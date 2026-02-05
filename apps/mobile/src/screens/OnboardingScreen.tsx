@@ -7,9 +7,17 @@ import {
   ScrollView,
   Dimensions,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSessionStore } from '../store/sessionStore';
+
+// Web-safe wrapper
+const SafeView = Platform.OS === 'web'
+  ? ({ children, style }: { children: React.ReactNode; style?: any }) => (
+      <View style={[{ flex: 1, paddingTop: 40 }, style]}>{children}</View>
+    )
+  : SafeAreaView;
 
 const { width } = Dimensions.get('window');
 
@@ -162,7 +170,7 @@ export function OnboardingScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {step === 'welcome' && renderWelcome()}
         {step === 'lane' && renderLaneSelection()}
@@ -189,7 +197,7 @@ export function OnboardingScreen() {
           </View>
         </View>
       )}
-    </SafeAreaView>
+    </SafeView>
   );
 }
 

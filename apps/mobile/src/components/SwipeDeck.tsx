@@ -1,24 +1,7 @@
 import React, { useRef, useCallback, ReactNode } from 'react';
-import { View, StyleSheet, Dimensions, Vibration } from 'react-native';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  runOnJS,
-  interpolate,
-  Extrapolation,
-} from 'react-native-reanimated';
+import { View, StyleSheet, Dimensions, Platform, Pressable, Text } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const SWIPE_THRESHOLD = width * 0.25;
-const SWIPE_UP_THRESHOLD = height * 0.15;
-const LONG_PRESS_DURATION = 500;
 
 interface SwipeDeckProps {
   children: ReactNode;
@@ -28,36 +11,82 @@ interface SwipeDeckProps {
   onLongPress: () => void;
 }
 
-export function SwipeDeck({
+// Simple web-compatible version
+function SwipeDeckWeb({
   children,
   onSwipeLeft,
   onSwipeRight,
   onSwipeUp,
   onLongPress,
 }: SwipeDeckProps) {
+  return (
+    <View style={styles.container}>
+      <View style={styles.cardContainer}>{children}</View>
+      <View style={styles.webButtons}>
+        <Pressable
+          style={[styles.webButton, styles.leftButton]}
+          onPress={onSwipeLeft}
+        >
+          <Text style={styles.webButtonText}>← Left</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.webButton, styles.skipButton]}
+          onPress={onSwipeUp}
+        >
+          <Text style={styles.webButtonText}>↑ Skip</Text>
+        </Pressable>
+        <Pressable
+          style={[styles.webButton, styles.rightButton]}
+          onPress={onSwipeRight}
+        >
+          <Text style={styles.webButtonText}>Right →</Text>
+        </Pressable>
+      </View>
+      <Pressable style={styles.twistButton} onPress={onLongPress}>
+        <Text style={styles.twistButtonText}>🔀 Twist this fork</Text>
+      </Pressable>
+    </View>
+  );
+}
+
+// Native version with gestures
+function SwipeDeckNative({
+  children,
+  onSwipeLeft,
+  onSwipeRight,
+  onSwipeUp,
+  onLongPress,
+}: SwipeDeckProps) {
+  const {
+    Gesture,
+    GestureDetector,
+  } = require('react-native-gesture-handler');
+  const Animated = require('react-native-reanimated');
+  const {
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+    withTiming,
+    runOnJS,
+    interpolate,
+    Extrapolation,
+  } = Animated;
+
+  const SWIPE_THRESHOLD = width * 0.25;
+  const SWIPE_UP_THRESHOLD = height * 0.15;
+
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const scale = useSharedValue(1);
-  const isLongPressed = useSharedValue(false);
 
   const handleSwipeComplete = useCallback(
     (direction: 'left' | 'right' | 'up') => {
-      Vibration.vibrate(10);
-      if (direction === 'left') {
-        onSwipeLeft();
-      } else if (direction === 'right') {
-        onSwipeRight();
-      } else {
-        onSwipeUp();
-      }
+      if (direction === 'left') onSwipeLeft();
+      else if (direction === 'right') onSwipeRight();
+      else onSwipeUp();
     },
     [onSwipeLeft, onSwipeRight, onSwipeUp]
   );
-
-  const handleLongPress = useCallback(() => {
-    Vibration.vibrate(50);
-    onLongPress();
-  }, [onLongPress]);
 
   const resetPosition = useCallback(() => {
     translateX.value = withSpring(0, { damping: 20, stiffness: 200 });
@@ -66,14 +95,13 @@ export function SwipeDeck({
   }, []);
 
   const panGesture = Gesture.Pan()
-    .onUpdate((event) => {
+    .onUpdate((event: any) => {
       translateX.value = event.translationX;
       translateY.value = event.translationY;
     })
-    .onEnd((event) => {
+    .onEnd((event: any) => {
       const { translationX, translationY, velocityX, velocityY } = event;
 
-      // Check for swipe up first
       if (translationY < -SWIPE_UP_THRESHOLD || velocityY < -500) {
         translateY.value = withTiming(-height, { duration: 200 }, () => {
           runOnJS(handleSwipeComplete)('up');
@@ -83,7 +111,6 @@ export function SwipeDeck({
         return;
       }
 
-      // Check for horizontal swipes
       if (Math.abs(translationX) > SWIPE_THRESHOLD || Math.abs(velocityX) > 500) {
         const direction = translationX > 0 ? 'right' : 'left';
         const targetX = translationX > 0 ? width * 1.5 : -width * 1.5;
@@ -94,20 +121,17 @@ export function SwipeDeck({
           translateY.value = 0;
         });
       } else {
-        // Reset position
         runOnJS(resetPosition)();
       }
     });
 
   const longPressGesture = Gesture.LongPress()
-    .minDuration(LONG_PRESS_DURATION)
+    .minDuration(500)
     .onStart(() => {
-      isLongPressed.value = true;
       scale.value = withSpring(0.95, { damping: 15 });
-      runOnJS(handleLongPress)();
+      runOnJS(onLongPress)();
     })
     .onEnd(() => {
-      isLongPressed.value = false;
       scale.value = withSpring(1, { damping: 15 });
     });
 
@@ -131,81 +155,22 @@ export function SwipeDeck({
     };
   });
 
-  const leftOverlayStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      translateX.value,
-      [-SWIPE_THRESHOLD, 0],
-      [1, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  const rightOverlayStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      translateX.value,
-      [0, SWIPE_THRESHOLD],
-      [0, 1],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
-  const skipOverlayStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      translateY.value,
-      [-SWIPE_UP_THRESHOLD, 0],
-      [1, 0],
-      Extrapolation.CLAMP
-    );
-    return { opacity };
-  });
-
   return (
     <View style={styles.container}>
       <GestureDetector gesture={composedGesture}>
-        <Animated.View style={[styles.cardContainer, animatedCardStyle]}>
+        <Animated.default.View style={[styles.cardContainer, animatedCardStyle]}>
           {children}
-
-          {/* Left overlay (pink) */}
-          <Animated.View
-            style={[styles.overlay, styles.leftOverlay, leftOverlayStyle]}
-            pointerEvents="none"
-          >
-            <View style={styles.overlayContent}>
-              <View style={[styles.overlayCircle, styles.leftCircle]}>
-                <Animated.Text style={styles.overlayArrow}>←</Animated.Text>
-              </View>
-            </View>
-          </Animated.View>
-
-          {/* Right overlay (blue) */}
-          <Animated.View
-            style={[styles.overlay, styles.rightOverlay, rightOverlayStyle]}
-            pointerEvents="none"
-          >
-            <View style={styles.overlayContent}>
-              <View style={[styles.overlayCircle, styles.rightCircle]}>
-                <Animated.Text style={styles.overlayArrow}>→</Animated.Text>
-              </View>
-            </View>
-          </Animated.View>
-
-          {/* Skip overlay (gray) */}
-          <Animated.View
-            style={[styles.overlay, styles.skipOverlay, skipOverlayStyle]}
-            pointerEvents="none"
-          >
-            <View style={styles.overlayContent}>
-              <View style={[styles.overlayCircle, styles.skipCircle]}>
-                <Animated.Text style={styles.overlayArrow}>↑</Animated.Text>
-              </View>
-            </View>
-          </Animated.View>
-        </Animated.View>
+        </Animated.default.View>
       </GestureDetector>
     </View>
   );
+}
+
+export function SwipeDeck(props: SwipeDeckProps) {
+  if (Platform.OS === 'web') {
+    return <SwipeDeckWeb {...props} />;
+  }
+  return <SwipeDeckNative {...props} />;
 }
 
 const styles = StyleSheet.create({
@@ -218,48 +183,44 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: 24,
-    justifyContent: 'center',
+  webButtons: {
+    flexDirection: 'row',
+    marginTop: 24,
+    gap: 16,
+  },
+  webButton: {
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    borderRadius: 12,
+    minWidth: 100,
     alignItems: 'center',
   },
-  overlayContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+  leftButton: {
+    backgroundColor: '#f472b6',
   },
-  leftOverlay: {
-    backgroundColor: 'rgba(244, 114, 182, 0.3)',
+  skipButton: {
+    backgroundColor: '#6b7280',
   },
-  rightOverlay: {
-    backgroundColor: 'rgba(96, 165, 250, 0.3)',
+  rightButton: {
+    backgroundColor: '#60a5fa',
   },
-  skipOverlay: {
-    backgroundColor: 'rgba(107, 114, 128, 0.3)',
-  },
-  overlayCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 4,
-  },
-  leftCircle: {
-    borderColor: '#f472b6',
-    backgroundColor: 'rgba(244, 114, 182, 0.2)',
-  },
-  rightCircle: {
-    borderColor: '#60a5fa',
-    backgroundColor: 'rgba(96, 165, 250, 0.2)',
-  },
-  skipCircle: {
-    borderColor: '#6b7280',
-    backgroundColor: 'rgba(107, 114, 128, 0.2)',
-  },
-  overlayArrow: {
-    fontSize: 36,
+  webButtonText: {
     color: '#ffffff',
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  twistButton: {
+    marginTop: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    backgroundColor: '#2d2d44',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#6366f1',
+  },
+  twistButtonText: {
+    color: '#6366f1',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });

@@ -20,6 +20,13 @@ import { useDeckStore } from '../store/deckStore';
 import { Fork } from '../types';
 import { RootStackParamList } from '../../App';
 
+// Web-safe wrapper
+const SafeView = Platform.OS === 'web'
+  ? ({ children, style }: { children: React.ReactNode; style?: any }) => (
+      <View style={[{ flex: 1, paddingTop: 20 }, style]}>{children}</View>
+    )
+  : SafeAreaView;
+
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Create'>;
 type RouteProps = RouteProp<RootStackParamList, 'Create'>;
 
@@ -114,7 +121,7 @@ export function CreateScreen() {
   const isValid = prompt.trim() && leftLabel.trim() && rightLabel.trim();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -239,7 +246,7 @@ export function CreateScreen() {
           )}
         </ScrollView>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </SafeView>
   );
 }
 

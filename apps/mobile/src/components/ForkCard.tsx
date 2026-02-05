@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Fork } from '../types';
 
 const { width, height } = Dimensions.get('window');
-const CARD_WIDTH = width - 32;
-const CARD_HEIGHT = height * 0.55;
+const isWeb = Platform.OS === 'web';
+const CARD_WIDTH = isWeb ? Math.min(400, width - 32) : width - 32;
+const CARD_HEIGHT = isWeb ? Math.min(500, height * 0.6) : height * 0.55;
 
 interface ForkCardProps {
   fork: Fork;

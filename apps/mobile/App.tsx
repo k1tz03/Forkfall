@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, Platform } from 'react-native';
 
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { DeckScreen } from './src/screens/DeckScreen';
@@ -19,22 +18,36 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+// Web-compatible linking config
+const linking = {
+  prefixes: [],
+  config: {
+    screens: {
+      Onboarding: 'onboarding',
+      Deck: '',
+      Create: 'create',
+    },
+  },
+};
+
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const { token, loadToken, authenticate } = useAuthStore();
+  const { loadToken, authenticate } = useAuthStore();
   const { lane, loadSession } = useSessionStore();
 
   useEffect(() => {
     const init = async () => {
-      await loadToken();
-      await loadSession();
+      try {
+        await loadToken();
+        await loadSession();
 
-      // Auto-authenticate if no token
-      const storedToken = useAuthStore.getState().token;
-      if (!storedToken) {
-        await authenticate();
+        const storedToken = useAuthStore.getState().token;
+        if (!storedToken) {
+          await authenticate();
+        }
+      } catch (error) {
+        console.error('Init error:', error);
       }
-
       setIsLoading(false);
     };
     init();
@@ -50,34 +63,45 @@ export default function App() {
 
   const needsOnboarding = !lane;
 
+  const content = (
+    <NavigationContainer linking={linking}>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: '#1a1a2e' },
+          animation: Platform.OS === 'web' ? 'none' : 'slide_from_right',
+        }}
+      >
+        {needsOnboarding ? (
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        ) : (
+          <>
+            <Stack.Screen name="Deck" component={DeckScreen} />
+            <Stack.Screen
+              name="Create"
+              component={CreateScreen}
+              options={{
+                presentation: Platform.OS === 'web' ? 'card' : 'modal',
+                animation: Platform.OS === 'web' ? 'none' : 'slide_from_bottom',
+              }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+      <StatusBar style="light" />
+    </NavigationContainer>
+  );
+
+  // On web, don't wrap with GestureHandlerRootView
+  if (Platform.OS === 'web') {
+    return <View style={styles.container}>{content}</View>;
+  }
+
+  // On native, use gesture handler
+  const { GestureHandlerRootView } = require('react-native-gesture-handler');
   return (
     <GestureHandlerRootView style={styles.container}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: '#1a1a2e' },
-            animation: 'slide_from_right',
-          }}
-        >
-          {needsOnboarding ? (
-            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-          ) : (
-            <>
-              <Stack.Screen name="Deck" component={DeckScreen} />
-              <Stack.Screen
-                name="Create"
-                component={CreateScreen}
-                options={{
-                  presentation: 'modal',
-                  animation: 'slide_from_bottom',
-                }}
-              />
-            </>
-          )}
-        </Stack.Navigator>
-        <StatusBar style="light" />
-      </NavigationContainer>
+      {content}
     </GestureHandlerRootView>
   );
 }

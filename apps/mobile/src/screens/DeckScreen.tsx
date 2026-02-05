@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Dimensions,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +19,13 @@ import { useSessionStore } from '../store/sessionStore';
 import { RootStackParamList } from '../../App';
 
 const { width, height } = Dimensions.get('window');
+
+// Web-safe wrapper
+const SafeView = Platform.OS === 'web'
+  ? ({ children, style }: { children: React.ReactNode; style?: any }) => (
+      <View style={[{ flex: 1, paddingTop: 20 }, style]}>{children}</View>
+    )
+  : SafeAreaView;
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Deck'>;
 
@@ -132,32 +140,39 @@ export function DeckScreen() {
     );
   };
 
-  const renderFooter = () => (
-    <View style={styles.footer}>
-      <View style={styles.actionHints}>
-        <View style={styles.hint}>
-          <Text style={styles.hintArrow}>←</Text>
-          <Text style={styles.hintText}>Left</Text>
+  const renderFooter = () => {
+    // On web, SwipeDeck has its own buttons
+    if (Platform.OS === 'web') {
+      return null;
+    }
+
+    return (
+      <View style={styles.footer}>
+        <View style={styles.actionHints}>
+          <View style={styles.hint}>
+            <Text style={styles.hintArrow}>←</Text>
+            <Text style={styles.hintText}>Left</Text>
+          </View>
+          <View style={styles.hint}>
+            <Text style={styles.hintArrow}>↑</Text>
+            <Text style={styles.hintText}>Skip</Text>
+          </View>
+          <View style={styles.hint}>
+            <Text style={styles.hintArrow}>→</Text>
+            <Text style={styles.hintText}>Right</Text>
+          </View>
         </View>
-        <View style={styles.hint}>
-          <Text style={styles.hintArrow}>↑</Text>
-          <Text style={styles.hintText}>Skip</Text>
-        </View>
-        <View style={styles.hint}>
-          <Text style={styles.hintArrow}>→</Text>
-          <Text style={styles.hintText}>Right</Text>
-        </View>
+        <Text style={styles.twistHint}>Hold to twist</Text>
       </View>
-      <Text style={styles.twistHint}>Hold to twist</Text>
-    </View>
-  );
+    );
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeView style={styles.container}>
       {renderHeader()}
       <View style={styles.deckContainer}>{renderContent()}</View>
       {currentFork && renderFooter()}
-    </SafeAreaView>
+    </SafeView>
   );
 }
 
