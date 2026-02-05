@@ -1,4 +1,3 @@
-import { I18n } from 'i18n-js';
 import { getLocales } from 'expo-localization';
 
 import en from './locales/en';
@@ -14,7 +13,9 @@ import ar from './locales/ar';
 import ru from './locales/ru';
 import hi from './locales/hi';
 
-const i18n = new I18n({
+type TranslationObject = { [key: string]: string | TranslationObject };
+
+const translations: { [locale: string]: TranslationObject } = {
   en,
   fr,
   es,
@@ -27,23 +28,57 @@ const i18n = new I18n({
   ar,
   ru,
   hi,
-});
+};
 
 // Get device locale
 const deviceLocale = getLocales()[0]?.languageCode || 'en';
 
-// Set default and fallback
-i18n.locale = deviceLocale;
-i18n.enableFallback = true;
-i18n.defaultLocale = 'en';
+let currentLocale = translations[deviceLocale] ? deviceLocale : 'en';
 
-export const t = (key: string, options?: object) => i18n.t(key, options);
+/**
+ * Get nested value from object using dot notation
+ */
+function getNestedValue(obj: TranslationObject, path: string): string | undefined {
+  const keys = path.split('.');
+  let current: TranslationObject | string | undefined = obj;
 
-export const setLocale = (locale: string) => {
-  i18n.locale = locale;
-};
+  for (const key of keys) {
+    if (current === undefined || typeof current === 'string') {
+      return undefined;
+    }
+    current = current[key];
+  }
 
-export const getLocale = () => i18n.locale;
+  return typeof current === 'string' ? current : undefined;
+}
+
+/**
+ * Translate a key with optional interpolation
+ */
+export function t(key: string, options?: { [key: string]: string | number }): string {
+  const translation = getNestedValue(translations[currentLocale], key)
+    ?? getNestedValue(translations.en, key)
+    ?? key;
+
+  if (!options) {
+    return translation;
+  }
+
+  // Simple interpolation: replace {{key}} with value
+  return translation.replace(/\{\{(\w+)\}\}/g, (_, k) => {
+    return options[k]?.toString() ?? `{{${k}}}`;
+  });
+}
+
+export function setLocale(locale: string): void {
+  if (translations[locale]) {
+    currentLocale = locale;
+  }
+}
+
+export function getLocale(): string {
+  return currentLocale;
+}
 
 export const availableLocales = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -59,5 +94,3 @@ export const availableLocales = [
   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
   { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
 ];
-
-export default i18n;
