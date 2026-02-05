@@ -1,0 +1,23 @@
+{
+  "name": "forkfall",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start --workspace=apps/mobile",
+    "mobile:ios": "npm run ios --workspace=apps/mobile",
+    "mobile:android": "npm run android --workspace=apps/mobile",
+    "backend": "cd backend && go run cmd/api/main.go",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:migrate": "docker-compose exec postgres psql -U forkfall -d forkfall -f /migrations/001_initial.sql",
+    "clean": "rm -rf node_modules apps/*/node_modules packages/*/node_modules"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
