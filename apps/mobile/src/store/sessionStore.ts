@@ -34,6 +34,7 @@ interface SessionState {
   loadSession: () => Promise<void>;
   setIntent: (lane: string, energy: string) => Promise<void>;
   loadIntents: () => Promise<void>;
+  resetSession: () => Promise<void>;
 }
 
 export const useSessionStore = create<SessionState>((set, get) => ({
@@ -113,6 +114,19 @@ export const useSessionStore = create<SessionState>((set, get) => ({
         ],
         isLoading: false,
       });
+    }
+  },
+
+  resetSession: async () => {
+    try {
+      if (Platform.OS === 'web') {
+        localStorage.removeItem(SESSION_KEY);
+      } else {
+        await SecureStore.deleteItemAsync(SESSION_KEY);
+      }
+      set({ lane: null, energy: null });
+    } catch (error) {
+      console.error('Failed to reset session:', error);
     }
   },
 }));

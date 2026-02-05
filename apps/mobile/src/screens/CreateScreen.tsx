@@ -18,6 +18,7 @@ import { api } from '../services/api';
 import { useSessionStore } from '../store/sessionStore';
 import { useDeckStore } from '../store/deckStore';
 import { Fork } from '../types';
+import { t } from '../i18n';
 import { RootStackParamList } from '../../App';
 
 // Web-safe wrapper
@@ -31,10 +32,10 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Create'>;
 type RouteProps = RouteProp<RootStackParamList, 'Create'>;
 
 const MUTATION_TYPES = [
-  { id: 'flip', label: 'Flip', emoji: '🔄', description: 'Swap the options' },
-  { id: 'reframe', label: 'Reframe', emoji: '🎭', description: 'New angle, same choices' },
-  { id: 'escalate', label: 'Escalate', emoji: '🔥', description: 'Raise the stakes' },
-  { id: 'specific', label: 'Narrow', emoji: '🎯', description: 'Make it specific' },
+  { id: 'flip', labelKey: 'create.mutations.flip', descKey: 'create.mutations.flipDesc', emoji: '🔄' },
+  { id: 'reframe', labelKey: 'create.mutations.reframe', descKey: 'create.mutations.reframeDesc', emoji: '🎭' },
+  { id: 'escalate', labelKey: 'create.mutations.escalate', descKey: 'create.mutations.escalateDesc', emoji: '🔥' },
+  { id: 'specific', labelKey: 'create.mutations.specific', descKey: 'create.mutations.specificDesc', emoji: '🎯' },
 ];
 
 export function CreateScreen() {
@@ -78,17 +79,17 @@ export function CreateScreen() {
 
   const handleSubmit = async () => {
     if (!prompt.trim() || !leftLabel.trim() || !rightLabel.trim()) {
-      setError('Please fill in all fields');
+      setError(t('create.errors.fillAllFields'));
       return;
     }
 
     if (prompt.length > 90) {
-      setError('Prompt must be 90 characters or less');
+      setError(t('create.errors.promptTooLong'));
       return;
     }
 
     if (leftLabel.length > 24 || rightLabel.length > 24) {
-      setError('Labels must be 24 characters or less');
+      setError(t('create.errors.labelsTooLong'));
       return;
     }
 
@@ -111,7 +112,7 @@ export function CreateScreen() {
       loadFeed(lane || undefined, energy || undefined);
       navigation.goBack();
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to create fork';
+      const message = error instanceof Error ? error.message : t('create.errors.createFailed');
       setError(message);
     } finally {
       setIsLoading(false);
@@ -131,10 +132,10 @@ export function CreateScreen() {
             style={styles.closeButton}
             onPress={() => navigation.goBack()}
           >
-            <Text style={styles.closeButtonText}>Cancel</Text>
+            <Text style={styles.closeButtonText}>{t('common.cancel')}</Text>
           </TouchableOpacity>
           <Text style={styles.title}>
-            {parentFork ? 'Twist Fork' : 'New Fork'}
+            {parentFork ? t('create.twistFork') : t('create.newFork')}
           </Text>
           <TouchableOpacity
             style={[styles.submitButton, !isValid && styles.submitButtonDisabled]}
@@ -144,7 +145,7 @@ export function CreateScreen() {
             {isLoading ? (
               <ActivityIndicator size="small" color="#ffffff" />
             ) : (
-              <Text style={styles.submitButtonText}>Post</Text>
+              <Text style={styles.submitButtonText}>{t('common.post')}</Text>
             )}
           </TouchableOpacity>
         </View>
@@ -152,14 +153,14 @@ export function CreateScreen() {
         <ScrollView style={styles.content} keyboardShouldPersistTaps="handled">
           {parentFork && (
             <View style={styles.parentInfo}>
-              <Text style={styles.parentLabel}>Twisting from:</Text>
+              <Text style={styles.parentLabel}>{t('create.twistingFrom')}</Text>
               <Text style={styles.parentPrompt}>{parentFork.prompt}</Text>
             </View>
           )}
 
           {parentFork && (
             <View style={styles.section}>
-              <Text style={styles.sectionLabel}>Mutation Type</Text>
+              <Text style={styles.sectionLabel}>{t('create.mutationType')}</Text>
               <View style={styles.mutationGrid}>
                 {MUTATION_TYPES.map((mutation) => (
                   <TouchableOpacity
@@ -171,7 +172,7 @@ export function CreateScreen() {
                     onPress={() => setSelectedMutation(mutation.id)}
                   >
                     <Text style={styles.mutationEmoji}>{mutation.emoji}</Text>
-                    <Text style={styles.mutationLabel}>{mutation.label}</Text>
+                    <Text style={styles.mutationLabel}>{t(mutation.labelKey)}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -180,11 +181,11 @@ export function CreateScreen() {
 
           <View style={styles.section}>
             <Text style={styles.sectionLabel}>
-              Prompt ({90 - prompt.length} chars left)
+              {t('create.prompt')} ({t('create.charsLeft', { count: 90 - prompt.length })})
             </Text>
             <TextInput
               style={styles.promptInput}
-              placeholder="Would you rather..."
+              placeholder={t('create.placeholderPrompt')}
               placeholderTextColor="#6b7280"
               value={prompt}
               onChangeText={setPrompt}
@@ -195,10 +196,10 @@ export function CreateScreen() {
 
           <View style={styles.labelsRow}>
             <View style={styles.labelContainer}>
-              <Text style={styles.sectionLabel}>Left ({24 - leftLabel.length})</Text>
+              <Text style={styles.sectionLabel}>{t('create.leftOption')} ({24 - leftLabel.length})</Text>
               <TextInput
                 style={styles.labelInput}
-                placeholder="Option A"
+                placeholder={t('create.placeholderOptionA')}
                 placeholderTextColor="#6b7280"
                 value={leftLabel}
                 onChangeText={setLeftLabel}
@@ -206,10 +207,10 @@ export function CreateScreen() {
               />
             </View>
             <View style={styles.labelContainer}>
-              <Text style={styles.sectionLabel}>Right ({24 - rightLabel.length})</Text>
+              <Text style={styles.sectionLabel}>{t('create.rightOption')} ({24 - rightLabel.length})</Text>
               <TextInput
                 style={styles.labelInput}
-                placeholder="Option B"
+                placeholder={t('create.placeholderOptionB')}
                 placeholderTextColor="#6b7280"
                 value={rightLabel}
                 onChangeText={setRightLabel}
@@ -219,7 +220,7 @@ export function CreateScreen() {
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionLabel}>Mood (optional)</Text>
+            <Text style={styles.sectionLabel}>{t('create.mood')}</Text>
             <View style={styles.moodGrid}>
               {moods.map((mood) => (
                 <TouchableOpacity

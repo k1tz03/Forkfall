@@ -16,6 +16,7 @@ import { SwipeDeck } from '../components/SwipeDeck';
 import { ForkCard } from '../components/ForkCard';
 import { useForkDeck } from '../hooks/useForkDeck';
 import { useSessionStore } from '../store/sessionStore';
+import { t } from '../i18n';
 import { RootStackParamList } from '../../App';
 
 const { width, height } = Dimensions.get('window');
@@ -31,7 +32,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Deck'>;
 
 export function DeckScreen() {
   const navigation = useNavigation<NavigationProp>();
-  const { lane, energy, lanes, energies } = useSessionStore();
+  const { lane, energy, lanes, energies, resetSession } = useSessionStore();
   const {
     currentFork,
     isLoading,
@@ -54,8 +55,15 @@ export function DeckScreen() {
     }
   }, [currentFork, handleTwist, navigation]);
 
+  const handleHomePress = useCallback(async () => {
+    await resetSession();
+  }, [resetSession]);
+
   const renderHeader = () => (
     <View style={styles.header}>
+      <TouchableOpacity style={styles.homeButton} onPress={handleHomePress}>
+        <Text style={styles.homeIcon}>🏠</Text>
+      </TouchableOpacity>
       <View style={styles.sessionInfo}>
         {currentLane && (
           <View style={styles.sessionBadge}>
@@ -78,7 +86,7 @@ export function DeckScreen() {
       return (
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color="#6366f1" />
-          <Text style={styles.loadingText}>Loading forks...</Text>
+          <Text style={styles.loadingText}>{t('deck.loadingForks')}</Text>
         </View>
       );
     }
@@ -89,7 +97,7 @@ export function DeckScreen() {
           <Text style={styles.errorEmoji}>😵</Text>
           <Text style={styles.errorText}>{error}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={refresh}>
-            <Text style={styles.retryButtonText}>Try Again</Text>
+            <Text style={styles.retryButtonText}>{t('common.retry')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -99,15 +107,13 @@ export function DeckScreen() {
       return (
         <View style={styles.centerContainer}>
           <Text style={styles.emptyEmoji}>🍴</Text>
-          <Text style={styles.emptyTitle}>No forks yet!</Text>
-          <Text style={styles.emptyText}>
-            Check back soon or create your own fork.
-          </Text>
+          <Text style={styles.emptyTitle}>{t('deck.noForks')}</Text>
+          <Text style={styles.emptyText}>{t('deck.noForksSubtitle')}</Text>
           <TouchableOpacity
             style={styles.createButton}
             onPress={() => navigation.navigate('Create', {})}
           >
-            <Text style={styles.createButtonText}>Create Fork</Text>
+            <Text style={styles.createButtonText}>{t('deck.createFork')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -117,12 +123,10 @@ export function DeckScreen() {
       return (
         <View style={styles.centerContainer}>
           <Text style={styles.emptyEmoji}>✨</Text>
-          <Text style={styles.emptyTitle}>You've seen them all!</Text>
-          <Text style={styles.emptyText}>
-            Come back later for more forks.
-          </Text>
+          <Text style={styles.emptyTitle}>{t('deck.allSeen')}</Text>
+          <Text style={styles.emptyText}>{t('deck.allSeenSubtitle')}</Text>
           <TouchableOpacity style={styles.retryButton} onPress={refresh}>
-            <Text style={styles.retryButtonText}>Refresh</Text>
+            <Text style={styles.retryButtonText}>{t('common.refresh')}</Text>
           </TouchableOpacity>
         </View>
       );
@@ -151,18 +155,18 @@ export function DeckScreen() {
         <View style={styles.actionHints}>
           <View style={styles.hint}>
             <Text style={styles.hintArrow}>←</Text>
-            <Text style={styles.hintText}>Left</Text>
+            <Text style={styles.hintText}>{t('deck.left')}</Text>
           </View>
           <View style={styles.hint}>
             <Text style={styles.hintArrow}>↑</Text>
-            <Text style={styles.hintText}>Skip</Text>
+            <Text style={styles.hintText}>{t('deck.skip')}</Text>
           </View>
           <View style={styles.hint}>
             <Text style={styles.hintArrow}>→</Text>
-            <Text style={styles.hintText}>Right</Text>
+            <Text style={styles.hintText}>{t('deck.right')}</Text>
           </View>
         </View>
-        <Text style={styles.twistHint}>Hold to twist</Text>
+        <Text style={styles.twistHint}>{t('deck.holdToTwist')}</Text>
       </View>
     );
   };
@@ -182,12 +186,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
+  },
+  homeButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#2d2d44',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  homeIcon: {
+    fontSize: 20,
   },
   sessionInfo: {
     flexDirection: 'row',
     gap: 8,
+    flex: 1,
   },
   sessionBadge: {
     flexDirection: 'row',

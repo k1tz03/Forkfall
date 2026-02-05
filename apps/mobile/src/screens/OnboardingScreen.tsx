@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSessionStore } from '../store/sessionStore';
+import { t } from '../i18n';
 
 // Web-safe wrapper
 const SafeView = Platform.OS === 'web'
@@ -43,23 +44,21 @@ export function OnboardingScreen() {
   const renderWelcome = () => (
     <View style={styles.stepContainer}>
       <Text style={styles.logo}>🍴</Text>
-      <Text style={styles.title}>FORKFALL</Text>
-      <Text style={styles.subtitle}>
-        Every choice tells a story.{'\n'}Make yours count.
-      </Text>
+      <Text style={styles.title}>{t('onboarding.welcome.title')}</Text>
+      <Text style={styles.subtitle}>{t('onboarding.welcome.subtitle')}</Text>
       <TouchableOpacity
         style={styles.primaryButton}
         onPress={() => setStep('lane')}
       >
-        <Text style={styles.primaryButtonText}>Get Started</Text>
+        <Text style={styles.primaryButtonText}>{t('onboarding.welcome.getStarted')}</Text>
       </TouchableOpacity>
     </View>
   );
 
   const renderLaneSelection = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>What brings you here?</Text>
-      <Text style={styles.stepSubtitle}>Choose your lane</Text>
+      <Text style={styles.stepTitle}>{t('onboarding.lane.title')}</Text>
+      <Text style={styles.stepSubtitle}>{t('onboarding.lane.subtitle')}</Text>
 
       {isLoading ? (
         <ActivityIndicator size="large" color="#6366f1" />
@@ -89,15 +88,15 @@ export function OnboardingScreen() {
         onPress={() => selectedLane && setStep('energy')}
         disabled={!selectedLane}
       >
-        <Text style={styles.primaryButtonText}>Continue</Text>
+        <Text style={styles.primaryButtonText}>{t('common.continue')}</Text>
       </TouchableOpacity>
     </View>
   );
 
   const renderEnergySelection = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>What's your vibe today?</Text>
-      <Text style={styles.stepSubtitle}>Set your energy level</Text>
+      <Text style={styles.stepTitle}>{t('onboarding.energy.title')}</Text>
+      <Text style={styles.stepSubtitle}>{t('onboarding.energy.subtitle')}</Text>
 
       <View style={styles.energyOptions}>
         {energies.map((energy) => (
@@ -123,14 +122,14 @@ export function OnboardingScreen() {
           style={styles.secondaryButton}
           onPress={() => setStep('lane')}
         >
-          <Text style={styles.secondaryButtonText}>Back</Text>
+          <Text style={styles.secondaryButtonText}>{t('common.back')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.primaryButton, styles.buttonFlex, !selectedEnergy && styles.buttonDisabled]}
           onPress={() => selectedEnergy && setStep('ready')}
           disabled={!selectedEnergy}
         >
-          <Text style={styles.primaryButtonText}>Continue</Text>
+          <Text style={styles.primaryButtonText}>{t('common.continue')}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -139,24 +138,21 @@ export function OnboardingScreen() {
   const renderReady = () => (
     <View style={styles.stepContainer}>
       <Text style={styles.readyEmoji}>🎉</Text>
-      <Text style={styles.title}>You're all set!</Text>
-      <Text style={styles.subtitle}>
-        Swipe left or right to make your choice.{'\n'}
-        Hold to twist and create your own fork.
-      </Text>
+      <Text style={styles.title}>{t('onboarding.ready.title')}</Text>
+      <Text style={styles.subtitle}>{t('onboarding.ready.subtitle')}</Text>
 
       <View style={styles.instructionRow}>
         <View style={styles.instruction}>
           <Text style={styles.instructionIcon}>👈</Text>
-          <Text style={styles.instructionText}>Left</Text>
+          <Text style={styles.instructionText}>{t('onboarding.ready.left')}</Text>
         </View>
         <View style={styles.instruction}>
           <Text style={styles.instructionIcon}>👆</Text>
-          <Text style={styles.instructionText}>Skip</Text>
+          <Text style={styles.instructionText}>{t('onboarding.ready.skip')}</Text>
         </View>
         <View style={styles.instruction}>
           <Text style={styles.instructionIcon}>👉</Text>
-          <Text style={styles.instructionText}>Right</Text>
+          <Text style={styles.instructionText}>{t('onboarding.ready.right')}</Text>
         </View>
       </View>
 
@@ -164,7 +160,7 @@ export function OnboardingScreen() {
         style={styles.primaryButton}
         onPress={handleComplete}
       >
-        <Text style={styles.primaryButtonText}>Start Forking</Text>
+        <Text style={styles.primaryButtonText}>{t('onboarding.ready.startForking')}</Text>
       </TouchableOpacity>
     </View>
   );
