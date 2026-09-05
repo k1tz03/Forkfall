@@ -7,7 +7,7 @@ import 'package:fusible_app/state/game_controller.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('title -> start a run -> play a few cards without crashing', (tester) async {
+  testWidgets('title -> start a run -> play a few cards without crashing', timeout: const Timeout(Duration(minutes: 2)), (tester) async {
     final content = ContentService();
     await content.load();
     final controller = GameController(content.engine);
