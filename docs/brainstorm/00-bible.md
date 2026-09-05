@@ -117,7 +117,7 @@ Il n'y a pas de victoire finale. Une carrière se juge au score, au Cimetière e
 ## 0.8 Croisement des destins et méta-progression
 
 - **Un seul monde persistant** par sauvegarde : mêmes clubs (avec leur division), mêmes seize personnages transversaux (âge, relation, drapeaux de mémoire), un drapeau « ton prédécesseur » qui alimente des cartes dédiées. « Nouveau monde » depuis l'écran titre remet tout à zéro, Panthéon et Cimetière exceptés.
-- **Une chronologie** : le monde commence en 1998-99 et court jusqu'en 2050 ; chaque run consomme ses saisons. Trois ères scénarisées par des Cartes Nouvelles datées : l'ère des présidents bâtisseurs (1998-2010), l'ère des fonds (2010-2025), l'ère du futur (2025-2050 : Mondial élargi, ligues fermées, arbitre algorithmique). Les patines visuelles par époque sont pour plus tard.
+- **Une chronologie** : le monde commence en 1990-91 et court jusqu'en 2050 ; chaque run consomme ses saisons. Trois ères scénarisées par des Cartes Nouvelles datées : l'ère des présidents bâtisseurs (1990-2005), l'ère des fonds (2005-2025), l'ère du futur (2025-2050 : Mondial élargi, ligues fermées, arbitre algorithmique). Les patines visuelles par époque sont pour plus tard.
 - **Mémoire des clubs** : rancune ou gratitude par drapeaux ; le club amateur d'un run précédent peut être celui qui t'élimine en Coupe.
 - **Lignée** : fils, fille, neveu, filleul comme successeurs ; le nom se transmet.
 - **Le Panthéon** : 60 Destins nommés (succès sous forme de cartes : « L'enfant du club », « Le Grand Chelem », « La Trilogie », « Homme de parole ») ; **l'Almanach** : la chronique générée du monde, une ligne par saison.

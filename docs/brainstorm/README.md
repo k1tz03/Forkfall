@@ -26,7 +26,7 @@ Ce dossier est le résultat de la phase de brainstorm demandée avant tout code.
 - **Jauges** : VESTIAIRE, TRIBUNES, DIRECTION, CAISSE, aux mêmes emplacements pour tous les rôles, renommées par rôle.
 - **Rôles** : neuf rôles en six familles sur un seul moteur ; tirage aléatoire dès le premier run ; transitions par Cartes Destin au Bilan ; la Porte de sortie pour descendre sans mourir.
 - **Die & retry** : 91 fins écrites, un Cimetière, une Succession en trois cartes face cachée, le Fantôme du personnage précédent.
-- **Croisement des destins** : un monde persistant de 1998 à 2050, seize personnages transversaux avec relation, mémoire des clubs, lignée, Nemesis, Almanach ; la méta donne de la variété, jamais de la puissance.
+- **Croisement des destins** : un monde persistant de 1990 à 2050, seize personnages transversaux avec relation, mémoire des clubs, lignée, Nemesis, Almanach ; la méta donne de la variété, jamais de la puissance.
 - **Style** : l'album de vignettes autocollantes, portraits modulaires, écussons procéduraux, Une de journal.
 - **Social** : zéro serveur ; un moteur déterministe et un Code de Carrière qui permettent seed partagé, duel, fantôme, roast, ligue ; défis du jour et de la semaine dérivés de la date.
 - **Monétisation** : premium 2,99 € au lancement puis 3,99 €, sans publicité ni monnaie virtuelle ; démo web ; Steam à 5,99 € ensuite ; free-to-try sur Android seulement si les ventes le justifient à 90 jours.

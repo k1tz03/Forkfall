@@ -90,8 +90,8 @@ Rythme réaliste : 12 à 15 cartes rédigées, taguées et testées par jour, pa
 4. **La monétisation.** Premium 2,99 € puis 3,99 €, avec démo web ; free-to-try Android à la revoyure seulement. *Recommandation : oui, tel quel.*
 5. **Les rôles du MVP.** Joueur pro + Entraîneur. *Recommandation : oui ; le Président pro est le troisième si le temps le permet.*
 6. **Le genre du protagoniste.** Une joueuse ou une dirigeante dès le MVP coûte un sélecteur ICU par carte et rien de plus. *Recommandation : oui, dès la première carte.*
-7. **Le début de la chronologie.** 1998-99 (ère moderne, patines plus tard) ou 1950 avec les ères graphiques dès la V1 (coût élevé). *Recommandation : 1998-99.*
-8. **La langue d'écriture.** Le français d'abord, l'anglais comme pivot dès le MVP ; les clins d'œil sont adaptés, pas traduits. *Recommandation : oui.*
+7. **Le début de la chronologie.** 1990-91 (ère moderne, patines plus tard) ou 1950 avec les ères graphiques dès la V1 (coût élevé). *Décidé : 1990-91 (années 90).*
+8. **La langue d'écriture.** Décidé : **le MVP est en français uniquement** ; l'anglais est ajouté en version finale. (La bible garde l'architecture ICU multilingue, mais un seul fichier de langue est livré au MVP.)
 9. **La structure juridique et les comptes.** Micro-entreprise, comptes développeurs, domaine, dépôt de marque. *Recommandation : tout ouvrir en semaine 1, le test fermé Google Play prend quatorze jours.*
 10. **Le calendrier.** Plein temps ou temps partiel ; la feuille de route ci-dessus suppose le plein temps.
 
