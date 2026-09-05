@@ -1,0 +1,1562 @@
+{
+  "version": 1,
+  "roles": [
+    {
+      "id": "entraineur",
+      "name": "Entraîneur",
+      "fragile": "direction",
+      "age": [
+        38,
+        55
+      ],
+      "posture": [
+        "Offensif",
+        "Prudent"
+      ],
+      "gauges": [
+        {
+          "id": "vestiaire",
+          "label": "Vestiaire",
+          "icon": "crampon",
+          "empty": "en_bus",
+          "full": "en_copain"
+        },
+        {
+          "id": "tribunes",
+          "label": "Tribunes",
+          "icon": "echarpe",
+          "empty": "en_banderole",
+          "full": "en_otage"
+        },
+        {
+          "id": "direction",
+          "label": "Le président",
+          "icon": "fauteuil",
+          "empty": "en_sms",
+          "full": "en_placard"
+        },
+        {
+          "id": "caisse",
+          "label": "Le budget",
+          "icon": "billets",
+          "empty": "en_decoupe",
+          "full": "en_coupable"
+        }
+      ],
+      "transitions": []
+    },
+    {
+      "id": "joueur",
+      "name": "Joueur pro",
+      "fragile": "tribunes",
+      "age": [
+        19,
+        31
+      ],
+      "posture": [
+        "Je fonce",
+        "Je me ménage"
+      ],
+      "gauges": [
+        {
+          "id": "vestiaire",
+          "label": "Vestiaire",
+          "icon": "crampon",
+          "empty": "jp_mouton",
+          "full": "jp_porteparole"
+        },
+        {
+          "id": "tribunes",
+          "label": "Tribunes",
+          "icon": "echarpe",
+          "empty": "jp_siffle",
+          "full": "jp_sandwich"
+        },
+        {
+          "id": "direction",
+          "label": "Le club",
+          "icon": "fauteuil",
+          "empty": "jp_place14b",
+          "full": "jp_fils"
+        },
+        {
+          "id": "caisse",
+          "label": "Compte",
+          "icon": "billets",
+          "empty": "jp_sansclub",
+          "full": "jp_panama"
+        }
+      ],
+      "transitions": [
+        {
+          "to": "entraineur",
+          "when": [
+            "or",
+            [
+              "cmp",
+              ">=",
+              [
+                "path",
+                "age"
+              ],
+              [
+                "lit",
+                32
+              ]
+            ],
+            [
+              "call",
+              "flag",
+              [
+                [
+                  "lit",
+                  "genou"
+                ]
+              ]
+            ]
+          ],
+          "label": "Le coach : « Tes jambes parlent, tu le sais. La réserve n'a pas d'entraîneur. Tu passes ton diplôme cet été ? »",
+          "answer": "Tu raccroches les crampons pour le survêtement."
+        }
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "co.presse.derby",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "divers",
+      "tags": [
+        "ultras"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 20,
+      "priority": 0,
+      "sablier": false,
+      "text": "Gégé, chef de tribune : « Derby dimanche. Perdre, c'est pas une option. Tu fais quoi de ta semaine ? »",
+      "left": {
+        "label": "Mise au vert, portables confisqués",
+        "effects": {
+          "force": 5,
+          "vestiaire": -5
+        }
+      },
+      "right": {
+        "label": "Semaine normale",
+        "effects": {
+          "tribunes": -5
+        }
+      }
+    },
+    {
+      "id": "co.sponsor.maillot",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "sponsors",
+      "tags": [
+        "sponsors",
+        "absurde"
+      ],
+      "speaker": "nassir",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 30,
+      "priority": 0,
+      "sablier": false,
+      "text": "Cheikh Nassir : « Nous aimerions le maillot orange fluo. Comme notre boisson. »",
+      "left": {
+        "label": "Le maillot est sacré",
+        "effects": {
+          "caisse": -5,
+          "tribunes": 5
+        }
+      },
+      "right": {
+        "label": "Va pour l'orange",
+        "effects": {
+          "caisse": 5,
+          "tribunes": -5
+        }
+      }
+    },
+    {
+      "id": "co.famille.belle_maman",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "famille",
+      "tags": [
+        "famille"
+      ],
+      "speaker": "camille",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 25,
+      "priority": 0,
+      "sablier": false,
+      "text": "Camille : « Le repas chez ma mère, c'est le jour du match. Choisis. »",
+      "left": {
+        "label": "Je viens au repas",
+        "effects": {
+          "vestiaire": -5,
+          "tribunes": -5
+        }
+      },
+      "right": {
+        "label": "C'est un match",
+        "effects": {
+          "tribunes": 5
+        },
+        "answer": "Camille ne répond plus à tes messages."
+      }
+    },
+    {
+      "id": "en.presse.special",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "presse",
+      "tags": [
+        "presse"
+      ],
+      "speaker": "meneche",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            0
+          ]
+        ],
+        [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season.phase"
+          ],
+          [
+            "lit",
+            "presaison"
+          ]
+        ]
+      ],
+      "text": "Pierre Ménèche, première conférence : « Vous vous décrivez comment, coach ? »",
+      "left": {
+        "label": "Je suis quelqu'un de spécial",
+        "effects": {
+          "tribunes": 5,
+          "direction": 5,
+          "set": [
+            "special"
+          ]
+        },
+        "answer": "La formule fait le tour des rédactions."
+      },
+      "right": {
+        "label": "Le groupe vit bien",
+        "effects": {
+          "tribunes": -5,
+          "direction": 5
+        },
+        "answer": "Sobre. Personne ne retient la phrase."
+      }
+    },
+    {
+      "id": "en.direction.achat_surprise",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction",
+        "mercato"
+      ],
+      "speaker": "aulard",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "or",
+        [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season.phase"
+          ],
+          [
+            "lit",
+            "presaison"
+          ]
+        ],
+        [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season.phase"
+          ],
+          [
+            "lit",
+            "hiver"
+          ]
+        ]
+      ],
+      "text": "Jean-Marie Aulard : « J'ai signé un attaquant ce matin. Tu l'apprends par la presse. Tu le fais jouer ? »",
+      "left": {
+        "label": "Il joue",
+        "effects": {
+          "direction": 5,
+          "vestiaire": -5
+        }
+      },
+      "right": {
+        "label": "Il s'entraîne avec la réserve",
+        "effects": {
+          "direction": -5,
+          "vestiaire": 5
+        },
+        "answer": "L'attaquant appelle un journaliste."
+      }
+    },
+    {
+      "id": "en.vestiaire.star_ne_defend_pas",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "direction"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          40
+        ]
+      ],
+      "text": "Bréhaut : « Notre numéro 10 refuse de défendre. Le président l'a payé une fortune. Tu le mets sur le banc ? »",
+      "left": {
+        "label": "Sur le banc",
+        "effects": {
+          "vestiaire": 5,
+          "direction": -5,
+          "set": [
+            "star_banc"
+          ]
+        }
+      },
+      "right": {
+        "label": "Titulaire quand même",
+        "effects": {
+          "vestiaire": -5,
+          "direction": 5
+        }
+      }
+    },
+    {
+      "id": "en.direction.ultimatum",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "rescue:direction",
+        "retorse"
+      ],
+      "speaker": "aulard",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 40,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          30
+        ]
+      ],
+      "text": "Le président : « Trois défaites de suite. Le prochain match est un ultimatum. J'ai déjà le numéro de ton remplaçant. »",
+      "left": {
+        "label": "On attaque à outrance",
+        "effects": {
+          "rand": [
+            {
+              "p": 0.5,
+              "direction": 5,
+              "tribunes": 5
+            },
+            {
+              "p": 0,
+              "end": "en_sms"
+            }
+          ]
+        }
+      },
+      "right": {
+        "label": "Bloc bas, on assure le nul",
+        "effects": {
+          "tribunes": -5,
+          "direction": 5
+        }
+      }
+    },
+    {
+      "id": "en.presse.pas_vu",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "presse",
+      "tags": [
+        "presse",
+        "arbitrage"
+      ],
+      "speaker": "lea",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.vestiaire"
+        ],
+        [
+          "lit",
+          60
+        ]
+      ],
+      "text": "Micro tendu, après le carton rouge de ton milieu : « Vous avez vu l'action , coach ? »",
+      "left": {
+        "label": "Je n'ai pas vu",
+        "effects": {
+          "vestiaire": 5,
+          "tribunes": -5
+        }
+      },
+      "right": {
+        "label": "Il mérite le rouge",
+        "effects": {
+          "vestiaire": -5,
+          "tribunes": 5
+        }
+      }
+    },
+    {
+      "id": "en.formation.gamin",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "formation",
+      "tags": [
+        "formation"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "not",
+        [
+          "call",
+          "flag",
+          [
+            [
+              "lit",
+              "pepite"
+            ]
+          ]
+        ]
+      ],
+      "text": "Vukić : « Le petit Mbako marche sur l'eau chez les jeunes. Le président veut le vendre. Le lancer, c'est le protéger. »",
+      "left": {
+        "label": "Titulaire samedi",
+        "effects": {
+          "tribunes": 5,
+          "direction": -5,
+          "set": [
+            "pepite"
+          ],
+          "relation": {
+            "mbako": 2
+          }
+        }
+      },
+      "right": {
+        "label": "Trop tôt",
+        "effects": {
+          "direction": 5
+        }
+      }
+    },
+    {
+      "id": "en.vestiaire.sechecheveux",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "moment"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "À la mi-temps, mené 0-2, Bréhaut : « Ils attendent que tu gueules. Ou pas. »",
+      "left": {
+        "label": "Coup de gueule",
+        "effects": {
+          "vestiaire": -5,
+          "force": 5
+        }
+      },
+      "right": {
+        "label": "Calme, tableau tactique",
+        "effects": {
+          "vestiaire": 5
+        }
+      }
+    },
+    {
+      "id": "en.direction.homme_president",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction",
+        "retorse"
+      ],
+      "speaker": "aulard",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          60
+        ]
+      ],
+      "text": "Aulard : « Signe cette déclaration : le président a raison de tout. Tu es mon homme, non ? »",
+      "left": {
+        "label": "Je signe",
+        "effects": {
+          "direction": 5,
+          "vestiaire": -5,
+          "parole": -1,
+          "set": [
+            "homme_president"
+          ]
+        }
+      },
+      "right": {
+        "label": "Je garde ma liberté",
+        "effects": {
+          "direction": -5
+        }
+      }
+    },
+    {
+      "id": "en.famille.podcast",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "famille",
+      "tags": [
+        "famille"
+      ],
+      "speaker": "camille",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          55
+        ]
+      ],
+      "text": "Camille : « Je lance un podcast sur notre vie. Premier épisode : pourquoi le vestiaire compte plus que moi. »",
+      "left": {
+        "label": "Je te soutiens",
+        "effects": {
+          "tribunes": -5,
+          "vestiaire": -5
+        }
+      },
+      "right": {
+        "label": "Pas question",
+        "effects": {
+          "vestiaire": 5
+        },
+        "answer": "Le dîner est silencieux."
+      }
+    },
+    {
+      "id": "en.piege.projet",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "divers",
+      "tags": [
+        "piege"
+      ],
+      "speaker": "aulard",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Aulard : « On fait du surplace. Il nous faut un projet, coach. Tu prends position ou tu subis ? »",
+      "left": {
+        "label": "Je prends un risque fort",
+        "effects": {
+          "direction": 5,
+          "vestiaire": -5
+        }
+      },
+      "right": {
+        "label": "On continue tranquille",
+        "effects": {
+          "direction": -5,
+          "tribunes": -5
+        }
+      }
+    },
+    {
+      "id": "jp.mercato.transfert_siecle",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "mercato",
+      "tags": [
+        "mercato"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          ">",
+          [
+            "path",
+            "gauges.tribunes"
+          ],
+          [
+            "lit",
+            70
+          ]
+        ],
+        [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ]
+      ],
+      "text": "Rocco Fardelli : « Un club lointain met une fortune sur la table. Ta clause est publique, ton club ne peut rien faire. »",
+      "left": {
+        "label": "Je pars",
+        "effects": {
+          "caisse": 5,
+          "tribunes": -5,
+          "set": [
+            "galactique"
+          ]
+        }
+      },
+      "right": {
+        "label": "Je reste",
+        "effects": {
+          "tribunes": 5,
+          "direction": 5
+        }
+      }
+    },
+    {
+      "id": "jp.moment.penalty",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "moment"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "88e, 1-1. Bréhaut, ballon sous le bras : « C'est moi le tireur désigné. Lâche ce ballon. »",
+      "left": {
+        "label": "Prends-le",
+        "effects": {
+          "vestiaire": 5,
+          "tribunes": -5
+        }
+      },
+      "right": {
+        "label": "Je tire",
+        "effects": {
+          "rand": [
+            {
+              "p": 0.7,
+              "tribunes": 5,
+              "vestiaire": -5
+            },
+            {
+              "p": 0,
+              "tribunes": -5,
+              "vestiaire": -5
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "jp.presse.bouteilles",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "presse",
+      "tags": [
+        "presse",
+        "sponsors"
+      ],
+      "speaker": "lea",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          65
+        ]
+      ],
+      "text": "L'attachée de presse : « Tu as écarté les bouteilles du sponsor en conférence. Ils veulent des excuses. »",
+      "left": {
+        "label": "Buvez de l'eau",
+        "effects": {
+          "tribunes": 5,
+          "direction": -5,
+          "caisse": -5
+        }
+      },
+      "right": {
+        "label": "Je m'excuse",
+        "effects": {
+          "direction": 5,
+          "tribunes": -5
+        }
+      }
+    },
+    {
+      "id": "jp.scandale.pari",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "scandale",
+      "tags": [
+        "scandale",
+        "risk:direction"
+      ],
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.caisse"
+        ],
+        [
+          "lit",
+          45
+        ]
+      ],
+      "text": "Un pote d'enfance : « Une petite mise sur ton propre match, juste le nombre de corners. Personne ne saura. »",
+      "left": {
+        "label": "OK, une fois",
+        "effects": {
+          "caisse": 5,
+          "set": [
+            "pisteur"
+          ],
+          "schedule": [
+            {
+              "card": "jp.scandale.brigade",
+              "in": [
+                4,
+                8
+              ]
+            }
+          ]
+        },
+        "answer": "Tu ranges le téléphone, un peu vite."
+      },
+      "right": {
+        "label": "Jamais",
+        "effects": {
+          "tribunes": 5
+        }
+      }
+    },
+    {
+      "id": "jp.scandale.brigade",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "scandale",
+      "tags": [
+        "scandale",
+        "chaine"
+      ],
+      "speaker": "meneche",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": true,
+      "when": [
+        "call",
+        "flag",
+        [
+          [
+            "lit",
+            "pisteur"
+          ]
+        ]
+      ],
+      "text": "Ménèche, sourire en coin : « La brigade financière s'intéresse à des paris. On dit que ça vient du vestiaire. »",
+      "left": {
+        "label": "Je nie tout",
+        "effects": {
+          "direction": -5,
+          "tribunes": -5
+        }
+      },
+      "right": {
+        "label": "Je coopère",
+        "effects": {
+          "direction": -5,
+          "tribunes": -5,
+          "caisse": -5
+        }
+      }
+    },
+    {
+      "id": "jp.selection.liste",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "divers",
+      "tags": [],
+      "speaker": "legruet",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          ">",
+          [
+            "path",
+            "gauges.tribunes"
+          ],
+          [
+            "lit",
+            55
+          ]
+        ],
+        [
+          "not",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "international"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "text": "Le sélectionneur, au téléphone : « Tu es dans ma liste. Mais ton club veut que tu déclares forfait pour ta cheville. »",
+      "left": {
+        "label": "J'y vais",
+        "effects": {
+          "tribunes": 5,
+          "direction": -5,
+          "set": [
+            "international"
+          ]
+        }
+      },
+      "right": {
+        "label": "Forfait",
+        "effects": {
+          "direction": 5,
+          "tribunes": -5
+        }
+      }
+    },
+    {
+      "id": "jp.corps.genou",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "divers",
+      "tags": [
+        "risk:tribunes"
+      ],
+      "speaker": "sabatier",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">=",
+        [
+          "path",
+          "age"
+        ],
+        [
+          "lit",
+          30
+        ]
+      ],
+      "text": "Doc Sabatier : « Ce genou, c'est six mois. On opère, ou on infiltre et tu joues le match de dimanche ? »",
+      "left": {
+        "label": "J'opère",
+        "effects": {
+          "tribunes": -5,
+          "set": [
+            "genou"
+          ]
+        }
+      },
+      "right": {
+        "label": "Infiltration",
+        "effects": {
+          "tribunes": 5,
+          "vestiaire": 5,
+          "set": [
+            "genou"
+          ]
+        }
+      }
+    },
+    {
+      "id": "jp.famille.frere_agent",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "famille",
+      "tags": [
+        "famille",
+        "agents"
+      ],
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Ton frère : « Vire Fardelli, je m'occupe de tout. Je suis de la famille, moi. »",
+      "left": {
+        "label": "D'accord, frérot",
+        "effects": {
+          "caisse": -5,
+          "relation": {
+            "fardelli": -2
+          }
+        }
+      },
+      "right": {
+        "label": "Reste à ta place",
+        "effects": {
+          "tribunes": 5
+        }
+      }
+    },
+    {
+      "id": "jp.vestiaire.yacht",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "presse",
+      "tags": [
+        "presse"
+      ],
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "call",
+        "flag",
+        [
+          [
+            "lit",
+            "genou"
+          ]
+        ]
+      ],
+      "text": "Ton community manager : « Ta photo sur un yacht pendant que l'équipe s'entraîne fait le tour du web. »",
+      "left": {
+        "label": "Supprime",
+        "effects": {
+          "tribunes": 5
+        }
+      },
+      "right": {
+        "label": "J'assume, blessé pas mort",
+        "effects": {
+          "tribunes": -5,
+          "vestiaire": -5
+        }
+      }
+    },
+    {
+      "id": "jp.piege.confort",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "divers",
+      "tags": [
+        "piege"
+      ],
+      "speaker": "clow",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Brian Clow, verre à la main : « Tu joues à ne pas perdre, gamin. Une jauge pleine tue autant qu'une vide. »",
+      "left": {
+        "label": "Je hausse le ton",
+        "effects": {
+          "vestiaire": 5,
+          "tribunes": -5
+        }
+      },
+      "right": {
+        "label": "Je reste discret",
+        "effects": {
+          "tribunes": -5
+        }
+      }
+    }
+  ],
+  "endings": [
+    {
+      "id": "en_bus",
+      "gauge": "vestiaire",
+      "side": "vide",
+      "rarity": "rare",
+      "title": "Le bus",
+      "epitaph": "Le vestiaire a refusé de descendre du bus. Tu es descendu seul, ta valise à la main. Il pleuvait, évidemment."
+    },
+    {
+      "id": "en_copain",
+      "gauge": "vestiaire",
+      "side": "plein",
+      "title": "Le copain",
+      "epitaph": "Tu étais leur meilleur ami. Les meilleurs amis ne se font pas obéir. Le président l'a compris avant toi."
+    },
+    {
+      "id": "en_banderole",
+      "gauge": "tribunes",
+      "side": "vide",
+      "title": "La banderole",
+      "epitaph": "La banderole faisait vingt mètres. Ton nom en prenait douze. Le mot DEHORS, le reste."
+    },
+    {
+      "id": "en_otage",
+      "gauge": "tribunes",
+      "side": "plein",
+      "title": "L'otage du kop",
+      "epitaph": "Les ultras t'aimaient tant qu'ils composaient ton équipe. Le président a préféré les laisser composer ton successeur."
+    },
+    {
+      "id": "en_sms",
+      "gauge": "direction",
+      "side": "vide",
+      "rarity": "commune",
+      "title": "Le SMS de 23h47",
+      "epitaph": "Viré par SMS entre la conférence de presse et le parking. Le message contenait une faute d'orthographe. Tu l'as corrigée."
+    },
+    {
+      "id": "en_placard",
+      "gauge": "direction",
+      "side": "plein",
+      "title": "Promotion-placard",
+      "epitaph": "Nommé Directeur du Développement International. Ton bureau n'a pas de fenêtre. Ni de téléphone. Ni de développement."
+    },
+    {
+      "id": "en_decoupe",
+      "gauge": "caisse",
+      "side": "vide",
+      "title": "Vendu à la découpe",
+      "epitaph": "Plus de budget. L'équipe a été vendue joueur par joueur, et toi avec les meubles."
+    },
+    {
+      "id": "en_coupable",
+      "gauge": "caisse",
+      "side": "plein",
+      "title": "Le coupable désigné",
+      "epitaph": "Tu as réclamé et obtenu des moyens fous. La Commission a bloqué le club, et le président a trouvé le nom du responsable sur ta porte."
+    },
+    {
+      "id": "jp_mouton",
+      "gauge": "vestiaire",
+      "side": "vide",
+      "title": "Le mouton noir",
+      "epitaph": "On ne t'a plus jamais fait de passe. Même à l'entraînement. Même au toro."
+    },
+    {
+      "id": "jp_porteparole",
+      "gauge": "vestiaire",
+      "side": "plein",
+      "title": "Le porte-parole",
+      "epitaph": "Trop aimé pour être gardé. Vendu à la trêve avec une lettre du vestiaire et une aile de poulet."
+    },
+    {
+      "id": "jp_siffle",
+      "gauge": "tribunes",
+      "side": "vide",
+      "title": "Sifflé",
+      "epitaph": "Sifflé à l'échauffement, à la mi-temps et à la sortie du parking. Le parking, ça n'était jamais arrivé."
+    },
+    {
+      "id": "jp_sandwich",
+      "gauge": "tribunes",
+      "side": "plein",
+      "title": "L'homme-sandwich",
+      "epitaph": "Tu as signé plus de contrats publicitaires que de passes décisives. Ton agent a pleuré de joie. Le coach a pleuré tout court."
+    },
+    {
+      "id": "jp_place14b",
+      "gauge": "direction",
+      "side": "vide",
+      "title": "La place 14B",
+      "epitaph": "Tu as fini par connaître par cœur les tribunes du stade. Depuis la place 14B."
+    },
+    {
+      "id": "jp_fils",
+      "gauge": "direction",
+      "side": "plein",
+      "title": "Le fils spirituel",
+      "epitaph": "Le coach t'aimait tant qu'il t'a emmené dans son nouveau club. En deuxième division lointaine."
+    },
+    {
+      "id": "jp_sansclub",
+      "gauge": "caisse",
+      "side": "vide",
+      "title": "Sans club",
+      "epitaph": "Ton agent a filé, le syndicat des joueurs t'a proposé son stage de chômeurs. Tu as fini en Régional, payé en merguez."
+    },
+    {
+      "id": "jp_panama",
+      "gauge": "caisse",
+      "side": "plein",
+      "title": "La carte Panama",
+      "epitaph": "Le contrat d'image aux îles lointaines était une idée de ton cousin. Le fisc a eu une idée aussi."
+    },
+    {
+      "id": "grand_deballage",
+      "rarity": "rare",
+      "title": "Le Grand Déballage",
+      "epitaph": "Le dossier faisait douze pages. Chaque page, une promesse. Chaque promesse, une date. Tu te souvenais de toutes."
+    },
+    {
+      "id": "jubile",
+      "golden": true,
+      "rarity": "rare",
+      "title": "Le Jubilé",
+      "epitaph": "Stade plein, tour d'honneur. Tu as demandé où était le vestiaire. Par habitude."
+    },
+    {
+      "id": "generique",
+      "title": "Fin de carrière",
+      "epitaph": "Le foot t'a recraché, comme il le fait toujours. On recommence ?"
+    }
+  ],
+  "feats": [
+    {
+      "id": "coup_du_chapeau",
+      "title": "Le Coup du chapeau",
+      "desc": "Survivre trois saisons complètes dans le même rôle."
+    },
+    {
+      "id": "le_passeur",
+      "title": "Le Passeur",
+      "desc": "Occuper deux rôles dans une seule carrière."
+    },
+    {
+      "id": "collectionneur",
+      "title": "Collectionneur",
+      "desc": "Découvrir 8 fins différentes."
+    },
+    {
+      "id": "homme_44_jours",
+      "title": "L'Homme des 44 jours",
+      "desc": "Être viré en moins de douze cartes après une prise de fonction."
+    },
+    {
+      "id": "invincibles",
+      "title": "Les Invincibles",
+      "desc": "Une saison de championnat sans défaite."
+    },
+    {
+      "id": "la_grande_porte",
+      "title": "La grande porte",
+      "desc": "Partir volontairement, tout gagné, avant qu'on te le demande."
+    }
+  ],
+  "calendar": {
+    "entraineur": [
+      {
+        "phase": "presaison",
+        "beats": [
+          "objective",
+          "card",
+          "card",
+          "card"
+        ]
+      },
+      {
+        "phase": "aller",
+        "beats": [
+          "card",
+          "card",
+          "match",
+          "card",
+          "card",
+          "match",
+          "card",
+          "card",
+          "match"
+        ]
+      },
+      {
+        "phase": "hiver",
+        "beats": [
+          "card",
+          "card",
+          "card"
+        ]
+      },
+      {
+        "phase": "retour",
+        "beats": [
+          "card",
+          "card",
+          "match",
+          "cup",
+          "card",
+          "card",
+          "match",
+          "card",
+          "match"
+        ]
+      },
+      {
+        "phase": "sprint",
+        "beats": [
+          "gm_annonce",
+          "gm_te",
+          "gm_te",
+          "gm_te",
+          "aftermatch"
+        ]
+      },
+      {
+        "phase": "bilan",
+        "beats": [
+          "bilan_une",
+          "bilan_verdict",
+          "bilan_contrat",
+          "bilan_carrefour"
+        ]
+      }
+    ],
+    "joueur": [
+      {
+        "phase": "presaison",
+        "beats": [
+          "objective",
+          "card",
+          "card",
+          "card"
+        ]
+      },
+      {
+        "phase": "aller",
+        "beats": [
+          "card",
+          "card",
+          "match",
+          "card",
+          "card",
+          "match",
+          "card",
+          "card",
+          "match"
+        ]
+      },
+      {
+        "phase": "hiver",
+        "beats": [
+          "card",
+          "card",
+          "card"
+        ]
+      },
+      {
+        "phase": "retour",
+        "beats": [
+          "card",
+          "card",
+          "match",
+          "cup",
+          "card",
+          "card",
+          "match",
+          "card",
+          "match"
+        ]
+      },
+      {
+        "phase": "sprint",
+        "beats": [
+          "gm_annonce",
+          "gm_te",
+          "gm_te",
+          "gm_te",
+          "aftermatch"
+        ]
+      },
+      {
+        "phase": "bilan",
+        "beats": [
+          "bilan_une",
+          "bilan_verdict",
+          "bilan_contrat",
+          "bilan_carrefour"
+        ]
+      }
+    ]
+  },
+  "names": {
+    "prenoms_m": [
+      "Malik",
+      "Enzo",
+      "Kylian",
+      "Théo",
+      "Rayan",
+      "Lucas",
+      "Nolan",
+      "Amine",
+      "Yanis",
+      "Ethan",
+      "Noah",
+      "Gabin",
+      "Ilyes",
+      "Sacha",
+      "Adam",
+      "Léo",
+      "Marius",
+      "Sofiane",
+      "Wael",
+      "Djibril",
+      "Bilal",
+      "Mattéo",
+      "Aaron",
+      "Naël",
+      "Ismaël"
+    ],
+    "prenoms_f": [
+      "Camille",
+      "Léa",
+      "Manon",
+      "Inès",
+      "Sarah",
+      "Jade",
+      "Louna",
+      "Lina",
+      "Nour",
+      "Ambre",
+      "Zoé",
+      "Maëlys",
+      "Romane",
+      "Yasmine",
+      "Clara",
+      "Anaïs",
+      "Elsa",
+      "Norah"
+    ],
+    "noms": [
+      "Ferrand",
+      "Bonnet",
+      "Rocher",
+      "Vasseur",
+      "Da Silva",
+      "Lemoine",
+      "Perrin",
+      "Guisard",
+      "Nkolo",
+      "Traoré",
+      "Vaquez",
+      "Marchetti",
+      "Delaunay",
+      "Bréhaut",
+      "Fauvel",
+      "Cissé",
+      "Ricci",
+      "Ollier",
+      "Bassong",
+      "Meunier",
+      "Sabbah",
+      "Lourenço",
+      "Vidal",
+      "Kanté",
+      "Bianchi"
+    ],
+    "club_prefixes": [
+      "US",
+      "AS",
+      "FC",
+      "Olympique",
+      "Racing",
+      "Stade",
+      "Sporting",
+      "Union",
+      "Étoile"
+    ],
+    "villes": [
+      "Valmont",
+      "Saint-Étoile",
+      "Lyonnet",
+      "Valdorne",
+      "Portclair",
+      "Montbéliac",
+      "Bretagne",
+      "Valentienne",
+      "Roquemont",
+      "Villefranche",
+      "Beaulieu",
+      "Castérac",
+      "Fontaine",
+      "Aubérive",
+      "Néville"
+    ]
+  },
+  "divisions": {
+    "d1": {
+      "titre": 82,
+      "europe": 70,
+      "descente": 38
+    },
+    "d2": {
+      "montee": 72,
+      "barrage": 64,
+      "descente": 36
+    }
+  },
+  "hash": "6b13a0ec"
+}

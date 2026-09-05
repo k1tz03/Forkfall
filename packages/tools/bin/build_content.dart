@@ -242,7 +242,17 @@ void main() {
   }
 
   final outDir = Directory('$contentDir/build')..createSync(recursive: true);
-  File('${outDir.path}/content.json').writeAsStringSync(const JsonEncoder.withIndent('  ').convert(bundle));
+  final pretty = const JsonEncoder.withIndent('  ').convert(bundle);
+  File('${outDir.path}/content.json').writeAsStringSync(pretty);
+
+  // Also drop a copy into the Flutter app's assets so `flutter run` works
+  // without an extra copy step (the app bundles content/build via this file).
+  final appAssets = Directory('${Directory(contentDir).parent.path}/app/assets');
+  if (appAssets.parent.existsSync()) {
+    appAssets.createSync(recursive: true);
+    File('${appAssets.path}/content.json').writeAsStringSync(pretty);
+  }
+
   stdout.writeln('OK: ${cards.length} cartes, ${roles.length} rôles, ${endings.length} fins, '
       '${feats.length} destins → content/build/content.json (hash $hash)');
 }
