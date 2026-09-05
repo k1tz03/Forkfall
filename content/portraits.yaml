@@ -1,0 +1,299 @@
+# Les portraits « paper doll » : une fiche par personnage, lue par le générateur
+# de bustes (packages/tools/web/portraits.js côté aperçu, app/lib/ui/widgets/
+# portrait.dart côté application ; les deux dessinent exactement la même chose).
+#
+# Direction (fiche de design §4.1) : vignette autocollante d'album de foot des
+# années 1990, buste 200 × 240 en aplats, contour encre 2 px, au plus deux ombres
+# plates, lisible à 60 px comme à 220 px. Sympathique, jamais une caricature
+# ethnique, jamais la ressemblance d'une personne réelle. Le fond n'est pas
+# dessiné : la vignette pose déjà le dégradé du camp derrière le buste.
+#
+# Les trois expressions (sourire / neutre / noir) ne touchent qu'aux yeux,
+# aux sourcils et à la bouche ; tout le reste de la fiche est immobile.
+#
+# Valeurs autorisées (validées par build_content ; les couleurs sont des noms
+# de palette, jamais des hexa, pour que les deux générateurs restent alignés) :
+#   teint       : porcelaine | clair | dore | olive | brun | ebene
+#   corpulence  : fin | moyen | large
+#   age         : jeune | mur | age            (mûr = plis du nez ; âgé = front ridé, pattes d'oie)
+#   coiffure    : chauve | degarni | court | brosse | meche | mulet | boucle | carre
+#                 | chignon | queue | long | casquette
+#   cheveux     : noir | brun | chatain | roux | blond | gris | blanc
+#   pilosite    : rase | moustache | barbe | bouc
+#   lunettes    : aucune | rondes | carrees | aviateur
+#   tenue       : costume | tailleur | chemise | survetement | maillot | gardien
+#                 | blouse | pull | doudoune | veste
+#   couleur     : couleur principale de la tenue
+#   couleur2    : couleur secondaire (rayures du maillot, haut sous la veste,
+#                 pull sous la blouse, cravate du costume) — facultatif
+#   coiffe      : couleur de la casquette (coiffure casquette) — facultatif
+#   coiffure_f  : coiffure de remplacement quand le personnage incarné est une
+#                 femme (fiches coach / joueur seulement) — facultatif
+#   accessoire  : aucun | echarpe | chewing_gum | stylo | carnet | brassard | sifflet
+#                 | micro | stethoscope | badge | journal | telephone | montre
+#   couleur_accessoire : couleur de l'écharpe / du brassard — facultatif
+#   Palette des couleurs de tenue : bordeaux | marine | anthracite | noir | pelouse
+#                 | creme | blanc | gris | bleu | ciel | orange | rouge | camel | violet
+#                 | beige | bouteille | jaune | rose | prune
+#
+# Les ids sont ceux de characters.yaml ; « coach » et « joueur » sont les deux
+# visages du joueur incarné (entraîneur en survêtement, joueur pro en maillot).
+# Le genre n'est pas dans la fiche : build_content le recopie depuis
+# characters.yaml dans la table compilée (clé « genre ») ; pour coach / joueur,
+# c'est l'appelant qui le fournit (genre choisi à la création de l'album).
+
+portraits:
+
+  # ── Direction ─────────────────────────────────────────────────────────────
+
+  aulard:                         # Jean-Marie Aulard, président. « J'ai pas le temps, j'ai un empire. »
+    teint: clair
+    corpulence: large
+    age: mur
+    coiffure: degarni             # le front a gagné du terrain, les tempes tiennent
+    cheveux: gris
+    pilosite: rase
+    lunettes: carrees
+    tenue: costume
+    couleur: bordeaux             # le costume du président, couleur du camp direction
+    couleur2: jaune               # cravate à pois du dimanche, sans les pois
+    accessoire: telephone         # le téléphone à antenne de 1990, toujours en ligne avec quelqu'un
+
+  fardelli:                       # Rocco Fardelli, agent de joueurs. « Mon ami, on parle d'argent ou d'amitié ? »
+    teint: dore
+    corpulence: moyen
+    age: mur
+    coiffure: meche               # mèche gominée sur le côté
+    cheveux: noir
+    pilosite: rase
+    lunettes: aucune
+    tenue: costume
+    couleur: anthracite           # costume brillant, chemise ouverte sans cravate ? Non : cravate fine, rose
+    couleur2: rose
+    accessoire: telephone         # deux téléphones dans la vraie vie, un seul tient dans la vignette
+
+  meneche:                        # Pierre Ménèche, journaliste. « Juste une question, hors micro. »
+    teint: clair
+    corpulence: fin
+    age: mur
+    coiffure: court
+    cheveux: chatain
+    pilosite: moustache
+    lunettes: aviateur            # lunettes teintées de reporter de bord de touche
+    tenue: veste
+    couleur: camel                # veste en velours côtelé
+    couleur2: creme
+    accessoire: micro             # le micro tendu, bonnette de mousse
+
+  nassir:                         # Cheikh Nassir, fonds Qatalyst. « Ce n'est pas un club, c'est un actif. »
+    teint: olive
+    corpulence: moyen
+    age: mur
+    coiffure: court
+    cheveux: noir
+    pilosite: bouc                # bouc taillé au millimètre
+    lunettes: aucune
+    tenue: costume
+    couleur: creme                # costume clair, impeccable
+    couleur2: marine
+    accessoire: montre            # la montre en or, seul bijou
+
+  josiane:                        # Madame Josiane, secrétaire depuis 1987. « J'en ai vu passer, vous savez. »
+    teint: porcelaine
+    corpulence: moyen
+    age: age
+    coiffure: chignon
+    cheveux: gris
+    pilosite: rase
+    lunettes: rondes              # lunettes rondes sur le bout du nez, chaîne en option
+    tenue: pull
+    couleur: violet               # petit pull en laine, col rond
+    accessoire: stylo             # le stylo à quatre couleurs du secrétariat
+
+  lea:                            # Léa, presse. « Vous confirmez ? »
+    teint: clair
+    corpulence: fin
+    age: jeune
+    coiffure: carre               # carré net, années 90
+    cheveux: chatain
+    pilosite: rase
+    lunettes: aucune
+    tenue: chemise
+    couleur: blanc                # chemise blanche de jeune reporter
+    accessoire: micro
+
+  # ── Terrain ───────────────────────────────────────────────────────────────
+
+  gege:                           # Gégé, capo de la tribune nord. « La tribune n'oublie rien. »
+    teint: clair
+    corpulence: large
+    age: mur
+    coiffure: casquette           # casquette vissée, cheveux courts dessous
+    coiffe: pelouse
+    cheveux: brun
+    pilosite: barbe               # barbe de trois jours devenue de trois ans
+    lunettes: aucune
+    tenue: doudoune
+    couleur: noir                 # doudoune noire de tribune, hiver comme été
+    accessoire: echarpe           # l'écharpe rayée du club, jamais lavée
+    couleur_accessoire: pelouse
+
+  vukic:                          # Zoran Vukić, entraîneur adjoint. « Je te le dis parce que personne ne te le dira. »
+    teint: clair
+    corpulence: moyen
+    age: mur
+    coiffure: court
+    cheveux: brun
+    pilosite: moustache           # la moustache de l'adjoint, immuable
+    lunettes: aucune
+    tenue: survetement
+    couleur: marine               # survêtement marine, pas celui du coach
+    accessoire: sifflet
+
+  brehaut:                        # Titi Bréhaut, capitaine. « Le groupe vit bien. »
+    teint: clair
+    corpulence: moyen
+    age: mur
+    coiffure: mulet               # le mulet du capitaine, coupe de 1990 par excellence
+    cheveux: blond
+    pilosite: rase
+    lunettes: aucune
+    tenue: maillot
+    couleur: blanc
+    couleur2: pelouse             # rayures du club
+    accessoire: brassard          # le brassard de capitaine
+    couleur_accessoire: jaune
+
+  sabatier:                       # Doc Sabatier, médecin du club. « Ça reste entre la table et moi. »
+    teint: clair
+    corpulence: moyen
+    age: mur
+    coiffure: degarni
+    cheveux: chatain
+    pilosite: barbe               # barbe courte, bien tenue
+    lunettes: rondes
+    tenue: blouse
+    couleur: blanc                # blouse blanche sur pull
+    couleur2: bleu
+    accessoire: stethoscope
+
+  camille:                        # Camille, à la maison. « Tu rentres à quelle heure ? »
+    teint: clair
+    corpulence: moyen
+    age: mur
+    coiffure: queue               # queue de cheval, fin de journée
+    cheveux: brun
+    pilosite: rase
+    lunettes: aucune
+    tenue: pull
+    couleur: orange               # pull de maison, chaleureux
+    accessoire: aucun
+
+  clow:                           # Brian Clow, le mentor. « … mais j'étais dans le top un. »
+    teint: clair
+    corpulence: moyen
+    age: age
+    coiffure: court
+    cheveux: blanc                # cheveux blancs, front dégagé de vieil entraîneur
+    pilosite: rase
+    lunettes: aucune
+    tenue: doudoune
+    couleur: pelouse              # la doudoune verte du banc, hiver 1990
+    accessoire: chewing_gum       # la boule de chewing-gum du bord de touche
+
+  mbako:                          # Lian Mbako, prodige, 16 ans. « Je veux jouer. Maintenant. »
+    teint: ebene
+    corpulence: fin
+    age: jeune
+    coiffure: brosse              # coupe droite, 1990
+    cheveux: noir
+    pilosite: rase
+    lunettes: aucune
+    tenue: maillot
+    couleur: blanc
+    couleur2: pelouse
+    accessoire: aucun
+
+  vecchio:                        # Gigi Vecchio, gardien, 41 ans. « J'en ai vu d'autres. »
+    teint: olive
+    corpulence: large
+    age: mur
+    coiffure: court
+    cheveux: gris                 # tempes grises, cheveux poivre et sel
+    pilosite: moustache
+    lunettes: aucune
+    tenue: gardien                # maillot manches longues et gants
+    couleur: gris
+    couleur2: jaune               # gants
+    accessoire: aucun
+
+  mere_mbako:                     # La mère de Mbako, mère et agente. « Mon fils n'a besoin de personne. »
+    teint: ebene
+    corpulence: moyen
+    age: mur
+    coiffure: chignon             # coiffure élégante, tirée en arrière
+    cheveux: noir
+    pilosite: rase
+    lunettes: aucune
+    tenue: veste
+    couleur: prune                # veste de tailleur sur haut clair
+    couleur2: creme
+    accessoire: carnet            # le carnet de comptes du prodige
+
+  # ── Instances ─────────────────────────────────────────────────────────────
+
+  aubert:                         # Madame Aubert, maire. « Le stade, c'est de l'argent public. »
+    teint: clair
+    corpulence: moyen
+    age: mur
+    coiffure: court               # coupe courte de campagne électorale
+    cheveux: roux
+    pilosite: rase
+    lunettes: aucune
+    tenue: tailleur
+    couleur: marine
+    couleur2: blanc
+    accessoire: echarpe           # écharpe d'élue stylisée (trois bandes), sans emblème
+    couleur_accessoire: bleu
+
+  legruet:                        # Noël Legruet, président de la fédération. « On verra ça après le Congrès. »
+    teint: porcelaine
+    corpulence: moyen
+    age: age
+    coiffure: degarni
+    cheveux: blanc
+    pilosite: rase
+    lunettes: carrees
+    tenue: costume
+    couleur: anthracite           # costume sombre d'instance
+    couleur2: bordeaux
+    accessoire: badge             # le badge du Congrès, toujours accroché
+
+  # ── Toi ───────────────────────────────────────────────────────────────────
+
+  coach:                          # toi, l'entraîneur : survêtement vert pelouse, sifflet
+    teint: clair
+    corpulence: moyen
+    age: mur
+    coiffure: court
+    coiffure_f: queue             # l'entraîneuse : queue de cheval
+    cheveux: brun
+    pilosite: rase
+    lunettes: aucune
+    tenue: survetement
+    couleur: pelouse
+    accessoire: sifflet
+
+  joueur:                         # toi, le joueur pro : maillot du club, jeune
+    teint: dore
+    corpulence: fin
+    age: jeune
+    coiffure: meche
+    coiffure_f: queue             # la joueuse : queue de cheval
+    cheveux: brun
+    pilosite: rase
+    lunettes: aucune
+    tenue: maillot
+    couleur: blanc
+    couleur2: pelouse
+    accessoire: aucun

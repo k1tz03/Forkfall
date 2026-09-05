@@ -3,6 +3,8 @@ import 'dart:convert' show utf8;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:fusible_core/fusible_core.dart';
 
+import '../ui/widgets/portrait.dart';
+
 /// Loads the compiled content bundle shipped as an asset and exposes the
 /// engine. Everything downstream is deterministic and offline.
 class ContentService {
@@ -20,5 +22,7 @@ class ContentService {
     final jsonStr = utf8.decode(data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
     content = loadContentFromJson(jsonStr);
     engine = Engine(content);
+    // Les fiches de portrait (content/portraits.yaml) alimentent le paper doll.
+    Portrait.install(content.portraits);
   }
 }

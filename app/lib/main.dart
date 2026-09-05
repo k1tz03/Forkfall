@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 import 'services/content_service.dart';
 import 'state/game_controller.dart';
@@ -9,6 +10,10 @@ import 'ui/title_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Automatisation / accessibilité : `--dart-define=FUSIBLE_A11Y=true` active
+  // l'arbre sémantique dès le démarrage (le vérificateur pilote l'app par les
+  // libellés des pochettes, des magnets, de la vignette, du Successeur…).
+  if (const bool.fromEnvironment('FUSIBLE_A11Y')) SemanticsBinding.instance.ensureSemantics();
   final content = ContentService();
   await content.load();
   runApp(FusibleApp(controller: GameController(content.engine)));
@@ -23,8 +28,7 @@ class FusibleApp extends StatelessWidget {
     return MaterialApp(
       title: 'FUSIBLE',
       debugShowCheckedModeBanner: false,
-      theme: fusibleTheme(Brightness.light),
-      darkTheme: fusibleTheme(Brightness.dark),
+      theme: fusibleTheme(),
       home: _Root(controller: controller),
     );
   }
@@ -58,11 +62,11 @@ class _RootState extends State<_Root> {
   @override
   Widget build(BuildContext context) {
     if (c.ended) {
-      return EndingScreen(controller: c, onNewRun: c.succeed);
+      return EndingScreen(controller: c, onNewRun: c.succeed, onReplay: c.replay);
     }
     if (c.playing) {
       return GameScreen(controller: c);
     }
-    return TitleScreen(controller: c, onStart: () {});
+    return TitleScreen(controller: c);
   }
 }

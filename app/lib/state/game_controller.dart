@@ -10,6 +10,10 @@ class GameController extends ChangeNotifier {
   GameState? state;
   int _nextSeed = 1;
 
+  /// La carte fatale : la dernière vignette jouée avant la fin (et son n°).
+  Pending? fatalCard;
+  int fatalNumber = 0;
+
   // Meta profile.
   final Set<String> discoveredEndings = {};
   int runsPlayed = 0;
@@ -24,9 +28,14 @@ class GameController extends ChangeNotifier {
   RoleDef get role => engine.content.roles[state!.role]!;
   EndingDef? get ending => state?.endingId == null ? null : engine.content.endings[state!.endingId];
 
+  /// Numéro d'album (1 pour le premier run), pour la plaque du Cimetière.
+  int get albumNumber => runsPlayed;
+
   void newRun(int postulat) {
     _nextSeed = _seedFrom(runsPlayed, postulat);
     state = engine.start(_nextSeed, postulat: postulat);
+    fatalCard = null;
+    fatalNumber = 0;
     runsPlayed++;
     notifyListeners();
   }
@@ -34,16 +43,35 @@ class GameController extends ChangeNotifier {
   /// Start from an explicit Code de Carrière seed (challenge / duel).
   void newRunFromSeed(int seed, int postulat) {
     state = engine.start(seed, postulat: postulat);
+    fatalCard = null;
+    fatalNumber = 0;
     runsPlayed++;
+    notifyListeners();
+  }
+
+  /// Rejouer cette graine à l'identique (même postulat, même monde).
+  void replay() {
+    final s = state;
+    if (s == null) return;
+    newRunFromSeed(s.seed, s.postulat);
+  }
+
+  /// Retour à l'écran titre (l'album fermé), sans toucher au profil.
+  void backToTitle() {
+    state = null;
     notifyListeners();
   }
 
   void choose(bool right) {
     final s = state;
     if (s == null || s.over) return;
+    final before = s.pending;
+    final number = s.turn;
     state = engine.choose(s, right);
-    if (state!.over && state!.endingId != null) {
-      discoveredEndings.add(state!.endingId!);
+    if (state!.over) {
+      fatalCard = before;
+      fatalNumber = number;
+      if (state!.endingId != null) discoveredEndings.add(state!.endingId!);
     }
     notifyListeners();
   }

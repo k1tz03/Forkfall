@@ -1,5 +1,5 @@
 // Web preview entrypoint: compiles the real Dart engine to JS and exposes it to
-// a hand-written HTML placeholder UI (the final design is a separate Fable pass).
+// the « album de vignettes » HTML preview (preview_template.html + assemble.js).
 // Build:  dart compile js -O2 packages/tools/web/preview.dart -o <out>/engine.js
 //
 // The whole GameState lives on the Dart side; JS only sends choices and renders
@@ -44,6 +44,10 @@ String _view() {
             'value': s.gauges[g.id] ?? 50,
           })
       .toList();
+  // The season calendar has one beat per « journée » (34 for both roles);
+  // the current beat therefore doubles as the matchday shown on the status bar.
+  final beats = _content.seasonBeats[s.role] ?? const <Beat>[];
+  final beatIndex = beats.isEmpty ? 0 : s.beat.clamp(0, beats.length - 1);
   final m = <String, dynamic>{
     'over': s.over,
     'role': s.role,
@@ -57,6 +61,21 @@ String _view() {
     'lastAnswer': s.lastAnswer ?? '',
     'stats': s.stats,
     'turn': s.turn,
+    // Album-specific extras: the sticker number, the promise ribbon, the
+    // club on the status line and the protagonist's genre (for the portrait).
+    'cardNumber': s.turn,
+    'promise': s.objectivePromised
+        ? 'Promis à ${s.entities.named['president'] ?? 'Le président'} : ${s.objectiveLabel}'
+        : null,
+    'club': s.entities.named['club'] ?? '',
+    'genre': s.entities.genre,
+    // The protagonist (names.yaml) for the NOM · FONCTION band of « toi » cards.
+    'name': s.entities.protagonist,
+    'journee': beatIndex + 1,
+    'journees': beats.length,
+    'phase': beats.isEmpty ? '' : beats[beatIndex].phase,
+    'division': s.world.division,
+    'promiseTo': s.objectivePromised ? (s.entities.named['president'] ?? 'Le président') : null,
   };
   if (s.over) {
     final e = s.endingId == null ? null : _content.endings[s.endingId];
@@ -68,6 +87,8 @@ String _view() {
       'golden': payload['golden'] == true || (e?.golden ?? false),
       'gauge': payload['gauge'],
       'side': payload['side'],
+      // Run flags (e.g. 'genou') so the ending screen can pick its stamp.
+      'flags': s.flags.toList()..sort(),
     };
   } else {
     final p = s.pending!;

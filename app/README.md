@@ -1,16 +1,36 @@
 # fusible_app
 
-A new Flutter project.
+L'application Flutter de FUSIBLE, dans l'identité « L'album de vignettes
+autocollantes » (`docs/design/album_de_vignettes.md`, maquette validée
+`docs/design/maquette_album.html`).
 
-## Getting Started
+## Lancer et vérifier
 
-This project is a starting point for a Flutter application.
+```sh
+cd app
+flutter analyze
+flutter test                                  # parcours complet titre → fin → successeur
+flutter build web --dart-define=FUSIBLE_A11Y=true   # sémantique activée pour les captures headless
+```
 
-A few resources to get you started if this is your first Flutter project:
+`FUSIBLE_A11Y=true` force l'arbre de sémantique (les captures Playwright
+cliquent les boutons par leur libellé) ; l'app de production n'en a pas besoin.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Cible web : canvaskit
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Le renderer web visé est **canvaskit** (le défaut de Flutter 3.27) ; le renderer
+`html` est déprécié et n'est vérifié que par courtoisie. Deux règles en découlent :
+
+- Aucun `ColorFilter` porteur de sens : les filtres SVG du renderer html
+  travaillent en linearRGB et transmettent mal la 5ᵉ colonne des matrices. La
+  photo N&B de la Une est donc calculée en Dart (`FusibleColors.photoGray`,
+  appliqué par `Vignette(grayscale: true)` et `Portrait(grayscale: true)`),
+  identique sur tous les renderers et en natif.
+- Aucun glyphe hors des trois polices embarquées (Barlow Condensed, Manrope,
+  Fraunces) : sous canvaskit, un caractère manquant déclenche le téléchargement
+  d'une police Noto depuis le CDN Google et tombe en carré sans réseau. Les
+  flèches, étoiles d'adversité (★ / ☆ du moteur) et ∞ sont tracés
+  (`ArrowGlyph`, `StarGlyph`, `cardTextSpan`, `_InfinityPainter`), et chaque
+  famille a les deux autres en tête de sa liste de repli (`FusibleFonts`).
+  Le seul chargement réseau restant est le « Roboto » par défaut du moteur
+  Flutter web, sans effet visible.

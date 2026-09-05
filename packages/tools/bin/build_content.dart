@@ -291,6 +291,9 @@ void main() {
     characters.add(cm);
   }
 
+  // Portraits (paper dolls) : une fiche par personnage + coach / joueur.
+  final portraits = _loadPortraits(characters, characterIds, errors);
+
   // Alarms.
   final alarms = <String, dynamic>{};
   ((_loadYaml('alarms.yaml') as Map?)?['alarms'] as Map?)?.forEach((role, byKey) {
@@ -635,6 +638,7 @@ void main() {
     'postulats': postulats,
     'alarms': alarms,
     'director': director,
+    'portraits': portraits,
   };
   final hash = fnv1a32(json.encode(bundle)).toRadixString(16);
   bundle['hash'] = hash;
@@ -661,6 +665,75 @@ void main() {
 
   final nPool = cards.where((c) => c['pool'] == true).length;
   stdout.writeln('OK: ${cards.length} cartes ($nPool dans le sac), ${arcs.length} arcs, ${postulats.length} postulats, '
-      '${characters.length} personnages, ${roles.length} rôles, ${endings.length} fins, ${feats.length} destins '
+      '${characters.length} personnages (${portraits.length} portraits), ${roles.length} rôles, ${endings.length} fins, ${feats.length} destins '
       '→ content/build/content.json (hash $hash)');
+}
+
+/// Valeurs autorisées des fiches de portraits (content/portraits.yaml) ; les
+/// deux générateurs (portraits.js, portrait.dart) connaissent les mêmes.
+const Map<String, List<String>> _portraitEnums = {
+  'teint': ['porcelaine', 'clair', 'dore', 'olive', 'brun', 'ebene'],
+  'corpulence': ['fin', 'moyen', 'large'],
+  'age': ['jeune', 'mur', 'age'],
+  'coiffure': ['chauve', 'degarni', 'court', 'brosse', 'meche', 'mulet', 'boucle', 'carre', 'chignon', 'queue', 'long', 'casquette'],
+  'coiffure_f': ['chauve', 'degarni', 'court', 'brosse', 'meche', 'mulet', 'boucle', 'carre', 'chignon', 'queue', 'long', 'casquette'],
+  'cheveux': ['noir', 'brun', 'chatain', 'roux', 'blond', 'gris', 'blanc'],
+  'pilosite': ['rase', 'moustache', 'barbe', 'bouc'],
+  'lunettes': ['aucune', 'rondes', 'carrees', 'aviateur'],
+  'tenue': ['costume', 'tailleur', 'chemise', 'survetement', 'maillot', 'gardien', 'blouse', 'pull', 'doudoune', 'veste'],
+  'accessoire': ['aucun', 'echarpe', 'chewing_gum', 'stylo', 'carnet', 'brassard', 'sifflet', 'micro', 'stethoscope', 'badge', 'journal', 'telephone', 'montre'],
+};
+const List<String> _portraitColours = [
+  'bordeaux', 'marine', 'anthracite', 'noir', 'pelouse', 'creme', 'blanc', 'gris', 'bleu', 'ciel', 'orange', 'rouge', 'camel',
+  'violet', 'beige', 'bouteille', 'jaune', 'rose', 'prune',
+];
+const List<String> _portraitColourKeys = ['couleur', 'couleur2', 'coiffe', 'couleur_accessoire'];
+const List<String> _portraitRequired = ['teint', 'corpulence', 'age', 'coiffure', 'cheveux', 'pilosite', 'lunettes', 'tenue', 'couleur', 'accessoire'];
+
+/// Charge content/portraits.yaml → table { id: fiche } pour le bundle. Chaque
+/// personnage de characters.yaml doit avoir une fiche ; chaque fiche doit viser
+/// un personnage connu ou « coach » / « joueur » ; les valeurs d'énumération
+/// sont contrôlées. Le genre de characters.yaml est recopié dans la fiche.
+Map<String, dynamic> _loadPortraits(List<Map<String, dynamic>> characters, Set<String> characterIds, List<String> errors) {
+  final out = <String, dynamic>{};
+  final raw = (_loadYaml('portraits.yaml') as Map?)?['portraits'];
+  if (raw == null) {
+    if (characterIds.isNotEmpty) errors.add('portraits: content/portraits.yaml manquant ou vide');
+    return out;
+  }
+  final genres = {for (final c in characters) c['id'].toString(): c['genre']?.toString()};
+  (raw as Map).forEach((idRaw, fiche) {
+    final id = idRaw.toString();
+    if (!characterIds.contains(id) && id != 'coach' && id != 'joueur') {
+      errors.add('portraits: $id: ni personnage de characters.yaml ni coach / joueur');
+      return;
+    }
+    if (fiche is! Map) {
+      errors.add('portraits: $id: fiche invalide (attendu une table de traits)');
+      return;
+    }
+    final m = <String, dynamic>{};
+    fiche.forEach((k, v) => m[k.toString()] = v is String ? v : v?.toString());
+    for (final key in _portraitRequired) {
+      if (m[key] == null) errors.add('portraits: $id: trait « $key » manquant');
+    }
+    for (final e in _portraitEnums.entries) {
+      final v = m[e.key];
+      if (v != null && !e.value.contains(v)) errors.add('portraits: $id: ${e.key} « $v » inconnu (attendu ${e.value.join(' | ')})');
+    }
+    for (final key in _portraitColourKeys) {
+      final v = m[key];
+      if (v != null && !_portraitColours.contains(v)) errors.add('portraits: $id: $key « $v » hors palette (${_portraitColours.join(' | ')})');
+    }
+    if (m['coiffure_f'] != null && id != 'coach' && id != 'joueur') errors.add('portraits: $id: coiffure_f est réservé à coach / joueur');
+    if (genres[id] != null) m['genre'] = genres[id];
+    out[id] = m;
+  });
+  for (final id in characterIds) {
+    if (!out.containsKey(id)) errors.add('portraits: $id (characters.yaml) n\'a pas de fiche dans portraits.yaml');
+  }
+  for (final id in const ['coach', 'joueur']) {
+    if (!out.containsKey(id)) errors.add('portraits: la fiche « $id » (joueur incarné) est obligatoire');
+  }
+  return out;
 }

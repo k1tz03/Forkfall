@@ -603,6 +603,7 @@ class Content {
   final Map<String, PostulatDef> postulats;
   final Map<String, Map<String, List<AlarmEntry>>> alarms; // role -> 'gauge.side' -> candidates
   final DirectorConfig director;
+  final Map<String, dynamic> portraits; // id -> fiche de portrait (content/portraits.yaml), {} si absente
 
   // Derived indexes.
   final Map<String, List<Card>> _cardsByRole = {};
@@ -628,6 +629,7 @@ class Content {
     this.postulats = const {},
     this.alarms = const {},
     this.director = const DirectorConfig(),
+    this.portraits = const {},
   }) {
     final ids = cards.keys.toList()..sort();
     for (final id in ids) {
@@ -727,6 +729,7 @@ class Content {
       postulats: postulats,
       alarms: alarms,
       director: DirectorConfig.fromJson((j['director'] as Map?)?.cast<String, dynamic>()),
+      portraits: (j['portraits'] as Map?)?.cast<String, dynamic>() ?? const {},
     );
   }
 }
