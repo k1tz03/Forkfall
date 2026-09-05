@@ -123,7 +123,7 @@ class Engine {
         _applyEffects(s, choice, rng);
         s.lastAnswer = right ? (p.payload['answerRight'] as String?) : (p.payload['answerLeft'] as String?);
         if (p.kind == 'objective') {
-          s.objectivePromised = right;
+          s.objectivePromised = !right; // « Je m'engage » est le swipe gauche.
         } else {
           director.afterNarrative(s, p, right);
           director.relationCrossings(s, relBefore, p.payload['phase'] as String? ?? '');
