@@ -722,7 +722,7 @@ class Engine {
         id: 'bilan:une:${s.season}',
         kind: 'bilan_une',
         speaker: null,
-        text: 'LA UNE — Le journal titre sur ta saison au ${s.entities.named['club']}.',
+        text: 'LA UNE — Le journal titre sur ta saison avec ${s.entities.named['club']}.',
         leftLabel: 'Tourner la page',
         rightLabel: 'Tourner la page',
         leftEffects: const EffectSet(),
