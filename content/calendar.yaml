@@ -13,3 +13,19 @@ roles:
     - {phase: retour, beats: [card, card, match, cup, card, card, match, card, match]}
     - {phase: sprint, beats: [gm_annonce, gm_te, gm_te, gm_te, aftermatch]}
     - {phase: bilan, beats: [bilan_une, bilan_verdict, bilan_contrat, bilan_carrefour]}
+
+# Le metteur en scène (voir la spec narrative §1-2). Les 17 emplacements de
+# cartes par saison sont numérotés 1..17 : présaison 1-3, aller 4-9, hiver
+# 10-12, retour 13-17.
+director:
+  nouvelle_slots: { entraineur: [7, 12, 14], joueur: [7, 12, 14] }
+  gap_max: 3                 # cartes sans temps d'histoire tolérées d'affilée
+  soft_steps_max: 8          # étapes servies en bande 2 par saison (les échues ne comptent pas)
+  min_active: 2              # maintainArcs ouvre tant qu'il y a moins d'arcs de premier plan
+  max_active: 3              # forceStory n'ouvre pas au-delà
+  events_max: 1
+  alarms_max: 3
+  phase_mult:
+    mercato: { presaison: 4, hiver: 4, aller: 0.2, retour: 0.2 }
+    moment:  { retour: 2 }
+    famille: { hiver: 2 }

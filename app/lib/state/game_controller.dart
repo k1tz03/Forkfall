@@ -52,7 +52,7 @@ class GameController extends ChangeNotifier {
   /// successor is simply the next drawn postulat in the same world seed line.
   void succeed() {
     final prev = state;
-    final nextPostulat = prev == null ? 0 : (prev.postulat + 1) % kPostulats.length;
+    final nextPostulat = prev == null ? 0 : (prev.postulat + 1) % engine.content.postulatsByIndex.length;
     newRun(nextPostulat);
   }
 

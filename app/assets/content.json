@@ -13,6 +13,7 @@
         "Offensif",
         "Prudent"
       ],
+      "patron": "aulard",
       "gauges": [
         {
           "id": "vestiaire",
@@ -57,6 +58,7 @@
         "Je fonce",
         "Je me ménage"
       ],
+      "patron": "fardelli",
       "gauges": [
         {
           "id": "vestiaire",
@@ -123,6 +125,922 @@
   ],
   "cards": [
     {
+      "id": "en.alarme.vestiaire_bas_vukic",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.vestiaire"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Vukić, à voix basse : « Je te le dis parce que personne ne te le dira : ils ne veulent plus descendre du bus. Le chauffeur non plus. »",
+      "left": {
+        "label": "Je monte leur parler",
+        "effects": {
+          "vestiaire": 18,
+          "direction": -5
+        },
+        "answer": "Vingt minutes dans le bus. Le chauffeur pleure, les autres descendent."
+      },
+      "right": {
+        "label": "Qu'ils restent dedans",
+        "effects": {
+          "vestiaire": -5,
+          "tribunes": 5,
+          "set": [
+            "bus_menace"
+          ]
+        },
+        "answer": "Le bus repart sans jouer. Le stade siffle le vide."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.vestiaire_bas_vecchio",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire"
+      ],
+      "speaker": "vecchio",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.vestiaire"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Vecchio, gants sous le bras : « Ils ne veulent plus descendre du bus. J'en ai vu d'autres, coach. Pas celle-là. Je descends le premier, si tu montes leur parler. »",
+      "left": {
+        "label": "Je monte",
+        "effects": {
+          "vestiaire": 18,
+          "direction": -5,
+          "relation": {
+            "vecchio": 1
+          }
+        },
+        "answer": "Gigi descend le premier. Les autres suivent, un par un."
+      },
+      "right": {
+        "label": "Qu'ils restent dedans",
+        "effects": {
+          "vestiaire": -5,
+          "tribunes": 5,
+          "set": [
+            "bus_menace"
+          ]
+        },
+        "answer": "Gigi descend seul. Il attend sur le parking."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.vestiaire_haut_brehaut",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.vestiaire"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Bréhaut, ravi : « Le groupe vit bien. Trop bien : ils t'appellent par ton prénom devant le président, et le président a noté le prénom. »",
+      "left": {
+        "label": "Je remets de la distance",
+        "effects": {
+          "vestiaire": -10,
+          "direction": 5
+        },
+        "answer": "Retour au vouvoiement. Quelqu'un rit, puis plus personne."
+      },
+      "right": {
+        "label": "On est une famille",
+        "effects": {
+          "vestiaire": 5,
+          "direction": -10
+        },
+        "answer": "Le président apprend qu'il n'est pas de la famille."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.tribunes_bas_gege",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Gégé, une aiguille à la main : « La banderole est cousue. Vingt mètres. Il manque juste ton nom, et j'ai un stylo. La tribune n'oublie rien. »",
+      "left": {
+        "label": "Je viens m'expliquer au local",
+        "effects": {
+          "tribunes": 18,
+          "direction": -5,
+          "relation": {
+            "gege": 1
+          }
+        },
+        "answer": "Deux heures au local. La banderole reste pliée. Pour l'instant."
+      },
+      "right": {
+        "label": "Le terrain répondra",
+        "effects": {
+          "tribunes": -5,
+          "force": 2
+        },
+        "answer": "Il range l'aiguille. Il garde le stylo."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.tribunes_haut_gege",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Gégé, radieux : « On t'aime tellement qu'on a fait la compo. Elle est sur la bâche, en face de ton banc. »",
+      "left": {
+        "label": "Le onze, c'est moi",
+        "effects": {
+          "tribunes": -10,
+          "vestiaire": 5
+        },
+        "answer": "La bâche reste. Le virage note deux noms qui n'y sont pas."
+      },
+      "right": {
+        "label": "Écoutons le peuple",
+        "effects": {
+          "tribunes": 10,
+          "vestiaire": -10,
+          "set": [
+            "otage_kop"
+          ]
+        },
+        "answer": "Le vestiaire lit sa compo sur une bâche. Avant toi."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.tribunes_haut_vukic",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Vukić, gêné : « Je te le dis parce que personne ne te le dira : le virage a fait la compo. Elle est sur la bâche, en face de ton banc. »",
+      "left": {
+        "label": "Le onze, c'est moi",
+        "effects": {
+          "tribunes": -10,
+          "vestiaire": 5
+        },
+        "answer": "La bâche reste. Le virage note deux noms qui n'y sont pas."
+      },
+      "right": {
+        "label": "Écoutons le peuple",
+        "effects": {
+          "tribunes": 10,
+          "vestiaire": -10,
+          "set": [
+            "otage_kop"
+          ]
+        },
+        "answer": "Le vestiaire lit sa compo sur une bâche. Avant toi."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.direction_bas_josiane",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Madame Josiane, porte fermée : « Le président ne vous salue plus. Il a demandé le numéro de fax de votre domicile, et il ne m'a pas dit pourquoi. J'en ai vu passer, vous savez. »",
+      "left": {
+        "label": "Je force sa porte ce soir",
+        "effects": {
+          "direction": 18,
+          "vestiaire": -5
+        },
+        "answer": "Une heure de bureau. Il ne signe rien, mais il te ressert un café."
+      },
+      "right": {
+        "label": "Qu'il faxe",
+        "effects": {
+          "direction": -5,
+          "tribunes": 5,
+          "parole": -1
+        },
+        "answer": "Le fax arrive. Trois lignes. La quatrième est la signature."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.direction_haut_aulard",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "aulard",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Aulard, bras ouverts : « Je t'adore. Tellement que je crée pour toi un poste de Directeur du Développement International. Le bureau est sans fenêtre, comme l'international. »",
+      "left": {
+        "label": "J'accepte le titre",
+        "effects": {
+          "direction": -10,
+          "caisse": 5
+        },
+        "answer": "Le bureau existe. La fenêtre non. Le vestiaire non plus."
+      },
+      "right": {
+        "label": "Je reste sur le banc",
+        "effects": {
+          "direction": -18,
+          "vestiaire": 10
+        },
+        "answer": "Il range la plaque. Il la garde dans un tiroir, à ton nom."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.caisse_bas_josiane",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "caisse"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.caisse"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Madame Josiane, un relevé à la main : « Le banquier a appelé. Deux fois. La deuxième, il a demandé si vous étiez cher à déménager. »",
+      "left": {
+        "label": "On vend un joueur",
+        "effects": {
+          "caisse": 18,
+          "vestiaire": -10,
+          "force": -3
+        },
+        "answer": "Le vestiaire compte les casiers vides. Il en manque un."
+      },
+      "right": {
+        "label": "On serre les dents jusqu'en juin",
+        "effects": {
+          "caisse": -5,
+          "direction": 5,
+          "set": [
+            "salaires_retard"
+          ]
+        },
+        "answer": "Les salaires partent le 12 au lieu du 1er. Personne ne dit rien. Encore."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "en.alarme.caisse_haut_meneche",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "presse",
+      "tags": [
+        "presse",
+        "caisse"
+      ],
+      "speaker": "meneche",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.caisse"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Ménèche, carnet ouvert : « Juste une question, hors micro : d'où vient l'argent ? Je demande pour un ami. Il travaille à la Commission de Contrôle des Comptes. »",
+      "left": {
+        "label": "Un mécène",
+        "effects": {
+          "caisse": -10,
+          "direction": 5
+        },
+        "answer": "Il note « mécène ». Il souligne deux fois."
+      },
+      "right": {
+        "label": "Ça ne vous regarde pas",
+        "effects": {
+          "caisse": 5,
+          "tribunes": -5,
+          "relation": {
+            "meneche": -1
+          }
+        },
+        "answer": "Il note le silence. Il note toujours."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.vestiaire_bas_brehaut",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.vestiaire"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Bréhaut, sans te regarder : « Plus personne ne te fait la passe. Même au toro. Le groupe vit bien, sans toi. »",
+      "left": {
+        "label": "Je paie ma tournée",
+        "effects": {
+          "vestiaire": 18,
+          "caisse": -5
+        },
+        "answer": "Trois tournées. Au toro, tu touches enfin le ballon."
+      },
+      "right": {
+        "label": "Je joue pour moi",
+        "effects": {
+          "vestiaire": -5,
+          "tribunes": 5
+        },
+        "answer": "Tu marques seul. Personne ne vient te féliciter."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.vestiaire_haut_brehaut",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.vestiaire"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Bréhaut, brassard à la main : « Ils veulent te donner le brassard. Le capitaine, c'est moi, et je note. »",
+      "left": {
+        "label": "Le brassard, c'est toi",
+        "effects": {
+          "vestiaire": -10,
+          "direction": 5,
+          "relation": {
+            "brehaut": 1
+          }
+        },
+        "answer": "Il remet le brassard. Il te serre la main, un peu trop fort."
+      },
+      "right": {
+        "label": "Je le prends",
+        "effects": {
+          "vestiaire": 5,
+          "direction": -10,
+          "relation": {
+            "brehaut": -2
+          },
+          "set": [
+            "capitaine"
+          ]
+        },
+        "answer": "Le vestiaire applaudit. Bréhaut regarde ailleurs."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.tribunes_bas_gege",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Gégé, à l'échauffement : « On te siffle à l'échauffement. On s'entraîne pour le parking. »",
+      "left": {
+        "label": "Je viens au local",
+        "effects": {
+          "tribunes": 18,
+          "vestiaire": -5
+        },
+        "answer": "Deux bières et une chanson. À ton nom, cette fois."
+      },
+      "right": {
+        "label": "Ils sifflent, je marque",
+        "effects": {
+          "tribunes": -5,
+          "force": 2
+        },
+        "answer": "Tu marques. Le virage siffle plus fort."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.tribunes_haut_lea",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "presse",
+      "tags": [
+        "presse",
+        "tribunes"
+      ],
+      "speaker": "lea",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.tribunes"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Léa, micro tendu : « Tu as plus de contrats pub que de passes. Ton agent pleure de joie, le coach pleure tout court. Vous confirmez ? »",
+      "left": {
+        "label": "J'annule deux tournages",
+        "effects": {
+          "tribunes": -10,
+          "vestiaire": 5,
+          "caisse": -5
+        },
+        "answer": "Le coach arrête de pleurer. Ton agent commence."
+      },
+      "right": {
+        "label": "Le foot, c'est un métier de pub",
+        "effects": {
+          "tribunes": 5,
+          "direction": -10,
+          "caisse": 5
+        },
+        "answer": "Titre du lendemain : « L'homme-sandwich ». Ton agent l'encadre."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.direction_bas_vukic",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Vukić, l'adjoint, en passant : « Je te le dis parce que personne ne te le dira : le coach a une place pour toi. La 14B. »",
+      "left": {
+        "label": "Je frappe à sa porte",
+        "effects": {
+          "direction": 18,
+          "vestiaire": -5
+        },
+        "answer": "Vingt minutes de bureau. Tu ressors titulaire, et détesté."
+      },
+      "right": {
+        "label": "Qu'il me mette 14B",
+        "effects": {
+          "direction": -5,
+          "tribunes": 5
+        },
+        "answer": "La 14B a une vue. Sur le banc."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.direction_haut_vukic",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.direction"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Vukić, l'adjoint : « Le coach t'aime tant qu'il t'emmène partout. Même en deuxième division lointaine. »",
+      "left": {
+        "label": "Je reste ici",
+        "effects": {
+          "direction": -10,
+          "tribunes": 5
+        },
+        "answer": "Le coach part seul. Il t'envoie une carte postale. Sans timbre."
+      },
+      "right": {
+        "label": "Je le suis",
+        "effects": {
+          "direction": -18,
+          "caisse": 10,
+          "vestiaire": -5
+        },
+        "answer": "Deuxième division lointaine. Le coach t'aime toujours. Personne d'autre."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.caisse_bas_fardelli",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "mercato",
+      "tags": [
+        "agents",
+        "caisse"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<",
+        [
+          "path",
+          "gauges.caisse"
+        ],
+        [
+          "lit",
+          25
+        ]
+      ],
+      "text": "Fardelli, sans cigare : « Mon ami, on parle d'argent ou d'amitié ? Là, on ne parle plus d'argent. »",
+      "left": {
+        "label": "Un contrat pub, vite",
+        "effects": {
+          "caisse": 18,
+          "tribunes": -5
+        },
+        "answer": "Une boisson énergisante. Tu ne l'as jamais goûtée."
+      },
+      "right": {
+        "label": "Je vends la voiture",
+        "effects": {
+          "caisse": 5,
+          "vestiaire": -5
+        },
+        "answer": "Tu arrives à l'entraînement en bus. Le groupe filme."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
+      "id": "jp.alarme.caisse_haut_fardelli",
+      "roles": [
+        "joueur"
+      ],
+      "arc": "mercato",
+      "tags": [
+        "agents",
+        "caisse",
+        "scandale"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 10,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">",
+        [
+          "path",
+          "gauges.caisse"
+        ],
+        [
+          "lit",
+          75
+        ]
+      ],
+      "text": "Fardelli, tout sourire : « Ton cousin a une idée pour ton contrat d'image. Le fisc en a une aussi. »",
+      "left": {
+        "label": "Tout déclaré",
+        "effects": {
+          "caisse": -10,
+          "direction": 5
+        },
+        "answer": "Le cousin est vexé. Le fisc, non."
+      },
+      "right": {
+        "label": "Le cousin gère",
+        "effects": {
+          "caisse": 5,
+          "relation": {
+            "fardelli": 1
+          },
+          "set": [
+            "offshore"
+          ]
+        },
+        "answer": "Le cousin ouvre une société. Aux îles. Tu ne sais pas lesquelles."
+      },
+      "tone": "strategique",
+      "kind": "alarme",
+      "pool": false
+    },
+    {
       "id": "co.nouvelle.fonds_voisins",
       "roles": [
         "entraineur",
@@ -151,7 +1069,10 @@
         "effects": {
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.arbitrage_video",
@@ -182,7 +1103,10 @@
         "effects": {
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.coach_vire_ailleurs",
@@ -213,7 +1137,10 @@
         "effects": {
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.droits_tele",
@@ -244,7 +1171,10 @@
         "effects": {
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.arret_contrats",
@@ -287,7 +1217,10 @@
         "effects": {
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.equipementier_fluo",
@@ -318,7 +1251,10 @@
         "effects": {
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.tout_assis",
@@ -349,7 +1285,10 @@
         "effects": {
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.record_transfert",
@@ -407,7 +1346,10 @@
         "effects": {
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.caisse_a_sec",
@@ -453,7 +1395,10 @@
           "tribunes": 5,
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.trop_plein_caisse",
@@ -500,7 +1445,10 @@
           "caisse": -5
         },
         "answer": "Le magot dort au chaud. La Commission aussi, pour l'instant."
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.conseil_veut_ta_tete",
@@ -546,7 +1494,10 @@
           "direction": -5,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.creature_du_president",
@@ -590,7 +1541,10 @@
           "direction": 5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.vestiaire_en_feu",
@@ -635,7 +1589,10 @@
           "vestiaire": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.vestiaire_trop_calin",
@@ -679,7 +1636,10 @@
           "vestiaire": 5,
           "force": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.stade_se_vide",
@@ -725,7 +1685,10 @@
           "tribunes": -5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.nouvelle.ultras_gouvernent",
@@ -770,7 +1733,10 @@
           "tribunes": 5,
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "co.monde.chamelle",
@@ -805,7 +1771,10 @@
           "tribunes": -5
         },
         "answer": "Le verre finit dans le seau à la première gorgée."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.numero_surtaxe",
@@ -838,7 +1807,10 @@
           "caisse": 10,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.arbitre_cousin",
@@ -871,7 +1843,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.arbitre_reclame",
@@ -918,7 +1893,10 @@
           "tribunes": -10,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.derby_veille",
@@ -952,7 +1930,10 @@
           "tribunes": -10,
           "force": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.derby_treve",
@@ -989,7 +1970,10 @@
           }
         },
         "answer": "Gégé t'envoie une écharpe en remerciement."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.belle_mere_consultante",
@@ -1026,7 +2010,10 @@
           },
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.belle_mere_vip",
@@ -1065,7 +2052,10 @@
           "direction": 5
         },
         "answer": "Belle-maman boude déjà le prochain Noël."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.boucher_arrive",
@@ -1082,7 +2072,7 @@
       "once": false,
       "cooldown": 28,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Le boucher du coin, tablier propre : « Je sponsorise le club ! Mon logo, mes merguez à la mi-temps, et je fais la causerie. »",
       "left": {
         "label": "Bienvenue, l'ami",
@@ -1110,7 +2100,10 @@
           "caisse": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.boucher_causerie",
@@ -1157,7 +2150,10 @@
           ]
         },
         "answer": "Le boucher remballe ses couteaux, vexé."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "co.monde.chaussettes",
@@ -1190,7 +2186,10 @@
           "vestiaire": -5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.bus_meme_route",
@@ -1224,7 +2223,10 @@
           "vestiaire": -5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.sanglier",
@@ -1259,7 +2261,10 @@
           "force": -5
         },
         "answer": "Le sanglier file dans le but vide, ovation générale."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.terrain_gele",
@@ -1294,7 +2299,10 @@
           "direction": -5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.canicule_tv",
@@ -1328,7 +2336,10 @@
           "caisse": -5,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.monde.nassir_cheque",
@@ -1375,7 +2386,10 @@
           "caisse": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.presse.derby",
@@ -1406,7 +2420,10 @@
         "effects": {
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.sponsor.maillot",
@@ -1439,7 +2456,10 @@
           "caisse": 10,
           "tribunes": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "co.famille.belle_maman",
@@ -1471,7 +2491,116 @@
           "tribunes": 5
         },
         "answer": "Camille ne répond plus à tes messages."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "co.script.rentree",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 0,
+      "priority": 0,
+      "sablier": false,
+      "text": "Madame Josiane, un café à la main : « Nouvelle saison. Le radiateur marche, c'est la seule nouvelle. J'en ai vu passer, vous savez. »",
+      "left": {
+        "label": "Un café, et les comptes",
+        "effects": {
+          "direction": 5
+        },
+        "answer": "Elle sort le classeur. Il est plus épais que l'an dernier."
+      },
+      "right": {
+        "label": "Un café, et le terrain",
+        "effects": {
+          "vestiaire": 5
+        },
+        "answer": "Elle range le classeur. Elle le garde à portée de main."
+      },
+      "tone": "leger",
+      "kind": "script",
+      "arcId": "co.script.generique",
+      "stepId": "rentree",
+      "pool": false
+    },
+    {
+      "id": "co.script.veille",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "direction"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 0,
+      "priority": 0,
+      "sablier": false,
+      "text": "Vukić, la veille du dernier bloc : « Je te le dis parce que personne ne te le dira : le président a deux discours prêts. »",
+      "left": {
+        "label": "On joue le nôtre",
+        "effects": {
+          "vestiaire": 5,
+          "force": 1
+        },
+        "answer": "Le vestiaire connaît le plan. Le président non."
+      },
+      "right": {
+        "label": "On joue le sien",
+        "effects": {
+          "direction": 5,
+          "vestiaire": -5
+        },
+        "answer": "Le président range un discours. Il garde l'autre."
+      },
+      "tone": "strategique",
+      "kind": "script",
+      "arcId": "co.script.generique",
+      "stepId": "veille",
+      "pool": false
+    },
+    {
+      "id": "tr.nouvelles_du_passe",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "arc": "nouvelle",
+      "tags": [
+        "nouvelle"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 0,
+      "priority": 0,
+      "sablier": false,
+      "text": "Madame Josiane, un fax à la main : « Une vieille affaire — {passe_titre} — refait surface. Ça ne vous concerne plus. Presque. »",
+      "left": {
+        "label": "Tourner la page",
+        "effects": {}
+      },
+      "right": {
+        "label": "Tourner la page",
+        "effects": {}
+      },
+      "tone": "leger",
+      "kind": "nouvelle",
+      "pool": false
     },
     {
       "id": "en.direction.recrue_imposee",
@@ -1507,7 +2636,10 @@
           "vestiaire": 5,
           "force": 2
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.dernier_avertissement",
@@ -1543,7 +2675,10 @@
           "direction": -10,
           "vestiaire": 10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.adjoint_confiance",
@@ -1583,7 +2718,10 @@
             "aulard": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.budget_coupe",
@@ -1619,7 +2757,10 @@
           "caisse": 5
         },
         "answer": "Un membre du board applaudit, puis se ravise."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.enveloppe_promise",
@@ -1637,7 +2778,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Tiens bon jusqu'à l'hiver et je t'ouvre une enveloppe mercato 'historique'. J'ai dit historique, pas garantie.",
       "left": {
         "label": "Je fais confiance",
@@ -1667,7 +2808,10 @@
           "direction": -5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.enveloppe_vide",
@@ -1717,7 +2861,10 @@
           ]
         },
         "answer": "Ménèche titre: 'L'enveloppe fantôme'."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "en.direction.reunion_crise",
@@ -1764,7 +2911,10 @@
           "direction": -10,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.felicitations",
@@ -1802,7 +2952,10 @@
           "vestiaire": 5
         },
         "answer": "Aulard rit jaune, nuance rare chez lui."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.fils_president",
@@ -1838,7 +2991,10 @@
             "aulard": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.nassir_injection",
@@ -1874,7 +3030,10 @@
           "caisse": -10,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.josiane_lettre",
@@ -1910,7 +3069,10 @@
           "tribunes": 5
         },
         "answer": "Josiane range la lettre dans le tiroir du haut, accessible."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.tuyau_josiane",
@@ -1958,7 +3120,10 @@
           "tribunes": 5,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.porte_entrouverte",
@@ -1994,7 +3159,10 @@
           "direction": 10,
           "parole": 1
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.piege_immobilisme",
@@ -2030,7 +3198,10 @@
           "vestiaire": -10
         },
         "answer": "Le prodige part, le vestiaire fait ses cartons."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.nassir_controle",
@@ -2070,7 +3241,10 @@
             "nassir": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.coup_com",
@@ -2106,7 +3280,10 @@
           "tribunes": 10,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.vecchio_solde",
@@ -2145,7 +3322,10 @@
             "vecchio": -2
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.promotion_piege",
@@ -2181,7 +3361,10 @@
           "vestiaire": 5,
           "force": 1
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.fardelli_pepite",
@@ -2250,7 +3433,10 @@
           }
         },
         "answer": "Il ira briller ailleurs, promis juré."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.reclame_neuf",
@@ -2318,7 +3504,10 @@
             "brehaut": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.vente_cadre",
@@ -2387,7 +3576,10 @@
           }
         },
         "answer": "Le président boude déjà le prochain conseil."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.jeune_reserve",
@@ -2436,7 +3628,10 @@
           "force": -2
         },
         "answer": "Il reviendra plus fort. Ou pas."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.veteran_libre",
@@ -2504,7 +3699,10 @@
             "fardelli": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.deadline_day",
@@ -2561,7 +3759,10 @@
           "direction": -5
         },
         "answer": "Zéro recrue, zéro risque, zéro frisson."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.fax_panne",
@@ -2610,7 +3811,10 @@
           "tribunes": -10
         },
         "answer": "Le transfert meurt dans un dernier bip."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.algo_data",
@@ -2684,7 +3888,10 @@
           }
         },
         "answer": "Nassir range son ordinateur, vexé."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.president_coup_coeur",
@@ -2752,7 +3959,10 @@
             "aulard": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.sponsor_impose",
@@ -2819,7 +4029,10 @@
             "nassir": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.echange_sec",
@@ -2868,7 +4081,10 @@
           "force": -1,
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.solde_hiver",
@@ -2948,7 +4164,10 @@
             "aulard": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.renfort_vestiaire",
@@ -3030,7 +4249,10 @@
             "brehaut": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.surenchere",
@@ -3096,7 +4318,10 @@
           }
         },
         "answer": "Raisonnable, donc les mains vides."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.pari_cassette",
@@ -3114,7 +4339,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "when": [
         "or",
         [
@@ -3174,7 +4399,10 @@
           }
         },
         "answer": "Pas de cassette, pas de miracle."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.mercato.revele_9",
@@ -3237,7 +4465,10 @@
           ]
         },
         "answer": "On verra à l'entraînement, loin des tribunes."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "en.presse.gros_titre",
@@ -3272,7 +4503,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.pas_vu_action",
@@ -3307,7 +4541,10 @@
           "caisse": -5
         },
         "answer": "Amende à la clé, et le vestiaire vous porte en triomphe."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.le_special",
@@ -3343,7 +4580,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.punchline",
@@ -3376,7 +4616,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.clash_consultant",
@@ -3408,7 +4651,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.rumeur",
@@ -3426,7 +4672,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Une source me jure que vous signez ailleurs en juin. Je publie... sauf si vous me démentez, là, maintenant.",
       "left": {
         "label": "Je démens fermement",
@@ -3465,7 +4711,10 @@
             }
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.dementi_suite",
@@ -3519,7 +4768,10 @@
           ]
         },
         "answer": "Votre prime grimpe, le vestiaire flaire le double jeu."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "en.presse.hors_contexte",
@@ -3554,7 +4806,10 @@
           "direction": -10
         },
         "answer": "Les ultras impriment déjà la banderole assortie."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.le_meme",
@@ -3588,7 +4843,10 @@
           "caisse": -5
         },
         "answer": "Les gradins adorent, le comptable un peu moins."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.langue_de_bois",
@@ -3625,7 +4883,10 @@
           "promise": true
         },
         "answer": "Franc du collier, mais vous vous engagez en public."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.rescue_tribunes",
@@ -3671,7 +4932,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.rescue_direction",
@@ -3717,7 +4981,10 @@
           "tribunes": 10,
           "direction": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.silence_radio",
@@ -3755,7 +5022,10 @@
             "meneche": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.exclu",
@@ -3793,7 +5063,10 @@
           },
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.consultant_faveur",
@@ -3826,7 +5099,10 @@
           "tribunes": -5
         },
         "answer": "Dès le lendemain, son soutien devient très nuancé."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.derapage_direct",
@@ -3861,7 +5137,10 @@
           "tribunes": -5,
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.mi_temps_menes",
@@ -3908,7 +5187,10 @@
           "vestiaire": 10,
           "force": -1
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.tactique_semaine",
@@ -3940,7 +5222,10 @@
           "force": 2,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.blessure_avant_match",
@@ -3991,7 +5276,10 @@
             "sabatier": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.genou_lache",
@@ -4045,7 +5333,10 @@
             "pari_genou"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "en.terrain.lancer_mbako",
@@ -4084,7 +5375,10 @@
             "mbako": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.vecchio_crise",
@@ -4122,7 +5416,10 @@
             "vecchio": -2
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.superstition",
@@ -4158,7 +5455,10 @@
             "brehaut": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.prepa_physique",
@@ -4190,7 +5490,10 @@
           "force": -2,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.jour_de_jeune",
@@ -4228,7 +5531,10 @@
             "mbako": -2
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.arbitre_avant_match",
@@ -4262,7 +5568,10 @@
           "vestiaire": -5,
           "force": 1
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.qui_tire_penos",
@@ -4301,7 +5610,10 @@
             "brehaut": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.repos_vecchio",
@@ -4340,7 +5652,10 @@
             "sabatier": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.avant_derby",
@@ -4375,7 +5690,10 @@
           "vestiaire": 5,
           "force": 2
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.terrain.entrainement_ouvert",
@@ -4422,7 +5740,10 @@
           "force": 2,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.premiere_rencontre",
@@ -4475,7 +5796,10 @@
           "tribunes": -5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.banderole",
@@ -4523,7 +5847,10 @@
           "vestiaire": 5
         },
         "answer": "Gégé note la phrase."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.greve_encouragements",
@@ -4569,7 +5896,10 @@
           "tribunes": -10
         },
         "answer": "On entend le ballon rouler. C'est glaçant."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.tifo",
@@ -4616,7 +5946,10 @@
           "direction": 5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.derby",
@@ -4664,7 +5997,10 @@
           "tribunes": -10,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.envahissement",
@@ -4719,7 +6055,10 @@
           "tribunes": -10,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.naming_virage",
@@ -4771,7 +6110,10 @@
             "gege": 2
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.mairie_subvention",
@@ -4818,7 +6160,10 @@
           "caisse": -10,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.pacte_kop",
@@ -4836,7 +6181,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "when": [
         "and",
         [
@@ -4893,7 +6238,10 @@
             "gege": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.pacte_suite",
@@ -4950,7 +6298,10 @@
           }
         },
         "answer": "La craie devient une banderole."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "en.ultras.portes_ouvertes",
@@ -4997,7 +6348,10 @@
           "tribunes": -5,
           "force": 4
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.fumigenes",
@@ -5044,7 +6398,10 @@
           "tribunes": -10,
           "direction": 10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.deplacement",
@@ -5090,7 +6447,10 @@
           "caisse": 5
         },
         "answer": "Ils arrivent à la 60e, trempés et fous de joie."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.ultras.ville_endormie",
@@ -5137,7 +6497,10 @@
           "tribunes": -10,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.cadres_conseil",
@@ -5169,7 +6532,10 @@
           "vestiaire": -5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.star_reveil",
@@ -5202,7 +6568,10 @@
           "vestiaire": 5,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.bizutage_chant",
@@ -5236,7 +6605,10 @@
             "mbako": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.mutinerie_couve",
@@ -5253,7 +6625,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Vukić : « Ça murmure au fond du bus : trois joueurs, une réunion, ton nom qui revient. On laisse couver ? »",
       "left": {
         "label": "Je crève l'abcès ce soir",
@@ -5279,7 +6651,10 @@
             }
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.mutinerie_eclate",
@@ -5328,7 +6703,10 @@
             "mutinerie"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "en.vestiaire.capitaine_usure",
@@ -5364,7 +6742,10 @@
             "brehaut": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.prime_contestee",
@@ -5397,7 +6778,10 @@
           "vestiaire": -5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.clan_anciens",
@@ -5431,7 +6815,10 @@
             "vecchio": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.mise_au_vert",
@@ -5464,7 +6851,10 @@
           "vestiaire": 5,
           "force": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.retour_blessure",
@@ -5511,7 +6901,10 @@
             "sabatier": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.ego_double",
@@ -5545,7 +6938,10 @@
           "vestiaire": 5,
           "force": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.soiree_karaoke",
@@ -5590,7 +6986,10 @@
           "vestiaire": -5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.vieux_gardien",
@@ -5636,7 +7035,10 @@
           "vestiaire": -5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.cap_ou_meuble",
@@ -5669,7 +7071,10 @@
           "direction": -5
         },
         "answer": "Le meuble prend la poussière."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.brassard_vote",
@@ -5705,7 +7110,10 @@
           "direction": 5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.veteran_banc",
@@ -5744,7 +7152,10 @@
           }
         },
         "answer": "Il vide son casier sans un mot."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.star_argent",
@@ -5779,7 +7190,10 @@
             "mbako": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.toro_coach",
@@ -5812,7 +7226,10 @@
           "vestiaire": -5,
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.special",
@@ -5875,7 +7292,10 @@
           "direction": 5
         },
         "answer": "Sobre. Personne ne retient la phrase."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.achat_surprise",
@@ -5935,7 +7355,10 @@
           "vestiaire": 5
         },
         "answer": "L'attaquant appelle un journaliste."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.star_ne_defend_pas",
@@ -5982,7 +7405,10 @@
           "vestiaire": -5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.ultimatum",
@@ -6035,7 +7461,10 @@
           "tribunes": -5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.presse.pas_vu",
@@ -6079,7 +7508,10 @@
           "vestiaire": -10,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.formation.gamin",
@@ -6128,7 +7560,10 @@
         "effects": {
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.vestiaire.sechecheveux",
@@ -6159,7 +7594,10 @@
         "effects": {
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.direction.homme_president",
@@ -6206,7 +7644,10 @@
         "effects": {
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.famille.podcast",
@@ -6250,7 +7691,10 @@
           "vestiaire": 5
         },
         "answer": "Le dîner est silencieux."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "en.piege.projet",
@@ -6281,7 +7725,10 @@
           "direction": -10,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.transfert_siecle",
@@ -6342,7 +7789,10 @@
           "tribunes": 10,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.moment.penalty",
@@ -6384,7 +7834,10 @@
             }
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.bouteilles",
@@ -6429,7 +7882,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.pari",
@@ -6445,7 +7901,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "when": [
         "cmp",
         "<",
@@ -6483,7 +7939,10 @@
         "effects": {
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.brigade",
@@ -6526,7 +7985,10 @@
           "tribunes": -5,
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.selection.liste",
@@ -6586,7 +8048,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.genou",
@@ -6634,7 +8099,10 @@
             "genou"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.frere_agent",
@@ -6666,7 +8134,10 @@
         "effects": {
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.yacht",
@@ -6705,7 +8176,10 @@
           "tribunes": -10,
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.piege.confort",
@@ -6735,7 +8209,10 @@
         "effects": {
           "tribunes": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.premiere_gene",
@@ -6778,7 +8255,10 @@
           "tribunes": 5,
           "force": -3
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.verdict_genou",
@@ -6844,7 +8324,10 @@
             "genou"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.infiltration",
@@ -6862,7 +8345,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "when": [
         "call",
         "flag",
@@ -6900,7 +8383,10 @@
           ]
         },
         "answer": "Tu ne sens plus rien. C'est bien ça, le problème."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.rechute",
@@ -6949,7 +8435,10 @@
             "infiltre"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.corps.la_liste",
@@ -7011,7 +8500,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.forfait",
@@ -7067,7 +8559,10 @@
           "direction": -10,
           "force": -3
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.reeducation",
@@ -7108,7 +8603,10 @@
           "vestiaire": 5,
           "force": -2
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.preparateur",
@@ -7168,7 +8666,10 @@
           "vestiaire": 5,
           "force": -3
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.retour_terrain",
@@ -7225,7 +8726,10 @@
           "direction": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.age_qui_vient",
@@ -7269,7 +8773,10 @@
           "tribunes": 5,
           "force": -6
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.derniere_liste",
@@ -7328,7 +8835,10 @@
             "mbako": 2
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.genou_hiver",
@@ -7370,7 +8880,10 @@
           "tribunes": 5,
           "force": -2
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.visite_medicale",
@@ -7430,7 +8943,10 @@
           "direction": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.corps.raccrocher",
@@ -7488,7 +9004,10 @@
           "force": -8,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.grand_soir",
@@ -7525,7 +9044,10 @@
           },
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.mariage_finale",
@@ -7564,7 +9086,10 @@
           "vestiaire": 5
         },
         "answer": "Camille part au mariage sans toi, et sans un mot."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.podcast",
@@ -7581,7 +9106,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Camille : « Je lance un podcast sur les femmes de footballeurs. Je peux raconter nos coulisses ? »",
       "left": {
         "label": "Raconte tout",
@@ -7612,7 +9137,10 @@
           },
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.podcast_carton",
@@ -7656,7 +9184,10 @@
         "effects": {
           "vestiaire": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.famille.naissance",
@@ -7716,7 +9247,10 @@
             }
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.nuit_blanche",
@@ -7764,7 +9298,10 @@
           },
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.famille.frere_envahissant",
@@ -7797,7 +9334,10 @@
         "effects": {
           "caisse": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.maison_pays",
@@ -7836,7 +9376,10 @@
           }
         },
         "answer": "Ta mère raccroche en soupirant très fort."
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.equilibre",
@@ -7871,7 +9414,10 @@
           },
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.diner_rescue",
@@ -7917,7 +9463,10 @@
         "effects": {
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.beau_pere_loge",
@@ -7952,7 +9501,10 @@
             "camille": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.famille.anniversaire",
@@ -7989,7 +9541,10 @@
           },
           "force": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.record",
@@ -8052,7 +9607,10 @@
           "direction": -5,
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.arret_bosquet",
@@ -8098,7 +9656,10 @@
           "caisse": 5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.frere_agent",
@@ -8147,7 +9708,10 @@
             "fardelli": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.clause",
@@ -8195,7 +9759,10 @@
             "fardelli": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.exil_dore",
@@ -8240,7 +9807,10 @@
           "tribunes": 5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.rester_loyal",
@@ -8275,7 +9845,10 @@
           "caisse": 5,
           "tribunes": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.agent_te_vend",
@@ -8313,7 +9886,10 @@
           },
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.loft",
@@ -8365,7 +9941,10 @@
             "aulard": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.offshore_montage",
@@ -8383,7 +9962,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Fardelli baisse la voix : « Ta prime, on la loge dans une société aux îles lointaines. Zéro impôt, fais-moi confiance. »",
       "left": {
         "label": "Monte la société",
@@ -8413,7 +9992,10 @@
           "caisse": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.fisc_lointain",
@@ -8462,7 +10044,10 @@
             "meneche": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.mercato.prime_signature",
@@ -8500,7 +10085,10 @@
             "camille": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.rescue_caisse",
@@ -8545,7 +10133,10 @@
           "tribunes": 10,
           "caisse": -10
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.rescue_tribunes",
@@ -8590,7 +10181,10 @@
           "tribunes": -5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.rescue_direction",
@@ -8635,7 +10229,10 @@
           "direction": -10,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.piege_indecis",
@@ -8683,7 +10280,10 @@
           "caisse": -5,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.mercato.enchere",
@@ -8729,7 +10329,10 @@
           "tribunes": -5,
           "force": -1
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.soda",
@@ -8763,7 +10366,10 @@
           "caisse": -10,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.yacht",
@@ -8807,7 +10413,10 @@
           "vestiaire": -5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.morsure",
@@ -8840,7 +10449,10 @@
           "direction": -5,
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.cm",
@@ -8856,7 +10468,7 @@
       "once": false,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Ton nouveau community manager, 19 ans : « File-moi les clés du compte. Une nuit et tu es viral, promis. »",
       "left": {
         "label": "Tiens, les clés",
@@ -8883,7 +10495,10 @@
           "tribunes": 5,
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.cm_derapage",
@@ -8934,7 +10549,10 @@
             "cm_solo"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.presse.sponsor_paris",
@@ -8968,7 +10586,10 @@
           "tribunes": 5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.pub_orange",
@@ -9001,7 +10622,10 @@
           "caisse": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.rescue_hopital",
@@ -9046,7 +10670,10 @@
           "vestiaire": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.rescue_maillot",
@@ -9091,7 +10718,10 @@
         "effects": {
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.interview_piege",
@@ -9125,7 +10755,10 @@
           "tribunes": 10,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.tweet_nuit",
@@ -9158,7 +10791,10 @@
           "direction": -5,
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.docu",
@@ -9190,7 +10826,10 @@
           "vestiaire": 5,
           "caisse": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.crampons",
@@ -9224,7 +10863,10 @@
           "force": 5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.faux_compte",
@@ -9256,7 +10898,10 @@
           "tribunes": -5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.merguez",
@@ -9290,7 +10935,10 @@
           "caisse": 5,
           "tribunes": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.presse.excuses_recyclees",
@@ -9322,7 +10970,10 @@
           "vestiaire": 5,
           "direction": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.pari_match",
@@ -9340,7 +10991,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Un pote bookmaker mise gros si tu ranges ton match de samedi. Tu lèves le pied en douce, on partage, la caisse te dit merci.",
       "left": {
         "label": "Je range mon match",
@@ -9374,7 +11025,10 @@
             "fardelli": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.brigade_financiere",
@@ -9424,7 +11078,10 @@
             "pari"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.scandale.vitamines",
@@ -9441,7 +11098,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Ces petites vitamines te feront courir jusqu'à la 95e sans souffler. Rien d'interdit, ou presque, et surtout aucune trace.",
       "left": {
         "label": "J'avale les vitamines",
@@ -9475,7 +11132,10 @@
             "sabatier": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.controle_positif",
@@ -9525,7 +11185,10 @@
             "vitamines"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.scandale.valise",
@@ -9543,7 +11206,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Un émir fan de toi laisse une valise « pour tes chaussures ». Elle est lourde, elle ne fait pas de bruit, elle ne pose pas de questions.",
       "left": {
         "label": "Je garde la valise",
@@ -9576,7 +11239,10 @@
             "fardelli": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.valise_douane",
@@ -9624,7 +11290,10 @@
             "valise"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.scandale.offshore",
@@ -9642,7 +11311,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Ton image vaut de l'or, logeons tes droits dans une société bien au chaud sur une île sans hiver ni impôt. Signe ici, ne lis pas trop.",
       "left": {
         "label": "Je signe les yeux fermés",
@@ -9672,7 +11341,10 @@
           "direction": 5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.panama",
@@ -9733,7 +11405,10 @@
             "offshore"
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.scandale.mecene_douteux",
@@ -9783,7 +11458,10 @@
           "vestiaire": 5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.photo_casino",
@@ -9820,7 +11498,10 @@
           "vestiaire": 5,
           "caisse": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.interview_verite",
@@ -9857,7 +11538,10 @@
             "meneche": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.certificat",
@@ -9894,7 +11578,10 @@
           "vestiaire": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.blanchi",
@@ -9943,7 +11630,10 @@
           "vestiaire": 5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.scandale.deballage_tv",
@@ -10010,7 +11700,10 @@
           "direction": -5,
           "vestiaire": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.brassard",
@@ -10049,7 +11742,10 @@
             "vecchio": 1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.penalty_prodige",
@@ -10105,7 +11801,10 @@
             }
           ]
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.star_snob",
@@ -10136,7 +11835,10 @@
           "vestiaire": -10,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.couvrir",
@@ -10168,7 +11870,10 @@
           "vestiaire": -10,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.fronde_primes",
@@ -10201,7 +11906,10 @@
           "vestiaire": -5,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.jeune_pousse",
@@ -10239,7 +11947,10 @@
             "mbako": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.vecchio_banc",
@@ -10277,7 +11988,10 @@
             "vecchio": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.repas_equipe",
@@ -10320,7 +12034,10 @@
         "effects": {
           "vestiaire": -5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.reunion_joueurs",
@@ -10366,7 +12083,10 @@
             "vecchio": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.superstition",
@@ -10398,7 +12118,10 @@
           "vestiaire": -5,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.discours",
@@ -10449,7 +12172,10 @@
           "vestiaire": 5,
           "force": 1
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.promesse_mbako",
@@ -10467,7 +12193,7 @@
       "once": true,
       "cooldown": 12,
       "priority": 0,
-      "sablier": false,
+      "sablier": true,
       "text": "Lian Mbako : « Promets-moi que tu parles au coach pour moi et je reste. Sinon je signe ailleurs. »",
       "left": {
         "label": "Je te le promets",
@@ -10497,7 +12223,10 @@
             "mbako": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.mbako_relance",
@@ -10551,7 +12280,10 @@
             "mbako": -2
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": false
     },
     {
       "id": "jp.vestiaire.fardelli_vestiaire",
@@ -10589,7 +12321,10 @@
             "fardelli": -1
           }
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.bagarre",
@@ -10619,7 +12354,10 @@
           "vestiaire": -10,
           "tribunes": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     },
     {
       "id": "jp.vestiaire.repartition_primes",
@@ -10651,7 +12389,10 @@
           "vestiaire": -10,
           "direction": 5
         }
-      }
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
     }
   ],
   "endings": [
@@ -11070,5 +12811,535 @@
       "descente": 36
     }
   },
-  "hash": "32fe89db"
+  "characters": [
+    {
+      "id": "fardelli",
+      "name": "Rocco Fardelli",
+      "label": "AGENT DE JOUEURS",
+      "genre": "m",
+      "role": "agent",
+      "tic": "Mon ami, on parle d'argent ou d'amitié ?",
+      "camp": "direction",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "meneche",
+      "name": "Pierre Ménèche",
+      "label": "JOURNALISTE",
+      "genre": "m",
+      "role": "journaliste",
+      "tic": "Juste une question, hors micro.",
+      "camp": "direction",
+      "default_target": 1.5,
+      "on_relation": {}
+    },
+    {
+      "id": "gege",
+      "name": "Gégé",
+      "label": "CAPO, TRIBUNE NORD",
+      "genre": "m",
+      "role": "ultra",
+      "tic": "La tribune n'oublie rien.",
+      "camp": "terrain",
+      "default_target": 1.5,
+      "on_relation": {}
+    },
+    {
+      "id": "aulard",
+      "name": "Jean-Marie Aulard",
+      "label": "PRÉSIDENT",
+      "genre": "m",
+      "role": "president",
+      "tic": "J'ai pas le temps, j'ai un empire.",
+      "camp": "direction",
+      "default_target": 2,
+      "on_relation": {}
+    },
+    {
+      "id": "vukic",
+      "name": "Zoran Vukić",
+      "label": "ENTRAÎNEUR ADJOINT",
+      "genre": "m",
+      "role": "adjoint",
+      "tic": "Je te le dis parce que personne ne te le dira.",
+      "camp": "terrain",
+      "default_target": 1.5,
+      "on_relation": {}
+    },
+    {
+      "id": "brehaut",
+      "name": "Titi Bréhaut",
+      "label": "CAPITAINE",
+      "genre": "m",
+      "role": "capitaine",
+      "tic": "Le groupe vit bien.",
+      "camp": "terrain",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "sabatier",
+      "name": "Doc Sabatier",
+      "label": "MÉDECIN DU CLUB",
+      "genre": "m",
+      "role": "medecin",
+      "tic": "Ça reste entre la table et moi.",
+      "camp": "terrain",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "camille",
+      "name": "Camille",
+      "label": "À LA MAISON",
+      "genre": "f",
+      "role": "conjoint",
+      "tic": "Tu rentres à quelle heure ?",
+      "camp": "terrain",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "aubert",
+      "name": "Madame Aubert",
+      "label": "MAIRE",
+      "genre": "f",
+      "role": "maire",
+      "tic": "Le stade, c'est de l'argent public.",
+      "camp": "instances",
+      "default_target": 0.5,
+      "on_relation": {}
+    },
+    {
+      "id": "legruet",
+      "name": "Noël Legruet",
+      "label": "PRÉSIDENT DE LA FÉDÉRATION",
+      "genre": "m",
+      "role": "federation",
+      "tic": "On verra ça après le Congrès.",
+      "camp": "instances",
+      "default_target": 0.5,
+      "on_relation": {}
+    },
+    {
+      "id": "nassir",
+      "name": "Cheikh Nassir",
+      "label": "FONDS QATALYST",
+      "genre": "m",
+      "role": "fonds",
+      "tic": "Ce n'est pas un club, c'est un actif.",
+      "camp": "direction",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "josiane",
+      "name": "Madame Josiane",
+      "label": "SECRÉTAIRE DEPUIS 1987",
+      "genre": "f",
+      "role": "secretaire",
+      "tic": "J'en ai vu passer, vous savez.",
+      "camp": "direction",
+      "default_target": 1.5,
+      "on_relation": {}
+    },
+    {
+      "id": "clow",
+      "name": "Brian Clow",
+      "label": "LE MENTOR",
+      "genre": "m",
+      "role": "mentor",
+      "tic": "Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un.",
+      "camp": "terrain",
+      "default_target": 0.5,
+      "on_relation": {}
+    },
+    {
+      "id": "mbako",
+      "name": "Lian Mbako",
+      "label": "PRODIGE, 16 ANS",
+      "genre": "m",
+      "role": "prodige",
+      "tic": "Je veux jouer. Maintenant.",
+      "camp": "terrain",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "vecchio",
+      "name": "Gigi Vecchio",
+      "label": "GARDIEN, 41 ANS",
+      "genre": "m",
+      "role": "gardien",
+      "tic": "J'en ai vu d'autres.",
+      "camp": "terrain",
+      "default_target": 1.5,
+      "on_relation": {}
+    },
+    {
+      "id": "lea",
+      "name": "Léa",
+      "label": "PRESSE",
+      "genre": "f",
+      "role": "presse",
+      "tic": "Vous confirmez ?",
+      "camp": "direction",
+      "default_target": 1,
+      "on_relation": {}
+    },
+    {
+      "id": "mere_mbako",
+      "name": "La mère de Mbako",
+      "label": "MÈRE ET AGENTE",
+      "genre": "f",
+      "role": "famille",
+      "tic": "Mon fils n'a besoin de personne.",
+      "camp": "terrain",
+      "default_target": 0.5,
+      "on_relation": {}
+    }
+  ],
+  "arcs": [
+    {
+      "id": "co.script.generique",
+      "title": "La saison",
+      "kind": "postulat",
+      "roles": [
+        "entraineur",
+        "joueur"
+      ],
+      "postulats": [],
+      "foreground": true,
+      "weight": 1.0,
+      "once": true,
+      "every_season": false,
+      "min_season": 0,
+      "chance": 0.0,
+      "cast": [],
+      "start": [
+        2,
+        7
+      ],
+      "same_club": true,
+      "fallback": "drop",
+      "epilogue": {},
+      "steps": [
+        {
+          "id": "rentree",
+          "card": [
+            {
+              "id": "co.script.rentree"
+            }
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "season": "0+",
+          "next": []
+        },
+        {
+          "id": "veille",
+          "card": [
+            {
+              "id": "co.script.veille"
+            }
+          ],
+          "at": [
+            17,
+            17
+          ],
+          "season": "0+",
+          "next": []
+        }
+      ]
+    }
+  ],
+  "postulats": [
+    {
+      "id": "promu",
+      "index": 0,
+      "role": "entraineur",
+      "title": "Le promu sans un sou",
+      "question": "Ce club est à qui : à la tribune qui l'a porté, au président qui a promis, ou à l'argent qui frappe à la porte ?",
+      "division": 1,
+      "year": 1990,
+      "gauges": {
+        "vestiaire": 50,
+        "tribunes": 80,
+        "direction": 52,
+        "caisse": 30
+      },
+      "force": 46,
+      "objective": "maintien",
+      "flags": [
+        "promu"
+      ],
+      "president": "aulard",
+      "camille": true,
+      "cast": {
+        "aulard": {
+          "fonction": "patron",
+          "target": 3
+        },
+        "gege": {
+          "fonction": "creancier",
+          "target": 3
+        },
+        "vecchio": {
+          "fonction": "coeur",
+          "target": 3
+        },
+        "josiane": {
+          "fonction": "choeur",
+          "target": 2
+        },
+        "vukic": {
+          "fonction": "messager",
+          "target": 2
+        },
+        "mbako": {
+          "fonction": "horloge",
+          "target": 1.5
+        },
+        "nassir": {
+          "fonction": "tentateur",
+          "target": 1.5
+        },
+        "meneche": {
+          "fonction": "chroniqueur",
+          "target": 1.5
+        },
+        "fardelli": {
+          "fonction": "vautour",
+          "target": 1
+        },
+        "clow": {
+          "fonction": "mentor",
+          "target": 1
+        },
+        "camille": {
+          "fonction": "jauge5",
+          "target": 1
+        }
+      },
+      "seeds": [],
+      "alarm_overrides": {}
+    },
+    {
+      "id": "interimaire",
+      "index": 1,
+      "role": "entraineur",
+      "title": "L'intérimaire",
+      "question": "Tu as six semaines pour devenir indispensable, et personne ne te croit.",
+      "division": 2,
+      "year": 1990,
+      "gauges": {
+        "vestiaire": 45,
+        "tribunes": 50,
+        "direction": 40,
+        "caisse": 50
+      },
+      "force": 44,
+      "flags": [
+        "interim"
+      ],
+      "president": "aulard",
+      "seeds": [],
+      "alarm_overrides": {}
+    },
+    {
+      "id": "pepite",
+      "index": 2,
+      "role": "joueur",
+      "title": "La pépite du club-usine",
+      "question": "Tout le monde veut te vendre. Toi, tu veux jouer.",
+      "division": 2,
+      "year": 1990,
+      "gauges": {
+        "vestiaire": 50,
+        "tribunes": 80,
+        "direction": 50,
+        "caisse": 45
+      },
+      "force": 58,
+      "president": "fardelli",
+      "seeds": [],
+      "alarm_overrides": {}
+    },
+    {
+      "id": "fin_de_contrat",
+      "index": 3,
+      "role": "joueur",
+      "title": "Fin de contrat à 31 ans",
+      "question": "Ton genou a un avis, ton agent en a un autre.",
+      "division": 1,
+      "year": 1990,
+      "gauges": {
+        "vestiaire": 50,
+        "tribunes": 50,
+        "direction": 45,
+        "caisse": 60
+      },
+      "force": 52,
+      "flags": [
+        "genou"
+      ],
+      "president": "fardelli",
+      "seeds": [],
+      "alarm_overrides": {}
+    }
+  ],
+  "alarms": {
+    "entraineur": {
+      "vestiaire.low": [
+        {
+          "card": "en.alarme.vestiaire_bas_vecchio",
+          "when": [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "relation.vecchio"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ]
+        },
+        {
+          "card": "en.alarme.vestiaire_bas_vukic"
+        }
+      ],
+      "vestiaire.high": [
+        {
+          "card": "en.alarme.vestiaire_haut_brehaut"
+        }
+      ],
+      "tribunes.low": [
+        {
+          "card": "en.alarme.tribunes_bas_gege"
+        }
+      ],
+      "tribunes.high": [
+        {
+          "card": "en.alarme.tribunes_haut_gege",
+          "when": [
+            "cmp",
+            "!=",
+            [
+              "path",
+              "last_speaker"
+            ],
+            [
+              "lit",
+              "gege"
+            ]
+          ]
+        },
+        {
+          "card": "en.alarme.tribunes_haut_vukic"
+        }
+      ],
+      "direction.low": [
+        {
+          "card": "en.alarme.direction_bas_josiane"
+        }
+      ],
+      "direction.high": [
+        {
+          "card": "en.alarme.direction_haut_aulard"
+        }
+      ],
+      "caisse.low": [
+        {
+          "card": "en.alarme.caisse_bas_josiane"
+        }
+      ],
+      "caisse.high": [
+        {
+          "card": "en.alarme.caisse_haut_meneche"
+        }
+      ]
+    },
+    "joueur": {
+      "vestiaire.low": [
+        {
+          "card": "jp.alarme.vestiaire_bas_brehaut"
+        }
+      ],
+      "vestiaire.high": [
+        {
+          "card": "jp.alarme.vestiaire_haut_brehaut"
+        }
+      ],
+      "tribunes.low": [
+        {
+          "card": "jp.alarme.tribunes_bas_gege"
+        }
+      ],
+      "tribunes.high": [
+        {
+          "card": "jp.alarme.tribunes_haut_lea"
+        }
+      ],
+      "direction.low": [
+        {
+          "card": "jp.alarme.direction_bas_vukic"
+        }
+      ],
+      "direction.high": [
+        {
+          "card": "jp.alarme.direction_haut_vukic"
+        }
+      ],
+      "caisse.low": [
+        {
+          "card": "jp.alarme.caisse_bas_fardelli"
+        }
+      ],
+      "caisse.high": [
+        {
+          "card": "jp.alarme.caisse_haut_fardelli"
+        }
+      ]
+    }
+  },
+  "director": {
+    "nouvelle_slots": {
+      "entraineur": [
+        7,
+        12,
+        14
+      ],
+      "joueur": [
+        7,
+        12,
+        14
+      ]
+    },
+    "gap_max": 3,
+    "soft_steps_max": 8,
+    "min_active": 2,
+    "max_active": 3,
+    "events_max": 1,
+    "alarms_max": 3,
+    "phase_mult": {
+      "mercato": {
+        "presaison": 4,
+        "hiver": 4,
+        "aller": 0.2,
+        "retour": 0.2
+      },
+      "moment": {
+        "retour": 2
+      },
+      "famille": {
+        "hiver": 2
+      }
+    }
+  },
+  "hash": "2085b32"
 }

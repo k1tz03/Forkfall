@@ -28,3 +28,39 @@ cards:
     text: "Camille : « Le repas chez ma mère, c'est le jour du match. Choisis. »"
     left: {label: "Je viens au repas", effects: {vestiaire: "-", tribunes: "-"}}
     right: {label: "C'est un match", effects: {tribunes: "+"}, answer: "Camille ne répond plus à tes messages."}
+
+  # --- Script générique (arcs/common/generique.yaml) : les deux ancres de saison.
+  - id: co.script.rentree
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, un café à la main : « Nouvelle saison. Le radiateur marche, c'est la seule nouvelle. J'en ai vu passer, vous savez. »"
+    left: {label: "Un café, et les comptes", effects: {direction: "+"}, answer: "Elle sort le classeur. Il est plus épais que l'an dernier."}
+    right: {label: "Un café, et le terrain", effects: {vestiaire: "+"}, answer: "Elle range le classeur. Elle le garde à portée de main."}
+
+  - id: co.script.veille
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: strategique
+    cooldown: 0
+    text: "Vukić, la veille du dernier bloc : « Je te le dis parce que personne ne te le dira : le président a deux discours prêts. »"
+    left: {label: "On joue le nôtre", effects: {vestiaire: "+", force: 1}, answer: "Le vestiaire connaît le plan. Le président non."}
+    right: {label: "On joue le sien", effects: {direction: "+", vestiaire: "-"}, answer: "Le président range un discours. Il garde l'autre."}
+
+  # --- « Nouvelles du passé » : une affaire d'un ancien club refait surface (effets = épilogue de l'arc).
+  - id: tr.nouvelles_du_passe
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    kind: passe
+    tags: [nouvelle]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, un fax à la main : « Une vieille affaire — {passe_titre} — refait surface. Ça ne vous concerne plus. Presque. »"
+    left: {label: "Tourner la page", effects: {}}
+    right: {label: "Tourner la page", effects: {}}

@@ -1,0 +1,185 @@
+# Cartes d'alarme (référencées par alarms.yaml → kind alarme, stratégiques,
+# cooldown 10). Chaque carte porte son propre seuil : si le joueur a redressé
+# la barre avant l'échéance, elle expire en silence.
+cards:
+  # ---------------------------------------------------------------- entraîneur
+  - id: en.alarme.vestiaire_bas_vukic
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    when: "gauges.vestiaire < 25"
+    text: "Vukić, à voix basse : « Je te le dis parce que personne ne te le dira : ils ne veulent plus descendre du bus. Le chauffeur non plus. »"
+    left: {label: "Je monte leur parler", effects: {vestiaire: "+++", direction: "-"}, answer: "Vingt minutes dans le bus. Le chauffeur pleure, les autres descendent."}
+    right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace]}, answer: "Le bus repart sans jouer. Le stade siffle le vide."}
+
+  - id: en.alarme.vestiaire_bas_vecchio
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    when: "gauges.vestiaire < 25"
+    text: "Vecchio, gants sous le bras : « Ils ne veulent plus descendre du bus. J'en ai vu d'autres, coach. Pas celle-là. Je descends le premier, si tu montes leur parler. »"
+    left: {label: "Je monte", effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}}, answer: "Gigi descend le premier. Les autres suivent, un par un."}
+    right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace]}, answer: "Gigi descend seul. Il attend sur le parking."}
+
+  - id: en.alarme.vestiaire_haut_brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    when: "gauges.vestiaire > 75"
+    text: "Bréhaut, ravi : « Le groupe vit bien. Trop bien : ils t'appellent par ton prénom devant le président, et le président a noté le prénom. »"
+    left: {label: "Je remets de la distance", effects: {vestiaire: "--", direction: "+"}, answer: "Retour au vouvoiement. Quelqu'un rit, puis plus personne."}
+    right: {label: "On est une famille", effects: {vestiaire: "+", direction: "--"}, answer: "Le président apprend qu'il n'est pas de la famille."}
+
+  - id: en.alarme.tribunes_bas_gege
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé, une aiguille à la main : « La banderole est cousue. Vingt mètres. Il manque juste ton nom, et j'ai un stylo. La tribune n'oublie rien. »"
+    left: {label: "Je viens m'expliquer au local", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}}, answer: "Deux heures au local. La banderole reste pliée. Pour l'instant."}
+    right: {label: "Le terrain répondra", effects: {tribunes: "-", force: 2}, answer: "Il range l'aiguille. Il garde le stylo."}
+
+  - id: en.alarme.tribunes_haut_gege
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes > 75"
+    text: "Gégé, radieux : « On t'aime tellement qu'on a fait la compo. Elle est sur la bâche, en face de ton banc. »"
+    left: {label: "Le onze, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "La bâche reste. Le virage note deux noms qui n'y sont pas."}
+    right: {label: "Écoutons le peuple", effects: {tribunes: "++", vestiaire: "--", set: [otage_kop]}, answer: "Le vestiaire lit sa compo sur une bâche. Avant toi."}
+
+  - id: en.alarme.tribunes_haut_vukic
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: vukic
+    when: "gauges.tribunes > 75"
+    text: "Vukić, gêné : « Je te le dis parce que personne ne te le dira : le virage a fait la compo. Elle est sur la bâche, en face de ton banc. »"
+    left: {label: "Le onze, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "La bâche reste. Le virage note deux noms qui n'y sont pas."}
+    right: {label: "Écoutons le peuple", effects: {tribunes: "++", vestiaire: "--", set: [otage_kop]}, answer: "Le vestiaire lit sa compo sur une bâche. Avant toi."}
+
+  - id: en.alarme.direction_bas_josiane
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    when: "gauges.direction < 25"
+    text: "Madame Josiane, porte fermée : « Le président ne vous salue plus. Il a demandé le numéro de fax de votre domicile, et il ne m'a pas dit pourquoi. J'en ai vu passer, vous savez. »"
+    left: {label: "Je force sa porte ce soir", effects: {direction: "+++", vestiaire: "-"}, answer: "Une heure de bureau. Il ne signe rien, mais il te ressert un café."}
+    right: {label: "Qu'il faxe", effects: {direction: "-", tribunes: "+", parole: -1}, answer: "Le fax arrive. Trois lignes. La quatrième est la signature."}
+
+  - id: en.alarme.direction_haut_aulard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    when: "gauges.direction > 75"
+    text: "Aulard, bras ouverts : « Je t'adore. Tellement que je crée pour toi un poste de Directeur du Développement International. Le bureau est sans fenêtre, comme l'international. »"
+    left: {label: "J'accepte le titre", effects: {direction: "--", caisse: "+"}, answer: "Le bureau existe. La fenêtre non. Le vestiaire non plus."}
+    right: {label: "Je reste sur le banc", effects: {direction: "---", vestiaire: "++"}, answer: "Il range la plaque. Il la garde dans un tiroir, à ton nom."}
+
+  - id: en.alarme.caisse_bas_josiane
+    roles: [entraineur]
+    arc: direction
+    tags: [caisse]
+    speaker: josiane
+    when: "gauges.caisse < 25"
+    text: "Madame Josiane, un relevé à la main : « Le banquier a appelé. Deux fois. La deuxième, il a demandé si vous étiez cher à déménager. »"
+    left: {label: "On vend un joueur", effects: {caisse: "+++", vestiaire: "--", force: -3}, answer: "Le vestiaire compte les casiers vides. Il en manque un."}
+    right: {label: "On serre les dents jusqu'en juin", effects: {caisse: "-", direction: "+", set: [salaires_retard]}, answer: "Les salaires partent le 12 au lieu du 1er. Personne ne dit rien. Encore."}
+
+  - id: en.alarme.caisse_haut_meneche
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, caisse]
+    speaker: meneche
+    when: "gauges.caisse > 75"
+    text: "Ménèche, carnet ouvert : « Juste une question, hors micro : d'où vient l'argent ? Je demande pour un ami. Il travaille à la Commission de Contrôle des Comptes. »"
+    left: {label: "Un mécène", effects: {caisse: "--", direction: "+"}, answer: "Il note « mécène ». Il souligne deux fois."}
+    right: {label: "Ça ne vous regarde pas", effects: {caisse: "+", tribunes: "-", relation: {meneche: -1}}, answer: "Il note le silence. Il note toujours."}
+
+  # ------------------------------------------------------------------- joueur
+  - id: jp.alarme.vestiaire_bas_brehaut
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    when: "gauges.vestiaire < 25"
+    text: "Bréhaut, sans te regarder : « Plus personne ne te fait la passe. Même au toro. Le groupe vit bien, sans toi. »"
+    left: {label: "Je paie ma tournée", effects: {vestiaire: "+++", caisse: "-"}, answer: "Trois tournées. Au toro, tu touches enfin le ballon."}
+    right: {label: "Je joue pour moi", effects: {vestiaire: "-", tribunes: "+"}, answer: "Tu marques seul. Personne ne vient te féliciter."}
+
+  - id: jp.alarme.vestiaire_haut_brehaut
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    when: "gauges.vestiaire > 75"
+    text: "Bréhaut, brassard à la main : « Ils veulent te donner le brassard. Le capitaine, c'est moi, et je note. »"
+    left: {label: "Le brassard, c'est toi", effects: {vestiaire: "--", direction: "+", relation: {brehaut: 1}}, answer: "Il remet le brassard. Il te serre la main, un peu trop fort."}
+    right: {label: "Je le prends", effects: {vestiaire: "+", direction: "--", relation: {brehaut: -2}, set: [capitaine]}, answer: "Le vestiaire applaudit. Bréhaut regarde ailleurs."}
+
+  - id: jp.alarme.tribunes_bas_gege
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé, à l'échauffement : « On te siffle à l'échauffement. On s'entraîne pour le parking. »"
+    left: {label: "Je viens au local", effects: {tribunes: "+++", vestiaire: "-"}, answer: "Deux bières et une chanson. À ton nom, cette fois."}
+    right: {label: "Ils sifflent, je marque", effects: {tribunes: "-", force: 2}, answer: "Tu marques. Le virage siffle plus fort."}
+
+  - id: jp.alarme.tribunes_haut_lea
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    when: "gauges.tribunes > 75"
+    text: "Léa, micro tendu : « Tu as plus de contrats pub que de passes. Ton agent pleure de joie, le coach pleure tout court. Vous confirmez ? »"
+    left: {label: "J'annule deux tournages", effects: {tribunes: "--", vestiaire: "+", caisse: "-"}, answer: "Le coach arrête de pleurer. Ton agent commence."}
+    right: {label: "Le foot, c'est un métier de pub", effects: {tribunes: "+", direction: "--", caisse: "+"}, answer: "Titre du lendemain : « L'homme-sandwich ». Ton agent l'encadre."}
+
+  - id: jp.alarme.direction_bas_vukic
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: vukic
+    when: "gauges.direction < 25"
+    text: "Vukić, l'adjoint, en passant : « Je te le dis parce que personne ne te le dira : le coach a une place pour toi. La 14B. »"
+    left: {label: "Je frappe à sa porte", effects: {direction: "+++", vestiaire: "-"}, answer: "Vingt minutes de bureau. Tu ressors titulaire, et détesté."}
+    right: {label: "Qu'il me mette 14B", effects: {direction: "-", tribunes: "+"}, answer: "La 14B a une vue. Sur le banc."}
+
+  - id: jp.alarme.direction_haut_vukic
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: vukic
+    when: "gauges.direction > 75"
+    text: "Vukić, l'adjoint : « Le coach t'aime tant qu'il t'emmène partout. Même en deuxième division lointaine. »"
+    left: {label: "Je reste ici", effects: {direction: "--", tribunes: "+"}, answer: "Le coach part seul. Il t'envoie une carte postale. Sans timbre."}
+    right: {label: "Je le suis", effects: {direction: "---", caisse: "++", vestiaire: "-"}, answer: "Deuxième division lointaine. Le coach t'aime toujours. Personne d'autre."}
+
+  - id: jp.alarme.caisse_bas_fardelli
+    roles: [joueur]
+    arc: mercato
+    tags: [agents, caisse]
+    speaker: fardelli
+    when: "gauges.caisse < 25"
+    text: "Fardelli, sans cigare : « Mon ami, on parle d'argent ou d'amitié ? Là, on ne parle plus d'argent. »"
+    left: {label: "Un contrat pub, vite", effects: {caisse: "+++", tribunes: "-"}, answer: "Une boisson énergisante. Tu ne l'as jamais goûtée."}
+    right: {label: "Je vends la voiture", effects: {caisse: "+", vestiaire: "-"}, answer: "Tu arrives à l'entraînement en bus. Le groupe filme."}
+
+  - id: jp.alarme.caisse_haut_fardelli
+    roles: [joueur]
+    arc: mercato
+    tags: [agents, caisse, scandale]
+    speaker: fardelli
+    when: "gauges.caisse > 75"
+    text: "Fardelli, tout sourire : « Ton cousin a une idée pour ton contrat d'image. Le fisc en a une aussi. »"
+    left: {label: "Tout déclaré", effects: {caisse: "--", direction: "+"}, answer: "Le cousin est vexé. Le fisc, non."}
+    right: {label: "Le cousin gère", effects: {caisse: "+", relation: {fardelli: 1}, set: [offshore]}, answer: "Le cousin ouvre une société. Aux îles. Tu ne sais pas lesquelles."}

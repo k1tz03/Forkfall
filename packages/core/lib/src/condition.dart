@@ -11,13 +11,39 @@
 ///   ['call', 'flag', [args...]]
 library;
 
+import 'content.dart';
 import 'state.dart';
 
 class EvalContext {
   final GameState state;
   final String phase;
-  const EvalContext(this.state, this.phase);
+  final Card? card; // the card being evaluated (for `speaker`, `speaker.relation`)
+  final int slotsTotal;
+  final Set<String> cast; // characters in the postulat's cast
+  const EvalContext(this.state, this.phase, {this.card, this.slotsTotal = 17, this.cast = const {}});
+
+  EvalContext withCard(Card? c) => EvalContext(state, phase, card: c, slotsTotal: slotsTotal, cast: cast);
 }
+
+/// Static paths the `when` language knows (consumed by the lint).
+const Set<String> kKnownPaths = {
+  'gauges.vestiaire', 'gauges.tribunes', 'gauges.direction', 'gauges.caisse',
+  'parole', 'pression', 'force', 'age', 'player.age', 'year', 'turn',
+  'season', 'season.index', 'season.phase', 'role',
+  'world.rang', 'world.serie_defaites', 'world.serie_victoires', 'world.division', 'world.rang_final',
+  'objective', 'objective.promised',
+  'postulat', 'ncards', 'slot', 'slots_left', 'tension', 'drames',
+  'speaker', 'speaker.relation', 'last_speaker',
+};
+
+/// Prefixes for dynamic paths (`vars.x`, `flags.x`, `relation.x`, `stats.x`).
+const List<String> kKnownPathPrefixes = ['vars.', 'flags.', 'relation.', 'stats.'];
+
+const Set<String> kKnownCalls = {
+  'flag', 'seen', 'since', 'count', 'relation', 'between', 'role_was', 'phase',
+  'seen_count', 'since_arc', 'arc', 'arc_step', 'since_char', 'appearances',
+  'alarm', 'enemy', 'unlocked', 'in_cast', 'expression',
+};
 
 /// Evaluate a compiled `when` node. A null node means "always true".
 bool evalWhen(Object? node, EvalContext ctx) {
@@ -131,10 +157,31 @@ Object? _resolvePath(String path, EvalContext ctx) {
       return s.world.serieVictoires;
     case 'world.division':
       return s.world.division;
+    case 'world.rang_final':
+      return s.world.rangFinal;
     case 'objective':
       return s.objectiveTarget;
     case 'objective.promised':
       return s.objectivePromised;
+    case 'postulat':
+      return s.postulatId;
+    case 'ncards':
+      return s.ncards;
+    case 'slot':
+      return s.slot;
+    case 'slots_left':
+      return ctx.slotsTotal - s.slot;
+    case 'tension':
+      return s.tension;
+    case 'drames':
+      return s.drames;
+    case 'speaker':
+      return ctx.card?.speaker ?? '';
+    case 'speaker.relation':
+      final sp = ctx.card?.speaker;
+      return sp == null ? 0 : (s.relations[sp] ?? 0);
+    case 'last_speaker':
+      return s.lastSpeaker ?? '';
   }
   if (path.startsWith('vars.')) {
     return s.vars[path.substring(5)] ?? 0;
@@ -144,6 +191,9 @@ Object? _resolvePath(String path, EvalContext ctx) {
   }
   if (path.startsWith('relation.')) {
     return s.relations[path.substring(9)] ?? 0;
+  }
+  if (path.startsWith('stats.')) {
+    return s.stats[path.substring(6)] ?? 0;
   }
   throw StateError('Unknown path: $path');
 }
@@ -156,10 +206,13 @@ Object? _call(String name, List<Object?> args, EvalContext ctx) {
     case 'seen':
       return s.cooldowns.containsKey(args[0] as String);
     case 'since':
+      // In narrative cards (the cooldown clock).
       final last = s.cooldowns[args[0] as String];
-      return last == null ? 99999 : (s.turn - last);
+      return last == null ? 99999 : (s.ncards - last);
     case 'count':
       return s.vars[args[0] as String] ?? 0;
+    case 'seen_count':
+      return s.seenCount[args[0] as String] ?? 0;
     case 'relation':
       return s.relations[args[0] as String] ?? 0;
     case 'between':
@@ -172,6 +225,29 @@ Object? _call(String name, List<Object?> args, EvalContext ctx) {
       return s.flags.contains('role_was_${args[0]}');
     case 'phase':
       return ctx.phase == args[0];
+    case 'since_arc':
+      final st = s.arcs[args[0] as String];
+      return st == null ? 99999 : (s.ncards - st.lastN);
+    case 'arc':
+      return s.arcs[args[0] as String]?.status ?? 'none';
+    case 'arc_step':
+      return s.arcs[args[0] as String]?.step ?? '';
+    case 'since_char':
+      final last = s.lastSeenChar[args[0] as String];
+      return last == null ? 99999 : (s.ncards - last);
+    case 'appearances':
+      return s.speakerSeen[args[0] as String] ?? 0;
+    case 'alarm':
+      return s.alarmFired.contains('${args[0]}:${args[1]}');
+    case 'enemy':
+      return s.enemies.contains(args[0] as String);
+    case 'unlocked':
+      return s.unlocked.contains(args[0] as String);
+    case 'in_cast':
+      return ctx.cast.contains(args[0] as String);
+    case 'expression':
+      final r = s.relations[args[0] as String] ?? 0;
+      return r >= 1 ? 'sourire' : (r <= -1 ? 'noir' : 'neutre');
     default:
       throw StateError('Unknown function: $name');
   }

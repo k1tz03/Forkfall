@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fusible_core/fusible_core.dart' show kPostulats;
 
 import '../state/game_controller.dart';
 
@@ -64,7 +63,7 @@ class _PostulatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final post = kPostulats[index];
+    final post = controller.engine.content.postulatsByIndex[index];
     final roleName = controller.engine.content.roles[post.role]?.name ?? post.role;
     return Card(
       margin: const EdgeInsets.only(bottom: 12),

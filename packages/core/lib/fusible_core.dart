@@ -3,8 +3,9 @@
 /// reproducible from a seed and a list of choices.
 library fusible_core;
 
-export 'src/condition.dart' show EvalContext, evalWhen;
+export 'src/condition.dart' show EvalContext, evalWhen, kKnownPaths, kKnownPathPrefixes, kKnownCalls;
 export 'src/content.dart';
+export 'src/draw/director.dart';
 export 'src/effects.dart';
 export 'src/engine.dart';
 export 'src/rng.dart';

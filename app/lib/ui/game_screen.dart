@@ -115,7 +115,15 @@ class _CardBody extends StatelessWidget {
                   color: scheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(pending.speaker!, style: Theme.of(context).textTheme.labelMedium),
+                child: Text(
+                  // The character's display name and function come from
+                  // characters.yaml via the engine payload (never the raw id).
+                  [
+                    (pending.payload['speakerName'] as String?) ?? pending.speaker!,
+                    if ((pending.payload['speakerLabel'] as String?)?.isNotEmpty ?? false) pending.payload['speakerLabel'] as String,
+                  ].join(' · '),
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
               ),
             ),
           Flexible(

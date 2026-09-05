@@ -6,22 +6,74 @@ library;
 import 'rng.dart';
 
 /// One entry in a `schedule:` list (a delayed / "sablier" chained card).
+/// Delays count narrative cards: the card is due at `inMin` and must be out by
+/// `inMax` (a hard deadline the director enforces — no randomness here).
 class ScheduleOp {
   final String card;
   final int inMin;
   final int inMax;
-  const ScheduleOp(this.card, this.inMin, this.inMax);
+  final String fallback; // 'drop' | 'nouvelles'
+  final Object? cancelIf; // compiled `when` AST, or null
+  final bool sameClub;
+  const ScheduleOp(this.card, this.inMin, this.inMax, {this.fallback = 'drop', this.cancelIf, this.sameClub = true});
 
   factory ScheduleOp.fromJson(Map<String, dynamic> j) => ScheduleOp(
         j['card'] as String,
-        (j['in'] as List).first as int,
-        (j['in'] as List).last as int,
+        ((j['in'] as List).first as num).toInt(),
+        ((j['in'] as List).last as num).toInt(),
+        fallback: j['fallback'] as String? ?? 'drop',
+        cancelIf: j['cancel_if'],
+        sameClub: j['same_club'] != false,
       );
 
   Map<String, dynamic> toJson() => {
         'card': card,
         'in': [inMin, inMax],
+        if (fallback != 'drop') 'fallback': fallback,
+        if (cancelIf != null) 'cancel_if': cancelIf,
+        if (!sameClub) 'same_club': false,
       };
+}
+
+/// An explicit arc branch taken from a choice:
+/// `next: end | abort | {step, in: [a, b], this_season}`.
+class NextOp {
+  final String kind; // 'end' | 'abort' | 'step'
+  final String? step;
+  final int inMin;
+  final int inMax;
+  final bool thisSeason;
+  const NextOp(this.kind, {this.step, this.inMin = 1, this.inMax = 3, this.thisSeason = false});
+
+  factory NextOp.fromJson(Object j) {
+    if (j is String) return NextOp(j);
+    final m = (j as Map).cast<String, dynamic>();
+    final range = (m['in'] as List?) ?? const [1, 3];
+    return NextOp(
+      'step',
+      step: m['step'] as String,
+      inMin: (range.first as num).toInt(),
+      inMax: (range.last as num).toInt(),
+      thisSeason: m['this_season'] == true,
+    );
+  }
+
+  Object toJson() => kind == 'step'
+      ? {
+          'step': step,
+          'in': [inMin, inMax],
+          if (thisSeason) 'this_season': true,
+        }
+      : kind;
+}
+
+/// Close another arc from a choice (`arc: [{id, status}]`).
+class ArcCloseOp {
+  final String id;
+  final String status; // 'done' | 'abandonne'
+  const ArcCloseOp(this.id, this.status);
+  factory ArcCloseOp.fromJson(Map<String, dynamic> j) => ArcCloseOp(j['id'] as String, j['status'] as String? ?? 'done');
+  Map<String, dynamic> toJson() => {'id': id, 'status': status};
 }
 
 class EffectSet {
@@ -41,6 +93,9 @@ class EffectSet {
   final String? end; // explicit ending id
   final bool promisePublic; // objective card: swiping this makes a public promise
   final List<RandBranch> rand;
+  final NextOp? arcNext; // explicit arc branch (step cards only)
+  final List<ArcCloseOp> arcClose;
+  final List<String> enemy; // characters forced to -3
 
   const EffectSet({
     this.gauges = const {},
@@ -59,6 +114,9 @@ class EffectSet {
     this.end,
     this.promisePublic = false,
     this.rand = const [],
+    this.arcNext,
+    this.arcClose = const [],
+    this.enemy = const [],
   });
 
   factory EffectSet.fromJson(Map<String, dynamic> j) {
@@ -83,6 +141,9 @@ class EffectSet {
       end: j['end'] as String?,
       promisePublic: j['promise'] == true,
       rand: (j['rand'] as List?)?.map((e) => RandBranch.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
+      arcNext: j['next'] == null ? null : NextOp.fromJson(j['next'] as Object),
+      arcClose: (j['arc'] as List?)?.map((e) => ArcCloseOp.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
+      enemy: (j['enemy'] as List?)?.cast<String>() ?? const [],
     );
   }
 
@@ -114,6 +175,9 @@ class EffectSet {
         if (end != null) 'end': end,
         if (promisePublic) 'promise': true,
         if (rand.isNotEmpty) 'rand': rand.map((r) => r.toJson()).toList(),
+        if (arcNext != null) 'next': arcNext!.toJson(),
+        if (arcClose.isNotEmpty) 'arc': arcClose.map((a) => a.toJson()).toList(),
+        if (enemy.isNotEmpty) 'enemy': enemy,
       };
 }
 

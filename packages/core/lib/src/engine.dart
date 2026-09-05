@@ -5,63 +5,56 @@ library;
 
 import 'condition.dart';
 import 'content.dart';
+import 'draw/director.dart';
 import 'effects.dart';
 import 'rng.dart';
 import 'state.dart';
 import 'text.dart';
 import 'world.dart';
 
-class Postulat {
-  final String role;
-  final String title;
-  final int division;
-  final Map<String, int> gauges;
-  final int force;
-  final String? objective; // forced objective, else auto
-  final List<String> flags;
-  const Postulat(this.role, this.title, this.division, this.gauges, this.force, {this.objective, this.flags = const []});
-}
-
-/// The MVP postulats. The app shows three drawn cards; the engine takes an
-/// index (0..). Chronology starts in the 1990s.
-const List<Postulat> kPostulats = [
-  Postulat('entraineur', 'Le promu sans un sou', 1, {'vestiaire': 50, 'tribunes': 80, 'direction': 52, 'caisse': 30}, 46,
-      objective: 'maintien'),
-  Postulat('entraineur', 'L\'intérimaire', 2, {'vestiaire': 45, 'tribunes': 50, 'direction': 40, 'caisse': 50}, 44,
-      flags: ['interim']),
-  Postulat('joueur', 'La pépite du club-usine', 2, {'vestiaire': 50, 'tribunes': 80, 'direction': 50, 'caisse': 45}, 58),
-  Postulat('joueur', 'Fin de contrat à 31 ans', 1, {'vestiaire': 50, 'tribunes': 50, 'direction': 45, 'caisse': 60}, 52,
-      flags: ['genou']),
-];
-
 class Engine {
   final Content content;
+  late final Director director = Director(content, _cardToPending, _filler);
   Engine(this.content);
 
+  /// Default chronology start; each postulat carries its own `year`.
   static const int startYear = 1990;
 
   GameState start(int seed, {int postulat = 0}) {
     final rng = Rng(seed);
-    final post = kPostulats[postulat % kPostulats.length];
+    final posts = content.postulatsByIndex;
+    if (posts.isEmpty) throw StateError('Aucun postulat dans le contenu (content/postulats.yaml).');
+    final post = posts[postulat % posts.length];
+    final role = content.roles[post.role]!;
     final entities = _makeEntities(rng, post.role);
+    entities.named['president'] = content.characters[post.president ?? role.patron ?? '']?.name ?? 'Le président';
+    final age = rng.range(role.startAgeMin, role.startAgeMax);
+    final flags = <String>{...post.flags};
+    if (post.camille) {
+      const metiers = ['avocate', 'journaliste', 'agente', 'medecin', 'elue'];
+      final m = metiers[rng.nextInt(metiers.length)];
+      flags.add('camille_$m');
+      entities.named['camille_metier'] = m;
+    }
     final s = GameState(
       contentVersion: content.version,
       contentHash: content.hash,
       seed: seed,
       postulat: postulat,
+      postulatId: post.id,
       rngState: rng.state,
       turn: 0,
       season: 0,
       beat: 0,
-      age: rng.range(content.roles[post.role]!.startAgeMin, content.roles[post.role]!.startAgeMax),
-      year: startYear,
+      age: age,
+      year: post.year,
       role: post.role,
       gauges: Map.of(post.gauges),
       force: post.force,
       parole: 0,
       pression: 0,
       vars: {},
-      flags: {...post.flags},
+      flags: flags,
       relations: {},
       entities: entities,
       world: WorldState(division: post.division),
@@ -124,10 +117,14 @@ class Engine {
       case 'narrative':
       case 'objective':
         final choice = right ? p.rightEffects : p.leftEffects;
+        final relBefore = Map<String, int>.of(s.relations);
         _applyEffects(s, choice, rng);
         s.lastAnswer = right ? (p.payload['answerRight'] as String?) : (p.payload['answerLeft'] as String?);
         if (p.kind == 'objective') {
           s.objectivePromised = right;
+        } else {
+          director.afterNarrative(s, p, right);
+          director.relationCrossings(s, relBefore, p.payload['phase'] as String? ?? '');
         }
         _passiveDrift(s);
         _updateCentered(s);
@@ -189,9 +186,37 @@ class Engine {
     for (final id in e.cancel) {
       s.scheduled.removeWhere((sc) => sc.card == id);
     }
-    for (final sc in e.schedule) {
-      final due = s.turn + rng.range(sc.inMin, sc.inMax);
-      s.scheduled.add(Scheduled(sc.card, due));
+    for (final op in e.schedule) {
+      // Delays are in narrative cards: due at min, hard deadline at max. A
+      // step card scheduled this way is an "arc jump": the arc goes straight
+      // to that step.
+      final target = content.cards[op.card];
+      final arcId = target?.arcId;
+      director.enqueue(
+        s,
+        Scheduled(
+          card: op.card,
+          kind: director.kindOfArc(arcId),
+          arc: arcId,
+          step: target?.stepId,
+          dueN: s.ncards + op.inMin,
+          deadlineN: s.ncards + op.inMax,
+          fallback: op.fallback,
+          cancelIf: op.cancelIf,
+          sameClub: op.sameClub,
+        ),
+      );
+    }
+    for (final c in e.arcClose) {
+      if (c.status == 'done') {
+        director.arcDone(s, c.id);
+      } else {
+        director.arcAbort(s, c.id, 'ferme');
+      }
+    }
+    for (final id in e.enemy) {
+      s.relations[id] = -3;
+      s.enemies.add(id);
     }
     for (final u in e.unlock) {
       s.unlocked.add(u);
@@ -323,12 +348,23 @@ class Engine {
     if (s.objectivePromised) {
       s.parole = (s.parole + (verdict.objectiveMet ? 1 : -2)).clamp(-5, 5);
     }
+    // What the next season's script reads.
+    s.world.rangFinal = verdict.rank;
+    if (verdict.objectiveMet) {
+      s.flags.add('bilan_tenu');
+      s.flags.remove('bilan_manque');
+      s.vars['saisons_tenues'] = (s.vars['saisons_tenues'] ?? 0) + 1;
+    } else {
+      s.flags.add('bilan_manque');
+      s.flags.remove('bilan_tenu');
+    }
     // Division movement for next season.
     if (verdict.outcome == 'montee' && s.world.division > 1) {
       s.world.division -= 1;
       s.force = (s.force + 4).clamp(0, 100);
     } else if (verdict.outcome == 'descente' && s.world.division < 2) {
       s.world.division += 1;
+      s.flags.add('descente');
     }
     if (verdict.outcome == 'titre') s.stats['titres'] = (s.stats['titres'] ?? 0) + 1;
     s.world.standingRank = verdict.rank;
@@ -370,6 +406,12 @@ class Engine {
     s.entities.named['clubShort'] = s.entities.named['club']!.split(' ').last;
     s.objectiveTarget = 'maintien';
     s.objectivePromised = false;
+    // A new club: pending same-club arcs degrade into « Nouvelles du passé »
+    // at the next purge; alarms and the tension counter start fresh.
+    s.clubSeq += 1;
+    s.lastSpeaker = null;
+    s.alarmFired.clear();
+    s.tension = 0;
   }
 
   // ---------------------------------------------------------------------------
@@ -418,6 +460,7 @@ class Engine {
         'gauge': ending?.gauge,
         'side': ending?.side,
         'golden': ending?.golden ?? false,
+        'share': ending?.share ?? true,
         'title': title,
       },
       single: true,
@@ -460,11 +503,12 @@ class Engine {
     final rng = rngIn ?? Rng.fromState(s.rngState);
     final beats = content.seasonBeats[s.role]!;
     if (s.beat >= beats.length) s.beat = 0;
+    if (s.beat == 0) director.openSeason(s);
     final beat = beats[s.beat];
     s.turn += 1;
     switch (beat.kind) {
       case 'card':
-        s.pending = _drawNarrative(s, beat.phase, rng);
+        s.pending = director.drawNarrative(s, beat.phase, rng);
         break;
       case 'objective':
         s.pending = _objectiveCard(s, rng);
@@ -503,57 +547,11 @@ class Engine {
     if (rngIn == null) s.rngState = rng.state;
   }
 
-  Pending _drawNarrative(GameState s, String phase, Rng rng) {
-    // 1) A scheduled (chained / sablier) card that is due and still eligible.
-    s.scheduled.sort((a, b) => a.dueTurn.compareTo(b.dueTurn));
-    for (final sc in List.of(s.scheduled)) {
-      if (sc.dueTurn > s.turn) continue;
-      final card = content.cards[sc.card];
-      if (card == null) {
-        s.scheduled.remove(sc);
-        continue;
-      }
-      if (evalWhen(card.when, EvalContext(s, phase))) {
-        s.scheduled.remove(sc);
-        return _cardToPending(s, card, phase, rng);
-      }
-    }
-    // 2) Weighted pick from the eligible pool.
-    final pool = <Card>[];
-    final weights = <double>[];
-    for (final card in content.cardsForRole(s.role)) {
-      final last = s.cooldowns[card.id];
-      if (last != null) {
-        if (card.once) continue;
-        if (s.turn - last < card.cooldown) continue;
-      }
-      if (!evalWhen(card.when, EvalContext(s, phase))) continue;
-      double w = card.weight;
-      for (final tag in card.tags) {
-        if (tag.startsWith('rescue:')) {
-          final g = tag.substring(7);
-          final v = s.gauges[g] ?? 50;
-          if (v < 20 || v > 80) w *= 3;
-        }
-        if (tag.startsWith('risk:')) {
-          final g = tag.substring(5);
-          final v = s.gauges[g] ?? 50;
-          if (v < 20 || v > 80) w *= 0.5;
-        }
-        if (tag == 'piege') w *= (s.centeredStreak >= 12) ? 4 : 0.25;
-      }
-      pool.add(card);
-      weights.add(w);
-    }
-    if (pool.isEmpty) return _filler(s);
-    final idx = rng.weightedIndex(weights);
-    if (idx < 0) return _filler(s);
-    return _cardToPending(s, pool[idx], phase, rng);
-  }
-
-  Pending _cardToPending(GameState s, Card card, String phase, Rng rng) {
-    s.cooldowns[card.id] = s.turn;
-    final speakerGenre = _speakerGenre(card.speaker);
+  /// Resolve a card into what the UI renders. `extra` comes from the director
+  /// (band, kind, arc/step, alarm gauge, epilogue of a « Nouvelles du passé »).
+  Pending _cardToPending(GameState s, Card card, String phase, Rng rng, Map<String, dynamic> extra) {
+    final ch = card.speaker == null ? null : content.characters[card.speaker];
+    final speakerGenre = ch?.genre ?? 'm';
     final text = formatText(card.text, s, speakerGenre: speakerGenre);
     List<GaugeHint> hintsFor(EffectSet e) {
       if (card.previewOverride != null) {
@@ -562,6 +560,12 @@ class Engine {
       return e.previewHints();
     }
 
+    final isPasse = card.kind == 'passe';
+    final left = isPasse ? epilogueEffects(extra) : card.left.effects;
+    final right = isPasse ? epilogueEffects(extra) : card.right.effects;
+    final rel = card.speaker == null ? 0 : (s.relations[card.speaker] ?? 0);
+    final expression = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
+
     return Pending(
       id: card.id,
       kind: 'narrative',
@@ -569,17 +573,33 @@ class Engine {
       text: text,
       leftLabel: formatText(card.left.label, s, speakerGenre: speakerGenre),
       rightLabel: formatText(card.right.label, s, speakerGenre: speakerGenre),
-      leftEffects: card.left.effects,
-      rightEffects: card.right.effects,
-      previewLeft: hintsFor(card.left.effects),
-      previewRight: hintsFor(card.right.effects),
+      leftEffects: left,
+      rightEffects: right,
+      previewLeft: hintsFor(left),
+      previewRight: hintsFor(right),
+      single: card.kind == 'nouvelle' || isPasse,
       payload: {
         if (card.left.answer != null) 'answerLeft': formatText(card.left.answer!, s, speakerGenre: speakerGenre),
         if (card.right.answer != null) 'answerRight': formatText(card.right.answer!, s, speakerGenre: speakerGenre),
         'sablier': card.sablier,
         'tags': card.tags,
+        if (ch != null) 'speakerName': ch.name,
+        if (ch != null) 'speakerLabel': ch.label,
+        if (ch != null && ch.tic.isNotEmpty) 'tic': ch.tic,
+        if (ch != null) 'camp': ch.camp,
+        'expression': expression,
+        'kind': card.kind,
+        'tone': card.tone,
+        ...extra,
       },
     );
+  }
+
+  String _patronOf(GameState s) {
+    final post = content.postulats[s.postulatId];
+    final role = content.roles[s.role];
+    final fromPost = post != null && post.role == s.role ? post.president : null;
+    return fromPost ?? role?.patron ?? (s.role == 'entraineur' ? 'aulard' : 'fardelli');
   }
 
   Pending _objectiveCard(GameState s, Rng rng) {
@@ -588,12 +608,13 @@ class Engine {
         : s.objectiveTarget;
     s.objectiveTarget = target;
     s.objectiveLabel = objectiveLabelFr(target);
-    final patron = s.role == 'entraineur' ? 'Jean-Marie Aulard' : 'Ton agent, Fardelli';
+    final patron = _patronOf(s);
+    final name = content.characters[patron]?.name ?? (s.role == 'entraineur' ? 'Le président' : 'Ton agent');
     return Pending(
       id: 'objective:${s.season}',
       kind: 'objective',
-      speaker: s.role == 'entraineur' ? 'aulard' : 'fardelli',
-      text: '$patron : « Cette saison, l\'objectif c\'est ${objectiveLabelFr(target).toLowerCase()}. Tu t\'engages ? »',
+      speaker: patron,
+      text: '$name : « Cette saison, l\'objectif c\'est ${objectiveLabelFr(target).toLowerCase()}. Tu t\'engages ? »',
       leftLabel: 'Je m\'engage',
       rightLabel: 'Je ne promets rien',
       leftEffects: const EffectSet(gauges: {'direction': 4}),
@@ -603,6 +624,8 @@ class Engine {
       payload: {
         'answerLeft': 'Promesse publique : ${objectiveLabelFr(target)}.',
         'answerRight': 'Tu gardes les mains libres.',
+        if (content.characters[patron] != null) 'speakerName': content.characters[patron]!.name,
+        if (content.characters[patron] != null) 'speakerLabel': content.characters[patron]!.label,
       },
     );
   }
@@ -707,18 +730,26 @@ class Engine {
         single: true,
       );
 
-  Pending _bilanContrat(GameState s) => Pending(
-        id: 'bilan:contrat:${s.season}',
-        kind: 'bilan_contrat',
-        speaker: 'aulard',
-        text: 'Le président : « On continue l\'aventure, ou tu tentes autre chose ? »',
-        leftLabel: 'Je reste',
-        rightLabel: 'Je réclame plus de moyens',
-        leftEffects: const EffectSet(gauges: {'direction': 3}),
-        rightEffects: const EffectSet(gauges: {'direction': -6, 'caisse': 6}),
-        previewLeft: const [GaugeHint('direction', 1)],
-        previewRight: const [GaugeHint('direction', 1), GaugeHint('caisse', 1)],
-      );
+  Pending _bilanContrat(GameState s) {
+    final patron = _patronOf(s);
+    final name = content.characters[patron]?.name ?? 'Le président';
+    return Pending(
+      id: 'bilan:contrat:${s.season}',
+      kind: 'bilan_contrat',
+      speaker: patron,
+      text: '$name : « On continue l\'aventure, ou tu tentes autre chose ? »',
+      leftLabel: 'Je reste',
+      rightLabel: 'Je réclame plus de moyens',
+      leftEffects: const EffectSet(gauges: {'direction': 3}),
+      rightEffects: const EffectSet(gauges: {'direction': -6, 'caisse': 6}),
+      previewLeft: const [GaugeHint('direction', 1)],
+      previewRight: const [GaugeHint('direction', 1), GaugeHint('caisse', 1)],
+      payload: {
+        if (content.characters[patron] != null) 'speakerName': content.characters[patron]!.name,
+        if (content.characters[patron] != null) 'speakerLabel': content.characters[patron]!.label,
+      },
+    );
+  }
 
   Pending _bilanCarrefour(GameState s, Rng rng) {
     // Offer a transition if any is eligible and no gauge is under 20.
@@ -763,6 +794,7 @@ class Engine {
         rightLabel: 'Plus tard',
         leftEffects: const EffectSet(),
         rightEffects: const EffectSet(),
+        payload: const {'kind': 'filler', 'tone': 'leger'},
       );
 
   // ---------------------------------------------------------------------------
@@ -781,7 +813,6 @@ class Engine {
         'club': club,
         'clubShort': club.split(' ').last,
         'rival': rival,
-        'president': 'Jean-Marie Aulard',
         'capitaine': _pickName(rng, 'm'),
         'ville': _pickVille(rng),
         'coach': _pickName(rng, 'm'),
@@ -804,11 +835,5 @@ class Engine {
   String _pickVille(Rng rng) {
     final villes = (content.names['villes'] as List).cast<String>();
     return villes[rng.nextInt(villes.length)];
-  }
-
-  String _speakerGenre(String? speaker) {
-    if (speaker == null) return 'm';
-    const feminine = {'josiane', 'aubert', 'camille', 'lea'};
-    return feminine.contains(speaker) ? 'f' : 'm';
   }
 }

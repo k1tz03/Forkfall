@@ -70,7 +70,7 @@ class RunStats {
 }
 
 RunStats runOne(Engine engine, int seed, Policy policy, Set<String> seenCards) {
-  var s = engine.start(seed, postulat: seed % kPostulats.length);
+  var s = engine.start(seed, postulat: seed % engine.content.postulatsByIndex.length);
   int step = 0;
   final stats = RunStats();
   while (!s.over && step < 5000) {

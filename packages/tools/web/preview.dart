@@ -17,14 +17,17 @@ GameState? _state;
 
 String _postulatsJson() {
   final list = <Map<String, dynamic>>[];
-  for (var i = 0; i < kPostulats.length; i++) {
-    final p = kPostulats[i];
+  final posts = _content.postulatsByIndex;
+  for (var i = 0; i < posts.length; i++) {
+    final p = posts[i];
     list.add({
       'index': i,
       'title': p.title,
+      'question': p.question,
       'role': p.role,
       'roleName': _content.roles[p.role]?.name ?? p.role,
       'division': p.division,
+      'year': p.year,
     });
   }
   return jsonEncode({'postulats': list, 'startYear': Engine.startYear});
@@ -71,6 +74,14 @@ String _view() {
     m['card'] = {
       'id': p.id,
       'speaker': p.speaker,
+      'speakerName': p.payload['speakerName'],
+      'speakerLabel': p.payload['speakerLabel'],
+      'expression': p.payload['expression'],
+      'kind': p.payload['kind'],
+      'tone': p.payload['tone'],
+      'arc': p.payload['arc'],
+      'band': p.payload['band'],
+      'sablier': p.payload['sablier'] == true,
       'text': p.text,
       'leftLabel': p.leftLabel,
       'rightLabel': p.rightLabel,
