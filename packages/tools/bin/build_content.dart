@@ -531,7 +531,8 @@ void main() {
     });
   }
   for (final c in cards) {
-    if (mechanism[c['id']] == null && c['arc'] == 'nouvelle') c['kind'] = 'nouvelle';
+    // A hand-written kind (passe/nouvelle) is kept; otherwise `arc: nouvelle` makes a Nouvelle.
+    if (mechanism[c['id']] == null && c['kind'] == 'routine' && c['arc'] == 'nouvelle') c['kind'] = 'nouvelle';
   }
   // Schedule targets are queue-only unless `pool: true` is written.
   final scheduleTargets = <String>{};

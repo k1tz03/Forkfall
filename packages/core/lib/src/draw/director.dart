@@ -73,7 +73,8 @@ class Director {
 
   /// Add an entry. One live entry per arc (a script's anchors are exempt: a
   /// postulat script queues several anchors of the same season by design) and
-  /// one entry per card (re-scheduling a queued card replaces its window).
+  /// one entry per card (re-scheduling a queued card replaces its window) —
+  /// except « Nouvelles du passé », which is one entry per abandoned arc.
   void enqueue(GameState s, Scheduled sc) {
     s.seq += 1;
     sc.seq = s.seq;
@@ -81,7 +82,7 @@ class Director {
     if (sc.arc != null && sc.kind != 'script') {
       s.scheduled.removeWhere((e) => e.arc == sc.arc && e.kind != 'script');
     }
-    s.scheduled.removeWhere((e) => e.card == sc.card);
+    if (sc.kind != 'passe') s.scheduled.removeWhere((e) => e.card == sc.card);
     s.scheduled.add(sc);
   }
 
@@ -559,7 +560,8 @@ class Director {
     if (sc.fallback == 'nouvelles' &&
         const {'club', 'annulee', 'perimee'}.contains(reason) &&
         content.cards.containsKey(kNouvellesDuPasse)) {
-      s.entities.named['passe_titre'] = arc?.title ?? content.cards[sc.card]?.title ?? 'une vieille histoire';
+      final title = arc?.title ?? content.cards[sc.card]?.title ?? 'une vieille histoire';
+      s.entities.named['passe_titre'] = title;
       enqueue(
         s,
         Scheduled(
@@ -569,7 +571,7 @@ class Director {
           deadlineN: s.ncards + 3,
           fallback: 'drop',
           sameClub: false,
-          payload: {'epilogue': arc?.epilogue ?? const <String, dynamic>{}},
+          payload: {'epilogue': arc?.epilogue ?? const <String, dynamic>{}, 'passe_titre': title},
         ),
       );
     }
@@ -651,6 +653,9 @@ class Director {
     }
     s.lastSpeaker = sp;
     s.lastTheme = card.arc;
+    // Each « Nouvelles du passé » names its own affair, even when several are queued.
+    final passeTitre = sc?.payload['passe_titre'];
+    if (passeTitre is String) s.entities.named['passe_titre'] = passeTitre;
     final extra = <String, dynamic>{
       ...?(sc?.payload),
       'phase': phase,
