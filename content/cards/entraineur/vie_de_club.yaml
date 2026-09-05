@@ -1,0 +1,100 @@
+cards:
+  - id: en.presse.special
+    roles: [entraineur]
+    arc: presse
+    tags: [presse]
+    speaker: menèche
+    once: true
+    when: "season == 0 && season.phase == 'presaison'"
+    text: "Pierre Ménèche, première conférence : « Vous vous décrivez comment, coach ? »"
+    left: {label: "Je suis quelqu'un de spécial", effects: {tribunes: "++", direction: "+", set: [special]}, answer: "La formule fait le tour des rédactions."}
+    right: {label: "Le groupe vit bien", effects: {tribunes: "-", direction: "+"}, answer: "Sobre. Personne ne retient la phrase."}
+
+  - id: en.direction.achat_surprise
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    when: "season.phase == 'presaison' || season.phase == 'hiver'"
+    text: "Jean-Marie Aulard : « J'ai signé un attaquant ce matin. Tu l'apprends par la presse. Tu le fais jouer ? »"
+    left: {label: "Il joue", effects: {direction: "+", vestiaire: "-"}}
+    right: {label: "Il s'entraîne avec la réserve", effects: {direction: "--", vestiaire: "+"}, answer: "L'attaquant appelle un journaliste."}
+
+  - id: en.vestiaire.star_ne_defend_pas
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    when: "gauges.direction > 40"
+    text: "Bréhaut : « Notre numéro 10 refuse de défendre. Le président l'a payé une fortune. Tu le mets sur le banc ? »"
+    left: {label: "Sur le banc", effects: {vestiaire: "++", direction: "-", set: [star_banc]}}
+    right: {label: "Titulaire quand même", effects: {vestiaire: "-", direction: "+"}}
+
+  - id: en.direction.ultimatum
+    roles: [entraineur]
+    arc: direction
+    tags: [rescue:direction, retorse]
+    speaker: aulard
+    cooldown: 40
+    when: "gauges.direction < 30"
+    text: "Le président : « Trois défaites de suite. Le prochain match est un ultimatum. J'ai déjà le numéro de ton remplaçant. »"
+    left: {label: "On attaque à outrance", effects: {rand: [{p: 0.5, direction: "+++", tribunes: "++"}, {p: 0, end: en_sms}]}}
+    right: {label: "Bloc bas, on assure le nul", effects: {tribunes: "-", direction: "+"}}
+
+  - id: en.presse.pas_vu
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, arbitrage]
+    speaker: lea
+    when: "gauges.vestiaire < 60"
+    text: "Micro tendu, après le carton rouge de ton milieu : « Vous avez vu l'action , coach ? »"
+    left: {label: "Je n'ai pas vu", effects: {vestiaire: "++", tribunes: "-"}}
+    right: {label: "Il mérite le rouge", effects: {vestiaire: "--", tribunes: "+"}}
+
+  - id: en.formation.gamin
+    roles: [entraineur]
+    arc: formation
+    tags: [formation]
+    speaker: vukic
+    when: "!flag('pepite')"
+    text: "Vukić : « Le petit Mbako marche sur l'eau chez les jeunes. Le président veut le vendre. Le lancer, c'est le protéger. »"
+    left: {label: "Titulaire samedi", effects: {tribunes: "+", direction: "-", set: [pepite], relation: {mbako: 2}}}
+    right: {label: "Trop tôt", effects: {direction: "+"}}
+
+  - id: en.vestiaire.sechecheveux
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    text: "À la mi-temps, mené 0-2, Bréhaut : « Ils attendent que tu gueules. Ou pas. »"
+    left: {label: "Coup de gueule", effects: {vestiaire: "-", force: "+"}}
+    right: {label: "Calme, tableau tactique", effects: {vestiaire: "+"}}
+
+  - id: en.direction.homme_president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, retorse]
+    speaker: aulard
+    when: "gauges.direction > 60"
+    text: "Aulard : « Signe cette déclaration : le président a raison de tout. Tu es mon homme, non ? »"
+    left: {label: "Je signe", effects: {direction: "++", vestiaire: "-", parole: -1, set: [homme_president]}}
+    right: {label: "Je garde ma liberté", effects: {direction: "-"}}
+
+  - id: en.famille.podcast
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    when: "gauges.tribunes < 55"
+    text: "Camille : « Je lance un podcast sur notre vie. Premier épisode : pourquoi le vestiaire compte plus que moi. »"
+    left: {label: "Je te soutiens", effects: {tribunes: "-", vestiaire: "-"}}
+    right: {label: "Pas question", effects: {vestiaire: "+"}, answer: "Le dîner est silencieux."}
+
+  - id: en.piege.projet
+    roles: [entraineur]
+    arc: divers
+    tags: [piege]
+    speaker: aulard
+    text: "Aulard : « On fait du surplace. Il nous faut un projet, coach. Tu prends position ou tu subis ? »"
+    left: {label: "Je prends un risque fort", effects: {direction: "++", vestiaire: "--"}}
+    right: {label: "On continue tranquille", effects: {direction: "--", tribunes: "-"}}

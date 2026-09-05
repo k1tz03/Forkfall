@@ -1,0 +1,99 @@
+cards:
+  - id: jp.mercato.transfert_siecle
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato]
+    speaker: fardelli
+    once: true
+    when: "gauges.tribunes > 70 && season >= 1"
+    text: "Rocco Fardelli : « Un club lointain met une fortune sur la table. Ta clause est publique, ton club ne peut rien faire. »"
+    left: {label: "Je pars", effects: {caisse: "+++", tribunes: "--", set: [galactique]}}
+    right: {label: "Je reste", effects: {tribunes: "++", direction: "+"}}
+
+  - id: jp.moment.penalty
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    text: "88e, 1-1. Bréhaut, ballon sous le bras : « C'est moi le tireur désigné. Lâche ce ballon. »"
+    left: {label: "Prends-le", effects: {vestiaire: "++", tribunes: "-"}}
+    right: {label: "Je tire", effects: {rand: [{p: 0.7, tribunes: "+++", vestiaire: "-"}, {p: 0, tribunes: "--", vestiaire: "-"}]}}
+
+  - id: jp.presse.bouteilles
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors]
+    speaker: lea
+    when: "gauges.tribunes > 65"
+    text: "L'attachée de presse : « Tu as écarté les bouteilles du sponsor en conférence. Ils veulent des excuses. »"
+    left: {label: "Buvez de l'eau", effects: {tribunes: "++", direction: "-", caisse: "-"}}
+    right: {label: "Je m'excuse", effects: {direction: "+", tribunes: "-"}}
+
+  - id: jp.scandale.pari
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, risk:direction]
+    speaker: null
+    when: "gauges.caisse < 45"
+    text: "Un pote d'enfance : « Une petite mise sur ton propre match, juste le nombre de corners. Personne ne saura. »"
+    left: {label: "OK, une fois", effects: {caisse: "+", set: [pisteur], schedule: [{card: jp.scandale.brigade, in: [4, 8]}]}, answer: "Tu ranges le téléphone, un peu vite."}
+    right: {label: "Jamais", effects: {tribunes: "+"}}
+
+  - id: jp.scandale.brigade
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, chaine]
+    speaker: menèche
+    sablier: true
+    when: "flag('pisteur')"
+    text: "Ménèche, sourire en coin : « La brigade financière s'intéresse à des paris. On dit que ça vient du vestiaire. »"
+    left: {label: "Je nie tout", effects: {direction: "--", tribunes: "--"}}
+    right: {label: "Je coopère", effects: {direction: "-", tribunes: "-", caisse: "-"}}
+
+  - id: jp.selection.liste
+    roles: [joueur]
+    arc: divers
+    tags: []
+    speaker: legruet
+    when: "gauges.tribunes > 55 && !flag('international')"
+    text: "Le sélectionneur, au téléphone : « Tu es dans ma liste. Mais ton club veut que tu déclares forfait pour ta cheville. »"
+    left: {label: "J'y vais", effects: {tribunes: "++", direction: "-", set: [international]}}
+    right: {label: "Forfait", effects: {direction: "+", tribunes: "-"}}
+
+  - id: jp.corps.genou
+    roles: [joueur]
+    arc: divers
+    tags: [risk:tribunes]
+    speaker: sabatier
+    when: "age >= 30"
+    text: "Doc Sabatier : « Ce genou, c'est six mois. On opère, ou on infiltre et tu joues le match de dimanche ? »"
+    left: {label: "J'opère", effects: {tribunes: "-", set: [genou]}}
+    right: {label: "Infiltration", effects: {tribunes: "+", vestiaire: "+", set: [genou]}}
+
+  - id: jp.famille.frere_agent
+    roles: [joueur]
+    arc: famille
+    tags: [famille, agents]
+    speaker: null
+    text: "Ton frère : « Vire Fardelli, je m'occupe de tout. Je suis de la famille, moi. »"
+    left: {label: "D'accord, frérot", effects: {caisse: "-", relation: {fardelli: -2}}}
+    right: {label: "Reste à ta place", effects: {tribunes: "+"}}
+
+  - id: jp.vestiaire.yacht
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: null
+    when: "flag('genou')"
+    text: "Ton community manager : « Ta photo sur un yacht pendant que l'équipe s'entraîne fait le tour du web. »"
+    left: {label: "Supprime", effects: {tribunes: "+"}}
+    right: {label: "J'assume, blessé pas mort", effects: {tribunes: "--", vestiaire: "-"}}
+
+  - id: jp.piege.confort
+    roles: [joueur]
+    arc: divers
+    tags: [piege]
+    speaker: clow
+    text: "Brian Clow, verre à la main : « Tu joues à ne pas perdre, gamin. Une jauge pleine tue autant qu'une vide. »"
+    left: {label: "Je hausse le ton", effects: {vestiaire: "++", tribunes: "-"}}
+    right: {label: "Je reste discret", effects: {tribunes: "--"}}

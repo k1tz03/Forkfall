@@ -1,0 +1,28 @@
+roles:
+  - id: entraineur
+    name: Entraîneur
+    fragile: direction
+    age: [38, 55]
+    posture: [Offensif, Prudent]
+    gauges:
+      - {id: vestiaire, label: Vestiaire, icon: crampon, empty: en_bus, full: en_copain}
+      - {id: tribunes, label: Tribunes, icon: echarpe, empty: en_banderole, full: en_otage}
+      - {id: direction, label: Le président, icon: fauteuil, empty: en_sms, full: en_placard}
+      - {id: caisse, label: Le budget, icon: billets, empty: en_decoupe, full: en_coupable}
+    transitions: []
+
+  - id: joueur
+    name: Joueur pro
+    fragile: tribunes
+    age: [19, 31]
+    posture: [Je fonce, Je me ménage]
+    gauges:
+      - {id: vestiaire, label: Vestiaire, icon: crampon, empty: jp_mouton, full: jp_porteparole}
+      - {id: tribunes, label: Tribunes, icon: echarpe, empty: jp_siffle, full: jp_sandwich}
+      - {id: direction, label: Le club, icon: fauteuil, empty: jp_place14b, full: jp_fils}
+      - {id: caisse, label: Compte, icon: billets, empty: jp_sansclub, full: jp_panama}
+    transitions:
+      - to: entraineur
+        when: "age >= 32 || flag('genou')"
+        label: "Le coach : « Tes jambes parlent, tu le sais. La réserve n'a pas d'entraîneur. Tu passes ton diplôme cet été ? »"
+        answer: "Tu raccroches les crampons pour le survêtement."

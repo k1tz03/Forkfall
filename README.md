@@ -1,94 +1,62 @@
-# FORKFALL
+# FUSIBLE
 
-A binary choice social app where users swipe on "Forks" (two-option prompts) and can "twist" (mutate) them to create branches.
+Un jeu mobile façon *Reigns*, basé sur le football : une carte, un pouce, gauche
+ou droite, quatre jauges à tenir entre le vide et le trop-plein, et le jour où
+l'une déborde, on est viré. On incarne au hasard un joueur ou un entraîneur, on
+monte, on chute, on change de métier au fil des saisons ; le monde persiste et
+le successeur reprend là où l'on a été viré. Chronologie à partir des années 90.
 
-## Stack
+Le brainstorm et la bible de design complets sont dans [`docs/brainstorm`](docs/brainstorm/README.md).
+Ce dépôt contient le **MVP** (deux rôles : Joueur pro et Entraîneur, en français).
 
-- **Mobile**: React Native
-- **Backend**: Go
-- **Database**: PostgreSQL
-- **Cache**: Redis
-- **Infrastructure**: Docker
+## Architecture
 
-## Project Structure
+Le jeu est à 90 % une application de lecture et de geste, piloté par des données.
+Cœur de règles **déterministe** en Dart pur ; tout le contenu est en YAML compilé
+en JSON ; l'interface est en Flutter (design final délégué à une passe dédiée).
 
 ```
-forkfall/
-├── apps/
-│   └── mobile/              # React Native app
-├── packages/
-│   └── shared/              # Shared types/constants
-├── backend/
-│   ├── cmd/api/             # Main entrypoint
-│   ├── internal/            # Application code
-│   ├── pkg/                 # Shared utilities
-│   └── migrations/          # SQL migrations
-├── docker-compose.yml       # Local dev environment
-└── package.json             # Root workspace config
+packages/core/     # moteur déterministe, pur Dart (aucun Flutter, aucune I/O)
+packages/tools/    # build_content, lint, simulate (Monte-Carlo)
+content/           # source YAML (rôles, calendrier, cartes, fins…) → build/content.json
+app/               # application Flutter
+docs/brainstorm/   # bible de design (11 sections)
 ```
 
-## Getting Started
+Le déterminisme est le socle du social : « même graine + mêmes choix » reproduit
+un run à l'identique, ce qui rend le *Code de Carrière*, le défi du jour et le
+duel entre amis possibles **sans serveur**.
 
-### Prerequisites
+## Développer (cœur + outils, sans Flutter)
 
-- Node.js 18+
-- Go 1.21+
-- Docker & Docker Compose
-- iOS Simulator (Mac) or Android Emulator
-
-### Setup
-
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-2. **Start infrastructure**
-   ```bash
-   npm run docker:up
-   ```
-
-3. **Run database migrations**
-   ```bash
-   npm run db:migrate
-   ```
-
-4. **Start backend**
-   ```bash
-   npm run backend
-   ```
-
-5. **Start mobile app**
-   ```bash
-   npm run mobile
-   # Then press 'i' for iOS or 'a' for Android
-   ```
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| POST | /api/v1/auth/device | Register/auth device |
-| GET | /api/v1/feed | Get personalized fork deck |
-| POST | /api/v1/forks/{id}/interact | Record interaction |
-| POST | /api/v1/forks | Create new fork |
-| GET | /api/v1/forks/{id} | Get fork details |
-| POST | /api/v1/forks/{id}/report | Report a fork |
-| GET | /api/v1/intents | Get available intents |
-| PUT | /api/v1/session | Update session intent |
-
-## Testing
+Prérequis : le SDK Dart (`^3.6`).
 
 ```bash
-# Test backend health
-curl http://localhost:8080/api/v1/health
-
-# Test device auth
-curl -X POST http://localhost:8080/api/v1/auth/device \
-  -H "Content-Type: application/json" \
-  -d '{"device_fingerprint": "test-device-123"}'
+dart pub get                              # résout le workspace (core + tools)
+dart run fusible_tools:build_content      # content/*.yaml -> content/build/content.json
+dart run fusible_tools:lint               # valide tags, drapeaux, noms, longueurs
+dart run fusible_tools:simulate --runs 5000   # équilibrage Monte-Carlo
+dart test packages/core                   # déterminisme, round-trip, bornes des jauges
 ```
 
-## License
+`build_content` compile chaque condition `when` en AST et résout les magnitudes
+symboliques (`+`/`++`/`+++`) via `content/balance.yaml`. `simulate --assert`
+échoue si un budget est violé (durée médiane, cause de mort dominante, run trop long).
 
-Private - All rights reserved
+## Lancer l'application (Flutter)
+
+```bash
+cd app
+flutter pub get
+flutter run          # un appareil / émulateur, ou -d chrome pour le web
+```
+
+L'app charge `content/build/content.json` (générer d'abord avec `build_content`).
+
+## État
+
+MVP jouable de bout en bout : boucle de saison en six actes, Cartes Match, Grand
+Match en direct, Bilan, objectifs et Parole (Grand Déballage), transitions de
+carrière (joueur → entraîneur), 19 fins écrites avec épitaphes, Succession,
+Code de Carrière. Le contenu (cartes) et le polish visuel sont en cours
+d'étoffement. Langue : français (l'anglais viendra en version finale).
