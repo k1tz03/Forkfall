@@ -1,15 +1,6 @@
 cards:
-  - id: en.presse.special
-    roles: [entraineur]
-    arc: presse
-    tags: [presse]
-    speaker: meneche
-    once: true
-    when: "season == 0 && season.phase == 'presaison'"
-    text: "Pierre Ménèche, première conférence : « Vous vous décrivez comment, coach ? »"
-    left: {label: "Je suis quelqu'un de spécial", effects: {tribunes: "++", direction: "+", set: [special]}, answer: "La formule fait le tour des rédactions."}
-    right: {label: "Le groupe vit bien", effects: {tribunes: "-", direction: "+"}, answer: "Sobre. Personne ne retient la phrase."}
-
+  # en.presse.special (présaison S0) et en.direction.ultimatum sont remplacées
+  # par en.promu.a7_miracle / le_special et par l'événement en.evt.ultimatum.
   - id: en.direction.achat_surprise
     roles: [entraineur]
     arc: direction
@@ -30,17 +21,6 @@ cards:
     left: {label: "Sur le banc", effects: {vestiaire: "++", direction: "-", set: [star_banc]}}
     right: {label: "Titulaire quand même", effects: {vestiaire: "-", direction: "+"}}
 
-  - id: en.direction.ultimatum
-    roles: [entraineur]
-    arc: direction
-    tags: [rescue:direction, retorse]
-    speaker: aulard
-    cooldown: 40
-    when: "gauges.direction < 30"
-    text: "Le président : « Trois défaites de suite. Le prochain match est un ultimatum. J'ai déjà le numéro de ton remplaçant. »"
-    left: {label: "On attaque à outrance", effects: {rand: [{p: 0.5, direction: "+++", tribunes: "++"}, {p: 0, end: en_sms}]}}
-    right: {label: "Bloc bas, on assure le nul", effects: {tribunes: "-", direction: "+"}}
-
   - id: en.presse.pas_vu
     roles: [entraineur]
     arc: presse
@@ -51,16 +31,7 @@ cards:
     left: {label: "Je n'ai pas vu", effects: {vestiaire: "++", tribunes: "-"}}
     right: {label: "Il mérite le rouge", effects: {vestiaire: "--", tribunes: "+"}}
 
-  - id: en.formation.gamin
-    roles: [entraineur]
-    arc: formation
-    tags: [formation]
-    speaker: vukic
-    when: "!flag('pepite')"
-    text: "Vukić : « Le petit Mbako marche sur l'eau chez les jeunes. Le président veut le vendre. Le lancer, c'est le protéger. »"
-    left: {label: "Titulaire samedi", effects: {tribunes: "+", direction: "-", set: [pepite], relation: {mbako: 2}}}
-    right: {label: "Trop tôt", effects: {direction: "+"}}
-
+  # en.formation.gamin est remplacée par l'arc B « Le prodige » (arc_prodige.yaml).
   - id: en.vestiaire.sechecheveux
     roles: [entraineur]
     arc: vestiaire

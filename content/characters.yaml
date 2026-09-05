@@ -19,6 +19,8 @@ characters:
     tic: "Juste une question, hors micro."
     camp: direction
     default_target: 1.5
+    on_relation:
+      -3: en.meneche.trahison_dossier
   - id: gege
     name: "Gégé"
     label: "CAPO, TRIBUNE NORD"
@@ -27,6 +29,9 @@ characters:
     tic: "La tribune n'oublie rien."
     camp: terrain
     default_target: 1.5
+    on_relation:
+      -3: en.gege.trahison_banderole
+      3: en.gege.faveur_insurrection
   - id: aulard
     name: "Jean-Marie Aulard"
     label: "PRÉSIDENT"
@@ -67,6 +72,15 @@ characters:
     tic: "Tu rentres à quelle heure ?"
     camp: terrain
     default_target: 1
+    on_relation:
+      -1: co.camille.dispute
+      -2: co.camille.chambre_amis
+      -3: co.camille.valise
+      3:
+        - { id: co.camille.secours_avocate, if: "flag('camille_avocate')" }
+        - { id: co.camille.secours_journaliste, if: "flag('camille_journaliste')" }
+        - { id: co.camille.secours_elue, if: "flag('camille_elue')" }
+        - { id: co.camille.secours_generique }
   - id: aubert
     name: "Madame Aubert"
     label: "MAIRE"
@@ -115,6 +129,8 @@ characters:
     tic: "Je veux jouer. Maintenant."
     camp: terrain
     default_target: 1
+    on_relation:
+      3: co.mbako.faveur_refus_grand_club
   - id: vecchio
     name: "Gigi Vecchio"
     label: "GARDIEN, 41 ANS"

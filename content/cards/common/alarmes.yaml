@@ -19,7 +19,7 @@ cards:
     tags: [vestiaire]
     speaker: vecchio
     when: "gauges.vestiaire < 25"
-    text: "Vecchio, gants sous le bras : « Ils ne veulent plus descendre du bus. J'en ai vu d'autres, coach. Pas celle-là. Je descends le premier, si tu montes leur parler. »"
+    text: "Vecchio, gants sous le bras : « Ils ne veulent plus descendre du bus. J'en ai vu d'autres. Pas celle-là. Je descends le premier, si tu montes leur parler. »"
     left: {label: "Je monte", effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}}, answer: "Gigi descend le premier. Les autres suivent, un par un."}
     right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace]}, answer: "Gigi descend seul. Il attend sur le parking."}
 
@@ -40,7 +40,7 @@ cards:
     speaker: gege
     when: "gauges.tribunes < 25"
     text: "Gégé, une aiguille à la main : « La banderole est cousue. Vingt mètres. Il manque juste ton nom, et j'ai un stylo. La tribune n'oublie rien. »"
-    left: {label: "Je viens m'expliquer au local", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}}, answer: "Deux heures au local. La banderole reste pliée. Pour l'instant."}
+    left: {label: "Je m'explique au local", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}}, answer: "Deux heures au local. La banderole reste pliée. Pour l'instant."}
     right: {label: "Le terrain répondra", effects: {tribunes: "-", force: 2}, answer: "Il range l'aiguille. Il garde le stylo."}
 
   - id: en.alarme.tribunes_haut_gege
@@ -48,20 +48,22 @@ cards:
     arc: ultras
     tags: [ultras, tribunes]
     speaker: gege
+    tone: leger
     when: "gauges.tribunes > 75"
-    text: "Gégé, radieux : « On t'aime tellement qu'on a fait la compo. Elle est sur la bâche, en face de ton banc. »"
-    left: {label: "Le onze, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "La bâche reste. Le virage note deux noms qui n'y sont pas."}
-    right: {label: "Écoutons le peuple", effects: {tribunes: "++", vestiaire: "--", set: [otage_kop]}, answer: "Le vestiaire lit sa compo sur une bâche. Avant toi."}
+    text: "Gégé, radieux : « On t'aime tellement qu'on a repeint ton vestiaire aux couleurs du virage. Cette nuit. On avait la clé. »"
+    left: {label: "Le vestiaire, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "Deux couches de blanc lundi. Le virage note ceux qui ont tenu le rouleau."}
+    right: {label: "Écoutons le peuple", effects: {tribunes: "+", vestiaire: "--", set: [otage_kop]}, answer: "Bréhaut retrouve son casier en vert. Il ne demande pas qui avait la clé."}
 
   - id: en.alarme.tribunes_haut_vukic
     roles: [entraineur]
     arc: ultras
     tags: [ultras, tribunes]
     speaker: vukic
+    tone: leger
     when: "gauges.tribunes > 75"
-    text: "Vukić, gêné : « Je te le dis parce que personne ne te le dira : le virage a fait la compo. Elle est sur la bâche, en face de ton banc. »"
-    left: {label: "Le onze, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "La bâche reste. Le virage note deux noms qui n'y sont pas."}
-    right: {label: "Écoutons le peuple", effects: {tribunes: "++", vestiaire: "--", set: [otage_kop]}, answer: "Le vestiaire lit sa compo sur une bâche. Avant toi."}
+    text: "Vukić, gêné : « Je te le dis parce que personne ne te le dira. Le virage a repeint le vestiaire cette nuit, aux couleurs du kop. Ils avaient la clé. »"
+    left: {label: "Le vestiaire, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "Deux couches de blanc lundi. Le virage note ceux qui ont tenu le rouleau."}
+    right: {label: "Écoutons le peuple", effects: {tribunes: "+", vestiaire: "--", set: [otage_kop]}, answer: "Bréhaut retrouve son casier en vert. Il ne demande pas qui avait la clé."}
 
   - id: en.alarme.direction_bas_josiane
     roles: [entraineur]
@@ -69,7 +71,7 @@ cards:
     tags: [direction]
     speaker: josiane
     when: "gauges.direction < 25"
-    text: "Madame Josiane, porte fermée : « Le président ne vous salue plus. Il a demandé le numéro de fax de votre domicile, et il ne m'a pas dit pourquoi. J'en ai vu passer, vous savez. »"
+    text: "Madame Josiane, porte fermée : « Le président ne vous salue plus. Il a demandé votre numéro de fax, sans dire pourquoi. J'en ai vu passer, vous savez. »"
     left: {label: "Je force sa porte ce soir", effects: {direction: "+++", vestiaire: "-"}, answer: "Une heure de bureau. Il ne signe rien, mais il te ressert un café."}
     right: {label: "Qu'il faxe", effects: {direction: "-", tribunes: "+", parole: -1}, answer: "Le fax arrive. Trois lignes. La quatrième est la signature."}
 
@@ -79,7 +81,7 @@ cards:
     tags: [direction]
     speaker: aulard
     when: "gauges.direction > 75"
-    text: "Aulard, bras ouverts : « Je t'adore. Tellement que je crée pour toi un poste de Directeur du Développement International. Le bureau est sans fenêtre, comme l'international. »"
+    text: "Aulard, bras ouverts : « Je t'adore. Je crée pour toi un poste de Directeur du Développement International. Le bureau est sans fenêtre, comme l'international. »"
     left: {label: "J'accepte le titre", effects: {direction: "--", caisse: "+"}, answer: "Le bureau existe. La fenêtre non. Le vestiaire non plus."}
     right: {label: "Je reste sur le banc", effects: {direction: "---", vestiaire: "++"}, answer: "Il range la plaque. Il la garde dans un tiroir, à ton nom."}
 
@@ -91,7 +93,7 @@ cards:
     when: "gauges.caisse < 25"
     text: "Madame Josiane, un relevé à la main : « Le banquier a appelé. Deux fois. La deuxième, il a demandé si vous étiez cher à déménager. »"
     left: {label: "On vend un joueur", effects: {caisse: "+++", vestiaire: "--", force: -3}, answer: "Le vestiaire compte les casiers vides. Il en manque un."}
-    right: {label: "On serre les dents jusqu'en juin", effects: {caisse: "-", direction: "+", set: [salaires_retard]}, answer: "Les salaires partent le 12 au lieu du 1er. Personne ne dit rien. Encore."}
+    right: {label: "On serre les dents, juin", effects: {caisse: "-", direction: "+", set: [salaires_retard]}, answer: "Les salaires partent le 12 au lieu du 1er. Personne ne dit rien. Encore."}
 
   - id: en.alarme.caisse_haut_meneche
     roles: [entraineur]
@@ -99,7 +101,7 @@ cards:
     tags: [presse, caisse]
     speaker: meneche
     when: "gauges.caisse > 75"
-    text: "Ménèche, carnet ouvert : « Juste une question, hors micro : d'où vient l'argent ? Je demande pour un ami. Il travaille à la Commission de Contrôle des Comptes. »"
+    text: "Ménèche : « Juste une question, hors micro. D'où vient l'argent ? Je demande pour un ami, il travaille à la Commission de Contrôle des Comptes. »"
     left: {label: "Un mécène", effects: {caisse: "--", direction: "+"}, answer: "Il note « mécène ». Il souligne deux fois."}
     right: {label: "Ça ne vous regarde pas", effects: {caisse: "+", tribunes: "-", relation: {meneche: -1}}, answer: "Il note le silence. Il note toujours."}
 
@@ -142,7 +144,7 @@ cards:
     when: "gauges.tribunes > 75"
     text: "Léa, micro tendu : « Tu as plus de contrats pub que de passes. Ton agent pleure de joie, le coach pleure tout court. Vous confirmez ? »"
     left: {label: "J'annule deux tournages", effects: {tribunes: "--", vestiaire: "+", caisse: "-"}, answer: "Le coach arrête de pleurer. Ton agent commence."}
-    right: {label: "Le foot, c'est un métier de pub", effects: {tribunes: "+", direction: "--", caisse: "+"}, answer: "Titre du lendemain : « L'homme-sandwich ». Ton agent l'encadre."}
+    right: {label: "Le foot, métier de pub", effects: {tribunes: "+", direction: "--", caisse: "+"}, answer: "Titre du lendemain : « L'homme-sandwich ». Ton agent l'encadre."}
 
   - id: jp.alarme.direction_bas_vukic
     roles: [joueur]

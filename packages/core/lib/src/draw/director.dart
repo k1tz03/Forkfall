@@ -132,6 +132,7 @@ class Director {
     lastCandidates = [];
 
     // 0. Housekeeping (no randomness except maintainArcs / armEvents).
+    refreshVariants(s, c);
     purge(s, c);
     raiseAlarms(s, c);
     armEvents(s, c, rng);
@@ -192,7 +193,8 @@ class Director {
     final reserved = q.nouvelleSlotsFor(s.role);
     final owed = reserved.where((k) => k <= s.slot).length - s.nouvellesThisSeason;
     final wantBreath = s.tension >= 2 && s.nouvellesThisSeason < reserved.length + 1;
-    if (owed > 0 || wantBreath) {
+    // Never two Nouvelles in a row (budget): a debt is carried to the next slot.
+    if ((owed > 0 || wantBreath) && s.lastTheme != 'nouvelle') {
       final nv = pickNouvelle(s, c, rng);
       if (nv != null) return serve(s, null, phase, rng, band: 1, card: nv);
     }
@@ -264,6 +266,21 @@ class Director {
   // ---------------------------------------------------------------------------
   // Housekeeping: purge, alarms, events, arcs (spec §1.4, §1.5, §1.7, §1.8).
   // ---------------------------------------------------------------------------
+
+  /// A queued step with several variants is re-read at every draw: the card
+  /// actually served is the first variant whose `if` holds NOW, not at the time
+  /// the step was queued (Gigi's promise made after the season opened, the
+  /// mid-season rank before the twist, the relation after the previous step).
+  void refreshVariants(GameState s, EvalContext c) {
+    for (final sc in s.scheduled) {
+      if (sc.arc == null || sc.step == null) continue;
+      final step = content.arcs[sc.arc]?.stepById(sc.step!);
+      if (step == null || step.card.length < 2) continue;
+      final id = resolveVariant(step, c);
+      if (id == sc.card || s.scheduled.any((e) => e.card == id)) continue;
+      sc.card = id;
+    }
+  }
 
   void purge(GameState s, EvalContext c) {
     final n = s.ncards;

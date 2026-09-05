@@ -1,0 +1,184 @@
+# Camille, la cinquième jauge (bible §4.2 H). Aucun arc : une routine d'hiver,
+# deux routines de fond, et les paliers de relation servis par `on_relation`
+# (characters.yaml → camille) : −1 dispute, −2 chambre d'amis, −3 valise
+# (pose `divorce`), +3 secours selon le métier tiré au start (camille_<metier>).
+# Toutes les cartes `famille` lisent `!flag('divorce')`, sauf les secours.
+cards:
+  # ------------------------------------------------------------- routines
+  - id: co.camille.noel
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'hiver' && !flag('divorce')"
+    text: "Camille : « Tu rentres à quelle heure ? C'est Noël, le sapin est dans l'entrée avec ton adjoint. »"
+    left:
+      label: "Je rentre"
+      effects: {vestiaire: "-", relation: {camille: 1}}
+      answer: "L'adjoint repart avec une part de bûche. Le sapin tient debout."
+    right:
+      label: "Après le match"
+      effects: {vestiaire: "+", relation: {camille: -1}}
+      answer: "Le 26, le sapin est encore dans l'entrée. Camille, non."
+
+  - id: co.camille.anniversaire
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    cooldown: 28
+    when: "!flag('divorce')"
+    text: "Camille : « Tu rentres à quelle heure ? C'est mon anniversaire, j'ai réservé pour deux. Le président a réservé pour toi aussi. »"
+    left:
+      label: "La table pour deux"
+      effects: {direction: "-", relation: {camille: 1}}
+      answer: "Le président dîne avec ta chaise vide. Il la retient pour plus tard."
+    right:
+      label: "Le dîner du président"
+      effects: {direction: "+", relation: {camille: -1}}
+      answer: "Le restaurant garde la table jusqu'à vingt-trois heures. Camille aussi."
+
+  - id: co.camille.dimanche
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    cooldown: 26
+    when: "!flag('divorce')"
+    text: "Camille : « Tu rentres à quelle heure ? Dimanche, il y a le marché, la sieste et toi. Les deux premiers sont sûrs. »"
+    left:
+      label: "Le dimanche est à toi"
+      effects: {force: -1, relation: {camille: 1}}
+      answer: "Le marché, la sieste, toi. Le vestiaire découvre un dimanche sans vidéo."
+    right:
+      label: "Dimanche, c'est vidéo"
+      effects: {force: 1, relation: {camille: -1}}
+      answer: "Trois heures de ralenti. À la maison, la sieste se fait à une place."
+
+  # ---------------------------------------------- paliers (on_relation, once)
+  - id: co.camille.dispute
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    once: true
+    when: "!flag('divorce')"
+    text: "Camille : « Tu rentres à quelle heure ? Je demande pour savoir si je mets une assiette. »"
+    left:
+      label: "Je rentre tôt"
+      effects: {direction: "-", relation: {camille: 1}}
+      answer: "Deux assiettes. Le président a appelé trois fois pendant le plat."
+    right:
+      label: "Tard"
+      effects: {relation: {camille: -1}}
+      answer: "Une assiette. Elle est dans l'évier quand tu rentres."
+
+  - id: co.camille.chambre_amis
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    once: true
+    when: "!flag('divorce')"
+    text: "Camille : « J'ai fait le lit de la chambre d'amis. C'est pour toi, pas pour un ami. »"
+    left:
+      label: "On se parle ce soir"
+      effects: {vestiaire: "-", relation: {camille: 1}}
+      answer: "Tu rates la séance vidéo. Le lit de la chambre d'amis reste fait, mais vide."
+    right:
+      label: "Après la saison"
+      effects: {relation: {camille: -1}}
+      answer: "Le lit est bien fait. Tu dors dedans jusqu'en juin, au moins."
+
+  - id: co.camille.valise
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    once: true
+    when: "!flag('divorce')"
+    text: "Camille, le manteau déjà mis : « La valise est dans l'entrée. Elle est à moi. »"
+    left:
+      label: "Je regarde la valise"
+      effects: {caisse: "--", set: [divorce]}
+      answer: "La porte ne claque pas. C'est pire. L'avocat, lui, facture."
+    right:
+      label: "Je regarde la valise"
+      effects: {caisse: "--", set: [divorce]}
+      answer: "La porte ne claque pas. C'est pire. L'avocat, lui, facture."
+
+  # ------------------------------------------- secours (+3, une par métier)
+  - id: co.camille.secours_avocate
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    once: true
+    text: "Camille, robe sur le bras : « Ta sanction, je l'ai lue. Elle a un vice de forme gros comme le stade. Je plaide demain, si tu veux. »"
+    left:
+      label: "Plaide"
+      effects: {direction: "+++", relation: {camille: 1}}
+      answer: "La commission annule tout en dix minutes. Elle rentre avant toi, pour une fois."
+    right:
+      label: "Je me débrouille"
+      effects: {direction: "+", relation: {camille: -1}}
+      answer: "Tu négocies seul. La sanction tombe, à moitié. La robe retourne au placard."
+
+  - id: co.camille.secours_journaliste
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    once: true
+    text: "Camille, au téléphone : « Ménèche a un papier sur toi pour demain. J'ai le rédacteur en chef en ligne. Je le bloque ? »"
+    left:
+      label: "Bloque-le"
+      effects: {tribunes: "+++", relation: {meneche: -1, camille: 1}}
+      answer: "Le papier ne paraît pas. Ménèche note qui a appelé. Il note toujours."
+    right:
+      label: "Laisse-le paraître"
+      effects: {tribunes: "-", relation: {meneche: 1, camille: -1}}
+      answer: "Le papier paraît. Ménèche te trouve honnête. Camille te trouve seul."
+
+  - id: co.camille.secours_elue
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    once: true
+    text: "Camille, écharpe pliée : « La subvention bloquée depuis mars, je l'ai fait passer au conseil ce soir. Aubert a voté contre. »"
+    left:
+      label: "Merci pour le club"
+      effects: {caisse: "+++", relation: {camille: 1, aubert: -1}}
+      answer: "Le chèque arrive par fax. Josiane le pose sur le radiateur, pour qu'il sèche."
+    right:
+      label: "Ça va faire parler"
+      effects: {caisse: "+", relation: {camille: -1}}
+      answer: "La subvention passe, réduite. Le journal ne parle de rien. Camille non plus."
+
+  - id: co.camille.secours_generique
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    once: true
+    text: "Camille, sur le parking : « J'ai invité tout le vestiaire dimanche. Je cuisine, tu te tais, ils parlent. Tu rentres à quelle heure ? »"
+    left:
+      label: "Avant eux"
+      effects: {vestiaire: "++", relation: {camille: 1}}
+      answer: "Vingt-deux couverts. Bréhaut fait la vaisselle. Le groupe vit bien."
+    right:
+      label: "Je passe en fin de repas"
+      effects: {vestiaire: "+", relation: {camille: -1}}
+      answer: "Ils sont partis à ton arrivée. Ils ont adoré. Camille range seule."

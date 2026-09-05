@@ -1,0 +1,64 @@
+# E · « Le vieux gardien » — le cœur, l'horloge qui recule. Gigi Vecchio,
+# quarante et un ans, prend sa retraite chaque juin ; l'épaule lâche, le
+# jeune attend, et la promesse que tu lui fais (ou pas) se paie en saison 2,
+# quand il revient sourire ou signer chez le rival. Semé au slot [7,8] de la
+# saison 1 du postulat « Le promu sans un sou » (postulats.yaml) ; ailleurs,
+# ouverture spontanée en début de carrière.
+#
+# Chemins : retraite → epaule (cette saison seulement ; échue → sautée) →
+# retour (S2, présaison : sourire si relation.vecchio >= 0, sinon noir) →
+# bus (si relation.vecchio >= 2 : menace si le vestiaire est sous 45, sinon
+# la même scène pour rire) | fin.
+arcs:
+  - id: en.vieux_gardien
+    title: "Le vieux gardien"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.2
+    once: true
+    every_season: false
+    min_season: 0
+    when: "season <= 2 && !flag('gigi_staff')"
+    cast: [vecchio, vukic, sabatier]
+    start: [2, 5]
+    same_club: true
+    fallback: nouvelles
+    epilogue: { vestiaire: "-" }
+    steps:
+      - id: retraite
+        card: en.vieux.retraite
+        # [2,5] : semée en [7,8], la retraite tombe aux slots 7-9 et l'épaule
+        # est due en 9-14, avant les slots 16-17 verrouillés par le script
+        # (A5/A6) ; plus large, l'étape périmait avec la saison une fois sur
+        # quatre.
+        next: [ { step: epaule, in: [2, 5], this_season: true } ]
+      - id: epaule
+        # Doit tomber avant le Bilan : passée la saison, l'épaule est oubliée
+        # et l'arc file directement au retour de Gigi.
+        card: en.vieux.epaule
+        this_season: true
+        on_expire: skip
+        # [8,14] : depuis l'épaule (slots 9-14), le retour ne peut plus tomber
+        # au slot 15 de la même saison (« ma retraite en juin » avant juin) :
+        # il attend la reprise, après A5 « Le dernier match ».
+        next: [ { step: retour, in: [8, 14] } ]
+      - id: retour
+        # Tombe à la reprise (S1) : la variante lit relation.vecchio au tirage,
+        # donc après A5 « Le dernier match » ; Gigi titulaire pour la finale
+        # (finale_gigi) revient toujours en souriant.
+        card:
+          - { id: en.vieux.retour_sourire, if: "relation.vecchio >= 0 || flag('finale_gigi')" }
+          - { id: en.vieux.retour_noir }
+        # Sans entrée éligible, l'arc se termine (Gigi parti, ou pas assez
+        # proche pour descendre du bus le premier).
+        next:
+          - { step: bus, if: "relation.vecchio >= 2", in: [8, 16] }
+      - id: bus
+        # Contre-alarme protectrice : la menace du bus si le vestiaire va mal
+        # (jauge lue au tirage), sinon la même scène pour rire.
+        card:
+          - { id: en.vieux.bus, if: "gauges.vestiaire < 45" }
+          - { id: en.vieux.bus_calme }
+        next: []

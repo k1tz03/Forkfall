@@ -471,7 +471,10 @@ void main() {
       return;
     }
     final prev = mechanism[cardId];
-    if (prev != null && prev != by) {
+    // An alarm card may be listed both in the role's alarms and in a postulat's
+    // alarm_overrides: that is still one mechanism (alarme), not two.
+    final sameAlarm = kind == 'alarme' && prev != null && prev.startsWith('alarms/');
+    if (prev != null && prev != by && !sameAlarm) {
       errors.add('$cardId: référencée par deux mécanismes ($prev et $by)');
       return;
     }

@@ -1,0 +1,82 @@
+# Cartes de palier de relation (characters.yaml → on_relation ; kind palier
+# dérivé par le build). Programmées en dur dans [1,3] cartes quand la relation
+# franchit le seuil, une fois par carrière. Hors du sac.
+#   gege    −3 → en.gege.trahison_banderole      +3 → en.gege.faveur_insurrection
+#   meneche −3 → en.meneche.trahison_dossier
+#   mbako   +3 → co.mbako.faveur_refus_grand_club (entraîneur et joueur)
+# Une seule sortie = les deux côtés identiques (single dérivé).
+cards:
+  # ------------------------------------------------------------- Gégé, −3
+  - id: en.gege.trahison_banderole
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, risk:tribunes]
+    speaker: gege
+    # strategique, pas drame : le palier −3 est atteignable dès la S0 (D1
+    # « Pas ce soir » −1, C2 « Signez » −2) où le drame est interdit, et le
+    # seul drame de la carrière est réservé à l'hôpital / la tribune noire.
+    tone: strategique
+    once: true
+    text: "Gégé, sans un regard : « La banderole fait vingt mètres. DÉMISSION. On a hésité sur l'accent. La tribune n'oublie rien. »"
+    left:
+      label: "Je lis"
+      effects: {tribunes: "---", direction: "--"}
+      answer: "L'accent est là. Le président aussi, en face, avec un stylo."
+    right:
+      label: "Je lis"
+      effects: {tribunes: "---", direction: "--"}
+      answer: "L'accent est là. Le président aussi, en face, avec un stylo."
+
+  # ------------------------------------------------------------- Gégé, +3
+  - id: en.gege.faveur_insurrection
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, vestiaire, rescue:vestiaire]
+    speaker: gege
+    tone: strategique
+    once: true
+    text: "Gégé, à voix basse : « Il y avait une insurrection prévue ce soir au vestiaire. J'ai dit non. La tribune n'oublie rien, et moi non plus. »"
+    left:
+      label: "Merci, Gégé"
+      effects: {vestiaire: "+++", tribunes: "+"}
+      answer: "Le vestiaire ne saura jamais qui a dit non. Toi, si."
+    right:
+      label: "Qui voulait ma tête ?"
+      effects: {vestiaire: "+", direction: "+", relation: {gege: -1}}
+      answer: "Il ne donne pas les noms. La tribune n'oublie rien, mais elle ne balance pas."
+
+  # ---------------------------------------------------------- Ménèche, −3
+  - id: en.meneche.trahison_dossier
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes, risk:tribunes]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Ménèche, micro allumé : « Le dossier sort demain. Toutes vos promesses, datées. Juste une question, hors micro : la une, ou la page trois ? »"
+    left:
+      label: "La une, je signe tout"
+      effects: {parole: -2, tribunes: "--"}
+      answer: "Douze promesses, douze dates. Gégé découpe l'article et le garde."
+    right:
+      label: "Page trois, et un entretien"
+      effects: {parole: -2, tribunes: "-", direction: "-", relation: {meneche: 1}}
+      answer: "Page trois. Le président lit quand même la page trois en premier."
+
+  # ------------------------------------------------------------ Mbako, +3
+  - id: co.mbako.faveur_refus_grand_club
+    roles: [entraineur, joueur]
+    arc: mercato
+    tags: [mercato, vestiaire, formation]
+    speaker: mbako
+    tone: strategique
+    once: true
+    text: "Mbako, sac sur l'épaule : « Le grand club a appelé ce matin. J'ai dit non. Je veux jouer. Maintenant. Ici, avec vous. »"
+    left:
+      label: "Tu es fou, et merci"
+      effects: {vestiaire: "++", tribunes: "++", caisse: "-"}
+      answer: "Sa mère raccroche au nez du grand club. Elle garde le numéro quand même."
+    right:
+      label: "Tu devrais partir"
+      effects: {direction: "+", caisse: "+", relation: {mbako: -1}}
+      answer: "Il ne part pas. Il joue moins bien pendant un mois."

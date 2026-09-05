@@ -43,7 +43,9 @@ cards:
     arc: moment
     tags: [moment, formation]
     speaker: mbako
-    text: "Mbako, dans le couloir : « Seize ans et j'attends toujours. Vous me lancez titulaire ou je moisis sur le banc ? »"
+    # Hors de l'arc B « Le prodige » seulement : jamais après le lancement ni la vente.
+    when: "!flag('mbako_lance') && !flag('mbako_vendu') && arc('en.prodige') != 'active'"
+    text: "Mbako, dans le couloir : « Seize ans et j'attends toujours. Je veux jouer. Maintenant. Vous me lancez titulaire ou je moisis sur le banc ? »"
     left: {label: "Je te lance d'entrée", effects: {force: 3, vestiaire: "-", tribunes: "+", relation: {mbako: 2}}, answer: "Les anciens font la gueule, les tribunes sourient."}
     right: {label: "Tu entres en fin de match", effects: {force: 1, relation: {mbako: -1}}}
 
@@ -106,7 +108,7 @@ cards:
     arc: moment
     tags: [moment, vestiaire]
     speaker: sabatier
-    text: "Sabatier, carnet en main : « Vecchio, 38 ans, trois matchs en huit jours. Tu le reposes ou tu le grilles ? »"
+    text: "Sabatier, carnet en main : « Vecchio, 41 ans, trois matchs en huit jours. Tu le reposes ou tu le grilles ? »"
     left: {label: "Repos, on protège le vieux", effects: {force: -2, vestiaire: "+", relation: {vecchio: 1}}}
     right: {label: "Il enchaîne, il est costaud", effects: {force: 3, vestiaire: "-", relation: {vecchio: -1, sabatier: -1}}}
 

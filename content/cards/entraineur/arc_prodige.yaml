@@ -1,0 +1,167 @@
+# Cartes d'étape de l'arc « Le prodige » (content/arcs/entraineur/prodige.yaml).
+# Toutes sont des étapes (kind: etape dérivé par le build), jamais dans le sac.
+# `arc:` est le THÈME de la carte, pas l'id de l'arc.
+cards:
+  # ---------------------------------------------------------------- B1 · gamin
+  - id: en.prodige.gamin_u19
+    roles: [entraineur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: vukic
+    tone: leger
+    once: true
+    text: "Vukić, aux U19 : « Le petit Mbako a seize ans et marche sur l'eau. Le président le vend avant qu'il nage. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Titulaire samedi"
+      effects: {vestiaire: "-", tribunes: "++", direction: "-", set: [mbako_lance, pepite], relation: {mbako: 2, aulard: -1}}
+      answer: "Seize ans. Le stade apprend son nom en dix minutes."
+    right:
+      label: "Trop tôt, on le protège"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "Il retourne aux U19 sans un mot. Il regarde tes chaussures."
+
+  # ----------------------------------------------------------- B2a · maintenant
+  - id: en.prodige.maintenant
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: mbako
+    tone: leger
+    once: true
+    text: "Mbako, devant ton bureau : « Je veux jouer. Maintenant. Pas samedi, pas quand le vieux sera fatigué. Sinon ma mère a le numéro d'un club qui me fera jouer. »"
+    left:
+      label: "Samedi, tu joues"
+      effects: {vestiaire: "-", tribunes: "+", set: [mbako_lance], relation: {mbako: 2}}
+      answer: "Il ne sourit pas. Il va chercher ses crampons."
+    right:
+      label: "Tu attends ton tour"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "Il attend. Mal."
+
+  # -------------------------------------------------------------- B2b · la_mere
+  - id: en.prodige.la_mere
+    roles: [entraineur]
+    arc: agents
+    tags: [agents, formation]
+    speaker: mere_mbako
+    tone: leger
+    once: true
+    text: "La mère de Mbako, stylo en main : « Seize ans et un contrat aspirant. Vous le faites jouer, je veux un contrat pro. Mon fils n'a besoin de personne. Je gère. »"
+    left:
+      label: "Contrat pro, zéro agent"
+      effects: {caisse: "-", relation: {mbako: 1}, set: [mbako_mere]}
+      answer: "Elle signe en trois exemplaires. Elle a apporté les trois."
+    right:
+      label: "Fardelli s'en occupe"
+      effects: {caisse: "+", relation: {fardelli: 1, mbako: -1}}
+      answer: "Elle range son stylo. Elle a le numéro de Fardelli depuis mardi."
+
+  # ------------------------------------------------------------- B3 · fardelli
+  - id: en.prodige.fardelli_tourne
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: leger
+    once: true
+    text: "Fardelli, cigare éteint : « Mon ami, on parle d'argent ou d'amitié ? Le petit vaut trente millions dans deux ans. Dans deux ans, il ne sera plus à toi. »"
+    left:
+      label: "On en parle maintenant"
+      effects: {caisse: "+", relation: {fardelli: 1}, set: [commission_vente]}
+      answer: "Il rallume le cigare. Il a déjà trois numéros à appeler."
+    right:
+      label: "On n'en parle pas"
+      effects: {vestiaire: "+", relation: {fardelli: -1}}
+      answer: "Il range son cigare. Il note quelque chose."
+
+  # ---------------------------------------------- B4 · offre (trois variantes)
+  # Saut d'arc depuis A4 « On vend le gamin » : la Commission a tranché avant
+  # que Fardelli ait tourné.
+  - id: en.prodige.offre_express
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents, caisse]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    # Texte neutre sur le lancement : la cible du saut d'arc depuis A4 arrive
+    # souvent après B1 « Titulaire samedi ».
+    text: "Fardelli, dès huit heures : « Trente millions pour le petit Mbako. Le président a dit oui, la mère a dit non. Mon ami, on parle d'argent ou d'amitié ? »"
+    left:
+      label: "On vend, la caisse d'abord"
+      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}}
+      answer: "Gégé peint « JUDAS » sur la bâche. En doré, quand même."
+    right:
+      label: "Il reste, je le garde"
+      effects: {direction: "--", tribunes: "+", set: [mbako_garde], relation: {mbako: 1, fardelli: -1, aulard: -1}}
+      answer: "Fardelli range son cigare. La Commission, elle, ne range rien."
+
+  - id: en.prodige.offre_lance
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents, caisse]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, tout sourire : « Trente millions pour le petit. Le président a déjà dit oui, la mère a déjà dit non. Mon ami, on parle d'argent ou d'amitié ? »"
+    left:
+      label: "On vend, la caisse d'abord"
+      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}}
+      answer: "Gégé peint « JUDAS » sur la bâche. En doré, quand même."
+    right:
+      label: "Il reste, je l'ai lancé"
+      effects: {direction: "--", tribunes: "+", set: [mbako_garde], relation: {mbako: 1, fardelli: -1, aulard: -1}}
+      answer: "Fardelli range son cigare. Il note quelque chose."
+
+  - id: en.prodige.offre_banc
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, direction, caisse]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard, un fax à la main : « Trente millions pour un gamin qui n'a pas joué. J'ai pas le temps, j'ai un empire. Tu bloques la vente, ou tu la signes ? »"
+    left:
+      label: "On signe, la caisse d'abord"
+      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}}
+      answer: "Gégé peint « JUDAS » sur la bâche. En doré, quand même."
+    right:
+      label: "Je bloque, il reste"
+      effects: {direction: "--", tribunes: "+", set: [mbako_garde], relation: {mbako: 1, fardelli: -1, aulard: -1}}
+      answer: "Il raccroche au nez de Fardelli. Il note ton nom sur le fax."
+
+  # ------------------------------------------------- B5a · marque (S2, vendu)
+  - id: en.prodige.marque_contre_toi
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Ménèche, après le match : « Mbako vient de marquer contre vous, et il n'a pas célébré. Il vous a regardé. Juste une question, hors micro. Vous regrettez ? »"
+    left:
+      label: "Je regrette"
+      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: 1}}
+      answer: "Titre du lendemain : « Le regret ». Le vestiaire le lit deux fois."
+    right:
+      label: "Je ne commente pas"
+      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}}
+      answer: "Il note le silence. Il note toujours."
+
+  # ------------------------------------------------- B5b · salaire (gardé)
+  - id: en.prodige.salaire_star
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, agents]
+    speaker: fardelli
+    tone: leger
+    once: true
+    text: "Fardelli, contrat en main : « Le petit veut un salaire de star. Il l'a gagné, tu l'as lancé, je prends dix pour cent. Mon ami, on parle d'argent ou d'amitié ? »"
+    left:
+      label: "Il l'a mérité"
+      effects: {caisse: "--", vestiaire: "++", relation: {mbako: 1}}
+      answer: "Le petit signe. Fardelli compte. Le vestiaire applaudit un salaire."
+    right:
+      label: "Pas à seize ans"
+      effects: {caisse: "+", vestiaire: "-", relation: {mbako: -2}}
+      answer: "Il range le contrat. Le petit range ses crampons dans un sac neuf."

@@ -3,6 +3,8 @@
 /// the run exactly. See docs/brainstorm sections 2 and 9.
 library;
 
+import 'dart:convert';
+
 import 'condition.dart';
 import 'content.dart';
 import 'draw/director.dart';
@@ -485,9 +487,12 @@ class Engine {
       s.world.blocks = 0;
       s.matchTemp = null;
       s.beat = 0;
-      // Joueur retirement check.
+      // Retirement checks: the player's legs, the coach's licence.
       if (s.role == 'joueur' && s.age >= 38) {
         s.endingId = 'jubile';
+        s.over = true;
+      } else if (s.role == 'entraineur' && s.age >= 65) {
+        s.endingId = 'en_retraite';
         s.over = true;
       }
     } else {
@@ -577,7 +582,7 @@ class Engine {
       rightEffects: right,
       previewLeft: hintsFor(left),
       previewRight: hintsFor(right),
-      single: card.kind == 'nouvelle' || isPasse,
+      single: card.kind == 'nouvelle' || isPasse || _sameChoice(card),
       payload: {
         if (card.left.answer != null) 'answerLeft': formatText(card.left.answer!, s, speakerGenre: speakerGenre),
         if (card.right.answer != null) 'answerRight': formatText(card.right.answer!, s, speakerGenre: speakerGenre),
@@ -594,6 +599,13 @@ class Engine {
       },
     );
   }
+
+  /// A card whose two sides are the same (label, answer, effects) is a card
+  /// without a choice: the drama, the fax, the banner. One button, no swipe.
+  bool _sameChoice(Card card) =>
+      card.left.label == card.right.label &&
+      card.left.answer == card.right.answer &&
+      jsonEncode(card.left.effects.toJson()) == jsonEncode(card.right.effects.toJson());
 
   String _patronOf(GameState s) {
     final post = content.postulats[s.postulatId];

@@ -1,0 +1,76 @@
+# Arc de postulat « Sans un sou » (postulat 0, « Le promu sans un sou »).
+# Le script de la saison 1 slot par slot, la facture en saison 2, puis deux
+# ancres rejouables (rentrée / veille du dernier bloc) à partir de la saison 3.
+# Semé par `opening_arc: en.promu.sans_un_sou` dans postulats.yaml ; il remplace
+# l'arc générique co.script.generique pour ce postulat.
+arcs:
+  - id: en.promu.sans_un_sou
+    title: "Sans un sou"
+    kind: postulat
+    roles: [entraineur]
+    foreground: true
+    weight: 1.0
+    cast: [josiane, aulard, meneche, vecchio]
+    same_club: true
+    fallback: drop
+    steps:
+      # ---------------------------------------------------------- saison 1 (S0)
+      - id: inventaire
+        card: en.promu.a1_inventaire
+        at: [1, 1]
+        season: 0
+      - id: empire
+        card: en.promu.a2_empire
+        at: [2, 2]
+        season: 0
+      - id: cote
+        card: en.promu.a3_cote
+        at: [5, 7]
+        season: 0
+      - id: commission
+        card: en.promu.a4_commission
+        at: [10, 11]
+        season: 0
+      - id: dernier_match
+        card:
+          - { id: en.promu.a5_dernier_match_promis, if: "flag('vecchio_promis')" }
+          - { id: en.promu.a5_dernier_match }
+        at: [16, 16]
+        season: 0
+      - id: dernier_virage
+        card: en.promu.a6_dernier_virage
+        at: [17, 17]
+        season: 0
+      # ---------------------------------------------------------- saison 2 (S1)
+      - id: epilogue
+        card:
+          - { id: en.promu.a7_ingratitude, if: "flag('bilan_tenu') && relation.aulard <= 0" }
+          # Un promu sans un sou dans la première moitié (13e = 58 pts) est
+          # déjà un miracle ; rang ≤ 8 exigerait ~78 pts, jamais atteints.
+          - { id: en.promu.a7_miracle, if: "flag('bilan_tenu') && between(world.rang_final, 1, 13)" }
+          - { id: en.promu.a7_projet, if: "flag('bilan_tenu')" }
+          - { id: en.promu.a7_chauffage }
+        at: [1, 2]
+        season: 1
+      - id: twist
+        card:
+          # Variantes relues au tirage (Director.refreshVariants) : world.rang
+          # est le classement projeté de mi-saison, pas celui du Bilan.
+          - { id: en.promu.a8_montoya, if: "flag('bilan_tenu') && world.division == 1 && (world.rang <= 10 || world.serie_victoires >= 2)" }
+          - { id: en.promu.a8_aubert, if: "world.division == 2" }
+          - { id: en.promu.a8_projet_aulard }
+        at: [10, 11]
+        season: 1
+      - id: finale
+        card: en.promu.a9_finale
+        at: [17, 17]
+        season: 1
+      # ---------------------------------------------------- saisons 3+ (S2+)
+      - id: rentree
+        card: en.promu.rentree
+        at: [1, 1]
+        season: "2+"
+      - id: veille
+        card: en.promu.veille
+        at: [17, 17]
+        season: "2+"

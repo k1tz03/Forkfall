@@ -12,23 +12,35 @@ postulats:
     division: 1
     year: 1990
     gauges: { vestiaire: 50, tribunes: 80, direction: 52, caisse: 30 }
-    force: 46
+    force: 52
     objective: maintien
     flags: [promu]
     president: aulard
     camille: true
     cast:
       aulard:   { fonction: patron,      target: 3 }
-      gege:     { fonction: creancier,   target: 3 }
+      gege:     { fonction: creancier,   target: 2 }     # S0 : le local + le onze ; banderoles/pacte tombent en S1
       vecchio:  { fonction: coeur,       target: 3 }
       josiane:  { fonction: choeur,      target: 2 }
-      vukic:    { fonction: messager,    target: 2 }
+      vukic:    { fonction: messager,    target: 1 }     # une carte de S0 (B1) + l'alarme tribunes haute
       mbako:    { fonction: horloge,     target: 1.5 }
       nassir:   { fonction: tentateur,   target: 1.5 }
       meneche:  { fonction: chroniqueur, target: 1.5 }
       fardelli: { fonction: vautour,     target: 1 }
-      clow:     { fonction: mentor,      target: 1 }
-      camille:  { fonction: jauge5,      target: 1 }
+      clow:     { fonction: mentor,      target: 0.5 }   # visage de S1+ (min_season 1)
+      camille:  { fonction: jauge5,      target: 0.5 }   # visage de S1+ (jauge 5)
+    opening_arc: en.promu.sans_un_sou
+    seeds:                            # arcs semés d'office, fenêtre absolue de l'étape 1
+      - { arc: en.kop_qui_aime_trop,   season: 0, at: [3, 4] }
+      - { arc: en.prodige,             season: 0, at: [4, 6] }
+      - { arc: en.vieux_gardien,       season: 0, at: [7, 8] }    # l'épaule doit tomber avant les slots 16-17 du script
+      - { arc: en.nassir_proprietaire, season: 0, at: [8, 10], if: "gauges.caisse < 40" }
+      - { arc: en.mentor_clow,         season: 1, at: [5, 12] }   # après la vague d'échéances des slots 1-6
+    alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
+      caisse.low:
+        - { card: en.promu.alarme_nassir_offre, when: "relation.nassir >= 0 && vars.nassir_palier >= 1" }
+      tribunes.high:                  # tant que le kop n'a pas fini son histoire, c'est Vukić qui porte l'alarme (Gégé sort déjà en D1-D3)
+        - { card: en.alarme.tribunes_haut_vukic, when: "arc('en.kop_qui_aime_trop') != 'done'" }
 
   - id: interimaire
     index: 1

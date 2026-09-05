@@ -1,0 +1,105 @@
+# Événements exceptionnels de l'entraîneur (§4.4 de la bible) : arcs
+# `kind: evenement`, tirés au hasard (`chance` par slot éligible, `when` de
+# l'arc), une seule fois par carrière, jamais rattrapés par « Nouvelles du
+# passé » (`fallback: drop`). Aucun n'est de premier plan : ce sont des
+# intrusions, pas des histoires que le metteur en scène doit faire avancer.
+#
+# 1. L'ultimatum (Aulard) : série de défaites + direction basse. Attaquer
+#    ouvre l'étape verdict [2,4] ; assurer referme l'arc. Verdict : le SMS
+#    (fin en_sms) si la série continue, sinon « mon fils » (homme_president).
+# 2. La voiture du président (Vukić) : vestiaire et tribune en fête.
+# 3. La tribune vétuste (Aubert, S2+) : trois rapports ; deux « on verra »
+#    de suite mènent au drame `en.evt.tribune_noir` (fin en_tribune).
+# 4. Gérard a fui (Josiane) : la buvette et la caisse en Thaïlande.
+arcs:
+  - id: en.evt.ultimatum
+    title: "L'ultimatum"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "world.serie_defaites >= 1 && gauges.direction < 40"
+    chance: 0.10
+    cast: [aulard]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: ultimatum
+        card: en.evt.ultimatum
+        # La sortie droite (« Bloc bas, on assure ») pose `next: end` ; le
+        # défaut ci-dessous sert la sortie gauche (attaque à outrance).
+        next: [ { step: verdict, in: [2, 4] } ]
+      - id: verdict
+        card:
+          - { id: en.evt.ultimatum_sms, if: "world.serie_defaites >= 2" }
+          - { id: en.evt.ultimatum_fils }
+        next: []
+
+  - id: en.evt.voiture
+    title: "La voiture du président"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "gauges.vestiaire >= 65 && gauges.tribunes >= 55"
+    chance: 0.08
+    cast: [vukic]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: voiture
+        card: en.evt.voiture
+        next: []
+
+  - id: en.evt.tribune
+    title: "La tribune vétuste"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && gauges.tribunes >= 55 && gauges.caisse < 45"
+    chance: 0.06
+    cast: [aubert]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: tribune
+        card: en.evt.tribune
+        # Fermer la tribune pose `next: end` sur la carte ; le défaut sert
+        # « On verra l'été prochain ».
+        next: [ { step: rappel, in: [10, 16] } ]
+      - id: rappel
+        card: en.evt.tribune_rappel
+        next: [ { step: rappel2, in: [10, 16] } ]
+      - id: rappel2
+        # Deux « on verra » de suite : la tribune tombe (drame, fin en_tribune).
+        card:
+          - { id: en.evt.tribune_noir, if: "count('tribune_ignoree') >= 2" }
+          - { id: en.evt.tribune_ferme }
+        next: []
+
+  - id: en.evt.gerard
+    title: "Gérard a fui"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # >= 30 et non 35 : la caisse du promu part à 30 ; à 35 l'événement était
+    # coupé tout le début de la saison 1.
+    when: "gauges.caisse >= 30"
+    chance: 0.06
+    cast: [josiane]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: gerard
+        card: en.evt.gerard
+        next: []

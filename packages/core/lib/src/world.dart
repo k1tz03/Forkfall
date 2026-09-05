@@ -164,7 +164,10 @@ SeasonVerdict seasonVerdict(int division, int pts, String objectiveTarget) {
   final met = _objectiveMet(objectiveTarget, outcome, rank);
   if (met) {
     effects['direction'] = (effects['direction'] ?? 0) + 15;
-  } else {
+  } else if (outcome != 'descente') {
+    // A relegation already IS the missed objective: its own bill (−25
+    // direction, −15 tribunes) is not stacked with the −20/−10 of a missed
+    // target, which used to take a 40-direction president straight to the SMS.
     effects['direction'] = (effects['direction'] ?? 0) - 20;
     effects['tribunes'] = (effects['tribunes'] ?? 0) - 10;
   }

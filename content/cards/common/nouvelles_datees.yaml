@@ -1,0 +1,64 @@
+# Nouvelles datées du postulat « Le promu sans un sou » (saison 2) : cartes
+# `arc: nouvelle` servies aux slots réservés, un seul bouton (effets
+# identiques des deux côtés), chacune une fois par carrière. Plus la routine
+# de Ménèche qui ressort le dossier de la voiture du président.
+cards:
+  # Descente : la clause de départ du petit Mbako joue d'office.
+  - id: co.nouvelle.mbako_parti
+    roles: [entraineur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: meneche
+    tone: leger
+    once: true
+    when: "flag('descente') && !flag('mbako_vendu')"
+    text: "Ménèche : « Le petit Mbako a signé chez un grand ce matin. Une clause de descente, deux lignes. Juste une question, hors micro : vous l'aviez lue ? »"
+    # Vendu hors de l'arc B : ses étapes en attente (salaire de star, offre,
+    # Fardelli) n'ont plus de sens, l'arc est fermé ; `!flag('mbako_vendu')`
+    # garantit que la branche « marque contre toi » n'est pas concernée.
+    left:
+      label: "Encaisser"
+      effects: {tribunes: "-", set: [mbako_vendu], arc: [{id: en.prodige, status: abandonne}]}
+      answer: "Sa mère avait lu la clause. Elle l'avait écrite."
+    right:
+      label: "Relire la clause"
+      effects: {tribunes: "-", set: [mbako_vendu], arc: [{id: en.prodige, status: abandonne}]}
+      answer: "Sa mère avait lu la clause. Elle l'avait écrite."
+
+  # Naming signé : la tribune découvre le panneau à la reprise.
+  - id: co.nouvelle.arena_qatalyst
+    roles: [entraineur]
+    arc: nouvelle
+    tags: [nouvelle, ultras, sponsors]
+    speaker: gege
+    tone: leger
+    once: true
+    when: "flag('naming_signe') && season == 1"
+    text: "Gégé, devant le panneau : « Arena Qatalyst. Le nom en orange, le nôtre en dessous, en petit. La tribune n'oublie rien, coach. »"
+    left:
+      label: "Encaisser"
+      effects: {tribunes: "-"}
+      answer: "Le virage chante l'ancien nom. Le panneau ne répond pas."
+    right:
+      label: "Regarder ailleurs"
+      effects: {tribunes: "-"}
+      answer: "Le virage chante l'ancien nom. Le panneau ne répond pas."
+
+  # Routine du sac : Ménèche ressort la voiture du président.
+  - id: en.presse.dossier_voiture
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: leger
+    once: true
+    when: "seen('en.evt.voiture')"
+    text: "Ménèche, dossier fermé : « Le dossier de la voiture est prêt. Il attend votre relation avec moi. Juste une question, hors micro : on est amis ? »"
+    left:
+      label: "On est amis, Pierre"
+      effects: {relation: {meneche: 1}, direction: "-"}
+      answer: "Le dossier reste fermé. Il le range au-dessus des autres."
+    right:
+      label: "Publiez, je m'en fiche"
+      effects: {tribunes: "+", direction: "--", relation: {meneche: -1}}
+      answer: "Titre du lendemain : « L'incendiaire ». Le vestiaire encadre l'article."

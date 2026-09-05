@@ -1,25 +1,8 @@
 cards:
-  - id: en.ultras.premiere_rencontre
-    roles: [entraineur]
-    arc: ultras
-    tags: [ultras, tribunes, nouvelle]
-    speaker: gege
-    once: true
-    when: "!flag('ami_ultras')"
-    text: "Gégé, écharpe jusqu'au nez : « Le kop, c'est moi. On chante pour toi ou contre toi, à toi de voir. »"
-    left: {label: "Je viens boire un coup", effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 2}}, answer: "Trois bières plus tard, tu es adopté."}
-    right: {label: "Je garde mes distances", effects: {tribunes: "-", direction: "+"}}
-
-  - id: en.ultras.banderole
-    roles: [entraineur]
-    arc: ultras
-    tags: [ultras, tribunes, presse]
-    speaker: gege
-    when: "gauges.tribunes < 45"
-    text: "Gégé déroule la bâche : « J'ai deux banderoles prêtes. Une qui t'adore, une qui te vire. »"
-    left: {label: "Je leur promets l'attaque", effects: {tribunes: "++", parole: 1, promise: true}, answer: "Il replie la mauvaise bâche. Pour l'instant."}
-    right: {label: "Une banderole ne marque pas", effects: {tribunes: "--", vestiaire: "+"}, answer: "Gégé note la phrase."}
-
+  # en.ultras.banderole (« deux banderoles prêtes ») est devenue l'étape D3b
+  # en.kop.banderoles de l'arc « Le kop qui t'aime trop ».
+  # en.ultras.premiere_rencontre, en.ultras.pacte_kop et en.ultras.pacte_suite
+  # sont remplacées par l'arc D « Le kop qui aime trop » (arc_kop.yaml).
   - id: en.ultras.greve_encouragements
     roles: [entraineur]
     arc: ultras
@@ -79,27 +62,6 @@ cards:
     text: "Madame Aubert, sourire municipal : « La subvention est prête. En échange, un panneau à mon nom sur la tribune et deux loges. »"
     left: {label: "Marché conclu, Madame", effects: {caisse: "++", tribunes: "-", direction: "+"}, answer: "Le panneau est déjà commandé, plus grand que prévu."}
     right: {label: "Le stade n'est pas une pub", effects: {caisse: "--", tribunes: "+"}}
-
-  - id: en.ultras.pacte_kop
-    roles: [entraineur]
-    arc: ultras
-    tags: [ultras, tribunes, chaine]
-    speaker: gege
-    when: "flag('ami_ultras') && !flag('pacte_gege')"
-    text: "Gégé, solennel : « Un pacte : le local des ultras rénové cette saison, et ton nom porté dans toute la ville. Tape là. »"
-    left: {label: "Je serre la main, promis", effects: {tribunes: "++", parole: 2, promise: true, set: [pacte_gege], schedule: [{card: en.ultras.pacte_suite, in: [5, 9]}]}, answer: "Gégé grave la date sur le mur du local."}
-    right: {label: "Pas de promesse en l'air", effects: {tribunes: "-", relation: {gege: -1}}}
-
-  - id: en.ultras.pacte_suite
-    roles: [entraineur]
-    arc: ultras
-    tags: [ultras, tribunes, chaine, retorse]
-    speaker: gege
-    sablier: true
-    when: "flag('pacte_gege')"
-    text: "Gégé revient, le mur du local encore nu : « Le pacte, coach. On efface la craie, ou on l'écrit en dur ? »"
-    left: {label: "Je tiens parole, on rénove", effects: {caisse: "--", tribunes: "++", clear: [pacte_gege], relation: {gege: 1}}, answer: "Le local sent la peinture fraîche et la fierté."}
-    right: {label: "Plus tard, on a le temps", effects: {tribunes: "---", clear: [pacte_gege], relation: {gege: -2}}, answer: "La craie devient une banderole."}
 
   - id: en.ultras.portes_ouvertes
     roles: [entraineur]

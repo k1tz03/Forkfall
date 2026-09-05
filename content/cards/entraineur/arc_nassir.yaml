@@ -1,0 +1,135 @@
+# Cartes d'étape de l'arc « Le sponsor qui devient propriétaire »
+# (content/arcs/entraineur/nassir.yaml). Toutes sont des étapes (kind: etape
+# dérivé par le build), jamais dans le sac. `arc:` est le THÈME de la carte,
+# pas l'id de l'arc. Remplace la routine co.sponsor.maillot (doublon de C1).
+cards:
+  # ------------------------------------------------------------- C1 · maillot
+  - id: en.nassir.maillot
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, absurde, tribunes]
+    speaker: nassir
+    tone: leger
+    once: true
+    text: "Cheikh Nassir, une canette à la main : « Nous aimerions que le maillot soit orange fluo. Comme notre boisson. Ce n'est pas un club, c'est un actif. »"
+    left:
+      label: "Le maillot est sacré"
+      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, var: {nassir_refus: "+1"}}
+      answer: "Il repose la canette. Il ne la finit pas."
+    right:
+      label: "Va pour l'orange"
+      effects: {caisse: "++", tribunes: "--", var: {nassir_palier: "=1"}, set: [nassir_sponsor]}
+      answer: "Le maillot clignote presque. Gégé plisse les yeux."
+
+  # ------------------------------------------- C2 · naming (variante express)
+  # Cible du saut d'arc depuis A4 (en.promu.a4_commission → « On trouve un
+  # sponsor », schedule in [2,4]) : Nassir arrive sans être passé par le maillot.
+  - id: en.nassir.naming_express
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, direction, tribunes]
+    speaker: nassir
+    tone: strategique
+    once: true
+    text: "Cheikh Nassir, au fax : « Un sponsor qui paie d'avance ? Nous payons d'avance. Arena Qatalyst, dix millions, le vieux président sur une plaque aux toilettes. »"
+    left:
+      label: "Le stade garde son nom"
+      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, var: {nassir_refus: "+1"}}
+      answer: "La Commission attend toujours son plan. Aulard aussi."
+    right:
+      label: "Signez"
+      effects: {caisse: "+++", tribunes: "---", relation: {gege: -2}, var: {nassir_palier: "=2"}, set: [naming_signe]}
+      answer: "La Commission a son plan. Gégé apprend le nom sur une pancarte."
+
+  # -------------------------------------------------------------- C2 · naming
+  - id: en.nassir.naming
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, tribunes, direction]
+    speaker: nassir
+    tone: strategique
+    once: true
+    text: "Cheikh Nassir, un plan du stade : « Arena Qatalyst, dix millions. Le vieux président ira sur une plaque, aux toilettes. Ce n'est pas un club, c'est un actif. »"
+    left:
+      label: "Le stade garde son nom"
+      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, var: {nassir_refus: "+1"}}
+      answer: "Gégé l'apprend par Josiane. Il lui offre un café. Un vrai."
+    right:
+      label: "Signez"
+      effects: {caisse: "+++", tribunes: "---", relation: {gege: -2}, var: {nassir_palier: "=2"}, set: [naming_signe]}
+      answer: "Gégé apprend le nom sur une pancarte. La tribune n'oublie rien."
+
+  # ------------------------------------------------------------- C2b · retrait
+  # Une seule sortie : gauche et droite identiques. Refus total → le trait
+  # `club_a_lancienne` ; le `when` de l'arc interdit toute réouverture.
+  - id: en.nassir.retrait
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: nassir
+    tone: leger
+    once: true
+    text: "Cheikh Nassir, par fax : « Nous retirons notre offre. Ce n'était pas un club, c'était un actif. Il ne l'est plus. »"
+    left:
+      label: "Bon vent"
+      effects: {caisse: "-", set: [club_a_lancienne]}
+      answer: "Josiane range le fax avec les autres. Le radiateur tousse."
+    right:
+      label: "Bon vent"
+      effects: {caisse: "-", set: [club_a_lancienne]}
+      answer: "Josiane range le fax avec les autres. Le radiateur tousse."
+
+  # ---------------------------------------------------------------- C3 · pret
+  - id: en.nassir.pret
+    roles: [entraineur]
+    arc: caisse
+    tags: [sponsors, caisse, direction]
+    speaker: nassir
+    tone: strategique
+    once: true
+    text: "Cheikh Nassir, sans canette : « Un prêt sans intérêt ni garantie. Presque : une option sur Mbako, et cinquante et un pour cent. Vous restez coach, de nom. »"
+    left:
+      label: "Ni le petit, ni le club"
+      # Fin de l'arc : le retrait (`club_a_lancienne`) est réservé au palier 0.
+      effects: {relation: {nassir: -2}, caisse: "-", var: {nassir_refus: "+1"}, next: end}
+      answer: "Il plie le contrat en quatre. Il le garde."
+    right:
+      label: "Signé"
+      effects: {caisse: "+++", var: {nassir_palier: "=3"}, set: [option_mbako, nassir_pret], relation: {aulard: -1}}
+      answer: "Le président signe après toi. Il ne lit pas la page trois."
+
+  # -------------------------------------------------------------- C4 · rachat
+  - id: en.nassir.rachat
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, sponsors]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane, un fax : « Le fonds a racheté le club, par fax. Le logo est orange, votre nom en petit, sous « ambassadeur ». J'en ai vu passer, vous savez. »"
+    left:
+      label: "Ambassadeur, alors"
+      effects: {direction: "++", caisse: "++", set: [club_actif], enemy: [aulard], arc: [{id: en.kop_qui_aime_trop, status: done}]}
+      answer: "Le président apprend qu'il n'a plus le temps. Ni d'empire."
+    right:
+      label: "Entraîneur, pas ambassadeur"
+      effects: {direction: "---", tribunes: "++", set: [club_actif, parti_tete_haute]}
+      answer: "Gégé fait peindre ton nom en grand. Sur une bâche, pas sur un logo."
+
+  # -------------------------------------------------------- C5 · notification
+  - id: en.nassir.notification
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sponsors]
+    speaker: nassir
+    tone: strategique
+    once: true
+    text: "Cheikh Nassir, par fax : « Votre poste est réorganisé. Le club vous remercie en trois lignes, la quatrième signe. Ce n'est pas un club, c'est un actif. »"
+    left:
+      label: "Je pars"
+      effects: {end: en_placard}
+      answer: "Le bureau d'ambassadeur n'a pas de fenêtre. Ni d'ambassade."
+    right:
+      label: "Je conteste"
+      effects: {direction: "---", caisse: "-", tribunes: "+"}
+      answer: "Ton avocat lit le fax. Il demande la page deux. Il n'y en a pas."

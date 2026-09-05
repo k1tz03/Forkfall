@@ -82,10 +82,11 @@ cards:
     left: {label: "Encaisser", effects: {vestiaire: "-"}}
     right: {label: "Souffler", effects: {vestiaire: "-"}}
 
-  # ---- Alarmes rescue (une par jauge, côté bas ET côté haut) ----
+  # ---- Rescue (une par jauge, côté bas ET côté haut) : vrais dilemmes, donc
+  # cartes de routine à deux choix rangées sous leur thème, pas des Nouvelles ----
   - id: co.nouvelle.caisse_a_sec
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: caisse
     tags: [rescue:caisse, direction]
     speaker: josiane
     cooldown: 30
@@ -96,7 +97,7 @@ cards:
 
   - id: co.nouvelle.trop_plein_caisse
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: caisse
     tags: [rescue:caisse, retorse]
     speaker: aulard
     cooldown: 30
@@ -107,7 +108,7 @@ cards:
 
   - id: co.nouvelle.conseil_veut_ta_tete
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: direction
     tags: [rescue:direction, retorse]
     speaker: aulard
     cooldown: 30
@@ -118,7 +119,7 @@ cards:
 
   - id: co.nouvelle.creature_du_president
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: direction
     tags: [rescue:direction]
     speaker: josiane
     cooldown: 30
@@ -129,7 +130,7 @@ cards:
 
   - id: co.nouvelle.vestiaire_en_feu
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: vestiaire
     tags: [rescue:vestiaire]
     speaker: sabatier
     cooldown: 30
@@ -140,7 +141,7 @@ cards:
 
   - id: co.nouvelle.vestiaire_trop_calin
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: vestiaire
     tags: [rescue:vestiaire]
     speaker: sabatier
     cooldown: 30
@@ -151,7 +152,7 @@ cards:
 
   - id: co.nouvelle.stade_se_vide
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: tribunes
     tags: [rescue:tribunes, presse]
     speaker: meneche
     cooldown: 30
@@ -162,11 +163,12 @@ cards:
 
   - id: co.nouvelle.ultras_gouvernent
     roles: [entraineur, joueur]
-    arc: nouvelle
+    arc: tribunes
     tags: [rescue:tribunes, ultras]
     speaker: meneche
     cooldown: 30
-    when: "gauges.tribunes > 75"
+    # Doublonne l'alarme tribunes haute et D2 « le onze du virage » : après l'arc du kop seulement.
+    when: "gauges.tribunes > 75 && arc('en.kop_qui_aime_trop') == 'done'"
     text: "Ménèche : « Les ultras t'adorent au point de composer ton équipe. Un kop qui gouverne, ça finit toujours en prise d'otage. »"
     left: {label: "Je recadre le kop", effects: {tribunes: "--", direction: "+"}}
     right: {label: "Je les laisse faire", effects: {tribunes: "+", vestiaire: "-"}}

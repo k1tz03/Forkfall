@@ -1,0 +1,312 @@
+# Cartes de l'arc de postulat « Sans un sou » (arcs/entraineur/promu.yaml).
+# Toutes sont des cartes d'étape (kind script dérivé par le build) : elles ne
+# sortent jamais du sac, seulement à leur slot. Saison 1 : l'inventaire, l'empire,
+# la cote, la lettre de la Commission, le dernier match, le dernier virage.
+# Saison 2 : l'épilogue (4 variantes), le twist (3 variantes), la deuxième finale.
+# Saisons 3+ : deux ancres rejouables, rentrée et veille.
+cards:
+  # ============================================================ saison 1 (S0)
+  # A1 · L'inventaire — slot 1
+  - id: en.promu.a1_inventaire
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane : « Les comptes de l'été : de quoi payer les maillots neufs ou le chauffage du vestiaire, pas les deux. J'en ai vu passer, vous savez. »"
+    left:
+      label: "Les maillots"
+      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots]}
+      answer: "Le président trouve que ça fait riche. Le vestiaire souffle dans ses mains."
+    right:
+      label: "Le chauffage"
+      effects: {vestiaire: "+", tribunes: "-", relation: {josiane: 1}}
+      answer: "Elle note. Elle note toujours."
+
+  # A2 · L'empire — slot 2
+  - id: en.promu.a2_empire
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Un promu, ça fait rêver. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
+    left:
+      label: "Un budget, ou rien"
+      effects: {caisse: "+", direction: "--", relation: {aulard: -1}}
+      answer: "Il signe un chèque. Il ne le date pas."
+    right:
+      label: "Un projet, et le maintien"
+      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}}
+      answer: "Il répète « projet » à trois journalistes avant le parking."
+
+  # A3 · La cote — slots 5-7
+  - id: en.promu.a3_cote
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: leger
+    once: true
+    text: "Ménèche : « Cinq mille contre un pour le titre, un contre cinq pour la descente, disent les bookmakers. Juste une question, hors micro. Vous avez parié ? »"
+    left:
+      label: "Sur nous, cent francs"
+      effects: {tribunes: "++", parole: 1, set: [pari_promu], relation: {meneche: 1}}
+      answer: "Il note la somme. Il note toujours."
+    right:
+      label: "Je ne commente pas"
+      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, direction: "+"}
+      answer: "Il note le silence."
+
+  # A4 · La lettre de la Commission (twist) — slots 10-11
+  # Chaque sortie saute dans un autre arc : B (Le prodige, étape `offre`) ou C (Nassir, étape `naming`).
+  - id: en.promu.a4_commission
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato, sponsors]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « La Commission veut un plan pour janvier : soit on vend le petit Mbako, soit un sponsor paie d'avance. J'ai pas le temps, j'ai un empire. Choisis. »"
+    left:
+      label: "On vend le gamin"
+      effects: {direction: "+", relation: {mbako: -1}, set: [commission_vente], schedule: [{card: en.prodige.offre_express, in: [2, 4]}]}
+      answer: "Fardelli a déjà le numéro. Il l'avait avant vous."
+    right:
+      label: "On trouve un sponsor"
+      effects: {caisse: "-", direction: "-", set: [commission_sponsor], schedule: [{card: en.nassir.naming_express, in: [2, 4]}]}
+      answer: "Josiane compose un numéro qui commence par l'étranger."
+
+  # A5 · Le dernier match — slot 16 (deux variantes selon `vecchio_promis`)
+  - id: en.promu.a5_dernier_match
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    text: "Vecchio, gants sous le bras : « Dernier match, coach. J'en ai vu d'autres. Mais celle-là, je veux la voir avec toi : tu me mets, ou tu mets le petit ? »"
+    left:
+      label: "Gigi dans les cages"
+      effects: {vestiaire: "++", force: -2, relation: {vecchio: 2}, set: [finale_gigi]}
+      answer: "Il range ses gants dans son sac. Il les ressort."
+    right:
+      label: "Le jeune, l'avenir"
+      effects: {vestiaire: "-", force: 2, relation: {vecchio: -2}}
+      answer: "Il ne dit rien. Il en a vu d'autres."
+
+  - id: en.promu.a5_dernier_match_promis
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    text: "Vecchio, gants sous le bras : « Dernier match, coach. Tu m'as promis les buts en juin. J'en ai vu d'autres. Des promesses, surtout : tu me mets, ou le petit ? »"
+    left:
+      label: "Gigi dans les cages, promis"
+      effects: {vestiaire: "++", force: -2, parole: 1, relation: {vecchio: 2}, set: [finale_gigi]}
+      answer: "Il range ses gants dans son sac. Il les ressort. Il te regarde."
+    right:
+      label: "Le jeune, l'avenir"
+      effects: {vestiaire: "-", force: 2, parole: -2, relation: {vecchio: -2}}
+      answer: "Il ne dit rien. Il en a vu d'autres, des promesses."
+
+  # A6 · Le dernier virage — slot 17
+  - id: en.promu.a6_dernier_virage
+    roles: [entraineur]
+    arc: moment
+    tags: [direction, moment]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Si on se maintient, je te garde. Si on descend, je te garde aussi, mais tu paies le chauffage. J'ai le numéro de ton remplaçant : c'est le mien. »"
+    left:
+      label: "On attaque, on se maintient"
+      effects: {vestiaire: "+", direction: "-", force: 2, set: [finale_attaque], relation: {aulard: 1}}
+      answer: "Le vestiaire a entendu. Le président aussi."
+    right:
+      label: "On ferme, on assure"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "Gégé apprend le mot « fermer » par la presse."
+
+  # ============================================================ saison 2 (S1)
+  # A7 · Épilogue — slots 1-2, quatre variantes (lues au Bilan de la saison 1)
+  - id: en.promu.a7_ingratitude
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Merci pour tout. Au sens propre : merci, c'est fini. Le maintien, c'est le club qui l'a fait ; toi, tu étais là. J'ai pas le temps, j'ai un empire. »"
+    left:
+      label: "Je pars la tête haute"
+      # Pas de `next: end` : l'arc de postulat resterait `done` et openSeason
+      # n'enfilerait plus aucune ancre (A8, A9, rentrée, veille). Le départ est
+      # porté par `parti_tete_haute`, lu par le Carrefour.
+      effects: {direction: "--", tribunes: "+", set: [parti_tete_haute]}
+      answer: "Le virage applaudit ta voiture jusqu'à la sortie. Aulard regarde sa montre."
+    right:
+      label: "Je reste, je me bats"
+      effects: {direction: "---", vestiaire: "++", relation: {aulard: -1}}
+      answer: "Le vestiaire t'a vu rester. Le président t'a vu rester aussi."
+
+  - id: en.promu.a7_miracle
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: leger
+    once: true
+    text: "Ménèche : « Juste une question, hors micro. Le club de province miraculé, c'est vous ou c'est le vieux gardien ? Le journal tient à savoir. »"
+    left:
+      label: "C'est le groupe"
+      effects: {vestiaire: "++", tribunes: "+", relation: {meneche: 1}}
+      answer: "Titre du lendemain : « Le groupe ». Bréhaut l'encadre."
+    right:
+      label: "C'est moi"
+      effects: {tribunes: "++", vestiaire: "--", set: [special]}
+      answer: "Titre du lendemain : « Le Spécial ». Aulard découpe l'article."
+
+  - id: en.promu.a7_projet
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Le maintien, c'est bien. Maintenant il nous faut un projet, et le projet, c'est le Top 10, et le Top 10, c'est toi qui le paies. »"
+    left:
+      label: "Je présente un projet"
+      effects: {direction: "++", caisse: "-", parole: 1, promise: true}
+      answer: "Douze pages, une couverture en couleur. Il lit la couverture."
+    right:
+      label: "Le projet, c'est le maintien"
+      effects: {direction: "--", vestiaire: "+"}
+      answer: "Il note « maintien ». Il ne l'entoure pas."
+
+  - id: en.promu.a7_chauffage
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane : « Division 2, coach. J'ai rallumé le chauffage, plus de maillots. J'en ai vu passer, vous savez. Ceux qui remontent, c'est ceux qui restent. »"
+    left:
+      label: "Je reste"
+      effects: {vestiaire: "++", tribunes: "+", set: [fidele]}
+      answer: "Elle ressert un café. Le radiateur fait du bruit, mais il marche."
+    right:
+      label: "Je regarde ailleurs"
+      effects: {vestiaire: "-", direction: "-"}
+      answer: "Elle range le classeur. Elle a vu passer votre regard."
+
+  # A8 · Twist S2 — slots 10-11, trois variantes
+  - id: en.promu.a8_montoya
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, cigare éteint : « Le Real Montoya te veut. Maintenant, à mi-saison, alors que tu as promis de rester. Mon ami, on parle d'argent ou d'amitié ? »"
+    left:
+      label: "Je pars"
+      effects: {caisse: "++", tribunes: "---", parole: -2, role: entraineur}
+      answer: "Le virage peint ton nom sur la bâche. Puis le mot d'après."
+    right:
+      label: "Je reste"
+      effects: {tribunes: "++", caisse: "-", parole: 1, set: [fidele], relation: {fardelli: -1}}
+      answer: "Il range le cigare. Il note un chiffre, et le raye."
+
+  - id: en.promu.a8_aubert
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes, caisse]
+    speaker: aubert
+    tone: strategique
+    once: true
+    text: "Madame Aubert : « La ville construit un stade. Vous serez locataire, et je choisis le nom. Le stade, c'est de l'argent public. »"
+    left:
+      label: "On signe"
+      effects: {caisse: "++", direction: "+", tribunes: "--"}
+      answer: "Le nom est celui d'un ancien maire. Gégé ne le prononce jamais."
+    right:
+      label: "On rénove le nôtre"
+      effects: {caisse: "--", tribunes: "++", set: [tribune_a_renover]}
+      answer: "La tribune Nord garde ses fissures. Et son nom."
+
+  - id: en.promu.a8_projet_aulard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Il nous faut un projet. Le board dit « projet », la presse dit « projet », le comptable dit « non ». Tu tranches, ou je tranche à ta place ? »"
+    left:
+      label: "Je tranche : les jeunes"
+      effects: {vestiaire: "++", direction: "-", force: -2, set: [projet_jeunes]}
+      answer: "Trois gamins des U19 sur la feuille. Le comptable sourit, seul."
+    right:
+      label: "Je tranche : on vend"
+      effects: {caisse: "++", vestiaire: "--", direction: "+"}
+      answer: "Un casier vide lundi. Le président dit « projet »."
+
+  # A9 · Deuxième finale — slot 17
+  - id: en.promu.a9_finale
+    roles: [entraineur]
+    arc: moment
+    tags: [direction, moment]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Deuxième dernier match. Même numéro dans ma poche, même empire, même pas le temps. Tu m'as coûté combien, cette saison ? »"
+    left:
+      label: "Moins qu'un remplaçant"
+      effects: {direction: "+", vestiaire: "+"}
+      answer: "Il range le numéro. Il le garde dans la même poche."
+    right:
+      label: "Plus que tu ne crois"
+      effects: {direction: "--", tribunes: "++", relation: {aulard: -1}}
+      answer: "Le virage a entendu. Il a une bâche à ton nom, au cas où."
+
+  # ========================================================== saisons 3+ (S2+)
+  # Deux ancres rejouables chaque saison : la rentrée (slot 1) et la veille du dernier bloc (slot 17).
+  - id: en.promu.rentree
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, un café à la main : « Nouvelle saison, coach. Le radiateur tient, le président aussi ; c'est la seule nouvelle. J'en ai vu passer, vous savez. »"
+    left:
+      label: "Un café, et les comptes"
+      effects: {direction: "+"}
+      answer: "Elle sort le classeur. Il a pris une couleur de plus."
+    right:
+      label: "Un café, et le terrain"
+      effects: {vestiaire: "+"}
+      answer: "Elle range le classeur. Elle le garde à portée de main."
+
+  - id: en.promu.veille
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: strategique
+    cooldown: 0
+    text: "Vukić, la veille du dernier bloc : « Je te le dis parce que personne ne te le dira. Le président a deux discours prêts, et ton nom n'est que dans un. »"
+    left:
+      label: "On joue le nôtre"
+      effects: {vestiaire: "+", force: 1}
+      answer: "Le vestiaire connaît le plan. Le président non."
+    right:
+      label: "On joue le sien"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Le président range un discours. Il garde l'autre."

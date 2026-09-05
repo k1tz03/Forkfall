@@ -90,7 +90,7 @@ class SeasonMetrics {
   int nouvelles = 0;
   int consecutiveNouvelles = 0;
   int alarms = 0;
-  int events = 0;
+  int events = 0; // events armed this season (engine counter)
   int maxBacklog = 0;
   int samePairs = 0;
   int maxGap = 0;
@@ -132,8 +132,9 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
   bool hadDrame = false, hadPalier = false;
   final seasonSlots = content.cardSlots(s.role);
 
-  void closeSeason() {
+  void closeSeason({bool over = false}) {
     if (curSeason < 0) return;
+    if (over) return; // a run that died mid-season leaves no "hole" behind it
     final trailing = seasonSlots - cur.lastStory;
     cur.maxGap = math.max(cur.maxGap, trailing);
   }
@@ -179,7 +180,10 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           m.alarms += 1;
           m.alarmCards[p.id] = (m.alarmCards[p.id] ?? 0) + 1;
         }
-        if (kind == 'evenement') m.events += 1;
+        // Events are counted at arming (the engine's per-season counter), not
+        // per served card: a multi-step event or a verdict carried over from
+        // the previous season is not a new intrusion.
+        m.events = math.max(m.events, s.eventsThisSeason);
         if (sp != null) {
           m.speakers[sp] = (m.speakers[sp] ?? 0) + 1;
           if (sp == m.lastSpeaker) m.samePairs += 1;
@@ -198,7 +202,7 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     s = engine.choose(s, policy(s, step));
     step++;
   }
-  closeSeason();
+  closeSeason(over: s.over);
   if (nar != null) {
     nar.runs += 1;
     nar.famine += s.stats['famine'] ?? 0;

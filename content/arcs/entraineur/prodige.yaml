@@ -1,0 +1,69 @@
+# B · « Le prodige » — l'horloge qui avance. Lian Mbako, seize ans, est la
+# seule richesse du club ; Vukić l'annonce, sa mère le négocie, Fardelli
+# tourne, et trente millions frappent à la porte. Semé au slot [4,6] de la
+# saison 1 du postulat « Le promu sans un sou » (postulats.yaml) ; ailleurs,
+# ouverture spontanée tant que le gamin n'est pas vendu.
+#
+# Chemins : gamin → maintenant (non lancé) | la_mere (lancé) → fardelli →
+# offre (express si la Commission a tranché / lancé / banc) → marque (vendu,
+# S2 : il marque contre toi) | salaire (gardé : le salaire de star).
+arcs:
+  - id: en.prodige
+    title: "Le prodige"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.4
+    once: true
+    every_season: false
+    min_season: 0
+    when: "season <= 2 && !flag('mbako_vendu')"
+    # Vendu hors de l'arc (clause de descente) : c'est co.nouvelle.mbako_parti
+    # qui ferme l'arc (`arc: [{id: en.prodige, status: abandonne}]`) ; un
+    # `cancel_if` sur mbako_vendu ne saurait pas distinguer la vente jouée à
+    # l'étape offre (branche `marque`, à garder) de la clause de descente.
+    cast: [mbako, vukic, fardelli, mere_mbako, aulard]
+    start: [2, 7]
+    same_club: true
+    fallback: nouvelles
+    epilogue: { tribunes: "-" }
+    steps:
+      - id: gamin
+        card: en.prodige.gamin_u19
+        next:
+          - { step: maintenant, if: "!flag('mbako_lance')", in: [4, 7] }
+          - { step: la_mere, in: [4, 7] }
+      - id: maintenant
+        card: en.prodige.maintenant
+        next: [ { step: fardelli, in: [4, 7] } ]
+      - id: la_mere
+        card: en.prodige.la_mere
+        next: [ { step: fardelli, in: [4, 7] } ]
+      - id: fardelli
+        card: en.prodige.fardelli_tourne
+        next:
+          - { step: offre, if: "flag('commission_vente')", in: [2, 5] }
+          - { step: offre, in: [8, 14] }
+      - id: offre
+        # Variantes : la première dont `if` est vrai au tirage.
+        # `offre_express` est aussi la cible du saut d'arc depuis A4
+        # (en.promu.a4_commission, schedule in [2,4]).
+        card:
+          - { id: en.prodige.offre_express, if: "flag('commission_vente') && arc_step('en.prodige') != 'fardelli'" }
+          - { id: en.prodige.offre_lance, if: "flag('mbako_lance')" }
+          - { id: en.prodige.offre_banc }
+        # [6,12] et non [4,9] : l'offre tombe aux slots 13-15 de la S0, le
+        # salaire ne doit pas arriver à échéance dans les 6 premiers slots de
+        # la S1 avec A7, les banderoles, le retour de Gigi et le prêt.
+        next:
+          - { step: marque, if: "flag('mbako_vendu')", in: [8, 20] }
+          - { step: salaire, in: [6, 12] }
+      - id: marque
+        card: en.prodige.marque_contre_toi
+        next: []
+      - id: salaire
+        card: en.prodige.salaire_star
+        this_season: false
+        on_expire: skip
+        next: []
