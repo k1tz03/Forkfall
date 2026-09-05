@@ -44,11 +44,15 @@ dynamic _yamlToDart(dynamic node) {
 
 late Map<String, int> balance;
 
-int _sym(String s) {
+/// Resolve a symbolic magnitude. The number of sign characters picks the band
+/// ("+" small, "++" medium, "+++" large) and the leading sign the direction.
+/// Relations move by 1..3 directly, never by a gauge band.
+int _sym(String s, {bool relation = false}) {
   final t = s.trim();
   if (t.isEmpty) return 0;
   final sign = t[0] == '-' ? -1 : 1;
-  final mag = t.replaceAll('+', '').replaceAll('-', '').length;
+  final mag = t.split('').where((c) => c == '+' || c == '-').length;
+  if (relation) return sign * mag.clamp(1, 3);
   final base = mag >= 3 ? balance['large']! : (mag >= 2 ? balance['medium']! : balance['small']!);
   return sign * base;
 }
@@ -84,7 +88,7 @@ Map<String, dynamic> _resolveEffects(dynamic raw, List<String> errors, String wh
         out[k] = (v as List).map((e) => e.toString()).toList();
         break;
       case 'relation':
-        out[k] = (v as Map).map((rk, rv) => MapEntry(rk.toString(), rv is int ? rv : _sym(rv.toString())));
+        out[k] = (v as Map).map((rk, rv) => MapEntry(rk.toString(), rv is int ? rv : _sym(rv.toString(), relation: true)));
         break;
       case 'var':
         out[k] = (v as Map).map((rk, rv) => MapEntry(rk.toString(), rv.toString()));
