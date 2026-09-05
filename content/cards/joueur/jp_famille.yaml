@@ -1,0 +1,162 @@
+cards:
+  - id: jp.famille.grand_soir
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    text: "Camille : « On ne sort plus jamais. Ce soir, resto en amoureux, le derby attendra bien. »"
+    left:
+      label: "Je t'emmène danser"
+      effects: { relation: { camille: 1 }, vestiaire: "-", force: -1 }
+      answer: "Tu rentres à 2h, jambes lourdes et cœur léger."
+    right:
+      label: "Après le derby"
+      effects: { relation: { camille: -1 }, tribunes: "+" }
+
+  - id: jp.famille.mariage_finale
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    text: "Camille : « Ma sœur se marie le jour de la demi-finale. Tu es témoin, tu avais promis. »"
+    left:
+      label: "Je serai témoin"
+      effects: { relation: { camille: 2 }, tribunes: "--", vestiaire: "-" }
+    right:
+      label: "C'est une demi-finale"
+      effects: { relation: { camille: -2 }, tribunes: "+", vestiaire: "+" }
+      answer: "Camille part au mariage sans toi, et sans un mot."
+
+  - id: jp.famille.podcast
+    roles: [joueur]
+    arc: famille
+    tags: [famille, presse]
+    speaker: camille
+    text: "Camille : « Je lance un podcast sur les femmes de footballeurs. Je peux raconter nos coulisses ? »"
+    left:
+      label: "Raconte tout"
+      effects: { relation: { camille: 1 }, tribunes: "+", set: [podcast], schedule: [{ card: jp.famille.podcast_carton, in: [3, 6] }] }
+    right:
+      label: "Garde ça pour nous"
+      effects: { relation: { camille: -1 }, direction: "+" }
+
+  - id: jp.famille.podcast_carton
+    roles: [joueur]
+    arc: famille
+    tags: [famille, chaine, vestiaire]
+    speaker: brehaut
+    sablier: true
+    when: "flag('podcast')"
+    text: "Bréhaut : « Ta femme a raconté mon divorce dans l'épisode 4. Tout le vestiaire l'écoute, figure-toi. »"
+    left:
+      label: "J'en parle à Camille"
+      effects: { relation: { camille: -1 }, vestiaire: "+" }
+    right:
+      label: "C'est son podcast"
+      effects: { vestiaire: "--" }
+
+  - id: jp.famille.naissance
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    once: true
+    text: "Camille, essoufflée : « Le travail a commencé. Et il y a match dans quatre heures. »"
+    left:
+      label: "Je fonce à la maternité"
+      effects: { relation: { camille: 2 }, tribunes: "-", set: [jeune_papa], schedule: [{ card: jp.famille.nuit_blanche, in: [2, 5] }] }
+    right:
+      label: "J'arrive après le match"
+      effects: { relation: { camille: -2 }, tribunes: "+", set: [jeune_papa], schedule: [{ card: jp.famille.nuit_blanche, in: [2, 5] }] }
+
+  - id: jp.famille.nuit_blanche
+    roles: [joueur]
+    arc: famille
+    tags: [famille, chaine, vestiaire]
+    speaker: camille
+    sablier: true
+    when: "flag('jeune_papa')"
+    text: "Camille, cernée : « Trois biberons cette nuit, tu t'entraînes dans deux heures. Je prends le relais ? »"
+    left:
+      label: "Dors, je gère le petit"
+      effects: { relation: { camille: 1 }, vestiaire: "+", force: -1 }
+    right:
+      label: "Repose-toi, j'ai match"
+      effects: { relation: { camille: -1 }, force: "+" }
+
+  - id: jp.famille.frere_envahissant
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    text: "Mon grand frère, sac à l'épaule : « Je m'installe chez toi le temps de rebondir. Deux mois, promis. »"
+    left:
+      label: "Fais comme chez toi"
+      effects: { caisse: "-", vestiaire: "-", relation: { camille: -1 } }
+    right:
+      label: "Je te paie un studio"
+      effects: { caisse: "--" }
+
+  - id: jp.famille.maison_pays
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    text: "Ma mère, au téléphone du pays : « Construis la grande maison au village. Tout le quartier n'attend que ça. »"
+    left:
+      label: "On construit la maison"
+      effects: { caisse: "--", relation: { camille: -1 }, set: [maison_pays] }
+    right:
+      label: "Plus tard"
+      effects: { caisse: "+", relation: { camille: 1 } }
+      answer: "Ta mère raccroche en soupirant très fort."
+
+  - id: jp.famille.equilibre
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    text: "Camille : « Tu es là, mais ta tête est au stade. Je te parle et tu revois le but encaissé. »"
+    left:
+      label: "Je coupe tout ce soir"
+      effects: { relation: { camille: 1 }, force: -1 }
+    right:
+      label: "Je reste concentré"
+      effects: { relation: { camille: -1 }, force: "+" }
+
+  - id: jp.famille.diner_rescue
+    roles: [joueur]
+    arc: famille
+    tags: [famille, rescue:vestiaire]
+    speaker: camille
+    when: "gauges.vestiaire < 30"
+    text: "Camille : « Le groupe se déchire ? Invite-les à la maison, mon grand plat du pays soude n'importe quel vestiaire. »"
+    left:
+      label: "Toute l'équipe à dîner"
+      effects: { vestiaire: "+++", caisse: "-", relation: { camille: 1 } }
+    right:
+      label: "Pas ce soir"
+      effects: { vestiaire: "-" }
+
+  - id: jp.famille.beau_pere_loge
+    roles: [joueur]
+    arc: famille
+    tags: [famille, direction]
+    text: "Mon beau-père, dans la loge : « Ton coach joue bien trop bas. Dis-le-lui, de ma part. »"
+    left:
+      label: "Je transmets, papy"
+      effects: { direction: "-", relation: { camille: 1 } }
+    right:
+      label: "Reste dans la loge"
+      effects: { direction: "+", relation: { camille: -1 } }
+
+  - id: jp.famille.anniversaire
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    text: "Camille : « Dix ans de mariage, et tu as réservé... le stage de reprise. Je sais, ne dis rien. »"
+    left:
+      label: "J'annule le stage"
+      effects: { relation: { camille: 2 }, vestiaire: "-", force: -1 }
+    right:
+      label: "Lune de miel après"
+      effects: { relation: { camille: -1 }, force: "+" }

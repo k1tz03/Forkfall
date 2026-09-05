@@ -1,0 +1,208 @@
+cards:
+  - id: jp.scandale.pari_match
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, agents, chaine]
+    speaker: fardelli
+    once: true
+    text: "Un pote bookmaker mise gros si tu ranges ton match de samedi. Tu lèves le pied en douce, on partage, la caisse te dit merci."
+    left:
+      label: "Je range mon match"
+      effects: { caisse: "++", force: -2, set: [pari], relation: { fardelli: 1 }, schedule: [{ card: jp.scandale.brigade_financiere, in: [4, 9] }] }
+      answer: "Fardelli me glisse une enveloppe et un clin d'œil."
+    right:
+      label: "Je joue pour gagner"
+      effects: { vestiaire: "+", tribunes: "+", relation: { fardelli: -1 } }
+
+  - id: jp.scandale.brigade_financiere
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, chaine, risk:direction]
+    once: true
+    sablier: true
+    when: "flag('pari')"
+    text: "La brigade des jeux débarque au centre d'entraînement : « Des paris anonymes sur vos défaites, quelle coïncidence. On en parle ? »"
+    left:
+      label: "Je nie tout en bloc"
+      effects: { direction: "--", tribunes: "-", clear: [pari] }
+      answer: "Ils repartent avec mes relevés et un sourire poli."
+    right:
+      label: "J'avoue et rembourse"
+      effects: { caisse: "---", vestiaire: "+", direction: "-", clear: [pari] }
+
+  - id: jp.scandale.vitamines
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, chaine]
+    speaker: sabatier
+    once: true
+    text: "Ces petites vitamines te feront courir jusqu'à la 95e sans souffler. Rien d'interdit, ou presque, et surtout aucune trace."
+    left:
+      label: "J'avale les vitamines"
+      effects: { force: 4, vestiaire: "+", set: [vitamines], relation: { sabatier: 1 }, schedule: [{ card: jp.scandale.controle_positif, in: [5, 11] }] }
+      answer: "Sabatier range le flacon dans ma poche, l'air de rien."
+    right:
+      label: "Je bois de l'eau"
+      effects: { force: -1, vestiaire: "+", relation: { sabatier: -1 } }
+
+  - id: jp.scandale.controle_positif
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, chaine, risk:direction]
+    once: true
+    sablier: true
+    when: "flag('vitamines')"
+    text: "Le contrôle antidopage revient « non conforme ». Le labo réclame un second flacon, et mon médecin a soudain très envie de vacances."
+    left:
+      label: "Je conteste le labo"
+      effects: { direction: "-", caisse: "-", tribunes: "+", clear: [vitamines] }
+    right:
+      label: "J'accepte la sanction"
+      effects: { vestiaire: "--", force: -3, direction: "-", clear: [vitamines] }
+
+  - id: jp.scandale.valise
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, agents, chaine]
+    speaker: fardelli
+    once: true
+    text: "Un émir fan de toi laisse une valise « pour tes chaussures ». Elle est lourde, elle ne fait pas de bruit, elle ne pose pas de questions."
+    left:
+      label: "Je garde la valise"
+      effects: { caisse: "+++", direction: "-", set: [valise], relation: { fardelli: 1 }, schedule: [{ card: jp.scandale.valise_douane, in: [4, 10] }] }
+    right:
+      label: "Je rends la valise"
+      effects: { direction: "+", vestiaire: "+", relation: { fardelli: -1 } }
+
+  - id: jp.scandale.valise_douane
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, chaine, risk:caisse]
+    once: true
+    sablier: true
+    when: "flag('valise')"
+    text: "À l'aéroport, la douane ouvre ma valise « à chaussures ». Le douanier compte les liasses tout haut, la file d'attente adore le spectacle."
+    left:
+      label: "Je dis que j'ignorais"
+      effects: { direction: "--", tribunes: "-", clear: [valise] }
+    right:
+      label: "Je laisse tout saisir"
+      effects: { caisse: "--", vestiaire: "+", clear: [valise] }
+
+  - id: jp.scandale.offshore
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, agents, chaine]
+    speaker: fardelli
+    once: true
+    text: "Ton image vaut de l'or, logeons tes droits dans une société bien au chaud sur une île sans hiver ni impôt. Signe ici, ne lis pas trop."
+    left:
+      label: "Je signe les yeux fermés"
+      effects: { caisse: "++", set: [offshore], relation: { fardelli: 1 }, schedule: [{ card: jp.scandale.panama, in: [6, 14] }] }
+    right:
+      label: "Je paie mes impôts"
+      effects: { caisse: "-", direction: "+", tribunes: "+" }
+
+  - id: jp.scandale.panama
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, chaine, risk:direction]
+    speaker: meneche
+    once: true
+    sablier: true
+    when: "flag('offshore')"
+    text: "Je publie demain : ton nom dans les fichiers d'une île à palmiers et à secrets. Un mot avant que tout le pays le lise au petit-déjeuner ?"
+    left:
+      label: "Je fais le mort"
+      effects: { rand: [{ p: 0.35, end: jp_panama }, { direction: "--", tribunes: "--", caisse: "-" }], clear: [offshore] }
+    right:
+      label: "Je déballe avant lui"
+      effects: { tribunes: "-", caisse: "-", direction: "+", clear: [offshore] }
+
+  - id: jp.scandale.mecene_douteux
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, caisse, rescue:caisse]
+    speaker: fardelli
+    weight: 1.2
+    when: "gauges.caisse < 30"
+    text: "La caisse est vide ? Un « ami » discret veut sponsoriser ton maillot, cash, sans facture, contre quelques photos gênantes plus tard."
+    left:
+      label: "Je prends le cash"
+      effects: { caisse: "+++", direction: "-", vestiaire: "-", relation: { fardelli: 1 } }
+    right:
+      label: "Je refuse l'argent sale"
+      effects: { caisse: "-", vestiaire: "+", direction: "+" }
+
+  - id: jp.scandale.photo_casino
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, risk:tribunes]
+    speaker: meneche
+    cooldown: 20
+    text: "Une photo de toi au casino à 4h du matin, la veille du derby, circule dans ma rédaction. Beau tapis vert, jolie martingale, sale timing."
+    left:
+      label: "Je jure que c'est faux"
+      effects: { tribunes: "-", direction: "-", relation: { meneche: -1 } }
+    right:
+      label: "J'assume, j'ai gagné"
+      effects: { tribunes: "--", vestiaire: "+", caisse: "+" }
+
+  - id: jp.scandale.interview_verite
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, piege]
+    speaker: meneche
+    cooldown: 18
+    text: "Micro tendu en zone mixte : « Une seule question. Tous ces bruits sur les paris, les valises, les vitamines... vous démentez tout ? »"
+    left:
+      label: "Je démens fermement"
+      effects: { tribunes: "+", direction: "-", parole: 1 }
+    right:
+      label: "Je pars sans un mot"
+      effects: { tribunes: "--", direction: "-", relation: { meneche: -1 } }
+
+  - id: jp.scandale.certificat
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, risk:direction]
+    speaker: sabatier
+    cooldown: 18
+    text: "Je te signe un petit certificat : blessure imaginaire, tu sautes la commission de discipline et le gros match. Personne ne vérifie jamais."
+    left:
+      label: "Je prends l'arrêt"
+      effects: { direction: "-", vestiaire: "+", force: 1, relation: { sabatier: 1 } }
+    right:
+      label: "Je vais à la commission"
+      effects: { direction: "+", vestiaire: "-", tribunes: "+" }
+
+  - id: jp.scandale.blanchi
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, tribunes, rescue:tribunes]
+    speaker: lea
+    weight: 1.2
+    when: "gauges.tribunes < 30"
+    text: "Bonne nouvelle : j'ai retourné la presse, te voilà « victime d'un complot ». Le public t'adore de nouveau, souris et ferme-la deux semaines."
+    left:
+      label: "Je joue la victime"
+      effects: { tribunes: "+++", vestiaire: "-", relation: { lea: 1 } }
+    right:
+      label: "Je dis la vérité"
+      effects: { tribunes: "-", vestiaire: "+", direction: "+" }
+
+  - id: jp.scandale.deballage_tv
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, chaine]
+    speaker: meneche
+    once: true
+    sablier: true
+    when: "seen('jp.scandale.panama') || seen('jp.scandale.controle_positif')"
+    text: "Prime time dimanche : deux heures d'enquête sur toi, paris, valises, vitamines, paradis fiscaux. Je t'offre trois minutes pour tout dire."
+    left:
+      label: "Je passe à l'émission"
+      effects: { rand: [{ p: 0.3, end: grand_deballage }, { tribunes: "-", direction: "--", caisse: "+" }] }
+    right:
+      label: "Je boycotte le plateau"
+      effects: { tribunes: "--", direction: "-", vestiaire: "+" }

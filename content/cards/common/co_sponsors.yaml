@@ -1,0 +1,161 @@
+cards:
+  - id: co.monde.chamelle
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, absurde]
+    speaker: nassir
+    cooldown: 24
+    text: "Cheikh Nassir : « Notre lait de chamelle sur le short arrière. Les joueurs en boiront un verre avant chaque match, filmé. »"
+    left: {label: "Jamais de la chamelle", effects: {caisse: "--", tribunes: "+"}}
+    right: {label: "Un verre pour la caisse", effects: {caisse: "+++", vestiaire: "-", tribunes: "-"}, answer: "Le verre finit dans le seau à la première gorgée."}
+
+  - id: co.monde.numero_surtaxe
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, absurde]
+    speaker: nassir
+    cooldown: 22
+    text: "Cheikh Nassir : « Un numéro surtaxé géant sur le maillot. Chaque appel rapporte, même ceux des supporters d'en face. »"
+    left: {label: "Pas un annuaire", effects: {caisse: "-", tribunes: "+"}}
+    right: {label: "Va pour le surtaxé", effects: {caisse: "++", tribunes: "-"}}
+
+  - id: co.monde.arbitre_cousin
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [arbitrage, presse]
+    speaker: meneche
+    cooldown: 20
+    text: "Ménèche : « L'arbitre de dimanche est le cousin du président d'en face. On me souffle que vous allez porter réclamation. »"
+    left: {label: "Je réclame haut et fort", effects: {tribunes: "+", direction: "-"}}
+    right: {label: "Je me tais poliment", effects: {direction: "+", tribunes: "-"}}
+
+  - id: co.monde.arbitre_reclame
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [arbitrage, rescue:tribunes, ultras]
+    speaker: gege
+    cooldown: 30
+    when: "gauges.tribunes < 30"
+    text: "Gégé : « Penalty volé à la 90e, encore ! Descends gueuler sur la pelouse avec nous, ou t'es plus des nôtres. »"
+    left: {label: "Je descends gueuler", effects: {tribunes: "+++", direction: "-", vestiaire: "-"}}
+    right: {label: "Je reste digne", effects: {tribunes: "--", direction: "+"}}
+
+  - id: co.monde.derby_veille
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [ultras, piege]
+    speaker: gege
+    cooldown: 26
+    text: "Gégé : « Le derby, c'est dans trois jours. Tu prépares un coup ou tu laisses filer la semaine comme un touriste ? »"
+    left: {label: "Je prépare un coup fort", effects: {force: "+", vestiaire: "-", tribunes: "+"}}
+    right: {label: "Je lève le pied", effects: {tribunes: "--", force: "-"}}
+
+  - id: co.monde.derby_treve
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [ultras, arbitrage]
+    speaker: aubert
+    cooldown: 26
+    text: "Madame Aubert : « Pour l'image de la ville, serre la main du capitaine adverse avant le derby, bien face aux photographes. »"
+    left: {label: "Je serre la main", effects: {direction: "+", tribunes: "--"}}
+    right: {label: "Pas de photo avec eux", effects: {tribunes: "++", direction: "-", relation: {aubert: -1}}, answer: "Gégé t'envoie une écharpe en remerciement."}
+
+  - id: co.monde.belle_mere_consultante
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [famille, absurde]
+    speaker: camille
+    cooldown: 24
+    text: "Camille : « Ma mère a revu le match au ralenti et te propose une tactique. Elle t'attend au téléphone, sois gentil. »"
+    left: {label: "J'écoute belle-maman", effects: {relation: {camille: 1}, vestiaire: "-"}}
+    right: {label: "Je raccroche vite", effects: {relation: {camille: -1}, vestiaire: "+"}}
+
+  - id: co.monde.belle_mere_vip
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [famille, direction]
+    speaker: camille
+    cooldown: 24
+    text: "Camille : « Ma mère veut la loge présidentielle pour le derby, avec ses douze amies. Le président demande qui paie. »"
+    left: {label: "Je réserve la loge", effects: {caisse: "-", relation: {camille: 1}, direction: "-"}}
+    right: {label: "Elles iront en tribune", effects: {relation: {camille: -2}, direction: "+"}, answer: "Belle-maman boude déjà le prochain Noël."}
+
+  - id: co.monde.boucher_arrive
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, absurde]
+    cooldown: 28
+    text: "Le boucher du coin, tablier propre : « Je sponsorise le club ! Mon logo, mes merguez à la mi-temps, et je fais la causerie. »"
+    left: {label: "Bienvenue, l'ami", effects: {caisse: "++", vestiaire: "-", set: [boucher_sponsor], schedule: [{card: co.monde.boucher_causerie, in: [3, 6]}]}, answer: "Les merguez fument déjà derrière le but."}
+    right: {label: "Je refuse l'étal", effects: {caisse: "-", tribunes: "+"}}
+
+  - id: co.monde.boucher_causerie
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, chaine, absurde]
+    sablier: true
+    when: "flag('boucher_sponsor')"
+    text: "Le boucher, couteau à la main : « Ma causerie d'avant-match est prête : trois minutes sur le persillé, puis on les mange ! »"
+    left: {label: "Trois minutes, pas plus", effects: {vestiaire: "-", caisse: "+"}}
+    right: {label: "Je garde le vestiaire", effects: {vestiaire: "+", caisse: "-", clear: [boucher_sponsor]}, answer: "Le boucher remballe ses couteaux, vexé."}
+
+  - id: co.monde.chaussettes
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [absurde, vestiaire]
+    speaker: vecchio
+    cooldown: 22
+    text: "Gigi Vecchio : « Je n'ai pas lavé ces chaussettes depuis huit victoires. L'intendant veut les brûler. Tu tranches. »"
+    left: {label: "On ne touche au rituel", effects: {vestiaire: "+", tribunes: "-"}}
+    right: {label: "À la machine, ça pue", effects: {vestiaire: "-", force: "+"}}
+
+  - id: co.monde.bus_meme_route
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [absurde, moment]
+    speaker: brehaut
+    cooldown: 22
+    text: "Bréhaut : « Depuis qu'on gagne, le bus prend toujours la même rue. Aujourd'hui elle est fermée pour le marché. »"
+    left: {label: "On force le passage", effects: {vestiaire: "+", direction: "-", caisse: "-"}}
+    right: {label: "On prend l'autre route", effects: {vestiaire: "-", force: "+"}}
+
+  - id: co.monde.sanglier
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [absurde, moment]
+    speaker: aubert
+    cooldown: 26
+    text: "Madame Aubert : « Un sanglier a envahi la pelouse en plein match. Les chasseurs municipaux, ou on laisse les joueurs le courser ? »"
+    left: {label: "J'appelle les chasseurs", effects: {direction: "+", tribunes: "-"}}
+    right: {label: "Je les laisse courser", effects: {tribunes: "++", vestiaire: "+", force: "-"}, answer: "Le sanglier file dans le but vide, ovation générale."}
+
+  - id: co.monde.terrain_gele
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [moment, risk:vestiaire]
+    speaker: sabatier
+    cooldown: 22
+    text: "Doc Sabatier : « Terrain gelé, verglas dans la surface. On joue et je te promets deux blessés, ou tu demandes le report. »"
+    left: {label: "On joue, tant pis", effects: {force: "+", vestiaire: "--", tribunes: "+"}}
+    right: {label: "Je demande le report", effects: {caisse: "-", direction: "-", tribunes: "-"}}
+
+  - id: co.monde.canicule_tv
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, absurde]
+    speaker: nassir
+    cooldown: 24
+    text: "Cheikh Nassir : « Quarante degrés, mais la télé du Golfe paie pour un coup d'envoi à 15h. Tes joueurs cuiront pour l'audience. »"
+    left: {label: "On joue à 15h, la télé", effects: {caisse: "++", vestiaire: "--", force: "-"}}
+    right: {label: "Je décale en soirée", effects: {caisse: "-", vestiaire: "+"}}
+
+  - id: co.monde.nassir_cheque
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, rescue:caisse]
+    speaker: nassir
+    cooldown: 34
+    when: "gauges.caisse < 30"
+    text: "Cheikh Nassir : « Ta caisse est vide, je le sais. Un chèque immense contre le nom du stade et un siège au conseil. »"
+    left: {label: "Je signe le chèque", effects: {caisse: "+++", direction: "-", parole: -1}, answer: "Le stade porte désormais le nom d'une eau minérale."}
+    right: {label: "Je garde mon stade", effects: {caisse: "-", tribunes: "+"}}

@@ -1,0 +1,172 @@
+cards:
+  # ---- Nouvelles du monde (flavor, deux labels « Encaisser », effet identique) ----
+  - id: co.nouvelle.fonds_voisins
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: meneche
+    cooldown: 25
+    text: "Ménèche : « Un fonds lointain a racheté le club voisin, cash. Nous, on répare encore les douches à la main. »"
+    left: {label: "Encaisser", effects: {direction: "-"}}
+    right: {label: "Soupirer", effects: {direction: "-"}}
+
+  - id: co.nouvelle.arbitrage_video
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, arbitrage]
+    speaker: meneche
+    cooldown: 25
+    text: "Ménèche : « On va juger les buts au ralenti, avec des caméras. Trois minutes d'attente pour valider un corner. »"
+    left: {label: "Prendre acte", effects: {tribunes: "-"}}
+    right: {label: "Noter", effects: {tribunes: "-"}}
+
+  - id: co.nouvelle.coach_vire_ailleurs
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: meneche
+    cooldown: 25
+    text: "Ménèche : « Le grand coach du Nord a sauté après une défaite. Vingt ans de maison, viré entre la soupe et le dessert. »"
+    left: {label: "Encaisser", effects: {vestiaire: "-"}}
+    right: {label: "Compatir", effects: {vestiaire: "-"}}
+
+  - id: co.nouvelle.droits_tele
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: josiane
+    cooldown: 25
+    text: "Josiane : « J'ai lu que les droits télé allaient tripler. L'argent va pleuvoir sur le foot, il en tombera bien une goutte ici. »"
+    left: {label: "Encaisser", effects: {caisse: "+"}}
+    right: {label: "Se frotter les mains", effects: {caisse: "+"}}
+
+  - id: co.nouvelle.arret_contrats
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: meneche
+    cooldown: 25
+    when: "season >= 1"
+    text: "Ménèche : « Un joueur a gagné son procès : en fin de contrat, il part où il veut, gratis. Les présidents en avalent leur cigare. »"
+    left: {label: "Prendre acte", effects: {direction: "-"}}
+    right: {label: "Encaisser", effects: {direction: "-"}}
+
+  - id: co.nouvelle.equipementier_fluo
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: josiane
+    cooldown: 25
+    text: "Josiane : « Un équipementier veut habiller tout le championnat en fluo. Ils paient une fortune pour trois bandes sur un short. »"
+    left: {label: "Encaisser", effects: {caisse: "+"}}
+    right: {label: "Signer partout", effects: {caisse: "+"}}
+
+  - id: co.nouvelle.tout_assis
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, ultras]
+    speaker: aulard
+    cooldown: 25
+    text: "Aulard : « On m'impose des stades tout-assis, fini les places debout. Mes ultras vont adorer, c'est certain. »"
+    left: {label: "Encaisser", effects: {tribunes: "-"}}
+    right: {label: "Ranger les banderoles", effects: {tribunes: "-"}}
+
+  - id: co.nouvelle.record_transfert
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: meneche
+    cooldown: 25
+    when: "season.phase == 'presaison' || season.phase == 'hiver'"
+    text: "Ménèche : « Le record du monde de transfert a encore explosé. Un joueur vaut désormais un pont, deux hôpitaux et un rond-point. »"
+    left: {label: "Encaisser", effects: {vestiaire: "-"}}
+    right: {label: "Souffler", effects: {vestiaire: "-"}}
+
+  # ---- Alarmes rescue (une par jauge, côté bas ET côté haut) ----
+  - id: co.nouvelle.caisse_a_sec
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:caisse, direction]
+    speaker: josiane
+    cooldown: 30
+    when: "gauges.caisse < 25"
+    text: "Josiane : « Plus un franc en caisse, je paie les oranges de ma poche. Un promoteur veut racheter le parking du stade. »"
+    left: {label: "Je vends le parking", effects: {caisse: "+++", tribunes: "--"}, answer: "Les abonnés feront trois tours du quartier avant de se garer."}
+    right: {label: "Je garde le parking", effects: {tribunes: "+", caisse: "-"}}
+
+  - id: co.nouvelle.trop_plein_caisse
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:caisse, retorse]
+    speaker: aulard
+    cooldown: 30
+    when: "gauges.caisse > 75"
+    text: "Aulard : « On croule sous le cash et la Commission de contrôle louche sur nos comptes. On claque tout sur une star, ou on planque ? »"
+    left: {label: "On signe une star", effects: {caisse: "---", force: "+", tribunes: "+"}}
+    right: {label: "On planque le magot", effects: {direction: "+", caisse: "-"}, answer: "Le magot dort au chaud. La Commission aussi, pour l'instant."}
+
+  - id: co.nouvelle.conseil_veut_ta_tete
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:direction, retorse]
+    speaker: aulard
+    cooldown: 30
+    when: "gauges.direction < 25"
+    text: "Aulard : « Le conseil réclame ta tête à chaque réunion. Une poignée de main devant les caméras et je te couvre encore un mois. »"
+    left: {label: "Je serre la main", effects: {direction: "+++", vestiaire: "-"}, answer: "Le vestiaire t'a vu ramper. Il n'oubliera pas."}
+    right: {label: "Je garde ma dignité", effects: {direction: "-", vestiaire: "+"}}
+
+  - id: co.nouvelle.creature_du_president
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:direction]
+    speaker: josiane
+    cooldown: 30
+    when: "gauges.direction > 75"
+    text: "Josiane : « Le président te présente comme son fils, et déjà tout le monde chuchote que tu es sa marionnette. Tu prends du recul ? »"
+    left: {label: "Je prends mes distances", effects: {direction: "--", vestiaire: "+"}}
+    right: {label: "Je reste son chouchou", effects: {direction: "+", caisse: "+"}}
+
+  - id: co.nouvelle.vestiaire_en_feu
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:vestiaire]
+    speaker: sabatier
+    cooldown: 30
+    when: "gauges.vestiaire < 25"
+    text: "Doc Sabatier : « Deux clans se battent au vestiaire, j'ai recousu une arcade ce matin. Je propose un stage commando dans la boue. »"
+    left: {label: "Stage dans la boue", effects: {vestiaire: "+++", force: "+", caisse: "-"}}
+    right: {label: "On laisse retomber", effects: {vestiaire: "-", tribunes: "+"}}
+
+  - id: co.nouvelle.vestiaire_trop_calin
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:vestiaire]
+    speaker: sabatier
+    cooldown: 30
+    when: "gauges.vestiaire > 75"
+    text: "Doc Sabatier : « Le vestiaire est un club de vacances, plus personne ne court aux tests. Il faut un bouc émissaire pour réveiller tout ça. »"
+    left: {label: "Je désigne un coupable", effects: {vestiaire: "--", force: "+"}}
+    right: {label: "On reste entre copains", effects: {vestiaire: "+", force: "-"}}
+
+  - id: co.nouvelle.stade_se_vide
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:tribunes, presse]
+    speaker: meneche
+    cooldown: 30
+    when: "gauges.tribunes < 25"
+    text: "Ménèche : « Le stade sonne creux, on te siffle avant le coup d'envoi. Une exclu bien larmoyante et je te réhabilite en une. »"
+    left: {label: "Je donne l'exclu", effects: {tribunes: "+++", direction: "-"}, answer: "L'article te sauve. Le président déteste lire ta vie privée."}
+    right: {label: "Je refuse tout net", effects: {tribunes: "-", direction: "+"}}
+
+  - id: co.nouvelle.ultras_gouvernent
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [rescue:tribunes, ultras]
+    speaker: meneche
+    cooldown: 30
+    when: "gauges.tribunes > 75"
+    text: "Ménèche : « Les ultras t'adorent au point de composer ton équipe. Un kop qui gouverne, ça finit toujours en prise d'otage. »"
+    left: {label: "Je recadre le kop", effects: {tribunes: "--", direction: "+"}}
+    right: {label: "Je les laisse faire", effects: {tribunes: "+", vestiaire: "-"}}

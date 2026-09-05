@@ -1,0 +1,142 @@
+cards:
+  - id: en.ultras.premiere_rencontre
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, nouvelle]
+    speaker: gege
+    once: true
+    when: "!flag('ami_ultras')"
+    text: "Gégé, écharpe jusqu'au nez : « Le kop, c'est moi. On chante pour toi ou contre toi, à toi de voir. »"
+    left: {label: "Je viens boire un coup", effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 2}}, answer: "Trois bières plus tard, tu es adopté."}
+    right: {label: "Je garde mes distances", effects: {tribunes: "-", direction: "+"}}
+
+  - id: en.ultras.banderole
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, presse]
+    speaker: gege
+    when: "gauges.tribunes < 45"
+    text: "Gégé déroule la bâche : « J'ai deux banderoles prêtes. Une qui t'adore, une qui te vire. »"
+    left: {label: "Je leur promets l'attaque", effects: {tribunes: "++", parole: 1, promise: true}, answer: "Il replie la mauvaise bâche. Pour l'instant."}
+    right: {label: "Une banderole ne marque pas", effects: {tribunes: "--", vestiaire: "+"}, answer: "Gégé note la phrase."}
+
+  - id: en.ultras.greve_encouragements
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, rescue:tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé, bras croisés : « Grève des encouragements. Le virage se taira jusqu'à ce que tu nous respectes. »"
+    left: {label: "Je monte chanter avec eux", effects: {tribunes: "+++", direction: "--"}, answer: "Tu prends le mégaphone. Le stade explose."}
+    right: {label: "Le silence, ça repose", effects: {tribunes: "--"}, answer: "On entend le ballon rouler. C'est glaçant."}
+
+  - id: en.ultras.tifo
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, caisse]
+    speaker: gege
+    when: "gauges.tribunes > 30"
+    text: "Gégé, plans sous le bras : « Un tifo géant pour dimanche. Il nous manque la bâche, la peinture, et surtout l'argent. »"
+    left: {label: "Le club paie le tifo", effects: {caisse: "--", tribunes: "++"}, answer: "Cent mètres carrés de ta tête au coup d'envoi."}
+    right: {label: "Débrouillez-vous, les gars", effects: {tribunes: "-", direction: "+", caisse: "+"}}
+
+  - id: en.ultras.derby
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    when: "gauges.tribunes > 35"
+    text: "Gégé, la veille du derby : « Cette année on veut la peau des voisins. Jure-moi que tes gars vont mouiller le maillot. »"
+    left: {label: "Je jure qu'on les mange", effects: {tribunes: "++", vestiaire: "-", parole: 1, promise: true}, answer: "Le vestiaire entend le serment par la fenêtre."}
+    right: {label: "Un match comme un autre", effects: {tribunes: "--", vestiaire: "+"}}
+
+  - id: en.ultras.envahissement
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, risk:direction]
+    speaker: brehaut
+    when: "gauges.tribunes > 60"
+    text: "Bréhaut, essoufflé : « Le virage veut envahir la pelouse pour fêter le maintien. La sécu panique, le président aussi. »"
+    left: {label: "Je les laisse fêter ça", effects: {rand: [{p: 0.6, tribunes: "++", direction: "--"}, {tribunes: "-", direction: "---"}]}}
+    right: {label: "Tout le monde reste dehors", effects: {tribunes: "--", direction: "+"}}
+
+  - id: en.ultras.naming_virage
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, sponsors, retorse]
+    speaker: aulard
+    when: "gauges.caisse < 55"
+    text: "Aulard, chèque à la main : « Un sponsor rebaptiserait le virage. Le kop de Gégé deviendrait le Virage Croquettes Bonchien. »"
+    left: {label: "On signe, la caisse d'abord", effects: {caisse: "+++", tribunes: "--", relation: {gege: -2}}, answer: "Gégé apprend le nouveau nom sur une pancarte."}
+    right: {label: "Le virage ne se vend pas", effects: {caisse: "-", tribunes: "++", relation: {gege: 2}}}
+
+  - id: en.ultras.mairie_subvention
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, caisse, retorse]
+    speaker: aubert
+    when: "gauges.caisse < 60"
+    text: "Madame Aubert, sourire municipal : « La subvention est prête. En échange, un panneau à mon nom sur la tribune et deux loges. »"
+    left: {label: "Marché conclu, Madame", effects: {caisse: "++", tribunes: "-", direction: "+"}, answer: "Le panneau est déjà commandé, plus grand que prévu."}
+    right: {label: "Le stade n'est pas une pub", effects: {caisse: "--", tribunes: "+"}}
+
+  - id: en.ultras.pacte_kop
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    when: "flag('ami_ultras') && !flag('pacte_gege')"
+    text: "Gégé, solennel : « Un pacte : le local des ultras rénové cette saison, et ton nom porté dans toute la ville. Tape là. »"
+    left: {label: "Je serre la main, promis", effects: {tribunes: "++", parole: 2, promise: true, set: [pacte_gege], schedule: [{card: en.ultras.pacte_suite, in: [5, 9]}]}, answer: "Gégé grave la date sur le mur du local."}
+    right: {label: "Pas de promesse en l'air", effects: {tribunes: "-", relation: {gege: -1}}}
+
+  - id: en.ultras.pacte_suite
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, chaine, retorse]
+    speaker: gege
+    sablier: true
+    when: "flag('pacte_gege')"
+    text: "Gégé revient, le mur du local encore nu : « Le pacte, coach. On efface la craie, ou on l'écrit en dur ? »"
+    left: {label: "Je tiens parole, on rénove", effects: {caisse: "--", tribunes: "++", clear: [pacte_gege], relation: {gege: 1}}, answer: "Le local sent la peinture fraîche et la fierté."}
+    right: {label: "Plus tard, on a le temps", effects: {tribunes: "---", clear: [pacte_gege], relation: {gege: -2}}, answer: "La craie devient une banderole."}
+
+  - id: en.ultras.portes_ouvertes
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, rescue:tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé, la mine grave : « Le virage se vide, coach. Viens signer des maillots à l'entraînement ouvert, ça peut se retourner. »"
+    left: {label: "J'ouvre les portes un jour", effects: {tribunes: "+++", vestiaire: "-", caisse: "-"}, answer: "Trois cents gamins, des selfies, un espoir."}
+    right: {label: "On sauvera ça au score", effects: {tribunes: "-", force: 4}}
+
+  - id: en.ultras.fumigenes
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, direction, risk:direction]
+    speaker: vukic
+    when: "gauges.tribunes > 45"
+    text: "Vukić : « Encore des fumigènes au virage. La Commission menace d'un huis clos et le président fume, lui aussi. »"
+    left: {label: "Je couvre le kop", effects: {tribunes: "++", direction: "--", caisse: "-"}, answer: "Le virage t'adopte pour de bon."}
+    right: {label: "Je condamne en public", effects: {tribunes: "--", direction: "++"}}
+
+  - id: en.ultras.deplacement
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, absurde]
+    speaker: gege
+    when: "gauges.tribunes > 30"
+    text: "Gégé, liste à la main : « Trois cars pour le déplacement au bout du pays. Le club paie l'essence, ou on part en stop avec les tambours ? »"
+    left: {label: "Le club affrète les cars", effects: {caisse: "-", tribunes: "++"}}
+    right: {label: "Le stop forge les légendes", effects: {tribunes: "+", caisse: "+"}, answer: "Ils arrivent à la 60e, trempés et fous de joie."}
+
+  - id: en.ultras.ville_endormie
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, piege]
+    speaker: aubert
+    when: "gauges.tribunes < 50"
+    text: "Madame Aubert, ruban de rond-point en main : « Votre club endort ma ville. Une étincelle, ou je coupe le ruban et le budget ? »"
+    left: {label: "Je lance une grande fête", effects: {tribunes: "++", caisse: "--", direction: "+"}, answer: "Fanfare, buvette, feux : la ville se réveille."}
+    right: {label: "On continue la routine", effects: {tribunes: "--", direction: "-"}}

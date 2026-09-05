@@ -1,0 +1,253 @@
+cards:
+  - id: en.direction.recrue_imposee
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato, agents]
+    speaker: aulard
+    text: "J'ai recruté un ailier via mon beau-frère agent. Tu le fais jouer titulaire, c'est pas une suggestion, c'est un organigramme."
+    left:
+      label: "Je le titularise"
+      effects: { direction: "++", vestiaire: "--", caisse: "-" }
+      answer: "Le vestiaire compte les passes du protégé: zéro."
+    right:
+      label: "Je le mets au banc"
+      effects: { direction: "--", vestiaire: "+", force: 2 }
+
+  - id: en.direction.dernier_avertissement
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse, retorse]
+    speaker: aulard
+    text: "Trois matchs, pas un de plus. Après je te remplace par un tableau blanc: il perd aussi, mais il fait moins de fautes en conférence."
+    left:
+      label: "Je promets le sursaut"
+      effects: { direction: "+", tribunes: "-", parole: 1, promise: true }
+      answer: "Aulard note la date, au stylo rouge."
+    right:
+      label: "Je réponds sec"
+      effects: { direction: "--", vestiaire: "++" }
+
+  - id: en.direction.adjoint_confiance
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, retorse]
+    speaker: vukic
+    text: "Aulard m'a nommé ton adjoint 'de confiance'. Je prends des notes même quand tu te tais, surtout quand tu te tais."
+    left:
+      label: "Je l'intègre au staff"
+      effects: { direction: "++", vestiaire: "-", set: [homme_president] }
+      answer: "Il a déjà un badge parking mieux placé que le tien."
+    right:
+      label: "Je le tiens à l'écart"
+      effects: { direction: "--", vestiaire: "+", relation: { aulard: -1 } }
+
+  - id: en.direction.budget_coupe
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, mercato]
+    speaker: aulard
+    text: "Le budget mercato est coupé de moitié. Officiellement 'rigueur', officieusement j'ai racheté une écurie de trot."
+    left:
+      label: "J'encaisse sans broncher"
+      effects: { direction: "+", caisse: "-", vestiaire: "-" }
+    right:
+      label: "Je gueule au board"
+      effects: { direction: "--", tribunes: "+", caisse: "+" }
+      answer: "Un membre du board applaudit, puis se ravise."
+
+  - id: en.direction.enveloppe_promise
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato, chaine]
+    speaker: aulard
+    text: "Tiens bon jusqu'à l'hiver et je t'ouvre une enveloppe mercato 'historique'. J'ai dit historique, pas garantie."
+    left:
+      label: "Je fais confiance"
+      effects: { direction: "+", relation: { aulard: 1 }, set: [enveloppe_promise], schedule: [{ card: en.direction.enveloppe_vide, in: [6, 12] }] }
+      answer: "Aulard scelle l'enveloppe, elle sonne creux."
+    right:
+      label: "Je veux du concret"
+      effects: { direction: "-", caisse: "+" }
+
+  - id: en.direction.enveloppe_vide
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, chaine]
+    sablier: true
+    when: "flag('enveloppe_promise')"
+    speaker: josiane
+    text: "L'enveloppe 'historique' est arrivée. Dedans: un bon de réduction jardinerie et les félicitations manuscrites du président."
+    left:
+      label: "J'avale la couleuvre"
+      effects: { direction: "-", vestiaire: "--", clear: [enveloppe_promise] }
+    right:
+      label: "Je fais fuiter à la presse"
+      effects: { direction: "---", tribunes: "++", clear: [enveloppe_promise] }
+      answer: "Ménèche titre: 'L'enveloppe fantôme'."
+
+  - id: en.direction.reunion_crise
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, rescue:direction, moment]
+    when: "gauges.direction < 25"
+    speaker: aulard
+    text: "Réunion de crise à huis clos. Tu as dix minutes pour me convaincre, et j'ai déjà mis huit minutes à trouver le parking."
+    left:
+      label: "Je plaide mon projet"
+      effects: { direction: "+++", vestiaire: "-", parole: 1 }
+      answer: "Le board hoche la tête, un vrai, pour une fois."
+    right:
+      label: "Je noie le poisson"
+      effects: { direction: "--", vestiaire: "+" }
+
+  - id: en.direction.felicitations
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse, retorse]
+    speaker: aulard
+    text: "Bravo pour la victoire! Je ne t'en croyais pas capable, et je l'ai dit à trois journalistes avant de te le dire à toi."
+    left:
+      label: "Je souris et je remercie"
+      effects: { direction: "+", vestiaire: "-", relation: { aulard: 1 } }
+    right:
+      label: "Je relève la pique"
+      effects: { direction: "--", tribunes: "+", vestiaire: "+" }
+      answer: "Aulard rit jaune, nuance rare chez lui."
+
+  - id: en.direction.fils_president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, absurde]
+    text: "Le fils d'Aulard veut 'juste s'entraîner avec les pros'. Il a 34 ans, une clause de confidentialité et un genou de moins que moi."
+    left:
+      label: "Je l'accueille au groupe"
+      effects: { direction: "++", vestiaire: "--" }
+      answer: "Il réclame déjà le brassard et une doublure."
+    right:
+      label: "Je refuse poliment"
+      effects: { direction: "--", vestiaire: "+", relation: { aulard: -1 } }
+
+  - id: en.direction.nassir_injection
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, sponsors]
+    speaker: nassir
+    text: "Mon fonds injecte de quoi respirer. En échange, le maillot devient un panneau publicitaire et toi, mon ambassadeur souriant."
+    left:
+      label: "Je signe le partenariat"
+      effects: { direction: "+", caisse: "+++", tribunes: "-" }
+      answer: "Le maillot clignote presque, les ultras plissent les yeux."
+    right:
+      label: "Je garde le blason nu"
+      effects: { direction: "-", caisse: "--", tribunes: "+" }
+
+  - id: en.direction.josiane_lettre
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde, moment]
+    speaker: josiane
+    text: "J'ai déjà tapé ta lettre de licenciement, 'au cas où'. Je l'ai même relue: il manquait une virgule, je l'ai corrigée pour toi."
+    left:
+      label: "Je la remercie, glacé"
+      effects: { direction: "+", vestiaire: "-" }
+    right:
+      label: "J'en fais mon alliée"
+      effects: { relation: { josiane: 2 }, tribunes: "+" }
+      answer: "Josiane range la lettre dans le tiroir du haut, accessible."
+
+  - id: en.direction.tuyau_josiane
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, rescue:direction, retorse]
+    when: "gauges.direction < 25"
+    speaker: josiane
+    text: "Entre nous: Aulard vote ton départ jeudi. Si tu lui apportes le sponsor avant mercredi, il 'oublie' l'ordre du jour."
+    left:
+      label: "Je cours signer Nassir"
+      effects: { direction: "+++", caisse: "+", vestiaire: "-" }
+      answer: "Aulard déchire l'ordre du jour, il en garde une photo."
+    right:
+      label: "Je refuse de ramper"
+      effects: { direction: "--", tribunes: "+", vestiaire: "+" }
+
+  - id: en.direction.porte_entrouverte
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato, moment]
+    text: "Un président rival me glisse sa carte au parking: 'Chez nous, l'entraîneur choisit ses joueurs.' La carte sent le cuir et la trahison."
+    left:
+      label: "Je garde la carte"
+      effects: { direction: "-", vestiaire: "+", set: [porte_ouverte] }
+      answer: "Elle reste dans ma poche, et elle chauffe."
+    right:
+      label: "Je la rends poliment"
+      effects: { direction: "++", parole: 1 }
+
+  - id: en.direction.piege_immobilisme
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, piege, mercato]
+    speaker: aulard
+    text: "Le board attend ta décision sur la vente du prodige. Ne rien décider, c'est décider que je décide à ta place."
+    left:
+      label: "Je bloque la vente"
+      effects: { direction: "--", vestiaire: "++", caisse: "-" }
+    right:
+      label: "Je valide la vente"
+      effects: { direction: "++", caisse: "++", vestiaire: "--" }
+      answer: "Le prodige part, le vestiaire fait ses cartons."
+
+  - id: en.direction.nassir_controle
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sponsors, retorse]
+    speaker: nassir
+    text: "Mon fonds veut un siège au board et un mot sur la compo. Rassure-toi, je ne connais rien au foot, juste aux tableurs."
+    left:
+      label: "J'accepte son siège"
+      effects: { direction: "+", caisse: "++", vestiaire: "-", relation: { nassir: 1 } }
+    right:
+      label: "Je verrouille la compo"
+      effects: { direction: "--", vestiaire: "+", relation: { nassir: -1 } }
+
+  - id: en.direction.coup_com
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse, sponsors]
+    speaker: aulard
+    text: "J'organise une conférence pour annoncer une 'révolution'. Tu montes sur scène, tu souris, et surtout tu ne dis pas qu'on n'a plus un rond."
+    left:
+      label: "Je joue la comédie"
+      effects: { direction: "++", tribunes: "+", caisse: "-" }
+      answer: "Les sponsors applaudissent, le comptable pleure en régie."
+    right:
+      label: "Je dis la vérité"
+      effects: { direction: "---", tribunes: "++", vestiaire: "+" }
+
+  - id: en.direction.vecchio_solde
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, vestiaire]
+    speaker: aulard
+    text: "Ton vieux gardien coûte cher en salaire et en nostalgie. Solde-le cet hiver, la nostalgie ne remplit pas les caisses."
+    left:
+      label: "Je garde Vecchio"
+      effects: { direction: "--", vestiaire: "++", caisse: "-" }
+      answer: "Vecchio ne saura jamais, tant mieux."
+    right:
+      label: "Je le laisse partir"
+      effects: { direction: "++", caisse: "++", vestiaire: "--", relation: { vecchio: -2 } }
+
+  - id: en.direction.promotion_piege
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, retorse, moment]
+    speaker: aulard
+    text: "Je te propose un beau titre: 'manager général'. Plus de pouvoir sur le papier, moins de budget dans la vraie vie."
+    left:
+      label: "J'accepte le titre"
+      effects: { direction: "+++", caisse: "--", parole: -1 }
+      answer: "Nouvelle plaque sur la porte, même bureau sans fenêtre."
+    right:
+      label: "Je reste entraîneur"
+      effects: { direction: "-", vestiaire: "+", force: 1 }

@@ -1,0 +1,203 @@
+cards:
+  - id: jp.corps.premiere_gene
+    roles: [joueur]
+    arc: moment
+    tags: [moment]
+    speaker: sabatier
+    when: "age >= 28"
+    text: "Doc Sabatier presse ton genou et fait la moue : « Ça, c'est un genou qui a des choses à te dire. On l'écoute maintenant, ou en mai ? »"
+    left:
+      label: "On écoute maintenant"
+      effects: {force: 4, tribunes: "-"}
+    right:
+      label: "En mai, en mai"
+      effects: {tribunes: "+", force: -3}
+
+  - id: jp.corps.verdict_genou
+    roles: [joueur]
+    arc: moment
+    tags: [moment, risk:tribunes]
+    speaker: sabatier
+    once: true
+    when: "age >= 30 && !flag('genou')"
+    text: "Doc Sabatier, radio en main : « Verdict : ce genou est fêlé. Tu peux finir la saison, mais après on parle très sérieusement. »"
+    left:
+      label: "Je finis la saison"
+      effects: {tribunes: "++", force: -4, set: [genou]}
+    right:
+      label: "J'arrête tout de suite"
+      effects: {direction: "+", tribunes: "--", set: [genou]}
+
+  - id: jp.corps.infiltration
+    roles: [joueur]
+    arc: moment
+    tags: [moment, risk:tribunes, chaine]
+    speaker: sabatier
+    once: true
+    when: "flag('genou')"
+    text: "Doc Sabatier prépare deux plateaux : « À gauche, le bistouri et six mois de tribune. À droite, une piqûre et le match de dimanche. »"
+    left:
+      label: "Le bistouri"
+      effects: {tribunes: "--", force: 6, direction: "-"}
+    right:
+      label: "La piqûre"
+      effects: {tribunes: "+", set: [infiltre], schedule: [{card: jp.corps.rechute, in: [3, 6]}]}
+      answer: "Tu ne sens plus rien. C'est bien ça, le problème."
+
+  - id: jp.corps.rechute
+    roles: [joueur]
+    arc: moment
+    tags: [moment, chaine]
+    speaker: sabatier
+    sablier: true
+    when: "flag('infiltre')"
+    text: "Doc Sabatier te montre l'écran sans un mot. « Le genou a lâché à l'échauffement. Je t'avais dit de ne rien sentir. »"
+    left:
+      label: "Je reviens vite"
+      effects: {tribunes: "-", force: -6, clear: [infiltre]}
+    right:
+      label: "Cette fois, j'opère"
+      effects: {tribunes: "--", direction: "-", force: 4, clear: [infiltre]}
+
+  - id: jp.corps.la_liste
+    roles: [joueur]
+    arc: moment
+    tags: [moment]
+    speaker: legruet
+    when: "gauges.tribunes > 55 && !flag('international')"
+    text: "Noël Legruet : « Je t'appelle en sélection. Ton club va râler pour ton genou, mais moi c'est ta patte gauche que je veux. »"
+    left:
+      label: "Je réponds présent"
+      effects: {tribunes: "++", direction: "-", set: [international]}
+    right:
+      label: "Je décline poliment"
+      effects: {direction: "+", tribunes: "-"}
+
+  - id: jp.corps.forfait
+    roles: [joueur]
+    arc: moment
+    tags: [moment, risk:direction]
+    speaker: legruet
+    when: "flag('international') && flag('genou')"
+    text: "Noël Legruet, sec : « Ton médecin de club te déclare forfait pour la sélection. Étrange, il t'a aligné dimanche. »"
+    left:
+      label: "Je déclare forfait"
+      effects: {direction: "++", tribunes: "--"}
+    right:
+      label: "Je joue pour le pays"
+      effects: {tribunes: "++", direction: "--", force: -3}
+
+  - id: jp.corps.reeducation
+    roles: [joueur]
+    arc: moment
+    tags: [moment]
+    speaker: sabatier
+    when: "flag('genou')"
+    text: "Doc Sabatier, chrono en main : « Encore vingt flexions. La rééduc, c'est pas glamour, mais c'est ça ou la place 14B. »"
+    left:
+      label: "Je serre les dents"
+      effects: {force: 7, vestiaire: "-"}
+    right:
+      label: "J'en garde sous le pied"
+      effects: {vestiaire: "+", force: -2}
+
+  - id: jp.corps.preparateur
+    roles: [joueur]
+    arc: moment
+    tags: [moment, caisse]
+    speaker: sabatier
+    when: "age >= 30 && flag('genou')"
+    text: "Un préparateur suisse hors de prix te jauge : « Je remets ce genou à neuf en trois mois. Reste à convaincre la direction de payer. »"
+    left:
+      label: "La direction paie"
+      effects: {caisse: "-", force: 8, set: [prepa]}
+    right:
+      label: "Je bosse tout seul"
+      effects: {vestiaire: "+", force: -3}
+
+  - id: jp.corps.retour_terrain
+    roles: [joueur]
+    arc: moment
+    tags: [moment, rescue:tribunes]
+    speaker: brehaut
+    when: "gauges.tribunes < 30 && flag('genou')"
+    text: "Titi Bréhaut te pousse vers la pelouse : « Le kop scande ton nom depuis dix minutes. Vas-y, montre-leur que le genou tient. »"
+    left:
+      label: "Je rentre sous les cris"
+      effects: {tribunes: "+++", force: -2}
+    right:
+      label: "Trop tôt, je reste assis"
+      effects: {direction: "+", tribunes: "-"}
+
+  - id: jp.corps.age_qui_vient
+    roles: [joueur]
+    arc: moment
+    tags: [moment, piege]
+    speaker: vukic
+    when: "age >= 32"
+    text: "Zoran Vukić, tableau tactique sorti : « Tes jambes ont trente-deux ans. On adapte ton jeu, ou tu cours après ta jeunesse ? »"
+    left:
+      label: "J'adapte mon jeu"
+      effects: {force: 5, tribunes: "-"}
+    right:
+      label: "Je cours quand même"
+      effects: {tribunes: "+", force: -6}
+
+  - id: jp.corps.derniere_liste
+    roles: [joueur]
+    arc: moment
+    tags: [moment]
+    speaker: legruet
+    once: true
+    when: "age >= 34 && flag('international')"
+    text: "Noël Legruet, presque ému : « C'est sans doute ta dernière liste. Je te prends pour le vestiaire, plus pour les jambes. »"
+    left:
+      label: "J'y vais pour transmettre"
+      effects: {vestiaire: "++", tribunes: "+"}
+    right:
+      label: "Place aux jeunes"
+      effects: {direction: "+", vestiaire: "+", relation: {mbako: 2}}
+
+  - id: jp.corps.genou_hiver
+    roles: [joueur]
+    arc: moment
+    tags: [moment, absurde]
+    speaker: sabatier
+    when: "flag('genou')"
+    text: "Doc Sabatier tapote ton genou comme un baromètre : « Il va pleuvoir. Ton genou le sait avant la météo. Repos ou pommade ? »"
+    left:
+      label: "Repos, il a raison"
+      effects: {tribunes: "-", force: 3}
+    right:
+      label: "Pommade, et j'y vais"
+      effects: {tribunes: "+", force: -2}
+
+  - id: jp.corps.visite_medicale
+    roles: [joueur]
+    arc: moment
+    tags: [moment, rescue:direction, retorse]
+    speaker: sabatier
+    when: "gauges.direction < 30 && age >= 30"
+    text: "Doc Sabatier, dossier fermé : « La direction veut ton bilan avant de prolonger. Je peux l'arrondir, ou dire toute la vérité. »"
+    left:
+      label: "Arrondis-le"
+      effects: {direction: "+++"}
+      answer: "Ta signature en dépend. Ton genou aussi."
+    right:
+      label: "Dis la vérité"
+      effects: {direction: "-", tribunes: "+"}
+
+  - id: jp.corps.raccrocher
+    roles: [joueur]
+    arc: moment
+    tags: [moment]
+    speaker: sabatier
+    once: true
+    when: "age >= 36 && gauges.tribunes > 65"
+    text: "Doc Sabatier, main sur ton épaule : « Ce genou t'a tout donné. Un dernier tour d'honneur, ou une saison de trop ? »"
+    left:
+      label: "Le tour d'honneur"
+      effects: {end: jubile}
+    right:
+      label: "Une saison de plus"
+      effects: {tribunes: "+", force: -8, direction: "-"}

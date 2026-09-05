@@ -1,0 +1,167 @@
+cards:
+  - id: en.vestiaire.cadres_conseil
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    text: "Bréhaut : « Les cadres veulent un conseil de vestiaire, sans toi. On gère les têtes, tu gères le tableau noir. »"
+    left: {label: "Je délègue aux cadres", effects: {vestiaire: "++", direction: "-"}, answer: "Le groupe respire enfin."}
+    right: {label: "Je garde la main", effects: {vestiaire: "-", force: "+"}}
+
+  - id: en.vestiaire.star_reveil
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    text: "Vukić : « La star est arrivée en retard, en jet privé et en lunettes noires. Elle réclame un vestiaire à elle seule. »"
+    left: {label: "Je cède au caprice", effects: {vestiaire: "--", tribunes: "+"}, answer: "Le reste du groupe compte les mètres carrés."}
+    right: {label: "J'impose la douche commune", effects: {vestiaire: "+", direction: "-"}}
+
+  - id: en.vestiaire.bizutage_chant
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    text: "Mbako, rouge écarlate : « Ils veulent que je chante sur la table. Je connais que l'hymne du club et une berceuse. »"
+    left: {label: "Je le laisse chanter", effects: {vestiaire: "++"}, answer: "La berceuse fait fondre tout le vestiaire."}
+    right: {label: "Je protège le petit", effects: {vestiaire: "-", relation: {mbako: 1}}}
+
+  - id: en.vestiaire.mutinerie_couve
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, chaine]
+    speaker: vukic
+    text: "Vukić : « Ça murmure au fond du bus : trois joueurs, une réunion, ton nom qui revient. On laisse couver ? »"
+    left: {label: "Je crève l'abcès ce soir", effects: {vestiaire: "+", force: "+"}}
+    right: {label: "Je laisse couver", effects: {vestiaire: "-", set: [mutinerie], schedule: [{card: en.vestiaire.mutinerie_eclate, in: [3, 8]}]}}
+
+  - id: en.vestiaire.mutinerie_eclate
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, chaine, scandale]
+    sablier: true
+    when: "flag('mutinerie')"
+    text: "Le clan des mécontents débarque, brassards en main : « Nous ou lui. » Bréhaut, lui, est resté dehors."
+    left: {label: "Je vends le meneur", effects: {vestiaire: "+", caisse: "+", clear: [mutinerie]}, answer: "Un cadre part, le calme revient."}
+    right: {label: "Je cède, ils décident", effects: {vestiaire: "--", direction: "--", clear: [mutinerie]}}
+
+  - id: en.vestiaire.capitaine_usure
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    text: "Bréhaut, cheville dans la glace : « Mes jambes ont trente-six ans, ma tête en a vingt. Tu me sors quand ? »"
+    left: {label: "Je te garde titulaire", effects: {vestiaire: "+", force: "-"}, answer: "Le stade se lève pour lui, une dernière fois."}
+    right: {label: "Je passe la main aux jeunes", effects: {vestiaire: "-", force: "+", relation: {brehaut: -1}}}
+
+  - id: en.vestiaire.prime_contestee
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    text: "Bréhaut : « Le président a promis une prime, puis l'a divisée par deux. Le vestiaire compte sur toi pour compter. »"
+    left: {label: "Je réclame la prime pleine", effects: {direction: "-", vestiaire: "++"}, answer: "Le trésorier fait semblant de chercher un stylo."}
+    right: {label: "Je calme le vestiaire", effects: {vestiaire: "-", direction: "+"}}
+
+  - id: en.vestiaire.clan_anciens
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    text: "Vecchio : « Les anciens ont leur table, leur radio, leurs règles ; les jeunes mangent debout. C'est comme ça depuis toujours. »"
+    left: {label: "Je casse les tables", effects: {vestiaire: "-", force: "+"}, answer: "Les anciens boudent une semaine entière."}
+    right: {label: "Je respecte les anciens", effects: {vestiaire: "+", relation: {vecchio: 1}}}
+
+  - id: en.vestiaire.mise_au_vert
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    text: "Vukić : « Mise au vert : hôtel sans wifi, sans télé, sans femmes. Ils menacent de se mutiner par pigeon voyageur. »"
+    left: {label: "Je coupe tout", effects: {vestiaire: "-", force: "++"}, answer: "Ils dorment à vingt heures. Ou font semblant."}
+    right: {label: "Wifi le soir, je tolère", effects: {vestiaire: "+", force: "-"}}
+
+  - id: en.vestiaire.retour_blessure
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: sabatier
+    text: "Doc Sabatier : « Ton buteur peut rejouer, ou pas. Son genou dit peut-être, son agent dit tout de suite. »"
+    left: {label: "Je le relance dimanche", effects: {rand: [{p: 0.5, vestiaire: "+", force: "++"}, {vestiaire: "--", force: "-", set: [genou]}]}}
+    right: {label: "Je le laisse au repos", effects: {force: "-", relation: {sabatier: 1}}}
+
+  - id: en.vestiaire.ego_double
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    text: "Vukić : « Nos deux buteurs refusent de se faire des passes. Chacun marque son but, jamais celui de l'autre. »"
+    left: {label: "Je n'en garde qu'un", effects: {vestiaire: "-", direction: "-", caisse: "+"}, answer: "L'autre est vendu, l'attaque tourne en rond."}
+    right: {label: "Je les mets en thérapie", effects: {vestiaire: "+", force: "-"}}
+
+  - id: en.vestiaire.soiree_karaoke
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [rescue:vestiaire, moment]
+    speaker: brehaut
+    cooldown: 20
+    when: "gauges.vestiaire < 25"
+    text: "Bréhaut : « Le groupe est mort, coach. Une soirée à mes frais, karaoké et cartes, ça peut le ressusciter. »"
+    left: {label: "Je viens à la soirée", effects: {vestiaire: "+++", caisse: "-"}, answer: "On rit enfin. Bréhaut chante faux."}
+    right: {label: "Je fais bosser le groupe", effects: {vestiaire: "-", force: "+"}}
+
+  - id: en.vestiaire.vieux_gardien
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [rescue:vestiaire]
+    speaker: vecchio
+    cooldown: 20
+    when: "gauges.vestiaire < 25"
+    text: "Vecchio : « Trente ans de vestiaire, coach. Laisse-moi parler aux gars, un vieux gardien ça calme les tempêtes. »"
+    left: {label: "Je te laisse parler", effects: {vestiaire: "++", relation: {vecchio: 1}}, answer: "Le calme revient, doucement."}
+    right: {label: "Je gère seul", effects: {vestiaire: "-", force: "+"}}
+
+  - id: en.vestiaire.cap_ou_meuble
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [piege]
+    speaker: vukic
+    text: "Vukić : « Le vestiaire attend un cap. Tu tranches un truc, n'importe quoi, ou tu deviens le meuble qu'on contourne. »"
+    left: {label: "J'impose une règle forte", effects: {vestiaire: "-", force: "++", direction: "+"}}
+    right: {label: "J'attends encore un peu", effects: {vestiaire: "--", direction: "-"}, answer: "Le meuble prend la poussière."}
+
+  - id: en.vestiaire.brassard_vote
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    text: "Vukić : « Bréhaut vieillit, Mbako brille : le vestiaire veut voter le brassard. Un vote se retourne vite contre le coach. »"
+    left: {label: "Je laisse voter", effects: {vestiaire: "+", relation: {brehaut: -1}}, answer: "Mbako gagne. Bréhaut sourit mal."}
+    right: {label: "Je nomme, c'est moi le chef", effects: {vestiaire: "-", direction: "+", force: "+"}}
+
+  - id: en.vestiaire.veteran_banc
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    text: "Vecchio : « Trois erreurs de suite, je sais. Mais me mettre au banc devant les jeunes, ça me tuerait, coach. »"
+    left: {label: "Je te laisse dans les buts", effects: {vestiaire: "-", force: "-", relation: {vecchio: 1}}}
+    right: {label: "Je lance le jeune", effects: {vestiaire: "+", force: "+", relation: {vecchio: -2}}, answer: "Il vide son casier sans un mot."}
+
+  - id: en.vestiaire.star_argent
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, agents]
+    speaker: fardelli
+    text: "Fardelli débarque au vestiaire : « Mon Mbako veut une prime à chaque but. Sinon il a mal partout, vous voyez. »"
+    left: {label: "J'accepte la prime au but", effects: {caisse: "-", vestiaire: "--"}, answer: "Le vestiaire découvre un nouveau tarif."}
+    right: {label: "Je le renvoie boiter", effects: {vestiaire: "+", relation: {mbako: -1}}}
+
+  - id: en.vestiaire.toro_coach
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    text: "Fin d'entraînement, le vestiaire te réclame au milieu du toro. Vukić : « Ils veulent te chambrer, coach : bon signe. »"
+    left: {label: "Je rentre dans le rond", effects: {vestiaire: "++", force: "-"}, answer: "Tu prends trois petits ponts et beaucoup de sourires."}
+    right: {label: "Je siffle la fin", effects: {vestiaire: "-", force: "+"}}

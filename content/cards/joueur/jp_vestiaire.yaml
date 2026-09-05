@@ -1,0 +1,217 @@
+cards:
+  - id: jp.vestiaire.brassard
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    once: true
+    text: "Titi Bréhaut : « Mon genou dit stop. Le brassard, tu le prends ou je le passe à Vecchio ? »"
+    left:
+      label: "Je le prends"
+      effects: { vestiaire: "+", direction: "+", set: [capitaine] }
+      answer: "Bréhaut te serre l'épaule, un peu trop fort."
+    right:
+      label: "Donne-le à Vecchio"
+      effects: { vestiaire: "++", tribunes: "-", relation: { vecchio: 1 } }
+
+  - id: jp.vestiaire.penalty_prodige
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    text: "Lian Mbako, chaud bouillant : « Le penalty c'est pour moi. T'as raté le dernier, papy. »"
+    left:
+      label: "Vas-y, petit"
+      effects: { vestiaire: "+", relation: { mbako: 1 }, rand: [{ p: 0.6, tribunes: "++" }, { tribunes: "-" }] }
+    right:
+      label: "C'est moi qui tire"
+      effects: { relation: { mbako: -1 }, rand: [{ p: 0.5, tribunes: "++" }, { tribunes: "--", vestiaire: "-" }] }
+
+  - id: jp.vestiaire.star_snob
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    text: "Da Silva, recrue à prix d'or, ne te calcule même pas : « Je parle qu'aux vrais titulaires, moi. »"
+    left:
+      label: "Je le calme au duel"
+      effects: { vestiaire: "++", tribunes: "-" }
+    right:
+      label: "Je laisse couler"
+      effects: { vestiaire: "--", direction: "+" }
+
+  - id: jp.vestiaire.couvrir
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    text: "Momo, 3h du matin : « J'ai froissé la bagnole du président. Tu me couvres, t'es le capitaine ? »"
+    left:
+      label: "Je te couvre"
+      effects: { vestiaire: "++", direction: "--" }
+      answer: "Momo t'embrasse le front. Ça sent la bière."
+    right:
+      label: "Assume tout seul"
+      effects: { vestiaire: "--", direction: "+" }
+
+  - id: jp.vestiaire.fronde_primes
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction, caisse]
+    speaker: brehaut
+    text: "Titi Bréhaut : « Les primes ont fondu de moitié. On fait grève de l'entraînement, tu signes le tract ? »"
+    left:
+      label: "Je signe"
+      effects: { vestiaire: "++", direction: "--" }
+    right:
+      label: "On joue, on parle après"
+      effects: { vestiaire: "-", direction: "+" }
+
+  - id: jp.vestiaire.jeune_pousse
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: mbako
+    text: "Lian Mbako : « Le coach dit que je prends ta place dimanche. Sans rancune, hein, papy ? »"
+    left:
+      label: "Bats-toi avec moi"
+      effects: { vestiaire: "+", force: 1, relation: { mbako: 1 } }
+    right:
+      label: "Tu prendras rien"
+      effects: { force: 2, tribunes: "+", relation: { mbako: -1 } }
+
+  - id: jp.vestiaire.vecchio_banc
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: vecchio
+    text: "Gigi Vecchio : « Ils veulent me mettre au banc pour un gamin. Tu montes au créneau ou tu regardes ? »"
+    left:
+      label: "Je défends le vieux"
+      effects: { vestiaire: "++", direction: "-", relation: { vecchio: 1 } }
+    right:
+      label: "La place au mérite"
+      effects: { vestiaire: "-", direction: "+", relation: { vecchio: -1 } }
+
+  - id: jp.vestiaire.repas_equipe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: brehaut
+    when: "gauges.vestiaire < 25"
+    text: "Titi Bréhaut : « Le groupe est en miettes. Un gueuleton payé de ta poche, ça recolle ou ça se moque ? »"
+    left:
+      label: "Je régale tout le monde"
+      effects: { vestiaire: "+++", caisse: "-" }
+    right:
+      label: "Chacun paie sa part"
+      effects: { vestiaire: "-" }
+
+  - id: jp.vestiaire.reunion_joueurs
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: vecchio
+    when: "gauges.vestiaire < 25"
+    text: "Gigi Vecchio : « Réunion sans le staff, portes fermées. Tu prends la parole ou tu la fermes ? »"
+    left:
+      label: "Je crève l'abcès"
+      effects: { vestiaire: "+++", tribunes: "-" }
+    right:
+      label: "Je laisse dire"
+      effects: { vestiaire: "-", relation: { vecchio: -1 } }
+
+  - id: jp.vestiaire.superstition
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    text: "Gigi Vecchio : « Cinq victoires avec mes chaussettes trouées jamais lavées. On garde le rituel ou pas ? »"
+    left:
+      label: "On garde les chaussettes"
+      effects: { vestiaire: "+", tribunes: "-" }
+    right:
+      label: "À la poubelle"
+      effects: { vestiaire: "-", tribunes: "+" }
+
+  - id: jp.vestiaire.discours
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    once: true
+    when: "flag('capitaine')"
+    text: "Zoran Vukić, avant le derby : « Capitaine, à toi de parler au groupe. Discours de feu ou silence de marbre ? »"
+    left:
+      label: "Discours de feu"
+      effects: { rand: [{ p: 0.6, vestiaire: "++", tribunes: "+" }, { vestiaire: "-" }] }
+    right:
+      label: "Silence, place au terrain"
+      effects: { vestiaire: "+", force: 1 }
+
+  - id: jp.vestiaire.promesse_mbako
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation, chaine]
+    speaker: mbako
+    once: true
+    text: "Lian Mbako : « Promets-moi que tu parles au coach pour moi et je reste. Sinon je signe ailleurs. »"
+    left:
+      label: "Je te le promets"
+      effects: { vestiaire: "+", promise: true, parole: 2, set: [promis_mbako], schedule: [{ card: jp.vestiaire.mbako_relance, in: [3, 6] }] }
+    right:
+      label: "Bosse, on verra"
+      effects: { vestiaire: "-", relation: { mbako: -1 } }
+
+  - id: jp.vestiaire.mbako_relance
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation, chaine]
+    speaker: mbako
+    sablier: true
+    once: true
+    when: "flag('promis_mbako')"
+    text: "Lian Mbako : « Alors, tu lui as parlé ? Je suis encore sur le banc, tu tiens parole ou pas ? »"
+    left:
+      label: "Je fonce voir le coach"
+      effects: { vestiaire: "+", direction: "-", clear: [promis_mbako], relation: { mbako: 1 } }
+    right:
+      label: "J'ai... oublié"
+      effects: { vestiaire: "--", clear: [promis_mbako], relation: { mbako: -2 } }
+
+  - id: jp.vestiaire.fardelli_vestiaire
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, agents]
+    speaker: fardelli
+    text: "Rocco Fardelli : « Je débauche trois de tes potes du vestiaire. File-moi leurs numéros contre 10 % ? »"
+    left:
+      label: "Voilà les numéros"
+      effects: { caisse: "+", vestiaire: "--", relation: { fardelli: 1 } }
+      answer: "Fardelli range son carnet, déjà au téléphone."
+    right:
+      label: "Touche pas au groupe"
+      effects: { vestiaire: "+", relation: { fardelli: -1 } }
+
+  - id: jp.vestiaire.bagarre
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    text: "Deux titulaires se prennent au collet à l'entraînement. Momo, le nez en sang : « Fais quelque chose, toi ! »"
+    left:
+      label: "Je les sépare"
+      effects: { vestiaire: "++" }
+    right:
+      label: "Je filme pour les réseaux"
+      effects: { vestiaire: "--", tribunes: "+" }
+
+  - id: jp.vestiaire.repartition_primes
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: brehaut
+    text: "Titi Bréhaut : « La prime de maintien : parts égales pour tous, ou au prorata du temps de jeu ? »"
+    left:
+      label: "Tout le monde pareil"
+      effects: { vestiaire: "++", tribunes: "-" }
+    right:
+      label: "Au temps de jeu"
+      effects: { vestiaire: "--", direction: "+" }

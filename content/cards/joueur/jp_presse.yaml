@@ -1,0 +1,223 @@
+cards:
+  - id: jp.presse.soda
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors]
+    speaker: lea
+    cooldown: 20
+    text: "Léa : « Tu as repoussé les bouteilles du sponsor hors du cadre. Eux parlent de rupture, moi de facture. »"
+    left:
+      label: "Je descends le soda cul sec"
+      effects: {caisse: "++", tribunes: "-"}
+      answer: "Tu grimaces, c'est filmé sous tous les angles."
+    right:
+      label: "Je bois de l'eau"
+      effects: {tribunes: "++", caisse: "--", direction: "-"}
+
+  - id: jp.presse.yacht
+    roles: [joueur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: meneche
+    when: "flag('genou')"
+    text: "Ménèche, ravi : « Toi au soleil sur un yacht, l'équipe sous la pluie. On met la photo en Une, ou tu rentres courir ? »"
+    left:
+      label: "Je rentre m'entraîner"
+      effects: {tribunes: "+", vestiaire: "+", caisse: "-"}
+    right:
+      label: "Je reste au soleil"
+      effects: {tribunes: "--", vestiaire: "-", caisse: "+"}
+
+  - id: jp.presse.morsure
+    roles: [joueur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: lea
+    text: "Léa : « Tu as mordu un défenseur, le web te surnomme le Requin. J'ai deux communiqués : un sérieux, un rigolo. »"
+    left:
+      label: "Le communiqué sérieux"
+      effects: {direction: "+", tribunes: "-"}
+    right:
+      label: "J'assume la dent"
+      effects: {tribunes: "++", direction: "-", vestiaire: "-"}
+
+  - id: jp.presse.cm
+    roles: [joueur]
+    arc: presse
+    tags: [presse, absurde]
+    text: "Ton nouveau community manager, 19 ans : « File-moi les clés du compte. Une nuit et tu es viral, promis. »"
+    left:
+      label: "Tiens, les clés"
+      effects: {caisse: "-", set: [cm_solo], schedule: [{card: jp.presse.cm_derapage, in: [3, 7]}]}
+      answer: "Il part déjà filmer l'intérieur de ton frigo."
+    right:
+      label: "Je poste moi-même"
+      effects: {tribunes: "+", vestiaire: "-"}
+
+  - id: jp.presse.cm_derapage
+    roles: [joueur]
+    arc: presse
+    tags: [presse, chaine, scandale]
+    speaker: lea
+    sablier: true
+    when: "flag('cm_solo')"
+    text: "Léa, à 4h du matin : « Ton CM a liké une horreur depuis ton compte. C'est déjà en story partout, je fais quoi ? »"
+    left:
+      label: "Je crie au piratage"
+      effects: {direction: "-", tribunes: "-", clear: [cm_solo]}
+      answer: "Personne n'y croit, mais ça occupe la nuit."
+    right:
+      label: "Je le vire en direct"
+      effects: {caisse: "-", tribunes: "+", vestiaire: "+", clear: [cm_solo]}
+
+  - id: jp.presse.sponsor_paris
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors, agents]
+    speaker: fardelli
+    text: "Fardelli : « Un site de paris des îles lointaines veut ton visage. L'argent est énorme, et comment dire, liquide. »"
+    left:
+      label: "Je signe, l'argent est vert"
+      effects: {caisse: "+++", direction: "--", tribunes: "-"}
+    right:
+      label: "Jamais les paris"
+      effects: {tribunes: "+", direction: "+"}
+
+  - id: jp.presse.pub_orange
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors]
+    speaker: nassir
+    cooldown: 25
+    text: "Cheikh Nassir : « Deux jours à tourner la pub de la boisson orange. En pleine semaine de derby, mais quel cachet, l'ami. »"
+    left:
+      label: "Je tourne la pub"
+      effects: {caisse: "++", force: "-", vestiaire: "-"}
+    right:
+      label: "Le derby d'abord"
+      effects: {caisse: "-", tribunes: "+"}
+
+  - id: jp.presse.rescue_hopital
+    roles: [joueur]
+    arc: presse
+    tags: [presse, rescue:tribunes]
+    speaker: lea
+    when: "gauges.tribunes < 25"
+    text: "Léa : « Les tribunes te détestent. Visite surprise à l'hôpital des enfants demain, caméras comprises, et tu souris. »"
+    left:
+      label: "J'y vais et je souris"
+      effects: {tribunes: "+++", direction: "-"}
+      answer: "Un gamin te fait un câlin, la Une s'attendrit."
+    right:
+      label: "Pas de caméra, pas moi"
+      effects: {vestiaire: "+", tribunes: "-"}
+
+  - id: jp.presse.rescue_maillot
+    roles: [joueur]
+    arc: presse
+    tags: [presse, rescue:tribunes, moment]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé, la voix cassée : « Le virage doute. Tu marques, tu cours vers nous, tu balances ton maillot, et on oublie tout. »"
+    left:
+      label: "Je cours vers le virage"
+      effects: {tribunes: "+++", vestiaire: "-"}
+      answer: "Le kop rugit ton nom, tu chiales un peu."
+    right:
+      label: "Après le match, au calme"
+      effects: {tribunes: "-"}
+
+  - id: jp.presse.interview_piege
+    roles: [joueur]
+    arc: presse
+    tags: [presse, piege]
+    speaker: meneche
+    text: "Ménèche, magnéto allumé : « Qui commande ce vestiaire, toi ou le coach ? Réponds, ou j'écris la réponse à ta place. »"
+    left:
+      label: "Le collectif, voyons"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "La langue de bois, ça n'a jamais rempli un stade."
+    right:
+      label: "Moi, et il le sait"
+      effects: {vestiaire: "-", tribunes: "++", direction: "-"}
+
+  - id: jp.presse.tweet_nuit
+    roles: [joueur]
+    arc: presse
+    tags: [presse, arbitrage]
+    speaker: lea
+    text: "Léa, au téléphone à 2h : « Tu as tweeté sur l'arbitre, c'est déjà repris partout. On efface ou on assume ? »"
+    left:
+      label: "J'efface tout"
+      effects: {direction: "+", tribunes: "-"}
+    right:
+      label: "J'assume mon tweet"
+      effects: {tribunes: "+", direction: "-", caisse: "-"}
+
+  - id: jp.presse.docu
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    text: "Ménèche : « Un doc immersif : caméras au vestiaire, chez toi, partout. Du brut, du vrai, une audience énorme. »"
+    left:
+      label: "Caméras partout, banco"
+      effects: {caisse: "++", vestiaire: "--"}
+      answer: "Le vestiaire trouve les micros, ambiance de plomb."
+    right:
+      label: "Ma vie reste à moi"
+      effects: {vestiaire: "+", caisse: "-"}
+
+  - id: jp.presse.crampons
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors, absurde]
+    speaker: nassir
+    text: "Cheikh Nassir : « Nos crampons orange, dimanche, aux pieds. Peu importe les ampoules, l'important c'est qu'ils brillent. »"
+    left:
+      label: "Je les mets, ça brille"
+      effects: {caisse: "++", force: "-"}
+    right:
+      label: "Mes crampons fétiches"
+      effects: {caisse: "-", force: "+", tribunes: "+"}
+
+  - id: jp.presse.faux_compte
+    roles: [joueur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: lea
+    text: "Léa : « Un faux compte à ton nom signe des autographes et vend des posters. Il a plus de succès que le vrai toi. »"
+    left:
+      label: "Je porte plainte"
+      effects: {caisse: "-", direction: "+"}
+    right:
+      label: "Qu'il bosse pour moi"
+      effects: {tribunes: "-", caisse: "+"}
+
+  - id: jp.presse.merguez
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors, absurde]
+    speaker: fardelli
+    text: "Fardelli : « Le boucher du coin te sponsorise : pas un rond, mais des merguez à vie et tout le quartier avec toi. »"
+    left:
+      label: "Va pour les merguez"
+      effects: {tribunes: "++", caisse: "-"}
+      answer: "Ton nom fleurit sur les murs, avec amour et gras."
+    right:
+      label: "Je vise plus gros"
+      effects: {caisse: "+", tribunes: "-"}
+
+  - id: jp.presse.excuses_recyclees
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    cooldown: 30
+    text: "Léa, blasée : « J'ai ressorti ton communiqué d'excuses habituel, j'ai juste changé la date. Tu signes ? »"
+    left:
+      label: "Je signe, comme d'hab"
+      effects: {direction: "+", tribunes: "-"}
+    right:
+      label: "J'écris moi-même"
+      effects: {tribunes: "+", vestiaire: "+", direction: "-"}

@@ -1,0 +1,220 @@
+cards:
+  - id: en.presse.gros_titre
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    text: "Je boucle ma une, coach. Vous voulez du « on vise le titre » ou du « on reste humbles » ?"
+    left:
+      label: "Je promets le titre"
+      effects: { tribunes: "++", direction: "-", parole: 1, promise: true }
+      answer: "Les tribunes ont adoré, le président beaucoup moins."
+    right:
+      label: "Je reste humble"
+      effects: { direction: "+", tribunes: "-" }
+  - id: en.presse.pas_vu_action
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, arbitrage]
+    speaker: meneche
+    text: "Penalty imaginaire, but refusé, expulsion... Coach, votre avis sur l'arbitrage de ce soir ?"
+    left:
+      label: "Je n'ai pas vu l'action"
+      effects: { direction: "+", tribunes: "--" }
+      answer: "Personne n'est dupe, mais la commission vous remercie."
+    right:
+      label: "Je démonte l'arbitre"
+      effects: { tribunes: "++", direction: "---", caisse: "-" }
+      answer: "Amende à la clé, et le vestiaire vous porte en triomphe."
+  - id: en.presse.le_special
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    once: true
+    speaker: meneche
+    text: "Un confrère vous surnomme « le Spécial ». Vous validez le sobriquet ou vous le tuez dans l'œuf ?"
+    left:
+      label: "J'endosse le Spécial"
+      effects: { tribunes: "++", direction: "-", set: [special] }
+      answer: "Le surnom colle, les affiches et les caméras aussi."
+    right:
+      label: "Je refuse l'étiquette"
+      effects: { direction: "+", tribunes: "-" }
+  - id: en.presse.punchline
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: lea
+    text: "J'ai deux fiches : la punchline qui fait le buzz ou la réponse posée qui rassure les costumes. Vous choisissez."
+    left:
+      label: "Je sors la punchline"
+      effects: { tribunes: "++", direction: "--" }
+      answer: "Le clip explose en ligne, le bureau grince des dents."
+    right:
+      label: "Je la joue posée"
+      effects: { direction: "+", tribunes: "-" }
+  - id: en.presse.clash_consultant
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    text: "Momo Tavares, sur le plateau : « Ce coach est cuit. » Le tacle passe en boucle, on me tend le micro d'après."
+    left:
+      label: "Je réponds cash"
+      effects: { tribunes: "++", direction: "-" }
+      answer: "Le clash cartonne, votre président soupire très fort."
+    right:
+      label: "Je l'ignore royalement"
+      effects: { direction: "+", tribunes: "-" }
+  - id: en.presse.rumeur
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, mercato, chaine]
+    once: true
+    speaker: meneche
+    text: "Une source me jure que vous signez ailleurs en juin. Je publie... sauf si vous me démentez, là, maintenant."
+    left:
+      label: "Je démens fermement"
+      effects: { direction: "++", tribunes: "+", set: [rumeur_mercato], schedule: [{ card: en.presse.dementi_suite, in: [3, 6] }] }
+    right:
+      label: "Je cultive le mystère"
+      effects: { tribunes: "++", direction: "--", set: [rumeur_mercato], schedule: [{ card: en.presse.dementi_suite, in: [3, 6] }] }
+  - id: en.presse.dementi_suite
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, mercato, chaine, retorse]
+    when: "flag('rumeur_mercato')"
+    sablier: true
+    once: true
+    speaker: meneche
+    text: "La rumeur de votre départ a enflé tout le mois. Aujourd'hui, un club fantôme dépose une offre bien réelle."
+    left:
+      label: "Je repousse l'offre"
+      effects: { vestiaire: "++", tribunes: "+", direction: "+", clear: [rumeur_mercato] }
+      answer: "Le vestiaire respire, la direction note votre loyauté."
+    right:
+      label: "Je négocie en douce"
+      effects: { caisse: "++", vestiaire: "--", direction: "-", clear: [rumeur_mercato] }
+      answer: "Votre prime grimpe, le vestiaire flaire le double jeu."
+  - id: en.presse.hors_contexte
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, retorse]
+    speaker: lea
+    text: "Ils ont coupé votre phrase : « les arbitres sont humains » devient « les arbitres sont nuls ». Ça part en vrille."
+    left:
+      label: "Je demande une rectif"
+      effects: { direction: "+", tribunes: "-", caisse: "-" }
+      answer: "Rectificatif publié en page 12, que personne ne lira."
+    right:
+      label: "Je surfe sur le malentendu"
+      effects: { tribunes: "++", direction: "--" }
+      answer: "Les ultras impriment déjà la banderole assortie."
+  - id: en.presse.le_meme
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: lea
+    text: "Votre grimace d'hier est devenue un mème géant. On peut la vendre en tee-shirt à la boutique dès demain."
+    left:
+      label: "Je monétise le mème"
+      effects: { caisse: "+++", tribunes: "--" }
+      answer: "Rupture de stock, dignité en berne au rayon caisses."
+    right:
+      label: "J'en ris avec les fans"
+      effects: { tribunes: "++", caisse: "-" }
+      answer: "Les gradins adorent, le comptable un peu moins."
+  - id: en.presse.langue_de_bois
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, piege]
+    speaker: meneche
+    text: "Trois « on prend match par match » et mon lecteur dort. Ici, l'immobilisme finit toujours en une assassine."
+    left:
+      label: "Je noie le poisson"
+      effects: { tribunes: "--", direction: "-" }
+      answer: "« Coach sans conviction » barre la une du week-end."
+    right:
+      label: "Je prends enfin position"
+      effects: { tribunes: "+", direction: "+", vestiaire: "-", parole: 1, promise: true }
+      answer: "Franc du collier, mais vous vous engagez en public."
+  - id: en.presse.rescue_tribunes
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes, rescue:tribunes]
+    when: "gauges.tribunes < 30"
+    speaker: lea
+    text: "Les tribunes vous lâchent. Une interview cœur ouvert au micro des supporters peut tout renverser."
+    left:
+      label: "Je me livre sans filtre"
+      effects: { tribunes: "+++", direction: "-" }
+      answer: "Les gradins fondent, la direction se crispe un peu."
+    right:
+      label: "Je reste pro et distant"
+      effects: { direction: "+", tribunes: "-" }
+  - id: en.presse.rescue_direction
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction, rescue:direction]
+    when: "gauges.direction < 30"
+    speaker: meneche
+    text: "Le président vous trouve trop bavard. Une conf sobre et cadrée le rassurerait sur votre sérieux."
+    left:
+      label: "Je rentre dans le rang"
+      effects: { direction: "+++", tribunes: "-" }
+      answer: "Le bureau approuve, les fans s'ennuient ferme."
+    right:
+      label: "Je reste flamboyant"
+      effects: { tribunes: "++", direction: "--" }
+  - id: en.presse.silence_radio
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: lea
+    text: "Vous voulez boycotter la presse après leurs titres. La direction adore, les journalistes affûtent leur vengeance."
+    left:
+      label: "Je coupe avec la presse"
+      effects: { direction: "++", tribunes: "-", relation: { meneche: -2 } }
+      answer: "Ménèche vous garde un chien de sa chienne."
+    right:
+      label: "Je reste ouvert"
+      effects: { tribunes: "+", relation: { meneche: 1 } }
+  - id: en.presse.exclu
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, sponsors, caisse]
+    speaker: meneche
+    text: "Ma chaîne paie cher une exclu avec vous. Le chèque est beau, mes questions le seront beaucoup moins."
+    left:
+      label: "J'accepte l'exclu payante"
+      effects: { caisse: "++", direction: "+", tribunes: "-" }
+      answer: "Le club encaisse, on vous cuisine en direct live."
+    right:
+      label: "Je refuse par principe"
+      effects: { tribunes: "+", relation: { meneche: -1 }, caisse: "-" }
+  - id: en.presse.consultant_faveur
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, retorse]
+    text: "Une gloire du club, aujourd'hui consultante télé, vous défend à l'antenne. En privé, elle réclame un stage pour son neveu."
+    left:
+      label: "J'accepte l'arrangement"
+      effects: { tribunes: "+", direction: "--" }
+      answer: "Elle vous encense, le bureau flaire le copinage."
+    right:
+      label: "Je refuse poliment"
+      effects: { direction: "+", tribunes: "-" }
+      answer: "Dès le lendemain, son soutien devient très nuancé."
+  - id: en.presse.derapage_direct
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale, moment]
+    once: true
+    speaker: lea
+    text: "Micro resté ouvert : on vous entend traiter l'adversaire de « touristes ». Ça tourne déjà en boucle."
+    left:
+      label: "J'assume, c'était mérité"
+      effects: { tribunes: "++", direction: "--" }
+      answer: "Le vestiaire jubile, la direction vous convoque."
+    right:
+      label: "Je présente mes excuses"
+      effects: { direction: "+", tribunes: "-", vestiaire: "-" }

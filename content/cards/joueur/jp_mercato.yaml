@@ -1,0 +1,225 @@
+cards:
+  - id: jp.mercato.record
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    once: true
+    when: "gauges.tribunes > 60 && season >= 1"
+    text: "Rocco Fardelli : « Un émir met sur la table le prix d'un pont. Le club encaisse une fortune, toi tu déménages loin de tout. »"
+    left:
+      label: "Je signe pour le pont"
+      effects: {caisse: "+++", tribunes: "--", relation: {fardelli: 1}}
+    right:
+      label: "Je reste au pays"
+      effects: {tribunes: "++", direction: "-", caisse: "-"}
+
+  - id: jp.mercato.arret_bosquet
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    when: "age >= 27"
+    text: "Fardelli brandit un texte de loi : « L'arrêt Bosquet, petit : fin de contrat, tu pars libre et gratuit. Le club ne touche pas un centime. »"
+    left:
+      label: "Je pars libre"
+      effects: {caisse: "--", direction: "--", tribunes: "-"}
+    right:
+      label: "Je prolonge"
+      effects: {direction: "++", caisse: "+", tribunes: "+"}
+
+  - id: jp.mercato.frere_agent
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents, famille]
+    when: "season >= 1"
+    text: "Mon petit frère, casquette à l'envers : « Laisse tomber Fardelli, je te négocie le transfert. La commission reste en famille, non ? »"
+    left:
+      label: "Je signe avec frérot"
+      effects: {caisse: "--", direction: "-", relation: {fardelli: -2}}
+    right:
+      label: "Je garde Fardelli"
+      effects: {tribunes: "+", relation: {fardelli: 1}}
+
+  - id: jp.mercato.clause
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    when: "gauges.tribunes > 55"
+    text: "Fardelli, tout sourire : « Un rival a payé ta clause au centime près. Le club fulmine mais ne peut absolument rien faire. »"
+    left:
+      label: "Je fais mes valises"
+      effects: {caisse: "++", tribunes: "--", direction: "-"}
+    right:
+      label: "Je décline poliment"
+      effects: {tribunes: "+", direction: "+", relation: {fardelli: -1}}
+
+  - id: jp.mercato.exil_dore
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, sponsors]
+    speaker: nassir
+    when: "season >= 1"
+    text: "Cheikh Nassir : « Chez nous, le championnat brille comme l'or et paie comme l'or. Le niveau sportif restera entre nous. »"
+    left:
+      label: "Je pars pour l'or"
+      effects: {caisse: "+++", tribunes: "--", force: -1}
+    right:
+      label: "Je garde l'ambition"
+      effects: {tribunes: "+", direction: "+"}
+
+  - id: jp.mercato.rester_loyal
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, ultras]
+    speaker: gege
+    text: "Gégé, écharpe au poing : « Les autres partent pour des valises de billets. Toi t'es d'ici, alors embrasse le blason. »"
+    left:
+      label: "J'embrasse le blason"
+      effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}}
+    right:
+      label: "Je prends les billets"
+      effects: {caisse: "+", tribunes: "--"}
+
+  - id: jp.mercato.agent_te_vend
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    text: "Fardelli, l'air gêné : « J'ai fait visiter ton dossier à trois clubs sans te prévenir. C'était pour ton bien, fais-moi confiance. »"
+    left:
+      label: "Je te recadre"
+      effects: {relation: {fardelli: -2}, direction: "+", tribunes: "+"}
+    right:
+      label: "Je te laisse faire"
+      effects: {caisse: "+", relation: {fardelli: 1}, tribunes: "-"}
+
+  - id: jp.mercato.loft
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, retorse]
+    speaker: aulard
+    when: "gauges.direction < 55"
+    text: "Le président Aulard, glacial : « Tu refuses de partir ? Alors tu t'entraîneras seul avec les U17, loin des caméras. »"
+    left:
+      label: "Je craque, je pars"
+      effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}}
+      answer: "Il te tend un stylo qui fuit, déjà."
+    right:
+      label: "Je tiens le loft"
+      effects: {vestiaire: "-", tribunes: "+", direction: "--", relation: {aulard: -1}}
+
+  - id: jp.mercato.offshore_montage
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents, scandale]
+    speaker: fardelli
+    once: true
+    text: "Fardelli baisse la voix : « Ta prime, on la loge dans une société aux îles lointaines. Zéro impôt, fais-moi confiance. »"
+    left:
+      label: "Monte la société"
+      effects: {caisse: "++", relation: {fardelli: 1}, set: [offshore], schedule: [{card: jp.mercato.fisc_lointain, in: [4, 8]}]}
+      answer: "Un dossier de vingt pages atterrit dans un tiroir."
+    right:
+      label: "Je paie mes impôts"
+      effects: {caisse: "-", tribunes: "+"}
+
+  - id: jp.mercato.fisc_lointain
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, scandale, chaine]
+    speaker: meneche
+    sablier: true
+    when: "flag('offshore')"
+    text: "Ménèche, dossier en main : « Les îles lointaines ont fuité : ton nom, ta prime, ta société. Le fisc va adorer, pas toi. »"
+    left:
+      label: "Je régularise"
+      effects: {caisse: "--", direction: "-", clear: [offshore]}
+    right:
+      label: "Je nie tout"
+      effects: {tribunes: "--", direction: "--", relation: {meneche: -1}}
+
+  - id: jp.mercato.prime_signature
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, famille]
+    speaker: fardelli
+    text: "Fardelli claque des doigts : « Le rival triple ta prime à la signature. Camille a déjà repéré la maison sur la colline. »"
+    left:
+      label: "On déménage"
+      effects: {caisse: "++", tribunes: "-", relation: {camille: 1}}
+    right:
+      label: "On reste ici"
+      effects: {tribunes: "+", direction: "+", relation: {camille: -1}}
+
+  - id: jp.mercato.rescue_caisse
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, rescue:caisse]
+    speaker: fardelli
+    when: "gauges.caisse < 25"
+    text: "Fardelli, providentiel : « Le club est à sec et un acheteur pose une malle de billets pour toi. Tu sauves la baraque en partant. »"
+    left:
+      label: "Je me sacrifie"
+      effects: {caisse: "+++", tribunes: "-"}
+      answer: "Le comptable du club pleure de joie dans son classeur."
+    right:
+      label: "Je refuse de fuir"
+      effects: {tribunes: "++", caisse: "--"}
+
+  - id: jp.mercato.rescue_tribunes
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, rescue:tribunes]
+    speaker: lea
+    when: "gauges.tribunes < 25"
+    text: "Léa, plan com en main : « Les tribunes te détestent. On annonce que tu retires ta demande de transfert et que tu restes. »"
+    left:
+      label: "Je retire ma demande"
+      effects: {tribunes: "+++", caisse: "-", direction: "-"}
+    right:
+      label: "J'assume mon départ"
+      effects: {tribunes: "-", caisse: "+"}
+
+  - id: jp.mercato.rescue_direction
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, rescue:direction]
+    speaker: aulard
+    when: "gauges.direction < 25"
+    text: "Le président Aulard, contrat tendu : « Signe la prolongation aujourd'hui. Je dois prouver aux actionnaires que tu restes. »"
+    left:
+      label: "Je prolonge"
+      effects: {direction: "+++", tribunes: "-", caisse: "-"}
+    right:
+      label: "Je reste libre"
+      effects: {direction: "--", caisse: "+"}
+
+  - id: jp.mercato.piege_indecis
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, piege]
+    speaker: fardelli
+    when: "season >= 2"
+    text: "Fardelli, agacé : « Trois mercatos que tu réfléchis à voix haute. À force de ne jamais trancher, plus personne ne t'appelle. »"
+    left:
+      label: "Je tranche : je pars"
+      effects: {caisse: "+", tribunes: "-", relation: {fardelli: 1}}
+    right:
+      label: "Je réfléchis encore"
+      effects: {tribunes: "--", caisse: "-", direction: "-"}
+
+  - id: jp.mercato.enchere
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    when: "gauges.tribunes > 50"
+    text: "Fardelli étale deux offres : « À gauche un grand club et zéro prime, à droite un club moyen et une fortune. Fais-moi confiance. »"
+    left:
+      label: "Je vise le prestige"
+      effects: {tribunes: "++", caisse: "-", force: 1}
+    right:
+      label: "Je prends la fortune"
+      effects: {caisse: "+++", tribunes: "-", force: -1}
