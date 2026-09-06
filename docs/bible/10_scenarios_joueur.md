@@ -404,7 +404,7 @@ Variante `plays() >= 2` (« encore ») : « Le pain, c'est à cinq heures, et c'
 ### SCÈNE am.dede_neveu.appel  —  L'indicatif de Montbéliac
 **Rôle** : joueur_amateur · **Intrigue** : am.dede_neveu · **Étape** : 3/4 (branche) · **Moment** : [1,3] · **Lieu** : la cuisine, le téléphone mural, Camille qui écoute depuis le couloir · **Conditions** : `flag('voisin_appelle')`
 **UNE VOIX DE MONTBÉLIAC** *(sans portrait — le président des Sangliers, il ne dit pas bonjour)*
-« Vous avez gueulé, on l'a su, et chez nous on ne fait pas jouer les neveux, on fait jouer ceux qu'on paie. Deux cents francs par match et un poste à la mairie : vous venez ?»
+« Vous avez gueulé, on l'a su, et chez nous on ne fait pas jouer les neveux, on fait jouer ceux qu'on paie. Deux cents francs par match et un poste à la mairie : vous venez ? »
 ← **Je viens** — effets : caisse ++, tribunes −−−, vestiaire −, club: {change: true}, set: passe_a_montbeliac — *Tu passes chez l'ennemi. Le village retire ta photo du bar ; Gérard la garde dans la boîte, à l'envers.*
 → **Je reste, même au banc** — effets : tribunes ++, caisse −, relation.dede +1 — *Tu raccroches. Camille sort du couloir. Dédé, le lendemain, remet ton nom à la craie ; il appuie fort.*
 **Traces** : passe_a_montbeliac (« {annee} : {prenom} {nom} est passé à Montbéliac pour deux cents francs. Le village a retourné sa photo. ») · **Réactions déclenchées** : co.re.camille_journal (∃) · **Lu plus tard par** : ch. 90 (mémoire des clubs : Boisnoir −3, « départ chez le rival »), ch. 13 (`fusion_imposee` : « tu étais passé chez eux »), fin am_enveloppe (epitaph_plus)
@@ -752,7 +752,7 @@ Variante `flag('revanche_valdorne')` (lache_academie) : « Je l'ai vu jouer sous
 « Bon, on va pas se mentir : le maillot de la Ligue, moi je ne l'ai jamais eu, et les jumeaux te regardent différemment depuis lundi. Tu le portes à l'entraînement, ou tu le laisses chez toi ? »
 ← **Je le laisse chez moi** — effets : vestiaire ++, tribunes −, relation.dede +1 — *Tu le laisses. Camille le range avec les choses qui comptent. Les jumeaux redeviennent les jumeaux.*
 → **Je le porte, une fois** — effets : tribunes ++, vestiaire −−, set: maillot_ligue_porte — *Tu le portes. Le mardi est silencieux. Momo demande s'il est lavable ; il le dit gentiment ; pas tous.*
-Variante `flag('karim_selectionne')` : « Bon, on va pas se mentir : Karim porte le maillot de la Ligue au bar depuis lundi, et il ne le lave pas ; toi tu lui as laissé la place. Tu lui dis bravo devant tout le monde, ou tu le laisses le porter ? » — ← **Bravo, devant tout le monde** — vestiaire ++, relation.dede +1 — *Tu le dis. Karim rougit ; c'est la seule fois.* · → **Je le laisse le porter** — vestiaire −, tribunes + — *Tu ne dis rien. Il le porte encore en juin ; il sent la Ligue.*
+Variante `flag('karim_selectionne')` : « Bon, on va pas se mentir : Karim porte le maillot de la Ligue au bar depuis lundi, sans le laver, et c'est toi qui lui as laissé la place. Tu lui dis bravo devant tout le monde, ou tu le laisses le porter ? » — ← **Bravo, devant tout le monde** — vestiaire ++, relation.dede +1 — *Tu le dis. Karim rougit ; c'est la seule fois.* · → **Je le laisse le porter** — vestiaire −, tribunes + — *Tu ne dis rien. Il le porte encore en juin ; il sent la Ligue.*
 **Traces** : maillot_ligue_porte (sans Almanach) · **Réactions déclenchées** : — · **Lu plus tard par** : alarme `am.alarme.vestiaire_bas_vieux` (variante « le maillot de la Ligue »), fin am_caid (epitaph_plus)
 **Épilogue** : ligne « {annee} : la Ligue a pris un nom au village. Le village l'a regardé autrement. »
 
@@ -902,12 +902,13 @@ Variante `flag('sans_agent')` — **AULARD** : « Tu vaux {prix} millions ce mat
 Variante `chars.vecchio.statut != 'club' && !flag('gigi_staff')` : le locuteur devient **BRÉHAUT** (« Le groupe vit bien, et demain le groupe a besoin de toi pour lui, pas pour la Une. »).
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : —
 
-### SCÈNE jp.pepite.p9_alarme_tifo_lea  —  (alarme, `tribunes.high`)
-**Rôle** : joueur · **Intrigue** : alarme (override du postulat) · **Moment** : quand TRIBUNES ≥ 85, tant que `arc('jp.tifo') != 'done'` · **Lieu** : le bureau de presse · **Conditions** : ci-dessus
+### SCÈNE jp.pepite.alarme_tifo_lea  —  La bâche et le prix (alarme, `tribunes.high`)
+**Rôle** : joueur · **Intrigue** : jp.pepite.club_usine (alarme d'override, étape 10/10) · **Étape** : 10/10 · **Moment** : alarme, servie quand TRIBUNES ≥ 85, tant que `arc('jp.tifo') != 'done'` ; hors créneau · **Lieu** : le bureau de presse · **Conditions** : `gauges.tribunes >= 85 && arc('jp.tifo') != 'done'`
 **LÉA** *(attachée de presse — neutre — la Une du jour, ton nom en gros, un prix en dessous)*
 « Vous confirmez ? La tribune a peint votre nom sur vingt mètres et le président a peint un prix dessous, en plus petit. Vous posez devant la bâche, ou devant le prix ? »
 ← **Devant la bâche** — effets : tribunes −, direction −, vestiaire + — *La photo montre la bâche. Le prix est coupé au cadrage ; Aulard le remarque.*
-→ **Devant le prix** — effets : tribunes −−, direction ++ — *La photo montre le prix. Gégé la découpe et la punaise au local, côté « à ne pas oublier ».*
+→ **Devant le prix** — effets : tribunes −−, direction ++, set: photo_prix — *La photo montre le prix. Gégé la découpe et la punaise au local, côté « à ne pas oublier ».*
+**Traces** : photo_prix (sans Almanach) · **Réactions déclenchées** : co.re.gege_decoupe (∃, après →) · **Lu plus tard par** : jp.tifo.un_an_apres (variante `vendu_d1` : « on a gardé la photo du prix aussi »), ch. 30 (alarmes standard du joueur : cette carte est l'override, les autres restent)
 
 ---
 
@@ -1008,11 +1009,13 @@ Variante `chars.vecchio.statut == 'retraite' && flag('gigi_staff')` : Vecchio pa
 Variante `flag('divorce')` — **JOSIANE** : « Dernier match demain, et j'en ai vu passer, vous savez, des derniers matchs qui ne l'étaient pas. Celui-là ? » — ← **Celui-là, oui** — set: dernier_annonce · → **On verra en juin** — tribunes +.
 **Traces** : dernier_annonce · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 30 (Carrefour : « tu l'avais dit à Camille » ; fin jubile si `jubile_fait`), jp.adieu (variante)
 
-### SCÈNE jp.fin.f9_alarme_gege_papy  —  (alarme, `tribunes.low`)
+### SCÈNE jp.fin.alarme_gege_papy  —  Quand tu courais (alarme, `tribunes.low`)
+**Rôle** : joueur · **Intrigue** : jp.fin.dernier_contrat (alarme d'override, étape 10/10) · **Étape** : 10/10 · **Moment** : alarme, servie quand TRIBUNES ≤ 15 ; hors créneau · **Lieu** : la grille de la Tribune Nord, après un match perdu · **Conditions** : `gauges.tribunes <= 15`
 **GÉGÉ** *(capo — noir — un sifflet à la bouche, pas encore dedans)*
 « La tribune n'oublie rien, le {numero}, elle se souvient même de quand tu courais ; maintenant elle regarde ses pieds. Tu lui donnes un match, ou tu lui donnes ta place ? »
 ← **Un match, dimanche** — effets : tribunes ++, force −2, rand: [{p: 0.25, set: genou_grave}, {}] — *Tu joues fort. Une fois. La tribune chante ; le genou, lui, siffle.*
-→ **Ma place, au jeune** — effets : tribunes +, vestiaire +, direction −, relation.mbako +1 — *Le jeune joue. La tribune chante son nom ; elle ne siffle plus le tien, elle l'a rangé.*
+→ **Ma place, au jeune** — effets : tribunes +, vestiaire +, direction −, relation.mbako +1, set: place_au_jeune — *Le jeune joue. La tribune chante son nom ; elle ne siffle plus le tien, elle l'a rangé.*
+**Traces** : place_au_jeune (sans Almanach), genou_grave · **Réactions déclenchées** : — · **Lu plus tard par** : jp.fin.f3_juin (variante « aucune offre » : Fardelli ajoute « et tu as donné ta place au petit »), fin jp_siffle (epitaph_plus « elle l'a rangé »), ch. 01 (Mbako +1)
 
 ---
 
@@ -1391,7 +1394,7 @@ Variante `flag('derby_tete_haute')` (ch. 01, Camille) : Gégé ajoute « ta femm
 « Vingt mètres à ton nom, c'est joli, ça fait monter le prix, alors j'ai fait peindre le prix sur le panneau d'à côté ; j'ai pas le temps, j'ai une usine. Tu poses avec les deux, ou on efface le prix ? »
 ← **Avec les deux** — effets : direction ++, tribunes −−, caisse + — *Tu poses. La photo montre ton nom et un chiffre. Gégé la découpe ; il coupe le chiffre.*
 → **Effacez le prix** — effets : direction −−, tribunes ++, relation.gege +1 — *Il ne l'efface pas. Il le fait peindre plus petit ; pour lui, c'est effacer.*
-**Traces** : — · **Réactions déclenchées** : co.re.gege_decoupe (∃) · **Lu plus tard par** : alarme `jp.pepite.p9_alarme_tifo_lea`
+**Traces** : — · **Réactions déclenchées** : co.re.gege_decoupe (∃) · **Lu plus tard par** : alarme `jp.pepite.alarme_tifo_lea`
 
 ### SCÈNE jp.tifo.un_an_apres  —  La bâche, un an après
 **Rôle** : joueur · **Intrigue** : jp.tifo · **Étape** : 4/5 · **Moment** : saison suivante, [3,10] · **Lieu** : la Tribune Nord, ou le couloir des visiteurs, selon que tu es resté · **Conditions** : —
@@ -1886,7 +1889,7 @@ Variante `plays() >= 1` (« encore ») : « Chez nous, l'or est toujours là, et
 « Tes jambes parlent, tu le sais, et je te le dis parce que personne ne te le dira : la réserve n'a pas d'entraîneur. Tu passes ton diplôme cet été, ou tu joues encore un an sans papier ? »
 ← **Je le passe cet été** — effets : direction +, vestiaire +, relation.vukic +1, set: diplome_en_cours — *Il te donne le formulaire. Il l'avait dans le cahier depuis mars.*
 → **Encore un an sans papier** — effets : tribunes +, direction −, set: diplome_reporte, outcome: pas_encore — *Il range le formulaire. Il en aura un l'an prochain ; il en a toujours un.*
-**Traces** : diplome_en_cours, diplome_reporte · **Réactions déclenchées** : — · **Lu plus tard par** : jp.diplome.clow, jp.adieu, ch. 30
+**Traces** : diplome_en_cours, diplome_reporte · **Réactions déclenchées** : jp.re.clow_top_un (§ 7, après ←, si `chars.clow.statut != 'mort'`) · **Lu plus tard par** : jp.diplome.clow, jp.adieu, ch. 30
 
 ### SCÈNE jp.diplome.clow  —  Le stage
 **Rôle** : joueur · **Intrigue** : jp.diplome_joueur · **Étape** : 2/5 · **Moment** : [1,3] · **Lieu** : le bar en face du stade, Clow, un verre, un tabouret libre · **Conditions** : `flag('diplome_en_cours') && chars.clow.statut != 'mort'`
@@ -1928,10 +1931,10 @@ Variante `flag('clow_stage_ailleurs')` : « Les chiffres sont têtus, les joueur
 **Rôle(s)** : joueur · **Postulat(s)** : fin_de_contrat ("1"), retour_croises ("2+"), banc_dore (« au désert, personne ne vient »), capitaine_dechu ("2+") · **Porteur** : gege · **Cast** : gege, lea, aulard, paulette, vecchio · **Thème** : tribune
 **Saisons** : "1", "2+" · **Conditions d'entrée** : `gauges.tribunes >= 60 && age >= 32` · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `accepte` → `jubile_fait` (« {annee} : stade plein pour le jubilé de {prenom} {nom}. Il a demandé où était le vestiaire. ») → fin jubile (Carrefour), objectif `fin_debout`, une.fin.jubile, ch. 31 (carte-légende) · `reporte` → `jubile_reporte` → jp.adieu (variante) · `charite` → `jubile_charite` → ch. 13 (la recette est allée à la buvette des anciens), ch. 20
-**Séquencier** : gege (ouverture) → lea [in 1,2] → aulard [in 1,3] → paulette [in 0,2] → jour [in 3,8].
+**Séquencier** : gege (ouverture ; Léa répond hors créneau par la réaction `jp.re.lea_jubile_mars`) → aulard [in 1,3] → paulette [in 0,2] → jour [in 3,8].
 
 ### SCÈNE jp.jubile.gege  —  On te fait un jubilé
-**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 1/5 · **Moment** : ouverture tirée · **Lieu** : le local, Gégé, une affiche à moitié dessinée avec ton numéro · **Conditions** : —
+**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : le local, Gégé, une affiche à moitié dessinée avec ton numéro · **Conditions** : —
 **GÉGÉ** *(capo — sourire — il te montre l'affiche ; la date est vide)*
 « On te fait un jubilé, la Nord a voté, et la tribune n'oublie rien, surtout pas ceux qui l'ont fait chanter. Tu choisis la date, ou tu nous dis que tu n'as pas fini ? »
 ← **Je choisis la date** — effets : tribunes ++, direction −, set: jubile_prevu — *Tu écris la date. Il la repasse au feutre. Elle est en mars ; tu joues encore en avril.*
@@ -1939,7 +1942,7 @@ Variante `flag('clow_stage_ailleurs')` : « Les chiffres sont têtus, les joueur
 **Traces** : jubile_prevu, jubile_reporte · **Réactions déclenchées** : jp.re.lea_jubile_mars (§ 7, après ←) · **Lu plus tard par** : jp.jubile.jour, jp.adieu
 
 ### SCÈNE jp.jubile.aulard  —  La recette
-**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 3/5 · **Moment** : [1,3] · **Lieu** : le bureau d'Aulard, un tableau de recettes, ton nom sur une ligne · **Conditions** : `flag('jubile_prevu')`
+**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 2/4 · **Moment** : [1,3] · **Lieu** : le bureau d'Aulard, un tableau de recettes, ton nom sur une ligne · **Conditions** : `flag('jubile_prevu')`
 **AULARD** *(président — neutre — il tape sur la ligne du tableau avec le stylo)*
 « Un jubilé, c'est un stade plein sans payer un adversaire, alors j'ai pas le temps, mais j'ai le temps pour ça : la recette est au club, ou on la partage, ou tu la donnes ? »
 ← **On la partage** — effets : caisse ++, direction +, tribunes − — *Tu prends ta part. Elle est correcte. Gégé l'apprend ; il ne dit rien ; la tribune n'oublie rien.*
@@ -1947,7 +1950,7 @@ Variante `flag('clow_stage_ailleurs')` : « Les chiffres sont têtus, les joueur
 **Traces** : jubile_charite · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 13, ch. 20, fin jubile (plus)
 
 ### SCÈNE jp.jubile.paulette  —  La place 14B
-**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 4/5 · **Moment** : [0,2] · **Lieu** : la tribune Est, avant le match, Paulette à sa place, une couverture sur les genoux · **Conditions** : `chars.paulette.statut != 'mort'` (Paulette meurt en 2009)
+**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 3/4 · **Moment** : [0,2] · **Lieu** : la tribune Est, avant le match, Paulette à sa place, une couverture sur les genoux · **Conditions** : `chars.paulette.statut != 'mort'` (Paulette meurt en 2009)
 **PAULETTE** *(abonnée depuis 1951 — sourire — elle tapote la place à côté de la sienne, la 14A)*
 « J'étais là en cinquante et un, mon petit, et j'ai vu tous les jubilés, ils demandent tous où est le vestiaire à la fin, par habitude. Tu viens t'asseoir cinq minutes ici, ou tu restes en bas ? »
 ← **Cinq minutes, ici** — effets : tribunes ++, vestiaire −, relation.paulette +1, set: paulette_14a — *Tu t'assois. Tu vois le stade de la 14A. Il est petit, et il est tout.*
@@ -1955,7 +1958,7 @@ Variante `flag('clow_stage_ailleurs')` : « Les chiffres sont têtus, les joueur
 **Traces** : paulette_14a (« {annee} : {prenom} {nom} s'est assis cinq minutes à la 14A. Paulette a expliqué le stade. ») · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 31 (enterrement de Paulette, 2009), fin ta_loge (ch. 30, plus), jp.geant.g4_virage (variante)
 
 ### SCÈNE jp.jubile.jour  —  Le tour d'honneur
-**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 5/5 · **Moment** : [3,8] · **Lieu** : la pelouse, le stade plein, Vecchio dans les buts pour l'occasion · **Conditions** : `flag('jubile_prevu')`
+**Rôle** : joueur · **Intrigue** : jp.jubile · **Étape** : 4/4 · **Moment** : [3,8] · **Lieu** : la pelouse, le stade plein, Vecchio dans les buts pour l'occasion · **Conditions** : `flag('jubile_prevu')`
 **VECCHIO** *(gardien, pour un soir — sourire — il a remis les gants, ils sont trop petits)*
 « Stade plein, petit, et moi dans les buts, j'en ai vu d'autres, mais pas un jubilé où le jubilé rejoue le mois d'après. Tu fais le tour d'honneur et tu raccroches, ou tu rejoues en avril ? »
 ← **Je raccroche** — effets : tribunes +++, direction −, set: jubile_fait, set: dernier_annonce, outcome: accepte — *Tu fais le tour. Tu demandes où est le vestiaire. Par habitude. Le Carrefour t'attend avec une porte.*
@@ -2009,7 +2012,7 @@ Variante `role_was('joueur_amateur') && flag('croissant_promis')` : le locuteur 
 « Vous confirmez ? Vos mémoires, à trente et un ans, c'est tôt, mais c'est le moment où l'on se souvient encore ; je les écris avec vous. Toute la vérité, ou une version qu'on peut offrir à Noël ? »
 ← **Toute la vérité** — effets : tribunes +, vestiaire −, direction −, set: memoires_verite, outcome: verite — *Elle allume le magnéto. Tu parles trois heures. Elle ne coupe rien ; c'est sa règle, c'est son problème.*
 → **La version de Noël** — effets : direction +, caisse +, set: memoires_lisses, outcome: lisse — *Elle écrit. C'est bien écrit. Ça se vend. Personne ne se souvient de la page cent douze ; il n'y en a pas.*
-Variante `flag('une_lea')` (ch. 02) : « Vous confirmez ? J'ai titré « Vous saviez ? » sur vous, une fois, et vous n'avez pas répondu ; vos mémoires, c'est la réponse. Vous la donnez, ou vous me laissez écrire le chapitre que je n'ai pas relu ? » — mêmes sorties, la gauche donne relation.lea +2.
+Variante `flag('une_lea')` (ch. 02) : « Vous confirmez ? J'ai titré « Vous saviez ? » sur vous, une fois, sans réponse ; vos mémoires, c'est la réponse. Vous la donnez, ou vous me laissez écrire le chapitre que je n'ai pas relu ? » — mêmes sorties, la gauche donne relation.lea +2.
 **Traces** : memoires_verite, memoires_lisses · **Réactions déclenchées** : jp.re.meneche_radio_d_abord (§ 7) · **Lu plus tard par** : jp.memoires.chapitre_trois, une.fin.chapitre_trois, ch. 02, ch. 31
 
 ### SCÈNE jp.memoires.meneche  —  La radio d'abord
@@ -2541,7 +2544,7 @@ Servies au tirage suivant, hors créneau ; plafond quatre par saison ; jamais de
 ### RÉACTION jp.re.lea_aller_simple  —  Aller simple
 **Après** : jp.pepite.p3_vente (← vendu) · **Famille** : conséquence immédiate · **Conditions** : —
 **LÉA** *(attachée de presse — neutre — la Une de demain sur l'écran)*
-« Vous confirmez ? « {PRIX} millions et un aller simple », c'est la manchette du Quotidien, ils ont le chiffre avant moi. Un mot pour la tribune, ou pas de mot ?»
+« Vous confirmez ? « {PRIX} millions et un aller simple », c'est la manchette du Quotidien, ils ont le chiffre avant moi. Un mot pour la tribune, ou pas de mot ? »
 ← **Un mot : merci** — effets : tribunes +, parole +1 — *Elle l'ajoute en dernière ligne. C'est petit ; c'est là.*
 → **Pas de mot** — effets : tribunes − — *La Une part sans. Gégé la découpe sans.*
 
@@ -2720,6 +2723,20 @@ Servies au tirage suivant, hors créneau ; plafond quatre par saison ; jamais de
 ← **Un autre** — effets : relation.fardelli −1, direction +, set: sans_agent, clear: agent_fardelli — *Tu cherches. Solvang a une carte ; elle l'a toujours eue.*
 → **Je t'appellerai** — effets : relation.fardelli +1, parole −1 — *Tu l'appelleras. Il le sait. Il note « appellera » ; il souligne.*
 
+### RÉACTION jp.re.vecchio_bouteilles_vendues  —  Ceux qui refusaient
+**Après** : jp.brehaut.bouteilles (∃, ch. 01 : → je refuse les bouteilles), jp.brassard.toro (← je dis quelque chose) · **Famille** : tiers qui commente · **Conditions** : `chars.vecchio.statut == 'club'`
+**VECCHIO** *(gardien, 41 ans — neutre — il porte lui-même une caisse de bouteilles, sans effort)*
+« Ceux qui refusaient les bouteilles finissaient par les vendre, j'en ai vu d'autres. Tu en portes une caisse avec moi, ou tu me laisses la porter ? »
+← **Une caisse avec toi** — effets : vestiaire +, relation.vecchio +1 — *Tu portes. Il porte la sienne moins vite ; il te laisse arriver le premier.*
+→ **Porte-la, Gigi** — effets : vestiaire −, tribunes + — *Il porte. Il ne dit rien ; il le répétera, à quelqu'un d'autre.*
+
+### RÉACTION jp.re.clow_top_un  —  Lundi, huit heures
+**Après** : jp.diplome.vukic (← je le passe cet été) · **Famille** : relance · **Conditions** : `chars.clow.statut != 'mort'`
+**CLOW** *(le mentor — neutre — au téléphone du bar, on entend un verre qu'on pose)*
+« Vukić m'a dit que tu passais le papier chez moi, et je ne dirais pas que j'étais le meilleur formateur, mais j'étais dans le top un. Lundi, huit heures, ou tu as un match ? »
+← **Lundi, huit heures** — effets : direction +, relation.clow +1 — *Tu notes. Il ne note pas ; il n'oublie jamais un lundi.*
+→ **J'ai un match, après** — effets : tribunes +, relation.clow −1 — *Il dit « après ». Il le dit comme on dit « jamais » ; il l'a dit à d'autres.*
+
 ### RÉACTION am.re.gerard_licence  —  La licence dans la boîte
 **Après** : am.village.v1_licence (les deux) · **Famille** : tiers qui commente · **Conditions** : —
 **GÉRARD** *(bénévole — neutre — il range ta licence dans la boîte en fer, avec l'argent)*
@@ -2824,6 +2841,21 @@ Servies au tirage suivant, hors créneau ; plafond quatre par saison ; jamais de
 « J'étais dans la deuxième barque, celle qui a pris l'eau, et le sac de ballons est sec, c'est moi qui l'ai tenu. Tu le dis à Dédé, ou tu le dis à L'Écho ? »
 ← **À L'Écho** — effets : tribunes +, relation.lea +1 — *Léa écrit « Momo et le sac ». C'est le titre ; il l'encadre.*
 → **À Dédé** — effets : vestiaire +, relation.dede +1 — *Dédé dit « bon ». Il donne le sac à Momo pour toute la saison ; c'est une récompense, il croit.*
+
+### RÉACTION am.re.dede_agent  —  Un parapluie à la scierie
+**Après** : am.academie.l1_rendu (les deux) · **Famille** : tiers qui commente · **Conditions** : —
+**DÉDÉ** *(coach bénévole — neutre — il regarde la voiture de Fardelli quitter le parking, les essuie-glaces encore en marche)*
+« Bon, on va pas se mentir : un agent en Régional, c'est comme un parapluie à la scierie, ça encombre. Il vient à tous les matchs, ou seulement quand il pleut ? »
+← **À tous les matchs** — effets : direction +, vestiaire − — *Il vient. Il reste dans la voiture ; le vestiaire compte les fois où la vitre descend.*
+→ **Seulement s'il pleut** — effets : vestiaire +, relation.dede +1 — *Il ne vient pas. Il pleut souvent, ici ; il ne vient pas non plus.*
+Variante `flag('sans_agent')` : « Bon, on va pas se mentir : tu as renvoyé l'agent, et moi j'ai une place au radiateur qui se libère. Tu la prends, ou tu la laisses aux vieux ? » — ← **Je la prends** — vestiaire +, relation.dede +1 — *Tu t'assois. Le plus vieux se pousse d'un cran ; c'est une phrase, chez lui.* · → **Aux vieux** — vestiaire ++, tribunes − — *Tu restes debout. Ils te regardent rester debout ; ils notent.*
+
+### RÉACTION am.re.camille_quatre_heures  —  Quatre heures dix
+**Après** : am.troisieme_mitemps.tournee (← je reste jusqu'à quatre h) · **Famille** : conséquence immédiate · **Conditions** : `!flag('divorce')`
+**CAMILLE** *(neutre — la lumière de la cuisine allumée, un bol sur la table, le sien)*
+« Tu rentres à quelle heure, je le sais maintenant : quatre heures dix, avec du pain. Tu me racontes la tournée, ou tu vas dormir ? »
+← **Je te raconte** — effets : relation.camille +1, force −1 — *Tu racontes. Elle rit une fois, à Momo. Tu dors à cinq ; dimanche, tu joues lourd.*
+→ **Je vais dormir** — effets : relation.camille −1, force +1 — *Tu dors. Elle éteint. Elle garde le pain ; elle ne le mange pas.*
 
 ---
 
@@ -3192,7 +3224,7 @@ Toutes lues au moins une fois dans ce chapitre ou dans un chapitre nommé ; la l
 - [x] `{toi}` seulement chez un locuteur à adresse ; `{NOM}` seulement en capitales de journal ou de bâche.
 - [x] Aucun nom réel, aucune monnaie réelle, aucun chiffre de jauge ou de relation dans un texte.
 - [x] Drames hors S0, jamais deux d'affilée (`am.genou_21`, `co.pharmacie` victime, `jp.genou_parle` rechute : ordonnés dans les pools).
-- [x] Nombres (§ 5.1 de la charte) : huit scripts de neuf à dix scènes (`pepite` et `fin_de_contrat` en ont dix : quatre ancres S0, trois S1, deux S2+, une alarme d'override) ; douze intrigues amateur (4 scènes chacune, `am.village` et `am.academie` en scripts) ; vingt-sept intrigues pro (4 à 6 scènes, plus le rituel Vecchio à une scène) ; douze cartes de tutoriel ; vingt temps forts ; quarante-trois réactions ; cinquante-cinq manchettes ; trois objectifs par postulat ; dix-neuf fins.
+- [x] Nombres (§ 5.1 de la charte) : huit scripts de neuf à dix scènes (`pepite` et `fin_de_contrat` en ont dix : quatre ancres S0, trois S1, deux S2+, une alarme d'override) ; douze intrigues amateur (4 scènes chacune, `am.village` et `am.academie` en scripts) ; vingt-sept intrigues pro (4 à 6 scènes, plus le rituel Vecchio à une scène) ; douze cartes de tutoriel ; vingt temps forts ; quarante-sept réactions ; cinquante-cinq manchettes ; trois objectifs par postulat ; dix-neuf fins.
 - [x] Chaque personnage convoqué par § 2.4 parle au moins une fois par postulat (amateur : Dédé, Pichon, Josiane, Gérard, Vecchio, Dupuis, Paulette, Barbier, Léa, Camille ; pro : Fardelli, Aulard, Vukić, Josiane, Rouvier, Bréhaut, Dembo, Vecchio, Mbako, Nassir, Solvang, Léa, Vence, Ménèche, Sabatier, Gégé, Camille, Legruet, Fauvel).
 - [x] Ratio léger / stratégique / drame ≈ 60 / 30 / 10 à l'échelle des réservoirs (amateur : 4 légères sur 8 ; pro : 9 légères ou familiales sur 27, 2 drames).
 - [ ] Relecture croisée par le chapitre 11 (à faire).

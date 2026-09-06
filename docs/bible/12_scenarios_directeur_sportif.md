@@ -1,6 +1,6 @@
 # FUSIBLE — Bible scénaristique · 12 · Les scénarios du directeur sportif
 
-> Ce chapitre écrit tout ce que vit un directeur sportif dans FUSIBLE : les deux postulats du rôle (`vendre_trente`, 2003, le club-usine ; `coach_intouchable` ★, 2010, le club-actif de Loco), leur script d'ouverture, un réservoir de quinze intrigues partagées, le mercato comme sous-paquet dense (deux fenêtres par saison, douze offres chacune), les quatre agents persistants (Fardelli le bulldozer, Solvang la discrète, la mère de Mbako, le père-agent générique), l'Inspecteur, le coach que l'on nomme ou que l'on vire, le fax de 23 h 58, l'algorithme contre l'œil, dix réactions, vingt-quatre manchettes, six objectifs cachés, huit alarmes, huit fins et leurs épitaphes, les Cartes Destin vers le bureau du président, la commission technique et le plus grand club, et la matrice des traces. Il suit la charte `00_charte.md` à la lettre (gabarits § 4, ids § 4.10, notation § 4.11, interdits § 6) ; il cite par id, sans les réécrire, les scènes de rôle `ds` déjà livrées par les chapitres 01 et 02 (`ds.vukic.nomination`, `ds.brehaut.costume`, `ds.sabatier.visite_cachee`, `ds.mere.trois_pour_cent`, `ds.loco.seau`, `ds.klopf.lateral`, `ds.rouvier.huit_kilos`, `ds.dembo.dix_sept_ans`, les paliers et retrouvailles de Fardelli, Solvang, Barbier, Vialat, Aulard, Nassir) et les branche dans ses intrigues.
+> Ce chapitre écrit tout ce que vit un directeur sportif dans FUSIBLE : les deux postulats du rôle (`vendre_trente`, 2003, le club-usine ; `coach_intouchable` ★, 2010, le club-actif de Loco), leur script d'ouverture, un réservoir de quinze intrigues partagées (soixante et une scènes écrites ici et cinq citées du chapitre 01, quatre à six par intrigue), le mercato comme sous-paquet dense (deux fenêtres par saison, douze offres chacune), les quatre agents persistants (Fardelli le bulldozer, Solvang la discrète, la mère de Mbako, le père-agent générique), l'Inspecteur, le coach que l'on nomme ou que l'on vire (Vukić, par le SMS de 23 h 47, côté DS), le fax de 23 h 58, l'algorithme contre l'œil, dix réactions, cinquante-quatre manchettes, six objectifs cachés, huit alarmes, huit fins et leurs épitaphes, les Cartes Destin vers le bureau du président, la commission technique et le plus grand club, et la matrice des traces. Il suit la charte `00_charte.md` à la lettre (gabarits § 4, ids § 4.10, notation § 4.11, interdits § 6) ; il cite par id, sans les réécrire, les scènes de rôle `ds` déjà livrées par les chapitres 01 et 02 (`ds.vukic.nomination`, `ds.brehaut.costume`, `ds.sabatier.visite_cachee`, `ds.mere.trois_pour_cent`, `ds.loco.seau`, `ds.klopf.lateral`, `ds.rouvier.huit_kilos`, `ds.dembo.dix_sept_ans`, les paliers et retrouvailles de Fardelli, Solvang, Barbier, Vialat, Aulard, Nassir) et les branche dans ses intrigues.
 
 ## 0. Comment lire ce chapitre
 
@@ -26,7 +26,7 @@ Voix sans portrait autorisées (deux cartes chacune au plus par postulat, jamais
 
 ### 0.3 Ce que le chapitre pose et ce qu'il lit (résumé ; la matrice est en § 11)
 
-**Pose** (charte § 5.2 et traces nouvelles) : `commission_occulte`, `commission_refusee`, `commission_denoncee`, `offshore` ∃ (côté commission aux îles), `fax_rate`, `fax_passe`, `fax_derogation`, `algorithme_adopte` (aussi posée par ch. 02, `co.barbier_doudoune`), `oeil_garde`, `pluie_et_tableur`, `dembo_vendu` (aussi posée par ch. 01, `ds.rouvier.huit_kilos`), `dembo_garde`, `coach_demission`, `neuf_achete`, `trader_assume`, `commission_lettre` (côté masse salariale), `masse_coupee`, `masse_plan`, `bloque_vendu`, `bloque_tribunal`, `bloque_pretes`, `president_ami` (via la set-piece Bilan : DIRECTION ≥ 80 trois saisons), `recrue_du_president`, `president_contre`, `beau_frere_retourne`, `recrue_du_sponsor`, `sponsor_refuse`, `petit_vendu`, `petit_garde`, `petit_prete`, `cellule_barbier`, `scout_lointain`, `cellule_fermee`, `nom_lache`, `prix_monte`, `no_comment_ds`, `jeune_vendu_tot`, `jeune_garde`, `centre_ferme`, `etranger_signe`, `etranger_reparti`, `etranger_adopte`, `grand_nom_nomme`, `fils_clow_nomme`, `interim_ds`, `page_deux_signee`, `page_deux_rayee`, `trente_tenus`, `trente_manques`, `klopf_parti_vestrie`, `fils_aulard_signe`, `cassette_recue`, `vingt_km_couverts`, `vingt_km_denonces`, `loco_parti_propre`, `loco_vire`, `fusible_saute`, `quarante_millions`.
+**Pose** (charte § 5.2 et traces nouvelles) : `commission_occulte`, `commission_refusee`, `commission_denoncee`, `offshore` ∃ (côté commission aux îles), `fax_rate`, `fax_passe`, `fax_derogation`, `algorithme_adopte` (aussi posée par ch. 02, `co.barbier_doudoune`), `oeil_garde`, `pluie_et_tableur`, `dembo_vendu` (aussi posée par ch. 01, `ds.rouvier.huit_kilos`), `dembo_garde`, `coach_demission`, `neuf_achete`, `trader_assume`, `commission_lettre` (côté masse salariale), `masse_coupee`, `masse_plan`, `bloque_vendu`, `bloque_tribunal`, `bloque_pretes`, `president_ami` (via la set-piece Bilan : DIRECTION ≥ 80 trois saisons), `recrue_du_president`, `president_contre`, `beau_frere_retourne`, `recrue_du_sponsor`, `sponsor_refuse`, `petit_vendu`, `petit_garde`, `petit_prete`, `cellule_barbier`, `scout_lointain`, `cellule_fermee`, `nom_lache`, `prix_monte`, `no_comment_ds`, `jeune_vendu_tot`, `jeune_garde`, `centre_ferme`, `etranger_signe`, `etranger_reparti`, `etranger_adopte`, `grand_nom_nomme`, `fils_clow_nomme`, `interim_ds`, `page_deux_signee`, `page_deux_rayee`, `trente_tenus`, `trente_manques`, `klopf_parti_vestrie`, `fils_aulard_signe`, `cassette_recue`, `vingt_km_couverts`, `vingt_km_denonces`, `loco_parti_propre`, `loco_vire`, `fusible_saute`, `quarante_millions` ; et, ajoutées au second passage pour porter chaque intrigue à quatre scènes au moins : `recrue_imposee`, `coach_couvert_sponsor`, `modele_garde`, `stagiaire_demission`, `modele_ferme`, `recrue_imposee_compo`, `coach_couvert_compo`, `gazette_dementie`, `gazette_libre`, `joueur_invente_signe`, `mercato_rentre`, `nuit_mercato`, `visite_faite_minuit`, `visite_sans_regarder`, `heure_confirmee`, `heure_josiane`, `casier_promis`, `casier_vide_assume`, `tribunal_appel`, `tribunal_encadre`, `gamin_contrat_pro`, `gamin_parti_castellane`, `etranger_trois_ans`, `etranger_un_an`, `coach_vire_par_ds`, `coach_garde_contre_president`, `fils_clow_vire`.
 
 **Lit** (venues d'ailleurs) : `mbako_vendu` (ch. 11 : le prix de référence), `mbako_garde`, `naming_signe`, `club_actif`, `nassir_pret`, `nassir_retire`, `nassir_sans_condition` (ch. 02), `enveloppe_promise` (ch. 11-13 : Malbec s'en souvient), `genou_opere` (ch. 10 : la visite médicale cachée), `president_ami` (ch. 11-13), `salaires_retard` (ch. 11), `ligne_douze`, `recrutement_bloque`, `plan_vialat`, `tribunal_saisi`, `ligne_confirmee`, `ligne_niee`, `nom_donne`, `nom_tu`, `page_trois_solvang`, `page_trois_barree`, `libre_chez_rival`, `star_vendue_dos`, `club_frere_pret`, `clause_spatiale`, `gamin_barbier`, `oeil_barbier`, `rapport_trop_lent`, `capitaine_vendu_malbec`, `lea_savait`, `lea_niee` (ch. 02), `vukic_numero_un`, `loco_contrarie`, `loco_banc_rapproche`, `klopf_lateral`, `klopf_sans_gauche`, `mere_trois_pour_cent`, `mere_rien`, `dembo_trois_semaines`, `gamin_demande`, `gamin_vendu_sans`, `visite_arrondie`, `visite_honnete`, `brehaut_ds`, `gigi_staff`, `cassette_regardee`, `clow_ingrat` (ch. 01), `dembo_ami`, `capitaine`, `special` (ch. 10), `coach_vire`, `stade_promis` (ch. 13), `monde_ecus`, `monde_flux`, `monde_video`, `aubert_ministre` (ch. 31).
 
@@ -188,7 +188,7 @@ Variante `fil_rouge == 'president'` : « Le président a dit que les vingt kilom
 ### SCÈNE ds.intouchable.a3_notification  —  La veille, la notification
 **Rôle** : ds · **Intrigue** : script · **Étape** : A3 · **Moment** : saison 0, slot 16 · **Lieu** : ton bureau, une enveloppe à en-tête de Qatalyst, un émissaire debout qui ne s'assoit pas, la petite Josiane qui a déjà lu · **Conditions** : —
 **NASSIR** *(par visioconférence, écran sur le bureau — neutre — un fond de désert, un fond de bureau, on ne sait pas)*
-« Demain, quel que soit le score, le club « clarifie sa gouvernance » : le coach, ou vous ; l'actif ne porte pas deux monuments. Ce n'est pas un club, c'est un actif, {toi} : vous me proposez lequel ? »
+« Demain, quel que soit le score, le club « clarifie sa gouvernance » : le coach, ou vous. Ce n'est pas un club, c'est un actif, {toi} : vous me proposez lequel ? »
 ← **Moi : je saute, il reste** — effets : direction −−, vestiaire ++, tribunes +, set: fusible_saute, parole +1 — *Le communiqué dit « d'un commun accord ». Le vestiaire lit ton nom, pas celui de Loco ; il ne dit rien, il court moins.*
 → **Lui : le seau part** — effets : direction ++, vestiaire −−, tribunes −, set: loco_vire, char: {loco: {statut: parti}}, relation.loco −2 — *Loco range son seau. Il ne te regarde pas. Le président te vouvoie ; ça ne lui plaît pas non plus.*
 Variante `flag('vingt_km_denonces') && relation.mbako >= 1` : « Le capitaine m'a écrit que le vestiaire vous suivait, pas le coach ; c'est une information, pas une opinion. Ce n'est pas un club, c'est un actif : je clarifie, et je vous garde, si vous me donnez Loco. » — ← **Je ne donne personne** — direction −−, vestiaire ++, set: fusible_saute — *Il clarifie quand même. Ton nom ; Mbako découpe le communiqué, il l'affiche dans le vestiaire.* · → **Prenez Loco** — set: loco_vire, direction ++, vestiaire −, relation.mbako −1 — *Loco part. Mbako aussi, en juin.*
@@ -198,7 +198,7 @@ Variante `vars.titres >= 1 || bilan.outcome == 'titre'` (le titre est acquis à 
 ### SCÈNE ds.intouchable.a4_bilan_actif  —  Le Bilan de l'actif
 **Rôle** : ds · **Intrigue** : script · **Étape** : A4 · **Moment** : saison 0, slot 17 · **Lieu** : la salle du conseil, un écran, une courbe, Vialat au fond avec un cahier (le fair-play financier de l'Union est à l'ordre du jour) · **Conditions** : —
 **NASSIR** *(fonds Qatalyst — neutre ; sourire si `flag('loco_vire')` et `bilan.tenu` — la courbe monte ou descend, il ne la commente pas)*
-« L'actif a rapporté, ou pas, la courbe le dit ; et l'Union écrit que nos commissions dépassent nos recettes, madame Vialat confirmera. Ce n'est pas un club, c'est un actif : expliquez-moi la courbe. »
+« La courbe dit si l'actif a rapporté ; l'Union écrit que nos commissions dépassent nos recettes, madame Vialat confirmera. Ce n'est pas un club, c'est un actif : expliquez-moi la courbe. »
 ← **La courbe, c'est le coach** — effets : direction +, vestiaire −, relation.loco −1, set: courbe_loco — *Il note « coach ». Loco l'apprend par Dembo, sur le Plateau, le dimanche.*
 → **La courbe, c'est moi** — effets : direction −, vestiaire +, parole +1, set: courbe_ds — *Il note « DS ». Vialat souligne « commissions ». Le rapport part à l'Union avec ton nom dans la marge.*
 Variante `flag('fusible_saute')` : la scène est servie comme épilogue : **LA PETITE JOSIANE** (voix) : « Le conseil s'est tenu sans vous, monsieur ; ma tante dit qu'elle en a vu passer, et que celui-là, elle le garde. Vous voulez le procès-verbal ? » — un bouton **Je veux le procès-verbal** — direction +, set: pv_garde — *Elle te le donne. Ton nom y est trois fois ; celui de Loco, une, et c'est « remercie ».*
@@ -261,12 +261,12 @@ Les intrigues sont partagées par les deux postulats (les `if` de pool disent o�
 ### SCÈNE ds.commission.bulldozer  —  Quinze plus deux
 **Rôle** : ds · **Intrigue** : ds.commission_occulte · **Étape** : 1/5 · **Moment** : ouverture tirée, fenêtre de mercato de préférence · **Lieu** : ton bureau, la porte qu'il n'a pas frappée, un dossier de joueur ouvert à la photo · **Conditions** : —
 **FARDELLI** *(agent — neutre — il pose le dossier photo vers toi, la page des chiffres vers lui)*
-« Quinze millions pour un attaquant qui marque partout, plus deux pour les frais, sur un compte que je t'indique ; le coach le veut, il ne le sait pas encore. Mon ami, on parle d'argent ou d'amitié ? »
+« Quinze millions pour un attaquant qui marque partout, plus deux pour les frais, sur un compte à moi ; le coach le veut, il ne le sait pas encore. Mon ami, on parle d'argent ou d'amitié ? »
 ← **D'argent : quinze plus deux** — effets : caisse −−−, vestiaire ++, force +3, relation.fardelli +1, set: commission_occulte, set: offshore, outcome: payee — *Il signe. Le compte est à une île. Josiane classe la copie sous « F » ; Vialat la trouvera sous « F » aussi.*
 → **D'amitié : quinze, pas plus** — effets : direction +, relation.fardelli −1, next: {step: solvang_sans_frais, in: [1,3]} — *Il range la page des chiffres. Il dit « on en reparle » ; il ne reparle jamais.*
 Variante `plays('ds.commission_occulte') >= 1` (« encore ») : « Encore un attaquant, encore deux millions de frais, et cette fois le compte est ailleurs, parce que tu es prudent. Mon ami, on parle d'argent ou d'amitié ? » — mêmes sorties.
 Variante `flag('page_trois_barree')` (ch. 02 : sa page trois est barrée) : « Quinze plus deux, et je n'apporte rien d'autre cette saison, {toi}, ma page trois a été barrée par quelqu'un que tu connais. Mon ami, on parle d'argent ? » — mêmes sorties.
-**Traces** : commission_occulte, offshore ∃ · **Réactions déclenchées** : ds.re.klopf_court ou ds.re.loco_cassette (§ 6, après ←, selon `world.coach`) · **Lu plus tard par** : ds.commission.vialat_ligne, ds.recrutement_bloque, ds.intouchable.a4 (variante), ds_copains, ch. 15, ch. 20
+**Traces** : commission_occulte, offshore ∃ · **Réactions déclenchées** : ds.re.klopf_court ou ds.re.loco_cassette (§ 6, après ←, selon `world.coach`) · **Lu plus tard par** : ds.commission.vialat_ligne, ds.recrutement_bloque, ds.intouchable.a4_bilan_actif (variante), ds_copains, ch. 15, ch. 20
 
 ### SCÈNE ds.commission.solvang_sans_frais  —  Le même, sans les frais
 **Rôle** : ds · **Intrigue** : ds.commission_occulte · **Étape** : 2/5 · **Moment** : [1,3] après le bulldozer · **Lieu** : un café loin du stade, une photocopie d'une page trois · **Conditions** : `!flag('commission_occulte')`
@@ -336,7 +336,7 @@ Variante `flag('neuf_achete')` : « Le coach vient de dire « merci au directeur
 ### SCÈNE ds.neuf.demission  —  Le sifflet rendu  (alarme conditionnelle)
 **Rôle** : ds · **Intrigue** : ds.neuf_ou_trader · **Étape** : 4/5 · **Moment** : hors séquencier, quand `gauges.vestiaire < 25 && flag('trader_assume')` (ou `flag('fronde_publique')`) · **Lieu** : ton bureau, le coach debout, son adjoint derrière avec le cahier · **Conditions** : `world.coach in ['loco', 'vukic']` (Klopf ne démissionne pas : il sourit ; sa variante est `_klopf`)
 **LOCO** *(entraîneur — noir — il pose le seau sur ton bureau, ce qui est la chose la plus violente qu'il ait jamais faite)*
-« Je ne suis pas venu entraîner un placement, profesor, je suis venu regarder un match, et vous avez acheté un placement. Regardez la cassette de ma démission : elle dure une seconde, c'est celle-ci. »
+« Je ne suis pas venu entraîner un placement, profesor, je suis venu regarder un match. Regardez la cassette de ma démission : elle dure une seconde, c'est celle-ci. »
 ← **Restez ; je vends l'ailier** — effets : vestiaire +, direction −, caisse −, relation.loco +1, parole +1, promise — *Il reprend le seau. Il ne dit pas oui ; il ne dit pas non. Il entraîne demain, c'est sa réponse.*
 → **Partez ; je prends le banc** — effets : vestiaire −−, tribunes −, direction +, set: coach_demission, char: {loco: {statut: parti}}, outcome: demission, next: {step: interim, in: [1,2]} — *Il part avec le seau. Tu prends le banc trois matchs ; il est à douze mètres du terrain, tu comprends le seau.*
 Variante `_klopf` (`world.coach == 'klopf'`) : **KLOPF** (sourire) : « Je ne démissionne pas, directeur, j'ai perdu trois finales sans démissionner ; on court, on presse, on chante, et je souris. Je souris jusqu'en juin, et en juin la Vestrie m'appelle. » — un bouton **Souriez, alors** — vestiaire −, set: klopf_sourit — *Il sourit. Le vestiaire sait ce que ça veut dire ; toi aussi, maintenant.*
@@ -363,7 +363,7 @@ Variante `world.coach == 'vukic'` : **VUKIĆ** (noir) : « Je te le dis parce qu
 ### SCÈNE ds.petit.pluie  —  Sous la pluie, un mardi
 **Rôle** : ds · **Intrigue** : ds.vente_du_prodige · **Étape** : 1/5 · **Moment** : ouverture tirée · **Lieu** : la touche du terrain de la réserve, la pluie, Barbier en doudoune ; en 2010, Barbier au téléphone et « l'algorithme » sur ton écran · **Conditions** : —
 **BARBIER** *(chef du recrutement — sourire — il ne montre pas le gamin du doigt ; il montre le ballon)*
-« Le petit Rancé, le dix de la réserve, je l'ai vu jouer sous la pluie, patron, et il ne glisse pas ; zéro aujourd'hui, trente millions dans deux ans. Tu veux trente dans deux ans, ou quinze demain ? »
+« Le petit Rancé, le dix de la réserve, je l'ai vu jouer sous la pluie, patron, et il ne glisse pas ; zéro aujourd'hui, trente millions dans deux ans. Trente dans deux ans, ou quinze demain ? »
 ← **Quinze demain, page deux** — effets : direction +, vestiaire −, relation.barbier −1, next: {step: clause, in: [1,3]} — *Il ferme la doudoune. Il dit qu'il en a vu partir d'autres ; c'est la phrase de quelqu'un d'autre.*
 → **Trente dans deux ans** — effets : direction −, vestiaire +, relation.barbier +1, set: petit_vise — *Il rouvre le carnet. Il écrit « garder » ; il ne l'a jamais écrit pour personne.*
 Variante `year >= 2008` (`coach_intouchable`) : **BARBIER** (au téléphone, retraité) : « Il y a un gamin de seize ans chez vous que l'algorithme note à quatre-vingt-deux, petit, et je l'ai vu jouer sous la pluie à Trébignac, il en vaut quatre-vingt-dix. Vous le vendez sur le chiffre, ou vous le gardez sur la pluie ? » — mêmes sorties.
@@ -448,13 +448,13 @@ Variante `flag('cellule_fermee') || (!flag('scout_lointain') && relation.barbier
 **Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : nassir · **Cast** : nassir, klopf/loco, josiane, gege · **Thème** : argent
 **Saisons** : "0", "1" · **Conditions d'entrée** : `relation.nassir >= 0` · **Exclusions** : — · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `recrue` → `recrue_du_sponsor` (« {annee} : un joueur d'Al-Dorado dans le onze de {club}, à la demande du sponsor. Il a joué douze minutes. ») → lue par ds.neuf_ou_trader (variante), ch. 13 (`rachete_fonds` : « ton DS a déjà accepté une recrue de communication »), ds_homme_president (epitaph_plus), une.vendre.sponsor · `refus` → `sponsor_refuse` (« {annee} : {prenom} {nom} a refusé la recrue du sponsor. Le maillot a changé de couleur en janvier. ») → lue par ch. 11 (`en.nassir_proprietaire` variante « le DS a dit non avant toi »), ch. 02 (Nassir −1), ch. 20
-**Séquencier** : recrue (ouverture, [2,9]) → douze_minutes [in 2,4, `if: flag('recrue_du_sponsor')`] → maillot (S+1, at_season +1, [1,6]).
+**Séquencier** : recrue (ouverture, [2,9]) → douze_minutes [in 2,4, `if: flag('recrue_du_sponsor')`] → quatre_vingt_dix [in 1,3, `if: flag('recrue_du_sponsor')`] → maillot (S+1, at_season +1, [1,6]).
 **Scènes** :
 
 ### SCÈNE ds.sponsor.recrue  —  Une recrue de communication
-**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 1/3 · **Moment** : ouverture tirée · **Lieu** : la loge du sponsor, un maillot floqué à un nom que tu ne connais pas · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : la loge du sponsor, un maillot floqué à un nom que tu ne connais pas · **Conditions** : —
 **NASSIR** *(fonds Qatalyst — neutre — il tient le maillot par les épaules, comme un enfant)*
-« Ce joueur est le capitaine d'Al-Dorado FC, très aimé chez nous, et il coûte zéro à votre club, nous payons tout ; il faut qu'il joue. Ce n'est pas un club, c'est un actif : vous le dites au coach ? »
+« Ce joueur est le capitaine d'Al-Dorado FC, et il coûte zéro à votre club, nous payons tout ; il faut qu'il joue. Ce n'est pas un club, c'est un actif : vous le dites au coach ? »
 ← **Je le dis au coach** — effets : caisse ++, vestiaire −, direction +, set: recrue_du_sponsor, outcome: recrue, relation.nassir +1 — *Le coach l'écoute. Il le fait jouer douze minutes. Nassir compte les minutes ; il en voulait quatre-vingt-dix.*
 → **Il ne jouera pas ici** — effets : caisse −, direction −, vestiaire +, set: sponsor_refuse, outcome: refus, relation.nassir −1 — *Il replie le maillot. Il dit que le contrat de sponsoring a une page trois aussi. Tout le monde en a une.*
 Variante `flag('naming_signe')` (ch. 11-13 : le stade porte le nom) : « Le stade porte notre nom, {toi}, le maillot aussi, et ce joueur portera les deux ; c'est une cohérence. Ce n'est pas un club, c'est un actif : vous le dites au coach ? » — mêmes sorties, la droite donne direction −−.
@@ -462,20 +462,30 @@ Variante `flag('nassir_retire')` (ch. 02 : le fonds est parti) : **DUPUIS** (sur
 **Traces** : recrue_du_sponsor, sponsor_refuse · **Réactions déclenchées** : ds.re.klopf_court / ds.re.loco_cassette (§ 6, après ←) · **Lu plus tard par** : ds.sponsor.douze_minutes, ds.sponsor.maillot, ds.neuf_ou_trader, ch. 13, ch. 11
 
 ### SCÈNE ds.sponsor.douze_minutes  —  Douze minutes
-**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 2/3 · **Moment** : [2,4] · **Lieu** : le couloir après le match, Gégé qui t'attend avec un journal plié · **Conditions** : `flag('recrue_du_sponsor')`
+**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 2/4 · **Moment** : [2,4] · **Lieu** : le couloir après le match, Gégé qui t'attend avec un journal plié · **Conditions** : `flag('recrue_du_sponsor')`
 **GÉGÉ** *(capo — neutre — il déplie le journal : la photo de la recrue, douze minutes, un coup franc dans le mur)*
 « Le virage a compté douze minutes et un coup franc dans le mur, et il a compté qui l'a fait entrer : pas le coach, coach, toi. La tribune n'oublie rien ; tu le sors du onze, ou on sort la bâche ? »
 ← **Je le sors du onze** — effets : tribunes +, caisse −−, direction −, relation.gege +1 — *Il replie le journal. Le sponsor paie « autrement » : le maillot d'entraînement porte son nom en plus grand.*
 → **Douze minutes par match** — effets : tribunes −−, caisse +, direction +, relation.gege −1, set: bache_ds — *La bâche sort dimanche. Elle dit « DS = Démission Sportive ». Elle est bien faite ; Gégé a un cousin imprimeur.*
 **Traces** : bache_ds · **Réactions déclenchées** : — · **Lu plus tard par** : alarme `ds.alarme.tribunes_bas_gege` (§ 8 : la même bâche), ds_mercato_rate (epitaph_plus), une.vendre.bache
 
+### SCÈNE ds.sponsor.quatre_vingt_dix  —  Quatre-vingt-dix minutes, page trois
+**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 3/4 · **Moment** : [1,3] après douze_minutes · **Lieu** : le couloir du vestiaire, le coach en survêtement, une lettre du sponsor à en-tête, le mot « page trois » souligné par Josiane · **Conditions** : `flag('recrue_du_sponsor')`
+**KLOPF** *(entraîneur — neutre — il lit la lettre en courant sur place ; il s'arrête au mot « quatre-vingt-dix »)*
+« Le sponsor exige quatre-vingt-dix minutes pour son capitaine, page trois, et le garçon marche ; on court, on presse, on chante, lui il salue. Tu me l'imposes, ou tu expliques le mur ? »
+← **Je l'impose : 90 minutes** — effets : direction +, caisse ++, vestiaire −−, relation.klopf −1, set: recrue_imposee — *Il joue quatre-vingt-dix minutes contre Villefranche. Il salue trois fois. Le sponsor compte les saluts ; le virage compte les ballons perdus.*
+→ **J'explique le mur au sponsor** — effets : vestiaire +, direction −, caisse −, relation.nassir −1, relation.klopf +1, set: coach_couvert_sponsor — *Tu expliques. Nassir écoute jusqu'au bout, ce qu'il ne fait jamais ; il dit « page trois » une fois, doucement.*
+Variante `world.coach == 'loco'` : **LA PETITE JOSIANE** (voix) apporte la lettre et une cassette : « Monsieur Loco a répondu au sponsor avec une cassette, ma tante dit qu'elle en a vu passer, mais pas des cassettes ; dedans, le joueur n'y est pas. Vous l'imposez, ou vous envoyez la cassette au sponsor ? » — ← **Je l'impose** — set: recrue_imposee, relation.loco −2, direction + · → **La cassette au sponsor** — set: coach_couvert_sponsor, relation.nassir −1, relation.loco +1 — *Nassir regarde la cassette. Deux heures. Il ne dit rien ; il ne demande plus quatre-vingt-dix minutes, il demande soixante.*
+**Traces** : recrue_imposee (« {annee} : la recrue du sponsor a joué quatre-vingt-dix minutes à {club}, page trois oblige. Le coach n'a pas signé la feuille. »), coach_couvert_sponsor · **Réactions déclenchées** : — · **Lu plus tard par** : ds.sponsor.maillot (variante « satisfait des quatre-vingt-dix minutes »), ds.neuf_ou_trader (variante `recrue_du_sponsor`), ch. 13 (`rachete_fonds` : « votre DS a imposé la recrue du sponsor »), ch. 11 (`en.nassir_proprietaire` : le coach qui a été couvert par son DS), ds_homme_president (epitaph_plus), une.vendre.sponsor
+
 ### SCÈNE ds.sponsor.maillot  —  Le maillot a changé de couleur
-**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 3/3 · **Moment** : saison suivante, [1,6] · **Lieu** : le bureau de Josiane, un carton de maillots neufs, une couleur qui n'est pas celle du club · **Conditions** : `flag('sponsor_refuse') || flag('recrue_du_sponsor')`
+**Rôle** : ds · **Intrigue** : ds.sponsor · **Étape** : 4/4 · **Moment** : saison suivante, [1,6] · **Lieu** : le bureau de Josiane, un carton de maillots neufs, une couleur qui n'est pas celle du club · **Conditions** : `flag('sponsor_refuse') || flag('recrue_du_sponsor')`
 **JOSIANE** *(secrétaire — neutre — elle tient un maillot à bout de bras, comme un poisson)*
 « Les maillots sont arrivés, monsieur, et ils sont de la couleur du sponsor, pas de la nôtre ; le contrat le permettait, page trois. J'en ai vu passer, vous savez : je range, ou je donne au coach ? »
 ← **Au coach, on joue avec** — effets : caisse ++, tribunes −−, set: maillot_sponsor — *Ils jouent avec. La Tribune Nord vient en maillot de l'an dernier, tout le stade, pendant un an.*
 → **On rachète les nôtres** — effets : caisse −−, tribunes ++, direction −, relation.gege +1 — *Tu rachètes. Le sponsor paie moins. Nassir note ; il note tout, sans chiffre.*
 Variante `flag('sponsor_refuse')` : « Le sponsor a changé la couleur parce que vous avez refusé son joueur, monsieur, il l'a écrit dans la lettre qui accompagne le carton. J'en ai vu passer ; je range ? » — mêmes sorties.
+Variante `flag('recrue_imposee')` : « Les maillots sont de la couleur du sponsor, monsieur, et la lettre dit qu'il est « satisfait des quatre-vingt-dix minutes » ; c'est la première fois qu'un sponsor est satisfait par écrit. J'en ai vu passer ; je range ? » — mêmes sorties, la gauche donne tribunes −−− (le virage a compté les minutes, lui aussi).
 **Traces** : maillot_sponsor · **Réactions déclenchées** : co.re.gege_decoupe (∃ ch. 02, après ←) · **Lu plus tard par** : ch. 13 (le naming côté bureau : « ton DS a déjà joué en rose »), ch. 20 (« {VILLE} JOUE EN COULEUR DE BOISSON »), ch. 90
 **Épilogue** (abandon) : `journal: "{annee} : la recrue du sponsor a joué douze minutes à {club}. {nom} est parti{pg, select, f{e} other{}} à la treizième."`.
 
@@ -484,13 +494,13 @@ Variante `flag('sponsor_refuse')` : « Le sponsor a changé la couleur parce que
 **Rôle(s)** : ds · **Postulat(s)** : partagé (`coach_intouchable` surtout) · **Porteur** : barbier (ou « l'algorithme », voix, si Barbier est `parti`) · **Cast** : barbier, l'algorithme (voix), nassir/aulard, brissac (0,5 : « les chiffres sont têtus ») · **Thème** : direction
 **Saisons** : "1", "2+" · **Conditions d'entrée** : `flag('cellule_barbier') || flag('cellule_fermee') || year >= 2008` · **Exclusions** : — · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `modele` → `algorithme_adopte` (« {annee} : {club} recrute au modèle. Barbier n'a jamais été noté ; {nom}, si. ») → lue par ds.mercato (offres e05, h05 : « le modèle dit »), ch. 02 (`co.barbier_doudoune` : « le modèle note tout »), ch. 15 (l'arbitre et la machine, 2027 : « vous aviez adopté le modèle »), ch. 14 (Brissac : « vos chiffres »), ds_architecte (epitaph_plus), ch. 20 · `oeil` → `oeil_garde` → lue par ds.mercato (offres e04, h09), ch. 02 (Barbier +1), ch. 30 (trait « Nez à joueurs » hérité de Clow si `nez_a_joueurs`) · `les_deux` → `pluie_et_tableur` (« {annee} : la pluie et le tableur, ensemble, à {club}. Un salaire de plus ; deux avis, un fax. ») → lue par ds.cellule.carnet (si ordre inverse), une.intouchable.pluie, ch. 31
-**Séquencier** : quatre_vingt_deux (ouverture, [2,10]) → pluie [in 1,3] → note (S+1, at_season +1, [3,9]).
+**Séquencier** : quatre_vingt_deux (ouverture, [2,10]) → pluie [in 1,3] → deux_fenetres [in 1,3] → note (S+1, at_season +1, [3,9]).
 **Scènes** :
 
 ### SCÈNE ds.algo.quatre_vingt_deux  —  Quatre-vingt-deux
-**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 1/3 · **Moment** : ouverture tirée · **Lieu** : la salle de réunion, un écran, une colonne de chiffres, un téléphone posé au milieu de la table avec Barbier dedans · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : la salle de réunion, un écran, une colonne de chiffres, un téléphone posé au milieu de la table avec Barbier dedans · **Conditions** : —
 **L'ALGORITHME** *(voix sans portrait — c'est le stagiaire, il a trente ans et un titre ; il parle au conditionnel)*
-« Le modèle note le latéral de Corbelin à quatre-vingt-deux, directeur, le meilleur du pays à son poste pour un dixième du prix ; monsieur Barbier ne l'a jamais vu sous la pluie. On signe le chiffre ? »
+« Le modèle note le latéral de Corbelin à quatre-vingt-deux, directeur, le meilleur du pays à son poste pour un dixième du prix ; monsieur Barbier ne l'a jamais vu jouer. On signe le chiffre ? »
 ← **On signe le chiffre** — effets : caisse −, vestiaire −, force +2, set: algorithme_adopte, outcome: modele, relation.barbier −1 — *Il signe. Il joue à quatre-vingt-deux. Le coach ne sait pas ce que ça veut dire ; il le fait jouer quand même.*
 → **On attend qu'il pleuve** — effets : direction −, relation.barbier +1, next: {step: pluie, in: [1,3]} — *Il pleut jeudi. Barbier y va, à soixante-douze ans, ou il envoie le carnet.*
 Variante `flag('rapport_trop_lent')` (ch. 02 : Barbier a écrit « trop lent » sur quelqu'un, peut-être toi) : « Monsieur Barbier a écrit « trop lent » sur ce joueur ; le modèle dit quatre-vingt-deux ; l'un des deux se trompe, et le modèle n'a jamais eu tort, il n'a jamais été là. On signe ? » — mêmes sorties.
@@ -498,7 +508,7 @@ Variante `flag('carnet_scanne')` : « Le carnet de monsieur Barbier est dans le 
 **Traces** : algorithme_adopte · **Réactions déclenchées** : — · **Lu plus tard par** : ds.algo.pluie, ds.algo.note, ds.mercato, ch. 02, ch. 15
 
 ### SCÈNE ds.algo.pluie  —  Il pleut jeudi
-**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 2/3 · **Moment** : [1,3] · **Lieu** : la touche d'un terrain de D2, jeudi, la pluie, Barbier en doudoune ou au téléphone (2010+) · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 2/4 · **Moment** : [1,3] · **Lieu** : la touche d'un terrain de D2, jeudi, la pluie, Barbier en doudoune ou au téléphone (2010+) · **Conditions** : —
 **BARBIER** *(recruteur — neutre — il regarde le match ; il te parle sans te regarder)*
 « Il ne glisse pas, patron, mais il regarde son pied quand il pleut, et ça, ton modèle ne le voit pas. Je l'ai vu jouer sous la pluie : soixante, pas quatre-vingt-deux ; l'autre, ou les deux ? »
 ← **L'autre, celui de la pluie** — effets : caisse −, vestiaire +, relation.barbier +2, set: oeil_garde, outcome: oeil — *L'autre signe. Il ne regarde jamais son pied. Le modèle le notait à cinquante-quatre ; il le renote à soixante-dix en mars, à l'insu de tout le monde.*
@@ -506,13 +516,23 @@ Variante `flag('carnet_scanne')` : « Le carnet de monsieur Barbier est dans le 
 Variante `flag('oeil_barbier')` (ch. 02 : tu as déjà choisi l'œil une fois) : « Tu m'as déjà cru une fois, patron, sous la pluie ; je te le dis encore, et après je ne le dirai plus, j'ai soixante-douze ans. Soixante, pas quatre-vingt-deux. » — mêmes sorties, la gauche donne aussi set: stagiaire_demission (le stagiaire démissionne : ch. 02 l'avait annoncé).
 **Traces** : oeil_garde, pluie_et_tableur, stagiaire_demission · **Réactions déclenchées** : ds.re.barbier_pluie (§ 6, après ←) · **Lu plus tard par** : ds.algo.note, ds.mercato, ch. 02, ch. 30
 
+### SCÈNE ds.algo.deux_fenetres  —  Un bureau à deux fenêtres
+**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 3/4 · **Moment** : [1,3] après pluie · **Lieu** : le placard du stagiaire, l'écran éteint, un carton à moitié plein, une lettre à en-tête de Lyonnet · **Conditions** : `!flag('stagiaire_demission')` (sinon variante Barbier)
+**L'ALGORITHME** *(voix sans portrait — il a le carton sous le bras ; il parle encore au conditionnel, mais moins)*
+« Lyonnet m'offre un bureau à deux fenêtres et pas de doudoune, directeur, et le modèle part avec moi, il est à mon nom. Vous me gardez au prix de la pluie, ou je pars avec la colonne ? »
+← **Je te garde, avec la pluie** — effets : caisse −−, direction −, relation.barbier −1, set: modele_garde — *Il pose le carton. Il garde la fenêtre ; il obtient une lampe. Barbier dit que la lampe ne prend pas froid non plus.*
+→ **Pars avec ta colonne** — effets : caisse +, vestiaire +, set: stagiaire_demission — *Il part à Lyonnet. Sa colonne te note de là-bas ; en juin, Lyonnet recrute ton latéral, celui de quatre-vingt-deux.*
+Variante `flag('stagiaire_demission')` (posée par ds.algo.pluie) : **BARBIER** (au téléphone) : « Le stagiaire est parti sans dire au revoir, patron, il a laissé la fenêtre ouverte et une colonne « pluie » vide ; je l'ai vu jouer sous la pluie, ce garçon, jamais. On rachète un tableur, ou on ferme la fenêtre ? » — ← **On rachète un tableur** — caisse −, set: modele_garde · → **On ferme la fenêtre** — caisse +, relation.barbier +1, set: modele_ferme — *Tu fermes. Il pleut dedans quand même, l'hiver ; c'est la fenêtre de Barbier, maintenant.*
+**Traces** : modele_garde, stagiaire_demission (« {annee} : le stagiaire de {club} est parti à Lyonnet avec son modèle. La colonne note encore le DS, de loin. »), modele_ferme · **Réactions déclenchées** : — · **Lu plus tard par** : ds.algo.note (variante « il vous note de Lyonnet »), ds.mercato h05 (`if: flag('modele_garde') || flag('algorithme_adopte')`), ch. 02 (`co.barbier_doudoune` : « le tableur est parti à Lyonnet, la doudoune est restée »), ch. 90 (Nemesis « le modèle » : la colonne te suit de club en club), une.intouchable.note
+
 ### SCÈNE ds.algo.note  —  Le modèle te note
-**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 3/3 · **Moment** : saison suivante, [3,9] · **Lieu** : le bureau du président, un écran, une ligne à ton nom, un chiffre · **Conditions** : `flag('algorithme_adopte') || flag('pluie_et_tableur')`
+**Rôle** : ds · **Intrigue** : ds.algorithme · **Étape** : 4/4 · **Moment** : saison suivante, [3,9] · **Lieu** : le bureau du président, un écran, une ligne à ton nom, un chiffre · **Conditions** : `flag('algorithme_adopte') || flag('pluie_et_tableur') || flag('stagiaire_demission')`
 **NASSIR** *(fonds Qatalyst — neutre — il tourne l'écran vers toi ; ton nom, une colonne, un chiffre)*
 « Le modèle note aussi les directeurs sportifs, {toi}, c'est vous qui l'avez adopté ; votre note est là, je ne la lis pas, je la regarde. Ce n'est pas un club, c'est un actif : vous voulez savoir ? »
 ← **Je veux savoir** — effets : direction −, vestiaire +, parole +1, set: note_lue — *Tu sais. C'est un chiffre. Il ne pleut pas dedans. Tu le gardes pour toi ; Ménèche l'a le lendemain.*
 → **Je continue sans savoir** — effets : direction +, set: note_ignoree — *Il éteint l'écran. Le chiffre reste dans le modèle ; il te suit dans ton prochain club, en colonne.*
 Variante `world.president == 'aulard'` (`vendre_trente`, 2008+) : **AULARD** (par téléphone) : « Mon fils a acheté ton modèle, et ton modèle dit un chiffre sur toi ; j'ai pas le temps, j'ai une Fédération. Tu veux le chiffre ? » — mêmes sorties.
+Variante `flag('stagiaire_demission')` : « Le modèle est à Lyonnet maintenant, et il vous note quand même ; Lyonnet me vend la note, c'est une ligne de recettes chez eux. Ce n'est pas un club, c'est un actif : vous voulez savoir ? » — mêmes sorties.
 **Traces** : note_lue, note_ignoree · **Réactions déclenchées** : ds.re.meneche_vitre (§ 6, après ←) · **Lu plus tard par** : ch. 15 (Vialat, l'agence de notation, 2033 : « votre note vous précède »), ch. 90 (Nemesis « le modèle » : la colonne te suit), une.intouchable.note
 **Épilogue** (abandon) : `journal: "{annee} : le modèle est resté à {club}. Barbier a gardé le carnet ; {nom} a gardé sa note."`.
 
@@ -546,7 +566,7 @@ Variante `flag('visite_arrondie')` (ch. 01 : tu as montré le dossier fin) : « 
 ### SCÈNE ds.ami.carte_postale  —  La carte du désert
 **Rôle** : ds · **Intrigue** : ds.joueur_ami · **Étape** : 5/5 · **Moment** : saison suivante, [2,8] · **Lieu** : le bureau de Josiane, une carte postale, une dune, une écriture ronde · **Conditions** : `flag('dembo_vendu') || flag('dembo_a_choisi')`
 **JOSIANE** *(secrétaire — sourire — elle a lu la carte, évidemment ; elle fait semblant de ne pas)*
-« Une carte de Dembo, monsieur, une dune et deux lignes : « je dors la journée, donne le ballon à quelqu'un » ; votre prénom, pas votre titre. J'en ai vu passer ; je la punaise, ou je vous la donne ? »
+« Une carte de Dembo, monsieur, une dune et deux lignes : « je dors la journée, donne le ballon à quelqu'un », et votre prénom. J'en ai vu passer ; je la punaise, ou je vous la donne ? »
 ← **Au vestiaire, au casier** — effets : vestiaire ++, tribunes +, relation.dembo +1 — *Elle la punaise. Le casier est vide. Quelqu'un met une aile de poulet dessous, en plastique ; c'est une blague de vestiaire, c'est tendre.*
 → **Donnez-la-moi** — effets : vestiaire −, set: carte_dembo_gardee — *Tu la gardes dans le tiroir de la page deux. Elle y restera plus longtemps que toi.*
 **Traces** : carte_dembo_gardee · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 01 (Dembo ruiné en 2015 : « tu as gardé la carte »), ch. 90 (retrouvailles), une.vendre.dune
@@ -557,11 +577,11 @@ Variante `flag('visite_arrondie')` (ch. 01 : tu as montré le dossier fin) : « 
 **Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : aulard | nassir · **Cast** : aulard/nassir, klopf/loco, josiane, le fils d'Aulard (voix) · **Thème** : direction (léger)
 **Saisons** : "0", "2+" (replay {after: 1, max: 3}) · **Conditions d'entrée** : — · **Rejouabilité** : replay, variante « encore » (« le fils du beau-frère »)
 **Issues** → **Traces** → **Qui les lit** : `accepte` → `recrue_du_president` (« {annee} : le beau-frère du président a vendu un joueur à {club}. {nom} a signé la fiche de paie. ») → lue par ds.neuf_ou_trader (variante), ds_homme_president (epitaph_plus), ch. 13 (Aulard te traite en égal : « tu as accepté mon beau-frère »), une.vendre.beau_frere · `refuse` → `president_contre` (« {annee} : {prenom} {nom} a refusé la recrue du président. Le président s'en souvient, à 23 h 47. ») → lue par alarme `direction.low` (variante), ch. 02 (Aulard −1), ch. 30 (ds_commun_accord) · `retourne` → `beau_frere_retourne` (« {annee} : la recrue du beau-frère revendue en janvier, avec plus-value. Le président a dit « bien joué », sans sourire. ») → lue par ds.fax (variante « le trader »), A2 du script (le compteur), ch. 20
-**Séquencier** : telephone (ouverture, [2,9]) → lundi [in 1,3] → janvier [in 4,8, `if: flag('recrue_du_president')`].
+**Séquencier** : telephone (ouverture, [2,9]) → lundi [in 1,3] → feuille_de_match [in 1,3, `if: flag('recrue_du_president')`] → janvier [in 4,8, `if: flag('recrue_du_president')`].
 **Scènes** :
 
 ### SCÈNE ds.beau_frere.telephone  —  Le beau-frère
-**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 1/3 · **Moment** : ouverture tirée · **Lieu** : ton bureau, le téléphone, 23 h 47 · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : ton bureau, le téléphone, 23 h 47 · **Conditions** : —
 **AULARD** *(par téléphone — neutre — il parle à quelqu'un d'autre en même temps)*
 « Mon beau-frère a un attaquant de Roquemont, il arrive lundi, c'est signé, tu n'as qu'à faire la fiche ; j'ai pas le temps, j'ai un empire. Tu la fais, ou tu m'expliques pourquoi tu es DS ? »
 ← **Je fais la fiche** — effets : direction ++, vestiaire −, caisse −, set: recrue_du_president, outcome: accepte — *Tu fais la fiche. Klopf lit le nom et dit « qui ? ». Il le dira toute la saison.*
@@ -571,7 +591,7 @@ Variante `flag('president_ami')` (ch. 11-13 : tu es l'homme du président) : « 
 **Traces** : recrue_du_president, president_contre, club_frere_pret · **Réactions déclenchées** : ds.re.aulard_23h47 (§ 6, après →) · **Lu plus tard par** : ds.beau_frere.lundi, ds.beau_frere.janvier, ds.neuf_ou_trader, ch. 13
 
 ### SCÈNE ds.beau_frere.lundi  —  Lundi, avec le cousin
-**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 2/3 · **Moment** : [1,3] · **Lieu** : le hall, la recrue, son agent (le père-agent), son cousin, une valise · **Conditions** : `flag('recrue_du_president')`
+**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 2/4 · **Moment** : [1,3] · **Lieu** : le hall, la recrue, son agent (le père-agent), son cousin, une valise · **Conditions** : `flag('recrue_du_president')`
 **LE PÈRE-AGENT** *(voix sans portrait — c'est le père du joueur ; il a un classeur et dix pour cent de tout)*
 « Mon fils a une clause : dix pour cent de tout pour moi, et il ne joue jamais à gauche, c'est écrit ; le beau-frère du président a dit que vous étiez d'accord. Vous l'êtes, ou je le rappelle ? »
 ← **D'accord, pas à gauche** — effets : caisse −, vestiaire −, set: clause_pas_a_gauche — *Klopf le fait jouer à gauche dès samedi. Le père appelle le beau-frère ; le beau-frère appelle Aulard ; Aulard t'appelle à 23 h 47.*
@@ -579,10 +599,21 @@ Variante `flag('president_ami')` (ch. 11-13 : tu es l'homme du président) : « 
 Variante `flag('clause_spatiale')` (ch. 02 : Solvang t'a déjà fait signer une clause anti-voyage spatial) : « Mon fils a une clause : il ne va pas dans l'espace, comme le vôtre, j'ai lu la Gazette ; et dix pour cent. » — mêmes sorties.
 **Traces** : clause_pas_a_gauche, pere_agent_renvoye · **Réactions déclenchées** : — · **Lu plus tard par** : ds.mercato (offre h10 : le père-agent revient), ds.klopf.lateral (∃ ch. 01, variante « tu as un droit qui ne joue jamais à gauche »), ch. 31 (anecdote)
 
+### SCÈNE ds.beau_frere.feuille_de_match  —  Il n'est pas sur la feuille
+**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 3/4 · **Moment** : [1,3] après lundi · **Lieu** : ton bureau, dimanche soir, la feuille de match punaisée par Josiane, le téléphone à 23 h 47 · **Conditions** : `flag('recrue_du_president')`
+**AULARD** *(par téléphone — noir — on entend son beau-frère derrière, qui ne parle pas, qui respire)*
+« Mon beau-frère a lu la feuille de match, son attaquant n'y est pas, et il me demande à quoi tu sers ; j'ai pas le temps, j'ai un empire. Tu le fais jouer dimanche, ou je demande au coach ? »
+← **Je le fais jouer dimanche** — effets : direction ++, vestiaire −−, relation.klopf −1, set: recrue_imposee_compo — *Klopf le fait entrer à la quatre-vingtième, à gauche. Il dit « qui ? » en le poussant sur le terrain ; c'est devenu son prénom dans le vestiaire.*
+→ **Demandez au coach vous-même** — effets : direction −, vestiaire ++, relation.klopf +1, parole +1, set: coach_couvert_compo — *Il appelle Klopf. Klopf court pendant l'appel ; on entend le vent, puis rien. L'attaquant ne joue pas ; le beau-frère apprend le mot « pressing ».*
+Variante `world.president == 'nassir'` : « Le comité a lu la feuille de match, {toi}, et le milieu du club frère n'y est pas ; un actif qui ne circule pas est une provision. Ce n'est pas un club, c'est un actif : il joue dimanche ? » — mêmes sorties, `relation.loco` à la place.
+Variante `flag('clause_pas_a_gauche')` : « Il a joué à gauche, contre sa clause, le père a appelé mon beau-frère, qui m'a appelé ; j'ai pas le temps, j'ai un empire, et j'ai trois appels. Tu le mets à droite, ou je demande au coach ? » — mêmes sorties.
+**Traces** : recrue_imposee_compo, coach_couvert_compo · **Réactions déclenchées** : ds.re.aulard_23h47 (§ 6, après →, si `relation.aulard <= 0`) · **Lu plus tard par** : ds.beau_frere.janvier (variante « dix minutes en tout »), ch. 13 (Aulard président : « mon DS m'a renvoyé au coach »), ch. 01 (Klopf : « vous m'avez couvert avec le beau-frère »), ds_homme_president (epitaph_plus), une.vendre.beau_frere
+
 ### SCÈNE ds.beau_frere.janvier  —  La plus-value
-**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 3/3 · **Moment** : [4,8] · **Lieu** : le bureau de Josiane, une offre par fax pour la recrue du président, le double du prix · **Conditions** : `flag('recrue_du_president')`
+**Rôle** : ds · **Intrigue** : ds.beau_frere · **Étape** : 4/4 · **Moment** : [4,8] · **Lieu** : le bureau de Josiane, une offre par fax pour la recrue du président, le double du prix · **Conditions** : `flag('recrue_du_president')`
 **JOSIANE** *(secrétaire — neutre — elle a souligné le chiffre, deux fois)*
-« Une offre pour l'attaquant du beau-frère, monsieur, le double de son prix, d'un club qui ne l'a jamais vu jouer non plus. J'en ai vu passer, vous savez : je l'envoie au président, ou vous répondez ? »
+« Une offre pour l'attaquant du beau-frère, monsieur, le double de son prix, d'un club qui ne l'a jamais vu jouer non plus. J'en ai vu passer : je l'envoie au président, ou vous répondez ? »
+Variante `flag('coach_couvert_compo')` : « Une offre pour l'attaquant du beau-frère, monsieur, qui a joué dix minutes en tout, à gauche ; le club qui l'achète a vu les dix minutes, il dit que ça suffit. J'en ai vu passer : vendu ? » — mêmes sorties, la gauche donne aussi relation.klopf +1.
 ← **Je réponds : vendu** — effets : caisse ++, direction +, vestiaire +, var: {ventes: "+{prix}"}, set: beau_frere_retourne, outcome: retourne — *Vendu. Aulard dit « bien joué », sans sourire ; le beau-frère dit qu'il l'avait « flairé ». Personne ne le contredit.*
 → **Au président ; c'est le sien** — effets : direction ++, caisse −, set: recrue_gardee_president — *Il refuse l'offre. Le joueur reste. Il ne joue toujours pas ; il coûte, c'est sa fonction.*
 **Traces** : beau_frere_retourne, recrue_gardee_president · **Réactions déclenchées** : — · **Lu plus tard par** : ds.fax (variante « le trader »), A2 du script, une.vendre.plus_value, ds_roi_mercato (epitaph_plus)
@@ -590,14 +621,14 @@ Variante `flag('clause_spatiale')` (ch. 02 : Solvang t'a déjà fait signer une 
 
 ## INTRIGUE ds.vitre  —  La vitre baissée
 **Logline** : Dernier jour du mercato ; Ménèche est à ta vitre, Vence a la caméra allumée, Léa a déjà le nom. · **Synopsis** : Le rituel de chaque fenêtre : la presse au parking. Tu lâches un nom pas encore signé (le prix monte de dix pour cent dans l'heure, le président t'engueule à la radio), tu ne commentes pas (la Gazette invente), ou tu donnes le nom à Léa seule (L'Écho l'a avant le fax, et la Tribune Nord le lit avec tendresse). Léger, rejouable, sans drame ; le nom lâché revient dans le fax.
-**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : meneche · **Cast** : meneche, vence, lea, aulard/nassir · **Thème** : presse (léger)
+**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : meneche · **Cast** : meneche, vence, lea, aulard/nassir, camille (le soir même), sacha (si née) · **Thème** : presse (léger)
 **Saisons** : "0", "2+" · **Conditions d'entrée** : — · **Rejouabilité** : ritual (variantes en escalier sur `plays()`)
-**Issues** → **Traces** → **Qui les lit** : `nom` → `nom_lache` et `prix_monte` (« {annee} : {nom} a lâché un nom à la vitre baissée. Le prix a monté de dix pour cent dans l'heure. ») → lues par ds.fax (variante « le prix a monté »), ds.re.aulard_radio (§ 6), une.vendre.vitre, ch. 02 (`co.meneche_hors_micro`) · `silence` → `no_comment_ds` → lue par ds.fax (variante « la Gazette avait inventé »), ch. 20 (« VU AU PARKING ») · `lea` → `lea_avait_le_nom` → lue par ch. 02 (`co.lea_carnet` : `lea_savait` a une sœur ici), ch. 20
-**Séquencier** : vitre (ouverture, dernier créneau d'une fenêtre : [3] ou [12]) → radio [in 1,2, `if: flag('nom_lache')`].
+**Issues** → **Traces** → **Qui les lit** : `nom` → `nom_lache` et `prix_monte` (« {annee} : {nom} a lâché un nom à la vitre baissée. Le prix a monté de dix pour cent dans l'heure. ») → lues par ds.fax (variante « le prix a monté »), ds.vitre.radio, une.vendre.vitre, ch. 02 (`co.meneche_hors_micro`) · `silence` → `no_comment_ds` → lue par ds.fax (variante « la Gazette avait inventé »), ch. 20 (« VU AU PARKING ») · `lea` → `lea_avait_le_nom` → lue par ch. 02 (`co.lea_carnet` : `lea_savait` a une sœur ici), ch. 20
+**Séquencier** : vitre (ouverture, dernier créneau d'une fenêtre : [3] ou [12]) → minuit_dix [in 0,1, le soir même, `if: !flag('divorce')`] → radio [in 1,2, `if: flag('nom_lache')`] | echo [in 1,2, `if: flag('no_comment_ds')`].
 **Scènes** :
 
 ### SCÈNE ds.vitre.parking  —  Vous signez qui ?
-**Rôle** : ds · **Intrigue** : ds.vitre · **Étape** : 1/2 · **Moment** : le dernier créneau d'une fenêtre · **Lieu** : le parking, ta vitre à moitié baissée, Ménèche penché, la caméra de Vence derrière lui, Léa plus loin, carnet fermé · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.vitre · **Étape** : 1/4 · **Moment** : le dernier créneau d'une fenêtre · **Lieu** : le parking, ta vitre à moitié baissée, Ménèche penché, la caméra de Vence derrière lui, Léa plus loin, carnet fermé · **Conditions** : —
 **MÉNÈCHE** *(consultant — neutre — un coude sur ta portière, comme s'il avait le temps)*
 « Dernier jour, la vitre est baissée, vous signez qui ? Juste une question, hors micro ; la caméra derrière moi, elle, est allumée. »
 ← **Un nom, pas encore signé** — effets : tribunes ++, direction −, set: nom_lache, set: prix_monte, outcome: nom — *Le nom passe en bandeau. Le prix monte de dix pour cent avant que tu aies quitté le parking ; l'agent a la télé aussi.*
@@ -608,27 +639,45 @@ Variante `flag('commission_denoncee')` : « Vous avez dénoncé un agent à la C
 **Traces** : nom_lache, prix_monte, no_comment_ds, lea_avait_le_nom · **Réactions déclenchées** : ds.re.vence_direct (§ 6, après ←) · **Lu plus tard par** : ds.vitre.radio, ds.fax, ch. 02, ch. 20
 
 ### SCÈNE ds.vitre.radio  —  Le président à la radio
-**Rôle** : ds · **Intrigue** : ds.vitre · **Étape** : 2/2 · **Moment** : [1,2] · **Lieu** : ta voiture, Radio Tribune, 22 h 10, Gégé qui reçoit le président (2004-2011) ou Vence qui lit un tweet (2007+) · **Conditions** : `flag('nom_lache')`
+**Rôle** : ds · **Intrigue** : ds.vitre · **Étape** : 2/4 · **Moment** : [1,2] · **Lieu** : ta voiture, Radio Tribune, 22 h 10, Gégé qui reçoit le président (2004-2011) ou Vence qui lit un tweet (2007+) · **Conditions** : `flag('nom_lache')`
 **AULARD** *(par la radio — noir — on entend Gégé rire derrière)*
 « Mon directeur sportif a annoncé une signature qui n'existe pas, et le prix a monté ; j'ai pas le temps, j'ai un empire, mais j'ai une radio. Qu'il paie la différence, ou qu'il signe ailleurs. »
 ← **Je paie la différence** — effets : caisse −−, direction +, clear: prix_monte — *Tu paies. Le joueur signe. Le président dit à la radio qu'il « l'avait dit » ; c'est vrai.*
 → **Je ne signe personne** — effets : caisse +, tribunes −−, vestiaire −, set: fax_rate — *Le fax ne part pas. Le nom reste en bandeau toute la semaine ; c'est le nom d'un joueur de {rival}, maintenant.*
 Variante `world.president == 'nassir'` — **VENCE** (elle lit un message du Flux, `year >= 2007`) : « Le propriétaire a écrit à trois heures du matin, on est en direct : « mon DS parle aux vitres, pas à moi ». Vous répondez en direct ? » — ← **Je réponds** — direction −, tribunes +, parole +1 · → **Pas en direct** — direction +, tribunes −.
 **Traces** : fax_rate · **Réactions déclenchées** : — · **Lu plus tard par** : ds.fax (le fax raté a un antécédent), ds_mercato_rate (epitaph_plus), ch. 13 (le tweet de 3 h du matin côté président), une.vendre.radio
+### SCÈNE ds.vitre.echo  —  Le joueur inventé
+**Rôle** : ds · **Intrigue** : ds.vitre · **Étape** : 3/4 · **Moment** : [1,2] après parking · **Lieu** : le hall du club, le matin, Léa avec La Gazette Rose pliée à la page du nom inventé, Josiane qui a déjà répondu au téléphone · **Conditions** : `flag('no_comment_ds')`
+**LÉA** *(L'Écho — neutre — elle montre le nom du doigt, sans le lire à voix haute ; il est trop bon)*
+« La Gazette a inventé un nom hier, et le joueur inventé a appelé le club ce matin pour savoir s'il était pris ; vous confirmez qu'il n'existe pas ? »
+← **Il n'existe pas ; écrivez-le** — effets : tribunes +, parole +1, relation.lea +1, set: gazette_dementie — *Elle écrit. La Gazette titre « L'ÉCHO NIE TOUT » ; le joueur inventé signe à Corbelin en juin, il existe un peu.*
+→ **Laissez-la inventer** — effets : tribunes −, direction +, relation.lea −1, set: gazette_libre — *Elle ferme le carnet. La Gazette invente un deuxième nom la semaine suivante ; c'est le tien, au Real Montoya.*
+Variante `plays('ds.vitre') >= 2` : « Cette fois la Gazette a inventé deux noms, et les deux ont appelé ; vous confirmez qu'ils n'existent pas, ou vous en prenez un ? » — ← **Aucun n'existe** — set: gazette_dementie · → **Je prends le moins cher** — caisse −, vestiaire +, force +1, set: joueur_invente_signe — *Il signe. Il existe. Il joue à droite, ou à gauche ; la Gazette dit qu'elle l'avait dit.*
+**Traces** : gazette_dementie, gazette_libre, joueur_invente_signe · **Réactions déclenchées** : — · **Lu plus tard par** : ds.fax (variante « la Gazette avait inventé »), ds.destin.plus_grand_club (`gazette_libre` : « le nom de Montoya était dans la Gazette avant lui »), ch. 20 (« VU AU PARKING » ; le Rosé note l'Écho), ch. 02 (Léa : `lea_savait` a une cousine ici), une.vendre.invente
+
+### SCÈNE ds.vitre.minuit_dix  —  Minuit dix
+**Rôle** : ds · **Intrigue** : ds.vitre · **Étape** : 4/4 · **Moment** : [0,1] après parking, le soir même · **Lieu** : ta voiture, minuit dix, le parking presque vide, ton téléphone qui vibre sur le tableau de bord, Ménèche encore là-bas sous le lampadaire · **Conditions** : `!flag('divorce')` (sinon la scène n'est pas servie)
+**CAMILLE** *(au téléphone — neutre ; noir si la chambre d'amis est déjà faite — on entend la télé derrière elle : le bandeau répète ton nom)*
+« Tu rentres à quelle heure ? Tu as dit minuit, il est minuit dix, et je vois ta vitre à la télé, elle est toujours baissée. »
+← **Je remonte la vitre** — effets : tribunes −, relation.camille +1, set: mercato_rentre — *Tu remontes la vitre. Ménèche fait un signe ; il comprend, il a une maison aussi, paraît-il. Le nom attendra le fax de demain.*
+→ **Encore un nom, et je rentre** — effets : tribunes +, direction +, relation.camille −1, var: {nuits_hotel: "+1"}, set: nuit_mercato — *Tu donnes le nom. Tu rentres à deux heures. La télé est éteinte ; la porte de la chambre d'amis, non.*
+Variante `flag('sacha_nee')` (ch. 01, à partir de ses six ans) : **SACHA** (voix, elle a pris le téléphone) : « Tu m'as promis. Tu as dit « avant que je dorme », et maman dit que le mercato, c'est un monsieur qui te garde. » — ← **J'arrive, Sacha** — relation.camille +1, set: mercato_rentre · → **Le monsieur me garde encore** — relation.camille −1, set: nuit_mercato — *Elle rend le téléphone à sa mère sans dire au revoir. C'est la deuxième pire chose qu'un enfant puisse faire.*
+**Traces** : mercato_rentre, nuit_mercato (« {annee} : quarante nuits d'hôtel par mercato, ou presque. {prenom} {nom} est rentré{pg, select, f{e} other{}} à deux heures, avec un nom. ») · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 01 (paliers de Camille : `nuit_mercato` compte comme une carte de dispute, `mercato_rentre` comme une carte de secours), ch. 30 (fin *Le burn-out*, epitaph_plus : « quarante nuits d'hôtel »), ch. 90 (Sacha héritière : « papa rentrait à deux heures avec un nom »), ch. 20 (la Une du burn-out)
+
 **Épilogue** : aucun (rituel).
 
 ## INTRIGUE ds.fax  —  Le fax de 23 h 58
 **Logline** : Il est 23 h 40, le fax passe ou ne passe pas, et Josiane a l'accusé de réception. · **Synopsis** : Le rituel de clôture de chaque fenêtre. Le contrat est prêt, il manque une signature, un tampon, une page trois ; l'agent est au téléphone, le coach dans le couloir, Léa a le nom. Le fax part (23 h 51 : il passe), rate (23 h 59 : Fardelli avait envoyé le sien à 23 h 58), ou Josiane demande une dérogation à Dauzat (« page 41 ») qui arrive à minuit et une. Après 2010, c'est un mail ; l'heure et la faute sont les mêmes.
-**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : josiane · **Cast** : josiane, fardelli, solvang, dauzat (0,5), lea, klopf/loco · **Thème** : mercato
+**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : josiane · **Cast** : josiane, fardelli, solvang, dauzat (0,5), lea, sabatier (la visite de 23 h 52), klopf/loco · **Thème** : mercato
 **Saisons** : "1", "2+" · **Conditions d'entrée** : — · **Rejouabilité** : ritual (variantes sur `plays()` et `year >= 2010`)
 **Issues** → **Traces** → **Qui les lit** : `passe` → `fax_passe` (« {annee} : le fax est parti à 23 h 51. Josiane a l'accusé de réception ; elle le garde. ») → lue par ds.neuf_ou_trader (le 9 est arrivé), une.vendre.fax, ch. 02 (Josiane) · `rate` → `fax_rate` (« {annee} : le fax de {club} est parti à 23 h 59. Celui de Fardelli à 23 h 58. ») → lue par ds_mercato_rate (epitaph_plus), ds.neuf_ou_trader (variante « tu n'as pas mon 9 »), ch. 13 (DS-09 côté président : « ton DS a raté un fax »), ch. 02 (`co.fardelli.trahison_signe_ailleurs` `_ds`), ch. 20 · `derogation` → `fax_derogation` (« {annee} : dérogation demandée à minuit et une. Dauzat a dit « page 41 » ; il a dit oui. ») → lue par ch. 02 (Dauzat : « vous me devez une page 41 »), ch. 15 (le règlement), ch. 20
-**Séquencier** : vingt_trois_quarante (ouverture, [3] ou [12], après `ds.vitre` si elle est ouverte) → accuse [in 1,2].
+**Séquencier** : vingt_trois_quarante (ouverture, [3] ou [12], après `ds.vitre` si elle est ouverte) → visite_minuit [in 0,1, la même nuit, `if: flag('fax_passe')`] → accuse [in 1,2, `if: flag('fax_rate')`] → lendemain [in 1,2].
 **Scènes** :
 
 ### SCÈNE ds.fax.vingt_trois_quarante  —  23 h 40
-**Rôle** : ds · **Intrigue** : ds.fax · **Étape** : 1/2 · **Moment** : le dernier créneau d'une fenêtre · **Lieu** : le bureau de Josiane, le fax, le contrat, une page trois qui manque, Fardelli au téléphone, Klopf ou Loco dans le couloir · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.fax · **Étape** : 1/4 · **Moment** : le dernier créneau d'une fenêtre · **Lieu** : le bureau de Josiane, le fax, le contrat, une page trois qui manque, Fardelli au téléphone, Klopf ou Loco dans le couloir · **Conditions** : —
 **JOSIANE** *(secrétaire — neutre — une main sur le fax, l'autre sur le combiné)*
-« Il est 23 h 40, monsieur, la page trois n'est pas signée, monsieur Fardelli dit qu'elle est « en route », et l'autre club a le même fax. J'en ai vu passer, vous savez : on envoie sans, ou on attend ? »
+« Il est 23 h 40, monsieur, la page trois n'est pas signée, monsieur Fardelli dit qu'elle est « en route », et l'autre club a le même fax. J'en ai vu passer : on envoie sans, ou on attend ? »
 ← **Envoyez sans la page trois** — effets : caisse −, vestiaire ++, force +2, set: fax_passe, outcome: passe, react: co.re.josiane_a_vu_le_fax — *Il part à 23 h 51. Le coach, dans le couloir, souffle. La page trois arrive le lendemain ; elle dit dix pour cent de plus.*
 → **On attend la page trois** — effets : direction +, caisse +, vestiaire −−, set: fax_rate, outcome: rate — *La page arrive à 23 h 57. Le fax part à 23 h 59. Celui de Fardelli, pour {rival}, à 23 h 58 ; il te le dit par politesse.*
 Variante `year >= 2010` : le fax est un mail ; « Le mail ne part pas, monsieur, la pièce jointe est trop lourde, la page trois est un scan de vingt mégas ; j'en ai vu passer, des fax, jamais des mégas. » — mêmes sorties.
@@ -638,27 +687,47 @@ Variante `flag('lea_savait')` (ch. 02) : Léa est dans le couloir avec le nom ; 
 Variante `flag('recrutement_bloque')` : la scène n'est pas servie (aucune offre entrante) ; `ds.mercato` sert e12/h12 à la place.
 **Traces** : fax_passe, fax_rate · **Réactions déclenchées** : co.re.josiane_a_vu_le_fax (∃ ch. 02) · **Lu plus tard par** : ds.fax.accuse, ds.neuf_ou_trader, ch. 13, ch. 02, ch. 20, ds_mercato_rate
 
+### SCÈNE ds.fax.visite_minuit  —  La visite de 23 h 52
+**Rôle** : ds · **Intrigue** : ds.fax · **Étape** : 2/4 · **Moment** : [0,1] après 23 h 40, la même nuit · **Lieu** : l'infirmerie, la lumière du néon, le joueur du fax assis sur la table du Doc avec un sac de glace, Sabatier en manteau, il allait partir · **Conditions** : `flag('fax_passe')`
+**SABATIER** *(médecin du club — neutre — il a la fiche médicale vierge dans une main, son stylo dans l'autre ; il ne les rapproche pas)*
+« Le fax est parti avec ma signature en blanc, et je n'ai pas vu le genou du garçon, il a un sac de glace depuis le train ; ça reste entre la table et moi. Je regarde ce soir, ou je signe demain ? »
+← **Regardez ce soir, Doc** — effets : direction −, caisse −, vestiaire +, relation.sabatier +1, set: visite_faite_minuit — *Il regarde. Il dit « trois semaines », et « pas plus », ce qui veut dire six. Josiane ajoute une page au fax ; elle est datée de 23 h 52.*
+→ **Signez demain, sans regarder** — effets : direction +, caisse +, relation.sabatier −1, set: visite_sans_regarder — *Il signe demain. Le genou dit non en octobre. Ça reste entre la table et lui ; Vialat, elle, lit les fiches de paie, pas les genoux.*
+Variante `flag('genou_vendu_cache')` (ds.joueur_ami) : « La dernière fois, c'est nous qui avons arrondi un dossier pour vendre ; cette fois, c'est l'autre club qui arrondit, et je reconnais l'écriture. Ça reste entre la table et moi : je regarde ? » — mêmes sorties, la droite pose aussi relation.sabatier −2.
+Variante `world.coach == 'loco'` : Loco est dans l'encadrement avec une cassette du joueur ; la gauche donne aussi relation.loco +1 (le Doc regarde le genou, Loco regarde la cassette : deux avis, un néon).
+**Traces** : visite_faite_minuit, visite_sans_regarder (« {annee} : un joueur signé par fax à 23 h 51, visite médicale le lendemain, sans regarder. Le genou a parlé en octobre. ») · **Réactions déclenchées** : — · **Lu plus tard par** : ds.fax.lendemain (variante), ds.masse_salariale (variante « un salaire qui ne joue pas »), ch. 01 (Sabatier : `visite_sans_regarder` pèse au palier −3), ch. 10 (le joueur acheté sans visite, c'est peut-être toi : `genou_opere` en face), ch. 15 (la commission médicale), une.vendre.fax
+
 ### SCÈNE ds.fax.accuse  —  L'accusé de réception
-**Rôle** : ds · **Intrigue** : ds.fax · **Étape** : 2/2 · **Moment** : [1,2] · **Lieu** : le bureau de Josiane, le lendemain, un accusé de réception, une heure imprimée · **Conditions** : `flag('fax_rate')`
+**Rôle** : ds · **Intrigue** : ds.fax · **Étape** : 3/4 · **Moment** : [1,2] · **Lieu** : le bureau de Josiane, le lendemain, un accusé de réception, une heure imprimée · **Conditions** : `flag('fax_rate')`
 **JOSIANE** *(secrétaire — neutre — elle tient l'accusé et un autre papier, plus petit)*
 « L'accusé dit 23 h 59, monsieur, et le règlement aussi, page 41, mais monsieur Dauzat accorde des dérogations si on les demande avant minuit et une. J'en ai vu passer, vous savez : je l'appelle ? »
 ← **Appelez Dauzat** — effets : direction −, caisse −, set: fax_derogation, outcome: derogation, relation.dauzat −1 — *Elle appelle. Il dit « c'est dans le procès-verbal ». Il dit oui. Tu lui dois une page 41 ; il s'en souviendra en 2016.*
 → **Tant pis ; on trouvera mieux** — effets : vestiaire −, tribunes −, direction + — *Le coach demande qui. Tu n'as pas encore le nom. Il retourne courir, ou regarder une cassette.*
 **Traces** : fax_derogation · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 02 (Dauzat), ch. 15 (le règlement des dérogations), une.vendre.minuit
+### SCÈNE ds.fax.lendemain  —  L'heure exacte
+**Rôle** : ds · **Intrigue** : ds.fax · **Étape** : 4/4 · **Moment** : [1,2] après 23 h 40 · **Lieu** : le hall, six heures du matin, Léa avec le carnet ouvert, la Tribune Nord qui attend L'Écho au kiosque · **Conditions** : `flag('fax_passe') || flag('fax_rate')`
+**LÉA** *(L'Écho — neutre — elle a deux heures écrites sur la page, l'une barrée ; elle ne dit pas laquelle)*
+« L'Écho sort à six heures et j'ai deux heures pour votre fax, 23 h 51 et 23 h 59, la Tribune Nord veut la bonne ; vous confirmez l'heure ? »
+← **Je confirme, à la minute** — effets : parole +1, relation.lea +1, tribunes + si `fax_passe` (tribunes − si `fax_rate`), set: heure_confirmee — *Elle écrit l'heure. Le kiosque la lit. La Tribune Nord apprend le nom, ou son absence, avec le radiateur qui tousse.*
+→ **Josiane a l'heure exacte** — effets : direction +, relation.josiane +1, set: heure_josiane — *Josiane la lui donne, à la minute, avec l'accusé. Elle en garde une copie ; elle en a toujours une.*
+Variante `flag('visite_sans_regarder')` : « J'ai l'heure du fax et l'absence de visite médicale, on m'a appelée de l'infirmerie ; je publie l'heure seule, ou les deux ? Vous confirmez ? » — ← **L'heure seule** — parole −1, tribunes +, set: heure_confirmee · → **Les deux ; c'est vrai** — parole +1, direction −−, relation.lea +2 — *Elle publie les deux. Le président lit L'Écho, pour une fois ; il « n'a pas le temps », il a celui de t'appeler.*
+Variante `world.coach == 'klopf' && plays('ds.fax') >= 1` (« encore ») : Klopf passe en courant derrière Léa avec le joueur du fax, deux chaussures gauches à la main ; la droite donne aussi vestiaire + (il court déjà).
+**Traces** : heure_confirmee, heure_josiane · **Réactions déclenchées** : co.re.josiane_a_vu_le_fax (∃ ch. 02, après →) · **Lu plus tard par** : ch. 20 (`une.vendre.fax` lit `heure_confirmee` pour l'heure exacte du sous-titre), ch. 02 (Léa : « vous confirmez toujours à la minute »), ds.vitre (variante « encore » : « vous confirmez l'heure aux vitres, maintenant »), une.vendre.minuit
+
 **Épilogue** : aucun (rituel).
 
 ## INTRIGUE ds.masse_salariale  —  Ligne douze  **[drame, la lettre]**
 **Logline** : Vialat a recompté la masse salariale ; il manque une ligne, la douzième, et la lettre est déjà tapée. · **Synopsis** : L'Inspecteur vient chaque fenêtre ; cette fois elle a un chiffre : les salaires que tu as signés dépassent ce que le club encaisse, et deux soldes négatifs déclenchent sa lettre. Tu coupes (tu vends un salaire, le vestiaire compte le casier), tu présentes un plan (elle attend jeudi), ou tu laisses la lettre partir (le club est interdit de recruter, et l'entraîneur devient le coupable désigné). Si la paie a déjà été en retard, elle le sait ; si le capitaine est parti à Valentienne, le trou est le sien ; si le fonds a payé, elle demande d'où.
-**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vialat · **Cast** : vialat, josiane, aulard/nassir, klopf/loco · **Thème** : argent
+**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vialat · **Cast** : vialat, josiane, aulard/nassir, klopf/loco, dembo/mbako (le casier d'à côté) · **Thème** : argent
 **Saisons** : "0" (sans drame : la lettre glisse en S1), "1", "2+" · **Conditions d'entrée** : `gauges.caisse < 45` · **Exclusions** : — · **Rejouabilité** : replay {after: 2, max: 2}
 **Issues** → **Traces** → **Qui les lit** : `coupe` → `masse_coupee` (« {annee} : un salaire coupé pour repasser sous la ligne. L'Inspecteur a recompté ; c'était juste. ») → lue par ds.neuf_ou_trader (variante), ch. 02 (Vialat +1), une.vendre.coupe · `plan` → `masse_plan` → lue par ch. 13 (`plan_vialat` a une sœur ici), ds.recrutement_bloque (variante « le plan ») · `lettre` → `commission_lettre` (« {annee} : la lettre de la Commission est arrivée à {club}. Deux soldes négatifs ; le DS avait signé les deux. ») → lue par ds.recrutement_bloque (ouverture), ch. 11 (le coupable désigné), ch. 13 (rétrogradation), ch. 20 (∃ `une.promu.argent_dou`), ds_contrats (epitaph_plus)
-**Séquencier** : recompte (ouverture, [2,9] ; aussi alarme `caisse.low`) → jeudi [in 1,3] → lettre (S+1 si S0, at_season +1, [2,8] ; sinon [in 2,4]).
+**Séquencier** : recompte (ouverture, [2,9] ; aussi alarme `caisse.low`) → casier [in 1,2, `if: flag('masse_coupee')`] → jeudi [in 1,3] → lettre (S+1 si S0, at_season +1, [2,8] ; sinon [in 2,4]).
 **Scènes** :
 
 ### SCÈNE ds.masse_salariale.vialat_recompte  —  Elle recompte
-**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 1/3 (aussi alarme `caisse.low`, override de `vendre_trente`) · **Moment** : ouverture tirée · **Lieu** : la salle de réunion, Vialat, un cahier, une calculatrice à ruban · **Conditions** : `gauges.caisse < 45`
+**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 1/4 (aussi alarme `caisse.low`, override de `vendre_trente`) · **Moment** : ouverture tirée · **Lieu** : la salle de réunion, Vialat, un cahier, une calculatrice à ruban · **Conditions** : `gauges.caisse < 45`
 **VIALAT** *(Inspecteur — neutre — elle arrache le ruban de la calculatrice et le pose devant toi)*
-« Vos salaires signés dépassent vos recettes de la ligne douze, madame ou monsieur {nom}, et un solde négatif en appelle un deuxième, qui appelle ma lettre. Je ne juge pas. Je compte : coupez, ou jeudi. »
+« Vos salaires signés dépassent vos recettes à la ligne douze, madame ou monsieur {nom}, et deux soldes négatifs appellent ma lettre. Je ne juge pas. Je compte : coupez, ou jeudi. »
 ← **Je coupe un salaire** — effets : caisse ++, vestiaire −−, force −2, set: masse_coupee, outcome: coupe, relation.vialat +1 — *Tu vends un salaire. Le casier est vide lundi. Elle recompte ; c'est juste, à trois mille près.*
 → **Un plan, jeudi** — effets : direction −, parole +1, promise, next: {step: jeudi, in: [1,3]} — *Elle note « jeudi ». Elle souligne. Elle ne souligne jamais.*
 Variante `flag('salaires_retard')` (ch. 11) : « Vos salaires sont partis le 12 au lieu du 5 l'an dernier, je l'ai dans mon cahier, et cette année la ligne douze est pire. Je ne juge pas. Je compte : vous coupez, ou jeudi ? » — mêmes sorties.
@@ -666,8 +735,19 @@ Variante `flag('capitaine_vendu_malbec')` (ch. 02 : Malbec a acheté ton capitai
 Variante `flag('ligne_douze')` (ch. 02 : elle t'a prévenu une fois, à +3) : « Je vous l'ai dit une fois, madame ou monsieur {nom}, jeudi, la ligne douze ; je ne le dis jamais deux fois, et je vous le dis. » — la droite donne relation.vialat +1.
 **Traces** : masse_coupee · **Réactions déclenchées** : co.re.vialat_recompte (∃ ch. 02) · **Lu plus tard par** : ds.masse_salariale.jeudi, ds.masse_salariale.lettre, ch. 02
 
+### SCÈNE ds.masse_salariale.casier  —  Le casier d'à côté
+**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 2/4 · **Moment** : [1,2] après recompte · **Lieu** : le vestiaire, lundi, un casier vide avec le nom encore dessus, le capitaine assis devant · **Conditions** : `flag('masse_coupee')`
+**DEMBO** *(capitaine, 37 ans — neutre — il fait rebondir le ballon dans le casier vide ; ça sonne creux)*
+« Tu as coupé le salaire de mon voisin de casier, le seul qui défendait pour moi, et l'Inspecteur a dit que c'était juste ; donne-moi le ballon, je m'occupe du reste. Il reste qui, pour défendre ? »
+← **Un prêt, et un vrai en juin** — effets : vestiaire +, caisse −, parole +1, promise, relation.dembo +1, set: casier_promis — *Il arrête le ballon. Un jeune du centre défend samedi ; il défend bien, il a peur, les deux se voient. Juin est loin.*
+→ **C'est juste, c'est tout** — effets : vestiaire −−, direction +, relation.dembo −1, set: casier_vide_assume — *Il remet le ballon dans le casier. Il joue samedi ; il défend lui-même, à trente-sept ans. Il a mal, il ne le dit qu'à la kiné.*
+Variante `year >= 2010` — **MBAKO** (36 ans) : « Vous avez coupé le salaire du seul qui courait vingt kilomètres sans se plaindre, directeur, Loco l'avait remarqué sur la cassette ; je veux jouer, maintenant, avec quelqu'un derrière. Il reste qui ? » — mêmes sorties, `relation.mbako` à la place.
+Variante `flag('dembo_ami')` (ch. 10) : la droite coûte relation.dembo −2 ; il ajoute « patron », ironique.
+Variante `flag('visite_sans_regarder')` (ds.fax) : « Tu as coupé un salaire qui défendait, et gardé un salaire qui a un genou et pas de visite ; donne-moi le ballon, je m'occupe du reste. Il reste qui ? » — mêmes sorties.
+**Traces** : casier_promis, casier_vide_assume · **Réactions déclenchées** : — · **Lu plus tard par** : ds.masse_salariale.lettre (variante « vous aviez promis juin »), ds.recrutement_bloque (variante « tu avais promis juin ; la fenêtre est vide »), ch. 01 (Dembo : « tu as coupé mon voisin »), ch. 30 (*Le Grand Déballage* : `casier_promis` est une promesse publique), une.vendre.coupe
+
 ### SCÈNE ds.masse_salariale.jeudi  —  Jeudi
-**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 2/3 · **Moment** : [1,3] · **Lieu** : le bureau du président, jeudi, ton plan sur trois pages, le président qui n'a pas le temps · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 3/4 · **Moment** : [1,3] · **Lieu** : le bureau du président, jeudi, ton plan sur trois pages, le président qui n'a pas le temps · **Conditions** : —
 **AULARD** *(par téléphone — neutre — il lit ton plan en diagonale, à voix haute, en sautant des lignes)*
 « Ton plan dit : vendre le petit, prêter le 9, geler les primes ; le mien dit : le sponsor paie, on ne vend personne, sauf toi si ça rate. J'ai pas le temps, j'ai un empire : le tien, ou le mien ? »
 ← **Le mien ; il tient** — effets : caisse +, vestiaire −, direction −, set: masse_plan, outcome: plan — *Vialat lit les trois pages. Elle dit « ça tient ». Elle ne le dit à personne d'autre.*
@@ -676,25 +756,26 @@ Variante `world.president == 'nassir'` : « Votre plan vend des joueurs ; le mie
 **Traces** : masse_plan, nassir_paie · **Réactions déclenchées** : — · **Lu plus tard par** : ds.masse_salariale.lettre (variante « le plan tenait »), ch. 13, ch. 15
 
 ### SCÈNE ds.masse_salariale.lettre  —  La lettre
-**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 3/3 · **Moment** : saison suivante si S0 ; sinon [2,4] · **Lieu** : le bureau de Josiane, une lettre recommandée, Josiane l'a vue avant toi · **Conditions** : `!flag('masse_coupee') && !flag('masse_plan')` ou `gauges.caisse < 25`
+**Rôle** : ds · **Intrigue** : ds.masse_salariale · **Étape** : 4/4 · **Moment** : saison suivante si S0 ; sinon [2,4] · **Lieu** : le bureau de Josiane, une lettre recommandée, Josiane l'a vue avant toi · **Conditions** : `!flag('masse_coupee') && !flag('masse_plan')` ou `gauges.caisse < 25`
 **VIALAT** *(Inspecteur — noir — elle la lit au téléphone pour être sûre)*
-« Deux soldes négatifs, madame ou monsieur {nom} ; la lettre est partie, le recrutement bloqué, et votre président m'a donné votre nom sans qu'on le demande. Je ne juge pas. Je compte : vous, ou lui ? »
+« Deux soldes négatifs, madame ou monsieur {nom} ; la lettre est partie, et votre président m'a donné votre nom sans qu'on le demande. Je ne juge pas. Je compte : vous, ou lui ? »
 ← **Je prends la ligne pour moi** — effets : direction −−, vestiaire +, caisse −, parole +1, set: commission_lettre, outcome: lettre, set: ligne_assumee — *Tu prends. L'entraîneur n'est pas le coupable désigné, cette fois ; toi, si. Le vestiaire le sait ; il ne dit rien, il ne court pas moins.*
 → **Le président a signé, lui** — effets : direction −−−, caisse +, set: commission_lettre, outcome: lettre, set: ligne_president — *Elle note. Le président « n'a pas le temps ». Il trouve celui d'écrire ton nom sur la porte ; Vialat a la copie.*
 Variante `flag('masse_plan')` : « Votre plan tenait, jeudi ; il ne tient plus, le sponsor a retiré une page. Deux soldes ; la lettre. » — mêmes sorties.
+Variante `flag('casier_promis')` : « Vous aviez promis un vrai défenseur en juin au capitaine, je l'ai lu dans L'Écho ; juin est passé, la ligne douze aussi. Je ne juge pas. Je compte : vous, ou lui ? » — mêmes sorties, la gauche donne aussi parole −1 (la promesse de juin n'a pas été tenue).
 **Traces** : commission_lettre, ligne_assumee, ligne_president · **Réactions déclenchées** : co.re.josiane_a_lu (∃) · **Lu plus tard par** : ds.recrutement_bloque, ch. 11 (`en_coupable` : « le DS avait pris la ligne »), ch. 13, ds_contrats (epitaph_plus), une.vendre.lettre
 **Épilogue** (abandon) : `journal: "{annee} : la ligne douze de {club} est restée fausse. {nom} est parti{pg, select, f{e} other{}} avant la lettre."` ; `caisse: "-"`.
 
 ## INTRIGUE ds.recrutement_bloque  —  L'audit : interdit de recruter
 **Logline** : Le club est interdit de recrutement ; Vialat audite trois saisons de commissions, et l'une d'elles a ton nom. · **Synopsis** : La lettre est arrivée, ou le palier −3 de Vialat (∃ `co.vialat.trahison_recrutement`, ch. 02). Une fenêtre sans offre entrante ; tu vends pour repasser (le meilleur part, la Tribune Nord sort la bâche), tu saisis le Tribunal du Sport (il répond tard ; le mercato ferme avant), ou tu reconstruis avec des prêts et les jeunes du centre (le coach découvre la réserve). Pendant ce temps, l'audit remonte : la commission des frais a un nom ; si c'est le tien, l'enquête commence par ton bureau.
-**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vialat · **Cast** : vialat, josiane, gege, klopf/loco, amsel (0,5, jamais S0), la_plume (par écrit) · **Thème** : instances
+**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vialat · **Cast** : vialat, josiane, gege, klopf/loco, Maître Vidal (voix), amsel (0,5, jamais S0), la_plume (par écrit) · **Thème** : instances
 **Saisons** : "2+" · **Conditions d'entrée** : `flag('commission_lettre') || flag('recrutement_bloque')` · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `vendu` → `bloque_vendu` (« {annee} : interdit de recruter, {club} a vendu son meilleur joueur pour repasser. Vialat a recompté. ») → lue par ds_contrats (epitaph_plus), ch. 13, une.intouchable.bloque · `tribunal` → `bloque_tribunal` → lue par ch. 15 (le Tribunal répond tard), ch. 02 (`tribunal_saisi` a une sœur), ch. 20 · `pretes` → `bloque_pretes` (« {annee} : interdit de recruter, {club} a joué avec des prêts et la réserve. Le coach a appris les prénoms. ») → lue par ds.centre (variante « ils ont joué »), ch. 30 (trait « Débrouille »), ch. 11 (`en.salaires_retard` variante), une.intouchable.reserve
-**Séquencier** : fenetre_vide (ouverture, [1,11], fenêtre de mercato de préférence) → audit [in 2,5] → nom (S+1, at_season +1, [3,9], `if: flag('commission_occulte')`).
+**Séquencier** : fenetre_vide (ouverture, [1,11], fenêtre de mercato de préférence) → audit [in 2,5] → tribunal [in 3,6, `if: flag('bloque_tribunal')`] → nom (S+1, at_season +1, [3,9], `if: flag('commission_occulte')`).
 **Scènes** :
 
 ### SCÈNE ds.bloque.fenetre_vide  —  Une fenêtre sans fax
-**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 1/3 · **Moment** : ouverture tirée · **Lieu** : le bureau de Josiane, le fax débranché, Klopf ou Loco qui regarde la prise · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : le bureau de Josiane, le fax débranché, Klopf ou Loco qui regarde la prise · **Conditions** : —
 **JOSIANE** *(secrétaire — neutre — elle a débranché le fax elle-même ; elle a gardé le câble)*
 « Le fax ne sert à rien cette fenêtre, monsieur, la lettre dit « aucune entrée », et le coach demande ce qu'il entraîne. J'en ai vu passer, vous savez : on vend, le Tribunal, ou les gamins ? »
 ← **On vend le meilleur** — effets : caisse ++, vestiaire −−, tribunes −−, force −4, set: bloque_vendu, outcome: vendu, clear: recrutement_bloque — *Le meilleur part. Vialat recompte. C'est juste. La bâche dit « VENDUS » ; pas de nom, pour une fois.*
@@ -704,7 +785,7 @@ Variante `flag('tribunal_saisi')` (ch. 02 : déjà saisi côté président) : la
 **Traces** : bloque_vendu, bloque_pretes, bloque_tribunal · **Réactions déclenchées** : co.re.gege_decoupe (∃, après ←) · **Lu plus tard par** : ds.bloque.audit, ds.centre, ch. 13, ch. 15, ds_contrats
 
 ### SCÈNE ds.bloque.audit  —  Trois saisons de commissions
-**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 2/3 · **Moment** : [2,5] · **Lieu** : la salle de réunion, trois cartons, trois saisons, Vialat avec un ruban de calculatrice long comme la table · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 2/4 · **Moment** : [2,5] · **Lieu** : la salle de réunion, trois cartons, trois saisons, Vialat avec un ruban de calculatrice long comme la table · **Conditions** : —
 **VIALAT** *(Inspecteur — neutre — le ruban fait le tour de la table ; elle a entouré trois chiffres)*
 « J'ai recompté trois saisons de commissions, madame ou monsieur {nom} : trois n'ont pas de destinataire, et une a une île. Je ne juge pas. Je compte : vous me donnez les noms, ou je les trouve ? »
 ← **Je donne les noms** — effets : direction −, caisse −, relation.fardelli −2, relation.vialat +1, set: noms_donnes — *Tu donnes. Fardelli, Solvang, un père. Elle note. Solvang t'appelle pour dire qu'elle avait tout déclaré ; c'est vrai.*
@@ -712,42 +793,63 @@ Variante `flag('tribunal_saisi')` (ch. 02 : déjà saisi côté président) : la
 Variante `flag('commission_denoncee')` : « Une des trois, vous l'aviez déclarée vous-même ; ça fait deux. Je compte : les deux noms ? » — mêmes sorties, la gauche donne direction + au lieu de −.
 **Traces** : noms_donnes, noms_cherches · **Réactions déclenchées** : co.re.vialat_recompte (∃) · **Lu plus tard par** : ds.bloque.nom, ch. 15 (Amsel : « les noms ont été donnés »), une.intouchable.audit
 
+### SCÈNE ds.bloque.tribunal  —  Le Tribunal répond en avril
+**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 3/4 · **Moment** : [3,6] après fenetre_vide · **Lieu** : ton bureau, une lettre à en-tête du Tribunal du Sport, quatre pages, une date qui n'est pas la bonne · **Conditions** : `flag('bloque_tribunal')`
+**MAÎTRE VIDAL** *(voix sans portrait — ton avocat ; il lit la lettre debout, il facture assis)*
+« Le Tribunal du Sport vous donne raison, et il siège loin, il répond tard : vous aviez raison en janvier, nous sommes en avril. Je fais appel de la date, ou vous encadrez la lettre ? »
+← **Appel de la date** — effets : caisse −, direction −, set: tribunal_appel — *Il fait appel. Le Tribunal répond en septembre qu'avril était « un délai raisonnable » ; c'est écrit, en quatre pages, cette fois.*
+→ **Encadrez-la, elle est belle** — effets : tribunes +, parole +1, set: tribunal_encadre — *Josiane l'accroche à côté de l'accusé de réception de 23 h 59. C'est un mur qui raconte ; Vialat le regarde en passant, sans s'arrêter.*
+Variante `flag('tribunal_saisi')` (ch. 02 : le président avait déjà saisi le Tribunal) : « C'est la deuxième fois que ce club a raison en retard, votre président avait déjà encadré une lettre ; j'appelle ou j'encadre, c'est le même tarif. » — mêmes sorties.
+Variante `flag('casier_promis')` : la droite donne aussi vestiaire − (« le capitaine attendait juin, pas avril »).
+**Traces** : tribunal_appel, tribunal_encadre (« {annee} : le Tribunal du Sport a donné raison à {club} en avril. Le mercato avait fermé en janvier ; la lettre est encadrée. ») · **Réactions déclenchées** : — · **Lu plus tard par** : ds.bloque.nom (variante « le Tribunal vous a donné raison, pas moi »), ch. 15 (le Tribunal du Sport : « il répond tard, vous le savez »), ch. 02 (`tribunal_saisi` a un frère ici), ch. 31 (anecdote : le mur de Josiane), une.intouchable.tribunal
+
 ### SCÈNE ds.bloque.nom  —  Le quatrième nom
-**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 3/3 · **Moment** : saison suivante, [3,9] · **Lieu** : ton bureau, six heures du matin, deux personnes qui ne se parlent pas : Amsel, et une enveloppe de La Plume · **Conditions** : `flag('commission_occulte') && (flag('noms_cherches') || flag('nom_tu'))`
+**Rôle** : ds · **Intrigue** : ds.recrutement_bloque · **Étape** : 4/4 · **Moment** : saison suivante, [3,9] · **Lieu** : ton bureau, six heures du matin, deux personnes qui ne se parlent pas : Amsel, et une enveloppe de La Plume · **Conditions** : `flag('commission_occulte') && (flag('noms_cherches') || flag('nom_tu'))`
 **AMSEL** *(procureure — neutre — elle s'assoit ; c'est la seule à s'asseoir dans ton bureau sans qu'on l'y invite)*
-« Nous avons tout notre temps, madame ou monsieur {nom}, et une île n'en a pas beaucoup ; La Plume a les documents, nous avons le reste. Vous répondez ici, ou au tribunal ? »
+« Nous avons tout notre temps, et une île n'en a pas beaucoup ; La Plume a les documents, nous avons le reste. Vous répondez ici, ou au tribunal ? »
+Variante `flag('tribunal_encadre')` : « Le Tribunal du Sport vous a donné raison, je l'ai vu au mur en entrant, ce n'est pas mon tribunal ; nous avons tout notre temps. Ici, ou là-bas ? » — mêmes sorties.
 ← **Ici, tout, maintenant** — effets : direction −−, caisse −−, parole +1, set: enquete_repondue, clear: commission_occulte — *Tu réponds. Elle écrit. La Plume publie le lendemain, avec tes réponses ; elles tiennent.*
-→ **Au tribunal, avec Vidal** — effets : direction −−−, tribunes −, set: enquete_tribunal, schedule: [{card: co.amsel.six_heures_suite, in: [3,6]}] (ch. 02 / ch. 15) — *Elle se lève. Elle a le temps. La Plume aussi : dix pages, ton nom en titre, la gourmette de Fardelli en photo.*
+→ **Au tribunal, avec Vidal** — effets : direction −−−, tribunes −, set: enquete_tribunal, schedule: [{card: co.amsel.temps_garde_a_vue, in: [3,6]}] (ch. 02 / ch. 15) — *Elle se lève. Elle a le temps. La Plume aussi : dix pages, ton nom en titre, la gourmette de Fardelli en photo.*
 **Traces** : enquete_repondue, enquete_tribunal · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 15 (le raid, les fins judiciaires), ch. 02 (Amsel, La Plume), ds_roi_mercato (epitaph_plus), ch. 30 (fin *Les commissions*, judiciaire, si `enquete_tribunal` et CAISSE pleine), une.intouchable.six_heures
 **Épilogue** (abandon) : `journal: "{annee} : {club} est resté interdit de recruter une saison. {nom} est parti{pg, select, f{e} other{}} sans fax."`.
 
 ## INTRIGUE ds.centre  —  Les jeunes du centre
 **Logline** : Le centre de formation coûte le salaire d'un remplaçant et produit un joueur tous les trois ans ; le président veut le fermer, Vecchio veut y mourir. · **Synopsis** : Léger et tendre : le centre, sa pelouse, son gardien de cinquante-quatre ans qui entraîne les gardiens (Vecchio, si `gigi_staff`, sinon « le directeur du centre », voix), ses gamins qui valent zéro aujourd'hui et vingt millions dans deux ans. Tu vends tôt (l'indemnité de formation, un aller simple à seize ans), tu gardes (le coach découvre un prénom), ou tu fermes (le stade où l'on entend les consignes n'a plus d'écho). Le petit prodige (ds.vente_du_prodige) en vient ; Dembo s'en souvient.
-**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vecchio (ou voix) · **Cast** : vecchio, aulard/nassir, barbier, un joueur de la réserve (voix) · **Thème** : absurde (tendre)
+**Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vecchio (ou voix) · **Cast** : vecchio, aulard/nassir, barbier, mere_mbako (le premier contrat), un joueur de la réserve (voix) · **Thème** : absurde (tendre)
 **Saisons** : "1", "2+" · **Conditions d'entrée** : — · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `vendu_tot` → `jeune_vendu_tot` (« {annee} : un gamin du centre de {club} vendu à seize ans. L'indemnité a payé la pelouse. ») → lue par ch. 01 (`ds.dembo.dix_sept_ans` ∃ : Dembo s'en souvient), ch. 10 (`lache_academie` : « le centre t'a rendu »), ch. 13 (l'indemnité côté président), une.intouchable.seize · `garde` → `jeune_garde` → lue par ds.recrutement_bloque (variante « ils ont joué »), ch. 14 (Brissac), ch. 20 · `ferme` → `centre_ferme` (« {annee} : le centre de formation de {club} a fermé. On n'entend plus les consignes. ») → lue par ds.vente_du_prodige (variante « le dernier du centre »), ch. 13, ch. 31 (anecdote), ds_architecte (epitaph_plus « il avait fermé le centre »)
-**Séquencier** : pelouse (ouverture, [2,10]) → seize_ans [in 1,3] → consignes (S+1, at_season +1, [2,8]).
+**Séquencier** : pelouse (ouverture, [2,10]) → seize_ans [in 1,3] → premier_contrat [in 1,3, `if: flag('jeune_garde')`] → consignes (S+1, at_season +1, [2,8]).
 **Scènes** :
 
 ### SCÈNE ds.centre.pelouse  —  La pelouse du centre
-**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 1/3 · **Moment** : ouverture tirée · **Lieu** : le terrain du centre, un samedi matin, Vecchio dans les buts des moins de quinze ans avec ses gants de 1990 · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : le terrain du centre, un samedi matin, Vecchio dans les buts des moins de quinze ans avec ses gants de 1990 · **Conditions** : —
 **VECCHIO** *(entraîneur des gardiens, 54 ans — sourire — il te parle en regardant un tir qui arrive)*
-« Le président veut fermer le centre parce qu'il coûte un remplaçant, directeur, et sort un joueur tous les trois ans ; j'en ai vu d'autres, des centres, jamais des fermés. Les gamins, ou la buvette ? »
+« Le président veut fermer le centre, directeur : il coûte un remplaçant et sort un joueur tous les trois ans ; j'en ai vu d'autres, des centres, jamais des fermés. Les gamins, ou la buvette ? »
 ← **Le centre reste, avec vous** — effets : caisse −, vestiaire +, tribunes +, relation.vecchio +2, set: jeune_garde, outcome: garde — *Il arrête le tir. Il ne dit rien ; il ne dit jamais rien quand il est content. Le gamin qui a tiré a quinze ans et un nom qu'on reverra.*
 → **On ferme ; la buvette, Gigi** — effets : caisse ++, vestiaire −−, tribunes −, relation.vecchio −2, set: centre_ferme, outcome: ferme — *Le centre ferme en juin. Il prend la buvette des anciens. Il y sert Dembo, en 2010 ; ils parlent des consignes.*
 Variante `!flag('gigi_staff')` — **LE DIRECTEUR DU CENTRE** (voix) : même dilemme, sans les gants ; la gauche donne relation.vecchio 0.
 **Traces** : jeune_garde, centre_ferme · **Réactions déclenchées** : — · **Lu plus tard par** : ds.centre.seize_ans, ds.centre.consignes, ds.vente_du_prodige, ch. 01, ch. 13
 
 ### SCÈNE ds.centre.seize_ans  —  Seize ans, un aller simple
-**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 2/3 · **Moment** : [1,3] · **Lieu** : ton bureau, un gamin de seize ans avec son père (le père-agent), Barbier dans le couloir · **Conditions** : `!flag('centre_ferme')`
+**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 2/4 · **Moment** : [1,3] · **Lieu** : ton bureau, un gamin de seize ans avec son père (le père-agent), Barbier dans le couloir · **Conditions** : `!flag('centre_ferme')`
 **UN JOUEUR DE LA RÉSERVE** *(voix sans portrait — il a seize ans ; son père parle, lui regarde ses chaussures)*
 « Un club de Castellane me prend en juillet, directeur, mon père a dit oui, l'indemnité paie la pelouse ; moi je voulais jouer ici, une fois, dans le grand stade. Vous signez, ou je joue une fois ? »
 ← **Tu joues une fois, en Coupe** — effets : vestiaire +, tribunes +, caisse −, set: jeune_garde, relation.barbier +1 — *Il joue en Coupe, contre Puymarin. Il ne marque pas. Il part quand même en juillet ; il a une photo, et le grand stade dedans.*
 → **Je signe ; l'indemnité paie** — effets : caisse ++, vestiaire −, set: jeune_vendu_tot, outcome: vendu_tot — *Il part sans jouer. Dembo, dans le couloir, lui donne un ballon. Il en donne à tous ceux-là.*
 **Traces** : jeune_vendu_tot, jeune_garde · **Réactions déclenchées** : ds.re.dembo_ballon (§ 6, après →, si Dembo est au club) · **Lu plus tard par** : ch. 01, ch. 10, ch. 13, une.intouchable.seize
 
+### SCÈNE ds.centre.premier_contrat  —  Un agent depuis ce matin
+**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 3/4 · **Moment** : [1,3] après seize_ans · **Lieu** : la cantine du centre, la mère de Mbako assise à la table des moins de quinze ans, un contrat pro sous une assiette · **Conditions** : `flag('jeune_garde')`
+**LA MÈRE DE MBAKO** *(agente — neutre — elle a écrit le chiffre sur la table, au stylo du club, avant que tu arrives)*
+« Le gamin que vous avez gardé a un agent depuis ce matin : moi ; mon fils n'a besoin de personne, celui-là a besoin d'un contrat pro avant juillet. Trois ans à mon chiffre, ou l'indemnité ? »
+← **Trois ans, à son chiffre** — effets : caisse −, vestiaire +, relation.mere_mbako +1, set: gamin_contrat_pro — *Il signe à la cantine. Le chiffre est le sien ; Josiane le recopie sans commentaire, elle en a vu passer, mais pas sur une table.*
+→ **Le chiffre du club, ou rien** — effets : caisse +, vestiaire −, relation.mere_mbako −1, relation.vecchio −1, set: gamin_parti_castellane — *Elle dit « rien ». Il signe l'indemnité en Castellane en juillet ; Vecchio range ses gants un peu plus tôt ce jour-là.*
+Variante `flag('mere_rien')` (ch. 01) : « Vous m'avez dit « rien » une fois ; celui-ci a signé chez moi hier, je vous informe, je ne négocie pas. » — un bouton **Je suis informé** — set: gamin_parti_castellane, caisse + — *Il part. Vecchio l'apprend au tir suivant.*
+Variante `flag('petit_garde')` (ds.vente_du_prodige) : « Le petit que vous avez gardé au lieu de trente millions m'a présenté celui-ci ; mon fils n'a besoin de personne, les gamins de {ville}, si. Trois ans ? » — mêmes sorties, la gauche donne aussi tribunes +.
+**Traces** : gamin_contrat_pro (« {annee} : un gamin du centre de {club} signe pro à seize ans, à la cantine. Son agente : la mère de Mbako. »), gamin_parti_castellane · **Réactions déclenchées** : ds.re.dembo_ballon (§ 6, après →, si Dembo est au club) · **Lu plus tard par** : ds.centre.consignes (variante « le gamin du contrat pro joue en réserve »), ds.vente_du_prodige (replay : le prodige d'après est celui-là, `if: flag('gamin_contrat_pro')`), ch. 01 (la mère de Mbako, « agente de vingt » : celui-ci est le premier des vingt), ch. 10 (`lache_academie` : le gamin qu'on n'a pas gardé), ch. 14 (Brissac : « votre gamin est dans ma liste »), une.intouchable.seize_pro
+
 ### SCÈNE ds.centre.consignes  —  On entend les consignes
-**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 3/3 · **Moment** : saison suivante, [2,8] · **Lieu** : le grand stade, un match de réserve, deux cents personnes, on entend Vecchio depuis la tribune · **Conditions** : `flag('jeune_garde') || flag('centre_ferme')`
+**Rôle** : ds · **Intrigue** : ds.centre · **Étape** : 4/4 · **Moment** : saison suivante, [2,8] · **Lieu** : le grand stade, un match de réserve, deux cents personnes, on entend Vecchio depuis la tribune · **Conditions** : `flag('jeune_garde') || flag('centre_ferme')`
 **LÉA** *(L'Écho — sourire — elle est venue au match de réserve, seule journaliste, avec un thermos)*
 « On entend les consignes de Gigi depuis la tribune Est, et Mamie Paulette dit qu'elle les comprend mieux que celles du coach ; vous confirmez que le centre reste ouvert l'an prochain ? »
 ← **Je confirme, dans L'Écho** — effets : tribunes ++, direction −, parole +1, promise, relation.lea +1 — *Elle écrit « Au local ». Le président lit L'Écho, pour une fois ; il « n'a pas le temps », il a lu quand même.*
@@ -761,11 +863,11 @@ Variante `flag('centre_ferme')` : « On n'entend plus les consignes, le centre e
 **Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vukic (2003-2008) | rouvier (2010+) · **Cast** : vukic, rouvier, le traducteur (voix), le gaucher (voix), lea, nassir · **Thème** : famille (léger)
 **Saisons** : "1", "2+" · **Conditions d'entrée** : `flag('scout_lointain') || flag('cellule_barbier') || flag('club_frere_pret')` · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `signe` → `etranger_signe` (« {annee} : un gaucher venu de loin a signé à {club}. Sa mère cuisine pour le vestiaire. ») → lue par ds.neuf_ou_trader (variante « tu as un gauche, enfin »), ds.klopf.lateral (∃ : variante « le gaucher de loin »), une.intouchable.gaucher · `reparti` → `etranger_reparti` → lue par ds.mercato (offre h07 : « il revient bronzé »), ch. 02 (`club_frere_pret`), ch. 20 · `adopte` → `etranger_adopte` (« {annee} : {ville} a adopté le gaucher de loin. L'Écho lui a ouvert une rubrique. ») → lue par ch. 14 (Brissac : « l'attaquant naturalisé, c'est le vôtre »), ch. 90 (mémoire des clubs +1), ch. 20
-**Séquencier** : neige (ouverture, [2,10], hiver de préférence) → mere [in 1,3] → juin (S+1 ou [in 5,9]).
+**Séquencier** : neige (ouverture, [2,10], hiver de préférence) → mere [in 1,3] → trois_mots [in 1,3] → juin (S+1 ou [in 5,9]).
 **Scènes** :
 
 ### SCÈNE ds.etranger.neige  —  La première neige
-**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 1/3 · **Moment** : ouverture tirée · **Lieu** : le parking, la neige, le gaucher en short, le traducteur en doudoune (celle de Barbier, prêtée) · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : le parking, la neige, le gaucher en short, le traducteur en doudoune (celle de Barbier, prêtée) · **Conditions** : —
 **VUKIĆ** *(adjoint — sourire — il a parlé au gaucher dans une langue que personne d'autre ne parle ici)*
 « Il ne comprend rien, sauf « gauche » et « froid », et il joue mieux que sur la cassette ; je te le dis parce que personne ne te le dira : il a peur, pas du froid, de nous. L'hôtel, ou chez moi ? »
 ← **Chez toi, Zoran** — effets : vestiaire ++, caisse −, relation.vukic +2, set: etranger_signe, outcome: signe — *Il dort chez Vukić deux mois. Il apprend « gauche », « froid » et « cahier ». Il joue en janvier ; il ne glisse pas.*
@@ -774,20 +876,31 @@ Variante `year >= 2010` (`coach_intouchable`) — **ROUVIER** (kiné des Cobalts
 **Traces** : etranger_signe, etranger_hotel · **Réactions déclenchées** : — · **Lu plus tard par** : ds.etranger.mere, ds.etranger.juin, ds.neuf_ou_trader, ch. 01
 
 ### SCÈNE ds.etranger.mere  —  Sa mère cuisine
-**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 2/3 · **Moment** : [1,3] · **Lieu** : la cantine du centre, une odeur qui n'est pas d'ici, tout le vestiaire assis, le traducteur qui traduit une recette · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 2/4 · **Moment** : [1,3] · **Lieu** : la cantine du centre, une odeur qui n'est pas d'ici, tout le vestiaire assis, le traducteur qui traduit une recette · **Conditions** : —
 **LE TRADUCTEUR** *(voix sans portrait — il traduit tout, y compris ce qu'on ne lui demande pas)*
 « Sa mère est arrivée hier avec deux valises de nourriture, directeur, et elle cuisine pour le vestiaire depuis six heures ; le capitaine dit qu'on mange ensemble, enfin. Elle reste, ou je traduis ? »
 ← **Elle reste, la cantine aussi** — effets : vestiaire ++, tribunes +, caisse −, set: mere_cantine, relation.rouvier −1 (le gras) — *Elle reste. Le vestiaire prend deux kilos et gagne trois matchs. Rouvier pèse ; elle ne dit rien, elle mange aussi.*
 → **Traduisez « hôtel »** — effets : vestiaire −, caisse +, set: mere_hotel — *Il traduit. Elle repart avec une valise vide. Le gaucher ne parle plus pendant un mois, dans aucune langue.*
 **Traces** : mere_cantine, mere_hotel · **Réactions déclenchées** : — · **Lu plus tard par** : ds.etranger.juin, une.intouchable.cantine, ch. 31 (anecdote)
 
+### SCÈNE ds.etranger.trois_mots  —  Trois ans, ou un an et je regarde
+**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 3/4 · **Moment** : [1,3] après mere · **Lieu** : ton bureau, le gaucher seul pour la première fois, sans traducteur, un dictionnaire de poche posé sur le contrat · **Conditions** : `flag('etranger_signe') || flag('etranger_hotel')`
+**LE GAUCHER** *(voix sans portrait — il parle lentement, il cherche les mots dans le dictionnaire avant de les dire ; il ne cherche pas « vendre »)*
+« Ma mère dit que vous êtes gentil, et le capitaine dit que vous vendez tout le monde, directeur ; j'ai compris les deux, je fais des progrès. Trois ans, ou un an et je regarde ? »
+← **Trois ans ; tu es d'ici** — effets : caisse −, vestiaire +, tribunes +, relation.vukic +1 (ou relation.rouvier, 2010+), set: etranger_trois_ans — *Il signe trois ans. Il apprend « d'ici » ; il le dit mal, exprès, le vestiaire adore. Le club frère note la date de fin.*
+→ **Un an, et on regarde** — effets : caisse +, direction +, vestiaire −, set: etranger_un_an — *Il signe un an. Il regarde. Le club frère aussi ; il regarde plus vite que toi, et il a un traducteur.*
+Variante `flag('mere_hotel')` : « Ma mère est repartie avec une valise vide, directeur, et je n'ai pas parlé pendant un mois, dans aucune langue ; maintenant je parle. Un an, et je regarde ? » — un bouton **Un an, et on regarde** — set: etranger_un_an, vestiaire − — *Un an. Il regarde surtout la porte.*
+Variante `flag('trader_assume')` : « Le capitaine dit que vous êtes « trader », j'ai cherché le mot, il n'est pas dans le dictionnaire ; trois ans, ou un an ? » — mêmes sorties, la droite pose aussi relation.vukic −1.
+**Traces** : etranger_trois_ans, etranger_un_an · **Réactions déclenchées** : — · **Lu plus tard par** : ds.etranger.juin (variantes : trois ans rend « il reste » moins cher, un an rend « il part » plus cher), ds.mercato h07, ch. 14 (Brissac : l'attaquant naturalisé, « trois ans chez vous, c'est le délai »), ch. 90 (mémoire des clubs), une.intouchable.gaucher
+
 ### SCÈNE ds.etranger.juin  —  Il revient bronzé, ou pas
-**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 3/3 · **Moment** : saison suivante ou [5,9] · **Lieu** : le parking, juin, une valise, la mère, L'Écho · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.etranger · **Étape** : 4/4 · **Moment** : saison suivante ou [5,9] · **Lieu** : le parking, juin, une valise, la mère, L'Écho · **Conditions** : —
 **LÉA** *(L'Écho — neutre — elle a une rubrique prête ; elle attend le titre)*
 « Le club frère, ou son pays, le reprend en juin, et {ville} lui a fait une banderole en deux langues ; vous confirmez qu'il part, ou vous confirmez qu'il reste ? »
 ← **Il reste, avec sa rubrique** — effets : tribunes ++, caisse −−, set: etranger_adopte, outcome: adopte, relation.lea +1 — *Il reste. La rubrique s'appelle « Le gaucher ». Sa mère y donne une recette par semaine ; Paulette les découpe.*
 → **Il part, il reviendra** — effets : caisse ++, tribunes −, vestiaire −, set: etranger_reparti, outcome: reparti, var: {ventes: "+{prix}"} — *Il part. Il revient en prêt l'hiver suivant, bronzé, avec une valise de nourriture. L'Écho rouvre la rubrique.*
 Variante `flag('mere_hotel')` : la gauche n'est pas proposée ; un bouton **Il part** — set: etranger_reparti — *Il part sans banderole. Sa mère n'était plus là pour la lire.*
+Variante `flag('etranger_trois_ans')` : la gauche coûte caisse − seulement (il a signé trois ans, le club frère paie la différence) ; variante `flag('etranger_un_an')` : la droite donne var: {ventes: "+{prix}"} × 2 (« un an, il regardait ; le club frère a regardé plus vite, et payé le double »).
 **Traces** : etranger_adopte, etranger_reparti · **Réactions déclenchées** : — · **Lu plus tard par** : ds.mercato h07, ch. 14, ch. 90, ch. 20
 **Épilogue** (abandon) : `journal: "{annee} : le gaucher de loin est resté à {club} plus longtemps que {nom}."`.
 
@@ -795,21 +908,22 @@ Variante `flag('mere_hotel')` : la gauche n'est pas proposée ; un bouton **Il p
 **Logline** : Le banc est vide ; le vestiaire vote Vukić, le président veut un grand nom, Fardelli représente le grand nom, et le fils de Clow a téléphoné. · **Synopsis** : Le coach est parti (la Vestrie, la démission, la notification). Tu nommes l'adjoint (∃ `ds.vukic.nomination`, ch. 01 : il garde le cahier, le président le vouvoie), un grand nom (Loco par Fardelli, avec une page trois et un seau ; ou Klopf, « l'entraîneur que tout le monde veut », 2017+), ou le fils de Clow (qui refuse ta lignée si `clow_ingrat`). Le grand nom coûte la page deux ; l'adjoint coûte la Une ; le fils coûte une dette qu'on ne date pas. Le nommé a une première conférence ; Ménèche note le silence.
 **Rôle(s)** : ds · **Postulat(s)** : partagé · **Porteur** : vukic | fardelli · **Cast** : vukic, fardelli, le fils de Clow (voix), aulard/nassir, meneche, loco/klopf · **Thème** : direction
 **Saisons** : "1", "2+" · **Conditions d'entrée** : `flag('klopf_parti_vestrie') || flag('coach_demission') || flag('loco_vire') || chars.<coach>.statut != 'staff'` · **Rejouabilité** : replay {after: 1, max: 3} (on nomme souvent)
-**Issues** → **Traces** → **Qui les lit** : `adjoint` → `vukic_numero_un` (∃ ch. 01) → lue par ds.neuf_ou_trader (Vukić démissionne si le président le vouvoie trois fois : variante `vukic`), ch. 01, ch. 30 (ds_fronde) · `grand_nom` → `grand_nom_nomme` (« {annee} : {club} a nommé un grand nom, par Fardelli. Le seau est arrivé avant le contrat. ») → lue par ds.commission_occulte (variante « l'agent du coach »), ch. 01 (`co.loco_cassette`), ch. 13 (le postulat « Le coach-cassette »), une.vendre.grand_nom, ds_architecte (epitaph_plus) · `fils` → `fils_clow_nomme` (« {annee} : Owen Clow, le fils, nommé à {club}. Il ne dirait pas que son père était le meilleur ; il a le banc. ») → lue par ch. 01 (le fils de Clow), ch. 11 (`clow_ingrat` : il refuse), ch. 20
-**Séquencier** : vote (ouverture, [1,4]) → nomination (∃ `ds.vukic.nomination` si adjoint, [in 1,2]) | grand_nom [in 1,3] | fils [in 1,3] → conference [in 2,4].
+**Issues** → **Traces** → **Qui les lit** : `adjoint` → `vukic_numero_un` (∃ ch. 01) → lue par ds.neuf_ou_trader (Vukić démissionne si le président le vouvoie trois fois : variante `vukic`), ch. 01, ch. 30 (ds_fronde) · `grand_nom` → `grand_nom_nomme` (« {annee} : {club} a nommé un grand nom, par Fardelli. Le seau est arrivé avant le contrat. ») → lue par ds.commission_occulte (variante « l'agent du coach »), ch. 01 (`co.loco_cassette`), ch. 13 (le postulat « Le coach-cassette »), une.vendre.grand_nom, ds_architecte (epitaph_plus) · `fils` → `fils_clow_nomme` (« {annee} : Owen Clow, le fils, nommé à {club}. Il ne dirait pas que son père était le meilleur ; il a le banc. ») → lue par ch. 01 (le fils de Clow), ch. 11 (`clow_ingrat` : il refuse), ch. 20 · `vire` → `coach_vire_par_ds` (« {annee} : {prenom} {nom} a envoyé le SMS de 23 h 47 au coach qu'{pg, select, f{elle} other{il}} avait nommé. Sans la faute. ») → lue par ch. 01 (Vukić, retrouvailles `_noir`), ch. 11 (`en_sms` epitaph_plus), ch. 13 (`coach_vire`), ch. 90 (Nemesis Vukić), une.vendre.sms
+**Séquencier** : vote (ouverture, [1,4]) → nomination (∃ `ds.vukic.nomination` si adjoint, [in 1,2]) | grand_nom [in 1,3] | fils [in 1,3] → conference [in 2,4] → sms [in 3,8, `if: gauges.tribunes < 45`, jamais en S0 : le SMS de 23 h 47, côté DS].
 **Scènes** :
 
 ### SCÈNE ds.nommer.vote  —  Le vestiaire vote
-**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 1/4 · **Moment** : ouverture tirée · **Lieu** : ton bureau, une feuille pliée passée sous la porte : onze signatures, un nom · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 1/5 · **Moment** : ouverture tirée · **Lieu** : ton bureau, une feuille pliée passée sous la porte : onze signatures, un nom · **Conditions** : —
 **VUKIĆ** *(adjoint — neutre — il a vu la feuille passer ; il ne l'a pas signée)*
-« Le vestiaire a voté, directeur, onze voix pour moi, et je ne les ai pas demandées ; je te le dis parce que personne ne te le dira : un vestiaire qui vote son coach le vire. Tu suis, ou tu cherches ? »
+« Le vestiaire a voté, onze voix pour moi, et je ne les ai pas demandées ; je te le dis parce que personne ne te le dira : un vestiaire qui vote son coach le vire. Tu suis, ou tu cherches ? »
 ← **Je suis le vote** — effets : vestiaire ++, direction −, next: {step: nomination, in: [1,2]} — *Tu le nommes lundi (∃ `ds.vukic.nomination`). Le président le vouvoie. Trois fois, c'est une démission ; il compte.*
 → **Je cherche ailleurs** — effets : vestiaire −, direction +, relation.vukic −1, next: [{step: fils, if: "!flag('clow_ingrat') && year >= 2005", in: [1,3]}, {step: grand_nom, in: [1,3]}] — *Il replie la feuille. Il la garde dans le cahier. Il la ressortira à la première défaite du suivant.*
 Variante `flag('interim_ds')` : « Tu as goûté au banc trois matchs, directeur ; je te le dis parce que personne ne te le dira : tu n'as pas aimé. Onze voix pour moi : tu suis ? » — mêmes sorties.
+Variante `flag('coach_vire_par_ds')` (replay : tu as déjà envoyé le SMS à un coach que tu avais nommé) : **VUKIĆ** (noir, au téléphone, depuis un autre banc) : « Le vestiaire a voté, et cette fois ce n'est pas pour moi, je suis à Néville ; je te le dis parce que personne ne te le dira : celui que tu nommes lit ses SMS. Tu suis le vote, ou tu cherches ? » — mêmes sorties, la gauche n'appelle pas `ds.vukic.nomination` mais `grand_nom` ou `fils`.
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : ds.nommer.conference, ch. 01
 
 ### SCÈNE ds.nommer.grand_nom  —  Le grand nom, avec seau
-**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 2/4 · **Moment** : [1,3] · **Lieu** : un hôtel, Fardelli, un contrat, et, dans le couloir, un seau · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 2/5 · **Moment** : [1,3] · **Lieu** : un hôtel, Fardelli, un contrat, et, dans le couloir, un seau · **Conditions** : —
 **FARDELLI** *(agent — sourire — il représente le coach ; il le dit comme on annonce une naissance)*
 « Marcelo Loco est libre, {toi}, il veut un club où on le laisse s'asseoir où il veut ; deux ans, une page trois, et une commission qui n'est pas pour toi. Mon ami, on parle d'argent ou d'amitié ? »
 ← **D'argent : Loco, deux ans** — effets : caisse −−, tribunes ++, vestiaire −, set: grand_nom_nomme, outcome: grand_nom, char: {loco: {statut: staff}}, world: {coach: loco} — *Il signe. Le seau arrive avant lui. Le président le vénère dès la première cassette ; tu es le fusible, cette fois pour de bon.*
@@ -818,7 +932,7 @@ Variante `year >= 2017` : le grand nom est Klopf (« l'entraîneur que tout le m
 **Traces** : grand_nom_nomme · **Réactions déclenchées** : ds.re.loco_cassette (§ 6, après ←) · **Lu plus tard par** : ds.nommer.conference, ds.commission_occulte, ch. 01, ch. 13
 
 ### SCÈNE ds.nommer.fils  —  Le fils de Clow
-**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 3/4 · **Moment** : [1,3] · **Lieu** : ton bureau, le téléphone, un homme de quarante ans qui a la voix de son père et pas ses phrases · **Conditions** : `!flag('clow_ingrat') && year >= 2005`
+**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 3/5 · **Moment** : [1,3] · **Lieu** : ton bureau, le téléphone, un homme de quarante ans qui a la voix de son père et pas ses phrases · **Conditions** : `!flag('clow_ingrat') && year >= 2005`
 **LE FILS DE CLOW** *(voix sans portrait — Owen Clow ; il entraîne en National, il attend un banc de D1)*
 « Mon père m'a parlé de vous, en bien, ce qui n'arrivait pas ; je ne dirais pas que j'étais le meilleur en National, mais j'y étais. Vous me donnez le banc, ou vous me devez un café ? »
 ← **Le banc, Owen** — effets : vestiaire +, tribunes +, direction −, set: fils_clow_nomme, outcome: fils, world: {coach: fils_clow} — *Il prend le banc. Il ne boit pas. Il gagne son premier match ; il regarde le ciel, pas la tribune.*
@@ -827,12 +941,22 @@ Variante `flag('clow_ingrat')` : la scène est remplacée par une réaction : «
 **Traces** : fils_clow_nomme, fils_clow_refuse · **Réactions déclenchées** : — · **Lu plus tard par** : ds.nommer.conference, ch. 01 (Clow), ch. 11, ch. 90 (lignée : « le fils de Clow a refusé ta lignée »)
 
 ### SCÈNE ds.nommer.conference  —  La première conférence du nommé
-**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 4/4 · **Moment** : [2,4] · **Lieu** : la salle de presse, le nommé à la table, toi à côté pour une fois, Ménèche au premier rang · **Conditions** : —
+**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 4/5 · **Moment** : [2,4] · **Lieu** : la salle de presse, le nommé à la table, toi à côté pour une fois, Ménèche au premier rang · **Conditions** : —
 **MÉNÈCHE** *(consultant — neutre — il regarde le nommé, puis toi, puis le nommé)*
-« Le nouveau coach vient de dire qu'il n'a « rien demandé » au mercato, et vous êtes assis à côté de lui, ce qui est nouveau ; juste une question, hors micro : c'est votre coach, ou celui du président ? »
+« Le nouveau coach vient de dire qu'il n'a « rien demandé » au mercato, et vous êtes assis à côté de lui ; juste une question, hors micro : c'est votre coach, ou celui du président ? »
 ← **Le mien ; je l'ai choisi** — effets : vestiaire +, direction −, tribunes +, parole +1, set: coach_du_ds — *Il note « le sien ». Le président lit « le sien » le lendemain ; il souligne, et ce n'est pas un compliment.*
 → **Celui du club** — effets : direction +, vestiaire −, parole −1 — *Il note « du club ». Le nommé te regarde ; il a compris qui le vire, le jour venu.*
 **Traces** : coach_du_ds · **Réactions déclenchées** : ds.re.meneche_vitre (§ 6, après ←) · **Lu plus tard par** : ds_fronde et ds_commun_accord (epitaph_plus : « c'était son coach »), ch. 13 (`coach_vire` : « le président a viré le coach du DS »), une.vendre.le_sien
+### SCÈNE ds.nommer.sms  —  Le SMS de 23 h 47, côté DS
+**Rôle** : ds · **Intrigue** : ds.nommer_le_coach · **Étape** : 5/5 · **Moment** : [3,8] après conference, jamais en S0 · **Lieu** : ton bureau, 23 h 47, le téléphone, le cahier de Vukić oublié sur la chaise, trois défaites sur la feuille de Josiane · **Conditions** : `(world.coach == 'vukic' || flag('coach_du_ds')) && gauges.tribunes < 45`
+**AULARD** *(par téléphone — noir — il lit un SMS à voix haute ; il bute sur la faute)*
+« Le coach que tu as nommé a perdu trois fois, et mon fils a tapé le SMS, avec une faute, c'est de famille ; j'ai pas le temps, j'ai un empire. Tu l'envoies, ou je l'envoie et je te mets dedans ? »
+← **Je l'envoie, sans la faute** — effets : vestiaire −−, direction +, tribunes +, relation.vukic −2, set: coach_vire_par_ds, char: {vukic: {statut: parti}}, next: {step: vote, in: [1,3]} (replay : on renomme) — *Tu l'envoies à 23 h 47. Sans la faute ; il la remarque, c'est ce qui le blesse. Le cahier reste sur la chaise ; personne n'ose l'ouvrir.*
+→ **Il reste, et moi avec lui** — effets : direction −−, vestiaire ++, relation.vukic +2, parole +1, promise, set: coach_garde_contre_president — *Il reste. Le président compte les matchs ; le vestiaire aussi, dans l'autre sens. Vukić te le dit : personne ne te l'aurait dit.*
+Variante `world.president == 'nassir'` : « L'actif clarifie sa gouvernance, {toi}, et cette fois c'est le coach que vous avez choisi ; la notification est prête, il manque un nom en bas. Ce n'est pas un club, c'est un actif : le vôtre, ou le mien ? » — ← **Le mien ; je l'envoie** — set: coach_vire_par_ds, char: {<coach>: {statut: parti}}, direction + · → **Le vôtre, alors** — direction −−, set: coach_garde_contre_president — *Il signe lui-même. Il n'aime pas ça ; il aime encore moins que tu l'aies vu.*
+Variante `world.coach == 'fils_clow'` : le fils de Clow à la place de Vukić ; la gauche pose aussi `fils_clow_vire` (ch. 01 : « vous avez viré le fils comme on a viré le père, en quarante-quatre jours »).
+**Traces** : coach_vire_par_ds (« {annee} : {prenom} {nom} a envoyé le SMS de 23 h 47 au coach qu'{pg, select, f{elle} other{il}} avait nommé. Sans la faute. »), coach_garde_contre_president, fils_clow_vire · **Réactions déclenchées** : ds.re.aulard_23h47 (§ 6, après →) · **Lu plus tard par** : ds.nommer.vote (replay : variante « tu as déjà envoyé un SMS »), ch. 01 (Vukić : retrouvailles `_noir` si `coach_vire_par_ds` ; « je te le dis parce que personne ne te le dira : tu l'as envoyé toi-même »), ch. 11 (`en_sms` epitaph_plus : « un DS l'a envoyé une fois, sans la faute »), ch. 13 (`coach_vire` : le président qui délègue le SMS à son DS), ch. 90 (Nemesis Vukić), ds_fronde et ds_homme_president (epitaph_plus), une.vendre.sms
+
 **Épilogue** (abandon) : `journal: "{annee} : le banc de {club} est resté vide un mois. {nom} est parti{pg, select, f{e} other{}} avant de nommer."` ; `vestiaire: "-"`.
 
 ---
@@ -873,13 +997,13 @@ Anecdote de sous-paquet (§ 4.9) : **12.fax_faute** — carte-légende · `ds.fa
 ## 6. Les réactions (dix)
 
 ### RÉACTION ds.re.klopf_court  —  Il court déjà
-**Après** : ds.vendre.a1 (←), ds.commission.bulldozer (←), ds.neuf.feuille (←), ds.sponsor.recrue (←) · **Famille** : conséquence immédiate · **Conditions** : `world.coach == 'klopf'`
+**Après** : ds.vendre.a1_page_deux (←), ds.commission.bulldozer (←), ds.neuf.feuille (←), ds.sponsor.recrue (←) · **Famille** : conséquence immédiate · **Conditions** : `world.coach == 'klopf'`
 **KLOPF** *(entraîneur — sourire — il passe devant ton bureau en courant, il ne s'arrête pas)*
 « Il est arrivé, il court déjà, et il chante faux, on va arranger ça. On court, on presse, on chante ! »
 **Bonne course** — effets : vestiaire + — *Il est déjà loin. La recrue aussi ; elle suit, elle a compris le principe.*
 
 ### RÉACTION ds.re.loco_cassette  —  La cassette du lendemain
-**Après** : ds.intouchable.a1 (←), ds.commission.bulldozer (←), ds.neuf.feuille (←), ds.nommer.grand_nom (←) · **Famille** : conséquence immédiate · **Conditions** : `world.coach == 'loco'`
+**Après** : ds.intouchable.a1_cassette (←), ds.commission.bulldozer (←), ds.neuf.feuille (←), ds.nommer.grand_nom (←) · **Famille** : conséquence immédiate · **Conditions** : `world.coach == 'loco'`
 **LOCO** *(entraîneur — neutre — il ne parle pas ; la petite Josiane pose une cassette sur ton bureau de sa part)*
 « Regardez la cassette. » *(c'est écrit sur l'étiquette ; il n'y a rien d'autre)*
 **Je la regarde** — effets : relation.loco +1 — *Trois minutes d'un joueur que tu viens d'acheter, sous la pluie, en 1997. Il était bon. Il ne l'est plus ; Loco le savait.*
@@ -891,20 +1015,20 @@ Anecdote de sous-paquet (§ 4.9) : **12.fax_faute** — carte-légende · `ds.fa
 **Il pleuvait, oui** — effets : relation.barbier +1 — *Il raccroche. Il retourne sous la pluie ; il y a un gamin.*
 
 ### RÉACTION ds.re.aulard_23h47  —  23 h 47
-**Après** : ds.vendre.a4 (→), ds.beau_frere.telephone (→) · **Famille** : relance · **Conditions** : `relation.aulard <= 0`
+**Après** : ds.vendre.a4_deux_discours (→), ds.beau_frere.telephone (→) · **Famille** : relance · **Conditions** : `relation.aulard <= 0`
 **AULARD** *(par téléphone — noir — il n'a pas dit bonjour)*
 « J'ai pas le temps, j'ai un empire, et j'ai une minute : tu m'expliques, ou tu m'expliques par écrit ? »
 **Par écrit** — effets : direction − — *Josiane tape. Elle en garde une copie ; c'est la troisième cette saison.*
 **Maintenant, une minute** — effets : direction +, relation.aulard +1 — *Une minute. Il en prend douze. Il raccroche sur « mon {prenom} » ; c'est mauvais signe.*
 
 ### RÉACTION ds.re.fils_aulard_papier  —  Sur le papier
-**Après** : ds.vendre.r3 (←), alarme `direction.low` (variante) · **Famille** : tiers qui commente · **Conditions** : `world.president == 'aulard'`
+**Après** : ds.vendre.r3_fils_signe (←), alarme `direction.low` (variante) · **Famille** : tiers qui commente · **Conditions** : `world.president == 'aulard'`
 **LE FILS D'AULARD** *(voix sans portrait — il a téléphoné lui-même, c'est rare)*
 « Mon père a rappelé pour demander qui avait signé, et j'ai dit « le président », et il a ri. Je voulais que vous le sachiez : c'est la première fois qu'il rit de moi gentiment. »
 **Merci de l'appel** — effets : direction + — *Il raccroche vite. Il n'a pas l'habitude de raccrocher en premier.*
 
 ### RÉACTION ds.re.mbako_maintenant  —  Maintenant
-**Après** : ds.intouchable.a2 (←) · **Famille** : conséquence immédiate · **Conditions** : `chars.mbako.statut == 'club'`
+**Après** : ds.intouchable.a2_vingt_kilometres (←) · **Famille** : conséquence immédiate · **Conditions** : `chars.mbako.statut == 'club'`
 **MBAKO** *(capitaine — noir — dans le couloir, il ne s'arrête pas)*
 « Je veux jouer. Maintenant, tu as dit « cours ». Je cours. »
 **Cours** — effets : vestiaire − — *Il court. Il marque au derby. Il ne regarde pas le banc ; il ne regarde pas ton bureau.*
@@ -930,41 +1054,71 @@ Anecdote de sous-paquet (§ 4.9) : **12.fax_faute** — carte-légende · `ds.fa
 **Le direct, pas le nom** — effets : tribunes −, direction + — *Elle rit en direct. C'est rare ; c'est un mème, en 2007.*
 
 ### RÉACTION ds.re.dembo_plateau  —  Le Plateau du dimanche
-**Après** : ds.intouchable.a3 (→) · **Famille** : tiers qui commente · **Conditions** : `year >= 2010 && chars.dembo.statut == 'retraite'`
+**Après** : ds.intouchable.a3_notification (→) · **Famille** : tiers qui commente · **Conditions** : `year >= 2010 && chars.dembo.statut == 'retraite'`
 **DEMBO** *(consultant Télé-Stade — neutre — depuis le Plateau, on l'entend à la radio de ta voiture)*
 « Le DS a lâché Loco, on est en direct, pardon, c'est la phrase de Nathalie ; donne-moi le ballon, je m'occupe du reste : le reste, c'est qu'un fusible ne lâche pas, il saute. »
 **Éteins la radio** — effets : tribunes − — *Tu éteins. Le lendemain, la Gazette cite la phrase. Elle est bonne ; c'est le problème.*
 
-## 7. Les manchettes (vingt-quatre)
+## 7. Les manchettes (cinquante-quatre : trente-quatre pour `vendre_trente`, vingt pour `coach_intouchable`)
 
 Priorités : 4 (titre/descente/changement de rôle), 3 (trace forte de la saison, `journal_has`), 2 (trace ordinaire ou état), 1 (générique), 0 (secours : `une.generic.*` existantes). `{NOM}` ou `{CLUB}`/`{VILLE}` dans une manchette sur deux ; ≤ 44 caractères rendus (test : BRÉHAUT-LEMOINE / SAINT-ÉTOILE).
 
 | id | Journal | Prio | Condition | Titre | Sous-titre · Brève suggérée · Photo · Réaction |
 |---|---|---|---|---|---|
-| `une.vendre.trente` | quotidien | 3 | `journal_has('trente_tenus')` | TRENTE MILLIONS, PAGE DEUX TENUE | « Le coach l'a appris en juin », dit Josiane, qui en a vu passer. · brève : la page deux · photo : ds.vendre.a4 · react : co.re.josiane_a_lu (`!seen`) |
-| `une.vendre.manque` | gazette | 3 | `journal_has('trente_manques')` | {NOM} N'A PAS FAIT LA PAGE DEUX | Le Rosé note le DS 7/20 : « il a gardé son capitaine pour un match ». · brève : les deux discours · photo : ds.vendre.a4 · react : co.re.gege_decoupe |
+| `une.vendre.trente` | quotidien | 3 | `journal_has('trente_tenus')` | TRENTE MILLIONS, PAGE DEUX TENUE | « Le coach l'a appris en juin », dit Josiane, qui en a vu passer. · brève : la page deux · photo : ds.vendre.a4_deux_discours · react : co.re.josiane_a_lu (`!seen`) |
+| `une.vendre.manque` | gazette | 3 | `journal_has('trente_manques')` | {NOM} N'A PAS FAIT LA PAGE DEUX | Le Rosé note le DS 7/20 : « il a gardé son capitaine pour un match ». · brève : les deux discours · photo : ds.vendre.a4_deux_discours · react : co.re.gege_decoupe |
 | `une.vendre.petit` | echo | 3 | `journal_has('petit_vendu')` | LE PETIT EST PARTI SANS QU'ON LUI DEMANDE | Rubrique « Au local » : sa mère a lu la clause ; le vestiaire a lu son casier. · brève : Dembo à la gare · photo : ds.petit.offre |
 | `une.vendre.frais` | gazette | 3 | `journal_has('commission_denoncee')` | DEUX MILLIONS SANS ADRESSE À {VILLE} | La Plume a les documents ; Fardelli « ne parle plus ». · brève : la facture des frais · photo : ds.commission.fax_frais |
 | `une.vendre.ligne` | quotidien | 3 | `journal_has('commission_occulte')` | {VILLE} A DES FRAIS. QUI LES TOUCHE ? | L'Inspecteur « ne juge pas, elle compte » ; elle a compté une île. · brève : la ligne · photo : ds.commission.bulldozer |
-| `une.vendre.casquette` | quotidien | 3 | `journal_has('klopf_parti_vestrie')` | KLOPF S'EN VA CHANTER EN VESTRIE | « On court, on presse, on chante » : là-bas, ils chantent déjà. {NOM} cherche un banc. · brève : la casquette sur le tableau de bord · photo : ds.vendre.r1 |
+| `une.vendre.casquette` | quotidien | 3 | `journal_has('klopf_parti_vestrie')` | KLOPF S'EN VA CHANTER EN VESTRIE | « On court, on presse, on chante » : là-bas, ils chantent déjà. {NOM} cherche un banc. · brève : la casquette sur le tableau de bord · photo : ds.vendre.r1_rentree_vestrie |
 | `une.vendre.sifflet` | gazette | 3 | `journal_has('coach_demission')` | LE COACH A RENDU LE SIFFLET AU TRADER | Le DS sur le banc trois matchs ; le Rosé lui donne une chaise, pas une note. · brève : le seau sur le bureau · photo : ds.neuf.demission |
 | `une.vendre.soixante` | quotidien | 3 | `journal_has('dembo_vendu')` | SOIXANTE MILLIONS ET UN AMI DE MOINS | Dembo au désert à trente-sept ans ; « donne-moi le ballon », a-t-il dit au parking. · brève : la carte postale · photo : ds.ami.fax_desert |
 | `une.vendre.beau_frere` | gazette | 2 | `journal_has('recrue_du_president')` | LE BEAU-FRÈRE A RECRUTÉ POUR {VILLE} | Un attaquant de Roquemont, une fiche de paie, douze matchs en quatre ans. · brève : « qui ? » · photo : ds.beau_frere.lundi |
 | `une.vendre.vitre` | gazette | 2 | `journal_has('nom_lache')` | {NOM} PARLE AUX VITRES | Le nom a monté de dix pour cent avant la sortie du parking. · brève : le bandeau · photo : ds.vitre.parking |
 | `une.vendre.fax` | echo | 2 | `journal_has('fax_rate')` | LE FAX DE {VILLE} EST PARTI À 23 H 59 | Celui de l'autre à 23 h 58 ; Josiane a l'accusé, elle le garde. · brève : la page trois en route · photo : ds.fax.vingt_trois_quarante · react : co.re.josiane_a_vu_le_fax |
 | `une.vendre.lettre` | quotidien | 3 | `journal_has('commission_lettre')` | {VILLE} A DES DETTES. LA LETTRE EST LÀ | Deux soldes, une lettre, un DS qui « prend la ligne ». · brève : ligne douze · photo : ds.masse_salariale.lettre |
-| `une.vendre.fils` | echo | 2 | `journal_has('fils_aulard_signe')` | LE FILS A SIGNÉ. LE PÈRE A RAPPELÉ | Rubrique « Au local » : « il me dit bonjour », a dit le président. · brève : le stylo · photo : ds.vendre.r3 |
+| `une.vendre.fils` | echo | 2 | `journal_has('fils_aulard_signe')` | LE FILS A SIGNÉ. LE PÈRE A RAPPELÉ | Rubrique « Au local » : « il me dit bonjour », a dit le président. · brève : le stylo · photo : ds.vendre.r3_fils_signe |
 | `une.vendre.rayee` | gazette | 2 | `journal_has('page_deux_rayee')` | IL A RAYÉ LA PAGE DEUX DU PRÉSIDENT | Josiane témoin ; Aulard « n'a pas le temps ». Le Rosé : 14/20. · photo : ds.vendre.s2_nouveau_contrat |
 | `une.vendre.tableur` | echo | 1 | `flag('cellule_barbier') && season >= 1` | À {VILLE}, LA DOUDOUNE BAT LE TABLEUR | Barbier a soixante-dix ans et un carnet ; le stagiaire a une fenêtre. · photo : ds.cellule.tableur |
-| `une.intouchable.cassette` | gazette | 2 | `journal_has('cassette_refusee')` | LE DS NE REGARDE PAS LES CASSETTES | Loco ne lui dit pas bonjour ; le vestiaire compte les jours. · photo : ds.intouchable.a1 |
-| `une.intouchable.vingt` | quotidien | 3 | `journal_has('vingt_km_couverts')` | VINGT KILOMÈTRES AVANT LE DERBY | Le capitaine a demandé ; le DS a couvert ; Loco a envoyé une cassette. · brève : Mbako assis par terre · photo : ds.intouchable.a2 · react : co.re.gege_decoupe |
-| `une.intouchable.fusible` | quotidien | 4 | `journal_has('fusible_saute')` | {NOM} SAUTE, LOCO GARDE LE SEAU | « D'un commun accord », dit le communiqué de trois lignes. Le vestiaire a affiché le nom. · photo : ds.intouchable.a3 |
-| `une.intouchable.notification` | gazette | 4 | `journal_has('loco_vire')` | LOCO VIRÉ PAR NOTIFICATION | Le DS a proposé son nom ; le Rosé propose le sien. Dembo, sur le Plateau : « un fusible saute ». · photo : ds.intouchable.a3 · react : ds.re.dembo_plateau |
-| `une.intouchable.courbe` | quotidien | 2 | `journal_has('courbe_ds')` | LA COURBE, C'EST {NOM} | Le rapport de l'Union parle de commissions ; le DS parle de lui. · photo : ds.intouchable.a4 · react : co.re.vialat_recompte |
-| `une.intouchable.dernier` | echo | 3 | `journal_has('mbako_dernier_ici')` | MBAKO FINIT ICI. SA MÈRE VOULAIT LE SOLEIL | Rubrique « Au local » : il a marqué contre {rival} en mars ; la statue commence là. · photo : ds.intouchable.r2 |
-| `une.intouchable.architecte` | quotidien | 4 | `journal_has('architecte_parti')` | L'ARCHITECTE DE {VILLE} S'ASSIED | « Douze clubs, une table » : il s'assoit. Le seau reste. · photo : ds.intouchable.r3 |
+| `une.intouchable.cassette` | gazette | 2 | `journal_has('cassette_refusee')` | LE DS NE REGARDE PAS LES CASSETTES | Loco ne lui dit pas bonjour ; le vestiaire compte les jours. · photo : ds.intouchable.a1_cassette |
+| `une.intouchable.vingt` | quotidien | 3 | `journal_has('vingt_km_couverts')` | VINGT KILOMÈTRES AVANT LE DERBY | Le capitaine a demandé ; le DS a couvert ; Loco a envoyé une cassette. · brève : Mbako assis par terre · photo : ds.intouchable.a2_vingt_kilometres · react : co.re.gege_decoupe |
+| `une.intouchable.fusible` | quotidien | 4 | `journal_has('fusible_saute')` | {NOM} SAUTE, LOCO GARDE LE SEAU | « D'un commun accord », dit le communiqué de trois lignes. Le vestiaire a affiché le nom. · photo : ds.intouchable.a3_notification |
+| `une.intouchable.notification` | gazette | 4 | `journal_has('loco_vire')` | LOCO VIRÉ PAR NOTIFICATION | Le DS a proposé son nom ; le Rosé propose le sien. Dembo, sur le Plateau : « un fusible saute ». · photo : ds.intouchable.a3_notification · react : ds.re.dembo_plateau |
+| `une.intouchable.courbe` | quotidien | 2 | `journal_has('courbe_ds')` | LA COURBE, C'EST {NOM} | Le rapport de l'Union parle de commissions ; le DS parle de lui. · photo : ds.intouchable.a4_bilan_actif · react : co.re.vialat_recompte |
+| `une.intouchable.dernier` | echo | 3 | `journal_has('mbako_dernier_ici')` | MBAKO FINIT ICI. SA MÈRE VOULAIT LE SOLEIL | Rubrique « Au local » : il a marqué contre {rival} en mars ; la statue commence là. · photo : ds.intouchable.r2_mbako_dernier |
+| `une.intouchable.architecte` | quotidien | 4 | `journal_has('architecte_parti')` | L'ARCHITECTE DE {VILLE} S'ASSIED | « Douze clubs, une table » : il s'assoit. Le seau reste. · photo : ds.intouchable.r3_bilan_deux_monuments |
 | `une.intouchable.seau` | echo | 3 | `journal_has('loco_parti_propre')` | LOCO A DONNÉ LE SEAU | Une cassette vierge pour le DS ; « c'est le plus beau message ». · photo : ds.intouchable.s2_loco_retraite |
 | `une.intouchable.audit` | gazette | 3 | `journal_has('noms_cherches')` | TROIS COMMISSIONS, UNE ÎLE, UN BUREAU | L'Inspecteur cherche ; La Plume a déjà trouvé. Le quatrième nom est sur une porte. · photo : ds.bloque.audit |
+| `une.vendre.page_deux` | quotidien | 2 | `journal_has('page_deux_signee') && season == 0` | TRENTE MILLIONS À LA PAGE DEUX | Le contrat du DS de {VILLE} a une page deux ; le coach « n'a pas lu », dit le président, qui « n'a pas le temps ». · photo : ds.vendre.a1_page_deux |
+| `une.vendre.moitie` | echo | 2 | `journal_has('coach_pas_prevenu')` | L'HIVER, ON VEND MOINS CHER | Rubrique « Au local » : Josiane a fait le compte deux fois ; il manque la moitié, et le coach ne sait pas qu'il y a un compte. · photo : ds.vendre.a2_compteur |
+| `une.vendre.nuit` | gazette | 3 | `journal_has('capitaine_vendu_nuit')` | LE CAPITAINE VENDU À 23 H 51 | Il l'a appris au distributeur, en tenue de match. « D'argent », a dit l'agent. Le Rosé : 3/20. · photo : ds.vendre.a3_dernier_fax · react : co.re.gege_decoupe |
+| `une.vendre.neuf` | quotidien | 2 | `journal_has('neuf_achete')` | {VILLE} A SON 9. LE COACH A DIT MERCI | Huit millions, une tête, et un « merci au directeur sportif », inédit dans cette salle de presse. · photo : ds.neuf.feuille |
+| `une.vendre.trader` | gazette | 2 | `journal_has('trader_assume')` | DS OU TRADER ? LE COACH A TRANCHÉ | Un ailier de dix-neuf ans pour la revente ; le Rosé note le sourire du coach 18/20, « c'est celui des finales ». · photo : ds.neuf.conference |
+| `une.vendre.banc` | echo | 3 | `journal_has('interim_ds')` | LE DS SUR LE BANC, TROIS DIMANCHES | Rubrique « Au local » : il a signé la compo de Vukić, ou l'a changée ; le cahier était ouvert, le seau était rangé. · photo : ds.neuf.interim |
+| `une.vendre.contre` | echo | 2 | `flag('petit_vendu') && season >= 1` | LE PETIT A MARQUÉ CONTRE {VILLE} | Il n'a pas célébré. Sa mère a lu la clause ; L'Écho a lu son visage. · photo : ds.petit.contre_toi |
+| `une.vendre.sponsor` | gazette | 2 | `journal_has('recrue_du_sponsor')` | DOUZE MINUTES DE SPONSOR À {VILLE} | Un coup franc dans le mur ; le sponsor compte les minutes, le virage compte le DS. Variante `recrue_imposee` : « QUATRE-VINGT-DIX MINUTES DE SPONSOR ». · photo : ds.sponsor.douze_minutes |
+| `une.vendre.bache` | gazette | 3 | `journal_has('bache_ds')` | « DS = DÉMISSION SPORTIVE », VINGT MÈTRES | Le cousin de Gégé a fait un prix ; Ménèche a filmé. Le DS « signe quelqu'un vendredi ». · photo : ds.sponsor.douze_minutes · react : co.re.gege_decoupe |
+| `une.vendre.coupe` | quotidien | 2 | `journal_has('masse_coupee')` | {VILLE} COUPE UN SALAIRE. ÇA TIENT | L'Inspecteur a recompté : juste, à trois mille près. Un casier vide lundi ; le capitaine « défend lui-même ». · photo : ds.masse_salariale.vialat_recompte |
+| `une.vendre.plus_value` | quotidien | 2 | `journal_has('beau_frere_retourne')` | LA RECRUE DU BEAU-FRÈRE VENDUE LE DOUBLE | « Bien joué », a dit le président, sans sourire ; le beau-frère l'avait « flairé ». · photo : ds.beau_frere.janvier |
+| `une.vendre.radio` | gazette | 2 | `journal_has('nom_lache') && journal_has('fax_rate')` | LE PRÉSIDENT ENGUEULE SON DS À LA RADIO | « Qu'il paie la différence » : Radio Tribune, 22 h 10, Gégé riait derrière. Le fax n'est pas parti. · photo : ds.vitre.radio |
+| `une.vendre.minuit` | echo | 2 | `journal_has('fax_derogation')` | DÉROGATION À MINUIT ET UNE POUR {VILLE} | Dauzat a dit « page 41 » ; il a dit oui. Josiane a l'accusé, et la dette. · photo : ds.fax.accuse |
+| `une.vendre.grand_nom` | quotidien | 3 | `journal_has('grand_nom_nomme')` | LOCO ARRIVE À {VILLE}. LE SEAU AUSSI | Deux ans, une page trois, et une commission « qui n'est pas pour le DS ». Variante `year >= 2017` : « KLOPF ARRIVE À {VILLE}. LA CASQUETTE AUSSI ». · photo : ds.nommer.grand_nom · react : ds.re.loco_cassette |
+| `une.vendre.le_sien` | gazette | 2 | `journal_has('coach_du_ds')` | « C'EST MON COACH », DIT LE DS | Le président a souligné « le sien » ; ce n'est pas un compliment, note le Rosé, qui souligne aussi. · photo : ds.nommer.conference |
+| `une.vendre.sms` | gazette | 3 | `journal_has('coach_vire_par_ds')` | LE DS A ENVOYÉ LE SMS DE 23 H 47 | Sans la faute, cette fois ; le coach l'a remarqué. Le Rosé : « le fusible a viré le fusible ». · photo : ds.nommer.sms · react : ds.re.aulard_23h47 (`relation.aulard <= 0`) |
+| `une.vendre.feuille` | echo | 1 | `plays('ds.vendre.s2_compteur_rituel') >= 2` | JOSIANE N'A PLUS DE PLACE SUR LA FEUILLE | Trois colonnes, une agrafeuse, un tiroir ; « je ne compte plus, monsieur, je note ». · photo : ds.vendre.s2_compteur_rituel |
+| `une.vendre.dune` | echo | 2 | `journal_has('carte_dembo_gardee') \|\| (flag('dembo_vendu') && season >= 1)` | UNE CARTE DU DÉSERT AU CASIER VIDE | « Donne le ballon à quelqu'un » ; une aile de poulet en plastique dessous, personne n'avoue. · photo : ds.ami.carte_postale |
+| `une.vendre.invente` | echo | 1 | `journal_has('gazette_dementie')` | LE JOUEUR INVENTÉ A APPELÉ LE CLUB | Il voulait savoir s'il était pris. L'Écho confirme qu'il n'existe pas ; Corbelin l'a signé quand même. · photo : ds.vitre.echo |
+| `une.intouchable.liste` | echo | 2 | `journal_has('loco_liste')` | LOCO A DEMANDÉ UN NOM. UN SEUL | « Gauche », dit la liste ; c'est la première fois qu'il écrit autre chose que « cassette ». · photo : ds.intouchable.r1_rentree_seau |
+| `une.intouchable.pluie` | echo | 2 | `journal_has('pluie_et_tableur')` | LA PLUIE ET LE TABLEUR, ENSEMBLE | Le stagiaire a attrapé froid ; Barbier a ri en lisant la colonne « pluie ». Un salaire de plus. · photo : ds.algo.pluie |
+| `une.intouchable.note` | gazette | 2 | `journal_has('note_lue') \|\| journal_has('stagiaire_demission')` | LE MODÈLE NOTE LE DS DE {VILLE} | Le chiffre n'a pas été publié ; Ménèche l'a eu le lendemain. Le Rosé le trouve généreux. Variante `stagiaire_demission` : « LE MODÈLE EST PARTI À LYONNET ». · photo : ds.algo.note |
+| `une.intouchable.bloque` | quotidien | 3 | `journal_has('bloque_vendu')` | INTERDIT DE RECRUTER, {VILLE} VEND | Le meilleur est parti pour repasser sous la ligne ; la bâche dit « VENDUS », sans nom, pour une fois. · photo : ds.bloque.fenetre_vide · react : co.re.gege_decoupe |
+| `une.intouchable.reserve` | echo | 3 | `journal_has('bloque_pretes')` | LA RÉSERVE JOUE EN D1, LE RADIATEUR TOUSSE | Le coach a appris cinq prénoms ; il en aime deux. Le fax est resté débranché. · photo : ds.bloque.fenetre_vide |
+| `une.intouchable.tribunal` | quotidien | 1 | `journal_has('tribunal_encadre')` | LE TRIBUNAL DONNE RAISON À {VILLE} | Le mercato avait fermé en janvier. La lettre est encadrée, à côté de l'accusé de 23 h 59. · photo : ds.bloque.tribunal |
+| `une.intouchable.six_heures` | gazette | 4 | `journal_has('enquete_tribunal') \|\| journal_has('enquete_repondue')` | SIX HEURES DU MATIN AU BUREAU DU DS | Amsel « a tout son temps » ; La Plume a dix pages et une gourmette en photo. Variante `enquete_repondue` : « IL A TOUT DIT. ÇA TIENT ». · photo : ds.bloque.nom |
+| `une.intouchable.seize` | echo | 2 | `journal_has('jeune_vendu_tot')` | PARTI À SEIZE ANS, SANS AVOIR JOUÉ | L'indemnité a payé la pelouse ; Dembo lui a donné un ballon à la gare. · photo : ds.centre.seize_ans |
+| `une.intouchable.seize_pro` | echo | 1 | `journal_has('gamin_contrat_pro')` | LE GAMIN DU CENTRE SIGNE PRO À LA CANTINE | Son agente est la mère de Mbako ; le chiffre est écrit sur la table, au stylo du club. Josiane l'a recopié. · photo : ds.centre.premier_contrat |
+| `une.intouchable.cantine` | echo | 1 | `journal_has('mere_cantine')` | SA MÈRE CUISINE POUR LE VESTIAIRE | Deux valises, six heures du matin, deux kilos et trois victoires ; la kiné pèse, et mange aussi. · photo : ds.etranger.mere |
+| `une.intouchable.gaucher` | echo | 2 | `journal_has('etranger_signe')` | LE GAUCHER DE LOIN A DORMI CHEZ VUKIĆ | Deux mois, trois mots : « gauche », « froid », « cahier ». Il ne glisse pas. Variante `etranger_trois_ans` : « LE GAUCHER EST D'ICI, TROIS ANS ». · photo : ds.etranger.neige |
 
 ## 8. Les alarmes (huit)
 
@@ -1054,7 +1208,7 @@ Fins universelles applicables au rôle (ch. 30) : *Le Grand Déballage* (Parole 
 « Le président vend, et le virage a un nom pour le fauteuil : le tien. La tribune n'oublie rien, surtout pas ceux qui achètent bien ; tu montes, ou tu restes au téléphone ? »
 ← **Je monte** — effets : club: {change: false}, role: president, Passation (VESTIAIRE 50, TRIBUNES 0,3 × ancienne + 40, DIRECTION 55, CAISSE 50), set: ds_devenu_president — *Tu montes. Le bureau d'à côté ; il a une fenêtre. Ton DS est Bréhaut, ou le fils de quelqu'un.*
 → **Je reste au téléphone** — effets : tribunes −, direction +, var: {refus_destin: "+1"} — *Tu restes. Le fauteuil va à un fonds. Il a son homme ; ce n'est pas toi, c'est la suite.*
-**Traces** : ds_devenu_president · **Lu plus tard par** : ch. 13 (`geant_dechu`, `rachete_fonds` : « tu étais le DS »), ch. 30 (« Le monde réagit »), ch. 90
+**Traces** : ds_devenu_president · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 13 (`geant_dechu`, `rachete_fonds` : « tu étais le DS »), ch. 30 (« Le monde réagit »), ch. 90
 
 ### SCÈNE ds.destin.commission_technique  —  Les chiffres vous aiment
 **Rôle** : ds · **Intrigue** : transition DS → Fédération · **Moment** : Bilan · **Conditions** : `relation.brissac >= 2 && (flag('algorithme_adopte') || flag('pluie_et_tableur') || flag('jeune_garde'))`
@@ -1062,7 +1216,7 @@ Fins universelles applicables au rôle (ch. 30) : *Le Grand Déballage* (Parole 
 « Vos chiffres de formation sont têtus, {toi}, et le Congrès aussi : la commission technique a un siège, et Legruet « verra ça après ». Vous le prenez avant ? »
 ← **Je prends le siège** — effets : role: instance (Fédération), Passation, set: ds_commission_technique — *Tu prends. Le siège est en salle 3 ; on y attend, on y examine. Josiane y range déjà tes dossiers.*
 → **Après le Congrès** — effets : direction +, var: {refus_destin: "+1"} — *Après le Congrès, c'est dans quatre ans. Elle note ; les chiffres sont têtus.*
-**Lu plus tard par** : ch. 15 (`heritage_empoisonne` : « vous venez de la commission technique »), ch. 01 (Brissac)
+**Traces** : ds_commission_technique · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 15 (`heritage_empoisonne` : « vous venez de la commission technique »), ch. 01 (Brissac)
 
 ### SCÈNE ds.destin.plus_grand_club  —  Assis ou debout ?
 **Rôle** : ds · **Intrigue** : transition DS → DS d'un plus grand club · **Moment** : Bilan, ou `schedule` depuis R3 de `coach_intouchable` · **Conditions** : `gauges.tribunes >= 70 || flag('architecte_parti') || flag('architecte_chante')`
@@ -1070,7 +1224,7 @@ Fins universelles applicables au rôle (ch. 30) : *Le Grand Déballage* (Parole 
 « Douze clubs, une table, et une chaise pour un directeur sportif qui achète bien ; vous êtes assis ou debout ? Assis, c'est mon club, et mon club perd de l'argent en gagnant tout. »
 ← **Assis** — effets : club: {change: true, division: 1}, Passation, set: ds_montoya, relation.montoya +1 — *Tu t'assieds. Dix-huit mois. Le chapitre 90 a la suite ; elle broie.*
 → **Debout, chez moi** — effets : tribunes +, direction +, set: fidele, var: {refus_destin: "+1"} — *Tu restes debout. Gégé l'apprend ; le virage chante « debout ». C'est un mot qu'il aime.*
-**Lu plus tard par** : ds_architecte, ch. 02 (Montoya), ch. 90 (les trois carrières de référence)
+**Traces** : ds_montoya, fidele ∃ · **Réactions déclenchées** : — · **Lu plus tard par** : ds_architecte, ch. 02 (Montoya), ch. 90 (les trois carrières de référence) ; variante `flag('gazette_libre')` : « Votre nom était dans la Gazette avant mon appel, c'est leur façon d'inviter ; assis ou debout ? »
 
 ### SCÈNE ds.destin.agente  —  Le bon côté de la table  (réservé : rôle agent hors des huit ; branche fermée tant que le rôle n'existe pas)
 **SOLVANG** *(sourire)* : « Vous lisez les contrats, {toi}, ce qui est rare de votre côté de la table ; venez du mien, il y a une chaise et une page trois. Mon client décide. Moi, je compte. » — ← **Je change de côté** — (réservé) · → **Je reste DS** — direction +, relation.solvang +1 — *Elle sourit. Plus tard, c'est son métier.*
@@ -1105,13 +1259,24 @@ Set-pieces à seeder pour ch. 30 (variantes DS, première vraie) : `objective` �
 | cassette_recue / cassette_refusee / vingt_km_couverts / vingt_km_denonces / fusible_saute / loco_vire / loco_parti_propre / loco_liste / seau_range / mbako_dernier_ici / fusible_reste / architecte_parti / courbe_ds / courbe_loco | script intouchable | a2, a3, a4, r1, r3, s2, ds.neuf, ds.nommer, destin plus_grand_club, ds_fronde, ds_commun_accord, ds_architecte | 01 (Loco, Mbako), 13 (coach-cassette, statue), 14 (Kambara), 15, 20, 90 |
 | club_des_copains / homme_president ∃ / roi_mercato / architecte_chante | alarmes | fins | 13, 30 |
 | ds_devenu_president / ds_commission_technique / ds_montoya | Destins | — | 13, 15, 30, 90 |
+| recrue_imposee / coach_couvert_sponsor | ds.sponsor.quatre_vingt_dix | ds.sponsor.maillot, ds.neuf, ds_homme_president, une.vendre.sponsor | 11, 13 |
+| modele_garde / stagiaire_demission / modele_ferme | ds.algo.deux_fenetres (et ds.algo.pluie) | ds.algo.note, h05, une.intouchable.note | 02, 90 (Nemesis « le modèle ») |
+| recrue_imposee_compo / coach_couvert_compo | ds.beau_frere.feuille_de_match | ds.beau_frere.janvier, ds_homme_president | 01 (Klopf), 13 |
+| gazette_dementie / gazette_libre / joueur_invente_signe | ds.vitre.echo | ds.fax, ds.destin.plus_grand_club, une.vendre.invente | 02 (Léa), 20 (le Rosé) |
+| mercato_rentre / nuit_mercato | ds.vitre.minuit_dix | — | 01 (paliers de Camille), 30 (burn-out), 90 (Sacha), 20 |
+| visite_faite_minuit / visite_sans_regarder / heure_confirmee / heure_josiane | ds.fax.visite_minuit, ds.fax.lendemain | ds.masse_salariale.casier, ds.vitre, une.vendre.fax, une.vendre.minuit | 01 (Sabatier), 02 (Léa), 10, 15, 20 |
+| casier_promis / casier_vide_assume | ds.masse_salariale.casier | ds.masse_salariale.lettre, ds.bloque.tribunal, une.vendre.coupe | 01 (Dembo), 30 (Grand Déballage) |
+| tribunal_appel / tribunal_encadre | ds.bloque.tribunal | ds.bloque.nom, une.intouchable.tribunal | 02, 15, 31 |
+| gamin_contrat_pro / gamin_parti_castellane | ds.centre.premier_contrat | ds.centre.consignes, ds.vente_du_prodige (replay), une.intouchable.seize_pro | 01 (la mère de Mbako), 10, 14 |
+| etranger_trois_ans / etranger_un_an | ds.etranger.trois_mots | ds.etranger.juin, h07, une.intouchable.gaucher | 14 (Brissac), 90 |
+| coach_vire_par_ds / coach_garde_contre_president / fils_clow_vire | ds.nommer.sms | ds.nommer.vote (replay), ds_fronde, ds_homme_president, une.vendre.sms | 01 (Vukić, le fils de Clow), 11 (en_sms), 13, 90 |
 
 Traces lues et posées ailleurs (contrat de couture, à confirmer par ch. 90) : `nassir_paie` (ch. 11, posée ici par ds.masse_salariale.jeudi), `club_frere_pret`, `ligne_confirmee`, `ligne_niee`, `nom_donne`, `nom_tu`, `capitaine_vendu_malbec`, `star_vendue_dos`, `recrutement_bloque` (ch. 02, posées ici aussi), `salaires_retard`, `fede_dossier` (ch. 11), `parti_tete_haute`, `fidele` (∃).
 
 ## 12. Nouveaux éléments, anecdotes, questions
 
-**Nouveaux éléments** (à faire remonter dans la charte § 2.3 / § 1) : Tibo Rancé (17 ans en 2003, milieu, la réserve du club-usine ; voix) · Noé Malandain (16 ans en 2010, ailier, « un des vingt » ; voix) · « le stagiaire » → « l'algorithme » (2008) → « le modèle » (2015) (voix, chef du recrutement d'après Barbier ; ch. 02 l'annonçait) · « le scout de l'autre hémisphère » (voix) · « le traducteur » (voix) · « le père-agent » (voix, ch. 02 l'annonçait) · « la docteure Ferrand » (voix, ch. 01) · la rubrique « Le gaucher » de L'Écho · la bâche « DS = Démission Sportive » · le fax de {club} et sa faute au mot « transfert » · le compteur à carreaux de Josiane (objet héritable : « la feuille ») · la cassette vierge de Loco (objet héritable) · le carnet de Barbier (objet héritable, dernière page : un gardien de Néville) · la Vestrie nomme Klopf sélectionneur en 2004 (Nouvelle datée à écrire par ch. 31 : `co.nv.2004_klopf`, arme `klopf_parti_vestrie` quand on n'est pas DS) · Étoile Bretagne monte en D1 en 2001 (anecdote de club, à confirmer).
+**Nouveaux éléments** (à faire remonter dans la charte § 2.3 / § 1) : « Maître Vidal, ton avocat » (voix, déjà listée par la charte § 2.3 ; il parle ici une fois : il lit debout, il facture assis) · « le joueur inventé » (par La Gazette Rose ; il appelle le club, il signe à Corbelin : anecdote de monde) · le mur de Josiane (l'accusé de réception de 23 h 59 et la lettre du Tribunal, encadrés côte à côte : objet de décor) · la visite médicale de 23 h 52 (une page datée ajoutée au fax) · le dictionnaire de poche du gaucher (il n'y a pas « trader » dedans) · Tibo Rancé (17 ans en 2003, milieu, la réserve du club-usine ; voix) · Noé Malandain (16 ans en 2010, ailier, « un des vingt » ; voix) · « le stagiaire » → « l'algorithme » (2008) → « le modèle » (2015) (voix, chef du recrutement d'après Barbier ; ch. 02 l'annonçait) · « le scout de l'autre hémisphère » (voix) · « le traducteur » (voix) · « le père-agent » (voix, ch. 02 l'annonçait) · « la docteure Ferrand » (voix, ch. 01) · la rubrique « Le gaucher » de L'Écho · la bâche « DS = Démission Sportive » · le fax de {club} et sa faute au mot « transfert » · le compteur à carreaux de Josiane (objet héritable : « la feuille ») · la cassette vierge de Loco (objet héritable) · le carnet de Barbier (objet héritable, dernière page : un gardien de Néville) · la Vestrie nomme Klopf sélectionneur en 2004 (Nouvelle datée à écrire par ch. 31 : `co.nv.2004_klopf`, arme `klopf_parti_vestrie` quand on n'est pas DS) · Étoile Bretagne monte en D1 en 2001 (anecdote de club, à confirmer).
 
-**Anecdotes** (§ 4.9) : **12.seau_douze_metres** — détail de décor · ds.loco.seau, ds.neuf.demission · Le banc de {club} est à douze mètres du terrain ; le seau à un. Loco a mesuré. · **12.carte_dune** — objet · ds.ami.carte_postale · La carte de Dembo, une dune, deux lignes, punaisée à côté d'un casier vide ; une aile de poulet en plastique dessous. · **12.consignes** — légende de club · ds.centre.consignes · Au stade de {club}, un samedi de réserve, on entend les consignes de Gigi depuis la tribune Est ; Paulette dit qu'elle les comprend. · **12.cassette_six_semaines** — objet · ds.cellule.cassette · Une cassette met six semaines de l'autre hémisphère ; le gamin dessus a toujours été vendu la veille.
+**Anecdotes** (§ 4.9) : **12.mur_josiane** — détail de décor · ds.bloque.tribunal, ds.fax.accuse · Dans le bureau de Josiane, deux cadres côte à côte : l'accusé de réception de 23 h 59 et la lettre du Tribunal qui donne raison au club en avril. Elle appelle ça « le mur ». · **12.joueur_invente** — légende de club · ds.vitre.echo · La Gazette a inventé un joueur pour {club} un dernier jour de mercato ; il a appelé le club le lendemain, et il a signé à Corbelin en juin. · **12.seau_douze_metres** — détail de décor · ds.loco.seau, ds.neuf.demission · Le banc de {club} est à douze mètres du terrain ; le seau à un. Loco a mesuré. · **12.carte_dune** — objet · ds.ami.carte_postale · La carte de Dembo, une dune, deux lignes, punaisée à côté d'un casier vide ; une aile de poulet en plastique dessous. · **12.consignes** — légende de club · ds.centre.consignes · Au stade de {club}, un samedi de réserve, on entend les consignes de Gigi depuis la tribune Est ; Paulette dit qu'elle les comprend. · **12.cassette_six_semaines** — objet · ds.cellule.cassette · Une cassette met six semaines de l'autre hémisphère ; le gamin dessus a toujours été vendu la veille.
 
-**Questions ouvertes pour le showrunner** : (1) `vendre_trente` fait d'Aulard le patron (moteur) en 2003 alors que la fiche 02 le dit président de {club} 1990-1998 : ce chapitre le résout par « le fils préside sur le papier, le père au téléphone » ; à valider ou à remplacer par une promotion du fils d'Aulard au rang de personnage à statut. (2) `coach_intouchable` prend Nassir comme patron (2010) plutôt qu'un Aulard alors à la Fédération : conforme à la charte § 2.4, mais la commande disait « Aulard ou son fils » ; à trancher. (3) La variable `vars.ventes` et l'effet `var:` ne sont pas dans la notation § 4.11 : à ajouter (ch. 11 l'utilise déjà). (4) `world: {coach: …}` et `role:` (Destin) sont des effets à déclarer au moteur. (5) `ds.destin.agente` est réservée tant que le rôle agent n'existe pas. (6) Le chapitre dépasse la cible de longueur (deux postulats complets, quinze intrigues, vingt-quatre offres, huit alarmes, huit fins) : couper d'abord `ds.etranger` et `ds.cellule` si le showrunner veut redescendre à douze intrigues ; les deux sont légères et leurs traces ont des lecteurs de secours (ds.mercato e09, h07).
+**Questions ouvertes pour le showrunner** : (1) `vendre_trente` fait d'Aulard le patron (moteur) en 2003 alors que la fiche 02 le dit président de {club} 1990-1998 : ce chapitre le résout par « le fils préside sur le papier, le père au téléphone » ; à valider ou à remplacer par une promotion du fils d'Aulard au rang de personnage à statut. (2) `coach_intouchable` prend Nassir comme patron (2010) plutôt qu'un Aulard alors à la Fédération : conforme à la charte § 2.4, mais la commande disait « Aulard ou son fils » ; à trancher. (3) La variable `vars.ventes` et l'effet `var:` ne sont pas dans la notation § 4.11 : à ajouter (ch. 11 l'utilise déjà). (4) `world: {coach: …}` et `role:` (Destin) sont des effets à déclarer au moteur. (5) `ds.destin.agente` est réservée tant que le rôle agent n'existe pas. (6) Le chapitre dépasse la cible de longueur (deux postulats complets, quinze intrigues de quatre à six scènes, vingt-quatre offres, huit alarmes, huit fins, cinquante-quatre manchettes) : le second passage a porté chaque intrigue au minimum de la charte (§ 5.1 : quatre scènes) et défini toutes les manchettes citées par les scènes ; pour redescendre à douze intrigues, couper d'abord `ds.etranger` et `ds.cellule` (légères, lecteurs de secours : ds.mercato e09, h07), puis `ds.vitre` (rituel, dont `ds.vitre.minuit_dix` peut migrer vers les cartes de Camille du ch. 01). (7) `Maître Vidal` parle une fois (ds.bloque.tribunal) comme voix sans portrait ; si le ch. 02 lui donne une fiche, la scène garde son id. (8) `ds.nommer.sms` répond à la commande « Vukić, l'entraîneur que tu nommes ou vires » : le SMS de 23 h 47 est envoyé par le DS ; le ch. 11 (`en_sms`) et le ch. 01 (Vukić) doivent lire `coach_vire_par_ds`.
