@@ -63,7 +63,7 @@ Zoran Vukić, dit « Zoki » (par Gigi seulement ; il ne répond pas aux autres)
 Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'apprend. Il tient le cahier (les compos, les blessés, les mensonges de chacun), fait les échauffements de gardiens, et va au restaurant du port avec qui l'invite. Le vestiaire le tutoie, le président le vouvoie, Josiane l'appelle « Zoran » : il est le seul du club à avoir trois adresses. Quand tu prends le banc, il garde le cahier ; quand tu le perds, il garde le cahier aussi.
 
 ### 1.3 Désir, besoin, blessure, secret
-**Désir** : servir un numéro 1 qu'il respecte — et le respect se gagne au premier bloc, pas à l'embauche. **Besoin** : qu'on lui dise, une fois, une chose vraie sur lui. **Blessure** : le ballon lâché en finale (1979, Étoile de Dalmarie contre le Real Montoya) ; le stade a sifflé, ses coéquipiers l'ont consolé, personne n'a dit « c'est toi ». Il a décidé ce soir-là de dire aux autres. **Secret** : il a relu, une fois, le second discours d'un président — et il y était (`vukic_dauphin`) ; il n'a pas dit non. Il n'a pas dit oui non plus. Il attend qu'on le lui dise.
+**Désir** : servir un numéro 1 qu'il respecte — et le respect se gagne au premier bloc, pas à l'embauche. **Besoin** : qu'on lui dise, une fois, une chose vraie sur lui. **Blessure** : le ballon lâché en finale (1979, Étoile de Dalmarie contre le Castel Montoya) ; le stade a sifflé, ses coéquipiers l'ont consolé, personne n'a dit « c'est toi ». Il a décidé ce soir-là de dire aux autres. **Secret** : il a relu, une fois, le second discours d'un président — et il y était (`vukic_dauphin`) ; il n'a pas dit non. Il n'a pas dit oui non plus. Il attend qu'on le lui dise.
 
 ### 1.4 Le tic et ses variations
 « Je te le dis parce que personne ne te le dira. » Une carte sur deux. Il s'en sert pour annoncer (le petit Mbako), prévenir (le bus), avouer (le dîner), et une fois — à +3 — pour se taire : « Je ne te le dis pas. Tu le sais déjà. » À −3, le tic se retourne contre toi : « Je le lui ai dit, parce que tu ne le lui aurais pas dit. »
@@ -76,7 +76,7 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 - **+3 (sourire, la faveur)** — « Trois valises. Je viens, où que ce soit ; ne me remercie pas. » / « Je ne te le dis pas. Cette fois, tu le sais avant moi. »
 
 ### 1.6 Rapports avec les autres
-**Alliés** : Gigi Vecchio (deux gardiens : ils se comprennent sans phrase ; Gigi est le seul à connaître le ballon lâché) ; Josiane (elle voit qui dîne avec qui et le lui dit à lui, pas à toi) ; Sabatier (la table et le cahier partagent des secrets). **Rivaux** : Klopf (il fut son adjoint chez Loco, un hiver : « on court, on presse, on chante », Vukić ne chante pas) ; Bréhaut quand le capitaine veut le costume que Vukić voudrait pour son numéro 1. **Dettes** : Aulard lui doit une élection interne qu'il n'a jamais réclamée ; il doit à Clow un conseil (« un adjoint qui dit tout n'est pas un adjoint ») qu'il n'a pas suivi. **Il déteste** : Fardelli, qui l'appelle « mon ami » alors qu'il n'a jamais eu d'agent.
+**Alliés** : Gigi Vecchio (deux gardiens : ils se comprennent sans phrase ; Gigi est le seul à connaître le ballon lâché) ; Josiane (elle voit qui dîne avec qui et le lui dit à lui, pas à toi) ; Sabatier (la table et le cahier partagent des secrets). **Rivaux** : Vogler (il fut son adjoint chez Vaz, un hiver : « on court, on presse, on chante », Vukić ne chante pas) ; Bréhaut quand le capitaine veut le costume que Vukić voudrait pour son numéro 1. **Dettes** : Vaubourg lui doit une élection interne qu'il n'a jamais réclamée ; il doit à Corven un conseil (« un adjoint qui dit tout n'est pas un adjoint ») qu'il n'a pas suivi. **Il déteste** : Fardelli, qui l'appelle « mon ami » alors qu'il n'a jamais eu d'agent.
 
 ### 1.7 INTRIGUE co.vukic_cahier  —  Le cahier de Vukić
 **Logline** : Vukić tient le cahier de ta carrière ; à la fin il le garde, te le rend, ou le donne à celui qui t'a remplacé. · **Synopsis** : Le premier matin, il t'apprend l'heure du café et l'heure du président. En cours de saison il te dit ce que personne ne dit : le banc, le petit, le bus. Un soir de relation, il raconte le ballon lâché. Au Bilan, il pose le cahier sur ton bureau : tu le prends, ou tu lui laisses. Des années plus tard, il est sur le banc d'en face, ou dans ton staff, ou sélectionneur de son pays, et le cahier est encore dans sa poche. À la fin de sa vie, le cahier va à ta lignée, au Panthéon, ou à ton successeur.
@@ -92,7 +92,7 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 « Le café est à sept heures, le président prend le sien à six heures et demie. Je te le dis parce que personne ne te le dira : il aime qu'on soit déjà là. »
 ← **Demain, six heures et quart** — effets : direction +, vestiaire −, relation.vukic +1 — *Le président te trouve devant la machine. Il ne dit rien ; il note l'heure.*
 → **Sept heures, c'est mon heure** — effets : vestiaire +, direction −, set: cahier_sept_heures — *Le vestiaire apprend que le coach dort. Il trouve ça humain, puis inquiétant.*
-**Traces** : cahier_sept_heures (pas de ligne d'Almanach : `journal:` poids 1, « le coach arrive à sept heures ») · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (set-piece `objective` : Aulard « tu étais là à six heures et quart » / « tu dormais »)
+**Traces** : cahier_sept_heures (pas de ligne d'Almanach : `journal:` poids 1, « le coach arrive à sept heures ») · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (set-piece `objective` : Vaubourg « tu étais là à six heures et quart » / « tu dormais »)
 
 ### SCÈNE jp.vukic.banc  —  Le banc, et pourquoi
 **Rôle** : joueur · **Intrigue** : co.vukic_cahier · **Étape** : 2/6 · **Moment** : saison 0, créneaux [5,11] · **Lieu** : le couloir, après l'affichage de la compo · **Conditions** : `world.serie_defaites >= 1 || gauges.direction < 45`
@@ -160,16 +160,14 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après une Passation ou un changement de club · **Conditions** : Vukić parmi les deux meilleures relations · **Lieu** : la salle de café du nouveau club, sept heures
 **VUKIĆ** *(sa fonction du moment — sourire — le cahier neuf, déjà corné)*
 « Tu m'as manqué à sept heures, {prenom}. Je te le dis parce que personne ne te le dira : le café ici est mauvais, et j'ai pris ta tasse. »
-← **Je reprends ma tasse** — effets : vestiaire +, relation.vukic +1 — *Il te la rend. Elle est sucrée. Il se souvient de tout.*
-→ **Garde-la, je suis de passage** — effets : direction +, relation.vukic −1 — *Il la garde. Il note « de passage » dans le cahier, avec la date.*
+**OK** **Je reprends ma tasse** — effets : vestiaire +, relation.vukic +1 — *Il te la rend. Elle est sucrée. Il se souvient de tout.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.vukic_noir  —  Le second discours
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après une Passation · **Conditions** : Vukić parmi les pires relations · **Lieu** : le couloir du nouveau club, devant ton bureau
 **VUKIĆ** *(sa fonction du moment — noir — il ne pose pas le cahier)*
 « Ton président d'alors avait deux discours, {nom}, et je les ai relus tous les deux. Je te le dis parce que personne ne te le dira : celui-ci en a aussi deux. »
-← **Je veux lire le second** — effets : direction −, relation.vukic +1 — *Il ne l'a pas. Il sait seulement qu'il existe. Ça lui suffit ; à toi aussi.*
-→ **Je n'ai pas besoin de toi** — effets : direction +, relation.vukic −1 — *Il ferme le cahier. Il y a ton nom en haut de la page, et une date en bas.*
+**OK** **Je veux lire le second** — effets : direction −, relation.vukic +1 — *Il ne l'a pas. Il sait seulement qu'il existe. Ça lui suffit ; à toi aussi.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.vukic_banc_en_face  —  Le banc d'en face
@@ -203,8 +201,8 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 **Adresse** : entraineur : coach / coach / {nom} · joueur : {prenom} / petit / le {numero} · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « tu es le coach que le groupe attendait, et je le lui dis » ; à 0 « on verra si tu tiens un vestiaire ou un tableau » ; à −2 « le groupe a lu avant toi, et le groupe ne te fait plus la passe »
 **Paliers** : −3 → `co.brehaut.trahison_petition` · +3 → `co.brehaut.faveur_lettre`
-**Dans les rôles** : joueur : cœur (le capitaine qui te teste ; 2) · entraîneur : cœur (le capitaine vieillissant, le relais, puis le DS ; 2) · DS : chœur ou rival (ton prédécesseur, ton successeur ; 1,5) · président : cœur (DS sous Qatalyst, allié ou rival ; 1,5) · sélectionneur : cœur (le capitaine écarté 1990-1994 ; 1) · instance : voix au téléphone (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 33-42 ans, mulet blond, brassard jaune ; le genou parle en 1993 ; DS de {club} ou de Qatalyst dès 1995 selon `brehaut_ds` · 2000-2009 · gris (2002), le mulet devient une coupe de banquier ; DS d'un club de D1, il achète sans toi ou avec toi ; le frère est toujours agent · 2010-2019 · lunettes (2012) ; DS sous Nassir (« le costume est un actif ») ; il te vire par SMS avec une faute, la même que celle d'Aulard · 2020-2029 · président de la Ligue (2020-2028) par défaut : le costume a fini par lui aller, les manches non ; puis de la Fédération (2028-2036) si personne de ta lignée ne la prend ; le samedi, il tient quand même la buvette des anciens avec Gigi puis seul ; il fait la vaisselle · 2030-2039 · retraite 2036 ; un banc à côté de celui de Gigi (mort 2031) · 2040-2050 · meurt en 2044 ; « Le groupe vit bien » est gravé sur le banc, la tribune a payé la gravure
+**Dans les rôles** : joueur : cœur (le capitaine qui te teste ; 2) · entraîneur : cœur (le capitaine vieillissant, le relais, puis le DS ; 2) · DS : chœur ou rival (ton prédécesseur, ton successeur ; 1,5) · président : cœur (DS sous Almadis, allié ou rival ; 1,5) · sélectionneur : cœur (le capitaine écarté 1990-1994 ; 1) · instance : voix au téléphone (0,5)
+**Trajectoire 1990 → 2050** : 1990-1999 · 33-42 ans, mulet blond, brassard jaune ; le genou parle en 1993 ; DS de {club} ou d'Almadis dès 1995 selon `brehaut_ds` · 2000-2009 · gris (2002), le mulet devient une coupe de banquier ; DS d'un club de D1, il achète sans toi ou avec toi ; le frère est toujours agent · 2010-2019 · lunettes (2012) ; DS sous Ilyas (« le costume est un actif ») ; il te vire par SMS avec une faute, la même que celle de Vaubourg · 2020-2029 · président de la Ligue (2020-2028) par défaut : le costume a fini par lui aller, les manches non ; puis de la Fédération (2028-2036) si personne de ta lignée ne la prend ; le samedi, il tient quand même la buvette des anciens avec Gigi puis seul ; il fait la vaisselle · 2030-2039 · retraite 2036 ; un banc à côté de celui de Gigi (mort 2031) · 2040-2050 · meurt en 2044 ; « Le groupe vit bien » est gravé sur le banc, la tribune a payé la gravure
 **Retrouvailles** : `co.retrouvailles.brehaut_sourire` / `_noir` / `_telephone`
 **Cartes propres** : *Les bouteilles* (01) · *Le groupe a lu* (01) · *Le frère* (01) · *Le dernier brassard* (01) · *Le costume* (01) · *Le DS de l'actif* (01) · *Le brassard* (11, `en.brassard_brehaut`) · *Le test du capitaine* (10, `jp.brassard_test`) · *Les salaires* (11, `en.salaires.brehaut`) · *Le podcast* (existant, `jp.famille.podcast_carton`)
 
@@ -221,13 +219,13 @@ Thierry Bréhaut, « Titi » depuis les poussins ; personne ne dit Thierry, pas 
 - **+3** — « J'ai une lettre du vestiaire, coach ; elle est pour le président, et elle dit que tu restes. » / « Le groupe vit bien. C'est grâce à toi, et je vais le dire à la télé. »
 
 ### 2.3 Rapports avec les autres
-**Alliés** : Vecchio (les deux vieux : ils partagent la table des anciens et la radio), Josiane (elle relit ses contrats depuis 1988), Gégé (qui l'a vu jouer en 1979 et le lui rappelle). **Rivaux** : Mbako (le vote du brassard ; « papy »), Vukić (le costume qu'ils voudraient tous deux pour leur numéro 1), Fardelli (l'agent que son frère imite mal). **Dettes** : il doit à Clow d'avoir été titulaire à 19 ans ; Nassir lui doit un costume, et le lui fait payer. **Il déteste** : Ménèche, qui a publié le contrat de la boisson.
+**Alliés** : Vecchio (les deux vieux : ils partagent la table des anciens et la radio), Josiane (elle relit ses contrats depuis 1988), Gégé (qui l'a vu jouer en 1979 et le lui rappelle). **Rivaux** : Mbako (le vote du brassard ; « papy »), Vukić (le costume qu'ils voudraient tous deux pour leur numéro 1), Fardelli (l'agent que son frère imite mal). **Dettes** : il doit à Corven d'avoir été titulaire à 19 ans ; Ilyas lui doit un costume, et le lui fait payer. **Il déteste** : Massenet, qui a publié le contrat de la boisson.
 
 ### 2.4 INTRIGUE co.brehaut_costume  —  Le costume de Bréhaut
-**Logline** : Titi Bréhaut a un brassard qu'il ne veut pas rendre et un costume qu'il n'ose pas mettre ; tu décides lequel il porte quand tu pars. · **Synopsis** : Il te teste avec les bouteilles d'eau. Il te dit que le groupe a lu. Son frère te propose un contrat d'image, et il te regarde signer ou pas. À trente-six ans, il demande à être prévenu avant les autres. Puis, DS, il achète sans toi ou t'achète, et sous Qatalyst il t'explique qu'un conseil d'administration est un groupe qui vit bien.
+**Logline** : Titi Bréhaut a un brassard qu'il ne veut pas rendre et un costume qu'il n'ose pas mettre ; tu décides lequel il porte quand tu pars. · **Synopsis** : Il te teste avec les bouteilles d'eau. Il te dit que le groupe a lu. Son frère te propose un contrat d'image, et il te regarde signer ou pas. À trente-six ans, il demande à être prévenu avant les autres. Puis, DS, il achète sans toi ou t'achète, et sous Almadis il t'explique qu'un conseil d'administration est un groupe qui vit bien.
 **Rôle(s)** : joueur, entraineur, ds, president · **Postulat(s)** : partagé (pepite, fin_de_contrat, promu, interimaire, vendre_trente, rachete_fonds) · **Porteur** : brehaut · **Cast** : brehaut, le frère de Bréhaut (voix), vecchio, mbako, nassir, josiane · **Thème** : vestiaire
 **Saisons** : "0" (bouteilles, groupe_a_lu), "1" (frere, dernier_brassard), "2+" (costume, ds_actif) · **Conditions d'entrée** : `chars.brehaut.statut in [club, staff]` ou `direction` (DS) · **Exclusions** : `en.brassard_brehaut` la même saison · **Rejouabilité** : jamais
-**Issues** → **Traces** → **Qui les lit** : `brassard_garde` → `brehaut_capitaine` (11 la déclare ; ligne « {annee} : Titi Bréhaut garde le brassard. Le genou n'a pas voté. ») → lue par 14 (le capitaine vieillissant), 30 (`en_copain` plus) · `costume` → `brehaut_ds` (« {annee} : Titi Bréhaut range le brassard et met le costume. Il lit chaque page. ») → lue par 12 (ton prédécesseur / successeur), 13 (DS sous Qatalyst), 20 (« LE BRASSARD MET UN COSTUME »), 90 (retrouvailles) · `frere` → `brehaut_frere` (« {annee} : {prenom} {nom} a signé avec le frère de Bréhaut. Titi a lu le contrat, lentement. ») → lue par 10 (`jp.contrat_image` variante), 02 (Fardelli : « le frère vend moins cher »), 30 (`jp_sandwich` plus)
+**Issues** → **Traces** → **Qui les lit** : `brassard_garde` → `brehaut_capitaine` (11 la déclare ; ligne « {annee} : Titi Bréhaut garde le brassard. Le genou n'a pas voté. ») → lue par 14 (le capitaine vieillissant), 30 (`en_copain` plus) · `costume` → `brehaut_ds` (« {annee} : Titi Bréhaut range le brassard et met le costume. Il lit chaque page. ») → lue par 12 (ton prédécesseur / successeur), 13 (DS sous Almadis), 20 (« LE BRASSARD MET UN COSTUME »), 90 (retrouvailles) · `frere` → `brehaut_frere` (« {annee} : {prenom} {nom} a signé avec le frère de Bréhaut. Titi a lu le contrat, lentement. ») → lue par 10 (`jp.contrat_image` variante), 02 (Fardelli : « le frère vend moins cher »), 30 (`jp_sandwich` plus)
 **Séquencier** : bouteilles (S0, [2,6], joueur ; entraîneur : groupe_a_lu à la place) → frere (S1, [4,10]) → dernier_brassard (S1+, [8,14], `chars.brehaut.age >= 36`) → costume (S2+, Bilan) → ds_actif (président, `club_actif`) ; variante à dernier_brassard lue sur `brassard_gigi` (chapitre 11).
 **Épilogue** : `vestiaire −` ; « {annee} : le brassard est resté à {club}. Titi Bréhaut aussi, pour l'instant. »
 
@@ -273,11 +271,11 @@ Thierry Bréhaut, « Titi » depuis les poussins ; personne ne dit Thierry, pas 
 **Traces** : brehaut_ds, brehaut_capitaine · **Réactions déclenchées** : co.re.josiane_a_lu (si manchette) · **Lu plus tard par** : 12 (le DS avant toi), 13 (`pr.brehaut.ds_actif`), 20 (« LE BRASSARD MET UN COSTUME »), 90 (retrouvailles)
 
 ### SCÈNE pr.brehaut.ds_actif  —  Le DS de l'actif
-**Rôle** : president · **Intrigue** : co.brehaut_costume · **Étape** : 5/6 · **Moment** : saison 1+, [4,12] · **Lieu** : la salle du conseil, Nassir en visioconférence · **Conditions** : `flag('club_actif') && flag('brehaut_ds')`
-**BRÉHAUT** *(directeur sportif — neutre — le costume aux manches trop longues, un dossier Qatalyst)*
+**Rôle** : president · **Intrigue** : co.brehaut_costume · **Étape** : 5/6 · **Moment** : saison 1+, [4,12] · **Lieu** : la salle du conseil, Ilyas en visioconférence · **Conditions** : `flag('club_actif') && flag('brehaut_ds')`
+**BRÉHAUT** *(directeur sportif — neutre — le costume aux manches trop longues, un dossier Almadis)*
 « Le fonds veut vendre le petit et prêter deux jeunes au club frère. Le groupe vit bien, président ; le conseil aussi, et c'est lui qui vote. »
 ← **Le conseil vote, c'est moi** — effets : direction ++, tribunes −−, caisse +, relation.brehaut −1, set: brehaut_execute — *Il exécute. Il fait la vaisselle du conseil comme il faisait celle du vestiaire.*
-→ **Le petit reste, dis-le** — effets : tribunes ++, direction −−, relation.brehaut +1, relation.nassir −1, set: brehaut_resiste — *Il le dit. Nassir coupe la visioconférence. Titi range le dossier dans sa manche.*
+→ **Le petit reste, dis-le** — effets : tribunes ++, direction −−, relation.brehaut +1, relation.nassir −1, set: brehaut_resiste — *Il le dit. Ilyas coupe la visioconférence. Titi range le dossier dans sa manche.*
 **Traces** : brehaut_execute, brehaut_resiste (« {annee} : Titi Bréhaut a dit non au fonds au nom du président. Le fonds a noté le nom. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (« Notification » : Bréhaut te la lit), 30 (`pr_pantin` plus)
 
 ### SCÈNE sl.brehaut.ecarte  —  Le capitaine écarté
@@ -310,16 +308,14 @@ Thierry Bréhaut, « Titi » depuis les poussins ; personne ne dit Thierry, pas 
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : Bréhaut parmi les deux meilleures relations · **Lieu** : le bord du terrain du nouveau club, fin d'échauffement
 **BRÉHAUT** *(sa fonction du moment — sourire — un pack de bouteilles, par habitude)*
 « Je porte encore les bouteilles, tu vois ; le costume a des poches, pas des mains. Le groupe vit bien, {prenom}, et il a demandé de tes nouvelles. »
-← **Donne-moi le pack** — effets : vestiaire +, relation.brehaut +1 — *Tu portes. Il te regarde porter avec le sourire de 1990.*
-→ **Tu as un bureau, Titi** — effets : direction +, relation.brehaut −1 — *Il pose le pack. Il dit que le bureau est petit ; il ne dit pas qu'il s'y ennuie.*
+**OK** **Donne-moi le pack** — effets : vestiaire +, relation.brehaut +1 — *Tu portes. Il te regarde porter avec le sourire de 1990.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.brehaut_noir  —  Le groupe vivait bien
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : Bréhaut parmi les pires relations · **Lieu** : le parking du nouveau club
 **BRÉHAUT** *(sa fonction du moment — noir — il ne tend pas la main)*
 « Le groupe vivait bien avant que tu partes, et il vit bien depuis. Je te le dis pour que tu ne poses pas la question, {nom}. »
-← **Je ne la posais pas** — effets : relation.brehaut +1, vestiaire − — *Il hoche la tête. Un peu en retard, comme toujours.*
-→ **Je la pose quand même** — effets : vestiaire −−, relation.brehaut −1 — *Il ne répond pas. Il va porter les bouteilles de quelqu'un d'autre.*
+**OK** **Je ne la posais pas** — effets : relation.brehaut +1, vestiaire − — *Il hoche la tête. Un peu en retard, comme toujours.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.brehaut_telephone  —  Le samedi de la buvette
@@ -335,7 +331,7 @@ Thierry Bréhaut, « Titi » depuis les poussins ; personne ne dit Thierry, pas 
 - **01.brehaut_voiture** — décor · brèves · Il roule dans un break familial qu'il n'a pas rempli ; à l'arrière, les bouteilles.
 - **01.brehaut_superstition** — légende de club · set-piece `gm_annonce` · Il entre sur le terrain du pied gauche et touche le poteau droit ; à 60 ans, il touche encore le poteau à la buvette.
 - **01.brehaut_repas** — décor · `jp.vestiaire.repas_equipe` · Il mange du riz blanc la veille, un steak après ; « le groupe mange pareil », dit-il, et le groupe mange pareil.
-- **01.brehaut_manches** — détail de portrait · `ds.brehaut.costume` · Les manches trop longues de son premier costume ne sont jamais reprises ; Nassir les remarque, ne dit rien, note.
+- **01.brehaut_manches** — détail de portrait · `ds.brehaut.costume` · Les manches trop longues de son premier costume ne sont jamais reprises ; Ilyas les remarque, ne dit rien, note.
 
 ---
 
@@ -347,7 +343,7 @@ Thierry Bréhaut, « Titi » depuis les poussins ; personne ne dit Thierry, pas 
 **Ce qu'il pense de toi** : à +2 « tu écoutes ton corps et les miens, je te préviendrai » ; à 0 « tu joues avec des genoux qui ne sont pas les tiens » ; à −2 « tu as fait jouer un joueur que j'avais interdit ; je ne salue plus, je regarde »
 **Paliers** : −3 → `co.sabatier.trahison_dossier` · +3 → `co.sabatier.faveur_controle`
 **Dans les rôles** : joueur : horloge (le genou, la table, la piqûre ; 2) · entraîneur : cœur et tentateur (la pharmacie, le genou du petit ; 1,5) · sélectionneur : cœur (le médecin des Cobalts ; 1) · DS : messager (la visite médicale cachée ; 1) · instance : témoin (la commission antidopage 2010 ; 0,5) · président : voix au téléphone (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 51-60 ans, barbe courte, lunettes rondes, blouse sur pull bleu ; la table, l'armoire, le premier contrôle inopiné (1991) ; médecin des Cobalts 1996 · 2000-2009 · gris depuis longtemps, lunettes déjà ; il vieillit par la voix, plus lente ; la docteure Ferrand arrive en 2008, il l'appelle « la table d'à côté » · 2010-2019 · témoin à la commission antidopage (2010) : il dit tout ou rien selon `flacon_b` et la relation ; retraité 2011 ; il vient encore le samedi, il regarde les genoux depuis la tribune · 2020-2029 · canne (2014) ; il meurt en 2029, la même année que Legruet, on le note dans l'Almanach juste en dessous · 2030-2050 · une table de massage porte son nom au centre de formation ; on y dit encore que ça reste entre elle et nous
+**Trajectoire 1990 → 2050** : 1990-1999 · 51-60 ans, barbe courte, lunettes rondes, blouse sur pull bleu ; la table, l'armoire, le premier contrôle inopiné (1991) ; médecin des Cobalts 1996 · 2000-2009 · gris depuis longtemps, lunettes déjà ; il vieillit par la voix, plus lente ; la docteure Ferrand arrive en 2008, il l'appelle « la table d'à côté » · 2010-2019 · témoin à la commission antidopage (2010) : il dit tout ou rien selon `flacon_b` et la relation ; retraité 2011 ; il vient encore le samedi, il regarde les genoux depuis la tribune · 2020-2029 · canne (2014) ; il meurt en 2020, la même année que Berthomier, on le note dans l'Almanach juste en dessous · 2030-2050 · une table de massage porte son nom au centre de formation ; on y dit encore que ça reste entre elle et nous
 **Retrouvailles** : `co.retrouvailles.sabatier_sourire` / `_noir` / `_enterrement`
 **Cartes propres** : *La table* (01) · *Le flacon du vélo* (01) · *Le genou du petit* (01) · *Le médecin des Cobalts* (01) · *La visite cachée* (01) · *Le témoin* (01) · *La pharmacie du club* (10-11, `co.pharmacie`) · *Le genou qui parle* (10, `jp.genou_parle`, absorbe `jp.corps.*` existantes)
 
@@ -364,7 +360,7 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 - **+3** — « Le contrôleur est à l'accueil. Il cherche le bon bâtiment ; il a quatre-vingt-dix minutes de retard, si tu vois ce que je veux dire. » / « Je te dis tout, cette fois. Entre la table et toi ; moi je sors. »
 
 ### 3.3 Rapports avec les autres
-**Alliés** : Rouvier (elle voit ce qu'il cache et ne dit rien : c'est un pacte, et une dette), Vecchio (quarante et un ans d'épaules), Vukić (le cahier et le carnet du tiroir se complètent). **Rivaux** : Fardelli (qui demande les radios), Ménèche (qui demande les flacons), Brissac (« les chiffres sont têtus, les genoux aussi »). **Dettes** : il doit à Josiane son silence sur le vélo ; Legruet lui doit un forfait arrangé (1996) qu'il n'a jamais réclamé. **Il craint** : Amsel, qui a tout son temps.
+**Alliés** : Rouvier (elle voit ce qu'il cache et ne dit rien : c'est un pacte, et une dette), Vecchio (quarante et un ans d'épaules), Vukić (le cahier et le carnet du tiroir se complètent). **Rivaux** : Fardelli (qui demande les radios), Massenet (qui demande les flacons), Brissac (« les chiffres sont têtus, les genoux aussi »). **Dettes** : il doit à Josiane son silence sur le vélo ; Berthomier lui doit un forfait arrangé (1996) qu'il n'a jamais réclamé. **Il craint** : Amsel, qui a tout son temps.
 
 ### 3.4 INTRIGUE co.sabatier_table  —  Entre la table et moi
 **Logline** : Doc Sabatier sait tout des corps et une chose de trop sur le sien ; ce qu'il te dit dépend de ce que tu lui laisses garder. · **Synopsis** : Première visite : il te dit la règle de la table. Une nuit de déplacement, il raconte le vélo. Un jour, il te dit que le genou du petit est fini ; tu décides qui le lui dit. Médecin des Cobalts, il cache une blessure avant un tournoi. DS, il te propose d'arrondir une visite médicale. En 2010, devant la commission, il témoigne : de toi, ou pour toi.
@@ -403,7 +399,7 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 **SABATIER** *(médecin des Cobalts — neutre — un dossier de plus que les autres, retourné)*
 « Ton meilleur joueur a une cheville qui tient trois matchs, pas sept ; son club ne le sait pas. Ça reste entre la table et moi, coach, et entre toi et ta liste. »
 ← **Il vient, trois matchs** — effets : force +2, tribunes +, set: cheville_cachee, relation.sabatier −1 — *Il vient. Il joue quatre matchs. Le cinquième, la cheville lâche en direct devant Vence.*
-→ **Il reste chez lui** — effets : force −1, tribunes −, relation.sabatier +1, relation.fauvel −1 — *Il reste. Son club ne comprend pas. La presse titre sur un « choix ». Ce n'en était pas un.*
+→ **Il reste chez lui** — effets : force −1, tribunes −, relation.sabatier +1, relation.fauvel −1 — *Il reste. Ce n'en était pas un.*
 **Traces** : cheville_cachee (« {annee} : un joueur des Cobalts a joué le tournoi sur une cheville. Le Doc l'avait dit au sélectionneur. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (chaîne Tournoi, temps fort « la cheville »), 20 (« LA CHEVILLE QUE PERSONNE N'A VUE »)
 
 ### SCÈNE ds.sabatier.visite_cachee  —  La visite cachée
@@ -435,7 +431,7 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 **Rôle** : joueur, entraineur, selectionneur · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : le couloir du vestiaire, la porte de l'accueil au bout · **Conditions** : `relation.sabatier >= 3`, une fois par carrière
 **SABATIER** *(médecin — sourire — les lunettes sur le nez, pour une fois)*
 « Le contrôleur est à l'accueil et cherche le bon bâtiment ; il lui faut quatre-vingt-dix minutes. Ça reste entre la table et moi, {prenom} : qu'est-ce que tu fais de ces minutes ? »
-← **Rien, on l'attend, propre** — effets : vestiaire +, parole +1, relation.sabatier +1, set: pharmacie_propre — *Il sourit. Le contrôleur arrive, contrôle, repart. Le Doc te tend un café. Il est sucré.*
+← **Rien, on l'attend, propre** — effets : vestiaire +, parole +1, relation.sabatier +1, set: pharmacie_propre — *Il sourit. Le contrôleur repart, et le café du Doc est sucré.*
 → **Je vide l'armoire** — effets : vestiaire ++, direction +, parole −2, set: armoire_videe — *Tu vides. Il regarde ailleurs. Il souligne une ligne dans le carnet du tiroir.*
 *(Variante si `flag('sabatier_confie')` : « Tu m'avais dit mars. Je te dis quatre-vingt-dix minutes. »)*
 **Traces** : pharmacie_propre (∃ § 5.2), armoire_videe (« {annee} : l'armoire du club a été vidée en quatre-vingt-dix minutes. Le Doc n'a rien vu ; il a écrit. ») · **Lu plus tard par** : 10-11 (`co.pharmacie` : variante « l'armoire déjà vide »), 15 (Sabatier ennemi ou témoin), 30 (fin *Le flacon B* épitaphe plus)
@@ -445,20 +441,18 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : la salle de soins du nouveau club, une table neuve
 **SABATIER** *(sa fonction du moment — sourire — il tapote une table qui n'est pas la sienne)*
 « Ici, la table est neuve et elle grince ; ça reste entre elle et moi. Tu as encore le genou de mars, {prenom}, je le vois d'ici. »
-← **Regarde-le, Doc** — effets : force +1, relation.sabatier +1 — *Il regarde. Il fait la moue. Rien de neuf, dit-il ; c'est bon signe.*
-→ **Il va bien, comme moi** — effets : tribunes +, relation.sabatier −1 — *Il n'insiste pas. Il note. Il souligne.*
+**OK** **Regarde-le, Doc** — effets : force +1, relation.sabatier +1 — *Il regarde. Il fait la moue. Rien de neuf, dit-il ; c'est bon signe.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.sabatier_noir  —  Je regarde
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le couloir du vestiaire, il regarde tes jambes
 **SABATIER** *(sa fonction du moment — noir — il ne tend pas la main, il regarde tes jambes)*
 « Je ne salue pas, je regarde ; c'est ce que je fais depuis l'homme que vous avez fait jouer. Ça reste entre la table et moi, monsieur {nom}, et la table s'en souvient. »
-← **Cet homme a fini sa carrière** — effets : relation.sabatier +1, direction − — *« En boitant », dit-il. Il tourne les talons ; il boite un peu aussi, depuis la canne.*
-→ **C'était mon métier** — effets : relation.sabatier −1, vestiaire − — *« Et voilà le mien », dit-il en montrant la table. Il ne dit plus rien.*
+**OK** **Cet homme a fini sa carrière** — effets : relation.sabatier +1, direction − — *« En boitant », dit-il. Il tourne les talons ; il boite un peu aussi, depuis la canne.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.sabatier_enterrement  —  Trente-deux lignes
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2029, une fois (`chars.sabatier.statut == 'mort'`) · **Conditions** : `relation.sabatier != 0` · **Lieu** : la salle de soins de {club}, la table du Doc, le tiroir ouvert
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2029, une fois (`chars.sabatier.statut == 'mort' || (chars.sabatier.statut == 'parti' && flag('sabatier_mort'))`) · **Conditions** : `relation.sabatier != 0` · **Lieu** : la salle de soins de {club}, la table du Doc, le tiroir ouvert
 **LA DOCTEURE FERRAND** *(médecin du club — neutre — un carnet à couverture noire, fermé)*
 « Le Doc a laissé son carnet, trente-deux lignes de choses refusées, et ta ligne est dedans. Il disait que ça restait entre la table et lui ; la table est à toi si tu la veux. »
 ← **Je prends la table** — effets : vestiaire +, caisse −, set: table_du_doc — *La table grince chez toi. Tu n'y couches personne. Tu y poses le carnet.*
@@ -468,7 +462,7 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 ### 3.7 Anecdotes
 - **01.sabatier_carnet** — objet · `in.sabatier.temoin`, enterrement · Le carnet du tiroir : trente-deux lignes en 2029, toutes des refus, datées ; la première est de 1985, la dernière de 2010.
 - **01.sabatier_voiture** — décor · brèves · Une fourgonnette blanche à hayon, celle de l'équipe cycliste, avec la trace d'un ancien logo sous la peinture.
-- **01.sabatier_superstition** — légende de club · set-piece `aftermatch` · Il ne dit jamais « fini » avant la soixante-dixième minute ; il dit « on verra », comme Legruet, et ça l'agace.
+- **01.sabatier_superstition** — légende de club · set-piece `aftermatch` · Il ne dit jamais « fini » avant la soixante-dixième minute ; il dit « on verra », comme Berthomier, et ça l'agace.
 - **01.sabatier_repas** — décor · `co.sabatier.flacon_velo` · Le thermos contient du café et un fond de gnôle ; « pour la table », dit-il ; la table ne boit pas.
 - **01.sabatier_camphre** — détail de portrait · toute scène de soins · L'odeur de camphre le précède de trois mètres ; les joueurs savent qu'il arrive avant d'entendre la porte.
 
@@ -480,7 +474,7 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 **Désir** : que tu existes ailleurs que sur un terrain · **Blessure** : elle a renoncé à quelque chose pour te suivre (un cabinet, une rédaction, un mandat, un service : son métier tiré au sort — `camille_avocate`, `camille_journaliste`, `camille_agente`, `camille_medecin`, `camille_elue` — est ce à quoi elle a renoncé, et ce qu'elle reprend à `camille_ici`)
 **Adresse** : {prenom} / {prenom} / {nom} dans tous les rôles ; à −1 elle dit {nom}, et c'est la première chose qu'on remarque
 **Ce qu'elle pense de toi** : à +2 « tu es là, même quand tu revois le but encaissé » ; à 0 « une assiette ou deux, je demande » ; à −2 « la chambre d'amis est faite ; ce n'est pas pour un ami »
-**Paliers** (existants, à citer, jamais réécrire) : −1 → `co.camille.dispute` · −2 → `co.camille.chambre_amis` · −3 → `co.camille.valise` (pose `divorce`) · +3 → `co.camille.secours_avocate` / `_journaliste` / `_elue` / `_generique` ; **ce chapitre ajoute les deux secours manquants** : `co.camille.secours_medecin`, `co.camille.secours_agente`
+**Paliers** : ∃ (déjà dans `content/`, cités et jamais réécrits) −1 → `co.camille.dispute` · −2 → `co.camille.chambre_amis` · −3 → `co.camille.valise` (pose `divorce`) · +3 → `co.camille.secours_avocate` / `_journaliste` / `_elue` / `_generique` ; **ce chapitre ajoute les deux secours manquants** : `co.camille.secours_medecin`, `co.camille.secours_agente`
 **Dans les rôles** : tous : la cinquième jauge (0,5 à 1 par saison) ; joueur : `jp.famille.*` existantes ; entraîneur : `co.camille.*` existantes et `co.cartons_camille` (11) ; DS : le mercato à table ; présidents : la loge vide ; sélectionneur : le téléphone depuis l'hôtel ; instance : la valise qu'elle ne fait pas — la sienne, à l'hôtel du Lac
 **Trajectoire 1990 → 2050** : 1990-1999 · 32-41 ans, queue de cheval, pull orange ; la maison à deux cents kilomètres ; la Naissance (Sacha) entre 1991 et 2000 ; les cartons · 2000-2009 · gris (2003) qu'elle ne cache pas ; elle reprend le métier (`camille_ici`) ; elle lit L'Écho, jamais la Gazette · 2010-2019 · lunettes (2013) ; elle a un compte sur le Flux pour lire Sacha, pas toi · 2020-2029 · si `divorce` : elle vit à Portclair ; sinon elle vient au stade une fois par an, tribune Est, à côté de la place 14B · 2030-2050 · elle survit à tout le monde ; à la fin de la carrière elle dit « tu rentres ? », et cette fois tu rentres
 **Retrouvailles** : `co.retrouvailles.camille_sourire` / `_noir` / `_telephone` (après `divorce`)
@@ -499,7 +493,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 - **+3** — « Ta sanction, je l'ai lue ; elle a un vice de forme gros comme le stade. » (existant) / « J'ai invité le vestiaire dimanche. Je cuisine, tu te tais, ils parlent. » (existant)
 
 ### 4.3 Rapports avec les autres
-**Alliés** : Josiane (elles se téléphonent le lundi ; Josiane lui dit à quelle heure tu es parti), Vecchio (il l'appelle « madame », il est le seul), Rouvier (le cabinet, plus tard, est à côté du sien). **Rivaux** : Aulard (qui réserve pour toi le soir de son anniversaire), Ménèche (qui a un papier), Fardelli (qui demande si « on a un projet »). **Dettes** : elle doit à Sabatier de t'avoir gardé debout ; Gégé lui doit une bâche (« CAMILLE, TU RENTRES À QUELLE HEURE » a été peint une fois, pour rire, elle n'a pas ri).
+**Alliés** : Josiane (elles se téléphonent le lundi ; Josiane lui dit à quelle heure tu es parti), Vecchio (il l'appelle « madame », il est le seul), Rouvier (le cabinet, plus tard, est à côté du sien). **Rivaux** : Vaubourg (qui réserve pour toi le soir de son anniversaire), Massenet (qui a un papier), Fardelli (qui demande si « on a un projet »). **Dettes** : elle doit à Sabatier de t'avoir gardé debout ; Gégé lui doit une bâche (« CAMILLE, TU RENTRES À QUELLE HEURE » a été peint une fois, pour rire, elle n'a pas ri).
 
 ### 4.4 INTRIGUE co.camille_naissance  —  Sacha
 **Logline** : Camille demande à quelle heure tu rentres ; un jour c'est pour la maternité, un jour pour le cabinet, un jour pour la tribune vide où votre fille t'attend. · **Synopsis** : La Naissance tombe une nuit de match. Puis Camille reprend son métier ici, ou pas. Après un derby perdu, la boulangère lui fait un prix. Une saison à l'hôtel du club, elle vient voir la chambre. Sacha a six ans et regarde une tribune vide. Après le divorce, elle appelle encore : « Tu rentres à quelle heure ? Pardon. L'habitude. »
@@ -515,7 +509,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 « Tu rentres à quelle heure ? Je demande pour la maternité, le travail a commencé et le match dans une heure, je sais. »
 ← **J'arrive, le match attendra** — effets : relation.camille +2, vestiaire −, tribunes −, set: sacha_nee, set: naissance_avant, outcome: nee — *Vukić fait la causerie. Sacha naît à la vingt-troisième minute ; tu ne sauras jamais le score de la vingt-troisième.*
 → **Après le coup de sifflet** — effets : relation.camille −2, tribunes +, set: sacha_nee, set: naissance_apres, outcome: nee — *Tu arrives à minuit. Elle dort ; Sacha aussi ; Josiane est dans le couloir, elle a apporté un dossier et un lapin.*
-**Traces** : sacha_nee, naissance_avant, naissance_apres (« {annee} : Sacha est née pendant le match. {prenom} {nom} est arrivé{pg, select, f{e} other{}} à minuit. ») · **Réactions déclenchées** : co.re.josiane_lapin (§ 4.8) · **Lu plus tard par** : 19 (`co.sacha.six_ans` variante « tu es arrivé après »), 10 (Succession : héritière), 13 (« Papa, tu as tweeté »), 14 (l'hymne), 15 (l'ONG), 90 (lignée), 30 (set-piece `bilan_carrefour` : « il y a quelqu'un à la maison maintenant »)
+**Traces** : sacha_nee, naissance_avant, naissance_apres (« {annee} : Sacha est née pendant le match. {prenom} {nom} est arrivé{pg, select, f{e} other{}} à minuit. ») · **Réactions déclenchées** : co.re.josiane_lapin (§ 4.8) · **Lu plus tard par** : § 19 (`co.sacha.six_ans` variante « tu es arrivé après »), 10 (Succession : héritière), 13 (« Papa, tu as tweeté »), 14 (l'hymne), 15 (l'ONG), 90 (lignée), 30 (set-piece `bilan_carrefour` : « il y a quelqu'un à la maison maintenant »)
 
 ### SCÈNE co.camille.metier  —  Le cabinet ouvre en septembre
 **Rôle** : tous sauf joueur amateur · **Intrigue** : co.camille_naissance · **Étape** : 2/6 · **Moment** : saison 1+, [2,10] · **Lieu** : la cuisine, une lettre à en-tête sur la table · **Conditions** : `flag('camille_ici') && !flag('divorce')` ; le mot « cabinet » devient « rédaction », « agence », « service », « permanence » selon `camille_<metier>`
@@ -531,7 +525,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 « La boulangère m'a fait un prix, comme après chaque derby perdu ; celui-là, c'est le prix des veuves. Tu rentres à quelle heure, ou tu rentres par le jardin ? »
 ← **Par le jardin, ce soir** — effets : tribunes −, relation.camille +1, vestiaire + — *Tu passes par le jardin. Elle a laissé la lumière de la cuisine. Le pain est bon.*
 → **Par la porte, tête haute** — effets : tribunes +, relation.camille −1, set: derby_tete_haute — *La voisine te voit. La boulangère l'apprend. Le lendemain, le pain est au prix normal ; c'est pire.*
-**Traces** : derby_tete_haute (`journal:` poids 1, sans Almanach) · **Réactions déclenchées** : — · **Lu plus tard par** : 09 (Gégé : `jp.gege.petit` variante « ta femme est passée par la porte »), 20 (Écho, brève)
+**Traces** : derby_tete_haute (`journal:` poids 1, sans Almanach) · **Réactions déclenchées** : — · **Lu plus tard par** : § 9 (Gégé : `jp.gege.petit` variante « ta femme est passée par la porte »), 20 (Écho, brève)
 
 ### SCÈNE co.camille.hotel  —  La chambre d'hôtel
 **Rôle** : entraineur, ds, selectionneur · **Intrigue** : co.camille_naissance · **Étape** : 4/6 · **Moment** : saison 2+, [3,9] · **Lieu** : l'hôtel du club, chambre 12, une valise ouverte sur le lit · **Conditions** : `flag('hotel_du_club') && !flag('divorce')`
@@ -539,7 +533,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 « Chambre douze, un lit, une fenêtre sur le parking et Josiane qui te sert le café. Tu rentres à quelle heure, ou c'est ici que tu rentres ? »
 ← **C'est ici, pour cette saison** — effets : relation.camille −2, direction +, set: hotel_assume — *Elle ferme la valise. Elle repart le soir même. Josiane lui offre le café, sans rien dire.*
 → **On cherche une maison** — effets : relation.camille +2, caisse −−, set: maison_cherchee — *Vous visitez trois maisons le dimanche. Pas de vidéo ce dimanche-là. Vukić remarque.*
-**Traces** : hotel_assume, maison_cherchee (« {annee} : {prenom} {nom} a quitté la chambre 12 de l'hôtel du club. Camille avait choisi la maison. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (set-piece `objective` variante « Josiane sert le café » disparaît), 11 (`co.cartons_camille` rejouable `after`), 19 (Sacha : « la maison de {ville} »)
+**Traces** : hotel_assume, maison_cherchee (« {annee} : {prenom} {nom} a quitté la chambre 12 de l'hôtel du club. Camille avait choisi la maison. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (set-piece `objective` variante « Josiane sert le café » disparaît), 11 (`co.cartons_camille` rejouable `after`), § 19 (Sacha : « la maison de {ville} »)
 
 ### SCÈNE co.camille.tribune_vide  —  La tribune vide
 **Rôle** : tous · **Intrigue** : co.camille_naissance · **Étape** : 5/6 · **Moment** : six saisons après `sacha_nee`, [8,14] · **Lieu** : la tribune Est, un mardi d'entraînement ouvert, personne · **Conditions** : `chars.sacha.age >= 6 && !flag('divorce')`
@@ -547,7 +541,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 « Elle voulait voir où tu travailles ; elle regarde depuis vingt minutes et elle n'a pas demandé où tu étais. Tu rentres à quelle heure, pour qu'on lui explique ? »
 ← **Je monte, maintenant** — effets : vestiaire −, relation.camille +1, relation.sacha +1, set: sacha_tribune_vide, outcome: tribune — *Tu montes. Sacha te montre le rond central : « c'est là que tu cries ». Elle a compris.*
 → **Après la séance, promis** — effets : force +1, relation.sacha −1, parole +1, promise, set: sacha_promesse_tribune — *La séance dure. Quand tu montes, il n'y a plus que Camille, et un chocolat entamé sur le siège 14B.*
-**Traces** : sacha_tribune_vide, sacha_promesse_tribune (« {annee} : {prenom} {nom} a promis de monter après la séance. Sacha avait fini le chocolat. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 19 (`co.sacha.six_ans` : « tu m'as promis »), 18 (Paulette : le chocolat sur la 14B), 90 (lignée : trait « a grandi dans une tribune vide »)
+**Traces** : sacha_tribune_vide, sacha_promesse_tribune (« {annee} : {prenom} {nom} a promis de monter après la séance. Sacha avait fini le chocolat. ») · **Réactions déclenchées** : — · **Lu plus tard par** : § 19 (`co.sacha.six_ans` : « tu m'as promis »), § 18 (Paulette : le chocolat sur la 14B), 90 (lignée : trait « a grandi dans une tribune vide »)
 
 ### SCÈNE co.camille.telephone  —  Pardon, l'habitude
 **Rôle** : tous · **Intrigue** : co.camille_naissance · **Étape** : 6/6 · **Moment** : la saison qui suit `divorce`, [2,12], une fois · **Lieu** : ton téléphone, un soir de semaine · **Conditions** : `flag('divorce')` ; `statut_ok` implicite : Camille parle au téléphone
@@ -555,7 +549,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 « Tu rentres à quelle heure ? Pardon, l'habitude ; j'appelais pour Sacha, elle a un mot de l'école, et c'est toi qui signes celui-là. »
 ← **Je signe, et je passe** — effets : relation.camille +1, relation.sacha +1, vestiaire − — *Tu signes dans l'entrée. Elle ne te fait pas entrer. Sacha te fait un signe depuis l'escalier.*
 → **Envoie-le au club, Josiane** — effets : relation.sacha −1, direction + — *Le mot arrive au secrétariat. Josiane signe à ta place, imite ta signature très bien, et te le dit.*
-**Traces** : — (`journal:` poids 2 : « {annee} : Camille a appelé après le divorce. Par habitude. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 19 (Sacha à −1 : « {nom} »), 90 (Sacha héritière lit la relation Camille)
+**Traces** : — (`journal:` poids 2 : « {annee} : Camille a appelé après le divorce. Par habitude. ») · **Réactions déclenchées** : — · **Lu plus tard par** : § 19 (Sacha à −1 : « {nom} »), 90 (Sacha héritière lit la relation Camille)
 
 ### 4.5 Les paliers (les deux secours manquants)
 ### SCÈNE co.camille.secours_medecin  —  Le certificat
@@ -579,16 +573,14 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations, `!flag('divorce')` · **Lieu** : la cuisine de la nouvelle maison, deux assiettes
 **CAMILLE** *(à la maison — sourire — deux assiettes, déjà)*
 « Nouveau club, même cuisine, j'ai mis deux assiettes sans demander. Tu rentres à quelle heure, {prenom} ? Pour la sauce, pas pour toi. »
-← **Avant la sauce** — effets : relation.camille +1, vestiaire − — *Tu rentres avant. C'est la première fois de la carrière ; elle ne le fait pas remarquer, elle le note.*
-→ **Commence sans moi** — effets : relation.camille −1, direction + — *Elle commence. Elle garde ton assiette au chaud ; le chat mange la sauce.*
+**OK** **Avant la sauce** — effets : relation.camille +1, vestiaire − — *Tu rentres avant. C'est la première fois de la carrière ; elle ne le fait pas remarquer, elle le note.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.camille_noir  —  Une assiette
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations, `!flag('divorce')` · **Lieu** : la cuisine de la nouvelle maison, des cartons fermés
 **CAMILLE** *(à la maison — noir — une assiette dans l'évier, propre)*
 « Nouveau club, nouvelle ville, même question, {nom} : tu rentres à quelle heure ? Je demande pour savoir si je défais mes cartons. »
-← **Défais-les, je rentre tôt** — effets : relation.camille +1, direction − — *Elle défait un carton. Un seul. Elle attend de voir.*
-→ **Garde-les fermés un mois** — effets : relation.camille −1, caisse + — *Ils restent fermés. En novembre, elle en ajoute un.*
+**OK** **Défais-les, je rentre tôt** — effets : relation.camille +1, direction − — *Elle défait un carton. Un seul. Elle attend de voir.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.camille_telephone  —  Sacha a dix-sept ans
@@ -601,7 +593,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 
 ### 4.7 Anecdotes
 - **01.camille_lettre** — objet · `co.camille.metier`, `co.retrouvailles.camille_telephone` · La lettre d'embauche de 1989, non signée, dans le tiroir de la cuisine ; elle déménage avec les couverts.
-- **01.camille_journal** — décor · `co.re.camille_journal` · Elle lit L'Écho à voix haute pour le chat, jamais la Gazette ; le chat s'appelle Ménèche, elle ne l'a jamais dit à Ménèche.
+- **01.camille_journal** — décor · `co.re.camille_journal` · Elle lit L'Écho à voix haute pour le chat, jamais la Gazette ; le chat s'appelle Massenet, elle ne l'a jamais dit à Massenet.
 - **01.camille_voiture** — décor · brèves · Une petite citadine rouge qu'elle a achetée seule le jour où tu as signé ton premier gros contrat ; elle a payé comptant.
 - **01.camille_repas** — décor · `jp.famille.diner_rescue` · « Le grand plat du pays » n'a pas de nom : c'est un gratin, elle en fait vingt-deux parts, et Bréhaut fait la vaisselle.
 - **01.camille_stade** — légende · `co.camille.tribune_vide`, jubilé · Elle n'entre au stade que deux fois par carrière ; les deux fois, elle s'assoit à côté de la place 14B, sans savoir pourquoi.
@@ -621,96 +613,96 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 
 ---
 
-## 5. BRIAN CLOW  (`clow`)
-**Fonction** : le mentor · **Genre** : m · **Âge en 1990** : 61 · **Camp** : terrain · **Fenêtre** : 1990 jusqu'à sa mort (entre 1995 et 2000 selon la carrière : l'hôpital de `en.clow.hopital` ; sinon il meurt en 2000, une Nouvelle datée le dit), puis un buste au Panthéon · **Suivant** : « le fils de Clow » (Owen Clow, né 1962, entraîneur de National dès 2005, de D1 en 2012 ; voix sans portrait dans les chapitres 10-15, portrait si le chapitre 90 le promeut) — il refuse ta lignée si `clow_ingrat`
-**Tic** : « Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un. » — torsions : « Je ne dirais pas que tu es le meilleur. Je ne dirais rien, en fait. » · « Il était dans le top un. Du bas. » · « Le top un, petit, c'est une place pour deux : toi et ta jauge. »
-**Désir** : te voir réussir sans le dire · **Blessure** : quarante-quatre jours dans un grand club (Capitale FC, 1974 : viré par télégramme, il a gardé le télégramme) ; il boit, il a arrêté trois fois, la troisième fois à l'hôpital
+## 5. DAN CORVEN  (`clow`)
+**Fonction** : le mentor · **Genre** : m · **Âge en 1990** : 61 · **Camp** : terrain · **Fenêtre** : 1990 jusqu'à sa mort (entre 1995 et 2000 selon la carrière : l'hôpital de `en.clow.hopital` ; sinon il meurt en 2000, une Nouvelle datée le dit), puis un buste au Panthéon · **Suivant** : « le fils de Corven » (Owen Corven, né 1962, entraîneur de National dès 2005, de D1 en 2012 ; voix sans portrait dans les chapitres 10-15, portrait si le chapitre 90 le promeut) — il refuse ta lignée si `clow_ingrat`
+**Tic** : « Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. » — torsions : « Je ne dirais pas que tu es le meilleur. Je ne dirais rien, en fait. » · « Il était devant. Devant la sortie. » · « Être devant, petit, c'est une place pour deux : toi et ce qui te suit. »
+**Désir** : te voir réussir sans le dire · **Blessure** : cinquante-neuf jours dans un grand club (Capitale FC, 1971 : renvoyé par télégramme un dimanche, il a gardé le télégramme) ; il a arrêté quelque chose en 1979 et ne dit jamais quoi ; devant lui, toujours, un verre d'eau plein à ras bord
 **Adresse** : entraineur : petit / {prenom} / coach · joueur : petit / petit / {nom} · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « tu écoutes ; les gens qui écoutent finissent sur un banc, le bon » ; à 0 « tu as peur du président, ça se voit à ton café » ; à −2 « tu n'appelles plus ; bon signe, un coach qui écoute n'en est pas un »
-**Paliers** : −3 → `co.clow.trahison_top_un` · +3 → `co.clow.faveur_telegramme`
-**Dans les rôles** : entraîneur : mentor (trois conseils, l'hôpital, le testament ; 0,5 dès S1) · joueur : mentor du diplôme (« lundi, huit heures » ; 1 en fin de carrière) · sélectionneur : le seul qui te dise que tu vas perdre (0,5) · DS : « le fils de Clow » refuse ou accepte ta lignée (0,5) · présidents, instance : au téléphone, puis le buste
-**Trajectoire 1990 → 2050** : 1990-1999 · 61-70 ans, cheveux blancs, doudoune verte du banc, chewing-gum ; le bar, le verre plein à ras bord, les trois conseils ; l'hôpital ; la mort (chambre 12) · 2000 · s'il vit encore : la Nouvelle « Brian Clow est mort dans son sommeil, un verre d'eau plein sur la table » · 2000-2009 · le buste (Panthéon) ; le fils de Clow prend un banc en 2005 · 2010-2019 · le fils en D1 ; il porte la doudoune du père le jour des derbies · 2020-2050 · le stage du diplôme s'appelle « le stage Clow » ; on y dit la phrase, avec ou sans « top un »
+**Paliers** : −3 → `co.clow.trahison_devant` · +3 → `co.clow.faveur_telegramme`
+**Dans les rôles** : entraîneur : mentor (trois conseils, l'hôpital, le testament ; 0,5 dès S1) · joueur : mentor du diplôme (« lundi, huit heures » ; 1 en fin de carrière) · sélectionneur : le seul qui te dise que tu vas perdre (0,5) · DS : « le fils de Corven » refuse ou accepte ta lignée (0,5) · présidents, instance : au téléphone, puis le buste
+**Trajectoire 1990 → 2050** : 1990-1999 · 61-70 ans, cheveux blancs, doudoune verte du banc, chewing-gum ; le bar, le verre plein à ras bord, les trois conseils ; l'hôpital ; la mort (chambre 12) · 2000 · s'il vit encore : la Nouvelle « Dan Corven est mort dans son sommeil, un verre d'eau plein sur la table » · 2000-2009 · le buste (Panthéon) ; le fils de Corven prend un banc en 2005 · 2010-2019 · le fils en D1 ; il porte la doudoune du père le jour des derbies · 2020-2050 · le stage du diplôme s'appelle « le stage Corven » ; on y dit la phrase, avec ou sans « devant »
 **Retrouvailles** : `co.retrouvailles.clow_sourire` / `_noir` / `_fantome` (le buste parle : une seule fois par carrière, un Fantôme sans être joué)
-**Cartes propres** : *Lundi, huit heures* (01) · *Trois verres* (01) · *Tu vas perdre* (01) · *Le télégramme* (01) · *Le fils de Clow* (01) · *L'enterrement* (01) · *Le mentor* (existant, `en.clow.*`) · *Le diplôme* (10, `jp.diplome_joueur` ; 11, `en.diplome` : le stage animé par Clow)
+**Cartes propres** : *Lundi, huit heures* (01) · *Trois verres* (01) · *Tu vas perdre* (01) · *Le télégramme* (01) · *Le fils de Corven* (01) · *L'enterrement* (01) · *Le mentor* (existant, `en.clow.*`) · *Le diplôme* (10, `jp.diplome_joueur` ; 11, `en.diplome` : le stage animé par Corven)
 
 ### 5.1 Identité et place
-Brian Clow ; « Clow » tout court dans la bouche des joueurs, « monsieur Clow » pour Josiane, « le vieux » pour Aulard, qui ne l'a jamais embauché. 61 ans en 1990, 66 à 71 ans à sa mort. **Portrait** : les cheveux blancs plaqués en arrière, la doudoune verte du banc (hiver 1990, il ne l'enlève jamais, même au bar), la boule de chewing-gum qui roule quand il réfléchit, le verre à côté, plein à ras bord, qu'il ne boit pas toujours. **Voix** : haute, nasale, ironique, une phrase sur deux commence par « petit » ; il parle de lui à la troisième personne quand il ment. Il n'est de personne : il suit l'entraîneur (`same_club: false`), pas le club, s'assoit au bar en face du stade, au téléphone, à l'hôpital. Il a un tabouret réservé dans trois villes.
+Dan Corven ; « Corven » tout court dans la bouche des joueurs, « monsieur Corven » pour Josiane, « le vieux » pour Vaubourg, qui ne l'a jamais embauché. 61 ans en 1990, 66 à 71 ans à sa mort. **Portrait** : les cheveux blancs plaqués en arrière, la doudoune verte du banc (hiver 1990, il ne l'enlève jamais, même au bar), la boule de chewing-gum qui roule quand il réfléchit, le verre à côté, plein à ras bord, qu'il ne boit pas toujours. **Voix** : haute, nasale, ironique, une phrase sur deux commence par « petit » ; il parle de lui à la troisième personne quand il ment. Il n'est de personne : il suit l'entraîneur (`same_club: false`), pas le club, s'assoit au bar en face du stade, au téléphone, à l'hôpital. Il a un tabouret réservé dans trois villes.
 
-**Désir / besoin / blessure / secret.** Désir : que tu réussisses, et qu'on dise qu'il t'a appris. Besoin : qu'on l'appelle. Blessure : le télégramme de 1974 (quarante-quatre jours). Secret : il n'a jamais gagné un titre comme entraîneur ; le « top un » est sa seule victoire, et il le sait.
+**Désir / besoin / blessure / secret.** Désir : que tu réussisses, et qu'on dise qu'il t'a appris. Besoin : qu'on l'appelle. Blessure : le télégramme de 1971 (cinquante-neuf jours). Secret : il n'a jamais gagné un titre comme entraîneur ; le « devant » est sa seule victoire, et il le sait.
 
 ### 5.2 Les cinq registres
 - **−3** — « Je ne dirais pas qu'il était le pire, coach. Je ne dirais rien ; c'est déjà beaucoup. » / « Tu as effacé le message. Le président en a un tout prêt pour toi. »
 - **−2 / −1** — « Tu n'appelles plus. Bon signe, un coach qui écoute n'en est pas un. » (existant) / « Je gère, tu dis. Ils disent tous ça avant le télégramme. »
-- **0** — « Peur du président, {prenom} ? Quarante-quatre jours dans un grand club. » (existant) / « Une promesse, c'est un chèque. Tu en as signé combien ? » (existant)
+- **0** — « Peur du président, {prenom} ? Cinquante-neuf jours dans un grand club. » (existant) / « Une promesse, c'est un chèque. Tu en as signé combien ? » (existant)
 - **+1 / +2** — « Une jauge pleine tue autant qu'une vide, petit. » (existant) / « Tu vas perdre dimanche, petit ; je te le dis parce que les autres t'aiment trop. »
-- **+3** — « Tiens, le télégramme de soixante-quatorze. Je ne dirais pas que c'est mon bien le plus précieux, mais il est dans le top un. » / « Lundi, huit heures. J'ai mis ta chaise devant. »
+- **+3** — « Tiens, le télégramme de soixante et onze. Je ne dirais pas que c'est mon bien le plus précieux ; je dirais qu'il est devant. » / « Lundi, huit heures. J'ai mis ta chaise devant. »
 
 ### 5.3 Rapports avec les autres
-**Alliés** : Josiane (elle a son numéro, elle prévient pour l'hôpital ; elle range son enveloppe), Vecchio (deux vieux au bar : Gigi boit de l'eau, Clow regarde), Brissac (elle le fait animer le stage du diplôme parce qu'il dit la vérité aux stagiaires). **Rivaux** : Aulard (« le vieux ne m'a jamais rien appris », dit Aulard, qui a copié son discours de 1974), Loco (« la cassette, c'est le top un des gens qui n'ont pas de mémoire »). **Dettes** : il doit à Vukić un conseil non suivi ; Ménèche lui doit son premier article. **Il aime** : Camille, qu'il appelle « la seule qui a compris que tu ne rentrerais pas ».
+**Alliés** : Josiane (elle a son numéro, elle prévient pour l'hôpital ; elle range son enveloppe), Vecchio (deux vieux au bar : Gigi boit de l'eau, Corven regarde), Brissac (elle le fait animer le stage du diplôme parce qu'il dit la vérité aux stagiaires). **Rivaux** : Vaubourg (« le vieux ne m'a jamais rien appris », dit Vaubourg, qui a copié son discours de 1971), Vaz (« la cassette, c'est le refuge des gens qui n'ont pas de mémoire »). **Dettes** : il doit à Vukić un conseil non suivi ; Massenet lui doit son premier article. **Il aime** : Camille, qu'il appelle « la seule qui a compris que tu ne rentrerais pas ».
 
 ### 5.4 INTRIGUE co.clow_lundi  —  Lundi, huit heures
-**Logline** : Brian Clow t'apprend le métier avant que tu l'aies, te dit que tu vas perdre quand tout le monde t'aime, et laisse un télégramme ou rien. · **Synopsis** : Joueur en fin de contrat, tu passes le diplôme chez lui : lundi, huit heures. Au bar, trois verres racontent trois versions des quarante-quatre jours. Sélectionneur, il est le seul à te dire que tu vas perdre. À +3 il te donne le télégramme de 1974. Après sa mort, son fils est sur le banc d'en face : il te serre la main ou non, selon ce que tu as fait au père. À l'enterrement, tu es au premier rang ou derrière un pilier.
-**Rôle(s)** : joueur, entraineur, selectionneur, ds · **Postulat(s)** : partagé (fin_de_contrat, interimaire, promu, apres_fiasco, coach_intouchable) · **Porteur** : clow · **Cast** : clow, josiane, brissac, le fils de Clow (voix), vecchio · **Thème** : presse (le mentor est un chapitre de presse : ce qu'on dit et ce qu'on tait)
-**Saisons** : "0" (lundi : joueur seulement), "1" (trois_verres), "2+" (tu_vas_perdre, telegramme, fils, enterrement) · **Conditions d'entrée** : `chars.clow.statut != 'mort'` pour 1-4 ; `== 'mort'` pour 5-6 · **Exclusions** : `en.mentor_clow` la même saison (les deux se partagent Clow : celle-là est l'arc des trois conseils, celle-ci la vie d'après) · **Rejouabilité** : jamais
-**Issues** → **Traces** → **Qui les lit** : `stage` → `clow_stage` (« {annee} : {prenom} {nom} a passé le diplôme chez Brian Clow. Lundi, huit heures ; il était là à sept. ») → lue par 10 (`jp.diplome_joueur`), 11 (`en.diplome` : le stage), 30 (Carrefour « tu as le papier »), 02 (Brissac : « le stage Clow ») · `telegramme` → `telegramme_clow` (objet héritable ; « {annee} : Brian Clow a donné son télégramme de 1974 à {prenom} {nom}. Quarante-quatre jours, plié en quatre. ») → lue par 90 (lignée : objet), 30 (`en_sms` plus : « le télégramme était dans la poche »), 31 · `fils_refus` → `fils_clow_refus` (« {annee} : le fils de Clow a refusé de serrer la main de {nom}. Il portait la doudoune du père. ») → lue par 90 (Nemesis de lignée), 12 (il refuse ton club), 20 (« LE FILS N'A PAS SERRÉ LA MAIN »)
-**Séquencier** : lundi (joueur, S0, [6,14], `age >= 30`) → trois_verres (S1+, [4,12], `relation.clow >= 0`) → tu_vas_perdre (sélectionneur, veille de Grand Match) → telegramme (= palier +3, cité) → fils (S2+, `chars.clow.statut == 'mort' && year >= 2005`, semaine d'un match contre son club) → enterrement (la saison de la mort, [1,4]) ; lit `clow_ingrat` (existant, 11) à fils et enterrement.
-**Épilogue** : rien (Clow suit l'entraîneur).
+**Logline** : Dan Corven t'apprend le métier avant que tu l'aies, te dit que tu vas perdre quand tout le monde t'aime, et laisse un télégramme ou rien. · **Synopsis** : Joueur en fin de contrat, tu passes le diplôme chez lui : lundi, huit heures. Au bar, trois verres racontent trois versions des cinquante-neuf jours. Sélectionneur, il est le seul à te dire que tu vas perdre. À +3 il te donne le télégramme de 1971. Après sa mort, son fils est sur le banc d'en face : il te serre la main ou non, selon ce que tu as fait au père. À l'enterrement, tu es au premier rang ou derrière un pilier.
+**Rôle(s)** : joueur, entraineur, selectionneur, ds · **Postulat(s)** : partagé (fin_de_contrat, interimaire, promu, apres_fiasco, coach_intouchable) · **Porteur** : clow · **Cast** : clow, josiane, brissac, le fils de Corven (voix), vecchio · **Thème** : presse (le mentor est un chapitre de presse : ce qu'on dit et ce qu'on tait)
+**Saisons** : "0" (lundi : joueur seulement), "1" (trois_verres), "2+" (tu_vas_perdre, telegramme, fils, enterrement) · **Conditions d'entrée** : `chars.clow.statut != 'mort'` pour 1-4 ; `== 'mort'` pour 5-6 · **Exclusions** : `en.mentor_clow` la même saison (les deux se partagent Corven : celle-là est l'arc des trois conseils, celle-ci la vie d'après) · **Rejouabilité** : jamais
+**Issues** → **Traces** → **Qui les lit** : `stage` → `clow_stage` (« {annee} : {prenom} {nom} a passé le diplôme chez Dan Corven. Lundi, huit heures ; il était là à sept. ») → lue par 10 (`jp.diplome_joueur`), 11 (`en.diplome` : le stage), 30 (Carrefour « tu as le papier »), 02 (Brissac : « le stage Corven ») · `telegramme` → `telegramme_clow` (objet héritable ; « {annee} : Dan Corven a donné son télégramme de 1974 à {prenom} {nom}. Cinquante-neuf jours, plié en quatre. ») → lue par 90 (lignée : objet), 30 (`en_sms` plus : « le télégramme était dans la poche »), 31 · `fils_refus` → `fils_clow_refus` (« {annee} : le fils de Corven a refusé de serrer la main de {nom}. Il portait la doudoune du père. ») → lue par 90 (Nemesis de lignée), 12 (il refuse ton club), 20 (« LE FILS N'A PAS SERRÉ LA MAIN »)
+**Séquencier** : lundi (joueur, S0, [6,14], `age >= 30`) → trois_verres (S1+, [4,12], `relation.clow >= 0`) → tu_vas_perdre (sélectionneur, veille de Grand Match) → telegramme (= palier +3, cité) → fils (S2+, `(chars.clow.statut == 'mort' || (chars.clow.statut == 'parti' && flag('clow_mort'))) && year >= 2005`, semaine d'un match contre son club) → enterrement (la saison de la mort, [1,4]) ; lit `clow_ingrat` (existant, 11) à fils et enterrement.
+**Épilogue** : rien (Corven suit l'entraîneur).
 
 ### SCÈNE jp.clow.lundi  —  Lundi, huit heures
 **Rôle** : joueur · **Intrigue** : co.clow_lundi · **Étape** : 1/6 · **Moment** : saison 0, [6,14] · **Lieu** : le bar en face du stade, un formulaire de la Fédération sur le comptoir · **Conditions** : `age >= 30 && !flag('diplome')`
-**CLOW** *(le mentor — neutre — il pousse le formulaire avec le fond de son verre)*
-« Le diplôme, c'est trois mois chez moi, et je ne dirais pas que j'étais le meilleur formateur, mais j'étais dans le top un. Lundi, huit heures, petit ; le club, tu lui dis après. »
+**CORVEN** *(le mentor — neutre — il pousse le formulaire avec le fond de son verre)*
+« Le diplôme, c'est trois mois chez moi, et je ne dirais pas que j'étais un grand formateur ; je dirais que j'étais devant. Lundi, huit heures, petit ; le club, tu lui dis après. »
 ← **Lundi, huit heures** — effets : direction −, vestiaire +, relation.clow +1, set: clow_stage, outcome: stage — *Tu es là à sept heures et demie. Il est là depuis sept. Il a mis ta chaise devant.*
-→ **Après ma carrière, Brian** — effets : tribunes +, relation.clow −1 — *Il replie le formulaire. « Après », dit-il, « c'est le mot des gens qui finissent consultants. »*
-**Traces** : clow_stage · **Réactions déclenchées** : co.re.vukic_lundi (§ 5.8) · **Lu plus tard par** : 10 (`jp.diplome_joueur` : variante « tu es déjà chez Clow »), 30 (Carrefour : « tu as le papier, et le tabouret »), 02 (Brissac)
+→ **Après ma carrière, Dan** — effets : tribunes +, relation.clow −1 — *Il replie le formulaire. « Après », dit-il, « c'est le mot des gens qui finissent consultants. »*
+**Traces** : clow_stage · **Réactions déclenchées** : co.re.vukic_lundi (§ 5.8) · **Lu plus tard par** : 10 (`jp.diplome_joueur` : variante « tu es déjà chez Corven »), 30 (Carrefour : « tu as le papier, et le tabouret »), 02 (Brissac)
 
 ### SCÈNE co.clow.trois_verres  —  Trois verres
 **Rôle** : entraineur, joueur, ds · **Intrigue** : co.clow_lundi · **Étape** : 2/6 · **Moment** : saison 1+, [4,12] · **Lieu** : le bar, tard, trois verres pleins alignés devant lui, aucun bu · **Conditions** : `relation.clow >= 0 && chars.clow.statut != 'mort'`
-**CLOW** *(le mentor — sourire — il désigne les verres l'un après l'autre)*
-« Premier verre : viré parce que j'avais raison ; deuxième : j'avais tort ; troisième : par télégramme, le vrai. Je ne dirais pas que j'ai tout dit, mais j'étais dans le top un des menteurs. »
+**CORVEN** *(le mentor — sourire — il désigne les verres l'un après l'autre)*
+« Premier verre : viré parce que j'avais raison ; deuxième : j'avais tort ; troisième : par télégramme, le vrai. Je ne dirais pas que j'ai tout dit. Je dirais que j'étais devant les menteurs. »
 ← **Je bois le troisième** — effets : relation.clow +1, vestiaire +, direction −, set: clow_trois_verres — *Vous buvez le troisième. Il ne le finit pas ; il ne finit jamais ceux-là. Tu rentres à pied.*
-→ **Je ne bois pas, Brian** — effets : relation.clow +1, force +1 — *« Bien », dit-il. Il fait porter les trois verres à la table d'à côté. Gigi y boit de l'eau.*
-**Traces** : clow_trois_verres (`journal:` poids 2 : « {annee} : trois verres avec Brian Clow. Le troisième était le vrai. ») · **Réactions déclenchées** : — · **Lu plus tard par** : co.clow.faveur_telegramme (variante « tu connais le troisième verre »), 31 (Almanach du Ballon, entrée « Clow »)
+→ **Je ne bois pas, Dan** — effets : relation.clow +1, force +1 — *« Bien », dit-il. Il fait porter les trois verres à la table d'à côté. Gigi y boit de l'eau.*
+**Traces** : clow_trois_verres (`journal:` poids 2 : « {annee} : trois verres avec Dan Corven. Le troisième était le vrai. ») · **Réactions déclenchées** : — · **Lu plus tard par** : co.clow.faveur_telegramme (variante « tu connais le troisième verre »), 31 (Almanach du Ballon, entrée « Corven »)
 
 ### SCÈNE sl.clow.tu_vas_perdre  —  Tu vas perdre
 **Rôle** : selectionneur · **Intrigue** : co.clow_lundi · **Étape** : 3/6 · **Moment** : la veille d'un Grand Match de tournoi · **Lieu** : le hall de l'hôtel des Cobalts, il n'est pas accrédité, il est là quand même · **Conditions** : `chars.clow.statut != 'mort' && gauges.tribunes >= 60`
-**CLOW** *(le mentor — sourire — la doudoune verte au milieu des costumes)*
-« Le pays t'aime, et c'est pour ça que tu perds demain : personne n'ose te dire que ton six ne court plus. Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un des perdants. »
-← **Le six sort, merci** — effets : force +2, vestiaire −, relation.clow +1, relation.fauvel −1 — *Le six sort. Il ne pardonne pas. Tu gagnes, ou tu perds avec un autre six ; Clow est déjà reparti.*
-→ **Le pays a raison** — effets : tribunes +, force −2, relation.clow −1, set: clow_pas_ecoute — *Le six joue. Tu vois à la vingtième qu'il ne court plus. Clow regarde depuis un bar, à trois rues.*
-**Traces** : clow_pas_ecoute (« {annee} : Brian Clow avait dit que le six ne courait plus. Le sélectionneur a écouté le pays. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (chaîne Tournoi : temps fort « le six »), 20 (« LE VIEUX AVAIT DIT »)
+**CORVEN** *(le mentor — sourire — la doudoune verte au milieu des costumes)*
+« Le pays t'aime, et c'est pour ça que tu perds demain : personne n'ose te dire que ton six ne court plus. Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant les perdants. »
+← **Le six sort, merci** — effets : force +2, vestiaire −, relation.clow +1, relation.fauvel −1 — *Le six sort. Il ne pardonne pas. Tu gagnes, ou tu perds avec un autre six ; Corven est déjà reparti.*
+→ **Le pays a raison** — effets : tribunes +, force −2, relation.clow −1, set: clow_pas_ecoute — *Le six joue. Tu vois à la vingtième qu'il ne court plus. Corven regarde depuis un bar, à trois rues.*
+**Traces** : clow_pas_ecoute (« {annee} : Dan Corven avait dit que le six ne courait plus. Le sélectionneur a écouté le pays. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (chaîne Tournoi : temps fort « le six »), 20 (« LE VIEUX AVAIT DIT »)
 
-### SCÈNE en.clow.fils  —  Le fils de Clow
-**Rôle** : entraineur, ds · **Intrigue** : co.clow_lundi · **Étape** : 5/6 · **Moment** : saison 2+, semaine d'un match contre le club du fils · **Lieu** : le rond central, avant l'échauffement · **Conditions** : `chars.clow.statut == 'mort' && year >= 2005` ; variante `_ingrat` si `flag('clow_ingrat')`
-**LE FILS DE CLOW** *(entraîneur adverse, voix sans portrait — neutre — la doudoune verte du père, trop grande)*
-« Mon père disait que vous écoutiez, ou pas, je ne sais plus. Je ne dirais pas qu'il était le meilleur, mais il est dans le top un de ceux qui sont morts avec votre nom dans la bouche. »
+### SCÈNE en.clow.fils  —  Le fils de Corven
+**Rôle** : entraineur, ds · **Intrigue** : co.clow_lundi · **Étape** : 5/6 · **Moment** : saison 2+, semaine d'un match contre le club du fils · **Lieu** : le rond central, avant l'échauffement · **Conditions** : `(chars.clow.statut == 'mort' || (chars.clow.statut == 'parti' && flag('clow_mort'))) && year >= 2005` ; variante `_ingrat` si `flag('clow_ingrat')`
+**LE FILS DE CORVEN** *(entraîneur adverse, voix sans portrait — neutre — la doudoune verte du père, trop grande)*
+« Mon père disait que vous écoutiez, ou pas, je ne sais plus. Je ne dirais pas qu'il était un grand. Je dirais qu'il est devant ceux qui sont morts avec votre nom dans la bouche. »
 ← **Il m'a tout appris** — effets : tribunes +, relation.clow +1 (posthume : la mémoire du buste), set: fils_clow_main — *Il vous serre la main. Il a le chewing-gum du père. Il perd le match ; il ne vous en veut pas.*
-→ **On s'est perdus de vue** — effets : direction +, set: fils_clow_refus, outcome: fils_refus — *Il retire la main avant que vous la preniez. La doudoune verte tourne le dos. Ménèche a vu.*
+→ **On s'est perdus de vue** — effets : direction +, set: fils_clow_refus, outcome: fils_refus — *Il retire la main avant que vous la preniez. La doudoune verte tourne le dos. Massenet a vu.*
 *(Variante `_ingrat` : la main n'est pas tendue ; un seul bouton, « Je comprends », `set: fils_clow_refus`.)*
-**Traces** : fils_clow_main, fils_clow_refus · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (Nemesis de lignée ; « le fils de Clow » refuse la lignée si refus), 12 (il ne travaille pas pour ton club), 20 (« LE FILS N'A PAS SERRÉ LA MAIN »)
+**Traces** : fils_clow_main, fils_clow_refus · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (Nemesis de lignée ; « le fils de Corven » refuse la lignée si refus), 12 (il ne travaille pas pour ton club), 20 (« LE FILS N'A PAS SERRÉ LA MAIN »)
 
 ### SCÈNE co.clow.enterrement  —  Derrière un pilier
-**Rôle** : tous · **Intrigue** : co.clow_lundi · **Étape** : 6/6 · **Moment** : la saison de la mort, [1,4] (drame sobre, une seule sortie) · **Lieu** : une église de village, une doudoune verte sur le cercueil · **Conditions** : `chars.clow.statut == 'mort'` ; si `flag('clow_ingrat')`, la carte existante `en.clow.testament_ingrat` a déjà dit que le fils ne voulait pas de toi : variante `_pilier`
+**Rôle** : tous · **Intrigue** : co.clow_lundi · **Étape** : 6/6 · **Moment** : la saison de la mort, [1,4] (drame sobre, une seule sortie) · **Lieu** : une église de village, une doudoune verte sur le cercueil · **Conditions** : `chars.clow.statut == 'mort' || (chars.clow.statut == 'parti' && flag('clow_mort'))` ; si `flag('clow_ingrat')`, la carte existante `en.clow.testament_ingrat` a déjà dit que le fils ne voulait pas de toi : variante `_pilier`
 **MADAME JOSIANE** *(secrétaire — neutre — elle t'a gardé une place, au bord)*
-« Ils ont mis la doudoune sur le cercueil et un verre d'eau plein à côté, à ras bord. J'en ai vu passer, vous savez ; lui, il disait qu'il était dans le top un. »
-← **Je m'assois** — effets : — — *Tu t'assois. Le fils lit le télégramme de 1974 à voix haute. Personne ne rit ; c'est pourtant drôle.*
-→ **Je m'assois** — effets : — — *Tu t'assois. Le fils lit le télégramme de 1974 à voix haute. Personne ne rit ; c'est pourtant drôle.*
+« Ils ont mis la doudoune sur le cercueil et un verre d'eau plein à côté, à ras bord. J'en ai vu passer, vous savez ; lui, il disait qu'il était devant. »
+← **Je m'assois** — effets : — — *Tu t'assois. Le fils lit le télégramme de 1971 à voix haute. Personne ne rit ; c'est pourtant drôle.*
+→ **Je m'assois** — effets : — — *Tu t'assois. Le fils lit le télégramme de 1971 à voix haute. Personne ne rit ; c'est pourtant drôle.*
 *(Variante `_pilier`, si `clow_ingrat` : « Je reste derrière le pilier » ; le fils te voit ; il ne dit rien ; `set: fils_clow_refus`.)*
-**Traces** : — (`journal:` poids 3 : « {annee} : enterrement de Brian Clow. Un verre d'eau plein sur le cercueil. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (l'épitaphe d'enterrement, ligne des 41), 90 (Panthéon : le buste)
+**Traces** : — (`journal:` poids 3 : « {annee} : enterrement de Dan Corven. Un verre d'eau plein sur le cercueil. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (l'épitaphe d'enterrement, ligne des 41), 90 (Panthéon : le buste)
 
 ### 5.5 Les paliers
-### SCÈNE co.clow.trahison_top_un  —  Le top un du bas
+### SCÈNE co.clow.trahison_devant  —  Devant la sortie
 **Rôle** : entraineur, joueur, selectionneur · **Intrigue** : palier −3 · **Étape** : on_relation −3 · **Moment** : programmé en [1,3] · **Lieu** : la radio, ou le plateau de Télé-Stade, un verre à côté du micro · **Conditions** : `relation.clow <= -3`, une fois par carrière
-**CLOW** *(le mentor — noir — il parle à Ménèche, pas à toi ; tu écoutes)*
-« Je ne dirais pas que c'était le pire de mes élèves, mais il était dans le top un ; du bas. Il n'appelait plus, coach, alors je parle à ceux qui m'appellent. »
-← **J'éteins la radio** — effets : tribunes −−, direction −, set: clow_a_parle — *Tu éteins. Ménèche a enregistré. Le vestiaire a écouté en direct, dans le bus.*
-→ **J'éteins la radio** — effets : tribunes −−, direction −, set: clow_a_parle — *Tu éteins. Ménèche a enregistré. Le vestiaire a écouté en direct, dans le bus.*
-**Traces** : clow_a_parle (« {annee} : Brian Clow a parlé de {nom} à la radio. Top un, du bas. ») · **Lu plus tard par** : 11 (`en.dossier_meneche` variante), 20 (« LE MENTOR LÂCHE SON ÉLÈVE »), 30 (`en_sms` plus)
+**CORVEN** *(le mentor — noir — il parle à Massenet, pas à toi ; tu écoutes)*
+« Je ne dirais pas que c'était le pire de mes élèves. Je dirais qu'il était devant, du mauvais côté. Il n'appelait plus, coach, alors je parle à ceux qui m'appellent. »
+← **J'éteins la radio** — effets : tribunes −−, direction −, set: clow_a_parle — *Tu éteins. Massenet a enregistré. Le vestiaire a écouté en direct, dans le bus.*
+→ **J'éteins la radio** — effets : tribunes −−, direction −, set: clow_a_parle — *Tu éteins. Massenet a enregistré. Le vestiaire a écouté en direct, dans le bus.*
+**Traces** : clow_a_parle (« {annee} : Dan Corven a parlé de {nom} à la radio. Top un, du bas. ») · **Lu plus tard par** : 11 (`en.dossier_meneche` variante), 20 (« LE MENTOR LÂCHE SON ÉLÈVE »), 30 (`en_sms` plus)
 
 ### SCÈNE co.clow.faveur_telegramme  —  Le télégramme
-**Rôle** : entraineur, joueur, selectionneur · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : le bar, le télégramme de 1974 plié en quatre, jauni, sur le comptoir · **Conditions** : `relation.clow >= 3`, une fois par carrière
-**CLOW** *(le mentor — sourire — il ne le pousse pas ; il attend que tu le prennes)*
-« Quarante-quatre jours, un télégramme, et je l'ai gardé quarante-quatre ans presque. Je ne dirais pas que c'est mon bien le plus précieux, petit, mais il est dans le top un : prends-le. »
+**Rôle** : entraineur, joueur, selectionneur · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : le bar, le télégramme de 1971 plié en quatre, jauni, sur le comptoir · **Conditions** : `relation.clow >= 3`, une fois par carrière
+**CORVEN** *(le mentor — sourire — il ne le pousse pas ; il attend que tu le prennes)*
+« Cinquante-neuf jours, un télégramme, et je l'ai gardé cinquante-neuf ans presque. Je ne dirais pas que c'est mon bien le plus précieux, petit ; je dirais qu'il est devant : prends-le. »
 ← **Je le prends** — effets : direction +, vestiaire +, relation.clow +1, set: telegramme_clow, outcome: telegramme — *Tu le prends. Il tient dans une poche de survêtement ; il y restera, quel que soit le survêtement.*
 → **Garde-le, il est à toi** — effets : relation.clow +1, tribunes + — *Il le replie. Il le donnera à Josiane pour l'enveloppe ; tu le retrouveras au testament, s'il y en a un.*
 *(Variante si `flag('clow_trois_verres')` : « Tu connais le troisième verre. Voilà le papier qui va avec. »)*
@@ -719,49 +711,47 @@ Brian Clow ; « Clow » tout court dans la bouche des joueurs, « monsieur Clow 
 ### 5.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.clow_sourire  —  Le tabouret
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations, `chars.clow.statut != 'mort'` · **Lieu** : le bar en face du nouveau stade, un tabouret de plus
-**CLOW** *(le mentor — sourire — un tabouret de plus au bar d'en face du nouveau stade)*
-« J'ai un tabouret ici aussi, petit ; j'en ai dans trois villes, et tu m'en dois une quatrième. Je ne dirais pas que je t'ai suivi, mais j'étais dans le top un des gens qui savaient où tu allais. »
-← **La tournée est pour moi** — effets : relation.clow +1, direction − — *Il commande de l'eau. Il ne te le dit pas ; tu le vois.*
-→ **Plus le temps pour le bar** — effets : relation.clow −1, direction + — *« J'ai pas le temps, j'ai un empire », dit-il, en imitant l'autre. Il reste au bar. Tu n'y retournes pas.*
+**CORVEN** *(le mentor — sourire — un tabouret de plus au bar d'en face du nouveau stade)*
+« J'ai un tabouret ici aussi, petit ; j'en ai dans trois villes, et tu m'en dois une quatrième. Je ne dirais pas que je t'ai suivi. Je dirais que j'étais devant, à savoir où tu allais. »
+**OK** **La tournée est pour moi** — effets : relation.clow +1, direction − — *Il commande de l'eau. Il ne te le dit pas ; tu le vois.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.clow_noir  —  Le message
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations, `chars.clow.statut != 'mort'` · **Lieu** : le bar en face du nouveau stade, le verre vide
-**CLOW** *(le mentor — noir — le verre vide, pour une fois)*
-« Tu as changé de club, et tu n'as pas changé de répondeur, coach. Je ne dirais pas que j'ai appelé, mais j'étais dans le top un des gens qui n'ont pas rappelé non plus. »
-← **Je te rappelle, Brian** — effets : relation.clow +1, vestiaire + — *Tu rappelles. Il décroche à la première sonnerie. Il attendait.*
-→ **On n'a plus rien à se dire** — effets : relation.clow −1, direction + — *Il finit le verre vide, geste absurde. Il part. Le fils saura.*
+**CORVEN** *(le mentor — noir — le verre vide, pour une fois)*
+« Tu as changé de club, et tu n'as pas changé de répondeur, coach. Je ne dirais pas que j'ai appelé. Je dirais que j'étais devant ceux qui n'ont pas rappelé non plus. »
+**OK** **Je te rappelle, Dan** — effets : relation.clow +1, vestiaire + — *Tu rappelles. Il décroche à la première sonnerie. Il attendait.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.clow_fantome  —  Le buste
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : une fois par carrière, à la Passation qui suit sa mort · **Conditions** : `chars.clow.statut == 'mort' && relation.clow != 0` · **Lieu** : le Panthéon, devant le buste
-**LE BUSTE DE CLOW** *(Panthéon — neutre — la voix vient de ta mémoire, pas du bronze)*
-« Une jauge pleine tue autant qu'une vide, petit ; je te l'ai dit en quatre-vingt-dix et tu as fait semblant de noter. Je ne dirais pas que je suis mort, mais je suis dans le top un des absents. »
-← **Je note, cette fois** — effets : tribunes −, direction − (ajustement vers le milieu), vestiaire + — *Tu regardes les jauges. Elles te regardent aussi. Ce n'est pas le même regard.*
-→ **Tais-toi, Brian** — effets : tribunes +, relation.clow −1 (posthume) — *Le bronze se tait. La tribune chante ton nom, un peu trop fort.*
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : une fois par carrière, à la Passation qui suit sa mort · **Conditions** : `(chars.clow.statut == 'mort' || (chars.clow.statut == 'parti' && flag('clow_mort'))) && relation.clow != 0` · **Lieu** : le Panthéon, devant le buste
+**LE BUSTE DE CORVEN** *(Panthéon — neutre — la voix vient de ta mémoire, pas du bronze)*
+« On meurt aussi d'être trop aimé, petit ; je te l'ai dit en quatre-vingt-dix et tu as fait semblant de noter. Je ne dirais pas que je suis mort. Je dirais que je suis devant les absents. »
+← **Je note, cette fois** — effets : tribunes −, direction − (ajustement vers le milieu), vestiaire + — *Tu regardes le bronze. Il ne cligne pas ; toi si.*
+→ **Tais-toi, Dan** — effets : tribunes +, relation.clow −1 (posthume) — *Le bronze se tait. La tribune chante ton nom, un peu trop fort.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### 5.7 Anecdotes
-- **01.clow_telegramme** — objet (héritable) · `co.clow.faveur_telegramme`, enterrement · Le télégramme de 1974 : « SERVICES PLUS REQUIS STOP MERCI STOP » ; il compte les mots quand il n'arrive pas à dormir : sept.
+- **01.clow_telegramme** — objet (héritable) · `co.clow.faveur_telegramme`, enterrement · Le télégramme de 1971 : « SERVICES PLUS REQUIS STOP MERCI STOP » ; il compte les mots quand il n'arrive pas à dormir : sept.
 - **01.clow_verre** — légende · `en.clow.verre`, hôpital · Le verre est toujours plein à ras bord et jamais fini ; à l'hôpital, c'est un verre d'eau, et il est plein aussi.
 - **01.clow_voiture** — décor · brèves · Il ne conduit plus depuis 1988 ; il prend le car des supporters, au fond, et personne ne le reconnaît sauf Gégé.
-- **01.clow_repas** — décor · `co.clow.trois_verres` · Il mange des cacahuètes de bar et des œufs durs ; « le régime du top un ».
+- **01.clow_repas** — décor · `co.clow.trois_verres` · Il mange des cacahuètes de bar et des œufs durs ; « le régime de ceux qui sont devant ».
 - **01.clow_chewing_gum** — détail de portrait · toute scène · Il ne mâche que sur le banc et au bar ; à l'hôpital, la boule est sur la table de nuit, dans son papier.
 
 ### 5.8 Réaction propre
 ### RÉACTION co.re.vukic_lundi  —  Sept heures, pas huit
 **Après** : jp.clow.lundi (← lundi) · **Famille** : tiers qui commente · **Conditions** : `relation.vukic >= 0`
 **VUKIĆ** *(entraîneur adjoint — neutre — il a vu la chaise devant)*
-« Clow a dit huit heures et il t'attendra à sept ; je te le dis parce que personne ne te le dira. Il m'a fait le coup en quatre-vingt-un. »
+« Corven a dit huit heures et il t'attendra à sept ; je te le dis parce que personne ne te le dira. Il m'a fait le coup en quatre-vingt-un. »
 **Un bouton** : **Sept heures, alors** — effets : relation.clow +1, force +1 — *Tu es là à sept. Il est là depuis six et demie. Il ne le dit pas.*
 
-### SCÈNE en.clow.stage  —  Le stage Clow (complément : sixième scène propre)
+### SCÈNE en.clow.stage  —  Le stage Corven (complément : sixième scène propre)
 **Rôle** : entraineur · **Intrigue** : co.clow_lundi (hors séquencier : servie par `en.diplome` du chapitre 11, étape « le stage ») · **Moment** : saison 0-1, la semaine du stage · **Lieu** : une salle de la Fédération, douze chaises, un magnétoscope débranché · **Conditions** : `flag('derogation') && chars.clow.statut != 'mort'`
-**CLOW** *(le mentor, animateur du stage — neutre — il éteint le magnétoscope que Loco avait laissé allumé)*
-« Douze stagiaires, onze qui veulent le papier et un qui veut le banc ; je ne dirais pas que je sais lequel tu es, mais j'ai une idée dans le top un. Le questionnaire, ou moi ? »
-← **À toi, Brian** — effets : direction −, relation.clow +1, relation.brissac +1, set: clow_stage — *Deux heures de questions. Brissac écoute derrière la porte ; elle tamponne le papier le lendemain.*
+**CORVEN** *(le mentor, animateur du stage — neutre — il éteint le magnétoscope que Vaz avait laissé allumé)*
+« Douze stagiaires, onze qui veulent le papier et un qui veut le banc ; je ne dirais pas que je sais lequel tu es ; je dirais que j'ai une idée, et qu'elle est devant. Le questionnaire, ou moi ? »
+← **À toi, Dan** — effets : direction −, relation.clow +1, relation.brissac +1, set: clow_stage — *Deux heures de questions. Brissac écoute derrière la porte ; elle tamponne le papier le lendemain.*
 → **Au questionnaire, vite** — effets : direction +, relation.clow −1, set: diplome — *Tu rends en vingt minutes. Il note « rapide » sur ta copie. Ce n'est pas un compliment.*
-**Traces** : clow_stage, diplome (∃) · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.diplome` étape S+1 : l'examen), 15 (Brissac : « le stage Clow »), 30 (Carrefour)
+**Traces** : clow_stage, diplome (∃) · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.diplome` étape S+1 : l'examen), 15 (Brissac : « le stage Corven »), 30 (Carrefour)
 
 ---
 
@@ -773,7 +763,7 @@ Brian Clow ; « Clow » tout court dans la bouche des joueurs, « monsieur Clow 
 **Ce qu'il pense de toi** : à +2 « tu m'as lancé ; je marque contre toi sans célébrer » ; à 0 « je veux jouer, et tu décides » ; à −2 « tu m'as vendu, ou tu m'as fait attendre ; c'est pareil »
 **Paliers** : −3 → `co.mbako.trahison_clause` · +3 → `co.mbako.faveur_refus_grand_club` (existant, entraîneur et joueur ; ce chapitre ajoute la variante sélectionneur `sl.mbako.faveur_hymne`)
 **Dans les rôles** : entraîneur : horloge (le prodige, l'offre, le retour ; 1,5) · joueur : cœur et rival (le prodige d'après, ton poste ; 1,5) · sélectionneur : cœur (la star des Cobalts, le binational tenté par le Kambara ; 2) · président : cœur (le retour, la statue ; 1) · instance : cœur (le capitaine qui négocie les primes 2008 ; 1) · DS : le prix de référence (0,5) · Fantôme : à partir de 2030
-**Trajectoire 1990 → 2050** : 1990-1999 · 16-25 ans, brosse, maillot blanc rayé ; lancé ou pas, vendu ou pas ; Cobalts en 1996, champion à la maison en 1998 · 2000-2009 · 26-35 ans ; capitaine des Cobalts 2004-2010 ; en 2008 il négocie les primes avec la Fédération ; le Kambara l'appelle une fois par an · 2010-2019 · 36-45 ans, gris à 45 (2019) ; retraite de joueur 2012 ; consultant deux saisons, entraîneur des jeunes, puis coach rival (2018, Étoile Bretagne ou {rival}) · 2020-2029 · lunettes (2029) ; sélectionneur du Kambara 2026-2030 : il bat les Cobalts une fois, il ne célèbre pas · 2030-2039 · Fantôme ; la statue devant la Marmite (si président tu l'as votée) ; il vient la regarder ; en 2036, si aucune lignée ne prend la Fédération, c'est lui qu'on élit « par défaut » (chapitre 02, table des mandats) : il veut présider, maintenant, et il préside jusqu'en 2044 · 2040-2050 · meurt en 2049 ; le prodige d'après lui succède dans l'Almanach ; « Je veux jouer. Maintenant. » est écrit sur le socle
+**Trajectoire 1990 → 2050** : 1990-1999 · 16-25 ans, brosse, maillot blanc rayé ; lancé ou pas, vendu ou pas ; Cobalts en 1996, champion du monde en 2002, à six mille kilomètres · 2000-2009 · 26-35 ans ; capitaine des Cobalts 2004-2010 ; en 2008 il négocie les primes avec la Fédération ; le Kambara l'appelle une fois par an · 2010-2019 · 36-45 ans, gris à 45 (2019) ; retraite de joueur 2012 ; consultant deux saisons, entraîneur des jeunes, puis coach rival (2018, Étoile Bretagne ou {rival}) · 2020-2029 · lunettes (2029) ; sélectionneur du Kambara 2026-2030 : il bat les Cobalts une fois, il ne célèbre pas · 2030-2039 · Fantôme ; la statue devant la Marmite (si président tu l'as votée) ; il vient la regarder ; en 2036, si aucune lignée ne prend la Fédération, c'est lui qu'on élit « par défaut » (chapitre 02, table des mandats) : il veut présider, maintenant, et il préside jusqu'en 2044 · 2040-2050 · meurt en 2049 ; le prodige d'après lui succède dans l'Almanach ; « Je veux jouer. Maintenant. » est écrit sur le socle
 **Retrouvailles** : `co.retrouvailles.mbako_sourire` / `_noir` / `_fantome`
 **Cartes propres** : *Le sac neuf* (01) · *Il revient* (01) · *Le Kambara appelle* (01) · *Les primes* (01) · *La statue* (01) · *Le banc d'en face* (01) · *Le prodige* (existant, `en.prodige.*`) · *Le prodige d'après* (10, `co.mbako_rival`) · *Le retour de Mbako* (11, `en.retour_mbako`) · *Le penalty, la place* (existants, `jp.vestiaire.penalty_prodige`, `jp.vestiaire.jeune_pousse`)
 
@@ -806,7 +796,7 @@ Lian Mbako ; « le petit » jusqu'à trente ans, « Mbako » après, « papy » 
 « Ma mère a signé pour un club que je n'ai pas vu, et le sac est arrivé ce matin. Je veux jouer. Maintenant, mais comment on lui dit non, à elle ? »
 ← **On la remercie, pas non** — effets : vestiaire +, relation.mbako +1, relation.mere_mbako +1, set: mbako_conseil_mere — *Il enlève l'étiquette. Il part. Il t'envoie une carte du club neuf, sans texte, juste sa signature.*
 → **Tu lui dis « je décide »** — effets : vestiaire +, relation.mbako +2, relation.mere_mbako −1, set: mbako_decide — *Il le lui dit. Elle raccroche au club. Il reste six mois de plus ; il ne sait pas si c'était bien.*
-**Traces** : mbako_conseil_mere, mbako_decide (« {annee} : Lian Mbako a dit « je décide » à sa mère. C'est {prenom} {nom} qui lui avait soufflé. ») · **Réactions déclenchées** : co.re.mere_mbako_souffle (§ 8.8) · **Lu plus tard par** : 10 (`co.mbako_rival` issue mentor), 08 (mère : `co.mere.dix_neuf_ans` variante), 14 (kambara : « tu m'as appris à décider »)
+**Traces** : mbako_conseil_mere, mbako_decide (« {annee} : Lian Mbako a dit « je décide » à sa mère. C'est {prenom} {nom} qui lui avait soufflé. ») · **Réactions déclenchées** : co.re.mere_mbako_souffle (§ 8.8) · **Lu plus tard par** : 10 (`co.mbako_rival` issue mentor), § 8 (mère : `co.mere.dix_neuf_ans` variante), 14 (kambara : « tu m'as appris à décider »)
 
 ### SCÈNE en.mbako.revient  —  Il revient
 **Rôle** : entraineur · **Intrigue** : co.mbako_horloge · **Étape** : 2/6 · **Moment** : saison 2+, [2,10] · **Lieu** : ton bureau, il a fait le voyage seul, sans sa mère · **Conditions** : `flag('mbako_vendu') && chars.mbako.age <= 28 && chars.mbako.statut == 'vendu'` (`statut_ok: [vendu]`)
@@ -870,16 +860,14 @@ Lian Mbako ; « le petit » jusqu'à trente ans, « Mbako » après, « papy » 
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le bord du terrain, ta première séance, il est venu en spectateur
 **MBAKO** *(sa fonction du moment — sourire — il est venu à ta première séance, en spectateur)*
 « Vous m'avez lancé, ou dit pour le genou, ou laissé décider, je ne sais plus lequel ; je m'en souviens de tous. Je veux jouer. Maintenant, {prenom}, même à mon âge : une séance ? »
-← **Une séance, en tenue** — effets : vestiaire ++, relation.mbako +1 — *Il joue quarante minutes. Il marque. Il ne célèbre pas. Le vestiaire comprend qui tu es.*
-→ **Assieds-toi, regarde** — effets : direction +, relation.mbako −1 — *Il regarde. Il note dans les manches. Il partira avant la fin.*
+**OK** **Une séance, en tenue** — effets : vestiaire ++, relation.mbako +1 — *Il joue quarante minutes. Le vestiaire comprend qui tu es.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.mbako_noir  —  Trente millions
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le tunnel, avant un match contre son club
 **MBAKO** *(sa fonction du moment — noir — il ne te tend pas la main, il tend un chiffre)*
 « Trente millions, monsieur, c'est ce que je valais quand vous avez signé ; je vaux plus, et vous moins. Je veux jouer. Maintenant, contre vous, de préférence. »
-← **Seize ans, et j'ai signé** — effets : relation.mbako +1, tribunes − — *Il hoche la tête. Il ne pardonne pas ; il note que tu n'as pas nié.*
-→ **C'était ta mère, pas moi** — effets : relation.mbako −1, relation.mere_mbako −1, direction + — *Il part. Il le dit à sa mère. Elle raccroche à ton club, par principe.*
+**OK** **Seize ans, et j'ai signé** — effets : relation.mbako +1, tribunes − — *Il hoche la tête. Il ne pardonne pas ; il note que tu n'as pas nié.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.mbako_fantome  —  Le socle
@@ -900,21 +888,21 @@ Lian Mbako ; « le petit » jusqu'à trente ans, « Mbako » après, « papy » 
 ---
 
 ## 7. GIGI VECCHIO  (`vecchio`)
-**Fonction** : gardien, 41 ans · **Genre** : m · **Âge en 1990** : 41 · **Camp** : terrain · **Fenêtre** : joueur 1990-1995 (cinq retraites), entraîneur des gardiens 1995-2010 (`gigi_staff`), gardien de Trébignac à 50 ans (2000-2002, amateur), buvette des anciens 2010-2031 ; meurt en 2031, minute de silence, l'arbitre ajoute une minute · **Suivant** : Bastien Lorrain, « le jeune » gardien (né 1971 ; il prend les gants en 1991 ou en 1995 selon `gardien_jeune` ; il en aura vu d'autres à son tour en 2012)
+**Fonction** : gardien, 41 ans · **Genre** : m · **Âge en 1990** : 41 · **Camp** : terrain · **Fenêtre** : joueur 1990-1995 (cinq retraites), **puis l'une des deux vies, jamais les deux** : avec `gigi_staff`, entraîneur des gardiens 1995-2010 et buvette des anciens dès 2010 ; sans `gigi_staff`, gardien de Trébignac à cinquante ans (1999-2001, amateur) et buvette des anciens dès 2002 ; meurt en 2031, minute de silence, l'arbitre ajoute une minute · **Suivant** : Bastien Lorrain, « le jeune » gardien (né 1971 ; il prend les gants en 1991 ou en 1995 selon `gardien_jeune` ; il en aura vu d'autres à son tour en 2012)
 **Tic** : « J'en ai vu d'autres. » — torsions : « J'en ai vu d'autres. Pas celle-là. » (existant) · « J'en ai vu d'autres, des dernières. » (existant) · « Celle-là, je la vois. » (existant)
-**Désir** : une saison de plus · **Blessure** : il a quarante et un ans et personne ne le lui a dit autrement qu'en riant ; Barbier l'a raté à dix-sept ans, sous la pluie, à Néville
+**Désir** : une saison de plus · **Blessure** : il a quarante et un ans et personne ne le lui a dit autrement qu'en riant ; Barbier l'a raté à dix-sept ans, sous la pluie, à Néville, en 1966
 **Adresse** : entraineur : coach sur les trois visages (c'est le personnage) · joueur : petit / petit / {prenom} · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « je descends le premier si tu montes » ; à 0 « on verra en juin, comme chaque juin » ; à −2 « je signe chez {rival}, ils m'ont demandé, eux »
 **Paliers** : −3 → `co.vecchio.trahison_une_rendue` · +3 → `co.vecchio.faveur_reunion`
-**Dans les rôles** : joueur : chœur et exemple (le tutoriel du corps, les chaussettes, la réunion sans le staff ; 1,5) · entraîneur : cœur (la retraite chaque juin, le bus, le staff ; 3 dans le promu) · sélectionneur : cœur (le troisième gardien qui descend le premier ; 1) · amateur : cœur (le vieux gardien de Trébignac à 50 ans ; 1) · présidents : chœur (la buvette des anciens ; 1) · instance : voix au téléphone (0,5) · tous : la Une gardée (`co.re.vecchio_garde`)
-**Trajectoire 1990 → 2050** : 1990-1999 · 41-50 ans, moustache, tempes grises, gants jaunes ; cinq retraites ; entraîneur des gardiens à 45 (1994-1995) ; il descend le premier · 2000-2009 · 50-59 ans ; deux saisons dans les buts de Trébignac (2000-2002 : « Capitale FC au stade municipal », il arrête un penalty) ; lunettes (2004) pour lire les Unes qu'il garde · 2010-2019 · 60-69 ans ; la buvette des anciens avec Bréhaut ; il tient le filet de 1990 dans un placard · 2020-2029 · canne (2024) ; il vient encore le samedi, derrière le but, sur le banc à son nom · 2030-2039 · meurt en 2031, un dimanche, à la 70e ; l'arbitre ajoute une minute (Colline, s'il est désignateur) · 2040-2050 · une Nouvelle datée rappelle « le gardien de quarante-deux ans, enfin, un » ; son nom est dans le Codex à côté de celui de Mamie Paulette
+**Dans les rôles** : joueur : chœur et exemple (le tutoriel du corps, les chaussettes, la réunion sans le staff ; 1,5) · entraîneur : cœur (la retraite chaque juin, le bus, le staff ; 3 dans le promu) · sélectionneur : cœur (le troisième gardien qui descend le premier ; 1) · amateur : cœur (le vieux gardien de Trébignac à cinquante ans ; 1) · présidents : chœur (la buvette des anciens ; 1) · instance : voix au téléphone (0,5) · tous : la Une gardée (`co.re.vecchio_garde`)
+**Trajectoire 1990 → 2050** : 1990-1999 · 41-50 ans, moustache, tempes grises, gants jaunes ; cinq retraites ; entraîneur des gardiens à 45 (1994-1995) ; il descend le premier · 2000-2009 · 50-59 ans ; deux saisons dans les buts de Trébignac (1999-2001, sans `gigi_staff` : « Capitale FC au stade municipal », il arrête un penalty) ; lunettes (2004) pour lire les Unes qu'il garde · 2010-2019 · 60-69 ans ; la buvette des anciens avec Bréhaut ; il tient le filet de 1990 dans un placard · 2020-2029 · canne (2024) ; il vient encore le samedi, derrière le but, sur le banc à son nom · 2030-2039 · meurt en 2031, un dimanche, à la 70e ; l'arbitre ajoute une minute (Colline, s'il est désignateur) · 2040-2050 · une Nouvelle datée rappelle « le gardien de quarante-deux ans, enfin, un » ; son nom est dans le Codex à côté de celui de Mamie Paulette
 **Retrouvailles** : `co.retrouvailles.vecchio_sourire` / `_noir` / `_telephone`
 **Cartes propres** : *Les gants prêtés* (01) · *Un brassard sur des gants* (01) · *Trébignac, cinquante ans* (01) · *Le troisième gardien* (01) · *Le filet de quatre-vingt-dix* (01) · *La minute* (01) · *Le vieux gardien* (existant, `en.vieux.*`) · *Les trois conseils de Gigi* (10, `jp.conseils_gigi`) · *Gigi au staff* (11, `en.gigi_staff`) · *Les chaussettes, la réunion, le banc* (existants, `jp.vestiaire.superstition`, `jp.vestiaire.reunion_joueurs`, `jp.vestiaire.vecchio_banc`)
 
 ### 7.1 Identité et place
-Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le vestiaire, « monsieur Vecchio » pour Paulette, « Zoki » pour Vukić en retour du « Gigi ». 41 ans en 1990, 51 en 2000, 61 en 2010, 71 en 2020, 81 en 2030, 82 à sa mort. **Portrait** : la moustache grise, le maillot gris à manches longues, les gants jaunes sous le bras (jamais aux mains hors du terrain), l'épaule droite plus basse que la gauche depuis 1991. **Voix** : rocailleuse, lente, du Sud ; il ne finit pas ses phrases quand elles sont tristes. Au club, il est le premier arrivé au toro, le dernier sorti du bus, la Une gardée, la chaussette pas lavée, le casier que personne ne touche. Il boit de l'eau au bar et regarde Clow boire le reste.
+Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le vestiaire, « monsieur Vecchio » pour Paulette, « Zoki » pour Vukić en retour du « Gigi ». 41 ans en 1990, 51 en 2000, 61 en 2010, 71 en 2020, 81 en 2030, 82 à sa mort. **Portrait** : la moustache grise, le maillot gris à manches longues, les gants jaunes sous le bras (jamais aux mains hors du terrain), l'épaule droite plus basse que la gauche depuis 1991. **Voix** : rocailleuse, lente, du Sud ; il ne finit pas ses phrases quand elles sont tristes. Au club, il est le premier arrivé au toro, le dernier sorti du bus, la Une gardée, la chaussette pas lavée, le casier que personne ne touche. Il boit de l'eau au bar ; Corven aussi, et ils font tous les deux semblant de trouver ça normal.
 
-**Désir / besoin / blessure / secret.** Désir : une saison de plus, chaque juin. Besoin : qu'on le lui dise sans rire. Blessure : l'essai raté à Valdorne sous la pluie n'est pas le sien (c'est celui de Dédé) : le sien, c'est Barbier qui ne l'a pas vu, à Néville, en 1979 ; il a attendu vingt ans que quelqu'un vienne en doudoune. Secret : il garde le filet du but de 1990 (la saison du promu) dans un placard de la buvette ; il le ressort pour la minute de silence, la sienne.
+**Désir / besoin / blessure / secret.** Désir : une saison de plus, chaque juin. Besoin : qu'on le lui dise sans rire. Blessure : l'essai raté à Valdorne sous la pluie n'est pas le sien (c'est celui de Dédé) : le sien, c'est Barbier qui ne l'a pas vu, à Néville, en 1966 ; il a attendu vingt-quatre ans que quelqu'un vienne en doudoune. Secret : il garde le filet du but de 1990 (la saison du promu) dans un placard de la buvette ; il le ressort pour la minute de silence, la sienne.
 
 ### 7.2 Les cinq registres
 - **−3** — « Celle-là, je ne la garde plus, {prenom}. Tiens. » / « Je signe chez {rival}. Ils m'ont demandé, eux. » (existant)
@@ -980,7 +968,7 @@ Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le
 « Gigi Vecchio est mort ce matin, à la buvette, en disant qu'il en avait vu d'autres. Une minute de silence à la soixante-dixième ; j'ai vu, et l'arbitre en ajoutera une. »
 ← **Je me lève** — effets : — — *Deux minutes. Le stade ne bouge pas. Bréhaut tient le filet ; Sacha, si elle est là, ne chante pas.*
 → **Je me lève** — effets : — — *Deux minutes. Le stade ne bouge pas. Bréhaut tient le filet ; Sacha, si elle est là, ne chante pas.*
-**Traces** : gigi_mort (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2031, épitaphe d'enterrement), 18 (Paulette : rime avec 2009), 90 (Panthéon), 02 (Colline)
+**Traces** : gigi_mort (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2031, épitaphe d'enterrement), § 18 (Paulette : rime avec 2009), 90 (Panthéon), 02 (Colline)
 
 ### 7.5 Les paliers
 ### SCÈNE co.vecchio.trahison_une_rendue  —  Celle-là, je ne la garde plus
@@ -1005,16 +993,14 @@ Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le vestiaire du nouveau club, un sac ouvert
 **VECCHIO** *(sa fonction du moment — sourire — il sort une Une pliée d'un sac qui a changé trois fois)*
 « Je l'ai gardée, celle de ta première saison ; elle a suivi dans trois sacs et deux clubs. J'en ai vu d'autres, coach, des Unes ; celle-là, je te la montre, je ne te la donne pas. »
-← **Montre-la au vestiaire** — effets : vestiaire ++, relation.vecchio +1 — *Il la montre. Le vestiaire comprend qui tu es. Il la replie entre les gants.*
-→ **Range-la, Gigi** — effets : direction +, relation.vecchio −1 — *Il la range. Il ne la ressortira pas ici. Il la ressortira à la buvette, en 2020, pour quelqu'un d'autre.*
+**OK** **Montre-la au vestiaire** — effets : vestiaire ++, relation.vecchio +1 — *Il la montre. Le vestiaire comprend qui tu es. Il la replie entre les gants.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.vecchio_noir  —  Le casier
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le vestiaire du nouveau club, devant un casier neuf
 **VECCHIO** *(sa fonction du moment — noir — il dit « coach » quand même ; c'est pire)*
 « Mon casier est resté vide jusqu'en octobre, là-bas, après toi ; ici j'en ai un neuf. J'en ai vu d'autres, coach, des casiers ; celui-là, tu n'y touches pas. »
-← **Je n'y touche pas** — effets : relation.vecchio +1, vestiaire − — *Il hoche la tête. Il n'en a pas vu d'autres, des coachs qui répondent ça.*
-→ **Le casier est au club, Gigi** — effets : relation.vecchio −1, direction + — *Il vide le casier neuf. Il met ses gants dans le sac. Il ne joue pas dimanche ; il descend du bus le dernier.*
+**OK** **Je n'y touche pas** — effets : relation.vecchio +1, vestiaire − — *Il hoche la tête. Il n'en a pas vu d'autres, des coachs qui répondent ça.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.vecchio_telephone  —  La buvette des anciens
@@ -1072,7 +1058,7 @@ On ne dit jamais son prénom (Josiane le connaît : Adama ; elle dit « madame �
 - **+3** — « Voilà le numéro que je ne donne jamais. Mon fils n'a besoin de personne ; vous, si, et je vous le donne. » / « Je vous laisse lui parler seul. C'est la première fois. »
 
 ### 8.3 Rapports avec les autres
-**Alliés** : Josiane (deux femmes qui tiennent les papiers du club : elles se respectent, se craignent, se prêtent des agrafeuses), Solvang (2010+ : la nouvelle génération contre les gourmettes ; elles se partagent les binationaux), Léa (elle lui donne les clauses, Léa lui donne la Une). **Rivaux** : Fardelli (« mon ami » : elle ne répond jamais à ce mot), Brissac (qui veut son fils chez les Cobalts sans prime), Nassir (« un actif, mon fils ? »). **Dettes** : elle doit à Vukić d'avoir vu le petit marcher sur l'eau ; Aulard lui doit une clause qu'il a signée sans lire. **Elle craint** : que son fils décide sans elle ; et elle le souhaite.
+**Alliés** : Josiane (deux femmes qui tiennent les papiers du club : elles se respectent, se craignent, se prêtent des agrafeuses), Solvang (2010+ : la nouvelle génération contre les gourmettes ; elles se partagent les binationaux), Léa (elle lui donne les clauses, Léa lui donne la Une). **Rivaux** : Fardelli (« mon ami » : elle ne répond jamais à ce mot), Brissac (qui veut son fils chez les Cobalts sans prime), Ilyas (« un actif, mon fils ? »). **Dettes** : elle doit à Vukić d'avoir vu le petit marcher sur l'eau ; Vaubourg lui doit une clause qu'il a signée sans lire. **Elle craint** : que son fils décide sans elle ; et elle le souhaite.
 
 ### 8.4 INTRIGUE co.mere_trois_pour_cent  —  Trois pour cent
 **Logline** : La mère de Mbako écrit toutes les clauses ; à chaque rôle elle te demande trois pour cent, un numéro ou un aveu, et une fois elle te raconte ses dix-neuf ans. · **Synopsis** : Joueur, elle te dit que tu étais le prochain. DS, elle veut trois pour cent ou rien. Sélectionneur, le Kambara appelle et elle a déjà la prime. Instance, elle arrive avec vingt contrats. Un soir de relation elle raconte le contrat de 1970. Après la vente de son fils, elle vient te demander de signer un papier : que tu l'aurais gardé.
@@ -1102,9 +1088,9 @@ On ne dit jamais son prénom (Josiane le connaît : Adama ; elle dit « madame �
 **Rôle** : selectionneur · **Intrigue** : co.mere_trois_pour_cent · **Étape** : 3/6 · **Moment** : fenêtre de septembre, la veille de `sl.mbako.kambara` ou à sa place si celle-ci a été jouée · **Lieu** : le hall de la Fédération, elle a déjà une chaise · **Conditions** : `year in 1996..2010 && !flag('mbako_kambara')`
 **LA MÈRE DE MBAKO** *(mère et agente — neutre — un fax dans une pochette plastique)*
 « Le Kambara offre une prime par match et une maison ; les Cobalts offrent un hymne. Mon fils n'a besoin de personne pour choisir, coach ; il a besoin que vous m'écoutiez avant lui. »
-← **Je l'écoute, lui, seul** — effets : relation.mbako +1, relation.mere_mbako −1, tribunes +, set: mbako_ecoute_seul — *Tu le vois seul, pour la première fois. Il dit qu'il veut jouer. Il ne dit pas où. Elle attend dans le hall, elle a compté les minutes.*
+← **Je l'écoute, lui, seul** — effets : relation.mbako +1, relation.mere_mbako −1, tribunes +, set: mbako_ecoute_seul — *Tu le vois seul, pour la première fois. Elle attend dans le hall, elle a compté les minutes.*
 → **Je vous écoute, madame** — effets : relation.mere_mbako +2, direction −, set: mere_ecoutee — *Elle te lit le fax. Elle te lit aussi ce que la Fédération ne t'a pas dit sur la prime des Cobalts ; Dauzat le confirmera, au procès-verbal.*
-**Traces** : mbako_ecoute_seul, mere_ecoutee (« {annee} : le sélectionneur a écouté la mère de Mbako avant son fils. Elle avait le fax du Kambara. ») · **Réactions déclenchées** : co.re.mere_mbako_kambara (§ 8.8) · **Lu plus tard par** : 06 (`sl.mbako.kambara` : variante « ma mère vous a parlé »), 14 (l'avion des primes), 15 (les fédérations se disputent)
+**Traces** : mbako_ecoute_seul, mere_ecoutee (« {annee} : le sélectionneur a écouté la mère de Mbako avant son fils. Elle avait le fax du Kambara. ») · **Réactions déclenchées** : co.re.mere_mbako_kambara (§ 8.8) · **Lu plus tard par** : § 6 (`sl.mbako.kambara` : variante « ma mère vous a parlé »), 14 (l'avion des primes), 15 (les fédérations se disputent)
 
 ### SCÈNE in.mere.vingt_contrats  —  Vingt contrats
 **Rôle** : instance · **Intrigue** : co.mere_trois_pour_cent · **Étape** : 4/6 · **Moment** : un dossier de l'année, `year >= 2010` · **Lieu** : la salle du comité, vingt contrats en pile, un carnet dessus · **Conditions** : `flag('mere_agente_vingt') || year >= 2010`
@@ -1120,7 +1106,7 @@ On ne dit jamais son prénom (Josiane le connaît : Adama ; elle dit « madame �
 « J'avais dix-neuf ans, on m'a fait signer trois ans et une avance jamais venue ; je chantais. Mon fils n'a besoin de personne, {prenom} : c'est cette clause-là, à l'envers, que j'écris depuis. »
 ← **Chantez-moi une ligne** — effets : relation.mere_mbako +2, vestiaire +, set: mere_dix_neuf_ans, outcome: dix_neuf — *Elle chante une ligne, bas. C'est la berceuse du bizutage. Tu comprends d'où le petit la tient.*
 → **Gardez ça pour vous, madame** — effets : relation.mere_mbako −1, direction + — *Elle range le contrat de 1970. Elle ne le ressort plus ; Léa l'aura en 2041, avec le reste.*
-**Traces** : mere_dix_neuf_ans · **Réactions déclenchées** : — · **Lu plus tard par** : co.retrouvailles.mere_mbako_carnet, 31 (le carnet publié, 2041), 06 (`co.retrouvailles.mbako_sourire` variante « ma mère vous a chanté »)
+**Traces** : mere_dix_neuf_ans · **Réactions déclenchées** : — · **Lu plus tard par** : co.retrouvailles.mere_mbako_carnet, 31 (le carnet publié, 2041), § 6 (`co.retrouvailles.mbako_sourire` variante « ma mère vous a chanté »)
 
 ### SCÈNE en.mere.clause_en_face  —  La clause, en face
 **Rôle** : entraineur · **Intrigue** : co.mere_trois_pour_cent · **Étape** : 6/6 · **Moment** : saison 1+, [2,10] · **Lieu** : ton bureau, elle a apporté une feuille blanche et un stylo · **Conditions** : `flag('mbako_vendu')`
@@ -1128,7 +1114,7 @@ On ne dit jamais son prénom (Josiane le connaît : Adama ; elle dit « madame �
 « La clause a joué, je l'avais écrite, et mon fils croit que c'est vous qui l'avez vendu. Mon fils n'a besoin de personne, coach ; écrivez-lui que vous l'auriez gardé, et signez, ou n'écrivez rien. »
 ← **J'écris, et je signe** — effets : vestiaire +, relation.mbako +2, relation.mere_mbako +1, direction −, set: lettre_mbako — *Trois lignes. Elle les lit deux fois. Elle les poste elle-même ; le petit ne célèbre plus jamais contre toi.*
 → **Je n'écris pas de mensonge** — effets : direction +, relation.mere_mbako +1, relation.mbako −1, set: lettre_refusee — *Elle rebouche le stylo. « Bien », dit-elle. C'est la première fois que vous êtes d'accord.*
-**Traces** : lettre_mbako, lettre_refusee (« {annee} : {prenom} {nom} a refusé d'écrire au petit Mbako qu'il l'aurait gardé. Sa mère a dit « bien ». ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.prodige.marque_contre_toi` variante : « il a lu la lettre »), 06 (`en.mbako.banc_en_face` variante), 90 (mémoire des clubs)
+**Traces** : lettre_mbako, lettre_refusee (« {annee} : {prenom} {nom} a refusé d'écrire au petit Mbako qu'il l'aurait gardé. Sa mère a dit « bien ». ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.prodige.marque_contre_toi` variante : « il a lu la lettre »), § 6 (`en.mbako.banc_en_face` variante), 90 (mémoire des clubs)
 
 ### 8.5 Les paliers
 ### SCÈNE co.mere_mbako.trahison_lea  —  Ce que Léa sait
@@ -1152,20 +1138,18 @@ On ne dit jamais son prénom (Josiane le connaît : Adama ; elle dit « madame �
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : ton nouveau bureau, trois exemplaires sur la table
 **LA MÈRE DE MBAKO** *(sa fonction du moment — sourire — trois exemplaires d'un contrat qui n'est pas celui de son fils)*
 « C'est votre contrat, {prenom}, pas le sien ; je l'ai relu et j'ai ajouté une clause à la page trois. Mon fils n'a besoin de personne ; vous, vous aviez besoin de cette page. »
-← **Je lis la page trois** — effets : caisse +, direction +, relation.mere_mbako +1 — *La page trois te protège du SMS de 23 h 47. Elle a écrit ça en une ligne ; l'avocat du club met deux jours à la comprendre.*
-→ **Je signe sans lire** — effets : caisse +, relation.mere_mbako −2 — *Elle reprend les trois exemplaires. Elle déchire la page trois. « Vous n'en avez pas besoin », dit-elle. Tu en auras besoin.*
+**OK** **Je lis la page trois** — effets : caisse +, direction +, relation.mere_mbako +1 — *La page trois te protège du SMS de 23 h 47. Elle a écrit ça en une ligne ; l'avocat du club met deux jours à la comprendre.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.mere_mbako_noir  —  Le numéro de Fardelli
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le hall du nouveau club, elle reste debout
 **LA MÈRE DE MBAKO** *(sa fonction du moment — noir — elle ne s'assoit pas, pour une fois)*
 « J'ai le numéro de monsieur Fardelli depuis mardi, comme la première fois ; cette fois je l'ai composé. Mon fils n'a besoin de personne, monsieur {nom} ; vous, vous aurez « mon ami ». »
-← **Fardelli ne me fait pas peur** — effets : relation.mere_mbako −1, relation.fardelli +1, direction + — *Elle sourit. C'est pire. Fardelli t'appelle « mon ami » le soir même.*
-→ **Madame, on repart de zéro ?** — effets : relation.mere_mbako +1, caisse − — *« De trois pour cent », dit-elle. Elle s'assoit. Elle ouvre le carnet.*
+**OK** **Fardelli ne me fait pas peur** — effets : relation.mere_mbako −1, relation.fardelli +1, direction + — *Elle sourit. C'est pire. Fardelli t'appelle « mon ami » le soir même.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.mere_mbako_carnet  —  Le carnet, 2041
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2041, une fois (`chars.mere_mbako.statut == 'mort'`) · **Conditions** : `flag('mere_dix_neuf_ans')` · **Lieu** : la salle de presse, un livre épais sur la table
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2041, une fois (`chars.mere_mbako.statut == 'mort' || (chars.mere_mbako.statut == 'parti' && flag('mere_mbako_mort'))`) · **Conditions** : `flag('mere_dix_neuf_ans')` · **Lieu** : la salle de presse, un livre épais sur la table
 **LÉA** *(ancienne rédactrice en chef, éditrice du carnet, 76 ans — neutre — un livre épais, une page marquée)*
 « Le carnet est publié, trois cents pages, toutes des clauses ; à la page cent douze il y a votre nom et une berceuse. Vous confirmez que vous l'avez entendue ? »
 ← **Je confirme** — effets : tribunes +, relation.mere_mbako +1 (posthume) — *Léa écrit « confirme ». Le livre se vend à {ville} plus qu'ailleurs. Mbako, Fantôme, achète dix exemplaires.*
@@ -1195,16 +1179,16 @@ On ne dit jamais son prénom (Josiane le connaît : Adama ; elle dit « madame �
 ---
 
 ## 9. GÉGÉ  (`gege`)
-**Fonction** : capo de la Tribune Nord · **Genre** : m · **Âge en 1990** : 47 · **Camp** : terrain · **Fenêtre** : 1990-2040 (capo 1990-2020, chroniqueur à Radio Tribune 2004-2011, compte anonyme dès 2020, élu socios 2032 à 89 ans, « le plus vieil élu du pays ») ; il meurt en 2040, la Tribune Nord porte son nom un an, puis la loi des franchises la renomme, puis on la renomme encore · **Suivant** : Nino, le neveu de Gégé (né 1985, capo dès 2020 ; même écharpe, jamais lavée non plus ; il dit « le virage n'oublie rien », c'est presque pareil)
+**Fonction** : capo de la Tribune Nord · **Genre** : m · **Âge en 1990** : 47 · **Camp** : terrain · **Fenêtre** : 1990-2040 (capo 1990-2020, chroniqueur à Radio Tribune 2004-2011, compte anonyme dès 2020, élu socios 2032 à 89 ans, « le plus vieil élu du pays ») ; il meurt en 2032, la Tribune Nord porte son nom un an, puis la loi des franchises la renomme, puis on la renomme encore · **Suivant** : Nino, le neveu de Gégé (né 1985, capo dès 2020 ; même écharpe, jamais lavée non plus ; il dit « le virage n'oublie rien », c'est presque pareil)
 **Tic** : « La tribune n'oublie rien. » — torsions : « La tribune n'oublie rien. Elle compte aussi. » · « La tribune n'oublie rien, mais elle ne balance pas. » (existant) · « La tribune a oublié. C'est pire. »
 **Désir** : la fierté du virage, le respect · **Blessure** : son père a été interdit de stade en 1971 pour un tifo (une bâche : « LE PRÉSIDENT VEND, LE VIRAGE RESTE ») ; il est mort sans revoir la Marmite ; Gégé a la bâche, pliée, sous le bar du local
 **Adresse** : entraineur : {prenom} / coach / {nom} · joueur : petit / {prenom} / le {numero} · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « la tribune t'a adopté, elle chante ton nom sans se tromper d'accent » ; à 0 « on te fait un tifo, tu passes au local ? » ; à −2 « on a hésité sur l'accent »
-**Paliers** (existants, entraîneur) : −3 → `en.gege.trahison_banderole` · +3 → `en.gege.faveur_insurrection` ; **ce chapitre ajoute** : joueur −3 → `jp.gege.trahison_sifflet` · président +3 → `pr.gege.faveur_siege`
+**Paliers** : ∃ (entraîneur, déjà dans `content/`, cités et jamais réécrits) −3 → `en.gege.trahison_banderole` · +3 → `en.gege.faveur_insurrection` ; **ce chapitre ajoute** : joueur −3 → `jp.gege.trahison_sifflet` · président +3 → `pr.gege.faveur_siege`
 **Dans les rôles** : entraîneur : créancier (le local, le onze, le pacte, les banderoles ; 2) · joueur : chœur (« petit », le tifo, le numéro sifflé ; 1,5) · président : créancier et cœur (les abonnements à cinq écus, le siège du siège, les socios ; 2) · amateur : cousin (il a un cousin partout ; 1) · instance : le compte anonyme (2020 ; 1) · sélectionneur : le car des supporters (0,5) · DS : « la tribune n'oublie pas qui achète bien » (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 47-56 ans, casquette verte, doudoune noire, écharpe jamais lavée ; le local, la craie, la bâche ; gris à 45 déjà · 2000-2009 · lunettes (1998) qu'il porte sur la casquette ; Radio Tribune 2004-2011 (« Les auditeurs ont la parole », il ne la leur laisse pas) ; les abonnements à cinq écus (2003) · 2010-2019 · le Flux : il découvre qu'on peut découper une Une sans ciseaux ; la Ligue fermée (2019) : il est devant l'hôtel, quarante-huit heures · 2020-2029 · canne (2018) ; capo honoraire ; le compte anonyme (« Tribune_N_1971 ») que tout le monde reconnaît · 2030-2039 · élu socios 2032 ; il vote la compo au conseil, à la craie · 2040-2050 · meurt en 2040, le jour de la loi des franchises ; la banderole de son enterrement fait vingt mètres ; on a hésité sur l'accent
+**Trajectoire 1990 → 2050** : 1990-1999 · 47-56 ans, casquette verte, doudoune noire, écharpe jamais lavée ; le local, la craie, la bâche ; gris à 45 déjà · 2000-2009 · lunettes (1998) qu'il porte sur la casquette ; Radio Tribune 2004-2011 (« Les auditeurs ont la parole », il ne la leur laisse pas) ; les abonnements à cinq écus (2003) · 2010-2019 · le Flux : il découvre qu'on peut découper une Une sans ciseaux ; la Ligue fermée (2019) : il est devant l'hôtel, soixante heures · 2020-2029 · canne (2018) ; capo honoraire ; le compte anonyme (« Tribune_N_1971 ») que tout le monde reconnaît · 2030-2039 · élu socios 2032 ; il vote la compo au conseil, à la craie · 2040-2050 · meurt en 2040, le jour de la loi des franchises ; la banderole de son enterrement fait vingt mètres ; on a hésité sur l'accent
 **Retrouvailles** : `co.retrouvailles.gege_sourire` / `_noir` / `_cousin`
-**Cartes propres** : *Le numéro* (01) · *Cinq écus* (01) · *Radio Tribune* (01) · *Le compte anonyme* (01) · *Les socios* (01) · *Le cousin de Corbelin* (01) · *Le kop qui t'aime trop* (existant, `en.kop.*`) · *Le tifo à ton nom* (10, `jp.tifo`) · *Le derby* (11, `co.derby`) · *Les 48 heures* (13) · *La Une découpée* (existant, `co.re.gege_decoupe`)
+**Cartes propres** : *Le numéro* (01) · *Cinq écus* (01) · *Radio Tribune* (01) · *Le compte anonyme* (01) · *Les socios* (01) · *Le cousin de Corbelin* (01) · *Le kop qui t'aime trop* (existant, `en.kop.*`) · *Le tifo à ton nom* (10, `jp.tifo`) · *Le derby* (11, `co.derby`) · *Les 60 heures* (13) · *La Une découpée* (existant, `co.re.gege_decoupe`)
 
 ### 9.1 Identité et place
 Gérard, comme l'autre : on dit Gégé pour ne pas confondre avec la buvette ; il en souffre. 47 ans en 1990, 57 en 2000, 67 en 2010, 77 en 2020, 87 en 2030, 97 à sa mort. **Portrait** : la casquette verte vissée, la barbe de trois jours devenue de trois ans puis de trente, la doudoune noire hiver comme été, l'écharpe rayée qui a la couleur des saisons passées. **Voix** : forte, rauque, poète malgré lui (il rime sans le vouloir, et il déteste ça) ; il parle du virage à la troisième personne, comme d'une femme. Au club, il est sous la Tribune Nord : le local, trois bières, la craie, les Unes découpées au-dessus du bar, la bâche du père. Il n'entre au bureau que pour réclamer ; il entre au vestiaire une fois par carrière, à +3.
@@ -1213,19 +1197,19 @@ Gérard, comme l'autre : on dit Gégé pour ne pas confondre avec la buvette ; i
 
 ### 9.2 Les cinq registres
 - **−3** — « La banderole fait vingt mètres. DÉMISSION, et ton nom devant. On a hésité sur l'accent. » (existant) / « Le {numero}, on le siffle à l'échauffement. La tribune n'oublie rien. »
-- **−2 / −1** — « Lui, il venait. La tribune n'oublie rien. Elle compte aussi. » / « Arena Qatalyst. Le nom en orange, le nôtre en dessous, en petit. » (existant)
+- **−2 / −1** — « Lui, il venait. La tribune n'oublie rien. Elle compte aussi. » / « Arena Almadis. Le nom en orange, le nôtre en dessous, en petit. » (existant)
 - **0** — « On te fait un tifo. Tu passes boire un coup au local ? » / « On a découpé la Une. Elle est au local, au-dessus du bar. » (existant)
 - **+1 / +2** — « Un pacte : le local rénové, et ton nom chanté dans toute la ville. Tape là. » (existant) / « Petit, la tribune a chanté ton nom sans se tromper d'accent. C'est rare. »
 - **+3** — « Il y avait une insurrection prévue ce soir au vestiaire. J'ai dit non. » (existant) / « Le siège du siège, on l'a levé. La tribune n'oublie rien, président ; elle sait aussi pardonner, une fois. »
 
 ### 9.3 Rapports avec les autres
-**Alliés** : Paulette (elle était là en cinquante et un, il l'écoute comme une mère), Vecchio (le vieux que la tribune n'a jamais sifflé), Josiane (elle lui prête les ciseaux du secrétariat), Clow (« le seul coach qui est venu au local sans être invité, en 1974 »). **Rivaux** : Aulard (« le président vend »), Nassir (« un actif ? une tribune, c'est du monde »), Ménèche (qui dit « kop » : Gégé dit le virage), Colline (qui a sifflé une main contre son pays : Gégé lui en veut par principe). **Dettes** : il doit à Dupuis les bières du local depuis 1994 ; Montoya lui doit quarante-huit heures de trottoir. **Il aime** : Sacha, qui a peint sa première banderole à sept ans, « PAPA/MAMAN RENTRE » ; elle est au-dessus du bar.
+**Alliés** : Paulette (elle était là en cinquante et un, il l'écoute comme une mère), Vecchio (le vieux que la tribune n'a jamais sifflé), Josiane (elle lui prête les ciseaux du secrétariat), Corven (« le seul coach qui est venu au local sans être invité, en 1974 »). **Rivaux** : Vaubourg (« le président vend »), Ilyas (« un actif ? une tribune, c'est du monde »), Massenet (qui dit « kop » : Gégé dit le virage), Colline (qui a sifflé une main contre son pays : Gégé lui en veut par principe). **Dettes** : il doit à Dupuis les bières du local depuis 1994 ; Montoya lui doit soixante heures de trottoir. **Il aime** : Sacha, qui a peint sa première banderole à sept ans, « PAPA/MAMAN RENTRE » ; elle est au-dessus du bar.
 
 ### 9.4 INTRIGUE co.gege_virage  —  Le virage
 **Logline** : Gégé traverse tous tes rôles avec la même écharpe ; il te siffle, te chante, te fait payer cinq écus, t'invite à la radio, te dénonce anonymement et finit élu au conseil de ton ancien club. · **Synopsis** : Joueur, il te dit que la tribune chante ton numéro, ou le siffle. Président, il vient réclamer les abonnements à cinq écus. À Radio Tribune il t'invite un jeudi soir. En 2020, un compte anonyme parle de toi ; c'est lui. En 2032, les socios prennent le club et il est élu. Et partout, il a un cousin.
 **Rôle(s)** : joueur, president, entraineur, instance, joueur_amateur, president_amateur · **Postulat(s)** : partagé · **Porteur** : gege · **Cast** : gege, paulette, aulard, nassir, lea, nino (voix) · **Thème** : tribune
 **Saisons** : "0" (numero : joueur), "1" (cinq_ecus : président ; radio 2004-2011), "2+" (compte 2020+, socios 2032, cousin partout) · **Conditions d'entrée** : `chars.gege.statut in [club, retraite]` · **Exclusions** : `en.kop_qui_aime_trop` la même saison · **Rejouabilité** : jamais (le kop rejouable est l'intrigue existante)
-**Issues** → **Traces** → **Qui les lit** : `cinq_ecus` → `abonnements_cinq_ecus` (« {annee} : abonnements à cinq écus en tribune Nord. {prenom} {nom} a signé ; la buvette a compensé. ») → lue par 13 (`rachete_fonds` : le naming contre les cinq écus), 20 (« CINQ ÉCUS, ET LE VIRAGE PLEIN »), 30 (`pr_siege` plus) · `radio` → `gege_radio` (« {annee} : {prenom} {nom} a répondu aux auditeurs de Radio Tribune. Gégé n'a pas laissé la parole. ») → lue par 20 (Radio Tribune comme source d'une brève), 02 (Ménèche : « la radio des supporters vous aime »), 30 (transition Consultant) · `socios` → `gege_socios` (« {annee} : Gégé, quatre-vingt-neuf ans, élu au conseil des socios de {club}. Il vote la compo à la craie. ») → lue par 13 (le club repris par les socios : Gégé au conseil), 90 (« le rat de tribune »), 31 (Nouvelle 2032) · `compte` → `gege_compte_anonyme` (« {annee} : un compte anonyme a parlé de {nom}. Tout le monde a reconnu Gégé. ») → lue par 15 (le compte anonyme, 2020), 20 (« TRIBUNE_N_1971 A PARLÉ »)
+**Issues** → **Traces** → **Qui les lit** : `cinq_ecus` → `abonnements_cinq_ecus` (« {annee} : abonnements à cinq écus en tribune Nord. {prenom} {nom} a signé ; la buvette a compensé. ») → lue par 13 (`rachete_fonds` : le naming contre les cinq écus), 20 (« CINQ ÉCUS, ET LE VIRAGE PLEIN »), 30 (`pr_siege` plus) · `radio` → `gege_radio` (« {annee} : {prenom} {nom} a répondu aux auditeurs de Radio Tribune. Gégé n'a pas laissé la parole. ») → lue par 20 (Radio Tribune comme source d'une brève), 02 (Massenet : « la radio des supporters vous aime »), 30 (transition Consultant) · `socios` → `gege_socios` (« {annee} : Gégé, quatre-vingt-neuf ans, élu au conseil des socios de {club}. Il vote la compo à la craie. ») → lue par 13 (le club repris par les socios : Gégé au conseil), 90 (« le rat de tribune »), 31 (Nouvelle 2032) · `compte` → `gege_compte_anonyme` (« {annee} : un compte anonyme a parlé de {nom}. Tout le monde a reconnu Gégé. ») → lue par 15 (le compte anonyme, 2020), 20 (« TRIBUNE_N_1971 A PARLÉ »)
 **Séquencier** : numero (joueur, S0, [4,12], lit `derby_perdu`) → cinq_ecus (président, S1+, `year >= 2003`) → radio (tous, `year in 2004..2011`) → compte (instance ou président, `year >= 2020`) → socios (président ou instance, `year >= 2032`) → cousin (amateur, tout moment) ; lecture croisée : numero lit `pacte_gege` (11) ; socios lit `ligue_fermee_signee` (13).
 **Épilogue** : `tribunes −` ; « {annee} : le virage a chanté un autre nom. Gégé a gardé l'ancien à la craie. »
 
@@ -1249,23 +1233,23 @@ Gérard, comme l'autre : on dit Gégé pour ne pas confondre avec la buvette ; i
 **Rôle** : tous · **Intrigue** : co.gege_virage · **Étape** : 3/6 · **Moment** : `year in 2004..2011`, [3,12] · **Lieu** : un studio au-dessus d'un bar, 22 h, un micro qui grésille · **Conditions** : `relation.gege >= 0`
 **GÉGÉ** *(chroniqueur, Radio Tribune — sourire — le casque sur la casquette)*
 « Jeudi, vingt-deux heures, « Les auditeurs ont la parole », et je ne la leur laisse jamais ; ce soir je te la donne. La tribune n'oublie rien, coach : qu'est-ce que tu dis au virage ? »
-← **La vérité, une heure** — effets : tribunes ++, direction −, parole +1, set: gege_radio, outcome: radio — *Une heure. Trois auditeurs, tous des cousins. Ménèche écoute depuis sa voiture ; il note « franc ».*
+← **La vérité, une heure** — effets : tribunes ++, direction −, parole +1, set: gege_radio, outcome: radio — *Une heure. Trois auditeurs, tous des cousins. Massenet écoute depuis sa voiture ; il note « franc ».*
 → **Le discours du club, court** — effets : direction +, tribunes −, relation.gege −1 — *Dix minutes. Il coupe la pub à la neuvième. Il met un chant du virage à la place ; c'est ton nom, mal accentué.*
-**Traces** : gege_radio · **Réactions déclenchées** : — · **Lu plus tard par** : 20 (Radio Tribune source de brève), 02 (Ménèche), 30 (transition Consultant : « le peuple vous réclame » variante radio)
+**Traces** : gege_radio · **Réactions déclenchées** : — · **Lu plus tard par** : 20 (Radio Tribune source de brève), 02 (Massenet), 30 (transition Consultant : « le peuple vous réclame » variante radio)
 
 ### SCÈNE in.gege.compte  —  Le compte anonyme
 **Rôle** : instance, president · **Intrigue** : co.gege_virage · **Étape** : 4/6 · **Moment** : `year >= 2020`, [2,10] · **Lieu** : ton téléphone, une notification, puis le local · **Conditions** : `flag('monde_flux')`
 **GÉGÉ** *(capo honoraire, 77 ans — neutre — la canne, le téléphone tenu à bout de bras)*
 « Un compte anonyme dit que tu as vendu le virage aux franchises ; il s'appelle Tribune_N_1971, et tout le monde sait qui c'est. La tribune n'oublie rien, président ; elle a juste changé de mur. »
 ← **Je réponds, sous mon nom** — effets : tribunes +, direction −, relation.gege +1, set: gege_compte_anonyme, outcome: compte — *Tu réponds. Il répond. Léa fait un papier sur « le dialogue » ; c'est le premier depuis 1971 qui finit sans bâche.*
-→ **Je bloque le compte** — effets : direction +, tribunes −−, relation.gege −2 — *Le compte est bloqué. Un autre naît, Tribune_N_1972. Puis un par année. La tribune compte.*
+→ **Je bloque le compte** — effets : direction +, tribunes −−, relation.gege −2 — *Le compte est bloqué. La tribune compte.*
 **Traces** : gege_compte_anonyme · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (le compte anonyme), 20 (« TRIBUNE_N_1971 A PARLÉ »), 13 (la Ligue fermée : il est devant l'hôtel)
 
 ### SCÈNE pr.gege.socios  —  Les socios
 **Rôle** : president, instance · **Intrigue** : co.gege_virage · **Étape** : 5/6 · **Moment** : `year >= 2032`, [1,6] · **Lieu** : la salle du conseil, une craie posée sur la table, la bâche du père au mur · **Conditions** : `flag('monde_franchises') || chars.gege.age >= 89`
 **GÉGÉ** *(élu socios, 89 ans — sourire — il s'assoit sur la chaise du président, pas la sienne)*
 « Élu au conseil à quatre-vingt-neuf ans, le plus vieux du pays, et j'ai apporté la craie. La tribune n'oublie rien, président ; maintenant elle vote, et elle a une voix de plus que toi. »
-← **Vote la compo, Gégé** — effets : tribunes +++, direction −−, set: gege_socios, set: onze_du_virage, outcome: socios — *Il vote. Le onze du virage joue samedi. Il gagne ; il perd le suivant. Le mur du conseil garde la craie.*
+← **Vote la compo, Gégé** — effets : tribunes +++, direction −−, set: gege_socios, set: onze_du_virage, outcome: socios — *Il vote. Le mur du conseil garde la craie.*
 → **Le conseil décide, pas toi** — effets : direction ++, tribunes −−, relation.gege −1, set: gege_socios — *Il range la craie. Il reste au conseil. Il vote contre chaque décision jusqu'en 2040 ; il perd toutes les fois, et gagne à la fin.*
 **Traces** : gege_socios, onze_du_virage (∃) · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (les socios), 90 (« le rat de tribune »), 31 (Nouvelle 2032), 30 (`en_otage` plus, `pr_mairie`)
 
@@ -1292,23 +1276,21 @@ Gérard, comme l'autre : on dit Gégé pour ne pas confondre avec la buvette ; i
 « Le virage voulait faire le siège du siège ce soir, trois cents sous tes fenêtres ; j'ai dit non. La tribune n'oublie rien, président ; elle sait aussi pardonner, une fois, et c'est celle-là. »
 ← **Merci, Gégé, monte** — effets : tribunes +++, direction +, set: siege_leve — *Il monte au bureau. Première fois depuis 1971 pour un Gégé. Il ne s'assoit pas ; il regarde la vue sur le virage.*
 → **Qui voulait le siège ?** — effets : tribunes +, relation.gege −1 — *Il ne donne pas de noms. La tribune n'oublie rien, mais elle ne balance pas. Les tambours rentrent.*
-**Traces** : siege_leve (« {annee} : le siège du siège annulé par Gégé. {prenom} {nom} ne saura jamais qui frappait les tambours. ») · **Lu plus tard par** : 30 (`pr_siege` plus), 13 (les 48 heures : il est de ton côté du trottoir)
+**Traces** : siege_leve (« {annee} : le siège du siège annulé par Gégé. {prenom} {nom} ne saura jamais qui frappait les tambours. ») · **Lu plus tard par** : 30 (`pr_siege` plus), 13 (les 60 heures : il est de ton côté du trottoir)
 
 ### 9.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.gege_sourire  —  L'écharpe
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le parking du nouveau stade, le car des supporters
 **GÉGÉ** *(capo, en déplacement — sourire — il enlève l'écharpe, ce qu'il ne fait jamais)*
 « Je suis venu avec le car, six heures de route, pour te donner ça ; elle n'a jamais été lavée, c'est le principe. La tribune n'oublie rien, {prenom} : elle te suit, même ici. »
-← **Je la mets** — effets : tribunes ++, relation.gege +1, set: echarpe_gege — *Tu la mets. Elle sent 1990. Le virage d'ici ne comprend pas ; celui de là-bas, si.*
-→ **Garde-la, elle est au virage** — effets : relation.gege +1, direction + — *Il la remet. Il repart avec le car. Il chante ton nom dans le car ; les cousins suivent.*
+**OK** **Je la mets** — effets : tribunes ++, relation.gege +1, set: echarpe_gege — *Tu la mets. Elle sent 1990. Le virage d'ici ne comprend pas ; celui de là-bas, si.*
 **Traces** : echarpe_gege (objet héritable ; « {annee} : Gégé a donné son écharpe à {prenom} {nom}. Jamais lavée ; c'est le principe. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (lignée : objet ; retrouvailles), 30 (`en_otage` plus : « l'écharpe de Gégé au cou »)
 
 ### SCÈNE co.retrouvailles.gege_noir  —  L'accent
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le parking du nouveau stade, la banderole pliée dans le coffre du car
 **GÉGÉ** *(capo, en déplacement — noir — il a fait six heures de route pour ça)*
 « On a refait la banderole pour ton nouveau club, vingt mètres, et cette fois on a trouvé l'accent. La tribune n'oublie rien, {nom} ; elle se déplace, aussi. »
-← **Déployez-la, et rentrez** — effets : tribunes −−, direction − — *Elle se déploie à la 30e. Le nouveau virage applaudit : c'est une belle banderole.*
-→ **Gégé, on parle ?** — effets : relation.gege +1, tribunes − — *Il parle. Une heure, sur le parking. La banderole reste pliée. « Pour cette fois », dit-il.*
+**OK** **Déployez-la, et rentrez** — effets : tribunes −−, direction − — *Elle se déploie à la 30e. Le nouveau virage applaudit : c'est une belle banderole.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.gege_cousin  —  Le car
@@ -1335,20 +1317,20 @@ Gérard, comme l'autre : on dit Gégé pour ne pas confondre avec la buvette ; i
 
 ---
 
-## 10. MARCELO LOCO  (`loco`)
-**Fonction** : entraîneur mystique · **Genre** : m · **Âge en 1990** : 45 · **Camp** : terrain · **Fenêtre** : 1990-2028 (entraîneur de D1 par intermittence ; le grand nom que le board veut pour janvier ; coach rival ; intouchable de 2010 sous un président qui le vénère ; il prend sa retraite en 2028 et donne son seau) ; il meurt en 2039, en regardant une cassette · **Suivant** : « le disciple au seau » (voix sans portrait : un jeune entraîneur qui s'assoit sur un seau sans savoir pourquoi, 2030+ ; c'est la blague finale)
+## 10. ANSELMO VAZ  (`loco`)
+**Fonction** : entraîneur mystique · **Genre** : m · **Âge en 1990** : 45 · **Camp** : terrain · **Fenêtre** : 1990-2010 (entraîneur de D1 par intermittence ; le grand nom que le board veut pour janvier ; coach rival ; intouchable en 2010 sous un président qui le vénère : c'est sa dernière saison, et il ne veut pas la finir) ; il prend sa retraite en juin 2010, à soixante-cinq ans, et donne son seau ; conseiller intouchable ensuite, sans banc, jusqu'en 2025 ; il meurt en 2032, en regardant une cassette · **Suivant** : « le disciple au seau » (voix sans portrait : un jeune entraîneur qui s'assoit sur un seau sans savoir pourquoi, 2030+ ; c'est la blague finale)
 **Tic** : « Regardez la cassette. » — torsions : « Vous n'avez pas regardé la cassette. » · « La cassette, c'est vous. » · « Il n'y a pas de cassette. Regardez quand même. »
 **Désir** : qu'on le comprenne · **Blessure** : personne ne le comprend ; il s'assoit sur un seau parce que le banc est trop loin du terrain, et personne n'a jamais demandé pourquoi le banc était si loin
 **Adresse** : entraineur : {prenom} / profesor / (il ne parle pas aux gens qu'il n'aime pas : à −1, la carte n'a pas de réplique, seulement une didascalie et le seau tourné) · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « profesor, vous avez vu la cassette jusqu'au bout, on peut parler » ; à 0 « regardez la cassette » ; à −2 : il ne pense rien à voix haute ; il tourne le seau
 **Paliers** : −3 → `co.loco.trahison_silence` · +3 → `co.loco.faveur_seau`
-**Dans les rôles** : entraîneur : rival et tentateur (le grand nom pour janvier, l'espion dans la haie, le banc d'en face ; 1 dès l'intérimaire) · DS : le coach intouchable (`coach_intouchable` : 2,5) · joueur : le coach qui te fait courir vingt kilomètres (1) · président : le postulat déblocable « Le coach-cassette » (30), et une cassette à la place d'une réunion (1) · sélectionneur : l'adversaire lointain (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 45-54 ans, cheveux longs attachés, lunettes rondes, un survêtement d'une autre époque ; le seau ; Klopf est son adjoint un hiver (1993), et repart en courant · 2000-2009 · gris (1990 déjà) ; l'intouchable de 2010 se prépare : un président le vénère · 2010-2019 · lunettes déjà ; le coach intouchable ; « le modèle » qui note tout n'a pas de colonne pour le seau ; il refuse la vidéo (2016) : « j'ai la cassette » · 2020-2029 · canne (2020) qu'il refuse et remplace par le seau, qu'il porte ; retraite 2028 ; le seau est donné · 2030-2039 · meurt en 2039 ; la cassette qu'il regardait n'a jamais été identifiée · 2040-2050 · un disciple s'assoit sur un seau à Trébignac ; personne ne sait pourquoi
+**Dans les rôles** : entraîneur : rival et tentateur (le grand nom pour janvier, l'espion, le banc d'en face ; 1 dès l'intérimaire) · DS : le coach intouchable (`coach_intouchable` : 2,5) · joueur : le coach qui te fait courir vingt kilomètres (1) · président : le postulat déblocable « Le coach-cassette » (30), et une cassette à la place d'une réunion (1) · sélectionneur : l'adversaire lointain (0,5)
+**Trajectoire 1990 → 2050** : 1990-1999 · 45-54 ans, cheveux longs attachés, lunettes rondes, un survêtement d'une autre époque ; le seau ; Vogler est son adjoint un hiver (1993), et repart en courant · 2000-2009 · gris (1990 déjà) ; l'intouchable de 2010 se prépare : un président le vénère · 2010-2019 · lunettes déjà ; le coach intouchable ; « le modèle » qui note tout n'a pas de colonne pour le seau ; il refuse la vidéo (2014) : « j'ai la cassette » · 2020-2029 · canne (2020) qu'il refuse et remplace par le seau, qu'il porte ; retraite 2028 ; le seau est donné · 2030-2039 · meurt en 2039 ; la cassette qu'il regardait n'a jamais été identifiée · 2040-2050 · un disciple s'assoit sur un seau à Trébignac ; personne ne sait pourquoi
 **Retrouvailles** : `co.retrouvailles.loco_sourire` / `_noir` / `_cassette`
-**Cartes propres** : *La cassette de ton équipe* (01) · *Le seau, pas le banc* (01) · *Vingt kilomètres* (01) · *La cassette à la place de la réunion* (01) · *Profesor* (01) · *Klopf, l'hiver* (01) · *Le grand nom* (11, `en.grand_nom`) · *Le coach intouchable* (12) · *Le coach-cassette* (30, postulat dérivé)
+**Cartes propres** : *La cassette de ton équipe* (01) · *Le seau, pas le banc* (01) · *Vingt kilomètres* (01) · *La cassette à la place de la réunion* (01) · *Profesor* (01) · *Vogler, l'hiver* (01) · *Le grand nom* (11, `en.grand_nom`) · *Le coach intouchable* (12) · *Le coach-cassette* (30, postulat dérivé)
 
 ### 10.1 Identité et place
-Marcelo Loco ; on dit « Loco » avec l'accent qu'on veut, il ne corrige jamais ; « le mystique » dans la presse, « le type au seau » dans le virage. 45 ans en 1990, 55 en 2000, 65 en 2010, 75 en 2020, 85 en 2030, 94 à sa mort. **Portrait** : les cheveux longs gris attachés bas, les lunettes rondes cerclées, le survêtement bleu passé d'une équipe qu'on ne nomme pas, et le seau : blanc, retourné, posé à la limite de la zone technique. **Voix** : douce, lointaine, un accent qu'on ne place pas ; il parle par images et par silences ; il ne dit jamais « je ». Dans un club, il est partout sauf au bureau : sur le seau, dans la salle vidéo, dans la haie du voisin avec une caméra. Il vénère les joueurs qui courent ; il ignore ceux qui parlent.
+Anselmo Vaz ; on dit « Vaz » avec l'accent qu'on veut, il ne corrige jamais ; « le mystique » dans la presse, « le type au seau » dans le virage. 45 ans en 1990, 55 en 2000, 65 en 2010, 75 en 2020, 85 en 2030, 94 à sa mort. **Portrait** : les cheveux longs gris attachés bas, les lunettes rondes cerclées, le survêtement bleu passé d'une équipe qu'on ne nomme pas, et le seau : blanc, retourné, posé à la limite de la zone technique. **Voix** : douce, lointaine, un accent qu'on ne place pas ; il parle par images et par silences ; il ne dit jamais « je ». Dans un club, il est partout sauf au bureau : sur le seau, dans la salle vidéo, dans la haie du voisin avec une caméra. Il vénère les joueurs qui courent ; il ignore ceux qui parlent.
 
 **Désir / besoin / blessure / secret.** Désir : être compris, une fois, sans avoir à expliquer. Besoin : un banc plus près. Blessure : personne ne demande. Secret : la cassette qu'il regarde tout le temps est un match de jeunes de 1967 où il a été remplacé à la mi-temps ; il cherche encore ce qu'il a raté.
 
@@ -1360,76 +1342,76 @@ Marcelo Loco ; on dit « Loco » avec l'accent qu'on veut, il ne corrige jamais 
 - **+3** — « Le seau est à vous, {prenom}. Il n'y a rien dedans ; c'est ce qu'il faut regarder. » / « La cassette, c'est vous. Je vous l'ai faite. »
 
 ### 10.3 Rapports avec les autres
-**Alliés** : Fardelli (son agent, qui le vend comme un tableau : « il faut le regarder longtemps »), un président qui le vénère (2010 : le postulat `coach_intouchable`), Vukić (qui a regardé la cassette jusqu'au bout et n'a rien dit). **Rivaux** : Klopf (l'adjoint d'un hiver : « on court, on presse, on chante » ; Loco ne chante pas et ne presse pas, il regarde), Clow (« le top un des gens sans mémoire »), Brissac (« les chiffres sont têtus ; les cassettes aussi »). **Dettes** : il doit à Gégé de l'avoir raccompagné à sa voiture avec les jumelles ; Montoya lui doit trois titres qu'il a gagnés pour le Real et qu'on a attribués au président. **Il aime** : Sacha, la seule qui lui ait demandé pourquoi le banc était loin ; il n'a pas répondu, il a souri.
+**Alliés** : Fardelli (son agent, qui le vend comme un tableau : « il faut le regarder longtemps »), un président qui le vénère (2010 : le postulat `coach_intouchable`), Vukić (qui a regardé la cassette jusqu'au bout et n'a rien dit). **Rivaux** : Vogler (l'adjoint d'un hiver : « on court, on presse, on chante » ; Vaz ne chante pas et ne presse pas, il regarde), Corven (« le refuge des gens sans mémoire »), Brissac (« les chiffres sont têtus ; les cassettes aussi »). **Dettes** : il doit à Gégé de l'avoir raccompagné à sa voiture avec les jumelles ; Montoya lui doit trois titres qu'il a gagnés pour le Castel et qu'on a attribués au président. **Il aime** : Sacha, la seule qui lui ait demandé pourquoi le banc était loin ; il n'a pas répondu, il a souri.
 
 ### 10.4 INTRIGUE co.loco_cassette  —  La cassette
-**Logline** : Marcelo Loco regarde des cassettes et s'assoit sur un seau ; ce que tu comprends de lui décide s'il te parle, te fait courir, ou te donne le seau. · **Synopsis** : Entraîneur, il t'offre la cassette de ta propre équipe avant de te battre. DS, il veut un seau et le président veut un banc. Joueur, il te fait courir vingt kilomètres en regardant une cassette. Président, il t'envoie une cassette à la place de la réunion. Un jour il t'appelle profesor et explique le banc. Un hiver de 1993, Klopf est son adjoint, et vous êtes trois sur le terrain.
+**Logline** : Anselmo Vaz regarde des cassettes et s'assoit sur un seau ; ce que tu comprends de lui décide s'il te parle, te fait courir, ou te donne le seau. · **Synopsis** : Entraîneur, il t'offre la cassette de ta propre équipe avant de te battre. DS, il veut un seau et le président veut un banc. Joueur, il te fait courir vingt kilomètres en regardant une cassette. Président, il t'envoie une cassette à la place de la réunion. Un jour il t'appelle profesor et explique le banc. Un hiver de 1993, Vogler est son adjoint, et vous êtes trois sur le terrain.
 **Rôle(s)** : entraineur, ds, joueur, president · **Postulat(s)** : partagé (interimaire, coach_intouchable, six_mois, rachete_fonds, pepite) · **Porteur** : loco · **Cast** : loco, klopf, fardelli, vukic, gege, sacha · **Thème** : absurde
 **Saisons** : "0" (cassette_equipe : entraîneur ; vingt_km : joueur), "1" (seau : DS ; reunion : président), "2+" (profesor, klopf_hiver 1993) · **Conditions d'entrée** : `chars.loco.statut != 'mort'` · **Exclusions** : `en.grand_nom` (11) la même saison · **Rejouabilité** : jamais
-**Issues** → **Traces** → **Qui les lit** : `compris` → `loco_compris` (« {annee} : {prenom} {nom} a regardé la cassette de Marcelo Loco jusqu'au bout. Il l'a appelé profesor. ») → lue par 12 (`coach_intouchable` : il te parle), 30 (postulat dérivé `le_coach_cassette` : débloqué si `loco_compris`), 90 (retrouvailles) · `seau` → `seau_loco` (objet héritable ; « {annee} : Marcelo Loco a donné son seau à {prenom} {nom}. Il n'y avait rien dedans. ») → lue par 90 (lignée : objet), 30 (`en_retraite` plus : « un seau à côté du banc »), 31 · `banc` → `loco_banc_rapproche` (« {annee} : à {club}, on a rapproché le banc du terrain de trois mètres. Marcelo Loco s'est assis dessus. ») → lue par 12 (le coach s'assoit : `coach_demission` moins probable), 20 (« LE BANC A BOUGÉ »)
+**Issues** → **Traces** → **Qui les lit** : `compris` → `loco_compris` (« {annee} : {prenom} {nom} a regardé la cassette de Anselmo Vaz jusqu'au bout. Il l'a appelé profesor. ») → lue par 12 (`coach_intouchable` : il te parle), 30 (postulat dérivé `le_coach_cassette` : débloqué si `loco_compris`), 90 (retrouvailles) · `seau` → `seau_loco` (objet héritable ; « {annee} : Anselmo Vaz a donné son seau à {prenom} {nom}. Il n'y avait rien dedans. ») → lue par 90 (lignée : objet), 30 (`en_retraite` plus : « un seau à côté du banc »), 31 · `banc` → `loco_banc_rapproche` (« {annee} : à {club}, on a rapproché le banc du terrain de trois mètres. Anselmo Vaz s'est assis dessus. ») → lue par 12 (le coach s'assoit : `coach_demission` moins probable), 20 (« LE BANC A BOUGÉ »)
 **Séquencier** : cassette_equipe (entraîneur, S0, semaine d'un match contre son club) | vingt_km (joueur, S0, [3,10]) → seau (DS, S1+, [2,8]) | reunion (président, S1+) → profesor (S2+, `relation.loco >= 1`) → klopf_hiver (`year == 1993`, entraîneur) ; lecture croisée : cassette_equipe lit `espion_presse` (11).
-**Épilogue** : rien : Loco ne suit personne.
+**Épilogue** : rien : Vaz ne suit personne.
 
 ### SCÈNE en.loco.cassette_equipe  —  La cassette de ton équipe
 **Rôle** : entraineur · **Intrigue** : co.loco_cassette · **Étape** : 1/6 · **Moment** : saison 0, semaine d'un match contre son club · **Lieu** : le parking du centre d'entraînement, une cassette VHS sur ton pare-brise (`year <= 2010` ; après : une clé) · **Conditions** : `chars.loco.statut == 'rival'` ; variante `_haie` si `flag('espion_presse')`
-**LOCO** *(entraîneur adverse — neutre — assis sur son seau, près de ta voiture, sans explication)*
+**VAZ** *(entraîneur adverse — neutre — assis sur son seau, près de ta voiture, sans explication)*
 « C'est votre équipe, filmée depuis la haie, quarante minutes ; votre six ne regarde jamais derrière lui. Regardez la cassette ; moi je l'ai vue, dimanche on verra qui a compris. »
-← **Je la regarde ce soir** — effets : force +2, direction −, relation.loco +1, set: cassette_regardee — *Quarante minutes. Le six ne regarde jamais derrière lui. Tu le changes ; tu perds quand même, d'un autre côté. Il savait.*
+← **Je la regarde ce soir** — effets : force +2, direction −, relation.loco +1, set: cassette_regardee — *Quarante minutes. Il savait.*
 → **Je la jette, c'est espionner** — effets : tribunes +, relation.loco −2, relation.gege +1, set: cassette_jetee — *Gégé la récupère dans la poubelle. Il la regarde au local. Le virage sait avant toi que le six ne regarde pas derrière.*
-**Traces** : cassette_regardee, cassette_jetee (« {annee} : {nom} a jeté la cassette de Loco. Gégé l'a regardée au local. ») · **Réactions déclenchées** : en.re.gege_jumelles (11) · **Lu plus tard par** : 11 (`en.espion_haie` : variante « c'était Loco »), 12 (le coach intouchable : il se souvient), co.loco.faveur_seau (variante)
+**Traces** : cassette_regardee, cassette_jetee (« {annee} : {nom} a jeté la cassette de Vaz. Gégé l'a regardée au local. ») · **Réactions déclenchées** : en.re.gege_jumelles (11) · **Lu plus tard par** : 11 (`en.espion_haie` : variante « c'était Vaz »), 12 (le coach intouchable : il se souvient), co.loco.faveur_seau (variante)
 
 ### SCÈNE jp.loco.vingt_km  —  Vingt kilomètres
-**Rôle** : joueur · **Intrigue** : co.loco_cassette · **Étape** : 1/6 (variante joueur) · **Moment** : saison 0, [3,10] · **Lieu** : le terrain d'entraînement, un magnétoscope sur une table pliante, une rallonge de cinquante mètres · **Conditions** : le coach du club est Loco (`world.coach == 'loco'`)
-**LOCO** *(entraîneur — neutre — il ne te regarde pas courir ; il regarde l'écran)*
+**Rôle** : joueur · **Intrigue** : co.loco_cassette · **Étape** : 1/6 (variante joueur) · **Moment** : saison 0, [3,10] · **Lieu** : le terrain d'entraînement, un magnétoscope sur une table pliante, une rallonge de cinquante mètres · **Conditions** : le coach du club est Vaz (`world.coach == 'loco'`)
+**VAZ** *(entraîneur — neutre — il ne te regarde pas courir ; il regarde l'écran)*
 « Vingt kilomètres ce matin, en regardant l'écran à chaque passage ; c'est votre match d'hier, et vous marchez à la soixante-dixième. Regardez la cassette, {prenom} ; courez en même temps. »
 ← **Je cours, je regarde** — effets : force +3, vestiaire −, relation.loco +1, set: vingt_km — *Vingt kilomètres. À la soixante-dixième de la cassette, tu cours plus vite. Il ne dit rien ; il rembobine.*
 → **Je cours sans regarder** — effets : force +1, tribunes +, relation.loco −1 — *Tu cours. Il éteint l'écran au dixième passage. Tu es sur le banc dimanche, et il ne te dit pas pourquoi ; Vukić, si.*
-**Traces** : vingt_km (`journal:` poids 1) · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (`jp.banc_hiver` variante « Loco »), 30 (`jp_fils` plus : « Loco t'a emmené, avec le seau »)
+**Traces** : vingt_km (`journal:` poids 1) · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (`jp.banc_hiver` variante « Vaz »), 30 (`jp_fils` plus : « Vaz t'a emmené, avec le seau »)
 
 ### SCÈNE ds.loco.seau  —  Le seau, pas le banc
-**Rôle** : ds · **Intrigue** : co.loco_cassette · **Étape** : 2/6 · **Moment** : saison 1+, [2,8] · **Lieu** : le bord du terrain, le président debout, Loco assis sur le seau, toi entre les deux · **Conditions** : `world.coach == 'loco'`
-**LOCO** *(entraîneur — neutre — il tapote le seau)*
+**Rôle** : ds · **Intrigue** : co.loco_cassette · **Étape** : 2/6 · **Moment** : saison 1+, [2,8] · **Lieu** : le bord du terrain, le président debout, Vaz assis sur le seau, toi entre les deux · **Conditions** : `world.coach == 'loco'`
+**VAZ** *(entraîneur — neutre — il tapote le seau)*
 « Le président veut que je m'assoie sur le banc, pour la télévision ; le banc est à douze mètres du terrain, le seau à un. Regardez la cassette, directeur ; on y voit la distance. »
 ← **On rapproche le banc** — effets : direction −, vestiaire +, relation.loco +2, set: loco_banc_rapproche, outcome: banc — *Le banc bouge. Il s'assoit dessus, une fois, puis reprend le seau, à côté. La télévision filme les deux.*
 → **Le banc, c'est le contrat** — effets : direction +, relation.loco −2, set: loco_contrarie — *Il s'assoit sur le banc. Il ne dit plus rien pendant un mois, à personne. Le vestiaire joue moins bien ; il n'y a pas de cassette de ça.*
-**Traces** : loco_banc_rapproche, loco_contrarie (« {annee} : Marcelo Loco a été assis sur le banc, par contrat. Il n'a plus parlé pendant un mois. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 12 (`coach_demission` : poids selon `loco_contrarie`), 20 (« LE BANC A BOUGÉ »), 30 (`ds_fronde` plus)
+**Traces** : loco_banc_rapproche, loco_contrarie (« {annee} : Anselmo Vaz a été assis sur le banc, par contrat. Il n'a plus parlé pendant un mois. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 12 (`coach_demission` : poids selon `loco_contrarie`), 20 (« LE BANC A BOUGÉ »), 30 (`ds_fronde` plus)
 
 ### SCÈNE pr.loco.cassette_reunion  —  La cassette à la place de la réunion
 **Rôle** : president · **Intrigue** : co.loco_cassette · **Étape** : 3/6 · **Moment** : saison 1+, [4,12] · **Lieu** : la salle du conseil, une chaise vide, une cassette sur la table à sa place · **Conditions** : `world.coach == 'loco'`
-**LOCO** *(entraîneur — absent — Josiane pose la cassette et lit l'étiquette : « Regardez la cassette. »)*
+**VAZ** *(entraîneur — absent — Josiane pose la cassette et lit l'étiquette : « Regardez la cassette. »)*
 « *(sur l'étiquette, de sa main)* Regardez la cassette ; tout ce que j'aurais dit à la réunion est dedans, et la réunion dure quatre-vingt-dix minutes de moins. »
 ← **On regarde, tous, maintenant** — effets : direction −, vestiaire +, relation.loco +1, set: conseil_cassette — *Le conseil regarde. C'est un match. À la fin, personne ne sait ce qu'il voulait dire ; Malbec, au téléphone, dit qu'entre présidents on se comprend, mais pas lui.*
-→ **Je le convoque, en personne** — effets : direction +, relation.loco −1, set: loco_convoque — *Il vient. Il s'assoit par terre, il n'y a pas de seau. Il ne dit rien pendant quarante minutes. Puis il dit « regardez la cassette » et il part.*
-**Traces** : conseil_cassette, loco_convoque (« {annee} : Marcelo Loco convoqué au conseil. Il s'est assis par terre et n'a rien dit. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (l'entraîneur qu'on vire ou qu'on confirme : variante Loco), 30 (`pr_pantin`, `pr_fantome` plus)
+→ **Je le convoque, en personne** — effets : direction +, relation.loco −1, set: loco_convoque — *Il vient. Il dit « regardez la cassette » et il part.*
+**Traces** : conseil_cassette, loco_convoque (« {annee} : Anselmo Vaz convoqué au conseil. Il s'est assis par terre et n'a rien dit. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (l'entraîneur qu'on vire ou qu'on confirme : variante Vaz), 30 (`pr_pantin`, `pr_fantome` plus)
 
 ### SCÈNE co.loco.profesor  —  Profesor
 **Rôle** : entraineur, ds, joueur, president · **Intrigue** : co.loco_cassette · **Étape** : 4/6 · **Moment** : saison 2+, [3,12] · **Lieu** : le terrain vide, la nuit, le seau, et une chaise pliante qu'il a apportée pour toi · **Conditions** : `relation.loco >= 1`
-**LOCO** *(entraîneur — sourire — il désigne le banc, à douze mètres, puis le terrain, à un)*
+**VAZ** *(entraîneur — sourire — il désigne le banc, à douze mètres, puis le terrain, à un)*
 « Le banc est loin parce qu'en soixante-sept on m'a remplacé à la mi-temps et que j'ai compté les pas : douze mètres. Regardez la cassette, profesor ; c'est celle-là que je regarde. »
-← **Montrez-la-moi** — effets : relation.loco +2, vestiaire +, set: loco_compris, outcome: compris — *Un match de jeunes, 1967, noir et blanc. Il est remplacé à la 45e. Vous la regardez trois fois. Tu ne vois pas ce qu'il a raté ; lui non plus ; c'est ça.*
+← **Montrez-la-moi** — effets : relation.loco +2, vestiaire +, set: loco_compris, outcome: compris — *Un match de jeunes, 1967, noir et blanc. Tu ne vois pas ce qu'il a raté ; lui non plus ; c'est ça.*
 → **Douze mètres, c'est la règle** — effets : relation.loco −1, direction + — *Il replie la chaise. Il ne dit plus « profesor ». Il dit « regardez la cassette », et c'est de nouveau la vôtre.*
 **Traces** : loco_compris · **Réactions déclenchées** : co.re.sacha_seau (§ 19.8) · **Lu plus tard par** : 30 (postulat dérivé `le_coach_cassette`), 12 (le coach intouchable te parle), co.retrouvailles.loco_cassette
 
-### SCÈNE en.loco.klopf_hiver  —  Klopf, l'hiver
-**Rôle** : entraineur · **Intrigue** : co.loco_cassette · **Étape** : 5/6 · **Moment** : `year == 1993`, hiver, semaine d'un match contre son club · **Lieu** : le tunnel, Loco sur le seau, Klopf debout derrière, casquette, qui court sur place · **Conditions** : `chars.loco.statut == 'rival'`
-**LOCO** *(entraîneur adverse — neutre — il désigne Klopf du pouce sans se retourner)*
+### SCÈNE en.loco.klopf_hiver  —  Vogler, l'hiver
+**Rôle** : entraineur · **Intrigue** : co.loco_cassette · **Étape** : 5/6 · **Moment** : `year == 1993`, hiver, semaine d'un match contre son club · **Lieu** : le tunnel, Vaz sur le seau, Vogler debout derrière, casquette, qui court sur place · **Conditions** : `chars.loco.statut == 'rival'`
+**VAZ** *(entraîneur adverse — neutre — il désigne Vogler du pouce sans se retourner)*
 « Mon adjoint court, presse et chante ; il repartira au printemps, il ne regarde pas les cassettes. Regardez la cassette, coach ; regardez aussi lequel des deux vous voulez sur votre banc, un jour. »
-← **Le seau, un jour** — effets : relation.loco +1, relation.klopf −1, force +1, set: loco_prefere — *Il hoche la tête. Klopf sourit et court encore. Vous perdez le match sur un pressing ; Loco n'a rien vu, il regardait ailleurs.*
-→ **La casquette, un jour** — effets : relation.klopf +1, relation.loco −1, tribunes +, set: klopf_prefere — *Klopf te serre la main avant le match, ce qui ne se fait pas. Loco tourne le seau. Vous gagnez ; ils chantent quand même.*
-**Traces** : loco_prefere, klopf_prefere (« {annee} : {prenom} {nom} a choisi la casquette contre le seau. Klopf a chanté ; Loco a tourné le seau. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.grand_nom` : variante « tu avais choisi »), 12 (le coach que tu nommes : Loco ou Klopf), 13 (l'entraîneur qu'on confirme)
+← **Le seau, un jour** — effets : relation.loco +1, relation.klopf −1, force +1, set: loco_prefere — *Il hoche la tête. Vogler sourit et court encore. Vous perdez le match sur un pressing ; Vaz n'a rien vu, il regardait ailleurs.*
+→ **La casquette, un jour** — effets : relation.klopf +1, relation.loco −1, tribunes +, set: klopf_prefere — *Vogler te serre la main avant le match, ce qui ne se fait pas. Vaz tourne le seau. Vous gagnez ; ils chantent quand même.*
+**Traces** : loco_prefere, klopf_prefere (« {annee} : {prenom} {nom} a choisi la casquette contre le seau. Vogler a chanté ; Vaz a tourné le seau. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.grand_nom` : variante « tu avais choisi »), 12 (le coach que tu nommes : Vaz ou Vogler), 13 (l'entraîneur qu'on confirme)
 
 ### 10.5 Les paliers
 ### SCÈNE co.loco.trahison_silence  —  Le seau tourné
 **Rôle** : entraineur, ds, joueur, president · **Intrigue** : palier −3 · **Étape** : on_relation −3 · **Moment** : programmé en [1,3] · **Lieu** : le bord du terrain, le seau tourné vers le terrain, son dos vers toi · **Conditions** : `relation.loco <= -3`, une fois par carrière
-**LOCO** *(entraîneur — noir — il ne parle pas ; la didascalie est toute la carte)*
+**VAZ** *(entraîneur — noir — il ne parle pas ; la didascalie est toute la carte)*
 « *(Il ne vous parle plus. Il ne vous parlera plus. Sur le seau, une cassette, sans étiquette ; c'est la vôtre, et il ne l'a pas regardée.)* »
 ← **Je prends la cassette** — effets : vestiaire −−, direction −, set: loco_silence — *Tu la prends. Elle est vierge. C'est le seul message qu'il t'enverra jamais.*
 → **Je prends la cassette** — effets : vestiaire −−, direction −, set: loco_silence — *Tu la prends. Elle est vierge. C'est le seul message qu'il t'enverra jamais.*
-**Traces** : loco_silence (« {annee} : Marcelo Loco a cessé de parler à {nom}. Il lui a laissé une cassette vierge. ») · **Lu plus tard par** : 12 (`coach_demission` : il part sans un mot), 30 (`ds_fronde`), 90 (Nemesis : le seul Nemesis muet)
+**Traces** : loco_silence (« {annee} : Anselmo Vaz a cessé de parler à {nom}. Il lui a laissé une cassette vierge. ») · **Lu plus tard par** : 12 (`coach_demission` : il part sans un mot), 30 (`ds_fronde`), 90 (Nemesis : le seul Nemesis muet)
 
 ### SCÈNE co.loco.faveur_seau  —  Le seau
 **Rôle** : entraineur, ds, joueur, president · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : le bord du terrain, il se lève du seau, ce qu'on ne l'a jamais vu faire pendant un match · **Conditions** : `relation.loco >= 3`, une fois par carrière
-**LOCO** *(entraîneur — sourire — il retourne le seau, montre qu'il est vide, le pose devant toi)*
+**VAZ** *(entraîneur — sourire — il retourne le seau, montre qu'il est vide, le pose devant toi)*
 « Il n'y a rien dedans, c'est ce qu'il faut regarder ; on m'a demandé pendant trente ans ce qu'il y avait dedans. Le seau est à vous, {prenom} ; regardez la cassette, elle est aussi à vous. »
 ← **Je m'assois dessus** — effets : vestiaire ++, tribunes +, relation.loco +1, set: seau_loco, outcome: seau — *Tu t'assois. À un mètre du terrain, on entend les consignes. On entend aussi les insultes ; il ne l'avait pas dit.*
 → **Gardez-le, profesor** — effets : relation.loco +1, direction + — *Il se rassoit. Il le donnera à Sacha, ou au disciple, ou à personne. Il n'y a rien dedans.*
@@ -1439,27 +1421,25 @@ Marcelo Loco ; on dit « Loco » avec l'accent qu'on veut, il ne corrige jamais 
 ### 10.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.loco_sourire  —  La chaise pliante
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le bord du terrain du nouveau club, une chaise pliante et un seau
-**LOCO** *(sa fonction du moment — sourire — il a apporté la chaise pliante et le seau)*
+**VAZ** *(sa fonction du moment — sourire — il a apporté la chaise pliante et le seau)*
 « Nouveau club, même distance, j'ai mesuré : douze mètres, ils sont tous à douze mètres. Regardez la cassette, profesor ; j'en ai fait une de votre nouveau six. »
-← **Je regarde, ce soir** — effets : force +1, relation.loco +1 — *Le nouveau six regarde derrière lui. C'est déjà ça. Il rembobine quand même.*
-→ **Pas de cassette, Marcelo** — effets : relation.loco −1, direction + — *Il range la cassette. Il laisse la chaise. Tu t'assois dessus un soir, sans savoir pourquoi.*
+**OK** **Je regarde, ce soir** — effets : force +1, relation.loco +1 — *Le nouveau six regarde derrière lui. C'est déjà ça. Il rembobine quand même.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.loco_noir  —  Rien
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le bord du terrain, ta première séance, un seau tourné
-**LOCO** *(sa fonction du moment — noir — le seau tourné, dans un stade qui n'est pas le sien)*
+**VAZ** *(sa fonction du moment — noir — le seau tourné, dans un stade qui n'est pas le sien)*
 « *(Il est venu. Il s'est assis sur le seau au bord de votre terrain, dos à vous, pendant votre première séance. Il n'a rien dit. Il est reparti à la fin, sans la cassette.)* »
-← **Je le laisse partir** — effets : vestiaire − — *Il part. Les joueurs demandent qui c'était. Vukić répond : « quelqu'un qui n'a pas été compris ». C'est tout.*
-→ **Je cours après lui** — effets : relation.loco +1, direction − — *Tu le rattrapes au parking. Il te regarde. Il dit : « douze mètres ». Il monte dans une voiture que quelqu'un d'autre conduit.*
+**OK** **Je le laisse partir** — effets : vestiaire − — *Il part. C'est tout.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.loco_cassette  —  1967
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2039, une fois (`chars.loco.statut == 'mort'`) · **Conditions** : `flag('loco_compris')` · **Lieu** : un bureau d'agente, un magnétoscope qu'on ne trouve plus, branché quand même
-**SOLVANG** *(agente, elle a repris le carnet de Fardelli en 2018 et Loco avec — neutre — une cassette VHS et un magnétoscope qu'on ne trouve plus)*
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2039, une fois (`chars.loco.statut == 'mort' || (chars.loco.statut == 'parti' && flag('loco_mort'))`) · **Conditions** : `flag('loco_compris')` · **Lieu** : un bureau d'agente, un magnétoscope qu'on ne trouve plus, branché quand même
+**SOLVANG** *(agente, elle a repris le carnet de Fardelli en 2018 et Vaz avec — neutre — une cassette VHS et un magnétoscope qu'on ne trouve plus)*
 « Il regardait ça quand c'est arrivé : un match de jeunes de soixante-sept, et il est remplacé à la mi-temps. Mon client décidait ; moi, je compte : la cassette est à vous, sans facture. »
 ← **Je la prends** — effets : vestiaire +, relation.loco +1 (posthume), set: cassette_1967 — *Tu la regardes une dernière fois. Tu vois ce qu'il a raté : rien. C'est ce qu'il fallait regarder.*
 → **Elle va au Panthéon** — effets : tribunes +, direction + — *Elle est sous vitrine. Personne ne peut la regarder. Il aurait détesté ; ou pas.*
-**Traces** : cassette_1967 (objet héritable ; « 2039 : la cassette de 1967 de Marcelo Loco est allée à {prenom} {nom}. Il n'y avait rien à voir ; c'est ce qu'il fallait regarder. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (lignée : objet), 31 (épitaphe d'enterrement de Loco)
+**Traces** : cassette_1967 (objet héritable ; « 2039 : la cassette de 1967 de Anselmo Vaz est allée à {prenom} {nom}. Il n'y avait rien à voir ; c'est ce qu'il fallait regarder. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (lignée : objet), 31 (épitaphe d'enterrement de Vaz)
 
 ### 10.7 Anecdotes
 - **01.loco_seau** — objet (héritable) · `co.loco.faveur_seau` · Le seau est un seau de peinture blanc de dix litres, propre ; il en a usé quatorze en trente ans ; il garde le premier chez lui, à douze mètres de la télévision.
@@ -1470,20 +1450,20 @@ Marcelo Loco ; on dit « Loco » avec l'accent qu'on veut, il ne corrige jamais 
 
 ---
 
-## 11. KLOPF  (`klopf`)
-**Fonction** : entraîneur à casquette · **Genre** : m · **Âge en 1990** : 38 · **Camp** : terrain · **Fenêtre** : 1990-2040 (adjoint de Loco un hiver, 1993 ; entraîneur de D1 dès 1995 ; sélectionneur de la Vestrie 2004-2016 ; l'entraîneur que tout le monde veut 2017-2030 ; retraité 2031, il court encore) ; il meurt en 2047 en souriant, sur un tapis de course · **Suivant** : aucun : Klopf dure ; sa suite est son « collègue », le mot qu'il donne à tous
+## 11. VOGLER  (`klopf`)
+**Fonction** : entraîneur à casquette · **Genre** : m · **Âge en 1990** : 38 · **Camp** : terrain · **Fenêtre** : 1990-2027 (adjoint de Vaz un hiver, 1993 ; entraîneur de D1 dès 1995 ; sélectionneur de la Vestrie 2004-2016 ; l'entraîneur que tout le monde veut 2017-2027 ; retraité 2027 à soixante-quinze ans, un mois après le vote de la limite d'âge, qui ne le concernait pas : il court encore) ; il meurt en 2038 en courant, sur un tapis · **Suivant** : aucun : Vogler dure ; sa suite est son « collègue », le mot qu'il donne à tous
 **Tic** : « On court, on presse, on chante. » — torsions : « On court, on presse, et ce soir on ne chante pas. » · « On a couru, on a pressé ; on a perdu en chantant. » · « Toi, tu cours. Moi, je chante. »
 **Désir** : le pressing comme une religion · **Blessure** : il a perdu trois finales de suite (1999, 2000, 2001) en souriant ; on lui a reproché le sourire plus que les défaites
 **Adresse** : entraineur : {prenom} / coach / collègue · autres : § 0.1 (« collègue » est son mot noir : il le dit à ceux qu'il ne respecte pas, en souriant)
 **Ce qu'il pense de toi** : à +2 « tu cours avec nous ; c'est rare chez un adversaire » ; à 0 « on verra au pressing » ; à −2 « collègue, ton six marche »
 **Paliers** : −3 → `co.klopf.trahison_collegue` · +3 → `co.klopf.faveur_chant`
-**Dans les rôles** : entraîneur : rival (le derby gagné, l'adjoint de Loco ; 1) · sélectionneur : adversaire (la Vestrie 2004-2016 ; 1,5) · président : cœur (l'entraîneur que tout le monde veut ; 1) · DS : cœur (il exige un latéral gauche ; 1,5) · joueur : le coach qui te fait presser (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 38-47 ans, casquette verte, sourire, un dentier parfait ; l'hiver chez Loco (1993) ; premier banc de D1 (1995, Valentienne) ; trois finales perdues · 2000-2009 · gris sous la casquette (1997), personne ne le voit ; sélectionneur de la Vestrie dès 2004 : le pressing des casquettes · 2010-2019 · lunettes (2007) qu'il enlève pour les photos ; Vestrie jusqu'en 2016 ; puis « tout le monde le veut » : il choisit le club qui chante le plus fort · 2020-2029 · canne (2027) : « on court moins, on presse quand même » ; retraite 2031 · 2030-2039 · il commente en courant sur un tapis, en direct, chez Vence · 2040-2050 · meurt en 2047 sur le tapis, en souriant ; on ne sait pas s'il a gagné
+**Dans les rôles** : entraîneur : rival (le derby gagné, l'adjoint de Vaz ; 1) · sélectionneur : adversaire (la Vestrie 2004-2016 ; 1,5) · président : cœur (l'entraîneur que tout le monde veut ; 1) · DS : cœur (il exige un latéral gauche ; 1,5) · joueur : le coach qui te fait presser (0,5)
+**Trajectoire 1990 → 2050** : 1990-1999 · 38-47 ans, casquette verte, sourire, un dentier parfait ; l'hiver chez Vaz (1993) ; premier banc de D1 (1995, Valentienne) ; trois finales perdues · 2000-2009 · gris sous la casquette (1997), personne ne le voit ; sélectionneur de la Vestrie dès 2004 : le pressing des casquettes · 2010-2019 · lunettes (2007) qu'il enlève pour les photos ; Vestrie jusqu'en 2016 ; puis « tout le monde le veut » : il choisit le club qui chante le plus fort · 2020-2029 · canne (2027) : « on court moins, on presse quand même » ; retraite 2031 · 2030-2039 · il commente en courant sur un tapis, en direct, chez Vence · 2040-2050 · meurt en 2047 sur le tapis, en souriant ; on ne sait pas s'il a gagné
 **Retrouvailles** : `co.retrouvailles.klopf_sourire` / `_noir` / `_tapis`
-**Cartes propres** : *Le derby gagné* (01) · *Le latéral gauche* (01) · *La Vestrie en face* (01) · *Tout le monde le veut* (01) · *La troisième finale* (01) · *La casquette* (01) · *Klopf, l'hiver* (§ 10) · *Le coach que tu nommes* (12)
+**Cartes propres** : *Le derby gagné* (01) · *Le latéral gauche* (01) · *La Vestrie en face* (01) · *Tout le monde le veut* (01) · *La troisième finale* (01) · *La casquette* (01) · *Vogler, l'hiver* (§ 10) · *Le coach que tu nommes* (12)
 
 ### 11.1 Identité et place
-On ne connaît pas son prénom ; il dit « Klopf » en se présentant, et « collègue » en te présentant. 38 ans en 1990, 48 en 2000, 58 en 2010, 68 en 2020, 78 en 2030, 95 à sa mort. **Portrait** : la casquette (verte, puis aux couleurs du club, puis de la Vestrie), le sourire trop blanc, la barbe blonde puis blanche, le survêtement zippé jusqu'au menton. **Voix** : forte, chantante, un accent du Nord qu'il exagère ; il ponctue par des claques dans le dos. Dans un club, il est partout, en courant : il fait l'échauffement avec les joueurs, il presse le président dans le couloir, il chante avec le virage après la victoire. Il ne s'assoit pas.
+On ne connaît pas son prénom ; il dit « Vogler » en se présentant, et « collègue » en te présentant. 38 ans en 1990, 48 en 2000, 58 en 2010, 68 en 2020, 78 en 2030, 95 à sa mort. **Portrait** : la casquette (verte, puis aux couleurs du club, puis de la Vestrie), le sourire trop blanc, la barbe blonde puis blanche, le survêtement zippé jusqu'au menton. **Voix** : forte, chantante, un accent du Nord qu'il exagère ; il ponctue par des claques dans le dos. Dans un club, il est partout, en courant : il fait l'échauffement avec les joueurs, il presse le président dans le couloir, il chante avec le virage après la victoire. Il ne s'assoit pas.
 
 **Désir / besoin / blessure / secret.** Désir : que tout le monde court ; que le pressing soit une chanson. Besoin : gagner une finale, une seule. Blessure : trois finales, trois sourires. Secret : il ne sait pas chanter ; il bouge les lèvres ; les joueurs l'ont compris depuis 1995 et chantent plus fort pour couvrir.
 
@@ -1495,59 +1475,59 @@ On ne connaît pas son prénom ; il dit « Klopf » en se présentant, et « col
 - **+3** — « La finale, on l'a perdue tous les deux, en souriant. On court, on presse, on chante ; viens chanter, une fois. » / « Je te donne ma casquette. Elle n'a jamais gagné de finale ; elle a tout le reste. »
 
 ### 11.3 Rapports avec les autres
-**Alliés** : Solvang (son agente, qui compte pendant qu'il court), Rouvier (elle siffle la fin de ses entraînements ; il obéit, en riant), Fauvel (« un groupe, pas une liste » : Klopf dit « un chœur »). **Rivaux** : Loco (le seau contre la casquette : deux religions), Vukić (qui ne chante pas), Bréhaut (« le groupe vit bien » : « le groupe court mal »). **Dettes** : il doit à Nassir un salaire de la Vestrie ; Malbec lui doit une élection (il a fait voter les entraîneurs). **Il aime** : Dembo, qui ne défend pas, et qu'il fait presser quand même, par amour.
+**Alliés** : Solvang (son agente, qui compte pendant qu'il court), Rouvier (elle siffle la fin de ses entraînements ; il obéit, en riant), Fauvel (« un groupe, pas une liste » : Vogler dit « un chœur »). **Rivaux** : Vaz (le seau contre la casquette : deux religions), Vukić (qui ne chante pas), Bréhaut (« le groupe vit bien » : « le groupe court mal »). **Dettes** : il doit à Ilyas un salaire de la Vestrie ; Malbec lui doit une élection (il a fait voter les entraîneurs). **Il aime** : Dembo, qui ne défend pas, et qu'il fait presser quand même, par amour.
 
 ### 11.4 INTRIGUE co.klopf_pressing  —  On court, on presse, on chante
-**Logline** : Klopf gagne le derby en souriant, exige un latéral gauche, perd trois finales, et finit par te donner sa casquette. · **Synopsis** : Entraîneur, il te bat au derby et t'embrasse. DS, il veut un gauche, pas un droit qui joue à gauche. Sélectionneur, sa Vestrie presse tes Cobalts. Président, tout le monde le veut et Solvang t'appelle. Après une finale perdue, il t'explique le sourire. Un jour un joueur veut une casquette.
+**Logline** : Vogler gagne le derby en souriant, exige un latéral gauche, perd trois finales, et finit par te donner sa casquette. · **Synopsis** : Entraîneur, il te bat au derby et t'embrasse. DS, il veut un gauche, pas un droit qui joue à gauche. Sélectionneur, sa Vestrie presse tes Cobalts. Président, tout le monde le veut et Solvang t'appelle. Après une finale perdue, il t'explique le sourire. Un jour un joueur veut une casquette.
 **Rôle(s)** : entraineur, ds, selectionneur, president · **Postulat(s)** : partagé (promu, interimaire, vendre_trente, apres_fiasco, rachete_fonds) · **Porteur** : klopf · **Cast** : klopf, solvang, dembo, rouvier, loco · **Thème** : vestiaire
 **Saisons** : "0" (derby), "1" (lateral, vestrie 2004-2016), "2+" (tout_le_monde 2017+, troisieme_finale, casquette) · **Conditions d'entrée** : `chars.klopf.statut != 'mort'` · **Exclusions** : `co.derby` (11) la même semaine · **Rejouabilité** : jamais
-**Issues** → **Traces** → **Qui les lit** : `lateral` → `klopf_lateral` (« {annee} : Klopf a eu son latéral gauche. Un gauche, pas un droit qui joue à gauche. ») → lue par 12 (le mercato d'hiver : il en veut un deuxième), 20 (« UN GAUCHE, UN VRAI »), 30 (`ds_architecte` plus) · `finale` → `klopf_trois_finales` (monde ; « 2001 : troisième finale perdue pour Klopf. Il a souri. On lui a reproché le sourire. ») → lue par 31 (Nouvelle 2001), 14 (l'adversaire qui sourit), 02 (Vence : « le sourire ») · `casquette` → `casquette_klopf` (objet héritable ; « {annee} : Klopf a donné sa casquette à {prenom} {nom}. Elle n'avait jamais gagné de finale. ») → lue par 90 (lignée : objet), 30 (`en_retraite` plus)
+**Issues** → **Traces** → **Qui les lit** : `lateral` → `klopf_lateral` (« {annee} : Vogler a eu son latéral gauche. Un gauche, pas un droit qui joue à gauche. ») → lue par 12 (le mercato d'hiver : il en veut un deuxième), 20 (« UN GAUCHE, UN VRAI »), 30 (`ds_architecte` plus) · `finale` → `klopf_trois_finales` (monde ; « 2001 : troisième finale perdue pour Vogler. Il a souri. On lui a reproché le sourire. ») → lue par 31 (Nouvelle 2001), 14 (l'adversaire qui sourit), 02 (Vence : « le sourire ») · `casquette` → `casquette_klopf` (objet héritable ; « {annee} : Vogler a donné sa casquette à {prenom} {nom}. Elle n'avait jamais gagné de finale. ») → lue par 90 (lignée : objet), 30 (`en_retraite` plus)
 **Séquencier** : derby (entraîneur, S0, semaine du derby si son club est {rival}) → lateral (DS, fenêtre de mercato) → vestrie (sélectionneur, `year in 2004..2016`) → tout_le_monde (président, `year >= 2017`) → troisieme_finale (tous, `year >= 2001`, après une finale perdue) → casquette (entraîneur, S2+, absurde)
 **Épilogue** : rien.
 
 ### SCÈNE en.klopf.derby  —  Le derby gagné
 **Rôle** : entraineur · **Intrigue** : co.klopf_pressing · **Étape** : 1/6 · **Moment** : saison 0, après le derby si `derby_perdu` · **Lieu** : le rond central, il traverse en courant pour t'embrasser · **Conditions** : `chars.klopf.statut == 'rival' && flag('derby_perdu')`
-**KLOPF** *(entraîneur de {rival} — sourire — la casquette à l'envers, il te serre trop fort)*
+**VOGLER** *(entraîneur de {rival} — sourire — la casquette à l'envers, il te serre trop fort)*
 « On a couru, on a pressé, on a chanté, et ton six a marché à la soixantième ; je l'ai vu de mon banc, collègue. Viens courir avec nous jeudi, ou reste, et regarde. »
 ← **Je viens courir jeudi** — effets : vestiaire −, force +2, relation.klopf +2, tribunes −, set: couru_avec_klopf — *Jeudi, chez eux, en survêtement. Gégé l'apprend. Le virage comprend mal ; le six court plus vite le dimanche suivant.*
 → **On se revoit au retour** — effets : tribunes +, relation.klopf −1, set: revanche_klopf — *Il rit. Il chante ton nom en s'éloignant ; ses joueurs reprennent. C'est le pire chant de la vallée.*
-**Traces** : couru_avec_klopf, revanche_klopf (« {annee} : {prenom} {nom} a promis la revanche à Klopf. Klopf a chanté. ») · **Réactions déclenchées** : en.re.gege_jumelles (11, variante : « tu as couru chez eux ») · **Lu plus tard par** : 11 (`co.derby` retour : variante « la revanche »), 09 (Gégé : « chez eux, jeudi »), 20 (« IL A COURU CHEZ L'ENNEMI »)
+**Traces** : couru_avec_klopf, revanche_klopf (« {annee} : {prenom} {nom} a promis la revanche à Vogler. Vogler a chanté. ») · **Réactions déclenchées** : en.re.gege_jumelles (11, variante : « tu as couru chez eux ») · **Lu plus tard par** : 11 (`co.derby` retour : variante « la revanche »), § 9 (Gégé : « chez eux, jeudi »), 20 (« IL A COURU CHEZ L'ENNEMI »)
 
 ### SCÈNE ds.klopf.lateral  —  Le latéral gauche
 **Rôle** : ds · **Intrigue** : co.klopf_pressing · **Étape** : 2/6 · **Moment** : fenêtre de mercato, [1,3] du sous-paquet · **Lieu** : ton bureau, il est entré en courant, il repart en courant · **Conditions** : `world.coach == 'klopf'`
-**KLOPF** *(entraîneur — neutre — il tapote une feuille : un seul nom, un seul poste)*
+**VOGLER** *(entraîneur — neutre — il tapote une feuille : un seul nom, un seul poste)*
 « Un latéral gauche, directeur, un vrai, pas un droit qui regarde son pied. On court, on presse, on chante ; sans gauche, on chante faux, et j'ai trois millions de moins que Solvang demande. »
 ← **Le gauche, à son prix** — effets : caisse −−, vestiaire ++, relation.klopf +2, relation.solvang +1, set: klopf_lateral, outcome: lateral — *Il signe. Il court dès le lendemain. Solvang compte ; Vialat écrit une lettre en mars.*
-→ **Un droit qui joue à gauche** — effets : caisse +, vestiaire −, relation.klopf −2, set: klopf_sans_gauche — *Le droit joue à gauche. Il regarde son pied. Klopf sourit sur le banc, et c'est le sourire des finales.*
-**Traces** : klopf_lateral, klopf_sans_gauche (« {annee} : Klopf n'a pas eu son gauche. Il a souri toute la saison ; le vestiaire a compris. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 12 (mercato d'hiver), 20, 30 (`ds_rate` plus)
+→ **Un droit qui joue à gauche** — effets : caisse +, vestiaire −, relation.klopf −2, set: klopf_sans_gauche — *Le droit joue à gauche. Il regarde son pied. Vogler sourit sur le banc, et c'est le sourire des finales.*
+**Traces** : klopf_lateral, klopf_sans_gauche (« {annee} : Vogler n'a pas eu son gauche. Il a souri toute la saison ; le vestiaire a compris. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 12 (mercato d'hiver), 20, 30 (`ds_rate` plus)
 
 ### SCÈNE sl.klopf.vestrie  —  La Vestrie en face
 **Rôle** : selectionneur · **Intrigue** : co.klopf_pressing · **Étape** : 3/6 · **Moment** : `year in 2004..2016`, la veille d'un match Cobalts-Vestrie · **Lieu** : le hall de l'hôtel, il fait son footing dans le couloir · **Conditions** : —
-**KLOPF** *(sélectionneur de la Vestrie — sourire — la casquette aux couleurs de la Vestrie, en sueur)*
+**VOGLER** *(sélectionneur de la Vestrie — sourire — la casquette aux couleurs de la Vestrie, en sueur)*
 « Onze casquettes demain, elles courent, elles pressent, elles chantent, et vos vingt-six ont dormi dans un hôtel de sponsor. Collègue, dis-moi juste une chose : ton six a couru cette semaine ? »
-← **Il a couru, tu verras** — effets : force +1, relation.klopf +1, tribunes + — *Le six court. Il presse même. La Vestrie gagne quand même, sur un coup de pied arrêté ; Klopf n'y croit pas, il chante.*
+← **Il a couru, tu verras** — effets : force +1, relation.klopf +1, tribunes + — *Le six court. Il presse même. La Vestrie gagne quand même, sur un coup de pied arrêté ; Vogler n'y croit pas, il chante.*
 → **Pas un mot à l'adversaire** — effets : force −1, relation.klopf −1, direction + — *Il rit. Il court jusqu'à sa chambre. Le lendemain, la Vestrie presse ton six pendant quatre-vingt-dix minutes ; il marche à la soixantième.*
-**Traces** : — (`journal:` poids 2) · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (chaîne Tournoi : « Klopf en face »), 20 (« LES CASQUETTES ONT PRESSÉ »)
+**Traces** : — (`journal:` poids 2) · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (chaîne Tournoi : « Vogler en face »), 20 (« LES CASQUETTES ONT PRESSÉ »)
 
 ### SCÈNE pr.klopf.tout_le_monde  —  Tout le monde le veut
-**Rôle** : president · **Intrigue** : co.klopf_pressing · **Étape** : 4/6 · **Moment** : `year >= 2017`, Bilan, quand l'entraîneur est à confirmer ou à virer · **Lieu** : ton bureau ; Solvang au téléphone, Klopf sur le parking, en train de courir · **Conditions** : `world.coach != 'klopf'`
-**KLOPF** *(entraîneur libre — sourire — il passe devant la fenêtre en courant, deux fois)*
+**Rôle** : president · **Intrigue** : co.klopf_pressing · **Étape** : 4/6 · **Moment** : `year >= 2017`, Bilan, quand l'entraîneur est à confirmer ou à virer · **Lieu** : ton bureau ; Solvang au téléphone, Vogler sur le parking, en train de courir · **Conditions** : `world.coach != 'klopf'`
+**VOGLER** *(entraîneur libre — sourire — il passe devant la fenêtre en courant, deux fois)*
 « Tout le monde me veut, président, et je choisis le club qui chante le plus fort ; ton virage chante juste. On court, on presse, on chante : tu vires l'autre, ou tu me laisses passer ? »
-← **Je vire l'autre, tu signes** — effets : tribunes ++, direction −, caisse −−, relation.klopf +2, set: coach_vire, char: {klopf: {statut: club}} — *L'autre reçoit un SMS à 23 h 47, avec une faute. Klopf signe à 8 h. Il court jusqu'au centre d'entraînement.*
+← **Je vire l'autre, tu signes** — effets : tribunes ++, direction −, caisse −−, relation.klopf +2, set: coach_vire, char: {klopf: {statut: club}} — *L'autre reçoit un SMS à 23 h 47, avec une faute. Vogler signe à 8 h. Il court jusqu'au centre d'entraînement.*
 → **L'autre reste, va courir** — effets : direction +, relation.klopf −1, set: klopf_refuse — *Il court ailleurs. Le club d'à côté chante plus fort en septembre. C'est le tien qui chante faux.*
-**Traces** : coach_vire (13), klopf_refuse (« {annee} : {prenom} {nom} a laissé passer Klopf. Il a signé à côté, et à côté chante fort. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (l'entraîneur qu'on vire : la chaîne), 12 (le coach que tu nommes), 20 (« KLOPF SIGNE À {VILLE} »)
+**Traces** : coach_vire (13), klopf_refuse (« {annee} : {prenom} {nom} a laissé passer Vogler. Il a signé à côté, et à côté chante fort. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (l'entraîneur qu'on vire : la chaîne), 12 (le coach que tu nommes), 20 (« VOGLER SIGNE À {VILLE} »)
 
 ### SCÈNE co.klopf.troisieme_finale  —  La troisième finale
 **Rôle** : entraineur, selectionneur, president · **Intrigue** : co.klopf_pressing · **Étape** : 5/6 · **Moment** : `year >= 2001`, après une finale perdue (Coupe, Continental, tournoi) · **Lieu** : le vestiaire vide, il est venu te voir, chez toi, avec deux bières · **Conditions** : `flag('grand_match_perdu') && relation.klopf >= 0`
-**KLOPF** *(entraîneur — sourire — la casquette sur les genoux, pour une fois)*
+**VOGLER** *(entraîneur — sourire — la casquette sur les genoux, pour une fois)*
 « J'ai perdu trois finales de suite en souriant et on m'a reproché le sourire, jamais les buts. On court, on presse, on chante ; on perd aussi, collègue, et tu as le droit de sourire ce soir. »
-← **Je souris avec toi** — effets : vestiaire +, tribunes −, relation.klopf +2, set: klopf_trois_finales, outcome: finale — *Vous souriez. Vence vous filme par la porte. Le titre du lendemain : « ILS ONT RI ». Vous n'avez pas ri ; vous avez souri.*
-→ **Pas ce soir, Klopf** — effets : relation.klopf −1, direction + — *Il remet la casquette. Il ne dit rien. Il te laisse les deux bières ; il ne boit pas, tu le savais.*
-**Traces** : klopf_trois_finales (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2001), 14 (l'après-tournoi : variante « Klopf est venu »), 02 (Vence), 30 (`sl_ennemi` plus : « il a souri »)
+← **Je souris avec toi** — effets : vestiaire +, tribunes −, relation.klopf +2, set: klopf_trois_finales, outcome: finale — *Vous souriez. Vous n'avez pas ri ; vous avez souri.*
+→ **Pas ce soir, Vogler** — effets : relation.klopf −1, direction + — *Il remet la casquette. Il ne dit rien. Il te laisse les deux bières ; il ne boit pas, tu le savais.*
+**Traces** : klopf_trois_finales (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2001), 14 (l'après-tournoi : variante « Vogler est venu »), 02 (Vence), 30 (`sl_ennemi` plus : « il a souri »)
 
 ### SCÈNE en.klopf.casquette  —  La casquette
 **Rôle** : entraineur · **Intrigue** : co.klopf_pressing · **Étape** : 6/6 · **Moment** : saison 2+, [3,12] (thème absurde) · **Lieu** : le vestiaire, un joueur avec une casquette verte, à l'envers · **Conditions** : `relation.klopf >= 1 || flag('couru_avec_klopf')`
-**KLOPF** *(entraîneur — sourire — au téléphone, en courant : on entend ses pas)*
+**VOGLER** *(entraîneur — sourire — au téléphone, en courant : on entend ses pas)*
 « Ton six porte une casquette depuis qu'il a couru avec nous, et le vestiaire en veut onze ; je te les envoie. On court, on presse, on chante : avec ou sans casquettes, tu choisis. »
 ← **Onze casquettes, on court** — effets : vestiaire ++, tribunes −, force +1, relation.klopf +1, set: onze_casquettes — *Onze casquettes vertes à l'entraînement. Gégé demande si c'est une blague. Ce n'est pas une blague ; ils pressent.*
 → **Une seule, hors entraînement** — effets : vestiaire +, direction +, relation.klopf −1 — *Le six garde la sienne. Il la met sur le banc. Il regarde son pied gauche, par habitude.*
@@ -1556,42 +1536,40 @@ On ne connaît pas son prénom ; il dit « Klopf » en se présentant, et « col
 ### 11.5 Les paliers
 ### SCÈNE co.klopf.trahison_collegue  —  Collègue
 **Rôle** : entraineur, ds, president · **Intrigue** : palier −3 · **Étape** : on_relation −3 · **Moment** : programmé en [1,3] · **Lieu** : le parking, ton adjoint monte dans sa voiture, ton latéral gauche aussi · **Conditions** : `relation.klopf <= -3`, une fois par carrière
-**KLOPF** *(entraîneur adverse — noir, mais il sourit : c'est son noir — il tient la portière)*
+**VOGLER** *(entraîneur adverse — noir, mais il sourit : c'est son noir — il tient la portière)*
 « J'ai pris ton adjoint et ton gauche, collègue ; ils voulaient courir, chez toi on marche. On court, on presse, on chante ; toi, tu regardes partir. »
 ← **Je regarde partir** — effets : vestiaire −−−, force −2, set: klopf_a_pris — *Ils partent. Ils chantent dans la voiture. Ton six, sur le parking, regarde son pied.*
 → **Je regarde partir** — effets : vestiaire −−−, force −2, set: klopf_a_pris — *Ils partent. Ils chantent dans la voiture. Ton six, sur le parking, regarde son pied.*
-**Traces** : klopf_a_pris (« {annee} : Klopf a pris l'adjoint et le latéral gauche de {nom}. Ils ont chanté dans la voiture. ») · **Lu plus tard par** : 90 (Nemesis Klopf : il te prend un joueur par saison), 30 (`en_bus` plus), 12 (le mercato : un gauche à racheter)
+**Traces** : klopf_a_pris (« {annee} : Vogler a pris l'adjoint et le latéral gauche de {nom}. Ils ont chanté dans la voiture. ») · **Lu plus tard par** : 90 (Nemesis Vogler : il te prend un joueur par saison), 30 (`en_bus` plus), 12 (le mercato : un gauche à racheter)
 
 ### SCÈNE co.klopf.faveur_chant  —  Ton nom, chanté par eux
 **Rôle** : entraineur, selectionneur, president · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : le tunnel, après un match que tu as gagné contre lui ; ses joueurs chantent · **Conditions** : `relation.klopf >= 3`, une fois par carrière
-**KLOPF** *(entraîneur adverse — sourire — la casquette à la main, il fait signe à ses joueurs de continuer)*
+**VOGLER** *(entraîneur adverse — sourire — la casquette à la main, il fait signe à ses joueurs de continuer)*
 « Ils chantent ton nom, mes joueurs, après une défaite ; je leur ai demandé, ils ont dit oui. On court, on presse, on chante, {prenom} ; ce soir on chante toi. »
-← **Je vais les remercier** — effets : tribunes ++, vestiaire ++, relation.klopf +1, set: chante_par_klopf — *Tu entres dans leur vestiaire. Ils chantent plus fort. Klopf bouge les lèvres ; tu vois qu'il ne chante pas ; tu ne le diras jamais.*
+← **Je vais les remercier** — effets : tribunes ++, vestiaire ++, relation.klopf +1, set: chante_par_klopf — *Tu entres dans leur vestiaire. Ils chantent plus fort. Vogler bouge les lèvres ; tu vois qu'il ne chante pas ; tu ne le diras jamais.*
 → **Fais-les taire, c'est gênant** — effets : direction +, relation.klopf −1 — *Il les fait taire. Il remet la casquette. « Collègue », dit-il, en souriant ; c'est la première fois qu'il te le dit.*
-**Traces** : chante_par_klopf (« {annee} : les joueurs de Klopf ont chanté le nom de {prenom} {nom} après leur défaite. Klopf bougeait les lèvres. ») · **Lu plus tard par** : 20 (« CHANTÉ PAR L'ENNEMI »), 14 (l'après-tournoi), 90 (mémoire des clubs +1 chez lui)
+**Traces** : chante_par_klopf (« {annee} : les joueurs de Vogler ont chanté le nom de {prenom} {nom} après leur défaite. Vogler bougeait les lèvres. ») · **Lu plus tard par** : 20 (« CHANTÉ PAR L'ENNEMI »), 14 (l'après-tournoi), 90 (mémoire des clubs +1 chez lui)
 
 ### 11.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.klopf_sourire  —  Le footing
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le tour du nouveau stade, six heures du matin
-**KLOPF** *(sa fonction du moment — sourire — il t'attend devant ton nouveau stade, en tenue, à six heures)*
+**VOGLER** *(sa fonction du moment — sourire — il t'attend devant ton nouveau stade, en tenue, à six heures)*
 « Nouveau club, même heure, six heures, on court autour du stade avant que le président arrive. On court, on presse, on chante, {prenom} ; tu viens, ou tu as pris du ventre ? »
-← **Je cours** — effets : force +1, relation.klopf +1, vestiaire + — *Trois tours. Il chante au deuxième. Le président arrive à six heures et demie ; il vous voit ; il ne comprend pas ; il apprécie.*
-→ **J'ai pris du ventre** — effets : relation.klopf −1, direction + — *Il rit. Il fait les trois tours seul. Il chante ton nom au troisième, faux.*
+**OK** **Je cours** — effets : force +1, relation.klopf +1, vestiaire + — *Trois tours. Il chante au deuxième. Le président arrive à six heures et demie ; il vous voit ; il ne comprend pas ; il apprécie.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.klopf_noir  —  Collègue
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le tunnel du nouveau stade ; il ne court pas
-**KLOPF** *(sa fonction du moment — noir, souriant — il ne court pas, c'est le signe)*
+**VOGLER** *(sa fonction du moment — noir, souriant — il ne court pas, c'est le signe)*
 « Collègue, on se retrouve ; j'ai regardé ton nouveau six, il marche déjà. On court, on presse, on chante ; toi, tu changes de club. »
-← **Je change de six aussi** — effets : force +1, relation.klopf +1 — *Tu changes. Il note. Il te dit « coach » la fois d'après ; c'est un progrès.*
-→ **Cours, Klopf, tu m'ennuies** — effets : relation.klopf −1, tribunes + — *Il court. Il chante. Le virage d'ici reprend ; c'est contagieux, c'est le problème.*
+**OK** **Je change de six aussi** — effets : force +1, relation.klopf +1 — *Tu changes. Il note. Il te dit « coach » la fois d'après ; c'est un progrès.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.klopf_tapis  —  Le tapis de course
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : après 2031, une fois · **Conditions** : `relation.klopf != 0` · **Lieu** : le plateau de Télé-Stade, un tapis de course, en direct
-**KLOPF** *(retraité, consultant sur un tapis de course, en direct — voix à la télé — on entend le tapis)*
+**VOGLER** *(retraité, consultant sur un tapis de course, en direct — voix à la télé — on entend le tapis)*
 « Je commente en courant, contrat de Vence, et ce soir je commente toi : ton équipe presse, chante, et marche à la soixantième. On court, on presse, on chante, collègue ; tu cours encore ? »
-← **Je cours encore, Klopf** — effets : tribunes +, relation.klopf +1 — *Il accélère le tapis. Vence s'inquiète en direct. Il sourit ; c'est le sourire des finales.*
+← **Je cours encore, Vogler** — effets : tribunes +, relation.klopf +1 — *Il accélère le tapis. Vence s'inquiète en direct. Il sourit ; c'est le sourire des finales.*
 → **J'éteins la télé** — effets : direction +, relation.klopf −1 — *Tu éteins. Il continue ; il ne sait pas que tu as éteint ; il chante.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
@@ -1629,7 +1607,7 @@ Nadia Rouvier ; « Nadia » pour les joueurs, « Rouvier » pour le coach, « la
 - **+3** — « Ce que le Doc cache, c'est dans mon carnet ; je te le lis, une fois. Respire. Encore. » / « Le cabinet ouvre lundi. Ton nom est sur la liste des patients ; c'est un honneur, tu sais. »
 
 ### 12.3 Rapports avec les autres
-**Alliés** : Sabatier (le pacte des deux tables : elle voit, il cache, ils se respectent), Camille (deux cabinets côte à côte en 2015), Vecchio (l'épaule de 1991 : elle a dit non à Sabatier, personne ne l'a su), Klopf (il obéit au sifflet). **Rivaux** : Fardelli (qui demande les radios), Loco (qui prolonge tout et ne siffle jamais), Brissac (« les chiffres sont têtus ; les muscles aussi »). **Dettes** : Dembo lui doit huit kilos ; Mbako lui doit un genou entier. **Elle craint** : Amsel, qui lui demandera le carnet.
+**Alliés** : Sabatier (le pacte des deux tables : elle voit, il cache, ils se respectent), Camille (deux cabinets côte à côte en 2015), Vecchio (l'épaule de 1991 : elle a dit non à Sabatier, personne ne l'a su), Vogler (il obéit au sifflet). **Rivaux** : Fardelli (qui demande les radios), Vaz (qui prolonge tout et ne siffle jamais), Brissac (« les chiffres sont têtus ; les muscles aussi »). **Dettes** : Dembo lui doit huit kilos ; Mbako lui doit un genou entier. **Elle craint** : Amsel, qui lui demandera le carnet.
 
 ### 12.4 INTRIGUE co.rouvier_sifflet  —  Le sifflet du kiné
 **Logline** : Nadia Rouvier voit ce que le Doc cache ; elle siffle la fin, elle refuse le stage commando, elle masse dans le hall d'un hôtel de sponsor, et un jour elle ouvre son cabinet. · **Synopsis** : Joueur, elle est la seconde voix contre la piqûre. Entraîneur, elle siffle la fin de ta séance. Tu veux un stage commando ; elle refuse. Sélectionneur, le stage est à l'hôtel du sponsor et les tables sont dans le hall. DS, Dembo a huit kilos de carnaval. En 2015, elle ouvre le cabinet et te demande de couper le ruban, ou non.
@@ -1659,7 +1637,7 @@ Nadia Rouvier ; « Nadia » pour les joueurs, « Rouvier » pour le coach, « la
 **Rôle** : entraineur · **Intrigue** : co.rouvier_sifflet · **Étape** : 2/6 · **Moment** : saison 1, [2,8] · **Lieu** : ton bureau, un prospectus d'un centre de « préparation extrême » · **Conditions** : `gauges.vestiaire >= 60 || relation.aulard >= 1`
 **ROUVIER** *(kiné — neutre — le prospectus déchiré en deux, posé bien à plat)*
 « Le stage commando, c'est quatre jours dans la boue et trois blessés en septembre ; je l'ai vu, à Néville, en quatre-vingt-sept. Respire. Encore, coach, et trouve autre chose pour souder un groupe. »
-← **Pas de commando, d'accord** — effets : vestiaire +, direction −, force −1, relation.rouvier +2, set: stage_commando_refuse, outcome: commando_refuse — *Vous faites un stage de pêche. Gigi pêche. Bréhaut nettoie. Le groupe vit bien ; personne n'est blessé.*
+← **Pas de commando, d'accord** — effets : vestiaire +, direction −, force −1, relation.rouvier +2, set: stage_commando_refuse, outcome: commando_refuse — *Vous faites un stage de pêche. Le groupe vit bien ; personne n'est blessé.*
 → **Le commando, ça forge** — effets : vestiaire ++, force +2, relation.rouvier −2, set: stage_commando, schedule: [{card: en.rouvier.commando_blesses, in: [4,8]}] — *Quatre jours de boue. Le groupe chante. En septembre, trois ischios ; elle les soigne sans un mot.*
 **Traces** : stage_commando_refuse, stage_commando (« {annee} : stage commando à {club}. Trois ischios en septembre ; la kiné avait dit non. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (le stage des Cobalts : « pas de commando » ou « encore »), 20 (« PAS DE COMMANDO » / « TROIS ISCHIOS »), `en.rouvier.commando_blesses` (chaîne, à écrire par 11 : trois blessés, une sortie)
 
@@ -1667,9 +1645,9 @@ Nadia Rouvier ; « Nadia » pour les joueurs, « Rouvier » pour le coach, « la
 **Rôle** : selectionneur · **Intrigue** : co.rouvier_sifflet · **Étape** : 3/6 · **Moment** : fenêtre de juin, la veille du stage du tournoi · **Lieu** : le hall d'un hôtel de sponsor, trois tables de massage entre les plantes vertes · **Conditions** : `year in 2002..2014`
 **ROUVIER** *(kiné des Cobalts — neutre — elle a posé sa table à côté d'une fontaine)*
 « Le sponsor a mis les tables dans le hall pour les photos, et les joueurs se font masser devant les clients. Respire. Encore, coach ; ou tu dis au sponsor que les corps ne sont pas des photos. »
-← **Les tables vont en chambre** — effets : caisse −, vestiaire ++, relation.rouvier +2, relation.nassir −1, set: tables_montees — *Les tables montent. Le sponsor souffle. Nassir dit que ce n'est pas une équipe, c'est un actif ; elle répond qu'un actif a des ischios.*
+← **Les tables vont en chambre** — effets : caisse −, vestiaire ++, relation.rouvier +2, relation.nassir −1, set: tables_montees — *Les tables montent. Le sponsor souffle. Ilyas dit que ce n'est pas une équipe, c'est un actif ; elle répond qu'un actif a des ischios.*
 → **Les photos, c'est le contrat** — effets : caisse +, vestiaire −, relation.rouvier −2, set: tables_hall — *Les joueurs se font masser entre deux plantes. Fauvel refuse. Il est massé dans sa chambre par personne ; il boite en poules.*
-**Traces** : tables_montees, tables_hall (« {annee} : les tables de massage des Cobalts dans le hall du sponsor. Fauvel a refusé ; il a boité. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (le stage, l'avion des primes), 02 (Nassir), 20 (« MASSÉS ENTRE LES PLANTES »)
+**Traces** : tables_montees, tables_hall (« {annee} : les tables de massage des Cobalts dans le hall du sponsor. Fauvel a refusé ; il a boité. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (le stage, l'avion des primes), 02 (Ilyas), 20 (« MASSÉS ENTRE LES PLANTES »)
 
 ### SCÈNE ds.rouvier.huit_kilos  —  Huit kilos
 **Rôle** : ds · **Intrigue** : co.rouvier_sifflet · **Étape** : 4/6 · **Moment** : saison 1+, [1,6], à la reprise · **Lieu** : la salle de pesée, Dembo sur la balance, le regard ailleurs · **Conditions** : `chars.dembo.statut == 'club'`
@@ -1683,17 +1661,17 @@ Nadia Rouvier ; « Nadia » pour les joueurs, « Rouvier » pour le coach, « la
 **Rôle** : tous · **Intrigue** : co.rouvier_sifflet · **Étape** : 5/6 · **Moment** : `year >= 2015`, [2,10], une fois · **Lieu** : une rue de Saint-Étoile, une porte neuve, un ruban, une paire de ciseaux · **Conditions** : `chars.rouvier.statut != 'mort'`
 **ROUVIER** *(kiné, cabinet — sourire — les ciseaux tendus, ceux de Josiane, empruntés)*
 « Le cabinet ouvre lundi, mon nom est sur la porte, et le ruban attend quelqu'un qui a un genou à me devoir. Respire. Encore, {prenom} ; tu coupes, ou tu m'envoies des fleurs ? »
-← **Je coupe** — effets : tribunes +, relation.rouvier +2, relation.camille +1, set: rouvier_cabinet, outcome: cabinet — *Tu coupes. Camille est là ; son cabinet est à côté. Léa fait une photo pour L'Écho ; Ménèche n'est pas venu.*
+← **Je coupe** — effets : tribunes +, relation.rouvier +2, relation.camille +1, set: rouvier_cabinet, outcome: cabinet — *Tu coupes. Camille est là ; son cabinet est à côté. Léa fait une photo pour L'Écho ; Massenet n'est pas venu.*
 → **Des fleurs, j'ai match** — effets : direction +, relation.rouvier −1, set: rouvier_fleurs — *Les fleurs arrivent. Elle les met dans la salle d'attente. Elle coupe le ruban avec Vecchio, qui a apporté une orange.*
-**Traces** : rouvier_cabinet, rouvier_fleurs (« {annee} : des fleurs pour le cabinet Rouvier. {prenom} {nom} avait match ; Gigi a coupé le ruban. ») · **Réactions déclenchées** : co.re.camille_journal (existant) · **Lu plus tard par** : 30 (le corps après 60 ans), 04 (Camille), 20 (Écho, « Au local »)
+**Traces** : rouvier_cabinet, rouvier_fleurs (« {annee} : des fleurs pour le cabinet Rouvier. {prenom} {nom} avait match ; Gigi a coupé le ruban. ») · **Réactions déclenchées** : co.re.camille_journal (existant) · **Lu plus tard par** : 30 (le corps après 60 ans), § 4 (Camille), 20 (Écho, « Au local »)
 
 ### SCÈNE co.rouvier.carnet_lu  —  Le carnet d'en face (sixième scène)
 **Rôle** : entraineur, selectionneur, instance · **Intrigue** : co.rouvier_sifflet · **Étape** : 6/6 · **Moment** : saison 2+, [4,12] · **Lieu** : la table d'à côté, la porte fermée, un carnet à couverture rouge · **Conditions** : `relation.rouvier >= 2 && flag('sabatier_secret')`
 **ROUVIER** *(kiné — sourire — le carnet ouvert à une page qu'elle a choisie)*
 « Le Doc a son carnet, j'ai le mien, et le mien dit ce qu'il n'a pas refusé ; il y a une ligne sur ton club, l'an dernier. Respire. Encore, coach ; je te la lis si tu la veux. »
 ← **Lis-la** — effets : vestiaire −, direction −, relation.rouvier +1, relation.sabatier −1, set: rouvier_a_parle — *Elle lit. Un joueur, une date, un produit qui n'était « pas encore » interdit. Tu ne dors pas ; elle, si, pour la première fois depuis 1990.*
-→ **Garde-la, tu as une clause** — effets : relation.rouvier −1, relation.sabatier +1, direction + — *Elle referme. « Je ne l'ai pas lue, la clause », dit-elle. Elle la lira ce soir. Elle la trouvera vide de sens.*
-**Traces** : rouvier_a_parle (« {annee} : Nadia Rouvier a lu une ligne de son carnet à {prenom} {nom}. Le Doc ne l'avait pas refusée, celle-là. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (commission antidopage : « la kiné a un carnet »), 10-11 (`co.pharmacie` variante « elle sait »), 03 (Sabatier : `in.sabatier.temoin` variante)
+→ **Garde-la, tu as une clause** — effets : relation.rouvier −1, relation.sabatier +1, direction + — *Elle referme. Elle la trouvera vide de sens.*
+**Traces** : rouvier_a_parle (« {annee} : Nadia Rouvier a lu une ligne de son carnet à {prenom} {nom}. Le Doc ne l'avait pas refusée, celle-là. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (commission antidopage : « la kiné a un carnet »), 10-11 (`co.pharmacie` variante « elle sait »), § 3 (Sabatier : `in.sabatier.temoin` variante)
 
 ### 12.5 Les paliers
 ### SCÈNE co.rouvier.trahison_dossier  —  Le carnet rouge à la Commission
@@ -1717,16 +1695,14 @@ Nadia Rouvier ; « Nadia » pour les joueurs, « Rouvier » pour le coach, « la
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : la salle de soins du nouveau club, sa table pliante dépliée
 **ROUVIER** *(sa fonction du moment — sourire — elle a apporté sa propre table, pliée)*
 « J'ai suivi, avec la table ; le kiné d'ici a une table qui grince, je l'ai entendue du parking. Respire. Encore, {prenom} ; tu as toujours le dos de quatre-vingt-quatorze. »
-← **Allonge-moi** — effets : force +1, relation.rouvier +1 — *Vingt minutes. Le dos de 1994 est toujours là. Elle aussi.*
-→ **Le dos va bien** — effets : relation.rouvier −1, tribunes + — *« Respire », dit-elle. Tu respires. Elle note ; elle a un carnet pour ça.*
+**OK** **Allonge-moi** — effets : force +1, relation.rouvier +1 — *Vingt minutes. Le dos de 1994 est toujours là. Elle aussi.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.rouvier_noir  —  Le sifflet rangé
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le terrain, dix-huit heures, sans sifflet
 **ROUVIER** *(sa fonction du moment — noir — sans sifflet au cou, pour la première fois)*
 « Je ne siffle plus pour toi, monsieur {nom} ; ici, le coach prolonge, et je laisse faire, c'est son ischio. Respire. Encore, ou pas ; ce n'est plus à moi de le dire. »
-← **Remets le sifflet, j'écoute** — effets : relation.rouvier +1, vestiaire + — *Elle le remet. Elle siffle à dix-huit heures. Tu arrêtes. C'est un début.*
-→ **Fais ton travail, c'est tout** — effets : relation.rouvier −1, force − — *Elle le fait. Trois ischios avant Noël. Elle les soigne. Elle note.*
+**OK** **Remets le sifflet, j'écoute** — effets : relation.rouvier +1, vestiaire + — *Elle le remet. C'est un début.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.rouvier_cabinet  —  Quatre-vingt-dix ans
@@ -1753,21 +1729,21 @@ Nadia Rouvier ; « Nadia » pour les joueurs, « Rouvier » pour le coach, « la
 
 ### RÉACTION co.re.klopf_sifflet  —  Le sifflet et la casquette
 **Après** : en.rouvier.sifflet (← ils rentrent) · **Famille** : tiers qui commente · **Conditions** : `relation.klopf >= 0 && chars.klopf.statut == 'rival'`
-**KLOPF** *(entraîneur adverse — sourire — au téléphone, essoufflé)*
+**VOGLER** *(entraîneur adverse — sourire — au téléphone, essoufflé)*
 « On m'a dit que ta kiné siffle la fin et que tu obéis ; chez moi aussi, collègue, c'est la même. On court, on presse, on chante, et à dix-huit heures on rentre. »
 **Un bouton** : **Même sifflet, même heure** — effets : relation.klopf +1, vestiaire + — *Il raccroche en chantant. Elle a entendu. Elle ne sourit pas ; elle note.*
 
 ---
 
 ## 13. DEMBO  (`dembo`)
-**Fonction** : avant-centre · **Genre** : m · **Âge en 1990** : 24 · **Camp** : terrain · **Fenêtre** : joueur 1990-2009 (star qui ne défend pas ; vendu à Al-Dorado ou mis au loft ; l'avant-centre des Cobalts qui ne chante pas l'hymne), consultant 2010-2014, ruiné 2015, entraîneur de Corbelin 2020-2030 ; il meurt en 2046, aimé, sans un sou · **Suivant** : dans le monde, le prodige d'avant devient le prodige d'après : Noa Vandel (§ 6) est « le Dembo de 2020 » ; Dembo le dit lui-même
+**Fonction** : avant-centre · **Genre** : m · **Âge en 1990** : 24 · **Camp** : terrain · **Fenêtre** : joueur 1990-2009 (star qui ne défend pas ; vendu à Al-Dorado ou mis au loft ; l'avant-centre des Cobalts qui ne chante pas l'hymne), consultant 2010-2014, ruiné 2015, entraîneur de Corbelin de 2020 à sa mort ; il meurt en 2046, sur le banc des Ardoises, aimé, sans un sou · **Suivant** : dans le monde, le prodige d'avant devient le prodige d'après : Noa Vandel (§ 6) est « le Dembo de 2020 » ; Dembo le dit lui-même
 **Tic** : « Donne-moi le ballon, je m'occupe du reste. » — torsions : « Donne-moi le ballon. Le reste, on verra. » · « On m'a donné le ballon. Personne ne s'est occupé du reste. » · « Donne-moi le micro, je m'occupe du reste. »
 **Désir** : marquer, être aimé, dormir tard · **Blessure** : il a été le prodige de quelqu'un ; on l'a vendu à 17 ans (Bretagne, l'usine, 1983) et il ne l'a pas digéré ; il déteste Mbako de l'aimer
 **Adresse** : entraineur : {prenom} / coach / patron (ironique) · joueur : {prenom} / {prenom} / {nom} · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « donne-moi le ballon, je marque pour toi » ; à 0 « je marque, tu défends » ; à −2 « patron, tu m'as vendu ou mis au loft ; c'est pareil, j'ai dormi tard »
 **Paliers** : −3 → `co.dembo.trahison_micro` · +3 → `co.dembo.faveur_ballon`
 **Dans les rôles** : joueur : rival et cœur (le tireur de penalty, le yacht ; 1,5) · entraîneur : cœur (la star qui ne défend pas, les huit kilos ; 1,5) · DS : l'actif (60 millions d'Al-Dorado ; 1,5) · président : la star qu'on vend ou qu'on met au loft (1) · sélectionneur : celui qui ne chante pas l'hymne (1) · tous, 2010+ : le consultant, le ruiné, le coach de Corbelin (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 24-33 ans, dreadlocks courtes, sourire, un maillot toujours sorti du short ; le penalty, le yacht loué, l'hymne muet · 2000-2009 · 34-43 ans ; gris (2011) ; Al-Dorado (2005-2008) ou le loft ; retraite 2009 · 2010-2019 · consultant chez Vence (« donne-moi le micro ») ; ruiné en 2015 : le yacht, le cousin, le restaurant ; il vend le ballon du match de 1996 · 2020-2029 · entraîneur de Corbelin (2020), les ultras poètes lui écrivent des vers ; lunettes (2011) qu'il refuse pour la télé · 2030-2039 · canne (2041) ; il dort tard ; il donne des ballons aux gamins de Corbelin · 2040-2050 · meurt en 2046 ; Corbelin peint un poème sur les ardoises ; il finissait par « le reste »
+**Trajectoire 1990 → 2050** : 1990-1999 · 24-33 ans, dreadlocks courtes, sourire, un maillot toujours sorti du short ; le penalty, le yacht loué, l'hymne muet · 2000-2009 · 34-43 ans ; Al-Dorado (2005-2008) ou le loft ; retraite 2009 · 2010-2019 · gris (2011) ; consultant chez Vence (« donne-moi le micro ») ; ruiné en 2015 : le yacht, le cousin, le restaurant ; il vend le ballon du match de 1996 · 2020-2029 · lunettes (2021) qu'il refuse pour la télé ; entraîneur de Corbelin de 2020 jusqu'à sa mort, les ultras poètes lui écrivent des vers · 2030-2039 · canne (2041) ; il dort tard ; il entraîne encore, il donne des ballons aux gamins de Corbelin · 2040-2050 · meurt en 2046, entraîneur de Corbelin depuis vingt-six ans ; Corbelin peint un poème sur les ardoises ; il finissait par « le reste »
 **Retrouvailles** : `co.retrouvailles.dembo_sourire` / `_noir` / `_corbeaux`
 **Cartes propres** : *Le penalty, le yacht* (01) · *Il ne défend pas* (01) · *Le loft* (01) · *L'hymne muet* (01) · *Donne-moi le micro* (01) · *Corbelin* (01) · *Soixante millions* (12) · *Huit kilos* (§ 12) · *Le coéquipier rival* (10)
 
@@ -1784,7 +1760,7 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 - **+3** — « Je joue blessé dimanche, patron, et je marque. Donne-moi le ballon, je m'occupe du reste, et du reste du reste. » / « Voilà le ballon du match. Je le donne à personne, d'habitude. »
 
 ### 13.3 Rapports avec les autres
-**Alliés** : Klopf (qui le fait presser par amour), Rouvier (huit kilos, trois semaines), Gégé (le virage l'aime : il marque), Fauvel (qui chante pour deux, sans demander). **Rivaux** : Mbako (le prodige d'après : « on m'a vendu à dix-sept, toi à seize, tu as un an de moins à digérer »), Bréhaut (le penalty), Nassir (« un actif qui dort tard »). **Dettes** : il doit à Fardelli le yacht, à Vence le micro, à Corbelin un poème. **Il aime** : Sacha, qui lui a demandé pourquoi il ne chantait pas, et à qui il a répondu.
+**Alliés** : Vogler (qui le fait presser par amour), Rouvier (huit kilos, trois semaines), Gégé (le virage l'aime : il marque), Fauvel (qui chante pour deux, sans demander). **Rivaux** : Mbako (le prodige d'après : « on m'a vendu à dix-sept, toi à seize, tu as un an de moins à digérer »), Bréhaut (le penalty), Ilyas (« un actif qui dort tard »). **Dettes** : il doit à Fardelli le yacht, à Vence le micro, à Corbelin un poème. **Il aime** : Sacha, qui lui a demandé pourquoi il ne chantait pas, et à qui il a répondu.
 
 ### 13.4 INTRIGUE co.dembo_ballon  —  Donne-moi le ballon
 **Logline** : Dembo marque, ne défend pas, ne chante pas, dort tard, prend le micro, perd tout, et finit entraîneur d'un club de ville morte dont les ultras écrivent des poèmes. · **Synopsis** : Joueur, il te prend le penalty et t'invite sur un yacht. Entraîneur, il ne défend pas. Président, tu le vends ou tu le mets au loft. Sélectionneur, il ne chante pas l'hymne. Consultant, il te descend ou te sauve au micro ; ruiné, il te demande un prêt. Coach de Corbelin, il est sur le banc d'en face, et les corbeaux chantent.
@@ -1798,7 +1774,7 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 **Rôle** : joueur · **Intrigue** : co.dembo_ballon · **Étape** : 1/6 · **Moment** : saison 0, [3,10] · **Lieu** : la surface, le point, l'arbitre qui attend, Bréhaut qui regarde · **Conditions** : `chars.dembo.statut == 'club'`
 **DEMBO** *(avant-centre — sourire — le ballon déjà sous le bras, il te parle en marchant)*
 « Le penalty, c'est moi, c'est écrit nulle part mais c'est moi ; et samedi j'ai loué un yacht, tu as une place. Donne-moi le ballon, je m'occupe du reste, {prenom} : du penalty, et du yacht. »
-← **Le ballon, et le yacht** — effets : vestiaire ++, tribunes −, caisse −, relation.dembo +2, set: yacht_dembo — *Il marque. Le yacht n'est pas un yacht ; c'est un bateau de pêche loué à Portclair. Vous riez jusqu'à deux heures. Camille demande à quelle heure.*
+← **Le ballon, et le yacht** — effets : vestiaire ++, tribunes −, caisse −, relation.dembo +2, set: yacht_dembo — *Il marque. Camille demande à quelle heure.*
 → **Je tire, tu regardes** — effets : relation.dembo −2, force +1, rand: [{p: 0.5, tribunes: "++"}, {tribunes: "−−", vestiaire: "−"}] — *Tu tires. Il regarde, bras croisés. Si tu rates, il ne dit rien ; c'est pire que s'il parlait.*
 **Traces** : yacht_dembo (« {annee} : le yacht de Dembo était un bateau de pêche. {prenom} {nom} y était, jusqu'à deux heures. ») · **Réactions déclenchées** : co.re.camille_journal (existant, variante « il y avait un bateau ») · **Lu plus tard par** : 10 (`co.mbako_rival` : Mbako jaloux du yacht), 20 (« LE YACHT DE PORTCLAIR »), 30 (`jp_porteparole` plus : « l'aile de poulet, c'était sur le bateau »)
 
@@ -1814,7 +1790,7 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 **Rôle** : president · **Intrigue** : co.dembo_ballon · **Étape** : 2/6 · **Moment** : saison 1+, [2,9] · **Lieu** : ton bureau ; Fardelli au téléphone, Dembo sur le canapé, endormi, puis pas · **Conditions** : `chars.dembo.statut == 'club'`
 **DEMBO** *(avant-centre — sourire — il se réveille pile pour parler)*
 « Al-Dorado offre le triple, et le loft avec les jeunes m'attend si je refuse ; j'ai dormi, patron, j'ai tout entendu. Donne-moi le ballon, ou donne-moi le loft, je m'occupe du reste. »
-← **Le loft, avec les jeunes** — effets : caisse −, vestiaire +, tribunes +, relation.dembo −1, set: dembo_loft, outcome: loft — *Le loft. Il apprend à Mbako, ou au prodige d'après, à ne pas défendre. Ils marquent tous. Vialat écrit.*
+← **Le loft, avec les jeunes** — effets : caisse −, vestiaire +, tribunes +, relation.dembo −1, set: dembo_loft, outcome: loft — *Le loft. Vialat écrit.*
 → **Al-Dorado, le triple** — effets : caisse +++, tribunes −−, relation.dembo +1, set: dembo_vendu, char: {dembo: {statut: vendu}} — *Il part. Il t'envoie une photo d'une piscine, la nuit. Il ne dort plus tard ; il ne dort plus du tout.*
 **Traces** : dembo_loft, dembo_vendu (12) · **Réactions déclenchées** : — · **Lu plus tard par** : 12, 20, 30 (`pr_fantome` plus, `jp_exil` : il t'y accueille)
 
@@ -1822,9 +1798,9 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 **Rôle** : selectionneur · **Intrigue** : co.dembo_ballon · **Étape** : 3/6 · **Moment** : fenêtre de juin, avant le premier match du tournoi · **Lieu** : le tunnel, la musique commence, sa bouche fermée · **Conditions** : `chars.dembo.statut != 'retraite' && year <= 2009`
 **DEMBO** *(avant-centre des Cobalts — neutre — il regarde le drapeau, pas la caméra)*
 « Je ne chante pas l'hymne, je n'ai jamais chanté, et Vence va te demander pourquoi en direct. Donne-moi le ballon, coach, je m'occupe du reste ; les paroles, ce n'est pas le reste. »
-← **Il chante en silence** — effets : tribunes +, vestiaire +, relation.dembo +2, set: dembo_hymne_muet, outcome: hymne — *Tu le dis à Vence. Le pays trouve ça beau. Il marque. Il ne chante toujours pas ; Fauvel chante pour deux.*
-→ **Tu chantes, ou tu sors** — effets : direction +, tribunes −, relation.dembo −2, relation.fauvel −1, set: hymne_impose — *Il bouge les lèvres. Ça se voit. Ménèche le dit à la radio. Il marque quand même ; il ne te regarde pas.*
-**Traces** : dembo_hymne_muet, hymne_impose (14) · **Réactions déclenchées** : co.re.sacha_hymne (§ 19.8) · **Lu plus tard par** : 14, 20 (« IL N'A PAS CHANTÉ »), 19 (Sacha), 02 (Vence : « vous avez vu l'action ? non, la bouche »)
+← **Il chante en silence** — effets : tribunes +, vestiaire +, relation.dembo +2, set: dembo_hymne_muet, outcome: hymne — *Tu le dis à Vence. Il ne chante toujours pas ; Fauvel chante pour deux.*
+→ **Tu chantes, ou tu sors** — effets : direction +, tribunes −, relation.dembo −2, relation.fauvel −1, set: hymne_impose — *Il bouge les lèvres. Il marque quand même ; il ne te regarde pas.*
+**Traces** : dembo_hymne_muet, hymne_impose (14) · **Réactions déclenchées** : co.re.sacha_hymne (§ 19.8) · **Lu plus tard par** : 14, 20 (« IL N'A PAS CHANTÉ »), § 19 (Sacha), 02 (Vence : « vous avez vu l'action ? non, la bouche »)
 
 ### SCÈNE co.dembo.micro  —  Donne-moi le micro
 **Rôle** : tous · **Intrigue** : co.dembo_ballon · **Étape** : 4/6 · **Moment** : `year in 2010..2015`, [3,12] · **Lieu** : le plateau de Télé-Stade, il t'appelle pendant la pub · **Conditions** : `chars.dembo.statut == 'retraite'`
@@ -1840,15 +1816,15 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 « Coach de Corbelin, deux cents supporters et ils écrivent des poèmes, sur moi, sur le froid, sur toi ce soir. Donne-moi le ballon, patron, je m'occupe du reste ; le reste, ici, c'est la rime. »
 ← **Je lis le poème** — effets : tribunes +, relation.dembo +1, set: poeme_corbelin — *Tu lis. Il parle d'un aller simple à dix-sept ans et du reste. Tu gagnes le match ; ils te font un vers quand même.*
 → **On joue, pas de poème** — effets : force +1, relation.dembo −1, tribunes − — *Vous jouez. Corbelin gagne. Les corbeaux chantent un vers sur toi ; Gégé le rapporte au local, il le trouve bon.*
-**Traces** : poeme_corbelin (« {annee} : les ultras de Corbelin ont écrit un vers sur {prenom} {nom}. Dembo l'a peint sur les ardoises. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 20 (Écho, « On nous écrit » : le vers), 90 (mémoire des clubs : Corbelin +1), 09 (Gégé : « un cousin à Corbelin »)
+**Traces** : poeme_corbelin (« {annee} : les ultras de Corbelin ont écrit un vers sur {prenom} {nom}. Dembo l'a peint sur les ardoises. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 20 (Écho, « On nous écrit » : le vers), 90 (mémoire des clubs : Corbelin +1), § 9 (Gégé : « un cousin à Corbelin »)
 
 ### SCÈNE ds.dembo.dix_sept_ans  —  Dix-sept ans (sixième scène)
 **Rôle** : ds, entraineur · **Intrigue** : co.dembo_ballon · **Étape** : 6/6 · **Moment** : saison 1+, à la première vente d'un joueur de moins de dix-huit ans · **Lieu** : le couloir, il t'attend, sans sourire, ce qui ne lui ressemble pas · **Conditions** : `chars.dembo.statut == 'club' && chars.mbako.age <= 17 || vente d'un mineur`
 **DEMBO** *(avant-centre — neutre — la montre au poignet, pour une fois)*
 « Vous vendez le petit à dix-sept ans, un aller simple, comme moi en quatre-vingt-trois ; personne ne m'avait demandé. Donne-moi le ballon, directeur ; le reste, c'est demander au gamin. »
-← **Je demande au gamin, ce soir** — effets : caisse −, vestiaire +, relation.dembo +2, relation.mbako +1, set: gamin_demande — *Tu demandes. Il dit qu'il veut jouer, maintenant, ailleurs. Il part. Il a décidé ; Dembo l'a regardé décider, et il a souri.*
+← **Je demande au gamin, ce soir** — effets : caisse −, vestiaire +, relation.dembo +2, relation.mbako +1, set: gamin_demande — *Tu demandes. Il a décidé ; Dembo l'a regardé décider, et il a souri.*
 → **Le gamin a une mère pour ça** — effets : caisse +, relation.dembo −2, set: gamin_vendu_sans — *Il part sans qu'on lui demande. Dembo lui donne le ballon du match, à la gare. Il ne te parle plus pendant un mois.*
-**Traces** : gamin_demande, gamin_vendu_sans (« {annee} : un gamin vendu à dix-sept ans sans qu'on lui demande. Dembo lui a donné un ballon à la gare. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 12 (`vendre_trente` : « le gamin a été demandé »), 06 (Mbako : « Dembo m'a donné un ballon »), 30 (trait Loyauté)
+**Traces** : gamin_demande, gamin_vendu_sans (« {annee} : un gamin vendu à dix-sept ans sans qu'on lui demande. Dembo lui a donné un ballon à la gare. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 12 (`vendre_trente` : « le gamin a été demandé »), § 6 (Mbako : « Dembo m'a donné un ballon »), 30 (trait Loyauté)
 
 ### 13.5 Les paliers
 ### SCÈNE co.dembo.trahison_micro  —  En direct
@@ -1872,24 +1848,22 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le parking du nouveau club, un billet de bateau à la main
 **DEMBO** *(sa fonction du moment — sourire — un billet de bateau de pêche, Portclair, samedi)*
 « Nouveau club, nouveau port, j'ai loué le même bateau, celui de Portclair, et j'ai dit au capitaine que tu venais. Donne-moi le ballon, {prenom}, je m'occupe du reste, comme la première fois. »
-← **Samedi, Portclair** — effets : vestiaire ++, relation.dembo +1, caisse − — *Le bateau. Les mêmes chansons. Il ne chante toujours pas l'hymne ; il chante tout le reste.*
-→ **J'ai match samedi** — effets : direction +, relation.dembo −1 — *Il y va seul. Il t'envoie une photo de la mer, la nuit, sans texte. Il en a l'habitude.*
+**OK** **Samedi, Portclair** — effets : vestiaire ++, relation.dembo +1, caisse − — *Le bateau. Les mêmes chansons. Il ne chante toujours pas l'hymne ; il chante tout le reste.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.dembo_noir  —  Un aller simple
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le couloir du nouveau club ; il ne sourit pas
 **DEMBO** *(sa fonction du moment — noir — il ne sourit pas ; c'est rare, ça se voit)*
 « Patron, tu as changé de club comme on change de gamin : un aller simple, et le reste. Donne-moi le ballon ; non, garde-le, je m'occupe du reste tout seul. »
-← **Je n'avais pas le choix** — effets : relation.dembo +1, tribunes − — *« Moi non plus, à dix-sept ans », dit-il. Il part. Il ne claque pas la porte ; il la laisse ouverte, c'est pire.*
-→ **C'est le métier** — effets : relation.dembo −1, direction + — *Il rit. Pas le bon rire. Il en parle au micro le dimanche suivant, sans ton nom ; tout le monde comprend.*
+**OK** **Je n'avais pas le choix** — effets : relation.dembo +1, tribunes − — *« Moi non plus, à dix-sept ans », dit-il. Il part. Il ne claque pas la porte ; il la laisse ouverte, c'est pire.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.dembo_corbeaux  —  Les ardoises
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2046, une fois (`chars.dembo.statut == 'mort'`) · **Conditions** : `relation.dembo != 0` · **Lieu** : le local de la Tribune Nord, un poème recopié sur le bar
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2046, une fois (`chars.dembo.statut == 'mort' || (chars.dembo.statut == 'parti' && flag('dembo_mort'))`) · **Conditions** : `relation.dembo != 0` · **Lieu** : le local de la Tribune Nord, un poème recopié sur le bar
 **GÉGÉ ou NINO** *(capo — neutre — un poème recopié à la main, venu de Corbelin)*
 « Les corbeaux ont peint un poème sur les ardoises pour Dembo, et il y a ton nom au troisième vers ; ils l'ont mis en rime avec « le reste ». La tribune n'oublie rien, même à Corbelin. »
-← **Je vais le lire sur place** — effets : tribunes +, relation.dembo +1 (posthume) — *Tu y vas. La ville est morte, la tribune est vivante. Le vers dit que tu as donné le ballon. C'est faux, ou vrai ; ça rime.*
-→ **Je le lis ici, ça suffit** — effets : direction + — *Tu le lis. Le troisième vers rime avec « le reste ». Tu ne sais pas si c'est un compliment. Lui non plus ne l'aurait pas su.*
+← **Je vais le lire sur place** — effets : tribunes +, relation.dembo +1 (posthume) — *Tu y vas. C'est faux, ou vrai ; ça rime.*
+→ **Je le lis ici, ça suffit** — effets : direction + — *Tu le lis. Lui non plus ne l'aurait pas su.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### 13.7 Anecdotes
@@ -1902,38 +1876,38 @@ Dembo ; un nom, pas de prénom qu'il ait accepté (« Dembo, c'est le nom qu'on 
 ---
 
 ## 14. KARIM FAUVEL  (`fauvel`)
-**Fonction** : capitaine des Cobalts · **Genre** : m · **Âge en 1990** : 27 · **Camp** : selection · **Fenêtre** : capitaine des Cobalts 1990-1998 (champion à la maison en 1998), joueur de {club} jusqu'en 2001 (33 ans, le capitaine vieillissant), président du syndicat des joueurs 2006-2030, la grève mondiale (2026) ; retraité 2031 ; il meurt en 2045, en tribune, pendant un hymne · **Suivant** : capitaine des Cobalts après lui : Mbako (2004-2010), puis Noa Vandel (2024+) ; au syndicat : « la déléguée » (voix sans portrait, 2030+)
+**Fonction** : capitaine des Cobalts · **Genre** : m · **Âge en 1990** : 27 · **Camp** : selection · **Fenêtre** : capitaine des Cobalts 1990-1998 (le Continental gagné chez nous en 1996, le Mondial raté en 1998), joueur de {club} jusqu'en 2001 (38 ans, le capitaine vieillissant), président du syndicat des joueurs 2006-2030, la grève mondiale (2026) ; retraité 2031 ; il meurt en 2045, en tribune, pendant un hymne · **Suivant** : capitaine des Cobalts après lui : Mbako (2004-2010), puis Noa Vandel (2024+) ; au syndicat : « la déléguée » (voix sans portrait, 2030+)
 **Tic** : « On est un groupe, pas une liste. » — torsions : « On était un groupe. C'est devenu une liste. » · « Une liste de vingt-six, un groupe de onze, un bus de zéro. » · « On est un syndicat, pas une liste. »
-**Désir** : le Mondial · **Blessure** : il a manqué le tir au but de 1990 (finale de la Coupe d'été) ; on le lui rappelle à chaque fenêtre ; il l'a retiré à 1998, à la maison, et on le lui rappelle quand même
+**Désir** : le Mondial · **Blessure** : il a manqué le tir au but de 1990 (finale de la Coupe d'été) ; on le lui rappelle à chaque fenêtre ; il l'a retiré en 1996, au Grand Stade, et on le lui rappelle quand même
 **Adresse** : sélectionneur : {prenom} / coach / monsieur le sélectionneur · joueur : {prenom} / {prenom} / le {numero} · autres : § 0.1
 **Ce qu'il pense de toi** : à +2 « tu as fait un groupe ; je descends du bus quand tu le dis » ; à 0 « on verra à la première liste » ; à −2 « monsieur le sélectionneur, le groupe a écrit une lettre »
 **Paliers** : −3 → `co.fauvel.trahison_lettre_publique` · +3 → `co.fauvel.faveur_bus`
-**Dans les rôles** : sélectionneur : cœur (le capitaine, le bus, l'avion des primes ; 2,5) · joueur : chœur (le capitaine qui te reçoit en sélection ; 1) · instance : cœur et adversaire (le syndicat 2006, la grève mondiale 2026 ; 1,5) · entraîneur : cœur (le capitaine vieillissant à 33 ans s'il joue à {club} ; 1) · président : le syndicat au téléphone (0,5)
-**Trajectoire 1990 → 2050** : 1990-1999 · 27-36 ans, cheveux ras, un regard de milieu défensif, le brassard cobalt ; le tir au but (1990), le Mondial raté (1994), le titre à la maison (1998) · 2000-2009 · retraite 2001 ; gris (2008) ; président du syndicat (2006) : il négocie les primes avec toi, puis contre toi · 2010-2019 · lunettes (2018) ; il défend Dembo ruiné, Mbako capitaine, le joueur suspendu ; il refuse la Ligue fermée (2019) avant tout le monde · 2020-2029 · la grève mondiale (2026 : soixante-douze matchs par saison) ; il est devant l'hôtel du Lac, à côté de Gégé, ils ne se parlent pas, ils sont d'accord · 2030-2039 · canne (2038) ; retraité du syndicat ; il vient aux matchs des Cobalts, tribune, il chante l'hymne pour deux · 2040-2050 · meurt en 2045 pendant un hymne, debout ; on ne l'a pas fait asseoir
+**Dans les rôles** : sélectionneur : cœur (le capitaine, le bus, l'avion des primes ; 2,5) · joueur : chœur (le capitaine qui te reçoit en sélection ; 1) · instance : cœur et adversaire (le syndicat 2006, la grève mondiale 2026 ; 1,5) · entraîneur : cœur (le capitaine vieillissant à 38 ans s'il joue à {club} ; 1) · président : le syndicat au téléphone (0,5)
+**Trajectoire 1990 → 2050** : 1990-1999 · 27-36 ans, cheveux ras, un regard de milieu défensif, le brassard cobalt ; le tir au but (1990), le Continental gagné chez nous (1996), le Mondial raté (1998) · 2000-2009 · retraite 2001 ; gris (2008) ; président du syndicat (2006) : il négocie les primes avec toi, puis contre toi · 2010-2019 · lunettes (2018) ; il défend Dembo ruiné, Mbako capitaine, le joueur suspendu ; il refuse la Ligue fermée (2019) avant tout le monde · 2020-2029 · la grève mondiale (2026 : soixante-douze matchs par saison) ; il est devant l'hôtel du Lac, à côté de Gégé, ils ne se parlent pas, ils sont d'accord · 2030-2039 · canne (2038) ; retraité du syndicat ; il vient aux matchs des Cobalts, tribune, il chante l'hymne pour deux · 2040-2050 · meurt en 2045 pendant un hymne, debout ; on ne l'a pas fait asseoir
 **Retrouvailles** : `co.retrouvailles.fauvel_sourire` / `_noir` / `_hymne`
-**Cartes propres** : *Le tir au but* (01) · *L'avion des primes* (01) · *Le premier jour en bleu* (01) · *Le syndicat* (01) · *La grève* (01) · *Trente-trois ans* (01) · *Le bus* (14, `sl.le_bus`) · *La Liste* (14) · *Le capitaine écarté* (§ 2, `sl.brehaut.ecarte`)
+**Cartes propres** : *Le tir au but* (01) · *L'avion des primes* (01) · *Le premier jour en bleu* (01) · *Le syndicat* (01) · *La grève* (01) · *Trente-huit ans* (01) · *Le bus* (14, `sl.le_bus`) · *La Liste* (14) · *Le capitaine écarté* (§ 2, `sl.brehaut.ecarte`)
 
 ### 14.1 Identité et place
 Karim Fauvel ; « Karim » pour le groupe, « le capitaine » pour le pays, « le tir au but » pour la Gazette. 27 ans en 1990, 37 en 2000, 47 en 2010, 57 en 2020, 67 en 2030, 82 à sa mort. **Portrait** : les cheveux ras, la mâchoire carrée, le maillot cobalt rentré dans le short, le brassard blanc, une cicatrice sur l'arcade gauche (1988, un coude, il n'en parle pas). **Voix** : grave, posée, le mot « groupe » toutes les trois phrases ; il ne hausse jamais le ton, il se lève. Dans la sélection, il est le bus : il monte le dernier, il descend le premier ou pas ; il porte la liste des vingt-six dans sa poche et il la déchire si c'est une liste. Il chante l'hymne pour deux, pour ceux qui ne chantent pas, sans leur demander pourquoi.
 
-**Désir / besoin / blessure / secret.** Désir : le Mondial, une fois, à la maison. Besoin : que le groupe soit un groupe. Blessure : 1990, le tir au but, le poteau gauche. Secret : il a manqué exprès — non ; il a cru un instant qu'il pouvait manquer exprès, et cette pensée le poursuit plus que le poteau.
+**Désir / besoin / blessure / secret.** Désir : le Mondial, une fois, n'importe où. Besoin : que le groupe soit un groupe. Blessure : 1990, le tir au but, le poteau gauche. Secret : il a manqué exprès — non ; il a cru un instant qu'il pouvait manquer exprès, et cette pensée le poursuit plus que le poteau.
 
 ### 14.2 Les cinq registres
 - **−3** — « Le groupe a écrit une lettre et je la publie demain, monsieur le sélectionneur. On était un groupe ; vous avez fait une liste. » / « Le bus ne descend pas. Moi non plus. »
 - **−2 / −1** — « Vous avez écarté Bréhaut sans le voir. Le groupe l'a vu. » / « Une liste de vingt-six, un groupe de onze, un bus de zéro. »
 - **0** — « On est un groupe, pas une liste, coach. La liste, c'est vous ; le groupe, c'est moi. » / « Le tir au but, oui, je sais. Vous vouliez autre chose ? »
-- **+1 / +2** — « {prenom}, le groupe descend si je descends. Dis-moi quand. » / « Vous avez fait un groupe. J'en ai vu un, en quatre-vingt-dix-huit ; c'est le deuxième. »
+- **+1 / +2** — « {prenom}, le groupe descend si je descends. Dis-moi quand. » / « Vous avez fait un groupe. J'en ai vu un, en quatre-vingt-seize ; c'est le deuxième. »
 - **+3** — « Le bus ne voulait pas descendre ; j'ai dit qu'on était un groupe, pas une liste, et ils sont descendus derrière moi. Ne me remerciez pas. » / « Je chante l'hymne pour deux, ce soir : pour moi et pour vous. »
 
 ### 14.3 Rapports avec les autres
-**Alliés** : Vecchio (le vingt-sixième qui descend le premier : ils se partagent le bus), Rouvier (il lui garde une assiette), Brissac (« un groupe, pas une liste » : « les chiffres sont têtus, les groupes aussi » ; ils s'estiment), Gégé (2019, 2026 : deux hommes devant un hôtel). **Rivaux** : Bréhaut (deux capitaines de 33 ans), Mbako (le brassard des Cobalts, 2004), Dembo (l'hymne : Fauvel chante pour lui et lui en veut de devoir le faire), Legruet (« on verra après le Congrès » : « le groupe ne verra rien »). **Dettes** : il doit à Vence des larmes en 1990 (elle l'a fait pleurer en direct, elle n'a pas aimé ça) ; Montoya lui doit une Ligue fermée refusée. **Il aime** : Sacha, qui ne chante pas l'hymne et le lui a dit ; il n'a pas chanté pour elle.
+**Alliés** : Vecchio (le vingt-sixième qui descend le premier : ils se partagent le bus), Rouvier (il lui garde une assiette), Brissac (« un groupe, pas une liste » : « les chiffres sont têtus, les groupes aussi » ; ils s'estiment), Gégé (2019, 2026 : deux hommes devant un hôtel). **Rivaux** : Bréhaut (le capitaine de club a 33 ans en 1990, celui du pays 27 : deux brassards, deux horloges), Mbako (le brassard des Cobalts, 2004), Dembo (l'hymne : Fauvel chante pour lui et lui en veut de devoir le faire), Berthomier (« on verra après le Congrès » : « le groupe ne verra rien »). **Dettes** : il doit à Vence des larmes en 1990 (elle l'a fait pleurer en direct, elle n'a pas aimé ça) ; Montoya lui doit une Ligue fermée refusée. **Il aime** : Sacha, qui ne chante pas l'hymne et le lui a dit ; il n'a pas chanté pour elle.
 
 ### 14.4 INTRIGUE co.fauvel_liste  —  On est un groupe, pas une liste
 **Logline** : Karim Fauvel a raté un tir au but en 1990 et passe le reste de sa vie à faire des groupes : dans le bus, dans l'avion des primes, au syndicat, dans la grève. · **Synopsis** : Sélectionneur, il te parle du tir au but à la première fenêtre. L'avion des primes attend sur le tarmac. Joueur, il te reçoit à ta première sélection. Instance, il préside le syndicat et négocie contre toi. En 2026, la grève mondiale : il est devant l'hôtel. Entraîneur, il a trente-trois ans dans ton vestiaire et un brassard qui pèse.
 **Rôle(s)** : selectionneur, joueur, instance, entraineur · **Postulat(s)** : partagé (apres_fiasco, pays_emergent, pepite, heritage_empoisonne, elu_surprise, fin_de_contrat) · **Porteur** : fauvel · **Cast** : fauvel, vecchio, brissac, legruet, vence, gege · **Thème** : instances
-**Saisons** : "0" (tir_au_but : sélectionneur, mars ; premier_jour : joueur), "1" (avion, trente_trois), rôles : syndicat (instance 2006+), greve (2026) · **Conditions d'entrée** : `chars.fauvel.statut` selon l'étape · **Exclusions** : `sl.le_bus` (14) la même fenêtre · **Rejouabilité** : jamais
+**Saisons** : "0" (tir_au_but : sélectionneur, mars ; premier_jour : joueur), "1" (avion, trente_huit), rôles : syndicat (instance 2006+), greve (2026) · **Conditions d'entrée** : `chars.fauvel.statut` selon l'étape · **Exclusions** : `sl.le_bus` (14) la même fenêtre · **Rejouabilité** : jamais
 **Issues** → **Traces** → **Qui les lit** : `groupe` → `fauvel_groupe` (« {annee} : Karim Fauvel a dit « on est un groupe ». Le sélectionneur l'a écouté ; le bus est descendu. ») → lue par 14 (`bus_descendu`, `mutinerie_matee` variantes), 30 (`sl_clans` plus, `sl_fete`) · `syndicat` → `fauvel_syndicat` (« {annee} : Karim Fauvel préside le syndicat des joueurs. Première revendication : un groupe, pas une liste. ») → lue par 15 (les dossiers : égalité des primes, calendrier), 13 (la grève des salariés), 20 · `greve` → `greve_soutenue` / `greve_brisee` (« 2026 : la grève mondiale. {prenom} {nom} a soutenu / brisé le mouvement ; Fauvel était devant l'hôtel. ») → lue par 31 (Nouvelle 2026), 15 (`reforme_votee`), 90 (mémoire des clubs : les joueurs se souviennent)
-**Séquencier** : tir_au_but (sélectionneur, fenêtre de mars, `year <= 1998`) | premier_jour (joueur, `flag('international')`, [2,8]) → avion (sélectionneur, fenêtre de juin, veille du tournoi) → syndicat (instance, `year >= 2006`) → greve (instance ou président, `year == 2026`, lit `monde_greve`) → trente_trois (entraîneur, `year <= 2001`, `chars.fauvel.statut == 'club'`)
+**Séquencier** : tir_au_but (sélectionneur, fenêtre de mars, `year <= 1998`) | premier_jour (joueur, `flag('international')`, [2,8]) → avion (sélectionneur, fenêtre de juin, veille du tournoi) → syndicat (instance, `year >= 2006`) → greve (instance ou président, `year == 2026`, lit `monde_greve`) → trente_huit (entraîneur, `year <= 2001`, `chars.fauvel.statut == 'club'`)
 **Épilogue** : rien : Fauvel suit le pays.
 
 ### SCÈNE sl.fauvel.tir_au_but  —  Le tir au but
@@ -1953,19 +1927,19 @@ Karim Fauvel ; « Karim » pour le groupe, « le capitaine » pour le pays, « l
 **Traces** : groupe_cobalts, liste_cobalts (« {annee} : première sélection pour {prenom} {nom}. Dîner avec l'agent ; casier près de la porte. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (le capitaine de la sélection te reçoit : variante), 30 (`jp_siffle` plus « même en bleu cobalt »), 20 (« {NOM} EN BLEU COBALT »)
 
 ### SCÈNE sl.fauvel.avion  —  L'avion des primes
-**Rôle** : selectionneur · **Intrigue** : co.fauvel_liste · **Étape** : 2/6 · **Moment** : fenêtre de juin, la veille du départ pour le tournoi · **Lieu** : le tarmac, l'avion, vingt-six joueurs assis dans le hall qui ne montent pas · **Conditions** : `year <= 2008` (Legruet préside ; après 2008, « le président de la Fédération » signe par courriel, sans fax, et la conséquence dit « il signe », pas « après le Congrès »)
+**Rôle** : selectionneur · **Intrigue** : co.fauvel_liste · **Étape** : 2/6 · **Moment** : fenêtre de juin, la veille du départ pour le tournoi · **Lieu** : le tarmac, l'avion, vingt-six joueurs assis dans le hall qui ne montent pas · **Conditions** : `year <= 2008` (Berthomier préside ; après 2008, « le président de la Fédération » signe par courriel, sans fax, et la conséquence dit « il signe », pas « après le Congrès »)
 **FAUVEL** *(capitaine des Cobalts — neutre — une feuille de primes signée par vingt-six mains)*
-« La Fédération a divisé les primes par deux hier soir, et le groupe ne monte pas tant que Legruet n'a pas signé. On est un groupe, pas une liste, coach ; vous montez avec nous, ou seul ? »
-← **Je reste sur le tarmac** — effets : direction −−, vestiaire +++, relation.fauvel +2, relation.legruet −2, set: fauvel_groupe, outcome: groupe — *Trois heures. Legruet signe par fax, « après le Congrès », le Congrès étant demain. Vous montez ensemble. Vence filme la passerelle.*
-→ **Montez, on négocie là-bas** — effets : direction +, vestiaire −−, relation.fauvel −2, set: primes_apres — *Ils montent. En silence. Le premier match est perdu sans un cri. L'avion des primes devient l'avion tout court.*
-**Traces** : fauvel_groupe, primes_apres (« {annee} : les Cobalts ont pris l'avion sans primes. Ils ont perdu le premier match en silence. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (l'avion des primes : ce chapitre écrit le premier temps, 14 la chaîne), 02 (Legruet), 20 (« TROIS HEURES SUR LE TARMAC »), 30 (`sl_primes` plus)
+« La Fédération a divisé les primes par deux hier soir, et le groupe ne monte pas tant que Berthomier n'a pas signé. On est un groupe, pas une liste, coach ; vous montez avec nous, ou seul ? »
+← **Je reste sur le tarmac** — effets : direction −−, vestiaire +++, relation.fauvel +2, relation.legruet −2, set: fauvel_groupe, outcome: groupe — *Trois heures. Vence filme la passerelle.*
+→ **Montez, on négocie là-bas** — effets : direction +, vestiaire −−, relation.fauvel −2, set: primes_apres — *Ils montent. L'avion des primes devient l'avion tout court.*
+**Traces** : fauvel_groupe, primes_apres (« {annee} : les Cobalts ont pris l'avion sans primes. Ils ont perdu le premier match en silence. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (l'avion des primes : ce chapitre écrit le premier temps, 14 la chaîne), 02 (Berthomier), 20 (« TROIS HEURES SUR LE TARMAC »), 30 (`sl_primes` plus)
 
 ### SCÈNE in.fauvel.syndicat  —  Le syndicat
 **Rôle** : instance · **Intrigue** : co.fauvel_liste · **Étape** : 3/6 · **Moment** : un dossier de l'année, `year >= 2006` · **Lieu** : la salle du comité, il est venu avec trois joueurs, dont un suspendu · **Conditions** : —
 **FAUVEL** *(président du syndicat des joueurs — neutre — la cicatrice, le costume, la même mâchoire)*
 « Soixante matchs par saison, un suspendu pour un flacon qu'il n'a pas rempli, et une commission qui « examine ». On est un groupe, pas une liste, monsieur le président ; vous nous recevez ? »
-← **Je vous reçois, tous** — effets : direction −, tribunes +, relation.fauvel +2, set: fauvel_syndicat, outcome: syndicat — *Deux heures. Le suspendu parle en dernier. Dauzat note tout. Le calendrier passe à cinquante-huit ; c'est un début, dit Fauvel.*
-→ **Les avocats, salle 3** — effets : direction +, tribunes −, relation.fauvel −2, set: syndicat_ecarte — *Les avocats. Salle 3. Ils attendent. Fauvel attend avec eux ; il a l'habitude des tarmacs.*
+← **Je vous reçois, tous** — effets : direction −, tribunes +, relation.fauvel +2, set: fauvel_syndicat, outcome: syndicat — *Deux heures. Le calendrier passe à cinquante-huit ; c'est un début, dit Fauvel.*
+→ **Les avocats, salle 3** — effets : direction +, tribunes −, relation.fauvel −2, set: syndicat_ecarte — *Les avocats. Fauvel attend avec eux ; il a l'habitude des tarmacs.*
 **Traces** : fauvel_syndicat, syndicat_ecarte (« {annee} : le syndicat des joueurs renvoyé aux avocats. Fauvel a attendu salle 3 avec eux. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (dossiers calendrier, égalité des primes, `reforme_votee`), 13 (la grève des salariés : Fauvel appelle), 20 (« LE GROUPE CONTRE LA LISTE »)
 
 ### SCÈNE in.fauvel.greve  —  La grève
@@ -1976,29 +1950,29 @@ Karim Fauvel ; « Karim » pour le groupe, « le capitaine » pour le pays, « l
 → **Soixante-douze, point** — effets : direction ++, tribunes −−, relation.fauvel −2, set: greve_brisee — *Ils ne descendent pas. Le Mondial des amateurs a lieu ; Trébignac joue ; Gigi n'est plus là pour le voir, le disciple au seau, si.*
 **Traces** : greve_soutenue, greve_brisee · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2026, le Mondial des amateurs), 15 (`reforme_votee`, la Campagne), 90 (mémoire des joueurs), 30 (`in_pantin` plus)
 
-### SCÈNE en.fauvel.trente_trois  —  Trente-trois ans
+### SCÈNE en.fauvel.trente_huit  —  Trente-huit ans
 **Rôle** : entraineur · **Intrigue** : co.fauvel_liste · **Étape** : 5/6 · **Moment** : `year <= 2001`, [4,12] · **Lieu** : ton vestiaire, il joue à {club}, il a un brassard cobalt et un genou de trente-trois ans · **Conditions** : `chars.fauvel.statut == 'club'`
 **FAUVEL** *(capitaine de {club} — neutre — il enlève le brassard cobalt de son sac, le pose sur le banc)*
-« Trente-trois ans, capitaine du pays, remplaçant chez vous depuis trois dimanches ; le groupe regarde qui vous regardez. On est un groupe, pas une liste, coach ; dedans, ou le vieux ? »
+« Trente-huit ans, capitaine du pays, remplaçant chez vous depuis trois dimanches ; le groupe regarde qui vous regardez. On est un groupe, pas une liste, coach ; dedans, ou le vieux ? »
 ← **Dedans, tu parles au groupe** — effets : vestiaire ++, force −1, relation.fauvel +2, relation.brehaut −1, set: fauvel_relais — *Il parle au groupe, cinq minutes, une fois par semaine. Bréhaut écoute, bras croisés. Le groupe vit bien ; il court moins.*
-→ **Le vieux transmet** — effets : force +1, vestiaire −, relation.fauvel −1, set: fauvel_transmet — *Il transmet. Au petit, ou au jeune gardien. Il raccroche en juin, sans jubilé ; il n'en voulait pas. Il chante l'hymne à la télé.*
+→ **Le vieux transmet** — effets : force +1, vestiaire −, relation.fauvel −1, set: fauvel_transmet — *Il transmet. Il chante l'hymne à la télé.*
 **Traces** : fauvel_relais, fauvel_transmet (« {annee} : Karim Fauvel a transmis. Pas de jubilé ; il n'en voulait pas. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.brassard_brehaut` : variante « deux capitaines »), 14 (il devient ton capitaine chez les Cobalts si `fauvel_relais`), 30 (`en_copain` plus)
 
-### SCÈNE sl.fauvel.mondial_maison  —  1998 (sixième scène)
-**Rôle** : selectionneur · **Intrigue** : co.fauvel_liste · **Étape** : 6/6 · **Moment** : `year == 1998`, la veille de la finale du Mondial à la maison (chaîne Tournoi, 14) · **Lieu** : la chambre d'hôtel du capitaine, la porte ouverte, il regarde le plafond · **Conditions** : le tournoi est arrivé en finale
+### SCÈNE sl.fauvel.finale_1996  —  1996 (sixième scène)
+**Rôle** : selectionneur · **Intrigue** : co.fauvel_liste · **Étape** : 6/6 · **Moment** : `year == 1996`, la veille de la finale du Continental, chez nous, au Grand Stade neuf (chaîne Tournoi, 14) · **Lieu** : la chambre d'hôtel du capitaine, la porte ouverte, il regarde le plafond · **Conditions** : le tournoi est arrivé en finale
 **FAUVEL** *(capitaine des Cobalts — neutre — il ne se lève pas quand tu entres ; c'est la seule fois)*
-« S'il y a des tirs au but, je tire le premier ou je ne tire pas ; huit ans que je le sais, sans savoir lequel. On est un groupe, pas une liste, coach ; la liste des tireurs, c'est vous. »
-← **Tu tires le premier** — effets : vestiaire ++, tribunes +, relation.fauvel +2, set: fauvel_premier_tireur — *Il tire le premier. Poteau gauche, rentré. Le pays hurle. Il ne célèbre pas ; il regarde le poteau, longtemps.*
-→ **Tu ne tires pas, tu regardes** — effets : vestiaire +, relation.fauvel +1, force +1, set: fauvel_ne_tire_pas — *Il ne tire pas. Les cinq autres rentrent. Champion à la maison. Il pleure devant Vence ; elle n'aime toujours pas ça ; elle ne coupe pas.*
-**Traces** : fauvel_premier_tireur, fauvel_ne_tire_pas (« 1998 : Karim Fauvel n'a pas tiré. Champion à la maison quand même ; il a pleuré devant Vence. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 14 (chaîne Tournoi : temps fort « les tirs au but »), 31 (`monde_1998`), 20 (« L'ANNÉE OÙ TOUT LE MONDE AIMAIT LE FOOT »), 02 (Vence)
+« S'il y a des tirs au but, je tire le premier ou je ne tire pas ; six ans que je le sais, sans savoir lequel. On est un groupe, pas une liste, coach ; la liste des tireurs, c'est vous. »
+← **Tu tires le premier** — effets : vestiaire ++, tribunes +, relation.fauvel +2, set: fauvel_premier_tireur — *Il tire le premier. Il ne célèbre pas ; il regarde le poteau, longtemps.*
+→ **Tu ne tires pas, tu regardes** — effets : vestiaire +, relation.fauvel +1, force +1, set: fauvel_ne_tire_pas — *Il ne tire pas. Il pleure devant Vence ; elle n'aime toujours pas ça, et elle ne coupe pas.*
+**Traces** : fauvel_premier_tireur, fauvel_ne_tire_pas (« 1996 : Karim Fauvel n'a pas tiré. Champion du continent quand même ; il a pleuré devant Vence. ») · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 14 (chaîne Tournoi : temps fort « les tirs au but »), ch. 31 (`monde_continental_1996`), ch. 20 (« L'ANNÉE OÙ TOUT LE MONDE AIMAIT LE FOOT »), ch. 02 (Vence)
 
 ### 14.5 Les paliers
 ### SCÈNE co.fauvel.trahison_lettre_publique  —  La lettre publiée
 **Rôle** : selectionneur, instance, entraineur · **Intrigue** : palier −3 · **Étape** : on_relation −3 · **Moment** : programmé en [1,3] · **Lieu** : la zone mixte, Vence tend le micro, il lit une lettre signée par vingt-six mains · **Conditions** : `relation.fauvel <= -3`, une fois par carrière
 **FAUVEL** *(capitaine ou président du syndicat — noir — il lit sans lever les yeux)*
 « Vingt-six signatures : le groupe ne reconnaît plus le sélectionneur, et je lis en direct ce qu'on n'a pas lu en privé. On était un groupe, monsieur le sélectionneur ; vous avez fait une liste. »
-← **Je l'écoute jusqu'au bout** — effets : vestiaire −−−, direction −−, tribunes −, set: lettre_groupe_publique — *Tu écoutes. Vence ne coupe pas. Legruet dit qu'on verra ça après le Congrès ; le Congrès, c'est ce soir.*
-→ **Je l'écoute jusqu'au bout** — effets : vestiaire −−−, direction −−, tribunes −, set: lettre_groupe_publique — *Tu écoutes. Vence ne coupe pas. Legruet dit qu'on verra ça après le Congrès ; le Congrès, c'est ce soir.*
+← **Je l'écoute jusqu'au bout** — effets : vestiaire −−−, direction −−, tribunes −, set: lettre_groupe_publique — *Tu écoutes. Vence ne coupe pas. Berthomier dit qu'on verra ça après le Congrès ; le Congrès, c'est ce soir.*
+→ **Je l'écoute jusqu'au bout** — effets : vestiaire −−−, direction −−, tribunes −, set: lettre_groupe_publique — *Tu écoutes. Vence ne coupe pas. Berthomier dit qu'on verra ça après le Congrès ; le Congrès, c'est ce soir.*
 **Traces** : lettre_groupe_publique (« {annee} : la lettre des vingt-six lue en direct par Karim Fauvel. Le sélectionneur a écouté jusqu'au bout. ») · **Lu plus tard par** : 30 (`sl_minuit`, `sl_clans`), 14 (`apres_fiasco` : le postulat naît de là), 20 (« VINGT-SIX CONTRE UN »), 90 (Nemesis)
 
 ### SCÈNE co.fauvel.faveur_bus  —  Ils sont descendus derrière moi
@@ -2007,27 +1981,25 @@ Karim Fauvel ; « Karim » pour le groupe, « le capitaine » pour le pays, « l
 « Ils ne voulaient pas descendre, et j'ai dit qu'on était un groupe, pas une liste ; ils sont descendus derrière moi, un par un. Ne me remerciez pas, {prenom} ; faites la causerie, ils écoutent. »
 ← **La causerie, maintenant** — effets : vestiaire +++, tribunes +, set: bus_descendu, set: mutinerie_matee — *Dix minutes. Ils écoutent. Gigi est descendu le deuxième ; il dit qu'il en a vu d'autres, mais qu'il a préféré celle-là.*
 → **Qui refusait de descendre ?** — effets : vestiaire +, relation.fauvel −1 — *Il ne donne pas de noms. « Un groupe », dit-il. Il monte faire la causerie à ta place ; elle est bonne.*
-**Traces** : bus_descendu, mutinerie_matee (14) · **Lu plus tard par** : 14, 30 (`sl_fete`, `en_bus` plus), 07 (Vecchio : « je suis descendu le deuxième »)
+**Traces** : bus_descendu, mutinerie_matee (14) · **Lu plus tard par** : 14, 30 (`sl_fete`, `en_bus` plus), § 7 (Vecchio : « je suis descendu le deuxième »)
 
 ### 14.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.fauvel_sourire  —  Le casier bien écrit
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le vestiaire du nouveau club, devant un casier
 **FAUVEL** *(sa fonction du moment — sourire — une étiquette de casier, ton nom sans faute)*
 « J'ai appris ton nom en quatre-vingt-dix et je ne l'ai plus jamais mal écrit ; ici, ils l'ont mal écrit, j'ai corrigé. On est un groupe, pas une liste, {prenom}, même à deux. »
-← **À deux, c'est déjà un groupe** — effets : vestiaire +, relation.fauvel +1 — *Il colle l'étiquette. Le vestiaire d'ici apprend ton nom en une semaine, au lieu d'un mois.*
-→ **Ici, je suis seul** — effets : direction +, relation.fauvel −1 — *Il laisse l'étiquette sur le banc. Tu la colles toi-même, le soir. Elle tient.*
+**OK** **À deux, c'est déjà un groupe** — effets : vestiaire +, relation.fauvel +1 — *Il colle l'étiquette. Le vestiaire d'ici apprend ton nom en une semaine, au lieu d'un mois.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.fauvel_noir  —  La liste
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : le hall du nouveau club, une liste pliée dans sa main
 **FAUVEL** *(sa fonction du moment — noir — une liste de vingt-six, pliée, qu'il ne te donne pas)*
 « Vous avez fait une liste, là-bas, et je l'ai gardée ; je la garde partout où vous allez, monsieur. On est un groupe, pas une liste ; vous, vous êtes vingt-six noms qui ne reviendront pas. »
-← **Je veux la lire** — effets : relation.fauvel +1, vestiaire − — *Il la donne. Vingt-six noms. Tu en as oublié dix-neuf. Lui, aucun.*
-→ **Garde ta liste, Fauvel** — effets : relation.fauvel −1, direction + — *Il la range. Il en parle au syndicat. Le syndicat te reçoit salle 3, quand tu le demandes ; pas avant.*
+**OK** **Je veux la lire** — effets : relation.fauvel +1, vestiaire − — *Il la donne. Lui, aucun.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.fauvel_hymne  —  Debout
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2045, une fois (`chars.fauvel.statut == 'mort'`) · **Conditions** : `relation.fauvel != 0` · **Lieu** : le stade, tribune Est, pendant l'hymne, en direct
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2045, une fois (`chars.fauvel.statut == 'mort' || (chars.fauvel.statut == 'parti' && flag('fauvel_mort'))`) · **Conditions** : `relation.fauvel != 0` · **Lieu** : le stade, tribune Est, pendant l'hymne, en direct
 **LA REMPLAÇANTE DE VENCE** *(Télé-Stade, voix sans portrait — en direct — un stade debout, un hymne qui continue)*
 « Karim Fauvel est mort pendant l'hymne, debout, tribune Est, et on ne l'a pas fait asseoir ; on est en direct, et vous, vous êtes là. Vous voulez dire quelque chose ? »
 ← **Un groupe, pas une liste** — effets : tribunes ++, relation.fauvel +1 (posthume) — *Tu le dis. Le stade le reprend. C'est faux, dans sa bouche à lui ça sonnait mieux ; ça sonne quand même.*
@@ -2036,7 +2008,7 @@ Karim Fauvel ; « Karim » pour le groupe, « le capitaine » pour le pays, « l
 
 ### 14.7 Anecdotes
 - **01.fauvel_poteau** — légende · `sl.fauvel.tir_au_but` · Le poteau gauche du Vélodrome de la Porte (1990) a été démonté en 1997 ; il est dans le garage de Fauvel ; il s'y cogne le genou tous les matins, exprès.
-- **01.fauvel_voiture** — décor · brèves · Une berline familiale, sept places, pour emmener les joueurs qui n'ont pas de voiture ; « on est un groupe, pas un covoiturage », dit Ménèche ; Fauvel n'a pas ri.
+- **01.fauvel_voiture** — décor · brèves · Une berline familiale, sept places, pour emmener les joueurs qui n'ont pas de voiture ; « on est un groupe, pas un covoiturage », dit Massenet ; Fauvel n'a pas ri.
 - **01.fauvel_superstition** — légende · set-piece `gm_annonce` · Il monte dans le bus le dernier et vérifie que la porte ferme ; il descend le premier, ou pas du tout.
 - **01.fauvel_repas** — décor · `sl.rouvier.hotel_sponsor` · Il garde une assiette à Rouvier ; il mange debout jusqu'à ce que le dernier joueur soit assis.
 - **01.fauvel_cicatrice** — détail de portrait · toute scène · La cicatrice de l'arcade gauche (1988, un coude, en amical) ; il dit qu'elle date de 1990 quand on lui demande ; c'est plus simple.
@@ -2044,31 +2016,31 @@ Karim Fauvel ; « Karim » pour le groupe, « le capitaine » pour le pays, « l
 ---
 
 ## 15. SOLANGE BRISSAC  (`brissac`)
-**Fonction** : directrice technique nationale · **Genre** : f · **Âge en 1990** : 49 · **Camp** : selection · **Fenêtre** : DTN 1988-2010 ; présidente de l'AS Mirevaux (2010-2024, la première section féminine professionnelle) ; membre de la commission technique de l'Union (2016-2024) ; retraitée 2025 ; elle meurt en 2036, avec ses chiffres · **Suivant** : Aurèle Castan, DTN 2010-2030 (né 1965 ; il a les chiffres, pas les joueurs)
+**Fonction** : directrice technique nationale · **Genre** : f · **Âge en 1990** : 49 · **Camp** : selection · **Fenêtre** : DTN 1988-2010 ; présidente de l'AS Mirevaux depuis 2010 (la section est professionnelle depuis 2008 ; en 2016 elle entre dans le premier championnat professionnel à huit clubs) jusqu'en 2020 ; membre de la commission technique de l'Union (2016-2020) ; retraitée 2020, à soixante-dix-neuf ans, en retard d'une réunion ; elle meurt en 2028, avec ses chiffres · **Suivant** : Aurèle Castan, DTN 2010-2030 (né 1965 ; il a les chiffres, pas les joueurs)
 **Tic** : « Les chiffres sont têtus, les joueurs aussi. » — torsions : « Les chiffres sont têtus. Les présidents, moins. » · « Les joueurs sont têtus ; les chiffres ont cédé. » · « Les joueuses sont têtues, et personne n'a de chiffres. »
 **Désir** : la formation, les diplômes, le jeu · **Blessure** : ancienne internationale d'une sélection féminine que personne ne filmait (1962-1971, quarante-deux sélections, zéro image) ; elle a tous ses chiffres dans un cahier, et aucun n'a été vérifié par personne
 **Adresse** : entraineur : {prenom} / {pg, select, f{madame} other{monsieur}} {nom} / idem · joueur : idem · autres : § 0.1 (elle ne tutoie qu'à +1, et seulement le prénom)
 **Ce qu'elle pense de toi** : à +2 « vous avez le papier, et vous l'avez lu » ; à 0 « les chiffres disent trop lent, les joueurs disent autre chose, on verra » ; à −2 « votre diplôme a un tampon et pas de signature »
 **Paliers** : −3 → `co.brissac.trahison_dossier` · +3 → `co.brissac.faveur_stage`
-**Dans les rôles** : entraîneur : patron secondaire (le diplôme, la dérogation, le stage de Clow ; 1) · sélectionneur : patron (l'attaquant naturalisé, la liste, le binational ; 2) · instance : cœur (la commission technique, la section féminine, l'égalité des primes ; 1,5) · joueur : le chiffre qui dit « trop lent » (0,5) · DS : « les chiffres vous aiment » (0,5) · président : présidente de Mirevaux, adversaire ou alliée (1 dès 2010)
+**Dans les rôles** : entraîneur : patron secondaire (le diplôme, la dérogation, le stage de Corven ; 1) · sélectionneur : patron (l'attaquant naturalisé, la liste, le binational ; 2) · instance : cœur (la commission technique, la section féminine, l'égalité des primes ; 1,5) · joueur : le chiffre qui dit « trop lent » (0,5) · DS : « les chiffres vous aiment » (0,5) · président : présidente de Mirevaux, adversaire ou alliée (1 dès 2010)
 **Trajectoire 1990 → 2050** : 1990-1999 · 49-58 ans, chignon serré, tailleur gris, un cahier à colonnes ; DTN : les diplômes, les stages, le premier « trop lent » chiffré · 2000-2009 · lunettes (1996) ; l'attaquant naturalisé (2002), le binational (2004) ; « l'algorithme » (2008) : elle le déteste, il lui donne raison · 2010-2019 · présidente de Mirevaux (2010) ; la section féminine professionnelle (2008) est son œuvre ; elle exige l'égalité des primes (2016) ; commission technique de l'Union · 2020-2029 · canne (2016) ; retraite 2025 ; elle publie ses chiffres de 1962-1971 ; personne ne peut les vérifier ; on les croit · 2030-2050 · meurt en 2036 ; Mirevaux donne son nom à la tribune ; les chiffres sont têtus
 **Retrouvailles** : `co.retrouvailles.brissac_sourire` / `_noir` / `_cahier`
 **Cartes propres** : *Le papier* (01) · *Le naturalisé* (01) · *Le binational dans la liste* (01) · *Les primes égales* (01) · *Trop lent* (01) · *Mirevaux, année un* (01) · *Le diplôme* (10-11) · *La commission technique* (15)
 
 ### 15.1 Identité et place
-Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Legruet, « Solange » pour Josiane et Paulette. 49 ans en 1990, 59 en 2000, 69 en 2010, 79 en 2020, 89 en 2030, 95 à sa mort. **Portrait** : le chignon serré gris, le tailleur gris, les lunettes sur une chaîne, le cahier à colonnes tenu contre la poitrine, une médaille qu'elle ne porte pas mais qu'on devine. **Voix** : sèche, exacte, un chiffre par phrase ; elle finit par « et les joueurs aussi » quand elle a tort et le sait. À la Fédération, elle est le papier : sans elle, pas de banc en D1 ; elle tient les diplômes, les stages, la liste des sélections de jeunes ; elle a un bureau au bout du couloir, après salle 3, et on y attend moins longtemps.
+Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Berthomier, « Solange » pour Josiane et Paulette. 49 ans en 1990, 59 en 2000, 69 en 2010, 79 en 2020, 89 en 2030, 95 à sa mort. **Portrait** : le chignon serré gris, le tailleur gris, les lunettes sur une chaîne, le cahier à colonnes tenu contre la poitrine, une médaille qu'elle ne porte pas mais qu'on devine. **Voix** : sèche, exacte, un chiffre par phrase ; elle finit par « et les joueurs aussi » quand elle a tort et le sait. À la Fédération, elle est le papier : sans elle, pas de banc en D1 ; elle tient les diplômes, les stages, la liste des sélections de jeunes ; elle a un bureau au bout du couloir, après salle 3, et on y attend moins longtemps.
 
-**Désir / besoin / blessure / secret.** Désir : que le jeu soit enseigné, mesuré, et gagné. Besoin : qu'un de ses chiffres soit filmé. Blessure : quarante-deux sélections, zéro image. Secret : elle a truqué un chiffre, une fois, en 1989, pour faire passer un diplôme à quelqu'un qui le méritait et ne l'avait pas ; c'était Clow.
+**Désir / besoin / blessure / secret.** Désir : que le jeu soit enseigné, mesuré, et gagné. Besoin : qu'un de ses chiffres soit filmé. Blessure : quarante-deux sélections, zéro image. Secret : elle a truqué un chiffre, une fois, en 1989, pour faire passer un diplôme à quelqu'un qui le méritait et ne l'avait pas ; c'était Corven.
 
 ### 15.2 Les cinq registres
 - **−3** — « Votre dossier de diplôme est rouvert, monsieur {nom} ; il y a un tampon et pas de signature. Les chiffres sont têtus, et les procès-verbaux aussi. » / « Vous n'aurez plus de banc en D1. C'est un chiffre : zéro. »
 - **−2 / −1** — « Les chiffres disent trop lent. Les joueurs disent que vous ne les écoutez pas. » / « Une dérogation de six mois. Le septième, on en reparle, et pas ici. »
 - **0** — « Les chiffres sont têtus, les joueurs aussi. Le stage, c'est lundi, huit heures. » / « Le binational est dans la liste ; les deux fédérations me téléphonent. Vous choisissez avant eux. »
 - **+1 / +2** — « {prenom}, les chiffres vous aiment ; le Congrès aussi, peut-être. » / « Vous avez lu le papier. Je vous mets à la tête du stage suivant. »
-- **+3** — « Le diplôme, sans stage, tamponné et signé ; c'est la deuxième fois que je fais ça, la première c'était pour Clow. Les chiffres sont têtus ; moi aussi, parfois, dans le bon sens. » / « Voilà mon cahier de soixante-deux. Personne ne l'a vu. Vous, si. »
+- **+3** — « Le diplôme, sans stage, tamponné et signé ; c'est la deuxième fois que je fais ça, la première c'était pour Corven. Les chiffres sont têtus ; moi aussi, parfois, dans le bon sens. » / « Voilà mon cahier de soixante-deux. Personne ne l'a vu. Vous, si. »
 
 ### 15.3 Rapports avec les autres
-**Alliés** : Clow (le diplôme de 1989, le stage qu'elle lui confie : « il dit la vérité aux stagiaires »), Fauvel (« un groupe, pas une liste » : elle a une liste et un groupe), Rouvier (les muscles sont têtus aussi), la mère de Mbako (deux femmes qui écrivent les colonnes). **Rivaux** : Legruet (« on verra après le Congrès » : elle a vu avant), Fardelli (« les chiffres sont à vendre ? non »), Barbier (« je l'ai vu jouer sous la pluie » : « moi, je l'ai chronométré »), Loco (les cassettes contre les colonnes). **Dettes** : elle doit à Josiane le cahier de 1962, retrouvé dans les archives de la Fédération ; Aulard lui doit un vote (2008). **Elle aime** : Sacha, qui lui a demandé les chiffres de la sélection féminine de 1965, et les a crus.
+**Alliés** : Corven (le diplôme de 1989, le stage qu'elle lui confie : « il dit la vérité aux stagiaires »), Fauvel (« un groupe, pas une liste » : elle a une liste et un groupe), Rouvier (les muscles sont têtus aussi), la mère de Mbako (deux femmes qui écrivent les colonnes). **Rivaux** : Berthomier (« on verra après le Congrès » : elle a vu avant), Fardelli (« les chiffres sont à vendre ? non »), Barbier (« je l'ai vu jouer sous la pluie » : « moi, je l'ai chronométré »), Vaz (les cassettes contre les colonnes). **Dettes** : elle doit à Josiane le cahier de 1962, retrouvé dans les archives de la Fédération ; Vaubourg lui doit un vote (2008). **Elle aime** : Sacha, qui lui a demandé les chiffres de la sélection féminine de 1965, et les a crus.
 
 ### 15.4 INTRIGUE co.brissac_chiffres  —  Les chiffres sont têtus
 **Logline** : Solange Brissac tient le papier, la liste et les chiffres ; elle te refuse un banc, te donne un naturalisé, te tend un binational, exige l'égalité des primes, et te dit que tu étais trop lent. · **Synopsis** : Entraîneur sans diplôme, elle t'accorde six mois. Sélectionneur, elle te propose un attaquant naturalisé, puis un binational que deux fédérations se disputent. Instance, elle vient avec un dossier : primes égales. Joueur, son chiffre confirme le rapport de Barbier. En 2016, elle est présidente de Mirevaux et la section féminine commence l'année un.
@@ -2081,9 +2053,9 @@ Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Leg
 ### SCÈNE en.brissac.papier  —  Le papier
 **Rôle** : entraineur · **Intrigue** : co.brissac_chiffres · **Étape** : 1/6 · **Moment** : saison 0, [1,4] · **Lieu** : son bureau, au bout du couloir, après salle 3 · **Conditions** : `!flag('diplome') && world.division == 1`
 **BRISSAC** *(DTN — neutre — un formulaire de dérogation, un tampon, pas de signature)*
-« Sans diplôme, pas de banc en D1 ; six mois de dérogation, et un stage en janvier avec monsieur Clow. Les chiffres sont têtus, les joueurs aussi : le septième mois, le papier ou la porte. »
-← **Six mois, et le stage** — effets : direction +, caisse −, relation.brissac +1, set: derogation, outcome: derogation — *Six mois. Le stage est en janvier. Clow t'attend à sept heures ; tu le sais déjà.*
-→ **Le président arrangera ça** — effets : direction ++, relation.brissac −2, set: diplome_arrange — *Le président appelle Legruet. Le tampon arrive sans signature. Elle range le formulaire dans un dossier à ton nom ; le dossier n'est pas fermé.*
+« Sans diplôme, pas de banc en D1 ; six mois de dérogation, et un stage en janvier avec monsieur Corven. Les chiffres sont têtus, les joueurs aussi : le septième mois, le papier ou la porte. »
+← **Six mois, et le stage** — effets : direction +, caisse −, relation.brissac +1, set: derogation, outcome: derogation — *Six mois. Le stage est en janvier. Corven t'attend à sept heures ; tu le sais déjà.*
+→ **Le président arrangera ça** — effets : direction ++, relation.brissac −2, set: diplome_arrange — *Le président appelle Berthomier. Le tampon arrive sans signature. Elle range le formulaire dans un dossier à ton nom ; le dossier n'est pas fermé.*
 **Traces** : derogation, diplome_arrange (§ 5.2 #21) · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.diplome` : le stage, l'examen), 15 (Brissac ressort le dossier), 11 (`en.dossier_meneche` variante), 20 (« LE COACH SANS PAPIER »), 30 (Carrefour)
 
 ### SCÈNE jp.brissac.trop_lent  —  Trop lent
@@ -2091,8 +2063,8 @@ Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Leg
 **BRISSAC** *(DTN — neutre — elle lit le chronomètre sans le montrer)*
 « Le recruteur de Valdorne a écrit « trop lent » sous la pluie, et mon chiffre dit pareil au sec. Les chiffres sont têtus, les joueurs aussi : vous courez encore, ou vous me montrez autre chose ? »
 ← **Je cours encore** — effets : force +1, tribunes −, relation.brissac +1, set: trop_lent_couru — *Tu cours. Le chiffre est le même. Elle note « têtu » à côté ; c'est un compliment, chez elle.*
-→ **Je vous montre autre chose** — effets : force +2, tribunes +, relation.brissac +1, relation.barbier −1, set: trop_lent_autre — *Vingt minutes avec un ballon. Elle range le chronomètre. « La patte gauche », dit-elle. Legruet l'appelle le lendemain.*
-**Traces** : trop_lent_couru, trop_lent_autre (« {annee} : « trop lent », disait le chiffre. {prenom} {nom} a montré autre chose ; Brissac a rangé le chronomètre. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (`jp.selection` : Legruet appelle), 02 (Barbier : « l'œil contre le chiffre »), `jp.corps.la_liste` (existant : variante « la patte gauche »)
+→ **Je vous montre autre chose** — effets : force +2, tribunes +, relation.brissac +1, relation.barbier −1, set: trop_lent_autre — *Vingt minutes avec un ballon. Berthomier l'appelle le lendemain.*
+**Traces** : trop_lent_couru, trop_lent_autre (« {annee} : « trop lent », disait le chiffre. {prenom} {nom} a montré autre chose ; Brissac a rangé le chronomètre. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (`jp.selection` : Berthomier appelle), 02 (Barbier : « l'œil contre le chiffre »), `jp.corps.la_liste` (existant : variante « la patte gauche »)
 
 ### SCÈNE sl.brissac.naturalise  —  Le naturalisé
 **Rôle** : selectionneur · **Intrigue** : co.brissac_chiffres · **Étape** : 2/6 · **Moment** : fenêtre de mars, `year >= 2002` · **Lieu** : son bureau, un passeport tout neuf sur la table, un joueur qui attend dans le couloir · **Conditions** : —
@@ -2106,7 +2078,7 @@ Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Leg
 **Rôle** : selectionneur · **Intrigue** : co.brissac_chiffres · **Étape** : 3/6 · **Moment** : fenêtre de septembre, `year >= 2004` · **Lieu** : le couloir, deux téléphones qui sonnent dans son bureau, elle ne décroche ni l'un ni l'autre · **Conditions** : `flag('binational_choisi') == null` sur un joueur de la liste, ou un binational générique
 **BRISSAC** *(DTN — neutre — deux courriers, un de chaque fédération, posés face à face)*
 « Deux fédérations pour un joueur de dix-neuf ans, et la nôtre veut un match officiel avant novembre pour le bloquer. Les chiffres sont têtus, les joueurs aussi : vous le bloquez, ou il choisit ? »
-← **Dix minutes, il est bloqué** — effets : tribunes +, direction +, vestiaire −, relation.brissac +1, set: binational_bloque — *Dix minutes. Il est bloqué. Sa mère, ou son père-agent, appelle la Fédération. Il joue pour vous dix ans ; il ne chante pas l'hymne.*
+← **Dix minutes, il est bloqué** — effets : tribunes +, direction +, vestiaire −, relation.brissac +1, set: binational_bloque — *Dix minutes. Il joue pour vous dix ans ; il ne chante pas l'hymne.*
 → **Il choisit à vingt et un ans** — effets : tribunes −, vestiaire +, relation.brissac −1, set: binational_libre — *Il choisit l'autre pays. Ou le vôtre. Il chante l'hymne qu'il a choisi ; ça s'entend.*
 **Traces** : binational_bloque (14), binational_libre (« {annee} : le sélectionneur a laissé un binational choisir. Il a chanté l'hymne qu'il a choisi. ») · **Réactions déclenchées** : co.re.mere_mbako_kambara (§ 8.8, variante « mes vingt fils ») · **Lu plus tard par** : 14 (`binational_bloque`), 10 (`binational` : le postulat), 15 (les fédérations se disputent), 20 (« BLOQUÉ EN DIX MINUTES »)
 
@@ -2114,9 +2086,9 @@ Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Leg
 **Rôle** : instance · **Intrigue** : co.brissac_chiffres · **Étape** : 4/6 · **Moment** : un dossier de l'année, `year >= 2016` · **Lieu** : la salle du comité, un dossier de trois centimètres, une colonne de chiffres soulignée · **Conditions** : —
 **BRISSAC** *(présidente de Mirevaux, commission technique — neutre — elle ouvre le dossier à la page des primes)*
 « Les Cobaltes ont gagné et touché un dixième de la prime des Cobalts, qui ont perdu. Les chiffres sont têtus, les joueuses aussi, monsieur le président : l'égalité, ou la colonne ? »
-← **L'égalité, je signe** — effets : caisse −−, tribunes ++, direction −, relation.brissac +2, relation.fauvel +1, set: primes_egales, outcome: primes — *Tu signes. Le sponsor souffle. Fauvel dit qu'on est un groupe, pas deux listes. Vence titre ; Ménèche « ne commente pas ».*
-→ **La colonne, pour cette année** — effets : caisse +, tribunes −−, relation.brissac −2, set: primes_inegales — *Tu signes la colonne. Les Cobaltes jouent le tournoi suivant en maillot blanc. Elles gagnent. La colonne fait la Une ; pas la tienne.*
-**Traces** : primes_egales, primes_inegales (« {annee} : primes inégales maintenues. Les Cobaltes ont joué en blanc ; elles ont gagné. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (dossier égalité des primes ; `reforme_votee`), 20 (« À PRIME ÉGALE » / « EN BLANC »), 31 (Nouvelle 2016), 06 (Mbako : « j'avais signé pour une école »)
+← **L'égalité, je signe** — effets : caisse −−, tribunes ++, direction −, relation.brissac +2, relation.fauvel +1, set: primes_egales, outcome: primes — *Tu signes. Vence titre ; Massenet « ne commente pas ».*
+→ **La colonne, pour cette année** — effets : caisse +, tribunes −−, relation.brissac −2, set: primes_inegales — *Tu signes la colonne. La colonne fait la Une ; pas la tienne.*
+**Traces** : primes_egales, primes_inegales (« {annee} : primes inégales maintenues. Les Cobaltes ont joué en blanc ; elles ont gagné. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (dossier égalité des primes ; `reforme_votee`), 20 (« À PRIME ÉGALE » / « EN BLANC »), 31 (Nouvelle 2016), § 6 (Mbako : « j'avais signé pour une école »)
 
 ### SCÈNE en.brissac.mirevaux  —  Mirevaux, année un
 **Rôle** : entraineur, president · **Intrigue** : co.brissac_chiffres · **Étape** : 5/6 · **Moment** : `year >= 2016`, [1,4] (ouverture de `section_feminine` si le postulat est joué ; sinon une carte de rôle) · **Lieu** : le stade de la Halle, une buvette, un vestiaire où les joueuses arrivent en tenue de travail · **Conditions** : `chars.brissac.statut != 'mort'`
@@ -2131,45 +2103,43 @@ Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Leg
 **BRISSAC** *(DTN — neutre — le stylo posé sur le nom entouré)*
 « Votre jeune a seize ans, trente matchs, et une mère qui dit qu'il n'a besoin de personne ; espoirs, ou un an de plus chez vous. Les chiffres sont têtus, les mères plus que tout. »
 ← **Prenez-le, il est prêt** — effets : tribunes +, vestiaire −, relation.brissac +1, relation.mere_mbako −1, set: jeune_espoirs — *Il part chez les espoirs. Il marque. Fardelli tourne dès le lendemain ; le prix double.*
-→ **Un an de plus chez moi** — effets : vestiaire +, force +1, relation.brissac −1, relation.mere_mbako +1, set: jeune_garde_un_an — *Un an. Il joue trente matchs de plus. Il te dit qu'il veut jouer, maintenant, chez les espoirs. Elle le prend en juin.*
-**Traces** : jeune_espoirs, jeune_garde_un_an (« {annee} : {prenom} {nom} a gardé son jeune un an de plus. Brissac a attendu ; elle a des chiffres pour ça. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.prodige` : variante « il est chez les espoirs »), 12 (le prix), 06 (Mbako : « vous m'avez gardé »)
+→ **Un an de plus chez moi** — effets : vestiaire +, force +1, relation.brissac −1, relation.mere_mbako +1, set: jeune_garde_un_an — *Un an. Elle le prend en juin.*
+**Traces** : jeune_espoirs, jeune_garde_un_an (« {annee} : {prenom} {nom} a gardé son jeune un an de plus. Brissac a attendu ; elle a des chiffres pour ça. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`en.prodige` : variante « il est chez les espoirs »), 12 (le prix), § 6 (Mbako : « vous m'avez gardé »)
 
 ### 15.5 Les paliers
 ### SCÈNE co.brissac.trahison_dossier  —  Le tampon sans signature
 **Rôle** : entraineur, selectionneur, instance · **Intrigue** : palier −3 · **Étape** : on_relation −3 · **Moment** : programmé en [1,3] · **Lieu** : salle 3, un dossier à ton nom, ouvert à la page d'un tampon · **Conditions** : `relation.brissac <= -3`, une fois par carrière
 **BRISSAC** *(DTN — noir — elle a apporté ses lunettes, pour lire à voix haute)*
 « Votre dérogation de quatre-vingt-dix a un tampon et pas de signature ; je rouvre le dossier. Les chiffres sont têtus, {pg, select, f{madame} other{monsieur}} {nom} ; les procès-verbaux aussi. »
-← **Je demande un avocat** — effets : direction −−−, tribunes −, set: dossier_diplome_rouvert — *Camille, si elle est avocate, plaide ; sinon Maître Vidal. Le tampon est faux. La signature manquante était celle de Legruet, qui « verra ça après le Congrès ».*
-→ **Je demande un avocat** — effets : direction −−−, tribunes −, set: dossier_diplome_rouvert — *Camille, si elle est avocate, plaide ; sinon Maître Vidal. Le tampon est faux. La signature manquante était celle de Legruet, qui « verra ça après le Congrès ».*
-**Traces** : dossier_diplome_rouvert (« {annee} : Brissac a rouvert le dossier du diplôme de {nom}. Un tampon, pas de signature. ») · **Lu plus tard par** : 15 (`fede_dossier`), 11 (`en.dossier_meneche`), 20 (« LE COACH SANS PAPIER, DIX ANS APRÈS »), 30 (fins judiciaires), 04 (Camille : secours avocate, variante)
+← **Je demande un avocat** — effets : direction −−−, tribunes −, set: dossier_diplome_rouvert — *Camille, si elle est avocate, plaide ; sinon Maître Vidal. Le tampon est faux. La signature manquante était celle de Berthomier, qui « verra ça après le Congrès ».*
+→ **Je demande un avocat** — effets : direction −−−, tribunes −, set: dossier_diplome_rouvert — *Camille, si elle est avocate, plaide ; sinon Maître Vidal. Le tampon est faux. La signature manquante était celle de Berthomier, qui « verra ça après le Congrès ».*
+**Traces** : dossier_diplome_rouvert (« {annee} : Brissac a rouvert le dossier du diplôme de {nom}. Un tampon, pas de signature. ») · **Lu plus tard par** : 15 (`fede_dossier`), 11 (`en.dossier_meneche`), 20 (« LE COACH SANS PAPIER, DIX ANS APRÈS »), 30 (fins judiciaires), § 4 (Camille : secours avocate, variante)
 
 ### SCÈNE co.brissac.faveur_stage  —  Signé, tamponné
 **Rôle** : entraineur, joueur · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : son bureau, un diplôme, deux tampons, une signature · **Conditions** : `relation.brissac >= 3`, une fois par carrière
 **BRISSAC** *(DTN — sourire — c'est la seule fois où elle tutoie)*
-« Le diplôme, signé et tamponné, sans stage : tu l'as, le jeu, je l'ai chronométré ; la première fois, c'était Clow. Les chiffres sont têtus, {prenom} ; moi aussi, deux fois par carrière. »
-← **Je le prends, merci** — effets : direction ++, vestiaire +, relation.brissac +1, set: diplome, set: diplome_brissac — *Tu le prends. Clow, s'il vit, en rit au bar. Legruet demande qui a signé ; c'est elle ; il ne dit rien.*
-→ **Je fais le stage quand même** — effets : relation.brissac +2, relation.clow +1, direction +, set: diplome, set: clow_stage — *Tu fais le stage. Elle vient le dernier jour. Elle s'assoit au fond et chronomètre Clow ; il parle exactement une heure.*
-**Traces** : diplome (∃), diplome_brissac (« {annee} : diplôme signé par Brissac sans stage. Deuxième fois en trente ans ; la première, Clow. ») · **Lu plus tard par** : 30 (Carrefour « tu as le papier »), 11 (`en.diplome` : exclusion), 05 (Clow : `co.clow.trois_verres` variante « elle t'a signé sans stage »)
+« Le diplôme, signé et tamponné, sans stage : tu l'as, le jeu, je l'ai chronométré ; la première fois, c'était Corven. Les chiffres sont têtus, {prenom} ; moi aussi, deux fois par carrière. »
+← **Je le prends, merci** — effets : direction ++, vestiaire +, relation.brissac +1, set: diplome, set: diplome_brissac — *Tu le prends. Corven, s'il vit, en rit au bar. Berthomier demande qui a signé ; c'est elle ; il ne dit rien.*
+→ **Je fais le stage quand même** — effets : relation.brissac +2, relation.clow +1, direction +, set: diplome, set: clow_stage — *Tu fais le stage. Elle vient le dernier jour. Elle s'assoit au fond et chronomètre Corven ; il parle exactement une heure.*
+**Traces** : diplome (∃), diplome_brissac (« {annee} : diplôme signé par Brissac sans stage. Deuxième fois en trente ans ; la première, Corven. ») · **Lu plus tard par** : 30 (Carrefour « tu as le papier »), 11 (`en.diplome` : exclusion), § 5 (Corven : `co.clow.trois_verres` variante « elle t'a signé sans stage »)
 
 ### 15.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.brissac_sourire  —  Le chronomètre
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations · **Lieu** : le couloir de la Fédération, un chronomètre à la main
 **BRISSAC** *(sa fonction du moment — sourire — un chronomètre, le même depuis 1988)*
 « Nouveau poste, et je vous ai chronométré depuis le couloir : vous marchez plus vite qu'avant, {prenom}. Les chiffres sont têtus, les joueurs aussi ; vous, vous avez cédé un peu, c'est bien. »
-← **Chronométrez-moi encore** — effets : force +1, relation.brissac +1 — *Elle chronomètre. Le chiffre est bon. Elle ne le dit pas ; elle range l'appareil ; ça veut dire oui.*
-→ **Pas de chiffre aujourd'hui** — effets : relation.brissac −1, direction + — *Elle range le chronomètre. Elle a le chiffre quand même ; elle l'a pris depuis le couloir.*
+**OK** **Chronométrez-moi encore** — effets : force +1, relation.brissac +1 — *Elle chronomètre. Le chiffre est bon. Elle ne le dit pas ; elle range l'appareil ; ça veut dire oui.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.brissac_noir  —  Le dossier suit
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations · **Lieu** : son bureau, après salle 3, un dossier épais
 **BRISSAC** *(sa fonction du moment — noir — un dossier à ton nom, plus épais qu'avant)*
 « Votre dossier m'a suivie ; une page de plus par poste, et vous en changez souvent, {pg, select, f{madame} other{monsieur}} {nom}. Les chiffres sont têtus, les procès-verbaux aussi, et je les lis. »
-← **Lisez, il n'y a rien** — effets : relation.brissac +1, direction − — *Elle lit. Il n'y a rien, ou presque. Elle ferme le dossier. « Presque », dit-elle.*
-→ **Fermez ce dossier** — effets : relation.brissac −1, direction + — *Elle ne le ferme pas. Elle le donne à Dauzat. C'est dans le procès-verbal.*
+**OK** **Lisez, il n'y a rien** — effets : relation.brissac +1, direction − — *Elle lit. « Presque », dit-elle.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.brissac_cahier  —  Soixante-deux
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2036, une fois (`chars.brissac.statut == 'mort'`) · **Conditions** : `relation.brissac >= 1` · **Lieu** : le secrétariat de la Fédération, un cahier toilé sur le comptoir
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2036, une fois (`chars.brissac.statut == 'mort' || (chars.brissac.statut == 'parti' && flag('brissac_mort'))`) · **Conditions** : `relation.brissac >= 1` · **Lieu** : le secrétariat de la Fédération, un cahier toilé sur le comptoir
 **MADAME JOSIANE ou la petite Josiane** *(secrétaire — neutre — un cahier à colonnes, couverture toilée, 1962)*
 « Madame Brissac a laissé son cahier de soixante-deux, des chiffres, aucune image ; votre nom est à la dernière page. J'en ai vu passer, vous savez ; pas des cahiers comme ça. »
 ← **Je lis le chiffre** — effets : tribunes +, relation.brissac +1 (posthume), set: cahier_brissac — *Le chiffre est bon. Tu ne sauras jamais ce qu'il mesure. Tu le crois ; tout le monde a fini par croire les siens.*
@@ -2181,7 +2151,7 @@ Solange Brissac ; « madame Brissac » pour tout le monde, « la DTN » pour Leg
 - **01.brissac_voiture** — décor · brèves · Une voiture de fonction de la Fédération qu'elle conduit elle-même, avec un chronomètre sur le tableau de bord ; elle chronomètre le trajet ; elle le bat.
 - **01.brissac_superstition** — légende · toute scène · Elle ne s'assoit jamais dans la tribune présidentielle ; elle regarde depuis le couloir, debout, « on voit mieux les courses ».
 - **01.brissac_repas** — décor · `sl.brissac.naturalise` · Un sandwich au bureau, coupé en quatre, un quart par dossier.
-- **01.brissac_clow** — légende · `co.brissac.faveur_stage` · Le diplôme de Clow (1989) a une signature de Brissac et un chiffre truqué ; Clow le sait ; il dit que c'est la seule tricherie de sa vie, et qu'elle n'était pas de lui.
+- **01.brissac_clow** — légende · `co.brissac.faveur_stage` · Le diplôme de Corven (1989) a une signature de Brissac et un chiffre truqué ; Corven le sait ; il dit que c'est la seule tricherie de sa vie, et qu'elle n'était pas de lui.
 
 ---
 
@@ -2224,7 +2194,7 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 **Rôle** : joueur_amateur · **Intrigue** : co.gerard_boite · **Étape** : 1/6 · **Moment** : saison 0, [2,8] · **Lieu** : la buvette, après le match, la boîte en fer ouverte, une ardoise · **Conditions** : —
 **GÉRARD** *(buvette — neutre — il tend une bière et montre l'ardoise du menton)*
 « Ici, on payait en bières : tu marques, tu en dois une ; tu rates, tu en dois deux, c'est plus juste. L'ardoise dit trois, petit ; tu règles ce soir, ou tu marques dimanche ? »
-← **Je règle, en bières** — effets : caisse −, vestiaire ++, relation.gerard +1, set: paye_en_bieres — *Trois bières. Les copains en boivent deux. Gérard note « réglé » et efface. Il efface bien ; il a l'habitude.*
+← **Je règle, en bières** — effets : caisse −, vestiaire ++, relation.gerard +1, set: paye_en_bieres — *Trois bières. Il efface bien ; il a l'habitude.*
 → **Je marque dimanche, effacé** — effets : vestiaire +, tribunes +, parole +1, promise, relation.gerard −1 — *Il n'efface pas. Il souligne. Dimanche, tu marques ou l'ardoise dit cinq ; il a un système.*
 **Traces** : paye_en_bieres (« {annee} : à {club}, {prenom} {nom} a payé en bières. Gérard a effacé l'ardoise. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (`village_endette` : le bistrot), 30 (`am_comptoir` plus), 13 (la buvette prend le pouvoir : variante)
 
@@ -2232,7 +2202,7 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 **Rôle** : president_amateur · **Intrigue** : co.gerard_boite · **Étape** : 1/6 (variante président) · **Moment** : saison 0, [2,8] · **Lieu** : la buvette, 22 h 05, le rideau à moitié baissé, trente personnes dedans · **Conditions** : —
 **GÉRARD** *(buvette, trésorier — neutre — il tient le rideau d'une main, la boîte de l'autre)*
 « La licence de la mairie dit vingt-deux heures, et la caisse dit que les deux tiers rentrent après. Ici, on payait en bières, président ; tu baisses le rideau, ou tu tournes la tête ? »
-← **Je tourne la tête, minuit** — effets : caisse ++, tribunes +, relation.aubert −1, relation.gerard +1, set: buvette_minuit — *Minuit. La caisse est pleine. Aubert l'apprend par la gendarmerie, qui buvait aussi. Le stade, c'est de l'argent public ; la buvette, non.*
+← **Je tourne la tête, minuit** — effets : caisse ++, tribunes +, relation.aubert −1, relation.gerard +1, set: buvette_minuit — *Minuit. Le stade, c'est de l'argent public ; la buvette, non.*
 → **Vingt-deux heures, la loi** — effets : caisse −−, tribunes −, relation.gerard −2, relation.aubert +1, set: buvette_loi — *Le rideau descend. Trente personnes finissent au bistrot d'en face. Gérard compte ce qu'il n'a pas gagné ; il a un système pour ça aussi.*
 **Traces** : buvette_minuit, buvette_loi (« {annee} : la buvette de {club} ferme à vingt-deux heures. Le bistrot d'en face a remercié le président. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (Aubert : la subvention, la licence), 30 (`pa_buvette`, `pa_magot`), 20 (Écho, « Au local »)
 
@@ -2248,8 +2218,8 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 **Rôle** : joueur_amateur, president_amateur, entraineur · **Intrigue** : co.gerard_boite · **Étape** : 3/6 · **Moment** : saison 1+, [8,15] · **Lieu** : le terrain, un samedi matin, il trace les lignes seul, à la chaux · **Conditions** : `!flag('gerard_parti')`
 **GÉRARD** *(bénévole — neutre — il ne s'arrête pas de tracer pendant qu'il parle)*
 « Vingt ans que je trace les lignes le samedi et lave les maillots le dimanche, et personne n'a jamais dit le mot. Ici, on payait en bières, petit ; le mot, on ne le paie pas, on le dit, ou pas. »
-← **Merci, Gérard** — effets : tribunes +, vestiaire +, relation.gerard +2, set: gerard_merci, outcome: merci — *Il s'arrête. Il pose la brouette. Il s'assoit sur la ligne, pour la première fois en vingt ans. La ligne est droite quand même.*
-→ **Les lignes sont de travers** — effets : force +1, relation.gerard −2, set: gerard_pas_merci — *Il regarde les lignes. Elles sont droites. Il ne dit rien ; il note. La boîte a un double fond ; il vérifie ce soir qu'il est plein.*
+← **Merci, Gérard** — effets : tribunes +, vestiaire +, relation.gerard +2, set: gerard_merci, outcome: merci — *Il s'arrête. La ligne est droite quand même.*
+→ **Les lignes sont de travers** — effets : force +1, relation.gerard −2, set: gerard_pas_merci — *Il regarde les lignes. La boîte a un double fond ; il vérifie ce soir qu'il est plein.*
 **Traces** : gerard_merci, gerard_pas_merci (« {annee} : personne n'a dit merci à Gérard. Il a vérifié le double fond de la boîte. ») · **Réactions déclenchées** : co.re.dede_merci (§ 17.8) · **Lu plus tard par** : 13 (« Gérard a fui » : variante ; si `gerard_merci` il laisse un mot), 30 (Carte Destin « le club de ton enfance »), 20 (Écho), 90
 
 ### SCÈNE co.gerard.carte_postale  —  La carte postale
@@ -2258,7 +2228,7 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 « « Ici, on paie en soleil, et le soleil ne rend pas la monnaie ; la caisse a fondu, il reste la boîte, je la renvoie si quelqu'un dit le mot. » Pas de signature, un cachet de la poste illisible. »
 ← **J'écris le mot** — effets : caisse +, tribunes +, relation.gerard +2, set: gerard_mot_envoye — *Tu écris « merci ». La boîte arrive en mars, vide, avec le double fond intact : trois cents francs, et un billet de retour non utilisé.*
 → **Qu'il garde la boîte** — effets : direction +, relation.gerard −1, set: gerard_oublie — *Tu ne réponds pas. Josiane garde la carte dans le dossier Gérard. La buvette est tenue par Marinette ; elle a un autre tiroir.*
-**Traces** : gerard_mot_envoye, gerard_oublie (« {annee} : la carte de Gérard est restée sans réponse. Marinette tient la buvette ; elle a un autre tiroir. ») · **Réactions déclenchées** : co.re.josiane_a_lu (existant, si Une) · **Lu plus tard par** : 16 (`pr.gerard.repenti` : variante), 13, 20 (« LE SOLEIL NE REND PAS LA MONNAIE »)
+**Traces** : gerard_mot_envoye, gerard_oublie (« {annee} : la carte de Gérard est restée sans réponse. Marinette tient la buvette ; elle a un autre tiroir. ») · **Réactions déclenchées** : co.re.josiane_a_lu (existant, si Une) · **Lu plus tard par** : § 16 (`pr.gerard.repenti` : variante), 13, 20 (« LE SOLEIL NE REND PAS LA MONNAIE »)
 
 ### SCÈNE pr.gerard.repenti  —  Le repenti
 **Rôle** : president · **Intrigue** : co.gerard_boite · **Étape** : 5/6 · **Moment** : `year >= 2005`, [2,10] · **Lieu** : la buvette des anciens du club pro, fermée, il attend devant avec un tablier plié · **Conditions** : `flag('gerard_parti') && chars.gerard.statut == 'parti'` (variante `_mot` si `gerard_mot_envoye`)
@@ -2266,7 +2236,7 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 « Je suis revenu du soleil avec la boîte vide et une dette en bières que je vais payer, une par une. Ici, on payait en bières, président ; je demande la buvette des anciens, et je paie les miennes. »
 ← **Les anciens, c'est à toi** — effets : tribunes ++, direction −, caisse −, relation.gerard +2, set: gerard_revenu, char: {gerard: {statut: staff}}, outcome: revenu — *Il tient la buvette avec Gigi. Il paie ses bières. En 2019, il meurt derrière le comptoir ; la boîte est fermée ; le double fond est plein : c'est pour les gamins qui rangent les ballons.*
 → **On ne reprend pas un voleur** — effets : direction +, tribunes −, relation.gerard −2, set: gerard_refuse — *Il replie le tablier. Marinette le reprend chez elle. Il vient aux matchs, tribune Est, à côté de Paulette ; il ne boit rien ; il ne dit rien.*
-**Traces** : gerard_revenu, gerard_refuse (« {annee} : Gérard refusé à la buvette des anciens. Il est venu en tribune Est, sans boire. ») · **Réactions déclenchées** : co.re.vecchio_garde (existant, variante « Gérard est revenu ») · **Lu plus tard par** : 07 (Vecchio : buvette des anciens), 02 (Bréhaut), 30 (`pr_buvette` plus), 90 (mémoire des clubs +1 : « le repenti »)
+**Traces** : gerard_revenu, gerard_refuse (« {annee} : Gérard refusé à la buvette des anciens. Il est venu en tribune Est, sans boire. ») · **Réactions déclenchées** : co.re.vecchio_garde (existant, variante « Gérard est revenu ») · **Lu plus tard par** : § 7 (Vecchio : buvette des anciens), 02 (Bréhaut), 30 (`pr_buvette` plus), 90 (mémoire des clubs +1 : « le repenti »)
 
 ### SCÈNE pr.gerard.merguez  —  Deux cents merguez (sixième scène)
 **Rôle** : president_amateur · **Intrigue** : co.gerard_boite · **Étape** : 6/6 · **Moment** : la semaine d'un match de Coupe à domicile contre un gros (`coupe_du_village`), [1,3] · **Lieu** : la chambre froide de la buvette, Dupuis à la porte avec un bon de commande · **Conditions** : `flag('boucher_sponsor')` ou Dupuis présent
@@ -2299,20 +2269,18 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations, `chars.gerard.statut != 'mort'` · **Lieu** : la buvette, une bière sans ardoise
 **GÉRARD** *(sa fonction du moment — sourire — une bière, sans ardoise)*
 « Tu es revenu, ou tu es passé, ça revient au même pour la buvette ; celle-là, elle n'est pas notée. Ici, on payait en bières, petit ; celle-là, c'est moi qui paie. »
-← **À la tienne, Gérard** — effets : tribunes +, relation.gerard +1 — *Vous buvez. Il ne compte pas. C'est la deuxième fois de sa vie.*
-→ **Note-la, je paie** — effets : caisse −, relation.gerard −1 — *Il la note. Il souligne. Il n'aime pas qu'on refuse une bière ; il en a vu peu.*
+**OK** **À la tienne, Gérard** — effets : tribunes +, relation.gerard +1 — *Vous buvez. Il ne compte pas. C'est la deuxième fois de sa vie.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.gerard_noir  —  L'ardoise
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations, `chars.gerard.statut != 'mort'` · **Lieu** : la buvette, l'ardoise tournée vers toi
 **GÉRARD** *(sa fonction du moment — noir — une ardoise, ton nom dessus, un chiffre)*
 « L'ardoise a suivi, {nom} ; elle dit cinq, avec le système, et elle ne s'efface pas d'ici. Ici, on payait en bières ; toi, tu ne payais pas. »
-← **Je règle les cinq** — effets : caisse −, relation.gerard +1 — *Il efface. Bien. Il ne dit pas merci ; ce n'est pas à lui de le dire.*
-→ **Ce n'est pas mon ardoise** — effets : relation.gerard −1, tribunes − — *Il la range. Elle ressortira. Il a une boîte pour ça.*
+**OK** **Je règle les cinq** — effets : caisse −, relation.gerard +1 — *Il efface. Bien. Il ne dit pas merci ; ce n'est pas à lui de le dire.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.gerard_carte_postale  —  Le double fond
-**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2019, une fois (`chars.gerard.statut == 'mort'`) · **Conditions** : `relation.gerard != 0` · **Lieu** : la buvette de Trébignac, la boîte en fer ouverte sur le comptoir
+**Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2019, une fois (`chars.gerard.statut == 'mort' || (chars.gerard.statut == 'parti' && flag('gerard_mort'))`) · **Conditions** : `relation.gerard != 0` · **Lieu** : la buvette de Trébignac, la boîte en fer ouverte sur le comptoir
 **MARINETTE** *(sa femme, buvette — voix sans portrait — la boîte en fer, ouverte, le double fond levé)*
 « Il est mort derrière le comptoir, la boîte fermée, et il y a trois cents francs dans le double fond, plus un mot pour toi. Il disait qu'ici on payait en bières ; le mot dit « merci ». »
 ← **Je garde le mot** — effets : tribunes +, relation.gerard +1 (posthume), set: mot_gerard — *Tu le gardes. Trois cents francs ne valent plus rien ; le mot, si.*
@@ -2368,7 +2336,7 @@ André, « Dédé » depuis l'école ; « le coach » pour les gamins, « Dédé
 **DÉDÉ** *(coach bénévole — neutre — il écrit ton nom sur le capot avec le doigt, dans la poussière)*
 « Bon, on va pas se mentir : tu as des genoux, un boulot et un samedi, et tu peux en garder deux. Le {numero}, c'est toi dimanche ; le patron du garage, c'est ton problème. »
 ← **Le samedi et les genoux** — effets : vestiaire +, caisse −, tribunes +, relation.dede +1, set: samedi_choisi — *Tu joues. Le patron du garage te retient l'heure. Dédé le sait ; il t'a mis titulaire quand même ; il écrit « bon » sur le capot.*
-→ **Le boulot d'abord, tard** — effets : caisse +, vestiaire −, relation.dede −1, set: boulot_choisi — *Tu arrives à la mi-temps. Il te fait entrer à la 60e. Tu marques. « Bon », dit-il ; ce n'est pas un compliment, c'est un constat.*
+→ **Le boulot d'abord, tard** — effets : caisse +, vestiaire −, relation.dede −1, set: boulot_choisi — *Tu arrives à la mi-temps. « Bon », dit-il ; ce n'est pas un compliment, c'est un constat.*
 **Traces** : samedi_choisi, boulot_choisi (chapitre 10, `village_endette` : fil rouge `boulot / copains / village`) · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (le script amateur), 30 (`am_touche`, `am_patron_non` plus)
 
 ### SCÈNE am.dede.neveu  —  Le neveu du président
@@ -2376,14 +2344,14 @@ André, « Dédé » depuis l'école ; « le coach » pour les gamins, « Dédé
 **DÉDÉ** *(coach bénévole — neutre — il regarde le gamin, puis toi, puis le plafond)*
 « Le neveu du président joue dimanche, à ta place ou à celle d'un autre ; la boulangerie paie les maillots. Bon, on va pas se mentir : tu lui laisses le poste, ou tu lui apprends à lacer ? »
 ← **Je lui apprends à lacer** — effets : vestiaire ++, direction −, relation.dede +2, relation.pichon −1, set: neveu_lace — *Tu laces. Il joue arrière droit ; il est mauvais ; il est heureux. Pichon te fait un pain gratuit ; il ne le dit pas.*
-→ **Il prend ma place, je bosse** — effets : direction +, vestiaire −, tribunes −, relation.dede −1, set: neveu_titulaire — *Il joue à ta place. Vous perdez. Le canton dit que c'est la boulangerie. Dédé dit « bon » ; il n'écrit rien sur le capot.*
+→ **Il prend ma place, je bosse** — effets : direction +, vestiaire −, tribunes −, relation.dede −1, set: neveu_titulaire — *Il joue à ta place. Dédé dit « bon » ; il n'écrit rien sur le capot.*
 **Traces** : neveu_lace, neveu_titulaire (« {annee} : le neveu du président titulaire à {club}. On a perdu ; on a mangé du pain gratuit. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 10 (`village_endette` : Pichon), 02 (Pichon : « le pain, c'est à cinq heures »), 30 (`am_chouchou` plus)
 
 ### SCÈNE co.dede.gardienne  —  La gardienne
 **Rôle** : joueur_amateur, president_amateur, entraineur · **Intrigue** : co.dede_sifflet · **Étape** : 3/6 · **Moment** : saison 1+, `year >= 2001`, [3,10] · **Lieu** : la cage, une fille de dix-neuf ans avec des gants trop grands, ceux de Gigi peut-être · **Conditions** : —
 **DÉDÉ** *(coach bénévole — neutre — il ne regarde pas le canton, qui regarde)*
 « La gardienne arrête tout depuis septembre et le règlement du district ne dit rien ; le canton, lui, dit beaucoup. Bon, on va pas se mentir, petit : elle joue dimanche, tu la défends ? »
-← **Elle joue, je la défends** — effets : vestiaire +, tribunes −, relation.dede +2, set: gardienne_titulaire, outcome: gardienne — *Elle joue. Elle arrête un penalty. Le canton se tait ; Roux, au district, « examine » ; il ne trouve rien. Brissac l'apprend ; elle note.*
+← **Elle joue, je la défends** — effets : vestiaire +, tribunes −, relation.dede +2, set: gardienne_titulaire, outcome: gardienne — *Elle joue. Brissac l'apprend ; elle note.*
 → **Pas cette fois, le canton** — effets : tribunes +, vestiaire −, relation.dede −2, set: gardienne_banc — *Elle reste sur le banc. Elle part à Mirevaux en 2008 ; elle y est titulaire ; elle ne revient jamais au village, sauf pour l'enterrement de Dédé.*
 **Traces** : gardienne_titulaire, gardienne_banc (« {annee} : la gardienne de Dédé sur le banc. Elle est partie à Mirevaux ; elle n'est revenue que pour l'enterrement. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`section_feminine` : « elle a commencé chez Dédé »), 15 (Brissac : la commission technique), 02 (Roux : le district « examine »), 20 (Écho : « LA GARDIENNE DU CANTON »)
 
@@ -2407,7 +2375,7 @@ André, « Dédé » depuis l'école ; « le coach » pour les gamins, « Dédé
 **Rôle** : entraineur · **Intrigue** : co.dede_sifflet · **Étape** : 6/6 · **Moment** : saison 0-1, [1,4] · **Lieu** : un terrain de National, il t'attend avec le minibus et le sifflet · **Conditions** : `world.division >= 3 && role_was('joueur_amateur')` ou club = Trébignac
 **DÉDÉ** *(coach bénévole — sourire — le sifflet orange tendu, puis retiré)*
 « Tu redescends avec ton diplôme, et moi j'ai le minibus, le sifflet et trente ans de samedis. Bon, on va pas se mentir, {prenom} : je suis ton adjoint, mais le sifflet reste à moi. »
-← **Le sifflet est à toi, Dédé** — effets : vestiaire ++, tribunes +, force −1, relation.dede +2, set: dede_adjoint, char: {dede: {statut: staff}} — *Il siffle la fin. Tu voulais prolonger. Tu n'y arrives pas ; personne n'y est arrivé. Rouvier, si elle passe, approuve.*
+← **Le sifflet est à toi, Dédé** — effets : vestiaire ++, tribunes +, force −1, relation.dede +2, set: dede_adjoint, char: {dede: {statut: staff}} — *Il siffle la fin. Rouvier, si elle passe, approuve.*
 → **Le sifflet aussi, mon banc** — effets : force +1, vestiaire −, relation.dede −2, set: dede_ecarte — *Il pose le sifflet sur le capot. Il conduit le minibus quand même. Il ne siffle plus ; il regarde ; c'est pire.*
 **Traces** : dede_adjoint, dede_ecarte (« {annee} : Dédé écarté du sifflet. Il conduit encore le minibus ; il ne siffle plus. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`interimaire` en National : Vukić absent, Dédé présent), 30 (`en_bus` plus : « le minibus n'a pas refusé de descendre »), 90 (objet : le sifflet de Dédé)
 
@@ -2425,7 +2393,7 @@ André, « Dédé » depuis l'école ; « le coach » pour les gamins, « Dédé
 **DÉDÉ** *(coach bénévole — sourire — le sifflet dans la paume ouverte)*
 « Bon, on va pas se mentir : tes genoux, c'est fini, et tu regardes le terrain comme moi en soixante et un. Mon sifflet, il est à toi, {prenom} ; il est en plastique, il siffle quand même. »
 ← **Je le prends** — effets : vestiaire ++, direction +, relation.dede +1, set: sifflet_dede, set: diplome (amateur : équivalent) — *Tu siffles la fin. Ils s'arrêtent. C'est la première fois que quelqu'un s'arrête pour toi ; Dédé écrit « bon » sur le capot.*
-→ **Garde-le, encore un samedi** — effets : force +1, relation.dede +1, tribunes + — *Il le range. Un samedi de plus. Puis un autre. Il te le donnera à l'enterrement, par Bébert ; c'est prévu.*
+→ **Garde-le, encore un samedi** — effets : force +1, relation.dede +1, tribunes + — *Il le range. Il te le donnera à l'enterrement, par Bébert ; c'est prévu.*
 **Traces** : sifflet_dede (objet héritable ; « {annee} : Dédé a donné son sifflet à {prenom} {nom}. En plastique ; il siffle quand même. ») · **Lu plus tard par** : 30 (Carte Destin amateur → entraîneur : « Dédé : mon sifflet, il est à toi », existant en § 3.3 de la charte), 90 (lignée : objet), 12 (Rouvier : « deux sifflets, un seul kiné »)
 
 ### 17.6 Les retrouvailles
@@ -2433,24 +2401,22 @@ André, « Dédé » depuis l'école ; « le coach » pour les gamins, « Dédé
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations, `chars.dede.statut != 'mort'` · **Lieu** : le parking du nouveau stade, le minibus garé en travers
 **DÉDÉ** *(coach bénévole — sourire — le minibus garé devant ton nouveau stade, en travers)*
 « J'ai fait quatre heures de minibus pour voir ton nouveau stade, il est grand, il a un vestiaire chauffé. Bon, on va pas se mentir, petit : je préfère le nôtre, mais je suis fier, voilà. »
-← **Viens voir le vestiaire** — effets : vestiaire +, relation.dede +1 — *Il le visite. Il touche le radiateur. Il dit « bon ». Il repart avant la nuit ; le minibus n'a pas de phares fiables.*
-→ **Je n'ai pas le temps, Dédé** — effets : direction +, relation.dede −1 — *Il regarde le stade depuis le parking. Il compte les places. Il repart. Il le dit à Gérard : « grand ».*
+**OK** **Viens voir le vestiaire** — effets : vestiaire +, relation.dede +1 — *Il le visite. Il repart avant la nuit ; le minibus n'a pas de phares fiables.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.dede_noir  —  Le capot
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations, `chars.dede.statut != 'mort'` · **Lieu** : le parking, la vitre du minibus à demi baissée
 **DÉDÉ** *(coach bénévole — noir — il ne descend pas du minibus ; il parle par la vitre)*
 « Tu n'as pas rappelé, ou tu ne m'as pas payé, ou tu m'as pris le sifflet, je sais plus lequel, bon, on va pas se mentir : les trois. Le {numero}, ici, on l'a effacé du capot. »
-← **Réécris-le, Dédé** — effets : relation.dede +1, tribunes + — *Il descend. Il l'écrit dans la poussière. Il repart. C'est un début ; il n'y en aura pas d'autre, il a soixante-douze ans.*
-→ **Efface, c'est du passé** — effets : relation.dede −1, direction + — *Il remonte la vitre. Il repart. Il le dit à Gérard : « effacé ». Gérard note.*
+**OK** **Réécris-le, Dédé** — effets : relation.dede +1, tribunes + — *Il descend. C'est un début ; il n'y en aura pas d'autre, il a soixante-douze ans.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.dede_enterrement  —  Terrain Dédé
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : 2012, une fois (drame sobre, une sortie) · **Conditions** : `relation.dede != 0` · **Lieu** : le terrain de Trébignac, le canton au bord de la ligne
 **BÉBERT** *(son fils, coach bénévole — voix sans portrait — le sifflet orange dans la main, le béret dans l'autre)*
 « Il a sifflé la fin samedi et il s'est assis sur le capot, voilà ; tout le canton est là, le type en doudoune aussi. Bon, on va pas se mentir : il voulait que tu aies ça, il l'a dit à Gérard. »
-← **Je prends le sifflet** — effets : — , set: sifflet_dede — *Tu le prends. Il est en plastique. Il siffle quand même. Le canton se tait quand tu siffles ; il ne sait pas pourquoi.*
-→ **Je prends le sifflet** — effets : — , set: sifflet_dede — *Tu le prends. Il est en plastique. Il siffle quand même. Le canton se tait quand tu siffles ; il ne sait pas pourquoi.*
+← **Je prends le sifflet** — effets : — , set: sifflet_dede — *Tu le prends. Le canton se tait quand tu siffles ; il ne sait pas pourquoi.*
+→ **Je prends le sifflet** — effets : — , set: sifflet_dede — *Tu le prends. Le canton se tait quand tu siffles ; il ne sait pas pourquoi.*
 *(Variante si `flag('dede_pas_rappele')` : Bébert ajoute « il a compté tes ballons jusqu'à la fin ». Variante si `flag('dede_montbeliac')` : l'enterrement est à Montbéliac ; tu es au fond.)*
 **Traces** : sifflet_dede, dede_mort (monde ; « 2012 : Dédé est mort sur le capot du minibus après avoir sifflé la fin. Le terrain porte son nom sans qu'on l'ait décidé. ») · **Lu plus tard par** : 31 (Nouvelle 2012, épitaphe des 41), 90, 02 (Barbier : « je suis venu de Trébignac »)
 
@@ -2495,7 +2461,7 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 - **+3** — « Voilà l'écharpe de mon mari ; il est mort ici, à la soixante-dixième, souriant. Je vous la donne parce que vous resterez. » / « J'étais là en cinquante et un, et je serai là en juin, à côté de vous. »
 
 ### 18.3 Rapports avec les autres
-**Alliés** : Gigi (l'orange, depuis 1990 ; « le vieux » et « la vieille » se comprennent), Gégé (il lit la tribune Est avant le penalty : si elle sourit, c'est dedans), Josiane (elles ont le même âge, elles se disent vous), Léa (L'Écho : Paulette est sa première lectrice, et la seule qui écrive « On nous écrit »). **Rivaux** : Aulard (la loge, la tribune vétuste : « le stade, c'est le mien »), Nassir (« un actif ? j'y étais avant l'actif »), Ménèche (qui dit « kop »). **Dettes** : le club lui doit une place à vie qu'il lui a donnée en 1971 ; Camille lui doit un siège (elle s'assoit toujours à côté). **Elle aime** : Sacha, qui lui a offert un chocolat entamé sur la 14B, sans savoir que c'était sa place.
+**Alliés** : Gigi (l'orange, depuis 1990 ; « le vieux » et « la vieille » se comprennent), Gégé (il lit la tribune Est avant le penalty : si elle sourit, c'est dedans), Josiane (elles ont le même âge, elles se disent vous), Léa (L'Écho : Paulette est sa première lectrice, et la seule qui écrive « On nous écrit »). **Rivaux** : Vaubourg (la loge, la tribune vétuste : « le stade, c'est le mien »), Ilyas (« un actif ? j'y étais avant l'actif »), Massenet (qui dit « kop »). **Dettes** : le club lui doit une place à vie qu'il lui a donnée en 1971 ; Camille lui doit un siège (elle s'assoit toujours à côté). **Elle aime** : Sacha, qui lui a offert un chocolat entamé sur la 14B, sans savoir que c'était sa place.
 
 ### 18.4 INTRIGUE co.paulette_14b  —  Place 14B
 **Logline** : Mamie Paulette était là en cinquante et un ; elle refuse la loge, ne quitte pas la tribune vétuste, prête sa 14A quand tu es sur le banc, t'offre une orange après le derby, et meurt à la soixante-dixième. · **Synopsis** : Première rencontre : elle te dit qu'elle était là. Président, tu lui offres la loge ; elle refuse. Entraîneur, la tribune Est est vétuste ; elle ne bouge pas. Joueur, sur le banc, tu t'assois en 14A. Après un derby perdu, elle t'offre une orange. En 2009, la 70e.
@@ -2517,8 +2483,8 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 **Rôle** : president, president_amateur · **Intrigue** : co.paulette_14b · **Étape** : 2/6 · **Moment** : saison 1+, [2,10] · **Lieu** : le hall, une invitation à la loge présidentielle, à son nom, dans une enveloppe du club · **Conditions** : `year >= 2003`
 **PAULETTE** *(abonnée — neutre — elle rend l'enveloppe sans l'ouvrir ; elle a lu le nom sur l'enveloppe, ça suffit)*
 « Une loge, des petits fours, une vitre, et on ne voit pas le but Nord ; j'étais là en cinquante et un, sans vitre. Merci, président ; la 14B, je la garde, et vous, vous venez quand ? »
-← **Je viens dimanche, en 14A** — effets : tribunes ++, direction −, relation.paulette +2, set: paulette_loge, outcome: loge_refusee — *Tu t'assois en 14A. Les actionnaires te cherchent en loge. Gigi apporte deux oranges. Léa fait une photo pour L'Écho ; c'est la Une.*
-→ **La loge est chauffée, madame** — effets : direction +, tribunes −, relation.paulette −1, set: paulette_loge — *Elle reste en 14B. Il fait froid. Elle a un manteau ; c'est le sien depuis 1971. La loge a une chaise vide, avec son nom, toute la saison.*
+← **Je viens dimanche, en 14A** — effets : tribunes ++, direction −, relation.paulette +2, set: paulette_loge, outcome: loge_refusee — *Tu t'assois en 14A. Léa fait une photo pour L'Écho ; c'est la Une.*
+→ **La loge est chauffée, madame** — effets : direction +, tribunes −, relation.paulette −1, set: paulette_loge — *Elle reste en 14B. La loge a une chaise vide, avec son nom, toute la saison.*
 **Traces** : paulette_loge · **Réactions déclenchées** : co.re.gege_decoupe (existant, si Une) · **Lu plus tard par** : 30 (fin *Ta loge* epitaph_plus), 13 (la loge : variante), 20 (« LA 14B PLUTÔT QUE LA LOGE »)
 
 ### SCÈNE en.paulette.tribune  —  La tribune vétuste
@@ -2526,14 +2492,14 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 **PAULETTE** *(abonnée — neutre — la canne pointée sur la fissure, puis sur toi)*
 « La fissure est là depuis soixante-dix, sous ma place ; elle a vu mon mari mourir et n'a pas bougé. J'étais là en cinquante et un, mon petit ; je ne m'assois pas ailleurs. »
 ← **On ferme la tribune Est** — effets : tribunes −−, caisse −−, direction −, relation.paulette −1, set: tribune_fermee, clear: tribune_a_renover — *Elle regarde le match depuis le parking, sur une chaise, avec Gérard. Elle revient en septembre. La fissure est rebouchée ; elle dit qu'on la voit encore.*
-→ **La tribune tient toujours** — effets : tribunes +, caisse +, relation.paulette +1, set: tribune_a_renover — *Elle tient. Cette saison. La fissure grandit d'un millimètre par derby. Gégé le mesure ; il ne le dit à personne.*
+→ **La tribune tient toujours** — effets : tribunes +, caisse +, relation.paulette +1, set: tribune_a_renover — *Elle tient. Gégé le mesure ; il ne le dit à personne.*
 **Traces** : tribune_fermee (∃), tribune_a_renover (∃) · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (fin *La tribune* : « Paulette était dedans » ; jamais partagé), 11 (`en.evt.tribune`), 13 (le stade dont tu es locataire), 02 (Aubert : l'arrêté)
 
 ### SCÈNE jp.paulette.14b  —  La place 14B
 **Rôle** : joueur · **Intrigue** : co.paulette_14b · **Étape** : 3/6 · **Moment** : saison 1+, [4,12] · **Lieu** : la tribune Est, tu es en tribune, pas sur la feuille, la 14A est libre · **Conditions** : `gauges.direction < 40` ; variante si `flag('paulette_14a')`
 **PAULETTE** *(abonnée — neutre — elle tapote le siège 14A avec la canne)*
 « Pas sur la feuille, mon petit, alors en tribune, et la 14A est libre depuis soixante-dix. J'étais là en cinquante et un ; asseyez-vous, on regarde ceux qui jouent à votre place. »
-← **Je m'assois, et je regarde** — effets : direction +, vestiaire +, force +1, relation.paulette +2, set: place_14a_joueur — *Tu regardes. Elle commente. Elle voit avant le coach que le six ne court plus. Tu le dis au coach lundi ; il ne demande pas d'où.*
+← **Je m'assois, et je regarde** — effets : direction +, vestiaire +, force +1, relation.paulette +2, set: place_14a_joueur — *Tu regardes. Tu le dis au coach lundi ; il ne demande pas d'où.*
 → **Je reste au bord du terrain** — effets : tribunes +, relation.paulette −1, set: bord_pelouse — *Tu restes debout. Le stade te voit debout. Elle dit « le petit » ; elle ne retient pas ton nom ; pas cette saison.*
 **Traces** : place_14a_joueur, bord_pelouse (« {annee} : {prenom} {nom} est resté debout au bord de la pelouse. Mamie Paulette avait libéré la 14A. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (`jp_place14b` : « tu connaissais déjà la vue »), 10 (`jp.banc_hiver` variante), 20 (Écho)
 
@@ -2541,17 +2507,17 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 **Rôle** : tous · **Intrigue** : co.paulette_14b · **Étape** : 4/6 · **Moment** : saison 2+, [1,6], après `derby_perdu` · **Lieu** : la sortie du stade, elle t'attend près de la grille, une orange dans la main · **Conditions** : `flag('derby_perdu')`
 **PAULETTE** *(abonnée — sourire, malgré le derby — l'orange tendue, déjà pelée à moitié)*
 « On a perdu le derby, et en cinquante et un aussi, et en soixante-dix c'était un nul, et il est mort en souriant ; tenez, une orange, mon petit. J'étais là ; je serai là dimanche prochain aussi. »
-← **Je prends l'orange** — effets : tribunes +, vestiaire +, relation.paulette +2, set: orange_paulette — *Tu la manges sur le parking. Gigi passe ; il en a une aussi. Vous ne parlez pas. C'est le meilleur moment d'un derby perdu.*
+← **Je prends l'orange** — effets : tribunes +, vestiaire +, relation.paulette +2, set: orange_paulette — *Tu la manges sur le parking. C'est le meilleur moment d'un derby perdu.*
 → **Pas faim, madame** — effets : relation.paulette −2, direction + — *Elle la remet dans le sac. Elle la donnera à Gigi. Elle dit « le coach » ; elle avait presque retenu ton prénom.*
-**Traces** : orange_paulette (« {annee} : après le derby perdu, Mamie Paulette a offert une orange à {prenom} {nom}. Il l'a mangée sur le parking. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`co.derby` retour : variante « l'orange »), 30 (*Le dernier derby* : « elle avait une orange »), 19 (Sacha : l'orange sur la 14B, 2031), 04 (Camille : « la boulangère » variante « tu sens l'orange »)
+**Traces** : orange_paulette (« {annee} : après le derby perdu, Mamie Paulette a offert une orange à {prenom} {nom}. Il l'a mangée sur le parking. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 11 (`co.derby` retour : variante « l'orange »), 30 (*Le dernier derby* : « elle avait une orange »), § 19 (Sacha : l'orange sur la 14B, 2031), § 4 (Camille : « la boulangère » variante « tu sens l'orange »)
 
 ### SCÈNE co.paulette.soixante_dixieme  —  La soixante-dixième
 **Rôle** : tous · **Intrigue** : co.paulette_14b · **Étape** : 5/6 · **Moment** : 2009, [4,14], un dimanche, drame sobre, une sortie, jamais partagé · **Lieu** : la tribune Est, la 70e minute, personne ne l'a réveillée · **Conditions** : `year == 2009 && chars.paulette.statut != 'mort'`
 **LÉA** *(L'Écho — neutre — elle est montée en tribune Est pendant le match, ce qu'elle ne fait jamais)*
 « Mamie Paulette s'est endormie à la soixante-dixième, place 14B, et on ne l'a pas réveillée. Vous confirmez que je peux l'écrire comme ça, « souriante », en première page ? »
-← **Écrivez-le comme ça** — effets : — , set: paulette_14b_vide, char: {paulette: {statut: mort}} — *L'Écho titre : « ELLE ÉTAIT LÀ EN CINQUANTE ET UN ». Personne ne s'assoit en 14B. Gigi met une orange dessus dimanche suivant ; il en mettra une jusqu'en 2031.*
-→ **Écrivez-le comme ça** — effets : — , set: paulette_14b_vide, char: {paulette: {statut: mort}} — *L'Écho titre : « ELLE ÉTAIT LÀ EN CINQUANTE ET UN ». Personne ne s'assoit en 14B. Gigi met une orange dessus dimanche suivant ; il en mettra une jusqu'en 2031.*
-**Traces** : paulette_14b_vide (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2009, épitaphe des 41), 30 (`jp_place14b` plus, *Ta loge*), 07 (2031), 19 (Sacha), 90 (Panthéon)
+← **Écrivez-le comme ça** — effets : — , set: paulette_14b_vide, char: {paulette: {statut: mort}} — *L'Écho titre : « ELLE ÉTAIT LÀ EN CINQUANTE ET UN ». Gigi pose une orange sur la 14B le dimanche suivant, et jusqu'en 2031.*
+→ **Écrivez-le comme ça** — effets : — , set: paulette_14b_vide, char: {paulette: {statut: mort}} — *L'Écho titre : « ELLE ÉTAIT LÀ EN CINQUANTE ET UN ». Gigi pose une orange sur la 14B le dimanche suivant, et jusqu'en 2031.*
+**Traces** : paulette_14b_vide (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : ch. 31 (§ 9, la ligne d'enterrement `31.ent_paulette`), ch. 30 (`jp_place14b` plus, *Ta loge*), § 7 (2031), § 19 (Sacha), ch. 90 (Panthéon)
 
 ### SCÈNE am.paulette.trebignac  —  Le même club, ou presque (sixième scène)
 **Rôle** : joueur_amateur, president_amateur · **Intrigue** : co.paulette_14b · **Étape** : 6/6 · **Moment** : saison 0-1, [3,10], quand le club amateur reçoit un club de la vallée en Coupe · **Lieu** : le stade municipal, une chaise pliante au bord de la ligne, elle a fait le voyage en car avec Gégé · **Conditions** : club amateur = Trébignac ou Boisnoir ; `chars.paulette.statut != 'mort'`
@@ -2559,7 +2525,7 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 « J'étais là en cinquante et un, ici aussi, en Coupe, contre le même club ou presque : quatre à un, et des merguez. Vous jouez, mon petit, ou vous m'apportez une chaise pour Gérard ? »
 ← **Je joue, Gérard a sa chaise** — effets : tribunes ++, vestiaire +, relation.paulette +2, relation.gerard +1, set: paulette_village — *Tu joues. Vous perdez quatre à un, ou pas. Elle mange une merguez ; elle dit qu'en cinquante et un elles étaient meilleures ; Gérard s'en souvient aussi.*
 → **En tribune d'honneur, madame** — effets : direction +, tribunes −, relation.paulette −1 — *Il n'y a pas de tribune d'honneur. Il y a le banc de touche. Elle s'y assoit ; elle fait la compo à voix haute ; Dédé l'écoute.*
-**Traces** : paulette_village (« {annee} : Mamie Paulette en Coupe au village, sur une chaise pliante. « Comme en cinquante et un. » ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (`coupe_du_village` : variante « Paulette est venue »), 09 (Gégé : le car), 20 (Écho)
+**Traces** : paulette_village (« {annee} : Mamie Paulette en Coupe au village, sur une chaise pliante. « Comme en cinquante et un. » ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (`coupe_du_village` : variante « Paulette est venue »), § 9 (Gégé : le car), 20 (Écho)
 
 ### 18.5 Les paliers
 ### SCÈNE co.paulette.trahison_nom  —  Le coach
@@ -2574,32 +2540,30 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 **Rôle** : tous · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : la tribune Est, après le match, une écharpe de 1951, bleu nuit et or, pliée dans le sac à main depuis 1970 · **Conditions** : `relation.paulette >= 3`, une fois par carrière
 **PAULETTE** *(abonnée — sourire — elle te tend l'écharpe à deux mains ; c'est la première fois qu'elle la sort)*
 « L'écharpe de mon mari, place 14A ; il est mort ici à la soixante-dixième, souriant, un jour de nul. J'étais là en cinquante et un avec lui ; je vous la donne parce que vous resterez, {prenom}. »
-← **Je la prends, madame** — effets : tribunes +++, vestiaire +, relation.paulette +1, set: echarpe_paulette — *Tu la prends. Elle sent 1951. Tu ne la mets pas ; tu l'accroches dans le vestiaire, à côté du filet de Gigi si tu l'as. Gégé vient la voir.*
+← **Je la prends, madame** — effets : tribunes +++, vestiaire +, relation.paulette +1, set: echarpe_paulette — *Tu la prends. Gégé vient la voir.*
 → **Gardez-la pour la 14A** — effets : tribunes ++, relation.paulette +2, set: echarpe_14a — *Elle la pose sur la 14A. Elle y reste jusqu'en 2009. Puis on la met sur la 14B ; personne ne s'assoit dessus ; personne ne la vole ; c'est le stade.*
-**Traces** : echarpe_paulette (objet héritable), echarpe_14a (« {annee} : l'écharpe du mari de Paulette est restée sur la 14A. Personne ne s'assoit dessus. ») · **Lu plus tard par** : 90 (lignée : objet ; la 14A/14B : mémoire), 30 (*Ta loge*, *Le dernier derby*), 19 (Sacha : « l'écharpe sur le siège »)
+**Traces** : echarpe_paulette (objet héritable), echarpe_14a (« {annee} : l'écharpe du mari de Paulette est restée sur la 14A. Personne ne s'assoit dessus. ») · **Lu plus tard par** : 90 (lignée : objet ; la 14A/14B : mémoire), 30 (*Ta loge*, *Le dernier derby*), § 19 (Sacha : « l'écharpe sur le siège »)
 
 ### 18.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.paulette_sourire  —  Le prénom retenu
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation, `chars.paulette.statut != 'mort'` · **Conditions** : parmi les deux meilleures relations · **Lieu** : le nouveau stade, rangée 14, le car des supporters sur le parking
 **PAULETTE** *(abonnée — sourire — elle a fait le voyage en car, Gégé a porté le sac)*
 « Je n'y étais pas en cinquante et un, ici, mais j'y suis aujourd'hui, et j'ai retenu votre prénom, {prenom}, alors je suis venue le dire. La 14B d'ici est prise ; je m'assois où ? »
-← **À côté de moi, sur le banc** — effets : tribunes ++, vestiaire +, relation.paulette +1 — *Elle s'assoit sur le banc. Elle fait la compo à voix haute. Le nouveau vestiaire l'écoute ; il ne sait pas qui c'est ; il le saura.*
-→ **En tribune, place gardée** — effets : tribunes +, relation.paulette +1 — *Une place en tribune Est du nouveau stade, rangée 14. Elle vérifie le numéro. Ce n'est pas la B. Elle s'assoit quand même.*
+**OK** **À côté de moi, sur le banc** — effets : tribunes ++, vestiaire +, relation.paulette +1 — *Elle s'assoit sur le banc. Elle fait la compo à voix haute. Le nouveau vestiaire l'écoute ; il ne sait pas qui c'est ; il le saura.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.paulette_noir  —  Le monsieur
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation, `chars.paulette.statut != 'mort'` · **Conditions** : parmi les pires relations · **Lieu** : la rédaction de L'Écho, une lettre que Léa te lit
 **PAULETTE** *(abonnée — noir — elle n'a pas fait le voyage ; elle écrit à L'Écho, et Léa te lit la lettre)*
 « « On nous écrit : le monsieur qui n'est pas resté est parti ailleurs ; j'étais là en cinquante et un, il n'y était pas, il n'est nulle part. » Vous confirmez que je peux la publier ? »
-← **Publiez, elle a le droit** — effets : tribunes −, relation.paulette +1, relation.lea +1 — *Publiée. « On nous écrit », sans ton nom. Le nouveau stade ne comprend pas ; l'ancien, si.*
-→ **Ne publiez pas** — effets : relation.lea −1, relation.paulette −1 — *Léa ne publie pas. Paulette la lit à voix haute à la 14B, dimanche. La tribune Est entend.*
+**OK** **Publiez, elle a le droit** — effets : tribunes −, relation.paulette +1, relation.lea +1 — *Publiée. « On nous écrit », sans ton nom. Le nouveau stade ne comprend pas ; l'ancien, si.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.paulette_place_vide  —  La 14B
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : après 2009, à la première Passation qui te ramène à {club} d'origine, une fois · **Conditions** : `flag('paulette_14b_vide') && relation.paulette != 0` · **Lieu** : la tribune Est de {club}, la 14B vide, une orange dessus
 **LA PETITE PAULETTE** *(sa petite-fille, place 14C — voix sans portrait — une orange dans la main, comme l'autre)*
 « Elle est morte là, à la soixante-dixième, et personne ne s'assoit en 14B, et personne ne prend la 14A non plus depuis que vous êtes parti. J'étais là en deux mille neuf ; vous, vous étiez où ? »
-← **En 14A, dimanche** — effets : tribunes ++, relation.paulette +1 (posthume) — *Tu t'assois en 14A. La 14B est vide. Une orange dessus. Tu ne la manges pas ; tu la laisses ; c'est la règle qu'on n'a jamais écrite.*
+← **En 14A, dimanche** — effets : tribunes ++, relation.paulette +1 (posthume) — *Tu t'assois en 14A. Tu ne la manges pas ; tu la laisses ; c'est la règle qu'on n'a jamais écrite.*
 → **Ailleurs, je travaillais** — effets : direction + — *Elle hoche la tête. Elle dit « le coach », ou « le président ». Elle a retenu ; elle fait semblant ; c'est de famille.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
@@ -2620,7 +2584,7 @@ Paulette ; « Mamie Paulette » pour le stade entier, « madame Paulette » pour
 **Ce qu'elle pense de toi** : à +2 « tu es venu ; tu as monté l'escalier de la tribune » ; à 0 « tu m'as promis ; on verra » ; à −2 « {nom}, tu as tweeté à trois heures du matin »
 **Paliers** : −3 → `co.sacha.trahison_succession` · +3 → `co.sacha.faveur_tribune_pleine`
 **Dans les rôles** : tous à partir de ses six ans (une carte par saison) · joueur amateur : héritière (Succession) · président : « tu as tweeté à trois heures » (1) · sélectionneur : elle ne chante pas l'hymne (1) · instance : l'ONG (1) · entraîneur, joueur, DS : la promesse, la tribune vide, le nom de famille (1)
-**Trajectoire 1990 → 2050** : naissance entre 1991 et 2000 · six ans : la tribune vide, le chocolat sur la 14B, « tu m'as promis le zoo » · douze ans : elle t'appelle par ton nom de famille une fois ; elle peint une banderole pour Gégé · dix-sept ans : elle trouve la lettre de 1989 dans le tiroir de la cuisine · dix-huit à vingt-deux ans : la Succession : elle prend ta suite, ou pas, avec un trait hérité et un trait inversé · vingt-cinq ans : l'ONG qui compte les ouvriers des chantiers du Mondial (2020+) · trente ans : elle demande à Loco pourquoi le banc est loin ; il sourit · 2031 : elle pose une orange sur la 14B pour Gigi · 2032 : élue socios à côté de Gégé, si la lignée a tenu · 2050 : elle est à l'écran-bilan du siècle ; elle ne chante toujours pas l'hymne
+**Trajectoire 1990 → 2050** : naissance entre 1991 et 2000 · six ans : la tribune vide, le chocolat sur la 14B, « tu m'as promis le zoo » · douze ans : elle t'appelle par ton nom de famille une fois ; elle peint une banderole pour Gégé · dix-sept ans : elle trouve la lettre de 1989 dans le tiroir de la cuisine · dix-huit à vingt-deux ans : la Succession : elle prend ta suite, ou pas, avec un trait hérité et un trait inversé · vingt-cinq ans : l'ONG qui compte les ouvriers des chantiers du Mondial (2020+) · trente ans : elle demande à Vaz pourquoi le banc est loin ; il sourit · 2031 : elle pose une orange sur la 14B pour Gigi · 2032 : élue socios à côté de Gégé, si la lignée a tenu · 2050 : elle est à l'écran-bilan du siècle ; elle ne chante toujours pas l'hymne
 **Retrouvailles** : `co.retrouvailles.sacha_sourire` / `_noir` / `_succession`
 **Cartes propres** : *Six ans* (01) · *Le nom de famille* (01) · *Trois heures du matin* (01) · *L'hymne* (01) · *L'ONG* (01) · *L'héritière* (01) · *Trois générations* (90, lignée) · *La banderole de sept ans* (§ 9, anecdote)
 
@@ -2637,13 +2601,13 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 - **+3** — « J'ai rempli la tribune, {prenom} ; enfin, la 14A et la 14B, et maman à côté. C'est plein. » / « Je prends ta suite. Avec mon trait à moi, pas le tien. »
 
 ### 19.3 Rapports avec les autres
-**Alliés** : Camille (la maison, la lettre de 1989), Paulette (le chocolat sur la 14B, le manteau), Gigi (il lui apprend à plonger du bon côté ; elle pose l'orange en 2031), Gégé (la banderole de sept ans au-dessus du bar), Dembo (l'hymne), Loco (le banc), Brissac (les chiffres de 1965, qu'elle a crus). **Rivaux** : Aulard (« le fils ne veut pas de l'empire ; la fille non plus » : elle lui dit qu'elle n'est pas sa fille), Nassir (l'ONG compte ses ouvriers), Bambini (« le football unit le monde » : elle a les chiffres). **Dettes** : elle doit à Josiane un lapin ; Vukić lui doit le cahier, à sa mort. **Elle aime** : Mbako, qui lui chante la berceuse de sa mère si les deux familles se croisent (90).
+**Alliés** : Camille (la maison, la lettre de 1989), Paulette (le chocolat sur la 14B, le manteau), Gigi (il lui apprend à plonger du bon côté ; elle pose l'orange en 2031), Gégé (la banderole de sept ans au-dessus du bar), Dembo (l'hymne), Vaz (le banc), Brissac (les chiffres de 1965, qu'elle a crus). **Rivaux** : Vaubourg (« le fils ne veut pas de l'empire ; la fille non plus » : elle lui dit qu'elle n'est pas sa fille), Ilyas (l'ONG compte ses ouvriers), Bambini (« le football unit le monde » : elle a les chiffres). **Dettes** : elle doit à Josiane un lapin ; Vukić lui doit le cahier, à sa mort. **Elle aime** : Mbako, qui lui chante la berceuse de sa mère si les deux familles se croisent (90).
 
 ### 19.4 INTRIGUE co.sacha_promis  —  Tu m'as promis
 **Logline** : Sacha grandit d'une carte par saison : la tribune vide à six ans, le nom de famille à douze, le tweet de trois heures, l'hymne qu'elle ne chante pas, l'ONG qui compte, et la Succession où elle prend ta suite ou la refuse. · **Synopsis** : Six ans, le zoo promis, le stade à la place. Douze ans, elle t'appelle par ton nom de famille. Président, tu as tweeté à trois heures ; elle l'a lu. Sélectionneur, elle ne chante pas l'hymne devant Vence. Instance, elle est dans l'ONG qui compte les ouvriers du Mondial que tu as attribué. À dix-huit ans, la Succession.
 **Rôle(s)** : tous · **Postulat(s)** : partagé · **Porteur** : sacha · **Cast** : sacha, camille, paulette, gege, dembo, vence, nassir · **Thème** : famille
 **Saisons** : une carte par saison à partir de `chars.sacha.age >= 6` ; jamais en S0 d'une carrière (elle naît en S1+) · **Conditions d'entrée** : `flag('sacha_nee')` ; `!flag('divorce')` sauf nom_de_famille et heritiere · **Exclusions** : — · **Rejouabilité** : jamais
-**Issues** → **Traces** → **Qui les lit** : `promesse_tenue` → `sacha_promesse_tenue` (« {annee} : {prenom} {nom} a tenu une promesse à Sacha. Une ; elle a compté. ») → lue par 90 (lignée : trait hérité « tient parole »), 30 (`grand_deballage` plus : « sauf une, à Sacha ») · `nom` → `sacha_nom` (« {annee} : Sacha a appelé {prenom} {nom} par son nom de famille. Une fois. ») → lue par 90 (Sacha à −1 : Succession refusée), 04 (Camille : téléphone) · `hymne` → `sacha_hymne_muette` (« {annee} : Sacha n'a pas chanté l'hymne. Vence a filmé ; le sélectionneur a expliqué / n'a pas expliqué. ») → lue par 14 (`hymne_impose`), 13 (Dembo), 20 · `ong` → `sacha_ong` (« {annee} : Sacha compte les ouvriers des chantiers du Mondial. Elle a envoyé les chiffres à la FédéMonde ; son père/sa mère y siège. ») → lue par 15 (les ouvriers des chantiers : dossier), 02 (Nassir, Bambini), 20 · `heritiere` → `sacha_heritiere` / `sacha_refus` → lue par 90 (Succession, « Trois générations »), 30 (écran de fin)
+**Issues** → **Traces** → **Qui les lit** : `promesse_tenue` → `sacha_promesse_tenue` (« {annee} : {prenom} {nom} a tenu une promesse à Sacha. Une ; elle a compté. ») → lue par 90 (lignée : trait hérité « tient parole »), 30 (`grand_deballage` plus : « sauf une, à Sacha ») · `nom` → `sacha_nom` (« {annee} : Sacha a appelé {prenom} {nom} par son nom de famille. Une fois. ») → lue par 90 (Sacha à −1 : Succession refusée), 04 (Camille : téléphone) · `hymne` → `sacha_hymne_muette` (« {annee} : Sacha n'a pas chanté l'hymne. Vence a filmé ; le sélectionneur a expliqué / n'a pas expliqué. ») → lue par 14 (`hymne_impose`), 13 (Dembo), 20 · `ong` → `sacha_ong` (« {annee} : Sacha compte les ouvriers des chantiers du Mondial. Elle a envoyé les chiffres à la FédéMonde ; son père/sa mère y siège. ») → lue par 15 (les ouvriers des chantiers : dossier), 02 (Ilyas, Bambini), 20 · `heritiere` → `sacha_heritiere` / `sacha_refus` → lue par 90 (Succession, « Trois générations »), 30 (écran de fin)
 **Séquencier** : six_ans (âge 6) → nom_de_famille (âge 12, ou relation ≤ −1) → trois_heures (président, `flag('monde_flux')`, âge ≥ 10) → hymne (sélectionneur, âge ≥ 8) → ong (instance, âge ≥ 25) → heritiere (Succession, âge 18-22)
 **Épilogue** : rien : Sacha suit la vie.
 
@@ -2652,8 +2616,8 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 **SACHA** *(six ans — neutre — elle tient un ticket de zoo découpé dans L'Écho)*
 « Tu m'as promis le zoo, dimanche, c'est écrit dans le journal, c'est dimanche. Le stade, c'est où tu cries ; le zoo, c'est où on regarde. »
 ← **Le zoo, la vidéo attendra** — effets : force −1, vestiaire −, relation.sacha +2, relation.camille +1, set: sacha_promesse_tenue, outcome: promesse_tenue — *Le zoo. Elle regarde les singes ; tu regardes ta montre ; elle le voit ; elle ne dit rien ; elle a six ans, elle note déjà.*
-→ **Le stade a des animaux aussi** — effets : force +1, tribunes +, relation.sacha −2, set: sacha_promesse_rompue — *Le stade. Elle regarde la tribune vide. Camille regarde le zoo fermer, depuis la voiture. Le lendemain, Sacha dit « tu m'as promis » ; c'est la première fois.*
-**Traces** : sacha_promesse_tenue, sacha_promesse_rompue (« {annee} : le zoo était promis. {prenom} {nom} a choisi le stade ; Sacha a regardé la tribune vide. ») · **Réactions déclenchées** : co.re.camille_journal (existant, variante « elle a découpé le ticket ») · **Lu plus tard par** : 90 (lignée : trait), 30 (`grand_deballage` plus), 04 (Camille : `co.camille.tribune_vide` exclusion si déjà jouée)
+→ **Le stade a des animaux aussi** — effets : force +1, tribunes +, relation.sacha −2, set: sacha_promesse_rompue — *Le stade. Le lendemain, Sacha dit « tu m'as promis » ; c'est la première fois.*
+**Traces** : sacha_promesse_tenue, sacha_promesse_rompue (« {annee} : le zoo était promis. {prenom} {nom} a choisi le stade ; Sacha a regardé la tribune vide. ») · **Réactions déclenchées** : co.re.camille_journal (existant, variante « elle a découpé le ticket ») · **Lu plus tard par** : 90 (lignée : trait), 30 (`grand_deballage` plus), § 4 (Camille : `co.camille.tribune_vide` exclusion si déjà jouée)
 
 ### SCÈNE co.sacha.nom_de_famille  —  Le nom de famille
 **Rôle** : tous · **Intrigue** : co.sacha_promis · **Étape** : 2/6 · **Moment** : la saison de ses douze ans, ou dès que `relation.sacha <= -1`, [2,12] · **Lieu** : la cuisine, la lettre de 1989 sur la table si `camille_metier` n'a pas été joué, sinon un bulletin scolaire · **Conditions** : `chars.sacha.age >= 12`
@@ -2661,21 +2625,21 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 « {nom}, tu es rentré à minuit trois fois cette semaine, j'ai compté ; maman ne compte plus, moi si. Tu m'as promis, ou tu n'as rien promis, dis-moi lequel. »
 ← **Je n'ai rien promis, pardon** — effets : relation.sacha +1, relation.camille +1, vestiaire −, set: sacha_nom — *Elle hoche la tête. Elle dit « papa » ou « maman » le lendemain. Elle a gardé le nom de famille pour une autre fois ; elle sait maintenant qu'il marche.*
 → **J'ai promis juin, on y est** — effets : relation.sacha −2, direction +, parole +1, promise, set: sacha_nom, set: sacha_promesse_juin — *Elle dit « juin ». Elle compte. En juin, tu as un Bilan ; elle a un bulletin ; personne ne lit le bulletin.*
-**Traces** : sacha_nom, sacha_promesse_juin (« {annee} : {prenom} {nom} a promis juin à Sacha. En juin, il y avait un Bilan. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (Sacha à −1 : Succession refusée), 04 (`co.retrouvailles.camille_telephone`), 30 (`grand_deballage` : « page douze : Sacha, juin »)
+**Traces** : sacha_nom, sacha_promesse_juin (« {annee} : {prenom} {nom} a promis juin à Sacha. En juin, il y avait un Bilan. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (Sacha à −1 : Succession refusée), § 4 (`co.retrouvailles.camille_telephone`), 30 (`grand_deballage` : « page douze : Sacha, juin »)
 
 ### SCÈNE pr.sacha.trois_heures  —  Trois heures du matin
 **Rôle** : president, instance · **Intrigue** : co.sacha_promis · **Étape** : 3/6 · **Moment** : `flag('monde_flux') && chars.sacha.age >= 10`, [2,10], après un tweet de 3 h (Nouvelle ou alarme) · **Lieu** : la cuisine, sept heures, son téléphone tendu, ton message dessus · **Conditions** : —
 **SACHA** *(dix à quinze ans — noir — elle lit ton message à voix haute, avec la faute)*
 « Tu as tweeté à trois heures que l'arbitre était un vendu, avec une faute à « vendu » ; tout le collège l'a lu avant moi. Tu m'as promis d'être un parent ; les parents dorment à trois heures. »
 ← **J'efface, et je m'excuse** — effets : direction −, tribunes −, relation.sacha +2, relation.colline +1, set: tweet_efface — *Tu effaces. Colline a une capture ; il ne la publie pas ; il te regarde. Sacha te rend le téléphone ; elle a changé ton mot de passe.*
-→ **L'arbitre était un vendu** — effets : tribunes ++, direction −−, relation.sacha −2, set: tweet_assume — *Le tweet reste. Vence le lit à l'antenne. Le collège le lit encore. Sacha ne va pas au collège le lendemain ; elle va au stade, tribune Est, seule, en 14A.*
-**Traces** : tweet_efface, tweet_assume (« {annee} : le tweet de trois heures. {prenom} {nom} a assumé ; Sacha a manqué le collège. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (« Papa, tu as tweeté » : ce chapitre l'écrit, 13 le lit dans la chaîne des 48 heures), 02 (Colline, Vence), 20 (« LE TWEET DE 3 H »), 30 (`pr_pantin` plus)
+→ **L'arbitre était un vendu** — effets : tribunes ++, direction −−, relation.sacha −2, set: tweet_assume — *Le tweet reste. Sacha ne va pas au collège le lendemain ; elle va au stade, tribune Est, seule, en 14A.*
+**Traces** : tweet_efface, tweet_assume (« {annee} : le tweet de trois heures. {prenom} {nom} a assumé ; Sacha a manqué le collège. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 13 (« Papa, tu as tweeté » : ce chapitre l'écrit, 13 le lit dans la chaîne des 60 heures), 02 (Colline, Vence), 20 (« LE TWEET DE 3 H »), 30 (`pr_pantin` plus)
 
 ### SCÈNE sl.sacha.hymne  —  L'hymne
 **Rôle** : selectionneur · **Intrigue** : co.sacha_promis · **Étape** : 4/6 · **Moment** : `chars.sacha.age >= 8`, la veille ou le jour d'un match des Cobalts à domicile · **Lieu** : la tribune présidentielle, Vence à trois mètres, la caméra sur les familles pendant l'hymne · **Conditions** : —
 **SACHA** *(huit à seize ans — neutre — la bouche fermée pendant l'hymne, elle te regarde, pas le drapeau)*
 « Je ne chante pas l'hymne, Dembo ne le chantait pas et il m'a dit pourquoi, et la caméra est sur moi. Tu m'as promis de ne pas m'expliquer à la télé ; tu tiens ? »
-← **Je tiens, je ne dis rien** — effets : tribunes −, direction −, relation.sacha +2, set: sacha_hymne_muette, outcome: hymne — *Vence demande. Tu dis « elle a huit ans ». C'est tout. Le pays trouve ça normal ; le pays a des enfants.*
+← **Je tiens, je ne dis rien** — effets : tribunes −, direction −, relation.sacha +2, set: sacha_hymne_muette, outcome: hymne — *Vence demande. Le pays trouve ça normal ; le pays a des enfants.*
 → **J'explique, ça calme** — effets : tribunes +, relation.sacha −2, relation.dembo −1, set: sacha_expliquee — *Tu expliques. Dembo l'apprend. Sacha ne te parle pas pendant le tournoi ; elle chante l'hymne d'un autre pays, exprès, devant la caméra.*
 **Traces** : sacha_hymne_muette, sacha_expliquee (« {annee} : le sélectionneur a expliqué à la télé pourquoi Sacha ne chantait pas. Elle a chanté un autre hymne, exprès. ») · **Réactions déclenchées** : co.re.sacha_hymne (§ 19.8, variante Dembo) · **Lu plus tard par** : 14 (`hymne_impose` variante), 13 (Dembo : `sl.dembo.hymne`), 02 (Vence), 20 (« LA FILLE DU SÉLECTIONNEUR NE CHANTE PAS »)
 
@@ -2683,9 +2647,9 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 **Rôle** : instance · **Intrigue** : co.sacha_promis · **Étape** : 5/6 · **Moment** : `chars.sacha.age >= 25`, un dossier de l'année (les ouvriers des chantiers) · **Lieu** : le hall de l'hôtel du Lac, elle a un badge d'ONG, pas d'invitation · **Conditions** : `flag('mondial_desert') || year >= 2020`
 **SACHA** *(vingt-cinq ans et plus — neutre — un dossier de chiffres, un par ouvrier)*
 « On a compté les ouvriers du Mondial que tu as voté, {prenom} ; il en manque, et j'ai les noms, pas les chiffres, les noms. Tu m'as promis un parent, pas un dirigeant ; lequel lit le dossier ? »
-← **Le parent, je lis ce soir** — effets : direction −−, tribunes ++, parole +1, relation.sacha +2, relation.nassir −2, relation.bambini −1, set: sacha_ong, outcome: ong — *Tu lis. Tu poses le dossier sur la table du comité. Bambini est « choqué ». Nassir dit que ce n'est pas un chantier, c'est un actif. Sacha attend dans le hall ; elle a le temps, comme Amsel.*
-→ **Le dirigeant : la commission** — effets : direction ++, tribunes −−, relation.sacha −2, set: sacha_ong, set: ong_ecartee — *La commission examine. Salle 3, version continentale. Sacha publie les noms sur le Flux, sous le tien. Elle signe de son nom, l'autre.*
-**Traces** : sacha_ong, ong_ecartee (« {annee} : Sacha a publié les noms des ouvriers manquants. Sous le nom de {nom} ; signé de l'autre. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (dossier « les ouvriers des chantiers », `lanceur_alerte` variante), 02 (Nassir, Bambini, Amsel : « votre fille a les noms »), 20 (« LES NOMS »), 90 (lignée : Nemesis de sang)
+← **Le parent, je lis ce soir** — effets : direction −−, tribunes ++, parole +1, relation.sacha +2, relation.nassir −2, relation.bambini −1, set: sacha_ong, outcome: ong — *Tu lis. Sacha attend dans le hall ; elle a le temps, comme Amsel.*
+→ **Le dirigeant : la commission** — effets : direction ++, tribunes −−, relation.sacha −2, set: sacha_ong, set: ong_ecartee — *La commission examine. Elle signe de son nom, l'autre.*
+**Traces** : sacha_ong, ong_ecartee (« {annee} : Sacha a publié les noms des ouvriers manquants. Sous le nom de {nom} ; signé de l'autre. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (dossier « les ouvriers des chantiers », `lanceur_alerte` variante), 02 (Ilyas, Bambini, Amsel : « votre fille a les noms »), 20 (« LES NOMS »), 90 (lignée : Nemesis de sang)
 
 ### SCÈNE co.sacha.heritiere  —  L'héritière
 **Rôle** : tous (Succession) · **Intrigue** : co.sacha_promis · **Étape** : 6/6 · **Moment** : après l'Épitaphe, à la Succession, si `chars.sacha.age in 18..22` · **Lieu** : l'écran de Succession, trois cartes face cachée, la troisième a son visage · **Conditions** : `flag('sacha_nee') && relation.sacha >= 0` (à −1 : variante `_refus`, une sortie)
@@ -2703,7 +2667,7 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 « J'ai pris le nom de maman à la mairie ce matin, c'est fait, c'est légal, et le stade ne chantera pas celui-là. Tu n'as rien promis, {nom} ; c'est pire, et c'est fini. »
 ← **Je signe la copie** — effets : tribunes −, vestiaire −, set: sacha_autre_nom, set: sacha_refus — *Tu signes. Gégé l'apprend. La tribune n'oublie rien ; elle chante ton nom sans la suite.*
 → **Je signe la copie** — effets : tribunes −, vestiaire −, set: sacha_autre_nom, set: sacha_refus — *Tu signes. Gégé l'apprend. La tribune n'oublie rien ; elle chante ton nom sans la suite.*
-**Traces** : sacha_autre_nom (« {annee} : Sacha a changé de nom. La tribune a chanté celui de {nom}, sans la suite. ») · **Lu plus tard par** : 90 (Succession : pas d'héritière ; Nemesis de sang si elle monte dans le graphe), 30 (écran de fin), 04 (Camille)
+**Traces** : sacha_autre_nom (« {annee} : Sacha a changé de nom. La tribune a chanté celui de {nom}, sans la suite. ») · **Lu plus tard par** : 90 (Succession : pas d'héritière ; Nemesis de sang si elle monte dans le graphe), 30 (écran de fin), § 4 (Camille)
 
 ### SCÈNE co.sacha.faveur_tribune_pleine  —  La tribune pleine
 **Rôle** : tous · **Intrigue** : palier +3 · **Étape** : on_relation +3 · **Moment** : programmé en [1,3] · **Lieu** : la tribune Est, un mardi d'entraînement ouvert, la 14A, la 14B, et Camille en 14C · **Conditions** : `relation.sacha >= 3`, une fois par carrière
@@ -2711,23 +2675,21 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 « J'ai rempli la tribune, {prenom} : moi en 14A, l'orange en 14B, maman en 14C, et Gégé qui chante tout seul en Nord. Je te promets, moi : on sera là en juin, et tu monteras l'escalier. »
 ← **Je monte, maintenant** — effets : vestiaire −, tribunes ++, relation.sacha +1, relation.camille +1, set: tribune_pleine_sacha — *Quarante-deux marches. Elle les compte à voix haute. Camille ne dit pas à quelle heure ; elle sait : maintenant.*
 → **Après la séance, je promets** — effets : force +1, relation.sacha −1, parole +1, promise — *Après la séance, il reste Camille et l'orange. Sacha est partie chercher Gégé ; elle l'a trouvé ; il chante pour elle.*
-**Traces** : tribune_pleine_sacha (« {annee} : Sacha a rempli la tribune Est : trois sièges. {prenom} {nom} a monté les quarante-deux marches. ») · **Lu plus tard par** : 90 (lignée : Succession acceptée d'office si `tribune_pleine_sacha`), 30 (`en_retraite` plus : « Sacha a le banc d'à côté »), 04 (Camille : `co.retrouvailles.camille_sourire` variante)
+**Traces** : tribune_pleine_sacha (« {annee} : Sacha a rempli la tribune Est : trois sièges. {prenom} {nom} a monté les quarante-deux marches. ») · **Lu plus tard par** : 90 (lignée : Succession acceptée d'office si `tribune_pleine_sacha`), 30 (`en_retraite` plus : « Sacha a le banc d'à côté »), § 4 (Camille : `co.retrouvailles.camille_sourire` variante)
 
 ### 19.6 Les retrouvailles
 ### SCÈNE co.retrouvailles.sacha_sourire  —  Les marches
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation, `chars.sacha.age >= 6` · **Conditions** : parmi les deux meilleures relations · **Lieu** : l'escalier de la tribune du nouveau stade
 **SACHA** *(tout âge — sourire — elle a compté les marches du nouveau stade)*
 « Trente-six marches ici, c'est moins qu'à {ville}, tu n'as plus d'excuse. Tu m'as promis ; je te le rappelle avant que tu oublies, pas après. »
-← **Trente-six, je monte** — effets : relation.sacha +1, vestiaire − — *Tu montes. Elle est en haut. Elle t'a gardé une place ; elle a demandé le numéro 14 ; il n'existe pas ici ; elle l'a écrit au marqueur.*
-→ **Après, Sacha** — effets : relation.sacha −1, force +1 — *Après. Elle attend. Elle a l'habitude ; elle a un livre. Camille lui a donné celui de 1989.*
+**OK** **Trente-six, je monte** — effets : relation.sacha +1, vestiaire − — *Tu montes. Elle est en haut. Elle t'a gardé une place ; elle a demandé le numéro 14 ; il n'existe pas ici ; elle l'a écrit au marqueur.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.sacha_noir  —  Le nom
 **Rôle** : tous · **Intrigue** : retrouvailles · **Moment** : [2,6] après Passation, `chars.sacha.age >= 6` · **Conditions** : parmi les pires relations · **Lieu** : ton téléphone, le répondeur
 **SACHA** *(tout âge — noir — elle n'est pas venue ; c'est un message sur le répondeur, ou un fax si `year < 2007`)*
 « {nom}, tu as changé de club, et tu ne m'as pas demandé si je changeais d'école ; maman a demandé. Tu m'as promis un parent ; tu as un club. »
-← **Je rappelle ce soir** — effets : relation.sacha +1, vestiaire − — *Tu rappelles. Elle décroche à la sixième sonnerie ; elle a compté ; elle compte tout.*
-→ **Je rappelle après le match** — effets : relation.sacha −1, direction + — *Tu rappelles après. Elle a changé d'école ; Camille a choisi ; c'est une bonne école ; ce n'est pas la question.*
+**OK** **Je rappelle ce soir** — effets : relation.sacha +1, vestiaire − — *Tu rappelles. Elle décroche à la sixième sonnerie ; elle a compté ; elle compte tout.*
 **Traces** : — · **Réactions déclenchées** : — · **Lu plus tard par** : 90 (retrouvailles : harmonisation des deux répliques par personnage à statut)
 
 ### SCÈNE co.retrouvailles.sacha_succession  —  Trois générations
@@ -2755,8 +2717,8 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 ### RÉACTION co.re.sacha_seau  —  Pourquoi le banc est loin
 **Après** : co.loco.profesor (← montrez-la-moi) · **Famille** : tiers qui commente · **Conditions** : `flag('sacha_nee') && chars.sacha.age >= 10`
 **SACHA** *(dix ans et plus — sourire — elle est venue chercher le seau, sans le prendre)*
-« J'ai demandé à monsieur Loco pourquoi le banc était loin, il a souri, il n'a pas répondu ; toi, tu le sais maintenant. Tu m'as promis de ne pas mentir : c'est loin pourquoi ? »
-**Un bouton** : **Douze mètres, soixante-sept** — effets : relation.sacha +1, relation.loco +1 — *Elle compte les mètres. Douze. Elle s'assoit sur le seau. Loco la regarde depuis la haie ; il n'y a pas de caméra ; il sourit.*
+« J'ai demandé à monsieur Vaz pourquoi le banc était loin, il a souri, il n'a pas répondu ; toi, tu le sais maintenant. Tu m'as promis de ne pas mentir : c'est loin pourquoi ? »
+**Un bouton** : **Douze mètres, soixante-sept** — effets : relation.sacha +1, relation.loco +1 — *Elle compte les mètres. Vaz la regarde depuis la haie ; il n'y a pas de caméra ; il sourit.*
 
 ---
 
@@ -2784,7 +2746,7 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 
 ### 20.2 Ce que le chapitre pose et qui doit le lire
 
-Trois familles. **Les traces transversales de la charte** que ce chapitre pose ou repose : `sacha_nee` (co.camille.naissance ; la carte `jp.famille.naissance` existante doit la poser aussi : remarque pour 10 et le chantier données), `divorce` (existant), `mbako_vendu` (palier −3), `ami_ultras` (jp.gege.numero), `onze_du_virage` (pr.gege.socios), `pharmacie_propre` (paliers +3 de Sabatier et Rouvier), `diplome` et `diplome_arrange` et `derogation` (Brissac), `tribune_a_renover` / `tribune_fermee` (Paulette), `bus_descendu` et `mutinerie_matee` (Fauvel +3), `hymne_impose` et `binational_bloque` (Dembo, Brissac), `coach_vire` (Klopf), `dembo_vendu` (Rouvier, Dembo), `gerard_parti` (Gérard −3), `infiltre` / `genou_ecoute` (Rouvier). **Les objets héritables** (Dossier, chapitre 90 : un seul objet actif par carrière, à trancher) : `cahier_vukic` (via `vukic_fidele`), `telegramme_clow`, `filet_gigi`, `seau_loco`, `casquette_klopf`, `sifflet_kine`, `sifflet_dede`, `ballon_dembo`, `echarpe_paulette`, `echarpe_gege`, `table_du_doc`, `cassette_1967`. **Les traces propres**, toutes lues au moins une fois par une autre fiche de ce chapitre ou par un chapitre nommé dans « Lu plus tard par » ; les plus structurantes, à inscrire au chapitre 90 :
+Trois familles. **Les traces transversales de la charte** que ce chapitre pose ou repose : `sacha_nee` (co.camille.naissance ; la carte `jp.famille.naissance` existante doit la poser aussi : remarque pour 10 et le chantier données), `divorce` (existant), `mbako_vendu` (palier −3), `ami_ultras` (jp.gege.numero), `onze_du_virage` (pr.gege.socios), `pharmacie_propre` (paliers +3 de Sabatier et Rouvier), `diplome` et `diplome_arrange` et `derogation` (Brissac), `tribune_a_renover` / `tribune_fermee` (Paulette), `bus_descendu` et `mutinerie_matee` (Fauvel +3), `hymne_impose` et `binational_bloque` (Dembo, Brissac), `coach_vire` (Vogler), `dembo_vendu` (Rouvier, Dembo), `gerard_parti` (Gérard −3), `infiltre` / `genou_ecoute` (Rouvier). **Les objets héritables** (Dossier, chapitre 90 : un seul objet actif par carrière, à trancher) : `cahier_vukic` (via `vukic_fidele`), `telegramme_clow`, `filet_gigi`, `seau_loco`, `casquette_klopf`, `sifflet_kine`, `sifflet_dede`, `ballon_dembo`, `echarpe_paulette`, `echarpe_gege`, `table_du_doc`, `cassette_1967`. **Les traces propres**, toutes lues au moins une fois par une autre fiche de ce chapitre ou par un chapitre nommé dans « Lu plus tard par » ; les plus structurantes, à inscrire au chapitre 90 :
 
 | Trace | Posée par | Lecteurs désignés |
 |---|---|---|
@@ -2834,21 +2796,21 @@ Lignes d'Almanach : chaque trace de ce chapitre porte sa ligne dans la scène qu
 | co.paulette_14b · Place 14B | paulette | tous | tribune | 6 + 2 + 3 |
 | co.sacha_promis · Tu m'as promis | sacha | tous | famille | 6 + 2 + 3 |
 
-Ratio léger / stratégique / drame à l'échelle du chapitre : les drames sont sobres et isolés (l'enterrement de Clow, la minute de Gigi, la soixante-dixième de Paulette, l'enterrement de Dédé : quatre scènes à une sortie, aucune en S0, aucune partageable en Une) ; environ un tiers des scènes sont de thème `absurde` ou `famille` (Loco, Gérard, Dédé, Sacha, les casquettes, le bateau de pêche).
+Ratio léger / stratégique / drame à l'échelle du chapitre : les drames sont sobres et isolés (l'enterrement de Corven, la minute de Gigi, la soixante-dixième de Paulette, l'enterrement de Dédé : quatre scènes à une sortie, aucune en S0, aucune partageable en Une) ; environ un tiers des scènes sont de thème `absurde` ou `famille` (Vaz, Gérard, Dédé, Sacha, les casquettes, le bateau de pêche).
 
 ### 20.4 Questions ouvertes (pour le showrunner et le chapitre 90)
 
 1. **Troisième retrouvailles.** La spec § 1.13 ne prévoit que `_sourire` et `_noir` ; ce chapitre en ajoute une par personnage (`_telephone`, `_enterrement`, `_fantome`, `_banc_en_face`, `_carnet`, `_cassette`, `_tapis`, `_corbeaux`, `_hymne`, `_cabinet`, `_carte_postale`, `_place_vide`, `_succession`, `_cousin`). Elles sont servies une fois par carrière sur un statut (`retraite`, `mort`, `rival`) et non à la Passation ; le moteur doit accepter un troisième id dans `retrouvailles:` ou les traiter comme des cartes de rôle `once` à condition de statut. À trancher.
-2. **`statut: mort`.** La spec ne liste que `club | staff | parti | vendu | retraite | rival`. Ce chapitre suppose un statut `mort` (Clow, Vecchio 2031, Paulette 2009, Dédé 2012, Sabatier 2029, Brissac 2036, Mère de Mbako 2041, Gérard 2019, Fauvel 2045, Dembo 2046, Loco 2039, Vukić 2038, Bréhaut 2044, Gégé 2040, Klopf 2047, Mbako 2049) et une relation posthume (« +1 (posthume) ») qui n'affecte que la mémoire des clubs et le Panthéon. Le chapitre 31 écrit les Nouvelles de décès ; le chapitre 90 décide si `mort` est un statut ou `parti` + une trace `<id>_mort`.
+2. **`statut: mort`.** La spec ne liste que `club | staff | parti | vendu | retraite | rival`. Ce chapitre suppose un statut `mort` (Corven, Vecchio 2031, Paulette 2009, Dédé 2012, Sabatier 2029, Brissac 2036, Mère de Mbako 2041, Gérard 2019, Fauvel 2045, Dembo 2046, Vaz 2039, Vukić 2038, Bréhaut 2044, Gégé 2040, Vogler 2047, Mbako 2049) et une relation posthume (« +1 (posthume) ») qui n'affecte que la mémoire des clubs et le Panthéon. Le chapitre 31 écrit les Nouvelles de décès ; le chapitre 90 décide si `mort` est un statut ou `parti` + une trace `<id>_mort`.
 3. **Colline dans `co.vecchio.minute`.** Colline est un personnage du chapitre 02 (camp `instances`, responsable de l'arbitrage à la Fédération dès 2008 : il a 75 ans en 2031 et ne siffle plus) ; il parle ici comme voix sans portrait et fait ajouter la minute par l'arbitre du jour. Le chapitre 02 lui donne un portrait : la scène le prend tel quel.
-4. **Le fils de Clow, Momo, Nino, Bébert, Marinette, la petite Paulette, la petite Josiane, la docteure Ferrand, Ilan Sorel, Noa Vandel, Bastien Lorrain, Aurèle Castan** : voix sans portrait dans ce chapitre (deux cartes au plus chacune, pas de relation), conformément à § 2.3 ; le chapitre 90 décide lesquels deviennent des personnages à statut (candidats : Noa Vandel, le prodige d'après ; Nino, le capo d'après ; Owen Clow).
+4. **Le fils de Corven, Momo, Nino, Bébert, Marinette, la petite Paulette, la petite Josiane, la docteure Ferrand, Ilan Sorel, Noa Vandel, Bastien Lorrain, Aurèle Castan** : voix sans portrait dans ce chapitre (deux cartes au plus chacune, pas de relation), conformément à § 2.3 ; le chapitre 90 décide lesquels deviennent des personnages à statut (candidats : Noa Vandel, le prodige d'après ; Nino, le capo d'après ; Owen Corven).
 5. **`jp.famille.naissance` (existante)** pose `jeune_papa` mais pas `sacha_nee` : à ajouter par le chantier données pour que Sacha existe aussi dans une carrière commencée joueur.
 6. **Les objets héritables** (douze dans ce chapitre) : le Dossier n'en porte qu'un ; le chapitre 90 fixe la règle de choix (le dernier reçu, ou un choix à la Succession).
 7. **Deux sifflets** (Rouvier, Dédé) : ce sont deux objets distincts (`sifflet_kine`, `sifflet_dede`) ; la réaction de Rouvier « deux sifflets, un seul kiné » est à écrire par 12 si les deux coexistent.
 8. **`pr.gerard.trahison_caisse`** double `en.evt.gerard` (existante, entraîneur) côté président amateur ; le chapitre 13 harmonise (une seule pose de `gerard_parti` par carrière).
 9. **Espaces d'ids** : les scènes de ce chapitre vivent dans `co.<id>.*` et `<préfixe>.<id>.*` (`en.vukic.*`, `jp.vecchio.*`, `en.mbako.*`…). Les chapitres 10-15 ont, depuis, écrit leurs propres scènes dans les mêmes espaces (`jp.mbako.contre_toi`, `jp.gege.petit`, `pr.gerard.tombola`, `pr.gege.centre`, `jp.dembo.yacht`…) : l'espace est donc **partagé**, pas réservé ; aucun id n'y est défini deux fois avec deux contenus (vérifié sur 02 et 10-14 : ils citent les scènes de ce chapitre par leur id exact et n'en redéfinissent aucune). Le chapitre 90 tient l'index unique des ids ; toute collision future se règle en suffixant la scène la plus récente.
 10. **Réactions citées à écrire ailleurs** : `co.re.barbier_doudoune` (citée ici et au chapitre 10 ; le chapitre 02 ne l'a pas écrite : à écrire par 02 ou par 10 dans la fiche Barbier, « Je l'ai vu jouer sous la pluie. À cinquante ans. »), `en.rouvier.commando_blesses` (11, chaîne), `en.re.camille_le_verre` variante joueur (11 ; la réaction existe dans `content/`), `en.re.gege_jumelles` (11).
-11. **Harmonisation avec le chapitre 02** (écrit après ce chapitre, relu ici en retour) : les décès et mandats que 02 fixe sont repris : Fardelli meurt en 2032 (la cassette de 1967, en 2039, est remise par Solvang, qui a repris son carnet en 2018) ; Vence prend sa retraite en 2035 (l'hymne de 2045 est commenté par « la remplaçante de Vence », voix sans portrait) ; Léa quitte Le Quotidien en 2035 (en 2041, elle édite le carnet de la mère de Mbako en retraitée) ; Bréhaut préside la Ligue 2020-2028 et la Fédération 2028-2036 « par défaut », Mbako la Fédération 2036-2044 « par défaut » : les deux fiches le disent désormais, sans rien changer à la buvette du samedi ni à la statue ; Aulard meurt en 2026, Josiane en 2041, Pichon en 2019, Roux en 2014, Barbier en 2021 : aucune scène de ce chapitre ne les fait parler après. Rossard (`rossard`, sélectionneur 1986-1994, créé par 02) est le sélectionneur que Vence a fait pleurer en 1990 et celui dont Fauvel a raté le tir au but : la fiche Fauvel ne le nomme pas, elle le laisse à 02. Les retrouvailles de Josiane, Fardelli et Ménèche (02) suivent la même mécanique que celles d'ici ([2,6] après Passation, deux meilleures / pires relations, deux phrases, un tic, un nom une fois) : vérifié, rien à harmoniser côté 01.
+11. **Harmonisation avec le chapitre 02** (écrit après ce chapitre, relu ici en retour) : les décès et mandats que 02 fixe sont repris : Fardelli meurt en 2032 (la cassette de 1967, en 2039, est remise par Solvang, qui a repris son carnet en 2018) ; Vence prend sa retraite en 2035 (l'hymne de 2045 est commenté par « la remplaçante de Vence », voix sans portrait) ; Léa quitte Le Quotidien en 2035 (en 2041, elle édite le carnet de la mère de Mbako en retraitée) ; Bréhaut préside la Ligue 2020-2028 et la Fédération 2028-2036 « par défaut », Mbako la Fédération 2036-2044 « par défaut » : les deux fiches le disent désormais, sans rien changer à la buvette du samedi ni à la statue ; Vaubourg meurt en 2020, Josiane en 2041, Pichon en 2019, Roux en 2014, Barbier en 2021 : aucune scène de ce chapitre ne les fait parler après. Rossard (`rossard`, sélectionneur 1986-1994, créé par 02) est le sélectionneur que Vence a fait pleurer en 1990 et celui dont Fauvel a raté le tir au but : la fiche Fauvel ne le nomme pas, elle le laisse à 02. Les retrouvailles de Josiane, Fardelli et Massenet (02) suivent la même mécanique que celles d'ici ([2,6] après Passation, deux meilleures / pires relations, deux phrases, un tic, un nom une fois) : vérifié, rien à harmoniser côté 01.
 
 ### 20.5 Relecture (seconde passe)
 
@@ -2857,7 +2819,7 @@ Vérifications mécaniques faites sur les 230 blocs (216 scènes, 14 réactions)
 ### 20.6 Check-list du chapitre (§ 6.2 de la charte)
 
 - [x] 19 fiches au gabarit § 4.2, avec fenêtre et suivant ; adresse dans les huit rôles (§ 0.1) ; cinq registres × deux répliques.
-- [x] 38 scènes de palier (dont les existantes citées et les variantes de rôle ajoutées : Gégé joueur/président, Mbako sélectionneur, Camille médecin/agente).
+- [x] **38 scènes de palier**, et le compte tombe juste : **36 écrites ici** au gabarit § 4.1 (32 `co.<id>.trahison|faveur_*` partagées, plus 4 variantes de rôle : Gégé joueur et président, Mbako sélectionneur, Camille médecin et agente), **plus 6 ∃ citées et jamais réécrites** parce qu'elles existent déjà dans `content/` (`en.gege.trahison_banderole`, `en.gege.faveur_insurrection`, `co.camille.dispute`, `co.camille.chambre_amis`, `co.camille.valise`, `co.camille.secours`). Les fiches Gégé et Camille portent la mention **∃** sur leur ligne **Paliers** : c'est ce qui manquait pour que le chapitre 90 puisse fermer la matrice.
 - [x] 57 scènes de retrouvailles (deux au gabarit spec + une troisième hors gabarit par fiche).
 - [x] 121 scènes propres (six par fiche, plus des variantes de rôle et deux compléments), 14 réactions au gabarit § 4.4, 95 anecdotes au gabarit § 4.9 ; 216 scènes en tout.
 - [x] Répliques ≤ 200 caractères, deux phrases, un tic, un nom une fois ; libellés ≤ 28, première personne, sans « Oui / Non », sans le nom du joueur ; effets en notation § 4.11 ; conséquences sans explication.
@@ -2868,4 +2830,4 @@ Vérifications mécaniques faites sur les 230 blocs (216 scènes, 14 réactions)
 
 ### 20.7 Relecture (troisième passe, après le chapitre 02)
 
-Passe mécanique sur les 230 blocs, gabarit § 4.1 champ par champ. Harmonisés à cette passe : les **paliers** portent tous la même ligne d'en-tête (`**Intrigue** : palier ±3 · **Étape** : on_relation ±3 · **Moment** : programmé en [1,3] · **Lieu** · **Conditions** : relation.<id> ≤ −3 ou ≥ 3, une fois par carrière`), y compris les deux secours de Camille (qui lisent en plus `camille_medecin` / `camille_agente`) ; les **retrouvailles** portent toutes `**Intrigue** : retrouvailles` et un **Lieu**, et une ligne **Traces** (« — » quand elles ne posent rien ; l'objet héritable quand elles en donnent un : `echarpe_gege`, `cassette_1967`, `cahier_brissac`, `mot_gerard`, `trois_generations`, chacun avec sa ligne d'Almanach et son lecteur au chapitre 90). Corrigés : un nom cité deux fois dans une réplique (`co.retrouvailles.mere_mbako_noir` : « vous aurez « mon ami » ») ; trois objets d'époque sans borne d'année (le fax de `co.camille.telephone` devient « le mot arrive au secrétariat » ; les fax de `sl.brissac.binational` deviennent des courriers ; `sl.fauvel.avion` reçoit `year <= 2008`, la durée du mandat de Legruet) ; trois locuteurs hors fenêtre après les décès et retraites fixés par le chapitre 02 (Solvang à la place de Fardelli en 2039, « la remplaçante de Vence » en 2045, Léa retraitée en 2041) ; les fiches Bréhaut et Mbako reprennent les mandats « par défaut » de la table de 02 (§ 20.4, point 11). Deux notations d'effet hors § 4.11 sont conservées parce que les cartes existantes de `content/` les emploient déjà : `rand:` (`en_vestiaire.yaml`, `en_mercato.yaml`) dans `jp.dembo.penalty`, et `var:` (`arc_vieux_gardien.yaml`, `arc_clow_presse.yaml` : `no_comment`) dans `co.mbako.trahison_clause`. Longueur : le chapitre dépasse la cible du chantier parce que les minima de la charte (dix-neuf fiches, trente-huit paliers, cinquante-sept retrouvailles, six scènes propres et cinq anecdotes par fiche) l'imposent ; rien n'y est écrit deux fois.
+Passe mécanique sur les 230 blocs, gabarit § 4.1 champ par champ. Harmonisés à cette passe : les **paliers** portent tous la même ligne d'en-tête (`**Intrigue** : palier ±3 · **Étape** : on_relation ±3 · **Moment** : programmé en [1,3] · **Lieu** · **Conditions** : relation.<id> ≤ −3 ou ≥ 3, une fois par carrière`), y compris les deux secours de Camille (qui lisent en plus `camille_medecin` / `camille_agente`) ; les **retrouvailles** portent toutes `**Intrigue** : retrouvailles` et un **Lieu**, et une ligne **Traces** (« — » quand elles ne posent rien ; l'objet héritable quand elles en donnent un : `echarpe_gege`, `cassette_1967`, `cahier_brissac`, `mot_gerard`, `trois_generations`, chacun avec sa ligne d'Almanach et son lecteur au chapitre 90). Corrigés : un nom cité deux fois dans une réplique (`co.retrouvailles.mere_mbako_noir` : « vous aurez « mon ami » ») ; trois objets d'époque sans borne d'année (le fax de `co.camille.telephone` devient « le mot arrive au secrétariat » ; les fax de `sl.brissac.binational` deviennent des courriers ; `sl.fauvel.avion` reçoit `year <= 2008`, la durée du mandat de Berthomier) ; trois locuteurs hors fenêtre après les décès et retraites fixés par le chapitre 02 (Solvang à la place de Fardelli en 2039, « la remplaçante de Vence » en 2045, Léa retraitée en 2041) ; les fiches Bréhaut et Mbako reprennent les mandats « par défaut » de la table de 02 (§ 20.4, point 11). Deux notations d'effet hors § 4.11 sont conservées parce que les cartes existantes de `content/` les emploient déjà : `rand:` (`en_vestiaire.yaml`, `en_mercato.yaml`) dans `jp.dembo.penalty`, et `var:` (`arc_vieux_gardien.yaml`, `arc_clow_presse.yaml` : `no_comment`) dans `co.mbako.trahison_clause`. Longueur : le chapitre dépasse la cible du chantier parce que les minima de la charte (dix-neuf fiches, trente-huit paliers, cinquante-sept retrouvailles, six scènes propres et cinq anecdotes par fiche) l'imposent ; rien n'y est écrit deux fois.
