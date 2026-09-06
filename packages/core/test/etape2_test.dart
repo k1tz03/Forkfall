@@ -425,7 +425,11 @@ void main() {
       expect(a.season, 1);
       expect(a.beat, 0);
       expect(a.pending!.id, 're.josiane');
-      expect(a.openingSlots, isEmpty, reason: 'openSeason ne s\'exécute qu\'au tirage suivant');
+      // openSeason ne s'exécute qu'au tirage suivant : les slots d'ouverture de
+      // la saison close (une ouverture spontanée de maintainArcs y est inscrite)
+      // n'ont pas encore été remis à zéro.
+      expect(a.openingSlots, at.openingSlots, reason: 'openSeason ne s\'exécute qu\'au tirage suivant');
+      expect(at.openingSlots, isNotEmpty);
       final b = e.choose(a, true);
       expect(b.pending!.kind, 'objective');
       expect(b.season, 1);
@@ -579,7 +583,7 @@ void main() {
     test('U2 · « la Une ne ment pas » sur 200 carrières réelles', () {
       final content = _real();
       final e = Engine(content);
-      int bilans = 0;
+      int bilans = 0, descentes = 0;
       for (var seed = 1; seed <= 200; seed++) {
         var s = e.start(seed, postulat: seed % content.postulatsByIndex.length);
         int step = 0;
@@ -593,6 +597,24 @@ void main() {
             final after = e.choose(next, true);
             expect(after.flags.contains('bilan_tenu'), pl['tenu'], reason: 'seed $seed saison ${s.season}');
             expect(after.world.rangFinal, pl['rang'], reason: 'seed $seed saison ${s.season}');
+            // L'issue lue par la manchette (`bilan.outcome`) est celle que le
+            // Verdict applique : la ligne d'Almanach descente / montee / titre,
+            // et la division qui bouge (ou non : 18e de Division 2 = lanterne).
+            final outcome = pl['outcome'] as String;
+            final applied = after.journal.where((x) => x.season == s.season && x.kind == 'bilan').expand((x) => x.tags).toSet();
+            for (final o in const ['descente', 'montee', 'titre']) {
+              expect(applied.contains(o), outcome == o, reason: 'seed $seed saison ${s.season} : issue $outcome, journal $applied');
+            }
+            expect(after.world.division, s.world.division + (outcome == 'descente' ? 1 : (outcome == 'montee' ? -1 : 0)), reason: 'seed $seed saison ${s.season}');
+            if (outcome == 'lanterne') expect(s.world.division, 2, reason: 'seed $seed : lanterne = dernier de Division 2');
+            // Les mots de la manchette (gabarits : « {objectif} » peut rendre
+            // « La montée ») ne promettent rien que le Verdict n'écrive.
+            final def = content.unes.where((u) => u.id == pl['une']).firstOrNull;
+            final words = def == null ? '' : '${def.titre} ${def.sous}'.toLowerCase();
+            if (RegExp(r"descen(d|te|du)|étage du dessous|relégu|dernier wagon").hasMatch(words)) expect(outcome, 'descente', reason: 'seed $seed : « $words »');
+            if (RegExp(r"mont(ée|e en)|étage du dessus|\bmonte\b").hasMatch(words)) expect(outcome, 'montee', reason: 'seed $seed : « $words »');
+            if (RegExp(r"\bchampion(s|ne|nes)?\b").hasMatch(words)) expect(outcome, 'titre', reason: 'seed $seed : « $words »');
+            if (outcome == 'descente') descentes++;
             bilans++;
             s = after;
             continue;
@@ -602,6 +624,7 @@ void main() {
         }
       }
       expect(bilans, greaterThan(100));
+      expect(descentes, greaterThan(0), reason: 'au moins une vraie descente vérifiée');
     });
 
     test('U3 · `bilan.tenu` hors d\'une manchette = erreur de build (fixture)', () async {
@@ -717,6 +740,23 @@ void main() {
       s.role = 'joueur';
       expect(formatText('{toi} ?', s), 'Lina ?');
       expect(formatText('{toi}', s, adresse: 'mon {prenom}'), 'mon Lina');
+    });
+  });
+
+  group('N · élision', () {
+    test('N6 · « de » / « que » devant un placeholder à voyelle deviennent « d\' » / « qu\' »', () {
+      final e = Engine(_synth());
+      final a = e.start(3, prenom: 'Ethan', nom: 'Aubry');
+      expect(formatText('la valise de {nom}, obtenu de {prenom}', a), 'la valise d\'Aubry, obtenu d\'Ethan');
+      expect(formatText('De {prenom} à {nom}', a), 'D\'Ethan à Aubry');
+      expect(formatText('plus que {prenom}', a), 'plus qu\'Ethan');
+      expect(formatText('le code de {nom}', a), 'le code d\'Aubry');
+      expect(formatText('« de {prenom} »', a), '« d\'Ethan »');
+      // Pas d'élision devant une consonne, ni sur un mot qui finit par « de ».
+      final b = e.start(3, prenom: 'Lina', nom: 'Vasseur');
+      expect(formatText('la valise de {nom}, obtenu de {prenom}', b), 'la valise de Vasseur, obtenu de Lina');
+      expect(formatText('tout le monde {prenom}', a), 'tout le monde Ethan');
+      expect(formatText('L\'Écho de {ville}', a), 'L\'Écho de Valmont');
     });
   });
 

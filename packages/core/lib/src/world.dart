@@ -87,15 +87,32 @@ double pTempsFort(int force, int oppForce, Map<String, int> gauges, int parole, 
 
 class SeasonVerdict {
   final int rank;
-  final String outcome; // titre / europe / montee / barrage / maintien / descente
+
+  /// titre / europe / montee / barrage / maintien / descente / lanterne.
+  /// `descente` n'existe qu'en Division 1 (le jeu n'a pas d'étage sous la
+  /// Division 2) ; `lanterne` est la dernière place de Division 2 : même
+  /// facture qu'une descente, objectif « maintien » manqué, mais le club ne
+  /// change pas de division et aucune manchette ne peut titrer « descend ».
+  final String outcome;
   final Map<String, int> gaugeEffects;
   final int forceEffect;
   final bool objectiveMet;
   const SeasonVerdict(this.rank, this.outcome, this.gaugeEffects, this.forceEffect, this.objectiveMet);
+
+  /// Le club descend d'une division à l'application du verdict.
+  bool get relegated => outcome == 'descente';
+
+  /// Le club monte d'une division à l'application du verdict.
+  bool get promoted => outcome == 'montee';
 }
+
+/// Les issues qu'un verdict peut porter (lint des manchettes : `bilan.outcome == '…'`).
+const Set<String> kVerdictOutcomes = {'titre', 'europe', 'montee', 'barrage', 'maintien', 'descente', 'lanterne'};
 
 /// Convert season points (max 108 over six blocks) into a rank + outcome via a
 /// per-division table, and derive the effects and whether the objective held.
+/// Pure : the caller applies (or not) the effects — the Une reads it without
+/// applying it (spec variété §1.6).
 SeasonVerdict seasonVerdict(int division, int pts, String objectiveTarget) {
   String outcome;
   int rank;
@@ -121,7 +138,9 @@ SeasonVerdict seasonVerdict(int division, int pts, String objectiveTarget) {
       outcome = 'barrage';
       rank = 4;
     } else if (pts <= 36) {
-      outcome = 'descente';
+      // Dernier de Division 2 : il n'y a pas d'étage en dessous. La facture
+      // est celle d'une descente, sans changement de division.
+      outcome = 'lanterne';
       rank = 18;
     } else {
       outcome = 'maintien';
@@ -148,6 +167,7 @@ SeasonVerdict seasonVerdict(int division, int pts, String objectiveTarget) {
       effects['vestiaire'] = -4;
       break;
     case 'descente':
+    case 'lanterne':
       effects['tribunes'] = -15;
       effects['direction'] = -25;
       effects['caisse'] = -15;
@@ -164,10 +184,11 @@ SeasonVerdict seasonVerdict(int division, int pts, String objectiveTarget) {
   final met = _objectiveMet(objectiveTarget, outcome, rank);
   if (met) {
     effects['direction'] = (effects['direction'] ?? 0) + 15;
-  } else if (outcome != 'descente') {
-    // A relegation already IS the missed objective: its own bill (−25
-    // direction, −15 tribunes) is not stacked with the −20/−10 of a missed
-    // target, which used to take a 40-direction president straight to the SMS.
+  } else if (outcome != 'descente' && outcome != 'lanterne') {
+    // A relegation (or the last place of Division 2) already IS the missed
+    // objective: its own bill (−25 direction, −15 tribunes) is not stacked with
+    // the −20/−10 of a missed target, which used to take a 40-direction
+    // president straight to the SMS.
     effects['direction'] = (effects['direction'] ?? 0) - 20;
     effects['tribunes'] = (effects['tribunes'] ?? 0) - 10;
   }
@@ -177,7 +198,7 @@ SeasonVerdict seasonVerdict(int division, int pts, String objectiveTarget) {
 bool _objectiveMet(String target, String outcome, int rank) {
   switch (target) {
     case 'maintien':
-      return outcome != 'descente';
+      return outcome != 'descente' && outcome != 'lanterne';
     case 'top10':
       return rank <= 10;
     case 'top5':
@@ -189,7 +210,28 @@ bool _objectiveMet(String target, String outcome, int rank) {
     case 'titre':
       return outcome == 'titre';
     default:
-      return outcome != 'descente';
+      return outcome != 'descente' && outcome != 'lanterne';
+  }
+}
+
+/// Le libellé de l'objectif avec son article, pour une phrase (« l'objectif,
+/// c'est le maintien »).
+String objectiveLabelWithArticleFr(String target) {
+  switch (target) {
+    case 'maintien':
+      return 'le maintien';
+    case 'top10':
+      return 'le Top 10';
+    case 'top5':
+      return 'le Top 5';
+    case 'europe':
+      return 'la qualification continentale';
+    case 'montee':
+      return 'la montée';
+    case 'titre':
+      return 'le titre';
+    default:
+      return 'le maintien';
   }
 }
 

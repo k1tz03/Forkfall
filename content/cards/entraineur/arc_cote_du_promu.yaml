@@ -17,11 +17,11 @@ cards:
     text: "Aulard : « Un promu, ça fait rêver, {toi}. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
     left:
       label: "Un budget, ou rien"
-      effects: {caisse: "+", direction: "--", relation: {aulard: -1}, react: en.re.josiane_cheque, journal: {text: "{annee} : « Un budget, ou rien. » Le président a signé un chèque pour {nom}. Sans le dater.", poids: 2, tags: [direction, caisse]}}
+      effects: {caisse: "+", direction: "--", relation: {aulard: -1}, react: {card: en.re.josiane_cheque, chance: 0.7}, journal: {text: "{annee} : « Un budget, ou rien. » Le président a signé un chèque pour {nom}. Sans le dater.", poids: 2, tags: [direction, caisse]}}
       answer: "Il signe un chèque. Il ne le date pas."
     right:
       label: "Un projet, et le maintien"
-      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}, react: en.re.meneche_projet}
+      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}, react: {card: en.re.meneche_projet, chance: 0.7}}
       answer: "Il répète « projet » à trois journalistes avant le parking."
 
   # 2 · La cote — Ménèche vend la cote
@@ -34,7 +34,7 @@ cards:
     once: true
     text: "Ménèche : « Cinq mille contre un pour le titre, un contre cinq pour la descente, disent les bookmakers. Juste une question, hors micro. Vous avez parié ? »"
     left:
-      label: "Sur nous, cent francs"
+      label: "Sur le maintien, cent francs"
       effects: {tribunes: "++", parole: 1, set: [pari_promu], relation: {meneche: 1}}
       answer: "Il note la somme. Il note toujours."
     right:
@@ -53,7 +53,7 @@ cards:
     text: "Ménèche, votre ticket entre deux doigts : « Cent francs sur le maintien, et le maintien tient. Juste une question, hors micro. Vous encaissez, ou vous laissez courir ? »"
     left:
       label: "J'encaisse"
-      effects: {caisse: "+", tribunes: "+", outcome: pari_tenu, relation: {meneche: 1}, journal: {text: "{annee} : {nom} a encaissé cent francs à cinq mille contre un. Photo du ticket en Une.", poids: 2, tags: [presse, caisse]}}
+      effects: {caisse: "+", tribunes: "+", outcome: pari_tenu, relation: {meneche: 1}, journal: {text: "{annee} : {nom} a encaissé cinq cents francs : cent sur le maintien, à cinq contre un. Photo du ticket en Une.", poids: 2, tags: [presse, caisse]}}
       answer: "Il photographie le ticket. La Une de demain a sa photo."
     right:
       label: "Je laisse courir"
@@ -104,7 +104,7 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, un bordereau à la main : « Le bookmaker a envoyé les cotes de janvier, {toi}. Cinq cents contre un, maintenant. J'en ai vu passer, vous savez. On les affiche au vestiaire ? »"
+    text: "Madame Josiane, un bordereau à la main : « Le bookmaker a envoyé les cotes de janvier, {toi}. Cinq cents contre un pour le titre, maintenant. J'en ai vu passer, vous savez. On les affiche au vestiaire ? »"
     left:
       label: "On affiche"
       effects: {vestiaire: "+", tribunes: "+", outcome: jamais_parie, journal: {text: "{annee} : cinq cents contre un en janvier. Les cotes affichées au vestiaire ; Bréhaut les a encadrées.", poids: 1, tags: [caisse, vestiaire]}}

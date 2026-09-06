@@ -9,7 +9,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fusible_core/fusible_core.dart' show kKnownCalls, kKnownPathPrefixes, kKnownPaths, kKnownPlaceholders, kNamePlaceholders, placeholdersOf;
+import 'package:fusible_core/fusible_core.dart' show kKnownCalls, kKnownPathPrefixes, kKnownPaths, kKnownPlaceholders, kNamePlaceholders, kVerdictOutcomes, placeholdersOf;
 import 'package:yaml/yaml.dart';
 
 /// Valeurs de rendu du lint pour la longueur des manchettes (spec variété
@@ -93,6 +93,14 @@ const List<String> kBlacklist = [
   'manchester', 'liverpool', 'juventus', 'paris saint-germain', 'psg', 'mbappé', 'messi',
   'ronaldo', 'zidane', 'guardiola', 'mourinho', 'raiola', 'infantino', 'coupe du monde',
 ];
+
+/// Les mots d'une manchette qui affirment une descente, une montée ou un
+/// titre : la manchette doit lire `bilan.outcome` (l'issue que le Verdict
+/// appliquera), jamais le rang seul (18e de Division 2 = lanterne, pas
+/// descente ; 1er de Division 2 = montée, pas titre).
+final RegExp kUneDescenteRe = RegExp(r"descen(d|te|du)|étage du dessous|relégu|dernier wagon");
+final RegExp kUneMonteeRe = RegExp(r"mont(ée|e en)|étage du dessus|\bmonte\b");
+final RegExp kUneTitreRe = RegExp(r"\bchampion(s|ne|nes)?\b");
 
 /// Flags the engine itself writes (Bilan, Camille's job, role history).
 const List<String> kEngineFlags = ['bilan_tenu', 'bilan_manque', 'descente'];
@@ -347,11 +355,43 @@ void main() {
     return node.any((c) => readsFlag(c, names));
   }
 
+  bool readsPath(Object? node, String path) {
+    if (node is! List || node.isEmpty) return false;
+    if (node[0] == 'path' && node.length > 1 && node[1].toString() == path) return true;
+    return node.any((c) => readsPath(c, path));
+  }
+
+  void checkOutcomeLiterals(Object? node, String where) {
+    if (node is! List || node.isEmpty) return;
+    if (node[0] == 'cmp' && node.length == 4 && readsPath(node[2], 'bilan.outcome') || node[0] == 'cmp' && node.length == 4 && readsPath(node[3], 'bilan.outcome')) {
+      for (final side in [node[2], node[3]]) {
+        if (side is List && side.isNotEmpty && side[0] == 'lit' && !kVerdictOutcomes.contains(side[1].toString())) {
+          errors.add('$where: bilan.outcome comparé à « ${side[1]} » (issues connues : ${(kVerdictOutcomes.toList()..sort()).join(', ')})');
+        }
+      }
+    }
+    for (final c in node) {
+      checkOutcomeLiterals(c, where);
+    }
+  }
+
   for (final u in unes) {
     final uid = u['id'].toString();
     scanAst(u['when'], 'unes.yaml/$uid/when');
+    checkOutcomeLiterals(u['when'], 'unes.yaml/$uid/when');
     if (readsFlag(u['when'], const {'bilan_tenu', 'bilan_manque', 'world.rang_final'})) {
       errors.add('unes.yaml/$uid: `when` lit bilan_tenu / bilan_manque / world.rang_final (valeurs de la saison précédente) : utiliser bilan.tenu / bilan.rang');
+    }
+    // Une manchette qui titre une descente, une montée ou un sacre lit l'issue
+    // du verdict (`bilan.outcome`), jamais le rang seul : « la Une ne ment pas ».
+    final words = '${u['titre']} ${u['sous'] ?? ''}'.toLowerCase();
+    final claims = [
+      if (kUneDescenteRe.hasMatch(words)) 'une descente',
+      if (kUneMonteeRe.hasMatch(words)) 'une montée',
+      if (kUneTitreRe.hasMatch(words)) 'un titre',
+    ];
+    if (claims.isNotEmpty && !readsPath(u['when'], 'bilan.outcome')) {
+      errors.add('unes.yaml/$uid: le titre ou le sous-titre affirme ${claims.join(' / ')} sans lire `bilan.outcome` (le rang ne dit pas la division : 18e de Division 2 = lanterne)');
     }
     for (final v in (u['react'] as List?) ?? const []) {
       scanAst((v as Map)['if'], 'unes.yaml/$uid/react');
@@ -497,9 +537,10 @@ void main() {
         if (!first.any((v) => readsPlays((v as Map)['if']))) strict.add('postulat $pid: intrigue rejouable $arcId sans variante lisant plays()$suffix');
       }
     }
-    // Budgets de volume (livraison du lot, étape 3) : avertissements.
+    // Budgets de volume (spec variété §3.7) : avertissements tant que le
+    // postulat est en chantier, erreurs dès `chantier: false` (la livraison du lot).
     void budget(bool ok, String msg) {
-      if (!ok) warnings.add('postulat $pid: budget de réservoir — $msg (bloquant à la livraison du lot)');
+      if (!ok) strict.add('postulat $pid: budget de réservoir — $msg${chantier ? ' (bloquant dès chantier: false)' : ''}');
     }
 
     budget(poolArcs.length >= 12, 'réservoir de ${poolArcs.length} intrigues (attendu ≥ 12)');

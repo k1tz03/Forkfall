@@ -9,7 +9,8 @@
 /// nommées (`{club}`, `{ville}`, `{rival}`, `{coach}`, `{president}`…).
 /// `{toi}` est résolu par l'appelant (adresse du locuteur selon le rôle et la
 /// relation) et interpolé récursivement (profondeur ≤ 2) ; défaut « coach »
-/// pour l'entraîneur, « {prenom} » pour le joueur.
+/// pour l'entraîneur, « {prenom} » pour le joueur. Un « de » ou « que » qui
+/// précède un placeholder à voyelle est élidé (« d'Ethan », « qu'Anne »).
 library;
 
 import 'naming.dart';
@@ -113,10 +114,38 @@ String _render(String tpl, Map<String, String> vars, String pg, String sg) {
       continue;
     }
     final inner = tpl.substring(i + 1, end);
-    out.write(_resolveTag(inner, vars, pg, sg));
+    final value = _resolveTag(inner, vars, pg, sg);
+    if (!inner.contains(',')) _elideBefore(out, value);
+    out.write(value);
     i = end + 1;
   }
   return out.toString();
+}
+
+const String _vowels = 'aeiouyàâäéèêëîïôöùûüAEIOUYÀÂÄÉÈÊËÎÏÔÖÙÛÜ';
+
+/// Élision devant un placeholder à voyelle (« la valise de {nom} » → « la
+/// valise d'Aubry », « que {prenom} » → « qu'Ethan ») : le « de » / « que »
+/// qui précède immédiatement la valeur devient « d' » / « qu' ». Le nom
+/// saisi par le joueur et les villes peuvent commencer par une voyelle ;
+/// aucun gabarit n'a à le prévoir. Le h n'est pas élidé (aspiré ou muet, on
+/// ne sait pas).
+void _elideBefore(StringBuffer out, String value) {
+  if (value.isEmpty || !_vowels.contains(value[0])) return;
+  final tail = out.toString();
+  for (final w in const ['de', 'De', 'que', 'Que']) {
+    final head = '$w ';
+    if (!tail.endsWith(head)) continue;
+    final before = tail.length - head.length;
+    // Un mot entier : début de chaîne ou séparateur devant (« de », « (de »…).
+    if (before > 0 && !' «(\'’-\n'.contains(tail[before - 1])) continue;
+    final elided = '${w.substring(0, w.length - 1)}\'';
+    out
+      ..clear()
+      ..write(tail.substring(0, before))
+      ..write(elided);
+    return;
+  }
 }
 
 int _matchBrace(String s, int open) {

@@ -193,11 +193,23 @@ class Director {
     final card = content.cards[rx.card];
     final beats = content.seasonBeats[s.role] ?? const <Beat>[];
     final phase = s.beat < beats.length ? beats[s.beat].phase : 'bilan';
-    bool ok = card != null && s.reactionsThisSeason < q.reactionsMax && !s.lastWasReaction;
-    if (ok && card.once && (s.seenCount[card.id] ?? 0) > 0) ok = false;
-    if (ok && !evalWhen(card!.when, ctx(s, phase, card: card))) ok = false;
-    if (!ok || card == null) {
+    // La cause de la perte est comptée (`miss_reaction_*`) : plafond, deux
+    // d'affilée, `once` déjà vue, `when` faux, carte disparue.
+    String? lost;
+    if (card == null) {
+      lost = 'inconnue';
+    } else if (s.reactionsThisSeason >= q.reactionsMax) {
+      lost = 'plafond';
+    } else if (s.lastWasReaction) {
+      lost = 'double';
+    } else if (card.once && (s.seenCount[card.id] ?? 0) > 0) {
+      lost = 'deja_vue';
+    } else if (!evalWhen(card.when, ctx(s, phase, card: card))) {
+      lost = 'when';
+    }
+    if (lost != null || card == null) {
       s.stats['miss_reaction'] = (s.stats['miss_reaction'] ?? 0) + 1;
+      s.stats['miss_reaction_$lost'] = (s.stats['miss_reaction_$lost'] ?? 0) + 1;
       return null;
     }
     final n = s.ncards;
@@ -262,8 +274,12 @@ class Director {
     armEvents(s, c, rng);
     maintainArcs(s, c, rng);
 
-    // 1. Hard candidates (bands 3..7): served without randomness.
+    // 1. Hard candidates (bands 4..7): served without randomness. Alarms still
+    //    in their window (band 3) are kept apart: they yield to the forced
+    //    cadence below and keep their two-slot deadline (overdue, they are
+    //    band 6 and come here).
     final hard = <_Hard>[];
+    final alarms = <_Hard>[];
     for (final sc in _sortedQueue(s)) {
       if (sc.dueN < 0 || sc.dueN > n) continue; // dueN < 0 : fusée longue non planifiée
       final card = content.cards[sc.card];
@@ -294,35 +310,50 @@ class Director {
       } else if (sc.kind == 'evenement') {
         hard.add(_Hard(4, sc, card));
       } else if (sc.kind == 'alarme') {
-        hard.add(_Hard(3, sc, card));
+        alarms.add(_Hard(3, sc, card));
       }
     }
+    int byHardOrder(_Hard a, _Hard b) {
+      if (a.band != b.band) return b.band.compareTo(a.band);
+      if (a.sc.deadlineN != b.sc.deadlineN) return a.sc.deadlineN.compareTo(b.sc.deadlineN);
+      final sa = a.card.speaker != null && a.card.speaker == s.lastSpeaker ? 1 : 0;
+      final sb = b.card.speaker != null && b.card.speaker == s.lastSpeaker ? 1 : 0;
+      if (sa != sb) return sa.compareTo(sb);
+      if (a.sc.dueN != b.sc.dueN) return a.sc.dueN.compareTo(b.sc.dueN);
+      return a.sc.seq.compareTo(b.sc.seq);
+    }
+
     if (hard.isNotEmpty) {
-      hard.sort((a, b) {
-        if (a.band != b.band) return b.band.compareTo(a.band);
-        if (a.sc.deadlineN != b.sc.deadlineN) return a.sc.deadlineN.compareTo(b.sc.deadlineN);
-        final sa = a.card.speaker != null && a.card.speaker == s.lastSpeaker ? 1 : 0;
-        final sb = b.card.speaker != null && b.card.speaker == s.lastSpeaker ? 1 : 0;
-        if (sa != sb) return sa.compareTo(sb);
-        if (a.sc.dueN != b.sc.dueN) return a.sc.dueN.compareTo(b.sc.dueN);
-        return a.sc.seq.compareTo(b.sc.seq);
-      });
+      hard.sort(byHardOrder);
       for (final h in hard) {
         lastCandidates.add(Candidate(h.band, h.card.id, 1));
       }
       return serve(s, hard.first.sc, phase, rng, band: hard.first.band);
     }
 
-    // 2. Forced cadence comes before the breathing slot: when the story has
-    // been silent for more than `gap_max` cards, a step (in window, opened
-    // from the reserve, or pulled) passes first and the reserved Nouvelle
-    // keeps its debt for the next slot — exactly as the hard bands do.
+    // 2. Forced cadence (spec variété §5.2 : jamais plus de `gap_max` cartes
+    //    sans temps d'histoire). Déviation documentée par rapport à l'ordre de
+    //    la spec §0 (Nouvelle → bande 2 → cadence forcée), mesurée dans
+    //    docs/balance/step4_etape2_corrections.md : quand l'histoire s'est tue,
+    //    l'étape en fenêtre (tirée au poids comme la bande 2), l'ouverture
+    //    (réserve puis réservoir) ou l'étape tirée en avant passe avant
+    //    l'alarme de bande 3 et avant la Nouvelle réservée ; l'alarme garde son
+    //    échéance (n + 2) et la Nouvelle sa dette pour le créneau suivant.
     if (n - s.lastStoryN > q.gapMax) {
       final sc = forceStory(s, c, rng);
       if (sc != null) return serve(s, sc, phase, rng, band: 2, forced: lastForceKind != 'window');
     }
 
-    // 3. Breathing: a reserved Nouvelle that is due (or owed), or wanted by tension.
+    // 3. Alarms in their window (band 3): without randomness.
+    if (alarms.isNotEmpty) {
+      alarms.sort(byHardOrder);
+      for (final h in alarms) {
+        lastCandidates.add(Candidate(h.band, h.card.id, 1));
+      }
+      return serve(s, alarms.first.sc, phase, rng, band: 3);
+    }
+
+    // 4. Breathing: a reserved Nouvelle that is due (or owed), or wanted by tension.
     final reserved = q.nouvelleSlotsFor(s.role);
     final owed = reserved.where((k) => k <= s.slot).length - s.nouvellesThisSeason;
     final wantBreath = s.tension >= 2 && s.nouvellesThisSeason < reserved.length + 1;
@@ -332,7 +363,7 @@ class Director {
       if (nv != null) return serve(s, null, phase, rng, band: 1, card: nv);
     }
 
-    // 4. Steps inside their window (band 2): weighted.
+    // 5. Steps inside their window (band 2): weighted.
     final soft = <Scheduled>[];
     final softW = <double>[];
     for (final sc in _sortedQueue(s)) {
@@ -354,7 +385,7 @@ class Director {
       if (i >= 0) return serve(s, soft[i], phase, rng, band: 2);
     }
 
-    // 5. Routine (band 0), then anti-famine fallbacks.
+    // 6. Routine (band 0), then anti-famine fallbacks.
     final card = pickPool(s, phase, c, rng);
     if (card != null) return serve(s, null, phase, rng, band: 0, card: card);
     final nv = pickNouvelle(s, c, rng);
@@ -474,13 +505,18 @@ class Director {
         }
         if (chosen == null) continue;
         s.alarmsThisSeason += 1;
+        // Plusieurs jauges peuvent franchir 20/80 au même tirage (le Bilan qui
+        // tombe) : les alarmes sont échelonnées d'un créneau chacune, dans
+        // l'ordre fixe des jauges, pour ne pas s'empiler échues au même moment
+        // (trois alarmes de suite = un trou de cadence, un backlog de 3).
+        final queued = s.scheduled.where((sc) => sc.kind == 'alarme').length;
         enqueue(
           s,
           Scheduled(
             card: chosen.id,
             kind: 'alarme',
-            dueN: n,
-            deadlineN: n + 2,
+            dueN: n + queued,
+            deadlineN: n + 2 + queued,
             fallback: 'drop',
             sameClub: false,
             payload: {'gauge': g.id, 'side': side},
@@ -609,15 +645,38 @@ class Director {
     final eligible = eligibleArcs(s, c);
     final fromReserve = _takeFromReserve(s, eligible, foregroundOnly: true);
     if (fromReserve != null) {
-      armArc(s, fromReserve, c, dueN: s.ncards + fromReserve.startMin, deadlineN: s.ncards + fromReserve.startMax);
+      _openSpaced(s, fromReserve, c);
       return;
     }
     final el = eligible.where((a) => a.foreground).toList();
     if (el.isEmpty) return;
     final i = rng.weightedIndex(el.map((a) => a.weight).toList());
     if (i < 0) return;
-    final a = el[i];
-    armArc(s, a, c, dueN: s.ncards + a.startMin, deadlineN: s.ncards + a.startMax);
+    _openSpaced(s, el[i], c);
+  }
+
+  /// Ouverture spontanée d'un arc (maintainArcs) : la fenêtre `start` de
+  /// l'arc, décalée sans aléa par [freeSlot] pour garder `ouverture_ecart`
+  /// avec les ouvertures d'intrigue et les ancres à créneau unique de la
+  /// saison (spec variété §1.2 : « jamais deux ouvertures à moins de 3
+  /// cartes »), jamais avant le créneau suivant.
+  void _openSpaced(GameState s, ArcDef a, EvalContext c) {
+    final lo = s.slot + a.startMin;
+    final hi = s.slot + a.startMax;
+    var u = lo;
+    if (a.kind == 'serie') {
+      u = freeSlot(lo, [...s.openingSlots, ..._singleSlotAnchors(s)], [lo, hi], ecart: q.ouvertureEcart, maxSlot: math.max(15, hi));
+      if (u <= s.slot) u = s.slot + 1;
+    }
+    final dueN = s.seasonStartN + u;
+    armArc(s, a, c, dueN: dueN, deadlineN: dueN + math.max(0, a.startMax - a.startMin));
+    _noteOpening(s, a, u);
+  }
+
+  /// Mémorise le slot d'ouverture d'une intrigue ouverte hors tirage de saison.
+  void _noteOpening(GameState s, ArcDef a, int slot) {
+    if (a.kind != 'serie') return;
+    s.openingSlots.add(slot);
   }
 
   void armArc(GameState s, ArcDef arc, EvalContext c, {required int dueN, required int deadlineN}) {
@@ -660,23 +719,42 @@ class Director {
   Scheduled? forceStory(GameState s, EvalContext c, Rng rng) {
     final n = s.ncards;
     lastForceKind = '';
-    // (a) a step suspended by tension or the quota: serve it anyway.
+    // (a) a step in its window, suspended or not by tension / the quota: the
+    //     band-2 weighted draw with the suspensions lifted (1 weightedIndex,
+    //     the one band 2 would have consumed for the same candidates).
+    final soft = <Scheduled>[];
+    final softW = <double>[];
     for (final sc in _sortedQueue(s)) {
       if (!_softKinds.contains(sc.kind) || sc.dueN < 0 || sc.dueN > n || n >= sc.deadlineN) continue;
       final card = content.cards[sc.card];
       if (card == null) continue;
       if (card.tone == 'drame' && !drameAllowed(s)) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
-      lastForceKind = 'window';
-      return sc;
+      soft.add(sc);
+      softW.add(_arcWeight(sc) * _urgency(sc, n) * _continuity(s, sc, card) * faceFactor(s, card.speaker));
     }
-    // (b) room for another arc: open one, first step due now (the reserve first).
-    if (activeForeground(s) < q.maxActive) {
+    if (soft.isNotEmpty) {
+      final i = rng.weightedIndex(softW);
+      if (i >= 0) {
+        lastForceKind = 'window';
+        return soft[i];
+      }
+    }
+    // (b) room for another arc: open one, first step due now (the reserve
+    //     first). The opening slot is recorded so that the next spontaneous
+    //     opening (maintainArcs) keeps its distance (spec variété §1.2). A step
+    //     already due at the next slot is pulled instead (c) : opening an
+    //     intrigue one slot before another one starts would break « jamais
+    //     deux ouvertures à moins de 3 cartes ».
+    final dueNext = _sortedQueue(s).any((sc) =>
+        (sc.kind == 'etape' || sc.kind == 'chaine') && sc.dueN == n + 1 && content.cards[sc.card] != null && evalWhen(content.cards[sc.card]!.when, c.withCard(content.cards[sc.card])));
+    if (!dueNext && activeForeground(s) < q.maxActive) {
       final el = eligibleArcs(s, c);
       final fromReserve = _takeFromReserve(s, el);
       if (fromReserve != null) {
         s.stats['reserve_forcee'] = (s.stats['reserve_forcee'] ?? 0) + 1;
         armArc(s, fromReserve, c, dueN: n, deadlineN: n + math.max(1, fromReserve.startMax - fromReserve.startMin));
+        _noteOpening(s, fromReserve, s.slot);
         lastForceKind = 'open';
         return s.scheduled.isEmpty ? null : s.scheduled.last;
       }
@@ -685,6 +763,7 @@ class Director {
         if (i >= 0) {
           final a = el[i];
           armArc(s, a, c, dueN: n, deadlineN: n + math.max(1, a.startMax - a.startMin));
+          _noteOpening(s, a, s.slot);
           lastForceKind = 'open';
           return s.scheduled.isEmpty ? null : s.scheduled.last;
         }
@@ -1052,7 +1131,9 @@ class Director {
     s.storyThisSeason = 0;
     s.softStepsThisSeason = 0;
     s.eventsThisSeason = 0;
-    s.alarmsThisSeason = 0;
+    // Une alarme levée en fin de saison et encore en file sera servie dans
+    // celle-ci : elle compte dans le plafond `alarms_max` (≤ 3 servies par saison).
+    s.alarmsThisSeason = s.scheduled.where((sc) => sc.kind == 'alarme').length;
     s.nouvellesThisSeason = 0;
     s.toneCounts = {};
     s.tension = 0;

@@ -17,6 +17,9 @@
 #     priority: 0..4               # 4 titre/descente/changement de rôle · 3 trace forte · 2 trace ordinaire ou état de l'instant · 1 générique · 0 secours
 #     poids: 1.0                   # optionnel
 #     when: "bilan.tenu && flag('x')"   # optionnel ; JAMAIS flag('bilan_tenu') ni world.rang_final (saison précédente)
+#                                  # bilan.outcome (titre | europe | montee | barrage | maintien | descente | lanterne) est
+#                                  # l'issue que le Verdict appliquera : une manchette qui titre une descente, une montée
+#                                  # ou un titre la lit (lint) — jamais le rang (18e de Division 2 = lanterne, pas descente)
 #     titre: "{NOM}, LE MIRACLE DE {VILLE}"   # ≤ 44 caractères une fois rendu (lint : BRÉHAUT-LEMOINE / SAINT-ÉTOILE)
 #     sous: "…"                    # placeholders : {rang} {objectif} {tenu} (tenu | manqué) {TENU} {annee} {prenom} {nom} {NOM} {club} {CLUB} {ville} {VILLE} {rival} {president} {pts}
 #     sujet: en.kop_qui_aime_trop  # optionnel : tag ou id d'arc exclu des brèves (déjà le sujet)
@@ -96,7 +99,7 @@ unes:
   - id: une.generic.champions
     journal: quotidien
     priority: 4
-    when: "bilan.rang == 1"
+    when: "bilan.outcome == 'titre'"
     titre: "CHAMPIONS !"
     sous: "{club} sur le toit du pays. {prenom} {nom} sur la photo, au bord."
     sujet: bilan
@@ -104,7 +107,7 @@ unes:
   - id: une.generic.montee
     journal: quotidien
     priority: 4
-    when: "bilan.rang <= 2 && world.division == 2"
+    when: "bilan.outcome == 'montee'"
     titre: "MONTÉE !"
     sous: "{club} retrouve l'étage du dessus. {prenom} {nom} a dit « on verra ». On a vu."
     sujet: bilan
@@ -112,7 +115,7 @@ unes:
   - id: une.generic.descente
     journal: echo
     priority: 4
-    when: "bilan.rang >= 17"
+    when: "bilan.outcome == 'descente'"
     titre: "LE RÊVE A DURÉ UN AN"
     sous: "Retour à l'étage du dessous. {prenom} {nom} n'a pas répondu à nos appels. Gégé, si."
     sujet: bilan
@@ -120,7 +123,7 @@ unes:
   - id: une.generic.descente_cartons
     journal: gazette
     priority: 4
-    when: "bilan.rang >= 17"
+    when: "bilan.outcome == 'descente'"
     titre: "{VILLE} REFAIT SES CARTONS"
     sous: "{rang}e et dernier wagon. Le président « n'a pas le temps » ; {prenom} {nom} a une valise, et le chauffage à payer."
     sujet: bilan
@@ -128,9 +131,27 @@ unes:
   - id: une.generic.descente_chauffage
     journal: quotidien
     priority: 4
-    when: "bilan.rang >= 17"
+    when: "bilan.outcome == 'descente'"
     titre: "SI ON DESCEND, TU PAIES LE CHAUFFAGE"
     sous: "Le président l'avait dit en avril. {club} descend, {rang}e. {NOM} garde le banc, et la facture."
+    sujet: bilan
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  # Dernier de Division 2 : il n'y a pas d'étage en dessous (verdict `lanterne`,
+  # même facture qu'une descente) ; la manchette le dit sans mentir.
+  - id: une.generic.lanterne
+    journal: gazette
+    priority: 3
+    when: "bilan.outcome == 'lanterne'"
+    titre: "{VILLE} FERME LA MARCHE"
+    sous: "Dix-huitième de Division 2. Il n'y a pas d'étage en dessous ; {prenom} {nom} a vérifié. Le président a « le numéro »."
+    sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.generic.lanterne_echo
+    journal: echo
+    priority: 3
+    when: "bilan.outcome == 'lanterne'"
+    titre: "DERNIERS, ET TOUJOURS LÀ"
+    sous: "{club} termine dernier de Division 2, et y reste : il n'y a rien en dessous. Au local, on a compté les verres, et les absents."
     sujet: bilan
     react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.promesses
@@ -221,7 +242,7 @@ unes:
     priority: 3
     when: "(flag('gigi_staff') && journal_has('gigi_staff'))"
     titre: "VECCHIO RACCROCHE, VECCHIO RESTE"
-    sous: "Quarante et un ans de gants, et un banc à côté de celui de {prenom} {nom}. « J'en ai vu d'autres. Je les montrerai. »"
+    sous: "Quarante et un ans de gants, et un banc à côté de celui de l'entraîneur, {prenom} {nom}. « J'en ai vu d'autres. Je les montrerai. »"
     sujet: en.vieux_gardien
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe } ]
   - id: une.promu.dauphin
@@ -303,7 +324,7 @@ unes:
     priority: 2
     when: "(flag('pari_promu') && journal_has('pari_promu')) && bilan.tenu"
     titre: "{pg, select, f{ELLE AVAIT PARIÉ SUR ELLE} other{IL AVAIT PARIÉ SUR LUI}}"
-    sous: "Cent francs à cinq mille contre un, en août. {rang}e en juin. Ménèche « ne commente pas ». Il note."
+    sous: "Cent francs sur le maintien, à cinq contre un, en août. {rang}e en juin. Ménèche « ne commente pas ». Il note."
     sujet: en.cote_du_promu
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.pari_perdu

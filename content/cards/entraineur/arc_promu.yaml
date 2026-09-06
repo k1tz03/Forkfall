@@ -8,9 +8,9 @@
 # « dauphin » de la veille, qui peut conclure la carrière : fin en_dauphin).
 #
 # Le nom du joueur (spec variété §1.8) : les ancres nominatives sont A1 (slot 1),
-# A4 (10-11), A5 (16, Gigi dit le prénom une fois), A8, A9 et la rentrée —
-# jamais A6 ni A7 (collées à A5 / au palier de Gégé) ni la veille (collée à la
-# rentrée de la saison suivante) : jamais deux cartes de suite avec le nom.
+# A4 (10-11), A7 (S1, slot 1-2), A8, A9 et la rentrée — jamais A5/A6 (slots
+# 15-17, collés aux échéances des intrigues) ni la veille (collée à la rentrée
+# de la saison suivante) : jamais deux cartes de suite avec le nom.
 # Les traces du script (choix_maillots, finale_gigi, finale_attaque,
 # parti_tete_haute, fidele, special, projet_jeunes, tribune_a_renover,
 # vukic_dauphin) écrivent leur ligne d'Almanach ; `journal:` couvre l'autre côté.
@@ -27,12 +27,12 @@ cards:
     text: "Madame Josiane : « {Toi} — ou le prénom, entre nous ? — les comptes de l'été : les maillots neufs ou le chauffage, pas les deux. Les maillots, Gégé les a déjà vus. »"
     left:
       label: "Les maillots"
-      effects: {tribunes: "++", vestiaire: "-", set: [choix_maillots], react: en.re.josiane_chauffage}
+      effects: {tribunes: "++", vestiaire: "-", set: [choix_maillots], react: {card: en.re.josiane_chauffage, chance: 0.7}}
       answer: "Le virage applaudit la couleur. Le vestiaire souffle dans ses mains."
     right:
       label: "Le chauffage"
-      effects: {vestiaire: "+", tribunes: "--", relation: {josiane: 1}, react: en.re.gege_chauffage, journal: {text: "{annee} : le chauffage plutôt que les maillots. Gégé a appris le mot par la presse.", poids: 2, tags: [caisse, tribunes]}}
-      answer: "Gégé apprend le mot « chauffage » par la presse. Elle note."
+      effects: {vestiaire: "+", tribunes: "--", relation: {josiane: 1}, react: {card: en.re.gege_chauffage, chance: 0.6}, journal: {text: "{annee} : le chauffage plutôt que les maillots. Gégé a compté les manches longues.", poids: 2, tags: [caisse, tribunes]}}
+      answer: "Gégé compte les manches longues au premier entraînement. Elle note."
 
   - id: en.promu.a1_inventaire_argent
     roles: [entraineur]
@@ -44,7 +44,7 @@ cards:
     text: "Madame Josiane : « {Toi} — ou le prénom, entre nous ? — les comptes de l'été : les maillots neufs ou le chauffage, pas les deux. Le chauffage, c'est le sponsor qui le paie. S'il signe. »"
     left:
       label: "Les maillots"
-      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots], react: en.re.josiane_chauffage}
+      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots], react: {card: en.re.josiane_chauffage, chance: 0.7}}
       answer: "Le sponsor n'a pas signé. Le vestiaire souffle dans ses mains."
     right:
       label: "Le chauffage"
@@ -61,7 +61,7 @@ cards:
     text: "Madame Josiane : « {Toi} — ou le prénom, entre nous ? — les comptes de l'été : de quoi payer les maillots neufs ou le chauffage du vestiaire, pas les deux. J'en ai vu passer, vous savez. »"
     left:
       label: "Les maillots"
-      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots], react: en.re.josiane_chauffage}
+      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots], react: {card: en.re.josiane_chauffage, chance: 0.7}}
       answer: "Le président trouve que ça fait riche. Le vestiaire souffle dans ses mains."
     right:
       label: "Le chauffage"
@@ -88,7 +88,9 @@ cards:
         react:                                   # carte-réaction servie au tirage suivant (spec variété §1.4)
           - { card: en.re.aulard_sms_brouillon, if: "relation.aulard >= 0" }
           - { card: en.re.josiane_numero }
-        journal: { text: "{annee} : la Commission voulait un plan. {nom} vend le petit.", poids: 3, tags: [direction, mercato] }
+        # Intention, pas fait accompli : l'offre vient après, et Mbako peut rester
+        # (la trace mbako_vendu / mbako_garde de l'intrigue tranche).
+        journal: { text: "{annee} : la Commission voulait un plan. {nom} accepte de vendre le petit.", poids: 2, tags: [direction, mercato] }
       answer: "Fardelli a déjà le numéro. Il l'avait avant vous."
     right:
       label: "On trouve un sponsor"
@@ -97,11 +99,12 @@ cards:
         direction: "-"
         set: [commission_sponsor]
         schedule: [{card: en.nassir.naming_express, in: [2, 4]}]
-        journal: { text: "{annee} : plutôt un sponsor qu'une vente. {prenom} {nom} a choisi l'orange.", poids: 3, tags: [direction, sponsors] }
+        journal: { text: "{annee} : plutôt un sponsor qu'une vente. {prenom} {nom} a choisi l'orange.", poids: 2, tags: [direction, sponsors] }
       answer: "Josiane compose un numéro qui commence par l'étranger."
 
   # A5 · Le dernier match — slot 16 (deux variantes selon `vecchio_promis`)
-  # Gigi dit toujours « coach » ; ici, une fois, le prénom (le moment qui compte).
+  # Jamais nominative : Gigi dit « coach », et le palier de Gégé, l'encaissement
+  # ou les banderoles tombent souvent au slot 15 (jamais deux de suite).
   - id: en.promu.a5_dernier_match
     roles: [entraineur]
     arc: vestiaire
@@ -109,7 +112,7 @@ cards:
     speaker: vecchio
     tone: strategique
     once: true
-    text: "Vecchio, gants sous le bras : « Dernier match, coach. J'en ai vu d'autres. Mais celle-là, je veux la voir avec toi, {prenom} : tu me mets, ou tu mets le petit ? »"
+    text: "Vecchio, gants sous le bras : « Dernier match, coach. J'en ai vu d'autres. Mais celle-là, je veux la voir avec toi : tu me mets, ou tu mets le petit ? »"
     left:
       label: "Gigi dans les cages"
       effects: {vestiaire: "++", force: -2, relation: {vecchio: 2}, set: [finale_gigi]}
@@ -126,7 +129,7 @@ cards:
     speaker: vecchio
     tone: strategique
     once: true
-    text: "Vecchio, gants sous le bras : « Dernier match, coach. Tu m'as promis les buts en juin, {prenom}. J'en ai vu d'autres. Des promesses, surtout : tu me mets, ou le petit ? »"
+    text: "Vecchio, gants sous le bras : « Dernier match, coach. Tu m'as promis les buts en juin. J'en ai vu d'autres. Des promesses, surtout : tu me mets, ou le petit ? »"
     left:
       label: "Gigi dans les cages, promis"
       effects: {vestiaire: "++", force: -2, parole: 1, relation: {vecchio: 2}, set: [finale_gigi]}
@@ -151,8 +154,8 @@ cards:
       answer: "Le vestiaire a entendu. Le président aussi."
     right:
       label: "On ferme, on assure"
-      effects: {tribunes: "--", direction: "+", react: en.re.vukic_bloc_bas, journal: {text: "{annee} : {nom} a fermé le jeu pour le dernier bloc. Gégé a appris le mot « fermer » par la presse.", poids: 2, tags: [direction, moment]}}
-      answer: "Gégé apprend le mot « fermer » par la presse."
+      effects: {tribunes: "--", direction: "+", react: en.re.vukic_bloc_bas, journal: {text: "{annee} : {nom} a fermé le jeu pour le dernier bloc. Gégé a écrit « fermer » sur ton pare-brise.", poids: 2, tags: [direction, moment]}}
+      answer: "Gégé écrit « fermer » sur ton pare-brise. Au feutre. Il a hésité sur l'accent."
 
   # ============================================================ saison 2 (S1)
   # A7 · Épilogue — slots 1-2, quatre variantes (lues au Bilan de la saison 1)
@@ -163,14 +166,16 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard : « Merci pour tout. Au sens propre : merci, c'est fini. Le maintien, c'est le club qui l'a fait ; toi, tu étais là. J'ai pas le temps, j'ai un empire. »"
+    text: "Aulard : « Merci pour tout, {toi}. Au sens propre : merci. Le maintien, c'est le club qui l'a fait ; toi, tu étais là. J'ai pas le temps, j'ai un empire. »"
     left:
-      label: "Je pars la tête haute"
-      # Pas de `next: end` : l'arc de postulat resterait `done` et openSeason
-      # n'enfilerait plus aucune ancre (A8, A9, rentrée, veille). Le départ est
-      # porté par `parti_tete_haute`, lu par le Carrefour.
+      label: "Je claque la porte"
+      # Aucun départ réel : le moteur ne change ni de club ni de rôle ici. Le
+      # choix est une sortie de bureau, la tête haute, et la carrière continue
+      # au même club (pas de `next: end` : l'arc de postulat resterait `done`
+      # et openSeason n'enfilerait plus aucune ancre). La trace
+      # `parti_tete_haute` dit exactement cela, rien de plus.
       effects: {direction: "--", tribunes: "+", set: [parti_tete_haute]}
-      answer: "Le virage applaudit ta voiture jusqu'à la sortie. Aulard regarde sa montre."
+      answer: "La porte claque. Le virage applaudit jusqu'au parking ; Aulard regarde sa montre. Tu reviens lundi."
     right:
       label: "Je reste, je me bats"
       effects: {direction: "---", vestiaire: "++", relation: {aulard: -1}, journal: {text: "{annee} : « Merci, c'est fini », a dit le président. {nom} est resté{pg, select, f{e} other{}} quand même.", poids: 3, tags: [direction]}}
@@ -183,7 +188,7 @@ cards:
     speaker: meneche
     tone: leger
     once: true
-    text: "Ménèche : « Juste une question, hors micro. Le club de province miraculé, c'est vous ou c'est le vieux gardien ? Le journal tient à savoir. »"
+    text: "Ménèche : « Juste une question, hors micro. Le miraculé de {ville}, c'est {nom} ou c'est le vieux gardien ? Le journal tient à savoir. »"
     left:
       label: "C'est le groupe"
       effects: {vestiaire: "++", tribunes: "+", relation: {meneche: 1}, journal: {text: "{annee} : « C'est le groupe », a répondu {nom}. Titre du lendemain : « Le groupe ». Bréhaut l'a encadré.", poids: 2, tags: [presse, vestiaire]}}
@@ -200,7 +205,7 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard : « Le maintien, c'est bien. Maintenant il nous faut un projet, et le projet, c'est le Top 10, et le Top 10, c'est toi qui le paies. »"
+    text: "Aulard : « Le maintien, c'est bien, {toi}. Maintenant il nous faut un projet, et le projet, c'est le Top 10, et le Top 10, c'est toi qui le paies. »"
     left:
       label: "Je présente un projet"
       effects: {direction: "++", caisse: "-", parole: 1, promise: true, journal: {text: "{annee} : {nom} a présenté un projet. Douze pages, couverture en couleur. Le président a lu la couverture.", poids: 2, tags: [direction]}}
@@ -217,7 +222,7 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane : « Division 2, coach. J'ai rallumé le chauffage, plus de maillots. J'en ai vu passer, vous savez. Ceux qui remontent, c'est ceux qui restent. »"
+    text: "Madame Josiane : « Division 2, {toi}. J'ai rallumé le chauffage, plus de maillots. J'en ai vu passer, vous savez. Ceux qui remontent, c'est ceux qui restent. »"
     left:
       label: "Je reste"
       effects: {vestiaire: "++", tribunes: "+", set: [fidele]}
@@ -235,14 +240,14 @@ cards:
     speaker: fardelli
     tone: strategique
     once: true
-    text: "Fardelli, cigare éteint : « Le Real Montoya te veut, {toi}. Maintenant, à mi-saison, alors que tu as promis de rester. On parle d'argent ou d'amitié ? »"
+    text: "Fardelli, cigare éteint : « Le Sporting Montoya te veut, {toi}. Maintenant, à mi-saison, alors que tu as promis de rester. On parle d'argent ou d'amitié ? »"
     left:
       label: "Je pars"
-      effects: {caisse: "++", tribunes: "---", parole: -2, role: entraineur, journal: {text: "{annee} : le Real Montoya a appelé à mi-saison. {prenom} {nom} a dit oui. Le virage a peint le mot d'après.", poids: 3, tags: [mercato, tribunes]}}
+      effects: {caisse: "++", tribunes: "---", parole: -2, role: entraineur, journal: {text: "{annee} : le Sporting Montoya a appelé. {prenom} {nom} a dit oui. Le virage a peint le mot d'après.", poids: 3, tags: [mercato, tribunes]}}
       answer: "Le virage peint ton nom sur la bâche. Puis le mot d'après."
     right:
       label: "Je reste"
-      effects: {tribunes: "++", caisse: "-", parole: 1, set: [fidele], relation: {fardelli: -1}, journal: {text: "{annee} : le Real Montoya a appelé à mi-saison. {nom} est resté{pg, select, f{e} other{}}. Fardelli a rayé un chiffre.", poids: 2, tags: [mercato, tribunes]}}
+      effects: {tribunes: "++", caisse: "-", parole: 1, set: [fidele], relation: {fardelli: -1}, journal: {text: "{annee} : le Sporting Montoya a appelé. {nom} est resté{pg, select, f{e} other{}}. Fardelli a rayé un chiffre.", poids: 2, tags: [mercato, tribunes]}}
       answer: "Il range le cigare. Il note un chiffre, et le raye."
 
   - id: en.promu.a8_aubert
@@ -323,7 +328,7 @@ cards:
     speaker: vukic
     tone: strategique
     cooldown: 0
-    text: "Vukić, la veille du dernier bloc : « Je te le dis parce que personne ne te le dira. Le président a deux discours prêts. « {nom} » n'est écrit que dans un. »"
+    text: "Vukić, la veille du dernier bloc : « Je te le dis parce que personne ne te le dira. Le président a deux discours prêts, et ton nom n'est que dans un. »"
     left:
       label: "On joue le nôtre"
       effects: {vestiaire: "+", force: 1, react: en.re.aulard_le_mien, journal: {text: "{annee} : veille du dernier bloc. Deux discours chez le président ; le vestiaire a joué le sien.", poids: 1, tags: [vestiaire, direction]}}

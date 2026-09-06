@@ -408,25 +408,30 @@ class Engine {
       s.flags.add('bilan_manque');
       s.flags.remove('bilan_tenu');
     }
-    // L'Almanach (spec variété §1.7) : le Bilan, puis la montée / descente / le titre.
-    director.addJournalAuto(s, verdict.objectiveMet ? 'bilan_tenu' : 'bilan_manque', kind: 'bilan', poids: 3, tags: ['bilan'], extra: extra);
-    // Division movement for next season.
-    if (verdict.outcome == 'montee' && s.world.division > 1) {
+    // L'Almanach (spec variété §1.7) : le Bilan, puis la montée / descente / le
+    // titre. Chaque ligne porte sa clé en tag (`journal_has('descente')`, et la
+    // vérification « la Une ne ment pas » de simulate / du test U2).
+    final tenuKey = verdict.objectiveMet ? 'bilan_tenu' : 'bilan_manque';
+    director.addJournalAuto(s, tenuKey, kind: 'bilan', poids: 3, tags: ['bilan', tenuKey], extra: extra);
+    // Division movement for next season : `montee` n'existe qu'en Division 2,
+    // `descente` qu'en Division 1 (seasonVerdict), donc les gardes ne servent
+    // qu'à protéger un contenu de test.
+    if (verdict.promoted && s.world.division > 1) {
       s.world.division -= 1;
       s.force = (s.force + 4).clamp(0, 100);
-      director.addJournalAuto(s, 'montee', kind: 'bilan', poids: 3, tags: ['bilan'], extra: extra);
-    } else if (verdict.outcome == 'descente' && s.world.division < 2) {
+      director.addJournalAuto(s, 'montee', kind: 'bilan', poids: 3, tags: ['bilan', 'montee'], extra: extra);
+    } else if (verdict.relegated && s.world.division < 2) {
       s.world.division += 1;
       s.flags.add('descente');
-      director.addJournalAuto(s, 'descente', kind: 'bilan', poids: 3, tags: ['bilan'], extra: extra);
+      director.addJournalAuto(s, 'descente', kind: 'bilan', poids: 3, tags: ['bilan', 'descente'], extra: extra);
     }
     if (verdict.outcome == 'titre') {
       s.stats['titres'] = (s.stats['titres'] ?? 0) + 1;
       s.vars['titre_saison'] = s.season;
-      director.addJournalAuto(s, 'titre', kind: 'bilan', poids: 4, tags: ['bilan'], extra: extra);
+      director.addJournalAuto(s, 'titre', kind: 'bilan', poids: 4, tags: ['bilan', 'titre'], extra: extra);
     }
     s.world.standingRank = verdict.rank;
-    s.lastAnswer = 'Bilan : ${verdict.rank}e · ${objectiveLabelFr(s.objectiveTarget)} '
+    s.lastAnswer = 'Bilan : ${verdict.rank}e · objectif « ${objectiveLabelFr(s.objectiveTarget)} » '
         '${verdict.objectiveMet ? 'tenu' : 'manqué'}.';
     _checkObjectifs(s, 'bilan');
   }
@@ -785,7 +790,7 @@ class Engine {
       id: 'objective:${s.season}',
       kind: 'objective',
       speaker: patron,
-      text: '$name : « Cette saison, l\'objectif c\'est ${objectiveLabelFr(target).toLowerCase()}. Tu t\'engages ? »',
+      text: '$name : « Cette saison, l\'objectif c\'est ${objectiveLabelWithArticleFr(target)}. Tu t\'engages ? »',
       leftLabel: 'Je m\'engage',
       rightLabel: 'Je ne promets rien',
       leftEffects: const EffectSet(gauges: {'direction': 4}),
@@ -887,7 +892,11 @@ class Engine {
     final verdict = seasonVerdict(s.world.division, s.world.pts, s.objectiveTarget);
     final post = content.postulats[s.postulatId];
     final c = EvalContext(s, 'bilan',
-        slotsTotal: content.cardSlots(s.role), cast: post?.cast.keys.toSet() ?? const {}, bilanTenu: verdict.objectiveMet, bilanRang: verdict.rank);
+        slotsTotal: content.cardSlots(s.role),
+        cast: post?.cast.keys.toSet() ?? const {},
+        bilanTenu: verdict.objectiveMet,
+        bilanRang: verdict.rank,
+        bilanOutcome: verdict.outcome);
     final objectif = objectiveLabelFr(s.objectiveTarget);
     final extra = <String, String>{
       'rang': '${verdict.rank}',
@@ -965,6 +974,7 @@ class Engine {
         'prix': prix,
         'rang': verdict.rank,
         'tenu': verdict.objectiveMet,
+        'outcome': verdict.outcome,
         'objectif': objectif,
         'priority': une?.priority ?? -1,
       },

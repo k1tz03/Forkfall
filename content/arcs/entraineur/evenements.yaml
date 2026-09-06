@@ -25,8 +25,10 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "season >= 1 && gauges.direction < 60 && !flag('enveloppe_refusee')"
-    chance: 0.08
+    # Rare (fin en_valise « rare ») : un entraîneur dans la zone rouge, sous
+    # pression du président ; 1,2 % par créneau éligible.
+    when: "season >= 1 && world.rang >= 13 && gauges.direction < 50 && !flag('enveloppe_refusee')"
+    chance: 0.012
     cast: [fardelli, legruet]
     traces:
       enveloppe_rival:   "{annee} : trois joueurs de {rival} ont levé le pied au dernier bloc. Une enveloppe a changé de poche ; {nom} savait."

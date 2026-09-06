@@ -103,21 +103,35 @@ class RunStats {
   int reactionsLat1 = 0; // … servies au tirage qui suit le swipe qui les a posées
   int reactionsConsecutive = 0; // … servies juste après une autre réaction
   int reactionsMissed = 0; // stats.miss_reaction (plafond, `when` faux, carte disparue)
+  final Map<String, int> reactionsMissedBy = {}; // cause → réactions perdues (stats.miss_reaction_<cause>)
   int uneChecks = 0; // Bilans où la Une a été comparée au verdict appliqué
-  int uneChecksOk = 0; // … et disait vrai (payload.tenu / payload.rang)
+  int uneChecksOk = 0; // … et disait vrai (payload.tenu / payload.rang / payload.outcome et les mots du titre)
   final List<String> uneCheckFailures = [];
 }
+
+/// Les mots d'une manchette qui affirment une descente, une montée ou un
+/// titre : ils doivent coïncider avec la ligne d'Almanach que `_resolveBilan`
+/// écrit au swipe du Verdict (spec variété §1.6, §3.7 « la Une ne ment pas »).
+final RegExp kUneDescenteRe = RegExp(r"descen(d|te|du)|étage du dessous|relégu|dernier wagon");
+final RegExp kUneMonteeRe = RegExp(r"mont(ée|e en)|étage du dessus|\bmonte\b");
+final RegExp kUneTitreRe = RegExp(r"\bchampion(s|ne|nes)?\b");
 
 /// Nombre de placeholders non résolus dans un texte servi : tout `{` qui
 /// subsiste (un `{x}` inconnu, un `select` mal formé). Zéro attendu (§5.3).
 int _unresolvedIn(String? t) => t == null ? 0 : '{'.allMatches(t).length;
 
-/// Vrai si la carte servie porte le nom du joueur (spec variété §5.3) : un
-/// placeholder de nom dans son texte ou ses `answer`, ou `{toi}` résolu par une
-/// adresse qui cite `{prenom}` / `{nom}` (le locuteur et la relation de l'instant).
-bool _carriesName(Content content, GameState s, Pending p) {
+/// Comment la carte servie porte le nom du joueur (spec variété §5.3) :
+/// `direct` = un placeholder de nom dans son texte ou ses `answer` ;
+/// `toi` = seulement `{toi}` résolu par une adresse qui cite `{prenom}` /
+/// `{nom}` (le locuteur et la relation de l'instant) ; `''` sinon. Les deux
+/// comptent pour « ≥ 2 cartes par saison » ; « jamais deux de suite » ne
+/// compte que les paires `direct` / `direct` : l'adresse d'un personnage
+/// (« mon Ethan », « monsieur Vasseur ») est sa voix, pas le nom lâché par la
+/// carte (mesure : 205 paires sur 208 venaient de `{toi}`, décision
+/// docs/balance/step4_etape2_corrections.md).
+String _nameLevel(Content content, GameState s, Pending p) {
   final card = content.cards[p.id];
-  if (card == null) return false;
+  if (card == null) return '';
   String? adresse;
   final sp = card.speaker;
   if (sp != null) {
@@ -126,14 +140,14 @@ bool _carriesName(Content content, GameState s, Pending p) {
     adresse = content.characters[sp]?.adresseFor(s.role, expr) ?? (s.role == 'joueur' ? '{prenom}' : 'coach');
   }
   final adresseNamed = adresse != null && placeholdersOf(adresse).any(kNamePlaceholders.contains);
-  bool named(String? t) {
-    if (t == null) return false;
+  var level = '';
+  for (final t in [card.text, card.left.answer, card.right.answer]) {
+    if (t == null) continue;
     final ph = placeholdersOf(t);
-    if (ph.any((x) => x != 'toi' && x != 'Toi' && kNamePlaceholders.contains(x))) return true;
-    return adresseNamed && (ph.contains('toi') || ph.contains('Toi'));
+    if (ph.any((x) => x != 'toi' && x != 'Toi' && kNamePlaceholders.contains(x))) return 'direct';
+    if (adresseNamed && (ph.contains('toi') || ph.contains('Toi'))) level = 'toi';
   }
-
-  return named(card.text) || named(card.left.answer) || named(card.right.answer);
+  return level;
 }
 
 // ---------------------------------------------------------------------------
@@ -191,7 +205,13 @@ class Opening {
   final int season;
   final int slot; // slot of the first step (due slot, or the serving slot when forced)
   final bool forced;
-  const Opening(this.arc, this.season, this.slot, this.forced);
+
+  /// Saut d'arc : l'intrigue est entrée en jeu par une étape qui n'est pas la
+  /// première (le twist du script qui `schedule` une étape de l'arc, spec
+  /// annexe A). Comptée pour la couverture, pas pour le rythme des ouvertures
+  /// (« jamais deux ouvertures à moins de 3 slots » vise le tirage de saison).
+  final bool jump;
+  const Opening(this.arc, this.season, this.slot, this.forced, {this.jump = false});
 }
 
 class SeasonRecord {
@@ -201,8 +221,9 @@ class SeasonRecord {
   int routine = 0;
   bool couture = false; // a served card read a trace posed in an earlier season
   int reactions = 0; // réactions servies (étape 2)
-  int nameCards = 0; // cartes portant un placeholder de nom
-  int nameConsecutive = 0; // … deux de suite
+  int nameCards = 0; // cartes portant un placeholder de nom ({toi} résolu en nom compris)
+  int nameConsecutive = 0; // … deux de suite, hors {toi} (paires direct / direct)
+  int nameConsecutiveToi = 0; // paires deux de suite dont l'une au moins ne tient qu'à {toi} (mesuré, non budgété)
   final List<String> storyCards = [];
   final List<String> firstStory = []; // ids of the first five story beats
   final List<String> arcSteps = []; // 'arc/step' in serving order
@@ -406,7 +427,10 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         if (e.arc == id && e.step == firstStep && (sc == null || e.seq < sc.seq)) sc = e;
       }
       final slot = sc == null || sc.dueN < 0 ? s.slot : sc.dueN - s.seasonStartN;
-      rec.openings.add(Opening(id, st.startedSeason, slot, false));
+      // Sans première étape en file ni servie : l'arc est entré par une autre
+      // étape (saut d'arc), servie maintenant.
+      final jump = sc == null && p != null && p.kind == 'narrative' && p.payload['arc'] == id;
+      rec.openings.add(Opening(id, st.startedSeason, slot, false, jump: jump));
     }
   }
 
@@ -432,9 +456,12 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
   // Étape 2 : réactions (latence, consécutives), nom, placeholders, Une.
   bool prevPosed = false; // le swipe précédent a posé une réaction (react d'un choix ou d'une manchette)
   bool prevWasReaction = false;
-  bool prevWasName = false;
-  bool? uneTenu; // payload.tenu / payload.rang de la Une en attente du verdict
+  String prevName = '';
+  bool? uneTenu; // payload.tenu / payload.rang / payload.outcome de la Une en attente du verdict
   int uneRang = 0;
+  String uneOutcome = '';
+  String uneText = '';
+  int journalBefore = 0;
   void scanText(String? t, String where) {
     final n = _unresolvedIn(t);
     if (n == 0) return;
@@ -536,12 +563,16 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         final r = curRec;
         r.cards += 1;
         if (isReaction) r.reactions += 1;
-        final named = _carriesName(content, s, p);
-        if (named) {
+        final named = _nameLevel(content, s, p);
+        if (named.isNotEmpty) {
           r.nameCards += 1;
-          if (prevWasName) r.nameConsecutive += 1;
+          if (prevName == 'direct' && named == 'direct') {
+            r.nameConsecutive += 1;
+          } else if (prevName.isNotEmpty) {
+            r.nameConsecutiveToi += 1;
+          }
         }
-        prevWasName = named;
+        prevName = named;
         if (kind == 'routine' || kind == 'filler') r.routine += 1;
         if (kStoryKinds.contains(kind)) {
           r.story += 1;
@@ -584,6 +615,12 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         // du Verdict, deux cartes plus loin.
         uneTenu = p.payload['tenu'] == true;
         uneRang = (p.payload['rang'] as num?)?.toInt() ?? 0;
+        uneOutcome = p.payload['outcome']?.toString() ?? '';
+        // Les gabarits (non rendus) de la manchette : « {objectif} » peut
+        // rendre « La montée » sans que la Une l'affirme.
+        final def = une is String ? content.unes.where((u) => u.id == une).firstOrNull : null;
+        uneText = def == null ? '' : '${def.titre} ${def.sous}'.toLowerCase();
+        journalBefore = s.journal.length;
       }
       trace?.writeln('S${s.season} ·         · n ${s.ncards.toString().padLeft(3)} ·         · ${p.kind.padRight(9)} · ${p.id}');
     }
@@ -603,12 +640,26 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     step++;
     if (wasVerdict && uneTenu != null) {
       final tenu = s.flags.contains('bilan_tenu');
-      final ok = tenu == uneTenu && s.world.rangFinal == uneRang;
+      // Ce que le Verdict a réellement écrit : les tags des lignes d'Almanach
+      // `bilan` ajoutées par _resolveBilan (descente / montee / titre).
+      final applied = <String>{};
+      for (final e in s.journal.skip(journalBefore)) {
+        if (e.kind == 'bilan') applied.addAll(e.tags);
+      }
+      final problems = <String>[];
+      if (tenu != uneTenu) problems.add('tenu $uneTenu ≠ $tenu');
+      if (s.world.rangFinal != uneRang) problems.add('rang $uneRang ≠ ${s.world.rangFinal}');
+      for (final o in const ['descente', 'montee', 'titre']) {
+        if ((uneOutcome == o) != applied.contains(o)) problems.add('outcome « $uneOutcome » ≠ journal $applied');
+      }
+      if (kUneDescenteRe.hasMatch(uneText) && !applied.contains('descente')) problems.add('titre une descente sans descente');
+      if (kUneMonteeRe.hasMatch(uneText) && !applied.contains('montee')) problems.add('titre une montée sans montée');
+      if (kUneTitreRe.hasMatch(uneText) && !applied.contains('titre')) problems.add('titre un sacre sans titre');
       stats.uneChecks += 1;
-      if (ok) {
+      if (problems.isEmpty) {
         stats.uneChecksOk += 1;
       } else if (stats.uneCheckFailures.length < 5) {
-        stats.uneCheckFailures.add('graine $seed S$seasonBefore : Une tenu=$uneTenu rang=$uneRang · verdict tenu=$tenu rang=${s.world.rangFinal}');
+        stats.uneCheckFailures.add('graine $seed S$seasonBefore : ${problems.join(', ')} · « ${uneText.length > 60 ? '${uneText.substring(0, 60)}…' : uneText} »');
       }
       uneTenu = null;
     }
@@ -622,6 +673,9 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     scanText(e.text, 'journal/${e.kind}');
   }
   stats.reactionsMissed = s.stats['miss_reaction'] ?? 0;
+  s.stats.forEach((k, v) {
+    if (k.startsWith('miss_reaction_')) stats.reactionsMissedBy[k.substring(14)] = v;
+  });
   closeSeason(over: s.over);
   if (nar != null) {
     nar.runs += 1;
@@ -766,9 +820,10 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   _line(entropy >= 0.9, 'entropie d\'histoire : séquences (arc, étape) S0 / runs', '${_f(entropy, 2)} (${arcSeqs.length}/${s0Runs.length})', '≥ 0,9');
 
   final firstSlots = <int>[];
-  int closePairs = 0;
+  int closePairs = 0, jumps = 0;
   for (final r in recs) {
-    final o = r.openingsOf(0);
+    final o = r.openingsOf(0).where((e) => !e.jump).toList();
+    jumps += r.openingsOf(0).length - o.length;
     if (o.isEmpty) continue;
     firstSlots.add(o.map((e) => e.slot).reduce(math.min));
     final slots = o.map((e) => e.slot).toList()..sort();
@@ -781,7 +836,7 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   }
   final sd = _stdDev(firstSlots);
   _line(sd >= 1.8 && closePairs == 0, 'rythme : slot de première ouverture (S0)',
-      firstSlots.isEmpty ? 'aucune ouverture d\'intrigue en S0' : 'écart-type ${_f(sd, 2)} · moy ${_f(_mean(firstSlots))} · S0 avec deux ouvertures à < 3 slots ${_f(100 * closePairs / math.max(1, n), 0)} %',
+      firstSlots.isEmpty ? 'aucune ouverture d\'intrigue en S0' : 'écart-type ${_f(sd, 2)} · moy ${_f(_mean(firstSlots))} · S0 avec deux ouvertures à < 3 slots ${_f(100 * closePairs / math.max(1, n), 0)} % (hors $jumps sauts d\'arc)',
       'σ ≥ 1,8 ; 0 %');
 
   final reservoir = reservoirArcs(content, post);
@@ -901,16 +956,20 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   final rxMean = _mean(rxPerSeason);
   final rxMax = rxPerSeason.isEmpty ? 0 : rxPerSeason.reduce(math.max);
   int rxServed = 0, rxLat1 = 0, rxConsec = 0, rxMissed = 0;
+  final rxMissedBy = <String, int>{};
   for (final r in recs) {
     rxServed += r.stats.reactions;
     rxLat1 += r.stats.reactionsLat1;
     rxConsec += r.stats.reactionsConsecutive;
     rxMissed += r.stats.reactionsMissed;
+    r.stats.reactionsMissedBy.forEach((k, v) => rxMissedBy[k] = (rxMissedBy[k] ?? 0) + v);
   }
   final latShare = rxServed == 0 ? 1.0 : rxLat1 / rxServed;
   final rxMaxOk = rxMax <= content.director.reactionsMax;
+  final missedKeys = rxMissedBy.keys.toList()..sort();
   _line(rxMean >= 1.5 && rxMean <= 3 && rxMaxOk && rxConsec == 0 && latShare >= 1.0, 'réactions par saison',
-      'moy ${_f(rxMean, 2)} · max $rxMax · consécutives $rxConsec · latence 1 ${_f(100 * latShare, 0)} % ($rxLat1/$rxServed) · perdues $rxMissed',
+      'moy ${_f(rxMean, 2)} · max $rxMax · consécutives $rxConsec · latence 1 ${_f(100 * latShare, 0)} % ($rxLat1/$rxServed) · perdues $rxMissed'
+      '${missedKeys.isEmpty ? '' : ' (${missedKeys.map((k) => '$k ${rxMissedBy[k]}').join(' · ')})'}',
       '1,5-3 · ≤ ${content.director.reactionsMax} · 0 · 100 %');
   if (rxConsec != 0) failures.add('réactions consécutives $rxConsec');
   if (latShare < 1.0) failures.add('latence des réactions ${_f(100 * latShare, 0)} %');
@@ -942,7 +1001,7 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
       '${uneFreq.length} / $bilans · la plus fréquente ${_f(100 * topShare, 0)} % · génériques (priorité ≤ 1) ${_f(100 * genShare, 0)} % · secours (0) ${_f(100 * secShare, 0)} %',
       '≥ 12 ; aucune > 30 % ; génériques < 25 % ; secours < 10 %');
   final checkShare = checks == 0 ? 1.0 : checksOk / checks;
-  _line(checkShare >= 1.0, 'la Une ne ment pas (tenu et rang == verdict appliqué)', '${_f(100 * checkShare, 0)} % ($checksOk/$checks)${checkFailures.isEmpty ? '' : ' · ${checkFailures.join(' ; ')}'}', '100 %');
+  _line(checkShare >= 1.0, 'la Une ne ment pas (tenu, rang, issue == verdict appliqué)', '${_f(100 * checkShare, 0)} % ($checksOk/$checks)${checkFailures.isEmpty ? '' : ' · ${checkFailures.join(' ; ')}'}', '100 %');
   if (checkShare < 1.0) failures.add('la Une ment dans ${checks - checksOk} Bilan(s)');
   final brevesShare = bilans == 0 ? 0.0 : brevesFull / bilans;
   _line(brevesShare >= 0.90, 'brèves : Bilans avec ${content.director.unesBreves} brèves issues du journal', '${_f(100 * brevesShare, 0)} % ($brevesFull/$bilans)', '≥ 90 %');
@@ -964,9 +1023,10 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   final withName = allSeasons.where((x) => x.nameCards >= 2).length;
   final nameShare = allSeasons.isEmpty ? 0.0 : withName / allSeasons.length;
   final nameConsec = allSeasons.fold<int>(0, (a, x) => a + x.nameConsecutive);
+  final nameConsecToi = allSeasons.fold<int>(0, (a, x) => a + x.nameConsecutiveToi);
   _line(nameShare >= 0.95 && nameConsec == 0, 'nom : saisons avec ≥ 2 cartes portant le nom',
-      '${_f(100 * nameShare, 0)} % ($withName/${allSeasons.length}) · moy ${_f(_mean(allSeasons.map((x) => x.nameCards)))} cartes/saison · deux de suite $nameConsec',
-      '≥ 95 % ; jamais deux de suite');
+      '${_f(100 * nameShare, 0)} % ($withName/${allSeasons.length}) · moy ${_f(_mean(allSeasons.map((x) => x.nameCards)))} cartes/saison · deux de suite $nameConsec (via {toi}, hors budget : $nameConsecToi)',
+      '≥ 95 % ; jamais deux de suite (hors {toi})');
 
   int unresolved = 0;
   final samples = <String>[];
@@ -1119,9 +1179,10 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     final distinct = ms.map((m) => m.speakers.length).toList();
     stdout.writeln('  [$b] $n saisons · ${_f(cards / n)} cartes/saison');
     final gapMax = gaps.isEmpty ? 0 : gaps.reduce(math.max);
-    final okGap = gapMax <= 4;
-    stdout.writeln('  ${okGap ? '✔' : '✗'} ${'cadence : écart max entre temps d\'histoire'.padRight(44)} max $gapMax · moy ${_f(_mean(gaps))} · P95 ${_f(_pct(gaps, 0.95), 0)}');
-    if (assertBudgets && !okGap) failures.add('[$b] écart max $gapMax > 4');
+    final gapLimit = b == 'S2+' ? 4 : 3; // spec variété §5.2 : ≤ 3 (S0-S1), ≤ 4 (S2+)
+    final okGap = gapMax <= gapLimit;
+    stdout.writeln('  ${okGap ? '✔' : '✗'} ${'cadence : écart max entre temps d\'histoire (≤ $gapLimit)'.padRight(44)} max $gapMax · moy ${_f(_mean(gaps))} · P95 ${_f(_pct(gaps, 0.95), 0)}');
+    if (assertBudgets && !okGap) failures.add('[$b] écart max $gapMax > $gapLimit');
     final storyP5 = _pct(stories, 0.05);
     final storyOk = b == 'S0' ? storyP5 >= 10 : storyP5 >= 8;
     stdout.writeln('  ${storyOk ? '✔' : '✗'} ${'temps d\'histoire par saison'.padRight(44)} P5 ${_f(storyP5, 0)} · médiane ${_f(_pct(stories, 0.5), 0)} · moy ${_f(_mean(stories))}');

@@ -21,13 +21,17 @@ class EvalContext {
   final int slotsTotal;
   final Set<String> cast; // characters in the postulat's cast
   /// Verdict de la saison calculé sans être appliqué (spec variété §1.6) :
-  /// posé par `_bilanUne` pour la phase `bilan`, null ailleurs.
+  /// posé par `_bilanUne` pour la phase `bilan`, null ailleurs. `bilanOutcome`
+  /// est l'issue que `_resolveBilan` appliquera au swipe suivant (titre /
+  /// europe / montee / barrage / maintien / descente / lanterne) : c'est elle,
+  /// et non le rang, qu'une manchette lit pour titrer une descente ou une montée.
   final bool? bilanTenu;
   final int? bilanRang;
-  const EvalContext(this.state, this.phase, {this.card, this.slotsTotal = 17, this.cast = const {}, this.bilanTenu, this.bilanRang});
+  final String? bilanOutcome;
+  const EvalContext(this.state, this.phase, {this.card, this.slotsTotal = 17, this.cast = const {}, this.bilanTenu, this.bilanRang, this.bilanOutcome});
 
-  EvalContext withCard(Card? c) =>
-      EvalContext(state, phase, card: c, slotsTotal: slotsTotal, cast: cast, bilanTenu: bilanTenu, bilanRang: bilanRang);
+  EvalContext withCard(Card? c) => EvalContext(state, phase,
+      card: c, slotsTotal: slotsTotal, cast: cast, bilanTenu: bilanTenu, bilanRang: bilanRang, bilanOutcome: bilanOutcome);
 }
 
 /// Static paths the `when` language knows (consumed by the lint).
@@ -40,7 +44,7 @@ const Set<String> kKnownPaths = {
   'postulat', 'ncards', 'slot', 'slots_left', 'tension', 'drames',
   'speaker', 'speaker.relation', 'last_speaker',
   'fil_rouge',
-  'bilan.tenu', 'bilan.rang', 'reactions',
+  'bilan.tenu', 'bilan.rang', 'bilan.outcome', 'reactions',
 };
 
 /// Prefixes for dynamic paths (`vars.x`, `flags.x`, `relation.x`, `stats.x`).
@@ -198,6 +202,8 @@ Object? _resolvePath(String path, EvalContext ctx) {
       return ctx.bilanTenu ?? false;
     case 'bilan.rang':
       return ctx.bilanRang ?? 0;
+    case 'bilan.outcome':
+      return ctx.bilanOutcome ?? '';
     case 'reactions':
       return s.reactionsThisSeason;
   }
