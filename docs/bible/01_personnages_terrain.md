@@ -108,7 +108,7 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 « Finale continentale, soixante-dix-neuf, un centre mou, et le ballon m'a traversé les mains. Personne ne me l'a dit ; je te le dis parce que personne ne te dira jamais tes ballons. »
 ← **C'était toi, Zoran** — effets : relation.vukic +2, vestiaire +, set: vukic_dit — *Il souffle par le nez. C'est la première fois que quelqu'un le lui dit. Il dort avant l'autoroute.*
 → **Un centre mou, ça arrive** — effets : relation.vukic −1, direction + — *Il hoche la tête. Le cahier reste fermé jusqu'à Néville.*
-**Traces** : vukic_dit (« {annee} : dans le bus, {prenom} {nom} a dit à Zoran Vukić que c'était lui. Il l'attendait depuis 1979. ») · **Réactions déclenchées** : co.re.vecchio_zoki (§ 7.11) · **Lu plus tard par** : co.vukic.faveur_trois_valises (variante), co.retrouvailles.vukic_sourire, 31 (épitaphe d'enterrement de Vukić)
+**Traces** : vukic_dit (« {annee} : dans le bus, {prenom} {nom} a dit à Zoran Vukić que c'était lui. Il l'attendait depuis 1979. ») · **Réactions déclenchées** : co.re.vecchio_zoki (§ 7.8) · **Lu plus tard par** : co.vukic.faveur_trois_valises (variante), co.retrouvailles.vukic_sourire, 31 (épitaphe d'enterrement de Vukić)
 
 ### SCÈNE en.vukic.cahier_bilan  —  Le cahier au Bilan
 **Rôle** : entraineur · **Intrigue** : co.vukic_cahier · **Étape** : 4/6 · **Moment** : saison 1+, créneaux [15,17] · **Lieu** : ton bureau, la veille du dernier bloc · **Conditions** : `season >= 1` ; variante `_dauphin` si `flag('vukic_dauphin')`
@@ -152,7 +152,7 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 ← **Monte, on y va** — effets : vestiaire ++, direction +, set: vukic_fidele, outcome: fidele — *Il ferme le coffre. Le cahier est dans la valise du milieu, entre deux survêtements marine.*
 → **Reste, ils ont besoin de toi** — effets : vestiaire +++, relation.vukic −1, set: vukic_reste — *Il rentre les valises une par une. Il te regarde partir depuis la porte du vestiaire.*
 *(Variante si `flag('vukic_dit')` : « Tu m'as dit le ballon. Je te dois trois valises. »)*
-**Traces** : vukic_fidele, vukic_reste (« {annee} : Zoran Vukić est resté à {club} à la demande de {prenom} {nom}. Les trois valises sont dans le grenier. ») · **Réactions déclenchées** : co.re.camille_valises_vukic (§ 4.11) · **Lu plus tard par** : 30 (`jp_fils` plus, `en_sms` plus), 14 (Vukić adjoint des Cobalts), 90 (« Trois générations » : le cahier hérité)
+**Traces** : vukic_fidele, vukic_reste (« {annee} : Zoran Vukić est resté à {club} à la demande de {prenom} {nom}. Les trois valises sont dans le grenier. ») · **Réactions déclenchées** : co.re.camille_valises_vukic (§ 4.8) · **Lu plus tard par** : 30 (`jp_fils` plus, `en_sms` plus), 14 (Vukić adjoint des Cobalts), 90 (« Trois générations » : le cahier hérité)
 
 ### 1.9 Les retrouvailles
 
@@ -178,11 +178,11 @@ Il arrive à 7 h, le président à 6 h 30 : c'est la première chose qu'il t'app
 → **Je te connais, Zoran** — effets : force −1, relation.vukic +1, vestiaire + — *Tu ne changes rien. Le gardien sort trop tôt. Il te regarde depuis son banc sans un geste.*
 
 ### 1.10 Anecdotes
-- **ANECDOTE 01.vukic_tasse** — Type : objet · Où : `en.vukic.premier_matin`, retrouvailles · Texte : Sa tasse est une tasse de l'Étoile de Dalmarie, ébréchée en 1979. Il la sucre, jamais il ne la lave à la machine.
-- **ANECDOTE 01.vukic_voiture** — Type : détail de décor · Où : brève d'Écho, Nouvelle · Texte : Il roule dans une berline grise de 1986 qu'il n'a jamais changée ; « elle démarre », dit-il, comme s'il parlait d'un gardien.
-- **ANECDOTE 01.vukic_superstition** — Type : légende de club · Où : `co.vukic.ballon_lache`, set-piece `gm_annonce` · Texte : Il ne regarde jamais un centre venu de la gauche depuis le banc. Il baisse les yeux sur le cahier ; les joueurs croient qu'il note.
-- **ANECDOTE 01.vukic_repas** — Type : détail de décor · Où : `en.adjoint_dine` (11), brèves · Texte : Au restaurant du port il commande toujours des moules, jamais de frites. « Les frites, c'est pour ceux qui ont gagné. »
-- **ANECDOTE 01.vukic_cahier** — Type : objet (héritable) · Où : Dossier (objet), 90 (lignée) · Texte : Le cahier est un cahier d'écolier à petits carreaux, marine, un par saison. Le premier date de 1981. Aucun n'a de nom sur la couverture.
+- **01.vukic_tasse** — objet · `en.vukic.premier_matin`, retrouvailles · Sa tasse est une tasse de l'Étoile de Dalmarie, ébréchée en 1979. Il la sucre, jamais il ne la lave à la machine.
+- **01.vukic_voiture** — décor · brève d'Écho, Nouvelle · Il roule dans une berline grise de 1986 qu'il n'a jamais changée ; « elle démarre », dit-il, comme s'il parlait d'un gardien.
+- **01.vukic_superstition** — légende · `co.vukic.ballon_lache`, set-piece `gm_annonce` · Il ne regarde jamais un centre venu de la gauche depuis le banc. Il baisse les yeux sur le cahier ; les joueurs croient qu'il note.
+- **01.vukic_repas** — décor · `en.adjoint_dine` (11), brèves · Au restaurant du port il commande toujours des moules, jamais de frites. « Les frites, c'est pour ceux qui ont gagné. »
+- **01.vukic_cahier** — objet (héritable) · Dossier (objet), 90 (lignée) · Le cahier est un cahier d'écolier à petits carreaux, marine, un par saison. Le premier date de 1981. Aucun n'a de nom sur la couverture.
 
 ### 1.11 Réaction propre
 ### RÉACTION en.re.josiane_cahier  —  Le cahier a voyagé
@@ -234,7 +234,7 @@ Thierry Bréhaut, « Titi » depuis les poussins ; personne ne dit Thierry, pas 
 « Le nouveau porte les bouteilles, c'est la règle depuis avant toi. Le groupe vit bien quand chacun porte quelque chose, petit. »
 ← **Je porte les bouteilles** — effets : vestiaire ++, tribunes −, relation.brehaut +1, set: groupe_accepte — *Tu portes. Vecchio te fait un clin d'œil ; il les a portées dix-sept ans.*
 → **Je ne suis pas là pour ça** — effets : vestiaire −−, tribunes +, relation.brehaut −1, set: mouton_noir — *Il pose le pack devant tes pieds. Tout le monde regarde le pack.*
-**Traces** : groupe_accepte, mouton_noir (chapitre 10, `jp.brassard_test` : ce chapitre-ci en écrit l'ouverture, 10 la suite) · **Réactions déclenchées** : co.re.vecchio_bouteilles (§ 7.11) · **Lu plus tard par** : 10 (`jp.brassard_test` étapes 2-5), 30 (alarme vestiaire basse « plus de passe », `jp_mouton` plus)
+**Traces** : groupe_accepte, mouton_noir (chapitre 10, `jp.brassard_test` : ce chapitre-ci en écrit l'ouverture, 10 la suite) · **Réactions déclenchées** : co.re.vecchio_bouteilles (§ 7.8) · **Lu plus tard par** : 10 (`jp.brassard_test` étapes 2-5), 30 (alarme vestiaire basse « plus de passe », `jp_mouton` plus)
 
 ### SCÈNE en.brehaut.groupe_a_lu  —  Le groupe a lu
 **Rôle** : entraineur · **Intrigue** : co.brehaut_costume · **Étape** : 1/6 (variante entraîneur) · **Moment** : saison 0, [3,8] · **Lieu** : le vestiaire, un journal plié sur le banc · **Conditions** : `seen('en.presse.trois_questions') || flag('special')`
@@ -382,7 +382,7 @@ Doc Sabatier ; personne ne connaît son prénom, sauf Josiane (Marcel) et elle n
 « J'ai été médecin d'une équipe cycliste, il y a longtemps, et j'ai rempli un flacon une fois. Ça reste entre la table et moi ; je te le dis pour que tu saches ce que je refuserai. »
 ← **Je le garde pour moi** — effets : relation.sabatier +2, set: sabatier_secret, outcome: confident — *Il ferme le thermos. Il dort mieux ; toi, tu penses au flacon B.*
 → **Tu aurais dû le dire avant** — effets : relation.sabatier −1, direction + — *Il ne se défend pas. Il range le gobelet. Il ne t'invitera plus au thermos.*
-**Traces** : sabatier_secret · **Réactions déclenchées** : co.re.rouvier_thermos (§ 12.11) · **Lu plus tard par** : 15 (commission antidopage : variante « il témoigne pour toi »), co.retrouvailles.sabatier_sourire, 30 (le médecin après 70 ans)
+**Traces** : sabatier_secret · **Réactions déclenchées** : co.re.rouvier_thermos (§ 12.8) · **Lu plus tard par** : 15 (commission antidopage : variante « il témoigne pour toi »), co.retrouvailles.sabatier_sourire, 30 (le médecin après 70 ans)
 
 ### SCÈNE en.sabatier.genou_du_petit  —  Le genou du petit
 **Rôle** : entraineur · **Intrigue** : co.sabatier_table · **Étape** : 3/6 · **Moment** : saison 1+, [6,14] · **Lieu** : ton bureau, la porte fermée, une radio contre la fenêtre · **Conditions** : `chars.mbako.statut == 'club'` ; sinon « le petit » est le jeune gardien (`gardien_jeune`)
@@ -507,7 +507,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 « Tu rentres à quelle heure ? Je demande pour la maternité, le travail a commencé et le match dans une heure, je sais. »
 ← **J'arrive, le match attendra** — effets : relation.camille +2, vestiaire −, tribunes −, set: sacha_nee, set: naissance_avant, outcome: nee — *Vukić fait la causerie. Sacha naît à la vingt-troisième minute ; tu ne sauras jamais le score de la vingt-troisième.*
 → **Après le coup de sifflet** — effets : relation.camille −2, tribunes +, set: sacha_nee, set: naissance_apres, outcome: nee — *Tu arrives à minuit. Elle dort ; Sacha aussi ; Josiane est dans le couloir, elle a apporté un dossier et un lapin.*
-**Traces** : sacha_nee, naissance_avant, naissance_apres (« {annee} : Sacha est née pendant le match. {prenom} {nom} est arrivé{pg, select, f{e} other{}} à minuit. ») · **Réactions déclenchées** : co.re.josiane_lapin (§ 4.11) · **Lu plus tard par** : 19 (`co.sacha.six_ans` variante « tu es arrivé après »), 10 (Succession : héritière), 13 (« Papa, tu as tweeté »), 14 (l'hymne), 15 (l'ONG), 90 (lignée), 30 (set-piece `bilan_carrefour` : « il y a quelqu'un à la maison maintenant »)
+**Traces** : sacha_nee, naissance_avant, naissance_apres (« {annee} : Sacha est née pendant le match. {prenom} {nom} est arrivé{pg, select, f{e} other{}} à minuit. ») · **Réactions déclenchées** : co.re.josiane_lapin (§ 4.8) · **Lu plus tard par** : 19 (`co.sacha.six_ans` variante « tu es arrivé après »), 10 (Succession : héritière), 13 (« Papa, tu as tweeté »), 14 (l'hymne), 15 (l'ONG), 90 (lignée), 30 (set-piece `bilan_carrefour` : « il y a quelqu'un à la maison maintenant »)
 
 ### SCÈNE co.camille.metier  —  Le cabinet ouvre en septembre
 **Rôle** : tous sauf joueur amateur · **Intrigue** : co.camille_naissance · **Étape** : 2/6 · **Moment** : saison 1+, [2,10] · **Lieu** : la cuisine, une lettre à en-tête sur la table · **Conditions** : `flag('camille_ici') && !flag('divorce')` ; le mot « cabinet » devient « rédaction », « agence », « service », « permanence » selon `camille_<metier>`
@@ -2702,3 +2702,106 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 **SACHA** *(dix ans et plus — sourire — elle est venue chercher le seau, sans le prendre)*
 « J'ai demandé à monsieur Loco pourquoi le banc était loin, il a souri, il n'a pas répondu ; toi, tu le sais maintenant. Tu m'as promis de ne pas mentir : c'est loin pourquoi ? »
 **Un bouton** : **Douze mètres, en soixante-sept** — effets : relation.sacha +1, relation.loco +1 — *Elle compte les mètres. Douze. Elle s'assoit sur le seau. Loco la regarde depuis la haie ; il n'y a pas de caméra ; il sourit.*
+
+---
+
+## 20. La couture : traces, intrigues, questions
+
+### 20.1 Ce que le chapitre lit (charte § 5.1) et où
+
+| Trace | Lue par (scène de ce chapitre) |
+|---|---|
+| `mbako_vendu` | en.mbako.revient, en.mere.clause_en_face, co.mbako.trahison_clause (pose), co.re.gege_pardon, co.retrouvailles.mbako_noir |
+| `mbako_lance` | en.sabatier.genou_du_petit (variante), pr.mbako.statue, en.mbako.banc_en_face (variante `_lance`) |
+| `mbako_garde` | pr.mbako.statue (condition), co.mbako_horloge (entrée) |
+| `pacte_gege` | jp.gege.numero (variante), co.gege_virage (entrée) |
+| `onze_du_virage` | pr.gege.socios (pose de nouveau), § 9 registres |
+| `gigi_staff` | sl.vecchio.troisieme (statut staff), co.vecchio_cinq_retraites (entrée), `co.vecchio.faveur_reunion` |
+| `genou_opere` | ds.sabatier.visite_cachee |
+| `flacon_b` | in.sabatier.temoin, co.rouvier.carnet_lu |
+| `camille_ici` | co.camille.metier |
+| `divorce` | co.camille.telephone, co.retrouvailles.camille_telephone, co.sacha.* (`!divorce` sauf nom_de_famille, heritiere) |
+| `clow_ingrat` | en.clow.fils (`_ingrat`), co.clow.enterrement (`_pilier`) |
+| `brassard_gigi` | en.brehaut.dernier_brassard (`_gigi`), en.vecchio.brassard |
+| `bus_menace` | co.vecchio.faveur_reunion (lu par 11 en retour), sl.vecchio.troisieme |
+| `derby_perdu` | co.camille.boulangere, jp.gege.numero (`_derby`), en.klopf.derby, co.paulette.orange |
+| `sacha_nee` | toutes les scènes de § 19 ; co.camille.tribune_vide ; co.re.sacha_hymne, co.re.sacha_seau |
+
+### 20.2 Ce que le chapitre pose et qui doit le lire
+
+Trois familles. **Les traces transversales de la charte** que ce chapitre pose ou repose : `sacha_nee` (co.camille.naissance ; la carte `jp.famille.naissance` existante doit la poser aussi : remarque pour 10 et le chantier données), `divorce` (existant), `mbako_vendu` (palier −3), `ami_ultras` (jp.gege.numero), `onze_du_virage` (pr.gege.socios), `pharmacie_propre` (paliers +3 de Sabatier et Rouvier), `diplome` et `diplome_arrange` et `derogation` (Brissac), `tribune_a_renover` / `tribune_fermee` (Paulette), `bus_descendu` et `mutinerie_matee` (Fauvel +3), `hymne_impose` et `binational_bloque` (Dembo, Brissac), `coach_vire` (Klopf), `dembo_vendu` (Rouvier, Dembo), `gerard_parti` (Gérard −3), `infiltre` / `genou_ecoute` (Rouvier). **Les objets héritables** (Dossier, chapitre 90 : un seul objet actif par carrière, à trancher) : `cahier_vukic` (via `vukic_fidele`), `telegramme_clow`, `filet_gigi`, `seau_loco`, `casquette_klopf`, `sifflet_kine`, `sifflet_dede`, `ballon_dembo`, `echarpe_paulette`, `echarpe_gege`, `table_du_doc`, `cassette_1967`. **Les traces propres**, toutes lues au moins une fois par une autre fiche de ce chapitre ou par un chapitre nommé dans « Lu plus tard par » ; les plus structurantes, à inscrire au chapitre 90 :
+
+| Trace | Posée par | Lecteurs désignés |
+|---|---|---|
+| `vukic_fidele`, `vukic_reste`, `cahier_garde`, `cahier_rendu`, `serrure_changee` | § 1 | 30 (en_sms, en_dauphin, jp_fils, bilan_carrefour), 11 (en.adjoint_dine), 14, 90 |
+| `brehaut_ds`, `brehaut_frere`, `brehaut_previens`, `petition_vestiaire`, `lettre_vestiaire`, `brehaut_ecarte` | § 2 | 12, 13, 10, 11, 14, 20, 30 |
+| `sabatier_secret`, `visite_arrondie`, `sabatier_temoin`, `dossier_medical_transmis`, `armoire_videe`, `genou_petit_dit`, `cheville_cachee` | § 3 | 15, 12, 11, 14, 20, 30 ; § 6, § 12 |
+| `sacha_nee`, `naissance_avant/apres`, `camille_metier`, `hotel_assume`, `maison_cherchee`, `sacha_tribune_vide`, `camille_agente_mandat` | § 4 | § 19, 30, 11, 13, 02, 12, 90 |
+| `clow_stage`, `clow_trois_verres`, `clow_pas_ecoute`, `fils_clow_main/refus`, `clow_a_parle`, `telegramme_clow` | § 5 | 10, 11, 14, 12, 20, 30, 31, 90 ; § 15 |
+| `mbako_decide`, `mbako_revenu`, `mbako_cobalts`, `mbako_kambara`, `primes_ecole/seules`, `mbako_statue`, `mbako_banc`, `hymne_chante` | § 6 | 10, 11, 13, 14, 15, 20, 30, 90 ; § 8 |
+| `gants_pretes`, `brassard_gant`, `gigi_trebignac`, `gigi_vingt_sixieme`, `filet_gigi`, `gigi_mort`, `une_rendue`, `reunion_ecoutee` | § 7 | 13, 14, 20, 31, 30, 90, 02 ; § 18 |
+| `mentor_mbako`, `rival_mbako`, `mere_trois_pour_cent`, `mere_rien`, `mere_ecoutee`, `mbako_ecoute_seul`, `mere_agente_vingt`, `mere_examen`, `mere_dix_neuf_ans`, `lettre_mbako`, `mere_a_parle`, `numero_mere` | § 8 | 10, 12, 14, 15, 02, 20, 31, 90 ; § 6 |
+| `abonnements_cinq_ecus`, `tarif_plein`, `gege_radio`, `gege_compte_anonyme`, `gege_socios`, `numero_siffle`, `siege_leve`, `bache_cousin` | § 9 | 13, 15, 20, 30, 31, 90, 02, 10 |
+| `cassette_regardee/jetee`, `loco_banc_rapproche`, `loco_contrarie`, `loco_convoque`, `loco_compris`, `loco_prefere`, `klopf_prefere`, `loco_silence`, `seau_loco` | § 10 | 11, 12, 13, 20, 30, 90, 31 ; § 19 |
+| `couru_avec_klopf`, `revanche_klopf`, `klopf_lateral`, `klopf_sans_gauche`, `klopf_refuse`, `klopf_trois_finales`, `klopf_a_pris`, `chante_par_klopf`, `casquette_klopf` | § 11 | 11, 12, 13, 14, 20, 30, 31, 90, 02 |
+| `sifflet_kine`, `sifflet_ignore`, `stage_commando(_refuse)`, `tables_montees/hall`, `dembo_trois_semaines`, `rouvier_cabinet/fleurs`, `rouvier_a_parle`, `carnet_rouvier_transmis` | § 12 | 10, 11, 14, 15, 20, 30, 90 ; § 3, § 4 |
+| `yacht_dembo`, `dembo_libre/banc`, `dembo_loft`, `dembo_hymne_muet`, `dembo_prete`, `dembo_ruine`, `poeme_corbelin`, `gamin_demande`, `gamin_vendu_sans`, `dembo_a_parle`, `ballon_dembo` | § 13 | 10, 11, 12, 14, 20, 30, 31, 90, 02 ; § 19 |
+| `capitaine_fauvel_confirme`, `brassard_en_jeu`, `groupe_cobalts`, `liste_cobalts`, `fauvel_groupe`, `primes_apres`, `fauvel_syndicat`, `syndicat_ecarte`, `greve_soutenue/brisee`, `fauvel_relais/transmet`, `fauvel_premier_tireur`, `fauvel_ne_tire_pas`, `lettre_groupe_publique` | § 14 | 14, 15, 13, 11, 20, 30, 31, 90, 02 ; § 2, § 7 |
+| `trop_lent_couru/autre`, `naturalise_appele/refuse`, `binational_libre`, `primes_egales/inegales`, `mirevaux_jeu/cameras`, `jeune_espoirs`, `jeune_garde_un_an`, `dossier_diplome_rouvert`, `diplome_brissac`, `cahier_brissac` | § 15 | 10, 11, 12, 14, 15, 20, 30, 31, 02 ; § 5, § 6 |
+| `paye_en_bieres`, `buvette_minuit/loi`, `boite_ouverte/confiance`, `gerard_merci`, `gerard_pas_merci`, `gerard_mot_envoye`, `gerard_oublie`, `gerard_revenu/refuse`, `merguez_gerard/dupuis`, `bas_de_laine(_refuse)`, `mot_gerard` | § 16 | 10, 13, 20, 30, 90, 02 ; § 7, § 2 |
+| `samedi_choisi`, `boulot_choisi`, `neveu_lace/titulaire`, `gardienne_titulaire/banc`, `dede_paye/benevole`, `dede_gamin_pro`, `dede_pas_rappele`, `dede_adjoint/ecarte`, `dede_montbeliac`, `sifflet_dede`, `dede_mort` | § 17 | 10, 11, 13, 15, 20, 30, 31, 90, 02 ; § 12 |
+| `paulette_14a`, `paulette_loge`, `place_14a_joueur`, `bord_pelouse`, `orange_paulette`, `paulette_14b_vide`, `paulette_village`, `paulette_oubli`, `echarpe_paulette`, `echarpe_14a` | § 18 | 30 (ta_loge, jp_place14b, la_tribune, le_dernier_derby), 10, 11, 13, 20, 31, 90 ; § 7, § 19, § 4 |
+| `sacha_promesse_tenue/rompue`, `sacha_nom`, `sacha_promesse_juin`, `tweet_efface/assume`, `sacha_hymne_muette`, `sacha_expliquee`, `sacha_ong`, `ong_ecartee`, `sacha_heritiere`, `sacha_refus`, `sacha_autre_nom`, `tribune_pleine_sacha`, `trois_generations` | § 19 | 90 (lignée, Succession, Nemesis de sang), 30, 13, 14, 15, 02, 20, 10 ; § 4, § 13 |
+
+Lignes d'Almanach : chaque trace de ce chapitre porte sa ligne dans la scène qui la pose (« Traces »), ≤ 120 caractères, au gabarit `{annee} : …` ; les traces sans ligne sont marquées `journal:` (poids 1-2) et ne sont pas des traces déclarées.
+
+### 20.3 Index des dix-neuf intrigues
+
+| Intrigue | Porteur | Rôles | Thème | Scènes (dont paliers et retrouvailles) |
+|---|---|---|---|---|
+| co.vukic_cahier · Le cahier de Vukić | vukic | en, jp, sl, ds | direction | 6 + 2 + 3 |
+| co.brehaut_costume · Le costume de Bréhaut | brehaut | jp, en, ds, pr, sl | vestiaire | 6 + 2 + 3 |
+| co.sabatier_table · Entre la table et moi | sabatier | jp, en, sl, ds, in | corps | 6 + 2 + 3 |
+| co.camille_naissance · Sacha | camille | tous | famille | 6 + 2 (secours médecin, agente) + 3 |
+| co.clow_lundi · Lundi, huit heures | clow | jp, en, sl, ds | presse | 6 + 2 + 3 |
+| co.mbako_horloge · L'horloge Mbako | mbako | jp, en, sl, in, pr | mercato | 6 + 2 + 3 |
+| co.vecchio_cinq_retraites · Les cinq retraites de Gigi | vecchio | jp, en, am, pa, sl, pr | vestiaire | 6 + 2 + 3 |
+| co.mere_trois_pour_cent · Trois pour cent | mere_mbako | jp, ds, sl, in, en | mercato | 6 + 2 + 3 |
+| co.gege_virage · Le virage | gege | jp, pr, en, in, am, pa | tribune | 6 + 2 + 3 |
+| co.loco_cassette · La cassette | loco | en, ds, jp, pr | absurde | 6 + 2 + 3 |
+| co.klopf_pressing · On court, on presse, on chante | klopf | en, ds, sl, pr | vestiaire | 6 + 2 + 3 |
+| co.rouvier_sifflet · Le sifflet du kiné | rouvier | jp, en, sl, ds, pr, in | corps | 6 + 2 + 3 |
+| co.dembo_ballon · Donne-moi le ballon | dembo | jp, en, pr, sl, ds, in | vestiaire | 6 + 2 + 3 |
+| co.fauvel_liste · On est un groupe, pas une liste | fauvel | sl, jp, in, en | instances | 6 + 2 + 3 |
+| co.brissac_chiffres · Les chiffres sont têtus | brissac | en, sl, in, jp, pr | instances | 6 + 2 + 3 |
+| co.gerard_boite · La boîte en fer | gerard | am, pa, en, pr | argent | 6 + 2 + 3 |
+| co.dede_sifflet · Mon sifflet est à toi | dede | am, pa, jp, en | famille | 6 + 2 + 3 |
+| co.paulette_14b · Place 14B | paulette | tous | tribune | 6 + 2 + 3 |
+| co.sacha_promis · Tu m'as promis | sacha | tous | famille | 6 + 2 + 3 |
+
+Ratio léger / stratégique / drame à l'échelle du chapitre : les drames sont sobres et isolés (l'enterrement de Clow, la minute de Gigi, la soixante-dixième de Paulette, l'enterrement de Dédé : quatre scènes à une sortie, aucune en S0, aucune partageable en Une) ; environ un tiers des scènes sont de thème `absurde` ou `famille` (Loco, Gérard, Dédé, Sacha, les casquettes, le bateau de pêche).
+
+### 20.4 Questions ouvertes (pour le showrunner et le chapitre 90)
+
+1. **Troisième retrouvailles.** La spec § 1.13 ne prévoit que `_sourire` et `_noir` ; ce chapitre en ajoute une par personnage (`_telephone`, `_enterrement`, `_fantome`, `_banc_en_face`, `_carnet`, `_cassette`, `_tapis`, `_corbeaux`, `_hymne`, `_cabinet`, `_carte_postale`, `_place_vide`, `_succession`, `_cousin`). Elles sont servies une fois par carrière sur un statut (`retraite`, `mort`, `rival`) et non à la Passation ; le moteur doit accepter un troisième id dans `retrouvailles:` ou les traiter comme des cartes de rôle `once` à condition de statut. À trancher.
+2. **`statut: mort`.** La spec ne liste que `club | staff | parti | vendu | retraite | rival`. Ce chapitre suppose un statut `mort` (Clow, Vecchio 2031, Paulette 2009, Dédé 2012, Sabatier 2029, Brissac 2036, Mère de Mbako 2041, Gérard 2019, Fauvel 2045, Dembo 2046, Loco 2039, Vukić 2038, Bréhaut 2044, Gégé 2040, Klopf 2047, Mbako 2049) et une relation posthume (« +1 (posthume) ») qui n'affecte que la mémoire des clubs et le Panthéon. Le chapitre 31 écrit les Nouvelles de décès ; le chapitre 90 décide si `mort` est un statut ou `parti` + une trace `<id>_mort`.
+3. **Colline dans `co.vecchio.minute`.** Colline est un personnage du chapitre 02 (camp `instances`) ; il parle ici comme voix sans portrait. Si 02 lui donne un portrait, la scène le prend tel quel.
+4. **Le fils de Clow, Momo, Nino, Bébert, Marinette, la petite Paulette, la petite Josiane, la docteure Ferrand, Ilan Sorel, Noa Vandel, Bastien Lorrain, Aurèle Castan** : voix sans portrait dans ce chapitre (deux cartes au plus chacune, pas de relation), conformément à § 2.3 ; le chapitre 90 décide lesquels deviennent des personnages à statut (candidats : Noa Vandel, le prodige d'après ; Nino, le capo d'après ; Owen Clow).
+5. **`jp.famille.naissance` (existante)** pose `jeune_papa` mais pas `sacha_nee` : à ajouter par le chantier données pour que Sacha existe aussi dans une carrière commencée joueur.
+6. **Les objets héritables** (douze dans ce chapitre) : le Dossier n'en porte qu'un ; le chapitre 90 fixe la règle de choix (le dernier reçu, ou un choix à la Succession).
+7. **Deux sifflets** (Rouvier, Dédé) : ce sont deux objets distincts (`sifflet_kine`, `sifflet_dede`) ; la réaction de Rouvier « deux sifflets, un seul kiné » est à écrire par 12 si les deux coexistent.
+8. **`pr.gerard.trahison_caisse`** double `en.evt.gerard` (existante, entraîneur) côté président amateur ; le chapitre 13 harmonise (une seule pose de `gerard_parti` par carrière).
+9. **Espaces d'ids** : ce chapitre réserve `co.<id>.*`, `<préfixe>.<id>.*` pour les dix-neuf ids de personnages (`en.vukic.*`, `jp.vecchio.*`, `en.mbako.*`…) ; les chapitres 10-15 gardent leurs mots d'arc (`en.retour_mbako`, `en.gigi_staff`, `en.brassard_brehaut`, `jp.conseils_gigi`, `co.pharmacie`, `co.derby`, `co.cartons_camille`). Aucune collision connue avec `content/`.
+10. **Réactions citées à écrire ailleurs** : `co.re.barbier_doudoune` (02), `en.rouvier.commando_blesses` (11, chaîne), `en.re.camille_le_verre` variante joueur (11), `en.re.gege_jumelles` variantes (11).
+
+### 20.5 Check-list du chapitre (§ 6.2 de la charte)
+
+- [x] 19 fiches au gabarit § 4.2, avec fenêtre et suivant ; adresse dans les huit rôles (§ 0.1) ; cinq registres × deux répliques.
+- [x] 38 scènes de palier (dont les existantes citées et les variantes de rôle ajoutées : Gégé joueur/président, Mbako sélectionneur, Camille médecin/agente).
+- [x] 57 scènes de retrouvailles (deux au gabarit spec + une troisième hors gabarit par fiche).
+- [x] 121 scènes propres (six par fiche, plus des variantes de rôle et deux compléments), 14 réactions au gabarit § 4.4, 95 anecdotes au gabarit § 4.9 ; 216 scènes en tout.
+- [x] Répliques ≤ 200 caractères, deux phrases, un tic, un nom une fois ; libellés ≤ 28, première personne, sans « Oui / Non », sans le nom du joueur ; effets en notation § 4.11 ; conséquences sans explication.
+- [x] Toutes les traces posées ont un lecteur nommé (« Lu plus tard par ») ; les traces lues de § 5.1 sont toutes lues (§ 20.1).
+- [x] Aucun nom réel, aucune monnaie réelle (francs, écus), aucun chiffre de jauge ou de relation dans un texte ; les pays sont ceux de la charte (Dalmarie, Kambara, Vestrie, Al-Dorado) ; « au soleil » pour la fuite de Gérard.
+- [x] Années cohérentes (pas de Flux avant 2007, pas de vidéo avant 2016, fax jusqu'en 2010, écus dès 2002) ; les âges suivent 1990 + saisons.
+- [x] Drames sobres, hors S0, jamais deux d'affilée, jamais partagés en Une.
