@@ -19,12 +19,16 @@ roles:
 # 10-12, retour 13-17.
 director:
   nouvelle_slots: { entraineur: [7, 12, 14], joueur: [7, 12, 14] }
-  gap_max: 3                 # cartes sans temps d'histoire tolérées d'affilée
-  soft_steps_max: 8          # étapes servies en bande 2 par saison (les échues ne comptent pas)
+  gap_max: 2                 # cartes sans temps d'histoire tolérées d'affilée : 2 ⇒ écart max 3 entre temps d'histoire (spec variété §5.2) ; 3 → 2 avec le tirage de saison
+  soft_steps_max: 10         # étapes servies en bande 2 par saison (les échues ne comptent pas) ; 8 → 10 (spec variété §2.9)
   min_active: 2              # maintainArcs ouvre tant qu'il y a moins d'arcs de premier plan
-  max_active: 3              # forceStory n'ouvre pas au-delà
+  max_active: 4              # forceStory n'ouvre pas au-delà ; 3 → 4 (la réserve peut s'ouvrir sur un trou de cadence)
   events_max: 1
   alarms_max: 3
+  reactions_max: 4           # réactions (cartes hors créneau) par saison — étape 2
+  unes_breves: 3             # brèves de la Une — étape 2
+  journal_par_saison: 12     # compaction de l'Almanach — étape 2
+  ouverture_ecart: 3         # jamais deux ouvertures d'intrigue à moins de 3 slots (spec variété §1.2)
   phase_mult:
     mercato: { presaison: 4, hiver: 4, aller: 0.2, retour: 0.2 }
     moment:  { retour: 2 }

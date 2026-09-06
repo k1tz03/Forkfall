@@ -23,7 +23,15 @@ arcs:
     once: true
     every_season: false
     min_season: 0
-    when: "gauges.caisse < 45 && !flag('club_a_lancienne')"
+    theme: argent
+    carrier: nassir
+    replay: { after: 2, max: 2 }
+    issues: [ancienne, naming, rachat]
+    traces:
+      naming_signe:     "{annee} : le stade de {club} s'appelle Arena Qatalyst. Le nom en orange, le nôtre en dessous, en petit."
+      club_a_lancienne: "{annee} : {prenom} {nom} a renvoyé le fonds et sa canette. Un club à l'ancienne."
+    hint: "Un sponsor entre par le maillot. Il ne ressort pas."
+    when: "gauges.caisse < 45 && !flag('club_a_lancienne') && !flag('club_actif')"
     cast: [nassir, josiane, gege, aulard]
     start: [3, 6]
     same_club: true
@@ -31,7 +39,10 @@ arcs:
     epilogue: { caisse: "-" }
     steps:
       - id: maillot
-        card: en.nassir.maillot
+        # « Encore » : la relance (deux saisons après un prêt refusé) lit plays().
+        card:
+          - { id: en.nassir.maillot_encore, if: "plays('en.nassir_proprietaire') >= 1" }
+          - { id: en.nassir.maillot }
         # Refus : Nassir revient plus tard ; accord : il revient vite, mais
         # pas au point de chasser la 3e Nouvelle de la S0 (slot 14) : depuis
         # le maillot (slots 8-10), [6,10] est dû au slot 15 (le seul libre) ou
@@ -54,6 +65,7 @@ arcs:
           - { step: retrait, in: [2, 4] }
       - id: retrait
         card: en.nassir.retrait
+        outcome: ancienne
         next: []
       - id: pret
         card: en.nassir.pret
@@ -64,6 +76,7 @@ arcs:
           - { step: rachat, if: "vars.nassir_palier >= 3", in: [6, 12] }
       - id: rachat
         card: en.nassir.rachat
+        outcome: rachat
         next: [ { step: notification, in: [6, 14] } ]
       - id: notification
         card: en.nassir.notification

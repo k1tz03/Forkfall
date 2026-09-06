@@ -1,10 +1,29 @@
+# `epitaph_plus` (spec variété §2.6) : seconde phrase conditionnelle sous
+# l'épitaphe, la première variante dont le `when` est vrai (≤ 2 par fin ;
+# `when` lit les traces, relations, ennemis, `bilan.*` non). Placeholders de
+# formatText autorisés ({prenom} {nom} {club} {ville} {pg, select, …}).
+# `rebond: { when, postulat }` est réservé (parsé, non lu) pour un lot ultérieur.
 endings:
   # --- Entraîneur ---
   - {id: en_bus, gauge: vestiaire, side: vide, rarity: rare, title: "Le bus", epitaph: "Le vestiaire a refusé de descendre du bus. Tu es descendu seul, ta valise à la main. Il pleuvait, évidemment."}
   - {id: en_copain, gauge: vestiaire, side: plein, title: "Le copain", epitaph: "Tu étais leur meilleur ami. Les meilleurs amis ne se font pas obéir. Le président l'a compris avant toi."}
-  - {id: en_banderole, gauge: tribunes, side: vide, title: "La banderole", epitaph: "La banderole faisait vingt mètres. Ton nom en prenait douze. Le mot DEHORS, le reste."}
+  - id: en_banderole
+    gauge: tribunes
+    side: vide
+    title: "La banderole"
+    epitaph: "La banderole faisait vingt mètres. {NOM} en prenait douze. Le mot DEHORS, le reste."
+    epitaph_plus:
+      - { when: "flag('onze_du_virage')", text: "Le onze du virage, lui, est resté affiché au local." }
   - {id: en_otage, gauge: tribunes, side: plein, title: "L'otage du kop", epitaph: "Les ultras t'aimaient tant qu'ils composaient ton équipe. Le président a préféré les laisser composer ton successeur."}
-  - {id: en_sms, gauge: direction, side: vide, rarity: commune, title: "Le SMS de 23h47", epitaph: "Viré par SMS entre la conférence de presse et le parking. Le message contenait une faute d'orthographe. Tu l'as corrigée."}
+  - id: en_sms
+    gauge: direction
+    side: vide
+    rarity: commune
+    title: "Le SMS de 23h47"
+    epitaph: "Viré{pg, select, f{e} other{}} par SMS entre la conférence de presse et le parking. Le message contenait une faute d'orthographe. Tu l'as corrigée."
+    epitaph_plus:
+      - { when: "relation.gege >= 1", text: "Gégé a découpé la Une. Il la garde." }
+      - { when: "enemy('meneche')",   text: "Ménèche avait le SMS avant toi. Il l'a publié avec la faute." }
   - {id: en_placard, gauge: direction, side: plein, title: "Promotion-placard", epitaph: "Nommé Directeur du Développement International. Ton bureau n'a pas de fenêtre. Ni de téléphone. Ni de développement."}
   - {id: en_decoupe, gauge: caisse, side: vide, title: "Vendu à la découpe", epitaph: "Plus de budget. L'équipe a été vendue joueur par joueur, et toi avec les meubles."}
   - {id: en_coupable, gauge: caisse, side: plein, title: "Le coupable désigné", epitaph: "Tu as réclamé et obtenu des moyens fous. La Commission a bloqué le club, et le président a trouvé le nom du responsable sur ta porte."}

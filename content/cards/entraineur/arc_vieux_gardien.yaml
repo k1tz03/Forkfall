@@ -3,21 +3,54 @@
 # `arc:` est le THÈME de la carte, pas l'id de l'arc.
 cards:
   # ------------------------------------------------------------- E1 · retraite
+  # Escalier du rituel (plays >= 1) : « encore une ».
+  - id: en.vieux.retraite_encore
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: vecchio
+    tone: leger
+    text: "Vecchio, gants sous le bras : « Ma retraite en juin, je l'ai prise. Elle n'a pas pris. Encore une, coach, la dernière. J'en ai vu d'autres, des dernières. Dans les buts, ou tout court ? »"
+    left:
+      label: "Dans les buts, encore"
+      effects: {vestiaire: "+", force: -2, parole: 1, promise: true, set: [vecchio_promis], var: {vecchio_retraites: "+1"}, relation: {vecchio: 2}, outcome: finale}
+      answer: "Il range ses gants. Il les ressort. Il en a vu d'autres, des juin."
+    right:
+      label: "Coach des gardiens, janvier"
+      effects: {force: 2, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune}
+      answer: "Il ne dit rien. Le jeune a déjà ses gants ; ce sont les siens."
+
+  # Escalier du rituel (plays >= 2) : « cette fois c'est vrai ».
+  - id: en.vieux.retraite_vrai
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio, sans ses gants : « Cette fois c'est vrai. Le doc l'a écrit, ma femme l'a lu. J'en ai vu d'autres, des retraites ; celle-là, je la vois. Tu me gardes au staff, ou tu me laisses partir ? »"
+    left:
+      label: "Reste, au staff"
+      effects: {vestiaire: "++", direction: "+", set: [gigi_staff], relation: {vecchio: 2}, outcome: staff, next: end}
+      answer: "Il pose les gants sur ton bureau. Il les reprendra pour les montrer."
+    right:
+      label: "Bon vent, Gigi"
+      effects: {vestiaire: "-", force: 1, relation: {vecchio: -1}, outcome: parti, next: end}
+      answer: "Il ne dit rien. Il en a vu d'autres, des bons vents."
+
   - id: en.vieux.retraite
     roles: [entraineur]
     arc: vestiaire
     tags: [vestiaire, formation]
     speaker: vecchio
     tone: leger
-    once: true
     text: "Vecchio, gants sous le bras : « Je prends ma retraite en juin, comme chaque juin. J'en ai vu d'autres. Tu me gardes dans les buts, ou tout court ? »"
     left:
       label: "Dans les buts, capitaine"
-      effects: {vestiaire: "+", force: -2, parole: 1, promise: true, set: [vecchio_promis], var: {vecchio_retraites: "+1"}, relation: {vecchio: 2}}
+      effects: {vestiaire: "+", force: -2, parole: 1, promise: true, set: [vecchio_promis], var: {vecchio_retraites: "+1"}, relation: {vecchio: 2}, outcome: finale}
       answer: "Il ne dit rien. Il en a vu d'autres, des promesses."
     right:
       label: "Coach des gardiens, janvier"
-      effects: {force: 2, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}}
+      effects: {force: 2, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune}
       answer: "Le jeune arrête tout à l'entraînement. Le vieux regarde ailleurs."
 
   # --------------------------------------------------------------- E2 · epaule
@@ -27,7 +60,6 @@ cards:
     tags: [vestiaire, moment]
     speaker: vecchio
     tone: strategique
-    once: true
     text: "Vecchio, le bras raide : « Un coup sur l'épaule en sortant dans les pieds. Le doc dit que ça reste entre la table et lui ; moi je te le dis. Tu me sors ? »"
     left:
       label: "Tu joues, tu décides"
@@ -35,7 +67,7 @@ cards:
       answer: "Il joue d'un bras. Le doc ne te salue plus, mais il regarde le match."
     right:
       label: "Repos forcé"
-      effects: {force: -1, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}}
+      effects: {force: -1, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune}
       answer: "Le jeune prend sa place. Le vieux regarde ses gants."
 
   # ------------------------------------------- E3 · retour (deux variantes, S2)
@@ -45,7 +77,6 @@ cards:
     tags: [vestiaire, moment]
     speaker: vecchio
     tone: leger
-    once: true
     text: "Vecchio, à la reprise : « J'ai pris ma retraite en juin. Elle n'a pas pris. J'en ai vu d'autres, des gardiens de quarante-deux ans. Enfin, un. »"
     left:
       label: "Bienvenue, Gigi"
@@ -53,7 +84,7 @@ cards:
       answer: "Il range ses gants dans son casier. Le même. Personne n'y avait touché."
     right:
       label: "Le staff, cette fois"
-      effects: {force: 1, direction: "+", set: [gigi_staff]}
+      effects: {force: 1, direction: "+", set: [gigi_staff], outcome: staff}
       answer: "Il accroche ses gants chez les jeunes. Il les décroche parfois, le samedi."
 
   - id: en.vieux.retour_noir
@@ -62,7 +93,6 @@ cards:
     tags: [vestiaire, mercato]
     speaker: vecchio
     tone: strategique
-    once: true
     text: "Vecchio, sac sur l'épaule : « Je signe chez {rival}. Ils m'ont demandé, eux. J'en ai vu d'autres, des entraîneurs. »"
     left:
       label: "Reste, je m'excuse"
@@ -70,7 +100,7 @@ cards:
       answer: "Il pose le sac. Il ne dit pas oui. Il reste."
     right:
       label: "Bon vent"
-      effects: {vestiaire: "--", force: 1}
+      effects: {vestiaire: "--", force: 1, outcome: parti}
       answer: "Il part sans un mot. Son casier reste vide jusqu'en octobre."
 
   # ---------------------------------------------- E4 · bus (deux variantes, S2)
@@ -82,7 +112,6 @@ cards:
     tags: [vestiaire, rescue:vestiaire]
     speaker: vecchio
     tone: strategique
-    once: true
     text: "Vecchio, porte du bus : « Les gars parlent de ne pas descendre dimanche. J'en ai vu d'autres. Pas celle-là. Je descends le premier si tu montes leur parler. »"
     left:
       label: "Je monte"
@@ -101,7 +130,6 @@ cards:
     tags: [vestiaire, absurde]
     speaker: vecchio
     tone: leger
-    once: true
     text: "Vecchio, sur le parking : « Les gars parlaient de rester dans le bus dimanche, pour rire. Je suis descendu le premier, ils ont suivi. J'en ai vu d'autres. »"
     left:
       label: "Je monte quand même"

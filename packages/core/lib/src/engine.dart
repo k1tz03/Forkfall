@@ -9,6 +9,7 @@ import 'condition.dart';
 import 'content.dart';
 import 'draw/director.dart';
 import 'effects.dart';
+import 'naming.dart';
 import 'rng.dart';
 import 'state.dart';
 import 'text.dart';
@@ -22,7 +23,11 @@ class Engine {
   /// Default chronology start; each postulat carries its own `year`.
   static const int startYear = 1990;
 
-  GameState start(int seed, {int postulat = 0}) {
+  /// Démarre une carrière. Le nom et le genre saisis (spec variété §1.8) sont
+  /// cosmétiques : les trois tirages de `_makeEntities` (genre, prénom, nom)
+  /// sont conservés puis écrasés, donc « même code, même carrière » tient
+  /// (test N1). Un nom vide ou sur liste noire est remplacé par le nom tiré.
+  GameState start(int seed, {int postulat = 0, String? prenom, String? nom, String? genre}) {
     final rng = Rng(seed);
     final posts = content.postulatsByIndex;
     if (posts.isEmpty) throw StateError('Aucun postulat dans le contenu (content/postulats.yaml).');
@@ -38,6 +43,13 @@ class Engine {
       flags.add('camille_$m');
       entities.named['camille_metier'] = m;
     }
+    // Dossard du joueur : un nouvel appel, après tous les tirages existants (spec §2.5).
+    if (post.role == 'joueur') entities.named['numero'] = '${rng.nextInt(30) + 1}';
+    if (genre == 'f' || genre == 'm') entities.genre = genre!;
+    final p = normalizeName(prenom ?? '', max: 14);
+    final n = normalizeName(nom ?? '', max: 16);
+    if (p.isNotEmpty && !isBlacklisted(p, content.blacklist)) entities.prenom = p;
+    if (n.isNotEmpty && !isBlacklisted(n, content.blacklist)) entities.nom = n;
     final s = GameState(
       contentVersion: content.version,
       contentHash: content.hash,
@@ -120,15 +132,21 @@ class Engine {
       case 'objective':
         final choice = right ? p.rightEffects : p.leftEffects;
         final relBefore = Map<String, int>.of(s.relations);
-        _applyEffects(s, choice, rng);
+        final kind = p.payload['kind'] as String? ?? '';
+        final isReaction = kind == 'reaction';
+        _applyEffects(s, choice, rng, arcId: p.payload['arc'] as String?, stepId: p.payload['step'] as String?, phase: p.payload['phase'] as String? ?? '');
         s.lastAnswer = right ? (p.payload['answerRight'] as String?) : (p.payload['answerLeft'] as String?);
+        // La carte fatale de la saison : dernier temps d'histoire non-Nouvelle (spec variété §1.6).
+        if (kStoryKinds.contains(kind)) s.lastStoryCard = LastStoryCard(p.id, s.lastAnswer);
         if (p.kind == 'objective') {
           s.objectivePromised = !right; // « Je m'engage » est le swipe gauche.
-        } else {
+        } else if (!isReaction) {
+          // Une réaction n'est l'étape d'aucun arc (son `arc`/`step` sont ceux
+          // de la carte déclencheuse) : elle ne fait pas avancer la file.
           director.afterNarrative(s, p, right);
-          director.relationCrossings(s, relBefore, p.payload['phase'] as String? ?? '');
         }
-        _passiveDrift(s);
+        if (p.kind != 'objective') director.relationCrossings(s, relBefore, p.payload['phase'] as String? ?? '');
+        if (!isReaction) _passiveDrift(s); // une réplique hors créneau ne coûte pas de dérive
         _updateCentered(s);
         break;
       case 'match':
@@ -149,7 +167,7 @@ class Engine {
       case 'bilan_une':
         break;
       case 'bilan_verdict':
-        _resolveBilan(s, rng);
+        _resolveBilan(s);
         break;
       case 'bilan_contrat':
         _applyEffects(s, right ? p.rightEffects : p.leftEffects, rng);
@@ -162,11 +180,11 @@ class Engine {
     }
   }
 
-  void _applyEffects(GameState s, EffectSet e, Rng rng) {
+  void _applyEffects(GameState s, EffectSet e, Rng rng, {String? arcId, String? stepId, String phase = ''}) {
     // Resolve a rand branch first (it may add nested effects).
     if (e.rand.isNotEmpty) {
       final branch = pickRand(e.rand, rng);
-      if (branch != null) _applyEffects(s, branch.effects, rng);
+      if (branch != null) _applyEffects(s, branch.effects, rng, arcId: arcId, stepId: stepId, phase: phase);
     }
     final ampl = (s.pression >= 8) ? 1.25 : 1.0;
     e.gauges.forEach((g, v) {
@@ -180,10 +198,39 @@ class Engine {
     e.relations.forEach((k, v) => s.relations[k] = ((s.relations[k] ?? 0) + v).clamp(-3, 3));
     e.vars.forEach((k, op) => s.vars[k] = applyVarOp(s.vars[k] ?? 0, op));
     for (final f in e.setFlags) {
-      s.flags.add(f);
+      final fresh = s.flags.add(f);
+      // Une trace posée écrit sa ligne d'Almanach (spec variété §1.3, §1.7) :
+      // celle de l'arc courant d'abord, sinon la première déclaration (arcs triés).
+      if (!fresh) continue;
+      final owner = (arcId != null && (content.arcs[arcId]?.traces.containsKey(f) ?? false)) ? arcId : content.tracesIndex[f];
+      final arc = owner == null ? null : content.arcs[owner];
+      final line = arc?.traces[f];
+      if (arc != null && line != null) {
+        director.addJournal(s, line, kind: 'trace', poids: 2, tags: [if (arc.themeId.isNotEmpty) arc.themeId, arc.id, f], arc: arc.id);
+      }
     }
     for (final f in e.clearFlags) {
       s.flags.remove(f);
+    }
+    if (e.journal != null) {
+      director.addJournal(s, e.journal!.text, kind: 'carte', poids: e.journal!.poids, tags: e.journal!.tags, arc: arcId);
+    }
+    // L'issue de l'arc courant (spec variété §1.3) ; `arc_outcome()` la lit.
+    if (e.outcome != null && arcId != null) {
+      (s.arcs[arcId] ??= ArcState(status: 'active', startedSeason: s.season)).outcome = e.outcome;
+    }
+    // La réaction (spec variété §1.4, règle 1) : la première variante dont le
+    // `if` est vrai ; `chance` consomme 1 nextDouble seulement si déclarée,
+    // après `rand`, avant `schedule`. La dernière posée écrase la précédente.
+    if (e.react.isNotEmpty) {
+      final c = EvalContext(s, phase, slotsTotal: content.cardSlots(s.role), cast: content.postulats[s.postulatId]?.cast.keys.toSet() ?? const {});
+      for (final v in e.react) {
+        if (v.ifWhen != null && !evalWhen(v.ifWhen, c)) continue;
+        if (v.chance == null || rng.nextDouble() < v.chance!) {
+          s.reaction = ReactionRef(card: v.card, arc: arcId, step: stepId, phase: phase);
+        }
+        break;
+      }
     }
     for (final id in e.cancel) {
       s.scheduled.removeWhere((sc) => sc.card == id);
@@ -341,8 +388,9 @@ class Engine {
   // Bilan.
   // ---------------------------------------------------------------------------
 
-  void _resolveBilan(GameState s, Rng rng) {
+  void _resolveBilan(GameState s) {
     final verdict = seasonVerdict(s.world.division, s.world.pts, s.objectiveTarget);
+    final extra = {'rang': '${verdict.rank}', 'objectif': objectiveLabelFr(s.objectiveTarget)};
     verdict.gaugeEffects.forEach((g, v) {
       s.gauges[g] = (s.gauges[g]! + v).clamp(0, 100);
     });
@@ -360,18 +408,57 @@ class Engine {
       s.flags.add('bilan_manque');
       s.flags.remove('bilan_tenu');
     }
+    // L'Almanach (spec variété §1.7) : le Bilan, puis la montée / descente / le titre.
+    director.addJournalAuto(s, verdict.objectiveMet ? 'bilan_tenu' : 'bilan_manque', kind: 'bilan', poids: 3, tags: ['bilan'], extra: extra);
     // Division movement for next season.
     if (verdict.outcome == 'montee' && s.world.division > 1) {
       s.world.division -= 1;
       s.force = (s.force + 4).clamp(0, 100);
+      director.addJournalAuto(s, 'montee', kind: 'bilan', poids: 3, tags: ['bilan'], extra: extra);
     } else if (verdict.outcome == 'descente' && s.world.division < 2) {
       s.world.division += 1;
       s.flags.add('descente');
+      director.addJournalAuto(s, 'descente', kind: 'bilan', poids: 3, tags: ['bilan'], extra: extra);
     }
-    if (verdict.outcome == 'titre') s.stats['titres'] = (s.stats['titres'] ?? 0) + 1;
+    if (verdict.outcome == 'titre') {
+      s.stats['titres'] = (s.stats['titres'] ?? 0) + 1;
+      s.vars['titre_saison'] = s.season;
+      director.addJournalAuto(s, 'titre', kind: 'bilan', poids: 4, tags: ['bilan'], extra: extra);
+    }
     s.world.standingRank = verdict.rank;
     s.lastAnswer = 'Bilan : ${verdict.rank}e · ${objectiveLabelFr(s.objectiveTarget)} '
         '${verdict.objectiveMet ? 'tenu' : 'manqué'}.';
+    _checkObjectifs(s, 'bilan');
+  }
+
+  /// Objectifs cachés du postulat (spec variété §1.9) : évalués sans Rng au
+  /// Bilan et à la fin ; atteint ⇒ `unlocked` reçoit `objectif:<id>`.
+  void _checkObjectifs(GameState s, String phase) {
+    final post = content.postulats[s.postulatId];
+    if (post == null || post.objectifs.isEmpty) return;
+    final c = EvalContext(s, phase, slotsTotal: content.cardSlots(s.role), cast: post.cast.keys.toSet());
+    for (final o in post.objectifs) {
+      final key = 'objectif:${o.id}';
+      if (s.unlocked.contains(key)) continue;
+      if (o.when != null && !evalWhen(o.when, c)) continue;
+      s.unlocked.add(key);
+      director.addJournalAuto(s, 'objectif', kind: 'objectif', poids: 3, tags: ['objectif', o.id], extra: {'objectif_titre': o.titre});
+    }
+  }
+
+  /// Les objectifs du postulat pour l'écran de fin : atteints et indices.
+  List<Map<String, dynamic>> _objectifsPayload(GameState s) {
+    final post = content.postulats[s.postulatId];
+    if (post == null) return const [];
+    return [
+      for (final o in post.objectifs)
+        {
+          'id': o.id,
+          'titre': o.titre,
+          'indice': o.indice,
+          'atteint': s.unlocked.contains('objectif:${o.id}'),
+        },
+    ];
   }
 
   void _updateProvisionalRank(GameState s) {
@@ -414,6 +501,8 @@ class Engine {
     s.lastSpeaker = null;
     s.alarmFired.clear();
     s.tension = 0;
+    s.reaction = null; // une réplique de l'ancien club ne suit pas (spec variété §1.4, règle 4)
+    director.addJournalAuto(s, 'transition', kind: 'transition', poids: 3, tags: ['transition', newRole]);
   }
 
   // ---------------------------------------------------------------------------
@@ -443,16 +532,56 @@ class Engine {
     }
   }
 
+  /// L'écran de fin et « Ce qui s'est passé » (spec variété §1.7, §1.13) :
+  /// épitaphe formatée, `epitaph_plus` (première variante vraie), les 6 lignes
+  /// les plus lourdes de l'Almanach, les objectifs, les histoires, les Unes.
   void _buildEndingPending(GameState s) {
     final ending = content.endings[s.endingId] ?? content.endings['generique'];
     final title = ending?.title ?? 'Fin de carrière';
     final epitaph = ending == null ? '' : formatText(ending.epitaph, s);
+    _checkObjectifs(s, 'fin');
     s.unlocked.add('fin:${s.endingId}');
+    final c = EvalContext(s, 'fin', slotsTotal: content.cardSlots(s.role), cast: content.postulats[s.postulatId]?.cast.keys.toSet() ?? const {});
+    String plus = '';
+    for (final v in ending?.epitaphPlus ?? const <TextVariant>[]) {
+      if (v.when == null || evalWhen(v.when, c)) {
+        plus = formatText(v.text, s);
+        break;
+      }
+    }
+    if (s.journal.isEmpty || s.journal.last.kind != 'fin') {
+      director.addJournalAuto(s, 'fin', kind: 'fin', poids: 5, tags: ['fin', s.endingId ?? ''], extra: {'fin_titre': title});
+    }
+    final ranked = List.of(s.journal)
+      ..sort((a, b) {
+        final c1 = b.poids.compareTo(a.poids);
+        if (c1 != 0) return c1;
+        final c2 = b.season.compareTo(a.season);
+        return c2 != 0 ? c2 : a.slot.compareTo(b.slot);
+      });
+    // Rendues dans l'ordre chronologique, la fin en dernier.
+    final six = ranked.take(6).toList()
+      ..sort((a, b) {
+        if ((a.kind == 'fin') != (b.kind == 'fin')) return a.kind == 'fin' ? 1 : -1;
+        return a.season != b.season ? a.season.compareTo(b.season) : a.slot.compareTo(b.slot);
+      });
+    final histoires = <String>[];
+    final debloquees = <String>[];
+    for (final a in content.arcsSorted) {
+      if (a.kind != 'serie') continue;
+      final st = s.arcs[a.id];
+      if (st != null) {
+        final stepIdx = st.step == null ? -1 : a.steps.indexWhere((x) => x.id == st.step);
+        if (st.status == 'done' || stepIdx >= 1) histoires.add(a.title ?? a.id);
+      } else if (s.reserve.contains(a.id)) {
+        debloquees.add(a.title ?? a.id);
+      }
+    }
     s.pending = Pending(
       id: 'ending:${s.endingId}',
       kind: 'ending',
       speaker: null,
-      text: '$title\n\n$epitaph',
+      text: '$title\n\n$epitaph${plus.isEmpty ? '' : ' $plus'}',
       leftLabel: 'Successeur',
       rightLabel: 'Successeur',
       leftEffects: const EffectSet(),
@@ -464,6 +593,14 @@ class Engine {
         'golden': ending?.golden ?? false,
         'share': ending?.share ?? true,
         'title': title,
+        'epitaph': epitaph,
+        'epitaph_plus': plus,
+        'objectifs': _objectifsPayload(s),
+        'journal': six.map((e) => e.toJson()).toList(),
+        'histoires': histoires,
+        'debloquees': debloquees,
+        'unes': [for (final e in s.journal) if (e.kind == 'une' && e.arc != null) e.arc!],
+        'nom': s.entities.protagonist,
       },
       single: true,
     );
@@ -474,6 +611,11 @@ class Engine {
   // ---------------------------------------------------------------------------
 
   void _advance(GameState s, Pending applied) {
+    // Une réaction est hors créneau : le beat ne bouge pas (spec variété §1.4, règle 3).
+    if (applied.payload['kind'] == 'reaction') {
+      s.lastWasReaction = true;
+      return;
+    }
     final beats = content.seasonBeats[s.role]!;
     final kind = s.beat < beats.length ? beats[s.beat].kind : 'bilan_carrefour';
     if (kind == 'bilan_carrefour') {
@@ -508,7 +650,21 @@ class Engine {
     final rng = rngIn ?? Rng.fromState(s.rngState);
     final beats = content.seasonBeats[s.role]!;
     if (s.beat >= beats.length) s.beat = 0;
-    if (s.beat == 0) director.openSeason(s);
+    // La réaction en attente passe avant le beat courant, y compris avant
+    // l'ouverture de saison (spec variété §1.4, règles 2 et 5) ; zéro aléa.
+    final rx = s.reaction;
+    if (rx != null) {
+      s.reaction = null;
+      final p = director.serveReaction(s, rx, rng);
+      if (p != null) {
+        s.turn += 1;
+        s.pending = p;
+        if (rngIn == null) s.rngState = rng.state;
+        return;
+      }
+    }
+    s.lastWasReaction = false;
+    if (s.beat == 0) director.openSeason(s, rng);
     final beat = beats[s.beat];
     s.turn += 1;
     switch (beat.kind) {
@@ -535,7 +691,7 @@ class Engine {
         s.pending = _afterMatchCard(s);
         break;
       case 'bilan_une':
-        s.pending = _bilanUne(s);
+        s.pending = _bilanUne(s, rng);
         break;
       case 'bilan_verdict':
         s.pending = _bilanVerdict(s);
@@ -557,7 +713,12 @@ class Engine {
   Pending _cardToPending(GameState s, Card card, String phase, Rng rng, Map<String, dynamic> extra) {
     final ch = card.speaker == null ? null : content.characters[card.speaker];
     final speakerGenre = ch?.genre ?? 'm';
-    final text = formatText(card.text, s, speakerGenre: speakerGenre);
+    final rel = card.speaker == null ? 0 : (s.relations[card.speaker] ?? 0);
+    final expression = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
+    // `{toi}` : l'adresse du locuteur selon le rôle et la relation (spec variété §1.8).
+    final adresse = ch?.adresseFor(s.role, expression);
+    String fmt(String t) => formatText(t, s, speakerGenre: speakerGenre, speakerId: card.speaker, adresse: adresse);
+    final text = fmt(card.text);
     List<GaugeHint> hintsFor(EffectSet e) {
       if (card.previewOverride != null) {
         return card.previewOverride!.map((g) => GaugeHint(g, 2)).toList();
@@ -568,24 +729,22 @@ class Engine {
     final isPasse = card.kind == 'passe';
     final left = isPasse ? epilogueEffects(extra) : card.left.effects;
     final right = isPasse ? epilogueEffects(extra) : card.right.effects;
-    final rel = card.speaker == null ? 0 : (s.relations[card.speaker] ?? 0);
-    final expression = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
 
     return Pending(
       id: card.id,
       kind: 'narrative',
       speaker: card.speaker,
       text: text,
-      leftLabel: formatText(card.left.label, s, speakerGenre: speakerGenre),
-      rightLabel: formatText(card.right.label, s, speakerGenre: speakerGenre),
+      leftLabel: fmt(card.left.label),
+      rightLabel: fmt(card.right.label),
       leftEffects: left,
       rightEffects: right,
       previewLeft: hintsFor(left),
       previewRight: hintsFor(right),
       single: card.kind == 'nouvelle' || isPasse || _sameChoice(card),
       payload: {
-        if (card.left.answer != null) 'answerLeft': formatText(card.left.answer!, s, speakerGenre: speakerGenre),
-        if (card.right.answer != null) 'answerRight': formatText(card.right.answer!, s, speakerGenre: speakerGenre),
+        if (card.left.answer != null) 'answerLeft': fmt(card.left.answer!),
+        if (card.right.answer != null) 'answerRight': fmt(card.right.answer!),
         'sablier': card.sablier,
         'tags': card.tags,
         if (ch != null) 'speakerName': ch.name,
@@ -718,17 +877,100 @@ class Engine {
     );
   }
 
-  Pending _bilanUne(GameState s) => Pending(
-        id: 'bilan:une:${s.season}',
-        kind: 'bilan_une',
-        speaker: null,
-        text: 'LA UNE — Le journal titre sur ta saison avec ${s.entities.named['club']}.',
-        leftLabel: 'Tourner la page',
-        rightLabel: 'Tourner la page',
-        leftEffects: const EffectSet(),
-        rightEffects: const EffectSet(),
-        single: true,
-      );
+  /// La Une composée (spec variété §1.6) : le verdict est calculé sans être
+  /// appliqué (`bilan.tenu` / `bilan.rang` dans `when`), la manchette gagnante
+  /// est la bande de priorité la plus haute puis 1 `weightedIndex` (le seul
+  /// aléa du Bilan ; aucun appel quand aucune manchette n'est éligible), les
+  /// brèves sont les entrées de journal les plus lourdes hors sujet, la photo
+  /// est la carte fatale. La Une entre au journal et peut poser une réaction.
+  Pending _bilanUne(GameState s, Rng rng) {
+    final verdict = seasonVerdict(s.world.division, s.world.pts, s.objectiveTarget);
+    final post = content.postulats[s.postulatId];
+    final c = EvalContext(s, 'bilan',
+        slotsTotal: content.cardSlots(s.role), cast: post?.cast.keys.toSet() ?? const {}, bilanTenu: verdict.objectiveMet, bilanRang: verdict.rank);
+    final objectif = objectiveLabelFr(s.objectiveTarget);
+    final extra = <String, String>{
+      'rang': '${verdict.rank}',
+      'objectif': objectif,
+      'tenu': verdict.objectiveMet ? 'tenu' : 'manqué',
+      'TENU': verdict.objectiveMet ? 'TENU' : 'MANQUÉ',
+    };
+    // La manchette : bande la plus haute, puis pondération.
+    final cands = <UneDef>[];
+    int band = -1;
+    for (final u in content.unes) {
+      if (u.postulats.isNotEmpty && !u.postulats.contains(s.postulatId)) continue;
+      if (u.roles.isNotEmpty && !u.roles.contains(s.role)) continue;
+      if (u.id == s.lastUne) continue;
+      if (!evalWhen(u.when, c)) continue;
+      if (u.priority > band) {
+        band = u.priority;
+        cands.clear();
+      }
+      if (u.priority == band) cands.add(u);
+    }
+    final i = rng.weightedIndex([for (final u in cands) u.poids]);
+    final une = i < 0 ? null : cands[i];
+    final journal = une == null ? null : content.journaux[une.journal];
+    final journalNom = journal == null ? 'Le journal' : formatText(journal.nom, s, extra: extra);
+    final titre = une == null ? 'LA UNE — Le journal titre sur ta saison avec ${s.entities.named['club']}.' : formatText(une.titre, s, extra: extra);
+    final sous = une == null ? '' : formatText(une.sous, s, extra: extra);
+    // Les brèves : entrées de la saison, hors Bilan / Une, triées (-poids, slot), hors sujet.
+    final sujet = une?.sujet;
+    final pool = [
+      for (final e in s.journal)
+        if (e.season == s.season && e.kind != 'bilan' && e.kind != 'une' && (sujet == null || (!e.tags.contains(sujet) && e.arc != sujet))) e,
+    ]..sort((a, b) => a.poids != b.poids ? b.poids.compareTo(a.poids) : a.slot.compareTo(b.slot));
+    final breves = pool.take(content.director.unesBreves).map((e) => e.text).toList();
+    // La photo : la carte préférée de la manchette si servie cette saison, sinon la carte fatale.
+    Map<String, dynamic>? photo;
+    final preferred = une?.photo;
+    if (preferred != null && (s.cooldowns[preferred] ?? -1) >= s.seasonStartN && content.cards.containsKey(preferred)) {
+      photo = {'card': preferred, if (s.lastStoryCard?.id == preferred && s.lastStoryCard?.answer != null) 'answer': s.lastStoryCard!.answer};
+    } else if (s.lastStoryCard != null) {
+      photo = {'card': s.lastStoryCard!.id, if (s.lastStoryCard!.answer != null) 'answer': s.lastStoryCard!.answer};
+    }
+    final annee = s.year;
+    final prix = s.year >= 2002 ? '0,80 €' : '4,50 F';
+    if (une != null) {
+      director.addJournal(s, titre, kind: 'une', poids: 3, tags: ['une', if (sujet != null) sujet], arc: une.id);
+      s.lastUne = une.id;
+      // « Quelqu'un a lu le journal » (spec variété §1.4, déclencheur b) : sans `chance`, zéro aléa.
+      for (final v in une.react) {
+        if (v.ifWhen != null && !evalWhen(v.ifWhen, c)) continue;
+        s.reaction = ReactionRef(card: v.card, phase: 'bilan');
+        break;
+      }
+    }
+    return Pending(
+      id: 'bilan:une:${s.season}',
+      kind: 'bilan_une',
+      speaker: null,
+      text: titre,
+      leftLabel: 'Tourner la page',
+      rightLabel: 'Tourner la page',
+      leftEffects: const EffectSet(),
+      rightEffects: const EffectSet(),
+      payload: {
+        if (une != null) 'une': une.id,
+        'journal': une?.journal ?? '',
+        'journal_nom': journalNom,
+        'style': journal?.style ?? 'bleu',
+        'titre': titre,
+        'sous': sous,
+        'breves': breves,
+        if (photo != null) 'photo': photo,
+        'annee': annee,
+        'date': 'juin ${annee + 1}',
+        'prix': prix,
+        'rang': verdict.rank,
+        'tenu': verdict.objectiveMet,
+        'objectif': objectif,
+        'priority': une?.priority ?? -1,
+      },
+      single: true,
+    );
+  }
 
   Pending _bilanVerdict(GameState s) => Pending(
         id: 'bilan:verdict:${s.season}',
@@ -818,8 +1060,10 @@ class Engine {
     final proto = _pickName(rng, genre);
     final club = _makeClub(rng);
     final rival = _makeClub(rng);
+    final sp = proto.indexOf(' ');
     return Entities(
-      protagonist: proto,
+      prenom: proto.substring(0, sp),
+      nom: proto.substring(sp + 1),
       genre: genre,
       named: {
         'club': club,

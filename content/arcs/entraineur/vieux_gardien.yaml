@@ -1,9 +1,12 @@
 # E · « Le vieux gardien » — le cœur, l'horloge qui recule. Gigi Vecchio,
 # quarante et un ans, prend sa retraite chaque juin ; l'épaule lâche, le
 # jeune attend, et la promesse que tu lui fais (ou pas) se paie en saison 2,
-# quand il revient sourire ou signer chez le rival. Semé au slot [7,8] de la
-# saison 1 du postulat « Le promu sans un sou » (postulats.yaml) ; ailleurs,
-# ouverture spontanée en début de carrière.
+# quand il revient sourire ou signer chez le rival. Tiré par le réservoir du
+# promu (postulats.yaml) ; rituel (`replay: ritual`) : Gigi prend sa retraite
+# chaque juin, et l'étape 1 monte en escalier sur plays() (« encore une »,
+# « cette fois c'est vrai »). Issues : finale | jeune | staff | parti ;
+# `staff` (retour_sourire, « Le staff, cette fois ») est l'objectif caché
+# « Le banc de Gigi ».
 #
 # Chemins : retraite → epaule (cette saison seulement ; échue → sautée) →
 # retour (S2, présaison : sourire si relation.vecchio >= 0, sinon noir) →
@@ -17,10 +20,18 @@ arcs:
     postulats: []
     foreground: true
     weight: 1.2
-    once: true
+    once: false
     every_season: false
     min_season: 0
-    when: "season <= 2 && !flag('gigi_staff')"
+    theme: vestiaire
+    carrier: vecchio
+    replay: ritual
+    issues: [finale, jeune, staff, parti]
+    traces:
+      vecchio_promis: "{annee} : Gigi Vecchio, quarante et un ans, a obtenu de {prenom} {nom} une dernière saison dans les buts. Promis."
+      gigi_staff:     "{annee} : Gigi Vecchio raccroche et reste, au staff. Il en a vu d'autres ; il les montrera."
+    hint: "Gigi prend sa retraite chaque juin. Chaque juin."
+    when: "!flag('gigi_staff')"
     cast: [vecchio, vukic, sabatier]
     start: [2, 5]
     same_club: true
@@ -28,7 +39,11 @@ arcs:
     epilogue: { vestiaire: "-" }
     steps:
       - id: retraite
-        card: en.vieux.retraite
+        # Escalier du rituel : « je raccroche » → « encore une » → « cette fois c'est vrai ».
+        card:
+          - { id: en.vieux.retraite_vrai,   if: "plays('en.vieux_gardien') >= 2" }
+          - { id: en.vieux.retraite_encore, if: "plays('en.vieux_gardien') >= 1" }
+          - { id: en.vieux.retraite }
         # [2,5] : semée en [7,8], la retraite tombe aux slots 7-9 et l'épaule
         # est due en 9-14, avant les slots 16-17 verrouillés par le script
         # (A5/A6) ; plus large, l'étape périmait avec la saison une fois sur

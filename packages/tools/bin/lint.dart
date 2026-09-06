@@ -38,7 +38,9 @@ void main() {
   final errors = <String>[];
   final warnings = <String>[];
 
-  final tags = ((_yaml('tags.yaml') as YamlMap)['tags'] as YamlList).map((e) => e.toString()).toSet();
+  final tagsDoc = _yaml('tags.yaml') as YamlMap;
+  final tags = (tagsDoc['tags'] as YamlList).map((e) => e.toString()).toSet();
+  final themes = ((tagsDoc['themes'] as YamlList?) ?? YamlList()).map((e) => e.toString()).toSet();
   final flags = ((_yaml('flags.yaml') as YamlMap)['flags'] as YamlList).map((e) => e.toString()).toSet();
   final characters = ((_yaml('characters.yaml') as YamlMap)['characters'] as YamlList)
       .map((e) => (e as YamlMap)['id'].toString())
@@ -152,6 +154,13 @@ void main() {
     final id = a['id'];
     scanAst(a['when'], 'arc $id/when');
     scanAst(a['cancel_if'], 'arc $id/cancel_if');
+    for (final f in [...(a['requires'] as List? ?? const []), ...(a['excludes'] as List? ?? const [])]) {
+      flagsRead.add(f.toString());
+      if (!flags.contains(f)) errors.add('arc $id: requires/excludes cite un drapeau non déclaré "$f"');
+    }
+    for (final f in (a['traces'] as Map? ?? const {}).keys) {
+      if (!flags.contains(f)) errors.add('arc $id: traces cite un drapeau non déclaré "$f"');
+    }
     final steps = (a['steps'] as List).cast<Map<String, dynamic>>();
     if (a['kind'] == 'serie' && steps.length < 3) warnings.add('arc $id: série de moins de 3 étapes');
     for (final f in (a['epilogue'] as Map? ?? const {}).keys) {
@@ -173,8 +182,18 @@ void main() {
       flagsWritten.add(f.toString());
       if (!flags.contains(f)) errors.add('postulat ${p['id']}: drapeau non déclaré "$f"');
     }
-    for (final sd in (p['seeds'] as List?) ?? const []) {
+    final seeds = (p['seeds'] as List?) ?? const [];
+    if (seeds.isNotEmpty) warnings.add('postulat ${p['id']}: `seeds` est déprécié (remplacé par `programme`, spec variété §1.2)');
+    for (final sd in seeds) {
       scanAst((sd as Map)['if'], 'postulat ${p['id']}/seeds');
+    }
+    ((p['programme'] as Map?) ?? const {}).forEach((bucket, bm) {
+      for (final e in ((bm as Map)['pool'] as List?) ?? const []) {
+        scanAst((e as Map)['if'], 'postulat ${p['id']}/programme/$bucket/${e['arc']}');
+      }
+    });
+    for (final o in (p['objectifs'] as List?) ?? const []) {
+      scanAst((o as Map)['when'], 'postulat ${p['id']}/objectifs/${o['id']}');
     }
     (p['alarm_overrides'] as Map? ?? const {}).forEach((key, list) {
       for (final e in list as List) {
@@ -217,6 +236,108 @@ void main() {
         scanAst((v as Map)['if'], 'characters/${ch['id']}/on_relation/$t');
       }
     });
+  }
+
+  // --- Réservoir et couture (spec variété §2.2, §3.7). Les contrôles de
+  // structure sont bloquants pour un postulat livré (`chantier: false`) et de
+  // simples avertissements tant qu'il est en chantier ; les budgets de volume
+  // (≥ 12 intrigues, ≥ 6 thèmes…) restent des avertissements jusqu'à la
+  // livraison du lot de contenu (étape 3).
+  final arcById = {for (final a in arcs) a['id'].toString(): a};
+  bool readsPlays(Object? node) {
+    if (node is! List || node.isEmpty) return false;
+    if (node[0] == 'call' && node.length >= 2 && node[1] == 'plays') return true;
+    return node.any(readsPlays);
+  }
+
+  final outcomesPosed = <String, Set<String>>{};
+  for (final a in arcs) {
+    final id = a['id'].toString();
+    for (final st in (a['steps'] as List).cast<Map<String, dynamic>>()) {
+      if (st['outcome'] != null) (outcomesPosed[id] ??= {}).add(st['outcome'].toString());
+    }
+  }
+  for (final c in cards) {
+    final arcId = c['arcId']?.toString();
+    if (arcId == null) continue;
+    for (final side in ['left', 'right']) {
+      final o = ((c[side] as Map)['effects'] as Map)['outcome'];
+      if (o != null) (outcomesPosed[arcId] ??= {}).add(o.toString());
+    }
+  }
+  for (final a in arcs) {
+    final id = a['id'].toString();
+    if (a['replay'] != null) {
+      final first = ((a['steps'] as List).isEmpty ? const [] : ((a['steps'] as List).first as Map)['card'] as List);
+      if (!first.any((v) => readsPlays((v as Map)['if']))) {
+        warnings.add('arc $id: rejouable sans variante « encore » (aucune variante de l\'étape 1 ne lit plays())');
+      }
+    }
+    for (final issue in (a['issues'] as List? ?? const [])) {
+      if (!(outcomesPosed[id] ?? const {}).contains(issue)) warnings.add('arc $id: issue « $issue » jamais posée par une sortie');
+    }
+  }
+  for (final p in postulats) {
+    final pid = p['id'].toString();
+    final prog = p['programme'] as Map?;
+    if (prog == null) continue;
+    final chantier = p['chantier'] == true;
+    final strict = chantier ? warnings : errors;
+    final suffix = chantier ? ' (en chantier)' : '';
+    final poolArcs = <String>[];
+    bool signature = false;
+    prog.forEach((bucket, bm) {
+      for (final e in ((bm as Map)['pool'] as List?) ?? const []) {
+        final arcId = (e as Map)['arc'].toString();
+        if (!poolArcs.contains(arcId)) poolArcs.add(arcId);
+        if (e['signature'] == true) signature = true;
+      }
+    });
+    final objectifs = (p['objectifs'] as List?) ?? const [];
+    if (objectifs.length != 3) strict.add('postulat $pid: ${objectifs.length} objectifs (attendu 3)$suffix');
+    final cast = (p['cast'] as Map? ?? const {}).keys.map((k) => k.toString()).toSet();
+    final themesSeen = <String>{};
+    final carriers = <String>{};
+    int tardives = 0;
+    for (final arcId in poolArcs) {
+      final a = arcById[arcId];
+      if (a == null) continue;
+      final theme = a['theme']?.toString() ?? '';
+      final carrier = a['carrier']?.toString() ?? ((a['cast'] as List).isEmpty ? '' : (a['cast'] as List).first.toString());
+      themesSeen.add(theme);
+      carriers.add(carrier);
+      if (((a['min_season'] as num?)?.toInt() ?? 0) >= 2) tardives += 1;
+      if (!themes.contains(theme)) strict.add('postulat $pid: intrigue $arcId : thème « $theme » hors de tags.yaml → themes$suffix');
+      if (carrier.isEmpty) {
+        strict.add('postulat $pid: intrigue $arcId sans porteur (carrier ou cast)$suffix');
+      } else if (cast.isNotEmpty && !cast.contains(carrier)) {
+        warnings.add('postulat $pid: le porteur « $carrier » de $arcId n\'est pas au casting du postulat');
+      }
+      if (((a['issues'] as List?) ?? const []).length < 2) strict.add('postulat $pid: intrigue $arcId : moins de 2 issues$suffix');
+      final traces = (a['traces'] as Map?) ?? const {};
+      if (traces.isEmpty) warnings.add('postulat $pid: intrigue $arcId sans `traces` (rien ne rappellera cette histoire)');
+      for (final f in traces.keys) {
+        if (!flagsRead.contains(f)) strict.add('postulat $pid: la trace « $f » de $arcId n\'est lue nulle part$suffix');
+      }
+      if (a['replay'] != null) {
+        final first = ((a['steps'] as List).isEmpty ? const [] : ((a['steps'] as List).first as Map)['card'] as List);
+        if (!first.any((v) => readsPlays((v as Map)['if']))) strict.add('postulat $pid: intrigue rejouable $arcId sans variante lisant plays()$suffix');
+      }
+    }
+    // Budgets de volume (livraison du lot, étape 3) : avertissements.
+    void budget(bool ok, String msg) {
+      if (!ok) warnings.add('postulat $pid: budget de réservoir — $msg (bloquant à la livraison du lot)');
+    }
+
+    budget(poolArcs.length >= 12, 'réservoir de ${poolArcs.length} intrigues (attendu ≥ 12)');
+    budget(signature, 'aucune intrigue `signature`');
+    budget(themesSeen.length >= 6, '${themesSeen.length} thèmes (attendu ≥ 6)');
+    budget(carriers.length >= 6, '${carriers.length} porteurs (attendu ≥ 6)');
+    budget(tardives >= 3, '$tardives intrigues tardives min_season ≥ 2 (attendu ≥ 3)');
+    for (final ch in cast) {
+      final n = poolArcs.where((id) => (arcById[id]?['cast'] as List? ?? const []).contains(ch)).length;
+      budget(n >= 2, '« $ch » est au casting mais porteur ou cast de $n intrigue(s) (attendu ≥ 2)');
+    }
   }
 
   // Flags declared but never referenced, and read-but-never-written.

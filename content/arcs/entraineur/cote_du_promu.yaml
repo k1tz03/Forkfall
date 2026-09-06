@@ -1,0 +1,50 @@
+# « La cote du promu » — le chroniqueur. Cinq mille contre un pour le titre :
+# Aulard vend le rêve, Ménèche vend la cote, Josiane tient la caisse. Les deux
+# premières étapes sont les anciennes ancres A2 « L'empire » et A3 « La cote »
+# du script du promu, sorties du script pour devenir une intrigue tirée par le
+# réservoir (postulats.yaml, bucket "0") ; la troisième, l'encaissement, lit ce
+# que le joueur a dit à la cote (pari_promu) ou au président (projet_promis).
+#
+# Chemins : empire → cote [2,5] → encaissement [5,9, cette saison] (variantes :
+# le pari tenu au classement de l'instant, le pari perdu, le projet promis, ou
+# les cotes de janvier de Josiane). Issues : pari_tenu | pari_perdu | jamais_parie.
+arcs:
+  - id: en.cote_du_promu
+    title: "La cote du promu"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    every_season: false
+    min_season: 0
+    theme: presse
+    carrier: meneche
+    cast: [meneche, aulard, josiane]
+    issues: [pari_tenu, pari_perdu, jamais_parie]
+    traces:
+      pari_promu:    "{annee} : {prenom} {nom} a misé cent francs sur {club} à cinq mille contre un. Ménèche a noté la somme."
+      projet_promis: "{annee} : {prenom} {nom} a promis « un projet » au président. Il l'a répété à trois journalistes avant le parking."
+    hint: "Cinq mille contre un pour le titre. Quelqu'un a parié. Peut-être toi."
+    start: [2, 5]
+    same_club: true
+    fallback: nouvelles
+    epilogue: { tribunes: "-" }
+    steps:
+      - id: empire
+        card: en.cote.empire
+        next: [ { step: cote, in: [2, 5] } ]
+      - id: cote
+        card: en.cote.cote
+        next: [ { step: encaissement, in: [5, 9], this_season: true } ]
+      - id: encaissement
+        # Variantes relues au tirage : world.rang est le classement projeté.
+        card:
+          - { id: en.cote.encaissement_gagne,  if: "flag('pari_promu') && world.rang <= 15" }
+          - { id: en.cote.encaissement_perdu,  if: "flag('pari_promu')" }
+          - { id: en.cote.encaissement_projet, if: "flag('projet_promis')" }
+          - { id: en.cote.encaissement }
+        this_season: true
+        on_expire: skip
+        next: []

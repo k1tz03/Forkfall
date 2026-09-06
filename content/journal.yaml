@@ -1,0 +1,31 @@
+# Gabarits moteur de l'Almanach (spec variété §1.7, §2.8). Le moteur écrit ces
+# lignes lui-même ; les cartes n'ont rien à répéter. Chaque gabarit est formaté
+# à l'écriture (le nom, le club, le rang de l'instant) et tronqué à 120
+# caractères. Placeholders : ceux de formatText ({annee} {club} {CLUB} {ville}
+# {rang} {objectif} {prenom} {nom} {NOM} {division} {pg, select, f{} other{}})
+# plus, selon le gabarit : {perso} {perso_tic} (paliers ±3), {objectif_titre}
+# (objectif caché atteint), {fin_titre} (fin). Un gabarit absent = pas de ligne.
+#   clé            écrite par            poids  kind
+#   bilan_tenu     _resolveBilan         3      bilan
+#   bilan_manque   _resolveBilan         3      bilan
+#   montee         _resolveBilan         3      bilan
+#   descente       _resolveBilan         3      bilan
+#   titre          _resolveBilan         4      bilan
+#   palier_moins3  relationCrossings     2      palier
+#   palier_plus3   relationCrossings     2      palier
+#   transition     _transitionTo         3      transition
+#   club_change    _changeClub (étape 5) 3      transition
+#   objectif       _checkObjectifs       3      objectif
+#   fin            _buildEndingPending   5      fin
+auto:
+  bilan_tenu:    "{annee} · {club} termine {rang}e : objectif « {objectif} » tenu."
+  bilan_manque:  "{annee} · {club} termine {rang}e : objectif « {objectif} » manqué."
+  montee:        "{annee} · Montée en Division 1 avec {club}."
+  descente:      "{annee} · {club} descend. {nom} reste. Pour l'instant."
+  titre:         "{annee} · {club} champion. {prenom} {nom} sur la photo, au bord."
+  palier_moins3: "{annee} · {perso} ne parle plus à {prenom} {nom}."
+  palier_plus3:  "{annee} · {perso} doit quelque chose à {prenom} {nom}. {perso_tic}"
+  transition:    "{annee} · {prenom} {nom} raccroche les crampons et prend le banc de {club}."
+  club_change:   "{annee} · {prenom} {nom} signe à {club}."
+  objectif:      "{annee} · {objectif_titre}."
+  fin:           "{annee} · {fin_titre}."

@@ -184,6 +184,9 @@ class EndingDef {
   final String rarity; // commune/rare/epique/legendaire
   final bool golden; // "good" endings shown gilded
   final bool share; // false = no share image (sober drama endings)
+  /// Seconde phrase conditionnelle (spec variété §2.6) : la première vraie.
+  final List<TextVariant> epitaphPlus;
+  final Map<String, dynamic>? rebond; // parsé, non lu (lot ultérieur)
   const EndingDef({
     required this.id,
     required this.title,
@@ -193,6 +196,8 @@ class EndingDef {
     this.rarity = 'commune',
     this.golden = false,
     this.share = true,
+    this.epitaphPlus = const [],
+    this.rebond,
   });
 
   factory EndingDef.fromJson(Map<String, dynamic> j) => EndingDef(
@@ -204,6 +209,84 @@ class EndingDef {
         rarity: j['rarity'] as String? ?? 'commune',
         golden: j['golden'] == true,
         share: j['share'] != false,
+        epitaphPlus: TextVariant.listFromJson(j['epitaph_plus']),
+        rebond: (j['rebond'] as Map?)?.cast<String, dynamic>(),
+      );
+}
+
+/// Un texte gardé par un `when` optionnel (epitaph_plus, set-pieces).
+class TextVariant {
+  final Object? when;
+  final String text;
+  const TextVariant(this.text, {this.when});
+
+  static List<TextVariant> listFromJson(Object? j) {
+    if (j == null) return const [];
+    return (j as List).map((e) {
+      if (e is String) return TextVariant(e);
+      final m = (e as Map).cast<String, dynamic>();
+      return TextVariant(m['text'] as String, when: m['when']);
+    }).toList();
+  }
+}
+
+/// Un journal fictif de la Une (spec variété §2.4).
+class JournalDef {
+  final String id;
+  final String nom;
+  final String ton;
+  final String style;
+  const JournalDef({required this.id, required this.nom, this.ton = 'sobre', this.style = 'bleu'});
+  factory JournalDef.fromJson(Map<String, dynamic> j) => JournalDef(
+        id: j['id'] as String,
+        nom: j['nom'] as String,
+        ton: j['ton'] as String? ?? 'sobre',
+        style: j['style'] as String? ?? 'bleu',
+      );
+}
+
+/// Une manchette candidate au Bilan (spec variété §1.6, §2.4).
+class UneDef {
+  final String id;
+  final List<String> postulats; // vide = tous
+  final List<String> roles; // vide = tous
+  final String journal;
+  final int priority; // 0 secours … 4 titre/descente
+  final double poids;
+  final Object? when;
+  final String titre;
+  final String sous;
+  final String? sujet; // tag exclu des brèves
+  final String? photo; // carte fatale préférée si servie cette saison
+  final List<ReactVariant> react;
+  const UneDef({
+    required this.id,
+    this.postulats = const [],
+    this.roles = const [],
+    required this.journal,
+    this.priority = 0,
+    this.poids = 1.0,
+    this.when,
+    required this.titre,
+    this.sous = '',
+    this.sujet,
+    this.photo,
+    this.react = const [],
+  });
+
+  factory UneDef.fromJson(Map<String, dynamic> j) => UneDef(
+        id: j['id'] as String,
+        postulats: (j['postulats'] as List?)?.cast<String>() ?? const [],
+        roles: (j['roles'] as List?)?.cast<String>() ?? const [],
+        journal: j['journal'] as String? ?? 'quotidien',
+        priority: (j['priority'] as num?)?.toInt() ?? 0,
+        poids: (j['poids'] as num?)?.toDouble() ?? 1.0,
+        when: j['when'],
+        titre: j['titre'] as String,
+        sous: j['sous'] as String? ?? '',
+        sujet: j['sujet'] as String?,
+        photo: j['photo'] as String?,
+        react: ReactVariant.listFromJson(j['react']),
       );
 }
 
@@ -253,7 +336,11 @@ class NextDef {
   final int inMin;
   final int inMax;
   final bool thisSeason;
-  const NextDef({required this.step, this.ifWhen, this.inMin = 1, this.inMax = 3, this.thisSeason = false});
+  /// « Fusée longue » (spec variété §1.3) : l'étape est enfilée pour la saison
+  /// `season + atSeason`, aux slots absolus `at` de cette saison-là.
+  final int? atSeason;
+  final List<int>? at;
+  const NextDef({required this.step, this.ifWhen, this.inMin = 1, this.inMax = 3, this.thisSeason = false, this.atSeason, this.at});
 
   factory NextDef.fromJson(Map<String, dynamic> j) {
     final range = (j['in'] as List?) ?? const [1, 3];
@@ -263,8 +350,12 @@ class NextDef {
       inMin: (range.first as num).toInt(),
       inMax: (range.last as num).toInt(),
       thisSeason: j['this_season'] == true,
+      atSeason: (j['at_season'] as num?)?.toInt(),
+      at: (j['at'] as List?)?.map((e) => (e as num).toInt()).toList(),
     );
   }
+
+  bool get isLongFuse => atSeason != null;
 }
 
 class StepDef {
@@ -275,6 +366,7 @@ class StepDef {
   final List<NextDef> next;
   final String onExpire; // 'skip' | 'abort'
   final bool thisSeason;
+  final String? outcome; // issue posée quand l'étape est jouée (spec variété §1.3)
   const StepDef({
     required this.id,
     required this.card,
@@ -283,6 +375,7 @@ class StepDef {
     this.next = const [],
     this.onExpire = 'abort',
     this.thisSeason = false,
+    this.outcome,
   });
 
   factory StepDef.fromJson(Map<String, dynamic> j) => StepDef(
@@ -293,6 +386,7 @@ class StepDef {
         next: (j['next'] as List?)?.map((e) => NextDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
         onExpire: j['on_expire'] as String? ?? 'abort',
         thisSeason: j['this_season'] == true,
+        outcome: j['outcome'] as String?,
       );
 
   bool get repeatable => season.endsWith('+');
@@ -300,6 +394,27 @@ class StepDef {
   bool appliesTo(int s) {
     if (repeatable) return s >= (int.tryParse(season.substring(0, season.length - 1)) ?? 0);
     return int.tryParse(season) == s;
+  }
+}
+
+/// Rejouabilité d'un arc (spec variété §1.3) : `never` (absent), `{after, max,
+/// after_abort}` ou `ritual` (= every_season + variantes en escalier sur plays()).
+class ReplayDef {
+  final int after;
+  final int max;
+  final bool afterAbort;
+  final bool ritual;
+  const ReplayDef({this.after = 1, this.max = 2, this.afterAbort = false, this.ritual = false});
+
+  factory ReplayDef.fromJson(Object j) {
+    if (j is String) return const ReplayDef(ritual: true, after: 0, max: 9999);
+    final m = (j as Map).cast<String, dynamic>();
+    if (m['ritual'] == true) return const ReplayDef(ritual: true, after: 0, max: 9999);
+    return ReplayDef(
+      after: (m['after'] as num?)?.toInt() ?? 1,
+      max: (m['max'] as num?)?.toInt() ?? 2,
+      afterAbort: m['after_abort'] == true,
+    );
   }
 }
 
@@ -322,8 +437,19 @@ class ArcDef {
   final bool sameClub;
   final Object? cancelIf;
   final String fallback; // nouvelles | drop
-  final Map<String, dynamic> epilogue; // resolved effects json
+  final Map<String, dynamic> epilogue; // resolved effects json (+ clé `journal`)
   final List<StepDef> steps;
+  // Réservoir et branches (spec variété §1.2-1.3, §2.2).
+  final String? theme; // résolu par le build (défaut : `arc:` de la carte de l'étape 1)
+  final String? carrier; // porteur ; défaut : cast.first
+  final ReplayDef? replay;
+  final List<String> requires;
+  final List<String> excludes;
+  final List<String> exclusiveWith; // symétrisé par le build
+  final String? hint;
+  final String? journal;
+  final Map<String, String> traces; // drapeau → ligne d'Almanach
+  final List<String> issues;
 
   const ArcDef({
     required this.id,
@@ -346,11 +472,23 @@ class ArcDef {
     this.fallback = 'nouvelles',
     this.epilogue = const {},
     required this.steps,
+    this.theme,
+    this.carrier,
+    this.replay,
+    this.requires = const [],
+    this.excludes = const [],
+    this.exclusiveWith = const [],
+    this.hint,
+    this.journal,
+    this.traces = const {},
+    this.issues = const [],
   });
 
   factory ArcDef.fromJson(Map<String, dynamic> j) {
     final kind = j['kind'] as String? ?? 'serie';
     final start = (j['start'] as List?) ?? const [2, 7];
+    final tracesRaw = (j['traces'] as Map?) ?? const {};
+    final traceKeys = tracesRaw.keys.map((k) => k.toString()).toList()..sort();
     return ArcDef(
       id: j['id'] as String,
       title: j['title'] as String?,
@@ -372,8 +510,27 @@ class ArcDef {
       fallback: j['fallback'] as String? ?? (kind == 'serie' ? 'nouvelles' : 'drop'),
       epilogue: (j['epilogue'] as Map?)?.cast<String, dynamic>() ?? const {},
       steps: (j['steps'] as List?)?.map((e) => StepDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
+      theme: j['theme'] as String?,
+      carrier: j['carrier'] as String?,
+      replay: j['replay'] == null ? null : ReplayDef.fromJson(j['replay'] as Object),
+      requires: (j['requires'] as List?)?.cast<String>() ?? const [],
+      excludes: (j['excludes'] as List?)?.cast<String>() ?? const [],
+      exclusiveWith: (j['exclusive_with'] as List?)?.cast<String>() ?? const [],
+      hint: j['hint'] as String?,
+      journal: j['journal'] as String?,
+      traces: {for (final k in traceKeys) k: tracesRaw[k].toString()},
+      issues: (j['issues'] as List?)?.cast<String>() ?? const [],
     );
   }
+
+  /// Le porteur de l'intrigue (jamais deux porteurs identiques la même saison).
+  String get carrierId => carrier ?? (cast.isEmpty ? '' : cast.first);
+
+  /// Le thème, tel que résolu par le build (`theme` écrit dans le json).
+  String get themeId => theme ?? '';
+
+  /// Ré-armé à chaque saison : `every_season` ou `replay: ritual`.
+  bool get isEverySeason => everySeason || (replay?.ritual ?? false);
 
   /// The queue entry kind for this arc's steps.
   String get entryKind => kind == 'postulat' ? 'script' : (kind == 'evenement' ? 'evenement' : 'etape');
@@ -396,6 +553,9 @@ class CharacterDef {
   final String camp; // terrain | direction | instances | selection
   final double? defaultTarget; // appearances per season aimed for outside a cast
   final Map<int, List<StepVariant>> onRelation; // threshold -> cards queued when crossed
+  /// Comment ce personnage s'adresse à toi (`{toi}`, spec variété §1.8) :
+  /// rôle → expression (sourire | neutre | noir) → gabarit (« mon {prenom} »).
+  final Map<String, Map<String, String>> adresse;
 
   const CharacterDef({
     required this.id,
@@ -407,10 +567,18 @@ class CharacterDef {
     this.camp = 'terrain',
     this.defaultTarget,
     this.onRelation = const {},
+    this.adresse = const {},
   });
+
+  /// Le gabarit d'adresse pour un rôle et une expression, ou null.
+  String? adresseFor(String role, String expression) => adresse[role]?[expression];
 
   factory CharacterDef.fromJson(Map<String, dynamic> j) {
     final onRel = <int, List<StepVariant>>{};
+    final adresse = <String, Map<String, String>>{};
+    ((j['adresse'] as Map?) ?? const {}).forEach((role, byExpr) {
+      adresse[role.toString()] = ((byExpr as Map).cast<String, dynamic>()).map((k, v) => MapEntry(k, v.toString()));
+    });
     ((j['on_relation'] as Map?) ?? const {}).forEach((k, v) {
       final t = int.tryParse(k.toString());
       if (t != null) onRel[t] = StepVariant.listFromJson(v);
@@ -425,6 +593,7 @@ class CharacterDef {
       camp: j['camp'] as String? ?? 'terrain',
       defaultTarget: (j['default_target'] as num?)?.toDouble(),
       onRelation: onRel,
+      adresse: adresse,
     );
   }
 }
@@ -455,6 +624,119 @@ class SeedDef {
   }
 }
 
+/// Une entrée du réservoir (spec variété §1.2) : un arc, son poids, la
+/// signature (×3 en S0, au plus une par postulat) et un `if` d'entrée.
+class ProgEntry {
+  final String arc;
+  final double poids;
+  final bool signature;
+  final Object? ifWhen;
+  const ProgEntry({required this.arc, this.poids = 1.0, this.signature = false, this.ifWhen});
+
+  factory ProgEntry.fromJson(Map<String, dynamic> j) => ProgEntry(
+        arc: j['arc'] as String,
+        poids: (j['poids'] as num?)?.toDouble() ?? 1.0,
+        signature: j['signature'] == true,
+        ifWhen: j['if'],
+      );
+}
+
+/// Un bucket de saison du réservoir : "0", "1" ou "2+".
+class BucketDef {
+  final int prendre;
+  final List<int> fenetre;
+  final int reserve;
+  final bool reprise;
+  final List<ProgEntry> pool; // ordre du fichier
+  const BucketDef({required this.prendre, required this.fenetre, this.reserve = 0, this.reprise = false, this.pool = const []});
+
+  factory BucketDef.fromJson(Map<String, dynamic> j) => BucketDef(
+        prendre: (j['prendre'] as num?)?.toInt() ?? 1,
+        fenetre: (j['fenetre'] as List?)?.map((e) => (e as num).toInt()).toList() ?? const [2, 9],
+        reserve: (j['reserve'] as num?)?.toInt() ?? 0,
+        reprise: j['reprise'] == true,
+        pool: (j['pool'] as List?)?.map((e) => ProgEntry.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
+      );
+}
+
+class ProgrammeDef {
+  static const List<String> bucketOrder = ['0', '1', '2+'];
+  final Map<String, BucketDef> buckets;
+  const ProgrammeDef(this.buckets);
+
+  factory ProgrammeDef.fromJson(Map<String, dynamic> j) {
+    final b = <String, BucketDef>{};
+    for (final k in bucketOrder) {
+      final raw = j[k];
+      if (raw != null) b[k] = BucketDef.fromJson((raw as Map).cast<String, dynamic>());
+    }
+    return ProgrammeDef(b);
+  }
+
+  static String bucketKey(int season) => season <= 0 ? '0' : (season == 1 ? '1' : '2+');
+
+  /// Le bucket de la saison (ou, à défaut, le dernier bucket déclaré avant).
+  BucketDef? bucketFor(int season) {
+    final key = bucketKey(season);
+    final direct = buckets[key];
+    if (direct != null) return direct;
+    final i = bucketOrder.indexOf(key);
+    for (var k = i - 1; k >= 0; k--) {
+      final b = buckets[bucketOrder[k]];
+      if (b != null) return b;
+    }
+    return null;
+  }
+
+  /// Entrées du bucket courant puis, si `reprise`, des buckets antérieurs
+  /// dans l'ordre "1", "0" (ordre du fichier à l'intérieur de chaque bucket).
+  List<ProgEntry> entriesWithReprise(int season) {
+    final cur = bucketFor(season);
+    if (cur == null) return const [];
+    final out = <ProgEntry>[...cur.pool];
+    if (cur.reprise) {
+      final i = bucketOrder.indexOf(bucketKey(season));
+      for (var k = i - 1; k >= 0; k--) {
+        final b = buckets[bucketOrder[k]];
+        if (b != null && b != cur) out.addAll(b.pool);
+      }
+    }
+    return out;
+  }
+
+  /// Toutes les entrées des buckets ≤ saison (pour `eligibleArcs`).
+  List<ProgEntry> entriesUpTo(int season) {
+    final i = bucketOrder.indexOf(bucketKey(season));
+    final out = <ProgEntry>[];
+    for (var k = 0; k <= i; k++) {
+      final b = buckets[bucketOrder[k]];
+      if (b != null) out.addAll(b.pool);
+    }
+    return out;
+  }
+}
+
+class QuestionDef {
+  final String id;
+  final double poids;
+  const QuestionDef(this.id, this.poids);
+  factory QuestionDef.fromJson(Map<String, dynamic> j) => QuestionDef(j['id'] as String, (j['poids'] as num?)?.toDouble() ?? 1.0);
+}
+
+class ObjectifDef {
+  final String id;
+  final String titre;
+  final Object? when;
+  final String indice;
+  const ObjectifDef({required this.id, required this.titre, this.when, this.indice = ''});
+  factory ObjectifDef.fromJson(Map<String, dynamic> j) => ObjectifDef(
+        id: j['id'] as String,
+        titre: j['titre'] as String? ?? j['id'] as String,
+        when: j['when'],
+        indice: j['indice'] as String? ?? '',
+      );
+}
+
 class AlarmEntry {
   final String card;
   final Object? when;
@@ -482,8 +764,13 @@ class PostulatDef {
   final bool camille;
   final Map<String, CastEntry> cast;
   final String? openingArc;
-  final List<SeedDef> seeds;
+  final List<SeedDef> seeds; // déprécié : gardé pour les tests synthétiques et les postulats en chantier
   final Map<String, List<AlarmEntry>> alarmOverrides;
+  final String pitch;
+  final bool chantier;
+  final ProgrammeDef? programme;
+  final List<QuestionDef> questions;
+  final List<ObjectifDef> objectifs;
 
   const PostulatDef({
     required this.id,
@@ -503,6 +790,11 @@ class PostulatDef {
     this.openingArc,
     this.seeds = const [],
     this.alarmOverrides = const {},
+    this.pitch = '',
+    this.chantier = false,
+    this.programme,
+    this.questions = const [],
+    this.objectifs = const [],
   });
 
   factory PostulatDef.fromJson(Map<String, dynamic> j) {
@@ -533,6 +825,11 @@ class PostulatDef {
       openingArc: j['opening_arc'] as String?,
       seeds: (j['seeds'] as List?)?.map((e) => SeedDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
       alarmOverrides: overrides,
+      pitch: j['pitch'] as String? ?? '',
+      chantier: j['chantier'] == true,
+      programme: j['programme'] == null ? null : ProgrammeDef.fromJson((j['programme'] as Map).cast<String, dynamic>()),
+      questions: (j['questions'] as List?)?.map((e) => QuestionDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
+      objectifs: (j['objectifs'] as List?)?.map((e) => ObjectifDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
     );
   }
 }
@@ -545,6 +842,10 @@ class DirectorConfig {
   final int maxActive;
   final int eventsMax;
   final int alarmsMax;
+  final int reactionsMax;
+  final int unesBreves;
+  final int journalParSaison;
+  final int ouvertureEcart; // jamais deux ouvertures d'intrigue à moins de N slots
   final Map<String, Map<String, double>> phaseMult; // tag -> phase -> multiplier
 
   const DirectorConfig({
@@ -555,6 +856,10 @@ class DirectorConfig {
     this.maxActive = 3,
     this.eventsMax = 1,
     this.alarmsMax = 3,
+    this.reactionsMax = 4,
+    this.unesBreves = 3,
+    this.journalParSaison = 12,
+    this.ouvertureEcart = 3,
     this.phaseMult = const {
       'mercato': {'presaison': 4, 'hiver': 4, 'aller': 0.2, 'retour': 0.2},
       'moment': {'retour': 2},
@@ -581,6 +886,10 @@ class DirectorConfig {
       maxActive: (j['max_active'] as num?)?.toInt() ?? d.maxActive,
       eventsMax: (j['events_max'] as num?)?.toInt() ?? d.eventsMax,
       alarmsMax: (j['alarms_max'] as num?)?.toInt() ?? d.alarmsMax,
+      reactionsMax: (j['reactions_max'] as num?)?.toInt() ?? d.reactionsMax,
+      unesBreves: (j['unes_breves'] as num?)?.toInt() ?? d.unesBreves,
+      journalParSaison: (j['journal_par_saison'] as num?)?.toInt() ?? d.journalParSaison,
+      ouvertureEcart: (j['ouverture_ecart'] as num?)?.toInt() ?? d.ouvertureEcart,
       phaseMult: pm.isEmpty ? d.phaseMult : pm,
     );
   }
@@ -604,6 +913,11 @@ class Content {
   final Map<String, Map<String, List<AlarmEntry>>> alarms; // role -> 'gauge.side' -> candidates
   final DirectorConfig director;
   final Map<String, dynamic> portraits; // id -> fiche de portrait (content/portraits.yaml), {} si absente
+  final List<String> themes; // thèmes fermés (content/tags.yaml → themes)
+  final List<UneDef> unes; // manchettes, ordre du fichier (content/unes.yaml)
+  final Map<String, JournalDef> journaux; // journaux fictifs de la Une
+  final Map<String, String> journalTemplates; // gabarits moteur (content/journal.yaml → auto)
+  final List<String> blacklist; // liste noire des noms (content/names/blacklist.yaml)
 
   // Derived indexes.
   final Map<String, List<Card>> _cardsByRole = {};
@@ -613,6 +927,9 @@ class Content {
   late final List<PostulatDef> postulatsByIndex;
   late final List<CharacterDef> charactersSorted;
   final Map<String, int> _cardSlots = {};
+  /// Drapeau → arc qui le déclare en `traces:` (première déclaration dans
+  /// l'ordre des arcs triés).
+  final Map<String, String> tracesIndex = {};
 
   Content({
     required this.version,
@@ -630,6 +947,11 @@ class Content {
     this.alarms = const {},
     this.director = const DirectorConfig(),
     this.portraits = const {},
+    this.themes = const [],
+    this.unes = const [],
+    this.journaux = const {},
+    this.journalTemplates = const {},
+    this.blacklist = const [],
   }) {
     final ids = cards.keys.toList()..sort();
     for (final id in ids) {
@@ -641,6 +963,11 @@ class Content {
       }
     }
     arcsSorted = arcs.values.toList()..sort((a, b) => a.id.compareTo(b.id));
+    for (final a in arcsSorted) {
+      for (final f in a.traces.keys) {
+        tracesIndex.putIfAbsent(f, () => a.id);
+      }
+    }
     postulatsByIndex = postulats.values.toList()..sort((a, b) => a.index.compareTo(b.index));
     charactersSorted = characters.values.toList()..sort((a, b) => a.id.compareTo(b.id));
     seasonBeats.forEach((role, beats) {
@@ -730,6 +1057,14 @@ class Content {
       alarms: alarms,
       director: DirectorConfig.fromJson((j['director'] as Map?)?.cast<String, dynamic>()),
       portraits: (j['portraits'] as Map?)?.cast<String, dynamic>() ?? const {},
+      themes: (j['themes'] as List?)?.cast<String>() ?? const [],
+      unes: (j['unes'] as List? ?? const []).map((e) => UneDef.fromJson((e as Map).cast<String, dynamic>())).toList(),
+      journaux: {
+        for (final e in (j['journaux'] as List? ?? const []))
+          (e as Map)['id'].toString(): JournalDef.fromJson(e.cast<String, dynamic>()),
+      },
+      journalTemplates: ((j['journal_templates'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
+      blacklist: (j['blacklist'] as List?)?.map((e) => e.toString()).toList() ?? const [],
     );
   }
 }

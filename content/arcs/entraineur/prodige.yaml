@@ -1,8 +1,8 @@
 # B · « Le prodige » — l'horloge qui avance. Lian Mbako, seize ans, est la
 # seule richesse du club ; Vukić l'annonce, sa mère le négocie, Fardelli
-# tourne, et trente millions frappent à la porte. Semé au slot [4,6] de la
-# saison 1 du postulat « Le promu sans un sou » (postulats.yaml) ; ailleurs,
-# ouverture spontanée tant que le gamin n'est pas vendu.
+# tourne, et trente millions frappent à la porte. Tiré par le réservoir du
+# promu (postulats.yaml, bucket "0") tant que le gamin n'est pas vendu.
+# Issues : vendu | garde (posées par les trois cartes d'offre).
 #
 # Chemins : gamin → maintenant (non lancé) | la_mere (lancé) → fardelli →
 # offre (express si la Commission a tranché / lancé / banc) → marque (vendu,
@@ -18,6 +18,13 @@ arcs:
     once: true
     every_season: false
     min_season: 0
+    theme: mercato
+    carrier: mbako
+    issues: [vendu, garde]
+    traces:
+      mbako_lance: "{annee} : Lian Mbako, seize ans, lancé en pro par {prenom} {nom} contre l'avis du président."
+      mbako_vendu: "{annee} : Lian Mbako vendu trente millions. Sa mère a lu la clause. Elle l'avait écrite."
+    hint: "Seize ans, la seule richesse du club, et trente millions à la porte."
     when: "season <= 2 && !flag('mbako_vendu')"
     # Vendu hors de l'arc (clause de descente) : c'est co.nouvelle.mbako_parti
     # qui ferme l'arc (`arc: [{id: en.prodige, status: abandonne}]`) ; un

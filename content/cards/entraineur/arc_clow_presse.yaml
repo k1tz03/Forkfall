@@ -17,7 +17,7 @@ cards:
     priority: 1
     # Seuil 75 comme la bible ; season <= 1 (et non == 0) en filet : la S0
     # du promu est presque entièrement réservée (script, semis, Nouvelles).
-    when: "gauges.tribunes >= 75 && season <= 1"
+    when: "gauges.tribunes >= 75 && season <= 1 && !flag('clow_ingrat')"
     text: "Brian Clow, verre à la main : « Une jauge pleine tue autant qu'une vide, petit. Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un. »"
     left:
       label: "Je note"
@@ -131,11 +131,11 @@ cards:
     text: "Madame Josiane, les mains vides : « Il n'a rien laissé. Le fils de Clow a demandé qu'on ne vous prévienne pas de l'enterrement. J'en ai vu passer, vous savez. »"
     left:
       label: "Je comprends"
-      effects: {set: [clow_ingrat]}
+      effects: {set: [clow_ingrat], outcome: ingrat}
       answer: "Tu y vas quand même. Au fond, derrière un pilier. Le fils te voit. Il ne dit rien."
     right:
       label: "Je comprends"
-      effects: {set: [clow_ingrat]}
+      effects: {set: [clow_ingrat], outcome: ingrat}
       answer: "Tu y vas quand même. Au fond, derrière un pilier. Le fils te voit. Il ne dit rien."
 
   # ================================================ G · La conférence de presse
@@ -151,11 +151,11 @@ cards:
     text: "Ménèche, micro posé sur la table : « Trois questions, un journaliste gentil. Juste une question, hors micro. L'objectif, vous y croyez ou vous le dites ? »"
     left:
       label: "Je ne commente pas"
-      effects: {var: {no_comment: "+1"}, tribunes: "-", direction: "+"}
+      effects: {var: {no_comment: "+1"}, tribunes: "-", direction: "+", outcome: no_comment}
       answer: "Il note le silence. Il note toujours. Le président apprécie qu'on note peu."
     right:
       label: "Franchement"
-      effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}}
+      effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}, outcome: franc}
       answer: "Il note « franchement ». Le mot sort en titre samedi, avec un point d'interrogation."
 
   # --------------------------------------------------- le mème (routine S1+)

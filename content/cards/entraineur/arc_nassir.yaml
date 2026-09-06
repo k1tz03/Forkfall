@@ -4,13 +4,29 @@
 # pas l'id de l'arc. Remplace la routine co.sponsor.maillot (doublon de C1).
 cards:
   # ------------------------------------------------------------- C1 · maillot
+  # Variante « encore » (relance, plays >= 1) : le fonds revient, canette neuve.
+  - id: en.nassir.maillot_encore
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, absurde, caisse]
+    speaker: nassir
+    tone: leger
+    text: "Cheikh Nassir, une canette neuve : « Nous revoilà. Le maillot, cette fois, on ne le discute pas : on l'achète, avec le club autour. Ce n'est pas un club, c'est un actif. »"
+    left:
+      label: "Le maillot est sacré"
+      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, var: {nassir_refus: "+1"}}
+      answer: "Il repose la canette. Il la laisse sur le bureau, pleine."
+    right:
+      label: "Va pour l'orange, encore"
+      effects: {caisse: "++", tribunes: "--", var: {nassir_palier: "=1"}, set: [nassir_sponsor]}
+      answer: "Le maillot est orange lundi. Gégé compte les manches."
+
   - id: en.nassir.maillot
     roles: [entraineur]
     arc: sponsors
     tags: [sponsors, absurde, tribunes]
     speaker: nassir
     tone: leger
-    once: true
     text: "Cheikh Nassir, une canette à la main : « Nous aimerions que le maillot soit orange fluo. Comme notre boisson. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "Le maillot est sacré"
@@ -30,7 +46,6 @@ cards:
     tags: [sponsors, direction, tribunes]
     speaker: nassir
     tone: strategique
-    once: true
     text: "Cheikh Nassir, au fax : « Un sponsor qui paie d'avance ? Nous payons d'avance. Arena Qatalyst, dix millions, le vieux président sur une plaque aux toilettes. »"
     left:
       label: "Le stade garde son nom"
@@ -38,7 +53,7 @@ cards:
       answer: "La Commission attend toujours son plan. Aulard aussi."
     right:
       label: "Signez"
-      effects: {caisse: "+++", tribunes: "---", relation: {gege: -2}, var: {nassir_palier: "=2"}, set: [naming_signe]}
+      effects: {caisse: "+++", tribunes: "---", relation: {gege: -2}, var: {nassir_palier: "=2"}, set: [naming_signe], outcome: naming}
       answer: "La Commission a son plan. Gégé apprend le nom sur une pancarte."
 
   # -------------------------------------------------------------- C2 · naming
@@ -48,7 +63,6 @@ cards:
     tags: [sponsors, tribunes, direction]
     speaker: nassir
     tone: strategique
-    once: true
     text: "Cheikh Nassir, un plan du stade : « Arena Qatalyst, dix millions. Le vieux président ira sur une plaque, aux toilettes. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "Le stade garde son nom"
@@ -56,7 +70,7 @@ cards:
       answer: "Gégé l'apprend par Josiane. Il lui offre un café. Un vrai."
     right:
       label: "Signez"
-      effects: {caisse: "+++", tribunes: "---", relation: {gege: -2}, var: {nassir_palier: "=2"}, set: [naming_signe]}
+      effects: {caisse: "+++", tribunes: "---", relation: {gege: -2}, var: {nassir_palier: "=2"}, set: [naming_signe], outcome: naming}
       answer: "Gégé apprend le nom sur une pancarte. La tribune n'oublie rien."
 
   # ------------------------------------------------------------- C2b · retrait
@@ -68,7 +82,6 @@ cards:
     tags: [sponsors, caisse]
     speaker: nassir
     tone: leger
-    once: true
     text: "Cheikh Nassir, par fax : « Nous retirons notre offre. Ce n'était pas un club, c'était un actif. Il ne l'est plus. »"
     left:
       label: "Bon vent"
@@ -86,7 +99,6 @@ cards:
     tags: [sponsors, caisse, direction]
     speaker: nassir
     tone: strategique
-    once: true
     text: "Cheikh Nassir, sans canette : « Un prêt sans intérêt ni garantie. Presque : une option sur Mbako, et cinquante et un pour cent. Vous restez coach, de nom. »"
     left:
       label: "Ni le petit, ni le club"
@@ -105,7 +117,6 @@ cards:
     tags: [direction, caisse, sponsors]
     speaker: josiane
     tone: strategique
-    once: true
     text: "Madame Josiane, un fax : « Le fonds a racheté le club, par fax. Le logo est orange, votre nom en petit, sous « ambassadeur ». J'en ai vu passer, vous savez. »"
     left:
       label: "Ambassadeur, alors"
@@ -123,7 +134,6 @@ cards:
     tags: [direction, sponsors]
     speaker: nassir
     tone: strategique
-    once: true
     text: "Cheikh Nassir, par fax : « Votre poste est réorganisé. Le club vous remercie en trois lignes, la quatrième signe. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "Je pars"

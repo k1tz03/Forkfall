@@ -11,7 +11,8 @@ export 'src/engine.dart';
 export 'src/rng.dart';
 export 'src/seed_codec.dart';
 export 'src/state.dart';
-export 'src/text.dart' show formatText;
+export 'src/naming.dart';
+export 'src/text.dart' show formatText, placeholdersOf, kKnownPlaceholders, kNamePlaceholders;
 export 'src/world.dart';
 
 import 'dart:convert';

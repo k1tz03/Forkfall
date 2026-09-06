@@ -6,20 +6,115 @@ library;
 import 'effects.dart';
 
 class Entities {
-  String protagonist;
+  /// Prénom et nom du protagoniste (spec variété §1.8) ; `protagonist` reste
+  /// « prénom nom ». Le nom est cosmétique : aucune carte servie n'en dépend.
+  String prenom;
+  String nom;
   String genre; // 'f' or 'm'
   Map<String, String> named; // club, clubShort, rival, president, capitaine, ville, coach, …
 
-  Entities({required this.protagonist, required this.genre, required this.named});
+  Entities({String? protagonist, String? prenom, String? nom, required this.genre, required this.named})
+      : prenom = prenom ?? _splitName(protagonist ?? '').first,
+        nom = nom ?? _splitName(protagonist ?? '').last;
 
-  Entities clone() => Entities(protagonist: protagonist, genre: genre, named: Map.of(named));
+  String get protagonist => nom.isEmpty ? prenom : '$prenom $nom';
 
-  Map<String, dynamic> toJson() => {'protagonist': protagonist, 'genre': genre, 'named': named};
+  static List<String> _splitName(String full) {
+    final t = full.trim();
+    final i = t.indexOf(' ');
+    if (i < 0) return [t, ''];
+    return [t.substring(0, i), t.substring(i + 1)];
+  }
+
+  Entities clone() => Entities(prenom: prenom, nom: nom, genre: genre, named: Map.of(named));
+
+  Map<String, dynamic> toJson() => {'protagonist': protagonist, 'prenom': prenom, 'nom': nom, 'genre': genre, 'named': named};
   factory Entities.fromJson(Map<String, dynamic> j) => Entities(
-        protagonist: j['protagonist'] as String,
+        protagonist: j['protagonist'] as String?,
+        prenom: j['prenom'] as String?,
+        nom: j['nom'] as String?,
         genre: j['genre'] as String,
         named: (j['named'] as Map).cast<String, String>(),
       );
+}
+
+/// Une entrée de l'Almanach (spec variété §1.7) : datée, pondérée, taguée. Le
+/// texte est formaté à l'écriture (le nom, le club, le rang de l'instant).
+class JournalEntry {
+  final int season;
+  final int year;
+  final int slot;
+  final String kind; // carte | trace | arc | palier | bilan | une | objectif | transition | fin
+  final String text;
+  final int poids;
+  final List<String> tags;
+  final String? arc; // arc source (ou id de la manchette pour `une`)
+  const JournalEntry({
+    required this.season,
+    required this.year,
+    required this.slot,
+    required this.kind,
+    required this.text,
+    this.poids = 1,
+    this.tags = const [],
+    this.arc,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'season': season,
+        'year': year,
+        'slot': slot,
+        'kind': kind,
+        'text': text,
+        'poids': poids,
+        if (tags.isNotEmpty) 'tags': tags,
+        if (arc != null) 'arc': arc,
+      };
+
+  factory JournalEntry.fromJson(Map<String, dynamic> j) => JournalEntry(
+        season: (j['season'] as num?)?.toInt() ?? 0,
+        year: (j['year'] as num?)?.toInt() ?? 0,
+        slot: (j['slot'] as num?)?.toInt() ?? 0,
+        kind: j['kind'] as String? ?? 'carte',
+        text: j['text'] as String? ?? '',
+        poids: (j['poids'] as num?)?.toInt() ?? 1,
+        tags: (j['tags'] as List?)?.cast<String>() ?? const [],
+        arc: j['arc'] as String?,
+      );
+}
+
+/// La réaction en attente (spec variété §1.4) : servie au tirage suivant, hors
+/// créneau ; `arc`/`step` sont ceux de la carte déclencheuse.
+class ReactionRef {
+  final String card;
+  final String? arc;
+  final String? step;
+  final String phase;
+  const ReactionRef({required this.card, this.arc, this.step, this.phase = ''});
+
+  Map<String, dynamic> toJson() => {
+        'card': card,
+        if (arc != null) 'arc': arc,
+        if (step != null) 'step': step,
+        'phase': phase,
+      };
+
+  factory ReactionRef.fromJson(Map<String, dynamic> j) => ReactionRef(
+        card: j['card'] as String,
+        arc: j['arc'] as String?,
+        step: j['step'] as String?,
+        phase: j['phase'] as String? ?? '',
+      );
+}
+
+/// La « carte fatale » de la saison : le dernier temps d'histoire non-Nouvelle
+/// servi et la réponse choisie (photo et légende de la Une, spec variété §1.6).
+class LastStoryCard {
+  final String id;
+  final String? answer;
+  const LastStoryCard(this.id, this.answer);
+  Map<String, dynamic> toJson() => {'id': id, if (answer != null) 'answer': answer};
+  factory LastStoryCard.fromJson(Map<String, dynamic> j) => LastStoryCard(j['id'] as String, j['answer'] as String?);
 }
 
 class WorldState {
@@ -121,6 +216,11 @@ class Scheduled {
   bool sameClub;
   int reports;
   Map<String, dynamic> payload;
+  /// Fusée longue (spec variété §1.3) : tant que `atSeason` est posé, l'entrée
+  /// attend l'ouverture de cette saison (`dueN == -1`), puis reçoit sa fenêtre
+  /// absolue `atSlot`.
+  int? atSeason;
+  List<int>? atSlot;
 
   Scheduled({
     required this.card,
@@ -137,7 +237,11 @@ class Scheduled {
     this.sameClub = true,
     this.reports = 0,
     Map<String, dynamic>? payload,
+    this.atSeason,
+    this.atSlot,
   }) : payload = payload ?? {};
+
+  bool get isLongFuse => atSeason != null;
 
   Scheduled clone() => Scheduled(
         card: card,
@@ -154,6 +258,8 @@ class Scheduled {
         sameClub: sameClub,
         reports: reports,
         payload: Map.of(payload),
+        atSeason: atSeason,
+        atSlot: atSlot == null ? null : List.of(atSlot!),
       );
 
   Map<String, dynamic> toJson() => {
@@ -171,6 +277,8 @@ class Scheduled {
         'sameClub': sameClub,
         if (reports != 0) 'reports': reports,
         if (payload.isNotEmpty) 'payload': payload,
+        if (atSeason != null) 'atSeason': atSeason,
+        if (atSlot != null) 'atSlot': atSlot,
       };
 
   /// Returns null for a v1 entry (`{card, due}`), which is dropped on load.
@@ -191,6 +299,8 @@ class Scheduled {
       sameClub: j['sameClub'] != false,
       reports: (j['reports'] as num?)?.toInt() ?? 0,
       payload: (j['payload'] as Map?)?.cast<String, dynamic>(),
+      atSeason: (j['atSeason'] as num?)?.toInt(),
+      atSlot: (j['atSlot'] as List?)?.map((e) => (e as num).toInt()).toList(),
     );
   }
 }
@@ -203,10 +313,13 @@ class ArcState {
   int startedSeason;
   int? doneSeason;
   String? reason;
+  int plays; // clôtures `done` dans la carrière (spec variété §1.3)
+  String? outcome; // dernière issue posée
 
-  ArcState({this.status = 'armed', this.step, this.lastN = 0, this.startedSeason = 0, this.doneSeason, this.reason});
+  ArcState({this.status = 'armed', this.step, this.lastN = 0, this.startedSeason = 0, this.doneSeason, this.reason, this.plays = 0, this.outcome});
 
-  ArcState clone() => ArcState(status: status, step: step, lastN: lastN, startedSeason: startedSeason, doneSeason: doneSeason, reason: reason);
+  ArcState clone() => ArcState(
+      status: status, step: step, lastN: lastN, startedSeason: startedSeason, doneSeason: doneSeason, reason: reason, plays: plays, outcome: outcome);
 
   Map<String, dynamic> toJson() => {
         'status': status,
@@ -215,6 +328,8 @@ class ArcState {
         'startedSeason': startedSeason,
         if (doneSeason != null) 'doneSeason': doneSeason,
         if (reason != null) 'reason': reason,
+        if (plays != 0) 'plays': plays,
+        if (outcome != null) 'outcome': outcome,
       };
 
   factory ArcState.fromJson(Map<String, dynamic> j) => ArcState(
@@ -224,6 +339,8 @@ class ArcState {
         startedSeason: (j['startedSeason'] as num?)?.toInt() ?? 0,
         doneSeason: (j['doneSeason'] as num?)?.toInt(),
         reason: j['reason'] as String?,
+        plays: (j['plays'] as num?)?.toInt() ?? 0,
+        outcome: j['outcome'] as String?,
       );
 }
 
@@ -360,6 +477,18 @@ class GameState {
   Set<String> alarmFired;
   Map<String, int> alarmsServed;
   Set<String> enemies;
+  // Tirage de saison (spec variété §1.2) : toutes les listes sont à ordre stable.
+  List<String> reserve; // ids d'arcs en réserve, triés
+  List<String> themesPlayed; // thèmes déjà ouverts dans la carrière, triés
+  List<int> openingSlots; // slots d'ouverture d'intrigue tirés cette saison
+  Map<String, int> carriersLastSeason; // porteur → saison de la dernière clôture
+  // Réactions, journal, Une (spec variété §1.4, §1.6, §1.7).
+  List<JournalEntry> journal;
+  ReactionRef? reaction;
+  int reactionsThisSeason;
+  bool lastWasReaction;
+  String? lastUne; // id de la manchette servie au dernier Bilan
+  LastStoryCard? lastStoryCard;
 
   Pending? pending;
   String? endingId;
@@ -425,6 +554,16 @@ class GameState {
     Set<String>? alarmFired,
     Map<String, int>? alarmsServed,
     Set<String>? enemies,
+    List<String>? reserve,
+    List<String>? themesPlayed,
+    List<int>? openingSlots,
+    Map<String, int>? carriersLastSeason,
+    List<JournalEntry>? journal,
+    this.reaction,
+    this.reactionsThisSeason = 0,
+    this.lastWasReaction = false,
+    this.lastUne,
+    this.lastStoryCard,
     required this.pending,
     required this.endingId,
     required this.lastAnswer,
@@ -438,7 +577,12 @@ class GameState {
         toneCounts = toneCounts ?? {},
         alarmFired = alarmFired ?? {},
         alarmsServed = alarmsServed ?? {},
-        enemies = enemies ?? {};
+        enemies = enemies ?? {},
+        reserve = reserve ?? [],
+        themesPlayed = themesPlayed ?? [],
+        openingSlots = openingSlots ?? [],
+        carriersLastSeason = carriersLastSeason ?? {},
+        journal = journal ?? [];
 
   GameState clone() => GameState(
         contentVersion: contentVersion,
@@ -499,6 +643,16 @@ class GameState {
         alarmFired: Set.of(alarmFired),
         alarmsServed: Map.of(alarmsServed),
         enemies: Set.of(enemies),
+        reserve: List.of(reserve),
+        themesPlayed: List.of(themesPlayed),
+        openingSlots: List.of(openingSlots),
+        carriersLastSeason: Map.of(carriersLastSeason),
+        journal: List.of(journal), // entrées immuables : copie superficielle
+        reaction: reaction,
+        reactionsThisSeason: reactionsThisSeason,
+        lastWasReaction: lastWasReaction,
+        lastUne: lastUne,
+        lastStoryCard: lastStoryCard,
         pending: pending,
         endingId: endingId,
         lastAnswer: lastAnswer,
@@ -565,6 +719,16 @@ class GameState {
         'alarmFired': alarmFired.toList()..sort(),
         'alarmsServed': alarmsServed,
         'enemies': enemies.toList()..sort(),
+        'reserve': reserve,
+        'themesPlayed': themesPlayed,
+        'openingSlots': openingSlots,
+        'carriersLastSeason': {for (final k in carriersLastSeason.keys.toList()..sort()) k: carriersLastSeason[k]},
+        'journal': journal.map((e) => e.toJson()).toList(),
+        'reaction': reaction?.toJson(),
+        'reactionsThisSeason': reactionsThisSeason,
+        'lastWasReaction': lastWasReaction,
+        'lastUne': lastUne,
+        'lastStoryCard': lastStoryCard?.toJson(),
         'pending': pending?.toJson(),
         'endingId': endingId,
         'lastAnswer': lastAnswer,
@@ -633,6 +797,16 @@ class GameState {
         alarmFired: (j['alarmFired'] as List?)?.cast<String>().toSet(),
         alarmsServed: (j['alarmsServed'] as Map?)?.cast<String, int>(),
         enemies: (j['enemies'] as List?)?.cast<String>().toSet(),
+        reserve: (j['reserve'] as List?)?.cast<String>(),
+        themesPlayed: (j['themesPlayed'] as List?)?.cast<String>(),
+        openingSlots: (j['openingSlots'] as List?)?.map((e) => (e as num).toInt()).toList(),
+        carriersLastSeason: (j['carriersLastSeason'] as Map?)?.cast<String, int>(),
+        journal: (j['journal'] as List?)?.map((e) => JournalEntry.fromJson((e as Map).cast<String, dynamic>())).toList(),
+        reaction: j['reaction'] == null ? null : ReactionRef.fromJson((j['reaction'] as Map).cast<String, dynamic>()),
+        reactionsThisSeason: (j['reactionsThisSeason'] as num?)?.toInt() ?? 0,
+        lastWasReaction: j['lastWasReaction'] == true,
+        lastUne: j['lastUne'] as String?,
+        lastStoryCard: j['lastStoryCard'] == null ? null : LastStoryCard.fromJson((j['lastStoryCard'] as Map).cast<String, dynamic>()),
         pending: j['pending'] == null ? null : Pending.fromJson((j['pending'] as Map).cast<String, dynamic>()),
         endingId: j['endingId'] as String?,
         lastAnswer: j['lastAnswer'] as String?,
@@ -643,7 +817,7 @@ class GameState {
   /// assert determinism.
   String fingerprint() {
     final arcKeys = arcs.keys.toList()..sort();
-    final arcStr = arcKeys.map((k) => '$k:${arcs[k]!.status}:${arcs[k]!.step ?? ''}').join(',');
+    final arcStr = arcKeys.map((k) => '$k:${arcs[k]!.status}:${arcs[k]!.step ?? ''}:${arcs[k]!.plays}:${arcs[k]!.outcome ?? ''}').join(',');
     final sched = List.of(scheduled)
       ..sort((a, b) {
         final c = a.deadlineN.compareTo(b.deadlineN);
@@ -681,7 +855,17 @@ class GameState {
       ..write('|a')
       ..write(arcStr)
       ..write('|q')
-      ..write(schedStr);
+      ..write(schedStr)
+      ..write('|v')
+      ..write(vars['fil_rouge_i'] ?? '')
+      ..write('|o')
+      ..write(openingSlots.join('.'))
+      ..write('|z')
+      ..write(reserve.join(','))
+      ..write('|j')
+      ..write(journal.length)
+      ..write('|r')
+      ..write(reaction?.card ?? '-');
     return b.toString();
   }
 }

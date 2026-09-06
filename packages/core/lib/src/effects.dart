@@ -43,7 +43,9 @@ class NextOp {
   final int inMin;
   final int inMax;
   final bool thisSeason;
-  const NextOp(this.kind, {this.step, this.inMin = 1, this.inMax = 3, this.thisSeason = false});
+  final int? atSeason; // fusée longue (spec variété §1.3)
+  final List<int>? at;
+  const NextOp(this.kind, {this.step, this.inMin = 1, this.inMax = 3, this.thisSeason = false, this.atSeason, this.at});
 
   factory NextOp.fromJson(Object j) {
     if (j is String) return NextOp(j);
@@ -55,6 +57,8 @@ class NextOp {
       inMin: (range.first as num).toInt(),
       inMax: (range.last as num).toInt(),
       thisSeason: m['this_season'] == true,
+      atSeason: (m['at_season'] as num?)?.toInt(),
+      at: (m['at'] as List?)?.map((e) => (e as num).toInt()).toList(),
     );
   }
 
@@ -63,6 +67,8 @@ class NextOp {
           'step': step,
           'in': [inMin, inMax],
           if (thisSeason) 'this_season': true,
+          if (atSeason != null) 'at_season': atSeason,
+          if (at != null) 'at': at,
         }
       : kind;
 }
@@ -74,6 +80,49 @@ class ArcCloseOp {
   const ArcCloseOp(this.id, this.status);
   factory ArcCloseOp.fromJson(Map<String, dynamic> j) => ArcCloseOp(j['id'] as String, j['status'] as String? ?? 'done');
   Map<String, dynamic> toJson() => {'id': id, 'status': status};
+}
+
+/// Une variante de `react:` (spec variété §1.4) : la carte-réaction servie au
+/// tirage suivant, un `if` optionnel (la première vraie gagne, la dernière n'en
+/// a pas) et une `chance` optionnelle (1 `nextDouble` seulement si présente).
+class ReactVariant {
+  final String card;
+  final Object? ifWhen;
+  final double? chance;
+  const ReactVariant(this.card, {this.ifWhen, this.chance});
+
+  static List<ReactVariant> listFromJson(Object? j) {
+    if (j == null) return const [];
+    if (j is String) return [ReactVariant(j)];
+    if (j is Map) return [ReactVariant.fromJson(j.cast<String, dynamic>())];
+    return (j as List).map((e) => e is String ? ReactVariant(e) : ReactVariant.fromJson((e as Map).cast<String, dynamic>())).toList();
+  }
+
+  factory ReactVariant.fromJson(Map<String, dynamic> j) =>
+      ReactVariant(j['card'] as String, ifWhen: j['if'], chance: (j['chance'] as num?)?.toDouble());
+
+  Map<String, dynamic> toJson() => {
+        'card': card,
+        if (ifWhen != null) 'if': ifWhen,
+        if (chance != null) 'chance': chance,
+      };
+}
+
+/// L'effet `journal:` d'un choix (spec variété §1.7) : une ligne d'Almanach,
+/// poids 1..3, tags libres.
+class JournalOp {
+  final String text;
+  final int poids;
+  final List<String> tags;
+  const JournalOp(this.text, {this.poids = 1, this.tags = const []});
+
+  factory JournalOp.fromJson(Object j) {
+    if (j is String) return JournalOp(j);
+    final m = (j as Map).cast<String, dynamic>();
+    return JournalOp(m['text'] as String, poids: (m['poids'] as num?)?.toInt() ?? 1, tags: (m['tags'] as List?)?.cast<String>() ?? const []);
+  }
+
+  Object toJson() => poids == 1 && tags.isEmpty ? text : {'text': text, 'poids': poids, if (tags.isNotEmpty) 'tags': tags};
 }
 
 class EffectSet {
@@ -96,6 +145,9 @@ class EffectSet {
   final NextOp? arcNext; // explicit arc branch (step cards only)
   final List<ArcCloseOp> arcClose;
   final List<String> enemy; // characters forced to -3
+  final String? outcome; // issue de l'arc courant (cartes d'étape seulement)
+  final List<ReactVariant> react; // carte-réaction servie au tirage suivant
+  final JournalOp? journal; // ligne d'Almanach
 
   const EffectSet({
     this.gauges = const {},
@@ -117,6 +169,9 @@ class EffectSet {
     this.arcNext,
     this.arcClose = const [],
     this.enemy = const [],
+    this.outcome,
+    this.react = const [],
+    this.journal,
   });
 
   factory EffectSet.fromJson(Map<String, dynamic> j) {
@@ -144,6 +199,9 @@ class EffectSet {
       arcNext: j['next'] == null ? null : NextOp.fromJson(j['next'] as Object),
       arcClose: (j['arc'] as List?)?.map((e) => ArcCloseOp.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
       enemy: (j['enemy'] as List?)?.cast<String>() ?? const [],
+      outcome: j['outcome'] as String?,
+      react: ReactVariant.listFromJson(j['react']),
+      journal: j['journal'] == null ? null : JournalOp.fromJson(j['journal'] as Object),
     );
   }
 
@@ -178,6 +236,9 @@ class EffectSet {
         if (arcNext != null) 'next': arcNext!.toJson(),
         if (arcClose.isNotEmpty) 'arc': arcClose.map((a) => a.toJson()).toList(),
         if (enemy.isNotEmpty) 'enemy': enemy,
+        if (outcome != null) 'outcome': outcome,
+        if (react.isNotEmpty) 'react': react.map((r) => r.toJson()).toList(),
+        if (journal != null) 'journal': journal!.toJson(),
       };
 }
 

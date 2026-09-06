@@ -1,8 +1,13 @@
 # Les postulats : les points de départ d'une carrière. L'ordre du fichier est
 # l'index du Code de Carrière (ne jamais réordonner ; ajouter à la fin).
 # `cast` : les visages que le metteur en scène doit faire revenir, avec le
-# nombre d'apparitions par saison visé. `opening_arc`, `seeds` et
-# `alarm_overrides` viennent avec la bible de chaque postulat.
+# nombre d'apparitions par saison visé. `opening_arc`, `programme` (le
+# réservoir d'intrigues tiré à chaque ouverture de saison, spec variété §1.2),
+# `questions` (le fil rouge tiré), `objectifs` (cachés, évalués au Bilan et à
+# la fin) et `alarm_overrides` viennent avec la bible de chaque postulat.
+# `seeds` (semis à créneaux fixes) est déprécié : gardé pour les postulats en
+# chantier et les tests. `chantier: true` = les lints de couture sont des
+# avertissements.
 postulats:
   - id: promu
     index: 0
@@ -29,13 +34,46 @@ postulats:
       fardelli: { fonction: vautour,     target: 1 }
       clow:     { fonction: mentor,      target: 0.5 }   # visage de S1+ (min_season 1)
       camille:  { fonction: jauge5,      target: 0.5 }   # visage de S1+ (jauge 5)
+    pitch: "Promu, ruiné, adoré. Trois histoires par saison, jamais les mêmes."
+    chantier: false
     opening_arc: en.promu.sans_un_sou
-    seeds:                            # arcs semés d'office, fenêtre absolue de l'étape 1
-      - { arc: en.kop_qui_aime_trop,   season: 0, at: [3, 4] }
-      - { arc: en.prodige,             season: 0, at: [4, 6] }
-      - { arc: en.vieux_gardien,       season: 0, at: [7, 8] }    # l'épaule doit tomber avant les slots 16-17 du script
-      - { arc: en.nassir_proprietaire, season: 0, at: [8, 10], if: "gauges.caisse < 40" }
-      - { arc: en.mentor_clow,         season: 1, at: [5, 12] }   # après la vague d'échéances des slots 1-6
+    questions:                        # fil rouge tiré à l'ouverture de saison (chemin `fil_rouge` dans `when`)
+      - { id: tribune,   poids: 1.0 }
+      - { id: president, poids: 1.0 }
+      - { id: argent,    poids: 1.0 }
+    programme:                        # le réservoir (remplace `seeds`) : k intrigues tirées sans remise, fenêtre d'ouverture tirée
+      "0":
+        prendre: 3
+        fenetre: [2, 9]               # slot d'ouverture tiré uniformément ; échéance = ouverture + 2
+        reserve: 1
+        pool:
+          - { arc: en.kop_qui_aime_trop,   poids: 1.2, signature: true, if: "gauges.tribunes >= 65" }
+          - { arc: en.prodige,             poids: 1.3 }
+          - { arc: en.vieux_gardien,       poids: 1.2 }
+          - { arc: en.nassir_proprietaire, poids: 1.2, if: "gauges.caisse < 45" }
+          - { arc: en.cote_du_promu,       poids: 1.0 }
+      "1":
+        prendre: 3
+        fenetre: [2, 10]
+        reserve: 1
+        reprise: true                 # les entrées de "0" non tirées restent candidates
+        pool:
+          - { arc: en.mentor_clow,         poids: 1.1 }
+          - { arc: en.conf_presse,         poids: 0.8 }
+      "2+":
+        prendre: 4
+        fenetre: [1, 11]
+        reserve: 2
+        reprise: true
+        pool:
+          - { arc: en.vieux_gardien,       poids: 0.8 }    # rituel (replay: ritual)
+          - { arc: en.conf_presse,         poids: 0.8 }    # rituel (every_season)
+          - { arc: en.kop_qui_aime_trop,   poids: 0.6 }    # replay after 2
+          - { arc: en.nassir_proprietaire, poids: 0.6 }    # replay after 2
+    objectifs:                        # 3 objectifs cachés ; l'indice est le levier de relance
+      - { id: promu_deux_maintiens, titre: "Deux maintiens de suite", when: "vars.saisons_tenues >= 2", indice: "Tenir. Encore." }
+      - { id: promu_a_lancienne,    titre: "Le club à l'ancienne",    when: "flag('club_a_lancienne') && stats.saisons >= 3", indice: "Il y a de l'argent qui frappe à la porte. On peut ne pas ouvrir." }
+      - { id: promu_banc_gigi,      titre: "Le banc de Gigi",         when: "arc_outcome('en.vieux_gardien') == 'staff'", indice: "Un gardien de quarante et un ans a autre chose à donner que ses gants." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
       caisse.low:
         - { card: en.promu.alarme_nassir_offre, when: "relation.nassir >= 0 && vars.nassir_palier >= 1" }
@@ -53,6 +91,7 @@ postulats:
     force: 44
     flags: [interim]
     president: aulard
+    chantier: true
 
   - id: pepite
     index: 2
@@ -64,6 +103,7 @@ postulats:
     gauges: { vestiaire: 50, tribunes: 80, direction: 50, caisse: 45 }
     force: 58
     president: fardelli
+    chantier: true
 
   - id: fin_de_contrat
     index: 3
@@ -76,3 +116,4 @@ postulats:
     force: 52
     flags: [genou]
     president: fardelli
+    chantier: true

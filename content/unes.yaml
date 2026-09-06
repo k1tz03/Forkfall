@@ -1,0 +1,85 @@
+# La Une du Bilan (spec variété §1.6, §2.4). Composée au beat `bilan_une` :
+# le moteur calcule le verdict SANS l'appliquer (chemins `bilan.tenu` et
+# `bilan.rang` valides seulement ici), garde les manchettes éligibles
+# (`postulats` vide = tous ; `roles` vide = tous ; `when` vrai ; pas servie au
+# Bilan précédent), prend la BANDE de `priority` la plus haute, puis tire dans
+# cette bande au `poids` (1 seul appel au Rng). Les brèves sont les 3 entrées
+# de journal les plus lourdes de la saison hors sujet (`sujet` = tag ou arc
+# exclu). La photo = `photo` si cette carte a été servie cette saison, sinon
+# la carte fatale (dernier temps d'histoire). `react` pose une carte-réaction
+# « quelqu'un a lu le journal », servie au tirage suivant (sans `chance`).
+#
+# Schéma d'une manchette :
+#   - id: une.<postulat|generic>.<mot>
+#     postulats: [promu]           # optionnel ; vide = tous
+#     roles: [entraineur]          # optionnel ; vide = tous
+#     journal: quotidien | gazette | echo
+#     priority: 0..4               # 4 titre/descente/changement de rôle · 3 trace forte · 2 trace ordinaire · 1 générique · 0 secours
+#     poids: 1.0                   # optionnel
+#     when: "bilan.tenu && flag('x')"   # optionnel ; JAMAIS flag('bilan_tenu') ni world.rang_final (saison précédente)
+#     titre: "{NOM}, LE MIRACLE DE {VILLE}"   # ≤ 44 caractères une fois rendu (lint : BRÉHAUT-LEMOINE / SAINT-ÉTOILE)
+#     sous: "…"                    # placeholders : {rang} {objectif} {tenu} (tenu | manqué) {TENU} {annee} {prenom} {nom} {NOM} {club} {CLUB} {ville} {VILLE} {rival} {president} {pts}
+#     sujet: direction             # optionnel : tag/arc exclu des brèves
+#     photo: en.promu.a6_dernier_virage      # optionnel
+#     react: { card: co.re.josiane_a_lu, if: "relation.josiane >= 0" }   # optionnel ; card ou liste [{card, if?}]
+#
+# Règles : ≥ 2 manchettes de secours (priority 0, sans `when`) ; par postulat
+# livré ≥ 10 manchettes dont ≥ 3 sur des traces ; {NOM} ou {CLUB}/{VILLE}
+# dans ≥ 50 % ; aucun nom réel.
+journaux:
+  - { id: quotidien, nom: "Le Quotidien du Ballon", ton: sobre,   style: bleu }
+  - { id: gazette,   nom: "La Gazette Rose",        ton: mechant, style: rose }
+  - { id: echo,      nom: "L'Écho de {ville}",      ton: tendre,  style: local }
+
+unes:
+  # ---------------------------------------------------------------- secours (0)
+  # Sans condition : leur texte doit être vrai que l'objectif soit tenu ou manqué ({tenu} / {TENU}).
+  - id: une.generic.objectif
+    journal: quotidien
+    priority: 0
+    titre: "{CLUB} : OBJECTIF {TENU}"
+    sous: "{objectif} : {rang}e en juin. La saison prochaine commence demain."
+  - id: une.generic.aout
+    journal: gazette
+    priority: 0
+    titre: "{VILLE}, {rang}E. ET MAINTENANT ?"
+    sous: "« {objectif} », disait-on en août. Objectif {tenu}. {prenom} {nom} n'a pas rappelé."
+  - id: une.generic.juin
+    journal: echo
+    priority: 0
+    titre: "{VILLE} RANGE LES BALLONS"
+    sous: "{rang}e place, un objectif « {objectif} » {tenu}, et un été pour y repenser."
+  - id: une.generic.bilan
+    journal: quotidien
+    priority: 0
+    titre: "LE BILAN DE {NOM}"
+    sous: "{club} termine {rang}e. Objectif {objectif} : {tenu}. Le président « n'a pas le temps »."
+
+  # ------------------------------------------------------- génériques conditionnées
+  - id: une.generic.champions
+    journal: quotidien
+    priority: 4
+    when: "bilan.rang == 1"
+    titre: "CHAMPIONS !"
+    sous: "{club} sur le toit du pays. {prenom} {nom} sur la photo, au bord."
+    sujet: bilan
+  - id: une.generic.descente
+    journal: echo
+    priority: 4
+    when: "bilan.rang >= 17"
+    titre: "LE RÊVE A DURÉ UN AN"
+    sous: "Retour à l'étage du dessous. {prenom} {nom} n'a pas répondu à nos appels. Gégé, si."
+    sujet: bilan
+
+  # ------------------------------------------------------------------ promu (P0)
+  - id: une.promu.miracle
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "bilan.tenu && world.division == 1 && bilan.rang <= 10 && season == 0"
+    titre: "{NOM}, LE MIRACLE DE {VILLE}"
+    sous: "Promu sans un sou, maintenu à la {rang}e place. Aulard parle déjà de « projet »."
+    sujet: direction
+    photo: en.promu.a6_dernier_virage
+    react: { card: co.re.josiane_a_lu, if: "relation.josiane >= 0" }

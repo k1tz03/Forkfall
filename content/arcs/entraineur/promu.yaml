@@ -1,6 +1,10 @@
 # Arc de postulat « Sans un sou » (postulat 0, « Le promu sans un sou »).
-# Le script de la saison 1 slot par slot, la facture en saison 2, puis deux
-# ancres rejouables (rentrée / veille du dernier bloc) à partir de la saison 3.
+# Le script maigre de la saison 1 (4 ancres : l'inventaire au slot 1, la
+# Commission en 10-11, le dernier match au 16, le dernier virage au 17 — A2
+# « L'empire » et A3 « La cote » sont devenus l'intrigue en.cote_du_promu,
+# tirée par le réservoir), la facture en saison 2, puis deux ancres rejouables
+# (rentrée / veille du dernier bloc) à partir de la saison 3. L'inventaire lit
+# le fil rouge tiré (`fil_rouge`).
 # Semé par `opening_arc: en.promu.sans_un_sou` dans postulats.yaml ; il remplace
 # l'arc générique co.script.generique pour ce postulat.
 arcs:
@@ -16,16 +20,11 @@ arcs:
     steps:
       # ---------------------------------------------------------- saison 1 (S0)
       - id: inventaire
-        card: en.promu.a1_inventaire
+        card:
+          - { id: en.promu.a1_inventaire_tribune, if: "fil_rouge == 'tribune'" }
+          - { id: en.promu.a1_inventaire_argent,  if: "fil_rouge == 'argent'" }
+          - { id: en.promu.a1_inventaire }
         at: [1, 1]
-        season: 0
-      - id: empire
-        card: en.promu.a2_empire
-        at: [2, 2]
-        season: 0
-      - id: cote
-        card: en.promu.a3_cote
-        at: [5, 7]
         season: 0
       - id: commission
         card: en.promu.a4_commission

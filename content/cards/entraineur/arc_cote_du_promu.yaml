@@ -1,0 +1,111 @@
+# Cartes de l'intrigue « La cote du promu » (arcs/entraineur/cote_du_promu.yaml).
+# L'empire et la cote sont les anciennes ancres A2 et A3 du script du promu ;
+# l'encaissement est la conséquence, en quatre variantes.
+cards:
+  # 1 · L'empire — Aulard vend le rêve
+  - id: en.cote.empire
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Aulard : « Un promu, ça fait rêver. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
+    left:
+      label: "Un budget, ou rien"
+      effects: {caisse: "+", direction: "--", relation: {aulard: -1}}
+      answer: "Il signe un chèque. Il ne le date pas."
+    right:
+      label: "Un projet, et le maintien"
+      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}}
+      answer: "Il répète « projet » à trois journalistes avant le parking."
+
+  # 2 · La cote — Ménèche vend la cote
+  - id: en.cote.cote
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: leger
+    once: true
+    text: "Ménèche : « Cinq mille contre un pour le titre, un contre cinq pour la descente, disent les bookmakers. Juste une question, hors micro. Vous avez parié ? »"
+    left:
+      label: "Sur nous, cent francs"
+      effects: {tribunes: "++", parole: 1, set: [pari_promu], relation: {meneche: 1}}
+      answer: "Il note la somme. Il note toujours."
+    right:
+      label: "Je ne commente pas"
+      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, direction: "+"}
+      answer: "Il note le silence."
+
+  # 3 · L'encaissement — le pari tient (classement de l'instant ≤ 13)
+  - id: en.cote.encaissement_gagne
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: leger
+    once: true
+    text: "Ménèche, votre ticket entre deux doigts : « Cent francs sur le maintien, et le maintien tient. Juste une question, hors micro. Vous encaissez, ou vous laissez courir ? »"
+    left:
+      label: "J'encaisse"
+      effects: {caisse: "+", tribunes: "+", outcome: pari_tenu, relation: {meneche: 1}}
+      answer: "Il photographie le ticket. La Une de demain a sa photo."
+    right:
+      label: "Je laisse courir"
+      effects: {tribunes: "++", parole: 1, outcome: pari_tenu}
+      answer: "Le virage apprend le mot « courir ». Il l'aime."
+
+  # 3 · L'encaissement — le pari est mal parti
+  - id: en.cote.encaissement_perdu
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Ménèche, sans ticket : « Cent francs sur le maintien, et le classement dit autre chose. Juste une question, hors micro. Vous doublez ? »"
+    left:
+      label: "Je double"
+      effects: {tribunes: "+", caisse: "-", parole: -1, outcome: pari_perdu}
+      answer: "Il note. Il note toujours, surtout les pertes."
+    right:
+      label: "Je ne joue plus"
+      effects: {direction: "+", tribunes: "-", outcome: pari_perdu, relation: {meneche: -1}}
+      answer: "Titre du lendemain : « Il ne joue plus ». Aulard découpe l'article."
+
+  # 3 · L'encaissement — le projet promis au président
+  - id: en.cote.encaissement_projet
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    tone: leger
+    once: true
+    text: "Ménèche, calepin ouvert : « Le président dit « projet » depuis août. Juste une question, hors micro. Le projet, en un mot ? »"
+    left:
+      label: "Le maintien"
+      effects: {parole: 1, direction: "-", outcome: jamais_parie, relation: {meneche: 1}}
+      answer: "Un mot. Il l'écrit en gros."
+    right:
+      label: "Le Top 10"
+      effects: {tribunes: "++", direction: "+", parole: -1, outcome: jamais_parie}
+      answer: "Deux mots. Aulard les répète à trois journalistes."
+
+  # 3 · L'encaissement — personne n'a parié : Josiane affiche les cotes
+  - id: en.cote.encaissement
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, un bordereau à la main : « Le bookmaker a envoyé les cotes de janvier. Cinq cents contre un, maintenant. J'en ai vu passer, vous savez. On les affiche au vestiaire ? »"
+    left:
+      label: "On affiche"
+      effects: {vestiaire: "+", tribunes: "+", outcome: jamais_parie}
+      answer: "Le vestiaire lit la cote. Bréhaut l'encadre."
+    right:
+      label: "On jette"
+      effects: {vestiaire: "-", direction: "+", outcome: jamais_parie}
+      answer: "Elle jette. Elle en garde une copie."

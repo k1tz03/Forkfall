@@ -2,9 +2,11 @@
 # un grand club et qui en a fait une carrière. Trois conseils = un tutoriel
 # déguisé (la jauge pleine, le président, les promesses) ; l'hôpital n'arrive
 # qu'en S2+ et seulement si le joueur a écouté (vars.clow_conseils >= 2).
-# Arc de fond (foreground: false), semé en S1 `at [4,10]` par le postulat
-# « Le promu sans un sou » (postulats.yaml) ; ailleurs, ouverture spontanée
-# dès la saison 1. Clow suit l'entraîneur, pas le club (same_club: false).
+# Arc de fond (foreground: false), tiré par le réservoir du promu dès la
+# saison 1 (postulats.yaml, bucket "1") ; ailleurs, ouverture spontanée dès la
+# saison 1. Clow suit l'entraîneur, pas le club (same_club: false).
+# Issues : ecoute | ingrat ; la trace clow_ingrat est lue par la routine
+# en.clow.top_un (un mentor lâché ne revient pas donner de conseils au bar).
 #
 # Chemins : 44_jours → verre → hopital (S2+, écouté) → testament (variante lue
 # sur relation.clow : enveloppe / rien) | verre → silence (fin, clow_ingrat).
@@ -27,6 +29,12 @@ arcs:
     once: true
     every_season: false
     min_season: 1
+    theme: presse
+    carrier: clow
+    issues: [ecoute, ingrat]
+    traces:
+      clow_ingrat: "{annee} : Brian Clow a laissé un message. {prenom} {nom} n'a pas rappelé."
+    hint: "Quarante-quatre jours dans un grand club, et une carrière de conseils."
     when: "season >= 1"
     cast: [clow, josiane]
     start: [4, 10]
@@ -47,6 +55,7 @@ arcs:
           - { step: silence, in: [2, 4] }
       - id: silence
         card: en.clow.silence
+        outcome: ingrat
         next: []
       - id: hopital
         # Drame, une seule sortie, aucun effet : la carte est le coup.
@@ -56,6 +65,7 @@ arcs:
         card:
           - { id: en.clow.testament, if: "relation.clow >= 0" }
           - { id: en.clow.testament_ingrat }
+        outcome: ecoute
         next: []
 
   - id: en.conf_presse
@@ -70,6 +80,9 @@ arcs:
     once: false
     every_season: true
     min_season: 1
+    theme: presse
+    carrier: meneche
+    issues: [no_comment, franc]
     when: "season >= 1"
     cast: [meneche]
     # [3,15] : éligible tôt (en S2+ c'est souvent le seul temps d'histoire de

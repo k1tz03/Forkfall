@@ -1,12 +1,47 @@
 # Cartes de l'arc de postulat « Sans un sou » (arcs/entraineur/promu.yaml).
 # Toutes sont des cartes d'étape (kind script dérivé par le build) : elles ne
-# sortent jamais du sac, seulement à leur slot. Saison 1 : l'inventaire, l'empire,
-# la cote, la lettre de la Commission, le dernier match, le dernier virage.
+# sortent jamais du sac, seulement à leur slot. Saison 1 : l'inventaire (trois
+# variantes lues sur le fil rouge tiré), la lettre de la Commission, le dernier
+# match, le dernier virage. L'empire et la cote vivent dans arc_cote_du_promu.yaml.
 # Saison 2 : l'épilogue (4 variantes), le twist (3 variantes), la deuxième finale.
 # Saisons 3+ : deux ancres rejouables, rentrée et veille.
 cards:
   # ============================================================ saison 1 (S0)
-  # A1 · L'inventaire — slot 1
+  # A1 · L'inventaire — slot 1 (variante par fil rouge : tribune / argent / président)
+  - id: en.promu.a1_inventaire_tribune
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, tribunes]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane : « Les comptes de l'été : les maillots neufs ou le chauffage du vestiaire, pas les deux. Les maillots, Gégé les a déjà vus. J'en ai vu passer, vous savez. »"
+    left:
+      label: "Les maillots"
+      effects: {tribunes: "++", vestiaire: "-", set: [choix_maillots], react: en.re.josiane_chauffage}
+      answer: "Le virage applaudit la couleur. Le vestiaire souffle dans ses mains."
+    right:
+      label: "Le chauffage"
+      effects: {vestiaire: "+", tribunes: "--", relation: {josiane: 1}}
+      answer: "Gégé apprend le mot « chauffage » par la presse. Elle note."
+
+  - id: en.promu.a1_inventaire_argent
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, sponsors]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane : « Les comptes de l'été : les maillots neufs ou le chauffage, pas les deux. Le chauffage, c'est le sponsor qui le paie. S'il signe. J'en ai vu passer, vous savez. »"
+    left:
+      label: "Les maillots"
+      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots], react: en.re.josiane_chauffage}
+      answer: "Le sponsor n'a pas signé. Le vestiaire souffle dans ses mains."
+    right:
+      label: "Le chauffage"
+      effects: {vestiaire: "+", caisse: "-", relation: {josiane: 1}}
+      answer: "Elle paie la facture avec le compte du sponsor. Le sponsor n'existe pas encore."
+
   - id: en.promu.a1_inventaire
     roles: [entraineur]
     arc: caisse
@@ -17,48 +52,12 @@ cards:
     text: "Madame Josiane : « Les comptes de l'été : de quoi payer les maillots neufs ou le chauffage du vestiaire, pas les deux. J'en ai vu passer, vous savez. »"
     left:
       label: "Les maillots"
-      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots]}
+      effects: {tribunes: "+", vestiaire: "-", set: [choix_maillots], react: en.re.josiane_chauffage}
       answer: "Le président trouve que ça fait riche. Le vestiaire souffle dans ses mains."
     right:
       label: "Le chauffage"
       effects: {vestiaire: "+", tribunes: "-", relation: {josiane: 1}}
       answer: "Elle note. Elle note toujours."
-
-  # A2 · L'empire — slot 2
-  - id: en.promu.a2_empire
-    roles: [entraineur]
-    arc: direction
-    tags: [direction, caisse]
-    speaker: aulard
-    tone: strategique
-    once: true
-    text: "Aulard : « Un promu, ça fait rêver. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
-    left:
-      label: "Un budget, ou rien"
-      effects: {caisse: "+", direction: "--", relation: {aulard: -1}}
-      answer: "Il signe un chèque. Il ne le date pas."
-    right:
-      label: "Un projet, et le maintien"
-      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}}
-      answer: "Il répète « projet » à trois journalistes avant le parking."
-
-  # A3 · La cote — slots 5-7
-  - id: en.promu.a3_cote
-    roles: [entraineur]
-    arc: presse
-    tags: [presse, tribunes]
-    speaker: meneche
-    tone: leger
-    once: true
-    text: "Ménèche : « Cinq mille contre un pour le titre, un contre cinq pour la descente, disent les bookmakers. Juste une question, hors micro. Vous avez parié ? »"
-    left:
-      label: "Sur nous, cent francs"
-      effects: {tribunes: "++", parole: 1, set: [pari_promu], relation: {meneche: 1}}
-      answer: "Il note la somme. Il note toujours."
-    right:
-      label: "Je ne commente pas"
-      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, direction: "+"}
-      answer: "Il note le silence."
 
   # A4 · La lettre de la Commission (twist) — slots 10-11
   # Chaque sortie saute dans un autre arc : B (Le prodige, étape `offre`) ou C (Nassir, étape `naming`).
@@ -72,11 +71,24 @@ cards:
     text: "Aulard : « La Commission veut un plan pour janvier : soit on vend le petit Mbako, soit un sponsor paie d'avance. J'ai pas le temps, j'ai un empire. Choisis. »"
     left:
       label: "On vend le gamin"
-      effects: {direction: "+", relation: {mbako: -1}, set: [commission_vente], schedule: [{card: en.prodige.offre_express, in: [2, 4]}]}
+      effects:
+        direction: "+"
+        relation: {mbako: -1}
+        set: [commission_vente]
+        schedule: [{card: en.prodige.offre_express, in: [2, 4]}]
+        react:                                   # carte-réaction servie au tirage suivant (spec variété §1.4)
+          - { card: en.re.aulard_sms_brouillon, if: "relation.aulard >= 0" }
+          - { card: en.re.josiane_chauffage }
+        journal: { text: "La Commission voulait un plan : {nom} vend le petit.", poids: 3, tags: [direction, mercato] }
       answer: "Fardelli a déjà le numéro. Il l'avait avant vous."
     right:
       label: "On trouve un sponsor"
-      effects: {caisse: "-", direction: "-", set: [commission_sponsor], schedule: [{card: en.nassir.naming_express, in: [2, 4]}]}
+      effects:
+        caisse: "-"
+        direction: "-"
+        set: [commission_sponsor]
+        schedule: [{card: en.nassir.naming_express, in: [2, 4]}]
+        journal: "Plutôt un sponsor qu'une vente : {prenom} {nom} a choisi l'orange."
       answer: "Josiane compose un numéro qui commence par l'étranger."
 
   # A5 · Le dernier match — slot 16 (deux variantes selon `vecchio_promis`)

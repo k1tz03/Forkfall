@@ -2,6 +2,15 @@
 # (la bande blanche sous la vignette), genre, tic de langage, camp (couleur de
 # fond de la vignette), apparitions par saison visées hors casting, et les
 # cartes programmées quand la relation franchit un seuil (`on_relation`).
+#
+# `adresse` (spec variété §1.8, §2.5) : comment le personnage s'adresse à toi.
+# Résout `{toi}` / `{Toi}` dans ses cartes selon le rôle joué et son expression
+# (sourire : relation ≥ 1 · neutre · noir : relation ≤ −1). Chaque valeur est
+# un gabarit : `{prenom}`, `{nom}`, `{numero}` (dossard du joueur),
+# `{pg, select, f{madame} other{monsieur}}` y sont interpolés (profondeur ≤ 2).
+# Quand `adresse` est présente elle couvre les deux rôles et les trois
+# expressions (erreur de build sinon). Sans adresse : « coach » (entraîneur)
+# / « {prenom} » (joueur). Une carte qui dit {toi} doit avoir un `speaker`.
 characters:
   - id: fardelli
     name: "Rocco Fardelli"
@@ -11,6 +20,9 @@ characters:
     tic: "Mon ami, on parle d'argent ou d'amitié ?"
     camp: direction
     default_target: 1
+    adresse:
+      entraineur: { sourire: "mon ami", neutre: "mon ami {prenom}", noir: "monsieur {nom}" }
+      joueur:     { sourire: "mon ami", neutre: "mon ami {prenom}", noir: "{prenom}" }
   - id: meneche
     name: "Pierre Ménèche"
     label: "JOURNALISTE"
@@ -19,6 +31,9 @@ characters:
     tic: "Juste une question, hors micro."
     camp: direction
     default_target: 1.5
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom} {nom}", noir: "{nom}" }
     on_relation:
       -3: en.meneche.trahison_dossier
   - id: gege
@@ -29,6 +44,9 @@ characters:
     tic: "La tribune n'oublie rien."
     camp: terrain
     default_target: 1.5
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{nom}" }
+      joueur:     { sourire: "petit", neutre: "{prenom}", noir: "le {numero}" }
     on_relation:
       -3: en.gege.trahison_banderole
       3: en.gege.faveur_insurrection
@@ -40,6 +58,9 @@ characters:
     tic: "J'ai pas le temps, j'ai un empire."
     camp: direction
     default_target: 2
+    adresse:
+      entraineur: { sourire: "mon {prenom}", neutre: "{nom}", noir: "monsieur {nom}" }
+      joueur:     { sourire: "petit", neutre: "{nom}", noir: "monsieur {nom}" }
   - id: vukic
     name: "Zoran Vukić"
     label: "ENTRAÎNEUR ADJOINT"
@@ -48,6 +69,9 @@ characters:
     tic: "Je te le dis parce que personne ne te le dira."
     camp: terrain
     default_target: 1.5
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "coach" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
   - id: brehaut
     name: "Titi Bréhaut"
     label: "CAPITAINE"
@@ -56,6 +80,9 @@ characters:
     tic: "Le groupe vit bien."
     camp: terrain
     default_target: 1
+    adresse:
+      entraineur: { sourire: "coach", neutre: "coach", noir: "{nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "petit", noir: "le {numero}" }
   - id: sabatier
     name: "Doc Sabatier"
     label: "MÉDECIN DU CLUB"
@@ -64,6 +91,9 @@ characters:
     tic: "Ça reste entre la table et moi."
     camp: terrain
     default_target: 1
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "petit", noir: "{nom}" }
   - id: camille
     name: "Camille"
     label: "À LA MAISON"
@@ -72,6 +102,9 @@ characters:
     tic: "Tu rentres à quelle heure ?"
     camp: terrain
     default_target: 1
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
     on_relation:
       -1: co.camille.dispute
       -2: co.camille.chambre_amis
@@ -89,6 +122,9 @@ characters:
     tic: "Le stade, c'est de l'argent public."
     camp: instances
     default_target: 0.5
+    adresse:
+      entraineur: { sourire: "{pg, select, f{madame} other{monsieur}} {nom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{pg, select, f{madame} other{monsieur}} {nom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
   - id: legruet
     name: "Noël Legruet"
     label: "PRÉSIDENT DE LA FÉDÉRATION"
@@ -97,6 +133,9 @@ characters:
     tic: "On verra ça après le Congrès."
     camp: instances
     default_target: 0.5
+    adresse:
+      entraineur: { sourire: "{pg, select, f{chère} other{cher}} {prenom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{pg, select, f{chère} other{cher}} {prenom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
   - id: nassir
     name: "Cheikh Nassir"
     label: "FONDS QATALYST"
@@ -105,6 +144,9 @@ characters:
     tic: "Ce n'est pas un club, c'est un actif."
     camp: direction
     default_target: 1
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "monsieur {nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom} {nom}", noir: "monsieur {nom}" }
   - id: josiane
     name: "Madame Josiane"
     label: "SECRÉTAIRE DEPUIS 1987"
@@ -113,6 +155,9 @@ characters:
     tic: "J'en ai vu passer, vous savez."
     camp: direction
     default_target: 1.5
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{pg, select, f{mademoiselle} other{monsieur}} {nom}" }
   - id: clow
     name: "Brian Clow"
     label: "LE MENTOR"
@@ -121,6 +166,9 @@ characters:
     tic: "Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un."
     camp: terrain
     default_target: 0.5
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "coach" }
+      joueur:     { sourire: "petit", neutre: "{prenom}", noir: "{nom}" }
   - id: mbako
     name: "Lian Mbako"
     label: "PRODIGE, 16 ANS"
@@ -129,6 +177,9 @@ characters:
     tic: "Je veux jouer. Maintenant."
     camp: terrain
     default_target: 1
+    adresse:
+      entraineur: { sourire: "coach", neutre: "coach", noir: "coach" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
     on_relation:
       3: co.mbako.faveur_refus_grand_club
   - id: vecchio
@@ -139,6 +190,9 @@ characters:
     tic: "J'en ai vu d'autres."
     camp: terrain
     default_target: 1.5
+    adresse:
+      entraineur: { sourire: "coach", neutre: "coach", noir: "coach" }
+      joueur:     { sourire: "petit", neutre: "petit", noir: "{prenom}" }
   - id: lea
     name: "Léa"
     label: "PRESSE"
@@ -147,6 +201,9 @@ characters:
     tic: "Vous confirmez ?"
     camp: direction
     default_target: 1
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
   - id: mere_mbako
     name: "La mère de Mbako"
     label: "MÈRE ET AGENTE"
@@ -155,3 +212,6 @@ characters:
     tic: "Mon fils n'a besoin de personne."
     camp: terrain
     default_target: 0.5
+    adresse:
+      entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }

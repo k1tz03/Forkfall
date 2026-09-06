@@ -1,8 +1,9 @@
 # D · « Le kop qui t'aime trop » — le créancier. La tribune est à 80, la ville
 # est en fête, et Gégé (capo Tribune Nord) vient réclamer sa part : un verre au
 # local, la compo du virage, un pacte gravé à la craie ou deux banderoles.
-# Semé au slot [3,4] de la saison 1 du postulat « Le promu sans un sou »
-# (postulats.yaml) ; ailleurs, ouverture spontanée en début de carrière.
+# Intrigue `signature` du réservoir du promu (postulats.yaml, bucket "0") ;
+# rejouable deux saisons après sa clôture (replay, bucket "2+") avec la
+# variante « encore » de l'étape 1, lue sur plays() et sur la trace onze_du_virage.
 #
 # Chemins : local → onze (variante froide si le verre au local a été refusé :
 # relation.gege < 0) → pacte (rel gege >= 1) → pacte_suite → anniversaire |
@@ -21,7 +22,13 @@ arcs:
     once: true
     every_season: false
     min_season: 0
-    when: "season <= 2"
+    theme: tribune
+    carrier: gege
+    replay: { after: 2, max: 2 }
+    issues: [pacte, banderoles, bache]
+    traces:
+      onze_du_virage: "{annee} : à {club}, la compo se vote en tribune Nord. {prenom} {nom} a signé."
+    hint: "La tribune est à quatre-vingts et vient réclamer sa part."
     cast: [gege]
     start: [1, 4]
     same_club: true
@@ -29,7 +36,11 @@ arcs:
     epilogue: { tribunes: "--" }
     steps:
       - id: local
-        card: en.kop.local
+        # « Encore » : la relance lit plays() et, si le virage a déjà voté, la trace.
+        card:
+          - { id: en.kop.local_encore_onze, if: "plays('en.kop_qui_aime_trop') >= 1 && flag('onze_du_virage')" }
+          - { id: en.kop.local_encore, if: "plays('en.kop_qui_aime_trop') >= 1" }
+          - { id: en.kop.local }
         next: [ { step: onze, in: [3, 6] } ]
       - id: onze
         # Variantes : la première dont `if` est vrai au tirage.
@@ -47,9 +58,11 @@ arcs:
         next: [ { step: pacte_suite, in: [5, 9] } ]
       - id: pacte_suite
         card: en.kop.pacte_suite
+        outcome: pacte
         next: [ { step: anniversaire, in: [6, 14] } ]
       - id: banderoles
         card: en.kop.banderoles
+        outcome: banderoles
         next: [ { step: anniversaire, in: [6, 14] } ]
       - id: anniversaire
         # La variante lit relation.gege au tirage (après « Signez », A6…).

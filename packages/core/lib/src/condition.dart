@@ -20,9 +20,14 @@ class EvalContext {
   final Card? card; // the card being evaluated (for `speaker`, `speaker.relation`)
   final int slotsTotal;
   final Set<String> cast; // characters in the postulat's cast
-  const EvalContext(this.state, this.phase, {this.card, this.slotsTotal = 17, this.cast = const {}});
+  /// Verdict de la saison calculé sans être appliqué (spec variété §1.6) :
+  /// posé par `_bilanUne` pour la phase `bilan`, null ailleurs.
+  final bool? bilanTenu;
+  final int? bilanRang;
+  const EvalContext(this.state, this.phase, {this.card, this.slotsTotal = 17, this.cast = const {}, this.bilanTenu, this.bilanRang});
 
-  EvalContext withCard(Card? c) => EvalContext(state, phase, card: c, slotsTotal: slotsTotal, cast: cast);
+  EvalContext withCard(Card? c) =>
+      EvalContext(state, phase, card: c, slotsTotal: slotsTotal, cast: cast, bilanTenu: bilanTenu, bilanRang: bilanRang);
 }
 
 /// Static paths the `when` language knows (consumed by the lint).
@@ -34,6 +39,8 @@ const Set<String> kKnownPaths = {
   'objective', 'objective.promised',
   'postulat', 'ncards', 'slot', 'slots_left', 'tension', 'drames',
   'speaker', 'speaker.relation', 'last_speaker',
+  'fil_rouge',
+  'bilan.tenu', 'bilan.rang', 'reactions',
 };
 
 /// Prefixes for dynamic paths (`vars.x`, `flags.x`, `relation.x`, `stats.x`).
@@ -43,6 +50,7 @@ const Set<String> kKnownCalls = {
   'flag', 'seen', 'since', 'count', 'relation', 'between', 'role_was', 'phase',
   'seen_count', 'since_arc', 'arc', 'arc_step', 'since_char', 'appearances',
   'alarm', 'enemy', 'unlocked', 'in_cast', 'expression',
+  'plays', 'arc_outcome', 'theme_played', 'objectif', 'journal_has',
 };
 
 /// Evaluate a compiled `when` node. A null node means "always true".
@@ -182,6 +190,16 @@ Object? _resolvePath(String path, EvalContext ctx) {
       return sp == null ? 0 : (s.relations[sp] ?? 0);
     case 'last_speaker':
       return s.lastSpeaker ?? '';
+    case 'fil_rouge':
+      // La question tirée à l'ouverture de saison (spec variété §1.2) ; '' sans `questions`.
+      return s.entities.named['fil_rouge'] ?? '';
+    case 'bilan.tenu':
+      // Verdict calculé sans être appliqué (spec variété §1.6) ; false hors phase bilan.
+      return ctx.bilanTenu ?? false;
+    case 'bilan.rang':
+      return ctx.bilanRang ?? 0;
+    case 'reactions':
+      return s.reactionsThisSeason;
   }
   if (path.startsWith('vars.')) {
     return s.vars[path.substring(5)] ?? 0;
@@ -248,6 +266,18 @@ Object? _call(String name, List<Object?> args, EvalContext ctx) {
     case 'expression':
       final r = s.relations[args[0] as String] ?? 0;
       return r >= 1 ? 'sourire' : (r <= -1 ? 'noir' : 'neutre');
+    case 'plays':
+      return s.arcs[args[0] as String]?.plays ?? 0;
+    case 'arc_outcome':
+      return s.arcs[args[0] as String]?.outcome ?? '';
+    case 'theme_played':
+      return s.themesPlayed.contains(args[0] as String);
+    case 'objectif':
+      return s.unlocked.contains('objectif:${args[0]}');
+    case 'journal_has':
+      // Une entrée de journal de la saison en cours porte ce tag (spec variété §2.11).
+      final tag = args[0] as String;
+      return s.journal.any((e) => e.season == s.season && e.tags.contains(tag));
     default:
       throw StateError('Unknown function: $name');
   }

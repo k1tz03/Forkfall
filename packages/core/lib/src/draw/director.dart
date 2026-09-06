@@ -17,6 +17,7 @@ import '../content.dart';
 import '../effects.dart';
 import '../rng.dart';
 import '../state.dart';
+import '../text.dart';
 
 typedef PendingBuilder = Pending Function(GameState s, Card card, String phase, Rng rng, Map<String, dynamic> extra);
 typedef FillerBuilder = Pending Function(GameState s);
@@ -36,7 +37,10 @@ class _Hard {
   const _Hard(this.band, this.sc, this.card);
 }
 
-const Set<String> _storyKinds = {'script', 'etape', 'evenement', 'palier', 'chaine'};
+/// « Temps d'histoire » (spec variété §1.1) : ce que la cadence et la carte
+/// fatale de la Une comptent.
+const Set<String> kStoryKinds = {'script', 'etape', 'evenement', 'palier', 'chaine', 'reaction'};
+const Set<String> _storyKinds = kStoryKinds;
 const Set<String> _softKinds = {'etape', 'chaine', 'palier'};
 const String kNouvellesDuPasse = 'tr.nouvelles_du_passe';
 const String kGenericArc = 'co.script.generique';
@@ -48,6 +52,11 @@ class Director {
 
   /// What competed for the last slot (band, id, weight) — for authors/tools.
   List<Candidate> lastCandidates = [];
+
+  /// How the last `forceStory` found its card: `window` (a step already in
+  /// its window, served early), `open` (an arc opened), `pull` (a future
+  /// step pulled to now). Only `open` and `pull` are reported as `forced`.
+  String lastForceKind = '';
 
   Director(this.content, this.toPending, this.filler);
 
@@ -110,7 +119,122 @@ class Director {
     final st = s.arcs[id] ??= ArcState();
     st.status = 'done';
     st.doneSeason = s.season;
+    st.plays += 1;
+    final arc = content.arcs[id];
+    if (arc != null && arc.kind == 'serie' && arc.carrierId.isNotEmpty) {
+      s.carriersLastSeason[arc.carrierId] = s.season; // ×0,5 au tirage suivant
+    }
+    final line = arc?.epilogue['journal'];
+    if (line is String && line.isNotEmpty) addJournal(s, line, kind: 'arc', poids: 2, tags: _arcTags(arc!), arc: id);
     s.scheduled.removeWhere((e) => e.arc == id && e.kind != 'script');
+  }
+
+  List<String> _arcTags(ArcDef arc) => [if (arc.themeId.isNotEmpty) arc.themeId, arc.id];
+
+  // ---------------------------------------------------------------------------
+  // Journal de carrière (spec variété §1.7) et réactions (§1.4).
+  // ---------------------------------------------------------------------------
+
+  /// Écrit une ligne d'Almanach, formatée à l'écriture (le nom, le club, le
+  /// rang de l'instant), tronquée à 120 caractères. Aucun aléa.
+  void addJournal(GameState s, String text, {required String kind, int poids = 1, List<String> tags = const [], String? arc, Map<String, String> extra = const {}}) {
+    var t = formatText(text, s, extra: extra).trim();
+    if (t.length > 120) t = '${t.substring(0, 119).trimRight()}…';
+    if (t.isEmpty) return;
+    s.journal.add(JournalEntry(
+      season: s.season,
+      year: s.year,
+      slot: s.slot,
+      kind: kind,
+      text: t,
+      poids: poids.clamp(1, 5),
+      tags: List.of(tags),
+      arc: arc,
+    ));
+  }
+
+  /// Écrit un gabarit moteur de `content/journal.yaml` (`auto:`) ; rien si le
+  /// gabarit est absent (contenu synthétique des tests).
+  void addJournalAuto(GameState s, String key, {required String kind, int poids = 2, List<String> tags = const [], String? arc, Map<String, String> extra = const {}}) {
+    final tpl = content.journalTemplates[key];
+    if (tpl == null || tpl.isEmpty) return;
+    addJournal(s, tpl, kind: kind, poids: poids, tags: tags, arc: arc, extra: extra);
+  }
+
+  /// Compaction de l'Almanach (spec variété §1.7) : la saison [season] garde
+  /// ses `journal_par_saison` entrées les plus lourdes (tri `(-poids, slot)`),
+  /// dans leur ordre d'écriture. Déterministe, sans aléa.
+  void compactJournal(GameState s, int season) {
+    final idx = <int>[];
+    for (var i = 0; i < s.journal.length; i++) {
+      if (s.journal[i].season == season) idx.add(i);
+    }
+    final max = q.journalParSaison;
+    if (idx.length <= max) return;
+    final ranked = List.of(idx)
+      ..sort((a, b) {
+        final c = s.journal[b].poids.compareTo(s.journal[a].poids);
+        if (c != 0) return c;
+        final d = s.journal[a].slot.compareTo(s.journal[b].slot);
+        return d != 0 ? d : a.compareTo(b);
+      });
+    final keep = ranked.take(max).toSet();
+    final drop = idx.where((i) => !keep.contains(i)).toSet();
+    s.journal = [for (var i = 0; i < s.journal.length; i++) if (!drop.contains(i)) s.journal[i]];
+  }
+
+  /// Sert la réaction en attente (spec variété §1.4, règle 2) : hors créneau
+  /// (bande 8), sans toucher `ncards`, `slot`, `lastStoryN`, `tension`,
+  /// `toneCounts` ni `storyThisSeason` ; met à jour la voix et la dette de
+  /// visage. Zéro aléa. Null (et `miss_reaction`) si la carte n'existe plus,
+  /// si son `when` est faux, si elle est `once` et déjà vue, si le plafond
+  /// est atteint ou si la carte précédente était déjà une réaction.
+  Pending? serveReaction(GameState s, ReactionRef rx, Rng rng) {
+    final card = content.cards[rx.card];
+    final beats = content.seasonBeats[s.role] ?? const <Beat>[];
+    final phase = s.beat < beats.length ? beats[s.beat].phase : 'bilan';
+    bool ok = card != null && s.reactionsThisSeason < q.reactionsMax && !s.lastWasReaction;
+    if (ok && card.once && (s.seenCount[card.id] ?? 0) > 0) ok = false;
+    if (ok && !evalWhen(card!.when, ctx(s, phase, card: card))) ok = false;
+    if (!ok || card == null) {
+      s.stats['miss_reaction'] = (s.stats['miss_reaction'] ?? 0) + 1;
+      return null;
+    }
+    final n = s.ncards;
+    s.reactionsThisSeason += 1;
+    s.cooldowns[card.id] = n;
+    s.seenCount[card.id] = (s.seenCount[card.id] ?? 0) + 1;
+    final sp = card.speaker;
+    if (sp != null) {
+      s.lastSeenChar[sp] = n;
+      s.speakerSeen[sp] = (s.speakerSeen[sp] ?? 0) + 1;
+      s.recentSpeakers.add(sp);
+      while (s.recentSpeakers.length > 3) {
+        s.recentSpeakers.removeAt(0);
+      }
+    }
+    s.lastSpeaker = sp;
+    final extra = <String, dynamic>{
+      'phase': phase,
+      'band': 8,
+      'kind': 'reaction',
+      if (rx.arc != null) 'arc': rx.arc,
+      if (rx.step != null) 'step': rx.step,
+      'tone': card.tone,
+    };
+    return toPending(s, card, phase, rng, extra);
+  }
+
+  /// Un arc peut-il être (r)ouvert ? (spec variété §1.3)
+  bool replayable(GameState s, ArcDef a) {
+    final st = s.arcs[a.id];
+    if (st == null) return true;
+    if (st.status == 'armed' || st.status == 'active') return false;
+    if (a.isEverySeason) return st.doneSeason != s.season;
+    final r = a.replay;
+    if (r == null) return false; // défaut : jamais
+    if (st.status == 'abandonne' && !r.afterAbort) return false;
+    return st.plays < r.max && s.season - (st.doneSeason ?? -99) >= r.after;
   }
 
   void arcAbort(GameState s, String id, [String? reason]) {
@@ -141,7 +265,7 @@ class Director {
     // 1. Hard candidates (bands 3..7): served without randomness.
     final hard = <_Hard>[];
     for (final sc in _sortedQueue(s)) {
-      if (sc.dueN > n) continue;
+      if (sc.dueN < 0 || sc.dueN > n) continue; // dueN < 0 : fusée longue non planifiée
       final card = content.cards[sc.card];
       if (card == null) {
         miss(s, sc, 'inconnue', c);
@@ -189,7 +313,16 @@ class Director {
       return serve(s, hard.first.sc, phase, rng, band: hard.first.band);
     }
 
-    // 2. Breathing: a reserved Nouvelle that is due (or owed), or wanted by tension.
+    // 2. Forced cadence comes before the breathing slot: when the story has
+    // been silent for more than `gap_max` cards, a step (in window, opened
+    // from the reserve, or pulled) passes first and the reserved Nouvelle
+    // keeps its debt for the next slot — exactly as the hard bands do.
+    if (n - s.lastStoryN > q.gapMax) {
+      final sc = forceStory(s, c, rng);
+      if (sc != null) return serve(s, sc, phase, rng, band: 2, forced: lastForceKind != 'window');
+    }
+
+    // 3. Breathing: a reserved Nouvelle that is due (or owed), or wanted by tension.
     final reserved = q.nouvelleSlotsFor(s.role);
     final owed = reserved.where((k) => k <= s.slot).length - s.nouvellesThisSeason;
     final wantBreath = s.tension >= 2 && s.nouvellesThisSeason < reserved.length + 1;
@@ -199,7 +332,7 @@ class Director {
       if (nv != null) return serve(s, null, phase, rng, band: 1, card: nv);
     }
 
-    // 3. Steps inside their window (band 2): weighted.
+    // 4. Steps inside their window (band 2): weighted.
     final soft = <Scheduled>[];
     final softW = <double>[];
     for (final sc in _sortedQueue(s)) {
@@ -219,12 +352,6 @@ class Director {
     if (soft.isNotEmpty) {
       final i = rng.weightedIndex(softW);
       if (i >= 0) return serve(s, soft[i], phase, rng, band: 2);
-    }
-
-    // 4. Forced cadence.
-    if (n - s.lastStoryN > q.gapMax) {
-      final sc = forceStory(s, c, rng);
-      if (sc != null) return serve(s, sc, phase, rng, band: 2, forced: true);
     }
 
     // 5. Routine (band 0), then anti-famine fallbacks.
@@ -286,6 +413,15 @@ class Director {
     final n = s.ncards;
     for (final sc in List.of(s.scheduled)) {
       final card = content.cards[sc.card];
+      if (sc.isLongFuse) {
+        // Une fusée longue attend sa saison : seules les raisons club / annulée la touchent.
+        if (sc.clubSeq != s.clubSeq && sc.sameClub) {
+          miss(s, sc, 'club', c);
+        } else if (sc.cancelIf != null && evalWhen(sc.cancelIf, c)) {
+          miss(s, sc, 'annulee', c);
+        }
+        continue;
+      }
       if (card == null) {
         miss(s, sc, 'inconnue', c);
       } else if (card.once && (s.seenCount[card.id] ?? 0) > 0) {
@@ -380,23 +516,103 @@ class Director {
     }
   }
 
+  /// Le programme du postulat courant, s'il en a un (sinon : comportement
+  /// historique, séries ouvertes spontanément).
+  ProgrammeDef? programmeOf(GameState s) {
+    final post = content.postulats[s.postulatId];
+    if (post == null || post.role != s.role) return null;
+    return post.programme;
+  }
+
+  /// Porteurs des intrigues de premier plan encore armées ou actives.
+  Set<String> _carriersInPlay(GameState s) {
+    final out = <String>{};
+    final ids = s.arcs.keys.toList()..sort();
+    for (final id in ids) {
+      final st = s.arcs[id]!;
+      if (st.status != 'armed' && st.status != 'active') continue;
+      final a = content.arcs[id];
+      if (a == null || a.kind != 'serie' || !a.foreground || !a.roles.contains(s.role)) continue;
+      if (a.carrierId.isNotEmpty) out.add(a.carrierId);
+    }
+    return out;
+  }
+
+  /// Filtre commun du réservoir (spec variété §1.2) : l'arc existe, joue le
+  /// rôle, est une série, est rejouable, ses `when`/`if` sont vrais, sa saison
+  /// minimale est atteinte, ses drapeaux exigés/interdits sont respectés, aucun
+  /// arc `exclusive_with` n'est en cours, et son porteur est libre.
+  bool _poolEligible(GameState s, ProgEntry e, EvalContext c, Set<String> carriers) {
+    final a = content.arcs[e.arc];
+    if (a == null || !a.roles.contains(s.role) || a.kind != 'serie') return false;
+    if (!replayable(s, a)) return false;
+    if (e.ifWhen != null && !evalWhen(e.ifWhen, c)) return false;
+    if (!evalWhen(a.when, c) || s.season < a.minSeason) return false;
+    if (a.requires.any((f) => !s.flags.contains(f))) return false;
+    if (a.excludes.any((f) => s.flags.contains(f))) return false;
+    for (final other in a.exclusiveWith) {
+      final st = s.arcs[other];
+      if (st != null && (st.status == 'armed' || st.status == 'active')) return false;
+    }
+    if (a.carrierId.isNotEmpty && carriers.contains(a.carrierId)) return false;
+    return true;
+  }
+
   List<ArcDef> eligibleArcs(GameState s, EvalContext c) {
     final out = <ArcDef>[];
+    final prog = programmeOf(s);
+    if (prog != null) {
+      // Réservoir : les entrées de tous les buckets ≤ saison, mêmes filtres que
+      // le tirage ; les séries non listées ne s'ouvrent plus spontanément.
+      final carriers = _carriersInPlay(s);
+      final seen = <String>{};
+      for (final e in prog.entriesUpTo(s.season)) {
+        if (!seen.add(e.arc)) continue;
+        if (!_poolEligible(s, e, c, carriers)) continue;
+        out.add(content.arcs[e.arc]!);
+      }
+      return out;
+    }
     for (final a in content.arcsSorted) {
       if (a.kind != 'serie' || !a.roles.contains(s.role)) continue;
       if (a.postulats.isNotEmpty && !a.postulats.contains(s.postulatId)) continue;
       final st = s.arcs[a.id];
-      if (st != null && !(a.everySeason && st.doneSeason != s.season)) continue;
+      if (st != null && !(a.isEverySeason && st.doneSeason != s.season)) continue;
       if (!evalWhen(a.when, c)) continue;
       out.add(a);
     }
     return out;
   }
 
+  /// Le premier arc de la réserve encore éligible (sans aléa), retiré de la
+  /// réserve ; null si la réserve est vide ou plus rien n'y est éligible.
+  ArcDef? _takeFromReserve(GameState s, List<ArcDef> eligible, {bool foregroundOnly = false}) {
+    if (s.reserve.isEmpty) return null;
+    for (final id in List.of(s.reserve)) {
+      ArcDef? a;
+      for (final e in eligible) {
+        if (e.id == id) {
+          a = e;
+          break;
+        }
+      }
+      if (a == null || (foregroundOnly && !a.foreground)) continue;
+      s.reserve.remove(id);
+      return a;
+    }
+    return null;
+  }
+
   void maintainArcs(GameState s, EvalContext c, Rng rng) {
     if (activeForeground(s) >= q.minActive) return;
     if (s.softStepsThisSeason >= q.softStepsMax) return;
-    final el = eligibleArcs(s, c).where((a) => a.foreground).toList();
+    final eligible = eligibleArcs(s, c);
+    final fromReserve = _takeFromReserve(s, eligible, foregroundOnly: true);
+    if (fromReserve != null) {
+      armArc(s, fromReserve, c, dueN: s.ncards + fromReserve.startMin, deadlineN: s.ncards + fromReserve.startMax);
+      return;
+    }
+    final el = eligible.where((a) => a.foreground).toList();
     if (el.isEmpty) return;
     final i = rng.weightedIndex(el.map((a) => a.weight).toList());
     if (i < 0) return;
@@ -406,7 +622,23 @@ class Director {
 
   void armArc(GameState s, ArcDef arc, EvalContext c, {required int dueN, required int deadlineN}) {
     if (arc.steps.isEmpty) return;
-    s.arcs[arc.id] = ArcState(status: 'armed', lastN: s.ncards, startedSeason: s.season);
+    final prev = s.arcs[arc.id];
+    // La ligne d'ouverture n'est écrite qu'à la première ouverture (spec variété §1.7).
+    if (prev == null && arc.journal != null && arc.journal!.isNotEmpty) {
+      addJournal(s, arc.journal!, kind: 'arc', poids: 2, tags: _arcTags(arc), arc: arc.id);
+    }
+    // Une relance conserve `plays` et `outcome` (spec variété §1.3).
+    s.arcs[arc.id] = ArcState(
+      status: 'armed',
+      lastN: s.ncards,
+      startedSeason: s.season,
+      plays: prev?.plays ?? 0,
+      outcome: prev?.outcome,
+    );
+    if (arc.kind == 'serie' && arc.themeId.isNotEmpty && !s.themesPlayed.contains(arc.themeId)) {
+      s.themesPlayed.add(arc.themeId);
+      s.themesPlayed.sort();
+    }
     final st = arc.steps.first;
     enqueue(
       s,
@@ -427,23 +659,33 @@ class Director {
   /// Called when too many cards went by without a story beat.
   Scheduled? forceStory(GameState s, EvalContext c, Rng rng) {
     final n = s.ncards;
+    lastForceKind = '';
     // (a) a step suspended by tension or the quota: serve it anyway.
     for (final sc in _sortedQueue(s)) {
-      if (!_softKinds.contains(sc.kind) || sc.dueN > n || n >= sc.deadlineN) continue;
+      if (!_softKinds.contains(sc.kind) || sc.dueN < 0 || sc.dueN > n || n >= sc.deadlineN) continue;
       final card = content.cards[sc.card];
       if (card == null) continue;
       if (card.tone == 'drame' && !drameAllowed(s)) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
+      lastForceKind = 'window';
       return sc;
     }
-    // (b) room for another arc: open one, first step due now.
+    // (b) room for another arc: open one, first step due now (the reserve first).
     if (activeForeground(s) < q.maxActive) {
       final el = eligibleArcs(s, c);
+      final fromReserve = _takeFromReserve(s, el);
+      if (fromReserve != null) {
+        s.stats['reserve_forcee'] = (s.stats['reserve_forcee'] ?? 0) + 1;
+        armArc(s, fromReserve, c, dueN: n, deadlineN: n + math.max(1, fromReserve.startMax - fromReserve.startMin));
+        lastForceKind = 'open';
+        return s.scheduled.isEmpty ? null : s.scheduled.last;
+      }
       if (el.isNotEmpty) {
         final i = rng.weightedIndex(el.map((a) => a.weight).toList());
         if (i >= 0) {
           final a = el[i];
           armArc(s, a, c, dueN: n, deadlineN: n + math.max(1, a.startMax - a.startMin));
+          lastForceKind = 'open';
           return s.scheduled.isEmpty ? null : s.scheduled.last;
         }
       }
@@ -460,6 +702,7 @@ class Director {
     if (best != null) {
       best.dueN = n;
       s.stats['cadence_pull'] = (s.stats['cadence_pull'] ?? 0) + 1;
+      lastForceKind = 'pull';
       return best;
     }
     return null;
@@ -579,6 +822,8 @@ class Director {
         content.cards.containsKey(kNouvellesDuPasse)) {
       final title = arc?.title ?? content.cards[sc.card]?.title ?? 'une vieille histoire';
       s.entities.named['passe_titre'] = title;
+      final line = arc?.epilogue['journal'];
+      if (line is String && line.isNotEmpty) addJournal(s, line, kind: 'arc', poids: 2, tags: _arcTags(arc!), arc: arc.id);
       enqueue(
         s,
         Scheduled(
@@ -607,6 +852,7 @@ class Director {
       arcDone(s, arc.id);
       return;
     }
+    final fuse = nx.isLongFuse;
     enqueue(
       s,
       Scheduled(
@@ -614,12 +860,15 @@ class Director {
         kind: arc.entryKind,
         arc: arc.id,
         step: target.id,
-        dueN: s.ncards + nx.inMin,
-        deadlineN: s.ncards + nx.inMax,
-        expireSeason: nx.thisSeason || target.thisSeason ? s.season : null,
+        // Fusée longue : en attente jusqu'à l'ouverture de la saison visée.
+        dueN: fuse ? -1 : s.ncards + nx.inMin,
+        deadlineN: fuse ? -1 : s.ncards + nx.inMax,
+        expireSeason: !fuse && (nx.thisSeason || target.thisSeason) ? s.season : null,
         fallback: arc.fallback,
         cancelIf: arc.cancelIf,
         sameClub: arc.sameClub,
+        atSeason: fuse ? s.season + nx.atSeason! : null,
+        atSlot: fuse ? List.of(nx.at ?? const [1, 3]) : null,
       ),
     );
   }
@@ -711,12 +960,26 @@ class Director {
       } else if (explicit.kind == 'abort') {
         arcAbort(s, arcId);
       } else {
-        enqueueNext(s, arc, NextDef(step: explicit.step!, inMin: explicit.inMin, inMax: explicit.inMax, thisSeason: explicit.thisSeason), c);
+        enqueueNext(
+          s,
+          arc,
+          NextDef(
+            step: explicit.step!,
+            inMin: explicit.inMin,
+            inMax: explicit.inMax,
+            thisSeason: explicit.thisSeason,
+            atSeason: explicit.atSeason,
+            at: explicit.at,
+          ),
+          c,
+        );
       }
       return;
     }
     final step = arc.stepById(stepId ?? '');
     if (step == null) return;
+    // L'issue de l'étape (celle des effets du choix a déjà été posée par _applyEffects).
+    if (step.outcome != null) st.outcome = step.outcome;
     if (step.at != null) return; // script anchors are queued by openSeason, not by `next`
     final nx = _firstNext(step, c);
     if (nx == null) {
@@ -739,6 +1002,10 @@ class Director {
       for (final t in thresholds) {
         final crossed = t < 0 ? (b > t && a <= t) : (t > 0 && b < t && a >= t);
         if (!crossed) continue;
+        if (t == -3 || t == 3) {
+          addJournalAuto(s, t < 0 ? 'palier_moins3' : 'palier_plus3',
+              kind: 'palier', poids: 2, tags: [ch.id], extra: {'perso': ch.name, 'perso_tic': ch.tic});
+        }
         final variants = ch.onRelation[t]!;
         String? cardId;
         for (final v in variants) {
@@ -771,7 +1038,7 @@ class Director {
   // Season opening (spec §1.12).
   // ---------------------------------------------------------------------------
 
-  void openSeason(GameState s) {
+  void openSeason(GameState s, Rng rng) {
     s.slot = 0;
     s.seasonStartN = s.ncards;
     s.storyThisSeason = 0;
@@ -781,9 +1048,25 @@ class Director {
     s.nouvellesThisSeason = 0;
     s.toneCounts = {};
     s.tension = 0;
+    s.openingSlots = [];
+    // Réactions (spec variété §1.4) : le compteur repart ; une réaction en
+    // attente a déjà été servie avant l'ouverture (règle 5), jamais perdue.
+    s.reactionsThisSeason = 0;
+    s.reaction = null;
+    // Compaction de l'Almanach de la saison précédente (spec variété §1.7).
+    if (s.season > 0) compactJournal(s, s.season - 1);
     final c = ctx(s, 'presaison');
     for (final sc in List.of(s.scheduled)) {
       if (sc.expireSeason != null && sc.expireSeason! < s.season) miss(s, sc, 'perimee', c);
+    }
+    // Fusées longues arrivées à leur saison : elles reçoivent leur fenêtre absolue.
+    for (final sc in s.scheduled) {
+      if (sc.atSeason == null || sc.atSeason! > s.season) continue;
+      final at = sc.atSlot ?? const [1, 3];
+      sc.dueN = s.seasonStartN + at.first;
+      sc.deadlineN = s.seasonStartN + at.last;
+      sc.atSeason = null;
+      sc.atSlot = null;
     }
     final post = content.postulats[s.postulatId];
     final openingId = (post != null && post.role == s.role) ? (post.openingArc ?? kGenericArc) : kGenericArc;
@@ -811,6 +1094,14 @@ class Director {
         }
       }
     }
+    final prog = programmeOf(s);
+    if (prog != null) {
+      // Le tirage de saison (spec variété §1.2) : réservoir, fenêtres tirées,
+      // réserve, fil rouge. Consommation Rng : ≤ prendre weightedIndex,
+      // ≤ prendre nextInt, puis 1 weightedIndex si `questions`.
+      _drawProgramme(s, c, rng, post!, prog);
+      return;
+    }
     if (post != null && post.role == s.role) {
       for (final seed in post.seeds) {
         if (seed.season != s.season) continue;
@@ -821,14 +1112,127 @@ class Director {
         armArc(s, a, c, dueN: s.seasonStartN + seed.atMin, deadlineN: s.seasonStartN + seed.atMax);
       }
     }
+    // Sans programme, les rituels sont armés d'office ; avec, ils sont tirés
+    // comme les autres intrigues (sinon ils doubleraient le tirage).
     for (final a in content.arcsSorted) {
-      if (!a.everySeason || !a.roles.contains(s.role) || s.season < a.minSeason) continue;
+      if (!a.isEverySeason || !a.roles.contains(s.role) || s.season < a.minSeason) continue;
       if (s.arcs[a.id]?.doneSeason == s.season) continue;
       if (!evalWhen(a.when, c)) continue;
-      s.arcs.remove(a.id);
+      final prev = s.arcs.remove(a.id);
+      if (prev != null) s.arcs[a.id] = prev; // armArc conserve plays/outcome
       armArc(s, a, c, dueN: s.seasonStartN + a.startMin, deadlineN: s.seasonStartN + a.startMax);
     }
   }
+
+  /// Poids d'un candidat à un tour du tirage (spec variété §1.2).
+  double _poolWeight(GameState s, ProgEntry e, ArcDef a, Set<String> carriers, Set<String> themes, bool signatureTaken) {
+    if (a.carrierId.isNotEmpty && carriers.contains(a.carrierId)) return 0;
+    if (a.themeId.isNotEmpty && themes.contains(a.themeId)) return 0;
+    double x = e.poids;
+    if (e.signature && s.season == 0 && !signatureTaken) x *= 3.0;
+    if (a.themeId.isNotEmpty && !s.themesPlayed.contains(a.themeId)) x *= 1.5;
+    if ((s.arcs[a.id]?.plays ?? 0) > 0) x *= 0.6;
+    if (a.carrierId.isNotEmpty && s.carriersLastSeason[a.carrierId] == s.season - 1) x *= 0.5;
+    return x;
+  }
+
+  void _drawProgramme(GameState s, EvalContext c, Rng rng, PostulatDef post, ProgrammeDef programme) {
+    final prog = programme.bucketFor(s.season);
+    if (prog != null) {
+      // Ce qui continue de la saison précédente (porteurs et thèmes réservés).
+      final carriers = _carriersInPlay(s);
+      final themes = <String>{};
+      int carry = 0;
+      final ids = s.arcs.keys.toList()..sort();
+      for (final id in ids) {
+        final st = s.arcs[id]!;
+        if (st.status != 'armed' && st.status != 'active') continue;
+        final a = content.arcs[id];
+        if (a == null || a.kind != 'serie' || !a.foreground || !a.roles.contains(s.role)) continue;
+        carry += 1;
+        if (a.themeId.isNotEmpty) themes.add(a.themeId);
+      }
+      final k = math.max(0, prog.prendre - carry);
+      // Candidats : ordre du fichier, bucket courant puis reprise.
+      final cands = <ProgEntry>[];
+      final seen = <String>{};
+      for (final e in programme.entriesWithReprise(s.season)) {
+        if (!seen.add(e.arc)) continue;
+        if (!_poolEligible(s, e, c, carriers)) continue;
+        cands.add(e);
+      }
+      // Tirage sans remise, pondéré : k weightedIndex au plus.
+      final taken = <ProgEntry>[];
+      bool signatureTaken = false;
+      for (var i = 0; i < k; i++) {
+        if (cands.isEmpty) break;
+        final w = [for (final e in cands) _poolWeight(s, e, content.arcs[e.arc]!, carriers, themes, signatureTaken)];
+        final j = rng.weightedIndex(w);
+        if (j < 0) break;
+        final e = cands.removeAt(j);
+        taken.add(e);
+        final a = content.arcs[e.arc]!;
+        if (a.carrierId.isNotEmpty) carriers.add(a.carrierId);
+        if (a.themeId.isNotEmpty) themes.add(a.themeId);
+        if (e.signature) signatureTaken = true;
+      }
+      // Fenêtre d'ouverture tirée, dans l'ordre du tirage : k nextInt au plus.
+      final anchors = _singleSlotAnchors(s);
+      final lo = prog.fenetre.first;
+      final hi = prog.fenetre.last;
+      for (final e in taken) {
+        final u0 = lo + rng.nextInt(hi - lo + 1);
+        final u = freeSlot(u0, [...s.openingSlots, ...anchors], prog.fenetre, ecart: q.ouvertureEcart);
+        s.openingSlots.add(u);
+        armArc(s, content.arcs[e.arc]!, c, dueN: s.seasonStartN + u, deadlineN: s.seasonStartN + u + 2);
+      }
+      // Réserve : les premiers candidats restants, dans l'ordre du fichier, triés.
+      s.reserve = [for (final e in cands.take(prog.reserve)) e.arc]..sort();
+    }
+    // Fil rouge : 1 weightedIndex si le postulat pose des questions.
+    if (post.questions.isNotEmpty) {
+      final qi = rng.weightedIndex([for (final x in post.questions) x.poids]);
+      if (qi >= 0) {
+        s.vars['fil_rouge_i'] = qi;
+        s.entities.named['fil_rouge'] = post.questions[qi].id;
+      }
+    }
+  }
+
+  /// Slots des ancres de script à créneau unique déjà en file pour cette
+  /// saison, hors l'ancre d'ouverture (slot 1) : c'est l'ouverture de la
+  /// saison, pas une ouverture d'intrigue, et une intrigue peut commencer
+  /// juste après elle (annexe A de la spec : le kop au slot 3 à côté de A1) ;
+  /// les ancres pivots (16, 17) restent protégées.
+  List<int> _singleSlotAnchors(GameState s) {
+    final out = <int>[];
+    for (final sc in s.scheduled) {
+      if (sc.kind != 'script' || sc.dueN < 0) continue;
+      final slot = sc.dueN - s.seasonStartN;
+      if (sc.dueN == sc.deadlineN && slot > 1) out.add(slot);
+    }
+    out.sort();
+    return out;
+  }
+}
+
+/// Le slot d'ouverture retenu à partir du slot tiré `u` (spec variété §1.2),
+/// sans aléa : tant qu'un slot de `taken` est à moins de `ecart`, on avance
+/// d'un slot ; au-delà de `maxSlot` (ou de `fenetre[1] + ecart`) on repart du
+/// plafond et on recule jusqu'à un slot libre ; à défaut, `u` tel quel.
+int freeSlot(int u, List<int> taken, List<int> fenetre, {int ecart = 3, int maxSlot = 15}) {
+  bool busy(int x) => taken.any((t) => (x - t).abs() < ecart);
+  final cap = math.min(maxSlot, fenetre.last + ecart);
+  var x = u;
+  while (x <= cap && busy(x)) {
+    x += 1;
+  }
+  if (x <= cap) return x;
+  x = cap;
+  while (x >= 1 && busy(x)) {
+    x -= 1;
+  }
+  return x >= 1 ? x : u;
 }
 
 /// Effects of a « Nouvelles du passé » card come from the arc's `epilogue`.
