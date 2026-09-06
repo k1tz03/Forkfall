@@ -1,12 +1,32 @@
 # `epitaph_plus` (spec variété §2.6) : seconde phrase conditionnelle sous
 # l'épitaphe, la première variante dont le `when` est vrai (≤ 2 par fin ;
-# `when` lit les traces, relations, ennemis, `bilan.*` non). Placeholders de
-# formatText autorisés ({prenom} {nom} {club} {ville} {pg, select, …}).
+# `when` lit les traces, relations, ennemis, objectifs, `bilan.*` non).
+# Placeholders de formatText autorisés ({prenom} {nom} {NOM} {club} {ville}
+# {rival} {pg, select, …}). Chaque fin a une variante qui nomme le joueur.
 # `rebond: { when, postulat }` est réservé (parsé, non lu) pour un lot ultérieur.
+# Quatre fins concluent une histoire (spec §1.13) : en_valise (L'enveloppe,
+# « J'assume »), en_dauphin (la veille, variante dauphin, « Prends le banc »),
+# jp_exil et jp_consultant (intrigues du rôle joueur, étapes 5-6 : déclarées
+# ici pour que le `end:` de leurs cartes compile).
 endings:
   # --- Entraîneur ---
-  - {id: en_bus, gauge: vestiaire, side: vide, rarity: rare, title: "Le bus", epitaph: "Le vestiaire a refusé de descendre du bus. Tu es descendu seul, ta valise à la main. Il pleuvait, évidemment."}
-  - {id: en_copain, gauge: vestiaire, side: plein, title: "Le copain", epitaph: "Tu étais leur meilleur ami. Les meilleurs amis ne se font pas obéir. Le président l'a compris avant toi."}
+  - id: en_bus
+    gauge: vestiaire
+    side: vide
+    rarity: rare
+    title: "Le bus"
+    epitaph: "Le vestiaire a refusé de descendre du bus. Tu es descendu{pg, select, f{e} other{}} seul{pg, select, f{e} other{}}, ta valise à la main. Il pleuvait, évidemment."
+    epitaph_plus:
+      - { when: "relation.vecchio >= 2", text: "Gigi Vecchio est descendu quand même. Il a porté la valise de {nom} jusqu'au taxi." }
+      - { when: "flag('bus_menace')",    text: "Le bus avait déjà refusé une fois. {prenom} {nom} n'avait pas écouté Gigi." }
+  - id: en_copain
+    gauge: vestiaire
+    side: plein
+    title: "Le copain"
+    epitaph: "Tu étais leur meilleur ami. Les meilleurs amis ne se font pas obéir. Le président l'a compris avant toi."
+    epitaph_plus:
+      - { when: "flag('onze_du_virage')", text: "La compo se votait en tribune Nord ; le vestiaire votait aussi. {prenom} {nom} comptait les mains." }
+      - { when: "relation.brehaut >= 2",  text: "Bréhaut a signé la pétition contre. « Le groupe vit bien », a-t-il dit à {nom}. Sans toi." }
   - id: en_banderole
     gauge: tribunes
     side: vide
@@ -14,7 +34,15 @@ endings:
     epitaph: "La banderole faisait vingt mètres. {NOM} en prenait douze. Le mot DEHORS, le reste."
     epitaph_plus:
       - { when: "flag('onze_du_virage')", text: "Le onze du virage, lui, est resté affiché au local." }
-  - {id: en_otage, gauge: tribunes, side: plein, title: "L'otage du kop", epitaph: "Les ultras t'aimaient tant qu'ils composaient ton équipe. Le président a préféré les laisser composer ton successeur."}
+      - { when: "relation.gege <= -2",    text: "Gégé a hésité sur l'accent de {NOM}. Pas sur le reste." }
+  - id: en_otage
+    gauge: tribunes
+    side: plein
+    title: "L'otage du kop"
+    epitaph: "Les ultras t'aimaient tant qu'ils composaient ton équipe. Le président a préféré les laisser composer ton successeur."
+    epitaph_plus:
+      - { when: "flag('pacte_gege')", text: "Le pacte de la craie tenait toujours. C'est le président que {prenom} {nom} n'avait pas fait signer." }
+      - { when: "flag('ami_ultras')", text: "Adopté{pg, select, f{e} other{}} par le local, {nom} y a gardé sa chaise. Le président y a mis quelqu'un d'autre." }
   - id: en_sms
     gauge: direction
     side: vide
@@ -22,23 +50,168 @@ endings:
     title: "Le SMS de 23h47"
     epitaph: "Viré{pg, select, f{e} other{}} par SMS entre la conférence de presse et le parking. Le message contenait une faute d'orthographe. Tu l'as corrigée."
     epitaph_plus:
-      - { when: "relation.gege >= 1", text: "Gégé a découpé la Une. Il la garde." }
-      - { when: "enemy('meneche')",   text: "Ménèche avait le SMS avant toi. Il l'a publié avec la faute." }
-  - {id: en_placard, gauge: direction, side: plein, title: "Promotion-placard", epitaph: "Nommé Directeur du Développement International. Ton bureau n'a pas de fenêtre. Ni de téléphone. Ni de développement."}
-  - {id: en_decoupe, gauge: caisse, side: vide, title: "Vendu à la découpe", epitaph: "Plus de budget. L'équipe a été vendue joueur par joueur, et toi avec les meubles."}
-  - {id: en_coupable, gauge: caisse, side: plein, title: "Le coupable désigné", epitaph: "Tu as réclamé et obtenu des moyens fous. La Commission a bloqué le club, et le président a trouvé le nom du responsable sur ta porte."}
-  - {id: en_tribune, gauge: tribunes, side: plein, rarity: rare, share: false, title: "La tribune", epitaph: "La tribune Nord est tombée à la soixante-douzième minute, avec ceux qui chantaient dedans. Tu avais dit : l'été prochain."}
-  - {id: en_retraite, golden: true, rarity: rare, title: "Le banc en bois", epitaph: "Soixante-cinq ans. On a mis un banc à ton nom derrière le but. Tu t'y assois à chaque échauffement et tu donnes des consignes que personne n'entend."}
+      - { when: "flag('vukic_dauphin')", text: "Zoran Vukić a pris le banc le lendemain. Il avait gardé le cahier de {nom}." }
+      - { when: "enemy('meneche')",      text: "Ménèche avait le SMS avant {prenom} {nom}. Il l'a publié avec la faute." }
+  - id: en_placard
+    gauge: direction
+    side: plein
+    title: "Promotion-placard"
+    epitaph: "Nommé{pg, select, f{e} other{}} Directeur du Développement International. Ton bureau n'a pas de fenêtre. Ni de téléphone. Ni de développement."
+    epitaph_plus:
+      - { when: "flag('club_actif')",       text: "Nassir a signé la plaque : « ambassadeur ». Ce n'était pas un club, c'était un actif ; {nom} en était une ligne." }
+      - { when: "flag('homme_president')",  text: "Le fils du président a eu le bureau avec fenêtre. {prenom} {nom}, la plaque." }
+  - id: en_decoupe
+    gauge: caisse
+    side: vide
+    title: "Vendu à la découpe"
+    epitaph: "Plus de budget. L'équipe a été vendue joueur par joueur, et toi avec les meubles."
+    epitaph_plus:
+      - { when: "flag('mbako_vendu')",      text: "Le petit Mbako était parti le premier, trente millions. Ils n'ont pas suffi ; {nom} est parti{pg, select, f{e} other{}} avec les meubles." }
+      - { when: "flag('club_a_lancienne')", text: "{prenom} {nom} avait renvoyé le fonds et sa canette. Le fonds a racheté les meubles aux enchères." }
+  - id: en_coupable
+    gauge: caisse
+    side: plein
+    title: "Le coupable désigné"
+    epitaph: "Tu as réclamé et obtenu des moyens fous. La Commission a bloqué le club, et le président a trouvé le nom du responsable sur ta porte."
+    epitaph_plus:
+      - { when: "flag('nassir_pret')",     text: "Page trois du prêt : le nom du responsable. {prenom} {nom} l'avait signée sans la lire." }
+      - { when: "relation.aulard <= -1",   text: "Aulard « n'avait pas le temps ». Il a trouvé celui d'écrire {nom} sur la porte." }
+  - id: en_tribune
+    gauge: tribunes
+    side: plein
+    rarity: rare
+    share: false
+    title: "La tribune"
+    epitaph: "La tribune Nord est tombée à la soixante-douzième minute, avec ceux qui chantaient dedans. Tu avais dit : l'été prochain."
+    epitaph_plus:
+      - { when: "flag('tribune_a_renover')", text: "{prenom} {nom} avait préféré garder la tribune Nord, ses fissures et son nom." }
+      - { when: "relation.gege >= 1",        text: "Gégé était dedans. La tribune n'oublie rien ; {nom} non plus." }
+  - id: en_retraite
+    golden: true
+    rarity: rare
+    title: "Le banc en bois"
+    epitaph: "Soixante-cinq ans. On a mis un banc à ton nom derrière le but. Tu t'y assois à chaque échauffement et tu donnes des consignes que personne n'entend."
+    epitaph_plus:
+      - { when: "objectif('promu_banc_gigi')", text: "Gigi Vecchio a le banc d'à côté. Il en a vu d'autres ; {nom} était le dernier." }
+      - { when: "relation.josiane >= 2",       text: "Josiane a pris sa retraite la même semaine. Elle en avait vu passer ; elle a gardé le dossier {nom}." }
+  - id: en_valise
+    gauge: direction
+    side: vide
+    rarity: rare
+    title: "La valise"
+    epitaph: "Trois joueurs adverses, une enveloppe, un maintien. La Fédération a « examiné ». Elle a trouvé {prenom} {nom}."
+    epitaph_plus:
+      - { when: "flag('pari_promu')",      text: "Cent francs sur le maintien à cinq mille contre un. L'enveloppe pesait plus lourd ; {nom} le savait." }
+      - { when: "relation.brehaut >= 1",   text: "Bréhaut n'a rien dit. « Le groupe vit bien », a-t-il répété. Pas à {nom}." }
+  - id: en_dauphin
+    gauge: direction
+    side: vide
+    rarity: rare
+    title: "Le dauphin"
+    epitaph: "Remplacé{pg, select, f{e} other{}} par ton adjoint. Il « réfléchissait » depuis novembre."
+    epitaph_plus:
+      - { when: "relation.aulard <= -1", text: "Aulard a lu le second discours sans lever les yeux. {NOM} n'y était pas." }
+      - { when: "relation.vukic <= -2",  text: "Zoran Vukić a gardé le bureau, la cafetière et le cahier de {prenom} {nom}. Il a changé la serrure." }
   # --- Joueur ---
-  - {id: jp_mouton, gauge: vestiaire, side: vide, title: "Le mouton noir", epitaph: "On ne t'a plus jamais fait de passe. Même à l'entraînement. Même au toro."}
-  - {id: jp_porteparole, gauge: vestiaire, side: plein, title: "Le porte-parole", epitaph: "Trop aimé pour être gardé. Vendu à la trêve avec une lettre du vestiaire et une aile de poulet."}
-  - {id: jp_siffle, gauge: tribunes, side: vide, title: "Sifflé", epitaph: "Sifflé à l'échauffement, à la mi-temps et à la sortie du parking. Le parking, ça n'était jamais arrivé."}
-  - {id: jp_sandwich, gauge: tribunes, side: plein, title: "L'homme-sandwich", epitaph: "Tu as signé plus de contrats publicitaires que de passes décisives. Ton agent a pleuré de joie. Le coach a pleuré tout court."}
-  - {id: jp_place14b, gauge: direction, side: vide, title: "La place 14B", epitaph: "Tu as fini par connaître par cœur les tribunes du stade. Depuis la place 14B."}
-  - {id: jp_fils, gauge: direction, side: plein, title: "Le fils spirituel", epitaph: "Le coach t'aimait tant qu'il t'a emmené dans son nouveau club. En deuxième division lointaine."}
-  - {id: jp_sansclub, gauge: caisse, side: vide, title: "Sans club", epitaph: "Ton agent a filé, le syndicat des joueurs t'a proposé son stage de chômeurs. Tu as fini en Régional, payé en merguez."}
-  - {id: jp_panama, gauge: caisse, side: plein, title: "La carte Panama", epitaph: "Le contrat d'image aux îles lointaines était une idée de ton cousin. Le fisc a eu une idée aussi."}
+  - id: jp_mouton
+    gauge: vestiaire
+    side: vide
+    title: "Le mouton noir"
+    epitaph: "On ne t'a plus jamais fait de passe. Même à l'entraînement. Même au toro."
+    epitaph_plus:
+      - { when: "flag('special')",         text: "« Le meilleur », avait dit {nom}. Le groupe avait lu." }
+      - { when: "relation.brehaut <= -2",  text: "Bréhaut a donné la consigne : pas de passe à {prenom} {nom}. Le groupe vit bien." }
+  - id: jp_porteparole
+    gauge: vestiaire
+    side: plein
+    title: "Le porte-parole"
+    epitaph: "Trop aimé{pg, select, f{e} other{}} pour être gardé{pg, select, f{e} other{}}. Vendu{pg, select, f{e} other{}} à la trêve avec une lettre du vestiaire et une aile de poulet."
+    epitaph_plus:
+      - { when: "flag('capitaine')",      text: "Le brassard est resté dans le casier. {prenom} {nom} a gardé l'aile de poulet." }
+      - { when: "relation.brehaut >= 2",  text: "Bréhaut a écrit la lettre. Il l'a signée en premier, sous le nom de {nom}." }
+  - id: jp_siffle
+    gauge: tribunes
+    side: vide
+    title: "Sifflé"
+    epitaph: "Sifflé{pg, select, f{e} other{}} à l'échauffement, à la mi-temps et à la sortie du parking. Le parking, ça n'était jamais arrivé."
+    epitaph_plus:
+      - { when: "relation.gege <= -2",   text: "Gégé a sifflé le premier. Il a hésité sur l'accent de {NOM}. Pas sur le sifflet." }
+      - { when: "flag('international')", text: "Sifflé{pg, select, f{e} other{}} même en bleu cobalt. {prenom} {nom} avait le maillot du pays et les sifflets de la ville." }
+  - id: jp_sandwich
+    gauge: tribunes
+    side: plein
+    title: "L'homme-sandwich"
+    epitaph: "Tu as signé plus de contrats publicitaires que de passes décisives. Ton agent a pleuré de joie. Le coach a pleuré tout court."
+    epitaph_plus:
+      - { when: "flag('offshore')",         text: "Le cousin de {nom} a pleuré aussi. De joie. Aux îles." }
+      - { when: "relation.fardelli >= 2",   text: "Fardelli a signé le dernier contrat au nom de {prenom} {nom}. Une boisson orange. Il pleurait de joie." }
+  - id: jp_place14b
+    gauge: direction
+    side: vide
+    title: "La place 14B"
+    epitaph: "Tu as fini par connaître par cœur les tribunes du stade. Depuis la place 14B."
+    epitaph_plus:
+      - { when: "flag('pari')",          text: "L'enregistrement du bar d'hôtel a fait le reste. {prenom} {nom} connaît aussi les tribunes des autres stades." }
+      - { when: "relation.vukic <= -1",  text: "Vukić choisissait la place. « Je te le dis parce que personne ne te le dira », disait-il à {nom}. Personne ne l'a dit." }
+  - id: jp_fils
+    gauge: direction
+    side: plein
+    title: "Le fils spirituel"
+    epitaph: "Le coach t'aimait tant qu'il t'a emmené{pg, select, f{e} other{}} dans son nouveau club. En deuxième division lointaine."
+    epitaph_plus:
+      - { when: "relation.vukic >= 2", text: "Vukić a suivi aussi. Trois valises, une deuxième division lointaine, et {nom} sur la feuille de match." }
+      - { when: "flag('capitaine')",   text: "Le brassard a suivi {prenom} {nom} dans la valise. Il ne va sur aucun maillot de là-bas." }
+  - id: jp_sansclub
+    gauge: caisse
+    side: vide
+    title: "Sans club"
+    epitaph: "Ton agent a filé, le syndicat des joueurs t'a proposé son stage de chômeurs. Tu as fini en Régional, payé{pg, select, f{e} other{}} en merguez."
+    epitaph_plus:
+      - { when: "flag('offshore')", text: "La société du cousin existe toujours. {nom} n'y a jamais eu de compte." }
+      - { when: "flag('genou')",    text: "Le genou de {prenom} {nom} avait raison depuis le début. Personne ne l'avait écouté, pas même les merguez." }
+  - id: jp_panama
+    gauge: caisse
+    side: plein
+    title: "La carte Panama"
+    epitaph: "Le contrat d'image aux îles lointaines était une idée de ton cousin. Le fisc a eu une idée aussi."
+    epitaph_plus:
+      - { when: "flag('international')",   text: "Le maillot cobalt est resté dans le dossier, entre deux relevés. {prenom} {nom} l'avait gagné, celui-là." }
+      - { when: "relation.fardelli <= -1", text: "Fardelli « ne connaissait pas le cousin ». Il connaissait le compte de {nom}." }
+  - id: jp_exil
+    golden: false
+    rarity: rare
+    title: "Parti pour l'or"
+    epitaph: "Le championnat du désert paie comme l'or. Le niveau reste entre eux. {prenom} {nom} a appris à dormir la journée."
+    epitaph_plus:
+      - { when: "relation.camille <= -1",  text: "Camille n'est pas venue. « Tu rentres à quelle heure ? » n'a plus de réponse ; {nom} dort la journée." }
+      - { when: "relation.fardelli >= 1",  text: "Fardelli prend dix pour cent de l'or. Il a fait installer la climatisation chez {prenom} {nom}. Par amitié." }
+  - id: jp_consultant
+    golden: true
+    rarity: rare
+    title: "Le micro du dimanche"
+    epitaph: "{prenom} {nom} juge les autres le dimanche soir. Le président « n'a pas le temps » de regarder."
+    epitaph_plus:
+      - { when: "enemy('meneche')",     text: "Ménèche est sur le même plateau. Il « ne commente pas » ; {nom}, si." }
+      - { when: "relation.vukic >= 1",  text: "Vukić regarde chaque dimanche. Il note ce que dit {prenom} {nom}, parce que personne ne le dira à sa place." }
   # --- Universelles ---
-  - {id: grand_deballage, rarity: rare, title: "Le Grand Déballage", epitaph: "Le dossier faisait douze pages. Chaque page, une promesse. Chaque promesse, une date. Tu te souvenais de toutes."}
-  - {id: jubile, golden: true, rarity: rare, title: "Le Jubilé", epitaph: "Stade plein, tour d'honneur. Tu as demandé où était le vestiaire. Par habitude."}
-  - {id: generique, title: "Fin de carrière", epitaph: "Le foot t'a recraché, comme il le fait toujours. On recommence ?"}
+  - id: grand_deballage
+    rarity: rare
+    title: "Le Grand Déballage"
+    epitaph: "Le dossier faisait douze pages. Chaque page, une promesse. Chaque promesse, une date. Tu te souvenais de toutes."
+    epitaph_plus:
+      - { when: "flag('pacte_gege')", text: "Page une : le pacte de la craie. La date, la main, et le nom de {nom}." }
+      - { when: "enemy('meneche')",   text: "Ménèche a signé le dossier. Il avait « juste une question, hors micro » pour {prenom} {nom}. Douze, en fait." }
+  - id: jubile
+    golden: true
+    rarity: rare
+    title: "Le Jubilé"
+    epitaph: "Stade plein, tour d'honneur. Tu as demandé où était le vestiaire. Par habitude."
+    epitaph_plus:
+      - { when: "flag('finale_gigi')",  text: "Gigi Vecchio était dans les buts. Il en a vu d'autres ; pas un jubilé de {nom}." }
+      - { when: "relation.gege >= 2",   text: "Gégé a dirigé les chants. La tribune n'oublie rien : elle a chanté {prenom} {nom} sans se tromper d'accent." }
+  - id: generique
+    title: "Fin de carrière"
+    epitaph: "Le foot t'a recraché{pg, select, f{e} other{}}, comme il le fait toujours. On recommence ?"
+    epitaph_plus:
+      - { when: "flag('fidele')",        text: "{prenom} {nom} était resté{pg, select, f{e} other{}}. C'est le foot qui est parti." }
+      - { when: "relation.josiane >= 1", text: "Josiane a rangé le dossier {nom} sous les autres. Elle en a vu passer." }

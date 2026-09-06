@@ -14,18 +14,25 @@
 #     postulats: [promu]           # optionnel ; vide = tous
 #     roles: [entraineur]          # optionnel ; vide = tous
 #     journal: quotidien | gazette | echo
-#     priority: 0..4               # 4 titre/descente/changement de rôle · 3 trace forte · 2 trace ordinaire · 1 générique · 0 secours
+#     priority: 0..4               # 4 titre/descente/changement de rôle · 3 trace forte · 2 trace ordinaire ou état de l'instant · 1 générique · 0 secours
 #     poids: 1.0                   # optionnel
 #     when: "bilan.tenu && flag('x')"   # optionnel ; JAMAIS flag('bilan_tenu') ni world.rang_final (saison précédente)
 #     titre: "{NOM}, LE MIRACLE DE {VILLE}"   # ≤ 44 caractères une fois rendu (lint : BRÉHAUT-LEMOINE / SAINT-ÉTOILE)
 #     sous: "…"                    # placeholders : {rang} {objectif} {tenu} (tenu | manqué) {TENU} {annee} {prenom} {nom} {NOM} {club} {CLUB} {ville} {VILLE} {rival} {president} {pts}
-#     sujet: direction             # optionnel : tag/arc exclu des brèves
+#     sujet: en.kop_qui_aime_trop  # optionnel : tag ou id d'arc exclu des brèves (déjà le sujet)
 #     photo: en.promu.a6_dernier_virage      # optionnel
 #     react: { card: co.re.josiane_a_lu, if: "relation.josiane >= 0" }   # optionnel ; card ou liste [{card, if?}]
 #
 # Règles : ≥ 2 manchettes de secours (priority 0, sans `when`) ; par postulat
 # livré ≥ 10 manchettes dont ≥ 3 sur des traces ; {NOM} ou {CLUB}/{VILLE}
 # dans ≥ 50 % ; aucun nom réel.
+#
+# Fraîcheur : une trace posée cette saison se lit par `journal_has('<drapeau>')`
+# (la ligne d'Almanach porte le drapeau en tag) — `flag()` resterait vrai
+# toute la carrière et la Une titrerait trois ans plus tard sur un vote
+# oublié. Les manchettes d'état (relation, jauge, saison) tiennent les S2+.
+# Le `react` « quelqu'un a lu le journal » : Josiane une fois par carrière
+# (`!seen`), sinon Gégé, Gigi ou Camille selon qui t'aime.
 journaux:
   - { id: quotidien, nom: "Le Quotidien du Ballon", ton: sobre,   style: bleu }
   - { id: gazette,   nom: "La Gazette Rose",        ton: mechant, style: rose }
@@ -55,7 +62,37 @@ unes:
     titre: "LE BILAN DE {NOM}"
     sous: "{club} termine {rang}e. Objectif {objectif} : {tenu}. Le président « n'a pas le temps »."
 
-  # ------------------------------------------------------- génériques conditionnées
+  # ------------------------------------------------------- génériques (1) : le verdict
+  - id: une.generic.tenu_respire
+    journal: quotidien
+    priority: 1
+    when: "bilan.tenu"
+    titre: "OBJECTIF TENU, ON RESPIRE À {VILLE}"
+    sous: "{rang}e. « {objectif} », disait-on en août ; c'est fait. {prenom} {nom} n'a rien promis pour la suite. Pas encore."
+    sujet: bilan
+  - id: une.generic.tenu_rang
+    journal: echo
+    priority: 1
+    when: "bilan.tenu"
+    titre: "{CLUB} TIENT SON RANG"
+    sous: "{rang}e en juin, objectif « {objectif} » tenu. Au local, on a ressorti les verres du placard."
+    sujet: bilan
+  - id: une.generic.manque_coupable
+    journal: gazette
+    priority: 1
+    when: "!bilan.tenu"
+    titre: "L'OBJECTIF EST MANQUÉ, PAS LE COUPABLE"
+    sous: "{rang}e. « {objectif} », disait le président en août. Il « n'a pas le temps » de commenter. {NOM}, lui, a une porte."
+    sujet: bilan
+  - id: une.generic.manque_mieux
+    journal: echo
+    priority: 1
+    when: "!bilan.tenu"
+    titre: "{VILLE} ATTENDAIT MIEUX"
+    sous: "{rang}e, objectif « {objectif} » manqué. Au local, on ne parle plus de {prenom} {nom}. On parle de dimanche."
+    sujet: bilan
+
+  # ------------------------------------------------------- génériques (2-4) : l'état
   - id: une.generic.champions
     journal: quotidien
     priority: 4
@@ -63,6 +100,15 @@ unes:
     titre: "CHAMPIONS !"
     sous: "{club} sur le toit du pays. {prenom} {nom} sur la photo, au bord."
     sujet: bilan
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.generic.montee
+    journal: quotidien
+    priority: 4
+    when: "bilan.rang <= 2 && world.division == 2"
+    titre: "MONTÉE !"
+    sous: "{club} retrouve l'étage du dessus. {prenom} {nom} a dit « on verra ». On a vu."
+    sujet: bilan
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.descente
     journal: echo
     priority: 4
@@ -70,8 +116,42 @@ unes:
     titre: "LE RÊVE A DURÉ UN AN"
     sous: "Retour à l'étage du dessous. {prenom} {nom} n'a pas répondu à nos appels. Gégé, si."
     sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.generic.descente_cartons
+    journal: gazette
+    priority: 4
+    when: "bilan.rang >= 17"
+    titre: "{VILLE} REFAIT SES CARTONS"
+    sous: "{rang}e et dernier wagon. Le président « n'a pas le temps » ; {prenom} {nom} a une valise, et le chauffage à payer."
+    sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.generic.descente_chauffage
+    journal: quotidien
+    priority: 4
+    when: "bilan.rang >= 17"
+    titre: "SI ON DESCEND, TU PAIES LE CHAUFFAGE"
+    sous: "Le président l'avait dit en avril. {club} descend, {rang}e. {NOM} garde le banc, et la facture."
+    sujet: bilan
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.generic.promesses
+    journal: gazette
+    priority: 3
+    when: "parole <= -3"
+    titre: "LES PROMESSES DE {NOM}, DATÉES"
+    sous: "Douze promesses, douze dates, une saison. Ménèche a tout gardé. « Juste une question, hors micro. »"
+    sujet: presse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.generic.feu_de_joie
+    journal: echo
+    priority: 2
+    when: "gauges.tribunes >= 80 && bilan.tenu"
+    titre: "{VILLE} EN FEU (DE JOIE)"
+    sous: "Tribune Nord pleine jusqu'aux grilles, {rang}e place, objectif tenu. Gégé a fait repeindre le local. Encore."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
 
   # ------------------------------------------------------------------ promu (P0)
+  # ---- traces fortes (3)
   - id: une.promu.miracle
     postulats: [promu]
     roles: [entraineur]
@@ -82,4 +162,386 @@ unes:
     sous: "Promu sans un sou, maintenu à la {rang}e place. Aulard parle déjà de « projet »."
     sujet: direction
     photo: en.promu.a6_dernier_virage
-    react: { card: co.re.josiane_a_lu, if: "relation.josiane >= 0" }
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.trente_millions
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('mbako_vendu') && journal_has('mbako_vendu'))"
+    titre: "TRENTE MILLIONS ET UN GAMIN"
+    sous: "Lian Mbako, seize ans, vendu. Sa mère a lu la clause. Elle l'avait écrite. {prenom} {nom} a signé en dessous."
+    sujet: en.prodige
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.dix_pour_cent
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    poids: 0.8
+    when: "(flag('mbako_vendu') && journal_has('mbako_vendu')) && flag('mbako_agent_fardelli')"
+    titre: "DIX POUR CENT POUR L'AMI FARDELLI"
+    sous: "Lian Mbako vendu trente millions. Son agent « depuis ce matin » prend dix pour cent. {prenom} {nom} a dit « bienvenue au club »."
+    sujet: en.prodige
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.mbako_garde
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "(flag('mbako_garde') && journal_has('mbako_garde'))"
+    titre: "TRENTE MILLIONS, ET IL RESTE"
+    sous: "Lian Mbako reste à {ville}. {prenom} {nom} a raccroché au nez de Fardelli. La Commission, elle, ne raccroche pas."
+    sujet: en.prodige
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.arena
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "(flag('naming_signe') && journal_has('naming_signe'))"
+    titre: "ARENA QATALYST"
+    sous: "Le nom en orange, le nôtre en dessous, en petit. La tribune chante l'ancien. {prenom} {nom} a signé le nouveau."
+    sujet: en.nassir_proprietaire
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.lancienne
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "(flag('club_a_lancienne') && journal_has('club_a_lancienne'))"
+    titre: "{VILLE} A DIT NON À L'ORANGE"
+    sous: "Le fonds est reparti avec sa canette. {prenom} {nom} garde le maillot, le nom du stade et le radiateur qui tousse."
+    sujet: en.nassir_proprietaire
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.staff
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('gigi_staff') && journal_has('gigi_staff'))"
+    titre: "VECCHIO RACCROCHE, VECCHIO RESTE"
+    sous: "Quarante et un ans de gants, et un banc à côté de celui de {prenom} {nom}. « J'en ai vu d'autres. Je les montrerai. »"
+    sujet: en.vieux_gardien
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe } ]
+  - id: une.promu.dauphin
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('vukic_dauphin') && !bilan.tenu"
+    titre: "LE DAUPHIN DE {VILLE} ATTEND"
+    sous: "Zoran Vukić « réfléchit ». Le président a deux discours. {NOM} n'est que dans un, et pas le bon : {rang}e."
+    sujet: direction
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.valise
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('enveloppe_rival') && journal_has('enveloppe_rival')) || (flag('enveloppe_niee') && journal_has('enveloppe_niee'))"
+    titre: "LA VALISE DE {VILLE}"
+    sous: "Trois joueurs adverses, une enveloppe, un dernier bloc. La Fédération « examine ». {prenom} {nom} « ne commente pas »."
+    sujet: en.evt.enveloppe
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  # ---- traces ordinaires (2)
+  - id: une.promu.chauffage
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "!bilan.tenu && flag('choix_maillots') && season == 0"
+    titre: "DES MAILLOTS NEUFS, UN VESTIAIRE FROID"
+    sous: "{club} termine {rang}e. {prenom} {nom} avait choisi les maillots plutôt que le chauffage. Le virage était beau."
+    sujet: caisse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.ingratitude
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "bilan.tenu && relation.aulard <= -1"
+    titre: "MAINTIEN, SANS UN MERCI"
+    sous: "{rang}e, objectif tenu. Aulard, interrogé sur {prenom} {nom} : « J'ai pas le temps, j'ai un empire. »"
+    sujet: direction
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.onze_virage
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('onze_du_virage') && journal_has('onze_du_virage'))"
+    titre: "LE ONZE DU VIRAGE DE {VILLE}"
+    sous: "À {ville}, la compo se vote en tribune Nord. L'entraîneur signe. Le président l'apprend dans ces colonnes."
+    sujet: en.kop_qui_aime_trop
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.pacte
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('pacte_gege') && journal_has('pacte_gege'))"
+    titre: "{NOM} ET LE PACTE DE LA CRAIE"
+    sous: "Le local rénové cette saison, promis à Gégé par {prenom} {nom}. La date est sur le mur. À la craie, pour l'instant."
+    sujet: en.kop_qui_aime_trop
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.mbako_lance
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('mbako_lance') && journal_has('mbako_lance'))"
+    titre: "SEIZE ANS ET DÉJÀ LE STADE"
+    sous: "Lian Mbako lancé en pro par {prenom} {nom}, contre l'avis du président. Le président a applaudi quand même."
+    sujet: en.prodige
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.pari
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('pari_promu') && journal_has('pari_promu')) && bilan.tenu"
+    titre: "{pg, select, f{ELLE AVAIT PARIÉ SUR ELLE} other{IL AVAIT PARIÉ SUR LUI}}"
+    sous: "Cent francs à cinq mille contre un, en août. {rang}e en juin. Ménèche « ne commente pas ». Il note."
+    sujet: en.cote_du_promu
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.pari_perdu
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('pari_promu') && journal_has('pari_promu')) && !bilan.tenu"
+    titre: "CENT FRANCS, CINQ MILLE REGRETS"
+    sous: "{prenom} {nom} avait misé sur le maintien. {rang}e. Le ticket est chez Ménèche, qui « ne commente pas »."
+    sujet: en.cote_du_promu
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.projet
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "(flag('projet_promis') && journal_has('projet_promis'))"
+    titre: "{NOM} A UN PROJET"
+    sous: "Le mot est lâché en août, répété trois fois avant le parking. En juin, le classement dit « {rang}e »."
+    sujet: en.cote_du_promu
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.gigi_promis
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('vecchio_promis') && journal_has('vecchio_promis'))"
+    titre: "GIGI VECCHIO, UNE DERNIÈRE. PROMIS."
+    sous: "Quarante et un ans, et une promesse de {prenom} {nom} : les buts jusqu'en juin. Le jeune attend. Il a le temps."
+    sujet: en.vieux_gardien
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+  - id: une.promu.gardien_jeune
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('gardien_jeune') && journal_has('gardien_jeune'))"
+    titre: "LE JEUNE A LES GANTS DE GIGI"
+    sous: "Gigi Vecchio, quarante et un ans, regarde ailleurs. {prenom} {nom} a tranché. Le jeune a arrêté tout, sauf les questions."
+    sujet: en.vieux_gardien
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe } ]
+  - id: une.promu.mere_mbako
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('mbako_mere') && journal_has('mbako_mere'))"
+    titre: "LA MÈRE DE MBAKO N'A BESOIN DE PERSONNE"
+    sous: "Contrat pro à seize ans, signé en trois exemplaires, sans agent. {prenom} {nom} a tenu le stylo. Elle, la main."
+    sujet: en.prodige
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.orange
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('nassir_sponsor') && journal_has('nassir_sponsor'))"
+    titre: "{VILLE} PASSE À L'ORANGE"
+    sous: "Le maillot est fluo, comme la boisson. {prenom} {nom} a dit oui à la canette. Gégé compte les manches, et les jours."
+    sujet: en.nassir_proprietaire
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.special
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('special') && journal_has('special'))"
+    titre: "« LE SPÉCIAL », DIT LE SPÉCIAL"
+    sous: "Interrogé{pg, select, f{e} other{}} sur le miracle, {prenom} {nom} a répondu « c'est moi ». Le vestiaire a lu. Deux fois."
+    sujet: presse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.clow
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "(flag('clow_ingrat') && journal_has('clow_ingrat'))"
+    titre: "BRIAN CLOW N'A PAS ÉTÉ RAPPELÉ"
+    sous: "Quarante-quatre jours dans un grand club, et un message sur le répondeur de {prenom} {nom}. Sans réponse."
+    sujet: en.mentor_clow
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.franchement
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "(flag('presse_franc') && journal_has('presse_franc'))"
+    titre: "{NOM}, FRANCHEMENT ?"
+    sous: "« Franchement », a répondu l'entraîneur à la question de l'objectif. {rang}e en juin : {objectif} {tenu}. Franchement."
+    sujet: en.conf_presse
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  # ---- l'état de l'instant (2) : ce qui tient les saisons 3 et suivantes
+  - id: une.promu.deuxieme
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "bilan.tenu && world.division == 1 && vars.saisons_tenues >= 1"
+    titre: "{VILLE} S'INSTALLE PARMI LES GRANDS"
+    sous: "Encore un maintien, {rang}e. Le mot « miracle » est rangé ; {prenom} {nom} préfère « travail ». Aulard préfère « projet »."
+    sujet: bilan
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.top5
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "bilan.rang <= 5 && bilan.rang >= 2 && world.division == 1"
+    titre: "{VILLE} DANS LE TOP 5, SANS UN SOU"
+    sous: "{rang}e. Le radiateur tousse toujours ; le classement, non. {prenom} {nom} « ne commente pas ». Le président, si."
+    sujet: bilan
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.trois_ans
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "season == 2 && bilan.tenu"
+    titre: "{NOM}, TROIS ANS DÉJÀ"
+    sous: "Trois saisons sur le banc de {club}, {rang}e cette fois. Josiane « en a vu passer ». Pas beaucoup qui restent."
+    sujet: bilan
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.cinq_ans
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "season == 4"
+    titre: "CINQ ANS DE {NOM} À {VILLE}"
+    sous: "Cinq saisons, {rang}e cette fois, objectif {tenu}. Le radiateur a été changé. Le président, non."
+    sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.meme_echarpe
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "relation.gege >= 2 && bilan.tenu"
+    titre: "LE VIRAGE ET {NOM}, MÊME ÉCHARPE"
+    sous: "{rang}e, objectif tenu, et la tribune Nord qui chante le nom de l'entraîneur avant celui du club. Gégé « n'oublie rien »."
+    sujet: tribunes
+    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal } ]
+  - id: une.promu.bache
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "relation.gege <= -2 && !bilan.tenu"
+    titre: "LA BÂCHE A UN NOM"
+    sous: "{rang}e. Gégé et la tribune Nord ne chantent plus le nom de {nom}. Ils l'écrivent, en grand, sur douze mètres."
+    sujet: tribunes
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.aulard_temps
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "relation.aulard >= 2 && bilan.tenu"
+    titre: "AULARD A LE TEMPS POUR {NOM}"
+    sous: "{rang}e, objectif tenu, et un président qui prolonge « sans lire ». Il a un empire ; il a trouvé une heure."
+    sujet: direction
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.meneche_contre
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "enemy('meneche') || relation.meneche <= -2"
+    titre: "MÉNÈCHE CONTRE {NOM}"
+    sous: "{rang}e, objectif {tenu}. Notre chroniqueur « ne commente pas » l'entraîneur. Il le décrit. Sur deux pages."
+    sujet: presse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.argent_dou
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "gauges.caisse >= 70"
+    titre: "{VILLE} A DE L'ARGENT. D'OÙ ?"
+    sous: "{rang}e, objectif {tenu}, et une caisse pleine dans un club « sans un sou ». Un ami à la Commission des comptes s'interroge."
+    sujet: caisse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+  - id: une.promu.gigi_encore
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "vars.vecchio_retraites >= 2 && relation.vecchio >= 1"
+    titre: "GIGI VECCHIO NE RACCROCHE PAS"
+    sous: "Encore une retraite prise, encore une retraite rendue. {prenom} {nom} n'a rien demandé. Enfin, si : les buts."
+    sujet: en.vieux_gardien
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+
+  # ---- génériques du postulat (1) : l'état de l'instant, sans trace
+  - id: une.promu.justesse
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "bilan.tenu && bilan.rang >= 15"
+    titre: "SAUVÉS. DE JUSTESSE."
+    sous: "{rang}e, à la dernière journée ou presque. {prenom} {nom} a dit « on verra ». On a vu, tard."
+    sujet: bilan
+  - id: une.promu.no_comment
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 1
+    when: "vars.no_comment >= 2"
+    titre: "{NOM} NE COMMENTE PAS"
+    sous: "{rang}e, objectif {tenu}. Interrogé{pg, select, f{e} other{}} sur la saison, l'entraîneur a « juste une question, hors micro ». Nous aussi."
+    sujet: presse
+  - id: une.promu.caisse_vide
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "gauges.caisse < 20 && gauges.tribunes >= 60"
+    titre: "{VILLE} : CAISSE VIDE, STADE PLEIN"
+    sous: "{rang}e, objectif {tenu}. Josiane compte les billets, Gégé compte les écharpes. Les écharpes gagnent."
+    sujet: caisse
+  - id: une.promu.deux_discours
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 1
+    when: "gauges.direction < 30"
+    titre: "LE PRÉSIDENT A DEUX DISCOURS"
+    sous: "{rang}e, objectif {tenu}. Aulard « n'a pas le temps ». {prenom} {nom} n'est que dans un des deux textes."
+    sujet: direction
+  - id: une.promu.groupe
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "gauges.vestiaire >= 70"
+    titre: "« LE GROUPE VIT BIEN », DIT LE GROUPE"
+    sous: "{rang}e, objectif {tenu}. Bréhaut, capitaine, pour l'Écho : « {prenom} {nom} a un vestiaire. C'est déjà ça. »"
+    sujet: vestiaire

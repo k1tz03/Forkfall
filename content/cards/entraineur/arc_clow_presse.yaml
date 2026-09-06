@@ -36,14 +36,14 @@ cards:
     speaker: clow
     tone: leger
     once: true
-    text: "Clow, au téléphone : « Peur du président ? Quarante-quatre jours dans un grand club. Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un. »"
+    text: "Clow, au téléphone : « Peur du président, {toi} ? Quarante-quatre jours dans un grand club. Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un. »"
     left:
       label: "Je l'écoute"
-      effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}, direction: "-"}
+      effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}, direction: "-", journal: {text: "{annee} : une heure au téléphone avec Brian Clow. Le président a cherché {nom} pendant une heure.", poids: 2, tags: [direction, piege]}}
       answer: "Une heure au téléphone. Le président t'a cherché pendant une heure."
     right:
       label: "Je gère"
-      effects: {relation: {clow: -1}, direction: "+"}
+      effects: {relation: {clow: -1}, direction: "+", journal: {text: "{annee} : Brian Clow a appelé. {nom} a raccroché le premier ; le président a apprécié.", poids: 1, tags: [direction]}}
       answer: "Tu raccroches le premier. Le président t'a vu raccrocher. Il apprécie."
 
   # ------------------------------------------------------------ F2 · le verre
@@ -57,7 +57,7 @@ cards:
     text: "Brian Clow, verre plein à ras bord : « Une promesse, petit, c'est un chèque. Tu en as signé combien ? Un vestiaire, c'est un verre : trop plein, ça déborde. »"
     left:
       label: "J'en ai signé trop"
-      effects: {var: {clow_conseils: "+1"}, parole: 1}
+      effects: {var: {clow_conseils: "+1"}, parole: 1, journal: {text: "{annee} : « J'en ai signé trop », a avoué {nom} à Brian Clow. Une goutte est tombée sur la nappe.", poids: 2, tags: [vestiaire, piege]}}
       answer: "Il lève son verre sans boire. Une goutte tombe sur la nappe. Il la regarde."
     right:
       label: "Ce sont mes chèques"
@@ -111,14 +111,14 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, une enveloppe : « Il a laissé ça pour vous. Dedans, une phrase et un choix : dire ce que vous pensez, ou voir ce que les autres cachent. »"
+    text: "Madame Josiane, une enveloppe : « Il a laissé ça pour vous, {toi}. Dedans, une phrase et un choix : dire ce que vous pensez, ou voir ce que les autres cachent. »"
     left:
       label: "Franc-parler"
-      effects: {set: [franc_parler]}
+      effects: {set: [franc_parler], journal: {text: "{annee} : Brian Clow a laissé une enveloppe à {nom}. Dedans, une phrase et un choix : le franc-parler.", poids: 3, tags: [moment, direction]}}
       answer: "La phrase : « Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un. » Tu la dis en conférence samedi. Ménèche note."
     right:
       label: "Nez à joueurs"
-      effects: {set: [nez_a_joueurs]}
+      effects: {set: [nez_a_joueurs], journal: {text: "{annee} : Brian Clow a laissé une enveloppe à {nom}. Dedans, une phrase et un choix : le nez à joueurs.", poids: 3, tags: [moment, direction]}}
       answer: "La phrase : « Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un. » Tu la gardes. Tu regardes les autres, désormais."
 
   - id: en.clow.testament_ingrat
@@ -148,14 +148,14 @@ cards:
     speaker: meneche
     tone: leger
     cooldown: 14
-    text: "Ménèche, micro posé sur la table : « Trois questions, un journaliste gentil. Juste une question, hors micro. L'objectif, vous y croyez ou vous le dites ? »"
+    text: "Ménèche, micro posé sur la table : « Trois questions, un journaliste gentil. Juste une question, hors micro. L'objectif, {nom}, vous y croyez ou vous le dites ? »"
     left:
       label: "Je ne commente pas"
-      effects: {var: {no_comment: "+1"}, tribunes: "-", direction: "+", outcome: no_comment}
+      effects: {var: {no_comment: "+1"}, tribunes: "-", direction: "+", outcome: no_comment, react: en.re.meneche_embuscade, journal: {text: "{annee} : conférence de presse. « Je ne commente pas », a dit {nom}. Ménèche a noté le silence.", poids: 1, tags: [presse]}}
       answer: "Il note le silence. Il note toujours. Le président apprécie qu'on note peu."
     right:
       label: "Franchement"
-      effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}, outcome: franc}
+      effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}, outcome: franc, set: [presse_franc], journal: {text: "{annee} : conférence de presse. « Franchement », a dit {nom}. Titre du samedi, avec un point d'interrogation.", poids: 1, tags: [presse]}}
       answer: "Il note « franchement ». Le mot sort en titre samedi, avec un point d'interrogation."
 
   # --------------------------------------------------- le mème (routine S1+)

@@ -1,6 +1,10 @@
 # Cartes de l'intrigue « La cote du promu » (arcs/entraineur/cote_du_promu.yaml).
 # L'empire et la cote sont les anciennes ancres A2 et A3 du script du promu ;
 # l'encaissement est la conséquence, en quatre variantes.
+# Le nom du joueur : Aulard le dit à l'empire ({toi} → « {nom} »), Josiane à
+# l'encaissement ; jamais à la cote, entre les deux. Réactions : Josiane et le
+# chèque non daté (empire ← budget), Ménèche qui compte les « projet » (empire
+# → projet), Ménèche en embuscade (cote → je ne commente pas).
 cards:
   # 1 · L'empire — Aulard vend le rêve
   - id: en.cote.empire
@@ -10,14 +14,14 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard : « Un promu, ça fait rêver. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
+    text: "Aulard : « Un promu, ça fait rêver, {toi}. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
     left:
       label: "Un budget, ou rien"
-      effects: {caisse: "+", direction: "--", relation: {aulard: -1}}
+      effects: {caisse: "+", direction: "--", relation: {aulard: -1}, react: en.re.josiane_cheque, journal: {text: "{annee} : « Un budget, ou rien. » Le président a signé un chèque pour {nom}. Sans le dater.", poids: 2, tags: [direction, caisse]}}
       answer: "Il signe un chèque. Il ne le date pas."
     right:
       label: "Un projet, et le maintien"
-      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}}
+      effects: {direction: "++", parole: 1, promise: true, set: [projet_promis], relation: {aulard: 1}, react: en.re.meneche_projet}
       answer: "Il répète « projet » à trois journalistes avant le parking."
 
   # 2 · La cote — Ménèche vend la cote
@@ -35,7 +39,7 @@ cards:
       answer: "Il note la somme. Il note toujours."
     right:
       label: "Je ne commente pas"
-      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, direction: "+"}
+      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, direction: "+", journal: {text: "{annee} : cinq mille contre un pour le titre. {nom} n'a pas commenté la cote ; Ménèche a noté le silence.", poids: 1, tags: [presse]}}
       answer: "Il note le silence."
 
   # 3 · L'encaissement — le pari tient (classement de l'instant ≤ 13)
@@ -49,11 +53,11 @@ cards:
     text: "Ménèche, votre ticket entre deux doigts : « Cent francs sur le maintien, et le maintien tient. Juste une question, hors micro. Vous encaissez, ou vous laissez courir ? »"
     left:
       label: "J'encaisse"
-      effects: {caisse: "+", tribunes: "+", outcome: pari_tenu, relation: {meneche: 1}}
+      effects: {caisse: "+", tribunes: "+", outcome: pari_tenu, relation: {meneche: 1}, journal: {text: "{annee} : {nom} a encaissé cent francs à cinq mille contre un. Photo du ticket en Une.", poids: 2, tags: [presse, caisse]}}
       answer: "Il photographie le ticket. La Une de demain a sa photo."
     right:
       label: "Je laisse courir"
-      effects: {tribunes: "++", parole: 1, outcome: pari_tenu}
+      effects: {tribunes: "++", parole: 1, outcome: pari_tenu, journal: {text: "{annee} : le pari tenait ; {nom} a laissé courir. Le virage a appris le mot « courir » et l'a aimé.", poids: 2, tags: [presse, tribunes]}}
       answer: "Le virage apprend le mot « courir ». Il l'aime."
 
   # 3 · L'encaissement — le pari est mal parti
@@ -67,11 +71,11 @@ cards:
     text: "Ménèche, sans ticket : « Cent francs sur le maintien, et le classement dit autre chose. Juste une question, hors micro. Vous doublez ? »"
     left:
       label: "Je double"
-      effects: {tribunes: "+", caisse: "-", parole: -1, outcome: pari_perdu}
+      effects: {tribunes: "+", caisse: "-", parole: -1, outcome: pari_perdu, journal: {text: "{annee} : le pari était mal parti ; {nom} a doublé. Ménèche a noté la perte, il note surtout celles-là.", poids: 2, tags: [presse, caisse]}}
       answer: "Il note. Il note toujours, surtout les pertes."
     right:
       label: "Je ne joue plus"
-      effects: {direction: "+", tribunes: "-", outcome: pari_perdu, relation: {meneche: -1}}
+      effects: {direction: "+", tribunes: "-", outcome: pari_perdu, relation: {meneche: -1}, journal: {text: "{annee} : « Il ne joue plus », a titré Ménèche. Aulard a découpé l'article.", poids: 2, tags: [presse, direction]}}
       answer: "Titre du lendemain : « Il ne joue plus ». Aulard découpe l'article."
 
   # 3 · L'encaissement — le projet promis au président
@@ -85,11 +89,11 @@ cards:
     text: "Ménèche, calepin ouvert : « Le président dit « projet » depuis août. Juste une question, hors micro. Le projet, en un mot ? »"
     left:
       label: "Le maintien"
-      effects: {parole: 1, direction: "-", outcome: jamais_parie, relation: {meneche: 1}}
+      effects: {parole: 1, direction: "-", outcome: jamais_parie, relation: {meneche: 1}, journal: {text: "{annee} : « Le projet, en un mot ? — Le maintien. » {nom} l'a dit, Ménèche l'a écrit en gros.", poids: 2, tags: [presse, direction]}}
       answer: "Un mot. Il l'écrit en gros."
     right:
       label: "Le Top 10"
-      effects: {tribunes: "++", direction: "+", parole: -1, outcome: jamais_parie}
+      effects: {tribunes: "++", direction: "+", parole: -1, outcome: jamais_parie, journal: {text: "{annee} : « Le projet, en un mot ? — Le Top 10. » Deux mots ; Aulard les a répétés à trois journalistes.", poids: 2, tags: [presse, direction]}}
       answer: "Deux mots. Aulard les répète à trois journalistes."
 
   # 3 · L'encaissement — personne n'a parié : Josiane affiche les cotes
@@ -100,10 +104,10 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, un bordereau à la main : « Le bookmaker a envoyé les cotes de janvier. Cinq cents contre un, maintenant. J'en ai vu passer, vous savez. On les affiche au vestiaire ? »"
+    text: "Madame Josiane, un bordereau à la main : « Le bookmaker a envoyé les cotes de janvier, {toi}. Cinq cents contre un, maintenant. J'en ai vu passer, vous savez. On les affiche au vestiaire ? »"
     left:
       label: "On affiche"
-      effects: {vestiaire: "+", tribunes: "+", outcome: jamais_parie}
+      effects: {vestiaire: "+", tribunes: "+", outcome: jamais_parie, journal: {text: "{annee} : cinq cents contre un en janvier. Les cotes affichées au vestiaire ; Bréhaut les a encadrées.", poids: 1, tags: [caisse, vestiaire]}}
       answer: "Le vestiaire lit la cote. Bréhaut l'encadre."
     right:
       label: "On jette"

@@ -347,6 +347,8 @@ void main() {
       expect(s2.reactionsThisSeason, 1);
       expect(s2.lastSpeaker, 'josiane');
       expect(s2.seenCount['re.josiane'], 1);
+      // Inventaire Rng (spec §3.9) : un react sans `chance` et une réaction servie = 0 appel.
+      expect(s2.rngState, s.rngState, reason: 'réaction servie = 0 appel au Rng');
       // La réplique ne touche pas la file ni l'arc ; le beat reprend ensuite.
       final s3 = e.choose(s2, true);
       expect(s3.beat, s2.beat, reason: 'le swipe d\'une réaction ne ré-avance pas le beat');
@@ -830,5 +832,90 @@ void main() {
       expect(objs.map((x) => x['atteint']), [true, false]);
       expect(s.journal.where((x) => x.kind == 'objectif').length, 1, reason: 'pas de doublon à la fin');
     });
+  });
+
+  group('J · journal de carrière (performance)', () {
+    test('J4 · 360 entrées d\'Almanach : le clone du journal coûte moins de 1 ms par swipe (contenu réel)', () {
+      final e = Engine(_real());
+      // Une carrière de 30 saisons compactée : 30 × 12 entrées immuables,
+      // greffées sur des carrières réelles jusqu'à 200 swipes chronométrés.
+      GameState fresh(int seed) {
+        final s = e.start(seed, postulat: 0);
+        for (var season = 0; season < 30; season++) {
+          for (var i = 1; i <= 12; i++) {
+            s.journal.add(JournalEntry(season: season, year: 1990 + season, slot: i, kind: 'carte', text: 'Saison $season, ligne $i.', poids: 1 + i % 3));
+          }
+        }
+        expect(s.journal.length, 360);
+        return s;
+      }
+
+      var s = fresh(7);
+      for (var i = 0; i < 20 && !s.over; i++) {
+        s = e.choose(s, _bot(s, i)); // échauffement
+      }
+      final sw = Stopwatch();
+      int swipes = 0, seed = 8;
+      while (swipes < 200) {
+        if (s.over) s = fresh(seed++);
+        sw.start();
+        s = e.choose(s, _bot(s, swipes));
+        sw.stop();
+        swipes++;
+        expect(s.journal.length, greaterThanOrEqualTo(360 - 12), reason: 'seule la saison courante est compactée en cours de route');
+      }
+      final perSwipe = sw.elapsedMicroseconds / swipes / 1000;
+      expect(perSwipe, lessThan(1.0), reason: '${perSwipe.toStringAsFixed(3)} ms par swipe à ${s.journal.length} entrées');
+    });
+  });
+
+  group('L · lint', () {
+    test('L1 · {toi} sans speaker, nom dans un libellé, titre > 44 rendu, placeholder inconnu = erreurs de lint (fixture)', () async {
+      final root = _repoRoot();
+      final tmp = Directory('${Directory.systemTemp.path}/fusible_l1_${DateTime.now().microsecondsSinceEpoch}')..createSync(recursive: true);
+      try {
+        Future<void> copy(Directory from, Directory to) async {
+          to.createSync(recursive: true);
+          for (final x in from.listSync()) {
+            final name = x.path.split('/').last;
+            if (x is Directory) {
+              if (name == 'build') continue;
+              await copy(x, Directory('${to.path}/$name'));
+            } else if (x is File) {
+              x.copySync('${to.path}/$name');
+            }
+          }
+        }
+
+        await copy(Directory('$root/content'), Directory('${tmp.path}/content'));
+        // 1. Une Nouvelle sans locuteur qui dit {toi} ; 2. le nom dans un libellé.
+        final nv = File('${tmp.path}/content/cards/common/co_nouvelles.yaml');
+        var txt = nv.readAsStringSync();
+        expect(txt, contains('    speaker: meneche\n    cooldown: 25\n    text: "Ménèche : « Un fonds lointain'));
+        txt = txt.replaceFirst('    speaker: meneche\n    cooldown: 25\n    text: "Ménèche : « Un fonds lointain',
+            '    cooldown: 25\n    text: "Ménèche : « Un fonds lointain, {toi},');
+        txt = txt.replaceFirst('left: {label: "Prendre acte"', 'left: {label: "Merci {prenom}"');
+        nv.writeAsStringSync(txt);
+        // 3. Un titre de Une trop long une fois rendu ; 4. un placeholder inconnu dans un sous-titre.
+        final unes = File('${tmp.path}/content/unes.yaml');
+        var u = unes.readAsStringSync();
+        expect(u, contains('    titre: "LE BILAN DE {NOM}"\n'));
+        u = u.replaceFirst('    titre: "LE BILAN DE {NOM}"\n', '    titre: "LE BILAN DE {NOM}, ENTRAÎNEUR DE {CLUB}"\n');
+        u = u.replaceFirst('{club} termine {rang}e.', '{club} termine {rangg}e.');
+        unes.writeAsStringSync(u);
+        final b = await Process.run('dart', ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
+        expect(b.exitCode, 0, reason: 'le build accepte (ce sont des contrôles de lint) : ${b.stderr}');
+        final r = await Process.run('dart', ['$root/packages/tools/bin/lint.dart'], workingDirectory: tmp.path);
+        expect(r.exitCode, 1, reason: 'stdout: ${r.stdout}\nstderr: ${r.stderr}');
+        final err = r.stderr.toString();
+        expect(err, contains('co.nouvelle.fonds_voisins: `{toi}` sans `speaker`'));
+        expect(err, contains('co.nouvelle.arbitrage_video/left: le nom du joueur n\'entre jamais dans un libellé'));
+        expect(err, contains('unes.yaml/une.generic.bilan: titre de'));
+        expect(err, contains('caractères rendu (> 44)'));
+        expect(err, contains('unes.yaml/une.generic.bilan: placeholder inconnu {rangg}'));
+      } finally {
+        tmp.deleteSync(recursive: true);
+      }
+    }, timeout: const Timeout(Duration(minutes: 3)));
   });
 }

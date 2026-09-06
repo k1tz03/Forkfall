@@ -1,6 +1,9 @@
 # Cartes d'étape de l'arc « Le vieux gardien » (content/arcs/entraineur/vieux_gardien.yaml).
 # Toutes sont des étapes (kind: etape dérivé par le build), jamais dans le sac.
 # `arc:` est le THÈME de la carte, pas l'id de l'arc.
+# Gigi dit toujours « coach » (c'est le personnage : son adresse ne cite pas le
+# nom) ; le nom vit dans les lignes d'Almanach. Traces : vecchio_promis,
+# gardien_jeune, gigi_staff.
 cards:
   # ------------------------------------------------------------- E1 · retraite
   # Escalier du rituel (plays >= 1) : « encore une ».
@@ -13,11 +16,11 @@ cards:
     text: "Vecchio, gants sous le bras : « Ma retraite en juin, je l'ai prise. Elle n'a pas pris. Encore une, coach, la dernière. J'en ai vu d'autres, des dernières. Dans les buts, ou tout court ? »"
     left:
       label: "Dans les buts, encore"
-      effects: {vestiaire: "+", force: -2, parole: 1, promise: true, set: [vecchio_promis], var: {vecchio_retraites: "+1"}, relation: {vecchio: 2}, outcome: finale}
+      effects: {vestiaire: "+", force: -2, parole: 1, promise: true, set: [vecchio_promis], var: {vecchio_retraites: "+1"}, relation: {vecchio: 2}, outcome: finale, journal: {text: "{annee} : encore une saison dans les buts pour Gigi Vecchio. {nom} a promis. Encore.", poids: 2, tags: [vestiaire, formation]}}
       answer: "Il range ses gants. Il les ressort. Il en a vu d'autres, des juin."
     right:
       label: "Coach des gardiens, janvier"
-      effects: {force: 2, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune}
+      effects: {force: 2, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune, journal: {text: "{annee} : Gigi Vecchio, coach des gardiens en janvier. Le jeune avait déjà ses gants.", poids: 1, tags: [vestiaire, formation]}}
       answer: "Il ne dit rien. Le jeune a déjà ses gants ; ce sont les siens."
 
   # Escalier du rituel (plays >= 2) : « cette fois c'est vrai ».
@@ -34,7 +37,7 @@ cards:
       answer: "Il pose les gants sur ton bureau. Il les reprendra pour les montrer."
     right:
       label: "Bon vent, Gigi"
-      effects: {vestiaire: "-", force: 1, relation: {vecchio: -1}, outcome: parti, next: end}
+      effects: {vestiaire: "-", force: 1, relation: {vecchio: -1}, outcome: parti, next: end, journal: {text: "{annee} : Gigi Vecchio a raccroché pour de vrai. « Bon vent », a dit {nom}. Il en avait vu d'autres, des bons vents.", poids: 3, tags: [vestiaire]}}
       answer: "Il ne dit rien. Il en a vu d'autres, des bons vents."
 
   - id: en.vieux.retraite
@@ -63,7 +66,7 @@ cards:
     text: "Vecchio, le bras raide : « Un coup sur l'épaule en sortant dans les pieds. Le doc dit que ça reste entre la table et lui ; moi je te le dis. Tu me sors ? »"
     left:
       label: "Tu joues, tu décides"
-      effects: {force: -3, relation: {vecchio: 1, sabatier: -1}}
+      effects: {force: -3, relation: {vecchio: 1, sabatier: -1}, journal: {text: "{annee} : Gigi Vecchio a joué d'un bras. Le doc n'a plus salué {nom}, mais il a regardé le match.", poids: 2, tags: [vestiaire, moment]}}
       answer: "Il joue d'un bras. Le doc ne te salue plus, mais il regarde le match."
     right:
       label: "Repos forcé"
@@ -80,7 +83,7 @@ cards:
     text: "Vecchio, à la reprise : « J'ai pris ma retraite en juin. Elle n'a pas pris. J'en ai vu d'autres, des gardiens de quarante-deux ans. Enfin, un. »"
     left:
       label: "Bienvenue, Gigi"
-      effects: {vestiaire: "++", var: {vecchio_retraites: "+1"}, relation: {vecchio: 1}}
+      effects: {vestiaire: "++", var: {vecchio_retraites: "+1"}, relation: {vecchio: 1}, journal: {text: "{annee} : Gigi Vecchio est revenu de sa retraite. Son casier l'attendait ; personne n'y avait touché.", poids: 2, tags: [vestiaire, moment]}}
       answer: "Il range ses gants dans son casier. Le même. Personne n'y avait touché."
     right:
       label: "Le staff, cette fois"
@@ -96,11 +99,11 @@ cards:
     text: "Vecchio, sac sur l'épaule : « Je signe chez {rival}. Ils m'ont demandé, eux. J'en ai vu d'autres, des entraîneurs. »"
     left:
       label: "Reste, je m'excuse"
-      effects: {vestiaire: "+", caisse: "-", relation: {vecchio: 2}}
+      effects: {vestiaire: "+", caisse: "-", relation: {vecchio: 2}, journal: {text: "{annee} : {nom} s'est excusé{pg, select, f{e} other{}} auprès de Gigi Vecchio. Il a posé le sac. Il est resté.", poids: 2, tags: [vestiaire]}}
       answer: "Il pose le sac. Il ne dit pas oui. Il reste."
     right:
       label: "Bon vent"
-      effects: {vestiaire: "--", force: 1, outcome: parti}
+      effects: {vestiaire: "--", force: 1, outcome: parti, journal: {text: "{annee} : Gigi Vecchio a signé chez {rival}. Son casier est resté vide jusqu'en octobre.", poids: 3, tags: [vestiaire, mercato]}}
       answer: "Il part sans un mot. Son casier reste vide jusqu'en octobre."
 
   # ---------------------------------------------- E4 · bus (deux variantes, S2)
@@ -115,11 +118,11 @@ cards:
     text: "Vecchio, porte du bus : « Les gars parlent de ne pas descendre dimanche. J'en ai vu d'autres. Pas celle-là. Je descends le premier si tu montes leur parler. »"
     left:
       label: "Je monte"
-      effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}}
+      effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}, journal: {text: "{annee} : le bus. {nom} est monté{pg, select, f{e} other{}} parler ; Gigi Vecchio est descendu le premier.", poids: 2, tags: [vestiaire]}}
       answer: "Gigi descend le premier. Les autres suivent, un par un, sans un mot."
     right:
       label: "Qu'ils restent dedans"
-      effects: {vestiaire: "--", direction: "+"}
+      effects: {vestiaire: "--", direction: "+", journal: {text: "{annee} : le bus est resté fermé. Gigi Vecchio est descendu seul et a attendu sur le parking.", poids: 2, tags: [vestiaire]}}
       answer: "Gigi descend seul. Il attend sur le parking."
 
   # La même scène sans menace : le vestiaire va bien, Gigi descend le premier
@@ -133,9 +136,9 @@ cards:
     text: "Vecchio, sur le parking : « Les gars parlaient de rester dans le bus dimanche, pour rire. Je suis descendu le premier, ils ont suivi. J'en ai vu d'autres. »"
     left:
       label: "Je monte quand même"
-      effects: {vestiaire: "++", direction: "-", relation: {vecchio: 1}}
+      effects: {vestiaire: "++", direction: "-", relation: {vecchio: 1}, journal: {text: "{annee} : {nom} est monté{pg, select, f{e} other{}} dans un bus vide. Le parking a applaudi.", poids: 1, tags: [vestiaire, absurde]}}
       answer: "Tu montes dans un bus vide. Ils applaudissent depuis le parking."
     right:
       label: "Je les laisse rire"
-      effects: {vestiaire: "+", tribunes: "+"}
+      effects: {vestiaire: "+", tribunes: "+", journal: {text: "{annee} : le bus est arrivé au stade en chantant. Le chauffeur aussi.", poids: 1, tags: [vestiaire, absurde]}}
       answer: "Le bus arrive au stade en chantant. Le chauffeur aussi."

@@ -2,6 +2,11 @@
 # (content/arcs/entraineur/kop.yaml), plus les deux paliers de relation de
 # Gégé (characters.yaml → on_relation, kind palier dérivé par le build).
 # Toutes hors du sac. `arc:` est le THÈME de la carte, pas l'id de l'arc.
+# Le nom du joueur : sur les étapes 1 et 3 (local, pacte / banderoles) et
+# l'anniversaire, jamais sur deux étapes consécutives ; Gégé dit {toi}
+# ({prenom} quand il t'aime, « coach », {nom} quand il ne t'aime plus).
+# Réactions : Camille après le local (← j'y vais), Bréhaut après le onze
+# (← le peuple a raison). Traces : onze_du_virage, pacte_gege, ami_ultras.
 cards:
   # ---------------------------------------------------------------- D1 · local
   # Variante « encore » (relance, plays >= 1) : le virage a déjà voté une fois.
@@ -11,14 +16,14 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: leger
-    text: "Gégé, écharpe au cou : « Le local a repeint le mur. Le virage a voté ton équipe une fois, il recommencerait bien. Tu passes boire un coup ? La tribune n'oublie rien. »"
+    text: "Gégé, écharpe au cou : « Le local a repeint le mur. Le virage a voté ton équipe une fois, il recommencerait bien. Tu passes boire un coup, {toi} ? La tribune n'oublie rien. »"
     left:
       label: "J'y vais"
-      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 1}}
+      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 1}, react: en.re.camille_le_verre, journal: {text: "{annee} : deux bières au local. La compo était déjà au tableau, à la craie.", poids: 1, tags: [ultras]}}
       answer: "Deux bières. La compo est déjà au tableau, à la craie."
     right:
       label: "Pas ce soir"
-      effects: {tribunes: "-", relation: {gege: -1}}
+      effects: {tribunes: "-", relation: {gege: -1}, journal: {text: "{annee} : {nom} n'est pas repassé{pg, select, f{e} other{}} au local. Le mur a gardé la craie.", poids: 1, tags: [ultras]}}
       answer: "Il range l'écharpe. Le mur garde la craie."
 
   # Variante « encore » (relance, plays >= 1).
@@ -28,14 +33,14 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: leger
-    text: "Gégé, écharpe au cou : « Encore une saison, encore un tifo. La tribune n'oublie rien, coach. Surtout pas ceux qui reviennent. Tu passes au local ? »"
+    text: "Gégé, écharpe au cou : « Encore une saison, encore un tifo. La tribune n'oublie rien, {toi}. Surtout pas ceux qui reviennent. Tu passes au local ? »"
     left:
       label: "J'y vais"
-      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 1}}
+      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 1}, react: en.re.camille_le_verre, journal: {text: "{annee} : encore un tifo, encore trois bières au local. Le nom de {nom} en plus grand que l'an dernier.", poids: 1, tags: [ultras]}}
       answer: "Trois bières. Le tifo a ton nom, en plus grand que l'an dernier."
     right:
       label: "Pas ce soir"
-      effects: {tribunes: "-", relation: {gege: -1}}
+      effects: {tribunes: "-", relation: {gege: -1}, journal: {text: "{annee} : encore un tifo, encore un refus. {nom} n'est pas passé{pg, select, f{e} other{}} au local ; la tribune a noté.", poids: 1, tags: [ultras]}}
       answer: "Il note. La tribune note toujours."
 
   - id: en.kop.local
@@ -47,11 +52,11 @@ cards:
     text: "Gégé, écharpe au cou : « On te fait un tifo. Tu passes boire un coup au local ? La tribune n'oublie rien. Surtout ceux qui viennent. »"
     left:
       label: "J'y vais"
-      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 2}}
+      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 2}, react: en.re.camille_le_verre}
       answer: "Trois bières plus tard, tu es adopté. Tribune à quatre-vingt-dix."
     right:
       label: "Pas ce soir"
-      effects: {tribunes: "-", relation: {gege: -1}}
+      effects: {tribunes: "-", relation: {gege: -1}, journal: {text: "{annee} : {nom} n'est pas passé{pg, select, f{e} other{}} au local du virage. Gégé a fini sa bière seul. Il a compté.", poids: 2, tags: [ultras, tribunes]}}
       answer: "Il finit sa bière seul. Il compte."
 
   # ----------------------------------------------------------------- D2 · onze
@@ -64,11 +69,11 @@ cards:
     text: "Gégé, bulletin en main : « Le virage a voté ton équipe : Vecchio aux buts, le petit devant, le gars du Nord au banc. La tribune n'oublie rien. Tu écoutes ? »"
     left:
       label: "Le peuple a raison"
-      effects: {tribunes: "++", vestiaire: "--", direction: "-", set: [onze_du_virage]}
+      effects: {tribunes: "++", vestiaire: "--", direction: "-", set: [onze_du_virage], react: en.re.brehaut_onze}
       answer: "Le président lit la compo dans le journal. Avant toi."
     right:
       label: "C'est moi qui compose"
-      effects: {tribunes: "--", vestiaire: "+", relation: {gege: -1}}
+      effects: {tribunes: "--", vestiaire: "+", relation: {gege: -1}, journal: {text: "{annee} : « C'est moi qui compose », a dit {nom} au virage. Gégé a noté la phrase.", poids: 2, tags: [ultras, vestiaire]}}
       answer: "Gégé note la phrase. Il note tout."
 
   - id: en.kop.onze_froid
@@ -80,11 +85,11 @@ cards:
     text: "Gégé, seul sous la bâche : « Le virage a voté ton équipe, et il a voté à main levée, et il y avait peu de mains. Tu écoutes ce qu'il en reste ? »"
     left:
       label: "Ce qu'il en reste a raison"
-      effects: {tribunes: "+", vestiaire: "--", set: [onze_du_virage]}
+      effects: {tribunes: "+", vestiaire: "--", set: [onze_du_virage], react: en.re.brehaut_onze}
       answer: "Douze personnes applaudissent la compo. Le vestiaire les compte."
     right:
       label: "C'est moi qui compose"
-      effects: {tribunes: "-", vestiaire: "+", relation: {gege: -1}}
+      effects: {tribunes: "-", vestiaire: "+", relation: {gege: -1}, journal: {text: "{annee} : douze mains levées pour une compo. {nom} a composé seul{pg, select, f{e} other{}} ; Gégé a replié le bulletin.", poids: 1, tags: [ultras]}}
       answer: "Il replie le bulletin. Il le garde."
 
   # ---------------------------------------------------------------- D3a · pacte
@@ -94,14 +99,14 @@ cards:
     tags: [ultras, tribunes, chaine]
     speaker: gege
     tone: strategique
-    text: "Gégé, solennel : « Un pacte : le local rénové cette saison, et ton nom chanté dans toute la ville. La tribune n'oublie rien. Tape là. »"
+    text: "Gégé, solennel : « Un pacte : le local rénové cette saison, et « {nom} » chanté dans toute la ville. La tribune n'oublie rien. Tape là. »"
     left:
       label: "Je serre la main, promis"
       effects: {tribunes: "++", parole: 2, promise: true, set: [pacte_gege]}
       answer: "Il grave la date sur le mur du local. À la craie, pour l'instant."
     right:
       label: "Pas de promesse en l'air"
-      effects: {tribunes: "-", relation: {gege: -1}, next: {step: banderoles, in: [5, 9]}}
+      effects: {tribunes: "-", relation: {gege: -1}, next: {step: banderoles, in: [5, 9]}, journal: {text: "{annee} : pas de pacte avec le virage. Gégé a gardé la main tendue une seconde de trop.", poids: 2, tags: [ultras]}}
       answer: "Il garde la main tendue une seconde de trop. Puis il la range."
 
   - id: en.kop.pacte_suite
@@ -113,11 +118,11 @@ cards:
     text: "Gégé, le mur du local encore nu : « Le pacte, coach. La tribune n'oublie rien. On efface la craie, ou on l'écrit en dur ? »"
     left:
       label: "Je tiens parole, on rénove"
-      effects: {caisse: "--", tribunes: "++", clear: [pacte_gege], relation: {gege: 1}}
+      effects: {caisse: "--", tribunes: "++", clear: [pacte_gege], relation: {gege: 1}, journal: {text: "{annee} : le local du virage repeint, promesse tenue. Josiane a senti la facture avant la peinture.", poids: 2, tags: [ultras, caisse]}}
       answer: "Le local sent la peinture fraîche et la fierté. Josiane sent la facture."
     right:
       label: "Plus tard, on a le temps"
-      effects: {tribunes: "---", parole: -2, clear: [pacte_gege], relation: {gege: -2}}
+      effects: {tribunes: "---", parole: -2, clear: [pacte_gege], relation: {gege: -2}, journal: {text: "{annee} : le pacte effacé. La craie est devenue une banderole, avec une date dessus.", poids: 3, tags: [ultras, tribunes]}}
       answer: "La craie devient une banderole. Elle a ta date dessus."
 
   # ----------------------------------------------------------- D3b · banderoles
@@ -127,14 +132,14 @@ cards:
     tags: [ultras, tribunes, presse]
     speaker: gege
     tone: strategique
-    text: "Gégé, deux bâches roulées : « J'ai deux banderoles prêtes. Une qui t'adore, une qui te vire. La tribune n'oublie rien. Laquelle je déroule ? »"
+    text: "Gégé, deux bâches roulées : « J'ai deux banderoles prêtes, {toi}. Une qui t'adore, une qui te vire. La tribune n'oublie rien. Laquelle je déroule ? »"
     left:
       label: "Je m'explique au local"
-      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}, journal: {text: "{annee} : deux heures au local pour une bâche. La mauvaise est restée roulée. Pour l'instant.", poids: 1, tags: [ultras]}}
       answer: "Deux heures au local. La mauvaise bâche reste roulée. Pour l'instant."
     right:
       label: "Le terrain répondra"
-      effects: {tribunes: "--", force: 2}
+      effects: {tribunes: "--", force: 2, journal: {text: "{annee} : Gégé a déroulé la mauvaise bâche. {nom} a répondu par le terrain.", poids: 2, tags: [ultras, tribunes]}}
       answer: "Il déroule la mauvaise. Dimanche, on verra pour l'autre."
 
   # ---------------------------------------------------- D4 · anniversaire (S2)
@@ -144,14 +149,14 @@ cards:
     tags: [ultras, tribunes, moment]
     speaker: gege
     tone: leger
-    text: "Gégé, radieux : « Dix ans du virage, samedi. On t'a gardé une place au milieu, pas en tribune d'honneur. La tribune n'oublie rien, coach. »"
+    text: "Gégé, radieux : « Dix ans du virage, samedi. On t'a gardé une place au milieu, pas en tribune d'honneur. La tribune n'oublie rien. »"
     left:
       label: "J'y serai"
-      effects: {tribunes: "++", direction: "-"}
+      effects: {tribunes: "++", direction: "-", journal: {text: "{annee} : dix ans du virage. {nom} a chanté faux au milieu de la tribune Nord ; le président regardait.", poids: 2, tags: [ultras, moment]}}
       answer: "Tu chantes faux au milieu du virage. Le président te voit depuis la loge."
     right:
       label: "Je serai sur le banc"
-      effects: {tribunes: "+"}
+      effects: {tribunes: "+", journal: {text: "{annee} : dix ans du virage. {nom} sur le banc ; la tribune a chanté depuis sa place.", poids: 1, tags: [ultras, moment]}}
       answer: "Ils chantent ton nom depuis leur place. Tu l'entends depuis la tienne."
 
   - id: en.kop.anniversaire_bache
@@ -167,7 +172,7 @@ cards:
       answer: "Une bière, pas trois. La bâche reste pliée, ton nom dedans."
     right:
       label: "Qu'ils la déploient"
-      effects: {tribunes: "---", vestiaire: "+", outcome: bache}
+      effects: {tribunes: "---", vestiaire: "+", outcome: bache, journal: {text: "{annee} : dix ans du virage, douze mètres de bâche au nom de {nom}. Pas pour le fêter.", poids: 3, tags: [ultras, tribunes]}}
       answer: "Douze mètres à ton nom. Le reste tient sur huit."
 
   - id: en.kop.anniversaire_neutre
@@ -179,11 +184,11 @@ cards:
     text: "Gégé, un appareil photo : « Dix ans du virage, samedi. Photo avec tous les coachs qu'on a eus. Il reste de la place : ils sont partis vite. »"
     left:
       label: "Je pose avec vous"
-      effects: {tribunes: "+", relation: {gege: 1}}
+      effects: {tribunes: "+", relation: {gege: 1}, journal: {text: "{annee} : dix ans du virage. {nom} au troisième rang de la photo des coachs. Le troisième rang, c'est déjà une saison.", poids: 1, tags: [ultras, moment]}}
       answer: "Tu es au troisième rang. Le troisième rang, c'est déjà une saison."
     right:
       label: "Sans moi, faites la fête"
-      effects: {tribunes: "-", direction: "+"}
+      effects: {tribunes: "-", direction: "+", journal: {text: "{annee} : dix ans du virage. La photo des coachs s'est faite sans {nom} ; un vide au troisième rang.", poids: 1, tags: [ultras, moment]}}
       answer: "La photo se fait sans toi. Ils laissent un vide au troisième rang."
 
   # Les paliers de relation de Gégé (en.gege.trahison_banderole −3,

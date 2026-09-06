@@ -1,0 +1,333 @@
+# Cartes-réactions de l'entraîneur (spec variété §1.4, §4.1) : servies AU
+# TIRAGE SUIVANT le swipe qui les pose (effet `react:` d'un choix), hors
+# créneau (bande 8), sans avancer le beat ni le slot. Le build dérive
+# `kind: reaction` de toute carte citée par un `react` : ne pas écrire `kind:`.
+# Trois familles : la relance (le même visage revient à la charge), la
+# conséquence immédiate (le fax, le numéro, la douche), le tiers qui commente
+# (Camille, Bréhaut, Vukić). Effets petits, une carte chacune, jamais `end`,
+# jamais `react`, jamais `drame`. Les déclencheurs sont cités en commentaire ;
+# une même réaction peut être posée par plusieurs cartes.
+#
+# Le nom du joueur : une réaction qui suit une carte nominative (A1, A4,
+# l'empire, le prêt, la rentrée) ne porte ni {toi} ni {prenom} — jamais deux
+# cartes de suite avec le nom (spec §1.8). Les autres disent {toi} quand la
+# bouche s'y prête (Bréhaut après le onze, Aulard après la veille).
+cards:
+  # ================================================================ A1 · L'inventaire
+  # ← les maillots : Josiane revient à la charge (relance).
+  - id: en.re.josiane_chauffage
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, dans l'encadrement de la porte : « Le chauffage, j'en ai vu passer. Des maillots neufs, jamais. Je commande les gants, au moins ? »"
+    left:
+      label: "Commandez les gants"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Elle note. Vingt-deux paires. Elle en commande vingt-trois."
+    right:
+      label: "Ils ont des poches"
+      effects: {relation: {josiane: -1}, tribunes: "+"}
+      answer: "Elle note aussi. Elle note toujours."
+
+  # → le chauffage : Gégé au parking (le tiers qui commente).
+  - id: en.re.gege_chauffage
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé, sur le parking, moteur allumé : « Chauffage. On a lu le mot dans le journal. On a compté les manches longues. La tribune n'oublie rien, et elle a froid aussi. »"
+    left:
+      label: "Je passe au local"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
+      answer: "Une bière. Le radiateur du local ne marche pas non plus."
+    right:
+      label: "Le vestiaire d'abord"
+      effects: {vestiaire: "+", relation: {gege: -1}}
+      answer: "Il coupe le moteur. Il note quelque chose sur le pare-brise embué."
+
+  # ================================================================ A4 · La Commission
+  # ← on vend le gamin : Aulard lit son SMS (conséquence immédiate).
+  - id: en.re.aulard_sms_brouillon
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: leger
+    text: "Aulard, dans le couloir : « J'ai écrit un SMS à Fardelli. Je te le lis. Il y a une faute, tu la vois ? »"
+    left:
+      label: "Je la corrige"
+      effects: {relation: {aulard: 1}}
+      answer: "Il corrige. Il envoie. Il ne relit pas."
+    right:
+      label: "Envoie"
+      effects: {direction: "+", parole: -1}
+      answer: "Fardelli répond en trente secondes. Avec la même faute."
+
+  # → on trouve un sponsor : Josiane a composé le numéro (conséquence immédiate).
+  - id: en.re.josiane_numero
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, le combiné contre l'épaule : « Ça sonne. Il est trois heures du matin là-bas, il paraît que c'est l'heure où ils signent. Je laisse sonner ? »"
+    left:
+      label: "Laissez sonner"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Quelqu'un décroche. Il dit « actif » avant de dire bonjour."
+    right:
+      label: "Raccrochez, on rappelle"
+      effects: {relation: {josiane: 1}, direction: "-"}
+      answer: "Elle raccroche. Le fax sonne à sa place. Il a déjà le numéro."
+
+  # ================================================================ A6 · Le dernier virage
+  # ← on attaque : Bréhaut a entendu (le tiers qui commente).
+  - id: en.re.brehaut_on_attaque
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut, à la porte du vestiaire : « Le groupe a entendu « on attaque ». Le groupe vit bien. Le groupe demande juste : avec qui, devant ? »"
+    left:
+      label: "Le petit"
+      effects: {tribunes: "+", relation: {mbako: 1}}
+      answer: "Il hoche la tête. Il va prévenir les anciens lui-même."
+    right:
+      label: "Les anciens"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Il sourit. Le petit range ses crampons sans un mot."
+
+  # → on ferme, on assure : Vukić a vu la bâche de Gégé (le tiers qui commente).
+  - id: en.re.vukic_bloc_bas
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić, la porte à peine fermée : « Je te le dis parce que personne ne te le dira. Gégé a lu « fermer ». Il a une bâche prête, roulée sous le siège. On ferme quand même ? »"
+    left:
+      label: "On ferme"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Bloc bas. La bâche reste roulée jusqu'à la soixantième minute."
+    right:
+      label: "On ouvre un peu"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Un attaquant de plus sur la feuille. Le président relit la feuille."
+
+  # ================================================================ La cote du promu
+  # empire ← un budget : Josiane et le chèque non daté (relance).
+  - id: en.re.josiane_cheque
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, le chèque du bout des doigts : « Il n'est pas daté. J'en ai vu passer, vous savez. Je le date de quand ? »"
+    left:
+      label: "D'aujourd'hui"
+      effects: {caisse: "+", relation: {aulard: -1}}
+      answer: "Elle date. Elle encaisse. Le président apprend le mot « aujourd'hui »."
+    right:
+      label: "De quand il faudra"
+      effects: {relation: {josiane: 1}}
+      answer: "Elle le range dans le tiroir du milieu. Celui qui ferme à clé."
+
+  # empire → un projet : Ménèche compte les « projet » (le tiers qui commente).
+  - id: en.re.meneche_projet
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    tone: leger
+    text: "Ménèche, déjà au parking : « Le président a dit « projet » trois fois entre la salle et la voiture. Juste une question, hors micro : vous, vous l'avez dit combien de fois ? »"
+    left:
+      label: "Zéro"
+      effects: {parole: 1, relation: {aulard: -1}}
+      answer: "Il note « zéro ». Le président lit le chiffre le lendemain, entouré."
+    right:
+      label: "Autant que lui"
+      effects: {direction: "+", parole: -1}
+      answer: "Il note « quatre ». Il arrondit toujours vers le haut."
+
+  # ================================================================ Le kop qui t'aime trop
+  # local ← j'y vais : Camille à une heure du matin (le tiers qui commente).
+  - id: en.re.camille_le_verre
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, ultras]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce')"
+    text: "Camille, dans la cuisine, lumière éteinte : « Tu rentres à quelle heure ? Il est une heure. Tu sens la bière et la tribune. »"
+    left:
+      label: "Je t'explique"
+      effects: {relation: {camille: 1}, tribunes: "-"}
+      answer: "Tu expliques le local, Gégé, la craie. Elle rallume la lumière pour t'écouter."
+    right:
+      label: "C'est le métier"
+      effects: {relation: {camille: -1}}
+      answer: "Elle éteint la lumière du couloir. Tu trouves le lit quand même."
+
+  # onze ← le peuple a raison : Bréhaut a lu la compo (le tiers qui commente).
+  - id: en.re.brehaut_onze
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, ultras]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut, le journal plié en deux : « Le groupe vit bien. Le groupe a lu la compo dans le journal. Avant toi, {toi}. »"
+    left:
+      label: "Je sais"
+      effects: {vestiaire: "-"}
+      answer: "Il pose le journal sur ton bureau. Compo vers le haut."
+    right:
+      label: "Je sais"
+      effects: {vestiaire: "-"}
+      answer: "Il pose le journal sur ton bureau. Compo vers le haut."
+
+  # ================================================================ Le prodige
+  # gamin (les deux côtés) : Fardelli a déjà le gamin (conséquence immédiate).
+  - id: en.re.fardelli_numero
+    roles: [entraineur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli, cigare éteint, dans l'escalier : « Mon ami, on parle d'argent ou d'amitié ? Le gamin a un agent depuis ce matin. C'est moi. »"
+    left:
+      label: "Bienvenue au club"
+      effects: {set: [mbako_agent_fardelli], relation: {fardelli: 1}}
+      answer: "Il rallume le cigare. Il a le numéro de la mère, elle a le sien."
+    right:
+      label: "Bienvenue au club"
+      effects: {set: [mbako_agent_fardelli], relation: {fardelli: 1}}
+      answer: "Il rallume le cigare. Il a le numéro de la mère, elle a le sien."
+
+  # ================================================================ Le sponsor qui devient propriétaire
+  # maillot → va pour l'orange : la mère de Mbako (le tiers qui commente).
+  - id: en.re.mere_orange
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, agents]
+    speaker: mere_mbako
+    tone: strategique
+    text: "La mère de Mbako, un maillot orange à bout de bras : « Mon fils ne portera pas une boisson. Mon fils n'a besoin de personne. Surtout pas d'orange. »"
+    left:
+      label: "Le maillot est le maillot"
+      effects: {relation: {mbako: -1}}
+      answer: "Elle plie le maillot. Elle le plie très bien, et très longtemps."
+    right:
+      label: "Un maillot blanc pour lui"
+      effects: {caisse: "-", relation: {mbako: 1}}
+      answer: "Un maillot blanc, sans sponsor. Nassir compte les manches sur la photo."
+
+  # maillot ← sacré · naming ← garde son nom · prêt ← ni le petit ni le club : Nassir reviendra (relance).
+  - id: en.re.nassir_reviendrons
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: nassir
+    tone: leger
+    text: "Cheikh Nassir, la canette dans la poche : « Nous reviendrons. Un actif attend ; il ne vieillit pas. Ce n'est pas un club, c'est un actif. »"
+    left:
+      label: "On vous raccompagne"
+      effects: {tribunes: "+"}
+      answer: "Gégé tient la porte. Il la tient jusqu'à ce que la voiture tourne."
+    right:
+      label: "On vous raccompagne"
+      effects: {tribunes: "+"}
+      answer: "Gégé tient la porte. Il la tient jusqu'à ce que la voiture tourne."
+
+  # ================================================================ L'alarme du bus
+  # vestiaire_bas_vukic → qu'ils restent dedans : Gigi descend seul (le tiers qui agit).
+  - id: en.re.vecchio_bus
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio, un pied sur le marchepied : « J'en ai vu d'autres. Pas celle-là. Je descends, coach. Seul. »"
+    left:
+      label: "Descends, Gigi"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il descend. Il attend sur le parking, gants sous le bras. Deux autres finissent par suivre."
+    right:
+      label: "Descends, Gigi"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il descend. Il attend sur le parking, gants sous le bras. Deux autres finissent par suivre."
+
+  # ================================================================ La presse
+  # trois_questions ← je ne commente pas · cote → je ne commente pas · marque → je ne commente pas :
+  # Ménèche en embuscade au parking (relance).
+  - id: en.re.meneche_embuscade
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: meneche
+    tone: leger
+    text: "Ménèche, entre deux voitures : « Hors micro, cette fois pour de vrai. Le micro est dans la voiture. Vous y croyez ? »"
+    left:
+      label: "Non. Ne l'écrivez pas"
+      effects: {relation: {meneche: 1}, direction: "-"}
+      answer: "Il ne l'écrit pas. Il le garde. Il garde tout."
+    right:
+      label: "Je ne commente pas non plus"
+      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}}
+      answer: "Il note le silence. Deux silences, même hors micro, ça fait un titre."
+
+  # ================================================================ Saisons 3+ · la rentrée
+  # rentree ← un café et les comptes : Josiane et la page rouge (relance).
+  - id: en.re.josiane_page_rouge
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, le classeur ouvert : « La couleur de plus, c'est le rouge. Je vous montre la page rouge, ou vous finissez votre café d'abord ? »"
+    left:
+      label: "La page rouge"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Un chiffre, souligné deux fois. Elle referme avant que tu le recopies."
+    right:
+      label: "Le café d'abord"
+      effects: {vestiaire: "+", relation: {josiane: -1}}
+      answer: "Le café refroidit. La page rouge, non."
+
+  # ================================================================ Saisons 3+ · la veille
+  # veille → on joue le sien : Vukić a le second discours (relance).
+  - id: en.re.vukic_second_discours
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić, une feuille pliée en quatre : « Et le second discours, tu veux le lire ? Je te le dis parce que personne ne te le dira : il est déjà imprimé. »"
+    left:
+      label: "Je le lis"
+      effects: {direction: "-", relation: {vukic: 1}}
+      answer: "Ton nom n'y est pas. Le sien, en bas, en petit."
+    right:
+      label: "Je ne veux pas savoir"
+      effects: {vestiaire: "+"}
+      answer: "Il replie la feuille. Il la garde dans la poche du survêtement, côté cœur."
+
+  # veille ← on joue le nôtre : Aulard garde le sien (relance).
+  - id: en.re.aulard_le_mien
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    text: "Aulard, au téléphone, sans dire bonjour : « Vukić me dit que tu joues le tien. J'ai pas le temps, j'ai un empire. Le mien, je le garde dans la poche. Tu veux savoir ce qu'il dit ? »"
+    left:
+      label: "Non"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il raccroche. Il rappelle pour dire qu'il ne rappellera pas."
+    right:
+      label: "Lisez-le-moi"
+      effects: {direction: "+", relation: {aulard: 1}}
+      answer: "Il lit. « {nom} », une fois, entre deux virgules."

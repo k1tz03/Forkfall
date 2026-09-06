@@ -12,14 +12,14 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard, debout : « Trois défaites de suite. Le prochain bloc est un ultimatum. J'ai déjà le numéro de ton remplaçant, il est dans mon écurie de trot. »"
+    text: "Aulard, debout : « Trois défaites de suite, {toi}. Le prochain bloc est un ultimatum. J'ai déjà le numéro de ton remplaçant, il est dans mon écurie de trot. »"
     left:
       label: "On attaque à outrance"
-      effects: {force: 4, vestiaire: "-", set: [ultimatum], next: {step: verdict, in: [2, 4]}}
+      effects: {force: 4, vestiaire: "-", set: [ultimatum], next: {step: verdict, in: [2, 4]}, journal: {text: "{annee} : l'ultimatum du président. {nom} a attaqué à outrance ; le vestiaire a appris le mot.", poids: 2, tags: [direction]}}
       answer: "Le vestiaire apprend le mot « outrance ». Le président apprend la date."
     right:
       label: "Bloc bas, on assure"
-      effects: {tribunes: "--", direction: "+", next: end}
+      effects: {tribunes: "--", direction: "+", next: end, journal: {text: "{annee} : l'ultimatum du président. Bloc bas, on assure ; Gégé a appris le mot par la presse.", poids: 2, tags: [direction]}}
       answer: "Gégé apprend « bloc bas » par la presse. Aulard range le numéro. Pas loin."
 
   # Verdict, variante noire : la série continue.
@@ -51,11 +51,11 @@ cards:
     text: "Aulard, bras ouvert : « Je parle de toi comme de mon fils. Mon vrai fils est furieux. J'ai pas le temps, j'ai un empire : tu montes dans la loge ? »"
     left:
       label: "Je monte, président"
-      effects: {direction: "+++", set: [homme_president], relation: {aulard: 1}}
+      effects: {direction: "+++", set: [homme_president], relation: {aulard: 1}, journal: {text: "{annee} : {nom} est monté{pg, select, f{e} other{}} dans la loge du président. Le vrai fils a laissé sa chaise.", poids: 3, tags: [direction]}}
       answer: "Le vrai fils quitte la loge. Tu prends sa chaise, encore chaude."
     right:
       label: "Je reste sur le banc"
-      effects: {direction: "+", vestiaire: "+", relation: {aulard: -1}}
+      effects: {direction: "+", vestiaire: "+", relation: {aulard: -1}, journal: {text: "{annee} : le président a offert sa loge. {nom} est resté{pg, select, f{e} other{}} sur le banc ; le mot a été noté.", poids: 2, tags: [direction]}}
       answer: "Il rit. Il note quand même le mot « banc »."
 
   # ================================================ 2 · La voiture du président
@@ -69,11 +69,11 @@ cards:
     text: "Vukić, essoufflé : « Je te le dis parce que personne ne te le dira. Le vestiaire a brûlé la voiture du président. Il t'attend au parking avec ton contrat. »"
     left:
       label: "Je couvre les gars"
-      effects: {vestiaire: "+++", direction: "---", relation: {aulard: -2}, set: [voiture_couverte]}
+      effects: {vestiaire: "+++", direction: "---", relation: {aulard: -2}, set: [voiture_couverte], journal: {text: "{annee} : la voiture du président a brûlé. {nom} a couvert le vestiaire ; le président a relu le contrat, page trois.", poids: 3, tags: [vestiaire, direction]}}
       answer: "Le vestiaire t'applaudit. Le président lit ton contrat à voix haute, page trois."
     right:
       label: "Je livre les coupables"
-      effects: {vestiaire: "---", direction: "++", relation: {brehaut: -1}}
+      effects: {vestiaire: "---", direction: "++", relation: {brehaut: -1}, journal: {text: "{annee} : la voiture du président a brûlé. Trois noms sur un papier, écrits par {nom} sous le regard de Bréhaut.", poids: 3, tags: [vestiaire, direction]}}
       answer: "Trois noms sur un papier. Bréhaut te regarde les écrire."
 
   # ===================================================== 3 · La tribune vétuste
@@ -84,14 +84,14 @@ cards:
     speaker: aubert
     tone: strategique
     once: true
-    text: "Madame Aubert, un rapport à la main : « La tribune Nord ne tient plus. Les travaux coûtent une saison de recettes. Le stade, c'est de l'argent public. »"
+    text: "Madame Aubert, un rapport à la main : « La tribune Nord ne tient plus, {toi}. Les travaux coûtent une saison de recettes. Le stade, c'est de l'argent public. »"
     left:
       label: "On ferme la tribune"
-      effects: {tribunes: "---", caisse: "-", relation: {gege: -1}, set: [tribune_fermee], next: end}
+      effects: {tribunes: "---", caisse: "-", relation: {gege: -1}, set: [tribune_fermee], next: end, journal: {text: "{annee} : {nom} a fermé la tribune Nord. Gégé chante depuis la Sud, moins fort.", poids: 3, tags: [tribunes]}}
       answer: "Gégé chante depuis la tribune Sud. Moins fort. Il compte les absents."
     right:
       label: "On verra l'été prochain"
-      effects: {var: {tribune_ignoree: "+1"}}
+      effects: {var: {tribune_ignoree: "+1"}, journal: {text: "{annee} : la tribune Nord ne tient plus. « L'été prochain », a dit {nom}. Madame Aubert a gardé la date.", poids: 2, tags: [tribunes]}}
       answer: "Elle range le rapport. Elle garde la date."
 
   - id: en.evt.tribune_rappel
@@ -140,7 +140,7 @@ cards:
     text: "Madame Aubert, un arrêté à la main : « La préfecture a signé. La tribune Nord ferme demain, sans vous demander. Le stade, c'est de l'argent public. »"
     left:
       label: "On ferme"
-      effects: {tribunes: "--", set: [tribune_fermee]}
+      effects: {tribunes: "--", set: [tribune_fermee], journal: {text: "{annee} : la préfecture a fermé la tribune Nord un mardi. Gégé a accroché son écharpe aux grilles.", poids: 3, tags: [tribunes]}}
       answer: "Les grilles se ferment un mardi. Gégé accroche son écharpe dessus."
     right:
       label: "On ferme"
@@ -158,12 +158,52 @@ cards:
     text: "Madame Josiane, tiroir vide : « Gérard tenait la buvette et la caisse depuis vingt ans. Il est en Thaïlande. La caisse aussi. J'en ai vu passer, vous savez. »"
     left:
       label: "On porte plainte"
-      effects: {direction: "+", caisse: "--", tribunes: "-"}
+      effects: {direction: "+", caisse: "--", tribunes: "-", journal: {text: "{annee} : Gérard a fui en Thaïlande avec la caisse de la buvette. {nom} a porté plainte.", poids: 2, tags: [caisse, absurde]}}
       answer: "Le journal titre sur la buvette. Les abonnés apprennent le mot « détournement »."
     right:
       label: "On étouffe, on refait"
-      effects: {caisse: "---", vestiaire: "+"}
+      effects: {caisse: "---", vestiaire: "+", journal: {text: "{annee} : Gérard a fui en Thaïlande avec la caisse de la buvette. Bréhaut a tenu la buvette le samedi.", poids: 2, tags: [caisse, absurde]}}
       answer: "Bréhaut tient la buvette le samedi. Le groupe vit bien, et boit gratis."
+
+  # ============================================================= 5 · L'enveloppe
+  # Un intermédiaire — Fardelli a « un ami » — propose que trois joueurs de
+  # {rival} lèvent le pied avant le dernier bloc (spec §4.1 n° 13, version
+  # courte : deux temps). Accepter pose la trace `enveloppe_rival` ; la
+  # Fédération examine à l'étape suivante, et assumer conclut la carrière
+  # (fin en_valise, spec §1.13). Sobre : aucun nom, aucune somme.
+  - id: en.evt.enveloppe
+    roles: [entraineur]
+    arc: mercato
+    tags: [agents, scandale, risk:direction]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, sans cigare, sans sourire : « J'ai un ami. Trois joueurs de {rival} pourraient lever le pied au dernier bloc. Mon ami, on parle d'argent ou d'amitié ? Là, des deux. »"
+    left:
+      label: "Jamais"
+      effects: {direction: "-", tribunes: "+", relation: {fardelli: -2}, set: [enveloppe_refusee], next: end}
+      answer: "Il remet son cigare. Il ne le rallume pas. Il ne rappelle pas non plus."
+    right:
+      label: "Combien"
+      effects: {caisse: "--", force: 3, parole: -1, relation: {fardelli: 1}, set: [enveloppe_rival]}
+      answer: "Il ne dit pas de chiffre. Il dit une date : le dernier bloc. Une enveloppe change de poche."
+
+  - id: en.evt.enveloppe_federation
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, risk:direction]
+    speaker: legruet
+    tone: strategique
+    once: true
+    text: "Legruet, sans son tampon : « Un joueur de {rival} a parlé, {toi}. Trois joueurs, une enveloppe, un dernier bloc. La Fédération examine. On verra ça après le Congrès — ou maintenant. »"
+    left:
+      label: "Je nie tout"
+      effects: {direction: "--", tribunes: "-", parole: -2, set: [enveloppe_niee], enemy: [legruet]}
+      answer: "Il note « nie ». Le Congrès est dans six mois. Le dossier, sur son bureau, dès lundi."
+    right:
+      label: "J'assume"
+      effects: {end: en_valise}
+      answer: "Il tamponne. Il n'attend pas le Congrès."
 
   # ================================== alarme de surcharge · caisse basse, Nassir
   # Servie avant en.alarme.caisse_bas_josiane dans le postulat « Le promu sans
@@ -182,7 +222,7 @@ cards:
       label: "On prend, même baissée"
       # Pas de `nassir_palier` ici : seules les cartes de l'arc C posent le
       # palier (sinon un joueur qui refuse le prêt partait quand même au rachat).
-      effects: {caisse: "+++", tribunes: "-", relation: {nassir: 1}}
+      effects: {caisse: "+++", tribunes: "-", relation: {nassir: 1}, journal: {text: "{annee} : l'offre de Nassir, « un peu baissée », acceptée. Le virement est arrivé avant le fax.", poids: 2, tags: [sponsors, caisse]}}
       answer: "Le virement arrive avant le fax. Josiane classe le fax quand même."
     right:
       label: "On serre les dents"

@@ -9,8 +9,73 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fusible_core/fusible_core.dart' show kKnownCalls, kKnownPathPrefixes, kKnownPaths;
+import 'package:fusible_core/fusible_core.dart' show kKnownCalls, kKnownPathPrefixes, kKnownPaths, kKnownPlaceholders, kNamePlaceholders, placeholdersOf;
 import 'package:yaml/yaml.dart';
+
+/// Valeurs de rendu du lint pour la longueur des manchettes (spec variété
+/// §2.4) : un nom de 16 lettres, une ville de 12, le club le plus long.
+const Map<String, String> kSampleVars = {
+  'NOM': 'BRÉHAUT-LEMOINE',
+  'nom': 'Bréhaut-Lemoine',
+  'prenom': 'Marie-Josèphe',
+  'initiales': 'MB',
+  'joueur': 'Marie-Josèphe Bréhaut-Lemoine',
+  'protagoniste': 'Marie-Josèphe Bréhaut-Lemoine',
+  'toi': 'monsieur Bréhaut-Lemoine',
+  'Toi': 'Monsieur Bréhaut-Lemoine',
+  'numero': '10',
+  'VILLE': 'SAINT-ÉTOILE',
+  'ville': 'Saint-Étoile',
+  'CLUB': 'OLYMPIQUE SAINT-ÉTOILE',
+  'club': 'Olympique Saint-Étoile',
+  'clubShort': 'Saint-Étoile',
+  'rival': 'Sporting Valentienne',
+  'president': 'Aulard',
+  'capitaine': 'Bréhaut',
+  'coach': 'Jean-Pierre Vasseur',
+  'rang': '18',
+  'pts': '100',
+  'annee': '1990',
+  'saison': '10',
+  'objectif': 'Le maintien',
+  'tenu': 'manqué',
+  'TENU': 'MANQUÉ',
+  'division': 'Division 2',
+  'age': '65',
+  'camille_metier': 'journaliste',
+  'passe_titre': 'Le vieux gardien',
+  'fil_rouge': 'president',
+  'perso': 'Madame Josiane',
+  'perso_tic': 'J\'en ai vu passer, vous savez.',
+  'objectif_titre': 'Deux maintiens de suite',
+  'fin_titre': 'Le SMS de 23h47',
+};
+
+final RegExp _selectRe = RegExp(r'\{(pg|sg),\s*select,?\s*((?:\w+\{[^{}]*\}\s*)+)\}');
+final RegExp _branchRe = RegExp(r'(\w+)\{([^{}]*)\}');
+final RegExp _simpleRe = RegExp(r'\{(\w+)\}');
+
+/// Rend un gabarit avec les valeurs de `kSampleVars` : chaque `select` prend
+/// sa branche la plus longue, chaque `{x}` connu sa valeur d'exemple.
+String renderSample(String tpl) {
+  var t = tpl.replaceAllMapped(_selectRe, (m) {
+    String longest = '';
+    for (final b in _branchRe.allMatches(m.group(2)!)) {
+      if (b.group(2)!.length > longest.length) longest = b.group(2)!;
+    }
+    return longest;
+  });
+  for (var depth = 0; depth < 2; depth++) {
+    t = t.replaceAllMapped(_simpleRe, (m) => kSampleVars[m.group(1)] ?? m.group(0)!);
+  }
+  return t;
+}
+
+/// Placeholders inconnus d'un gabarit (hors `select`, hors `age_<id>`).
+Iterable<String> unknownPlaceholders(String tpl, Set<String> known) =>
+    placeholdersOf(tpl).where((p) => !known.contains(p) && !p.startsWith('age_'));
+
+bool hasNamePlaceholder(String tpl) => placeholdersOf(tpl).any(kNamePlaceholders.contains);
 
 late String contentDir;
 
@@ -63,6 +128,8 @@ void main() {
 
   final flagsWritten = <String>{...kEngineFlags};
   final flagsRead = <String>{};
+  final knownPlaceholders = <String>{...kKnownPlaceholders};
+  final nameCardsByRole = <String, int>{}; // cartes du rôle portant le nom (budget §3.7)
 
   // --- AST scanning: flags read, and the `when` vocabulary (L20).
   void scanAst(Object? node, String where) {
@@ -138,6 +205,28 @@ void main() {
       if (lower.contains(bad)) errors.add('$id: nom/marque réel(le) interdit(e) "$bad"');
     }
     scanAst(card['when'], '$id/when');
+    // Le nom du joueur (spec variété §1.8, §3.7) : `{toi}` exige un locuteur ;
+    // jamais dans un libellé de bouton ; au plus une fois par carte (avertissement) ;
+    // aucun placeholder inconnu dans les textes servis.
+    final answers = [for (final side in ['left', 'right']) (card[side] as Map)['answer']?.toString() ?? ''];
+    final labels = [for (final side in ['left', 'right']) (card[side] as Map)['label'].toString()];
+    for (final t in [text, ...answers, ...labels]) {
+      final ph = placeholdersOf(t);
+      if ((ph.contains('toi') || ph.contains('Toi')) && speaker == null) errors.add('$id: `{toi}` sans `speaker` (l\'adresse est celle du locuteur)');
+      for (final u in unknownPlaceholders(t, knownPlaceholders)) {
+        errors.add('$id: placeholder inconnu {$u}');
+      }
+    }
+    for (var i = 0; i < 2; i++) {
+      if (hasNamePlaceholder(labels[i])) errors.add('$id/${i == 0 ? 'left' : 'right'}: le nom du joueur n\'entre jamais dans un libellé de bouton');
+    }
+    final nameHits = RegExp(r'\{(prenom|nom|NOM|initiales|toi|Toi|joueur|protagoniste)\}').allMatches(text).length;
+    if (nameHits > 1) warnings.add('$id: le nom du joueur apparaît $nameHits fois dans le texte (une fois au plus)');
+    if (hasNamePlaceholder(text) || answers.any(hasNamePlaceholder)) {
+      for (final r in card['roles'] as List) {
+        nameCardsByRole[r.toString()] = (nameCardsByRole[r.toString()] ?? 0) + 1;
+      }
+    }
     // Narrative shape.
     if ((card['tags'] as List).contains('nouvelle') && card['arc'] != 'nouvelle' && card['kind'] != 'passe') {
       warnings.add('$id: tag « nouvelle » sur une carte dont l\'arc n\'est pas « nouvelle » (ne sera pas une respiration)');
@@ -235,6 +324,90 @@ void main() {
       for (final v in variants as List) {
         scanAst((v as Map)['if'], 'characters/${ch['id']}/on_relation/$t');
       }
+    });
+  }
+
+  // --- La Une, le journal, les épitaphes, les adresses (spec variété §2.4-2.6,
+  // §3.7) : placeholders connus seulement ; titre ≤ 44 caractères rendu avec un
+  // nom de 16 lettres et une ville de 12 ; `when` sans les drapeaux de la
+  // saison précédente ; ≥ 2 secours ; {NOM}/{CLUB}/{VILLE} dans ≥ 50 % des
+  // manchettes (avertissement).
+  final unes = (bundle['unes'] as List? ?? const []).cast<Map<String, dynamic>>();
+  int unesNamed = 0;
+  bool readsFlag(Object? node, Set<String> names) {
+    if (node is! List || node.isEmpty) return false;
+    if (node[0] == 'call' && node.length > 2 && node[1] == 'flag') {
+      final args = node[2];
+      if (args is List && args.isNotEmpty && args[0] is List && (args[0] as List)[0] == 'lit' && names.contains((args[0] as List)[1].toString())) return true;
+    }
+    if (node[0] == 'path' && node.length > 1) {
+      final p = node[1].toString();
+      if (names.contains(p) || (p.startsWith('flags.') && names.contains(p.substring(6)))) return true;
+    }
+    return node.any((c) => readsFlag(c, names));
+  }
+
+  for (final u in unes) {
+    final uid = u['id'].toString();
+    scanAst(u['when'], 'unes.yaml/$uid/when');
+    if (readsFlag(u['when'], const {'bilan_tenu', 'bilan_manque', 'world.rang_final'})) {
+      errors.add('unes.yaml/$uid: `when` lit bilan_tenu / bilan_manque / world.rang_final (valeurs de la saison précédente) : utiliser bilan.tenu / bilan.rang');
+    }
+    for (final v in (u['react'] as List?) ?? const []) {
+      scanAst((v as Map)['if'], 'unes.yaml/$uid/react');
+      if (!cardIds.contains(v['card'].toString())) errors.add('unes.yaml/$uid: react vers une carte inexistante « ${v['card']} »');
+    }
+    final titre = u['titre'].toString();
+    final sous = u['sous']?.toString() ?? '';
+    for (final t in [titre, sous]) {
+      for (final p in unknownPlaceholders(t, knownPlaceholders)) {
+        errors.add('unes.yaml/$uid: placeholder inconnu {$p}');
+      }
+    }
+    final rendered = renderSample(titre);
+    if (rendered.length > 44) errors.add('unes.yaml/$uid: titre de ${rendered.length} caractères rendu (> 44) : « $rendered »');
+    if (u['photo'] != null && !cardIds.contains(u['photo'].toString())) errors.add('unes.yaml/$uid: photo vers une carte inexistante « ${u['photo']} »');
+    final ph = placeholdersOf(titre);
+    if (ph.contains('NOM') || ph.contains('CLUB') || ph.contains('VILLE')) unesNamed += 1;
+    final lower = '$titre $sous'.toLowerCase();
+    for (final bad in kBlacklist) {
+      if (lower.contains(bad)) errors.add('unes.yaml/$uid: nom/marque réel(le) interdit(e) "$bad"');
+    }
+  }
+  if (unes.isNotEmpty && unesNamed < unes.length / 2) {
+    warnings.add('unes.yaml: {NOM} ou {CLUB}/{VILLE} dans $unesNamed manchette(s) sur ${unes.length} (attendu ≥ 50 %)');
+  }
+  final journaux = (bundle['journaux'] as List? ?? const []).cast<Map<String, dynamic>>();
+  for (final j in journaux) {
+    for (final p in unknownPlaceholders(j['nom'].toString(), knownPlaceholders)) {
+      errors.add('unes.yaml/journaux/${j['id']}: placeholder inconnu {$p}');
+    }
+  }
+  ((bundle['journal_templates'] as Map?) ?? const {}).forEach((k, v) {
+    for (final p in unknownPlaceholders(v.toString(), knownPlaceholders)) {
+      errors.add('journal.yaml/auto/$k: placeholder inconnu {$p}');
+    }
+  });
+  for (final e in (bundle['endings'] as List).cast<Map<String, dynamic>>()) {
+    final eid = e['id'];
+    for (final p in unknownPlaceholders(e['epitaph'].toString(), knownPlaceholders)) {
+      errors.add('endings/$eid: placeholder inconnu {$p}');
+    }
+    for (final v in (e['epitaph_plus'] as List?) ?? const []) {
+      final vm = v as Map;
+      scanAst(vm['when'], 'endings/$eid/epitaph_plus');
+      for (final p in unknownPlaceholders(vm['text'].toString(), knownPlaceholders)) {
+        errors.add('endings/$eid/epitaph_plus: placeholder inconnu {$p}');
+      }
+    }
+  }
+  for (final ch in chars) {
+    ((ch['adresse'] as Map?) ?? const {}).forEach((role, byExpr) {
+      (byExpr as Map).forEach((expr, tpl) {
+        for (final p in unknownPlaceholders(tpl.toString(), knownPlaceholders)) {
+          errors.add('characters/${ch['id']}/adresse/$role/$expr: placeholder inconnu {$p}');
+        }
+      });
     });
   }
 
@@ -338,6 +511,23 @@ void main() {
       final n = poolArcs.where((id) => (arcById[id]?['cast'] as List? ?? const []).contains(ch)).length;
       budget(n >= 2, '« $ch » est au casting mais porteur ou cast de $n intrigue(s) (attendu ≥ 2)');
     }
+    // Étape 2 (spec variété §3.7) : réactions, manchettes (dont sur des traces), cartes portant le nom.
+    final role = p['role'].toString();
+    final reactions = cards.where((c) => c['kind'] == 'reaction' && (c['roles'] as List).contains(role)).length;
+    budget(reactions >= 8, '$reactions réaction(s) pour le rôle $role (attendu ≥ 8)');
+    final traceNames = <String>{};
+    for (final arcId in poolArcs) {
+      traceNames.addAll(((arcById[arcId]?['traces'] as Map?) ?? const {}).keys.map((k) => k.toString()));
+    }
+    final mine = unes.where((u) {
+      final ps = (u['postulats'] as List?) ?? const [];
+      final rs = (u['roles'] as List?) ?? const [];
+      return (ps.isEmpty || ps.contains(pid)) && (rs.isEmpty || rs.contains(role));
+    }).toList();
+    final onTraces = mine.where((u) => readsFlag(u['when'], traceNames)).length;
+    budget(mine.length >= 10 && onTraces >= 3, '${mine.length} manchette(s) dont $onTraces sur des traces du postulat (attendu ≥ 10 dont ≥ 3)');
+    final named = nameCardsByRole[role] ?? 0;
+    budget(named >= 25, '$named carte(s) du rôle $role portant le nom du joueur (attendu ≥ 25)');
   }
 
   // Flags declared but never referenced, and read-but-never-written.

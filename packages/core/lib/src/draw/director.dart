@@ -887,8 +887,15 @@ class Director {
       s.storyThisSeason += 1;
     }
     if (band == 2 && sc?.kind == 'etape') s.softStepsThisSeason += 1;
+    String? unlockedStory;
     if (sc != null && sc.arc != null && const {'script', 'etape', 'evenement'}.contains(sc.kind)) {
       final st = s.arcs[sc.arc!] ??= ArcState(status: 'active', startedSeason: s.season);
+      // Bandeau « Nouvelle histoire » (spec variété §3.8) : première étape d'une
+      // intrigue jamais jouée jusqu'au bout.
+      final arcDef = content.arcs[sc.arc!];
+      if (sc.kind == 'etape' && arcDef != null && arcDef.kind == 'serie' && st.plays == 0 && arcDef.steps.isNotEmpty && arcDef.steps.first.id == sc.step) {
+        unlockedStory = arcDef.title ?? arcDef.id;
+      }
       st.status = 'active';
       s.lastArcId = sc.arc;
       if (sc.kind == 'script') {
@@ -931,6 +938,7 @@ class Director {
       if (sc?.step != null) 'step': sc!.step,
       'tone': card.tone,
       if (forced) 'forced': true,
+      if (unlockedStory != null) 'unlocked_story': unlockedStory,
     };
     return toPending(s, card, phase, rng, extra);
   }

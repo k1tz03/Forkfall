@@ -1,8 +1,8 @@
-# Cartes-réactions (spec variété §1.4, §2.3) : servies AU TIRAGE SUIVANT le
-# swipe qui les pose (effet `react:` d'un choix, ou `react:` d'une manchette
-# de unes.yaml), hors créneau (bande 8), sans avancer le beat, le slot ni
-# `ncards`. Le build dérive `kind: reaction` de toute carte citée par un
-# `react` : ne pas écrire `kind:`. Une réaction a un `speaker` obligatoire,
+# Cartes-réactions communes (spec variété §1.4, §2.3) : servies AU TIRAGE
+# SUIVANT le swipe qui les pose (effet `react:` d'un choix, ou `react:` d'une
+# manchette de unes.yaml), hors créneau (bande 8), sans avancer le beat, le
+# slot ni `ncards`. Le build dérive `kind: reaction` de toute carte citée par
+# un `react` : ne pas écrire `kind:`. Une réaction a un `speaker` obligatoire,
 # jamais `end`, jamais `react`, jamais `tone: drame`, des effets petits ;
 # deux sorties identiques = un seul bouton. Plafond 4 par saison, jamais deux
 # d'affilée. Une même réaction peut être citée par plusieurs déclencheurs.
@@ -11,45 +11,12 @@
 #   effects: { …, react: en.re.josiane_chauffage }
 #   effects: { …, react: [ { card: en.re.aulard_sms_brouillon, if: "relation.aulard >= 0" }, { card: en.re.josiane_numero } ] }
 #   (la dernière variante n'a pas de `if` ; `chance: 0.5` consomme 1 tirage seulement si présent)
-# Le lot de contenu (10 réactions du promu, 6 communes) s'écrit ici et dans
-# content/cards/<role>/reactions.yaml ; l'id est `<role>.re.<qui>_<quoi>` /
-# `co.re.<qui>_<quoi>`.
+# Les réactions propres à un rôle vivent dans content/cards/<role>/reactions.yaml
+# (`<role>.re.<qui>_<quoi>`) ; ici, les `co.re.*` posées par la Une : quelqu'un
+# a lu le journal. Une réaction `once` (Josiane) est guardée par `!seen()` dans
+# le `react` de la manchette, sinon elle serait perdue (miss_reaction).
 cards:
-  # A1 « L'inventaire » ← les maillots : Josiane revient à la charge.
-  - id: en.re.josiane_chauffage
-    roles: [entraineur]
-    arc: caisse
-    tags: [caisse]
-    speaker: josiane
-    tone: leger
-    text: "Madame Josiane, dans l'encadrement de la porte : « Le chauffage, {toi}, j'en ai vu passer. Des maillots neufs, jamais. Je commande les gants ? »"
-    left:
-      label: "Commandez les gants"
-      effects: {caisse: "-", vestiaire: "+"}
-      answer: "Elle note. Vingt-deux paires. Elle en commande vingt-trois."
-    right:
-      label: "Ils ont des poches"
-      effects: {relation: {josiane: -1}, tribunes: "+"}
-      answer: "Elle note aussi. Elle note toujours."
-
-  # A4 « La lettre de la Commission » ← on vend le gamin : Aulard lit son SMS.
-  - id: en.re.aulard_sms_brouillon
-    roles: [entraineur]
-    arc: direction
-    tags: [direction]
-    speaker: aulard
-    tone: leger
-    text: "Aulard, dans le couloir : « J'ai écrit un SMS à Fardelli. Je te le lis, {toi}. Il y a une faute, tu la vois ? »"
-    left:
-      label: "Je la corrige"
-      effects: {relation: {aulard: 1}}
-      answer: "Il corrige. Il envoie. Il ne relit pas."
-    right:
-      label: "Envoie"
-      effects: {direction: "+", parole: -1}
-      answer: "Fardelli répond en trente secondes. Avec la même faute."
-
-  # Toute manchette de priorité ≥ 3 (react de la Une) : Josiane a lu le journal.
+  # Toute manchette de priorité ≥ 2 (react de la Une) : Josiane a lu le journal.
   - id: co.re.josiane_a_lu
     roles: [entraineur, joueur]
     arc: direction
@@ -57,7 +24,7 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, le journal plié en quatre : « J'ai lu. Je l'ai rangé sous les autres, {toi}. J'en ai vu passer, vous savez. »"
+    text: "Madame Josiane, le journal plié en quatre : « J'ai lu. Je l'ai rangé sous les autres. J'en ai vu passer, vous savez. »"
     left:
       label: "Merci, Josiane"
       effects: {direction: "+", relation: {josiane: 1}}
@@ -66,3 +33,55 @@ cards:
       label: "Merci, Josiane"
       effects: {direction: "+", relation: {josiane: 1}}
       answer: "Elle en garde un exemplaire. Pour le dossier."
+
+  # Une manchette, Gigi dans le couloir : il garde celle-là.
+  - id: co.re.vecchio_garde
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: vecchio
+    tone: leger
+    text: "Vecchio, le journal sous le bras avec les gants : « J'en ai vu d'autres, des Unes. Celle-là, je la garde. Pas pour moi. »"
+    left:
+      label: "Garde-la, Gigi"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il la plie dans le sac, entre les deux gants. Elle y restera."
+    right:
+      label: "Garde-la, Gigi"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il la plie dans le sac, entre les deux gants. Elle y restera."
+
+  # Une manchette, Camille a lu le journal. Tout le quartier aussi.
+  - id: co.re.camille_journal
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille, presse]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce')"
+    text: "Camille, le journal ouvert sur la table : « Tu rentres à quelle heure ? J'ai lu le journal. La boulangère aussi. Elle m'a fait un prix. »"
+    left:
+      label: "Je rentre tôt"
+      effects: {relation: {camille: 1}, direction: "-"}
+      answer: "Tu rentres tôt. Le journal est encore sur la table. Elle a entouré ton nom."
+    right:
+      label: "Ne le lis pas"
+      effects: {relation: {camille: -1}, vestiaire: "+"}
+      answer: "Elle l'a déjà lu deux fois. La deuxième, à voix haute, pour le chat."
+
+  # Une manchette, Gégé l'a découpée pour le local.
+  - id: co.re.gege_decoupe
+    roles: [entraineur, joueur]
+    arc: ultras
+    tags: [ultras, presse]
+    speaker: gege
+    tone: leger
+    text: "Gégé, des ciseaux à la main : « On a découpé la Une. Elle est au local, au-dessus du bar, à côté des autres. La tribune n'oublie rien. »"
+    left:
+      label: "Je passerai la voir"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Elle est là, entre une coupure de 1987 et une facture de bière."
+    right:
+      label: "Je passerai la voir"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Elle est là, entre une coupure de 1987 et une facture de bière."

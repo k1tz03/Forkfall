@@ -11,7 +11,39 @@
 # 3. La tribune vétuste (Aubert, S2+) : trois rapports ; deux « on verra »
 #    de suite mènent au drame `en.evt.tribune_noir` (fin en_tribune).
 # 4. Gérard a fui (Josiane) : la buvette et la caisse en Thaïlande.
+# 5. L'enveloppe (Fardelli, S1+) : trois joueurs adverses lèvent le pied.
+#    Refuser referme l'arc ; accepter ouvre l'étape Fédération [6,14], où
+#    assumer conclut la carrière (fin en_valise, spec §1.13). Traces :
+#    enveloppe_rival (manchette « La valise »), enveloppe_niee et
+#    enveloppe_refusee (épitaphes).
 arcs:
+  - id: en.evt.enveloppe
+    title: "L'enveloppe"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && gauges.direction < 60 && !flag('enveloppe_refusee')"
+    chance: 0.08
+    cast: [fardelli, legruet]
+    traces:
+      enveloppe_rival:   "{annee} : trois joueurs de {rival} ont levé le pied au dernier bloc. Une enveloppe a changé de poche ; {nom} savait."
+      enveloppe_refusee: "{annee} : Fardelli avait « un ami » et une enveloppe. {prenom} {nom} a dit jamais. Il n'a pas rappelé."
+      enveloppe_niee:    "{annee} : la Fédération a examiné l'enveloppe. {prenom} {nom} a tout nié ; Legruet a noté « nie »."
+    hint: "Fardelli a un ami. L'ami a une enveloppe. Le dernier bloc a un prix."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: enveloppe
+        card: en.evt.enveloppe
+        # « Jamais » pose `next: end` sur la carte ; le défaut sert « Combien ».
+        next: [ { step: federation, in: [6, 14] } ]
+      - id: federation
+        card: en.evt.enveloppe_federation
+        next: []
+
   - id: en.evt.ultimatum
     title: "L'ultimatum"
     kind: evenement

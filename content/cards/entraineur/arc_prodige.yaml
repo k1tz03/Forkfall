@@ -1,6 +1,10 @@
 # Cartes d'étape de l'arc « Le prodige » (content/arcs/entraineur/prodige.yaml).
 # Toutes sont des étapes (kind: etape dérivé par le build), jamais dans le sac.
 # `arc:` est le THÈME de la carte, pas l'id de l'arc.
+# Le nom du joueur : Fardelli dit {toi} (« mon ami {prenom} ») à l'étape 3 et
+# au salaire, jamais à l'offre (collée à l'étape 3). Réaction : Fardelli après
+# le gamin (les deux côtés). Traces : mbako_lance, mbako_vendu, mbako_garde,
+# mbako_mere.
 cards:
   # ---------------------------------------------------------------- B1 · gamin
   - id: en.prodige.gamin_u19
@@ -17,7 +21,7 @@ cards:
       answer: "Seize ans. Le stade apprend son nom en dix minutes."
     right:
       label: "Trop tôt, on le protège"
-      effects: {direction: "+", relation: {mbako: -1}}
+      effects: {direction: "+", relation: {mbako: -1}, react: en.re.fardelli_numero, journal: {text: "{annee} : {nom} a renvoyé Lian Mbako aux U19. « Trop tôt. » Il a regardé ses chaussures.", poids: 2, tags: [formation, vestiaire]}}
       answer: "Il retourne aux U19 sans un mot. Il regarde tes chaussures."
 
   # ----------------------------------------------------------- B2a · maintenant
@@ -35,7 +39,7 @@ cards:
       answer: "Il ne sourit pas. Il va chercher ses crampons."
     right:
       label: "Tu attends ton tour"
-      effects: {direction: "+", relation: {mbako: -1}}
+      effects: {direction: "+", relation: {mbako: -1}, journal: {text: "{annee} : Lian Mbako a demandé à jouer maintenant. {nom} a dit « ton tour ». Il a attendu. Mal.", poids: 2, tags: [vestiaire, formation]}}
       answer: "Il attend. Mal."
 
   # -------------------------------------------------------------- B2b · la_mere
@@ -46,14 +50,14 @@ cards:
     speaker: mere_mbako
     tone: leger
     once: true
-    text: "La mère de Mbako, stylo en main : « Seize ans et un contrat aspirant. Vous le faites jouer, je veux un contrat pro. Mon fils n'a besoin de personne. Je gère. »"
+    text: "La mère de Mbako, stylo en main : « Seize ans et un contrat aspirant. Vous le faites jouer, {toi}, je veux un contrat pro. Mon fils n'a besoin de personne. Je gère. »"
     left:
       label: "Contrat pro, zéro agent"
       effects: {caisse: "-", relation: {mbako: 1}, set: [mbako_mere]}
       answer: "Elle signe en trois exemplaires. Elle a apporté les trois."
     right:
       label: "Fardelli s'en occupe"
-      effects: {caisse: "+", relation: {fardelli: 1, mbako: -1}}
+      effects: {caisse: "+", relation: {fardelli: 1, mbako: -1}, journal: {text: "{annee} : le contrat de Lian Mbako confié à Fardelli. Sa mère avait son numéro depuis mardi.", poids: 2, tags: [agents, formation]}}
       answer: "Elle range son stylo. Elle a le numéro de Fardelli depuis mardi."
 
   # ------------------------------------------------------------- B3 · fardelli
@@ -64,14 +68,14 @@ cards:
     speaker: fardelli
     tone: leger
     once: true
-    text: "Fardelli, cigare éteint : « Mon ami, on parle d'argent ou d'amitié ? Le petit vaut trente millions dans deux ans. Dans deux ans, il ne sera plus à toi. »"
+    text: "Fardelli, cigare éteint : « {Toi}, on parle d'argent ou d'amitié ? Le petit vaut trente millions dans deux ans. Dans deux ans, il ne sera plus à toi. »"
     left:
       label: "On en parle maintenant"
-      effects: {caisse: "+", relation: {fardelli: 1}, set: [commission_vente]}
+      effects: {caisse: "+", relation: {fardelli: 1}, set: [commission_vente], journal: {text: "{annee} : Fardelli a tourné autour du petit Mbako. {nom} a dit « on en parle ». Trois numéros à appeler.", poids: 2, tags: [mercato, agents]}}
       answer: "Il rallume le cigare. Il a déjà trois numéros à appeler."
     right:
       label: "On n'en parle pas"
-      effects: {vestiaire: "+", relation: {fardelli: -1}}
+      effects: {vestiaire: "+", relation: {fardelli: -1}, journal: {text: "{annee} : Fardelli a tourné autour du petit Mbako. {nom} n'en a pas parlé. Fardelli a noté.", poids: 1, tags: [mercato, agents]}}
       answer: "Il range son cigare. Il note quelque chose."
 
   # ---------------------------------------------- B4 · offre (trois variantes)
@@ -138,14 +142,14 @@ cards:
     speaker: meneche
     tone: strategique
     once: true
-    text: "Ménèche, après le match : « Mbako vient de marquer contre vous, et il n'a pas célébré. Il vous a regardé. Juste une question, hors micro. Vous regrettez ? »"
+    text: "Ménèche, après le match : « Mbako vient de marquer contre vous, et il n'a pas célébré. Il vous a regardé{pg, select, f{e} other{}}. Juste une question, hors micro. Vous regrettez ? »"
     left:
       label: "Je regrette"
-      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: 1}}
+      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: 1}, journal: {text: "{annee} : Lian Mbako a marqué contre {club} sans célébrer. « Je regrette », a dit {nom}. Le vestiaire l'a lu deux fois.", poids: 2, tags: [presse, mercato]}}
       answer: "Titre du lendemain : « Le regret ». Le vestiaire le lit deux fois."
     right:
       label: "Je ne commente pas"
-      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}}
+      effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, react: en.re.meneche_embuscade, journal: {text: "{annee} : Lian Mbako a marqué contre {club} sans célébrer. {nom} n'a pas commenté.", poids: 2, tags: [presse, mercato]}}
       answer: "Il note le silence. Il note toujours."
 
   # ------------------------------------------------- B5b · salaire (gardé)
@@ -156,12 +160,12 @@ cards:
     speaker: fardelli
     tone: leger
     once: true
-    text: "Fardelli, contrat en main : « Le petit veut un salaire de star. Il l'a gagné, tu l'as lancé, je prends dix pour cent. Mon ami, on parle d'argent ou d'amitié ? »"
+    text: "Fardelli, contrat en main : « Le petit veut un salaire de star, {toi}. Il l'a gagné, tu l'as lancé, je prends dix pour cent. On parle d'argent ou d'amitié ? »"
     left:
       label: "Il l'a mérité"
-      effects: {caisse: "--", vestiaire: "++", relation: {mbako: 1}}
+      effects: {caisse: "--", vestiaire: "++", relation: {mbako: 1}, journal: {text: "{annee} : salaire de star pour Lian Mbako, seize ans. Fardelli a compté dix pour cent, le vestiaire a applaudi.", poids: 2, tags: [caisse, agents]}}
       answer: "Le petit signe. Fardelli compte. Le vestiaire applaudit un salaire."
     right:
       label: "Pas à seize ans"
-      effects: {caisse: "+", vestiaire: "-", relation: {mbako: -2}}
+      effects: {caisse: "+", vestiaire: "-", relation: {mbako: -2}, journal: {text: "{annee} : « Pas à seize ans » : {nom} a refusé le salaire de star. Le petit a rangé ses crampons dans un sac neuf.", poids: 2, tags: [caisse, agents]}}
       answer: "Il range le contrat. Le petit range ses crampons dans un sac neuf."

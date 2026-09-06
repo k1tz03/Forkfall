@@ -2,6 +2,11 @@
 # (content/arcs/entraineur/nassir.yaml). Toutes sont des étapes (kind: etape
 # dérivé par le build), jamais dans le sac. `arc:` est le THÈME de la carte,
 # pas l'id de l'arc. Remplace la routine co.sponsor.maillot (doublon de C1).
+# Le nom du joueur : Nassir dit {toi} (« coach » tant qu'il vous respecte,
+# « monsieur {nom} » quand il ne vous respecte plus) au maillot et au prêt ;
+# Josiane le lit sur le logo au rachat. Réactions : la mère de Mbako après
+# l'orange, Nassir qui reviendra après chaque refus. Traces : nassir_sponsor,
+# naming_signe, club_a_lancienne, nassir_pret, club_actif.
 cards:
   # ------------------------------------------------------------- C1 · maillot
   # Variante « encore » (relance, plays >= 1) : le fonds revient, canette neuve.
@@ -11,14 +16,14 @@ cards:
     tags: [sponsors, absurde, caisse]
     speaker: nassir
     tone: leger
-    text: "Cheikh Nassir, une canette neuve : « Nous revoilà. Le maillot, cette fois, on ne le discute pas : on l'achète, avec le club autour. Ce n'est pas un club, c'est un actif. »"
+    text: "Cheikh Nassir, une canette neuve : « Nous revoilà, {toi}. Le maillot, cette fois, on ne le discute pas : on l'achète, avec le club autour. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "Le maillot est sacré"
-      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, var: {nassir_refus: "+1"}}
+      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, var: {nassir_refus: "+1"}, journal: {text: "{annee} : le fonds est revenu avec une canette neuve. {nom} a encore dit non.", poids: 1, tags: [sponsors]}}
       answer: "Il repose la canette. Il la laisse sur le bureau, pleine."
     right:
       label: "Va pour l'orange, encore"
-      effects: {caisse: "++", tribunes: "--", var: {nassir_palier: "=1"}, set: [nassir_sponsor]}
+      effects: {caisse: "++", tribunes: "--", var: {nassir_palier: "=1"}, set: [nassir_sponsor], react: en.re.mere_orange, journal: {text: "{annee} : le fonds est revenu, le maillot est repassé à l'orange. Gégé a compté les manches.", poids: 2, tags: [sponsors, tribunes]}}
       answer: "Le maillot est orange lundi. Gégé compte les manches."
 
   - id: en.nassir.maillot
@@ -27,14 +32,14 @@ cards:
     tags: [sponsors, absurde, tribunes]
     speaker: nassir
     tone: leger
-    text: "Cheikh Nassir, une canette à la main : « Nous aimerions que le maillot soit orange fluo. Comme notre boisson. Ce n'est pas un club, c'est un actif. »"
+    text: "Cheikh Nassir, une canette à la main : « Nous aimerions, {toi}, que le maillot soit orange fluo. Comme notre boisson. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "Le maillot est sacré"
-      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, var: {nassir_refus: "+1"}}
+      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, var: {nassir_refus: "+1"}, journal: {text: "{annee} : {nom} a refusé l'orange fluo. Nassir a reposé la canette sans la finir.", poids: 2, tags: [sponsors, tribunes]}}
       answer: "Il repose la canette. Il ne la finit pas."
     right:
       label: "Va pour l'orange"
-      effects: {caisse: "++", tribunes: "--", var: {nassir_palier: "=1"}, set: [nassir_sponsor]}
+      effects: {caisse: "++", tribunes: "--", var: {nassir_palier: "=1"}, set: [nassir_sponsor], react: en.re.mere_orange}
       answer: "Le maillot clignote presque. Gégé plisse les yeux."
 
   # ------------------------------------------- C2 · naming (variante express)
@@ -49,7 +54,7 @@ cards:
     text: "Cheikh Nassir, au fax : « Un sponsor qui paie d'avance ? Nous payons d'avance. Arena Qatalyst, dix millions, le vieux président sur une plaque aux toilettes. »"
     left:
       label: "Le stade garde son nom"
-      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, var: {nassir_refus: "+1"}}
+      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, var: {nassir_refus: "+1"}, react: en.re.nassir_reviendrons, journal: {text: "{annee} : le stade garde son nom. La Commission attend toujours son plan ; Aulard aussi.", poids: 2, tags: [sponsors, direction]}}
       answer: "La Commission attend toujours son plan. Aulard aussi."
     right:
       label: "Signez"
@@ -66,7 +71,7 @@ cards:
     text: "Cheikh Nassir, un plan du stade : « Arena Qatalyst, dix millions. Le vieux président ira sur une plaque, aux toilettes. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "Le stade garde son nom"
-      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, var: {nassir_refus: "+1"}}
+      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, var: {nassir_refus: "+1"}, react: en.re.nassir_reviendrons, journal: {text: "{annee} : le stade garde son nom. Gégé l'a appris par Josiane ; il lui a offert un vrai café.", poids: 2, tags: [sponsors, tribunes]}}
       answer: "Gégé l'apprend par Josiane. Il lui offre un café. Un vrai."
     right:
       label: "Signez"
@@ -99,11 +104,11 @@ cards:
     tags: [sponsors, caisse, direction]
     speaker: nassir
     tone: strategique
-    text: "Cheikh Nassir, sans canette : « Un prêt sans intérêt ni garantie. Presque : une option sur Mbako, et cinquante et un pour cent. Vous restez coach, de nom. »"
+    text: "Cheikh Nassir, sans canette : « Un prêt sans intérêt ni garantie. Presque : une option sur Mbako, et cinquante et un pour cent. Vous restez coach, {toi}. De nom. »"
     left:
       label: "Ni le petit, ni le club"
       # Fin de l'arc : le retrait (`club_a_lancienne`) est réservé au palier 0.
-      effects: {relation: {nassir: -2}, caisse: "-", var: {nassir_refus: "+1"}, next: end}
+      effects: {relation: {nassir: -2}, caisse: "-", var: {nassir_refus: "+1"}, next: end, react: en.re.nassir_reviendrons, journal: {text: "{annee} : ni le petit, ni le club. {nom} a renvoyé le prêt de Nassir ; il l'a plié en quatre.", poids: 2, tags: [sponsors, caisse]}}
       answer: "Il plie le contrat en quatre. Il le garde."
     right:
       label: "Signé"
@@ -117,7 +122,7 @@ cards:
     tags: [direction, caisse, sponsors]
     speaker: josiane
     tone: strategique
-    text: "Madame Josiane, un fax : « Le fonds a racheté le club, par fax. Le logo est orange, votre nom en petit, sous « ambassadeur ». J'en ai vu passer, vous savez. »"
+    text: "Madame Josiane, un fax : « Le fonds a racheté le club, par fax. Le logo est orange, « {nom} » en petit, sous « ambassadeur ». J'en ai vu passer, vous savez. »"
     left:
       label: "Ambassadeur, alors"
       effects: {direction: "++", caisse: "++", set: [club_actif], enemy: [aulard], arc: [{id: en.kop_qui_aime_trop, status: done}]}
@@ -141,5 +146,5 @@ cards:
       answer: "Le bureau d'ambassadeur n'a pas de fenêtre. Ni d'ambassade."
     right:
       label: "Je conteste"
-      effects: {direction: "---", caisse: "-", tribunes: "+"}
+      effects: {direction: "---", caisse: "-", tribunes: "+", journal: {text: "{annee} : poste « réorganisé » par fax. {nom} a contesté ; l'avocat a demandé la page deux. Il n'y en avait pas.", poids: 3, tags: [direction, sponsors]}}
       answer: "Ton avocat lit le fax. Il demande la page deux. Il n'y en a pas."

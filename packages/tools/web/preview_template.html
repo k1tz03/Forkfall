@@ -127,7 +127,28 @@
   .album .body { position: absolute; inset: 0; background: var(--creme); border-radius: 3px 10px 10px 3px; box-shadow: 0 18px 24px rgba(0,0,0,.45), inset 0 2px 0 #d9caa2; }
   .album .page-1 { position: absolute; inset: 10px 12px; padding: 10px; font-family: var(--font-paper); font-size: 10.5px; line-height: 1.3; color: var(--encre-2); }
   .album .page-1 b { display: block; font-family: var(--font-cond); font-size: 15px; letter-spacing: .1em; color: var(--pelouse); text-transform: uppercase; margin-bottom: 6px; }
-  .album .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+  .album .slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+  .album .slots .slot { height: 40px; aspect-ratio: auto; }
+  .name-form { margin-top: 4px; font-family: var(--font-paper); font-style: italic; font-size: 10.5px; color: var(--encre-2); cursor: default; }
+  .name-form .row { display: flex; align-items: baseline; gap: 4px; }
+  .name-form .row + .row { margin-top: 2px; }
+  .name-form label { flex: none; }
+  .name-form input {
+    flex: 1; min-width: 0; width: 100%; border: 0; border-bottom: 1.5px dashed #a89b74; background: transparent; padding: 0 2px 1px; margin: 0;
+    font-family: var(--font-paper); font-style: italic; font-weight: 600; font-size: 12px; line-height: 1.2; color: var(--encre); outline: none;
+  }
+  .name-form input::placeholder { color: #a89b74; font-weight: 500; }
+  .name-form input:focus { border-bottom-color: var(--ui-orange); border-bottom-style: solid; }
+  .name-form .tools { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .genre-stamp {
+    flex: none; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--tampon); background: transparent; color: var(--tampon); cursor: pointer; padding: 0;
+    font-family: var(--font-cond); font-weight: 800; font-size: 15px; line-height: 1; transform: rotate(-8deg);
+    -webkit-mask-image: var(--grunge); mask-image: var(--grunge);
+  }
+  .genre-stamp:focus-visible { outline: 2px solid var(--ui-orange); outline-offset: 2px; }
+  .name-form .hasard { border: 0; background: none; padding: 0; cursor: pointer; font-family: var(--font-cond); font-weight: 700; font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--pelouse); text-decoration: underline; text-underline-offset: 2px; }
+  .name-form .hasard:focus-visible { outline: 2px solid var(--ui-orange); outline-offset: 2px; }
+  .name-form .who { margin-left: auto; font-family: var(--font-cond); font-style: normal; font-weight: 600; font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--encre-3); }
   .album .slot { aspect-ratio: 3 / 4; border: 1.5px dashed #a89b74; border-radius: 2px; font-size: 9px; color: #a89b74; display: grid; place-items: center; }
   .album .cover {
     position: absolute; inset: 0; transform-origin: left center; border-radius: 3px 10px 10px 3px; overflow: hidden;
@@ -243,7 +264,7 @@
     box-shadow: inset 0 0 0 1px var(--alu), inset 0 0 40px 10px rgba(0,0,0,.35);
     padding: 0 13px 12px;
   }
-  #gameScreen { overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+  #gameScreen, #endingScreen { overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
   .chalk { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .35; }
   .status {
     flex: none; display: flex; align-items: center; gap: 8px; height: 44px; margin-top: 6px; color: var(--creme); overflow: hidden; min-width: 0;
@@ -310,6 +331,8 @@
   .sablier { position: absolute; left: 6px; top: 6px; z-index: 2; width: 26px; height: 26px; border-radius: 50%; background: var(--creme); display: grid; place-items: center; box-shadow: 0 1px 2px rgba(0,0,0,.4); }
   .sablier svg { width: 15px; height: 15px; color: var(--encre); }
   .kindtag { position: absolute; right: 8px; top: 38px; z-index: 2; font-family: var(--font-cond); font-weight: 800; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--tampon); border: 2px solid var(--tampon); padding: 1px 6px; transform: rotate(6deg); -webkit-mask-image: var(--grunge); mask-image: var(--grunge); background: rgba(252,250,243,.55); }
+  .card .tape.corner { left: -14px; top: 6px; width: 56px; height: 15px; transform: rotate(-38deg); z-index: 6; }
+  .card[data-kind="reaction"] .sticker { background: var(--creme); }
   .peel { position: absolute; top: 0; right: 0; width: var(--peel); height: var(--peel); z-index: 4; pointer-events: none; }
   .peel::before { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.45); clip-path: polygon(0 0, 100% 100%, 0 100%); filter: blur(3px); transform: translate(-3px, 4px); }
   .peel::after { content: ""; position: absolute; inset: 0; clip-path: polygon(0 0, 100% 100%, 0 100%); background: linear-gradient(225deg, #FFFFFF 50%, #EDE8DA 68%, #CFC7B2 100%); }
@@ -327,6 +350,17 @@
   .badge.right:not(:empty)::after { content: "\00a0→"; }
   .badge.left:not(:empty)::before { content: "←\00a0"; }
 
+  .story-banner {
+    position: absolute; left: 50%; top: -8px; z-index: 20; transform: translateX(-50%) rotate(-1.5deg); max-width: calc(100% - 8px);
+    background: var(--blanc-vignette); color: var(--encre); padding: 7px 14px 7px 12px; border-radius: 3px 6px 3px 5px;
+    box-shadow: 0 3px 0 #cfc3a0, 0 10px 18px rgba(0,0,0,.45); display: flex; align-items: center; gap: 8px;
+    font-family: var(--font-cond); font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+    animation: banner-in var(--t-pop) ease-out;
+  }
+  .story-banner .tape { left: -18px; top: -6px; width: 44px; height: 13px; transform: rotate(-32deg); }
+  .story-banner::before { content: ""; flex: none; width: 12px; height: 12px; border-radius: 50%; background: var(--tampon); box-shadow: inset 0 0 0 2px var(--blanc-vignette), 0 0 0 1.5px var(--tampon); }
+  .story-banner i { font-family: var(--font-paper); font-style: italic; font-weight: 600; font-size: 13px; letter-spacing: 0; text-transform: none; overflow: hidden; text-overflow: ellipsis; }
+  @keyframes banner-in { from { transform: translateX(-50%) rotate(-1.5deg) scale(.9); opacity: 0; } to { transform: translateX(-50%) rotate(-1.5deg) scale(1); opacity: 1; } }
   .cardtext { flex: none; margin: 10px 0 0; min-height: 72px; font-size: 16px; line-height: 24px; color: var(--creme); text-align: center; text-wrap: pretty; transition: opacity var(--t-text) linear; }
   .answer { flex: none; min-height: 18px; font-size: 12px; line-height: 1.4; color: var(--creme); opacity: .7; text-align: center; margin: 4px 0 8px; font-family: var(--font-paper); font-style: italic; }
   .controls { flex: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 0; }
@@ -382,10 +416,12 @@
   }
   .fatal.hit .card { animation: shake 80ms linear 1; }
 
-  .une-wrap { flex: 1; min-height: 0; overflow: hidden; padding: 8px 6px 0; margin: 0 -6px; display: flex; }
+  /* pleine largeur, clip horizontal seulement : la page penchée (−1°) et ses scotchs ne créent jamais de défilement latéral */
+  .une-wrap { flex: none; padding: 8px 13px 0; margin: 0 -13px; display: flex; overflow-x: clip; overflow-y: visible; }
+  .une-wrap.in-game { padding-top: 16px; }
   .une {
-    position: relative; width: 100%; max-height: 100%; display: flex; flex-direction: column; background: var(--journal); color: var(--encre);
-    padding: 8px 12px 10px; transform: rotate(-1deg); transform-origin: top center;
+    position: relative; width: 100%; display: flex; flex-direction: column; background: var(--journal); color: var(--encre);
+    padding: 8px 12px 10px; transform: rotate(-1deg); transform-origin: center center;
     box-shadow: 0 14px 24px rgba(0,0,0,.5);
     animation: unfold var(--t-page) ease-out 500ms both;
   }
@@ -393,14 +429,25 @@
   .une::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px); }
   .une .tape.tl { left: -16px; top: -6px; transform: rotate(-35deg); }
   .une .tape.tr { right: -16px; top: -6px; transform: rotate(35deg); }
-  .masthead { flex: none; display: grid; grid-template-columns: 60px 1fr 54px; align-items: center; gap: 6px; border-bottom: 2.5px solid var(--journal-bleu); padding-bottom: 6px; }
+  .une { --jb: var(--journal-bleu); }
+  .une[data-style="rose"] { --jb: var(--ui-rose); }
+  .une[data-style="local"] { --jb: var(--pelouse); }
+  .masthead { flex: none; display: grid; grid-template-columns: 60px 1fr 54px; align-items: center; gap: 6px; border-bottom: 2.5px solid var(--jb); padding-bottom: 6px; }
   .ear { font-size: 7.5px; line-height: 1.25; border: 1px solid var(--encre); padding: 3px 4px; text-align: center; font-family: var(--font-ui); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
   .ear b { display: block; font-family: var(--font-cond); font-size: 9px; letter-spacing: .1em; }
-  .ear.price b { font-size: 16px; letter-spacing: 0; color: var(--journal-bleu); font-weight: 800; }
-  .masthead h1 { margin: 0; font-family: var(--font-paper); font-weight: 900; font-size: 22px; line-height: 1; color: var(--journal-bleu); text-align: center; letter-spacing: -.01em; font-variation-settings: "opsz" 144; }
+  .ear.price b { font-size: 16px; letter-spacing: 0; color: var(--jb); font-weight: 800; }
+  .ear.date b { font-size: 10px; letter-spacing: .04em; color: var(--jb); text-transform: none; }
+  .masthead h1 { margin: 0; font-family: var(--font-paper); font-weight: 900; font-size: 22px; line-height: 1; color: var(--jb); text-align: center; letter-spacing: -.01em; font-variation-settings: "opsz" 144; }
   .masthead h1 small { display: block; font-family: var(--font-ui); font-weight: 600; font-size: 7.5px; letter-spacing: .18em; text-transform: uppercase; color: var(--encre-2); margin-top: 4px; }
   .dateline { flex: none; display: flex; justify-content: space-between; gap: 6px; font-size: 8px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; border-bottom: 1px solid var(--encre); padding: 3px 0; margin-bottom: 8px; font-variant-numeric: tabular-nums; }
   .etitle { flex: none; font-family: var(--font-cond); font-weight: 800; font-size: 34px; line-height: .95; text-transform: uppercase; letter-spacing: .005em; text-wrap: balance; margin: 0 0 6px; overflow-wrap: anywhere; }
+  /* manchette > 3 lignes : 34 → 28 → 24 (spec variété §3.8) */
+  .etitle.m28 { font-size: 28px; }
+  .etitle.m24 { font-size: 24px; }
+  .kicker { flex: none; font-family: var(--font-cond); font-weight: 700; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--encre-2); margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kicker:empty { display: none; }
+  .epitaph.plus { margin-top: -4px; color: var(--encre); }
+  .epitaph.plus:empty { display: none; }
   .epitaph { flex: none; font-family: var(--font-paper); font-style: italic; font-weight: 500; font-size: 12px; line-height: 1.35; margin: 0 0 8px; color: var(--encre-2); }
   .body-grid { flex: none; display: grid; grid-template-columns: 100px 1fr; gap: 8px; }
   .une-photo .shot { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: linear-gradient(180deg, var(--camp, #777) 0%, color-mix(in srgb, var(--camp, #777) 78%, #000) 100%); filter: grayscale(1) contrast(1.25) brightness(1.05); border: 1px solid var(--encre); }
@@ -412,7 +459,20 @@
   .une-photo .legend { font-family: var(--font-paper); font-size: 8px; line-height: 1.3; margin-top: 3px; font-style: italic; color: var(--encre-2); }
   .sidebar { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
   .box { border: 1px solid var(--encre); padding: 4px 6px 5px; }
-  .box .bh { font-family: var(--font-cond); font-weight: 800; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--journal-bleu); border-bottom: 1px solid var(--encre-3); padding-bottom: 2px; margin-bottom: 4px; }
+  .box .bh { font-family: var(--font-cond); font-weight: 800; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--jb); border-bottom: 1px solid var(--encre-3); padding-bottom: 2px; margin-bottom: 4px; }
+  /* colonne « En bref » = les 3 brèves du journal de la saison (§1.6) */
+  .breves { list-style: none; margin: 0; padding: 0; font-family: var(--font-paper); font-size: 10.5px; line-height: 1.3; color: var(--encre); }
+  .breves li { padding: 3px 0 3px 9px; position: relative; border-top: 1px dotted var(--encre-3); }
+  .breves li:first-child { border-top: 0; padding-top: 1px; }
+  .breves li::before { content: ""; position: absolute; left: 0; top: 8px; width: 4px; height: 4px; background: var(--jb); }
+  .breves li:first-child::before { top: 6px; }
+  .breves li.empty { font-style: italic; color: var(--encre-3); }
+  .breves li.empty::before { display: none; }
+  .pied { flex: none; display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; padding-top: 5px; border-top: 1.5px solid var(--encre); font-family: var(--font-cond); font-weight: 700; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre); font-variant-numeric: tabular-nums; }
+  .pied span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pied b { color: var(--jb); }
+  .pied .manque b { color: var(--tampon); }
+  .une-photo .legend b { font-family: var(--font-cond); font-style: normal; font-weight: 800; font-size: 8.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--encre); }
   .score { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 6px; }
   .score .n { font-family: var(--font-cond); font-weight: 800; font-size: 18px; line-height: 1; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .score .l { font-family: var(--font-cond); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--encre-2); }
@@ -421,10 +481,31 @@
   .guilty .barred { position: relative; flex: none; width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--encre); display: grid; place-items: center; color: var(--encre); }
   .guilty .barred svg { width: 17px; height: 17px; }
   .guilty .barred::after { content: ""; position: absolute; left: -4px; right: -4px; top: 50%; height: 3px; background: var(--tampon); transform: rotate(-32deg); }
-  .columns { flex: 1; min-height: 0; overflow: hidden; margin-top: 6px; margin-right: 62px; border-top: 1px solid var(--encre); padding-top: 5px; font-family: var(--font-paper); font-size: 8px; line-height: 1.32; text-align: justify; columns: 2; column-gap: 8px; column-rule: 1px solid #ccc; hyphens: auto; color: #3a342c; }
+  .columns { flex: none; margin-top: 6px; margin-right: 62px; border-top: 1px solid var(--encre); padding-top: 5px; font-family: var(--font-paper); font-size: 8px; line-height: 1.32; text-align: justify; columns: 2; column-gap: 8px; column-rule: 1px solid #ccc; hyphens: auto; color: #3a342c; }
   .columns p { margin: 0 0 4px; }
   .columns b { font-family: var(--font-cond); font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--encre); }
-  .columns p:first-child::first-letter { font-weight: 900; font-size: 18px; float: left; line-height: .8; padding-right: 2px; color: var(--journal-bleu); }
+  .columns p:first-child::first-letter { font-weight: 900; font-size: 18px; float: left; line-height: .8; padding-right: 2px; color: var(--jb); }
+  /* « Ce qui s'est passé » (écran de fin, spec variété §3.8) */
+  .almanach { flex: none; margin-top: 8px; border-top: 1px solid var(--encre); padding-top: 5px; }
+  .almanach .ah { font-family: var(--font-cond); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--jb); margin: 6px 0 3px; display: flex; align-items: center; gap: 6px; }
+  .almanach .ah:first-child { margin-top: 0; }
+  .almanach .ah::after { content: ""; flex: 1; height: 1px; background: var(--encre-3); }
+  .almanach ol { list-style: none; margin: 0; padding: 0; }
+  .almanach .jl { display: grid; grid-template-columns: 34px 1fr; gap: 6px; font-family: var(--font-paper); font-size: 11px; line-height: 1.3; color: var(--encre); padding: 2px 0; border-top: 1px dotted var(--encre-3); }
+  .almanach .jl:first-child { border-top: 0; }
+  .almanach .jl b { font-family: var(--font-cond); font-weight: 800; font-size: 11px; letter-spacing: .04em; color: var(--jb); font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .almanach .jl.fin b { color: var(--tampon); }
+  .almanach .jl.une span { font-style: italic; }
+  .almanach .obj { display: grid; grid-template-columns: 14px 1fr; gap: 4px; font-family: var(--font-paper); font-size: 11px; line-height: 1.3; color: var(--encre-2); padding: 2px 0; }
+  .almanach .obj i { font-style: normal; font-family: var(--font-cond); font-weight: 800; color: var(--encre-3); text-align: center; }
+  .almanach .obj.ok { color: var(--encre); }
+  .almanach .obj.ok i { color: var(--pelouse); }
+  .almanach .obj.ok b { font-family: var(--font-cond); font-weight: 800; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+  .almanach .obj q { font-style: italic; quotes: "« " " »"; }
+  .almanach .hist { font-family: var(--font-paper); font-size: 11px; line-height: 1.35; color: var(--encre); margin: 0; }
+  .almanach .hist b { font-family: var(--font-cond); font-weight: 700; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--encre-2); }
+  .almanach .hist .sep { color: var(--encre-3); padding: 0 3px; }
+  .almanach .hist.none { font-style: italic; color: var(--encre-3); }
   .last-sticker { position: absolute; right: -6px; bottom: 4px; z-index: 7; width: 62px; transform: rotate(7deg); background: var(--blanc-vignette); padding: 4px 4px 3px; box-shadow: 0 6px 10px rgba(0,0,0,.4); }
   .last-sticker .shot { aspect-ratio: 3 / 4; position: relative; overflow: hidden; background: linear-gradient(180deg, #2A6E3F, var(--board)); }
   .last-sticker .shot::before { content: ""; position: absolute; inset: 0; background: var(--grain); opacity: .35; mix-blend-mode: soft-light; z-index: 1; }
@@ -497,8 +578,16 @@
         <div class="body">
           <div class="page-1">
             <b id="albumPageTitle">Page 1 · 1990-91</b>
-            Colle ici les visages de ta première saison.
-            <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div><div class="slot">4</div><div class="slot">5</div><div class="slot">6</div></div>
+            <form class="name-form" id="nameForm" autocomplete="off" aria-label="Ton nom">
+              <div class="row"><label for="inPrenom">Nom :</label><input id="inPrenom" type="text" maxlength="14" placeholder="prénom" spellcheck="false" aria-label="Prénom"></div>
+              <div class="row"><label for="inNom" aria-hidden="true">&nbsp;</label><input id="inNom" type="text" maxlength="16" placeholder="nom" spellcheck="false" aria-label="Nom de famille"></div>
+              <div class="tools">
+                <button class="genre-stamp" id="btnGenre" type="button" aria-label="Genre : homme ; toucher pour changer" title="♀ / ♂">♂</button>
+                <button class="hasard" id="btnHasard" type="button">Au hasard</button>
+                <span class="who" id="nameWho"></span>
+              </div>
+            </form>
+            <div class="slots"><div class="slot">1</div><div class="slot">2</div><div class="slot">3</div></div>
           </div>
         </div>
         <div class="cover">
@@ -565,7 +654,34 @@
     <div class="context" id="context"></div>
     <div class="ruban" id="ruban" aria-label="Promesse en cours" hidden><i></i><span id="rubanText"></span></div>
 
-    <div class="cardwrap">
+    <!-- la page de journal du Bilan (bilan_une) : même composant que la Une de l'écran de fin -->
+    <div class="une-wrap in-game" id="unePage" hidden><div class="une" id="uneGame" data-style="bleu">
+      <div class="tape tl"></div><div class="tape tr"></div>
+      <div class="masthead">
+        <div class="ear date">Édition<b id="uDate"></b></div>
+        <h1><span id="uJournal">Le Quotidien du Ballon</span><small id="uDevise"></small></h1>
+        <div class="ear price">Prix<b id="uPrix"></b></div>
+      </div>
+      <div class="dateline" id="uDateline"><span></span><span></span><span></span></div>
+      <h2 class="etitle" id="uTitre"></h2>
+      <p class="epitaph" id="uSous"></p>
+      <div class="body-grid">
+        <div class="une-photo">
+          <div class="shot" id="uPhoto"><div class="portrait" id="uPortrait"></div></div>
+          <div class="legend" id="uLegend"></div>
+        </div>
+        <div class="sidebar">
+          <div class="box">
+            <div class="bh">En bref</div>
+            <ul class="breves" id="uBreves"></ul>
+          </div>
+        </div>
+      </div>
+      <div class="pied" id="uPied"><span></span><span></span></div>
+    </div></div>
+
+    <div class="cardwrap" id="cardwrap">
+      <div class="story-banner" id="storyBanner" role="status" hidden><span class="tape"></span>Nouvelle histoire : <i id="storyBannerTitle"></i></div>
       <article class="card" id="card" data-camp="terrain" tabindex="0" aria-label="Vignette">
         <span class="shadow" aria-hidden="true"><i></i></span>
         <span class="pin" aria-hidden="true"></span>
@@ -577,6 +693,7 @@
             <div class="cardnum" id="cardNumber"></div>
           </div>
           <div class="peel" aria-hidden="true"></div>
+          <span class="tape corner" id="cardTape" aria-hidden="true" hidden></span>
           <div class="band">
             <div class="name" id="speaker"></div>
             <div class="fn" id="speakerLabel"></div>
@@ -633,8 +750,10 @@
         <div class="ear price">Prix<b>5 écus</b></div>
       </div>
       <div class="dateline" id="dateline"><span></span><span></span><span>Édition Sud</span></div>
+      <div class="kicker" id="ekicker"></div>
       <h2 class="etitle" id="etitle"></h2>
       <p class="epitaph" id="epitaph"></p>
+      <p class="epitaph plus" id="epitaphPlus"></p>
       <div class="body-grid">
         <div class="une-photo">
           <div class="shot" id="unePhoto"><div class="portrait" id="unePortrait"></div></div>
@@ -651,6 +770,7 @@
           </div>
         </div>
       </div>
+      <div class="almanach" id="almanach"></div>
       <div class="columns" id="columns"></div>
       <div class="last-sticker" id="lastSticker" aria-label="Dernière apparition">
         <div class="tape"></div>
@@ -677,7 +797,9 @@
   var GAUGE_MAX_DANGER = 80, GAUGE_MIN_DANGER = 20;
   var GAUGE_COLOR = { vestiaire: "var(--ui-bleu)", tribunes: "var(--ui-orange)", direction: "var(--ui-violet)", caisse: "var(--ui-jaunevert)" };
   var GAUGE_TILT = [-1.5, 1, -0.5, 2];
-  var KIND_LABELS = { alarme: "Alarme", nouvelle: "Nouvelle", evenement: "Événement", palier: "Face à face", passe: "Nouvelles du passé" };
+  var KIND_LABELS = { alarme: "Alarme", nouvelle: "Nouvelle", evenement: "Événement", palier: "Face à face", passe: "Nouvelles du passé", reaction: "Réplique" };
+  // Devises des trois journaux (décoratives, §1.6) ; le nom vient du moteur.
+  var DEVISES = { quotidien: "Le journal qui siffle avant l'arbitre", gazette: "Tout ce qu'on n'ose pas dire, en rose", echo: "Le journal de ta rue, depuis toujours" };
   var CAMPS = { terrain: 1, direction: 1, instances: 1, selection: 1 };
   // 4 jauges × vidée / déborde : la phrase de l'encart « La jauge coupable » (§4.5).
   var GUILTY_PHRASES = {
@@ -726,6 +848,15 @@
   (Array.isArray(content.roles) ? content.roles : []).forEach(function (r) {
     (r.gauges || []).forEach(function (g) { if (g.id && g.icon) GAUGE_ICON[g.id] = g.icon; });
   });
+  // Journaux et manchettes (pour nommer le journal d'une Une dans « Ce qui s'est passé »).
+  var JOURNAUX = {}, UNES = {};
+  (Array.isArray(content.journaux) ? content.journaux : []).forEach(function (j) { if (j && j.id) JOURNAUX[j.id] = j; });
+  (Array.isArray(content.unes) ? content.unes : []).forEach(function (u) { if (u && u.id) UNES[u.id] = u; });
+  var NAMES = (content.names && typeof content.names === "object") ? content.names : {};
+  function journalName(id, ville) {
+    var j = JOURNAUX[id];
+    return j && j.nom ? String(j.nom).split("{ville}").join(ville || "la ville") : "Le journal";
+  }
 
   // --- portraits (paper doll) ---
   try { if (window.FusiblePortraits) window.FusiblePortraits.init(content.portraits || {}); } catch (e) {}
@@ -750,6 +881,45 @@
   if (!profile.endings || typeof profile.endings !== "object") profile.endings = {};
   var runCount = profile.runs | 0;
   function discovered() { return Object.keys(profile.endings).length; }
+  if (!profile.name || typeof profile.name !== "object") profile.name = { prenom: "", nom: "", genre: "m" };
+
+  // --- le nom (spec variété §1.8) : saisi sur la page 1 de l'album, mémorisé,
+  // hors graine (le moteur conserve ses tirages puis écrase le nom affiché) ---
+  var inPrenom = $("inPrenom"), inNom = $("inNom"), btnGenre = $("btnGenre");
+  var nameGenre = (profile.name.genre === "f") ? "f" : "m";
+  function cleanName(v, max) {
+    // même alphabet que naming.dart : lettres, espace, apostrophe, tiret ; coupure à max
+    return String(v || "").replace(/[^\p{L} '’-]/gu, "").replace(/\s+/g, " ").slice(0, max);
+  }
+  function nameValues() {
+    return { prenom: cleanName(inPrenom.value, 14).trim(), nom: cleanName(inNom.value, 16).trim(), genre: nameGenre };
+  }
+  function renderGenre() {
+    btnGenre.textContent = nameGenre === "f" ? "♀" : "♂";
+    btnGenre.setAttribute("aria-label", "Genre : " + (nameGenre === "f" ? "femme" : "homme") + " ; toucher pour changer");
+    $("nameWho").textContent = nameGenre === "f" ? "elle" : "il";
+    setPortrait($("coverPortrait"), "coach", "sourire", "terrain", nameGenre);
+  }
+  function saveName() {
+    var v = nameValues();
+    profile.name = v; saveProfile(profile);
+  }
+  function pick(arr) { return (Array.isArray(arr) && arr.length) ? arr[Math.floor(Math.random() * arr.length)] : ""; }
+  function randomName() {
+    // Rng cosmétique (Math.random), jamais celui de la partie.
+    inPrenom.value = pick(nameGenre === "f" ? NAMES.prenoms_f : NAMES.prenoms_m) || "";
+    inNom.value = pick(NAMES.noms) || "";
+    saveName();
+  }
+  inPrenom.value = cleanName(profile.name.prenom, 14);
+  inNom.value = cleanName(profile.name.nom, 16);
+  inPrenom.addEventListener("input", function () { var c = cleanName(inPrenom.value, 14); if (c !== inPrenom.value) inPrenom.value = c; saveName(); });
+  inNom.addEventListener("input", function () { var c = cleanName(inNom.value, 16); if (c !== inNom.value) inNom.value = c; saveName(); });
+  btnGenre.addEventListener("click", function () { nameGenre = nameGenre === "f" ? "m" : "f"; renderGenre(); saveName(); });
+  $("btnHasard").addEventListener("click", randomName);
+  $("nameForm").addEventListener("submit", function (e) { e.preventDefault(); inPrenom.blur(); inNom.blur(); });
+  $("nameForm").addEventListener("click", function (e) { e.stopPropagation(); });
+  $("nameForm").addEventListener("keydown", function (e) { e.stopPropagation(); });
 
   // --- écrans ---
   var elTitle = $("titleScreen"), elGame = $("gameScreen"), elEnd = $("endingScreen");
@@ -773,7 +943,8 @@
   function startRun(postulat, seed) {
     currentPostulat = postulat;
     currentSeed = (typeof seed === "number") ? seed : randomSeed();
-    view = JSON.parse(window.fusibleStart(currentSeed, postulat));
+    var nm = nameValues();
+    view = JSON.parse(window.fusibleStart(currentSeed, postulat, nm.prenom, nm.nom, nm.genre));
     lastCard = null;
     answerLog = [];
     logAnswer(view.lastAnswer);
@@ -816,6 +987,7 @@
   var album = $("album");
   function openAlbum(open) {
     album.classList.toggle("open", open);
+    try { $("nameForm").inert = !open; } catch (e) {}
     album.setAttribute("aria-expanded", open ? "true" : "false");
     album.setAttribute("aria-label", open ? "Fermer l'album" : "Ouvrir l'album");
   }
@@ -828,7 +1000,7 @@
     var first = document.querySelector("#postulats .postulat");
     if (first) setTimeout(function () { first.focus({ preventScroll: false }); }, reduce ? 0 : 400);
   });
-  setPortrait($("coverPortrait"), "coach", "sourire", "terrain", "m");
+  renderGenre();
   if (meta.startYear) $("albumPageTitle").textContent = "Page 1 · " + meta.startYear + "-" + pad2((meta.startYear + 1) % 100);
 
   function renderTitle() {
@@ -881,10 +1053,27 @@
     return { name: name, label: label, camp: camp, genre: genre, id: id };
   }
 
+  var bannerTimer = null;
+  function showStoryBanner(title) {
+    var b = $("storyBanner");
+    if (bannerTimer) { clearTimeout(bannerTimer); bannerTimer = null; }
+    if (!title) { b.hidden = true; return; }
+    $("storyBannerTitle").textContent = title;
+    b.hidden = false;
+    bannerTimer = setTimeout(function () { b.hidden = true; bannerTimer = null; }, 2000);
+  }
+
   function renderGame() {
     var c = view.card;
-    lastCard = c;
+    if (c.beatKind !== "bilan_une") lastCard = c; // la page de journal n'est pas une vignette
     renderRail(view.gauges, null);
+    showStoryBanner(c.unlockedStory || null);
+    var isUne = c.beatKind === "bilan_une" && c.une;
+    $("unePage").hidden = !isUne;
+    $("cardwrap").hidden = !!isUne;
+    text.hidden = !!isUne;
+    $("answer").hidden = !!isUne;
+    if (isUne) { renderUnePage(c); return; }
 
     $("statusClub").textContent = view.club || "";
     $("statusMid").textContent = "Saison " + view.season + (view.journee ? " · J " + view.journee : "");
@@ -903,7 +1092,7 @@
     if (c.kind) card.setAttribute("data-kind", c.kind); else card.removeAttribute("data-kind");
     if (c.tone) card.setAttribute("data-tone", c.tone); else card.removeAttribute("data-tone");
     card.classList.toggle("single", !!c.single);
-    card.setAttribute("aria-label", "Vignette n° " + (view.cardNumber || view.turn) + ", " + sp.name + (sp.label ? ", " + sp.label : ""));
+    card.setAttribute("aria-label", (c.kind === "reaction" ? "Réplique, " : "Vignette n° " + (view.cardNumber || view.turn) + ", ") + sp.name + (sp.label ? ", " + sp.label : ""));
     setPortrait(portraitEl, sp.id, c.expression || "neutre", sp.camp, sp.genre);
     $("speaker").textContent = sp.name;
     $("speakerLabel").textContent = sp.label;
@@ -911,6 +1100,10 @@
     var kt = $("kindTag");
     if (c.kind && KIND_LABELS[c.kind]) { kt.hidden = false; kt.textContent = KIND_LABELS[c.kind]; } else { kt.hidden = true; }
     $("sablier").hidden = !c.sablier;
+    // Réplique (§3.8) : tampon « RÉPLIQUE », coin scotché, pas de numéro de créneau.
+    var isReaction = c.kind === "reaction";
+    $("cardTape").hidden = !isReaction;
+    $("cardNumber").hidden = isReaction;
     $("cardNumber").textContent = "n° " + (view.cardNumber || view.turn);
 
     text.textContent = c.text;
@@ -943,6 +1136,80 @@
       card.classList.add("pop");
       if (c.kind === "alarme") setTimeout(function () { card.classList.remove("pop"); void card.offsetWidth; card.classList.add("shake"); }, 200);
     }
+  }
+
+  // La page de journal du Bilan (spec variété §1.6, §3.8) : masthead = le
+  // journal, date et prix ; manchette 34 → 28 → 24 au-delà de 3 lignes ;
+  // sous-titre ; photo = la carte fatale en N&B tramé + légende ; « En bref » =
+  // 3 brèves ; pied « Classement · Objectif » ; un seul magnet « Tourner la page ».
+  function renderUnePage(c) {
+    var d = c.une;
+    var ent = view.entities || {};
+    var page = $("uneGame");
+    page.setAttribute("data-style", d.style || "bleu");
+    page.style.animation = "none"; void page.offsetWidth; page.style.animation = "";
+    $("uJournal").textContent = d.journalNom || "Le journal";
+    $("uDevise").textContent = DEVISES[d.journal] || "";
+    $("uDate").textContent = d.date || "";
+    $("uPrix").textContent = d.prix || "";
+    var dl = $("uDateline").children;
+    dl[0].textContent = "Saison " + view.season + " · " + d.annee + "-" + pad2((d.annee + 1) % 100);
+    dl[1].textContent = (ent.club || view.club || "");
+    dl[2].textContent = "Division " + (view.division || 1);
+    var t = $("uTitre");
+    t.className = "etitle";
+    t.textContent = d.titre || "";
+    fitHeadline(t);
+    $("uSous").textContent = d.sous || "";
+    // la photo : la vignette de la dernière carte d'histoire (ou celle voulue par la manchette)
+    var ph = d.photo || null;
+    var shot = $("uPhoto");
+    var camp = (ph && ph.camp && CAMPS[ph.camp]) ? ph.camp : "terrain";
+    var self = !(ph && ph.speaker);
+    var pid = self ? selfId() : ph.speaker;
+    var genre = self ? (view.genre || "m") : (ph.genre || "m");
+    shot.setAttribute("data-camp", camp);
+    setPortrait($("uPortrait"), pid, (ph && ph.expression) || "neutre", camp, genre);
+    var leg = $("uLegend");
+    leg.innerHTML = "";
+    var who = ph && ph.speakerName ? ph.speakerName : (self ? (ent.protagonist || view.name || "") : "");
+    if (who) { var b = document.createElement("b"); b.textContent = who; leg.appendChild(b); leg.appendChild(document.createTextNode(" ")); }
+    leg.appendChild(document.createTextNode((ph && ph.answer) ? "— " + ph.answer : "(Photo d'archives)"));
+    // les brèves
+    var ul = $("uBreves");
+    ul.innerHTML = "";
+    var breves = Array.isArray(d.breves) ? d.breves : [];
+    if (!breves.length) { var li0 = document.createElement("li"); li0.className = "empty"; li0.textContent = "Rien à signaler. La saison s'est jouée sur le terrain."; ul.appendChild(li0); }
+    breves.forEach(function (bv) { var li = document.createElement("li"); li.textContent = bv; ul.appendChild(li); });
+    // le pied
+    var pied = $("uPied").children;
+    pied[0].innerHTML = "Classement : <b>" + escapeHtml(d.rang) + "ᵉ</b>";
+    pied[1].className = d.tenu ? "" : "manque";
+    pied[1].innerHTML = "Objectif " + escapeHtml(String(d.objectif || "").toLowerCase()) + " : <b>" + (d.tenu ? "tenu" : "manqué") + "</b>";
+    page.setAttribute("aria-label", (d.journalNom || "Le journal") + " · " + (d.titre || ""));
+
+    var controls = $("controls");
+    controls.innerHTML = "";
+    controls.classList.add("single");
+    controls.appendChild(mkMagnet("magnet right", c.rightLabel || "Tourner la page", function () { choose(true); }));
+    $("hintline").textContent = "Tourne la page, ou appuie sur Entrée";
+    elGame.scrollTop = 0;
+  }
+  // ≤ 3 lignes : au-delà on réduit à 28 puis 24 (spec variété §3.8).
+  function fitHeadline(el) {
+    function lines() {
+      var lh = parseFloat(getComputedStyle(el).lineHeight) || (parseFloat(getComputedStyle(el).fontSize) * 0.95);
+      return Math.round(el.getBoundingClientRect().height / lh);
+    }
+    el.classList.remove("m28", "m24");
+    if (lines() > 3) el.classList.add("m28");
+    if (lines() > 3) { el.classList.remove("m28"); el.classList.add("m24"); }
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () {
+      if (!$("unePage").hidden) fitHeadline($("uTitre"));
+      if (!elEnd.hidden) fitHeadline($("etitle"));
+    }).catch(function () {});
   }
 
   function renderRail(gauges, dir) {
@@ -1052,8 +1319,15 @@
     var dl = $("dateline").children;
     dl[0].textContent = pd.text;
     dl[1].textContent = (pd.year - 1946) + "ᵉ année · n° " + fmtNumber(pd.issue);
-    $("etitle").textContent = e.title || "Fin de carrière";
+    var ent = view.entities || {};
+    var y0 = e.startYear || meta.startYear || 1990;
+    $("ekicker").textContent = (e.nom || ent.protagonist || view.name || "") + " · " + view.age + " ans · " + y0 + (view.year && view.year !== y0 ? "-" + view.year : "") + " · " + (ent.club || view.club || "");
+    var et = $("etitle");
+    et.className = "etitle";
+    et.textContent = e.title || "Fin de carrière";
     $("epitaph").textContent = e.epitaph || "";
+    $("epitaphPlus").textContent = e.epitaphPlus || "";
+    renderAlmanach(e, ent);
     var shot = $("unePhoto");
     shot.setAttribute("data-camp", sp.camp);
     setPortrait($("unePortrait"), sp.id, lc.expression || "neutre", sp.camp, sp.genre);
@@ -1085,10 +1359,78 @@
     }
 
     renderColumns(e, golden, sp);
+    fitHeadline(et);
 
     setPortrait($("lastPortrait"), selfId(), golden ? "sourire" : "noir", "terrain", view.genre || "m");
+    elEnd.scrollTop = 0;
 
     $("seedline").textContent = "Graine " + fmtNumber(currentSeed) + " · postulat " + (currentPostulat + 1) + " · album n° " + runCount;
+  }
+
+  // « Ce qui s'est passé » (spec variété §1.7, §3.8) : les 6 lignes les plus
+  // lourdes de l'Almanach (année · texte), les objectifs cachés avec leurs
+  // indices, les histoires vécues et débloquées.
+  function renderAlmanach(e, ent) {
+    var root = $("almanach");
+    root.innerHTML = "";
+    function head(txt) { var h = document.createElement("div"); h.className = "ah"; h.textContent = txt; root.appendChild(h); }
+    head("Ce qui s'est passé");
+    var ol = document.createElement("ol");
+    var lines = Array.isArray(e.journal) ? e.journal : [];
+    if (!lines.length) {
+      var li0 = document.createElement("li"); li0.className = "jl"; li0.innerHTML = "<b></b><span></span>";
+      li0.querySelector("b").textContent = String(e.startYear || meta.startYear || "");
+      li0.querySelector("span").textContent = "Une carrière trop courte pour l'Almanach.";
+      ol.appendChild(li0);
+    }
+    lines.forEach(function (j) {
+      var li = document.createElement("li");
+      li.className = "jl " + (j.kind || "");
+      var txt = String(j.text || "").replace(/^\s*\d{4}\s*[·:]\s*/, "");
+      txt = txt.charAt(0).toUpperCase() + txt.slice(1);
+      if (j.kind === "une") {
+        var u = UNES[j.arc];
+        txt = "« " + txt + " », titre " + journalName(u ? u.journal : "quotidien", ent.ville) + ".";
+      }
+      li.innerHTML = "<b></b><span></span>";
+      li.querySelector("b").textContent = String(j.year || "");
+      li.querySelector("span").textContent = txt;
+      ol.appendChild(li);
+    });
+    root.appendChild(ol);
+
+    var objs = Array.isArray(e.objectifs) ? e.objectifs : [];
+    if (objs.length) {
+      var k = objs.filter(function (o) { return o.atteint; }).length;
+      head("Objectifs " + k + "/" + objs.length);
+      objs.forEach(function (o) {
+        var d = document.createElement("div");
+        d.className = "obj" + (o.atteint ? " ok" : "");
+        d.innerHTML = "<i></i><span></span>";
+        d.querySelector("i").textContent = o.atteint ? "✔" : "·";
+        var sp = d.querySelector("span");
+        if (o.atteint) { var b = document.createElement("b"); b.textContent = o.titre || o.id; sp.appendChild(b); }
+        else { var q = document.createElement("q"); q.textContent = o.indice || "…"; sp.appendChild(q); }
+        d.setAttribute("aria-label", o.atteint ? "Objectif atteint : " + (o.titre || o.id) : "Indice : " + (o.indice || ""));
+        root.appendChild(d);
+      });
+    }
+
+    var hist = Array.isArray(e.histoires) ? e.histoires : [];
+    var deb = Array.isArray(e.debloquees) ? e.debloquees : [];
+    head("Histoires vécues");
+    var p = document.createElement("p");
+    p.className = "hist" + (hist.length ? "" : " none");
+    if (hist.length) hist.forEach(function (t, i) { if (i) { var s = document.createElement("span"); s.className = "sep"; s.textContent = "·"; p.appendChild(s); } p.appendChild(document.createTextNode(t)); });
+    else p.textContent = "Aucune histoire n'a eu le temps de s'écrire.";
+    root.appendChild(p);
+    if (deb.length) {
+      var p2 = document.createElement("p");
+      p2.className = "hist";
+      var b2 = document.createElement("b"); b2.textContent = (deb.length > 1 ? "Débloquées : " : "Débloquée : "); p2.appendChild(b2);
+      deb.forEach(function (t, i) { if (i) { var s2 = document.createElement("span"); s2.className = "sep"; s2.textContent = "·"; p2.appendChild(s2); } p2.appendChild(document.createTextNode(t)); });
+      root.appendChild(p2);
+    }
   }
 
   // La date du journal : la saison ouvre le 1er août, un temps du calendrier vaut
@@ -1129,14 +1471,8 @@
     para(club + ".", sentences.join(" "));
 
     // les relevés de match (« D V N · 3 pts ») restent au tableau, pas dans le journal
-    var heard = answerLog.slice(0, -1).filter(function (a) { return !/\bpts\b/.test(a); }).slice(-3);
+    var heard = answerLog.slice(0, -1).filter(function (a) { return !/\bpts\b/.test(a); }).slice(-2);
     if (heard.length) para("Ce qu'on a entendu.", heard.join(" "));
-
-    var gs = (view.gauges || []).map(function (g) { return g.label + " " + g.value; }).join(", ");
-    var brief = "Au tableau, à l'heure du bouclage : " + gs + ".";
-    if (view.promiseTo && view.objective) brief += " Sur le carnet de promesses, faite à " + view.promiseTo + " : « " + view.objective + " ».";
-    else if (view.objective) brief += " Objectif affiché : " + String(view.objective).toLowerCase() + ", sans promesse signée.";
-    para("En bref.", brief);
 
     var voices = Object.keys(CHARS).map(function (k) { return CHARS[k]; }).filter(function (c) {
       return c && c.tic && c.label && c.camp !== "selection" && c.id !== (sp && sp.id);

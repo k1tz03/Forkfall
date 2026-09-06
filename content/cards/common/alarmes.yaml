@@ -10,8 +10,8 @@ cards:
     speaker: vukic
     when: "gauges.vestiaire < 25"
     text: "Vukić, à voix basse : « Je te le dis parce que personne ne te le dira : ils ne veulent plus descendre du bus. Le chauffeur non plus. »"
-    left: {label: "Je monte leur parler", effects: {vestiaire: "+++", direction: "-"}, answer: "Vingt minutes dans le bus. Le chauffeur pleure, les autres descendent."}
-    right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace]}, answer: "Le bus repart sans jouer. Le stade siffle le vide."}
+    left: {label: "Je monte leur parler", effects: {vestiaire: "+++", direction: "-", journal: {text: "{annee} : vingt minutes dans le bus. Le chauffeur a pleuré, les autres sont descendus.", poids: 2, tags: [vestiaire]}}, answer: "Vingt minutes dans le bus. Le chauffeur pleure, les autres descendent."}
+    right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace], react: en.re.vecchio_bus, journal: {text: "{annee} : le bus est reparti sans jouer. Le stade a sifflé le vide.", poids: 2, tags: [vestiaire]}}, answer: "Le bus repart sans jouer. Le stade siffle le vide."}
 
   - id: en.alarme.vestiaire_bas_vecchio
     roles: [entraineur]
@@ -20,8 +20,8 @@ cards:
     speaker: vecchio
     when: "gauges.vestiaire < 25"
     text: "Vecchio, gants sous le bras : « Ils ne veulent plus descendre du bus. J'en ai vu d'autres. Pas celle-là. Je descends le premier, si tu montes leur parler. »"
-    left: {label: "Je monte", effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}}, answer: "Gigi descend le premier. Les autres suivent, un par un."}
-    right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace]}, answer: "Gigi descend seul. Il attend sur le parking."}
+    left: {label: "Je monte", effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}, journal: {text: "{annee} : le bus. {nom} est monté{pg, select, f{e} other{}} ; Gigi Vecchio est descendu le premier.", poids: 2, tags: [vestiaire]}}, answer: "Gigi descend le premier. Les autres suivent, un par un."}
+    right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace], journal: {text: "{annee} : le bus est resté fermé. Gigi Vecchio est descendu seul, gants sous le bras.", poids: 2, tags: [vestiaire]}}, answer: "Gigi descend seul. Il attend sur le parking."}
 
   - id: en.alarme.vestiaire_haut_brehaut
     roles: [entraineur]
@@ -29,9 +29,9 @@ cards:
     tags: [vestiaire]
     speaker: brehaut
     when: "gauges.vestiaire > 75"
-    text: "Bréhaut, ravi : « Le groupe vit bien. Trop bien : ils t'appellent par ton prénom devant le président, et le président a noté le prénom. »"
-    left: {label: "Je remets de la distance", effects: {vestiaire: "--", direction: "+"}, answer: "Retour au vouvoiement. Quelqu'un rit, puis plus personne."}
-    right: {label: "On est une famille", effects: {vestiaire: "+", direction: "--"}, answer: "Le président apprend qu'il n'est pas de la famille."}
+    text: "Bréhaut, ravi : « Le groupe vit bien. Trop bien : ils t'appellent {prenom} devant le président, et le président a noté le prénom. »"
+    left: {label: "Je remets de la distance", effects: {vestiaire: "--", direction: "+", journal: {text: "{annee} : retour au vouvoiement dans le vestiaire. Quelqu'un a ri, puis plus personne.", poids: 1, tags: [vestiaire]}}, answer: "Retour au vouvoiement. Quelqu'un rit, puis plus personne."}
+    right: {label: "On est une famille", effects: {vestiaire: "+", direction: "--", journal: {text: "{annee} : « On est une famille », a dit {nom}. Le président a appris qu'il n'en était pas.", poids: 2, tags: [vestiaire, direction]}}, answer: "Le président apprend qu'il n'est pas de la famille."}
 
   - id: en.alarme.tribunes_bas_gege
     roles: [entraineur]
@@ -39,9 +39,9 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     when: "gauges.tribunes < 25"
-    text: "Gégé, une aiguille à la main : « La banderole est cousue. Vingt mètres. Il manque juste ton nom, et j'ai un stylo. La tribune n'oublie rien. »"
-    left: {label: "Je m'explique au local", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}}, answer: "Deux heures au local. La banderole reste pliée. Pour l'instant."}
-    right: {label: "Le terrain répondra", effects: {tribunes: "-", force: 2}, answer: "Il range l'aiguille. Il garde le stylo."}
+    text: "Gégé, une aiguille à la main : « La banderole est cousue. Vingt mètres. {NOM} tient sur trois ; il manque l'accent, et j'ai un stylo. La tribune n'oublie rien. »"
+    left: {label: "Je m'explique au local", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}, journal: {text: "{annee} : deux heures au local pour une banderole de vingt mètres. Elle est restée pliée. Pour l'instant.", poids: 2, tags: [ultras, tribunes]}}, answer: "Deux heures au local. La banderole reste pliée. Pour l'instant."}
+    right: {label: "Le terrain répondra", effects: {tribunes: "-", force: 2, journal: {text: "{annee} : vingt mètres de banderole cousue. {nom} a répondu par le terrain ; Gégé a gardé le stylo.", poids: 2, tags: [ultras, tribunes]}}, answer: "Il range l'aiguille. Il garde le stylo."}
 
   - id: en.alarme.tribunes_haut_gege
     roles: [entraineur]
@@ -51,8 +51,8 @@ cards:
     tone: leger
     when: "gauges.tribunes > 75"
     text: "Gégé, radieux : « On t'aime tellement qu'on a repeint ton vestiaire aux couleurs du virage. Cette nuit. On avait la clé. »"
-    left: {label: "Le vestiaire, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "Deux couches de blanc lundi. Le virage note ceux qui ont tenu le rouleau."}
-    right: {label: "Écoutons le peuple", effects: {tribunes: "+", vestiaire: "--", set: [otage_kop]}, answer: "Bréhaut retrouve son casier en vert. Il ne demande pas qui avait la clé."}
+    left: {label: "Le vestiaire, c'est moi", effects: {tribunes: "--", vestiaire: "+", journal: {text: "{annee} : le virage a repeint le vestiaire la nuit. Deux couches de blanc le lundi.", poids: 1, tags: [ultras, vestiaire]}}, answer: "Deux couches de blanc lundi. Le virage note ceux qui ont tenu le rouleau."}
+    right: {label: "Écoutons le peuple", effects: {tribunes: "+", vestiaire: "--", set: [otage_kop], journal: {text: "{annee} : le vestiaire aux couleurs du virage. Bréhaut a retrouvé son casier en vert.", poids: 2, tags: [ultras, vestiaire]}}, answer: "Bréhaut retrouve son casier en vert. Il ne demande pas qui avait la clé."}
 
   - id: en.alarme.tribunes_haut_vukic
     roles: [entraineur]
@@ -62,8 +62,8 @@ cards:
     tone: leger
     when: "gauges.tribunes > 75"
     text: "Vukić, gêné : « Je te le dis parce que personne ne te le dira. Le virage a repeint le vestiaire cette nuit, aux couleurs du kop. Ils avaient la clé. »"
-    left: {label: "Le vestiaire, c'est moi", effects: {tribunes: "--", vestiaire: "+"}, answer: "Deux couches de blanc lundi. Le virage note ceux qui ont tenu le rouleau."}
-    right: {label: "Écoutons le peuple", effects: {tribunes: "+", vestiaire: "--", set: [otage_kop]}, answer: "Bréhaut retrouve son casier en vert. Il ne demande pas qui avait la clé."}
+    left: {label: "Le vestiaire, c'est moi", effects: {tribunes: "--", vestiaire: "+", journal: {text: "{annee} : le virage a repeint le vestiaire la nuit. Deux couches de blanc le lundi.", poids: 1, tags: [ultras, vestiaire]}}, answer: "Deux couches de blanc lundi. Le virage note ceux qui ont tenu le rouleau."}
+    right: {label: "Écoutons le peuple", effects: {tribunes: "+", vestiaire: "--", set: [otage_kop], journal: {text: "{annee} : le vestiaire aux couleurs du virage. Bréhaut a retrouvé son casier en vert.", poids: 2, tags: [ultras, vestiaire]}}, answer: "Bréhaut retrouve son casier en vert. Il ne demande pas qui avait la clé."}
 
   - id: en.alarme.direction_bas_josiane
     roles: [entraineur]
@@ -72,8 +72,8 @@ cards:
     speaker: josiane
     when: "gauges.direction < 25"
     text: "Madame Josiane, porte fermée : « Le président ne vous salue plus. Il a demandé votre numéro de fax, sans dire pourquoi. J'en ai vu passer, vous savez. »"
-    left: {label: "Je force sa porte ce soir", effects: {direction: "+++", vestiaire: "-"}, answer: "Une heure de bureau. Il ne signe rien, mais il te ressert un café."}
-    right: {label: "Qu'il faxe", effects: {direction: "-", tribunes: "+", parole: -1}, answer: "Le fax arrive. Trois lignes. La quatrième est la signature."}
+    left: {label: "Je force sa porte ce soir", effects: {direction: "+++", vestiaire: "-", journal: {text: "{annee} : une heure dans le bureau du président. Il n'a rien signé ; il a resservi un café à {nom}.", poids: 2, tags: [direction]}}, answer: "Une heure de bureau. Il ne signe rien, mais il te ressert un café."}
+    right: {label: "Qu'il faxe", effects: {direction: "-", tribunes: "+", parole: -1, journal: {text: "{annee} : le président a demandé le numéro de fax de {nom}. Trois lignes ; la quatrième signait.", poids: 2, tags: [direction]}}, answer: "Le fax arrive. Trois lignes. La quatrième est la signature."}
 
   - id: en.alarme.direction_haut_aulard
     roles: [entraineur]
@@ -81,9 +81,9 @@ cards:
     tags: [direction]
     speaker: aulard
     when: "gauges.direction > 75"
-    text: "Aulard, bras ouverts : « Je t'adore. Je crée pour toi un poste de Directeur du Développement International. Le bureau est sans fenêtre, comme l'international. »"
-    left: {label: "J'accepte le titre", effects: {direction: "--", caisse: "+"}, answer: "Le bureau existe. La fenêtre non. Le vestiaire non plus."}
-    right: {label: "Je reste sur le banc", effects: {direction: "---", vestiaire: "++"}, answer: "Il range la plaque. Il la garde dans un tiroir, à ton nom."}
+    text: "Aulard, bras ouverts : « Je t'adore, {toi}. Je crée pour toi un poste de Directeur du Développement International. Le bureau est sans fenêtre, comme l'international. »"
+    left: {label: "J'accepte le titre", effects: {direction: "--", caisse: "+", journal: {text: "{annee} : {nom}, Directeur du Développement International. Le bureau existe, la fenêtre non.", poids: 2, tags: [direction, absurde]}}, answer: "Le bureau existe. La fenêtre non. Le vestiaire non plus."}
+    right: {label: "Je reste sur le banc", effects: {direction: "---", vestiaire: "++", journal: {text: "{annee} : {nom} a refusé le placard doré. Le président a rangé la plaque dans un tiroir.", poids: 2, tags: [direction]}}, answer: "Il range la plaque. Il la garde dans un tiroir, à ton nom."}
 
   - id: en.alarme.caisse_bas_josiane
     roles: [entraineur]
@@ -91,9 +91,9 @@ cards:
     tags: [caisse]
     speaker: josiane
     when: "gauges.caisse < 25"
-    text: "Madame Josiane, un relevé à la main : « Le banquier a appelé. Deux fois. La deuxième, il a demandé si vous étiez cher à déménager. »"
-    left: {label: "On vend un joueur", effects: {caisse: "+++", vestiaire: "--", force: -3}, answer: "Le vestiaire compte les casiers vides. Il en manque un."}
-    right: {label: "On serre les dents, juin", effects: {caisse: "-", direction: "+", set: [salaires_retard]}, answer: "Les salaires partent le 12 au lieu du 1er. Personne ne dit rien. Encore."}
+    text: "Madame Josiane, un relevé à la main : « Le banquier a appelé. Deux fois. La deuxième, il a demandé si {nom} coûtait cher à déménager. »"
+    left: {label: "On vend un joueur", effects: {caisse: "+++", vestiaire: "--", force: -3, journal: {text: "{annee} : un joueur vendu pour rassurer le banquier. Le vestiaire a compté les casiers ; il en manquait un.", poids: 2, tags: [caisse, vestiaire]}}, answer: "Le vestiaire compte les casiers vides. Il en manque un."}
+    right: {label: "On serre les dents, juin", effects: {caisse: "-", direction: "+", set: [salaires_retard], journal: {text: "{annee} : les salaires sont partis le 12 au lieu du 1er. Personne n'a rien dit. Encore.", poids: 2, tags: [caisse, vestiaire]}}, answer: "Les salaires partent le 12 au lieu du 1er. Personne ne dit rien. Encore."}
 
   - id: en.alarme.caisse_haut_meneche
     roles: [entraineur]
@@ -102,8 +102,8 @@ cards:
     speaker: meneche
     when: "gauges.caisse > 75"
     text: "Ménèche : « Juste une question, hors micro. D'où vient l'argent ? Je demande pour un ami, il travaille à la Commission de Contrôle des Comptes. »"
-    left: {label: "Un mécène", effects: {caisse: "--", direction: "+"}, answer: "Il note « mécène ». Il souligne deux fois."}
-    right: {label: "Ça ne vous regarde pas", effects: {caisse: "+", tribunes: "-", relation: {meneche: -1}}, answer: "Il note le silence. Il note toujours."}
+    left: {label: "Un mécène", effects: {caisse: "--", direction: "+", journal: {text: "{annee} : « Un mécène », a répondu {nom} à Ménèche. Il a souligné le mot deux fois.", poids: 1, tags: [presse, caisse]}}, answer: "Il note « mécène ». Il souligne deux fois."}
+    right: {label: "Ça ne vous regarde pas", effects: {caisse: "+", tribunes: "-", relation: {meneche: -1}, journal: {text: "{annee} : d'où vient l'argent ? « Ça ne vous regarde pas. » Ménèche a noté le silence.", poids: 1, tags: [presse, caisse]}}, answer: "Il note le silence. Il note toujours."}
 
   # ------------------------------------------------------------------- joueur
   - id: jp.alarme.vestiaire_bas_brehaut

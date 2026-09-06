@@ -11,9 +11,13 @@
 ///       dart run fusible_tools:simulate --reservoir --postulat 0 [--runs 200] [--seasons 3]
 ///       dart run fusible_tools:simulate --diff <seedA> <seedB> [--postulat 0] [--seasons 3]
 ///       dart run fusible_tools:simulate --trace <seed> [--postulat 0] [--seasons 2]
+///       dart run fusible_tools:simulate --une-check [--postulat 0] [--runs 200]
 ///
-/// The diversity metrics have no `--assert` yet (spec §6 étape 0) : the spec
-/// thresholds are printed next to the values, nothing more.
+/// The diversity volume budgets have no `--assert` yet (spec §6 étape 0) : the
+/// spec thresholds are printed next to the values. Since step 2, `--assert`
+/// enforces the invariants of §5.2-5.3 on every mode : zero unresolved
+/// placeholder, reactions served at latency 1 and never twice in a row, and a
+/// Une that never lies (`--une-check` runs that comparison alone).
 library;
 
 import 'dart:io';
@@ -92,6 +96,44 @@ class RunStats {
   String ending = '';
   int seasons = 0;
   int roles = 1;
+  // Étape 2 (spec variété §5.2-5.3) : mesurés sur toute politique, asserts globaux.
+  int unresolved = 0; // `{…}` restant dans un texte servi (cartes, Une, journal, fin)
+  final List<String> unresolvedSamples = [];
+  int reactions = 0; // réactions servies
+  int reactionsLat1 = 0; // … servies au tirage qui suit le swipe qui les a posées
+  int reactionsConsecutive = 0; // … servies juste après une autre réaction
+  int reactionsMissed = 0; // stats.miss_reaction (plafond, `when` faux, carte disparue)
+  int uneChecks = 0; // Bilans où la Une a été comparée au verdict appliqué
+  int uneChecksOk = 0; // … et disait vrai (payload.tenu / payload.rang)
+  final List<String> uneCheckFailures = [];
+}
+
+/// Nombre de placeholders non résolus dans un texte servi : tout `{` qui
+/// subsiste (un `{x}` inconnu, un `select` mal formé). Zéro attendu (§5.3).
+int _unresolvedIn(String? t) => t == null ? 0 : '{'.allMatches(t).length;
+
+/// Vrai si la carte servie porte le nom du joueur (spec variété §5.3) : un
+/// placeholder de nom dans son texte ou ses `answer`, ou `{toi}` résolu par une
+/// adresse qui cite `{prenom}` / `{nom}` (le locuteur et la relation de l'instant).
+bool _carriesName(Content content, GameState s, Pending p) {
+  final card = content.cards[p.id];
+  if (card == null) return false;
+  String? adresse;
+  final sp = card.speaker;
+  if (sp != null) {
+    final rel = s.relations[sp] ?? 0;
+    final expr = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
+    adresse = content.characters[sp]?.adresseFor(s.role, expr) ?? (s.role == 'joueur' ? '{prenom}' : 'coach');
+  }
+  final adresseNamed = adresse != null && placeholdersOf(adresse).any(kNamePlaceholders.contains);
+  bool named(String? t) {
+    if (t == null) return false;
+    final ph = placeholdersOf(t);
+    if (ph.any((x) => x != 'toi' && x != 'Toi' && kNamePlaceholders.contains(x))) return true;
+    return adresseNamed && (ph.contains('toi') || ph.contains('Toi'));
+  }
+
+  return named(card.text) || named(card.left.answer) || named(card.right.answer);
 }
 
 // ---------------------------------------------------------------------------
@@ -158,6 +200,9 @@ class SeasonRecord {
   int story = 0;
   int routine = 0;
   bool couture = false; // a served card read a trace posed in an earlier season
+  int reactions = 0; // réactions servies (étape 2)
+  int nameCards = 0; // cartes portant un placeholder de nom
+  int nameConsecutive = 0; // … deux de suite
   final List<String> storyCards = [];
   final List<String> firstStory = []; // ids of the first five story beats
   final List<String> arcSteps = []; // 'arc/step' in serving order
@@ -177,6 +222,14 @@ class RunRecord {
   final Map<String, String> outcomes = {}; // arc -> outcome (tolerant, absent today)
   final List<String> filRouge = []; // per season (tolerant, absent today)
   final List<String> journal = []; // tolerant, absent today
+  // Étape 2 (spec variété §5.3) : Une, brèves, journal, réactions.
+  final List<int> unePriorities = []; // priorité de la manchette servie à chaque Bilan (-1 : aucune)
+  int bilans = 0;
+  int brevesFull = 0; // Bilans avec `unes_breves` brèves issues du journal
+  final Map<int, int> journalHeavy = {}; // saison → entrées de poids ≥ 2
+  final Map<int, int> journalPerSeason = {}; // saison → entrées (après compaction pour les saisons closes)
+  int seasonClosed = 0; // saisons dont le journal a été compacté (season < s.season à la fin)
+  RunStats stats = RunStats();
   String ending = '';
   int seasonsPlayed = 0;
   RunRecord(this.seed);
@@ -376,11 +429,50 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     }
   }
 
+  // Étape 2 : réactions (latence, consécutives), nom, placeholders, Une.
+  bool prevPosed = false; // le swipe précédent a posé une réaction (react d'un choix ou d'une manchette)
+  bool prevWasReaction = false;
+  bool prevWasName = false;
+  bool? uneTenu; // payload.tenu / payload.rang de la Une en attente du verdict
+  int uneRang = 0;
+  void scanText(String? t, String where) {
+    final n = _unresolvedIn(t);
+    if (n == 0) return;
+    stats.unresolved += n;
+    if (stats.unresolvedSamples.length < 5) stats.unresolvedSamples.add('$where : ${t!.length > 80 ? '${t.substring(0, 80)}…' : t}');
+  }
+
+  void scanPending(Pending p) {
+    scanText(p.text, p.id);
+    scanText(p.leftLabel, '${p.id}/left');
+    scanText(p.rightLabel, '${p.id}/right');
+    for (final k in const ['answerLeft', 'answerRight', 'titre', 'sous', 'journal_nom', 'epitaph', 'epitaph_plus']) {
+      final v = p.payload[k];
+      if (v is String) scanText(v, '${p.id}/$k');
+    }
+    for (final k in const ['breves', 'histoires', 'debloquees']) {
+      final v = p.payload[k];
+      if (v is List) {
+        for (final b in v) {
+          scanText(b.toString(), '${p.id}/$k');
+        }
+      }
+    }
+  }
+
   noteOpenings();
   while (!s.over && step < 5000) {
     final p = s.pending!;
     seenCards.add(p.id);
     rec?.seen.add(p.id);
+    scanPending(p);
+    final isReaction = p.payload['kind'] == 'reaction';
+    if (isReaction) {
+      stats.reactions += 1;
+      if (prevPosed) stats.reactionsLat1 += 1;
+      if (prevWasReaction) stats.reactionsConsecutive += 1;
+    }
+    prevWasReaction = isReaction;
     if (p.kind == 'narrative') {
       if (s.season >= maxSeasons) break;
       final kind = p.payload['kind'] as String? ?? 'routine';
@@ -425,9 +517,11 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         m.events = math.max(m.events, s.eventsThisSeason);
         if (sp != null) {
           m.speakers[sp] = (m.speakers[sp] ?? 0) + 1;
-          if (sp == m.lastSpeaker) m.samePairs += 1;
+          // Une réaction « relance » est souvent le même visage qui revient à la
+          // charge (spec variété §1.4) : elle ne compte pas comme une paire de voix.
+          if (sp == m.lastSpeaker && !isReaction) m.samePairs += 1;
         }
-        m.lastSpeaker = sp;
+        if (!isReaction) m.lastSpeaker = sp;
         final backlog = s.scheduled.where((e) => e.deadlineN <= s.ncards).length;
         m.maxBacklog = math.max(m.maxBacklog, backlog);
         if (s.season == 0) s0Ids.add(p.id);
@@ -441,6 +535,13 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         }
         final r = curRec;
         r.cards += 1;
+        if (isReaction) r.reactions += 1;
+        final named = _carriesName(content, s, p);
+        if (named) {
+          r.nameCards += 1;
+          if (prevWasName) r.nameConsecutive += 1;
+        }
+        prevWasName = named;
         if (kind == 'routine' || kind == 'filler') r.routine += 1;
         if (kStoryKinds.contains(kind)) {
           r.story += 1;
@@ -468,21 +569,59 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           '${((p.payload['arc'] as String?) ?? '').padRight(24)} ${((p.payload['step'] as String?) ?? '').padRight(12)} · ${(sp ?? '—').padRight(9)} · ${tone.padRight(11)} · ${p.id}'
           '${p.payload['forced'] == true ? '  [forcé]' : ''}');
     } else {
-      if (rec != null && p.kind == 'bilan_une') {
-        if (s.season >= maxSeasons) break;
+      if (p.kind == 'bilan_une') {
+        if (rec != null && s.season >= maxSeasons) break;
         final une = p.payload['une'];
-        rec.unes.add(une is String && une.isNotEmpty ? une : _normaliseUne(s, p.text));
+        if (rec != null) {
+          rec.unes.add(une is String && une.isNotEmpty ? une : _normaliseUne(s, p.text));
+          rec.unePriorities.add((p.payload['priority'] as num?)?.toInt() ?? -1);
+          rec.bilans += 1;
+          final breves = p.payload['breves'];
+          if (breves is List && breves.length >= content.director.unesBreves) rec.brevesFull += 1;
+        }
+        // « La Une ne ment pas » (spec variété §1.6, §5.3) : le verdict lu par la
+        // manchette est comparé à celui que `_resolveBilan` applique au swipe
+        // du Verdict, deux cartes plus loin.
+        uneTenu = p.payload['tenu'] == true;
+        uneRang = (p.payload['rang'] as num?)?.toInt() ?? 0;
       }
       trace?.writeln('S${s.season} ·         · n ${s.ncards.toString().padLeft(3)} ·         · ${p.kind.padRight(9)} · ${p.id}');
     }
     final seasonBefore = s.season;
-    s = engine.choose(s, policy(s, step));
+    final right = policy(s, step);
+    // Le swipe pose-t-il une réaction ? (latence mesurée au tirage suivant)
+    if (p.kind == 'narrative') {
+      prevPosed = (right ? p.rightEffects : p.leftEffects).react.isNotEmpty;
+    } else if (p.kind == 'bilan_une') {
+      final une = p.payload['une'];
+      prevPosed = une is String && content.unes.any((u) => u.id == une && u.react.isNotEmpty);
+    } else {
+      prevPosed = false;
+    }
+    final wasVerdict = p.kind == 'bilan_verdict';
+    s = engine.choose(s, right);
     step++;
+    if (wasVerdict && uneTenu != null) {
+      final tenu = s.flags.contains('bilan_tenu');
+      final ok = tenu == uneTenu && s.world.rangFinal == uneRang;
+      stats.uneChecks += 1;
+      if (ok) {
+        stats.uneChecksOk += 1;
+      } else if (stats.uneCheckFailures.length < 5) {
+        stats.uneCheckFailures.add('graine $seed S$seasonBefore : Une tenu=$uneTenu rang=$uneRang · verdict tenu=$tenu rang=${s.world.rangFinal}');
+      }
+      uneTenu = null;
+    }
     if (rec != null) {
       noteTraces(seasonBefore);
       noteOpenings();
     }
   }
+  if (s.over && s.pending != null) scanPending(s.pending!); // l'écran de fin (épitaphe, « Ce qui s'est passé »)
+  for (final e in s.journal) {
+    scanText(e.text, 'journal/${e.kind}');
+  }
+  stats.reactionsMissed = s.stats['miss_reaction'] ?? 0;
   closeSeason(over: s.over);
   if (nar != null) {
     nar.runs += 1;
@@ -507,6 +646,12 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     final played = rec.seasons.map((x) => x.season).toSet();
     rec.openings.removeWhere((o) => !played.contains(o.season));
     noteTolerant();
+    rec.stats = stats;
+    for (final e in s.journal) {
+      rec.journalPerSeason[e.season] = (rec.journalPerSeason[e.season] ?? 0) + 1;
+      if (e.poids >= 2) rec.journalHeavy[e.season] = (rec.journalHeavy[e.season] ?? 0) + 1;
+    }
+    rec.seasonClosed = s.season; // les saisons < s.season ont été compactées à leur ouverture suivante
   }
   stats.turns = s.turn;
   stats.ending = s.endingId ?? 'inconnu';
@@ -573,10 +718,15 @@ List<ArcDef> reservoirArcs(Content content, PostulatDef post) => content.arcsSor
     .where((a) => a.kind == 'serie' && a.roles.contains(post.role) && (a.postulats.isEmpty || a.postulats.contains(post.id)))
     .toList();
 
-void _reportDiversity(List<RunRecord> recs, Content content, int postulat, int maxSeasons) {
+/// Prints the diversity report ; returns the budgets that `--assert` enforces
+/// at this stage (reactions consecutive / latency, « la Une ne ment pas »,
+/// unresolved placeholders — spec variété §5.2-5.3 ; the volume budgets are
+/// printed with their threshold only).
+List<String> _reportDiversity(List<RunRecord> recs, Content content, int postulat, int maxSeasons) {
   final post = content.postulatsByIndex[postulat];
   final n = recs.length;
-  if (n == 0) return;
+  final failures = <String>[];
+  if (n == 0) return failures;
   stdout.writeln('── Diversité (spec variété §5.1-5.3) · postulat $postulat « ${post.title} » · $n runs · ${maxSeasons >= 99 ? 'carrières entières' : '$maxSeasons saison(s)'} ──');
 
   // --- 5.1 variété perçue -------------------------------------------------
@@ -745,18 +895,88 @@ void _reportDiversity(List<RunRecord> recs, Content content, int postulat, int m
   final coutureShare = later.isEmpty ? 0.0 : coutures / later.length;
   _line(coutureShare >= 0.70, 'coutures : saisons S1+ lisant une trace antérieure', later.isEmpty ? 'aucune saison S1+' : '${_f(100 * coutureShare, 0)} % ($coutures/${later.length})', '≥ 70 %');
 
-  // --- 5.3 Unes -----------------------------------------------------------
+  // --- 5.2 réactions (étape 2) ---------------------------------------------
+  final allSeasons = recs.expand((r) => r.seasons).toList();
+  final rxPerSeason = allSeasons.map((x) => x.reactions).toList();
+  final rxMean = _mean(rxPerSeason);
+  final rxMax = rxPerSeason.isEmpty ? 0 : rxPerSeason.reduce(math.max);
+  int rxServed = 0, rxLat1 = 0, rxConsec = 0, rxMissed = 0;
+  for (final r in recs) {
+    rxServed += r.stats.reactions;
+    rxLat1 += r.stats.reactionsLat1;
+    rxConsec += r.stats.reactionsConsecutive;
+    rxMissed += r.stats.reactionsMissed;
+  }
+  final latShare = rxServed == 0 ? 1.0 : rxLat1 / rxServed;
+  final rxMaxOk = rxMax <= content.director.reactionsMax;
+  _line(rxMean >= 1.5 && rxMean <= 3 && rxMaxOk && rxConsec == 0 && latShare >= 1.0, 'réactions par saison',
+      'moy ${_f(rxMean, 2)} · max $rxMax · consécutives $rxConsec · latence 1 ${_f(100 * latShare, 0)} % ($rxLat1/$rxServed) · perdues $rxMissed',
+      '1,5-3 · ≤ ${content.director.reactionsMax} · 0 · 100 %');
+  if (rxConsec != 0) failures.add('réactions consécutives $rxConsec');
+  if (latShare < 1.0) failures.add('latence des réactions ${_f(100 * latShare, 0)} %');
+  if (!rxMaxOk) failures.add('réactions par saison max $rxMax > ${content.director.reactionsMax}');
+
+  // --- 5.3 Unes, journal, nom, placeholders --------------------------------
   final uneFreq = <String, int>{};
-  int bilans = 0;
+  int bilans = 0, generic = 0, secours = 0, brevesFull = 0, checks = 0, checksOk = 0;
+  final checkFailures = <String>[];
   for (final r in recs) {
     for (final u in r.unes) {
       bilans += 1;
       uneFreq[u] = (uneFreq[u] ?? 0) + 1;
     }
+    for (final pr in r.unePriorities) {
+      if (pr <= 1) generic += 1;
+      if (pr <= 0) secours += 1;
+    }
+    brevesFull += r.brevesFull;
+    checks += r.stats.uneChecks;
+    checksOk += r.stats.uneChecksOk;
+    if (checkFailures.length < 3) checkFailures.addAll(r.stats.uneCheckFailures.take(3 - checkFailures.length));
   }
   final topUne = uneFreq.entries.toList()..sort((a, b) => b.value != a.value ? b.value.compareTo(a.value) : a.key.compareTo(b.key));
   final topShare = bilans == 0 ? 0.0 : topUne.first.value / bilans;
-  _line(uneFreq.length >= 12 && topShare <= 0.30, 'Unes distinctes / Bilans', '${uneFreq.length} / $bilans · la plus fréquente ${_f(100 * topShare, 0)} %', '≥ 12 ; aucune > 30 %');
+  final genShare = bilans == 0 ? 0.0 : generic / bilans;
+  final secShare = bilans == 0 ? 0.0 : secours / bilans;
+  _line(uneFreq.length >= 12 && topShare <= 0.30 && genShare < 0.25 && secShare < 0.10, 'Unes distinctes / Bilans',
+      '${uneFreq.length} / $bilans · la plus fréquente ${_f(100 * topShare, 0)} % · génériques (priorité ≤ 1) ${_f(100 * genShare, 0)} % · secours (0) ${_f(100 * secShare, 0)} %',
+      '≥ 12 ; aucune > 30 % ; génériques < 25 % ; secours < 10 %');
+  final checkShare = checks == 0 ? 1.0 : checksOk / checks;
+  _line(checkShare >= 1.0, 'la Une ne ment pas (tenu et rang == verdict appliqué)', '${_f(100 * checkShare, 0)} % ($checksOk/$checks)${checkFailures.isEmpty ? '' : ' · ${checkFailures.join(' ; ')}'}', '100 %');
+  if (checkShare < 1.0) failures.add('la Une ment dans ${checks - checksOk} Bilan(s)');
+  final brevesShare = bilans == 0 ? 0.0 : brevesFull / bilans;
+  _line(brevesShare >= 0.90, 'brèves : Bilans avec ${content.director.unesBreves} brèves issues du journal', '${_f(100 * brevesShare, 0)} % ($brevesFull/$bilans)', '≥ 90 %');
+
+  final heavy = <int>[];
+  final perClosed = <int>[];
+  for (final r in recs) {
+    for (final sr in r.seasons) {
+      heavy.add(r.journalHeavy[sr.season] ?? 0);
+      if (sr.season < r.seasonClosed) perClosed.add(r.journalPerSeason[sr.season] ?? 0);
+    }
+  }
+  final heavyMin = heavy.isEmpty ? 0 : heavy.reduce(math.min);
+  final perMax = perClosed.isEmpty ? 0 : perClosed.reduce(math.max);
+  _line(_pct(heavy, 0.5) >= 3 && perMax <= content.director.journalParSaison, 'journal : entrées de poids ≥ 2 par saison',
+      'médiane ${_f(_pct(heavy, 0.5), 0)} · min $heavyMin · moy ${_f(_mean(heavy))} · max après compaction $perMax (${perClosed.length} saisons closes)',
+      '≥ 3 ; ≤ ${content.director.journalParSaison} après compaction');
+
+  final withName = allSeasons.where((x) => x.nameCards >= 2).length;
+  final nameShare = allSeasons.isEmpty ? 0.0 : withName / allSeasons.length;
+  final nameConsec = allSeasons.fold<int>(0, (a, x) => a + x.nameConsecutive);
+  _line(nameShare >= 0.95 && nameConsec == 0, 'nom : saisons avec ≥ 2 cartes portant le nom',
+      '${_f(100 * nameShare, 0)} % ($withName/${allSeasons.length}) · moy ${_f(_mean(allSeasons.map((x) => x.nameCards)))} cartes/saison · deux de suite $nameConsec',
+      '≥ 95 % ; jamais deux de suite');
+
+  int unresolved = 0;
+  final samples = <String>[];
+  for (final r in recs) {
+    unresolved += r.stats.unresolved;
+    if (samples.length < 4) samples.addAll(r.stats.unresolvedSamples.take(4 - samples.length));
+  }
+  _line(unresolved == 0, 'placeholders non résolus (textes servis)', '$unresolved${samples.isEmpty ? '' : ' · ${samples.join(' ; ')}'}', '0');
+  if (unresolved != 0) failures.add('placeholders non résolus $unresolved');
+  return failures;
 }
 
 void _reportReservoir(List<RunRecord> recs, Content content, int postulat) {
@@ -867,9 +1087,9 @@ void _reportDiff(RunRecord a, RunRecord b, Content content, int postulat) {
   _line(d >= 0.6, 'distance de carrière D', _f(d, 2), 'médiane ≥ 0,6');
 }
 
-void _reportNarrative(Narrative nar, Content content, int postulat, bool assertBudgets) {
+void _reportNarrative(Narrative nar, Content content, int postulat, bool assertBudgets, {List<String> extraFailures = const []}) {
   final post = content.postulatsByIndex[postulat];
-  final failures = <String>[];
+  final failures = <String>[...extraFailures];
 
   stdout.writeln('── Métriques narratives · postulat $postulat « ${post.title} » · ${nar.runs} runs ──');
   for (final b in ['S0', 'S1', 'S2+']) {
@@ -981,6 +1201,7 @@ void main(List<String> args) {
   bool assertBudgets = false;
   bool narrative = false;
   bool reservoir = false;
+  bool uneCheck = false;
   int? postulat;
   int? traceSeed;
   int? diffA, diffB;
@@ -990,6 +1211,7 @@ void main(List<String> args) {
     if (args[i] == '--assert') assertBudgets = true;
     if (args[i] == '--narrative') narrative = true;
     if (args[i] == '--reservoir') reservoir = true;
+    if (args[i] == '--une-check') uneCheck = true;
     if (args[i] == '--postulat' && i + 1 < args.length) postulat = int.parse(args[i + 1]);
     if (args[i] == '--trace' && i + 1 < args.length) traceSeed = int.parse(args[i + 1]);
     if (args[i] == '--seasons' && i + 1 < args.length) maxSeasons = int.parse(args[i + 1]);
@@ -1033,8 +1255,41 @@ void main(List<String> args) {
       _reportReservoir(recs, content, p);
       if (!narrative) return;
     }
-    _reportDiversity(recs, content, p, maxSeasons);
-    _reportNarrative(nar, content, p, assertBudgets);
+    final extra = _reportDiversity(recs, content, p, maxSeasons);
+    _reportNarrative(nar, content, p, assertBudgets, extraFailures: assertBudgets ? extra : const []);
+    return;
+  }
+
+  if (uneCheck) {
+    // « La Une ne ment pas » (spec variété §3.7, §5.3) : sur `--runs` carrières
+    // (200 par défaut) de chaque postulat, `payload.tenu` et `payload.rang` de
+    // la Une valent le verdict appliqué au swipe du Verdict.
+    final n = runs == 5000 ? 200 : runs;
+    final posts = postulat == null ? List.generate(nPost, (i) => i) : [postulat];
+    int failed = 0;
+    for (final p in posts) {
+      int checks = 0, ok = 0, unresolved = 0;
+      final samples = <String>[];
+      for (int i = 0; i < n; i++) {
+        final r = runOne(engine, seedOfRun(i), p, _humanLike, <String>{});
+        checks += r.uneChecks;
+        ok += r.uneChecksOk;
+        unresolved += r.unresolved;
+        if (samples.length < 5) samples.addAll(r.uneCheckFailures.take(5 - samples.length));
+      }
+      final share = checks == 0 ? 1.0 : ok / checks;
+      stdout.writeln('── Une-check · postulat $p « ${content.postulatsByIndex[p].title} » · $n runs ──');
+      _line(share >= 1.0, 'la Une ne ment pas (tenu et rang == verdict)', '${_f(100 * share, 0)} % ($ok/$checks Bilans)', '100 %');
+      _line(unresolved == 0, 'placeholders non résolus', '$unresolved', '0');
+      for (final s in samples) {
+        stdout.writeln('    ✗ $s');
+      }
+      if (share < 1.0 || unresolved != 0) failed += 1;
+    }
+    if (failed > 0) {
+      stderr.writeln('$failed postulat(s) dont la Une ment ou laisse un placeholder.');
+      exit(1);
+    }
     return;
   }
 
@@ -1052,6 +1307,8 @@ void main(List<String> args) {
     final seen = <String>{};
     int seasonSum = 0;
     int roleTransitions = 0;
+    int unresolved = 0, rxServed = 0, rxLat1 = 0, rxConsec = 0, rxMissed = 0, uneChecks = 0, uneOk = 0;
+    final samples = <String>[];
     for (int i = 0; i < runs; i++) {
       final seed = seedOfRun(i);
       final r = runOne(engine, seed, postulat ?? seed % nPost, entry.value, seen);
@@ -1059,6 +1316,14 @@ void main(List<String> args) {
       endings[r.ending] = (endings[r.ending] ?? 0) + 1;
       seasonSum += r.seasons;
       roleTransitions += (r.roles - 1);
+      unresolved += r.unresolved;
+      rxServed += r.reactions;
+      rxLat1 += r.reactionsLat1;
+      rxConsec += r.reactionsConsecutive;
+      rxMissed += r.reactionsMissed;
+      uneChecks += r.uneChecks;
+      uneOk += r.uneChecksOk;
+      if (samples.length < 3) samples.addAll([...r.unresolvedSamples, ...r.uneCheckFailures].take(3 - samples.length));
     }
     lengths.sort();
     int pct(double q) => lengths[(q * (lengths.length - 1)).round()];
@@ -1073,16 +1338,28 @@ void main(List<String> args) {
     final topEndings = endings.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final causeLine = topEndings.take(6).map((e) => '${e.key} ${(100 * e.value / runs).toStringAsFixed(0)}%').join(' · ');
     stdout.writeln('  causes de fin : $causeLine');
+    final latShare = rxServed == 0 ? 1.0 : rxLat1 / rxServed;
+    final uneShare = uneChecks == 0 ? 1.0 : uneOk / uneChecks;
+    stdout.writeln('  réactions : ${(rxServed / runs).toStringAsFixed(2)}/run · latence 1 ${(100 * latShare).toStringAsFixed(0)} % · consécutives $rxConsec · perdues $rxMissed'
+        ' · la Une ne ment pas ${(100 * uneShare).toStringAsFixed(0)} % ($uneOk/$uneChecks) · placeholders non résolus $unresolved'
+        '${samples.isEmpty ? '' : ' : ${samples.join(' ; ')}'}');
 
-    // Budgets checked on the human_like policy.
-    if (assertBudgets && entry.key == 'human_like') {
-      void check(bool ok, String msg) {
-        if (!ok) {
-          stderr.writeln('  BUDGET VIOLÉ : $msg');
-          failures++;
-        }
+    // Budgets checked on the human_like policy ; the step-2 invariants
+    // (placeholders, reaction latency, Une) hold for every policy.
+    void check(bool ok, String msg) {
+      if (!ok) {
+        stderr.writeln('  BUDGET VIOLÉ : $msg');
+        failures++;
       }
+    }
 
+    if (assertBudgets) {
+      check(unresolved == 0, '${entry.key} : $unresolved placeholder(s) non résolu(s)');
+      check(rxConsec == 0, '${entry.key} : $rxConsec réaction(s) consécutive(s)');
+      check(latShare >= 1.0, '${entry.key} : latence des réactions ${(100 * latShare).toStringAsFixed(0)} %');
+      check(uneShare >= 1.0, '${entry.key} : la Une ment dans ${uneChecks - uneOk} Bilan(s)');
+    }
+    if (assertBudgets && entry.key == 'human_like') {
       check(median >= 20 && median <= 320, 'médiane hors [20,320] : $median');
       check(maxLen <= 1500, 'run trop long : $maxLen > 1500');
       final maxCause = topEndings.isEmpty ? 0.0 : topEndings.first.value / runs;
