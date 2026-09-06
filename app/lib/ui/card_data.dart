@@ -24,6 +24,7 @@ VignetteData vignetteFor(Pending p, GameState s, Content content, {String? expre
     number: number ?? s.turn,
     sablier: payload['sablier'] == true,
     kindTag: VignetteData.kindTagFor(payload['kind'] as String?),
+    reaction: payload['kind'] == 'reaction',
   );
 }
 

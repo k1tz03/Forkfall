@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fusible_core/fusible_core.dart';
 
@@ -8,6 +10,7 @@ import 'widgets/album_rail.dart';
 import 'widgets/magnets.dart';
 import 'widgets/paper.dart';
 import 'widgets/swipe_card.dart';
+import 'widgets/une_page.dart';
 import 'widgets/vignette.dart';
 
 const double _cardWidth = 222;
@@ -30,8 +33,32 @@ class _GameScreenState extends State<GameScreen> {
   // Une clé par carte : la vignette est remontée (et « pop ») à chaque carte.
   GlobalKey<SwipeCardState> _cardKey = GlobalKey<SwipeCardState>();
   String _cardKeyFor = '';
+  // Bandeau « Nouvelle histoire : {titre} » (spec variété §3.8) : 2 s à
+  // l'arrivée d'une carte dont le payload porte `unlocked_story`.
+  String? _banner;
+  Timer? _bannerTimer;
 
   GameController get c => widget.controller;
+
+  @override
+  void dispose() {
+    _bannerTimer?.cancel();
+    super.dispose();
+  }
+
+  void _onNewCard(Pending p) {
+    final story = p.payload['unlocked_story'];
+    _bannerTimer?.cancel();
+    _bannerTimer = null;
+    if (story == null) {
+      _banner = null;
+      return;
+    }
+    _banner = story.toString();
+    _bannerTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _banner = null);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +73,9 @@ class _GameScreenState extends State<GameScreen> {
     if (_cardKeyFor != cardId) {
       _cardKey = GlobalKey<SwipeCardState>();
       _cardKeyFor = cardId;
+      _onNewCard(p);
     }
+    final isUne = p.kind == 'bilan_une';
 
     void choose(bool right) {
       setState(() => _dx = 0);
@@ -81,6 +110,18 @@ class _GameScreenState extends State<GameScreen> {
                   const SizedBox(height: 6),
                   _Ruban(state: s),
                 ],
+                // La page de journal du Bilan (spec variété §1.6, §3.8) remplace
+                // la vignette, le texte et la réponse : elle défile, un seul
+                // magnet « Tourner la page ».
+                if (isUne)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      clipBehavior: Clip.hardEdge,
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 14),
+                      child: UnePage(data: UneData.fromPending(p, s, content)),
+                    ),
+                  )
+                else
                 // Zone de vignette (342 px de référence) + texte de carte + réponse
                 // précédente : le texte suit la vignette et les magnets suivent la
                 // réponse (8 à 30 px) ; ce qui reste tombe SOUS la hintline, comme
@@ -132,6 +173,7 @@ class _GameScreenState extends State<GameScreen> {
                                         child: Vignette(data: data, width: _cardWidth),
                                       ),
                                     ),
+                                    if (_banner != null) Positioned(top: -8, child: _StoryBanner(title: _banner!, reduced: reduced)),
                                   ],
                                 ),
                               ),
@@ -187,7 +229,7 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 const SizedBox(height: 8),
-                _Hintline(single: p.single),
+                _Hintline(single: p.single, une: isUne),
               ],
             ),
           ),
@@ -346,11 +388,13 @@ class _Ruban extends StatelessWidget {
 /// Hintline : « Décolle la vignette ← / →, ou pose un magnet ».
 class _Hintline extends StatelessWidget {
   final bool single;
-  const _Hintline({required this.single});
+  final bool une;
+  const _Hintline({required this.single, this.une = false});
 
   @override
   Widget build(BuildContext context) {
     final style = FusibleFonts.cond_(11, weight: FontWeight.w600, height: 1, spacing: .08, color: FusibleColors.creme.withValues(alpha: .55));
+    if (une) return Text('TOURNE LA PAGE', textAlign: TextAlign.center, style: style);
     if (single) return Text('POSE LE MAGNET', textAlign: TextAlign.center, style: style);
     WidgetSpan arrow(bool right) => WidgetSpan(alignment: PlaceholderAlignment.middle, child: ArrowGlyph(right: right, size: 10, color: style.color!));
     return Text.rich(
@@ -363,6 +407,87 @@ class _Hintline extends StatelessWidget {
       ]),
       textAlign: TextAlign.center,
       style: style,
+    );
+  }
+}
+
+/// Bandeau « Nouvelle histoire : {titre} » (spec variété §3.8) : sticker blanc
+/// −1,5°, pastille rouge, scotch au coin, titre en Fraunces italique ; il
+/// apparaît en 200 ms et reste 2 s.
+class _StoryBanner extends StatelessWidget {
+  final String title;
+  final bool reduced;
+  const _StoryBanner({required this.title, required this.reduced});
+
+  @override
+  Widget build(BuildContext context) {
+    final banner = Semantics(
+      label: 'Nouvelle histoire : $title',
+      liveRegion: true,
+      excludeSemantics: true,
+      child: Transform.rotate(
+        angle: -1.5 * 3.141592653589793 / 180,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Container(
+              constraints: const BoxConstraints(maxWidth: 300),
+              padding: const EdgeInsets.fromLTRB(12, 7, 14, 7),
+              decoration: BoxDecoration(
+                color: FusibleColors.blancVignette,
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(3),
+                  topRight: Radius.circular(6),
+                  bottomRight: Radius.circular(3),
+                  bottomLeft: Radius.circular(5),
+                ),
+                boxShadow: [
+                  const BoxShadow(color: Color(0xFFCFC3A0), offset: Offset(0, 3)),
+                  BoxShadow(color: Colors.black.withValues(alpha: .45), blurRadius: 18, offset: const Offset(0, 10)),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: FusibleColors.tampon,
+                      border: Border.all(color: FusibleColors.blancVignette, width: 2),
+                      boxShadow: const [BoxShadow(color: FusibleColors.tampon, spreadRadius: 1.5)],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  // Une seule ligne : « NOUVELLE HISTOIRE : » puis le titre en
+                  // Fraunces italique, coupée d'une ellipse si la place manque.
+                  Flexible(
+                    child: Text.rich(
+                      TextSpan(children: [
+                        TextSpan(text: 'NOUVELLE HISTOIRE : ', style: FusibleFonts.cond_(13, height: 1, spacing: .06)),
+                        TextSpan(text: title, style: FusibleFonts.paper_(13, italic: true, height: 1).copyWith(fontWeight: FontWeight.w600)),
+                      ]),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: FusibleFonts.cond_(13, height: 1, spacing: .06),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Positioned(left: -18, top: -6, child: Tape(width: 44, height: 13, angle: -32)),
+          ],
+        ),
+      ),
+    );
+    if (reduced) return banner;
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: FusibleMotion.pop,
+      curve: Curves.easeOut,
+      builder: (_, t, child) => Opacity(opacity: t, child: Transform.scale(scale: .9 + .1 * t, child: child)),
+      child: banner,
     );
   }
 }

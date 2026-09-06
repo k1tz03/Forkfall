@@ -149,3 +149,35 @@ class StickerButton extends StatelessWidget {
     );
   }
 }
+
+/// Lien-texte Barlow 12 souligné, crème 75 % (Rejouer, Partager, Almanach…).
+class GhostLink extends StatelessWidget {
+  final String label;
+  final String text;
+  final VoidCallback onPressed;
+  const GhostLink({super.key, required this.label, required this.text, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: label,
+      button: true,
+      onTap: onPressed,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTap: onPressed,
+        behavior: HitTestBehavior.opaque,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          child: Text(
+            text.toUpperCase(),
+            style: FusibleFonts.cond_(12, weight: FontWeight.w600, height: 1, spacing: .08, color: FusibleColors.creme.withValues(alpha: .75)).copyWith(
+              decoration: TextDecoration.underline,
+              decorationColor: FusibleColors.creme.withValues(alpha: .75),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

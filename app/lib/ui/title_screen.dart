@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fusible_core/fusible_core.dart';
 
 import '../state/game_controller.dart';
@@ -59,7 +60,7 @@ class _TitleScreenState extends State<TitleScreen> {
                               Positioned(
                                 left: 22,
                                 top: 20,
-                                child: _Album(open: _open, genre: c.state?.entities.genre ?? 'm', onTap: () => setState(() => _open = !_open)),
+                                child: _Album(open: _open, controller: c, onTap: () => setState(() => _open = !_open)),
                               ),
                               const Positioned(right: 12, top: 6, child: _Clipping()),
                               const Positioned(right: 14, bottom: 10, child: _Packet()),
@@ -95,8 +96,8 @@ class _TitleScreenState extends State<TitleScreen> {
                                 const SizedBox(height: 10),
                                 _PostulatGrid(
                                   postulats: postulats,
-                                  content: content,
-                                  onStart: (i) => c.newRun(i),
+                                  controller: c,
+                                  onStart: (i) => c.startRun(i),
                                 ),
                                 const Spacer(),
                                 const SizedBox(height: 10),
@@ -274,9 +275,9 @@ class _WallPainter extends CustomPainter {
 
 class _Album extends StatefulWidget {
   final bool open;
-  final String genre;
+  final GameController controller;
   final VoidCallback onTap;
-  const _Album({required this.open, required this.genre, required this.onTap});
+  const _Album({required this.open, required this.controller, required this.onTap});
 
   @override
   State<_Album> createState() => _AlbumState();
@@ -284,6 +285,13 @@ class _Album extends StatefulWidget {
 
 class _AlbumState extends State<_Album> with SingleTickerProviderStateMixin {
   late final AnimationController _c = AnimationController(vsync: this, duration: FusibleMotion.page, value: widget.open ? 1 : 0);
+  String _genre = 'm';
+
+  @override
+  void initState() {
+    super.initState();
+    _genre = widget.controller.playerName.genre;
+  }
 
   @override
   void didUpdateWidget(_Album old) {
@@ -320,26 +328,36 @@ class _AlbumState extends State<_Album> with SingleTickerProviderStateMixin {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('PAGE 1 · 1990-91', style: FusibleFonts.cond_(15, height: 1, spacing: .1, color: FusibleColors.pelouse)),
-          const SizedBox(height: 6),
-          Text('Colle ici les visages de ta première saison.', style: FusibleFonts.paper_(10.5, height: 1.3, color: FusibleColors.encre2)),
-          const SizedBox(height: 8),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 3,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              childAspectRatio: 3 / 4,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              children: [
-                for (var i = 1; i <= 6; i++)
-                  CustomPaint(
-                    painter: const DashedBorderPainter(color: Color(0xFFA89B74)),
-                    child: Center(child: Text('$i', style: FusibleFonts.ui_(9, color: const Color(0xFFA89B74)))),
-                  ),
-              ],
+          Text('PAGE 1 · ${Engine.startYear}-${((Engine.startYear + 1) % 100).toString().padLeft(2, '0')}', style: FusibleFonts.cond_(15, height: 1, spacing: .1, color: FusibleColors.pelouse)),
+          const SizedBox(height: 4),
+          // « Nom : ________ » (spec variété §1.8) : inerte tant que l'album est
+          // fermé (la couverture le cache).
+          ExcludeSemantics(
+            excluding: !widget.open,
+            child: IgnorePointer(
+              ignoring: !widget.open,
+              child: NameForm(
+                controller: widget.controller,
+                onGenre: (g) => setState(() => _genre = g),
+              ),
             ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              for (var i = 1; i <= 3; i++) ...[
+                if (i > 1) const SizedBox(width: 8),
+                Expanded(
+                  child: SizedBox(
+                    height: 40,
+                    child: CustomPaint(
+                      painter: const DashedBorderPainter(color: Color(0xFFA89B74)),
+                      child: Center(child: Text('$i', style: FusibleFonts.ui_(9, color: const Color(0xFFA89B74)))),
+                    ),
+                  ),
+                ),
+              ],
+            ],
           ),
         ],
       ),
@@ -417,7 +435,7 @@ class _AlbumState extends State<_Album> with SingleTickerProviderStateMixin {
                         child: Container(
                           decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF2A6E3F), FusibleColors.board])),
                           alignment: Alignment.bottomCenter,
-                          child: Portrait(characterId: 'coach', expression: 'sourire', traits: {...?Portrait.traitsOf('coach'), 'genre': widget.genre}),
+                          child: Portrait(characterId: 'coach', expression: 'sourire', traits: {...?Portrait.traitsOf('coach'), 'genre': _genre}),
                         ),
                       ),
                     ),
@@ -443,11 +461,13 @@ class _AlbumState extends State<_Album> with SingleTickerProviderStateMixin {
       ),
     );
 
+    // Fermé, l'album est un seul bouton ; ouvert, sa page 1 (le formulaire
+    // « Nom : ________ ») est lisible et pilotable par les libellés.
     return Semantics(
-      label: "Ouvrir l'album",
+      label: widget.open ? "Fermer l'album" : "Ouvrir l'album",
       button: true,
       onTap: widget.onTap,
-      excludeSemantics: true,
+      excludeSemantics: !widget.open,
       child: GestureDetector(
         onTap: widget.onTap,
         child: Transform.rotate(
@@ -663,12 +683,13 @@ class _SectionLabel extends StatelessWidget {
 
 class _PostulatGrid extends StatelessWidget {
   final List<PostulatDef> postulats;
-  final Content content;
+  final GameController controller;
   final ValueChanged<int> onStart;
-  const _PostulatGrid({required this.postulats, required this.content, required this.onStart});
+  const _PostulatGrid({required this.postulats, required this.controller, required this.onStart});
 
   @override
   Widget build(BuildContext context) {
+    final content = controller.engine.content;
     final items = postulats.take(4).toList();
     final rows = <Widget>[];
     for (var r = 0; r < items.length; r += 2) {
@@ -684,6 +705,9 @@ class _PostulatGrid extends StatelessWidget {
                       def: items[k],
                       roleName: content.roles[items[k].role]?.name ?? items[k].role,
                       tilt: (k == 1 || k == 2) ? .6 : 0,
+                      objectifsDone: controller.profile.objectifsDone(items[k].id),
+                      storiesSeen: controller.profile.storiesSeen(items[k].id),
+                      storiesTotal: controller.storiesTotal(items[k]),
                       onStart: () => onStart(k),
                     )
                   : const SizedBox.shrink(),
@@ -702,8 +726,20 @@ class _Pochette extends StatefulWidget {
   final PostulatDef def;
   final String roleName;
   final double tilt;
+  final int objectifsDone;
+  final int storiesSeen;
+  final int storiesTotal;
   final VoidCallback onStart;
-  const _Pochette({required this.index, required this.def, required this.roleName, required this.tilt, required this.onStart});
+  const _Pochette({
+    required this.index,
+    required this.def,
+    required this.roleName,
+    required this.tilt,
+    this.objectifsDone = 0,
+    this.storiesSeen = 0,
+    this.storiesTotal = 0,
+    required this.onStart,
+  });
 
   @override
   State<_Pochette> createState() => _PochetteState();
@@ -733,6 +769,14 @@ class _PochetteState extends State<_Pochette> with SingleTickerProviderStateMixi
     final coach = widget.def.role == 'entraineur';
     final label = 'Pochette ${widget.index + 1} : ${widget.def.title}';
     final bg = coach ? FusibleColors.board : FusibleColors.campTerrain;
+    final def = widget.def;
+    // Compteurs par postulat (spec variété §1.9, §3.8) depuis le profil.
+    final counters = <String>[
+      if (def.objectifs.isNotEmpty) 'Objectifs ${widget.objectifsDone}/${def.objectifs.length}',
+      if (widget.storiesTotal > 0) 'Histoires ${widget.storiesSeen}/${widget.storiesTotal}',
+    ].join(' · ');
+    final question = def.question;
+    final pitch = def.pitch;
 
     Widget background({required bool flap}) => Stack(
           fit: StackFit.expand,
@@ -745,6 +789,7 @@ class _PochetteState extends State<_Pochette> with SingleTickerProviderStateMixi
 
     return Semantics(
       label: label,
+      hint: [if (def.chantier) 'en chantier', if (counters.isNotEmpty) counters.toLowerCase()].join(', '),
       button: true,
       onTap: _tap,
       excludeSemantics: true,
@@ -753,7 +798,7 @@ class _PochetteState extends State<_Pochette> with SingleTickerProviderStateMixi
         child: Transform.rotate(
           angle: widget.tilt * math.pi / 180,
           child: SizedBox(
-            height: 122,
+            height: 176,
             child: ClipPath(
               clipper: const DentelleClipper(depth: 7),
               child: Stack(
@@ -825,24 +870,55 @@ class _PochetteState extends State<_Pochette> with SingleTickerProviderStateMixi
                         Expanded(
                           child: LayoutBuilder(
                             builder: (context, box) {
-                              // Des lignes entières seulement (2 au plus).
-                              final lines = (box.maxHeight / (11 * 1.25)).floor().clamp(0, 2);
-                              if (lines == 0) return const SizedBox.shrink();
+                              // La question (2 lignes au plus) puis le pitch (spec
+                              // variété §3.8) : des lignes entières seulement.
+                              const qLine = 11 * 1.25;
+                              const pLine = 9.5 * 1.3;
+                              final qLines = question.isEmpty ? 0 : (box.maxHeight / qLine).floor().clamp(0, 2);
+                              final pLines = pitch.isEmpty ? 0 : ((box.maxHeight - qLines * qLine - (qLines > 0 ? 3 : 0)) / pLine).floor().clamp(0, 2);
+                              if (qLines == 0 && pLines == 0) return const SizedBox.shrink();
                               return Align(
                                 alignment: Alignment.bottomLeft,
-                                child: Text(
-                                  widget.def.question,
-                                  maxLines: lines,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: FusibleFonts.paper_(11, italic: true, height: 1.25, color: Colors.white.withValues(alpha: .85)),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    if (qLines > 0)
+                                      Text(
+                                        question,
+                                        maxLines: qLines,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: FusibleFonts.paper_(11, italic: true, height: 1.25, color: Colors.white.withValues(alpha: .85)),
+                                      ),
+                                    if (qLines > 0 && pLines > 0) const SizedBox(height: 3),
+                                    if (pLines > 0)
+                                      Text(
+                                        pitch,
+                                        maxLines: pLines,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: FusibleFonts.ui_(9.5, weight: FontWeight.w500, height: 1.3, color: Colors.white.withValues(alpha: .72)),
+                                      ),
+                                  ],
                                 ),
                               );
                             },
                           ),
                         ),
+                        if (counters.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            counters.toUpperCase(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: FusibleFonts.cond_(9.5, weight: FontWeight.w600, height: 1, spacing: .1, color: Colors.white.withValues(alpha: .8)).copyWith(fontFeatures: const [FontFeature.tabularFigures()]),
+                          ),
+                        ],
                       ],
                     ),
                   ),
+                  // Tampon « EN CHANTIER » (spec variété §3.8) tant que le lot du
+                  // postulat n'est pas livré (`chantier: true` dans le contenu).
+                  if (def.chantier) const Positioned(right: 6, top: 30, child: _ChantierStamp()),
                 ],
               ),
             ),
@@ -941,4 +1017,258 @@ class _Cimetiere extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Tampon « EN CHANTIER » : petit tampon orange grungé, −8°, bordure 1,5 px.
+class _ChantierStamp extends StatelessWidget {
+  const _ChantierStamp();
+
+  @override
+  Widget build(BuildContext context) {
+    const color = FusibleColors.uiOrange;
+    return Transform.rotate(
+      angle: -8 * math.pi / 180,
+      child: Opacity(
+        opacity: .92,
+        child: Container(
+          padding: const EdgeInsets.all(1.2),
+          decoration: BoxDecoration(border: Border.all(color: color, width: 1.5), borderRadius: BorderRadius.circular(4)),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
+            decoration: BoxDecoration(border: Border.all(color: color, width: 1.5), borderRadius: BorderRadius.circular(3)),
+            child: Text('EN CHANTIER', style: FusibleFonts.cond_(10, height: 1, spacing: .1, color: color)),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// « Nom : ________ » sur la page 1 de l'album (spec variété §1.8).
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Le formulaire de nom : prénom (14) et nom (16) sur des lignes en pointillé,
+/// tampon ♀/♂ à toucher, « Au hasard » (Rng cosmétique), « il / elle ». Les
+/// valeurs vont au profil du contrôleur à chaque frappe ; le moteur les
+/// normalise (naming.dart) au départ de la carrière.
+class NameForm extends StatefulWidget {
+  final GameController controller;
+  final ValueChanged<String>? onGenre;
+  const NameForm({super.key, required this.controller, this.onGenre});
+
+  @override
+  State<NameForm> createState() => _NameFormState();
+}
+
+class _NameFormState extends State<NameForm> {
+  late final TextEditingController _prenom = TextEditingController(text: widget.controller.playerName.prenom);
+  late final TextEditingController _nom = TextEditingController(text: widget.controller.playerName.nom);
+  late String _genre = widget.controller.playerName.genre;
+
+  // Le même alphabet que naming.dart : lettres, espace, apostrophe, tiret.
+  static final _allowed = FilteringTextInputFormatter.allow(RegExp(r"[\p{L}' \-]", unicode: true));
+
+  @override
+  void dispose() {
+    _prenom.dispose();
+    _nom.dispose();
+    super.dispose();
+  }
+
+  void _save() => widget.controller.setPlayerName(prenom: _prenom.text, nom: _nom.text, genre: _genre);
+
+  void _toggleGenre() {
+    setState(() => _genre = _genre == 'f' ? 'm' : 'f');
+    _save();
+    widget.onGenre?.call(_genre);
+  }
+
+  void _random() {
+    _save();
+    final n = widget.controller.randomName();
+    setState(() {
+      _prenom.text = n.prenom;
+      _nom.text = n.nom;
+    });
+    _save();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final labelStyle = FusibleFonts.paper_(10.5, italic: true, height: 1.2, color: FusibleColors.encre2);
+    Widget field(TextEditingController ctl, String hint, int max, String semantics) => Expanded(
+          child: Semantics(
+            label: semantics,
+            textField: true,
+            child: TextField(
+              controller: ctl,
+              maxLength: max,
+              maxLines: 1,
+              inputFormatters: [_allowed, LengthLimitingTextInputFormatter(max)],
+              textCapitalization: TextCapitalization.words,
+              autocorrect: false,
+              enableSuggestions: false,
+              cursorColor: FusibleColors.uiOrange,
+              style: FusibleFonts.paper_(12, italic: true, height: 1.2).copyWith(fontWeight: FontWeight.w600),
+              decoration: InputDecoration(
+                isDense: true,
+                counterText: '',
+                hintText: hint,
+                hintStyle: FusibleFonts.paper_(12, italic: true, height: 1.2, color: const Color(0xFFA89B74)),
+                contentPadding: const EdgeInsets.fromLTRB(2, 2, 2, 1),
+                enabledBorder: const _DashedUnderline(color: Color(0xFFA89B74)),
+                focusedBorder: const _DashedUnderline(color: FusibleColors.uiOrange, solid: true),
+                border: const _DashedUnderline(color: Color(0xFFA89B74)),
+              ),
+              onChanged: (_) => _save(),
+              onSubmitted: (_) => FocusScope.of(context).unfocus(),
+            ),
+          ),
+        );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('Nom :', style: labelStyle),
+            const SizedBox(width: 4),
+            field(_prenom, 'prénom', 14, 'Prénom'),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Row(
+          children: [
+            Opacity(opacity: 0, child: Text('Nom :', style: labelStyle)),
+            const SizedBox(width: 4),
+            field(_nom, 'nom', 16, 'Nom de famille'),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Row(
+          children: [
+            Semantics(
+              label: 'Genre : ${_genre == 'f' ? 'femme' : 'homme'} ; toucher pour changer',
+              button: true,
+              onTap: _toggleGenre,
+              excludeSemantics: true,
+              child: GestureDetector(
+                onTap: _toggleGenre,
+                behavior: HitTestBehavior.opaque,
+                child: Transform.rotate(
+                  angle: -8 * math.pi / 180,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: FusibleColors.tampon, width: 2)),
+                    child: CustomPaint(painter: _GenderGlyphPainter(female: _genre == 'f')),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Flexible(
+              child: Semantics(
+                label: 'Au hasard',
+                button: true,
+                onTap: _random,
+                excludeSemantics: true,
+                child: GestureDetector(
+                  onTap: _random,
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'AU HASARD',
+                        maxLines: 1,
+                        style: FusibleFonts.cond_(9.5, weight: FontWeight.w700, height: 1, spacing: .12, color: FusibleColors.pelouse).copyWith(
+                          decoration: TextDecoration.underline,
+                          decorationColor: FusibleColors.pelouse,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Text(_genre == 'f' ? 'ELLE' : 'IL', style: FusibleFonts.cond_(8.5, weight: FontWeight.w600, height: 1, spacing: .1, color: FusibleColors.encre3)),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Le trait sous le champ : pointillé 1,5 px (plein quand le champ a le focus).
+class _DashedUnderline extends InputBorder {
+  final Color color;
+  final bool solid;
+  const _DashedUnderline({required this.color, this.solid = false}) : super(borderSide: BorderSide.none);
+
+  @override
+  bool get isOutline => false;
+
+  @override
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.only(bottom: 1.5);
+
+  @override
+  _DashedUnderline copyWith({BorderSide? borderSide}) => this;
+
+  @override
+  ShapeBorder scale(double t) => this;
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) => Path()..addRect(rect);
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) => Path()..addRect(rect);
+
+  @override
+  void paint(Canvas canvas, Rect rect, {double? gapStart, double gapExtent = 0.0, double gapPercentage = 0.0, TextDirection? textDirection}) {
+    final p = Paint()
+      ..color = color
+      ..strokeWidth = 1.5;
+    final y = rect.bottom - .75;
+    if (solid) {
+      canvas.drawLine(Offset(rect.left, y), Offset(rect.right, y), p);
+      return;
+    }
+    for (var x = rect.left; x < rect.right; x += 6) {
+      canvas.drawLine(Offset(x, y), Offset(math.min(x + 3, rect.right), y), p);
+    }
+  }
+}
+
+/// ♂ / ♀ dessinés (aucune dépendance à un glyphe de police) en encre tampon.
+class _GenderGlyphPainter extends CustomPainter {
+  final bool female;
+  const _GenderGlyphPainter({required this.female});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = FusibleColors.tampon
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.round;
+    final c = size.center(Offset.zero);
+    if (female) {
+      canvas.drawCircle(c.translate(0, -2), 3.6, p);
+      canvas.drawLine(c.translate(0, 1.6), c.translate(0, 6.2), p);
+      canvas.drawLine(c.translate(-2.4, 4.2), c.translate(2.4, 4.2), p);
+    } else {
+      canvas.drawCircle(c.translate(-1.2, 1.2), 3.6, p);
+      canvas.drawLine(c.translate(1.4, -1.4), c.translate(5.2, -5.2), p);
+      canvas.drawLine(c.translate(5.2, -5.2), c.translate(1.8, -5.2), p);
+      canvas.drawLine(c.translate(5.2, -5.2), c.translate(5.2, -1.8), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_GenderGlyphPainter oldDelegate) => oldDelegate.female != female;
 }

@@ -16,7 +16,11 @@ class VignetteData {
   final String label;
   final int number;
   final bool sablier;
-  final String? kindTag; // Alarme / Nouvelle / Événement / Face à face / Nouvelles du passé
+  final String? kindTag; // Alarme / Nouvelle / Événement / Face à face / Nouvelles du passé / Réplique
+
+  /// Une réplique (spec variété §1.4, §3.8) : servie hors créneau, la vignette
+  /// porte le tampon « RÉPLIQUE », un coin scotché et pas de numéro.
+  final bool reaction;
 
   const VignetteData({
     required this.characterId,
@@ -28,12 +32,14 @@ class VignetteData {
     required this.number,
     this.sablier = false,
     this.kindTag,
+    this.reaction = false,
   });
 
   bool get isSelf => characterId == 'coach' || characterId == 'joueur';
 
-  /// Libellé lisible : « Carte n° X, {nom}, {fonction} ».
-  String get semanticsLabel => 'Carte n° $number, $name${label.isEmpty ? '' : ', ${label.toLowerCase()}'}';
+  /// Libellé lisible : « Carte n° X, {nom}, {fonction} » (« Réplique, … » pour
+  /// une réaction, qui n'a pas de numéro de créneau).
+  String get semanticsLabel => '${reaction ? 'Réplique' : 'Carte n° $number'}, $name${label.isEmpty ? '' : ', ${label.toLowerCase()}'}';
 
   /// Le tampon de genre de la carte (§6 : kind → texte), null si aucun.
   static String? kindTagFor(String? kind) => switch (kind) {
@@ -42,6 +48,7 @@ class VignetteData {
         'evenement' => 'Événement',
         'palier' => 'Face à face',
         'passe' => 'Nouvelles du passé',
+        'reaction' => 'Réplique',
         _ => null,
       };
 }
@@ -119,7 +126,7 @@ class Vignette extends StatelessWidget {
     final body = Container(
       width: width,
       height: height,
-      color: tone(FusibleColors.blancVignette),
+      color: tone(data.reaction ? FusibleColors.creme : FusibleColors.blancVignette),
       padding: padding,
       child: Column(
         children: [
@@ -184,16 +191,17 @@ class Vignette extends StatelessWidget {
                         ),
                       ),
                     ),
-                  Positioned(
-                    right: numberLeft ? null : (compact ? 4 : 6),
-                    left: numberLeft ? (compact ? 4 : 6) : null,
-                    bottom: compact ? 4 : 5,
-                    child: Container(
-                      padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
-                      decoration: BoxDecoration(color: Colors.black.withValues(alpha: .35), borderRadius: BorderRadius.circular(2)),
-                      child: Text('n° ${data.number}', style: FusibleFonts.paper_(compact ? 8 : 11, height: 1.2, color: tone(FusibleColors.creme))),
+                  if (!data.reaction)
+                    Positioned(
+                      right: numberLeft ? null : (compact ? 4 : 6),
+                      left: numberLeft ? (compact ? 4 : 6) : null,
+                      bottom: compact ? 4 : 5,
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(5, 1, 5, 1),
+                        decoration: BoxDecoration(color: Colors.black.withValues(alpha: .35), borderRadius: BorderRadius.circular(2)),
+                        child: Text('n° ${data.number}', style: FusibleFonts.paper_(compact ? 8 : 11, height: 1.2, color: tone(FusibleColors.creme))),
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -245,6 +253,8 @@ class Vignette extends StatelessWidget {
             sticker,
             // Coin décollé : ombre + rabat blanc → gris dans le carré `peel`.
             Positioned(top: 0, right: 0, child: IgnorePointer(child: CustomPaint(size: Size(peel, peel), painter: const _PeelPainter()))),
+            // Réplique : un bout de scotch en travers du coin supérieur gauche.
+            if (data.reaction) Positioned(left: -14, top: 6, child: IgnorePointer(child: Tape(width: compact ? 40 : 56, height: compact ? 11 : 15, angle: -38))),
             if (showPin)
               Positioned(
                 top: -pinSize / 2 + 1,
