@@ -512,7 +512,7 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 ### SCÈNE co.camille.metier  —  Le cabinet ouvre en septembre
 **Rôle** : tous sauf joueur amateur · **Intrigue** : co.camille_naissance · **Étape** : 2/6 · **Moment** : saison 1+, [2,10] · **Lieu** : la cuisine, une lettre à en-tête sur la table · **Conditions** : `flag('camille_ici') && !flag('divorce')` ; le mot « cabinet » devient « rédaction », « agence », « service », « permanence » selon `camille_<metier>`
 **CAMILLE** *(à la maison — sourire — la lettre tenue comme un contrat pro)*
-« Le cabinet ouvre en septembre, ici, à {ville}, avec mon nom sur la porte. Tu rentres à quelle heure ? Je demande parce que moi, je rentrerai tard. »
+« Le cabinet ouvre en septembre, ici, à {ville}, avec mon nom sur la porte. Tu rentres à quelle heure ? Parce que moi, je rentrerai tard. »
 ← **Ton nom sur la porte, enfin** — effets : relation.camille +2, caisse +, set: camille_metier, outcome: metier_repris — *Le nom est sur la porte en septembre. Le tien, sur la bâche ; elle trouve ça équitable.*
 → **Et si on repart en juin ?** — effets : relation.camille −2, direction + — *Elle plie la lettre. Elle la range dans le tiroir de la cuisine, avec l'autre, celle de 1989.*
 **Traces** : camille_metier · **Réactions déclenchées** : — · **Lu plus tard par** : 30 (secours +3 variante « je plaide ici »), 11 (`co.cartons_camille` exclu ensuite), 13 (« elle n'a pas le temps pour la loge »), 90 (Sacha trouve la lettre de 1989 : `co.sacha.nom_de_famille` variante)
@@ -570,14 +570,14 @@ Camille ; pas de nom de famille écrit (elle porte le tien ou le sien, le jeu ne
 ### SCÈNE co.retrouvailles.camille_sourire  —  Deux assiettes
 **Rôle** : tous · **Moment** : [2,6] après Passation · **Conditions** : parmi les deux meilleures relations, `!flag('divorce')`
 **CAMILLE** *(à la maison — sourire — deux assiettes, déjà)*
-« Nouveau club, même cuisine, j'ai mis deux assiettes sans demander. Tu rentres à quelle heure, {prenom} ? Je demande pour la sauce, pas pour toi. »
+« Nouveau club, même cuisine, j'ai mis deux assiettes sans demander. Tu rentres à quelle heure, {prenom} ? Pour la sauce, pas pour toi. »
 ← **Avant la sauce** — effets : relation.camille +1, vestiaire − — *Tu rentres avant. C'est la première fois de la carrière ; elle ne le fait pas remarquer, elle le note.*
 → **Commence sans moi** — effets : relation.camille −1, direction + — *Elle commence. Elle garde ton assiette au chaud ; le chat mange la sauce.*
 
 ### SCÈNE co.retrouvailles.camille_noir  —  Une assiette
 **Rôle** : tous · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations, `!flag('divorce')`
 **CAMILLE** *(à la maison — noir — une assiette dans l'évier, propre)*
-« Nouveau club, nouvelle ville, même question, {nom}. Tu rentres à quelle heure ? Je demande pour savoir si je défais mes cartons. »
+« Nouveau club, nouvelle ville, même question, {nom} : tu rentres à quelle heure ? Je demande pour savoir si je défais mes cartons. »
 ← **Défais-les, je rentre tôt** — effets : relation.camille +1, direction − — *Elle défait un carton. Un seul. Elle attend de voir.*
 → **Garde-les fermés un mois** — effets : relation.camille −1, caisse + — *Ils restent fermés. En novembre, elle en ajoute un.*
 
@@ -959,8 +959,8 @@ Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le
 
 ### SCÈNE co.vecchio.minute  —  La minute
 **Rôle** : tous · **Intrigue** : co.vecchio_cinq_retraites · **Étape** : 6/6 · **Moment** : 2031, [1,6], drame sobre, une sortie, jamais partagé en Une · **Lieu** : le stade, un dimanche, le filet de 1990 accroché au but Nord · **Conditions** : `year == 2031` (posée comme Nouvelle datée par 31 ; ce chapitre écrit la scène)
-**COLLINE** *(arbitre, désignateur — neutre — voix sans portrait dans ce chapitre — il regarde le tableau d'affichage)*
-« Gigi Vecchio est mort ce matin, à la buvette, en disant qu'il en avait vu d'autres. Une minute de silence à la soixante-dixième ; j'ai vu, j'en ajoute une. »
+**COLLINE** *(responsable de l'arbitrage à la Fédération, 75 ans — neutre — voix sans portrait dans ce chapitre — il est descendu au bord du terrain, l'arbitre l'écoute)*
+« Gigi Vecchio est mort ce matin, à la buvette, en disant qu'il en avait vu d'autres. Une minute de silence à la soixante-dixième ; j'ai vu, et l'arbitre en ajoutera une. »
 ← **Je me lève** — effets : — — *Deux minutes. Le stade ne bouge pas. Bréhaut tient le filet ; Sacha, si elle est là, ne chante pas.*
 → **Je me lève** — effets : — — *Deux minutes. Le stade ne bouge pas. Bréhaut tient le filet ; Sacha, si elle est là, ne chante pas.*
 **Traces** : gigi_mort (monde) · **Réactions déclenchées** : — · **Lu plus tard par** : 31 (Nouvelle 2031, épitaphe d'enterrement), 18 (Paulette : rime avec 2009), 90 (Panthéon), 02 (Colline)
@@ -1001,7 +1001,7 @@ Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le
 ### SCÈNE co.retrouvailles.vecchio_telephone  —  La buvette des anciens
 **Rôle** : tous · **Moment** : après 2010 (`chars.vecchio.statut == 'retraite'`), une fois par carrière · **Conditions** : `relation.vecchio != 0`
 **VECCHIO** *(retraité, buvette des anciens — voix au téléphone — des verres qu'on empile)*
-« Ici on paie en bières, c'est Gérard qui l'a dit avant de partir au soleil ; moi je paie en Unes. J'en ai vu d'autres, coach, des téléphones ; celui-là, tu décroches. »
+« Gérard est parti au soleil, Bréhaut fait la vaisselle, et moi je paie les bières en Unes. J'en ai vu d'autres, coach, des téléphones ; celui-là, tu décroches. »
 ← **Je passe dimanche** — effets : tribunes +, relation.vecchio +1 — *Tu passes. Il te sert de l'eau. Il t'a gardé la place derrière le but, sur le banc à son nom.*
 → **Je t'appelle après la saison** — effets : direction +, relation.vecchio −1 — *« Après », dit-il. Il en a vu d'autres, des après. Il raccroche doucement.*
 
@@ -1010,7 +1010,7 @@ Luigi Vecchio, « Gigi » depuis les cadets de Néville ; « le vieux » dans le
 - **01.vecchio_voiture** — décor · brèves · Une camionnette avec « VECCHIO — PLOMBERIE » à moitié effacé : le métier de son père ; il n'a jamais posé un tuyau.
 - **01.vecchio_superstition** — légende · set-piece `gm_annonce` · Il touche les deux poteaux avant chaque mi-temps et parle au poteau gauche ; « le droit, il écoute pas ».
 - **01.vecchio_repas** — décor · `jp.vestiaire.repas_equipe` · Il ne mange que des pâtes au beurre la veille et une orange à la mi-temps ; il en apporte une à Paulette, tribune Est, avant de rentrer aux vestiaires.
-- **01.vecchio_orange** — objet · `co.paulette.derby` · L'orange de la mi-temps : quand Gigi est mort, Paulette était morte depuis vingt-deux ans ; c'est Sacha qui a mis une orange sur la 14B.
+- **01.vecchio_orange** — objet · `co.paulette.orange` · L'orange de la mi-temps : quand Gigi est mort, Paulette était morte depuis vingt-deux ans ; c'est Sacha qui a mis une orange sur la 14B.
 
 ### 7.8 Réactions propres
 ### RÉACTION co.re.vecchio_zoki  —  Zoki
@@ -1422,7 +1422,7 @@ Marcelo Loco ; on dit « Loco » avec l'accent qu'on veut, il ne corrige jamais 
 **Rôle** : tous · **Moment** : [2,6] après Passation · **Conditions** : parmi les pires relations
 **LOCO** *(sa fonction du moment — noir — le seau tourné, dans un stade qui n'est pas le sien)*
 « *(Il est venu. Il s'est assis sur le seau au bord de votre terrain, dos à vous, pendant votre première séance. Il n'a rien dit. Il est reparti à la fin, sans la cassette.)* »
-← **Je le laisse partir** — effets : vestiaire −, relation.loco 0 — *Il part. Les joueurs demandent qui c'était. Vukić répond : « quelqu'un qui n'a pas été compris ». C'est tout.*
+← **Je le laisse partir** — effets : vestiaire − — *Il part. Les joueurs demandent qui c'était. Vukić répond : « quelqu'un qui n'a pas été compris ». C'est tout.*
 → **Je cours après lui** — effets : relation.loco +1, direction − — *Tu le rattrapes au parking. Il te regarde. Il dit : « douze mètres ». Il monte dans une voiture que quelqu'un d'autre conduit.*
 
 ### SCÈNE co.retrouvailles.loco_cassette  —  1967
@@ -2211,7 +2211,7 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 ### SCÈNE co.gerard.carte_postale  —  La carte postale
 **Rôle** : president_amateur, entraineur, president · **Intrigue** : co.gerard_boite · **Étape** : 4/6 · **Moment** : la saison qui suit `gerard_parti`, [2,8] · **Lieu** : le secrétariat, Josiane tend une carte : une plage, sans nom de lieu · **Conditions** : `flag('gerard_parti')` (`statut_ok: [parti]` : il écrit)
 **GÉRARD** *(parti, au soleil — voix écrite, au dos de la carte — une écriture qui compte)*
-« « Ici, on paie en soleil, et le soleil ne rend pas la monnaie ; la caisse a fondu, il reste la boîte. Je la renvoie si quelqu'un dit le mot. » Pas de signature. Un cachet de la poste, illisible. »
+« « Ici, on paie en soleil, et le soleil ne rend pas la monnaie ; la caisse a fondu, il reste la boîte, je la renvoie si quelqu'un dit le mot. » Pas de signature, un cachet de la poste illisible. »
 ← **J'écris le mot** — effets : caisse +, tribunes +, relation.gerard +2, set: gerard_mot_envoye — *Tu écris « merci ». La boîte arrive en mars, vide, avec le double fond intact : trois cents francs, et un billet de retour non utilisé.*
 → **Qu'il garde la boîte** — effets : direction +, relation.gerard −1, set: gerard_oublie — *Tu ne réponds pas. Josiane garde la carte dans le dossier Gérard. La buvette est tenue par Marinette ; elle a un autre tiroir.*
 **Traces** : gerard_mot_envoye, gerard_oublie (« {annee} : la carte de Gérard est restée sans réponse. Marinette tient la buvette ; elle a un autre tiroir. ») · **Réactions déclenchées** : co.re.josiane_a_lu (existant, si Une) · **Lu plus tard par** : 16 (`pr.gerard.repenti` : variante), 13, 20 (« LE SOLEIL NE REND PAS LA MONNAIE »)
@@ -2236,7 +2236,7 @@ Gérard ; « Gégé » est pris ; on dit « Gérard de la buvette » quand il y 
 ### SCÈNE pr.gerard.trahison_caisse  —  Gérard a fui (côté président amateur)
 **Rôle** : president_amateur, joueur_amateur · **Palier** : −3, une fois (l'entraîneur a `en.evt.gerard`, existant ; 13 harmonise) · **Lieu** : la buvette, un lundi, le tiroir vide, la boîte partie, un mot sur le comptoir
 **GÉRARD** *(parti — voix écrite sur un dessous de verre — une écriture qui ne compte plus)*
-« « Vingt ans, zéro merci, une caisse ; je pars au soleil, loin, avec la boîte. Ici, on payait en bières ; là-bas, je verrai. » Pas de signature. Le tabouret est resté. »
+« « Vingt ans, zéro merci, une caisse, et je pars au soleil, loin, avec la boîte ; ici, on payait en bières, là-bas je verrai. » Pas de signature, et le tabouret est resté. »
 ← **Je préviens la gendarmerie** — effets : caisse −−−, tribunes −, direction +, set: gerard_parti, char: {gerard: {statut: parti}} — *La gendarmerie buvait ici après vingt-deux heures. Elle prend la plainte. Elle ne cherche pas très loin ; le soleil, c'est vaste.*
 → **On étouffe, Marinette prend** — effets : caisse −−−, vestiaire +, set: gerard_parti, char: {gerard: {statut: parti}} — *Marinette tient la buvette dès samedi. Elle a un autre tiroir. Elle ne dit rien sur lui ; elle dit « ici, on paie ».*
 *(Variante si `flag('boite_ouverte')` : il part avec moins ; `caisse −−`. Variante si `flag('gerard_merci')` : le mot dit « merci quand même », et la moitié de la caisse est dans le double fond.)*
@@ -2632,7 +2632,7 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 **SACHA** *(vingt-cinq ans et plus — neutre — un dossier de chiffres, un par ouvrier)*
 « On a compté les ouvriers du Mondial que tu as voté, {prenom} ; il en manque, et j'ai les noms, pas les chiffres, les noms. Tu m'as promis un parent, pas un dirigeant ; lequel lit le dossier ? »
 ← **Le parent, je lis ce soir** — effets : direction −−, tribunes ++, parole +1, relation.sacha +2, relation.nassir −2, relation.bambini −1, set: sacha_ong, outcome: ong — *Tu lis. Tu poses le dossier sur la table du comité. Bambini est « choqué ». Nassir dit que ce n'est pas un chantier, c'est un actif. Sacha attend dans le hall ; elle a le temps, comme Amsel.*
-→ **Le dirigeant : la commission** — effets : direction ++, tribunes −−, relation.sacha −3, set: sacha_ong, set: ong_ecartee — *La commission examine. Salle 3, version continentale. Sacha publie les noms sur le Flux, sous le tien. Elle signe de son nom, l'autre.*
+→ **Le dirigeant : la commission** — effets : direction ++, tribunes −−, relation.sacha −2, set: sacha_ong, set: ong_ecartee — *La commission examine. Salle 3, version continentale. Sacha publie les noms sur le Flux, sous le tien. Elle signe de son nom, l'autre.*
 **Traces** : sacha_ong, ong_ecartee (« {annee} : Sacha a publié les noms des ouvriers manquants. Sous le nom de {nom} ; signé de l'autre. ») · **Réactions déclenchées** : — · **Lu plus tard par** : 15 (dossier « les ouvriers des chantiers », `lanceur_alerte` variante), 02 (Nassir, Bambini, Amsel : « votre fille a les noms »), 20 (« LES NOMS »), 90 (lignée : Nemesis de sang)
 
 ### SCÈNE co.sacha.heritiere  —  L'héritière
@@ -2701,7 +2701,7 @@ Sacha ; « la petite » pour Josiane, « Sacha » pour tout le monde, « {nom} �
 **Après** : co.loco.profesor (← montrez-la-moi) · **Famille** : tiers qui commente · **Conditions** : `flag('sacha_nee') && chars.sacha.age >= 10`
 **SACHA** *(dix ans et plus — sourire — elle est venue chercher le seau, sans le prendre)*
 « J'ai demandé à monsieur Loco pourquoi le banc était loin, il a souri, il n'a pas répondu ; toi, tu le sais maintenant. Tu m'as promis de ne pas mentir : c'est loin pourquoi ? »
-**Un bouton** : **Douze mètres, en soixante-sept** — effets : relation.sacha +1, relation.loco +1 — *Elle compte les mètres. Douze. Elle s'assoit sur le seau. Loco la regarde depuis la haie ; il n'y a pas de caméra ; il sourit.*
+**Un bouton** : **Douze mètres, soixante-sept** — effets : relation.sacha +1, relation.loco +1 — *Elle compte les mètres. Douze. Elle s'assoit sur le seau. Loco la regarde depuis la haie ; il n'y a pas de caméra ; il sourit.*
 
 ---
 
@@ -2785,7 +2785,7 @@ Ratio léger / stratégique / drame à l'échelle du chapitre : les drames sont 
 
 1. **Troisième retrouvailles.** La spec § 1.13 ne prévoit que `_sourire` et `_noir` ; ce chapitre en ajoute une par personnage (`_telephone`, `_enterrement`, `_fantome`, `_banc_en_face`, `_carnet`, `_cassette`, `_tapis`, `_corbeaux`, `_hymne`, `_cabinet`, `_carte_postale`, `_place_vide`, `_succession`, `_cousin`). Elles sont servies une fois par carrière sur un statut (`retraite`, `mort`, `rival`) et non à la Passation ; le moteur doit accepter un troisième id dans `retrouvailles:` ou les traiter comme des cartes de rôle `once` à condition de statut. À trancher.
 2. **`statut: mort`.** La spec ne liste que `club | staff | parti | vendu | retraite | rival`. Ce chapitre suppose un statut `mort` (Clow, Vecchio 2031, Paulette 2009, Dédé 2012, Sabatier 2029, Brissac 2036, Mère de Mbako 2041, Gérard 2019, Fauvel 2045, Dembo 2046, Loco 2039, Vukić 2038, Bréhaut 2044, Gégé 2040, Klopf 2047, Mbako 2049) et une relation posthume (« +1 (posthume) ») qui n'affecte que la mémoire des clubs et le Panthéon. Le chapitre 31 écrit les Nouvelles de décès ; le chapitre 90 décide si `mort` est un statut ou `parti` + une trace `<id>_mort`.
-3. **Colline dans `co.vecchio.minute`.** Colline est un personnage du chapitre 02 (camp `instances`) ; il parle ici comme voix sans portrait. Si 02 lui donne un portrait, la scène le prend tel quel.
+3. **Colline dans `co.vecchio.minute`.** Colline est un personnage du chapitre 02 (camp `instances`, responsable de l'arbitrage à la Fédération dès 2008 : il a 75 ans en 2031 et ne siffle plus) ; il parle ici comme voix sans portrait et fait ajouter la minute par l'arbitre du jour. Le chapitre 02 lui donne un portrait : la scène le prend tel quel.
 4. **Le fils de Clow, Momo, Nino, Bébert, Marinette, la petite Paulette, la petite Josiane, la docteure Ferrand, Ilan Sorel, Noa Vandel, Bastien Lorrain, Aurèle Castan** : voix sans portrait dans ce chapitre (deux cartes au plus chacune, pas de relation), conformément à § 2.3 ; le chapitre 90 décide lesquels deviennent des personnages à statut (candidats : Noa Vandel, le prodige d'après ; Nino, le capo d'après ; Owen Clow).
 5. **`jp.famille.naissance` (existante)** pose `jeune_papa` mais pas `sacha_nee` : à ajouter par le chantier données pour que Sacha existe aussi dans une carrière commencée joueur.
 6. **Les objets héritables** (douze dans ce chapitre) : le Dossier n'en porte qu'un ; le chapitre 90 fixe la règle de choix (le dernier reçu, ou un choix à la Succession).
@@ -2794,7 +2794,11 @@ Ratio léger / stratégique / drame à l'échelle du chapitre : les drames sont 
 9. **Espaces d'ids** : ce chapitre réserve `co.<id>.*`, `<préfixe>.<id>.*` pour les dix-neuf ids de personnages (`en.vukic.*`, `jp.vecchio.*`, `en.mbako.*`…) ; les chapitres 10-15 gardent leurs mots d'arc (`en.retour_mbako`, `en.gigi_staff`, `en.brassard_brehaut`, `jp.conseils_gigi`, `co.pharmacie`, `co.derby`, `co.cartons_camille`). Aucune collision connue avec `content/`.
 10. **Réactions citées à écrire ailleurs** : `co.re.barbier_doudoune` (02), `en.rouvier.commando_blesses` (11, chaîne), `en.re.camille_le_verre` variante joueur (11), `en.re.gege_jumelles` variantes (11).
 
-### 20.5 Check-list du chapitre (§ 6.2 de la charte)
+### 20.5 Relecture (seconde passe)
+
+Vérifications mécaniques faites sur les 230 blocs (216 scènes, 14 réactions) : ids au format § 4.10 sans doublon ; répliques ≤ 200 caractères ; libellés ≤ 28, sans le nom du joueur, sans « Oui / Non » ; nom du joueur au plus une fois par carte ; relations ±1 (±2 exceptionnel) ; un `+++` au plus par côté ; ids « existants » tous présents dans `content/` (les autres ids cités appartiennent aux chapitres 10-15 et 30, nommés à chaque fois). Corrigés à cette passe : un libellé de trente caractères (`co.re.sacha_seau`), une relation à −3 (`in.sacha.ong`, ramenée à −2), un effet `relation 0` (`co.retrouvailles.loco_noir`), un double tic (Gérard cité dans `co.retrouvailles.vecchio_telephone`), cinq répliques à trois ou quatre phrases (Camille, les deux mots écrits de Gérard), un id fantôme (`co.paulette.derby` → `co.paulette.orange`), et la fonction de Colline en 2031 (responsable de l'arbitrage, conforme au chapitre 02). Les répliques de Mbako et de Rouvier comptent trois points parce que leur tic en contient deux (« Je veux jouer. Maintenant. », « Respire. Encore. ») : c'est le tic, pas une troisième phrase.
+
+### 20.6 Check-list du chapitre (§ 6.2 de la charte)
 
 - [x] 19 fiches au gabarit § 4.2, avec fenêtre et suivant ; adresse dans les huit rôles (§ 0.1) ; cinq registres × deux répliques.
 - [x] 38 scènes de palier (dont les existantes citées et les variantes de rôle ajoutées : Gégé joueur/président, Mbako sélectionneur, Camille médecin/agente).
