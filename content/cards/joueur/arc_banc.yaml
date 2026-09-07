@@ -1,0 +1,100 @@
+# Cartes de l'intrigue « Le banc » (arc jp.banc_hiver) — bible ch. 10 § 6.7.
+# Vukić ouvre (« je te le dis parce que personne ne te le dira »), le président
+# propose le loft, l'agent invente une blessure, et le retour se fait par la
+# petite porte ou pas du tout.
+cards:
+  - id: jp.banc.vukic
+    roles: [joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "« Tu es sur le banc dimanche, et le coach ne te dira pas pourquoi ; moi je te le dis parce que personne ne te le dira. Tu bosses en silence, ou tu vas taper à sa porte ? »"
+    left:
+      label: "Je bosse en silence"
+      effects: {direction: "+", vestiaire: "+", force: 1, relation: {vukic: 1}, set: [banc_bosse], outcome: bosse}
+      answer: "Tu bosses. Il note ce que tu fais le mardi, dans un cahier à spirale. Il note bien."
+    right:
+      label: "Je tape à sa porte"
+      effects: {tribunes: "+", direction: "--", set: [banc_boude], outcome: boude}
+      answer: "Tu tapes. Il ouvre, écoute, referme. La porte est plus lourde en repartant."
+
+  - id: jp.banc.vukic_encore
+    roles: [joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: leger
+    text: "« Le banc, encore, et je te le dis parce que personne ne te le dira : la deuxième fois, ce n'est plus une punition, c'est un classement. Tu bosses, ou tu tapes ? »"
+    left:
+      label: "Je bosse en silence"
+      effects: {direction: "+", vestiaire: "+", force: 1, relation: {vukic: 1}, set: [banc_bosse], outcome: bosse}
+      answer: "Tu bosses. Le cahier à spirale a une page à ton nom, déjà à moitié pleine."
+    right:
+      label: "Je tape à sa porte"
+      effects: {tribunes: "+", direction: "--", set: [banc_boude], outcome: boude}
+      answer: "Tu tapes. Il ouvre moins grand que la première fois."
+
+  - id: jp.banc.loft
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: leger
+    text: "« Sur le banc, tu coûtes le même prix que dans le onze, et j'ai pas le temps, j'ai une usine. Tu pars en janvier, ou tu t'entraînes avec les U17 en attendant ? »"
+    left:
+      label: "Je pars en janvier"
+      effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}, set: [parti_janvier], club: {change: true}, outcome: partir, react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Il te tend un stylo qui fuit. Tu signes avec. La tache est sur le contrat ; Josiane la garde."
+    right:
+      label: "Je tiens le loft"
+      effects: {vestiaire: "-", tribunes: "++", direction: "--", relation: {aulard: -1}, set: [loft_tenu]}
+      answer: "Tu t'entraînes avec des gamins de dix-sept ans. Le petit est dedans. Il te fait la passe ; il est le seul."
+
+  - id: jp.banc.recruteurs
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Trois recruteurs en tribune et toi sur le banc, alors j'ai dit que tu étais blessé ; on parle d'argent ou d'amitié. Tu confirmes, ou tu dis que tu es sur le banc ? »"
+    left:
+      label: "Je confirme, je suis blessé"
+      effects: {caisse: "+", direction: "-", parole: -1, set: [blessure_inventee], react: jp.re.sabatier_certificat}
+      answer: "Le Doc signe un certificat sans te regarder. Il dit que ça reste entre la table et lui ; il ne dit pas quoi."
+    right:
+      label: "Je suis sur le banc, point"
+      effects: {tribunes: "+", caisse: "-", relation: {fardelli: -1}}
+      answer: "Il dit « d'accord ». Les trois doudounes vont voir le petit. C'est plus simple."
+
+  - id: jp.banc.retour
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "« Tu es dedans dimanche, en bas de la feuille, et je te le dis parce que personne ne te le dira : c'est moi qui ai insisté. Petite porte, ou tu attends la grande ? »"
+    left:
+      label: "La petite porte"
+      effects: {vestiaire: "+", tribunes: "+", force: 1, relation: {vukic: 1}, set: [retour_petite_porte]}
+      answer: "Tu joues vingt minutes. Tu fais une passe décisive au petit ; c'est le meilleur retour possible, et il est à lui."
+    right:
+      label: "J'attends la grande"
+      effects: {tribunes: "-", direction: "-", force: -1}
+      answer: "Tu attends. Elle ne s'ouvre pas cette saison. Il range le cahier ; il souligne ton nom quand même."
+
+  - id: jp.banc.retour_ailleurs
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: vukic
+    tone: strategique
+    text: "« Tu es parti en janvier, et je te le dis parce que personne ne te le dira : là-bas aussi il y a un banc, et il est plus long. Tu rappelles, ou tu te débrouilles ? »"
+    left:
+      label: "Je rappelle"
+      effects: {direction: "+", relation: {vukic: 1}, force: 1, set: [retour_petite_porte]}
+      answer: "Tu rappelles. Il te dit trois choses sur ton nouveau coach ; les trois sont vraies."
+    right:
+      label: "Je me débrouille"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Tu te débrouilles. Ça prend six mois de plus ; ça tient mieux, peut-être."

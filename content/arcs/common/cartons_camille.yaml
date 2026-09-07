@@ -1,0 +1,72 @@
+# « Les cartons » — la maison est à deux cents kilomètres ; Camille fait les
+# cartons, ou elle ne les fait pas, et Josiane sert le café à l'hôtel du club en
+# attendant (bible ch. 11 § « INTRIGUE co.cartons_camille », fiche de Camille
+# ch. 01 § 4). C'est l'intrigue de la cinquième jauge : légère, tendre, et la
+# seule où le président n'a rien à dire.
+#
+# Elle manquait au réservoir du promu : le pool "0" de la bible en compte neuf
+# et le lot n'en avait importé que sept, ce qui laissait Camille au casting sans
+# aucune intrigue à porter (lint « porteur ou cast de 1 intrigue »).
+#
+# Chemins : appel (trois variantes : la première fois, « encore », six semaines
+# d'intérim) → josiane (la chambre 12 : jusqu'en juin, ou jusqu'à ce qu'elle
+# arrive ; variante « la trêve » si tu as promis) → metier (elle est venue : ce
+# qu'il y a au fond du dernier carton) | promesse (le calendrier de la cuisine)
+# → treve (saison suivante, l'hiver : la trêve est passée).
+# Issues : ici | hotel | promis.
+arcs:
+  - id: co.cartons_camille
+    title: "Les cartons"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.1
+    replay: { after: 3, max: 2 }
+    min_season: 0
+    theme: famille
+    carrier: camille
+    cast: [camille, josiane]
+    when: "!flag('divorce')"
+    # Elle est déjà venue (ou partie) : les cartons ne sont plus une question.
+    excludes: [divorce, camille_ici]
+    issues: [ici, hotel, promis]
+    traces:
+      camille_ici:   "{annee} : Camille a fait les cartons. Deux cents kilomètres, un appartement à {ville}, un métier au fond du dernier."
+      hotel_du_club: "{annee} : {prenom} {nom} vit à l'hôtel du club, chambre 12. Josiane sert le café."
+      treve_promise: "{annee} : « à la trêve », a dit {nom} à Camille. La trêve est passée."
+    hint: "Deux cents kilomètres, une chambre 12, et des cartons qui attendent."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      relation: { camille: -1 }
+      journal: "{annee} : {nom} a changé de club sans défaire la valise. Camille a gardé les cartons."
+    steps:
+      - id: appel
+        card:
+          - { id: co.cartons.appel_hotel, if: "flag('hotel_du_club')" }
+          - { id: co.cartons.appel_encore, if: "plays('co.cartons_camille') >= 1" }
+          - { id: co.cartons.appel_interim, if: "flag('interim')" }
+          - { id: co.cartons.appel }
+        next: [ { step: josiane, in: [1, 3] } ]
+      - id: josiane
+        card:
+          - { id: co.cartons.josiane_promis, if: "vars.cartons == 2" }
+          - { id: co.cartons.josiane }
+        next:
+          - { step: metier, if: "flag('camille_ici')", in: [2, 5] }
+          - { step: promesse, in: [2, 5] }
+      - id: metier
+        card:
+          - { id: co.cartons.metier_avocate, if: "flag('camille_avocate')" }
+          - { id: co.cartons.metier }
+        next: []
+      - id: promesse
+        card: co.cartons.promesse
+        next: [ { step: treve, at_season: 1, at: [10, 12], in: [10, 24] } ]
+      - id: treve
+        # Si elle est venue entre-temps, la carte n'a plus lieu d'être servie.
+        card: co.cartons.treve
+        on_expire: skip
+        next: []

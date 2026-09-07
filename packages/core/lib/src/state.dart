@@ -83,6 +83,24 @@ class JournalEntry {
       );
 }
 
+/// L'état d'un personnage (spec variété §1.10) : son âge (+1 à chaque
+/// ouverture de saison) et son statut (`kStatuts`). Posé au départ depuis
+/// `characters.yaml`, changé par l'effet `char:` d'un choix.
+class CharState {
+  int age;
+  String statut;
+  CharState({this.age = 0, this.statut = 'present'});
+
+  CharState clone() => CharState(age: age, statut: statut);
+
+  Map<String, dynamic> toJson() => {'age': age, 'statut': statut};
+
+  factory CharState.fromJson(Map<String, dynamic> j) => CharState(
+        age: (j['age'] as num?)?.toInt() ?? 0,
+        statut: j['statut'] as String? ?? 'present',
+      );
+}
+
 /// La réaction en attente (spec variété §1.4) : servie au tirage suivant, hors
 /// créneau ; `arc`/`step` sont ceux de la carte déclencheuse.
 class ReactionRef {
@@ -489,6 +507,10 @@ class GameState {
   bool lastWasReaction;
   String? lastUne; // id de la manchette servie au dernier Bilan
   LastStoryCard? lastStoryCard;
+  /// Âge et statut des personnages (spec variété §1.10) : clés triées à la
+  /// sérialisation ; reconstruit au premier `openSeason` si une sauvegarde
+  /// ancienne ne le porte pas.
+  Map<String, CharState> chars;
 
   Pending? pending;
   String? endingId;
@@ -564,6 +586,7 @@ class GameState {
     this.lastWasReaction = false,
     this.lastUne,
     this.lastStoryCard,
+    Map<String, CharState>? chars,
     required this.pending,
     required this.endingId,
     required this.lastAnswer,
@@ -582,7 +605,8 @@ class GameState {
         themesPlayed = themesPlayed ?? [],
         openingSlots = openingSlots ?? [],
         carriersLastSeason = carriersLastSeason ?? {},
-        journal = journal ?? [];
+        journal = journal ?? [],
+        chars = chars ?? {};
 
   GameState clone() => GameState(
         contentVersion: contentVersion,
@@ -653,6 +677,7 @@ class GameState {
         lastWasReaction: lastWasReaction,
         lastUne: lastUne,
         lastStoryCard: lastStoryCard,
+        chars: chars.map((k, v) => MapEntry(k, v.clone())),
         pending: pending,
         endingId: endingId,
         lastAnswer: lastAnswer,
@@ -729,6 +754,7 @@ class GameState {
         'lastWasReaction': lastWasReaction,
         'lastUne': lastUne,
         'lastStoryCard': lastStoryCard?.toJson(),
+        'chars': {for (final k in chars.keys.toList()..sort()) k: chars[k]!.toJson()},
         'pending': pending?.toJson(),
         'endingId': endingId,
         'lastAnswer': lastAnswer,
@@ -807,11 +833,26 @@ class GameState {
         lastWasReaction: j['lastWasReaction'] == true,
         lastUne: j['lastUne'] as String?,
         lastStoryCard: j['lastStoryCard'] == null ? null : LastStoryCard.fromJson((j['lastStoryCard'] as Map).cast<String, dynamic>()),
+        chars: ((j['chars'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), CharState.fromJson((v as Map).cast<String, dynamic>()))),
         pending: j['pending'] == null ? null : Pending.fromJson((j['pending'] as Map).cast<String, dynamic>()),
         endingId: j['endingId'] as String?,
         lastAnswer: j['lastAnswer'] as String?,
         over: j['over'] == true,
       );
+
+  /// L'état des personnages, compacté pour le `fingerprint` : le nombre de
+  /// visages, la somme des âges, et les statuts qui ont bougé (triés).
+  String charsDigest() {
+    if (chars.isEmpty) return '0';
+    final keys = chars.keys.toList()..sort();
+    int ages = 0;
+    final moved = <String>[];
+    for (final k in keys) {
+      ages += chars[k]!.age;
+      if (chars[k]!.statut != 'present') moved.add('$k=${chars[k]!.statut}');
+    }
+    return '${keys.length}:$ages:${moved.join('.')}';
+  }
 
   /// A short stable fingerprint of the whole state, used by golden tests to
   /// assert determinism.
@@ -865,7 +906,9 @@ class GameState {
       ..write('|j')
       ..write(journal.length)
       ..write('|r')
-      ..write(reaction?.card ?? '-');
+      ..write(reaction?.card ?? '-')
+      ..write('|c')
+      ..write(charsDigest());
     return b.toString();
   }
 }

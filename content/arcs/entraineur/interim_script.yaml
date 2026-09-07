@@ -1,0 +1,92 @@
+# Arc de postulat « Six semaines » (postulat 1, « L'intérimaire », bible ch. 11
+# § 3.2). Le script ancré de la carrière : quatre ancres en saison 1 (le bureau
+# encore au nom de l'ancien au slot 1 — quatre variantes lues sur le fil rouge
+# tiré —, le verdict de l'intérim en 10-11, le CDI ou la porte au 17), trois en
+# saison 2 (la plaque, le retour de l'ancien chez {rival}, la veille), puis deux
+# ancres rejouables à partir de la saison 3 (rentrée / veille).
+# Semé par `opening_arc: en.interim.six_semaines` dans postulats.yaml ; il
+# remplace l'arc générique co.script.generique pour ce postulat.
+#
+# Traces du script : cartons_jetes (lu par Le bureau de l'ancien), cdi_signe,
+# interim_prolonge et dechu (lus par I3, la rentrée, l'alarme des trois CV),
+# montee_promise (lu par La D2 et la mairie), examen_promis et diplome_arrange
+# (lus par Le diplôme et les manchettes), ancien_rival (lu par `requires` de
+# L'ancien sur le banc d'en face).
+arcs:
+  - id: en.interim.six_semaines
+    title: "Six semaines"
+    kind: postulat
+    roles: [entraineur]
+    foreground: true
+    weight: 1.0
+    theme: direction
+    carrier: josiane
+    cast: [josiane, aulard, meneche, vukic, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      cartons_jetes:    "{annee} : {nom} a fait jeter les cartons de l'ancien dès le premier jour. La plaque a suivi."
+      cdi_signe:        "{annee} : {prenom} {nom} a signé jusqu'en juin. La page deux disait douze mois ; elle n'existait pas."
+      interim_prolonge: "{annee} : un mois de plus, sans prime. Le président n'a pas dit lequel."
+      dechu:            "{annee} : un vrai coach est arrivé un lundi. {nom} est resté à côté, sur la même ligne de banc."
+      montee_promise:   "{annee} : {nom} a promis la montée pour se faire confirmer. Deux personnes ont noté la date."
+      examen_promis:    "{annee} : {prenom} {nom} a promis de passer l'examen en juillet. Le président a écrit « juillet »."
+      diplome_arrange:  "{annee} : le diplôme de {nom} est arrivé un vendredi soir, signé par quelqu'un qui n'était pas là."
+      ancien_rival:     "{annee} : l'ancien a signé chez {rival}. Il « revient dans sa vallée » ; il vient d'ailleurs."
+    steps:
+      # -------------------------------------------------------- saison 1 (S0)
+      - id: i1_bureau
+        card:
+          - { id: en.interim.i1_bureau_vestiaire, if: "fil_rouge == 'vestiaire'" }
+          - { id: en.interim.i1_bureau_diplome,   if: "fil_rouge == 'diplome'" }
+          - { id: en.interim.i1_bureau_grand_nom, if: "fil_rouge == 'grand_nom'" }
+          - { id: en.interim.i1_bureau }
+        at: [1, 1]
+        season: 0
+      - id: i2_verdict
+        # Première vraie : déchu (direction au plancher), confirmé (une série ou
+        # un classement), prolongé (le défaut : ni bon ni mauvais).
+        card:
+          - { id: en.interim.i2_dechu,    if: "gauges.direction < 30" }
+          - { id: en.interim.i2_confirme, if: "world.serie_victoires >= 1 || world.rang <= 8" }
+          - { id: en.interim.i2_prolonge }
+        at: [10, 11]
+        season: 0
+      - id: i3_cdi
+        card:
+          - { id: en.interim.i3_dechu,   if: "flag('dechu')" }
+          - { id: en.interim.i3_dauphin, if: "flag('vukic_dauphin')" }
+          - { id: en.interim.i3_diplome, if: "!flag('diplome') && !flag('derogation')" }
+          - { id: en.interim.i3_cdi }
+        at: [17, 17]
+        season: 0
+      # -------------------------------------------------------- saison 2 (S1)
+      - id: s1_rentree
+        card:
+          - { id: en.interim.s1_rentree_dechu, if: "flag('dechu')" }
+          - { id: en.interim.s1_rentree_cdi,   if: "flag('cdi_signe')" }
+          - { id: en.interim.s1_rentree }
+        at: [1, 2]
+        season: 1
+      - id: s1_ancien
+        card:
+          - { id: en.interim.s1_ancien_sali,     if: "flag('ancien_sali')" }
+          - { id: en.interim.s1_ancien_methodes, if: "flag('methodes_ancien')" }
+          - { id: en.interim.s1_ancien }
+        at: [10, 11]
+        season: 1
+      - id: s1_veille
+        card: en.interim.s1_veille
+        at: [17, 17]
+        season: 1
+      # ---------------------------------------------------- saisons 3+ (S2+)
+      - id: rentree
+        card:
+          - { id: en.interim.rentree_diplome, if: "flag('derogation') && !flag('diplome')" }
+          - { id: en.interim.rentree }
+        at: [1, 1]
+        season: "2+"
+      - id: veille
+        card: en.interim.veille
+        at: [17, 17]
+        season: "2+"

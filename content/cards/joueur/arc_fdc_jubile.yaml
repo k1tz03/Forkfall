@@ -1,0 +1,102 @@
+# Cartes de l'intrigue « Le jubilé » (arc jp.jubile) — bible ch. 10 § 6.14.
+# Un jubilé, c'est une fin ; tu n'as pas fini. L'affiche a une date en mars et
+# tu joues en avril. La place 14A est tenue par Josiane (la bible dit Paulette).
+cards:
+  - id: jp.jubile.gege
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« On te fait un jubilé, {toi}, la Nord a voté, et la tribune n'oublie rien, surtout pas ceux qui l'ont fait chanter. Tu choisis la date, ou tu nous dis que tu n'as pas fini ? »"
+    left:
+      label: "Je choisis la date"
+      effects: {tribunes: "++", direction: "-", set: [jubile_prevu], react: jp.re.lea_jubile_mars}
+      answer: "Tu écris la date. Il la repasse au feutre. Elle est en mars ; tu joues encore en avril."
+    right:
+      label: "Je n'ai pas fini"
+      effects: {tribunes: "+", vestiaire: "+", set: [jubile_reporte], outcome: reporte}
+      answer: "Il garde l'affiche. Il la ressort chaque année, la date toujours vide."
+
+  - id: jp.jubile.aulard
+    roles: [joueur]
+    arc: caisse
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    text: "« Un jubilé, c'est un stade plein sans payer d'adversaire : j'ai pas le temps, j'ai un empire, mais j'ai le temps pour ça. La recette au club, ou tu la donnes ? »"
+    left:
+      label: "On la partage"
+      effects: {caisse: "++", direction: "+", tribunes: "-"}
+      answer: "Tu prends ta part. Elle est correcte. Le local l'apprend ; il ne dit rien."
+    right:
+      label: "Aux anciens"
+      effects: {caisse: "-", tribunes: "++", set: [jubile_charite], outcome: charite}
+      answer: "La recette va à la buvette des anciens. Gigi la gère ; il ne compte pas ; ça marche."
+
+  - id: jp.jubile.place
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes]
+    speaker: josiane
+    tone: leger
+    text: "« La 14A est libre depuis 1987 et personne n'a voulu la reprendre, {toi}, j'en ai vu passer, des abonnés. Vous venez vous y asseoir cinq minutes, ou vous restez en bas ? »"
+    left:
+      label: "Cinq minutes, là-haut"
+      effects: {tribunes: "++", vestiaire: "-", relation: {josiane: 1}, set: [place_14a]}
+      answer: "Tu t'assois. Tu vois le stade de la 14A. Il est petit, et il est tout."
+    right:
+      label: "Je reste en bas"
+      effects: {tribunes: "+", relation: {josiane: -1}}
+      answer: "Elle hoche la tête. Elle range la fiche d'abonnement, sans la remplir."
+
+  - id: jp.jubile.jour
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: vecchio
+    tone: strategique
+    text: "« Stade plein, petit, et moi dans les buts ; j'en ai vu d'autres, mais pas un jubilé où le jubilé rejoue le mois d'après. Tu raccroches, ou tu rejoues en avril ? »"
+    left:
+      label: "Je raccroche"
+      effects: {tribunes: "+++", direction: "-", set: [jubile_fait, dernier_annonce], outcome: accepte, end: jubile}
+      answer: "Tu fais le tour d'honneur. À la fin, tu demandes où est le vestiaire, par habitude."
+    right:
+      label: "Je rejoue en avril"
+      effects: {tribunes: "++", vestiaire: "+", set: [jubile_fait], outcome: accepte, react: co.re.vecchio_garde}
+      answer: "En avril, tu joues. Le journal titre « Le jubilé continue » ; c'est absurde ; c'est vrai."
+
+  # L'issue `charite` était posée à l'étape « recette » puis écrasée par
+  # `accepte` au jour du jubilé (spec §1.3 : l'arc garde la dernière issue) :
+  # elle tombait à 9 %. La variante du jour la reprend et la ferme.
+  - id: jp.jubile.jour_anciens
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: gege
+    tone: strategique
+    text: "« Stade plein, et la recette part à la buvette des anciens ; la tribune n'oublie rien, elle a compté les billets pour toi. Tu raccroches, ou tu rejoues en avril ? »"
+    left:
+      label: "Je raccroche"
+      effects: {tribunes: "+++", direction: "-", set: [jubile_fait, dernier_annonce], outcome: charite, end: jubile}
+      answer: "Tu fais le tour d'honneur. À la buvette, on sert gratuit ; personne ne compte."
+    right:
+      label: "Je rejoue en avril"
+      effects: {tribunes: "++", vestiaire: "+", set: [jubile_fait], outcome: charite}
+      answer: "En avril, tu joues. La buvette des anciens a repeint la porte avec la recette."
+
+  - id: jp.jubile.jour_14a
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: vecchio
+    tone: strategique
+    text: "« Stade plein, petit, et la 14A est occupée pour une fois ; j'en ai vu d'autres, des tours d'honneur, jamais avec quelqu'un là-haut qui compte. Tu raccroches, ou tu rejoues ? »"
+    left:
+      label: "Je raccroche"
+      effects: {tribunes: "+++", direction: "-", set: [jubile_fait, dernier_annonce], outcome: accepte, end: jubile}
+      answer: "Tu fais le tour. En passant sous la 14A, tu lèves la main ; elle lève la sienne."
+    right:
+      label: "Je rejoue en avril"
+      effects: {tribunes: "++", vestiaire: "+", set: [jubile_fait], outcome: accepte}
+      answer: "En avril, tu joues. La 14A est reprise pour l'année ; c'est écrit sur le classeur."

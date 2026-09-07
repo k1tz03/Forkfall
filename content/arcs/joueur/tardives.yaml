@@ -1,0 +1,142 @@
+# Réservoir du joueur pro — les intrigues tardives (bucket "2+", bible ch. 10
+# § 6.25, § 6.26, § 6.13) : le retour à l'usine (rejouable, `requires: vendu_d1`),
+# le brassard à vingt ans, le diplôme. Elles ne s'ouvrent qu'à partir de la
+# troisième saison : le passé du joueur est alors assez épais pour être lu.
+arcs:
+  # ------------------------------------------------ § 6.25 · Le retour à l'usine
+  - id: jp.retour_usine
+    title: "Le retour à l'usine"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.1
+    once: false
+    replay: { after: 1, max: 5 }
+    min_season: 2
+    theme: tribune
+    carrier: gege
+    cast: [gege, aulard, josiane, mbako, mere_mbako]
+    start: [2, 10]
+    same_club: false
+    fallback: nouvelles
+    requires: [vendu_d1]
+    hint: "Tu joues contre ton ancien club. La bâche est pliée dans un coin."
+    issues: [celebre, baisse, rachete]
+    traces:
+      celebre_contre_usine: "{annee} : {prenom} {nom} a célébré devant la Nord. La bâche est sortie du sac, et a brûlé."
+      retour_usine_signe:   "{annee} : l'usine a racheté {prenom} {nom}. Moins cher. La bâche dit « (BIS) »."
+      tifo_adieu:           "{annee} : {prenom} {nom} a marqué contre l'usine et a baissé la tête. La Nord a applaudi un visiteur."
+    epilogue:
+      journal: "{annee} : {nom} est revenu{pg, select, f{e} other{}} jouer contre l'usine. La bâche était dans un sac."
+    steps:
+      - id: parking
+        card:
+          - { id: jp.retour.parking_encore, if: "plays('jp.retour_usine') >= 1" }
+          - { id: jp.retour.parking }
+        next: [ { step: gamin, in: [1, 8] } ]
+      - id: gamin
+        card:
+          - { id: jp.retour.gamin, if: "chars.mbako.statut != 'vendu' && chars.mbako.statut != 'mort'" }
+          - { id: jp.retour.gamin_inconnu }
+        next: [ { step: but, in: [1, 8] } ]
+      - id: but
+        card:
+          - { id: jp.retour.but_cave, if: "flag('bache_a_la_cave')" }
+          - { id: jp.retour.but }
+        next: [ { step: rachat, in: [1, 9] } ]
+      - id: rachat
+        card:
+          - { id: jp.retour.aulard_brule, if: "flag('celebre_contre_usine')" }
+          - { id: jp.retour.aulard }
+        next: []
+
+  # --------------------------------------------------------- § 6.26 · Le brassard
+  - id: jp.brassard_20
+    title: "Le brassard"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vecchio, mbako, vukic]
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    when: "!flag('capitaine') && chars.brehaut.statut != 'retraite'"
+    hint: "Le groupe a voté. Bréhaut n'a pas voté."
+    issues: [prend, refuse, gigi]
+    traces:
+      capitaine:         "{annee} : le groupe a voté {prenom} {nom}. Bréhaut n'avait pas voté ; il a mis le brassard {pg, select, f{elle-même} other{lui-même}}."
+    epilogue:
+      journal: "{annee} : le brassard de {nom}. À vingt ans, ou jamais."
+    steps:
+      - id: vote
+        card:
+          - { id: jp.brassard_33.deux, if: "age >= 29" }
+          - { id: jp.brassard_20.groupe }
+        next: [ { step: lundi, if: "flag('capitaine')", in: [1, 9] }, { step: premier_match, in: [2, 11] } ]
+      - id: lundi
+        card: jp.brassard.lundi
+        next: [ { step: premier_match, in: [1, 10] } ]
+      - id: premier_match
+        card:
+          - { id: jp.brassard.premier_match, if: "flag('capitaine')" }
+          - { id: jp.brassard.premier_match_sans }
+        next: []
+
+  # ---------------------------------------------------------- § 6.13 · Le diplôme
+  - id: jp.diplome_joueur
+    title: "Le diplôme"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: formation
+    carrier: vukic
+    cast: [vukic, clow, aulard, legruet, brehaut]
+    start: [2, 8]
+    same_club: false
+    fallback: nouvelles
+    excludes: [diplome]
+    hint: "Tes jambes parlent. La réserve n'a pas d'entraîneur."
+    issues: [diplome, pas_encore, brehaut]
+    traces:
+      diplome:          "{annee} : {prenom} {nom} a passé le diplôme d'entraîneur. Lundi, huit heures."
+      diplome_reporte:  "{annee} : encore un an sans papier pour {prenom} {nom}. L'adjoint a rangé le formulaire."
+      brehaut_diplome:  "{annee} : Titi Bréhaut a passé le diplôme avec {prenom} {nom}. Adjoint, ou rival."
+      clow_stage:       "{annee} : {prenom} {nom} est arrivé{pg, select, f{e} other{}} à sept heures au stage. La chaise était devant."
+      vers_entraineur:  "{annee} : {prenom} {nom} a le papier. La réserve a un entraîneur, ou deux."
+    epilogue:
+      journal: "{annee} : {nom} a le papier. La réserve a un entraîneur, ou deux."
+    steps:
+      - id: vukic
+        card: jp.diplome.vukic
+        next: [ { step: stage, if: "flag('diplome_en_cours')", in: [1, 9] }, { step: relance, in: [3, 12] } ]
+      # Dire non une fois ne ferme pas l'intrigue : l'adjoint revient avec le
+      # même formulaire, et c'est la deuxième réponse qui compte.
+      - id: relance
+        card: jp.diplome.vukic_encore
+        next: [ { step: stage, if: "flag('diplome_en_cours')", in: [1, 9] } ]
+      - id: stage
+        card:
+          - { id: jp.diplome.clow_deja, if: "flag('clow_stage')" }
+          - { id: jp.diplome.clow_ferme, if: "flag('clow_ingrat')" }
+          - { id: jp.diplome.clow }
+        next: [ { step: president, in: [1, 9] } ]
+      - id: president
+        card: jp.diplome.aulard
+        next: [ { step: papier, in: [2, 11] } ]
+      - id: papier
+        card: jp.diplome.legruet
+        next: [ { step: brehaut, if: "flag('diplome')", in: [1, 8] } ]
+      - id: brehaut
+        card: jp.diplome.brehaut
+        next: []

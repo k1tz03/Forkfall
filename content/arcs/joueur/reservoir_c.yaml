@@ -1,0 +1,155 @@
+# Réservoir du joueur pro — lot C (bible ch. 10 § 6.8, § 6.11, § 6.12) :
+# le genou qui parle, la clause, l'exil doré. Bucket "1" du programme de la
+# pépite : la deuxième saison, quand le corps et le marché se réveillent.
+arcs:
+  # -------------------------------------------------- § 6.8 · Le genou qui parle
+  # Entrée « pepite » : la première gêne à vingt ans, en saison 2.
+  - id: jp.genou_parle
+    title: "Le genou qui parle"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 1
+    theme: corps
+    carrier: sabatier
+    cast: [sabatier, camille, fardelli, vukic]
+    start: [2, 10]
+    same_club: false
+    fallback: nouvelles
+    hint: "La radio contre le néon. Il montre la fissure avec le capuchon du stylo."
+    issues: [bistouri, piqure, silence]
+    traces:
+      genou_opere:   "{annee} : le genou de {prenom} {nom} a parlé. Le bistouri a répondu. Six mois de tribune."
+      genou_grave:   "{annee} : le genou de {prenom} {nom} a eu le dernier mot."
+      genou_cache:   "{annee} : {prenom} {nom} boite dans l'escalier, et le Doc ne le sait pas encore."
+      bilan_arrondi: "{annee} : le bilan médical de {prenom} {nom} a été arrondi. Le genou, non."
+    epilogue:
+      journal: "{annee} : le genou de {nom} a parlé. On l'a écouté tard."
+    steps:
+      # L'ordre compte : l'issue de l'arc est celle de la DERNIÈRE étape servie.
+      # `maison` (issue `silence`) passait après les plateaux et écrasait
+      # `bistouri` / `piqure` : les deux issues du bloc opératoire tombaient à
+      # 0 % et 6 %. La maison parle d'abord (on cache, ou on dit), la table
+      # d'opération tranche ensuite.
+      - id: radio
+        card:
+          - { id: jp.genou.radio_jeune, if: "age < 25" }
+          - { id: jp.genou.radio }
+        next: [ { step: maison, in: [2, 11] } ]
+      - id: maison
+        card:
+          - { id: jp.genou.maison_medecin, if: "flag('camille_medecin')" }
+          - { id: jp.genou.maison, if: "!flag('divorce')" }
+          - { id: jp.genou.vestiaire_seul }
+        next: [ { step: plateaux, if: "flag('genou')", in: [2, 11] }, { step: visite, if: "flag('genou_cache')", in: [6, 16] } ]
+      - id: plateaux
+        card: jp.genou.plateaux
+        next: [ { step: rechute, if: "flag('genou_grave_arme')", in: [3, 12] }, { step: visite, if: "flag('genou_cache')", in: [4, 16] } ]
+      - id: rechute
+        card: jp.genou.rechute
+        # `genou_grave` n'est posé que par la sortie droite de la rechute : la
+        # dernière fois où le genou parle est donc une étape, pas une variante.
+        next: [ { step: croises, if: "flag('genou_grave')", in: [1, 9] }, { step: visite, if: "flag('genou_cache')", in: [2, 12] } ]
+      - id: croises
+        card: jp.genou.rechute_croises
+        next: [ { step: visite, if: "flag('genou_cache')", in: [2, 11] } ]
+      - id: visite
+        card: jp.genou.visite
+        next: []
+
+  # ------------------------------------------------------------ § 6.11 · La clause
+  - id: jp.clause
+    title: "La clause"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 1
+    theme: mercato
+    carrier: fardelli
+    cast: [fardelli, aulard, gege, josiane]
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    when: "gauges.tribunes >= 55"
+    hint: "Le rival a payé ta clause au centime. Le club fulmine et ne peut rien."
+    issues: [part, refuse, double]
+    traces:
+      parti_chez_rival: "{annee} : {prenom} {nom} est parti{pg, select, f{e} other{}} chez {rival}. La clause, au centime."
+      mercenaire:       "{annee} : {prenom} {nom} a fait doubler sa clause. Le club a payé pour {pg, select, f{qu'elle reste} other{qu'il reste}}."
+      blason_embrasse:  "{annee} : {prenom} {nom} a embrassé le blason devant la Nord. Le club avait payé."
+      fax_rate:         "{annee} : le transfert de {prenom} {nom} est mort dans un fax, à 23 h 59 min 58 s."
+    epilogue:
+      journal: "{annee} : la clause de {nom} a été levée. Au centime."
+    steps:
+      - id: rival
+        card:
+          - { id: jp.clause.rival_gigi, if: "flag('gigi_non_agent')" }
+          - { id: jp.clause.rival }
+        next: [ { step: page_deux, if: "!flag('parti_chez_rival')", in: [1, 9] }, { step: fax, in: [2, 10] } ]
+      - id: page_deux
+        card:
+          - { id: jp.clause.page_deux_lue, if: "flag('page_lue')" }
+          - { id: jp.clause.page_deux }
+        next: [ { step: blason, in: [1, 9] } ]
+      - id: blason
+        card:
+          - { id: jp.clause.blason_mercenaire, if: "flag('mercenaire')" }
+          - { id: jp.clause.blason }
+        next: [ { step: fax, in: [2, 10] } ]
+      - id: fax
+        card:
+          - { id: jp.clause.fax_dernier, if: "gauges.direction <= 30" }
+          - { id: jp.clause.fax_mail, if: "year >= 2010" }
+          - { id: jp.clause.fax }
+        next: []
+
+  # -------------------------------------------------------- § 6.12 · L'exil doré
+  - id: jp.exil_dore
+    title: "L'exil doré"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: false
+    replay: { after: 2, max: 4 }
+    min_season: 1
+    theme: argent
+    carrier: nassir
+    cast: [nassir, fardelli, camille]
+    start: [2, 10]
+    same_club: false
+    fallback: nouvelles
+    hint: "Le championnat du désert brille comme l'or et paie comme l'or."
+    issues: [part, reste, cousin]
+    traces:
+      exil_dore:     "{annee} : {prenom} {nom} est parti{pg, select, f{e} other{}} pour l'or. Le niveau est resté entre eux."
+      camille_reste: "{annee} : Camille n'est pas venue au désert. On s'appelle à des heures impossibles."
+    epilogue:
+      journal: "{annee} : on a proposé l'or à {nom}. {pg, select, f{Elle} other{Il}} a dit oui, ou « je reviendrai »."
+    steps:
+      - id: offre
+        card:
+          - { id: jp.exil.nassir_encore, if: "plays('jp.exil_dore') >= 1" }
+          - { id: jp.exil.nassir }
+        next: [ { step: camille, if: "flag('exil_dore') && !flag('divorce')", in: [1, 9] }, { step: dix_pour_cent, in: [1, 9] } ]
+      - id: camille
+        card: jp.exil.camille
+        next: [ { step: dix_pour_cent, in: [1, 9] } ]
+      - id: dix_pour_cent
+        card:
+          - { id: jp.exil.vendu_en_dormant, if: "flag('agent_fardelli') && relation.fardelli <= -2" }
+          - { id: jp.exil.dix_pour_cent, if: "flag('agent_fardelli')" }
+          - { id: jp.exil.climatisation }
+        next: [ { step: cousin, if: "flag('exil_dore')", in: [6, 16] } ]
+      - id: cousin
+        card:
+          - { id: jp.exil.cousin_compte_plein, if: "gauges.caisse >= 80" }
+          - { id: jp.exil.cousin }
+        next: []

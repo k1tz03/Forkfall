@@ -1,0 +1,55 @@
+# « L'adjoint qui dîne » — Josiane a vu Vukić et le président au restaurant du
+# port ; il n'était pas question de toi, enfin si (bible ch. 11 § 2.3,
+# intrigue 13). C'est la mécanique de l'adjoint vue de l'autre côté : il dîne
+# parce que tu ne l'as pas invité.
+#
+# Chemins : addition → vukic (←, tu le confrontes : le garder, ou la porte et
+# le banc d'en face en mars) | aulard (→, tu entres sans frapper) → discours
+# (le second discours, celui qui dit « si on descend », avec son nom dedans) →
+# novembre (S+1 : il a fini de réfléchir).
+# Issues : confronte | dauphin | aulard.
+arcs:
+  - id: en.adjoint_dine
+    title: "L'adjoint qui dîne"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: direction
+    carrier: vukic
+    cast: [vukic, aulard, josiane, brehaut]
+    issues: [confronte, dauphin, aulard]
+    traces:
+      vukic_ecarte:     "{annee} : Zoran Vukić écarté par {prenom} {nom}. Il a pris le banc d'en face en mars."
+      aulard_confronte: "{annee} : {nom} est entré{pg, select, f{e} other{}} sans frapper chez le président, à propos d'un dîner. Le président a payé l'addition."
+    hint: "Une addition, un mardi, deux couverts, et le nom de ton adjoint au dos."
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      relation: { vukic: -1 }
+      clear: [vukic_dauphin]
+      journal: "{annee} : {nom} est parti{pg, select, f{e} other{}} avant que Vukić ait fini de réfléchir. Le cahier est resté au club."
+    steps:
+      - id: addition
+        card: en.adjoint.addition
+        next: [ { step: vukic, in: [1, 3] } ]
+      - id: vukic
+        card: en.adjoint.vukic
+        next: [ { step: discours, in: [2, 5] } ]
+      - id: aulard
+        card: en.adjoint.aulard
+        outcome: aulard
+        next: [ { step: discours, in: [2, 5] } ]
+      - id: discours
+        card:
+          - { id: en.adjoint.discours_brassard, if: "flag('brehaut_capitaine') && relation.brehaut <= 0" }
+          - { id: en.adjoint.discours }
+        next: [ { step: novembre, if: "flag('vukic_dauphin')", at_season: 1, at: [8, 11], in: [8, 11] } ]
+      - id: novembre
+        card: en.adjoint.novembre
+        on_expire: skip
+        next: []

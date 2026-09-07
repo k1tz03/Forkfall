@@ -1,0 +1,63 @@
+# « Le brassard » — Bréhaut a trente-trois ans, un genou qui parle et un
+# brassard qu'il ne veut pas rendre ; Gigi le mérite, le petit le veut, Vukić a
+# un avis (bible ch. 11 § 2.3, intrigue 12). Seconde vague : le réservoir la
+# tire en saison 1 et au-delà, quand le vestiaire a déjà une histoire.
+#
+# Chemins : genou (le Doc, le chiffre ou l'homme) → brehaut (garder jusqu'en
+# juin, ou décider) → choix (Gigi ou le petit ; variante « il sort à l'heure »
+# si tu as pris le chiffre) → cercle (trois variantes lues sur l'issue) →
+# raccroche (S+1 : le costume, ton staff ou un bureau au-dessus).
+# Issues : garde | gigi | mbako | staff.
+arcs:
+  - id: en.brassard_brehaut
+    title: "Le brassard"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 1
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, mbako, vecchio, vukic, sabatier]
+    when: "chars.brehaut.statut == 'club' || chars.brehaut.statut == 'present'"
+    # Il a déjà raccroché : le brassard n'est plus une question.
+    excludes: [brehaut_staff]
+    issues: [garde, gigi, mbako, staff]
+    traces:
+      brehaut_capitaine: "{annee} : Bréhaut a gardé le brassard à trente-quatre ans. Sur une jambe, le groupe vivait bien."
+      brassard_gigi:     "{annee} : Gigi Vecchio, quarante et un ans, capitaine et gardien. Le vestiaire a ri dix secondes."
+      brassard_mbako:    "{annee} : le brassard au petit, dix-sept ans. Les anciens ont fait un cercle sans lui."
+      brehaut_staff:     "{annee} : Bréhaut a raccroché. Il est au staff de {club}, ou en costume ailleurs."
+    hint: "Un genou de trente-trois ans, un brassard, et deux bras qui attendent."
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : Bréhaut a gardé le brassard après le départ de {nom}. Sur une jambe, jusqu'en juin."
+    steps:
+      - id: genou
+        card: en.brassard.genou
+        next: [ { step: brehaut, in: [1, 3] } ]
+      - id: brehaut
+        card: en.brassard.brehaut
+        next: [ { step: choix, in: [2, 4] } ]
+      - id: choix
+        card:
+          - { id: en.brassard.choix_chiffre, if: "vars.genou_brehaut == 1 && relation.brehaut >= 1" }
+          - { id: en.brassard.choix }
+        next: [ { step: cercle, in: [1, 3] } ]
+      - id: cercle
+        card:
+          - { id: en.brassard.cercle_mbako, if: "flag('brassard_mbako')" }
+          - { id: en.brassard.cercle_gigi, if: "flag('brassard_gigi')" }
+          - { id: en.brassard.cercle }
+        next: [ { step: raccroche, at_season: 1, at: [1, 4], in: [1, 4] } ]
+      - id: raccroche
+        card:
+          - { id: en.brassard.raccroche_actif, if: "flag('club_actif')" }
+          - { id: en.brassard.raccroche }
+        outcome: staff
+        on_expire: skip
+        next: []

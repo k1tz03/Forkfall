@@ -1,0 +1,91 @@
+# Cartes d'étape de « L'enveloppe » (content/arcs/entraineur/enveloppe.yaml).
+# Les étapes 1 et 5 sont les deux cartes ∃ `en.evt.enveloppe` et
+# `en.evt.enveloppe_federation` (content/cards/entraineur/evenements.yaml) :
+# elles ne sont pas recopiées ici. Toutes hors du sac.
+# Le nom du joueur : sur Bréhaut et sur l'enveloppe fermée, jamais deux étapes
+# de suite. Traces : enveloppe_rival, enveloppe_refusee, enveloppe_promise,
+# enveloppe_denoncee, enveloppe_niee, fede_dossier.
+cards:
+  # ---------------------------------------------- S2a · une date, pas un chiffre
+  - id: en.enveloppe.combien
+    roles: [entraineur]
+    arc: mercato
+    tags: [agents, scandale, risk:direction]
+    speaker: fardelli
+    tone: strategique
+    text: "Fardelli regarde le pare-brise, jamais l'enveloppe : « On ne parle plus d'argent, c'est réglé, on parle d'amitié : mon ami voudrait que tu ne changes pas de gardien au dernier bloc. »"
+    left:
+      label: "Promis, pas de changement"
+      effects: {force: 2, parole: -2, direction: "+", set: [enveloppe_promise], outcome: paye, react: en.re.meneche_valise}
+      answer: "L'enveloppe reste dans la voiture. La promesse, elle, part avec toi."
+    right:
+      label: "Je rends tout"
+      effects: {caisse: "++", force: -3, relation: {fardelli: -2}, clear: [enveloppe_rival], set: [enveloppe_refusee], outcome: jamais}
+      answer: "Il reprend l'enveloppe. Il la pèse dans la main ; elle a le même poids."
+
+  # ---------------------------------------------- S2b · le regard du numéro six
+  - id: en.enveloppe.brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut tapote une pochette de match contre sa cuisse : « Leur numéro six m'a demandé si « on avait reçu la visite de l'ami », et je n'ai pas compris. Tu sais, {toi} ? »"
+    left:
+      label: "Je sais, et j'ai dit jamais"
+      effects: {vestiaire: "+", parole: 1, relation: {brehaut: 1}}
+      answer: "Il range la pochette. Il rappelle le numéro six ; il lui dit « non », et raccroche avant la réponse."
+    right:
+      label: "Je ne sais pas"
+      effects: {vestiaire: "-", parole: -1, relation: {brehaut: -1}}
+      answer: "Il te croit. Il garde la pochette dans son casier ; c'est le genre de chose qu'il garde."
+
+  # ---------------------------------------------- S3 · hors micro
+  - id: en.enveloppe.meneche
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale, risk:direction]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet, le carnet ouvert à une page vide : « Hors micro : un ami de Fardelli a fait le tour des bancs de la vallée avec une enveloppe. Vous la dénoncez, ou je cherche ? »"
+    left:
+      label: "Je parle, à la Fédération"
+      effects: {direction: "-", tribunes: "+", parole: 1, relation: {meneche: 1, fardelli: -2}, set: [enveloppe_denoncee], outcome: denonce}
+      answer: "Il ferme le carnet sans avoir écrit. Il dit « merci », ce qui est rare, et « mercredi », ce qui est une date."
+    right:
+      label: "Cherchez, je n'ai rien vu"
+      effects: {direction: "+", parole: -1, relation: {meneche: -1}}
+      answer: "Il ouvre le carnet. Il écrit une seule chose : ton nom, et un point d'interrogation."
+
+  - id: en.enveloppe.meneche_promise
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale, retorse]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet, le micro rangé : « Hors micro : leur numéro six a une voiture neuve depuis mardi, et vous n'avez pas changé de gardien. Une coïncidence, ou je cherche ? »"
+    left:
+      label: "Une coïncidence"
+      effects: {parole: -2, direction: "+"}
+      answer: "Il note « coïncidence ». Il l'entoure."
+    right:
+      label: "Cherchez"
+      effects: {parole: -1, relation: {meneche: -1}}
+      answer: "Il cherche. Il trouve la voiture ; il cherche encore le reste."
+
+  # ---------------------------------------------- S6 · fermée
+  - id: en.enveloppe.denonce
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, chaine]
+    speaker: legruet
+    tone: strategique
+    text: "Berthomier ne touche pas l'enveloppe ; il touche le tampon : « Vous m'apportez une enveloppe fermée et le nom d'un ami que tout le monde connaît. Un reçu, ou ça reste entre nous ? »"
+    left:
+      label: "Un reçu, daté"
+      effects: {direction: "-", tribunes: "+", parole: 1, relation: {legruet: 1, fardelli: -2}}
+      answer: "Il tamponne un reçu. Il date ; c'est la première fois que tu le vois dater quelque chose."
+    right:
+      label: "Entre nous"
+      effects: {direction: "+", parole: -1, relation: {legruet: 1}, var: {fede_faveur: "+1"}}
+      answer: "Il range l'enveloppe dans un tiroir sans clé. Il ne date rien ; il se souviendra quand même."

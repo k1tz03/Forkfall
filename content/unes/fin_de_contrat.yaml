@@ -1,0 +1,366 @@
+# Manchettes du postulat « Fin de contrat à 31 ans » (bible ch. 10 § 8).
+# Schéma et règles : en-tête de content/unes.yaml.
+# Fraîcheur : chaque manchette de trace lit `flag('x') && journal_has('x')` — le
+# drapeau reste vrai toute la carrière, la ligne d'Almanach, non : on ne titre
+# pas trois ans plus tard sur un jubilé.
+# Aucune ne prétend à une montée, une descente ou un titre : elles parlent de
+# contrats, de genoux et de vestiaires, pas du classement.
+unes:
+  # -------------------------------------------------------- le contrat (4)
+  - id: une.fin.un_an_de_plus
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('prolonge') && journal_has('prolonge')"
+    titre: "UN AN DE PLUS POUR {NOM}"
+    sous: "Trente-deux ans, un genou, une page. Le président « n'a pas le temps », mais il a signé, et le Doc a paraphé en dessous."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.f3_juin
+    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.fin.vestiaire
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('prolonge_vestiaire') && journal_has('prolonge_vestiaire')"
+    titre: "{NOM}, PROLONGÉ PAR LE VESTIAIRE"
+    sous: "Vingt-deux noms par fax, le gardien deux fois. « Le groupe vit bien », dit le capitaine. Le président a lu, finalement."
+    sujet: jp.vestiaire_porte
+    photo: jp.porte.petition
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.sans_club
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 4
+    when: "flag('sans_club') && journal_has('sans_club')"
+    titre: "{NOM}, 32 ANS, SANS CLUB"
+    sous: "Le téléphone n'a pas sonné en août. Il était débranché ; personne n'avait remarqué, et personne n'a rappelé pour le dire."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.f3_juin_aucune
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.fin.quinzieme
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 2
+    when: "flag('quinzieme_jouee') && journal_has('quinzieme_jouee')"
+    titre: "QUATORZE CROIX, ET LA QUINZIÈME"
+    sous: "La clause disait quinze. Le Doc comptait les croix au capuchon de son stylo ; « ça reste entre la table et moi ». Le genou a tenu."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.f2b_quinzieme
+    react: [ { card: co.re.vecchio_garde } ]
+
+  # ---------------------------------------------------------- le corps (3)
+  - id: une.fin.dernier_mot
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('genou_grave') && journal_has('genou_grave')"
+    titre: "LE GENOU A EU LE DERNIER MOT"
+    sous: "Le Doc avait dit « tu ne sens plus rien ». C'était le problème. On a compté les croix ; il en manquait une."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.s1_jambes
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.fin.derriere
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('recule_poste') && journal_has('recule_poste')"
+    titre: "TROIS PAS DE MOINS, DIX MÈTRES PLUS BAS"
+    sous: "{prenom} {nom} joue derrière depuis janvier. L'adjoint dit que c'est de là qu'on voit tout ; il le dit à tout le monde, mais il le pense."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.s1_jambes
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.flacon
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 4
+    when: "flag('flacon_b') && journal_has('flacon_b')"
+    titre: "LE FLACON B DE {NOM}"
+    sous: "Deux ans. Le médecin du club « a très envie de vacances ». La kiné, elle, a demandé ce qu'il y avait dans le flacon ; on ne lui a pas dit."
+    sujet: co.pharmacie
+    photo: jp.pharmacie.flacon_b
+    react: [ { card: co.re.camille_journal } ]
+
+  # -------------------------------------------------------- la tribune (3)
+  - id: une.fin.jubile
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('jubile_fait') && journal_has('jubile_fait')"
+    titre: "JUBILÉ DE {NOM} : STADE PLEIN"
+    sous: "Tour d'honneur, le vieux gardien dans les buts pour un soir. À la fin, il a demandé où était le vestiaire. Par habitude."
+    sujet: jp.jubile
+    photo: jp.jubile.jour
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.affiche_sans_date
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('jubile_reporte') && journal_has('jubile_reporte')"
+    titre: "L'AFFICHE DU LOCAL N'A PAS DE DATE"
+    sous: "La Nord avait voté le jubilé. « La tribune n'oublie rien », dit le capo ; elle attend, c'est tout, et elle a le temps."
+    sujet: jp.jubile
+    photo: jp.jubile.gege
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.fin.derby
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('salue_ancien_virage') && journal_has('salue_ancien_virage')"
+    titre: "{NOM} A SALUÉ SON ANCIEN VIRAGE"
+    sous: "En face, avec l'autre maillot. Le virage avait son nom en deux morceaux : un pour l'aller, un pour le retour. Il n'a pas répondu."
+    sujet: co.derby
+    photo: co.derby.ancien
+    react: [ { card: co.re.gege_decoupe } ]
+
+  # ---------------------------------------------------------- la presse (3)
+  - id: une.fin.chapitre_trois
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "(flag('memoires_verite') || flag('chapitre_assume')) && journal_has('memoires_verite')"
+    titre: "LE CHAPITRE 3 A FÂCHÉ LE VESTIAIRE"
+    sous: "Les mémoires de {prenom} {nom}, page quarante-sept. Le capitaine a lu. « Le groupe vit bien. » Sans passe, pendant une semaine."
+    sujet: jp.memoires
+    photo: jp.memoires.chapitre_trois
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.fin.noel
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('memoires_lisses') && journal_has('memoires_lisses')"
+    titre: "UNE VIE EN LIVRE, SANS UN MOT PLUS HAUT"
+    sous: "Trois cents pages, aucune fâcherie, une photo de mariage. On l'offre à Noël ; personne ne se souvient de la page cent douze."
+    sujet: jp.memoires
+    photo: jp.memoires.lea
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.samedi_dimanche
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "(flag('consultant') || flag('consultant_assume')) && journal_has('consultant')"
+    titre: "IL JOUE LE SAMEDI, IL JUGE LE DIMANCHE"
+    sous: "Le fauteuil à côté du chroniqueur. Le président « n'a pas le temps » de regarder ; la secrétaire lui raconte, le lundi, en détail."
+    sujet: jp.consultant
+    photo: jp.consultant.plateau
+    react: [ { card: co.re.josiane_a_lu } ]
+
+  # ------------------------------------------------------- l'après, et le reste (5)
+  - id: une.fin.banc
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 4
+    when: "flag('vers_entraineur') && journal_has('vers_entraineur')"
+    titre: "{NOM} PASSE SUR LE BANC"
+    sous: "La réserve a un entraîneur. L'adjoint « le disait parce que personne ne le dirait » ; il l'a dit, et il avait le survêtement à la bonne taille."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.s1_veille
+    react: [ { card: co.re.josiane_a_lu } ]
+
+  - id: une.fin.cahier
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('page_lue_vukic') && journal_has('page_lue_vukic')"
+    titre: "DIX ANS, VUS DEPUIS LA TOUCHE"
+    sous: "Une page commencée le jour où {prenom} {nom} a regardé le banc pour la première fois. Elle est pleine, elle est dure, et elle est signée."
+    sujet: jp.adieu
+    photo: jp.adieu.vukic
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.prodigue
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('maison_pays_signee') && journal_has('maison_pays_signee')"
+    titre: "L'ENFANT PRODIGUE REVIENT À {VILLE}"
+    sous: "Le club de sa ville voulait un nom. Sa mère a appelé le président avant l'agent, et l'agent l'a appris par le journal."
+    sujet: jp.maison_pays
+    photo: jp.maison.offre_d2
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.fin.dernier_cobalt
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('adieu_cobalt') || flag('adieu_banc')) && journal_has('adieu_cobalt')"
+    titre: "UNE DERNIÈRE FOIS EN BLEU COBALT"
+    sous: "Pris « pour le vestiaire, plus pour les jambes ». Le capitaine a rendu la clé de la chambre du plus vieux ; elle change de main tous les dix ans."
+    sujet: jp.derniere_selection
+    photo: jp.derniere.legruet
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.enregistrement
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 4
+    when: "(flag('plume_parle') || flag('pari_double') || flag('temoin_brigade')) && journal_has('plume_parle')"
+    titre: "UN ENREGISTREMENT, UN BAR D'HÔTEL"
+    sous: "La journaliste « a les documents » : le nombre de corners, la date, une voix. L'agent, lui, « ne connaît pas Tony » ; il connaît le bar."
+    sujet: jp.pari
+    photo: jp.pari.plume
+    react: [ { card: co.re.camille_journal } ]
+
+  # ------------------------------------------------- les traces plus rares (4)
+  - id: une.fin.noms
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('petition_presse') && journal_has('petition_presse')"
+    titre: "VINGT-DEUX NOMS, ET LE VINGT-TROISIÈME"
+    sous: "La pétition du vestiaire a fuité, puis a été publiée avec les noms. Le président les a lus dans le journal ; le sien n'y était pas."
+    sujet: jp.vestiaire_porte
+    photo: jp.porte.presse
+    react: [ { card: co.re.josiane_a_lu } ]
+
+  - id: une.fin.dechiree
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('petition_retiree') && journal_has('petition_retiree')"
+    titre: "LA FEUILLE A FINI EN MORCEAUX"
+    sous: "Le capitaine en a gardé un : celui de la signature. Elle avait été imitée, et plutôt bien, par quelqu'un qui écrit beaucoup."
+    sujet: jp.vestiaire_porte
+    photo: jp.porte.petition
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.hymne
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('hymne_1990') && journal_has('hymne_1990')"
+    titre: "{NOM} REGARDAIT 1990"
+    sous: "La caméra était sur sa bouche pendant l'hymne, et pas sur le drapeau. Il a dit une année, pas une phrase. Le poteau était à gauche."
+    sujet: jp.derniere_selection
+    photo: jp.derniere.hymne
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.buvette
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('jubile_charite') && journal_has('jubile_charite')"
+    titre: "LA RECETTE EST PARTIE À LA BUVETTE"
+    sous: "Celle des anciens. Le vieux gardien la gère et ne compte pas ; à la fin de l'année, il manque quatre mille, et il en reste douze."
+    sujet: jp.jubile
+    photo: jp.jubile.aulard
+    react: [ { card: co.re.vecchio_garde } ]
+
+  # ------------------------------- les traces restantes, en bas de page (3)
+  - id: une.fin.eau
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('pharmacie_propre') && journal_has('pharmacie_propre')"
+    titre: "IL A BU DE L'EAU, ET IL L'A DIT"
+    sous: "Le flacon blanc est reparti dans le tiroir. Le médecin du club a rangé la table ; il regarde son joueur autrement, et moins souvent."
+    sujet: co.pharmacie
+    photo: jp.pharmacie.creatine
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.insu
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 4
+    when: "flag('dope_a_son_insu') && journal_has('dope_a_son_insu')"
+    titre: "« JE NE SAVAIS PAS CE QU'IL Y AVAIT DEDANS »"
+    sous: "La kiné a lu la feuille trois fois avant de fermer la porte. Elle témoignera ; la commission, elle, ne fait pas la différence."
+    sujet: co.pharmacie
+    photo: jp.pharmacie.victime
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.fin.vallee
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 2
+    when: "(flag('derby_gagne') && journal_has('derby_gagne')) || (flag('derby_perdu') && journal_has('derby_perdu'))"
+    titre: "LA VALLÉE L'A REGARDÉ DEUX FOIS"
+    sous: "Le derby, et le lendemain le derby encore, au local, lu à voix haute ligne par ligne. Le vieux gardien parle toujours de celui de cinquante et un."
+    sujet: co.derby
+    photo: co.derby.match
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.fin.integre
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('pari_refuse') && journal_has('pari_refuse')"
+    titre: "ON NOUS ÉCRIT : « J'AI DIT NON »"
+    sous: "Un joueur du cru raconte le coup de fil d'un ami d'enfance et les corners qu'on lui proposait de compter. Il n'a pas donné le nom de l'ami."
+    sujet: jp.pari
+    photo: jp.pari.tony
+    react: [ { card: co.re.vecchio_garde } ]
+
+  # ------------------------------------- les traces fortes de la saison 0 (3)
+  # Trois manchettes de priorité 3 pour trois traces de S0 qui n'en avaient
+  # aucune : le contrat replié sous le cendrier, le rabais de janvier et la
+  # pétition partie par fax (spec §5.2, « une trace posée est une trace lue »).
+  - id: une.fin.sans_agent
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('sans_agent') && journal_has('sans_agent')"
+    titre: "{NOM} CHERCHE, SANS AGENT"
+    sous: "Le contrat est resté sous le cendrier, plié en deux. « On parle d'argent ou d'amitié », avait dit l'agent ; il ne rappelle plus."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.f1_derniere_annee
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.fin.rabais
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('prolonge_rabais') && journal_has('prolonge_rabais')"
+    titre: "UN AN AU RABAIS, QUINZE MATCHS"
+    sous: "Le chiffre est petit et la clause est grande : quinze matchs, ou le contrat s'arrête. La secrétaire coche au crayon, pour pouvoir effacer."
+    sujet: jp.fin.dernier_contrat
+    photo: jp.fin.f2_offre
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.fin.vingt_deux_noms
+    postulats: [fin_de_contrat]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('petition_portee') && journal_has('petition_portee')"
+    titre: "VINGT-DEUX NOMS POUR {NOM}"
+    sous: "Une feuille par fax, le gardien signé deux fois. Le président « n'a pas le temps » ; la secrétaire l'a classée sous « pétitions », dossier mince."
+    sujet: jp.vestiaire_porte
+    photo: jp.porte.petition
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]

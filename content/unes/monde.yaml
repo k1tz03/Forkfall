@@ -1,0 +1,333 @@
+# Les manchettes de monde (bible ch. 20 § 2.1 pour les manchettes d'époque, et
+# § 7.1 pour la table des traces). Schéma et règles : en-tête de
+# content/unes.yaml.
+#
+# Chacune lit une ou plusieurs **traces de monde** posées par les Nouvelles
+# datées de content/cards/common/nouvelles_datees.yaml : c'est le contrat de
+# couture du chapitre 90 — une trace posée est une trace lue. Elles ne
+# dépendent d'aucun postulat ni d'aucun rôle : elles disent dans quel monde la
+# saison s'est jouée, et elles vieillissent la Une du Bilan de 1990 à 2050.
+#
+# Fraîcheur : ici, `flag()` seul est volontaire. Une trace de monde n'est pas
+# un vote oublié, c'est une époque : elle reste vraie tant que le monde ne
+# change pas, et la manchette ne titre jamais sur le club, seulement sur ce
+# que le club a autour de lui. Priorité 1 ou 2 : l'état du club et les traces
+# du postulat passent toujours devant.
+unes:
+  # ------------------------------------------------------------ l'argent (1990-2009)
+  - id: une.monde.droits
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_droits_1990') || flag('monde_droits_1997')"
+    titre: "{VILLE} REGARDE PASSER L'ARGENT"
+    sous: "Les droits ont triplé, puis doublé. Ici, {rang}e, la goutte est tombée sur le toit du parking."
+    sujet: caisse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.dimanche
+    journal: gazette
+    priority: 2
+    when: "flag('monde_dimanche_soir') || flag('monde_tele_stade')"
+    titre: "LE DIMANCHE SOIR A UN PROPRIÉTAIRE"
+    sous: "Vingt heures trente, et personne n'a demandé au dimanche. {rang}e ; les cars rentrent à deux heures."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.libre
+    journal: gazette
+    priority: 2
+    when: "flag('monde_libre_1993') || flag('monde_premier_libre')"
+    titre: "{VILLE} RELIT SES CONTRATS"
+    sous: "En fin de contrat, on part où l'on veut, et gratis. Les dates de fin sont affichées au mur du bureau."
+    sujet: mercato
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.quotas
+    journal: quotidien
+    priority: 1
+    when: "flag('monde_quotas') || flag('monde_dix_huit')"
+    titre: "{CLUB} COMPTE SES ÉTRANGERS"
+    sous: "Onze si l'on veut, plus de compte à faire, et deux clubs de trop dans un championnat qui rétrécit."
+    sujet: mercato
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  - id: une.monde.cobalts
+    journal: echo
+    priority: 2
+    when: "flag('monde_cobalts_1990') || flag('monde_titre_2002')"
+    titre: "LE PAYS A REGARDÉ, {VILLE} A CHANTÉ"
+    sous: "Une fois, très loin, quelque chose a été gagné. Ici, on a chanté trois jours et compté les licenciés en septembre."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.continentale
+    journal: echo
+    priority: 2
+    when: "flag('monde_continentale_1993') || flag('monde_sans_mondial')"
+    titre: "LA FÊTE DURE TROIS JOURS"
+    sous: "L'audit, lui, dure trois ans. {rang}e à {ville} ; le port, à côté, a chanté jusqu'au mardi."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.monde.but_en_or
+    journal: quotidien
+    priority: 1
+    when: "flag('monde_but_en_or')"
+    titre: "UN BUT QUI ARRÊTE TOUT"
+    sous: "Comme une gifle, et c'est le gardien qui reste seul dessus. {rang}e ; la règle, elle, ne fera pas cinq ans."
+    sujet: arbitrage
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.gege_decoupe } ]
+
+  - id: une.monde.fonds
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_fonds') || flag('monde_capitale_rachetee')"
+    titre: "{VILLE} REGARDE UN FONDS ACHETER"
+    sous: "Un club en une nuit, le centre de formation et les dettes avec. Ici, {rang}e, on répare les douches à la main."
+    sujet: sponsors
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.premier_ecu
+    journal: quotidien
+    priority: 1
+    when: "flag('monde_ecus')"
+    titre: "PREMIER BILAN EN ÉCUS"
+    sous: "{rang}e, objectif {tenu}. Le journal coûte 0,80 écu ; Josiane a recompté trois fois, « pour voir »."
+    sujet: caisse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.ministre
+    journal: quotidien
+    priority: 2
+    when: "flag('aubert_ministre')"
+    titre: "LA MINISTRE A SIGNÉ POUR {VILLE}"
+    sous: "« Le stade, c'est de l'argent public », a-t-elle dit en signant l'argent public. La tribune Nord sera prête. Un jour."
+    sujet: direction
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.faillites
+    journal: gazette
+    priority: 2
+    when: "flag('monde_vaucastel') || flag('monde_defaut_droits') || flag('monde_mediacrash')"
+    titre: "{VILLE} A VU TOMBER PLUS GRAND"
+    sous: "Quatre-vingts ans de club dans une chemise cartonnée, et vingt budgets bâtis sur une échéance qui n'est pas venue."
+    sujet: caisse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.buvette
+    journal: echo
+    priority: 2
+    when: "flag('monde_buvette_anciens') || flag('monde_buvette_refaite')"
+    titre: "LA BUVETTE DE {VILLE} A ROUVERT"
+    sous: "Les verres du placard, la boîte en fer, et la caisse ouverte sur la table toute la journée. {rang}e, par ailleurs."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.agents
+    journal: gazette
+    priority: 2
+    when: "flag('monde_licence_agents') || flag('monde_club_frere')"
+    titre: "UNE LICENCE, UN NUMÉRO, DIX POUR CENT"
+    sous: "Onze agents à l'examen, quatre reçus, sept qui travaillent quand même. Et un club frère à huit mille kilomètres."
+    sujet: agents
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.feminines
+    journal: echo
+    priority: 2
+    when: "flag('monde_feminines')"
+    titre: "{VILLE} A UNE SECTION, ET UN BUDGET"
+    sous: "Douze contrats, un vestiaire, un budget de buvette. Quatre cents personnes au premier match, sept cents au deuxième."
+    sujet: formation
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.monde.fair_play
+    journal: gazette
+    priority: 2
+    when: "flag('monde_fair_play') || flag('monde_notation')"
+    titre: "{VILLE} EST NOTÉE, DE A À E"
+    sous: "On ne dépense plus que ce qu'on gagne ; le reste est un écart, et l'écart se compte deux fois. {rang}e."
+    sujet: caisse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  # -------------------------------------------------------- les écrans (2007-2038)
+  - id: une.monde.flux
+    journal: gazette
+    priority: 1
+    when: "flag('monde_flux') && !flag('monde_kick')"
+    titre: "{NOM} A UN COMPTE SUR LE FLUX"
+    sous: "Deux messages, dont un à trois heures du matin. La Gazette ne note pas ; elle recopie."
+    sujet: presse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.presse
+    journal: gazette
+    priority: 2
+    when: "flag('monde_gazette_en_ligne') || flag('monde_lea_redac') || flag('monde_meme')"
+    titre: "LA PAGE ROSE NE DORT PLUS"
+    sous: "On notait les présidents une fois par semaine ; on les note trois fois par jour. La Une finit par un point d'interrogation."
+    sujet: presse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.compte_anonyme
+    journal: gazette
+    priority: 2
+    when: "flag('monde_compte_anonyme') || flag('monde_memoires')"
+    titre: "{VILLE} A UN COMPTE SANS VISAGE"
+    sous: "Douze mille abonnés, aucun nom, une écharpe de profil. Il sait ce qui se dit au local avant le local."
+    sujet: presse
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.kick
+    journal: gazette
+    priority: 1
+    when: "flag('monde_kick')"
+    titre: "{NOM} EN FLUX, AVEC LES FAUTES"
+    sous: "Le Bilan a été commenté en direct par onze mille personnes. Trois ont lu le classement jusqu'au bout."
+    sujet: presse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.video
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_video') || flag('monde_arbitre_machine')"
+    titre: "{VILLE} ATTEND LE RALENTI"
+    sous: "Trois minutes pour valider un corner, huit centièmes pour un hors-jeu. Le virage a appris à chanter pendant l'attente."
+    sujet: arbitrage
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.algorithme
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_algorithme') || flag('monde_modele')"
+    titre: "{VILLE} CONTRE LE TABLEAU"
+    sous: "Ils notent les joueurs en colonnes, sans aller au stade. Le tableau a raison deux fois sur trois ; la troisième, non."
+    sujet: mercato
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  - id: une.monde.voix
+    journal: gazette
+    priority: 2
+    when: "flag('monde_voix_generee')"
+    titre: "LA VOIX NE SE TROMPE JAMAIS DE NOM"
+    sous: "Elle commente les matchs depuis onze ans qu'il est mort, et sa famille touche un pourcentage. {rang}e, dit-elle."
+    sujet: presse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  # --------------------------------------------------- les institutions et la fin
+  - id: une.monde.legruet
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_legruet_parti') || flag('monde_legruet_mort')"
+    titre: "VINGT-HUIT ANS, QUATRE ARMOIRES"
+    sous: "Le président de la Fédération est parti ; il emporte une photo et laisse le reste. Trois cents districts au corbillard."
+    sujet: direction
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.josiane
+    journal: echo
+    priority: 3
+    when: "flag('monde_josiane_retraite')"
+    titre: "TRENTE-CINQ ANS DANS UN CARTON"
+    sous: "Quatre présidents, deux fédérations, une machine à café gagnée en 1994. Les dossiers restent rangés par année."
+    sujet: direction
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.vecchio
+    journal: echo
+    priority: 3
+    when: "flag('monde_vecchio_mort')"
+    titre: "UNE MINUTE, ET LE STADE EN A TENU DEUX"
+    sous: "Quarante et une saisons de gants, et deux minutes de silence pour une. Les gants sont au-dessus du couloir."
+    sujet: vestiaire
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.monde.ligue_fermee
+    journal: gazette
+    priority: 2
+    when: "flag('monde_ligue_fermee')"
+    titre: "ASSIS OU DEBOUT, {VILLE} ?"
+    sous: "Quatorze clubs ont annoncé une ligue entre eux et l'ont retirée le surlendemain. Les bâches sont pliées sous le bar."
+    sujet: direction
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.greve
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_greve') || flag('monde_mondial_amateurs')"
+    titre: "{VILLE} N'A PAS JOUÉ DIMANCHE"
+    sous: "Trente et un pays à l'arrêt, et un tournoi de villages qui a fait le plein. Les buvettes ont ouvert quand même."
+    sujet: vestiaire
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.calendrier
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_mondial_hiver') || flag('monde_limite_age')"
+    titre: "UN MONDIAL EN DÉCEMBRE, SANS NEIGE"
+    sous: "Les clubs rendront les joueurs le lundi, cassés. Le Doc a compté les genoux ; ils y sont tous, presque."
+    sujet: vestiaire
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  - id: une.monde.mondial
+    journal: quotidien
+    priority: 2
+    when: "flag('monde_quarante_huit') || flag('monde_soixante_quatre') || flag('monde_mondial_64')"
+    titre: "SOIXANTE-QUATRE PAYS, ONZE STADES"
+    sous: "Cent quatre matchs et six semaines. Trois des onze stades n'auront plus d'usage en septembre ; on le sait déjà."
+    sujet: direction
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.argent_fou
+    journal: gazette
+    priority: 2
+    when: "flag('monde_milliard') || flag('monde_agents_riches')"
+    titre: "{CLUB} COMPTE LES ZÉROS"
+    sous: "Un milliard d'écus, onze pour cent de commission, deux ans de garantie. Ici, {rang}e, on compte en billets de vingt."
+    sujet: agents
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.socios
+    journal: echo
+    priority: 2
+    when: "flag('monde_socios') || flag('monde_stade_partage')"
+    titre: "{VILLE} A REPRIS SON NOM"
+    sous: "Cinquante écus la part, un conseil au local le mardi soir, du café et des chaises pliantes. Et deux jeux de bâches."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.franchises
+    journal: quotidien
+    priority: 1
+    when: "flag('monde_franchises')"
+    titre: "L'ESCALIER EST FERMÉ, ET APRÈS ?"
+    sous: "{rang}e, et rien ne change : la loi a fermé l'escalier de l'étage du haut. La Coupe reste le seul suspense."
+    sujet: direction
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.district
+    journal: echo
+    priority: 2
+    when: "flag('monde_district_plein') || flag('monde_national_vivant')"
+    titre: "EN BAS, ON PEUT ENCORE TOMBER"
+    sous: "Quarante-deux clubs dans le district, neuf qui ont repris le nom d'un club mort. {rang}e, et un suspense gratuit."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.echo_parait
+    journal: echo
+    priority: 2
+    when: "year >= 2049"
+    titre: "L'ÉCHO PARAÎT ENCORE. {VILLE} AUSSI."
+    sous: "Édition du dimanche, prix libre, quatre pages. {rang}e ; le stagiaire a compté les abonnés : ils sont tous là."
+    sujet: presse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.monde.fin
+    journal: echo
+    priority: 2
+    when: "flag('monde_fin')"
+    titre: "SOIXANTE ANS TIENNENT SUR UNE PAGE"
+    sous: "Quatre monnaies, deux formats, un journal survivant. On y lit tout, sauf ce que ça faisait d'y être."
+    sujet: presse
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]

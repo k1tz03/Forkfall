@@ -1,3 +1,26 @@
+# Cartes transversales (les deux rôles) : le décor, les sponsors, la presse.
+#
+# ── Champs et effets ajoutés par le lot « personnages à état » ───────────────
+# `statut_ok: [parti, retraite, mort]` (carte ou étape d'arc, spec variété
+# §1.10) : par défaut, un locuteur dont le statut n'est ni `present`, ni `club`,
+# ni `staff` **ne parle plus** (sa carte sort du tirage, son entrée en file est
+# purgée). `statut_ok` rouvre les statuts qui la laissent servir : le coup de
+# fil de Gigi parti, la lettre du mort, l'ancien passé chez le rival.
+#
+# `char: { mbako: { statut: vendu } }` (effet d'un choix) : pose le statut d'un
+# personnage — `present | club | staff | vendu | parti | retraite | rival |
+# mort` — et/ou son âge (`age: "+1"` déplace, `age: 17` pose). Forme courte :
+# `char: {mbako: vendu}`. Les `when` le lisent : `chars.mbako.statut ==
+# 'vendu'`, `chars.vecchio.age >= 44` ; les textes aussi : « J'ai
+# {age_vecchio} ans. »
+#
+# `club: { change: true, division: 2 }` (effet d'un choix, spec variété §1.11) :
+# nouveau club et nouvelle ville **sans changer de rôle** — la vente forcée de
+# la pépite, l'exil doré. Le moteur recale les jauges (vestiaire 50, direction
+# 55, tribunes 40 + 0,3 × anciennes, caisse conservée), incrémente `clubSeq`
+# (les étapes `same_club` en attente deviennent des « Nouvelles du passé »),
+# jette la réaction en attente, écrit la ligne d'Almanach `club_change` et
+# programme les retrouvailles des deux visages à |relation| maximale.
 cards:
   - id: co.presse.derby
     roles: [entraineur, joueur]
@@ -15,7 +38,7 @@ cards:
     tags: [sponsors, absurde]
     speaker: nassir
     cooldown: 30
-    text: "Cheikh Nassir : « Nous aimerions le maillot orange fluo. Comme notre boisson. »"
+    text: "Cheikh Ilyas : « Nous aimerions le maillot orange fluo. Comme notre boisson. »"
     left: {label: "Le maillot est sacré", effects: {caisse: "-", tribunes: "+"}}
     right: {label: "Va pour l'orange", effects: {caisse: "++", tribunes: "--"}}
 

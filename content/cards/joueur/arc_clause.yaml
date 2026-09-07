@@ -1,0 +1,150 @@
+# Cartes de l'intrigue « La clause » (arc jp.clause) — bible ch. 10 § 6.11.
+# Un rival a payé la clause au centime ; le club fulmine et ne peut rien faire.
+# La page deux double la clause ; Gégé veut le blason ; le fax arrive à 23 h 58.
+cards:
+  - id: jp.clause.rival
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« {rival} a payé ta clause au centime près ; on parle d'argent ou d'amitié, et là c'est de l'argent : le club fulmine et ne peut rien. Tes valises, ou tu déclines ? »"
+    left:
+      label: "Mes valises"
+      effects: {caisse: "++", tribunes: "--", direction: "-", set: [parti_chez_rival], club: {change: true}, outcome: part, react: jp.re.gege_blason}
+      answer: "Tu pars chez le rival. Gégé décroche ton nom du local. Il ne le brûle pas ; il le garde pour le derby."
+    right:
+      label: "Je décline"
+      effects: {tribunes: "+", direction: "+", relation: {fardelli: -1}, set: [fidele], outcome: refuse}
+      answer: "Tu déclines. Il dit « on parlait d'amitié, alors ». Il n'insiste pas ; il attend l'an prochain."
+
+  - id: jp.clause.rival_gigi
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« {rival} a payé la clause au centime, et je sais qu'on t'a conseillé de me dire non une fois. On parle d'argent ou d'amitié : c'est le moment, ou pas ? »"
+    left:
+      label: "Mes valises"
+      effects: {caisse: "++", tribunes: "--", direction: "-", set: [parti_chez_rival], club: {change: true}, outcome: part, react: jp.re.gege_blason}
+      answer: "Tu pars chez le rival. Gégé décroche ton nom du local ; il le garde pour le derby."
+    right:
+      label: "C'est le moment : non"
+      effects: {tribunes: "+", direction: "+", relation: {fardelli: -2}, set: [fidele], outcome: refuse}
+      answer: "Tu dis non. Il range la photocopie. Il la garde ; il garde tout ce qu'on lui refuse."
+
+  - id: jp.clause.page_deux
+    roles: [joueur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "« La page deux, {toi}, dit que si tu restes, ta clause double : je l'ai écrite pour qu'on ne te la lève plus. J'ai pas le temps : tu signes, ou tu restes au prix d'avant ? »"
+    left:
+      label: "Je signe la page deux"
+      effects: {caisse: "++", direction: "+", tribunes: "-", set: [mercenaire], outcome: double, react: {card: jp.re.josiane_classeur, chance: 0.5}}
+      answer: "Tu signes. Le club paie pour que tu restes. La Gazette Rose écrit « le mercenaire fidèle » ; les deux mots sont vrais."
+    right:
+      label: "Au prix d'avant"
+      effects: {tribunes: "++", caisse: "-", set: [fidele], outcome: refuse}
+      answer: "Tu restes au prix d'avant. Il ne comprend pas ; il te serre la main ; c'est rare."
+
+  - id: jp.clause.page_deux_lue
+    roles: [joueur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu es le seul à avoir lu la page deux avant moi, et elle dit que ta clause double si tu restes. J'ai pas le temps, j'ai une usine : tu signes, ou tu la relis ? »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "++", direction: "+", tribunes: "-", set: [mercenaire], outcome: double}
+      answer: "Tu signes. Il repose le stylo à l'endroit exact où il l'avait pris ; il aime que les choses reviennent."
+    right:
+      label: "Je la relis"
+      effects: {direction: "-", caisse: "+", tribunes: "+", set: [fidele], outcome: refuse}
+      answer: "Tu la relis. Il y a une ligne sur les primes de match qu'il espérait que tu ne lises pas. Tu la lis."
+
+  - id: jp.clause.blason
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« Les autres partent pour des valises, toi tu es d'ici : embrasse le blason devant la Nord, la tribune n'oublie rien. Tu l'embrasses, ou tu prends les billets ? »"
+    left:
+      label: "J'embrasse le blason"
+      effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}, set: [blason_embrasse], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.5 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.5 }, { card: co.re.gege_decoupe, chance: 0.5 } ]}
+      answer: "Tu l'embrasses. La Nord chante. En loge, on regarde la clause doublée ; on a payé le baiser."
+    right:
+      label: "Je prends les billets"
+      effects: {caisse: "+", tribunes: "--"}
+      answer: "Tu ne l'embrasses pas. L'écharpe reste tendue. Il la range ; il ne la range pas vite."
+
+  - id: jp.clause.blason_mercenaire
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« Tu as fait doubler ta clause pour rester, on l'a lu ; la tribune n'oublie rien, même ce qu'elle préférerait. Tu embrasses le blason, ou le chèque ? »"
+    left:
+      label: "Le blason"
+      effects: {tribunes: "++", caisse: "-", relation: {gege: 1}, set: [blason_embrasse]}
+      answer: "Tu l'embrasses. La Nord chante à moitié. La moitié qui chante, c'est celle qui n'a pas lu."
+    right:
+      label: "Le chèque, honnêtement"
+      effects: {caisse: "+", tribunes: "--", relation: {gege: -1}}
+      answer: "Il hoche la tête. « Au moins c'est dit », lâche-t-il, et il range l'écharpe très lentement."
+
+  # Câblage de la fin `jp_fax` (ch. 10 § 11.3, cause : « fax_rate puis DIRECTION
+  # vide »). La variante ne tire pas au sort : le dé ne décide pas d'une fin
+  # (charte § 3.2), c'est le bureau vide qui décide.
+  - id: jp.clause.fax_dernier
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, absurde, chaine]
+    speaker: josiane
+    tone: strategique
+    text: "« 23 h 58, la page trois est coincée, et le président a dit que c'était le dernier transfert qu'il signerait pour vous. J'en ai vu passer. Je tire, ou je l'appelle chez lui ? »"
+    left:
+      label: "Tirez"
+      effects: {direction: "--", tribunes: "-", set: [fax_rate], end: jp_fax}
+      answer: "Elle tire. La page se déchire en biais, sur le numéro de licence. Le fax imprime minuit une."
+    right:
+      label: "Appelez-le chez lui"
+      effects: {direction: "-", caisse: "+", relation: {josiane: 1}, set: [fax_passe]}
+      answer: "Il décroche à la neuvième sonnerie. Il signe en pyjama ; il ne le redira jamais."
+
+  - id: jp.clause.fax
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, absurde]
+    speaker: josiane
+    tone: strategique
+    text: "« Il est 23 h 58, {toi}, le fax du transfert arrive page par page, et la page trois est coincée ; j'en ai vu passer, jamais un qui se coince. Je tire, ou j'attends ? »"
+    left:
+      label: "Tirez"
+      effects: {rand: [{p: 0.6, caisse: "++", set: [fax_passe]}, {direction: "--", tribunes: "-", set: [fax_rate]}]}
+      answer: "Elle tire. La page vient, ou elle se déchire. Le fax imprime l'heure ; il ne ment pas."
+    right:
+      label: "Attendez"
+      effects: {rand: [{p: 0.5, caisse: "++", set: [fax_passe]}, {direction: "--", set: [fax_rate]}]}
+      answer: "Elle attend. Le fax finit à minuit une. Il a été promu depuis ; toi, non."
+
+  - id: jp.clause.fax_mail
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, absurde]
+    speaker: josiane
+    tone: strategique
+    text: "« Le mail du transfert est parti à 23 h 58 et le serveur de la Ligue dit « en attente » ; j'en ai vu passer, mais jamais un serveur. On rappelle, ou on attend ? »"
+    left:
+      label: "On rappelle"
+      effects: {rand: [{p: 0.6, caisse: "++", set: [fax_passe]}, {direction: "--", tribunes: "-", set: [fax_rate]}]}
+      answer: "Elle rappelle. Quelqu'un décroche, ou pas. L'horodatage, lui, ne discute pas."
+    right:
+      label: "On attend"
+      effects: {rand: [{p: 0.5, caisse: "++", set: [fax_passe]}, {direction: "--", set: [fax_rate]}]}
+      answer: "Elle attend. Le serveur répond à minuit une. Il a été remplacé depuis ; toi, non."

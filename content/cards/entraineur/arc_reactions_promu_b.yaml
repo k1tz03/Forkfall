@@ -1,0 +1,202 @@
+# Cartes-réactions de la seconde moitié du réservoir du promu (bible ch. 11
+# § 2.5) : servies AU TIRAGE SUIVANT le swipe qui les pose (`react:` d'un
+# choix), hors créneau, sans avancer le beat. Ne pas écrire `kind:` : le build
+# le dérive. Effets petits, jamais `end`, jamais `react`, jamais `drame`.
+# Trois familles : la relance (le même visage revient), la conséquence
+# immédiate (le téléphone, la plaque, le fax), le tiers qui commente.
+# Le nom du joueur : aucune de ces réactions ne le porte — elles suivent toutes
+# une carte d'étape qui l'a déjà dit (spec §1.8, jamais deux cartes de suite).
+cards:
+  # ============================================== Les salaires en retard
+  # distributeur → « c'est la banque » : Gigi compte des pièces (le tiers qui commente).
+  - id: en.re.vecchio_distributeur
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio compte des pièces dans sa main, pour de vrai : « Des paies qui ne tombent pas, j'en ai vu d'autres, deux, et les deux fois le coach a dit « la banque ». Je le dis aux jeunes, ou tu le dis ? »"
+    left:
+      label: "Dis-le-leur, Gigi"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il le dit. Il ajoute que la deuxième fois on a fini par être payés ; il ne dit pas quand."
+    right:
+      label: "Je le dis moi"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Tu le dis. Ils te croient moins que lui ; il a quarante et un ans."
+
+  # brehaut ← « je m'en occupe » : le président au téléphone (conséquence immédiate).
+  - id: en.re.aulard_avance
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg au téléphone, sans dire bonjour : « Tu as fait avancer la paie sans me demander. J'ai pas le temps, j'ai un empire. Tu la dates de quand, ta démission ? »"
+    left:
+      label: "De jamais"
+      effects: {direction: "-", relation: {aulard: -1}}
+      answer: "Il raccroche. Il rappelle pour raccrocher encore."
+    right:
+      label: "Du 5, comme la paie"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il rit. Le vestiaire, moins."
+
+  # ============================================== L'espion dans la haie
+  # cafe (les deux) : la plaque au-dessus du bar (conséquence immédiate).
+  - id: en.re.gege_jumelles
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé déplie un papier avec des chiffres dessus : « On l'a raccompagné à sa voiture. On a noté la plaque. La tribune n'oublie rien. »"
+    left:
+      label: "Bien"
+      effects: {tribunes: "+"}
+      answer: "La plaque est au local le lendemain, clouée au-dessus du bar."
+    right:
+      label: "Bien"
+      effects: {tribunes: "+"}
+      answer: "La plaque est au local le lendemain, clouée au-dessus du bar."
+
+  # presse (les deux) : Vukić et le croquis (le tiers qui commente).
+  - id: en.re.vukic_croquis
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: vukic
+    tone: leger
+    text: "Vukić, le journal plié à la page du croquis : « Il a dessiné la haie, la casquette et le poteau, mais la casquette était à gauche. Tu rectifies, ou tu laisses ? »"
+    left:
+      label: "Je laisse"
+      effects: {direction: "+"}
+      answer: "La casquette reste à droite. On dément la droite ; on ne dément pas la gauche."
+    right:
+      label: "Je rectifie"
+      effects: {relation: {meneche: -1}, parole: 1}
+      answer: "Tu appelles. Il publie un rectificatif ; c'est un second article."
+
+  # ============================================== Le brassard
+  # brehaut → « je décide cette semaine » : le petit a vu le brassard (relance).
+  - id: en.re.mbako_brassard
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: mbako
+    tone: strategique
+    text: "Le petit a vu le brassard sur ton bureau : « Il est là et personne ne le porte cette semaine. Je veux jouer, maintenant, avec : vous me le prêtez pour un match ? »"
+    left:
+      label: "Un match, pour voir"
+      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: 1}}
+      answer: "Il le porte un match. Il est trop grand ; il le remonte à chaque sprint."
+    right:
+      label: "C'est non"
+      effects: {vestiaire: "+", relation: {mbako: -1}}
+      answer: "Il ferme la porte. Il la ferme doucement ; c'est pire."
+
+  # ============================================== L'adjoint qui dîne
+  # vukic → la porte : le capitaine et les plots (le tiers qui commente).
+  - id: en.re.brehaut_adjoint
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut tient les plots que l'adjoint a laissés : « Le groupe vit bien, mais le groupe l'aimait, il posait les plots avant tout le monde. Qui les pose, maintenant ? »"
+    left:
+      label: "Moi"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu poses les plots. En ligne droite, comme lui ; tu ne l'avais jamais remarqué."
+    right:
+      label: "Toi"
+      effects: {vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Il les pose. De travers ; il a un genou."
+
+  # aulard ← la note payée : le pourboire (relance).
+  - id: en.re.aulard_addition
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, absurde]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg tient la note du port, un chiffre entouré : « Tu as payé la note et pas le pourboire, et ils s'en souviennent. Tu retournes payer, ou c'est sur ta prime ? »"
+    left:
+      label: "Je retourne"
+      effects: {caisse: "-", relation: {aulard: 1}}
+      answer: "Tu retournes. Le serveur te reconnaît ; il te demande si l'adjoint va bien."
+    right:
+      label: "Sur ma prime"
+      effects: {direction: "-", caisse: "+"}
+      answer: "Il note. Il déduit ; il déduit toujours."
+
+  # discours → « garde-le » : la photocopieuse ne plie pas (le tiers qui commente).
+  - id: en.re.josiane_relu
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane range une feuille pliée en quatre : « L'adjoint l'a laissée dans la photocopieuse, et la photocopieuse ne plie pas. Je la lui rends, ou je la garde ? »"
+    left:
+      label: "Rendez-la-lui"
+      effects: {relation: {vukic: 1}, direction: "-"}
+      answer: "Elle la rend. Il la remet côté cœur."
+    right:
+      label: "Le tiroir du milieu"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle la garde. Le tiroir ferme à clé ; le président a la clé, elle aussi."
+
+  # ============================================== L'enveloppe
+  # combien ← la promesse : l'heure de la réponse (conséquence immédiate).
+  - id: en.re.meneche_valise
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet, un carnet, une seule ligne écrite : « Juste une question, hors micro : la compo du dernier bloc, vous l'avez déjà, ou vous attendez un coup de fil ? Je note juste l'heure de la réponse. »"
+    left:
+      label: "Je l'ai déjà"
+      effects: {parole: -1, direction: "+"}
+      answer: "Il note l'heure. Il note aussi que c'était trop vite."
+    right:
+      label: "J'attends l'entraînement"
+      effects: {parole: 1, relation: {meneche: 1}}
+      answer: "Il note l'heure. Il ne note rien d'autre ; pour l'instant."
+
+  # ============================================== Le fils du président
+  # placard ← laissez-le finir : le père rapporte, à vingt-deux heures (relance).
+  - id: en.re.fils_pompe
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg appelle à vingt-deux heures : « Mon fils a gonflé vingt-deux ballons à la même pression, il a vérifié deux fois. Il recommence demain, ou c'était une punition ? »"
+    left:
+      label: "Demain aussi"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il revient. Vingt-trois ballons ; il en a acheté un."
+    right:
+      label: "C'était une punition"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il pose la pompe. Il ne revient pas au placard ; il revient au bureau."
+
+  # ============================================== Le retour de Mbako
+  # appel ← « reviens » : la mère rappelle dix minutes après (conséquence immédiate).
+  - id: en.re.mere_retour
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents, famille]
+    speaker: mere_mbako
+    tone: strategique
+    text: "La mère de Mbako, dix minutes après son fils : « Il vous a appelé seul, c'est la première fois de sa vie. Vous lui parlez directement, ou par moi ? »"
+    left:
+      label: "Directement"
+      effects: {relation: {mbako: 1, mere_mbako: -1}}
+      answer: "Elle raccroche. Elle envoie le contrat par fax le lendemain, en trois exemplaires."
+    right:
+      label: "Par vous"
+      effects: {relation: {mere_mbako: 1, mbako: -1}}
+      answer: "Elle ne raccroche pas. Elle commence la négociation ; il est vingt-trois heures."

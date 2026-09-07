@@ -9,6 +9,10 @@
 # la carte fatale (dernier temps d'histoire). `react` pose une carte-réaction
 # « quelqu'un a lu le journal », servie au tirage suivant (sans `chance`).
 #
+# Où écrire : ici, ou dans `content/unes/<lot>.yaml` (mêmes clefs `journaux:` et
+# `unes:`). Le build lit les deux et refuse un id déclaré deux fois : deux
+# salles peuvent écrire leurs manchettes en même temps sans se marcher dessus.
+#
 # Schéma d'une manchette :
 #   - id: une.<postulat|generic>.<mot>
 #     postulats: [promu]           # optionnel ; vide = tous
@@ -159,7 +163,7 @@ unes:
     priority: 3
     when: "parole <= -3"
     titre: "LES PROMESSES DE {NOM}, DATÉES"
-    sous: "Douze promesses, douze dates, une saison. Ménèche a tout gardé. « Juste une question, hors micro. »"
+    sous: "Douze promesses, douze dates, une saison. Massenet a tout gardé. « Juste une question, hors micro. »"
     sujet: presse
     react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.feu_de_joie
@@ -180,7 +184,7 @@ unes:
     priority: 3
     when: "bilan.tenu && world.division == 1 && bilan.rang <= 10 && season == 0"
     titre: "{NOM}, LE MIRACLE DE {VILLE}"
-    sous: "Promu sans un sou, maintenu à la {rang}e place. Aulard parle déjà de « projet »."
+    sous: "Promu sans un sou, maintenu à la {rang}e place. Vaubourg parle déjà de « projet »."
     sujet: direction
     photo: en.promu.a6_dernier_virage
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.vecchio_garde } ]
@@ -221,7 +225,7 @@ unes:
     journal: gazette
     priority: 3
     when: "(flag('naming_signe') && journal_has('naming_signe'))"
-    titre: "ARENA QATALYST"
+    titre: "ARENA ALMADIS"
     sous: "Le nom en orange, le nôtre en dessous, en petit. La tribune chante l'ancien. {prenom} {nom} a signé le nouveau."
     sujet: en.nassir_proprietaire
     react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
@@ -284,7 +288,7 @@ unes:
     priority: 2
     when: "bilan.tenu && relation.aulard <= -1"
     titre: "MAINTIEN, SANS UN MERCI"
-    sous: "{rang}e, objectif tenu. Aulard, interrogé sur {prenom} {nom} : « J'ai pas le temps, j'ai un empire. »"
+    sous: "{rang}e, objectif tenu. Vaubourg, interrogé sur {prenom} {nom} : « J'ai pas le temps, j'ai un empire. »"
     sujet: direction
     react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.onze_virage
@@ -324,7 +328,7 @@ unes:
     priority: 2
     when: "(flag('pari_promu') && journal_has('pari_promu')) && bilan.tenu"
     titre: "{pg, select, f{ELLE AVAIT PARIÉ SUR ELLE} other{IL AVAIT PARIÉ SUR LUI}}"
-    sous: "Cent francs sur le maintien, à cinq contre un, en août. {rang}e en juin. Ménèche « ne commente pas ». Il note."
+    sous: "Cent francs sur le maintien, à cinq contre un, en août. {rang}e en juin. Massenet « ne commente pas ». Il note."
     sujet: en.cote_du_promu
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.pari_perdu
@@ -334,7 +338,7 @@ unes:
     priority: 2
     when: "(flag('pari_promu') && journal_has('pari_promu')) && !bilan.tenu"
     titre: "CENT FRANCS, CINQ MILLE REGRETS"
-    sous: "{prenom} {nom} avait misé sur le maintien. {rang}e. Le ticket est chez Ménèche, qui « ne commente pas »."
+    sous: "{prenom} {nom} avait misé sur le maintien. {rang}e. Le ticket est chez Massenet, qui « ne commente pas »."
     sujet: en.cote_du_promu
     react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.projet
@@ -403,8 +407,8 @@ unes:
     journal: quotidien
     priority: 2
     when: "(flag('clow_ingrat') && journal_has('clow_ingrat'))"
-    titre: "BRIAN CLOW N'A PAS ÉTÉ RAPPELÉ"
-    sous: "Quarante-quatre jours dans un grand club, et un message sur le répondeur de {prenom} {nom}. Sans réponse."
+    titre: "DAN CORVEN N'A PAS ÉTÉ RAPPELÉ"
+    sous: "Cinquante-neuf jours dans un grand club, et un message sur le répondeur de {prenom} {nom}. Sans réponse."
     sujet: en.mentor_clow
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.franchement
@@ -426,7 +430,7 @@ unes:
     priority: 2
     when: "bilan.tenu && world.division == 1 && vars.saisons_tenues >= 1"
     titre: "{VILLE} S'INSTALLE PARMI LES GRANDS"
-    sous: "Encore un maintien, {rang}e. Le mot « miracle » est rangé ; {prenom} {nom} préfère « travail ». Aulard préfère « projet »."
+    sous: "Encore un maintien, {rang}e. Le mot « miracle » est rangé ; {prenom} {nom} préfère « travail ». Vaubourg préfère « projet »."
     sujet: bilan
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.top5
@@ -485,7 +489,7 @@ unes:
     journal: gazette
     priority: 2
     when: "relation.aulard >= 2 && bilan.tenu"
-    titre: "AULARD A LE TEMPS POUR {NOM}"
+    titre: "VAUBOURG A LE TEMPS POUR {NOM}"
     sous: "{rang}e, objectif tenu, et un président qui prolonge « sans lire ». Il a un empire ; il a trouvé une heure."
     sujet: direction
     react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
@@ -495,7 +499,7 @@ unes:
     journal: gazette
     priority: 2
     when: "enemy('meneche') || relation.meneche <= -2"
-    titre: "MÉNÈCHE CONTRE {NOM}"
+    titre: "MASSENET CONTRE {NOM}"
     sous: "{rang}e, objectif {tenu}. Notre chroniqueur « ne commente pas » l'entraîneur. Il le décrit. Sur deux pages."
     sujet: presse
     react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
@@ -555,7 +559,7 @@ unes:
     priority: 1
     when: "gauges.direction < 30"
     titre: "LE PRÉSIDENT A DEUX DISCOURS"
-    sous: "{rang}e, objectif {tenu}. Aulard « n'a pas le temps ». {prenom} {nom} n'est que dans un des deux textes."
+    sous: "{rang}e, objectif {tenu}. Vaubourg « n'a pas le temps ». {prenom} {nom} n'est que dans un des deux textes."
     sujet: direction
   - id: une.promu.groupe
     postulats: [promu]

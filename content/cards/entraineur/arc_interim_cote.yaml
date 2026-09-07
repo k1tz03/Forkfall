@@ -1,0 +1,116 @@
+# Cartes d'étape de « Le pari de Massenet » (interim_courtes.yaml). Le bookmaker
+# du port donne l'intérimaire à quatre contre un pour être encore là en juin ;
+# la presse a deux titres, la tribune a le cousin derrière le bar. Trois étapes,
+# chacune avec sa variante. Traces : pari_interim, pari_contre_soi.
+cards:
+  - id: en.cote_interim.cote
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, caisse]
+    speaker: meneche
+    tone: leger
+    text: "Massenet montre deux maquettes de titre, une cote griffonnée au dos : « Le port vous donne à quatre contre un pour juin. Hors micro : cent francs sur vous, ou pas de commentaire ? »"
+    left:
+      label: "Cent francs sur moi"
+      effects: {caisse: "-", tribunes: "+", parole: 1, set: [pari_interim], outcome: parie, react: en.re.meneche_une_parie}
+      answer: "Il note. Il propose deux titres ; le second est « sur sa tête »."
+    right:
+      label: "Pas de commentaire"
+      effects: {parole: -1, var: {no_comment: "+1"}, outcome: no_comment, react: en.re.meneche_embuscade}
+      answer: "Il note le silence. Il mise lui-même ; il ne dit pas dans quel sens."
+
+  - id: en.cote_interim.cote_silence
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, caisse]
+    speaker: meneche
+    tone: leger
+    text: "Massenet, deux maquettes et une cote au dos : « Vous ne commentez jamais rien, et le port vous trouve suspect à force. Hors micro : cent francs sur vous, ou cent francs contre ? »"
+    left:
+      label: "Cent francs sur moi"
+      effects: {caisse: "-", tribunes: "+", parole: 1, set: [pari_interim], outcome: parie, react: en.re.meneche_une_parie}
+      answer: "Il note. Il propose deux titres ; le second est « sur sa tête »."
+    right:
+      label: "Contre, pour voir"
+      effects: {caisse: "+", parole: -2, set: [pari_contre_soi], outcome: contre}
+      answer: "Il note « contre ». Il ne titre pas ; il garde le ticket, c'est mieux qu'un titre."
+
+  - id: en.cote_interim.bookmaker
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé déplie un papier comme un bulletin de vote : « Le bookmaker du port, c'est le cousin du bar, {toi}, et il a ouvert une cote sur ton accent. Tu veux la cote ? »"
+    left:
+      label: "Donne-moi la cote"
+      effects: {tribunes: "+", parole: -1, relation: {gege: 1}}
+      answer: "Quatre contre un pour juin, sept pour l'accent. Il a misé sur l'accent."
+    right:
+      label: "Je ne veux pas savoir"
+      effects: {tribunes: "-", parole: 1}
+      answer: "Il replie le papier. Il mise quand même ; il te le dira en juin."
+
+  - id: en.cote_interim.bookmaker_contre
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé, le papier déplié : « Le port dit au bar que tu as misé contre toi, et la tribune n'oublie rien, mais là elle ne comprend pas. Tu expliques au local, {toi} ? »"
+    left:
+      label: "J'explique au local"
+      effects: {tribunes: "+", relation: {gege: 1}, caisse: "-"}
+      answer: "Ils retiennent « malin ». Ils chantent « lâche » ; c'est plus facile à rimer."
+    right:
+      label: "Que le port jase"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "Le président entend « contre lui ». Il n'entend pas « cent francs »."
+
+  - id: en.cote_interim.une
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    tone: leger
+    text: "Massenet tient un ticket par le bord : « Le verdict est tombé, le ticket avec, et ça tient en une ligne. Hors micro : je publie la photo, ou je vous le rends ? »"
+    left:
+      label: "Publiez la photo"
+      effects: {tribunes: "++", direction: "-", relation: {meneche: 1}, react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Le ticket en page une, à côté de ta plaque. Le président lit « cent francs »."
+    right:
+      label: "Rendez-le-moi"
+      effects: {parole: 1, relation: {meneche: -1}}
+      answer: "Il le rend. Il en a fait une photocopie ; il a toujours une photocopie."
+
+  - id: en.cote_interim.une_gagnant
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    tone: leger
+    text: "Massenet, le ticket entre deux doigts : « Vous avez misé contre vous et vous avez le poste : la meilleure affaire de la saison. Hors micro : je titre sur la perte, ou sur le gain ? »"
+    left:
+      label: "Sur le gain"
+      effects: {direction: "+", tribunes: "+", react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "« GAGNANT ». Le président découpe ; il ne découpe jamais."
+    right:
+      label: "La perte, c'est plus drôle"
+      effects: {tribunes: "++", relation: {meneche: 1}, parole: -1}
+      answer: "Le port en rit. Le cousin du bar encadre le titre au-dessus de la caisse."
+
+  - id: en.cote_interim.une_silence
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, caisse]
+    speaker: meneche
+    tone: leger
+    text: "Massenet sort un ticket de son portefeuille : « Vous n'avez pas misé, alors j'ai misé pour vous, et j'ai eu la cote d'avant. Hors micro : je vous rends la moitié ? »"
+    left:
+      label: "Gardez tout"
+      effects: {parole: 1, relation: {meneche: 1}}
+      answer: "Il garde tout. Il encadre le ticket au-dessus de son bureau, sans le titre."
+    right:
+      label: "La moitié, alors"
+      effects: {caisse: "+", tribunes: "-", relation: {meneche: -1}}
+      answer: "Il compte la moitié en pièces. Le port l'apprend avant toi ; le port apprend tout."

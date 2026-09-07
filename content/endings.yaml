@@ -8,6 +8,10 @@
 # « J'assume »), en_dauphin (la veille, variante dauphin, « Prends le banc »),
 # jp_exil et jp_consultant (intrigues du rôle joueur, étapes 5-6 : déclarées
 # ici pour que le `end:` de leurs cartes compile).
+#
+# Où écrire : ici, ou dans `content/endings/<lot>.yaml` (même clef `endings:`).
+# Le build lit les deux et refuse un id déclaré deux fois : deux salles peuvent
+# écrire leurs fins en même temps sans se marcher dessus.
 endings:
   # --- Entraîneur ---
   - id: en_bus
@@ -51,14 +55,14 @@ endings:
     epitaph: "Viré{pg, select, f{e} other{}} par SMS entre la conférence de presse et le parking. Le message contenait une faute d'orthographe. Tu l'as corrigée."
     epitaph_plus:
       - { when: "flag('vukic_dauphin')", text: "Zoran Vukić a pris le banc le lendemain. Il avait gardé le cahier de {nom}." }
-      - { when: "enemy('meneche')",      text: "Ménèche avait le SMS avant {prenom} {nom}. Il l'a publié avec la faute." }
+      - { when: "enemy('meneche')",      text: "Massenet avait le SMS avant {prenom} {nom}. Il l'a publié avec la faute." }
   - id: en_placard
     gauge: direction
     side: plein
     title: "Promotion-placard"
     epitaph: "Nommé{pg, select, f{e} other{}} Directeur du Développement International. Ton bureau n'a pas de fenêtre. Ni de téléphone. Ni de développement."
     epitaph_plus:
-      - { when: "flag('club_actif')",       text: "Nassir a signé la plaque : « ambassadeur ». Ce n'était pas un club, c'était un actif ; {nom} en était une ligne." }
+      - { when: "flag('club_actif')",       text: "Ilyas a signé la plaque : « ambassadeur ». Ce n'était pas un club, c'était un actif ; {nom} en était une ligne." }
       - { when: "flag('homme_president')",  text: "Le fils du président a eu le bureau avec fenêtre. {prenom} {nom}, la plaque." }
   - id: en_decoupe
     gauge: caisse
@@ -75,7 +79,7 @@ endings:
     epitaph: "Tu as réclamé et obtenu des moyens fous. La Commission a bloqué le club, et le président a trouvé le nom du responsable sur ta porte."
     epitaph_plus:
       - { when: "flag('nassir_pret')",     text: "Page trois du prêt : le nom du responsable. {prenom} {nom} l'avait signée sans la lire." }
-      - { when: "relation.aulard <= -1",   text: "Aulard « n'avait pas le temps ». Il a trouvé celui d'écrire {nom} sur la porte." }
+      - { when: "relation.aulard <= -1",   text: "Vaubourg « n'avait pas le temps ». Il a trouvé celui d'écrire {nom} sur la porte." }
   - id: en_tribune
     gauge: tribunes
     side: plein
@@ -110,7 +114,7 @@ endings:
     title: "Le dauphin"
     epitaph: "Remplacé{pg, select, f{e} other{}} par ton adjoint. Il « réfléchissait » depuis novembre."
     epitaph_plus:
-      - { when: "relation.aulard <= -1", text: "Aulard a lu le second discours sans lever les yeux. {NOM} n'y était pas." }
+      - { when: "relation.aulard <= -1", text: "Vaubourg a lu le second discours sans lever les yeux. {NOM} n'y était pas." }
       - { when: "relation.vukic <= -2",  text: "Zoran Vukić a gardé le bureau, la cafetière et le cahier de {prenom} {nom}. Il a changé la serrure." }
   # --- Joueur ---
   - id: jp_mouton
@@ -172,7 +176,7 @@ endings:
   - id: jp_panama
     gauge: caisse
     side: plein
-    title: "La carte Panama"
+    title: "Les îles lointaines"
     epitaph: "Le contrat d'image aux îles lointaines était une idée de ton cousin. Le fisc a eu une idée aussi."
     epitaph_plus:
       - { when: "flag('international')",   text: "Le maillot cobalt est resté dans le dossier, entre deux relevés. {prenom} {nom} l'avait gagné, celui-là." }
@@ -191,7 +195,7 @@ endings:
     title: "Le micro du dimanche"
     epitaph: "{prenom} {nom} juge les autres le dimanche soir. Le président « n'a pas le temps » de regarder."
     epitaph_plus:
-      - { when: "enemy('meneche')",     text: "Ménèche est sur le même plateau. Il « ne commente pas » ; {nom}, si." }
+      - { when: "enemy('meneche')",     text: "Massenet est sur le même plateau. Il « ne commente pas » ; {nom}, si." }
       - { when: "relation.vukic >= 1",  text: "Vukić regarde chaque dimanche. Il note ce que dit {prenom} {nom}, parce que personne ne le dira à sa place." }
   # --- Universelles ---
   - id: grand_deballage
@@ -200,7 +204,7 @@ endings:
     epitaph: "Le dossier faisait douze pages. Chaque page, une promesse. Chaque promesse, une date. Tu te souvenais de toutes."
     epitaph_plus:
       - { when: "flag('pacte_gege')", text: "Page une : le pacte de la craie. La date, la main, et le nom de {nom}." }
-      - { when: "enemy('meneche')",   text: "Ménèche a signé le dossier. Il avait « juste une question, hors micro » pour {prenom} {nom}. Douze, en fait." }
+      - { when: "enemy('meneche')",   text: "Massenet a signé le dossier. Il avait « juste une question, hors micro » pour {prenom} {nom}. Douze, en fait." }
   - id: jubile
     golden: true
     rarity: rare

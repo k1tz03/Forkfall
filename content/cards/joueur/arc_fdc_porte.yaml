@@ -1,0 +1,86 @@
+# Cartes de l'intrigue « Le vestiaire te porte » (arc jp.vestiaire_porte) —
+# bible ch. 10 § 6.19. Vingt-deux noms, Vecchio deux fois, un fax, un sous-main,
+# et une photo dans un journal qui n'est pas le bon.
+cards:
+  - id: jp.porte.petition
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe vit bien, {toi}, et il a signé pour que tu restes : vingt-deux noms, Gigi deux fois. On l'envoie au président, ou tu la déchires parce que ça ne se fait pas ? »"
+    left:
+      label: "Envoyez-la"
+      effects: {vestiaire: "++", direction: "-", set: [petition_portee], outcome: porte, react: jp.re.vecchio_encore_une}
+      answer: "Elle part par fax. Josiane la classe sous « pétitions » ; c'est un dossier mince."
+    right:
+      label: "Déchire-la"
+      effects: {vestiaire: "-", direction: "+", set: [petition_retiree], outcome: retire}
+      answer: "Il la déchire. Il garde le morceau avec ta signature ; tu n'avais pas signé, il l'a imitée."
+
+  - id: jp.porte.josiane
+    roles: [joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, vous savez, mais une pétition par fax, avec vingt-deux noms et deux fois le gardien, jamais. Je la mets sur le bureau du président, ou dessous ? »"
+    left:
+      label: "Dessus"
+      effects: {direction: "+", relation: {josiane: 1}, react: co.re.josiane_a_lu}
+      answer: "Elle la met dessus. Il dit qu'il n'a pas deux minutes ; il les prend."
+    right:
+      label: "Dessous, pour plus tard"
+      effects: {direction: "-", vestiaire: "+", set: [petition_retard]}
+      answer: "Elle la met dessous. Il la trouve en juin. C'est tard, ou c'est le bon moment."
+
+  - id: jp.porte.aulard
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Une pétition, ça se lit en deux minutes, {toi}, et j'ai pas deux minutes, j'ai un empire. Je la lis devant toi, ou tu me résumes ? »"
+    left:
+      label: "Lisez-la"
+      effects: {direction: "+", vestiaire: "+"}
+      answer: "Il lit. Il compte les noms. Il en manque un : le sien."
+    right:
+      label: "Je résume : ils m'aiment"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il dit « moi aussi ». Il ne prolonge pas ; il aime autrement."
+
+  - id: jp.porte.presse
+    roles: [joueur]
+    arc: presse
+    tags: [presse, vestiaire]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? La pétition a fuité, l'hebdo du dimanche l'a en photo ; je la publie chez nous avec les noms, ou sans ? »"
+    left:
+      label: "Avec les noms"
+      effects: {tribunes: "++", direction: "--", set: [petition_presse], outcome: presse, react: jp.re.lea_confirme}
+      answer: "Elle publie. Le président lit les noms dans le journal ; il n'a pas le temps, mais il lit."
+    right:
+      label: "Sans, ou pas du tout"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "Elle ne publie pas. L'hebdo, si. Sans les noms ; avec le tien, en gros."
+
+  - id: jp.porte.presse_dechiree
+    roles: [joueur]
+    arc: presse
+    tags: [presse, vestiaire]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? On me dit qu'il y a eu une feuille avec vingt-deux noms, et qu'elle a fini en morceaux dans un vestiaire. Vous démentez, ou vous laissez dire ? »"
+    left:
+      label: "Je démens"
+      effects: {direction: "+", vestiaire: "-", relation: {lea: -1}}
+      answer: "Elle écrit « dément ». Le capitaine lit le mot ; il a gardé le morceau, lui."
+    right:
+      # L'issue `presse` n'était atteignable que par la branche « pétition
+      # portée » : elle tombait à 8 % (spec §5.1, « aucune issue < 10 % »).
+      # La feuille déchirée sort quand même — c'est la même histoire.
+      label: "Laissez dire"
+      effects: {vestiaire: "+", tribunes: "+", relation: {lea: 1}, outcome: presse}
+      answer: "Elle écrit trois lignes. Le vestiaire les découpe et les met dans un casier."

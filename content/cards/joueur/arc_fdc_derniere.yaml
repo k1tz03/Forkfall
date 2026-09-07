@@ -1,0 +1,84 @@
+# Cartes de l'intrigue « Une dernière fois en bleu cobalt » (arc
+# jp.derniere_selection) — bible ch. 10 § 6.18. On te prend pour le vestiaire,
+# plus pour les jambes. Le capitaine des Cobalts est Bréhaut (la bible dit
+# Fauvel : même clé, même armoire) ; le médecin de la sélection est Sabatier.
+cards:
+  - id: jp.derniere.legruet
+    roles: [joueur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: legruet
+    tone: strategique
+    text: "« {Toi}, c'est sans doute votre dernière liste, on verra ça après le Congrès ; je vous prends pour le vestiaire, plus pour les jambes. Vous venez transmettre, ou vous laissez la place ? »"
+    left:
+      label: "Je viens transmettre"
+      effects: {vestiaire: "++", tribunes: "+", set: [adieu_cobalt], outcome: y_va, react: jp.re.aulard_cheville}
+      answer: "Tu viens. Tu ne joues pas ; tu parles ; on t'écoute. C'est nouveau."
+    right:
+      label: "Place aux jeunes"
+      effects: {direction: "+", vestiaire: "+", relation: {mbako: 2}, set: [selection_refusee], outcome: refuse}
+      answer: "Le petit prend ton numéro. Il le porte bien ; il t'envoie une carte, sans texte."
+
+  - id: jp.derniere.chambre
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: leger
+    text: "« Le groupe vit bien, et le groupe a un vieux de plus, c'est toi ; la chambre du plus vieux, c'est la mienne, encore. Tu la reprends, ou tu dors avec les jeunes ? »"
+    left:
+      label: "Avec toi, comme avant"
+      effects: {vestiaire: "++", relation: {brehaut: 1}, set: [chambre_fauvel]}
+      answer: "Il ne raconte pas 1990. Tu le racontes à sa place ; il corrige : le poteau était à gauche."
+    right:
+      label: "Avec les jeunes"
+      effects: {vestiaire: "+", relation: {mbako: 1}, set: [raconte_1990]}
+      answer: "Ils ne dorment pas. Tu leur racontes 1990 ; tu l'as bien retenu."
+
+  - id: jp.derniere.sabatier
+    roles: [joueur]
+    arc: corps
+    tags: [moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« Ton genou a fait le voyage, {toi}, et ça reste entre la table et moi, mais la Fédération a une table aussi, plus dure. Tu joues les dix dernières minutes, ou tu regardes ? »"
+    left:
+      label: "Dix minutes"
+      effects: {tribunes: "+++", rand: [{p: 0.3, set: [genou_grave]}, {}]}
+      answer: "Tu rentres. Le stade se lève. Le genou aussi, ou pas."
+    right:
+      label: "Je regarde"
+      effects: {vestiaire: "+", direction: "+", set: [adieu_banc], outcome: ne_joue_pas}
+      answer: "On te fait monter sur le podium quand même. Tu as le maillot, pas la sueur."
+
+  - id: jp.derniere.hymne
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? Vous avez chanté l'hymne en regardant le sol, la caméra était sur vous et pas sur le drapeau. Un mot sur ce que vous regardiez, ou pas ? »"
+    left:
+      label: "Le sol, c'est tout"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "Elle écrit « il regardait le sol ». C'est vrai ; ça suffit."
+    right:
+      label: "Je regardais 1990"
+      effects: {tribunes: "++", direction: "-", set: [hymne_1990], react: jp.re.lea_confirme}
+      answer: "Elle écrit 1990. Le capitaine lit, t'appelle, ne dit rien, raccroche ; c'est un merci."
+
+  - id: jp.derniere.hymne_raconte
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? Les jeunes disent que vous leur avez raconté 1990 dans la chambre ; et pendant l'hymne, vous regardiez le sol. Vous regardiez 1990 ? »"
+    left:
+      label: "Le sol, c'est tout"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "Elle écrit « il regardait le sol ». Les jeunes lisent l'article et n'y croient pas."
+    right:
+      label: "Je regardais 1990"
+      effects: {tribunes: "++", relation: {brehaut: 1}, set: [hymne_1990], react: jp.re.lea_confirme}
+      answer: "Elle écrit 1990. Le capitaine découpe la photo ; le poteau y est, à gauche."

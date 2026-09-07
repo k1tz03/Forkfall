@@ -1,0 +1,278 @@
+# Manchettes de couture — écrites à l'intégration des huit lots (chapitre 90
+# § 1.5, traitement (A) : « lui donner un lecteur ; une manchette suffit »).
+#
+# Chacune lit une trace que les salles POSENT sans que rien ne la LISE encore
+# dans le contenu compilé. La bible attribue le plus souvent le lecteur à un
+# chapitre hors de ce lot (01, 02, 12 à 15) ; ces manchettes tiennent la place
+# jusque-là, sans jamais contredire ce que ces chapitres écriront : une Une ne
+# fait que constater ce qui est déjà arrivé.
+#
+# Toutes en `priority: 1` (générique) : elles ne prennent jamais la bande d'une
+# manchette de postulat. `flag()` sans `journal_has()` là où la carte qui pose
+# la trace n'écrit pas de ligne d'Almanach (le journal_has serait toujours faux).
+unes:
+  # ------------------------------------------------------------- entraîneur
+  - id: une.couture.tete_haute
+    roles: [entraineur]
+    journal: quotidien
+    priority: 1
+    when: "flag('parti_tete_haute')"
+    titre: "PARTI LA TÊTE HAUTE DE {VILLE}"
+    sous: "Pas de communiqué, pas d'indemnité, pas de photo sur le parking. On a appris le départ par le planning du mardi, corrigé au stylo."
+    photo: en.aulard_rappelle.sms
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.cassette
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "flag('cassette_regardee')"
+    titre: "LA CASSETTE DU BUREAU DE {VILLE}"
+    sous: "Une vieille finale, un magnétoscope de bureau, et un entraîneur qui a passé la soirée à compter les appels de balle d'un autre."
+    photo: en.grand_nom.cassette
+    react: [ { card: co.re.camille_journal }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.finale
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "flag('finale_attaque')"
+    titre: "{VILLE} : LE DERNIER VIRAGE À L'ATTAQUE"
+    sous: "Le choix a été fait à la mi-temps, devant un tableau et douze paires d'yeux. On saura en juin s'il fallait, et on le saura seulement alors."
+    photo: en.promu.a6_dernier_virage
+    react: [ { card: co.re.gege_decoupe }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.option
+    roles: [entraineur]
+    journal: quotidien
+    priority: 1
+    when: "flag('option_mbako')"
+    titre: "UNE OPTION SUR LE PETIT DE {VILLE}"
+    sous: "Elle est à la page trois, entre le taux zéro et la part majoritaire. Personne au club n'a lu la page trois avant de signer la page quatre."
+    sujet: en.nassir_proprietaire
+    photo: en.nassir.pret
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.carnet_rendu
+    roles: [entraineur]
+    journal: gazette
+    priority: 1
+    when: "flag('carnet_rendu')"
+    titre: "LE CARNET EST REVENU À {VILLE}"
+    sous: "Quinze ans de compositions, d'adresses et de numéros, rendus sans un mot au tiroir du bas. Rien n'a été photocopié, dit-on."
+    photo: en.bureau_ancien.carnet
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.serrure
+    journal: quotidien
+    priority: 1
+    when: "flag('cahier_perdu')"
+    titre: "{VILLE} : LE CAHIER CHANGE DE MAIN"
+    sous: "L'adjoint tenait le cahier des séances depuis six ans. Le tiroir a une clef neuve ; le cahier, lui, n'est plus dedans."
+    photo: co.vukic.trahison_serrure
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.star_assise
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "flag('star_banc')"
+    titre: "LA STAR DE {VILLE} A REGARDÉ ASSISE"
+    sous: "Elle n'a pas défendu, elle n'a pas joué, elle n'a pas crié. Le banc était froid ; la tribune, plus froide encore."
+    photo: en.vestiaire.star_ne_defend_pas
+    react: [ { card: co.re.gege_decoupe }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.tribune_fermee
+    roles: [entraineur]
+    journal: quotidien
+    priority: 1
+    when: "flag('tribune_fermee')"
+    titre: "LA TRIBUNE EST FERMÉE AU PUBLIC"
+    sous: "Un arrêté, deux barrières et onze rangs vides à {VILLE}. La commission de sécurité repassera ; elle repasse toujours."
+    photo: en.evt.tribune_ferme
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe } ]
+
+  - id: une.couture.porte_entrouverte
+    roles: [entraineur]
+    journal: gazette
+    priority: 1
+    when: "flag('porte_ouverte')"
+    titre: "LA PORTE DU BUREAU RESTE OUVERTE"
+    sous: "Le président reçoit sans rendez-vous, ce qui n'était pas arrivé depuis deux ans. On entre ; on ressort avec une idée qui n'est pas la sienne."
+    photo: en.direction.porte_entrouverte
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.projet_jeunes
+    roles: [entraineur]
+    journal: echo
+    priority: 1
+    when: "flag('projet_jeunes')"
+    titre: "{VILLE} : UN PROJET ET DOUZE GAMINS"
+    sous: "Le club annonce qu'il fera jouer sa formation. Le calendrier, lui, n'a pas été prévenu, et il ne s'excuse jamais."
+    photo: en.promu.a8_projet_aulard
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.gege_decoupe } ]
+
+  - id: une.couture.ultimatum
+    roles: [entraineur]
+    journal: quotidien
+    priority: 1
+    when: "flag('ultimatum')"
+    titre: "L'ULTIMATUM TIENT SUR UNE LIGNE"
+    sous: "Trois matchs, dit la ligne, et elle ne dit rien d'autre. Le club dément l'avoir écrite ; personne ne dément l'avoir lue."
+    photo: en.evt.ultimatum
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  # ------------------------------------------------------------------ joueur
+  - id: une.couture.fax_passe
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('fax_passe')"
+    titre: "{VILLE} : LE FAX EST PASSÉ À MINUIT"
+    sous: "La page trois s'est décoincée, l'horodatage est resté au bon jour, et la Ligue a validé sans regarder. Le fax a été promu depuis."
+    photo: jp.clause.fax
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.or_refuse
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('or_refuse')"
+    titre: "{NOM} A DIT NON À L'OR"
+    sous: "Le désert payait trois fois le salaire et proposait la villa. La réponse a tenu en une phrase, et elle n'a pas été répétée."
+    sujet: jp.exil_dore
+    photo: jp.exil.nassir
+    react: [ { card: co.re.camille_journal }, { card: co.re.gege_decoupe } ]
+
+  - id: une.couture.genou_ecoute
+    roles: [joueur]
+    journal: gazette
+    priority: 1
+    when: "flag('genou_ecoute')"
+    titre: "{VILLE} : IL A ÉCOUTÉ SON GENOU"
+    sous: "Six semaines de moins sur la pelouse, et personne au club n'a compris pourquoi. Le Doc a rangé la radio dans le dossier, pas dans le tiroir."
+    sujet: jp.genou_parle
+    photo: jp.genou.radio_jeune
+    react: [ { card: co.re.camille_journal }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.le_meilleur_assume
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('special_assume') || flag('special_retire')"
+    titre: "{NOM} ASSUME « LE MEILLEUR »"
+    sous: "La phrase a fait la couverture, puis le vestiaire, puis le couloir. Personne ne l'a retirée ; on l'a seulement dite moins fort le lundi."
+    photo: jp.une.vestiaire
+    react: [ { card: co.re.camille_journal }, { card: co.re.gege_decoupe } ]
+
+  - id: une.couture.brassard_refuse
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('brassard_refuse') || flag('capitaine_lundi')"
+    titre: "LE BRASSARD DE {VILLE} CHANGE DE BRAS"
+    sous: "Il a été proposé un mardi et rendu le lundi suivant, sans discours. Le groupe vit bien, dit le capitaine ; il le dit chaque fois."
+    photo: jp.brassard.lundi
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.capitaine_vendu
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('brehaut_vendu_par_toi')"
+    titre: "IL A FAIT VENDRE SON CAPITAINE"
+    sous: "Un mot au bureau a suffi, et le bureau ne l'a pas gardé pour lui. Le capitaine l'a su par le planning, comme tout le monde."
+    photo: jp.pepite.s1_retour_usine_fidele
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.penalty
+    roles: [joueur]
+    journal: gazette
+    priority: 1
+    when: "flag('penalty_marque') || flag('penalty_rate')"
+    titre: "LE PENALTY DU CAPITAINE D'UN SOIR"
+    sous: "Le ballon a été pris à celui qui le prenait toujours. Le vestiaire a compté les pas ; il compte encore, dans les deux sens."
+    photo: jp.brassard.penalty
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.petite_porte
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('retour_petite_porte')"
+    titre: "{NOM} RENTRE PAR LA PETITE PORTE"
+    sous: "Six mois ailleurs, un retour sans conférence et un casier repris au fond. Le numéro, lui, avait déjà été donné à un autre."
+    photo: jp.banc.retour
+    react: [ { card: co.re.camille_journal }, { card: co.re.gege_decoupe } ]
+
+  - id: une.couture.place_au_jeune
+    roles: [joueur]
+    journal: gazette
+    priority: 1
+    when: "flag('place_au_jeune')"
+    titre: "PLACE AU JEUNE, DIT LA TRIBUNE"
+    sous: "Le virage a chanté un autre prénom pendant vingt minutes, et il l'a bien chanté. Ce n'est pas une insulte ; c'est une date."
+    photo: jp.fin.alarme_gege_papy
+    react: [ { card: co.re.gege_decoupe }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.vendu_explique
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('vendu_explique')"
+    titre: "{NOM} A EXPLIQUÉ SA VENTE"
+    sous: "Dans le parking, sans micro, avec des mots simples et un ballon sous le bras. Le gamin a hoché la tête ; il n'a pas dit qu'il comprenait."
+    sujet: jp.retour_usine
+    photo: jp.retour.gamin
+    react: [ { card: co.re.camille_journal }, { card: co.re.gege_decoupe } ]
+
+  - id: une.couture.controle_negatif
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('controle_negatif')"
+    titre: "CONTRÔLE NÉGATIF, DOSSIER CLOS"
+    sous: "Deux flacons, deux laboratoires, une seule ligne de conclusion. L'armoire de l'infirmerie a été refermée à clef le lendemain."
+    photo: jp.pharmacie.controleur
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.bilan_vrai
+    roles: [joueur]
+    journal: gazette
+    priority: 1
+    when: "flag('bilan_vrai')"
+    titre: "LE BILAN N'A PAS ÉTÉ ARRONDI"
+    sous: "Le club acheteur a reçu les deux dossiers, celui qui est propre et celui qui boite. Il a payé moins cher, et il a payé quand même."
+    photo: jp.genou.visite
+    react: [ { card: co.re.camille_journal }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.compte_cousin
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('compte_cousin')"
+    titre: "{NOM}, SON COUSIN ET LES ÎLES"
+    sous: "L'image, l'or et les montres passent par la même adresse, qui est celle d'un cousin. Le cousin, lui, n'a jamais touché un ballon."
+    photo: jp.exil.cousin
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.couture.diplome_juin
+    roles: [joueur]
+    journal: echo
+    priority: 1
+    when: "flag('diplome_juin') || flag('destination_choisie')"
+    titre: "IL A CHOISI SEUL, ET EN JUIN"
+    sous: "Pas d'agent dans le couloir, pas de conseiller au téléphone, une date et une signature. C'est plus rare que ça n'en a l'air."
+    photo: jp.diplome.aulard
+    react: [ { card: co.re.camille_journal }, { card: co.re.vecchio_garde } ]
+
+  - id: une.couture.galactique
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "flag('galactique') || flag('prepa')"
+    titre: "LE TRANSFERT DU SIÈCLE, DIT-ON"
+    sous: "On l'a dit du précédent, et de celui d'avant. Cette fois il y a un préparateur pour lui seul, ce qui est un chiffre, pas un adjectif."
+    photo: jp.mercato.transfert_siecle
+    react: [ { card: co.re.camille_journal }, { card: co.re.gege_decoupe } ]

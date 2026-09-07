@@ -1,0 +1,83 @@
+# Cartes de l'intrigue « Les mémoires » (arc jp.memoires) — bible ch. 10 § 6.16.
+# Ta vie en livre à trente et un ans ; le chapitre trois parle du vestiaire, et
+# le vestiaire lit. Le chroniqueur veut la radio avant le papier.
+cards:
+  - id: jp.memoires.lea
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez, {toi} ? Vos mémoires maintenant, c'est tôt, mais c'est le moment où l'on se souvient encore. Toute la vérité, ou une version qu'on peut offrir à Noël ? »"
+    left:
+      label: "Toute la vérité"
+      effects: {tribunes: "+", vestiaire: "-", direction: "-", set: [memoires_verite], outcome: verite, react: jp.re.meneche_radio_d_abord}
+      answer: "Elle allume le magnéto. Tu parles trois heures. Elle ne coupe rien ; c'est sa règle."
+    right:
+      label: "La version de Noël"
+      effects: {direction: "+", caisse: "+", set: [memoires_lisses], outcome: lisse, react: jp.re.meneche_radio_d_abord}
+      answer: "Elle écrit. Personne ne se souvient de la page cent douze ; il n'y en a pas."
+
+  - id: jp.memoires.meneche
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro : des mémoires, ça se raconte à la radio avant de s'écrire, sinon personne n'achète le livre. Le chapitre trois, dimanche soir, ou un autre ? »"
+    left:
+      label: "Le chapitre trois"
+      effects: {tribunes: "++", vestiaire: "--", relation: {meneche: 1}, set: [chapitre_trois_radio]}
+      answer: "Le vestiaire écoute la radio dans le bus. Le bus est silencieux jusqu'à l'hôtel."
+    right:
+      label: "Un autre, le premier"
+      effects: {tribunes: "+", relation: {meneche: -1}}
+      answer: "Tu racontes ton enfance. Il bâille ; il n'a jamais bâillé en direct, il le fait exprès."
+
+  - id: jp.memoires.chapitre_trois
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe a lu le chapitre trois, {toi}, et le groupe vit bien quand on ne raconte pas ce qui se dit ici. Tu le retires de la réédition, ou tu assumes devant tout le monde ? »"
+    left:
+      label: "Je le retire"
+      effects: {vestiaire: "+", tribunes: "-", parole: -1, set: [chapitre_retire]}
+      answer: "Elle retire. Elle garde la page dans un tiroir ; elle la ressortira dans ses mémoires."
+    right:
+      label: "J'assume"
+      effects: {vestiaire: "--", tribunes: "++", set: [chapitre_assume], react: jp.re.brehaut_plus_de_passe}
+      answer: "Le groupe ne te fait plus la passe une semaine. La semaine d'après, si ; quelqu'un a aimé."
+
+  - id: jp.memoires.camille
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "« Tu rentres à quelle heure, c'est la première phrase de ton livre ; c'est elle qui l'a mise, ou toi ? Tu me dédicaces l'exemplaire, ou tu le dédicaces au vestiaire ? »"
+    left:
+      label: "À toi"
+      effects: {relation: {camille: 2}, tribunes: "-"}
+      answer: "Tu écris son prénom. Elle range le livre sur l'étagère de ce qui compte."
+    right:
+      label: "Au vestiaire"
+      effects: {vestiaire: "++", relation: {camille: -1}}
+      answer: "Tu écris « au groupe ». Elle le lit quand même ; elle s'arrête au chapitre trois."
+
+  - id: jp.memoires.josiane
+    roles: [joueur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, vous savez, des livres de joueurs, et ils finissent tous au vestiaire, jamais chez eux. Vous m'en dédicacez un pour le classeur, ou pour la buvette ? »"
+    left:
+      label: "Pour le classeur"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle le range debout, entre deux dossiers. C'est la meilleure place du club."
+    right:
+      label: "Pour la buvette"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Il est sur le comptoir. Trois pages sont cornées ; toujours les mêmes trois."

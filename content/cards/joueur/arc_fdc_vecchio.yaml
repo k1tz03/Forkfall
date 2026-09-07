@@ -1,0 +1,71 @@
+# Cartes du rituel « Vecchio l'exemple » (arc jp.vecchio_exemple) — bible
+# ch. 10 § 6.27. Cinq verres sur le comptoir, un par retraite, et il en ajoute
+# un chaque saison. Rejouable : aucune de ces cartes n'est `once`.
+cards:
+  - id: jp.vecchio_exemple.retraites
+    roles: [joueur]
+    arc: vestiaire
+    tags: [absurde, vestiaire]
+    speaker: vecchio
+    statut_ok: [retraite]
+    tone: leger
+    text: "« Cinq retraites, {toi}, un verre par retraite, et j'en ai vu d'autres, mais pas des miennes. Tu veux que je te raconte la première, ou la vraie ? »"
+    left:
+      label: "La première"
+      effects: {vestiaire: "+", relation: {vecchio: 1}, outcome: premiere}
+      answer: "Il raconte la première. Il avait dit « je raccroche » ; il a rejoué en août."
+    right:
+      label: "La vraie"
+      effects: {tribunes: "+", relation: {vecchio: 1}, set: [vecchio_vraie_retraite], outcome: vraie}
+      answer: "Il raconte la vraie. Il a rendu les gants à un jeune ; le jeune les a gardés."
+
+  - id: jp.vecchio_exemple.retraites_encore
+    roles: [joueur]
+    arc: vestiaire
+    tags: [absurde, vestiaire]
+    speaker: vecchio
+    statut_ok: [retraite]
+    tone: leger
+    text: "« Un verre de plus sur le comptoir, petit, j'ai arrêté de compter les miennes. J'en ai vu d'autres : et toi, tu en es à combien, de retraites annoncées ? »"
+    left:
+      label: "Aucune, pour l'instant"
+      effects: {vestiaire: "+", tribunes: "+", outcome: premiere}
+      answer: "Il aligne un verre à ton nom, vide. « Pour quand ce sera », dit-il, et il l'oublie là."
+    right:
+      label: "Une, l'an dernier"
+      effects: {tribunes: "+", relation: {vecchio: 1}, set: [vecchio_vraie_retraite], outcome: vraie}
+      answer: "Il rit sans bruit. Il remplit le verre à ton nom et le boit à ta place."
+
+  - id: jp.vecchio_exemple.gants
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: vecchio
+    statut_ok: [retraite]
+    tone: leger
+    text: "« Les gants, je les ai donnés au jeune de la réserve, et il les a mis dans une boîte au lieu de jouer avec. J'en ai vu d'autres : tu lui dis de les user, ou tu le laisses ? »"
+    left:
+      label: "Qu'il les use"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Le jeune les sort de la boîte. Il les use en trois mois ; c'était fait pour."
+    right:
+      label: "Laisse-le les garder"
+      effects: {tribunes: "+", relation: {vecchio: 1}}
+      answer: "La boîte reste sur l'étagère du vestiaire. Elle y sera encore dans vingt ans."
+
+  - id: jp.vecchio_exemple.comptoir
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, absurde]
+    speaker: vecchio
+    statut_ok: [retraite]
+    tone: leger
+    text: "« Le comptoir a une règle, {toi} : qui annonce sa retraite paie la tournée, et qui revient la repaie. J'en ai vu d'autres : tu paies d'avance, ou tu attends de savoir ? »"
+    left:
+      label: "D'avance"
+      effects: {caisse: "-", tribunes: "++"}
+      answer: "Tu paies. Le comptoir te doit une tournée si tu reviens ; il n'oublie pas les dettes."
+    right:
+      label: "J'attends de savoir"
+      effects: {caisse: "+", vestiaire: "+"}
+      answer: "Personne ne paie. Le patron met la tournée sur l'ardoise, au nom du club."

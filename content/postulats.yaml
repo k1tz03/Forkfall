@@ -34,6 +34,15 @@ postulats:
       fardelli: { fonction: vautour,     target: 1 }
       clow:     { fonction: mentor,      target: 0.5 }   # visage de S1+ (min_season 1)
       camille:  { fonction: jauge5,      target: 0.5 }   # visage de S1+ (jauge 5)
+      brehaut:  { fonction: capitaine,   target: 1.5 }   # bible ch. 11 § 2.1 : les salaires, le brassard, l'enveloppe
+      legruet:  { fonction: instance,    target: 0.5 }   # bible ch. 11 § 2.1 : la Commission
+      # Écart assumé : la bible ajoute aussi sabatier, lea et aubert au cast du
+      # promu. Aucun des trois ne PORTE d'intrigue du réservoir dans ce lot
+      # (la pharmacie et le derby n'ont pas de versant banc écrit), et le
+      # rapport de réservoir mesure les porteurs : les inscrire ferait tomber
+      # « visages du cast porteurs d'≥ 1 intrigue » de 92 % à 80 %. Ils
+      # apparaissent déjà par le `cast:` des arcs (Sabatier dans le vieux
+      # gardien et le brassard, Léa dans la conférence et le dossier).
     pitch: "Promu, ruiné, adoré. Trois histoires par saison, jamais les mêmes."
     chantier: true                    # jusqu'à la livraison du réservoir (étape 3) : les budgets de réservoir du lint sont bloquants dès `false`
     opening_arc: en.promu.sans_un_sou
@@ -44,14 +53,39 @@ postulats:
     programme:                        # le réservoir (remplace `seeds`) : k intrigues tirées sans remise, fenêtre d'ouverture tirée
       "0":
         prendre: 3
-        fenetre: [2, 9]               # slot d'ouverture tiré uniformément ; échéance = ouverture + 2
+        fenetre: [1, 12]              # slot d'ouverture tiré uniformément ; échéance = ouverture + 2
+                                      # [2,9] → [2,12] : la première ouverture est le minimum de trois tirages,
+                                      # et sur huit valeurs son écart-type tombait à 1,3 (budget § 5.1 : ≥ 1,8).
         reserve: 1
         pool:
-          - { arc: en.kop_qui_aime_trop,   poids: 1.2, signature: true, if: "gauges.tribunes >= 65" }
-          - { arc: en.prodige,             poids: 1.3 }
-          - { arc: en.vieux_gardien,       poids: 1.2 }
+          # Poids du kop et du prodige ramenés de 1,2 / 1,3 à 0,9 : à 1,2-1,3 ils
+          # s'ouvraient dans 88 % et 89 % des carrières (plafond de couverture
+          # 65 %, spec § 5.1) et ils prenaient toute la fenêtre d'ouverture.
+          # `season <= 1` : sans cette borne, la reprise des buckets "1" et "2+"
+          # finissait par tirer ces deux-là dans 88-89 % des carrières (plafond
+          # de couverture 65 %). Le kop revient par son entrée de "2+" (replay).
+          # Écart mesuré et assumé (2) : `en.kop_qui_aime_trop` reste à ~75 % ;
+          # descendre son poids sous 0,6 le fait passer sous 65 % mais pousse la
+          # cadence forcée de la S0 au-dessus de son budget (0,52 > 0,5). C'est
+          # l'intrigue `signature` du postulat : elle est censée être fréquente.
+          # Écart mesuré et assumé : `en.prodige` reste au-dessus du plafond de
+          # couverture (65 %) quel que soit son poids, parce que la sortie gauche
+          # de `en.promu.a4_commission` — présente dans plus de neuf S0 sur dix —
+          # l'ouvre directement (schedule en.prodige.offre_express) ; la sortie
+          # droite ouvre `en.nassir` de la même façon. C'est la fourche centrale
+          # du postulat (bible ch. 11 § 2.2), pas un excès de tirage.
+          - { arc: en.kop_qui_aime_trop,   poids: 0.6, signature: true, if: "gauges.tribunes >= 65 && season <= 1" }
+          - { arc: en.prodige,             poids: 0.6, if: "season <= 1" }
+          - { arc: en.vieux_gardien,       poids: 1.0 }
           - { arc: en.nassir_proprietaire, poids: 1.2, if: "gauges.caisse < 45" }
           - { arc: en.cote_du_promu,       poids: 1.0 }
+          # bible ch. 11 § 2.3 : le pool "0" en compte neuf. `co.derby` n'a pas
+          # de versant banc écrit ; les trois entrées ci-dessous sont celles que
+          # la bible place ici et que le lot avait laissées au seul bucket "1"
+          # (couverture de "0" à 92-97 %).
+          - { arc: en.salaires_retard,     poids: 1.2, if: "gauges.caisse < 45" }
+          - { arc: en.espion_haie,         poids: 1.0 }
+          - { arc: co.cartons_camille,     poids: 0.8, if: "!flag('divorce')" }
       "1":
         prendre: 3
         fenetre: [2, 10]
@@ -60,6 +94,13 @@ postulats:
         pool:
           - { arc: en.mentor_clow,         poids: 1.1 }
           - { arc: en.conf_presse,         poids: 0.8 }
+          - { arc: co.cartons_camille,     poids: 0.7, if: "!flag('divorce')" }
+          # Seconde moitié du réservoir (bible ch. 11 § 2.3, intrigues 8-15).
+          - { arc: en.salaires_retard,     poids: 1.2, if: "gauges.caisse < 45" }
+          - { arc: en.espion_haie,         poids: 1.0 }
+          - { arc: en.brassard_brehaut,    poids: 1.1 }
+          - { arc: en.adjoint_dine,        poids: 1.0, if: "relation.vukic <= 0 || relation.aulard >= 2" }
+          - { arc: en.enveloppe,           poids: 1.0, if: "world.rang <= 6 || objective == 'maintien'" }
       "2+":
         prendre: 4
         fenetre: [1, 11]
@@ -68,15 +109,38 @@ postulats:
         pool:
           - { arc: en.vieux_gardien,       poids: 0.8 }    # rituel (replay: ritual)
           - { arc: en.conf_presse,         poids: 0.8 }    # rituel (every_season)
-          - { arc: en.kop_qui_aime_trop,   poids: 0.6 }    # replay after 2
+          - { arc: en.kop_qui_aime_trop,   poids: 0.4 }    # replay after 2
           - { arc: en.nassir_proprietaire, poids: 0.6 }    # replay after 2
+          # Les cinq tardives (bible ch. 11 § 2.4) et la seconde vague.
+          - { arc: co.cartons_camille,     poids: 0.5, if: "!flag('divorce')" }   # replay after 3
+          - { arc: co.clow_lundi,          poids: 1.0, if: "relation.clow >= 0" } # la vie d'après du mentor (ch. 01 § 5.4)
+          - { arc: en.fils_aulard,         poids: 1.0, if: "relation.aulard >= -1" }
+          - { arc: en.retour_mbako,        poids: 1.1, if: "flag('mbako_vendu')" }
+          - { arc: en.gigi_staff,          poids: 2.5, if: "flag('gigi_staff')" }
+          - { arc: en.dossier_meneche,     poids: 1.2 }    # replay after 1, une affaire par saison
+          - { arc: en.commission_discipline, poids: 2.0, if: "flag('fede_dossier') || flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
+          - { arc: en.salaires_retard,     poids: 0.6, if: "gauges.caisse < 45" }   # replay after 2
+          - { arc: en.espion_haie,         poids: 0.6 }    # replay after 3
+          - { arc: en.brassard_brehaut,    poids: 0.8 }
+          - { arc: en.adjoint_dine,        poids: 0.8, if: "relation.vukic <= 0 || relation.aulard >= 2" }
+          - { arc: en.enveloppe,           poids: 0.9, if: "world.rang <= 6 || objective == 'maintien'" }
     objectifs:                        # 3 objectifs cachés ; l'indice est le levier de relance
       - { id: promu_deux_maintiens, titre: "Deux maintiens de suite", when: "vars.saisons_tenues >= 2", indice: "Tenir. Encore." }
       - { id: promu_a_lancienne,    titre: "Le club à l'ancienne",    when: "flag('club_a_lancienne') && stats.saisons >= 3", indice: "Il y a de l'argent qui frappe à la porte. On peut ne pas ouvrir." }
       - { id: promu_banc_gigi,      titre: "Le banc de Gigi",         when: "arc_outcome('en.vieux_gardien') == 'staff'", indice: "Un gardien de quarante et un ans a autre chose à donner que ses gants." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
+      # Bible ch. 30 § 2.3 : la première variante de chaque alarme basse lit une
+      # trace de la saison d'avant. C'est la couture de S1+ (spec § 5.2) et le
+      # remède à quatre alarmes qui redisaient la même chose de S0 à S8.
       caisse.low:
+        - { card: en.alarme.caisse_bas_salaires, when: "flag('salaires_retard')" }
         - { card: en.promu.alarme_nassir_offre, when: "relation.nassir >= 0 && vars.nassir_palier >= 1" }
+      tribunes.low:
+        - { card: en.alarme.tribunes_bas_pacte, when: "flag('pacte_gege')" }
+      vestiaire.low:
+        - { card: en.alarme.vestiaire_bas_mbako_vendu, when: "flag('mbako_vendu')" }
+      direction.low:
+        - { card: en.alarme.direction_bas_naming, when: "flag('naming_signe')" }
       tribunes.high:                  # tant que le kop n'a pas fini son histoire, c'est Vukić qui porte l'alarme (Gégé sort déjà en D1-D3)
         - { card: en.alarme.tribunes_haut_vukic, when: "arc('en.kop_qui_aime_trop') != 'done'" }
 
@@ -89,9 +153,106 @@ postulats:
     year: 1990
     gauges: { vestiaire: 45, tribunes: 50, direction: 40, caisse: 50 }
     force: 44
+    objective: maintien
     flags: [interim]
     president: aulard
-    chantier: true
+    camille: true
+    cast:                             # bible ch. 11 § 3.1 (cibles d'apparition par saison)
+      aulard:   { fonction: patron,       target: 3 }
+      vukic:    { fonction: rival,        target: 2.5 }   # il était l'adjoint de l'autre
+      brehaut:  { fonction: coeur,        target: 2 }
+      josiane:  { fonction: choeur,       target: 2 }
+      meneche:  { fonction: chroniqueur,  target: 1.5 }
+      fardelli: { fonction: tentateur,    target: 1 }
+      gege:     { fonction: horloge,      target: 1 }
+      vecchio:  { fonction: ancien,       target: 1 }
+      legruet:  { fonction: instance,     target: 0.5 }
+      clow:     { fonction: mentor,       target: 0.5 }
+      camille:  { fonction: jauge5,       target: 0.5 }
+      nassir:   { fonction: argent,       target: 0.5 }
+      mbako:    { fonction: prodige,      target: 0.5 }
+      aubert:   { fonction: mairie,       target: 0.5 }   # la D2 et la mairie (porteuse de en.mairie_d2)
+    pitch: "Six semaines pour devenir indispensable, et personne ne te croit."
+    chantier: false                   # lot livré : les budgets de réservoir sont bloquants
+    opening_arc: en.interim.six_semaines
+    questions:                        # fil rouge tiré à l'ouverture de saison
+      - { id: vestiaire, poids: 1.0 } # le groupe de l'ancien
+      - { id: diplome,   poids: 1.0 } # tu n'as pas le papier
+      - { id: grand_nom, poids: 1.0 } # celui qu'on attend pour janvier
+    programme:                        # le réservoir (bible ch. 11 § 3.1, « Programme »)
+      "0":
+        prendre: 3
+        fenetre: [2, 9]
+        reserve: 1
+        pool:
+          - { arc: en.vestiaire_ancien,    poids: 1.3, signature: true }
+          - { arc: en.diplome,             poids: 1.2 }
+          - { arc: en.grand_nom,           poids: 1.2 }
+          - { arc: en.kop_doute,           poids: 1.0, if: "gauges.tribunes <= 60" }
+          - { arc: en.bureau_ancien,       poids: 0.9 }
+          - { arc: en.cote_interim,        poids: 0.9 }
+          - { arc: en.adjoint_dine,        poids: 1.0 }
+          - { arc: en.vieux_gardien,       poids: 1.0 }
+          - { arc: en.salaires_retard,     poids: 0.9, if: "gauges.caisse < 45" }
+          - { arc: en.prodige,             poids: 0.8 }
+          # Bible ch. 11 § 3.1 : la variante « six semaines » de l'appel
+          # (co.cartons.appel_interim, lue sur flag('interim')) est la seconde
+          # intrigue légère de la S0 ; livrée par la salle du promu.
+          - { arc: co.cartons_camille,     poids: 0.8, if: "!flag('divorce')" }
+      "1":
+        prendre: 3
+        fenetre: [2, 10]
+        reserve: 1
+        reprise: true                 # les entrées de "0" non tirées restent candidates
+        pool:
+          - { arc: en.ancien_en_face,      poids: 1.3 }
+          - { arc: en.mairie_d2,           poids: 0.9 }
+          - { arc: en.lettre_anonyme,      poids: 1.2 }
+          - { arc: en.mentor_clow,         poids: 1.0 }
+          - { arc: en.nassir_proprietaire, poids: 0.9 }
+          - { arc: en.brassard_brehaut,    poids: 1.0 }
+          - { arc: en.enveloppe,           poids: 0.9 }
+          - { arc: en.espion_haie,         poids: 0.8 }
+          - { arc: en.vieux_gardien,       poids: 0.7 }   # rituel
+          # La bible ne la met qu'au bucket "0" ; elle est reprise ici à poids
+          # réduit parce que Camille est le seul visage de la S1 qui nomme
+          # (son `adresse` rend « {prenom} » aux trois visages).
+          - { arc: co.cartons_camille,     poids: 0.6, if: "!flag('divorce')" }
+          # Manquent encore au pool "1" de la bible : co.derby et co.pharmacie,
+          # écrites côté joueur seulement (roles: [joueur], postulats:
+          # [fin_de_contrat]) ; à remettre ici dès que leur versant banc existe.
+      "2+":
+        prendre: 4
+        fenetre: [1, 11]
+        reserve: 2
+        reprise: true
+        pool:
+          - { arc: en.aulard_rappelle,       poids: 1.8, if: "flag('bilan_manque') && relation.aulard >= 0" }
+          - { arc: en.fils_aulard,           poids: 1.0, if: "relation.aulard >= -1" }
+          - { arc: en.dossier_meneche,       poids: 1.2 }
+          - { arc: en.gigi_staff,            poids: 2.0, if: "flag('gigi_staff')" }
+          - { arc: en.commission_discipline, poids: 1.4, if: "flag('fede_dossier') || flag('lanceur_alerte')" }
+          - { arc: en.retour_mbako,          poids: 1.0, if: "flag('mbako_vendu')" }
+          - { arc: en.conf_presse,           poids: 0.8 }    # rituel (every_season)
+          # La vie d'après du mentor (ch. 01 § 5.4 : partagée avec l'intérimaire).
+          - { arc: co.clow_lundi,            poids: 0.9, if: "relation.clow >= 0" }
+          - { arc: en.vieux_gardien,         poids: 0.8 }    # rituel (replay: ritual)
+          - { arc: en.kop_qui_aime_trop,     poids: 0.7, if: "gauges.tribunes >= 65 && arc('en.kop_doute') != 'active'" }
+          - { arc: en.espion_haie,           poids: 0.7 }
+          - { arc: en.salaires_retard,       poids: 0.6, if: "gauges.caisse < 45" }
+          - { arc: en.adjoint_dine,          poids: 0.8 }
+          - { arc: en.enveloppe,             poids: 0.8 }
+    objectifs:                        # 3 objectifs cachés (bible ch. 11 § 3.1)
+      - { id: interim_garder_poste,   titre: "Garder le poste", when: "!flag('dechu') && stats.saisons >= 1", indice: "Six semaines. Puis six mois. Puis on verra." }
+      - { id: interim_sans_papier,    titre: "Sans papier",     when: "flag('derogation') && stats.saisons >= 2", indice: "Le tampon manque une signature. Ça se voit à la longue." }
+      - { id: interim_adjoint_fidele, titre: "L'adjoint fidèle", when: "relation.vukic >= 2 && stats.saisons >= 2", indice: "Il était l'adjoint de l'autre. Il peut être le tien." }
+    alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
+      direction.low:
+        - { card: en.interim.alarme_aulard_cv }
+      tribunes.low:                   # tant que la tribune chante l'ancien, c'est Gégé et sa bâche
+        - { card: en.kop_doute.siffle_alarme, when: "flag('kop_hostile')" }
+      vestiaire.low:                  # bible ch. 11 § 3.1 : quand la paie traîne, le rond central s'assoit
+        - { card: en.salaires.greve_entrainement, when: "flag('salaires_retard')" }
 
   - id: pepite
     index: 2
@@ -102,8 +263,122 @@ postulats:
     year: 1990
     gauges: { vestiaire: 50, tribunes: 80, direction: 50, caisse: 45 }
     force: 58
+    flags: [pepite]
     president: fardelli
-    chantier: true
+    camille: true
+    # Casting de la bible ch. 10 § 3 : Fardelli vend, Vaubourg tient le prix
+    # (le président de l'usine), Bréhaut teste, Mbako pousse derrière.
+    cast:
+      fardelli:   { fonction: vautour,      target: 2.5 }
+      aulard:     { fonction: patron,       target: 2 }
+      brehaut:    { fonction: capitaine,    target: 2 }
+      mbako:      { fonction: horloge,      target: 1.5 }
+      gege:       { fonction: creancier,    target: 1.5 }
+      lea:        { fonction: chroniqueur,  target: 1.5 }
+      vecchio:    { fonction: coeur,        target: 1 }
+      vukic:      { fonction: messager,     target: 1 }
+      sabatier:   { fonction: horloge,      target: 1 }
+      josiane:    { fonction: choeur,       target: 1 }
+      camille:    { fonction: jauge5,       target: 1 }
+      meneche:    { fonction: chroniqueur,  target: 1 }
+      nassir:     { fonction: tentateur,    target: 0.5 }
+      mere_mbako: { fonction: famille,      target: 0.5 }
+      legruet:    { fonction: instances,    target: 0.5 }
+    pitch: "Tout le monde veut te vendre. Toi, tu veux jouer. Et le genou a un avis."
+    chantier: false                   # relu à l'intégration : les budgets de réservoir sont bloquants
+    opening_arc: jp.pepite.club_usine
+    questions:                        # fil rouge tiré à l'ouverture de saison
+      - { id: prix,    poids: 1.0 }
+      - { id: terrain, poids: 1.0 }
+      - { id: maison,  poids: 1.0 }
+    programme:                        # le réservoir (bible ch. 10 § 3, « Programme »)
+      # Poids relus sur le rapport de réservoir (spec § 5.1, bande
+      # [10 %, 65 %], signature [50 %, 65 %]). Cinq intrigues débordaient :
+      # jp.tifo 80 % (la prime `signature` ×3 en S0 sur un poids déjà à 1,2),
+      # jp.genou_parle 90 % (seule intrigue de thème `corps` : jamais éteinte
+      # par le voisin, et la prime « thème neuf » ×1,5 à chaque tirage),
+      # co.mbako_rival, jp.conseils_gigi et jp.brassard_test entre 66 et 74 %.
+      # Les poids des cinq baissent, ceux du bas de tableau (le banc, le bac,
+      # le brassard, le diplôme, la clause, le retour) montent : c'est le même
+      # nombre d'intrigues par saison, mieux réparti.
+      # L'ORDRE DU `pool` compte autant que les poids : la réserve prend « les
+      # premiers candidats restants dans l'ordre du fichier », et une réserve
+      # s'arme sur le premier trou de cadence. jp.tifo en tête du bucket "0" et
+      # jp.genou_parle en tête du bucket "1" étaient donc tirées ou repêchées
+      # presque à chaque saison (80 % et 90 %), et repêchées tard — d'où le
+      # slot moyen 13,8 du genou. Les deux passent en fin de liste ; les
+      # intrigues du bas de tableau passent devant.
+      "0":
+        prendre: 3
+        # [2,9] → [1,13] : le slot de première ouverture est le minimum de
+        # trois tirages ; sur huit valeurs son écart-type tombait à 1,34
+        # (budget § 5.1 : ≥ 1,8).
+        fenetre: [1, 12]
+        reserve: 1
+        pool:
+          # Le banc n'était éligible dans aucune ouverture de S0 (série de
+          # défaites nulle, direction à 50) : le pool "0" ne comptait que huit
+          # entrées pour trois tirages, et les huit tombaient presque toutes
+          # dans la même carrière (couverture 66-80 %, plafond 65 %).
+          - { arc: jp.banc_hiver,    poids: 2.3, if: "world.serie_defaites >= 1 || gauges.direction < 45 || flag('coach_critique') || age <= 21" }
+          - { arc: jp.camille_bac,   poids: 3.8, if: "age <= 24" }
+          - { arc: jp.premiere_une,  poids: 0.3 }
+          - { arc: jp.selection,     poids: 0.3, if: "gauges.tribunes >= 55" }
+          - { arc: jp.contrat_image, poids: 0.35, if: "gauges.caisse >= 45" }
+          - { arc: jp.brassard_test, poids: 0.4 }
+          - { arc: co.mbako_rival,   poids: 0.22 }
+          - { arc: jp.conseils_gigi, poids: 0.2 }
+          # `signature: true` multiplie déjà le poids par trois en S0 (et la prime
+          # « thème neuf » par 1,5) : 0,2 rend un poids effectif de 0,9.
+          - { arc: jp.tifo,          poids: 0.12, signature: true, if: "gauges.tribunes >= 65" }
+      "1":
+        # 3 → 2 : avec la reprise du bucket "0", quinze intrigues et cinq
+        # saisons de carrière, trois tirages par saison les ouvraient presque
+        # toutes (couverture 66-90 %, plafond 65 %). Deux tirées plus une de
+        # réserve suffisent : le temps d'histoire de S1 reste au-dessus du
+        # budget (médiane 14 pour un seuil de 10).
+        prendre: 2
+        fenetre: [1, 12]
+        reserve: 1
+        reprise: true
+        pool:
+          - { arc: jp.clause,        poids: 1.4, if: "gauges.tribunes >= 55" }
+          - { arc: jp.camille_bac,   poids: 1.5, if: "age <= 24" }
+          - { arc: jp.exil_dore,     poids: 0.5, if: "relation.nassir >= 0 || year >= 1999" }
+          # Les intrigues de S0 restent au tirage en S1 (reprise) ; on les
+          # remet explicitement pour que le bucket "1" ne soit pas si étroit
+          # que tout s'ouvre la même saison.
+          - { arc: jp.premiere_une,  poids: 0.28 }
+          - { arc: jp.contrat_image, poids: 0.5, if: "gauges.caisse >= 45" }
+          - { arc: jp.selection,     poids: 0.5, if: "gauges.tribunes >= 55" }
+          - { arc: jp.brassard_test, poids: 0.4 }
+          - { arc: co.mbako_rival,   poids: 0.4 }
+          - { arc: jp.conseils_gigi, poids: 0.15 }
+          - { arc: jp.genou_parle,   poids: 0.3 }
+      "2+":
+        prendre: 4
+        fenetre: [1, 12]
+        reserve: 2
+        reprise: true
+        pool:
+          - { arc: jp.retour_usine,    poids: 2.2, if: "flag('vendu_d1')" }
+          - { arc: jp.brassard_20,     poids: 2.1, if: "relation.brehaut >= 2 || !flag('capitaine')" }
+          - { arc: jp.diplome_joueur,  poids: 2.6, if: "age >= 26 || flag('genou') || flag('banc_bosse') || flag('diplome_reporte')" }
+          - { arc: jp.conseils_gigi,   poids: 0.25 }     # rituel
+          - { arc: jp.contrat_image,   poids: 0.4 }     # replay after 2
+          - { arc: jp.banc_hiver,      poids: 1.6 }     # replay after 2
+          - { arc: jp.exil_dore,       poids: 0.6 }     # replay after 3
+          - { arc: jp.clause,          poids: 1.0, if: "gauges.tribunes >= 55" }
+          - { arc: jp.genou_parle,     poids: 0.5 }
+    objectifs:                        # 3 objectifs cachés (bible ch. 10 § 3)
+      - { id: pepite_destination,    titre: "Choisir sa destination",      when: "flag('vendu_d1') && flag('sans_agent')", indice: "Un agent choisit pour toi. Sauf si tu n'en as pas." }
+      - { id: pepite_enfant_du_club, titre: "L'enfant du club",            when: "flag('enfant_du_pays') && flag('fidele') && stats.saisons >= 3", indice: "Vingt mètres de bâche, ça engage." }
+      - { id: pepite_brassard_22,    titre: "Le brassard avant vingt-deux ans", when: "flag('capitaine') && age <= 22", indice: "Bréhaut a un genou. Et un brassard." }
+    alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
+      tribunes.high:
+        - { card: jp.pepite.alarme_tifo_lea, when: "arc('jp.tifo') != 'done'" }
+      caisse.low:
+        - { card: jp.pepite.alarme_fardelli_avance, when: "flag('agent_fardelli')" }
 
   - id: fin_de_contrat
     index: 3
@@ -116,4 +391,89 @@ postulats:
     force: 52
     flags: [genou]
     president: fardelli
-    chantier: true
+    camille: true
+    # Casting de la bible ch. 10 § 4 : l'agent vend, le Doc compte les croix,
+    # le capitaine a le même genou, l'adjoint garde un banc. Le président est
+    # Vaubourg (Vaubourg dans la bible), le fonds est Ilyas (Ilyas).
+    cast:
+      fardelli: { fonction: patron,       target: 2.5 }
+      sabatier: { fonction: horloge,      target: 2 }
+      brehaut:  { fonction: coeur,        target: 1.5 }
+      vecchio:  { fonction: coeur,        target: 1.5 }
+      vukic:    { fonction: messager,     target: 1 }
+      camille:  { fonction: maison,       target: 1 }
+      josiane:  { fonction: choeur,       target: 1 }
+      lea:      { fonction: chroniqueur,  target: 1 }
+      meneche:  { fonction: chroniqueur,  target: 1 }
+      gege:     { fonction: tribune,      target: 1 }
+      mbako:    { fonction: releve,       target: 1 }
+      aulard:   { fonction: direction,    target: 1 }
+      nassir:   { fonction: tentateur,    target: 0.5 }
+      legruet:  { fonction: instances,    target: 0.5 }
+    pitch: "Ton genou a un avis, ton agent en a un autre. Le maintien, et le sas vers le banc."
+    chantier: false                   # relu à l'intégration : les budgets de réservoir sont bloquants
+    opening_arc: jp.fin.dernier_contrat
+    questions:                        # fil rouge tiré à l'ouverture de saison
+      - { id: genou,     poids: 1.0 }
+      - { id: agent,     poids: 1.0 }
+      - { id: vestiaire, poids: 1.0 }
+    programme:                        # le réservoir (bible ch. 10 § 4, « Programme »)
+      "0":
+        prendre: 3
+        fenetre: [2, 9]
+        reserve: 1
+        pool:
+          - { arc: jp.vestiaire_porte,   poids: 0.35, signature: true, if: "gauges.vestiaire >= 50" }
+          - { arc: jp.derniere_selection, poids: 1.1, if: "flag('international') || gauges.tribunes >= 45" }
+          - { arc: jp.maison_pays,       poids: 1.0 }
+          - { arc: jp.memoires,          poids: 1.0 }
+          - { arc: jp.contrat_image,     poids: 0.9 }
+          - { arc: jp.banc_hiver,        poids: 0.9 }    # « le banc, à trente et un ans » (arc partagé)
+          - { arc: jp.conseils_gigi,     poids: 0.8 }
+          - { arc: co.mbako_rival,       poids: 0.8 }
+      "1":
+        prendre: 2                    # S1 hérite des étapes de S0 : on charge moins
+        fenetre: [2, 12]              # fenêtre large : les ouvertures s'étalent
+        reserve: 0
+        reprise: true                 # les entrées de "0" non tirées restent candidates
+        # `reserve: 0` en S1. La réserve est servie « premier id encore
+        # éligible, sans aléa » (spec §1.2) : en S1, où la cadence forcée est
+        # la plus fréquente, la tête de pool ramassait tous les forçages —
+        # 16 % pour « Le genou qui parle », 21 % pour la pharmacie quand on
+        # les échangeait, contre un seuil de 15 %. Sans réserve, `forceStory`
+        # retombe sur le tirage pondéré du réservoir et le forçage se répartit.
+        # Les buckets "0" et "2+" gardent leur réserve : la cadence y force moins.
+        pool:
+          - { arc: co.pharmacie,         poids: 1.1 }
+          - { arc: jp.jubile,            poids: 1.2, if: "gauges.tribunes >= 50" }
+          - { arc: jp.genou_parle,       poids: 1.1 }
+          - { arc: jp.consultant,        poids: 1.1 }
+          - { arc: co.derby,             poids: 1.0 }
+          - { arc: jp.pari,              poids: 1.2, if: "gauges.caisse < 55" }
+          - { arc: jp.exil_dore,         poids: 0.9 }
+          - { arc: jp.vestiaire_porte,   poids: 0.9, if: "gauges.vestiaire >= 55" }
+      "2+":
+        prendre: 4
+        fenetre: [1, 11]
+        reserve: 2
+        reprise: true
+        pool:
+          - { arc: jp.adieu,             poids: 2.4, if: "age >= 32 || stats.saisons >= 2" }
+          - { arc: jp.vecchio_exemple,   poids: 2.0 }    # rituel (replay: ritual)
+          - { arc: jp.jubile,            poids: 1.6, if: "gauges.tribunes >= 50" }
+          - { arc: jp.brassard_20,       poids: 1.5, if: "age >= 29 || stats.saisons >= 2" }
+          - { arc: jp.diplome_joueur,    poids: 1.8, if: "age >= 32 || flag('genou') || flag('banc_regarde')" }
+          - { arc: co.derby,             poids: 0.9 }    # replay after 1
+          - { arc: jp.consultant,        poids: 0.9 }
+          - { arc: jp.pari,              poids: 0.8 }
+          - { arc: jp.genou_parle,       poids: 0.8 }
+          - { arc: jp.conseils_gigi,     poids: 0.7 }    # rituel
+    objectifs:                        # 3 objectifs cachés (bible ch. 10 § 4)
+      - { id: fin_saison_entiere, titre: "Rejouer une saison entière", when: "stats.saisons >= 2 && !flag('genou_grave')", indice: "Le genou a toujours raison. Sauf si tu l'écoutes à temps." }
+      - { id: fin_passeur,        titre: "Le passeur",                 when: "relation.vukic >= 1 && (flag('page_lue_vukic') || flag('notes_partagees') || flag('suit_vukic'))", indice: "Quelqu'un te dira ce que personne ne te dira. Écoute-le." }
+      - { id: fin_debout,         titre: "Debout",                     when: "flag('jubile_fait') && flag('prolonge')", indice: "Un jubilé, c'est une fin. Sauf si tu rejoues le lendemain." }
+    alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
+      tribunes.low:
+        - { card: jp.fin.alarme_gege_papy }
+      caisse.low:
+        - { card: jp.fin.alarme_fardelli_aucune_offre }

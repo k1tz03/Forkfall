@@ -1,0 +1,54 @@
+# Cartes de l'intrigue « La liste des vingt-six » (arc jp.selection) —
+# bible ch. 10 § 6.5. Berthomier tient le téléphone de la Fédération (Berthomier
+# dans la bible : même Congrès, même voix). Le plus vieux du groupe, c'est
+# Vecchio : quarante et un ans et une chambre à deux lits.
+# La carte d'ouverture absorbe `jp.selection.liste` (content/cards/joueur/
+# carriere.yaml) : le texte existant y reste, cette carte en est l'étape.
+cards:
+  - id: jp.selection.groupe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: vecchio
+    tone: leger
+    text: "« Ici c'est un groupe, pas une liste, et le groupe a une règle : le nouveau dort avec le plus vieux, c'est moi. Tu prends la chambre, ou tu en demandes une ? »"
+    left:
+      label: "Je prends la chambre"
+      effects: {vestiaire: "++", tribunes: "+", relation: {vecchio: 1}, set: [chambre_fauvel]}
+      answer: "Tu dors avec lui. Il ne dort pas. Il te raconte le tir au but de 1990 à deux heures du matin, une fois, et plus jamais."
+    right:
+      label: "La mienne, s'il vous plaît"
+      effects: {direction: "+", vestiaire: "-", relation: {vecchio: -1}}
+      answer: "Tu as ta chambre. Le groupe l'apprend. Le groupe est une liste, pour toi, pendant deux rassemblements."
+
+  - id: jp.selection.retour
+    roles: [joueur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu rentres de sélection, en héros ou en boitant, je ne sais pas encore. J'ai pas le temps, j'ai une usine : tu joues dimanche pour prouver, ou je vends ? »"
+    left:
+      label: "Je joue dimanche"
+      effects: {tribunes: "++", direction: "+", force: -1, rand: [{p: 0.2, set: [genou], tribunes: "-"}, {}], react: {card: jp.re.lea_confirme, chance: 0.6}}
+      answer: "Tu joues. Le stade chante le nom du pays et le tien, dans l'ordre. Il applaudit ; il regarde le prix."
+    right:
+      label: "Je me repose"
+      effects: {direction: "--", force: 1, set: [repos_selection]}
+      answer: "Tu te reposes. Il vend en juin, ou pas ; il dit que c'est à cause de ça ; c'est faux."
+
+  - id: jp.selection.retour_forfait
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: leger
+    text: "« Tu as déclaré forfait pour moi, {toi}, et la Fédération l'a noté quelque part. J'ai pas le temps, j'ai une usine : tu joues dimanche, ou tu soignes la cheville ? »"
+    left:
+      label: "Je joue dimanche"
+      effects: {tribunes: "+", direction: "++", force: -1}
+      answer: "Tu joues. La cheville n'avait rien. Tout le monde le sait ; personne ne le dit."
+    right:
+      label: "Je soigne la cheville"
+      effects: {direction: "-", force: 1, set: [repos_selection]}
+      answer: "Tu la soignes trois semaines. Le Doc écrit « repos » ; il n'écrit pas pourquoi."

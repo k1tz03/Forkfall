@@ -1,0 +1,318 @@
+# Les retrouvailles (bible ch. 30 § 4 ; spec variété §1.13). Un personnage
+# parti, vendu, écarté ou à la retraite revient quand tu changes de club ou de
+# rôle : deux visages par personnage — `sourire` si la relation était positive
+# à la séparation, `noir` si elle était négative. Le metteur en scène programme
+# les deux visages à |relation| maximale (`characters.yaml → retrouvailles`),
+# hors du sac, en [2, 6] cartes.
+#
+# Chaque carte porte `statut_ok:` : c'est ce qui autorise un locuteur vendu,
+# parti ou à la retraite à parler encore une fois (spec variété §1.10). Les
+# cartes sont `once: true` (une retrouvaille ne se rejoue pas) et
+# n'appartiennent à aucun autre mécanisme.
+#
+# Écarts d'import : les scènes de la bible portées par Solvang (le carnet
+# repris), Paulette (la place 14B), Gérard (la carte postale), Dembo, Colline,
+# Fauvel, Barbier, Vialat, Dédé et Pichon attendent leurs personnages ; celles
+# de Gégé socio (2032), Brehaut président de la Ligue et Josiane retraitée sont
+# ici sans leur borne d'année, parce que le rôle joué ne change pas d'époque.
+cards:
+  # ══════════════════════════════════════════════ Mbako — vendu, en face, en jaune
+  - id: co.retrouvailles.mbako_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [mercato, formation, chaine]
+    speaker: mbako
+    tone: strategique
+    once: true
+    statut_ok: [vendu, parti, rival]
+    text: "Mbako, six centimètres de plus : « Je veux jouer. Maintenant, et en face de vous. C'est vous qui m'avez mis dedans la première fois. »"
+    left: {label: "Bon match, petit", effects: {vestiaire: "+", tribunes: "+", set: [mbako_revu], journal: {text: "{annee} : le petit a grandi de six centimètres et joue en face. Il a salué {nom} avant l'échauffement.", poids: 2, tags: [mercato, formation]}}, answer: "Il te regarde une seconde de plus. C'est tout ce que tu auras."}
+    right: {label: "Tu as changé de camp", effects: {vestiaire: "-", relation: {mbako: -1}, set: [mbako_revu]}, answer: "Il hoche la tête et va s'échauffer devant ton banc."}
+
+  - id: co.retrouvailles.mbako_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [mercato, formation, chaine]
+    speaker: mbako
+    tone: strategique
+    once: true
+    statut_ok: [vendu, parti, rival]
+    text: "Mbako, sans sourire : « Je veux jouer. Maintenant. Vous m'avez vendu un mardi ; j'ai appris le prix par la radio, dans la voiture de ma mère. »"
+    left: {label: "C'était le club", effects: {vestiaire: "-", relation: {mbako: -1}, set: [mbako_revu], journal: {text: "{annee} : « c'était le club », a répondu {nom}. Le petit a marqué deux fois le même soir.", poids: 3, tags: [mercato]}}, answer: "Il hoche la tête et va s'échauffer devant ton banc."}
+    right: {label: "C'est moi qui ai dit oui", effects: {vestiaire: "+", tribunes: "-", set: [mbako_revu], journal: {text: "{annee} : « c'est moi qui ai dit oui. » Le petit n'a rien répondu, et il a marqué quand même.", poids: 3, tags: [mercato]}}, answer: "Il te regarde une seconde de plus. C'est tout ce que tu auras."}
+
+  # ═════════════════════════════════════════════════════ Vecchio — le banc en bois
+  - id: co.retrouvailles.vecchio_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [vestiaire, objet, chaine]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    statut_ok: [retraite, parti]
+    text: "Vecchio, assis sur un banc en bois derrière le but : « J'en ai vu d'autres revenir, et repartir plus vite. Tu t'assois cinq minutes, ou tu es pressé ? »"
+    left: {label: "Je m'assois", effects: {vestiaire: "++", direction: "-", set: [banc_de_gigi], journal: {text: "{annee} : cinq minutes sur le banc en bois derrière le but. Elles en ont duré quarante.", poids: 2, tags: [vestiaire, objet]}}, answer: "Cinq minutes deviennent quarante. Personne ne vient vous chercher."}
+    right: {label: "Je suis pressé", effects: {direction: "+", relation: {vecchio: -1}, set: [banc_de_gigi]}, answer: "Il ne se retourne pas. Il regarde les gardiens s'échauffer."}
+
+  - id: co.retrouvailles.vecchio_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [vestiaire, objet, chaine]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    statut_ok: [retraite, parti]
+    text: "Vecchio, gants sur les genoux, derrière le but : « J'en ai vu d'autres me dire au revoir. Toi, tu ne m'as rien dit du tout. Assieds-toi, ou pas. »"
+    left: {label: "Je m'assois", effects: {vestiaire: "+", relation: {vecchio: 1}, set: [banc_de_gigi], journal: {text: "{annee} : le vieux gardien et {nom}, assis sur le même banc en bois, sans se parler.", poids: 2, tags: [vestiaire]}}, answer: "Vous restez là sans parler. Deux gardiens s'échauffent devant vous."}
+    right: {label: "Une autre fois", effects: {direction: "+", vestiaire: "-"}, answer: "Il remet ses gants pour ne rien avoir à faire de ses mains."}
+
+  # ═══════════════════════════════════════════════════════ Josiane — elle range encore
+  - id: co.retrouvailles.josiane_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, objet, chaine]
+    speaker: josiane
+    tone: strategique
+    once: true
+    statut_ok: [retraite, parti]
+    text: "Madame Josiane, un carton sur les genoux : « J'en ai vu passer, et je range encore ceux qui sont partis. Le vôtre est sur le dessus, figurez-vous. »"
+    left: {label: "Je le prends", effects: {direction: "+", set: [dossier_repris], journal: {text: "{annee} : douze pages sur {nom}, écrites par quelqu'un qui l'aimait bien, rendues dans un carton.", poids: 2, tags: [direction, objet]}}, answer: "Douze pages sur toi, écrites par quelqu'un qui t'aimait bien."}
+    right: {label: "Laissez-le où il est", effects: {vestiaire: "+", relation: {josiane: 1}}, answer: "Elle le remet sous les autres, doucement, et referme le carton."}
+
+  - id: co.retrouvailles.josiane_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, objet, chaine]
+    speaker: josiane
+    tone: strategique
+    once: true
+    statut_ok: [retraite, parti]
+    text: "Madame Josiane, un carton sur les genoux : « J'en ai vu passer, vous savez. Le vôtre, je l'ai gardé quand même. C'est mon métier, pas de l'affection. »"
+    left: {label: "Je le prends", effects: {direction: "+", vestiaire: "-", set: [dossier_repris], journal: {text: "{annee} : le dossier de {nom} récupéré dans un carton de retraitée. Il pesait douze pages.", poids: 2, tags: [direction]}}, answer: "Douze pages. Trois sont des lettres que tu n'as jamais reçues."}
+    right: {label: "Gardez-le", effects: {parole: 1}, answer: "Elle referme le carton. « Comme vous voulez », et elle range encore."}
+
+  # ═══════════════════════════════════════════════════ Fardelli — le carnet noir
+  - id: co.retrouvailles.fardelli_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [agents, mercato, objet, chaine]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "Fardelli, un carnet noir posé sur la table : « Mon ami, je ne travaille plus. Ton nom est là-dedans deux fois, dont une au crayon. On regarde ? »"
+    left: {label: "Je veux voir la page", effects: {caisse: "-", direction: "+", set: [carnet_fardelli], journal: {text: "{annee} : le carnet noir ouvert devant {nom}. Une seule ligne était lisible ; elle datait de dix ans.", poids: 2, tags: [agents, objet]}}, answer: "Il tourne le carnet vers toi. Une seule ligne est lisible."}
+    right: {label: "Je ne veux pas savoir", effects: {parole: 1, relation: {fardelli: 1}}, answer: "Il referme le carnet et le range sans un mot. C'est une première."}
+
+  - id: co.retrouvailles.fardelli_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [agents, mercato, objet, chaine]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "Fardelli, le carnet fermé : « Mon ami, on parle d'argent ou d'amitié ? Ni l'un ni l'autre : je passais, et j'ai vu ton nom sur une porte. »"
+    left: {label: "Ouvrez le carnet", effects: {caisse: "-", direction: "-", set: [carnet_fardelli], journal: {text: "{annee} : le carnet noir rouvert une dernière fois. Le nom de {nom} y était barré, puis réécrit.", poids: 2, tags: [agents, objet]}}, answer: "Ton nom est barré, puis réécrit dessous, plus petit."}
+    right: {label: "Bonne route", effects: {parole: 2}, answer: "Il repart avec le carnet sous le bras. Il ne se retourne pas."}
+
+  # ══════════════════════════════════════════════════ Corven — le fantôme du mentor
+  - id: co.retrouvailles.clow_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [vestiaire, moment, chaine]
+    speaker: clow
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, mort]
+    text: "Corven, silhouette au bord du terrain : « Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant ; toi, tu es juste derrière, et c'est mieux que prévu. »"
+    left: {label: "Je réponds à voix haute", effects: {vestiaire: "+", direction: "-", set: [clow_revu], journal: {text: "{annee} : {nom} a parlé seul{pg, select, f{e} other{}} au bord d'un terrain. Deux joueurs se sont retournés.", poids: 2, tags: [moment]}}, answer: "Deux joueurs se retournent. Tu parles seul, au bord d'un terrain."}
+    right: {label: "Je continue la séance", effects: {force: 2, set: [clow_revu]}, answer: "La silhouette reste jusqu'à la fin de la séance, puis n'y est plus."}
+
+  - id: co.retrouvailles.clow_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [vestiaire, moment, chaine]
+    speaker: clow
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, mort]
+    text: "Corven, silhouette au bord du terrain : « Je ne dirais pas que j'étais le meilleur. Je dirais que tu n'as pas appelé, et que j'attendais près du téléphone. »"
+    left: {label: "Je n'ai pas appelé", effects: {vestiaire: "-", parole: 1, set: [clow_revu], journal: {text: "{annee} : le coup de fil qui n'est jamais parti. {nom} l'a reconnu au bord d'un terrain, trop tard.", poids: 3, tags: [moment]}}, answer: "Tu le dis à voix haute. La silhouette ne bouge pas d'un pouce."}
+    right: {label: "Je continue la séance", effects: {force: 2, tribunes: "-", set: [clow_revu]}, answer: "Elle reste jusqu'au dernier ballon. Puis il n'y a plus que la haie."}
+
+  # ══════════════════════════════════════════════════ Massenet — le chapitre neuf
+  - id: co.retrouvailles.meneche_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [presse, objet, chaine]
+    speaker: meneche
+    tone: strategique
+    once: true
+    statut_ok: [retraite, parti]
+    text: "Massenet, un manuscrit sous le bras : « Juste une question, hors micro : le chapitre neuf parle de vous, et il est aimable. Aimable ou vrai ? »"
+    left: {label: "Vrai", effects: {tribunes: "-", parole: 2, journal: {text: "{annee} : « vrai », a répondu {nom} au journaliste. Le chapitre neuf fait onze pages.", poids: 2, tags: [presse]}}, answer: "Il sourit pour la première fois depuis trente ans. Onze pages."}
+    right: {label: "Aimable", effects: {tribunes: "+", parole: -1}, answer: "Le chapitre neuf fait quatre pages et ne dit rien du tout."}
+
+  - id: co.retrouvailles.meneche_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [presse, objet, chaine]
+    speaker: meneche
+    tone: strategique
+    once: true
+    statut_ok: [retraite, parti]
+    text: "Massenet, un manuscrit sous le bras : « Juste une question, hors micro : le chapitre neuf parle de vous, et il n'est pas aimable. Vous voulez le lire avant ? »"
+    left: {label: "Je le lis", effects: {tribunes: "-", direction: "-", parole: 1, journal: {text: "{annee} : le chapitre neuf lu avant tout le monde par {nom}. Rien n'y était faux.", poids: 3, tags: [presse]}}, answer: "Tu le lis debout, dans un couloir. Rien n'y est faux."}
+    right: {label: "Publiez", effects: {tribunes: "--", parole: 2}, answer: "Il range le manuscrit. « Comme vous voulez », et il le publie."}
+
+  # ══════════════════════════════════════════════════════ Vaubourg — cinq ans après
+  - id: co.retrouvailles.aulard_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, chaine]
+    speaker: aulard
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "Vaubourg, au téléphone : « J'ai pas le temps, j'ai un empire, et un banc vide depuis mardi. Tu es libre jeudi, {toi} ? »"
+    left: {label: "Je suis libre", effects: {direction: "++", caisse: "+", set: [aulard_rappelle], journal: {text: "{annee} : le président a rappelé cinq ans après. Personne n'a reparlé de la fin de la première fois.", poids: 2, tags: [direction]}}, answer: "Il ne parle pas de la première fois. Toi non plus : c'est le contrat."}
+    right: {label: "Je ne suis pas libre", effects: {parole: 1, relation: {aulard: -1}}, answer: "Il raccroche poliment. Il rappellera dans deux ans, à la même heure."}
+
+  - id: co.retrouvailles.aulard_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, chaine]
+    speaker: aulard
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    when: "!flag('aulard_rappelle')"
+    text: "Vaubourg, sans se lever : « On m'a dit que vous étiez de ce côté-ci de la table maintenant. J'ai pas le temps, j'ai un empire ; vous, vous avez le temps. »"
+    left: {label: "Je m'assois quand même", effects: {direction: "-", parole: 1, journal: {text: "{annee} : l'ancien président et {nom} à la même table. Personne n'a parlé pendant une minute.", poids: 2, tags: [direction]}}, answer: "Il déplace sa chaise de dix centimètres. Personne ne dit rien."}
+    right: {label: "Je m'assois quand même", effects: {direction: "-", parole: 1, journal: {text: "{annee} : l'ancien président et {nom} à la même table. Personne n'a parlé pendant une minute.", poids: 2, tags: [direction]}}, answer: "Il déplace sa chaise de dix centimètres. Personne ne dit rien."}
+
+  # ══════════════════════════════════════════════════ Bréhaut — le costume lui va
+  - id: co.retrouvailles.brehaut_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, vestiaire, chaine]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "Bréhaut, manches trop courtes : « Le groupe vit bien, et le groupe c'est vingt présidents maintenant. Tu veux quelque chose, ou tu passais ? »"
+    left: {label: "Je veux quelque chose", effects: {direction: "+", relation: {brehaut: -1}, journal: {text: "{annee} : l'ancien capitaine note tout, depuis qu'il a le costume. Il a noté la demande de {nom}.", poids: 2, tags: [direction]}}, answer: "Il note sur un carnet. Il note tout, depuis qu'il a le costume."}
+    right: {label: "Je passais", effects: {vestiaire: "+", relation: {brehaut: 1}}, answer: "Il propose un café et parle de bouteilles d'eau pendant vingt minutes."}
+
+  - id: co.retrouvailles.brehaut_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, vestiaire, chaine]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "Bréhaut, manches trop courtes : « Le groupe vit bien. Il a vécu bien après toi aussi, c'est la partie que personne ne raconte. Tu voulais quoi ? »"
+    left: {label: "Rien, je passais", effects: {vestiaire: "-", parole: 1}, answer: "Il te raccompagne jusqu'à l'ascenseur. Il appuie sur le bouton lui-même."}
+    right: {label: "Un service", effects: {direction: "+", vestiaire: "--"}, answer: "Il note la demande sur un carnet, et la page suivante reste blanche."}
+
+  # ══════════════════════════════════════════════ Ilyas — il achète le club d'après
+  - id: co.retrouvailles.nassir_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, caisse, chaine]
+    speaker: nassir
+    tone: strategique
+    once: true
+    statut_ok: [parti, rival, retraite]
+    text: "Ilyas, sur un écran de visioconférence : « Ce n'est pas un club, c'est un actif, et j'ai acheté celui-ci mardi. Vous êtes dans le périmètre, {toi}. »"
+    left: {label: "Je pose mes conditions", effects: {direction: "+", caisse: "+", journal: {text: "{annee} : le fonds a racheté le club d'après. Deux conditions sur trois ont été acceptées.", poids: 2, tags: [direction, caisse]}}, answer: "Il accepte deux points sur trois, et note le troisième pour plus tard."}
+    right: {label: "Je ne travaille plus là", effects: {direction: "--", parole: 2}, answer: "L'écran s'éteint. La clause de rupture arrive par courrier, jeudi."}
+
+  - id: co.retrouvailles.nassir_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [direction, caisse, chaine]
+    speaker: nassir
+    tone: strategique
+    once: true
+    statut_ok: [parti, rival, retraite]
+    text: "Ilyas, sur un écran de visioconférence : « Ce n'est pas un club, c'est un actif, et celui-ci est à moi depuis mardi. Vous, vous étiez une ligne. »"
+    left: {label: "Je pose mes conditions", effects: {direction: "-", caisse: "+", journal: {text: "{annee} : « vous étiez une ligne. » Le fonds a racheté le club où {nom} venait d'arriver.", poids: 3, tags: [direction]}}, answer: "Il accepte un point sur trois, et coupe la caméra avant la réponse."}
+    right: {label: "Je pars", effects: {direction: "--", parole: 2, caisse: "-"}, answer: "L'écran s'éteint. Personne ne rappelle, et c'est le plus long."}
+
+  # ═══════════════════════════════════ la mère de Mbako — elle en a vingt maintenant
+  - id: co.retrouvailles.mere_mbako_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [mercato, famille, chaine]
+    speaker: mere_mbako
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "La mère de Mbako, un dossier par joueur : « Mon fils n'a besoin de personne, et les dix-neuf autres non plus. On commence par lequel ? »"
+    left: {label: "Par le gardien", effects: {caisse: "-", direction: "+", journal: {text: "{annee} : vingt dossiers sur une table, et le bon sorti sans regarder. Elle est agente, maintenant.", poids: 2, tags: [mercato]}}, answer: "Elle sort le bon dossier sans regarder la pile. Il était déjà dessus."}
+    right: {label: "Par le vôtre", effects: {vestiaire: "+", relation: {mere_mbako: 1}}, answer: "Elle referme les dix-neuf autres. Ça prend du temps, et elle le prend."}
+
+  - id: co.retrouvailles.mere_mbako_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [mercato, famille, chaine]
+    speaker: mere_mbako
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite, rival]
+    text: "La mère de Mbako, un dossier par joueur : « Mon fils n'a besoin de personne. Vous, vous avez besoin d'un ailier, et j'en ai trois. C'est amusant. »"
+    left: {label: "Montrez-moi les trois", effects: {caisse: "--", direction: "+", journal: {text: "{annee} : trois ailiers, trois dossiers, un prix par dossier. Elle a laissé {nom} choisir le plus cher.", poids: 2, tags: [mercato]}}, answer: "Trois dossiers, trois prix. Le moins cher est en dessous, exprès."}
+    right: {label: "Je trouverai ailleurs", effects: {direction: "-", parole: 1}, answer: "Elle range les trois dossiers. Elle en vend deux la semaine suivante."}
+
+  # ══════════════════════════════════════════════ Camille — le téléphone du dimanche
+  - id: co.retrouvailles.camille_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [famille, chaine]
+    speaker: camille
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Camille, au téléphone : « Tu rentres à quelle heure, dans ta nouvelle vie ? Je demande pour savoir quoi répondre quand on appelle ici. »"
+    left: {label: "Dimanche, sûr", effects: {vestiaire: "+", relation: {camille: 1}, set: [dimanche_promis], journal: {text: "{annee} : un dimanche noté en rouge sur le planning du club. Il y est resté toute la saison.", poids: 2, tags: [famille]}}, answer: "Tu notes la date sur le planning du club. En rouge."}
+    right: {label: "Je ne peux rien promettre", effects: {parole: 1, relation: {camille: -1}}, answer: "Elle dit « d'accord » et raccroche la première, sans claquer."}
+
+  - id: co.retrouvailles.camille_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [famille, chaine]
+    speaker: camille
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Camille, au téléphone : « Tu rentres à quelle heure ? Je le demande pour la petite, plus pour moi. C'est elle qui décroche, maintenant. »"
+    left: {label: "Dimanche, sûr", effects: {vestiaire: "+", relation: {camille: 1}, set: [dimanche_promis], journal: {text: "{annee} : « dimanche, sûr. » {nom} a écrit la date en rouge, et le club a écrit autre chose dessus.", poids: 3, tags: [famille]}}, answer: "Tu notes la date en rouge. Le club écrit autre chose par-dessus."}
+    right: {label: "Je ne peux pas promettre", effects: {parole: 1, vestiaire: "-"}, answer: "Elle dit « d'accord » et raccroche la première. C'est toujours elle."}
+
+  # ═════════════════════════════════════════════════ Gégé — il est du conseil, maintenant
+  - id: co.retrouvailles.gege_sourire
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Gégé, cravate mal nouée : « La tribune n'oublie rien, et maintenant elle vote. Je suis assis en face de toi, et ça me fait tout drôle. »"
+    left: {label: "Parle le premier", effects: {tribunes: "++", direction: "-", journal: {text: "{annee} : le capo est devenu élu. Il a parlé onze minutes ; il ne s'était jamais entendu.", poids: 2, tags: [ultras, tribunes]}}, answer: "Il parle onze minutes. Il ne s'était jamais entendu de sa vie."}
+    right: {label: "C'est moi qui préside", effects: {direction: "+", tribunes: "-"}, answer: "Il note, comme au local. Sur un carton de bière, retourné."}
+
+  - id: co.retrouvailles.gege_noir
+    roles: [entraineur, joueur]
+    arc: retrouvailles
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Gégé, une écharpe pliée dans un sac : « La tribune n'oublie rien. Elle a lavé celle-là avant de la rendre, et c'est la première fois. »"
+    left: {label: "Je la reprends", effects: {tribunes: "-", vestiaire: "+", set: [echarpe_rendue], journal: {text: "{annee} : une écharpe rendue lavée, dans un sac, devant douze personnes. La tribune n'oublie rien.", poids: 3, tags: [ultras, tribunes]}}, answer: "Elle sent la lessive. C'est ce qui te reste de douze ans."}
+    right: {label: "Gardez-la", effects: {tribunes: "--", parole: 1, set: [echarpe_rendue]}, answer: "Il la repose sur une chaise et sort. L'écharpe reste sur la chaise."}

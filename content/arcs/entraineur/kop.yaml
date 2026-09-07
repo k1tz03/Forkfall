@@ -31,7 +31,9 @@ arcs:
       pacte_gege:     "{annee} : {prenom} {nom} a promis le local rénové au virage. Gégé a gravé la date à la craie."
       ami_ultras:     "{annee} : trois bières au local du virage. {prenom} {nom}, adopté{pg, select, f{e} other{}} par la tribune Nord."
     hint: "La tribune est à quatre-vingts et vient réclamer sa part."
-    cast: [gege]
+    # Cast de la fiche (ch. 11 § 2.3.1) : Gégé porte, Bréhaut commente le onze
+    # (en.re.brehaut_onze), Camille commente le verre (en.re.camille_le_verre).
+    cast: [gege, brehaut, camille]
     start: [1, 4]
     same_club: true
     fallback: nouvelles
@@ -39,7 +41,10 @@ arcs:
     steps:
       - id: local
         # « Encore » : la relance lit plays() et, si le virage a déjà voté, la trace.
+        # La première variante lit une autre intrigue : l'espion de la haie a
+        # laissé sa plaque au-dessus du bar du local (en.espion_haie).
         card:
+          - { id: en.kop.local_jumelles, if: "flag('espion_cafe')" }
           - { id: en.kop.local_encore_onze, if: "plays('en.kop_qui_aime_trop') >= 1 && flag('onze_du_virage')" }
           - { id: en.kop.local_encore, if: "plays('en.kop_qui_aime_trop') >= 1" }
           - { id: en.kop.local }
@@ -50,7 +55,10 @@ arcs:
           - { id: en.kop.onze, if: "relation.gege >= 0" }
           - { id: en.kop.onze_froid }
         next:
-          - { step: pacte, if: "relation.gege >= 1", in: [9, 14] }
+          # `>= 1` demandait d'avoir déjà gagné deux crans avec Gégé : l'étape du
+          # pacte n'était atteinte que dans 4 % des arcs (budget d'issue ≥ 10 %).
+          # Le capo propose la craie tant qu'il ne t'en veut pas.
+          - { step: pacte, if: "relation.gege >= 0", in: [9, 14] }
           - { step: banderoles, in: [9, 14] }
       - id: pacte
         # La sortie droite de la carte (« Pas de promesse en l'air ») pose son
@@ -69,7 +77,13 @@ arcs:
       - id: anniversaire
         # La variante lit relation.gege au tirage (après « Signez », A6…).
         card:
+          # Avant les trois autres : quand le pacte a été signé et que la Nord
+          # est toujours là, l'anniversaire est une inauguration — et l'issue
+          # `pacte` n'est plus recouverte par `bache` (elle tombait à 3 %).
+          - { id: en.kop.anniversaire_inauguration, if: "flag('pacte_gege') && gauges.tribunes >= 65" }
           - { id: en.kop.anniversaire_sourire, if: "relation.gege >= 2" }
+          # Le pacte signé garde son issue même quand la Nord sort la bâche.
+          - { id: en.kop.anniversaire_pacte_trahi, if: "relation.gege <= -1 && flag('pacte_gege')" }
           - { id: en.kop.anniversaire_bache, if: "relation.gege <= -1" }
           - { id: en.kop.anniversaire_neutre }
         next: []

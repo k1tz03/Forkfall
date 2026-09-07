@@ -1,0 +1,101 @@
+# Cartes de l'intrigue « Le consultant du dimanche » (arc jp.consultant) —
+# bible ch. 10 § 6.17. Il joue le samedi, il juge le dimanche. Le fauteuil vide
+# est celui du chroniqueur ; le micro du direct est tendu par la presse.
+cards:
+  - id: jp.consultant.plateau
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro, {toi} : le dimanche soir vous êtes libre, et il y a un fauteuil vide à côté du mien. Vous jugez les autres, ou vous restez juge de vous-même ? »"
+    left:
+      label: "Je prends le fauteuil"
+      effects: {tribunes: "+", vestiaire: "-", caisse: "+", set: [consultant], outcome: accepte}
+      answer: "Tu juges. Tu es bon. C'est le problème."
+    right:
+      label: "Je reste sur le terrain"
+      effects: {vestiaire: "+", relation: {meneche: -1}, outcome: refuse}
+      answer: "Il garde le fauteuil vide. Il le filme vide le dimanche suivant ; c'est une menace."
+
+  - id: jp.consultant.aulard
+    roles: [joueur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu juges mes joueurs le dimanche, et j'ai pas le temps de regarder, mais Josiane me raconte. Tu arrêtes, ou tu continues et tu ne joues plus le samedi ? »"
+    left:
+      label: "J'arrête"
+      effects: {direction: "++", caisse: "-", clear: [consultant], react: co.re.josiane_a_lu}
+      answer: "Tu arrêtes. Il l'annonce à l'antenne ; il le dit deux fois, avec ton nom."
+    right:
+      label: "Je continue"
+      effects: {direction: "--", tribunes: "++", set: [consultant_assume]}
+      answer: "Tu continues. Tu joues moins. Tu juges mieux."
+
+  - id: jp.consultant.vukic
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: vukic
+    tone: strategique
+    text: "« Je te le dis parce que personne ne te le dira, {toi} : je note ce que tu dis à l'antenne, et tu as raison une fois sur deux, c'est beaucoup. Tu me montres tes notes, ou tu les gardes ? »"
+    left:
+      label: "Je te les montre"
+      effects: {relation: {vukic: 1}, vestiaire: "+", set: [notes_partagees]}
+      answer: "Vous comparez. Vous êtes d'accord une fois sur deux ; c'est beaucoup."
+    right:
+      label: "Pour l'antenne"
+      effects: {relation: {vukic: -1}, tribunes: "+"}
+      answer: "Il ferme le cahier. Il regarde quand même, chaque dimanche ; il prend des notes sur toi."
+
+  # Câblage de la fin ∃ `jp_consultant` (ch. 10 § 6.17 : « Carrefour si
+  # age >= 33 »). La fin existait sans porte : aucune carte ne la citait.
+  - id: jp.consultant.dimanche_adieu
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment, chaine]
+    speaker: meneche
+    tone: strategique
+    text: "« Le fauteuil du dimanche est à vous à l'année, et le samedi vous jouez un quart d'heure. Juste une question, hors micro : vous gardez lequel des deux ? »"
+    left:
+      label: "Je garde le dimanche"
+      effects: {tribunes: "+", direction: "-", set: [consultant, consultant_assume], outcome: accepte, end: jp_consultant}
+      answer: "Tu gardes le fauteuil. Le samedi, on te juge ; le dimanche, c'est toi. Le président « n'a pas le temps » de regarder."
+    right:
+      label: "Je garde le samedi"
+      effects: {tribunes: "-", vestiaire: "+", force: 2, parole: 1, outcome: refuse}
+      answer: "Tu rends le fauteuil. Ils le donnent à un ancien gardien ; il parle moins bien et il a raison plus souvent."
+
+  - id: jp.consultant.dimanche
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? On est en direct, et vous venez de dire que votre propre coach « joue trop bas » ; c'est passé. Un mot pour lui, ou un mot pour vous ? »"
+    left:
+      label: "Pour lui : pardon"
+      effects: {direction: "+", tribunes: "-", parole: 1}
+      answer: "Tu dis pardon. Il l'entend. Il ne te met pas samedi ; c'est sa réponse."
+    right:
+      label: "Pour moi : j'assume"
+      effects: {tribunes: "++", direction: "--", set: [consultant_assume], outcome: accepte}
+      answer: "Tu assumes. Le fauteuil du dimanche t'attend à l'année ; il est confortable."
+
+  - id: jp.consultant.dimanche_notes
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? Votre coach vient de dire, dans l'autre studio, qu'il était d'accord avec vous « une fois sur deux ». Vous répondez, ou vous le laissez conclure ? »"
+    left:
+      label: "Je le laisse conclure"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Il conclut. Il est bon aussi ; c'est le problème, à deux."
+    right:
+      label: "Je réponds"
+      effects: {tribunes: "++", relation: {vukic: -1}, set: [consultant_assume], outcome: accepte}
+      answer: "Tu réponds. La régie coupe ; trop tard."

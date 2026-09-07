@@ -1,0 +1,258 @@
+# Les six intrigues longues du réservoir de l'intérimaire (bible ch. 11 § 3.3).
+# Le vestiaire de l'ancien (signature), L'ancien sur le banc d'en face,
+# Le diplôme, Le grand nom, Le kop qui doute, La lettre anonyme.
+# Chacune : quatre étapes, deux à trois issues, ses traces et leur ligne
+# d'Almanach. Programme et fenêtres : content/postulats.yaml, postulat
+# `interimaire`.
+arcs:
+  # ---------------------------------------------------------------- signature
+  # Les joueurs jouent encore son système et regardent Bréhaut avant de te
+  # regarder. Garder ses méthodes, tout changer, ou écarter le capitaine.
+  - id: en.vestiaire_ancien
+    title: "Le vestiaire de l'ancien"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.3
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vukic, vecchio]
+    issues: [methodes, change, ecarte]
+    traces:
+      methodes_ancien:  "{annee} : {prenom} {nom} a gardé le système de l'ancien. Le groupe a dit merci, et qu'il reviendrait."
+      nouvelle_methode: "{annee} : {nom} a effacé la compo à la craie de l'ancien. Trois défaites, puis le reste."
+      brehaut_ecarte:   "{annee} : Bréhaut écarté par l'intérimaire. Le vestiaire s'est tu ; il n'a pas dit à qui il était."
+    hint: "Sa compo est encore au mur, à la craie, et l'éponge est sèche."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le système de l'ancien est resté au mur après {nom}. Personne n'a effacé."
+    steps:
+      - id: craie
+        card:
+          - { id: en.vestiaire_ancien.craie_vote, if: "fil_rouge == 'vestiaire'" }
+          - { id: en.vestiaire_ancien.craie }
+        next: [ { step: plots, in: [1, 2] } ]
+      - id: plots
+        card: en.vestiaire_ancien.plots
+        next: [ { step: brehaut, in: [2, 4] } ]
+      - id: brehaut
+        card: en.vestiaire_ancien.brehaut
+        next: [ { step: telephone, in: [2, 5] } ]
+      - id: telephone
+        card: en.vestiaire_ancien.telephone
+        next: []
+
+  # --------------------------------------------------- l'ancien chez {rival}
+  # Ouverte seulement si le script a posé `ancien_rival` (S1, le twist).
+  - id: en.ancien_en_face
+    title: "L'ancien sur le banc d'en face"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.3
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: meneche
+    cast: [meneche, gege, brehaut]
+    requires: [ancien_rival]
+    issues: [mots, silence, poignee]
+    traces:
+      guerre_des_mots: "{annee} : la guerre des mots entre {nom} et l'ancien. La presse a compté les points ; la Fédération aussi."
+      poignee_ancien:  "{annee} : {nom} a serré la main de l'ancien au rond central. La tribune a hésité, puis applaudi."
+    hint: "Il connaît leur vestiaire par cœur, et il le dit dans le journal."
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : {nom} et l'ancien se sont serré la main. Puis ils ont changé de banc, encore."
+    steps:
+      - id: affiche
+        card: en.ancien_en_face.affiche
+        next: [ { step: bache, in: [1, 2] } ]
+      - id: bache
+        card:
+          - { id: en.ancien_en_face.bache_methodes, if: "flag('methodes_ancien')" }
+          - { id: en.ancien_en_face.bache }
+        next: [ { step: rond_central, in: [1, 2] } ]
+      - id: rond_central
+        card: en.ancien_en_face.rond_central
+        next: [ { step: couloir, in: [1, 2] } ]
+      - id: couloir
+        card: en.ancien_en_face.couloir
+        next: []
+
+  # ------------------------------------------------------------- le diplôme
+  - id: en.diplome
+    title: "Le diplôme"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 0
+    theme: instances
+    carrier: legruet
+    cast: [legruet, clow, josiane, aulard]
+    excludes: [diplome]
+    issues: [diplome, derogation, arrange]
+    traces:
+      diplome:    "{annee} : {prenom} {nom} a passé le diplôme d'entraîneur. L'examinatrice a tamponné « admis », puis signé."
+      derogation: "{annee} : dérogation de six mois pour {nom}. Le tampon manque une signature."
+    hint: "Sans le papier, pas de banc : six mois de dérogation, un stage, un examen."
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    epilogue:
+      direction: "-"
+      journal: "{annee} : {nom} a changé de club avec une dérogation dans la poche. Elle avait expiré."
+    steps:
+      - id: appel
+        card:
+          # Le stage déjà fait (trace `clow_stage` du ch. 01, pas encore importé)
+          # ou la saison dont le fil rouge est le papier qui manque.
+          - { id: en.diplome.appel_stage, if: "flag('clow_stage') || fil_rouge == 'diplome'" }
+          - { id: en.diplome.appel }
+        next: [ { step: stage, if: "flag('derogation')", in: [3, 8] } ]
+      - id: stage
+        card: en.diplome.stage
+        next: [ { step: examen, at_season: 1, at: [1, 3] } ]
+      - id: examen
+        card:
+          - { id: en.diplome.examen_d1, if: "world.division == 1" }
+          - { id: en.diplome.examen }
+        next: []
+
+  # ------------------------------------------------------------ le grand nom
+  - id: en.grand_nom
+    title: "Le grand nom"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 0
+    theme: mercato
+    carrier: fardelli
+    cast: [fardelli, aulard, vukic]
+    issues: [evince, adjoint, fuite]
+    traces:
+      loco_evince:      "{annee} : le grand nom n'est pas venu à {club}. Le seau est resté au placard."
+      adjoint_de_loco:  "{annee} : {prenom} {nom}, adjoint du mystique. « Regardez la cassette », a-t-il dit, et rien d'autre."
+      fuite_loco:       "{annee} : il est venu, a regardé un entraînement depuis son seau, et il est reparti. Il a dit « la cassette »."
+    hint: "Le board veut un grand nom pour janvier ; toi, tu es jusqu'à nouvel ordre."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : {nom} a quitté le banc du mystique. Le mystique n'a pas remarqué tout de suite."
+    steps:
+      - id: cassette
+        card: en.grand_nom.cassette
+        next: [ { step: jeudi, in: [1, 3] } ]
+      - id: jeudi
+        card:
+          - { id: en.grand_nom.jeudi_dechu, if: "flag('dechu')" }
+          - { id: en.grand_nom.jeudi }
+        next: [ { step: seau, in: [1, 3] } ]
+      - id: seau
+        card: en.grand_nom.seau
+        next: [ { step: president, in: [1, 2] } ]
+      - id: president
+        card:
+          - { id: en.grand_nom.president_fuite, if: "flag('fuite_loco')" }
+          - { id: en.grand_nom.president }
+        next: []
+
+  # ----------------------------------------------------------- le kop qui doute
+  # Même porteur que « Le kop qui t'aime trop » : jamais la même saison.
+  - id: en.kop_doute
+    title: "Le kop qui doute"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: tribune
+    carrier: gege
+    cast: [gege, meneche, vukic]
+    # Même porteur que « Le kop qui t'aime trop » : l'exclusion est portée par
+    # le programme (kop_doute en bucket "0", kop_qui_aime_trop en "2+", avec un
+    # `if` qui lit l'état de cette intrigue) et non par `exclusive_with` — la
+    # symétrisation du build ne sait pas écrire dans un arc d'un autre lot.
+    issues: [adopte, siffle, sali]
+    traces:
+      kop_hostile: "{annee} : la tribune de {ville} a sifflé l'intérimaire et chanté l'ancien. Vingt minutes, chaque match."
+      ancien_sali: "{annee} : au local, on a sali l'ancien pour faire une place à {nom}. La bâche avait un nom."
+    hint: "La tribune chantait le nom de l'autre. Elle attend, et elle compte."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : la tribune de {ville} a chanté l'ancien jusqu'au départ de {nom}. Puis elle a chanté le suivant."
+    steps:
+      - id: stagiaire
+        card: en.kop_doute.stagiaire
+        next: [ { step: local, in: [1, 3] } ]
+      - id: local
+        card:
+          - { id: en.kop_doute.local_methode, if: "flag('nouvelle_methode')" }
+          - { id: en.kop_doute.local }
+        next: [ { step: vingtieme, in: [2, 4] } ]
+      - id: vingtieme
+        card:
+          - { id: en.kop_doute.vingtieme_ami, if: "flag('ami_ultras')" }
+          - { id: en.kop_doute.vingtieme }
+        next: []
+
+  # ---------------------------------------------------------- la lettre anonyme
+  - id: en.lettre_anonyme
+    title: "La lettre anonyme"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: meneche
+    cast: [meneche, legruet, aulard, brehaut, josiane]
+    issues: [couvre, parle, publie]
+    traces:
+      match_arrange_couvert: "{annee} : une lettre anonyme accusait l'ancien. {nom} l'a rangée dans le tiroir du milieu."
+      lanceur_alerte:        "{annee} : {nom} a porté une lettre anonyme à la Fédération. Le vestiaire a appris un mot."
+      lettre_publiee:        "{annee} : la lettre anonyme sur l'ancien est parue dans la presse. Copie conforme."
+    hint: "Une enveloppe sans timbre, une faute au mot « arrangé »."
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : la lettre est restée dans le tiroir du milieu de {club}. Quelqu'un a la clé."
+    steps:
+      - id: enveloppe
+        card: en.lettre.enveloppe
+        next: [ { step: brehaut, in: [1, 2] } ]
+      - id: brehaut
+        card:
+          - { id: en.lettre.brehaut_ecarte, if: "flag('brehaut_ecarte')" }
+          - { id: en.lettre.brehaut }
+        next:
+          - { step: legruet, if: "flag('lanceur_alerte')", in: [2, 4] }
+          - { step: copie, in: [1, 3] }
+      - id: legruet
+        card: en.lettre.legruet
+        next: [ { step: copie, in: [1, 3] } ]
+      - id: copie
+        card: en.lettre.copie
+        next: []

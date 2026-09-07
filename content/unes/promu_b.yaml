@@ -1,0 +1,177 @@
+# Manchettes de Une de la seconde moitié du réservoir du promu (bible ch. 11
+# § 2.6). Même schéma que content/unes.yaml ; le build lit les deux et refuse
+# un id déclaré deux fois. Toutes lisent `journal_has(...)` (fraîcheur : la
+# trace a été posée CETTE saison ; `flag()` titrerait trois ans plus tard sur
+# un vote oublié) et portent un `sujet` égal à l'id de l'intrigue, pour que les
+# trois brèves de la Une ne répètent pas le sujet.
+# Titres : ≤ 44 caractères rendus (nom de 16 lettres, ville de 12).
+unes:
+  # ---- traces fortes (3)
+  - id: une.promu.salaires
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('salaires_retard') && journal_has('salaires_retard') && bilan.tenu"
+    titre: "{VILLE} PAYÉ EN RETARD, SAUVÉ À TEMPS"
+    sous: "Trois semaines sans paie, un maintien quand même. Au distributeur de {ville}, on parle encore du 12."
+    sujet: en.salaires_retard
+    photo: en.salaires.brehaut
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.avance
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "flag('salaires_avances') && journal_has('salaires_avances')"
+    titre: "{NOM} A PAYÉ LA PAIE"
+    sous: "De sa poche, sans demander. Le président : « J'ai pas le temps, j'ai un empire. » Et une facture."
+    sujet: en.salaires_retard
+    photo: en.salaires.aulard_avance
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.brassard
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('brassard_gigi') && journal_has('brassard_gigi')) || (flag('brassard_mbako') && journal_has('brassard_mbako')) || (flag('brehaut_capitaine') && journal_has('brehaut_capitaine'))"
+    titre: "{VILLE} : UN BRASSARD, DEUX CAPITAINES"
+    sous: "Bréhaut l'a rendu. Le vestiaire a ri dix secondes, ou fait un cercle. À {ville}, on n'a pas encore choisi."
+    sujet: en.brassard_brehaut
+    photo: en.brassard.choix
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.adjoint_parti
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('vukic_ecarte') && journal_has('vukic_ecarte')"
+    titre: "VUKIĆ PREND LE BANC D'EN FACE"
+    sous: "L'adjoint écarté entraîne le voisin dès mars. Il a emporté un cahier. {prenom} {nom} pose les plots seul{pg, select, f{e} other{}}."
+    sujet: en.adjoint_dine
+    photo: en.adjoint.vukic
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.promu.retour
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('mbako_revenu') && journal_has('mbako_revenu')"
+    titre: "MBAKO REVIENT À {VILLE}"
+    sous: "Prêt d'un an, une clause réécrite, pas d'agent dans le couloir. La bâche a retrouvé son L."
+    sujet: en.retour_mbako
+    photo: en.retour.premier_match
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.promu.blanchi
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "flag('commission_blanchi') && journal_has('commission_blanchi')"
+    titre: "{NOM} BLANCHI, ET IL ATTEND"
+    sous: "Salle 3, deux heures d'attente, un tampon qui n'est pas daté. « On verra ça après le Congrès. »"
+    sujet: en.commission_discipline
+    photo: en.commission.salle_3
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  # ---- traces ordinaires (2)
+  - id: une.promu.haie
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('espion_presse') && journal_has('espion_presse')) || (flag('espion_retour') && journal_has('espion_retour')) || (flag('espion_cafe') && journal_has('espion_cafe'))"
+    titre: "L'HOMME DE LA HAIE DE {VILLE}"
+    sous: "Des jumelles, un café et une plaque d'immatriculation clouée au-dessus d'un bar. Le voisin dément la haie."
+    sujet: en.espion_haie
+    photo: en.espion.cafe
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.promu.jamais
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('enveloppe_refusee') && journal_has('enveloppe_refusee')) || (flag('enveloppe_denoncee') && journal_has('enveloppe_denoncee'))"
+    titre: "UN AMI A FAIT LE TOUR DES BANCS"
+    sous: "Une enveloppe, plusieurs vestiaires, un dernier bloc. Celui de {ville} a dit non, dit-on."
+    sujet: en.enveloppe
+    photo: en.evt.enveloppe
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.fils
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "(flag('fils_ds') && journal_has('fils_ds')) || (flag('fils_joueur') && journal_has('fils_joueur'))"
+    titre: "LE FILS A UN BUREAU À {VILLE}"
+    sous: "« Directeur sportif », avec la plaque vissée sur un placard. Il a acheté un ailier par fax, à sept heures dix."
+    sujet: en.fils_aulard
+    photo: en.fils.bureau
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.dossier
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "(flag('dossier_repondu') && journal_has('dossier_repondu')) || (flag('dossier_ignore') && journal_has('dossier_ignore')) || (flag('dossier_troque') && journal_has('dossier_troque'))"
+    titre: "LE DOSSIER {NOM}, PAGE UNE"
+    sous: "Une chemise cartonnée, une feuille. « Juste une question, hors micro. » La réponse tient en douze lignes, ou en trois."
+    sujet: en.dossier_meneche
+    photo: en.dossier.tiroir_vide
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.promu.sanction
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('commission_sanction') && journal_has('commission_sanction')"
+    titre: "TROIS MATCHS DEPUIS LA TRIBUNE"
+    sous: "Place 14C, un talkie et du vent. Vukić a tenu le banc de {club}, et il l'a rendu au quatrième."
+    sujet: en.commission_discipline
+    photo: en.commission.tribune
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.gigi_staff
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('gigi_a_parle') && journal_has('gigi_a_parle')) || (flag('banc_gigi_promis') && journal_has('banc_gigi_promis'))"
+    titre: "À {VILLE}, GIGI A DIT TROIS MOTS"
+    sous: "Entraîneur des gardiens, une serviette sur l'épaule, des gants qui ne sont plus les siens. Le troisième mot était un nom."
+    sujet: en.gigi_staff
+    photo: en.gigi.douche
+    react: [ { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.addition
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('aulard_confronte') && journal_has('aulard_confronte')"
+    titre: "DEUX COUVERTS, UN SEUL BANC"
+    sous: "Le président a dîné avec l'adjoint, un mardi, au port. {prenom} {nom} est entré{pg, select, f{e} other{}} sans frapper, et a payé la note."
+    sujet: en.adjoint_dine
+    photo: en.adjoint.aulard
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.fils_refuse
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('fils_refuse') && journal_has('fils_refuse')"
+    titre: "LE FILS N'A PAS EU SES CRAMPONS"
+    sous: "Trente-quatre ans, une clause de confidentialité, et un coach qui a dit non poliment. Le père a gardé le mot."
+    sujet: en.fils_aulard
+    photo: en.direction.fils_president
+    react: [ { card: co.re.vecchio_garde } ]

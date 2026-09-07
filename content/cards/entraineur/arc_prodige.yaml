@@ -93,7 +93,7 @@ cards:
     text: "Fardelli, dès huit heures : « Trente millions pour le petit Mbako. Le président a dit oui, la mère a dit non. Mon ami, on parle d'argent ou d'amitié ? »"
     left:
       label: "On vend, la caisse d'abord"
-      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}, outcome: vendu}
+      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}, outcome: vendu, char: {mbako: {statut: vendu}}, react: {card: en.re.mere_clause, chance: 0.6}}
       answer: "Gégé peint « JUDAS » sur la bâche. En doré, quand même."
     right:
       label: "Il reste, je le garde"
@@ -110,7 +110,7 @@ cards:
     text: "Fardelli, tout sourire : « Trente millions pour le petit. Le président a déjà dit oui, la mère a déjà dit non. Mon ami, on parle d'argent ou d'amitié ? »"
     left:
       label: "On vend, la caisse d'abord"
-      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}, outcome: vendu}
+      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}, outcome: vendu, char: {mbako: {statut: vendu}}, react: {card: en.re.mere_clause, chance: 0.6}}
       answer: "Gégé peint « JUDAS » sur la bâche. En doré, quand même."
     right:
       label: "Il reste, je l'ai lancé"
@@ -124,10 +124,10 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard, un fax à la main : « Trente millions pour un gamin qui n'a pas joué. J'ai pas le temps, j'ai un empire. Tu bloques la vente, ou tu la signes ? »"
+    text: "Vaubourg, un fax à la main : « Trente millions pour un gamin qui n'a pas joué. J'ai pas le temps, j'ai un empire. Tu bloques la vente, ou tu la signes ? »"
     left:
       label: "On signe, la caisse d'abord"
-      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}, outcome: vendu}
+      effects: {caisse: "+++", tribunes: "---", vestiaire: "-", set: [mbako_vendu], relation: {mbako: -2, fardelli: 1, gege: -1}, outcome: vendu, char: {mbako: {statut: vendu}}, react: {card: en.re.mere_clause, chance: 0.6}}
       answer: "Gégé peint « JUDAS » sur la bâche. En doré, quand même."
     right:
       label: "Je bloque, il reste"
@@ -142,7 +142,7 @@ cards:
     speaker: meneche
     tone: strategique
     once: true
-    text: "Ménèche, après le match : « Mbako vient de marquer contre vous, et il n'a pas célébré. Il vous a regardé{pg, select, f{e} other{}}. Juste une question, hors micro. Vous regrettez ? »"
+    text: "Massenet, après le match : « Mbako vient de marquer contre vous, et il n'a pas célébré. Il vous a regardé{pg, select, f{e} other{}}. Juste une question, hors micro. Vous regrettez ? »"
     left:
       label: "Je regrette"
       effects: {tribunes: "+", vestiaire: "-", relation: {mbako: 1}, journal: {text: "{annee} : Lian Mbako a marqué contre {club} sans célébrer. « Je regrette », a dit {nom}. Le vestiaire l'a lu deux fois.", poids: 2, tags: [presse, mercato]}}
@@ -169,3 +169,24 @@ cards:
       label: "Pas à seize ans"
       effects: {caisse: "+", vestiaire: "-", relation: {mbako: -2}, journal: {text: "{annee} : « Pas à seize ans » : {nom} a refusé le salaire de star. Le petit a rangé ses crampons dans un sac neuf.", poids: 2, tags: [caisse, agents]}}
       answer: "Il range le contrat. Le petit range ses crampons dans un sac neuf."
+
+  # ------------------------------------------------------- Réaction de l'arc
+  # Le build dérive `kind: reaction` de tout `react:` qui la cite : ne pas
+  # écrire `kind:`. Après les trois cartes d'offre (← on vend) : la mère lit la
+  # clause qu'elle a écrite (ch. 90 § 2.3, « tu as vendu un gamin ; deux
+  # personnes s'en souviennent, dont une pour toujours »).
+  - id: en.re.mere_clause
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, famille]
+    speaker: mere_mbako
+    tone: strategique
+    text: "La mère de Mbako, le contrat en trois exemplaires : « La clause de la page trois, c'est moi qui l'ai écrite, et vous l'avez signée sans la lire. Mon fils n'a besoin de personne. »"
+    left:
+      label: "Je l'ai lue, madame"
+      effects: {relation: {mere_mbako: -1}, parole: 1}
+      answer: "Elle repose les trois exemplaires. Le troisième est pour toi ; il est surligné."
+    right:
+      label: "Je l'ai lue, madame"
+      effects: {relation: {mere_mbako: -1}, parole: 1}
+      answer: "Elle repose les trois exemplaires. Le troisième est pour toi ; il est surligné."

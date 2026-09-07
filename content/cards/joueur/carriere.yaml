@@ -5,8 +5,8 @@ cards:
     tags: [mercato]
     speaker: fardelli
     once: true
-    when: "gauges.tribunes > 70 && season >= 1"
-    text: "Rocco Fardelli : « Un club lointain met une fortune sur la table. Ta clause est publique, ton club ne peut rien faire. »"
+    when: "gauges.tribunes > 70 && season >= 1 && !flag('exil_dore')"
+    text: "Rocco Fardelli : « Un club lointain met une fortune sur la table, {toi}. Ta clause est publique, ton club ne peut rien faire. »"
     left: {label: "Je pars", effects: {caisse: "+++", tribunes: "--", set: [galactique]}}
     right: {label: "Je reste", effects: {tribunes: "++", direction: "+"}}
 
@@ -15,7 +15,8 @@ cards:
     arc: vestiaire
     tags: [vestiaire, moment]
     speaker: brehaut
-    text: "88e, 1-1. Bréhaut, ballon sous le bras : « C'est moi le tireur désigné. Lâche ce ballon. »"
+    when: "!flag('mouton_noir')"
+    text: "88e, 1-1. Bréhaut, ballon sous le bras : « C'est moi le tireur désigné, {toi}. Lâche ce ballon. »"
     left: {label: "Prends-le", effects: {vestiaire: "++", tribunes: "-"}}
     right: {label: "Je tire", effects: {rand: [{p: 0.7, tribunes: "+++", vestiaire: "-"}, {p: 0, tribunes: "--", vestiaire: "-"}]}}
 
@@ -24,8 +25,8 @@ cards:
     arc: presse
     tags: [presse, sponsors]
     speaker: lea
-    when: "gauges.tribunes > 65"
-    text: "L'attachée de presse : « Tu as écarté les bouteilles du sponsor en conférence. Ils veulent des excuses. »"
+    when: "gauges.tribunes > 65 && !flag('special')"
+    text: "L'attachée de presse : « Vous avez écarté les bouteilles du sponsor en conférence, {toi}. Ils veulent des excuses. »"
     left: {label: "Buvez de l'eau", effects: {tribunes: "++", direction: "-", caisse: "-"}}
     right: {label: "Je m'excuse", effects: {direction: "+", tribunes: "-"}}
 
@@ -34,7 +35,7 @@ cards:
     arc: scandale
     tags: [scandale, risk:direction]
     speaker: null
-    when: "gauges.caisse < 45"
+    when: "gauges.caisse < 45 && !flag('pari')"
     text: "Un pote d'enfance : « Une petite mise sur ton propre match, juste le nombre de corners. Personne ne saura. »"
     left: {label: "OK, une fois", effects: {caisse: "+", set: [pisteur], schedule: [{card: jp.scandale.brigade, in: [4, 8]}]}, answer: "Tu ranges le téléphone, un peu vite."}
     right: {label: "Jamais", effects: {tribunes: "+"}}
@@ -46,27 +47,36 @@ cards:
     speaker: meneche
     sablier: true
     when: "flag('pisteur')"
-    text: "Ménèche, sourire en coin : « La brigade financière s'intéresse à des paris. On dit que ça vient du vestiaire. »"
+    text: "Massenet, sourire en coin : « La brigade financière s'intéresse à des paris. On dit que ça vient du vestiaire. »"
     left: {label: "Je nie tout", effects: {direction: "--", tribunes: "--"}}
     right: {label: "Je coopère", effects: {direction: "-", tribunes: "-", caisse: "-"}}
 
+  # Absorbée par l'intrigue « La liste des vingt-six » (arc jp.selection,
+  # bible ch. 10 § 6.5) : le texte existant reste, la carte devient l'étape 1
+  # et pose ses deux issues.
   - id: jp.selection.liste
     roles: [joueur]
-    arc: divers
-    tags: []
+    arc: instances
+    tags: [formation]
     speaker: legruet
-    when: "gauges.tribunes > 55 && !flag('international')"
-    text: "Le sélectionneur, au téléphone : « Tu es dans ma liste. Mais ton club veut que tu déclares forfait pour ta cheville. »"
-    left: {label: "J'y vais", effects: {tribunes: "++", direction: "-", set: [international]}}
-    right: {label: "Forfait", effects: {direction: "+", tribunes: "-"}}
+    tone: leger
+    text: "« {Toi}, vous êtes dans ma liste, on verra ça après le Congrès pour le reste. Votre club, lui, voudrait un forfait pour votre cheville. Vous venez ? »"
+    left:
+      label: "Je viens"
+      effects: {tribunes: "++", direction: "-", set: [international], outcome: cobalts, react: jp.re.aulard_cheville}
+      answer: "Tu viens. Le président l'apprend par Josiane ; il dit qu'il n'a pas le temps d'être fâché, et il l'est."
+    right:
+      label: "Je suis blessé, monsieur"
+      effects: {direction: "++", tribunes: "-", relation: {legruet: -1}, set: [selection_refusee], outcome: refus}
+      answer: "Tu déclares forfait. « On ne dit pas non deux fois », dit-il. Ce n'est pas une menace ; c'en est une."
 
   - id: jp.corps.genou
     roles: [joueur]
     arc: divers
     tags: [risk:tribunes]
     speaker: sabatier
-    when: "age >= 30"
-    text: "Doc Sabatier : « Ce genou, c'est six mois. On opère, ou on infiltre et tu joues le match de dimanche ? »"
+    when: "age >= 30 && !flag('genou_opere')"
+    text: "Doc Sabatier : « Ce genou, {toi}, c'est six mois. On opère, ou on infiltre et tu joues le match de dimanche ? Ça reste entre la table et moi. »"
     left: {label: "J'opère", effects: {tribunes: "-", set: [genou]}}
     right: {label: "Infiltration", effects: {tribunes: "+", vestiaire: "+", set: [genou]}}
 
@@ -75,6 +85,7 @@ cards:
     arc: famille
     tags: [famille, agents]
     speaker: null
+    when: "flag('agent_fardelli')"
     text: "Ton frère : « Vire Fardelli, je m'occupe de tout. Je suis de la famille, moi. »"
     left: {label: "D'accord, frérot", effects: {caisse: "-", relation: {fardelli: -2}}}
     right: {label: "Reste à ta place", effects: {tribunes: "+"}}
@@ -94,6 +105,6 @@ cards:
     arc: divers
     tags: [piege]
     speaker: clow
-    text: "Brian Clow, verre à la main : « Tu joues à ne pas perdre, gamin. Une jauge pleine tue autant qu'une vide. »"
+    text: "Dan Corven, un verre d'eau devant lui : « Tu joues à ne pas perdre, gamin. Une jauge pleine tue autant qu'une vide. »"
     left: {label: "Je hausse le ton", effects: {vestiaire: "++", tribunes: "-"}}
     right: {label: "Je reste discret", effects: {tribunes: "--"}}

@@ -45,7 +45,7 @@ cards:
       effects: {vestiaire: "+", direction: "+", relation: {gege: -1}}
       answer: "Il ne donne pas les noms. La tribune n'oublie rien, mais elle ne balance pas."
 
-  # ---------------------------------------------------------- Ménèche, −3
+  # ---------------------------------------------------------- Massenet, −3
   - id: en.meneche.trahison_dossier
     roles: [entraineur]
     arc: presse
@@ -53,14 +53,14 @@ cards:
     speaker: meneche
     tone: strategique
     once: true
-    text: "Ménèche, micro allumé : « Le dossier sort demain, {toi}. Toutes vos promesses, datées. Juste une question, hors micro : la une, ou la page trois ? »"
+    text: "Massenet, micro allumé : « Le dossier sort demain, {toi}. Toutes vos promesses, datées. Juste une question, hors micro : la une, ou la page trois ? »"
     left:
       label: "La une, je signe tout"
-      effects: {parole: -2, tribunes: "--", journal: {text: "{annee} : le dossier Ménèche en Une : toutes les promesses de {nom}, datées. Gégé a découpé l'article.", poids: 3, tags: [presse, tribunes]}}
+      effects: {parole: -2, tribunes: "--", journal: {text: "{annee} : le dossier Massenet en Une : toutes les promesses de {nom}, datées. Gégé a découpé l'article.", poids: 3, tags: [presse, tribunes]}}
       answer: "Douze promesses, douze dates. Gégé découpe l'article et le garde."
     right:
       label: "Page trois, et un entretien"
-      effects: {parole: -2, tribunes: "-", direction: "-", relation: {meneche: 1}, journal: {text: "{annee} : le dossier Ménèche en page trois. Le président a lu la page trois en premier.", poids: 3, tags: [presse, direction]}}
+      effects: {parole: -2, tribunes: "-", direction: "-", relation: {meneche: 1}, journal: {text: "{annee} : le dossier Massenet en page trois. Le président a lu la page trois en premier.", poids: 3, tags: [presse, direction]}}
       answer: "Page trois. Le président lit quand même la page trois en premier."
 
   # ------------------------------------------------------------ Mbako, +3
@@ -80,3 +80,347 @@ cards:
       label: "Tu devrais partir"
       effects: {direction: "+", caisse: "+", relation: {mbako: -1}}
       answer: "Il ne part pas. Il joue moins bien pendant un mois."
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # Les face-à-face de palier de la bible ch. 30 § 3.1 (la table des quatre-
+  # vingt-deux paliers) et § 3.2 (les transversaux), pour les quinze visages du
+  # casting qui n'en avaient pas encore. Trois règles : la trahison n'a qu'une
+  # sortie (on ne négocie pas un −3, on le lit) ; la faveur en a deux (accepter,
+  # ou demander pourquoi — ce qui coûte un cran) ; aucune n'est un drame, même
+  # quand elle fait mal. Un −3 pose l'Ennemi : `enemy('<id>')` devient vrai et
+  # les fins, les manchettes et les retrouvailles le lisent.
+  # ═══════════════════════════════════════════════════════════════════════════
+
+  # ---------------------------------------------------------- Bréhaut, −3 / +3
+  - id: co.brehaut.trahison_petition
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    text: "Bréhaut, la feuille pliée en quatre : « Le groupe vit bien. Il a écrit une lettre contre toi, vingt-deux noms, et j'ai signé en premier. »"
+    left: {label: "Je lis les noms", effects: {vestiaire: "---", direction: "--", enemy: [brehaut], journal: {text: "{annee} : vingt-deux noms sur une feuille contre {nom}. Le capitaine avait signé en premier.", poids: 3, tags: [vestiaire]}}, answer: "Vingt-deux noms. Le premier est celui qui te tutoyait hier."}
+    right: {label: "Je lis les noms", effects: {vestiaire: "---", direction: "--", enemy: [brehaut], journal: {text: "{annee} : vingt-deux noms sur une feuille contre {nom}. Le capitaine avait signé en premier.", poids: 3, tags: [vestiaire]}}, answer: "Vingt-deux noms. Le premier est celui qui te tutoyait hier."}
+
+  - id: co.brehaut.faveur_lettre
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    text: "Bréhaut, la même feuille : « Le groupe vit bien, et il a écrit pour toi. Vingt-deux noms, le mien en premier, parti par fax ce matin. »"
+    left: {label: "Merci, capitaine", effects: {vestiaire: "+++", direction: "+", set: [lettre_du_vestiaire], journal: {text: "{annee} : la lettre du vestiaire pour {nom}, vingt-deux noms, reçue par fax au premier étage.", poids: 3, tags: [vestiaire]}}, answer: "Le fax a chauffé onze minutes. Le président a lu la deuxième page."}
+    right: {label: "Qui a refusé de signer ?", effects: {vestiaire: "+", relation: {brehaut: -1}}, answer: "Il ne donne pas les noms. Le groupe vit bien parce qu'on ne les donne pas."}
+
+  # ------------------------------------------------------------ Vukić, −3 / +3
+  - id: co.vukic.trahison_serrure
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, vestiaire, risk:direction]
+    speaker: vukic
+    tone: strategique
+    once: true
+    text: "Vukić, une clé neuve dans la main : « Je te le dis parce que personne ne te le dira : le bureau est à moi depuis ce matin. La serrure aussi. »"
+    left: {label: "J'ai compris", effects: {vestiaire: "--", direction: "---", set: [cahier_perdu], enemy: [vukic], journal: {text: "{annee} : la serrure du bureau changée un mardi. Le cahier de {nom} est resté dedans.", poids: 3, tags: [direction]}}, answer: "Le cahier est resté dans le tiroir. Deux pages étaient de ta main."}
+    right: {label: "J'ai compris", effects: {vestiaire: "--", direction: "---", set: [cahier_perdu], enemy: [vukic], journal: {text: "{annee} : la serrure du bureau changée un mardi. Le cahier de {nom} est resté dedans.", poids: 3, tags: [direction]}}, answer: "Le cahier est resté dans le tiroir. Deux pages étaient de ta main."}
+
+  - id: co.vukic.faveur_trois_valises
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: vukic
+    tone: strategique
+    once: true
+    text: "Vukić, trois valises dans le couloir : « Je te le dis parce que personne ne te le dira : où tu vas, je vais. J'ai fait les sacs avant de demander. »"
+    left: {label: "Viens", effects: {vestiaire: "++", direction: "+", set: [trois_valises], journal: {text: "{annee} : trois valises dans le couloir. L'adjoint suit {nom}, et il n'a pas demandé où.", poids: 2, tags: [vestiaire]}}, answer: "Trois valises, un couloir, et personne pour porter la troisième."}
+    right: {label: "Pourquoi tu ferais ça ?", effects: {vestiaire: "+", relation: {vukic: -1}}, answer: "« Parce que personne ne te le dira. » Il remonte une valise à l'étage."}
+
+  # ---------------------------------------------------------- Vecchio, −3 / +3
+  - id: co.vecchio.trahison_une_rendue
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    text: "Vecchio, le maillot plié sur la table : « J'en ai vu d'autres, et j'ai toujours rendu le maillot au vestiaire. Aujourd'hui je le rends devant eux. »"
+    left: {label: "Je le prends", effects: {vestiaire: "---", tribunes: "-", enemy: [vecchio], journal: {text: "{annee} : le vieux gardien a rendu son maillot devant le groupe. Personne n'a parlé pendant une minute.", poids: 3, tags: [vestiaire]}}, answer: "Il le pose plié, à l'endroit. Le numéro est vers le haut."}
+    right: {label: "Je le prends", effects: {vestiaire: "---", tribunes: "-", enemy: [vecchio], journal: {text: "{annee} : le vieux gardien a rendu son maillot devant le groupe. Personne n'a parlé pendant une minute.", poids: 3, tags: [vestiaire]}}, answer: "Il le pose plié, à l'endroit. Le numéro est vers le haut."}
+
+  - id: co.vecchio.faveur_reunion
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    text: "Vecchio, gants aux mains : « J'en ai vu d'autres se faire manger par leur vestiaire. J'ai réuni le groupe hier soir, sans toi, pour toi. »"
+    left: {label: "Merci, Gigi", effects: {vestiaire: "+++", relation: {vecchio: 1}, journal: {text: "{annee} : une réunion de vestiaire sans le coach, pour le coach. Gigi Vecchio a parlé six minutes.", poids: 3, tags: [vestiaire]}}, answer: "Six minutes, gants aux mains. Personne ne l'a coupé."}
+    right: {label: "Qui parlait contre moi ?", effects: {vestiaire: "+", relation: {vecchio: -1}}, answer: "Il enlève ses gants pour répondre, puis les remet sans répondre."}
+
+  # --------------------------------------------------------- Sabatier, −3 / +3
+  - id: co.sabatier.trahison_dossier
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [presse, direction, risk:direction]
+    speaker: sabatier
+    tone: strategique
+    once: true
+    text: "Sabatier, une chemise ouverte : « Ça restait entre la table et moi. Depuis jeudi, ça reste entre la table, moi et trois personnes qui ont demandé poliment. »"
+    left: {label: "Je lis la page trois", effects: {direction: "--", vestiaire: "--", enemy: [sabatier], journal: {text: "{annee} : le dossier médical est sorti de la table du Doc. Page trois, deux dates et un nom.", poids: 3, tags: [presse, direction]}}, answer: "Page trois : deux dates, une signature, et une piqûre que tu avais oubliée."}
+    right: {label: "Je lis la page trois", effects: {direction: "--", vestiaire: "--", enemy: [sabatier], journal: {text: "{annee} : le dossier médical est sorti de la table du Doc. Page trois, deux dates et un nom.", poids: 3, tags: [presse, direction]}}, answer: "Page trois : deux dates, une signature, et une piqûre que tu avais oubliée."}
+
+  - id: co.sabatier.faveur_controle
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, scandale, rescue:direction]
+    speaker: sabatier
+    tone: strategique
+    once: true
+    text: "Sabatier, à voix basse : « Ça reste entre la table et moi : il y a un contrôle jeudi, à huit heures. Et je ne te l'ai pas dit. »"
+    left: {label: "Merci, docteur", effects: {direction: "+", vestiaire: "++", journal: {text: "{annee} : le contrôle de jeudi huit heures était attendu. Personne n'a jamais su par qui.", poids: 2, tags: [vestiaire, scandale]}}, answer: "L'armoire est rangée mercredi soir. Il n'y était pas."}
+    right: {label: "Pourquoi me prévenir ?", effects: {direction: "+", relation: {sabatier: -1}}, answer: "« Parce que la table est à moi. » Il referme le tiroir du haut."}
+
+  # ------------------------------------------------------------- Corven, −3 / +3
+  - id: co.clow.trahison_devant
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, risk:direction]
+    speaker: clow
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Corven, sans se lever : « Je ne dirais pas que j'étais le meilleur, mais j'étais devant. Toi, tu es derrière moi, et tu y resteras. »"
+    left: {label: "Je m'en vais", effects: {vestiaire: "-", direction: "--", parole: -1, enemy: [clow], journal: {text: "{annee} : le vieux mentor a rayé {nom} de sa liste. Il l'a dit devant deux personnes, exprès.", poids: 2, tags: [vestiaire]}}, answer: "Il ne se lève pas. C'est la première fois qu'il ne se lève pas."}
+    right: {label: "Je m'en vais", effects: {vestiaire: "-", direction: "--", parole: -1, enemy: [clow], journal: {text: "{annee} : le vieux mentor a rayé {nom} de sa liste. Il l'a dit devant deux personnes, exprès.", poids: 2, tags: [vestiaire]}}, answer: "Il ne se lève pas. C'est la première fois qu'il ne se lève pas."}
+
+  - id: co.clow.faveur_telegramme
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:tribunes]
+    speaker: clow
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Corven, un télégramme à la main : « Six mots, pas un de plus. Je ne dirais pas que j'étais le meilleur ; toi, tu pourras le dire. »"
+    left: {label: "Je le garde", effects: {tribunes: "+", parole: 2, set: [telegramme_clow], journal: {text: "{annee} : six mots par télégramme, du vieux monsieur. {nom} les a comptés deux fois.", poids: 3, tags: [objet, vestiaire]}}, answer: "Six mots. Tu les comptes deux fois, et ils font toujours six."}
+    right: {label: "Six mots, c'est court", effects: {parole: 1, relation: {clow: -1}}, answer: "« C'est un télégramme. » Il le reprend et le remet dans sa poche."}
+
+  # ------------------------------------------------------------------ Mbako, −3
+  - id: co.mbako.trahison_clause
+    roles: [entraineur, joueur]
+    arc: mercato
+    tags: [mercato, vestiaire, risk:vestiaire]
+    speaker: mbako
+    tone: strategique
+    once: true
+    text: "Mbako, sa mère derrière lui : « Je veux jouer. Maintenant, et ailleurs. La clause, c'est elle qui l'a écrite ; vous l'avez signée sans la lire. »"
+    left: {label: "Je relis la clause", effects: {vestiaire: "--", caisse: "-", enemy: [mbako], journal: {text: "{annee} : la clause du petit a été levée au centime. Sa mère l'avait écrite elle-même.", poids: 3, tags: [mercato]}}, answer: "Onze lignes, une virgule bien placée. Elle l'avait écrite en trois jours."}
+    right: {label: "Je relis la clause", effects: {vestiaire: "--", caisse: "-", enemy: [mbako], journal: {text: "{annee} : la clause du petit a été levée au centime. Sa mère l'avait écrite elle-même.", poids: 3, tags: [mercato]}}, answer: "Onze lignes, une virgule bien placée. Elle l'avait écrite en trois jours."}
+
+  # -------------------------------------------------- la mère de Mbako, −3 / +3
+  - id: co.mere_mbako.trahison_lea
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [presse, famille, risk:tribunes]
+    speaker: mere_mbako
+    tone: strategique
+    once: true
+    text: "La mère de Mbako, téléphone à l'oreille : « Mon fils n'a besoin de personne. La journaliste, elle, avait besoin de trois choses ; je les lui ai données. »"
+    left: {label: "Je lis l'article", effects: {tribunes: "--", direction: "-", enemy: [mere_mbako], journal: {text: "{annee} : trois choses racontées à la presse par la mère du petit. Les trois étaient vraies.", poids: 3, tags: [presse, famille]}}, answer: "Trois choses. Les trois sont vraies, et c'est ce qui fait mal."}
+    right: {label: "Je lis l'article", effects: {tribunes: "--", direction: "-", enemy: [mere_mbako], journal: {text: "{annee} : trois choses racontées à la presse par la mère du petit. Les trois étaient vraies.", poids: 3, tags: [presse, famille]}}, answer: "Trois choses. Les trois sont vraies, et c'est ce qui fait mal."}
+
+  - id: co.mere_mbako.faveur_numero
+    roles: [entraineur, joueur]
+    arc: mercato
+    tags: [mercato, famille, rescue:direction]
+    speaker: mere_mbako
+    tone: strategique
+    once: true
+    text: "La mère de Mbako, un papier plié : « Mon fils n'a besoin de personne, mais vous, si. Voilà mon numéro direct ; ne le donnez pas. »"
+    left: {label: "Je ne le donnerai pas", effects: {direction: "++", vestiaire: "+", journal: {text: "{annee} : le numéro direct de la mère du petit, plié en quatre, dans la poche de {nom}.", poids: 2, tags: [mercato, famille]}}, answer: "Un papier plié en quatre. Il ne quittera pas la poche intérieure."}
+    right: {label: "Pourquoi moi ?", effects: {direction: "+", relation: {mere_mbako: -1}}, answer: "« Parce que vous l'avez fait jouer. » Elle reprend le papier, puis le rend."}
+
+  # --------------------------------------------------------- Fardelli, −3 / +3
+  - id: co.fardelli.trahison_signe_ailleurs
+    roles: [entraineur, joueur]
+    arc: mercato
+    tags: [agents, mercato, risk:direction]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, sans cigare : « Mon ami, on parle d'argent ou d'amitié ? On a signé cette nuit, ailleurs, pendant que tu dormais. »"
+    left: {label: "Je demande où", effects: {direction: "--", caisse: "-", enemy: [fardelli], journal: {text: "{annee} : signé ailleurs pendant la nuit. L'agent a appelé {nom} à onze heures, pour le dire.", poids: 3, tags: [agents, mercato]}}, answer: "Il donne la ville, pas le nom. Le nom, c'est pour les amis."}
+    right: {label: "Je ne demande rien", effects: {direction: "--", caisse: "-", enemy: [fardelli], journal: {text: "{annee} : signé ailleurs pendant la nuit. L'agent a appelé {nom} à onze heures, pour le dire.", poids: 3, tags: [agents, mercato]}}, answer: "Il donne la ville quand même, pas le nom. Le nom, c'est pour les amis."}
+
+  - id: co.fardelli.faveur_premier_appel
+    roles: [entraineur, joueur]
+    arc: mercato
+    tags: [agents, mercato, rescue:caisse]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, carnet ouvert : « Mon ami, il y a trois clubs sur cette page et tu es mon premier appel. On parle d'argent, mais dans cet ordre-là. »"
+    left: {label: "Je t'écoute", effects: {caisse: "++", direction: "+", journal: {text: "{annee} : trois clubs sur une page de carnet. {nom} a été le premier appel, pour une fois.", poids: 2, tags: [agents, mercato]}}, answer: "Il compose devant toi. Le deuxième numéro décroche tout de suite."}
+    right: {label: "Pourquoi moi d'abord ?", effects: {caisse: "+", relation: {fardelli: -1}}, answer: "« Par amitié. » Il referme le carnet avant que tu voies la page."}
+
+  # ------------------------------------------------------------------ Massenet, +3
+  - id: co.meneche.faveur_enterre
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [presse, rescue:tribunes]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Massenet, une chemise sous le bras : « Juste une question, hors micro : ce dossier, je l'enterre. Je vous le dis pour que vous sachiez qu'il existait. »"
+    left: {label: "Merci", effects: {tribunes: "+", direction: "+", journal: {text: "{annee} : un dossier enterré par le journaliste, et dit à {nom} pour qu'il le sache.", poids: 2, tags: [presse]}}, answer: "Il ne l'ouvre pas. Il te laisse regarder l'épaisseur, c'est tout."}
+    right: {label: "Montrez-le-moi", effects: {tribunes: "+", relation: {meneche: -1}}, answer: "« Hors micro, c'est hors micro. » Il remet la chemise sous le bras."}
+
+  # -------------------------------------------------------------- Léa, −3 / +3
+  - id: co.lea.trahison_une_question
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [presse, tribunes, risk:tribunes]
+    speaker: lea
+    tone: strategique
+    once: true
+    text: "Léa, magnéto allumé : « Vous confirmez ? Une seule question, et c'est celle-là qui fera la Une demain matin. »"
+    left: {label: "Je réponds", effects: {tribunes: "---", parole: -1, enemy: [lea], journal: {text: "{annee} : une question, une réponse, une Une. {NOM} tenait sur trois colonnes.", poids: 3, tags: [presse, tribunes]}}, answer: "Tu réponds onze mots. Neuf sont en Une le lendemain."}
+    right: {label: "Je réponds", effects: {tribunes: "---", parole: -1, enemy: [lea], journal: {text: "{annee} : une question, une réponse, une Une. {NOM} tenait sur trois colonnes.", poids: 3, tags: [presse, tribunes]}}, answer: "Tu réponds onze mots. Neuf sont en Une le lendemain."}
+
+  - id: co.lea.faveur_vingt_quatre_heures
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [presse, rescue:direction]
+    speaker: lea
+    tone: strategique
+    once: true
+    text: "Léa, à voix basse : « Vous confirmez ? Alors sachez que ça sort demain à six heures. Vous avez vingt-quatre heures d'avance sur tout le monde. »"
+    left: {label: "Merci pour l'avance", effects: {direction: "++", tribunes: "+", journal: {text: "{annee} : vingt-quatre heures d'avance sur un papier de six heures du matin. {nom} n'a pas dormi.", poids: 2, tags: [presse]}}, answer: "Vingt-quatre heures. Tu en passes trois à choisir qui appeler d'abord."}
+    right: {label: "Pourquoi me prévenir ?", effects: {direction: "+", relation: {lea: -1}}, answer: "« Parce que vous répondez au téléphone. » Elle raccroche la première."}
+
+  # ----------------------------------------------------------- Vaubourg, −3 / +3
+  # Écart d'import assumé : la bible donne une seule sortie à une trahison ; ce
+  # palier en a deux, parce que la FIN co_cheque (§ 5.2) est précisément
+  # « accepter l'indemnité quand le patron la propose », et que c'est ici
+  # qu'elle est proposée.
+  - id: co.aulard.trahison_cheque_non_date
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, caisse, risk:direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, le carnet à souches ouvert : « J'ai pas le temps, j'ai un empire. Voilà le chèque ; je ne le date pas, {toi}. Tu le dates toi-même. »"
+    left: {label: "Je ne le prends pas", effects: {direction: "---", parole: 2, set: [cheque_non_date], enemy: [aulard], journal: {text: "{annee} : un chèque non daté refusé dans un bureau du premier étage. Le carnet est resté ouvert.", poids: 3, tags: [direction, caisse]}}, answer: "Le carnet reste ouvert sur le bureau. Personne ne le referme."}
+    right: {label: "Je prends le chèque", effects: {caisse: "++", set: [cheque_non_date], end: co_cheque}, answer: "Il était gros, la porte aussi."}
+
+  - id: co.aulard.faveur_rappel
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, rescue:direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    # Le palier +3 se joue pendant qu'il est ton président : c'est une promesse
+    # pour plus tard, pas des retrouvailles (bible 02 § co.aulard.faveur_rappel,
+    # « Je te rappelle toujours »). Le « cinq ans après » appartient à
+    # co.retrouvailles.aulard_sourire, qui ne sort qu'après un changement.
+    text: "Vaubourg, au téléphone, sans dire bonjour : « Je vire souvent et je rappelle toujours, {toi} : le jour où ça tombe, tu as un bureau chez moi. J'ai pas le temps, j'ai un empire. »"
+    left: {label: "Je garde le numéro", effects: {direction: "++", relation: {aulard: 1}, set: [aulard_rappelle], journal: {text: "{annee} : « Je vire souvent, je rappelle toujours. » Vaubourg a promis un bureau à {nom}.", poids: 3, tags: [direction]}}, answer: "Il raccroche. Josiane note l'heure : c'est une promesse, elle les date."}
+    right: {label: "Je n'en aurai pas besoin", effects: {direction: "+", tribunes: "+", parole: 1, set: [aulard_rappelle], journal: {text: "{annee} : Vaubourg a offert un bureau à {nom}, qui a dit non. Il a noté quand même.", poids: 2, tags: [direction]}}, answer: "Il rit. Il note quand même."}
+
+  # ----------------------------------------------------------- Ilyas, −3 / +3
+  - id: co.nassir.trahison_notification
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, caisse, risk:direction]
+    speaker: nassir
+    tone: strategique
+    once: true
+    text: "Ilyas, l'écran tourné vers toi : « Ce n'est pas un club, c'est un actif. Deux lignes de notification, et vous n'êtes plus dans le périmètre. »"
+    left: {label: "Je lis les deux lignes", effects: {direction: "---", caisse: "-", enemy: [nassir], journal: {text: "{annee} : deux lignes de notification, et {nom} sort du périmètre. L'écran s'est éteint tout seul.", poids: 3, tags: [direction]}}, answer: "Deux lignes, une virgule. L'écran s'éteint avant que tu répondes."}
+    right: {label: "Je lis les deux lignes", effects: {direction: "---", caisse: "-", enemy: [nassir], journal: {text: "{annee} : deux lignes de notification, et {nom} sort du périmètre. L'écran s'est éteint tout seul.", poids: 3, tags: [direction]}}, answer: "Deux lignes, une virgule. L'écran s'éteint avant que tu répondes."}
+
+  - id: co.nassir.faveur_un_club
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, caisse, rescue:caisse]
+    speaker: nassir
+    tone: strategique
+    once: true
+    text: "Ilyas, l'écran tourné vers toi : « Ce n'est pas un club, c'est un actif, et je viens d'en acheter un pour vous. Il est en bas du tableau. »"
+    left: {label: "J'accepte", effects: {direction: "++", caisse: "++", journal: {text: "{annee} : un club acheté pour {nom}, en bas d'un tableau, un mardi, en visioconférence.", poids: 3, tags: [direction, caisse]}}, answer: "Il accepte deux points sur trois, et note le troisième."}
+    right: {label: "Pourquoi moi ?", effects: {direction: "+", relation: {nassir: -1}}, answer: "« Parce que la ligne est lisible. » Il ferme l'onglet, pas le fichier."}
+
+  # ---------------------------------------------------------- Josiane, −3 / +3
+  - id: co.josiane.trahison_sous_les_autres
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane, une pile de chemises : « J'en ai vu passer, vous savez. Le vôtre, je viens de le ranger sous les autres, et il y restera. »"
+    left: {label: "Je regarde la pile", effects: {direction: "--", vestiaire: "-", enemy: [josiane], journal: {text: "{annee} : le dossier de {nom} rangé sous les autres, un vendredi, sans commentaire.", poids: 2, tags: [direction]}}, answer: "La pile fait onze centimètres. Le tien est en bas depuis vendredi."}
+    right: {label: "Je regarde la pile", effects: {direction: "--", vestiaire: "-", enemy: [josiane], journal: {text: "{annee} : le dossier de {nom} rangé sous les autres, un vendredi, sans commentaire.", poids: 2, tags: [direction]}}, answer: "La pile fait onze centimètres. Le tien est en bas depuis vendredi."}
+
+  # Bible ch. 30 § 3.2 — « La seule qui sait » : le face-à-face transversal.
+  - id: co.josiane.faveur_classeur
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane, un classeur vert sur les genoux : « J'en ai vu passer, et j'ai gardé celui-là pour le jour où quelqu'un en aurait besoin. Vous le lisez ici. »"
+    left: {label: "Je le lis ici", effects: {direction: "++", set: [classeur_josiane], journal: {text: "{annee} : douze pages dans un classeur vert, lues sur place. La signature n'était pas celle de {nom}.", poids: 3, tags: [direction, objet]}}, answer: "Douze pages, trois dates, une signature qui n'est pas la tienne."}
+    right: {label: "Pourquoi moi ?", effects: {direction: "+", relation: {josiane: -1}}, answer: "Elle referme le classeur. « Parce que vous avez dit bonjour », et elle sort."}
+
+  # ----------------------------------------------------------- Aubert, −3 / +3
+  - id: co.aubert.trahison_subvention
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, caisse, risk:caisse]
+    speaker: aubert
+    tone: strategique
+    once: true
+    text: "Madame Aubert, en séance : « Le stade, c'est de l'argent public. La subvention du club sort de l'ordre du jour, et de l'année. »"
+    left: {label: "Je note la date", effects: {caisse: "---", direction: "-", enemy: [aubert], journal: {text: "{annee} : subvention coupée en séance du conseil. Le compte rendu tient en une ligne.", poids: 3, tags: [direction, caisse]}}, answer: "Le compte rendu tient en une ligne. Elle a fait relire la ligne."}
+    right: {label: "Je note la date", effects: {caisse: "---", direction: "-", enemy: [aubert], journal: {text: "{annee} : subvention coupée en séance du conseil. Le compte rendu tient en une ligne.", poids: 3, tags: [direction, caisse]}}, answer: "Le compte rendu tient en une ligne. Elle a fait relire la ligne."}
+
+  - id: co.aubert.faveur_ministere
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, rescue:direction]
+    speaker: aubert
+    tone: strategique
+    once: true
+    text: "Madame Aubert, la main sur le combiné : « Le stade, c'est de l'argent public, et le ministère décroche quand j'appelle. Là, il décroche pour vous. »"
+    left: {label: "Merci, madame la maire", effects: {direction: "++", caisse: "+", journal: {text: "{annee} : le ministère a décroché pour {nom}. La maire a gardé la main sur le combiné.", poids: 2, tags: [direction]}}, answer: "Elle passe le combiné sans lâcher le fil. Ça dure quatre minutes."}
+    right: {label: "Ça me coûte quoi ?", effects: {direction: "+", relation: {aubert: -1}}, answer: "« Une inauguration. » Elle repose le combiné et note une date."}
+
+  # ---------------------------------------------------------- Berthomier, −3 / +3
+  - id: co.legruet.trahison_avant_toi
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: legruet
+    tone: strategique
+    once: true
+    text: "Berthomier, dans un couloir : « On verra ça après le Congrès, disais-je. Le Congrès a eu lieu ce matin, et j'ai nommé quelqu'un d'autre. »"
+    left: {label: "Je le félicite", effects: {direction: "--", tribunes: "-", enemy: [legruet], journal: {text: "{annee} : la Fédération a nommé quelqu'un d'autre avant de prévenir {nom}. Le couloir était long.", poids: 3, tags: [direction]}}, answer: "Il te le dit dans un couloir. Le couloir fait quarante mètres."}
+    right: {label: "Je le félicite", effects: {direction: "--", tribunes: "-", enemy: [legruet], journal: {text: "{annee} : la Fédération a nommé quelqu'un d'autre avant de prévenir {nom}. Le couloir était long.", poids: 3, tags: [direction]}}, answer: "Il te le dit dans un couloir. Le couloir fait quarante mètres."}
+
+  - id: co.legruet.faveur_les_districts
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, rescue:tribunes]
+    speaker: legruet
+    tone: strategique
+    once: true
+    text: "Berthomier, sourire : « On verra ça après le Congrès, et le Congrès a voté. Trois cents districts se sont levés, et c'était pour vous. »"
+    left: {label: "Merci, président", effects: {direction: "++", tribunes: "+", journal: {text: "{annee} : trois cents districts se sont levés au Congrès pour {nom}. Deux sont restés assis.", poids: 3, tags: [direction]}}, answer: "Trois cents mains levées, deux restées baissées. Il compte les deux."}
+    right: {label: "Qui a voté contre ?", effects: {direction: "+", relation: {legruet: -1}}, answer: "« On verra ça après le Congrès. » Il sourit et regarde ailleurs."}

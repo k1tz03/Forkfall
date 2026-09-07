@@ -1,0 +1,62 @@
+# « La commission de discipline » — salle 3 ; on y est convoqué, on y attend,
+# on y « examine » ; Berthomier a un tampon et deux options, et aucune n'est la
+# vérité (bible ch. 11 § 2.4, tardive 5). Intrigue d'instances : féroce,
+# courte, sans blague sur l'attente, qui est la vraie sanction.
+#
+# Entrée : `requires: [fede_dossier]` — le dossier est posé par
+# `en.salaires.commission` (la lettre où le club a répondu « le club ») ou par
+# `en.evt.enveloppe_federation` (la nuit où tu as nié). Les deux planifient
+# aussi la convocation par `schedule`.
+# Chemins : convocation (la chemise avec tout, ou avec ce qu'il faut ; variante
+# « encore » sur plays) → vidal (le vice de forme) → salle_3 (le tampon a deux
+# faces ; variante « j'assume tout » si l'enveloppe est promise et non niée) →
+# tribune (les trois matchs, place 14C, Vukić au talkie).
+# Issues : blanchi | sanction | valise.
+arcs:
+  - id: en.commission_discipline
+    title: "La commission de discipline"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: instances
+    carrier: legruet
+    cast: [legruet, josiane, vukic]
+    requires: [fede_dossier]
+    replay: { after: 2, max: 2 }
+    issues: [blanchi, sanction, valise]
+    traces:
+      commission_blanchi:  "{annee} : la Commission de discipline a blanchi {prenom} {nom}. Berthomier a un service en attente."
+      commission_sanction: "{annee} : trois matchs de tribune pour {nom}. Vukić a tenu le banc ; il l'a rendu."
+    hint: "Salle 3, mardi, dix heures. On y attend jusqu'à midi."
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    epilogue:
+      direction: "-"
+      journal: "{annee} : la Commission a suivi {nom} jusqu'à son nouveau club. Salle 3 a une chaise à son nom."
+    steps:
+      - id: convocation
+        card:
+          - { id: en.commission.convocation_encore, if: "plays('en.commission_discipline') >= 1" }
+          - { id: en.commission.convocation }
+        next: [ { step: vidal, in: [1, 2] } ]
+      - id: vidal
+        card: en.commission.vidal
+        next: [ { step: salle_3, in: [2, 4] } ]
+      - id: salle_3
+        card:
+          # Écart assumé : la bible réserve la troisième sortie (« J'assume tout »)
+          # au cas « enveloppe promise et non niée ». Or la convocation arrive
+          # justement par le `schedule` de la nuit où tu as nié : sans lever
+          # l'exclusion, la variante n'est jamais servie.
+          - { id: en.commission.salle_3_valise, if: "flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
+          - { id: en.commission.salle_3_vice, if: "flag('vice_de_forme')" }
+          - { id: en.commission.salle_3 }
+        next: [ { step: tribune, if: "flag('commission_sanction')", in: [1, 3] } ]
+      - id: tribune
+        card: en.commission.tribune
+        next: []

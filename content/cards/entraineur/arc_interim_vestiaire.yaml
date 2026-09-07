@@ -1,0 +1,84 @@
+# Cartes d'étape de « Le vestiaire de l'ancien » (arcs/entraineur/interim_longues.yaml),
+# intrigue signature du postulat `interimaire`. Quatre étapes : la craie (deux
+# variantes, dont celle du fil rouge « vestiaire »), les plots, le capitaine,
+# le téléphone (l'ancien appelle le vestiaire ; voix sans portrait).
+# Traces : methodes_ancien, nouvelle_methode, brehaut_ecarte.
+cards:
+  - id: en.vestiaire_ancien.craie
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut, devant le tableau noir plutôt que devant toi : « Le groupe vit bien, coach, il vivait bien avant, avec ça au mur. On la garde, ou tu l'effaces maintenant ? »"
+    left:
+      label: "Je l'efface"
+      effects: {vestiaire: "--", direction: "+", force: -2, set: [nouvelle_methode], outcome: change}
+      answer: "L'éponge est sèche. Il reste un fantôme de craie, en 4-4-2."
+    right:
+      label: "On la garde, pour l'instant"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1}, set: [methodes_ancien], outcome: methodes, react: en.re.brehaut_merci}
+      answer: "Le groupe te fait dire merci. Il te fait dire aussi qu'il reviendra."
+
+  - id: en.vestiaire_ancien.craie_vote
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut, une feuille pliée à la main : « Le groupe vit bien, et le groupe a voté hier soir, sans toi : on garde tout jusqu'en juin. Tu signes en bas, ou tu effaces le vote aussi ? »"
+    left:
+      label: "J'efface le vote avec"
+      effects: {vestiaire: "--", direction: "+", force: -2, set: [nouvelle_methode], outcome: change}
+      answer: "Tu effaces les deux. La feuille reste sur le banc, pliée, toute la semaine."
+    right:
+      label: "Je signe en bas"
+      effects: {vestiaire: "++", parole: -1, relation: {brehaut: 1}, set: [methodes_ancien], outcome: methodes, react: en.re.brehaut_merci}
+      answer: "Onze signatures, puis la tienne. Le groupe te fait dire merci, et qu'il reviendra."
+
+  - id: en.vestiaire_ancien.plots
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    tone: leger
+    text: "Vukić déplace un plot de dix centimètres, puis le remet : « Ils sont là parce que c'est moi qui les pose, et je les posais pour lui. Tu veux les tiens, ou les miens ? »"
+    left:
+      label: "Les tiens, tu les connais"
+      effects: {vestiaire: "+", relation: {vukic: 1}, force: 1}
+      answer: "La séance est la même. Le regard du groupe, un peu moins."
+    right:
+      label: "Les miens, dès demain"
+      effects: {vestiaire: "-", relation: {vukic: -1}, force: -1, direction: "+"}
+      answer: "Il pose les tiens. De travers le premier jour ; droits le deuxième."
+
+  - id: en.vestiaire_ancien.brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio, le seul à te regarder : « Ils t'écoutent et ils regardent le capitaine pour savoir s'ils ont le droit. J'en ai vu d'autres. Tu lui parles avant, ou devant tout le monde ? »"
+    left:
+      label: "Avant, entre nous"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, direction: "-"}
+      answer: "Tu lui parles dans le couloir. Il traduit mieux ; il traduit toujours."
+    right:
+      label: "Devant tout le monde"
+      effects: {vestiaire: "--", direction: "+", relation: {brehaut: -2}, set: [brehaut_ecarte], outcome: ecarte}
+      answer: "Tu le mets sur le banc. Le vestiaire se tait ; on ne sait pas pour qui."
+
+  - id: en.vestiaire_ancien.telephone
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    tone: strategique
+    text: "Le téléphone mural du vestiaire, un bar derrière la voix : « Je voulais parler au groupe, pas à vous. Dites-leur que le bloc était bien, c'est le mien. Vous transmettez ? »"
+    left:
+      label: "Je transmets, mot pour mot"
+      effects: {vestiaire: "+", direction: "-", parole: 1, relation: {brehaut: 1}}
+      answer: "Le groupe hoche la tête. Il hoche la tête pour lui."
+    right:
+      label: "Je raccroche"
+      effects: {vestiaire: "-", direction: "+", relation: {brehaut: -1}}
+      answer: "Bréhaut le rappelle depuis le parking. Tu le vois par la fenêtre."

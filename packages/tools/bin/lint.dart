@@ -228,6 +228,14 @@ void main() {
     for (var i = 0; i < 2; i++) {
       if (hasNamePlaceholder(labels[i])) errors.add('$id/${i == 0 ? 'left' : 'right'}: le nom du joueur n\'entre jamais dans un libellé de bouton');
     }
+    // Charte § 4.1 : « un seul bouton = deux sorties identiques ». Le moteur
+    // rend en un seul bouton toute Nouvelle et toute « Nouvelle du passé »
+    // (engine `single`), et il affiche alors le libellé de DROITE : deux
+    // libellés différents laissent celui de gauche en texte mort, et rien ne
+    // garantit que c'est celui de droite que l'auteur voulait montrer.
+    if ((card['kind'] == 'nouvelle' || card['kind'] == 'passe') && labels[0] != labels[1]) {
+      errors.add('$id: carte à un seul bouton (${card['kind']}) avec deux libellés — « ${labels[0]} » à gauche est du texte mort, seul « ${labels[1]} » s\'affiche');
+    }
     final nameHits = RegExp(r'\{(prenom|nom|NOM|initiales|toi|Toi|joueur|protagoniste)\}').allMatches(text).length;
     if (nameHits > 1) warnings.add('$id: le nom du joueur apparaît $nameHits fois dans le texte (une fois au plus)');
     if (hasNamePlaceholder(text) || answers.any(hasNamePlaceholder)) {
@@ -441,6 +449,46 @@ void main() {
       }
     }
   }
+  // --- Les set-pieces (spec variété §1.12, §2.7) : placeholders connus, `{toi}`
+  // avec un locuteur, aucun nom réel, et le budget d'écriture par rôle.
+  final setpieces = (bundle['setpieces'] as Map? ?? const {}).cast<String, dynamic>();
+  final spByRole = <String, int>{};
+  setpieces.forEach((beat, list) {
+    final variants = (list as List).cast<Map<String, dynamic>>();
+    for (int i = 0; i < variants.length; i++) {
+      final v = variants[i];
+      final where = 'setpieces.yaml/$beat[$i]';
+      scanAst(v['when'], '$where/when');
+      for (final key in const ['text', 'left', 'right', 'answer_left', 'answer_right']) {
+        final t = v[key];
+        if (t is! String) continue;
+        for (final ph in unknownPlaceholders(t, {...knownPlaceholders, 'patron', 'objectif_min', 'adversite', 'vestiaire_mot', 'tour', 'minute', 'score', 'gm_score'})) {
+          errors.add('$where/$key: placeholder inconnu {$ph}');
+        }
+        if (placeholdersOf(t).any((x) => x == 'toi' || x == 'Toi') && v['speaker'] == null) {
+          errors.add('$where/$key: {toi} sans `speaker` (l\'adresse est celle du locuteur)');
+        }
+        final lower = t.toLowerCase();
+        for (final bad in kBlacklist) {
+          if (lower.contains(bad)) errors.add('$where/$key: nom/marque réel(le) interdit(e) "$bad"');
+        }
+        if (const ['left', 'right'].contains(key) && hasNamePlaceholder(t)) {
+          errors.add('$where/$key: le nom du joueur n\'a rien à faire dans un libellé de bouton');
+        }
+      }
+      final roles = (v['roles'] as List?)?.map((e) => e.toString()).toList() ?? const <String>[];
+      for (final r in roles.isEmpty ? roleIds.toList() : roles) {
+        if (v['when'] != null || roles.isNotEmpty) spByRole[r] = (spByRole[r] ?? 0) + 1;
+      }
+    }
+  });
+  for (final r in roleIds) {
+    final n = spByRole[r] ?? 0;
+    if (setpieces.isNotEmpty && n < 20) {
+      warnings.add('setpieces.yaml: $n variante(s) conditionnée(s) pour le rôle « $r » (budget ≈ 60 lignes par rôle, spec variété §1.12)');
+    }
+  }
+
   for (final ch in chars) {
     ((ch['adresse'] as Map?) ?? const {}).forEach((role, byExpr) {
       (byExpr as Map).forEach((expr, tpl) {
@@ -470,12 +518,22 @@ void main() {
       if (st['outcome'] != null) (outcomesPosed[id] ??= {}).add(st['outcome'].toString());
     }
   }
+  // Une issue peut être posée dans une branche de `rand:` (le moteur applique
+  // les effets récursivement, engine `_applyEffects`) : le scanner descend donc
+  // dans `rand`, sinon `co.derby` passe pour n'avoir jamais posé `gagne`.
+  void collectOutcomes(String arcId, Map<dynamic, dynamic> eff) {
+    final o = eff['outcome'];
+    if (o != null) (outcomesPosed[arcId] ??= {}).add(o.toString());
+    for (final b in (eff['rand'] as List?) ?? const []) {
+      if (b is Map) collectOutcomes(arcId, b);
+    }
+  }
+
   for (final c in cards) {
     final arcId = c['arcId']?.toString();
     if (arcId == null) continue;
     for (final side in ['left', 'right']) {
-      final o = ((c[side] as Map)['effects'] as Map)['outcome'];
-      if (o != null) (outcomesPosed[arcId] ??= {}).add(o.toString());
+      collectOutcomes(arcId, (c[side] as Map)['effects'] as Map);
     }
   }
   for (final a in arcs) {
@@ -548,8 +606,24 @@ void main() {
     budget(themesSeen.length >= 6, '${themesSeen.length} thèmes (attendu ≥ 6)');
     budget(carriers.length >= 6, '${carriers.length} porteurs (attendu ≥ 6)');
     budget(tardives >= 3, '$tardives intrigues tardives min_season ≥ 2 (attendu ≥ 3)');
+    // Un visage du casting doit avoir deux histoires. Les Cartes Événement du
+    // rôle comptent : elles sont tirées dans la carrière comme les intrigues du
+    // réservoir (la bible donne à Aubert « la D2 et la mairie » **et** « la
+    // tribune vétuste » : la seconde est un événement, pas une entrée de pool).
+    final postRole = p['role']?.toString();
+    final eventArcs = <String>[];
+    arcById.forEach((id, a) {
+      if (a['kind']?.toString() != 'evenement') return;
+      final roles = ((a['roles'] as List?) ?? const []).map((e) => e.toString());
+      if (postRole != null && roles.isNotEmpty && !roles.contains(postRole)) return;
+      final posts = ((a['postulats'] as List?) ?? const []).map((e) => e.toString());
+      if (posts.isNotEmpty && !posts.contains(pid)) return;
+      eventArcs.add(id);
+    });
     for (final ch in cast) {
-      final n = poolArcs.where((id) => (arcById[id]?['cast'] as List? ?? const []).contains(ch)).length;
+      final n = [...poolArcs, ...eventArcs]
+          .where((id) => (arcById[id]?['cast'] as List? ?? const []).contains(ch))
+          .length;
       budget(n >= 2, '« $ch » est au casting mais porteur ou cast de $n intrigue(s) (attendu ≥ 2)');
     }
     // Étape 2 (spec variété §3.7) : réactions, manchettes (dont sur des traces), cartes portant le nom.
@@ -585,13 +659,45 @@ void main() {
   }
 
   // Endings referenced by roles must exist.
+  final gaugeEndings = <String>{};
   for (final role in bundle['roles'] as List) {
     for (final g in (role as Map)['gauges'] as List) {
       for (final key in ['empty', 'full']) {
         final e = (g as Map)[key];
-        if (e != null && !endingIds.contains(e)) errors.add('rôle ${role['id']}: fin inconnue "$e"');
+        if (e == null) continue;
+        gaugeEndings.add(e.toString());
+        if (!endingIds.contains(e)) errors.add('rôle ${role['id']}: fin inconnue "$e"');
       }
     }
+  }
+
+  // Toute fin doit avoir une porte : une fin de jauge, ou la cible d'au moins un
+  // `end:` (n'importe où dans le bundle : carte, set-piece, étape d'arc). Le
+  // champ `cause:` d'une fin est documentaire — le moteur ne le lit pas
+  // (`Engine._checkEndings` ne connaît que parole ≤ −5, la jauge à 0/100 et
+  // l'effet `end:`) : une fin sans porte est inatteignable et compte quand même
+  // au Cimetière. `generique` est le repli du moteur (engine.dart), pas une
+  // fin écrite : elle est exemptée.
+  final endsTargeted = <String>{};
+  void collectEnds(Object? node) {
+    if (node is Map) {
+      final e = node['end'];
+      if (e is String) endsTargeted.add(e);
+      for (final v in node.values) {
+        collectEnds(v);
+      }
+    } else if (node is List) {
+      for (final v in node) {
+        collectEnds(v);
+      }
+    }
+  }
+
+  collectEnds(bundle);
+  for (final e in endingIds) {
+    if (e == 'generique') continue;
+    if (gaugeEndings.contains(e) || endsTargeted.contains(e)) continue;
+    warnings.add('fin « $e » sans porte : ni fin de jauge, ni cible d\'un `end:` (le champ `cause:` n\'est lu par personne)');
   }
 
   stdout.writeln('Lint : ${cards.length} cartes, ${arcs.length} arcs, ${errors.length} erreurs, ${warnings.length} avertissements.');

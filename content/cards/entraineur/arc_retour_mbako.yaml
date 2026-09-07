@@ -1,0 +1,91 @@
+# Cartes d'étape de « Le retour de Mbako »
+# (content/arcs/entraineur/retour_mbako.yaml). Toutes hors du sac.
+# Le nom du joueur : nulle part — c'est lui qu'on nomme, pas toi ; le petit
+# parle alors qu'il est `vendu` (statut_ok à l'étape appel).
+# Traces : mbako_revenu, mbako_refuse_retour, mbako_garde (∃), mbako_vendu (∃).
+cards:
+  # ------------------------------------------------------ S1 · il appelle lui-même
+  - id: en.retour.appel
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, tribunes, moment]
+    speaker: mbako
+    statut_ok: [vendu]
+    tone: strategique
+    text: "Au téléphone, un silence avant chaque phrase, comme s'il cherchait sa mère : « Ils ne me font plus jouer, coach, depuis janvier. Je veux jouer, maintenant, chez vous. »"
+    left:
+      label: "Reviens, on en parle"
+      effects: {tribunes: "++", direction: "-", relation: {mbako: 2}, react: en.re.mere_retour}
+      answer: "Il raccroche avant de dire merci. Sa mère rappelle dans les dix minutes."
+    right:
+      label: "Le club a vécu sans toi"
+      effects: {vestiaire: "+", tribunes: "--", relation: {mbako: -2}, set: [mbako_refuse_retour], outcome: refuse, next: end}
+      answer: "Il ne raccroche pas tout de suite. Tu entends un banc chauffé ; ça ne fait aucun bruit."
+
+  # ------------------------------------------------------ S2 · la clause, réécrite
+  - id: en.retour.mere
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents, caisse]
+    speaker: mere_mbako
+    tone: strategique
+    text: "Elle tourne les pages pour toi : « Prêt d'un an, moitié du salaire payée par l'autre club, clause de retour à son prix, pas d'agent dans le couloir. Vous signez, ou vous discutez ? »"
+    left:
+      label: "Je signe, il joue"
+      effects: {caisse: "-", tribunes: "+", relation: {mere_mbako: 1}, set: [mbako_revenu], char: {mbako: {statut: club}}}
+      answer: "Trois signatures. Fardelli entre quand c'est fini ; il félicite tout le monde."
+    right:
+      label: "Je discute la clause"
+      effects: {caisse: "+", direction: "+", relation: {mere_mbako: -1, mbako: -1}, set: [mbako_revenu], char: {mbako: {statut: club}}}
+      answer: "Elle discute. Elle gagne ; la clause revient à son prix, plus dix pour cent, pour la discussion."
+
+  # ------------------------------------------------------ S3 · le casier d'avant
+  - id: en.retour.vestiaire
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: brehaut
+    tone: leger
+    text: "Bréhaut fait tourner un tournevis : « Le groupe a donné son casier à un gamin qui n'a rien demandé, et le petit veut le sien, celui d'avant. Tu déplaces qui ? »"
+    left:
+      label: "Le petit reprend le sien"
+      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: 1}}
+      answer: "La plaque change. Le gamin met ses affaires à côté de la porte ; il y reste toute la saison."
+    right:
+      label: "Il prend celui qui reste"
+      effects: {vestiaire: "+", relation: {mbako: -1, brehaut: 1}}
+      answer: "Le casier près de la douche. Il ne dit rien ; il joue mieux que quand il disait des choses."
+
+  # ------------------------------------------------------ S4 · sans célébrer
+  - id: en.retour.premier_match
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: leger
+    text: "Gégé a une vieille bâche sous le bras, une lettre effacée par la pluie : « On a ressorti la bâche à son nom, il manque un L, {toi}. À l'échauffement, ou après son premier but ? »"
+    left:
+      label: "À l'échauffement"
+      effects: {tribunes: "++", vestiaire: "-", relation: {gege: 1}}
+      answer: "Elle sort. Il regarde le L qui manque ; il marque, sans célébrer."
+    right:
+      label: "Après son premier but"
+      effects: {tribunes: "+", vestiaire: "+", relation: {mbako: 1}}
+      answer: "Elle reste roulée. Il marque à la quatre-vingtième ; le L a été repeint à la mi-temps."
+
+  # ------------------------------------------------------ S5 · la clause, encore
+  - id: en.retour.bache
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents, caisse, chaine]
+    speaker: fardelli
+    tone: strategique
+    text: "Fardelli fume enfin, il a le temps : « Mon ami, on parle d'argent ou d'amitié ? La clause dit qu'il repart à son prix d'achat avant juin, et quelqu'un vient de la lever. »"
+    left:
+      label: "Il reste, je paie l'écart"
+      effects: {caisse: "--", tribunes: "++", relation: {mbako: 2, fardelli: -1}, set: [mbako_garde]}
+      answer: "Il reste. La mère négocie quand même une prime ; elle négocie toujours."
+    right:
+      label: "La clause est la clause"
+      effects: {caisse: "+++", tribunes: "--", relation: {mbako: -2, gege: -1}, set: [mbako_vendu], char: {mbako: {statut: vendu}}}
+      answer: "Il repart. Gégé plie la bâche ; cette fois, il la range dans un carton fermé."

@@ -1,0 +1,177 @@
+# Réservoir de « Fin de contrat à 31 ans » — lot A (bible ch. 10 § 6.15, § 6.16,
+# § 6.18, § 6.19) : le vestiaire qui te porte, la dernière liste en cobalt, la
+# maison du pays, les mémoires. Quatre intrigues de saison 0 : elles décident de
+# ce que juin lira. Schéma : en-tête de content/arcs/entraineur/kop.yaml.
+arcs:
+  # ------------------------------------------- § 6.19 · Le vestiaire te porte
+  # Vingt-deux noms, Vecchio deux fois, un fax et un sous-main.
+  - id: jp.vestiaire_porte
+    title: "Le vestiaire te porte"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vecchio, aulard, josiane, lea]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    hint: "Le groupe a signé pour que tu restes. Vingt-deux noms, Vecchio deux fois."
+    issues: [porte, retire, presse]
+    traces:
+      petition_portee:  "{annee} : vingt-deux noms par fax pour {prenom} {nom}. Le président « n'a pas le temps »."
+      petition_retiree: "{annee} : la pétition du vestiaire, déchirée par {nom}. Le capitaine en a gardé un morceau."
+      petition_presse:  "{annee} : la pétition du vestiaire dans le journal, avec les noms. {prenom} {nom} a confirmé."
+    epilogue:
+      vestiaire: "-"
+      journal: "{annee} : le vestiaire a écrit pour {nom}. Vecchio deux fois."
+    steps:
+      - id: petition
+        card: jp.porte.petition
+        next: [ { step: josiane, if: "flag('petition_portee')", in: [1, 2] }, { step: presse, in: [2, 5] } ]
+      - id: josiane
+        card: jp.porte.josiane
+        next: [ { step: aulard, if: "!flag('petition_retard')", in: [1, 3] }, { step: presse, in: [1, 4] } ]
+      - id: aulard
+        card: jp.porte.aulard
+        next: [ { step: presse, in: [1, 4] } ]
+      - id: presse
+        card:
+          - { id: jp.porte.presse, if: "flag('petition_portee')" }
+          - { id: jp.porte.presse_dechiree }
+        next: []
+
+  # ------------------------------ § 6.18 · Une dernière fois en bleu cobalt
+  # On te prend pour le vestiaire, plus pour les jambes.
+  - id: jp.derniere_selection
+    title: "Une dernière fois en bleu cobalt"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 0
+    theme: selection
+    carrier: legruet
+    cast: [legruet, brehaut, sabatier, lea, mbako]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    excludes: [selection_refusee]
+    hint: "Une dernière liste. Pour le vestiaire, plus pour les jambes."
+    issues: [y_va, refuse, ne_joue_pas]
+    traces:
+      adieu_cobalt:      "{annee} : la dernière sélection de {prenom} {nom}. Pour le vestiaire, a dit la Fédération."
+      selection_refusee: "{annee} : {prenom} {nom} a laissé sa place. Le petit a pris le numéro, et l'a bien porté."
+      raconte_1990:      "{annee} : {prenom} {nom} a raconté 1990 aux jeunes des Cobalts. Le poteau était à gauche."
+      adieu_banc:        "{annee} : {prenom} {nom} a regardé son dernier match des Cobalts depuis le banc."
+      hymne_1990:        "{annee} : pendant son dernier hymne, {prenom} {nom} regardait le sol. Il a dit : 1990."
+    epilogue:
+      journal: "{annee} : la dernière liste de {nom}. Pour le vestiaire."
+    steps:
+      - id: liste
+        card: jp.derniere.legruet
+        next: [ { step: chambre, if: "flag('adieu_cobalt')", in: [1, 2] } ]
+      - id: chambre
+        card: jp.derniere.chambre
+        next: [ { step: minutes, in: [1, 3] } ]
+      - id: minutes
+        card: jp.derniere.sabatier
+        next: [ { step: hymne, in: [1, 2] } ]
+      - id: hymne
+        card:
+          - { id: jp.derniere.hymne_raconte, if: "flag('raconte_1990')" }
+          - { id: jp.derniere.hymne }
+        next: []
+
+  # ------------------------------------------------ § 6.15 · La maison du pays
+  # Ta mère fait construire ; Camille demande où est « chez nous ».
+  - id: jp.maison_pays
+    title: "La maison du pays"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: famille
+    carrier: camille
+    cast: [camille, fardelli, josiane, aulard]
+    start: [2, 8]
+    same_club: false
+    fallback: nouvelles
+    hint: "Ta mère a envoyé les plans de la grande maison. Chez nous, c'est où ?"
+    issues: [rentre, reste, achete]
+    traces:
+      maison_pays:        "{annee} : {prenom} {nom} fait construire au pays. Le quartier a regardé les plans."
+      promis_camille:     "{annee} : la maison a été achetée ici. {prenom} {nom} l'avait promis à la table."
+      maison_pays_signee: "{annee} : l'enfant prodigue est rentré{pg, select, f{e} other{}} en Division 2. Sa mère a encadré la page."
+    epilogue:
+      journal: "{annee} : la grande maison au village. Les murs sont montés."
+    steps:
+      - id: mere
+        card: jp.maison.mere
+        next: [ { step: chez_nous, in: [1, 3] } ]
+      - id: chez_nous
+        card:
+          - { id: jp.maison.chez_nous_seul, if: "flag('divorce')" }
+          - { id: jp.maison.chez_nous }
+        next: [ { step: offre_d2, if: "flag('maison_pays')", in: [2, 5] } ]
+      # L'ancre d'hiver du script (jp.fin.f2_offre_maison) pose la même offre :
+      # celle des deux qui arrive en second la commente au lieu de la reposer
+      # (spec §1.2). Réciproque dans fdc_script.yaml, étape offre.
+      - id: offre_d2
+        card:
+          - { id: jp.maison.offre_d2_deja, if: "flag('maison_pays_signee') || flag('pays_refuse')" }
+          - { id: jp.maison.offre_d2 }
+        next: [ { step: retour, if: "flag('maison_pays_signee')", at_season: 1, at: [1, 4] } ]
+      - id: retour
+        card: jp.maison.retour
+        next: []
+
+  # ---------------------------------------------------- § 6.16 · Les mémoires
+  # Ta vie en livre, à trente et un ans ; le chapitre trois parle du vestiaire.
+  - id: jp.memoires
+    title: "Les mémoires"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: presse
+    carrier: lea
+    cast: [lea, meneche, brehaut, camille]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    hint: "On te propose ta vie en livre. Le chapitre trois parle du vestiaire."
+    issues: [verite, lisse]
+    traces:
+      memoires_verite:  "{annee} : les mémoires de {prenom} {nom}. Le chapitre trois parlait du vestiaire ; le vestiaire a lu."
+      memoires_lisses:  "{annee} : les mémoires de {nom}, version de Noël. Personne ne se souvient de la page cent douze."
+      chapitre_assume:  "{annee} : {prenom} {nom} a refusé de retirer le chapitre trois. Plus de passe pendant une semaine."
+    epilogue:
+      journal: "{annee} : les mémoires de {nom}. Le chapitre trois a fait parler."
+    steps:
+      - id: livre
+        card: jp.memoires.lea
+        next: [ { step: radio, in: [1, 2] } ]
+      - id: radio
+        card: jp.memoires.meneche
+        next: [ { step: chapitre_trois, if: "flag('memoires_verite')", in: [3, 8] }, { step: dedicace, in: [2, 6] } ]
+      - id: chapitre_trois
+        card: jp.memoires.chapitre_trois
+        next: [ { step: dedicace, in: [1, 3] } ]
+      - id: dedicace
+        card:
+          - { id: jp.memoires.josiane, if: "flag('divorce') || relation.camille <= -1" }
+          - { id: jp.memoires.camille }
+        next: []

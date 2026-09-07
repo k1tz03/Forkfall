@@ -1,0 +1,168 @@
+# Cartes d'étape de « Les salaires en retard »
+# (content/arcs/entraineur/salaires.yaml). Toutes hors du sac. `arc:` est le
+# THÈME de la carte, pas l'id de l'arc.
+# Le nom du joueur : sur le distributeur et sur la Commission, jamais sur deux
+# étapes de suite. Josiane dit {toi} ; Bréhaut dit {toi} ; Vaubourg dit ton nom
+# quand il est noir, et le moteur le résout par son `adresse`.
+# Traces : salaires_avances, salaires_retard, nassir_paie, fede_dossier.
+cards:
+  # ------------------------------------------------------- S1 · le distributeur
+  - id: en.salaires.distributeur
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane tient le relevé par un coin : « La banque a refusé le virement, {toi}, et le vestiaire l'a su hier au distributeur. J'en ai vu passer ; je dis quoi, lundi ? »"
+    left:
+      label: "Dites que je m'en occupe"
+      effects: {vestiaire: "+", direction: "-", parole: 1, promise: true}
+      answer: "Elle le dit. Le vestiaire la croit ; c'est elle qu'ils croient, pas toi."
+    right:
+      label: "Dites que c'est la banque"
+      effects: {vestiaire: "-", direction: "+", relation: {josiane: -1}, react: {card: en.re.vecchio_distributeur, chance: 0.6}}
+      answer: "Elle le dit. Bréhaut demande le nom du banquier ; elle le donne."
+
+  # Variante « encore » (relance, plays >= 1) : cette fois ils attendaient devant.
+  - id: en.salaires.distributeur_encore
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, vestiaire, retorse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane, le relevé déjà plié : « La banque a encore refusé, et cette fois ils attendaient devant le distributeur. J'en ai vu passer ; deux fois le même, jamais. »"
+    left:
+      label: "Dites que je m'en occupe"
+      effects: {vestiaire: "+", direction: "-", parole: 1, promise: true}
+      answer: "Elle le dit. Deux joueurs hochent la tête ; les autres regardent l'écran du distributeur."
+    right:
+      label: "Dites que c'est la banque"
+      effects: {vestiaire: "-", direction: "+", relation: {josiane: -1}, var: {paie_retard: "+1"}, react: {card: en.re.vecchio_distributeur, chance: 0.6}}
+      answer: "Elle le dit. Personne ne demande plus le nom du banquier ; ils l'ont."
+
+  # ------------------------------------------------------- S2 · le capitaine
+  - id: en.salaires.brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut ne s'assoit pas, un relevé de banque à la main, le pouce sur une ligne : « Le groupe vit bien. Pas à crédit. Le 5, c'était il y a douze jours, {toi}. Tu savais ? »"
+    left:
+      label: "Je savais, je m'en occupe"
+      effects: {vestiaire: "-", parole: 1, promise: true, relation: {brehaut: 1}, set: [salaires_avances], outcome: avance, react: en.re.aulard_avance}
+      answer: "Il plie le relevé. Il le garde dans la poche du survêtement, côté cœur."
+    right:
+      label: "Première nouvelle"
+      effects: {vestiaire: "--", direction: "+", relation: {brehaut: -1}, set: [salaires_retard], outcome: patience}
+      answer: "Il te croit. C'est pire."
+
+  # Variante : tu as porté le brassard (ch. 10), tu sais ce que pèse un relevé.
+  - id: en.salaires.brehaut_capitaine
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut ne s'assoit pas : « Le groupe vit bien, pas à crédit, et un brassard ne rend pas la banque plus patiente. Le 5, c'était il y a douze jours, {toi}. Tu savais ? »"
+    left:
+      label: "Je savais, je m'en occupe"
+      effects: {vestiaire: "+", parole: 1, promise: true, relation: {brehaut: 2}, set: [salaires_avances], outcome: avance, react: en.re.aulard_avance}
+      answer: "Il plie le relevé. Il le range côté cœur, et il fait le tour des casiers pour le dire."
+    right:
+      label: "Première nouvelle"
+      effects: {vestiaire: "--", direction: "+", relation: {brehaut: -1}, set: [salaires_retard], outcome: patience}
+      answer: "Il te croit, parce qu'il t'a vu porter le brassard. C'est pire."
+
+  # ------------------------------------------------------- S3 · le président
+  - id: en.salaires.aulard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg raccroche sans avoir parlé dedans : « La paie c'est la trésorerie, et le comptable est en arrêt. J'ai pas le temps, j'ai un empire : on vend quelqu'un, ou quelqu'un paie ? »"
+    left:
+      label: "On vend quelqu'un"
+      effects: {caisse: "++", vestiaire: "--", force: -3, relation: {brehaut: -1}}
+      answer: "Un casier vide lundi. La paie tombe mardi ; le groupe compte les deux."
+    right:
+      label: "Que quelqu'un paie"
+      effects: {direction: "-", caisse: "-"}
+      answer: "Il note « quelqu'un ». Il a un numéro pour ça ; il commence par l'étranger."
+
+  # Variante : tu as avancé la paie de ta poche. Il ne dit plus « mon ».
+  - id: en.salaires.aulard_avance
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, retorse]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg, sans lever les yeux : « Tu as avancé la paie de ta poche et le vestiaire croit que le président c'est toi. J'ai pas le temps : tu me rends la facture, ou tu la gardes ? »"
+    left:
+      label: "Je la garde"
+      effects: {direction: "--", vestiaire: "++", relation: {aulard: -1}}
+      answer: "Il ne dit plus « mon ». Il dit ton nom de famille, jusqu'en juin."
+    right:
+      label: "Je vous la rends"
+      effects: {direction: "+", caisse: "+", vestiaire: "-", clear: [salaires_avances], set: [salaires_retard], outcome: patience}
+      answer: "Il paie. Le 19. Le vestiaire apprend que la poche n'était pas la tienne."
+
+  # ------------------------------------------------------- S4 · quelqu'un paie
+  - id: en.salaires.nassir_paie
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse, vestiaire]
+    speaker: nassir
+    tone: strategique
+    text: "Cheikh Ilyas, un chéquier fermé à la main : « Un club qui ne paie pas ses joueurs est un passif. Nous payons deux mois, sans maillot ; prévenez-nous avant la banque. »"
+    left:
+      label: "Payez, et merci"
+      effects: {caisse: "++", vestiaire: "++", direction: "-", set: [nassir_paie], relation: {nassir: 1}, outcome: nassir}
+      answer: "La paie tombe avant le fax. Josiane classe le fax quand même, sous « N »."
+    right:
+      label: "Personne ne paie pour moi"
+      effects: {caisse: "-", vestiaire: "-", direction: "+", relation: {nassir: -1}, set: [salaires_retard], outcome: patience, react: en.re.nassir_reviendrons}
+      answer: "Il range le chéquier. La paie tombe le 12 ; il note la date, lui aussi."
+
+  # ------------------------------------------------------- S5 · la Commission
+  - id: en.salaires.commission
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, scandale, chaine]
+    # La Commission ne se souvient que s'il y a une date à se rappeler : la paie
+    # du 12, la poche du coach, ou le virement du fonds.
+    when: "flag('salaires_retard') || flag('nassir_paie') || flag('salaires_avances')"
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane fait semblant de lire encore : « La Commission écrit qu'une paie du 12 est une paie du 12, et demande qui a payé de sa poche. Je réponds le club, ou la vérité ? »"
+    left:
+      label: "La vérité, avec les dates"
+      effects: {direction: "-", caisse: "-", parole: 1, relation: {josiane: 1}}
+      answer: "Elle écrit les dates. La Commission répond en trois lignes ; la quatrième est un tampon."
+    right:
+      label: "Le club, en une ligne"
+      effects: {direction: "+", caisse: "+", parole: -1, set: [fede_dossier], schedule: [{card: en.commission.convocation, in: [3, 8]}], react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Elle écrit « le club ». La Commission range la lettre dans un dossier ; il a ton nom sur la tranche."
+
+  # ------------------------------------------- alarme · la grève d'entraînement
+  # Hors séquencier : override `vestiaire.low` du postulat `interimaire`
+  # (postulats.yaml), servie quand le vestiaire passe sous 20 alors que la paie
+  # traîne. Bible ch. 11 § 2.3 ; `rescue:vestiaire` comme les autres alarmes.
+  - id: en.salaires.greve_entrainement
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse, rescue:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    when: "flag('salaires_retard')"
+    cooldown: 20
+    text: "Bréhaut, debout au milieu d'un rond central assis : « Le groupe ne s'entraîne pas tant que le 5 n'est pas tombé, et il vit bien assis : il a apporté des oranges. Tu t'assois, {toi} ? »"
+    left:
+      label: "Je m'assois avec eux"
+      effects: {vestiaire: "+++", direction: "--", relation: {brehaut: 1}, parole: 1, promise: true}
+      answer: "Le président compte douze personnes assises depuis la loge. Toi comprise dans le compte."
+    right:
+      label: "Je siffle, on verra"
+      effects: {vestiaire: "-", direction: "++", force: -2, relation: {brehaut: -1}, set: [bus_menace], react: {card: en.re.vecchio_bus, chance: 0.7}}
+      answer: "Vecchio se lève, seul, et va dans les buts. Personne ne tire."

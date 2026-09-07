@@ -46,8 +46,8 @@ cards:
     arc: mercato
     tags: [mercato, agents]
     speaker: fardelli
-    when: "gauges.tribunes > 55"
-    text: "Fardelli, tout sourire : « Un rival a payé ta clause au centime près. Le club fulmine mais ne peut absolument rien faire. »"
+    when: "gauges.tribunes > 55 && !flag('parti_chez_rival') && !flag('mercenaire')"
+    text: "Fardelli, tout sourire : « Un rival a payé ta clause au centime près, {toi}. Le club fulmine et ne peut absolument rien faire. »"
     left:
       label: "Je fais mes valises"
       effects: {caisse: "++", tribunes: "--", direction: "-"}
@@ -60,8 +60,8 @@ cards:
     arc: mercato
     tags: [mercato, sponsors]
     speaker: nassir
-    when: "season >= 1"
-    text: "Cheikh Nassir : « Chez nous, le championnat brille comme l'or et paie comme l'or. Le niveau sportif restera entre nous. »"
+    when: "season >= 1 && !flag('exil_dore')"
+    text: "Cheikh Ilyas : « Chez nous, le championnat brille comme l'or et paie comme l'or, {toi}. Le niveau sportif restera entre nous. »"
     left:
       label: "Je pars pour l'or"
       effects: {caisse: "+++", tribunes: "--", force: -1}
@@ -87,7 +87,7 @@ cards:
     arc: mercato
     tags: [mercato, agents]
     speaker: fardelli
-    text: "Fardelli, l'air gêné : « J'ai fait visiter ton dossier à trois clubs sans te prévenir. C'était pour ton bien, fais-moi confiance. »"
+    text: "Fardelli, l'air gêné : « J'ai fait visiter ton dossier à trois clubs sans te prévenir, {toi}. C'était pour ton bien, fais-moi confiance. »"
     left:
       label: "Je te recadre"
       effects: {relation: {fardelli: -2}, direction: "+", tribunes: "+"}
@@ -100,8 +100,8 @@ cards:
     arc: mercato
     tags: [mercato, retorse]
     speaker: aulard
-    when: "gauges.direction < 55"
-    text: "Le président Aulard, glacial : « Tu refuses de partir ? Alors tu t'entraîneras seul avec les U17, loin des caméras. »"
+    when: "gauges.direction < 55 && !flag('loft_tenu') && !flag('parti_janvier')"
+    text: "Le président Vaubourg, glacial : « Tu refuses de partir, {toi} ? Alors tu t'entraîneras seul avec les U17, loin des caméras. »"
     left:
       label: "Je craque, je pars"
       effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}}
@@ -111,6 +111,7 @@ cards:
       effects: {vestiaire: "-", tribunes: "+", direction: "--", relation: {aulard: -1}}
 
   - id: jp.mercato.offshore_montage
+    when: "!flag('offshore') && !flag('image_propre')"
     roles: [joueur]
     arc: mercato
     tags: [mercato, agents, scandale]
@@ -131,8 +132,8 @@ cards:
     tags: [mercato, scandale, chaine]
     speaker: meneche
     sablier: true
-    when: "flag('offshore')"
-    text: "Ménèche, dossier en main : « Les îles lointaines ont fuité : ton nom, ta prime, ta société. Le fisc va adorer, pas toi. »"
+    when: "flag('offshore') && !flag('regularise')"
+    text: "Massenet, dossier en main : « Les îles lointaines ont fuité : ton nom, ta prime, ta société. Le fisc va adorer, pas toi. »"
     left:
       label: "Je régularise"
       effects: {caisse: "--", direction: "-", clear: [offshore]}
@@ -174,7 +175,7 @@ cards:
     tags: [mercato, rescue:tribunes]
     speaker: lea
     when: "gauges.tribunes < 25"
-    text: "Léa, plan com en main : « Les tribunes te détestent. On annonce que tu retires ta demande de transfert et que tu restes. »"
+    text: "Léa, plan com en main : « Les tribunes te détestent, {toi}. On annonce que tu retires ta demande de transfert et que tu restes. »"
     left:
       label: "Je retire ma demande"
       effects: {tribunes: "+++", caisse: "-", direction: "-"}
@@ -188,7 +189,7 @@ cards:
     tags: [mercato, rescue:direction]
     speaker: aulard
     when: "gauges.direction < 25"
-    text: "Le président Aulard, contrat tendu : « Signe la prolongation aujourd'hui. Je dois prouver aux actionnaires que tu restes. »"
+    text: "Le président Vaubourg, contrat tendu : « Signe la prolongation aujourd'hui. Je dois prouver aux actionnaires que tu restes. »"
     left:
       label: "Je prolonge"
       effects: {direction: "+++", tribunes: "-", caisse: "-"}

@@ -1,0 +1,138 @@
+# Cartes d'étape de « L'espion dans la haie »
+# (content/arcs/entraineur/espion.yaml). Toutes hors du sac.
+# Le nom du joueur : nulle part ici sauf le retour — c'est une intrigue de
+# regards, pas de titres ; Vukić dit « je te le dis parce que personne ne te le
+# dira », Gégé dit {toi}. Traces : espion_cafe, espion_presse, espion_retour.
+cards:
+  # ----------------------------------------------------------- S1 · la casquette
+  - id: en.espion.haie
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: vukic
+    tone: leger
+    text: "Vukić parle en regardant le rond central : « Une casquette qui ne bouge pas depuis vingt minutes, au fond du terrain. Je te le dis parce que personne ne te le dira : il a des jumelles. »"
+    left:
+      label: "On lui montre un faux onze"
+      effects: {force: 2, vestiaire: "-", relation: {vukic: 1}, next: {step: cafe, in: [1, 2]}}
+      answer: "Tu fais jouer Gigi en attaque pendant dix minutes. La casquette prend des notes."
+    right:
+      label: "J'appelle Massenet"
+      effects: {tribunes: "+", direction: "-", relation: {meneche: 1}, next: {step: presse, in: [1, 3]}}
+      answer: "Il arrive en vingt minutes, avec un photographe qui a un plus gros objectif que les jumelles."
+
+  - id: en.espion.haie_encore
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde, retorse]
+    speaker: vukic
+    tone: leger
+    text: "Vukić, sans tourner la tête : « Il est revenu, avec une casquette différente et les mêmes jumelles. Je te le dis parce que personne ne te le dira : cette fois, il a apporté une chaise. »"
+    left:
+      label: "On lui montre un faux onze"
+      effects: {force: 2, vestiaire: "-", relation: {vukic: 1}, next: {step: cafe, in: [1, 2]}}
+      answer: "Deux faux onze en deux ans. Il note les deux, sur la même page."
+    right:
+      label: "J'appelle Massenet"
+      effects: {tribunes: "+", direction: "-", relation: {meneche: 1}, next: {step: presse, in: [1, 3]}}
+      answer: "Le photographe reconnaît la chaise. C'est la sienne ; il l'avait oubliée l'an dernier."
+
+  - id: en.espion.haie_car
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: vukic
+    tone: leger
+    text: "Vukić montre le parking du menton : « Il n'y a plus personne dans la haie ; il y a un homme dans le car de la presse qui filme les ateliers. On ferme le car, ou les yeux ? »"
+    left:
+      label: "On ferme le car"
+      effects: {force: 2, direction: "-", relation: {vukic: 1}, next: {step: cafe, in: [1, 2]}}
+      answer: "Le car repart vide. La caméra reste allumée dans la poche de quelqu'un."
+    right:
+      label: "J'appelle Massenet"
+      effects: {tribunes: "+", direction: "-", relation: {meneche: 1}, next: {step: presse, in: [1, 3]}}
+      answer: "Il arrive avant le car de la télévision. Il filme le car qui filme."
+
+  # ----------------------------------------------------------- S2a · le café
+  - id: en.espion.cafe
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, presse]
+    speaker: gege
+    tone: leger
+    text: "Gégé arrive avec deux gobelets : « On l'a vu depuis le bar, {toi}, on a apporté un café pour lui et un pour toi. Je le lui offre gentiment, ou je le raccompagne gentiment ? »"
+    left:
+      label: "Le café, gentiment"
+      effects: {tribunes: "++", relation: {gege: 1}, set: [espion_cafe], outcome: cafe, react: en.re.gege_jumelles}
+      answer: "Il boit le café. Il donne son prénom, son club, et le nom de la haie d'en face, qui est plus haute."
+    right:
+      label: "Raccompagne-le, gentiment"
+      effects: {tribunes: "+", direction: "-", set: [espion_cafe], outcome: cafe, react: en.re.gege_jumelles}
+      answer: "Trois écharpes autour d'une voiture grise. Elle démarre en marche arrière, longtemps."
+
+  # ----------------------------------------------------------- S2b · le croquis
+  - id: en.espion.presse
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet dessine la haie sur son carnet, avec une croix : « Hors micro : j'écris « un espion de {rival} », ou « un homme à jumelles », ce qui est vrai et ne fait pas vendre ? »"
+    left:
+      label: "Écrivez « espion »"
+      effects: {tribunes: "++", direction: "-", parole: -1, set: [espion_presse], outcome: presse, relation: {meneche: 1}, react: en.re.vukic_croquis}
+      answer: "Le journal titre le lendemain. {rival} dément avec un communiqué qui mentionne la haie."
+    right:
+      label: "Écrivez ce qui est vrai"
+      effects: {tribunes: "+", parole: 1, set: [espion_presse], outcome: presse, relation: {meneche: -1}, react: en.re.vukic_croquis}
+      answer: "Il écrit « un homme ». Le croquis paraît en page six, avec la croix."
+
+  # ----------------------------------------------------------- S3 · la compo
+  - id: en.espion.compo
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut tapote la feuille de match vierge : « Le groupe vit bien, mais il sait que l'autre a vu la séance de mardi. Tu joues ce qu'il a vu, ou ce qu'il n'a pas vu ? »"
+    left:
+      label: "Ce qu'il a vu, à l'envers"
+      effects: {force: 3, vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Gigi en attaque dix minutes, pour de vrai cette fois. Ils le marquent à deux ; le petit est seul."
+    right:
+      label: "Ce qu'on joue toujours"
+      effects: {vestiaire: "+", force: -1, relation: {brehaut: 1}}
+      answer: "Le onze de toujours. Il le connaissait ; il connaît aussi le sien, et ça ne l'a jamais aidé."
+
+  - id: en.espion.compo_cafe
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, ultras, retorse]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut pose une feuille pliée sur la table de massage : « Le groupe vit bien : Gégé nous a apporté la compo d'en face, il paraît que le café a été très long. Tu la regardes, ou tu fais l'honnête ? »"
+    left:
+      label: "Je la regarde"
+      effects: {force: 3, parole: -1, tribunes: "+"}
+      answer: "Tu la regardes. Elle est fausse ; ils avaient aussi un faux onze."
+    right:
+      label: "Je fais l'honnête"
+      effects: {vestiaire: "+", parole: 1}
+      answer: "Tu ne la regardes pas. Bréhaut la regarde pour toi."
+
+  # ----------------------------------------------------------- S4 · le retour
+  - id: en.espion.retour
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde, chaine]
+    speaker: vukic
+    tone: leger
+    text: "Vukić tient des jumelles neuves par la courroie : « Leur haie est plus haute que la nôtre, et je te le dis parce que personne ne te le dira : j'ai des jumelles. Tu m'envoies ? »"
+    left:
+      label: "Vas-y, et prends une chaise"
+      effects: {force: 3, parole: -1, set: [espion_retour], outcome: retour, relation: {vukic: 1}}
+      answer: "Il revient à midi. Il a vu leur faux onze, et leur gardien qui fume."
+    right:
+      label: "On ne fait pas ça"
+      effects: {parole: 1, tribunes: "+", force: -1, set: [espion_retour], outcome: retour}
+      answer: "Il range les jumelles. Le samedi, dans leur tribune, quelqu'un porte une casquette et te salue."

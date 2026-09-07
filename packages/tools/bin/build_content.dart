@@ -44,6 +44,22 @@ dynamic _yamlToDart(dynamic node) {
   return node;
 }
 
+/// Les documents d'une clef, lus dans le fichier unique `file` **et** dans le
+/// dossier `dir/*.yaml` (chargeur par dossier, anti-conflit d'écriture) :
+/// chaque salle écrit son fichier, le build les concatène dans l'ordre des
+/// chemins. Retourne (origine lisible, liste d'entrées).
+List<MapEntry<String, List<dynamic>>> _docsOf(String file, String dir, String key) {
+  final out = <MapEntry<String, List<dynamic>>>[];
+  final single = _loadYaml(file);
+  if (single is Map && single[key] is List) out.add(MapEntry(file, single[key] as List));
+  for (final f in _yamlFiles(dir)) {
+    final rel = f.path.substring(contentDir.length + 1);
+    final doc = _yamlToDart(loadYaml(f.readAsStringSync()));
+    if (doc is Map && doc[key] is List) out.add(MapEntry(rel, doc[key] as List));
+  }
+  return out;
+}
+
 List<File> _yamlFiles(String rel) {
   final root = Directory('$contentDir/$rel');
   if (!root.existsSync()) return const [];
@@ -54,6 +70,20 @@ List<File> _yamlFiles(String rel) {
 
 late Map<String, int> balance;
 late Set<String> roleIdsGlobal;
+
+/// Les statuts d'un personnage (charte de la bible § 2.4 et § 2.4 bis,
+/// spec variété §1.10) — la même énumération que `kStatuts` du moteur.
+const Set<String> kStatuts = {'present', 'club', 'vendu', 'staff', 'parti', 'retraite', 'rival', 'mort'};
+
+/// Les beats moteur dont le texte est auteurisable (content/setpieces.yaml).
+const List<String> kSetpieceBeats = [
+  'objective', 'match', 'cup', 'gm_annonce', 'gm_te', 'aftermatch',
+  'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
+];
+
+/// « où|id » de chaque effet `char:` rencontré : le personnage est vérifié
+/// une fois le casting chargé.
+final List<String> charEffectIds = [];
 
 /// Resolve a symbolic magnitude. The number of sign characters picks the band
 /// ("+" small, "++" medium, "+++" large) and the leading sign the direction.
@@ -161,6 +191,36 @@ Map<String, dynamic> _resolveEffects(dynamic raw, List<String> errors, String wh
           final am = (e as Map).cast<String, dynamic>();
           return {'id': am['id'].toString(), 'status': am['status']?.toString() ?? 'done'};
         }).toList();
+        break;
+      case 'char':
+        // `char: {mbako: vendu}` ou `{mbako: {statut: vendu, age: "+1"}}`
+        // (spec variété §1.10) : le statut appartient à `kStatuts`.
+        out[k] = (v as Map).map((rk, rv) {
+          final id = rk.toString();
+          final om = rv is Map ? rv.cast<String, dynamic>() : <String, dynamic>{'statut': rv.toString()};
+          final statut = om['statut']?.toString();
+          if (statut != null && !kStatuts.contains(statut)) {
+            errors.add('$where/char/$id: statut « $statut » inconnu (${kStatuts.join(' | ')})');
+          }
+          if (om['statut'] == null && om['age'] == null) errors.add('$where/char/$id: ni `statut` ni `age`');
+          charEffectIds.add('$where|$id');
+          return MapEntry(id, {
+            if (statut != null) 'statut': statut,
+            if (om['age'] != null) 'age': om['age'].toString(),
+          });
+        });
+        break;
+      case 'club':
+        {
+          // `club: {change: true, division: n}` (spec variété §1.11).
+          final cm = v is Map ? v.cast<String, dynamic>() : <String, dynamic>{'change': v == true};
+          final div = (cm['division'] as num?)?.toInt();
+          if (div != null && (div < 1 || div > 2)) errors.add('$where/club: division $div hors 1..2');
+          if (cm['change'] == false) errors.add('$where/club: `change: false` n\'a pas de sens (retirer l\'effet)');
+          // `retour: true` : rendre le club d'origine au lieu d'en tirer un neuf.
+          final retour = cm['retour'] == true;
+          out[k] = {'change': true, if (div != null) 'division': div, if (retour) 'retour': true};
+        }
         break;
       case 'role':
       case 'end':
@@ -330,8 +390,23 @@ Map<String, dynamic> _compileStep(dynamic raw, List<String> errors, String where
     if (m['on_expire'] != null) 'on_expire': m['on_expire'].toString(),
     if (m['this_season'] == true) 'this_season': true,
     if (m['outcome'] != null) 'outcome': m['outcome'].toString(),
+    if (m['statut_ok'] != null) 'statut_ok': _statutOk(m['statut_ok'], errors, '$where/$id'),
   };
 }
+
+/// `statut_ok: [parti, retraite]` (spec variété §1.10) : les statuts qui
+/// laissent quand même parler le locuteur.
+List<String> _statutOk(Object? raw, List<String> errors, String where) {
+  final out = _strList(raw);
+  for (final st in out) {
+    if (!kStatuts.contains(st)) errors.add('$where/statut_ok: statut « $st » inconnu (${kStatuts.join(' | ')})');
+    if (kStatutsParlants.contains(st)) errors.add('$where/statut_ok: « $st » parle déjà par défaut (à retirer)');
+  }
+  return out;
+}
+
+/// Les statuts qui parlent sans `statut_ok:` (même table que le moteur).
+const Set<String> kStatutsParlants = {'present', 'club', 'staff'};
 
 List<String> _strList(Object? raw) => (raw as List?)?.map((e) => e.toString()).toList() ?? const [];
 
@@ -376,11 +451,19 @@ void main() {
   });
   final director = (calendarDoc['director'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{};
 
-  // Endings, feats.
+  // Endings, feats. Les fins se lisent dans content/endings.yaml **et** dans
+  // content/endings/*.yaml (un fichier par lot d'écriture : deux salles ne se
+  // marchent pas dessus). Les ids sont uniques d'un fichier à l'autre.
   final endings = <Map<String, dynamic>>[];
-  for (final e in (_loadYaml('endings.yaml') as Map)['endings'] as List) {
+  final endingIdsSeen = <String, String>{};
+  for (final entry in _docsOf('endings.yaml', 'endings', 'endings')) {
+    final from = entry.key;
+    for (final e in entry.value) {
     final em = Map<String, dynamic>.of((e as Map).cast<String, dynamic>());
     final eid = em['id'].toString();
+    final prev = endingIdsSeen[eid];
+    if (prev != null) errors.add('$from: fin « $eid » déjà déclarée dans $prev');
+    endingIdsSeen[eid] = from;
     // `epitaph_plus` (spec variété §2.6) : ≤ 2 variantes {when, text}, `when` compilé.
     final plus = <Map<String, dynamic>>[];
     for (final v in (em['epitaph_plus'] as List?) ?? const []) {
@@ -397,6 +480,7 @@ void main() {
       em['rebond'] = {if (w != null) 'when': w, if (rm['postulat'] != null) 'postulat': rm['postulat'].toString()};
     }
     endings.add(em);
+    }
   }
   final feats = <Map<String, dynamic>>[];
   final featsFile = _loadYaml('feats.yaml');
@@ -453,6 +537,33 @@ void main() {
       }
     }
     cm['adresse'] = adresse;
+    // Âge (en 1990) et statut (spec variété §1.10, charte de la bible § 2.4).
+    if (cm['age'] != null) {
+      final a = (cm['age'] as num).toInt();
+      if (a < 0 || a > 110) errors.add('characters/$id: age $a hors 0..110');
+      cm['age'] = a;
+    }
+    final statut = cm['statut']?.toString() ?? 'present';
+    if (!kStatuts.contains(statut)) errors.add('characters/$id: statut « $statut » inconnu (${kStatuts.join(' | ')})');
+    cm['statut'] = statut;
+    if (cm['age'] == null && cm['statut'] != 'present') {
+      errors.add('characters/$id: un statut sans `age` : le personnage n\'a pas d\'état de partie');
+    }
+    // Retrouvailles (spec variété §1.13) : {sourire, noir}, deux cartes qui existent.
+    final retro = <String, String>{};
+    ((cm['retrouvailles'] as Map?) ?? const {}).forEach((k, v) {
+      final key = k.toString();
+      if (!const {'sourire', 'noir'}.contains(key)) {
+        errors.add('characters/$id/retrouvailles: clef « $key » inconnue (sourire | noir)');
+      }
+      retro[key] = v.toString();
+    });
+    if (retro.isNotEmpty) {
+      for (final k in const ['sourire', 'noir']) {
+        if (!retro.containsKey(k)) errors.add('characters/$id/retrouvailles: « $k » manquant (les deux visages sont requis)');
+      }
+    }
+    cm['retrouvailles'] = retro;
     characters.add(cm);
   }
 
@@ -681,41 +792,49 @@ void main() {
 
   // Unes (spec variété §2.4) : journaux fictifs et manchettes, ordre du fichier.
   final postulatIds = postulats.map((p) => p['id'].toString()).toSet();
-  final unesDoc = (_loadYaml('unes.yaml') as Map?)?.cast<String, dynamic>();
+  // Les manchettes se lisent dans content/unes.yaml **et** dans
+  // content/unes/*.yaml (un fichier par salle d'écriture) ; les ids sont
+  // uniques d'un fichier à l'autre.
   final journaux = <Map<String, dynamic>>[];
   final journauxIds = <String>{};
-  for (final j in (unesDoc?['journaux'] as List?) ?? const []) {
-    final jm = (j as Map).cast<String, dynamic>();
-    final jid = jm['id'].toString();
-    if (!journauxIds.add(jid)) errors.add('unes.yaml: journal « $jid » en double');
-    if (jm['nom'] == null) errors.add('unes.yaml: journal « $jid » sans `nom`');
-    journaux.add({'id': jid, 'nom': jm['nom']?.toString() ?? jid, 'ton': jm['ton']?.toString() ?? 'sobre', 'style': jm['style']?.toString() ?? 'bleu'});
+  for (final entry in _docsOf('unes.yaml', 'unes', 'journaux')) {
+    for (final j in entry.value) {
+      final jm = (j as Map).cast<String, dynamic>();
+      final jid = jm['id'].toString();
+      if (!journauxIds.add(jid)) errors.add('${entry.key}: journal « $jid » en double');
+      if (jm['nom'] == null) errors.add('${entry.key}: journal « $jid » sans `nom`');
+      journaux.add({'id': jid, 'nom': jm['nom']?.toString() ?? jid, 'ton': jm['ton']?.toString() ?? 'sobre', 'style': jm['style']?.toString() ?? 'bleu'});
+    }
   }
   final unes = <Map<String, dynamic>>[];
-  final uneIds = <String>{};
+  final uneIdsFrom = <String, String>{};
   int secours = 0;
-  for (final u in (unesDoc?['unes'] as List?) ?? const []) {
+  for (final entry in _docsOf('unes.yaml', 'unes', 'unes')) {
+    for (final u in entry.value) {
+    final where = entry.key;
     final um = (u as Map).cast<String, dynamic>();
     final uid = um['id'].toString();
-    if (!uneIds.add(uid)) errors.add('unes.yaml: manchette « $uid » en double');
+    final prevUne = uneIdsFrom[uid];
+    if (prevUne != null) errors.add('$where: manchette « $uid » déjà déclarée dans $prevUne');
+    uneIdsFrom[uid] = where;
     final journal = um['journal']?.toString() ?? 'quotidien';
-    if (!journauxIds.contains(journal)) errors.add('unes.yaml/$uid: journal inconnu « $journal »');
+    if (!journauxIds.contains(journal)) errors.add('$where/$uid: journal inconnu « $journal »');
     final priority = (um['priority'] as num?)?.toInt() ?? 0;
-    if (priority < 0 || priority > 4) errors.add('unes.yaml/$uid: priority $priority hors 0..4');
+    if (priority < 0 || priority > 4) errors.add('$where/$uid: priority $priority hors 0..4');
     final poids = (um['poids'] as num?)?.toDouble() ?? 1.0;
-    if (poids <= 0) errors.add('unes.yaml/$uid: poids ≤ 0');
-    final w = _parseWhen(um['when'], errors, 'unes.yaml/$uid/when');
+    if (poids <= 0) errors.add('$where/$uid: poids ≤ 0');
+    final w = _parseWhen(um['when'], errors, '$where/$uid/when');
     if (priority == 0 && um['when'] == null) secours += 1;
-    if (um['titre'] == null) errors.add('unes.yaml/$uid: manchette sans `titre`');
+    if (um['titre'] == null) errors.add('$where/$uid: manchette sans `titre`');
     for (final p in _strList(um['postulats'])) {
-      if (!postulatIds.contains(p)) errors.add('unes.yaml/$uid: postulat inconnu « $p »');
+      if (!postulatIds.contains(p)) errors.add('$where/$uid: postulat inconnu « $p »');
     }
     for (final r in _strList(um['roles'])) {
-      if (!roleIds.contains(r)) errors.add('unes.yaml/$uid: rôle inconnu « $r »');
+      if (!roleIds.contains(r)) errors.add('$where/$uid: rôle inconnu « $r »');
     }
-    final react = _compileReact(um['react'], errors, 'unes.yaml/$uid/react');
+    final react = _compileReact(um['react'], errors, '$where/$uid/react');
     for (final v in react) {
-      if (v['chance'] != null) errors.add('unes.yaml/$uid/react: `chance` interdit sur la réaction d\'une manchette (le Bilan ne tire qu\'une fois)');
+      if (v['chance'] != null) errors.add('$where/$uid/react: `chance` interdit sur la réaction d\'une manchette (le Bilan ne tire qu\'une fois)');
     }
     unes.add({
       'id': uid,
@@ -731,8 +850,68 @@ void main() {
       if (um['photo'] != null) 'photo': um['photo'].toString(),
       if (react.isNotEmpty) 'react': react,
     });
+    }
   }
   if (unes.isNotEmpty && secours < 2) errors.add('unes.yaml: $secours manchette(s) de secours (priority 0 sans `when`), attendu ≥ 2');
+
+  // Set-pieces (spec variété §1.12, §2.7) : le texte des beats moteur, par
+  // rôle et par condition ; la première variante vraie gagne, la dernière est
+  // le secours (sans `when` ni `roles`). Aucun aléa n'entre ici.
+  const twoButtons = {'objective', 'match', 'gm_te', 'aftermatch', 'bilan_contrat', 'bilan_carrefour'};
+  const withAnswers = {'objective', 'aftermatch', 'bilan_contrat'};
+  final setpieces = <String, List<Map<String, dynamic>>>{};
+  ((_loadYaml('setpieces.yaml') as Map?)?['setpieces'] as Map?)?.forEach((beatRaw, list) {
+    final beat = beatRaw.toString();
+    if (!kSetpieceBeats.contains(beat)) {
+      errors.add('setpieces.yaml: beat « $beat » inconnu (${kSetpieceBeats.join(' | ')})');
+      return;
+    }
+    final variants = <Map<String, dynamic>>[];
+    final raw = (list as List?) ?? const [];
+    for (int i = 0; i < raw.length; i++) {
+      final vm = (raw[i] as Map).cast<String, dynamic>();
+      final where = 'setpieces.yaml/$beat[$i]';
+      final w = _parseWhen(vm['when'], errors, '$where/when');
+      final roles = _strList(vm['roles']);
+      for (final r in roles) {
+        if (!roleIds.contains(r)) errors.add('$where: rôle inconnu « $r »');
+      }
+      final text = vm['text']?.toString() ?? '';
+      if (text.isEmpty) errors.add('$where: variante sans `text`');
+      if (text.length > 240) errors.add('$where: texte de ${text.length} caractères (> 240)');
+      final speaker = vm['speaker']?.toString();
+      if (speaker != null && !characterIds.contains(speaker)) errors.add('$where: locuteur inconnu « $speaker »');
+      if (vm['right'] != null && !twoButtons.contains(beat)) {
+        errors.add('$where: le beat $beat n\'a qu\'un bouton (`left` seul)');
+      }
+      if ((vm['answer_left'] != null || vm['answer_right'] != null) && !withAnswers.contains(beat)) {
+        errors.add('$where: le beat $beat n\'affiche pas de conséquence (`answer_*` ignoré)');
+      }
+      final transition = vm['transition']?.toString();
+      if (transition != null) {
+        if (beat != 'bilan_carrefour') errors.add('$where: `transition` n\'existe qu\'au beat bilan_carrefour');
+        if (!roleIds.contains(transition)) errors.add('$where: transition vers un rôle inconnu « $transition »');
+      }
+      if (_readsBilan(w) && beat != 'bilan_verdict') {
+        errors.add('$where: `bilan.*` hors du beat bilan_verdict (le verdict n\'y est calculé qu\'une fois)');
+      }
+      final secours = w == null && roles.isEmpty && transition == null;
+      if (secours && i != raw.length - 1) errors.add('$where: variante inaccessible après le secours (le secours est le dernier)');
+      if (!secours && i == raw.length - 1) errors.add('$where: le beat $beat n\'a pas de secours (une dernière variante sans `when` ni `roles`)');
+      variants.add({
+        if (w != null) 'when': w,
+        if (roles.isNotEmpty) 'roles': roles,
+        if (speaker != null) 'speaker': speaker,
+        'text': text,
+        if (vm['left'] != null) 'left': vm['left'].toString(),
+        if (vm['right'] != null) 'right': vm['right'].toString(),
+        if (vm['answer_left'] != null) 'answer_left': vm['answer_left'].toString(),
+        if (vm['answer_right'] != null) 'answer_right': vm['answer_right'].toString(),
+        if (transition != null) 'transition': transition,
+      });
+    }
+    if (variants.isNotEmpty) setpieces[beat] = variants;
+  });
 
   // Cards: every yaml under cards/.
   final cards = <Map<String, dynamic>>[];
@@ -772,7 +951,22 @@ void main() {
         'tone': tone,
         'kind': explicitKind ?? 'routine',
         if (m['title'] != null) 'title': m['title'].toString(),
+        // Nouvelle datée (spec variété §1.5) : l'année de sa fenêtre [year, year + 1].
+        if (m['year'] != null) 'year': (m['year'] as num).toInt(),
+        if (m['statut_ok'] != null) 'statut_ok': _statutOk(m['statut_ok'], errors, '$rel/$id'),
       };
+      final yr = m['year'];
+      if (yr != null) {
+        final y = (yr as num).toInt();
+        if (y < 1990 || y > 2050) errors.add('$rel: $id: year $y hors 1990..2050');
+        if (m['arc']?.toString() != 'nouvelle' && explicitKind != 'nouvelle') {
+          errors.add('$rel: $id: `year` est réservé aux Nouvelles (arc: nouvelle ou kind: nouvelle)');
+        }
+        if (m['once'] != true) errors.add('$rel: $id: une Nouvelle datée doit être once: true (elle ne dit son année qu\'une fois)');
+      }
+      if (m['statut_ok'] != null && m['speaker'] == null) {
+        errors.add('$rel: $id: `statut_ok` sans `speaker` (le statut est celui du locuteur)');
+      }
       if (m['pool'] == true) card['pool'] = true;
       cards.add(card);
       rawById[id] = m;
@@ -780,8 +974,18 @@ void main() {
   }
   final cardById = {for (final c in cards) c['id'].toString(): c};
 
-  // Thèmes fermés (content/tags.yaml → themes).
-  final themes = _strList((_loadYaml('tags.yaml') as Map?)?['themes']);
+  // Thèmes fermés et leur libellé (content/tags.yaml → themes / theme_labels).
+  final tagsDoc = (_loadYaml('tags.yaml') as Map?)?.cast<String, dynamic>();
+  final themes = _strList(tagsDoc?['themes']);
+  final themeLabels = <String, String>{};
+  ((tagsDoc?['theme_labels'] as Map?) ?? const {}).forEach((k, v) {
+    final id = k.toString();
+    if (!themes.contains(id)) errors.add('tags.yaml/theme_labels: thème « $id » absent de `themes`');
+    themeLabels[id] = v.toString();
+  });
+  for (final t in themes) {
+    if (!themeLabels.containsKey(t)) errors.add('tags.yaml: le thème « $t » n\'a pas de libellé (theme_labels)');
+  }
 
   // --- Arcs : thème résolu, exclusive_with symétrisé (spec variété §2.2, §3.7).
   for (final a in arcs) {
@@ -876,6 +1080,25 @@ void main() {
         if (c != null && c['once'] != true) errors.add('$cid: une carte de palier (on_relation) doit être once: true');
       }
     });
+    // Retrouvailles (spec variété §1.13) : cartes propres, hors du sac, servies
+    // depuis la file au changement de club ou de rôle.
+    ((ch['retrouvailles'] as Map?) ?? const {}).forEach((visage, cid) {
+      claim(cid.toString(), 'chaine', 'characters/${ch['id']}/retrouvailles/$visage');
+      final c = cardById[cid.toString()];
+      if (c != null && c['once'] != true) errors.add('$cid: une carte de retrouvailles doit être once: true');
+    });
+  }
+  // Les personnages cités par un effet `char:` existent.
+  for (final entry in charEffectIds) {
+    final parts = entry.split('|');
+    if (!characterIds.contains(parts.last)) errors.add('${parts.first}/char: personnage inconnu « ${parts.last} »');
+  }
+  // Le locuteur d'une carte à `statut_ok` doit être un personnage connu.
+  for (final c in cards) {
+    final sp = c['speaker']?.toString();
+    if ((c['statut_ok'] as List?)?.isNotEmpty == true && sp != null && !characterIds.contains(sp)) {
+      errors.add('${c['id']}: `statut_ok` sur une carte dont le locuteur « $sp » n\'est pas un personnage');
+    }
   }
   // Étapes d'un arc rejouable : jamais `once: true` (le purge « déjà vue »
   // tuerait la relance) ; `outcome` d'un choix ∈ issues de l'arc.
@@ -1116,6 +1339,8 @@ void main() {
     'unes': unes,
     'journal_templates': journalTemplates,
     'blacklist': blacklist,
+    'theme_labels': themeLabels,
+    'setpieces': setpieces,
   };
   final hash = fnv1a32(json.encode(bundle)).toRadixString(16);
   bundle['hash'] = hash;
@@ -1142,7 +1367,10 @@ void main() {
 
   final nPool = cards.where((c) => c['pool'] == true).length;
   final nReact = cards.where((c) => c['kind'] == 'reaction').length;
-  stdout.writeln('OK: ${cards.length} cartes ($nPool dans le sac, $nReact réactions), ${unes.length} manchettes, ${arcs.length} arcs, ${postulats.length} postulats, '
+  final nSetpieces = setpieces.values.fold<int>(0, (a, v) => a + v.length);
+  final nDatees = cards.where((c) => c['year'] != null).length;
+  stdout.writeln('OK: ${cards.length} cartes ($nPool dans le sac, $nReact réactions, $nDatees Nouvelles datées), ${unes.length} manchettes, '
+      '$nSetpieces variantes de set-piece (${setpieces.length} beats), ${arcs.length} arcs, ${postulats.length} postulats, '
       '${characters.length} personnages (${portraits.length} portraits), ${roles.length} rôles, ${endings.length} fins, ${feats.length} destins '
       '→ content/build/content.json (hash $hash)');
 }

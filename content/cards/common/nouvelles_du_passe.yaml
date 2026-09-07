@@ -1,0 +1,280 @@
+# Les Nouvelles du passé (bible ch. 20 § 4) : ce que l'ancien club te fait
+# savoir, une fois, plus tard, quand tu as changé de club ou de rôle.
+#
+# Le moteur planifie la carte générique `tr.nouvelles_du_passe` (Josiane, un
+# fax à la main — content/cards/common/transversal.yaml) quand une intrigue est
+# abandonnée pour cause de changement de club. Les vingt variantes ci-dessous
+# nomment l'affaire au lieu de la désigner et donnent la parole à quelqu'un
+# d'autre que la secrétaire : elles vivent dans le sac ordinaire, gardées par
+# la trace qu'elles rappellent et par « tu es parti d'ailleurs »
+# (`stats.clubs >= 2 || role_was('joueur')`), jamais en saison 0, une seule
+# fois chacune. La générique reste le secours de la file.
+#
+# Gabarit : un seul bouton (deux libellés, effets identiques), un effet petit,
+# `once: true`, `tone: leger`, aucun placeholder de nom (c'est le club qui
+# parle du joueur, pas l'inverse).
+cards:
+  # --------------------------------------------------------- ce qu'on a promis
+  - id: co.nouvelle.passe_pacte
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('pacte_gege')"
+    text: "Gégé, au téléphone : « Le local a été repeint cet été, par le club, sans qu'on demande. La tribune n'oublie rien : la date est encore sur le mur, avec ton nom au-dessus. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-"}, answer: "La craie a tenu deux ans. La peinture a tenu deux mois."}
+    right: {label: "Regarder le mur", effects: {tribunes: "-"}, answer: "La craie a tenu deux ans. La peinture a tenu deux mois."}
+
+  - id: co.nouvelle.passe_gigi
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('vecchio_promis')"
+    text: "Vecchio, au téléphone : « Ils m'ont mis entraîneur des gardiens en octobre, sans me demander, et j'ai dit oui. J'en ai vu d'autres ; celle-là, je l'ai vue venir de loin. »"
+    left:  {label: "Encaisser", effects: {vestiaire: "-"}, answer: "Il raccroche le premier. Ça ne lui était jamais arrivé."}
+    right: {label: "Rappeler plus tard", effects: {vestiaire: "-"}, answer: "Il raccroche le premier. Ça ne lui était jamais arrivé."}
+
+  - id: co.nouvelle.passe_tribune
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [tribunes, ultras]
+    speaker: gege
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('tribune_a_renover')"
+    text: "Gégé, sans lever la voix : « La tribune Nord a été refaite en juillet : sièges neufs, radiateurs neufs, deux rangs en moins. La tribune n'oublie rien, surtout pas les deux rangs. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-"}, answer: "Trois cents places de moins, quatre cents abonnés en plus. On s'assoit serré, et on aime ça."}
+    right: {label: "Compter les rangs", effects: {tribunes: "-"}, answer: "Trois cents places de moins, quatre cents abonnés en plus. On s'assoit serré, et on aime ça."}
+
+  - id: co.nouvelle.passe_bache
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && (flag('otage_kop') || flag('ami_ultras'))"
+    text: "Gégé, sans sourire : « La bâche à ton nom a été décrochée en octobre, pliée, rangée sous le bar avec les autres. La tribune n'oublie rien ; elle range, mais elle ne jette pas. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-"}, answer: "Elle est toujours sous le bar. Vingt mètres, trois plis, ton nom à l'intérieur."}
+    right: {label: "Demander la bâche", effects: {tribunes: "-"}, answer: "Elle est toujours sous le bar. Vingt mètres, trois plis, ton nom à l'intérieur."}
+
+  # ------------------------------------------------------------ ce qu'on a vendu
+  - id: co.nouvelle.passe_mbako
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [mercato, presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('mbako_lance') && !flag('mbako_vendu')"
+    text: "Massenet, hors micro : « Le petit que vous aviez lancé est parti pour trente millions, six mois après vous. Juste une question : vous en touchez quelque chose ? »"
+    left:  {label: "Encaisser", effects: {direction: "-"}, answer: "Le club encaisse. Toi, tu lis le chiffre dans le journal comme tout le monde."}
+    right: {label: "Sourire jaune", effects: {direction: "-"}, answer: "Le club encaisse. Toi, tu lis le chiffre dans le journal comme tout le monde."}
+
+  - id: co.nouvelle.passe_prodige
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [formation, mercato]
+    speaker: vukic
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 2 && (stats.clubs >= 2 || role_was('joueur')) && !flag('mbako_lance') && !flag('pepite')"
+    text: "Vukić, un rapport de quatre lignes : « Le gamin que tu n'as pas fait jouer a signé à Valdorne en janvier, et il a marqué en février. Personne ne te le dira : il s'entraînait le mercredi. »"
+    left:  {label: "Encaisser", effects: {force: -1}, answer: "Le rapport tient en quatre lignes. La quatrième dit « à revoir dans deux ans »."}
+    right: {label: "Regarder le rapport", effects: {force: -1}, answer: "Le rapport tient en quatre lignes. La quatrième dit « à revoir dans deux ans »."}
+
+  - id: co.nouvelle.passe_naming
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [sponsors, tribunes]
+    speaker: lea
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('naming_signe')"
+    text: "Léa, une photo sur la table : « Le panneau est monté en août : ancien nom en petit, marque en orange, quatre mètres de haut. Au local, on donne toujours rendez-vous à l'ancien. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-"}, answer: "La photo de Une est prise de la tribune Est. On y voit surtout l'orange."}
+    right: {label: "Dire l'ancien nom", effects: {tribunes: "-"}, answer: "La photo de Une est prise de la tribune Est. On y voit surtout l'orange."}
+
+  # ---------------------------------------------------------- ce qu'on a laissé
+  - id: co.nouvelle.passe_vukic
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('vukic_dauphin')"
+    text: "Vukić, souriant : « J'ai pris le banc en janvier, avec ton cahier et deux pages en moins. Je te le dis parce que personne ne te le dira : les deux pages, c'était les tiennes. »"
+    left:  {label: "Encaisser", effects: {direction: "-"}, answer: "Il envoie une photocopie trois semaines plus tard. Elle est incomplète."}
+    right: {label: "Demander les pages", effects: {direction: "-"}, answer: "Il envoie une photocopie trois semaines plus tard. Elle est incomplète."}
+
+  - id: co.nouvelle.passe_brassard
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('capitaine')"
+    text: "Bréhaut, au téléphone : « Le brassard est passé à un garçon de vingt-trois ans qui le remet à l'envers un match sur deux. Le groupe vit bien ; il vit autrement, c'est tout. »"
+    left:  {label: "Encaisser", effects: {vestiaire: "-"}, answer: "Tu envoies trois lignes. Il les lit à voix haute dans le vestiaire ; ça fait du bien."}
+    right: {label: "Envoyer un mot", effects: {vestiaire: "-"}, answer: "Tu envoies trois lignes. Il les lit à voix haute dans le vestiaire ; ça fait du bien."}
+
+  - id: co.nouvelle.passe_clow
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [vestiaire, formation]
+    speaker: clow
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('clow_ingrat')"
+    text: "Corven, un carton de cassettes à ses pieds : « Il y a une liste de six noms sur le couvercle, et le cinquième est barré au crayon, pas au stylo. Pour les listes, j'étais devant. »"
+    left:  {label: "Encaisser", effects: {vestiaire: "-"}, answer: "Le carton reste chez lui. Le crayon s'efface ; personne ne repasse dessus."}
+    right: {label: "Demander le carton", effects: {vestiaire: "-"}, answer: "Le carton reste chez lui. Le crayon s'efface ; personne ne repasse dessus."}
+
+  - id: co.nouvelle.passe_josiane
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && year < 2008"
+    text: "Josiane, un carton sur les genoux : « J'ai rangé votre bureau : deux cahiers, une photo, un sifflet et un mot que vous n'avez pas posté. J'en ai vu passer, des mots non postés. »"
+    left:  {label: "Encaisser", effects: {relation: {josiane: 1}}, answer: "Elle garde le mot dans le tiroir du haut. Elle ne le lit pas."}
+    right: {label: "Demander le mot", effects: {relation: {josiane: 1}}, answer: "Elle garde le mot dans le tiroir du haut. Elle ne le lit pas."}
+
+  - id: co.nouvelle.passe_plaque
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [tribunes, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && stats.saisons >= 5"
+    text: "Léa, une photo de vestiaire : « Une plaque a été posée au-dessus de la porte, avec le nom, les années et une faute d'accent. Au local, on a voté pour garder la faute. »"
+    left:  {label: "Encaisser", effects: {tribunes: "+"}, answer: "La faute reste. Elle devient le détail qu'on raconte aux nouveaux."}
+    right: {label: "Regarder l'accent", effects: {tribunes: "+"}, answer: "La faute reste. Elle devient le détail qu'on raconte aux nouveaux."}
+
+  # ------------------------------------------------------- ce qui a mal fini là-bas
+  - id: co.nouvelle.passe_salaires
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('salaires_retard')"
+    text: "Josiane, au téléphone : « Tout a été payé en novembre, d'un coup, avec les arriérés et les intérêts. J'en ai vu passer ; celui-là était parti le mois d'avant. »"
+    left:  {label: "Encaisser", effects: {caisse: "-"}, answer: "Onze joueurs ont été payés. Le douzième était toi."}
+    right: {label: "Compter les mois", effects: {caisse: "-"}, answer: "Onze joueurs ont été payés. Le douzième était toi."}
+
+  - id: co.nouvelle.passe_enveloppe
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [scandale, direction]
+    speaker: legruet
+    tone: strategique
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('enveloppe_promise')"
+    text: "Berthomier, une chemise devant lui : « La commission a rouvert un dossier de l'époque où vous étiez là-bas, à la demande d'un club adverse. On verra ça après le Congrès. »"
+    left:  {label: "Encaisser", effects: {direction: "-"}, answer: "La page arrive par courrier. Les deux mentions sont dans la liste des présents."}
+    right: {label: "Demander la page", effects: {direction: "-"}, answer: "La page arrive par courrier. Les deux mentions sont dans la liste des présents."}
+
+  - id: co.nouvelle.passe_commission
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [scandale, caisse]
+    speaker: legruet
+    tone: strategique
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('fede_dossier')"
+    text: "Berthomier, une lettre ouverte : « Elle est partie le 12, vous étiez parti le 4, et elle porte quand même votre nom en objet. On verra ça après le Congrès ; les dates, elles, sont là. »"
+    left:  {label: "Encaisser", effects: {caisse: "-"}, answer: "La lettre suit deux adresses et arrive chez toi en mars. Elle est ouverte."}
+    right: {label: "Demander la lettre", effects: {caisse: "-"}, answer: "La lettre suit deux adresses et arrive chez toi en mars. Elle est ouverte."}
+
+  - id: co.nouvelle.passe_flacon
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [scandale, vestiaire]
+    speaker: sabatier
+    tone: strategique
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('flacon_b')"
+    text: "Le Doc, au téléphone : « Le dossier a été classé en avril, sans audition, une ligne de conclusion et pas de nom. Ça reste entre la table et moi ; la table était une salle. »"
+    left:  {label: "Encaisser", effects: {direction: "-"}, answer: "La ligne dit « éléments insuffisants ». Elle ne dit pas insuffisants pour quoi."}
+    right: {label: "Lire la ligne", effects: {direction: "-"}, answer: "La ligne dit « éléments insuffisants ». Elle ne dit pas insuffisants pour quoi."}
+
+  # ------------------------------------------------------- ce qu'ils sont devenus
+  - id: co.nouvelle.passe_descente
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 2 && (stats.clubs >= 2 || role_was('joueur'))"
+    text: "Massenet, hors micro : « Votre ancien club a perdu son étage, à deux points, avec quatre entraîneurs dans la saison. Juste une question : vous auriez fait mieux ? »"
+    left:  {label: "Encaisser", effects: {tribunes: "+"}, answer: "Tu ne réponds pas. Le lendemain, le journal écrit que tu as souri."}
+    right: {label: "Ne pas répondre", effects: {tribunes: "+"}, answer: "Tu ne réponds pas. Le lendemain, le journal écrit que tu as souri."}
+
+  - id: co.nouvelle.passe_montee
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [presse, direction]
+    speaker: lea
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 2 && (stats.clubs >= 2 || role_was('joueur'))"
+    text: "Léa, calepin ouvert : « Ils ont gagné l'étage du dessus, au bout de la deuxième saison, avec neuf joueurs que vous aviez fait signer. Le président ne vous a pas cité une fois. »"
+    left:  {label: "Encaisser", effects: {direction: "-"}, answer: "Le président remercie le groupe, la ville et le hasard. Dans cet ordre."}
+    right: {label: "Confirmer", effects: {direction: "-"}, answer: "Le président remercie le groupe, la ville et le hasard. Dans cet ordre."}
+
+  - id: co.nouvelle.passe_president
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [direction]
+    speaker: aulard
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 2 && (stats.clubs >= 2 || role_was('joueur'))"
+    text: "Vaubourg, presque aimable : « Le président qui vous a laissé partir a été destitué en assemblée, onze voix contre neuf. J'ai pas le temps, j'ai un empire ; lui, il a une assemblée. »"
+    left:  {label: "Encaisser", effects: {direction: "+"}, answer: "Il t'appelle deux mois plus tard, pour rien. Tu décroches, aussi pour rien."}
+    right: {label: "Ne rien dire", effects: {direction: "+"}, answer: "Il t'appelle deux mois plus tard, pour rien. Tu décroches, aussi pour rien."}
+
+  - id: co.nouvelle.passe_camille
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 1 && (stats.clubs >= 2 || role_was('joueur')) && flag('camille_ici') && !flag('divorce')"
+    text: "Camille, une carte postale à la main : « L'ancien voisin écrit que le boulanger d'en bas a fermé et qu'il pense à nous. Tu rentres à quelle heure ? Je l'ai mise sur le frigo. »"
+    left:  {label: "Encaisser", effects: {relation: {camille: 1}}, answer: "La carte reste sur le frigo trois ans. On finit par ne plus la voir."}
+    right: {label: "Lire la carte", effects: {relation: {camille: 1}}, answer: "La carte reste sur le frigo trois ans. On finit par ne plus la voir."}

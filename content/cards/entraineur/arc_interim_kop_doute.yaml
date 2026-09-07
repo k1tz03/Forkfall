@@ -1,0 +1,105 @@
+# Cartes d'étape de « Le kop qui doute » (interim_longues.yaml), plus l'alarme
+# `tribunes.low` du postulat (override, hors séquencier). Trois étapes : le
+# stagiaire envoyé au parking à la place de Gégé, la tournée au local (variante
+# si la compo à la craie a été effacée), la vingtième minute (variante si la
+# tribune a déjà adopté). Traces : ami_ultras, kop_hostile, ancien_sali, otage_kop.
+cards:
+  - id: en.kop_doute.stagiaire
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: vukic
+    tone: leger
+    text: "Vukić traduit un gamin à l'écharpe trop longue : « Gégé envoie dire que le local est ouvert jeudi et que la tribune n'a pas décidé. Lui, il venait. Tu y vas ? »"
+    left:
+      label: "J'y vais jeudi"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Le gamin répète « jeudi » trois fois. L'écharpe traîne par terre jusqu'au portail."
+    right:
+      label: "J'attends qu'il vienne"
+      effects: {tribunes: "-", vestiaire: "+", relation: {gege: -1}, react: en.re.gege_il_venait}
+      answer: "Il ne vient pas. Le stagiaire revient ; il a un deuxième message, plus court."
+
+  - id: en.kop_doute.local
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, caisse]
+    speaker: gege
+    tone: leger
+    text: "Gégé essuie un verre sans te le tendre : « Sa photo est au mur parce qu'on n'a pas la tienne, {toi}, et la tribune n'a pas encore appris à chanter ton nom. Tu paies la tournée ? »"
+    left:
+      label: "Je paie la tournée"
+      effects: {tribunes: "++", caisse: "-", relation: {gege: 1}, set: [ami_ultras], outcome: adopte, react: {card: en.re.camille_le_verre, chance: 0.6}}
+      answer: "Trente bières. Ils apprennent l'accent avant la troisième ; ils le chantent faux."
+    right:
+      label: "Décidez à jeun"
+      effects: {tribunes: "-", parole: 1, relation: {gege: -1}}
+      answer: "Ils ne décident rien. La photo de l'ancien reste au mur, la tienne à côté, plus petite."
+
+  - id: en.kop_doute.local_methode
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, vestiaire, caisse]
+    speaker: gege
+    tone: leger
+    text: "Gégé essuie un verre : « Sa photo est au mur, et on a vu que tu as effacé sa compo, ce que la tribune n'a pas décidé d'aimer. Tu paies la tournée pour expliquer, {toi} ? »"
+    left:
+      label: "Je paie et j'explique"
+      effects: {tribunes: "++", caisse: "-", relation: {gege: 1}, set: [ami_ultras], outcome: adopte, react: {card: en.re.camille_le_verre, chance: 0.6}}
+      answer: "Trente bières et un tableau noir emprunté au local. Ils retiennent le tableau."
+    right:
+      label: "On regarde dimanche"
+      effects: {tribunes: "-", parole: 1, relation: {gege: -1}}
+      answer: "Dimanche, ils regardent. Ils comptent les passes en arrière, à voix haute."
+
+  - id: en.kop_doute.vingtieme
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, ultras, tribunes]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet, la montre encore au poignet : « Vingtième minute, ils ont chanté l'ancien quatre minutes, j'ai chronométré. Hors micro : « la tribune chante encore », ou l'inverse ? »"
+    left:
+      label: "« Elle chante encore »"
+      effects: {tribunes: "-", parole: 1, set: [kop_hostile], outcome: siffle}
+      answer: "Il titre. Gégé lit ; il fait chanter cinq minutes la fois suivante, par principe."
+    right:
+      label: "Titrez sur l'ancien"
+      effects: {tribunes: "+", parole: -1, relation: {gege: 1}, set: [ancien_sali], outcome: sali}
+      answer: "« L'ancien est parti, pas la tribune. » Sa photo descend du mur du local."
+
+  - id: en.kop_doute.vingtieme_ami
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, ultras, tribunes]
+    speaker: meneche
+    tone: leger
+    text: "Massenet, carnet ouvert : « Vingtième minute, ils ont chanté votre nom, faux, avec l'accent au mauvais endroit. Hors micro : je corrige dans le titre, ou je le laisse ? »"
+    left:
+      label: "Comme ils le chantent"
+      effects: {tribunes: "++", relation: {gege: 1}, set: [ami_ultras], outcome: adopte}
+      answer: "Il laisse. Le titre a une faute ; c'est la tienne, désormais."
+    right:
+      label: "Corrigez"
+      effects: {tribunes: "+", parole: 1}
+      answer: "Il corrige. Ils continuent de le chanter faux ; ils n'ont pas lu."
+
+  # ---------------------------------------------------------------- alarme
+  # Override `tribunes.low` du postulat `interimaire` (postulats.yaml) : hors
+  # séquencier, servie quand la tribune tombe et que `kop_hostile` est posé.
+  - id: en.kop_doute.siffle_alarme
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, rescue:tribunes]
+    speaker: gege
+    tone: strategique
+    when: "flag('kop_hostile')"
+    text: "Gégé déroule une bâche par terre, pour que tu la lises à l'endroit : « Elle fait vingt mètres et il y a deux noms dessus, le sien devant, le tien derrière. Elle sort, {toi} ? »"
+    left:
+      label: "Je viens au local"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}, clear: [kop_hostile]}
+      answer: "Trois bières. Le nom de derrière passe devant ; l'accent est toujours faux."
+    right:
+      label: "Qu'elle sorte, on verra"
+      effects: {tribunes: "--", vestiaire: "+", set: [otage_kop]}
+      answer: "Bréhaut fait un signe vers le virage depuis le rond central. Pas pour toi."

@@ -14,7 +14,7 @@
 #   palier_moins3  relationCrossings     2      palier
 #   palier_plus3   relationCrossings     2      palier
 #   transition     _transitionTo         3      transition
-#   club_change    _changeClub (étape 5) 3      transition
+#   club_change    _changeClub           3      transition
 #   objectif       _checkObjectifs       3      objectif
 #   fin            _buildEndingPending   5      fin
 auto:
@@ -23,9 +23,60 @@ auto:
   montee:        "{annee} · Montée en Division 1 avec {club}."
   descente:      "{annee} · {club} descend. {nom} reste. Pour l'instant."
   titre:         "{annee} · {club} champion. {prenom} {nom} sur la photo, au bord."
-  palier_moins3: "{annee} · {perso} ne parle plus à {prenom} {nom}."
+  palier_moins3: "{annee} · {perso} ne dit plus bonjour à {prenom} {nom}."
   palier_plus3:  "{annee} · {perso} doit quelque chose à {prenom} {nom}. {perso_tic}"
   transition:    "{annee} · {prenom} {nom} raccroche les crampons et prend le banc de {club}."
   club_change:   "{annee} · {prenom} {nom} signe à {club}."
   objectif:      "{annee} · {objectif_titre}."
   fin:           "{annee} · {fin_titre}."
+  # ------------------------------------------------------------------------
+  # Les quarante gabarits de plus (bible ch. 20 § 5.2 et § 5.2 bis). Un gabarit
+  # absent = pas de ligne ; un gabarit présent qu'aucun beat n'écrit encore
+  # attend son écrivain (Coupe, mercato, sanctions, objets, votes) et ne coûte
+  # rien. Poids et `kind` sont fixés par l'appelant (`addJournalAuto`) :
+  # 1 anecdote, 2 trace, 3 fait de saison, 4 fait rare, 5 fin.
+  # Écart d'import : la bible écrit {joueur} {prix} {monnaie} {sanction}
+  # {perso_nom} {promesse} {objet} {ecart}… ; `formatText` ne connaît pas ces
+  # variables (le lint refuse un placeholder inconnu), donc chaque ligne a été
+  # rendue avec les placeholders garantis, sans perdre sa chute.
+  # ------------------------------------------------------------------------
+  coupe_gagnee:        "{annee} · {club} gagne la Coupe. {prenom} {nom} tient le trophée par le bas."
+  coupe_humiliation:   "{annee} · {club} sorti de la Coupe par un club de {division}. Terrain en pente."
+  derby_gagne:         "{annee} · La vallée a un patron : {club} bat {rival}."
+  derby_perdu:         "{annee} · {rival} gagne le derby. Le local n'a pas ouvert le lendemain."
+  promesse_tenue:      "{annee} · {nom} avait promis. {pg, select, f{Elle} other{Il}} l'a fait, à la date dite."
+  promesse_rompue:     "{annee} · La promesse est datée au mur de la Gazette. Elle n'a pas tenu."
+  promesse_datee:      "{annee} · Promesse datée au mur de la Gazette, échéance en juin. Le mur ne bouge pas."
+  promesse_tenue_tard: "{annee} · {nom} a tenu, avec du retard. La Gazette a barré la ligne, à regret."
+  mercato_vente:       "{annee} · {club} vend son meilleur joueur. La caisse respire jusqu'en janvier."
+  mercato_achat:       "{annee} · {club} signe une recrue. Le vestiaire compte les places, pas les millions."
+  mercato_rate:        "{annee} · Le transfert n'est pas parti à temps. Le fax a imprimé à 23 h 59."
+  blessure_longue:     "{annee} · Un titulaire sort pour la saison. Le Doc n'a pas commenté ; c'est sa façon de commenter."
+  retour_blessure:     "{annee} · Il rejoue, après des mois. Le stade s'est levé avant le coup d'envoi."
+  controle_medical:    "{annee} · Visite médicale : trois jours, deux avis, une signature."
+  controle_inopine:    "{annee} · Contrôle inopiné un mardi matin. Le Doc a ouvert l'armoire lui-même."
+  selection_appel:     "{annee} · {prenom} {nom} en bleu cobalt pour la première fois."
+  selection_refus:     "{annee} · {prenom} {nom} décline la sélection. On ne dit pas non deux fois."
+  sanction_commission: "{annee} · Salle 3 : une sanction pour {prenom} {nom}. Le procès-verbal tient en une page."
+  sanction_levee:      "{annee} · La sanction est levée pour vice de forme. Le Tribunal du Sport a répondu tard."
+  audit:               "{annee} · Audit ouvert sur {club}. L'Inspecteur ne juge pas ; elle a demandé la ligne douze."
+  arrivee_perso:       "{annee} · {perso} arrive à {club}."
+  depart_perso:        "{annee} · {perso} quitte {club}. {perso_tic}"
+  deces_perso:         "{annee} · {perso} est mort. Une minute avant le coup d'envoi ; le stade a tenu deux."
+  enterrement_present: "{annee} · {nom} était à l'enterrement de {perso}, au premier rang ou derrière un pilier."
+  naissance:           "{annee} · Une naissance au carnet du canton. Tribune Est dès le mois prochain, dit le père Guichard."
+  divorce:             "{annee} · La valise était dans l'entrée. Elle n'était pas à {prenom} {nom}."
+  retrouvailles:       "{annee} · Une vieille tête au bord du terrain. Elle n'a pas changé de phrase."
+  stade_renomme:       "{annee} · Le stade a changé de nom. Dans la rue, on dit encore « le stade »."
+  stade_rendu:         "{annee} · Le nom est retiré de la façade. Les vis sont restées ; on les voit de loin."
+  objet_transmis:      "{annee} · Un objet a changé de main à {club}. Celui qui l'a donné ne l'a pas repris."
+  objet_perdu:         "{annee} · L'objet a disparu. Personne n'a cherché longtemps ; c'est ça qui reste."
+  vote_socios:         "{annee} · Les socios ont voté à main levée. On a recompté les mains, pas les voix."
+  nouvelle_monde:      "{annee} · Le monde a bougé d'une ligne. On l'a lue au local, à voix haute."
+  nouvelle_epoque:     "{annee} · L'époque a changé d'unité. On recompte à voix haute, dans les deux monnaies."
+  serie_noire:         "{annee} · Cinq défaites d'affilée pour finir. {club} a oublié comment on gagne."
+  serie_belle:         "{annee} · Cinq victoires de suite. Le local a ressorti les verres du placard."
+  alarme_vestiaire:    "{annee} · Le groupe a menacé de rester dans le bus. Il est descendu, en dernier."
+  alarme_tribunes:     "{annee} · Une bâche de douze mètres, tribune Nord. Le nom est à l'intérieur."
+  alarme_direction:    "{annee} · Le président a deux discours prêts. {nom} n'est que dans un des deux."
+  alarme_caisse:       "{annee} · La paie du 5 est tombée le 26. Onze joueurs au distributeur."

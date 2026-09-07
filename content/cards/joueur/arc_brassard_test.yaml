@@ -1,0 +1,100 @@
+# Cartes de l'intrigue « Le test du capitaine » (arc jp.brassard_test) —
+# bible ch. 10 § 6.2. Bréhaut dit {toi} (« petit » en neutre, « le {numero} »
+# quand il ne t'aime plus) ; le nom du joueur ne sort pas de l'intrigue :
+# c'est une histoire de dossard.
+cards:
+  - id: jp.brassard.penalty
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "« Je suis le tireur désigné, mais tu as porté les bouteilles, alors je pose la question une fois : le groupe vit bien quand on sait qui tire. Toi, ou moi ? »"
+    left:
+      label: "Toi, capitaine"
+      effects: {vestiaire: "++", tribunes: "-", relation: {brehaut: 1}, react: {card: jp.re.vecchio_bouteilles, chance: 0.5}}
+      answer: "Il tire. Il marque. Il te montre du doigt en courant ; le groupe a vu."
+    right:
+      label: "Moi"
+      effects: {vestiaire: "-", rand: [{p: 0.7, tribunes: "+++", set: [penalty_marque]}, {tribunes: "--", vestiaire: "-", set: [penalty_rate]}]}
+      answer: "Tu tires. Le stade retient. Il retient jusqu'au filet, ou jusqu'au poteau."
+
+  - id: jp.brassard.penalty_mouton
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le tireur, c'est moi, et personne ne te l'a demandé. Le groupe vit bien quand on sait qui tire, et le groupe sait. »"
+    left:
+      label: "Je regarde"
+      effects: {vestiaire: "-"}
+      answer: "Il tire sans te regarder. Il marque. Personne ne te tape dans le dos ; personne ne te voit."
+    right:
+      label: "Je regarde"
+      effects: {vestiaire: "-"}
+      answer: "Il tire sans te regarder. Il marque. Personne ne te tape dans le dos ; personne ne te voit."
+
+  - id: jp.brassard.toro
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Dix minutes au milieu, j'ai touché le ballon deux fois, et toi zéro : on ne te le passe pas. J'en ai vu d'autres, petit — tu dis quelque chose, ou tu attends ? »"
+    left:
+      label: "Je dis quelque chose"
+      effects: {vestiaire: "+", tribunes: "-", outcome: accepte, rand: [{p: 0.5, clear: [mouton_noir], set: [groupe_accepte]}, {vestiaire: "-"}]}
+      answer: "Tu dis « oh ». Bréhaut te passe le ballon, une fois, fort. C'est un début, ou une fin."
+    right:
+      label: "J'attends"
+      effects: {vestiaire: "--", force: 1, set: [mouton_noir], outcome: mouton}
+      answer: "Tu attends. Le toro finit sans toi. Le lendemain, tu t'entraînes à côté ; c'est plus calme."
+
+  - id: jp.brassard.genou_de_titi
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Mon genou dit stop, pas moi, mais c'est lui qu'on écoute ; le groupe vit bien avec un brassard qui court. Tu le prends, ou je le passe à Gigi ? »"
+    left:
+      label: "Je le prends"
+      effects: {vestiaire: "+", direction: "+", set: [capitaine], outcome: capitaine, react: jp.re.vukic_capitaine}
+      answer: "Il te le met lui-même. Il serre un peu trop fort sur l'épaule ; il le fait exprès."
+    right:
+      label: "Donne-le à Gigi"
+      effects: {vestiaire: "++", tribunes: "-", relation: {vecchio: 1}, set: [brassard_gigi], react: {card: co.re.vecchio_garde, chance: 0.6}}
+      answer: "Vecchio le met sur le gant. Il tombe deux fois par match ; le stade applaudit quand il le remet."
+
+  - id: jp.brassard.discours
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "« Capitaine, c'est à toi de parler avant le derby, et je te le dis parce que personne ne te le dira : ils t'écoutent depuis le brassard, pas avant. Feu, ou silence ? »"
+    left:
+      label: "Discours de feu"
+      effects: {rand: [{p: 0.6, vestiaire: "++", tribunes: "+"}, {vestiaire: "-"}], set: [discours_feu]}
+      answer: "Tu parles. Le petit regarde ses chaussures ; le gardien regarde le plafond ; Bréhaut te regarde, toi."
+    right:
+      label: "Silence, place au terrain"
+      effects: {vestiaire: "+", force: 1}
+      answer: "Tu ne dis rien. Vecchio dit « allez ». Ça suffit ; il en a vu d'autres."
+
+  - id: jp.brassard.discours_sans
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "« Le derby est jeudi, et le capitaine parlera. Je te le dis parce que personne ne te le dira : ce que tu diras avant lui compte plus. Tu parles, ou tu écoutes ? »"
+    left:
+      label: "Je parle avant lui"
+      effects: {vestiaire: "-", tribunes: "+", force: 1, set: [discours_feu]}
+      answer: "Tu parles le premier. Bréhaut attend que tu finisses. Il dit trois mots ; on retient les siens."
+    right:
+      label: "J'écoute"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Tu écoutes. Il dit « le groupe vit bien ». Il le dit en te regardant, cette fois."

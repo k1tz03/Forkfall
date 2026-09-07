@@ -1,0 +1,168 @@
+# Cartes de l'intrigue « Le tifo à ton nom » (arc jp.tifo) — bible ch. 10 § 6.1.
+# Gégé dit « petit » (sourire), {prenom} (neutre), « le {numero} » (noir) :
+# c'est son adresse, jamais son nom écrit en dur. Le nom du joueur sort une
+# fois, sur la bâche (étape 2), et plus jamais dans l'intrigue.
+cards:
+  - id: jp.tifo.local
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« On te fait un tifo, {toi} : la Nord a voté ça hier soir, à main levée et à la troisième bière. Tu passes au local, ou tu restes du côté des joueurs ? »"
+    left:
+      label: "J'y vais"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}, set: [ami_ultras], react: {card: co.re.camille_journal, if: "!flag('divorce')", chance: 0.6}}
+      answer: "Trois bières, la compo à la craie, ton nom déjà dessus. Tu rentres à une heure ; Camille demande à quelle heure, mais tu es déjà rentré."
+    right:
+      label: "Pas ce soir"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Il range la clé. Le tifo se fait quand même ; il te le dira samedi, de loin."
+
+  - id: jp.tifo.local_pacte
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« On te fait un tifo, {toi}, et le local, on l'a rénové grâce à quelqu'un qui portait ton maillot, il y a longtemps. La tribune n'oublie rien. Tu passes ? »"
+    left:
+      label: "J'y vais"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 2}, set: [ami_ultras], react: {card: co.re.camille_journal, if: "!flag('divorce')", chance: 0.6}}
+      answer: "Trois bières sous la craie d'un autre. La date est encore lisible ; il te la montre du doigt."
+    right:
+      label: "Pas ce soir"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Il range la clé. Le local a été rénové pour quelqu'un ; ce ne sera pas pour toi."
+
+  - id: jp.tifo.bache
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« Vingt mètres, {NOM}, et en dessous on a écrit « ICI, POUR TOUJOURS ». La tribune n'oublie rien : tu le dis au micro, ou on l'écrit à ta place ? »"
+    left:
+      label: "Je le dis : je reste"
+      effects: {tribunes: "+++", direction: "-", parole: 2, promise: true, set: [enfant_du_pays], outcome: promis, react: jp.re.lea_vingt_metres}
+      answer: "Tu le dis au micro du stade. Le stade hurle. En loge, le président note la date ; il n'écrit pas la même chose."
+    right:
+      label: "Je ne promets rien"
+      effects: {tribunes: "-", vestiaire: "+", parole: 1, set: [honnete_tribune], outcome: honnete, react: jp.re.lea_vingt_metres}
+      answer: "Tu dis que tu ne sais pas. La Nord se tait dix secondes, puis chante quand même ; elle a payé la bâche."
+
+  - id: jp.tifo.prix
+    roles: [joueur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    text: "« Vingt mètres à ton nom, {toi}, c'est joli, ça fait monter le prix : j'ai fait peindre le prix sur le panneau d'à côté. Tu poses avec les deux, ou on efface ? »"
+    left:
+      label: "Avec les deux"
+      effects: {direction: "++", tribunes: "--", caisse: "+", react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.6 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.6 }, { card: co.re.gege_decoupe, chance: 0.6 } ]}
+      answer: "Tu poses. La photo montre ton nom et un chiffre. Gégé la découpe ; il coupe le chiffre."
+    right:
+      label: "Effacez le prix"
+      effects: {direction: "--", tribunes: "++", relation: {gege: 1}}
+      answer: "Il ne l'efface pas. Il le fait peindre plus petit ; pour lui, c'est effacer."
+
+  - id: jp.tifo.un_an_apres
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« Un an, et la bâche est toujours pliée dans le local, sans phrase dessous. La tribune n'oublie rien, {toi} : on la ressort, ou on la laisse ? »"
+    left:
+      label: "Ressortez-la"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Elle ressort. Elle sent le local et la peinture ; le stade la reconnaît avant de lire."
+    right:
+      label: "Laissez-la pliée"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Elle reste pliée. Il la range sous le bar, à l'endroit où l'on range ce qu'on garde."
+
+  # Câblage de la fin `jp_statue` (ch. 10 § 11.3, destin : `enfant_du_pays &&
+  # fidele`, le club descendu). Écrite par la salle « pépite », sans porte.
+  - id: jp.tifo.un_an_apres_statue
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    tone: strategique
+    text: "« On n'est jamais remontés, et tu avais tout refusé pour rester. La tribune n'oublie rien, {toi} : on t'a coulé une statue, en résine, devant la buvette. Tu viens la voir ? »"
+    left:
+      label: "Je viens la voir"
+      effects: {tribunes: "++", parole: 1, end: jp_statue}
+      answer: "Tu y vas. Elle est en résine ; il nettoie le socle chaque dimanche, avant l'ouverture."
+    right:
+      label: "Une autre fois"
+      effects: {tribunes: "+", vestiaire: "+", relation: {gege: -1}}
+      answer: "Il la bâche pour l'hiver. Il la débâche au printemps, au cas où."
+
+  # Câblage de la fin `jp_bache_pliee` (salle « pépite », destin) : vingt mètres
+  # à ton nom, un fax en janvier, et une tribune qui a fini par se taire.
+  - id: jp.tifo.un_an_apres_sac
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    tone: strategique
+    text: "« Vingt mètres à ton nom, une promesse au micro, un fax en janvier. On l'a pliée proprement, {toi} ; on ne l'a pas brûlée. Tu la reprends, ou elle reste dans le sac ? »"
+    left:
+      label: "Elle reste dans le sac"
+      effects: {tribunes: "-", parole: -1, relation: {gege: -1}, end: jp_bache_pliee}
+      answer: "Elle reste. Il referme le sac, il le pose sous le bar, et il ne le rouvre plus."
+    right:
+      label: "Je la reprends"
+      effects: {tribunes: "+", direction: "-", parole: -1, relation: {gege: 1}}
+      answer: "Tu la prends. Elle pèse. Elle finit à la cave, pliée pareil, dans un autre sac."
+
+  - id: jp.tifo.un_an_apres_dore
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« Un an, et tu es là, alors on a repeint en doré ; la tribune n'oublie rien, surtout pas ceux qui restent. Tu montes la tenir, ou tu restes sur la pelouse ? »"
+    left:
+      label: "Je monte"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Tu tiens un bout. Tu vois le stade depuis là ; il est plus grand."
+    right:
+      label: "Sur la pelouse"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Tu regardes d'en bas. Elle descend lentement ; ils la font durer."
+
+  - id: jp.tifo.un_an_apres_pliee
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« Un an, « ICI, POUR TOUJOURS », et tu joues en face. On l'a pliée, pas brûlée. Tu viens la chercher, ou on la garde pour te la montrer ? »"
+    left:
+      label: "Je viens la chercher"
+      effects: {tribunes: "+", direction: "-", parole: -1, relation: {gege: 1}, set: [bache_a_la_cave]}
+      answer: "Tu la prends. Elle pèse. Camille la met à la cave ; elle y est encore."
+    right:
+      label: "Gardez-la"
+      effects: {tribunes: "--", relation: {gege: -1}}
+      answer: "Il la garde. Il te la montre à chaque retour, pliée, dans le sac."
+
+  - id: jp.tifo.un_an_apres_honnete
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« On a gardé la bâche, sans la phrase : tu n'avais rien promis. La tribune n'oublie rien, même ce qu'on ne lui a pas dit. Tu la signes, ou toujours pas ? »"
+    left:
+      label: "Je la signe"
+      effects: {tribunes: "++", parole: 1, set: [enfant_du_pays]}
+      answer: "Tu signes au marqueur, en bas. C'est petit ; c'est là."
+    right:
+      label: "Toujours pas"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Il hoche la tête. Il respecte ; il ne comprend pas."

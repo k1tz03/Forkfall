@@ -1,0 +1,148 @@
+# Réactions du postulat « Fin de contrat à 31 ans » (bible ch. 10 § 7).
+# Servies au tirage suivant, hors créneau ; jamais de `end`, jamais de drame,
+# jamais deux d'affilée. Le build leur pose `kind: reaction` par le `react:`
+# qui les cite ; elles ne portent donc pas de `kind` à la main.
+cards:
+  - id: jp.re.camille_projet
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "« Ton agent a appelé à la maison, {toi}, il a demandé si on avait « un projet ». Tu rentres à quelle heure, pour qu'on en parle, du projet ? »"
+    left:
+      label: "Tôt, ce soir"
+      effects: {relation: {camille: 1}, vestiaire: "-"}
+      answer: "Tu rentres tôt. Vous parlez. Il n'y a pas de projet ; c'est déjà un début."
+    right:
+      label: "Après l'entraînement"
+      effects: {relation: {camille: -1}}
+      answer: "Elle raccroche. Il rappelle à sept heures ; il tombe sur elle."
+
+  - id: jp.re.vecchio_encore_une
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« À ton âge, {toi}, j'étais papy aussi, et j'avais encore dix ans devant moi ; j'en ai vu d'autres. Tu comptes les tiennes, ou tu les joues ? »"
+    left:
+      label: "Je les joue"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Il hoche la tête. Il en a vu d'autres, et il les a vus jouer."
+    right:
+      label: "Je les compte"
+      effects: {direction: "+"}
+      answer: "Il compte pour toi. Il trouve un chiffre ; il ne le dit pas."
+
+  - id: jp.re.vukic_feuille
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: vukic
+    tone: strategique
+    text: "« Je te le dis parce que personne ne te le dira, {toi} : tu as regardé le match comme quelqu'un qui compte les passes, pas les buts. Tu réponds sur le milieu, ou tu regardes encore ? »"
+    left:
+      label: "Le milieu est trop bas"
+      effects: {direction: "+", relation: {vukic: 1}, set: [notes_partagees]}
+      answer: "Tu réponds. Il écrit ta réponse dans le cahier ; à ta page."
+    right:
+      label: "Je regarde encore"
+      effects: {tribunes: "+"}
+      answer: "Il range la feuille. Il te la redonnera en juin ; la question sera la même."
+
+  - id: jp.re.lea_jubile_mars
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    tone: leger
+    text: "« Vous confirmez, {toi} ? Un jubilé en mars, et vous jouez en avril ; j'ai relu deux fois. Je titre « Le jubilé continue », ou vous me donnez un autre titre ? »"
+    left:
+      label: "« Le jubilé continue »"
+      effects: {tribunes: "+"}
+      answer: "Elle titre. C'est absurde ; c'est vrai ; c'est le journal du soir."
+    right:
+      label: "Plutôt « Encore une »"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "Elle titre « Encore une ». Gigi découpe ; il a le même titre depuis cinq ans."
+
+  - id: jp.re.meneche_radio_d_abord
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    tone: leger
+    text: "« Juste une question, hors micro, {toi} : on écrit vos mémoires, et personne ne les lira si vous ne les racontez pas à la radio d'abord. Dimanche soir, une heure ? »"
+    left:
+      label: "Dimanche, une heure"
+      effects: {tribunes: "+", relation: {lea: -1}}
+      answer: "Elle l'apprend. Elle ne dit rien ; elle coupe deux pages."
+    right:
+      label: "Le livre d'abord"
+      effects: {relation: {meneche: -1, lea: 1}}
+      answer: "Il note. Il en parlera quand même ; sans vous."
+
+  - id: jp.re.brehaut_plus_de_passe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe a lu le chapitre trois, {toi}, et il ne te fait plus la passe ; c'est comme ça que le groupe vit bien. Tu joues seul, ou tu vas le retirer ? »"
+    left:
+      label: "Je joue seul"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Tu joues seul une semaine. Samedi suivant, un jeune te sert ; il a aimé le chapitre."
+    right:
+      label: "Je vais le retirer"
+      effects: {vestiaire: "+", parole: -1, set: [chapitre_retire]}
+      answer: "Elle retire. Elle garde la page ; elle la range avec les autres pages gardées."
+
+  - id: jp.re.fardelli_on_ne_parle_plus
+    roles: [joueur]
+    arc: mercato
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Tu as gagné, {toi}, et mon pote a perdu gros, alors là on ne parle plus, ni d'argent ni d'amitié. Tu m'appelles quand tu as besoin d'un agent, ou tu en cherches un autre ? »"
+    left:
+      label: "J'en cherche un autre"
+      effects: {relation: {fardelli: -1}, direction: "+", set: [sans_agent], clear: [agent_fardelli]}
+      answer: "Tu cherches. Une carte de visite traîne dans ton casier depuis trois ans."
+    right:
+      label: "Je t'appellerai"
+      effects: {relation: {fardelli: 1}, parole: -1}
+      answer: "Tu l'appelleras. Il le sait. Il note « appellera » ; il souligne."
+
+  - id: jp.re.josiane_formulaire
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, {toi}, des fins de contrat, et elles arrivent toutes en juin par le même formulaire jaune. Je le prépare, ou je le laisse dans le tiroir ? »"
+    left:
+      label: "Préparez-le"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle le prépare. Il attend sur le coin du bureau, en jaune, tout l'hiver."
+    right:
+      label: "Dans le tiroir"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Elle le laisse. Le tiroir en contient quatorze ; elle connaît les quatorze noms."
+
+  - id: jp.re.sabatier_trois_pas
+    roles: [joueur]
+    arc: corps
+    tags: [moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« Trois pas, {toi}, ça ne se rattrape pas en courant, ça se rattrape en respirant, et ça reste entre la table et moi. Tu viens le matin avant les autres, ou tu cours avec eux ? »"
+    left:
+      label: "Le matin, avant"
+      effects: {force: 1, relation: {sabatier: 1}}
+      answer: "Tu viens. Il compte. Tu rattrapes un pas ; c'est déjà ça."
+    right:
+      label: "Avec eux"
+      effects: {vestiaire: "+", relation: {sabatier: -1}}
+      answer: "Tu cours avec le groupe. Il regarde depuis la fenêtre ; il ne compte plus."

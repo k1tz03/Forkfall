@@ -1,0 +1,2460 @@
+# Le décor (bible scénaristique, ch. 31 « Les anecdotes, les running gags et
+# l'almanach du monde »). Ce fichier ne raconte aucune histoire : il fournit ce
+# qui se passe **entre** les histoires — les quatorze lieux, les objets qui
+# changent de main, les gags qui vieillissent. Toutes les cartes sont des
+# cartes de routine (`arc: routine`) : elles tombent dans la bande de
+# respiration, jamais deux d'affilée, et le metteur en scène les tire du sac.
+#
+# Règles de l'anecdote (ch. 31 § 0) : elle (a) ne fait jamais avancer une
+# intrigue, (b) ne pose qu'une trace légère au plus, (c) touche une jauge, deux
+# au maximum, jamais `+++`, (d) n'appelle jamais `end`, (e) ne cite le nom du
+# joueur qu'une carte sur quatre, (f) est rejouable sauf mention `once`,
+# (g) parle d'un lieu ou d'un objet, pas d'un enjeu.
+#
+# ── Écarts d'import assumés (le schéma technique tranche, charte § 5.3) ──────
+# · Le moteur ne connaît que deux rôles (`entraineur`, `joueur`) : les cartes
+#   de la bible réservées au DS, aux présidents, au sélectionneur ou aux
+#   instances ne sont pas ici (elles attendent leur rôle). Une carte « tous »
+#   devient `roles: [entraineur, joueur]`.
+# · `speaker:` est un **id** de `characters.yaml`. Les voix sans portrait de la
+#   bible (Norbert le chauffeur, Lulu et son chien Corner, Marinette, Nino,
+#   Momo, le stagiaire de l'Écho, la petite Josiane, Gérard, Dédé, Dupuis,
+#   Pichon, Paulette, Rouvier, Dembo, Brissac, Barbier, Solvang, Colline,
+#   Dauzat, Vaz, Vogler) n'ont pas de fiche : leur carte est écrite **sans**
+#   `speaker`, la voix est nommée dans le texte, et elle ne dit jamais `{toi}`.
+# · `react:` est interdit sur une carte de routine (le build le refuse) : les
+#   « Réactions déclenchées » de la bible ne sont pas importées ici.
+# · Une trace posée hors d'un arc n'a pas de ligne d'Almanach d'arc : elle est
+#   écrite à la main dans `journal:` (README § 3.1).
+# · `tone` du moteur : `leger | strategique | drame`. Le « neutre » de la bible
+#   devient `leger` (respiration) ou `strategique` (quand la carte pèse).
+cards:
+
+  # ==========================================================================
+  # § 2.1 — Le couloir et le distributeur (8)
+  # Le distributeur est le vrai bulletin de santé du club : le 5 du mois, on
+  # sait avant le président.
+  # ==========================================================================
+
+  - id: co.dec.couloir_distributeur
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    cooldown: 25
+    when: "!flag('salaires_retard')"
+    text: "Vecchio déplie un ticket ramassé sous le distributeur : « Quelqu'un a laissé son solde imprimé dans la fente, et il est jeune. J'en ai vu d'autres ; celui-là, je le remets à l'envers. »"
+    left:
+      label: "Je lis le chiffre"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Tu ne dis rien. Lui non plus, et c'est pire."
+    right:
+      label: "Je le retourne aussi"
+      effects: {vestiaire: "+"}
+      answer: "Il replie le papier en quatre. Le couloir sent le café brûlé."
+
+  - id: co.dec.couloir_le_cinq
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, caisse, vestiaire]
+    tone: strategique
+    cooldown: 20
+    when: "flag('salaires_retard')"
+    text: "Momo, trois cartes dans la main : « On y va à trois, comme ça il n'y en a qu'un qui a l'air bête. Tu viens avec nous ou tu attends le communiqué ? »"
+    left:
+      label: "Je viens avec vous"
+      effects:
+        vestiaire: "++"
+        direction: "-"
+        set: [distributeur_groupe]   # Almanach : « {annee} : ils y sont allés à trois. »
+      answer: "Vous êtes cinq en arrivant. Le distributeur n'a rien à dire à personne."
+    right:
+      label: "J'attends le communiqué"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Ils y vont sans toi. Le communiqué arrive le 11."
+
+  - id: co.dec.couloir_affiche
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, direction, absurde]
+    speaker: josiane
+    tone: leger
+    cooldown: 30
+    text: "Josiane, une punaise entre les dents : « L'affiche du stage de secourisme est là depuis quatre ans. J'en ai vu passer, des affiches qui durent plus que des entraîneurs. »"
+    left:
+      label: "Je l'enlève"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "Elle garde la punaise. Le carré plus clair sur le mur reste."
+    right:
+      label: "Je la laisse"
+      effects: {vestiaire: "+"}
+      answer: "Elle repunaise le coin décollé. L'affiche gagne une année."
+
+  - id: co.dec.couloir_pesee
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, absurde]
+    tone: leger
+    cooldown: 25
+    text: "Rouvier, la kiné, tape la balance du pied : « Elle ment de deux kilos depuis l'inondation, et tout le monde s'est arrangé avec. Respire ; je la règle, ou on garde le mensonge ? »"
+    left:
+      label: "Règle-la"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Trois joueurs découvrent leur poids réel. Deux ne reviennent pas dans le couloir."
+    right:
+      label: "On garde le mensonge"
+      effects: {vestiaire: "+"}
+      answer: "Elle laisse la balance tranquille. Tout le monde a maigri de deux kilos."
+
+  - id: co.dec.couloir_cafe
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, direction, moment]
+    speaker: josiane
+    tone: leger
+    cooldown: 25
+    text: "Josiane serre sa cafetière contre elle : « La machine du couloir n'a jamais marché ; j'apporte la mienne depuis quatre-vingt-sept, {toi}. J'en ai vu passer, des techniciens. »"
+    left:
+      label: "Je paie un percolateur"
+      effects: {caisse: "-", direction: "+", vestiaire: "+"}
+      answer: "Le percolateur arrive. Sa cafetière reste sur le bureau, au cas où."
+    right:
+      label: "La vôtre est meilleure"
+      effects: {relation: {josiane: 1}, direction: "+"}
+      answer: "Elle sert deux tasses. Le technicien ne repassera pas."
+
+  - id: co.dec.couloir_plaque
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, direction, moment]
+    speaker: josiane
+    tone: strategique
+    cooldown: 40
+    when: "season >= 1"
+    text: "Josiane, une plaque gravée dans la main : « J'ai fait la vôtre, {toi}, et j'ai gardé les sept précédentes dans le tiroir du bas. J'en ai vu passer ; le tiroir est plein. »"
+    left:
+      label: "Vissez la mienne"
+      effects: {direction: "+"}
+      answer: "Elle visse. Le tiroir se referme sur les sept autres."
+    right:
+      label: "Gardez le tiroir ouvert"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle laisse la plaque à plat sur le bureau. Elle prend la poussière du bon côté."
+
+  - id: co.dec.couloir_chaussures
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, moment]
+    tone: leger
+    cooldown: 30
+    text: "Lulu, le gardien du stade, à genoux, pinceau à la main : « J'ai repeint la ligne bleue ce matin et vous êtes onze à avoir marché dessus. Le chien, lui, il a fait le tour. »"
+    left:
+      label: "On repeindra, promis"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il regarde le chien. Le chien a raison depuis toujours."
+    right:
+      label: "Je fais le tour aussi"
+      effects: {vestiaire: "+"}
+      answer: "Tu longes le mur. Onze paires d'yeux te regardent longer le mur."
+
+  - id: co.dec.couloir_liste
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: brehaut
+    tone: leger
+    cooldown: 25
+    text: "Bréhaut regarde une feuille punaisée de travers : « La liste est affichée depuis huit heures et personne n'a osé la redresser. Le groupe vit bien, mais il vit de travers. »"
+    left:
+      label: "Je la redresse"
+      effects: {vestiaire: "+"}
+      answer: "Il sourit sans le montrer. La feuille est droite ; le groupe aussi, pour un jour."
+    right:
+      label: "Qu'ils la lisent comme ça"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Deux joueurs la lisent la tête penchée. Ils retiennent la position, pas les noms."
+
+  # ==========================================================================
+  # § 2.2 — Le vestiaire, la table du Doc, la pharmacie (8)
+  # La table du Doc est la seule pièce sans témoin, donc la seule où l'on parle.
+  # ==========================================================================
+
+  - id: co.dec.doc_table
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: sabatier
+    tone: strategique
+    cooldown: 30
+    when: "season.phase != 'sprint'"
+    text: "Le Doc essuie ses mains : « Trois joueurs m'ont dit trois choses ce matin, et deux concernent ton onze, {toi}. Ça reste entre la table et moi, sauf si tu demandes. »"
+    left:
+      label: "Je ne demande rien"
+      effects: {vestiaire: "++", relation: {sabatier: 1}}
+      answer: "Il hoche la tête. Il range la serviette et il oublie très bien."
+    right:
+      label: "Dis-moi la troisième"
+      effects: {direction: "+", vestiaire: "-", relation: {sabatier: -1}}
+      answer: "Il te la dit. La porte est fermée, et quelqu'un l'a entendue quand même."
+
+  - id: co.dec.vestiaire_crochet
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    cooldown: 35
+    text: "Vecchio désigne un crochet du menton : « Il est à un type parti en quatre-vingt-douze, et personne ne s'y accroche depuis. J'en ai vu d'autres, mais celui-là on le laisse. »"
+    left:
+      label: "J'y pends ma veste"
+      effects: {vestiaire: "--", force: 1}
+      answer: "Le vestiaire se tait. Ta veste est très seule sur le mur."
+    right:
+      label: "On le laisse"
+      effects: {vestiaire: "+"}
+      answer: "Le crochet reste vide. Il tiendra plus longtemps que toi."
+
+  - id: co.dec.vestiaire_musique
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, absurde]
+    tone: leger
+    cooldown: 20
+    text: "Dembo, une enceinte grosse comme un ballon sous le bras : « C'est moi qui la porte, donc c'est moi qui choisis. Donne-moi le ballon, je m'occupe du reste, et du volume. »"
+    left:
+      label: "Baisse de moitié"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Il baisse. Il remonte à la 40e minute de la mi-temps, ce qui n'existe pas."
+    right:
+      label: "Monte, et gagne"
+      effects: {vestiaire: "++", direction: "-"}
+      answer: "Le couloir tremble. Le président ferme la porte de son bureau."
+
+  - id: co.dec.doc_flan
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, absurde]
+    tone: leger
+    cooldown: 30
+    text: "Rouvier, un flan dans une main, une cuillère dans l'autre : « Il restait un flan et deux blessés, j'ai tranché en faveur du plus triste. Respire, et ne le dis pas à l'autre. »"
+    left:
+      label: "Je ne dis rien"
+      effects: {vestiaire: "+"}
+      answer: "L'autre l'apprend en trois heures. Personne ne sait comment."
+    right:
+      label: "J'en rachète douze"
+      effects: {caisse: "-", vestiaire: "++"}
+      answer: "Douze flans arrivent le lendemain. Le club en parle plus que du match."
+
+  - id: co.dec.pharmacie_boite
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, scandale]
+    speaker: sabatier
+    tone: strategique
+    cooldown: 40
+    when: "season >= 1 && !flag('pharmacie_propre')"
+    text: "Le Doc tient une boîte sans étiquette : « Elle traîne dans l'armoire depuis l'ancien staff, et je ne sais pas ce qu'il y a dedans. Ça reste entre la table et moi : je la jette ou je la range ? »"
+    left:
+      label: "Jetez-la"
+      effects:
+        direction: "+"
+        vestiaire: "+"
+        set: [pharmacie_propre]      # Almanach : « {annee} : l'armoire a été vidée devant témoin. »
+      answer: "Il la jette devant toi, avec le sac, dans la benne du parking."
+    right:
+      label: "Rangez-la"
+      effects: {caisse: "+", direction: "-"}
+      answer: "Il la range tout au fond. L'armoire ferme mal depuis toujours."
+
+  - id: co.dec.vestiaire_ballon_signe
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: brehaut
+    tone: leger
+    cooldown: 30
+    when: "world.serie_victoires >= 1"
+    text: "Bréhaut, un ballon et un marqueur qui ne marche qu'à plat : « Celui de la victoire, on le signe tous et on l'offre à quelqu'un du club. Il faut juste choisir qui. »"
+    left:
+      label: "À Josiane"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle le pose sur le classeur. Il y restera vingt ans."
+    right:
+      label: "Au kop"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "Le local l'accroche au plafond, dans un filet à oranges."
+
+  - id: co.dec.vestiaire_douche_froide
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, caisse]
+    speaker: vukic
+    tone: leger
+    cooldown: 25
+    when: "season.phase == 'aller' || season.phase == 'hiver'"
+    text: "Vukić, serviette sur l'épaule : « L'eau chaude tient onze minutes et on est vingt-deux. Je te le dis parce que personne ne te le dira : ils tirent au sort. »"
+    left:
+      label: "Je paie le ballon d'eau"
+      effects: {caisse: "--", vestiaire: "++"}
+      answer: "L'eau chaude tient une heure. Le tirage au sort manque à trois joueurs."
+    right:
+      label: "Qu'ils tirent au sort"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Les onze perdants s'endurcissent. Deux tombent malades, ce qui est autre chose."
+
+  - id: co.dec.vestiaire_maillot_numero
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'presaison'"
+    text: "Momo, deux maillots pliés : « Le douze, personne n'en veut, et le sept, ils sont trois dessus. Tu tranches, ou on se débrouille comme l'an dernier ? »"
+    left:
+      label: "Je tranche"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Le sept est attribué. Deux joueurs s'entraînent avec le dos tourné."
+    right:
+      label: "Débrouillez-vous"
+      effects: {vestiaire: "+"}
+      answer: "Ils se débrouillent. Le douze finit sur le dos du plus jeune, comme toujours."
+
+  # ==========================================================================
+  # § 2.3 — Le bus et Norbert (8)
+  # La hiérarchie du club se lit à l'œil nu dans l'ordre des sièges. Norbert
+  # conduit depuis 1988 ; il ne commente pas, ce qui est une manière de tout dire.
+  # ==========================================================================
+
+  - id: co.dec.bus_siege_douze
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    tone: leger
+    cooldown: 25
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Norbert pose sa veste sur un dossier, sans regarder personne : « Le douze, personne ne s'assoit dessus depuis le car de quatre-vingt-onze. Je conduis, je ne commente pas. »"
+    left:
+      label: "Je m'assois au douze"
+      effects: {vestiaire: "-", force: 1, tribunes: "+"}
+      answer: "Vingt kilomètres sans un mot. Puis quelqu'un rit, et le bus repart."
+    right:
+      label: "Je reste debout"
+      effects: {vestiaire: "+"}
+      answer: "Il remet sa veste sur le douze. Le douze reste au douze."
+
+  - id: co.dec.bus_radio
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, moment]
+    tone: leger
+    cooldown: 20
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Norbert, la main sur le bouton, pas encore tourné : « À l'aller c'est ma radio, au retour c'est la vôtre : règle de quatre-vingt-huit. Je ne commente pas, mais l'aller est long. »"
+    left:
+      label: "Votre radio, alors"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Trois heures d'accordéon. Deux joueurs dorment mieux que d'habitude."
+    right:
+      label: "On met la nôtre"
+      effects: {vestiaire: "+", force: -1}
+      answer: "Il baisse sa vitre. Le bruit du vent est une chronique."
+
+  - id: co.dec.bus_arret_frites
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Vecchio, un cornet de frites pour deux : « On s'arrête ici depuis quinze ans et le patron nous garde la friteuse allumée. J'en ai vu d'autres, des aires ; celle-là a un patron. »"
+    left:
+      label: "Vingt minutes, pas plus"
+      effects: {vestiaire: "+", force: -1}
+      answer: "Le patron sort douze cornets. Le bus sent la frite jusqu'à la ville."
+    right:
+      label: "On roule"
+      effects: {force: 1, vestiaire: "--"}
+      answer: "Le bus passe devant. Le patron reste sur le parking avec sa friteuse allumée."
+
+  - id: co.dec.bus_retard_president
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, direction, moment]
+    tone: strategique
+    cooldown: 30
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Norbert regarde sa montre de conducteur, pas la sienne : « J'ai vingt-deux personnes à l'heure et une qui n'est pas là. Je conduis, je ne commente pas, mais l'amende, c'est pour moi. »"
+    left:
+      label: "On part sans lui"
+      effects: {direction: "--", vestiaire: "++"}
+      answer: "Le bus part. Le retardataire arrive en taxi, et il n'oublie pas."
+    right:
+      label: "On attend"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Onze minutes. Personne ne parle pendant onze minutes."
+
+  - id: co.dec.bus_carte_papier
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, moment]
+    tone: leger
+    cooldown: 35
+    when: "year < 2010"
+    text: "Norbert déplie une carte routière sur le volant : « La sortie a changé de numéro cet été et la carte date de l'an dernier. Je conduis, je ne commente pas : à droite ou tout droit ? »"
+    left:
+      label: "À droite"
+      effects: {force: -1, vestiaire: "+"}
+      answer: "Vous arrivez par le vieux pont. Le stade est plus beau par là."
+    right:
+      label: "Tout droit"
+      effects: {force: 1, tribunes: "-"}
+      answer: "Vous arrivez pile à l'heure, par la zone commerciale. Personne ne regarde par la fenêtre."
+
+  - id: co.dec.bus_chant_impose
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: mbako
+    tone: leger
+    cooldown: 25
+    when: "(season.phase == 'aller' || season.phase == 'retour') && world.serie_victoires >= 1"
+    text: "Mbako, debout dans l'allée, une bouteille en guise de micro : « Le nouveau chante debout, c'est la règle, et je suis le nouveau depuis deux ans. Je veux jouer, maintenant. »"
+    left:
+      label: "Chante quand même"
+      effects: {vestiaire: "++", relation: {mbako: -1}}
+      answer: "Il chante faux, exprès, très longtemps. Le bus l'adore."
+    right:
+      label: "Je chante à sa place"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Tu chantes. Norbert klaxonne une fois, ce qui est un compliment."
+
+  - id: co.dec.bus_gigi_descend
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, tribunes]
+    speaker: vecchio
+    tone: leger
+    cooldown: 30
+    when: "flag('gigi_staff') || chars.vecchio.statut == 'club' || chars.vecchio.statut == 'present'"
+    text: "Vecchio, sac de gants sur l'épaule, déjà debout : « Je descends le premier depuis dix-neuf ans, c'est comme ça qu'on sait qu'on est arrivés. J'en ai vu d'autres descendre avant moi. »"
+    left:
+      label: "Descends"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Il descend. Le stade fait le bruit qu'il fait toujours quand il descend."
+    right:
+      label: "Le capitaine d'abord"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Il laisse passer. Il descend deuxième, et il compte les marches."
+
+  - id: co.dec.bus_norbert_retraite
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, moment, vestiaire]
+    tone: strategique
+    once: true
+    cooldown: 40
+    when: "season >= 4"
+    text: "Norbert rend deux clés au lieu d'une : « Trente-quatre ans, deux cent mille kilomètres, une seule crevaison. Je conduis, je ne commente pas ; à partir de lundi, je commente. »"
+    left:
+      label: "On vous garde le douze"
+      effects: {vestiaire: "++", tribunes: "+"}
+      answer: "Il s'assoit au douze. Personne ne dit rien, et pour une fois c'est bien."
+    right:
+      label: "Merci, et bonne route"
+      effects: {direction: "+"}
+      answer: "Il salue de la main depuis le trottoir. Le bus part avec un autre à sa place."
+
+  # ==========================================================================
+  # § 2.4 — Le parking (6 sur 7 : « la photo de La Plume » attend son rôle)
+  # Le parking est la salle de rédaction de la Gazette Rose : le prix des
+  # voitures, et qui attend dans la sienne, moteur éteint.
+  # ==========================================================================
+
+  - id: co.dec.parking_meneche_attend
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, presse, direction]
+    speaker: meneche
+    tone: strategique
+    cooldown: 25
+    text: "Massenet, appuyé sur une portière qui n'est pas la sienne : « J'attends depuis quarante minutes. Juste une question, hors micro, {toi} : vous sortez par où, d'habitude ? »"
+    left:
+      label: "Une question, une seule"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il note trois mots. Il en publiera onze."
+    right:
+      label: "Je sors par derrière"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il regarde la porte de derrière. Il la connaissait déjà."
+
+  - id: co.dec.parking_voiture_president
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, tribunes]
+    speaker: gege
+    tone: leger
+    cooldown: 30
+    text: "Gégé, assis sur le muret, écharpe au cou : « Sa place est peinte à son nom et la nôtre est dans la boue depuis quinze ans. La tribune n'oublie rien, surtout la peinture. »"
+    left:
+      label: "Je fais peindre le parking"
+      effects: {caisse: "-", tribunes: "++"}
+      answer: "Les lignes sont blanches. Le nom du président est toujours écrit plus gros."
+    right:
+      label: "Une place, c'est une place"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il crache par terre, poliment. La boue reste."
+
+  - id: co.dec.parking_fardelli_moteur
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, agents, caisse]
+    speaker: fardelli
+    tone: leger
+    cooldown: 25
+    text: "Fardelli, vitre baissée de dix centimètres : « Je ne descends pas, {toi}, il fait froid et j'ai quatre-vingts kilomètres. On parle d'argent ou d'amitié ? »"
+    left:
+      label: "D'amitié, alors"
+      effects: {direction: "+", caisse: "-"}
+      answer: "Il remonte la vitre en riant. Il rappellera pour l'argent."
+    right:
+      label: "D'argent, vite"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Il coupe le moteur. La conversation dure quarante minutes."
+
+  - id: co.dec.parking_voitures_jeunes
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, formation]
+    speaker: vukic
+    tone: leger
+    cooldown: 30
+    when: "year >= 2000"
+    text: "Vukić regarde une voiture jaune, très basse : « Le gamin a signé lundi et la voiture est arrivée mercredi ; le permis, c'est vendredi. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Je lui parle"
+      effects: {vestiaire: "+", relation: {mbako: -1}}
+      answer: "Il écoute. La voiture est garée plus loin la semaine suivante."
+    right:
+      label: "C'est son argent"
+      effects: {vestiaire: "-"}
+      answer: "La voiture reste devant la porte. Deux autres arrivent le mois d'après."
+
+  - id: co.dec.parking_camionnette_supporters
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, tribunes]
+    tone: leger
+    cooldown: 30
+    text: "Nino, une camionnette pleine de peinture derrière lui : « On a la bâche, la peinture et personne pour ouvrir le portail. Le virage attend, et le virage attend mal. »"
+    left:
+      label: "J'ouvre le portail"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "La bâche est peinte dans le parking. Le sol garde une fresque de vingt mètres."
+    right:
+      label: "Demandez au club"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Ils peignent sur le trottoir d'en face. C'est plus visible, et c'est bien le problème."
+
+  - id: co.dec.parking_flaque
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, tribunes]
+    tone: leger
+    cooldown: 35
+    text: "Lulu, bottes, seau, chien : « La flaque du fond a un nom depuis quatre-vingt-quatorze et le chien s'y baigne. Elle prendra le vôtre si vous ne la bouchez pas. »"
+    left:
+      label: "On la bouche"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Deux camions de gravier. La flaque revient au printemps, plus à l'est."
+    right:
+      label: "Qu'elle garde son nom"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Le chien y saute. Trois enfants font pareil, ce qui règle la question."
+
+  # ==========================================================================
+  # § 2.5 — Le local, sous la Tribune Nord (8)
+  # Trois bières, un mur, une craie, un filet à oranges : la seule archive du
+  # club qui n'a jamais brûlé.
+  # ==========================================================================
+
+  - id: co.dec.local_mur_craie
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    cooldown: 30
+    when: "relation.gege >= 0"
+    text: "Gégé, la craie à la main : « Ce mur porte cent onze dates et deux promesses non tenues, écrites plus gros. La tribune n'oublie rien, {toi} ; tu veux les voir ? »"
+    left:
+      label: "Montre-moi les deux"
+      effects: {tribunes: "+", direction: "-", parole: 1}
+      answer: "Il montre. Les deux noms sont ceux de gens qui vivent encore en ville."
+    right:
+      label: "Je préfère les cent onze"
+      effects: {tribunes: "++", relation: {gege: 1}}
+      answer: "Il fait le tour du mur avec toi. Ça prend une heure et deux bières."
+
+  - id: co.dec.local_filet_oranges
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, moment]
+    tone: leger
+    cooldown: 35
+    when: "season >= 1"
+    text: "Nino décroche un filet à oranges plein de ballons : « Chacun vient d'une victoire à l'extérieur, et il en manque un depuis l'inondation. Le virage compte mieux que la Fédération. »"
+    left:
+      label: "Je vous en donne un"
+      effects: {tribunes: "++", vestiaire: "-"}
+      answer: "Le filet est plein. Le vestiaire cherche son ballon toute la semaine."
+    right:
+      label: "Comptez sans moi"
+      effects: {tribunes: "-"}
+      answer: "Il raccroche le filet. Il compte quand même."
+
+  - id: co.dec.local_unes_decoupees
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, presse]
+    speaker: gege
+    tone: leger
+    cooldown: 30
+    when: "season >= 1"
+    text: "Gégé, des ciseaux et un journal rose : « On découpe les Unes et on garde même les moches, surtout les moches. La tribune n'oublie rien, et elle plastifie. »"
+    left:
+      label: "Découpez celle-là"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "La Une est punaisée au-dessus de la porte. Tu la vois en sortant."
+    right:
+      label: "Brûlez-la"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Ils la brûlent dans un seau. Ils en gardent une photo."
+
+  - id: co.dec.local_bache_nom
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, tribunes]
+    tone: strategique
+    cooldown: 40
+    when: "season >= 1"
+    text: "Nino, un pinceau à la main, une lettre déjà peinte : « La bâche a un nom depuis mardi et il reste trois lettres. On peut encore changer d'avis ; après, c'est peint. »"
+    left:
+      label: "Peignez"
+      effects: {tribunes: "++", direction: "-", promise: true}
+      answer: "Vingt mètres portent un nom. Ce nom devra tenir la saison."
+    right:
+      label: "Attendez juin"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "La bâche est repliée avec trois lettres. Elles sèchent quand même."
+
+  - id: co.dec.local_chaise_du_pere
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, moment]
+    speaker: gege
+    tone: strategique
+    once: true
+    cooldown: 45
+    text: "Gégé pose la main sur un dossier de chaise vide : « Celle-là, c'est celle de mon père, interdit de stade en soixante et onze pour un dessin. La tribune s'assoit ailleurs. »"
+    left:
+      label: "Je reste debout"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il approuve d'un mouvement de menton. La chaise reste vide."
+    right:
+      label: "Je m'assois"
+      effects: {tribunes: "--", relation: {gege: -1}}
+      answer: "Le local se vide en quatre minutes. Personne ne t'a rien dit."
+
+  - id: co.dec.local_vote_compo
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, vestiaire]
+    tone: leger
+    cooldown: 25
+    when: "season.phase != 'presaison'"
+    text: "Nino, un tableau noir, onze noms, une craie qui grince : « On a voté le onze à main levée et on t'a mis en dix, par politesse. Le virage attend mal, mais il attend. »"
+    left:
+      label: "Je regarde le tableau"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Tu le regardes. Deux noms te trottent dans la tête jusqu'à dimanche."
+    right:
+      label: "Je ne regarde pas"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Ils effacent avant que tu sortes. Ils recommencent la semaine d'après."
+
+  - id: co.dec.local_biere_tiede
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, absurde]
+    speaker: gege
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'retour' || season.phase == 'sprint'"
+    text: "Gégé aligne trois bières tièdes sur une caisse : « Le frigo est mort en mars et on boit tiède depuis, ça forge le caractère. La tribune n'oublie rien, même la panne. »"
+    left:
+      label: "Je paie le frigo"
+      effects: {caisse: "-", tribunes: "++"}
+      answer: "Le frigo arrive. Ils gardent l'ancien, debout, comme une statue."
+    right:
+      label: "Trois tièdes, alors"
+      effects: {tribunes: "+", force: -1}
+      answer: "Tu bois la tienne. Le goût reste jusqu'à l'échauffement."
+
+  - id: co.dec.local_paulette_visite
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, tribunes, moment]
+    tone: leger
+    cooldown: 40
+    when: "year <= 2009"
+    text: "Mamie Paulette descend au local avec un cabas et deux tartes : « Je viens deux fois par an vérifier qu'ils mangent, et ils mangent mal. J'étais là en cinquante et un. »"
+    left:
+      label: "Je prends une part"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Tu manges debout. Le local se tient droit pendant vingt minutes."
+    right:
+      label: "Je repasserai"
+      effects: {tribunes: "-"}
+      answer: "Elle laisse les deux tartes. Elle repart par l'escalier, lentement."
+
+  # ==========================================================================
+  # § 2.6 — La buvette et le club-house (4 sur 8 : le reste attend le rôle
+  # « président amateur »). La trésorerie réelle du football amateur.
+  # ==========================================================================
+
+  - id: co.dec.buvette_ardoise
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, caisse, vestiaire]
+    tone: strategique
+    cooldown: 25
+    text: "Gérard, trésorier de la buvette, un carnet à spirale plein de bâtons : « L'ardoise du dimanche fait quatre pages et trois noms reviennent partout. Ici, on payait en bières. »"
+    left:
+      label: "J'efface tout"
+      effects: {caisse: "--", vestiaire: "++", tribunes: "+"}
+      answer: "Il arrache les quatre pages. Trois hommes te serrent la main trop longtemps."
+    right:
+      label: "Que chacun paie"
+      effects: {caisse: "++", vestiaire: "-", tribunes: "-"}
+      answer: "Deux paient. Un ne revient plus le dimanche."
+
+  - id: co.dec.buvette_merguez
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, sponsors, absurde]
+    tone: leger
+    once: true
+    cooldown: 45
+    text: "Dupuis pose deux cents merguez sur le comptoir : « La buvette d'à côté a brûlé en quatre-vingt-douze avec deux cents dedans, personne dessous. Le meilleur du cochon, et je pèse mes mots. »"
+    left:
+      label: "On en refait deux cents"
+      effects:
+        caisse: "-"
+        tribunes: "++"
+        set: [merguez_deux_cents]   # Almanach : « {annee} : deux cents merguez, comme en quatre-vingt-douze. »
+      answer: "La fumée monte jusqu'à la tribune. Quelqu'un ressort la photo de quatre-vingt-douze."
+    right:
+      label: "Cent suffiront"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Il en apporte deux cents quand même. Il en remporte cent."
+
+  - id: co.dec.buvette_merguez_record
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, sponsors, absurde]
+    tone: leger
+    cooldown: 40
+    when: "flag('merguez_deux_cents')"
+    text: "Dupuis compte sur ses doigts, devant la buvette : « Deux cents ont battu le record du stade, et il en restait quatre. Le meilleur du cochon, et je pèse mes mots : on remet ça ? »"
+    left:
+      label: "On remet ça"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "Les quatre de l'an dernier sortent du congélateur. Personne ne demande depuis quand."
+    right:
+      label: "Une fois suffisait"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Il range son gril. Il le ressort en juin, pour la fête de l'école."
+
+  - id: co.dec.buvette_photo_1974
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, tribunes, moment]
+    tone: leger
+    cooldown: 35
+    text: "Pichon, le boulanger, redresse un cadre : « Cette photo de soixante-quatorze a treize joueurs et douze noms. Le pain, c'est à cinq heures ; le mystère, c'est après. »"
+    left:
+      label: "On cherche le treizième"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Trois anciens s'y mettent. Ils trouvent quatre noms différents."
+    right:
+      label: "Qu'il reste anonyme"
+      effects: {tribunes: "+"}
+      answer: "Le cadre est redressé. Le treizième continue de sourire."
+
+  - id: co.dec.buvette_anciens_samedi
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, tribunes, moment]
+    speaker: vecchio
+    statut_ok: [retraite, parti]
+    tone: leger
+    cooldown: 30
+    when: "year >= 2005"
+    text: "Vecchio, un torchon sur l'épaule, derrière le comptoir des anciens : « Le samedi matin, ici, c'est nous ; on refait des matchs de quatre-vingt-quinze. J'en ai vu d'autres. »"
+    left:
+      label: "Je m'assois avec vous"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Tu écoutes un match que tu n'as pas joué. Tu t'en souviens quand même."
+    right:
+      label: "Je passe en coup de vent"
+      effects: {direction: "+"}
+      answer: "Il te sert un café à emporter. Le gobelet fuit ; il le sait."
+
+  # ==========================================================================
+  # § 2.7 — Le secrétariat, le bureau, le fax (3 sur 7 : le reste attend les
+  # rôles de bureau). Josiane a le vrai plan du club : un tiroir du bas.
+  # ==========================================================================
+
+  - id: co.dec.bureau_tiroir_du_bas
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, direction, caisse]
+    speaker: josiane
+    tone: strategique
+    cooldown: 35
+    when: "season >= 1"
+    text: "Josiane ouvre un tiroir de dix centimètres, pas plus : « Le tiroir du bas contient ce qu'on n'a pas jeté et ce qu'on n'a pas classé. J'en ai vu passer ; il faudrait deux heures. »"
+    left:
+      label: "On trie ce soir"
+      effects: {direction: "+", caisse: "+", relation: {josiane: 1}}
+      answer: "Deux heures. Il en ressort un contrat de 1993 que personne ne cherchait."
+    right:
+      label: "Qu'il reste fermé"
+      effects: {direction: "-", vestiaire: "+"}
+      answer: "Elle repousse le tiroir du genou. Il ne ferme plus tout à fait."
+
+  - id: co.dec.bureau_fax_faute
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, direction, absurde]
+    speaker: josiane
+    tone: leger
+    cooldown: 25
+    when: "year <= 2010"
+    text: "Josiane, stylo rouge sur une page qui sort encore chaude : « Notre fax écrit transfet depuis quatre-vingt-dix-huit et je corrige à la main. J'en ai vu passer, des machines. »"
+    left:
+      label: "On le fait réparer"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Le technicien change une pièce. Le mot revient faux la semaine suivante."
+    right:
+      label: "Corrigez, comme toujours"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle corrige. Le club reçoit ses transferts avec une virgule rouge."
+
+  - id: co.dec.bureau_sms_faute
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, direction, retorse]
+    speaker: aulard
+    tone: strategique
+    cooldown: 40
+    when: "relation.aulard <= 0"
+    text: "Le président, le pouce au-dessus de l'écran : « J'ai un message tout prêt pour un entraîneur, avec une faute que je ne corrige jamais. J'ai pas le temps, j'ai un empire ; tu le lis ? »"
+    left:
+      label: "Montrez-moi"
+      effects:
+        direction: "-"
+        parole: 1
+        set: [faute_lue]   # Almanach : « {annee} : la faute du patron a été lue avant d'être envoyée. »
+      answer: "Tu la vois : le mot est faux depuis 1991. Il l'a envoyé onze fois."
+    right:
+      label: "Gardez-le pour un autre"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il range le téléphone. Le brouillon reste en mémoire."
+
+  # ==========================================================================
+  # § 2.8 — Le centre de formation (7)
+  # Un préfabriqué, une pelouse trop courte, un panneau avec les horaires du car.
+  # ==========================================================================
+
+  - id: co.dec.centre_flans
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, formation, absurde]
+    tone: leger
+    cooldown: 25
+    when: "season.phase != 'bilan'"
+    text: "Marinette pousse un chariot de ramequins dans la cantine du centre : « Il y a des flans pour tout le monde, sauf pour ceux qui reviennent en douce. Je sais toujours qui est revenu. »"
+    left:
+      label: "Un flan, et je m'assois"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Tu manges avec quatorze gamins. Deux te parlent, douze te regardent."
+    right:
+      label: "Je n'ai pas le temps"
+      effects: {direction: "+"}
+      answer: "Elle met un flan de côté. Il attend jusqu'au soir."
+
+  - id: co.dec.centre_panneau
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, formation, moment]
+    tone: strategique
+    cooldown: 30
+    when: "season.phase == 'retour' || season.phase == 'sprint'"
+    text: "Brissac pose un doigt sur une liste de quatorze noms : « Deux joueront en pro et onze le sauront trop tard. Les chiffres sont têtus, les joueurs aussi ; qui prévient les onze ? »"
+    left:
+      label: "Je les préviens moi-même"
+      effects: {vestiaire: "-", direction: "+", parole: 1}
+      answer: "Tu passes une matinée à dire non. Onze familles s'en souviennent."
+    right:
+      label: "Le club le fera"
+      effects: {direction: "-", caisse: "+"}
+      answer: "Une lettre part le 30 juin. Elle est très bien écrite."
+
+  - id: co.dec.centre_barbier_pluie
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, formation, moment]
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'aller' || season.phase == 'hiver'"
+    text: "Barbier, doudoune et carnet dans un sac plastique : « Je suis là depuis une heure et quart, il pleut, et c'est exactement pour ça. Je l'ai vu jouer sous la pluie ; le reste, c'est du beau temps. »"
+    left:
+      label: "Lequel ?"
+      effects: {direction: "+", force: 1}
+      answer: "Il montre un dossard sans le nommer. Le numéro est neuf."
+    right:
+      label: "Il pleut aussi ailleurs"
+      effects: {vestiaire: "+"}
+      answer: "Il rabat sa capuche. Il reste encore une heure."
+
+  - id: co.dec.centre_chaussures_trop_grandes
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, formation, vestiaire]
+    speaker: mbako
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'hiver' || season.phase == 'retour'"
+    text: "Mbako montre des crampons deux pointures trop grands : « Je joue avec du quarante-cinq depuis février, c'est ce qu'il y avait, {toi}. Je veux jouer ; les pieds suivront. »"
+    left:
+      label: "On t'achète ta pointure"
+      effects: {caisse: "-", relation: {mbako: 1}, vestiaire: "+"}
+      answer: "Les crampons arrivent le jeudi. Il marque le samedi, ce qui ne prouve rien."
+    right:
+      label: "Les pieds suivront"
+      effects: {force: 1, relation: {mbako: -1}}
+      answer: "Il joue avec du quarante-cinq. Il ne l'oublie jamais."
+
+  - id: co.dec.centre_car_horaire
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, formation, moment]
+    tone: leger
+    cooldown: 35
+    when: "season.phase == 'aller' || season.phase == 'hiver'"
+    text: "Marinette, deux sandwichs emballés, un dans chaque main : « Le car de six heures quarante prend les gamins des trois villages, et il en manque un. Il n'y a pas de deuxième car. »"
+    left:
+      label: "Je vais le chercher"
+      effects: {direction: "-", vestiaire: "++"}
+      answer: "Tu arrives chez lui à sept heures dix. Sa mère te fait un café qu'elle n'a pas."
+    right:
+      label: "Il apprendra"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Il apprend. Il arrive à l'heure pendant six ans."
+
+  - id: co.dec.centre_mur_des_partis
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, formation, moment]
+    tone: strategique
+    cooldown: 40
+    when: "season >= 2"
+    text: "Brissac montre un mur de photos de classe, une par promotion : « On entoure au feutre ceux qui sont passés pros. Les chiffres sont têtus : il y a des années sans un seul rond. »"
+    left:
+      label: "On entoure aussi les autres"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Deux cents ronds au feutre bleu. Le mur devient illisible et beaucoup plus juste."
+    right:
+      label: "On garde la règle"
+      effects: {direction: "+"}
+      answer: "Un rond de plus cette année. La photo de 1996 n'en a toujours aucun."
+
+  - id: co.dec.centre_but_sans_filet
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, formation, caisse]
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'hiver' || season.phase == 'retour'"
+    text: "Lulu, un filet roulé sous le bras : « Le but nord n'a plus de filet depuis Noël et les gamins courent chercher le ballon dans les orties. Le chien, lui, il n'y va plus. »"
+    left:
+      label: "Deux filets neufs"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Les filets sont posés le jeudi. Les orties respirent."
+    right:
+      label: "Ça les fait courir"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Ils courent. Deux ont des plaques rouges jusqu'aux genoux."
+
+  # ==========================================================================
+  # § 2.9 — L'hôtel du club et les déplacements (6)
+  # Chambre 12, moquette à motifs, un plateau de fruits sous film.
+  # ==========================================================================
+
+  - id: co.dec.hotel_chambre_douze
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: vukic
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Vukić fait tourner une clé à gros porte-clés : « La douze donne sur la route et personne n'y dort, sauf qui a mal parlé, {toi}. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Je prends la douze"
+      effects: {vestiaire: "++", force: -1}
+      answer: "Tu dors mal. Le vestiaire l'apprend avant le petit-déjeuner."
+    right:
+      label: "Attribuez-la"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Un joueur y dort. Il joue en colère, ce qui marche une fois sur deux."
+
+  - id: co.dec.hotel_plateau_fruits
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, caisse]
+    speaker: sabatier
+    tone: leger
+    cooldown: 25
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Le Doc soulève un film plastique sur des bananes : « Le plateau est le même depuis lundi, seul le film a changé. Ça reste entre la table et moi, mais je ne mangerais pas la poire. »"
+    left:
+      label: "On change de traiteur"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Le plateau du lendemain est splendide. Personne n'y touche non plus."
+    right:
+      label: "Personne n'y touche"
+      effects: {direction: "+"}
+      answer: "Le plateau reste. La poire devient un personnage du couloir."
+
+  - id: co.dec.hotel_cloison
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: brehaut
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Bréhaut tape deux fois du poing sur un mur fin : « On entend tout à travers, et cette nuit on a tout entendu. Le groupe vit bien ; il faut juste qu'il dorme. »"
+    left:
+      label: "Je change les chambres"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le plan est refait à minuit. Deux joueurs ne se parlent plus, mais ils dorment."
+    right:
+      label: "On dort quand même"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Personne ne dort. L'échauffement est très silencieux."
+
+  - id: co.dec.hotel_ascenseur
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, moment]
+    tone: leger
+    cooldown: 35
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Vogler, casquette et survêtement, tient la porte : « L'ascenseur ne fait que quatre personnes et nous sommes deux staffs. On court, on presse, on chante : on prend les escaliers ? »"
+    left:
+      label: "On prend l'escalier"
+      effects: {force: 1, vestiaire: "+"}
+      answer: "Quatre étages avec l'adversaire. Vous parlez de latéraux gauches."
+    right:
+      label: "Après vous"
+      effects: {direction: "+", force: -1}
+      answer: "Il monte. Tu attends huit minutes avec vingt-deux personnes."
+
+  - id: co.dec.hotel_facture_minibar
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, caisse, vestiaire]
+    speaker: josiane
+    tone: strategique
+    cooldown: 30
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Josiane déplie une note d'hôtel en accordéon : « Le minibar de la chambre neuf a coûté plus que la chambre neuf. J'en ai vu passer, mais pas à ce prix, et pas en janvier. »"
+    left:
+      label: "Le club paie"
+      effects: {caisse: "--", vestiaire: "+"}
+      answer: "Le club paie. Le minibar de la neuf est vide dès février."
+    right:
+      label: "Il paiera lui-même"
+      effects: {caisse: "+", vestiaire: "--"}
+      answer: "Le joueur paie. Il raconte l'histoire à chaque nouveau pendant six ans."
+
+  - id: co.dec.hotel_fenetre_fanfare
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, absurde]
+    speaker: gege
+    tone: leger
+    cooldown: 35
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Gégé, en bas dans la rue, un tambour et onze personnes : « Leur kop est venu jouer sous vos fenêtres, alors on est venus sous les leurs. La tribune n'oublie rien, et elle ne dort pas. »"
+    left:
+      label: "Rentrez, s'il vous plaît"
+      effects: {tribunes: "-", force: 1}
+      answer: "Ils rentrent en chantant plus bas. Le tambour continue deux rues plus loin."
+    right:
+      label: "Vous êtes fous"
+      effects: {tribunes: "++", force: -1}
+      answer: "Le tambour dure jusqu'à quatre heures. Le club perd, et personne ne regrette."
+
+  # ==========================================================================
+  # § 2.10 — Le port, la ville, le marché du dimanche (6)
+  # La seule sonde de TRIBUNES qui ne passe pas par le stade.
+  # ==========================================================================
+
+  - id: co.dec.ville_marche_dimanche
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, tribunes, moment]
+    tone: leger
+    cooldown: 25
+    text: "Mamie Paulette, cabas au bras, une file derrière elle : « Trois personnes m'ont parlé du match avant mes poireaux, aucune n'était contente. J'étais là en cinquante et un. »"
+    left:
+      label: "Je fais la queue"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "Tu écoutes vingt minutes. Tu apprends deux choses que le club ignore."
+    right:
+      label: "Je passe devant"
+      effects: {tribunes: "-", force: 1}
+      answer: "Tu passes. La file te regarde passer."
+
+  - id: co.dec.ville_vitrine
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, presse, tribunes]
+    tone: leger
+    cooldown: 30
+    when: "world.rang >= 10"
+    text: "Le stagiaire de L'Écho, un scotch et une affiche : « On affiche le classement en vitrine chaque lundi, et lundi dernier il a fallu du petit format. Une phrase pour la légende ? »"
+    left:
+      label: "Une phrase courte"
+      effects: {tribunes: "+", parole: 1, promise: true}
+      answer: "Ta phrase tient dans la vitrine. Elle y reste six semaines."
+    right:
+      label: "Pas de phrase"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il affiche le classement tout seul. C'est plus dur à lire."
+
+  - id: co.dec.port_bateau_puymarin
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, moment, absurde]
+    tone: leger
+    cooldown: 35
+    when: "season.phase == 'aller' || season.phase == 'retour'"
+    text: "Norbert arrête le bus devant une passerelle : « Il y a un bateau par jour et il part dans onze minutes, avec ou sans nous. Je conduis, je ne commente pas ; je ne nage pas non plus. »"
+    left:
+      label: "On court"
+      effects: {force: -1, vestiaire: "++"}
+      answer: "Vingt-deux personnes courent avec des sacs. Le bateau attend deux minutes, pour rire."
+    right:
+      label: "On dormira sur place"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Une nuit imprévue au bord de l'eau. Trois joueurs disent que c'était la meilleure."
+
+  - id: co.dec.ville_coiffeur
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, famille, tribunes]
+    speaker: camille
+    tone: leger
+    cooldown: 30
+    when: "!flag('divorce')"
+    text: "Camille montre une photo découpée dans un journal : « Le coiffeur t'a mis au mur, entre un chanteur et un cheval. Tu rentres à quelle heure ; il ferme à sept heures. »"
+    left:
+      label: "Je passe avant sept heures"
+      effects: {tribunes: "+", relation: {camille: 1}}
+      answer: "Tu y vas. Le coiffeur refuse d'être payé et parle du match de 1994."
+    right:
+      label: "Une autre fois"
+      effects: {tribunes: "-", relation: {camille: -1}}
+      answer: "La photo jaunit. Le cheval, lui, est intemporel."
+
+  - id: co.dec.ville_ecole
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, presse, tribunes]
+    speaker: lea
+    tone: leger
+    cooldown: 40
+    text: "Léa, carnet en main, trente enfants derrière elle : « Une classe a écrit trente lettres au club et vingt-huit posent la même question. Vous confirmez que vous restez, {toi} ? »"
+    left:
+      label: "Je réponds aux trente"
+      effects: {tribunes: "++", direction: "-", parole: 1, promise: true}
+      answer: "Trente réponses écrites à la main. Deux finissent encadrées."
+    right:
+      label: "Je réponds à la classe"
+      effects: {tribunes: "+"}
+      answer: "Une lettre pour trente. Elle est lue à voix haute et ça suffit."
+
+  - id: co.dec.port_bookmaker
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, scandale, retorse]
+    tone: strategique
+    cooldown: 40
+    when: "year >= 1994 && !flag('pisteur')"
+    text: "Au bar du port, une ardoise de cotes à la craie : « Votre club est à cinq mille contre un pour le titre et deux personnes ont misé cent francs. Vous voulez savoir qui ? »"
+    left:
+      label: "Je veux savoir"
+      effects:
+        direction: "-"
+        tribunes: "+"
+        set: [pisteur]   # Almanach : « {annee} : une ardoise du port portait deux noms, dont un connu. »
+      answer: "Il te donne un prénom. Tu le connais très bien."
+    right:
+      label: "Ça ne me regarde pas"
+      effects: {vestiaire: "+"}
+      answer: "Il efface la cote et en écrit une autre. La craie ne tient pas."
+
+  # ==========================================================================
+  # § 2.11 — Salle 3, la salle d'attente (2 sur 8 : le Congrès et l'hôtel du
+  # Lac attendent les rôles « président » et « instance »).
+  # ==========================================================================
+
+  - id: co.dec.salle3_horloge
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, arbitrage, absurde]
+    tone: leger
+    cooldown: 35
+    when: "season >= 1"
+    text: "Dauzat, dossier fermé sur les genoux, dans la salle d'attente : « L'horloge de la salle trois avance de quatre minutes depuis mille neuf cent quatre-vingts. C'est dans le procès-verbal. »"
+    left:
+      label: "Je la règle"
+      effects: {direction: "-", parole: 1}
+      answer: "Tu montes sur une chaise devant deux commissaires. Ils notent."
+    right:
+      label: "J'attends"
+      effects: {direction: "+", force: -1}
+      answer: "Tu attends quarante minutes. Trente-six, selon l'horloge."
+
+  - id: co.dec.salle3_chaise_orange
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, arbitrage, moment]
+    tone: leger
+    cooldown: 40
+    when: "season >= 1"
+    text: "Colline attend, dossier sur les genoux, dos droit : « Cette chaise a une fêlure et tout le monde s'assoit dessus, moi le premier. J'ai vu ; ça ne change rien à ce que j'écris. »"
+    left:
+      label: "Je m'assois à côté"
+      effects: {direction: "+", vestiaire: "+"}
+      answer: "Vous attendez ensemble. Aucun des deux ne parle du match."
+    right:
+      label: "Je reste debout"
+      effects: {force: 1, direction: "-"}
+      answer: "Tu restes debout quarante minutes. Il note que tu es resté debout."
+
+  # ==========================================================================
+  # § 2.12 — La pelouse, la tribune Est, le panneau (8)
+  # Le décor est un personnage : une pelouse qui a un avis, un panneau qui
+  # change de nom plus souvent que l'équipe.
+  # ==========================================================================
+
+  - id: co.dec.pelouse_taupe
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, moment]
+    tone: leger
+    cooldown: 30
+    text: "Lulu montre une taupinière au point de penalty : « Il y a une taupe là-dessous et elle a gagné deux fois contre moi. Le chien la cherche ; le chien est très mauvais. »"
+    left:
+      label: "Appelez quelqu'un"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Un homme vient avec une boîte. La taupe déménage de trois mètres."
+    right:
+      label: "Laissez-la"
+      effects: {tribunes: "+", force: -1}
+      answer: "Le penalty du dimanche part de travers. Personne ne parle de la taupe."
+
+  - id: co.dec.tribune_est_14b
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, tribunes, moment]
+    tone: strategique
+    cooldown: 35
+    when: "year <= 2009"
+    text: "Mamie Paulette époussette un siège avec un mouchoir : « Quatorze B, c'est la mienne, et quatorze A, c'était la sienne, à la soixante-dixième. J'étais là en cinquante et un. »"
+    left:
+      label: "Je m'assois en 14A"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Tu regardes vingt minutes de match à côté d'elle. Elle commente très bien."
+    right:
+      label: "Je vous laisse"
+      effects: {tribunes: "+"}
+      answer: "Elle pose son mouchoir sur le 14A. Le siège reste propre."
+
+  - id: co.dec.panneau_naming
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, sponsors, ultras]
+    speaker: gege
+    tone: strategique
+    cooldown: 30
+    when: "flag('naming_signe')"
+    text: "Gégé regarde des lettres orange : « Le sponsor est en haut, le nôtre en petit, {toi}, et en dessous rien. La tribune n'oublie rien, surtout ce qui est écrit petit. »"
+    left:
+      label: "On agrandit le nôtre"
+      effects: {caisse: "-", tribunes: "++"}
+      answer: "Les lettres du club doublent. Le sponsor demande pourquoi, poliment."
+    right:
+      label: "C'est le contrat"
+      effects: {tribunes: "--", caisse: "+"}
+      answer: "Le panneau reste. Le virage chante l'ancien nom pendant six ans."
+
+  - id: co.dec.pelouse_arrosage
+    roles: [entraineur]
+    arc: routine
+    tags: [decor, arbitrage, moment]
+    tone: leger
+    cooldown: 30
+    when: "season.phase != 'presaison'"
+    text: "Lulu garde la main sur la vanne d'arrosage : « Je peux arroser beaucoup ou pas du tout, et les deux sont légaux. Le chien préfère beaucoup ; moi, je fais ce qu'on me dit. »"
+    left:
+      label: "Beaucoup"
+      effects: {force: 1, direction: "-", tribunes: "-"}
+      answer: "Le terrain est gras. L'adversaire glisse ; vous aussi, un peu moins."
+    right:
+      label: "Comme d'habitude"
+      effects: {direction: "+", vestiaire: "+"}
+      answer: "Le terrain est parfait. L'arbitre le note, ce qui n'arrive jamais."
+
+  - id: co.dec.tribune_travaux
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, caisse, tribunes]
+    speaker: josiane
+    tone: strategique
+    cooldown: 35
+    when: "flag('tribune_a_renover')"
+    text: "Josiane tient un devis à deux pages, la deuxième dessous : « Le devis de la tribune date de trois étés et il n'a pas vieilli, lui. J'en ai vu passer ; celui-là est toujours à la même page. »"
+    left:
+      label: "On signe cet été"
+      effects: {caisse: "--", tribunes: "++", promise: true}
+      answer: "Le devis est signé. L'échafaudage arrive deux ans plus tard, et il reste."
+    right:
+      label: "L'été prochain"
+      effects: {tribunes: "-", caisse: "+"}
+      answer: "Elle range le devis dans le tiroir du bas. Il connaît le chemin."
+
+  - id: co.dec.stade_horloge_arretee
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, tribunes, absurde]
+    tone: leger
+    cooldown: 40
+    when: "season >= 1"
+    text: "Lulu lève la tête vers le cadran du fronton : « L'horloge est arrêtée sur quatre-vingt-dix depuis la montée, et personne n'a demandé qu'on la répare. Le chien s'assoit dessous. »"
+    left:
+      label: "On la répare"
+      effects: {caisse: "-", tribunes: "-"}
+      answer: "L'horloge repart. Le stade trouve ça triste sans savoir pourquoi."
+    right:
+      label: "Elle a raison"
+      effects: {tribunes: "++"}
+      answer: "Elle reste sur quatre-vingt-dix. Deux tatouages en ville reproduisent le cadran."
+
+  - id: co.dec.stade_chien_corner
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, absurde, vestiaire]
+    tone: leger
+    cooldown: 25
+    text: "Lulu siffle un chien qui traverse la surface : « Il s'appelle Corner parce qu'il ne va jamais au milieu, jamais. Le chien, lui, connaît le règlement mieux que la ligue. »"
+    left:
+      label: "Il peut rester"
+      effects: {vestiaire: "++", force: -1}
+      answer: "Corner assiste à toute la séance. Il rapporte deux ballons et en cache un."
+    right:
+      label: "Sortez-le"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Corner sort. Il aboie du parking pendant une heure et vingt minutes."
+
+  - id: co.dec.stade_sono
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, sponsors]
+    tone: leger
+    cooldown: 30
+    when: "season.phase != 'presaison'"
+    text: "Nino tient un câble débranché : « La sono passe une chanson que le virage déteste depuis trois ans, et le virage la couvre en chantant plus fort. Il attend mal, mais il chante bien. »"
+    left:
+      label: "On change la chanson"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "La nouvelle chanson est reprise par tout le stade. Le sponsor déteste."
+    right:
+      label: "La sono décide"
+      effects: {tribunes: "-", caisse: "+"}
+      answer: "La chanson passe. Elle est couverte, comme d'habitude."
+
+  # ==========================================================================
+  # § 2.13 — Le restaurant, la boucherie, le bistrot (4 sur 7 : la boucherie
+  # et le comptoir attendent les rôles amateurs). On mange, jamais gratuitement.
+  # ==========================================================================
+
+  - id: co.dec.resto_port_addition
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, agents, caisse]
+    speaker: fardelli
+    tone: leger
+    cooldown: 25
+    text: "Fardelli pose la main à plat sur l'addition : « J'ai réservé, j'ai commandé, et je vais payer, {toi}, ce qui n'engage à rien. Mon ami, on parle d'argent ou d'amitié ? »"
+    left:
+      label: "Je paie ma part"
+      effects: {caisse: "-", direction: "+", parole: 1}
+      answer: "Il laisse faire, l'air déçu. Il note quelque chose sur son téléphone."
+    right:
+      label: "Merci pour l'addition"
+      effects: {caisse: "+", direction: "-"}
+      answer: "Il paie tout. Il rappellera dans onze jours, à midi."
+
+  - id: co.dec.resto_solvang_eau
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, agents, direction]
+    tone: leger
+    cooldown: 30
+    when: "year >= 2000"
+    text: "Solvang, une carafe d'eau et un carnet, rien d'autre sur la table : « Je prends de l'eau et je note tout, ça fait gagner du temps. Mon client décide ; moi, je compte. »"
+    left:
+      label: "Notez tout"
+      effects: {direction: "+", caisse: "+"}
+      answer: "Elle note. Elle t'envoie la même page par courrier, signée."
+    right:
+      label: "On parle sans papier"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle referme le carnet. Elle se souvient très bien quand même."
+
+  - id: co.dec.resto_dembo_table
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, presse]
+    tone: leger
+    cooldown: 30
+    text: "Dembo, quatorze personnes à sa table, dont deux qu'il ne connaît pas : « Il en est venu six que je ne connais pas, et c'est moi qui régale. Donne-moi le ballon, je m'occupe de l'addition. »"
+    left:
+      label: "Je m'assois deux minutes"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Tu restes une heure. Deux photos sortent le lendemain, floues."
+    right:
+      label: "Je passe mon chemin"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Il lève son verre vers toi de loin. Il raconte l'histoire autrement."
+
+  - id: co.dec.bistrot_ecran
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, presse]
+    speaker: gege
+    tone: leger
+    cooldown: 35
+    when: "year >= 2003"
+    text: "Gégé, devant un écran qui montre un autre match : « Ils ont mis le dimanche soir et notre match, personne ne le montre. La tribune n'oublie rien ; elle regarde par la fenêtre. »"
+    left:
+      label: "On paie l'abonnement"
+      effects: {caisse: "-", tribunes: "++"}
+      answer: "Le bar diffuse le club. Il est plein à quatorze heures un mardi."
+    right:
+      label: "Qu'ils regardent l'autre"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "L'écran montre les autres. Douze personnes vont au stade quand même."
+
+  # ==========================================================================
+  # § 2.14 — La maison (3 sur 4 : le dessin de Sacha attend sa fiche)
+  # La maison n'est pas un décor, c'est la cinquième jauge.
+  # ==========================================================================
+
+  - id: co.dec.maison_repas_froid
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, famille, moment]
+    speaker: camille
+    tone: leger
+    cooldown: 25
+    when: "!flag('divorce')"
+    text: "Camille soulève une assiette recouverte d'une autre assiette : « J'ai gardé le tien au chaud jusqu'à neuf heures, puis je l'ai gardé tout court, {toi}. Tu rentres à quelle heure ? »"
+    left:
+      label: "Je le mange froid"
+      effects: {relation: {camille: 1}, force: -1}
+      answer: "Tu manges froid en face d'elle. Elle raconte sa journée, et c'est mieux que le repas."
+    right:
+      label: "J'ai déjà mangé"
+      effects: {relation: {camille: -1}, direction: "+"}
+      answer: "Elle range l'assiette. Elle ne la ressort pas."
+
+  - id: co.dec.maison_valise_couloir
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, famille, moment]
+    speaker: camille
+    tone: strategique
+    cooldown: 40
+    when: "season >= 2 && relation.camille <= 0 && !flag('divorce')"
+    text: "Camille désigne une valise ouverte, vide, posée à plat : « Elle est sortie du placard pour un déplacement, et elle est restée trois semaines. Tu rentres à quelle heure ? »"
+    left:
+      label: "Je la range"
+      effects: {relation: {camille: 1}, direction: "-"}
+      answer: "Tu la ranges. Le couloir redevient un couloir."
+    right:
+      label: "Je repars jeudi"
+      effects: {relation: {camille: -1}, force: 1}
+      answer: "La valise reste ouverte. Elle se remplit toute seule, un peu chaque jour."
+
+  - id: co.dec.maison_telephone_clow
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, famille, moment]
+    speaker: clow
+    statut_ok: [parti, retraite]
+    tone: leger
+    cooldown: 35
+    when: "year <= 2000"
+    text: "Corven, au téléphone, un verre qu'on entend poser : « J'ai regardé ton match sur un poste qui prend une chaîne et demie. Je ne dirais pas que j'ai tout vu. Je dirais que j'étais devant. »"
+    left:
+      label: "Dis-moi ce que tu as vu"
+      effects: {vestiaire: "+", force: 1, relation: {clow: 1}}
+      answer: "Il parle onze minutes du même joueur. Il a raison sur dix."
+    right:
+      label: "Une autre fois, il est tard"
+      effects: {relation: {clow: -1}, direction: "+"}
+      answer: "Il dit « bien sûr ». Il rappelle quinze jours plus tard, plus court."
+
+  # ==========================================================================
+  # § 3 — Les vingt running gags (quatorze importés ici)
+  #
+  # Règle du gag (ch. 31 § 3) : deux fois par saison au plus, jamais deux
+  # d'affilée, et il **vieillit**. Quatre âges : S0 découverte, S1
+  # confirmation, S2+ variation, lignée héritage. Le troisième passage doit
+  # être tordu, sinon le gag meurt. Jamais plus d'une jauge.
+  #
+  # Mécanique d'import : l'âge se lit avec `seen()` sur la carte de l'âge
+  # précédent ; S0 et S1 sont `once: true`, S2+ est rejouable (la variation).
+  # Les six gags manquants (les plantes vertes de l'hôtel du sponsor, le badge
+  # vert, « après le Congrès », le stagiaire de l'Écho, la minute de silence,
+  # le distributeur d'après 2038) tiennent à des rôles ou à des décennies que
+  # ce lot ne sert pas encore.
+  # ==========================================================================
+
+  # --- § 3.1 La faute du président (« convocqué » depuis 1991) ---------------
+  # S1 est la carte de décor `co.dec.bureau_sms_faute` (le brouillon, trace
+  # `faute_lue`) : le gag ne la double pas, il la lit.
+  - id: co.gag.faute_s0
+    roles: [entraineur]
+    arc: routine
+    tags: [gag, direction, absurde]
+    speaker: aulard
+    tone: leger
+    once: true
+    cooldown: 30
+    text: "Le président a punaisé une note au tableau du vestiaire, avec une faute au troisième mot : « J'ai pas le temps, j'ai un empire. Personne n'a rien à redire, je suppose ? »"
+    left:
+      label: "Personne, non"
+      effects: {direction: "+"}
+      answer: "La note reste six semaines. La faute prend racine."
+    right:
+      label: "Il manque une lettre"
+      effects: {direction: "-", vestiaire: "+"}
+      answer: "Il relit, hausse une épaule et repunaise la note telle quelle."
+
+  - id: co.gag.faute_s2
+    roles: [entraineur]
+    arc: routine
+    tags: [gag, direction, absurde]
+    speaker: josiane
+    tone: leger
+    cooldown: 30
+    when: "flag('faute_lue')"
+    text: "Josiane pose une circulaire du club sur le bureau : « Le nouveau secrétaire a recopié la faute du président, par respect. J'en ai vu passer ; celle-là a trente ans. »"
+    left:
+      label: "On corrige"
+      effects: {direction: "+"}
+      answer: "La circulaire repart propre. Personne ne la reconnaît, et deux personnes s'inquiètent."
+    right:
+      label: "Qu'elle vive"
+      effects: {vestiaire: "+"}
+      answer: "La faute traverse une décennie de plus, en gras, dans le pied de page."
+
+  # --- § 3.2 Le journal rangé « sous les autres » ----------------------------
+  - id: co.gag.journal_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, presse, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 25
+    when: "season >= 1"
+    text: "Josiane glisse un journal sous la pile et le dit : « Celui-là, je le mets dessous, il ne vous ferait pas plaisir. J'en ai vu passer, vous savez, des piles bien rangées. »"
+    left:
+      label: "Je le lirai quand même"
+      effects: {direction: "-", parole: 1}
+      answer: "Tu lis les trois paragraphes. Elle range la pile pendant que tu lis."
+    right:
+      label: "Rangez, alors"
+      effects: {relation: {josiane: 1}}
+      answer: "La pile est droite. Le coin du journal dépasse d'un demi-centimètre."
+
+  - id: co.gag.journal_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, presse, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 25
+    when: "seen('co.gag.journal_s0')"
+    text: "Josiane ne dit rien cette fois ; un coin de papier rose dépasse de la pile : « Le courrier est trié, le café est fait. J'en ai vu passer, vous savez : rien d'intéressant aujourd'hui. »"
+    left:
+      label: "Je tire le coin rose"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "La Une est mauvaise et tu la lis debout. Elle repart avec la cafetière."
+    right:
+      label: "Rien d'intéressant, donc"
+      effects: {relation: {josiane: 1}}
+      answer: "Elle repousse le coin du pouce. La journée est meilleure sans."
+
+  - id: co.gag.journal_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, presse, direction]
+    speaker: josiane
+    tone: strategique
+    cooldown: 30
+    when: "seen('co.gag.journal_s1')"
+    text: "Josiane ouvre le tiroir du bas sur une chemise pleine de doubles : « J'en garde un exemplaire de chaque, pour le dossier. J'en ai vu passer ; le dossier, lui, ne bouge pas. »"
+    left:
+      label: "Montrez le dossier"
+      effects: {direction: "-", parole: 1}
+      answer: "Onze coupures, toutes datées au crayon. Deux ne parlent pas de toi."
+    right:
+      label: "Refermez le tiroir"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle referme du genou. Le tiroir garde ce qu'il garde depuis 1987."
+
+  # --- § 3.3 La canette orange du fonds -------------------------------------
+  - id: co.gag.canette_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, sponsors, absurde]
+    speaker: nassir
+    tone: leger
+    once: true
+    cooldown: 30
+    text: "Cheikh Ilyas pose deux canettes orange sur la table et n'en ouvre aucune : « Ce n'est pas un club, c'est un actif. Prenez-en une ; elles sont à moi, la marque aussi. »"
+    left:
+      label: "J'en prends une"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Tu la gardes fermée toute la réunion. Elle est encore sur ton bureau en mai."
+    right:
+      label: "Je bois de l'eau"
+      effects: {direction: "-"}
+      answer: "Il repart avec les deux canettes, toujours fermées, dans sa poche de veste."
+
+  - id: co.gag.canette_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, sponsors, absurde]
+    speaker: nassir
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.canette_s0')"
+    text: "Deux canettes orange attendent sur ton bureau depuis son départ. Ilyas, au téléphone : « Vous les avez ouvertes ? Ce n'est pas un club, c'est un actif ; les canettes non plus. »"
+    left:
+      label: "Toujours fermées"
+      effects: {direction: "+"}
+      answer: "Il rit une seconde. Deux autres arrivent le mois suivant, par coursier."
+    right:
+      label: "J'en ai bu une"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Silence au bout du fil. Il te croit, et il note quelque chose."
+
+  - id: co.gag.canette_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, sponsors, absurde]
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.canette_s1')"
+    text: "Le distributeur du couloir a été rechargé : il ne vend plus que de l'orange, quarante-huit fentes sur quarante-huit. Le club n'a rien signé et personne ne sait qui a la clé."
+    left:
+      label: "Je remets de l'eau"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Deux fentes d'eau reviennent. Elles sont vides le vendredi."
+    right:
+      label: "Qu'ils boivent orange"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Le couloir sent le sucre. Trois joueurs apportent leur gourde de chez eux."
+
+  # --- § 3.4 Le « devant » du mentor ----------------------------------------
+  - id: co.gag.devant_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, moment, vestiaire]
+    speaker: clow
+    statut_ok: [parti, retraite]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "year <= 2000"
+    text: "Corven remplit un verre d'eau qu'il ne boira pas : « On me demande si j'ai été un grand. Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. »"
+    left:
+      label: "Devant qui ?"
+      effects: {vestiaire: "+", relation: {clow: 1}}
+      answer: "Il ne répond pas. Il montre la porte du vestiaire, qui est devant."
+    right:
+      label: "On connaît la phrase"
+      effects: {force: 1, relation: {clow: -1}}
+      answer: "Il hoche la tête. Il la ressort douze jours plus tard, mot pour mot."
+
+  - id: co.gag.devant_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, moment, vestiaire]
+    speaker: clow
+    statut_ok: [parti, retraite]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.devant_s0') && year <= 2000"
+    text: "Corven te regarde sortir du couloir : « Je ne dirais pas que tu es un grand, {toi}. Je dirais que tu es devant. » Puis il se reprend, très vite : « Enfin. On verra en juin. »"
+    left:
+      label: "Merci, quand même"
+      effects: {vestiaire: "+", relation: {clow: 1}}
+      answer: "Il repose son verre plein. Il n'y reviendra jamais, et toi si."
+    right:
+      label: "On verra en juin"
+      effects: {force: 1}
+      answer: "Il approuve. Juin arrive, et il ne redit pas la phrase."
+
+  - id: co.gag.devant_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, moment, formation]
+    speaker: clow
+    statut_ok: [parti, retraite]
+    tone: strategique
+    cooldown: 35
+    when: "seen('co.gag.devant_s1')"
+    text: "Corven parle d'un gamin que tu n'as pas retenu : « Celui-là, je ne dirais pas qu'il était bon. Je dirais qu'il était devant. » Il ne dit pas où il joue maintenant."
+    left:
+      label: "Je le rappelle"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le gamin ne rappelle pas. Sa mère, si, trois semaines plus tard."
+    right:
+      label: "J'avais tranché"
+      effects: {direction: "+", relation: {clow: -1}}
+      answer: "Il pose son verre. Il ne redemande pas de nouvelles du gamin."
+
+  # --- § 3.5 « Ici, on payait en bières » -----------------------------------
+  - id: co.gag.bieres_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, absurde]
+    tone: leger
+    once: true
+    cooldown: 30
+    text: "Gérard compte la recette de la buvette dans une boîte à gâteaux : « Quarante-deux, plus la tournée du président. Ici, on payait en bières ; on comptait mieux. »"
+    left:
+      label: "Comptez en écus"
+      effects: {caisse: "+"}
+      answer: "Il recompte deux fois, en soupirant. Le total est le même, à une bière près."
+    right:
+      label: "Comptez comme vous voulez"
+      effects: {tribunes: "+"}
+      answer: "Il note un chiffre dans son carnet à spirale. Le carnet a raison depuis vingt ans."
+
+  - id: co.gag.bieres_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, absurde]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.bieres_s0')"
+    text: "Gérard convertit ton salaire à voix haute, devant quatre témoins et un jambon : « Ça fait mille huit cents bières par mois, à la louche. Ici, on payait en bières ; ça se voyait moins. »"
+    left:
+      label: "Baissez la voix"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il baisse la voix. Les quatre témoins ont déjà retenu le chiffre."
+    right:
+      label: "À la louche, oui"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le comptoir rit. Le chiffre traverse la ville avant le dimanche."
+
+  - id: co.gag.bieres_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, mercato]
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.bieres_s1')"
+    text: "Gérard a lu le montant d'un transfert dans le journal et il l'a converti au crayon : « Quatre-vingt mille bières. Ici, on payait en bières ; il faudrait un camion et deux dimanches. »"
+    left:
+      label: "Affichez le calcul"
+      effects: {tribunes: "++"}
+      answer: "Le calcul est punaisé à la buvette. Un enfant vérifie et trouve une erreur."
+    right:
+      label: "Rangez ce papier"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il le plie en quatre et le garde. Il le ressort à chaque mercato."
+
+  # --- § 3.6 « J'étais là en cinquante et un » ------------------------------
+  - id: co.gag.cinquante_et_un_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, tribunes, moment]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "year <= 2009"
+    text: "Mamie Paulette tapote la rambarde de la tribune Est : « Ce stade a été inauguré un dimanche de pluie et il n'a jamais séché depuis. J'étais là en cinquante et un. »"
+    left:
+      label: "Racontez-moi"
+      effects: {tribunes: "+"}
+      answer: "Elle raconte douze minutes. Onze sont vraies, et la douzième est la meilleure."
+    right:
+      label: "Une autre fois"
+      effects: {tribunes: "-"}
+      answer: "Elle regarde le terrain. Elle raconte quand même, à personne."
+
+  - id: co.gag.cinquante_et_un_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, tribunes, moment]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.cinquante_et_un_s0') && year <= 2009"
+    text: "Mamie Paulette te regarde longuement, dans le couloir : « Votre prédécesseur disait ça aussi, et il le disait mieux. J'étais là en cinquante et un ; lui, il est resté onze mois. »"
+    left:
+      label: "Je resterai plus longtemps"
+      effects: {tribunes: "+", promise: true}
+      answer: "Elle note la date sur son programme, au stylo bille. Elle garde les programmes."
+    right:
+      label: "On verra bien"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Elle approuve. C'est la première réponse honnête qu'on lui fait depuis 1979."
+
+  - id: co.gag.cinquante_et_un_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, tribunes, sponsors]
+    tone: strategique
+    cooldown: 35
+    when: "seen('co.gag.cinquante_et_un_s1') && year <= 2009"
+    text: "Mamie Paulette refuse de lire le nouveau nom du stade sur son billet : « Moi, je vais au stade. J'étais là en cinquante et un et il s'appelait comme la rue, ce qui suffisait. »"
+    left:
+      label: "Appelez-le comme avant"
+      effects: {tribunes: "++", caisse: "-"}
+      answer: "Deux mille personnes l'appellent comme avant. Le sponsor achète une page pour rien."
+    right:
+      label: "C'est le nom officiel"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Elle plie le billet en deux, sur le nom. Elle entre quand même."
+
+  # --- § 3.7 Le seau du mystique --------------------------------------------
+  - id: co.gag.seau_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, moment]
+    tone: leger
+    once: true
+    cooldown: 30
+    text: "Sur le banc d'en face, l'entraîneur adverse a retourné un seau et s'est assis dessus, à trois mètres de la ligne. Le délégué le regarde et ne trouve aucun article à citer."
+    left:
+      label: "Je demande un seau"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "L'intendant en trouve un, percé. Tu restes debout, ce qui est une réponse."
+    right:
+      label: "Je reste sur le banc"
+      effects: {direction: "+"}
+      answer: "Le seau gagne le match. Personne ne dit que c'est le seau."
+
+  - id: co.gag.seau_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, moment]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.seau_s0')"
+    text: "Le seau d'en face porte un numéro peint au pochoir : « seau 4 ». Il voyage en soute, dans une housse, et l'intendant adverse en a la responsabilité écrite."
+    left:
+      label: "Je veux voir la housse"
+      effects: {vestiaire: "+"}
+      answer: "La housse est doublée. Il y a un seau de rechange, numéroté 5."
+    right:
+      label: "On joue au football"
+      effects: {force: 1}
+      answer: "Tu regardes le terrain. Tu regardes le seau deux fois, quand même."
+
+  - id: co.gag.seau_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, arbitrage]
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.seau_s1')"
+    text: "Le règlement du stade interdit désormais tout objet dans la zone technique. L'entraîneur d'en face s'est assis par terre, jambes croisées, et n'a pas dit un mot de la première période."
+    left:
+      label: "Je lui prête une chaise"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il refuse la chaise d'un geste. Il reste par terre toute la seconde période."
+    right:
+      label: "Le règlement, c'est écrit"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "La tribune adverse apporte quatre-vingts seaux au match retour."
+
+  # --- § 3.9 Le radiateur qui tousse ----------------------------------------
+  - id: co.gag.radiateur_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, absurde]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "season.phase == 'hiver'"
+    text: "Josiane pose un pull sur le dossier de ta chaise : « Le radiateur tousse parce que la facture n'est pas passée. J'en ai vu passer, des hivers ; celui-là tousse en si bémol. »"
+    left:
+      label: "On paie la facture"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Le radiateur se tait deux jours. Il recommence le jeudi, plus grave."
+    right:
+      label: "Je garde le pull"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Le pull reste sur la chaise jusqu'en avril. Il devient un objet du club."
+
+  - id: co.gag.radiateur_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, direction]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.radiateur_s0')"
+    text: "Dans un bureau de la Fédération, sous un portrait officiel, un radiateur tousse exactement de la même façon. L'huissier hausse les épaules : « Il fait ça depuis quatre présidents. »"
+    left:
+      label: "Je le signale"
+      effects: {direction: "-"}
+      answer: "On note ta remarque. Le procès-verbal dit « incident technique »."
+    right:
+      label: "Je reconnais la note"
+      effects: {vestiaire: "+"}
+      answer: "Tu souris tout seul devant un huissier. Il te trouve un peu étrange."
+
+  - id: co.gag.radiateur_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, caisse]
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.radiateur_s1')"
+    text: "Le radiateur neuf, posé il y a trois semaines, garanti dix ans, silencieux sur la notice, a commencé à tousser mardi. Le plombier dit que c'est la tuyauterie, pas lui."
+    left:
+      label: "On refait la tuyauterie"
+      effects: {caisse: "--", direction: "+"}
+      answer: "Trois semaines de travaux. Le radiateur tousse dans une autre tonalité."
+    right:
+      label: "On s'y est habitué"
+      effects: {vestiaire: "+"}
+      answer: "Personne ne l'entend plus. Un visiteur le remarque toujours, en premier."
+
+  # --- § 3.10 Le fax et « transfet » ----------------------------------------
+  # S0 est la carte de décor `co.dec.bureau_fax_faute`.
+  - id: co.gag.transfet_s1
+    roles: [entraineur]
+    arc: routine
+    tags: [gag, mercato, absurde]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "year <= 2010 && seen('co.dec.bureau_fax_faute')"
+    text: "Josiane tient une feuille revenue d'un club adverse, la faute soulignée deux fois en rouge : « Ils nous l'ont renvoyée corrigée. J'en ai vu passer, mais jamais des professeurs. »"
+    left:
+      label: "On répond poliment"
+      effects: {direction: "+"}
+      answer: "La réponse part avec la même faute. Elle est partie du même fax."
+    right:
+      label: "On ne répond pas"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle range la feuille dans le tiroir du bas, soulignements compris."
+
+  - id: co.gag.transfet_s2
+    roles: [entraineur]
+    arc: routine
+    tags: [gag, mercato, absurde]
+    speaker: josiane
+    tone: leger
+    cooldown: 30
+    when: "year >= 2010"
+    text: "Josiane a débranché le fax pour de bon : « Le courriel a repris la faute au copier-coller, elle est dans le modèle. J'en ai vu passer, des machines ; celle-là a laissé un héritier. »"
+    left:
+      label: "Corrigez le modèle"
+      effects: {direction: "+"}
+      answer: "Le modèle est propre. Trois personnes continuent d'utiliser l'ancien."
+    right:
+      label: "L'héritier reste"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "La faute part vingt fois par semaine, à toute la Division 2."
+
+  # --- § 3.11 Le sifflet de la kiné -----------------------------------------
+  - id: co.gag.sifflet_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, moment]
+    tone: leger
+    once: true
+    cooldown: 30
+    text: "Rouvier siffle la fin de la séance à l'heure exacte, au milieu de l'exercice que tu voulais prolonger : « Respire. Encore. Le tendon ne lit pas ton planning, coach. »"
+    left:
+      label: "Encore dix minutes"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Dix minutes. Deux joueurs sortent en boitant, et elle ne dit rien du tout."
+    right:
+      label: "On rentre"
+      effects: {vestiaire: "+"}
+      answer: "Le groupe rentre en riant. Elle range le sifflet dans sa trousse."
+
+  - id: co.gag.sifflet_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, absurde]
+    tone: leger
+    once: true
+    cooldown: 30
+    when: "seen('co.gag.sifflet_s0')"
+    text: "Le sifflet a disparu de la trousse : il est au fond d'un tiroir du bureau, sous les feuilles de match. Rouvier siffle quand même, à l'heure, avec deux doigts dans la bouche."
+    left:
+      label: "Je lui rends le sifflet"
+      effects: {vestiaire: "+"}
+      answer: "Elle le raccroche à son cou sans commentaire. Le point de vernis rouge est intact."
+    right:
+      label: "Le tiroir reste fermé"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Deux doigts suffisent. On l'entend du parking."
+
+  - id: co.gag.sifflet_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, formation]
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.sifflet_s1')"
+    text: "Rouvier a prêté le sifflet à un jeune kiné qui n'ose pas s'en servir : la séance a douze minutes de retard et personne n'a rien dit. Elle regarde, depuis le bord, sans bouger."
+    left:
+      label: "Sifflez à sa place"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Elle ne bouge pas. Le jeune siffle huit jours plus tard, tout seul."
+    right:
+      label: "On attend qu'il ose"
+      effects: {vestiaire: "+"}
+      answer: "Il ose à la seizième minute. Le groupe applaudit, ce qui est pire."
+
+  # --- § 3.12 « Le groupe vit bien » ----------------------------------------
+  - id: co.gag.groupe_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, moment]
+    speaker: brehaut
+    tone: leger
+    once: true
+    cooldown: 25
+    text: "Bréhaut passe la tête par la porte, une glacière sous le bras : « Le groupe vit bien. On mange ensemble jeudi, il y a même les deux qui ne se parlaient pas. »"
+    left:
+      label: "Je viens jeudi"
+      effects: {vestiaire: "+"}
+      answer: "Tu viens. Tu repars à vingt et une heures et ils restent, ce qui est normal."
+    right:
+      label: "Entre vous, c'est mieux"
+      effects: {vestiaire: "+", direction: "+"}
+      answer: "Il approuve. Le jeudi dure jusqu'à minuit et le vendredi est très lent."
+
+  - id: co.gag.groupe_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    cooldown: 25
+    when: "seen('co.gag.groupe_s0')"
+    text: "Une chaise cassée, un maillot déchiré au col. Bréhaut ferme la porte : « Le groupe vit bien. Ça arrive, {toi} : deux hommes fatigués et un vestiaire trop petit. »"
+    left:
+      label: "Je veux les deux noms"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Il donne un nom, pas deux. Le deuxième s'entraîne très bien pendant un mois."
+    right:
+      label: "Le groupe vit bien"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "La chaise est remplacée le jeudi. Personne n'a jamais rien vu."
+
+  - id: co.gag.groupe_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, direction]
+    speaker: brehaut
+    statut_ok: [parti, retraite]
+    tone: strategique
+    cooldown: 30
+    when: "seen('co.gag.groupe_s1') && season >= 3"
+    text: "Bréhaut a un bureau et une cravate maintenant, et il n'est pas descendu au vestiaire depuis six mois : « Le groupe vit bien, je te le dis. On me l'a dit, en tout cas. »"
+    left:
+      label: "Descends une fois"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il descend le mardi. Il remonte en sachant deux choses qu'il ignorait."
+    right:
+      label: "Je te crois sur parole"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il te croit de t'avoir cru. Les deux se trompent, poliment."
+
+  # --- § 3.13 « J'en ai vu d'autres » — l'inventaire du vieux gardien -------
+  - id: co.gag.vu_dautres_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    once: true
+    cooldown: 25
+    text: "Le bus est en panne, il pleut, et le match est dans deux heures. Vecchio remonte son col : « J'en ai vu d'autres. On a marché quatre kilomètres en quatre-vingt-un, avec les sacs. »"
+    left:
+      label: "On marche, alors"
+      effects: {vestiaire: "+", force: -1}
+      answer: "Vous marchez huit cents mètres. Un car de la mairie vous ramasse, ce qui gâche l'histoire."
+    right:
+      label: "On appelle un car"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Le car arrive en quarante minutes. Il raconte quand même quatre-vingt-un."
+
+  - id: co.gag.vu_dautres_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, moment]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    cooldown: 25
+    when: "seen('co.gag.vu_dautres_s0')"
+    text: "Le club a encaissé cinq buts et le président a parlé à la radio avant le vestiaire. Vecchio met longtemps à répondre : « J'en ai vu d'autres. Pas celle-là. »"
+    left:
+      label: "Qu'est-ce qui change ?"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il dit trois mots et va se doucher. Les trois mots sont justes."
+    right:
+      label: "On efface et on repart"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Il hoche la tête. Il n'efface rien du tout, et il le note."
+
+  - id: co.gag.vu_dautres_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.vu_dautres_s1')"
+    text: "Vecchio a écrit une liste à la main sur la doublure de son sac, quatre-vingt-onze lignes, la première de 1968 : « J'en ai vu d'autres, et je les compte. Celle-ci fera la douze. »"
+    left:
+      label: "Je peux lire ?"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il tourne le sac vers toi trente secondes. Ton nom est dans la liste, ligne 88."
+    right:
+      label: "Garde ta doublure"
+      effects: {direction: "+"}
+      answer: "Il referme le sac. Il ajoute la ligne le soir même, au stylo bille."
+
+  # --- § 3.14 Corner, le chien du gardien de stade --------------------------
+  - id: co.gag.corner_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, vestiaire]
+    tone: leger
+    once: true
+    cooldown: 25
+    text: "Un chien traverse la séance en diagonale, longe la ligne de touche et ressort par le corner. Lulu, du bord : « Il ne va jamais au milieu. Jamais. Vous verrez, en dix ans, jamais. »"
+    left:
+      label: "On continue"
+      effects: {vestiaire: "+"}
+      answer: "Le chien s'assoit au poteau de corner et regarde la fin de l'exercice."
+    right:
+      label: "Qu'on le sorte"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Il sort tout seul, par le corner, sans se presser."
+
+  - id: co.gag.corner_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, vestiaire]
+    tone: leger
+    once: true
+    cooldown: 25
+    when: "seen('co.gag.corner_s0')"
+    text: "Il manque un ballon depuis novembre et l'intendant a fait deux inventaires. Corner l'a rapporté ce matin, en mars, dégonflé, propre, posé devant la porte du vestiaire."
+    left:
+      label: "On le regonfle"
+      effects: {vestiaire: "++"}
+      answer: "Le ballon regonflé sert à l'échauffement. Le chien le suit toute la séance."
+    right:
+      label: "On le met au mur"
+      effects: {tribunes: "+"}
+      answer: "Le ballon finit dans le filet à oranges du local, avec une date au feutre."
+
+  - id: co.gag.corner_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, absurde, moment]
+    tone: leger
+    cooldown: 30
+    when: "seen('co.gag.corner_s1')"
+    text: "Le synthétique neuf a été livré et Corner refuse d'y poser une patte : il fait le tour par la piste, tous les jours, depuis huit jours. Lulu trouve ça très significatif."
+    left:
+      label: "Le chien a raison"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Trois joueurs se plaignent du synthétique la semaine suivante. On cite le chien."
+    right:
+      label: "C'est un chien"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Corner continue le tour. Il l'aura fait quatre cents fois avant qu'on l'écoute."
+
+  # --- § 3.16 Le distributeur du 5 ------------------------------------------
+  - id: co.gag.distributeur_s0
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, vestiaire]
+    tone: leger
+    once: true
+    cooldown: 25
+    text: "Le 5 du mois, à sept heures, il y a déjà quelqu'un devant le distributeur du centre commercial, tout seul, le dos très droit. Il fait semblant de ne pas t'avoir vu."
+    left:
+      label: "Je fais demi-tour"
+      effects: {vestiaire: "+"}
+      answer: "Tu repars. Il reste quatre minutes de plus, pour être sûr."
+    right:
+      label: "Je passe derrière lui"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Il s'écarte poliment. Vous ne parlerez jamais de ce matin-là."
+
+  - id: co.gag.distributeur_s1
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, vestiaire]
+    tone: leger
+    once: true
+    cooldown: 25
+    when: "flag('distributeur_groupe')"
+    text: "Ils y vont à trois maintenant, le 5, dans la même voiture, et ils rentrent en riant très fort. C'est plus digne à trois, et tout le monde a compris pourquoi ils rient."
+    left:
+      label: "Je prends le volant"
+      effects: {vestiaire: "++", direction: "-"}
+      answer: "Vous êtes cinq au retour. Le rire est plus vrai à partir du deuxième kilomètre."
+    right:
+      label: "Je les laisse rire"
+      effects: {vestiaire: "+"}
+      answer: "Ils rient. Le rire s'arrête exactement au portail du club."
+
+  - id: co.gag.distributeur_s2
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [gag, caisse, vestiaire]
+    tone: strategique
+    cooldown: 30
+    when: "seen('co.gag.distributeur_s1')"
+    text: "Personne ne va plus au distributeur : ils regardent leur téléphone, chacun dans son coin du vestiaire, le 5 à sept heures. C'est pire, parce que c'est silencieux."
+    left:
+      label: "Je demande à voix haute"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Deux répondent. Le silence d'après est plus court que celui d'avant."
+    right:
+      label: "Je ne dis rien"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Onze écrans éclairent onze visages. L'échauffement est très appliqué."
+
+  # ==========================================================================
+  # § 4 — Les huit objets qui reviennent (six importés ici)
+  #
+  # Un objet FUSIBLE change de main (il raconte une relation), ne vaut rien (le
+  # donner coûte autre chose que de l'argent) et survit à celui qui le portait.
+  # La valise (§ 4.2) est déjà `co.dec.maison_valise_couloir` ; l'enveloppe
+  # (§ 4.6) appartient à l'intrigue `en.enveloppe` et n'est pas doublée ici.
+  # ==========================================================================
+
+  # --- § 4.1 Le cahier : quadrillé, couverture noire, une page par joueur, la
+  # dernière page réservée à ceux qu'il n'a pas pris.
+  - id: co.obj.cahier_passation
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    once: true
+    cooldown: 40
+    when: "season >= 2"
+    text: "Vukić pose un cahier noir sur le bureau : « Une page par joueur, et la dernière pour ceux qu'on n'a pas pris, {toi}. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Je le laisse sur le bureau"
+      effects: {direction: "-", relation: {vukic: 1}, vestiaire: "+"}
+      answer: "Il le reprend le lendemain. Il n'écrit rien dedans pendant un an."
+    right:
+      label: "Je l'emporte"
+      effects: {direction: "+", relation: {vukic: -1}}
+      answer: "La dernière page est pleine. Tu la lis deux fois et tu ne dors pas bien."
+
+  # --- § 4.3 Le sifflet : plastique jauni, un point de vernis rouge.
+  - id: co.obj.sifflet_legue
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, vestiaire, moment]
+    tone: strategique
+    once: true
+    cooldown: 40
+    when: "year >= 2014"
+    text: "Rouvier ouvre son cabinet en ville et vide sa trousse sur la table de massage. Le sifflet en plastique jauni, marqué d'un point de vernis rouge, reste au milieu : « Respire. Encore. »"
+    left:
+      label: "Je le prends"
+      effects: {vestiaire: "+", force: 1}
+      answer: "Tu le mets dans ta poche. Tu ne t'en sers pas, et il pèse quand même."
+    right:
+      label: "Qu'il reste au club"
+      effects: {vestiaire: "++"}
+      answer: "Il est accroché au clou de l'infirmerie, avec un mot : « Respire. Encore. »"
+
+  # --- § 4.4 Le brassard : tissu élastique, cousu deux fois, à la taille du
+  # bras de celui de 1994. On ne le donne pas : on le pose sur un banc.
+  - id: co.obj.brassard_pose
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    cooldown: 40
+    when: "season >= 2"
+    text: "Bréhaut pose un brassard élastique, cousu deux fois, au milieu du banc du vestiaire : « On ne le donne pas, on le pose. Le groupe vit bien ; il saura qui le ramasse. »"
+    left:
+      label: "Je le pose sur le banc"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il reste deux jours sur le banc. Le troisième matin, il n'y est plus."
+    right:
+      label: "Je le donne en main propre"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Le joueur l'enfile devant tout le monde. Deux autres regardent leurs crampons."
+
+  # --- § 4.5 L'écharpe : tricotée en 1971 par la mère de Gégé pour son père,
+  # interdit de stade. Elle ne se lave pas.
+  - id: co.obj.echarpe_rendue
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, ultras, moment]
+    speaker: gege
+    tone: strategique
+    once: true
+    cooldown: 45
+    when: "season >= 3 && relation.gege >= 2"
+    text: "Gégé plie une écharpe qui a cinquante ans et la pose sur un siège : « Ma mère l'a tricotée en soixante et onze, pour mon père, qui n'avait plus le droit d'entrer. La tribune n'oublie rien. »"
+    left:
+      label: "Je la garde"
+      effects:
+        tribunes: "++"
+        relation: {gege: 1}
+        set: [echarpe_rendue]   # Almanach : « {annee} : l'écharpe de soixante et onze a changé d'épaule. »
+      answer: "Elle sent la laine et le tabac de 1971. Elle ne se lave pas ; il l'a dit deux fois."
+    right:
+      label: "Elle est à vous"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il la remet au cou. Il te la reproposera, et ce sera plus difficile de refuser."
+
+  - id: co.obj.echarpe_brulee
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, ultras, scandale]
+    speaker: gege
+    tone: strategique
+    once: true
+    cooldown: 45
+    when: "season >= 3 && relation.gege <= -2"
+    text: "Une photo est arrivée au club : un seau, une écharpe de laine dedans, et de la fumée. Gégé, au portail : « Celle de soixante et onze. La tribune n'oublie rien ; elle range, c'est tout. »"
+    left:
+      label: "Vous n'aviez pas le droit"
+      effects: {tribunes: "--", parole: 1}
+      answer: "Il te regarde brûler à sa place. Le seau est encore chaud dans le parking."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Il range la photo dans sa veste. Elle ressortira, encadrée, un jour de juin."
+
+  - id: co.obj.echarpe_siege
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, ultras, moment]
+    tone: leger
+    cooldown: 40
+    when: "flag('echarpe_rendue')"
+    text: "L'écharpe de soixante et onze est pliée sur le dossier de ton siège, à sa place, chaque dimanche. Personne ne l'a jamais lavée et personne ne s'assoit dessus par erreur."
+    left:
+      label: "Je la mets sur mes épaules"
+      effects: {tribunes: "+"}
+      answer: "Le virage la reconnaît de loin. Le chant démarre trois secondes plus tôt."
+    right:
+      label: "Elle reste pliée"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Elle reste pliée. C'est ce qu'il en aurait fait, et c'est ce qu'il voit."
+
+  # --- § 4.7 La boîte en fer : une boîte à gâteaux, un élastique, un carnet à
+  # spirale dedans. Quand la caisse a fui, c'est elle qui manquait.
+  - id: co.obj.boite_revenue
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, caisse, moment]
+    tone: strategique
+    once: true
+    cooldown: 45
+    when: "year >= 2005"
+    text: "Une boîte à gâteaux en fer est revenue par la poste, avec son élastique, son carnet à spirale et quatre-vingt-douze francs qui n'ont plus cours. Le mot d'excuse tient en deux lignes."
+    left:
+      label: "On rouvre la buvette"
+      effects: {caisse: "-", tribunes: "++"}
+      answer: "La buvette des anciens rouvre un samedi. Le carnet reprend à la page qu'il avait quittée."
+    right:
+      label: "On garde la boîte fermée"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "La boîte est mise sur une étagère. Il manque deux pages au carnet, et on les cherche."
+
+  # --- § 4.8 La cassette : vierge, étiquetée « FINALE » d'une écriture
+  # appliquée. Personne n'a jamais osé la lire.
+  - id: co.obj.cassette_lue
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [objet, absurde, moment]
+    tone: strategique
+    once: true
+    cooldown: 45
+    when: "year >= 2020"
+    text: "Une cassette étiquetée FINALE, d'une écriture très appliquée, est arrivée dans un carton du club. Le magnétoscope de la salle vidéo marche encore, et il est le seul du pays."
+    left:
+      label: "Je la lis"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Quatre-vingt-dix minutes de neige, puis une voix qui dit trois mots. Tu ne les répètes pas."
+    right:
+      label: "Je la garde fermée"
+      effects: {direction: "+", tribunes: "+"}
+      answer: "Elle retourne dans le carton. Elle vaut plus fermée, et tout le monde le sait."

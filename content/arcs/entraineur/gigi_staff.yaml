@@ -1,0 +1,54 @@
+# « Gigi au staff » — Vecchio, entraîneur des gardiens, te dit ce que le
+# vestiaire pense, à sa façon : en trois mots, dont deux qu'il a déjà dits
+# (bible ch. 11 § 2.4, tardive 3). Rituel de seconde vague : une carte par
+# saison où il est au staff, et la variante « encore » monte en escalier sur
+# plays() — la première fois il te teste, la deuxième il te fait confiance, la
+# troisième il te demande une chose pour lui.
+#
+# Chemins : douche (trois variantes, première vraie) → suite (Vukić, vexé de
+# ne pas avoir parlé le premier). Issues : parle | banc.
+arcs:
+  - id: en.gigi_staff
+    title: "Gigi au staff"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 0.9
+    once: true
+    min_season: 2
+    theme: vestiaire
+    carrier: vecchio
+    cast: [vecchio, vukic, brehaut]
+    replay: ritual
+    when: "flag('gigi_staff') && chars.vecchio.statut == 'staff'"
+    issues: [parle, banc]
+    traces:
+      gigi_a_parle:      "{annee} : Gigi Vecchio, entraîneur des gardiens, a dit trois mots à {nom} sous la douche. Ça a suffi."
+      banc_gigi_promis:  "{annee} : {nom} a promis à Gigi un banc à son nom derrière le but. À la craie, pour l'instant."
+    hint: "Sous la douche, ils parlent. Lui, il essuie les gants et il entend."
+    start: [2, 12]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      relation: { vecchio: -1 }
+      journal: "{annee} : Gigi Vecchio est resté aux gants de {club}. {nom} est parti sans le banc."
+    steps:
+      - id: douche
+        card:
+          # `plays >= 2` rendait la carte — et l'issue `banc` — inatteignables :
+          # l'arc s'ouvre dans 11 % des carrières, deux reprises n'arrivent pas.
+          # Le partage entre les deux relances se fait sur `gigi_a_parle` : il
+          # ne réclame son banc qu'à quelqu'un à qui il a déjà parlé.
+          - { id: en.gigi.douche_banc, if: "plays('en.gigi_staff') >= 1 && flag('gigi_a_parle')" }
+          - { id: en.gigi.douche_discours, if: "plays('en.gigi_staff') >= 1" }
+          - { id: en.gigi.douche }
+        next: [ { step: suite, if: "flag('gigi_a_parle')", in: [1, 3] } ]
+      - id: suite
+        card: en.gigi.suite
+        # Le banc n'arrive que si la promesse a été faite ET que la carrière a
+        # duré : c'est la seule porte de la fin ∃ `en_retraite` (cause : l'âge).
+        next: [ { step: banc, if: "flag('banc_gigi_promis') && age >= 55", in: [6, 14] } ]
+      - id: banc
+        card: en.gigi.banc_inaugure
+        next: []

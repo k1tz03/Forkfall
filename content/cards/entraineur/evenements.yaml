@@ -12,7 +12,7 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard, debout : « Trois défaites de suite. Le prochain bloc est un ultimatum. J'ai déjà le numéro de ton remplaçant, il est dans mon écurie de trot. »"
+    text: "Vaubourg, debout : « Trois défaites de suite. Le prochain bloc est un ultimatum. J'ai un cheval qui perd aussi, et lui je le garde parce qu'il est beau. »"
     left:
       label: "On attaque à outrance"
       effects: {force: 4, vestiaire: "-", set: [ultimatum], next: {step: verdict, in: [2, 4]}, journal: {text: "{annee} : l'ultimatum du président. {nom} a attaqué à outrance ; le vestiaire a appris le mot.", poids: 2, tags: [direction]}}
@@ -20,7 +20,7 @@ cards:
     right:
       label: "Bloc bas, on assure"
       effects: {tribunes: "--", direction: "+", next: end, journal: {text: "{annee} : l'ultimatum du président. Bloc bas, on assure ; Gégé a appris le mot par la presse.", poids: 2, tags: [direction]}}
-      answer: "Gégé apprend « bloc bas » par la presse. Aulard range le numéro. Pas loin."
+      answer: "Gégé apprend « bloc bas » par la presse. Vaubourg range le numéro. Pas loin."
 
   # Verdict, variante noire : la série continue.
   - id: en.evt.ultimatum_sms
@@ -30,7 +30,7 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard, au téléphone : « Le SMS est parti à 23 h 47. Je te le lis pour que tu l'aies avant les journalistes. J'ai pas le temps, j'ai un empire. »"
+    text: "Vaubourg, au téléphone : « Le SMS est parti à 23 h 47. Je te le lis pour que tu l'aies avant les journalistes. J'ai pas le temps, j'ai un empire. »"
     left:
       label: "Je l'écoute jusqu'au bout"
       effects: {end: en_sms}
@@ -48,7 +48,7 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    text: "Aulard, bras ouvert : « Je parle de toi comme de mon fils. Mon vrai fils est furieux. J'ai pas le temps, j'ai un empire : tu montes dans la loge ? »"
+    text: "Vaubourg, bras ouvert : « Je parle de toi comme de mon fils. Mon vrai fils est furieux. J'ai pas le temps, j'ai un empire : tu montes dans la loge ? »"
     left:
       label: "Je monte, président"
       effects: {direction: "+++", set: [homme_president], relation: {aulard: 1}, journal: {text: "{annee} : {nom} est monté{pg, select, f{e} other{}} dans la loge du président. Le vrai fils a laissé sa chaise.", poids: 3, tags: [direction]}}
@@ -155,14 +155,14 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, tiroir vide : « Gérard tenait la buvette et la caisse depuis vingt ans. Il est en Thaïlande. La caisse aussi. J'en ai vu passer, vous savez. »"
+    text: "Madame Josiane, tiroir vide : « Gérard tenait la buvette et la caisse depuis vingt ans. Il est au soleil, loin. La caisse aussi. J'en ai vu passer, vous savez. »"
     left:
       label: "On porte plainte"
-      effects: {direction: "+", caisse: "--", tribunes: "-", journal: {text: "{annee} : Gérard a fui en Thaïlande avec la caisse de la buvette. {nom} a porté plainte.", poids: 2, tags: [caisse, absurde]}}
+      effects: {direction: "+", caisse: "--", tribunes: "-", set: [gerard_parti], journal: {text: "{annee} : Gérard est parti au soleil avec la caisse de la buvette. {nom} a porté plainte.", poids: 2, tags: [caisse, absurde]}}
       answer: "Le journal titre sur la buvette. Les abonnés apprennent le mot « détournement »."
     right:
       label: "On étouffe, on refait"
-      effects: {caisse: "---", vestiaire: "+", journal: {text: "{annee} : Gérard a fui en Thaïlande avec la caisse de la buvette. Bréhaut a tenu la buvette le samedi.", poids: 2, tags: [caisse, absurde]}}
+      effects: {caisse: "---", vestiaire: "+", set: [gerard_parti], journal: {text: "{annee} : Gérard est parti au soleil avec la caisse de la buvette. Bréhaut a tenu la buvette le samedi.", poids: 2, tags: [caisse, absurde]}}
       answer: "Bréhaut tient la buvette le samedi. Le groupe vit bien, et boit gratis."
 
   # ============================================================= 5 · L'enveloppe
@@ -181,7 +181,7 @@ cards:
     text: "Fardelli, sans cigare, sans sourire : « J'ai un ami. Trois joueurs de {rival} pourraient lever le pied au dernier bloc. Mon ami, on parle d'argent ou d'amitié ? Là, des deux. »"
     left:
       label: "Jamais"
-      effects: {direction: "-", tribunes: "+", relation: {fardelli: -2}, set: [enveloppe_refusee], next: end}
+      effects: {direction: "-", tribunes: "+", relation: {fardelli: -2}, set: [enveloppe_refusee], outcome: jamais, next: {step: brehaut, in: [1, 3]}}
       answer: "Il remet son cigare. Il ne le rallume pas. Il ne rappelle pas non plus."
     right:
       label: "Combien"
@@ -195,19 +195,19 @@ cards:
     speaker: legruet
     tone: strategique
     once: true
-    text: "Legruet, sans son tampon : « Un joueur de {rival} a parlé. Trois joueurs, une enveloppe, un dernier bloc. La Fédération examine. On verra ça après le Congrès — ou maintenant. »"
+    text: "Berthomier, sans son tampon : « Un joueur de {rival} a parlé. Trois joueurs, une enveloppe, un dernier bloc. La Fédération examine. On verra ça après le Congrès — ou maintenant. »"
     left:
       label: "Je nie tout"
-      effects: {direction: "--", tribunes: "-", parole: -2, set: [enveloppe_niee], enemy: [legruet]}
+      effects: {direction: "--", tribunes: "-", parole: -2, set: [enveloppe_niee, fede_dossier], enemy: [legruet], schedule: [{card: en.commission.convocation, in: [4, 8]}]}
       answer: "Il note « nie ». Le Congrès est dans six mois. Le dossier, sur son bureau, dès lundi."
     right:
       label: "J'assume"
       effects: {end: en_valise}
       answer: "Il tamponne. Il n'attend pas le Congrès."
 
-  # ================================== alarme de surcharge · caisse basse, Nassir
+  # ================================== alarme de surcharge · caisse basse, Ilyas
   # Servie avant en.alarme.caisse_bas_josiane dans le postulat « Le promu sans
-  # un sou » quand Nassir est déjà dans la place (postulats.yaml →
+  # un sou » quand Ilyas est déjà dans la place (postulats.yaml →
   # alarm_overrides caisse.low, when relation.nassir >= 0 && vars.nassir_palier >= 1).
   - id: en.promu.alarme_nassir_offre
     roles: [entraineur]
@@ -217,14 +217,14 @@ cards:
     tone: strategique
     cooldown: 10
     when: "gauges.caisse < 25"
-    text: "Cheikh Nassir, par fax : « Mon offre tient toujours. Elle a juste un peu baissé. Ce n'est pas un club, c'est un actif. »"
+    text: "Cheikh Ilyas, par fax : « Mon offre tient toujours. Elle a juste un peu baissé. Ce n'est pas un club, c'est un actif. »"
     left:
       label: "On prend, même baissée"
       # Pas de `nassir_palier` ici : seules les cartes de l'arc C posent le
       # palier (sinon un joueur qui refuse le prêt partait quand même au rachat).
-      effects: {caisse: "+++", tribunes: "-", relation: {nassir: 1}, journal: {text: "{annee} : l'offre de Nassir, « un peu baissée », acceptée. Le virement est arrivé avant le fax.", poids: 2, tags: [sponsors, caisse]}}
+      effects: {caisse: "+++", tribunes: "-", relation: {nassir: 1}, journal: {text: "{annee} : l'offre de Ilyas, « un peu baissée », acceptée. Le virement est arrivé avant le fax.", poids: 2, tags: [sponsors, caisse]}}
       answer: "Le virement arrive avant le fax. Josiane classe le fax quand même."
     right:
       label: "On serre les dents"
       effects: {caisse: "-", direction: "+", var: {nassir_refus: "+1"}, relation: {nassir: -1}, set: [salaires_retard]}
-      answer: "Les salaires partent le 12. Nassir note la date, lui aussi."
+      answer: "Les salaires partent le 12. Ilyas note la date, lui aussi."

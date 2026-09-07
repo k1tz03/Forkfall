@@ -1,0 +1,180 @@
+# Cartes d'étape de « Le dossier Massenet » (content/arcs/entraineur/dossier.yaml).
+# Toutes hors du sac, aucune `once` (l'arc est rejouable neuf fois).
+# Le texte commun du tiroir : « Juste une question, hors micro : j'ai un
+# dossier, une feuille, et elle parle de … ». Chaque variante pose son
+# `dossier_<mot>` et ne repasse jamais. Le nom du joueur : sur la page une et
+# sur le lendemain, jamais sur le tiroir (deux cartes de suite).
+# Traces : dossier_repondu, dossier_ignore, dossier_troque.
+cards:
+  # -------------------------------------------------------- tiroir · la relance (Léa)
+  # Variante « encore » de l'étape 1 : elle lit plays(), comme l'exige un arc
+  # rejouable. La bible donne Léa au Quotidien à partir de 2018 ; ici elle tient
+  # la boîte à chaussures de L'Écho, ce qui marche à toutes les époques (écart
+  # assumé : sans lui, la variante n'est jamais servie dans une carrière de promu).
+  - id: en.dossier.tiroir_lea
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: lea
+    tone: strategique
+    text: "Léa pose une boîte à chaussures sur la table : « Le national a un tiroir ; nous, à L'Écho, on a une boîte, et il y a votre nom sur le couvercle, écrit deux fois. Vous confirmez ? »"
+    left:
+      label: "Je réponds, page une"
+      effects: {parole: 1, direction: "-", tribunes: "+", relation: {lea: 1}, set: [dossier_repondu, dossier_lea], outcome: repondu}
+      answer: "Elle ouvre la boîte. Elle a gardé l'ordre des coupures ; c'est chronologique."
+    right:
+      label: "Publiez, ou pas"
+      effects: {direction: "-", relation: {lea: -1}, set: [dossier_ignore, dossier_lea], outcome: ignore, next: {step: lendemain, in: [1, 2]}}
+      answer: "Elle referme la boîte. Elle dit qu'une boîte se transmet, comme un abonnement."
+
+  # -------------------------------------------------------- tiroir · l'enveloppe
+  - id: en.dossier.tiroir_enveloppe
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale, risk:direction]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet tapote une chemise fermée : « Hors micro : j'ai un dossier, une feuille, et elle parle d'un ami de Fardelli et d'un gardien que vous n'avez pas changé. Vous répondez ? »"
+    left:
+      label: "Je réponds, page une"
+      effects: {parole: 1, direction: "-", tribunes: "+", relation: {meneche: 1}, set: [dossier_repondu, dossier_enveloppe], outcome: repondu}
+      answer: "Il ouvre la chemise. Vous écrivez la réponse ensemble ; il garde le stylo."
+    right:
+      label: "Publiez, ou pas"
+      effects: {direction: "-", relation: {meneche: -1}, set: [dossier_ignore, dossier_enveloppe], outcome: ignore, next: {step: lendemain, in: [1, 2]}}
+      answer: "Il referme la chemise. Il publie le lundi, ou pas ; ça dépend de la Une du dimanche."
+
+  # -------------------------------------------------------- tiroir · la haie
+  - id: en.dossier.tiroir_haie
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet tapote une chemise fermée : « Hors micro : j'ai un dossier, une feuille, et elle parle de jumelles, deux fois, des deux côtés d'une haie. Je publie les deux croquis ? »"
+    left:
+      label: "Je réponds, page une"
+      effects: {parole: 1, direction: "-", tribunes: "+", relation: {meneche: 1}, set: [dossier_repondu, dossier_haie], outcome: repondu}
+      answer: "Il ouvre la chemise. Il y a les deux croquis dedans, agrafés."
+    right:
+      label: "Publiez, ou pas"
+      effects: {direction: "-", relation: {meneche: -1}, set: [dossier_ignore, dossier_haie], outcome: ignore, next: {step: lendemain, in: [1, 2]}}
+      answer: "Il referme la chemise. Il dit qu'une haie, ça repousse."
+
+  # -------------------------------------------------------- tiroir · la paie du 12
+  - id: en.dossier.tiroir_salaires
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, caisse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet tapote une chemise fermée : « Hors micro : j'ai un dossier et il parle d'une paie du 12 et d'une lettre où le club a répondu « le club ». Je publie la lettre ? »"
+    left:
+      label: "Je réponds, page une"
+      effects: {parole: 1, direction: "-", tribunes: "+", relation: {meneche: 1}, set: [dossier_repondu, dossier_salaires], outcome: repondu}
+      answer: "Il ouvre la chemise. La lettre est dedans, avec la ligne soulignée à la règle."
+    right:
+      label: "Publiez, ou pas"
+      effects: {direction: "-", relation: {meneche: -1}, set: [dossier_ignore, dossier_salaires], outcome: ignore, next: {step: lendemain, in: [1, 2]}}
+      answer: "Il referme la chemise. Il connaît la date du virement mieux que la banque."
+
+  # -------------------------------------------------------- tiroir · le fils
+  - id: en.dossier.tiroir_fils
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction, mercato]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet tapote une chemise fermée : « Hors micro : j'ai un dossier et il parle d'un ailier acheté par fax par quelqu'un qui porte le nom du président. Je publie le fax ? »"
+    left:
+      label: "Je réponds, page une"
+      effects: {parole: 1, direction: "-", tribunes: "+", relation: {meneche: 1}, set: [dossier_repondu, dossier_fils], outcome: repondu}
+      answer: "Il ouvre la chemise. Le fax est dedans, avec l'heure d'envoi : sept heures dix."
+    right:
+      label: "Publiez, ou pas"
+      effects: {direction: "-", relation: {meneche: -1}, set: [dossier_ignore, dossier_fils], outcome: ignore, next: {step: lendemain, in: [1, 2]}}
+      answer: "Il referme la chemise. Il dit qu'un fax, ça se garde mieux qu'une promesse."
+
+  # -------------------------------------------------------- tiroir · le ticket
+  - id: en.dossier.tiroir_pari
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale, caisse]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet tapote une chemise fermée : « Hors micro : j'ai un dossier et il parle d'un ticket à cinq mille contre un, encadré, dit-on, au-dessus d'un bureau. Je publie la cote ? »"
+    left:
+      label: "Je réponds, page une"
+      effects: {parole: 1, direction: "-", tribunes: "+", relation: {meneche: 1}, set: [dossier_repondu, dossier_pari], outcome: repondu}
+      answer: "Il ouvre la chemise. Il a la photocopie du ticket ; il n'a pas la photo du cadre."
+    right:
+      label: "Publiez, ou pas"
+      effects: {direction: "-", relation: {meneche: -1}, set: [dossier_ignore, dossier_pari], outcome: ignore, next: {step: lendemain, in: [1, 2]}}
+      answer: "Il referme la chemise. Il dit qu'il aurait parié l'inverse, et qu'il aurait perdu."
+
+  # -------------------------------------------------------- tiroir · le secours
+  - id: en.dossier.tiroir_vide
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    tone: leger
+    text: "Massenet tapote une chemise trop plate pour être pleine : « Hors micro : j'ai un dossier, une feuille, et elle ne parle de rien. Votre dossier est vide, et ça se remarque. »"
+    left:
+      label: "Écrivez-le"
+      effects: {parole: 1, relation: {meneche: 1}, set: [dossier_repondu, dossier_vide], outcome: repondu}
+      answer: "Il l'écrit. Trois cents signes en page huit ; le président découpe l'article."
+    right:
+      label: "Qu'on ne le sache pas"
+      effects: {parole: 1, relation: {meneche: 1}, set: [dossier_vide]}
+      answer: "Il range la chemise vide. Il la garde ; il dit qu'elle se remplira."
+
+  # -------------------------------------------------------- la page une, ensemble
+  - id: en.dossier.reponse
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction, chaine]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet te tend le stylo qui n'écrit pas : « Hors micro, avant de mettre en page : la vérité entière, qui tient en douze lignes, ou la vérité utile, qui en tient trois ? »"
+    left:
+      label: "Les douze lignes"
+      effects: {parole: 2, direction: "--", tribunes: "++", relation: {meneche: 1}}
+      answer: "Douze lignes. Le président lit la neuvième deux fois ; c'est celle où il est."
+    right:
+      label: "Les trois, et il dort"
+      effects: {parole: 1, direction: "+", relation: {meneche: -1}, var: {dossier_troc: "+1"}}
+      answer: "Trois lignes. Il garde les neuf autres dans la chemise ; il la referme sans bruit."
+
+  # -------------------------------------------------------- le journal du lundi
+  - id: en.dossier.lendemain
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane tient le journal plié, l'article vers l'intérieur : « Il était dans la boîte du président, ouvert à la bonne page, et ce n'est pas moi. Je le range sous les autres ? »"
+    left:
+      label: "Je le lis avant lui"
+      effects: {direction: "-", parole: -1, relation: {josiane: 1}}
+      answer: "Tu lis. Il a tout écrit, sauf le nom de la source ; la source a une plaque sur sa porte."
+    right:
+      label: "Sous les autres"
+      effects: {direction: "+", relation: {josiane: -1, meneche: -1}, react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Elle range. Le président le déterre le soir même ; il a le temps pour ça."
+
+  - id: en.dossier.lendemain_rien
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse, retorse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane tient le journal du lundi ouvert : « Il est dans la boîte du président, et il n'y a rien dedans sur vous, ce qui est plus rare qu'un article. Je le range ? »"
+    left:
+      label: "Je vérifie"
+      effects: {parole: 1, relation: {meneche: 1}, set: [dossier_troque], outcome: troque}
+      answer: "Rien. Il t'appelle le soir : il voudrait une exclusivité, un jour, pour compenser."
+    right:
+      label: "Rangez-le"
+      effects: {direction: "+"}
+      answer: "Elle range. Il n'y avait rien ; il y aura quelque chose une autre année."

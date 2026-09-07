@@ -11,6 +11,27 @@
 # Quand `adresse` est présente elle couvre les deux rôles et les trois
 # expressions (erreur de build sinon). Sans adresse : « coach » (entraîneur)
 # / « {prenom} » (joueur). Une carte qui dit {toi} doit avoir un `speaker`.
+#
+# `age` (en 1990) et `statut` (spec variété §1.10, charte de la bible § 2.4 et
+# § 2.4 bis) : le moteur en fait un état de partie (`GameState.chars`), prend
+# un an à chaque ouverture de saison, et le contenu le lit —
+#   · dans un `when` : `chars.vecchio.age >= 44`, `chars.mbako.statut == 'vendu'`
+#   · dans un texte : « J'ai {age_vecchio} ans. » (jamais un nombre en dur)
+#   · dans un effet : `char: { mbako: { statut: vendu } }`, ou `char: {mbako: vendu}`
+#     (`age: "+1"` déplace l'âge, `age: 17` le pose).
+# Statuts : present · club · staff · vendu · parti · retraite · rival · mort.
+# Un personnage dont le statut n'est ni present, ni club, ni staff **ne parle
+# plus** : ses cartes sortent du tirage et ses entrées en file sont purgées
+# (`miss` raison `statut`). Pour le faire parler quand même — le coup de fil de
+# Vecchio parti, le mort au Fantôme —, la carte (ou l'étape) déclare
+# `statut_ok: [parti, retraite]`. Un personnage sans `age` n'a pas d'état : il
+# parle toujours.
+#
+# `retrouvailles` (spec variété §1.13) : les deux cartes servies quand tu
+# changes de club ou de rôle, pour les deux visages à |relation| maximale —
+#   retrouvailles: { sourire: co.retrouvailles.gege_sourire, noir: co.retrouvailles.gege_noir }
+# Les deux visages sont requis dès que le champ est là, les cartes doivent
+# exister, être `once: true`, et n'appartenir à aucun autre mécanisme.
 characters:
   - id: fardelli
     name: "Rocco Fardelli"
@@ -19,23 +40,37 @@ characters:
     role: agent
     tic: "Mon ami, on parle d'argent ou d'amitié ?"
     camp: direction
+    age: 44
+    statut: present
     default_target: 1
     adresse:
-      entraineur: { sourire: "{pg, select, f{mon amie} other{mon ami}}", neutre: "{pg, select, f{mon amie} other{mon ami}} {prenom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
-      joueur:     { sourire: "{pg, select, f{mon amie} other{mon ami}}", neutre: "{pg, select, f{mon amie} other{mon ami}} {prenom}", noir: "{prenom}" }
+      # `sourire` nommait le seul cas où Fardelli ne disait pas le prénom, et
+      # c'est celui qu'on voit le plus (il parle à l'Objectif, à l'Après-match
+      # et au Bilan) : le budget « nom » (spec § 5.3) y perdait une carte par
+      # saison. Quand il t'aime, il met le prénom devant.
+      entraineur: { sourire: "{prenom}, {pg, select, f{mon amie} other{mon ami}}", neutre: "{pg, select, f{mon amie} other{mon ami}} {prenom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+      joueur:     { sourire: "{prenom}, {pg, select, f{mon amie} other{mon ami}}", neutre: "{pg, select, f{mon amie} other{mon ami}} {prenom}", noir: "{prenom}" }
+    on_relation:
+      -3: co.fardelli.trahison_signe_ailleurs
+      3: co.fardelli.faveur_premier_appel
+    retrouvailles: { sourire: co.retrouvailles.fardelli_sourire, noir: co.retrouvailles.fardelli_noir }
   - id: meneche
-    name: "Pierre Ménèche"
+    name: "Pierre Massenet"
     label: "JOURNALISTE"
     genre: m
     role: journaliste
     tic: "Juste une question, hors micro."
     camp: direction
+    age: 42
+    statut: present
     default_target: 1.5
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom} {nom}", noir: "{nom}" }
     on_relation:
       -3: en.meneche.trahison_dossier
+      3: co.meneche.faveur_enterre
+    retrouvailles: { sourire: co.retrouvailles.meneche_sourire, noir: co.retrouvailles.meneche_noir }
   - id: gege
     name: "Gégé"
     label: "CAPO, TRIBUNE NORD"
@@ -43,6 +78,8 @@ characters:
     role: ultra
     tic: "La tribune n'oublie rien."
     camp: terrain
+    age: 47
+    statut: present
     default_target: 1.5
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{nom}" }
@@ -50,17 +87,24 @@ characters:
     on_relation:
       -3: en.gege.trahison_banderole
       3: en.gege.faveur_insurrection
+    retrouvailles: { sourire: co.retrouvailles.gege_sourire, noir: co.retrouvailles.gege_noir }
   - id: aulard
-    name: "Jean-Marie Aulard"
+    name: "Jean-Marie Vaubourg"
     label: "PRÉSIDENT"
     genre: m
     role: president
     tic: "J'ai pas le temps, j'ai un empire."
     camp: direction
+    age: 58
+    statut: present
     default_target: 2
     adresse:
       entraineur: { sourire: "{pg, select, f{ma} other{mon}} {prenom}", neutre: "{nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{pg, select, f{petite} other{petit}}", neutre: "{nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+    on_relation:
+      -3: co.aulard.trahison_cheque_non_date
+      3: co.aulard.faveur_rappel
+    retrouvailles: { sourire: co.retrouvailles.aulard_sourire, noir: co.retrouvailles.aulard_noir }
   - id: vukic
     name: "Zoran Vukić"
     label: "ENTRAÎNEUR ADJOINT"
@@ -68,10 +112,15 @@ characters:
     role: adjoint
     tic: "Je te le dis parce que personne ne te le dira."
     camp: terrain
+    age: 37
+    statut: present
     default_target: 1.5
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{nom}" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
+    on_relation:
+      -3: co.vukic.trahison_serrure
+      3: co.vukic.faveur_trois_valises
   - id: brehaut
     name: "Titi Bréhaut"
     label: "CAPITAINE"
@@ -79,10 +128,16 @@ characters:
     role: capitaine
     tic: "Le groupe vit bien."
     camp: terrain
+    age: 33
+    statut: present
     default_target: 1
     adresse:
       entraineur: { sourire: "coach", neutre: "coach", noir: "{nom}" }
       joueur:     { sourire: "{prenom}", neutre: "petit", noir: "le {numero}" }
+    on_relation:
+      -3: co.brehaut.trahison_petition
+      3: co.brehaut.faveur_lettre
+    retrouvailles: { sourire: co.retrouvailles.brehaut_sourire, noir: co.retrouvailles.brehaut_noir }
   - id: sabatier
     name: "Doc Sabatier"
     label: "MÉDECIN DU CLUB"
@@ -90,10 +145,15 @@ characters:
     role: medecin
     tic: "Ça reste entre la table et moi."
     camp: terrain
+    age: 51
+    statut: present
     default_target: 1
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{prenom}", neutre: "petit", noir: "{nom}" }
+    on_relation:
+      -3: co.sabatier.trahison_dossier
+      3: co.sabatier.faveur_controle
   - id: camille
     name: "Camille"
     label: "À LA MAISON"
@@ -101,6 +161,8 @@ characters:
     role: conjoint
     tic: "Tu rentres à quelle heure ?"
     camp: terrain
+    age: 32
+    statut: present
     default_target: 1
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
@@ -114,6 +176,7 @@ characters:
         - { id: co.camille.secours_journaliste, if: "flag('camille_journaliste')" }
         - { id: co.camille.secours_elue, if: "flag('camille_elue')" }
         - { id: co.camille.secours_generique }
+    retrouvailles: { sourire: co.retrouvailles.camille_sourire, noir: co.retrouvailles.camille_noir }
   - id: aubert
     name: "Madame Aubert"
     label: "MAIRE"
@@ -121,32 +184,48 @@ characters:
     role: maire
     tic: "Le stade, c'est de l'argent public."
     camp: instances
+    age: 46
+    statut: present
     default_target: 0.5
     adresse:
       entraineur: { sourire: "{pg, select, f{madame} other{monsieur}} {nom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{pg, select, f{madame} other{monsieur}} {nom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+    on_relation:
+      -3: co.aubert.trahison_subvention
+      3: co.aubert.faveur_ministere
   - id: legruet
-    name: "Noël Legruet"
+    name: "Noé Berthomier"
     label: "PRÉSIDENT DE LA FÉDÉRATION"
     genre: m
     role: federation
     tic: "On verra ça après le Congrès."
     camp: instances
+    age: 63
+    statut: present
     default_target: 0.5
     adresse:
       entraineur: { sourire: "{pg, select, f{chère} other{cher}} {prenom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{pg, select, f{chère} other{cher}} {prenom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+    on_relation:
+      -3: co.legruet.trahison_avant_toi
+      3: co.legruet.faveur_les_districts
   - id: nassir
-    name: "Cheikh Nassir"
-    label: "FONDS QATALYST"
+    name: "Cheikh Ilyas"
+    label: "FONDS ALMADIS"
     genre: m
     role: fonds
     tic: "Ce n'est pas un club, c'est un actif."
     camp: direction
+    age: 34
+    statut: present
     default_target: 1
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+    on_relation:
+      -3: co.nassir.trahison_notification
+      3: co.nassir.faveur_un_club
+    retrouvailles: { sourire: co.retrouvailles.nassir_sourire, noir: co.retrouvailles.nassir_noir }
   - id: josiane
     name: "Madame Josiane"
     label: "SECRÉTAIRE DEPUIS 1987"
@@ -154,21 +233,33 @@ characters:
     role: secretaire
     tic: "J'en ai vu passer, vous savez."
     camp: direction
+    age: 52
+    statut: present
     default_target: 1.5
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "{pg, select, f{madame} other{monsieur}} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{pg, select, f{mademoiselle} other{monsieur}} {nom}" }
+    on_relation:
+      -3: co.josiane.trahison_sous_les_autres
+      3: co.josiane.faveur_classeur
+    retrouvailles: { sourire: co.retrouvailles.josiane_sourire, noir: co.retrouvailles.josiane_noir }
   - id: clow
-    name: "Brian Clow"
+    name: "Dan Corven"
     label: "LE MENTOR"
     genre: m
     role: mentor
-    tic: "Je ne dirais pas que j'étais le meilleur, mais j'étais dans le top un."
+    tic: "Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant."
     camp: terrain
+    age: 61
+    statut: present
     default_target: 0.5
     adresse:
       entraineur: { sourire: "petit", neutre: "{prenom}", noir: "coach" }
       joueur:     { sourire: "petit", neutre: "petit", noir: "{nom}" }
+    on_relation:
+      -3: co.clow.trahison_devant
+      3: co.clow.faveur_telegramme
+    retrouvailles: { sourire: co.retrouvailles.clow_sourire, noir: co.retrouvailles.clow_noir }
   - id: mbako
     name: "Lian Mbako"
     label: "PRODIGE, 16 ANS"
@@ -176,12 +267,16 @@ characters:
     role: prodige
     tic: "Je veux jouer. Maintenant."
     camp: terrain
+    age: 16
+    statut: present
     default_target: 1
     adresse:
       entraineur: { sourire: "coach", neutre: "coach", noir: "monsieur" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
     on_relation:
       3: co.mbako.faveur_refus_grand_club
+      -3: co.mbako.trahison_clause
+    retrouvailles: { sourire: co.retrouvailles.mbako_sourire, noir: co.retrouvailles.mbako_noir }
   - id: vecchio
     name: "Gigi Vecchio"
     label: "GARDIEN, 41 ANS"
@@ -189,10 +284,16 @@ characters:
     role: gardien
     tic: "J'en ai vu d'autres."
     camp: terrain
+    age: 41
+    statut: present
     default_target: 1.5
     adresse:
       entraineur: { sourire: "coach", neutre: "coach", noir: "coach" }
       joueur:     { sourire: "petit", neutre: "petit", noir: "{prenom}" }
+    on_relation:
+      -3: co.vecchio.trahison_une_rendue
+      3: co.vecchio.faveur_reunion
+    retrouvailles: { sourire: co.retrouvailles.vecchio_sourire, noir: co.retrouvailles.vecchio_noir }
   - id: lea
     name: "Léa"
     label: "PRESSE"
@@ -200,10 +301,15 @@ characters:
     role: presse
     tic: "Vous confirmez ?"
     camp: direction
+    age: 25
+    statut: present
     default_target: 1
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom} {nom}", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
+    on_relation:
+      -3: co.lea.trahison_une_question
+      3: co.lea.faveur_vingt_quatre_heures
   - id: mere_mbako
     name: "La mère de Mbako"
     label: "MÈRE ET AGENTE"
@@ -211,7 +317,13 @@ characters:
     role: famille
     tic: "Mon fils n'a besoin de personne."
     camp: terrain
+    age: 39
+    statut: present
     default_target: 0.5
     adresse:
       entraineur: { sourire: "{prenom}", neutre: "coach", noir: "{pg, select, f{madame} other{monsieur}} {nom}" }
       joueur:     { sourire: "{prenom}", neutre: "{prenom}", noir: "{nom}" }
+    on_relation:
+      -3: co.mere_mbako.trahison_lea
+      3: co.mere_mbako.faveur_numero
+    retrouvailles: { sourire: co.retrouvailles.mere_mbako_sourire, noir: co.retrouvailles.mere_mbako_noir }

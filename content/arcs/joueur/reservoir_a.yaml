@@ -1,0 +1,253 @@
+# Réservoir du joueur pro — lot A (bible ch. 10 § 6.1 à § 6.6) : le tifo à ton
+# nom (signature de la pépite), le test du capitaine, le prodige d'après, la
+# première Une, le contrat d'image. Tirées par `programme` (postulats.yaml).
+# Schéma : en-tête de content/arcs/entraineur/kop.yaml.
+arcs:
+  # ------------------------------------------------ § 6.1 · Le tifo à ton nom
+  # La Tribune Nord a peint ton nom sur vingt mètres ; elle veut une promesse.
+  # Elle adore, puis elle siffle : c'est l'intrigue signature de la pépite.
+  - id: jp.tifo
+    title: "Le tifo à ton nom"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 0
+    theme: tribune
+    carrier: gege
+    cast: [gege, lea, aulard, camille]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    hint: "La Nord a peint ton nom sur vingt mètres. Elle veut une promesse."
+    issues: [promis, honnete]
+    traces:
+      enfant_du_pays:  "{annee} : vingt mètres de bâche à {ville}. {prenom} {nom} a promis de rester. À la craie, pour l'instant."
+      honnete_tribune: "{annee} : {prenom} {nom} a dit à la Nord {pg, select, f{qu'elle ne promettait} other{qu'il ne promettait}} rien. Elle a gardé la bâche."
+      ami_ultras:      "{annee} : trois bières au local du virage. La Nord a adopté son numéro avant son nom."
+      # Lue par jp.retour.but_cave (l'usine ne peut pas brûler ce qu'elle n'a
+      # plus) : c'est toi qui es reparti avec les vingt mètres.
+      bache_a_la_cave: "{annee} : {prenom} {nom} est reparti{pg, select, f{e} other{}} avec les vingt mètres. Ils sont à la cave, pliés."
+    epilogue:
+      tribunes: "-"
+      # Pas de ville : l'épilogue peut tomber une saison plus tard, dans un
+      # autre club — la bâche, elle, n'a pas déménagé.
+      journal: "{annee} : la bâche a été pliée. Pas brûlée."
+    steps:
+      - id: local
+        card:
+          - { id: jp.tifo.local_pacte, if: "flag('pacte_gege')" }
+          - { id: jp.tifo.local }
+        next: [ { step: bache, in: [2, 10] } ]
+      - id: bache
+        card: jp.tifo.bache
+        next: [ { step: prix, in: [2, 11] } ]
+      - id: prix
+        card: jp.tifo.prix
+        next: [ { step: un_an_apres, in: [6, 16] } ]
+      - id: un_an_apres
+        card:
+          # `world.division == 2` est vrai d'entrée pour la pépite : la variante
+          # aurait éteint `un_an_apres_dore`. C'est la descente qui la déclenche.
+          # `descente` n'existe qu'en Division 1 (engine `_resolveBilan`) et
+          # l'usine joue en Division 2 : la fin dorée `jp_statue` était donc
+          # structurellement hors d'atteinte pour celui qui reste. On garde la
+          # relégation, et on ajoute ce que le club-usine, lui, peut vivre :
+          # trois saisons à ne jamais remonter, avec toi dedans.
+          - { id: jp.tifo.un_an_apres_statue, if: "flag('enfant_du_pays') && flag('fidele') && (flag('descente') || (stats.saisons >= 3 && world.rang >= 12))" }
+          # Seuil ramené de 30 à 45 : la pépite part de 80 de tribunes et n'y
+          # descend presque jamais, et la fin `jp_bache_pliee` restait sans
+          # porte praticable.
+          - { id: jp.tifo.un_an_apres_sac,    if: "flag('enfant_du_pays') && (flag('vendu_d1') || flag('vendu_d2')) && gauges.tribunes <= 45" }
+          - { id: jp.tifo.un_an_apres_dore,   if: "flag('enfant_du_pays') && flag('fidele')" }
+          - { id: jp.tifo.un_an_apres_pliee,  if: "flag('enfant_du_pays') && (flag('vendu_d1') || flag('vendu_d2'))" }
+          - { id: jp.tifo.un_an_apres_honnete, if: "flag('honnete_tribune')" }
+          - { id: jp.tifo.un_an_apres }
+        next: []
+
+  # -------------------------------------------- § 6.2 · Le test du capitaine
+  # Les bouteilles, puis le penalty à sa place. Bréhaut teste ; le groupe note.
+  - id: jp.brassard_test
+    title: "Le test du capitaine"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.3
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vecchio, vukic, mbako]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    when: "chars.brehaut.statut != 'retraite' && chars.brehaut.statut != 'parti'"
+    hint: "Trente-trois ans, un genou, un brassard. Il teste le nouveau."
+    issues: [accepte, mouton, capitaine]
+    traces:
+      groupe_accepte: "{annee} : le groupe a fait la passe à {prenom} {nom}. Une fois, fort. C'était un début."
+      mouton_noir:    "{annee} : plus personne ne fait la passe à {prenom} {nom}. Même au toro."
+      capitaine:      "{annee} : Titi Bréhaut a passé le brassard à {prenom} {nom}. Un peu trop fort sur l'épaule."
+      brassard_gigi:  "{annee} : le brassard est passé sur le gant de Gigi Vecchio. Il tombe deux fois par match."
+    epilogue:
+      journal: "{annee} : Bréhaut a testé {nom}. Le groupe a noté."
+    steps:
+      - id: toro
+        card: jp.brassard.toro
+        next: [ { step: penalty, in: [1, 9] } ]
+      - id: penalty
+        card:
+          - { id: jp.brassard.penalty_mouton, if: "flag('mouton_noir')" }
+          - { id: jp.brassard.penalty }
+        next: [ { step: genou_de_titi, if: "flag('groupe_accepte')", in: [3, 14] }, { step: discours, in: [8, 16] } ]
+      - id: genou_de_titi
+        card: jp.brassard.genou_de_titi
+        next: [ { step: discours, in: [4, 16] } ]
+      - id: discours
+        card:
+          - { id: jp.brassard.discours, if: "flag('capitaine')" }
+          - { id: jp.brassard.discours_sans }
+        next: []
+
+  # ---------------------------------------------- § 6.3 · Le prodige d'après
+  # Seize ans, ton poste, et une mère qui dit qu'il n'a besoin de personne.
+  - id: co.mbako_rival
+    title: "Le prodige d'après"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 0
+    theme: formation
+    carrier: mbako
+    cast: [mbako, mere_mbako, vukic, fardelli, vecchio]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    when: "chars.mbako.statut != 'vendu' && chars.mbako.age <= 24"
+    hint: "Lian Mbako a seize ans et ton poste."
+    issues: [mentor, rival, demande_vente]
+    traces:
+      mentor_mbako: "{annee} : {prenom} {nom} a appris le contrôle à Lian Mbako. Il fait mieux ; c'était le but."
+      rival_mbako:  "{annee} : Lian Mbako et {prenom} {nom}, un poste pour deux. Le vestiaire a compté les points."
+      demande_vente: "{annee} : {prenom} {nom} a demandé à partir. Le président a noté « deux pour le prix d'un »."
+      mbako_blesse_par_toi: "{annee} : {prenom} {nom} a blessé Lian Mbako. Sa mère, en tribune, a noté."
+    epilogue:
+      journal: "{annee} : Lian Mbako a pris la place de {nom}. Ou l'inverse."
+    steps:
+      - id: mere
+        card:
+          - { id: jp.mbako.mere_papy, if: "age >= 28" }
+          - { id: jp.mbako.mere_jeune, if: "age <= 20" }
+          - { id: jp.mbako.mere }
+        next: [ { step: vukic, in: [2, 10] } ]
+      - id: vukic
+        card: jp.mbako.vukic
+        next: [ { step: partir, if: "relation.mbako >= 1", in: [2, 12] }, { step: contre_toi, in: [8, 16] } ]
+      - id: partir
+        card: jp.mbako.partir_avec_moi
+        next: [ { step: contre_toi, in: [6, 16] } ]
+      - id: contre_toi
+        card:
+          - { id: jp.mbako.contre_toi_rival, if: "flag('rival_mbako')" }
+          - { id: jp.mbako.contre_toi }
+        # Le tacle sur le petit se paie : la mère a noté, et il reste une
+        # phrase à dire (fin `jp_coup_de_tete`).
+        next: [ { step: sternum, if: "flag('mbako_blesse_par_toi')", in: [3, 14] } ]
+      - id: sternum
+        card: jp.mbako.sternum
+        next: []
+
+  # ------------------------------------------------- § 6.6 · La première Une
+  # Ta première conférence : tu dis « le meilleur », ou tu ne le dis pas.
+  - id: jp.premiere_une
+    title: "La première Une"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: presse
+    carrier: lea
+    cast: [lea, meneche, brehaut]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    hint: "Deux journalistes, un stagiaire, et une phrase qui reste."
+    issues: [modeste, special, critique]
+    traces:
+      special:        "{annee} : « le meilleur », a dit {prenom} {nom} en conférence. Le vestiaire a lu."
+      coach_critique: "{annee} : {prenom} {nom} a critiqué le coach hors micro. Le coach a lu aussi."
+      meme_assume:    "{annee} : {prenom} {nom} a ri de son propre mème. Le mug s'est vendu."
+    epilogue:
+      journal: "{annee} : la première Une de {nom}. Le vestiaire l'a lue avant {pg, select, f{elle} other{lui}}."
+    steps:
+      - id: conference
+        card: jp.une.conference
+        next: [ { step: hors_micro, in: [1, 8] } ]
+      - id: hors_micro
+        card: jp.une.hors_micro
+        next: [ { step: vestiaire, if: "flag('special')", in: [1, 9] }, { step: meme, in: [3, 14] } ]
+      - id: vestiaire
+        card: jp.une.vestiaire
+        next: [ { step: meme, in: [3, 14] } ]
+      - id: meme
+        card:
+          - { id: jp.une.meme_dessin, if: "year < 2007" }
+          - { id: jp.une.meme }
+        next: []
+
+  # ----------------------------------------------- § 6.4 · Le contrat d'image
+  # Une société aux îles pour ton image. Tu as dix-neuf ans, et une image.
+  - id: jp.contrat_image
+    title: "Le contrat d'image"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: false
+    replay: { after: 1, max: 4 }
+    min_season: 0
+    theme: argent
+    carrier: fardelli
+    cast: [fardelli, camille, meneche, brehaut, josiane, nassir]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    hint: "Zéro impôt, une société lointaine, un cousin que tu n'as jamais vu."
+    issues: [signe, refuse, camille]
+    traces:
+      offshore:     "{annee} : l'image de {prenom} {nom} est partie aux îles. Le cousin a acheté une montre."
+      image_propre: "{annee} : {prenom} {nom} a payé ses impôts, et l'addition du restaurant est restée à Fardelli."
+      camille_a_lu: "{annee} : Camille a lu le relevé avant tout le monde. La moitié a été régularisée."
+    epilogue:
+      journal: "{annee} : une société aux îles au nom de {nom}. Le cousin a gardé la montre."
+    steps:
+      - id: cousin
+        card:
+          - { id: jp.image.cousin_encore, if: "plays('jp.contrat_image') >= 1" }
+          - { id: jp.image.cousin_frere,  if: "relation.brehaut >= 2" }
+          - { id: jp.image.cousin }
+        next: [ { step: montre, if: "flag('offshore')", in: [1, 9] }, { step: double_mandat, in: [2, 12] } ]
+      - id: montre
+        card: jp.image.montre
+        next: [ { step: double_mandat, in: [2, 12] } ]
+      - id: double_mandat
+        card: jp.image.double_mandat
+        next: [ { step: fisc, if: "flag('offshore')", in: [6, 16] } ]
+      - id: fisc
+        card:
+          # Le compte trop plein ferme la carrière (charte § 3.2 : c'est la
+          # caisse qui décide de la fin, jamais un dé).
+          - { id: jp.image.fisc_compte_plein, if: "gauges.caisse >= 75" }
+          - { id: jp.image.fisc_moitie, if: "flag('camille_a_lu')" }
+          - { id: jp.image.fisc }
+        next: []

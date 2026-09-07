@@ -47,8 +47,9 @@ const Set<String> kKnownPaths = {
   'bilan.tenu', 'bilan.rang', 'bilan.outcome', 'reactions',
 };
 
-/// Prefixes for dynamic paths (`vars.x`, `flags.x`, `relation.x`, `stats.x`).
-const List<String> kKnownPathPrefixes = ['vars.', 'flags.', 'relation.', 'stats.'];
+/// Prefixes for dynamic paths (`vars.x`, `flags.x`, `relation.x`, `stats.x`,
+/// `chars.<id>.age` / `chars.<id>.statut`).
+const List<String> kKnownPathPrefixes = ['vars.', 'flags.', 'relation.', 'stats.', 'chars.'];
 
 const Set<String> kKnownCalls = {
   'flag', 'seen', 'since', 'count', 'relation', 'between', 'role_was', 'phase',
@@ -218,6 +219,20 @@ Object? _resolvePath(String path, EvalContext ctx) {
   }
   if (path.startsWith('stats.')) {
     return s.stats[path.substring(6)] ?? 0;
+  }
+  if (path.startsWith('chars.')) {
+    // `chars.<id>.age` / `chars.<id>.statut` (spec variété §1.10 et §2.11) :
+    // 0 et « present » pour un personnage sans état.
+    final rest = path.substring(6);
+    final dot = rest.lastIndexOf('.');
+    if (dot > 0) {
+      final id = rest.substring(0, dot);
+      final field = rest.substring(dot + 1);
+      final st = s.chars[id];
+      if (field == 'age') return st?.age ?? 0;
+      if (field == 'statut') return st?.statut ?? 'present';
+    }
+    throw StateError('Unknown path: $path');
   }
   throw StateError('Unknown path: $path');
 }

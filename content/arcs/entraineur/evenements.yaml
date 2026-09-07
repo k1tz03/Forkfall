@@ -4,48 +4,19 @@
 # passé » (`fallback: drop`). Aucun n'est de premier plan : ce sont des
 # intrusions, pas des histoires que le metteur en scène doit faire avancer.
 #
-# 1. L'ultimatum (Aulard) : série de défaites + direction basse. Attaquer
+# 1. L'ultimatum (Vaubourg) : série de défaites + direction basse. Attaquer
 #    ouvre l'étape verdict [2,4] ; assurer referme l'arc. Verdict : le SMS
 #    (fin en_sms) si la série continue, sinon « mon fils » (homme_president).
 # 2. La voiture du président (Vukić) : vestiaire et tribune en fête.
 # 3. La tribune vétuste (Aubert, S2+) : trois rapports ; deux « on verra »
 #    de suite mènent au drame `en.evt.tribune_noir` (fin en_tribune).
-# 4. Gérard a fui (Josiane) : la buvette et la caisse en Thaïlande.
-# 5. L'enveloppe (Fardelli, S1+) : trois joueurs adverses lèvent le pied.
-#    Refuser referme l'arc ; accepter ouvre l'étape Fédération [6,14], où
-#    assumer conclut la carrière (fin en_valise, spec §1.13). Traces :
-#    enveloppe_rival (manchette « La valise »), enveloppe_niee et
-#    enveloppe_refusee (épitaphes).
+# 4. Gérard a fui (Josiane) : la buvette et la caisse parties au soleil.
+# 5. L'enveloppe : absorbée par l'intrigue `en.enveloppe` du réservoir
+#    (content/arcs/entraineur/enveloppe.yaml, bible ch. 11 § 2.3, intrigue 14).
+#    Les deux cartes ∃ `en.evt.enveloppe` et `en.evt.enveloppe_federation` en
+#    sont les étapes 1 et 5 ; l'événement aléatoire est retiré d'ici pour
+#    qu'une carte n'appartienne pas à deux mécanismes.
 arcs:
-  - id: en.evt.enveloppe
-    title: "L'enveloppe"
-    kind: evenement
-    roles: [entraineur]
-    postulats: []
-    foreground: false
-    weight: 1.0
-    once: true
-    # Rare (fin en_valise « rare ») : un entraîneur dans la zone rouge, sous
-    # pression du président ; 1,2 % par créneau éligible.
-    when: "season >= 1 && world.rang >= 13 && gauges.direction < 50 && !flag('enveloppe_refusee')"
-    chance: 0.012
-    cast: [fardelli, legruet]
-    traces:
-      enveloppe_rival:   "{annee} : trois joueurs de {rival} ont levé le pied au dernier bloc. Une enveloppe a changé de poche ; {nom} savait."
-      enveloppe_refusee: "{annee} : Fardelli avait « un ami » et une enveloppe. {prenom} {nom} a dit jamais. Il n'a pas rappelé."
-      enveloppe_niee:    "{annee} : la Fédération a examiné l'enveloppe. {prenom} {nom} a tout nié ; Legruet a noté « nie »."
-    hint: "Fardelli a un ami. L'ami a une enveloppe. Le dernier bloc a un prix."
-    same_club: true
-    fallback: drop
-    steps:
-      - id: enveloppe
-        card: en.evt.enveloppe
-        # « Jamais » pose `next: end` sur la carte ; le défaut sert « Combien ».
-        next: [ { step: federation, in: [6, 14] } ]
-      - id: federation
-        card: en.evt.enveloppe_federation
-        next: []
-
   - id: en.evt.ultimatum
     title: "L'ultimatum"
     kind: evenement

@@ -1,0 +1,100 @@
+# Cartes d'étape de « Le grand nom » (interim_longues.yaml). L'agent apporte
+# une cassette : un entraîneur mystique, libre, assis sur un seau, que le board
+# veut pour janvier. Quatre étapes : la cassette, la visite du jeudi (variante
+# si le script t'a déjà déchu), le match à onze contre onze devant le
+# président, le bureau (variante si le mystique est reparti).
+# Traces : cassette_regardee, loco_evince, adjoint_de_loco, fuite_loco.
+cards:
+  - id: en.grand_nom.cassette
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli tend une cassette sans étiquette : « {Toi}, on parle d'argent ou d'amitié ? Là, on parle d'un mystique, libre, que ton président veut pour janvier. »"
+    left:
+      label: "Je regarde la cassette"
+      effects: {direction: "-", relation: {fardelli: 1}, set: [cassette_regardee], react: en.re.fardelli_seau}
+      answer: "Un seau, un match, un homme qui ne bouge pas. La deuxième fois, tu comprends."
+    right:
+      label: "Je ne regarde pas"
+      effects: {direction: "+", relation: {fardelli: -1}, react: en.re.fardelli_seau}
+      answer: "Tu rends la cassette. Il la donne au président ; le président a un magnétoscope."
+
+  - id: en.grand_nom.jeudi
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    tone: strategique
+    text: "Il s'est assis sur un seau au milieu du vestiaire, les joueurs debout autour : « Regardez la cassette, il y a tout dedans. Vous me le prêtez une semaine, ou vous le gardez ? »"
+    left:
+      label: "Une semaine, on verra"
+      effects: {vestiaire: "-", direction: "+", relation: {fardelli: 1}}
+      answer: "Il ne dit rien. Les joueurs courent vingt kilomètres sans savoir pourquoi."
+    right:
+      label: "Je le garde, monsieur"
+      effects: {vestiaire: "+", direction: "-", relation: {fardelli: -1}}
+      answer: "Il se lève et emporte le seau. Il ne parle pas aux gens qu'il n'aime pas."
+
+  - id: en.grand_nom.jeudi_dechu
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    tone: strategique
+    text: "Il s'assoit sur son seau au milieu du vestiaire : « On m'a dit que je commence lundi et que vous restez à côté. Ce vestiaire est trop grand pour deux silences. Vous restez ? »"
+    left:
+      label: "Je reste, en silence"
+      effects: {direction: "+", vestiaire: "-", set: [adjoint_de_loco], outcome: adjoint}
+      answer: "Tu restes. Tu apprends à ne pas parler ; c'est long."
+    right:
+      label: "Je parle, alors je pars"
+      effects: {direction: "--", tribunes: "+", set: [parti_tete_haute, loco_evince], outcome: evince}
+      answer: "Le vestiaire parle pour toi. Il parle fort, et pas longtemps."
+
+  - id: en.grand_nom.seau
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction, moment]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić a compris avant toi : « Le président est en tribune avec l'agent et un carnet. Je te le dis parce que personne ne te le dira : c'est un match pour ton poste. »"
+    left:
+      label: "Je joue pour gagner"
+      effects: {force: 2, vestiaire: "-", direction: "+", relation: {vukic: 1}, set: [loco_evince], outcome: evince}
+      answer: "Ce qui compte, c'est que tu criais et qu'il ne disait rien. On a préféré le cri."
+    right:
+      label: "Je joue pour montrer"
+      effects: {vestiaire: "+", direction: "-", parole: 1, set: [fuite_loco], outcome: fuite}
+      answer: "Il se lève à la mi-temps, dit « la cassette », et repart. Personne ne sait."
+
+  - id: en.grand_nom.president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg tapote la cassette rembobinée : « J'ai réfléchi vite, {toi} : lui en janvier avec toi à côté, ou toi jusqu'en juin avec lui sur une chaise dans ma loge. Tu choisis, ou moi ? »"
+    left:
+      label: "Moi en juin, lui en loge"
+      effects: {direction: "-", vestiaire: "+", tribunes: "+", relation: {fardelli: -1}, set: [loco_evince], outcome: evince}
+      answer: "Il regarde tes matchs depuis un seau qu'il a apporté. La loge a des chaises."
+    right:
+      label: "Lui en janvier, moi à côté"
+      effects: {direction: "++", vestiaire: "--", relation: {fardelli: 1}, set: [adjoint_de_loco], outcome: adjoint}
+      answer: "Tu poses les plots avec Vukić. Lui regarde la cassette de la séance, le soir."
+
+  - id: en.grand_nom.president_fuite
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg, la cassette rendue sur le bureau : « J'ai réfléchi, et lui aussi : il est reparti avec son seau sans rien dire. Tu restes jusqu'en juin, {toi}. Par écrit, ou tu me crois ? »"
+    left:
+      label: "Par écrit"
+      effects: {direction: "+", parole: 1, set: [cdi_signe]}
+      answer: "Une page. Elle dit « juin » ; elle ne dit pas l'année."
+    right:
+      label: "Je vous crois"
+      effects: {direction: "-", vestiaire: "+", set: [loco_evince], outcome: evince}
+      answer: "Tu le crois. Josiane, elle, garde la page qu'il n'a pas écrite."

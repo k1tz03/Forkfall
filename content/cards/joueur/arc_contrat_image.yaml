@@ -1,0 +1,133 @@
+# Cartes de l'intrigue « Le contrat d'image » (arc jp.contrat_image) —
+# bible ch. 10 § 6.4. Le cousin des îles est une voix sans portrait : c'est
+# Fardelli qui le présente, comme un plat. Josiane tient le rôle de l'agente
+# qui compte (Solvang dans la bible) : elle a vu passer les deux factures.
+cards:
+  - id: jp.image.cousin
+    roles: [joueur]
+    arc: agents
+    tags: [agents, caisse, scandale]
+    speaker: fardelli
+    tone: leger
+    text: "« Ton cousin a monté une société aux îles pour ton image, zéro impôt ; tu as une image et dix-neuf ans. On parle d'argent ou d'amitié : tu signes sans lire ? »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "++", relation: {fardelli: 1}, set: [offshore], outcome: signe, react: jp.re.camille_montre}
+      answer: "Tu signes. Le cousin range le dossier. Il a une montre neuve la semaine suivante."
+    right:
+      label: "Je paie mes impôts"
+      effects: {caisse: "-", tribunes: "+", direction: "+", set: [image_propre], outcome: refuse}
+      answer: "Le cousin repart aux îles. Fardelli paie l'addition ; il la garde, pour la déduire."
+
+  - id: jp.image.cousin_frere
+    roles: [joueur]
+    arc: agents
+    tags: [agents, vestiaire, caisse]
+    speaker: brehaut
+    tone: strategique
+    text: "« Mon frère a un plan pour ton contrat d'image, aux îles, et le groupe vit bien quand tout le monde a le même plan. Tu signes avec lui, ou tu restes chez ton agent ? »"
+    left:
+      label: "Avec ton frère"
+      effects: {caisse: "++", relation: {brehaut: 1, fardelli: -2}, set: [offshore], outcome: signe, react: jp.re.camille_montre}
+      answer: "Le frère vend moins cher. Il vend quand même."
+    right:
+      label: "Je reste chez le mien"
+      effects: {vestiaire: "-", relation: {brehaut: -1}, set: [image_propre], outcome: refuse}
+      answer: "Titi ne dit rien. Le groupe fait la passe, un peu moins."
+
+  - id: jp.image.cousin_encore
+    roles: [joueur]
+    arc: agents
+    tags: [agents, caisse, scandale]
+    speaker: fardelli
+    tone: leger
+    text: "« Ton cousin a remonté une société, ailleurs, plus propre, il dit. On parle d'argent ou d'amitié : tu signes une deuxième fois, ou une fois t'a suffi ? »"
+    left:
+      label: "Je signe encore"
+      effects: {caisse: "++", relation: {fardelli: 1}, set: [offshore], outcome: signe, react: jp.re.camille_montre}
+      answer: "Tu signes. Le cousin a déjà la deuxième montre ; il te montre la première, par nostalgie."
+    right:
+      label: "Une fois m'a suffi"
+      effects: {caisse: "-", tribunes: "+", direction: "+", set: [image_propre], outcome: refuse}
+      answer: "Fardelli hausse les épaules. Il paie l'addition ; il la garde, comme la dernière fois."
+
+  - id: jp.image.montre
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    speaker: camille
+    tone: leger
+    text: "« Tu rentres à quelle heure, et ton cousin, lui, il rentre avec quelle montre ? Elle coûte trois mois de ton salaire. Tu lui demandes d'où elle vient ? »"
+    left:
+      label: "Je lui demande"
+      effects: {caisse: "-", direction: "+", relation: {camille: 1}, set: [camille_a_lu], outcome: camille}
+      answer: "Tu demandes. Le cousin dit « les frais ». Tu régularises la moitié ; l'autre moitié est déjà partie."
+    right:
+      label: "Je ne veux pas savoir"
+      effects: {caisse: "+", relation: {camille: -1}}
+      answer: "Tu ne sais pas. Elle sait. Elle range le relevé dans un tiroir qui ferme à clé."
+
+  - id: jp.image.double_mandat
+    roles: [joueur]
+    arc: agents
+    tags: [agents, direction]
+    speaker: josiane
+    tone: strategique
+    text: "« J'en ai vu passer, {toi}, des factures : votre agent facture le club et vous, pour le même contrat d'image. Vous en changez, ou vous restez avec l'ami ? »"
+    left:
+      label: "J'en change"
+      effects: {direction: "+", caisse: "-", relation: {josiane: 1, fardelli: -2}, set: [sans_agent], clear: [agent_fardelli], react: jp.re.fardelli_amitie}
+      answer: "Elle classe les deux factures ensemble, agrafées. Fardelli l'apprend le soir ; il dit « on parlait d'amitié »."
+    right:
+      label: "Je reste avec l'ami"
+      effects: {caisse: "+", relation: {josiane: -1}}
+      answer: "Elle range les factures dans deux dossiers différents. Elle en garde une photocopie ; par habitude."
+
+  - id: jp.image.fisc
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, risk:direction]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro : les îles ont fuité — votre nom, votre image, la montre de votre cousin. Vous régularisez avant que je publie, ou vous niez ? »"
+    left:
+      label: "Je régularise"
+      effects: {caisse: "--", direction: "-", clear: [offshore], set: [regularise]}
+      answer: "Tu paies. Le cousin garde la montre. Le chroniqueur garde le dossier ; il ne publie pas ; il note."
+    right:
+      label: "Je nie"
+      effects: {tribunes: "--", direction: "--", caisse: "-", relation: {meneche: -1}}
+      answer: "Tu nies. Il publie. Le fisc lit le journal ; il lit vite."
+
+  - id: jp.image.fisc_moitie
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, risk:direction]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro : la moitié est régularisée, votre femme a bien lu ; l'autre moitié est aux îles. Vous régularisez le reste, ou vous niez la moitié ? »"
+    left:
+      label: "Je régularise le reste"
+      effects: {caisse: "--", direction: "-", clear: [offshore], set: [regularise]}
+      answer: "Tu paies le reste. Il referme le dossier ; il ne publie pas ; il note qui avait lu en premier."
+    right:
+      label: "Je nie la moitié"
+      effects: {tribunes: "--", direction: "-", caisse: "-", relation: {meneche: -1}}
+      answer: "Tu nies la moitié. Il publie la moitié. C'est la moitié qui a une photo."
+
+  # Le compte a débordé : nier, c'est la fin (aucun aléa, c'est la caisse).
+  - id: jp.image.fisc_compte_plein
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, risk:caisse]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro : les îles ont fuité, et votre compte là-bas est plus gros que le budget de votre club. Vous régularisez, ou vous niez ? »"
+    left:
+      label: "Je régularise"
+      effects: {caisse: "---", direction: "-", clear: [offshore], set: [regularise]}
+      answer: "Tu paies. Beaucoup. Le cousin garde la montre ; le chroniqueur garde le dossier, fermé."
+    right:
+      label: "Je nie"
+      effects: {end: jp_panama}
+      answer: "Tu nies. Il publie le relevé, colonne par colonne. Le fisc lit le journal ; il lit vite."

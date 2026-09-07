@@ -1,0 +1,89 @@
+# Cartes d'étape de « La lettre anonyme » (interim_longues.yaml). Une lettre
+# accuse l'ancien d'avoir arrangé un match ; le capitaine était sur le terrain,
+# la Fédération a la lettre, la presse a la copie. Quatre étapes : l'enveloppe,
+# le capitaine (variante s'il a été écarté), la Fédération (si tu as parlé), la
+# copie. Intrigue sobre : personne ne rit d'un match arrangé.
+# Traces : match_arrange_couvert, lanceur_alerte, lettre_publiee, fede_dossier.
+cards:
+  - id: en.lettre.enveloppe
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane tient la lettre par un coin : « Sous la porte ce matin, à votre nom, avec une faute dedans : le match de Néville aurait été « arrangé » par l'ancien. Je la range, {toi} ? »"
+    left:
+      label: "Laissez-la-moi"
+      effects: {direction: "-", parole: 1}
+      answer: "Tu la gardes. Tu la lis trois fois ; la faute est toujours là."
+    right:
+      label: "Rangez, tiroir du milieu"
+      effects: {direction: "+", parole: -1, relation: {josiane: -1}, set: [match_arrange_couvert], outcome: couvre}
+      answer: "Le tiroir ferme à clé. Elle sait déjà que quelqu'un a une copie."
+
+  - id: en.lettre.brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: brehaut
+    tone: drame
+    once: true
+    text: "Bréhaut a lu, debout : « Le groupe vit bien, et le groupe jouait ce match, moi devant. J'ai perdu un duel à la quatre-vingtième que je perds jamais. Tu me crois ? »"
+    left:
+      label: "Je te crois, point final"
+      effects: {vestiaire: "+", direction: "-", parole: -1, relation: {brehaut: 1}, set: [match_arrange_couvert], outcome: couvre}
+      answer: "Il plie la lettre en quatre et la garde dans son casier. Il ne la rend pas."
+    right:
+      label: "Je demande à la Fédération"
+      effects: {vestiaire: "--", direction: "+", parole: 1, relation: {brehaut: -2}, set: [lanceur_alerte], outcome: parle}
+      answer: "Il répond « je ne sais pas ». Le vestiaire apprend le mot « convoqué »."
+
+  - id: en.lettre.brehaut_ecarte
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: brehaut
+    tone: drame
+    once: true
+    text: "Bréhaut a lu, sans s'asseoir : « Le groupe vit bien sans moi depuis le banc, et il jouait ce match, moi devant. Tu veux que je te dise ce que j'ai vu, ou je le dis ailleurs ? »"
+    left:
+      label: "Dis-le-moi, à moi"
+      effects: {vestiaire: "+", direction: "-", parole: -1, relation: {brehaut: 1}, set: [match_arrange_couvert], outcome: couvre}
+      answer: "Il parle deux minutes, puis il range la lettre lui-même. Il garde le pli."
+    right:
+      label: "Dis-le à la Fédération"
+      effects: {vestiaire: "--", direction: "+", parole: 1, relation: {brehaut: -3}, set: [lanceur_alerte], outcome: parle}
+      answer: "Il le répète salle 3, un mardi. Il ne te regarde plus dans le couloir."
+
+  - id: en.lettre.legruet
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    speaker: legruet
+    tone: strategique
+    when: "flag('lanceur_alerte')"
+    text: "Berthomier a mis le président sur haut-parleur sans le lui dire : « Cher {toi}, une lettre sans nom contre un entraîneur qui n'est plus le vôtre. On verra ça après le Congrès. Vous maintenez ? »"
+    left:
+      label: "Je maintiens"
+      effects: {direction: "--", parole: 2, relation: {legruet: 1, aulard: -2}, set: [fede_dossier]}
+      answer: "Il tamponne « examine ». Le président raccroche, puis rappelle pour raccrocher encore."
+    right:
+      label: "Je retire, c'est une lettre"
+      effects: {direction: "+", parole: -2, relation: {legruet: -1}, clear: [lanceur_alerte], set: [match_arrange_couvert], outcome: couvre}
+      answer: "Il range la lettre et garde la photocopie. Il garde tout."
+
+  - id: en.lettre.copie
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet montre une photocopie sans la donner : « Je l'ai depuis mardi, avant vous, et je publie lundi ou je range. Hors micro : ça dépend de ce que vous dites de l'ancien. »"
+    left:
+      label: "Publiez, je ne dis rien"
+      effects: {parole: 1, tribunes: "-", relation: {meneche: -1}, set: [lettre_publiee], outcome: publie}
+      answer: "Copie conforme, faute comprise. {rival} le suspend une semaine, « le temps d'examiner »."
+    right:
+      label: "Mettez-la au tiroir"
+      effects: {direction: "+", parole: -1, relation: {meneche: 1}, var: {dossier_troc: "+1"}}
+      answer: "Il range. Il te doit une exclusivité, ou tu lui en dois une ; vous ne savez plus."

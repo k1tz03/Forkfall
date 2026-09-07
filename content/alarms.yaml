@@ -5,6 +5,9 @@ alarms:
   entraineur:
     vestiaire.low:
       - { card: en.alarme.vestiaire_bas_vecchio, when: "relation.vecchio >= 2" }
+      # Bible ch. 30 § 2.3 : le troisième porteur, celui de la saison 2 (Rouvier
+      # dans la bible, Sabatier ici : le kiné n'existe pas encore au casting).
+      - { card: en.alarme.vestiaire_bas_sabatier, when: "season >= 2" }
       - { card: en.alarme.vestiaire_bas_vukic }
     vestiaire.high:
       - { card: en.alarme.vestiaire_haut_brehaut }
@@ -12,29 +15,51 @@ alarms:
       - { card: en.alarme.tribunes_bas_gege }
     tribunes.high:
       - { card: en.alarme.tribunes_haut_gege, when: "last_speaker != 'gege' && arc('en.kop_qui_aime_trop') != 'armed'" }
+      # Porteur 3 (bible ch. 30 § 2.3) : le journaliste, quand le kop compose.
+      - { card: en.alarme.tribunes_haut_meneche, when: "season >= 2 || flag('otage_kop')" }
       - { card: en.alarme.tribunes_haut_vukic }
     direction.low:
+      # Porteur 3 (bible ch. 30 § 2.3) : à la maison, on a appelé pour savoir.
+      - { card: en.alarme.direction_bas_camille, when: "season >= 1 && !flag('divorce')" }
       - { card: en.alarme.direction_bas_josiane }
     direction.high:
       - { card: en.alarme.direction_haut_aulard }
     caisse.low:
       - { card: en.alarme.caisse_bas_josiane }
     caisse.high:
+      # Porteur 3 (bible ch. 30 § 2.3) : la Commission dans la bible (Vialat),
+      # le fonds ici — c'est lui qui compte les budgets qui doublent.
+      - { card: en.alarme.caisse_haut_nassir, when: "season >= 2 || flag('naming_signe')" }
       - { card: en.alarme.caisse_haut_meneche }
   joueur:
     vestiaire.low:
+      # Bible ch. 10 § 6.2 : quand plus personne ne fait la passe, c'est Gigi
+      # qui vient, pas le capitaine.
+      - { card: jp.alarme.vestiaire_bas_toro, when: "flag('mouton_noir')" }
+      # Porteur 3 (bible ch. 30 § 2.2) : l'avant-centre qui réclame le ballon —
+      # Dembo dans la bible, le prodige ici.
+      - { card: jp.alarme.vestiaire_bas_mbako, when: "season >= 2 && relation.brehaut == 0" }
       - { card: jp.alarme.vestiaire_bas_brehaut }
     vestiaire.high:
       - { card: jp.alarme.vestiaire_haut_brehaut }
     tribunes.low:
+      # Bible ch. 10 § 6.1 : la bâche qu'on ne déroule plus.
+      - { card: jp.alarme.tribunes_bas_bache, when: "flag('enfant_du_pays')" }
+      # Porteur 3 (bible ch. 30 § 2.2) : celui qui ne siffle jamais et qui,
+      # là, en a envie — Paulette dans la bible, le vieux gardien ici.
+      - { card: jp.alarme.tribunes_bas_vecchio, when: "season >= 2 || relation.vecchio >= 1" }
       - { card: jp.alarme.tribunes_bas_gege }
     tribunes.high:
       - { card: jp.alarme.tribunes_haut_lea }
     direction.low:
       - { card: jp.alarme.direction_bas_vukic }
     direction.high:
+      # Porteur 3 (bible ch. 30 § 2.2) : le chouchou du bureau a un dossier.
+      - { card: jp.alarme.direction_haut_josiane, when: "season >= 2" }
       - { card: jp.alarme.direction_haut_vukic }
     caisse.low:
       - { card: jp.alarme.caisse_bas_fardelli }
     caisse.high:
+      # Porteur 3 (bible ch. 30 § 2.2) : la maison est payée, et le cousin a une idée.
+      - { card: jp.alarme.caisse_haut_camille, when: "!flag('divorce')" }
       - { card: jp.alarme.caisse_haut_fardelli }

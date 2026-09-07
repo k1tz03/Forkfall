@@ -1,0 +1,96 @@
+# Cartes de l'intrigue « Le pari » (arc jp.pari) — bible ch. 10 § 6.22. Une
+# petite mise sur ton propre match, juste le nombre de corners. Jamais un mode
+# d'emploi, toujours un bar d'hôtel. Tony et la procureure sont des voix sans
+# portrait ; la journaliste d'investigation signe d'une plume dessinée.
+cards:
+  - id: jp.pari.tony
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, caisse]
+    tone: strategique
+    text: "Tony, ton pote d'enfance, au téléphone, comme si vous vous étiez vus hier : « Une petite mise sur ton match, juste les corners, personne ne saura. Une fois, ou jamais ? »"
+    left:
+      label: "Une fois"
+      effects: {caisse: "+", set: [pisteur, pari], outcome: parie}
+      answer: "Tu ranges le téléphone, un peu vite. Il rappelle le jeudi suivant, à la même heure."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", set: [pari_refuse], outcome: refuse}
+      answer: "Tu raccroches. Il rappelle deux ans plus tard ; il a un autre numéro."
+
+  - id: jp.pari.tony_encore
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, caisse]
+    tone: strategique
+    text: "Tony, ton pote d'enfance, un autre numéro : « On m'a dit que plus personne ne t'appelait, {prenom}, alors moi je t'appelle ; on se connaît depuis le collège. Juste les corners, une fois ? »"
+    left:
+      label: "Une fois, alors"
+      effects: {caisse: "+", set: [pisteur, pari], outcome: parie}
+      answer: "Tu ranges le téléphone. Cette fois tu ne le ranges pas vite ; c'est pire."
+    right:
+      label: "Toujours jamais"
+      effects: {tribunes: "+", vestiaire: "+", outcome: refuse}
+      answer: "Tu raccroches. Il ne rappellera plus. Tu y penses le jeudi, quand même."
+
+  - id: jp.pari.fardelli
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« Un pote bookmaker mise gros si tu ranges ton match ; on parle d'argent ou d'amitié, et là c'est de l'argent, beaucoup. Tu lèves le pied, ou tu joues pour gagner ? »"
+    left:
+      label: "Je lève le pied"
+      effects: {caisse: "++", force: -2, relation: {fardelli: 1}, set: [pari_double], outcome: double}
+      answer: "Il te glisse une enveloppe. Le bar a un micro sous la table ; tu ne le sais pas."
+    right:
+      label: "Je joue pour gagner"
+      effects: {vestiaire: "+", tribunes: "+", relation: {fardelli: -1}, react: jp.re.fardelli_on_ne_parle_plus}
+      answer: "Tu gagnes. Il perd. Il dit « là, on ne parle plus »."
+
+  - id: jp.pari.plume
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    tone: strategique
+    text: "Un message sous la porte, tapé à la machine, une plume dessinée : « J'ai les documents, un enregistrement, la voix de {nom}, la date. Vous me parlez, ou votre agent ? »"
+    left:
+      label: "Je vous parle"
+      effects: {tribunes: "-", direction: "-", parole: -2, set: [plume_parle]}
+      answer: "Tu parles. Elle écoute. Elle publie quand même ; avec ta version, en encadré."
+    right:
+      label: "Mon agent répond"
+      effects: {parole: -5, direction: "--", relation: {fardelli: -1}}
+      answer: "Ton agent « ne connaît pas Tony ». Il connaît le bar."
+
+  - id: jp.pari.brigade
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale]
+    tone: strategique
+    text: "La procureure verse un café dans le couvercle du thermos et te le tend : « Nous avons tout notre temps, et vous, un entraînement à neuf heures. Vous niez, ou vous coopérez ? »"
+    left:
+      label: "Je nie"
+      effects: {direction: "--", tribunes: "-", clear: [pari]}
+      answer: "Elle note. Elle repart avec les relevés et un sourire poli ; elle a tout son temps."
+    right:
+      label: "Je coopère"
+      effects: {caisse: "---", vestiaire: "+", direction: "-", clear: [pari], set: [temoin_brigade]}
+      answer: "Tu coopères. Trois heures, un café, un témoin. Ça compte, plus tard."
+
+  - id: jp.pari.plateau
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro, enfin, à l'antenne : deux heures d'enquête sur vous dimanche, paris, enregistrement, cousin. Je vous offre trois minutes : vous venez ? »"
+    left:
+      label: "Je viens"
+      effects: {rand: [{p: 0.3, end: grand_deballage}, {tribunes: "-", direction: "--", caisse: "+"}]}
+      answer: "Trois minutes. C'est long, en direct."
+    right:
+      label: "Je boycotte"
+      effects: {tribunes: "--", direction: "-", vestiaire: "+"}
+      answer: "Le fauteuil est vide. Il le filme."

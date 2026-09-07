@@ -12,6 +12,7 @@
 ///       dart run fusible_tools:simulate --diff <seedA> <seedB> [--postulat 0] [--seasons 3]
 ///       dart run fusible_tools:simulate --trace <seed> [--postulat 0] [--seasons 2]
 ///       dart run fusible_tools:simulate --une-check [--postulat 0] [--runs 200]
+///       dart run fusible_tools:simulate --arc <id> [--postulat 0] [--runs 300] [--seasons 4]
 ///
 /// The diversity volume budgets have no `--assert` yet (spec §6 étape 0) : the
 /// spec thresholds are printed next to the values. Since step 2, `--assert`
@@ -104,6 +105,11 @@ class RunStats {
   int reactionsConsecutive = 0; // … servies juste après une autre réaction
   int reactionsMissed = 0; // stats.miss_reaction (plafond, `when` faux, carte disparue)
   final Map<String, int> reactionsMissedBy = {}; // cause → réactions perdues (stats.miss_reaction_<cause>)
+  // Set-pieces (spec variété §1.12) et Nouvelles datées (§1.5).
+  int setpieces = 0; // beats moteur servis (objective, match, cup, GM, bilan…)
+  int setpiecesVariantes = 0; // … servis par une variante auteurisée, hors secours
+  int nouvellesDatees = 0; // Nouvelles datées servies dans leur fenêtre [year, year + 1]
+  int nouvellesDateesPerdues = 0; // … jamais servies, fenêtre fermée (stats.nouvelle_datee_perdue)
   int uneChecks = 0; // Bilans où la Une a été comparée au verdict appliqué
   int uneChecksOk = 0; // … et disait vrai (payload.tenu / payload.rang / payload.outcome et les mots du titre)
   final List<String> uneCheckFailures = [];
@@ -131,9 +137,26 @@ int _unresolvedIn(String? t) => t == null ? 0 : '{'.allMatches(t).length;
 /// docs/balance/step4_etape2_corrections.md).
 String _nameLevel(Content content, GameState s, Pending p) {
   final card = content.cards[p.id];
-  if (card == null) return '';
+  // Les beats (Objectif, Grand Match, Bilan…) ne sont pas des cartes : leur
+  // gabarit vit dans setpieces.yaml et le Pending porte l'indice de la variante
+  // servie (`setpiece` / `setpiece_variante`). Sans ce détour, sept écrans par
+  // saison — dont la carte Objectif, premier exemple de la spec §1.8 —
+  // sortaient du budget « nom » sans être comptés.
+  final texts = <String?>[];
+  String? sp;
+  if (card != null) {
+    texts.addAll([card.text, card.left.answer, card.right.answer]);
+    sp = card.speaker;
+  } else {
+    final beat = p.payload['setpiece'] as String?;
+    final idx = (p.payload['setpiece_variante'] as num?)?.toInt() ?? -1;
+    final variants = beat == null ? null : content.setpieces[beat];
+    if (variants == null || idx < 0 || idx >= variants.length) return '';
+    final v = variants[idx];
+    texts.addAll([v.text, v.answerLeft, v.answerRight]);
+    sp = v.speaker ?? p.speaker;
+  }
   String? adresse;
-  final sp = card.speaker;
   if (sp != null) {
     final rel = s.relations[sp] ?? 0;
     final expr = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
@@ -141,7 +164,7 @@ String _nameLevel(Content content, GameState s, Pending p) {
   }
   final adresseNamed = adresse != null && placeholdersOf(adresse).any(kNamePlaceholders.contains);
   var level = '';
-  for (final t in [card.text, card.left.answer, card.right.answer]) {
+  for (final t in texts) {
     if (t == null) continue;
     final ph = placeholdersOf(t);
     if (ph.any((x) => x != 'toi' && x != 'Toi' && kNamePlaceholders.contains(x))) return 'direct';
@@ -189,6 +212,10 @@ class Narrative {
   int runsWithPalier = 0;
   int arcsOpened = 0;
   int arcsClosed = 0;
+  int setpieces = 0;
+  int setpiecesVariantes = 0;
+  int nouvellesDatees = 0;
+  int nouvellesDateesPerdues = 0;
 
   String bucket(int season) => season == 0 ? 'S0' : (season == 1 ? 'S1' : 'S2+');
 }
@@ -241,6 +268,8 @@ class RunRecord {
   final Set<String> seen = {};
   final List<SeasonRecord> seasons = [];
   final Map<String, String> outcomes = {}; // arc -> outcome (tolerant, absent today)
+  final Map<String, String> arcStatus = {}; // arc -> status final (armed | active | done | abandonne)
+  final Map<String, String> arcReason = {}; // arc abandonné -> raison (perimee, club, statut…)
   final List<String> filRouge = []; // per season (tolerant, absent today)
   final List<String> journal = []; // tolerant, absent today
   // Étape 2 (spec variété §5.3) : Une, brèves, journal, réactions.
@@ -500,6 +529,12 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
       if (prevWasReaction) stats.reactionsConsecutive += 1;
     }
     prevWasReaction = isReaction;
+    // Set-pieces (spec variété §1.12) : le beat a-t-il été servi par une
+    // variante auteurisée, ou par son secours ?
+    if (p.payload['setpiece'] is String) {
+      stats.setpieces += 1;
+      if (p.payload['setpiece_secours'] != true) stats.setpiecesVariantes += 1;
+    }
     if (p.kind == 'narrative') {
       if (s.season >= maxSeasons) break;
       final kind = p.payload['kind'] as String? ?? 'routine';
@@ -533,6 +568,7 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           m.nouvelles += 1;
           if (m.lastWasNouvelle) m.consecutiveNouvelles += 1;
         }
+        if (kind == 'nouvelle' && content.cards[p.id]?.year != null) stats.nouvellesDatees += 1;
         m.lastWasNouvelle = kind == 'nouvelle';
         if (kind == 'alarme') {
           m.alarms += 1;
@@ -600,6 +636,30 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           '${((p.payload['arc'] as String?) ?? '').padRight(24)} ${((p.payload['step'] as String?) ?? '').padRight(12)} · ${(sp ?? '—').padRight(9)} · ${tone.padRight(11)} · ${p.id}'
           '${p.payload['forced'] == true ? '  [forcé]' : ''}');
     } else {
+      // Les beats (Objectif, Carte Match, Grand Match, Bilan…) sont des écrans
+      // que le joueur lit : ils comptent pour le budget « nom » (spec §5.3),
+      // même si ce ne sont pas des cartes du sac. Sans ce bloc, sept écrans par
+      // saison — dont l'Objectif, premier exemple de la spec §1.8 — étaient
+      // invisibles pour la mesure, et y poser le nom ne changeait rien.
+      if (rec != null && s.season < maxSeasons) {
+        if (curRec == null || curRec.season != s.season) {
+          curRec = SeasonRecord(s.season);
+          rec.seasons.add(curRec);
+          final fr = s.entities.named['fil_rouge'];
+          if (fr != null) rec.filRouge.add(fr);
+        }
+        final r = curRec;
+        final named = _nameLevel(content, s, p);
+        if (named.isNotEmpty) {
+          r.nameCards += 1;
+          if (prevName == 'direct' && named == 'direct') {
+            r.nameConsecutive += 1;
+          } else if (prevName.isNotEmpty) {
+            r.nameConsecutiveToi += 1;
+          }
+        }
+        prevName = named;
+      }
       if (p.kind == 'bilan_une') {
         if (rec != null && s.season >= maxSeasons) break;
         final une = p.payload['une'];
@@ -672,6 +732,7 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
   for (final e in s.journal) {
     scanText(e.text, 'journal/${e.kind}');
   }
+  stats.nouvellesDateesPerdues = s.stats['nouvelle_datee_perdue'] ?? 0;
   stats.reactionsMissed = s.stats['miss_reaction'] ?? 0;
   s.stats.forEach((k, v) {
     if (k.startsWith('miss_reaction_')) stats.reactionsMissedBy[k.substring(14)] = v;
@@ -684,6 +745,10 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     s.stats.forEach((k, v) {
       if (k.startsWith('miss_')) nar.misses[k] = (nar.misses[k] ?? 0) + v;
     });
+    nar.setpieces += stats.setpieces;
+    nar.setpiecesVariantes += stats.setpiecesVariantes;
+    nar.nouvellesDatees += stats.nouvellesDatees;
+    nar.nouvellesDateesPerdues += stats.nouvellesDateesPerdues;
     if (hadDrame) nar.runsWithDrame += 1;
     if (hadPalier) nar.runsWithPalier += 1;
     if (s0Ids.isNotEmpty) nar.s0Sequences.add(s0Ids.take(seasonSlots).join(','));
@@ -700,6 +765,11 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     final played = rec.seasons.map((x) => x.season).toSet();
     rec.openings.removeWhere((o) => !played.contains(o.season));
     noteTolerant();
+    s.arcs.forEach((id, st) {
+      rec.arcStatus[id] = st.status;
+      final r = st.reason;
+      if (r != null && r.isNotEmpty) rec.arcReason[id] = r;
+    });
     rec.stats = stats;
     for (final e in s.journal) {
       rec.journalPerSeason[e.season] = (rec.journalPerSeason[e.season] ?? 0) + 1;
@@ -1246,6 +1316,16 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
   final exposure = content.cards.values.where((c) => c.roles.contains(post.role)).length;
   stdout.writeln('  ${never.length / math.max(1, exposure) < 0.10 ? '✔' : '✗'} ${'exposition : cartes du rôle jamais vues'.padRight(44)} ${never.length}/$exposure${never.isEmpty ? '' : ' : ${never.take(8).map((c) => c.id).join(', ')}${never.length > 8 ? '…' : ''}'}');
   stdout.writeln('  ${nar.s0Sequences.length >= 25 ? '✔' : '✗'} ${'entropie : séquences S0 distinctes (tous ids)'.padRight(44)} ${nar.s0Sequences.length}');
+  // Set-pieces (spec variété §1.12) : tant que content/setpieces.yaml n'a que
+  // ses secours, la part servie en variante reste basse — c'est la mesure du
+  // « la S2+ ressemble à la S0 ».
+  final spShare = nar.setpieces == 0 ? 0.0 : nar.setpiecesVariantes / nar.setpieces;
+  stdout.writeln('  ${spShare >= 0.50 ? '✔' : '✗'} ${'set-pieces servis en variante (hors secours)'.padRight(44)} ${_f(100 * spShare, 0)} % (${nar.setpiecesVariantes}/${nar.setpieces}) · seuil 50 %');
+  // Nouvelles datées (spec variété §1.5) : celles dont la fenêtre s'est fermée
+  // sans qu'elles soient servies sont perdues pour la carrière.
+  final dateesTotal = content.cards.values.where((c) => c.year != null && c.roles.contains(post.role)).length;
+  final perduesParRun = nar.nouvellesDateesPerdues / math.max(1, nar.runs);
+  stdout.writeln('  ${perduesParRun <= 1.0 ? '✔' : '✗'} ${'Nouvelles datées : servies / perdues par run'.padRight(44)} ${_f(nar.nouvellesDatees / math.max(1, nar.runs), 2)} / ${_f(perduesParRun, 2)} ($dateesTotal écrites) · seuil 1,0');
   if (assertBudgets && failures.isNotEmpty) {
     stderr.writeln('${failures.length} budget(s) narratif(s) violé(s) :');
     for (final f in failures) {
@@ -1253,6 +1333,108 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     }
     exit(1);
   }
+}
+
+/// `--arc <id>` (spec variété §5.2) : la fiche d'une intrigue sur N carrières —
+/// taux d'ouverture par saison, créneau d'ouverture, issues atteintes,
+/// clôtures et expirations, cartes de l'arc jamais vues. C'est le rapport que
+/// lit l'auteur d'une intrigue avant de la déclarer finie.
+void _reportArc(List<RunRecord> recs, Content content, int postulat, String arcId) {
+  final arc = content.arcs[arcId];
+  final post = content.postulatsByIndex[postulat];
+  if (arc == null) {
+    stderr.writeln('Intrigue « $arcId » inconnue. Intrigues du rôle ${post.role} : '
+        '${content.arcsSorted.where((a) => a.roles.contains(post.role)).map((a) => a.id).join(', ')}');
+    exit(1);
+  }
+  final n = recs.length;
+  stdout.writeln('── Intrigue $arcId « ${arc.title ?? '—'} » · postulat $postulat « ${post.title} » · $n runs ──');
+  if (!arc.roles.contains(post.role)) {
+    stdout.writeln('  ⚠ l\'intrigue ne joue pas le rôle ${post.role} de ce postulat : elle ne peut pas s\'ouvrir ici.');
+  }
+  // Ouvertures : part des carrières, part par saison, créneau, forçage.
+  // Un arc `kind: postulat` (l'`opening_arc`) n'est pas « ouvert » par le
+  // tirage de saison : il est semé d'office. Sans ça, son compteur reste à 0
+  // et les issues sont divisées par zéro (voir §5.1 « issues »).
+  final isOpeningArc = arc.kind == 'postulat' || post.openingArc == arcId;
+  final withOpening = isOpeningArc
+      ? recs.length
+      : recs.where((r) => r.openings.any((o) => o.arc == arcId)).length;
+  final bySeason = <int, int>{};
+  final slots = <int>[];
+  int forced = 0, jumps = 0, openings = 0;
+  final seasonsPlayed = <int, int>{}; // saison → carrières qui l'ont jouée
+  for (final r in recs) {
+    for (int k = 0; k < r.seasonsPlayed; k++) {
+      seasonsPlayed[k] = (seasonsPlayed[k] ?? 0) + 1;
+    }
+    for (final o in r.openings.where((o) => o.arc == arcId)) {
+      openings += 1;
+      bySeason[o.season] = (bySeason[o.season] ?? 0) + 1;
+      slots.add(o.slot);
+      if (o.forced) forced += 1;
+      if (o.jump) jumps += 1;
+    }
+  }
+  _line(withOpening / math.max(1, n) >= 0.20, 'carrières où l\'intrigue s\'ouvre',
+      isOpeningArc
+          ? '100 % ($n/$n) · semée d\'office (opening_arc)'
+          : '${_f(100 * withOpening / n, 0)} % ($withOpening/$n) · ${_f(openings / math.max(1, n), 2)} ouverture(s) par carrière',
+      '≥ 20 %');
+  final seasonKeys = bySeason.keys.toList()..sort();
+  stdout.writeln('    par saison : ${seasonKeys.isEmpty ? '—' : seasonKeys.map((k) => 'S$k ${_f(100 * bySeason[k]! / math.max(1, seasonsPlayed[k] ?? n), 0)} %').join(' · ')}'
+      '  (part des saisons jouées)');
+  if (slots.isNotEmpty) {
+    stdout.writeln('    créneau d\'ouverture : médiane ${_f(_pct(slots, 0.5), 0)} · min ${slots.reduce(math.min)} · max ${slots.reduce(math.max)}'
+        ' · forcée ${_f(100 * forced / openings, 0)} % · saut d\'arc ${_f(100 * jumps / openings, 0)} %');
+  }
+  // Issues (spec variété §1.3) : chaque issue déclarée doit être atteinte.
+  final outcomes = <String, int>{};
+  for (final r in recs) {
+    final o = r.outcomes[arcId];
+    if (o != null && o.isNotEmpty) outcomes[o] = (outcomes[o] ?? 0) + 1;
+  }
+  final missing = arc.issues.where((i) => !outcomes.containsKey(i)).toList();
+  _line(arc.issues.isEmpty || missing.isEmpty, 'issues atteintes',
+      arc.issues.isEmpty
+          ? 'l\'intrigue ne déclare pas d\'issues'
+          : '${arc.issues.map((i) => '$i ${_f(100 * (outcomes[i] ?? 0) / math.max(1, withOpening), 0)} %').join(' · ')}'
+              '${missing.isEmpty ? '' : ' · jamais atteinte(s) : ${missing.join(', ')}'}',
+      'toutes');
+  for (final e in outcomes.entries.where((e) => !arc.issues.contains(e.key))) {
+    stdout.writeln('    ⚠ issue hors `issues` : ${e.key} (${e.value})');
+  }
+  // Clôtures et expirations.
+  final status = <String, int>{};
+  final reasons = <String, int>{};
+  for (final r in recs) {
+    final st = r.arcStatus[arcId];
+    if (st == null) continue;
+    status[st] = (status[st] ?? 0) + 1;
+    final why = r.arcReason[arcId];
+    if (st == 'abandonne' && why != null) reasons[why] = (reasons[why] ?? 0) + 1;
+  }
+  final done = status['done'] ?? 0;
+  final abandon = status['abandonne'] ?? 0;
+  _line(withOpening == 0 || done / math.max(1, withOpening) >= 0.50, 'clôtures',
+      'done ${_f(100 * done / math.max(1, withOpening), 0)} % · abandonnée ${_f(100 * abandon / math.max(1, withOpening), 0)} %'
+      ' · encore ouverte ${_f(100 * ((status['active'] ?? 0) + (status['armed'] ?? 0)) / math.max(1, withOpening), 0)} %',
+      '≥ 50 % done');
+  stdout.writeln('    expirations et abandons : ${reasons.isEmpty ? '—' : (reasons.entries.toList()..sort((a, b) => b.value.compareTo(a.value))).map((e) => '${e.key} ${e.value}').join(' · ')}');
+  // Cartes de l'intrigue jamais vues (toutes les variantes de toutes les étapes).
+  final cards = <String>[];
+  for (final st in arc.steps) {
+    for (final v in st.card) {
+      if (!cards.contains(v.id)) cards.add(v.id);
+    }
+  }
+  final seen = <String>{};
+  for (final r in recs) {
+    seen.addAll(r.seen);
+  }
+  final never = cards.where((c) => !seen.contains(c)).toList();
+  _line(never.isEmpty, 'cartes de l\'intrigue jamais vues',
+      never.isEmpty ? '0/${cards.length}' : '${never.length}/${cards.length} : ${never.join(', ')}', '0');
 }
 
 void main(List<String> args) {
@@ -1266,6 +1448,7 @@ void main(List<String> args) {
   int? postulat;
   int? traceSeed;
   int? diffA, diffB;
+  String? arcId;
   int maxSeasons = 99;
   for (int i = 0; i < args.length; i++) {
     if (args[i] == '--runs' && i + 1 < args.length) runs = int.parse(args[i + 1]);
@@ -1276,6 +1459,7 @@ void main(List<String> args) {
     if (args[i] == '--postulat' && i + 1 < args.length) postulat = int.parse(args[i + 1]);
     if (args[i] == '--trace' && i + 1 < args.length) traceSeed = int.parse(args[i + 1]);
     if (args[i] == '--seasons' && i + 1 < args.length) maxSeasons = int.parse(args[i + 1]);
+    if (args[i] == '--arc' && i + 1 < args.length) arcId = args[i + 1];
     if (args[i] == '--diff' && i + 2 < args.length) {
       diffA = int.parse(args[i + 1]);
       diffB = int.parse(args[i + 2]);
@@ -1288,6 +1472,20 @@ void main(List<String> args) {
     stdout.writeln('── Trace · graine $traceSeed · postulat $p « ${content.postulatsByIndex[p].title} » · human_like ──');
     final r = runOne(engine, traceSeed, p, _humanLike, <String>{}, trace: stdout, maxSeasons: maxSeasons);
     stdout.writeln('fin : ${r.ending} · ${r.seasons} saison(s) · ${r.turns} beats');
+    return;
+  }
+
+  if (arcId != null) {
+    final p = postulat ?? 0;
+    final n = runs == 5000 ? 300 : runs;
+    final recs = <RunRecord>[];
+    for (int i = 0; i < n; i++) {
+      final seed = seedOfRun(i);
+      final rec = RunRecord(seed);
+      runOne(engine, seed, p, _humanLike, <String>{}, rec: rec, maxSeasons: maxSeasons);
+      recs.add(rec);
+    }
+    _reportArc(recs, content, p, arcId);
     return;
   }
 

@@ -1,0 +1,56 @@
+# « Le dossier Massenet » — une affaire par saison, tirée dans tes traces ; il
+# l'a dans un tiroir, et il te propose de la sortir, de l'enterrer, ou de la
+# troquer (bible ch. 11 § 2.4, tardive 4, gabarit « dossier »). C'est
+# l'intrigue qui fait que le jeu te rappelle ce que tu as fait, chaque saison,
+# par la bouche de quelqu'un qui n'oublie rien non plus.
+#
+# Chemins : tiroir (variantes en escalier sur les traces, première vraie ;
+# chacune pose son `dossier_<mot>` et exige `!flag('dossier_<mot>')` — jamais
+# deux fois la même affaire ; la dernière est le secours « votre dossier est
+# vide, ça se remarque ») → reponse (←, la page une, ensemble) | lendemain (→,
+# le journal dans la boîte du président).
+# Issues : repondu | ignore | troque. Rejouable une saison sur deux, neuf fois.
+arcs:
+  - id: en.dossier_meneche
+    title: "Le dossier Massenet"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: presse
+    carrier: meneche
+    cast: [meneche, josiane, lea]
+    replay: { after: 1, max: 9 }
+    issues: [repondu, ignore, troque]
+    traces:
+      dossier_repondu: "{annee} : {prenom} {nom} a répondu au dossier de la presse, page une. Sans avocat."
+      dossier_ignore:  "{annee} : le dossier est paru. {nom} n'a pas répondu ; le président a lu."
+      dossier_troque:  "{annee} : {nom} a acheté un silence avec une exclusivité. Quelqu'un le sait."
+    hint: "Une chemise cartonnée, une seule feuille dedans, et elle parle de toi."
+    start: [3, 11]
+    same_club: false
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : la chemise au nom de {nom} est restée dans le tiroir de {club}. Il en a un par ville."
+    steps:
+      - id: tiroir
+        card:
+          - { id: en.dossier.tiroir_lea, if: "plays('en.dossier_meneche') >= 1 && !flag('dossier_lea')" }
+          - { id: en.dossier.tiroir_enveloppe, if: "(flag('enveloppe_promise') || flag('enveloppe_niee')) && !flag('dossier_enveloppe')" }
+          - { id: en.dossier.tiroir_haie, if: "flag('espion_presse') && flag('espion_retour') && !flag('dossier_haie')" }
+          - { id: en.dossier.tiroir_salaires, if: "flag('salaires_retard') && flag('fede_dossier') && !flag('dossier_salaires')" }
+          - { id: en.dossier.tiroir_fils, if: "flag('fils_ds') && !flag('dossier_fils')" }
+          - { id: en.dossier.tiroir_pari, if: "flag('pari_promu') && !flag('dossier_pari')" }
+          - { id: en.dossier.tiroir_vide }
+        next: [ { step: reponse, if: "flag('dossier_repondu')", in: [1, 3] } ]
+      - id: reponse
+        card: en.dossier.reponse
+        next: []
+      - id: lendemain
+        card:
+          - { id: en.dossier.lendemain_rien, if: "relation.meneche >= 1" }
+          - { id: en.dossier.lendemain }
+        next: []

@@ -1,0 +1,297 @@
+# Les réactions du rôle joueur (bible ch. 10 § 7, gabarit § 4.4).
+# Servies au tirage suivant, hors créneau ; plafond quatre par saison ; jamais
+# de `end`, jamais de `react`, jamais de drame ; effets petits. Le nom du
+# joueur n'y figure pas : la scène précédente l'a déjà porté.
+# `kind: reaction` est DÉRIVÉ par le build depuis le `react:` qui les cite.
+cards:
+  # ------------------------------------------------------- après la valeur (P1)
+  - id: jp.re.aulard_quatre_millions
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Quatre millions, m'a dit ton agent. Ou trois. J'ai pas le temps, j'ai une usine : tu marques dimanche ? »"
+    left:
+      label: "Je marque"
+      effects: {direction: "+", force: -1}
+      answer: "Il continue son chemin. Il note « dimanche »."
+    right:
+      label: "On verra dimanche"
+      effects: {direction: "-"}
+      answer: "Il note « on verra ». C'est ce qu'il note le plus souvent."
+
+  # ------------------------------------------------ après le dernier bloc (P2b)
+  - id: jp.re.fardelli_montre_tour
+    roles: [joueur]
+    arc: agents
+    tags: [agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« J'ai regardé ma montre pendant le tour d'honneur, on me l'a reproché. On parle d'argent ou d'amitié : lundi, huit heures, la visite. Tu seras là ? »"
+    left:
+      label: "Je serai là"
+      effects: {direction: "+", caisse: "+"}
+      answer: "Il note l'heure. Il note toujours l'heure ; c'est son métier, dit-il."
+    right:
+      label: "Je dormirai"
+      effects: {tribunes: "+", relation: {fardelli: -1}}
+      answer: "Il décale d'une heure. Il facture le décalage ; pas à toi."
+
+  # ------------------------------------------------------ après la vente (P3)
+  - id: jp.re.lea_aller_simple
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? « Un chèque et un aller simple », c'est la manchette de demain ; ils ont le chiffre avant moi. Un mot pour la tribune, ou pas de mot ? »"
+    left:
+      label: "Un mot : merci"
+      effects: {tribunes: "+", parole: 1}
+      answer: "Elle l'ajoute en dernière ligne. C'est petit ; c'est là."
+    right:
+      label: "Pas de mot"
+      effects: {tribunes: "-"}
+      answer: "La Une part sans. Gégé la découpe sans."
+
+  # ----------------------------------------------------- après la bâche (tifo)
+  - id: jp.re.lea_vingt_metres
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? Vous venez de parler au micro du stade, devant vingt mètres de bâche. Je le mets dans le communiqué, ou je laisse la bâche parler ? »"
+    left:
+      label: "Mettez-le"
+      effects: {tribunes: "+", parole: 1}
+      answer: "C'est écrit. Deux fois, donc."
+    right:
+      label: "Laissez la bâche parler"
+      effects: {direction: "+"}
+      answer: "Elle n'écrit rien. La Gazette Rose, si ; avec la date."
+
+  # ------------------------------------------------- après le penalty (brassard)
+  - id: jp.re.vecchio_bouteilles
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Tu as porté les bouteilles tout l'hiver et tu lui as laissé le ballon ; j'en ai vu d'autres faire l'inverse, et finir seuls. Tu recommences la saison prochaine ? »"
+    left:
+      label: "Je recommence"
+      effects: {vestiaire: "+"}
+      answer: "Il hoche la tête. Il porte la dernière caisse avec toi."
+    right:
+      label: "Au tour d'un autre"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Il porte la caisse seul. Il ne dit rien ; il en a vu d'autres."
+
+  # ------------------------------------------------ après le brassard (brassard)
+  - id: jp.re.vukic_capitaine
+    roles: [joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "« Je t'ai vu le prendre, et je te le dis parce que personne ne te le dira : un brassard, ça se porte le lundi aussi. Tu passes au bureau lundi ? »"
+    left:
+      label: "Je passe lundi"
+      effects: {direction: "+", relation: {vukic: 1}, set: [capitaine_lundi]}
+      answer: "Tu passes. Il note ce que tu dis. Il l'utilise ; pas contre toi."
+    right:
+      label: "Le dimanche suffit"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il referme le cahier. Il le rouvrira ; il rouvre toujours."
+
+  # ------------------------------------------------- après la conférence (Une)
+  - id: jp.re.brehaut_decoupe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe a découpé l'article ; il est dans ton casier, la phrase en jaune. Le groupe vit bien quand tout le monde a lu. Tu as lu ? »"
+    left:
+      label: "J'ai lu"
+      effects: {vestiaire: "-"}
+      answer: "Tu as lu. Ils t'ont regardé lire."
+    right:
+      label: "Pas encore"
+      effects: {vestiaire: "-", tribunes: "+"}
+      answer: "Tu lis plus tard. Seul. C'est pire ; c'est mieux."
+
+  # ------------------------------------------------- après la société aux îles
+  - id: jp.re.camille_montre
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    speaker: camille
+    tone: strategique
+    # Après la valise (co.camille.valise pose `divorce`), Camille ne demande
+    # plus l'heure : même garde que co.re.camille_journal.
+    when: "!flag('divorce')"
+    text: "« Ton cousin est passé, avec une montre neuve et un dossier bleu. Tu rentres à quelle heure, pour qu'on regarde le dossier bleu ensemble ? »"
+    left:
+      label: "Tôt, ce soir"
+      effects: {relation: {camille: 1}, vestiaire: "-"}
+      answer: "Tu rentres tôt. Vous lisez la page trois ; elle est en anglais ; vous ne la comprenez ni l'un ni l'autre."
+    right:
+      label: "Après l'entraînement"
+      effects: {relation: {camille: -1}}
+      answer: "Elle regarde seule. Elle photocopie la page trois, à tout hasard."
+
+  # --------------------------------------------------- après le double mandat
+  - id: jp.re.fardelli_amitie
+    roles: [joueur]
+    arc: agents
+    tags: [agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« On parlait d'amitié, alors. Deux factures, tu dis ; moi je dis deux services. Tu me laisses finir l'année, ou je rends les clés ce soir ? »"
+    left:
+      label: "Finis l'année"
+      effects: {caisse: "-", relation: {fardelli: 1}}
+      answer: "Il finit l'année. Il facture l'année. C'est une amitié qui se solde en juin."
+    right:
+      label: "Rends-les ce soir"
+      effects: {direction: "+", relation: {fardelli: -1}}
+      answer: "Il pose le trousseau sur le capot. Il garde une clé ; il dit que c'est celle de son bureau."
+
+  # ------------------------------------------------- après le faux certificat
+  - id: jp.re.sabatier_certificat
+    roles: [joueur]
+    arc: corps
+    tags: [scandale]
+    speaker: sabatier
+    tone: strategique
+    text: "« Un certificat pour une blessure que tu n'as pas ; ça reste entre la table et moi, mais la table commence à être encombrée. C'est la dernière fois ? »"
+    left:
+      label: "La dernière"
+      effects: {relation: {sabatier: 1}}
+      answer: "Il classe. Dans le tiroir, pas dans le dossier."
+    right:
+      label: "On verra"
+      effects: {relation: {sabatier: -1}, direction: "-"}
+      answer: "Il classe dans le dossier. Le dossier, tout le monde peut le lire."
+
+  # ------------------------------------------------------- après la radio (genou)
+  - id: jp.re.sabatier_radio_agent
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes]
+    speaker: sabatier
+    tone: strategique
+    text: "« Ça reste entre la table et moi — et entre la table et ton agent, qui a demandé la radio ce matin. Je lui donne le dossier, ou le tiroir reste fermé ? »"
+    left:
+      label: "Le tiroir reste fermé"
+      effects: {direction: "-", relation: {sabatier: 1}, set: [radio_cachee]}
+      answer: "Il ferme à clé, devant toi. Ton agent demande deux fois ; deux fois non."
+    right:
+      label: "Donne-lui le dossier"
+      effects: {caisse: "+", relation: {sabatier: -1}}
+      answer: "Il donne. On vend avec ; on vend moins cher ; on vend."
+
+  # -------------------------------------------------- après le retour de sélection
+  - id: jp.re.lea_confirme
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    tone: strategique
+    text: "« Vous confirmez ? Le club dit « cheville », la Fédération dit « en pleine forme », et j'ai les deux communiqués sur le même bureau. J'en sors un ? »"
+    left:
+      label: "Sortez celui du club"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Elle sort celui du club. La Fédération lit ; elle ne répond pas ; elle note."
+    right:
+      label: "Sortez les deux"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Elle sort les deux, côte à côte. C'est la mise en page qui fait le scandale."
+
+  # ------------------------------------------------------ après la mère du petit
+  - id: jp.re.mere_mbako_note
+    roles: [joueur]
+    arc: formation
+    tags: [formation]
+    speaker: mere_mbako
+    tone: strategique
+    text: "« Mon fils n'a besoin de personne, et pourtant il répète vos gestes devant la glace du couloir. Je vous demande une chose : vous lui direz quand vous partirez ? »"
+    left:
+      label: "Je lui dirai"
+      effects: {relation: {mere_mbako: 1, mbako: 1}}
+      answer: "Elle note quelque chose dans un carnet à couverture souple. Ce n'est pas un chiffre, pour une fois."
+    right:
+      label: "Il l'apprendra"
+      effects: {tribunes: "+", relation: {mere_mbako: -1}}
+      answer: "Elle referme le carnet. « Comme tout le monde, alors », dit-elle, et elle a raison."
+
+  # ------------------------------------------------------ après un fax, un classeur
+  - id: jp.re.josiane_classeur
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, vous savez, des contrats qui changent de dossier en une nuit. Le vôtre est passé dans le classeur vert. Vous voulez savoir ce qu'est le vert ? »"
+    left:
+      label: "Dites-moi"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Le vert, c'est « en cours de vente ». Il y a aussi un rouge ; elle ne dit pas ce qu'est le rouge."
+    right:
+      label: "Je préfère pas"
+      effects: {tribunes: "+", relation: {josiane: -1}}
+      answer: "Elle range le classeur vert. Elle le range plus haut que les autres, pour qu'on le voie."
+
+  # ------------------------------------------------------ après la clause levée
+  - id: jp.re.gege_blason
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« Tu pars chez eux, {toi}, et la tribune n'oublie rien : ton nom est encore peint au local. Je le décroche ce soir, ou je le laisse jusqu'au derby ? »"
+    left:
+      label: "Décroche-le"
+      effects: {tribunes: "-", relation: {gege: 1}}
+      answer: "Il le décroche. Il le roule proprement. Il pose le rouleau derrière le bar, debout."
+    right:
+      label: "Laisse-le"
+      effects: {tribunes: "--", relation: {gege: -1}}
+      answer: "Il le laisse. Au derby, il le montre du doigt pendant quatre-vingt-dix minutes."
+
+  # -------------------------------------------------------- après l'or refusé
+  - id: jp.re.nassir_reviendrai
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, sponsors]
+    speaker: nassir
+    tone: leger
+    text: "« Vous avez dit non, et ce n'est pas grave : ce n'est pas un club, c'est un actif, et un actif a le temps. Je vous laisse la maquette, ou je la remporte ? »"
+    left:
+      label: "Laissez-la"
+      effects: {caisse: "+", relation: {nassir: 1}}
+      answer: "La maquette reste sur ton étagère. Le toit s'ouvre encore ; tu l'ouvres, parfois, sans raison."
+    right:
+      label: "Remportez-la"
+      effects: {tribunes: "+", relation: {nassir: -1}}
+      answer: "Il la remporte sous le bras. Elle réapparaît trois ans plus tard, plus grande."
+
+  # -------------------------------------------------------- après la sélection
+  - id: jp.re.aulard_cheville
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Ta cheville allait très bien pour la Fédération et très mal pour moi. J'ai pas le temps, j'ai une usine : tu reviens entier, ou je facture la Fédération ? »"
+    left:
+      label: "Entier, promis"
+      effects: {direction: "+", parole: 1, promise: true}
+      answer: "Il note. Il facture quand même, pour le principe."
+    right:
+      label: "Facturez-la"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il facture. On « verra ça après le Congrès ». Il n'y a pas de Congrès."

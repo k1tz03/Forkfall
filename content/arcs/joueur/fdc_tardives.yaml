@@ -1,0 +1,137 @@
+# Réservoir de « Fin de contrat à 31 ans » — lot C, les tardives (bible ch. 10
+# § 6.23, § 6.27) : l'adieu, le rituel des retraites de Gigi, et le derby
+# (partagé ; le ch. 11 écrit le versant banc). Elles ne s'ouvrent qu'une fois
+# que la carrière a un passé à replier.
+arcs:
+  # -------------------------------------------------------- § 6.27 · L'adieu
+  # À trente-quatre ans, on te demande si c'est la dernière.
+  - id: jp.adieu
+    title: "L'adieu"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.3
+    once: true
+    min_season: 2
+    # Thème « contrat » : l'adieu est la dernière ligne du dernier contrat. La
+    # bible le range en « famille », mais « La maison du pays » tient déjà ce
+    # thème tout au long de la carrière, et deux intrigues d'un même thème ne
+    # se tirent jamais la même saison.
+    theme: contrat
+    # Porteuse : Josiane et son formulaire jaune de fin de carrière. La bible
+    # ouvre l'intrigue sur Camille (première scène) ; le porteur d'arc est
+    # l'ancre du réservoir, et Camille porte déjà « La maison du pays ».
+    carrier: josiane
+    cast: [camille, gege, vukic, josiane]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    excludes: [dernier_annonce]
+    hint: "Un calendrier, une croix en juin au crayon, pour pouvoir l'effacer."
+    issues: [raccroche, encore]
+    traces:
+      dernier_annonce: "{annee} : {prenom} {nom} l'a dit à la maison d'abord. La croix de juin est repassée au stylo."
+      une_de_plus:     "{annee} : une saison de plus pour {prenom} {nom}. La croix de juin a été effacée."
+      page_lue_vukic:  "{annee} : l'adjoint a montré la page à {prenom} {nom}. Dix ans, vus de la touche."
+    epilogue:
+      journal: "{annee} : l'adieu de {nom}. Ou une de plus."
+    steps:
+      - id: croix
+        card:
+          # La garde `divorce` passe en tête : sans elle, l'affiche du jubilé
+          # reporté ramenait Camille à la table après la valise.
+          - { id: jp.adieu.josiane, if: "flag('divorce') || relation.camille <= -2" }
+          - { id: jp.adieu.camille_affiche, if: "flag('jubile_reporte')" }
+          - { id: jp.adieu.camille }
+        next: [ { step: bache, in: [1, 3] } ]
+      - id: bache
+        card:
+          - { id: jp.adieu.gege_bache, if: "flag('ami_ultras') || relation.gege >= 2" }
+          - { id: jp.adieu.gege }
+        next: [ { step: page, if: "flag('dernier_annonce')", in: [1, 3] } ]
+      - id: page
+        card: jp.adieu.vukic
+        next: []
+
+  # ------------------------------------------ § 6.27 · Vecchio l'exemple (rituel)
+  # Cinq verres alignés sur le comptoir, un par retraite. Il en ajoute un.
+  - id: jp.vecchio_exemple
+    title: "Vecchio l'exemple"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    weight: 0.9
+    once: false
+    replay: ritual
+    min_season: 2
+    theme: absurde
+    carrier: vecchio
+    cast: [vecchio, mbako, josiane]
+    start: [2, 11]
+    same_club: false
+    fallback: nouvelles
+    hint: "Cinq verres sur le comptoir, un par retraite. Il en ajoute un chaque saison."
+    issues: [premiere, vraie]
+    traces:
+      vecchio_vraie_retraite: "{annee} : la vraie retraite du vieux gardien, racontée au comptoir. Les gants sont partis au jeune."
+    epilogue:
+      journal: "{annee} : un verre de plus au comptoir. On ne compte plus les retraites."
+    steps:
+      - id: retraites
+        card:
+          - { id: jp.vecchio_exemple.retraites_encore, if: "plays('jp.vecchio_exemple') >= 1 || flag('vecchio_vraie_retraite')" }
+          - { id: jp.vecchio_exemple.retraites }
+        statut_ok: [retraite]
+        next: [ { step: gants, in: [1, 3] } ]
+      - id: gants
+        card: jp.vecchio_exemple.gants
+        statut_ok: [retraite]
+        next: [ { step: comptoir, in: [2, 6] } ]
+      - id: comptoir
+        card: jp.vecchio_exemple.comptoir
+        statut_ok: [retraite]
+        next: []
+
+  # ------------------------------------------------------- § 6.23 · Le derby
+  # Le seul match que la ville regarde deux fois.
+  - id: co.derby
+    title: "Le derby"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.1
+    once: false
+    replay: { after: 1, max: 3 }
+    min_season: 1
+    theme: tribune
+    carrier: gege
+    cast: [gege, camille, vecchio, lea]
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    hint: "Le derby. Le seul match que la ville regarde deux fois."
+    issues: [gagne, perdu]
+    traces:
+      derby_gagne:          "{annee} : derby gagné. {prenom} {nom} a marqué, ou pas ; la ville s'en souvient."
+      derby_perdu:          "{annee} : derby perdu. {prenom} {nom} a joué, ou pas ; la ville s'en souvient aussi."
+      salue_ancien_virage:  "{annee} : {prenom} {nom} a salué son ancien virage, en face. Le virage n'a pas répondu."
+    epilogue:
+      journal: "{annee} : le derby. La ville l'a regardé deux fois."
+    steps:
+      - id: semaine
+        card:
+          - { id: co.derby.semaine_encore, if: "plays('co.derby') >= 1" }
+          - { id: co.derby.semaine }
+        next: [ { step: match, in: [1, 2] } ]
+      - id: match
+        card: co.derby.match
+        next: [ { step: lendemain, in: [1, 2] } ]
+      - id: lendemain
+        card:
+          - { id: co.derby.ancien, if: "flag('parti_chez_rival') || flag('parti_juin')" }
+          - { id: co.derby.lendemain_local, if: "flag('divorce') || flag('ami_ultras') || relation.camille <= -1" }
+          - { id: co.derby.lendemain }
+        next: []

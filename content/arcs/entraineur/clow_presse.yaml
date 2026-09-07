@@ -1,19 +1,21 @@
-# F · « Le mentor » — Brian Clow, l'ancien qui a tenu quarante-quatre jours dans
-# un grand club et qui en a fait une carrière. Trois conseils = un tutoriel
+# F · « Le mentor » — Dan Corven, l'ancien qui a tenu cinquante-neuf jours dans
+# un grand club, en 1971, et qui en a fait une carrière. Trois conseils = un tutoriel
 # déguisé (la jauge pleine, le président, les promesses) ; l'hôpital n'arrive
 # qu'en S2+ et seulement si le joueur a écouté (vars.clow_conseils >= 2).
 # Arc de fond (foreground: false), tiré par le réservoir du promu dès la
 # saison 1 (postulats.yaml, bucket "1") ; ailleurs, ouverture spontanée dès la
-# saison 1. Clow suit l'entraîneur, pas le club (same_club: false).
+# saison 1. Corven suit l'entraîneur, pas le club (same_club: false).
 # Issues : ecoute | ingrat ; la trace clow_ingrat est lue par la routine
 # en.clow.top_un (un mentor lâché ne revient pas donner de conseils au bar).
 #
-# Chemins : 44_jours → verre → hopital (S2+, écouté) → testament (variante lue
-# sur relation.clow : enveloppe / rien) | verre → silence (fin, clow_ingrat).
+# Chemins : 44_jours (variante `_stage` si le mentor t'a eu au stage du
+# diplôme) → verre → hopital (S2+, écouté) → testament | verre → silence
+# (clow_ingrat) → testament : les deux branches finissent chez Josiane, avec
+# l'enveloppe (issue ecoute) ou les mains vides (issue ingrat).
 # La carte de routine `en.clow.top_un` (S0, tribune >= 75) n'appartient pas à
 # l'arc : elle sort du sac en priorité 1 et compte le premier conseil.
 #
-# G · « La conférence de presse » — Ménèche, chaque saison dès la S1, une seule
+# G · « La conférence de presse » — Massenet, chaque saison dès la S1, une seule
 # étape ré-armée au début de saison (`every_season`, `start [3,9]`). La carte
 # `en.presse.trois_questions` n'est PAS `once` (sinon `deja_vue` en S2).
 # La routine `en.presse.meme` (count('no_comment') >= 3, priorité 2) ramasse
@@ -33,8 +35,10 @@ arcs:
     carrier: clow
     issues: [ecoute, ingrat]
     traces:
-      clow_ingrat: "{annee} : Brian Clow a laissé un message. {prenom} {nom} n'a pas rappelé."
-    hint: "Quarante-quatre jours dans un grand club, et une carrière de conseils."
+      clow_ingrat: "{annee} : Dan Corven a laissé un message. {prenom} {nom} n'a pas rappelé."
+      franc_parler:  "{annee} : le testament de l'ancien tenait en deux mots. {prenom} {nom} a pris le franc-parler."
+      nez_a_joueurs: "{annee} : le testament de l'ancien tenait en deux mots. {prenom} {nom} a pris le nez à joueurs."
+    hint: "Cinquante-neuf jours dans un grand club, et une carrière de conseils."
     when: "season >= 1"
     cast: [clow, josiane]
     start: [4, 10]
@@ -42,30 +46,37 @@ arcs:
     fallback: drop
     steps:
       - id: "44_jours"
-        card: en.clow.44_jours
+        # La première variante lit le chapitre 01 : il t'a eu au stage du
+        # diplôme (clow_stage), et il se souvient de ce que tu écrivais.
+        card:
+          - { id: en.clow.44_jours_stage, if: "flag('clow_stage')" }
+          - { id: en.clow.44_jours }
         next: [ { step: verre, in: [8, 14] } ]
       - id: verre
         card: en.clow.verre
         # L'hôpital n'arrive que si le joueur a noté au moins deux conseils ;
-        # sinon Clow se tait et l'arc se ferme. Pas de garde `season` : le `if`
+        # sinon Corven se tait et l'arc se ferme. Pas de garde `season` : le `if`
         # est évalué au swipe de `verre` (S1) ; la fenêtre [12,30] et
         # l'interdiction du drame en S0 suffisent à le repousser en S2+.
         next:
           - { step: hopital, if: "vars.clow_conseils >= 2", in: [12, 30] }
           - { step: silence, in: [2, 4] }
       - id: silence
+        # Le séquencier de la fiche (ch. 11 § 2.3.1) enchaîne les deux branches
+        # sur le testament : après le silence, c'est Josiane les mains vides.
         card: en.clow.silence
         outcome: ingrat
-        next: []
+        next: [ { step: testament, in: [2, 4] } ]
       - id: hopital
         # Drame, une seule sortie, aucun effet : la carte est le coup.
         card: en.clow.hopital
         next: [ { step: testament, in: [2, 4] } ]
       - id: testament
+        # L'issue vient de la carte servie (ecoute / ingrat) : l'enveloppe n'est
+        # pour toi que si tu as répondu à l'ancien.
         card:
-          - { id: en.clow.testament, if: "relation.clow >= 0" }
+          - { id: en.clow.testament, if: "relation.clow >= 0 && !flag('clow_ingrat')" }
           - { id: en.clow.testament_ingrat }
-        outcome: ecoute
         next: []
 
   - id: en.conf_presse
@@ -84,10 +95,11 @@ arcs:
     carrier: meneche
     issues: [no_comment, franc]
     traces:
-      presse_franc: "{annee} : « Franchement », a dit {prenom} {nom} à Ménèche. Le mot est sorti en titre, avec un point d'interrogation."
+      presse_franc: "{annee} : « Franchement », a dit {prenom} {nom} à Massenet. Le mot est sorti en titre, avec un point d'interrogation."
     hint: "Trois questions par saison, un journaliste gentil. Hors micro, bien sûr."
     when: "season >= 1"
-    cast: [meneche]
+    # Léa (L'Écho) rappelle le lendemain pour faire confirmer le mot.
+    cast: [meneche, lea]
     # [3,15] : éligible tôt (en S2+ c'est souvent le seul temps d'histoire de
     # la première moitié), mais l'échéance attend la seconde moitié, où les
     # slots 13, 15 et 16 sont libres : en S1, la première moitié est déjà

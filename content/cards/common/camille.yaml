@@ -60,6 +60,12 @@ cards:
       answer: "Trois heures de ralenti. À la maison, la sieste se fait à une place."
 
   # ---------------------------------------------- paliers (on_relation, once)
+  # Les trois paliers **constatent**, ils n'aggravent pas : une sortie qui
+  # rebaisserait la relation franchirait le seuil suivant dans la foulée et
+  # enfilerait les trois cartes en trois swipes (dispute, chambre d'amis,
+  # valise), sans un match entre elles. La droite coûte donc autre chose que
+  # Camille, et la valise attend une saison : un couple ne se défait pas au
+  # quatrième swipe d'une carrière.
   - id: co.camille.dispute
     roles: [entraineur, joueur]
     arc: famille
@@ -75,7 +81,7 @@ cards:
       answer: "Deux assiettes. Le président a appelé trois fois pendant le plat."
     right:
       label: "Tard"
-      effects: {relation: {camille: -1}}
+      effects: {force: 1}
       answer: "Une assiette. Elle est dans l'évier quand tu rentres."
 
   - id: co.camille.chambre_amis
@@ -93,7 +99,7 @@ cards:
       answer: "Tu rates la séance vidéo. Le lit de la chambre d'amis reste fait, mais vide."
     right:
       label: "Après la saison"
-      effects: {relation: {camille: -1}}
+      effects: {direction: "+"}
       answer: "Le lit est bien fait. Tu dors dedans jusqu'en juin, au moins."
 
   - id: co.camille.valise
@@ -103,7 +109,7 @@ cards:
     speaker: camille
     tone: strategique
     once: true
-    when: "!flag('divorce')"
+    when: "!flag('divorce') && season >= 1"
     text: "Camille, le manteau déjà mis : « La valise est dans l'entrée. Elle est à moi. »"
     left:
       label: "Je regarde la valise"
@@ -139,15 +145,15 @@ cards:
     speaker: camille
     tone: strategique
     once: true
-    text: "Camille, au téléphone : « Ménèche a un papier sur toi pour demain. J'ai le rédacteur en chef en ligne. Je le bloque ? »"
+    text: "Camille, au téléphone : « Massenet a un papier sur toi pour demain. J'ai le rédacteur en chef en ligne. Je le bloque ? »"
     left:
       label: "Bloque-le"
       effects: {tribunes: "+++", relation: {meneche: -1, camille: 1}}
-      answer: "Le papier ne paraît pas. Ménèche note qui a appelé. Il note toujours."
+      answer: "Le papier ne paraît pas. Massenet note qui a appelé. Il note toujours."
     right:
       label: "Laisse-le paraître"
       effects: {tribunes: "-", relation: {meneche: 1, camille: -1}}
-      answer: "Le papier paraît. Ménèche te trouve honnête. Camille te trouve seul."
+      answer: "Le papier paraît. Massenet te trouve honnête. Camille te trouve seul."
 
   - id: co.camille.secours_elue
     roles: [entraineur, joueur]

@@ -1,0 +1,83 @@
+# Cartes de l'intrigue « Le bac de Camille » (arc jp.camille_bac) —
+# bible ch. 10 § 6.9. Dix-neuf ans tous les deux, et un seul des deux a un
+# agent. Camille dit {toi} ({prenom}) ; Josiane vouvoie.
+cards:
+  - id: jp.bac.revision
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "« Tu rentres à quelle heure, ce n'est pas la question : la question c'est le bac en juin et toi qui pars peut-être à quatre cents kilomètres. Tu me fais réviser ? »"
+    left:
+      label: "Je te fais réviser"
+      effects: {vestiaire: "-", force: -1, relation: {camille: 1}, set: [camille_bac_aidee], outcome: aide}
+      answer: "Tu lui fais réciter. Tu apprends des choses. Ton agent appelle ; tu ne réponds pas ; c'est la première fois."
+    right:
+      label: "Après le transfert"
+      effects: {force: 1, tribunes: "+", relation: {camille: -1}, set: [bac_apres], outcome: apres}
+      answer: "Elle révise seule. Elle a le bac. Elle ne te le dit pas le jour même."
+
+  - id: jp.bac.annales
+    roles: [joueur]
+    arc: famille
+    tags: [famille, absurde]
+    speaker: josiane
+    tone: leger
+    text: "« J'ai gardé mes annales de 1957 pour vous, {toi} ; j'en ai vu passer, vous savez, des bacheliers, et jamais un joueur. Vous les apportez à Camille, ou je les lui apporte ? »"
+    left:
+      label: "Je les apporte"
+      effects: {relation: {camille: 1, josiane: 1}, vestiaire: "+"}
+      answer: "Tu portes le carton. Camille rit ; c'est rare cette semaine."
+    right:
+      label: "Apportez-les, en passant"
+      effects: {relation: {josiane: 1}, vestiaire: "+"}
+      answer: "Elle passe. Elle reste dîner. Elle raconte 1957 ; tu apprends qu'elle a eu dix-huit en philosophie."
+
+  - id: jp.bac.jour_j
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    tone: leger
+    text: "« Philo à huit heures, ton match à quinze, et je sors à midi. Tu rentres à quelle heure aujourd'hui, ça compte : tu m'attends à la sortie, ou tu pars avant ? »"
+    left:
+      label: "Je t'attends à midi"
+      effects: {vestiaire: "-", force: -1, relation: {camille: 2}, set: [attendu_lycee]}
+      answer: "Tu attends. Elle sort à midi dix. Tu arrives au stade à quatorze heures trente ; on te met quand même."
+    right:
+      label: "Je pars avant"
+      effects: {vestiaire: "+", tribunes: "+", relation: {camille: -1}}
+      answer: "Tu pars. Elle sort seule, prend le bus jusqu'au stade, arrive à la mi-temps ; tu ne l'as pas vue."
+
+  - id: jp.bac.resultats
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    tone: leger
+    text: "« Elle a son bac et toi une offre de D1 ; on parle d'argent ou d'amitié : je vous offre la voiture pour fêter les deux. Tu la prends à ton nom, ou au sien ? »"
+    left:
+      label: "Au sien"
+      effects: {caisse: "-", relation: {camille: 1}, set: [voiture_camille], outcome: voiture}
+      answer: "La voiture est à elle. Elle apprend à conduire dessus ; elle a une fac à quatre cents kilomètres, et une voiture."
+    right:
+      label: "Au mien"
+      effects: {caisse: "+", relation: {camille: -1}}
+      answer: "La voiture est à toi. Tu roules seul dedans. C'est une belle voiture."
+
+  - id: jp.bac.resultats_seul
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    speaker: camille
+    tone: leger
+    text: "« J'ai le bac, tu as une prime, et personne ne prend dix pour cent sur nous deux. Tu rentres à quelle heure ? On achète une voiture, elle sera à qui ? »"
+    left:
+      label: "À ton nom"
+      effects: {caisse: "-", relation: {camille: 1}, set: [voiture_camille], outcome: voiture}
+      answer: "La carte grise est à elle. Elle conduit mal pendant six mois ; personne ne le lui dit."
+    right:
+      label: "Au mien, pour l'assurance"
+      effects: {caisse: "+", relation: {camille: -1}}
+      answer: "Elle dit « pour l'assurance », deux fois, avec la même voix. La deuxième est plus lente."

@@ -125,6 +125,49 @@ class JournalOp {
   Object toJson() => poids == 1 && tags.isEmpty ? text : {'text': text, 'poids': poids, if (tags.isNotEmpty) 'tags': tags};
 }
 
+/// L'effet `char:` d'un choix (spec variété §1.10) : le statut et/ou l'âge d'un
+/// personnage. `statut` prend une valeur de `kStatuts` ; `age` est soit un
+/// nombre (âge posé), soit une opération (« +1 », « -2 »).
+class CharOp {
+  final String? statut;
+  final String? age; // opération de `applyVarOp` ; « 17 » pose l'âge
+  const CharOp({this.statut, this.age});
+
+  factory CharOp.fromJson(Object j) {
+    if (j is String) return CharOp(statut: j);
+    final m = (j as Map).cast<String, dynamic>();
+    return CharOp(statut: m['statut']?.toString(), age: m['age']?.toString());
+  }
+
+  Map<String, dynamic> toJson() => {
+        if (statut != null) 'statut': statut,
+        if (age != null) 'age': age,
+      };
+}
+
+/// L'effet `club: {change: true, division: n}` (spec variété §1.11, §1.13) :
+/// un nouveau club sans changement de rôle. `retour: true` ne tire pas un club
+/// neuf : il rend le club d'origine (celui de la première saison), pour les
+/// intrigues de rachat — l'usine reprend ce qu'elle a vendu, pas autre chose.
+class ClubChangeOp {
+  final bool change;
+  final int? division;
+  final bool retour;
+  const ClubChangeOp({this.change = true, this.division, this.retour = false});
+
+  factory ClubChangeOp.fromJson(Map<String, dynamic> j) => ClubChangeOp(
+        change: j['change'] != false,
+        division: (j['division'] as num?)?.toInt(),
+        retour: j['retour'] == true,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'change': change,
+        if (division != null) 'division': division,
+        if (retour) 'retour': true,
+      };
+}
+
 class EffectSet {
   final Map<String, int> gauges; // vestiaire/tribunes/direction/caisse
   final int force;
@@ -148,6 +191,8 @@ class EffectSet {
   final String? outcome; // issue de l'arc courant (cartes d'étape seulement)
   final List<ReactVariant> react; // carte-réaction servie au tirage suivant
   final JournalOp? journal; // ligne d'Almanach
+  final Map<String, CharOp> char; // âge et statut des personnages
+  final ClubChangeOp? club; // changement de club sans changement de rôle
 
   const EffectSet({
     this.gauges = const {},
@@ -172,6 +217,8 @@ class EffectSet {
     this.outcome,
     this.react = const [],
     this.journal,
+    this.char = const {},
+    this.club,
   });
 
   factory EffectSet.fromJson(Map<String, dynamic> j) {
@@ -202,6 +249,8 @@ class EffectSet {
       outcome: j['outcome'] as String?,
       react: ReactVariant.listFromJson(j['react']),
       journal: j['journal'] == null ? null : JournalOp.fromJson(j['journal'] as Object),
+      char: ((j['char'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), CharOp.fromJson(v as Object))),
+      club: j['club'] == null ? null : ClubChangeOp.fromJson((j['club'] as Map).cast<String, dynamic>()),
     );
   }
 
@@ -239,6 +288,8 @@ class EffectSet {
         if (outcome != null) 'outcome': outcome,
         if (react.isNotEmpty) 'react': react.map((r) => r.toJson()).toList(),
         if (journal != null) 'journal': journal!.toJson(),
+        if (char.isNotEmpty) 'char': char.map((k, v) => MapEntry(k, v.toJson())),
+        if (club != null) 'club': club!.toJson(),
       };
 }
 

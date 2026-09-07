@@ -25,6 +25,8 @@ const Set<String> kKnownPlaceholders = {
   'club', 'clubShort', 'rival', 'president', 'capitaine', 'ville', 'coach', 'camille_metier', 'passe_titre', 'fil_rouge',
   // Fournis par le moteur au moment de l'écriture (Une, journal, fin).
   'tenu', 'TENU', 'perso', 'perso_tic', 'objectif_titre', 'fin_titre',
+  // Set-pieces (spec variété §1.12, §2.7) : fournis par le beat qui les sert.
+  'patron', 'objectif_min', 'adversite', 'vestiaire_mot', 'tour', 'minute', 'score', 'gm_score',
 };
 
 /// Placeholders qui portent le nom du joueur (métrique « nom », lint des libellés).
@@ -55,6 +57,9 @@ String formatText(
     'division': 'Division ${s.world.division}',
     'age': '${s.age}',
     ...e.named,
+    // `{age_<id>}` : l'âge d'un personnage (spec variété §1.10) — « J'ai
+    // {age_vecchio} ans » se met à jour tout seul d'une saison à l'autre.
+    for (final c in s.chars.entries) 'age_${c.key}': '${c.value.age}',
     'CLUB': (e.named['club'] ?? '').toUpperCase(),
     'VILLE': (e.named['ville'] ?? '').toUpperCase(),
     ...extra,

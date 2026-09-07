@@ -1,0 +1,139 @@
+# Cartes de l'intrigue « L'exil doré » (arc jp.exil_dore) — bible ch. 10 § 6.12.
+# Le fonds propose (Ilyas dans la bible : ici Ilyas, même phrase, même
+# maquette de stade à toit ouvrant) ; Camille ne suit pas, ou si ; l'agent
+# prend dix pour cent de l'or ; le cousin gère le compte depuis les îles.
+cards:
+  - id: jp.exil.nassir
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, sponsors]
+    speaker: nassir
+    tone: strategique
+    text: "« Chez nous le championnat brille comme l'or et paie comme l'or, le niveau reste entre nous. Ce n'est pas un club, c'est un actif : vous en seriez la meilleure ligne. »"
+    left:
+      label: "Je pars pour l'or"
+      effects: {caisse: "+++", tribunes: "--", force: -1, set: [exil_dore], club: {change: true, division: 2}, outcome: part}
+      answer: "Tu signes. Le stade a un toit. Tu ne verras plus la pluie pendant deux ans ; le genou dit merci, le reste non."
+    right:
+      label: "Je garde l'ambition"
+      effects: {tribunes: "+", direction: "+", set: [or_refuse], outcome: reste, react: {card: jp.re.nassir_reviendrai, chance: 0.6}}
+      answer: "Il referme le toit de la maquette. « Je reviendrai », dit-il ; il revient toujours, avec une maquette plus grande."
+
+  - id: jp.exil.nassir_encore
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, sponsors]
+    speaker: nassir
+    tone: strategique
+    text: "« L'or est toujours là, et vous avez dit non une fois. Ce n'est pas un club, c'est un actif, et un actif attend. Cette fois, {toi} ? »"
+    left:
+      label: "Cette fois, je pars"
+      effects: {caisse: "+++", tribunes: "--", force: -1, set: [exil_dore], club: {change: true, division: 2}, outcome: part}
+      answer: "Tu signes. La maquette est plus grande que la dernière fois ; le toit s'ouvre en deux temps, maintenant."
+    right:
+      label: "Toujours pas"
+      effects: {tribunes: "+", direction: "+", set: [or_refuse], outcome: reste, react: {card: jp.re.nassir_reviendrai, chance: 0.6}}
+      answer: "Il referme le toit. Il ne dit plus « je reviendrai » ; il le fait, c'est tout."
+
+  - id: jp.exil.camille
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure, là-bas ça ne veut plus rien dire : quatre heures de décalage et un désert. Je viens six mois pour voir, ou je reste avec mon métier ? »"
+    left:
+      label: "Viens six mois"
+      effects: {caisse: "-", relation: {camille: 1}, set: [camille_ici]}
+      answer: "Elle vient. Elle reste. Elle ouvre quelque chose là-bas ; ce n'est pas ce qu'elle voulait, c'est à elle."
+    right:
+      label: "Reste avec ton métier"
+      effects: {caisse: "+", relation: {camille: -2}, set: [camille_reste]}
+      answer: "Elle reste. Tu appelles à des heures qui ne sont les bonnes pour personne. Le téléphone sonne dans le vide, souvent."
+
+  - id: jp.exil.dix_pour_cent
+    roles: [joueur]
+    arc: agents
+    tags: [agents, caisse]
+    speaker: fardelli
+    tone: leger
+    text: "« Dix pour cent de l'or, c'est dans le contrat, et par amitié j'ai fait installer la climatisation chez toi. On parle d'argent ou d'amitié : tu la paies, ou je la déduis ? »"
+    left:
+      label: "Je la paie"
+      effects: {caisse: "-", relation: {fardelli: 1}}
+      answer: "Tu paies. Il a froid chez toi ; il vient souvent."
+    right:
+      label: "Déduis-la"
+      effects: {caisse: "+", relation: {fardelli: -1}, set: [gigi_non_agent]}
+      answer: "Il déduit. Il n'a plus froid chez toi ; il ne vient plus."
+
+  - id: jp.exil.climatisation
+    roles: [joueur]
+    arc: caisse
+    tags: [caisse, absurde]
+    speaker: nassir
+    tone: leger
+    text: "« La climatisation de votre villa est comptée dans les avantages, et les avantages s'amortissent sur cinq ans. Vous la laissez tourner la nuit, ou vous économisez ? »"
+    left:
+      label: "Elle tourne la nuit"
+      effects: {caisse: "-", force: 1}
+      answer: "Elle tourne. Tu dors. C'est la première ligne du budget que tu comprends."
+    right:
+      label: "J'économise"
+      effects: {caisse: "+", force: -1, tribunes: "-"}
+      answer: "Tu économises. Tu dors mal. À l'entraînement de sept heures, ça se voit."
+
+  # Câblage de la fin ∃ `jp_exil` (ch. 10 § 6.12 : « si tu pars et que le compte
+  # déborde, Parti pour l'or tombe au Carrefour suivant, caisse >= 80 »).
+  # La fin existait sans porte : aucune carte ne la citait.
+  - id: jp.exil.cousin_compte_plein
+    roles: [joueur]
+    arc: caisse
+    tags: [caisse, scandale, chaine]
+    speaker: fardelli
+    tone: strategique
+    text: "« Le compte des îles a débordé cette nuit ; ton cousin a acheté une troisième montre. On parle d'argent ou d'amitié : tu signes trois ans de plus, ou tu rentres jouer ? »"
+    left:
+      label: "Trois ans de plus"
+      effects: {caisse: "++", tribunes: "-", set: [compte_cousin, offshore], outcome: cousin, end: jp_exil}
+      answer: "Tu signes. Le niveau reste entre eux, le compte reste rond, et personne au pays ne connaît ton numéro."
+    right:
+      label: "Je rentre jouer"
+      effects: {caisse: "--", direction: "+", tribunes: "+", clear: [offshore], outcome: cousin}
+      answer: "Tu rentres. Pour un tiers du salaire, dans un stade froid et plein. Le cousin garde la montre."
+
+  # Câblage de la fin `jp_agent` (ch. 10 § 11.3, cause : imposture,
+  # `agent_fardelli` et Fardelli au plus bas). Le palier −3 de l'agent est une
+  # carte partagée avec l'entraîneur (`on_relation` n'accepte qu'un id par
+  # seuil) : la variante joueur vit ici, à l'étape où il prend ses dix pour cent.
+  - id: jp.exil.vendu_en_dormant
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato, chaine]
+    speaker: fardelli
+    tone: strategique
+    text: "« Mon ami, on parle d'argent ou d'amitié ? On a signé cette nuit, pendant que tu dormais, et le désert paie mieux. Tu relis le contrat, ou tu fais ta valise ? »"
+    left:
+      label: "Montre-moi ma signature"
+      effects: {direction: "--", caisse: "-", enemy: [fardelli], end: jp_agent}
+      answer: "Elle est là, en bas de la page quatre. Tu la reconnais. Personne ne se souvient de l'avoir vue faire ; toi non plus."
+    right:
+      label: "Je ne fais pas ma valise"
+      effects: {direction: "-", caisse: "--", tribunes: "+", relation: {fardelli: -1}, set: [or_refuse], outcome: reste}
+      answer: "Tu restes. Il annule, en soupirant, et il facture l'annulation. Il ne t'appelle plus le dimanche."
+
+  - id: jp.exil.cousin
+    roles: [joueur]
+    arc: caisse
+    tags: [caisse, scandale]
+    speaker: fardelli
+    tone: strategique
+    text: "« Ton cousin met l'or sur le compte des îles, à côté de l'image ; c'est plus simple pour tout le monde. On continue, ou tu veux un compte ici, avec des impôts ? »"
+    left:
+      label: "On continue"
+      effects: {caisse: "++", set: [compte_cousin, offshore], outcome: cousin, react: {card: co.re.camille_journal, if: "!flag('divorce')", chance: 0.5}}
+      answer: "Il continue. Le cousin achète une deuxième montre. Il t'en envoie une ; elle est belle ; elle est à ton nom."
+    right:
+      label: "Un compte ici"
+      effects: {caisse: "-", direction: "+", clear: [offshore]}
+      answer: "Tu ouvres un compte. Le cousin est vexé. Il garde la montre ; il l'avait « avancée »."

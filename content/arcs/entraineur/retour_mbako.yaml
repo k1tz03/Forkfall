@@ -1,0 +1,54 @@
+# « Le retour de Mbako » — il est parti pour trente millions, il a marqué
+# contre toi, et il veut revenir (bible ch. 11 § 2.4, tardive 2). Sa mère
+# renégocie, Fardelli tourne, le vestiaire se souvient. Intrigue tardive : le
+# réservoir ne la tire que si le petit a vraiment été vendu.
+#
+# Chemins : appel (il appelle lui-même, pour la première fois) → mere (la
+# clause, réécrite) → vestiaire (le casier d'avant) → premier_match (la bâche à
+# son nom, il manque un L) → bache (S+1 : la clause, encore).
+# Issues : revenu | refuse. `statut_ok: [vendu]` sur les cartes où il parle.
+arcs:
+  - id: en.retour_mbako
+    title: "Le retour de Mbako"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 2
+    theme: mercato
+    carrier: mbako
+    cast: [mbako, mere_mbako, fardelli, brehaut, gege]
+    when: "flag('mbako_vendu')"
+    # Tu lui as déjà dit que le club avait vécu sans lui : il ne rappelle pas.
+    excludes: [mbako_refuse_retour]
+    issues: [revenu, refuse]
+    traces:
+      mbako_revenu:        "{annee} : Lian Mbako est revenu à {club}. Sa mère a réécrit la clause ; Gégé a ressorti la bâche."
+      mbako_refuse_retour: "{annee} : Mbako voulait revenir. {nom} a dit que le club avait vécu sans lui."
+    hint: "Il est sur un banc chauffé depuis janvier, et il appelle lui-même."
+    start: [1, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : Mbako est resté à {club} après le départ de {nom}. Il a demandé qui l'avait fait revenir."
+    steps:
+      - id: appel
+        card: en.retour.appel
+        statut_ok: [vendu]
+        next: [ { step: mere, in: [1, 3] } ]
+      - id: mere
+        card: en.retour.mere
+        outcome: revenu
+        next: [ { step: vestiaire, in: [2, 4] } ]
+      - id: vestiaire
+        card: en.retour.vestiaire
+        next: [ { step: premier_match, in: [1, 3] } ]
+      - id: premier_match
+        card: en.retour.premier_match
+        next: [ { step: bache, at_season: 1, at: [13, 17], in: [13, 17] } ]
+      - id: bache
+        card: en.retour.bache
+        on_expire: skip
+        next: []

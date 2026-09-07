@@ -1,0 +1,827 @@
+# FUSIBLE — le texte des beats moteur (spec variété §1.12, §2.7)
+#
+# Les neuf beats ci-dessous gardent leur **mécanique** en Dart (effets, match,
+# verdict, transitions, Rng) et prennent leur **texte** ici. C'est ce qui
+# empêche « la moitié des écrans d'une S2+ est la même qu'en S0 » : Vaubourg ne
+# dit plus « cette saison, l'objectif c'est le maintien » de la même façon
+# après une descente, un titre, ou quand Vukić dîne avec lui.
+#
+# ── Comment ça marche ────────────────────────────────────────────────────────
+# Chaque beat porte une **liste ordonnée** de variantes. Le moteur sert la
+# **première dont `roles` et `when` sont vrais** ; la **dernière**, sans `when`
+# ni `roles`, est le **secours** (elle reprend le texte historique en dur) et
+# elle est **obligatoire** dès qu'un beat est présent ici. Une variante placée
+# après le secours est une erreur de build : elle ne serait jamais servie.
+# **Coût Rng : zéro.** Le choix est un parcours de liste, jamais un tirage : la
+# même graine et les mêmes swipes donnent le même texte.
+#
+# ── Une variante ─────────────────────────────────────────────────────────────
+#   - roles: [entraineur]      # vide/absent = tous les rôles
+#     when: "season >= 1 && flag('descente')"
+#     speaker: aulard          # optionnel : le portrait et le `{toi}` de la carte
+#     text: "…"                # ≤ 240 caractères, le ton de la bible
+#     left: "…"                # optionnel : le libellé de gauche
+#     right: "…"               # optionnel : celui de droite (beats à deux boutons)
+#     answer_left: "…"         # optionnel : la conséquence (objective, aftermatch, bilan_contrat)
+#     answer_right: "…"
+#     transition: entraineur   # bilan_carrefour seulement (voir plus bas)
+#
+# `when` parle le langage des cartes : `flag('x')`, `relation.gege >= 1`,
+# `season >= 2`, `plays('en.kop')`, `arc_outcome('en.prodige') == 'vendu'`,
+# `chars.vecchio.age >= 44`, `chars.mbako.statut == 'vendu'`, `fil_rouge ==
+# 'argent'`, `phase('retour')`, `vars.gm_won == 1`, `stats.titres >= 1`,
+# `journal_has('descente')`, `objectif('deux_maintiens')`.
+# `bilan.tenu` / `bilan.rang` / `bilan.outcome` ne valent qu'au beat
+# `bilan_verdict` (le verdict y est calculé sans être appliqué) : ailleurs,
+# c'est une erreur de build. Après le Verdict, on lit `flag('bilan_tenu')`.
+#
+# ── Les placeholders fournis par chaque beat ─────────────────────────────────
+#   partout          {prenom} {nom} {NOM} {toi} {club} {ville} {rival} {annee}
+#                    {saison} {age} {age_<id>} {division} {objectif} {rang}
+#   objective        {patron} (le nom du patron du rôle) · {objectif_min}
+#   match            {adversite} (★★★☆☆) · {vestiaire_mot}
+#   cup              {tour}
+#   gm_te            {minute} · {score}
+#   aftermatch       {gm_score} · {score}
+#   bilan_verdict    {rang} · {objectif} · {tenu} · {TENU}
+#   bilan_contrat    {patron} · {objectif}
+# Un placeholder inconnu est une erreur de lint : le joueur ne doit jamais lire
+# une accolade.
+#
+# ── Le budget d'écriture (spec variété §5) ───────────────────────────────────
+# ≈ 60 lignes de variantes par rôle : trois à cinq variantes par beat, lues sur
+# le fil rouge, les traces, les issues, les âges et les statuts. Le rapport de
+# `simulate --narrative` affiche la **part des set-pieces servis en variante
+# non-secours** : sous 50 %, la saison 2 ressemble encore trop à la saison 0.
+#
+# ── Ce que ce fichier ne fait pas ────────────────────────────────────────────
+# Il ne change aucun effet, aucun libellé de jauge, aucune mécanique. `match` et
+# `gm_te` restent un état de match : leur texte se commente, il ne se raconte
+# pas. Les libellés de posture de `match` (« Offensif » / « Prudent ») viennent
+# de roles.yaml : n'y touche que si la variante vise un rôle précis.
+
+# ── Le texte des beats, transcrit de la bible ch. 30 § 1 ─────────────────────
+# Deux rôles seulement existent aujourd'hui (content/roles.yaml) : la bible
+# écrit huit rôles, on importe « Entraîneur » → `entraineur` et « Joueur pro »
+# → `joueur`. Les six autres familles (amateur, DS, présidents, sélectionneur,
+# instance) attendent leurs rôles.
+# Ordre de lecture : les variantes de l'entraîneur, puis celles du joueur, puis
+# le secours commun (sans `when` ni `roles`) qui reprend le texte historique.
+setpieces:
+  # ══ objective — l'objectif de saison (bible § 1.1) ═════════════════════════
+  # Créneau 1, deux sorties ; s'engager pose la Parole au Bilan.
+  objective:
+    # ---- Entraîneur (patron : le président)
+    - roles: [entraineur]
+      when: "season >= 1 && flag('descente')"
+      speaker: aulard
+      text: "« On est descendus, {toi}. Cette saison l'objectif c'est {objectif_min}, et tu paies le chauffage. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Il note la date en marge."
+      answer_right: "Il repose le stylo sans le ranger."
+    - roles: [entraineur]
+      when: "flag('vukic_dauphin')"
+      speaker: aulard
+      text: "« Cette saison, {toi}, l'objectif c'est {objectif_min}. Zoran est d'accord ; il l'était avant toi. »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il regarde le couloir en signant. Zoran y est encore."
+      answer_right: "« Lui, il aurait dit oui. » Il le dit sans lever les yeux."
+    - roles: [entraineur]
+      when: "fil_rouge == 'argent'"
+      speaker: aulard
+      text: "« J'ai pas le temps, j'ai un empire : l'objectif c'est {objectif_min} et un sponsor sur le maillot. Tu signes en bas ? »"
+      left: "Je signe en bas"
+      right: "Le maillot n'est pas à vendre"
+      answer_left: "Il plie la page avant que tu la relises."
+      answer_right: "Il range le contrat. Il garde le nom du sponsor."
+    - roles: [entraineur]
+      when: "flag('pacte_gege')"
+      speaker: aulard
+      text: "« La tribune a écrit ton objectif à la craie avant moi, {toi}. Le mien est en dur : {objectif_min}. »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Deux objectifs, une craie et un contrat. Ils ne disent pas pareil."
+      answer_right: "« Alors c'est la craie qui décide. » Il sourit mal."
+    - roles: [entraineur]
+      when: "flag('naming_signe')"
+      speaker: nassir
+      text: "« Ce n'est pas un club, c'est un actif : l'objectif de l'actif, c'est {objectif_min} et deux jeunes revendables. Vous validez ? »"
+      left: "Je valide le tableau"
+      right: "Je ne vends pas de jeunes"
+      answer_left: "La ligne devient verte devant toi. C'est tout ce qui change."
+      answer_right: "Il note ton refus dans une case prévue pour."
+    - roles: [entraineur]
+      when: "stats.titres >= 1"
+      speaker: aulard
+      text: "« L'objectif, {toi}, c'est de recommencer. Personne ne m'a jamais dit que c'était plus facile. »"
+      left: "Je recommence"
+      right: "On ne recommence pas"
+      answer_left: "Il fait encadrer la photo de l'an dernier. En grand."
+      answer_right: "Il enlève la photo du couloir le lendemain."
+    - roles: [entraineur]
+      when: "relation.aulard <= -2"
+      speaker: aulard
+      text: "« {Toi}, l'objectif est écrit dans le contrat, page quatre. J'ai pas le temps de vous le lire. »"
+      left: "Je lis la page quatre"
+      right: "Je m'engage quand même"
+      answer_left: "Page quatre, quatre lignes, et une clause de sortie."
+      answer_right: "Tu t'engages sur un texte que tu n'as pas lu."
+    # La variante que la bible ch. 30 § 1.1 réclame pour `hotel_du_club` : le
+    # café de Josiane à l'hôtel du club (posé par co.cartons_camille).
+    - roles: [entraineur]
+      when: "flag('hotel_du_club')"
+      speaker: aulard
+      text: "« Josiane me dit que vous prenez le café à l'hôtel du club, {toi}. Un homme qui dort au stade doit bien viser {objectif_min}. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Josiane sert le café le lendemain sans rien dire."
+      answer_right: "Il regarde la clé de la chambre 12 sur le bureau. Il ne la rend pas."
+    # Le secours de l'entraîneur porte l'adresse du président : c'est la carte
+    # servie à chaque présaison, et la spec § 1.8 la donne en premier exemple du
+    # nom prononcé (« {Toi}, cette saison l'objectif c'est le maintien »).
+    - roles: [entraineur]
+      speaker: aulard
+      text: "« {Toi}, cette saison, l'objectif c'est {objectif_min}. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}."
+      answer_right: "Tu gardes les mains libres."
+    # ---- Joueur pro (patron : l'agent)
+    - roles: [joueur]
+      when: "season == 0 && fil_rouge == 'prix'"
+      speaker: fardelli
+      text: "« {Toi}, l'objectif de l'année c'est ton prix : vingt titularisations et je double la mise. On parle d'argent ou d'amitié ? »"
+      left: "D'argent"
+      right: "D'amitié"
+      answer_left: "Il écrit vingt dans son carnet. Il souligne."
+      answer_right: "« D'amitié », répète-t-il. Il écrit vingt quand même."
+    - roles: [joueur]
+      when: "flag('genou')"
+      speaker: sabatier
+      text: "« L'objectif, cette saison, c'est trente matchs sans piqûre. Ça reste entre la table et moi, {toi}. »"
+      left: "Trente sans piqûre"
+      right: "Je jouerai ce qu'il faut"
+      answer_left: "Il range l'aiguille dans le tiroir du haut. Il ne le ferme pas."
+      answer_right: "Il note la date. Il note toujours les dates."
+    - roles: [joueur]
+      when: "flag('capitaine')"
+      speaker: brehaut
+      text: "« Le groupe vit bien, {toi}, et le groupe attend {objectif_min}. Tu portes le brassard, tu portes l'objectif : d'accord ? »"
+      left: "D'accord"
+      right: "Le brassard, pas l'objectif"
+      answer_left: "Il te tend le brassard sans le lâcher tout de suite."
+      answer_right: "Il garde le brassard une semaine de plus, pour voir."
+    - roles: [joueur]
+      when: "flag('international')"
+      speaker: legruet
+      text: "« On verra ça après le Congrès, {toi}, mais la liste se fait en mars. Vous jouez combien de matchs cette saison ? »"
+      left: "Tous"
+      right: "Je ne compte pas"
+      answer_left: "Il note un chiffre. En mars, il le relira."
+      answer_right: "« Personne ne compte, et tout le monde compte. » Il raccroche."
+    - roles: [joueur]
+      when: "relation.fardelli <= -2"
+      speaker: fardelli
+      text: "« {Toi}, l'objectif c'est que quelqu'un te veuille en juin. On parle d'argent, là, plus d'amitié. »"
+      left: "Alors parlons d'argent"
+      right: "Je trouverai sans vous"
+      answer_left: "Il rouvre le carnet à la bonne page. Elle était prête."
+      answer_right: "Il referme le carnet. Il ne le range pas."
+    - roles: [joueur]
+      when: "season >= 2 && age >= 30"
+      speaker: vecchio
+      text: "« À ton âge, l'objectif c'est de finir la saison entier. J'en ai vu d'autres se fixer autre chose. »"
+      left: "Finir entier"
+      right: "Je vise plus haut"
+      answer_left: "Il hoche la tête et retourne à ses gants."
+      answer_right: "« D'accord. » Il le dit comme on range un dossier."
+    - roles: [joueur]
+      when: "flag('exil_dore')"
+      speaker: nassir
+      text: "« Ce n'est pas un club, c'est un actif, {toi}, et tu en es la ligne la plus lisible. Ton objectif est dans mon tableau : tu le signes ? »"
+      left: "Je signe le tableau"
+      right: "Je ne suis pas une ligne"
+      answer_left: "La ligne change de couleur. Toi, non."
+      answer_right: "Il laisse la case vide. Il la garde ouverte."
+    - roles: [joueur]
+      speaker: fardelli
+      text: "« L'objectif de la saison, {toi}, c'est {objectif_min}. Tu t'engages, ou je vais le dire à quelqu'un d'autre ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}."
+      answer_right: "Tu gardes les mains libres. Lui aussi."
+    # ---- Secours commun
+    - text: "{patron} : « Cette saison, l'objectif c'est {objectif_min}. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}."
+      answer_right: "Tu gardes les mains libres."
+
+  # ══ match — le bloc de six journées ════════════════════════════════════════
+  # La bible ne commente pas ce beat : il reste un état de match.
+  match:
+    - roles: [entraineur]
+      when: "flag('salaires_retard')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La paie du cinq n'est pas tombée, et six journées, c'est six semaines."
+    - roles: [entraineur]
+      when: "flag('onze_du_virage') || flag('otage_kop')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le local a affiché son onze mardi ; il te reste six matchs pour le contredire."
+    - roles: [entraineur]
+      when: "world.serie_defaites >= 2"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. On ne parle plus de jeu au club, on parle de série."
+    - roles: [entraineur]
+      when: "season >= 1"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le président a écrit le mot « bloc » sur son sous-main. Il compte."
+    - roles: [entraineur]
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs pour savoir ce que vaut ce groupe-là."
+    - roles: [joueur]
+      when: "flag('genou')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs en dix-neuf jours, et un genou qui compte les jours."
+    - roles: [joueur]
+      when: "flag('capitaine')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le brassard se voit surtout sur les blocs comme celui-là."
+    - roles: [joueur]
+      when: "world.serie_victoires >= 2"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. On te demande ton avis sur la série avant de te le demander sur toi."
+    - roles: [joueur]
+      when: "season >= 1"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs, et quelqu'un dans une tribune qui note tes courses."
+    - roles: [joueur]
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs pour se faire une place, ou la perdre."
+    - text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}."
+
+  # ══ cup — le tour de Coupe (bible § 1.5) ═══════════════════════════════════
+  cup:
+    # ---- Entraîneur
+    - roles: [entraineur]
+      when: "flag('vitamines') || flag('flacon_b')"
+      text: "Tour de Coupe. Un contrôleur attend à l'accueil avec une mallette. Le tirage t'offre un adversaire surprise."
+      left: "On y va"
+    - roles: [entraineur]
+      when: "flag('espion_retour')"
+      text: "Tour de Coupe. L'adversaire a taillé sa haie. Il a laissé un mot dedans, à ton nom."
+      left: "On y va"
+    - roles: [entraineur]
+      when: "flag('salaires_retard')"
+      text: "Tour de Coupe. La prime de qualification tomberait avant la paie du cinq. Le vestiaire a fait le calcul avant toi."
+      left: "On y va"
+    - roles: [entraineur]
+      when: "relation.aulard <= -1"
+      text: "Tour de Coupe. Le président a dit à la radio que la Coupe n'est pas la priorité. Le vestiaire écoute la radio."
+      left: "On y va quand même"
+    - roles: [entraineur]
+      when: "flag('mbako_lance')"
+      text: "Tour de Coupe. Le gamin veut jouer ce match-là et l'a dit à sa mère. Sa mère l'a dit à un journaliste."
+      left: "On y va"
+    - roles: [entraineur]
+      when: "flag('pacte_gege')"
+      text: "Tour de Coupe. Le local a affrété deux cars pour un match à cinq heures de route. Personne ne leur a demandé."
+      left: "On y va"
+    - roles: [entraineur]
+      when: "season >= 2 && stats.titres == 0"
+      text: "Tour de Coupe. C'est la dernière chose que tu peux encore gagner cette saison. Tout le monde le sait, personne ne le dit."
+      left: "On y va"
+    - roles: [entraineur]
+      when: "world.division >= 2"
+      text: "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Le club adverse a prévu deux fûts."
+      left: "On y va"
+    - roles: [entraineur]
+      text: "Tour de Coupe. Le tirage t'offre un adversaire surprise, et un vestiaire qui n'a pas envie d'y penser."
+      left: "On y va"
+    # ---- Joueur pro
+    - roles: [joueur]
+      when: "flag('vitamines') || flag('flacon_b')"
+      text: "Tour de Coupe. Un contrôleur attend à l'accueil avec une mallette. Le tirage t'offre un adversaire surprise."
+      left: "On y va"
+    - roles: [joueur]
+      when: "flag('genou')"
+      text: "Tour de Coupe. Terrain gras, District, cinq degrés. Le staff te demande si tu veux vraiment jouer ça."
+      left: "Je joue"
+    - roles: [joueur]
+      when: "world.division <= 1"
+      text: "Tour de Coupe. Un stade municipal, huit cents personnes derrière une main courante, et ton maillot qui vaut leur budget."
+      left: "On y va"
+    - roles: [joueur]
+      when: "flag('special')"
+      text: "Tour de Coupe. Le président du petit club a fait afficher ta phrase sur la buvette. En grand."
+      left: "On y va"
+    - roles: [joueur]
+      when: "flag('capitaine')"
+      text: "Tour de Coupe. Le vestiaire a décidé que c'était un match de jeunes. Tu es sur la feuille quand même."
+      left: "On y va"
+    - roles: [joueur]
+      when: "relation.fardelli >= 1"
+      text: "Tour de Coupe. Ton agent trouve que c'est un match à risque pour rien. Il l'a dit à un journaliste avant de te le dire."
+      left: "On y va"
+    - roles: [joueur]
+      when: "year >= 2016 && flag('monde_video')"
+      text: "Tour de Coupe. Pas de vidéo à ce tour-là : l'arbitre est seul, et il le sait."
+      left: "On y va"
+    - roles: [joueur]
+      when: "season >= 1"
+      text: "Tour de Coupe. Un terrain gras, une main courante, et trois cents personnes qui connaissent ton nom mieux que ton club."
+      left: "On y va"
+    - roles: [joueur]
+      text: "Tour de Coupe. Le tirage t'offre un adversaire surprise, et une pelouse qui n'a pas d'avis sur ton contrat."
+      left: "On y va"
+    # ---- Secours commun
+    - text: "Tour de Coupe. Le tirage t'offre un adversaire surprise. On y va ?"
+      left: "On joue le coup"
+
+  # ══ gm_annonce — l'annonce du Grand Match (bible § 1.2) ════════════════════
+  # Le texte ne dit jamais qui va gagner.
+  gm_annonce:
+    # ---- Entraîneur
+    - roles: [entraineur]
+      when: "arc('co.derby') == 'active'"
+      text: "GRAND MATCH. Le derby de la vallée. Gégé a peint la ville, le président a invité la maire. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "flag('onze_du_virage')"
+      text: "GRAND MATCH. Le onze est affiché au local depuis mardi. Il est le tien, à deux noms près."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "flag('salaires_retard')"
+      text: "GRAND MATCH. La paie du cinq n'est pas tombée. Le vestiaire a fait comme si, jusqu'à l'échauffement."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "flag('mbako_lance')"
+      text: "GRAND MATCH. Le gamin est titulaire, il a seize ans et il a demandé le ballon dans le couloir. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "relation.aulard <= -1"
+      text: "GRAND MATCH. Le président est en loge avec deux invités que personne ne connaît. Ils regardent ton banc, pas le terrain."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "year >= 2016 && flag('monde_video')"
+      text: "GRAND MATCH. La vidéo est branchée, l'écran est au-dessus du kop. On verra tout, deux fois."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "flag('derby_perdu')"
+      text: "GRAND MATCH. Le derby de l'aller a laissé une trace de peinture sur le mur du local. Elle n'a pas été effacée."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "flag('trois_valises')"
+      text: "GRAND MATCH. L'adjoint est arrivé au stade avec le même sac que le jour des trois valises. Il n'a rien dit. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      text: "GRAND MATCH. Le stade est plein, le banc est court, et tout se joue ici. Coup d'envoi."
+      left: "Coup d'envoi"
+    # ---- Joueur pro
+    - roles: [joueur]
+      when: "arc('co.derby') == 'active'"
+      text: "GRAND MATCH. Le derby. Gégé a peint la ville, ta sœur habite du mauvais côté. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "flag('genou')"
+      text: "GRAND MATCH. Le genou a parlé toute la semaine. Le kiné a dit « respire », le coach a dit « tu joues »."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "flag('mbako_vendu') && chars.mbako.statut == 'vendu'"
+      text: "GRAND MATCH. Il est en face, en jaune, et il a dix-neuf ans. Le stade connaît son prénom mieux que le tien."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "flag('special')"
+      text: "GRAND MATCH. Tu as dit « le meilleur » en conférence. Quarante mille personnes sont venues vérifier."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "flag('international')"
+      text: "GRAND MATCH. Le sélectionneur est dans la tribune de presse, deuxième rang. Il ne prend pas de notes, c'est pire."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "relation.gege <= -2"
+      text: "GRAND MATCH. La tribune Nord a préparé quelque chose pour toi. Ce n'est pas un tifo."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "stats.titres >= 1 && season >= 2"
+      text: "GRAND MATCH. On te siffle à l'échauffement dans un stade où tu as gagné. C'est la nouveauté de l'année."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      text: "GRAND MATCH. Le stade est plein, ton nom est au dos, et tout se joue ici. Coup d'envoi."
+      left: "Coup d'envoi"
+    # ---- Secours commun
+    - text: "GRAND MATCH. Le stade est plein, tout se joue ici. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  # ══ gm_te — le cadre du temps fort (bible § 1.3) ═══════════════════════════
+  # La bible écrit trois libellés de risque ; le moteur n'a que deux sorties :
+  # SÛR et RISQUÉ. ÉQUILIBRÉ n'a pas de bouton (écart d'import).
+  gm_te:
+    - when: "flag('genou')"
+      text: "{minute}e minute · {score}. Ton corps a une opinion sur la suite. Elle n'est pas dans le plan."
+      left: "Je lève le pied"
+      right: "Je force"
+    - roles: [entraineur]
+      when: "flag('finale_gigi')"
+      text: "{minute}e minute · {score}. Le vieux gardien s'avance de trois mètres. Il n'a pas demandé la permission."
+      left: "Je le laisse monter"
+      right: "Je le rappelle"
+    - roles: [entraineur]
+      when: "flag('otage_kop')"
+      text: "{minute}e minute · {score}. Le onze est celui du virage. Ce que tu changes maintenant, le local le saura avant la fin."
+      left: "Je ne change rien"
+      right: "Je change tout"
+    - roles: [joueur]
+      when: "flag('capitaine')"
+      text: "{minute}e minute · {score}. Le brassard pèse une demi-seconde de plus. Deux façons de le porter, une seule qui te ressemble."
+      left: "Je joue simple"
+      right: "Je prends tout"
+    - when: "season >= 2 && stats.titres >= 1"
+      text: "{minute}e minute · {score}. On te regarde comme on regarde un champion : en attendant la faute. Dernier quart d'heure."
+      left: "Sûr"
+      right: "Risqué"
+    - when: "relation.gege >= 2"
+      text: "{minute}e minute · {score}. Le virage chante depuis la vingtième et il ne s'arrêtera pas. Ce qu'on décide ici, on le racontera en juin."
+      left: "Sûr"
+      right: "Risqué"
+    - roles: [entraineur]
+      text: "{minute}e minute · {score}. Le match bascule ici, et tout le monde regarde ton banc. Deux façons de faire."
+      left: "Le choix sûr"
+      right: "Le choix risqué"
+    - roles: [joueur]
+      text: "{minute}e minute · {score}. Le match bascule ici, et le ballon revient vers toi. Deux façons de le prendre."
+      left: "Le choix sûr"
+      right: "Le choix risqué"
+    # ---- Secours commun
+    - text: "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble."
+      left: "Le choix sûr"
+      right: "Le choix risqué"
+
+  # ══ aftermatch — l'après-match (bible § 1.4) ═══════════════════════════════
+  # Écart d'import : la bible lit `vars.gm_won == -1` (défaite) ; le moteur ne
+  # pose que 1 (gagné) et 0 (pas gagné). Les variantes de défaite lisent 0.
+  aftermatch:
+    # ---- Entraîneur
+    - roles: [entraineur]
+      when: "vars.gm_won == 1 && flag('finale_gigi')"
+      text: "Score final {gm_score}. Gigi a gardé le ballon sous le bras. Il en a vu d'autres, pas celui-là."
+      left: "Je le laisse le garder"
+      right: "Le ballon est au club"
+      answer_left: "Il le pose sur son casier. Il ne le rendra jamais."
+      answer_right: "Il le rend. Il regarde ailleurs en le rendant."
+    - roles: [entraineur]
+      when: "vars.gm_won == 1 && flag('pacte_gege')"
+      speaker: gege
+      text: "« La tribune n'oublie rien : ton nom a été chanté quatre fois. Le local, il est toujours à rénover ? »"
+      left: "Il sera rénové"
+      right: "On verra en juin"
+      answer_left: "Il regrave la date à la craie, un cran au-dessus."
+      answer_right: "« En juin. » Il le répète pour que ça s'entende."
+    - roles: [entraineur]
+      when: "vars.gm_won == 0 && arc('co.derby') == 'active'"
+      speaker: meneche
+      text: "« Juste une question, hors micro, {toi} : on perd un derby avec ce onze-là, ou avec ce coach-là ? »"
+      left: "Avec ce onze-là"
+      right: "Avec moi"
+      answer_left: "Il note le onze. Il souligne deux noms."
+      answer_right: "Il note la phrase entière, sans la couper."
+    - roles: [entraineur]
+      when: "vars.gm_won == 0 && flag('salaires_retard')"
+      speaker: brehaut
+      text: "« Le groupe vit bien, mais le groupe n'a pas été payé le cinq. Tu leur dis quelque chose ou je le dis ? »"
+      left: "Je leur parle ce soir"
+      right: "Dis-le, toi"
+      answer_left: "Tu parles onze minutes. Personne ne regarde son téléphone."
+      answer_right: "Il le dit à sa façon. Elle est meilleure que la tienne."
+    - roles: [entraineur]
+      when: "vars.gm_won == 1 && relation.aulard <= -1"
+      speaker: aulard
+      text: "« J'ai pas le temps, j'ai un empire. Bravo, hein. »"
+      left: "Merci, président"
+      right: "Vous avez deux minutes ?"
+      answer_left: "Il est déjà dans l'ascenseur. La porte se ferme sur « hein »."
+      answer_right: "Il a deux minutes. Il les passe à regarder son téléphone."
+    - roles: [entraineur]
+      when: "vars.gm_won == 0 && flag('mbako_lance')"
+      speaker: mere_mbako
+      text: "« Mon fils n'a besoin de personne, mais il a besoin de jouer quatre-vingt-dix minutes. Vous l'avez sorti à la soixantième. »"
+      left: "Il jouera les quatre-vingt-dix"
+      right: "C'est moi qui décide"
+      answer_left: "Elle note la promesse dans son téléphone, avec la date."
+      answer_right: "Elle sourit, et appelle quelqu'un d'autre en sortant."
+    - roles: [entraineur]
+      when: "vars.gm_won == 0 && flag('onze_du_virage')"
+      speaker: vukic
+      text: "« Je te le dis parce que personne ne te le dira : ce onze-là n'est pas le tien. Tu le sais depuis mardi. »"
+      left: "Je reprends la compo"
+      right: "C'est mon onze"
+      answer_left: "Il efface le tableau lui-même, sans commentaire."
+      answer_right: "Il n'insiste pas. Il note la date sur son cahier."
+    # ---- Joueur pro
+    - roles: [entraineur]
+      when: "vars.gm_won == 1"
+      speaker: vukic
+      text: "« Je te le dis parce que personne ne te le dira : on a gagné, et on a eu de la chance. Tu leur dis quoi, ce soir ? »"
+      left: "Je les félicite"
+      right: "Je recadre quand même"
+      answer_left: "Ils crient onze minutes. Il les laisse crier, en regardant l'heure."
+      answer_right: "Le vestiaire se tait d'un coup. Vukić hoche la tête, une fois."
+    - roles: [entraineur]
+      speaker: vukic
+      text: "« Je te le dis parce que personne ne te le dira : ce match-là, on l'a perdu à l'échauffement. Tu parles au groupe ou tu attends demain ? »"
+      left: "Je parle maintenant"
+      right: "Demain"
+      answer_left: "Quatre minutes, debout, sans notes. Deux joueurs regardent le sol."
+      answer_right: "Le bus rentre en silence. Demain sera plus long que ce soir."
+    - roles: [joueur]
+      when: "vars.gm_won == 1 && flag('capitaine')"
+      speaker: brehaut
+      text: "« Le groupe vit bien ce soir, {toi}. Tu parles au vestiaire ou tu les laisses crier ? »"
+      left: "Je parle"
+      right: "Qu'ils crient"
+      answer_left: "Trois phrases, debout sur un banc. La troisième est de trop."
+      answer_right: "Ils crient vingt minutes. Tu écoutes depuis la douche."
+    - roles: [joueur]
+      when: "vars.gm_won == 1 && flag('special')"
+      speaker: lea
+      text: "« Vous confirmez, {toi} ? Vous aviez dit que vous étiez le meilleur. On est en direct, et le pays écoute. »"
+      left: "Je confirme"
+      right: "J'ai dit ça vite"
+      answer_left: "Le titre est déjà écrit. Il l'était avant la question."
+      answer_right: "Elle garde la première version. Elle est meilleure."
+    - roles: [joueur]
+      when: "vars.gm_won == 0 && relation.gege <= -1"
+      speaker: gege
+      text: "« La tribune n'oublie rien, {toi}, et elle a compté tes courses. Tu descends nous parler ou tu montes dans la voiture ? »"
+      left: "Je descends"
+      right: "Je monte"
+      answer_left: "Vingt minutes debout au parking. Personne ne crie."
+      answer_right: "La voiture démarre. Ils la regardent démarrer."
+    - roles: [joueur]
+      when: "vars.gm_won == 0 && flag('genou')"
+      speaker: sabatier
+      text: "« Ça reste entre la table et moi : dis-moi ce que tu as senti à la soixantième, et pas ce que tu veux que j'entende. »"
+      left: "La vérité"
+      right: "Rien, ça va"
+      answer_left: "Il écrit trois lignes. Il en garde deux pour lui."
+      answer_right: "Il écrit une ligne. « Rien », avec la date."
+    - roles: [joueur]
+      when: "vars.gm_won == 1 && relation.fardelli >= 1"
+      speaker: fardelli
+      text: "« {Toi}, ça, ça vaut deux millions de plus. On parle d'argent ou d'amitié, ce soir ? »"
+      left: "D'argent"
+      right: "D'amitié"
+      answer_left: "Il appelle trois numéros depuis le parking, dans l'ordre."
+      answer_right: "Il range le téléphone. Il rappellera demain, par amitié."
+    - roles: [joueur]
+      when: "vars.gm_won == 0 && flag('mbako_vendu')"
+      speaker: meneche
+      text: "« Juste une question, hors micro : le gamin en face vous a coûté un point. Vous en pensez quoi, vraiment ? »"
+      left: "Il est meilleur que moi"
+      right: "Sans commentaire"
+      answer_left: "C'est le titre du lendemain, sans guillemets."
+      answer_right: "Il note le silence. Il note toujours."
+    - roles: [joueur]
+      when: "vars.gm_won == 0 && flag('international')"
+      speaker: legruet
+      text: "« On verra ça après le Congrès, {toi}. La liste, elle, se fait sur des soirs comme celui-là. »"
+      left: "Je serai meilleur"
+      right: "Faites votre liste"
+      answer_left: "Il hoche la tête. Il ne note rien, ce qui est pire."
+      answer_right: "Il sourit et s'en va. Le couloir est long."
+    - roles: [joueur]
+      speaker: vukic
+      text: "« Je te le dis parce que personne ne te le dira : ce match, tu l'as joué à moitié. On regarde la vidéo demain ? »"
+      left: "On la regarde"
+      right: "Pas la peine"
+      answer_left: "Quarante minutes de cassette. Tu comptes tes courses."
+      answer_right: "Il garde la cassette. Il la ressortira en février."
+    # ---- Secours commun
+    - when: "vars.gm_won == 1"
+      text: "Score final {gm_score}. Le vestiaire exulte."
+    - text: "Le match est terminé. Il faut parler au groupe."
+
+  # ══ bilan_verdict — le verdict (bible § 1.6) ═══════════════════════════════
+  # Texte de narrateur, un bouton. Le seul beat où `bilan.*` est lisible.
+  # Les cinq rôles de club partagent une liste : ici, entraîneur et joueur.
+  bilan_verdict:
+    - when: "bilan.tenu && bilan.rang <= 3"
+      text: "Le verdict tombe : {rang}e. Le président a fait imprimer la photo de famille. Tu es dessus, au bord."
+      left: "Voir le classement"
+    - when: "bilan.tenu && objective.promised"
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. La promesse d'août tient encore debout, à une semaine près."
+      left: "Voir le classement"
+    - when: "bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. Josiane a déjà rangé le dossier sous les autres."
+      left: "Voir le classement"
+    - when: "!bilan.tenu && bilan.outcome == 'descente'"
+      text: "Le verdict tombe : {rang}e. Le mot « descente » est écrit en petit, en bas de la lettre."
+      left: "Voir le classement"
+    - when: "!bilan.tenu && bilan.outcome == 'lanterne'"
+      text: "Le verdict tombe : {rang}e. Dernier. Le classement tient sur une ligne, et c'est la dernière."
+      left: "Voir le classement"
+    - when: "!bilan.tenu && flag('salaires_retard')"
+      text: "Le verdict tombe : {rang}e. Les salaires de mai ne sont pas tombés non plus. Deux lignes dans le même courrier."
+      left: "Voir le classement"
+    - when: "!bilan.tenu && objective.promised"
+      text: "Le verdict tombe : {rang}e. La Gazette a ressorti la phrase d'août, avec la date."
+      left: "Voir le classement"
+    - when: "!bilan.tenu && bilan.rang <= 6"
+      text: "Le verdict tombe : {rang}e. À un point de ce qu'on t'avait demandé. On a refait la photo sans toi."
+      left: "Voir le classement"
+    - when: "!bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : manqué. Le dossier de la saison fait deux pages, et la deuxième est vide."
+      left: "Voir le classement"
+    # ---- Secours commun
+    - text: "Le verdict de la saison tombe. Objectif : {objectif}."
+      left: "Voir le classement"
+
+  # ══ bilan_contrat — on continue ou pas (bible § 1.7) ═══════════════════════
+  # Après le Verdict on lit `flag('bilan_tenu')` / `flag('bilan_manque')`.
+  bilan_contrat:
+    # ---- Entraîneur
+    - roles: [entraineur]
+      when: "relation.aulard <= -1"
+      speaker: aulard
+      text: "« On continue, {toi}, ou je te fais un chèque ? Je ne le date pas. »"
+      left: "On continue"
+      right: "Faites le chèque"
+      answer_left: "Il repose le carnet à souches sans l'ouvrir."
+      answer_right: "Il signe, il ne date pas, et il te tend le stylo pour rien."
+    - roles: [entraineur]
+      when: "stats.titres >= 1"
+      speaker: aulard
+      text: "« Champion, {toi}. Je te prolonge sans lire ; tu signes où ? »"
+      left: "Je signe"
+      right: "Je lis d'abord"
+      answer_left: "Deux signatures, un café, et personne n'a lu la page trois."
+      answer_right: "Tu lis. Page trois, il y a une clause qui n'y était pas."
+    - roles: [entraineur]
+      when: "flag('vukic_dauphin')"
+      speaker: aulard
+      text: "« On continue un an, {toi}, avec Zoran comme adjoint. Il a déjà dit oui, lui. »"
+      left: "D'accord pour un an"
+      right: "Sans Zoran"
+      answer_left: "Zoran attend dans le couloir. Il attendait déjà avant."
+      answer_right: "« Alors c'est sans toi. » Il le dit calmement."
+    - roles: [entraineur]
+      when: "flag('otage_kop')"
+      speaker: aulard
+      text: "« J'ai pas le temps, j'ai un empire, et la tribune a un entraîneur. Lequel des deux je prolonge ? »"
+      left: "Celui du banc"
+      right: "Celui du virage"
+      answer_left: "Il prolonge le banc. Le virage l'apprend par la radio."
+      answer_right: "Il note. Il ne prolonge personne ce jour-là."
+    - roles: [entraineur]
+      when: "flag('bilan_manque') && objective.promised"
+      speaker: meneche
+      text: "« Juste une question, hors micro : vous aviez promis en août. On prolonge la promesse ou l'homme ? »"
+      left: "L'homme"
+      right: "La promesse"
+      answer_left: "Il écrit « l'homme » et met des guillemets autour."
+      answer_right: "Il ressort la phrase d'août, datée, et la met en face."
+    - roles: [entraineur]
+      when: "relation.nassir >= 1"
+      speaker: nassir
+      text: "« Ce n'est pas un club, c'est un actif, et j'en ai deux autres. Vous prolongez ici, ou vous écoutez le tableau ? »"
+      left: "Je prolonge ici"
+      right: "J'écoute le tableau"
+      answer_left: "Il ferme le fichier. Il garde l'onglet ouvert."
+      answer_right: "Trois clubs, trois colonnes, et ton nom dans la troisième."
+    - roles: [entraineur]
+      when: "flag('clow_ingrat')"
+      speaker: josiane
+      text: "« J'en ai vu passer, et le vieux monsieur qui vous a formé n'a pas eu de coup de fil. Vous prolongez quoi, au juste ? »"
+      left: "Je l'appellerai"
+      right: "Le contrat, madame"
+      answer_left: "Elle te donne le numéro. Elle l'avait déjà écrit."
+      answer_right: "Elle range le numéro dans le classeur vert."
+    - roles: [entraineur]
+      when: "flag('aulard_rappelle')"
+      speaker: aulard
+      text: "« Je t'ai rappelé une fois, {toi}, et j'ai pas le temps de le refaire. On continue, ou on arrête proprement ? »"
+      left: "On continue"
+      right: "On arrête proprement"
+      answer_left: "Il signe sans lire. C'est sa façon de dire qu'il se souvient."
+      answer_right: "Il hoche la tête. « La deuxième fois, on ne rappelle pas. »"
+    - roles: [entraineur]
+      speaker: aulard
+      text: "« On continue l'aventure, {toi}, ou tu tentes autre chose ? »"
+      left: "Je reste"
+      right: "Je réclame plus de moyens"
+    # ---- Joueur pro
+    - roles: [joueur]
+      when: "flag('bilan_tenu') && relation.fardelli >= 1"
+      speaker: fardelli
+      text: "« {Toi}, trois clubs appellent et le tien traîne. On parle d'argent ou d'amitié, cette fois ? »"
+      left: "D'argent"
+      right: "D'amitié"
+      answer_left: "Il décroche devant toi. Le troisième numéro est le bon."
+      answer_right: "Il range le carnet. Il rappellera les trois quand même."
+    - roles: [joueur]
+      when: "flag('genou') && age >= 30"
+      speaker: sabatier
+      text: "« Ça reste entre la table et moi, {toi} : une saison de plus, ça se paie en cartilage. Tu signes quand même ? »"
+      left: "Je signe"
+      right: "J'attends juin"
+      answer_left: "Il note la date. Il note aussi ce qu'il pense, ailleurs."
+      answer_right: "Il referme le dossier. Il ne le range pas."
+    - roles: [joueur]
+      when: "flag('capitaine') && flag('bilan_tenu')"
+      speaker: aulard
+      text: "« Je prolonge le brassard, pas le salaire, {toi}. Tu signes où, comme d'habitude ? »"
+      left: "Comme d'habitude"
+      right: "Le salaire aussi"
+      answer_left: "Le brassard est prolongé. Le reste tient sur une ligne."
+      answer_right: "Il rit. Il ne dit pas non, il rit."
+    - roles: [joueur]
+      when: "flag('exil_dore')"
+      speaker: nassir
+      text: "« Ce n'est pas un club, c'est un actif, {toi}, et vous êtes une ligne qui vieillit bien. Vous venez au soleil ? »"
+      left: "Je viens"
+      right: "Je reste au froid"
+      answer_left: "Le contrat fait quatre pages. Trois sont des annexes."
+      answer_right: "Il éteint l'écran. Il laisse l'offre ouverte jusqu'en juin."
+    - roles: [joueur]
+      when: "flag('bilan_manque') && relation.vukic <= -1"
+      speaker: vukic
+      text: "« Je te le dis parce que personne ne te le dira : tu n'es plus dans mes plans. Tu cherches, ou tu attends ? »"
+      left: "Je cherche"
+      right: "J'attends"
+      answer_left: "Il te donne deux noms. Ils ne rappelleront pas."
+      answer_right: "Il hoche la tête. Le tableau du vestiaire change mardi."
+    - roles: [joueur]
+      when: "flag('diplome')"
+      speaker: vukic
+      text: "« Tes jambes parlent, {toi}, et tu as le papier. Tu joues une saison de plus, ou tu prends la réserve ? »"
+      left: "Une saison de plus"
+      right: "Je prends la réserve"
+      answer_left: "Il range le formulaire dans le tiroir. Pas à la poubelle."
+      answer_right: "Tu changes de vestiaire sans changer de couloir."
+    - roles: [joueur]
+      when: "flag('petition_portee') || flag('lettre_du_vestiaire')"
+      speaker: brehaut
+      text: "« Le groupe a signé pour toi, {toi}, et le président l'a reçue par fax. Tu veux qu'on remette une couche ? »"
+      left: "Remettez une couche"
+      right: "Ça suffit comme ça"
+      answer_left: "Vingt-deux noms, deuxième fois. Le fax chauffe."
+      answer_right: "Il plie la feuille et la garde dans son casier."
+    - roles: [joueur]
+      speaker: fardelli
+      text: "« On continue l'aventure, {toi}, ou on tente autre chose ailleurs ? »"
+      left: "Je reste"
+      right: "Je réclame plus de moyens"
+    # ---- Secours commun
+    - text: "{patron} : « On continue l'aventure, ou tu tentes autre chose ? »"
+      left: "Je reste"
+      right: "Je réclame plus de moyens"
+
+  # ══ bilan_carrefour — la porte (bible § 1.8) ═══════════════════════════════
+  # Une variante `transition:` remplace le libellé de roles.yaml quand son
+  # `when` est vrai et que la transition est éligible. Seule la porte
+  # joueur → entraîneur existe aujourd'hui ; les sept autres arêtes de la
+  # bible attendent leurs rôles.
+  bilan_carrefour:
+    - transition: entraineur
+      when: "flag('diplome')"
+      speaker: vukic
+      text: "« Tu as le papier, {toi}. La réserve n'a pas d'entraîneur ; tu passes de l'autre côté ? »"
+      left: "Pas encore"
+      right: "Je passe de l'autre côté"
+    - transition: entraineur
+      when: "flag('genou') && age >= 30"
+      speaker: sabatier
+      text: "« Ça reste entre la table et moi : ce genou ne fera pas deux saisons. Le survêtement, lui, ne s'use pas. »"
+      left: "Je joue encore"
+      right: "Je prends le survêtement"
+    - transition: entraineur
+      when: "flag('capitaine')"
+      speaker: aulard
+      text: "« Reste, mais en survêtement. J'ai pas le temps de former quelqu'un d'autre à mes défauts. »"
+      left: "Je reste joueur"
+      right: "J'accepte le banc"
+    - transition: entraineur
+      speaker: vukic
+      text: "« Tes jambes parlent, et personne d'autre ne les écoute. La réserve n'a pas d'entraîneur ; tu y vas ? »"
+      left: "Pas cette année"
+      right: "J'y vais"
+    - when: "gauges.direction <= 25"
+      speaker: camille
+      text: "« Tu vois le mur arriver, et moi je le vois depuis mars. Tu pars avant, ou tu attends la lettre ? »"
+      left: "J'attends la lettre"
+      right: "Je pars avant"
+    - when: "flag('vukic_dauphin') && relation.vukic <= -1"
+      speaker: vukic
+      text: "« Je te le dis parce que personne ne te le dira : ils m'ont proposé ta place. Je n'ai pas encore répondu. »"
+      left: "Réponds ce que tu veux"
+      right: "Réponds non"
+    - when: "age >= 55 && stats.titres >= 2"
+      speaker: vecchio
+      text: "« J'en ai vu d'autres partir un an trop tard, et aucun n'a trouvé ça drôle. Tu veux finir comment, toi ? »"
+      left: "Comme eux"
+      right: "Pas comme eux"
+    - when: "season >= 1"
+      speaker: josiane
+      text: "« J'en ai vu passer, des étés. Celui-là, le téléphone a sonné deux fois et je n'ai pas décroché. On repart ? »"
+      left: "On repart"
+      right: "Je regarde ailleurs"
+    - roles: [joueur]
+      speaker: fardelli
+      text: "« {Toi}, l'été est long et mon carnet est court. On recommence ici, ou je fais deux appels ? »"
+      left: "On recommence ici"
+      right: "Fais tes deux appels"
+    # ---- Secours commun
+    - text: "L'été passe. Le téléphone sonne une fois, deux fois, puis plus. On repart."
+      left: "Continuer"

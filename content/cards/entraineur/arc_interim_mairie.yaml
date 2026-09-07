@@ -1,0 +1,133 @@
+# Cartes d'étape de « La D2 et la mairie » (interim_courtes.yaml). La maire
+# réduit la subvention si le club ne monte pas ; le stade est de l'argent
+# public, et l'argent public a un calendrier électoral. Quatre étapes, le
+# verdict glisse à la saison suivante (fusée longue).
+# Traces : montee_promise, subvention_perdue, chantier_mairie.
+cards:
+  - id: en.mairie_d2.rendez_vous
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aubert
+    tone: strategique
+    text: "La maire ouvre le dossier à la page du montant : « {Toi}, la ville subventionne un club qui promet la montée depuis onze ans, et je suis en campagne dans dix-huit mois. Vous promettez ? »"
+    left:
+      label: "La montée, madame"
+      effects: {caisse: "++", direction: "+", parole: 1, promise: true, set: [montee_promise], outcome: promesse}
+      answer: "Elle note la date dans son agenda, pas dans le dossier. C'est pire."
+    right:
+      label: "Une tribune à votre nom"
+      effects: {caisse: "+", tribunes: "-", relation: {gege: -1}, set: [chantier_mairie], outcome: chantier}
+      answer: "Elle sourit. Le panneau est commandé le lendemain, plus grand que prévu."
+
+  - id: en.mairie_d2.rendez_vous_promise
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aubert
+    tone: strategique
+    text: "La maire, le dossier ouvert : « {Toi}, vous avez promis la montée à votre président pour vous faire confirmer ; il me l'a répété au conseil. Vous me la promettez, ou je réduis ? »"
+    left:
+      label: "À vous aussi, madame"
+      effects: {caisse: "++", parole: -1, promise: true, outcome: promesse}
+      answer: "Deux promesses, une montée. Elle compte pour deux, et elle compte bien."
+    right:
+      label: "Réduisez, je reste honnête"
+      effects: {caisse: "--", parole: 2, tribunes: "+", set: [subvention_perdue], outcome: refus}
+      answer: "Le radiateur tousse. Gégé apporte un chauffage d'appoint et le prête au vestiaire."
+
+  - id: en.mairie_d2.conseil
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aubert
+    tone: strategique
+    text: "La maire parle au conseil et te regarde à la fin de chaque phrase : « L'opposition demande deux loges à l'année pour « les associations », {toi}. Deux loges, ou un vote serré ? »"
+    left:
+      label: "Deux loges, et le vote"
+      effects: {caisse: "+", direction: "+", tribunes: "-"}
+      answer: "Les associations sont deux : le club de bridge, et le cousin d'un conseiller."
+    right:
+      label: "Un vote serré, on assume"
+      effects: {caisse: "-", tribunes: "+", parole: 1, relation: {aubert: -1}}
+      answer: "Le vote passe d'une voix. Trente écharpes dans le public ; personne n'a rien dit."
+
+  - id: en.mairie_d2.conseil_chantier
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: aubert
+    tone: strategique
+    text: "La maire, au conseil, le plan de la tribune déplié : « L'opposition veut le nom de la ville sur le panneau, en plus grand que le vôtre, {toi}. La ville en plus grand, ou le vote de jeudi ? »"
+    left:
+      label: "La ville en plus grand"
+      effects: {caisse: "++", tribunes: "--", relation: {gege: -1}}
+      answer: "Le panneau grandit. Gégé recompte les lettres ; il y en a plus que dans la bâche."
+    right:
+      label: "Le vote, on verra après"
+      effects: {caisse: "+", tribunes: "+", direction: "-"}
+      answer: "Le vote passe. Le panneau garde la taille prévue ; il est déjà trop grand."
+
+  - id: en.mairie_d2.panneau
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé mesure le panneau, puis la bâche, puis le panneau encore : « Quatre mètres, juste sous la bâche, et plus de lettres que dans ton nom. On le laisse, ou on le couvre ? »"
+    left:
+      label: "On le laisse"
+      effects: {direction: "+", caisse: "+", tribunes: "-", relation: {gege: -1}}
+      answer: "La bâche descend de vingt centimètres par semaine. En mars, on lit « MUNI »."
+    right:
+      label: "Couvrez-le le dimanche"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1, aubert: -1}}
+      answer: "La maire vient au match, regarde le panneau, voit une bâche, et note."
+
+  - id: en.mairie_d2.panneau_chauffage
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, vestiaire]
+    speaker: gege
+    tone: leger
+    text: "Gégé traîne une rallonge par la buvette : « La mairie a réduit, le radiateur tousse, alors le local prête son chauffage au vestiaire. La tribune n'oublie rien. Tu l'acceptes ? »"
+    left:
+      label: "J'accepte, merci"
+      effects: {vestiaire: "+", tribunes: "+", relation: {gege: 1}}
+      answer: "La rallonge saute deux fois par match. Vecchio la remet, entre deux arrêts."
+    right:
+      label: "Le vestiaire se débrouille"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Il remporte le chauffage. Le vestiaire s'échauffe plus longtemps, dit Vukić."
+
+  - id: en.mairie_d2.verdict
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, une lettre à en-tête de la ville : « La subvention est reconduite à l'identique, {toi}, avec une ligne sur « la tenue des engagements » qui ne veut rien dire. Je réponds ? »"
+    left:
+      label: "Remerciez-la de ma part"
+      effects: {direction: "+", relation: {aubert: 1}}
+      answer: "Elle répond. La maire répond aussi ; elle répond toujours, c'est de l'argent public."
+    right:
+      label: "Classez"
+      effects: {caisse: "+"}
+      answer: "Elle classe. Le radiateur tient tout l'hiver ; c'est la première fois."
+
+  - id: en.mairie_d2.verdict_promesse
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane a souligné une date, la tienne : « La subvention est réduite d'un tiers « conformément aux engagements non tenus », et votre promesse est en gras. Je réponds, {toi} ? »"
+    left:
+      label: "Répondez, nouvelle date"
+      effects: {parole: -1, caisse: "+", promise: true, relation: {aubert: -1}}
+      answer: "Tu promets encore. Elle note la nouvelle sous l'ancienne ; l'agenda a de la place."
+    right:
+      label: "Classez, on jouera sans"
+      effects: {caisse: "--", parole: 1, vestiaire: "+", set: [subvention_perdue], outcome: refus}
+      answer: "Le radiateur tousse tout l'hiver. Gégé a encore le chauffage du local."

@@ -1,0 +1,43 @@
+# L'intrigue tardive de l'intérimaire (bible ch. 11 § 3.3, « une tardive ») :
+# « Je te vire souvent, je te rappelle toujours ». Après un Bilan manqué,
+# l'offre de rester quand même, à ses conditions. Rejouable une saison sur
+# deux, trois fois : la variante « encore » lit plays().
+arcs:
+  - id: en.aulard_rappelle
+    title: "Le président te rappelle"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: direction
+    carrier: aulard
+    cast: [aulard, josiane, vukic]
+    replay: { after: 1, max: 3 }
+    issues: [reste, part]
+    traces:
+      rappele_par_aulard: "{annee} : viré le lundi, rappelé le mercredi. {nom} a dit oui ; le président a dit « mon »."
+    hint: "Viré lundi à 23 h 47, avec une faute. Rappelé mercredi, sans excuse."
+    start: [1, 3]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le président avait rappelé {nom}. Il est parti quand même, avec la plaque, sans les vis."
+    steps:
+      - id: sms
+        card:
+          - { id: en.aulard_rappelle.sms_encore, if: "plays('en.aulard_rappelle') >= 2" }
+          - { id: en.aulard_rappelle.sms }
+        next: [ { step: conditions, in: [1, 2] } ]
+      - id: conditions
+        card:
+          - { id: en.aulard_rappelle.conditions_fils, if: "flag('fils_ds')" }
+          - { id: en.aulard_rappelle.conditions }
+        next: [ { step: josiane, in: [1, 2] } ]
+      - id: josiane
+        card:
+          - { id: en.aulard_rappelle.josiane_trous, if: "plays('en.aulard_rappelle') >= 2" }
+          - { id: en.aulard_rappelle.josiane }
+        next: []

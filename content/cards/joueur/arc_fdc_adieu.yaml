@@ -1,0 +1,99 @@
+# Cartes de l'intrigue « L'adieu » (arc jp.adieu) — bible ch. 10 § 6.27.
+# Une croix en juin au crayon, une bâche pliée qu'on n'ouvre pas, une page du
+# cahier de l'adjoint commencée il y a dix ans.
+cards:
+  - id: jp.adieu.camille
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure, {toi}, et cette fois je demande pour l'année : c'est la dernière, ou encore « une de plus » ? Tu me réponds, ou tu réponds au local d'abord ? »"
+    left:
+      label: "La dernière, à toi"
+      effects: {relation: {camille: 2}, direction: "+", set: [dernier_annonce], outcome: raccroche, react: co.re.camille_journal}
+      answer: "Elle repasse la croix au stylo. Elle ne dit rien ; elle sourit ; c'est nouveau depuis mars."
+    right:
+      label: "Une de plus"
+      effects: {tribunes: "+", relation: {camille: -1}, set: [une_de_plus], outcome: encore}
+      answer: "Elle efface la croix. Elle en achètera un autre ; elle en a l'habitude."
+
+  - id: jp.adieu.camille_affiche
+    roles: [joueur]
+    arc: famille
+    tags: [famille, tribunes]
+    speaker: camille
+    tone: strategique
+    text: "« Le local a une affiche sans date depuis deux ans, et moi un calendrier avec une croix au crayon. Tu rentres à quelle heure, et lequel des deux tu remplis ? »"
+    left:
+      label: "Le tien, ce soir"
+      effects: {relation: {camille: 2}, direction: "+", set: [dernier_annonce], outcome: raccroche}
+      answer: "Elle repasse la croix au stylo. L'affiche du local restera vide ; il la garde quand même."
+    right:
+      label: "Ni l'un ni l'autre"
+      effects: {tribunes: "+", relation: {camille: -1}, set: [une_de_plus], outcome: encore}
+      answer: "Elle efface. Deux papiers vides dans deux tiroirs ; personne ne cède."
+
+  - id: jp.adieu.josiane
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: strategique
+    text: "« J'en ai vu passer, vous savez, des dernières saisons qui ne l'étaient pas ; j'ai le formulaire de fin de carrière dans le classeur, jamais rempli. Celui-là, c'est le bon ? »"
+    left:
+      label: "Celui-là, oui"
+      effects: {direction: "+", relation: {josiane: 1}, set: [dernier_annonce], outcome: raccroche}
+      answer: "Elle sort le formulaire. Il est daté de l'an dernier ; elle rature l'année, proprement."
+    right:
+      label: "Encore une"
+      effects: {tribunes: "+", vestiaire: "+", set: [une_de_plus], outcome: encore}
+      answer: "Elle referme le classeur. Elle laisse le formulaire dessus, en évidence, tout l'hiver."
+
+  - id: jp.adieu.gege
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« La tribune n'oublie rien, et elle a préparé une bâche pour ton dernier match, sans savoir si c'est le dernier. Tu nous dis, ou on la garde pliée une saison de plus ? »"
+    left:
+      label: "C'est le dernier"
+      effects: {tribunes: "+++", set: [dernier_annonce], react: co.re.gege_decoupe}
+      answer: "La bâche s'ouvre. Elle dit « MERCI », et une année ; l'année est bonne."
+    right:
+      label: "Gardez-la pliée"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Il la garde. Il la déplie à moitié, pour voir si elle est bien ; elle l'est."
+
+  - id: jp.adieu.gege_bache
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« C'est la même bâche que la première, petit, on a repeint le dos ; « ICI, POUR TOUJOURS » est de l'autre côté. La tribune n'oublie rien : tu nous dis, ou on la replie ? »"
+    left:
+      label: "C'est le dernier"
+      effects: {tribunes: "+++", relation: {gege: 2}, set: [dernier_annonce], react: co.re.gege_decoupe}
+      answer: "Elle s'ouvre du bon côté. De loin, on lit les deux ; de près, un seul."
+    right:
+      label: "Repliez-la"
+      effects: {tribunes: "+", vestiaire: "+", relation: {gege: 1}}
+      answer: "Il replie, côté promesse dessus. C'est celui qui prend la poussière."
+
+  - id: jp.adieu.vukic
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: vukic
+    tone: strategique
+    text: "« Je te le dis parce que personne ne te le dira, {toi} : cette page, commencée le jour où tu as regardé le banc pour la première fois, elle est pleine. Maintenant, ou en août ? »"
+    left:
+      label: "Maintenant"
+      effects: {direction: "+", relation: {vukic: 1}, set: [page_lue_vukic]}
+      answer: "C'est toi, vu de la touche, en dix ans. C'est juste ; c'est dur ; c'est signé."
+    right:
+      label: "En août, à la réserve"
+      effects: {direction: "++", vestiaire: "+", relation: {vukic: 1}, set: [vers_entraineur, page_lue_vukic]}
+      answer: "Il referme. Il te donne le cahier en août. Tu es sur le banc ; tu as la page."

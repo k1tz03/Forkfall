@@ -1,0 +1,271 @@
+# Les manchettes génériques de tous les rôles (bible ch. 20 § 2.1, et les
+# lignes de § 2.2 dont la trace et le rôle existent déjà dans le moteur).
+# Schéma et règles : en-tête de content/unes.yaml.
+#
+# Elles ne dépendent d'aucun postulat : elles lisent l'état de l'instant
+# (jauges, parole, âge, relations, saisons, ennemis) et tiennent les saisons 2
+# et suivantes, là où les manchettes de trace d'un postulat s'épuisent. Les
+# quatre secours de content/unes.yaml (priority 0 sans `when`) ne bougent pas.
+#
+# Écarts d'import assumés, faute de compteur dans le moteur : `stats.ennemis`
+# devient `enemy()`, `stats.saisons_club` devient `season`, `fin.famille`
+# n'existe pas encore (les douze Unes de fin de carrière du § 2.4 attendent ce
+# chemin). Les manchettes des rôles non jouables (directeur sportif, président,
+# sélectionneur, instances) ne sont pas importées : le moteur ne connaît que
+# `entraineur` et `joueur`.
+unes:
+  # ------------------------------------------------- l'âge de la carrière (1-2)
+  - id: une.generic.premiere
+    journal: echo
+    priority: 1
+    when: "season == 0 && bilan.tenu"
+    titre: "BIENVENUE, ET À L'ANNÉE PROCHAINE"
+    sous: "Une première saison à {ville}, {rang}e, objectif tenu. Au local, on a retenu le prénom ; le nom viendra."
+    sujet: bilan
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.cinq_ans
+    journal: echo
+    priority: 2
+    when: "season >= 4"
+    titre: "{NOM}, CINQ ANS CHEZ NOUS"
+    sous: "Cinq saisons, {rang}e cette fois. Josiane « en a vu passer » ; {pg, select, f{celle-là} other{celui-là}}, elle le tutoie presque."
+    sujet: bilan
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe } ]
+
+  - id: une.generic.vingt_ans
+    roles: [joueur]
+    journal: quotidien
+    priority: 1
+    when: "player.age <= 22"
+    titre: "{NOM}, VINGT ANS ET DÉJÀ UNE UNE"
+    sous: "{club}, {rang}e. Le carnet du recruteur note la date de naissance ; le reste viendra tout seul."
+    sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.soixante
+    journal: echo
+    priority: 2
+    when: "player.age >= 60"
+    titre: "{NOM} N'A PAS L'ÂGE DE PARTIR"
+    sous: "Soixante ans passés, {rang}e, et un contrat d'un an « renouvelable par tacite reconduction »."
+    sujet: bilan
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.gege_decoupe } ]
+
+  - id: une.generic.troisieme_club
+    journal: quotidien
+    priority: 2
+    when: "stats.clubs >= 3"
+    titre: "TROISIÈME CLUB, MÊME VALISE"
+    sous: "{club}, {rang}e. Le carnet note trois adresses en six ans ; Camille, elle, en note deux."
+    sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  # ------------------------------------------------------------ la parole (2-3)
+  - id: une.generic.parole_tenue
+    journal: quotidien
+    priority: 3
+    when: "parole >= 4"
+    titre: "{NOM} TIENT PAROLE. C'EST RARE."
+    sous: "Quatre promesses publiques, quatre tenues, une saison. À la Gazette, on n'a rien à dater cette année."
+    sujet: presse
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe } ]
+
+  - id: une.generic.deux_dates
+    journal: gazette
+    priority: 2
+    when: "parole <= -1 && parole > -3"
+    titre: "DEUX PROMESSES, DEUX DATES, ZÉRO"
+    sous: "Le mur des promesses a deux lignes au nom de {nom}. La Gazette note 9/20, « et encore, pour l'écriture »."
+    sujet: presse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.ennemis
+    journal: gazette
+    priority: 2
+    when: "enemy('meneche') || enemy('aulard') || enemy('gege')"
+    titre: "{NOM} A DES ENNEMIS, ET UNE LISTE"
+    sous: "Deux personnes ne prononcent plus le nom. La Gazette les a appelées ; elles ont décroché, puis raccroché."
+    sujet: presse
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  # ------------------------------------------------------------- la maison (3)
+  - id: une.generic.maison
+    journal: echo
+    priority: 3
+    when: "relation.camille >= 3 && bilan.tenu && !flag('divorce')"
+    titre: "QUELQU'UN ATTENDAIT À LA MAISON"
+    sous: "{rang}e. Sur la photo de tribune Est, on voit un manteau qui n'est pas d'ici et qui reste jusqu'au bout."
+    sujet: famille
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe } ]
+
+  - id: une.generic.hotel_du_club
+    journal: gazette
+    priority: 3
+    when: "flag('divorce')"
+    titre: "{NOM} DORT À L'HÔTEL DU CLUB"
+    sous: "Chambre 12, celle de Josiane pour les stagiaires. « Vu au parking » n'a rien vu ; c'est ce qu'il a écrit."
+    sujet: famille
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.naissance
+    journal: echo
+    priority: 3
+    when: "journal_has('sacha_nee')"
+    titre: "UNE NAISSANCE AU CARNET DU CANTON"
+    sous: "Trois kilos deux, tribune Est dès le mois prochain, dit le père Guichard. {rang}e, par ailleurs."
+    sujet: famille
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  # -------------------------------------------------------------- la Coupe (2-4)
+  - id: une.generic.coupe
+    journal: quotidien
+    priority: 4
+    when: "journal_has('coupe_gagnee')"
+    titre: "LA COUPE EST À {VILLE}"
+    sous: "Finale au Grand Stade, un but, un car de police pour la rentrée. {prenom} {nom} a tenu le trophée par le bas."
+    sujet: bilan
+    react: [ { card: co.re.gege_decoupe }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.sorti_village
+    journal: gazette
+    priority: 2
+    when: "journal_has('coupe_humiliation')"
+    titre: "SORTI PAR UN VILLAGE"
+    sous: "Trente-deuxièmes, un terrain en pente, un gardien de cinquante ans. La Gazette note le village 20/20."
+    sujet: bilan
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  # ------------------------------------------------------ l'état des jauges (2)
+  - id: une.generic.stade_plein_manque
+    journal: echo
+    priority: 2
+    when: "gauges.tribunes >= 80 && !bilan.tenu"
+    titre: "STADE PLEIN, OBJECTIF MANQUÉ À {VILLE}"
+    sous: "{rang}e, et pas une place vide. Gégé : « La tribune n'oublie rien. » Elle a oublié le classement."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.sauves_devant_personne
+    journal: echo
+    priority: 2
+    when: "gauges.tribunes < 25 && bilan.tenu"
+    titre: "SAUVÉS DEVANT PERSONNE"
+    sous: "Objectif tenu, {rang}e, devant trois cents abonnés et le père Guichard. Le local n'a pas ouvert."
+    sujet: tribunes
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.creature
+    journal: gazette
+    priority: 2
+    when: "gauges.direction >= 85"
+    titre: "{NOM}, CRÉATURE DU PRÉSIDENT"
+    sous: "Le président « n'a pas le temps », mais il en a pour ce nom-là. Le vestiaire parle d'autre chose."
+    sujet: direction
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  - id: une.generic.vestiaire_muet
+    journal: quotidien
+    priority: 2
+    when: "gauges.vestiaire < 25"
+    titre: "LE VESTIAIRE DE {VILLE} NE PARLE PLUS"
+    sous: "{rang}e. Bréhaut : « Le groupe vit bien. » Il l'a dit sans regarder personne, ce qui est nouveau."
+    sujet: vestiaire
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.bieres
+    journal: gazette
+    priority: 2
+    when: "gauges.caisse < 15"
+    titre: "{VILLE} PAIE EN BIÈRES"
+    sous: "{rang}e et une caisse vide. Un ami à la Commission des comptes a « tout son temps » ; le trésorier, moins."
+    sujet: caisse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.kop_bureau
+    journal: gazette
+    priority: 2
+    when: "gauges.tribunes >= 75 && gauges.direction < 30"
+    titre: "LE KOP L'AIME, LE BUREAU NON"
+    sous: "{rang}e. Le virage chante le nom ; le président a deux discours, et celui-là n'est dans aucun des deux."
+    sujet: tribunes
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.serie_noire
+    journal: quotidien
+    priority: 2
+    when: "world.serie_defaites >= 5"
+    titre: "{VILLE} A OUBLIÉ COMMENT ON GAGNE"
+    sous: "Cinq défaites d'affilée pour finir, {rang}e. Page quatre, en trois mots : « le tableau noir est noir »."
+    sujet: bilan
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  # --------------------------------- les traces lues depuis l'autre rôle (§ 2.2)
+  - id: une.generic.capitaine_sifflet
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('capitaine') && role_was('joueur') && season == 0"
+    titre: "L'ANCIEN CAPITAINE A UN SIFFLET"
+    sous: "Le brassard est dans un tiroir, le sifflet au cou. {rang}e ; le vestiaire l'appelle encore par son prénom."
+    sujet: vestiaire
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.gege_decoupe } ]
+
+  - id: une.generic.paie_du_26
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('salaires_retard')"
+    titre: "LA PAIE DU 5 EST TOMBÉE LE 26"
+    sous: "Au distributeur du centre commercial, onze joueurs et un ticket « solde insuffisant ». Le président « n'a pas le temps »."
+    sujet: caisse
+    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.canette
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('naming_signe') && season >= 1"
+    titre: "{NOM} JOUE DANS UNE CANETTE"
+    sous: "Un nom de boisson en orange, quatre mètres de haut. {rang}e. Le virage dit l'ancien nom ; le speaker, le nouveau."
+    sujet: sponsors
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.gants_eleve
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('gigi_staff') && relation.vecchio >= 1"
+    titre: "LES GANTS DE GIGI ONT UN ÉLÈVE"
+    sous: "Une serviette, deux gants, un élève qui arrête tout. Vecchio : « J'en ai vu d'autres. Pas celui-là. »"
+    sujet: vestiaire
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.gege_decoupe } ]
+
+  - id: une.generic.diplome_sans_mentor
+    roles: [joueur]
+    journal: quotidien
+    priority: 2
+    when: "flag('clow_ingrat') && flag('diplome')"
+    titre: "LE DIPLÔME, SANS LE MENTOR"
+    sous: "Lundi, huit heures, sans le vieux dans la salle. Il n'a pas été rappelé ; on ne l'a pas rappelé non plus."
+    sujet: formation
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.generic.dauphin_ailleurs
+    roles: [joueur]
+    journal: quotidien
+    priority: 2
+    when: "flag('vukic_dauphin') && season >= 2"
+    titre: "LE DAUPHIN EST ROI AILLEURS"
+    sous: "Zoran Vukić a un banc, un cahier, et une offre pour un joueur qu'il « connaît ». Le joueur n'a pas rappelé."
+    sujet: direction
+    react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
+
+  # ------------------------------------------------------- le foot d'en bas (1)
+  - id: une.generic.boue
+    journal: echo
+    priority: 1
+    when: "world.division >= 2"
+    titre: "BOUE, BUVETTE, BILAN : {VILLE}"
+    sous: "{rang}e, objectif {tenu}. La buvette a fait sa saison ; on a compté les bières, pas les points."
+    sujet: bilan

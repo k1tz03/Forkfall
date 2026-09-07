@@ -1,0 +1,53 @@
+# « Lundi, huit heures » — la vie d'après de Dan Corven : le bar, les trois
+# verres, le car des supporters, et le télégramme de 1971 (bible ch. 01 § 5.4
+# « INTRIGUE co.clow_lundi », plus les objets § 5.7 : 01.clow_telegramme,
+# 01.clow_voiture, 01.clow_repas).
+#
+# `en.mentor_clow` est l'arc des trois conseils ; celui-ci est la vie d'après,
+# et les deux se partagent Corven : le `when` attend que le mentor ait fini (ou
+# n'ait jamais commencé). Il manquait au réservoir du promu — Corven était au
+# casting sans porter qu'une seule intrigue (lint « porteur ou cast de 1 »).
+#
+# Chemins : trois_verres (le troisième est le vrai) → car (Gégé reconnaît le
+# vieux au fond du car des supporters) → telegramme (six mots de 1971 ; la
+# variante lit le troisième verre).
+# Issues : telegramme | garde.
+arcs:
+  - id: co.clow_lundi
+    title: "Lundi, huit heures"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: false
+    weight: 0.9
+    once: true
+    min_season: 2
+    theme: presse
+    carrier: clow
+    cast: [clow, gege]
+    # Corven ne raconte sa vie qu'à qui l'écoute encore, et jamais pendant que
+    # l'arc des trois conseils tourne.
+    when: "season >= 2 && relation.clow >= 0 && arc('en.mentor_clow') != 'armed' && arc('en.mentor_clow') != 'active'"
+    excludes: [clow_ingrat, telegramme_clow]
+    issues: [telegramme, garde]
+    traces:
+      clow_trois_verres: "{annee} : trois verres avec Dan Corven. Le troisième était le vrai."
+      telegramme_clow:   "{annee} : Dan Corven a donné son télégramme de 1971 à {prenom} {nom}. Cinquante-neuf jours, plié en quatre."
+    hint: "Trois verres pleins, un car de supporters, et six mots de 1971."
+    start: [4, 12]
+    same_club: false
+    fallback: drop
+    epilogue:
+      journal: "{annee} : Dan Corven a gardé son télégramme. {nom} avait un déménagement à faire."
+    steps:
+      - id: trois_verres
+        card: co.clow.trois_verres
+        next: [ { step: car, in: [3, 8] } ]
+      - id: car
+        card: co.clow.car_des_supporters
+        next: [ { step: telegramme, in: [3, 8] } ]
+      - id: telegramme
+        card:
+          - { id: co.clow.telegramme_verres, if: "flag('clow_trois_verres')" }
+          - { id: co.clow.telegramme }
+        next: []

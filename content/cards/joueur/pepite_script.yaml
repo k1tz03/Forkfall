@@ -1,0 +1,532 @@
+# Cartes du script d'ouverture de la pépite (arc jp.pepite.club_usine,
+# content/arcs/joueur/pepite_script.yaml) — bible ch. 10 § 3, gabarit § 4.1.
+# Hors du sac. `arc:` porte le THÈME de la carte, pas l'id de l'arc.
+# Le nom du joueur : jamais deux étapes de suite, jamais dans un libellé.
+# Fardelli dit {toi} (« mon ami » / « mon ami {prenom} ») ; Vaubourg dit {toi}
+# (« petit » quand il t'aime, {nom} sinon) ; Gégé dit « petit » ou « le {numero} ».
+# Les deux dernières cartes sont les alarmes d'override du postulat
+# (postulats.yaml → alarm_overrides).
+cards:
+  # ============================================================ S0 · 1 · la valeur
+  - id: jp.pepite.p1_valeur
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Tu vaux trois millions ce matin, quatre ce soir si tu marques. {Toi}, on parle d'argent ou d'amitié : dix pour cent, et on choisit ensemble où tu joues. »"
+    left:
+      label: "Dix pour cent, on est amis"
+      effects: {direction: "+", caisse: "+", relation: {fardelli: 1}, set: [agent_fardelli], react: jp.re.aulard_quatre_millions}
+      answer: "Il monte la vitre. Le contrat était signé de sa main ; il manquait la tienne, en bas, là où il tapote."
+    right:
+      label: "Je choisis seul où je joue"
+      effects: {direction: "-", tribunes: "+", relation: {fardelli: -1}, set: [sans_agent], react: jp.re.aulard_quatre_millions}
+      answer: "Il remonte la vitre plus vite. « Trois millions sans agent, ça fait deux et demi », dit-il au pare-brise."
+
+  - id: jp.pepite.p1_valeur_prix
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Trois millions ce matin, quatre ce soir, six en janvier si tu ne te blesses pas. {Toi}, on parle d'argent ou d'amitié : je compte, et toi tu cours. »"
+    left:
+      label: "Dix pour cent, on est amis"
+      effects: {direction: "+", caisse: "+", relation: {fardelli: 1}, set: [agent_fardelli], react: jp.re.aulard_quatre_millions}
+      answer: "Il range le carnet où il compte. Il te laisse le chiffre du jour sur un ticket."
+    right:
+      label: "Je choisis seul où je joue"
+      effects: {direction: "-", tribunes: "+", relation: {fardelli: -1}, set: [sans_agent]}
+      answer: "« Trois millions sans agent, ça fait deux et demi », dit-il au pare-brise. Il compte encore, pour lui."
+
+  - id: jp.pepite.p1_valeur_maison
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    tone: strategique
+    text: "« Tu vaux trois millions, et ta mère a demandé si on pouvait te vendre près de la maison. On ne vend pas près, on vend cher : on parle d'argent ou d'amitié ? »"
+    left:
+      label: "Dix pour cent, on est amis"
+      effects: {direction: "+", caisse: "+", relation: {fardelli: 1}, set: [agent_fardelli], react: jp.re.aulard_quatre_millions}
+      answer: "Il note l'adresse de ta mère dans le carnet. À la page des frais."
+    right:
+      label: "Je choisis seul où je joue"
+      effects: {direction: "-", tribunes: "+", relation: {fardelli: -1}, set: [sans_agent]}
+      answer: "Il remonte la vitre. Ta mère l'apprendra par L'Écho, comme tout le monde."
+
+  # ========================================================= S0 · 2 · le mercato d'hiver
+  - id: jp.pepite.p2_hiver
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Une offre de janvier, {toi}, un club qui paie maintenant et prend en juin. J'ai pas le temps, j'ai une usine : tu dis oui ce soir, ou je vends plus cher ? »"
+    left:
+      label: "Je viens ce soir"
+      effects: {caisse: "++", direction: "+", tribunes: "--", set: [vente_janvier], react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Il signe le fax. Josiane le classe sous « janvier », le dossier le plus épais du club."
+    right:
+      label: "Je finis la saison ici"
+      effects: {tribunes: "++", direction: "-", force: 1, set: [finit_saison]}
+      answer: "Il déchire le fax. Il en a une copie ; à l'usine, on a toujours une copie."
+
+  - id: jp.pepite.p2_hiver_maison
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, famille]
+    speaker: aulard
+    tone: strategique
+    text: "« Une offre à trente kilomètres de chez ta mère, une autre à six cents. J'ai pas le temps, j'ai une usine : la maison, ou la carrière ? »"
+    left:
+      label: "La maison"
+      effects: {tribunes: "+", caisse: "-", set: [finit_saison]}
+      answer: "Il note « maison » sur le fax. Il ne comprend pas ce mot-là ; il le note quand même."
+    right:
+      label: "La carrière"
+      effects: {caisse: "++", tribunes: "-", set: [vente_janvier]}
+      answer: "Ta mère l'apprend par L'Écho. Elle raccroche en soupirant très fort."
+
+  - id: jp.pepite.p2_hiver_bleu
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Une offre de janvier, et depuis que tu joues en bleu cobalt le prix a doublé. J'ai pas le temps, j'ai une usine : on vend ce soir, ou on attend le Continental ? »"
+    left:
+      label: "Je viens ce soir"
+      effects: {caisse: "+++", direction: "+", tribunes: "--", set: [vente_janvier]}
+      answer: "Il signe le fax en regardant le chiffre, pas toi. Josiane classe sous « janvier »."
+    right:
+      label: "J'attends le Continental"
+      effects: {tribunes: "++", direction: "-", force: 1, set: [finit_saison]}
+      answer: "Il déchire le fax. Il garde la copie ; à l'usine, on a toujours une copie."
+
+  - id: jp.pepite.p2_hiver_bache
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, ultras]
+    speaker: aulard
+    tone: strategique
+    text: "« Une offre de janvier, et vingt mètres de bâche à ton nom qui disent le contraire. J'ai pas le temps : tu pars sous la bâche, ou tu restes dessous ? »"
+    left:
+      label: "Je pars sous la bâche"
+      effects: {caisse: "++", tribunes: "---", parole: -2, relation: {gege: -2}, set: [vente_janvier]}
+      answer: "Gégé décroche la bâche lui-même. Il la plie. Il ne la jette pas."
+    right:
+      label: "Je reste dessous"
+      effects: {tribunes: "++", direction: "-", parole: 1, set: [finit_saison]}
+      answer: "La bâche reste. Le président fait repeindre le prix sur le panneau d'à côté."
+
+  # ====================================================== S0 · 3 · le dernier match
+  - id: jp.pepite.p2b_dernier_bloc
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe vit bien, et dimanche c'est la montée ou le barrage ; ton agent a demandé qu'on te ménage pour lundi. Tu joues tout, ou tu sors à l'heure ? »"
+    left:
+      label: "Quatre-vingt-dix, pour eux"
+      effects: {vestiaire: "++", tribunes: "+", force: -1, set: [dernier_bloc_joue], rand: [{p: 0.15, set: [genou]}, {}], react: jp.re.fardelli_montre_tour}
+      answer: "Tu joues tout. Le groupe te porte à la fin, ou te ramasse. Ton agent regarde sa montre pendant le tour d'honneur."
+    right:
+      label: "Je sors à l'heure"
+      effects: {direction: "+", caisse: "+", vestiaire: "--", set: [dernier_bloc_menage], react: jp.re.fardelli_montre_tour}
+      answer: "Tu sors à la soixantième. Le stade siffle la sortie, pas toi ; c'est pareil. Lundi, ton genou est propre."
+
+  - id: jp.pepite.p2b_dernier_bloc_bache
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« La tribune n'oublie rien, et dimanche la bâche descend pour la dernière fois de la saison, ou pour la dernière fois. Tu passes dessous, ou tu restes au milieu ? »"
+    left:
+      label: "Je passe dessous"
+      effects: {tribunes: "++", relation: {gege: 1}, set: [dernier_bloc_joue]}
+      answer: "Tu passes dessous. Elle te touche la tête ; c'est voulu."
+    right:
+      label: "Au milieu, avec le groupe"
+      effects: {tribunes: "-", vestiaire: "+", set: [dernier_bloc_joue]}
+      answer: "Tu restes au milieu. La bâche descend quand même ; sur personne."
+
+  - id: jp.pepite.p2b_dernier_bloc_mouton
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: strategique
+    text: "« J'en ai vu d'autres, des derniers matchs où personne ne te fait la passe. Dimanche, petit, tu la demandes, ou tu la prends ? »"
+    left:
+      label: "Je la demande"
+      effects: {vestiaire: "+", set: [dernier_bloc_joue]}
+      answer: "Tu demandes. On te la fait ; une ; Gigi, du pied."
+    right:
+      label: "Je la prends"
+      effects: {tribunes: "+", vestiaire: "-", force: 1, set: [dernier_bloc_joue]}
+      answer: "Tu la prends. Tu marques. Personne ne vient ; tu cours seul vers le virage."
+
+  # ============================================================ S0 · 4 · la vente
+  - id: jp.pepite.p3_vente
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« L'usine a besoin d'une vente par an, et cette année c'est toi. J'ai pas le temps, j'ai un empire : le grand club, ou tu restes ici un an pour le prix ? »"
+    left:
+      label: "Le grand club"
+      effects: {caisse: "++", tribunes: "--", direction: "+", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu, react: jp.re.lea_aller_simple}
+      answer: "Tu signes le fax du milieu. Josiane tamponne. L'usine achète un jeune avec ton prix ; il a seize ans et une mère."
+    right:
+      label: "Je reste, encore un an"
+      effects: {tribunes: "+", vestiaire: "+", direction: "-", caisse: "-", set: [fidele], outcome: fidele}
+      answer: "Il range les fax. Il dit « l'an prochain », et l'an prochain, à l'usine, c'est toujours cette année."
+
+  - id: jp.pepite.p3_vente_bache
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, ultras]
+    speaker: aulard
+    tone: strategique
+    text: "« Une vente par an, et cette année c'est toi ; la Nord a peint autre chose sur vingt mètres. J'ai pas le temps : le grand club, ou la bâche ? »"
+    left:
+      label: "Le grand club"
+      effects: {caisse: "++", tribunes: "---", direction: "+", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu, react: jp.re.lea_aller_simple}
+      answer: "Tu signes. Josiane tamponne. La bâche descend le soir même, pliée, pas brûlée."
+    right:
+      label: "Je reste, la bâche a raison"
+      effects: {tribunes: "+", vestiaire: "+", direction: "-", caisse: "-", parole: 1, set: [fidele, enfant_du_pays], outcome: fidele}
+      answer: "Gégé repeint la bâche en doré. Le président repeint le prix, plus gros."
+
+  - id: jp.pepite.p3_vente_or
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: aulard
+    tone: strategique
+    text: "« Trois fax : le grand club, un an de plus ici, et l'or du désert qui paie le double. J'ai pas le temps, j'ai un empire : où ? »"
+    left:
+      label: "L'or du désert"
+      effects: {caisse: "+", tribunes: "--", direction: "-", force: -1, set: [exil_dore], club: {change: true, division: 2}, outcome: exil, react: jp.re.lea_aller_simple}
+      answer: "Tu signes en écus avant l'heure. Là-bas, on dit que tu n'es pas un joueur, tu es un actif ; on le dit gentiment."
+    right:
+      label: "Le grand club"
+      effects: {caisse: "++", tribunes: "--", direction: "+", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu}
+      answer: "Tu signes le fax du milieu. L'usine achète un jeune avec ton prix ; il a seize ans et une mère."
+
+  - id: jp.pepite.p3_vente_signee
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« C'était signé en janvier, {toi}, et en juin on livre. J'ai pas le temps, j'ai une usine, et l'usine tient ses fax. »"
+    left:
+      label: "Je pars, c'est signé"
+      effects: {caisse: "+", tribunes: "--", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu, react: jp.re.lea_aller_simple}
+      answer: "Il te serre la main en regardant le fax suivant."
+    right:
+      label: "Je pars, c'est signé"
+      effects: {caisse: "+", tribunes: "--", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu, react: jp.re.lea_aller_simple}
+      answer: "Il te serre la main en regardant le fax suivant."
+
+  - id: jp.pepite.p3_vente_genou
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, risk:direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Le grand club veut une visite médicale demain à huit heures, et le Doc dit que ton genou a un avis. Tu y vas, ou on vend à quelqu'un qui ne regarde pas ? »"
+    left:
+      label: "J'y vais, on verra"
+      effects: {rand: [{p: 0.5, set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu}, {set: [vente_annulee], tribunes: "--", direction: "-"}]}
+      answer: "La visite dure trois heures. Le kiné du club acheteur regarde ton genou, puis ton agent, puis son téléphone."
+    right:
+      label: "Vendez à qui ne regarde pas"
+      effects: {caisse: "+", tribunes: "--", direction: "+", set: [vendu_d2], club: {change: true, division: 2}, outcome: vendu}
+      answer: "Tu pars pour un club qui ne regarde pas les genoux. Il regarde les prix."
+
+  # ======================================================== S1 · 5 · le premier jour
+  - id: jp.pepite.s1_premier_jour
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Nouvelle saison, même vestiaire, et moi j'ai un an de plus ; j'en ai vu d'autres. Tu portes toujours les bouteilles, petit, ou c'est fini ? »"
+    left:
+      label: "Je porte encore"
+      effects: {vestiaire: "++"}
+      answer: "Tu portes. Il en prend une, la dernière, pour toi."
+    right:
+      label: "C'est au nouveau"
+      effects: {vestiaire: "-", tribunes: "+"}
+      answer: "Le nouveau porte. Il te regarde en portant ; tu te souviens de ce regard."
+
+  - id: jp.pepite.s1_premier_jour_vendu
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, vous savez, des pépites d'usine ; le casier est au fond, celui sans nom. Vous voulez qu'on écrive le vôtre, ou vous attendez de jouer ? »"
+    left:
+      label: "Écrivez-le"
+      effects: {direction: "+", tribunes: "-", set: [casier_nomme]}
+      answer: "Elle l'écrit au feutre. Le feutre est presque sec ; c'est celui des remplaçants."
+    right:
+      label: "J'attends de jouer"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le casier reste sans nom. Au troisième match, un coéquipier y écrit « le nouveau » ; ça durera."
+
+  - id: jp.pepite.s1_premier_jour_fidele
+    roles: [joueur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu es resté{pg, select, f{e} other{}}, {toi}, alors on fait comme les grands : un an, une page. J'ai pas le temps : tu signes la page, ou tu veux lire la deuxième ? »"
+    left:
+      label: "Je signe la page"
+      effects: {direction: "++", caisse: "+"}
+      answer: "Il n'y a pas de deuxième page. Il y en aura une en juin."
+    right:
+      label: "Je lis la deuxième"
+      effects: {direction: "-", caisse: "++", set: [page_lue]}
+      answer: "La deuxième page dit « clause de vente ». Elle est à ton nom, pas au sien."
+
+  - id: jp.pepite.s1_premier_jour_or
+    roles: [joueur]
+    arc: direction
+    tags: [direction, sponsors]
+    speaker: nassir
+    tone: strategique
+    text: "« Bienvenue, ce n'est pas un club, c'est un actif, et vous en êtes la ligne la plus chère. Vous jouez dès samedi, ou vous vous reposez, c'est compris ? »"
+    left:
+      label: "Jouer samedi"
+      effects: {tribunes: "+", force: 1}
+      answer: "Tu joues devant trois mille personnes et cinquante caméras. La climatisation souffle sur la pelouse."
+    right:
+      label: "Me reposer, c'est compris"
+      effects: {caisse: "+", force: -2, tribunes: "-"}
+      answer: "Tu te reposes. Le compte se remplit sans toi. Camille demande à quelle heure tu rentres ; tu ne sors pas."
+
+  # ==================================================== S1 · 6 · le retour à l'usine
+  - id: jp.pepite.s1_retour_usine_vendu
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    text: "« La tribune n'oublie rien : dimanche tu joues contre nous, avec ton nom encore sur la bâche. Tu célèbres si tu marques, ou tu baisses la tête ? »"
+    left:
+      label: "Je baisse la tête"
+      effects: {tribunes: "++", vestiaire: "-", relation: {gege: 1}, set: [tifo_adieu], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.6 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.6 }, { card: co.re.gege_decoupe, chance: 0.6 } ]}
+      answer: "Tu marques. Tu baisses la tête. La Tribune Nord applaudit un visiteur ; ça n'arrive qu'une fois."
+    right:
+      label: "Je célèbre, c'est mon métier"
+      effects: {tribunes: "--", vestiaire: "++", relation: {gege: -2}, set: [celebre_contre_usine]}
+      answer: "Tu célèbres devant la Nord. La bâche descend pendant que tu cours. Elle est brûlée le soir, proprement."
+
+  - id: jp.pepite.s1_retour_usine_fidele
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe vit bien, et l'usine a besoin d'une vente ; cette année, sur la liste, il y a moi ou toi. Tu dis au président de me vendre, ou tu te tais ? »"
+    left:
+      label: "Vendez-moi plutôt lui"
+      effects: {direction: "+", vestiaire: "--", relation: {brehaut: -2}, set: [brehaut_vendu_par_toi]}
+      answer: "Il part en janvier. Le groupe l'apprend par le fax. Il t'en veut par le fax aussi."
+    right:
+      label: "Je me tais"
+      effects: {vestiaire: "++", direction: "-", set: [fidele_deux]}
+      answer: "Tu te tais. Il te serre l'épaule, un peu trop fort ; c'est sa façon de dire merci."
+
+  - id: jp.pepite.s1_retour_usine_or
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure — enfin, tu rentres quel mois ? L'usine joue la Coupe dimanche. Tu prends l'avion pour le match, ou tu regardes de loin ? »"
+    left:
+      label: "Je prends l'avion"
+      effects: {tribunes: "+", caisse: "-", relation: {camille: 1}}
+      answer: "Tu es en tribune. Gégé te voit ; il ne dit rien ; c'est déjà ça."
+    right:
+      label: "Je regarde de loin"
+      effects: {caisse: "+", relation: {camille: -1}}
+      answer: "Tu regardes de loin. L'Écho met ta photo au bar de l'hôtel du désert ; c'est Léa qui l'a envoyée."
+
+  # ============================================================ S1 · 7 · la veille
+  - id: jp.pepite.s1_veille
+    roles: [joueur]
+    arc: agents
+    tags: [agents, moment]
+    speaker: fardelli
+    tone: strategique
+    text: "« Demain c'est le dernier bloc, et ta valeur ce soir tient sur un ticket : elle monte si tu joues, elle descend si tu te ménages. Alors, tu fonces ? »"
+    left:
+      label: "Je fonce"
+      effects: {tribunes: "+", force: 1, set: [veille_fonce]}
+      answer: "Il note « fonce » sur le ticket. Le ticket, c'est celui d'un chroniqueur ; il l'a acheté."
+    right:
+      label: "Je me ménage"
+      effects: {force: -1, direction: "+", set: [veille_menage]}
+      answer: "Il note « prudent ». Il vend les prudents aussi ; à des clubs prudents."
+
+  - id: jp.pepite.s1_veille_seul
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro : sans agent, votre valeur, c'est vous qui la fixez ou c'est le marché ? Demain, vous jouez pour vous, ou pour la cote ? »"
+    left:
+      label: "Je fonce"
+      effects: {tribunes: "+", force: 1, set: [veille_fonce]}
+      answer: "Il note. Il écrit « il joue pour lui » ; c'est un compliment, chez lui."
+    right:
+      label: "Je me ménage"
+      effects: {force: -1, direction: "+", set: [veille_menage]}
+      answer: "Il note « prudent ». Il garde le mot pour la Une de juin."
+
+  # ========================================================= S2+ · 8 · la rentrée
+  - id: jp.pepite.s2_rentree
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Tu vaux le double de l'an dernier ce matin, et dans deux ans la moitié, c'est ça le métier. On parle d'argent ou d'amitié : on vend cet été, ou on attend ? »"
+    left:
+      label: "On vend cet été"
+      effects: {caisse: "++", tribunes: "-", set: [vente_ete]}
+      answer: "Il sort le carnet. Trois clubs, deux pays qu'on ne nomme pas."
+    right:
+      label: "On attend"
+      effects: {tribunes: "+", direction: "+", force: 1}
+      answer: "Il range le carnet. Il ne le ferme pas complètement."
+
+  - id: jp.pepite.s2_rentree_encore
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: leger
+    text: "« Tu me dis « on attend » depuis deux étés, {toi} ; à force d'attendre, les clubs attendent aussi. On parle d'argent ou d'amitié : cette fois ? »"
+    left:
+      label: "On vend cet été"
+      effects: {caisse: "++", tribunes: "-", set: [vente_ete]}
+      answer: "Il sort le carnet. Il l'avait déjà ouvert dans la voiture."
+    right:
+      label: "On attend encore"
+      effects: {tribunes: "+", direction: "+", force: 1}
+      answer: "Il range le carnet. Il ne le ferme toujours pas."
+
+  - id: jp.pepite.s2_rentree_seul
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu vaux ce que je dis que tu vaux, {toi}, parce que sans agent c'est moi qui compte pour toi. J'ai pas le temps, j'ai une usine : on vend cet été ? »"
+    left:
+      label: "On vend cet été"
+      effects: {caisse: "++", tribunes: "-", set: [vente_ete, destination_choisie]}
+      answer: "Il sort trois fax. Tu les lis toi-même, ligne à ligne ; c'est long ; c'est à toi."
+    right:
+      label: "On attend"
+      effects: {tribunes: "+", direction: "+", force: 1}
+      answer: "Il range les fax. « L'an prochain », dit-il, et à l'usine l'an prochain c'est cette année."
+
+  # ===================================================== S2+ · 9 · la veille, encore
+  - id: jp.pepite.s2_veille
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    text: "« Dernier bloc demain, et tu as {age} ans, l'âge où l'on croit que ça dure. J'en ai vu d'autres, petit : tu joues pour la Une, ou pour le vestiaire ? »"
+    left:
+      label: "Pour le vestiaire"
+      effects: {vestiaire: "++", tribunes: "-"}
+      answer: "Il te donne un quartier d'orange. Il en garde un pour sa femme."
+    right:
+      label: "Pour la Une"
+      effects: {tribunes: "++", vestiaire: "-"}
+      answer: "Il mange l'orange. Toute."
+
+  - id: jp.pepite.s2_veille_brehaut
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: leger
+    text: "« Le groupe vit bien, et demain le groupe a besoin de toi pour lui, pas pour la Une. Tu joues pour qui, {toi} ? »"
+    left:
+      label: "Pour le vestiaire"
+      effects: {vestiaire: "++", tribunes: "-"}
+      answer: "Il hoche la tête. Il ne dit rien de plus ; il n'en dit jamais plus."
+    right:
+      label: "Pour la Une"
+      effects: {tribunes: "++", vestiaire: "-"}
+      answer: "Il hausse les épaules. Il fait la passe quand même, le lendemain, une fois."
+
+  # ============================================== alarmes d'override du postulat
+  - id: jp.pepite.alarme_tifo_lea
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    tone: strategique
+    once: false
+    text: "« Vous confirmez ? La tribune a peint votre nom sur vingt mètres et le président a peint un prix dessous, en plus petit. La bâche, ou le prix ? »"
+    left:
+      label: "Devant la bâche"
+      effects: {tribunes: "-", direction: "-", vestiaire: "+"}
+      answer: "La photo montre la bâche. Le prix est coupé au cadrage ; le président le remarque."
+    right:
+      label: "Devant le prix"
+      effects: {tribunes: "--", direction: "++", set: [photo_prix], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.6 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.6 }, { card: co.re.gege_decoupe, chance: 0.6 } ]}
+      answer: "La photo montre le prix. Gégé la découpe et la punaise au local, côté « à ne pas oublier »."
+
+  - id: jp.pepite.alarme_fardelli_avance
+    roles: [joueur]
+    arc: agents
+    tags: [agents, caisse]
+    speaker: fardelli
+    tone: strategique
+    text: "« Une avance sur ton prochain transfert, {toi}, ça ne s'appelle pas un prêt. On parle d'argent ou d'amitié : tu prends l'enveloppe, ou tu comptes ? »"
+    left:
+      label: "Je prends l'avance"
+      effects: {caisse: "++", direction: "-", relation: {fardelli: 1}}
+      answer: "Il compte devant toi, deux fois. La deuxième fois, le chiffre est le même ; c'est rassurant, et ça ne devrait pas."
+    right:
+      label: "Je compte moi-même"
+      effects: {caisse: "-", tribunes: "+", relation: {fardelli: -1}}
+      answer: "Tu comptes. Il attend, la main sur l'enveloppe. Il la remet dans la poche intérieure."
+
+  # Variante « tu as demandé à partir » (bible ch. 10 § 6.3 → § 3, P3)
+  - id: jp.pepite.p3_vente_demande
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu as demandé à partir avec le petit, {toi}, et j'ai noté « deux pour le prix d'un ». J'ai pas le temps de rire : je te vends avec lui, ou seul et plus cher ? »"
+    left:
+      label: "Avec lui"
+      effects: {caisse: "+", tribunes: "--", vestiaire: "+", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu, react: jp.re.lea_aller_simple}
+      answer: "Vous partez le même jour, dans deux voitures. Il arrive avant toi ; il arrive toujours avant."
+    right:
+      label: "Seul, et plus cher"
+      effects: {caisse: "++", tribunes: "-", vestiaire: "--", direction: "+", set: [vendu_d1], club: {change: true, division: 1}, outcome: vendu}
+      answer: "Tu pars seul. Il apprend le chiffre par sa mère, qui l'a lu ; il ne t'écrit pas."

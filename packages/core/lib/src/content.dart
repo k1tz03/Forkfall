@@ -46,6 +46,15 @@ class Card {
   final String? arcId; // arc this card is a step of
   final String? stepId;
   final String? title; // short title for « Nouvelles du passé »
+  /// Nouvelle datée (spec variété §1.5) : l'année où elle dit l'époque. Elle
+  /// est servie en priorité tant que `s.year ∈ [year, year + 1]` ; passée
+  /// cette fenêtre elle est perdue (`stats.nouvelle_datee_perdue`).
+  final int? year;
+
+  /// Statuts du locuteur qui autorisent quand même la carte (spec variété
+  /// §1.10). Par défaut un locuteur `vendu | parti | retraite | rival | mort`
+  /// ne parle plus : la carte est écartée du tirage et purgée de la file.
+  final List<String> statutOk;
 
   const Card({
     required this.id,
@@ -69,6 +78,8 @@ class Card {
     this.arcId,
     this.stepId,
     this.title,
+    this.year,
+    this.statutOk = const [],
   });
 
   factory Card.fromJson(Map<String, dynamic> j) => Card(
@@ -93,8 +104,18 @@ class Card {
         arcId: j['arcId'] as String?,
         stepId: j['stepId'] as String?,
         title: j['title'] as String?,
+        year: (j['year'] as num?)?.toInt(),
+        statutOk: (j['statut_ok'] as List?)?.cast<String>() ?? const [],
       );
 }
+
+/// Les statuts d'un personnage (charte de la bible § 2.4 et § 2.4 bis,
+/// spec variété §1.10). `present` est le statut de départ des visages du club ;
+/// `club` et `staff` sont ses variantes explicites.
+const Set<String> kStatuts = {'present', 'club', 'vendu', 'staff', 'parti', 'retraite', 'rival', 'mort'};
+
+/// Les statuts qui laissent encore parler un locuteur sans `statut_ok:`.
+const Set<String> kStatutsParlants = {'present', 'club', 'staff'};
 
 class GaugeDef {
   final String id;
@@ -367,6 +388,10 @@ class StepDef {
   final String onExpire; // 'skip' | 'abort'
   final bool thisSeason;
   final String? outcome; // issue posée quand l'étape est jouée (spec variété §1.3)
+  /// Statuts du locuteur qui autorisent l'étape (spec variété §1.10) : posé sur
+  /// l'étape, il vaut pour toutes ses variantes (l'union avec le `statut_ok:`
+  /// de la carte servie).
+  final List<String> statutOk;
   const StepDef({
     required this.id,
     required this.card,
@@ -376,6 +401,7 @@ class StepDef {
     this.onExpire = 'abort',
     this.thisSeason = false,
     this.outcome,
+    this.statutOk = const [],
   });
 
   factory StepDef.fromJson(Map<String, dynamic> j) => StepDef(
@@ -387,6 +413,7 @@ class StepDef {
         onExpire: j['on_expire'] as String? ?? 'abort',
         thisSeason: j['this_season'] == true,
         outcome: j['outcome'] as String?,
+        statutOk: (j['statut_ok'] as List?)?.cast<String>() ?? const [],
       );
 
   bool get repeatable => season.endsWith('+');
@@ -556,6 +583,15 @@ class CharacterDef {
   /// Comment ce personnage s'adresse à toi (`{toi}`, spec variété §1.8) :
   /// rôle → expression (sourire | neutre | noir) → gabarit (« mon {prenom} »).
   final Map<String, Map<String, String>> adresse;
+  /// Âge en 1990 (spec variété §1.10) : `GameState.chars` le reprend au départ
+  /// et l'incrémente d'un an à chaque ouverture de saison. Null = le
+  /// personnage n'a pas d'état (il ne figure pas dans `chars`).
+  final int? age;
+  /// Statut initial (`kStatuts`) : `present` par défaut.
+  final String statut;
+  /// Retrouvailles (spec variété §1.13) : la carte servie quand tu changes de
+  /// club ou de rôle, selon le visage (`sourire` : relation ≥ 0, `noir` : < 0).
+  final Map<String, String> retrouvailles;
 
   const CharacterDef({
     required this.id,
@@ -568,6 +604,9 @@ class CharacterDef {
     this.defaultTarget,
     this.onRelation = const {},
     this.adresse = const {},
+    this.age,
+    this.statut = 'present',
+    this.retrouvailles = const {},
   });
 
   /// Le gabarit d'adresse pour un rôle et une expression, ou null.
@@ -594,6 +633,9 @@ class CharacterDef {
       defaultTarget: (j['default_target'] as num?)?.toDouble(),
       onRelation: onRel,
       adresse: adresse,
+      age: (j['age'] as num?)?.toInt(),
+      statut: j['statut'] as String? ?? 'present',
+      retrouvailles: ((j['retrouvailles'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
     );
   }
 }
@@ -897,6 +939,55 @@ class DirectorConfig {
   List<int> nouvelleSlotsFor(String role) => nouvelleSlots[role] ?? const [7, 12, 14];
 }
 
+/// Une variante de set-piece (spec variété §1.12, §2.7) : le texte d'un beat
+/// moteur, choisi sans aucun aléa (la première variante vraie gagne, la
+/// dernière — sans `when` ni `roles` — est le secours).
+class SetpieceVariant {
+  final Object? when;
+  final List<String> roles; // vide = tous les rôles
+  final String? speaker;
+  final String text;
+  final String? left; // libellé de gauche (défaut : celui du Dart)
+  final String? right;
+  final String? answerLeft;
+  final String? answerRight;
+  final String? transition; // bilan_carrefour : la transition visée
+  const SetpieceVariant({
+    this.when,
+    this.roles = const [],
+    this.speaker,
+    required this.text,
+    this.left,
+    this.right,
+    this.answerLeft,
+    this.answerRight,
+    this.transition,
+  });
+
+  /// Le secours : la variante sans condition qui reprend le texte historique.
+  /// Une variante `transition:` n'en est jamais une (elle ne sert qu'au
+  /// Carrefour qui propose cette transition).
+  bool get isSecours => when == null && roles.isEmpty && transition == null;
+
+  factory SetpieceVariant.fromJson(Map<String, dynamic> j) => SetpieceVariant(
+        when: j['when'],
+        roles: (j['roles'] as List?)?.cast<String>() ?? const [],
+        speaker: j['speaker'] as String?,
+        text: j['text'] as String? ?? '',
+        left: j['left'] as String?,
+        right: j['right'] as String?,
+        answerLeft: j['answer_left'] as String?,
+        answerRight: j['answer_right'] as String?,
+        transition: j['transition'] as String?,
+      );
+}
+
+/// Les beats moteur dont le texte est auteurisable (spec variété §1.12).
+const List<String> kSetpieceBeats = [
+  'objective', 'match', 'cup', 'gm_annonce', 'gm_te', 'aftermatch',
+  'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
+];
+
 class Content {
   final int version;
   final String hash;
@@ -918,6 +1009,10 @@ class Content {
   final Map<String, JournalDef> journaux; // journaux fictifs de la Une
   final Map<String, String> journalTemplates; // gabarits moteur (content/journal.yaml → auto)
   final List<String> blacklist; // liste noire des noms (content/names/blacklist.yaml)
+  final Map<String, String> themeLabels; // thème → libellé (content/tags.yaml → theme_labels)
+  /// Beat moteur → variantes de texte, dans l'ordre du fichier
+  /// (content/setpieces.yaml, spec variété §2.7).
+  final Map<String, List<SetpieceVariant>> setpieces;
 
   // Derived indexes.
   final Map<String, List<Card>> _cardsByRole = {};
@@ -952,6 +1047,8 @@ class Content {
     this.journaux = const {},
     this.journalTemplates = const {},
     this.blacklist = const [],
+    this.themeLabels = const {},
+    this.setpieces = const {},
   }) {
     final ids = cards.keys.toList()..sort();
     for (final id in ids) {
@@ -1065,6 +1162,11 @@ class Content {
       },
       journalTemplates: ((j['journal_templates'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
       blacklist: (j['blacklist'] as List?)?.map((e) => e.toString()).toList() ?? const [],
+      themeLabels: ((j['theme_labels'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
+      setpieces: ((j['setpieces'] as Map?) ?? const {}).map((k, v) => MapEntry(
+            k.toString(),
+            (v as List).map((e) => SetpieceVariant.fromJson((e as Map).cast<String, dynamic>())).toList(),
+          )),
     );
   }
 }

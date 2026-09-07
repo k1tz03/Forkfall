@@ -1,0 +1,134 @@
+# Cartes de l'intrigue « Le retour à l'usine » (arc jp.retour_usine) —
+# bible ch. 10 § 6.25. Rejouable : la variante « encore » de l'étape 1 lit
+# plays(). Aucune carte `once` (un rituel de rancune revient).
+cards:
+  - id: jp.retour.parking
+    roles: [joueur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, {toi}, mais rarement quelqu'un qui revient jouer contre nous avec sa place de parking encore à son nom. Vous vous garez dessus, ou avec les visiteurs ? »"
+    left:
+      label: "Dessus"
+      effects: {tribunes: "+", direction: "-", react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Tu te gares. On fait enlever la plaque à la mi-temps ; pour ça, il y a le temps."
+    right:
+      label: "Avec les visiteurs"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle enlève la plaque elle-même. Elle la garde dans le classeur, sous la pétition."
+
+  - id: jp.retour.parking_encore
+    roles: [joueur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    text: "« J'en ai vu passer, et vous, deux fois maintenant. La place, cette fois, c'est celle du visiteur : je l'ai fait peindre. Vous vous garez dessus ? »"
+    left:
+      label: "Dessus"
+      effects: {relation: {josiane: 1}, tribunes: "+"}
+      answer: "Tu te gares. La peinture est fraîche ; c'est voulu."
+    right:
+      label: "Dessus"
+      effects: {relation: {josiane: 1}, tribunes: "+"}
+      answer: "Tu te gares. La peinture est fraîche ; c'est voulu."
+
+  - id: jp.retour.gamin
+    roles: [joueur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: mbako
+    tone: strategique
+    text: "« Je veux jouer, maintenant, {toi}, et ils m'ont acheté avec ton prix : ma mère me l'a dit, elle a lu le chiffre. Tu me dis comment c'est, d'être vendu, ou je découvre ? »"
+    left:
+      label: "Je te dis"
+      effects: {vestiaire: "+", relation: {mbako: 1}, set: [vendu_explique], react: {card: jp.re.mere_mbako_note, chance: 0.5}}
+      answer: "Tu lui dis. Le fax, la secrétaire d'ailleurs, le casier sans nom. Il écoute ; c'est rare ; c'est parce que c'est toi."
+    right:
+      label: "Tu découvriras"
+      effects: {tribunes: "+", relation: {mbako: -1}}
+      answer: "Tu ne dis rien. Il découvre en juin. Il t'écrit une carte sans texte ; le chiffre est dessus."
+
+  - id: jp.retour.gamin_inconnu
+    roles: [joueur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Le gamin qu'ils ont acheté avec ton prix porte ton ancien numéro, et il ne le sait pas. J'en ai vu d'autres : tu lui dis, petit, ou tu le laisses ? »"
+    left:
+      label: "Je lui dis"
+      effects: {vestiaire: "+", relation: {vecchio: 1}, set: [vendu_explique]}
+      answer: "Tu lui dis. Il regarde son dos, comme si le numéro avait changé de sens."
+    right:
+      label: "Je le laisse"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Il l'apprend par la Gazette, deux mois plus tard, avec ta photo à côté."
+
+  - id: jp.retour.but
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    text: "« La tribune n'oublie rien : tu viens de marquer contre nous, et on a la bâche pliée dans un sac. Tu célèbres, ou tu baisses la tête ? »"
+    left:
+      label: "Je baisse la tête"
+      effects: {tribunes: "++", vestiaire: "-", set: [tifo_adieu], outcome: baisse, react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.5 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.5 }, { card: co.re.gege_decoupe, chance: 0.5 } ]}
+      answer: "La Nord applaudit un visiteur. Ça n'arrive qu'une fois ; c'est la fois."
+    right:
+      label: "Je célèbre"
+      effects: {vestiaire: "++", tribunes: "--", relation: {gege: -2}, set: [celebre_contre_usine], outcome: celebre}
+      answer: "La bâche sort du sac. Elle est brûlée le soir ; proprement."
+
+  # Variante lue sur `bache_a_la_cave` (posée par jp.tifo.un_an_apres_pliee) :
+  # la bâche n'est plus dans le sac du local, elle est chez toi. Le virage ne
+  # peut donc pas la brûler — il a repeint la sienne.
+  - id: jp.retour.but_cave
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    text: "« Celle qu'on t'a donnée, tu l'as chez toi ; nous on en a repeint une autre, sans ton nom. Tu viens de marquer : tu célèbres, ou tu baisses la tête ? »"
+    left:
+      label: "Je baisse la tête"
+      effects: {tribunes: "++", vestiaire: "-", set: [tifo_adieu], outcome: baisse, react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.5 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.5 }, { card: co.re.gege_decoupe, chance: 0.5 } ]}
+      answer: "La Nord applaudit un visiteur. Chez toi, à la cave, il y a vingt mètres qui disent le contraire."
+    right:
+      label: "Je célèbre"
+      effects: {vestiaire: "++", tribunes: "--", relation: {gege: -2}, set: [celebre_contre_usine], outcome: celebre}
+      answer: "C'est la neuve qui brûle, celle sans ton nom. La tienne dort à la cave ; elle ne le saura jamais."
+
+  - id: jp.retour.aulard
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Tu as bien joué contre nous, et j'ai pas le temps, j'ai une usine, mais l'usine rachète parfois ce qu'elle a vendu, moins cher. Tu reviens l'été prochain ? »"
+    left:
+      label: "Je reviens"
+      effects: {tribunes: "+++", caisse: "-", set: [retour_usine_signe], club: {change: true, division: 2, retour: true}, outcome: rachete, react: {card: jp.re.lea_aller_simple, chance: 0.6}}
+      answer: "Tu reviens. Gégé ressort la bâche ; il repeint « POUR TOUJOURS » ; il ajoute « (BIS) »."
+    right:
+      label: "Je reste"
+      effects: {caisse: "+", direction: "+"}
+      answer: "Il hoche la tête. Il vend un autre gamin."
+
+  - id: jp.retour.aulard_brule
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« La tribune a brûlé quelque chose hier soir, je n'ai pas eu le temps de regarder quoi. L'usine rachète parfois ce qu'elle a vendu : tu reviens quand même ? »"
+    left:
+      label: "Je reviens quand même"
+      effects: {tribunes: "+", caisse: "-", set: [retour_usine_signe], club: {change: true, division: 2, retour: true}, outcome: rachete}
+      answer: "Tu reviens. Il n'y a plus de bâche à repeindre ; il y a un mur, et une date à la craie dessous."
+    right:
+      label: "Je reste"
+      effects: {caisse: "+", direction: "+"}
+      answer: "Il hoche la tête. Il vend un autre gamin, et le vend plus cher que toi."

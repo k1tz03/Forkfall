@@ -1,0 +1,99 @@
+# Cartes de l'intrigue partagée « Le derby » (arc co.derby), versant joueur —
+# bible ch. 10 § 6.23 ; le ch. 11 écrit le versant banc. Le seul match que la
+# ville regarde deux fois. Rejouable : aucune de ces cartes n'est `once`.
+cards:
+  - id: co.derby.semaine
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« La tribune n'oublie rien, {toi}, et dimanche c'est le derby, le seul match qu'on regarde deux fois. Tu viens au local jeudi peindre le tifo, ou tu restes concentré ? »"
+    left:
+      label: "Jeudi, au local"
+      effects: {tribunes: "++", force: -1, set: [ami_ultras]}
+      answer: "Tu peins. Tu as de la peinture sur les mains dimanche ; le rival la voit."
+    right:
+      label: "Concentré"
+      effects: {force: 1, tribunes: "-"}
+      answer: "Tu ne viens pas. Le tifo est beau ; ton nom n'y est pas."
+
+  - id: co.derby.semaine_encore
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« La tribune n'oublie rien, et l'an dernier tu avais de la peinture sur les mains jusqu'au coup d'envoi. Jeudi on refait la bâche, ou tu as déjà donné ? »"
+    left:
+      label: "Je repeins"
+      effects: {tribunes: "++", force: -1, relation: {gege: 1}}
+      answer: "Vous repeignez la même bâche. Elle est plus lourde chaque année ; personne ne le dit."
+    right:
+      label: "J'ai déjà donné"
+      effects: {force: 1, tribunes: "-", relation: {gege: -1}}
+      answer: "Il hausse les épaules. La bâche sort quand même ; il a repris ton pinceau."
+
+  - id: co.derby.match
+    roles: [joueur]
+    arc: tribunes
+    tags: [moment, tribunes]
+    speaker: vecchio
+    tone: strategique
+    text: "« Le derby de cinquante et un, on l'a perdu quatre à zéro, et c'est celui dont tout le monde parle encore ; j'en ai vu d'autres. Tu joues pour marquer, ou pour ne pas perdre ? »"
+    left:
+      label: "Pour marquer"
+      effects: {tribunes: "++", rand: [{p: 0.5, set: [derby_gagne], outcome: gagne}, {set: [derby_perdu], tribunes: "-", outcome: perdu}]}
+      answer: "Tu joues devant. La ville s'en souviendra, dans un sens ou dans l'autre."
+    right:
+      label: "Pour ne pas perdre"
+      effects: {vestiaire: "+", rand: [{p: 0.65, set: [derby_gagne], outcome: gagne}, {set: [derby_perdu], outcome: perdu}]}
+      answer: "Tu joues derrière. Il dit que c'est ce que faisait son gardien préféré."
+
+  - id: co.derby.lendemain
+    roles: [joueur]
+    arc: famille
+    tags: [famille, presse]
+    speaker: camille
+    tone: leger
+    text: "« Tu rentres à quelle heure, {toi} — hier, trois heures du matin, gagné ou perdu, je ne sais plus lequel. Tu me racontes, ou je lis le journal ? »"
+    left:
+      label: "Je raconte"
+      effects: {relation: {camille: 1}, tribunes: "-", react: co.re.camille_journal}
+      answer: "Elle écoute. Elle a déjà lu ; elle écoute quand même."
+    right:
+      label: "Lis"
+      effects: {relation: {camille: -1}, force: 1}
+      answer: "Elle lit. Le journal dit « tête haute ». Elle demande à qui ; tu ne sais pas."
+
+  - id: co.derby.lendemain_local
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, presse]
+    speaker: gege
+    tone: leger
+    text: "« La tribune n'oublie rien, et le lendemain d'un derby, elle relit le journal à voix haute au local, ligne par ligne. Tu viens l'entendre, ou tu laisses dire ? »"
+    left:
+      label: "Je viens l'entendre"
+      effects: {tribunes: "+", vestiaire: "-", relation: {gege: 1}}
+      answer: "Tu écoutes ta propre note lue à voix haute. Elle est basse ; personne ne conteste."
+    right:
+      label: "Je laisse dire"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Ils lisent sans toi. Le local garde la page punaisée jusqu'au match retour."
+
+  - id: co.derby.ancien
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, moment]
+    speaker: gege
+    tone: strategique
+    text: "« La tribune n'oublie rien, et aujourd'hui tu es en face, avec leur maillot ; on a ton nom en deux morceaux, un pour l'aller, un pour le retour. Tu salues le virage, ou pas ? »"
+    left:
+      label: "Je salue le virage"
+      effects: {tribunes: "+", vestiaire: "-", relation: {gege: 1}, set: [salue_ancien_virage], react: jp.re.gege_blason}
+      answer: "Tu salues. Il ne répond pas. Il range un morceau ; il garde l'autre pour le retour."
+    right:
+      label: "Je regarde mes crampons"
+      effects: {vestiaire: "+", tribunes: "-", relation: {gege: -1}}
+      answer: "Tu ne salues pas. Le virage siffle ton nom en entier ; il le connaît par cœur."

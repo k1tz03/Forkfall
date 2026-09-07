@@ -1,0 +1,116 @@
+# Arc de postulat « Le club-usine » (postulat 2, « La pépite du club-usine »).
+# Bible ch. 10 § 3 : le script d'ouverture du rôle joueur. Dix ancres —
+# S0 : la valeur (slot 1), le mercato d'hiver (10-11), le dernier match (16),
+# la vente (17) ; S1 : le premier jour (1-2), le retour à l'usine (10-11), la
+# veille (17) ; S2+ : la valeur encore (1-2), la veille (17).
+# La vente pose `club: {change: true}` : c'est elle qui déplace le joueur.
+# Le président narratif de l'usine est Vaubourg (la bible l'appelle Vaubourg ;
+# le casting du postulat, lui, dit `aulard` : même fauteuil, même tic).
+# Semé par `opening_arc: jp.pepite.club_usine` dans postulats.yaml.
+arcs:
+  - id: jp.pepite.club_usine
+    title: "Le club-usine"
+    kind: postulat
+    roles: [joueur]
+    foreground: true
+    weight: 1.0
+    theme: mercato
+    carrier: fardelli
+    cast: [fardelli, aulard, brehaut, gege, josiane, vecchio, camille, nassir]
+    same_club: false          # la vente change de club : l'arc suit le joueur
+    fallback: drop
+    issues: [vendu, fidele, exil]
+    # Traces du script : chacune est lue par une manchette, une variante ou un
+    # objectif (contrat de couture, ch. 90 § 1).
+    traces:
+      agent_fardelli: "{annee} : dix pour cent et une poignée de main. Rocco Fardelli représente {nom}."
+      sans_agent:     "{annee} : {prenom} {nom} a dit non à Fardelli. Trois millions sont devenus deux et demi."
+      vendu_d1:       "{annee} : {prenom} {nom}, un chèque et un aller simple. L'usine a acheté un gamin avec."
+      fidele:         "{annee} : {prenom} {nom} est resté{pg, select, f{e} other{}} à l'usine. Le président a dit « l'an prochain »."
+      exil_dore:      "{annee} : {prenom} {nom} est parti{pg, select, f{e} other{}} pour l'or. Le niveau est resté entre eux."
+      tifo_adieu:     "{annee} : {prenom} {nom} a marqué contre l'usine et a baissé la tête. La Nord a applaudi un visiteur."
+      brehaut_vendu_par_toi: "{annee} : sur la liste de vente, il y avait deux noms. {nom} a désigné l'autre."
+      casier_nomme:   "{annee} : le casier du fond a reçu un nom, au feutre presque sec. Celui de {nom}."
+      destination_choisie: "{annee} : sans agent, {prenom} {nom} a lu les fax {pg, select, f{elle-même} other{lui-même}}. Et choisi."
+    steps:
+      # ------------------------------------------------------------- saison 1
+      - id: valeur
+        card:
+          - { id: jp.pepite.p1_valeur_prix,   if: "fil_rouge == 'prix'" }
+          - { id: jp.pepite.p1_valeur_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.pepite.p1_valeur }
+        at: [1, 1]
+        season: "0"
+      - id: hiver
+        card:
+          - { id: jp.pepite.p2_hiver_bache,  if: "flag('enfant_du_pays')" }
+          - { id: jp.pepite.p2_hiver_bleu,   if: "flag('international')" }
+          - { id: jp.pepite.p2_hiver_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.pepite.p2_hiver }
+        at: [10, 11]
+        season: "0"
+      - id: dernier_bloc
+        card:
+          - { id: jp.pepite.p2b_dernier_bloc_bache,  if: "flag('enfant_du_pays')" }
+          - { id: jp.pepite.p2b_dernier_bloc_mouton, if: "flag('mouton_noir')" }
+          - { id: jp.pepite.p2b_dernier_bloc }
+        at: [16, 16]
+        season: "0"
+      - id: vente
+        card:
+          # L'or passe devant le fax de janvier : quand le désert double la
+          # mise, l'usine déchire l'accord d'hiver. C'est le seul chemin vers
+          # l'issue `exil`, et derrière `p3_vente_signee` (deux ventes sur
+          # trois) il ne sortait jamais (3 %). Le seuil de caisse était à 55 :
+          # à la fin d'une S0 jouée proprement il est vrai neuf fois sur dix,
+          # et il éteignait alors la seule carte qui propose de RESTER
+          # (issue `fidele` à 1 %).
+          # La bâche passe devant tout : quand on a promis au micro sur vingt
+          # mètres, c'est CETTE scène-là qu'on joue en juin. Reléguée en
+          # cinquième position, elle ne sortait presque jamais, et avec elle
+          # l'issue `fidele` de l'enfant du pays (donc l'objectif caché
+          # `pepite_enfant_du_club` et la fin dorée `jp_statue`).
+          - { id: jp.pepite.p3_vente_bache,   if: "flag('enfant_du_pays') && gauges.tribunes >= 65" }
+          - { id: jp.pepite.p3_vente_or,      if: "relation.nassir >= 1 || gauges.caisse >= 78" }
+          - { id: jp.pepite.p3_vente_signee,  if: "flag('vente_janvier')" }
+          - { id: jp.pepite.p3_vente_genou,   if: "flag('genou_cache') || flag('genou')" }
+          - { id: jp.pepite.p3_vente_demande, if: "flag('demande_vente')" }
+          - { id: jp.pepite.p3_vente }
+        at: [17, 17]
+        season: "0"
+      # ------------------------------------------------------------- saison 2
+      - id: premier_jour
+        card:
+          - { id: jp.pepite.s1_premier_jour_vendu,  if: "flag('vendu_d1') || flag('vendu_d2')" }
+          - { id: jp.pepite.s1_premier_jour_fidele, if: "flag('fidele')" }
+          - { id: jp.pepite.s1_premier_jour_or,     if: "flag('exil_dore')" }
+          - { id: jp.pepite.s1_premier_jour }
+        at: [1, 2]
+        season: "1"
+      - id: retour_usine
+        card:
+          - { id: jp.pepite.s1_retour_usine_vendu,  if: "flag('vendu_d1') || flag('vendu_d2')" }
+          - { id: jp.pepite.s1_retour_usine_or,     if: "flag('exil_dore')" }
+          - { id: jp.pepite.s1_retour_usine_fidele }
+        at: [10, 11]
+        season: "1"
+      - id: veille
+        card:
+          - { id: jp.pepite.s1_veille_seul, if: "flag('sans_agent')" }
+          - { id: jp.pepite.s1_veille }
+        at: [17, 17]
+        season: "1"
+      # ------------------------------------------------------------ saisons 3+
+      - id: rentree
+        card:
+          - { id: jp.pepite.s2_rentree_seul,   if: "flag('sans_agent')" }
+          - { id: jp.pepite.s2_rentree_encore, if: "season >= 3" }
+          - { id: jp.pepite.s2_rentree }
+        at: [1, 2]
+        season: "2+"
+      - id: veille_tard
+        card:
+          - { id: jp.pepite.s2_veille_brehaut, if: "flag('capitaine') || flag('gigi_staff')" }
+          - { id: jp.pepite.s2_veille }
+        at: [17, 17]
+        season: "2+"

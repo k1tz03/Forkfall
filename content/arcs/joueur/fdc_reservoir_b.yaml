@@ -1,0 +1,190 @@
+# Réservoir de « Fin de contrat à 31 ans » — lot B (bible ch. 10 § 6.14, § 6.17,
+# § 6.21, § 6.22) : le jubilé, le consultant du dimanche, la pharmacie du club
+# (versant joueur ; le ch. 11 écrit le versant banc) et le pari. Quatre
+# intrigues de reprise : elles s'ouvrent quand la carrière a déjà un passé.
+arcs:
+  # -------------------------------------------------------- § 6.14 · Le jubilé
+  # Un jubilé, c'est une fin. Tu n'as pas fini.
+  - id: jp.jubile
+    title: "Le jubilé"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 1
+    theme: tribune
+    carrier: gege
+    cast: [gege, lea, aulard, josiane, vecchio]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    hint: "La Nord veut te faire un jubilé. En mars. Tu joues encore en avril."
+    issues: [accepte, reporte, charite]
+    traces:
+      jubile_fait:     "{annee} : stade plein pour le jubilé de {prenom} {nom}. Il a demandé où était le vestiaire."
+      jubile_reporte:  "{annee} : l'affiche du jubilé de {nom} est restée sans date. Le local la ressort chaque année."
+      jubile_charite:  "{annee} : la recette du jubilé de {nom} est allée à la buvette des anciens. Personne n'a compté."
+      place_14a:       "{annee} : {prenom} {nom} s'est assis{pg, select, f{e} other{}} cinq minutes à la 14A. On lui a expliqué le stade."
+    epilogue:
+      journal: "{annee} : le jubilé de {nom}. Stade plein, ou affiche sans date."
+    steps:
+      - id: affiche
+        card: jp.jubile.gege
+        next: [ { step: recette, if: "flag('jubile_prevu')", in: [1, 3] } ]
+      - id: recette
+        card: jp.jubile.aulard
+        next: [ { step: place, in: [1, 2] } ]
+      - id: place
+        card: jp.jubile.place
+        next: [ { step: jour, in: [3, 8] } ]
+      - id: jour
+        card:
+          - { id: jp.jubile.jour_anciens, if: "flag('jubile_charite')" }
+          - { id: jp.jubile.jour_14a, if: "flag('place_14a')" }
+          - { id: jp.jubile.jour }
+        next: []
+
+  # ------------------------------------------- § 6.17 · Le consultant du dimanche
+  # Il joue le samedi, il juge le dimanche.
+  - id: jp.consultant
+    title: "Le consultant du dimanche"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: meneche
+    cast: [meneche, lea, aulard, vukic]
+    start: [2, 10]
+    same_club: false
+    fallback: nouvelles
+    excludes: [consultant]
+    hint: "Un fauteuil vide, le dimanche soir, à côté de celui du chroniqueur."
+    issues: [accepte, refuse]
+    traces:
+      consultant:        "{annee} : {prenom} {nom} juge les autres le dimanche soir. Le président « n'a pas le temps » de regarder."
+      consultant_assume: "{annee} : {prenom} {nom} a gardé le fauteuil du dimanche. Il joue moins ; il juge mieux."
+      notes_partagees:   "{annee} : {prenom} {nom} et l'adjoint ont comparé leurs notes. D'accord une fois sur deux."
+    epilogue:
+      journal: "{annee} : {nom} jugeait le dimanche. Le samedi, on le jugeait."
+    steps:
+      - id: plateau
+        card: jp.consultant.plateau
+        next: [ { step: bureau, if: "flag('consultant')", in: [1, 3] } ]
+      - id: bureau
+        card: jp.consultant.aulard
+        next: [ { step: cahier, in: [1, 4] } ]
+      - id: cahier
+        card: jp.consultant.vukic
+        next: [ { step: direct, in: [2, 6] } ]
+      - id: direct
+        card:
+          - { id: jp.consultant.dimanche_adieu, if: "age >= 30 || stats.saisons >= 3" }
+          - { id: jp.consultant.dimanche_notes, if: "flag('notes_partagees')" }
+          - { id: jp.consultant.dimanche }
+        next: []
+
+  # --------------------------------------- § 6.21 · La pharmacie du club (joueur)
+  # De la créatine. Légal. Enfin, encore.
+  - id: co.pharmacie
+    title: "La pharmacie du club"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: corps
+    carrier: sabatier
+    cast: [sabatier, meneche, camille, vecchio]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    when: "chars.sabatier.statut == 'club' || chars.sabatier.statut == 'present'"
+    hint: "Un flacon blanc sans étiquette, qui roule sur la table vers toi."
+    issues: [flacon, propre, victime]
+    traces:
+      flacon_b:         "{annee} : le flacon B de {prenom} {nom}. Deux ans. Le Doc avait très envie de vacances."
+      pharmacie_propre: "{annee} : {prenom} {nom} a bu de l'eau. Le Doc a rangé le flacon, et l'a regardé{pg, select, f{e} other{}} autrement."
+      dope_a_son_insu:  "{annee} : {prenom} {nom} ne savait pas ce qu'il y avait dans le flacon. La kiné l'a dit à la commission."
+    epilogue:
+      clear: [vitamines]
+      journal: "{annee} : la pharmacie de {ville}. On n'a pas su ce qu'il y avait dedans."
+    steps:
+      - id: creatine
+        card:
+          - { id: jp.pharmacie.creatine_finir, if: "age >= 28" }
+          - { id: jp.pharmacie.creatine }
+        next: [ { step: armoire, if: "flag('vitamines')", in: [1, 3] } ]
+      # « J'arrête le flacon » ne fermait plus rien : la branche mourait sans
+      # issue. Le contrôle ne trouve rien sur toi — la kiné, elle, trouve ce
+      # qu'il y avait dans les vitamines du Doc (issue `victime`).
+      - id: armoire
+        card: jp.pharmacie.armoire
+        next: [ { step: controleur, if: "!flag('flacon_arrete')", in: [2, 6] }, { step: victime, in: [3, 8] } ]
+      # L'étape « victime » est une carte de drame : elle est bloquée en S0 et
+      # plafonnée à un drame par carrière. Portée en plus par une fusée longue
+      # (at_season: 1), elle mourait au changement de rôle ou de club et
+      # l'issue tombait à 5 %. Elle reste dans la saison : le laboratoire
+      # rappelle avant l'été.
+      - id: controleur
+        card: jp.pharmacie.controleur
+        next: [ { step: laboratoire, if: "flag('flacon_b')", in: [1, 2] }, { step: victime, in: [3, 8] } ]
+      - id: laboratoire
+        card: jp.pharmacie.flacon_b
+        next: []
+      - id: victime
+        card: jp.pharmacie.victime
+        next: []
+
+  # ---------------------------------------------------------- § 6.22 · Le pari
+  # Une petite mise sur ton propre match, juste le nombre de corners.
+  - id: jp.pari
+    title: "Le pari"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: fardelli
+    cast: [fardelli, meneche, camille, josiane]
+    start: [2, 10]
+    same_club: false
+    fallback: nouvelles
+    hint: "Un pote d'enfance appelle. Juste le nombre de corners. Personne ne saura."
+    issues: [refuse, parie, double]
+    traces:
+      pari:            "{annee} : {prenom} {nom} a parié sur ses propres corners. Un bar d'hôtel a enregistré."
+      pari_refuse:     "{annee} : {prenom} {nom} a raccroché au nez d'un ami d'enfance. L'ami a rappelé deux ans après."
+      pari_double:     "{annee} : {prenom} {nom} a levé le pied contre une enveloppe. La table du bar avait un dessous."
+      plume_parle:     "{annee} : la journaliste a écrit à {prenom} {nom}. Il a parlé ; elle a publié, avec l'encadré."
+      temoin_brigade:  "{annee} : {prenom} {nom} a coopéré. Trois heures, un café dans un couvercle, un témoin."
+    epilogue:
+      journal: "{annee} : les corners de {nom}. Quelqu'un a compté."
+    steps:
+      - id: telephone
+        card:
+          - { id: jp.pari.tony_encore, if: "flag('sans_agent') || relation.fardelli <= -1" }
+          - { id: jp.pari.tony }
+        next: [ { step: bar, if: "flag('pari')", in: [1, 4] } ]
+      - id: bar
+        card: jp.pari.fardelli
+        next: [ { step: plume, at_season: 1, at: [1, 6] } ]
+      - id: plume
+        card: jp.pari.plume
+        next: [ { step: brigade, in: [1, 3] } ]
+      - id: brigade
+        card: jp.pari.brigade
+        next: [ { step: plateau, in: [1, 4] } ]
+      - id: plateau
+        card: jp.pari.plateau
+        next: []

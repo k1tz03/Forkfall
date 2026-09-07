@@ -1,24 +1,24 @@
 cards:
   # ---- Nouvelles du monde (flavor, deux labels « Encaisser », effet identique) ----
-  - id: co.nouvelle.fonds_voisins
-    roles: [entraineur, joueur]
-    arc: nouvelle
-    tags: [nouvelle, sponsors]
-    speaker: meneche
-    cooldown: 25
-    text: "Ménèche : « Un fonds lointain a racheté le club voisin, cash. Nous, on répare encore les douches à la main. »"
-    left: {label: "Encaisser", effects: {direction: "-"}}
-    right: {label: "Soupirer", effects: {direction: "-"}}
-
+  # Retirées du sac par la spec § 1.5 « Corrections » : leurs jumelles datées
+  # les remplacent et les datent — `co.nouvelle.droits_tele` → co.nv.1990_droits_tele,
+  # `co.nouvelle.arret_contrats` → co.nv.1993_arret_vaneste, `co.nouvelle.fonds_voisins`
+  # → co.nv.1999_fonds. Les garder ici faisait annoncer deux fois la même
+  # nouvelle d'époque, et diluait le système de datation.
+  # Datée 2016 par la bible ch. 20 § 3.3 : le texte, les libellés et l'effet ne
+  # changent pas (charte § 6.1 n° 11) ; l'import ajoute `year`, `once` et la
+  # trace de monde `monde_video`, lue par content/unes/monde.yaml.
   - id: co.nouvelle.arbitrage_video
     roles: [entraineur, joueur]
     arc: nouvelle
     tags: [nouvelle, arbitrage]
     speaker: meneche
+    once: true
+    year: 2016
     cooldown: 25
-    text: "Ménèche : « On va juger les buts au ralenti, avec des caméras. Trois minutes d'attente pour valider un corner. »"
-    left: {label: "Prendre acte", effects: {tribunes: "-"}}
-    right: {label: "Noter", effects: {tribunes: "-"}}
+    text: "Massenet : « On va juger les buts au ralenti, avec des caméras. Trois minutes d'attente pour valider un corner. »"
+    left: {label: "Noter", effects: {tribunes: "-", set: [monde_video]}}
+    right: {label: "Noter", effects: {tribunes: "-", set: [monde_video]}}
 
   - id: co.nouvelle.coach_vire_ailleurs
     roles: [entraineur, joueur]
@@ -26,30 +26,9 @@ cards:
     tags: [nouvelle, presse]
     speaker: meneche
     cooldown: 25
-    text: "Ménèche : « Le grand coach du Nord a sauté après une défaite. Vingt ans de maison, viré entre la soupe et le dessert. »"
-    left: {label: "Encaisser", effects: {vestiaire: "-"}}
+    text: "Massenet : « Le grand coach du Nord a sauté après une défaite. Vingt ans de maison, viré entre la soupe et le dessert. »"
+    left: {label: "Compatir", effects: {vestiaire: "-"}}
     right: {label: "Compatir", effects: {vestiaire: "-"}}
-
-  - id: co.nouvelle.droits_tele
-    roles: [entraineur, joueur]
-    arc: nouvelle
-    tags: [nouvelle, caisse]
-    speaker: josiane
-    cooldown: 25
-    text: "Josiane : « J'ai lu que les droits télé allaient tripler. L'argent va pleuvoir sur le foot, il en tombera bien une goutte ici. »"
-    left: {label: "Encaisser", effects: {caisse: "+"}}
-    right: {label: "Se frotter les mains", effects: {caisse: "+"}}
-
-  - id: co.nouvelle.arret_contrats
-    roles: [entraineur, joueur]
-    arc: nouvelle
-    tags: [nouvelle, mercato]
-    speaker: meneche
-    cooldown: 25
-    when: "season >= 1"
-    text: "Ménèche : « Un joueur a gagné son procès : en fin de contrat, il part où il veut, gratis. Les présidents en avalent leur cigare. »"
-    left: {label: "Prendre acte", effects: {direction: "-"}}
-    right: {label: "Encaisser", effects: {direction: "-"}}
 
   - id: co.nouvelle.equipementier_fluo
     roles: [entraineur, joueur]
@@ -58,7 +37,7 @@ cards:
     speaker: josiane
     cooldown: 25
     text: "Josiane : « Un équipementier veut habiller tout le championnat en fluo. Ils paient une fortune pour trois bandes sur un short. »"
-    left: {label: "Encaisser", effects: {caisse: "+"}}
+    left: {label: "Signer partout", effects: {caisse: "+"}}
     right: {label: "Signer partout", effects: {caisse: "+"}}
 
   - id: co.nouvelle.tout_assis
@@ -67,8 +46,8 @@ cards:
     tags: [nouvelle, ultras]
     speaker: aulard
     cooldown: 25
-    text: "Aulard : « On m'impose des stades tout-assis, fini les places debout. Mes ultras vont adorer, c'est certain. »"
-    left: {label: "Encaisser", effects: {tribunes: "-"}}
+    text: "Vaubourg : « On m'impose des stades tout-assis, fini les places debout. Mes ultras vont adorer, c'est certain. »"
+    left: {label: "Ranger les banderoles", effects: {tribunes: "-"}}
     right: {label: "Ranger les banderoles", effects: {tribunes: "-"}}
 
   - id: co.nouvelle.record_transfert
@@ -78,8 +57,8 @@ cards:
     speaker: meneche
     cooldown: 25
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Ménèche : « Le record du monde de transfert a encore explosé. Un joueur vaut désormais un pont, deux hôpitaux et un rond-point. »"
-    left: {label: "Encaisser", effects: {vestiaire: "-"}}
+    text: "Massenet : « Le record du monde de transfert a encore explosé. Un joueur vaut désormais un pont, deux hôpitaux et un rond-point. »"
+    left: {label: "Souffler", effects: {vestiaire: "-"}}
     right: {label: "Souffler", effects: {vestiaire: "-"}}
 
   # ---- Rescue (une par jauge, côté bas ET côté haut) : vrais dilemmes, donc
@@ -102,7 +81,7 @@ cards:
     speaker: aulard
     cooldown: 30
     when: "gauges.caisse > 75"
-    text: "Aulard : « On croule sous le cash et la Commission de contrôle louche sur nos comptes. On claque tout sur une star, ou on planque ? »"
+    text: "Vaubourg : « On croule sous le cash et la Commission de contrôle louche sur nos comptes. On claque tout sur une star, ou on planque ? »"
     left: {label: "On signe une star", effects: {caisse: "---", force: "+", tribunes: "+"}}
     right: {label: "On planque le magot", effects: {direction: "+", caisse: "-"}, answer: "Le magot dort au chaud. La Commission aussi, pour l'instant."}
 
@@ -113,7 +92,7 @@ cards:
     speaker: aulard
     cooldown: 30
     when: "gauges.direction < 25"
-    text: "Aulard : « Le conseil réclame ta tête à chaque réunion. Une poignée de main devant les caméras et je te couvre encore un mois. »"
+    text: "Vaubourg : « Le conseil réclame ta tête à chaque réunion. Une poignée de main devant les caméras et je te couvre encore un mois. »"
     left: {label: "Je serre la main", effects: {direction: "+++", vestiaire: "-"}, answer: "Le vestiaire t'a vu ramper. Il n'oubliera pas."}
     right: {label: "Je garde ma dignité", effects: {direction: "-", vestiaire: "+"}}
 
@@ -157,7 +136,7 @@ cards:
     speaker: meneche
     cooldown: 30
     when: "gauges.tribunes < 25"
-    text: "Ménèche : « Le stade sonne creux, on te siffle avant le coup d'envoi. Une exclu bien larmoyante et je te réhabilite en une. »"
+    text: "Massenet : « Le stade sonne creux, on te siffle avant le coup d'envoi. Une exclu bien larmoyante et je te réhabilite en une. »"
     left: {label: "Je donne l'exclu", effects: {tribunes: "+++", direction: "-"}, answer: "L'article te sauve. Le président déteste lire ta vie privée."}
     right: {label: "Je refuse tout net", effects: {tribunes: "-", direction: "+"}}
 
@@ -169,6 +148,6 @@ cards:
     cooldown: 30
     # Doublonne l'alarme tribunes haute et D2 « le onze du virage » : après l'arc du kop seulement.
     when: "gauges.tribunes > 75 && arc('en.kop_qui_aime_trop') == 'done'"
-    text: "Ménèche : « Les ultras t'adorent au point de composer ton équipe. Un kop qui gouverne, ça finit toujours en prise d'otage. »"
+    text: "Massenet : « Les ultras t'adorent au point de composer ton équipe. Un kop qui gouverne, ça finit toujours en prise d'otage. »"
     left: {label: "Je recadre le kop", effects: {tribunes: "--", direction: "+"}}
     right: {label: "Je les laisse faire", effects: {tribunes: "+", vestiaire: "-"}}

@@ -1,0 +1,121 @@
+# Cartes d'étape de « La commission de discipline »
+# (content/arcs/entraineur/commission.yaml). Toutes hors du sac, aucune `once`
+# (l'arc est rejouable une fois : une autre affaire, une autre convocation).
+# Maître Vidal est une voix sans portrait : sa carte n'a pas de `speaker` et ne
+# dit jamais {toi}. Traces : commission_blanchi, commission_sanction,
+# vice_de_forme (sans Almanach, lue par la salle 3).
+cards:
+  # ---------------------------------------------------------- S1 · salle 3, mardi
+  - id: en.commission.convocation
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane tient une chemise déjà prête : « La Commission vous convoque salle 3, mardi, dix heures, et on y attend jusqu'à midi. Avec tout, ou avec ce qu'il faut, {toi} ? »"
+    left:
+      label: "Celle avec tout"
+      effects: {parole: 1, direction: "-", relation: {josiane: 1}, var: {chemise: "=2"}}
+      answer: "Elle te donne la grosse. Elle garde la petite, au cas où ; elle a toujours un cas où."
+    right:
+      label: "Celle avec ce qu'il faut"
+      effects: {parole: -1, direction: "+", var: {chemise: "=1"}}
+      answer: "Elle te donne la petite. La grosse va dans le tiroir du milieu, celui qui ferme à clé."
+
+  - id: en.commission.convocation_encore
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, retorse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane sort une chemise d'un tiroir qu'elle n'a pas cherché : « Salle 3, mardi : la deuxième fois, on attend dans le même couloir, sur la même chaise. Avec tout ? »"
+    left:
+      label: "Celle avec tout"
+      effects: {parole: 1, direction: "-", relation: {josiane: 1}, var: {chemise: "=2"}}
+      answer: "Elle te donne la grosse, qui a grossi. Elle a mis un élastique autour."
+    right:
+      label: "Celle avec ce qu'il faut"
+      effects: {parole: -1, direction: "+", var: {chemise: "=1"}}
+      answer: "Elle te donne la petite. Elle est plus mince que l'an dernier ; ce n'est pas bon signe."
+
+  # ---------------------------------------------------------- S2 · le vice de forme
+  - id: en.commission.vidal
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, scandale]
+    tone: strategique
+    text: "Sur un banc en bois, ton avocat tient la convocation et une loupe : « Elle dit « mardi » à la main et « lundi » à la machine : un vice de forme. On plaide la forme, ou vous ? »"
+    left:
+      label: "La forme, on gagne du temps"
+      effects: {direction: "+", parole: -2, caisse: "-", set: [vice_de_forme]}
+      answer: "Le Tribunal du Sport reçoit le dossier. Il répond dans onze mois ; entre-temps, on « examine »."
+    right:
+      label: "Moi, et on y va"
+      effects: {parole: 1, direction: "-", relation: {legruet: 1}}
+      answer: "Il range la loupe. Il dit « très bien », comme un homme qui perd un honoraire."
+
+  # ---------------------------------------------------------- S3 · le tampon
+  - id: en.commission.salle_3
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, chaine]
+    speaker: legruet
+    tone: strategique
+    text: "Berthomier fait tourner le tampon entre deux doigts : « La Commission peut examiner longtemps ou trancher vite, et trancher vite a un prix : une voix au Congrès, un jour. »"
+    left:
+      label: "La voix, un jour"
+      effects: {direction: "++", parole: -2, relation: {legruet: 1}, set: [commission_blanchi], outcome: blanchi}
+      answer: "Il tamponne « classé ». Il ne date pas ; il n'a jamais gagné une élection de plus de dix voix."
+    right:
+      label: "La sanction, proportionnée"
+      effects: {direction: "-", tribunes: "+", parole: 1, set: [commission_sanction], outcome: sanction}
+      answer: "Trois matchs de tribune. Il tamponne, il date ; c'est proportionné, dit le tampon."
+
+  - id: en.commission.salle_3_vice
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, retorse]
+    speaker: legruet
+    tone: strategique
+    text: "Berthomier a la convocation sous le tampon : « Votre avocat plaide un « lundi » tapé à la machine, et le Tribunal du Sport répond dans onze mois. D'ici là, on peut classer. »"
+    left:
+      label: "La voix, un jour"
+      effects: {direction: "++", parole: -3, relation: {legruet: 1}, set: [commission_blanchi], outcome: blanchi}
+      answer: "Il tamponne « classé ». Le Tribunal du Sport répondra quand même, dans onze mois, à personne."
+    right:
+      label: "La sanction, proportionnée"
+      effects: {direction: "-", tribunes: "+", parole: 1, set: [commission_sanction], outcome: sanction}
+      answer: "Trois matchs de tribune. Ton avocat range la loupe ; il l'avait sortie pour rien."
+
+  - id: en.commission.salle_3_valise
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, piege]
+    speaker: legruet
+    tone: strategique
+    text: "Berthomier pose le tampon à plat : « Un joueur d'en face a parlé, et vous n'avez pas nié : ça ne m'aide pas. Trancher vite contre une voix, ou vous assumez tout ici ? »"
+    left:
+      label: "La voix, un jour"
+      effects: {direction: "++", parole: -2, relation: {legruet: 1}, set: [commission_blanchi], outcome: blanchi}
+      answer: "Il tamponne « classé ». Il compte ta voix avant de reposer le tampon."
+    right:
+      label: "J'assume tout"
+      effects: {outcome: valise, end: en_valise}
+      answer: "Il tamponne. Il n'attend pas le Congrès."
+
+  # ---------------------------------------------------------- S4 · depuis la tribune
+  - id: en.commission.tribune
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "Place 14C, un talkie, la voix coupée par le vent : « Je tiens le banc trois matchs et je te le rends ; le président regarde la tribune. Tu me donnes la compo, ou je la fais ? »"
+    left:
+      label: "La mienne, ligne à ligne"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, force: -1}
+      answer: "Il l'applique. Il ne change rien ; à la soixantième, il aurait changé quelque chose."
+    right:
+      label: "Fais-la, c'est ton banc"
+      effects: {vestiaire: "+", direction: "-", relation: {vukic: 2}, force: 1}
+      answer: "Il la fait. Il te rend le banc au quatrième match, le cahier ouvert à la bonne page."

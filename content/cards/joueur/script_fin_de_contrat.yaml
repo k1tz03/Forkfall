@@ -1,0 +1,558 @@
+# Script d'ouverture du postulat « Fin de contrat à 31 ans » (bible ch. 10 § 4).
+# Neuf ancres, leurs variantes, et les deux alarmes d'override du postulat.
+# Le président est Vaubourg (Vaubourg dans la bible), le fonds est Ilyas (Ilyas).
+# Toutes ces cartes sont des étapes de l'arc jp.fin.dernier_contrat : elles ne
+# passent jamais par le sac.
+cards:
+  # ------------------------------------------------- F1 · La dernière année
+  - id: jp.fin.f1_derniere_annee
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Personne ne prolonge un genou, {toi}, et le tien fait du bruit jusqu'ici. On parle d'argent ou d'amitié : je te prolonge, pour dix pour cent de ce que je trouve. »"
+    left:
+      label: "Dix pour cent, trouve"
+      effects: {direction: "+", caisse: "-", relation: {fardelli: 1}, set: [agent_fardelli], react: [{card: jp.re.camille_projet, if: "!flag('divorce')"}, {card: jp.re.fardelli_amitie}]}
+      answer: "Il commande un dessert pour deux. Il mange les deux."
+    right:
+      label: "Je trouve seul"
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent], react: [{card: jp.re.camille_projet, if: "!flag('divorce')"}, {card: jp.re.fardelli_amitie}]}
+      answer: "Il replie le contrat sous le cendrier. « Tu as trente et un ans » ; il ne dit pas la suite."
+
+  - id: jp.fin.f1_derniere_annee_genou
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    text: "« Personne ne prolonge un genou, {toi}, et le Doc a la radio dans son tiroir. On parle d'argent ou d'amitié, alors je te le dis : j'ai demandé la radio, moi, avant les autres. »"
+    left:
+      label: "Tu as bien fait"
+      effects: {direction: "+", caisse: "-", relation: {fardelli: 1}, set: [agent_fardelli, radio_demandee], react: jp.re.sabatier_radio_agent}
+      answer: "Il commande un dessert pour deux. Le Doc, lui, n'a pas ouvert le tiroir."
+    right:
+      label: "Le genou me regarde"
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent, radio_demandee]}
+      answer: "Il replie le contrat sous le cendrier. La radio reste dans le tiroir ; elle y était bien."
+
+  - id: jp.fin.f1_derniere_annee_vestiaire
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, vestiaire]
+    speaker: fardelli
+    tone: strategique
+    text: "« Un vestiaire prolonge un capitaine, {toi}, et Titi Bréhaut a le même genou, à un an près. On parle d'argent ou d'amitié : lequel des deux je vends cet hiver ? »"
+    left:
+      label: "Vends-moi, pas lui"
+      effects: {direction: "+", vestiaire: "-", relation: {fardelli: 1}, set: [agent_fardelli]}
+      answer: "Il note ton nom en haut de sa liste. Bréhaut n'apprendra jamais qu'il y était."
+    right:
+      label: "Ni l'un ni l'autre"
+      effects: {vestiaire: "++", direction: "-", relation: {fardelli: -1, brehaut: 1}, set: [sans_agent]}
+      answer: "Il replie le contrat sous le cendrier. Bréhaut te sert la main le lendemain, sans savoir pourquoi."
+
+  # ------------------------------------------------------ F2 · L'offre d'hiver
+  - id: jp.fin.f2_offre
+    roles: [joueur]
+    arc: contrat
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "« Un an de plus au rabais, {toi}, avec une clause : quinze matchs ou le contrat s'arrête. J'ai pas le temps, j'ai un empire — tu signes, ou tu attends juin ? »"
+    left:
+      label: "Je signe le rabais"
+      effects: {direction: "++", caisse: "-", set: [prolonge_rabais]}
+      answer: "Tu signes. Le chiffre est petit ; la clause est grande."
+    right:
+      label: "J'attends juin"
+      effects: {direction: "--", tribunes: "+", set: [attend_juin], react: jp.re.josiane_formulaire}
+      answer: "Il range la page. En juin, il en aura une autre, ou pas."
+
+  - id: jp.fin.f2_offre_fax
+    roles: [joueur]
+    arc: contrat
+    tags: [direction, vestiaire]
+    speaker: aulard
+    tone: strategique
+    text: "« Un an au rabais, {toi}, quinze matchs, et une pétition de vingt-deux noms par fax que je n'ai pas eu le temps de lire. J'ai pas le temps, j'ai un empire : tu signes ? »"
+    left:
+      label: "Je signe, pour eux"
+      effects: {direction: "+", vestiaire: "++", set: [prolonge_rabais]}
+      answer: "Tu signes. Josiane classe la pétition sous le contrat, à l'endroit."
+    right:
+      label: "J'attends juin"
+      effects: {direction: "-", vestiaire: "+", set: [attend_juin]}
+      answer: "Il range la page sur la pétition. Les deux attendront juin ensemble."
+
+  - id: jp.fin.f2_offre_or
+    roles: [joueur]
+    arc: contrat
+    tags: [mercato, caisse]
+    speaker: nassir
+    tone: strategique
+    text: "« Ce n'est pas un club, c'est un actif, {toi}, et un joueur avec un nom vaut plus chez nous que chez vous. Deux ans au chaud, ou six mois ici pour finir ? »"
+    left:
+      label: "Deux ans au chaud"
+      effects: {caisse: "+++", tribunes: "--", set: [exil_dore], club: {change: true}, outcome: parti}
+      answer: "Tu signes. Le genou aime la chaleur ; le reste, moins."
+    right:
+      label: "Six mois ici"
+      effects: {tribunes: "++", caisse: "-", relation: {nassir: -1}, react: jp.re.nassir_reviendrai}
+      answer: "Il referme le dossier. « Je reviendrai » ; il revient toujours."
+
+  - id: jp.fin.f2_offre_maison
+    roles: [joueur]
+    arc: contrat
+    tags: [famille, mercato]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure, {toi}, et surtout tu rentres où : le club de Division 2 de chez toi a appelé, il veut un nom pour monter. On rentre, ou on finit ici ? »"
+    left:
+      label: "On rentre"
+      effects: {tribunes: "+", caisse: "-", relation: {camille: 2}, set: [maison_pays_signee], club: {change: true, division: 2}, outcome: parti}
+      answer: "Tu signes en Division 2, chez toi. Ta mère fait construire ; elle n'a pas attendu."
+    right:
+      label: "On finit ici"
+      effects: {direction: "+", relation: {camille: -1}, set: [pays_refuse]}
+      answer: "Elle replie la carte. Le cercle au feutre reste visible à travers le papier."
+
+  # Le script commente le feuilleton, il ne le raconte plus (spec §1.2) : quand
+  # « La maison du pays » a déjà posé la question du retour, l'ancre d'hiver ne
+  # la repose pas — elle passe la lettre sous le contrat.
+  - id: jp.fin.f2_offre_maison_refus
+    roles: [joueur]
+    arc: contrat
+    tags: [direction, famille]
+    speaker: josiane
+    tone: strategique
+    text: "« Le contrat d'un an au rabais est sur le bureau, {toi}, et dessous il y a la lettre du club de chez vous, celle que vous avez refusée. Je monte laquelle des deux ? »"
+    left:
+      label: "Le rabais, en haut"
+      effects: {direction: "++", caisse: "-", set: [prolonge_rabais]}
+      answer: "Elle monte le contrat. La lettre reste dessous, pliée en trois, avec un cercle au feutre."
+    right:
+      label: "Aucune des deux"
+      effects: {direction: "--", tribunes: "+", set: [attend_juin]}
+      answer: "Elle range les deux dans le même dossier. Le dossier s'appelle « juin »."
+
+  # ------------------------------------------------------- F2b · La quinzième
+  - id: jp.fin.f2b_quinzieme
+    roles: [joueur]
+    arc: corps
+    tags: [moment, vestiaire]
+    speaker: sabatier
+    tone: strategique
+    text: "« Quatorze matchs joués, {toi}, dimanche c'est le dernier, et ça reste entre la table et moi : le genou a tenu quatorze fois. Tu tentes la quinzième, ou tu regardes ? »"
+    left:
+      label: "La quinzième"
+      effects: {tribunes: "++", force: -1, set: [quinzieme_jouee], rand: [{p: 0.2, set: [genou_grave]}, {}]}
+      answer: "Tu joues. Le genou tient, ou dit ce qu'il avait à dire. En loge, on compte autre chose."
+    right:
+      label: "En tribune, radio propre"
+      effects: {direction: "+", tribunes: "-", force: 1, set: [quinzieme_tribune, banc_regarde], react: jp.re.vukic_feuille}
+      answer: "Tu regardes. L'adjoint s'assoit à côté, la feuille de match sur les genoux."
+
+  - id: jp.fin.f2b_quinzieme_clause
+    roles: [joueur]
+    arc: corps
+    tags: [moment, direction]
+    speaker: sabatier
+    tone: strategique
+    text: "« Quatorze matchs, {toi}, et la clause du président dit quinze ; ça reste entre la table et moi, mais lui a le calendrier aussi. Tu joues pour la clause, ou tu la laisses ? »"
+    left:
+      label: "Pour la clause"
+      effects: {direction: "+", tribunes: "+", set: [quinzieme_jouee], rand: [{p: 0.25, set: [genou_grave]}, {}]}
+      answer: "Tu joues. La clause est cochée ; Josiane la coche elle-même, au crayon."
+    right:
+      label: "Je la laisse tomber"
+      effects: {caisse: "--", direction: "-", force: 1, set: [quinzieme_tribune, banc_regarde], clear: [prolonge_rabais], react: jp.re.vukic_feuille}
+      answer: "Le contrat s'arrête à la case quatorze. Le président n'a pas le temps de le regretter."
+
+  # -------------------------------------------------------------- F3 · Juin
+  - id: jp.fin.f3_juin
+    roles: [joueur]
+    arc: contrat
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "« Juin, {toi}, et ton genou a fait la saison, ou presque. J'ai pas le temps, j'ai un empire : un an de plus ici, ou tu prends l'offre d'ailleurs ? »"
+    left:
+      label: "Un an de plus, ici"
+      effects: {direction: "+", tribunes: "+", caisse: "-", set: [prolonge], outcome: prolonge, react: jp.re.vecchio_encore_une}
+      answer: "Tu signes. Le Doc signe le certificat en dessous, sans lire le montant."
+    right:
+      label: "L'offre d'ailleurs"
+      effects: {caisse: "++", tribunes: "--", club: {change: true}, set: [parti_juin], outcome: parti}
+      answer: "Tu pars. Le vestiaire t'offre une aile de poulet et une lettre ; la lettre est courte."
+
+  - id: jp.fin.f3_juin_rabais
+    roles: [joueur]
+    arc: contrat
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    text: "« C'était signé en janvier, {toi}, j'en ai vu passer, des janviers qui ne valaient rien en juin. La clause des quinze matchs, je la coche, ou je la laisse en blanc ? »"
+    left:
+      label: "Cochez, c'est fait"
+      effects: {direction: "+", relation: {josiane: 1}, set: [prolonge], outcome: prolonge}
+      answer: "Elle coche au crayon. Le président lit la croix ; il ne compte pas derrière elle."
+    right:
+      label: "Laissez en blanc"
+      effects: {vestiaire: "+", direction: "-", set: [prolonge], outcome: prolonge}
+      answer: "Elle laisse blanc. Personne ne réclame ; c'est ce qui s'appelle un an de plus."
+
+  - id: jp.fin.f3_juin_petition
+    roles: [joueur]
+    arc: contrat
+    tags: [vestiaire, direction]
+    speaker: aulard
+    tone: strategique
+    text: "« Juin, {toi}, et une pétition de vingt-deux noms que j'ai fini par lire ; j'ai pas le temps, j'ai un empire, mais un vestiaire qui écrit, ça se prolonge. Un an ? »"
+    left:
+      label: "Un an, pour eux"
+      effects: {vestiaire: "++", direction: "+", set: [prolonge, prolonge_vestiaire], outcome: prolonge}
+      answer: "Bréhaut a signé en premier. Il le fait remarquer, deux fois, à deux personnes."
+    right:
+      label: "Je pars quand même"
+      effects: {vestiaire: "--", caisse: "++", club: {change: true}, set: [parti_juin], outcome: parti}
+      answer: "La pétition reste sur le bureau. Il s'en sert de sous-main tout l'été."
+
+  - id: jp.fin.f3_juin_aucune
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, caisse]
+    speaker: fardelli
+    tone: strategique
+    text: "« Aucune offre, {toi}, aucune, et on parle d'argent ou d'amitié, mais là il n'y a ni l'un ni l'autre. Tu attends août sans club, ou tu prends le banc de la réserve ? »"
+    left:
+      label: "J'attends août"
+      effects: {caisse: "-", set: [sans_club], outcome: sans_club}
+      answer: "Août arrive. Le téléphone ne sonne pas. Quelqu'un l'a débranché, pour voir."
+    right:
+      label: "Le banc de la réserve"
+      effects: {direction: "+", tribunes: "--", caisse: "-", set: [banc_reserve, vers_entraineur], outcome: banc, relation: {vukic: 1}}
+      answer: "L'adjoint te tend un survêtement. Il est à ta taille ; il l'avait pris exprès."
+
+  # --------------------------------------------------- S1 · Le premier jour
+  - id: jp.fin.s1_premier_jour
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "« Nouvelle saison, {toi}, et je te le dis parce que personne ne te le dira : cette année tu joues moins, et ce n'est pas une punition. Tu l'acceptes, ou tu vas voir le coach ? »"
+    left:
+      label: "J'accepte"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Il hoche la tête. Il note la date dans son cahier, à ta page."
+    right:
+      label: "Je vais le voir"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Tu y vas. Il t'écoute jusqu'au bout, puis il fait la compo sans toi."
+
+  - id: jp.fin.s1_premier_jour_prolonge
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: leger
+    text: "« Le groupe vit bien, {toi}, et on est deux du même âge avec un genou chacun : ça fait un joueur et demi. On se partage les matchs, ou on se dispute le brassard ? »"
+    left:
+      label: "On se partage"
+      effects: {vestiaire: "++", force: -1, relation: {brehaut: 1}, set: [partage_brehaut]}
+      answer: "Vous jouez un match sur deux. Le coach compte ; vous, non."
+    right:
+      label: "On se dispute"
+      effects: {tribunes: "+", vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Vous jouez tous les deux, tous les matchs. En mars il n'en reste qu'un."
+
+  - id: jp.fin.s1_premier_jour_parti
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: josiane
+    tone: strategique
+    text: "« Vous êtes le nom qu'on a pris pour le vestiaire, {toi} ; on ne vous a pas pris pour vos jambes, j'en ai vu passer. Le casier près du coach, ou près des jeunes ? »"
+    left:
+      label: "Près des jeunes"
+      effects: {vestiaire: "++", direction: "-"}
+      answer: "Les jeunes t'appellent « papy » le premier jour, puis par ton prénom."
+    right:
+      label: "Près du coach"
+      effects: {direction: "++", vestiaire: "-"}
+      answer: "Le coach t'appelle « mon relais ». Les jeunes t'appellent « le relais »."
+
+  - id: jp.fin.s1_premier_jour_sans_club
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure, {toi}, ça ne veut plus rien dire, tu es là depuis août. Je demande autrement : tu prends le poste à la réserve, ou tu attends encore ? »"
+    left:
+      label: "Le poste à la réserve"
+      # Pas d'`outcome:` ici : l'issue de la carrière est `sans_club`, posée en
+      # juin. La reprendre en `banc` effaçait la seule trace de l'été sans club
+      # (spec §1.3 : `ArcState.outcome` garde la dernière issue posée).
+      effects: {direction: "+", caisse: "+", relation: {camille: 1, vukic: 1}, set: [vers_entraineur]}
+      answer: "Tu appelles. Il répond à la première sonnerie ; il attendait."
+    right:
+      label: "J'attends encore"
+      effects: {caisse: "--", tribunes: "-", relation: {camille: -2}}
+      answer: "Tu attends. En janvier, un club de National appelle. Il paie en merguez."
+
+  # Après la valise (co.camille.valise pose `divorce`), Camille ne pose plus la
+  # question de l'heure : c'est l'agent qui appelle, et il ne dit plus « ami ».
+  - id: jp.fin.s1_premier_jour_sans_club_seul
+    roles: [joueur]
+    arc: caisse
+    tags: [agents, caisse]
+    speaker: fardelli
+    tone: strategique
+    text: "« Août, {toi}, et on parle d'argent ou d'amitié : là il n'y a ni l'un ni l'autre, plus de club et plus personne à la maison. Le banc de la réserve, ou tu attends encore ? »"
+    left:
+      label: "Le banc de la réserve"
+      effects: {direction: "+", caisse: "+", relation: {vukic: 1}, set: [vers_entraineur]}
+      answer: "Tu appelles l'adjoint. Il répond à la première sonnerie ; il attendait, lui aussi."
+    right:
+      label: "J'attends encore"
+      effects: {caisse: "--", tribunes: "-", relation: {fardelli: -1}}
+      answer: "Tu attends. En janvier, un club de National appelle : un contrat au match, et le train."
+
+  # ---------------------------------------------------------- S1 · Les jambes
+  - id: jp.fin.s1_jambes
+    roles: [joueur]
+    arc: corps
+    tags: [moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« Tes jambes ont perdu trois pas cette année, {toi}, c'est mesuré, et ça reste entre la table et moi. Tu recules d'un cran, ou tu cours après les trois pas ? »"
+    left:
+      label: "Je recule d'un cran"
+      effects: {force: 2, tribunes: "-", vestiaire: "+", set: [recule_poste]}
+      answer: "Tu joues plus bas. Tu vois le jeu de derrière ; l'adjoint dit qu'on voit tout, de là."
+    right:
+      label: "Je cours après"
+      effects: {tribunes: "+", force: -4, react: jp.re.sabatier_trois_pas, rand: [{p: 0.3, set: [genou_grave], tribunes: "--"}, {}]}
+      answer: "Tu cours. Trois pas, ça ne se rattrape pas ; ça se paie, en mars, ou en mai."
+
+  - id: jp.fin.s1_jambes_gigi
+    roles: [joueur]
+    arc: corps
+    tags: [moment, vestiaire]
+    speaker: vecchio
+    tone: strategique
+    text: "« Trois pas de moins, {toi}, le Doc les a comptés au chronomètre et moi à l'œil. J'en ai vu d'autres : tu recules d'un cran, ou tu cours après les trois pas ? »"
+    left:
+      label: "Je recule d'un cran"
+      effects: {force: 2, vestiaire: "+", relation: {vecchio: 1}, set: [recule_poste]}
+      answer: "Tu joues plus bas. Il dit que les gardiens font ça depuis toujours ; c'est vrai."
+    right:
+      label: "Je cours après"
+      effects: {tribunes: "+", force: -2, relation: {vecchio: -1}}
+      answer: "Tu cours. Il te regarde courir. Il ne dit rien ; il a arrêté de compter."
+
+  # Seconde vague : le Doc a compté quatorze croix en S0, il compte trois pas en
+  # S1 (couture, spec §5.2 : une saison S1+ lit une trace posée avant).
+  - id: jp.fin.s1_jambes_quinzieme
+    roles: [joueur]
+    arc: corps
+    tags: [moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« La quinzième, {toi}, je l'ai comptée comme les quatorze autres, et depuis tu as perdu trois pas ; ça reste entre la table et moi. Tu recules d'un cran, ou tu cours après ? »"
+    left:
+      label: "Je recule d'un cran"
+      effects: {force: 2, tribunes: "-", vestiaire: "+", set: [recule_poste]}
+      answer: "Tu joues plus bas. Il barre la quinzième croix et en dessine une autre, plus loin."
+    right:
+      label: "Je cours après"
+      effects: {tribunes: "+", force: -3, rand: [{p: 0.25, set: [genou_grave], tribunes: "--"}, {}]}
+      answer: "Tu cours. Il ferme le carnet des croix ; il en ouvre un autre, pour compter les mois."
+
+  # --------------------------------------------------- S1 · La veille, le papier
+  - id: jp.fin.s1_veille
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: vukic
+    tone: strategique
+    text: "« Dernier bloc demain, {toi}, et je te le dis parce que personne ne te le dira : le banc de la réserve est libre en juin, ton nom est en haut de la page. Tu joues ? »"
+    left:
+      label: "Comme un joueur"
+      effects: {tribunes: "+", force: 1, relation: {vukic: 1}}
+      answer: "Il referme le cahier. Il ne raye pas ton nom ; il en garde un autre en dessous."
+    right:
+      label: "Je regarde déjà le banc"
+      effects: {direction: "+", tribunes: "-", relation: {vukic: 1}, set: [banc_regarde]}
+      answer: "Il te donne le cahier. Il en a un autre ; il en a toujours un autre."
+
+  - id: jp.fin.s1_veille_ailleurs
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: vukic
+    tone: strategique
+    text: "« Je te le dis parce que personne ne te le dira, {toi} : j'ai un banc ici, et un poste d'adjoint à ton nom, écrit au crayon. Tu joues demain, ou tu viens ? »"
+    left:
+      label: "Je joue demain"
+      effects: {tribunes: "+", force: 1}
+      answer: "Il dit « dimanche prochain, alors ». Il le dit tous les dimanches."
+    right:
+      label: "Je viens"
+      effects: {direction: "+", relation: {vukic: 2}, set: [vers_entraineur, suit_vukic], outcome: banc}
+      answer: "Tu prends le train le lundi. Le cahier est dans le sac, sous les crampons."
+
+  # Seconde vague : le vestiaire a écrit vingt-deux noms l'an dernier. Cette
+  # année, la veille du dernier bloc, il en manque deux (couture, spec §5.2).
+  - id: jp.fin.s1_veille_petition
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe vit bien, {toi}, mais l'an dernier on a signé pour toi et cette année personne n'a ressorti la feuille. Tu joues demain, ou tu laisses la place ? »"
+    left:
+      label: "Je joue demain"
+      effects: {tribunes: "+", force: 1, vestiaire: "-"}
+      answer: "Tu joues. Deux jeunes regardent depuis le banc ; ils ont signé la feuille, eux."
+    right:
+      label: "Je laisse la place"
+      effects: {vestiaire: "++", tribunes: "-", relation: {brehaut: 1}, set: [banc_regarde]}
+      answer: "Tu laisses. Il garde la feuille dans son casier ; il ne la jette jamais."
+
+  # ------------------------------------------------- S2+ · Une saison de plus
+  - id: jp.fin.s2_saison_de_plus
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Une saison de plus, {toi}, moi j'en suis à ma quatrième retraite et je suis encore là. J'en ai vu d'autres : tu la joues pour toi, ou pour montrer aux jeunes ? »"
+    left:
+      label: "Pour moi"
+      effects: {tribunes: "+", force: -1}
+      answer: "Il hoche la tête. Il en a vu d'autres, des égoïstes ; il les aimait bien."
+    right:
+      label: "Pour montrer aux jeunes"
+      effects: {vestiaire: "++", tribunes: "-", relation: {mbako: 1}}
+      answer: "Le petit te regarde t'échauffer. Il copie. Il fait mieux ; c'est le but."
+
+  - id: jp.fin.s2_saison_de_plus_encore
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« Une saison de plus, {toi}, encore, et cette fois j'ai les gants sous le bras, pas aux mains. J'en ai vu d'autres, mais pas beaucoup : pour toi, ou pour eux ? »"
+    left:
+      label: "Pour moi"
+      effects: {tribunes: "+", relation: {vecchio: 1}}
+      answer: "Il raconte la tienne à ta place. Il se trompe d'une saison ; personne ne corrige."
+    right:
+      label: "Pour eux"
+      effects: {vestiaire: "++", force: -1, relation: {mbako: 1}}
+      answer: "Les jeunes te laissent le ballon à l'échauffement. C'est une politesse ; tu la prends."
+
+  # Seconde vague : celui qui a reculé d'un cran voit tout, y compris le banc.
+  - id: jp.fin.s2_saison_de_plus_recule
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: vukic
+    tone: strategique
+    text: "« Tu as reculé d'un cran, {toi}, et de là on voit tout ; je te le dis parce que personne ne te le dira : de là on voit le banc aussi. Tu rejoues, ou tu regardes ? »"
+    left:
+      label: "Je rejoue"
+      effects: {tribunes: "+", force: 1, relation: {vukic: 1}}
+      answer: "Il note la date. Il laisse la page ouverte ; il sait qu'il la relira en juin."
+    right:
+      label: "Je regarde, un peu"
+      effects: {direction: "+", tribunes: "-", relation: {vukic: 1}, set: [banc_regarde]}
+      answer: "Tu t'assois à côté de lui. Il te passe le cahier sans rien dire ; c'est un cadeau."
+
+  # ------------------------------------------------------- S2+ · La veille
+  - id: jp.fin.s2_veille
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure demain, {toi}, après le dernier match ; je demande parce que je ne sais plus si tu rentres joueur ou autre chose. Ce soir, ou demain ? »"
+    left:
+      label: "Ce soir : je continue"
+      effects: {tribunes: "+", relation: {camille: -1}}
+      answer: "Elle remonte le son. Le match à la télé, c'est celui d'un joueur de vingt ans."
+    right:
+      label: "Ce soir : c'est le dernier"
+      effects: {direction: "+", relation: {camille: 2}, set: [dernier_annonce]}
+      answer: "Elle coupe la télé. Elle ne dit rien ; c'est la première fois que le silence est bon."
+
+  - id: jp.fin.s2_veille_josiane
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: strategique
+    text: "« Dernier match demain, {toi}, et j'en ai vu passer, des derniers matchs qui ne l'étaient pas ; j'ai le formulaire dans le classeur. Celui-là, c'est le bon ? »"
+    left:
+      label: "Celui-là, oui"
+      effects: {direction: "+", relation: {josiane: 1}, set: [dernier_annonce]}
+      answer: "Elle sort le formulaire. Il est daté de l'an dernier ; elle rature l'année."
+    right:
+      label: "On verra en juin"
+      effects: {tribunes: "+", relation: {josiane: -1}}
+      answer: "Elle referme le classeur. Elle laisse le formulaire dessus, en évidence."
+
+  # Seconde vague : la tribune se souvient du jubilé — celui qu'on a fait, ou
+  # celui dont l'affiche est restée sans date.
+  - id: jp.fin.s2_veille_jubile
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« On t'a fait un jubilé, {toi}, ou on a gardé l'affiche sans date ; la tribune n'oublie rien, et demain elle t'attend encore. Une saison de plus, ou la fin ? »"
+    left:
+      label: "Une saison de plus"
+      effects: {tribunes: "++", force: -1, relation: {gege: 1}}
+      answer: "Il replie la bâche. Il ne la range pas ; il la replie, ce n'est pas pareil."
+    right:
+      label: "La fin, demain"
+      effects: {tribunes: "+", direction: "+", set: [dernier_annonce]}
+      answer: "Il écrit la date sur l'affiche, enfin. Elle attendait depuis quatre saisons."
+
+  # ------------------------------------------- Les deux alarmes du postulat
+  - id: jp.fin.alarme_gege_papy
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    once: true
+    text: "« La tribune n'oublie rien, {toi}, elle se souvient même de quand tu courais ; maintenant elle regarde ses pieds. Tu lui donnes un match, ou tu lui donnes ta place ? »"
+    left:
+      label: "Un match, dimanche"
+      effects: {tribunes: "++", force: -2, rand: [{p: 0.25, set: [genou_grave]}, {}]}
+      answer: "Tu joues fort. Une fois. La tribune chante ; le genou, lui, siffle."
+    right:
+      label: "Ma place, au jeune"
+      effects: {tribunes: "+", vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [place_au_jeune]}
+      answer: "Le jeune joue. La tribune chante son nom ; elle a rangé le tien, elle ne le siffle plus."
+
+  - id: jp.fin.alarme_fardelli_aucune_offre
+    roles: [joueur]
+    arc: caisse
+    tags: [agents, caisse]
+    speaker: fardelli
+    once: true
+    text: "« Aucune offre, {toi}, et un genou ; on parle d'argent ou d'amitié, alors je te le dis franchement : là, il n'y a ni l'un ni l'autre. On baisse le prix, ou on attend ? »"
+    left:
+      label: "On baisse le prix"
+      effects: {caisse: "+", direction: "+", relation: {fardelli: 1}}
+      answer: "Il rappelle trois clubs. Deux répondent. Le troisième était le bon ; il rappellera."
+    right:
+      label: "On attend"
+      effects: {caisse: "-", tribunes: "+", relation: {fardelli: -1}}
+      answer: "Vous attendez. Il attend moins longtemps que toi ; il a d'autres joueurs."

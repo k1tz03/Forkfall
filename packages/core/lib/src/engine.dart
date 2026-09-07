@@ -87,6 +87,9 @@ class Engine {
       lastAnswer: null,
       over: false,
     );
+    // Âge et statut des personnages (spec variété §1.10) : posés depuis
+    // characters.yaml, sans aucun tirage.
+    director.initChars(s);
     _draw(s);
     return s;
   }
@@ -219,6 +222,14 @@ class Engine {
     if (e.outcome != null && arcId != null) {
       (s.arcs[arcId] ??= ArcState(status: 'active', startedSeason: s.season)).outcome = e.outcome;
     }
+    // L'état des personnages (spec variété §1.10) : statut, âge posé (« 17 »)
+    // ou déplacé (« +1 »). Un personnage sans entrée en reçoit une.
+    e.char.forEach((id, op) {
+      final st = s.chars[id] ??= CharState(age: content.characters[id]?.age ?? 0, statut: content.characters[id]?.statut ?? 'present');
+      if (op.statut != null) st.statut = op.statut!;
+      final a = op.age;
+      if (a != null) st.age = a.startsWith('+') || a.startsWith('-') ? applyVarOp(st.age, a) : (int.tryParse(a) ?? st.age);
+    });
     // La réaction (spec variété §1.4, règle 1) : la première variante dont le
     // `if` est vrai ; `chance` consomme 1 nextDouble seulement si déclarée,
     // après `rand`, avant `schedule`. La dernière posée écrase la précédente.
@@ -269,6 +280,22 @@ class Engine {
     }
     for (final u in e.unlock) {
       s.unlocked.add(u);
+    }
+    // Changement de club sans changement de rôle (spec variété §1.11, §1.13).
+    // Il est DIFFÉRÉ au Carrefour : la vente tombe au créneau 17, mais la Une,
+    // le verdict et l'Almanach de la saison qu'on vient de jouer doivent encore
+    // nommer le club où elle a été jouée (et le classement de cette saison-là).
+    // Le club change à l'ouverture de la saison suivante ; la réaction posée
+    // par la même carte (« l'aller simple ») survit donc au départ.
+    if (e.club != null && e.club!.change) {
+      // Le jour où l'on signe, tout le monde te regarde autrement : les jauges
+      // sont recalées tout de suite (c'est le coût du départ, il ne se reporte
+      // pas). Le reste — le nom du club, la ville, la division, la ligne
+      // d'Almanach — attend le Carrefour.
+      _leaveClub(s);
+      s.vars['_club_pending'] = 1;
+      s.vars['_club_div'] = e.club!.division ?? 0;
+      s.vars['_club_retour'] = e.club!.retour ? 1 : 0;
     }
     if (e.role != null) _transitionTo(s, e.role!, rng);
     if (e.end != null) {
@@ -507,7 +534,70 @@ class Engine {
     s.alarmFired.clear();
     s.tension = 0;
     s.reaction = null; // une réplique de l'ancien club ne suit pas (spec variété §1.4, règle 4)
+    // Les entrées de file dont la carte ne joue pas le nouveau rôle tombent
+    // (raison `role`, sur le modèle de la purge `statut`, spec variété §1.10) :
+    // sans ça, l'adjoint continue de proposer le diplôme à quelqu'un qui
+    // entraîne déjà la réserve.
+    director.purgeRole(s);
     director.addJournalAuto(s, 'transition', kind: 'transition', poids: 3, tags: ['transition', newRole]);
+    director.retrouvailles(s);
+  }
+
+  /// Changement de club **sans changement de rôle** (spec variété §1.11) :
+  /// l'effet `club: {change: true, division: n}`. Nouveau club et nouvelle
+  /// ville, `clubSeq += 1` (les arcs `same_club` en file dégradent en
+  /// « Nouvelles du passé » au prochain purge), jauges recalées comme à une
+  /// transition (la caisse suit le joueur, pas le club), alarmes réarmées,
+  /// réaction jetée, ligne d'Almanach et retrouvailles programmées.
+  /// Coût Rng, dans cet ordre : 1 `range(-6, 6)` (la force du nouvel effectif),
+  /// 2 `nextInt` (le club), 1 `nextInt` (la ville). `retour: true` ne tire rien
+  /// de tout ça après la force : il rend le club d'origine (celui de la
+  /// première saison), mémorisé au premier départ.
+  /// Le coût immédiat du départ (spec variété §1.11) : les jauges se recalent
+  /// au moment où l'on signe, pas trois cartes plus tard. La caisse suit le
+  /// joueur ; les alarmes et la tension repartent de zéro.
+  void _leaveClub(GameState s) {
+    final oldTribunes = s.gauges['tribunes'] ?? 50;
+    final caisse = s.gauges['caisse'] ?? 50;
+    s.gauges = {
+      'vestiaire': 50,
+      'tribunes': (40 + 0.3 * oldTribunes).round().clamp(0, 100),
+      'direction': 55,
+      'caisse': caisse,
+    };
+    s.alarmFired.clear();
+    s.tension = 0;
+  }
+
+  void _changeClub(GameState s, Rng rng, {int? division, bool retour = false, bool gauges = true}) {
+    if (gauges) _leaveClub(s);
+    s.world = WorldState(division: (division ?? s.world.division).clamp(1, 2));
+    s.force = divisionBaseForce(s.world.division) + rng.range(-6, 6);
+    // Le club d'origine est mémorisé au premier départ : c'est lui que `retour`
+    // rend, et lui seul (l'usine reprend ce qu'elle a vendu).
+    s.entities.named.putIfAbsent('clubOrigine', () => s.entities.named['club'] ?? '');
+    s.entities.named.putIfAbsent('villeOrigine', () => s.entities.named['ville'] ?? '');
+    final origine = retour ? s.entities.named['clubOrigine'] : null;
+    if (origine != null && origine.isNotEmpty) {
+      s.entities.named['club'] = origine;
+      s.entities.named['clubShort'] = origine.split(' ').last;
+      final v = s.entities.named['villeOrigine'];
+      if (v != null && v.isNotEmpty) s.entities.named['ville'] = v;
+    } else {
+      s.entities.named['club'] = _makeClub(rng);
+      s.entities.named['clubShort'] = s.entities.named['club']!.split(' ').last;
+      s.entities.named['ville'] = _pickVille(rng);
+    }
+    s.objectiveTarget = 'maintien';
+    s.objectivePromised = false;
+    s.clubSeq += 1;
+    s.lastSpeaker = null;
+    s.alarmFired.clear();
+    s.tension = 0;
+    s.reaction = null;
+    s.stats['clubs'] = (s.stats['clubs'] ?? 1) + 1;
+    director.addJournalAuto(s, 'club_change', kind: 'transition', poids: 3, tags: ['transition', 'club']);
+    director.retrouvailles(s);
   }
 
   // ---------------------------------------------------------------------------
@@ -669,7 +759,19 @@ class Engine {
       }
     }
     s.lastWasReaction = false;
-    if (s.beat == 0) director.openSeason(s, rng);
+    if (s.beat == 0) {
+      // Le changement de club différé (voir `_applyEffects`) tombe ici, entre
+      // le Carrefour et l'ouverture : la saison close a gardé son club.
+      if ((s.vars['_club_pending'] ?? 0) == 1) {
+        final div = s.vars['_club_div'] ?? 0;
+        final retour = (s.vars['_club_retour'] ?? 0) == 1;
+        s.vars.remove('_club_pending');
+        s.vars.remove('_club_div');
+        s.vars.remove('_club_retour');
+        _changeClub(s, rng, division: div == 0 ? null : div, retour: retour, gauges: false);
+      }
+      director.openSeason(s, rng);
+    }
     final beat = beats[s.beat];
     s.turn += 1;
     switch (beat.kind) {
@@ -778,30 +880,89 @@ class Engine {
     return fromPost ?? role?.patron ?? (s.role == 'entraineur' ? 'aulard' : 'fardelli');
   }
 
+  /// Formate un gabarit moteur avec son locuteur : genre pour `{pg, select}`,
+  /// adresse pour `{toi}` (spec variété §1.8).
+  String _fmtFor(GameState s, String tpl, {String? speaker, Map<String, String> extra = const {}}) {
+    final ch = speaker == null ? null : content.characters[speaker];
+    final rel = speaker == null ? 0 : (s.relations[speaker] ?? 0);
+    final expression = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
+    return formatText(tpl, s,
+        speakerGenre: ch?.genre ?? 'm', speakerId: speaker, adresse: ch?.adresseFor(s.role, expression), extra: extra);
+  }
+
+  /// La variante de set-piece servie (spec variété §1.12, §2.7) : la première
+  /// dont le rôle et le `when` sont vrais ; la dernière, sans `when` ni
+  /// `roles`, est le secours (le texte historique en Dart). **Zéro Rng** : le
+  /// choix est un parcours de liste, la carte servie ne dépend d'aucun tirage.
+  /// `bilan.*` n'est fourni qu'au beat `bilan_verdict` (le verdict y est
+  /// calculé sans être appliqué, comme pour la Une).
+  _Setpiece? _setpiece(GameState s, String beat, String phase,
+      {bool? bilanTenu, int? bilanRang, String? bilanOutcome, bool Function(SetpieceVariant)? keep}) {
+    final variants = content.setpieces[beat];
+    if (variants == null || variants.isEmpty) return null;
+    final post = content.postulats[s.postulatId];
+    final c = EvalContext(s, phase,
+        slotsTotal: content.cardSlots(s.role),
+        cast: post?.cast.keys.toSet() ?? const {},
+        bilanTenu: bilanTenu,
+        bilanRang: bilanRang,
+        bilanOutcome: bilanOutcome);
+    for (int i = 0; i < variants.length; i++) {
+      final v = variants[i];
+      if (keep != null && !keep(v)) continue;
+      if (v.roles.isNotEmpty && !v.roles.contains(s.role)) continue;
+      if (!evalWhen(v.when, c)) continue;
+      return _Setpiece(v, i, beat);
+    }
+    return null;
+  }
+
+  /// Le texte du beat : celui de la variante, sinon le secours en dur.
+  String _spText(GameState s, _Setpiece? sp, String fallback, {String? speaker, Map<String, String> extra = const {}}) =>
+      _fmtFor(s, sp?.v.text.isNotEmpty == true ? sp!.v.text : fallback, speaker: speaker, extra: extra);
+
+  /// Ce que la vignette et `simulate` lisent d'un set-piece servi.
+  Map<String, dynamic> _spPayload(String beat, _Setpiece? sp) => {
+        'setpiece': beat,
+        'setpiece_variante': sp?.index ?? -1,
+        'setpiece_secours': sp == null || sp.secours,
+      };
+
   Pending _objectiveCard(GameState s, Rng rng) {
     final target = s.objectiveTarget.isEmpty || s.season > 0 || s.postulat >= 2
         ? pickObjective(s.world.division, s.pression, rng)
         : s.objectiveTarget;
     s.objectiveTarget = target;
     s.objectiveLabel = objectiveLabelFr(target);
-    final patron = _patronOf(s);
-    final name = content.characters[patron]?.name ?? (s.role == 'entraineur' ? 'Le président' : 'Ton agent');
+    final patronId = _patronOf(s);
+    final name = content.characters[patronId]?.name ?? (s.role == 'entraineur' ? 'Le président' : 'Ton agent');
+    final sp = _setpiece(s, 'objective', 'presaison');
+    final speaker = sp?.v.speaker ?? patronId;
+    final ch = content.characters[speaker];
+    final extra = {
+      'patron': name,
+      'objectif_min': objectiveLabelWithArticleFr(target),
+      'objectif': objectiveLabelFr(target),
+    };
+    String f(String t) => _fmtFor(s, t, speaker: speaker, extra: extra);
     return Pending(
       id: 'objective:${s.season}',
       kind: 'objective',
-      speaker: patron,
-      text: '$name : « Cette saison, l\'objectif c\'est ${objectiveLabelWithArticleFr(target)}. Tu t\'engages ? »',
-      leftLabel: 'Je m\'engage',
-      rightLabel: 'Je ne promets rien',
+      speaker: speaker,
+      text: _spText(s, sp, '{patron} : « Cette saison, l\'objectif c\'est {objectif_min}. Tu t\'engages ? »',
+          speaker: speaker, extra: extra),
+      leftLabel: f(sp?.v.left ?? 'Je m\'engage'),
+      rightLabel: f(sp?.v.right ?? 'Je ne promets rien'),
       leftEffects: const EffectSet(gauges: {'direction': 4}),
       rightEffects: const EffectSet(gauges: {'direction': -6}),
       previewLeft: const [GaugeHint('direction', 1)],
       previewRight: const [GaugeHint('direction', 2)],
       payload: {
-        'answerLeft': 'Promesse publique : ${objectiveLabelFr(target)}.',
-        'answerRight': 'Tu gardes les mains libres.',
-        if (content.characters[patron] != null) 'speakerName': content.characters[patron]!.name,
-        if (content.characters[patron] != null) 'speakerLabel': content.characters[patron]!.label,
+        'answerLeft': f(sp?.v.answerLeft ?? 'Promesse publique : {objectif}.'),
+        'answerRight': f(sp?.v.answerRight ?? 'Tu gardes les mains libres.'),
+        if (ch != null) 'speakerName': ch.name,
+        if (ch != null) 'speakerLabel': ch.label,
+        ..._spPayload('objective', sp),
       },
     );
   }
@@ -810,75 +971,108 @@ class Engine {
     final role = content.roles[s.role]!;
     final oppForce = divisionBaseForce(s.world.division);
     final stars = (oppForce / 20).round().clamp(1, 5);
+    final extra = {
+      'adversite': '${'★' * stars}${'☆' * (5 - stars)}',
+      'vestiaire_mot': s.gauges['vestiaire']! >= 60 ? 'vestiaire serein' : (s.gauges['vestiaire']! <= 35 ? 'vestiaire tendu' : 'vestiaire neutre'),
+    };
+    final sp = _setpiece(s, 'match', phase);
+    String f(String t) => _fmtFor(s, t, speaker: sp?.v.speaker, extra: extra);
     return Pending(
       id: 'match:$phase:${s.world.blocks}',
       kind: 'match',
-      speaker: null,
-      text: 'Bloc de six journées. Adversité : ${'★' * stars}${'☆' * (5 - stars)} · '
-          '${s.gauges['vestiaire']! >= 60 ? 'vestiaire serein' : (s.gauges['vestiaire']! <= 35 ? 'vestiaire tendu' : 'vestiaire neutre')}.',
-      leftLabel: role.matchPostureLeft,
-      rightLabel: role.matchPostureRight,
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, 'Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}.', speaker: sp?.v.speaker, extra: extra),
+      leftLabel: f(sp?.v.left ?? role.matchPostureLeft),
+      rightLabel: f(sp?.v.right ?? role.matchPostureRight),
       leftEffects: const EffectSet(),
       rightEffects: const EffectSet(),
       previewLeft: const [GaugeHint('tribunes', 2), GaugeHint('direction', 2)],
       previewRight: const [GaugeHint('tribunes', 2), GaugeHint('direction', 2)],
+      payload: _spPayload('match', sp),
     );
   }
 
-  Pending _cupCard(GameState s) => Pending(
-        id: 'cup:${s.world.cupRound}',
-        kind: 'cup',
-        speaker: null,
-        text: 'Tour de Coupe. Le tirage t\'offre un adversaire surprise. On y va ?',
-        leftLabel: 'On joue le coup',
-        rightLabel: 'On joue le coup',
-        leftEffects: const EffectSet(),
-        rightEffects: const EffectSet(),
-        single: true,
-      );
+  Pending _cupCard(GameState s) {
+    final sp = _setpiece(s, 'cup', 'retour');
+    final extra = {'tour': '${s.world.cupRound + 1}'};
+    String f(String t) => _fmtFor(s, t, speaker: sp?.v.speaker, extra: extra);
+    final label = f(sp?.v.left ?? 'On joue le coup');
+    return Pending(
+      id: 'cup:${s.world.cupRound}',
+      kind: 'cup',
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, 'Tour de Coupe. Le tirage t\'offre un adversaire surprise. On y va ?', speaker: sp?.v.speaker, extra: extra),
+      leftLabel: label,
+      rightLabel: label,
+      leftEffects: const EffectSet(),
+      rightEffects: const EffectSet(),
+      single: true,
+      payload: _spPayload('cup', sp),
+    );
+  }
 
-  Pending _gmAnnonce(GameState s) => Pending(
-        id: 'gm:annonce:${s.season}',
-        kind: 'gm_annonce',
-        speaker: null,
-        text: 'GRAND MATCH. Le stade est plein, tout se joue ici. Coup d\'envoi.',
-        leftLabel: 'Coup d\'envoi',
-        rightLabel: 'Coup d\'envoi',
-        leftEffects: const EffectSet(),
-        rightEffects: const EffectSet(),
-        single: true,
-      );
+  Pending _gmAnnonce(GameState s) {
+    final sp = _setpiece(s, 'gm_annonce', 'sprint');
+    final label = _fmtFor(s, sp?.v.left ?? 'Coup d\'envoi', speaker: sp?.v.speaker);
+    return Pending(
+      id: 'gm:annonce:${s.season}',
+      kind: 'gm_annonce',
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, 'GRAND MATCH. Le stade est plein, tout se joue ici. Coup d\'envoi.', speaker: sp?.v.speaker),
+      leftLabel: label,
+      rightLabel: label,
+      leftEffects: const EffectSet(),
+      rightEffects: const EffectSet(),
+      single: true,
+      payload: _spPayload('gm_annonce', sp),
+    );
+  }
 
   Pending _gmTempsFort(GameState s) {
     final mt = s.matchTemp ?? MatchTemp();
+    final extra = {'minute': '${mt.minute + 20}', 'score': '${mt.goalsFor}-${mt.goalsAgainst}'};
+    final sp = _setpiece(s, 'gm_te', 'sprint');
+    String f(String t) => _fmtFor(s, t, speaker: sp?.v.speaker, extra: extra);
     return Pending(
       id: 'gm:te:${mt.minute}',
       kind: 'gm_te',
-      speaker: null,
-      text: '${mt.minute + 20}e minute · ${mt.goalsFor}-${mt.goalsAgainst}. Un moment décisif se présente.',
-      leftLabel: 'Le choix sûr',
-      rightLabel: 'Le choix risqué',
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, '{minute}e minute · {score}. Un moment décisif se présente.', speaker: sp?.v.speaker, extra: extra),
+      leftLabel: f(sp?.v.left ?? 'Le choix sûr'),
+      rightLabel: f(sp?.v.right ?? 'Le choix risqué'),
       leftEffects: const EffectSet(),
       rightEffects: const EffectSet(),
       previewLeft: const [GaugeHint('tribunes', 1)],
       previewRight: const [GaugeHint('tribunes', 2), GaugeHint('vestiaire', 1)],
+      payload: _spPayload('gm_te', sp),
     );
   }
 
   Pending _afterMatchCard(GameState s) {
     final mt = s.matchTemp;
     final won = mt != null && mt.goalsFor > mt.goalsAgainst;
+    final extra = {'gm_score': mt == null ? '' : '${mt.goalsFor}-${mt.goalsAgainst}', 'score': mt == null ? '' : '${mt.goalsFor}-${mt.goalsAgainst}'};
+    // Le résultat du Grand Match, lisible par les variantes (`vars.gm_won`).
+    s.vars['gm_won'] = won ? 1 : 0;
+    final sp = _setpiece(s, 'aftermatch', 'sprint');
+    String f(String t) => _fmtFor(s, t, speaker: sp?.v.speaker, extra: extra);
     return Pending(
       id: 'aftermatch:${s.season}',
       kind: 'aftermatch',
-      speaker: null,
-      text: won ? 'Score final ${mt.goalsFor}-${mt.goalsAgainst}. Le vestiaire exulte.' : 'Le match est terminé. Il faut parler au groupe.',
-      leftLabel: 'Féliciter',
-      rightLabel: 'Recadrer',
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, won ? 'Score final {gm_score}. Le vestiaire exulte.' : 'Le match est terminé. Il faut parler au groupe.',
+          speaker: sp?.v.speaker, extra: extra),
+      leftLabel: f(sp?.v.left ?? 'Féliciter'),
+      rightLabel: f(sp?.v.right ?? 'Recadrer'),
       leftEffects: won ? const EffectSet(gauges: {'vestiaire': 4}) : const EffectSet(gauges: {'vestiaire': 4, 'direction': -3}),
       rightEffects: won ? const EffectSet(gauges: {'vestiaire': -4, 'direction': 4}) : const EffectSet(gauges: {'vestiaire': -6, 'direction': 4}),
       previewLeft: const [GaugeHint('vestiaire', 1)],
       previewRight: const [GaugeHint('vestiaire', 1), GaugeHint('direction', 1)],
+      payload: {
+        if (sp?.v.answerLeft != null) 'answerLeft': f(sp!.v.answerLeft!),
+        if (sp?.v.answerRight != null) 'answerRight': f(sp!.v.answerRight!),
+        ..._spPayload('aftermatch', sp),
+      },
     );
   }
 
@@ -982,35 +1176,58 @@ class Engine {
     );
   }
 
-  Pending _bilanVerdict(GameState s) => Pending(
-        id: 'bilan:verdict:${s.season}',
-        kind: 'bilan_verdict',
-        speaker: null,
-        text: 'Le verdict de la saison tombe. Objectif : ${objectiveLabelFr(s.objectiveTarget)}.',
-        leftLabel: 'Voir le classement',
-        rightLabel: 'Voir le classement',
-        leftEffects: const EffectSet(),
-        rightEffects: const EffectSet(),
-        single: true,
-      );
+  Pending _bilanVerdict(GameState s) {
+    // Le verdict est calculé sans être appliqué (comme la Une, spec §1.6) :
+    // les variantes lisent `bilan.tenu`, `bilan.rang`, `bilan.outcome`.
+    final verdict = seasonVerdict(s.world.division, s.world.pts, s.objectiveTarget);
+    final extra = {
+      'rang': '${verdict.rank}',
+      'objectif': objectiveLabelFr(s.objectiveTarget),
+      'tenu': verdict.objectiveMet ? 'tenu' : 'manqué',
+      'TENU': verdict.objectiveMet ? 'TENU' : 'MANQUÉ',
+    };
+    final sp = _setpiece(s, 'bilan_verdict', 'bilan',
+        bilanTenu: verdict.objectiveMet, bilanRang: verdict.rank, bilanOutcome: verdict.outcome);
+    final label = _fmtFor(s, sp?.v.left ?? 'Voir le classement', speaker: sp?.v.speaker, extra: extra);
+    return Pending(
+      id: 'bilan:verdict:${s.season}',
+      kind: 'bilan_verdict',
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, 'Le verdict de la saison tombe. Objectif : {objectif}.', speaker: sp?.v.speaker, extra: extra),
+      leftLabel: label,
+      rightLabel: label,
+      leftEffects: const EffectSet(),
+      rightEffects: const EffectSet(),
+      single: true,
+      payload: _spPayload('bilan_verdict', sp),
+    );
+  }
 
   Pending _bilanContrat(GameState s) {
-    final patron = _patronOf(s);
-    final name = content.characters[patron]?.name ?? 'Le président';
+    final patronId = _patronOf(s);
+    final name = content.characters[patronId]?.name ?? 'Le président';
+    final sp = _setpiece(s, 'bilan_contrat', 'bilan');
+    final speaker = sp?.v.speaker ?? patronId;
+    final ch = content.characters[speaker];
+    final extra = {'patron': name, 'objectif': objectiveLabelFr(s.objectiveTarget)};
+    String f(String t) => _fmtFor(s, t, speaker: speaker, extra: extra);
     return Pending(
       id: 'bilan:contrat:${s.season}',
       kind: 'bilan_contrat',
-      speaker: patron,
-      text: '$name : « On continue l\'aventure, ou tu tentes autre chose ? »',
-      leftLabel: 'Je reste',
-      rightLabel: 'Je réclame plus de moyens',
+      speaker: speaker,
+      text: _spText(s, sp, '{patron} : « On continue l\'aventure, ou tu tentes autre chose ? »', speaker: speaker, extra: extra),
+      leftLabel: f(sp?.v.left ?? 'Je reste'),
+      rightLabel: f(sp?.v.right ?? 'Je réclame plus de moyens'),
       leftEffects: const EffectSet(gauges: {'direction': 3}),
       rightEffects: const EffectSet(gauges: {'direction': -6, 'caisse': 6}),
       previewLeft: const [GaugeHint('direction', 1)],
       previewRight: const [GaugeHint('direction', 1), GaugeHint('caisse', 1)],
       payload: {
-        if (content.characters[patron] != null) 'speakerName': content.characters[patron]!.name,
-        if (content.characters[patron] != null) 'speakerLabel': content.characters[patron]!.label,
+        if (sp?.v.answerLeft != null) 'answerLeft': f(sp!.v.answerLeft!),
+        if (sp?.v.answerRight != null) 'answerRight': f(sp!.v.answerRight!),
+        if (ch != null) 'speakerName': ch.name,
+        if (ch != null) 'speakerLabel': ch.label,
+        ..._spPayload('bilan_contrat', sp),
       },
     );
   }
@@ -1019,33 +1236,40 @@ class Engine {
     // Offer a transition if any is eligible and no gauge is under 20.
     final anyLow = s.gauges.values.any((v) => v < 20) && s.parole < 3;
     final role = content.roles[s.role]!;
+    final sp = _setpiece(s, 'bilan_carrefour', 'bilan', keep: (v) => v.transition != null);
     if (!anyLow) {
       for (final t in role.transitions) {
         if (evalWhen(t.when, EvalContext(s, 'bilan'))) {
+          // Une variante `transition:` remplace le libellé de roles.yaml quand
+          // elle vise la même transition (spec variété §2.7).
+          final v = sp != null && sp.v.transition == t.to ? sp : null;
           return Pending(
             id: 'carrefour:${s.season}',
             kind: 'bilan_carrefour',
-            speaker: null,
-            text: formatText(t.label, s),
-            leftLabel: 'Je refuse',
-            rightLabel: 'J\'accepte',
+            speaker: v?.v.speaker,
+            text: _spText(s, v, t.label, speaker: v?.v.speaker),
+            leftLabel: _fmtFor(s, v?.v.left ?? 'Je refuse', speaker: v?.v.speaker),
+            rightLabel: _fmtFor(s, v?.v.right ?? 'J\'accepte', speaker: v?.v.speaker),
             leftEffects: const EffectSet(),
             rightEffects: const EffectSet(),
-            payload: {'transition': t.to},
+            payload: {'transition': t.to, ..._spPayload('bilan_carrefour', v)},
           );
         }
       }
     }
+    final noTransition = _setpiece(s, 'bilan_carrefour', 'bilan', keep: (v) => v.transition == null);
+    final label = _fmtFor(s, noTransition?.v.left ?? 'Continuer', speaker: noTransition?.v.speaker);
     return Pending(
       id: 'carrefour:none:${s.season}',
       kind: 'bilan_carrefour',
-      speaker: null,
-      text: 'Une nouvelle saison commence.',
-      leftLabel: 'Continuer',
-      rightLabel: 'Continuer',
+      speaker: noTransition?.v.speaker,
+      text: _spText(s, noTransition, 'Une nouvelle saison commence.', speaker: noTransition?.v.speaker),
+      leftLabel: label,
+      rightLabel: label,
       leftEffects: const EffectSet(),
       rightEffects: const EffectSet(),
       single: true,
+      payload: _spPayload('bilan_carrefour', noTransition),
     );
   }
 
@@ -1102,4 +1326,14 @@ class Engine {
     final villes = (content.names['villes'] as List).cast<String>();
     return villes[rng.nextInt(villes.length)];
   }
+}
+
+/// La variante de set-piece retenue et son rang dans la liste du beat
+/// (spec variété §1.12) : `simulate` mesure la part servie hors secours.
+class _Setpiece {
+  final SetpieceVariant v;
+  final int index;
+  final String beat;
+  const _Setpiece(this.v, this.index, this.beat);
+  bool get secours => v.isSecours;
 }

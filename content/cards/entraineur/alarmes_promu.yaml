@@ -1,0 +1,55 @@
+# Alarmes du promu qui lisent une trace d'une saison passée (bible ch. 30 § 2.3 :
+# « une variante au moins de chaque alarme lit une trace »). Elles sont montées
+# en tête des candidats par `alarm_overrides` du postulat `promu` : quand la
+# jauge tombe, c'est ce qui s'est passé l'an dernier qui vient réclamer.
+# Sans elles, les quatre alarmes basses du promu redisaient la même chose de la
+# saison 0 à la saison 8, et une saison sur trois ne rappelait rien du passé.
+cards:
+  # ------------------------------------------------- tribunes basses · le pacte
+  # Lit `pacte_gege` (en.kop.pacte, S0-S1) : la craie au-dessus de la porte du
+  # local, et le local qui prend toujours l'eau.
+  - id: en.alarme.tribunes_bas_pacte
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25 && flag('pacte_gege')"
+    text: "Gégé montre la craie au-dessus de la porte : « La date est encore là, elle ne s'efface pas toute seule. Le local prend l'eau, {toi}, et la tribune n'oublie rien. »"
+    left: {label: "Je viens réparer avec eux", effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}, journal: {text: "{annee} : deux samedis au local, un seau et une échelle. La date à la craie a été repassée.", poids: 2, tags: [ultras, tribunes]}}, answer: "Deux samedis, un seau, une échelle. Quelqu'un repasse la date à la craie."}
+    right: {label: "Le club n'a pas un sou", effects: {tribunes: "--", direction: "+", journal: {text: "{annee} : le local prend toujours l'eau. Gégé a effacé la date de {nom} à la craie, lui-même.", poids: 3, tags: [ultras, tribunes]}}, answer: "Il efface la date lui-même, à la manche. Il ne la réécrit pas."}
+
+  # ------------------------------------------- vestiaire bas · le petit vendu
+  # Lit `mbako_vendu` (en.prodige) : le casier qu'on n'a pas réattribué.
+  - id: en.alarme.vestiaire_bas_mbako_vendu
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: brehaut
+    when: "gauges.vestiaire < 25 && flag('mbako_vendu')"
+    text: "Bréhaut, devant un casier fermé : « Le groupe vit bien, sauf devant celui-là. Personne ne l'a rouvert depuis qu'on a vendu le petit. On le réattribue, ou on le laisse ? »"
+    left: {label: "On le réattribue lundi", effects: {vestiaire: "++", tribunes: "-", journal: {text: "{annee} : le casier du petit a été réattribué. Deux joueurs ont refusé avant que le troisième accepte.", poids: 2, tags: [vestiaire]}}, answer: "Deux refusent. Le troisième accepte, et range ses affaires en silence."}
+    right: {label: "On le laisse fermé", effects: {vestiaire: "-", tribunes: "+", relation: {brehaut: 1}, journal: {text: "{annee} : le casier du petit est resté fermé toute la saison. Le vestiaire s'habille autour.", poids: 2, tags: [vestiaire]}}, answer: "Le casier reste fermé. Le vestiaire s'habille autour, sans en parler."}
+
+  # ------------------------------------------ direction basse · le nom du stade
+  # Lit `naming_signe` (en.nassir) : le fonds a payé le stade, il lit les comptes.
+  - id: en.alarme.direction_bas_naming
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sponsors]
+    speaker: josiane
+    when: "gauges.direction < 25 && flag('naming_signe')"
+    text: "Madame Josiane, une chemise orange : « Le fonds a envoyé son rapport avant le président, {toi}. Il y a une page sur vous, et elle est en anglais. J'en ai vu passer, vous savez. »"
+    left: {label: "Je demande la traduction", effects: {direction: "++", caisse: "-", journal: {text: "{annee} : le rapport du fonds a été traduit pour {nom}. La page était courte, et datée de mars.", poids: 2, tags: [direction]}}, answer: "La page fait onze lignes. Elle est datée de mars ; on est en avril."}
+    right: {label: "Qu'ils écrivent", effects: {direction: "-", tribunes: "+", parole: 1, journal: {text: "{annee} : le rapport du fonds n'a pas été lu. Le président, lui, l'a fait traduire.", poids: 2, tags: [direction]}}, answer: "Tu ne la lis pas. Le président, lui, l'a fait traduire, et souligner."}
+
+  # ---------------------------------------------- caisse basse · la paie du 12
+  # Lit `salaires_retard` (en.salaires) : ce n'est plus une alerte, c'est une habitude.
+  - id: en.alarme.caisse_bas_salaires
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    speaker: josiane
+    when: "gauges.caisse < 25 && flag('salaires_retard')"
+    text: "Madame Josiane, le même classeur : « Le banquier a rappelé. Il a dit « comme l'an dernier », et il ne l'a pas dit méchamment, {toi}. C'est ça qui m'inquiète. »"
+    left: {label: "On vend, et on paie le 1er", effects: {caisse: "+++", vestiaire: "--", force: -2, journal: {text: "{annee} : un joueur vendu pour payer le 1er. Le vestiaire avait déjà noté la date du 12.", poids: 2, tags: [caisse, vestiaire]}}, answer: "La paie tombe le 1er. Personne ne dit merci ; tout le monde a vérifié."}
+    right: {label: "Encore une fois le 12", effects: {caisse: "-", vestiaire: "-", direction: "+", journal: {text: "{annee} : la paie est repartie le 12, comme l'an dernier. Cette fois, quelqu'un a compté à voix haute.", poids: 2, tags: [caisse, vestiaire]}}, answer: "Le 12, comme l'an dernier. Cette fois, quelqu'un compte à voix haute."}

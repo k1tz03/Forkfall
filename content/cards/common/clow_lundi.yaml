@@ -1,0 +1,74 @@
+# Cartes d'étape de « Lundi, huit heures » (content/arcs/common/clow_lundi.yaml),
+# transcrites de la bible ch. 01 § 5.4 (co.clow.trois_verres) et § 5.7 (les
+# objets : le télégramme de 1971, le car des supporters, les cacahuètes).
+# Toutes hors du sac. Corven ne boit aucun de ses verres (charte § 5.3.b) et son
+# tic est « Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. »
+# Traces : clow_trois_verres, telegramme_clow.
+cards:
+  # ------------------------------------------------------- 1 · trois verres
+  - id: co.clow.trois_verres
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, piege]
+    speaker: clow
+    tone: leger
+    text: "Corven désigne trois verres pleins alignés : « Premier verre : viré parce que j'avais raison. Deuxième : j'avais tort. Troisième : par télégramme, le vrai. Je n'en bois aucun. »"
+    left:
+      label: "Je bois le troisième"
+      effects: {relation: {clow: 1}, vestiaire: "+", direction: "-", var: {clow_conseils: "+1"}, set: [clow_trois_verres]}
+      answer: "Tu bois le troisième. Lui n'y touche pas ; il ne finit jamais ceux-là. Tu rentres à pied."
+    right:
+      label: "Je ne bois pas, Dan"
+      effects: {relation: {clow: 1}, force: 1}
+      answer: "« Bien. » Il fait porter les trois verres à la table d'à côté. Gigi y boit de l'eau."
+
+  # --------------------------------------------- 2 · le car des supporters
+  - id: co.clow.car_des_supporters
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, ultras]
+    speaker: gege
+    tone: leger
+    text: "Gégé, la casquette à la main : « Le vieux monte au fond de notre car depuis qu'il ne conduit plus, et personne ne le reconnaît. La tribune n'oublie rien : moi, si. Je le dis, {toi} ? »"
+    left:
+      label: "Garde-le pour toi"
+      effects: {relation: {gege: 1, clow: 1}, tribunes: "+"}
+      answer: "Il ne le dit pas. Le vieux garde sa place au fond, et son ticket, qu'il paie."
+    right:
+      label: "Dis-le, il aimera"
+      effects: {tribunes: "++", relation: {clow: -1}}
+      answer: "Le car chante son nom à la station-service. Il regarde par la vitre, longtemps."
+
+  # ------------------------------------------------ 3 · six mots, en 1971
+  - id: co.clow.telegramme
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, presse]
+    speaker: clow
+    tone: strategique
+    text: "Corven sort un papier plié en quatre : « SERVICES PLUS REQUIS STOP MERCI STOP. Six mots, et j'en compte sept quand je ne dors pas. Tu le prends, ou il reste dans ma poche ? »"
+    left:
+      label: "Je le prends"
+      effects: {relation: {clow: 1}, parole: 1, set: [telegramme_clow], outcome: telegramme}
+      answer: "Il te le tend sans le déplier. Cinquante-neuf jours tiennent dans une poche de veste."
+    right:
+      label: "Garde-le, Dan"
+      effects: {relation: {clow: 1}, vestiaire: "+", outcome: garde}
+      answer: "Il le replie dans le même pli. La quatrième pliure est usée jusqu'au blanc."
+
+  # La variante qui lit le troisième verre (couture interne à l'intrigue).
+  - id: co.clow.telegramme_verres
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, presse]
+    speaker: clow
+    tone: strategique
+    text: "Corven repousse le verre du milieu et sort un papier plié : « Tu as bu le troisième, alors tu peux lire le troisième : SERVICES PLUS REQUIS STOP MERCI STOP. Tu le prends ? »"
+    left:
+      label: "Je le prends"
+      effects: {relation: {clow: 2}, parole: 1, set: [telegramme_clow], outcome: telegramme}
+      answer: "Il te le tend déplié, cette fois. Il connaît les six mots ; il les dit avec toi."
+    right:
+      label: "Garde-le, Dan"
+      effects: {relation: {clow: 1}, vestiaire: "+", outcome: garde}
+      answer: "Il le remet dans la poche intérieure. « Un jour », dit-il, et il ne dit pas lequel."

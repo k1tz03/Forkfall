@@ -1,0 +1,86 @@
+# Manchettes du promu — lot A (première moitié du réservoir : le kop, le
+# prodige, le sponsor, le vieux gardien, le mentor, la cote, la conférence de
+# presse). Schéma et règles : en-tête de content/unes.yaml.
+#
+# Chacune lit une trace de ces intrigues qu'aucune manchette ne lisait encore :
+# ami_ultras (le local), nassir_pret et club_actif (le fonds), franc_parler et
+# nez_a_joueurs (le testament de l'ancien), gigi_staff vu deux saisons plus
+# tard (les gants ont un élève). Fraîcheur : `flag()` + `journal_has()` quand
+# la trace a une ligne d'Almanach dans son arc ; les manchettes d'état (la
+# relation, l'élève) tiennent les saisons suivantes sans journal_has.
+unes:
+  # ---------------------------------------------------- le kop (ami_ultras)
+  - id: une.promu.local
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('ami_ultras') && journal_has('ami_ultras'))"
+    titre: "TROIS BIÈRES AU LOCAL DE {VILLE}"
+    sous: "Le local du virage a reçu un entraîneur de Division 1, et il n'a pas fait de discours. Au mur, la craie du tifo n'a pas été effacée."
+    sujet: en.kop_qui_aime_trop
+    photo: en.kop.local
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.camille_journal } ]
+
+  # ------------------------------------------- le fonds (nassir_pret, club_actif)
+  - id: une.promu.pret
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('nassir_pret') && journal_has('nassir_pret'))"
+    titre: "LE PRÊT ARRIVE À ÉCHÉANCE"
+    sous: "Un prêt sans intérêt, une option sur le petit, cinquante et un pour cent : la page trois est signée. Il reste à la lire."
+    sujet: en.nassir_proprietaire
+    photo: en.nassir.pret
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe } ]
+
+  - id: une.promu.rachat
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "(flag('club_actif') && journal_has('club_actif'))"
+    titre: "{CLUB} N'EST PLUS UN CLUB"
+    sous: "Le fonds a racheté par fax, en trois lignes. « Ce n'est pas un club, c'est un actif » : le nom de l'entraîneur est écrit dessous, en petit."
+    sujet: en.nassir_proprietaire
+    photo: en.nassir.rachat
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+
+  # ------------------------------ le mentor (franc_parler, nez_a_joueurs)
+  - id: une.promu.franc_parler
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "(flag('franc_parler') && journal_has('franc_parler'))"
+    titre: "{NOM} HÉRITE DU FRANC-PARLER"
+    sous: "L'ancien a laissé une enveloppe et deux mots dedans. Le premier était « franchement » ; le second n'était pas pour nous."
+    sujet: en.mentor_clow
+    photo: en.clow.testament
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+
+  - id: une.promu.nez
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('nez_a_joueurs') && journal_has('nez_a_joueurs'))"
+    titre: "UN NEZ À JOUEURS, EN HÉRITAGE"
+    sous: "L'enveloppe de l'ancien tenait en deux mots. Le coach a pris celui qui ne se prouve pas, et il regarde les U19 autrement depuis."
+    sujet: en.mentor_clow
+    photo: en.clow.testament
+    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal } ]
+
+  # ------------------------------------- le vieux gardien (gigi_staff, état)
+  - id: une.promu.gants_eleve
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('gigi_staff') && relation.vecchio >= 1"
+    titre: "LES GANTS DE GIGI ONT UN ÉLÈVE"
+    sous: "Entraîneur des gardiens, une serviette sur l'épaule, et un jeune qui arrête tout depuis mardi. « J'en ai vu d'autres. Pas celui-là. »"
+    sujet: en.vieux_gardien
+    photo: en.vieux.retour_sourire
+    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 1" }, { card: co.re.josiane_a_lu } ]

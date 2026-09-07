@@ -1,0 +1,156 @@
+# Routines du sac joueur écrites pour le lot « pépite » (bible ch. 10 § 6 et
+# § 12) : elles ne portent pas d'intrigue, mais elles LISENT ses traces —
+# la bâche, le brassard, l'agent, le genou, le petit — pour que le sac ne
+# parle jamais d'un joueur qui n'existe pas. Toutes ont un locuteur du casting
+# du postulat et disent {toi}.
+cards:
+  - id: jp.routine.mere_couloir
+    roles: [joueur]
+    arc: formation
+    tags: [formation, famille]
+    speaker: mere_mbako
+    tone: leger
+    text: "« Mon fils n'a besoin de personne, mais il a besoin d'une paire de crampons à sa taille, et le club dit « la semaine prochaine ». Vous en avez une paire, {toi} ? »"
+    left:
+      label: "J'ai ma pointure en double"
+      effects: {vestiaire: "+", caisse: "-", relation: {mere_mbako: 1, mbako: 1}}
+      answer: "Il les porte trois mois. Il ne dit jamais d'où elles viennent ; sa mère, si, une fois, à quelqu'un d'autre."
+    right:
+      label: "Demandez à l'intendant"
+      effects: {direction: "+", relation: {mere_mbako: -1}}
+      answer: "Elle demande. L'intendant dit « la semaine prochaine ». Elle achète les crampons elle-même, le samedi."
+
+  - id: jp.routine.mere_chiffre
+    roles: [joueur]
+    arc: formation
+    tags: [formation, mercato]
+    speaker: mere_mbako
+    tone: strategique
+    when: "season >= 1"
+    text: "« Mon fils n'a besoin de personne, et pourtant on me met un contrat sous le nez avec un chiffre en bas. Vous l'avez lu, votre premier contrat, {toi} ? »"
+    left:
+      label: "Je l'ai lu. Mal"
+      effects: {vestiaire: "+", relation: {mere_mbako: 1}}
+      answer: "Elle note la page qui t'avait échappé. Elle la lira deux fois, elle."
+    right:
+      label: "Mon agent l'a lu"
+      effects: {caisse: "+", relation: {mere_mbako: -1}}
+      answer: "Elle referme le dossier. « Alors vous ne l'avez pas lu », dit-elle, et elle a raison."
+
+  - id: jp.routine.bache_dimanche
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    when: "flag('enfant_du_pays') || flag('honnete_tribune')"
+    text: "« La bâche sort dimanche, {toi}, et elle a pris la pluie trois fois : il manque une lettre à ton nom. On la repeint, ou on laisse le trou ? »"
+    left:
+      label: "Repeignez-la"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}}
+      answer: "Ils la repeignent le samedi, au local, à quatre. La lettre neuve est plus brillante que les autres."
+    right:
+      label: "Laissez le trou"
+      effects: {tribunes: "+", vestiaire: "+"}
+      answer: "Le trou reste. Au bout d'un an, c'est le trou qu'on reconnaît de loin, pas le nom."
+
+  - id: jp.routine.capitaine_pieces
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: brehaut
+    tone: leger
+    when: "flag('capitaine')"
+    text: "« Le groupe vit bien, et la caisse du groupe fait quarante écus d'amendes en retard. Tu relances toi-même, {toi}, ou tu laisses courir jusqu'en juin ? »"
+    left:
+      label: "Je relance"
+      effects: {vestiaire: "+", direction: "+", caisse: "+"}
+      answer: "Tu relances. Deux paient tout de suite, un paie en pièces, un paie en juin ; c'est toujours le même."
+    right:
+      label: "Je laisse courir"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Tu laisses courir. En juin, la caisse paie le repas ; il manque quarante écus, et personne ne dit rien."
+
+  - id: jp.routine.agent_repondeur
+    roles: [joueur]
+    arc: agents
+    tags: [agents]
+    speaker: fardelli
+    tone: leger
+    when: "flag('agent_fardelli')"
+    text: "« J'ai laissé trois messages sur ton répondeur, {toi}, et tu as rappelé une fois, en mars. On parle d'argent ou d'amitié : tu me rappelles le jour même ? »"
+    left:
+      label: "Le jour même"
+      effects: {direction: "+", relation: {fardelli: 1}, tribunes: "-"}
+      answer: "Tu rappelles. Il parle vingt minutes ; trois d'entre elles servent à quelque chose."
+    right:
+      label: "Quand j'ai le temps"
+      effects: {tribunes: "+", relation: {fardelli: -1}}
+      answer: "Il rappelle ta femme. Elle prend le message ; elle ne le transmet pas tout de suite."
+
+  - id: jp.routine.sans_agent_courrier
+    roles: [joueur]
+    arc: direction
+    tags: [direction, agents]
+    speaker: josiane
+    tone: leger
+    when: "flag('sans_agent')"
+    text: "« J'en ai vu passer, vous savez, mais jamais un qui ouvre son courrier lui-même. Il y a deux offres et une facture, {toi} : je vous les lis, ou vous emportez tout ? »"
+    left:
+      label: "Lisez-moi tout"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle lit les trois à voix haute, dans l'ordre du tampon. La facture d'abord ; c'est sa méthode."
+    right:
+      label: "J'emporte tout"
+      effects: {caisse: "+", tribunes: "+"}
+      answer: "Tu emportes. Tu lis dans la voiture, deux fois, et tu comprends à la deuxième."
+
+  - id: jp.routine.genou_escalier
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes]
+    speaker: sabatier
+    tone: strategique
+    when: "flag('genou') || flag('genou_opere')"
+    text: "« Tu montes l'escalier en trois temps depuis mardi, {toi}, et ça reste entre la table et moi. Tu passes lundi matin, ou on attend que ça se voie du parking ? »"
+    left:
+      label: "Je passe lundi"
+      effects: {force: 1, tribunes: "-", relation: {sabatier: 1}}
+      answer: "Tu passes. Il note « escalier » dans le tiroir. Le tiroir a une page à ton nom, maintenant."
+    right:
+      label: "Ça se verra bien"
+      effects: {tribunes: "+", force: -1}
+      answer: "Ça se voit du parking, trois semaines plus tard. C'est Gégé qui le dit en premier, et il le dit fort."
+
+  - id: jp.routine.vestiaire_musique
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    tone: leger
+    text: "« Je te le dis parce que personne ne te le dira : c'est le plus jeune qui met la musique, et depuis trois semaines c'est toujours la même. Tu changes, {toi} ? »"
+    left:
+      label: "Je change"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Tu changes. Deux protestent, six approuvent, le gardien fait semblant de ne pas entendre."
+    right:
+      label: "On garde ce qui gagne"
+      effects: {vestiaire: "-", force: 1}
+      answer: "La même chanson, encore. Elle a une réputation, maintenant ; on la met au bus aussi."
+
+  - id: jp.routine.lea_photo
+    roles: [joueur]
+    arc: presse
+    tags: [presse, sponsors]
+    speaker: lea
+    tone: leger
+    when: "gauges.tribunes >= 55"
+    text: "« Vous confirmez, {toi} ? La séance photo du calendrier du club, c'est jeudi, torse nu ou en costume, et le photographe préfère le costume. Vous préférez quoi ? »"
+    left:
+      label: "En costume"
+      effects: {direction: "+", tribunes: "-", caisse: "+"}
+      answer: "Le costume est trop grand aux épaules. Le calendrier se vend quand même ; c'est le mois de mars."
+    right:
+      label: "Torse nu, tant pis"
+      effects: {tribunes: "++", vestiaire: "-"}
+      answer: "Le vestiaire découpe la page et la scotche au-dessus des douches. Elle y reste deux saisons."

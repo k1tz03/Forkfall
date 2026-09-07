@@ -1,0 +1,116 @@
+# Cartes d'étape de « Le bureau de l'ancien » (interim_courtes.yaml), intrigue
+# légère : ses cartons, son carnet, sa cafetière. Quatre étapes, deux variantes
+# lues sur d'autres histoires (`cartons_jetes` posé par le script, `divorce`
+# posé par Camille). Traces : carnet_ancien, carnet_rendu, carnet_meneche.
+cards:
+  - id: en.bureau_ancien.cartons
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, la liste du contenu à la main : « Trois cartons dans le couloir depuis lundi, {toi}, et le concierge demande s'ils partent au grenier ou chez lui. J'en ai vu passer. »"
+    left:
+      label: "Le grenier, on verra"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le carnet dépasse du deuxième carton avant l'escalier. Le concierge l'a vu aussi."
+    right:
+      label: "Chez lui, aujourd'hui"
+      effects: {direction: "+", parole: 1, relation: {josiane: -1}}
+      answer: "Il charge sa voiture. Il oublie la cafetière ; elle est branchée, elle chauffe."
+
+  - id: en.bureau_ancien.carnet
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, sans toucher au carnet à spirale : « Il dépasse du deuxième carton et il y a votre nom à la dernière page. Je le lui renvoie, {toi}, ou vous le lisez ? »"
+    left:
+      label: "Je le lis d'abord"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: -1}, set: [carnet_ancien], outcome: lu}
+      answer: "L'adjoint est à toutes les pages. Ton nom, à la dernière, suivi d'un point d'interrogation."
+    right:
+      label: "Renvoyez-le, fermé"
+      effects: {parole: 1, relation: {josiane: 1}, set: [carnet_rendu], outcome: rendu}
+      answer: "Elle le renvoie. Il accuse réception ; il rajoute une page, dit-on."
+
+  - id: en.bureau_ancien.carnet_presse
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, le carnet posé à plat : « Votre nom est à la dernière page, {toi}, et un journaliste a appelé deux fois pour « des archives ». Je le renvoie, ou je le donne ? »"
+    left:
+      label: "Je le lis d'abord"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: -1}, set: [carnet_ancien], outcome: lu}
+      answer: "L'adjoint est à toutes les pages. Le journaliste rappelle le lendemain."
+    right:
+      label: "Donnez-le au journal"
+      effects: {parole: -2, relation: {meneche: 2}, set: [carnet_meneche], outcome: donne}
+      answer: "Il le lit en une nuit. Il te rend le carnet ; il garde les pages."
+
+  - id: en.bureau_ancien.cafetiere
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, absurde]
+    speaker: camille
+    tone: leger
+    text: "Camille au téléphone, sa cafetière qui tousse derrière : « Josiane dit que celle de l'ancien fait un meilleur café que « celui de la maison ». Tu rentres à quelle heure, et tu la ramènes ? »"
+    left:
+      label: "Je la ramène ce soir"
+      effects: {relation: {camille: 1, josiane: -1}, direction: "-"}
+      answer: "La cafetière change de maison. Le café du club revient ; il tousse aussi."
+    right:
+      label: "Elle reste au club"
+      effects: {relation: {josiane: 1, camille: -1}}
+      answer: "Camille achète la même le samedi. Elle fait un café différent, sans qu'on sache pourquoi."
+
+  - id: en.bureau_ancien.cafetiere_vukic
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    tone: leger
+    text: "Vukić tient la cafetière débranchée, le fil enroulé autour : « C'est la seule chose qu'il m'ait laissée, et Josiane la veut. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Laisse-la à Josiane"
+      effects: {relation: {josiane: 1, vukic: -1}}
+      answer: "Il la pose sur son bureau. Il ne boit plus de café ; il boit du thé, par principe."
+    right:
+      label: "Garde-la"
+      effects: {relation: {vukic: 1}, direction: "-"}
+      answer: "Elle va dans son casier. Le café du club revient ; il tousse aussi."
+
+  - id: en.bureau_ancien.couloir
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    tone: leger
+    text: "Vukić regarde le couloir comme on regarde un terrain : « Les cartons sont encore là et le groupe ralentit devant chaque matin. C'est un autel. Tu les fais partir ? »"
+    left:
+      label: "Ils partent ce soir"
+      effects: {vestiaire: "-", direction: "+", relation: {vukic: 1}}
+      answer: "Le couloir est vide. Le groupe passe plus vite, et regarde ta porte en passant."
+    right:
+      label: "Qu'ils ralentissent"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1}}
+      answer: "Bréhaut y pose une écharpe. Personne ne l'enlève, pas même Josiane."
+
+  - id: en.bureau_ancien.couloir_vide
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vukic
+    tone: leger
+    text: "Vukić, devant un couloir vide : « Le groupe ralentit quand même à la place des cartons ; le vide aussi est un autel. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Une photo de l'équipe"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Le groupe s'arrête pour se compter dessus. Il manque l'ancien ; personne ne le dit."
+    right:
+      label: "Rien, c'est un couloir"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Rien. Le groupe ralentit encore une semaine, puis plus du tout."

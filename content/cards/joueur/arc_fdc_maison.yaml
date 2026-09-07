@@ -1,0 +1,100 @@
+# Cartes de l'intrigue « La maison du pays » (arc jp.maison_pays) — bible
+# ch. 10 § 6.15. Ta mère fait construire, Camille demande où est « chez nous »,
+# et le club de ta ville natale veut un nom pour monter.
+cards:
+  - id: jp.maison.mere
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    tone: leger
+    text: "Ta mère, au téléphone du pays, la voix qui porte : « Le terrain est à côté de chez ton oncle, et tout le quartier a vu les plans avant moi. On commence quand ? »"
+    left:
+      label: "On commence en juin"
+      effects: {caisse: "-", tribunes: "+", set: [maison_pays]}
+      answer: "Les murs montent. Le quartier regarde les murs monter ; il t'attend derrière."
+    right:
+      label: "On en reparle"
+      effects: {caisse: "+", relation: {camille: 1}}
+      answer: "Elle dit « bien sûr ». Elle rappelle le dimanche suivant, avec un devis."
+
+  - id: jp.maison.chez_nous
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure, {toi}, et surtout tu rentres où : ta mère a envoyé les plans de la grande maison. Chez nous c'est ici, ou c'est là-bas ? »"
+    left:
+      label: "Chez nous, c'est ici"
+      effects: {relation: {camille: 2}, caisse: "-", set: [promis_camille], outcome: achete, react: co.re.camille_journal}
+      answer: "Tu achètes ici. Ta mère fait construire quand même ; « pour les vacances »."
+    right:
+      label: "Là-bas, c'est chez nous"
+      effects: {relation: {camille: -1}, tribunes: "+", set: [maison_pays], outcome: rentre}
+      answer: "Tu envoies l'argent. Les murs montent. Le quartier regarde les murs monter."
+
+  # Après la valise (co.camille.valise pose `divorce`), « chez nous » n'a plus
+  # de « nous » : la question revient au pays, et c'est ta mère qui la pose.
+  - id: jp.maison.chez_nous_seul
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    tone: strategique
+    text: "Ta mère, au téléphone, qui a appris la nouvelle par le quartier : « J'ai écrit « chambre d'amis » sur la grande pièce, au crayon, pour pouvoir l'effacer. On monte les murs ? »"
+    left:
+      label: "On monte les murs"
+      effects: {tribunes: "+", caisse: "-", set: [maison_pays], outcome: rentre}
+      answer: "Les murs montent. Le quartier les regarde monter ; toi, tu regardes les photos."
+    right:
+      label: "On arrête là"
+      effects: {caisse: "++", direction: "+", outcome: reste}
+      answer: "Elle efface le crayon. Elle garde le plan quand même, roulé debout sur l'armoire."
+
+  # Réciproque de l'ancre de script jp.fin.f2_offre_maison (spec §1.2) : quand
+  # l'hiver a déjà tranché, l'étape ne repose pas l'offre, elle la classe.
+  - id: jp.maison.offre_d2_deja
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« Le club de chez toi a rappelé, {toi}, et cette fois c'est moi qui décroche : on parle d'argent ou d'amitié, et ta mère a déjà répondu pour toi. Je leur dis quoi ? »"
+    left:
+      label: "Que c'est déjà fait"
+      effects: {tribunes: "+", relation: {fardelli: 1}}
+      answer: "Il raccroche vite. Le président du pays rappelle deux fois ; il ne décroche plus."
+    right:
+      label: "Rien, ils savent"
+      effects: {caisse: "+", direction: "+"}
+      answer: "Il ne rappelle pas. Ta mère, elle, rappelle : elle a le numéro du président."
+
+  - id: jp.maison.offre_d2
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: strategique
+    text: "« Le club de chez toi veut un nom pour monter, et on parle d'argent ou d'amitié : là c'est ni l'un ni l'autre, ta mère a appelé le président avant moi. Tu rentres jouer, ou tu finis ici ? »"
+    left:
+      label: "Je rentre jouer"
+      effects: {tribunes: "++", caisse: "-", direction: "-", set: [maison_pays_signee], club: {change: true, division: 2}, react: jp.re.lea_confirme}
+      answer: "Tu signes pour le blason. Le journal du pays titre « L'enfant revient ». Ta mère l'encadre."
+    right:
+      label: "Je finis ici"
+      effects: {caisse: "+", tribunes: "-", relation: {camille: 1}, set: [pays_refuse], outcome: reste}
+      answer: "Ta mère raccroche en soupirant très fort ; c'est sa façon de dire « bien »."
+
+  - id: jp.maison.retour
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, famille, moment]
+    tone: leger
+    text: "Ta mère, en tribune d'honneur, une écharpe neuve qu'elle ne sait pas mettre : « Tout le quartier a payé sa place pour voir {prenom}, sauf ton oncle. Tu joues pour eux, ou comme là-bas ? »"
+    left:
+      label: "Pour eux"
+      effects: {tribunes: "+++", force: -1, vestiaire: "-"}
+      answer: "Tu marques. Le quartier envahit la pelouse ; l'arbitre laisse faire, il est du quartier."
+    right:
+      label: "Comme là-bas"
+      effects: {force: 1, tribunes: "+", direction: "+"}
+      answer: "Tu joues juste. Le club monte en fin de saison ; ta mère dit que c'est grâce à toi."

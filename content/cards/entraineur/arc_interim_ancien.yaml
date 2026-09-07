@@ -1,0 +1,84 @@
+# Cartes d'étape de « L'ancien sur le banc d'en face » (interim_longues.yaml).
+# Ouverte par la trace `ancien_rival` du script. Quatre étapes : l'affiche
+# (maquette de Une), la bâche (variante qui lit `methodes_ancien`), la main au
+# rond central, le couloir d'après-match (voix sans portrait).
+# Traces : guerre_des_mots, silence_ancien, poignee_ancien, ancien_sali.
+cards:
+  - id: en.ancien_en_face.affiche
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet montre une maquette, ta photo à gauche et plus petite : « « Derby des ex », ta photo à gauche, la sienne à droite, et il manque votre phrase. La sienne y est déjà. Vous répondez, {toi} ? »"
+    left:
+      label: "Le vestiaire, pas le banc"
+      effects: {tribunes: "++", direction: "-", parole: -1, relation: {meneche: 1}, set: [guerre_des_mots], outcome: mots}
+      answer: "La phrase paraît. Elle est reprise à la radio le soir même, sans raison."
+    right:
+      label: "Laissez le blanc"
+      effects: {tribunes: "-", parole: 1, relation: {meneche: -1}, set: [silence_ancien], outcome: silence}
+      answer: "Le blanc paraît. Il est plus lu que la phrase ; c'est son métier."
+
+  - id: en.ancien_en_face.bache
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé, pinceau en main devant une bâche par terre : « On a son nom, {toi}, il manque le mot d'avant : on hésite entre « traître » et « merci ». Tu choisis, ou on vote ? »"
+    left:
+      label: "« Merci », et rien d'autre"
+      effects: {tribunes: "+", vestiaire: "+", relation: {gege: 1}, parole: 1}
+      answer: "Le mot « merci ». La bâche sort à l'échauffement ; il la regarde longtemps."
+    right:
+      label: "Votez, je ne suis pas là"
+      effects: {tribunes: "++", direction: "-", relation: {gege: -1}, set: [ancien_sali]}
+      answer: "Ils votent. Ce n'est ni « traître » ni « merci » ; c'est pire, et c'est drôle."
+
+  - id: en.ancien_en_face.bache_methodes
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, vestiaire]
+    speaker: gege
+    tone: leger
+    text: "Gégé, pinceau en main : « On a son nom, et on a vu que tu joues encore son système : la tribune hésite entre le siffler lui, ou te siffler toi. Tu choisis un mot ? »"
+    left:
+      label: "« Merci », et rien d'autre"
+      effects: {tribunes: "+", vestiaire: "+", relation: {gege: 1}, parole: 1}
+      answer: "Le mot « merci », en lettres noires. Le virage le chante comme une insulte."
+    right:
+      label: "Votez, je ne suis pas là"
+      effects: {tribunes: "++", direction: "-", relation: {gege: -1}, set: [ancien_sali]}
+      answer: "Ils votent. Le mot est pire que « traître » ; il tient en six lettres."
+
+  - id: en.ancien_en_face.rond_central
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut, à côté de toi, a déjà serré la main : « Le groupe vit bien, et le groupe l'a salué à l'échauffement, même les jeunes. Il vient vers toi. Tu la serres ? »"
+    left:
+      label: "Je la serre"
+      effects: {vestiaire: "+", tribunes: "-", parole: 1, set: [poignee_ancien], outcome: poignee}
+      answer: "La tribune hésite une seconde. Elle applaudit, ou elle siffle, selon la bâche."
+    right:
+      label: "Je regarde le terrain"
+      effects: {tribunes: "+", vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Il range la main dans sa poche. Il gagne le match, ou pas, la main dedans."
+
+  - id: en.ancien_en_face.couloir
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment]
+    tone: strategique
+    text: "Dans ton couloir, après le match, une voix qui connaît le code : « On vous dira « jusqu'à nouvel ordre » jusqu'à ce que vous le disiez. Un conseil, ou je pars ? »"
+    left:
+      label: "Un conseil"
+      effects: {direction: "-", vestiaire: "+", parole: 1, var: {conseil_ancien: "=1"}}
+      answer: "Il dit « gardez le cahier chez vous ». Il connaît aussi le code du parking."
+    right:
+      label: "Partez"
+      effects: {direction: "+", relation: {brehaut: -1}}
+      answer: "Il part. Bréhaut le raccompagne ; ils parlent dix minutes sur le parking."

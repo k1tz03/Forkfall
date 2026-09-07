@@ -1,0 +1,90 @@
+# Cartes d'étape de « Le diplôme » (interim_longues.yaml). Trois étapes :
+# l'appel de la Fédération (variante si Corven t'a déjà eu au stage comme joueur,
+# trace `clow_stage` du ch. 01), le stage (une semaine avec Corven), l'examen
+# (l'été suivant, fusée longue at_season +1 ; variante « sans papier en
+# Division 1 »). Traces : derogation, diplome, diplome_arrange, clow_stage.
+cards:
+  - id: en.diplome.appel
+    roles: [entraineur]
+    arc: instances
+    tags: [direction]
+    speaker: legruet
+    tone: strategique
+    when: "!flag('diplome')"
+    text: "Berthomier au téléphone, un tampon derrière lui : « {Toi}, vous êtes sur les feuilles de match et nulle part dans le registre ; on verra ça après le Congrès. Six mois et un stage ? »"
+    left:
+      label: "Six mois, et le stage"
+      effects: {direction: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
+      answer: "Il tamponne. Le tampon manque une signature ; on la verra au stage."
+    right:
+      label: "J'ai un autre moyen"
+      effects: {direction: "+", parole: -2, relation: {aulard: 1}, set: [diplome_arrange], outcome: arrange}
+      answer: "Le président connaît quelqu'un. Le papier arrive un vendredi ; le tampon est parfait."
+
+  - id: en.diplome.appel_stage
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, formation]
+    speaker: legruet
+    tone: strategique
+    when: "!flag('diplome')"
+    text: "Berthomier, un registre ouvert : « {Toi}, vous êtes chez nous depuis le stage, sans examen derrière, et on nous l'a fait remarquer. Six mois et un stage, alors ? »"
+    left:
+      label: "Six mois, et le stage"
+      effects: {direction: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
+      answer: "Il tamponne. Il ajoute « déjà venu » au crayon, dans la marge."
+    right:
+      label: "J'ai un autre moyen"
+      effects: {direction: "+", parole: -2, relation: {aulard: 1}, set: [diplome_arrange], outcome: arrange}
+      answer: "Le président connaît quelqu'un. Le registre, lui, garde la ligne d'avant."
+
+  - id: en.diplome.stage
+    roles: [entraineur]
+    arc: instances
+    tags: [formation, direction]
+    speaker: clow
+    tone: leger
+    when: "flag('derogation')"
+    text: "Corven fait le stage debout, un verre d'eau tenu comme un micro : « On apprend une chose ici : avoir peur du président sans qu'il le voie. Tu écris, ou tu écoutes ? »"
+    left:
+      label: "J'écris tout"
+      effects: {relation: {clow: 1}, direction: "-", var: {clow_conseils: "+1"}, set: [clow_stage]}
+      answer: "Tu écris. Une inspectrice lit par-dessus ton épaule ; elle note un chiffre."
+    right:
+      label: "J'écoute"
+      effects: {relation: {clow: 1}, vestiaire: "+", parole: 1, set: [clow_stage]}
+      answer: "Il parle jusqu'à midi. L'après-midi, il parle mieux, et plus bas."
+
+  - id: en.diplome.examen
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, formation]
+    speaker: legruet
+    tone: strategique
+    when: "flag('derogation') && !flag('diplome')"
+    text: "Berthomier ouvre le classeur à ta page : « Les chiffres sont têtus, {toi}, les joueurs aussi, et les vôtres ont fini où ils ont fini. Un oral d'une heure, ou une dérogation de plus ? »"
+    left:
+      label: "Maintenant"
+      effects: {parole: 1, direction: "+", relation: {legruet: 1}, set: [diplome], clear: [derogation], outcome: diplome}
+      answer: "Une heure. Corven parle quand même, deux fois. Le tampon dit « admis »."
+    right:
+      label: "La deuxième dérogation"
+      effects: {direction: "-", parole: -1, relation: {legruet: -1}, var: {derogations: "+1"}}
+      answer: "Le tampon dit « prolongée ». Personne ne signe ; c'est la deuxième fois."
+
+  - id: en.diplome.examen_d1
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, formation]
+    speaker: legruet
+    tone: strategique
+    when: "flag('derogation') && !flag('diplome')"
+    text: "Berthomier, le classeur ouvert et une seule ligne libre : « Vous êtes en Division 1 sans diplôme, {toi}, ce qui n'existe pas dans mon classeur. L'oral ce matin, ou vous redescendez sur le papier ? »"
+    left:
+      label: "L'oral, ce matin"
+      effects: {parole: 1, direction: "+", relation: {legruet: 1}, set: [diplome], clear: [derogation], outcome: diplome}
+      answer: "Une heure et vingt minutes. Le tampon dit « admis », et la ligne se remplit."
+    right:
+      label: "Que le classeur se taise"
+      effects: {direction: "++", parole: -2, relation: {legruet: -1}, set: [diplome_arrange], outcome: arrange}
+      answer: "Quelqu'un a signé pour que la ligne se remplisse. Personne ne sait qui."

@@ -98,11 +98,33 @@ class Director {
   String kindOfArc(String? arcId) => arcId == null ? 'chaine' : (content.arcs[arcId]?.entryKind ?? 'chaine');
 
   /// First variant whose `if` holds at scheduling time, else the last one.
+  /// Une variante dont le locuteur est parti (spec variété §1.10) est sautée.
   String resolveVariant(StepDef st, EvalContext c) {
     for (final v in st.card) {
-      if (v.ifWhen == null || evalWhen(v.ifWhen, c)) return v.id;
+      if (v.ifWhen != null && !evalWhen(v.ifWhen, c)) continue;
+      if (!speakerOk(c.state, content.cards[v.id], step: st)) continue;
+      return v.id;
     }
     return st.card.last.id;
+  }
+
+  /// Le statut d'un personnage (spec variété §1.10) : celui de l'état de
+  /// partie, sinon celui de `characters.yaml`, sinon `present`.
+  String statutOf(GameState s, String? id) {
+    if (id == null) return 'present';
+    return s.chars[id]?.statut ?? content.characters[id]?.statut ?? 'present';
+  }
+
+  /// Le locuteur de la carte parle-t-il encore ? Par défaut seuls
+  /// `present | club | staff` parlent ; `statut_ok:` (sur la carte ou sur
+  /// l'étape) ouvre les autres statuts (Vecchio parti peut téléphoner).
+  bool speakerOk(GameState s, Card? card, {StepDef? step}) {
+    if (card == null) return false;
+    final sp = card.speaker;
+    if (sp == null) return true;
+    final st = statutOf(s, sp);
+    if (kStatutsParlants.contains(st)) return true;
+    return card.statutOk.contains(st) || (step?.statutOk.contains(st) ?? false);
   }
 
   bool drameAllowed(GameState s) => s.season >= 1 && !s.lastWasDrame && s.drames < 1;
@@ -238,6 +260,51 @@ class Director {
   }
 
   /// Un arc peut-il être (r)ouvert ? (spec variété §1.3)
+  /// Pose `GameState.chars` depuis `characters.yaml` : un personnage sans
+  /// `age:` n'a pas d'état. Idempotent (les personnages déjà présents gardent
+  /// leur âge et leur statut) : une sauvegarde d'avant ce champ se complète.
+  void initChars(GameState s) {
+    for (final ch in content.charactersSorted) {
+      if (ch.age == null) continue;
+      s.chars.putIfAbsent(ch.id, () => CharState(age: ch.age! + s.season, statut: ch.statut));
+    }
+  }
+
+  /// Les retrouvailles (spec variété §1.13) : à un changement de rôle ou de
+  /// club, les deux visages à |relation| maximale (tri `(-|rel|, id)`) reviennent
+  /// en `[2, 6]` si leur carte existe. Zéro aléa.
+  void retrouvailles(GameState s) {
+    final faces = <String>[];
+    for (final ch in content.charactersSorted) {
+      if (ch.retrouvailles.isEmpty) continue;
+      if ((s.relations[ch.id] ?? 0) == 0) continue;
+      faces.add(ch.id);
+    }
+    faces.sort((a, b) {
+      final ra = (s.relations[a] ?? 0).abs();
+      final rb = (s.relations[b] ?? 0).abs();
+      return ra != rb ? rb.compareTo(ra) : a.compareTo(b);
+    });
+    for (final id in faces.take(2)) {
+      final rel = s.relations[id] ?? 0;
+      final cardId = content.characters[id]?.retrouvailles[rel >= 0 ? 'sourire' : 'noir'];
+      if (cardId == null || !content.cards.containsKey(cardId)) continue;
+      if (s.scheduled.any((sc) => sc.card == cardId)) continue;
+      enqueue(
+        s,
+        Scheduled(
+          card: cardId,
+          kind: 'chaine',
+          dueN: s.ncards + 2,
+          deadlineN: s.ncards + 6,
+          fallback: 'drop',
+          sameClub: false,
+          payload: {'character': id, 'retrouvailles': true},
+        ),
+      );
+    }
+  }
+
   bool replayable(GameState s, ArcDef a) {
     final st = s.arcs[a.id];
     if (st == null) return true;
@@ -440,6 +507,22 @@ class Director {
     }
   }
 
+  /// Au changement de rôle : les entrées de file dont la carte ne joue pas le
+  /// nouveau rôle tombent (raison `role`, `fallback` respecté), comme la purge
+  /// `statut` quand un visage s'en va (spec variété §1.10). Les arcs armés en
+  /// joueur ne continuent pas de parler à quelqu'un qui entraîne.
+  void purgeRole(GameState s) {
+    final c = ctx(s, '');
+    for (final sc in List.of(s.scheduled)) {
+      final card = content.cards[sc.card];
+      if (card == null) {
+        miss(s, sc, 'inconnue', c);
+      } else if (card.roles.isNotEmpty && !card.roles.contains(s.role)) {
+        miss(s, sc, 'role', c);
+      }
+    }
+  }
+
   void purge(GameState s, EvalContext c) {
     final n = s.ncards;
     for (final sc in List.of(s.scheduled)) {
@@ -455,6 +538,12 @@ class Director {
       }
       if (card == null) {
         miss(s, sc, 'inconnue', c);
+      } else if (card.roles.isNotEmpty && !card.roles.contains(s.role)) {
+        // La carte ne joue pas le rôle courant : l'entrée armée tombe.
+        miss(s, sc, 'role', c);
+      } else if (!speakerOk(s, card, step: content.arcs[sc.arc]?.stepById(sc.step ?? ''))) {
+        // Le locuteur vient de changer de statut : l'entrée armée tombe.
+        miss(s, sc, 'statut', c);
       } else if (card.once && (s.seenCount[card.id] ?? 0) > 0) {
         miss(s, sc, 'deja_vue', c);
       } else if (sc.clubSeq != s.clubSeq && sc.sameClub) {
@@ -497,6 +586,7 @@ class Director {
         for (final e in cands) {
           final card = content.cards[e.card];
           if (card == null) continue;
+          if (!speakerOk(s, card)) continue;
           if (e.when != null && !evalWhen(e.when, c.withCard(card))) continue;
           if (!evalWhen(card.when, c.withCard(card))) continue;
           if (n - (s.cooldowns[card.id] ?? -999) < card.cooldown) continue;
@@ -816,6 +906,7 @@ class Director {
       final last = s.cooldowns[card.id];
       if (last != null && card.once) continue;
       if (last != null && n - last < card.cooldown) continue;
+      if (!speakerOk(s, card)) continue;
       final retorse = card.tags.contains('retorse');
       if (retorse && s.pression < 4) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
@@ -852,22 +943,58 @@ class Director {
     return i < 0 ? null : bands[top]![i];
   }
 
+  /// La Nouvelle du créneau (spec variété §1.5). Deux listes sont construites
+  /// dans l'ordre fixe des ids : les **datées** de la saison en cours
+  /// (`year ∈ [s.year, s.year + 1]` — une saison commence en août et finit en
+  /// juin, elle couvre donc deux années civiles) et les intemporelles. Si la
+  /// liste datée n'est pas vide, on tire **dans elle seule** : l'époque passe
+  /// avant le décor. Un seul `weightedIndex` dans les deux cas.
   Card? pickNouvelle(GameState s, EvalContext c, Rng rng) {
     final n = s.ncards;
     final cands = <Card>[];
     final w = <double>[];
+    final datees = <Card>[];
+    final dateesW = <double>[];
     for (final card in content.nouvelles(s.role)) {
       if (s.scheduled.any((sc) => sc.card == card.id)) continue;
       final last = s.cooldowns[card.id];
       if (last != null && card.once) continue;
       if (last != null && n - last < card.cooldown) continue;
+      if (!speakerOk(s, card)) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
+      final year = card.year;
+      if (year != null) {
+        if (year < s.year || year > s.year + 1) continue; // hors de sa fenêtre : jamais servie
+        if ((s.seenCount[card.id] ?? 0) > 0) continue;
+        datees.add(card);
+        dateesW.add(card.weight * faceFactor(s, card.speaker));
+        continue;
+      }
       cands.add(card);
       w.add(card.weight * faceFactor(s, card.speaker));
     }
-    if (cands.isEmpty) return null;
-    final i = rng.weightedIndex(w);
-    return i < 0 ? null : cands[i];
+    final list = datees.isNotEmpty ? datees : cands;
+    final weights = datees.isNotEmpty ? dateesW : w;
+    if (list.isEmpty) return null;
+    final i = rng.weightedIndex(weights);
+    return i < 0 ? null : list[i];
+  }
+
+  /// Les Nouvelles datées que la carrière a laissées passer : une datée est
+  /// servable pendant deux saisons (celle qui commence l'année d'avant et
+  /// celle de son année) ; passée son année, elle est perdue, et comptée une
+  /// seule fois (`stats.nouvelle_datee_perdue`, mesuré par `simulate`).
+  void countLostNouvelles(GameState s) {
+    // Comptées une fois par année : deux ouvertures de saison dans la même
+    // année (contenu de test, saison avortée) ne doublent pas la statistique.
+    if (s.vars['_nv_perdues_annee'] == s.year) return;
+    s.vars['_nv_perdues_annee'] = s.year;
+    for (final card in content.nouvelles(s.role)) {
+      final year = card.year;
+      if (year == null || s.year != year + 1) continue;
+      if ((s.seenCount[card.id] ?? 0) > 0) continue;
+      s.stats['nouvelle_datee_perdue'] = (s.stats['nouvelle_datee_perdue'] ?? 0) + 1;
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -897,7 +1024,7 @@ class Director {
       }
     }
     if (sc.fallback == 'nouvelles' &&
-        const {'club', 'annulee', 'perimee'}.contains(reason) &&
+        const {'club', 'annulee', 'perimee', 'role'}.contains(reason) &&
         content.cards.containsKey(kNouvellesDuPasse)) {
       final title = arc?.title ?? content.cards[sc.card]?.title ?? 'une vieille histoire';
       s.entities.named['passe_titre'] = title;
@@ -1102,7 +1229,13 @@ class Director {
           }
         }
         cardId ??= variants.last.id;
-        if (!content.cards.containsKey(cardId)) continue;
+        final crossCard = content.cards[cardId];
+        if (crossCard == null) continue;
+        // Le filtre de rôle de `pickPool` vaut aussi ici : une carte déclarée
+        // pour l'entraîneur (« {NOM} DÉMISSION » sur vingt mètres) n'a rien à
+        // faire dans la carrière d'un joueur de dix-neuf ans.
+        if (crossCard.roles.isNotEmpty && !crossCard.roles.contains(s.role)) continue;
+        if (!speakerOk(s, crossCard)) continue; // le visage est parti (spec variété §1.10)
         if ((s.seenCount[cardId] ?? 0) > 0) continue;
         if (s.scheduled.any((sc) => sc.card == cardId)) continue;
         enqueue(
@@ -1144,6 +1277,15 @@ class Director {
     s.reaction = null;
     // Compaction de l'Almanach de la saison précédente (spec variété §1.7).
     if (s.season > 0) compactJournal(s, s.season - 1);
+    // Les personnages prennent un an (spec variété §1.10) ; une sauvegarde
+    // ancienne, ou un contenu de test, reconstruit la table au passage.
+    initChars(s);
+    if (s.season > 0) {
+      for (final st in s.chars.values) {
+        st.age += 1;
+      }
+      countLostNouvelles(s);
+    }
     final c = ctx(s, 'presaison');
     for (final sc in List.of(s.scheduled)) {
       if (sc.expireSeason != null && sc.expireSeason! < s.season) miss(s, sc, 'perimee', c);

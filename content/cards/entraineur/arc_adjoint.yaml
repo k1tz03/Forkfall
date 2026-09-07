@@ -1,0 +1,104 @@
+# Cartes d'étape de « L'adjoint qui dîne » (content/arcs/entraineur/adjoint.yaml).
+# Toutes hors du sac. Le nom du joueur : sur l'addition et sur novembre, jamais
+# deux étapes de suite. Traces : vukic_ecarte, vukic_dauphin (∃), aulard_confronte.
+cards:
+  # ----------------------------------------------------------- S1 · deux couverts
+  - id: en.adjoint.addition
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane laisse l'addition où tu peux la lire : « Le port, mardi, deux couverts, la note dans les frais du président, le nom de votre adjoint au dos. Sous « frais », ou sous « vous » ? »"
+    left:
+      label: "Je vais voir Zoran"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle classe sous « frais ». Elle garde le trombone."
+    right:
+      label: "Je vais voir le président"
+      effects: {direction: "-", vestiaire: "-", relation: {aulard: -1}, next: {step: aulard, in: [1, 3]}}
+      answer: "Elle classe sous « vous ». C'est un dossier qui n'existait pas ce matin."
+
+  # ----------------------------------------------------------- S2a · l'adjoint
+  - id: en.adjoint.vukic
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, risk:vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "Sept heures, Vukić pose les plots en ligne droite, ce qu'il ne fait jamais : « Il m'a demandé si le vestiaire tiendrait sans toi ; j'ai dit oui, comme sans moi. Tu me gardes avec ça ? »"
+    left:
+      label: "Je te garde, et je sais"
+      effects: {vestiaire: "+", direction: "-", relation: {vukic: 1}}
+      answer: "Il pose le dernier plot. La ligne est droite ; il la regarde comme un aveu."
+    right:
+      label: "Tu prends la porte"
+      effects: {vestiaire: "-", direction: "+", relation: {vukic: -2}, set: [vukic_ecarte], outcome: confronte, char: {vukic: {statut: rival}}, react: en.re.brehaut_adjoint, next: end}
+      answer: "Il ramasse les plots. Il prend le banc d'en face en mars, avec ton cahier."
+
+  # ----------------------------------------------------------- S2b · le président
+  - id: en.adjoint.aulard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, retorse]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg retourne deux feuilles face contre bureau : « J'ai dîné avec ton adjoint parce que tu ne dînes jamais avec moi, et je dîne avec qui répond. Le menu, ou la note ? »"
+    left:
+      label: "La note, je la paie"
+      effects: {direction: "++", caisse: "-", relation: {aulard: 1}, set: [aulard_confronte], react: en.re.aulard_addition}
+      answer: "Tu paies. Il retourne une seule feuille ; c'est celle qui parle de toi."
+    right:
+      label: "Le menu, et le discours"
+      effects: {direction: "-", vestiaire: "+", set: [aulard_confronte]}
+      answer: "Il ne retourne rien. Il dit « on verra en novembre » ; il ne dit pas quoi."
+
+  # ----------------------------------------------------------- S3 · le second discours
+  - id: en.adjoint.discours
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, chaine]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić, une feuille pliée en quatre dans le vestiaire vide : « Le président m'a donné à relire le second discours, celui qui dit « si on descend », et mon nom est dedans. Je te le lis ? »"
+    left:
+      label: "Lis-le-moi"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: 1}, set: [vukic_dauphin], outcome: dauphin}
+      answer: "Il lit. Ton nom n'y est pas ; le sien, une fois, en bas."
+    right:
+      label: "Garde-le, et réfléchis"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [vukic_dauphin], outcome: dauphin, react: en.re.josiane_relu}
+      answer: "Il garde la feuille. Il « réfléchit » à partir de ce soir, jusqu'en novembre."
+
+  - id: en.adjoint.discours_brassard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, chaine, retorse]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić pose la feuille pliée à côté d'un brassard : « Le second discours, c'est le capitaine qui l'a relu avec moi. Il y a deux noms dedans, et aucun n'est le tien. »"
+    left:
+      label: "Lis-le-moi"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: 1}, set: [vukic_dauphin], outcome: dauphin}
+      answer: "Il lit les deux noms. Le second est le sien, en bas, sans majuscule."
+    right:
+      label: "Garde-le, et réfléchis"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1, brehaut: -1}, set: [vukic_dauphin], outcome: dauphin, react: en.re.josiane_relu}
+      answer: "Il garde la feuille. Le capitaine, lui, garde la copie."
+
+  # ----------------------------------------------------------- S4 · novembre
+  - id: en.adjoint.novembre
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment, chaine]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić frappe deux fois, ce qu'il ne faisait plus, et entre : « J'ai fini de réfléchir : le président m'a proposé ton banc pour janvier. Tu réponds quoi, {toi} ? »"
+    left:
+      label: "Prends-le, si tu le veux"
+      effects: {direction: "--", vestiaire: "+", relation: {vukic: 2}, parole: 1}
+      answer: "Il ne le prend pas. Il rend le cahier au président, avec une page en moins : la tienne."
+    right:
+      label: "Tu restes numéro deux"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, clear: [vukic_dauphin]}
+      answer: "Il reste. Il ne relit plus de discours ; le président trouve un autre relecteur, sans cahier."

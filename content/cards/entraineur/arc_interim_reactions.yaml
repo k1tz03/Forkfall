@@ -1,0 +1,177 @@
+# Les neuf réactions de l'intérimaire (bible ch. 11 § 3.4) et l'alarme
+# `direction.low` du postulat (les trois CV). Une réaction est une carte
+# ordinaire, hors du sac, servie au tirage suivant : petits effets, jamais de
+# `react`, jamais de `end`, jamais tone drame. `kind: reaction` est dérivé par
+# le build à partir des `react:` qui les citent.
+cards:
+  # ------------------------------------------------------- après I1 · le bureau
+  - id: en.re.josiane_cafetiere
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane, deux tasses, une meilleure que l'autre : « Sa cafetière fait un meilleur café que celle du club. J'en ai vu passer, vous savez. Je la garde ? »"
+    left:
+      label: "Gardez-la"
+      effects: {relation: {josiane: 1}}
+      answer: "Le café est meilleur. L'ancien le savait ; il n'a jamais rien dit."
+    right:
+      label: "Renvoyez-la"
+      effects: {direction: "+"}
+      answer: "Elle la renvoie. Le café du club revient ; il est à l'image du chauffage."
+
+  - id: en.re.camille_six_semaines
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce')"
+    text: "Camille au téléphone, un carton derrière elle, pas encore ouvert : « Six semaines, c'est un délai ou un contrat ? Tu rentres à quelle heure, pendant six semaines ? »"
+    left:
+      label: "Un délai"
+      effects: {relation: {camille: 1}}
+      answer: "Elle ne fait pas de carton. Elle compte six semaines et entoure la septième."
+    right:
+      label: "Un contrat"
+      effects: {relation: {camille: -1}, direction: "+"}
+      answer: "Elle ouvre un carton, puis le referme. Elle attend de voir."
+
+  # -------------------------------------------- après la craie · le vestiaire
+  - id: en.re.brehaut_merci
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: leger
+    text: "Bréhaut, sur le pas de la porte : « Le groupe vit bien. Il vous fait dire merci. Il vous fait dire aussi qu'il reviendra. »"
+    left:
+      label: "Merci à lui"
+      effects: {vestiaire: "+"}
+      answer: "Tu remercies. Le groupe transmet ; il transmet tout."
+    right:
+      label: "Qu'il revienne, alors"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Le groupe transmet ça aussi. Il ne revient pas ; il signe chez {rival}."
+
+  # ------------------------------------------------------ après la cote · le pari
+  - id: en.re.meneche_une_parie
+    roles: [entraineur]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    tone: leger
+    text: "Massenet, deux titres au feutre : « La Une de demain : « L'INTÉRIMAIRE PARIE SUR LUI ». Ça vous va, ou je mets « SUR SA TÊTE » ? »"
+    left:
+      label: "« Sur lui »"
+      effects: {tribunes: "+", parole: 1}
+      answer: "Il imprime. Le bookmaker du port baisse la cote ; il a lu."
+    right:
+      label: "« Sur sa tête », plus vrai"
+      effects: {tribunes: "+", relation: {meneche: 1}, direction: "-"}
+      answer: "Il imprime. Le président lit « tête » ; il n'a pas le temps de lire le reste."
+
+  # --------------------------------------------------- après la cassette · le seau
+  - id: en.re.fardelli_seau
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli, le cigare rallumé : « Il veut visiter le vestiaire jeudi. Avec son seau. Mon ami, on parle d'argent ou d'amitié ? Jeudi, on parle de seau. »"
+    left:
+      label: "Jeudi, d'accord"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Jeudi. Le seau arrive avant lui, porté par l'agent."
+    right:
+      label: "Pas jeudi, pas de seau"
+      effects: {direction: "-", relation: {fardelli: -1}}
+      answer: "Il rappelle vendredi. Le seau est dans le coffre ; il attend."
+
+  # -------------------------------------------------- après l'appel · le tampon
+  - id: en.re.legruet_tampon
+    roles: [entraineur]
+    arc: instances
+    tags: [direction]
+    speaker: legruet
+    tone: leger
+    text: "Berthomier, la dérogation tamponnée et une ligne vide : « Le tampon, lui, on le voit maintenant. Il manque une signature. On verra ça après le Congrès. »"
+    left:
+      label: "Je vais la chercher"
+      effects: {parole: 1, direction: "-"}
+      answer: "Quelqu'un signe. On lit ton dossier avant ; on note un chiffre."
+    right:
+      label: "Après le Congrès, alors"
+      effects: {direction: "+"}
+      answer: "La ligne reste vide six mois. Quelqu'un finira par la regarder."
+
+  # ---------------------------------------------- après le stagiaire · la tribune
+  - id: en.re.gege_il_venait
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "Gégé, enfin au parking, pas pour longtemps : « Lui, il venait. La tribune n'oublie rien. Elle compte aussi. »"
+    left:
+      label: "Je viendrai jeudi"
+      effects: {tribunes: "+", parole: 1, promise: true}
+      answer: "Il note jeudi. Il compte les jeudis ; il en a beaucoup."
+    right:
+      label: "Je ne suis pas lui"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "Il repart. Le stagiaire reste, avec l'écharpe ; il ne sait pas quoi dire."
+
+  # --------------------------------------------- après le verdict · le CDI-CDD
+  - id: en.re.aulard_cdd
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg sort la page deux, qui existe finalement : « Le CDI est un CDD de douze mois. J'ai pas le temps, j'ai un empire. Tu signes ? »"
+    left:
+      label: "Je signe quand même"
+      effects: {direction: "+", parole: -1, set: [cdi_signe]}
+      answer: "Douze mois. Josiane classe sous « CDI », par principe."
+    right:
+      label: "Un intérim de plus"
+      effects: {direction: "-", vestiaire: "+", set: [interim_prolonge], clear: [cdi_signe]}
+      answer: "Il range la page deux. Il la ressort en juin ; elle a la même date."
+
+  # --------------------------- après une manchette défavorable · le journal lu
+  - id: en.re.vukic_journal_president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: vukic
+    tone: leger
+    when: "relation.vukic >= 0"
+    text: "Vukić tient le journal ouvert, pas à la bonne page, à la page d'après : « Il était dans la boîte du président. Je te le dis parce que personne ne te le dira : il l'a lu deux fois. »"
+    left:
+      label: "Merci de me le dire"
+      effects: {relation: {vukic: 1}, direction: "-"}
+      answer: "Il remet le journal dans la boîte, ouvert à la même page. Il ne triche pas."
+    right:
+      label: "Je m'en doutais"
+      effects: {direction: "+"}
+      answer: "Il hausse les épaules. Il le savait ; il voulait que tu le saches par lui."
+
+  # ------------------------------------------------ alarme `direction.low` (override)
+  - id: en.interim.alarme_aulard_cv
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, rescue:direction]
+    speaker: aulard
+    tone: strategique
+    when: "flag('interim') || flag('interim_prolonge')"
+    text: "Vaubourg tourne trois CV vers toi sans les cacher : « Le tien n'y est pas, tu n'en as jamais envoyé, tu es « jusqu'à nouvel ordre ». Un CV ce soir, ou une raison ? »"
+    left:
+      label: "Un CV ce soir"
+      effects: {direction: "++", vestiaire: "-", parole: -1}
+      answer: "Une page. Josiane la tape et rajoute une ligne que tu n'avais pas mise."
+    right:
+      label: "Une raison : le vestiaire"
+      effects: {direction: "+", vestiaire: "+", relation: {brehaut: 1}, force: -1}
+      answer: "Bréhaut monte et dit « le groupe vit bien » devant les trois CV. Il en range un."

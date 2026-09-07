@@ -1,7 +1,30 @@
 # Nouvelles datées du postulat « Le promu sans un sou » (saison 2) : cartes
 # `arc: nouvelle` servies aux slots réservés, un seul bouton (effets
 # identiques des deux côtés), chacune une fois par carrière. Plus la routine
-# de Ménèche qui ressort le dossier de la voiture du président.
+# de Massenet qui ressort le dossier de la voiture du président.
+#
+# ── `year:` — les Nouvelles datées (spec variété §1.5) ───────────────────────
+# Une Nouvelle qui dit l'époque (la télé, l'arrêt Vaneste, les écus, le Flux)
+# porte l'année où elle se passe :
+#
+#   - id: co.nv.1995_arret_vaneste
+#     roles: [entraineur, joueur]
+#     arc: nouvelle          # obligatoire (ou kind: nouvelle)
+#     once: true             # obligatoire : elle ne dit son année qu'une fois
+#     year: 1995             # servable pendant les saisons 1994 et 1995
+#
+# Le metteur en scène sert **en priorité** une Nouvelle datée de la saison en
+# cours, `year ∈ [{annee}, {annee} + 1]` : une saison commence en août et finit
+# en juin, elle couvre donc deux années civiles, et l'événement du printemps
+# arrive dans la saison ouverte l'été d'avant. Tant qu'il reste une datée
+# éligible et non vue, aucune Nouvelle intemporelle n'est tirée (un seul
+# `weightedIndex`, comme avant).
+# Passée son année, elle n'est plus jamais servie : elle est **perdue**, et
+# `simulate --narrative` compte les perdues par carrière
+# (`stats.nouvelle_datee_perdue`). Écrire ≈ une datée par demi-saison suffit ;
+# au-delà, la chronologie mange les créneaux de respiration.
+# Une datée peut armer une intrigue (`set: [monde_video]` lu par le `if` d'une
+# entrée de réservoir) : c'est ainsi que l'époque change les histoires.
 cards:
   # Descente : la clause de départ du petit Mbako joue d'office.
   - id: co.nouvelle.mbako_parti
@@ -12,12 +35,12 @@ cards:
     tone: leger
     once: true
     when: "flag('descente') && !flag('mbako_vendu')"
-    text: "Ménèche : « Le petit Mbako a signé chez un grand ce matin. Une clause de descente, deux lignes. Juste une question, hors micro : vous l'aviez lue ? »"
+    text: "Massenet : « Le petit Mbako a signé chez un grand ce matin. Une clause de descente, deux lignes. Juste une question, hors micro : vous l'aviez lue ? »"
     # Vendu hors de l'arc B : ses étapes en attente (salaire de star, offre,
     # Fardelli) n'ont plus de sens, l'arc est fermé ; `!flag('mbako_vendu')`
     # garantit que la branche « marque contre toi » n'est pas concernée.
     left:
-      label: "Encaisser"
+      label: "Relire la clause"
       effects: {tribunes: "-", set: [mbako_vendu], arc: [{id: en.prodige, status: abandonne}]}
       answer: "Sa mère avait lu la clause. Elle l'avait écrite."
     right:
@@ -34,9 +57,9 @@ cards:
     tone: leger
     once: true
     when: "flag('naming_signe') && season == 1"
-    text: "Gégé, devant le panneau : « Arena Qatalyst. Le nom en orange, le nôtre en dessous, en petit. La tribune n'oublie rien, coach. »"
+    text: "Gégé, devant le panneau : « Arena Almadis. Le nom en orange, le nôtre en dessous, en petit. La tribune n'oublie rien, coach. »"
     left:
-      label: "Encaisser"
+      label: "Regarder ailleurs"
       effects: {tribunes: "-"}
       answer: "Le virage chante l'ancien nom. Le panneau ne répond pas."
     right:
@@ -44,7 +67,7 @@ cards:
       effects: {tribunes: "-"}
       answer: "Le virage chante l'ancien nom. Le panneau ne répond pas."
 
-  # Routine du sac : Ménèche ressort la voiture du président.
+  # Routine du sac : Massenet ressort la voiture du président.
   - id: en.presse.dossier_voiture
     roles: [entraineur]
     arc: presse
@@ -53,7 +76,7 @@ cards:
     tone: leger
     once: true
     when: "seen('en.evt.voiture')"
-    text: "Ménèche, dossier fermé : « Le dossier de la voiture est prêt. Il attend votre relation avec moi. Juste une question, hors micro : on est amis ? »"
+    text: "Massenet, dossier fermé : « Le dossier de la voiture est prêt. Il attend votre relation avec moi. Juste une question, hors micro : on est amis ? »"
     left:
       label: "On est amis, Pierre"
       effects: {relation: {meneche: 1}, direction: "-"}
@@ -62,3 +85,1056 @@ cards:
       label: "Publiez, je m'en fiche"
       effects: {tribunes: "+", direction: "--", relation: {meneche: -1}}
       answer: "Titre du lendemain : « L'incendiaire ». Le vestiaire encadre l'article."
+
+  # ==========================================================================
+  # La chronologie du monde, 1990 → 2050 (bible ch. 20 § 3, quatre-vingt-sept
+  # Nouvelles datées ; la quatre-vingt-septième est `co.nouvelle.arbitrage_video`
+  # de co_nouvelles.yaml, datée 2016 sur place comme le demande le § 3.3).
+  #
+  # Une Nouvelle datée ne se joue pas : elle se constate. Elle dit l'époque par
+  # ses mœurs et elle **arme** quelque chose — un drapeau de monde
+  # (`set: [monde_…]`, lu par les manchettes de content/unes/monde.yaml) ou une
+  # variable qui double le poids d'une entrée de réservoir (`var: {x: 2}`, lue
+  # par `poids_if` des chapitres 10 à 15). Les libellés restent à l'infinitif
+  # (« Encaisser », « Prendre acte », « Soupirer ») : ce sont des constats, pas
+  # des choix — seule exception à la règle de la première personne
+  # (charte § 6.1 n° 4), déjà en vigueur dans les cartes existantes.
+  #
+  # Les deux sorties portent des effets identiques (un seul bouton au rendu),
+  # l'effet est petit, `once: true` toujours, `roles` = les deux rôles jouables.
+  # Locuteurs : la bible nomme des voix que content/characters.yaml ne connaît
+  # pas encore (Vialat, Dauzat, Roux, Gérard, Dédé, Solvang, la petite Josiane,
+  # le stagiaire de l'Écho…) ; chaque réplique a été rendue à la voix la plus
+  # proche du casting compilé, tic compris, sans changer ce qui est dit.
+  # ==========================================================================
+  - id: co.nv.1990_droits_tele
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 1990
+    text: "Josiane plie le journal sur le radiateur : « Les droits de télévision ont triplé cette nuit. J'en ai vu passer, des pluies ; il en tombera bien une goutte ici. »"
+    left:  {label: "Se frotter les mains", effects: {caisse: "+", set: [monde_droits_1990], var: {sponsor: 2}}, answer: "La goutte met deux saisons à tomber. Elle tombe sur le toit du parking."}
+    right: {label: "Se frotter les mains", effects: {caisse: "+", set: [monde_droits_1990], var: {sponsor: 2}}, answer: "La goutte met deux saisons à tomber. Elle tombe sur le toit du parking."}
+
+  - id: co.nv.1990_tirs_au_but
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, moment]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 1990
+    text: "Massenet, la télé du bar sans le son : « Le capitaine des Cobalts a tiré le cinquième et le pays s'est assis d'un coup. Juste une question, hors micro : vous étiez où ? »"
+    left:  {label: "Répondre en silence", effects: {tribunes: "+", set: [monde_cobalts_1990]}, answer: "Tout le monde se souvient d'où il était. Personne ne se souvient du gardien d'en face."}
+    right: {label: "Répondre en silence", effects: {tribunes: "+", set: [monde_cobalts_1990]}, answer: "Tout le monde se souvient d'où il était. Personne ne se souvient du gardien d'en face."}
+
+  - id: co.nv.1991_tele_stade
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 1991
+    text: "Vaubourg repose le combiné sans avoir parlé : « Une chaîne vient d'acheter le club de la capitale, avec le stade et les joueurs dedans. J'ai un empire ; eux, ils ont une antenne. »"
+    left:  {label: "Encaisser", effects: {direction: "-", set: [monde_tele_stade]}, answer: "Le dimanche soir devient une case de grille. Personne n'a demandé au dimanche."}
+    right: {label: "Encaisser", effects: {direction: "-", set: [monde_tele_stade]}, answer: "Le dimanche soir devient une case de grille. Personne n'a demandé au dimanche."}
+
+  - id: co.nv.1991_controle
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, vestiaire]
+    speaker: sabatier
+    tone: leger
+    once: true
+    year: 1991
+    text: "Le Doc ferme la mallette d'un coup sec : « Deux inspecteurs sont venus sans prévenir, repartis avec des flacons numérotés. Ça reste entre la table et moi, mais la table a une porte. »"
+    left:  {label: "Noter", effects: {vestiaire: "-", var: {pharmacie: 2}}, answer: "La mallette change de placard. Le placard change de clé."}
+    right: {label: "Noter", effects: {vestiaire: "-", var: {pharmacie: 2}}, answer: "La mallette change de placard. Le placard change de clé."}
+
+  - id: co.nv.1992_buvette_portclair
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: aubert
+    tone: leger
+    once: true
+    year: 1992
+    text: "Madame Aubert, communiqué à la main : « La buvette d'un club voisin a brûlé la veille d'une demi-finale : deux cents merguez, personne dedans. Le stade, c'est de l'argent public, le fil aussi. »"
+    left:  {label: "Encaisser", effects: {caisse: "-", var: {tribune_alerte: 3}}, answer: "Le préfet écrit à tous les clubs. Ici, on regarde le plafond de la buvette pour la première fois depuis 1974."}
+    right: {label: "Encaisser", effects: {caisse: "-", var: {tribune_alerte: 3}}, answer: "Le préfet écrit à tous les clubs. Ici, on regarde le plafond de la buvette pour la première fois depuis 1974."}
+
+  - id: co.nv.1992_depot_bilan
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 1992
+    text: "Josiane, le fax n'a pas fini de sortir : « Vaucastel a déposé le bilan ce matin, quatre-vingts ans de club dans une chemise cartonnée. J'en ai vu passer, jamais avec le trésorier qui pleure. »"
+    left:  {label: "Se taire", effects: {caisse: "-", set: [monde_vaucastel]}, answer: "Ils repartiront du District. Ils remonteront en 2009 ; personne ne le sait encore."}
+    right: {label: "Se taire", effects: {caisse: "-", set: [monde_vaucastel]}, answer: "Ils repartiront du District. Ils remonteront en 2009 ; personne ne le sait encore."}
+
+  - id: co.nv.1993_continentale
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 1993
+    text: "Gégé, écharpe d'une autre couleur pour une fois : « Marsange a gagné la Coupe Continentale avec un budget de deuxième division. La fête dure trois jours ; l'audit, trois ans. »"
+    left:  {label: "Lever son verre", effects: {tribunes: "+", set: [monde_continentale_1993]}, answer: "Trois ans plus tard, un inspecteur compte les factures de la fête. Il en trouve une de mille sept cents couverts."}
+    right: {label: "Lever son verre", effects: {tribunes: "+", set: [monde_continentale_1993]}, answer: "Trois ans plus tard, un inspecteur compte les factures de la fête. Il en trouve une de mille sept cents couverts."}
+
+  - id: co.nv.1993_bons_essence
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 1993
+    text: "Massenet, carnet ouvert et stylo capuchonné : « Un club de D2 payait son gardien en bons d'essence et en jambons, sur trois saisons. Juste une question, hors micro : la Fédération examine quoi ? »"
+    left:  {label: "Encaisser", effects: {direction: "-", var: {enveloppe: 2}}, answer: "Le gardien, lui, a fait quatre-vingt mille kilomètres. Il les a tous faits pour venir s'entraîner."}
+    right: {label: "Encaisser", effects: {direction: "-", var: {enveloppe: 2}}, answer: "Le gardien, lui, a fait quatre-vingt mille kilomètres. Il les a tous faits pour venir s'entraîner."}
+
+  - id: co.nv.1998_sans_mondial
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 1994
+    text: "Berthomier lit un papier qu'il n'a pas écrit : « Les Cobalts regarderont le Mondial à la télévision, comme tout le monde, avec le son. On verra ça après le Congrès ; c'est dans onze mois. »"
+    left:  {label: "Prendre acte", effects: {direction: "-", set: [monde_sans_mondial]}, answer: "La sélection joue un amical un mardi de juin. Il y a quatre mille personnes et deux caméras."}
+    right: {label: "Prendre acte", effects: {direction: "-", set: [monde_sans_mondial]}, answer: "La sélection joue un amical un mardi de juin. Il y a quatre mille personnes et deux caméras."}
+
+  - id: co.nv.1994_dimanche_soir
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 1994
+    text: "Vaubourg, la grille des horaires sur le bureau : « Ils veulent un match le dimanche à vingt heures trente, et ils paient pour l'avoir. J'ai un empire, moi ; il ferme à vingt-deux heures. »"
+    left:  {label: "Regarder la grille", effects: {tribunes: "-", set: [monde_dimanche_soir]}, answer: "Les cars partent à seize heures et rentrent à deux. Le lundi, l'usine ne comprend pas."}
+    right: {label: "Regarder la grille", effects: {tribunes: "-", set: [monde_dimanche_soir]}, answer: "Les cars partent à seize heures et rentrent à deux. Le lundi, l'usine ne comprend pas."}
+
+  - id: co.nv.1993_arret_vaneste
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: fardelli
+    tone: leger
+    once: true
+    year: 1993
+    text: "Fardelli agite trois feuillets agrafés : « Un joueur a gagné son procès : en fin de contrat, il part où il veut, et gratis. Mon ami, on parle d'argent ou d'amitié ? Des deux, maintenant. »"
+    left:  {label: "Encaisser", effects: {direction: "-", set: [monde_libre_1993]}, answer: "Les présidents relisent tous leurs contrats en une nuit. Les agents aussi, mais en riant."}
+    right: {label: "Encaisser", effects: {direction: "-", set: [monde_libre_1993]}, answer: "Les présidents relisent tous leurs contrats en une nuit. Les agents aussi, mais en riant."}
+
+  - id: co.nv.1997_quotas
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: vukic
+    tone: leger
+    once: true
+    year: 1995
+    text: "Vukić pose une carte du continent : « On peut aligner onze étrangers, plus de compte à faire. Je te le dis parce que personne ne te le dira : ils coûteront plus cher que les vingt-deux d'avant. »"
+    left:  {label: "Prendre la carte", effects: {force: 1, set: [monde_quotas]}, answer: "Le recruteur de Valdorne achète un atlas. Il l'annote au crayon, comme un cahier."}
+    right: {label: "Prendre la carte", effects: {force: 1, set: [monde_quotas]}, answer: "Le recruteur de Valdorne achète un atlas. Il l'annote au crayon, comme un cahier."}
+
+  - id: co.nv.1996_dix_huit
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 1996
+    text: "Berthomier compte sur ses doigts, deux fois : « Le championnat passera de vingt clubs à dix-huit : quatre matchs de moins et deux clubs de trop. On verra ça après le Congrès, où ils votent. »"
+    left:  {label: "Compter aussi", effects: {direction: "-", set: [monde_dix_huit]}, answer: "La réforme est votée par vingt clubs dont deux ne seront plus là pour l'appliquer."}
+    right: {label: "Compter aussi", effects: {direction: "-", set: [monde_dix_huit]}, answer: "La réforme est votée par vingt clubs dont deux ne seront plus là pour l'appliquer."}
+
+  - id: co.nv.1996_faux_cousin
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, absurde]
+    speaker: fardelli
+    tone: leger
+    once: true
+    year: 1996
+    text: "Fardelli, costume neuf et gourmette ancienne : « Un garçon s'est présenté partout comme le cousin d'un international et a signé quatre contrats en trois mois. Lui, il parlait famille. »"
+    left:  {label: "Rire jaune", effects: {caisse: "-", var: {cousin: 3}}, answer: "Le vrai cousin apprend la nouvelle par le journal. Il n'a jamais eu de cousin."}
+    right: {label: "Rire jaune", effects: {caisse: "-", var: {cousin: 3}}, answer: "Le vrai cousin apprend la nouvelle par le journal. Il n'a jamais eu de cousin."}
+
+  - id: co.nv.1997_droits_doublent
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 1997
+    text: "Josiane, calculette et deux piles de courrier : « Les droits ont encore doublé, et la part des petits clubs a baissé de trois lignes. J'en ai vu passer, des tableaux ; celui-là, je le garde. »"
+    left:  {label: "Garder le tableau", effects: {caisse: "+", set: [monde_droits_1997], var: {sponsor: 2}}, answer: "La part augmente en écus et diminue en pourcentage. Les deux sont vrais ; on titre le premier."}
+    right: {label: "Garder le tableau", effects: {caisse: "+", set: [monde_droits_1997], var: {sponsor: 2}}, answer: "La part augmente en écus et diminue en pourcentage. Les deux sont vrais ; on titre le premier."}
+
+  - id: co.nv.1996_grand_stade
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: aubert
+    tone: leger
+    once: true
+    year: 1997
+    text: "Madame Aubert, maquette sous plexiglas : « La capitale ouvre un stade de quatre-vingts mille places aux sièges qui se rabattent seuls. Le stade, c'est de l'argent public ; le vôtre a des poutres. »"
+    left:  {label: "Regarder la maquette", effects: {tribunes: "-", var: {tribune_alerte: 2}}, answer: "On visite le Grand Stade en autocar. On rentre et on regarde la tribune Nord autrement."}
+    right: {label: "Regarder la maquette", effects: {tribunes: "-", var: {tribune_alerte: 2}}, answer: "On visite le Grand Stade en autocar. On rentre et on regarde la tribune Nord autrement."}
+
+  - id: co.nv.2002_cobalts
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 1998
+    text: "Gégé, voix cassée, écharpe bleu cobalt : « Les Cobalts sont champions du monde et la ville n'a pas dormi de la semaine. La tribune n'oublie rien, surtout pas une nuit pareille. »"
+    left:  {label: "Chanter encore", effects: {tribunes: "++", set: [monde_titre_2002]}, answer: "Trois mille licenciés de plus en septembre. Mille sont restés vingt ans."}
+    right: {label: "Chanter encore", effects: {tribunes: "++", set: [monde_titre_2002]}, answer: "Trois mille licenciés de plus en septembre. Mille sont restés vingt ans."}
+
+  - id: co.nv.1998_libre
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: fardelli
+    tone: leger
+    once: true
+    year: 1998
+    text: "Fardelli tapote une enveloppe kraft vide : « Un titulaire de D1 est parti libre, son club n'a pas touché un franc, seulement une lettre. On ne parle de rien : il n'y a rien. »"
+    left:  {label: "Ranger l'enveloppe", effects: {direction: "-", set: [monde_premier_libre]}, answer: "Le président fait afficher les dates de fin de contrat au mur du bureau. Elles y resteront dix ans."}
+    right: {label: "Ranger l'enveloppe", effects: {direction: "-", set: [monde_premier_libre]}, answer: "Le président fait afficher les dates de fin de contrat au mur du bureau. Elles y resteront dix ans."}
+
+  - id: co.nv.1999_fonds
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: nassir
+    tone: leger
+    once: true
+    year: 1999
+    text: "Ilyas repose une tasse minuscule : « Un fonds a acheté un club de première division en une nuit, avec le centre de formation et les dettes. Ce n'est pas un club, c'est un actif. »"
+    left:  {label: "Encaisser", effects: {direction: "-", set: [monde_fonds]}, answer: "Les autres présidents appellent le vendeur pour savoir le prix. Aucun ne le dit."}
+    right: {label: "Encaisser", effects: {direction: "-", set: [monde_fonds]}, answer: "Les autres présidents appellent le vendeur pour savoir le prix. Aucun ne le dit."}
+
+  - id: co.nv.1999_but_en_or
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, arbitrage]
+    speaker: vecchio
+    tone: leger
+    once: true
+    year: 1999
+    text: "Vecchio tient ses gants à bout de bras : « On a inventé un but qui arrête le match tout de suite, comme une gifle, et le gardien reste seul dessus. J'en ai vu d'autres ; celle-là, de dos. »"
+    left:  {label: "Regarder les gants", effects: {vestiaire: "-", set: [monde_but_en_or]}, answer: "La règle disparaîtra en cinq ans. Le gardien qui l'a prise, non."}
+    right: {label: "Regarder les gants", effects: {vestiaire: "-", set: [monde_but_en_or]}, answer: "La règle disparaîtra en cinq ans. Le gardien qui l'a prise, non."}
+
+  - id: co.nv.2000_fax_1900
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, absurde]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2000
+    text: "Josiane tient un rouleau de papier thermique : « Le fax date tous les contrats de janvier au premier janvier mille neuf cents. J'en ai vu passer, jamais un club renvoyé au siècle dernier. »"
+    left:  {label: "Redater à la main", effects: {direction: "-", var: {fax: 2}}, answer: "Elle redate quarante-deux feuilles au stylo bille. La Fédération les accepte toutes."}
+    right: {label: "Redater à la main", effects: {direction: "-", var: {fax: 2}}, answer: "Elle redate quarante-deux feuilles au stylo bille. La Fédération les accepte toutes."}
+
+  - id: co.nv.2000_ecus_annonce
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 2000
+    text: "Vaubourg, une calculette dans chaque main : « Dans deux ans tout se signera en écus, et ce qui vaut un million en vaudra cent cinquante mille. J'ai un empire ; il va changer d'unité. »"
+    left:  {label: "Recompter", effects: {caisse: "-"}, answer: "Les joueurs recomptent leur salaire dans les deux monnaies pendant six ans. Ils y perdent à chaque fois."}
+    right: {label: "Recompter", effects: {caisse: "-"}, answer: "Les joueurs recomptent leur salaire dans les deux monnaies pendant six ans. Ils y perdent à chaque fois."}
+
+  - id: co.nv.2001_licence_agents
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, agents]
+    speaker: fardelli
+    tone: leger
+    once: true
+    year: 2001
+    text: "Fardelli, dossier à onglets : « La Fédération délivre des licences d'agent depuis ce matin, avec un examen et un numéro. Mon ami, à partir d'aujourd'hui je compte aussi les numéros. »"
+    left:  {label: "Prendre note", effects: {direction: "+", set: [monde_licence_agents]}, answer: "Onze agents passent l'examen. Quatre le réussissent. Les sept autres travaillent quand même."}
+    right: {label: "Prendre note", effects: {direction: "+", set: [monde_licence_agents]}, answer: "Onze agents passent l'examen. Quatre le réussissent. Les sept autres travaillent quand même."}
+
+  - id: co.nv.2002_ecus
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2002
+    text: "Josiane étale trois fiches de paie : « Les salaires sont passés en écus, et personne ne sait plus s'il gagne beaucoup. J'en ai vu passer, des monnaies ; celle-là, on la divise à voix haute. »"
+    left:  {label: "Recompter trois fois", effects: {caisse: "-", set: [monde_ecus]}, answer: "La buvette arrondit à l'écu supérieur. Personne ne s'en aperçoit avant Noël."}
+    right: {label: "Recompter trois fois", effects: {caisse: "-", set: [monde_ecus]}, answer: "La buvette arrondit à l'écu supérieur. Personne ne s'en aperçoit avant Noël."}
+
+  - id: co.nv.2002_aubert_ministre
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aubert
+    tone: leger
+    once: true
+    year: 2002
+    text: "Madame Aubert, même tailleur, autre bureau : « Je m'occupe du sport pour tout le pays à partir de lundi, stades compris. Le stade, c'est de l'argent public ; j'ai les deux clés maintenant. »"
+    left:  {label: "Encaisser", effects: {direction: "+", set: [aubert_ministre]}, answer: "Le club reçoit une lettre à en-tête neuf. Elle dit exactement ce que disait l'ancienne."}
+    right: {label: "Encaisser", effects: {direction: "+", set: [aubert_ministre]}, answer: "Le club reçoit une lettre à en-tête neuf. Elle dit exactement ce que disait l'ancienne."}
+
+  - id: co.nv.2003_mediacrash
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 2003
+    text: "Vaubourg, enveloppe scellée sur la table : « Une chaîne inconnue a mis deux fois le prix et a tout emporté, poules comprises. J'ai un empire ; j'ai quand même lu leur bilan. »"
+    left:  {label: "Lire le bilan aussi", effects: {caisse: "+", set: [monde_mediacrash]}, answer: "L'argent arrive en août, entier. On note la date ; on la regrettera en 2006."}
+    right: {label: "Lire le bilan aussi", effects: {caisse: "+", set: [monde_mediacrash]}, answer: "L'argent arrive en août, entier. On note la date ; on la regrettera en 2006."}
+
+  - id: co.nv.2004_fusion_villages
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: aubert
+    tone: leger
+    once: true
+    year: 2004
+    text: "Madame Aubert, registre ouvert, doigt sur la ligne : « Loubières et Montbéliac ont fusionné en une seule société, maillot mi-jaune mi-vert. Deux buvettes, un seul comptable. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-", var: {fusion: 2}}, answer: "Trois cents licenciés, deux clubs de supporters, aucun qui se parle. Le maillot, lui, se vend bien."}
+    right: {label: "Encaisser", effects: {tribunes: "-", var: {fusion: 2}}, answer: "Trois cents licenciés, deux clubs de supporters, aucun qui se parle. Le maillot, lui, se vend bien."}
+
+  - id: co.nv.2005_buvette_anciens
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2005
+    text: "Gégé, tablier repassé et boîte en fer neuve : « On a rouvert la buvette des anciens le dimanche matin, avec les verres du placard. On payait en bières ; maintenant on rend la monnaie. »"
+    left:  {label: "Payer une tournée", effects: {tribunes: "+", set: [monde_buvette_anciens]}, answer: "La caisse reste sur la table, ouverte, toute la journée. Personne ne la regarde ; tout le monde la voit."}
+    right: {label: "Payer une tournée", effects: {tribunes: "+", set: [monde_buvette_anciens]}, answer: "La caisse reste sur la table, ouverte, toute la journée. Personne ne la regarde ; tout le monde la voit."}
+
+  - id: co.nv.2006_mediacrash_defaut
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 2006
+    text: "Berthomier, deux colonnes et un trait : « Le diffuseur n'a pas versé la deuxième échéance et vingt clubs ont bâti leur budget dessus. On verra ça après le Congrès ; à cette heure, je compte à zéro. »"
+    left:  {label: "Rouvrir le budget", effects: {caisse: "--", set: [monde_defaut_droits]}, answer: "Six clubs vendent un joueur en janvier. Deux vendent leur centre de formation."}
+    right: {label: "Rouvrir le budget", effects: {caisse: "--", set: [monde_defaut_droits]}, answer: "Six clubs vendent un joueur en janvier. Deux vendent leur centre de formation."}
+
+  - id: co.nv.2007_flux
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2007
+    text: "Léa retourne son écran vers toi : « Il y a un endroit où tout le monde écrit ce qu'il pense, à toute heure, sous son vrai nom ou pas. Vous confirmez ? Trois cents personnes confirment pour vous. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-", set: [monde_flux]}, answer: "Le président ouvre un compte le soir même. Il écrit son premier message à trois heures du matin."}
+    right: {label: "Encaisser", effects: {tribunes: "-", set: [monde_flux]}, answer: "Le président ouvre un compte le soir même. Il écrit son premier message à trois heures du matin."}
+
+  - id: co.nv.2007_droits_reviennent
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2007
+    text: "Massenet, deux mots puis il repart : « Télé-Stade reprend le championnat en août, au même prix qu'il y a quatre ans. Juste une question, hors micro : qui a gagné, dans l'histoire ? »"
+    left:  {label: "Signer", effects: {caisse: "+", var: {sponsor: 2}}, answer: "Le championnat retrouve son dimanche soir. Il ne retrouve pas ses deux saisons perdues."}
+    right: {label: "Signer", effects: {caisse: "+", var: {sponsor: 2}}, answer: "Le championnat retrouve son dimanche soir. Il ne retrouve pas ses deux saisons perdues."}
+
+  - id: co.nv.2008_algorithme
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: vukic
+    tone: leger
+    once: true
+    year: 2008
+    text: "Vukić, feuille imprimée : « Lyonnet paie trois garçons qui notent les joueurs en colonnes, sans aller au stade. Je te le dis parce que personne ne te le dira : leur tableau n'a jamais pris la pluie. »"
+    left:  {label: "Regarder la feuille", effects: {force: 1, set: [monde_algorithme]}, answer: "Le tableau a raison deux fois sur trois. La troisième fois, c'est le recruteur."}
+    right: {label: "Regarder la feuille", effects: {force: 1, set: [monde_algorithme]}, answer: "Le tableau a raison deux fois sur trois. La troisième fois, c'est le recruteur."}
+
+  - id: co.nv.2008_mirevaux
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, formation]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2008
+    text: "Léa, deux feuilles et un stylo rouge : « Mirevaux a professionnalisé sa section féminine : douze contrats, un vestiaire, un budget de buvette. Vous confirmez que ça tiendra ? »"
+    left:  {label: "Encaisser", effects: {tribunes: "+", set: [monde_feminines]}, answer: "Quatre cents personnes au premier match. Sept cents au deuxième, parce qu'il pleuvait ailleurs."}
+    right: {label: "Encaisser", effects: {tribunes: "+", set: [monde_feminines]}, answer: "Quatre cents personnes au premier match. Sept cents au deuxième, parce qu'il pleuvait ailleurs."}
+
+  - id: co.nv.2009_fair_play
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 2009
+    text: "Berthomier pose une règle sur le bilan : « L'Union a voté simple : un club ne dépense que ce qu'il gagne, le reste est un écart. On verra ça après le Congrès ; les écarts, on les compte deux fois. »"
+    left:  {label: "Relire la règle", effects: {caisse: "-", set: [monde_fair_play]}, answer: "Les fonds inventent le contrat de sponsor à la maison. L'Inspecteur invente la colonne d'en face."}
+    right: {label: "Relire la règle", effects: {caisse: "-", set: [monde_fair_play]}, answer: "Les fonds inventent le contrat de sponsor à la maison. L'Inspecteur invente la colonne d'en face."}
+
+  - id: co.nv.2010_multi_propriete
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: nassir
+    tone: leger
+    once: true
+    year: 2010
+    text: "Ilyas, carte du monde à deux punaises : « Nous avons acheté un deuxième club à huit mille kilomètres du premier, mêmes couleurs. Deux actifs se prêtent des joueurs sans commission. »"
+    left:  {label: "Encaisser", effects: {direction: "-", set: [monde_club_frere]}, answer: "Un jeune part en prêt un mardi et revient en janvier avec un accent. Il n'a joué que six matchs."}
+    right: {label: "Encaisser", effects: {direction: "-", set: [monde_club_frere]}, answer: "Un jeune part en prêt un mardi et revient en janvier avec un accent. Il n'a joué que six matchs."}
+
+  - id: co.nv.2011_qatalyst_capitale
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2011
+    text: "Massenet, micro ouvert qu'il croit fermé : « Le club de la capitale a été racheté par un fonds du désert, et le premier virement dépasse le budget de la Ligue. On met combien de zéros ? »"
+    left:  {label: "Compter les zéros", effects: {direction: "-", set: [monde_capitale_rachetee]}, answer: "Les salaires de la ligue montent de vingt pour cent en deux étés. Les recettes, non."}
+    right: {label: "Compter les zéros", effects: {direction: "-", set: [monde_capitale_rachetee]}, answer: "Les salaires de la ligue montent de vingt pour cent en deux étés. Les recettes, non."}
+
+  - id: co.nv.2011_seize_ans
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, formation]
+    speaker: mere_mbako
+    tone: leger
+    once: true
+    year: 2011
+    text: "La mère de Mbako, sac posé, pas ouvert : « Trois clubs sont venus voir un garçon de seize ans au mercredi, contrats prêts. Mon fils n'a besoin de personne ; celui-là a besoin de sa mère. »"
+    left:  {label: "Fermer la porte", effects: {vestiaire: "-", var: {pepite: 2}}, answer: "La Fédération écrit une note sur l'âge minimum. Elle arrive en mars, après la signature."}
+    right: {label: "Fermer la porte", effects: {vestiaire: "-", var: {pepite: 2}}, answer: "La Fédération écrit une note sur l'âge minimum. Elle arrive en mars, après la signature."}
+
+  - id: co.nv.2012_naming_partout
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2012
+    text: "Gégé montre un panneau du menton : « Quatre stades du championnat ont changé de nom cette année, aucun ne s'appelle comme sa ville. La tribune n'oublie rien ; elle n'apprend pas les nouveaux. »"
+    left:  {label: "Dire l'ancien nom", effects: {tribunes: "-", var: {naming: 2}}, answer: "Le speaker dit le nouveau nom. Le virage répond l'ancien, plus fort, à chaque annonce."}
+    right: {label: "Dire l'ancien nom", effects: {tribunes: "-", var: {naming: 2}}, answer: "Le speaker dit le nouveau nom. Le virage répond l'ancien, plus fort, à chaque annonce."}
+
+  - id: co.nv.2013_agents_plus_riches
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, agents]
+    speaker: fardelli
+    tone: leger
+    once: true
+    year: 2013
+    text: "Fardelli, montre neuve et sourire ancien : « Les commissions d'un seul mercato dépassent le budget annuel de deux clubs de D1. Mon ami, on ne parle plus que d'argent. »"
+    left:  {label: "Encaisser", effects: {caisse: "-", set: [monde_agents_riches]}, answer: "Un président demande à devenir agent. On lui répond qu'il est trop vieux et trop connu."}
+    right: {label: "Encaisser", effects: {caisse: "-", set: [monde_agents_riches]}, answer: "Un président demande à devenir agent. On lui répond qu'il est trop vieux et trop connu."}
+
+  - id: co.nv.2014_meme
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2014
+    text: "Léa tend son téléphone, image figée : « Une grimace de vingt-quatre images tourne depuis hier avec sept phrases écrites dessus. Vous confirmez ? Vous êtes en boucle depuis quatorze heures. »"
+    left:  {label: "Regarder l'image", effects: {tribunes: "-", set: [monde_meme]}, answer: "La grimace dure toute la saison. Le match d'où elle vient, personne ne s'en souvient."}
+    right: {label: "Regarder l'image", effects: {tribunes: "-", set: [monde_meme]}, answer: "La grimace dure toute la saison. Le match d'où elle vient, personne ne s'en souvient."}
+
+  - id: co.nv.2015_gazette_en_ligne
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2015
+    text: "Massenet, sans lever les yeux : « La Gazette ne s'imprime plus : elle paraît quand il se passe quelque chose, c'est-à-dire tout le temps. Trois fois par jour désormais, hors micro. »"
+    left:  {label: "Encaisser", effects: {direction: "-", set: [monde_gazette_en_ligne]}, answer: "Le kiosque du stade garde une pile de vieux numéros. Ils se vendent mieux qu'avant."}
+    right: {label: "Encaisser", effects: {direction: "-", set: [monde_gazette_en_ligne]}, answer: "Le kiosque du stade garde une pile de vieux numéros. Ils se vendent mieux qu'avant."}
+
+  - id: co.nv.2016_legruet_part
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2016
+    text: "Josiane referme une chemise cartonnée : « Le président de la Fédération part après vingt-huit ans, dont vingt-six gagnés de moins de dix voix. J'en ai vu passer ; pas d'aussi bien rangés. »"
+    left:  {label: "Refermer la chemise", effects: {direction: "-", set: [monde_legruet_parti]}, answer: "Il emporte une photo et laisse le reste. Le reste tient dans quatre armoires."}
+    right: {label: "Refermer la chemise", effects: {direction: "-", set: [monde_legruet_parti]}, answer: "Il emporte une photo et laisse le reste. Le reste tient dans quatre armoires."}
+
+  - id: co.nv.2017_quarante_huit
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 2017
+    text: "Berthomier, main levée avant le vote : « Le Mondial passera à quarante-huit équipes, vingt-deux pays de plus à la fête. On verra ça après le Congrès ; mes amis sont désormais quarante-huit. »"
+    left:  {label: "Encaisser", effects: {direction: "+", set: [monde_quarante_huit]}, answer: "Six confédérations votent pour. Les joueurs comptent les matchs et ne votent pas."}
+    right: {label: "Encaisser", effects: {direction: "+", set: [monde_quarante_huit]}, answer: "Six confédérations votent pour. Les joueurs comptent les matchs et ne votent pas."}
+
+  - id: co.nv.2018_lea_redac
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2018
+    text: "Léa, épreuve de Une à la main : « Je dirige le journal depuis ce matin, et la Une de demain se termine par un point d'interrogation. Soixante-douze ans pour poser une question. »"
+    left:  {label: "Lire l'épreuve", effects: {direction: "-", set: [monde_lea_redac]}, answer: "Quatre présidents appellent avant la parution. Trois pour féliciter, un pour autre chose."}
+    right: {label: "Lire l'épreuve", effects: {direction: "-", set: [monde_lea_redac]}, answer: "Quatre présidents appellent avant la parution. Trois pour féliciter, un pour autre chose."}
+
+  - id: co.nv.2019_ligue_fermee
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 2019
+    text: "Vaubourg, table longue, douze chaises, deux vides : « Quatorze clubs ont annoncé une ligue entre eux, sans classement à perdre, et l'ont retirée le surlendemain. Vous étiez assis ou debout ? »"
+    left:  {label: "Rester debout", effects: {tribunes: "-", set: [monde_ligue_fermee]}, answer: "Les bâches sortent en deux heures dans quarante stades. Elles restent pliées sous les bars vingt ans."}
+    right: {label: "Rester debout", effects: {tribunes: "-", set: [monde_ligue_fermee]}, answer: "Les bâches sortent en deux heures dans quarante stades. Elles restent pliées sous les bars vingt ans."}
+
+  - id: co.nv.2019_prix_du_billet
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2019
+    text: "Gégé, trois talons de billets en éventail : « Le billet du virage a doublé en six ans et la moyenne d'âge de la Nord a pris huit ans. La tribune n'oublie rien ; elle vieillit, c'est tout. »"
+    left:  {label: "Compter les talons", effects: {tribunes: "-", var: {abonnement: 2}}, answer: "Le club crée un tarif jeune en février. Il est plafonné à deux cents places."}
+    right: {label: "Compter les talons", effects: {tribunes: "-", var: {abonnement: 2}}, answer: "Le club crée un tarif jeune en février. Il est plafonné à deux cents places."}
+
+  - id: co.nv.2020_compte_anonyme
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2020
+    text: "Léa projette une capture d'écran : « Un compte sans nom et sans visage a douze mille abonnés et sait ce qui se dit au local avant nous. Vous confirmez ? Lui, il est en avance. »"
+    left:  {label: "Chercher qui c'est", effects: {tribunes: "-", set: [monde_compte_anonyme]}, answer: "On cherche pendant six mois. On trouve une écharpe de profil et rien d'autre."}
+    right: {label: "Chercher qui c'est", effects: {tribunes: "-", set: [monde_compte_anonyme]}, answer: "On cherche pendant six mois. On trouve une écharpe de profil et rien d'autre."}
+
+  - id: co.nv.2021_quatre_sponsors
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, sponsors]
+    speaker: nassir
+    tone: leger
+    once: true
+    year: 2021
+    text: "Ilyas déplie un maillot sur le comptoir : « Quatre noms tiennent sur un maillot : la poitrine, la manche, le dos et le short. Ce n'est pas un maillot, c'est un actif à quatre faces. »"
+    left:  {label: "Regarder la manche", effects: {caisse: "+", var: {sponsor: 2}}, answer: "Le maillot rapporte trois fois plus. Il devient illisible de la tribune Est."}
+    right: {label: "Regarder la manche", effects: {caisse: "+", var: {sponsor: 2}}, answer: "Le maillot rapporte trois fois plus. Il devient illisible de la tribune Est."}
+
+  - id: co.nv.2022_josiane_retraite
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2022
+    text: "Josiane, carton à archives et deux stylos dessus : « Je m'arrête après trente-cinq ans, quatre présidents, deux fédérations et une machine à café gagnée en 1994. Ma nièce en verra d'autres. »"
+    left:  {label: "Porter le carton", effects: {direction: "-", set: [monde_josiane_retraite]}, answer: "Elle laisse les dossiers rangés par année. Ils resteront rangés par année pendant vingt ans."}
+    right: {label: "Porter le carton", effects: {direction: "-", set: [monde_josiane_retraite]}, answer: "Elle laisse les dossiers rangés par année. Ils resteront rangés par année pendant vingt ans."}
+
+  - id: co.nv.2023_calendrier_plein
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, vestiaire]
+    speaker: brehaut
+    tone: leger
+    once: true
+    year: 2023
+    text: "Bréhaut, calendrier annoté au feutre : « Un international jouera soixante-douze matchs cette saison, sans compter les avions. Le groupe vit bien ; là, le groupe est devenu un calendrier. »"
+    left:  {label: "Compter les avions", effects: {vestiaire: "-", var: {greve: 2}}, answer: "Le syndicat demande une réunion. On la fixe en juin, pendant le tournoi."}
+    right: {label: "Compter les avions", effects: {vestiaire: "-", var: {greve: 2}}, answer: "Le syndicat demande une réunion. On la fixe en juin, pendant le tournoi."}
+
+  - id: co.nv.2024_kick
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2024
+    text: "Massenet regarde l'écran, pas toi : « Les matchs se regardent sur une application, avec les commentaires des gens qui défilent sur le terrain. Hors micro : ils écrivent par-dessus le ballon. »"
+    left:  {label: "Encaisser", effects: {tribunes: "-", set: [monde_kick]}, answer: "On peut couper le fil de commentaires. Onze pour cent des gens le coupent."}
+    right: {label: "Encaisser", effects: {tribunes: "-", set: [monde_kick]}, answer: "On peut couper le fil de commentaires. Onze pour cent des gens le coupent."}
+
+  - id: co.nv.2024_billet_sans_papier
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2024
+    text: "Josiane, imprimante débranchée : « Les abonnements n'ont plus de carnet : c'est un code sur le téléphone, et il change à chaque match. J'en ai vu passer ; celui-là ne se plie pas. »"
+    left:  {label: "Imprimer quand même", effects: {tribunes: "-", var: {abonnement: 2}}, answer: "Le club imprime quatre cents carnets pour les anciens. Ils sont tous pris en trois jours."}
+    right: {label: "Imprimer quand même", effects: {tribunes: "-", var: {abonnement: 2}}, answer: "Le club imprime quatre cents carnets pour les anciens. Ils sont tous pris en trois jours."}
+
+  - id: co.nv.2025_memoires_meneche
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2025
+    text: "Massenet pousse un livre épais vers toi : « Six cents pages sur trente-cinq ans, et j'ai gardé deux histoires pour moi, dont une vous concerne. Juste une question : vous voulez le chapitre onze ? »"
+    left:  {label: "Ouvrir au chapitre onze", effects: {direction: "-", set: [monde_memoires]}, answer: "Le livre se vend quarante mille exemplaires. Le chapitre onze fait quatre pages et ne nomme personne."}
+    right: {label: "Ouvrir au chapitre onze", effects: {direction: "-", set: [monde_memoires]}, answer: "Le livre se vend quarante mille exemplaires. Le chapitre onze fait quatre pages et ne nomme personne."}
+
+  - id: co.nv.2026_greve
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, vestiaire]
+    speaker: brehaut
+    tone: leger
+    once: true
+    year: 2026
+    text: "Bréhaut, micro de fortune sur un parking : « Les joueurs de trente et un pays ne joueront pas les deux prochaines journées, et personne n'a prévenu les clubs. Le groupe vit bien, ce week-end. »"
+    left:  {label: "Encaisser", effects: {vestiaire: "+", caisse: "-", set: [monde_greve]}, answer: "Deux journées sans football. Les buvettes ouvrent quand même, par habitude."}
+    right: {label: "Encaisser", effects: {vestiaire: "+", caisse: "-", set: [monde_greve]}, answer: "Deux journées sans football. Les buvettes ouvrent quand même, par habitude."}
+
+  - id: co.nv.2026_mondial_amateurs
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, moment]
+    speaker: clow
+    tone: leger
+    once: true
+    year: 2026
+    text: "Corven, survêtement propre pour une fois : « Pendant la grève, ils ont monté un tournoi mondial avec des équipes de village, et c'était plein. C'était mieux, et ça ne durera pas. »"
+    left:  {label: "Regarder jusqu'au bout", effects: {tribunes: "+", set: [monde_mondial_amateurs]}, answer: "Un gardien de district passe à la télévision nationale un mardi soir. Il travaille le mercredi."}
+    right: {label: "Regarder jusqu'au bout", effects: {tribunes: "+", set: [monde_mondial_amateurs]}, answer: "Un gardien de district passe à la télévision nationale un mardi soir. Il travaille le mercredi."}
+
+  - id: co.nv.2027_arbitre_machine
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, arbitrage]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2027
+    text: "Massenet, sifflet posé sur la table : « On teste un système qui décide des hors-jeu tout seul, en huit centièmes, sans lever la tête. Hors micro : il ne se trompe pas les jours de pluie. »"
+    left:  {label: "Regarder le sifflet", effects: {tribunes: "-", set: [monde_arbitre_machine]}, answer: "La main de l'arbitre reste en l'air un dimanche de novembre. Personne ne la regrette à voix haute."}
+    right: {label: "Regarder le sifflet", effects: {tribunes: "-", set: [monde_arbitre_machine]}, answer: "La main de l'arbitre reste en l'air un dimanche de novembre. Personne ne la regrette à voix haute."}
+
+  - id: co.nv.2028_milliard
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, mercato]
+    speaker: fardelli
+    tone: leger
+    once: true
+    year: 2028
+    text: "Fardelli montre un chiffre écrit sur une serviette : « Un joueur transféré pour un milliard d'écus, onze pour cent de commission et deux ans de garantie. J'ai compté deux fois, mon ami. »"
+    left:  {label: "Relire la serviette", effects: {caisse: "-", set: [monde_milliard]}, answer: "Le club vendeur construit un centre de formation et une piscine. Il redescend quatre ans plus tard."}
+    right: {label: "Relire la serviette", effects: {caisse: "-", set: [monde_milliard]}, answer: "Le club vendeur construit un centre de formation et une piscine. Il redescend quatre ans plus tard."}
+
+  - id: co.nv.2028_limite_age
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 2028
+    text: "Berthomier, article surligné page 41 : « Le Congrès a voté une limite d'âge à soixante-quinze ans pour tous les postes élus, au mandat suivant. L'exception est page quarante et un. »"
+    left:  {label: "Lire la page 41", effects: {direction: "-", set: [monde_limite_age]}, answer: "Quatre dirigeants fêtent leurs soixante-quinze ans la même année. Trois trouvent la page."}
+    right: {label: "Lire la page 41", effects: {direction: "-", set: [monde_limite_age]}, answer: "Quatre dirigeants fêtent leurs soixante-quinze ans la même année. Trois trouvent la page."}
+
+  - id: co.nv.2020_legruet_mort
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aubert
+    tone: leger
+    once: true
+    year: 2029
+    text: "Madame Aubert, chapeau à la main, dehors : « On a enterré le président de la Fédération ce matin, trois cents districts derrière le corbillard. Il ne s'est jamais souvenu de mon prénom. »"
+    left:  {label: "Rester dehors", effects: {direction: "-", set: [monde_legruet_mort]}, answer: "La Fédération met un drapeau en berne trois jours. Le quatrième, on discute de la succession."}
+    right: {label: "Rester dehors", effects: {direction: "-", set: [monde_legruet_mort]}, answer: "La Fédération met un drapeau en berne trois jours. Le quatrième, on discute de la succession."}
+
+  - id: co.nv.2030_mondial_hiver
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, vestiaire]
+    speaker: sabatier
+    tone: leger
+    once: true
+    year: 2030
+    text: "Le Doc, deux noms surlignés : « Le Mondial se joue en décembre, en plein championnat ; les clubs rendront les joueurs le lundi. Ça reste entre la table et moi : personne ne souffle avant mars. »"
+    left:  {label: "Encaisser", effects: {vestiaire: "-", set: [monde_mondial_hiver]}, answer: "Trois clubs perdent leur meilleur joueur en janvier. Aucun ne perd le même."}
+    right: {label: "Encaisser", effects: {vestiaire: "-", set: [monde_mondial_hiver]}, answer: "Trois clubs perdent leur meilleur joueur en janvier. Aucun ne perd le même."}
+
+  - id: co.nv.2030_biere_quinze
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2030
+    text: "Gégé, ardoise réécrite trois fois : « La bière du stade est passée à quinze écus, celle de la buvette des anciens reste à trois. Là-haut, on paie la bière comme un repas. »"
+    left:  {label: "Rester en bas", effects: {tribunes: "-", var: {abonnement: 2}}, answer: "La buvette des anciens ne désemplit pas. Le club envisage de la fermer pour concurrence déloyale."}
+    right: {label: "Rester en bas", effects: {tribunes: "-", var: {abonnement: 2}}, answer: "La buvette des anciens ne désemplit pas. Le club envisage de la fermer pour concurrence déloyale."}
+
+  - id: co.nv.2031_vecchio
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, moment]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2031
+    text: "Massenet, montre qu'il ne remonte pas : « Une minute de silence pour un gardien qui en avait fait quarante et une ; le stade a tenu deux. Hors micro : la deuxième était pour nous. »"
+    left:  {label: "Compter jusqu'à deux", effects: {vestiaire: "-", set: [monde_vecchio_mort]}, answer: "Les gants sont accrochés au-dessus du couloir. Personne ne les décroche, jamais."}
+    right: {label: "Compter jusqu'à deux", effects: {vestiaire: "-", set: [monde_vecchio_mort]}, answer: "Les gants sont accrochés au-dessus du couloir. Personne ne les décroche, jamais."}
+
+  - id: co.nv.2031_radio_ferme
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2031
+    text: "Gégé, casque sur la table et micro débranché : « Radio Tribune s'est arrêtée mardi à minuit, sans le dire, au milieu de l'appel d'un auditeur. La tribune n'oublie rien ; lui, il attend encore. »"
+    left:  {label: "Rappeler l'auditeur", effects: {tribunes: "-"}, answer: "L'émission de vingt-deux heures est remplacée par de la musique. Personne ne répond aux lettres."}
+    right: {label: "Rappeler l'auditeur", effects: {tribunes: "-"}, answer: "L'émission de vingt-deux heures est remplacée par de la musique. Personne ne répond aux lettres."}
+
+  - id: co.nv.2032_socios
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2032
+    text: "Gégé, badge trop grand, écharpe intacte : « Trois clubs ont été rachetés par leurs abonnés, cinquante écus la part, et le stade a repris son ancien nom. La tribune signe les chèques, maintenant. »"
+    left:  {label: "Prendre une part", effects: {tribunes: "+", set: [monde_socios]}, answer: "Le conseil se réunit au local, le mardi, à dix-neuf heures. Il y a du café et des chaises pliantes."}
+    right: {label: "Prendre une part", effects: {tribunes: "+", set: [monde_socios]}, answer: "Le conseil se réunit au local, le mardi, à dix-neuf heures. Il y a du café et des chaises pliantes."}
+
+  - id: co.nv.2032_gazette_payante
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    year: 2032
+    text: "Massenet, sans carnet cette fois : « La Gazette ne vend plus d'abonnements : elle vend l'affaire à l'unité, dix écus, payables avant de lire. On facture désormais à la note. »"
+    left:  {label: "Payer pour voir", effects: {direction: "-"}, answer: "Les affaires à dix écus se revendent à deux dans les cours de récréation. Le tirage triple."}
+    right: {label: "Payer pour voir", effects: {direction: "-"}, answer: "Les affaires à dix écus se revendent à deux dans les cours de récréation. Le tirage triple."}
+
+  - id: co.nv.2033_agence_notation
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: legruet
+    tone: leger
+    once: true
+    year: 2033
+    text: "Berthomier, grille à cinq colonnes : « La Commission est devenue une agence : chaque club reçoit une note publique, de A à E, tous les six mois. C'est la note qui juge, et les banques la lisent. »"
+    left:  {label: "Demander la grille", effects: {caisse: "-", set: [monde_notation]}, answer: "Deux clubs de D1 sont notés D. Leur assurance double avant le premier match."}
+    right: {label: "Demander la grille", effects: {caisse: "-", set: [monde_notation]}, answer: "Deux clubs de D1 sont notés D. Leur assurance double avant le premier match."}
+
+  - id: co.nv.2034_ecole_a_douze
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, formation]
+    speaker: clow
+    tone: leger
+    once: true
+    year: 2034
+    text: "Corven, tableau des âges, deux lignes barrées : « Les centres recrutent à douze ans, avec l'école dans le même bâtiment. On les fait entrer deux ans plus tôt et sortir au même âge. »"
+    left:  {label: "Barrer une ligne", effects: {vestiaire: "-", var: {pepite: 2}}, answer: "Sur quarante enfants entrés à douze ans, un signera pro. On le sait ; on recrute quand même."}
+    right: {label: "Barrer une ligne", effects: {vestiaire: "-", var: {pepite: 2}}, answer: "Sur quarante enfants entrés à douze ans, un signera pro. On le sait ; on recrute quand même."}
+
+  - id: co.nv.2035_quotidien_offert
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2035
+    text: "Léa montre le bandeau du sponsor sur l'épreuve : « Le Quotidien ne se vend plus : il est offert, et le nom du fonds est sous le nôtre, en orange. Vous confirmez ? Moi, j'ai gardé la Une. »"
+    left:  {label: "Lire le bandeau", effects: {direction: "-"}, answer: "Le tirage triple en un mois. Les questions en Une passent de trois par semaine à une."}
+    right: {label: "Lire le bandeau", effects: {direction: "-"}, answer: "Le tirage triple en un mois. Les questions en Une passent de trois par semaine à une."}
+
+  - id: co.nv.2035_stade_partage
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2035
+    text: "Josiane, planning mural à deux couleurs : « Deux clubs partagent le même stade dès août, un dimanche sur deux, avec deux jeux de bâches. J'en ai vu passer ; jamais deux étiquettes sur une porte. »"
+    left:  {label: "Regarder le planning", effects: {caisse: "+", set: [monde_stade_partage]}, answer: "La pelouse tient jusqu'en novembre. Après, elle ne tient plus pour personne."}
+    right: {label: "Regarder le planning", effects: {caisse: "+", set: [monde_stade_partage]}, answer: "La pelouse tient jusqu'en novembre. Après, elle ne tient plus pour personne."}
+
+  - id: co.nv.2036_joueur_clone
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, absurde]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2036
+    text: "Léa, doigt sur le titre : « La Gazette annonce qu'un club a cloné son avant-centre et l'a aligné deux fois en amical. Vous confirmez ? Au local, on demande lequel paie sa tournée. »"
+    left:  {label: "Chercher le démenti", effects: {tribunes: "+"}, answer: "Le démenti paraît quatre jours plus tard, en corps huit. Le mème, lui, dure six ans."}
+    right: {label: "Chercher le démenti", effects: {tribunes: "+"}, answer: "Le démenti paraît quatre jours plus tard, en corps huit. Le mème, lui, dure six ans."}
+
+  - id: co.nv.2037_onze_contre_modele
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, absurde]
+    speaker: vukic
+    tone: leger
+    once: true
+    year: 2037
+    text: "Vukić, un verre d'eau et rien d'autre : « Un club a joué un amical où la compo et les changements venaient d'un modèle, sans entraîneur sur le banc. Personne ne te le dira : le modèle ne dit rien. »"
+    left:  {label: "Regarder le banc vide", effects: {direction: "-", set: [monde_modele]}, answer: "Ils gagnent trois à zéro. Personne ne sait qui féliciter, alors on ne félicite personne."}
+    right: {label: "Regarder le banc vide", effects: {direction: "-", set: [monde_modele]}, answer: "Ils gagnent trois à zéro. Personne ne sait qui féliciter, alors on ne félicite personne."}
+
+  - id: co.nv.2038_kick_rachete
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2038
+    text: "Léa, plateau à moitié démonté : « La chaîne appartient à l'application depuis ce matin, mais elle garde son nom pour les vieux. Vous confirmez ? Cinquante-quatre ans, et écrit nulle part. »"
+    left:  {label: "Regarder le plateau", effects: {direction: "-"}, answer: "Le générique de 1984 est rediffusé une fois, par erreur. Il fait la meilleure audience du mois."}
+    right: {label: "Regarder le plateau", effects: {direction: "-"}, answer: "Le générique de 1984 est rediffusé une fois, par erreur. Il fait la meilleure audience du mois."}
+
+  - id: co.nv.2039_debat_franchises
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 2039
+    text: "Vaubourg, deux versions du texte, l'une annotée : « La loi qui ferme l'escalier de la première division sera votée l'an prochain, ou dans dix ans. Vingt la veulent, quatre-vingts la craignent. »"
+    left:  {label: "Lire l'autre version", effects: {direction: "-", var: {franchises: 2}}, answer: "Les vingt ont les voix. Les quatre-vingts ont les tribunes ; on verra ce qui pèse."}
+    right: {label: "Lire l'autre version", effects: {direction: "-", var: {franchises: 2}}, answer: "Les vingt ont les voix. Les quatre-vingts ont les tribunes ; on verra ce qui pèse."}
+
+  - id: co.nv.2040_franchises
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 2040
+    text: "Vaubourg, stylo posé sur un texte signé : « C'est voté : l'escalier de la première division est fermé, les clubs y restent et les autres restent dehors. On se comprend un peu trop bien. »"
+    left:  {label: "Regarder la signature", effects: {tribunes: "-", direction: "+", set: [monde_franchises]}, answer: "Le championnat garde ses dix-huit clubs pour toujours. La Coupe devient le seul endroit où tomber."}
+    right: {label: "Regarder la signature", effects: {tribunes: "-", direction: "+", set: [monde_franchises]}, answer: "Le championnat garde ses dix-huit clubs pour toujours. La Coupe devient le seul endroit où tomber."}
+
+  - id: co.nv.2040_prix_libre
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2040
+    text: "Léa, boîte en fer près de la porte : « L'Écho n'a plus de prix : une boîte à l'entrée du local, chacun donne ce qu'il veut. Le premier dimanche, quatre-vingts écus et une pièce de dix francs. »"
+    left:  {label: "Mettre quelque chose", effects: {tribunes: "+"}, answer: "La pièce de dix francs reste dans la boîte huit ans. Personne ne la prend, personne ne la rend."}
+    right: {label: "Mettre quelque chose", effects: {tribunes: "+"}, answer: "La pièce de dix francs reste dans la boîte huit ans. Personne ne la prend, personne ne la rend."}
+
+  - id: co.nv.2041_national_vrai_foot
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: clow
+    tone: leger
+    once: true
+    year: 2041
+    text: "Corven, écharpe roulée sur un banc en bois : « Depuis que la première division est fermée, tout le monde regarde la deuxième et le National. C'est nous qui avons le suspense, maintenant. »"
+    left:  {label: "Regarder en bas", effects: {tribunes: "+", set: [monde_national_vivant]}, answer: "Une chaîne achète les droits du National. Elle filme les matchs avec deux caméras et un drone."}
+    right: {label: "Regarder en bas", effects: {tribunes: "+", set: [monde_national_vivant]}, answer: "Une chaîne achète les droits du National. Elle filme les matchs avec deux caméras et un drone."}
+
+  - id: co.nv.2042_voix_generee
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2042
+    text: "Josiane, poste de radio à volume bas : « Les matchs sont commentés par la voix d'un joueur mort il y a onze ans, et sa famille touche un pourcentage. J'en ai vu passer ; celle-là, je débranche. »"
+    left:  {label: "Débrancher", effects: {tribunes: "-", set: [monde_voix_generee]}, answer: "La voix ne se trompe jamais de nom. C'est à ça qu'on la reconnaît."}
+    right: {label: "Débrancher", effects: {tribunes: "-", set: [monde_voix_generee]}, answer: "La voix ne se trompe jamais de nom. C'est à ça qu'on la reconnaît."}
+
+  - id: co.nv.2043_coupe_suspense
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2043
+    text: "Gégé repasse une bande d'archive : « Elle disait : on ne gagnait rien du tout, on venait quand même ; le seul soir où j'ai tremblé, c'était un seizième de Coupe. La tribune n'oublie rien. »"
+    left:  {label: "Écouter jusqu'au bout", effects: {tribunes: "+", var: {coupe: 2}}, answer: "La bande dure vingt-deux secondes. On la repasse tous les ans jusqu'en 2050."}
+    right: {label: "Écouter jusqu'au bout", effects: {tribunes: "+", var: {coupe: 2}}, answer: "La bande dure vingt-deux secondes. On la repasse tous les ans jusqu'en 2050."}
+
+  - id: co.nv.2044_vote_soixante_quatre
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: aulard
+    tone: leger
+    once: true
+    year: 2044
+    text: "Vaubourg, même table, deux chaises de plus : « Le Mondial passera à soixante-quatre équipes en 2046 : cent quatre matchs, six semaines. Ils sont soixante-quatre, et la table est un stade. »"
+    left:  {label: "Compter les chaises", effects: {direction: "+", set: [monde_soixante_quatre]}, answer: "Les qualifications sont supprimées pour trois confédérations. Elles votent pour, à l'unanimité."}
+    right: {label: "Compter les chaises", effects: {direction: "+", set: [monde_soixante_quatre]}, answer: "Les qualifications sont supprimées pour trois confédérations. Elles votent pour, à l'unanimité."}
+
+  - id: co.nv.2045_echo_dimanche
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2045
+    text: "Léa, presse arrêtée, odeur d'encre : « L'Écho ne paraît plus que le dimanche matin, quatre pages, dernier journal papier du pays. On garde Au local en une et On nous écrit en dernière. »"
+    left:  {label: "Prendre les quatre pages", effects: {tribunes: "+"}, answer: "Le tirage baisse d'un tiers. La boîte à prix libre se remplit deux fois plus."}
+    right: {label: "Prendre les quatre pages", effects: {tribunes: "+"}, answer: "Le tirage baisse d'un tiers. La boîte à prix libre se remplit deux fois plus."}
+
+  - id: co.nv.2046_mondial_64
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, famille]
+    speaker: camille
+    tone: leger
+    once: true
+    year: 2046
+    text: "Camille, carnet et badge d'observatrice : « Le Mondial commence aujourd'hui : soixante-quatre pays, onze stades neufs dans trois pays. Tu rentres à quelle heure ? La finale est dans six semaines. »"
+    left:  {label: "Noter la date", effects: {vestiaire: "+", set: [monde_mondial_64]}, answer: "Trois des onze stades n'auront plus d'usage en septembre. On le sait avant le coup d'envoi."}
+    right: {label: "Noter la date", effects: {vestiaire: "+", set: [monde_mondial_64]}, answer: "Trois des onze stades n'auront plus d'usage en septembre. On le sait avant le coup d'envoi."}
+
+  - id: co.nv.2047_sans_guichet
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2047
+    text: "Josiane fait tourner la clé d'un local qui ne sert plus : « On a fermé le dernier guichet du stade : tout se prend sur l'application. J'en ai vu passer ; celui-là, je l'ai tenu douze ans en août. »"
+    left:  {label: "Garder la clé", effects: {tribunes: "-"}, answer: "Le guichet devient l'endroit où l'on range les bâches. C'est bien pour les bâches."}
+    right: {label: "Garder la clé", effects: {tribunes: "-"}, answer: "Le guichet devient l'endroit où l'on range les bâches. C'est bien pour les bâches."}
+
+  - id: co.nv.2048_derniere_buvette
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    year: 2048
+    text: "Gégé, devant une plaque neuve : « La buvette a été refaite, deux tireuses et la boîte en fer d'origine sous verre. On payait en bières ; c'est écrit sur la plaque, avec la date et une faute. »"
+    left:  {label: "Lire la plaque", effects: {tribunes: "+", set: [monde_buvette_refaite]}, answer: "La faute est sur le mot « bénévole ». On ne la corrige pas ; on la montre."}
+    right: {label: "Lire la plaque", effects: {tribunes: "+", set: [monde_buvette_refaite]}, answer: "La faute est sur le mot « bénévole ». On ne la corrige pas ; on la montre."}
+
+  - id: co.nv.2049_district_renait
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: aubert
+    tone: leger
+    once: true
+    year: 2049
+    text: "Madame Aubert, registre neuf, écriture tremblée : « Il y a plus de clubs dans le district qu'en mille neuf cent quatre-vingt-dix, et aucun n'a de budget. La base a repris toute la place. »"
+    left:  {label: "Signer le registre", effects: {tribunes: "+", set: [monde_district_plein]}, answer: "Quarante-deux clubs, dont onze créés depuis 2040. Neuf ont repris le nom d'un club mort."}
+    right: {label: "Signer le registre", effects: {tribunes: "+", set: [monde_district_plein]}, answer: "Quarante-deux clubs, dont onze créés depuis 2040. Neuf ont repris le nom d'un club mort."}
+
+  - id: co.nv.2050_bilan_siecle
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    year: 2050
+    text: "Josiane, un seul feuillet imprimé : « La Fédération a publié le bilan du demi-siècle : soixante ans, quatre monnaies, deux formats, un journal survivant. J'en ai vu passer ; ça tient sur une page. »"
+    left:  {label: "Lire la page", effects: {direction: "-", set: [monde_fin]}, answer: "Le tableau tient sur une page. On y lit tout, sauf ce que ça faisait d'y être."}
+    right: {label: "Lire la page", effects: {direction: "-", set: [monde_fin]}, answer: "Le tableau tient sur une page. On y lit tout, sauf ce que ça faisait d'y être."}
+
+  - id: co.nv.2050_dernier_dimanche
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, moment]
+    speaker: lea
+    tone: leger
+    once: true
+    year: 2050
+    text: "Léa, dernière page composée à la main : « Le journal fête ses cent quarante-huit ans dimanche, et le stade joue à quinze heures comme en 1902. Au local, on a ressorti les photos. »"
+    left:  {label: "Regarder la photo", effects: {tribunes: "+"}, answer: "On identifie deux visages sur la photo. On invente les autres, et on les note au dos."}
+    right: {label: "Regarder la photo", effects: {tribunes: "+"}, answer: "On identifie deux visages sur la photo. On invente les autres, et on les note au dos."}

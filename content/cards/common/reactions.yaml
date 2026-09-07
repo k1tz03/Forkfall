@@ -30,7 +30,7 @@ cards:
       effects: {direction: "+", relation: {josiane: 1}}
       answer: "Elle en garde un exemplaire. Pour le dossier."
     right:
-      label: "Merci, Josiane"
+      label: "Rangez-le sous les autres"
       effects: {direction: "+", relation: {josiane: 1}}
       answer: "Elle en garde un exemplaire. Pour le dossier."
 
@@ -69,19 +69,60 @@ cards:
       effects: {relation: {camille: -1}, vestiaire: "+"}
       answer: "Elle l'a déjà lu deux fois. La deuxième, à voix haute, pour le chat."
 
-  # Une manchette, Gégé l'a découpée pour le local.
+  # Une manchette, Gégé l'a découpée pour le local. Le mur se remplit lentement :
+  # `since` tient un cran d'une saison et demie entre deux découpages, sinon la
+  # même phrase revient deux Bilans de suite, usée et fausse (le mur, lui, a
+  # changé). Les ciseaux ne sortent pas à chaque Une.
   - id: co.re.gege_decoupe
     roles: [entraineur, joueur]
     arc: ultras
     tags: [ultras, presse]
     speaker: gege
     tone: leger
+    when: "since('co.re.gege_decoupe') >= 24"
     text: "Gégé, des ciseaux à la main : « On a découpé la Une. Elle est au local, au-dessus du bar, à côté des autres. La tribune n'oublie rien. »"
     left:
       label: "Je passerai la voir"
       effects: {tribunes: "+", direction: "-"}
       answer: "Elle est là, entre une coupure de 1987 et une facture de bière."
     right:
-      label: "Je passerai la voir"
+      label: "Laissez-la sécher"
       effects: {tribunes: "+", direction: "-"}
       answer: "Elle est là, entre une coupure de 1987 et une facture de bière."
+
+  # Deuxième et troisième découpage : le rituel le plus visible du virage ne
+  # peut pas revenir avec la même phrase à chaque Bilan (spec variété §5.3).
+  # Les appelants les tirent sur `seen()`, la dernière variante sans `if`.
+  - id: co.re.gege_decoupe_1987
+    roles: [entraineur, joueur]
+    arc: ultras
+    tags: [ultras, presse]
+    speaker: gege
+    tone: leger
+    when: "since('co.re.gege_decoupe_1987') >= 24"
+    text: "Gégé, des ciseaux à la main : « Celle-là, on l'a punaisée à côté de 1987 ; c'est la seule qu'on ait sous verre. La tribune n'oublie rien. »"
+    left:
+      label: "Mettez-la sous verre"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il ne la met pas sous verre. Il déplace 1987 de deux centimètres, pour faire de la place."
+    right:
+      label: "1987, c'était mieux"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Il rit, puis il ne rit plus. « 1987, on est descendus », dit-il en punaisant quand même."
+
+  - id: co.re.gege_decoupe_mur
+    roles: [entraineur, joueur]
+    arc: ultras
+    tags: [ultras, presse]
+    speaker: gege
+    tone: leger
+    when: "since('co.re.gege_decoupe_mur') >= 24"
+    text: "Gégé, des ciseaux à la main : « Le mur est plein, alors on a décroché une facture de bière pour te faire de la place. La tribune n'oublie rien. »"
+    left:
+      label: "Décrochez la facture"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Il la décroche. Il la range dans le tiroir du bar, avec les autres factures, qu'il garde aussi."
+    right:
+      label: "Gardez la facture"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il garde la facture et punaise la Une par-dessus. On voit encore un coin du montant."

@@ -1,0 +1,106 @@
+# Cartes d'étape de « Le président te rappelle » (interim_rappelle.yaml),
+# l'intrigue tardive de l'intérimaire : viré le lundi à 23 h 47 avec une faute,
+# rappelé le mercredi parce que le suivant demandait plus cher. Rejouable :
+# les variantes « encore » lisent plays(). Trace : rappele_par_aulard.
+cards:
+  - id: en.aulard_rappelle.sms
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    when: "flag('bilan_manque')"
+    text: "Vaubourg t'attend près de ta voiture, le SMS du lundi encore ouvert : « Je t'ai viré à 23 h 47 avec une faute, {toi}, et je te rappelle parce que le suivant demandait plus cher. »"
+    left:
+      label: "Je reviens, aux vôtres"
+      effects: {direction: "++", vestiaire: "-", parole: -1, relation: {aulard: 1}, set: [rappele_par_aulard], outcome: reste}
+      answer: "Le vestiaire t'avait fait une lettre d'adieu. Bréhaut la range ; elle servira."
+    right:
+      label: "Je garde la valise"
+      effects: {direction: "--", tribunes: "+", set: [parti_tete_haute], outcome: part, end: en_sms}
+      answer: "Le SMS reste ouvert. Tu ne corriges pas la faute, cette fois."
+
+  - id: en.aulard_rappelle.sms_encore
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: aulard
+    tone: strategique
+    when: "flag('bilan_manque')"
+    text: "Vaubourg, le téléphone à plat sur le capot : « Troisième fois que je te vire et que je te rappelle, la presse dit que c'est une habitude. Tu reviens, ou tu me fais changer d'habitude ? »"
+    left:
+      label: "Je reviens, aux vôtres"
+      effects: {direction: "++", vestiaire: "-", parole: -2, relation: {aulard: 1}, set: [rappele_par_aulard], outcome: reste}
+      answer: "Le vestiaire ne fait plus de lettre. Bréhaut a gardé la première ; elle sert encore."
+    right:
+      label: "Changez d'habitude"
+      effects: {direction: "--", tribunes: "+", set: [parti_tete_haute], outcome: part, end: en_sms}
+      answer: "Il change d'habitude. Le SMS suivant part à 23 h 47, sans faute et sans toi."
+
+  - id: en.aulard_rappelle.conditions
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: aulard
+    tone: strategique
+    when: "flag('rappele_par_aulard')"
+    text: "Vaubourg lit trois lignes manuscrites comme un menu : « Zoran adjoint « de confiance », la mienne ; mon fils au bureau ; le budget de janvier coupé. Les trois, {toi}, ou tu en négocies une ? »"
+    left:
+      label: "Les trois, je signe"
+      effects: {direction: "++", vestiaire: "--", caisse: "-", relation: {vukic: -1}, react: {card: en.re.vukic_journal_president, if: "relation.vukic >= 0"}}
+      answer: "Zoran apprend qu'il est « de confiance ». Il ne demande pas de qui."
+    right:
+      label: "J'en négocie une : Zoran"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: 1, aulard: -1}}
+      answer: "Il raye la première ligne et souligne les deux autres, deux fois."
+
+  - id: en.aulard_rappelle.conditions_fils
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    when: "flag('rappele_par_aulard')"
+    text: "Vaubourg relit ses lignes : « Zoran « de confiance », le budget coupé, et mon fils qui garde le fax, ce qu'il a déjà, donc ça ne coûte rien. Les trois, ou tu en négocies une ? »"
+    left:
+      label: "Les trois, je signe"
+      effects: {direction: "++", vestiaire: "-", caisse: "-", relation: {vukic: -1}, react: {card: en.re.vukic_journal_president, if: "relation.vukic >= 0"}}
+      answer: "Le fils garde le fax. Il envoie une offre le soir même, à un ailier qu'il aime."
+    right:
+      label: "J'en négocie une : Zoran"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: 1, aulard: -1}}
+      answer: "Il raye la première ligne. Le fax reste au fils ; c'était le vrai sujet."
+
+  - id: en.aulard_rappelle.josiane
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    when: "flag('rappele_par_aulard')"
+    text: "Madame Josiane tient la plaque et le tournevis, et sait lequel utiliser : « Elle est dans le tiroir depuis lundi, sous celle de l'ancien. Je la revisse, {toi}, ou j'attends lundi ? »"
+    left:
+      label: "Revissez-la"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Les trous sont les mêmes. Elle tient un peu moins bien que la première fois."
+    right:
+      label: "Le tiroir, au cas où"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le vestiaire colle un papier à ton nom sur la porte. De la craie sur du scotch."
+
+  - id: en.aulard_rappelle.josiane_trous
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, absurde]
+    speaker: josiane
+    tone: leger
+    when: "flag('rappele_par_aulard')"
+    text: "Madame Josiane compte les trous dans la porte : « Trois jeux maintenant, un par lundi, et le menuisier propose une porte neuve « au nom du club », sans nom. La neuve, {toi} ? »"
+    left:
+      label: "La vieille, avec les trous"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Elle revisse dans les premiers trous. Ce sont les meilleurs ; elle le savait."
+    right:
+      label: "La porte neuve, sans nom"
+      effects: {direction: "+", parole: -1}
+      answer: "Une porte neuve, sans nom. Le prochain n'aura pas de trous à faire."

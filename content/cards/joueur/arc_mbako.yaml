@@ -1,0 +1,140 @@
+# Cartes de l'intrigue « Le prodige d'après » (arc co.mbako_rival) —
+# bible ch. 10 § 6.3. Le petit a seize ans, ton poste, et une mère qui dit
+# qu'il n'a besoin de personne. La mère vouvoie ; Mbako tutoie et dit {toi}.
+cards:
+  - id: jp.mbako.mere
+    roles: [joueur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: mere_mbako
+    tone: strategique
+    text: "« Mon fils n'a besoin de personne, surtout pas d'un aîné qui lui montre. Vous aviez dix-neuf ans, vous étiez le prochain. Vous l'aidez, ou vous le laissez passer ? »"
+    left:
+      label: "Je l'aide"
+      effects: {vestiaire: "+", force: -1, relation: {mbako: 1, mere_mbako: -1}, set: [mentor_mbako], outcome: mentor}
+      answer: "Tu restes après l'entraînement. Il copie. Sa mère regarde depuis la voiture ; elle note."
+    right:
+      label: "Je le laisse passer, seul"
+      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: -1}, set: [rival_mbako], outcome: rival}
+      answer: "Il passe. Seul. Il joue mieux que toi en mars ; il ne te le dit pas, il n'a pas besoin."
+
+  # Variante « tu as encore l'âge » : co.mbako_rival s'ouvre dans plus d'un
+  # tiers des S0, où le joueur A dix-neuf ans. La mère ne parle pas au passé
+  # d'un présent.
+  - id: jp.mbako.mere_jeune
+    roles: [joueur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: mere_mbako
+    tone: strategique
+    text: "« Mon fils n'a besoin de personne, surtout pas d'un aîné qui lui montre. Vous avez dix-neuf ans, vous êtes le prochain. Vous l'aidez, ou vous le laissez passer ? »"
+    left:
+      label: "Je l'aide"
+      effects: {vestiaire: "+", force: -1, relation: {mbako: 1, mere_mbako: -1}, set: [mentor_mbako], outcome: mentor}
+      answer: "Tu restes après l'entraînement. Il copie. Sa mère regarde depuis la voiture ; elle note."
+    right:
+      label: "Je le laisse passer, seul"
+      effects: {tribunes: "+", vestiaire: "-", relation: {mbako: -1}, set: [rival_mbako], outcome: rival}
+      answer: "Il passe. Seul. Il joue mieux que toi en mars ; il ne te le dit pas, il n'a pas besoin."
+
+  - id: jp.mbako.mere_papy
+    roles: [joueur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: mere_mbako
+    tone: leger
+    text: "« Mon fils n'a besoin de personne, et le coach lui a dit qu'il prenait votre place dimanche, sans rancune, papy. Vous l'aidez, ou vous défendez votre place ? »"
+    left:
+      label: "Je l'aide"
+      effects: {vestiaire: "+", force: -1, relation: {mbako: 1, mere_mbako: -1}, set: [mentor_mbako], outcome: mentor}
+      answer: "Tu restes après l'entraînement. Il apprend en trois séances ce que tu as mis six ans à comprendre."
+    right:
+      label: "Je défends ma place"
+      effects: {tribunes: "+", vestiaire: "-", force: 1, relation: {mbako: -1}, set: [rival_mbako], outcome: rival}
+      answer: "Tu la défends. Deux mois. Le troisième, le coach écrit son nom au feutre, le tien au crayon."
+
+  - id: jp.mbako.vukic
+    roles: [joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "« Le coach veut le petit dimanche, {toi}, et je te le dis parce que personne ne te le dira : il a raison cette semaine, pas la prochaine. Le banc sans rien dire, ou je lui parle ? »"
+    left:
+      label: "Le banc, sans rien dire"
+      effects: {direction: "+", vestiaire: "+", tribunes: "-", relation: {vukic: 1}, set: [banc_bosse]}
+      answer: "Tu regardes le match. Le petit marque. Tu applaudis ; c'est filmé ; ça compte."
+    right:
+      label: "Dis-lui quelque chose"
+      effects: {direction: "-", tribunes: "+", relation: {vukic: -1, mbako: -1}, set: [banc_boude]}
+      answer: "Il lui dit. Le coach met le petit quand même. Il te met en tribune, pas sur le banc ; pour la leçon."
+
+  - id: jp.mbako.partir_avec_moi
+    roles: [joueur]
+    arc: formation
+    tags: [formation, mercato]
+    speaker: mbako
+    tone: strategique
+    text: "« Ils me vendent en juin, ma mère a signé, et j'ai dit que je voulais jouer, maintenant, et qu'on prenne aussi celui qui m'a appris. Tu viens, ou tu restes ? »"
+    left:
+      label: "Je viens avec toi"
+      effects: {caisse: "+", tribunes: "-", direction: "-", set: [demande_vente], outcome: demande_vente}
+      answer: "Tu demandes à partir. Le président note « deux pour le prix d'un ». Il ne rit pas ; il n'a pas le temps."
+    right:
+      label: "Je reste, va jouer"
+      effects: {vestiaire: "++", relation: {mbako: 1}, tribunes: "+"}
+      answer: "Il part seul. Il t'envoie une carte sans texte, avec sa signature. Tu la gardes dans le casier."
+
+  - id: jp.mbako.contre_toi
+    roles: [joueur]
+    arc: formation
+    tags: [formation, moment]
+    speaker: mbako
+    tone: strategique
+    text: "« Un sac neuf, un maillot plus cher, et je veux jouer, maintenant, contre toi : c'est ce que je voulais. Tu me tacles comme un aîné, ou comme un adversaire ? »"
+    left:
+      label: "Comme un aîné"
+      effects: {vestiaire: "+", tribunes: "-", relation: {mbako: 1}}
+      answer: "Tu le laisses respirer une fois. Il marque. Il vient te chercher pour te montrer du doigt ; le stade ne comprend pas ; vous, si."
+    right:
+      label: "Comme un adversaire"
+      effects: {tribunes: "++", vestiaire: "+", force: 1, relation: {mbako: -1}, react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.5 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.5 }, { card: co.re.gege_decoupe, chance: 0.5 } ]}
+      answer: "Tu le tacles. Il se relève, il te tend la main ; tu l'as appris à quelqu'un, un jour."
+
+  - id: jp.mbako.contre_toi_rival
+    roles: [joueur]
+    arc: formation
+    tags: [formation, moment]
+    speaker: mbako
+    tone: strategique
+    text: "« Je veux jouer, maintenant, contre celui qui m'a laissé passer seul. Tu me tacles, {toi}, ou tu me regardes encore ? »"
+    left:
+      label: "Comme un aîné"
+      effects: {vestiaire: "+", tribunes: "-", relation: {mbako: 1}}
+      answer: "Tu le laisses respirer une fois. Il ne remercie pas ; il n'a jamais appris avec toi."
+    right:
+      label: "Comme un adversaire"
+      effects: {tribunes: "++", vestiaire: "-", force: 1, relation: {mbako: -2}, set: [mbako_blesse_par_toi], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.5 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.5 }, { card: co.re.gege_decoupe, chance: 0.5 } ]}
+      answer: "Tu le tacles. Il ne se relève pas seul. Sa mère descend de la tribune avec son carnet ouvert."
+
+  # Câblage de la fin `jp_coup_de_tete` (ch. 10 § 11.3, cause : « choix »).
+  # La fin était écrite et sans porte : aucune carte ne la citait. Elle se paie
+  # au comptant, un an après le tacle, sur une phrase de trop.
+  # `strategique` et non `drame` : l'intrigue s'ouvre dans plus d'un tiers des
+  # saisons 0, et le drame y est interdit (charte § 6.1, règle 4).
+  - id: jp.mbako.sternum
+    roles: [joueur]
+    arc: formation
+    tags: [formation, moment, chaine]
+    speaker: mbako
+    tone: strategique
+    once: true
+    text: "« Ma mère a ton tacle sur son carnet, page trois, et moi j'ai autre chose : je veux jouer, et toi tu es fini. Tu réponds, {toi}, ou tu rentres ? »"
+    left:
+      label: "Je réponds"
+      effects: {tribunes: "+", vestiaire: "--", parole: -1, end: jp_coup_de_tete}
+      answer: "Ton front part avant ta tête. Le sternum fait un bruit sourd ; l'arbitre n'a pas besoin de la vidéo."
+    right:
+      label: "Je rentre"
+      effects: {vestiaire: "+", direction: "+", tribunes: "-", relation: {mbako: -1}}
+      answer: "Tu te retournes. Il parle encore ; il parle tout seul. En tribune, sa mère referme le carnet."

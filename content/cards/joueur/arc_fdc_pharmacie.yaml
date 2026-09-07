@@ -1,0 +1,99 @@
+# Cartes de l'intrigue partagée « La pharmacie du club » (arc co.pharmacie),
+# versant joueur — bible ch. 10 § 6.21 ; le ch. 11 écrit le versant banc.
+# De la créatine, légal, enfin, encore. La kiné du club est une voix sans
+# portrait (la bible l'appelle Rouvier).
+cards:
+  - id: jp.pharmacie.creatine
+    roles: [joueur]
+    arc: corps
+    tags: [scandale, moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« De la créatine, {toi}, légal, enfin, encore, et ça reste entre la table et moi ; tu cours jusqu'à la quatre-vingt-quinzième sans souffler. Tu avales, ou tu bois de l'eau ? »"
+    left:
+      label: "J'avale"
+      effects: {force: 4, vestiaire: "+", relation: {sabatier: 1}, set: [vitamines]}
+      answer: "Il range le flacon dans ta poche. L'air de rien."
+    right:
+      label: "De l'eau"
+      effects: {force: -1, vestiaire: "+", relation: {sabatier: -1}, set: [pharmacie_propre], outcome: propre}
+      answer: "Il range le flacon dans le tiroir. Il te regarde autrement ; moins."
+
+  - id: jp.pharmacie.creatine_finir
+    roles: [joueur]
+    arc: corps
+    tags: [scandale, moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« Un coup de pouce pour finir, légal, enfin, encore, et ça reste entre la table et moi ; à ton âge on ne demande pas, on finit. Tu avales, ou tu finis sans ? »"
+    left:
+      label: "J'avale"
+      effects: {force: 4, tribunes: "+", relation: {sabatier: 1}, set: [vitamines]}
+      answer: "Il range le flacon dans ta poche. Il ne dit pas combien de temps ça dure."
+    right:
+      label: "Je finis sans"
+      effects: {force: -1, vestiaire: "+", relation: {sabatier: -1}, set: [pharmacie_propre], outcome: propre}
+      answer: "Il range le flacon dans le tiroir. Il dit « c'est plus rare que tu crois »."
+
+  - id: jp.pharmacie.armoire
+    roles: [joueur]
+    arc: corps
+    tags: [scandale]
+    tone: strategique
+    text: "La kiné, en regardant l'armoire et pas toi : « Respire. Encore. Elle est plus grande que le vestiaire et je ne peux rien dire ; je le dis quand même : arrête le flacon. »"
+    left:
+      label: "J'arrête"
+      effects: {force: -2, vestiaire: "+", clear: [vitamines], set: [flacon_arrete]}
+      answer: "Tu arrêtes. Le contrôle vient ; il ne trouve rien ; il trouve quelqu'un d'autre."
+    right:
+      label: "Jusqu'au contrôle"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Elle ne dit plus rien. Elle te fait respirer ; c'est tout ce qu'elle peut."
+
+  - id: jp.pharmacie.controleur
+    roles: [joueur]
+    arc: corps
+    tags: [scandale, moment]
+    speaker: sabatier
+    tone: strategique
+    text: "« Le contrôleur est à l'accueil, {toi}, il cherche le bon bâtiment, il a quatre-vingt-dix minutes ; ça reste entre la table et moi. Tu bois trois litres, ou tu vas le voir ? »"
+    left:
+      label: "Trois litres"
+      effects: {direction: "+", parole: -1, rand: [{p: 0.5, set: [flacon_b]}, {set: [controle_negatif]}]}
+      answer: "Tu bois. Il trouve le bâtiment à la quatre-vingt-neuvième minute. Il est patient."
+    right:
+      label: "Je vais le voir"
+      effects: {direction: "-", tribunes: "+", rand: [{p: 0.7, set: [flacon_b]}, {set: [controle_negatif]}]}
+      answer: "Tu y vas. Le flacon B dit ce qu'il a à dire, ou ne dit rien."
+
+  - id: jp.pharmacie.flacon_b
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse]
+    speaker: meneche
+    tone: strategique
+    text: "« Juste une question, hors micro : le flacon B est « non conforme », et votre médecin a soudain très envie de vacances. Vous contestez le laboratoire, ou vous acceptez ? »"
+    left:
+      label: "Je conteste"
+      effects: {direction: "-", caisse: "-", tribunes: "+", set: [flacon_b], outcome: flacon}
+      answer: "Tu contestes. Le tribunal siège loin et répond tard ; il répond « deux ans »."
+    right:
+      label: "J'accepte"
+      effects: {vestiaire: "--", force: -3, set: [flacon_b], outcome: flacon}
+      answer: "Deux ans. Personne ne te demande ce qu'il y avait dedans ; on te demande combien."
+
+  - id: jp.pharmacie.victime
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale]
+    tone: drame
+    once: true
+    text: "La kiné, porte fermée, une feuille d'analyse qu'elle a lue trois fois : « Ce n'est pas la créatine, c'est autre chose, dans les vitamines du Doc. Et tu ne le savais pas. »"
+    left:
+      label: "Je ne le savais pas"
+      effects: {set: [flacon_b, dope_a_son_insu], relation: {sabatier: -3}, outcome: victime}
+      answer: "La commission ne fait pas la différence. Elle, si ; elle témoigne ; ça compte plus tard."
+    right:
+      label: "Je ne le savais pas"
+      effects: {set: [flacon_b, dope_a_son_insu], relation: {sabatier: -3}, outcome: victime}
+      answer: "La commission ne fait pas la différence. Elle, si ; elle témoigne ; ça compte plus tard."

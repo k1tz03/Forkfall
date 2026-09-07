@@ -1,0 +1,183 @@
+# Cartes de l'intrigue rituelle « Les trois conseils de Gigi »
+# (arc jp.conseils_gigi) — bible ch. 10 § 6.10. Un conseil par saison, dans
+# l'ordre : la tribune, l'agent, le genou, puis « encore une ». Vecchio dit
+# {toi} (« petit » tant qu'il t'aime) et pèle toujours la même orange.
+# Aucune carte `once` : c'est un rituel, il revient.
+cards:
+  - id: jp.gigi.tribune
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: vecchio
+    tone: leger
+    text: "« Premier conseil, {toi}, et j'en ai vu d'autres qui ne l'ont pas écouté : une tribune pleine tue autant qu'une tribune vide. Tu le notes, ou tu attends de voir ? »"
+    left:
+      label: "Je le note"
+      effects: {tribunes: "-", vestiaire: "+", var: {gigi_conseils: "+1"}}
+      answer: "Tu le notes. Il te donne un quartier d'orange. Il en garde un pour sa femme."
+    right:
+      label: "J'attends de voir"
+      effects: {tribunes: "+", var: {gigi_conseils: "+1"}}
+      answer: "Tu attends. Elle se remplit. Il te regarde d'un air qui dit « j'en ai vu d'autres »."
+
+  - id: jp.gigi.tribune_age
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Premier conseil, {toi}, à ton âge il n'y en a qu'un : le genou a toujours raison. Tu l'écoutes, lui, ou tu écoutes ton agent ? »"
+    left:
+      label: "Le genou"
+      effects: {force: 1, tribunes: "-", var: {gigi_conseils: "+1"}}
+      answer: "Tu l'écoutes. Il pèle l'orange en une fois, comme d'habitude ; c'est sa façon d'approuver."
+    right:
+      label: "L'agent"
+      effects: {caisse: "+", var: {gigi_conseils: "+1"}}
+      answer: "Tu écoutes l'agent. Gigi hausse les épaules ; il en a vu d'autres, et il les a vus finir."
+
+  - id: jp.gigi.agent
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, agents]
+    speaker: vecchio
+    tone: leger
+    text: "« Deuxième conseil : l'agent est ton employé, pas ton père, et j'en ai vu d'autres pleurer à l'enterrement du leur. Tu lui dis non une fois cette saison, ou jamais ? »"
+    left:
+      label: "Une fois, pour voir"
+      effects: {relation: {fardelli: -1}, direction: "+", set: [gigi_non_agent], var: {gigi_conseils: "+1"}}
+      answer: "Tu dis non sur un détail. Il note. Toi aussi."
+    right:
+      label: "Jamais, il sait mieux"
+      effects: {caisse: "+", relation: {fardelli: 1}, var: {gigi_conseils: "+1"}}
+      answer: "Tu ne dis pas non. Gigi hausse les épaules ; il en a vu d'autres."
+
+  - id: jp.gigi.genou
+    roles: [joueur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: strategique
+    text: "« Troisième conseil, et c'est le dernier, après je n'en ai plus : le genou a toujours raison. Tu l'écoutes cette année, ou l'année prochaine ? »"
+    left:
+      label: "Cette année"
+      effects: {force: 2, tribunes: "-", set: [gigi_genou_ecoute], var: {gigi_conseils: "+1"}}
+      answer: "Tu lèves le pied une semaine. Le genou dit merci ; il ne le dit qu'une fois."
+    right:
+      label: "L'année prochaine"
+      effects: {tribunes: "+", force: -1, var: {gigi_conseils: "+1"}}
+      answer: "L'année prochaine, il te le redira. Autrement."
+
+  - id: jp.gigi.encore_une
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    tone: leger
+    text: "« Plus de conseils, {toi}, je les ai tous donnés ; alors une question : je raccroche cette fois, ou j'en fais encore une ? Toi tu me vois jouer, dis-moi. »"
+    left:
+      label: "Encore une, Gigi"
+      effects: {vestiaire: "++", tribunes: "+", relation: {vecchio: 1}, set: [gigi_encore_une], react: {card: co.re.vecchio_garde, chance: 0.6}}
+      answer: "Il rentre. Il jouera dix matchs. Il en arrêtera trois de trop, et un d'assez."
+    right:
+      label: "Raccroche, on t'aime"
+      effects: {vestiaire: "+", direction: "+", relation: {vecchio: 1}, set: [gigi_staff]}
+      answer: "Il raccroche. Il revient le lundi, en survêtement d'entraîneur des gardiens. Il a acheté le survêtement lui-même."
+
+  - id: jp.gigi.orange
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« Une orange, une seule, et je la pèle en un morceau depuis 1971 ; personne n'a jamais compris pourquoi. Tu veux un quartier, ou tu veux savoir pourquoi ? »"
+    left:
+      label: "Un quartier"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Tu prends le quartier. Il ne dit pas pourquoi. Il ne le dira jamais ; c'est le tarif."
+    right:
+      label: "Savoir pourquoi"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Il raconte un vestiaire de 1971 et un gardien qui pelait les oranges. Il ne dit pas ce que le gardien est devenu."
+
+  # Deuxième saison du rituel : la même orange, mais on sait déjà la fin.
+  - id: jp.gigi.orange_deux
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« La même orange, le même morceau, et cette année tu connais déjà la fin ; j'en ai vu d'autres se lasser avant moi. Tu la pèles, {toi}, ou je m'y colle ? »"
+    left:
+      label: "Je la pèle"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Tu casses le morceau au tiers. Il ne dit rien ; il ramasse les bouts et les mange."
+    right:
+      label: "Vas-y, toi"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Il la pèle en un morceau, encore. Il te tend la peau entière, comme un trophée."
+
+  - id: jp.gigi.orange_gants
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: vecchio
+    tone: leger
+    text: "« Plus de conseils pour toi, j'en donne aux gardiens maintenant ; j'en ai vu d'autres, des ailiers qui voulaient mes gants. Tu les essaies, une fois ? »"
+    left:
+      label: "Une fois"
+      effects: {vestiaire: "+", tribunes: "+", relation: {vecchio: 1}}
+      answer: "Tu essaies. Tu arrêtes un tir. Il dit « bon, c'est tout »."
+    right:
+      label: "Jamais"
+      effects: {vestiaire: "+"}
+      answer: "Il rit. C'est rare."
+
+  - id: jp.gigi.comptoir
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« Un verre par retraite, {toi}, et j'en ai cinq sur le comptoir ce soir ; j'en ai vu d'autres arrêter une fois et bien. Tu bois avec moi, ou tu comptes ? »"
+    left:
+      label: "Je bois avec toi"
+      effects: {vestiaire: "+", tribunes: "-", relation: {vecchio: 1}, outcome: ecoute}
+      answer: "Vous buvez les cinq. Il raconte les cinq. La quatrième est la vraie ; il ne le dit qu'à toi."
+    right:
+      label: "Je compte"
+      effects: {direction: "+", force: 1, outcome: ignore}
+      answer: "Tu comptes. Cinq. Il en commande un sixième, pour voir si tu recomptes."
+
+  # Deuxième saison du rituel au comptoir : il a ajouté une retraite à sa liste.
+  - id: jp.gigi.comptoir_encore
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« Un verre par retraite, et j'en ai six ce soir : j'en ai rajouté une depuis l'an dernier. J'en ai vu d'autres recompter. Tu bois, ou tu recomptes ? »"
+    left:
+      label: "Je bois"
+      effects: {vestiaire: "+", tribunes: "-", relation: {vecchio: 1}, outcome: ecoute}
+      answer: "Vous buvez les six. La sixième n'a pas d'histoire ; c'est celle qu'il préfère raconter."
+    right:
+      label: "Je recompte"
+      effects: {direction: "+", force: 1, outcome: ignore}
+      answer: "Tu recomptes. Six. Il dit que la première ne comptait pas, et il en commande une septième."
+
+  - id: jp.gigi.orange_encore
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« J'en fais encore une, je l'ai dit, et depuis tout le monde me demande si je suis sûr. J'en ai vu d'autres douter à ma place : tu doutes aussi, {toi} ? »"
+    left:
+      label: "Je ne doute pas"
+      effects: {vestiaire: "+", tribunes: "+", relation: {vecchio: 1}}
+      answer: "Il pèle l'orange en un morceau, comme toujours. Il en garde la moitié cette fois ; il dit que c'est pour plus tard."
+    right:
+      label: "Un peu, oui"
+      effects: {vestiaire: "+", direction: "+"}
+      answer: "Il hausse les épaules. « Moi aussi », dit-il, et il enfile les gants quand même."

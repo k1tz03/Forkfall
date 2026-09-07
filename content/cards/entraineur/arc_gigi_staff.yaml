@@ -1,0 +1,93 @@
+# Cartes d'étape de « Gigi au staff » (content/arcs/entraineur/gigi_staff.yaml).
+# Toutes hors du sac, aucune `once` (l'arc est rituel : la purge « déjà vue »
+# tuerait la relance). Le nom du joueur : nulle part — Gigi dit « coach ».
+# Traces : gigi_a_parle, banc_gigi_promis.
+cards:
+  # ------------------------------------------------------------ 1re fois : il te teste
+  - id: en.gigi.douche
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio essuie des gants qui ne sont plus les siens : « Sous la douche, ils parlent, coach, et moi j'entends. Tu veux savoir, ou je continue à essuyer ? »"
+    left:
+      label: "Je veux savoir"
+      effects: {vestiaire: "-", direction: "+", relation: {vecchio: 1}, set: [gigi_a_parle], outcome: parle}
+      answer: "Trois mots. Le troisième est un nom ; tu ne le répètes pas."
+    right:
+      label: "Continue à essuyer"
+      effects: {vestiaire: "+", relation: {vecchio: -1}}
+      answer: "Il essuie. Il garde les trois mots ; il en aura d'autres."
+
+  # ------------------------------------------------------------ 2e fois : il te fait confiance
+  - id: en.gigi.douche_discours
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio, une serviette sur l'épaule : « Sous la douche, ils disent que le président a deux discours et que toi tu n'en as qu'un. Tu veux le mien, ou tu gardes le tien ? »"
+    left:
+      label: "Donne le tien"
+      effects: {vestiaire: "++", direction: "-", set: [gigi_a_parle], outcome: parle}
+      answer: "Trois phrases avant le match. La troisième est « j'en ai vu d'autres » ; ça suffit."
+    right:
+      label: "Je garde le mien"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il hoche la tête. Il fait le sien aux gardiens, dans la salle d'à côté."
+
+  # ------------------------------------------------------------ 3e fois : une chose pour lui
+  - id: en.gigi.douche_banc
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment, chaine]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio a posé les gants : « Sous la douche, ils disent que je vais avoir un banc à mon nom derrière le but ; j'en ai vu d'autres, jamais le mien. Tu me le promets ? »"
+    left:
+      label: "Je te le promets"
+      effects: {vestiaire: "+", parole: 1, promise: true, set: [banc_gigi_promis], outcome: banc, relation: {vecchio: 2}}
+      answer: "Il ne dit rien. Il essuie les gants une dernière fois ; ils sont secs depuis longtemps."
+    right:
+      label: "Les bancs, c'est le patron"
+      effects: {direction: "+", relation: {vecchio: -1}}
+      answer: "Il essuie. Le président a le temps pour un banc ; il n'a pas le temps pour le nom."
+
+  # ------------------------------------------------------- le banc, inauguré
+  # Câblage de la fin ∃ `en_retraite` (« Le banc en bois »), écrite mais
+  # inatteignable jusqu'ici : sa cause est l'âge, son epitaph_plus lit
+  # l'objectif `promu_banc_gigi` et `banc_gigi_promis`. C'est la seule scène du
+  # jeu où la promesse du banc est tenue ; elle donne aussi sa 3e étape à l'arc.
+  - id: en.gigi.banc_inaugure
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment, chaine]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio devant deux planches vernies, derrière le but : « Le mien, et le tien à côté. J'en ai vu d'autres, coach, jamais deux le même jour. Tu t'assois, ou tu descends au vestiaire ? »"
+    left:
+      label: "Je m'assois"
+      effects: {tribunes: "+", relation: {vecchio: 2}, end: en_retraite}
+      answer: "Tu t'assois. Il donne des consignes que personne n'entend ; toi non plus, et ça n'a pas d'importance."
+    right:
+      label: "Je descends"
+      effects: {vestiaire: "+", direction: "+", relation: {vecchio: -1}}
+      answer: "Tu descends. Il reste assis sur le sien, seul, pendant tout l'échauffement."
+
+  # ------------------------------------------------------------ le troisième mot
+  - id: en.gigi.suite
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: strategique
+    text: "Vukić croise les bras, ce qu'il fait quand il est vexé : « Le vieux t'a dit trois mots, je te les aurais dits en deux. Le troisième est un nom, et il est capitaine. »"
+    left:
+      label: "J'agis, ce soir"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: -1, vukic: 1}}
+      answer: "Tu parles au capitaine. Il dit « le groupe vit bien » ; il le dit moins fort que d'habitude."
+    right:
+      label: "J'attends qu'il vienne"
+      effects: {vestiaire: "-", relation: {brehaut: 1, vukic: -1}}
+      answer: "Il vient, trois jours plus tard. Il dit la même chose que Gigi, en trente mots."

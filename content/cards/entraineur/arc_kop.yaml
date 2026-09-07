@@ -9,6 +9,24 @@
 # (← le peuple a raison). Traces : onze_du_virage, pacte_gege, ami_ultras.
 cards:
   # ---------------------------------------------------------------- D1 · local
+  # Variante qui lit une autre intrigue (ch. 11 § 2.3.1) : l'homme de la haie a
+  # laissé sa plaque d'immatriculation au-dessus du bar du local.
+  - id: en.kop.local_jumelles
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé, la plaque clouée au-dessus du bar : « On a gardé la plaque du type de la haie. La tribune n'oublie rien, {toi}, surtout pas les jumelles. Tu passes boire un coup dessous ? »"
+    left:
+      label: "J'y vais"
+      effects: {tribunes: "++", direction: "-", set: [ami_ultras], relation: {gege: 2}, react: {card: en.re.camille_le_verre, chance: 0.6}, journal: {text: "{annee} : trois bières sous la plaque de l'homme de la haie. La fin de l'histoire n'est pas dans le journal.", poids: 2, tags: [ultras]}}
+      answer: "Trois bières sous la plaque. On te raconte la fin ; elle n'est pas dans le journal."
+    right:
+      label: "Pas ce soir"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "Il finit sa bière sous la plaque. Il compte, comme toujours."
+
   # Variante « encore » (relance, plays >= 1) : le virage a déjà voté une fois.
   - id: en.kop.local_encore_onze
     roles: [entraineur]
@@ -99,15 +117,19 @@ cards:
     tags: [ultras, tribunes, chaine]
     speaker: gege
     tone: strategique
-    text: "Gégé, solennel : « Un pacte : le local rénové cette saison, et « {nom} » chanté dans toute la ville. La tribune n'oublie rien. Tape là. »"
+    # Texte et libellés repris de la scène de la bible (README § 2, ch. 11 § 2.3) :
+    # « Tu signes, ou tu fais comme les autres ? ». L'ancien libellé « Je serre la
+    # main, promis » face à « Pas de promesse en l'air » présentait la gauche
+    # comme une imprudence : l'issue `pacte` tombait sous 5 %.
+    text: "Gégé pose une craie sur la table : « Le local, il prend l'eau depuis douze ans et personne n'a jamais signé. Tu signes, ou tu fais comme les autres ? »"
     left:
-      label: "Je serre la main, promis"
-      effects: {tribunes: "++", parole: 2, promise: true, set: [pacte_gege]}
-      answer: "Il grave la date sur le mur du local. À la craie, pour l'instant."
+      label: "Je signe le local"
+      effects: {tribunes: "++", caisse: "-", parole: 2, promise: true, relation: {gege: 1}, set: [pacte_gege], react: {card: en.re.gege_lui_venait, chance: 0.7}}
+      answer: "Il grave la date à la craie, au-dessus de la porte."
     right:
       label: "Pas de promesse en l'air"
       effects: {tribunes: "-", relation: {gege: -1}, next: {step: banderoles, in: [5, 9]}, journal: {text: "{annee} : pas de pacte avec le virage. Gégé a gardé la main tendue une seconde de trop.", poids: 2, tags: [ultras]}}
-      answer: "Il garde la main tendue une seconde de trop. Puis il la range."
+      answer: "La craie reste sur la table. Personne ne la reprend."
 
   - id: en.kop.pacte_suite
     roles: [entraineur]
@@ -118,7 +140,10 @@ cards:
     text: "Gégé, le mur du local encore nu : « Le pacte, coach. La tribune n'oublie rien. On efface la craie, ou on l'écrit en dur ? »"
     left:
       label: "Je tiens parole, on rénove"
-      effects: {caisse: "--", tribunes: "++", clear: [pacte_gege], relation: {gege: 1}, journal: {text: "{annee} : le local du virage repeint, promesse tenue. Josiane a senti la facture avant la peinture.", poids: 2, tags: [ultras, caisse]}}
+      # Pas de `clear` : le pacte a été TENU. `pacte_gege` est la trace n° 4 de
+      # la matrice (ch. 90 § 1.2) et ses onze lecteurs veulent dire « il y a eu
+      # un pacte, et il a tenu ». Seul le reniement (à droite) l'efface.
+      effects: {caisse: "--", tribunes: "++", relation: {gege: 1}, journal: {text: "{annee} : le local du virage repeint, promesse tenue. Josiane a senti la facture avant la peinture.", poids: 2, tags: [ultras, caisse]}}
       answer: "Le local sent la peinture fraîche et la fierté. Josiane sent la facture."
     right:
       label: "Plus tard, on a le temps"
@@ -143,6 +168,26 @@ cards:
       answer: "Il déroule la mauvaise. Dimanche, on verra pour l'autre."
 
   # ---------------------------------------------------- D4 · anniversaire (S2)
+  # Câblage de la fin `co_pacte_tenu` (ch. 30 § 5.5 : « conclut Le kop qui aime
+  # trop — pacte_gege tenu, tribunes ≥ 70, départ volontaire »). La salle des
+  # set-pieces a écrit la plaque sans pouvoir la brancher : l'arc n'était pas
+  # le sien. La voici branchée sur la seule scène qui la mérite.
+  - id: en.kop.anniversaire_inauguration
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    tone: strategique
+    text: "« Le local est refait, la date est restée à la craie et ton nom est peint au-dessus. La tribune n'oublie rien, {toi} : tu coupes le ruban et tu t'en vas, ou tu restes encore ? »"
+    left:
+      label: "Je coupe et je m'en vais"
+      effects: {tribunes: "++", parole: 1, end: co_pacte_tenu}
+      answer: "Tu coupes. Il fait le discours : deux phrases, et il s'arrête au milieu de la deuxième."
+    right:
+      label: "Je reste encore"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
+      answer: "Tu restes. Il repeint la date par-dessus l'ancienne ; c'est la même, en plus épais."
+
   - id: en.kop.anniversaire_sourire
     roles: [entraineur]
     arc: ultras
@@ -158,6 +203,26 @@ cards:
       label: "Je serai sur le banc"
       effects: {tribunes: "+", journal: {text: "{annee} : dix ans du virage. {nom} sur le banc ; la tribune a chanté depuis sa place.", poids: 1, tags: [ultras, moment]}}
       answer: "Ils chantent ton nom depuis leur place. Tu l'entends depuis la tienne."
+
+  # Variante lue avant `_bache` : le pacte a été signé, et la Nord a quand même
+  # sorti la bâche. Elle ferme l'arc sur l'issue `pacte` (la promesse tenue ou
+  # trahie reste l'histoire) au lieu de la recouvrir : sans elle, `bache` écrasait
+  # `pacte`, qui tombait à 4 % des arcs.
+  - id: en.kop.anniversaire_pacte_trahi
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    text: "Gégé, sans écharpe, devant la porte du local : « La date est toujours à la craie au-dessus, et on a peint une bâche pour la recouvrir. La tribune n'oublie rien, {toi}. »"
+    left:
+      label: "Je répare le local"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}, outcome: pacte, journal: {text: "{annee} : le local a été refait avec deux saisons de retard. La date à la craie a été repassée par-dessus la bâche.", poids: 2, tags: [ultras, tribunes]}}
+      answer: "La bâche descend le samedi. La date reste ; ils la repassent au-dessus."
+    right:
+      label: "La craie s'efface"
+      effects: {tribunes: "---", direction: "+", outcome: pacte, journal: {text: "{annee} : la bâche a recouvert la date de {nom} au-dessus de la porte du local. Personne n'a rien effacé.", poids: 3, tags: [ultras, tribunes]}}
+      answer: "Personne n'efface rien. La bâche reste, et la date dessous."
 
   - id: en.kop.anniversaire_bache
     roles: [entraineur]
@@ -190,6 +255,26 @@ cards:
       label: "Sans moi, faites la fête"
       effects: {tribunes: "-", direction: "+", journal: {text: "{annee} : dix ans du virage. La photo des coachs s'est faite sans {nom} ; un vide au troisième rang.", poids: 1, tags: [ultras, moment]}}
       answer: "La photo se fait sans toi. Ils laissent un vide au troisième rang."
+
+  # ------------------------------------------------------- Réaction de l'arc
+  # Le build dérive `kind: reaction` de tout `react:` qui la cite : ne pas
+  # écrire `kind:`. Après en.kop.pacte (←) : la tribune a désormais une dette
+  # envers toi, ce qui est pire qu'une créance (ch. 90 § 2.3).
+  - id: en.re.gege_lui_venait
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé, la craie encore dans la main : « Le virage te doit un local, maintenant, et une dette de tribune, ça se rembourse en chants. La tribune n'oublie rien. »"
+    left:
+      label: "Qu'ils chantent, alors"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Ils chantent ton nom dès la douzième minute. Douze, c'est l'année du local."
+    right:
+      label: "Qu'ils chantent, alors"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Ils chantent ton nom dès la douzième minute. Douze, c'est l'année du local."
 
   # Les paliers de relation de Gégé (en.gege.trahison_banderole −3,
   # en.gege.faveur_insurrection +3) vivent dans cards/common/paliers.yaml.

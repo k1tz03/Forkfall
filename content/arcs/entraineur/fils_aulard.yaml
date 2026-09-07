@@ -1,0 +1,53 @@
+# « Le fils du président » — il ne veut pas de l'empire ; il veut s'entraîner
+# avec les pros, puis un bureau, puis ton banc (bible ch. 11 § 2.4, tardive 1).
+# Intrigue tardive : le réservoir ne la tire qu'en saison 2 et au-delà, quand
+# le président te connaît assez pour te confier ce qu'il ne dit pas au fils.
+#
+# Chemins : groupe (∃ `en.direction.fils_president`) → placard (le placard à
+# ballons, s'il est accueilli) → bureau (la plaque « DIRECTEUR SPORTIF » vissée
+# sur un placard) → mercato (l'ailier de janvier, acheté par fax) → pourquoi
+# (S+1 : personne ne me dit bonjour le premier).
+# Issues : joueur | ds | refuse. La trace `fils_ds` coûte à la caisse à chaque
+# fenêtre de mercato ; elle est lue par la rentrée du script et par la Une.
+arcs:
+  - id: en.fils_aulard
+    title: "Le fils du président"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: direction
+    carrier: aulard
+    cast: [aulard, josiane, brehaut]
+    when: "relation.aulard >= -1"
+    issues: [joueur, ds, refuse]
+    traces:
+      fils_joueur: "{annee} : le fils du président s'est entraîné avec les pros. Bréhaut lui a montré le placard à ballons."
+      fils_ds:     "{annee} : le fils du président a un bureau, « directeur sportif », avec la plaque. La caisse s'en souvient."
+      fils_refuse: "{annee} : {nom} a refusé le fils du président au groupe. Le président a gardé le mot."
+    hint: "Trente-quatre ans, une clause de confidentialité, et des crampons neufs."
+    start: [1, 8]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le fils du président est resté au bureau après {nom}. La plaque aussi."
+    steps:
+      - id: groupe
+        card: en.direction.fils_president
+        next: [ { step: placard, in: [1, 3] } ]
+      - id: placard
+        card: en.fils.placard
+        next: [ { step: bureau, in: [3, 6] } ]
+      - id: bureau
+        card: en.fils.bureau
+        next: [ { step: mercato, in: [4, 8] } ]
+      - id: mercato
+        card: en.fils.mercato
+        next: [ { step: pourquoi, at_season: 1, at: [2, 8], in: [2, 8] } ]
+      - id: pourquoi
+        card: en.fils.pourquoi
+        on_expire: skip
+        next: []

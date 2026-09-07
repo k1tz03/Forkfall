@@ -41,7 +41,10 @@ arcs:
     steps:
       - id: retraite
         # Escalier du rituel : « je raccroche » → « encore une » → « cette fois c'est vrai ».
+        # Première ouverture chez l'intérimaire : Gigi compte les coachs de
+        # l'année (ch. 11 § 2.3.1) et s'arrête au pouce.
         card:
+          - { id: en.vieux.retraite_quatrieme, if: "flag('interim') && plays('en.vieux_gardien') == 0" }
           - { id: en.vieux.retraite_vrai,   if: "plays('en.vieux_gardien') >= 2" }
           - { id: en.vieux.retraite_encore, if: "plays('en.vieux_gardien') >= 1" }
           - { id: en.vieux.retraite }

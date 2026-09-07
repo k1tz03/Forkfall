@@ -22,7 +22,7 @@ cards:
     left:
       label: "Je promets le sursaut"
       effects: { direction: "+", tribunes: "-", parole: 1, promise: true }
-      answer: "Aulard note la date, au stylo rouge."
+      answer: "Vaubourg note la date, au stylo rouge."
     right:
       label: "Je réponds sec"
       effects: { direction: "--", vestiaire: "++" }
@@ -32,7 +32,7 @@ cards:
     arc: direction
     tags: [direction, vestiaire, retorse]
     speaker: vukic
-    text: "Aulard m'a nommé ton adjoint 'de confiance'. Je prends des notes même quand tu te tais, surtout quand tu te tais."
+    text: "Vaubourg m'a nommé ton adjoint 'de confiance'. Je prends des notes même quand tu te tais, surtout quand tu te tais."
     left:
       label: "Je l'intègre au staff"
       effects: { direction: "++", vestiaire: "-", set: [homme_president] }
@@ -64,7 +64,7 @@ cards:
     left:
       label: "Je fais confiance"
       effects: { direction: "+", relation: { aulard: 1 }, set: [enveloppe_promise], schedule: [{ card: en.direction.enveloppe_vide, in: [6, 12] }] }
-      answer: "Aulard scelle l'enveloppe, elle sonne creux."
+      answer: "Vaubourg scelle l'enveloppe, elle sonne creux."
     right:
       label: "Je veux du concret"
       effects: { direction: "-", caisse: "+" }
@@ -83,7 +83,7 @@ cards:
     right:
       label: "Je fais fuiter à la presse"
       effects: { direction: "---", tribunes: "++", clear: [enveloppe_promise] }
-      answer: "Ménèche titre: 'L'enveloppe fantôme'."
+      answer: "Massenet titre: 'L'enveloppe fantôme'."
 
   - id: en.direction.reunion_crise
     roles: [entraineur]
@@ -112,20 +112,25 @@ cards:
     right:
       label: "Je relève la pique"
       effects: { direction: "--", tribunes: "+", vestiaire: "+" }
-      answer: "Aulard rit jaune, nuance rare chez lui."
+      answer: "Vaubourg rit jaune, nuance rare chez lui."
 
+  # Étape 1 de l'intrigue « Le fils du président »
+  # (content/arcs/entraineur/fils_aulard.yaml) : hors du sac depuis la reprise
+  # de la bible ch. 11 § 2.4 ; c'est le père qui parle de son fils à la
+  # troisième personne, à sa manière.
   - id: en.direction.fils_president
     roles: [entraineur]
     arc: direction
     tags: [direction, vestiaire, absurde]
-    text: "Le fils d'Aulard veut 'juste s'entraîner avec les pros'. Il a 34 ans, une clause de confidentialité et un genou de moins que moi."
+    speaker: aulard
+    text: "Le fils de Vaubourg veut 'juste s'entraîner avec les pros'. Il a 34 ans, une clause de confidentialité et un genou de moins que moi."
     left:
       label: "Je l'accueille au groupe"
-      effects: { direction: "++", vestiaire: "--" }
+      effects: { direction: "++", vestiaire: "--", set: [fils_joueur], outcome: joueur }
       answer: "Il réclame déjà le brassard et une doublure."
     right:
       label: "Je refuse poliment"
-      effects: { direction: "--", vestiaire: "+", relation: { aulard: -1 } }
+      effects: { direction: "--", vestiaire: "+", relation: { aulard: -1 }, set: [fils_refuse], outcome: refuse, next: { step: bureau, in: [3, 6] } }
 
   - id: en.direction.nassir_injection
     roles: [entraineur]
@@ -161,11 +166,11 @@ cards:
     tags: [direction, rescue:direction, retorse]
     when: "gauges.direction < 25"
     speaker: josiane
-    text: "Entre nous: Aulard vote ton départ jeudi. Si tu lui apportes le sponsor avant mercredi, il 'oublie' l'ordre du jour."
+    text: "Entre nous: Vaubourg vote ton départ jeudi. Si tu lui apportes le sponsor avant mercredi, il 'oublie' l'ordre du jour."
     left:
-      label: "Je cours signer Nassir"
+      label: "Je cours signer Ilyas"
       effects: { direction: "+++", caisse: "+", vestiaire: "-" }
-      answer: "Aulard déchire l'ordre du jour, il en garde une photo."
+      answer: "Vaubourg déchire l'ordre du jour, il en garde une photo."
     right:
       label: "Je refuse de ramper"
       effects: { direction: "--", tribunes: "+", vestiaire: "+" }

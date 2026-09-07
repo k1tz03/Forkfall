@@ -1,0 +1,128 @@
+# Les fins de la bible ch. 30 § 5, pour les deux rôles qui existent aujourd'hui
+# (entraîneur et joueur). Le chapitre en écrit trente et une : celles des six
+# autres familles (président amateur, président pro, directeur sportif,
+# sélectionneur, dirigeant d'instance) attendent leurs rôles et ne sont pas
+# importées ici — voir le rapport de lot.
+#
+# Chaque plaque : titre, épitaphe de deux phrases (le joueur nommé une fois,
+# accord de genre par `{pg, select, …}`), et deux `epitaph_plus` — une phrase,
+# jamais deux, qui ne répète pas l'épitaphe mais ajoute le détail que seule
+# cette carrière-là a produit, et qui ne nomme pas le joueur (§ 5.7).
+endings:
+  # ─────────────────────────────────── § 5.2 · les fins de choix et de chaîne
+  - id: co_cheque
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "Le Chèque"
+    epitaph: "Tu as pris le chèque. Il était gros, la porte aussi, et {prenom} {nom} est sorti{pg, select, f{e} other{}} en marchant droit."
+    epitaph_plus:
+      - { when: "flag('cheque_non_date')", text: "Il ne l'a pas daté. La banque non plus, pendant trois semaines." }
+      - { when: "objective.promised",      text: "La promesse d'août tenait sur une ligne ; le chèque, sur deux." }
+
+  - id: en_chaussure
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "La chaussure"
+    epitaph: "Tu as shooté dans une chaussure. Elle a atterri sur l'arcade de ta star, et la star avait un compagnon dans la presse."
+    epitaph_plus:
+      - { when: "flag('mbako_revu')", text: "Il a montré l'arcade en direct, longuement, sous trois angles." }
+      - { when: "flag('otage_kop')",  text: "Le virage a chanté « encore » ; le président a lu ça comme un programme." }
+
+  # ──────────────────────────── § 5.3 · les fins judiciaires et financières
+  - id: co_dix_huit_mois
+    cause: chaine
+    rarity: rare
+    golden: false
+    share: false
+    title: "Dix-huit mois"
+    epitaph: "Fraude fiscale, dix-huit mois, une cellule avec vue sur un parking. Ton codétenu demandait des pronostics à {nom}, qui les donnait faux."
+    epitaph_plus:
+      - { when: "flag('offshore')",        text: "La société du cousin s'appelait comme une plage. Le juge a demandé laquelle." }
+      - { when: "flag('carnet_fardelli')", text: "Le carnet noir a été saisi le même jour ; le nom y était deux fois, dont une au crayon." }
+
+  # ──────────────────────────────────────────── § 5.4 · les fins d'objectif
+  - id: co_relegation
+    cause: objectif
+    rarity: commune
+    golden: false
+    title: "La relégation"
+    epitaph: "Descendu{pg, select, f{e} other{}} à l'étage du dessous. Le stade a paru très grand d'un coup, et les actionnaires très petits."
+    epitaph_plus:
+      - { when: "flag('salaires_retard')", text: "Les salaires de mai sont tombés en août, dans une division de moins." }
+      - { when: "relation.gege >= 1",      text: "Le virage a chanté jusqu'à la fin, et il est resté. C'est ce qui fait le plus mal." }
+
+  - id: co_photo_famille
+    cause: objectif
+    rarity: commune
+    golden: false
+    title: "La photo de famille"
+    epitaph: "Sixième à un point. On a refait la photo de famille du club sans {nom}, et le photographe s'est excusé, lui."
+    epitaph_plus:
+      - { when: "objective.promised",         text: "La promesse d'août était affichée au local, datée, à la craie." }
+      - { when: "flag('classeur_josiane')",   text: "Le classeur vert avait la photo de l'an dernier. La même, à un visage près." }
+
+  # ─────────────── § 5.5 · les fins de fin de vie, dorées, et de conclusion
+  - id: ta_loge
+    cause: age
+    rarity: rare
+    golden: true
+    title: "Ta loge"
+    epitaph: "Tu t'es endormi{pg, select, f{e} other{}} dans ta loge à la soixante-dixième, souriant{pg, select, f{e} other{}}. Le derby a été gagné ; on ne t'a pas réveillé{pg, select, f{e} other{}}."
+    epitaph_plus:
+      - { when: "flag('banc_de_gigi')",    text: "Deux sièges vides ce jour-là : le banc en bois derrière le but, et le tien." }
+      - { when: "flag('dimanche_promis')", text: "Le dimanche était noté en rouge sur un planning. On a baissé la musique." }
+
+  - id: mort_au_poste
+    cause: age
+    rarity: rare
+    golden: false
+    share: false
+    title: "Mort au poste"
+    epitaph: "Tu es mort{pg, select, f{e} other{}} dans ton fauteuil, au stade, pendant la quatre-vingt-neuvième minute. L'arbitre a ajouté une minute d'arrêt de jeu."
+    epitaph_plus:
+      - { when: "relation.sabatier >= 1",   text: "Le médecin était à trois rangs. Ça reste entre la table et lui." }
+      - { when: "flag('telegramme_clow')",  text: "Le télégramme de six mots était dans la poche de la veste. Il les comptait." }
+
+  - id: statue_de_bronze
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "La statue de bronze"
+    epitaph: "Tu as tout gagné, tout dit, et {prenom} {nom} est parti{pg, select, f{e} other{}} avant qu'on le lui demande. On a coulé la statue en bronze, pas en résine."
+    epitaph_plus:
+      - { when: "flag('pacte_gege')", text: "Le virage a payé le socle, en pièces, dans une boîte en fer." }
+      - { when: "flag('clow_revu')",  text: "Un vieux monsieur qui se disait devant a dit qu'il n'était pas surpris. Il mentait bien." }
+
+  - id: burn_out
+    cause: chaine
+    rarity: commune
+    golden: false
+    share: false
+    title: "Le burn-out"
+    epitaph: "Tu as fait un malaise à la troisième conférence de presse de la journée. Le médecin a prescrit du repos, le président un remplaçant."
+    epitaph_plus:
+      - { when: "relation.camille >= 1", text: "Elle est venue à l'hôpital avec des vêtements propres et aucune question." }
+      - { when: "flag('divorce')",       text: "Personne n'avait le numéro à appeler. On a appelé le club." }
+
+  - id: co_pacte_tenu
+    cause: chaine
+    rarity: rare
+    golden: true
+    title: "Le local rénové"
+    epitaph: "Le local a été rénové, la date est restée à la craie, et le nom de {nom} est sur le mur au-dessus. Tu es parti{pg, select, f{e} other{}} le jour de l'inauguration."
+    epitaph_plus:
+      - { when: "flag('onze_du_virage')", text: "Le onze du virage est encadré à côté. Il ressemble beaucoup au tien." }
+      - { when: "relation.gege >= 3",     text: "Il a fait le discours. Deux phrases, et il s'est arrêté au milieu de la deuxième." }
+
+  # ────────────────────────────────────────── § 5.6 · les fins de monde
+  - id: co_fuyard
+    cause: chaine
+    rarity: commune
+    golden: false
+    title: "La porte de sortie, la troisième fois"
+    epitaph: "Tu es parti{pg, select, f{e} other{}} avant la fin trois fois de suite. La quatrième, personne n'a proposé de porte à {nom}."
+    epitaph_plus:
+      - { when: "parole <= -3",            text: "Douze promesses en cours, aucune close, et un carnet d'adresses qui ne répond plus." }
+      - { when: "flag('dossier_repris')",  text: "Elle avait gardé les trois lettres de démission. Elles se ressemblent beaucoup." }

@@ -1,0 +1,83 @@
+# Cartes de l'intrigue « La première Une » (arc jp.premiere_une) —
+# bible ch. 10 § 6.6. Léa dit {toi} et vouvoie ; Massenet tient le rôle du
+# chroniqueur (Massenet de la bible : même magnéto, même « hors micro »).
+cards:
+  - id: jp.une.conference
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    tone: leger
+    text: "« Vous confirmez ? Trois phrases : « je suis content », « le groupe est bien », « merci le coach », et vous rentrez. Ou vous dites ce que vous pensez, et je gère demain ? »"
+    left:
+      label: "Les trois phrases"
+      effects: {direction: "+", tribunes: "-", set: [modeste_une], outcome: modeste}
+      answer: "Tu lis. Le chroniqueur bâille. L'Écho titre « Un garçon poli » ; c'est le pire titre possible, et il est gentil."
+    right:
+      label: "Ce que je pense"
+      effects: {tribunes: "++", direction: "-", vestiaire: "-", set: [special], outcome: special, react: jp.re.brehaut_decoupe}
+      answer: "Tu dis « je suis le meilleur ici ». Il ne bâille plus. La Gazette Rose titre avant que tu sois rentré."
+
+  - id: jp.une.hors_micro
+    roles: [joueur]
+    arc: presse
+    tags: [presse, retorse]
+    speaker: meneche
+    tone: leger
+    text: "« Juste une question, hors micro : qui commande ce vestiaire, vous ou le coach ? Répondez, ou j'écris la réponse à votre place. Le collectif, ou vous ? »"
+    left:
+      label: "Le collectif, voyons"
+      effects: {direction: "+", tribunes: "-", var: {no_comment: "+1"}}
+      answer: "Tu dis « le collectif ». Il écrit « langue de bois ». Il a raison ; ça se lit."
+    right:
+      label: "Moi, et il le sait"
+      effects: {tribunes: "++", direction: "--", vestiaire: "-", set: [coach_critique], outcome: critique}
+      answer: "Il écrit ta phrase. Le coach la lit au petit-déjeuner ; il te met sur le banc au déjeuner."
+
+  - id: jp.une.vestiaire
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: brehaut
+    tone: leger
+    text: "« Le groupe a découpé l'article et l'a mis dans ton casier, avec « le meilleur » en jaune. Le groupe vit bien quand tout le monde lit la même chose. Tu l'enlèves ? »"
+    left:
+      label: "Je le laisse"
+      effects: {tribunes: "+", vestiaire: "-", force: 1, set: [special_assume]}
+      answer: "Tu le laisses. Tu marques dimanche. L'article reste ; on ajoute la date du but au feutre."
+    right:
+      label: "Je l'enlève devant eux"
+      effects: {vestiaire: "++", tribunes: "-", clear: [special], set: [special_retire]}
+      answer: "Tu l'enlèves. Quelqu'un dit « enfin » ; c'est celui qui aime dire « enfin »."
+
+  - id: jp.une.meme
+    roles: [joueur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: meneche
+    tone: leger
+    text: "« Juste une question, hors micro : trois « je ne commente pas » en un mois, et le Flux en a fait une boucle. Vous en riez, ou vous commentez ? »"
+    left:
+      label: "J'en ris"
+      effects: {tribunes: "++", direction: "-", relation: {meneche: 1}, set: [meme_assume]}
+      answer: "Tu ris. Tu postes la boucle toi-même. Le club l'imprime sur un mug ; le mug se vend."
+    right:
+      label: "Je commente, enfin"
+      effects: {tribunes: "+", direction: "--", relation: {meneche: 1}, parole: 1}
+      answer: "Tu commentes. Longtemps. Il note tout ; il en a pour deux Unes."
+
+  - id: jp.une.meme_dessin
+    roles: [joueur]
+    arc: presse
+    tags: [presse, absurde]
+    speaker: meneche
+    tone: leger
+    text: "« Juste une question, hors micro : la Gazette vous a dessiné en poteau de corner, « je ne commente pas » dans la bulle, page trois. Vous encadrez, ou vous répondez ? »"
+    left:
+      label: "J'encadre"
+      effects: {tribunes: "++", direction: "-", relation: {meneche: 1}, set: [meme_assume]}
+      answer: "Tu l'encadres. Tu l'accroches au-dessus de ton casier. Le vestiaire trouve ça très bien ; c'est rare."
+    right:
+      label: "Je réponds, enfin"
+      effects: {tribunes: "+", direction: "--", relation: {meneche: 1}, parole: 1}
+      answer: "Tu réponds. Longtemps. Il note tout ; il en a pour deux Unes."

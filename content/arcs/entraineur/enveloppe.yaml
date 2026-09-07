@@ -1,0 +1,61 @@
+# « L'enveloppe » — Fardelli a « un ami » : trois joueurs d'en face pourraient
+# lever le pied au dernier bloc, et ça se paie en amitié (bible ch. 11 § 2.3,
+# intrigue 14). L'intrigue absorbe l'ancien événement `en.evt.enveloppe` : ses
+# deux cartes ∃ sont les étapes 1 et 5, et l'événement aléatoire a été retiré
+# de content/arcs/entraineur/evenements.yaml.
+#
+# Chemins : ami (∃) → combien (→, une date pas un chiffre) | brehaut (←, le
+# regard du numéro six) → meneche (hors micro) → federation (S+1, ∃ : nier ou
+# assumer — la valise) | denonce (l'enveloppe portée fermée à la Fédération).
+# Issues : jamais | paye | denonce. Sobre : aucun nom, aucune somme.
+arcs:
+  - id: en.enveloppe
+    title: "L'enveloppe"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 0.9
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: fardelli
+    cast: [fardelli, brehaut, meneche, legruet]
+    issues: [jamais, paye, denonce]
+    traces:
+      enveloppe_rival:     "{annee} : trois joueurs d'en face ont levé le pied au dernier bloc. Une enveloppe a changé de poche ; {nom} savait."
+      enveloppe_refusee:   "{annee} : Fardelli avait « un ami » et une enveloppe. {prenom} {nom} a dit jamais. Il n'a pas rappelé."
+      enveloppe_niee:      "{annee} : la Fédération a examiné l'enveloppe. {prenom} {nom} a tout nié ; Berthomier a noté « nie »."
+      enveloppe_promise:   "{annee} : un dernier bloc, un gardien qu'on n'a pas changé, une promesse. La Fédération « examine »."
+      enveloppe_denoncee:  "{annee} : {nom} a porté l'enveloppe de Fardelli à la Fédération, fermée. Berthomier a « examiné »."
+    hint: "Fardelli a un ami. L'ami a une enveloppe. Le dernier bloc a un prix."
+    start: [11, 14]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      direction: "-"
+      journal: "{annee} : l'enveloppe du dernier bloc a suivi {nom} dans son nouveau club. Fermée, mais suivie."
+    steps:
+      - id: ami
+        card: en.evt.enveloppe
+        next: [ { step: combien, in: [1, 2] } ]
+      - id: combien
+        card: en.enveloppe.combien
+        next: [ { step: meneche, in: [1, 3] } ]
+      - id: brehaut
+        card: en.enveloppe.brehaut
+        next: [ { step: meneche, in: [1, 3] } ]
+      - id: meneche
+        card:
+          - { id: en.enveloppe.meneche_promise, if: "flag('enveloppe_promise')" }
+          - { id: en.enveloppe.meneche }
+        next:
+          - { step: federation, if: "flag('enveloppe_promise')", at_season: 1, at: [2, 6], in: [2, 6] }
+          - { step: denonce, if: "flag('enveloppe_denoncee')", in: [2, 4] }
+      - id: federation
+        card: en.evt.enveloppe_federation
+        on_expire: skip
+        next: []
+      - id: denonce
+        card: en.enveloppe.denonce
+        next: []

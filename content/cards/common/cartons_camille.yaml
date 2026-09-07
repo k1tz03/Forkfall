@@ -1,0 +1,176 @@
+# Cartes d'étape de « Les cartons » (content/arcs/common/cartons_camille.yaml),
+# transcrites de la bible ch. 11 (scènes co.cartons.appel, .josiane, .metier,
+# .promesse, .treve) et de la fiche de Camille (ch. 01 § 4).
+# Toutes hors du sac. Le nom du joueur : chez Josiane seulement ({toi} rend
+# « monsieur {nom} »), jamais deux étapes de suite. Aucun drame : l'intrigue
+# peut s'ouvrir en S0. Traces : camille_ici, hotel_du_club, treve_promise.
+cards:
+  # ------------------------------------------------ 1 · deux cents kilomètres
+  - id: co.cartons.appel
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "Camille, du scotch qui se déroule derrière sa voix : « Deux pièces au-dessus d'une boulangerie, à {ville}, et j'ai commencé les cartons sans te demander. Tu rentres à quelle heure, ce soir ? »"
+    left:
+      label: "Viens, on s'installe"
+      effects: {relation: {camille: 1}, vestiaire: "+", caisse: "-", var: {cartons: "=1"}}
+      answer: "Le scotch se déroule plus vite. Elle demande si l'appartement a un radiateur ; tu ne sais pas."
+    right:
+      label: "Attends la trêve"
+      effects: {relation: {camille: -1}, direction: "+", parole: 1, promise: true, set: [treve_promise], var: {cartons: "=2"}}
+      answer: "Le scotch s'arrête. Elle dit « la trêve », comme on répète une date de rendez-vous."
+
+  # La variante « encore » : les cartons sont restés au garage depuis la fois d'avant.
+  - id: co.cartons.appel_encore
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "Camille, la même voix : « Les cartons sont restés au garage depuis la dernière fois, et l'appartement de la boulangerie est libre à nouveau. Tu rentres à quelle heure, cette fois pour de vrai ? »"
+    left:
+      label: "Cette fois, on y va"
+      effects: {relation: {camille: 1}, vestiaire: "+", caisse: "-", var: {cartons: "=1"}}
+      answer: "Elle coupe le vieux scotch au couteau. Il a jauni ; les cartons, non."
+    right:
+      label: "Attends encore un peu"
+      effects: {relation: {camille: -2}, direction: "+", promise: true, set: [treve_promise], var: {cartons: "=2"}}
+      answer: "Elle ne dit pas « la trêve » cette fois. Elle dit « d'accord », ce qui est pire."
+
+  # La variante qui lit l'hôtel : la chambre 12 est encore à ton nom.
+  - id: co.cartons.appel_hotel
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "Camille, la voix nette : « La chambre 12 est encore à ton nom, j'ai appelé l'hôtel pour vérifier ; c'est madame Josiane qui a répondu. Tu rentres à quelle heure, et où ? »"
+    left:
+      label: "Chez nous, pas ici"
+      effects: {relation: {camille: 1}, vestiaire: "+", caisse: "-", var: {cartons: "=1"}}
+      answer: "Elle rappelle l'hôtel elle-même. Josiane note ; elle avait laissé la ligne à côté du café."
+    right:
+      label: "La chambre 12 me va"
+      effects: {relation: {camille: -1}, direction: "+", promise: true, set: [treve_promise], var: {cartons: "=2"}}
+      answer: "Elle raccroche doucement. La chambre 12 reste à ton nom, et le café aussi."
+
+  # La variante de l'intérimaire : on ne déménage pas pour six semaines.
+  - id: co.cartons.appel_interim
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "Camille, le scotch encore dans son emballage : « Six semaines, on ne déménage pas pour six semaines, alors je regarde les cartons. Tu rentres à quelle heure, quand ils t'auront dit ? »"
+    left:
+      label: "Fais-en un quand même"
+      effects: {relation: {camille: 1}, parole: 1, promise: true, var: {cartons: "=1"}}
+      answer: "Elle en fait un. Un seul, avec les photos, et elle écrit « photos » dessus."
+    right:
+      label: "Attends qu'ils décident"
+      effects: {relation: {camille: -1}, direction: "+", set: [treve_promise], var: {cartons: "=2"}}
+      answer: "Elle range le scotch. Six semaines, ça se compte sur les doigts ; elle compte."
+
+  # ------------------------------------------------------- 2 · la chambre 12
+  - id: co.cartons.josiane
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, direction]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane pose la clé et le café côte à côte : « L'hôtel demande si la chambre 12 est prise jusqu'en juin, ou jusqu'à ce que madame arrive. J'en ai vu passer, {toi}. Je réponds quoi ? »"
+    left:
+      label: "Jusqu'à ce qu'elle arrive"
+      effects: {relation: {josiane: 1, camille: 1}, caisse: "-", set: [camille_ici], outcome: ici}
+      answer: "Elle rend la clé à l'hôtel. Elle garde le café ; elle le boit, pour une fois."
+    right:
+      label: "Jusqu'en juin, au moins"
+      effects: {direction: "+", relation: {camille: -1}, set: [hotel_du_club], outcome: hotel}
+      answer: "Elle garde la clé dans le tiroir du milieu. Elle sert le café chaque matin, sans le dire."
+
+  - id: co.cartons.josiane_promis
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, direction]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane, la clé et le café : « L'hôtel demande si la chambre 12 est prise jusqu'à la trêve ; c'est le mot que vous avez dit à madame, et ça s'entend depuis la réception. La trêve, ou juin ? »"
+    left:
+      label: "La trêve"
+      effects: {parole: 1, relation: {josiane: 1}, set: [hotel_du_club], outcome: promis}
+      answer: "Elle note « trêve ». Elle souligne ; elle sait ce que valent les trêves."
+    right:
+      label: "Juin"
+      effects: {direction: "+", parole: -1, relation: {camille: -1}, set: [hotel_du_club], outcome: hotel}
+      answer: "Elle note « juin ». Elle ne souligne pas."
+
+  # ------------------------------ 3a · ce qu'il y a au fond du dernier carton
+  - id: co.cartons.metier
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "Camille tient l'objet de son métier à deux mains : « J'ai démissionné vendredi, ils ont fait un pot, et j'ai dit que je reprendrais ici, un jour. Tu rentres à quelle heure, cette année ? »"
+    left:
+      label: "Reprends tout de suite"
+      effects: {relation: {camille: 2}, vestiaire: "-", direction: "-"}
+      answer: "Elle range l'objet dans le placard, pas dans le carton. La boulangère connaît quelqu'un pour le local."
+    right:
+      label: "Cette saison, c'est le club"
+      effects: {relation: {camille: -1}, direction: "+", parole: -1}
+      answer: "Elle remet l'objet au fond du carton. Elle le referme avec le scotch de la dernière fois."
+
+  - id: co.cartons.metier_avocate
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    text: "Camille, la robe noire pliée sur ses genoux : « J'ai rendu la robe vendredi ; j'ai dit que je plaiderais ici, un jour, si le tribunal de {ville} veut quelqu'un qui lit les clauses. »"
+    left:
+      label: "Plaide ici, dès lundi"
+      effects: {relation: {camille: 2}, vestiaire: "-", direction: "-"}
+      answer: "Elle déplie la robe. Trois mois plus tard, elle lit les clauses de ton contrat, et elle en trouve une."
+    right:
+      label: "Cette saison, c'est le club"
+      effects: {relation: {camille: -1}, direction: "+", parole: -1}
+      answer: "Elle repose la robe au fond du carton. Elle referme sans le scotch : elle n'y croit plus assez."
+
+  # ---------------------------------- 3b · le calendrier de la cuisine
+  - id: co.cartons.promesse
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, piege]
+    speaker: camille
+    tone: strategique
+    when: "flag('treve_promise')"
+    text: "Camille montre un rond rouge sans le toucher : « J'ai entouré la trêve sur le calendrier, et aussi le derby, la Coupe et le dernier bloc, parce que je connais les excuses. »"
+    left:
+      label: "Les cartons à la trêve"
+      effects: {relation: {camille: 1}, parole: 1, promise: true, direction: "-"}
+      answer: "Elle décroche le calendrier. Elle le met dans le premier carton, pour le retrouver."
+    right:
+      label: "Après le dernier bloc"
+      effects: {relation: {camille: -2}, direction: "+", parole: -1}
+      answer: "Elle laisse le calendrier au mur. Elle entoure le dernier bloc deux fois."
+
+  # ------------------------------------------- 4 · la trêve est passée (S+1)
+  - id: co.cartons.treve
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    tone: strategique
+    when: "flag('treve_promise') && !flag('camille_ici') && !flag('divorce')"
+    text: "Camille est dans le couloir de l'hôtel, un carton posé devant la porte : « C'est la trêve, celle de l'an dernier. Tu rentres à quelle heure, quand il n'y a plus de trêve ? »"
+    left:
+      label: "J'ouvre, entre"
+      effects: {relation: {camille: 2}, vestiaire: "+", set: [camille_ici], clear: [treve_promise], outcome: ici}
+      answer: "Elle entre. Le carton reste dans le couloir ; Josiane le monte elle-même le lendemain."
+    right:
+      label: "Après le bloc, promis"
+      effects: {relation: {camille: -2}, direction: "+", parole: -2}
+      answer: "Elle laisse le carton devant la porte. Deux cents kilomètres, et le calendrier au mur."

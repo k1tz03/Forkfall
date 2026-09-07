@@ -1,0 +1,156 @@
+# Cartes de l'intrigue « Le genou qui parle » (arc jp.genou_parle) —
+# bible ch. 10 § 6.8, entrée « pepite » (la première gêne à vingt ans).
+# Sabatier dit {toi} (« petit » en neutre) et répète « ça reste entre la table
+# et moi ». La rechute est la seule carte de drame de l'intrigue.
+cards:
+  - id: jp.genou.radio
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes]
+    speaker: sabatier
+    tone: strategique
+    text: "« Fêlé, là, et ça reste entre la table et moi — mais ton agent a demandé la radio ce matin. Tu finis la saison avec, ou tu la finis vraiment, maintenant ? »"
+    left:
+      label: "Je finis la saison avec"
+      effects: {tribunes: "++", force: -3, set: [genou], react: {card: jp.re.sabatier_radio_agent, if: "flag('agent_fardelli')"}}
+      answer: "Tu joues. Il range la radio dans le tiroir, pas dans le dossier. On lui demande le dossier ; le tiroir, personne ne le connaît."
+    right:
+      label: "Je la finis vraiment"
+      effects: {direction: "+", tribunes: "--", set: [genou, genou_arrete]}
+      answer: "Tu t'arrêtes. Le stade apprend « blessure » ; il n'apprend pas quoi. Six mois, ou moins, ou plus."
+
+  - id: jp.genou.radio_jeune
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes]
+    speaker: sabatier
+    tone: strategique
+    text: "« Ça, {toi}, c'est un genou qui a des choses à te dire, à vingt ans, et ça reste entre la table et moi. On l'écoute maintenant, ou en mai ? »"
+    left:
+      label: "Maintenant"
+      effects: {force: 3, tribunes: "-", set: [genou_ecoute]}
+      answer: "Tu lèves le pied six semaines. Personne ne comprend pourquoi ; toi non plus, tout à fait."
+    right:
+      label: "En mai"
+      effects: {tribunes: "+", force: -2, set: [genou], react: {card: jp.re.sabatier_radio_agent, if: "flag('agent_fardelli')"}}
+      answer: "En mai, il a d'autres choses à dire. Il les dira plus fort."
+
+  - id: jp.genou.plateaux
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes]
+    speaker: sabatier
+    tone: strategique
+    text: "« À gauche le bistouri et six mois de tribune ; à droite une piqûre et le match de dimanche. Ça reste entre la table et moi, le nombre de piqûres. Lequel ? »"
+    left:
+      label: "Le bistouri"
+      effects: {tribunes: "-", direction: "-", force: 6, set: [genou_opere], outcome: bistouri}
+      answer: "Tu t'allonges. Six mois. On te fait respirer tous les matins ; on compte les flexions à voix haute."
+    right:
+      label: "La piqûre"
+      effects: {tribunes: "+", vestiaire: "-", caisse: "-", set: [infiltre], rand: [{p: 0.5, set: [genou_grave_arme]}, {}], outcome: piqure}
+      answer: "Tu ne sens plus rien. C'est bien ça, le problème."
+
+  # Câblage de la fin `jp_croises` (ch. 10 § 11.3, cause : « genou_grave deux
+  # fois »). La fin était écrite et sans porte : aucune carte ne la citait.
+  # Variante de l'étape `rechute` quand le genou a déjà eu le dernier mot.
+  - id: jp.genou.rechute_croises
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes, moment, chaine]
+    speaker: sabatier
+    # `strategique` et non `drame` : `jp.genou.rechute` en amont est déjà un
+    # drame, et le metteur en scène refuse le second de la carrière — la carte
+    # n'était jamais servie (2 000 carrières × 8 saisons).
+    tone: strategique
+    once: true
+    text: "« Il a relâché une deuxième fois, et cette fois j'ai regardé la radio devant toi. Ça reste entre la table et moi : tu rejoues dimanche, ou tu t'arrêtes ce soir ? »"
+    left:
+      label: "Je rejoue dimanche"
+      effects: {tribunes: "+", force: -8, set: [genou_grave], end: jp_croises}
+      answer: "Tu rejoues. Onze minutes. Le bruit s'entend du banc ; le Doc était déjà debout."
+    right:
+      label: "Je m'arrête ce soir"
+      effects: {tribunes: "--", direction: "-", force: 4, relation: {sabatier: 1}, set: [genou_arrete, genou_opere], outcome: bistouri}
+      answer: "Tu t'arrêtes. Il range la radio dans le dossier, cette fois, et il te serre la main."
+
+  - id: jp.genou.rechute
+    roles: [joueur]
+    arc: corps
+    tags: [risk:tribunes, moment]
+    speaker: sabatier
+    tone: drame
+    once: true
+    text: "« Le genou a lâché à l'échauffement, et je t'avais dit de ne rien sentir. Là, c'est le tiroir qui déborde : cette fois j'opère, ou tu reviens vite et mal ? »"
+    left:
+      label: "Cette fois, opère"
+      effects: {tribunes: "--", direction: "-", force: 4, clear: [infiltre], set: [genou_opere], outcome: bistouri}
+      answer: "Tu t'allonges. Quelqu'un compte les flexions, tous les matins, à voix haute."
+    right:
+      label: "Je reviens vite"
+      effects: {tribunes: "-", force: -6, clear: [infiltre], rand: [{p: 0.5, set: [genou_grave]}, {}]}
+      answer: "Tu reviens en six semaines. Tu joues. Le genou parle une dernière fois, ou il se tait pour de bon."
+
+  - id: jp.genou.maison
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu rentres à quelle heure, {toi}, je ne demande plus ; je demande à quelle heure tu diras au Doc que tu boites dans l'escalier. Tu lui dis, ou je lui dis ? »"
+    left:
+      label: "Je lui dis"
+      effects: {direction: "-", force: 1, relation: {camille: 1}, set: [genou_dit], outcome: silence}
+      answer: "Tu lui dis. Il note « escalier » dans le tiroir. Il te laisse dimanche au repos ; le stade ne sait pas pourquoi."
+    right:
+      label: "Ne dis rien, s'il te plaît"
+      effects: {tribunes: "+", relation: {camille: -1}, set: [genou_cache], outcome: silence}
+      answer: "Elle ne dit rien. Elle regarde l'escalier tous les soirs ; elle compte les marches, elle aussi."
+
+  - id: jp.genou.maison_medecin
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Tu boites, et je suis médecin, je vois ça depuis la cuisine. Tu rentres à quelle heure demain : je t'examine ici, ou tu vas voir le Doc du club ? »"
+    left:
+      label: "Examine-moi"
+      effects: {force: 2, relation: {camille: 1}, set: [genou_dit], outcome: silence}
+      answer: "Elle t'examine sur la table de la cuisine. Elle trouve en dix minutes ce que le club n'a pas cherché."
+    right:
+      label: "Je vais voir le Doc"
+      effects: {tribunes: "+", relation: {camille: -1}, set: [genou_cache], outcome: silence}
+      answer: "Tu y vas. Il note « rien à signaler » ; il note ça quand il ne veut pas noter le reste."
+
+  - id: jp.genou.vestiaire_seul
+    roles: [joueur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "« Tu montes l'escalier du vestiaire en trois temps depuis mardi, et je te le dis parce que personne ne te le dira. Tu vois le Doc, ou je ne t'ai rien dit ? »"
+    left:
+      label: "Je vois le Doc"
+      effects: {direction: "-", force: 1, relation: {vukic: 1}, set: [genou_dit], outcome: silence}
+      answer: "Tu y vas. Le Doc note « escalier », et note aussi qui l'a vu avant lui."
+    right:
+      label: "Tu ne m'as rien dit"
+      effects: {tribunes: "+", relation: {vukic: -1}, set: [genou_cache], outcome: silence}
+      answer: "Il n'a rien dit. Il regarde l'escalier, le mardi suivant, sans en avoir l'air."
+
+  - id: jp.genou.visite
+    roles: [joueur]
+    arc: corps
+    tags: [mercato, scandale]
+    speaker: sabatier
+    tone: strategique
+    text: "« Le club qui t'achète veut le bilan, et j'en ai deux : celui du dossier, propre, celui du tiroir, qui boite. On me demande la table. J'arrondis, ou je dis tout ? »"
+    left:
+      label: "Arrondis"
+      effects: {direction: "+++", caisse: "+", parole: -1, set: [bilan_arrondi], react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      answer: "Il arrondit. Tu signes. Le kiné du club acheteur regarde ton genou six mois, tous les matins ; il finit par comprendre."
+    right:
+      label: "Dis tout"
+      effects: {direction: "-", tribunes: "+", relation: {sabatier: 1}, set: [bilan_vrai]}
+      answer: "Il dit tout. Le club achète moins cher, ou n'achète pas. Il te serre la main ; il ne l'a jamais fait."

@@ -1,0 +1,133 @@
+# Cartes de l'intrigue « Le diplôme » (arc jp.diplome_joueur) — bible ch. 10
+# § 6.13. La transition vers le banc devient une intrigue en cinq temps :
+# l'adjoint pose la question, le mentor tient le stage, le président ne veut
+# pas d'un joueur qui étudie, la Fédération tamponne, et le capitaine passe
+# le même diplôme la même année.
+cards:
+  - id: jp.diplome.vukic
+    roles: [joueur]
+    arc: formation
+    tags: [formation, direction]
+    speaker: vukic
+    tone: strategique
+    text: "« Tes jambes parlent, tu le sais, et je te le dis parce que personne ne te le dira : la réserve n'a pas d'entraîneur. Tu passes ton diplôme cet été ? »"
+    left:
+      label: "Je le passe cet été"
+      effects: {direction: "+", vestiaire: "+", relation: {vukic: 1}, set: [diplome_en_cours]}
+      answer: "Il te donne le formulaire. Il l'avait dans le cahier depuis mars."
+    right:
+      label: "Encore un an sans papier"
+      effects: {tribunes: "+", direction: "-", set: [diplome_reporte]}
+      answer: "Il range le formulaire. Il en aura un l'an prochain ; il en a toujours un."
+
+  - id: jp.diplome.clow
+    roles: [joueur]
+    arc: formation
+    tags: [formation]
+    speaker: clow
+    tone: leger
+    text: "« Le stage, c'est chez moi. Je ne dirais pas que j'étais le meilleur formateur, je dirais que j'étais devant. Lundi, huit heures : tu viens à sept, ou à huit ? »"
+    left:
+      label: "À sept"
+      effects: {direction: "+", relation: {clow: 1}, set: [clow_stage]}
+      answer: "Tu es là à sept. Il est là depuis six. Il a mis ta chaise devant."
+    right:
+      label: "À huit, comme tout le monde"
+      effects: {vestiaire: "+", relation: {clow: -1}}
+      answer: "Tu arrives à huit. Il a commencé. Il ne recommence pas."
+
+  - id: jp.diplome.clow_deja
+    roles: [joueur]
+    arc: formation
+    tags: [formation]
+    speaker: clow
+    tone: leger
+    text: "« Tu es déjà venu chez moi, {toi}, et je ne dirais pas que je m'en souviens, je dirais que j'ai mis deux chaises. Lundi, huit heures, comme d'habitude ? »"
+    left:
+      label: "Comme d'habitude"
+      effects: {direction: "+", relation: {clow: 1}, set: [clow_stage]}
+      answer: "Il a mis deux chaises. La deuxième est pour quelqu'un qui n'est pas encore arrivé ; il ne dit pas qui."
+    right:
+      label: "Comme d'habitude"
+      effects: {direction: "+", relation: {clow: 1}, set: [clow_stage]}
+      answer: "Il a mis deux chaises. La deuxième est pour quelqu'un qui n'est pas encore arrivé ; il ne dit pas qui."
+
+  - id: jp.diplome.clow_ferme
+    roles: [joueur]
+    arc: formation
+    tags: [formation]
+    speaker: clow
+    tone: strategique
+    text: "« J'ai formé quelqu'un de ton nom, et je n'ai pas eu de merci ; je ne dirais pas que je suis rancunier. Le stage est complet : tu le passes ailleurs, ou tu attends un an ? »"
+    left:
+      label: "Ailleurs"
+      effects: {direction: "-", caisse: "-", set: [clow_stage_ailleurs]}
+      answer: "Tu le passes à la capitale. Personne ne met ta chaise devant."
+    right:
+      label: "J'attends un an"
+      effects: {tribunes: "+", set: [diplome_reporte], outcome: pas_encore}
+      answer: "Tu attends. Il t'appelle en octobre, sans raison, pour parler d'un ailier de 1974."
+
+  - id: jp.diplome.aulard
+    roles: [joueur]
+    arc: direction
+    tags: [direction, formation]
+    speaker: aulard
+    tone: strategique
+    text: "« Un joueur qui passe un diplôme pendant la saison pense à après, et l'empire paie pour maintenant. Tu attends juin, ou tu le passes et je te mets sur le banc ? »"
+    left:
+      label: "J'attends juin"
+      effects: {direction: "++", relation: {aulard: 1}, set: [diplome_juin]}
+      answer: "Tu attends. Le mentor attend aussi ; il n'aime pas ça ; il le fait pour toi, il ne le dit pas."
+    right:
+      label: "Je le passe, tant pis"
+      effects: {direction: "--", tribunes: "-", force: -1, set: [diplome_contre_aulard]}
+      answer: "Il te met sur le banc. Tu regardes les matchs en prenant des notes. L'adjoint lit les notes ; il corrige."
+
+  - id: jp.diplome.legruet
+    roles: [joueur]
+    arc: formation
+    tags: [formation, arbitrage]
+    speaker: legruet
+    tone: strategique
+    text: "« Votre dossier de stage dit « présent à sept heures », ou « à huit », et je tamponne les deux, pas pareil. Le papier tout de suite, ou l'oral après le Congrès ? »"
+    left:
+      label: "Tout de suite"
+      effects: {direction: "+", set: [diplome], outcome: diplome}
+      answer: "Il tamponne. Le papier est chaud. L'adjoint le met dans le dossier, dessus."
+    right:
+      label: "L'oral après le Congrès"
+      effects: {direction: "-", force: 1, set: [diplome_reporte], outcome: pas_encore}
+      answer: "Tu repasses en juin. Tu as le papier en juillet ; l'adjoint l'avait déjà mis dans le dossier, en blanc."
+
+  - id: jp.diplome.brehaut
+    roles: [joueur]
+    arc: formation
+    tags: [formation, vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe vit bien, et le groupe a deux diplômés cette année, toi et moi, pour une seule réserve. Tu me prends comme adjoint, ou on se présente tous les deux ? »"
+    left:
+      label: "Tu seras mon adjoint"
+      effects: {vestiaire: "++", direction: "+", relation: {brehaut: 1}, set: [brehaut_diplome, brehaut_adjoint, vers_entraineur], outcome: brehaut}
+      answer: "Il dit « d'accord ». Il le dit vite ; il y a pensé avant toi."
+    right:
+      label: "On se présente tous les deux"
+      effects: {direction: "-", vestiaire: "-", relation: {brehaut: -1}, set: [brehaut_diplome, brehaut_rival_banc, vers_entraineur], outcome: brehaut}
+      answer: "Vous vous présentez. Le président choisit celui qui coûte le moins. Ce n'est pas forcément toi."
+
+  - id: jp.diplome.vukic_encore
+    roles: [joueur]
+    arc: formation
+    tags: [formation, direction]
+    speaker: vukic
+    tone: strategique
+    text: "« J'ai ressorti le formulaire, {toi}, il n'a pas bougé du cahier. Je te le dis parce que personne ne te le dira : la deuxième fois qu'on dit non, c'est un choix. »"
+    left:
+      label: "Alors je le passe"
+      effects: {direction: "+", vestiaire: "+", relation: {vukic: 1}, clear: [diplome_reporte], set: [diplome_en_cours]}
+      answer: "Il te tend le formulaire, plié en deux depuis mars. Il n'a même pas eu à le chercher."
+    right:
+      label: "Non. C'est un choix"
+      effects: {tribunes: "+", force: 1, set: [diplome_reporte], outcome: pas_encore}
+      answer: "Il referme le cahier. Il ne le rouvrira pas cette saison ; il le dit, et il tient parole."

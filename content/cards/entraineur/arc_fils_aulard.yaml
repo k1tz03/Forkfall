@@ -1,0 +1,73 @@
+# Cartes d'étape de « Le fils du président »
+# (content/arcs/entraineur/fils_aulard.yaml). L'étape 1 est la carte ∃
+# `en.direction.fils_president` (content/cards/entraineur/en_direction.yaml).
+# Le fils est une voix sans portrait : ses cartes n'ont pas de `speaker` et ne
+# disent jamais {toi}. Traces : fils_joueur, fils_ds, fils_refuse.
+cards:
+  # ------------------------------------------------------ S2 · le placard à ballons
+  - id: en.fils.placard
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction, absurde]
+    speaker: brehaut
+    tone: leger
+    text: "Bréhaut tient la porte du placard à ballons comme une ligne : « Le groupe lui a montré où on range les ballons et il gonfle depuis vingt minutes, il gonfle bien. Tu le sors ? »"
+    left:
+      label: "Laissez-le finir"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1}, react: en.re.fils_pompe}
+      answer: "Il finit. Vingt-deux ballons, tous à la même pression ; le père le sait le soir même."
+    right:
+      label: "Sortez-le, il est joueur"
+      effects: {direction: "+", vestiaire: "-", relation: {aulard: 1}}
+      answer: "Il sort. Il s'entraîne à côté du groupe, jamais dedans ; il le remarque au bout d'une semaine."
+
+  # ------------------------------------------------------ S3 · la plaque
+  - id: en.fils.bureau
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "Un ouvrier visse « DIRECTEUR SPORTIF » sur une porte qui était un placard ; Vaubourg regarde la plaque : « Mon fils veut un bureau dans l'empire. Tu lui laisses le mercato ? »"
+    left:
+      label: "Le mercato, c'est moi"
+      effects: {direction: "--", vestiaire: "+", caisse: "+", relation: {aulard: -1}}
+      answer: "La plaque est vissée quand même. Le fils a le bureau ; il n'a pas le fax."
+    right:
+      label: "Le bureau et le mercato"
+      effects: {direction: "++", caisse: "-", set: [fils_ds], outcome: ds}
+      answer: "Il a le fax. Il apprend à s'en servir en janvier ; le premier fax achète un ailier."
+
+  # ------------------------------------------------------ S4 · l'ailier de janvier
+  - id: en.fils.mercato
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, caisse, direction]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane tient le fax comme un relevé de banque : « Le fils a acheté un ailier ce matin, {toi}, que personne ici n'a vu jouer. Sous « recrues », ou sous « fils » ? »"
+    left:
+      label: "Sous « recrues », il jouera"
+      effects: {direction: "+", caisse: "-", vestiaire: "-", force: 1}
+      answer: "L'ailier joue. Il n'est pas mauvais ; il n'est pas ce qu'il coûte."
+    right:
+      label: "Sous « fils », il s'assoit"
+      effects: {direction: "-", vestiaire: "+", caisse: "-", relation: {aulard: -1}}
+      answer: "L'ailier s'assoit. Le père voit la feuille de match ; il voit surtout ce qui manque."
+
+  # ------------------------------------------------------ S5 · pourquoi personne
+  - id: en.fils.pourquoi
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment, chaine]
+    when: "flag('fils_joueur') || flag('fils_ds')"
+    tone: strategique
+    text: "Tard, le fils est appuyé sur la voiture du père, sans le père : « Mon père a un empire, deux discours et pas de temps ; moi j'ai une plaque, et personne ne me dit bonjour. »"
+    left:
+      label: "Parce que tu es son fils"
+      effects: {direction: "-", vestiaire: "+", relation: {aulard: -1}, parole: 1}
+      answer: "Il hoche la tête. Il rend la plaque le lendemain ; le père la remet le surlendemain."
+    right:
+      label: "Parce que tu n'as rien fait"
+      effects: {direction: "+", relation: {aulard: 1}}
+      answer: "Il ne hoche pas la tête. Il achète un latéral en juin, sans fax : il a pris l'avion."

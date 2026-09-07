@@ -1,0 +1,73 @@
+# Les fins propres au rôle joueur (bible ch. 10 § 11.3, gabarit § 4.8).
+# Les huit fins de jauge du joueur (jp_mouton, jp_porteparole, jp_siffle,
+# jp_sandwich, jp_place14b, jp_fils, jp_sansclub, jp_panama) et les deux fins
+# d'intrigue (jp_exil, jp_consultant) vivent dans content/endings.yaml : ce
+# fichier n'écrit que les fins de choix, de chaîne et de destin du lot pépite.
+# Chacune a une variante d'épitaphe qui nomme le joueur (charte § 4.8).
+endings:
+  # -------------------------------------------------------- chaîne : le genou
+  - id: jp_croises
+    cause: chaine
+    rarity: rare
+    golden: false
+    title: "Les croisés"
+    epitaph: "Tes ligaments ont rendu leur tablier avant toi. La kiné a dit qu'elle avait vu pire ; tu savais qu'elle mentait, et tu l'as remerciée."
+    epitaph_plus:
+      - { when: "flag('gigi_genou_ecoute')", text: "Gigi t'avait dit d'écouter le genou. {prenom} {nom} l'avait écouté une année sur deux." }
+      - { when: "flag('infiltre')",           text: "« Tu ne sens plus rien », avait dit le Doc. C'était bien ça, le problème ; {nom} l'a compris à l'échauffement." }
+
+  # ---------------------------------------------------------- chaîne : le fax
+  - id: jp_fax
+    cause: chaine
+    rarity: rare
+    golden: false
+    title: "Le fax"
+    epitaph: "Ton transfert de rêve est mort dans un fax, à 23 h 59 min 58 s. Tu as passé la saison en tribune ; le fax, lui, a été promu."
+    epitaph_plus:
+      - { when: "relation.josiane >= 1", text: "Josiane a gardé la page trois, celle qui s'est coincée. Elle en a vu passer ; celle-là, elle l'a encadrée pour {nom}." }
+      - { when: "year >= 2010",          text: "Ce n'était pas un fax, c'était un serveur « en attente ». Il attend encore le dossier de {prenom} {nom}." }
+
+  # ------------------------------------------------------- destin : la statue
+  - id: jp_statue
+    cause: destin
+    rarity: rare
+    golden: true
+    title: "La statue"
+    epitaph: "Tu as tout refusé pour ton club. Il n'est jamais remonté, et toi non plus ; on t'a coulé une statue en résine, devant la buvette."
+    epitaph_plus:
+      - { when: "flag('blason_embrasse')",  text: "La statue embrasse le blason. Gégé nettoie le socle chaque dimanche, avant l'ouverture." }
+      - { when: "flag('honnete_tribune')",  text: "{prenom} {nom} n'avait rien promis. La statue non plus ; elle est restée quand même." }
+
+  # ----------------------------------------------------- imposture : l'agent
+  - id: jp_agent
+    cause: imposture
+    rarity: rare
+    golden: false
+    title: "L'agent"
+    epitaph: "Ton agent t'a vendu au désert pendant que tu dormais. Le contrat était signé de ta main ; personne ne s'en souvient, toi non plus."
+    epitaph_plus:
+      - { when: "flag('gigi_non_agent')", text: "Gigi avait dit de dire non une fois. {prenom} {nom} l'avait dit ; une fois." }
+      - { when: "flag('camille_a_lu')",   text: "Camille avait lu le relevé. Elle n'avait pas lu le contrat ; il n'était pas dans le tiroir qui ferme." }
+
+  # ------------------------------------------------- choix : le coup de tête
+  - id: jp_coup_de_tete
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "Le coup de tête"
+    epitaph: "Une phrase de trop, un coup de tête dans un sternum, une carrière qui s'achève sur un carton rouge. On a commandé la statue quand même."
+    epitaph_plus:
+      - { when: "flag('mbako_blesse_par_toi')", text: "Le tacle sur Lian Mbako était le premier. Sa mère avait noté ; elle a montré le carnet à la commission." }
+      - { when: "flag('special')",   text: "« Le meilleur », avait dit {nom} en conférence. Ce soir-là, c'était vrai d'une autre façon." }
+
+  # -------------------------------------------- destin : la bâche dans le sac
+  # Fin propre à la pépite : la tribune a peint ton nom, puis l'a plié.
+  - id: jp_bache_pliee
+    cause: destin
+    rarity: rare
+    golden: false
+    title: "La bâche pliée"
+    epitaph: "Vingt mètres à ton nom, une promesse au micro, un fax en janvier. La Nord a plié la bâche proprement ; elle ne l'a pas brûlée."
+    epitaph_plus:
+      - { when: "flag('tifo_adieu')",           text: "{prenom} {nom} avait marqué contre eux et baissé la tête. La Nord avait applaudi ; une fois." }
+      - { when: "flag('celebre_contre_usine')", text: "{prenom} {nom} avait célébré devant la Nord. Le sac est parti au feu le soir même, proprement." }

@@ -1,5 +1,6 @@
 cards:
   - id: jp.vestiaire.brassard
+    when: "!flag('capitaine') && !flag('brassard_gigi')"
     roles: [joueur]
     arc: vestiaire
     tags: [vestiaire, moment]
@@ -66,6 +67,7 @@ cards:
       effects: { vestiaire: "-", direction: "+" }
 
   - id: jp.vestiaire.jeune_pousse
+    when: "chars.mbako.statut != 'vendu' && !flag('mentor_mbako')"
     roles: [joueur]
     arc: vestiaire
     tags: [vestiaire, formation]
@@ -138,7 +140,7 @@ cards:
     tags: [vestiaire, moment]
     speaker: vukic
     once: true
-    when: "flag('capitaine')"
+    when: "flag('capitaine') && !flag('discours_feu')"
     text: "Zoran Vukić, avant le derby : « Capitaine, à toi de parler au groupe. Discours de feu ou silence de marbre ? »"
     left:
       label: "Discours de feu"

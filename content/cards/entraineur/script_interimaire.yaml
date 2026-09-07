@@ -1,0 +1,385 @@
+# Cartes de l'arc de postulat « Six semaines » (arcs/entraineur/interim_script.yaml).
+# Toutes sont des cartes d'étape (kind script dérivé par le build) : hors du sac,
+# servies à leur créneau. Saison 1 : le bureau (quatre variantes de fil rouge),
+# le verdict de l'intérim (confirmé / prolongé / déchu), le CDI ou la porte
+# (quatre variantes, première vraie). Saison 2 : la plaque, le retour de
+# l'ancien chez {rival}, la veille du dernier bloc. Saisons 3+ : rentrée
+# (+ variante « la dérogation a expiré ») et veille, rejouables (cooldown 0).
+#
+# Le nom du joueur (spec variété §1.8, « au moins deux cartes par saison, au
+# moment qui compte ») : les ancres le portent, parce qu'une saison faite
+# d'étapes d'intrigues ne le prononçait jamais. Deux façons, jamais dans un
+# libellé, jamais deux fois dans la même carte —
+#   · {toi} chez Josiane (I1, la rentrée) et Vaubourg (I2, I3) : leur `adresse`
+#     rend un nom aux trois visages (« mon {prenom} », « {nom} », « monsieur
+#     {nom} ») ; c'est leur voix, pas le nom lâché par la carte ;
+# Aucune ancre n'écrit {NOM} en clair : la plaque de la S1 est arrivée « à votre
+# nom » et c'est Josiane qui le dit ; le nom en capitales reste à la bâche de
+# l'alarme des tribunes et aux manchettes, là où il est vraiment peint.
+# Gégé, lui, dit « coach » au neutre : sa bâche écrit « ton nom » sans l'écrire,
+# et c'est l'alarme des tribunes (en.alarme.tribunes_bas_gege) qui le peint.
+cards:
+  # ======================================================== I1 · Le bureau (S0, slot 1)
+  - id: en.interim.i1_bureau
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, un rouleau de scotch dans une main, un tournevis dans l'autre : « Le bureau est encore à son nom, et « jusqu'à nouvel ordre » n'est pas une date. Je jette ses cartons, {toi} ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle dévisse la plaque. Elle garde la cafetière ; elle fait un meilleur café."
+    right:
+      label: "Gardez-les, six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle scotche les cartons et laisse la plaque. Six semaines, ça ne vaut pas un tournevis."
+
+  - id: en.interim.i1_bureau_vestiaire
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, tournevis en main : « Le vestiaire a gardé sa compo au mur et le bureau est encore à son nom. J'en ai vu passer, vous savez. Je jette ses cartons, {toi} ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "--", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle dévisse la plaque. Le tableau du vestiaire, lui, personne n'y touche."
+    right:
+      label: "Gardez-les, six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle scotche les cartons. La compo reste au mur, à la craie, jusqu'à nouvel ordre."
+
+  - id: en.interim.i1_bureau_diplome
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, le téléphone contre l'épaule : « La Fédération a appelé pour votre papier, et le bureau est encore à son nom. J'en ai vu passer. Je jette ses cartons, {toi} ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle dévisse la plaque. Elle rappelle la Fédération l'après-midi, sans le dire."
+    right:
+      label: "Gardez-les, six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle scotche les cartons. Elle range le message de la Fédération dessous."
+
+  - id: en.interim.i1_bureau_grand_nom
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, un message rose à la main : « Un agent a appelé pour le sien, et pour le vôtre — de remplaçant. Le bureau est encore à son nom. Je jette ses cartons, {toi} ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle dévisse la plaque. Le message rose reste sur le bureau, bien au centre."
+    right:
+      label: "Gardez-les, six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      answer: "Elle scotche les cartons. Elle jette le message rose ; elle ne le dit pas."
+
+  # ================================================ I2 · Le verdict (S0, 10-11)
+  - id: en.interim.i2_confirme
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg tapote un contrat d'une page sans le pousser : « Six semaines, deux victoires, et la presse dit « l'intérimaire » sur un ton que je n'aime pas, {toi}. Je confirme jusqu'en juin. »"
+    left:
+      label: "Je signe"
+      effects: {direction: "++", parole: -1, set: [cdi_signe], react: en.re.aulard_cdd}
+      answer: "Tu signes. La page deux, qui n'existe pas, dit « douze mois »."
+    right:
+      label: "Je lis d'abord"
+      effects: {direction: "-", vestiaire: "+", relation: {aulard: -1}, set: [interim_prolonge]}
+      answer: "Il reprend le contrat. Il te laisse « jusqu'en juin », sans papier."
+
+  # Défaut : ni bon ni mauvais. Un seul bouton (sorties identiques).
+  - id: en.interim.i2_prolonge
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, les mains vides : « Six semaines, et rien, ni bon ni mauvais, alors un mois de plus, sans prime, {toi}. J'ai pas le temps, j'ai un empire. Tu prends ? »"
+    left:
+      label: "Je prends"
+      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge]}
+      answer: "Un mois. Il ne dit pas lequel."
+    right:
+      label: "Je prends"
+      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge]}
+      answer: "Un mois. Il ne dit pas lequel."
+
+  - id: en.interim.i2_dechu
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, sans lever les yeux : « Un vrai coach arrive lundi, {toi} : tu restes adjoint jusqu'en juin, et j'ai pas le temps pour te dire lequel. Tu restes, ou tu pars avant lui ? »"
+    left:
+      label: "Je reste adjoint"
+      effects: {direction: "+", vestiaire: "-", set: [dechu]}
+      answer: "Lundi, un homme avec un seau. Ou une casquette ; tu le sauras lundi."
+    right:
+      label: "Je pars avant lui"
+      effects: {direction: "--", tribunes: "+", set: [dechu, parti_tete_haute]}
+      answer: "Le vestiaire t'applaudit dans le couloir. C'est court."
+
+  # ================================================ I3 · Le CDI ou la porte (S0, 17)
+  - id: en.interim.i3_cdi
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg a un stylo, pas de contrat : « Si on se maintient, {toi}, tu as le CDI, un vrai, en trois pages ; si on descend, tu as la porte. Le maintien, ou la montée pour me faire taire ? »"
+    left:
+      label: "Le maintien, propre"
+      effects: {direction: "+", force: -1, vestiaire: "+"}
+      answer: "Bloc bas, trois nuls. Le CDI attend en trois pages ; la troisième est blanche."
+    right:
+      label: "La montée, en réponse"
+      effects: {tribunes: "++", direction: "-", force: 2, parole: 1, promise: true, set: [montee_promise]}
+      answer: "Le vestiaire entend le mot. Gégé aussi ; il commande une bâche, sans texte."
+
+  - id: en.interim.i3_diplome
+    roles: [entraineur]
+    arc: instances
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, le stylo en travers : « Sans papier, la Fédération dit que tu n'as rien, {toi}, et la dérogation finit en juin. L'examen cet été, ou quelqu'un qui signe à ta place ? »"
+    left:
+      label: "Je passe l'examen"
+      effects: {parole: 1, direction: "+", set: [examen_promis]}
+      answer: "Il note « juillet ». Le stage est animé par Corven ; tu ne le sais pas encore."
+    right:
+      label: "Quelqu'un signera"
+      effects: {direction: "++", parole: -2, relation: {aulard: 1}, set: [diplome_arrange]}
+      answer: "Il connaît quelqu'un. Il connaît toujours quelqu'un ; ça a un prix, plus tard."
+
+  - id: en.interim.i3_dauphin
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [direction, vestiaire]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, le stylo à plat : « Si on se maintient je te garde, {toi} ; si on descend, Zoran a relu le second discours et son nom est dedans. Avec lui à côté, ou en tribune ? »"
+    left:
+      label: "Avec lui à côté"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Il reste à côté. Il relit ton discours aussi ; il corrige une faute."
+    right:
+      label: "En tribune"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -2}}
+      answer: "Il monte en tribune, à côté de la loge. Le président lui parle à la mi-temps."
+
+  - id: en.interim.i3_dechu
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, dans le couloir : « Le vrai coach fait le dernier match, {toi}, tu es à côté ; si ça monte c'est lui, si ça descend c'est toi. Tu t'assois, ou tu prends la porte ? »"
+    left:
+      label: "Je m'assois"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu t'assois. Le seau est entre vous deux."
+    right:
+      label: "Je prends la porte"
+      effects: {end: en_sms}
+      answer: "Le SMS arrive quand même, à 23 h 47. Il contient une faute ; tu ne la corriges pas."
+
+  # ================================================ S1 · La plaque (S1, 1-2)
+  - id: en.interim.s1_rentree
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane pose une plaque neuve sur le bureau, pas sur la porte : « Votre nom bien orthographié, {toi}, ce qui n'arrive jamais la première fois. Je la visse, ou j'attends ? »"
+    left:
+      label: "Vissez-la"
+      effects: {direction: "+", tribunes: "+", relation: {josiane: 1}}
+      answer: "Elle visse. La plaque de l'ancien est dans le tiroir du milieu, au cas où."
+    right:
+      label: "Après le premier bloc"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Un nul, un nul, une victoire. Elle visse le lundi, sans demander."
+
+  - id: en.interim.s1_rentree_cdi
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, la plaque neuve et le tournevis : « Elle est arrivée à votre nom, {toi}, et le contrat est classé sous « CDI », par principe. Je la visse ? »"
+    left:
+      label: "Vissez-la"
+      effects: {direction: "+", tribunes: "+", relation: {josiane: 1}}
+      answer: "Elle visse. Elle range la page deux dans le classeur, à sa place."
+    right:
+      label: "Après le premier bloc"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle attend. Le contrat, lui, n'attend pas ; il court depuis juin."
+
+  - id: en.interim.s1_rentree_dechu
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, deux plaques dans les mains : « Le vrai coach est parti en juin avec son seau, et vous voilà « de nouveau jusqu'à nouvel ordre », {toi}. La vôtre, ou la sienne ? »"
+    left:
+      label: "La mienne"
+      effects: {direction: "+", clear: [dechu]}
+      answer: "Elle la ressort. Elle était dans le tiroir, sous l'autre."
+    right:
+      label: "Aucune, pour l'instant"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "La porte reste nue. Le vestiaire y colle une photo découpée dans le journal."
+
+  # ================================================ S1 · Le retour de l'ancien (S1, 10-11)
+  - id: en.interim.s1_ancien
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Massenet tient un journal comme une pièce à conviction : « L'ancien a signé chez {rival} : deux pages pour lui, une ligne pour vous. Hors micro : bonne chance à lui ? »"
+    left:
+      label: "Bonne chance à lui"
+      effects: {parole: 1, tribunes: "-", relation: {meneche: 1}, set: [ancien_rival]}
+      answer: "Il note « bonne chance ». Il souligne « chance » ; c'est un titre."
+    right:
+      label: "Je ne commente pas"
+      effects: {tribunes: "+", parole: -1, set: [ancien_rival], var: {no_comment: "+1"}, react: en.re.meneche_embuscade}
+      answer: "Il note le silence. Deux silences, ça fait un titre aussi."
+
+  - id: en.interim.s1_ancien_methodes
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, vestiaire]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Massenet, le journal plié sur la photo : « Il dit que vous jouez encore son système, avec ses plots, et il le dit chez {rival}. Hors micro : le vôtre, ou le sien ? »"
+    left:
+      label: "Le mien, depuis six semaines"
+      effects: {parole: 1, vestiaire: "-", set: [ancien_rival]}
+      answer: "Il note. Le vestiaire lit ; le vestiaire sait."
+    right:
+      label: "Le foot n'a pas de nom"
+      effects: {vestiaire: "+", relation: {meneche: -1}, set: [ancien_rival]}
+      answer: "Il note « pas de nom ». Il met le nom de l'ancien en titre."
+
+  - id: en.interim.s1_ancien_sali
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, ultras]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Massenet, la photo d'une bâche à la main : « L'ancien a signé chez {rival} et dit qu'on l'a sali ici, au local, sous votre nom. Hors micro : vous, ou la tribune ? »"
+    left:
+      label: "La tribune, pas moi"
+      effects: {tribunes: "-", parole: 1, relation: {gege: -1}, set: [ancien_rival]}
+      answer: "Il note « la tribune ». Gégé lit ; il n'oublie rien, et surtout pas ça."
+    right:
+      label: "Je ne réponds pas à ça"
+      effects: {tribunes: "+", parole: -1, set: [ancien_rival]}
+      answer: "Il met la bâche en photo. Elle a un nom dessus, en lettres noires."
+
+  # ================================================ S1 · La veille (S1, 17)
+  - id: en.interim.s1_veille
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: strategique
+    once: true
+    text: "Vukić, la feuille de match encore vierge : « Demain le dernier bloc, et le président a fait taper deux discours. Je te le dis parce que personne ne te le dira. Tu joues quoi ? »"
+    left:
+      label: "Le bloc bas, comme toujours"
+      effects: {direction: "+", force: -1, vestiaire: "+"}
+      answer: "Bloc bas. Il pose les plots à sept heures, comme d'habitude."
+    right:
+      label: "On attaque, une fois"
+      effects: {tribunes: "++", force: 2, vestiaire: "-"}
+      answer: "Le virage se lève à la vingtième. Le président regarde sa montre."
+
+  # ================================================ S2+ · Rentrée et veille (rejouables)
+  - id: en.interim.rentree
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, le classeur ouvert : « Encore une rentrée, et la plaque tient toujours. J'en ai vu passer, des « jusqu'à nouvel ordre ». Je commande des cartons, {toi}, ou pas ? »"
+    left:
+      label: "Pas de cartons"
+      effects: {direction: "+", vestiaire: "+"}
+      answer: "Elle referme le classeur. Elle en commande deux quand même, par habitude."
+    right:
+      label: "Deux, au cas où"
+      effects: {caisse: "-", direction: "-", relation: {josiane: 1}}
+      answer: "Deux cartons pliés sous le bureau. Le groupe les voit en passant."
+
+  - id: en.interim.rentree_diplome
+    roles: [entraineur]
+    arc: instances
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, une lettre à en-tête : « La dérogation a expiré en juin et la plaque est vissée : deux vérités qui se contredisent. Je réponds, {toi}, ou je classe ? »"
+    left:
+      label: "Répondez : je repasserai"
+      effects: {parole: 1, direction: "-", set: [examen_promis]}
+      answer: "Elle répond en deux lignes. Elle garde une copie ; elle garde tout."
+    right:
+      label: "Classez"
+      effects: {direction: "+", parole: -1, set: [diplome_arrange]}
+      answer: "Elle classe. Le papier arrive un vendredi soir, signé par quelqu'un d'absent."
+
+  - id: en.interim.veille
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    cooldown: 0
+    text: "Gégé au parking, la veille : « La bâche est prête, avec ton nom dessus et l'accent au bon endroit cette fois. La tribune n'oublie rien. Elle sort demain, {toi} ? »"
+    left:
+      label: "Qu'elle sorte"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Vingt mètres au-dessus du virage. L'accent est au bon endroit ; personne ne le voit."
+    right:
+      label: "Pas demain"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il la replie. Il la garde ; il la ressortira, un jour ou l'autre."

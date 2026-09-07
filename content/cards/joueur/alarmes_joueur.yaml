@@ -1,0 +1,37 @@
+# Deux alarmes propres au rôle joueur, greffées sur les traces du réservoir de
+# la pépite (content/alarms.yaml → joueur) : le toro sans passe (vestiaire
+# basse, après `mouton_noir`) et la bâche qu'on n'ose plus dérouler (tribunes
+# basse, après `enfant_du_pays`). Elles passent AVANT les alarmes génériques.
+# `kind: alarme` est dérivé par le build depuis alarms.yaml.
+cards:
+  - id: jp.alarme.vestiaire_bas_toro
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: vecchio
+    tone: strategique
+    text: "« Au toro, ce matin, tu as touché le ballon zéro fois, encore ; j'en ai vu d'autres, petit, et ils ont fini par s'entraîner tout seuls. Tu manges avec eux à midi ? »"
+    left:
+      label: "Je mange avec eux"
+      effects: {vestiaire: "++", tribunes: "-"}
+      answer: "Tu t'assois à leur table. Personne ne parle pendant six minutes. Puis quelqu'un demande le sel ; c'est un début."
+    right:
+      label: "Je mange chez moi"
+      effects: {vestiaire: "-", caisse: "+"}
+      answer: "Tu rentres. La table du club se remplit sans toi ; elle se remplit vite."
+
+  - id: jp.alarme.tribunes_bas_bache
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, rescue:tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« On n'a pas déroulé la bâche depuis trois matchs, et la tribune n'oublie rien, surtout pas ce qu'elle a peint. Tu montes t'expliquer au local, ou on la range ? »"
+    left:
+      label: "Je monte m'expliquer"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Tu montes. Tu parles neuf minutes. À la fin, quelqu'un dit « bon » ; c'est le mot qui compte."
+    right:
+      label: "Rangez-la"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Ils la rangent. Le local sent la peinture pendant deux semaines ; on ne sait pas de quoi."

@@ -931,10 +931,11 @@ void main() {
         // 1. Une Nouvelle sans locuteur qui dit {toi} ; 2. le nom dans un libellé.
         final nv = File('${tmp.path}/content/cards/common/co_nouvelles.yaml');
         var txt = nv.readAsStringSync();
-        expect(txt, contains('    speaker: meneche\n    cooldown: 25\n    text: "Ménèche : « Un fonds lointain'));
-        txt = txt.replaceFirst('    speaker: meneche\n    cooldown: 25\n    text: "Ménèche : « Un fonds lointain',
-            '    cooldown: 25\n    text: "Ménèche : « Un fonds lointain, {toi},');
-        txt = txt.replaceFirst('left: {label: "Prendre acte"', 'left: {label: "Merci {prenom}"');
+        expect(txt, contains('    speaker: meneche\n    cooldown: 25\n    text: "Massenet : « Le grand coach du Nord'));
+        txt = txt.replaceFirst('    speaker: meneche\n    cooldown: 25\n    text: "Massenet : « Le grand coach du Nord',
+            '    cooldown: 25\n    text: "Massenet : « Le grand coach du Nord, {toi},');
+        expect(txt, contains('left: {label: "Noter"'));
+        txt = txt.replaceFirst('left: {label: "Noter"', 'left: {label: "Merci {prenom}"');
         nv.writeAsStringSync(txt);
         // 3. Un titre de Une trop long une fois rendu ; 4. un placeholder inconnu dans un sous-titre.
         final unes = File('${tmp.path}/content/unes.yaml');
@@ -948,7 +949,7 @@ void main() {
         final r = await Process.run('dart', ['$root/packages/tools/bin/lint.dart'], workingDirectory: tmp.path);
         expect(r.exitCode, 1, reason: 'stdout: ${r.stdout}\nstderr: ${r.stderr}');
         final err = r.stderr.toString();
-        expect(err, contains('co.nouvelle.fonds_voisins: `{toi}` sans `speaker`'));
+        expect(err, contains('co.nouvelle.coach_vire_ailleurs: `{toi}` sans `speaker`'));
         expect(err, contains('co.nouvelle.arbitrage_video/left: le nom du joueur n\'entre jamais dans un libellé'));
         expect(err, contains('unes.yaml/une.generic.bilan: titre de'));
         expect(err, contains('caractères rendu (> 44)'));

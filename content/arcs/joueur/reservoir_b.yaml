@@ -1,0 +1,181 @@
+# Réservoir du joueur pro — lot B (bible ch. 10 § 6.5, § 6.7, § 6.9, § 6.10) :
+# la liste des vingt-six, le banc, le bac de Camille, les trois conseils de
+# Gigi (rituel). Schéma : en-tête de content/arcs/entraineur/kop.yaml.
+arcs:
+  # ------------------------------------------- § 6.5 · La liste des vingt-six
+  - id: jp.selection
+    title: "La liste des vingt-six"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 0
+    theme: instances
+    carrier: legruet
+    cast: [legruet, aulard, vecchio, lea, sabatier]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    when: "gauges.tribunes >= 55 && !flag('international')"
+    hint: "La Fédération appelle. Ton club voudrait une cheville douloureuse."
+    issues: [cobalts, refus]
+    traces:
+      international:     "{annee} : {prenom} {nom} en bleu cobalt. Le club a râlé pour la cheville."
+      selection_refusee: "{annee} : {prenom} {nom} a dit non à la Fédération. On ne dit pas non deux fois."
+      chambre_fauvel:    "{annee} : {prenom} {nom} a dormi dans la chambre du plus vieux. {pg, select, f{Elle} other{Il}} a entendu 1990."
+    epilogue:
+      journal: "{annee} : la Fédération a appelé {nom}. Le club a râlé."
+    steps:
+      - id: liste
+        card: jp.selection.liste
+        next: [ { step: groupe, if: "flag('international')", in: [1, 9] }, { step: retour, in: [2, 11] } ]
+      - id: groupe
+        card: jp.selection.groupe
+        next: [ { step: retour, in: [2, 10] } ]
+      - id: retour
+        card:
+          - { id: jp.selection.retour, if: "flag('international')" }
+          - { id: jp.selection.retour_forfait }
+        next: []
+
+  # ---------------------------------------------------------- § 6.7 · Le banc
+  - id: jp.banc_hiver
+    title: "Le banc"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: false
+    replay: { after: 1, max: 5 }
+    min_season: 0
+    theme: direction
+    carrier: vukic
+    cast: [vukic, aulard, fardelli, mbako, sabatier]
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    # `age <= 21` : à dix-neuf ans on commence sur le banc sans avoir besoin
+    # d'une série de défaites — sans ça l'intrigue n'était éligible dans aucune
+    # ouverture de saison 0 de la pépite. Sans effet sur `fin_de_contrat`
+    # (trente et un ans).
+    when: "world.serie_defaites >= 1 || gauges.direction < 45 || age <= 21"
+    hint: "Tu es sur le banc dimanche, et le coach ne te dira pas pourquoi."
+    issues: [bosse, boude, partir]
+    traces:
+      banc_bosse:        "{annee} : sur le banc, {prenom} {nom} a bossé. L'adjoint a noté ; il note tout."
+      banc_boude:        "{annee} : sur le banc, {prenom} {nom} a boudé. Le coach a ouvert, écouté, refermé."
+      loft_tenu:         "{annee} : {prenom} {nom} a tenu le loft avec les U17. Le petit lui faisait la passe."
+      blessure_inventee: "{annee} : {prenom} {nom} était « blessé{pg, select, f{e} other{}} » le jour des recruteurs. Le Doc a signé."
+    epilogue:
+      journal: "{annee} : sur le banc, {nom} a bossé, ou a boudé. L'adjoint a noté."
+    steps:
+      - id: banc
+        card:
+          - { id: jp.banc.vukic_encore, if: "plays('jp.banc_hiver') >= 1" }
+          - { id: jp.banc.vukic }
+        next: [ { step: loft, in: [2, 11] } ]
+      - id: loft
+        card: jp.banc.loft
+        next: [ { step: recruteurs, if: "flag('agent_fardelli')", in: [1, 9] }, { step: retour, in: [2, 12] } ]
+      - id: recruteurs
+        card: jp.banc.recruteurs
+        next: [ { step: retour, in: [2, 12] } ]
+      - id: retour
+        card:
+          - { id: jp.banc.retour, if: "!flag('parti_janvier')" }
+          - { id: jp.banc.retour_ailleurs }
+        next: []
+
+  # ------------------------------------------------- § 6.9 · Le bac de Camille
+  - id: jp.camille_bac
+    title: "Le bac de Camille"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: famille
+    carrier: camille
+    cast: [camille, josiane, fardelli]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    when: "age <= 24 && !flag('divorce')"
+    hint: "Elle passe le bac en juin. Toi, tu passes peut-être en D1."
+    issues: [aide, apres, voiture]
+    traces:
+      camille_bac_aidee: "{annee} : {prenom} {nom} a fait réviser Camille. Elle a eu le bac ; {pg, select, f{elle} other{lui}}, la D1."
+      voiture_camille:   "{annee} : la voiture du transfert est au nom de Camille. Elle apprend à conduire dessus."
+    epilogue:
+      journal: "{annee} : Camille a eu le bac. {nom} a eu autre chose."
+    steps:
+      - id: revision
+        card: jp.bac.revision
+        next: [ { step: annales, in: [1, 9] } ]
+      - id: annales
+        card: jp.bac.annales
+        next: [ { step: jour_j, in: [3, 13] } ]
+      - id: jour_j
+        card: jp.bac.jour_j
+        next: [ { step: resultats, in: [2, 10] } ]
+      - id: resultats
+        card:
+          - { id: jp.bac.resultats_seul, if: "flag('sans_agent')" }
+          - { id: jp.bac.resultats }
+        next: []
+
+  # ------------------------------------- § 6.10 · Les trois conseils de Gigi
+  # Rituel : un conseil par saison, et le suivant lit plays().
+  - id: jp.conseils_gigi
+    title: "Les trois conseils de Gigi"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: false
+    replay: ritual
+    min_season: 0
+    theme: absurde
+    carrier: vecchio
+    cast: [vecchio, fardelli]
+    start: [2, 9]
+    same_club: false
+    fallback: nouvelles
+    hint: "Un gardien de quarante et un ans a trois choses à te dire."
+    issues: [ecoute, ignore]
+    traces:
+      gigi_non_agent:    "{annee} : {prenom} {nom} a dit non à son agent, une fois. Gigi Vecchio avait conseillé ça."
+      gigi_genou_ecoute: "{annee} : {prenom} {nom} a levé le pied une semaine. Le genou a dit merci, une fois."
+      gigi_encore_une:   "{annee} : Gigi Vecchio en fait encore une. Il a acheté le survêtement lui-même."
+    steps:
+      - id: conseil
+        card:
+          - { id: jp.gigi.encore_une, if: "plays('jp.conseils_gigi') >= 3" }
+          - { id: jp.gigi.genou, if: "plays('jp.conseils_gigi') >= 2" }
+          - { id: jp.gigi.agent, if: "plays('jp.conseils_gigi') >= 1" }
+          - { id: jp.gigi.tribune_age, if: "age >= 28" }
+          - { id: jp.gigi.tribune }
+        statut_ok: [retraite]
+        next: [ { step: orange, in: [3, 13] } ]
+      # Un rituel qui revient mot pour mot ne fait plus rire la deuxième fois :
+      # les trois étapes lisent plays(), pas seulement la première.
+      - id: orange
+        card:
+          - { id: jp.gigi.orange_gants, if: "flag('gigi_staff')" }
+          - { id: jp.gigi.orange_encore, if: "flag('gigi_encore_une')" }
+          - { id: jp.gigi.orange_deux, if: "plays('jp.conseils_gigi') >= 1" }
+          - { id: jp.gigi.orange }
+        statut_ok: [retraite]
+        next: [ { step: comptoir, in: [3, 13] } ]
+      - id: comptoir
+        card:
+          - { id: jp.gigi.comptoir_encore, if: "plays('jp.conseils_gigi') >= 1" }
+          - { id: jp.gigi.comptoir }
+        statut_ok: [retraite]
+        next: []

@@ -1,0 +1,207 @@
+# Manchettes du postulat 1 « L'intérimaire » (bible ch. 11 § 3.5). Schéma et
+# règles : en-tête de content/unes.yaml. Chacune lit une trace du réservoir de
+# l'intérimaire — le contrat, l'ombre de l'ancien, le papier qui manque, le
+# seau, la tribune qui chante l'autre, le ticket du port, le derby des ex, la
+# lettre, le carnet, le panneau de la mairie, le rappel du mercredi.
+# Fraîcheur : `flag()` + `journal_has()` (la ligne d'Almanach porte le drapeau
+# en tag) — sinon la Une titrerait trois ans plus tard sur une craie effacée.
+# Le nom de l'entraîneur viré n'est jamais écrit : c'est « l'ancien ».
+unes:
+  # --------------------------------------------------- le contrat et le poste
+  - id: une.interim.titulaire
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "bilan.tenu && flag('cdi_signe')"
+    titre: "L'INTÉRIMAIRE EST TITULAIRE"
+    sous: "Six semaines, puis douze mois. {prenom} {nom} a signé sans lire, ou lu sans signer ; le résultat est le même."
+    sujet: en.interim.six_semaines
+    photo: en.interim.i2_confirme
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe } ]
+
+  - id: une.interim.montee
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 4
+    when: "bilan.outcome == 'montee'"
+    titre: "MONTÉE ! {CLUB} PASSE"
+    sous: "Un intérimaire à l'étage du dessus. « Jusqu'à nouvel ordre », disait le président ; l'ordre est nouveau."
+    sujet: en.interim.six_semaines
+    photo: en.interim.i3_cdi
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.interim.rappele
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('rappele_par_aulard') && journal_has('rappele_par_aulard')"
+    titre: "VIRÉ LUNDI, RAPPELÉ MERCREDI"
+    sous: "Le suivant a demandé plus cher. {prenom} {nom} est revenu « aux conditions » : trois lignes, écrites à la main."
+    sujet: en.aulard_rappelle
+    photo: en.aulard_rappelle.sms
+    react: [ { card: en.re.vukic_journal_president, if: "relation.vukic >= 0" }, { card: co.re.camille_journal } ]
+
+  # ------------------------------------------------------- l'ombre de l'ancien
+  - id: une.interim.ombre
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('methodes_ancien') && journal_has('methodes_ancien')"
+    titre: "L'OMBRE DE L'ANCIEN"
+    sous: "Même système, mêmes plots, même compo à la craie. « Le groupe vit bien », dit le groupe, et il le dit de lui."
+    sujet: en.vestiaire_ancien
+    photo: en.vestiaire_ancien.craie
+    react: [ { card: en.re.vukic_journal_president, if: "relation.vukic >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.interim.derby_des_ex
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "(flag('guerre_des_mots') && journal_has('guerre_des_mots')) || (flag('poignee_ancien') && journal_has('poignee_ancien'))"
+    titre: "LE DERBY DES EX À {VILLE}"
+    sous: "Une phrase, un blanc, ou une main serrée au rond central. La vallée a compté les points ; la Fédération aussi."
+    sujet: en.ancien_en_face
+    photo: en.ancien_en_face.rond_central
+    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.interim.chante_encore
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('kop_hostile') && journal_has('kop_hostile')"
+    titre: "LA TRIBUNE CHANTE ENCORE L'AUTRE"
+    sous: "Vingtième minute, quatre minutes, chaque match. L'accent du nouveau, personne au virage ne le connaît."
+    sujet: en.kop_doute
+    photo: en.kop_doute.vingtieme
+    react: [ { card: en.re.vukic_journal_president, if: "relation.vukic >= 0" }, { card: co.re.gege_decoupe } ]
+
+  # --------------------------------------------------------------- le papier
+  - id: une.interim.sans_papier
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "(flag('derogation') && journal_has('derogation')) || (flag('diplome_arrange') && journal_has('diplome_arrange')) || (flag('examen_promis') && journal_has('examen_promis'))"
+    titre: "LE COACH SANS PAPIER"
+    sous: "Une dérogation, un tampon, une signature qui manque. « On verra ça après le Congrès », dit la Fédération."
+    sujet: en.diplome
+    photo: en.diplome.appel
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.interim.diplome
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "bilan.tenu && flag('diplome') && journal_has('diplome')"
+    titre: "DIPLÔMÉ, ET MAINTENU"
+    sous: "Un oral d'une heure, le vieux mentor assis dans le fond, « admis ». {VILLE} garde son banc, et son banc a un papier."
+    sujet: en.diplome
+    photo: en.diplome.examen
+    react: [ { card: co.re.vecchio_garde } ]
+
+  # ---------------------------------------------------------------- le seau
+  - id: une.interim.seau
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('loco_evince') && journal_has('loco_evince')"
+    titre: "LE SEAU RESTE AU PLACARD"
+    sous: "Le grand nom n'est pas venu à {club}. La cassette, si ; le président a un magnétoscope, et il l'a rembobinée."
+    sujet: en.grand_nom
+    photo: en.grand_nom.seau
+    react: [ { card: co.re.camille_journal } ]
+
+  - id: une.interim.mystique
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('adjoint_de_loco') && journal_has('adjoint_de_loco')"
+    titre: "{NOM}, ADJOINT DU MYSTIQUE"
+    sous: "Lui sur son seau, l'intérimaire debout à côté. « Regardez la cassette », a-t-il dit, et rien d'autre de la saison."
+    sujet: en.grand_nom
+    photo: en.grand_nom.president
+    react: [ { card: en.re.vukic_journal_president, if: "relation.vukic >= 0" }, { card: co.re.camille_journal } ]
+
+  # ---------------------------------------------------------------- le ticket
+  - id: une.interim.parie
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "bilan.tenu && ((flag('pari_interim') && journal_has('pari_interim')) || (flag('pari_contre_soi') && journal_has('pari_contre_soi')))"
+    titre: "{pg, select, f{ELLE AVAIT PARIÉ} other{IL AVAIT PARIÉ}}"
+    sous: "Cent francs à quatre contre un, au port. Le ticket est resté dans un portefeuille, à côté d'une carte de presse."
+    sujet: en.cote_interim
+    photo: en.cote_interim.une
+    react: [ { card: co.re.gege_decoupe } ]
+
+  # ---------------------------------------------------------------- la lettre
+  - id: une.interim.lettre
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "(flag('lanceur_alerte') && journal_has('lanceur_alerte')) || (flag('lettre_publiee') && journal_has('lettre_publiee'))"
+    titre: "LE MATCH DE NÉVILLE, EN OCTOBRE"
+    sous: "Une lettre sans timbre, une faute au mot « arrangé ». Le capitaine « ne sait pas », et il le dit deux fois."
+    sujet: en.lettre_anonyme
+    photo: en.lettre.copie
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+
+  - id: une.interim.tiroir
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('match_arrange_couvert') && journal_has('match_arrange_couvert')"
+    titre: "LE TIROIR DU MILIEU DE {VILLE}"
+    sous: "Une lettre y dort depuis octobre. Quelqu'un a la clé ; quelqu'un d'autre a la copie, et la même faute."
+    sujet: en.lettre_anonyme
+    photo: en.lettre.enveloppe
+    react: [ { card: co.re.camille_journal } ]
+
+  # ------------------------------------------------------- le carnet, le panneau
+  - id: une.interim.carnet
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('carnet_ancien') && journal_has('carnet_ancien')) || (flag('carnet_meneche') && journal_has('carnet_meneche'))"
+    titre: "LE CARNET DE L'ANCIEN A UN LECTEUR"
+    sous: "Un nom à la dernière page, suivi d'un point d'interrogation. On l'a lu en une nuit, et on a gardé les pages."
+    sujet: en.bureau_ancien
+    photo: en.bureau_ancien.carnet
+    react: [ { card: en.re.vukic_journal_president, if: "relation.vukic >= 0" }, { card: co.re.camille_journal } ]
+
+  - id: une.interim.panneau
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "(flag('chantier_mairie') && journal_has('chantier_mairie')) || (flag('subvention_perdue') && journal_has('subvention_perdue'))"
+    titre: "QUATRE MÈTRES SOUS LA BÂCHE"
+    sous: "Le panneau de la ville a plus de lettres que le nom du coach. Le virage a compté, deux fois, avec un mètre."
+    sujet: en.mairie_d2
+    photo: en.mairie_d2.panneau
+    react: [ { card: co.re.gege_decoupe } ]
+
+  - id: une.interim.promesse_juin
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "!bilan.tenu && flag('montee_promise') && journal_has('montee_promise')"
+    titre: "{VILLE} : LA PROMESSE DE JUIN"
+    sous: "À la mairie, au président, à la tribune : la même phrase, trois fois. La maire a gardé la date, en gras."
+    sujet: en.mairie_d2
+    photo: en.mairie_d2.rendez_vous
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]

@@ -1,0 +1,84 @@
+# Cartes de l'intrigue « Le brassard » (arc jp.brassard_20) — bible ch. 10
+# § 6.26. Deux entrées : le vote du groupe à vingt ans, ou deux capitaines de
+# trente-trois ans et un brassard pour deux jambes valides. Le premier match
+# avec le brassard se joue devant l'arbitre : un capitaine parle une fois.
+cards:
+  - id: jp.brassard_20.groupe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe a voté, le groupe vit bien quand il vote, et il a voté toi — contre moi, qui n'ai pas voté. Tu le prends devant eux, ou tu me le laisses un an ? »"
+    left:
+      label: "Je le prends"
+      effects: {vestiaire: "++", direction: "+", set: [capitaine], outcome: prend, react: jp.re.vukic_capitaine}
+      answer: "Il te le met. Il ne serre pas trop fort cette fois ; il a compris."
+    right:
+      label: "Un an de plus, Titi"
+      effects: {vestiaire: "+", relation: {brehaut: 2}, set: [brassard_refuse], outcome: refuse}
+      answer: "Il le garde. Il te le donne en juin, sans vote ; c'est mieux."
+
+  - id: jp.brassard_33.deux
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Mon genou dit stop et le tien aussi : deux capitaines du même âge, ça fait un brassard pour deux jambes valides. Tu le prends, ou je le passe à Gigi ? »"
+    left:
+      label: "Je le prends"
+      effects: {vestiaire: "+", direction: "+", set: [capitaine], outcome: prend, react: jp.re.vukic_capitaine}
+      answer: "Tu le prends. Vous jouez un match sur deux ; le brassard, tous les matchs."
+    right:
+      label: "Donne-le à Gigi"
+      effects: {vestiaire: "++", tribunes: "-", relation: {vecchio: 1}, set: [brassard_gigi], outcome: gigi}
+      answer: "Gigi le met sur le gant. Il tombe deux fois par match ; le stade applaudit quand il le remet."
+
+  - id: jp.brassard.lundi
+    roles: [joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: strategique
+    text: "« Je te le dis parce que personne ne te le dira : un capitaine parle au coach avant le groupe, pas après. Tu viens me voir le lundi, ou tu attends qu'on t'envoie ? »"
+    left:
+      label: "Le lundi"
+      effects: {direction: "+", relation: {vukic: 1}, set: [capitaine_lundi]}
+      answer: "Tu viens. Il note ce que tu dis. Il l'utilise ; pas contre toi."
+    right:
+      label: "Quand le groupe m'envoie"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le groupe t'envoie souvent. Tu deviens le porte-parole ; la jauge sait ce que ça veut dire."
+
+  - id: jp.brassard.premier_match
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, arbitrage, moment]
+    speaker: vecchio
+    tone: strategique
+    text: "« L'arbitre a vu le brassard, petit, et un capitaine lui parle une fois par match, pas dix. J'en ai vu d'autres : tu choisis la fois maintenant, ou à la fin ? »"
+    left:
+      label: "Maintenant : bonjour"
+      effects: {direction: "+", vestiaire: "+", set: [capitaine_bonjour]}
+      answer: "Tu dis bonjour au rond central. Il t'écoute à la quatre-vingt-dixième ; une fois ; ça suffit."
+    right:
+      label: "Je la garde pour la fin"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Tu la gardes. À la quatre-vingt-dixième, tu parles ; il a déjà vu ; il siffle."
+
+  - id: jp.brassard.premier_match_sans
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, arbitrage]
+    speaker: vecchio
+    tone: leger
+    text: "« Tu n'as pas le brassard, et tu parles à l'arbitre plus que celui qui l'a. J'en ai vu d'autres, petit : tu te tais dimanche, ou tu continues ? »"
+    left:
+      label: "Je me tais"
+      effects: {direction: "+", vestiaire: "+"}
+      answer: "Tu te tais. L'arbitre te regarde deux fois, étonné ; c'est déjà une conversation."
+    right:
+      label: "Je continue"
+      effects: {tribunes: "+", direction: "-", vestiaire: "-"}
+      answer: "Tu continues. Il note ton numéro dans son carnet, à la page des bavards."

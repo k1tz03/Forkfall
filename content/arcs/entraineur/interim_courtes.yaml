@@ -1,0 +1,142 @@
+# Les trois intrigues courtes de l'intérimaire (bible ch. 11 § 3.3, « trois
+# intrigues courtes ») : Le bureau de l'ancien (léger, absurde), Le pari de
+# Massenet (presse), La D2 et la mairie (instances). Elles se jouent en une
+# saison, sauf le verdict de la mairie, qui glisse à la suivante.
+arcs:
+  # ------------------------------------------------------- le bureau de l'ancien
+  # Ses cartons, son carnet, sa cafetière : le passé tient en trois objets, et
+  # chacun a un lecteur.
+  - id: en.bureau_ancien
+    title: "Le bureau de l'ancien"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 0.9
+    once: true
+    min_season: 0
+    theme: absurde
+    carrier: josiane
+    cast: [josiane, camille, vukic, brehaut]
+    issues: [lu, rendu, donne]
+    traces:
+      carnet_ancien:  "{annee} : {nom} a lu le carnet de l'ancien. L'adjoint y était à toutes les pages."
+      carnet_meneche: "{annee} : le carnet de l'ancien est arrivé chez le journaliste. On ne sait pas comment."
+    hint: "Trois cartons dans le couloir depuis lundi, et le concierge attend."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : {nom} a lu le carnet de l'ancien, puis il est parti. Le carnet est resté dans le carton."
+    steps:
+      - id: cartons
+        card: en.bureau_ancien.cartons
+        next:
+          - { step: carnet, if: "!flag('cartons_jetes')", in: [1, 2] }
+          - { step: cafetiere, in: [1, 3] }
+      - id: carnet
+        card:
+          - { id: en.bureau_ancien.carnet_presse, if: "relation.meneche >= 1" }
+          - { id: en.bureau_ancien.carnet }
+        next: [ { step: cafetiere, in: [1, 3] } ]
+      - id: cafetiere
+        card:
+          - { id: en.bureau_ancien.cafetiere_vukic, if: "flag('divorce')" }
+          - { id: en.bureau_ancien.cafetiere }
+        next: [ { step: couloir, in: [2, 4] } ]
+      - id: couloir
+        card:
+          - { id: en.bureau_ancien.couloir_vide, if: "flag('cartons_jetes')" }
+          - { id: en.bureau_ancien.couloir }
+        next: []
+
+  # --------------------------------------------------------- le pari de la cote
+  - id: en.cote_interim
+    title: "Le pari de Massenet"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 0.9
+    once: true
+    min_season: 0
+    theme: presse
+    carrier: meneche
+    cast: [meneche, gege]
+    issues: [parie, no_comment, contre]
+    traces:
+      pari_interim:    "{annee} : {nom} a parié cent francs sur son propre maintien au poste. Le ticket a été gardé."
+      pari_contre_soi: "{annee} : {nom} a parié contre {pg, select, f{elle} other{lui}}. Poste gagné, cent francs perdus."
+    hint: "« L'intérimaire parie sur lui », ou « sur sa tête » : deux titres, une cote."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le ticket de {nom} est resté dans le portefeuille du journaliste. Jamais encaissé."
+    steps:
+      - id: cote
+        card:
+          - { id: en.cote_interim.cote_silence, if: "flag('silence_ancien') || relation.meneche <= -1 || vars.no_comment >= 1" }
+          - { id: en.cote_interim.cote }
+        next: [ { step: bookmaker, in: [1, 3] } ]
+      - id: bookmaker
+        card:
+          - { id: en.cote_interim.bookmaker_contre, if: "flag('pari_contre_soi')" }
+          - { id: en.cote_interim.bookmaker }
+        next: [ { step: une, in: [1, 3] } ]
+      - id: une
+        # Trois variantes : le ticket gagnant (misé contre soi et poste gardé),
+        # le ticket tout court, et — si tu n'as jamais misé — celui que le
+        # journaliste a pris pour lui. La dernière est sans `if` : l'étape se
+        # clôt toujours, l'intrigue ne meurt pas d'un choix « pas de commentaire ».
+        card:
+          - { id: en.cote_interim.une_gagnant, if: "flag('pari_contre_soi') && flag('cdi_signe')" }
+          - { id: en.cote_interim.une, if: "flag('pari_interim') || flag('pari_contre_soi')" }
+          - { id: en.cote_interim.une_silence }
+        next: []
+
+  # ----------------------------------------------------------- la D2 et la mairie
+  - id: en.mairie_d2
+    title: "La D2 et la mairie"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: aubert
+    cast: [aubert, josiane, gege, aulard]
+    issues: [promesse, refus, chantier]
+    traces:
+      subvention_perdue: "{annee} : la mairie de {ville} a réduit la subvention. Le radiateur a toussé tout l'hiver."
+      chantier_mairie:   "{annee} : {nom} a accepté la tribune municipale, panneau compris. Gégé a compté les lettres."
+    hint: "Le stade, c'est de l'argent public, et l'argent public a un calendrier."
+    start: [2, 10]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      caisse: "-"
+      journal: "{annee} : {nom} avait promis la montée à la mairie de {ville}. La maire a gardé la date."
+    steps:
+      - id: rendez_vous
+        card:
+          - { id: en.mairie_d2.rendez_vous_promise, if: "flag('montee_promise')" }
+          - { id: en.mairie_d2.rendez_vous }
+        next: [ { step: conseil, in: [2, 4] } ]
+      - id: conseil
+        card:
+          - { id: en.mairie_d2.conseil_chantier, if: "flag('chantier_mairie')" }
+          - { id: en.mairie_d2.conseil }
+        next: [ { step: panneau, in: [2, 5] } ]
+      - id: panneau
+        card:
+          - { id: en.mairie_d2.panneau_chauffage, if: "flag('subvention_perdue')" }
+          - { id: en.mairie_d2.panneau }
+        next: [ { step: verdict, at_season: 1, at: [1, 3] } ]
+      - id: verdict
+        card:
+          - { id: en.mairie_d2.verdict_promesse, if: "flag('montee_promise')" }
+          - { id: en.mairie_d2.verdict }
+        next: []

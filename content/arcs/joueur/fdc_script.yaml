@@ -1,0 +1,118 @@
+# Arc de postulat « La dernière année » (postulat 3, « Fin de contrat à 31 ans »).
+# Bible ch. 10 § 4 : le script d'ouverture du joueur en fin de contrat. Neuf
+# ancres — S0 : le restaurant de l'agent (slot 1), l'offre d'hiver (10-11), la
+# quinzième (16), juin (17) ; S1 : le premier jour selon la destination (1-2),
+# les jambes (10-11), la veille (17) ; S2+ : une saison de plus (1-2), la
+# veille à la maison (17).
+# Le président narratif est Vaubourg (la bible l'appelle Vaubourg : même fauteuil,
+# même tic) ; le fonds est Ilyas (la bible dit Ilyas).
+# Deux alarmes d'override (jp.fin.alarme_*) sont déclarées dans postulats.yaml.
+# Semé par `opening_arc: jp.fin.dernier_contrat`.
+arcs:
+  - id: jp.fin.dernier_contrat
+    title: "La dernière année"
+    kind: postulat
+    roles: [joueur]
+    foreground: true
+    weight: 1.0
+    theme: contrat
+    carrier: fardelli
+    cast: [fardelli, sabatier, aulard, brehaut, vukic, camille, josiane, nassir, vecchio]
+    same_club: false          # l'offre d'hiver et juin peuvent changer de club
+    fallback: drop
+    issues: [prolonge, parti, banc, sans_club]
+    traces:
+      agent_fardelli:     "{annee} : dix pour cent et un dessert pour deux. Rocco Fardelli représente {nom}."
+      sans_agent:         "{annee} : {prenom} {nom} cherche seul{pg, select, f{e} other{}}. Le contrat est resté sous le cendrier."
+      radio_demandee:     "{annee} : l'agent de {nom} a demandé la radio du genou. Le tiroir était fermé."
+      prolonge_rabais:    "{annee} : un an au rabais pour {prenom} {nom}. Le chiffre est petit, la clause est grande."
+      attend_juin:        "{annee} : {prenom} {nom} n'a rien signé en janvier. Juin est loin, en janvier."
+      quinzieme_jouee:    "{annee} : quatorze croix, et la quinzième. Le genou de {nom} a tenu, ou a parlé."
+      prolonge:           "{annee} : un an de plus pour {prenom} {nom}. Le genou n'a pas signé, il a laissé faire."
+      prolonge_vestiaire: "{annee} : {prenom} {nom} prolongé{pg, select, f{e} other{}} par vingt-deux noms. Le capitaine avait signé en premier."
+      sans_club:          "{annee} : {prenom} {nom}, trente-deux ans, sans club. Le téléphone était débranché."
+      recule_poste:       "{annee} : {prenom} {nom} a reculé d'un cran. De là, on voit tout."
+      banc_regarde:       "{annee} : {prenom} {nom} a regardé le banc avant de regarder le terrain."
+      suit_vukic:         "{annee} : {prenom} {nom} a pris le train le lundi. Le cahier était dans le sac."
+      dernier_annonce:    "{annee} : {prenom} {nom} l'a dit à la maison d'abord. C'était la dernière."
+      vers_entraineur:    "{annee} : le survêtement de la réserve était à la taille de {nom}. Il l'avait pris exprès."
+      genou_grave:        "{annee} : le genou de {prenom} {nom} a eu le dernier mot. Il l'avait dit avant."
+    steps:
+      # ------------------------------------------------------------- saison 0
+      - id: derniere_annee
+        card:
+          - { id: jp.fin.f1_derniere_annee_genou,     if: "fil_rouge == 'genou'" }
+          - { id: jp.fin.f1_derniere_annee_vestiaire, if: "fil_rouge == 'vestiaire'" }
+          - { id: jp.fin.f1_derniere_annee }
+        at: [1, 1]
+        season: "0"
+      # L'ancre d'hiver ne repose jamais la question de « La maison du pays » :
+      # si l'intrigue l'a déjà tranchée (retour signé ou pays refusé), le
+      # script la commente (variante _refus) ou passe la main à l'offre du
+      # président. Réciproque dans fdc_reservoir_a.yaml, étape offre_d2.
+      - id: offre
+        card:
+          - { id: jp.fin.f2_offre_or,           if: "relation.nassir >= 1 || gauges.caisse >= 62 || year >= 1999" }
+          - { id: jp.fin.f2_offre_maison_refus, if: "flag('pays_refuse')" }
+          - { id: jp.fin.f2_offre_maison,       if: "(flag('maison_pays') || flag('promis_camille')) && !flag('maison_pays_signee') && !flag('pays_refuse') && !flag('divorce')" }
+          - { id: jp.fin.f2_offre_fax,          if: "flag('petition_portee')" }
+          - { id: jp.fin.f2_offre }
+        at: [10, 11]
+        season: "0"
+      - id: quinzieme
+        card:
+          - { id: jp.fin.f2b_quinzieme_clause, if: "flag('prolonge_rabais')" }
+          - { id: jp.fin.f2b_quinzieme }
+        at: [16, 16]
+        season: "0"
+      - id: juin
+        card:
+          - { id: jp.fin.f3_juin_rabais,    if: "flag('prolonge_rabais')" }
+          # L'issue `sans_club` arme toute une branche (s1_premier_jour_sans_club,
+          # une.fin.sans_club, la fin jp_sansclub) : elle était vue par 1 % des
+          # joueurs. On l'ouvre à ceux qui ont replié le contrat sous le
+          # cendrier — c'est la même histoire, un an plus tard.
+          - { id: jp.fin.f3_juin_aucune,    if: "!flag('exil_dore') && !flag('maison_pays_signee') && (gauges.direction < 42 || flag('genou_grave') || (flag('quinzieme_tribune') && (flag('sans_agent') || flag('attend_juin'))) || (flag('sans_agent') && flag('attend_juin')))" }
+          - { id: jp.fin.f3_juin_petition,  if: "flag('petition_portee') && gauges.vestiaire >= 60" }
+          - { id: jp.fin.f3_juin }
+        at: [17, 17]
+        season: "0"
+      # ------------------------------------------------------------- saison 1
+      - id: premier_jour
+        card:
+          - { id: jp.fin.s1_premier_jour_sans_club_seul, if: "flag('sans_club') && flag('divorce')" }
+          - { id: jp.fin.s1_premier_jour_sans_club, if: "flag('sans_club')" }
+          - { id: jp.fin.s1_premier_jour_parti,     if: "flag('parti_juin') || flag('maison_pays_signee') || flag('exil_dore')" }
+          - { id: jp.fin.s1_premier_jour_prolonge,  if: "flag('prolonge')" }
+          - { id: jp.fin.s1_premier_jour }
+        at: [1, 2]
+        season: "1"
+      - id: jambes
+        card:
+          - { id: jp.fin.s1_jambes_gigi, if: "flag('gigi_genou_ecoute') || relation.vecchio >= 2" }
+          - { id: jp.fin.s1_jambes_quinzieme, if: "flag('quinzieme_jouee')" }
+          - { id: jp.fin.s1_jambes }
+        at: [10, 11]
+        season: "1"
+      - id: veille
+        card:
+          - { id: jp.fin.s1_veille_ailleurs, if: "flag('vukic_dauphin') || flag('banc_regarde') || relation.vukic >= 2" }
+          - { id: jp.fin.s1_veille_petition, if: "flag('petition_portee') || flag('petition_presse') || flag('prolonge_vestiaire')" }
+          - { id: jp.fin.s1_veille }
+        at: [17, 17]
+        season: "1"
+      # ------------------------------------------------------------ saisons 2+
+      - id: saison_de_plus
+        card:
+          - { id: jp.fin.s2_saison_de_plus_recule, if: "flag('recule_poste') || flag('banc_regarde')" }
+          - { id: jp.fin.s2_saison_de_plus_encore, if: "season >= 3 || flag('une_de_plus')" }
+          - { id: jp.fin.s2_saison_de_plus }
+        at: [1, 2]
+        season: "2+"
+      - id: veille_maison
+        card:
+          - { id: jp.fin.s2_veille_josiane, if: "flag('divorce') || relation.camille <= -2" }
+          - { id: jp.fin.s2_veille_jubile, if: "flag('jubile_fait') || flag('jubile_reporte')" }
+          - { id: jp.fin.s2_veille }
+        at: [17, 17]
+        season: "2+"

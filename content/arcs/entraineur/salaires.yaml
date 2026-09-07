@@ -1,0 +1,64 @@
+# « Les salaires en retard » — la paie du 5 n'est pas arrivée, et le vestiaire
+# l'apprend au distributeur du centre commercial, avant toi (bible ch. 11
+# § 2.3, intrigue 8). Josiane montre le relevé ; Bréhaut arrive avec le sien ;
+# Vaubourg « n'a pas le temps » ; Ilyas, lui, a le temps et un chéquier. La
+# saison suivante, la Commission de Contrôle des Comptes se souvient de la date.
+#
+# Chemins : distributeur (variante « encore » sur plays) → brehaut → aulard
+# (variante « tu as avancé » si salaires_avances) → nassir_paie (si Ilyas est
+# dans la place et que tu n'as pas payé de ta poche) → commission (S+1).
+# Issues : avance | patience | nassir. Exclusive avec « Le sponsor qui devient
+# propriétaire » : les deux racontent la même porte qui s'ouvre.
+arcs:
+  - id: en.salaires_retard
+    title: "Les salaires en retard"
+    kind: serie
+    roles: [entraineur]
+    postulats: []
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 0
+    theme: argent
+    carrier: josiane
+    cast: [josiane, brehaut, aulard, nassir, vecchio]
+    replay: { after: 2, max: 2 }
+    exclusive_with: [en.nassir_proprietaire]
+    issues: [avance, patience, nassir]
+    traces:
+      salaires_avances: "{annee} : la paie du 5 avancée par {prenom} {nom}, de sa poche. Le président l'a appris par la banque."
+      salaires_retard:  "{annee} : les salaires sont partis le 12 au lieu du 5. Le vestiaire a compté les jours au distributeur."
+      nassir_paie:      "{annee} : le fonds a payé les salaires de {club}. Par virement, avant le fax."
+      fede_dossier:     "{annee} : la Fédération a ouvert un dossier au nom de {nom}. Sur la tranche, en majuscules."
+    hint: "La paie du 5 n'est pas tombée. Le distributeur l'a dit avant toi."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      caisse: "-"
+      journal: "{annee} : à {club}, la paie du 12 est restée la paie du 12. {nom} était déjà ailleurs."
+    steps:
+      - id: distributeur
+        card:
+          - { id: en.salaires.distributeur_encore, if: "plays('en.salaires_retard') >= 1" }
+          - { id: en.salaires.distributeur }
+        next: [ { step: brehaut, in: [2, 4] } ]
+      - id: brehaut
+        card:
+          - { id: en.salaires.brehaut_capitaine, if: "flag('capitaine') || flag('brehaut_capitaine')" }
+          - { id: en.salaires.brehaut }
+        next: [ { step: aulard, in: [2, 4] } ]
+      - id: aulard
+        card:
+          - { id: en.salaires.aulard_avance, if: "flag('salaires_avances')" }
+          - { id: en.salaires.aulard }
+        next:
+          - { step: nassir_paie, if: "relation.nassir >= 0 && !flag('salaires_avances')", in: [3, 6] }
+          - { step: commission, at_season: 1, at: [4, 10], in: [4, 10] }
+      - id: nassir_paie
+        card: en.salaires.nassir_paie
+        next: [ { step: commission, at_season: 1, at: [4, 10], in: [4, 10] } ]
+      - id: commission
+        card: en.salaires.commission
+        on_expire: skip
+        next: []
