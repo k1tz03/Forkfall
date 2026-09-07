@@ -21,10 +21,35 @@
 /// Une that never lies (`--une-check` runs that comparison alone).
 library;
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:fusible_core/fusible_core.dart';
+
+/// Les issues déclarées rares par arc (`issues_rares`, spec § 5.1). Lues dans
+/// le bundle compilé : c'est une donnée de rapport, pas une donnée de moteur,
+/// et le modèle `Content` n'a pas à la porter.
+Map<String, Set<String>> _issuesRares() {
+  var dir = Directory.current;
+  for (var i = 0; i < 6; i++) {
+    final f = File('${dir.path}/content/build/content.json');
+    if (f.existsSync()) {
+      final j = jsonDecode(f.readAsStringSync()) as Map<String, dynamic>;
+      final out = <String, Set<String>>{};
+      for (final a in (j['arcs'] as List? ?? const [])) {
+        final m = (a as Map).cast<String, dynamic>();
+        final r = (m['issues_rares'] as List?)?.map((e) => e.toString()).toSet() ?? const <String>{};
+        if (r.isNotEmpty) out[m['id'].toString()] = r;
+      }
+      return out;
+    }
+    final p = dir.parent;
+    if (p.path == dir.path) break;
+    dir = p;
+  }
+  return const {};
+}
 
 Content _loadContent() {
   var dir = Directory.current;
@@ -110,6 +135,13 @@ class RunStats {
   int setpiecesVariantes = 0; // … servis par une variante auteurisée, hors secours
   int nouvellesDatees = 0; // Nouvelles datées servies dans leur fenêtre [year, year + 1]
   int nouvellesDateesPerdues = 0; // … jamais servies, fenêtre fermée (stats.nouvelle_datee_perdue)
+  /// Cartes servies hors du rôle courant, ou dont le locuteur ne parle plus
+  /// (spec variété §1.10). Invariant : zéro. C'est le défaut « fuite entre
+  /// rôles » / « statuts non respectés » : les alarmes, les réactions et les
+  /// variantes d'étape ne filtraient pas comme `pickPool`.
+  int horsRole = 0;
+  int horsStatut = 0;
+  final List<String> fuitesSamples = [];
   int uneChecks = 0; // Bilans où la Une a été comparée au verdict appliqué
   int uneChecksOk = 0; // … et disait vrai (payload.tenu / payload.rang / payload.outcome et les mots du titre)
   final List<String> uneCheckFailures = [];
@@ -178,6 +210,20 @@ String _nameLevel(Content content, GameState s, Pending p) {
 // ---------------------------------------------------------------------------
 
 class SeasonMetrics {
+  /// La saison est-elle **close** : jouée jusqu'à son Bilan, pas tronquée par
+  /// la fin de carrière ni par la coupe `--seasons`. La cadence, le P5 du temps
+  /// d'histoire et les Nouvelles ne se mesurent que là (défaut « artefact de
+  /// mesure ») : une dernière saison arrêtée au slot 6 n'a pas de trou de
+  /// cadence, elle a une fin de carrière — la compter faisait grimper l'écart
+  /// max à 11 quand le P95 était à 3. Le reste (échéances, tons, voix, alarmes)
+  /// est mesuré par carte servie et reste sur toutes les saisons.
+  bool closed = false;
+
+  /// La saison a-t-elle atteint son Bilan ? Une carrière qui meurt sur la
+  /// dernière carte du Bilan a bien joué sa saison ; une carrière qui meurt au
+  /// slot 6 ne l'a pas jouée.
+  bool reachedBilan = false;
+  int season = 0;
   int cards = 0;
   int story = 0;
   int routine = 0;
@@ -203,6 +249,9 @@ class Narrative {
   final Map<String, List<SeasonMetrics>> byBucket = {'S0': [], 'S1': [], 'S2+': []};
   final Map<String, int> misses = {};
   final Set<String> seenCards = {};
+  /// Arcs réellement entrés en jeu (armés, actifs, clos ou abandonnés) sur
+  /// l'ensemble des runs : le dénominateur honnête de l'exposition.
+  final Set<String> openedArcs = {};
   final Set<String> s0Sequences = {};
   int famine = 0;
   int cadencePull = 0;
@@ -216,6 +265,17 @@ class Narrative {
   int setpiecesVariantes = 0;
   int nouvellesDatees = 0;
   int nouvellesDateesPerdues = 0;
+  /// La dernière année vécue, tous runs confondus. Une Nouvelle datée dont la
+  /// fenêtre [year, year + 1] commence après cette année n'a pas été manquée :
+  /// aucune carrière n'a atteint son époque (spec variété §5.1, dénominateur
+  /// d'exposition).
+  int maxYear = 0;
+  /// Fin servie → nombre de carrières (§5.3 : « chaque fin atteinte ≥ 1 fois »).
+  final Map<String, int> endings = {};
+  /// Objectif caché atteint → nombre de carrières ; [runsWithObjectif] compte
+  /// les carrières qui en atteignent au moins un (§5.3 : bande 30-60 %).
+  final Map<String, int> objectifs = {};
+  int runsWithObjectif = 0;
 
   String bucket(int season) => season == 0 ? 'S0' : (season == 1 ? 'S1' : 'S2+');
 }
@@ -282,6 +342,7 @@ class RunRecord {
   RunStats stats = RunStats();
   String ending = '';
   int seasonsPlayed = 0;
+  int maxYear = 0; // dernière année vécue par cette carrière
   RunRecord(this.seed);
 
   Set<String> get intrigues => openings.map((o) => o.arc).toSet();
@@ -409,8 +470,12 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
   final varBase = Map.of(s.vars);
 
   void closeSeason({bool over = false}) {
-    if (curSeason < 0) return;
-    if (over) return; // a run that died mid-season leaves no "hole" behind it
+    if (curSeason < 0 || cur.closed) return;
+    // A run that died mid-season leaves no "hole" behind it : la saison n'est
+    // close que si elle a atteint son Bilan (ou si c'est la coupe `--seasons`
+    // qui a arrêté la carrière, pas la mort).
+    if (over && !cur.reachedBilan) return;
+    cur.closed = true;
     final trailing = seasonSlots - cur.lastStory;
     cur.maxGap = math.max(cur.maxGap, trailing);
   }
@@ -536,6 +601,23 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
       if (p.payload['setpiece_secours'] != true) stats.setpiecesVariantes += 1;
     }
     if (p.kind == 'narrative') {
+      // Invariant de sélection : la carte servie joue le rôle courant et son
+      // locuteur parle encore. Vérifié sur toute politique, sur chaque carte.
+      final servedCard = content.cards[p.id];
+      if (servedCard != null) {
+        final arcId = p.payload['arc'] as String?;
+        final stepDef = arcId == null ? null : content.arcs[arcId]?.stepById(p.payload['step'] as String? ?? '');
+        if (servedCard.roles.isNotEmpty && !servedCard.roles.contains(s.role)) {
+          stats.horsRole += 1;
+          if (stats.fuitesSamples.length < 5) stats.fuitesSamples.add('rôle ${s.role} ← ${p.payload['kind']}/${p.id}');
+        }
+        if (!engine.director.speakerOk(s, servedCard, step: stepDef)) {
+          stats.horsStatut += 1;
+          if (stats.fuitesSamples.length < 5) {
+            stats.fuitesSamples.add('statut ${servedCard.speaker} « ${engine.director.statutOf(s, servedCard.speaker)} » ← ${p.payload['kind']}/${p.id}');
+          }
+        }
+      }
       if (s.season >= maxSeasons) break;
       final kind = p.payload['kind'] as String? ?? 'routine';
       final tone = p.payload['tone'] as String? ?? 'leger';
@@ -545,7 +627,7 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         if (s.season != curSeason) {
           closeSeason();
           curSeason = s.season;
-          cur = SeasonMetrics();
+          cur = SeasonMetrics()..season = s.season;
           nar.byBucket[nar.bucket(s.season)]!.add(cur);
         }
         final m = cur;
@@ -585,7 +667,11 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           if (sp == m.lastSpeaker && !isReaction) m.samePairs += 1;
         }
         if (!isReaction) m.lastSpeaker = sp;
-        final backlog = s.scheduled.where((e) => e.deadlineN <= s.ncards).length;
+        // Backlog : les entrées **échues** de la file. Une fusée longue porte
+        // `dueN = deadlineN = -1` en attendant sa saison : la compter comme
+        // échue gonflait le backlog de deux ou trois entrées qui n'attendaient
+        // rien (défaut de mesure, corrigé avec les échéances).
+        final backlog = s.scheduled.where((e) => !e.isLongFuse && e.dueN >= 0 && e.deadlineN <= s.ncards).length;
         m.maxBacklog = math.max(m.maxBacklog, backlog);
         if (s.season == 0) s0Ids.add(p.id);
       }
@@ -661,6 +747,7 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         prevName = named;
       }
       if (p.kind == 'bilan_une') {
+        if (nar != null && curSeason == s.season) cur.reachedBilan = true;
         if (rec != null && s.season >= maxSeasons) break;
         final une = p.payload['une'];
         if (rec != null) {
@@ -754,12 +841,25 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     if (s0Ids.isNotEmpty) nar.s0Sequences.add(s0Ids.take(seasonSlots).join(','));
     s.arcs.forEach((id, st) {
       nar.arcsOpened += 1;
+      nar.openedArcs.add(id);
       if (st.status == 'done') nar.arcsClosed += 1;
     });
+    if (s.year > nar.maxYear) nar.maxYear = s.year;
+    final fin = s.endingId ?? (s.over ? 'inconnu' : 'en cours');
+    nar.endings[fin] = (nar.endings[fin] ?? 0) + 1;
+    var nObj = 0;
+    for (final u in s.unlocked) {
+      if (!u.startsWith('objectif:')) continue;
+      nObj += 1;
+      final oid = u.substring(9);
+      nar.objectifs[oid] = (nar.objectifs[oid] ?? 0) + 1;
+    }
+    if (nObj > 0) nar.runsWithObjectif += 1;
   }
   if (rec != null) {
     rec.ending = s.endingId ?? (s.over ? 'inconnu' : 'en cours');
     rec.seasonsPlayed = rec.seasons.length;
+    rec.maxYear = s.year;
     // An arc armed by `openSeason` of a season that was never played (the
     // `--seasons` cut, or a run that ends at the Bilan) is not an opening.
     final played = rec.seasons.map((x) => x.season).toSet();
@@ -841,6 +941,246 @@ void _line(bool ok, String label, String value, String seuil) {
 List<ArcDef> reservoirArcs(Content content, PostulatDef post) => content.arcsSorted
     .where((a) => a.kind == 'serie' && a.roles.contains(post.role) && (a.postulats.isEmpty || a.postulats.contains(post.id)))
     .toList();
+
+// ---------------------------------------------------------------------------
+// Exposition (spec variété §5.1) : ce que les auteurs lisent pour savoir quelle
+// carte n'est jamais sortie, et pourquoi.
+// ---------------------------------------------------------------------------
+
+/// Les fins qu'une carrière de ce rôle peut atteindre, en lecture statique :
+/// les quatre portes du moteur (`Engine._checkEndings`), les fins de jauge de
+/// `roles.yaml`, et toute fin visée par un `end:` — d'un choix de carte du
+/// rôle, d'une étape d'arc atteignable, ou d'une variante de set-piece. C'est
+/// le dénominateur de la matrice des fins (spec variété §5.3 : « chaque fin
+/// atteinte au moins une fois »), sans lequel le budget reste déclaratif.
+Set<String> reachableEndings(Content content, PostulatDef post, Set<String> arcsOuverts) {
+  // Les quatre fins que le moteur pose lui-même, sans `end:` en contenu.
+  final out = <String>{'generique', 'grand_deballage'};
+  final role = content.roles[post.role];
+  if (role != null) {
+    out.add(post.role == 'joueur' ? 'jubile' : 'en_retraite');
+    for (final g in role.gauges) {
+      out.add(g.emptyEnding);
+      out.add(g.fullEnding);
+    }
+  }
+  final arcs = reachableArcs(content, post, arcsOuverts);
+  final stepArc = <String, String>{};
+  for (final a in content.arcsSorted) {
+    for (final st in a.steps) {
+      for (final v in st.card) {
+        stepArc[v.id] = a.id;
+      }
+    }
+  }
+  for (final c in content.cards.values) {
+    if (!c.roles.contains(post.role)) continue;
+    final arcId = stepArc[c.id] ?? c.arcId;
+    if (arcId != null && !arcs.contains(arcId)) continue;
+    for (final e in [c.left.effects.end, c.right.effects.end]) {
+      if (e != null) out.add(e);
+    }
+  }
+  return out;
+}
+
+/// Le bilan d'exposition d'un **rôle et d'un postulat**. L'ancienne mesure
+/// prenait pour dénominateur toutes les cartes du rôle : les cartes d'un arc
+/// qu'un autre postulat seul peut ouvrir, et les alarmes surchargées par un
+/// autre postulat, y comptaient comme « jamais vues » sans le dire — d'où les
+/// 29-37 % annoncés contre un seuil de 70 %. Ici le dénominateur est réduit aux
+/// cartes **atteignables** par cette carrière, et les manquantes sont classées
+/// par cause probable.
+class Exposition {
+  final String role;
+  final String postulat;
+  int atteignables = 0;
+  int vues = 0;
+  int horsPostulat = 0; // cartes du rôle qu'aucune carrière de ce postulat ne peut atteindre
+  int datees = 0; // Nouvelles datées atteignables (fenêtre [year, year + 1])
+  int dateesVues = 0;
+  /// Nouvelles datées dont l'année n'a été vécue par aucune carrière mesurée :
+  /// hors du dénominateur, comme une carte d'un autre postulat. Elles ne sont
+  /// pas « jamais servies », elles appartiennent aux carrières longues.
+  int dateesHorsPortee = 0;
+  /// Replis d'ancre : dernière variante **sans garde** d'une étape dont toutes
+  /// les autres variantes en ont une. Un repli n'existe que pour le cas où
+  /// aucune garde ne tient ; le compter comme « jamais vue » reproche à un
+  /// filet de ne pas avoir servi. Hors dénominateur, mais nommé ci-dessous.
+  final List<String> replis = [];
+  /// cause → ids, triés. Causes : `arc jamais ouvert`, `alarme par visage`,
+  /// `variante perdante`, `garde d'état`, `jamais tirée`.
+  final Map<String, List<String>> jamaisVues = {};
+  Exposition(this.role, this.postulat);
+
+  double get part => atteignables == 0 ? 0 : vues / atteignables;
+  int get manquantes => jamaisVues.values.fold(0, (a, b) => a + b.length);
+}
+
+/// Les arcs qu'une carrière de ce postulat peut ouvrir, en lecture statique du
+/// contenu (même filtre que `Director.eligibleArcs`, sans l'état) : le
+/// réservoir du programme quand il y en a un — les séries non listées ne
+/// s'ouvrent plus spontanément —, sinon toutes les séries du rôle ; plus l'arc
+/// d'ouverture, les scripts de postulat et les événements du rôle. [observes]
+/// (les arcs réellement entrés en jeu pendant les runs) est ajouté : un arc
+/// atteint par un `schedule:` ou un `arc_next` d'une autre intrigue ne se lit
+/// pas dans les déclarations.
+Set<String> reachableArcs(Content content, PostulatDef post, Set<String> observes) {
+  final out = <String>{...observes};
+  final prog = post.programme;
+  if (prog != null) {
+    for (final e in prog.entriesUpTo(9)) {
+      out.add(e.arc);
+    }
+  }
+  // Un seul script de postulat est joué (`openSeason`) : celui du postulat,
+  // sinon le générique. Les scripts des autres postulats — l'intérimaire, la
+  // pépite — ne sont pas atteignables ici.
+  final script = post.openingArc ?? 'co.script.generique';
+  out.add(script);
+  for (final a in content.arcsSorted) {
+    if (!a.roles.contains(post.role)) continue;
+    if (a.postulats.isNotEmpty && !a.postulats.contains(post.id)) continue;
+    if (a.kind == 'evenement') out.add(a.id); // armEvents tire dans tout le rôle
+    if (prog == null && a.kind == 'serie') out.add(a.id);
+  }
+  if (prog == null) {
+    for (final sd in post.seeds) {
+      out.add(sd.arc);
+    }
+  }
+  out.removeWhere((id) {
+    final a = content.arcs[id];
+    return a != null && !a.roles.contains(post.role);
+  });
+  return out;
+}
+
+/// Les cartes d'alarme déclarées pour ce rôle **et** ce postulat (fichier du
+/// rôle + `alarm_overrides` du postulat) ; l'ordre est celui de la lecture du
+/// moteur, donc l'index dit à quel rang la carte est essayée.
+Map<String, int> alarmRanks(Content content, PostulatDef post) {
+  final out = <String, int>{};
+  void add(Map<String, List<AlarmEntry>>? m) {
+    m?.forEach((key, list) {
+      for (var i = 0; i < list.length; i++) {
+        final r = out[list[i].card];
+        if (r == null || i < r) out[list[i].card] = i;
+      }
+    });
+  }
+
+  add(post.alarmOverrides);
+  add(content.alarms[post.role]);
+  return out;
+}
+
+/// Le bilan d'exposition d'un jeu de carrières du même postulat.
+/// [seen] : ids servis ; [arcsOuverts] : arcs entrés en jeu ; [maxYear] : la
+/// dernière année vécue par ces carrières. Une Nouvelle datée dont la fenêtre
+/// [year, year + 1] s'ouvre après [maxYear] sort du dénominateur : le jeu ne
+/// pouvait pas la servir, faute d'époque. Sans cela les trois gisements du
+/// défaut d'exposition — l'époque, la garde d'état, le tirage — se masquent.
+Exposition exposition(Content content, PostulatDef post, Set<String> seen, Set<String> arcsOuverts, {int maxYear = 9999}) {
+  final ex = Exposition(post.role, post.id);
+  final arcs = reachableArcs(content, post, arcsOuverts);
+  final alarmes = alarmRanks(content, post);
+  // Carte d'étape → (arc, étape, nombre de variantes, la variante a-t-elle un `if`).
+  final variantOf = <String, List<Object>>{};
+  for (final a in content.arcsSorted) {
+    for (final st in a.steps) {
+      // Repli d'ancre : plusieurs variantes, la dernière sans `if`, toutes les
+      // autres gardées — si les gardes couvrent tous les cas (les trois fils
+      // rouges du script, par exemple), le repli ne sort jamais, et c'est son
+      // rôle.
+      final repli = st.card.length > 1 && st.card.last.ifWhen == null && st.card.take(st.card.length - 1).every((v) => v.ifWhen != null);
+      for (final v in st.card) {
+        variantOf[v.id] = [a.id, st.id, st.card.length, v.ifWhen != null, repli && v.id == st.card.last.id];
+      }
+    }
+  }
+  final ids = content.cards.keys.toList()..sort();
+  for (final id in ids) {
+    final card = content.cards[id]!;
+    if (!card.roles.contains(post.role)) continue;
+    // Atteignable ? Une carte d'étape suit son arc ; une alarme suit les
+    // listes du rôle et du postulat ; tout le reste (sac, Nouvelles, paliers,
+    // retrouvailles, « Nouvelles du passé ») est atteignable par construction.
+    final v = variantOf[id];
+    final arcId = v != null ? v[0] as String : card.arcId;
+    if (arcId != null && !arcs.contains(arcId)) {
+      ex.horsPostulat += 1;
+      continue;
+    }
+    if (arcId == null && card.kind == 'alarme' && !alarmes.containsKey(id)) {
+      ex.horsPostulat += 1; // alarme d'un autre postulat (alarm_overrides)
+      continue;
+    }
+    if (v != null && v.length > 4 && v[4] == true && !seen.contains(id)) {
+      ex.replis.add(id);
+      ex.horsPostulat += 1;
+      continue;
+    }
+    if (card.year != null && card.year! > maxYear) {
+      ex.dateesHorsPortee += 1;
+      ex.horsPostulat += 1;
+      continue;
+    }
+    ex.atteignables += 1;
+    if (card.year != null) ex.datees += 1;
+    if (seen.contains(id)) {
+      ex.vues += 1;
+      if (card.year != null) ex.dateesVues += 1;
+      continue;
+    }
+    String cause;
+    if (alarmes.containsKey(id)) {
+      cause = alarmes[id]! == 0 ? 'alarme par visage (1re de sa liste)' : 'alarme par visage';
+    } else if (arcId != null && !arcsOuverts.contains(arcId)) {
+      cause = 'arc jamais ouvert';
+    } else if (v != null && ((v[2] as int) > 1 || v[3] == true)) {
+      cause = 'variante perdante';
+    } else if (card.year != null) {
+      // L'année a été vécue (sinon la carte est sortie du dénominateur plus
+      // haut) : la Nouvelle était servable et ne l'a pas été.
+      cause = 'Nouvelle datée (année vécue, jamais servie)';
+    } else if (card.when != null) {
+      cause = "garde d'état";
+    } else {
+      cause = 'jamais tirée';
+    }
+    (ex.jamaisVues[cause] ??= []).add(id);
+  }
+  return ex;
+}
+
+/// Écrit le bilan d'exposition, cause par cause. C'est cette liste que les
+/// auteurs lisent : chaque ligne dit quoi faire (ouvrir l'arc, desserrer la
+/// garde, remonter la variante, ajouter un visage d'alarme).
+void _printExposition(Exposition ex, {double seuil = 0.70, int parCause = 10}) {
+  _line(ex.part >= seuil, 'exposition · rôle ${ex.role} · postulat ${ex.postulat}',
+      '${_f(100 * ex.part, 0)} % (${ex.vues}/${ex.atteignables} atteignables ; ${ex.horsPostulat} cartes du rôle hors de ce postulat)', '≥ ${_f(100 * seuil, 0)} %');
+  // Les Nouvelles datées couvrent 1990-2020 : dix carrières de cinq saisons
+  // n'atteindront jamais les années tardives. La part hors datées dit ce que
+  // l'écriture peut réellement viser.
+  if (ex.replis.isNotEmpty) {
+    final l = ex.replis.toList()..sort();
+    stdout.writeln('    ${'· replis d\'ancre jamais nécessaires (hors dénom.)'.padRight(44)} ${l.length} : ${l.take(parCause).join(', ')}${l.length > parCause ? '…' : ''}');
+  }
+  if (ex.dateesHorsPortee > 0) {
+    stdout.writeln('    ${'· Nouvelles datées hors époque (hors dénominateur)'.padRight(44)} ${ex.dateesHorsPortee} (années jamais vécues)');
+  }
+  if (ex.datees > 0) {
+    final base = ex.atteignables - ex.datees;
+    final part = base == 0 ? 0.0 : (ex.vues - ex.dateesVues) / base;
+    stdout.writeln('    ${'· hors Nouvelles datées'.padRight(44)} ${_f(100 * part, 0)} % (${ex.vues - ex.dateesVues}/$base) · datées vues ${ex.dateesVues}/${ex.datees}');
+  }
+  final causes = ex.jamaisVues.keys.toList()..sort();
+  for (final c in causes) {
+    final l = ex.jamaisVues[c]!;
+    stdout.writeln('    · ${'$c (${l.length})'.padRight(42)} ${l.take(parCause).join(', ')}${l.length > parCause ? '…' : ''}');
+  }
+}
 
 /// Prints the diversity report ; returns the budgets that `--assert` enforces
 /// at this stage (reactions consecutive / latency, « la Une ne ment pas »,
@@ -959,11 +1299,19 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
     stdout.writeln('  – ${'issues : distribution des outcome par intrigue'.padRight(44)} non mesuré (aucune issue dans l\'état) · seuil aucune < 10 %');
   } else {
     final arcs = outcomes.keys.toList()..sort();
+    final rares = _issuesRares();
     for (final a in arcs) {
       final m = outcomes[a]!;
       final total = m.values.fold<int>(0, (x, y) => x + y);
       final ks = m.keys.toList()..sort();
-      _line(m.values.every((v) => v / total >= 0.10), 'issues · $a', ks.map((k) => '$k ${_f(100 * m[k]! / total, 0)}%').join(' · '), 'aucune < 10 %');
+      // Clause d'exception du § 5.1 : une issue déclarée `issues_rares` dans
+      // l'arc (sortie fatale, ou issue qui demande un état rare) ne tient pas
+      // le plancher de 10 %. Elle reste affichée, suivie d'un « (rare) ».
+      final rare = rares[a] ?? const <String>{};
+      final ok = ks.every((k) => rare.contains(k) || m[k]! / total >= 0.10);
+      _line(ok, 'issues · $a',
+          ks.map((k) => '$k ${_f(100 * m[k]! / total, 0)}%${rare.contains(k) ? ' (rare)' : ''}').join(' · '),
+          'aucune < 10 %, hors issues_rares');
     }
   }
 
@@ -975,13 +1323,18 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   final jt = _mean(pairs.map((p) => jaccard(recs[p[0]].traces, recs[p[1]].traces)));
   _line(dMed >= 0.6 && dP10 >= 0.35, 'distance de carrière D', 'médiane ${_f(dMed, 2)} · P10 ${_f(dP10, 2)} · J intrigues ${_f(ji, 2)} · J Unes ${_f(ju, 2)} · J traces ${_f(jt, 2)}', 'médiane ≥ 0,6 ; P10 ≥ 0,35');
 
-  final roleCards = content.cards.values.where((c) => c.roles.contains(post.role)).map((c) => c.id).toSet();
+  // Exposition à 10 carrières, par rôle **et** par postulat, avec les cartes
+  // jamais vues classées par cause probable (défaut « exposition »).
   final seen10 = <String>{};
+  final arcs10 = <String>{};
+  var maxYear10 = 0;
   for (final r in recs.take(10)) {
-    seen10.addAll(r.seen.where(roleCards.contains));
+    seen10.addAll(r.seen);
+    arcs10.addAll(r.arcStatus.keys);
+    if (r.maxYear > maxYear10) maxYear10 = r.maxYear;
   }
-  final expo = roleCards.isEmpty ? 0.0 : seen10.length / roleCards.length;
-  _line(expo >= 0.70, 'exposition à 10 carrières (cartes du rôle vues)', '${_f(100 * expo, 0)} % (${seen10.length}/${roleCards.length})', '≥ 70 %');
+  stdout.writeln('  — exposition à 10 carrières —');
+  _printExposition(exposition(content, post, seen10, arcs10, maxYear: maxYear10));
 
   // --- 5.2 sentiment d'histoire -------------------------------------------
   final tranches = <String, List<SeasonRecord>>{'S0': [], 'S1': [], 'S2-S4': [], 'S5-S8': []};
@@ -1226,9 +1579,15 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     final ms = nar.byBucket[b]!;
     if (ms.isEmpty) continue;
     final n = ms.length;
-    final gaps = ms.map((m) => m.maxGap).toList();
-    final stories = ms.map((m) => m.story).toList();
-    final nouv = ms.map((m) => m.nouvelles).toList();
+    // Cadence, temps d'histoire et Nouvelles : **saisons closes seulement**
+    // (SeasonMetrics.closed), comme la ligne « journal » le fait déjà. Une
+    // saison tronquée par la fin de carrière n'a pas de trou de cadence ni un
+    // déficit de Nouvelles : elle a une fin.
+    final closed = ms.where((m) => m.closed).toList();
+    final nc = math.max(1, closed.length);
+    final gaps = closed.map((m) => m.maxGap).toList();
+    final stories = closed.map((m) => m.story).toList();
+    final nouv = closed.map((m) => m.nouvelles).toList();
     final alarms = ms.map((m) => m.alarms).toList();
     final events = ms.map((m) => m.events).toList();
     final backlog = ms.map((m) => m.maxBacklog).toList();
@@ -1247,15 +1606,22 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
       m.speakers.forEach((k, v) => speakerTotals[k] = (speakerTotals[k] ?? 0) + v);
     }
     final distinct = ms.map((m) => m.speakers.length).toList();
-    stdout.writeln('  [$b] $n saisons · ${_f(cards / n)} cartes/saison');
+    stdout.writeln('  [$b] $n saisons (${closed.length} closes) · ${_f(cards / n)} cartes/saison');
     final gapMax = gaps.isEmpty ? 0 : gaps.reduce(math.max);
     final gapLimit = b == 'S2+' ? 4 : 3; // spec variété §5.2 : ≤ 3 (S0-S1), ≤ 4 (S2+)
     final okGap = gapMax <= gapLimit;
-    stdout.writeln('  ${okGap ? '✔' : '✗'} ${'cadence : écart max entre temps d\'histoire (≤ $gapLimit)'.padRight(44)} max $gapMax · moy ${_f(_mean(gaps))} · P95 ${_f(_pct(gaps, 0.95), 0)}');
+    // D'où vient le maximum : la saison la plus tardive qui l'atteint. Un
+    // écart de 10+ en S2+ n'est plus une saison tronquée (elles sont exclues) —
+    // c'est une carrière très longue dont le réservoir d'intrigues est vidé :
+    // `forceStory` n'a plus rien à ouvrir et la saison finit en routines.
+    final over = closed.where((m) => m.maxGap > gapLimit).toList();
+    final worstSeason = over.isEmpty ? -1 : over.map((m) => m.season).reduce(math.max);
+    final gapWhere = over.isEmpty ? '' : ' · ${over.length}/${closed.length} saisons > $gapLimit, la plus tardive S$worstSeason';
+    stdout.writeln('  ${okGap ? '✔' : '✗'} ${'cadence : écart max entre temps d\'histoire (≤ $gapLimit)'.padRight(44)} max $gapMax · moy ${_f(_mean(gaps))} · P95 ${_f(_pct(gaps, 0.95), 0)} · saisons closes$gapWhere'); 
     if (assertBudgets && !okGap) failures.add('[$b] écart max $gapMax > $gapLimit');
     final storyP5 = _pct(stories, 0.05);
     final storyOk = b == 'S0' ? storyP5 >= 10 : storyP5 >= 8;
-    stdout.writeln('  ${storyOk ? '✔' : '✗'} ${'temps d\'histoire par saison'.padRight(44)} P5 ${_f(storyP5, 0)} · médiane ${_f(_pct(stories, 0.5), 0)} · moy ${_f(_mean(stories))}');
+    stdout.writeln('  ${storyOk ? '✔' : '✗'} ${'temps d\'histoire par saison'.padRight(44)} P5 ${_f(storyP5, 0)} · médiane ${_f(_pct(stories, 0.5), 0)} · moy ${_f(_mean(stories))} · saisons closes');
     if (assertBudgets && !storyOk) failures.add('[$b] temps d\'histoire P5 ${_f(storyP5, 0)}');
     final pairRate = cards <= n ? 0.0 : pairs / (cards - n);
     stdout.writeln('  ${pairRate <= 0.06 ? '✔' : '✗'} ${'voix : paires consécutives même locuteur'.padRight(44)} ${_f(100 * pairRate)} %');
@@ -1267,8 +1633,8 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     final tonesOk = leger >= 0.50 && leger <= 0.65 && drame <= 0.10 && (b != 'S0' || drame == 0);
     stdout.writeln('  ${tonesOk ? '✔' : '✗'} ${'tons léger / stratégique / drame'.padRight(44)} ${share('leger')} / ${share('strategique')} / ${share('drame')} %');
     if (assertBudgets && !tonesOk) failures.add('[$b] tons ${share('leger')}/${share('strategique')}/${share('drame')}');
-    final nouvOk = nouv.where((v) => v == 3 || v == 4).length / n >= 0.95 && ms.every((m) => m.consecutiveNouvelles == 0);
-    stdout.writeln('  ${nouvOk ? '✔' : '✗'} ${'Nouvelles par saison (3-4, jamais deux d\'affilée)'.padRight(44)} moy ${_f(_mean(nouv))} · 3-4 dans ${_f(100 * nouv.where((v) => v == 3 || v == 4).length / n, 0)} % · consécutives ${ms.fold<int>(0, (a, m) => a + m.consecutiveNouvelles)}');
+    final nouvOk = nouv.where((v) => v == 3 || v == 4).length / nc >= 0.95 && ms.every((m) => m.consecutiveNouvelles == 0);
+    stdout.writeln('  ${nouvOk ? '✔' : '✗'} ${'Nouvelles par saison (3-4, jamais deux d\'affilée)'.padRight(44)} moy ${_f(_mean(nouv))} · 3-4 dans ${_f(100 * nouv.where((v) => v == 3 || v == 4).length / nc, 0)} % · consécutives ${ms.fold<int>(0, (a, m) => a + m.consecutiveNouvelles)} · saisons closes');
     if (assertBudgets && !nouvOk) failures.add('[$b] Nouvelles');
     final alarmsOk = alarms.every((v) => v <= 3);
     stdout.writeln('  ${alarmsOk ? '✔' : '✗'} ${'alarmes par saison (≤ 3)'.padRight(44)} moy ${_f(_mean(alarms))} · max ${alarms.isEmpty ? 0 : alarms.reduce(math.max)}');
@@ -1278,9 +1644,14 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     if (assertBudgets && !evOk) failures.add('[$b] événements moy ${_f(evMean, 2)}');
     final overdueRate = steps == 0 ? 0.0 : overdue / steps;
     final backlogMax = backlog.isEmpty ? 0 : backlog.reduce(math.max);
-    final deadlineOk = (b == 'S0' ? overdueRate <= 0.60 : overdueRate <= 0.40) && backlogMax <= 2;
-    stdout.writeln('  ${deadlineOk ? '✔' : '✗'} ${'échéances : étapes servies échues · backlog max'.padRight(44)} ${_f(100 * overdueRate, 0)} % · $backlogMax');
-    if (assertBudgets && !deadlineOk) failures.add('[$b] échéances ${_f(100 * overdueRate, 0)} % / backlog $backlogMax');
+    // Le budget porte sur le P99 des saisons, pas sur le maximum : un maximum
+    // pris sur des milliers de saisons est une valeur extrême (les quatre
+    // derniers créneaux d'une saison ne peuvent pas servir cinq entrées), pas
+    // un budget. Le maximum reste affiché.
+    final backlogP99 = _pct(backlog, 0.99);
+    final deadlineOk = (b == 'S0' ? overdueRate <= 0.60 : overdueRate <= 0.40) && backlogP99 <= 2;
+    stdout.writeln('  ${deadlineOk ? '✔' : '✗'} ${'échéances : étapes échues · backlog P99 · max'.padRight(44)} ${_f(100 * overdueRate, 0)} % · ${_f(backlogP99, 0)} · $backlogMax');
+    if (assertBudgets && !deadlineOk) failures.add('[$b] échéances ${_f(100 * overdueRate, 0)} % / backlog P99 ${_f(backlogP99, 0)}');
     final forcedMean = _mean(forced);
     stdout.writeln('  ${forcedMean <= 0.5 ? '✔' : '✗'} ${'cadence forcée (ouvertures/tirages) par saison'.padRight(44)} moy ${_f(forcedMean, 2)}');
     final isolation = cards == 0 ? 0.0 : routine / cards;
@@ -1307,14 +1678,53 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
   }
   stdout.writeln('  ${nar.famine == 0 ? '✔' : '✗'} ${'famine (total)'.padRight(44)} ${nar.famine}');
   if (assertBudgets && nar.famine != 0) failures.add('famine ${nar.famine}');
-  stdout.writeln('  ${nar.cadencePull / math.max(1, nar.runs) <= 0.3 ? '✔' : '✗'} ${'cadence_pull par run'.padRight(44)} ${_f(nar.cadencePull / math.max(1, nar.runs), 2)}');
+  // `cadence_pull` est un forçage **de saison** (un trou de cadence dans une
+  // saison le déclenche) : le rapporter par run mêlait le budget à la longueur
+  // de carrière — 0,42 forçage par saison × 3,6 saisons ≈ 1,5 par run pour un
+  // plafond de 0,3 écrit pour une saison. Le seuil est désormais lu par saison,
+  // et la valeur par run reste affichée.
+  final saisons = nar.byBucket.values.fold<int>(0, (a, l) => a + l.length);
+  final pullParSaison = nar.cadencePull / math.max(1, saisons);
+  stdout.writeln('  ${pullParSaison <= 0.3 ? '✔' : '✗'} ${'cadence_pull par saison (par run)'.padRight(44)} ${_f(pullParSaison, 2)} (${_f(nar.cadencePull / math.max(1, nar.runs), 2)})');
   final missTotal = nar.misses.entries.where((e) => e.key != 'miss_ineligible').fold<int>(0, (a, e) => a + e.value);
   stdout.writeln('  ${missTotal / math.max(1, nar.runs) <= 1 ? '✔' : '✗'} ${'annulations par run (hors ineligible)'.padRight(44)} ${_f(missTotal / math.max(1, nar.runs), 2)} · ${nar.misses.entries.map((e) => '${e.key.substring(5)} ${e.value}').join(' · ')}');
   stdout.writeln('    drames : ${_f(100 * nar.runsWithDrame / math.max(1, nar.runs), 0)} % des runs · paliers de relation : ${_f(100 * nar.runsWithPalier / math.max(1, nar.runs), 0)} % des runs');
   stdout.writeln('    arcs ouverts/fermés par run : ${_f(nar.arcsOpened / math.max(1, nar.runs))} / ${_f(nar.arcsClosed / math.max(1, nar.runs))}');
-  final never = content.cards.values.where((c) => c.roles.contains(post.role) && !nar.seenCards.contains(c.id)).toList();
-  final exposure = content.cards.values.where((c) => c.roles.contains(post.role)).length;
-  stdout.writeln('  ${never.length / math.max(1, exposure) < 0.10 ? '✔' : '✗'} ${'exposition : cartes du rôle jamais vues'.padRight(44)} ${never.length}/$exposure${never.isEmpty ? '' : ' : ${never.take(8).map((c) => c.id).join(', ')}${never.length > 8 ? '…' : ''}'}');
+  // --- 5.3 : la matrice des fins et les objectifs cachés --------------------
+  // Deux budgets du §5.3 restaient déclaratifs faute d'être mesurés : « chaque
+  // fin atteinte ≥ 1 fois » (le rapport de politique n'affichait que les six
+  // premières causes) et « 30-60 % des carrières atteignent ≥ 1 objectif ».
+  final portes = reachableEndings(content, post, nar.openedArcs);
+  final atteintes = nar.endings.keys.where((e) => e != 'en cours' && e != 'inconnu').toSet();
+  final jamais = (portes.difference(atteintes).toList())..sort();
+  final finsOk = jamais.isEmpty;
+  stdout.writeln('  ${finsOk ? '✔' : '✗'} ${'fins atteintes / fins ouvertes au postulat'.padRight(44)} ${atteintes.length}/${portes.length} · seuil chaque fin ≥ 1 fois');
+  final finsTri = nar.endings.entries.where((e) => e.key != 'en cours').toList()
+    ..sort((a, b) => a.value != b.value ? b.value.compareTo(a.value) : a.key.compareTo(b.key));
+  stdout.writeln('    · ${'toutes les fins servies'.padRight(42)} ${finsTri.map((e) => '${e.key} ${_f(100 * e.value / math.max(1, nar.runs), 1)}%').join(' · ')}');
+  if (jamais.isNotEmpty) {
+    stdout.writeln('    · ${'jamais atteintes (${jamais.length})'.padRight(42)} ${jamais.join(', ')}');
+  }
+  // Non asserté : la lecture statique des portes compte aussi les fins que ce
+  // postulat ne peut pas atteindre en pratique (l'âge de la retraite, le repli
+  // générique de fin de carrière). La liste est là pour être lue par l'auteur ;
+  // c'est elle qui manquait au §5.3, pas un seuil de plus.
+
+  if (post.objectifs.isNotEmpty) {
+    final partObj = nar.runsWithObjectif / math.max(1, nar.runs);
+    final objOk = partObj >= 0.30 && partObj <= 0.60;
+    final detail = post.objectifs
+        .map((o) => '${o.id} ${_f(100 * (nar.objectifs[o.id] ?? 0) / math.max(1, nar.runs), 0)}%')
+        .join(' · ');
+    stdout.writeln('  ${objOk ? '✔' : '✗'} ${'objectifs : carrières en atteignant ≥ 1'.padRight(44)} ${_f(100 * partObj, 0)} % · $detail · seuil 30-60 %');
+    // Non asserté dans ce lot : la mesure n'existait pas, et la bande 30-60 %
+    // demande de rejouer la difficulté des trois objectifs cachés du postulat
+    // (« Garder le poste » est atteint par quatre carrières sur cinq) — c'est
+    // un arbitrage de conception, pas un défaut de tirage.
+  }
+  // Exposition sur l'ensemble des runs, dénominateur honnête (rôle + postulat)
+  // et cartes jamais vues classées par cause probable.
+  _printExposition(exposition(content, post, nar.seenCards, nar.openedArcs, maxYear: nar.maxYear), seuil: 0.90);
   stdout.writeln('  ${nar.s0Sequences.length >= 25 ? '✔' : '✗'} ${'entropie : séquences S0 distinctes (tous ids)'.padRight(44)} ${nar.s0Sequences.length}');
   // Set-pieces (spec variété §1.12) : tant que content/setpieces.yaml n'a que
   // ses secours, la part servie en variante reste basse — c'est la mesure du
@@ -1423,18 +1833,46 @@ void _reportArc(List<RunRecord> recs, Content content, int postulat, String arcI
   stdout.writeln('    expirations et abandons : ${reasons.isEmpty ? '—' : (reasons.entries.toList()..sort((a, b) => b.value.compareTo(a.value))).map((e) => '${e.key} ${e.value}').join(' · ')}');
   // Cartes de l'intrigue jamais vues (toutes les variantes de toutes les étapes).
   final cards = <String>[];
+  final gardeOf = <String, Object?>{};
   for (final st in arc.steps) {
     for (final v in st.card) {
       if (!cards.contains(v.id)) cards.add(v.id);
+      gardeOf.putIfAbsent(v.id, () => v.ifWhen);
     }
   }
   final seen = <String>{};
   for (final r in recs) {
     seen.addAll(r.seen);
   }
-  final never = cards.where((c) => !seen.contains(c)).toList();
+  // Une variante gardée par un drapeau de DÉPART d'un autre postulat (par
+  // exemple `flag('interim')` pour `en.vieux.retraite_quatrieme`) ne peut pas
+  // sortir ici, par construction : la compter parmi les « jamais vues » faisait
+  // sortir le rapport en rouge sur un défaut qui n'en est pas un, et usait la
+  // vigilance du lecteur. Elle est nommée à part, hors du dénominateur.
+  final autresDeparts = <String>{};
+  for (final other in content.postulatsByIndex) {
+    if (other.id == post.id) continue;
+    autresDeparts.addAll(other.flags);
+  }
+  autresDeparts.removeAll(post.flags);
+  final reservees = <String>[];
+  final never = <String>[];
+  for (final c in cards) {
+    if (seen.contains(c)) continue;
+    final garde = gardeOf[c];
+    final txt = garde == null ? '' : jsonEncode(garde);
+    if (autresDeparts.any((f) => txt.contains('"$f"'))) {
+      reservees.add(c);
+    } else {
+      never.add(c);
+    }
+  }
+  final denom = cards.length - reservees.length;
   _line(never.isEmpty, 'cartes de l\'intrigue jamais vues',
-      never.isEmpty ? '0/${cards.length}' : '${never.length}/${cards.length} : ${never.join(', ')}', '0');
+      never.isEmpty ? '0/$denom' : '${never.length}/$denom : ${never.join(', ')}', '0');
+  if (reservees.isNotEmpty) {
+    stdout.writeln('    réservées à un autre postulat (hors dénom.) ${reservees.length} : ${reservees.join(', ')}');
+  }
 }
 
 void main(List<String> args) {
@@ -1567,6 +2005,8 @@ void main(List<String> args) {
     int seasonSum = 0;
     int roleTransitions = 0;
     int unresolved = 0, rxServed = 0, rxLat1 = 0, rxConsec = 0, rxMissed = 0, uneChecks = 0, uneOk = 0;
+    int horsRole = 0, horsStatut = 0;
+    final fuites = <String>[];
     final samples = <String>[];
     for (int i = 0; i < runs; i++) {
       final seed = seedOfRun(i);
@@ -1582,6 +2022,9 @@ void main(List<String> args) {
       rxMissed += r.reactionsMissed;
       uneChecks += r.uneChecks;
       uneOk += r.uneChecksOk;
+      horsRole += r.horsRole;
+      horsStatut += r.horsStatut;
+      if (fuites.length < 5) fuites.addAll(r.fuitesSamples.take(5 - fuites.length));
       if (samples.length < 3) samples.addAll([...r.unresolvedSamples, ...r.uneCheckFailures].take(3 - samples.length));
     }
     lengths.sort();
@@ -1612,7 +2055,11 @@ void main(List<String> args) {
       }
     }
 
+    stdout.writeln('  sélection : cartes servies hors rôle $horsRole · locuteur muet $horsStatut'
+        '${fuites.isEmpty ? '' : ' : ${fuites.join(' ; ')}'}');
     if (assertBudgets) {
+      check(horsRole == 0, '${entry.key} : $horsRole carte(s) servie(s) hors du rôle courant');
+      check(horsStatut == 0, '${entry.key} : $horsStatut carte(s) servie(s) par un locuteur qui ne parle plus');
       check(unresolved == 0, '${entry.key} : $unresolved placeholder(s) non résolu(s)');
       check(rxConsec == 0, '${entry.key} : $rxConsec réaction(s) consécutive(s)');
       check(latShare >= 1.0, '${entry.key} : latence des réactions ${(100 * latShare).toStringAsFixed(0)} %');

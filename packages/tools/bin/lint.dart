@@ -671,13 +671,19 @@ void main() {
     }
   }
 
-  // Toute fin doit avoir une porte : une fin de jauge, ou la cible d'au moins un
-  // `end:` (n'importe où dans le bundle : carte, set-piece, étape d'arc). Le
-  // champ `cause:` d'une fin est documentaire — le moteur ne le lit pas
-  // (`Engine._checkEndings` ne connaît que parole ≤ −5, la jauge à 0/100 et
-  // l'effet `end:`) : une fin sans porte est inatteignable et compte quand même
-  // au Cimetière. `generique` est le repli du moteur (engine.dart), pas une
-  // fin écrite : elle est exemptée.
+  // Toute fin doit avoir une **porte**, et son champ `cause:` doit dire
+  // laquelle. Trois portes existent, et trois seulement (`Engine._checkEndings`
+  // et `_applyEffects`) :
+  //   * la jauge à 0 / 100, déclarée dans roles.yaml (`cause: jauge`) ;
+  //   * l'effet `end:` d'un choix, d'une variante de set-piece ou d'une étape
+  //     d'arc (toute autre `cause:` — choix, chaîne, objectif, destin, âge…) ;
+  //   * le moteur lui-même, en Dart : `grand_deballage` (parole ≤ −5),
+  //     `jubile` (joueur de 38 ans), `en_retraite` (entraîneur de 65 ans) et
+  //     `generique` (le repli de fin de carrière). Ces quatre-là ne s'écrivent
+  //     pas en contenu : elles sont exemptées, `cause:` comprise.
+  // Une fin sans porte est inatteignable et compte quand même au Cimetière :
+  // c'est une ERREUR, pas un avertissement — le dépôt refuse une fin orpheline.
+  const enginePosed = {'generique', 'grand_deballage', 'jubile', 'en_retraite'};
   final endsTargeted = <String>{};
   void collectEnds(Object? node) {
     if (node is Map) {
@@ -694,10 +700,23 @@ void main() {
   }
 
   collectEnds(bundle);
-  for (final e in endingIds) {
-    if (e == 'generique') continue;
-    if (gaugeEndings.contains(e) || endsTargeted.contains(e)) continue;
-    warnings.add('fin « $e » sans porte : ni fin de jauge, ni cible d\'un `end:` (le champ `cause:` n\'est lu par personne)');
+  for (final e in (bundle['endings'] as List).cast<Map<String, dynamic>>()) {
+    final eid = e['id'].toString();
+    if (enginePosed.contains(eid)) continue;
+    final cause = e['cause']?.toString();
+    final parJauge = gaugeEndings.contains(eid);
+    final parEnd = endsTargeted.contains(eid);
+    if (!parJauge && !parEnd) {
+      errors.add('fin « $eid » sans porte : ni fin de jauge (roles.yaml), ni cible d\'un `end:`'
+          '${cause == null ? '' : ' — elle se déclare pourtant « cause: $cause »'}');
+      continue;
+    }
+    // Le champ `cause:` est lu : il doit désigner la porte qui existe.
+    if (cause == 'jauge' && !parJauge) {
+      errors.add('fin « $eid » : « cause: jauge » mais aucune jauge de roles.yaml ne la pose');
+    } else if (cause != null && cause != 'jauge' && !parEnd) {
+      errors.add('fin « $eid » : « cause: $cause » demande un `end: $eid` (carte, set-piece ou étape) ; seule une jauge la pose');
+    }
   }
 
   stdout.writeln('Lint : ${cards.length} cartes, ${arcs.length} arcs, ${errors.length} erreurs, ${warnings.length} avertissements.');

@@ -102,8 +102,14 @@ class Director {
   String resolveVariant(StepDef st, EvalContext c) {
     for (final v in st.card) {
       if (v.ifWhen != null && !evalWhen(v.ifWhen, c)) continue;
-      if (!speakerOk(c.state, content.cards[v.id], step: st)) continue;
+      if (!servable(c.state, content.cards[v.id], step: st)) continue;
       return v.id;
+    }
+    // Secours : la dernière variante qui joue au moins le rôle courant. Une
+    // carte d'un autre rôle n'est jamais mise en file, même en dernier recours.
+    for (final v in st.card.reversed) {
+      final card = content.cards[v.id];
+      if (card != null && roleOk(c.state, card)) return v.id;
     }
     return st.card.last.id;
   }
@@ -126,6 +132,24 @@ class Director {
     if (kStatutsParlants.contains(st)) return true;
     return card.statutOk.contains(st) || (step?.statutOk.contains(st) ?? false);
   }
+
+  /// La carte joue-t-elle le rôle courant ? (`roles:` vide = tous les rôles.)
+  /// Le sac (`Content.poolCards`) est indexé par rôle ; partout ailleurs — une
+  /// alarme, une Nouvelle, un palier, des retrouvailles, une réaction, une
+  /// variante d'étape — c'est ce filtre qui empêche la carte d'un rôle d'être
+  /// servie dans l'autre.
+  bool roleOk(GameState s, Card card) => card.roles.isEmpty || card.roles.contains(s.role);
+
+  /// La carte est-elle servable ici et maintenant : le rôle **et** le statut
+  /// du locuteur (spec variété §1.10). Aucun chemin de sélection ne sert une
+  /// carte qui échoue à ce test — c'est l'invariant que `simulate --assert`
+  /// vérifie sur chaque carte servie.
+  bool servable(GameState s, Card? card, {StepDef? step}) =>
+      card != null && roleOk(s, card) && speakerOk(s, card, step: step);
+
+  /// L'étape de l'entrée de file, quand elle en a une (pour lire son
+  /// `statut_ok:`).
+  StepDef? stepOf(Scheduled sc) => sc.arc == null ? null : content.arcs[sc.arc]?.stepById(sc.step ?? '');
 
   bool drameAllowed(GameState s) => s.season >= 1 && !s.lastWasDrame && s.drames < 1;
 
@@ -220,10 +244,22 @@ class Director {
     String? lost;
     if (card == null) {
       lost = 'inconnue';
+    } else if (!roleOk(s, card)) {
+      // Une réplique écrite pour l'autre rôle (la carrière a changé de métier
+      // entre le swipe qui l'a posée et le tirage qui la sert).
+      lost = 'role';
+    } else if (!speakerOk(s, card, step: rx.arc == null ? null : content.arcs[rx.arc]?.stepById(rx.step ?? ''))) {
+      // Le visage est parti / vendu / mort depuis le swipe (spec variété §1.10).
+      lost = 'statut';
     } else if (s.reactionsThisSeason >= q.reactionsMax) {
       lost = 'plafond';
     } else if (s.lastWasReaction) {
       lost = 'double';
+    } else if (voixSaturee(s, card.speaker)) {
+      // Garde de voix : la réaction ne fait pas une troisième carte d'affilée
+      // du même visage (l'ancre, sa réaction et les retrouvailles tombaient
+      // toutes sur Josiane à l'ouverture de saison).
+      lost = 'voix';
     } else if (card.once && (s.seenCount[card.id] ?? 0) > 0) {
       lost = 'deja_vue';
     } else if (!evalWhen(card.when, ctx(s, phase, card: card))) {
@@ -288,7 +324,9 @@ class Director {
     for (final id in faces.take(2)) {
       final rel = s.relations[id] ?? 0;
       final cardId = content.characters[id]?.retrouvailles[rel >= 0 ? 'sourire' : 'noir'];
-      if (cardId == null || !content.cards.containsKey(cardId)) continue;
+      if (cardId == null) continue;
+      // Même filtre que le sac : le rôle courant et le statut du visage.
+      if (!servable(s, content.cards[cardId])) continue;
       if (s.scheduled.any((sc) => sc.card == cardId)) continue;
       enqueue(
         s,
@@ -354,6 +392,11 @@ class Director {
         miss(s, sc, 'inconnue', c);
         continue;
       }
+      // `purge` a déjà écarté les entrées hors rôle ou dont le locuteur s'est
+      // tu, mais `armEvents`, `maintainArcs` et `forceStory` arment après elle :
+      // une entrée posée à ce tirage est vérifiée ici avant d'être servie. Elle
+      // reste en file — la purge du tirage suivant écrit la raison.
+      if (!servable(s, card, step: stepOf(sc))) continue;
       if (card.tone == 'drame' && !drameAllowed(s)) {
         if (n >= sc.deadlineN) {
           sc.deadlineN = n + 1;
@@ -383,8 +426,9 @@ class Director {
     int byHardOrder(_Hard a, _Hard b) {
       if (a.band != b.band) return b.band.compareTo(a.band);
       if (a.sc.deadlineN != b.sc.deadlineN) return a.sc.deadlineN.compareTo(b.sc.deadlineN);
-      final sa = a.card.speaker != null && a.card.speaker == s.lastSpeaker ? 1 : 0;
-      final sb = b.card.speaker != null && b.card.speaker == s.lastSpeaker ? 1 : 0;
+      int voix(Card k) => voixSaturee(s, k.speaker) ? 2 : (k.speaker != null && k.speaker == s.lastSpeaker ? 1 : 0);
+      final sa = voix(a.card);
+      final sb = voix(b.card);
       if (sa != sb) return sa.compareTo(sb);
       if (a.sc.dueN != b.sc.dueN) return a.sc.dueN.compareTo(b.sc.dueN);
       return a.sc.seq.compareTo(b.sc.seq);
@@ -420,39 +464,80 @@ class Director {
       return serve(s, alarms.first.sc, phase, rng, band: 3);
     }
 
-    // 4. Breathing: a reserved Nouvelle that is due (or owed), or wanted by tension.
-    final reserved = q.nouvelleSlotsFor(s.role);
-    final owed = reserved.where((k) => k <= s.slot).length - s.nouvellesThisSeason;
-    final wantBreath = s.tension >= 2 && s.nouvellesThisSeason < reserved.length + 1;
-    // Never two Nouvelles in a row (budget): a debt is carried to the next slot.
-    if ((owed > 0 || wantBreath) && s.lastTheme != 'nouvelle') {
-      final nv = pickNouvelle(s, c, rng);
-      if (nv != null) return serve(s, null, phase, rng, band: 1, card: nv);
-    }
-
-    // 5. Steps inside their window (band 2): weighted.
+    // 4. Les étapes en fenêtre (bande 2), rassemblées avant la Nouvelle : une
+    //    étape **urgente** — à une carte de son échéance, donc échue au tirage
+    //    suivant — passe devant la Nouvelle réservée et gagne seule le tirage
+    //    de bande 2. Correctif « échéances » : depuis que les réservoirs sont
+    //    pleins, la file se remplissait plus vite qu'elle ne se vidait (41-48 %
+    //    des étapes de S1+ sortaient en bande 6, backlog jusqu'à 5). Deux
+    //    leviers, tous deux gardés par l'urgence, donc sans effet tant que la
+    //    file respire : la Nouvelle cède le créneau et garde sa dette (comme
+    //    devant la cadence forcée, §2 ci-dessus), et les deux suspensions
+    //    (tension, quota `soft_steps_max`) ne s'appliquent plus à une étape qui
+    //    n'a plus de créneau devant elle. Zéro aléa ajouté : le tirage de
+    //    bande 2 reste un unique `weightedIndex`.
     final soft = <Scheduled>[];
     final softW = <double>[];
+    var urgentOnly = false;
     for (final sc in _sortedQueue(s)) {
       if (!_softKinds.contains(sc.kind)) continue;
       if (sc.dueN > n || n >= sc.deadlineN) continue;
       final card = content.cards[sc.card];
-      if (card == null) continue;
+      if (card == null || !servable(s, card, step: stepOf(sc))) continue;
       if (card.tone == 'drame' && !drameAllowed(s)) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
-      if (s.tension >= 2 && card.tone != 'leger') continue;
-      if (sc.kind == 'etape' && s.softStepsThisSeason >= q.softStepsMax) continue;
+      final urgent = n + 1 >= sc.deadlineN;
+      // Garde de voix : seule une étape urgente (échue au tirage suivant) peut
+      // faire une troisième carte d'affilée du même locuteur.
+      if (!urgent && voixSaturee(s, card.speaker)) continue;
+      if (!urgent) {
+        if (urgentOnly) continue;
+        if (s.tension >= 2 && card.tone != 'leger') continue;
+        if (sc.kind == 'etape' && s.softStepsThisSeason >= q.softStepsMax) continue;
+      } else if (!urgentOnly) {
+        // La première urgente vide la liste : elle ne partage plus le tirage.
+        urgentOnly = true;
+        soft.clear();
+        softW.clear();
+        lastCandidates.removeWhere((x) => x.band == 2);
+      }
       final w = _arcWeight(sc) * _urgency(sc, n) * _continuity(s, sc, card) * faceFactor(s, card.speaker);
       soft.add(sc);
       softW.add(w);
       lastCandidates.add(Candidate(2, card.id, w));
     }
+
+    // 5. Breathing: a reserved Nouvelle that is due (or owed), or wanted by
+    //    tension — sauf si une étape urgente attend le créneau.
+    final reserved = q.nouvelleSlotsFor(s.role);
+    // Plafond de la bande 3-4 (budget § 5.2) : la dette et la respiration
+    // s'arrêtent à `nouvelles_max`, quel que soit le nombre de créneaux
+    // réservés — quatre créneaux plus une respiration en servaient cinq.
+    final cap = q.nouvellesMax;
+    final owed = math.min(reserved.where((k) => k <= s.slot).length, cap) - s.nouvellesThisSeason;
+    final wantBreath = s.tension >= 2 && s.nouvellesThisSeason < math.min(reserved.length + 1, cap);
+    // Never two Nouvelles in a row (budget): a debt is carried to the next slot.
+    // Correctif « Nouvelles par saison » (§ 5.2, budget 3-4) : la Nouvelle
+    // réservée cédait le créneau à toute étape urgente, et la S0 — la saison
+    // la plus chargée en ancres et en étapes, 16 temps d'histoire médians sur
+    // 17 créneaux — n'en servait plus que 1,8, laissant le monde de 1990 hors
+    // de la saison que tout le monde joue. Quand DEUX créneaux réservés ont
+    // déjà été manqués (la dette est de 2 sur 3), la Nouvelle passe devant
+    // l'étape urgente : l'étape glisse d'un créneau et sort en bande 6 au
+    // tirage suivant. Tant que la dette reste à 1, rien ne change.
+    final passeDevantUrgente = owed >= 2;
+    if ((!urgentOnly || passeDevantUrgente) && (owed > 0 || wantBreath) && s.lastTheme != 'nouvelle') {
+      final nv = pickNouvelle(s, c, rng);
+      if (nv != null) return serve(s, null, phase, rng, band: 1, card: nv);
+    }
+
+    // 6. Steps inside their window (band 2): weighted.
     if (soft.isNotEmpty) {
       final i = rng.weightedIndex(softW);
       if (i >= 0) return serve(s, soft[i], phase, rng, band: 2);
     }
 
-    // 6. Routine (band 0), then anti-famine fallbacks.
+    // 7. Routine (band 0), then anti-famine fallbacks.
     final card = pickPool(s, phase, c, rng);
     if (card != null) return serve(s, null, phase, rng, band: 0, card: card);
     final nv = pickNouvelle(s, c, rng);
@@ -478,6 +563,20 @@ class Director {
 
   /// "Face debt": a cast character who has not been seen for longer than his
   /// expected interval gets more likely (bounded ×0.5..×2).
+  /// Garde de voix (spec variété §5.2) : jamais plus de **deux cartes
+  /// consécutives** du même locuteur, réactions comprises. Vrai quand `sp` a
+  /// déjà parlé sur la carte précédente **et** sur la précédente carte parlée
+  /// avant elle : une troisième d'affilée est écartée. Sans cette garde,
+  /// l'ouverture de saison empilait l'ancre, sa réaction, les retrouvailles et
+  /// le palier de relation du même visage (Josiane cinq cartes de suite), ce
+  /// qui tenait ensemble les trois budgets manqués : paires de même locuteur,
+  /// isolement de la S0 et bande de tons de la S1.
+  bool voixSaturee(GameState s, String? sp) {
+    if (sp == null || s.lastSpeaker != sp) return false;
+    final r = s.recentSpeakers;
+    return r.length >= 2 && r[r.length - 2] == sp;
+  }
+
   double faceFactor(GameState s, String? ch) {
     if (ch == null) return 1.0;
     final post = content.postulats[s.postulatId];
@@ -517,7 +616,7 @@ class Director {
       final card = content.cards[sc.card];
       if (card == null) {
         miss(s, sc, 'inconnue', c);
-      } else if (card.roles.isNotEmpty && !card.roles.contains(s.role)) {
+      } else if (!roleOk(s, card)) {
         miss(s, sc, 'role', c);
       }
     }
@@ -538,10 +637,10 @@ class Director {
       }
       if (card == null) {
         miss(s, sc, 'inconnue', c);
-      } else if (card.roles.isNotEmpty && !card.roles.contains(s.role)) {
+      } else if (!roleOk(s, card)) {
         // La carte ne joue pas le rôle courant : l'entrée armée tombe.
         miss(s, sc, 'role', c);
-      } else if (!speakerOk(s, card, step: content.arcs[sc.arc]?.stepById(sc.step ?? ''))) {
+      } else if (!speakerOk(s, card, step: stepOf(sc))) {
         // Le locuteur vient de changer de statut : l'entrée armée tombe.
         miss(s, sc, 'statut', c);
       } else if (card.once && (s.seenCount[card.id] ?? 0) > 0) {
@@ -586,6 +685,10 @@ class Director {
         for (final e in cands) {
           final card = content.cards[e.card];
           if (card == null) continue;
+          // Le chemin des alarmes filtrait le statut mais pas le rôle : une
+          // alarme écrite pour le joueur sonnait dans la carrière d'un
+          // entraîneur (mesuré en trace).
+          if (!roleOk(s, card)) continue;
           if (!speakerOk(s, card)) continue;
           if (e.when != null && !evalWhen(e.when, c.withCard(card))) continue;
           if (!evalWhen(card.when, c.withCard(card))) continue;
@@ -703,6 +806,12 @@ class Director {
       if (a.kind != 'serie' || !a.roles.contains(s.role)) continue;
       if (a.postulats.isNotEmpty && !a.postulats.contains(s.postulatId)) continue;
       final st = s.arcs[a.id];
+      // Un rituel (`every_season`, `replay: ritual`) encore ARMÉ ou ACTIF n'est
+      // pas rejouable : sans ce garde-fou, `forceStory` ré-armait Gigi au
+      // milieu de sa propre saison — la retraite annoncée deux fois en dix
+      // cartes, `plays` bloqué à 0 et l'escalier `_encore` / `_vrai` jamais
+      // atteint. `replayable` porte la règle ; on la lit ici aussi.
+      if (st != null && (st.status == 'armed' || st.status == 'active')) continue;
       if (st != null && !(a.isEverySeason && st.doneSeason != s.season)) continue;
       if (!evalWhen(a.when, c)) continue;
       out.add(a);
@@ -805,6 +914,15 @@ class Director {
     );
   }
 
+  /// La dernière entrée mise en file, si elle est servable (rôle et statut) ;
+  /// null sinon — l'ouverture reste armée et la purge du tirage suivant écrit
+  /// la raison de sa chute.
+  Scheduled? _lastIfServable(GameState s) {
+    if (s.scheduled.isEmpty) return null;
+    final sc = s.scheduled.last;
+    return servable(s, content.cards[sc.card], step: stepOf(sc)) ? sc : null;
+  }
+
   /// Called when too many cards went by without a story beat.
   Scheduled? forceStory(GameState s, EvalContext c, Rng rng) {
     final n = s.ncards;
@@ -817,7 +935,7 @@ class Director {
     for (final sc in _sortedQueue(s)) {
       if (!_softKinds.contains(sc.kind) || sc.dueN < 0 || sc.dueN > n || n >= sc.deadlineN) continue;
       final card = content.cards[sc.card];
-      if (card == null) continue;
+      if (card == null || !servable(s, card, step: stepOf(sc))) continue;
       if (card.tone == 'drame' && !drameAllowed(s)) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
       soft.add(sc);
@@ -845,8 +963,11 @@ class Director {
         s.stats['reserve_forcee'] = (s.stats['reserve_forcee'] ?? 0) + 1;
         armArc(s, fromReserve, c, dueN: n, deadlineN: n + math.max(1, fromReserve.startMax - fromReserve.startMin));
         _noteOpening(s, fromReserve, s.slot);
-        lastForceKind = 'open';
-        return s.scheduled.isEmpty ? null : s.scheduled.last;
+        final opened = _lastIfServable(s);
+        if (opened != null) {
+          lastForceKind = 'open';
+          return opened;
+        }
       }
       if (el.isNotEmpty) {
         final i = rng.weightedIndex(el.map((a) => a.weight).toList());
@@ -854,8 +975,11 @@ class Director {
           final a = el[i];
           armArc(s, a, c, dueN: n, deadlineN: n + math.max(1, a.startMax - a.startMin));
           _noteOpening(s, a, s.slot);
-          lastForceKind = 'open';
-          return s.scheduled.isEmpty ? null : s.scheduled.last;
+          final opened = _lastIfServable(s);
+          if (opened != null) {
+            lastForceKind = 'open';
+            return opened;
+          }
         }
       }
     }
@@ -865,7 +989,8 @@ class Director {
       if (sc.kind != 'etape' && sc.kind != 'chaine') continue;
       if (sc.dueN <= n) continue;
       final card = content.cards[sc.card];
-      if (card == null || !evalWhen(card.when, c.withCard(card))) continue;
+      if (card == null || !servable(s, card, step: stepOf(sc))) continue;
+      if (!evalWhen(card.when, c.withCard(card))) continue;
       if (best == null || sc.dueN < best.dueN || (sc.dueN == best.dueN && sc.seq < best.seq)) best = sc;
     }
     if (best != null) {
@@ -906,7 +1031,7 @@ class Director {
       final last = s.cooldowns[card.id];
       if (last != null && card.once) continue;
       if (last != null && n - last < card.cooldown) continue;
-      if (!speakerOk(s, card)) continue;
+      if (!servable(s, card)) continue;
       final retorse = card.tags.contains('retorse');
       if (retorse && s.pression < 4) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
@@ -916,6 +1041,7 @@ class Director {
       if (last != null && n - last < 15) w *= 0.1;
       if (card.arc == s.lastTheme) w *= 0.5;
       final sp = card.speaker;
+      if (voixSaturee(s, sp)) continue; // garde de voix : jamais trois d'affilée
       if (sp != null) {
         if (sp == s.lastSpeaker) w *= 0.5;
         w *= faceFactor(s, sp);
@@ -960,7 +1086,8 @@ class Director {
       final last = s.cooldowns[card.id];
       if (last != null && card.once) continue;
       if (last != null && n - last < card.cooldown) continue;
-      if (!speakerOk(s, card)) continue;
+      if (!servable(s, card)) continue;
+      if (voixSaturee(s, card.speaker)) continue; // garde de voix
       if (!evalWhen(card.when, c.withCard(card))) continue;
       final year = card.year;
       if (year != null) {
@@ -1025,7 +1152,7 @@ class Director {
     }
     if (sc.fallback == 'nouvelles' &&
         const {'club', 'annulee', 'perimee', 'role'}.contains(reason) &&
-        content.cards.containsKey(kNouvellesDuPasse)) {
+        servable(s, content.cards[kNouvellesDuPasse])) {
       final title = arc?.title ?? content.cards[sc.card]?.title ?? 'une vieille histoire';
       s.entities.named['passe_titre'] = title;
       final line = arc?.epilogue['journal'];
@@ -1231,20 +1358,25 @@ class Director {
         cardId ??= variants.last.id;
         final crossCard = content.cards[cardId];
         if (crossCard == null) continue;
-        // Le filtre de rôle de `pickPool` vaut aussi ici : une carte déclarée
-        // pour l'entraîneur (« {NOM} DÉMISSION » sur vingt mètres) n'a rien à
-        // faire dans la carrière d'un joueur de dix-neuf ans.
-        if (crossCard.roles.isNotEmpty && !crossCard.roles.contains(s.role)) continue;
-        if (!speakerOk(s, crossCard)) continue; // le visage est parti (spec variété §1.10)
+        // Le filtre de rôle et de statut du sac vaut aussi ici : une carte
+        // déclarée pour l'entraîneur (« {NOM} DÉMISSION » sur vingt mètres) n'a
+        // rien à faire dans la carrière d'un joueur de dix-neuf ans, et un
+        // visage parti ne franchit plus de palier (spec variété §1.10).
+        if (!servable(s, crossCard)) continue;
         if ((s.seenCount[cardId] ?? 0) > 0) continue;
         if (s.scheduled.any((sc) => sc.card == cardId)) continue;
+        // Un même swipe peut franchir plusieurs paliers (la carte qui fâche
+        // trois visages) : ils sont échelonnés d'un créneau chacun, dans
+        // l'ordre fixe des personnages, comme les alarmes. Sans quoi trois
+        // paliers arrivent échus au même tirage (backlog, bande 6). Zéro aléa.
+        final queued = s.scheduled.where((sc) => sc.kind == 'palier').length;
         enqueue(
           s,
           Scheduled(
             card: cardId,
             kind: 'palier',
-            dueN: s.ncards + 1,
-            deadlineN: s.ncards + 3,
+            dueN: s.ncards + 1 + queued,
+            deadlineN: s.ncards + 3 + queued,
             fallback: 'drop',
             sameClub: false,
             payload: {'character': ch.id, 'threshold': t},
@@ -1289,6 +1421,26 @@ class Director {
     final c = ctx(s, 'presaison');
     for (final sc in List.of(s.scheduled)) {
       if (sc.expireSeason != null && sc.expireSeason! < s.season) miss(s, sc, 'perimee', c);
+    }
+    // Les entrées que la fin de saison a laissées échues (correctif
+    // « échéances ») : les derniers créneaux d'une saison sont des beats — le
+    // Grand Match, le Bilan —, pas des cartes, donc une étape posée au dernier
+    // slot avec `in: [1, 3]` ne peut plus sortir avant l'été. Sans rien, elles
+    // arrivaient toutes échues au premier tirage de la saison suivante (backlog
+    // de 4-5, autant d'étapes en bande 6). Elles sont réétalées sur l'ouverture,
+    // une par créneau, dans l'ordre de la file, en gardant la largeur de leur
+    // fenêtre. Zéro aléa. Les ancres de script gardent leur créneau absolu, et
+    // ce qui devait périr a déjà été purgé juste au-dessus.
+    var pushed = 0;
+    for (final sc in _sortedQueue(s)) {
+      if (sc.isLongFuse || sc.dueN < 0 || sc.kind == 'script') continue;
+      if (sc.deadlineN > s.ncards) continue;
+      final span = math.max(1, sc.deadlineN - sc.dueN);
+      // Borné : au-delà de six entrées en retard, elles repartagent le créneau
+      // plutôt que d'être poussées hors de la saison.
+      sc.dueN = s.seasonStartN + 1 + math.min(pushed, 6);
+      sc.deadlineN = sc.dueN + span;
+      pushed += 1;
     }
     // Fusées longues arrivées à leur saison : elles reçoivent leur fenêtre absolue.
     for (final sc in s.scheduled) {
@@ -1347,7 +1499,11 @@ class Director {
     // comme les autres intrigues (sinon ils doubleraient le tirage).
     for (final a in content.arcsSorted) {
       if (!a.isEverySeason || !a.roles.contains(s.role) || s.season < a.minSeason) continue;
-      if (s.arcs[a.id]?.doneSeason == s.season) continue;
+      // `replayable` et non `doneSeason != season` : un rituel encore armé ou
+      // actif à l'ouverture de saison (son étape 2 n'est pas sortie) était
+      // ré-armé sur son étape 1 — la même carte trois saisons de suite, et
+      // `arcDone` n'incrémentait jamais `plays`.
+      if (!replayable(s, a)) continue;
       if (!evalWhen(a.when, c)) continue;
       final prev = s.arcs.remove(a.id);
       if (prev != null) s.arcs[a.id] = prev; // armArc conserve plays/outcome

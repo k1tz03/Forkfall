@@ -27,7 +27,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : {nom} a lu le carnet de l'ancien, puis il est parti. Le carnet est resté dans le carton."
+      journal: "{annee} : le bureau de l'ancien a été vidé, à {club}. Le carnet a changé de mains au moins une fois."
     steps:
       - id: cartons
         card: en.bureau_ancien.cartons
@@ -72,7 +72,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : le ticket de {nom} est resté dans le portefeuille du journaliste. Jamais encaissé."
+      journal: "{annee} : le journaliste a rangé le ticket du pari sur {nom}. La cote, elle, a bougé toute la saison."
     steps:
       - id: cote
         card:
@@ -82,6 +82,9 @@ arcs:
       - id: bookmaker
         card:
           - { id: en.cote_interim.bookmaker_contre, if: "flag('pari_contre_soi')" }
+          # Rien n'a été misé à l'étape 1 : le capo propose le cousin du port.
+          # C'est la seconde porte vers l'issue `contre`.
+          - { id: en.cote_interim.bookmaker_cousin, if: "!flag('pari_interim')" }
           - { id: en.cote_interim.bookmaker }
         next: [ { step: une, in: [1, 3] } ]
       - id: une
@@ -118,7 +121,7 @@ arcs:
     fallback: nouvelles
     epilogue:
       caisse: "-"
-      journal: "{annee} : {nom} avait promis la montée à la mairie de {ville}. La maire a gardé la date."
+      journal: "{annee} : la mairie de {ville} a classé le dossier de {club}. La maire a gardé la date au crayon dans son agenda."
     steps:
       - id: rendez_vous
         card:

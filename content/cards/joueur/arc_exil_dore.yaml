@@ -131,7 +131,7 @@ cards:
     text: "« Ton cousin met l'or sur le compte des îles, à côté de l'image ; c'est plus simple pour tout le monde. On continue, ou tu veux un compte ici, avec des impôts ? »"
     left:
       label: "On continue"
-      effects: {caisse: "++", set: [compte_cousin, offshore], outcome: cousin, react: {card: co.re.camille_journal, if: "!flag('divorce')", chance: 0.5}}
+      effects: {caisse: "++", set: [compte_cousin, offshore], outcome: cousin, react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')", chance: 0.5 }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')", chance: 0.5 }, { card: co.re.camille_journal, chance: 0.5 } ]}
       answer: "Il continue. Le cousin achète une deuxième montre. Il t'en envoie une ; elle est belle ; elle est à ton nom."
     right:
       label: "Un compte ici"

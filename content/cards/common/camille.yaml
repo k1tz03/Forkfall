@@ -2,11 +2,19 @@
 # deux routines de fond, et les paliers de relation servis par `on_relation`
 # (characters.yaml → camille) : −1 dispute, −2 chambre d'amis, −3 valise
 # (pose `divorce`), +3 secours selon le métier tiré au start (camille_<metier>).
-# Toutes les cartes `famille` lisent `!flag('divorce')`, sauf les secours.
+# La valise pose `divorce` **et** `char: {camille: {statut: parti}}` : le
+# moteur écarte alors toutes ses cartes du tirage et purge ses entrées en file
+# (spec variété §1.10). Le `!flag('divorce')` des cartes `famille` reste la
+# ceinture ; le statut est la bretelle, et il couvre les cartes d'arc que les
+# `when` avaient oubliées. Ce qui doit continuer d'exister après son départ le
+# déclare : `co.camille.appel_de_loin` (ci-dessous) et les deux retrouvailles
+# (`co.retrouvailles.camille_sourire` / `_noir`, `statut_ok: [parti, retraite]`).
 cards:
   # ------------------------------------------------------------- routines
+  # Le sapin et l'adjoint : un joueur n'a pas d'adjoint. Version joueur juste
+  # dessous (« qui décide, qui possède »).
   - id: co.camille.noel
-    roles: [entraineur, joueur]
+    roles: [entraineur]
     arc: famille
     tags: [famille]
     speaker: camille
@@ -22,6 +30,24 @@ cards:
       label: "Après le match"
       effects: {vestiaire: "+", relation: {camille: -1}}
       answer: "Le 26, le sapin est encore dans l'entrée. Camille, non."
+
+  - id: co.camille.noel_jp
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    cooldown: 30
+    when: "season.phase == 'hiver' && !flag('divorce')"
+    text: "Camille : « Tu rentres à quelle heure ? C'est Noël, et le sapin est dans l'entrée à côté de ton sac de match, qui n'a pas bougé depuis mardi. »"
+    left:
+      label: "Je rentre, et je vide le sac"
+      effects: {vestiaire: "-", relation: {camille: 1}}
+      answer: "Tu vides le sac. Il y a un maillot, deux chaussettes dépareillées et une orange de septembre."
+    right:
+      label: "Après le 26"
+      effects: {vestiaire: "+", relation: {camille: -1}}
+      answer: "Le 26, le sapin est décoré ; le sac est dessous, avec les cadeaux. Camille dit que ça fait un paquet de plus."
 
   - id: co.camille.anniversaire
     roles: [entraineur, joueur]
@@ -113,11 +139,11 @@ cards:
     text: "Camille, le manteau déjà mis : « La valise est dans l'entrée. Elle est à moi. »"
     left:
       label: "Je regarde la valise"
-      effects: {caisse: "--", set: [divorce]}
+      effects: {caisse: "--", set: [divorce], char: {camille: {statut: parti}}}
       answer: "La porte ne claque pas. C'est pire. L'avocat, lui, facture."
     right:
       label: "Je regarde la valise"
-      effects: {caisse: "--", set: [divorce]}
+      effects: {caisse: "--", set: [divorce], char: {camille: {statut: parti}}}
       answer: "La porte ne claque pas. C'est pire. L'avocat, lui, facture."
 
   # ------------------------------------------- secours (+3, une par métier)
@@ -128,6 +154,7 @@ cards:
     speaker: camille
     tone: strategique
     once: true
+    when: "!flag('divorce')"
     text: "Camille, robe sur le bras : « Ta sanction, je l'ai lue. Elle a un vice de forme gros comme le stade. Je plaide demain, si tu veux. »"
     left:
       label: "Plaide"
@@ -135,7 +162,7 @@ cards:
       answer: "La commission annule tout en dix minutes. Elle rentre avant toi, pour une fois."
     right:
       label: "Je me débrouille"
-      effects: {direction: "+", relation: {camille: -1}}
+      effects: {direction: "+", parole: 1}
       answer: "Tu négocies seul. La sanction tombe, à moitié. La robe retourne au placard."
 
   - id: co.camille.secours_journaliste
@@ -145,6 +172,7 @@ cards:
     speaker: camille
     tone: strategique
     once: true
+    when: "!flag('divorce')"
     text: "Camille, au téléphone : « Massenet a un papier sur toi pour demain. J'ai le rédacteur en chef en ligne. Je le bloque ? »"
     left:
       label: "Bloque-le"
@@ -152,8 +180,8 @@ cards:
       answer: "Le papier ne paraît pas. Massenet note qui a appelé. Il note toujours."
     right:
       label: "Laisse-le paraître"
-      effects: {tribunes: "-", relation: {meneche: 1, camille: -1}}
-      answer: "Le papier paraît. Massenet te trouve honnête. Camille te trouve seul."
+      effects: {tribunes: "-", parole: 1, relation: {meneche: 1}}
+      answer: "Le papier paraît. Massenet te trouve honnête. Camille ne dit rien du tout."
 
   - id: co.camille.secours_elue
     roles: [entraineur, joueur]
@@ -162,6 +190,7 @@ cards:
     speaker: camille
     tone: strategique
     once: true
+    when: "!flag('divorce')"
     text: "Camille, écharpe pliée : « La subvention bloquée depuis mars, je l'ai fait passer au conseil ce soir. Aubert a voté contre. »"
     left:
       label: "Merci pour le club"
@@ -169,7 +198,7 @@ cards:
       answer: "Le chèque arrive par fax. Josiane le pose sur le radiateur, pour qu'il sèche."
     right:
       label: "Ça va faire parler"
-      effects: {caisse: "+", relation: {camille: -1}}
+      effects: {caisse: "+", direction: "-"}
       answer: "La subvention passe, réduite. Le journal ne parle de rien. Camille non plus."
 
   - id: co.camille.secours_generique
@@ -179,6 +208,7 @@ cards:
     speaker: camille
     tone: strategique
     once: true
+    when: "!flag('divorce')"
     text: "Camille, sur le parking : « J'ai invité tout le vestiaire dimanche. Je cuisine, tu te tais, ils parlent. Tu rentres à quelle heure ? »"
     left:
       label: "Avant eux"
@@ -186,5 +216,29 @@ cards:
       answer: "Vingt-deux couverts. Bréhaut fait la vaisselle. Le groupe vit bien."
     right:
       label: "Je passe en fin de repas"
-      effects: {vestiaire: "+", relation: {camille: -1}}
+      effects: {vestiaire: "+", direction: "-"}
       answer: "Ils sont partis à ton arrivée. Ils ont adoré. Camille range seule."
+
+  # ---------------------------------------------- après la valise : à distance
+  # Camille est partie (`statut: parti`) : elle ne parle plus « d'ici ». Cette
+  # carte est la seule qui la fasse revenir, au téléphone, et elle le déclare
+  # (`statut_ok`). Sans elle la cinquième jauge disparaît du jour au lendemain,
+  # ce qui est faux : on ne cesse pas d'avoir quelqu'un à rappeler.
+  - id: co.camille.appel_de_loin
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    cooldown: 26
+    statut_ok: [parti, retraite]
+    when: "flag('divorce')"
+    text: "Camille, au téléphone, une porte qui se ferme derrière elle : « Tu rentres à quelle heure ? Je demande pour le carton qui reste dans l'entrée. Il est à toi, celui-là. »"
+    left:
+      label: "Je passe le prendre"
+      effects: {direction: "-", relation: {camille: 1}}
+      answer: "Le carton tient dans une main. Tu restes debout dans l'entrée onze minutes."
+    right:
+      label: "Garde-le, ou jette-le"
+      effects: {vestiaire: "+", parole: -1}
+      answer: "Elle ne jette rien. Le carton passe de l'entrée au garage, et il y reste."

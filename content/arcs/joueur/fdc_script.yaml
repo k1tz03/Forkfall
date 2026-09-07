@@ -4,8 +4,7 @@
 # quinzième (16), juin (17) ; S1 : le premier jour selon la destination (1-2),
 # les jambes (10-11), la veille (17) ; S2+ : une saison de plus (1-2), la
 # veille à la maison (17).
-# Le président narratif est Vaubourg (la bible l'appelle Vaubourg : même fauteuil,
-# même tic) ; le fonds est Ilyas (la bible dit Ilyas).
+# Le président narratif est Vaubourg (`aulard`) ; le fonds est Ilyas (`nassir`).
 # Deux alarmes d'override (jp.fin.alarme_*) sont déclarées dans postulats.yaml.
 # Semé par `opening_arc: jp.fin.dernier_contrat`.
 arcs:
@@ -102,17 +101,28 @@ arcs:
         at: [17, 17]
         season: "1"
       # ------------------------------------------------------------ saisons 2+
+      # Les deux ancres de S2+ sont les seules du script à être rejouées saison
+      # après saison : leurs variantes doivent monter un escalier, pas s'agripper
+      # à un drapeau. `recule_poste`, `banc_regarde`, `divorce`, `jubile_fait` et
+      # `jubile_reporte` sont des traces DÉFINITIVES : en tête de liste et sans
+      # garde propre, elles servaient la même carte deux à trois saisons de
+      # suite et la scène de la bible (Vecchio, la quatrième retraite, la
+      # chaussette trouée) n'était plus jamais jouée. Chaque variante d'état
+      # pose donc son `_vu` et ne tient qu'une saison, et l'escalier lu sur
+      # `season` / la marche précédente passe devant.
       - id: saison_de_plus
         card:
-          - { id: jp.fin.s2_saison_de_plus_recule, if: "flag('recule_poste') || flag('banc_regarde')" }
-          - { id: jp.fin.s2_saison_de_plus_encore, if: "season >= 3 || flag('une_de_plus')" }
+          - { id: jp.fin.s2_saison_de_plus_recule, if: "(flag('recule_poste') || flag('banc_regarde')) && !flag('s2_recule_vu')" }
+          - { id: jp.fin.s2_saison_de_plus_vrai,   if: "flag('s2_saison_encore')" }
+          - { id: jp.fin.s2_saison_de_plus_encore, if: "season >= 3 || flag('une_de_plus') || flag('s2_saison_marche')" }
           - { id: jp.fin.s2_saison_de_plus }
         at: [1, 2]
         season: "2+"
       - id: veille_maison
         card:
-          - { id: jp.fin.s2_veille_josiane, if: "flag('divorce') || relation.camille <= -2" }
-          - { id: jp.fin.s2_veille_jubile, if: "flag('jubile_fait') || flag('jubile_reporte')" }
+          - { id: jp.fin.s2_veille_josiane, if: "(flag('divorce') || relation.camille <= -2) && !flag('s2_josiane_vu')" }
+          - { id: jp.fin.s2_veille_jubile,  if: "(flag('jubile_fait') || flag('jubile_reporte')) && !flag('s2_jubile_vu')" }
+          - { id: jp.fin.s2_veille_encore,  if: "flag('s2_veille_marche')" }
           - { id: jp.fin.s2_veille }
         at: [17, 17]
         season: "2+"

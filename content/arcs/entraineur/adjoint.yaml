@@ -17,7 +17,12 @@ arcs:
     foreground: true
     weight: 1.0
     once: true
-    min_season: 1
+    # 0 et non 1 : le pool "0" de l'intérimaire (postulats.yaml, bible ch. 11
+    # § 3.1) liste déjà l'adjoint qui dîne, et l'ancre « le dauphin » du script
+    # (en.interim.i3_dauphin, créneau 17 de la S0) lit `vukic_dauphin` — un
+    # drapeau que seule cette intrigue pose quand on ne joue pas le promu. À
+    # min_season 1 l'entrée du bucket "0" était morte et l'ancre inatteignable.
+    min_season: 0
     theme: direction
     carrier: vukic
     cast: [vukic, aulard, josiane, brehaut]
@@ -32,7 +37,7 @@ arcs:
     epilogue:
       relation: { vukic: -1 }
       clear: [vukic_dauphin]
-      journal: "{annee} : {nom} est parti{pg, select, f{e} other{}} avant que Vukić ait fini de réfléchir. Le cahier est resté au club."
+      journal: "{annee} : le dîner du mardi a cessé d'être un secret à {club}. Vukić a rangé le cahier ; il connaît le tiroir."
     steps:
       - id: addition
         card: en.adjoint.addition
@@ -43,7 +48,11 @@ arcs:
       - id: aulard
         card: en.adjoint.aulard
         outcome: aulard
-        next: [ { step: discours, in: [2, 5] } ]
+        # Le second discours recouvrait l'issue `aulard` par `dauphin` dans
+        # presque tous les cas (issue à 5-7 % des ouvertures, plancher 10 %) :
+        # quand le président a encaissé l'entrée sans frapper, l'affaire est
+        # close et l'addition reste au nom de celui qui a payé.
+        next: [ { step: discours, if: "relation.aulard <= 0", in: [2, 5] } ]
       - id: discours
         card:
           - { id: en.adjoint.discours_brassard, if: "flag('brehaut_capitaine') && relation.brehaut <= 0" }

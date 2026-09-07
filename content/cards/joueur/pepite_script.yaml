@@ -481,13 +481,16 @@ cards:
       answer: "Il hausse les épaules. Il fait la passe quand même, le lendemain, une fois."
 
   # ============================================== alarmes d'override du postulat
+  # Alarme tribunes.high nº 1 (postulats.yaml) : servie seulement quand la bâche
+  # ET le panneau du prix existent (`seen('jp.tifo.prix')`). `once: true` : Léa ne
+  # fait confirmer la même photo qu'une fois par carrière.
   - id: jp.pepite.alarme_tifo_lea
     roles: [joueur]
     arc: presse
     tags: [presse, tribunes]
     speaker: lea
     tone: strategique
-    once: false
+    once: true
     text: "« Vous confirmez ? La tribune a peint votre nom sur vingt mètres et le président a peint un prix dessous, en plus petit. La bâche, ou le prix ? »"
     left:
       label: "Devant la bâche"
@@ -497,6 +500,27 @@ cards:
       label: "Devant le prix"
       effects: {tribunes: "--", direction: "++", set: [photo_prix], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.6 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.6 }, { card: co.re.gege_decoupe, chance: 0.6 } ]}
       answer: "La photo montre le prix. Gégé la découpe et la punaise au local, côté « à ne pas oublier »."
+
+  # Alarme tribunes.high nº 2 : la pépite dont la tribune monte sans qu'aucune
+  # bâche n'ait jamais été peinte (jp.tifo pas ouverte, ou ouverte trop tard).
+  # Léa n'a pas de vingt mètres à faire confirmer : elle a la cote, la Une et le
+  # prix seul, sur le panneau, sans le nom à côté.
+  - id: jp.pepite.alarme_cote_lea
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    tone: strategique
+    once: true
+    text: "« Ils chantent votre numéro, pas votre nom : ils ne le connaissent pas encore. Le club, lui, a chiffré ce que ça vaut, et je fais la Une demain. Je titre le chant, ou le montant ? »"
+    left:
+      label: "Le chant"
+      effects: {tribunes: "+", direction: "-", vestiaire: "+", relation: {lea: 1}}
+      answer: "Elle titre le chant. Le montant passe en page quatre, en petit ; en loge, on lit la page quatre."
+    right:
+      label: "Le montant"
+      effects: {tribunes: "--", direction: "++", caisse: "+", set: [photo_prix], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.6 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.6 }, { card: co.re.gege_decoupe, chance: 0.6 } ]}
+      answer: "Elle titre le montant. Gégé découpe la Une, coupe le chiffre, et punaise ce qui reste : un numéro, sans nom."
 
   - id: jp.pepite.alarme_fardelli_avance
     roles: [joueur]

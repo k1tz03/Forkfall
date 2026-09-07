@@ -208,6 +208,22 @@ cards:
     left: {label: "Je le garde", effects: {tribunes: "+", parole: 2, set: [telegramme_clow], journal: {text: "{annee} : six mots par télégramme, du vieux monsieur. {nom} les a comptés deux fois.", poids: 3, tags: [objet, vestiaire]}}, answer: "Six mots. Tu les comptes deux fois, et ils font toujours six."}
     right: {label: "Six mots, c'est court", effects: {parole: 1, relation: {clow: -1}}, answer: "« C'est un télégramme. » Il le reprend et le remet dans sa poche."}
 
+  # Second registre +3 du mentor (bible ch. 01 § 5.2 : « Lundi, huit heures.
+  # J'ai mis ta chaise devant. »). Il sert quand le télégramme est déjà donné,
+  # ou pendant que « Lundi, huit heures » (co.clow_lundi) le garde pour son
+  # climax : deux fois la même révélation à trois cartes d'écart, sinon.
+  - id: co.clow.faveur_chaise
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:tribunes]
+    speaker: clow
+    tone: strategique
+    once: true
+    statut_ok: [parti, retraite]
+    text: "Corven pousse le tabouret du bout contre le comptoir : « Lundi, huit heures. J'ai mis ta chaise devant. Je ne dirais pas que c'est un honneur ; je dirais qu'elle est devant. »"
+    left: {label: "J'y serai à sept", effects: {tribunes: "+", parole: 1, relation: {clow: 1}, journal: {text: "{annee} : Dan Corven a réservé un tabouret à {prenom} {nom}. Le premier du comptoir, celui qui voit la porte.", poids: 2, tags: [objet, vestiaire]}}, answer: "Il ne dit pas merci. Il tourne le tabouret d'un quart pour qu'il voie la porte."}
+    right: {label: "Je ne suis plus stagiaire", effects: {parole: 1, relation: {clow: -1}}, answer: "« Personne ne l'est. » Il remet le tabouret contre le mur, du bout du pied."}
+
   # ------------------------------------------------------------------ Mbako, −3
   - id: co.mbako.trahison_clause
     roles: [entraineur, joueur]
@@ -324,11 +340,18 @@ cards:
     speaker: aulard
     tone: strategique
     once: true
-    # Le palier +3 se joue pendant qu'il est ton président : c'est une promesse
-    # pour plus tard, pas des retrouvailles (bible 02 § co.aulard.faveur_rappel,
-    # « Je te rappelle toujours »). Le « cinq ans après » appartient à
-    # co.retrouvailles.aulard_sourire, qui ne sort qu'après un changement.
-    text: "Vaubourg, au téléphone, sans dire bonjour : « Je vire souvent et je rappelle toujours, {toi} : le jour où ça tombe, tu as un bureau chez moi. J'ai pas le temps, j'ai un empire. »"
+    # Correction de relecture : ce palier +3 se jouait pendant que Vaubourg était
+    # le patron en poste, et « le jour où ça tombe, tu as un bureau chez moi »
+    # n'a aucun sens dit par l'homme qui te paie et dont tu occupes déjà le
+    # bureau. La bible (02 § co.aulard.faveur_rappel) le range ailleurs : la
+    # table des paliers dit « il te rappelle, **cinq ans après** », la fiche
+    # ajoute `statut_ok: [club, rival, retraite]` — c'est-à-dire tout sauf
+    # « votre président ». La garde le dit avec ce que le moteur sait : tu as
+    # changé de club ou de rôle depuis, ou il n'est plus au club. Le `statut_ok`
+    # accompagne la garde pour le jour où une carte le fera partir.
+    statut_ok: [rival, retraite, parti]
+    when: "stats.clubs >= 2 || role_was('joueur') || chars.aulard.statut != 'present'"
+    text: "Vaubourg, au téléphone, sans dire bonjour : « Je t'ai viré, {toi}, et je rappelle toujours : le jour où ça retombe, tu as un bureau chez moi. J'ai pas le temps, j'ai un empire. »"
     left: {label: "Je garde le numéro", effects: {direction: "++", relation: {aulard: 1}, set: [aulard_rappelle], journal: {text: "{annee} : « Je vire souvent, je rappelle toujours. » Vaubourg a promis un bureau à {nom}.", poids: 3, tags: [direction]}}, answer: "Il raccroche. Josiane note l'heure : c'est une promesse, elle les date."}
     right: {label: "Je n'en aurai pas besoin", effects: {direction: "+", tribunes: "+", parole: 1, set: [aulard_rappelle], journal: {text: "{annee} : Vaubourg a offert un bureau à {nom}, qui a dit non. Il a noté quand même.", poids: 2, tags: [direction]}}, answer: "Il rit. Il note quand même."}
 

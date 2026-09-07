@@ -147,7 +147,10 @@ arcs:
           - { id: jp.exil.vendu_en_dormant, if: "flag('agent_fardelli') && relation.fardelli <= -2" }
           - { id: jp.exil.dix_pour_cent, if: "flag('agent_fardelli')" }
           - { id: jp.exil.climatisation }
-        next: [ { step: cousin, if: "flag('exil_dore')", in: [6, 16] } ]
+        # [6,16] repoussait la dernière étape d'une saison entière : l'issue
+        # `cousin` tombait à 8 % des ouvertures (plancher 10 %). Le cousin
+        # rappelle dans la saison où le compte a changé de banque.
+        next: [ { step: cousin, if: "flag('exil_dore')", in: [3, 12] } ]
       - id: cousin
         card:
           - { id: jp.exil.cousin_compte_plein, if: "gauges.caisse >= 80" }

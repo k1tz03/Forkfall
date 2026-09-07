@@ -92,6 +92,27 @@ cards:
       effects: {force: -1, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune}
       answer: "Le jeune prend sa place. Le vieux regarde ses gants."
 
+  # Escalier du rituel (plays >= 1) : la même épaule, un an de plus, et le doc
+  # qui ne salue plus. Sans cette variante, la scène de l'épaule se rejouait
+  # mot pour mot à chaque reprise du rituel (le lint ne le voyait pas : sa
+  # règle « arc replay ⇒ ≥ 1 variante lisant plays() » était déjà satisfaite
+  # par l'étape 1).
+  - id: en.vieux.epaule_encore
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment, retorse]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio remonte la même manche : « La même épaule, un an de plus. Le doc ne me salue plus ; il la regarde et il écrit. J'en ai vu d'autres, des épaules ; celle-là, je la connais. Tu me sors ? »"
+    left:
+      label: "Tu joues, tu décides"
+      effects: {force: -3, relation: {vecchio: 1, sabatier: -2}, react: {card: en.re.sabatier_la_table, chance: 0.6}, journal: {text: "{annee} : Gigi Vecchio a rejoué du même bras. Le doc a écrit la même ligne, en dessous de celle de l'an dernier.", poids: 2, tags: [vestiaire, moment]}}
+      answer: "Il rejoue d'un bras. Le doc écrit la même ligne, sous celle de l'an dernier."
+    right:
+      label: "Repos forcé, cette fois"
+      effects: {force: -1, vestiaire: "-", set: [gardien_jeune], relation: {vecchio: -1}, outcome: jeune}
+      answer: "Le jeune reprend les gants. Le vieux regarde le doc, pas les gants."
+
   # ------------------------------------------- E3 · retour (deux variantes, S2)
   - id: en.vieux.retour_sourire
     roles: [entraineur]

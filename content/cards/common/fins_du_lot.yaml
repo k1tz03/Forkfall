@@ -1,0 +1,195 @@
+# Les portes des fins de la bible ch. 30 § 5 qui n'en avaient pas (relecture du
+# lot « fins sans porte »). Une fin n'existe que si une carte la pose : le champ
+# `cause:` de content/endings/setpieces_fins.yaml n'est lu par personne, seul un
+# `end:` sur une sortie — ou une fin de jauge de roles.yaml — ouvre la plaque.
+#
+# Six portes ici, communes aux deux rôles jouables ; les trois portes propres au
+# banc sont dans content/cards/entraineur/fins_du_banc.yaml.
+#   co.fisc.controle              → co_dix_huit_mois   (§ 5.3, CAISSE haute)
+#   co.pression.troisieme         → burn_out           (§ 5.5, la série noire)
+#   co.destin.statue_bronze       → statue_de_bronze   (§ 5.5, partir debout)
+#   co.destin.porte_de_sortie(_seul) → pose `fuyard`   (§ 6.1, arête 28)
+#   co.destin.porte_troisieme     → co_fuyard          (§ 5.6, la troisième fois)
+#   co.loge.derby                 → ta_loge            (§ 5.5, la loge)
+#   co.medecin.fauteuil           → mort_au_poste      (§ 5.5, le fauteuil)
+#
+# Écarts d'import assumés, mesurés sur `simulate --runs 2000` :
+# · `ta_loge` (« âge, 78 ans ») et `mort_au_poste` (« après 70 ans ») : les deux
+#   rôles qui existent s'arrêtent à 38 ans (joueur, `jubile`) et 65 ans
+#   (entraîneur, `en_retraite`). La porte est posée à 57 ans, le dernier âge que
+#   les carrières atteignent vraiment ; l'épitaphe, elle, ne dit aucun chiffre.
+# · les deux sont un **choix**, avec une part de hasard sur la sortie fatale :
+#   sinon 3,5 % des carrières mourraient d'office à 57 ans et `en_retraite`
+#   (65 ans) devenait inatteignable.
+# · `priority: 2` : ces cartes ont des `when` étroits et ne doivent pas être
+#   perdues dans le sac le jour où la condition est vraie.
+cards:
+  # ───────────────────────────── § 5.3 · Dix-huit mois (la carte du fisc)
+  - id: co.fisc.controle
+    roles: [entraineur, joueur]
+    arc: caisse
+    tags: [caisse, scandale, direction]
+    speaker: josiane
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 2 && gauges.caisse >= 85"
+    text: "Madame Josiane, une convocation à en-tête : « Deux inspecteurs jeudi, huit heures, avec les trois dernières années. J'en ai vu passer ; celle-là est recommandée. »"
+    left:
+      label: "Je sors tous les livres"
+      effects: {caisse: "---", direction: "-", parole: 1}
+      answer: "Trois années sur une table. Il en manque une, et c'est celle qu'ils lisent d'abord."
+    right:
+      label: "Je signe sans relire"
+      effects: {caisse: "+", direction: "---", tribunes: "--", end: co_dix_huit_mois}
+      answer: "Tu signes en bas, comme d'habitude. Le juge, lui, a commencé par le haut."
+
+  # ───────────────────────────── § 5.5 · Le burn-out (trois conférences)
+  - id: co.pression.troisieme
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [presse, direction, risk:direction]
+    speaker: lea
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 1 && pression >= 8 && world.serie_defaites >= 1"
+    text: "Léa, dans le couloir, deux magnétos déjà pleins : « Vous confirmez ? C'est la troisième conférence de la journée, et la salle est encore pleine. On y va, ou on annule ? »"
+    left:
+      label: "On annule tout"
+      effects: {direction: "--", tribunes: "-", pression: -2}
+      answer: "La salle se vide en riant. Le club publie deux lignes que personne ne relit."
+    right:
+      label: "On y va, la troisième"
+      effects: {vestiaire: "--", direction: "---", tribunes: "-", end: burn_out}
+      answer: "Tu commences la phrase. Tu ne la finis pas ; c'est le Doc qui la termine, plus tard."
+
+  # ───────────────────────── § 5.5 · La statue de bronze (partir debout)
+  - id: co.destin.statue_bronze
+    roles: [entraineur, joueur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "stats.saisons >= 8 && parole >= 2 && gauges.vestiaire >= 40 && gauges.tribunes >= 40 && gauges.direction >= 40 && gauges.caisse >= 40"
+    text: "Gégé, une boîte en fer sous le bras : « On a compté : il y a de quoi payer un socle. La tribune n'oublie rien, {toi}, mais elle préfère couler ça de ton vivant. »"
+    left:
+      label: "Alors je pars maintenant"
+      effects: {tribunes: "++", parole: 1, end: statue_de_bronze}
+      answer: "Il repose la boîte sur le bar. Elle n'en repartira pas, et toi non plus."
+    right:
+      label: "Encore une saison"
+      effects: {tribunes: "+", pression: 1, relation: {gege: 1}}
+      answer: "Il referme la boîte et la range sous l'évier du local, avec les autres."
+
+  # ─────────────────── § 6.1 arête 28 · La porte de sortie (pose `fuyard`)
+  # Servie tant que `fuyard` a été posé moins de deux fois : partir remet les
+  # jauges (nouveau club) et l'histoire peut se répéter, ce que la fin lit.
+  - id: co.destin.porte_de_sortie
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille, direction, chaine]
+    speaker: camille
+    tone: strategique
+    priority: 2
+    cooldown: 20
+    when: "season >= 1 && gauges.direction >= 8 && gauges.direction <= 30 && count('fuyard') <= 1 && !flag('divorce')"
+    text: "Camille, le manteau déjà sur le bras : « Tu vois le mur arriver, {toi}. Moi je le vois depuis mars. On part avant qu'il tombe, ou on attend le message de vingt-trois heures ? »"
+    left:
+      label: "On part avant"
+      effects: {parole: -1, tribunes: "-", relation: {camille: 1}, var: {fuyard: "+1"}, club: {change: true}}
+      answer: "Tu démissionnes un jeudi. Josiane date la lettre ; elle date tout, depuis 1987."
+    right:
+      label: "Je reste jusqu'au bout"
+      effects: {direction: "-", vestiaire: "+", parole: 1}
+      answer: "Elle repose le manteau sur le dossier de la chaise. Elle ne le range pas."
+
+  # La même porte quand la maison est vide : c'est la secrétaire qui la tient.
+  - id: co.destin.porte_de_sortie_seul
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, chaine]
+    speaker: josiane
+    tone: strategique
+    priority: 2
+    cooldown: 20
+    when: "season >= 1 && gauges.direction >= 8 && gauges.direction <= 30 && count('fuyard') <= 1 && flag('divorce')"
+    text: "Madame Josiane, une feuille blanche et une enveloppe : « J'en ai vu passer, et ceux qui partent d'eux-mêmes s'en sortent mieux. Je vous tape la lettre, ou je range la feuille ? »"
+    left:
+      label: "Tapez la lettre"
+      effects: {parole: -1, tribunes: "-", relation: {josiane: 1}, var: {fuyard: "+1"}, club: {change: true}}
+      answer: "Quatre lignes, une date, deux exemplaires. Elle en garde un, comme toujours."
+    right:
+      label: "Rangez la feuille"
+      effects: {direction: "-", vestiaire: "+", parole: 1}
+      answer: "Elle la range dans le tiroir du haut, à l'endroit. Elle ne la déchire pas."
+
+  # ─────────────────── § 5.6 · La porte de sortie, la troisième fois
+  - id: co.destin.porte_troisieme
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, chaine]
+    speaker: josiane
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "count('fuyard') >= 2 && gauges.direction <= 35"
+    text: "Madame Josiane, une chemise à trois lettres : « J'en ai vu passer, mais trois de la même main, jamais. Cette fois, personne n'a préparé de porte. Je vous les rends ? »"
+    left:
+      label: "Rendez-les-moi"
+      effects: {end: co_fuyard}
+      answer: "Elles se ressemblent beaucoup. La troisième est la plus courte des trois."
+    right:
+      label: "Rendez-les-moi"
+      effects: {end: co_fuyard}
+      answer: "Elles se ressemblent beaucoup. La troisième est la plus courte des trois."
+
+  # ────────────────────────────────────── § 5.5 · Ta loge (le dernier derby)
+  - id: co.loge.derby
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment, tribunes]
+    speaker: josiane
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 3 && age >= 58 && gauges.tribunes >= 45"
+    text: "Madame Josiane, une clé sur un anneau : « Le derby est dimanche et le médecin a écrit « assis ». La loge est chauffée, {toi} ; j'en ai vu passer qui refusaient. »"
+    left:
+      label: "Je monte en loge"
+      effects: {rand: [{p: 0.35, end: ta_loge}, {tribunes: "+", direction: "+"}], force: -2}
+      answer: "Le fauteuil est trop grand, la couverture trop courte. Le stade chante à la vingtième."
+    right:
+      label: "Je reste au bord"
+      effects: {force: 1, vestiaire: "+", tribunes: "-"}
+      answer: "Tu tiens debout quatre-vingt-dix minutes. Elle remet la clé au tableau, sans commentaire."
+
+  # ──────────────────────────────── § 5.5 · Mort au poste (le fauteuil)
+  # Ton : drame sobre, sans blague ; le `tone` reste strategique pour que la
+  # carte vive dans le sac (une carte `drame` est hors sac, charte § 5.3).
+  - id: co.medecin.fauteuil
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction, moment]
+    speaker: sabatier
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 3 && age >= 58"
+    text: "Le Doc referme le brassard sans regarder l'aiguille : « Ça reste entre la table et moi, {toi} : à ce rythme, il vous faut trois semaines sans stade. Le derby est dimanche. »"
+    left:
+      label: "Je prends les trois semaines"
+      effects: {direction: "--", vestiaire: "-", force: 1}
+      answer: "Trois semaines. L'adjoint dirige, et il découvre qu'il aime ça."
+    right:
+      label: "Dimanche, je serai là"
+      effects: {rand: [{p: 0.35, end: mort_au_poste}, {tribunes: "+", direction: "+"}], force: -2}
+      answer: "Tu es là. Le fauteuil du couloir a été monté pour toi, contre le mur."

@@ -124,7 +124,13 @@ cards:
     text: "Gégé pose une craie sur la table : « Le local, il prend l'eau depuis douze ans et personne n'a jamais signé. Tu signes, ou tu fais comme les autres ? »"
     left:
       label: "Je signe le local"
-      effects: {tribunes: "++", caisse: "-", parole: 2, promise: true, relation: {gege: 1}, set: [pacte_gege], react: {card: en.re.gege_lui_venait, chance: 0.7}}
+      # `outcome: pacte` posé ICI, pas seulement sur `pacte_suite` : l'issue,
+      # c'est d'avoir signé. Attendre la poignée de main (étape `pacte_suite`,
+      # [5,9] créneaux plus loin) faisait tomber l'issue à 4-9 % des clôtures
+      # — sous le plancher de 10 % du § 5.1 — alors que la craie était gravée
+      # dans une carrière sur trois. `pacte_suite` garde son `outcome`, il ne
+      # fait que confirmer.
+      effects: {tribunes: "++", caisse: "-", parole: 2, promise: true, relation: {gege: 1}, set: [pacte_gege], outcome: pacte, react: {card: en.re.gege_lui_venait, chance: 0.7}}
       answer: "Il grave la date à la craie, au-dessus de la porte."
     right:
       label: "Pas de promesse en l'air"

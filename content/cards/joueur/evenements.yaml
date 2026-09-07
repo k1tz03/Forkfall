@@ -1,0 +1,100 @@
+# Cartes des événements du joueur pro (arcs jp.evt.*, content/arcs/joueur/
+# evenements.yaml). Une intrusion se joue en une carte : elle arrive, elle
+# coûte, elle repart. Six visages différents, six lieux, aucun ne parle du
+# classement.
+cards:
+  - id: jp.evt.bus
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    text: "Vecchio, debout dans l'allée : « Deux heures du matin, bande d'arrêt d'urgence, trois heures d'attente. Le petit a dix-sept ans et il pleure. Tu descends avec les vieux, ou tu t'assois à côté ? »"
+    left:
+      label: "Je m'assois à côté de lui"
+      effects: {vestiaire: "++", relation: {vecchio: 1, mbako: 1}}
+      answer: "Tu t'assois. Il ne parle pas, tu ne parles pas, et à cinq heures il dort sur ton épaule. Personne ne le raconte ; tout le monde l'a vu."
+    right:
+      label: "Je descends avec les vieux"
+      effects: {vestiaire: "+", tribunes: "-", relation: {vecchio: 1}}
+      answer: "Dehors il fait quatre degrés. Gigi raconte 1974 pendant quarante minutes ; c'est la meilleure heure de la saison, et vous êtes trois à l'avoir eue."
+
+  - id: jp.evt.controle
+    roles: [joueur]
+    arc: corps
+    tags: [scandale, moment]
+    speaker: sabatier
+    tone: strategique
+    text: "Doc Sabatier, la porte tenue du pied : « Une glacière dans le couloir, tirage au sort, tu es sorti. Tu leur déclares la pommade de jeudi, ou on considère que c'est de la pommade ? »"
+    left:
+      label: "Je déclare tout"
+      effects: {direction: "-", vestiaire: "+", parole: 1, relation: {sabatier: -1}}
+      answer: "Tu déclares les trois lignes. Le formulaire part avec le flacon ; le Doc range le tube dans un tiroir qui ferme, maintenant."
+    right:
+      label: "C'est de la pommade"
+      effects: {direction: "+", vestiaire: "-", parole: -1, relation: {sabatier: 1}}
+      answer: "C'était de la pommade. Le résultat arrive six semaines plus tard, négatif, et personne ne te dit qu'il est arrivé."
+
+  - id: jp.evt.jambe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    text: "Bréhaut, le brassard encore au bras, la voix plus basse : « Le duel, c'était toi. Tibia-péroné, six mois, et pas de contrat. Tu vas le voir ce soir, ou tu laisses passer trois jours ? »"
+    left:
+      label: "Ce soir"
+      effects: {vestiaire: "++", force: "-", relation: {brehaut: 1}}
+      answer: "Tu y vas à vingt heures. Il te dit « c'est le foot » avant que tu aies parlé, et il le pense ; ça ne t'aide pas."
+    right:
+      label: "Je laisse passer trois jours"
+      effects: {vestiaire: "--", force: "+", relation: {brehaut: -1}}
+      answer: "Tu y vas le samedi. Sa mère est là. Elle te dit bonjour comme on dit bonjour à quelqu'un qu'on a vu sur une vidéo."
+
+  - id: jp.evt.huissier
+    roles: [joueur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane, une liasse contre la poitrine : « Un huissier au centre, il compte les ballons et les machines. Vous sortez vos crampons du casier avant qu'il monte, ou vous le laissez faire ? »"
+    left:
+      label: "Je sors mes crampons"
+      effects: {caisse: "+", vestiaire: "-", direction: "-"}
+      answer: "Tu sors la paire du dimanche par la porte du parking. Trois autres font pareil dans l'heure ; le vestiaire a vu qui."
+    right:
+      label: "Je le laisse compter"
+      effects: {vestiaire: "+", direction: "+", caisse: "-"}
+      answer: "Il compte tout, y compris tes crampons. Il en note la marque et l'usure ; il écrit « usagés » et ne les prend pas."
+
+  - id: jp.evt.photographe
+    roles: [joueur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    tone: strategique
+    text: "Ménèche, garé là depuis trois jours, le coude à la portière : « Je ne suis pas là pour vous, je suis là pour la maison. Un café à l'intérieur, ou je reste sur le trottoir jusqu'à dimanche ? »"
+    left:
+      label: "Un café à l'intérieur"
+      effects: {tribunes: "+", direction: "-", parole: -1, relation: {meneche: 1}}
+      answer: "Il entre, il boit, il repart. La photo publiée est celle du salon ; on y voit la table, et l'ardoise des courses, et l'écriture de Camille."
+    right:
+      label: "Restez sur le trottoir"
+      effects: {tribunes: "-", vestiaire: "+", parole: 1}
+      answer: "Il reste. Dimanche, la photo est celle du volet fermé, avec une légende qui parle d'orgueil. Le volet, lui, était fermé parce que tu dormais."
+
+  - id: jp.evt.faux_cousin
+    roles: [joueur]
+    arc: agents
+    tags: [agents, absurde, piege]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli, mon ami, le combiné encore chaud : « Le cousin d'un Ballon d'Argent te veut à l'essai jeudi, là-bas. Il demande le billet d'avance. Tu paies le billet, ou je le rappelle ? »"
+    left:
+      label: "Je paie le billet"
+      effects: {caisse: "--", parole: -1, relation: {fardelli: 1}}
+      answer: "Le numéro ne répond plus le jeudi. Tu as un billet non remboursable et l'adresse d'un centre commercial."
+    right:
+      label: "Rappelle-le"
+      effects: {caisse: "+", vestiaire: "+", relation: {fardelli: -1}}
+      answer: "Il rappelle. Personne. « Bon », dit Fardelli, qui note quand même le nom dans le carnet, à la page des gens à ne pas oublier."

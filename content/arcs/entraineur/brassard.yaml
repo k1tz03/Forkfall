@@ -35,7 +35,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : Bréhaut a gardé le brassard après le départ de {nom}. Sur une jambe, jusqu'en juin."
+      journal: "{annee} : le brassard de {club} a trouvé un bras pour la saison. Bréhaut a fait le tour du vestiaire, sur une jambe."
     steps:
       - id: genou
         card: en.brassard.genou
@@ -53,7 +53,11 @@ arcs:
           - { id: en.brassard.cercle_mbako, if: "flag('brassard_mbako')" }
           - { id: en.brassard.cercle_gigi, if: "flag('brassard_gigi')" }
           - { id: en.brassard.cercle }
-        next: [ { step: raccroche, at_season: 1, at: [1, 4], in: [1, 4] } ]
+        # `raccroche` pose `outcome: staff` : servie sans garde, elle recouvrait
+        # `garde`, `gigi` et `mbako` l'été suivant (issue `garde` à 9-10 % des
+        # ouvertures, plancher 10 %). Bréhaut ne raccroche pas l'année où il a
+        # gardé le brassard : il le rend d'abord.
+        next: [ { step: raccroche, if: "!flag('brehaut_capitaine')", at_season: 1, at: [1, 4], in: [1, 4] } ]
       - id: raccroche
         card:
           - { id: en.brassard.raccroche_actif, if: "flag('club_actif')" }

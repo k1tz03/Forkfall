@@ -1,0 +1,103 @@
+# Les visages du promu qui ne parlaient pas — cartes de sac de la première
+# saison (bible ch. 01 § 6 pour Mbako, ch. 02 pour Berthomier).
+#
+# Défaut relevé : le `cast` du postulat 0 déclare Mbako à 1,5 apparition par
+# saison et Berthomier à 0,5, mais aucun des deux n'ouvrait la bouche en S0 —
+# Mbako dans 11 % des premières saisons, Berthomier dans 0 %. `en.prodige`
+# s'ouvre pourtant dans plus des trois quarts des S0, et ses cartes sont
+# parlées par Fardelli et par le président : le gamin de seize ans autour
+# duquel tourne la fourche centrale du postulat était muet dans sa propre
+# histoire. Ces trois cartes le font parler avant qu'on parle de lui.
+#
+# `priority: 1` sur la première : elle a un `when` étroit (saison 0, le petit
+# encore au club) et doit sortir dès qu'un créneau de sac est libre — c'est le
+# même mécanisme que `en.presse.meme`.
+cards:
+  # --------------------------------------------------------------- Mbako, 16 ans
+  # Voix de la fiche : brève, aiguë ; il ne dit jamais bonjour, il dit « je veux
+  # jouer », et « maintenant » comme d'autres disent « s'il vous plaît ».
+  - id: en.mbako.maintenant
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: mbako
+    tone: leger
+    once: true
+    priority: 2
+    when: "season == 0 && !flag('mbako_vendu')"
+    text: "Le petit Mbako, seize ans, les mains dans les manches : « Je ne dis pas bonjour, coach. Je dis : je veux jouer. Maintenant. Dimanche, ou je demande où. »"
+    left:
+      label: "Dimanche, tu joues"
+      effects: {force: 1, vestiaire: "-", tribunes: "+", relation: {mbako: 1, brehaut: -1}}
+      answer: "Il ne dit pas merci. Il part vers le terrain avant que tu aies fini."
+    right:
+      label: "Quand tu seras prêt"
+      effects: {vestiaire: "+", relation: {mbako: -1}}
+      answer: "Il remet les mains dans les manches. Il attend. Mal, et devant ton bureau."
+
+  # Le sac neuf (bible ch. 01 § 6, « cartes propres ») : l'agent tourne avant
+  # que le club ait décidé quoi que ce soit.
+  - id: en.mbako.sac_neuf
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, formation]
+    speaker: mbako
+    tone: strategique
+    once: true
+    cooldown: 20
+    when: "season <= 2 && !flag('mbako_vendu')"
+    text: "Mbako pose un sac neuf sur le banc, l'étiquette encore dessus : « Ma mère dit que c'est un cadeau d'un monsieur. Moi je veux jouer, maintenant. Je le rends, ou je le garde ? »"
+    left:
+      label: "Tu le rends"
+      effects: {direction: "+", tribunes: "+", relation: {mbako: -1, fardelli: -1}}
+      answer: "Il le rend. L'étiquette est restée dessus ; le monsieur ne l'a jamais retirée."
+    right:
+      label: "Garde-le"
+      effects: {caisse: "-", vestiaire: "-", relation: {mbako: 1, fardelli: 1}}
+      answer: "Il le garde. Le monsieur revient trois semaines après, avec un deuxième."
+
+  # --------------------------------------------------- Berthomier, la Fédération
+  # Il n'entrait qu'avec la Commission, une intrigue du bucket « 2+ » : dans un
+  # postulat dont la carrière médiane dure trois saisons, l'instance n'existait
+  # pas. Sa réplique est son tic (ch. 02) : « on verra ça après le Congrès ».
+  - id: en.legruet.recepisse
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: legruet
+    tone: strategique
+    once: true
+    when: "season <= 2"
+    text: "Berthomier, une lettre à en-tête : « Un promu, c'est un dossier neuf : licences, terrain, comptes. On verra ça après le Congrès. Vous signez le récépissé, ou vous lisez ? »"
+    left:
+      label: "Je signe"
+      effects: {direction: "+", caisse: "-"}
+      answer: "Tu signes. Le récépissé part ; le dossier reste, sur une pile qui a un ordre."
+    right:
+      label: "Je lis d'abord"
+      effects: {direction: "-", vestiaire: "+", relation: {legruet: -1}}
+      answer: "Tu lis. Il attend debout et regarde sa montre trois fois, sans rien dire."
+
+  # ------------------------------------------------------ Gégé, capo, 47 ans
+  # Le créancier du postulat apparaissait 1,6 fois par première saison mais
+  # seulement dans 70 % d'entre elles : le local, le onze et le pacte viennent
+  # tous d'intrigues tirées. Son besoin de fiche (ch. 01 § 9.1) : « que
+  # quelqu'un du club vienne au local sans y être obligé ». Son tic, torsion 1.
+  - id: en.gege.local_du_pere
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: gege
+    tone: leger
+    once: true
+    priority: 1
+    when: "season == 0"
+    text: "Gégé, casquette verte, sous la Tribune Nord : « Le local ouvre le mardi. On n'invite pas les coachs, ils viennent. La tribune n'oublie rien, {prenom} ; elle compte aussi. »"
+    left:
+      label: "Mardi, j'y passe"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Tu y passes. Il sort une bâche pliée de sous le bar et ne la déplie pas."
+    right:
+      label: "Quand j'aurai le temps"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il compte qui est venu, le mardi suivant. Il compte à voix haute."

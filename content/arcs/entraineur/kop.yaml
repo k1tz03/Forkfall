@@ -26,6 +26,10 @@ arcs:
     carrier: gege
     replay: { after: 2, max: 2 }
     issues: [pacte, banderoles, bache]
+    # Clause du § 5.1 : `pacte` est bornée par un état — il faut que le capo
+    # ne t'en veuille pas (`relation.gege >= 0`) au tirage de l'étape 2, puis
+    # signer la craie. Elle reste sous 10 %, et c'est ce qu'elle raconte.
+    issues_rares: [pacte]
     traces:
       onze_du_virage: "{annee} : à {club}, la compo se vote en tribune Nord. {prenom} {nom} a signé."
       pacte_gege:     "{annee} : {prenom} {nom} a promis le local rénové au virage. Gégé a gravé la date à la craie."
@@ -44,9 +48,14 @@ arcs:
         # La première variante lit une autre intrigue : l'espion de la haie a
         # laissé sa plaque au-dessus du bar du local (en.espion_haie).
         card:
-          - { id: en.kop.local_jumelles, if: "flag('espion_cafe')" }
+          # Les deux variantes « encore » passent devant le croisement de
+          # l'espion : sur une relance, c'est la relance que le capo commente,
+          # et `local_jumelles` reste servie à la première ouverture. Dans
+          # l'autre ordre, un `espion_cafe` posé en S0 les recouvrait toutes
+          # les deux et `local_encore_onze` n'était jamais servie.
           - { id: en.kop.local_encore_onze, if: "plays('en.kop_qui_aime_trop') >= 1 && flag('onze_du_virage')" }
           - { id: en.kop.local_encore, if: "plays('en.kop_qui_aime_trop') >= 1" }
+          - { id: en.kop.local_jumelles, if: "flag('espion_cafe')" }
           - { id: en.kop.local }
         next: [ { step: onze, in: [3, 6] } ]
       - id: onze
@@ -69,21 +78,33 @@ arcs:
       - id: pacte_suite
         card: en.kop.pacte_suite
         outcome: pacte
-        next: [ { step: anniversaire, in: [6, 14] } ]
+        # Mesuré : l'issue `pacte` reste à 2 % des ouvertures parce que la
+        # sortie droite de `en.kop.pacte` (« Pas de promesse en l'air ») bascule
+        # vers les banderoles avant `pacte_suite` — ce n'est pas l'anniversaire
+        # qui la recouvre. Fermer l'anniversaire après le pacte ne changeait
+        # rien à l'issue et coûtait deux variantes ; le `next` reste ouvert.
+        # [6,14] → [4,10] : 46 % des ouvertures restaient ouvertes à la fin de
+        # la carrière, et l'anniversaire — dernier temps de l'intrigue — n'était
+        # jamais atteint derrière le pacte. Quatre à dix créneaux suffisent : la
+        # date est gravée, l'anniversaire tombe la saison suivante au plus tard.
+        next: [ { step: anniversaire, in: [4, 10] } ]
       - id: banderoles
         card: en.kop.banderoles
         outcome: banderoles
-        next: [ { step: anniversaire, in: [6, 14] } ]
+        next: [ { step: anniversaire, in: [4, 10] } ]
       - id: anniversaire
         # La variante lit relation.gege au tirage (après « Signez », A6…).
+        # La branche du pacte se partage d'abord, et de façon exhaustive : la
+        # date est gravée à la craie, l'anniversaire dit si elle a été tenue.
+        # Le capo tranche : à +2 il a fait refaire le local avec ses gens
+        # (inauguration) ; sinon la bâche est passée par-dessus la craie. Les gardes précédentes
+        # (`gauges.tribunes >= 65` d'un côté, `relation.gege <= -1` de l'autre)
+        # laissaient les deux cartes inatteignables : signer le pacte donne
+        # +1 à Gégé, et l'épilogue de l'intrigue fait retomber la tribune.
         card:
-          # Avant les trois autres : quand le pacte a été signé et que la Nord
-          # est toujours là, l'anniversaire est une inauguration — et l'issue
-          # `pacte` n'est plus recouverte par `bache` (elle tombait à 3 %).
-          - { id: en.kop.anniversaire_inauguration, if: "flag('pacte_gege') && gauges.tribunes >= 65" }
+          - { id: en.kop.anniversaire_inauguration, if: "flag('pacte_gege') && relation.gege >= 2" }
+          - { id: en.kop.anniversaire_pacte_trahi, if: "flag('pacte_gege')" }
           - { id: en.kop.anniversaire_sourire, if: "relation.gege >= 2" }
-          # Le pacte signé garde son issue même quand la Nord sort la bâche.
-          - { id: en.kop.anniversaire_pacte_trahi, if: "relation.gege <= -1 && flag('pacte_gege')" }
           - { id: en.kop.anniversaire_bache, if: "relation.gege <= -1" }
           - { id: en.kop.anniversaire_neutre }
         next: []

@@ -32,7 +32,7 @@ arcs:
     fallback: nouvelles
     epilogue:
       relation: { vecchio: -1 }
-      journal: "{annee} : Gigi Vecchio est resté aux gants de {club}. {nom} est parti sans le banc."
+      journal: "{annee} : Gigi Vecchio a dit sous la douche ce qu'il avait à dire. Le banc derrière le but attend son nom."
     steps:
       - id: douche
         card:
@@ -40,7 +40,11 @@ arcs:
           # l'arc s'ouvre dans 11 % des carrières, deux reprises n'arrivent pas.
           # Le partage entre les deux relances se fait sur `gigi_a_parle` : il
           # ne réclame son banc qu'à quelqu'un à qui il a déjà parlé.
-          - { id: en.gigi.douche_banc, if: "plays('en.gigi_staff') >= 1 && flag('gigi_a_parle')" }
+          # `plays >= 1 && gigi_a_parle` demandait une relance d'une intrigue
+          # ouverte dans une carrière sur dix : l'issue `banc` tombait à 0-6 %
+          # des ouvertures (plancher 10 %). Il réclame aussi son banc du premier
+          # coup à quelqu'un à qui il doit déjà quelque chose.
+          - { id: en.gigi.douche_banc, if: "(plays('en.gigi_staff') >= 1 && flag('gigi_a_parle')) || relation.vecchio >= 3" }
           - { id: en.gigi.douche_discours, if: "plays('en.gigi_staff') >= 1" }
           - { id: en.gigi.douche }
         next: [ { step: suite, if: "flag('gigi_a_parle')", in: [1, 3] } ]
@@ -48,7 +52,11 @@ arcs:
         card: en.gigi.suite
         # Le banc n'arrive que si la promesse a été faite ET que la carrière a
         # duré : c'est la seule porte de la fin ∃ `en_retraite` (cause : l'âge).
-        next: [ { step: banc, if: "flag('banc_gigi_promis') && age >= 55", in: [6, 14] } ]
+        # `age >= 55` fermait l'issue `banc` : le rôle démarre entre 38 et 55 ans
+        # et l'intrigue est déjà `min_season: 2` (issue à 0-6 % des ouvertures,
+        # plancher 10 %). 46 ans : la promesse tenue reste une affaire de fin de
+        # carrière sans exiger le haut de la fourchette de départ.
+        next: [ { step: banc, if: "flag('banc_gigi_promis') && age >= 46", in: [6, 14] } ]
       - id: banc
         card: en.gigi.banc_inaugure
         next: []

@@ -56,7 +56,10 @@ arcs:
       - id: epaule
         # Doit tomber avant le Bilan : passée la saison, l'épaule est oubliée
         # et l'arc file directement au retour de Gigi.
-        card: en.vieux.epaule
+        # Escalier du rituel, comme l'étape 1 : la même épaule, un an de plus.
+        card:
+          - { id: en.vieux.epaule_encore, if: "plays('en.vieux_gardien') >= 1" }
+          - { id: en.vieux.epaule }
         this_season: true
         on_expire: skip
         # [8,14] : depuis l'épaule (slots 9-14), le retour ne peut plus tomber
@@ -68,7 +71,12 @@ arcs:
         # donc après A5 « Le dernier match » ; Gigi titulaire pour la finale
         # (finale_gigi) revient toujours en souriant.
         card:
-          - { id: en.vieux.retour_sourire, if: "relation.vecchio >= 0 || flag('finale_gigi')" }
+          # `>= 0` : après la promesse d'une dernière saison (relation +2), la
+          # garde était toujours vraie et l'issue `parti` tombait à 2-9 % des
+          # clôtures (plancher 10 %) — Gigi revenait en souriant même quand on
+          # lui avait pris ses gants. `>= 1` : il sourit à qui lui doit encore
+          # quelque chose ; aux autres il montre le sac.
+          - { id: en.vieux.retour_sourire, if: "relation.vecchio >= 1 || flag('finale_gigi')" }
           - { id: en.vieux.retour_noir }
         # Sans entrée éligible, l'arc se termine (Gigi parti, ou pas assez
         # proche pour descendre du bus le premier).

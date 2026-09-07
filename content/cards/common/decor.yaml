@@ -188,7 +188,7 @@ cards:
     tone: strategique
     cooldown: 30
     when: "season.phase != 'sprint'"
-    text: "Le Doc essuie ses mains : « Trois joueurs m'ont dit trois choses ce matin, et deux concernent ton onze, {toi}. Ça reste entre la table et moi, sauf si tu demandes. »"
+    text: "Le Doc essuie ses mains : « Trois joueurs m'ont dit trois choses ce matin, et deux concernent le onze de dimanche, {toi}. Ça reste entre la table et moi, sauf si tu demandes. »"
     left:
       label: "Je ne demande rien"
       effects: {vestiaire: "++", relation: {sabatier: 1}}
@@ -580,6 +580,13 @@ cards:
   # club qui n'a jamais brûlé.
   # ==========================================================================
 
+  # Les quatre cartes du local, l'écharpe de 1971 et la bâche disent « ici » :
+  # Gégé est le capo de la Tribune Nord du club d'origine (bible ch. 01, il
+  # finit élu au conseil de « ton ancien club »). Après une vente ou une
+  # transition, il ne tient plus ces scènes de vive voix — c'est la garde
+  # `stats.clubs <= 1 && !role_was('joueur')`, l'exact contraire de celle des
+  # Nouvelles du passé, où il téléphone. La scène qui doit continuer d'exister
+  # après le départ est écrite à distance : `co.dec.local_au_telephone`.
   - id: co.dec.local_mur_craie
     roles: [entraineur, joueur]
     arc: routine
@@ -587,7 +594,7 @@ cards:
     speaker: gege
     tone: strategique
     cooldown: 30
-    when: "relation.gege >= 0"
+    when: "relation.gege >= 0 && stats.clubs <= 1 && !role_was('joueur')"
     text: "Gégé, la craie à la main : « Ce mur porte cent onze dates et deux promesses non tenues, écrites plus gros. La tribune n'oublie rien, {toi} ; tu veux les voir ? »"
     left:
       label: "Montre-moi les deux"
@@ -622,7 +629,7 @@ cards:
     speaker: gege
     tone: leger
     cooldown: 30
-    when: "season >= 1"
+    when: "season >= 1 && stats.clubs <= 1 && !role_was('joueur')"
     text: "Gégé, des ciseaux et un journal rose : « On découpe les Unes et on garde même les moches, surtout les moches. La tribune n'oublie rien, et elle plastifie. »"
     left:
       label: "Découpez celle-là"
@@ -658,6 +665,7 @@ cards:
     tone: strategique
     once: true
     cooldown: 45
+    when: "stats.clubs <= 1 && !role_was('joueur')"
     text: "Gégé pose la main sur un dossier de chaise vide : « Celle-là, c'est celle de mon père, interdit de stade en soixante et onze pour un dessin. La tribune s'assoit ailleurs. »"
     left:
       label: "Je reste debout"
@@ -692,7 +700,7 @@ cards:
     speaker: gege
     tone: leger
     cooldown: 30
-    when: "season.phase == 'retour' || season.phase == 'sprint'"
+    when: "(season.phase == 'retour' || season.phase == 'sprint') && stats.clubs <= 1 && !role_was('joueur')"
     text: "Gégé aligne trois bières tièdes sur une caisse : « Le frigo est mort en mars et on boit tiède depuis, ça forge le caractère. La tribune n'oublie rien, même la panne. »"
     left:
       label: "Je paie le frigo"
@@ -702,6 +710,26 @@ cards:
       label: "Trois tièdes, alors"
       effects: {tribunes: "+", force: -1}
       answer: "Tu bois la tienne. Le goût reste jusqu'à l'échauffement."
+
+  # Le local, à distance : quand tu es parti ailleurs, Gégé ne t'y reçoit plus,
+  # il t'appelle. C'est la variante « à distance » des quatre cartes ci-dessus.
+  - id: co.dec.local_au_telephone
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, ultras, tribunes]
+    speaker: gege
+    tone: leger
+    cooldown: 30
+    when: "stats.clubs >= 2 || role_was('joueur')"
+    text: "Gégé au téléphone, un tabouret qui racle derrière lui : « Le mur du local a une place libre au-dessus du bar, {toi}. On la garde pour toi, ou on la donne au suivant ? »"
+    left:
+      label: "Gardez-la-moi"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "La place reste vide deux ans. Personne n'ose y punaiser une facture."
+    right:
+      label: "Donnez-la au suivant"
+      effects: {tribunes: "-", parole: 1}
+      answer: "Ils la donnent au suivant. Ils gardent quand même une punaise, au cas où."
 
   - id: co.dec.local_paulette_visite
     roles: [entraineur, joueur]
@@ -1773,7 +1801,10 @@ cards:
     cooldown: 30
     text: "Gérard compte la recette de la buvette dans une boîte à gâteaux : « Quarante-deux, plus la tournée du président. Ici, on payait en bières ; on comptait mieux. »"
     left:
-      label: "Comptez en écus"
+      # « écus » était un anachronisme : le monde du jeu ne passe à l'écu qu'en
+      # 2002 (co.nv.2000_ecus_annonce, co.nv.2002_ecus) et cette carte est
+      # servie dès la première saison, en 1990.
+      label: "Comptez en francs"
       effects: {caisse: "+"}
       answer: "Il recompte deux fois, en soupirant. Le total est le même, à une bière près."
     right:
@@ -2369,7 +2400,7 @@ cards:
     tone: strategique
     once: true
     cooldown: 45
-    when: "season >= 3 && relation.gege >= 2"
+    when: "season >= 3 && relation.gege >= 2 && stats.clubs <= 1 && !role_was('joueur')"
     text: "Gégé plie une écharpe qui a cinquante ans et la pose sur un siège : « Ma mère l'a tricotée en soixante et onze, pour mon père, qui n'avait plus le droit d'entrer. La tribune n'oublie rien. »"
     left:
       label: "Je la garde"
@@ -2391,7 +2422,7 @@ cards:
     tone: strategique
     once: true
     cooldown: 45
-    when: "season >= 3 && relation.gege <= -2"
+    when: "season >= 3 && relation.gege <= -2 && stats.clubs <= 1 && !role_was('joueur')"
     text: "Une photo est arrivée au club : un seau, une écharpe de laine dedans, et de la fumée. Gégé, au portail : « Celle de soixante et onze. La tribune n'oublie rien ; elle range, c'est tout. »"
     left:
       label: "Vous n'aviez pas le droit"

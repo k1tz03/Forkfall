@@ -798,11 +798,21 @@ class PostulatDef {
   final String question;
   final int division;
   final int year;
+  /// Âge de départ imposé par le postulat (spec variété §1.8, comme le nom) :
+  /// le tirage `rng.range(role.age)` est conservé — donc « même code, même
+  /// carrière » tient — puis écrasé. `null` = on garde le tirage du rôle.
+  final int? age;
   final Map<String, int> gauges;
   final int force;
   final String? objective;
   final List<String> flags;
   final String? president;
+
+  /// Le personnage qui te tient dans ce postulat (Objectif, Bilan du contrat).
+  /// Par défaut le `patron` du rôle. Distinct de [president], qui n'est que le
+  /// nom rendu par `{president}` : chez un joueur, l'agent tient le contrat et
+  /// le président reste le président.
+  final String? patron;
   final bool camille;
   final Map<String, CastEntry> cast;
   final String? openingArc;
@@ -822,11 +832,13 @@ class PostulatDef {
     this.question = '',
     required this.division,
     this.year = 1990,
+    this.age,
     required this.gauges,
     required this.force,
     this.objective,
     this.flags = const [],
     this.president,
+    this.patron,
     this.camille = false,
     this.cast = const {},
     this.openingArc,
@@ -857,11 +869,13 @@ class PostulatDef {
       question: j['question'] as String? ?? '',
       division: (j['division'] as num?)?.toInt() ?? 2,
       year: (j['year'] as num?)?.toInt() ?? 1990,
+      age: (j['age'] as num?)?.toInt(),
       gauges: ((j['gauges'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), (v as num).toInt())),
       force: (j['force'] as num?)?.toInt() ?? 50,
       objective: j['objective'] as String?,
       flags: (j['flags'] as List?)?.cast<String>() ?? const [],
       president: j['president'] as String?,
+      patron: j['patron'] as String?,
       camille: j['camille'] == true,
       cast: cast,
       openingArc: j['opening_arc'] as String?,
@@ -878,6 +892,12 @@ class PostulatDef {
 
 class DirectorConfig {
   final Map<String, List<int>> nouvelleSlots;
+
+  /// Plafond de Nouvelles servies dans une saison (budget § 5.2 : la bande est
+  /// 3-4). Les créneaux réservés portent une dette ; sans plafond, un rôle à
+  /// quatre créneaux pouvait en servir cinq (dette + respiration) et sortait
+  /// de la bande par le haut.
+  final int nouvellesMax;
   final int gapMax;
   final int softStepsMax;
   final int minActive;
@@ -892,6 +912,7 @@ class DirectorConfig {
 
   const DirectorConfig({
     this.nouvelleSlots = const {},
+    this.nouvellesMax = 4,
     this.gapMax = 3,
     this.softStepsMax = 8,
     this.minActive = 2,
@@ -922,6 +943,7 @@ class DirectorConfig {
     final d = const DirectorConfig();
     return DirectorConfig(
       nouvelleSlots: slots,
+      nouvellesMax: (j['nouvelles_max'] as num?)?.toInt() ?? d.nouvellesMax,
       gapMax: (j['gap_max'] as num?)?.toInt() ?? d.gapMax,
       softStepsMax: (j['soft_steps_max'] as num?)?.toInt() ?? d.softStepsMax,
       minActive: (j['min_active'] as num?)?.toInt() ?? d.minActive,

@@ -278,3 +278,22 @@ cards:
     text: "Camille, une carte postale à la main : « L'ancien voisin écrit que le boulanger d'en bas a fermé et qu'il pense à nous. Tu rentres à quelle heure ? Je l'ai mise sur le frigo. »"
     left:  {label: "Encaisser", effects: {relation: {camille: 1}}, answer: "La carte reste sur le frigo trois ans. On finit par ne plus la voir."}
     right: {label: "Lire la carte", effects: {relation: {camille: 1}}, answer: "La carte reste sur le frigo trois ans. On finit par ne plus la voir."}
+
+  # ------------------------------------------ le second fax (la générique revient)
+  # `tr.nouvelles_du_passe` (Josiane, le fax) est passée `once` : le cadre ne se
+  # répète plus. Quand une deuxième affaire remonte, c'est cette carte-là qui la
+  # dit — même mécanisme, autre bouche, autre objet, et elle nomme la fatigue de
+  # l'ancien club au lieu de la désigner.
+  - id: co.nouvelle.passe_second_fax
+    roles: [entraineur, joueur]
+    arc: passe
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    cooldown: 0
+    when: "season >= 2 && (stats.clubs >= 2 || role_was('joueur')) && seen('tr.nouvelles_du_passe')"
+    text: "Madame Josiane, deux feuilles thermiques déjà pâles : « Le vieux fax de là-bas a encore mon numéro. C'est la deuxième affaire ce mois-ci. J'en ai vu passer, mais pas par erreur. »"
+    left:  {label: "Encaisser", effects: {direction: "-"}, answer: "Elle range les deux feuilles dans une chemise neuve. Elle écrit un nom dessus, pas le tien."}
+    right: {label: "Changer le numéro", effects: {direction: "-"}, answer: "Elle range les deux feuilles dans une chemise neuve. Elle écrit un nom dessus, pas le tien."}
+

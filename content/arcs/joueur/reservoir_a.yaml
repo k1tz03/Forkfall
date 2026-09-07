@@ -19,6 +19,12 @@ arcs:
     carrier: gege
     cast: [gege, lea, aulard, camille]
     start: [2, 9]
+    # `same_club: false` : la bâche ne déménage pas, mais l'intrigue suit le
+    # joueur — la pépite est vendue au slot 17 de la S0 dans toutes les
+    # carrières, et sans cela l'arc mourrait avant sa deuxième étape. Les trois
+    # premières étapes ont donc chacune une variante « à distance » (Gégé au
+    # téléphone, la photo par la poste, le président qui convoque pour l'été) :
+    # elles passent devant la version au stade dès `vendu_d1` / `vendu_d2`.
     same_club: false
     fallback: nouvelles
     hint: "La Nord a peint ton nom sur vingt mètres. Elle veut une promesse."
@@ -30,25 +36,41 @@ arcs:
       # Lue par jp.retour.but_cave (l'usine ne peut pas brûler ce qu'elle n'a
       # plus) : c'est toi qui es reparti avec les vingt mètres.
       bache_a_la_cave: "{annee} : {prenom} {nom} est reparti{pg, select, f{e} other{}} avec les vingt mètres. Ils sont à la cave, pliés."
+      # Posée par jp.tifo.un_an_apres_brulee : la seule fin de la bâche qui ne
+      # soit pas un pliage. Lue par la manchette « LA BÂCHE A BRÛLÉ » (unes/pepite).
+      bache_cendres:   "{annee} : la bâche de {prenom} {nom} a brûlé le soir du but. Le local a gardé les œillets, dans une boîte."
     epilogue:
       tribunes: "-"
       # Pas de ville : l'épilogue peut tomber une saison plus tard, dans un
       # autre club — la bâche, elle, n'a pas déménagé.
-      journal: "{annee} : la bâche a été pliée. Pas brûlée."
+      # La ligne était « pliée. Pas brûlée. » : fausse dans les carrières qui ont
+      # célébré contre l'usine (`celebre_contre_usine` la fait brûler le soir
+      # même). L'épilogue ne tranche plus ; c'est l'étape `un_an_apres` qui dit
+      # ce qu'elle est devenue, et sa variante brûlée pose `bache_cendres`.
+      journal: "{annee} : vingt mètres de bâche au nom de {nom}. Le local sait ce qu'elle est devenue."
     steps:
       - id: local
         card:
+          - { id: jp.tifo.local_loin,  if: "flag('vendu_d1') || flag('vendu_d2') || flag('exil_dore')" }
           - { id: jp.tifo.local_pacte, if: "flag('pacte_gege')" }
           - { id: jp.tifo.local }
         next: [ { step: bache, in: [2, 10] } ]
       - id: bache
-        card: jp.tifo.bache
+        card:
+          - { id: jp.tifo.bache_loin, if: "flag('vendu_d1') || flag('vendu_d2') || flag('exil_dore')" }
+          - { id: jp.tifo.bache }
         next: [ { step: prix, in: [2, 11] } ]
       - id: prix
-        card: jp.tifo.prix
+        card:
+          - { id: jp.tifo.prix_loin, if: "flag('vendu_d1') || flag('vendu_d2') || flag('exil_dore')" }
+          - { id: jp.tifo.prix }
         next: [ { step: un_an_apres, in: [6, 16] } ]
       - id: un_an_apres
         card:
+          # La bâche a brûlé le soir du but contre l'usine : elle passe AVANT
+          # tout le reste, sinon les cinq variantes suivantes racontent un
+          # pliage (« on ne l'a pas brûlée ») pour une bâche qui n'existe plus.
+          - { id: jp.tifo.un_an_apres_brulee,  if: "flag('celebre_contre_usine')" }
           # `world.division == 2` est vrai d'entrée pour la pépite : la variante
           # aurait éteint `un_an_apres_dore`. C'est la descente qui la déclenche.
           # `descente` n'existe qu'en Division 1 (engine `_resolveBilan`) et

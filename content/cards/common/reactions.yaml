@@ -34,13 +34,36 @@ cards:
       effects: {direction: "+", relation: {josiane: 1}}
       answer: "Elle en garde un exemplaire. Pour le dossier."
 
-  # Une manchette, Gigi dans le couloir : il garde celle-là.
+  # Le pack de six vient de changer de mains : Gigi les a portées dix-sept ans
+  # (bible ch. 01 § 2.4, réaction déclarée de la scène « Les bouteilles »).
+  - id: co.re.vecchio_bouteilles
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    text: "Vecchio, les gants sous le bras, un clin d'œil qui prend son temps : « Dix-sept ans, les bouteilles. On ne s'en souvient pas ; eux, si. »"
+    left:
+      label: "Dix-sept ans, Gigi ?"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "« Dix-huit avec la Coupe. » Il repart vers son but sans attendre la suite."
+    right:
+      label: "Et maintenant ?"
+      effects: {relation: {vecchio: 1}}
+      answer: "« Maintenant je regarde qui les porte. » Il regarde, en effet, un long moment."
+
+  # Une manchette, Gigi dans le couloir : il garde celle-là. Escalier de trois
+  # crans (le sac, le casier, le bar), tiré sur `seen()` par les appelants
+  # (unes.yaml, cartes) : sans lui, la même phrase revenait à chaque Bilan
+  # (spec variété §5.3), quinze fois par carrière. `since` tient en plus un cran
+  # d'une saison et demie entre deux, comme les ciseaux de Gégé.
   - id: co.re.vecchio_garde
     roles: [entraineur, joueur]
     arc: vestiaire
     tags: [vestiaire, presse]
     speaker: vecchio
     tone: leger
+    when: "since('co.re.vecchio_garde') >= 24"
     text: "Vecchio, le journal sous le bras avec les gants : « J'en ai vu d'autres, des Unes. Celle-là, je la garde. Pas pour moi. »"
     left:
       label: "Garde-la, Gigi"
@@ -51,14 +74,52 @@ cards:
       effects: {vestiaire: "+", relation: {vecchio: 1}}
       answer: "Il la plie dans le sac, entre les deux gants. Elle y restera."
 
+  - id: co.re.vecchio_garde_casier
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: vecchio
+    tone: leger
+    when: "since('co.re.vecchio_garde_casier') >= 24"
+    text: "Vecchio, la porte de son casier ouverte de dix centimètres : « Le sac est plein. Celle-là, je l'ai scotchée à l'intérieur, avec les autres. Personne ne l'ouvre. »"
+    left:
+      label: "Je peux voir ?"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il ouvre de dix centimètres de plus. Il y a quatre Unes, une chaussette, et une photo qu'il ne montre pas."
+    right:
+      label: "Garde-le fermé"
+      effects: {vestiaire: "+", parole: 1}
+      answer: "Il referme. « De toute façon… » Il ne finit pas ; il repart vers son but."
+
+  - id: co.re.vecchio_garde_eau
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: vecchio
+    tone: leger
+    when: "since('co.re.vecchio_garde_eau') >= 24"
+    text: "Vecchio, un verre d'eau au bar, le journal à côté : « Le casier est plein aussi. Celle-là, je la laisse ici : ils la mettront au mur quand je serai parti. »"
+    left:
+      label: "Tu ne pars pas, Gigi"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "« Chaque juin. » Il repose le verre, plein aux trois quarts, comme toujours."
+    right:
+      label: "Ils la mettront au mur"
+      effects: {tribunes: "+", relation: {vecchio: 1}}
+      answer: "Le patron la punaise le soir même, trop haut. Gigi ne le lui dit pas."
+
   # Une manchette, Camille a lu le journal. Tout le quartier aussi.
+  # `since` tient un cran d'une saison et demie entre deux lectures, comme les
+  # ciseaux de Gégé : sans lui, la même phrase revenait deux Bilans de suite
+  # (spec variété §5.3). Les appelants tirent la deuxième et la troisième sur
+  # `seen()`, la dernière variante sans `if`.
   - id: co.re.camille_journal
     roles: [entraineur, joueur]
     arc: famille
     tags: [famille, presse]
     speaker: camille
     tone: leger
-    when: "!flag('divorce')"
+    when: "!flag('divorce') && since('co.re.camille_journal') >= 24"
     text: "Camille, le journal ouvert sur la table : « Tu rentres à quelle heure ? J'ai lu le journal. La boulangère aussi. Elle m'a fait un prix. »"
     left:
       label: "Je rentre tôt"
@@ -68,6 +129,40 @@ cards:
       label: "Ne le lis pas"
       effects: {relation: {camille: -1}, vestiaire: "+"}
       answer: "Elle l'a déjà lu deux fois. La deuxième, à voix haute, pour le chat."
+
+  - id: co.re.camille_journal_ecole
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille, presse]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce') && since('co.re.camille_journal_ecole') >= 24"
+    text: "Camille, le journal plié à l'envers : « Tu rentres à quelle heure ? Une mère l'a lu à voix haute devant l'école ce matin. Elle a mis le ton, en plus. »"
+    left:
+      label: "Je passerai à l'école"
+      effects: {relation: {camille: 1}, direction: "-"}
+      answer: "Tu y passes le lendemain. Personne ne dit rien ; tout le monde a le même journal."
+    right:
+      label: "Elle mettra le ton demain"
+      effects: {vestiaire: "+", parole: -1}
+      answer: "Le lendemain, c'est une autre page. Elle met le ton quand même."
+
+  - id: co.re.camille_journal_frigo
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [famille, presse]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce') && since('co.re.camille_journal_frigo') >= 24"
+    text: "Camille, un aimant à la main : « Tu rentres à quelle heure ? Celle-là, je l'ai mise sur le frigo. Il y en a trois maintenant, et une seule est belle. »"
+    left:
+      label: "Enlève les deux autres"
+      effects: {relation: {camille: 1}, vestiaire: "-"}
+      answer: "Elle en enlève une. La plus moche reste, et elle ne dit pas pourquoi."
+    right:
+      label: "Laisse les trois"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Les trois restent. Le frigo devient la seule revue de presse honnête de la ville."
 
   # Une manchette, Gégé l'a découpée pour le local. Le mur se remplit lentement :
   # `since` tient un cran d'une saison et demie entre deux découpages, sinon la

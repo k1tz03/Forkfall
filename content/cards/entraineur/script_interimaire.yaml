@@ -25,7 +25,7 @@ cards:
     arc: direction
     tags: [direction, vestiaire]
     speaker: josiane
-    tone: leger
+    tone: strategique
     once: true
     text: "Madame Josiane, un rouleau de scotch dans une main, un tournevis dans l'autre : « Le bureau est encore à son nom, et « jusqu'à nouvel ordre » n'est pas une date. Je jette ses cartons, {toi} ? »"
     left:
@@ -42,16 +42,16 @@ cards:
     arc: direction
     tags: [direction, vestiaire]
     speaker: josiane
-    tone: leger
+    tone: strategique
     once: true
     text: "Madame Josiane, tournevis en main : « Le vestiaire a gardé sa compo au mur et le bureau est encore à son nom. J'en ai vu passer, vous savez. Je jette ses cartons, {toi} ? »"
     left:
       label: "Jetez, c'est mon bureau"
-      effects: {direction: "+", vestiaire: "--", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      effects: {direction: "+", vestiaire: "--", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.gege_il_venait}]}
       answer: "Elle dévisse la plaque. Le tableau du vestiaire, lui, personne n'y touche."
     right:
       label: "Gardez-les, six semaines"
-      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.gege_il_venait}]}
       answer: "Elle scotche les cartons. La compo reste au mur, à la craie, jusqu'à nouvel ordre."
 
   - id: en.interim.i1_bureau_diplome
@@ -59,7 +59,7 @@ cards:
     arc: direction
     tags: [direction]
     speaker: josiane
-    tone: leger
+    tone: strategique
     once: true
     text: "Madame Josiane, le téléphone contre l'épaule : « La Fédération a appelé pour votre papier, et le bureau est encore à son nom. J'en ai vu passer. Je jette ses cartons, {toi} ? »"
     left:
@@ -76,17 +76,76 @@ cards:
     arc: direction
     tags: [direction, mercato]
     speaker: josiane
-    tone: leger
+    tone: strategique
     once: true
     text: "Madame Josiane, un message rose à la main : « Un agent a appelé pour le sien, et pour le vôtre — de remplaçant. Le bureau est encore à son nom. Je jette ses cartons, {toi} ? »"
     left:
       label: "Jetez, c'est mon bureau"
-      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.fardelli_seau}]}
       answer: "Elle dévisse la plaque. Le message rose reste sur le bureau, bien au centre."
     right:
       label: "Gardez-les, six semaines"
-      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.fardelli_seau}]}
       answer: "Elle scotche les cartons. Elle jette le message rose ; elle ne le dit pas."
+
+  # ============================ I1b · Le groupe a lu (S0, [5,8]) — Bréhaut
+  # Bible ch. 01 § 2.4, scène `en.brehaut.groupe_a_lu` (version entraîneur de
+  # l'ouverture du costume). Le capitaine est le « cœur » du postulat : il lui
+  # fallait une porte qui ne dépende pas du tirage du réservoir.
+  - id: en.brehaut.groupe_a_lu
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    text: "Bréhaut tapote un journal plié sans l'ouvrir : « Le groupe a lu ce qu'on écrit sur toi, et il l'a lu deux fois. Le groupe vit bien, coach ; il aimerait l'apprendre par toi. »"
+    left:
+      label: "Je le dis au groupe, là"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1}, react: en.re.vukic_second_discours}
+      answer: "Tu parles dix minutes. Il hoche la tête à chaque phrase, un peu en retard."
+    right:
+      label: "La presse, c'est la presse"
+      effects: {vestiaire: "-", tribunes: "+", relation: {brehaut: -1}, set: [groupe_lit_avant], react: en.re.vukic_second_discours}
+      answer: "Le journal reste sur le banc. Le lendemain, il y en a deux."
+
+  # ============================ I2b · Les bouteilles (S0, [13,15]) — Bréhaut
+  # Bible ch. 01 § 2.2 (registre 0 : « Le groupe vit bien, coach. Les
+  # bouteilles, c'est toi ou c'est moi ? ») et § 2.4 (« Les bouteilles »). La
+  # variante lit le drapeau posé au créneau 5-8 : couture interne à la S0.
+  - id: en.brehaut.bouteilles
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: leger
+    once: true
+    text: "Bréhaut, un pack de six à bout de bras, fin d'échauffement : « Le groupe vit bien, coach. Les bouteilles, c'est toi ou c'est moi ? Chez nous, le nouveau porte quelque chose. »"
+    left:
+      label: "Je porte, donne"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1}, react: co.re.vecchio_bouteilles}
+      answer: "Tu portes. Vecchio te fait un clin d'œil ; il les a portées dix-sept ans."
+    right:
+      label: "Je ne suis pas là pour ça"
+      effects: {vestiaire: "-", direction: "+", relation: {brehaut: -1}, react: co.re.vecchio_bouteilles}
+      answer: "Il pose le pack devant tes pieds. Tout le monde regarde le pack."
+
+  - id: en.brehaut.bouteilles_journal
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment, presse]
+    speaker: brehaut
+    tone: leger
+    once: true
+    text: "Bréhaut, un pack de six dans une main, le journal de mardi dans l'autre : « Le groupe vit bien, et il lit. Les bouteilles, c'est toi ou c'est moi, coach ? »"
+    left:
+      label: "Je porte, donne"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1}, react: co.re.vecchio_bouteilles}
+      answer: "Tu portes le pack. Il replie le journal sous son bras et ne le ressort pas."
+    right:
+      label: "Je ne suis pas là pour ça"
+      effects: {vestiaire: "-", direction: "+", relation: {brehaut: -1}, react: co.re.vecchio_bouteilles}
+      answer: "Il pose le pack, puis le journal dessus. Le vestiaire regarde les deux."
 
   # ================================================ I2 · Le verdict (S0, 10-11)
   - id: en.interim.i2_confirme

@@ -139,8 +139,11 @@ cards:
     left: {label: "On joue, tant pis", effects: {force: "+", vestiaire: "--", tribunes: "+"}}
     right: {label: "Je demande le report", effects: {caisse: "-", direction: "-", tribunes: "-"}}
 
+  # « Qui décide, qui possède » : programmer l'heure du coup d'envoi et parler de
+  # « tes joueurs », c'est le banc. Le joueur, lui, SUBIT l'horaire : sa version
+  # est portée par le capitaine, et le choix porte sur ce qu'on fait du groupe.
   - id: co.monde.canicule_tv
-    roles: [entraineur, joueur]
+    roles: [entraineur]
     arc: sponsors
     tags: [sponsors, absurde]
     speaker: nassir
@@ -149,8 +152,18 @@ cards:
     left: {label: "On joue à 15h, la télé", effects: {caisse: "++", vestiaire: "--", force: "-"}}
     right: {label: "Je décale en soirée", effects: {caisse: "-", vestiaire: "+"}}
 
+  - id: co.monde.canicule_tv_jp
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, absurde]
+    speaker: brehaut
+    cooldown: 24
+    text: "Bréhaut, maillot déjà trempé à l'échauffement : « Quarante degrés, coup d'envoi à 15h, parce que la télé du Golfe paie. Le groupe veut refuser. Tu signes avec nous, ou tu joues ? »"
+    left: {label: "Je signe avec le groupe", effects: {vestiaire: "++", direction: "--", caisse: "-"}, answer: "Onze signatures, aucune conséquence : on joue à 15h. Mais on a compté onze."}
+    right: {label: "Je joue, c'est tout", effects: {direction: "+", force: "-", vestiaire: "--"}, answer: "Tu joues. Tu es sorti à la 60e, blanc, et personne ne t'a demandé si ça allait."}
+
   - id: co.monde.nassir_cheque
-    roles: [entraineur, joueur]
+    roles: [entraineur]
     arc: sponsors
     tags: [sponsors, rescue:caisse]
     speaker: nassir
@@ -159,3 +172,16 @@ cards:
     text: "Cheikh Ilyas : « Ta caisse est vide, je le sais. Un chèque immense contre le nom du stade et un siège au conseil. »"
     left: {label: "Je signe le chèque", effects: {caisse: "+++", direction: "-", parole: -1}, answer: "Le stade porte désormais le nom d'une eau minérale."}
     right: {label: "Je garde mon stade", effects: {caisse: "-", tribunes: "+"}}
+
+  # Version joueur : sa jauge « Compte », c'est son compte à lui — on ne lui
+  # achète pas le nom du stade, on lui achète trois jours et son visage.
+  - id: co.monde.nassir_cheque_jp
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, rescue:caisse]
+    speaker: nassir
+    cooldown: 34
+    when: "gauges.caisse < 30"
+    text: "Cheikh Ilyas : « Ton compte est à sec, je le sais, on sait tout. Trois jours chez moi en juin, un match de gala et ton visage sur une bouteille. »"
+    left: {label: "Je prends les trois jours", effects: {caisse: "+++", vestiaire: "-", parole: -1}, answer: "Le match dure une mi-temps ; la bouteille dure onze ans. On la voit encore dans les stations-service."}
+    right: {label: "Je passe mon tour", effects: {caisse: "-", vestiaire: "+", relation: {nassir: -1}}, answer: "« Une autre année. » Il le dit comme un rendez-vous, pas comme un refus."}

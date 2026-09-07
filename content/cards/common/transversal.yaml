@@ -76,6 +76,14 @@ cards:
     right: {label: "On joue le sien", effects: {direction: "+", vestiaire: "-"}, answer: "Le président range un discours. Il garde l'autre."}
 
   # --- « Nouvelles du passé » : une affaire d'un ancien club refait surface (effets = épilogue de l'arc).
+  # `once` : le moteur met cette carte en file à chaque intrigue abandonnée pour
+  # changement de club, et une carrière en abandonne deux ou trois. Le même fax,
+  # la même secrétaire, la même phrase deux ou trois fois par carrière : c'est le
+  # cadre qui s'use, pas l'affaire qu'il nomme. Le fax ne sort donc qu'une fois ;
+  # les abandons suivants sont racontés par les vingt Nouvelles du passé nommées
+  # (content/cards/common/nouvelles_du_passe.yaml), qui vivent dans le sac et
+  # donnent la parole à quelqu'un d'autre. La ligne d'Almanach de l'intrigue
+  # abandonnée, elle, est écrite avant la mise en file : rien ne se perd.
   - id: tr.nouvelles_du_passe
     roles: [entraineur, joueur]
     arc: nouvelle
@@ -83,6 +91,7 @@ cards:
     tags: [nouvelle]
     speaker: josiane
     tone: leger
+    once: true
     cooldown: 0
     text: "Madame Josiane, un fax à la main : « Une vieille affaire — {passe_titre} — refait surface. Ça ne vous concerne plus. Presque. »"
     left: {label: "Tourner la page", effects: {}}

@@ -35,7 +35,12 @@ class Engine {
     final role = content.roles[post.role]!;
     final entities = _makeEntities(rng, post.role);
     entities.named['president'] = content.characters[post.president ?? role.patron ?? '']?.name ?? 'Le président';
-    final age = rng.range(role.startAgeMin, role.startAgeMax);
+    // Le tirage est TOUJOURS consommé (déterminisme : même code, même carrière),
+    // puis écrasé par le postulat quand il fixe un âge — comme le nom saisi en
+    // §1.8. La pépite a dix-neuf ans (bible ch. 10 § 3) ; le rôle joueur, lui,
+    // tire 19-31 pour les postulats qui ne disent rien.
+    final ageTire = rng.range(role.startAgeMin, role.startAgeMax);
+    final age = post.age ?? ageTire;
     final flags = <String>{...post.flags};
     if (post.camille) {
       const metiers = ['avocate', 'journaliste', 'agente', 'medecin', 'elue'];
@@ -876,7 +881,10 @@ class Engine {
   String _patronOf(GameState s) {
     final post = content.postulats[s.postulatId];
     final role = content.roles[s.role];
-    final fromPost = post != null && post.role == s.role ? post.president : null;
+    // `patron` d'abord : le champ `president` du postulat ne nomme que le
+    // président (`{president}`). Chez un joueur, c'est l'agent qui tient le
+    // contrat, pas le président.
+    final fromPost = post != null && post.role == s.role ? (post.patron ?? post.president) : null;
     return fromPost ?? role?.patron ?? (s.role == 'entraineur' ? 'aulard' : 'fardelli');
   }
 
@@ -1291,7 +1299,13 @@ class Engine {
 
   Entities _makeEntities(Rng rng, String role) {
     final genre = rng.nextDouble() < 0.5 ? 'f' : 'm';
-    final proto = _pickName(rng, genre);
+    // Un seul jeu de noms de famille par carrière : le protagoniste, le
+    // capitaine et le coach adverse sont tirés dans cet ordre fixe et ne
+    // peuvent pas se retrouver homonymes (défaut relevé : « Camille Bréhaut /
+    // capitaine Noah Bréhaut »). La boucle de re-tirage est bornée, donc le
+    // nombre d'appels au Rng reste borné et « même code, même carrière » tient.
+    final pris = <String>{};
+    final proto = _pickName(rng, genre, pris);
     final club = _makeClub(rng);
     final rival = _makeClub(rng);
     final sp = proto.indexOf(' ');
@@ -1303,17 +1317,55 @@ class Engine {
         'club': club,
         'clubShort': club.split(' ').last,
         'rival': rival,
-        'capitaine': _pickName(rng, 'm'),
+        'capitaine': _pickName(rng, 'm', pris),
         'ville': _pickVille(rng),
-        'coach': _pickName(rng, 'm'),
+        'coach': _pickName(rng, 'm', pris),
       },
     );
   }
 
-  String _pickName(Rng rng, String genre) {
-    final firsts = (content.names[genre == 'f' ? 'prenoms_f' : 'prenoms_m'] as List).cast<String>();
-    final lasts = (content.names['noms'] as List).cast<String>();
-    return '${firsts[rng.nextInt(firsts.length)]} ${lasts[rng.nextInt(lasts.length)]}';
+  /// Mots (sans casse ni accents) portés par le nom d'un personnage du jeu :
+  /// aucun nom tiré ne doit les reprendre, sous peine de faire parler dans la
+  /// même saison « Bréhaut le capitaine » et un protagoniste homonyme.
+  late final Set<String> _motsDuCasting = () {
+    final out = <String>{};
+    for (final c in content.charactersSorted) {
+      for (final w in foldAccents(c.name).split(RegExp(r"[ \-']+"))) {
+        if (w.isNotEmpty) out.add(w);
+      }
+    }
+    return out;
+  }();
+
+  List<String> _pool(String cle) {
+    final brut = (content.names[cle] as List).cast<String>();
+    final net = brut.where((n) {
+      for (final w in foldAccents(n).split(RegExp(r"[ \-']+"))) {
+        if (w.isNotEmpty && _motsDuCasting.contains(w)) return false;
+      }
+      return true;
+    }).toList();
+    return net.isEmpty ? brut : net; // jamais de pool vide
+  }
+
+  late final Map<String, List<String>> _pools = {
+    'prenoms_m': _pool('prenoms_m'),
+    'prenoms_f': _pool('prenoms_f'),
+    'noms': _pool('noms'),
+  };
+
+  String _pickName(Rng rng, String genre, [Set<String>? pris]) {
+    final firsts = _pools[genre == 'f' ? 'prenoms_f' : 'prenoms_m']!;
+    final lasts = _pools['noms']!;
+    final prenom = firsts[rng.nextInt(firsts.length)];
+    var nom = lasts[rng.nextInt(lasts.length)];
+    if (pris != null) {
+      for (var i = 0; i < 6 && pris.contains(nom); i++) {
+        nom = lasts[rng.nextInt(lasts.length)];
+      }
+      pris.add(nom);
+    }
+    return '$prenom $nom';
   }
 
   String _makeClub(Rng rng) {

@@ -69,11 +69,15 @@ cards:
       label: "Je garde l'ambition"
       effects: {tribunes: "+", direction: "+"}
 
+  # « Toi t'es d'ici » : la carte ne vaut qu'au club d'origine. Après une vente
+  # qui a changé de club, Gégé n'est plus dans ce virage-là — c'est la variante
+  # `_ailleurs` qui sort, au téléphone (spec variété §1.11).
   - id: jp.mercato.rester_loyal
     roles: [joueur]
     arc: mercato
     tags: [mercato, ultras]
     speaker: gege
+    when: "stats.clubs <= 1 && !role_was('joueur')"
     text: "Gégé, écharpe au poing : « Les autres partent pour des valises de billets. Toi t'es d'ici, alors embrasse le blason. »"
     left:
       label: "J'embrasse le blason"
@@ -81,6 +85,24 @@ cards:
     right:
       label: "Je prends les billets"
       effects: {caisse: "+", tribunes: "--"}
+
+  - id: jp.mercato.rester_loyal_ailleurs
+    roles: [joueur]
+    arc: mercato
+    tags: [mercato, ultras]
+    speaker: gege
+    tone: leger
+    cooldown: 26
+    when: "stats.clubs >= 2 || role_was('joueur')"
+    text: "Gégé, au téléphone, le bar du local derrière lui : « Tu n'es plus d'ici, {toi}, et on t'entend quand même. Tu embrasses quel blason, cette fois ? »"
+    left:
+      label: "Le mien, celui d'ici"
+      effects: {tribunes: "++", caisse: "-"}
+      answer: "Il raccroche sans commenter. Au local, quelqu'un demande ce qu'il a dit ; il dit « rien »."
+    right:
+      label: "Aucun, je joue au foot"
+      effects: {caisse: "+", tribunes: "-", relation: {gege: -1}}
+      answer: "Il répète la phrase à voix haute pour le bar. Le bar la retient mieux que lui."
 
   - id: jp.mercato.agent_te_vend
     roles: [joueur]

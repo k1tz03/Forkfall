@@ -102,6 +102,64 @@ cards:
         journal: { text: "{annee} : plutôt un sponsor qu'une vente. {prenom} {nom} a choisi l'orange.", poids: 2, tags: [direction, sponsors] }
       answer: "Josiane compose un numéro qui commence par l'étranger."
 
+  # Troisième plan de la Commission : la ville. C'est la seule sortie de A4 qui
+  # n'ouvre ni `en.prodige` ni `en.nassir_proprietaire` — les deux sorties de
+  # la carte de base sautent directement dans ces deux intrigues (schedule) et
+  # poussaient `en.prodige` à 82 % de couverture, hors de la bande [10 %, 65 %]
+  # du § 5.1, sans qu'aucun poids de réservoir puisse y faire quoi que ce soit.
+  # Servie sur le fil rouge « tribune », c'est-à-dire quand la question de la
+  # carrière est déjà « ce club est à la tribune » : le plan passe par la
+  # mairie, pas par le mercato ni par le fonds.
+  - id: en.promu.a4_commission_mairie
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Vaubourg, deux lettres et un plan de la ville : « La Commission veut un plan pour janvier, {toi}. La mairie a le stade, et l'État a la mairie. J'ai pas le temps. Tu y vas, ou j'envoie Josiane ? »"
+    left:
+      label: "J'y vais moi-même"
+      effects:
+        direction: "+"
+        tribunes: "+"
+        relation: {aubert: 1}
+        set: [commission_mairie]
+        schedule: [{card: en.promu.a4_mairie_reponse, in: [2, 4]}]
+        journal: { text: "{annee} : la Commission voulait un plan. {prenom} {nom} est allé{pg, select, f{e} other{}} le chercher à la mairie.", poids: 2, tags: [direction, tribunes] }
+      answer: "Tu montes à la mairie à pied. Le stade est en face ; ça se voit de son bureau."
+    right:
+      label: "Envoyez Josiane"
+      effects:
+        direction: "-"
+        caisse: "+"
+        relation: {josiane: 1}
+        set: [commission_mairie]
+        schedule: [{card: en.promu.a4_mairie_reponse, in: [2, 4]}]
+        react: en.re.josiane_page_rouge
+        journal: { text: "{annee} : la Commission voulait un plan. C'est Josiane qui est montée à la mairie, avec le classeur.", poids: 2, tags: [direction] }
+      answer: "Elle prend le classeur rouge et son manteau. Elle connaît l'étage."
+
+  # La réponse de la ville (schedule de A4-mairie) : Madame Aubert entre dans le
+  # promu, où elle n'apparaissait jamais — ses deux cartes de palier n'étaient
+  # donc jamais tirées.
+  - id: en.promu.a4_mairie_reponse
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes, caisse]
+    speaker: aubert
+    tone: strategique
+    once: true
+    text: "Madame Aubert déplie un plan du stade : « La ville avance six mois de subvention, et la ville inaugure quelque chose. Vous avez une tribune Nord ; moi j'ai un ruban. Marché ? »"
+    left:
+      label: "Marché"
+      effects: {caisse: "++", tribunes: "-", relation: {aubert: 2}, set: [subvention_avancee]}
+      answer: "Elle note une date de février. Le ruban existe déjà ; il attend un stade."
+    right:
+      label: "Pas de ruban"
+      effects: {direction: "-", tribunes: "+", relation: {aubert: -1}}
+      answer: "Elle replie le plan dans le bon sens. La subvention arrivera, à sa date."
+
   # A5 · Le dernier match — slot 16 (deux variantes selon `vecchio_promis`)
   # Jamais nominative : Gigi dit « coach », et le palier de Gégé, l'encaissement
   # ou les banderoles tombent souvent au slot 15 (jamais deux de suite).
@@ -357,3 +415,132 @@ cards:
       label: "Prends le banc, Zoran"
       effects: {end: en_dauphin}
       answer: "Il ne dit pas merci. Il « réfléchissait » depuis novembre."
+
+  # ---------------------------------------------- variantes de la rentrée (S2+)
+  # Les deux ancres rejouables des saisons 3+ n'avaient qu'une carte chacune :
+  # à partir de la S2, chaque saison s'ouvrait et se fermait sur exactement les
+  # mêmes deux répliques, réactions comprises (spec § 1.2 : « chaque ancre
+  # reçoit ≥ 2 variantes lues sur `fil_rouge` et sur les traces »). Les
+  # variantes ci-dessous lisent les traces déjà posées (gigi_staff,
+  # salaires_retard / pacte_gege, naming_signe, mbako_vendu), le fil rouge, et
+  # montent en escalier sur les saisons. Elles changent aussi de visage : la
+  # rentrée n'est plus fatalement un monologue de Josiane au slot 1.
+  - id: en.promu.rentree_gigi
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: leger
+    cooldown: 0
+    text: "Vecchio, gants neufs sous le bras, dans le couloir : « Rentrée, {toi}. J'ai compté : je suis le seul ici qui ait vu l'ancienne tribune debout. Tu commences par eux, ou par les comptes ? »"
+    left:
+      label: "Par eux"
+      effects: {vestiaire: "+", relation: {vecchio: 1}, journal: {text: "{annee} : rentrée. {nom} a commencé par le vestiaire. Gigi Vecchio tenait la porte, gants neufs.", poids: 1, tags: [vestiaire]}}
+      answer: "Il tient la porte. Il la tient déjà, en fait ; il voulait l'entendre."
+    right:
+      label: "Par les comptes"
+      effects: {direction: "+", vestiaire: "-", journal: {text: "{annee} : rentrée. {nom} est monté au bureau avant de descendre au terrain.", poids: 1, tags: [direction]}}
+      answer: "Il monte les gants au bureau, les pose, redescend. Personne ne lui a demandé."
+
+  - id: en.promu.rentree_ardoise
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes, caisse]
+    speaker: gege
+    tone: leger
+    cooldown: 0
+    text: "Gégé, devant le local rouvert : « Rentrée. J'ai gardé l'ardoise de juin, parce qu'elle n'est pas payée et parce qu'elle est belle. On l'efface, ou on la laisse au mur ? »"
+    left:
+      label: "On l'efface"
+      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}, journal: {text: "{annee} : rentrée. L'ardoise de juin a été effacée. Gégé a gardé le chiffon, encadré.", poids: 1, tags: [tribunes, caisse]}}
+      answer: "Il efface, lentement, en lisant chaque ligne à voix haute. Ça prend le café."
+    right:
+      label: "Laissez-la au mur"
+      effects: {tribunes: "+", direction: "-", journal: {text: "{annee} : rentrée. L'ardoise de juin est restée au mur du local, à la craie.", poids: 1, tags: [tribunes]}}
+      answer: "Elle reste au mur. En octobre, quelqu'un ajoute une ligne dessous."
+
+  - id: en.promu.rentree_naming
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: josiane
+    tone: strategique
+    cooldown: 0
+    text: "Madame Josiane tend le papier à en-tête : « Le nouveau nom du stade est imprimé, et il tient toute la ligne. J'en ai vu passer, des en-têtes. On commande, ou on finit les vieux ? »"
+    left:
+      label: "On commande"
+      effects: {caisse: "-", direction: "+", react: en.re.josiane_page_rouge, journal: {text: "{annee} : rentrée. Le nouveau nom du stade est passé sur le papier à en-tête. {nom} a signé le bon.", poids: 1, tags: [direction, argent]}}
+      answer: "Elle commande. Elle garde une rame des anciens, « pour le brouillon »."
+    right:
+      label: "On finit les vieux"
+      effects: {caisse: "+", tribunes: "+", journal: {text: "{annee} : rentrée. Le club a continué d'écrire sous l'ancien nom du stade, faute de papier.", poids: 1, tags: [direction, tribunes]}}
+      answer: "Le club écrit encore sous l'ancien nom. Personne au virage ne s'en plaint."
+
+  - id: en.promu.rentree_vieille
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane pose le café sans le lâcher : « J'en ai vu passer, et maintenant j'en ai vu passer avec vous. Le classeur a une couleur par saison. On l'ouvre, ou on prend le café d'abord ? »"
+    left:
+      label: "Le classeur d'abord"
+      effects: {direction: "+", relation: {josiane: 1}, journal: {text: "{annee} : rentrée. Josiane a aligné les classeurs par couleur. {nom} les a comptés à voix haute.", poids: 1, tags: [direction]}}
+      answer: "Elle les aligne par couleur. Elle sait laquelle a été la pire ; elle ne le dit pas."
+    right:
+      label: "Le café d'abord"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle s'assoit en face. C'est la première fois qu'elle s'assoit en face."
+
+  # ------------------------------------------- variantes de la veille (S2+)
+  - id: en.promu.veille_mbako
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: brehaut
+    tone: strategique
+    cooldown: 0
+    text: "Bréhaut, la veille du dernier bloc : « Le groupe vit bien. Il vit bien avec un joueur en moins, et tout le monde sait lequel. On en parle avant, ou on joue et on verra ? »"
+    left:
+      label: "On en parle avant"
+      effects: {vestiaire: "+", tribunes: "-", relation: {brehaut: 1}, journal: {text: "{annee} : veille du dernier bloc. {nom} a nommé le joueur parti, devant le groupe. Le groupe a écouté.", poids: 2, tags: [vestiaire, mercato]}}
+      answer: "Tu le nommes. Personne ne répond ; tout le monde a entendu son propre chiffre."
+    right:
+      label: "On joue, et on verra"
+      effects: {force: 1, vestiaire: "-", journal: {text: "{annee} : veille du dernier bloc. Personne n'a nommé le joueur parti. Le vestiaire a compté tout seul.", poids: 1, tags: [vestiaire]}}
+      answer: "On joue. Le nom sort quand même, à la mi-temps, par la fenêtre du couloir."
+
+  - id: en.promu.veille_virage
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: gege
+    tone: leger
+    cooldown: 0
+    text: "Gégé, la veille du dernier bloc, une bâche roulée sous le bras : « Elle est peinte des deux côtés, {toi}. On déroule le côté qu'on veut samedi. Tu veux savoir ce qu'il y a derrière ? »"
+    left:
+      label: "Je veux savoir"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}, journal: {text: "{annee} : veille du dernier bloc. {nom} a demandé à voir l'autre côté de la bâche. Gégé l'a déroulée.", poids: 2, tags: [tribunes]}}
+      answer: "Il déroule. L'autre côté est ton nom, en plus petit, et déjà décoloré."
+    right:
+      label: "Samedi, je verrai"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Il reroule. Samedi, c'est le côté peint en dernier qui est dehors."
+
+  - id: en.promu.veille_encore
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, retorse]
+    speaker: vukic
+    tone: strategique
+    cooldown: 0
+    text: "Vukić, même couloir, même veille : « Chaque année deux discours, et chaque année je te le dis parce que personne ne te le dira. Cette fois, les deux ont ton nom. Ça veut dire deux choses. »"
+    left:
+      label: "Lesquelles ?"
+      effects: {direction: "-", vestiaire: "+", relation: {vukic: 1}, journal: {text: "{annee} : veille du dernier bloc. Les deux discours du président avaient le nom de {nom} dedans.", poids: 2, tags: [direction]}}
+      answer: "« Qu'il t'aime, ou qu'il a préparé les deux. » Il n'en choisit pas une."
+    right:
+      label: "Je préfère ne pas savoir"
+      effects: {direction: "+", relation: {vukic: -1}}
+      answer: "Il hausse les épaules. Il connaît la réponse depuis novembre ; il la garde."

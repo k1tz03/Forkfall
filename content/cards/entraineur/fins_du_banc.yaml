@@ -1,0 +1,78 @@
+# Les trois portes de la bible ch. 30 § 5 qui n'existent que sur le banc.
+#   en.vestiaire.chaussure   → en_chaussure     (§ 5.2, le coup de sang)
+#   co.verdict.actionnaires  → co_relegation    (§ 5.4, l'étage du dessous)
+#   co.verdict.photo_famille → co_photo_famille (§ 5.4, manqué d'un point)
+#
+# Écart d'import assumé sur `co_photo_famille` : la bible écrit « sixième à un
+# point », mais le classement du moteur (packages/core, seasonVerdict) ne rend
+# jamais un rang entre 5 et 10 — au-dessus de la barre du maintien on est
+# quatrième (Continentale / barrage) ou premier. La porte lit donc le rang 4
+# avec l'objectif manqué, et l'épitaphe dit « quatrième » : le Cimetière ne
+# doit pas afficher un rang que le Bilan n'a pas écrit.
+#
+# Les deux cartes de Verdict se servent la saison qui suit le Bilan qu'elles
+# lisent (`flag('bilan_manque')`, `flag('descente')`, `world.rang_final`) :
+# c'est là que les actionnaires demandent un nom.
+cards:
+  # ────────────────────────────────── § 5.2 · La chaussure
+  - id: en.vestiaire.chaussure
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, presse, risk:vestiaire]
+    speaker: vukic
+    tone: strategique
+    once: true
+    priority: 1
+    cooldown: 30
+    when: "season >= 1 && world.serie_defaites >= 1 && gauges.vestiaire < 40 && pression >= 3 && chars.mbako.statut != 'vendu'"
+    text: "Vukić tient la porte du vestiaire du pied : « Je te le dis parce que personne ne te le dira : ils t'attendent. Il y a une chaussure au milieu, et le couloir est plein de micros. »"
+    left:
+      label: "Je la ramasse"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu la poses sur le banc, lacets rentrés. Personne ne remercie ; tout le monde a vu."
+    right:
+      label: "Je shoote dedans"
+      effects: {vestiaire: "---", direction: "--", end: en_chaussure}
+      answer: "Elle part haut et revient bas. L'arcade s'ouvre devant douze micros allumés."
+
+  # ────────────────────────────── § 5.4 · La relégation
+  - id: co.verdict.actionnaires
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 1 && flag('descente') && flag('bilan_manque')"
+    text: "Vaubourg, table longue et douze chaises : « On est descendus, {toi}. Les actionnaires réclament un nom, et il n'y en a qu'un sur la porte. J'ai pas le temps, j'ai un empire. »"
+    left:
+      label: "Je remonte ce club"
+      effects: {rand: [{p: 0.25, end: co_relegation}, {direction: "-", tribunes: "-", pression: 1}]}
+      answer: "Ils comptent les voix devant toi. Le stade paraît très grand d'un coup."
+    right:
+      label: "Je rends le survêtement"
+      effects: {direction: "---", tribunes: "--", caisse: "-", end: co_relegation}
+      answer: "Tu le plies sur le dossier. Il y reste jusqu'en août, et personne n'y touche."
+
+  # ─────────────────────── § 5.4 · La photo de famille (à un point)
+  - id: co.verdict.photo_famille
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 1 && flag('bilan_manque') && world.rang_final == 4"
+    text: "Madame Josiane, le classeur vert ouvert à la bonne page : « Quatrième, à un point. La photo de famille se refait jeudi, et le photographe a demandé qui serait dessus. »"
+    left:
+      label: "Je pose au premier rang"
+      effects: {rand: [{p: 0.3, end: co_photo_famille}, {direction: "-", tribunes: "-"}]}
+      answer: "Elle range le classeur sans le fermer. Le photographe rappelle jeudi matin."
+    right:
+      label: "Je ne serai pas dessus"
+      effects: {direction: "---", tribunes: "-", end: co_photo_famille}
+      answer: "Le photographe s'excuse, lui. Il range le pied et il le dit deux fois."

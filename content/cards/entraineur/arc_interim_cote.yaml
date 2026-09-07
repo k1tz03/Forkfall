@@ -35,6 +35,26 @@ cards:
       effects: {caisse: "+", parole: -2, set: [pari_contre_soi], outcome: contre}
       answer: "Il note « contre ». Il ne titre pas ; il garde le ticket, c'est mieux qu'un titre."
 
+  # Seconde porte vers l'issue `contre` : elle n'existait que dans la variante
+  # « silence » de l'étape 1, servie seulement si un « pas de commentaire »
+  # avait déjà été dit ailleurs — l'issue tombait sous 2 %. Ici, c'est le capo
+  # qui porte l'argent au cousin, et la carte rend une apparition à Gégé.
+  - id: en.cote_interim.bookmaker_cousin
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, caisse]
+    speaker: gege
+    tone: leger
+    text: "Gégé, le papier du cousin déplié sur un capot : « Tu n'as rien dit au journal, alors le port a mis sept contre un que tu sautes. Cent francs là-dessus, {toi}, ou on regarde ? »"
+    left:
+      label: "Cent francs, contre moi"
+      effects: {caisse: "+", parole: -2, relation: {gege: 1}, set: [pari_contre_soi], outcome: contre}
+      answer: "Il porte les cent francs au cousin. Il ne dit pas ton nom ; le cousin le devine."
+    right:
+      label: "On regarde"
+      effects: {tribunes: "+", parole: 1, relation: {gege: 1}}
+      answer: "Il replie le papier du cousin. Il mise quand même ; il te le dira en juin."
+
   - id: en.cote_interim.bookmaker
     roles: [entraineur]
     arc: ultras

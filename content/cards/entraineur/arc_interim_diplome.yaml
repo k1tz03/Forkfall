@@ -14,11 +14,18 @@ cards:
     text: "Berthomier au téléphone, un tampon derrière lui : « {Toi}, vous êtes sur les feuilles de match et nulle part dans le registre ; on verra ça après le Congrès. Six mois et un stage ? »"
     left:
       label: "Six mois, et le stage"
-      effects: {direction: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
+      # Bible ch. 01 § 15.4 : « direction +, caisse − ». La carte versée avait
+      # inversé le signe — le bureau paie le stage, il ne le reproche pas —, ce
+      # qui rendait la dérogation strictement perdante pour la jauge et poussait
+      # 78 % des ouvertures sur l'arrangement.
+      effects: {direction: "+", caisse: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
       answer: "Il tamponne. Le tampon manque une signature ; on la verra au stage."
     right:
       label: "J'ai un autre moyen"
-      effects: {direction: "+", parole: -2, relation: {aulard: 1}, set: [diplome_arrange], outcome: arrange}
+      # Le président gagne une prise sur toi (+1) ; l'examinateur, lui, voit
+      # passer un tampon qu'il n'a pas posé. Le ressentiment allait entièrement
+      # au bureau, et pas du tout à la Fédération — qui relit le dossier.
+      effects: {direction: "+", parole: -2, relation: {aulard: 1, legruet: -1}, set: [diplome_arrange], outcome: arrange}
       answer: "Le président connaît quelqu'un. Le papier arrive un vendredi ; le tampon est parfait."
 
   - id: en.diplome.appel_stage
@@ -31,7 +38,11 @@ cards:
     text: "Berthomier, un registre ouvert : « {Toi}, vous êtes chez nous depuis le stage, sans examen derrière, et on nous l'a fait remarquer. Six mois et un stage, alors ? »"
     left:
       label: "Six mois, et le stage"
-      effects: {direction: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
+      # Bible ch. 01 § 15.4 : « direction +, caisse − ». La carte versée avait
+      # inversé le signe — le bureau paie le stage, il ne le reproche pas —, ce
+      # qui rendait la dérogation strictement perdante pour la jauge et poussait
+      # 78 % des ouvertures sur l'arrangement.
+      effects: {direction: "+", caisse: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
       answer: "Il tamponne. Il ajoute « déjà venu » au crayon, dans la marge."
     right:
       label: "J'ai un autre moyen"
@@ -71,6 +82,25 @@ cards:
       label: "La deuxième dérogation"
       effects: {direction: "-", parole: -1, relation: {legruet: -1}, var: {derogations: "+1"}}
       answer: "Le tampon dit « prolongée ». Personne ne signe ; c'est la deuxième fois."
+
+  # Clôture courte du chemin « arrangé » : le classeur de la Fédération a une
+  # ligne remplie par une signature que personne ne revendique.
+  - id: en.diplome.signature
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, formation]
+    speaker: legruet
+    tone: strategique
+    when: "flag('diplome_arrange')"
+    text: "Berthomier, le classeur ouvert à ta page : « Le papier est arrivé un vendredi soir, signé par quelqu'un qui n'était pas là. On verra ça après le Congrès — ou vous me dites qui. »"
+    left:
+      label: "Je ne sais pas qui a signé"
+      effects: {direction: "+", parole: -1, relation: {legruet: -2}, journal: {text: "{annee} : la Fédération a rouvert le dossier de {nom}. Personne n'a su dire qui avait signé le vendredi.", poids: 2, tags: [instances, direction]}}
+      answer: "Il referme le classeur sans le ranger. Il le laisse sur le coin du bureau, ouvert vers la porte."
+    right:
+      label: "Le président a un ami"
+      effects: {direction: "--", parole: 1, relation: {legruet: -1, aulard: -2}, journal: {text: "{annee} : {nom} a dit à la Fédération qui avait signé son diplôme. Le président l'a appris le soir même.", poids: 3, tags: [instances, direction]}}
+      answer: "Il note un nom, pas le tien. Le président t'appelle à sept heures, et ne parle pas de football."
 
   - id: en.diplome.examen_d1
     roles: [entraineur]

@@ -516,7 +516,7 @@ void main() {
         final txt = kop.readAsStringSync();
         expect(txt, contains('  - id: en.kop.local\n'));
         kop.writeAsStringSync(txt.replaceFirst('  - id: en.kop.local\n', '  - id: en.kop.local\n    once: true\n'));
-        final r = await Process.run('dart', ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
+        final r = await Process.run(Platform.resolvedExecutable, ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
         expect(r.exitCode, 1, reason: 'stdout: ${r.stdout}\nstderr: ${r.stderr}');
         expect(r.stderr.toString(), contains('once: true sur une étape de l\'arc rejouable en.kop_qui_aime_trop'));
       } finally {

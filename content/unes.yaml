@@ -29,6 +29,11 @@
 #     sujet: en.kop_qui_aime_trop  # optionnel : tag ou id d'arc exclu des brèves (déjà le sujet)
 #     photo: en.promu.a6_dernier_virage      # optionnel
 #     react: { card: co.re.josiane_a_lu, if: "relation.josiane >= 0" }   # optionnel ; card ou liste [{card, if?}]
+#     ESCALIER : une réaction à plusieurs marches (Gégé, Camille, Gigi) se cite
+#     TOUJOURS de la dernière marche à la première, chacune sur `seen()` de la
+#     précédente, la première sans `seen()` — sinon la manchette repose la
+#     marche de base après que la carte d'arc a servi la deuxième, et la même
+#     réplique revient deux Bilans plus loin (spec variété §5.3).
 #
 # Règles : ≥ 2 manchettes de secours (priority 0, sans `when`) ; par postulat
 # livré ≥ 10 manchettes dont ≥ 3 sur des traces ; {NOM} ou {CLUB}/{VILLE}
@@ -107,7 +112,7 @@ unes:
     titre: "CHAMPIONS !"
     sous: "{club} sur le toit du pays. {prenom} {nom} sur la photo, au bord."
     sujet: bilan
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.montee
     journal: quotidien
     priority: 4
@@ -115,7 +120,7 @@ unes:
     titre: "MONTÉE !"
     sous: "{club} retrouve l'étage du dessus. {prenom} {nom} a dit « on verra ». On a vu."
     sujet: bilan
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.descente
     journal: echo
     priority: 4
@@ -123,7 +128,7 @@ unes:
     titre: "LE RÊVE A DURÉ UN AN"
     sous: "Retour à l'étage du dessous. {prenom} {nom} n'a pas répondu à nos appels. Gégé, si."
     sujet: bilan
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.descente_cartons
     journal: gazette
     priority: 4
@@ -131,7 +136,7 @@ unes:
     titre: "{VILLE} REFAIT SES CARTONS"
     sous: "{rang}e et dernier wagon. Le président « n'a pas le temps » ; {prenom} {nom} a une valise, et le chauffage à payer."
     sujet: bilan
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.descente_chauffage
     journal: quotidien
     priority: 4
@@ -139,7 +144,7 @@ unes:
     titre: "SI ON DESCEND, TU PAIES LE CHAUFFAGE"
     sous: "Le président l'avait dit en avril. {club} descend, {rang}e. {NOM} garde le banc, et la facture."
     sujet: bilan
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   # Dernier de Division 2 : il n'y a pas d'étage en dessous (verdict `lanterne`,
   # même facture qu'une descente) ; la manchette le dit sans mentir.
   - id: une.generic.lanterne
@@ -149,7 +154,7 @@ unes:
     titre: "{VILLE} FERME LA MARCHE"
     sous: "Dix-huitième de Division 2. Il n'y a pas d'étage en dessous ; {prenom} {nom} a vérifié. Le président a « le numéro »."
     sujet: bilan
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.lanterne_echo
     journal: echo
     priority: 3
@@ -157,7 +162,7 @@ unes:
     titre: "DERNIERS, ET TOUJOURS LÀ"
     sous: "{club} termine dernier de Division 2, et y reste : il n'y a rien en dessous. Au local, on a compté les verres, et les absents."
     sujet: bilan
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.promesses
     journal: gazette
     priority: 3
@@ -165,7 +170,7 @@ unes:
     titre: "LES PROMESSES DE {NOM}, DATÉES"
     sous: "Douze promesses, douze dates, une saison. Massenet a tout gardé. « Juste une question, hors micro. »"
     sujet: presse
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.generic.feu_de_joie
     journal: echo
     priority: 2
@@ -173,7 +178,7 @@ unes:
     titre: "{VILLE} EN FEU (DE JOIE)"
     sous: "Tribune Nord pleine jusqu'aux grilles, {rang}e place, objectif tenu. Gégé a fait repeindre le local. Encore."
     sujet: tribunes
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   # ------------------------------------------------------------------ promu (P0)
   # ---- traces fortes (3)
@@ -187,7 +192,7 @@ unes:
     sous: "Promu sans un sou, maintenu à la {rang}e place. Vaubourg parle déjà de « projet »."
     sujet: direction
     photo: en.promu.a6_dernier_virage
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe_mur, if: "relation.gege >= 1 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 1 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.trente_millions
     postulats: [promu]
     roles: [entraineur]
@@ -197,7 +202,7 @@ unes:
     titre: "TRENTE MILLIONS ET UN GAMIN"
     sous: "Lian Mbako, seize ans, vendu. Sa mère a lu la clause. Elle l'avait écrite. {prenom} {nom} a signé en dessous."
     sujet: en.prodige
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.dix_pour_cent
     postulats: [promu]
     roles: [entraineur]
@@ -208,7 +213,7 @@ unes:
     titre: "DIX POUR CENT POUR L'AMI FARDELLI"
     sous: "Lian Mbako vendu trente millions. Son agent « depuis ce matin » prend dix pour cent. {prenom} {nom} a dit « bienvenue au club »."
     sujet: en.prodige
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.mbako_garde
     postulats: [promu]
     roles: [entraineur]
@@ -218,7 +223,7 @@ unes:
     titre: "TRENTE MILLIONS, ET IL RESTE"
     sous: "Lian Mbako reste à {ville}. {prenom} {nom} a raccroché au nez de Fardelli. La Commission, elle, ne raccroche pas."
     sujet: en.prodige
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.arena
     postulats: [promu]
     roles: [entraineur]
@@ -228,7 +233,7 @@ unes:
     titre: "ARENA ALMADIS"
     sous: "Le nom en orange, le nôtre en dessous, en petit. La tribune chante l'ancien. {prenom} {nom} a signé le nouveau."
     sujet: en.nassir_proprietaire
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.lancienne
     postulats: [promu]
     roles: [entraineur]
@@ -238,7 +243,7 @@ unes:
     titre: "{VILLE} A DIT NON À L'ORANGE"
     sous: "Le fonds est reparti avec sa canette. {prenom} {nom} garde le maillot, le nom du stade et le radiateur qui tousse."
     sujet: en.nassir_proprietaire
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.staff
     postulats: [promu]
     roles: [entraineur]
@@ -248,7 +253,7 @@ unes:
     titre: "VECCHIO RACCROCHE, VECCHIO RESTE"
     sous: "Quarante et un ans de gants, et un banc à côté de celui de l'entraîneur, {prenom} {nom}. « J'en ai vu d'autres. Je les montrerai. »"
     sujet: en.vieux_gardien
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe } ]
   - id: une.promu.dauphin
     postulats: [promu]
     roles: [entraineur]
@@ -258,7 +263,7 @@ unes:
     titre: "LE DAUPHIN DE {VILLE} ATTEND"
     sous: "Zoran Vukić « réfléchit ». Le président a deux discours. {NOM} n'est que dans un, et pas le bon : {rang}e."
     sujet: direction
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.valise
     postulats: [promu]
     roles: [entraineur]
@@ -268,7 +273,7 @@ unes:
     titre: "LA VALISE DE {VILLE}"
     sous: "Trois joueurs adverses, une enveloppe, un dernier bloc. La Fédération « examine ». {prenom} {nom} « ne commente pas »."
     sujet: en.evt.enveloppe
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   # ---- traces ordinaires (2)
   - id: une.promu.chauffage
@@ -280,7 +285,7 @@ unes:
     titre: "DES MAILLOTS NEUFS, UN VESTIAIRE FROID"
     sous: "{club} termine {rang}e. {prenom} {nom} avait choisi les maillots plutôt que le chauffage. Le virage était beau."
     sujet: caisse
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.ingratitude
     postulats: [promu]
     roles: [entraineur]
@@ -290,7 +295,7 @@ unes:
     titre: "MAINTIEN, SANS UN MERCI"
     sous: "{rang}e, objectif tenu. Vaubourg, interrogé sur {prenom} {nom} : « J'ai pas le temps, j'ai un empire. »"
     sujet: direction
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.onze_virage
     postulats: [promu]
     roles: [entraineur]
@@ -300,7 +305,7 @@ unes:
     titre: "LE ONZE DU VIRAGE DE {VILLE}"
     sous: "À {ville}, la compo se vote en tribune Nord. L'entraîneur signe. Le président l'apprend dans ces colonnes."
     sujet: en.kop_qui_aime_trop
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.pacte
     postulats: [promu]
     roles: [entraineur]
@@ -310,7 +315,7 @@ unes:
     titre: "{NOM} ET LE PACTE DE LA CRAIE"
     sous: "Le local rénové cette saison, promis à Gégé par {prenom} {nom}. La date est sur le mur. À la craie, pour l'instant."
     sujet: en.kop_qui_aime_trop
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.mbako_lance
     postulats: [promu]
     roles: [entraineur]
@@ -320,7 +325,7 @@ unes:
     titre: "SEIZE ANS ET DÉJÀ LE STADE"
     sous: "Lian Mbako lancé en pro par {prenom} {nom}, contre l'avis du président. Le président a applaudi quand même."
     sujet: en.prodige
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.pari
     postulats: [promu]
     roles: [entraineur]
@@ -330,7 +335,7 @@ unes:
     titre: "{pg, select, f{ELLE AVAIT PARIÉ SUR ELLE} other{IL AVAIT PARIÉ SUR LUI}}"
     sous: "Cent francs sur le maintien, à cinq contre un, en août. {rang}e en juin. Massenet « ne commente pas ». Il note."
     sujet: en.cote_du_promu
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.pari_perdu
     postulats: [promu]
     roles: [entraineur]
@@ -340,7 +345,7 @@ unes:
     titre: "CENT FRANCS, CINQ MILLE REGRETS"
     sous: "{prenom} {nom} avait misé sur le maintien. {rang}e. Le ticket est chez Massenet, qui « ne commente pas »."
     sujet: en.cote_du_promu
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.projet
     postulats: [promu]
     roles: [entraineur]
@@ -350,7 +355,7 @@ unes:
     titre: "{NOM} A UN PROJET"
     sous: "Le mot est lâché en août, répété trois fois avant le parking. En juin, le classement dit « {rang}e »."
     sujet: en.cote_du_promu
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.gigi_promis
     postulats: [promu]
     roles: [entraineur]
@@ -360,7 +365,7 @@ unes:
     titre: "GIGI VECCHIO, UNE DERNIÈRE. PROMIS."
     sous: "Quarante et un ans, et une promesse de {prenom} {nom} : les buts jusqu'en juin. Le jeune attend. Il a le temps."
     sujet: en.vieux_gardien
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
   - id: une.promu.gardien_jeune
     postulats: [promu]
     roles: [entraineur]
@@ -370,7 +375,7 @@ unes:
     titre: "LE JEUNE A LES GANTS DE GIGI"
     sous: "Gigi Vecchio, quarante et un ans, regarde ailleurs. {prenom} {nom} a tranché. Le jeune a arrêté tout, sauf les questions."
     sujet: en.vieux_gardien
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe } ]
   - id: une.promu.mere_mbako
     postulats: [promu]
     roles: [entraineur]
@@ -380,7 +385,7 @@ unes:
     titre: "LA MÈRE DE MBAKO N'A BESOIN DE PERSONNE"
     sous: "Contrat pro à seize ans, signé en trois exemplaires, sans agent. {prenom} {nom} a tenu le stylo. Elle, la main."
     sujet: en.prodige
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.orange
     postulats: [promu]
     roles: [entraineur]
@@ -390,7 +395,7 @@ unes:
     titre: "{VILLE} PASSE À L'ORANGE"
     sous: "Le maillot est fluo, comme la boisson. {prenom} {nom} a dit oui à la canette. Gégé compte les manches, et les jours."
     sujet: en.nassir_proprietaire
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.special
     postulats: [promu]
     roles: [entraineur]
@@ -400,7 +405,7 @@ unes:
     titre: "« LE SPÉCIAL », DIT LE SPÉCIAL"
     sous: "Interrogé{pg, select, f{e} other{}} sur le miracle, {prenom} {nom} a répondu « c'est moi ». Le vestiaire a lu. Deux fois."
     sujet: presse
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.clow
     postulats: [promu]
     roles: [entraineur]
@@ -410,7 +415,7 @@ unes:
     titre: "DAN CORVEN N'A PAS ÉTÉ RAPPELÉ"
     sous: "Cinquante-neuf jours dans un grand club, et un message sur le répondeur de {prenom} {nom}. Sans réponse."
     sujet: en.mentor_clow
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.franchement
     postulats: [promu]
     roles: [entraineur]
@@ -420,7 +425,7 @@ unes:
     titre: "{NOM}, FRANCHEMENT ?"
     sous: "« Franchement », a répondu l'entraîneur à la question de l'objectif. {rang}e en juin : {objectif} {tenu}. Franchement."
     sujet: en.conf_presse
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   # ---- l'état de l'instant (2) : ce qui tient les saisons 3 et suivantes
   - id: une.promu.deuxieme
@@ -432,7 +437,7 @@ unes:
     titre: "{VILLE} S'INSTALLE PARMI LES GRANDS"
     sous: "Encore un maintien, {rang}e. Le mot « miracle » est rangé ; {prenom} {nom} préfère « travail ». Vaubourg préfère « projet »."
     sujet: bilan
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.top5
     postulats: [promu]
     roles: [entraineur]
@@ -442,7 +447,7 @@ unes:
     titre: "{VILLE} DANS LE TOP 5, SANS UN SOU"
     sous: "{rang}e. Le radiateur tousse toujours ; le classement, non. {prenom} {nom} « ne commente pas ». Le président, si."
     sujet: bilan
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.trois_ans
     postulats: [promu]
     roles: [entraineur]
@@ -452,7 +457,7 @@ unes:
     titre: "{NOM}, TROIS ANS DÉJÀ"
     sous: "Trois saisons sur le banc de {club}, {rang}e cette fois. Josiane « en a vu passer ». Pas beaucoup qui restent."
     sujet: bilan
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.cinq_ans
     postulats: [promu]
     roles: [entraineur]
@@ -462,7 +467,7 @@ unes:
     titre: "CINQ ANS DE {NOM} À {VILLE}"
     sous: "Cinq saisons, {rang}e cette fois, objectif {tenu}. Le radiateur a été changé. Le président, non."
     sujet: bilan
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.meme_echarpe
     postulats: [promu]
     roles: [entraineur]
@@ -472,7 +477,7 @@ unes:
     titre: "LE VIRAGE ET {NOM}, MÊME ÉCHARPE"
     sous: "{rang}e, objectif tenu, et la tribune Nord qui chante le nom de l'entraîneur avant celui du club. Gégé « n'oublie rien »."
     sujet: tribunes
-    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "relation.vecchio >= 0 && seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "relation.vecchio >= 0 && seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
   - id: une.promu.bache
     postulats: [promu]
     roles: [entraineur]
@@ -482,7 +487,7 @@ unes:
     titre: "LA BÂCHE A UN NOM"
     sous: "{rang}e. Gégé et la tribune Nord ne chantent plus le nom de {nom}. Ils l'écrivent, en grand, sur douze mètres."
     sujet: tribunes
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.aulard_temps
     postulats: [promu]
     roles: [entraineur]
@@ -492,7 +497,7 @@ unes:
     titre: "VAUBOURG A LE TEMPS POUR {NOM}"
     sous: "{rang}e, objectif tenu, et un président qui prolonge « sans lire ». Il a un empire ; il a trouvé une heure."
     sujet: direction
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.meneche_contre
     postulats: [promu]
     roles: [entraineur]
@@ -502,7 +507,7 @@ unes:
     titre: "MASSENET CONTRE {NOM}"
     sous: "{rang}e, objectif {tenu}. Notre chroniqueur « ne commente pas » l'entraîneur. Il le décrit. Sur deux pages."
     sujet: presse
-    react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.argent_dou
     postulats: [promu]
     roles: [entraineur]
@@ -512,7 +517,7 @@ unes:
     titre: "{VILLE} A DE L'ARGENT. D'OÙ ?"
     sous: "{rang}e, objectif {tenu}, et une caisse pleine dans un club « sans un sou ». Un ami à la Commission des comptes s'interroge."
     sujet: caisse
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
   - id: une.promu.gigi_encore
     postulats: [promu]
     roles: [entraineur]
@@ -522,7 +527,7 @@ unes:
     titre: "GIGI VECCHIO NE RACCROCHE PAS"
     sous: "Encore une retraite prise, encore une retraite rendue. {prenom} {nom} n'a rien demandé. Enfin, si : les buts."
     sujet: en.vieux_gardien
-    react: [ { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 0 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 0 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 0" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # ---- génériques du postulat (1) : l'état de l'instant, sans trace
   - id: une.promu.justesse

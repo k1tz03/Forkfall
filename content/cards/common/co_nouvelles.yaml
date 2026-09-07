@@ -5,6 +5,13 @@ cards:
   # `co.nouvelle.arret_contrats` → co.nv.1993_arret_vaneste, `co.nouvelle.fonds_voisins`
   # → co.nv.1999_fonds. Les garder ici faisait annoncer deux fois la même
   # nouvelle d'époque, et diluait le système de datation.
+  # Relecture « répétitions » : deux héritées de plus tombaient dans le même
+  # piège et sont retirées à leur tour — `co.nouvelle.equipementier_fluo`
+  # (jumelle : co.nv.2021_quatre_sponsors, « quatre noms sur un maillot ») et
+  # `co.nouvelle.record_transfert` (jumelle : co.nv.2028_milliard, « un joueur
+  # transféré pour un milliard »). Deux constats sans année les remplacent :
+  # le sac garde ses quatre Nouvelles intemporelles, secours des saisons où
+  # aucune datée n'est éligible.
   # Datée 2016 par la bible ch. 20 § 3.3 : le texte, les libellés et l'effet ne
   # changent pas (charte § 6.1 n° 11) ; l'import ajoute `year`, `once` et la
   # trace de monde `monde_video`, lue par content/unes/monde.yaml.
@@ -30,15 +37,29 @@ cards:
     left: {label: "Compatir", effects: {vestiaire: "-"}}
     right: {label: "Compatir", effects: {vestiaire: "-"}}
 
-  - id: co.nouvelle.equipementier_fluo
+  # Deux Nouvelles intemporelles de remplacement : les héritées qui disaient déjà
+  # ce que dit une datée ont été retirées (voir l'en-tête), et le sac a besoin de
+  # quatre constats sans année pour les saisons où aucune datée n'est éligible.
+  # Celles-ci ne datent rien : elles pourraient tomber en 1991 comme en 2044.
+  - id: co.nouvelle.terrain_impraticable
     roles: [entraineur, joueur]
     arc: nouvelle
-    tags: [nouvelle, sponsors]
-    speaker: josiane
+    tags: [nouvelle, arbitrage]
+    speaker: legruet
     cooldown: 25
-    text: "Josiane : « Un équipementier veut habiller tout le championnat en fluo. Ils paient une fortune pour trois bandes sur un short. »"
-    left: {label: "Signer partout", effects: {caisse: "+"}}
-    right: {label: "Signer partout", effects: {caisse: "+"}}
+    text: "Berthomier : « Onze matchs reportés le même week-end pour terrain impraticable, et deux clubs disent que le leur était bon. On verra ça après le Congrès. »"
+    left: {label: "Prendre acte", effects: {direction: "-"}}
+    right: {label: "Prendre acte", effects: {direction: "-"}}
+
+  - id: co.nouvelle.tribune_evacuee
+    roles: [entraineur, joueur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    speaker: lea
+    cooldown: 25
+    text: "Léa : « Une tribune a été évacuée à la mi-temps dans un stade du championnat, sans un blessé et sans une image. Vous confirmez qu'on visite la vôtre ? »"
+    left: {label: "Encaisser", effects: {tribunes: "-"}}
+    right: {label: "Encaisser", effects: {tribunes: "-"}}
 
   - id: co.nouvelle.tout_assis
     roles: [entraineur, joueur]
@@ -50,21 +71,13 @@ cards:
     left: {label: "Ranger les banderoles", effects: {tribunes: "-"}}
     right: {label: "Ranger les banderoles", effects: {tribunes: "-"}}
 
-  - id: co.nouvelle.record_transfert
-    roles: [entraineur, joueur]
-    arc: nouvelle
-    tags: [nouvelle, mercato]
-    speaker: meneche
-    cooldown: 25
-    when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Massenet : « Le record du monde de transfert a encore explosé. Un joueur vaut désormais un pont, deux hôpitaux et un rond-point. »"
-    left: {label: "Souffler", effects: {vestiaire: "-"}}
-    right: {label: "Souffler", effects: {vestiaire: "-"}}
-
   # ---- Rescue (une par jauge, côté bas ET côté haut) : vrais dilemmes, donc
   # cartes de routine à deux choix rangées sous leur thème, pas des Nouvelles ----
+  # « Qui décide, qui possède » : vendre le parking du stade, c'est le club. La
+  # jauge « caisse » du joueur est son compte en banque, pas la caisse du club :
+  # sa version parle de ce qu'il a, lui.
   - id: co.nouvelle.caisse_a_sec
-    roles: [entraineur, joueur]
+    roles: [entraineur]
     arc: caisse
     tags: [rescue:caisse, direction]
     speaker: josiane
@@ -74,8 +87,19 @@ cards:
     left: {label: "Je vends le parking", effects: {caisse: "+++", tribunes: "--"}, answer: "Les abonnés feront trois tours du quartier avant de se garer."}
     right: {label: "Je garde le parking", effects: {tribunes: "+", caisse: "-"}}
 
+  - id: co.nouvelle.caisse_a_sec_jp
+    roles: [joueur]
+    arc: caisse
+    tags: [rescue:caisse, agents]
+    speaker: fardelli
+    cooldown: 30
+    when: "gauges.caisse < 25"
+    text: "Fardelli, mon ami, le carnet ouvert : « Ton compte est à zéro et ta prime est en avril. Le concessionnaire veut ta tête sur une affiche, deux heures un mardi. »"
+    left: {label: "Deux heures un mardi", effects: {caisse: "+++", tribunes: "-", relation: {fardelli: 1}}, answer: "L'affiche reste six ans à l'entrée de la ville. On te klaxonne dessous jusqu'en 2001."}
+    right: {label: "Je tiens jusqu'en avril", effects: {caisse: "-", vestiaire: "+", parole: 1}, answer: "Tu tiens. Camille avance le loyer et ne le dit pas ; Josiane, si."}
+
   - id: co.nouvelle.trop_plein_caisse
-    roles: [entraineur, joueur]
+    roles: [entraineur]
     arc: caisse
     tags: [rescue:caisse, retorse]
     speaker: aulard
@@ -84,6 +108,17 @@ cards:
     text: "Vaubourg : « On croule sous le cash et la Commission de contrôle louche sur nos comptes. On claque tout sur une star, ou on planque ? »"
     left: {label: "On signe une star", effects: {caisse: "---", force: "+", tribunes: "+"}}
     right: {label: "On planque le magot", effects: {direction: "+", caisse: "-"}, answer: "Le magot dort au chaud. La Commission aussi, pour l'instant."}
+
+  - id: co.nouvelle.trop_plein_caisse_jp
+    roles: [joueur]
+    arc: caisse
+    tags: [rescue:caisse, retorse]
+    speaker: fardelli
+    cooldown: 30
+    when: "gauges.caisse > 75"
+    text: "Fardelli, mon ami, une brochure à la main : « Ton compte déborde et l'administration lit les comptes qui débordent. On monte une société pour l'image, ou tu laisses dormir ? »"
+    left: {label: "On monte la société", effects: {caisse: "---", direction: "+", parole: -1}, answer: "La société a un nom d'oiseau et une adresse au bord d'une mer que tu n'as jamais vue."}
+    right: {label: "Je laisse dormir", effects: {caisse: "-", vestiaire: "+"}, answer: "Ça dort. Ça rapporte trois pour cent, et personne ne t'écrit."}
 
   - id: co.nouvelle.conseil_veut_ta_tete
     roles: [entraineur, joueur]

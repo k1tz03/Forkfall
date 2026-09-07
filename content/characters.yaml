@@ -258,7 +258,13 @@ characters:
       joueur:     { sourire: "petit", neutre: "petit", noir: "{nom}" }
     on_relation:
       -3: co.clow.trahison_devant
-      3: co.clow.faveur_telegramme
+      # Le palier du télégramme rejouait la révélation du climax de
+      # « Lundi, huit heures » quand l'intrigue était ouverte : garde
+      # symétrique de son `excludes:`, avec un second registre en repli
+      # pour que le palier reste atteignable (il est aussi rescue:tribunes).
+      3:
+        - { id: co.clow.faveur_telegramme, if: "!flag('telegramme_clow') && arc('co.clow_lundi') != 'armed' && arc('co.clow_lundi') != 'active'" }
+        - { id: co.clow.faveur_chaise }
     retrouvailles: { sourire: co.retrouvailles.clow_sourire, noir: co.retrouvailles.clow_noir }
   - id: mbako
     name: "Lian Mbako"

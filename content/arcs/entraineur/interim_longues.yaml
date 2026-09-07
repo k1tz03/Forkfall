@@ -30,7 +30,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : le système de l'ancien est resté au mur après {nom}. Personne n'a effacé."
+      journal: "{annee} : à {club}, le tableau de l'ancien a cessé d'être une question. Le vestiaire a compté les semaines de {nom}."
     steps:
       - id: craie
         card:
@@ -55,7 +55,11 @@ arcs:
     roles: [entraineur]
     postulats: [interimaire]
     foreground: true
-    weight: 1.3
+    # 1,3 → 0,9 : `forceStory` ouvre l'intrigue la plus lourde parmi les
+    # éligibles (`weight`, pas le poids du réservoir), et l'ancien d'en face
+    # devait 16 % de ses ouvertures au forçage (plafond 15 %). Son poids de
+    # réservoir au bucket "1" a été relevé en contrepartie.
+    weight: 0.9
     once: true
     min_season: 1
     theme: presse
@@ -71,7 +75,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : {nom} et l'ancien se sont serré la main. Puis ils ont changé de banc, encore."
+      journal: "{annee} : {nom} et l'ancien se sont croisés au rond central. Depuis, la presse compte les points à chaque affiche."
     steps:
       - id: affiche
         card: en.ancien_en_face.affiche
@@ -112,7 +116,7 @@ arcs:
     fallback: nouvelles
     epilogue:
       direction: "-"
-      journal: "{annee} : {nom} a changé de club avec une dérogation dans la poche. Elle avait expiré."
+      journal: "{annee} : la Fédération a classé le dossier d'entraîneur de {nom}. Il y a un papier ; reste à savoir lequel."
     steps:
       - id: appel
         card:
@@ -120,7 +124,18 @@ arcs:
           # ou la saison dont le fil rouge est le papier qui manque.
           - { id: en.diplome.appel_stage, if: "flag('clow_stage') || fil_rouge == 'diplome'" }
           - { id: en.diplome.appel }
-        next: [ { step: stage, if: "flag('derogation')", in: [3, 8] } ]
+        # Le chemin `arrange` fermait l'intrigue en une seule carte dans six
+        # ouvertures sur dix : le président faisait le papier, et plus rien.
+        # La Fédération revient sur la signature — c'est la sanction visible de
+        # l'arrangement, et la trace `diplome_arrange` gagne une scène avant
+        # d'être relue par en.dossier_meneche et par « LE COACH SANS PAPIER ».
+        next:
+          - { step: signature, if: "flag('diplome_arrange')", in: [4, 9] }
+          - { step: stage, if: "flag('derogation')", in: [3, 8] }
+      - id: signature
+        card: en.diplome.signature
+        outcome: arrange
+        next: []
       - id: stage
         card: en.diplome.stage
         next: [ { step: examen, at_season: 1, at: [1, 3] } ]
@@ -153,7 +168,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : {nom} a quitté le banc du mystique. Le mystique n'a pas remarqué tout de suite."
+      journal: "{annee} : l'histoire du grand nom s'est terminée à {club}. Le seau en plastique est retourné au placard."
     steps:
       - id: cassette
         card: en.grand_nom.cassette
@@ -199,7 +214,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : la tribune de {ville} a chanté l'ancien jusqu'au départ de {nom}. Puis elle a chanté le suivant."
+      journal: "{annee} : la tribune de {ville} a fini par choisir son camp sur {nom}. Elle a chanté l'ancien encore deux fois."
     steps:
       - id: stagiaire
         card: en.kop_doute.stagiaire
@@ -238,7 +253,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : la lettre est restée dans le tiroir du milieu de {club}. Quelqu'un a la clé."
+      journal: "{annee} : la lettre anonyme sur l'ancien a fini par trouver un destinataire. Le tiroir du milieu ferme mal."
     steps:
       - id: enveloppe
         card: en.lettre.enveloppe

@@ -116,27 +116,37 @@ arcs:
       vers_entraineur:  "{annee} : {prenom} {nom} a le papier. La réserve a un entraîneur, ou deux."
     epilogue:
       journal: "{annee} : {nom} a le papier. La réserve a un entraîneur, ou deux."
+    # Fenêtres resserrées : cinq étapes en [1,9] / [2,11] / [1,8] tenaient sur
+    # deux saisons et demie, alors que l'intrigue est `min_season: 2` et
+    # `once: true` — l'issue `diplome` (posée par le papier de Berthomier)
+    # n'était jamais atteinte et `brehaut` restait à 3 % des ouvertures. Le
+    # cursus tient maintenant dans une saison et demie : c'est un diplôme, pas
+    # une thèse.
     steps:
       - id: vukic
         card: jp.diplome.vukic
-        next: [ { step: stage, if: "flag('diplome_en_cours')", in: [1, 9] }, { step: relance, in: [3, 12] } ]
+        next: [ { step: stage, if: "flag('diplome_en_cours')", in: [1, 4] }, { step: relance, in: [2, 6] } ]
       # Dire non une fois ne ferme pas l'intrigue : l'adjoint revient avec le
       # même formulaire, et c'est la deuxième réponse qui compte.
       - id: relance
         card: jp.diplome.vukic_encore
-        next: [ { step: stage, if: "flag('diplome_en_cours')", in: [1, 9] } ]
+        next: [ { step: stage, if: "flag('diplome_en_cours')", in: [1, 4] } ]
       - id: stage
         card:
           - { id: jp.diplome.clow_deja, if: "flag('clow_stage')" }
           - { id: jp.diplome.clow_ferme, if: "flag('clow_ingrat')" }
           - { id: jp.diplome.clow }
-        next: [ { step: president, in: [1, 9] } ]
+        next: [ { step: president, in: [1, 4] } ]
       - id: president
         card: jp.diplome.aulard
-        next: [ { step: papier, in: [2, 11] } ]
+        next: [ { step: papier, in: [2, 5] } ]
       - id: papier
         card: jp.diplome.legruet
-        next: [ { step: brehaut, if: "flag('diplome')", in: [1, 8] } ]
+        # `jp.diplome.brehaut` pose `outcome: brehaut` : servie dès que le papier
+        # était signé, elle recouvrait l'issue `diplome` (jamais atteinte chez la
+        # fin de contrat, 2-3 % chez la pépite). Bréhaut ne s'inscrit au même
+        # stage que s'il te suit encore ; sinon le papier reste le papier.
+        next: [ { step: brehaut, if: "flag('diplome') && relation.brehaut >= 1", in: [1, 5] } ]
       - id: brehaut
         card: jp.diplome.brehaut
         next: []

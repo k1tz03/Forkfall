@@ -649,7 +649,7 @@ void main() {
         final txt = f.readAsStringSync();
         expect(txt, contains('  - id: en.kop.local\n'));
         f.writeAsStringSync(txt.replaceFirst('  - id: en.kop.local\n', '  - id: en.kop.local\n    when: "bilan.tenu"\n'));
-        final r = await Process.run('dart', ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
+        final r = await Process.run(Platform.resolvedExecutable, ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
         expect(r.exitCode, 1, reason: 'stdout: ${r.stdout}\nstderr: ${r.stderr}');
         expect(r.stderr.toString(), contains('`bilan.*` hors d\'une manchette'));
       } finally {
@@ -944,9 +944,9 @@ void main() {
         u = u.replaceFirst('    titre: "LE BILAN DE {NOM}"\n', '    titre: "LE BILAN DE {NOM}, ENTRAÎNEUR DE {CLUB}"\n');
         u = u.replaceFirst('{club} termine {rang}e.', '{club} termine {rangg}e.');
         unes.writeAsStringSync(u);
-        final b = await Process.run('dart', ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
+        final b = await Process.run(Platform.resolvedExecutable, ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
         expect(b.exitCode, 0, reason: 'le build accepte (ce sont des contrôles de lint) : ${b.stderr}');
-        final r = await Process.run('dart', ['$root/packages/tools/bin/lint.dart'], workingDirectory: tmp.path);
+        final r = await Process.run(Platform.resolvedExecutable, ['$root/packages/tools/bin/lint.dart'], workingDirectory: tmp.path);
         expect(r.exitCode, 1, reason: 'stdout: ${r.stdout}\nstderr: ${r.stderr}');
         final err = r.stderr.toString();
         expect(err, contains('co.nouvelle.coach_vire_ailleurs: `{toi}` sans `speaker`'));

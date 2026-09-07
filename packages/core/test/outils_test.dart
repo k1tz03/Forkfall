@@ -444,7 +444,7 @@ endings:
     title: "La fin de dossier"
     epitaph: "Écrite dans content/endings/lot_test.yaml."
 ''');
-        final ok = await Process.run('dart', ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
+        final ok = await Process.run(Platform.resolvedExecutable, ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
         expect(ok.exitCode, 0, reason: 'stdout: ${ok.stdout}\nstderr: ${ok.stderr}');
         final bundle = File('${tmp.path}/content/build/content.json').readAsStringSync();
         expect(bundle, contains('une.test.dossier'));
@@ -460,7 +460,7 @@ unes:
     titre: "LA MÊME, AILLEURS"
     sous: "Deux salles, un id."
 ''');
-        final ko = await Process.run('dart', ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
+        final ko = await Process.run(Platform.resolvedExecutable, ['$root/packages/tools/bin/build_content.dart'], workingDirectory: tmp.path);
         expect(ko.exitCode, 1);
         expect(ko.stderr.toString(), contains('déjà déclarée'));
       } finally {

@@ -438,6 +438,7 @@ void main() {
     roles.add((r as Map).cast<String, dynamic>());
   }
   final roleIds = roles.map((r) => r['id'].toString()).toSet();
+  final roleById = {for (final r in roles) r['id'].toString(): r};
   roleIdsGlobal = roleIds;
 
   // Calendar (+ director config).
@@ -624,11 +625,22 @@ void main() {
         if (m['journal'] != null) 'journal': m['journal'].toString(),
         'traces': ((m['traces'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
         'issues': _strList(m['issues']),
+        // Issues rares (spec § 5.1, clause d'exception) : une issue qui demande
+        // un état rare ou qui est une sortie fatale n'a pas à tenir le plancher
+        // de 10 %. Elle doit être DÉCLARÉE : sans ça, `simulate` sortait en
+        // rouge sur une intention, et le rouge des vrais ratés ne se voyait
+        // plus. Chaque entrée doit figurer dans `issues`.
+        'issues_rares': _strList(m['issues_rares']),
       };
       final replay = _compileReplay(m['replay'], errors, '$rel/$id/replay');
       if (replay != null) compiled['replay'] = replay;
       if (m['carrier'] != null && !(compiled['cast'] as List).contains(m['carrier'].toString())) {
         errors.add('$rel: arc $id: carrier « ${m['carrier']} » n\'est pas dans le cast');
+      }
+      for (final r in compiled['issues_rares'] as List) {
+        if (!(compiled['issues'] as List).contains(r)) {
+          errors.add('$rel: arc $id: issues_rares « $r » ∉ issues (${compiled['issues']})');
+        }
       }
       final issues = compiled['issues'] as List;
       for (final st in compiled['steps'] as List) {
@@ -675,7 +687,19 @@ void main() {
     if (idx != i) errors.add('postulats: $id: index $idx ≠ position $i');
     m['index'] = idx;
     if (!roleIds.contains(m['role'])) errors.add('postulats: $id: rôle inconnu « ${m['role']} »');
+    // `age:` optionnel : le postulat écrase le tirage du rôle (engine §1.8). On
+    // le veut dans la fenêtre du rôle, sinon les portes de transition et les
+    // objectifs d'âge du rôle ne veulent plus rien dire.
+    if (m['age'] != null) {
+      final a = (m['age'] as num).toInt();
+      final rr = (roleById[m['role']]?['age'] as List?)?.map((e) => (e as num).toInt()).toList();
+      if (rr != null && (a < rr.first || a > rr.last)) {
+        errors.add('postulats: $id: age $a hors de la fenêtre du rôle ${m['role']} [${rr.first}, ${rr.last}]');
+      }
+      m['age'] = a;
+    }
     if (m['president'] != null && !characterIds.contains(m['president'])) errors.add('postulats: $id: président inconnu « ${m['president']} »');
+    if (m['patron'] != null && !characterIds.contains(m['patron'])) errors.add('postulats: $id: patron inconnu « ${m['patron']} »');
     if (m['opening_arc'] != null) {
       final oa = arcById[m['opening_arc'].toString()];
       if (oa == null) {

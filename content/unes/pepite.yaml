@@ -17,7 +17,7 @@ unes:
     sous: "L'usine a vendu son jeune de l'année. Elle en a acheté un autre avec ; il a seize ans et une mère qui négocie."
     sujet: jp.pepite.club_usine
     photo: jp.pepite.p3_vente
-    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.rival
     postulats: [pepite]
@@ -42,7 +42,7 @@ unes:
     sous: "Vingt mètres de bâche, une promesse tenue. Gégé : « La tribune n'oublie rien. » Elle a repeint en doré, et souligné la phrase."
     sujet: jp.tifo
     photo: jp.tifo.bache
-    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 1 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 1 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.gege_decoupe_mur, if: "relation.gege >= 1 && seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "relation.gege >= 1 && seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe, if: "relation.gege >= 1" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.honnete
     postulats: [pepite]
@@ -54,7 +54,21 @@ unes:
     sous: "La Nord a gardé la bâche sans la phrase. Au micro du stade, {prenom} {nom} a dit « je ne sais pas » ; c'est rare, et ça s'entend."
     sujet: jp.tifo
     photo: jp.tifo.bache
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
+
+  # Lit `bache_cendres`, posée par jp.tifo.un_an_apres_brulee : la seule fin de
+  # la bâche qui ne soit pas un pliage.
+  - id: une.pepite.cendres
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('bache_cendres') && journal_has('bache_cendres')"
+    titre: "VINGT MÈTRES, UN BIDON, DES ŒILLETS"
+    sous: "La Nord a brûlé elle-même la bâche de {nom}, le soir de son but. Gégé : « Proprement. » Il a gardé les œillets dans une boîte de biscuits."
+    sujet: jp.tifo
+    photo: jp.tifo.un_an_apres_brulee
+    react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')" }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')" }, { card: co.re.gege_decoupe } ]
 
   - id: une.pepite.retour
     postulats: [pepite]
@@ -91,7 +105,7 @@ unes:
     sous: "Même au toro du mardi. Bréhaut : « Le groupe vit bien. » Sans lui, visiblement ; l'entraînement d'à côté est plus calme."
     sujet: jp.brassard_test
     photo: jp.brassard.toro
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.pepite.brassard
     postulats: [pepite]
@@ -103,7 +117,7 @@ unes:
     sous: "Le genou de Titi Bréhaut a dit stop ; lui, non. Il a serré l'épaule un peu trop fort en passant le brassard ; il l'a fait exprès."
     sujet: jp.brassard_test
     photo: jp.brassard.genou_de_titi
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.pepite.deux_pepites
     postulats: [pepite]
@@ -128,7 +142,7 @@ unes:
     sous: "Première conférence, première phrase. Le vestiaire a découpé ; la phrase est en jaune, scotchée dans un casier, avec la date du but."
     sujet: jp.premiere_une
     photo: jp.une.conference
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.pepite.boude
     postulats: [pepite]
@@ -140,7 +154,7 @@ unes:
     sous: "Sur le banc, {prenom} {nom} a tapé à la porte du coach. Le coach a ouvert, écouté, refermé ; la porte est plus lourde en repartant."
     sujet: jp.banc_hiver
     photo: jp.banc.vukic
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.loft
     postulats: [pepite]
@@ -152,7 +166,7 @@ unes:
     sous: "Le président montrait la porte des U17 sans se lever. Un gamin de dix-sept ans lui fait la passe ; il est le seul, et il ne le sait pas."
     sujet: jp.banc_hiver
     photo: jp.banc.loft
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # ------------------------------------------------------ la sélection (3 / 3)
   - id: une.pepite.bleu_cobalt
@@ -165,7 +179,7 @@ unes:
     sous: "Première sélection. Le club « a râlé pour la cheville » ; la Fédération, elle, « verra ça après le Congrès »."
     sujet: jp.selection
     photo: jp.selection.groupe
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.forfait
     postulats: [pepite]
@@ -177,7 +191,7 @@ unes:
     sous: "La cheville allait très mal pour la Fédération et très bien pour le club. « On ne dit pas non deux fois », a noté quelqu'un, quelque part."
     sujet: jp.selection
     photo: jp.selection.retour_forfait
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # --------------------------------------------------------- l'argent (3 / 2)
   - id: une.pepite.or
@@ -190,7 +204,7 @@ unes:
     sous: "Le championnat du désert paie comme l'or, et le niveau reste entre eux. « Ce n'est pas un club, c'est un actif » : {NOM} en est une ligne."
     sujet: jp.exil_dore
     photo: jp.exil.nassir
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.montre
     postulats: [pepite]
@@ -202,7 +216,7 @@ unes:
     sous: "Une société aux îles, une image à dix-neuf ans, un cousin sur le parking. Trois mois de salaire au poignet, et personne n'a rien demandé."
     sujet: jp.contrat_image
     photo: jp.image.cousin
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.mercenaire
     postulats: [pepite]
@@ -226,7 +240,7 @@ unes:
     sous: "La page trois s'est coincée. Josiane « en a vu passer, jamais un qui se coince ». Le fax, depuis, a été promu ; le transfert, non."
     sujet: jp.clause
     photo: jp.clause.fax
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # ------------------------------------------------------------- le corps (2)
   - id: une.pepite.genou
@@ -239,7 +253,7 @@ unes:
     sous: "Six mois de tribune. On compte les flexions à voix haute dans la salle de kiné ; on les entend depuis la buvette, tous les matins."
     sujet: jp.genou_parle
     photo: jp.genou.plateaux
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.dernier_mot
     postulats: [pepite]
@@ -251,7 +265,7 @@ unes:
     sous: "Le Doc avait dit « tu ne sens plus rien ». C'était bien ça, le problème ; il l'a compris à l'échauffement, en courant, ce qu'il ne fait jamais."
     sujet: jp.genou_parle
     photo: jp.genou.rechute
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   # ------------------------------------------------------------ la maison (2)
   - id: une.pepite.bac
@@ -264,7 +278,7 @@ unes:
     sous: "La table de la cuisine, des fiches, un ballon dessous. Il a fait réciter la philo ; l'agent a appelé, et n'a pas eu de réponse."
     sujet: jp.camille_bac
     photo: jp.bac.revision
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.dernier_bloc
     postulats: [pepite]
@@ -276,7 +290,7 @@ unes:
     sous: "La veille de la vente, il a tout joué. Son agent regardait sa montre pendant le tour d'honneur ; il note toujours l'heure."
     sujet: jp.pepite.club_usine
     photo: jp.pepite.p2b_dernier_bloc
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # -------------------------------------------------------- vers le banc (4)
   - id: une.pepite.banc
@@ -289,7 +303,7 @@ unes:
     sous: "La réserve a un entraîneur. L'adjoint « le disait parce que personne ne le dirait » ; il l'a dit, et il avait le formulaire depuis mars."
     sujet: jp.diplome_joueur
     photo: jp.diplome.vukic
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   # ------------------------------- les traces que rien d'autre ne relit encore
   - id: une.pepite.meme
@@ -302,7 +316,7 @@ unes:
     sous: "Trois « je ne commente pas » en un mois, et une boucle qui tourne. Le club l'a imprimée sur un mug ; le mug se vend mieux que le maillot."
     sujet: jp.premiere_une
     photo: jp.une.meme
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.image_propre
     postulats: [pepite]
@@ -314,7 +328,7 @@ unes:
     sous: "Le cousin est reparti aux îles avec son dossier bleu, et l'agent a gardé l'addition du restaurant, pour la déduire."
     sujet: jp.contrat_image
     photo: jp.image.cousin
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.chambre
     postulats: [pepite]
@@ -326,7 +340,7 @@ unes:
     sous: "Chez les Cobalts, la règle du groupe n'a pas bougé depuis 1971. Il a entendu le tir au but de 1990 à deux heures du matin, une fois."
     sujet: jp.selection
     photo: jp.selection.groupe
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.pepite.certificat
     postulats: [pepite]
@@ -338,7 +352,7 @@ unes:
     sous: "Trois doudounes en tribune, un certificat signé sans lecture. Le Doc « ne commente pas » ; il a classé la copie dans le tiroir, pas dans le dossier."
     sujet: jp.banc_hiver
     photo: jp.banc.recruteurs
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.voiture
     postulats: [pepite]
@@ -350,7 +364,7 @@ unes:
     sous: "Une prime de transfert, une carte grise, et une fac à quatre cents kilomètres. Elle apprend à conduire dessus ; elle conduit mal six mois."
     sujet: jp.camille_bac
     photo: jp.bac.resultats
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.bilan
     postulats: [pepite]
@@ -362,7 +376,7 @@ unes:
     sous: "Deux dossiers, un propre et un qui boite. Le club acheteur a reçu le propre ; son kiné a compris en six mois, tous les matins."
     sujet: jp.genou_parle
     photo: jp.genou.visite
-    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.desert
     postulats: [pepite]
@@ -374,7 +388,7 @@ unes:
     sous: "Deux billets d'avion, un seul rempli. On s'appelle à des heures qui ne sont les bonnes pour personne ; le téléphone sonne dans le vide, souvent."
     sujet: jp.exil_dore
     photo: jp.exil.camille
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.pepite.deux_diplomes
     postulats: [pepite]
@@ -386,4 +400,4 @@ unes:
     sous: "Titi Bréhaut a passé le même stage la même année. Adjoint, ou rival : le président choisira celui qui coûte le moins."
     sujet: jp.diplome_joueur
     photo: jp.diplome.brehaut
-    react: [ { card: co.re.vecchio_garde } ]
+    react: [ { card: co.re.vecchio_garde_eau, if: "seen('co.re.vecchio_garde_casier')" }, { card: co.re.vecchio_garde_casier, if: "seen('co.re.vecchio_garde')" }, { card: co.re.vecchio_garde } ]

@@ -12,7 +12,7 @@ cards:
     text: "« On te fait un tifo, {toi} : la Nord a voté ça hier soir, à main levée et à la troisième bière. Tu passes au local, ou tu restes du côté des joueurs ? »"
     left:
       label: "J'y vais"
-      effects: {tribunes: "++", direction: "-", relation: {gege: 1}, set: [ami_ultras], react: {card: co.re.camille_journal, if: "!flag('divorce')", chance: 0.6}}
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}, set: [ami_ultras], react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')", chance: 0.6 }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')", chance: 0.6 }, { card: co.re.camille_journal, chance: 0.6 } ]}
       answer: "Trois bières, la compo à la craie, ton nom déjà dessus. Tu rentres à une heure ; Camille demande à quelle heure, mais tu es déjà rentré."
     right:
       label: "Pas ce soir"
@@ -28,12 +28,66 @@ cards:
     text: "« On te fait un tifo, {toi}, et le local, on l'a rénové grâce à quelqu'un qui portait ton maillot, il y a longtemps. La tribune n'oublie rien. Tu passes ? »"
     left:
       label: "J'y vais"
-      effects: {tribunes: "++", direction: "-", relation: {gege: 2}, set: [ami_ultras], react: {card: co.re.camille_journal, if: "!flag('divorce')", chance: 0.6}}
+      effects: {tribunes: "++", direction: "-", relation: {gege: 2}, set: [ami_ultras], react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')", chance: 0.6 }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')", chance: 0.6 }, { card: co.re.camille_journal, chance: 0.6 } ]}
       answer: "Trois bières sous la craie d'un autre. La date est encore lisible ; il te la montre du doigt."
     right:
       label: "Pas ce soir"
       effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
       answer: "Il range la clé. Le local a été rénové pour quelqu'un ; ce ne sera pas pour toi."
+
+  # ------------------------------------------------------------- à distance
+  # `same_club: false` sur l'arc laisse les trois premières étapes suivre le
+  # joueur vendu (l'étape `un_an_apres`, elle, se lit de loin par nature). Sans
+  # ces trois variantes, Gégé lui tendait le micro du stade de l'usine et Léa le
+  # trouvait « devant vingt mètres de bâche » alors qu'il joue à trois cents
+  # kilomètres. Elles sont placées AVANT la version au stade dans reservoir_a.
+  - id: jp.tifo.local_loin
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "« On te fait le tifo quand même, {toi} : la Nord a voté hier soir, à main levée, et personne n'a dit que tu étais parti. Tu nous appelles depuis là-bas, ou on se débrouille ? »"
+    left:
+      label: "Je vous appelle"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}, set: [ami_ultras]}
+      answer: "Tu appelles le local à onze heures du soir. Tu entends le bar, la craie, et quelqu'un qui répète ta phrase aux autres."
+    right:
+      label: "Débrouillez-vous"
+      effects: {tribunes: "-", vestiaire: "+", relation: {gege: -1}}
+      answer: "Ils se débrouillent. La bâche se fait quand même ; il te le dira quand tu reviendras, de loin."
+
+  - id: jp.tifo.bache_loin
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    text: "« La photo est dans l'enveloppe : vingt mètres, {NOM}, et en dessous « ICI, POUR TOUJOURS ». Tu joues ailleurs, et c'est déroulé. Tu le dis à L'Écho, ou on l'écrit à ta place ? »"
+    left:
+      label: "Je le dis : c'est chez moi"
+      effects: {tribunes: "+++", direction: "-", parole: 2, promise: true, set: [enfant_du_pays], outcome: promis, react: jp.re.lea_vingt_metres}
+      answer: "Tu le dis à Léa, au téléphone, sans micro et sans stade. L'Écho le titre ; à l'usine, on lit la Une debout."
+    right:
+      label: "Je ne promets rien"
+      effects: {tribunes: "-", vestiaire: "+", parole: 1, set: [honnete_tribune], outcome: honnete, react: jp.re.lea_vingt_metres}
+      answer: "Tu ne promets rien. Ils la déroulent quand même, dix minutes, puis la replient : dehors, il pleuvait."
+
+  - id: jp.tifo.prix_loin
+    roles: [joueur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    text: "« Vingt mètres à ton nom dans MON stade, et tu joues ailleurs, {toi} : j'ai fait peindre à côté ce qu'on t'a vendu. Tu viens poser devant les deux cet été, ou on efface ? »"
+    left:
+      label: "Je viendrai poser"
+      effects: {direction: "++", tribunes: "--", caisse: "+", react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.6 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.6 }, { card: co.re.gege_decoupe, chance: 0.6 } ]}
+      answer: "Tu poses en juillet, en polo, entre ton nom et un chiffre. Gégé découpe la photo ; il coupe le chiffre."
+    right:
+      label: "Effacez le prix"
+      effects: {direction: "--", tribunes: "++", relation: {gege: 1}}
+      answer: "Il ne l'efface pas. Il le fait repeindre plus petit ; pour lui, c'est effacer."
 
   - id: jp.tifo.bache
     roles: [joueur]
@@ -118,6 +172,26 @@ cards:
       label: "Je la reprends"
       effects: {tribunes: "+", direction: "-", parole: -1, relation: {gege: 1}}
       answer: "Tu la prends. Elle pèse. Elle finit à la cave, pliée pareil, dans un autre sac."
+
+  # Câblage de la contradiction relevée à la relecture : quand le joueur a
+  # célébré son but contre l'usine (`celebre_contre_usine`), la bâche a brûlé le
+  # soir même. Les cinq autres variantes disent « on ne l'a pas brûlée ».
+  - id: jp.tifo.un_an_apres_brulee
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, chaine]
+    speaker: gege
+    tone: drame
+    once: true
+    text: "« Elle a brûlé le soir de ton but, {toi}, et c'est nous qui l'avons fait, proprement, dans un bidon. Il reste les œillets, dans une boîte. Tu les veux, ou on les garde ? »"
+    left:
+      label: "Gardez-les"
+      effects: {tribunes: "-", vestiaire: "+", set: [bache_cendres]}
+      answer: "Il garde la boîte derrière le bar. Il la secoue parfois pour les nouveaux ; ça fait le bruit d'une bâche."
+    right:
+      label: "Je les prends"
+      effects: {tribunes: "+", parole: -1, relation: {gege: 1}, set: [bache_cendres]}
+      answer: "Tu prends la boîte. Vingt-deux œillets, un peu noirs. Camille demande ce que c'est ; tu réponds « rien »."
 
   - id: jp.tifo.un_an_apres_dore
     roles: [joueur]

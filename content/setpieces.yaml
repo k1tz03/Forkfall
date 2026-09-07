@@ -409,25 +409,122 @@ setpieces:
   # La bible écrit trois libellés de risque ; le moteur n'a que deux sorties :
   # SÛR et RISQUÉ. ÉQUILIBRÉ n'a pas de bouton (écart d'import).
   gm_te:
+    # ── Ce que la relecture a trouvé, et ce qui manque encore ────────────────
+    # Le Grand Match sert `gm_te` **trois fois de suite** (content/calendar.yaml,
+    # phase sprint) et `_setpiece` reprend chaque fois la première variante vraie :
+    # les trois temps forts d'une saison étaient identiques mot pour mot.
+    # La bible ch. 30 § 1.3 règle ça avec `vars.gm_te_index` (1, 2, 3) ; ce
+    # compteur est posé par le moteur, et le moteur ne l'écrit pas encore. Les
+    # trois variantes d'index sont donc écrites ici, **en bas**, prêtes à
+    # prendre le relais du secours le jour où `_gmTempsFort` posera la variable :
+    # elles sont inertes tant que `vars.gm_te_index` vaut 0.
+    # Écart d'ordre assumé avec la bible : elle place les variantes d'index
+    # avant les variantes de trace, ce qui les rendrait toujours gagnantes et
+    # ramènerait le même trio dans toutes les carrières. Ici les traces passent
+    # d'abord (le genou, le vieux gardien, le dauphin, la loge…) et l'index sert
+    # de secours différencié : une carrière qui n'a rien à dire voit quand même
+    # trois écrans différents.
+    # Ce que ce fichier peut faire seul, et qui est fait : quinze variantes de
+    # plus, lues sur les traces des deux rôles (bible ch. 10 § 9 et ch. 11 § 9),
+    # pour que le temps fort change au moins d'une saison et d'une carrière à
+    # l'autre.
     - when: "flag('genou')"
       text: "{minute}e minute · {score}. Ton corps a une opinion sur la suite. Elle n'est pas dans le plan."
       left: "Je lève le pied"
       right: "Je force"
+    # ---- Entraîneur, sur les traces du banc (bible ch. 11 § 9)
     - roles: [entraineur]
       when: "flag('finale_gigi')"
       text: "{minute}e minute · {score}. Le vieux gardien s'avance de trois mètres. Il n'a pas demandé la permission."
       left: "Je le laisse monter"
       right: "Je le rappelle"
     - roles: [entraineur]
+      when: "flag('vecchio_promis')"
+      text: "{minute}e minute · {score}. Le gardien montre le corner, puis sa propre ligne. « J'en ai vu d'autres » ne dit pas laquelle des deux."
+      left: "Reste sur ta ligne"
+      right: "Sors sur les corners"
+    - roles: [entraineur]
+      when: "flag('mbako_lance')"
+      text: "{minute}e minute · {score}. Penalty. L'avant-centre tend la main, le gamin de seize ans a déjà le ballon sous le bras."
+      left: "Le buteur tire"
+      right: "Le petit tire"
+    - roles: [entraineur]
       when: "flag('otage_kop')"
       text: "{minute}e minute · {score}. Le onze est celui du virage. Ce que tu changes maintenant, le local le saura avant la fin."
       left: "Je ne change rien"
       right: "Je change tout"
+    - roles: [entraineur]
+      when: "flag('vukic_dauphin')"
+      text: "{minute}e minute · {score}. L'adjoint a un papier plié : trois lignes, un système, et sa signature en bas. Il ne l'a pas montré au président. Pas encore."
+      left: "Son plan"
+      right: "Le mien"
+    - roles: [entraineur]
+      when: "flag('salaires_retard')"
+      text: "{minute}e minute · {score}. La paie du cinq n'est pas tombée, et onze hommes courent quand même. Personne ne le dira avant le coup de sifflet."
+      left: "Je ferme la boutique"
+      right: "Je demande un effort"
+    - roles: [entraineur]
+      when: "flag('espion_retour')"
+      text: "{minute}e minute · {score}. Leur onze est exactement celui de la feuille du café. Ou bien ils t'ont laissé la lire."
+      left: "Je garde mon plan"
+      right: "Je change tout de suite"
+    - roles: [entraineur]
+      when: "flag('fils_joueur')"
+      text: "{minute}e minute · {score}. Dernier changement possible, et c'est le fils du président qui s'échauffe le long de la ligne, sans regarder le banc."
+      left: "Il entre"
+      right: "Il se rassoit"
+    - roles: [entraineur]
+      when: "relation.aulard <= -1"
+      text: "{minute}e minute · {score}. La loge fait un signe qu'on voit du banc et des tribunes. Ce n'est pas un encouragement."
+      left: "Je ferme le match"
+      right: "Je fais l'inverse"
+    - roles: [entraineur]
+      when: "flag('derby_perdu')"
+      text: "{minute}e minute · {score}. Le derby de l'aller a laissé une trace de peinture sur le mur du local. Personne ne l'a effacée, et tout le monde y pense."
+      left: "On assure"
+      right: "On y va"
+    # ---- Joueur, sur les traces du terrain (bible ch. 10 § 9)
     - roles: [joueur]
       when: "flag('capitaine')"
       text: "{minute}e minute · {score}. Le brassard pèse une demi-seconde de plus. Deux façons de le porter, une seule qui te ressemble."
       left: "Je joue simple"
       right: "Je prends tout"
+    - roles: [joueur]
+      when: "flag('mbako_vendu')"
+      text: "{minute}e minute · {score}. Le gamin qu'on a vendu arrive seul en face de toi, en jaune, et le stade connaît son prénom."
+      left: "Je temporise"
+      right: "Je tacle fort"
+    - roles: [joueur]
+      when: "relation.brehaut >= 1"
+      text: "{minute}e minute · {score}. Penalty. Le capitaine tend la main sans un mot : « Le groupe vit bien » se dit aussi comme ça."
+      left: "Je le lui laisse"
+      right: "Je le prends"
+    - roles: [joueur]
+      when: "chars.vecchio.statut == 'club'"
+      text: "{minute}e minute · {score}. Le vieux gardien fait signe qu'il veut sortir maintenant, pour l'ovation. Le banc regarde ailleurs, exprès."
+      left: "Je préviens le banc"
+      right: "Je le retiens sur le terrain"
+    - roles: [joueur]
+      when: "flag('international')"
+      text: "{minute}e minute · {score}. Le sélectionneur est au deuxième rang de la tribune de presse. Il ne prend pas de notes, ce qui est pire."
+      left: "Je joue juste"
+      right: "Je joue pour lui"
+    - roles: [joueur]
+      when: "flag('pari')"
+      text: "{minute}e minute · {score}. Le corner est pour toi, et quelqu'un dans un bar compte les corners depuis la première minute."
+      left: "Je tire normalement"
+      right: "Je gagne du temps"
+    - roles: [joueur]
+      when: "flag('special')"
+      text: "{minute}e minute · {score}. Tu as dit « le meilleur » en conférence. Quarante mille personnes sont venues vérifier, et elles ont de la mémoire."
+      left: "Je fais simple"
+      right: "Je fais le geste"
+    - roles: [joueur]
+      when: "year < 2016 && gauges.tribunes < 45"
+      text: "{minute}e minute · {score}. Le ballon est là, le gardien aussi, et l'arbitre regarde de l'autre côté. Personne ne reverra l'image au ralenti."
+      left: "Je la joue au pied"
+      right: "Je la joue à la main"
+    # ---- Les deux rôles
     - when: "season >= 2 && stats.titres >= 1"
       text: "{minute}e minute · {score}. On te regarde comme on regarde un champion : en attendant la faute. Dernier quart d'heure."
       left: "Sûr"
@@ -436,6 +533,25 @@ setpieces:
       text: "{minute}e minute · {score}. Le virage chante depuis la vingtième et il ne s'arrêtera pas. Ce qu'on décide ici, on le racontera en juin."
       left: "Sûr"
       right: "Risqué"
+    # ---- Le secours différencié (bible ch. 30 § 1.3) : inerte tant que le
+    #      moteur ne pose pas `vars.gm_te_index` (1, 2, 3) dans `_gmTempsFort`.
+    - when: "vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble."
+      left: "Le choix sûr"
+      right: "Le choix risqué"
+    - when: "vars.gm_te_index == 2 && vars.gm_won == 1"
+      text: "{minute}e minute · {score}. On mène, il reste une heure, et tout le monde regarde le banc. C'est long, une heure."
+      left: "Je tiens"
+      right: "Je tue le match"
+    - when: "vars.gm_te_index == 2"
+      text: "{minute}e minute · {score}. Le stade s'est tu d'un coup, comme on ferme un robinet. Il reste une heure pour le rouvrir."
+      left: "Je resserre"
+      right: "Je monte tout le monde"
+    - when: "vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Ce que tu décides maintenant, on le racontera en juin, dans les deux sens."
+      left: "Le choix sûr"
+      right: "Le choix risqué"
+    # ---- Secours de rôle, puis secours commun
     - roles: [entraineur]
       text: "{minute}e minute · {score}. Le match bascule ici, et tout le monde regarde ton banc. Deux façons de faire."
       left: "Le choix sûr"
@@ -812,6 +928,27 @@ setpieces:
       text: "« J'en ai vu d'autres partir un an trop tard, et aucun n'a trouvé ça drôle. Tu veux finir comment, toi ? »"
       left: "Comme eux"
       right: "Pas comme eux"
+    # ---- Le Carrefour du joueur qui vient d'être vendu. Sans ces trois-là, le
+    # beat servait « On recommence ici » à quelqu'un qui a signé ailleurs deux
+    # cartes plus tôt (l'ancre du slot 17 vend la pépite dans 76 % des carrières).
+    - roles: [joueur]
+      when: "flag('celebre_contre_usine')"
+      speaker: gege
+      text: "« Tu as célébré devant nous, on a brûlé vingt mètres, et l'été est quand même arrivé. Tu reviens un jour, ou c'est fini ? »"
+      left: "Je reviendrai"
+      right: "C'est fini"
+    - roles: [joueur]
+      when: "flag('vendu_d1') || flag('vendu_d2')"
+      speaker: fardelli
+      text: "« {Toi}, c'est signé, et l'été sert à savoir où on dort en août. Je te dis la ville maintenant, ou tu la lis dans le journal comme tout le monde ? »"
+      left: "Dis-la-moi maintenant"
+      right: "Je la lirai"
+    - roles: [joueur]
+      when: "flag('vente_janvier') || flag('vente_annulee')"
+      speaker: josiane
+      text: "« J'ai un carton et votre casier, et je ne sais pas si je vide ou si je range. Vous partez pour de bon, ou la visite médicale a tout arrêté ? »"
+      left: "Videz le casier"
+      right: "Rangez, je reste"
     - when: "season >= 1"
       speaker: josiane
       text: "« J'en ai vu passer, des étés. Celui-là, le téléphone a sonné deux fois et je n'ai pas décroché. On repart ? »"

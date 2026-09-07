@@ -1,0 +1,128 @@
+# Événements exceptionnels du joueur pro (spec § 5.2, « événements » ; bible
+# ch. 10) : arcs `kind: evenement`, tirés au hasard (`chance` par slot
+# éligible, `when` de l'arc), une seule fois par carrière, jamais rattrapés
+# par « Nouvelles du passé » (`fallback: drop`). Aucun n'est de premier plan :
+# ce sont des intrusions, pas des histoires que le metteur en scène doit faire
+# avancer, et ils vivent dans le pool commun — jamais dans un `programme`.
+#
+# Le rôle joueur n'en avait AUCUN : la mesure § 5.2 donnait 0,00 par saison en
+# S0 et S1 pour un plancher de 0,20 dès la S1, et toute la variété de milieu de
+# saison reposait sur les étapes d'intrigue et les alarmes. Six ici, portés par
+# six visages différents — dont Bréhaut, sous-servi en S0.
+#
+# 1. Le bus (Vecchio) : deux heures du matin, la bande d'arrêt d'urgence.
+# 2. Le contrôle (Sabatier) : la glacière, le tirage au sort, la pommade.
+# 3. La jambe du petit (Bréhaut) : un duel à l'entraînement, une civière.
+# 4. L'huissier (Josiane) : l'inventaire du matériel, un mardi matin.
+# 5. Le photographe (Ménèche) : une voiture devant chez toi, trois jours.
+# 6. Le faux cousin (Fardelli, 1996+) : un coup de fil, un nom immense, un vol
+#    à payer d'avance. La bible en fait la cause de la fin `jp_faux_cousin` ;
+#    ici il ne ferme rien, il coûte.
+arcs:
+  - id: jp.evt.bus
+    title: "Le bus"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    chance: 0.09
+    cast: [vecchio]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: bus
+        card: jp.evt.bus
+        next: []
+
+  - id: jp.evt.controle
+    title: "Le contrôle"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    chance: 0.08
+    cast: [sabatier]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: glaciere
+        card: jp.evt.controle
+        next: []
+
+  - id: jp.evt.jambe
+    title: "La jambe du petit"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "gauges.vestiaire >= 35"
+    chance: 0.09
+    cast: [brehaut]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: civiere
+        card: jp.evt.jambe
+        next: []
+
+  - id: jp.evt.huissier
+    title: "L'huissier au centre"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "gauges.direction < 60"
+    chance: 0.08
+    cast: [josiane]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: inventaire
+        card: jp.evt.huissier
+        next: []
+
+  - id: jp.evt.photographe
+    title: "La voiture devant chez toi"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "gauges.tribunes >= 50"
+    chance: 0.08
+    cast: [meneche]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: voiture
+        card: jp.evt.photographe
+        next: []
+
+  - id: jp.evt.faux_cousin
+    title: "Le faux cousin"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Le téléphone d'abord, l'agence de voyage ensuite : la bible date l'affaire
+    # de 1996 (les premiers essais vendus par téléphone).
+    when: "year >= 1996"
+    chance: 0.07
+    cast: [fardelli]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: telephone
+        card: jp.evt.faux_cousin
+        next: []

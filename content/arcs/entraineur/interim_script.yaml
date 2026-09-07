@@ -33,6 +33,7 @@ arcs:
       examen_promis:    "{annee} : {prenom} {nom} a promis de passer l'examen en juillet. Le président a écrit « juillet »."
       diplome_arrange:  "{annee} : le diplôme de {nom} est arrivé un vendredi soir, signé par quelqu'un qui n'était pas là."
       ancien_rival:     "{annee} : l'ancien a signé chez {rival}. Il « revient dans sa vallée » ; il vient d'ailleurs."
+      groupe_lit_avant: "{annee} : à {club}, le vestiaire apprend tout par le journal. Bréhaut l'a fait remarquer, lentement."
     steps:
       # -------------------------------------------------------- saison 1 (S0)
       - id: i1_bureau
@@ -43,6 +44,16 @@ arcs:
           - { id: en.interim.i1_bureau }
         at: [1, 1]
         season: 0
+      # Bréhaut est le « cœur » du postulat (bible ch. 11 § 3.1 : cible 2
+      # apparitions par saison) et il n'apparaissait qu'une fois par S0 : ses
+      # seules portes étaient l'intrigue signature (60 % de couverture) et les
+      # salaires (23 %). Deux ancres lui rendent la S0, indépendamment du
+      # réservoir — c'est le découplage que demande le budget de casting.
+      # Scènes de la bible ch. 01 § 2.4 (« Le groupe a lu », « Les bouteilles »).
+      - id: i1b_groupe_a_lu
+        card: en.brehaut.groupe_a_lu
+        at: [5, 8]
+        season: 0
       - id: i2_verdict
         # Première vraie : déchu (direction au plancher), confirmé (une série ou
         # un classement), prolongé (le défaut : ni bon ni mauvais).
@@ -51,6 +62,14 @@ arcs:
           - { id: en.interim.i2_confirme, if: "world.serie_victoires >= 1 || world.rang <= 8" }
           - { id: en.interim.i2_prolonge }
         at: [10, 11]
+        season: 0
+      # Seconde ancre : la couture interne à la saison. S'il a appris la
+      # nouvelle par le journal au créneau 5-8, il le redit ici, pack en main.
+      - id: i2b_bouteilles
+        card:
+          - { id: en.brehaut.bouteilles_journal, if: "flag('groupe_lit_avant')" }
+          - { id: en.brehaut.bouteilles }
+        at: [13, 15]
         season: 0
       - id: i3_cdi
         card:

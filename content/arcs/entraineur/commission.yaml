@@ -25,9 +25,22 @@ arcs:
     theme: instances
     carrier: legruet
     cast: [legruet, josiane, vukic]
-    requires: [fede_dossier]
+    # `requires: [fede_dossier]` retiré : le drapeau n'est posé que par la
+    # lettre des salaires et par la nuit de la Fédération, alors que les deux
+    # postulats ouvrent déjà l'intrigue sur d'autres traces (`if` du pool :
+    # l'enveloppe chez le promu, le lanceur d'alerte chez l'intérimaire). Le
+    # `requires` annulait ces entrées — d'où la couverture à 7 % chez
+    # l'intérimaire et l'issue `valise` jamais atteinte chez le promu.
     replay: { after: 2, max: 2 }
     issues: [blanchi, sanction, valise]
+    # Clause du § 5.1 : `valise` conclut la carrière (elle pose une fin), elle
+    # ne peut pas tenir 10 % des clôtures de l'intrigue.
+    # Clause d'exception du § 5.1 : `valise` est une sortie FATALE (`end:
+    # en_valise`), pas une issue que le joueur choisit à froid — elle ne peut
+    # pas tenir un plancher de 10 % sans faire mourir une carrière sur dix à la
+    # Commission. Déclarée rare pour que `simulate` garde son rouge aux vrais
+    # ratés (spec § 5.1, mesure 2 %).
+    issues_rares: [valise]
     traces:
       commission_blanchi:  "{annee} : la Commission de discipline a blanchi {prenom} {nom}. Berthomier a un service en attente."
       commission_sanction: "{annee} : trois matchs de tribune pour {nom}. Vukić a tenu le banc ; il l'a rendu."
@@ -37,7 +50,7 @@ arcs:
     fallback: nouvelles
     epilogue:
       direction: "-"
-      journal: "{annee} : la Commission a suivi {nom} jusqu'à son nouveau club. Salle 3 a une chaise à son nom."
+      journal: "{annee} : la salle 3 de la Fédération a refermé le dossier de {nom}. Le couloir sent toujours le café froid."
     steps:
       - id: convocation
         card:

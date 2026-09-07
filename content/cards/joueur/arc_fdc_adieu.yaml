@@ -11,7 +11,7 @@ cards:
     text: "« Tu rentres à quelle heure, {toi}, et cette fois je demande pour l'année : c'est la dernière, ou encore « une de plus » ? Tu me réponds, ou tu réponds au local d'abord ? »"
     left:
       label: "La dernière, à toi"
-      effects: {relation: {camille: 2}, direction: "+", set: [dernier_annonce], outcome: raccroche, react: co.re.camille_journal}
+      effects: {relation: {camille: 2}, direction: "+", set: [dernier_annonce], outcome: raccroche, react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]}
       answer: "Elle repasse la croix au stylo. Elle ne dit rien ; elle sourit ; c'est nouveau depuis mars."
     right:
       label: "Une de plus"

@@ -25,6 +25,11 @@ arcs:
     cast: [meneche, josiane, lea]
     replay: { after: 1, max: 9 }
     issues: [repondu, ignore, troque]
+    # `troque` demande d'être arrivé à l'étape `lendemain` ET d'avoir gardé
+    # Massenet à relation < 0 : un état rare au sens du § 5.1 (mesure 4 %).
+    # `pacte`, lui, n'est pas déclaré rare sur en.kop_qui_aime_trop : c'est un
+    # vrai raté de justesse, sur l'intrigue signature du postulat.
+    issues_rares: [troque]
     traces:
       dossier_repondu: "{annee} : {prenom} {nom} a répondu au dossier de la presse, page une. Sans avocat."
       dossier_ignore:  "{annee} : le dossier est paru. {nom} n'a pas répondu ; le président a lu."
@@ -34,7 +39,7 @@ arcs:
     same_club: false
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : la chemise au nom de {nom} est restée dans le tiroir de {club}. Il en a un par ville."
+      journal: "{annee} : le dossier du journaliste sur {nom} est sorti du tiroir, puis y est retourné. Il en a un par ville."
     steps:
       - id: tiroir
         card:
@@ -51,6 +56,9 @@ arcs:
         next: []
       - id: lendemain
         card:
-          - { id: en.dossier.lendemain_rien, if: "relation.meneche >= 1" }
+          # `>= 1` fermait la seule face qui pose `troque` (issue à 2-6 % des
+          # ouvertures, plancher 10 %) : Massenet troque avec qui ne lui a pas
+          # encore claqué la porte, pas seulement avec un ami.
+          - { id: en.dossier.lendemain_rien, if: "relation.meneche >= 0" }
           - { id: en.dossier.lendemain }
         next: []

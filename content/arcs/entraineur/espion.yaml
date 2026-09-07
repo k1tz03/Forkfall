@@ -33,7 +33,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : la plaque de l'homme de la haie est restée au local de {ville}. {nom} est parti avant le café."
+      journal: "{annee} : la haie de {club} a été retaillée. La plaque de la camionnette est restée notée au local, à la craie."
     steps:
       - id: haie
         card:
@@ -43,6 +43,10 @@ arcs:
           # couvre le championnat depuis 1984) et la variante passe devant la
           # relance, sinon la seconde ouverture prend toujours « encore ».
           - { id: en.espion.haie_car, if: "year >= 1996" }
+          # `cassette_regardee` : la trace est déclarée « lue » par la matrice
+          # du ch. 90 § 1 et personne ne la lisait. Elle passe devant la
+          # relance : ce n'est plus le même homme, c'est un élève.
+          - { id: en.espion.haie_eleve, if: "flag('cassette_regardee')" }
           - { id: en.espion.haie_encore, if: "plays('en.espion_haie') >= 1" }
           - { id: en.espion.haie }
         next:

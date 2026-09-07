@@ -40,7 +40,14 @@ arcs:
         at: [1, 1]
         season: 0
       - id: commission
-        card: en.promu.a4_commission
+        # Troisième plan (fil rouge « tribune ») : la ville. Les deux sorties de
+        # la carte de base sautent dans `en.prodige` et `en.nassir_proprietaire`
+        # (schedule), ce qui tenait `en.prodige` à 82 % de couverture quel que
+        # soit son poids de réservoir ; la variante mairie n'ouvre ni l'une ni
+        # l'autre et fait entrer Madame Aubert dans le postulat.
+        card:
+          - { id: en.promu.a4_commission_mairie, if: "fil_rouge == 'tribune'" }
+          - { id: en.promu.a4_commission }
         at: [10, 11]
         season: 0
       - id: dernier_match
@@ -69,7 +76,9 @@ arcs:
           # Variantes relues au tirage (Director.refreshVariants) : world.rang
           # est le classement projeté de mi-saison, pas celui du Bilan.
           - { id: en.promu.a8_montoya, if: "flag('bilan_tenu') && world.division == 1 && (world.rang <= 10 || world.serie_victoires >= 2)" }
-          - { id: en.promu.a8_aubert, if: "world.division == 2" }
+          # `commission_mairie` : quand le plan de janvier est passé par la
+          # ville, c'est la maire qui revient au twist, même en D1.
+          - { id: en.promu.a8_aubert, if: "world.division == 2 || flag('commission_mairie')" }
           - { id: en.promu.a8_projet_aulard }
         at: [10, 11]
         season: 1
@@ -79,7 +88,18 @@ arcs:
         season: 1
       # ---------------------------------------------------- saisons 3+ (S2+)
       - id: rentree
-        card: en.promu.rentree
+        # Les deux ancres rejouables se lisaient à vie sur la même carte : à
+        # partir de la S2 chaque saison s'ouvrait et se fermait sur exactement
+        # les deux mêmes répliques, réactions comprises (spec § 1.2 : chaque
+        # ancre reçoit ≥ 2 variantes lues sur `fil_rouge` et sur les traces).
+        # Les variantes lisent les traces posées en S0/S1 et changent de
+        # visage : la rentrée n'est plus fatalement un monologue de Josiane.
+        card:
+          - { id: en.promu.rentree_gigi,    if: "flag('gigi_staff')" }
+          - { id: en.promu.rentree_ardoise, if: "flag('pacte_gege') || flag('salaires_retard')" }
+          - { id: en.promu.rentree_naming,  if: "flag('naming_signe')" }
+          - { id: en.promu.rentree_vieille, if: "stats.saisons >= 4" }
+          - { id: en.promu.rentree }
         at: [1, 1]
         season: "2+"
       - id: veille
@@ -87,6 +107,9 @@ arcs:
         # discours ; lui laisser le banc conclut la carrière (fin en_dauphin).
         card:
           - { id: en.promu.veille_dauphin, if: "relation.vukic <= -1 && gauges.direction < 40 && !flag('vukic_dauphin')" }
+          - { id: en.promu.veille_mbako,   if: "flag('mbako_vendu')" }
+          - { id: en.promu.veille_virage,  if: "fil_rouge == 'tribune' || flag('pacte_gege') || flag('subvention_avancee')" }
+          - { id: en.promu.veille_encore,  if: "stats.saisons >= 4" }
           - { id: en.promu.veille }
         at: [17, 17]
         season: "2+"

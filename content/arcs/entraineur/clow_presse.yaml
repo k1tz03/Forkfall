@@ -85,7 +85,12 @@ arcs:
     roles: [entraineur]
     postulats: []
     foreground: false
-    weight: 1.0
+    # 1,0 → 0,5. `forceStory` ouvre l'intrigue la plus lourde parmi les
+    # éligibles (`weight`, pas le poids du réservoir), et une intrigue de fond
+    # ne compte pas dans `max_active` : la conférence était donc candidate à
+    # chaque trou de cadence et devait 21-32 % de ses ouvertures au forçage,
+    # pour un plafond de 15 %. Son poids de réservoir, lui, a été relevé.
+    weight: 0.5
     # Ré-armé chaque saison par le metteur en scène (every_season) : `once`
     # est sans objet, on le pose à false pour la lisibilité.
     once: false
@@ -100,14 +105,28 @@ arcs:
     when: "season >= 1"
     # Léa (L'Écho) rappelle le lendemain pour faire confirmer le mot.
     cast: [meneche, lea]
-    # [3,15] : éligible tôt (en S2+ c'est souvent le seul temps d'histoire de
-    # la première moitié), mais l'échéance attend la seconde moitié, où les
-    # slots 13, 15 et 16 sont libres : en S1, la première moitié est déjà
-    # pleine (A7, les échéances des arcs de S0, l'alarme direction du Bilan).
-    start: [3, 15]
+    # [3,15] → [3,11] : la série compte maintenant trois étapes (§ 1.1) et
+    # doit se fermer dans la saison — ouverture au plus tard au slot 11, puis
+    # [1,3] et [1,3], soit le slot 17 au pire. L'échéance reste dans la
+    # seconde moitié, où les slots 13, 15 et 16 sont libres.
+    start: [3, 11]
     same_club: false
     fallback: drop
     steps:
       - id: trois_questions
         card: en.presse.trois_questions
+        next: [ { step: bureau, in: [1, 3] } ]
+      - id: bureau
+        # Le président a lu le journal : la variante lit ce que tu as répondu
+        # la veille (`presse_franc` posé par la sortie droite de l'étape 1).
+        card:
+          - { id: en.presse.president_a_lu, if: "flag('presse_franc')" }
+          - { id: en.presse.president_silence }
+        next: [ { step: hors_micro, in: [1, 3] } ]
+      - id: hors_micro
+        # Escalier du rituel : la deuxième année, Massenet a le chiffre de la
+        # première.
+        card:
+          - { id: en.presse.hors_micro_encore, if: "plays('en.conf_presse') >= 1" }
+          - { id: en.presse.hors_micro }
         next: []

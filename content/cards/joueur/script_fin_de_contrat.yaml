@@ -1,6 +1,6 @@
 # Script d'ouverture du postulat « Fin de contrat à 31 ans » (bible ch. 10 § 4).
 # Neuf ancres, leurs variantes, et les deux alarmes d'override du postulat.
-# Le président est Vaubourg (Vaubourg dans la bible), le fonds est Ilyas (Ilyas).
+# Le président est Vaubourg (`aulard`) ; le fonds est Ilyas (`nassir`).
 # Toutes ces cartes sont des étapes de l'arc jp.fin.dernier_contrat : elles ne
 # passent jamais par le sac.
 cards:
@@ -424,22 +424,28 @@ cards:
       answer: "Tu laisses. Il garde la feuille dans son casier ; il ne la jette jamais."
 
   # ------------------------------------------------- S2+ · Une saison de plus
+  # Marche 1 de l'escalier (bible ch. 10 § 4, « Une saison de plus ») : la
+  # chaussette trouée, la quatrième retraite. Les deux sorties posent
+  # `s2_saison_marche` : la saison suivante, l'ancre monte d'une marche au lieu
+  # de rejouer la même scène (correctif « la colonne vertébrale se répète »).
   - id: jp.fin.s2_saison_de_plus
     roles: [joueur]
     arc: vestiaire
     tags: [vestiaire]
     speaker: vecchio
     tone: leger
-    text: "« Une saison de plus, {toi}, moi j'en suis à ma quatrième retraite et je suis encore là. J'en ai vu d'autres : tu la joues pour toi, ou pour montrer aux jeunes ? »"
+    text: "« Une saison de plus, {toi} ; moi j'en suis à ma quatrième retraite et je suis encore là. J'en ai vu d'autres : tu la joues pour toi, ou pour montrer aux jeunes ? »"
     left:
       label: "Pour moi"
-      effects: {tribunes: "+", force: -1}
+      effects: {tribunes: "+", force: -1, set: [s2_saison_marche]}
       answer: "Il hoche la tête. Il en a vu d'autres, des égoïstes ; il les aimait bien."
     right:
       label: "Pour montrer aux jeunes"
-      effects: {vestiaire: "++", tribunes: "-", relation: {mbako: 1}}
+      effects: {vestiaire: "++", tribunes: "-", relation: {mbako: 1}, set: [s2_saison_marche]}
       answer: "Le petit te regarde t'échauffer. Il copie. Il fait mieux ; c'est le but."
 
+  # Marche 2 : les gants sous le bras. Elle pose `s2_saison_encore`, qui ouvre
+  # la marche 3 la saison d'après.
   - id: jp.fin.s2_saison_de_plus_encore
     roles: [joueur]
     arc: vestiaire
@@ -449,14 +455,37 @@ cards:
     text: "« Une saison de plus, {toi}, encore, et cette fois j'ai les gants sous le bras, pas aux mains. J'en ai vu d'autres, mais pas beaucoup : pour toi, ou pour eux ? »"
     left:
       label: "Pour moi"
-      effects: {tribunes: "+", relation: {vecchio: 1}}
+      effects: {tribunes: "+", relation: {vecchio: 1}, set: [s2_saison_encore]}
       answer: "Il raconte la tienne à ta place. Il se trompe d'une saison ; personne ne corrige."
     right:
       label: "Pour eux"
-      effects: {vestiaire: "++", force: -1, relation: {mbako: 1}}
+      effects: {vestiaire: "++", force: -1, relation: {mbako: 1}, set: [s2_saison_encore]}
       answer: "Les jeunes te laissent le ballon à l'échauffement. C'est une politesse ; tu la prends."
 
+  # Marche 3, écrite pour ce lot (bible ch. 10 § 4, variante « les chaussettes
+  # de quatre-vingt-dix ») : Gigi a rendu les gants et gardé les chaussettes.
+  # Elle efface `s2_saison_encore` : au-delà, l'escalier redescend d'une marche
+  # au lieu de servir trois fois la même carte.
+  - id: jp.fin.s2_saison_de_plus_vrai
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, absurde]
+    speaker: vecchio
+    tone: leger
+    text: "« Cette fois c'est vrai, {toi} : j'ai rendu les gants, j'ai gardé les chaussettes, et elles ont le trou de quatre-vingt-dix. Tu rejoues avec les miennes, ou tu en prends des neuves ? »"
+    left:
+      label: "Avec les siennes"
+      effects: {vestiaire: "++", tribunes: "-", relation: {vecchio: 2}, clear: [s2_saison_encore]}
+      answer: "Il te les donne sans les laver. Il dit que le lavage, ça enlève les saisons."
+    right:
+      label: "Des neuves"
+      effects: {tribunes: "+", force: 1, clear: [s2_saison_encore]}
+      answer: "Il repose les siennes dans le casier que personne ne touche, et le referme doucement."
+
   # Seconde vague : celui qui a reculé d'un cran voit tout, y compris le banc.
+  # `recule_poste` et `banc_regarde` sont des traces définitives : sans garde
+  # propre, Vukić reposait la même question toutes les saisons. Les deux sorties
+  # posent `s2_recule_vu` et la variante ne revient plus (garde d'une saison).
   - id: jp.fin.s2_saison_de_plus_recule
     roles: [joueur]
     arc: direction
@@ -466,14 +495,17 @@ cards:
     text: "« Tu as reculé d'un cran, {toi}, et de là on voit tout ; je te le dis parce que personne ne te le dira : de là on voit le banc aussi. Tu rejoues, ou tu regardes ? »"
     left:
       label: "Je rejoue"
-      effects: {tribunes: "+", force: 1, relation: {vukic: 1}}
+      effects: {tribunes: "+", force: 1, relation: {vukic: 1}, set: [s2_recule_vu]}
       answer: "Il note la date. Il laisse la page ouverte ; il sait qu'il la relira en juin."
     right:
       label: "Je regarde, un peu"
-      effects: {direction: "+", tribunes: "-", relation: {vukic: 1}, set: [banc_regarde]}
+      effects: {direction: "+", tribunes: "-", relation: {vukic: 1}, set: [banc_regarde, s2_recule_vu]}
       answer: "Tu t'assois à côté de lui. Il te passe le cahier sans rien dire ; c'est un cadeau."
 
   # ------------------------------------------------------- S2+ · La veille
+  # Marche 1 de la veille (bible ch. 10 § 4, « La veille, Camille ») : elle
+  # baisse le son, elle ne coupe pas. Les deux sorties posent `s2_veille_marche`
+  # pour que la saison suivante monte d'une marche.
   - id: jp.fin.s2_veille
     roles: [joueur]
     arc: famille
@@ -483,12 +515,31 @@ cards:
     text: "« Tu rentres à quelle heure demain, {toi}, après le dernier match ; je demande parce que je ne sais plus si tu rentres joueur ou autre chose. Ce soir, ou demain ? »"
     left:
       label: "Ce soir : je continue"
-      effects: {tribunes: "+", relation: {camille: -1}}
+      effects: {tribunes: "+", relation: {camille: -1}, set: [s2_veille_marche]}
       answer: "Elle remonte le son. Le match à la télé, c'est celui d'un joueur de vingt ans."
     right:
       label: "Ce soir : c'est le dernier"
-      effects: {direction: "+", relation: {camille: 2}, set: [dernier_annonce]}
+      effects: {direction: "+", relation: {camille: 2}, set: [dernier_annonce, s2_veille_marche]}
       answer: "Elle coupe la télé. Elle ne dit rien ; c'est la première fois que le silence est bon."
+
+  # Marche 2, écrite pour ce lot : la même veille, une saison plus tard. Elle
+  # ne demande plus l'heure — elle a arrêté de la demander. Elle efface
+  # `s2_veille_marche` : l'ancre alterne au lieu de se répéter.
+  - id: jp.fin.s2_veille_encore
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "« Je ne te demande plus l'heure, {toi}, j'ai arrêté l'an dernier ; je demande juste si je mets deux couverts demain soir, ou si j'attends de voir. Deux, ou on verra ? »"
+    left:
+      label: "Deux couverts"
+      effects: {direction: "+", relation: {camille: 2}, set: [dernier_annonce]}
+      answer: "Elle met les deux couverts le soir même, pour s'entraîner. Elle laisse la télé éteinte."
+    right:
+      label: "On verra"
+      effects: {tribunes: "+", force: 1, relation: {camille: -1}, clear: [s2_veille_marche]}
+      answer: "Elle en met un. Le deuxième reste dans le tiroir, propre, à portée de main."
 
   - id: jp.fin.s2_veille_josiane
     roles: [joueur]
@@ -499,15 +550,16 @@ cards:
     text: "« Dernier match demain, {toi}, et j'en ai vu passer, des derniers matchs qui ne l'étaient pas ; j'ai le formulaire dans le classeur. Celui-là, c'est le bon ? »"
     left:
       label: "Celui-là, oui"
-      effects: {direction: "+", relation: {josiane: 1}, set: [dernier_annonce]}
+      effects: {direction: "+", relation: {josiane: 1}, set: [dernier_annonce, s2_josiane_vu]}
       answer: "Elle sort le formulaire. Il est daté de l'an dernier ; elle rature l'année."
     right:
       label: "On verra en juin"
-      effects: {tribunes: "+", relation: {josiane: -1}}
+      effects: {tribunes: "+", relation: {josiane: -1}, set: [s2_josiane_vu]}
       answer: "Elle referme le classeur. Elle laisse le formulaire dessus, en évidence."
 
   # Seconde vague : la tribune se souvient du jubilé — celui qu'on a fait, ou
-  # celui dont l'affiche est restée sans date.
+  # celui dont l'affiche est restée sans date. `jubile_fait` / `jubile_reporte`
+  # sont définitifs : la variante pose `s2_jubile_vu` et ne tient qu'une saison.
   - id: jp.fin.s2_veille_jubile
     roles: [joueur]
     arc: tribunes
@@ -517,11 +569,11 @@ cards:
     text: "« On t'a fait un jubilé, {toi}, ou on a gardé l'affiche sans date ; la tribune n'oublie rien, et demain elle t'attend encore. Une saison de plus, ou la fin ? »"
     left:
       label: "Une saison de plus"
-      effects: {tribunes: "++", force: -1, relation: {gege: 1}}
+      effects: {tribunes: "++", force: -1, relation: {gege: 1}, set: [s2_jubile_vu]}
       answer: "Il replie la bâche. Il ne la range pas ; il la replie, ce n'est pas pareil."
     right:
       label: "La fin, demain"
-      effects: {tribunes: "+", direction: "+", set: [dernier_annonce]}
+      effects: {tribunes: "+", direction: "+", set: [dernier_annonce, s2_jubile_vu]}
       answer: "Il écrit la date sur l'affiche, enfin. Elle attendait depuis quatre saisons."
 
   # ------------------------------------------- Les deux alarmes du postulat

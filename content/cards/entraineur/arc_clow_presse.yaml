@@ -177,6 +177,77 @@ cards:
       effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}, outcome: franc, set: [presse_franc], react: {card: en.re.lea_confirmez, chance: 0.7}, journal: {text: "{annee} : conférence de presse. « Franchement », a dit {nom}. Titre du samedi, avec un point d'interrogation.", poids: 1, tags: [presse]}}
       answer: "Il note « franchement ». Le mot sort en titre samedi, avec un point d'interrogation."
 
+  # ------------------------------------------------- G2 · le président a lu
+  # Étapes 2 et 3 : la conférence était une série d'une seule étape (le lint
+  # sortait « série de moins de 3 étapes » en permanence, alors que le § 1.1
+  # définit une intrigue comme une série de 3 à 5 étapes). Le séquencier est
+  # celui de la fiche : tu parles, le président lit, le journaliste garde la
+  # phrase — et il ne garde pas la réponse, il garde le temps que tu mets.
+  - id: en.presse.president_a_lu
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg, le journal plié sur le titre : « « Franchement. » Vous avez dit franchement, et moi j'ai un empire à tenir. J'ai pas le temps de démentir. Vous répétez, ou ça retombe ? »"
+    left:
+      label: "Je répète"
+      effects: {tribunes: "+", direction: "--", parole: 1, relation: {aulard: -1, meneche: 1}, journal: {text: "{annee} : {nom} a répété le mot, devant le président. Le titre a vécu une semaine de plus.", poids: 2, tags: [presse, direction]}}
+      answer: "Tu répètes. Le mot vit une semaine de plus ; le président aussi, plus mal."
+    right:
+      label: "Ça retombera"
+      effects: {direction: "+", tribunes: "-", relation: {meneche: -1}}
+      answer: "Ça retombe. Massenet garde la page, pliée dans la même poche."
+
+  - id: en.presse.president_silence
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg, le journal plié sur une photo : « Vous n'avez rien dit et ils ont titré quand même, sur votre visage. Le silence, ça se remplit tout seul. Vous parlez la prochaine fois, ou jamais ? »"
+    left:
+      label: "Je parlerai"
+      effects: {direction: "-", tribunes: "+", parole: 1}
+      answer: "Il note la promesse dans un carnet qui n'est pas le sien. Il en a trois."
+    right:
+      label: "Jamais"
+      effects: {direction: "+", tribunes: "-", var: {no_comment: "+1"}}
+      answer: "Le silence se remplit tout seul. Samedi, il est rempli par quelqu'un d'autre."
+
+  # ------------------------------------------------------- G3 · hors micro
+  - id: en.presse.hors_micro
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    tone: leger
+    text: "Massenet sur le parking, micro rangé : « Hors micro, pour de vrai : vous y croyez ? Je n'écris pas ce que vous répondez. J'écris le temps que vous mettez à répondre. »"
+    left:
+      label: "J'y crois"
+      effects: {tribunes: "+", parole: 1, relation: {meneche: 1}}
+      answer: "Il ne note rien. Il note l'heure plus tard, de mémoire, et elle est juste."
+    right:
+      label: "Je réponds au printemps"
+      effects: {direction: "+", relation: {meneche: -1}}
+      answer: "Il range le carnet fermé. Samedi, le titre parle du printemps."
+
+  - id: en.presse.hors_micro_encore
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment, retorse]
+    speaker: meneche
+    tone: leger
+    text: "Massenet, même parking, même carnet : « L'an dernier vous avez mis quatre secondes. Je les ai comptées, hors micro. Cette année je compte encore, ou vous répondez tout de suite ? »"
+    left:
+      label: "Tout de suite : j'y crois"
+      effects: {tribunes: "+", parole: 1, relation: {meneche: 1}, journal: {text: "{annee} : hors micro, {nom} n'a pas mis quatre secondes. Massenet a compté quand même.", poids: 1, tags: [presse]}}
+      answer: "Il compte quand même. Il annonce le chiffre, plus bas que l'an dernier."
+    right:
+      label: "Comptez"
+      effects: {direction: "+", relation: {meneche: -1}}
+      answer: "Il compte à voix haute jusqu'à sept. Puis il range le carnet, sans écrire."
+
   # --------------------------------------------------- le mème (routine S1+)
   # Ramasse les « je ne commente pas » de A3, B5a et G1. Priorité 2 : sort dès
   # qu'un slot de routine est libre.
