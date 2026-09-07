@@ -23,11 +23,18 @@ arcs:
     cast: [fardelli, brehaut, meneche, legruet]
     issues: [jamais, paye, denonce]
     traces:
-      enveloppe_rival:     "{annee} : trois joueurs d'en face ont levé le pied au dernier bloc. Une enveloppe a changé de poche ; {nom} savait."
+      enveloppe_rival:     "{annee} : trois joueurs d'en face ont levé le pied au dernier bloc. Une enveloppe a changé de poche, et on savait."
       enveloppe_refusee:   "{annee} : Fardelli avait « un ami » et une enveloppe. {prenom} {nom} a dit jamais. Il n'a pas rappelé."
       enveloppe_niee:      "{annee} : la Fédération a examiné l'enveloppe. {prenom} {nom} a tout nié ; Berthomier a noté « nie »."
       enveloppe_promise:   "{annee} : un dernier bloc, un gardien qu'on n'a pas changé, une promesse. La Fédération « examine »."
       enveloppe_denoncee:  "{annee} : {nom} a porté l'enveloppe de Fardelli à la Fédération, fermée. Berthomier a « examiné »."
+    # Ligne écrite quand un `clear:` retire la trace (moteur, `_applyEffects`) :
+    # « Je rends tout » efface enveloppe_rival, et « J'avale la couleuvre »
+    # efface enveloppe_promise. Sans ces deux lignes, la Une republiait le fait
+    # rétracté à côté de sa contradiction, dans la même page.
+    traces_retract:
+      enveloppe_rival:   "{annee} : l'enveloppe est repartie avec Fardelli, non ouverte. Le dernier bloc s'est joué sans elle."
+      enveloppe_promise: "{annee} : la promesse du dernier bloc est tombée. L'enveloppe « historique » tenait sur un bon de réduction."
     hint: "Fardelli a un ami. L'ami a une enveloppe. Le dernier bloc a un prix."
     start: [11, 14]
     same_club: true

@@ -14,7 +14,11 @@ alarms:
     tribunes.low:
       - { card: en.alarme.tribunes_bas_gege }
     tribunes.high:
-      - { card: en.alarme.tribunes_haut_gege, when: "last_speaker != 'gege' && arc('en.kop_qui_aime_trop') != 'armed'" }
+      # Garde d'usure : le premier candidat d'une liste n'en avait aucune et
+      # revenait mot pour mot d'une saison sur l'autre (graine 1990, S1 puis S2)
+      # pendant que ses deux porteurs de rechange ne sortaient jamais. Une fois
+      # servi, il laisse la main au journaliste puis à l'adjoint.
+      - { card: en.alarme.tribunes_haut_gege, when: "last_speaker != 'gege' && arc('en.kop_qui_aime_trop') != 'armed' && !seen('en.alarme.tribunes_haut_gege')" }
       # Porteur 3 (bible ch. 30 § 2.3) : le journaliste, quand le kop compose.
       - { card: en.alarme.tribunes_haut_meneche, when: "season >= 2 || flag('otage_kop')" }
       - { card: en.alarme.tribunes_haut_vukic }

@@ -624,6 +624,11 @@ void main() {
         if (m['hint'] != null) 'hint': m['hint'].toString(),
         if (m['journal'] != null) 'journal': m['journal'].toString(),
         'traces': ((m['traces'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
+        // Rétractation d'une trace (spec § 1.3, § 1.7) : la ligne d'Almanach
+        // écrite quand un `clear:` retire le drapeau. Sans elle, la trace est
+        // simplement effacée du journal ; avec elle, l'Almanach dit qu'on est
+        // revenu dessus, ce qui est plus juste qu'un trou.
+        'traces_retract': ((m['traces_retract'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
         'issues': _strList(m['issues']),
         // Issues rares (spec § 5.1, clause d'exception) : une issue qui demande
         // un état rare ou qui est une sortie fatale n'a pas à tenir le plancher

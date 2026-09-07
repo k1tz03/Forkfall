@@ -52,11 +52,14 @@ cards:
     text: "Vecchio, sans ses gants : « Cette fois c'est vrai, {toi}. Le doc l'a écrit, ma femme l'a lu. J'en ai vu d'autres ; celle-là, je la vois. Tu me gardes au staff, ou tu me laisses partir ? »"
     left:
       label: "Reste, au staff"
-      effects: {vestiaire: "++", direction: "+", set: [gigi_staff], relation: {vecchio: 2}, outcome: staff, next: end, char: {vecchio: {statut: staff}}}
+      # `caisse: "-"` : garder un gardien de quarante et un ans au staff coûte
+      # une ligne au budget. Sans ce prix, la gauche était gratuite et double,
+      # et l'issue `parti` restait à 4 % des clôtures (plancher 10 %).
+      effects: {vestiaire: "++", direction: "+", caisse: "-", set: [gigi_staff], relation: {vecchio: 2}, outcome: staff, next: end, char: {vecchio: {statut: staff}}}
       answer: "Il pose les gants sur ton bureau. Il les reprendra pour les montrer."
     right:
       label: "Bon vent, Gigi"
-      effects: {vestiaire: "-", force: 1, relation: {vecchio: -1}, outcome: parti, next: end, journal: {text: "{annee} : Gigi Vecchio a raccroché pour de vrai. « Bon vent », a dit {nom}. Il en avait vu d'autres, des bons vents.", poids: 3, tags: [vestiaire]}}
+      effects: {vestiaire: "-", force: 1, relation: {vecchio: -1}, outcome: parti, next: end, journal: {text: "{annee} : Gigi Vecchio a raccroché pour de vrai. « Bon vent », a dit {nom}. Il en avait vu d'autres, des vents.", poids: 3, tags: [vestiaire]}}
       answer: "Il ne dit rien. Il en a vu d'autres, des bons vents."
 
   - id: en.vieux.retraite
@@ -143,7 +146,9 @@ cards:
       answer: "Il pose le sac. Il ne dit pas oui. Il reste."
     right:
       label: "Bon vent"
-      effects: {vestiaire: "--", force: 1, outcome: parti, journal: {text: "{annee} : Gigi Vecchio a signé chez {rival}. Son casier est resté vide jusqu'en octobre.", poids: 3, tags: [vestiaire, mercato]}}
+      # `vestiaire: "--"` → `"-"` : deux crans de vestiaire face à une gauche
+      # qui en rend un rendaient « Bon vent » strictement perdant.
+      effects: {vestiaire: "-", force: 1, outcome: parti, journal: {text: "{annee} : Gigi Vecchio a signé chez {rival}. Son casier est resté vide jusqu'en octobre.", poids: 3, tags: [vestiaire, mercato]}}
       answer: "Il part sans un mot. Son casier reste vide jusqu'en octobre."
 
   # ---------------------------------------------- E4 · bus (deux variantes, S2)

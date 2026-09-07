@@ -112,6 +112,43 @@ void main() {
     }
   });
 
+  // Le Grand Match sert trois `gm_te` de suite (calendar.yaml, phase sprint).
+  // Sans mémoire, `_setpiece` reprenait chaque fois la première variante vraie
+  // et les trois écrans du moment le plus intense de la saison étaient le même
+  // texte, avec les mêmes deux libellés. Le moteur pose maintenant
+  // `vars.gm_te_index` (1, 2, 3) et écarte les variantes déjà servies dans CE
+  // Grand Match ; ce test refuse deux temps forts identiques.
+  test('les trois temps forts d\'un Grand Match ne se répètent pas', () {
+    var total = 0;
+    for (final seed in [4242, 777, 130581, 5, 91]) {
+      var s = engine.start(seed);
+      var guard = 0;
+      var matches = 0;
+      var textes = <String>[];
+      var labels = <String>[];
+      while (!s.over && guard < 3000) {
+        final p = s.pending!;
+        if (p.kind == 'gm_annonce') {
+          textes = [];
+          labels = [];
+        } else if (p.kind == 'gm_te') {
+          expect(textes, isNot(contains(p.text)),
+              reason: 'graine $seed : deux temps forts au même texte dans le même Grand Match');
+          expect(labels, isNot(contains('${p.leftLabel}|${p.rightLabel}')),
+              reason: 'graine $seed : deux temps forts aux mêmes libellés');
+          textes.add(p.text);
+          labels.add('${p.leftLabel}|${p.rightLabel}');
+          expect(s.vars['gm_te_index'], equals(textes.length));
+          if (textes.length == 3) matches += 1;
+        }
+        s = engine.choose(s, guard % 2 == 0);
+        guard++;
+      }
+      total += matches;
+    }
+    expect(total, greaterThan(0), reason: 'aucun Grand Match complet joué sur les cinq graines');
+  });
+
   test('Code de Carrière round-trips', () {
     final s = playToEnd(engine, 77);
     final code = CareerCode(

@@ -476,6 +476,10 @@ class ArcDef {
   final String? hint;
   final String? journal;
   final Map<String, String> traces; // drapeau → ligne d'Almanach
+  /// Drapeau → ligne d'Almanach de **rétractation**, écrite quand un `clear:`
+  /// retire le drapeau (spec § 1.3). Sans entrée, la ligne de la trace est
+  /// seulement retirée du journal : la Une ne republie plus un fait rétracté.
+  final Map<String, String> tracesRetract;
   final List<String> issues;
 
   const ArcDef({
@@ -508,6 +512,7 @@ class ArcDef {
     this.hint,
     this.journal,
     this.traces = const {},
+    this.tracesRetract = const {},
     this.issues = const [],
   });
 
@@ -516,6 +521,8 @@ class ArcDef {
     final start = (j['start'] as List?) ?? const [2, 7];
     final tracesRaw = (j['traces'] as Map?) ?? const {};
     final traceKeys = tracesRaw.keys.map((k) => k.toString()).toList()..sort();
+    final retractRaw = (j['traces_retract'] as Map?) ?? const {};
+    final retractKeys = retractRaw.keys.map((k) => k.toString()).toList()..sort();
     return ArcDef(
       id: j['id'] as String,
       title: j['title'] as String?,
@@ -546,6 +553,7 @@ class ArcDef {
       hint: j['hint'] as String?,
       journal: j['journal'] as String?,
       traces: {for (final k in traceKeys) k: tracesRaw[k].toString()},
+      tracesRetract: {for (final k in retractKeys) k: retractRaw[k].toString()},
       issues: (j['issues'] as List?)?.cast<String>() ?? const [],
     );
   }
@@ -908,6 +916,13 @@ class DirectorConfig {
   final int unesBreves;
   final int journalParSaison;
   final int ouvertureEcart; // jamais deux ouvertures d'intrigue à moins de N slots
+
+  /// Créneaux laissés à la PREMIÈRE étape d'une intrigue tirée au réservoir
+  /// avant qu'elle ne soit échue (`deadlineN = ouverture + N`). C'était la
+  /// constante 2 de `_drawProgramme` : trois intrigues ouvertes dans une
+  /// fenêtre [1,13] arrivaient à échéance presque ensemble et empilaient le
+  /// backlog (P99 3 pour un plafond de 2, spec § 5.2).
+  final int ouvertureEcheance;
   final Map<String, Map<String, double>> phaseMult; // tag -> phase -> multiplier
 
   const DirectorConfig({
@@ -923,6 +938,7 @@ class DirectorConfig {
     this.unesBreves = 3,
     this.journalParSaison = 12,
     this.ouvertureEcart = 3,
+    this.ouvertureEcheance = 2,
     this.phaseMult = const {
       'mercato': {'presaison': 4, 'hiver': 4, 'aller': 0.2, 'retour': 0.2},
       'moment': {'retour': 2},
@@ -954,6 +970,7 @@ class DirectorConfig {
       unesBreves: (j['unes_breves'] as num?)?.toInt() ?? d.unesBreves,
       journalParSaison: (j['journal_par_saison'] as num?)?.toInt() ?? d.journalParSaison,
       ouvertureEcart: (j['ouverture_ecart'] as num?)?.toInt() ?? d.ouvertureEcart,
+      ouvertureEcheance: (j['ouverture_echeance'] as num?)?.toInt() ?? d.ouvertureEcheance,
       phaseMult: pm.isEmpty ? d.phaseMult : pm,
     );
   }

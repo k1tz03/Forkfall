@@ -34,6 +34,11 @@ arcs:
       diplome_arrange:  "{annee} : le diplôme de {nom} est arrivé un vendredi soir, signé par quelqu'un qui n'était pas là."
       ancien_rival:     "{annee} : l'ancien a signé chez {rival}. Il « revient dans sa vallée » ; il vient d'ailleurs."
       groupe_lit_avant: "{annee} : à {club}, le vestiaire apprend tout par le journal. Bréhaut l'a fait remarquer, lentement."
+    # Rétractations (moteur, `_applyEffects`) : le « CDI » redevenu un intérim
+    # (en.re.aulard_cdd →) et la plaque ressortie du tiroir (I3 ←).
+    traces_retract:
+      cdi_signe: "{annee} : le « jusqu'en juin » de {nom} est redevenu un mois. La page deux est retournée dans le tiroir."
+      dechu:     "{annee} : la plaque de {nom} est ressortie du tiroir, sous celle de l'autre. « De nouveau jusqu'à nouvel ordre. »"
     steps:
       # -------------------------------------------------------- saison 1 (S0)
       - id: i1_bureau
@@ -84,6 +89,7 @@ arcs:
         card:
           - { id: en.interim.s1_rentree_dechu, if: "flag('dechu')" }
           - { id: en.interim.s1_rentree_cdi,   if: "flag('cdi_signe')" }
+          - { id: en.interim.s1_rentree_prolonge, if: "flag('interim_prolonge')" }
           - { id: en.interim.s1_rentree }
         at: [1, 2]
         season: 1
@@ -95,17 +101,22 @@ arcs:
         at: [10, 11]
         season: 1
       - id: s1_veille
-        card: en.interim.s1_veille
+        card:
+          - { id: en.interim.s1_veille_montee, if: "flag('montee_promise')" }
+          - { id: en.interim.s1_veille }
         at: [17, 17]
         season: 1
       # ---------------------------------------------------- saisons 3+ (S2+)
       - id: rentree
         card:
           - { id: en.interim.rentree_diplome, if: "flag('derogation') && !flag('diplome')" }
+          - { id: en.interim.rentree_cdi, if: "flag('cdi_signe')" }
           - { id: en.interim.rentree }
         at: [1, 1]
         season: "2+"
       - id: veille
-        card: en.interim.veille
+        card:
+          - { id: en.interim.veille_bache, if: "flag('kop_hostile') || flag('ancien_sali') || flag('adopte_kop')" }
+          - { id: en.interim.veille }
         at: [17, 17]
         season: "2+"

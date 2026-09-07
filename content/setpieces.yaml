@@ -281,14 +281,17 @@ setpieces:
       left: "On y va"
     - roles: [entraineur]
       when: "season >= 2 && stats.titres == 0"
-      text: "Tour de Coupe. C'est la dernière chose que tu peux encore gagner cette saison. Tout le monde le sait, personne ne le dit."
+      text: "Tour de Coupe. C'est la dernière chose que {nom} peut encore gagner cette saison. Tout le monde le sait, personne ne le dit."
       left: "On y va"
     - roles: [entraineur]
       when: "world.division >= 2"
-      text: "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Le club adverse a prévu deux fûts."
+      text: "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Sur l'affiche du club adverse : « {NOM} »."
       left: "On y va"
     - roles: [entraineur]
-      text: "Tour de Coupe. Le tirage t'offre un adversaire surprise, et un vestiaire qui n'a pas envie d'y penser."
+      # Budget « nom » (§ 5.3) : le repli de la Coupe est servi presque chaque
+      # saison et ne prononçait pas le nom. C'est le créneau le plus sûr du
+      # calendrier pour le dire — il suit un bloc de matchs, jamais une carte.
+      text: "Tour de Coupe. Le tirage offre à {nom} un adversaire surprise, et un vestiaire qui n'a pas envie d'y penser."
       left: "On y va"
     # ---- Joueur pro
     - roles: [joueur]
@@ -413,11 +416,12 @@ setpieces:
     # Le Grand Match sert `gm_te` **trois fois de suite** (content/calendar.yaml,
     # phase sprint) et `_setpiece` reprend chaque fois la première variante vraie :
     # les trois temps forts d'une saison étaient identiques mot pour mot.
-    # La bible ch. 30 § 1.3 règle ça avec `vars.gm_te_index` (1, 2, 3) ; ce
-    # compteur est posé par le moteur, et le moteur ne l'écrit pas encore. Les
-    # trois variantes d'index sont donc écrites ici, **en bas**, prêtes à
-    # prendre le relais du secours le jour où `_gmTempsFort` posera la variable :
-    # elles sont inertes tant que `vars.gm_te_index` vaut 0.
+    # La bible ch. 30 § 1.3 règle ça avec `vars.gm_te_index` (1, 2, 3) : le
+    # moteur le pose maintenant dans `_gmTempsFort`, et il **écarte en plus les
+    # variantes déjà servies dans ce Grand Match** — sans quoi une variante de
+    # trace, vraie les trois fois, gagnait les trois fois et l'index ne servait
+    # à rien. Deux libellés identiques dans un même Grand Match sont refusés par
+    # un test moteur (`packages/core/test/engine_test.dart`).
     # Écart d'ordre assumé avec la bible : elle place les variantes d'index
     # avant les variantes de trace, ce qui les rendrait toujours gagnantes et
     # ramènerait le même trio dans toutes les carrières. Ici les traces passent
@@ -527,14 +531,15 @@ setpieces:
     # ---- Les deux rôles
     - when: "season >= 2 && stats.titres >= 1"
       text: "{minute}e minute · {score}. On te regarde comme on regarde un champion : en attendant la faute. Dernier quart d'heure."
-      left: "Sûr"
-      right: "Risqué"
+      left: "Comme un champion"
+      right: "Comme avant"
     - when: "relation.gege >= 2"
       text: "{minute}e minute · {score}. Le virage chante depuis la vingtième et il ne s'arrêtera pas. Ce qu'on décide ici, on le racontera en juin."
-      left: "Sûr"
-      right: "Risqué"
-    # ---- Le secours différencié (bible ch. 30 § 1.3) : inerte tant que le
-    #      moteur ne pose pas `vars.gm_te_index` (1, 2, 3) dans `_gmTempsFort`.
+      left: "Je joue le point"
+      right: "Je joue le virage"
+    # ---- Le secours différencié (bible ch. 30 § 1.3), lu sur `vars.gm_te_index`
+    #      (1, 2, 3) posé par `_gmTempsFort`. `vars.gm_won` est rafraîchi avant
+    #      le deuxième temps fort : la variante « on mène » est vivante.
     - when: "vars.gm_te_index == 1"
       text: "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble."
       left: "Le choix sûr"
@@ -549,21 +554,21 @@ setpieces:
       right: "Je monte tout le monde"
     - when: "vars.gm_te_index == 3"
       text: "{minute}e minute · {score}. Dernier quart d'heure. Ce que tu décides maintenant, on le racontera en juin, dans les deux sens."
-      left: "Le choix sûr"
-      right: "Le choix risqué"
+      left: "On ferme"
+      right: "On va chercher"
     # ---- Secours de rôle, puis secours commun
     - roles: [entraineur]
       text: "{minute}e minute · {score}. Le match bascule ici, et tout le monde regarde ton banc. Deux façons de faire."
-      left: "Le choix sûr"
-      right: "Le choix risqué"
+      left: "Je gère"
+      right: "Je tente"
     - roles: [joueur]
       text: "{minute}e minute · {score}. Le match bascule ici, et le ballon revient vers toi. Deux façons de le prendre."
-      left: "Le choix sûr"
-      right: "Le choix risqué"
+      left: "Je la joue simple"
+      right: "Je tente le geste"
     # ---- Secours commun
     - text: "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble."
-      left: "Le choix sûr"
-      right: "Le choix risqué"
+      left: "On assure"
+      right: "On y va"
 
   # ══ aftermatch — l'après-match (bible § 1.4) ═══════════════════════════════
   # Écart d'import : la bible lit `vars.gm_won == -1` (défaite) ; le moteur ne
@@ -817,6 +822,8 @@ setpieces:
       text: "« On continue l'aventure, {toi}, ou tu tentes autre chose ? »"
       left: "Je reste"
       right: "Je réclame plus de moyens"
+      answer_left: "Il repose le carnet à souches sans l'ouvrir. « Alors on ne change rien. »"
+      answer_right: "Il ouvre le carnet à souches, regarde la première ligne, et le referme."
     # ---- Joueur pro
     - roles: [joueur]
       when: "flag('bilan_tenu') && relation.fardelli >= 1"
@@ -879,10 +886,14 @@ setpieces:
       text: "« On continue l'aventure, {toi}, ou on tente autre chose ailleurs ? »"
       left: "Je reste"
       right: "Je réclame plus de moyens"
+      answer_left: "Il range le carnet sans noter de numéro. « On se rappelle en juin, alors. »"
+      answer_right: "Il note un chiffre, le barre, en note un autre. Il ne te le montre pas."
     # ---- Secours commun
     - text: "{patron} : « On continue l'aventure, ou tu tentes autre chose ? »"
       left: "Je reste"
       right: "Je réclame plus de moyens"
+      answer_left: "Il repose le carnet à souches sans l'ouvrir. La saison suivante est déjà écrite."
+      answer_right: "Il repose le carnet à souches et regarde par la fenêtre. « On verra en juin. »"
 
   # ══ bilan_carrefour — la porte (bible § 1.8) ═══════════════════════════════
   # Une variante `transition:` remplace le libellé de roles.yaml quand son

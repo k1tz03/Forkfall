@@ -11555,15 +11555,48 @@
           ]
         ],
         [
-          "cmp",
-          ">=",
+          "or",
           [
-            "path",
-            "gauges.caisse"
+            "cmp",
+            ">=",
+            [
+              "path",
+              "gauges.caisse"
+            ],
+            [
+              "lit",
+              70
+            ]
           ],
           [
-            "lit",
-            85
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "offshore"
+              ]
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "nassir_pret"
+              ]
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "enveloppe_promise"
+              ]
+            ]
           ]
         ]
       ],
@@ -11693,15 +11726,43 @@
       "when": [
         "and",
         [
-          "cmp",
-          ">=",
+          "or",
           [
-            "path",
-            "stats.saisons"
+            "cmp",
+            ">=",
+            [
+              "path",
+              "stats.saisons"
+            ],
+            [
+              "lit",
+              4
+            ]
           ],
           [
-            "lit",
-            8
+            "and",
+            [
+              "call",
+              "flag",
+              [
+                [
+                  "lit",
+                  "pacte_gege"
+                ]
+              ]
+            ],
+            [
+              "cmp",
+              ">=",
+              [
+                "path",
+                "stats.titres"
+              ],
+              [
+                "lit",
+                1
+              ]
+            ]
           ]
         ],
         [
@@ -11721,47 +11782,38 @@
           ">=",
           [
             "path",
-            "gauges.vestiaire"
-          ],
-          [
-            "lit",
-            40
-          ]
-        ],
-        [
-          "cmp",
-          ">=",
-          [
-            "path",
             "gauges.tribunes"
           ],
           [
             "lit",
-            40
+            70
           ]
         ],
         [
-          "cmp",
-          ">=",
+          "or",
           [
-            "path",
-            "gauges.direction"
+            "cmp",
+            ">=",
+            [
+              "path",
+              "gauges.vestiaire"
+            ],
+            [
+              "lit",
+              45
+            ]
           ],
           [
-            "lit",
-            40
-          ]
-        ],
-        [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "gauges.caisse"
-          ],
-          [
-            "lit",
-            40
+            "cmp",
+            ">=",
+            [
+              "path",
+              "gauges.direction"
+            ],
+            [
+              "lit",
+              45
+            ]
           ]
         ]
       ],
@@ -11769,7 +11821,6 @@
       "left": {
         "label": "Alors je pars maintenant",
         "effects": {
-          "tribunes": 10,
           "parole": 1,
           "end": "statue_de_bronze"
         },
@@ -12252,6 +12303,108 @@
           "force": -2
         },
         "answer": "Tu es là. Le fauteuil du couloir a été monté pour toi, contre le mur."
+      },
+      "tone": "strategique",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "co.fisc.moyens_fous",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "caisse",
+      "tags": [
+        "caisse",
+        "sponsors",
+        "direction",
+        "scandale"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 40,
+      "priority": 2,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ],
+        [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "gauges.caisse"
+          ],
+          [
+            "lit",
+            55
+          ]
+        ],
+        [
+          "or",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "naming_signe"
+              ]
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "nassir_pret"
+              ]
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "club_actif"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "text": "Madame Josiane, deux relevés côte à côte : « Il y a de quoi payer trois saisons, {toi}. La Commission demande d'où ça vient, et c'est votre signature qui est en bas de la réponse. »",
+      "left": {
+        "label": "Je rends l'argent du fonds",
+        "effects": {
+          "caisse": -18,
+          "direction": -5,
+          "tribunes": 5,
+          "parole": 1
+        },
+        "answer": "Le virement part un vendredi. Le club redevient pauvre en une après-midi, et respire mieux."
+      },
+      "right": {
+        "label": "On garde tout",
+        "effects": {
+          "caisse": 18,
+          "direction": -5,
+          "end": "en_coupable"
+        },
+        "answer": "Elle range les deux relevés dans le même dossier. C'est celui que la Commission demandera."
       },
       "tone": "strategique",
       "kind": "routine",
@@ -18738,7 +18891,7 @@
             "clow": 1
           },
           "journal": {
-            "text": "{annee} : Dan Corven a réservé un tabouret à {prenom} {nom}. Le premier du comptoir, celui qui voit la porte.",
+            "text": "{annee} : Dan Corven a réservé un tabouret à {nom}. Le premier du comptoir, celui qui voit la porte.",
             "poids": 2,
             "tags": [
               "objet",
@@ -22340,7 +22493,7 @@
         },
         "answer": "Elle classe sous « vous ». C'est un dossier qui n'existait pas ce matin."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.adjoint_dine",
       "stepId": "addition",
@@ -22401,7 +22554,7 @@
         },
         "answer": "Il ramasse les plots. Il prend le banc d'en face en mars, avec ton cahier."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.adjoint_dine",
       "stepId": "vukic",
@@ -22672,7 +22825,7 @@
         },
         "answer": "Il range la seringue. Il dit « il tiendra », ce qui n'est pas une réponse de médecin."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.brassard_brehaut",
       "stepId": "genou",
@@ -22786,7 +22939,7 @@
       "left": {
         "label": "Gigi, jusqu'en juin",
         "effects": {
-          "vestiaire": 5,
+          "vestiaire": 10,
           "tribunes": 5,
           "relation": {
             "vecchio": 2,
@@ -22815,7 +22968,7 @@
         },
         "answer": "Le brassard glisse sur son bras ; il est trop grand. La mère demande une photo pour le dossier."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.brassard_brehaut",
       "stepId": "choix",
@@ -22919,7 +23072,7 @@
         },
         "answer": "Tu casses le cercle. Il se reforme dans le bus, sans le petit, sans toi."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.brassard_brehaut",
       "stepId": "cercle",
@@ -22964,7 +23117,7 @@
         },
         "answer": "Gigi parle. Trois phrases ; la troisième est « j'en ai vu d'autres », et ça suffit."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.brassard_brehaut",
       "stepId": "cercle",
@@ -23221,7 +23374,7 @@
       "pool": true
     },
     {
-      "id": "en.clow.44_jours_stage",
+      "id": "en.clow.cinquante_neuf_jours_stage",
       "roles": [
         "entraineur"
       ],
@@ -23246,7 +23399,7 @@
           "relation": {
             "clow": 1
           },
-          "direction": -5,
+          "parole": 1,
           "react": [
             {
               "card": "en.re.josiane_au_telephone",
@@ -23262,18 +23415,18 @@
           "relation": {
             "clow": -1
           },
-          "direction": 5
+          "force": 2
         },
         "answer": "Tu raccroches le premier. Il repose un verre qu'il n'a pas bu."
       },
       "tone": "leger",
       "kind": "etape",
       "arcId": "en.mentor_clow",
-      "stepId": "44_jours",
+      "stepId": "cinquante_neuf_jours",
       "pool": false
     },
     {
-      "id": "en.clow.44_jours",
+      "id": "en.clow.cinquante_neuf_jours",
       "roles": [
         "entraineur"
       ],
@@ -23298,7 +23451,7 @@
           "relation": {
             "clow": 1
           },
-          "direction": -5,
+          "parole": 1,
           "react": [
             {
               "card": "en.re.josiane_au_telephone",
@@ -23322,7 +23475,7 @@
           "relation": {
             "clow": -1
           },
-          "direction": 5,
+          "force": 2,
           "journal": {
             "text": "{annee} : Dan Corven a appelé. {nom} a raccroché le premier ; le président a apprécié.",
             "poids": 1,
@@ -23336,7 +23489,7 @@
       "tone": "leger",
       "kind": "etape",
       "arcId": "en.mentor_clow",
-      "stepId": "44_jours",
+      "stepId": "cinquante_neuf_jours",
       "pool": false
     },
     {
@@ -24316,7 +24469,7 @@
         },
         "answer": "Il la fait. Il te rend le banc au quatrième match, le cahier ouvert à la bonne page."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.commission_discipline",
       "stepId": "tribune",
@@ -24385,7 +24538,7 @@
         },
         "answer": "Il répète « projet » à trois journalistes avant le parking."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.cote_du_promu",
       "stepId": "empire",
@@ -24735,7 +24888,7 @@
         },
         "answer": "Elle referme la boîte. Elle dit qu'une boîte se transmet, comme un abonnement."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.dossier_meneche",
       "stepId": "tiroir",
@@ -25258,7 +25411,7 @@
         },
         "answer": "Elle range. Il n'y avait rien ; il y aura quelque chose une autre année."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.dossier_meneche",
       "stepId": "lendemain",
@@ -25363,7 +25516,7 @@
         },
         "answer": "Il te croit. Il garde la pochette dans son casier ; c'est le genre de chose qu'il garde."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.enveloppe",
       "stepId": "brehaut",
@@ -25877,6 +26030,66 @@
       "pool": false
     },
     {
+      "id": "en.espion.haie_brehaut",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "presse",
+        "absurde"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Bréhaut, une chaussure à la main, montre le fond du terrain : « Le groupe vit bien, mais il y a une casquette qui ne bouge pas depuis vingt minutes, et personne ici n'a d'adjoint à envoyer voir. »",
+      "left": {
+        "label": "On lui montre un faux onze",
+        "effects": {
+          "force": 2,
+          "vestiaire": -5,
+          "relation": {
+            "brehaut": 1
+          },
+          "next": {
+            "step": "cafe",
+            "in": [
+              1,
+              2
+            ]
+          }
+        },
+        "answer": "Gigi joue en attaque dix minutes. La casquette prend des notes ; Bréhaut compte les pages."
+      },
+      "right": {
+        "label": "J'appelle Massenet",
+        "effects": {
+          "tribunes": 5,
+          "direction": -5,
+          "relation": {
+            "meneche": 1
+          },
+          "next": {
+            "step": "presse",
+            "in": [
+              1,
+              3
+            ]
+          }
+        },
+        "answer": "Il arrive en vingt minutes, avec un photographe qui a un plus gros objectif que les jumelles."
+      },
+      "tone": "leger",
+      "kind": "etape",
+      "arcId": "en.espion_haie",
+      "stepId": "haie",
+      "pool": false
+    },
+    {
       "id": "en.espion.compo",
       "roles": [
         "entraineur"
@@ -26015,6 +26228,58 @@
       "pool": false
     },
     {
+      "id": "en.espion.retour_brehaut",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "presse",
+        "chaine"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Bréhaut fait tourner une paire de jumelles au bout de la courroie : « Leur haie est plus haute que la nôtre, {toi}, et j'ai un cousin qui habite en face. Je regarde, ou je range ça ? »",
+      "left": {
+        "label": "Regarde, prends une chaise",
+        "effects": {
+          "force": 3,
+          "parole": -1,
+          "set": [
+            "espion_retour"
+          ],
+          "outcome": "retour",
+          "relation": {
+            "brehaut": 1
+          }
+        },
+        "answer": "Il revient à midi. Il a vu leur faux onze, et leur gardien qui fume derrière le but."
+      },
+      "right": {
+        "label": "On ne fait pas ça",
+        "effects": {
+          "parole": 1,
+          "tribunes": 5,
+          "force": -1,
+          "set": [
+            "espion_retour"
+          ],
+          "outcome": "retour"
+        },
+        "answer": "Il range les jumelles chez son cousin. Le samedi, quelqu'un dans leur tribune te salue."
+      },
+      "tone": "leger",
+      "kind": "etape",
+      "arcId": "en.espion_haie",
+      "stepId": "retour",
+      "pool": false
+    },
+    {
       "id": "en.fils.placard",
       "roles": [
         "entraineur"
@@ -26107,7 +26372,7 @@
         },
         "answer": "Il a le fax. Il apprend à s'en servir en janvier ; le premier fax achète un ailier."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.fils_aulard",
       "stepId": "bureau",
@@ -26153,7 +26418,7 @@
         },
         "answer": "L'ailier s'assoit. Le père voit la feuille de match ; il voit surtout ce qui manque."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.fils_aulard",
       "stepId": "mercato",
@@ -26268,6 +26533,68 @@
           }
         },
         "answer": "Il essuie. Il garde les trois mots ; il en aura d'autres."
+      },
+      "tone": "strategique",
+      "kind": "etape",
+      "arcId": "en.gigi_staff",
+      "stepId": "douche",
+      "pool": false
+    },
+    {
+      "id": "en.gigi.douche_derniere",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "moment"
+      ],
+      "speaker": "vecchio",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Vecchio n'a plus les gants du dimanche, et il est là en juillet, sans sac : « J'en ai vu d'autres raccrocher, coach. Il me reste des mains. Je m'en vais, ou j'essuie ceux des autres ? »",
+      "left": {
+        "label": "Tu essuies les autres",
+        "effects": {
+          "vestiaire": 10,
+          "caisse": -5,
+          "set": [
+            "gigi_staff",
+            "gigi_a_parle"
+          ],
+          "relation": {
+            "vecchio": 2
+          },
+          "char": {
+            "vecchio": {
+              "statut": "staff"
+            }
+          }
+        },
+        "answer": "Il s'installe dans la salle des gardiens. Il n'a rien demandé d'autre que la clé."
+      },
+      "right": {
+        "label": "Prends la salle des gants",
+        "effects": {
+          "vestiaire": 5,
+          "direction": 5,
+          "set": [
+            "gigi_staff"
+          ],
+          "relation": {
+            "vecchio": 1
+          },
+          "char": {
+            "vecchio": {
+              "statut": "staff"
+            }
+          }
+        },
+        "answer": "Il prend la clé, la salle, et le silence qui va avec. Il parlera plus tard, ou jamais."
       },
       "tone": "strategique",
       "kind": "etape",
@@ -28565,7 +28892,7 @@
       "right": {
         "label": "Je demande à la Fédération",
         "effects": {
-          "vestiaire": -10,
+          "vestiaire": -5,
           "direction": 5,
           "parole": 1,
           "relation": {
@@ -28620,7 +28947,7 @@
       "right": {
         "label": "Dis-le à la Fédération",
         "effects": {
-          "vestiaire": -10,
+          "vestiaire": -5,
           "direction": 5,
           "parole": 1,
           "relation": {
@@ -29655,7 +29982,46 @@
       "pool": false
     },
     {
-      "id": "en.re.fardelli_seau",
+      "id": "en.re.gege_nouvel_ordre",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Gégé, l'écharpe roulée sous le bras : « « Jusqu'à nouvel ordre », c'est écrit dans le journal, et le journal on l'a lu au local. La tribune n'oublie rien : on t'attend, ou on attend l'autre ? »",
+      "left": {
+        "label": "Attendez-moi",
+        "effects": {
+          "tribunes": 5,
+          "relation": {
+            "gege": 1
+          }
+        },
+        "answer": "Il déplie l'écharpe et la remet au cou. « Alors on t'attend, mais pas longtemps. »"
+      },
+      "right": {
+        "label": "Attendez le classement",
+        "effects": {
+          "tribunes": -5,
+          "direction": 5
+        },
+        "answer": "Il note le mot « classement ». Au local, ce n'est pas un mot qu'on aime."
+      },
+      "tone": "leger",
+      "kind": "reaction",
+      "pool": false
+    },
+    {
+      "id": "en.re.fardelli_juin",
       "roles": [
         "entraineur"
       ],
@@ -29667,6 +30033,89 @@
       "speaker": "fardelli",
       "weight": 1.0,
       "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Fardelli, le cigare éteint contre la vitre de ta voiture : « Mon ami, on parle d'argent ou d'amitié ? En juin, ton président aura trois pages à signer, et moi trois noms. Tu es lequel ? »",
+      "left": {
+        "label": "Le premier",
+        "effects": {
+          "direction": -5,
+          "parole": 1,
+          "relation": {
+            "fardelli": 1
+          }
+        },
+        "answer": "Il rit sans bruit. « Le premier, c'est celui qu'on appelle le dernier. »"
+      },
+      "right": {
+        "label": "Aucun des trois",
+        "effects": {
+          "direction": 5,
+          "relation": {
+            "fardelli": -1
+          }
+        },
+        "answer": "Il range le carnet. « Alors on se reverra en janvier. » Il dit toujours janvier."
+      },
+      "tone": "leger",
+      "kind": "reaction",
+      "pool": false
+    },
+    {
+      "id": "en.re.fardelli_remplacant",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "mercato",
+      "tags": [
+        "mercato",
+        "agents"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Fardelli, le cigare éteint : « Mon ami, on parle d'argent ou d'amitié ? Ton bureau est encore à son nom et le mien a déjà trois numéros dessus. Je te lis les trois, ou je les garde ? »",
+      "left": {
+        "label": "Lisez-les",
+        "effects": {
+          "direction": -5,
+          "relation": {
+            "fardelli": 1
+          }
+        },
+        "answer": "Il lit trois noms. Le troisième, il le dit deux fois ; c'est celui qu'il représente."
+      },
+      "right": {
+        "label": "Gardez-les",
+        "effects": {
+          "direction": 5,
+          "relation": {
+            "fardelli": -1
+          }
+        },
+        "answer": "Il replie le carnet. « Alors je les lis au président. » Il ne plaisante qu'à moitié."
+      },
+      "tone": "leger",
+      "kind": "reaction",
+      "pool": false
+    },
+    {
+      "id": "en.re.fardelli_seau",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "mercato",
+      "tags": [
+        "mercato",
+        "agents"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": true,
       "cooldown": 12,
       "priority": 0,
       "sablier": false,
@@ -30740,7 +31189,7 @@
         },
         "answer": "Il déroule la mauvaise. Dimanche, on verra pour l'autre."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.kop_qui_aime_trop",
       "stepId": "banderoles",
@@ -30984,7 +31433,7 @@
             "gege": 1
           },
           "journal": {
-            "text": "{annee} : dix ans du virage. {nom} au troisième rang de la photo des coachs. Le troisième rang, c'est déjà une saison.",
+            "text": "{annee} : dix ans du virage. {nom} au troisième rang de la photo. Le troisième rang, c'est déjà une saison.",
             "poids": 1,
             "tags": [
               "ultras",
@@ -32143,7 +32592,7 @@
             "mbako": 1
           },
           "journal": {
-            "text": "{annee} : Lian Mbako a marqué contre {club} sans célébrer. « Je regrette », a dit {nom}. Le vestiaire l'a lu deux fois.",
+            "text": "{annee} : Lian Mbako a marqué contre nous sans célébrer. « Je regrette », a dit {nom} ; le vestiaire l'a relu.",
             "poids": 2,
             "tags": [
               "presse",
@@ -32230,7 +32679,7 @@
             "mbako": -2
           },
           "journal": {
-            "text": "{annee} : « Pas à seize ans » : {nom} a refusé le salaire de star. Le petit a rangé ses crampons dans un sac neuf.",
+            "text": "{annee} : « Pas à seize ans » : {nom} a refusé le salaire de star. Le petit a rangé ses crampons sans un mot.",
             "poids": 2,
             "tags": [
               "caisse",
@@ -33039,7 +33488,7 @@
         },
         "answer": "Il note « maintien ». Il ne l'entoure pas."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "script",
       "arcId": "en.promu.sans_un_sou",
       "stepId": "epilogue",
@@ -34612,7 +35061,7 @@
         },
         "answer": "Elle le dit. Bréhaut demande le nom du banquier ; elle le donne."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.salaires_retard",
       "stepId": "distributeur",
@@ -34666,7 +35115,7 @@
         },
         "answer": "Elle le dit. Personne ne demande plus le nom du banquier ; ils l'ont."
       },
-      "tone": "strategique",
+      "tone": "leger",
       "kind": "etape",
       "arcId": "en.salaires_retard",
       "stepId": "distributeur",
@@ -35274,6 +35723,7 @@
         "effects": {
           "vestiaire": 10,
           "direction": 5,
+          "caisse": -5,
           "set": [
             "gigi_staff"
           ],
@@ -35301,7 +35751,7 @@
           "outcome": "parti",
           "next": "end",
           "journal": {
-            "text": "{annee} : Gigi Vecchio a raccroché pour de vrai. « Bon vent », a dit {nom}. Il en avait vu d'autres, des bons vents.",
+            "text": "{annee} : Gigi Vecchio a raccroché pour de vrai. « Bon vent », a dit {nom}. Il en avait vu d'autres, des vents.",
             "poids": 3,
             "tags": [
               "vestiaire"
@@ -35600,7 +36050,7 @@
       "right": {
         "label": "Bon vent",
         "effects": {
-          "vestiaire": -10,
+          "vestiaire": -5,
           "force": 1,
           "outcome": "parti",
           "journal": {
@@ -40425,7 +40875,7 @@
             "voiture_couverte"
           ],
           "journal": {
-            "text": "{annee} : la voiture du président a brûlé. {nom} a couvert le vestiaire ; le président a relu le contrat, page trois.",
+            "text": "{annee} : la voiture du président a brûlé. {nom} a couvert le vestiaire ; le président a relu la page trois.",
             "poids": 3,
             "tags": [
               "vestiaire",
@@ -41426,6 +41876,504 @@
       "pool": true
     },
     {
+      "id": "en.fardelli.parking_doudoune",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "agents",
+      "tags": [
+        "agents",
+        "mercato"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<=",
+        [
+          "path",
+          "season"
+        ],
+        [
+          "lit",
+          1
+        ]
+      ],
+      "text": "Un homme en doudoune contre ta portière, la main déjà tendue : « Rocco Fardelli. On monte en Division 1, mon ami, et personne ne m'a appelé. Je prends un café, ou je prends mal ? »",
+      "left": {
+        "label": "Un café, alors",
+        "effects": {
+          "direction": 5,
+          "relation": {
+            "fardelli": 1
+          },
+          "parole": -1
+        },
+        "answer": "Le café dure quarante minutes. Il n'a rien demandé ; il a tout noté."
+      },
+      "right": {
+        "label": "Ni l'un ni l'autre",
+        "effects": {
+          "vestiaire": 5,
+          "relation": {
+            "fardelli": -1
+          }
+        },
+        "answer": "Il remonte la fermeture jusqu'au menton. « On se reverra en janvier », et il a raison."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.fardelli.liste_de_trois",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "mercato",
+      "tags": [
+        "mercato",
+        "agents",
+        "risk:caisse"
+      ],
+      "speaker": "fardelli",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 25,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          "<=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        [
+          "not",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "club_actif"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "text": "Fardelli pose une feuille pliée en deux : « Trois noms, {toi}, trois joueurs libres, gratuits pour le club. Je me paie sur le quatrième, celui que vous me vendrez en juin. »",
+      "left": {
+        "label": "Je prends la feuille",
+        "effects": {
+          "force": 1,
+          "caisse": 5,
+          "relation": {
+            "fardelli": 1
+          },
+          "parole": -1
+        },
+        "answer": "Trois libres arrivent en août. En juin, il vient chercher le quatrième, et il sait déjà lequel."
+      },
+      "right": {
+        "label": "Je paie mes joueurs",
+        "effects": {
+          "caisse": -10,
+          "vestiaire": 5,
+          "relation": {
+            "fardelli": -1
+          }
+        },
+        "answer": "Il replie la feuille dans le même pli. Elle ressort chez le voisin, à la virgule près."
+      },
+      "tone": "strategique",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.brehaut.groupe_vit_bien",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "rescue:vestiaire"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<=",
+        [
+          "path",
+          "season"
+        ],
+        [
+          "lit",
+          1
+        ]
+      ],
+      "text": "Titi Bréhaut, brassard sur l'avant-bras, sans le mettre : « Le groupe vit bien, coach. Il vit bien à onze, un peu moins à dix-huit. Vous comptez comment, vous ? »",
+      "left": {
+        "label": "Je compte à dix-huit",
+        "effects": {
+          "vestiaire": 10,
+          "force": -1,
+          "relation": {
+            "brehaut": 1
+          }
+        },
+        "answer": "Il hoche la tête et va prévenir les sept autres. Il les avait déjà prévenus."
+      },
+      "right": {
+        "label": "Je compte à onze",
+        "effects": {
+          "force": 1,
+          "vestiaire": -5,
+          "relation": {
+            "brehaut": -1
+          }
+        },
+        "answer": "Il enfile le brassard. « Le groupe vit bien », répète-t-il, plus bas."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.brehaut.chaussures_du_frere",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "agents",
+      "tags": [
+        "agents",
+        "vestiaire"
+      ],
+      "speaker": "brehaut",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 25,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        "<=",
+        [
+          "path",
+          "season"
+        ],
+        [
+          "lit",
+          2
+        ]
+      ],
+      "text": "Le capitaine, un carton de chaussures sous le bras : « Mon frère fait agent depuis mardi. Il a offert ça à tout le monde, pointure au hasard. Je les rends, ou on fait comme si ? »",
+      "left": {
+        "label": "On fait comme si",
+        "effects": {
+          "vestiaire": 5,
+          "direction": -5,
+          "relation": {
+            "brehaut": 1,
+            "fardelli": -1
+          }
+        },
+        "answer": "Personne ne rend rien. Trois joueurs jouent en trente-neuf, dont un en quarante-deux."
+      },
+      "right": {
+        "label": "Tout revient au carton",
+        "effects": {
+          "parole": 1,
+          "vestiaire": -5,
+          "relation": {
+            "brehaut": -1
+          }
+        },
+        "answer": "Le carton repart entier. Le frère revient en janvier, avec des survêtements."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.nassir.canette_parking",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "sponsors",
+      "tags": [
+        "sponsors",
+        "caisse"
+      ],
+      "speaker": "nassir",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          "<=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ],
+        [
+          "not",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "club_a_lancienne"
+              ]
+            ]
+          ]
+        ],
+        [
+          "not",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "club_actif"
+              ]
+            ]
+          ]
+        ]
+      ],
+      "text": "Un homme très calme distribue des canettes orange sur le parking, aux gamins d'abord : « Je ne viens rien vendre, {toi}. Je viens voir combien vous êtes. Goûtez, c'est trop sucré. »",
+      "left": {
+        "label": "Je goûte",
+        "effects": {
+          "caisse": 5,
+          "tribunes": -5,
+          "relation": {
+            "nassir": 1
+          }
+        },
+        "answer": "C'est trop sucré. Il le sait, il le dit avant toi, et il repart en notant le chiffre du parking."
+      },
+      "right": {
+        "label": "Le parking est au club",
+        "effects": {
+          "tribunes": 5,
+          "relation": {
+            "nassir": -1
+          },
+          "parole": 1
+        },
+        "answer": "Il ramasse les canettes une par une, sans se presser. Les gamins gardent les leurs."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.gege.bache_qui_seche",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes",
+        "decor"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 20,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">=",
+        [
+          "path",
+          "season"
+        ],
+        [
+          "lit",
+          1
+        ]
+      ],
+      "text": "Gégé, les mains pleines de peinture : « Vingt mètres de bâche, et il pleut depuis mardi. On la sort humide dimanche, ou on garde le slogan pour l'an prochain ? »",
+      "left": {
+        "label": "Sortez-la humide",
+        "effects": {
+          "tribunes": 10,
+          "direction": -5
+        },
+        "answer": "Elle sort. Elle pèse trois fois son poids, et le virage la tient quand même une mi-temps."
+      },
+      "right": {
+        "label": "Gardez-la au sec",
+        "effects": {
+          "tribunes": -5,
+          "relation": {
+            "gege": -1
+          }
+        },
+        "answer": "Elle sèche au local, roulée, avec les quatre autres qui n'ont jamais servi."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.vukic.velo_du_lundi",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "decor"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 20,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "cmp",
+        ">=",
+        [
+          "path",
+          "season"
+        ],
+        [
+          "lit",
+          1
+        ]
+      ],
+      "text": "Vukić, son vélo à la main dans le couloir : « Le lundi, je viens en vélo. Vingt-deux kilomètres. Les joueurs trouvent ça drôle. Je continue, ou je fais comme tout le monde ? »",
+      "left": {
+        "label": "Continue en vélo",
+        "effects": {
+          "vestiaire": 5,
+          "relation": {
+            "vukic": 1
+          }
+        },
+        "answer": "Le lundi suivant, deux joueurs sont venus en vélo. Le troisième lundi, ils étaient cinq."
+      },
+      "right": {
+        "label": "Fais comme tout le monde",
+        "effects": {
+          "direction": 5,
+          "relation": {
+            "vukic": -1
+          }
+        },
+        "answer": "Il range le vélo derrière le local. Il ne le reprend pas, et il ne l'oublie pas."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
+      "id": "en.vecchio.gants_a_secher",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "objet",
+        "decor"
+      ],
+      "speaker": "vecchio",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 20,
+      "priority": 0,
+      "sablier": false,
+      "when": [
+        "and",
+        [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ],
+        [
+          "cmp",
+          "!=",
+          [
+            "path",
+            "chars.vecchio.statut"
+          ],
+          [
+            "lit",
+            "parti"
+          ]
+        ]
+      ],
+      "text": "Gigi Vecchio, deux paires de gants sur le radiateur : « J'en ai vu d'autres, des radiateurs. Les neufs sèchent mal, les vieux sèchent bien. On commande, ou on lave ? »",
+      "left": {
+        "label": "On lave",
+        "effects": {
+          "caisse": 5,
+          "vestiaire": -5,
+          "relation": {
+            "vecchio": 1
+          }
+        },
+        "answer": "Il lave les siens dans l'évier du local. Il lave aussi ceux du jeune, sans le dire au jeune."
+      },
+      "right": {
+        "label": "On commande",
+        "effects": {
+          "caisse": -5,
+          "vestiaire": 5,
+          "relation": {
+            "vecchio": 1
+          }
+        },
+        "answer": "Deux paires arrivent en novembre. Il en garde une dans son casier, encore emballée."
+      },
+      "tone": "leger",
+      "kind": "routine",
+      "pool": true
+    },
+    {
       "id": "en.re.josiane_chauffage",
       "roles": [
         "entraineur"
@@ -42324,23 +43272,7 @@
           ],
           "react": [
             {
-              "card": "en.re.camille_six_semaines",
-              "if": [
-                "not",
-                [
-                  "call",
-                  "flag",
-                  [
-                    [
-                      "lit",
-                      "divorce"
-                    ]
-                  ]
-                ]
-              ]
-            },
-            {
-              "card": "en.re.josiane_cafetiere"
+              "card": "en.re.fardelli_juin"
             }
           ]
         },
@@ -42356,23 +43288,7 @@
           },
           "react": [
             {
-              "card": "en.re.camille_six_semaines",
-              "if": [
-                "not",
-                [
-                  "call",
-                  "flag",
-                  [
-                    [
-                      "lit",
-                      "divorce"
-                    ]
-                  ]
-                ]
-              ]
-            },
-            {
-              "card": "en.re.josiane_cafetiere"
+              "card": "en.re.fardelli_juin"
             }
           ]
         },
@@ -42414,7 +43330,7 @@
           ],
           "react": [
             {
-              "card": "en.re.fardelli_seau"
+              "card": "en.re.fardelli_remplacant"
             }
           ]
         },
@@ -42430,7 +43346,7 @@
           },
           "react": [
             {
-              "card": "en.re.fardelli_seau"
+              "card": "en.re.fardelli_remplacant"
             }
           ]
         },
@@ -42686,6 +43602,23 @@
           "vestiaire": -5,
           "set": [
             "interim_prolonge"
+          ],
+          "react": [
+            {
+              "card": "en.re.gege_nouvel_ordre",
+              "if": [
+                "cmp",
+                "<=",
+                [
+                  "path",
+                  "reactions"
+                ],
+                [
+                  "lit",
+                  2
+                ]
+              ]
+            }
           ]
         },
         "answer": "Un mois. Il ne dit pas lequel."
@@ -42697,6 +43630,23 @@
           "vestiaire": -5,
           "set": [
             "interim_prolonge"
+          ],
+          "react": [
+            {
+              "card": "en.re.gege_nouvel_ordre",
+              "if": [
+                "cmp",
+                "<=",
+                [
+                  "path",
+                  "reactions"
+                ],
+                [
+                  "lit",
+                  2
+                ]
+              ]
+            }
           ]
         },
         "answer": "Un mois. Il ne dit pas lequel."
@@ -42731,6 +43681,23 @@
           "vestiaire": -5,
           "set": [
             "dechu"
+          ],
+          "react": [
+            {
+              "card": "en.re.gege_nouvel_ordre",
+              "if": [
+                "cmp",
+                "<=",
+                [
+                  "path",
+                  "reactions"
+                ],
+                [
+                  "lit",
+                  2
+                ]
+              ]
+            }
           ]
         },
         "answer": "Lundi, un homme avec un seau. Ou une casquette ; tu le sauras lundi."
@@ -42743,6 +43710,23 @@
           "set": [
             "dechu",
             "parti_tete_haute"
+          ],
+          "react": [
+            {
+              "card": "en.re.gege_nouvel_ordre",
+              "if": [
+                "cmp",
+                "<=",
+                [
+                  "path",
+                  "reactions"
+                ],
+                [
+                  "lit",
+                  2
+                ]
+              ]
+            }
           ]
         },
         "answer": "Le vestiaire t'applaudit dans le couloir. C'est court."
@@ -42961,6 +43945,47 @@
           "direction": -5
         },
         "answer": "Un nul, un nul, une victoire. Elle visse le lundi, sans demander."
+      },
+      "tone": "leger",
+      "kind": "script",
+      "arcId": "en.interim.six_semaines",
+      "stepId": "s1_rentree",
+      "pool": false
+    },
+    {
+      "id": "en.interim.s1_rentree_prolonge",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Madame Josiane, une plaque provisoire en plastique dans la main : « Un mois de plus, puis un autre, et on est en août. J'ai fait faire celle-ci en attendant, {toi}. Je la visse ? »",
+      "left": {
+        "label": "Vissez celle-là",
+        "effects": {
+          "direction": 5,
+          "vestiaire": 5,
+          "relation": {
+            "josiane": 1
+          }
+        },
+        "answer": "Elle visse le plastique. Elle garde la commande de la vraie, en attente, datée."
+      },
+      "right": {
+        "label": "La vraie, ou rien",
+        "effects": {
+          "direction": -5,
+          "tribunes": 5
+        },
+        "answer": "La porte reste nue. Le groupe y colle une photo découpée dans L'Écho."
       },
       "tone": "leger",
       "kind": "script",
@@ -43202,6 +44227,47 @@
       "pool": false
     },
     {
+      "id": "en.interim.s1_veille_montee",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "vestiaire",
+      "tags": [
+        "vestiaire",
+        "tribunes"
+      ],
+      "speaker": "vukic",
+      "weight": 1.0,
+      "once": true,
+      "cooldown": 12,
+      "priority": 0,
+      "sablier": false,
+      "text": "Vukić, la feuille de match vierge : « Tu as dit « la montée » l'an dernier, devant tout le monde, et demain c'est le dernier bloc. Ils comptent, je te le dis. Tu joues quoi ? »",
+      "left": {
+        "label": "Le bloc bas, comme toujours",
+        "effects": {
+          "direction": 5,
+          "vestiaire": 5,
+          "force": -1
+        },
+        "answer": "Bloc bas. Le virage déplie une banderole où il manque une lettre."
+      },
+      "right": {
+        "label": "On attaque, une fois",
+        "effects": {
+          "tribunes": 10,
+          "force": 2,
+          "vestiaire": -5
+        },
+        "answer": "Le virage se lève à la vingtième. Le président regarde sa montre, puis la tribune."
+      },
+      "tone": "strategique",
+      "kind": "script",
+      "arcId": "en.interim.six_semaines",
+      "stepId": "s1_veille",
+      "pool": false
+    },
+    {
       "id": "en.interim.s1_veille",
       "roles": [
         "entraineur"
@@ -43240,6 +44306,47 @@
       "kind": "script",
       "arcId": "en.interim.six_semaines",
       "stepId": "s1_veille",
+      "pool": false
+    },
+    {
+      "id": "en.interim.rentree_cdi",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "direction",
+      "tags": [
+        "direction"
+      ],
+      "speaker": "josiane",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 0,
+      "priority": 0,
+      "sablier": false,
+      "text": "Madame Josiane, un contrat de trois pages sorti du classeur vert : « La page deux dit douze mois et on en est à la troisième rentrée. J'en ai vu passer. Je la ressors au président, {toi} ? »",
+      "left": {
+        "label": "Ressortez-la",
+        "effects": {
+          "direction": -5,
+          "parole": 1,
+          "relation": {
+            "josiane": 1
+          }
+        },
+        "answer": "Elle la pose sur son sous-main. Il la retourne sans la lire ; elle la reprend."
+      },
+      "right": {
+        "label": "Laissez dormir",
+        "effects": {
+          "direction": 5,
+          "parole": -1
+        },
+        "answer": "Elle la range dans le classeur vert. Elle note la date au crayon, en haut."
+      },
+      "tone": "leger",
+      "kind": "script",
+      "arcId": "en.interim.six_semaines",
+      "stepId": "rentree",
       "pool": false
     },
     {
@@ -43325,6 +44432,48 @@
       "kind": "script",
       "arcId": "en.interim.six_semaines",
       "stepId": "rentree",
+      "pool": false
+    },
+    {
+      "id": "en.interim.veille_bache",
+      "roles": [
+        "entraineur"
+      ],
+      "arc": "ultras",
+      "tags": [
+        "ultras",
+        "tribunes"
+      ],
+      "speaker": "gege",
+      "weight": 1.0,
+      "once": false,
+      "cooldown": 0,
+      "priority": 0,
+      "sablier": false,
+      "text": "Gégé au parking, la veille : « La première année, on chantait un autre nom que le tien, et la bâche disait autre chose. On l'a repeinte. Elle sort demain, {toi} ? »",
+      "left": {
+        "label": "Qu'elle sorte",
+        "effects": {
+          "tribunes": 10,
+          "direction": -5,
+          "relation": {
+            "gege": 1
+          }
+        },
+        "answer": "Vingt mètres au-dessus du virage. En dessous, on devine l'ancienne peinture."
+      },
+      "right": {
+        "label": "Pas celle-là",
+        "effects": {
+          "tribunes": -5,
+          "vestiaire": 5
+        },
+        "answer": "Il la replie sans discuter. « On la garde pour le jour où tu partiras. »"
+      },
+      "tone": "leger",
+      "kind": "script",
+      "arcId": "en.interim.six_semaines",
+      "stepId": "veille",
       "pool": false
     },
     {
@@ -64999,8 +66148,8 @@
       "desc": "Découvrir 8 fins différentes."
     },
     {
-      "id": "homme_44_jours",
-      "title": "L'Homme des 44 jours",
+      "id": "homme_cinquante_neuf_jours",
+      "title": "L'Homme des cinquante-neuf jours",
       "desc": "Être viré en moins de douze cartes après une prise de fonction."
     },
     {
@@ -65247,7 +66396,7 @@
       "Étoile"
     ],
     "villes": [
-      "Valmont",
+      "Valmorne",
       "Saint-Étoile",
       "Lyonnet",
       "Valdorne",
@@ -65256,12 +66405,12 @@
       "Bretagne",
       "Valentienne",
       "Roquemont",
-      "Villefranche",
-      "Beaulieu",
+      "Villebranle",
+      "Beaudieu",
       "Castérac",
-      "Fontaine",
+      "Fontenaire",
       "Aubérive",
-      "Néville"
+      "Nerville"
     ]
   },
   "divisions": {
@@ -66266,6 +67415,7 @@
         "hotel_du_club": "{annee} : {prenom} {nom} vit à l'hôtel du club, chambre 12. Josiane sert le café.",
         "treve_promise": "{annee} : « à la trêve », a dit {nom} à Camille. La trêve est passée."
       },
+      "traces_retract": {},
       "issues": [
         "ici",
         "hotel",
@@ -66391,6 +67541,7 @@
         "clow_trois_verres": "{annee} : trois verres avec Dan Corven. Le troisième était le vrai.",
         "telegramme_clow": "{annee} : Dan Corven a donné son télégramme de 1971 à {prenom} {nom}. Cinquante-neuf jours, plié en quatre."
       },
+      "traces_retract": {},
       "issues": [
         "telegramme",
         "garde"
@@ -66517,6 +67668,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "theme": "direction"
@@ -66554,7 +67706,7 @@
         "clear": [
           "vukic_dauphin"
         ],
-        "journal": "{annee} : le dîner du mardi a cessé d'être un secret à {club}. Vukić a rangé le cahier ; il connaît le tiroir."
+        "journal": "{annee} : le dîner du mardi a cessé d'être un secret. Vukić a rangé le cahier ; il connaît le tiroir."
       },
       "steps": [
         {
@@ -66707,6 +67859,7 @@
         "vukic_ecarte": "{annee} : Zoran Vukić écarté par {prenom} {nom}. Il a pris le banc d'en face en mars.",
         "aulard_confronte": "{annee} : {nom} est entré{pg, select, f{e} other{}} sans frapper chez le président, à propos d'un dîner. Le président a payé l'addition."
       },
+      "traces_retract": {},
       "issues": [
         "confronte",
         "dauphin",
@@ -66742,7 +67895,7 @@
       "same_club": true,
       "fallback": "nouvelles",
       "epilogue": {
-        "journal": "{annee} : le brassard de {club} a trouvé un bras pour la saison. Bréhaut a fait le tour du vestiaire, sur une jambe."
+        "journal": "{annee} : le brassard a trouvé un bras pour la saison. Bréhaut a fait le tour du vestiaire, sur une jambe."
       },
       "steps": [
         {
@@ -66931,6 +68084,7 @@
         "brassard_mbako": "{annee} : le brassard au petit, dix-sept ans. Les anciens ont fait un cercle sans lui.",
         "brehaut_staff": "{annee} : Bréhaut a raccroché. Il est au staff de {club}, ou en costume ailleurs."
       },
+      "traces_retract": {},
       "issues": [
         "garde",
         "gigi",
@@ -66993,10 +68147,10 @@
       "epilogue": {},
       "steps": [
         {
-          "id": "44_jours",
+          "id": "cinquante_neuf_jours",
           "card": [
             {
-              "id": "en.clow.44_jours_stage",
+              "id": "en.clow.cinquante_neuf_jours_stage",
               "if": [
                 "call",
                 "flag",
@@ -67009,7 +68163,7 @@
               ]
             },
             {
-              "id": "en.clow.44_jours"
+              "id": "en.clow.cinquante_neuf_jours"
             }
           ],
           "season": "0",
@@ -67150,6 +68304,7 @@
         "franc_parler": "{annee} : le testament de l'ancien tenait en deux mots. {prenom} {nom} a pris le franc-parler.",
         "nez_a_joueurs": "{annee} : le testament de l'ancien tenait en deux mots. {prenom} {nom} a pris le nez à joueurs."
       },
+      "traces_retract": {},
       "issues": [
         "ecoute",
         "ingrat"
@@ -67282,8 +68437,9 @@
       "exclusive_with": [],
       "hint": "Trois questions par saison, un journaliste gentil. Hors micro, bien sûr.",
       "traces": {
-        "presse_franc": "{annee} : « Franchement », a dit {prenom} {nom} à Massenet. Le mot est sorti en titre, avec un point d'interrogation."
+        "presse_franc": "{annee} : « Franchement », a dit {nom} à Massenet. Le mot est sorti en titre, avec un point d'interrogation."
       },
+      "traces_retract": {},
       "issues": [
         "no_comment",
         "franc"
@@ -67487,6 +68643,7 @@
         "commission_blanchi": "{annee} : la Commission de discipline a blanchi {prenom} {nom}. Berthomier a un service en attente.",
         "commission_sanction": "{annee} : trois matchs de tribune pour {nom}. Vukić a tenu le banc ; il l'a rendu."
       },
+      "traces_retract": {},
       "issues": [
         "blanchi",
         "sanction",
@@ -67642,9 +68799,10 @@
       "exclusive_with": [],
       "hint": "Cinq mille contre un pour le titre. Quelqu'un a parié. Peut-être toi.",
       "traces": {
-        "pari_promu": "{annee} : {prenom} {nom} a misé cent francs sur le maintien de {club}, à cinq contre un. Massenet a noté la somme.",
-        "projet_promis": "{annee} : {prenom} {nom} a promis « un projet » au président. Il l'a répété à trois journalistes avant le parking."
+        "pari_promu": "{annee} : {nom} a misé cent francs sur le maintien, à cinq contre un. Massenet a noté la somme.",
+        "projet_promis": "{annee} : {nom} a promis « un projet » au président. Il l'a répété à trois journalistes avant le parking."
       },
+      "traces_retract": {},
       "issues": [
         "pari_tenu",
         "pari_perdu",
@@ -67973,6 +69131,7 @@
         "dossier_ignore": "{annee} : le dossier est paru. {nom} n'a pas répondu ; le président a lu.",
         "dossier_troque": "{annee} : {nom} a acheté un silence avec une exclusivité. Quelqu'un le sait."
       },
+      "traces_retract": {},
       "issues": [
         "repondu",
         "ignore",
@@ -68163,11 +69322,15 @@
       "exclusive_with": [],
       "hint": "Fardelli a un ami. L'ami a une enveloppe. Le dernier bloc a un prix.",
       "traces": {
-        "enveloppe_rival": "{annee} : trois joueurs d'en face ont levé le pied au dernier bloc. Une enveloppe a changé de poche ; {nom} savait.",
+        "enveloppe_rival": "{annee} : trois joueurs d'en face ont levé le pied au dernier bloc. Une enveloppe a changé de poche, et on savait.",
         "enveloppe_refusee": "{annee} : Fardelli avait « un ami » et une enveloppe. {prenom} {nom} a dit jamais. Il n'a pas rappelé.",
         "enveloppe_niee": "{annee} : la Fédération a examiné l'enveloppe. {prenom} {nom} a tout nié ; Berthomier a noté « nie ».",
         "enveloppe_promise": "{annee} : un dernier bloc, un gardien qu'on n'a pas changé, une promesse. La Fédération « examine ».",
         "enveloppe_denoncee": "{annee} : {nom} a porté l'enveloppe de Fardelli à la Fédération, fermée. Berthomier a « examiné »."
+      },
+      "traces_retract": {
+        "enveloppe_rival": "{annee} : l'enveloppe est repartie avec Fardelli, non ouverte. Le dernier bloc s'est joué sans elle.",
+        "enveloppe_promise": "{annee} : la promesse du dernier bloc est tombée. L'enveloppe « historique » tenait sur un bon de réduction."
       },
       "issues": [
         "jamais",
@@ -68203,24 +69366,51 @@
       "same_club": true,
       "fallback": "nouvelles",
       "epilogue": {
-        "journal": "{annee} : la haie de {club} a été retaillée. La plaque de la camionnette est restée notée au local, à la craie."
+        "journal": "{annee} : la haie a été retaillée. La plaque de la camionnette est restée notée au local, à la craie."
       },
       "steps": [
         {
           "id": "haie",
           "card": [
             {
-              "id": "en.espion.haie_car",
+              "id": "en.espion.haie_brehaut",
               "if": [
-                "cmp",
-                ">=",
+                "and",
                 [
-                  "path",
-                  "year"
+                  "cmp",
+                  "!=",
+                  [
+                    "path",
+                    "chars.vukic.statut"
+                  ],
+                  [
+                    "lit",
+                    "present"
+                  ]
                 ],
                 [
-                  "lit",
-                  1996
+                  "cmp",
+                  "!=",
+                  [
+                    "path",
+                    "chars.vukic.statut"
+                  ],
+                  [
+                    "lit",
+                    "club"
+                  ]
+                ],
+                [
+                  "cmp",
+                  "!=",
+                  [
+                    "path",
+                    "chars.vukic.statut"
+                  ],
+                  [
+                    "lit",
+                    "staff"
+                  ]
                 ]
               ]
             },
@@ -68255,6 +69445,21 @@
                 [
                   "lit",
                   1
+                ]
+              ]
+            },
+            {
+              "id": "en.espion.haie_car",
+              "if": [
+                "cmp",
+                ">=",
+                [
+                  "path",
+                  "year"
+                ],
+                [
+                  "lit",
+                  1996
                 ]
               ]
             },
@@ -68374,13 +69579,13 @@
                 ]
               ],
               "in": [
-                13,
-                16
+                4,
+                10
               ],
               "at_season": 1,
               "at": [
-                13,
-                16
+                4,
+                10
               ]
             }
           ]
@@ -68388,6 +69593,48 @@
         {
           "id": "retour",
           "card": [
+            {
+              "id": "en.espion.retour_brehaut",
+              "if": [
+                "and",
+                [
+                  "cmp",
+                  "!=",
+                  [
+                    "path",
+                    "chars.vukic.statut"
+                  ],
+                  [
+                    "lit",
+                    "present"
+                  ]
+                ],
+                [
+                  "cmp",
+                  "!=",
+                  [
+                    "path",
+                    "chars.vukic.statut"
+                  ],
+                  [
+                    "lit",
+                    "club"
+                  ]
+                ],
+                [
+                  "cmp",
+                  "!=",
+                  [
+                    "path",
+                    "chars.vukic.statut"
+                  ],
+                  [
+                    "lit",
+                    "staff"
+                  ]
+                ]
+              ]
+            },
             {
               "id": "en.espion.retour"
             }
@@ -68405,10 +69652,11 @@
       "exclusive_with": [],
       "hint": "Une casquette qui ne bouge pas depuis vingt minutes, au fond du terrain.",
       "traces": {
-        "espion_cafe": "{annee} : un homme à jumelles dans la haie de {club}. Gégé lui a offert un café ; la tribune a noté la plaque.",
+        "espion_cafe": "{annee} : un homme à jumelles dans la haie. Gégé lui a offert un café ; la tribune a noté la plaque.",
         "espion_presse": "{annee} : {prenom} {nom} a dénoncé l'espion de la haie à la presse. Avec un croquis.",
         "espion_retour": "{annee} : l'homme de la haie est revenu, côté Coupe. Il avait des jumelles neuves."
       },
+      "traces_retract": {},
       "issues": [
         "cafe",
         "presse",
@@ -68493,6 +69741,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -68564,6 +69813,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -68692,6 +69942,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -68775,6 +70026,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -68920,6 +70172,7 @@
         "fils_ds": "{annee} : le fils du président a un bureau, « directeur sportif », avec la plaque. La caisse s'en souvient.",
         "fils_refuse": "{annee} : {nom} a refusé le fils du président au groupe. Le président a gardé le mot."
       },
+      "traces_retract": {},
       "issues": [
         "joueur",
         "ds",
@@ -68951,7 +70204,7 @@
       "weight": 0.9,
       "once": true,
       "every_season": false,
-      "min_season": 2,
+      "min_season": 1,
       "chance": 0.0,
       "cast": [
         "vecchio",
@@ -68974,6 +70227,22 @@
         {
           "id": "douche",
           "card": [
+            {
+              "id": "en.gigi.douche_derniere",
+              "if": [
+                "not",
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "gigi_staff"
+                    ]
+                  ]
+                ]
+              ]
+            },
             {
               "id": "en.gigi.douche_banc",
               "if": [
@@ -69133,6 +70402,7 @@
         "gigi_a_parle": "{annee} : Gigi Vecchio, entraîneur des gardiens, a dit trois mots à {nom} sous la douche. Ça a suffi.",
         "banc_gigi_promis": "{annee} : {nom} a promis à Gigi un banc à son nom derrière le but. À la craie, pour l'instant."
       },
+      "traces_retract": {},
       "issues": [
         "parle",
         "banc"
@@ -69142,27 +70412,80 @@
         "ritual": true
       },
       "when": [
-        "and",
+        "or",
         [
-          "call",
-          "flag",
+          "and",
           [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "gigi_staff"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "chars.vecchio.statut"
+            ],
             [
               "lit",
-              "gigi_staff"
+              "staff"
             ]
           ]
         ],
         [
-          "cmp",
-          "==",
+          "and",
           [
-            "path",
-            "chars.vecchio.statut"
+            "or",
+            [
+              "call",
+              "flag",
+              [
+                [
+                  "lit",
+                  "vecchio_promis"
+                ]
+              ]
+            ],
+            [
+              "call",
+              "flag",
+              [
+                [
+                  "lit",
+                  "gardien_jeune"
+                ]
+              ]
+            ]
           ],
           [
-            "lit",
-            "staff"
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "chars.vecchio.statut"
+            ],
+            [
+              "lit",
+              "present"
+            ]
           ]
         ]
       ]
@@ -69335,12 +70658,15 @@
         "carnet_ancien": "{annee} : {nom} a lu le carnet de l'ancien. L'adjoint y était à toutes les pages.",
         "carnet_meneche": "{annee} : le carnet de l'ancien est arrivé chez le journaliste. On ne sait pas comment."
       },
+      "traces_retract": {},
       "issues": [
         "lu",
         "rendu",
         "donne"
       ],
-      "issues_rares": []
+      "issues_rares": [
+        "donne"
+      ]
     },
     {
       "id": "en.cote_interim",
@@ -69550,6 +70876,7 @@
         "pari_interim": "{annee} : {nom} a parié cent francs sur son propre maintien au poste. Le ticket a été gardé.",
         "pari_contre_soi": "{annee} : {nom} a parié contre {pg, select, f{elle} other{lui}}. Poste gagné, cent francs perdus."
       },
+      "traces_retract": {},
       "issues": [
         "parie",
         "no_comment",
@@ -69587,7 +70914,7 @@
       "fallback": "nouvelles",
       "epilogue": {
         "caisse": -5,
-        "journal": "{annee} : la mairie de {ville} a classé le dossier de {club}. La maire a gardé la date au crayon dans son agenda."
+        "journal": "{annee} : la mairie de {ville} a classé le dossier. La maire a gardé la date au crayon dans son agenda."
       },
       "steps": [
         {
@@ -69722,6 +71049,7 @@
         "subvention_perdue": "{annee} : la mairie de {ville} a réduit la subvention. Le radiateur a toussé tout l'hiver.",
         "chantier_mairie": "{annee} : {nom} a accepté la tribune municipale, panneau compris. Gégé a compté les lettres."
       },
+      "traces_retract": {},
       "issues": [
         "promesse",
         "refus",
@@ -69757,7 +71085,7 @@
       "same_club": true,
       "fallback": "nouvelles",
       "epilogue": {
-        "journal": "{annee} : à {club}, le tableau de l'ancien a cessé d'être une question. Le vestiaire a compté les semaines de {nom}."
+        "journal": "{annee} : le tableau de l'ancien a cessé d'être une question. Le vestiaire a compté les semaines de {nom}."
       },
       "steps": [
         {
@@ -69851,6 +71179,7 @@
         "nouvelle_methode": "{annee} : {nom} a effacé la compo à la craie de l'ancien. Trois défaites, puis le reste.",
         "brehaut_ecarte": "{annee} : Bréhaut écarté par l'intérimaire. Le vestiaire s'est tu ; il n'a pas dit à qui il était."
       },
+      "traces_retract": {},
       "issues": [
         "methodes",
         "change",
@@ -69886,7 +71215,7 @@
       "same_club": true,
       "fallback": "nouvelles",
       "epilogue": {
-        "journal": "{annee} : {nom} et l'ancien se sont croisés au rond central. Depuis, la presse compte les points à chaque affiche."
+        "journal": "{annee} : {nom} et l'ancien se sont croisés au rond central. La presse compte les points à chaque affiche."
       },
       "steps": [
         {
@@ -69979,6 +71308,7 @@
         "guerre_des_mots": "{annee} : la guerre des mots entre {nom} et l'ancien. La presse a compté les points ; la Fédération aussi.",
         "poignee_ancien": "{annee} : {nom} a serré la main de l'ancien au rond central. La tribune a hésité, puis applaudi."
       },
+      "traces_retract": {},
       "issues": [
         "mots",
         "silence",
@@ -70164,6 +71494,9 @@
         "diplome": "{annee} : {prenom} {nom} a passé le diplôme d'entraîneur. L'examinatrice a tamponné « admis », puis signé.",
         "derogation": "{annee} : dérogation de six mois pour {nom}. Le tampon manque une signature."
       },
+      "traces_retract": {
+        "derogation": "{annee} : la dérogation de {nom} a été remplacée par le papier. Le tampon a enfin sa signature."
+      },
       "issues": [
         "diplome",
         "derogation",
@@ -70304,6 +71637,7 @@
         "adjoint_de_loco": "{annee} : {prenom} {nom}, adjoint du mystique. « Regardez la cassette », a-t-il dit, et rien d'autre.",
         "fuite_loco": "{annee} : il est venu, a regardé un entraînement depuis son seau, et il est reparti. Il a dit « la cassette »."
       },
+      "traces_retract": {},
       "issues": [
         "evince",
         "adjoint",
@@ -70339,7 +71673,7 @@
       "same_club": true,
       "fallback": "nouvelles",
       "epilogue": {
-        "journal": "{annee} : la tribune de {ville} a fini par choisir son camp sur {nom}. Elle a chanté l'ancien encore deux fois."
+        "journal": "{annee} : la tribune a fini par choisir son camp sur {nom}. Elle a chanté l'ancien encore deux fois."
       },
       "steps": [
         {
@@ -70424,6 +71758,9 @@
       "traces": {
         "kop_hostile": "{annee} : la tribune de {ville} a sifflé l'intérimaire et chanté l'ancien. Vingt minutes, chaque match.",
         "ancien_sali": "{annee} : au local, on a sali l'ancien pour faire une place à {nom}. La bâche avait un nom."
+      },
+      "traces_retract": {
+        "kop_hostile": "{annee} : la tribune de {ville} a cessé de chanter l'ancien. Gégé a rangé la bâche, pliée dans le bon sens."
       },
       "issues": [
         "adopte",
@@ -70571,6 +71908,9 @@
         "lanceur_alerte": "{annee} : {nom} a porté une lettre anonyme à la Fédération. Le vestiaire a appris un mot.",
         "lettre_publiee": "{annee} : la lettre anonyme sur l'ancien est parue dans la presse. Copie conforme."
       },
+      "traces_retract": {
+        "lanceur_alerte": "{annee} : {nom} a repris sa lettre à la Fédération. Berthomier a rendu l'enveloppe sans la commenter."
+      },
       "issues": [
         "couvre",
         "parle",
@@ -70606,7 +71946,7 @@
       "same_club": true,
       "fallback": "nouvelles",
       "epilogue": {
-        "journal": "{annee} : viré le lundi, rappelé le mercredi : {club} a tranché avant le week-end. Le bureau sentait le carton."
+        "journal": "{annee} : viré le lundi, rappelé le mercredi : le club a tranché avant le week-end. Le bureau sentait le carton."
       },
       "steps": [
         {
@@ -70720,6 +72060,7 @@
       "traces": {
         "rappele_par_aulard": "{annee} : viré le lundi, rappelé le mercredi. {nom} a dit oui ; le président a dit « mon »."
       },
+      "traces_retract": {},
       "issues": [
         "reste",
         "part"
@@ -71020,6 +72361,19 @@
               ]
             },
             {
+              "id": "en.interim.s1_rentree_prolonge",
+              "if": [
+                "call",
+                "flag",
+                [
+                  [
+                    "lit",
+                    "interim_prolonge"
+                  ]
+                ]
+              ]
+            },
+            {
               "id": "en.interim.s1_rentree"
             }
           ],
@@ -71074,6 +72428,19 @@
           "id": "s1_veille",
           "card": [
             {
+              "id": "en.interim.s1_veille_montee",
+              "if": [
+                "call",
+                "flag",
+                [
+                  [
+                    "lit",
+                    "montee_promise"
+                  ]
+                ]
+              ]
+            },
+            {
               "id": "en.interim.s1_veille"
             }
           ],
@@ -71117,6 +72484,19 @@
               ]
             },
             {
+              "id": "en.interim.rentree_cdi",
+              "if": [
+                "call",
+                "flag",
+                [
+                  [
+                    "lit",
+                    "cdi_signe"
+                  ]
+                ]
+              ]
+            },
+            {
               "id": "en.interim.rentree"
             }
           ],
@@ -71130,6 +72510,42 @@
         {
           "id": "veille",
           "card": [
+            {
+              "id": "en.interim.veille_bache",
+              "if": [
+                "or",
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "kop_hostile"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "ancien_sali"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "adopte_kop"
+                    ]
+                  ]
+                ]
+              ]
+            },
             {
               "id": "en.interim.veille"
             }
@@ -71157,6 +72573,10 @@
         "diplome_arrange": "{annee} : le diplôme de {nom} est arrivé un vendredi soir, signé par quelqu'un qui n'était pas là.",
         "ancien_rival": "{annee} : l'ancien a signé chez {rival}. Il « revient dans sa vallée » ; il vient d'ailleurs.",
         "groupe_lit_avant": "{annee} : à {club}, le vestiaire apprend tout par le journal. Bréhaut l'a fait remarquer, lentement."
+      },
+      "traces_retract": {
+        "cdi_signe": "{annee} : le « jusqu'en juin » de {nom} est redevenu un mois. La page deux est retournée dans le tiroir.",
+        "dechu": "{annee} : la plaque de {nom} est ressortie du tiroir, sous celle de l'autre. « De nouveau jusqu'à nouvel ordre. »"
       },
       "issues": [],
       "issues_rares": []
@@ -71477,6 +72897,7 @@
         "pacte_gege": "{annee} : {prenom} {nom} a promis le local rénové au virage. Gégé a gravé la date à la craie.",
         "ami_ultras": "{annee} : trois bières au local du virage. {prenom} {nom}, adopté{pg, select, f{e} other{}} par la tribune Nord."
       },
+      "traces_retract": {},
       "issues": [
         "pacte",
         "banderoles",
@@ -71747,9 +73168,10 @@
         "club_a_lancienne": "{annee} : {prenom} {nom} a renvoyé le fonds et sa canette. Un club à l'ancienne.",
         "nassir_sponsor": "{annee} : le maillot de {club} est orange fluo. {nom} a dit oui à la canette.",
         "nassir_pret": "{annee} : un prêt sans intérêt, une option sur Mbako, cinquante et un pour cent. {nom} a signé la page trois.",
-        "club_actif": "{annee} : le fonds a racheté {club} par fax. Le logo est orange ; « {nom} » en petit, sous « ambassadeur ».",
+        "club_actif": "{annee} : le fonds a racheté le club par fax. Le logo est orange ; « {nom} » en petit, sous « ambassadeur ».",
         "nassir_retire": "{annee} : les panneaux orange sont descendus dans la nuit. Le fonds a retiré ses panneaux, pas son numéro."
       },
+      "traces_retract": {},
       "issues": [
         "ancienne",
         "naming",
@@ -72058,6 +73480,7 @@
         "mbako_garde": "{annee} : trente millions refusés. {prenom} {nom} garde Lian Mbako ; la Commission ne range rien.",
         "mbako_mere": "{annee} : contrat pro pour Lian Mbako, seize ans. Sa mère a signé en trois exemplaires, sans agent."
       },
+      "traces_retract": {},
       "issues": [
         "vendu",
         "garde"
@@ -72646,13 +74069,14 @@
         "choix_maillots": "{annee} : {nom} a choisi les maillots neufs plutôt que le chauffage. Le vestiaire a soufflé dans ses mains.",
         "finale_gigi": "{annee} : dernier match, Gigi Vecchio dans les buts. {prenom} {nom} a tenu parole ; le jeune a regardé.",
         "finale_attaque": "{annee} : {prenom} {nom} a attaqué le dernier bloc. Le vestiaire a entendu, le président aussi.",
-        "parti_tete_haute": "{annee} : {prenom} {nom} a claqué la porte du bureau. Le virage a applaudi jusqu'au parking ; lundi, tout le monde était là.",
+        "parti_tete_haute": "{annee} : {nom} a claqué la porte du bureau. Le virage a applaudi jusqu'au parking ; lundi, tout le monde y est.",
         "fidele": "{annee} : {prenom} {nom} est resté{pg, select, f{e} other{}} malgré les offres. Josiane a ressorti le classeur.",
         "special": "{annee} : « C'est moi », a répondu {nom} à Massenet. Titre du lendemain : « Le Spécial ».",
         "projet_jeunes": "{annee} : {prenom} {nom} a tranché : les jeunes. Trois gamins des U19 sur la feuille de match.",
         "tribune_a_renover": "{annee} : {nom} a refusé le stade de la ville. La tribune Nord garde ses fissures, et son nom.",
         "vukic_dauphin": "{annee} : Zoran Vukić a relu le discours du président. Son nom est dedans ; celui de {nom}, non."
       },
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "theme": "caisse"
@@ -72793,6 +74217,7 @@
         "mbako_revenu": "{annee} : Lian Mbako est revenu à {club}. Sa mère a réécrit la clause ; Gégé a ressorti la bâche.",
         "mbako_refuse_retour": "{annee} : Mbako voulait revenir. {nom} a dit que le club avait vécu sans lui."
       },
+      "traces_retract": {},
       "issues": [
         "revenu",
         "refuse"
@@ -72838,7 +74263,7 @@
       "fallback": "nouvelles",
       "epilogue": {
         "caisse": -5,
-        "journal": "{annee} : à {club}, l'affaire des salaires s'est réglée. Le vestiaire connaît maintenant le chemin du distributeur."
+        "journal": "{annee} : l'affaire des salaires s'est réglée. Le vestiaire connaît maintenant le chemin du distributeur."
       },
       "steps": [
         {
@@ -73043,6 +74468,9 @@
         "salaires_retard": "{annee} : les salaires sont partis le 12 au lieu du 5. Le vestiaire a compté les jours au distributeur.",
         "nassir_paie": "{annee} : le fonds a payé les salaires de {club}. Par virement, avant le fax.",
         "fede_dossier": "{annee} : la Fédération a ouvert un dossier au nom de {nom}. Sur la tranche, en majuscules."
+      },
+      "traces_retract": {
+        "salaires_avances": "{annee} : {nom} a cessé d'avancer la paie de sa poche. La banque a noté le mois où ça s'arrête."
       },
       "issues": [
         "avance",
@@ -73311,10 +74739,11 @@
       "exclusive_with": [],
       "hint": "Gigi prend sa retraite chaque juin. Chaque juin.",
       "traces": {
-        "vecchio_promis": "{annee} : Gigi Vecchio, quarante et un ans, a obtenu du coach une dernière saison dans les buts. {prenom} {nom} a promis.",
+        "vecchio_promis": "{annee} : Gigi Vecchio, quarante et un ans, a obtenu une dernière saison dans les buts. {nom} a promis.",
         "gigi_staff": "{annee} : Gigi Vecchio raccroche et reste, au staff. Il en a vu d'autres ; il les montrera.",
-        "gardien_jeune": "{annee} : le jeune prend les gants de Gigi Vecchio. Décision de {prenom} {nom} ; le vieux a regardé ailleurs."
+        "gardien_jeune": "{annee} : le jeune prend les gants de Gigi Vecchio. Décision de {nom} ; le vieux a regardé ailleurs."
       },
+      "traces_retract": {},
       "issues": [
         "finale",
         "jeune",
@@ -73379,6 +74808,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "theme": "vestiaire"
@@ -73423,6 +74853,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "theme": "corps"
@@ -73467,6 +74898,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -73523,6 +74955,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -73579,6 +75012,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -73635,6 +75069,7 @@
       "excludes": [],
       "exclusive_with": [],
       "traces": {},
+      "traces_retract": {},
       "issues": [],
       "issues_rares": [],
       "when": [
@@ -73811,6 +75246,7 @@
         "petition_retiree": "{annee} : la pétition du vestiaire, déchirée par {nom}. Le capitaine en a gardé un morceau.",
         "petition_presse": "{annee} : la pétition du vestiaire dans le journal, avec les noms. {prenom} {nom} a confirmé."
       },
+      "traces_retract": {},
       "issues": [
         "porte",
         "retire",
@@ -73954,6 +75390,7 @@
         "adieu_banc": "{annee} : {prenom} {nom} a regardé son dernier match des Cobalts depuis le banc.",
         "hymne_1990": "{annee} : pendant son dernier hymne, {prenom} {nom} regardait le sol. Il a dit : 1990."
       },
+      "traces_retract": {},
       "issues": [
         "y_va",
         "refuse",
@@ -74133,6 +75570,7 @@
         "promis_camille": "{annee} : la maison a été achetée ici. {prenom} {nom} l'avait promis à la table.",
         "maison_pays_signee": "{annee} : l'enfant prodigue est rentré{pg, select, f{e} other{}} en Division 2. Sa mère a encadré la page."
       },
+      "traces_retract": {},
       "issues": [
         "rentre",
         "reste",
@@ -74293,6 +75731,7 @@
         "memoires_lisses": "{annee} : les mémoires de {nom}, version de Noël. Personne ne se souvient de la page cent douze.",
         "chapitre_assume": "{annee} : {prenom} {nom} a refusé de retirer le chapitre trois. Plus de passe pendant une semaine."
       },
+      "traces_retract": {},
       "issues": [
         "verite",
         "lisse"
@@ -74445,6 +75884,7 @@
         "jubile_charite": "{annee} : la recette du jubilé de {nom} est allée à la buvette des anciens. Personne n'a compté.",
         "place_14a": "{annee} : {prenom} {nom} s'est assis{pg, select, f{e} other{}} cinq minutes à la 14A. On lui a expliqué le stade."
       },
+      "traces_retract": {},
       "issues": [
         "accepte",
         "reporte",
@@ -74615,6 +76055,7 @@
         "consultant_assume": "{annee} : {prenom} {nom} a gardé le fauteuil du dimanche. Il joue moins ; il juge mieux.",
         "notes_partagees": "{annee} : {prenom} {nom} et l'adjoint ont comparé leurs notes. D'accord une fois sur deux."
       },
+      "traces_retract": {},
       "issues": [
         "accepte",
         "refuse"
@@ -74804,6 +76245,7 @@
         "pharmacie_propre": "{annee} : {prenom} {nom} a bu de l'eau. Le Doc a rangé le flacon, et l'a regardé{pg, select, f{e} other{}} autrement.",
         "dope_a_son_insu": "{annee} : {prenom} {nom} ne savait pas ce qu'il y avait dans le flacon. La kiné l'a dit à la commission."
       },
+      "traces_retract": {},
       "issues": [
         "flacon",
         "propre",
@@ -75009,6 +76451,7 @@
         "plume_parle": "{annee} : la journaliste a écrit à {prenom} {nom}. Il a parlé ; elle a publié, avec l'encadré.",
         "temoin_brigade": "{annee} : {prenom} {nom} a coopéré. Trois heures, un café dans un couvercle, un témoin."
       },
+      "traces_retract": {},
       "issues": [
         "refuse",
         "parie",
@@ -75929,6 +77372,7 @@
         "vers_entraineur": "{annee} : le survêtement de la réserve était à la taille de {nom}. Il l'avait pris exprès.",
         "genou_grave": "{annee} : le genou de {prenom} {nom} a eu le dernier mot. Il l'avait dit avant."
       },
+      "traces_retract": {},
       "issues": [
         "prolonge",
         "parti",
@@ -76108,6 +77552,7 @@
         "une_de_plus": "{annee} : une saison de plus pour {prenom} {nom}. La croix de juin a été effacée.",
         "page_lue_vukic": "{annee} : l'adjoint a montré la page à {prenom} {nom}. Dix ans, vus de la touche."
       },
+      "traces_retract": {},
       "issues": [
         "raccroche",
         "encore"
@@ -76244,6 +77689,7 @@
       "traces": {
         "vecchio_vraie_retraite": "{annee} : la vraie retraite du vieux gardien, racontée au comptoir. Les gants sont partis au jeune."
       },
+      "traces_retract": {},
       "issues": [
         "premiere",
         "vraie"
@@ -76428,6 +77874,7 @@
         "derby_perdu": "{annee} : derby perdu. {prenom} {nom} a joué, ou pas ; la ville s'en souvient aussi.",
         "salue_ancien_virage": "{annee} : {prenom} {nom} a salué son ancien virage, en face. Le virage n'a pas répondu."
       },
+      "traces_retract": {},
       "issues": [
         "gagne",
         "perdu"
@@ -76978,6 +78425,7 @@
         "casier_nomme": "{annee} : le casier du fond a reçu un nom, au feutre presque sec. Celui de {nom}.",
         "destination_choisie": "{annee} : sans agent, {prenom} {nom} a lu les fax {pg, select, f{elle-même} other{lui-même}}. Et choisi."
       },
+      "traces_retract": {},
       "issues": [
         "vendu",
         "fidele",
@@ -77419,12 +78867,13 @@
       "exclusive_with": [],
       "hint": "La Nord a peint ton nom sur vingt mètres. Elle veut une promesse.",
       "traces": {
-        "enfant_du_pays": "{annee} : vingt mètres de bâche à {ville}. {prenom} {nom} a promis de rester. À la craie, pour l'instant.",
+        "enfant_du_pays": "{annee} : vingt mètres de bâche à {ville}. {nom} a promis de rester. À la craie, pour l'instant.",
         "honnete_tribune": "{annee} : {prenom} {nom} a dit à la Nord {pg, select, f{qu'elle ne promettait} other{qu'il ne promettait}} rien. Elle a gardé la bâche.",
         "ami_ultras": "{annee} : trois bières au local du virage. La Nord a adopté son numéro avant son nom.",
         "bache_a_la_cave": "{annee} : {prenom} {nom} est reparti{pg, select, f{e} other{}} avec les vingt mètres. Ils sont à la cave, pliés.",
         "bache_cendres": "{annee} : la bâche de {prenom} {nom} a brûlé le soir du but. Le local a gardé les œillets, dans une boîte."
       },
+      "traces_retract": {},
       "issues": [
         "promis",
         "honnete"
@@ -77583,6 +79032,7 @@
         "capitaine": "{annee} : Titi Bréhaut a passé le brassard à {prenom} {nom}. Un peu trop fort sur l'épaule.",
         "brassard_gigi": "{annee} : le brassard est passé sur le gant de Gigi Vecchio. Il tombe deux fois par match."
       },
+      "traces_retract": {},
       "issues": [
         "accepte",
         "mouton",
@@ -77818,6 +79268,7 @@
         "demande_vente": "{annee} : {prenom} {nom} a demandé à partir. Le président a noté « deux pour le prix d'un ».",
         "mbako_blesse_par_toi": "{annee} : {prenom} {nom} a blessé Lian Mbako. Sa mère, en tribune, a noté."
       },
+      "traces_retract": {},
       "issues": [
         "mentor",
         "rival",
@@ -77991,6 +79442,7 @@
         "coach_critique": "{annee} : {prenom} {nom} a critiqué le coach hors micro. Le coach a lu aussi.",
         "meme_assume": "{annee} : {prenom} {nom} a ri de son propre mème. Le mug s'est vendu."
       },
+      "traces_retract": {},
       "issues": [
         "modeste",
         "special",
@@ -78200,6 +79652,7 @@
         "image_propre": "{annee} : {prenom} {nom} a payé ses impôts, et l'addition du restaurant est restée à Fardelli.",
         "camille_a_lu": "{annee} : Camille a lu le relevé avant tout le monde. La moitié a été régularisée."
       },
+      "traces_retract": {},
       "issues": [
         "signe",
         "refuse",
@@ -78332,6 +79785,7 @@
         "selection_refusee": "{annee} : {prenom} {nom} a dit non à la Fédération. On ne dit pas non deux fois.",
         "chambre_fauvel": "{annee} : {prenom} {nom} a dormi dans la chambre du plus vieux. {pg, select, f{Elle} other{Il}} a entendu 1990."
       },
+      "traces_retract": {},
       "issues": [
         "cobalts",
         "refus"
@@ -78531,6 +79985,7 @@
         "loft_tenu": "{annee} : {prenom} {nom} a tenu le loft avec les U17. Le petit lui faisait la passe.",
         "blessure_inventee": "{annee} : {prenom} {nom} était « blessé{pg, select, f{e} other{}} » le jour des recruteurs. Le Doc a signé."
       },
+      "traces_retract": {},
       "issues": [
         "bosse",
         "boude",
@@ -78700,6 +80155,7 @@
         "camille_bac_aidee": "{annee} : {prenom} {nom} a fait réviser Camille. Elle a eu le bac ; {pg, select, f{elle} other{lui}}, la D1.",
         "voiture_camille": "{annee} : la voiture du transfert est au nom de Camille. Elle apprend à conduire dessus."
       },
+      "traces_retract": {},
       "issues": [
         "aide",
         "apres",
@@ -78977,6 +80433,7 @@
         "gigi_genou_ecoute": "{annee} : {prenom} {nom} a levé le pied une semaine. Le genou a dit merci, une fois.",
         "gigi_encore_une": "{annee} : Gigi Vecchio en fait encore une. Il a acheté le survêtement lui-même."
       },
+      "traces_retract": {},
       "issues": [
         "ecoute",
         "ignore"
@@ -79267,6 +80724,7 @@
         "genou_cache": "{annee} : {prenom} {nom} boite dans l'escalier, et le Doc ne le sait pas encore.",
         "bilan_arrondi": "{annee} : le bilan médical de {prenom} {nom} a été arrondi. Le genou, non."
       },
+      "traces_retract": {},
       "issues": [
         "bistouri",
         "piqure",
@@ -79472,6 +80930,7 @@
         "blason_embrasse": "{annee} : {prenom} {nom} a embrassé le blason devant la Nord. Le club avait payé.",
         "fax_rate": "{annee} : le transfert de {prenom} {nom} est mort dans un fax, à 23 h 59 min 58 s."
       },
+      "traces_retract": {},
       "issues": [
         "part",
         "refuse",
@@ -79718,6 +81177,7 @@
         "exil_dore": "{annee} : {prenom} {nom} est parti{pg, select, f{e} other{}} pour l'or. Le niveau est resté entre eux.",
         "camille_reste": "{annee} : Camille n'est pas venue au désert. On s'appelle à des heures impossibles."
       },
+      "traces_retract": {},
       "issues": [
         "part",
         "reste",
@@ -79917,6 +81377,7 @@
         "retour_usine_signe": "{annee} : l'usine a racheté {prenom} {nom}. Moins cher. La bâche dit « (BIS) ».",
         "tifo_adieu": "{annee} : {prenom} {nom} a marqué contre l'usine et a baissé la tête. La Nord a applaudi un visiteur."
       },
+      "traces_retract": {},
       "issues": [
         "celebre",
         "baisse",
@@ -80062,6 +81523,7 @@
       "traces": {
         "capitaine": "{annee} : le groupe a voté {prenom} {nom}. Bréhaut n'avait pas voté ; il a mis le brassard {pg, select, f{elle-même} other{lui-même}}."
       },
+      "traces_retract": {},
       "issues": [
         "prend",
         "refuse",
@@ -80325,6 +81787,7 @@
         "clow_stage": "{annee} : {prenom} {nom} est arrivé{pg, select, f{e} other{}} à sept heures au stage. La chaise était devant.",
         "vers_entraineur": "{annee} : {prenom} {nom} a le papier. La réserve a un entraîneur, ou deux."
       },
+      "traces_retract": {},
       "issues": [
         "diplome",
         "pas_encore",
@@ -80382,7 +81845,7 @@
         },
         "nassir": {
           "fonction": "tentateur",
-          "target": 1.5
+          "target": 0.9
         },
         "meneche": {
           "fonction": "chroniqueur",
@@ -80390,7 +81853,7 @@
         },
         "fardelli": {
           "fonction": "vautour",
-          "target": 1
+          "target": 0.9
         },
         "clow": {
           "fonction": "mentor",
@@ -80402,7 +81865,7 @@
         },
         "brehaut": {
           "fonction": "capitaine",
-          "target": 1.5
+          "target": 0.9
         },
         "legruet": {
           "fonction": "instance",
@@ -80438,7 +81901,7 @@
           "pool": [
             {
               "arc": "en.kop_qui_aime_trop",
-              "poids": 0.22,
+              "poids": 0.3,
               "signature": true,
               "if": [
                 "and",
@@ -80666,6 +82129,43 @@
                   ]
                 ]
               ]
+            },
+            {
+              "arc": "en.gigi_staff",
+              "poids": 6.0,
+              "if": [
+                "or",
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "gigi_staff"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "vecchio_promis"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "gardien_jeune"
+                    ]
+                  ]
+                ]
+              ]
             }
           ]
         },
@@ -80761,12 +82261,35 @@
               "arc": "en.gigi_staff",
               "poids": 12.0,
               "if": [
-                "call",
-                "flag",
+                "or",
                 [
+                  "call",
+                  "flag",
                   [
-                    "lit",
-                    "gigi_staff"
+                    [
+                      "lit",
+                      "gigi_staff"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "vecchio_promis"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "gardien_jeune"
+                    ]
                   ]
                 ]
               ]
@@ -80916,15 +82439,58 @@
           "id": "promu_deux_maintiens",
           "titre": "Deux maintiens de suite",
           "when": [
-            "cmp",
-            ">=",
+            "or",
             [
-              "path",
-              "vars.saisons_tenues"
+              "cmp",
+              ">=",
+              [
+                "path",
+                "vars.saisons_tenues"
+              ],
+              [
+                "lit",
+                2
+              ]
             ],
             [
-              "lit",
-              2
+              "and",
+              [
+                "cmp",
+                ">=",
+                [
+                  "path",
+                  "vars.saisons_tenues"
+                ],
+                [
+                  "lit",
+                  1
+                ]
+              ],
+              [
+                "or",
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "pacte_gege"
+                    ]
+                  ]
+                ],
+                [
+                  "cmp",
+                  ">=",
+                  [
+                    "path",
+                    "stats.saisons"
+                  ],
+                  [
+                    "lit",
+                    3
+                  ]
+                ]
+              ]
             ]
           ],
           "indice": "Tenir. Encore."
@@ -80933,7 +82499,7 @@
           "id": "promu_a_lancienne",
           "titre": "Le club à l'ancienne",
           "when": [
-            "and",
+            "or",
             [
               "call",
               "flag",
@@ -80945,15 +82511,13 @@
               ]
             ],
             [
-              "cmp",
-              ">=",
+              "call",
+              "flag",
               [
-                "path",
-                "stats.saisons"
-              ],
-              [
-                "lit",
-                3
+                [
+                  "lit",
+                  "nassir_retire"
+                ]
               ]
             ]
           ],
@@ -80963,21 +82527,44 @@
           "id": "promu_banc_gigi",
           "titre": "Le banc de Gigi",
           "when": [
-            "cmp",
-            "==",
+            "or",
+            [
+              "cmp",
+              "==",
+              [
+                "call",
+                "arc_outcome",
+                [
+                  [
+                    "lit",
+                    "en.vieux_gardien"
+                  ]
+                ]
+              ],
+              [
+                "lit",
+                "staff"
+              ]
+            ],
             [
               "call",
-              "arc_outcome",
+              "flag",
               [
                 [
                   "lit",
-                  "en.vieux_gardien"
+                  "banc_gigi_promis"
                 ]
               ]
             ],
             [
-              "lit",
-              "staff"
+              "call",
+              "flag",
+              [
+                [
+                  "lit",
+                  "gigi_a_parle"
+                ]
+              ]
             ]
           ],
           "indice": "Un gardien de quarante et un ans a autre chose à donner que ses gants."
@@ -81198,7 +82785,7 @@
       ],
       "programme": {
         "0": {
-          "prendre": 2,
+          "prendre": 3,
           "fenetre": [
             1,
             14
@@ -81208,7 +82795,7 @@
           "pool": [
             {
               "arc": "en.vestiaire_ancien",
-              "poids": 0.42,
+              "poids": 1.05,
               "signature": true,
               "if": [
                 "cmp",
@@ -81225,7 +82812,7 @@
             },
             {
               "arc": "en.diplome",
-              "poids": 1.0,
+              "poids": 0.85,
               "if": [
                 "cmp",
                 "<=",
@@ -81241,7 +82828,7 @@
             },
             {
               "arc": "en.grand_nom",
-              "poids": 1.0,
+              "poids": 1.5,
               "if": [
                 "cmp",
                 "<=",
@@ -81257,7 +82844,7 @@
             },
             {
               "arc": "en.kop_doute",
-              "poids": 1.0,
+              "poids": 2.2,
               "if": [
                 "and",
                 [
@@ -81288,7 +82875,7 @@
             },
             {
               "arc": "en.bureau_ancien",
-              "poids": 0.9,
+              "poids": 0.7,
               "if": [
                 "cmp",
                 "<=",
@@ -81304,7 +82891,7 @@
             },
             {
               "arc": "en.cote_interim",
-              "poids": 0.9,
+              "poids": 0.7,
               "if": [
                 "cmp",
                 "<=",
@@ -81320,15 +82907,15 @@
             },
             {
               "arc": "en.adjoint_dine",
-              "poids": 0.55
+              "poids": 0.95
             },
             {
               "arc": "en.vieux_gardien",
-              "poids": 0.5
+              "poids": 2.0
             },
             {
               "arc": "en.salaires_retard",
-              "poids": 0.9,
+              "poids": 0.8,
               "if": [
                 "cmp",
                 "<",
@@ -81344,11 +82931,11 @@
             },
             {
               "arc": "en.prodige",
-              "poids": 0.8
+              "poids": 0.9
             },
             {
               "arc": "co.cartons_camille",
-              "poids": 0.4,
+              "poids": 0.3,
               "if": [
                 "not",
                 [
@@ -81489,7 +83076,7 @@
             },
             {
               "arc": "en.gigi_staff",
-              "poids": 3.2,
+              "poids": 5.4,
               "if": [
                 "call",
                 "flag",
@@ -81532,6 +83119,26 @@
                   [
                     [
                       "lit",
+                      "match_arrange_couvert"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
+                      "enveloppe_denoncee"
+                    ]
+                  ]
+                ],
+                [
+                  "call",
+                  "flag",
+                  [
+                    [
+                      "lit",
                       "enveloppe_promise"
                     ]
                   ]
@@ -81560,7 +83167,7 @@
             },
             {
               "arc": "en.retour_mbako",
-              "poids": 5.2,
+              "poids": 11.0,
               "if": [
                 "call",
                 "flag",
@@ -81692,7 +83299,17 @@
               ],
               [
                 "lit",
-                1
+                3
+              ]
+            ],
+            [
+              "call",
+              "flag",
+              [
+                [
+                  "lit",
+                  "cdi_signe"
+                ]
               ]
             ]
           ],
@@ -83074,6 +84691,19 @@
                 "lit",
                 "armed"
               ]
+            ],
+            [
+              "not",
+              [
+                "call",
+                "seen",
+                [
+                  [
+                    "lit",
+                    "en.alarme.tribunes_haut_gege"
+                  ]
+                ]
+              ]
             ]
           ]
         },
@@ -83352,7 +84982,8 @@
   "director": {
     "nouvelle_slots": {
       "entraineur": [
-        4,
+        3,
+        6,
         9,
         13
       ],
@@ -83365,7 +84996,7 @@
     },
     "nouvelles_max": 4,
     "gap_max": 2,
-    "soft_steps_max": 10,
+    "soft_steps_max": 12,
     "min_active": 2,
     "max_active": 4,
     "events_max": 1,
@@ -83374,6 +85005,7 @@
     "unes_breves": 3,
     "journal_par_saison": 12,
     "ouverture_ecart": 3,
+    "ouverture_echeance": 5,
     "phase_mult": {
       "mercato": {
         "presaison": 4,
@@ -102238,7 +103870,7 @@
         "roles": [
           "entraineur"
         ],
-        "text": "Tour de Coupe. C'est la dernière chose que tu peux encore gagner cette saison. Tout le monde le sait, personne ne le dit.",
+        "text": "Tour de Coupe. C'est la dernière chose que {nom} peut encore gagner cette saison. Tout le monde le sait, personne ne le dit.",
         "left": "On y va"
       },
       {
@@ -102257,14 +103889,14 @@
         "roles": [
           "entraineur"
         ],
-        "text": "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Le club adverse a prévu deux fûts.",
+        "text": "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Sur l'affiche du club adverse : « {NOM} ».",
         "left": "On y va"
       },
       {
         "roles": [
           "entraineur"
         ],
-        "text": "Tour de Coupe. Le tirage t'offre un adversaire surprise, et un vestiaire qui n'a pas envie d'y penser.",
+        "text": "Tour de Coupe. Le tirage offre à {nom} un adversaire surprise, et un vestiaire qui n'a pas envie d'y penser.",
         "left": "On y va"
       },
       {
@@ -103183,8 +104815,8 @@
           ]
         ],
         "text": "{minute}e minute · {score}. On te regarde comme on regarde un champion : en attendant la faute. Dernier quart d'heure.",
-        "left": "Sûr",
-        "right": "Risqué"
+        "left": "Comme un champion",
+        "right": "Comme avant"
       },
       {
         "when": [
@@ -103200,8 +104832,8 @@
           ]
         ],
         "text": "{minute}e minute · {score}. Le virage chante depuis la vingtième et il ne s'arrêtera pas. Ce qu'on décide ici, on le racontera en juin.",
-        "left": "Sûr",
-        "right": "Risqué"
+        "left": "Je joue le point",
+        "right": "Je joue le virage"
       },
       {
         "when": [
@@ -103283,29 +104915,29 @@
           ]
         ],
         "text": "{minute}e minute · {score}. Dernier quart d'heure. Ce que tu décides maintenant, on le racontera en juin, dans les deux sens.",
-        "left": "Le choix sûr",
-        "right": "Le choix risqué"
+        "left": "On ferme",
+        "right": "On va chercher"
       },
       {
         "roles": [
           "entraineur"
         ],
         "text": "{minute}e minute · {score}. Le match bascule ici, et tout le monde regarde ton banc. Deux façons de faire.",
-        "left": "Le choix sûr",
-        "right": "Le choix risqué"
+        "left": "Je gère",
+        "right": "Je tente"
       },
       {
         "roles": [
           "joueur"
         ],
         "text": "{minute}e minute · {score}. Le match bascule ici, et le ballon revient vers toi. Deux façons de le prendre.",
-        "left": "Le choix sûr",
-        "right": "Le choix risqué"
+        "left": "Je la joue simple",
+        "right": "Je tente le geste"
       },
       {
         "text": "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble.",
-        "left": "Le choix sûr",
-        "right": "Le choix risqué"
+        "left": "On assure",
+        "right": "On y va"
       }
     ],
     "aftermatch": [
@@ -104262,7 +105894,9 @@
         "speaker": "aulard",
         "text": "« On continue l'aventure, {toi}, ou tu tentes autre chose ? »",
         "left": "Je reste",
-        "right": "Je réclame plus de moyens"
+        "right": "Je réclame plus de moyens",
+        "answer_left": "Il repose le carnet à souches sans l'ouvrir. « Alors on ne change rien. »",
+        "answer_right": "Il ouvre le carnet à souches, regarde la première ligne, et le referme."
       },
       {
         "when": [
@@ -104489,12 +106123,16 @@
         "speaker": "fardelli",
         "text": "« On continue l'aventure, {toi}, ou on tente autre chose ailleurs ? »",
         "left": "Je reste",
-        "right": "Je réclame plus de moyens"
+        "right": "Je réclame plus de moyens",
+        "answer_left": "Il range le carnet sans noter de numéro. « On se rappelle en juin, alors. »",
+        "answer_right": "Il note un chiffre, le barre, en note un autre. Il ne te le montre pas."
       },
       {
         "text": "{patron} : « On continue l'aventure, ou tu tentes autre chose ? »",
         "left": "Je reste",
-        "right": "Je réclame plus de moyens"
+        "right": "Je réclame plus de moyens",
+        "answer_left": "Il repose le carnet à souches sans l'ouvrir. La saison suivante est déjà écrite.",
+        "answer_right": "Il repose le carnet à souches et regarde par la fenêtre. « On verra en juin. »"
       }
     ],
     "bilan_carrefour": [
@@ -104769,5 +106407,5 @@
       }
     ]
   },
-  "hash": "247040e6"
+  "hash": "7c83e9d3"
 }

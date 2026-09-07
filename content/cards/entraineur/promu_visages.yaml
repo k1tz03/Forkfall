@@ -101,3 +101,174 @@ cards:
       label: "Quand j'aurai le temps"
       effects: {tribunes: "-", direction: "+"}
       answer: "Il compte qui est venu, le mardi suivant. Il compte à voix haute."
+
+  # ═══════════════════════ Passe « récurrence du casting » (budget § 5.2) ═════
+  # Quatre visages du cast n'atteignaient pas leur cible dans 80 % des premières
+  # saisons : Nassir 51 %, Fardelli 50 %, Bréhaut 67 %, Ménèche 76 %. Les trois
+  # premiers ne parlent qu'à l'intérieur d'intrigues qui, en S0, ne s'ouvrent
+  # qu'une fois sur deux — hors intrigue, ils n'avaient aucune carte de sac. Le
+  # remède du fichier (baisser le `target`) était déjà pris deux fois ; ici on
+  # écrit ce qui manquait, parce que `target` entre aussi dans `faceFactor` :
+  # une cible que le contenu ne porte pas ne fait pas revenir le visage.
+  #
+  # Elles servent aussi la bande de tons de la S1 (47 % de léger pour un
+  # plancher de 50 %) : la moitié sont `leger` et lisibles dès la S1.
+
+  # ---------------------------------------------------------- Fardelli, l'agent
+  # Voix de la fiche (ch. 02) : « mon ami », le prix avant le nom, la doudoune
+  # qui n'est pas lui mais qui a sa carte.
+  - id: en.fardelli.parking_doudoune
+    roles: [entraineur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: leger
+    once: true
+    when: "season <= 1"
+    text: "Un homme en doudoune contre ta portière, la main déjà tendue : « Rocco Fardelli. On monte en Division 1, mon ami, et personne ne m'a appelé. Je prends un café, ou je prends mal ? »"
+    left:
+      label: "Un café, alors"
+      effects: {direction: "+", relation: {fardelli: 1}, parole: -1}
+      answer: "Le café dure quarante minutes. Il n'a rien demandé ; il a tout noté."
+    right:
+      label: "Ni l'un ni l'autre"
+      effects: {vestiaire: "+", relation: {fardelli: -1}}
+      answer: "Il remonte la fermeture jusqu'au menton. « On se reverra en janvier », et il a raison."
+
+  - id: en.fardelli.liste_de_trois
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents, risk:caisse]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    cooldown: 25
+    when: "season <= 2 && !flag('club_actif')"
+    text: "Fardelli pose une feuille pliée en deux : « Trois noms, {toi}, trois joueurs libres, gratuits pour le club. Je me paie sur le quatrième, celui que vous me vendrez en juin. »"
+    left:
+      label: "Je prends la feuille"
+      effects: {force: 1, caisse: "+", relation: {fardelli: 1}, parole: -1}
+      answer: "Trois libres arrivent en août. En juin, il vient chercher le quatrième, et il sait déjà lequel."
+    right:
+      label: "Je paie mes joueurs"
+      effects: {caisse: "--", vestiaire: "+", relation: {fardelli: -1}}
+      answer: "Il replie la feuille dans le même pli. Elle ressort chez le voisin, à la virgule près."
+
+  # ---------------------------------------------------------- Bréhaut, capitaine
+  # Tic de la fiche : « Le groupe vit bien. » Il le dit surtout quand c'est faux.
+  - id: en.brehaut.groupe_vit_bien
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: brehaut
+    tone: leger
+    once: true
+    when: "season <= 1"
+    text: "Titi Bréhaut, brassard sur l'avant-bras, sans le mettre : « Le groupe vit bien, coach. Il vit bien à onze, un peu moins à dix-huit. Vous comptez comment, vous ? »"
+    left:
+      label: "Je compte à dix-huit"
+      effects: {vestiaire: "++", force: -1, relation: {brehaut: 1}}
+      answer: "Il hoche la tête et va prévenir les sept autres. Il les avait déjà prévenus."
+    right:
+      label: "Je compte à onze"
+      effects: {force: 1, vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Il enfile le brassard. « Le groupe vit bien », répète-t-il, plus bas."
+
+  - id: en.brehaut.chaussures_du_frere
+    roles: [entraineur]
+    arc: agents
+    tags: [agents, vestiaire]
+    speaker: brehaut
+    tone: leger
+    once: true
+    cooldown: 25
+    when: "season <= 2"
+    text: "Le capitaine, un carton de chaussures sous le bras : « Mon frère fait agent depuis mardi. Il a offert ça à tout le monde, pointure au hasard. Je les rends, ou on fait comme si ? »"
+    left:
+      label: "On fait comme si"
+      effects: {vestiaire: "+", direction: "-", relation: {brehaut: 1, fardelli: -1}}
+      answer: "Personne ne rend rien. Trois joueurs jouent en trente-neuf, dont un en quarante-deux."
+    right:
+      label: "Tout revient au carton"
+      effects: {parole: 1, vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Le carton repart entier. Le frère revient en janvier, avec des survêtements."
+
+  # -------------------------------------------------- Cheikh Ilyas, avant l'arc
+  # Le tentateur du postulat ne parlait qu'une fois son intrigue ouverte : une
+  # carrière sur deux ne le voyait jamais en S0. Ici il ne propose rien — il
+  # regarde, et il fait goûter.
+  - id: en.nassir.canette_parking
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: nassir
+    tone: leger
+    once: true
+    when: "season <= 1 && !flag('club_a_lancienne') && !flag('club_actif')"
+    text: "Un homme très calme distribue des canettes orange sur le parking, aux gamins d'abord : « Je ne viens rien vendre, {toi}. Je viens voir combien vous êtes. Goûtez, c'est trop sucré. »"
+    left:
+      label: "Je goûte"
+      effects: {caisse: "+", tribunes: "-", relation: {nassir: 1}}
+      answer: "C'est trop sucré. Il le sait, il le dit avant toi, et il repart en notant le chiffre du parking."
+    right:
+      label: "Le parking est au club"
+      effects: {tribunes: "+", relation: {nassir: -1}, parole: 1}
+      answer: "Il ramasse les canettes une par une, sans se presser. Les gamins gardent les leurs."
+
+  # -------------------------------------- Trois respirations de S1+ (bande de tons)
+  - id: en.gege.bache_qui_seche
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, decor]
+    speaker: gege
+    tone: leger
+    once: true
+    cooldown: 20
+    when: "season >= 1"
+    text: "Gégé, les mains pleines de peinture : « Vingt mètres de bâche, et il pleut depuis mardi. On la sort humide dimanche, ou on garde le slogan pour l'an prochain ? »"
+    left:
+      label: "Sortez-la humide"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "Elle sort. Elle pèse trois fois son poids, et le virage la tient quand même une mi-temps."
+    right:
+      label: "Gardez-la au sec"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "Elle sèche au local, roulée, avec les quatre autres qui n'ont jamais servi."
+
+  - id: en.vukic.velo_du_lundi
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vukic
+    tone: leger
+    once: true
+    cooldown: 20
+    when: "season >= 1"
+    text: "Vukić, son vélo à la main dans le couloir : « Le lundi, je viens en vélo. Vingt-deux kilomètres. Les joueurs trouvent ça drôle. Je continue, ou je fais comme tout le monde ? »"
+    left:
+      label: "Continue en vélo"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Le lundi suivant, deux joueurs sont venus en vélo. Le troisième lundi, ils étaient cinq."
+    right:
+      label: "Fais comme tout le monde"
+      effects: {direction: "+", relation: {vukic: -1}}
+      answer: "Il range le vélo derrière le local. Il ne le reprend pas, et il ne l'oublie pas."
+
+  - id: en.vecchio.gants_a_secher
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, objet, decor]
+    speaker: vecchio
+    tone: leger
+    once: true
+    cooldown: 20
+    when: "season >= 1 && chars.vecchio.statut != 'parti'"
+    text: "Gigi Vecchio, deux paires de gants sur le radiateur : « J'en ai vu d'autres, des radiateurs. Les neufs sèchent mal, les vieux sèchent bien. On commande, ou on lave ? »"
+    left:
+      label: "On lave"
+      effects: {caisse: "+", vestiaire: "-", relation: {vecchio: 1}}
+      answer: "Il lave les siens dans l'évier du local. Il lave aussi ceux du jeune, sans le dire au jeune."
+    right:
+      label: "On commande"
+      effects: {caisse: "-", vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Deux paires arrivent en novembre. Il en garde une dans son casier, encore emballée."

@@ -30,7 +30,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : à {club}, le tableau de l'ancien a cessé d'être une question. Le vestiaire a compté les semaines de {nom}."
+      journal: "{annee} : le tableau de l'ancien a cessé d'être une question. Le vestiaire a compté les semaines de {nom}."
     steps:
       - id: craie
         card:
@@ -75,7 +75,7 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : {nom} et l'ancien se sont croisés au rond central. Depuis, la presse compte les points à chaque affiche."
+      journal: "{annee} : {nom} et l'ancien se sont croisés au rond central. La presse compte les points à chaque affiche."
     steps:
       - id: affiche
         card: en.ancien_en_face.affiche
@@ -110,6 +110,10 @@ arcs:
     traces:
       diplome:    "{annee} : {prenom} {nom} a passé le diplôme d'entraîneur. L'examinatrice a tamponné « admis », puis signé."
       derogation: "{annee} : dérogation de six mois pour {nom}. Le tampon manque une signature."
+    traces_retract:
+      # L'examen passé remplace la dérogation : la ligne du tampon incomplet ne
+      # doit plus revenir en Une une fois le papier obtenu.
+      derogation: "{annee} : la dérogation de {nom} a été remplacée par le papier. Le tampon a enfin sa signature."
     hint: "Sans le papier, pas de banc : six mois de dérogation, un stage, un examen."
     start: [2, 9]
     same_club: false
@@ -209,12 +213,14 @@ arcs:
     traces:
       kop_hostile: "{annee} : la tribune de {ville} a sifflé l'intérimaire et chanté l'ancien. Vingt minutes, chaque match."
       ancien_sali: "{annee} : au local, on a sali l'ancien pour faire une place à {nom}. La bâche avait un nom."
+    traces_retract:
+      kop_hostile: "{annee} : la tribune de {ville} a cessé de chanter l'ancien. Gégé a rangé la bâche, pliée dans le bon sens."
     hint: "La tribune chantait le nom de l'autre. Elle attend, et elle compte."
     start: [2, 9]
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : la tribune de {ville} a fini par choisir son camp sur {nom}. Elle a chanté l'ancien encore deux fois."
+      journal: "{annee} : la tribune a fini par choisir son camp sur {nom}. Elle a chanté l'ancien encore deux fois."
     steps:
       - id: stagiaire
         card: en.kop_doute.stagiaire
@@ -248,6 +254,8 @@ arcs:
       match_arrange_couvert: "{annee} : une lettre anonyme accusait l'ancien. {nom} l'a rangée dans le tiroir du milieu."
       lanceur_alerte:        "{annee} : {nom} a porté une lettre anonyme à la Fédération. Le vestiaire a appris un mot."
       lettre_publiee:        "{annee} : la lettre anonyme sur l'ancien est parue dans la presse. Copie conforme."
+    traces_retract:
+      lanceur_alerte: "{annee} : {nom} a repris sa lettre à la Fédération. Berthomier a rendu l'enveloppe sans la commenter."
     hint: "Une enveloppe sans timbre, une faute au mot « arrangé »."
     start: [2, 10]
     same_club: true

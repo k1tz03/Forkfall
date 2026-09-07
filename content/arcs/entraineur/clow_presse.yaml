@@ -8,7 +8,7 @@
 # Issues : ecoute | ingrat ; la trace clow_ingrat est lue par la routine
 # en.clow.top_un (un mentor lâché ne revient pas donner de conseils au bar).
 #
-# Chemins : 44_jours (variante `_stage` si le mentor t'a eu au stage du
+# Chemins : cinquante_neuf_jours (variante `_stage` si le mentor t'a eu au stage du
 # diplôme) → verre → hopital (S2+, écouté) → testament | verre → silence
 # (clow_ingrat) → testament : les deux branches finissent chez Josiane, avec
 # l'enveloppe (issue ecoute) ou les mains vides (issue ingrat).
@@ -45,12 +45,12 @@ arcs:
     same_club: false
     fallback: drop
     steps:
-      - id: "44_jours"
+      - id: "cinquante_neuf_jours"
         # La première variante lit le chapitre 01 : il t'a eu au stage du
         # diplôme (clow_stage), et il se souvient de ce que tu écrivais.
         card:
-          - { id: en.clow.44_jours_stage, if: "flag('clow_stage')" }
-          - { id: en.clow.44_jours }
+          - { id: en.clow.cinquante_neuf_jours_stage, if: "flag('clow_stage')" }
+          - { id: en.clow.cinquante_neuf_jours }
         next: [ { step: verre, in: [8, 14] } ]
       - id: verre
         card: en.clow.verre
@@ -100,7 +100,7 @@ arcs:
     carrier: meneche
     issues: [no_comment, franc]
     traces:
-      presse_franc: "{annee} : « Franchement », a dit {prenom} {nom} à Massenet. Le mot est sorti en titre, avec un point d'interrogation."
+      presse_franc: "{annee} : « Franchement », a dit {nom} à Massenet. Le mot est sorti en titre, avec un point d'interrogation."
     hint: "Trois questions par saison, un journaliste gentil. Hors micro, bien sûr."
     when: "season >= 1"
     # Léa (L'Écho) rappelle le lendemain pour faire confirmer le mot.

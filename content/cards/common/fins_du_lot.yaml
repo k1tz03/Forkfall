@@ -6,12 +6,33 @@
 # Six portes ici, communes aux deux rôles jouables ; les trois portes propres au
 # banc sont dans content/cards/entraineur/fins_du_banc.yaml.
 #   co.fisc.controle              → co_dix_huit_mois   (§ 5.3, CAISSE haute)
+#   co.fisc.moyens_fous           → en_coupable        (§ 5.3, le chemin du fonds)
 #   co.pression.troisieme         → burn_out           (§ 5.5, la série noire)
 #   co.destin.statue_bronze       → statue_de_bronze   (§ 5.5, partir debout)
 #   co.destin.porte_de_sortie(_seul) → pose `fuyard`   (§ 6.1, arête 28)
 #   co.destin.porte_troisieme     → co_fuyard          (§ 5.6, la troisième fois)
 #   co.loge.derby                 → ta_loge            (§ 5.5, la loge)
 #   co.medecin.fauteuil           → mort_au_poste      (§ 5.5, le fauteuil)
+#
+# Passe « la porte est posée, la clé n'existe pas » (relecture des quatre
+# postulats). Trois fins n'étaient jamais servies sur 5 000 carrières, non
+# parce qu'elles n'avaient pas de porte, mais parce que leur porte demandait un
+# état que le promu n'atteint pas :
+# · `co.fisc.controle` exigeait `gauges.caisse >= 85` en saison ≥ 2 : la caisse
+#   du promu plafonne à 94 et ne passe 85 que dans 4 carrières sur 2 000. Seuil
+#   ramené à 70, et la porte s'ouvre aussi sur le chemin de l'argent
+#   (`offshore`, `nassir_pret`, `enveloppe_promise`), qui est celui que ce
+#   postulat emprunte vraiment.
+# · `en_coupable` (fin « caisse pleine » du rôle, roles.yaml) n'avait aucune
+#   clé du tout : la jauge ne va pas à 100. `co.fisc.moyens_fous` (en bas de ce
+#   fichier) la pose sur la trace du fonds.
+# · `statue_de_bronze` demandait `stats.saisons >= 8` quand 11 carrières sur
+#   2 000 atteignent la saison 8 (médiane 2,1 saisons), plus les quatre jauges
+#   à 40. La porte est réécrite sur ce que « partir debout » veut dire ici : le
+#   virage (tribunes ≥ 60), le vestiaire, la parole tenue, et trois saisons —
+#   ou, pour une carrière courte, le pacte du virage et un titre. La caisse
+#   sort de la condition : un promu est pauvre par définition, et le socle est
+#   payé par la boîte en fer de Gégé, pas par le club.
 #
 # Écarts d'import assumés, mesurés sur `simulate --runs 2000` :
 # · `ta_loge` (« âge, 78 ans ») et `mort_au_poste` (« après 70 ans ») : les deux
@@ -34,7 +55,7 @@ cards:
     once: true
     priority: 2
     cooldown: 40
-    when: "season >= 2 && gauges.caisse >= 85"
+    when: "season >= 2 && (gauges.caisse >= 70 || flag('offshore') || flag('nassir_pret') || flag('enveloppe_promise'))"
     text: "Madame Josiane, une convocation à en-tête : « Deux inspecteurs jeudi, huit heures, avec les trois dernières années. J'en ai vu passer ; celle-là est recommandée. »"
     left:
       label: "Je sors tous les livres"
@@ -76,11 +97,23 @@ cards:
     once: true
     priority: 2
     cooldown: 40
-    when: "stats.saisons >= 8 && parole >= 2 && gauges.vestiaire >= 40 && gauges.tribunes >= 40 && gauges.direction >= 40 && gauges.caisse >= 40"
+    # Porte rejouée (§ 5.3, « chaque fin atteinte ≥ 1 fois sur 5 000 ») : la
+    # statue n'était jamais coulée pour l'intérimaire, dont la carrière dure
+    # 3,2 saisons en moyenne — quatre jauges à 40 en même temps, à la huitième
+    # saison, n'arrivait pas. `parole >= 2` reste la condition de sens (on ne
+    # coule pas de bronze pour quelqu'un qui n'a rien tenu) ; la tribune à 70
+    # et une seule des deux autres jauges la rendent atteignable sans la rendre
+    # courante (mesuré : 15,6 % des fins avec trois jauges sur quatre à 40, ce
+    # qui est trop pour une fin déclarée `rare`).
+    when: "(stats.saisons >= 4 || (flag('pacte_gege') && stats.titres >= 1)) && parole >= 2 && gauges.tribunes >= 70 && (gauges.vestiaire >= 45 || gauges.direction >= 45)"
     text: "Gégé, une boîte en fer sous le bras : « On a compté : il y a de quoi payer un socle. La tribune n'oublie rien, {toi}, mais elle préfère couler ça de ton vivant. »"
     left:
+      # Le côté qui pose la fin ne touche plus aucune jauge : à `tribunes ++` il
+      # était systématiquement évité par une politique de recentrage — la
+      # tribune est déjà à 60 quand la carte sort, la pousser plus haut coûte.
+      # Partir debout ne devrait rien coûter ; c'est tout le propos de la scène.
       label: "Alors je pars maintenant"
-      effects: {tribunes: "++", parole: 1, end: statue_de_bronze}
+      effects: {parole: 1, end: statue_de_bronze}
       answer: "Il repose la boîte sur le bar. Elle n'en repartira pas, et toi non plus."
     right:
       label: "Encore une saison"
@@ -193,3 +226,32 @@ cards:
       label: "Dimanche, je serai là"
       effects: {rand: [{p: 0.35, end: mort_au_poste}, {tribunes: "+", direction: "+"}], force: -2}
       answer: "Tu es là. Le fauteuil du couloir a été monté pour toi, contre le mur."
+
+  # ───────────── § 5.3 · Les moyens fous (la porte de `en_coupable`, jauge pleine)
+  # `en_coupable` est la fin « caisse pleine » du rôle entraîneur
+  # (`roles.yaml:12`) et la caisse du promu plafonne à 94 sur 2 000 carrières :
+  # la porte existait, la clé n'existait pas. Elle n'est donc pas un niveau de
+  # jauge — c'est le chemin de l'argent (le naming, le prêt page trois, le
+  # rachat) que ce postulat, lui, emprunte vraiment. L'épitaphe de la fin lit
+  # déjà `nassir_pret` : elle avait été écrite pour ce chemin-là.
+  # Seule carte du fichier réservée à un rôle : la fin « caisse pleine » du
+  # joueur est `jp_panama`, une autre histoire (bible ch. 30 § 5.3).
+  - id: co.fisc.moyens_fous
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, sponsors, direction, scandale]
+    speaker: josiane
+    tone: strategique
+    once: true
+    priority: 2
+    cooldown: 40
+    when: "season >= 1 && gauges.caisse >= 55 && (flag('naming_signe') || flag('nassir_pret') || flag('club_actif'))"
+    text: "Madame Josiane, deux relevés côte à côte : « Il y a de quoi payer trois saisons, {toi}. La Commission demande d'où ça vient, et c'est votre signature qui est en bas de la réponse. »"
+    left:
+      label: "Je rends l'argent du fonds"
+      effects: {caisse: "---", direction: "-", tribunes: "+", parole: 1}
+      answer: "Le virement part un vendredi. Le club redevient pauvre en une après-midi, et respire mieux."
+    right:
+      label: "On garde tout"
+      effects: {caisse: "+++", direction: "-", end: en_coupable}
+      answer: "Elle range les deux relevés dans le même dossier. C'est celui que la Commission demandera."

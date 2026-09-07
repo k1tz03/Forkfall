@@ -218,7 +218,23 @@ class Engine {
       }
     }
     for (final f in e.clearFlags) {
-      s.flags.remove(f);
+      if (!s.flags.remove(f)) continue;
+      // Un `clear:` retirait le drapeau mais laissait dans l'Almanach la ligne
+      // que la trace avait écrite : la Une republiait ensuite un fait rétracté,
+      // et la même page affirmait les deux versions (« une enveloppe a changé
+      // de poche » suivi de « il a dit jamais »). La ligne posée par la trace
+      // est donc retirée avec le drapeau, et remplacée — quand l'arc l'a
+      // déclarée en `traces_retract:` — par une ligne de rétractation, qui dit
+      // qu'on est revenu dessus plutôt que de laisser un trou.
+      final owner = (arcId != null && (content.arcs[arcId]?.traces.containsKey(f) ?? false)) ? arcId : content.tracesIndex[f];
+      if (owner == null) continue;
+      final arc = content.arcs[owner];
+      if (arc == null || !arc.traces.containsKey(f)) continue;
+      s.journal.removeWhere((j) => j.kind == 'trace' && j.arc == owner && j.tags.contains(f));
+      final retract = arc.tracesRetract[f];
+      if (retract != null && retract.isNotEmpty) {
+        director.addJournal(s, retract, kind: 'trace', poids: 2, tags: [if (arc.themeId.isNotEmpty) arc.themeId, arc.id], arc: arc.id);
+      }
     }
     if (e.journal != null) {
       director.addJournal(s, e.journal!.text, kind: 'carte', poids: e.journal!.poids, tags: e.journal!.tags, arc: arcId);
@@ -243,7 +259,23 @@ class Engine {
       for (final v in e.react) {
         if (v.ifWhen != null && !evalWhen(v.ifWhen, c)) continue;
         if (v.chance == null || rng.nextDouble() < v.chance!) {
-          s.reaction = ReactionRef(card: v.card, arc: arcId, step: stepId, phase: phase);
+          // On ne pose que ce que le tirage suivant pourra servir (§ 1.4
+          // règle 4) : le plafond de la saison, la garde de voix et un `once`
+          // déjà vu sont connus MAINTENANT et ne bougeront pas d'ici là — la
+          // carte courante est déjà comptée dans `lastSpeaker`. Les poser puis
+          // les jeter faisait 2 488 réactions perdues sur 2 000 carrières (le
+          // plafond à lui seul en jetait 1 888), et une réaction perdue est une
+          // réponse promise au joueur qui n'arrive jamais. Ce qui reste
+          // vraiment imprévisible (le `when`, le rôle, un visage qui s'en va)
+          // est toujours compté par `miss_reaction_*`.
+          final rc = content.cards[v.card];
+          final servable = rc != null &&
+              s.reactionsThisSeason < content.director.reactionsMax &&
+              !director.voixSaturee(s, rc.speaker) &&
+              !(rc.once && (s.seenCount[rc.id] ?? 0) > 0);
+          if (servable) {
+            s.reaction = ReactionRef(card: v.card, arc: arcId, step: stepId, phase: phase);
+          }
         }
         break;
       }
@@ -905,7 +937,7 @@ class Engine {
   /// `bilan.*` n'est fourni qu'au beat `bilan_verdict` (le verdict y est
   /// calculé sans être appliqué, comme pour la Une).
   _Setpiece? _setpiece(GameState s, String beat, String phase,
-      {bool? bilanTenu, int? bilanRang, String? bilanOutcome, bool Function(SetpieceVariant)? keep}) {
+      {bool? bilanTenu, int? bilanRang, String? bilanOutcome, bool Function(SetpieceVariant)? keep, Set<int> skip = const {}}) {
     final variants = content.setpieces[beat];
     if (variants == null || variants.isEmpty) return null;
     final post = content.postulats[s.postulatId];
@@ -917,6 +949,7 @@ class Engine {
         bilanOutcome: bilanOutcome);
     for (int i = 0; i < variants.length; i++) {
       final v = variants[i];
+      if (skip.contains(i)) continue;
       if (keep != null && !keep(v)) continue;
       if (v.roles.isNotEmpty && !v.roles.contains(s.role)) continue;
       if (!evalWhen(v.when, c)) continue;
@@ -1036,10 +1069,28 @@ class Engine {
     );
   }
 
+  /// Le temps fort du Grand Match. Le calendrier en sert **trois de suite**
+  /// (`calendar.yaml`, phase sprint) : sans mémoire, `_setpiece` reprenait
+  /// chaque fois la première variante vraie et les trois écrans étaient le
+  /// même texte. Deux garde-fous, tous deux sans aléa :
+  /// · `vars.gm_te_index` (1, 2, 3) est posé ici — les variantes de secours
+  ///   différenciées de `setpieces.yaml` le lisent (bible ch. 30 § 1.3) ;
+  /// · les variantes déjà servies dans CE Grand Match sont écartées (`skip`),
+  ///   si bien qu'une variante de trace gagne une fois et laisse la place.
+  /// `vars.gm_won` est rafraîchi avant les deuxième et troisième temps forts
+  /// (score courant), sinon la variante « on mène » resterait morte.
   Pending _gmTempsFort(GameState s) {
     final mt = s.matchTemp ?? MatchTemp();
+    final idx = (mt.minute ~/ 25).clamp(0, 2) + 1;
+    s.vars['gm_te_index'] = idx;
+    if (idx > 1) s.vars['gm_won'] = mt.goalsFor > mt.goalsAgainst ? 1 : 0;
+    final skip = <int>{
+      if (idx > 1) s.vars['gm_te_vu1'] ?? -1,
+      if (idx > 2) s.vars['gm_te_vu2'] ?? -1,
+    }..remove(-1);
     final extra = {'minute': '${mt.minute + 20}', 'score': '${mt.goalsFor}-${mt.goalsAgainst}'};
-    final sp = _setpiece(s, 'gm_te', 'sprint');
+    final sp = _setpiece(s, 'gm_te', 'sprint', skip: skip);
+    if (idx < 3) s.vars['gm_te_vu$idx'] = sp?.index ?? -1;
     String f(String t) => _fmtFor(s, t, speaker: sp?.v.speaker, extra: extra);
     return Pending(
       id: 'gm:te:${mt.minute}',
@@ -1147,8 +1198,19 @@ class Engine {
       director.addJournal(s, titre, kind: 'une', poids: 3, tags: ['une', if (sujet != null) sujet], arc: une.id);
       s.lastUne = une.id;
       // « Quelqu'un a lu le journal » (spec variété §1.4, déclencheur b) : sans `chance`, zéro aléa.
+      // Même règle qu'ailleurs : on ne pose que ce que le tirage suivant peut
+      // servir. Le Bilan tombe en fin de saison, quand le plafond de réactions
+      // est le plus souvent atteint — c'était la première source de réactions
+      // posées puis jetées.
       for (final v in une.react) {
         if (v.ifWhen != null && !evalWhen(v.ifWhen, c)) continue;
+        final rc = content.cards[v.card];
+        if (rc == null ||
+            s.reactionsThisSeason >= content.director.reactionsMax ||
+            director.voixSaturee(s, rc.speaker) ||
+            (rc.once && (s.seenCount[rc.id] ?? 0) > 0)) {
+          break;
+        }
         s.reaction = ReactionRef(card: v.card, phase: 'bilan');
         break;
       }

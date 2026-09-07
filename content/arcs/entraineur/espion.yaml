@@ -25,7 +25,7 @@ arcs:
     replay: { after: 3, max: 2 }
     issues: [cafe, presse, retour]
     traces:
-      espion_cafe:   "{annee} : un homme à jumelles dans la haie de {club}. Gégé lui a offert un café ; la tribune a noté la plaque."
+      espion_cafe:   "{annee} : un homme à jumelles dans la haie. Gégé lui a offert un café ; la tribune a noté la plaque."
       espion_presse: "{annee} : {prenom} {nom} a dénoncé l'espion de la haie à la presse. Avec un croquis."
       espion_retour: "{annee} : l'homme de la haie est revenu, côté Coupe. Il avait des jumelles neuves."
     hint: "Une casquette qui ne bouge pas depuis vingt minutes, au fond du terrain."
@@ -33,21 +33,29 @@ arcs:
     same_club: true
     fallback: nouvelles
     epilogue:
-      journal: "{annee} : la haie de {club} a été retaillée. La plaque de la camionnette est restée notée au local, à la craie."
+      journal: "{annee} : la haie a été retaillée. La plaque de la camionnette est restée notée au local, à la craie."
     steps:
       - id: haie
         card:
-          # Écart assumé : la bible date la variante « le car de la presse » de
-          # 2010 ; le promu part en 1990 et sa carrière dure au mieux une
-          # quinzaine de saisons, donc la fenêtre est avancée à 1996 (Télé-Stade
-          # couvre le championnat depuis 1984) et la variante passe devant la
-          # relance, sinon la seconde ouverture prend toujours « encore ».
-          - { id: en.espion.haie_car, if: "year >= 1996" }
+          # Repli de porteur : quand Vukić n'est plus en état de parler (parti,
+          # prêté, à l'hôpital), l'étape armée tombait en `statut` et l'intrigue
+          # s'arrêtait sans issue. Le capitaine, déjà au cast, la reprend.
+          - { id: en.espion.haie_brehaut, if: "chars.vukic.statut != 'present' && chars.vukic.statut != 'club' && chars.vukic.statut != 'staff'" }
           # `cassette_regardee` : la trace est déclarée « lue » par la matrice
           # du ch. 90 § 1 et personne ne la lisait. Elle passe devant la
           # relance : ce n'est plus le même homme, c'est un élève.
           - { id: en.espion.haie_eleve, if: "flag('cassette_regardee')" }
+          # La relance repasse devant le car de la presse : une reprise a lieu
+          # trois saisons après la première, donc en 1996 au plus tôt, et le car
+          # la mangeait — « encore » n'était jamais servi (exposition à 600
+          # tirages). Le car reste servi sur une PREMIÈRE ouverture tardive,
+          # qui est fréquente (l'intrigue s'ouvre encore en S6-S8).
           - { id: en.espion.haie_encore, if: "plays('en.espion_haie') >= 1" }
+          # Écart assumé : la bible date la variante « le car de la presse » de
+          # 2010 ; le promu part en 1990 et sa carrière dure au mieux une
+          # quinzaine de saisons, donc la fenêtre est avancée à 1996 (Télé-Stade
+          # couvre le championnat depuis 1984).
+          - { id: en.espion.haie_car, if: "year >= 1996" }
           - { id: en.espion.haie }
         next:
           - { step: cafe, in: [1, 2] }
@@ -63,9 +71,15 @@ arcs:
         card:
           - { id: en.espion.compo_cafe, if: "flag('espion_cafe') && relation.gege >= 1" }
           - { id: en.espion.compo }
-        next: [ { step: retour, if: "flag('espion_cafe') || flag('espion_presse')", at_season: 1, at: [13, 16], in: [13, 16] } ]
+        # [13,16] → [4,10] : le retour était posé à la toute fin de la saison
+        # suivante, et une carrière sur trois se terminait avec l'intrigue
+        # encore ouverte (budget `--arc` : ≥ 50 % de clôtures `done`). Plus tôt
+        # dans la saison, il laisse aussi moins de temps au porteur pour partir.
+        next: [ { step: retour, if: "flag('espion_cafe') || flag('espion_presse')", at_season: 1, at: [4, 10], in: [4, 10] } ]
       - id: retour
-        card: en.espion.retour
+        card:
+          - { id: en.espion.retour_brehaut, if: "chars.vukic.statut != 'present' && chars.vukic.statut != 'club' && chars.vukic.statut != 'staff'" }
+          - { id: en.espion.retour }
         outcome: retour
         on_expire: skip
         next: []

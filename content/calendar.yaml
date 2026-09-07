@@ -28,10 +28,26 @@ director:
   # 2,7 Nouvelles en S0 et la bande 3-4 tenue dans 71 % des saisons pour un
   # seuil de 95 % (postulat 3). Ses ancres de script sont aux slots 1, 10-11,
   # 16 et 17 : [4, 9, 13] ne les croise pas non plus.
-  nouvelle_slots: { entraineur: [4, 9, 13], joueur: [3, 7, 12, 15] }
+  # Quatrième créneau pour l'entraîneur ([4, 9, 13] → [3, 6, 9, 13]). Avec
+  # trois créneaux, la bande 3-4 exigeait que les TROIS tombent : une seule
+  # cession à une étape échue (bande 6, qui passe avant la dette) sortait la
+  # saison de la bande. La S0 — la plus chargée en ancres et en étapes — y
+  # tombait à 2,2 Nouvelles de moyenne et ne tenait la bande que dans 30 % des
+  # saisons, pour un plancher de 95 % : la première saison, celle que tout
+  # joueur voit, était la plus pauvre en respiration d'époque alors que 87
+  # Nouvelles datées sont écrites. Le plafond `nouvelles_max: 4` empêche le
+  # quatrième créneau de faire une cinquième Nouvelle ; les ancres du script de
+  # l'entraîneur (slots 1, 10-11, 16, 17) ne croisent aucun des quatre, et 14-15
+  # restent libres pour solder la dette du créneau 13.
+  nouvelle_slots: { entraineur: [3, 6, 9, 13], joueur: [3, 7, 12, 15] }
   nouvelles_max: 4           # plafond de la bande 3-4 (§ 5.2) : la dette d'un quatrième créneau ne fait pas une cinquième Nouvelle
   gap_max: 2                 # cartes sans temps d'histoire tolérées d'affilée : 2 ⇒ écart max 3 entre temps d'histoire (spec variété §5.2) ; 3 → 2 avec le tirage de saison
-  soft_steps_max: 10         # étapes servies en bande 2 par saison (les échues ne comptent pas) ; 8 → 10 (spec variété §2.9)
+  # 10 → 12 : une étape servie DANS sa fenêtre ne devient jamais échue. Le
+  # quota bloquait la bande 2 en milieu de saison et la file finissait par
+  # sortir en bande 6, trois entrées empilées (backlog P99 3 pour un plafond
+  # de 2, § 5.2). Le taux d'étapes échues était bon : c'est l'empilement qu'on
+  # dénoue, pas le retard.
+  soft_steps_max: 12         # étapes servies en bande 2 par saison (les échues ne comptent pas) ; 8 → 10 → 12 (spec variété §2.9)
   min_active: 2              # maintainArcs ouvre tant qu'il y a moins d'arcs de premier plan
   max_active: 4              # forceStory n'ouvre pas au-delà ; 3 → 4 (la réserve peut s'ouvrir sur un trou de cadence)
   events_max: 1
@@ -40,6 +56,13 @@ director:
   unes_breves: 3             # brèves de la Une — étape 2
   journal_par_saison: 12     # compaction de l'Almanach — étape 2
   ouverture_ecart: 3         # jamais deux ouvertures d'intrigue à moins de 3 slots (spec variété §1.2)
+  # Créneaux laissés à la première étape d'une intrigue tirée au réservoir
+  # avant qu'elle ne soit échue. C'était la constante 2 de `_drawProgramme` :
+  # trois intrigues ouvertes dans une fenêtre [1,13] arrivaient à échéance
+  # presque ensemble et empilaient la file (backlog P99 3 en S0 et en S1 pour
+  # un plafond de 2 ; le taux d'étapes échues, lui, était bon). Ce n'est pas du
+  # retard en plus : c'est le même retard, étalé.
+  ouverture_echeance: 5
   phase_mult:
     mercato: { presaison: 4, hiver: 4, aller: 0.2, retour: 0.2 }
     moment:  { retour: 2 }

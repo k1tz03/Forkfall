@@ -51,6 +51,9 @@ const Map<String, String> kSampleVars = {
   'fin_titre': 'Le SMS de 23h47',
 };
 
+/// Longueur maximale d'une ligne d'Almanach une fois rendue (spec §1.7).
+const int kJournalMax = 120;
+
 final RegExp _selectRe = RegExp(r'\{(pg|sg),\s*select,?\s*((?:\w+\{[^{}]*\}\s*)+)\}');
 final RegExp _branchRe = RegExp(r'(\w+)\{([^{}]*)\}');
 final RegExp _simpleRe = RegExp(r'\{(\w+)\}');
@@ -266,6 +269,13 @@ void main() {
     for (final f in (a['traces'] as Map? ?? const {}).keys) {
       if (!flags.contains(f)) errors.add('arc $id: traces cite un drapeau non déclaré "$f"');
     }
+    // Une rétractation n'a de sens que pour une trace que l'arc déclare : c'est
+    // la ligne qui remplace celle du drapeau quand un `clear:` le retire.
+    for (final f in (a['traces_retract'] as Map? ?? const {}).keys) {
+      if (!(a['traces'] as Map? ?? const {}).containsKey(f)) {
+        errors.add('arc $id: traces_retract cite "$f", qui n\'est pas une trace de cet arc');
+      }
+    }
     final steps = (a['steps'] as List).cast<Map<String, dynamic>>();
     if (a['kind'] == 'serie' && steps.length < 3) warnings.add('arc $id: série de moins de 3 étapes');
     for (final f in (a['epilogue'] as Map? ?? const {}).keys) {
@@ -435,6 +445,47 @@ void main() {
     for (final p in unknownPlaceholders(v.toString(), knownPlaceholders)) {
       errors.add('journal.yaml/auto/$k: placeholder inconnu {$p}');
     }
+  });
+
+  // --- Longueur RENDUE des lignes d'Almanach (spec variété §1.7 : « ≤ 120
+  // caractères »). `Director.addJournal` coupait au 119e caractère, en plein
+  // mot : ces lignes sont servies telles quelles dans les brèves de la Une et
+  // sur l'écran « Ce qui s'est passé ». La troncature reste un garde-fou de
+  // rendu ; la règle d'écriture est ici, et elle est bloquante. Même échantillon
+  // que le titre de manchette (`renderSample`, le pire cas de nom et de club).
+  void journalLen(String where, String tpl) {
+    final r = renderSample(tpl);
+    if (r.length > kJournalMax) {
+      errors.add('$where: ligne de journal de ${r.length} caractères rendue (> $kJournalMax) : « $r »');
+    }
+  }
+
+  String? journalText(Object? v) {
+    if (v is String) return v;
+    if (v is Map) return v['text']?.toString();
+    return null;
+  }
+
+  for (final c in cards) {
+    for (final side in ['left', 'right']) {
+      final eff = ((c[side] as Map?)?['effects'] as Map?) ?? const {};
+      final t = journalText(eff['journal']);
+      if (t != null) journalLen('${c['id']}/$side/journal', t);
+    }
+  }
+  for (final a in arcs) {
+    ((a['traces'] as Map?) ?? const {}).forEach((k, v) {
+      journalLen('arc ${a['id']}/traces/$k', v.toString());
+    });
+    ((a['traces_retract'] as Map?) ?? const {}).forEach((k, v) {
+      journalLen('arc ${a['id']}/traces_retract/$k', v.toString());
+    });
+    if (a['journal'] != null) journalLen('arc ${a['id']}/journal', a['journal'].toString());
+    final ep = journalText((a['epilogue'] as Map?)?['journal']);
+    if (ep != null) journalLen('arc ${a['id']}/epilogue/journal', ep);
+  }
+  ((bundle['journal_templates'] as Map?) ?? const {}).forEach((k, v) {
+    journalLen('journal.yaml/auto/$k', v.toString());
   });
   for (final e in (bundle['endings'] as List).cast<Map<String, dynamic>>()) {
     final eid = e['id'];

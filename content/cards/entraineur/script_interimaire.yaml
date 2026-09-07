@@ -64,11 +64,17 @@ cards:
     text: "Madame Josiane, le téléphone contre l'épaule : « La Fédération a appelé pour votre papier, et le bureau est encore à son nom. J'en ai vu passer. Je jette ses cartons, {toi} ? »"
     left:
       label: "Jetez, c'est mon bureau"
-      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      # La réaction du fil rouge « diplôme » passe à l'agent : Fardelli, le
+      # tentateur du postulat, n'apparaissait que dans 67 % des premières
+      # saisons (plancher 80 %) — il ne porte qu'une intrigue de S0. Une
+      # réaction est servie hors créneau, elle ne coûte pas de Nouvelle ;
+      # posée au créneau 1, elle est servie au 2 (à I3, créneau 17, elle
+      # tombait dans la saison suivante).
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.fardelli_juin}]}
       answer: "Elle dévisse la plaque. Elle rappelle la Fédération l'après-midi, sans le dire."
     right:
       label: "Gardez-les, six semaines"
-      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.camille_six_semaines, if: "!flag('divorce')"}, {card: en.re.josiane_cafetiere}]}
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.fardelli_juin}]}
       answer: "Elle scotche les cartons. Elle range le message de la Fédération dessous."
 
   - id: en.interim.i1_bureau_grand_nom
@@ -81,11 +87,11 @@ cards:
     text: "Madame Josiane, un message rose à la main : « Un agent a appelé pour le sien, et pour le vôtre — de remplaçant. Le bureau est encore à son nom. Je jette ses cartons, {toi} ? »"
     left:
       label: "Jetez, c'est mon bureau"
-      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.fardelli_seau}]}
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, set: [cartons_jetes], react: [{card: en.re.fardelli_remplacant}]}
       answer: "Elle dévisse la plaque. Le message rose reste sur le bureau, bien au centre."
     right:
       label: "Gardez-les, six semaines"
-      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.fardelli_seau}]}
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, react: [{card: en.re.fardelli_remplacant}]}
       answer: "Elle scotche les cartons. Elle jette le message rose ; elle ne le dit pas."
 
   # ============================ I1b · Le groupe a lu (S0, [5,8]) — Bréhaut
@@ -176,11 +182,11 @@ cards:
     text: "Vaubourg, les mains vides : « Six semaines, et rien, ni bon ni mauvais, alors un mois de plus, sans prime, {toi}. J'ai pas le temps, j'ai un empire. Tu prends ? »"
     left:
       label: "Je prends"
-      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge]}
+      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge], react: [{card: en.re.gege_nouvel_ordre, if: "reactions <= 2"}]}
       answer: "Un mois. Il ne dit pas lequel."
     right:
       label: "Je prends"
-      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge]}
+      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge], react: [{card: en.re.gege_nouvel_ordre, if: "reactions <= 2"}]}
       answer: "Un mois. Il ne dit pas lequel."
 
   - id: en.interim.i2_dechu
@@ -193,11 +199,11 @@ cards:
     text: "Vaubourg, sans lever les yeux : « Un vrai coach arrive lundi, {toi} : tu restes adjoint jusqu'en juin, et j'ai pas le temps pour te dire lequel. Tu restes, ou tu pars avant lui ? »"
     left:
       label: "Je reste adjoint"
-      effects: {direction: "+", vestiaire: "-", set: [dechu]}
+      effects: {direction: "+", vestiaire: "-", set: [dechu], react: [{card: en.re.gege_nouvel_ordre, if: "reactions <= 2"}]}
       answer: "Lundi, un homme avec un seau. Ou une casquette ; tu le sauras lundi."
     right:
       label: "Je pars avant lui"
-      effects: {direction: "--", tribunes: "+", set: [dechu, parti_tete_haute]}
+      effects: {direction: "--", tribunes: "+", set: [dechu, parti_tete_haute], react: [{card: en.re.gege_nouvel_ordre, if: "reactions <= 2"}]}
       answer: "Le vestiaire t'applaudit dans le couloir. C'est court."
 
   # ================================================ I3 · Le CDI ou la porte (S0, 17)
@@ -287,6 +293,26 @@ cards:
       effects: {vestiaire: "+", direction: "-"}
       answer: "Un nul, un nul, une victoire. Elle visse le lundi, sans demander."
 
+  # Variante « coutures » (§ 5.2 : une saison S1+ sur trois ne relisait aucune
+  # trace posée avant) : le troisième chemin du verdict de la S0 — ni le CDI,
+  # ni la déchéance, juste un mois de plus — n'avait pas de rentrée à lui.
+  - id: en.interim.s1_rentree_prolonge
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, une plaque provisoire en plastique dans la main : « Un mois de plus, puis un autre, et on est en août. J'ai fait faire celle-ci en attendant, {toi}. Je la visse ? »"
+    left:
+      label: "Vissez celle-là"
+      effects: {direction: "+", vestiaire: "+", relation: {josiane: 1}}
+      answer: "Elle visse le plastique. Elle garde la commande de la vraie, en attente, datée."
+    right:
+      label: "La vraie, ou rien"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "La porte reste nue. Le groupe y colle une photo découpée dans L'Écho."
+
   - id: en.interim.s1_rentree_cdi
     roles: [entraineur]
     arc: direction
@@ -374,6 +400,24 @@ cards:
       answer: "Il met la bâche en photo. Elle a un nom dessus, en lettres noires."
 
   # ================================================ S1 · La veille (S1, 17)
+  # Variante « coutures » : le dernier bloc de la S1 relit la promesse de la S0.
+  - id: en.interim.s1_veille_montee
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: vukic
+    tone: strategique
+    once: true
+    text: "Vukić, la feuille de match vierge : « Tu as dit « la montée » l'an dernier, devant tout le monde, et demain c'est le dernier bloc. Ils comptent, je te le dis. Tu joues quoi ? »"
+    left:
+      label: "Le bloc bas, comme toujours"
+      effects: {direction: "+", vestiaire: "+", force: -1}
+      answer: "Bloc bas. Le virage déplie une banderole où il manque une lettre."
+    right:
+      label: "On attaque, une fois"
+      effects: {tribunes: "++", force: 2, vestiaire: "-"}
+      answer: "Le virage se lève à la vingtième. Le président regarde sa montre, puis la tribune."
+
   - id: en.interim.s1_veille
     roles: [entraineur]
     arc: vestiaire
@@ -392,6 +436,26 @@ cards:
       answer: "Le virage se lève à la vingtième. Le président regarde sa montre."
 
   # ================================================ S2+ · Rentrée et veille (rejouables)
+  # Variante « coutures » : la rentrée des saisons 3+ ne relisait que la
+  # dérogation ; le papier signé en S0 est la trace la plus fréquente du
+  # postulat et personne ne la rappelait.
+  - id: en.interim.rentree_cdi
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, un contrat de trois pages sorti du classeur vert : « La page deux dit douze mois et on en est à la troisième rentrée. J'en ai vu passer. Je la ressors au président, {toi} ? »"
+    left:
+      label: "Ressortez-la"
+      effects: {direction: "-", parole: 1, relation: {josiane: 1}}
+      answer: "Elle la pose sur son sous-main. Il la retourne sans la lire ; elle la reprend."
+    right:
+      label: "Laissez dormir"
+      effects: {direction: "+", parole: -1}
+      answer: "Elle la range dans le classeur vert. Elle note la date au crayon, en haut."
+
   - id: en.interim.rentree
     roles: [entraineur]
     arc: direction
@@ -425,6 +489,25 @@ cards:
       label: "Classez"
       effects: {direction: "+", parole: -1, set: [diplome_arrange]}
       answer: "Elle classe. Le papier arrive un vendredi soir, signé par quelqu'un d'absent."
+
+  # Variante « coutures » : la veille des saisons 3+ relit la tribune de la
+  # première année — celle qui chantait le nom de l'autre.
+  - id: en.interim.veille_bache
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    cooldown: 0
+    text: "Gégé au parking, la veille : « La première année, on chantait un autre nom que le tien, et la bâche disait autre chose. On l'a repeinte. Elle sort demain, {toi} ? »"
+    left:
+      label: "Qu'elle sorte"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Vingt mètres au-dessus du virage. En dessous, on devine l'ancienne peinture."
+    right:
+      label: "Pas celle-là"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Il la replie sans discuter. « On la garde pour le jour où tu partiras. »"
 
   - id: en.interim.veille
     roles: [entraineur]

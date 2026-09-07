@@ -161,6 +161,27 @@ class Director {
     return n;
   }
 
+  /// Les intrigues de premier plan qui occupent **encore la saison courante** :
+  /// celles dont au moins une entrée de file n'est pas une fusée longue (une
+  /// fusée longue attend la saison suivante et n'a plus rien à servir ici).
+  ///
+  /// C'est ce compte, et non [activeForeground], que `forceStory` doit lire
+  /// avant d'ouvrir : en fin de saison, trois intrigues actives dont les
+  /// étapes suivantes sont toutes datées de la saison d'après saturaient
+  /// `max_active`, il n'y avait aucune étape à tirer en avant, et la cadence
+  /// forcée ne trouvait plus rien — le budget § 5.2 (« écart max entre temps
+  /// d'histoire ») cassait à l'échelle, jusqu'à cinq ou six cartes de routine
+  /// d'affilée dans une saison sur quatre cents.
+  int activeForegroundHere(GameState s) {
+    int n = 0;
+    s.arcs.forEach((id, st) {
+      if (st.status != 'armed' && st.status != 'active') return;
+      if (!(content.arcs[id]?.foreground ?? false)) return;
+      if (s.scheduled.any((sc) => sc.arc == id && !sc.isLongFuse)) n++;
+    });
+    return n;
+  }
+
   void arcDone(GameState s, String id) {
     final st = s.arcs[id] ??= ArcState();
     st.status = 'done';
@@ -182,10 +203,19 @@ class Director {
   // ---------------------------------------------------------------------------
 
   /// Écrit une ligne d'Almanach, formatée à l'écriture (le nom, le club, le
-  /// rang de l'instant), tronquée à 120 caractères. Aucun aléa.
+  /// rang de l'instant). Aucun aléa.
+  ///
+  /// La longueur rendue est un garde-fou de **rendu**, pas une règle
+  /// d'écriture : le lint refuse maintenant tout gabarit `journal:` /
+  /// `traces:` qui dépasse 120 caractères une fois substitué (lint.dart,
+  /// « ligne de journal de N caractères rendue »). Ce qui passe encore ici
+  /// vient d'un nom saisi plus long que l'échantillon du lint ; on coupe alors
+  /// au dernier séparateur de mot, jamais en plein mot — ces lignes sont
+  /// servies telles quelles dans les brèves de la Une et sur l'écran « Ce qui
+  /// s'est passé ».
   void addJournal(GameState s, String text, {required String kind, int poids = 1, List<String> tags = const [], String? arc, Map<String, String> extra = const {}}) {
     var t = formatText(text, s, extra: extra).trim();
-    if (t.length > 120) t = '${t.substring(0, 119).trimRight()}…';
+    if (t.length > 120) t = ellipsizeWords(t, 120);
     if (t.isEmpty) return;
     s.journal.add(JournalEntry(
       season: s.season,
@@ -864,8 +894,23 @@ class Director {
     final hi = s.slot + a.startMax;
     var u = lo;
     if (a.kind == 'serie') {
-      u = freeSlot(lo, [...s.openingSlots, ..._singleSlotAnchors(s)], [lo, hi], ecart: q.ouvertureEcart, maxSlot: math.max(15, hi));
-      if (u <= s.slot) u = s.slot + 1;
+      final taken = [...s.openingSlots, ..._singleSlotAnchors(s)];
+      u = freeSlot(lo, taken, [lo, hi], ecart: q.ouvertureEcart, maxSlot: math.max(15, hi));
+      // Le recul de `freeSlot` peut rendre un slot déjà passé : on repart du
+      // créneau suivant, en repassant par la garde des ±`ouverture_ecart`
+      // (sans elle, ce rattrapage posait une ouverture collée à une autre).
+      if (u <= s.slot) {
+        u = freeSlot(s.slot + 1, taken, [s.slot + 1, math.max(hi, s.slot + 1)],
+            ecart: q.ouvertureEcart, maxSlot: math.max(15, hi));
+        if (u <= s.slot) u = s.slot + 1;
+      }
+      // Dernier garde-fou du § 1.2 (« jamais deux ouvertures à moins de 3
+      // cartes ») : quand la saison est si pleine que `freeSlot` ne rend plus
+      // qu'un slot serré — ou que le rattrapage ci-dessus retombe sur le
+      // créneau suivant —, on N'OUVRE PAS. L'intrigue reste éligible et
+      // s'ouvrira au prochain tour ; une ouverture collée à une autre, elle,
+      // ne se rattrape pas.
+      if (taken.any((t) => (u - t).abs() < q.ouvertureEcart)) return;
     }
     final dueN = s.seasonStartN + u;
     armArc(s, a, c, dueN: dueN, deadlineN: dueN + math.max(0, a.startMax - a.startMin));
@@ -956,7 +1001,15 @@ class Director {
     //     deux ouvertures à moins de 3 cartes ».
     final dueNext = _sortedQueue(s).any((sc) =>
         (sc.kind == 'etape' || sc.kind == 'chaine') && sc.dueN == n + 1 && content.cards[sc.card] != null && evalWhen(content.cards[sc.card]!.when, c.withCard(content.cards[sc.card])));
-    if (!dueNext && activeForeground(s) < q.maxActive) {
+    // Une ouverture forcée est servie au créneau courant : elle ne peut pas se
+    // décaler, donc si elle tombait à moins de `ouverture_ecart` d'une
+    // ouverture de la saison, on ne l'ouvre pas — on retombe sur (c). C'est la
+    // seconde fuite de la garde « jamais deux ouvertures à moins de 3 cartes ».
+    final tooClose = s.openingSlots.any((t) => (s.slot - t).abs() < q.ouvertureEcart);
+    // `activeForegroundHere` et non `activeForeground` : une intrigue qui
+    // n'attend plus que la saison suivante (fusée longue) ne tient pas la
+    // saison courante et ne doit pas retenir le plafond contre la cadence.
+    if (!dueNext && !tooClose && activeForegroundHere(s) < q.maxActive) {
       final el = eligibleArcs(s, c);
       final fromReserve = _takeFromReserve(s, el);
       if (fromReserve != null) {
@@ -982,6 +1035,10 @@ class Director {
           }
         }
       }
+    }
+    if (const bool.fromEnvironment('GAPDIAG')) {
+      // ignore: avoid_print
+      print('FORCE slot=${s.slot} season=${s.season} soft=${soft.length} dueNext=$dueNext tooClose=$tooClose active=${activeForegroundHere(s)} elig=${eligibleArcs(s, c).length} openings=${s.openingSlots}');
     }
     // (c) last resort: pull the nearest future step to now (counted).
     Scheduled? best;
@@ -1088,6 +1145,12 @@ class Director {
       if (last != null && n - last < card.cooldown) continue;
       if (!servable(s, card)) continue;
       if (voixSaturee(s, card.speaker)) continue; // garde de voix
+      // Une Nouvelle n'a aucune raison d'enchaîner sur le même visage : elle
+      // n'est le rappel de rien. La garde générale n'écarte que la TROISIÈME
+      // carte d'affilée ; ici on refuse déjà la deuxième (budget § 5.2
+      // « paires consécutives même locuteur ≤ 6 % »). Si la liste se vide, le
+      // tirage retombe sur le sac au créneau suivant, dette gardée.
+      if (card.speaker != null && card.speaker == s.lastSpeaker) continue;
       if (!evalWhen(card.when, c.withCard(card))) continue;
       final year = card.year;
       if (year != null) {
@@ -1163,7 +1226,10 @@ class Director {
           card: kNouvellesDuPasse,
           kind: 'passe',
           dueN: s.ncards,
-          deadlineN: s.ncards + 3,
+          // 3 → 5, même raison que les paliers : trois « Nouvelles du passé »
+          // ouvertes au même retour de saison arrivaient échues ensemble
+          // (`passe+passe+passe` dans les empilements de la S1).
+          deadlineN: s.ncards + 5,
           fallback: 'drop',
           sameClub: false,
           payload: {'epilogue': arc?.epilogue ?? const <String, dynamic>{}, 'passe_titre': title},
@@ -1370,13 +1436,18 @@ class Director {
         // l'ordre fixe des personnages, comme les alarmes. Sans quoi trois
         // paliers arrivent échus au même tirage (backlog, bande 6). Zéro aléa.
         final queued = s.scheduled.where((sc) => sc.kind == 'palier').length;
+        // Fenêtre de 3 → 7 créneaux. Un palier est une couleur, pas une
+        // urgence : à trois créneaux il devenait échu (bande 6) au milieu des
+        // étapes et c'est lui qu'on retrouve dans les empilements de la S0
+        // (`etape+etape+palier`, budget § 5.2 « backlog ≤ 2 »). Le décalage
+        // d'un créneau par palier déjà en file est conservé.
         enqueue(
           s,
           Scheduled(
             card: cardId,
             kind: 'palier',
             dueN: s.ncards + 1 + queued,
-            deadlineN: s.ncards + 3 + queued,
+            deadlineN: s.ncards + 7 + queued,
             fallback: 'drop',
             sameClub: false,
             payload: {'character': ch.id, 'threshold': t},
@@ -1571,7 +1642,7 @@ class Director {
         final u0 = lo + rng.nextInt(hi - lo + 1);
         final u = freeSlot(u0, [...s.openingSlots, ...anchors], prog.fenetre, ecart: q.ouvertureEcart);
         s.openingSlots.add(u);
-        armArc(s, content.arcs[e.arc]!, c, dueN: s.seasonStartN + u, deadlineN: s.seasonStartN + u + 2);
+        armArc(s, content.arcs[e.arc]!, c, dueN: s.seasonStartN + u, deadlineN: s.seasonStartN + u + q.ouvertureEcheance);
       }
       // Réserve : les premiers candidats restants, dans l'ordre du fichier, triés.
       s.reserve = [for (final e in cands.take(prog.reserve)) e.arc]..sort();
@@ -1608,8 +1679,9 @@ class Director {
 /// d'un slot ; au-delà de `maxSlot` (ou de `fenetre[1] + ecart`) on repart du
 /// plafond et on recule jusqu'à un slot libre ; à défaut, `u` tel quel.
 int freeSlot(int u, List<int> taken, List<int> fenetre, {int ecart = 3, int maxSlot = 15}) {
-  bool busy(int x) => taken.any((t) => (x - t).abs() < ecart);
-  final cap = math.min(maxSlot, fenetre.last + ecart);
+  int dist(int x) => taken.isEmpty ? 99 : taken.map((t) => (x - t).abs()).reduce(math.min);
+  bool busy(int x) => dist(x) < ecart;
+  final cap = math.max(1, math.min(maxSlot, fenetre.last + ecart));
   var x = u;
   while (x <= cap && busy(x)) {
     x += 1;
@@ -1619,7 +1691,35 @@ int freeSlot(int u, List<int> taken, List<int> fenetre, {int ecart = 3, int maxS
   while (x >= 1 && busy(x)) {
     x -= 1;
   }
-  return x >= 1 ? x : u;
+  if (x >= 1) return x;
+  // Aucun slot libre dans les deux sens : le chemin de recul rendait `u` tel
+  // quel, c'est-à-dire un slot voisin d'une ouverture — la fuite mesurée par
+  // `simulate` (« deux ouvertures à moins de 3 slots », non nulle à 2 000
+  // carrières). On rend maintenant le slot le MOINS serré de la fenêtre :
+  // sans aléa, à égalité le plus proche de `u`, puis le plus petit.
+  var best = math.max(1, math.min(u, cap));
+  var bestD = dist(best);
+  for (var k = 1; k <= cap; k++) {
+    final d = dist(k);
+    if (d > bestD || (d == bestD && ((k - u).abs() < (best - u).abs()))) {
+      best = k;
+      bestD = d;
+    }
+  }
+  return best;
+}
+
+/// Coupe [t] à [max] caractères (le caractère de suspension compris) **au
+/// dernier espace** : une brève de Une ne s'arrête jamais au milieu d'un mot.
+/// La ponctuation laissée en bout de coupe est retirée. Sans aléa ; si le
+/// premier mot dépasse déjà la borne, on coupe net.
+String ellipsizeWords(String t, int max) {
+  if (t.length <= max) return t;
+  var head = t.substring(0, max - 1);
+  final sp = head.lastIndexOf(' ');
+  if (sp >= max ~/ 3) head = head.substring(0, sp);
+  head = head.replaceFirst(RegExp(r"[\s.,;:!?·—–-]+$"), '');
+  return head.isEmpty ? '…' : '$head…';
 }
 
 /// Effects of a « Nouvelles du passé » card come from the arc's `epilogue`.

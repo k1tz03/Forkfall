@@ -108,6 +108,27 @@ cards:
       effects: {tribunes: "+", parole: 1, set: [espion_presse], outcome: presse, relation: {meneche: -1}, react: en.re.vukic_croquis}
       answer: "Il écrit « un homme ». Le croquis paraît en page six, avec la croix."
 
+  # ------------------------------------------ S1 bis · la casquette, sans l'adjoint
+  # Repli de porteur : l'intrigue est portée par Vukić, et quand il quitte le
+  # club l'étape armée tombait (raison `statut`) — l'histoire commençait, tenait
+  # deux ou trois créneaux, puis disparaissait sans issue. Le capitaine, déjà au
+  # cast, la reprend : c'est lui qui regarde la haie depuis le rond central.
+  - id: en.espion.haie_brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, presse, absurde]
+    speaker: brehaut
+    tone: leger
+    text: "Bréhaut, une chaussure à la main, montre le fond du terrain : « Le groupe vit bien, mais il y a une casquette qui ne bouge pas depuis vingt minutes, et personne ici n'a d'adjoint à envoyer voir. »"
+    left:
+      label: "On lui montre un faux onze"
+      effects: {force: 2, vestiaire: "-", relation: {brehaut: 1}, next: {step: cafe, in: [1, 2]}}
+      answer: "Gigi joue en attaque dix minutes. La casquette prend des notes ; Bréhaut compte les pages."
+    right:
+      label: "J'appelle Massenet"
+      effects: {tribunes: "+", direction: "-", relation: {meneche: 1}, next: {step: presse, in: [1, 3]}}
+      answer: "Il arrive en vingt minutes, avec un photographe qui a un plus gros objectif que les jumelles."
+
   # ----------------------------------------------------------- S3 · la compo
   - id: en.espion.compo
     roles: [entraineur]
@@ -157,3 +178,20 @@ cards:
       label: "On ne fait pas ça"
       effects: {parole: 1, tribunes: "+", force: -1, set: [espion_retour], outcome: retour}
       answer: "Il range les jumelles. Le samedi, dans leur tribune, quelqu'un porte une casquette et te salue."
+
+  # ------------------------------------------- S4 bis · le retour, sans l'adjoint
+  - id: en.espion.retour_brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, presse, chaine]
+    speaker: brehaut
+    tone: leger
+    text: "Bréhaut fait tourner une paire de jumelles au bout de la courroie : « Leur haie est plus haute que la nôtre, {toi}, et j'ai un cousin qui habite en face. Je regarde, ou je range ça ? »"
+    left:
+      label: "Regarde, prends une chaise"
+      effects: {force: 3, parole: -1, set: [espion_retour], outcome: retour, relation: {brehaut: 1}}
+      answer: "Il revient à midi. Il a vu leur faux onze, et leur gardien qui fume derrière le but."
+    right:
+      label: "On ne fait pas ça"
+      effects: {parole: 1, tribunes: "+", force: -1, set: [espion_retour], outcome: retour}
+      answer: "Il range les jumelles chez son cousin. Le samedi, quelqu'un dans leur tribune te salue."

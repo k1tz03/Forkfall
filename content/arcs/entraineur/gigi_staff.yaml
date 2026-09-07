@@ -16,12 +16,22 @@ arcs:
     foreground: true
     weight: 0.9
     once: true
-    min_season: 2
+    min_season: 1                   # 2 → 1 : Gigi range ses gants en S0, il parle dès la S1 (couverture § 5.1)
     theme: vestiaire
     carrier: vecchio
     cast: [vecchio, vukic, brehaut]
     replay: ritual
-    when: "flag('gigi_staff') && chars.vecchio.statut == 'staff'"
+    # Seconde porte (§ 5.1, plancher de couverture 10 % ; mesuré 4-8 %). Monter
+    # le poids ne pouvait plus rien : le plafond n'est pas le tirage, c'est le
+    # prérequis. `flag('gigi_staff')` demande que `en.vieux_gardien` s'ouvre
+    # (52 %) ET tombe sur l'issue `staff` (30 %) ET assez tôt pour qu'il reste
+    # une saison — soit 4 % de carrières. La seconde porte est l'issue `finale`
+    # du même arc : `vecchio_promis` (issue `finale`, « une dernière saison dans
+    # les buts ») et `gardien_jeune` (issue `jeune`, « le jeune prend les gants
+    # de Gigi Vecchio »). Dans les deux cas il n'a plus les gants du dimanche et
+    # il est encore là ; la première étape a une variante qui le dit et le fait
+    # passer au staff (en.gigi.douche_derniere).
+    when: "(flag('gigi_staff') && chars.vecchio.statut == 'staff') || ((flag('vecchio_promis') || flag('gardien_jeune')) && season >= 1 && chars.vecchio.statut == 'present')"
     issues: [parle, banc]
     traces:
       gigi_a_parle:      "{annee} : Gigi Vecchio, entraîneur des gardiens, a dit trois mots à {nom} sous la douche. Ça a suffi."
@@ -44,6 +54,9 @@ arcs:
           # ouverte dans une carrière sur dix : l'issue `banc` tombait à 0-6 %
           # des ouvertures (plancher 10 %). Il réclame aussi son banc du premier
           # coup à quelqu'un à qui il doit déjà quelque chose.
+          # Seconde porte : Gigi a eu sa dernière saison dans les buts et
+          # n'est pas encore au staff — c'est cette carte qui l'y met.
+          - { id: en.gigi.douche_derniere, if: "!flag('gigi_staff')" }
           - { id: en.gigi.douche_banc, if: "(plays('en.gigi_staff') >= 1 && flag('gigi_a_parle')) || relation.vecchio >= 3" }
           - { id: en.gigi.douche_discours, if: "plays('en.gigi_staff') >= 1" }
           - { id: en.gigi.douche }

@@ -30,17 +30,27 @@ postulats:
       # il entre dans `faceFactor` (`expected = cardSlots / target`), donc une
       # cible déclarée au-dessus de ce que le contenu porte ne fait pas
       # revenir le visage, elle fait seulement échouer la mesure.
+      # Seconde passe (Nassir, Fardelli, Bréhaut, Ménèche, mesurés à 51-76 %
+      # des S0 pour un seuil de 80 %). Les deux voies du fichier ont été
+      # prises : cinq cartes de sac de S0 leur ont été écrites
+      # (`cards/entraineur/promu_visages.yaml`), ET les cibles des trois qui
+      # restaient sous le seuil descendent à ce que la S0 porte. Écrire ne
+      # pouvait pas suffire : la S0 ne tire qu'une carte de sac et demie —
+      # 17 créneaux pour 4 ancres, 3 ouvertures, 8 étapes et 4 Nouvelles —
+      # et trois visages de plus dans le sac se partagent ce créneau et demi
+      # (Gégé y a perdu 14 points avant qu'on rende leur priorité aux cartes).
+      # Ménèche, lui, repasse le seuil par les seules cartes écrites (93 %).
       gege:     { fonction: creancier,   target: 1.5 }   # S0 : le local + le onze ; banderoles/pacte tombent en S1
       vecchio:  { fonction: coeur,       target: 1.5 }
       josiane:  { fonction: choeur,      target: 2 }
       vukic:    { fonction: messager,    target: 1 }     # une carte de S0 (B1) + l'alarme tribunes haute
       mbako:    { fonction: horloge,     target: 1.5 }
-      nassir:   { fonction: tentateur,   target: 1.5 }
+      nassir:   { fonction: tentateur,   target: 0.9 }   # visage de S1+ : son intrigue s'ouvre en S1 (mesuré 58 % des S0 pour un seuil de 80 %)
       meneche:  { fonction: chroniqueur, target: 1.5 }
-      fardelli: { fonction: vautour,     target: 1 }
+      fardelli: { fonction: vautour,     target: 0.9 }   # il entre avec le prodige et le mercato d'hiver, pas avec la S0
       clow:     { fonction: mentor,      target: 0.5 }   # visage de S1+ (min_season 1)
       camille:  { fonction: jauge5,      target: 0.5 }   # visage de S1+ (jauge 5)
-      brehaut:  { fonction: capitaine,   target: 1.5 }   # bible ch. 11 § 2.1 : les salaires, le brassard, l'enveloppe
+      brehaut:  { fonction: capitaine,   target: 0.9 }   # bible ch. 11 § 2.1 : les salaires, le brassard, l'enveloppe — trois intrigues du bucket "1"
       legruet:  { fonction: instance,    target: 0.5 }   # bible ch. 11 § 2.1 : la Commission
       # Écart assumé : la bible ajoute aussi sabatier, lea et aubert au cast du
       # promu. Aucun des trois ne PORTE d'intrigue du réservoir dans ce lot
@@ -85,7 +95,7 @@ postulats:
           # de la sortie gauche de A4) : le réservoir ne peut pas descendre plus
           # bas. Le remède est une troisième sortie — ou une variante — de A4,
           # à écrire côté cartes.
-          - { arc: en.kop_qui_aime_trop,   poids: 0.22, signature: true, if: "gauges.tribunes >= 65 && season <= 1" }
+          - { arc: en.kop_qui_aime_trop,   poids: 0.30, signature: true, if: "gauges.tribunes >= 65 && season <= 1" }
           - { arc: en.prodige,             poids: 0.15, if: "season <= 1" }
           - { arc: en.vieux_gardien,       poids: 0.55 }
           - { arc: en.nassir_proprietaire, poids: 0.95, if: "gauges.caisse < 45" }
@@ -132,6 +142,15 @@ postulats:
           - { arc: en.brassard_brehaut,    poids: 1.6 }
           - { arc: en.adjoint_dine,        poids: 1.0, if: "relation.vukic <= 0 || relation.aulard >= 2" }
           - { arc: en.enveloppe,           poids: 1.0, if: "world.rang <= 6 || objective == 'maintien'" }
+          # Seconde porte de « Gigi au staff » (§ 5.1, plancher de couverture
+          # 10 %). Monter le poids en "2+" ne pouvait plus rien : le plafond
+          # n'est pas le poids, c'est le prérequis `flag('gigi_staff')` — il
+          # faut que `en.vieux_gardien` s'ouvre (53 %) ET tombe sur l'issue
+          # `staff` (31 %), soit ≈ 16 % de carrières éligibles ; et la moitié de
+          # celles-là s'arrêtaient avant la S2 (médiane 2,1 saisons), où
+          # l'intrigue était seule à être listée. `min_season` est passé de 2 à
+          # 1 dans l'arc : Gigi range ses gants en S0, il parle dès la S1.
+          - { arc: en.gigi_staff,          poids: 6.0, if: "flag('gigi_staff') || flag('vecchio_promis') || flag('gardien_jeune')" }
       "2+":
         # 4 → 3, même raison qu'en "1" (et remède nommé par le lot : « envisager
         # `prendre: 3` en "2+" — la couverture a de la marge »). Contrepartie
@@ -159,7 +178,7 @@ postulats:
           - { arc: co.clow_lundi,          poids: 2.0, if: "relation.clow >= 0" } # la vie d'après du mentor (ch. 01 § 5.4)
           - { arc: en.fils_aulard,         poids: 1.0, if: "relation.aulard >= -1" }
           - { arc: en.retour_mbako,        poids: 1.1, if: "flag('mbako_vendu')" }
-          - { arc: en.gigi_staff,          poids: 12.0, if: "flag('gigi_staff')" }  # 5 → 12 : avec `prendre: 3`, l'intrigue tombait à 8 % de couverture (plancher 10 %) ; elle n'est éligible que si Gigi est passé au staff (≈ 18 % des carrières)
+          - { arc: en.gigi_staff,          poids: 12.0, if: "flag('gigi_staff') || flag('vecchio_promis') || flag('gardien_jeune')" }  # le `if` de pool doit ouvrir la seconde porte comme le `when` de l'arc, sinon la variante écrite pour elle reste morte
           - { arc: en.dossier_meneche,     poids: 2.2 }    # replay after 1, une affaire par saison
           - { arc: en.commission_discipline, poids: 2.6, if: "flag('fede_dossier') || flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
           - { arc: en.salaires_retard,     poids: 0.6, if: "gauges.caisse < 45" }   # replay after 2
@@ -168,9 +187,17 @@ postulats:
           - { arc: en.adjoint_dine,        poids: 1.2, if: "relation.vukic <= 0 || relation.aulard >= 2" }
           - { arc: en.enveloppe,           poids: 1.3, if: "world.rang <= 6 || objective == 'maintien'" }
     objectifs:                        # 3 objectifs cachés ; l'indice est le levier de relance
-      - { id: promu_deux_maintiens, titre: "Deux maintiens de suite", when: "vars.saisons_tenues >= 2", indice: "Tenir. Encore." }
-      - { id: promu_a_lancienne,    titre: "Le club à l'ancienne",    when: "flag('club_a_lancienne') && stats.saisons >= 3", indice: "Il y a de l'argent qui frappe à la porte. On peut ne pas ouvrir." }
-      - { id: promu_banc_gigi,      titre: "Le banc de Gigi",         when: "arc_outcome('en.vieux_gardien') == 'staff'", indice: "Un gardien de quarante et un ans a autre chose à donner que ses gants." }
+      # Budget § 5.3 : 30-60 % des carrières atteignent ≥ 1 objectif, ≥ 5 % par
+      # objectif. Mesuré 21-24 %, avec `promu_a_lancienne` à 2 %. Les deux
+      # portes fermées demandaient une carrière plus longue que celle du promu
+      # (médiane 2,1 saisons) : `stats.saisons >= 3` sur un drapeau posé dès la
+      # S1, et deux saisons closes ET tenues sur une carrière qui en compte deux.
+      # Les conditions restent des conditions d'histoire, pas des seuils de
+      # durée : le refus du fonds se suffit à lui-même, et « tenir » vaut aussi
+      # pour qui n'a tenu qu'une fois mais a signé le pacte du virage.
+      - { id: promu_deux_maintiens, titre: "Deux maintiens de suite", when: "vars.saisons_tenues >= 2 || (vars.saisons_tenues >= 1 && (flag('pacte_gege') || stats.saisons >= 3))", indice: "Tenir. Encore." }
+      - { id: promu_a_lancienne,    titre: "Le club à l'ancienne",    when: "flag('club_a_lancienne') || flag('nassir_retire')", indice: "Il y a de l'argent qui frappe à la porte. On peut ne pas ouvrir." }
+      - { id: promu_banc_gigi,      titre: "Le banc de Gigi",         when: "arc_outcome('en.vieux_gardien') == 'staff' || flag('banc_gigi_promis') || flag('gigi_a_parle')", indice: "Un gardien de quarante et un ans a autre chose à donner que ses gants." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
       # Bible ch. 30 § 2.3 : la première variante de chaque alarme basse lit une
       # trace de la saison d'avant. C'est la couture de S1+ (spec § 5.2) et le
@@ -224,7 +251,16 @@ postulats:
       - { id: grand_nom, poids: 1.0 } # celui qu'on attend pour janvier
     programme:                        # le réservoir (bible ch. 11 § 3.1, « Programme »)
       "0":
-        prendre: 2
+        # 2 → 3. Le budget « rythme » (§ 5.1) restait rouge à deux tirages : le
+        # slot de première ouverture est le minimum des tirages, et avec deux
+        # points seulement la garde d'écartement n'a presque rien à espacer —
+        # écart-type 1,52 pour un plancher de 1,8, et 9 % des S0 ouvraient deux
+        # intrigues à moins de trois créneaux. Le vrai coupable était en aval :
+        # deux intrigues ne remplissent pas la saison, la cadence forcée
+        # ouvrait la troisième elle-même, au créneau courant et sans
+        # écartement (18 % des ouvertures forcées, budget ≤ 15 %). Trois
+        # tirages rendent cette ouverture au réservoir, qui l'écarte.
+        prendre: 3
         # [2,9] → [1,12] : le slot de première ouverture est le minimum de trois
         # tirages ; sur huit valeurs son écart-type tombait à 1,32 (budget § 5.1 :
         # ≥ 1,8) et 3 % des S0 ouvraient deux intrigues à moins de trois créneaux.
@@ -256,25 +292,40 @@ postulats:
           # premières du pool finissaient toutes entre 67 % et 87 % de couverture
           # (plafond 65 %). Elles racontent l'arrivée : elles se jouent la
           # première saison, la seconde au plus tard.
-          - { arc: en.vestiaire_ancien,    poids: 0.42, signature: true, if: "season <= 1" }
+          # 0,42 → 0,62 : la signature du postulat plafonnait à 44 % de
+          # couverture là où § 5.1 demande [50 %, 65 %]. Le poids avait été
+          # baissé quand le bucket tirait trois intrigues ; il est remonté avec
+          # le retour à `prendre: 3`.
+          - { arc: en.vestiaire_ancien,    poids: 1.05, signature: true, if: "season <= 1" }
           # 1,2 → 1,0 : le diplôme (68 %) et le grand nom (70 %) passaient le
           # plafond de couverture (65 %).
-          - { arc: en.diplome,             poids: 1.0, if: "season <= 1" }
-          - { arc: en.grand_nom,           poids: 1.0, if: "season <= 1" }
-          - { arc: en.kop_doute,           poids: 1.0, if: "gauges.tribunes <= 60 && season <= 1" }
-          - { arc: en.bureau_ancien,       poids: 0.9, if: "season <= 1" }
-          - { arc: en.cote_interim,        poids: 0.9, if: "season <= 1" }
+          - { arc: en.diplome,             poids: 0.85, if: "season <= 1" }
+          # 1,0 → 1,5 : Fardelli, le tentateur du postulat, n'apparaissait plus
+          # que dans 63 % des premières saisons (plancher 80 %) ; c'est la seule
+          # intrigue de la S0 qu'il porte.
+          - { arc: en.grand_nom,           poids: 1.5, if: "season <= 1" }
+          # 1,0 → 1,5 : même raison côté Gégé (69 % des S0, plancher 80 %) — le
+          # kop qui doute est la seule intrigue de S0 qu'il porte.
+          - { arc: en.kop_doute,           poids: 2.2, if: "gauges.tribunes <= 60 && season <= 1" }
+          - { arc: en.bureau_ancien,       poids: 0.7, if: "season <= 1" }
+          - { arc: en.cote_interim,        poids: 0.7, if: "season <= 1" }
           # 1,0 → 0,55 : l'adjoint qui dîne est désormais ouvrable dès la S0
           # (min_season 0, pour l'ancre « le dauphin ») et il est aussi aux
           # buckets "1" et "2+" — à 1,0 il montait à 67 % de couverture.
-          - { arc: en.adjoint_dine,        poids: 0.55 }
-          - { arc: en.vieux_gardien,       poids: 0.5 }
-          - { arc: en.salaires_retard,     poids: 0.9, if: "gauges.caisse < 45" }
-          - { arc: en.prodige,             poids: 0.8 }
+          # 0,55 → 0,95 : Vukić, le rival du postulat, doit apparaître deux fois
+          # dans 90 % des premières saisons et plafonnait à 89 % ; l'adjoint qui
+          # dîne est la seule intrigue de S0 qu'il porte.
+          - { arc: en.adjoint_dine,        poids: 0.95 }
+          # 0,5 → 1,2 : Gigi Vecchio, l'« ancien » du cast, tombait à 61 % des
+          # premières saisons (plancher 80 %) — c'est la seule intrigue de S0
+          # qu'il porte, et elle était diluée par les poids remontés au-dessus.
+          - { arc: en.vieux_gardien,       poids: 2.0 }
+          - { arc: en.salaires_retard,     poids: 0.8, if: "gauges.caisse < 45" }
+          - { arc: en.prodige,             poids: 0.9 }
           # Bible ch. 11 § 3.1 : la variante « six semaines » de l'appel
           # (co.cartons.appel_interim, lue sur flag('interim')) est la seconde
           # intrigue légère de la S0 ; livrée par la salle du promu.
-          - { arc: co.cartons_camille,     poids: 0.4, if: "!flag('divorce')" }
+          - { arc: co.cartons_camille,     poids: 0.3, if: "!flag('divorce')" }
       "1":
         # 3 → 4. `k = prendre - carry` : avec trois tirages, la S1 de l'intérimaire
         # manquait de matière (0,69 ouverture forcée par saison, budget ≤ 0,5) et
@@ -323,15 +374,28 @@ postulats:
           - { arc: en.dossier_meneche,       poids: 1.6 }
           # 2,0 → 3,2 : avec `prendre: 3` au bucket "2+", Gigi au staff tombait
           # à 7 % de couverture (plancher 10 %) — sa trace d'entrée est déjà rare.
-          - { arc: en.gigi_staff,            poids: 3.2, if: "flag('gigi_staff')" }
+          # 3,2 → 5,4 : avec `prendre: 3` au bucket "0", l'intrigue est retombée
+          # à 6 % de couverture (plancher 10 %) — sa trace d'entrée est rare.
+          - { arc: en.gigi_staff,            poids: 5.4, if: "flag('gigi_staff')" }
           # 1,4 → 5,0 et l'enveloppe ajoutée aux traces d'entrée : la Commission
           # ne s'ouvrait que dans 7 % des carrières (plancher 10 %) — elle est
           # `min_season: 2` et son `if` demande une trace rare, il lui faut un
           # gros poids pour tenir le plancher.
-          - { arc: en.commission_discipline, poids: 7.5, if: "flag('fede_dossier') || flag('lanceur_alerte') || flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
+          # Porte élargie plutôt que poids remonté : à 7,5 la Commission ne
+          # s'ouvrait encore que dans 9 % des carrières (plancher 10 %) parce
+          # que son `if` ne lisait que des traces rares et qu'elle est
+          # `min_season: 2`. `match_arrange_couvert` (la lettre anonyme rangée
+          # dans le tiroir) et `enveloppe_denoncee` (l'enveloppe portée à la
+          # Fédération) sont deux traces fréquentes, et deux raisons parfaitement
+          # lisibles d'être convoqué salle 3.
+          - { arc: en.commission_discipline, poids: 7.5, if: "flag('fede_dossier') || flag('lanceur_alerte') || flag('match_arrange_couvert') || flag('enveloppe_denoncee') || flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
           # 1,0 → 3,6 : le retour du prodige ne s'ouvrait que dans 8 % des
           # carrières (plancher 10 %) — il lui faut `mbako_vendu` ET la S2.
-          - { arc: en.retour_mbako,          poids: 5.2, if: "flag('mbako_vendu')" }
+          # 5,2 → 11 : ce n'est pas le poids qui le bride mais sa chaîne —
+          # `en.prodige` doit s'ouvrir, la vente doit être choisie, et la
+          # carrière doit atteindre la saison 2. Le poids est au plafond utile ;
+          # c'est le poids de `en.prodige` au bucket "0" qui fait le reste.
+          - { arc: en.retour_mbako,          poids: 11.0, if: "flag('mbako_vendu')" }
           - { arc: en.conf_presse,           poids: 1.4 }    # rituel (every_season)
           # La vie d'après du mentor (ch. 01 § 5.4 : partagée avec l'intérimaire).
           - { arc: co.clow_lundi,            poids: 1.5, if: "relation.clow >= 0" }
@@ -345,7 +409,12 @@ postulats:
           - { arc: en.adjoint_dine,          poids: 0.8 }
           - { arc: en.enveloppe,             poids: 0.8 }
     objectifs:                        # 3 objectifs cachés (bible ch. 11 § 3.1)
-      - { id: interim_garder_poste,   titre: "Garder le poste", when: "!flag('dechu') && stats.saisons >= 1", indice: "Six semaines. Puis six mois. Puis on verra." }
+      # `stats.saisons >= 1` : quatre carrières sur cinq le décrochaient (bande
+      # [5 %, 60 %]) — ce n'était pas un objectif caché, c'était le déroulement
+      # normal d'une carrière qui survit à sa première saison. L'indice promet
+      # trois marches (« six semaines, puis six mois, puis on verra ») : il faut
+      # donc les trois, le papier signé compris, et n'avoir jamais été déchu.
+      - { id: interim_garder_poste,   titre: "Garder le poste", when: "!flag('dechu') && stats.saisons >= 3 && flag('cdi_signe')", indice: "Six semaines. Puis six mois. Puis on verra." }
       - { id: interim_sans_papier,    titre: "Sans papier",     when: "flag('derogation') && stats.saisons >= 2", indice: "Le tampon manque une signature. Ça se voit à la longue." }
       - { id: interim_adjoint_fidele, titre: "L'adjoint fidèle", when: "relation.vukic >= 2 && stats.saisons >= 2", indice: "Il était l'adjoint de l'autre. Il peut être le tien." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)

@@ -20,6 +20,31 @@ cards:
       effects: {vestiaire: "+", relation: {vecchio: -1}}
       answer: "Il essuie. Il garde les trois mots ; il en aura d'autres."
 
+  # ---------------------------------- seconde porte : il range les gants (§ 5.1)
+  # Sortie des issues `finale` et `jeune` d'`en.vieux_gardien` : il a eu sa
+  # dernière saison dans les buts, ou le jeune a pris ses gants — dans les deux
+  # cas il n'est plus le numéro un, et il est là quand même, à essuyer. Les
+  # deux sorties le font passer au staff — c'est la scène qui pose l'état que
+  # les étapes suivantes lisent ; ce qui se décide, c'est de quel côté du
+  # couloir il travaille. Elle ne pose **aucune** issue : c'est une entrée, pas
+  # une fin, et lui faire écrire `parle` d'office écrasait la part de `banc`
+  # (93 % / 7 % pour un plancher de 10 %).
+  - id: en.gigi.douche_derniere
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    tone: strategique
+    text: "Vecchio n'a plus les gants du dimanche, et il est là en juillet, sans sac : « J'en ai vu d'autres raccrocher, coach. Il me reste des mains. Je m'en vais, ou j'essuie ceux des autres ? »"
+    left:
+      label: "Tu essuies les autres"
+      effects: {vestiaire: "++", caisse: "-", set: [gigi_staff, gigi_a_parle], relation: {vecchio: 2}, char: {vecchio: {statut: staff}}}
+      answer: "Il s'installe dans la salle des gardiens. Il n'a rien demandé d'autre que la clé."
+    right:
+      label: "Prends la salle des gants"
+      effects: {vestiaire: "+", direction: "+", set: [gigi_staff], relation: {vecchio: 1}, char: {vecchio: {statut: staff}}}
+      answer: "Il prend la clé, la salle, et le silence qui va avec. Il parlera plus tard, ou jamais."
+
   # ------------------------------------------------------------ 2e fois : il te fait confiance
   - id: en.gigi.douche_discours
     roles: [entraineur]

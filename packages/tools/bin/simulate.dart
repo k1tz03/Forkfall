@@ -235,6 +235,7 @@ class SeasonMetrics {
   int alarms = 0;
   int events = 0; // events armed this season (engine counter)
   int maxBacklog = 0;
+  String maxBacklogKinds = '';
   int samePairs = 0;
   int maxGap = 0;
   int lastStory = 0; // slot of the last story beat (0 = none yet)
@@ -478,6 +479,9 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     cur.closed = true;
     final trailing = seasonSlots - cur.lastStory;
     cur.maxGap = math.max(cur.maxGap, trailing);
+    if (const bool.fromEnvironment('GAPDIAG') && cur.maxGap > (curSeason <= 1 ? 3 : 4)) {
+      stderr.writeln('GAPDIAG seed=$seed season=$curSeason maxGap=${cur.maxGap} trailing=$trailing lastStory=${cur.lastStory}');
+    }
   }
 
   void noteTraces(int season) {
@@ -671,7 +675,14 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         // `dueN = deadlineN = -1` en attendant sa saison : la compter comme
         // échue gonflait le backlog de deux ou trois entrées qui n'attendaient
         // rien (défaut de mesure, corrigé avec les échéances).
-        final backlog = s.scheduled.where((e) => !e.isLongFuse && e.dueN >= 0 && e.deadlineN <= s.ncards).length;
+        final overdueQ = s.scheduled.where((e) => !e.isLongFuse && e.dueN >= 0 && e.deadlineN <= s.ncards).toList();
+        final backlog = overdueQ.length;
+        if (backlog > m.maxBacklog) {
+          // Ce qui empile : sans la composition, « backlog P99 3 » ne dit pas
+          // par où le desserrer (une étape d'intrigue, une alarme, un palier et
+          // une ancre de script ne se règlent pas au même endroit).
+          m.maxBacklogKinds = (overdueQ.map((e) => e.kind).toList()..sort()).join('+');
+        }
         m.maxBacklog = math.max(m.maxBacklog, backlog);
         if (s.season == 0) s0Ids.add(p.id);
       }
@@ -954,8 +965,13 @@ List<ArcDef> reservoirArcs(Content content, PostulatDef post) => content.arcsSor
 /// le dénominateur de la matrice des fins (spec variété §5.3 : « chaque fin
 /// atteinte au moins une fois »), sans lequel le budget reste déclaratif.
 Set<String> reachableEndings(Content content, PostulatDef post, Set<String> arcsOuverts) {
-  // Les quatre fins que le moteur pose lui-même, sans `end:` en contenu.
-  final out = <String>{'generique', 'grand_deballage'};
+  // Les fins que le moteur pose lui-même, sans `end:` en contenu.
+  // `generique` n'en fait PAS partie : le moteur ne la pose jamais, elle n'est
+  // qu'un repli de rendu (`content.endings[s.endingId] ?? …['generique']`).
+  // Comptée comme porte, elle rendait le budget § 5.3 (« chaque fin atteinte au
+  // moins une fois ») impossible à passer pour tous les postulats, et masquait
+  // les fins réellement pauvres.
+  final out = <String>{'grand_deballage'};
   final role = content.roles[post.role];
   if (role != null) {
     out.add(post.role == 'joueur' ? 'jubile' : 'en_retraite');
@@ -1246,7 +1262,10 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   }
   final sd = _stdDev(firstSlots);
   _line(sd >= 1.8 && closePairs == 0, 'rythme : slot de première ouverture (S0)',
-      firstSlots.isEmpty ? 'aucune ouverture d\'intrigue en S0' : 'écart-type ${_f(sd, 2)} · moy ${_f(_mean(firstSlots))} · S0 avec deux ouvertures à < 3 slots ${_f(100 * closePairs / math.max(1, n), 0)} % (hors $jumps sauts d\'arc)',
+      firstSlots.isEmpty
+          ? 'aucune ouverture d\'intrigue en S0'
+          : 'écart-type ${_f(sd, 2)} · moy ${_f(_mean(firstSlots))} · S0 avec deux ouvertures à < 3 slots $closePairs'
+              ' (${_f(100 * closePairs / math.max(1, n), 1)} %, hors $jumps sauts d\'arc)',
       'σ ≥ 1,8 ; 0 %');
 
   final reservoir = reservoirArcs(content, post);
@@ -1266,6 +1285,20 @@ List<String> _reportDiversity(List<RunRecord> recs, Content content, int postula
   } else {
     _line(coverOk, 'couverture du réservoir (${reservoir.length} intrigues)', reservoir.map((a) => '${a.id.replaceFirst(RegExp(r'^(en|jp|co)\.'), '')} ${_f(100 * cover[a.id]!, 0)}%').join(' · '), 'chaque ∈ [10 %, 65 %]');
     _line(zero.isEmpty, '  intrigues jamais ouvertes', zero.isEmpty ? 'aucune' : zero.join(', '), 'aucune');
+    // La bande propre à l'intrigue signature ([50 %, 65 %], spec § 5.1) : elle
+    // n'était mesurée nulle part, seule la bande commune [10 %, 65 %] l'était,
+    // si bien qu'une signature sous son plancher passait pour saine.
+    final signatures = <String>{
+      for (final b in (post.programme?.buckets.values ?? const <BucketDef>[]))
+        for (final e in b.pool)
+          if (e.signature) e.arc,
+    }.where(cover.containsKey).toList()
+      ..sort();
+    for (final sig in signatures) {
+      final v = cover[sig]!;
+      _line(v >= 0.50 && v <= 0.65, '  couverture de la signature',
+          '${sig.replaceFirst(RegExp(r'^(en|jp|co)\.'), '')} ${_f(100 * v, 0)} %', '∈ [50 %, 65 %]');
+    }
     _line(seen20Share >= 0.70, '  intrigues vues sur 20 carrières', '${_f(100 * seen20Share, 0)} % (${seen20.length}/${reservoir.length})', '≥ 70 %');
   }
   int forcedOpen = 0, totalOpen = 0;
@@ -1650,7 +1683,13 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     // un budget. Le maximum reste affiché.
     final backlogP99 = _pct(backlog, 0.99);
     final deadlineOk = (b == 'S0' ? overdueRate <= 0.60 : overdueRate <= 0.40) && backlogP99 <= 2;
-    stdout.writeln('  ${deadlineOk ? '✔' : '✗'} ${'échéances : étapes échues · backlog P99 · max'.padRight(44)} ${_f(100 * overdueRate, 0)} % · ${_f(backlogP99, 0)} · $backlogMax');
+    final kinds = <String, int>{};
+    for (final m in ms) {
+      if (m.maxBacklog >= 3 && m.maxBacklogKinds.isNotEmpty) kinds[m.maxBacklogKinds] = (kinds[m.maxBacklogKinds] ?? 0) + 1;
+    }
+    final topKinds = kinds.entries.toList()..sort((a, b2) => b2.value != a.value ? b2.value.compareTo(a.value) : a.key.compareTo(b2.key));
+    stdout.writeln('  ${deadlineOk ? '✔' : '✗'} ${'échéances : étapes échues · backlog P99 · max'.padRight(44)} ${_f(100 * overdueRate, 0)} % · ${_f(backlogP99, 0)} · $backlogMax'
+        '${topKinds.isEmpty ? '' : ' · empilements ≥ 3 : ${topKinds.take(4).map((e) => '${e.key} ×${e.value}').join(', ')}'}');
     if (assertBudgets && !deadlineOk) failures.add('[$b] échéances ${_f(100 * overdueRate, 0)} % / backlog P99 ${_f(backlogP99, 0)}');
     final forcedMean = _mean(forced);
     stdout.writeln('  ${forcedMean <= 0.5 ? '✔' : '✗'} ${'cadence forcée (ouvertures/tirages) par saison'.padRight(44)} moy ${_f(forcedMean, 2)}');
@@ -1804,13 +1843,22 @@ void _reportArc(List<RunRecord> recs, Content content, int postulat, String arcI
     final o = r.outcomes[arcId];
     if (o != null && o.isNotEmpty) outcomes[o] = (outcomes[o] ?? 0) + 1;
   }
-  final missing = arc.issues.where((i) => !outcomes.containsKey(i)).toList();
-  _line(arc.issues.isEmpty || missing.isEmpty, 'issues atteintes',
+  // Les issues déclarées rares ne sont pas des issues manquantes : à 300
+  // tirages une issue à 4 % sort dans un échantillon sur deux, et le rapport
+  // accusait alors une intrigue saine (`troque` d'en.dossier_meneche). Même
+  // clause d'exception que le bloc « issues » du rapport de diversité, et
+  // l'échantillon est nommé pour que « jamais atteinte » se lise « pas dans
+  // ces $n tirages ».
+  final rares = _issuesRares()[arcId] ?? const <String>{};
+  final missing = arc.issues.where((i) => !outcomes.containsKey(i) && !rares.contains(i)).toList();
+  final missingRare = arc.issues.where((i) => !outcomes.containsKey(i) && rares.contains(i)).toList();
+  _line(arc.issues.isEmpty || missing.isEmpty, 'issues atteintes (sur $n tirages)',
       arc.issues.isEmpty
           ? 'l\'intrigue ne déclare pas d\'issues'
-          : '${arc.issues.map((i) => '$i ${_f(100 * (outcomes[i] ?? 0) / math.max(1, withOpening), 0)} %').join(' · ')}'
-              '${missing.isEmpty ? '' : ' · jamais atteinte(s) : ${missing.join(', ')}'}',
-      'toutes');
+          : '${arc.issues.map((i) => '$i ${_f(100 * (outcomes[i] ?? 0) / math.max(1, withOpening), 0)} %${rares.contains(i) ? ' (rare)' : ''}').join(' · ')}'
+              '${missing.isEmpty ? '' : ' · jamais atteinte(s) : ${missing.join(', ')}'}'
+              '${missingRare.isEmpty ? '' : ' · hors échantillon, déclarée(s) rare(s) : ${missingRare.join(', ')}'}',
+      'toutes, hors issues_rares');
   for (final e in outcomes.entries.where((e) => !arc.issues.contains(e.key))) {
     stdout.writeln('    ⚠ issue hors `issues` : ${e.key} (${e.value})');
   }

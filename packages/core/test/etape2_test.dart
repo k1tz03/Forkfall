@@ -380,12 +380,17 @@ void main() {
       expect(s3.pending!.payload['kind'], isNot('reaction'));
       expect(s3.stats['miss_reaction'], 1);
       expect(s3.reaction, isNull);
-      // Plafond : une réaction posée au-delà de reactions_max retombe sur le beat.
+      // Plafond : au-delà de `reactions_max`, la réaction n'est plus POSÉE du
+      // tout (correctif « annulations par run » : la poser puis la jeter faisait
+      // 1 888 réponses promises et jamais servies sur 2 000 carrières). Le beat
+      // normal est servi, rien n'est mis en attente, et `miss_reaction` ne
+      // compte plus une perte qui n'a pas lieu d'être.
       final s4 = _atScript(e, 3, 'sc.a1');
       s4.reactionsThisSeason = 1;
       final s5 = e.choose(s4, false);
       expect(s5.pending!.payload['kind'], isNot('reaction'));
-      expect(s5.stats['miss_reaction'], 1);
+      expect(s5.reaction, isNull);
+      expect(s5.stats['miss_reaction'], isNull);
       // Le compteur repart à l'ouverture de saison.
       expect(e.start(4).reactionsThisSeason, 0);
     });

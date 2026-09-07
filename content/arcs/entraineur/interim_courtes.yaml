@@ -19,6 +19,11 @@ arcs:
     carrier: josiane
     cast: [josiane, camille, vukic, brehaut]
     issues: [lu, rendu, donne]
+    # `donne` n'existe que sur la variante `carnet_presse`, servie quand le
+    # journaliste est déjà un contact (`relation.meneche >= 1`) : c'est une
+    # trahison sous condition, pas une branche ordinaire. Déclarée rare (§ 5.1,
+    # clause d'exception) au lieu d'être forcée à tenir le plancher de 10 %.
+    issues_rares: [donne]
     traces:
       carnet_ancien:  "{annee} : {nom} a lu le carnet de l'ancien. L'adjoint y était à toutes les pages."
       carnet_meneche: "{annee} : le carnet de l'ancien est arrivé chez le journaliste. On ne sait pas comment."
@@ -121,7 +126,7 @@ arcs:
     fallback: nouvelles
     epilogue:
       caisse: "-"
-      journal: "{annee} : la mairie de {ville} a classé le dossier de {club}. La maire a gardé la date au crayon dans son agenda."
+      journal: "{annee} : la mairie de {ville} a classé le dossier. La maire a gardé la date au crayon dans son agenda."
     steps:
       - id: rendez_vous
         card:

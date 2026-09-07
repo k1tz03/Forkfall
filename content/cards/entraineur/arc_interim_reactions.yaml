@@ -72,8 +72,74 @@ cards:
       effects: {tribunes: "+", relation: {meneche: 1}, direction: "-"}
       answer: "Il imprime. Le président lit « tête » ; il n'a pas le temps de lire le reste."
 
+  # ------------------------------------------- après I2 (prolongé, déchu) · le local
+  # Récurrence du casting (§ 5.2) : Gégé, l'« horloge » du postulat, n'apparaît
+  # dans aucune ancre de la première saison, et le réservoir à trois intrigues
+  # a fait disparaître la carte de routine où il passait — il tombait à 66 % des
+  # S0 pour un plancher de 80 %. Une réaction est servie hors créneau : elle le
+  # ramène sans prendre la place d'une Nouvelle.
+  - id: en.re.gege_nouvel_ordre
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Gégé, l'écharpe roulée sous le bras : « « Jusqu'à nouvel ordre », c'est écrit dans le journal, et le journal on l'a lu au local. La tribune n'oublie rien : on t'attend, ou on attend l'autre ? »"
+    left:
+      label: "Attendez-moi"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il déplie l'écharpe et la remet au cou. « Alors on t'attend, mais pas longtemps. »"
+    right:
+      label: "Attendez le classement"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il note le mot « classement ». Au local, ce n'est pas un mot qu'on aime."
+
+  # ---------------------------------------------- après I3 (le CDI ou la porte) · l'agent
+  # Même raison côté Fardelli, le « tentateur » : la seule intrigue de S0 qu'il
+  # porte est le grand nom, et elle ne s'ouvre pas toutes les saisons.
+  - id: en.re.fardelli_juin
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli, le cigare éteint contre la vitre de ta voiture : « Mon ami, on parle d'argent ou d'amitié ? En juin, ton président aura trois pages à signer, et moi trois noms. Tu es lequel ? »"
+    left:
+      label: "Le premier"
+      effects: {direction: "-", parole: 1, relation: {fardelli: 1}}
+      answer: "Il rit sans bruit. « Le premier, c'est celui qu'on appelle le dernier. »"
+    right:
+      label: "Aucun des trois"
+      effects: {direction: "+", relation: {fardelli: -1}}
+      answer: "Il range le carnet. « Alors on se reverra en janvier. » Il dit toujours janvier."
+
+  # ------------------------------------ après I1 (fil rouge « grand nom ») · l'agent
+  # Le message rose de Josiane appelle l'agent, pas encore la cassette : à ce
+  # créneau l'intrigue `en.grand_nom` n'est pas ouverte, et le jeudi comme le
+  # seau ne se jouent qu'après elle. La réaction du seau, elle, reste réservée
+  # à `en.grand_nom.cassette` (défaut « la même réaction deux fois »).
+  - id: en.re.fardelli_remplacant
+    roles: [entraineur]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli, le cigare éteint : « Mon ami, on parle d'argent ou d'amitié ? Ton bureau est encore à son nom et le mien a déjà trois numéros dessus. Je te lis les trois, ou je les garde ? »"
+    left:
+      label: "Lisez-les"
+      effects: {direction: "-", relation: {fardelli: 1}}
+      answer: "Il lit trois noms. Le troisième, il le dit deux fois ; c'est celui qu'il représente."
+    right:
+      label: "Gardez-les"
+      effects: {direction: "+", relation: {fardelli: -1}}
+      answer: "Il replie le carnet. « Alors je les lis au président. » Il ne plaisante qu'à moitié."
+
   # --------------------------------------------------- après la cassette · le seau
+  # `once` : elle annonce un jeudi daté et unique, et les réactions échappent au
+  # purge `deja_vue` — sans ce garde-fou, le joueur entendait la nouvelle deux
+  # fois dans la même carrière avant de la vivre.
   - id: en.re.fardelli_seau
+    once: true
     roles: [entraineur]
     arc: mercato
     tags: [mercato, agents]

@@ -31,7 +31,7 @@ cards:
   # -------------------------------------------------- F1 · cinquante-neuf jours
   # Variante qui lit le chapitre 01 (clow_stage) : il t'a eu au stage du
   # diplôme, et il se souvient de celui qui écrivait tout.
-  - id: en.clow.44_jours_stage
+  - id: en.clow.cinquante_neuf_jours_stage
     roles: [entraineur]
     arc: direction
     tags: [direction, piege]
@@ -41,14 +41,20 @@ cards:
     text: "Corven, un comptoir derrière la voix : « Au stage, petit, tu écrivais tout, même ce que je ne disais pas. Peur du président ? Je ne dirais pas que j'étais un grand ; j'étais devant les sans-peur. »"
     left:
       label: "Je l'écoute"
-      effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}, direction: "-", react: {card: en.re.josiane_au_telephone, chance: 0.6}}
+      # Jauges retirées des deux côtés : la politique de recentrage ne lit que
+      # les jauges, et « direction − » à gauche contre « direction + » à droite
+      # rendait l'écoute strictement perdante — l'issue `ecoute` tombait à 8 %
+      # contre 92 % d'`ingrat` (plancher 10 %). Écouter un vieux monsieur au
+      # téléphone ne coûte pas une jauge : ça coûte une heure, et le président
+      # s'en aperçoit plus tard.
+      effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}, parole: 1, react: {card: en.re.josiane_au_telephone, chance: 0.6}}
       answer: "Une heure au téléphone. Le président t'a cherché ; on lui a dit « le stage »."
     right:
       label: "Je gère"
-      effects: {relation: {clow: -1}, direction: "+"}
+      effects: {relation: {clow: -1}, force: 2}
       answer: "Tu raccroches le premier. Il repose un verre qu'il n'a pas bu."
 
-  - id: en.clow.44_jours
+  - id: en.clow.cinquante_neuf_jours
     roles: [entraineur]
     arc: direction
     tags: [direction, piege]
@@ -58,11 +64,12 @@ cards:
     text: "Corven, au téléphone : « Peur du président, {toi} ? Cinquante-neuf jours à Capitale FC, en 1971. Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. »"
     left:
       label: "Je l'écoute"
-      effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}, direction: "-", react: {card: en.re.josiane_au_telephone, chance: 0.6}, journal: {text: "{annee} : une heure au téléphone avec Dan Corven. Le président a cherché {nom} pendant une heure.", poids: 2, tags: [direction, piege]}}
+      # Même correctif de jauges que la variante `_stage` ci-dessus.
+      effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}, parole: 1, react: {card: en.re.josiane_au_telephone, chance: 0.6}, journal: {text: "{annee} : une heure au téléphone avec Dan Corven. Le président a cherché {nom} pendant une heure.", poids: 2, tags: [direction, piege]}}
       answer: "Une heure au téléphone. Le président t'a cherché pendant une heure."
     right:
       label: "Je gère"
-      effects: {relation: {clow: -1}, direction: "+", journal: {text: "{annee} : Dan Corven a appelé. {nom} a raccroché le premier ; le président a apprécié.", poids: 1, tags: [direction]}}
+      effects: {relation: {clow: -1}, force: 2, journal: {text: "{annee} : Dan Corven a appelé. {nom} a raccroché le premier ; le président a apprécié.", poids: 1, tags: [direction]}}
       answer: "Tu raccroches le premier. Le président t'a vu raccrocher. Il apprécie."
 
   # ------------------------------------------------------------ F2 · le verre
@@ -273,7 +280,7 @@ cards:
   # ------------------------------------------------------ Réactions des arcs
   # Le build dérive `kind: reaction` de tout `react:` qui les cite : ne pas
   # écrire `kind:`.
-  # Après en.clow.44_jours (← je l'écoute) : le président a cherché pendant
+  # Après en.clow.cinquante_neuf_jours (← je l'écoute) : le président a cherché pendant
   # l'heure de téléphone, et quelqu'un a répondu à sa place.
   - id: en.re.josiane_au_telephone
     roles: [entraineur]
