@@ -91,7 +91,7 @@ setpieces:
     - roles: [entraineur]
       when: "fil_rouge == 'argent'"
       speaker: aulard
-      text: "« J'ai pas le temps, j'ai un empire : l'objectif c'est {objectif_min} et un sponsor sur le maillot. Tu signes en bas ? »"
+      text: "« J'ai pas le temps, j'ai un empire : l'objectif c'est {objectif_min} et un sponsor sur le maillot. Tu signes en bas, {toi} ? »"
       left: "Je signe en bas"
       right: "Le maillot n'est pas à vendre"
       answer_left: "Il plie la page avant que tu la relises."
@@ -107,7 +107,7 @@ setpieces:
     - roles: [entraineur]
       when: "flag('naming_signe')"
       speaker: nassir
-      text: "« Ce n'est pas un club, c'est un actif : l'objectif de l'actif, c'est {objectif_min} et deux jeunes revendables. Vous validez ? »"
+      text: "« Ce n'est pas un club, c'est un actif : l'objectif de l'actif, c'est {objectif_min} et deux jeunes revendables. Vous validez, {toi} ? »"
       left: "Je valide le tableau"
       right: "Je ne vends pas de jeunes"
       answer_left: "La ligne devient verte devant toi. C'est tout ce qui change."
@@ -281,17 +281,33 @@ setpieces:
       left: "On y va"
     - roles: [entraineur]
       when: "season >= 2 && stats.titres == 0"
-      text: "Tour de Coupe. C'est la dernière chose que {nom} peut encore gagner cette saison. Tout le monde le sait, personne ne le dit."
+      text: "Tour de Coupe. C'est la dernière chose que ce club peut encore gagner cette saison. Tout le monde le sait, personne ne le dit."
       left: "On y va"
     - roles: [entraineur]
       when: "world.division >= 2"
-      text: "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Sur l'affiche du club adverse : « {NOM} »."
+      text: "Tour de Coupe. Un car, cinq heures de route, un terrain gras et une main courante. Sur l'affiche du club adverse : « {CLUB} »."
       left: "On y va"
     - roles: [entraineur]
-      # Budget « nom » (§ 5.3) : le repli de la Coupe est servi presque chaque
-      # saison et ne prononçait pas le nom. C'est le créneau le plus sûr du
-      # calendrier pour le dire — il suit un bloc de matchs, jamais une carte.
-      text: "Tour de Coupe. Le tirage offre à {nom} un adversaire surprise, et un vestiaire qui n'a pas envie d'y penser."
+      # Le nom est SORTI de la Coupe (relecture des quatre postulats, budget
+      # « nom » § 5.3 : « jamais deux cartes de nom direct de suite »). Le
+      # créneau paraissait sûr — il suit un bloc de matchs — mais il est aussi
+      # le seul écran nommé que le calendrier place JUSTE AVANT une carte
+      # (`retour: … match, cup, card, …`) : les deux seules paires mesurées
+      # étaient `cup → en.nassir.rachat`, où le fax de Josiane montre le nom
+      # dans le logo. Un écran de beat ne peut pas savoir ce qui vient après,
+      # et l'étape d'intrigue déjà armée ne peut pas se décaler : la garde ne
+      # peut donc être posée QUE par l'écriture, en ne nommant pas sur ce
+      # créneau-là. Le nom est repris au Bilan (`bilan_contrat`), qui est
+      # entouré d'écrans de beat des deux côtés.
+      # Le nom revient, mais par la VOIX : Madame Josiane nomme toujours le
+      # coach (`adresse`, les trois expressions), donc `{toi}` fait de cet
+      # écran une carte « nommée » au sens du § 5.3 sans en faire une carte de
+      # nom DIRECT — et les paires `{toi}` sont hors budget, par construction
+      # (« l'adresse d'un personnage est sa voix, pas le nom lâché par la
+      # carte »). C'est ce qui rend le créneau sûr alors qu'il précède une
+      # carte : on garde le nom à chaque Coupe, on perd la paire.
+      speaker: josiane
+      text: "Tour de Coupe. Madame Josiane apporte le tirage : « Un adversaire surprise, {toi}, et un vestiaire qui n'a pas envie d'y penser. J'en ai vu passer. »"
       left: "On y va"
     # ---- Joueur pro
     - roles: [joueur]
@@ -717,6 +733,16 @@ setpieces:
   # ══ bilan_verdict — le verdict (bible § 1.6) ═══════════════════════════════
   # Texte de narrateur, un bouton. Le seul beat où `bilan.*` est lisible.
   # Les cinq rôles de club partagent une liste : ici, entraîneur et joueur.
+  #
+  # C'est ici que le nom DIRECT du protagoniste est prononcé une fois par
+  # saison close (budget « nom » § 5.3 : « ≥ 2 cartes portant le nom dans ≥ 95 %
+  # des saisons » ET « jamais deux cartes de nom direct de suite »). Le Verdict
+  # est le seul créneau du calendrier encadré par deux écrans de beat des deux
+  # côtés — la Une (`bilan_une`, qui n'a pas de gabarit de set-piece et ne
+  # compte donc jamais) avant, le Contrat (nommé, lui, par l'ADRESSE du
+  # président, donc hors budget de paire) après. Un écran de beat ne sait pas
+  # ce qui vient après lui : c'est la seule façon de tenir la clause « jamais
+  # deux de suite » sans garde de moteur.
   bilan_verdict:
     - when: "bilan.tenu && bilan.rang <= 3"
       text: "Le verdict tombe : {rang}e. Le président a fait imprimer la photo de famille. Tu es dessus, au bord."
@@ -725,7 +751,7 @@ setpieces:
       text: "Le verdict tombe : {rang}e. {objectif} : tenu. La promesse d'août tient encore debout, à une semaine près."
       left: "Voir le classement"
     - when: "bilan.tenu"
-      text: "Le verdict tombe : {rang}e. {objectif} : tenu. Josiane a déjà rangé le dossier sous les autres."
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. Josiane a déjà rangé le dossier {nom} sous les autres."
       left: "Voir le classement"
     - when: "!bilan.tenu && bilan.outcome == 'descente'"
       text: "Le verdict tombe : {rang}e. Le mot « descente » est écrit en petit, en bas de la lettre."
@@ -743,10 +769,10 @@ setpieces:
       text: "Le verdict tombe : {rang}e. À un point de ce qu'on t'avait demandé. On a refait la photo sans toi."
       left: "Voir le classement"
     - when: "!bilan.tenu"
-      text: "Le verdict tombe : {rang}e. {objectif} : manqué. Le dossier de la saison fait deux pages, et la deuxième est vide."
+      text: "Le verdict tombe : {rang}e. {objectif} : manqué. Le dossier {nom} fait deux pages, et la deuxième est vide."
       left: "Voir le classement"
     # ---- Secours commun
-    - text: "Le verdict de la saison tombe. Objectif : {objectif}."
+    - text: "Le verdict de la saison tombe. Objectif : {objectif}. En haut du dossier, un nom : {nom}."
       left: "Voir le classement"
 
   # ══ bilan_contrat — on continue ou pas (bible § 1.7) ═══════════════════════
@@ -780,7 +806,7 @@ setpieces:
     - roles: [entraineur]
       when: "flag('otage_kop')"
       speaker: aulard
-      text: "« J'ai pas le temps, j'ai un empire, et la tribune a un entraîneur. Lequel des deux je prolonge ? »"
+      text: "« J'ai pas le temps, j'ai un empire, et la tribune a un entraîneur. Lequel des deux je prolonge, {toi} ? »"
       left: "Celui du banc"
       right: "Celui du virage"
       answer_left: "Il prolonge le banc. Le virage l'apprend par la radio."
@@ -788,7 +814,7 @@ setpieces:
     - roles: [entraineur]
       when: "flag('bilan_manque') && objective.promised"
       speaker: meneche
-      text: "« Juste une question, hors micro : vous aviez promis en août. On prolonge la promesse ou l'homme ? »"
+      text: "« Juste une question, hors micro, {toi} : vous aviez promis en août. On prolonge la promesse ou l'homme ? »"
       left: "L'homme"
       right: "La promesse"
       answer_left: "Il écrit « l'homme » et met des guillemets autour."
@@ -796,7 +822,7 @@ setpieces:
     - roles: [entraineur]
       when: "relation.nassir >= 1"
       speaker: nassir
-      text: "« Ce n'est pas un club, c'est un actif, et j'en ai deux autres. Vous prolongez ici, ou vous écoutez le tableau ? »"
+      text: "« Ce n'est pas un club, c'est un actif, et j'en ai deux autres. Vous prolongez ici, {toi}, ou vous écoutez le tableau ? »"
       left: "Je prolonge ici"
       right: "J'écoute le tableau"
       answer_left: "Il ferme le fichier. Il garde l'onglet ouvert."
@@ -804,7 +830,7 @@ setpieces:
     - roles: [entraineur]
       when: "flag('clow_ingrat')"
       speaker: josiane
-      text: "« J'en ai vu passer, et le vieux monsieur qui vous a formé n'a pas eu de coup de fil. Vous prolongez quoi, au juste ? »"
+      text: "« J'en ai vu passer, {toi}, et le vieux monsieur qui vous a formé n'a pas eu de coup de fil. Vous prolongez quoi, au juste ? »"
       left: "Je l'appellerai"
       right: "Le contrat, madame"
       answer_left: "Elle te donne le numéro. Elle l'avait déjà écrit."

@@ -5,12 +5,22 @@
 # passent jamais par le sac.
 cards:
   # ------------------------------------------------- F1 · La dernière année
+  # Les trois variantes posent la MÊME réaction d'agent (`jp.re.fardelli_amitie`,
+  # toutes sorties) : Fardelli est le porteur du postulat, et
+  # seule la variante `fil_rouge == 'agent'` la posait — soit une S0 sur trois.
+  # Il n'apparaissait deux fois qu'en 74 % des premières saisons, pour une cible
+  # de casting de 2,5 (budget § 5.2 : ≥ 90 %). L'ancre du slot 1 est la seule
+  # scène garantie de la S0 : c'est là que se tient la récurrence du patron.
   - id: jp.fin.f1_derniere_annee
     roles: [joueur]
     arc: contrat
     tags: [agents, mercato]
     speaker: fardelli
-    tone: strategique
+    # `leger` : le dessert pour deux qu'il mange tout seul est le gag d'entrée du
+    # postulat, pas un calcul. Les deux variantes de fil rouge (le genou, le
+    # vestiaire) gardent `strategique` — elles, elles calculent. Sans ça la S0
+    # tombait juste sous le plancher « léger ≥ 50 % » du budget § 5.2.
+    tone: leger
     text: "« Personne ne prolonge un genou, {toi}, et le tien fait du bruit jusqu'ici. On parle d'argent ou d'amitié : je te prolonge, pour dix pour cent de ce que je trouve. »"
     left:
       label: "Dix pour cent, trouve"
@@ -30,11 +40,11 @@ cards:
     text: "« Personne ne prolonge un genou, {toi}, et le Doc a la radio dans son tiroir. On parle d'argent ou d'amitié, alors je te le dis : j'ai demandé la radio, moi, avant les autres. »"
     left:
       label: "Tu as bien fait"
-      effects: {direction: "+", caisse: "-", relation: {fardelli: 1}, set: [agent_fardelli, radio_demandee], react: jp.re.sabatier_radio_agent}
+      effects: {direction: "+", caisse: "-", relation: {fardelli: 1}, set: [agent_fardelli, radio_demandee], react: [{card: jp.re.fardelli_amitie, chance: 0.5}, {card: jp.re.sabatier_radio_agent}]}
       answer: "Il commande un dessert pour deux. Le Doc, lui, n'a pas ouvert le tiroir."
     right:
       label: "Le genou me regarde"
-      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent, radio_demandee]}
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent, radio_demandee], react: {card: jp.re.fardelli_amitie}}
       answer: "Il replie le contrat sous le cendrier. La radio reste dans le tiroir ; elle y était bien."
 
   - id: jp.fin.f1_derniere_annee_vestiaire
@@ -46,11 +56,11 @@ cards:
     text: "« Un vestiaire prolonge un capitaine, {toi}, et Titi Bréhaut a le même genou, à un an près. On parle d'argent ou d'amitié : lequel des deux je vends cet hiver ? »"
     left:
       label: "Vends-moi, pas lui"
-      effects: {direction: "+", vestiaire: "-", relation: {fardelli: 1}, set: [agent_fardelli]}
+      effects: {direction: "+", vestiaire: "-", relation: {fardelli: 1}, set: [agent_fardelli], react: {card: jp.re.fardelli_amitie}}
       answer: "Il note ton nom en haut de sa liste. Bréhaut n'apprendra jamais qu'il y était."
     right:
       label: "Ni l'un ni l'autre"
-      effects: {vestiaire: "++", direction: "-", relation: {fardelli: -1, brehaut: 1}, set: [sans_agent]}
+      effects: {vestiaire: "++", direction: "-", relation: {fardelli: -1, brehaut: 1}, set: [sans_agent], react: {card: jp.re.fardelli_amitie}}
       answer: "Il replie le contrat sous le cendrier. Bréhaut te sert la main le lendemain, sans savoir pourquoi."
 
   # ------------------------------------------------------ F2 · L'offre d'hiver
@@ -147,7 +157,7 @@ cards:
     text: "« Quatorze matchs joués, {toi}, dimanche c'est le dernier, et ça reste entre la table et moi : le genou a tenu quatorze fois. Tu tentes la quinzième, ou tu regardes ? »"
     left:
       label: "La quinzième"
-      effects: {tribunes: "++", force: -1, set: [quinzieme_jouee], rand: [{p: 0.2, set: [genou_grave]}, {}]}
+      effects: {tribunes: "++", force: -1, set: [quinzieme_jouee], rand: [{p: 0.2, set: [genou_grave]}, {}], react: jp.re.fardelli_quinze}
       answer: "Tu joues. Le genou tient, ou dit ce qu'il avait à dire. En loge, on compte autre chose."
     right:
       label: "En tribune, radio propre"
@@ -163,7 +173,7 @@ cards:
     text: "« Quatorze matchs, {toi}, et la clause du président dit quinze ; ça reste entre la table et moi, mais lui a le calendrier aussi. Tu joues pour la clause, ou tu la laisses ? »"
     left:
       label: "Pour la clause"
-      effects: {direction: "+", tribunes: "+", set: [quinzieme_jouee], rand: [{p: 0.25, set: [genou_grave]}, {}]}
+      effects: {direction: "+", tribunes: "+", set: [quinzieme_jouee], rand: [{p: 0.25, set: [genou_grave]}, {}], react: jp.re.fardelli_quinze}
       answer: "Tu joues. La clause est cochée ; Josiane la coche elle-même, au crayon."
     right:
       label: "Je la laisse tomber"
@@ -227,9 +237,16 @@ cards:
     tone: strategique
     text: "« Aucune offre, {toi}, aucune, et on parle d'argent ou d'amitié, mais là il n'y a ni l'un ni l'autre. Tu attends août sans club, ou tu prends le banc de la réserve ? »"
     left:
+      # `sans_club` posait une trace, une manchette et une fin, mais AUCUN
+      # changement de club ni de rôle : la saison suivante s'ouvrait sur « tu es
+      # là depuis août » puis enchaînait une saison de club entière — derby,
+      # coupe, vestiaire, offre de D2 — pendant que l'Almanach imprimait
+      # « trente-deux ans, sans club ». Le contrat s'arrête donc pour de bon :
+      # l'été est vide, et ce qui rappelle fin août rappelle deux divisions plus
+      # bas (l'`answer` le disait déjà, elle est maintenant vraie).
       label: "J'attends août"
-      effects: {caisse: "-", set: [sans_club], outcome: sans_club}
-      answer: "Août arrive. Le téléphone ne sonne pas. Quelqu'un l'a débranché, pour voir."
+      effects: {caisse: "--", tribunes: "-", set: [sans_club], outcome: sans_club, club: {change: true, division: 2}}
+      answer: "Août arrive, le téléphone ne sonne pas ; quelqu'un l'a débranché, pour voir. Le trente et un il sonne une fois : deux divisions plus bas, on a perdu un joueur à l'entraînement."
     right:
       label: "Le banc de la réserve"
       effects: {direction: "+", tribunes: "--", caisse: "-", set: [banc_reserve, vers_entraineur], outcome: banc, relation: {vukic: 1}}
@@ -284,24 +301,30 @@ cards:
       effects: {direction: "++", vestiaire: "-"}
       answer: "Le coach t'appelle « mon relais ». Les jeunes t'appellent « le relais »."
 
+  # Le premier jour du club d'après. `sans_club` a fait son travail — la ligne
+  # d'Almanach, la manchette de la gazette, l'issue du script — et il se referme
+  # ici : sans `clear`, il restait posé pour toute la carrière et la Une « 32
+  # ANS, SANS CLUB » pouvait s'imprimer une saison où le joueur disputait son
+  # derby. La trace reste écrite au passé dans le journal ; le drapeau, lui, ne
+  # survit pas au premier jour.
   - id: jp.fin.s1_premier_jour_sans_club
     roles: [joueur]
     arc: famille
     tags: [famille, caisse]
     speaker: camille
     tone: strategique
-    text: "« Tu rentres à quelle heure, {toi}, ça ne veut plus rien dire, tu es là depuis août. Je demande autrement : tu prends le poste à la réserve, ou tu attends encore ? »"
+    text: "« Tu rentres à quelle heure, {toi} ? Depuis le trente et un août je ne sais plus : deux divisions, deux heures de route. Tu finis la saison là-bas, ou tu prends le poste à la réserve ? »"
     left:
-      label: "Le poste à la réserve"
       # Pas d'`outcome:` ici : l'issue de la carrière est `sans_club`, posée en
       # juin. La reprendre en `banc` effaçait la seule trace de l'été sans club
       # (spec §1.3 : `ArcState.outcome` garde la dernière issue posée).
-      effects: {direction: "+", caisse: "+", relation: {camille: 1, vukic: 1}, set: [vers_entraineur]}
-      answer: "Tu appelles. Il répond à la première sonnerie ; il attendait."
+      label: "Le poste à la réserve"
+      effects: {direction: "+", caisse: "+", relation: {camille: 1, vukic: 1}, set: [vers_entraineur], clear: [sans_club]}
+      answer: "Tu appelles. Il répond à la première sonnerie ; il attendait. Les deux heures de route, tu les fais une dernière fois, pour rendre le survêtement."
     right:
-      label: "J'attends encore"
-      effects: {caisse: "--", tribunes: "-", relation: {camille: -2}}
-      answer: "Tu attends. En janvier, un club de National appelle. Il paie en merguez."
+      label: "Je finis la saison là-bas"
+      effects: {caisse: "-", tribunes: "-", relation: {camille: -2}, clear: [sans_club]}
+      answer: "Tu finis. Deux heures le samedi, deux heures le dimanche. En janvier le club paie en retard, et une fois en merguez."
 
   # Après la valise (co.camille.valise pose `divorce`), Camille ne pose plus la
   # question de l'heure : c'est l'agent qui appelle, et il ne dit plus « ami ».
@@ -311,15 +334,15 @@ cards:
     tags: [agents, caisse]
     speaker: fardelli
     tone: strategique
-    text: "« Août, {toi}, et on parle d'argent ou d'amitié : là il n'y a ni l'un ni l'autre, plus de club et plus personne à la maison. Le banc de la réserve, ou tu attends encore ? »"
+    text: "« Le trente et un août, {toi}, et on parle d'argent ou d'amitié : là il n'y a ni l'un ni l'autre, deux divisions plus bas et plus personne à la maison. Le banc de la réserve, ou tu y vas ? »"
     left:
       label: "Le banc de la réserve"
-      effects: {direction: "+", caisse: "+", relation: {vukic: 1}, set: [vers_entraineur]}
+      effects: {direction: "+", caisse: "+", relation: {vukic: 1}, set: [vers_entraineur], clear: [sans_club]}
       answer: "Tu appelles l'adjoint. Il répond à la première sonnerie ; il attendait, lui aussi."
     right:
-      label: "J'attends encore"
-      effects: {caisse: "--", tribunes: "-", relation: {fardelli: -1}}
-      answer: "Tu attends. En janvier, un club de National appelle : un contrat au match, et le train."
+      label: "J'y vais"
+      effects: {caisse: "-", tribunes: "-", relation: {fardelli: -1}, clear: [sans_club]}
+      answer: "Tu y vas. Un contrat au match, et le train. Fardelli ne prend pas dix pour cent d'un contrat au match ; il ne rappelle plus."
 
   # ---------------------------------------------------------- S1 · Les jambes
   - id: jp.fin.s1_jambes
@@ -576,7 +599,47 @@ cards:
       effects: {tribunes: "+", direction: "+", set: [dernier_annonce, s2_jubile_vu]}
       answer: "Il écrit la date sur l'affiche, enfin. Elle attendait depuis quatre saisons."
 
-  # ------------------------------------------- Les deux alarmes du postulat
+  # --------------------------------------------- Les alarmes du postulat
+  # Alarme `vestiaire.low`. La fin `jp_mouton` (« On ne t'a plus jamais fait de
+  # passe. Même au toro. ») n'était atteinte par aucune carrière de ce postulat
+  # sur 5 000 : le vestiaire part à 50 et toutes les intrigues du réservoir le
+  # remontent (la pétition, le capitaine, Vecchio), tandis que la seule alarme
+  # basse du rôle rend +10 d'un côté et −5 de l'autre. Ici le refus coûte le
+  # double : le vieux qui joue seul finit seul, et la fin a enfin sa pente.
+  - id: jp.fin.alarme_brehaut_plus_de_passe
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Le groupe vit bien, {toi}, et il vit bien sans te faire la passe ; ça fait trois semaines, j'ai compté avec les autres. Tu viens le dire au groupe, ou tu joues seul ? »"
+    left:
+      label: "Je viens le dire"
+      effects: {vestiaire: "++", tribunes: "-", relation: {brehaut: 1}}
+      answer: "Tu le dis debout, au milieu. Trois joueurs regardent leurs crampons ; le quatrième te sert samedi."
+    right:
+      label: "Je joue seul"
+      effects: {vestiaire: "--", force: 1, relation: {brehaut: -1}, set: [joue_seul]}
+      answer: "Tu joues seul. Personne ne te siffle ; personne ne te sert non plus. Au toro, tu es au milieu, et tu y restes."
+
+  # Deuxième marche : quand on a déjà choisi de jouer seul, le vestiaire ne
+  # propose plus rien, il constate. C'est la pente qui mène à `jp_mouton`.
+  - id: jp.fin.alarme_brehaut_toro_seul
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    text: "« Au toro tu es au milieu depuis trois semaines, {toi}, et personne ne t'en sort ; le groupe vit bien, il a même arrêté de compter. Tu demandes à sortir, ou tu restes au milieu ? »"
+    left:
+      label: "Je demande à sortir"
+      effects: {vestiaire: "++", tribunes: "-", relation: {brehaut: 1}, clear: [joue_seul]}
+      answer: "Tu demandes. Bréhaut te sort au bout de deux passes ; il les compte à voix haute, les deux."
+    right:
+      label: "Je reste au milieu"
+      effects: {vestiaire: "---", force: 1}
+      answer: "Tu restes. À la fin de la séance, tout le monde est parti et le ballon est encore là. Toi aussi."
+
   - id: jp.fin.alarme_gege_papy
     roles: [joueur]
     arc: tribunes

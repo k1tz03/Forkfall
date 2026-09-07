@@ -78,7 +78,11 @@ arcs:
           # structurellement hors d'atteinte pour celui qui reste. On garde la
           # relégation, et on ajoute ce que le club-usine, lui, peut vivre :
           # trois saisons à ne jamais remonter, avec toi dedans.
-          - { id: jp.tifo.un_an_apres_statue, if: "flag('enfant_du_pays') && flag('fidele') && (flag('descente') || (stats.saisons >= 3 && world.rang >= 12))" }
+          # `world.rang >= 12` : deux saisons sur trois le club-usine finit
+          # entre 8 et 12, et la variante n'était jamais servie sur 300
+          # carrières. `>= 9` (la seconde moitié du tableau) suffit à dire ce
+          # qu'elle dit : la bâche est toujours là, et le classement, non.
+          - { id: jp.tifo.un_an_apres_statue, if: "flag('enfant_du_pays') && flag('fidele') && (flag('descente') || (stats.saisons >= 3 && world.rang >= 9))" }
           # Seuil ramené de 30 à 45 : la pépite part de 80 de tribunes et n'y
           # descend presque jamais, et la fin `jp_bache_pliee` restait sans
           # porte praticable.

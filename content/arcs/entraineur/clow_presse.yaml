@@ -114,13 +114,21 @@ arcs:
     fallback: drop
     steps:
       - id: trois_questions
-        card: en.presse.trois_questions
+        # Escalier du rituel : `every_season` rejoue la série toute la carrière,
+        # et la première étape n'avait aucune variante — la même question mot
+        # pour mot chaque année (mesuré : 10 traces de 3 saisons sur 40).
+        card:
+          - { id: en.presse.trois_questions_encore, if: "plays('en.conf_presse') >= 1" }
+          - { id: en.presse.trois_questions }
         next: [ { step: bureau, in: [1, 3] } ]
       - id: bureau
         # Le président a lu le journal : la variante lit ce que tu as répondu
-        # la veille (`presse_franc` posé par la sortie droite de l'étape 1).
+        # la veille (`presse_franc` posé par la sortie droite de l'étape 1),
+        # et, la deuxième année, le fait qu'il l'a déjà lu une fois.
         card:
+          - { id: en.presse.president_a_lu_encore, if: "flag('presse_franc') && plays('en.conf_presse') >= 1" }
           - { id: en.presse.president_a_lu, if: "flag('presse_franc')" }
+          - { id: en.presse.president_silence_encore, if: "plays('en.conf_presse') >= 1" }
           - { id: en.presse.president_silence }
         next: [ { step: hors_micro, in: [1, 3] } ]
       - id: hors_micro

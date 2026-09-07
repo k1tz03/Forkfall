@@ -8,11 +8,28 @@ arcs:
     roles: [entraineur, joueur]
     fallback: drop
     steps:
+      # Escalier des deux ancres (spec § 1.2 : « chaque ancre reçoit ≥ 2
+      # variantes »). Ce script reprend la main dès qu'un postulat quitte son
+      # propre script — après le Carrefour joueur → entraîneur, par exemple —
+      # et il est rejoué à chaque saison : sans marches, il servait la même
+      # carte au slot 1 et la même au slot 17 toute la carrière.
+      # Ordre : le contexte du postulat quitté d'abord (une fois, `_vu`), puis
+      # les marches de saison, la plus haute en tête.
       - id: rentree
-        card: co.script.rentree
+        card:
+          - { id: co.script.rentree_survetement, if: "(flag('vers_entraineur') || flag('banc_regarde')) && !flag('rentree_survet_vu')" }
+          - { id: co.script.rentree_quatrieme,   if: "season >= 4" }
+          - { id: co.script.rentree_troisieme,   if: "season >= 2" }
+          - { id: co.script.rentree_encore,      if: "season >= 1" }
+          - { id: co.script.rentree }
         at: [1, 1]
         season: "0+"
       - id: veille
-        card: co.script.veille
+        card:
+          - { id: co.script.veille_banc,      if: "(flag('vers_entraineur') || flag('banc_regarde') || flag('recule_poste')) && !flag('veille_banc_vu')" }
+          - { id: co.script.veille_quatrieme, if: "season >= 4" }
+          - { id: co.script.veille_troisieme, if: "season >= 2" }
+          - { id: co.script.veille_encore,    if: "season >= 1" }
+          - { id: co.script.veille }
         at: [17, 17]
         season: "0+"

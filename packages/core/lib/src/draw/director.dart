@@ -39,7 +39,13 @@ class _Hard {
 
 /// « Temps d'histoire » (spec variété §1.1) : ce que la cadence et la carte
 /// fatale de la Une comptent.
-const Set<String> kStoryKinds = {'script', 'etape', 'evenement', 'palier', 'chaine', 'reaction'};
+/// « Temps d'histoire » (spec variété §1.1). `passe` — la carte « Nouvelles du
+/// passé », qui dit ce qu'est devenue une intrigue laissée dans l'ancien club —
+/// s'y ajoute à l'étape 8 : c'est une scène avec un locuteur qui conclut une
+/// histoire, et la mesure de variété la comptait déjà comme carte d'histoire
+/// (`kStoryCardKinds`). Servie en bande 6 au milieu d'un creux, elle laissait
+/// un écart de 4 mesuré alors que le joueur, lui, venait de lire une histoire.
+const Set<String> kStoryKinds = {'script', 'etape', 'evenement', 'palier', 'chaine', 'reaction', 'passe'};
 const Set<String> _storyKinds = kStoryKinds;
 const Set<String> _softKinds = {'etape', 'chaine', 'palier'};
 const String kNouvellesDuPasse = 'tr.nouvelles_du_passe';
@@ -337,13 +343,41 @@ class Director {
   }
 
   /// Les retrouvailles (spec variété §1.13) : à un changement de rôle ou de
-  /// club, les deux visages à |relation| maximale (tri `(-|rel|, id)`) reviennent
-  /// en `[2, 6]` si leur carte existe. Zéro aléa.
+  /// club, les deux visages **qui ne sont plus là** et dont la relation n'est
+  /// pas nulle (tri `(-|rel|, id)`) reviennent en `[2, 6]` si leur carte
+  /// existe. Zéro aléa.
+  ///
+  /// Correction de relecture (postulat `pepite`, défaut majeur « des années
+  /// après en S1 ») : ces cartes sont écrites comme des scènes d'après
+  /// (« Mon ami, je ne travaille plus », « le président a rappelé cinq ans
+  /// après ») et partaient à des visages **restés présents**, qui reprenaient
+  /// la parole deux cartes plus tard — adieux à Fardelli au slot 5 de la S1,
+  /// Fardelli agent au slot 7, palier Fardelli au slot 17. Le filtre
+  /// `speakerOk` laissait passer : `statut_ok:` n'y est qu'un élargissement,
+  /// et un visage `present` passe toujours.
+  ///
+  /// Le filtre est ici, à la source, et non dans `speakerOk` : `statut_ok:`
+  /// sert aussi à *ouvrir* des statuts sans exclure `present`
+  /// (`co.gag.devant_s0` avec Corven encore là, `co.aulard.faveur_rappel`,
+  /// `co.gag.groupe_s2`), et le rendre restrictif partout ferait taire une
+  /// douzaine de cartes écrites pour un locuteur présent.
+  ///
+  /// Pourquoi le moteur ne fait partir personne de lui-même : les dix-sept
+  /// visages sont des **archétypes** (il y a un président, un capitaine, un
+  /// capo à chaque club), et les faire rester derrière à chaque transfert vide
+  /// le corpus — mesuré sur 300 carrières pépite : 2 309 purges `statut`,
+  /// temps d'histoire S2+ de 13 à 11, écart de cadence max de 9 à 16, coutures
+  /// de 81 % à 63 %. Un visage part donc quand le **contenu** le fait partir
+  /// (la valise de Camille pose `parti`, Mbako `vendu`, Bréhaut `staff`), et
+  /// c'est là seulement qu'il y a des retrouvailles à jouer.
   void retrouvailles(GameState s) {
     final faces = <String>[];
     for (final ch in content.charactersSorted) {
       if (ch.retrouvailles.isEmpty) continue;
       if ((s.relations[ch.id] ?? 0) == 0) continue;
+      // Le cœur de la correction : seul un visage qui ne parle plus a des
+      // retrouvailles. Un visage encore au club n'a pas d'« après ».
+      if (kStatutsParlants.contains(statutOf(s, ch.id))) continue;
       faces.add(ch.id);
     }
     faces.sort((a, b) {
@@ -729,17 +763,21 @@ class Director {
         if (chosen == null) continue;
         s.alarmsThisSeason += 1;
         // Plusieurs jauges peuvent franchir 20/80 au même tirage (le Bilan qui
-        // tombe) : les alarmes sont échelonnées d'un créneau chacune, dans
-        // l'ordre fixe des jauges, pour ne pas s'empiler échues au même moment
-        // (trois alarmes de suite = un trou de cadence, un backlog de 3).
+        // tombe) : les alarmes sont échelonnées dans l'ordre fixe des jauges,
+        // pour ne pas s'empiler échues au même moment (trois alarmes de suite =
+        // un trou de cadence, un backlog de 3). Étape 8 : deux créneaux
+        // d'écart, pas un. Une alarme n'est pas un temps d'histoire ; trois
+        // alarmes échelonnées d'un seul créneau tombaient malgré tout aux
+        // créneaux 3-4-5 et laissaient un écart de 4 entre deux histoires
+        // (mesuré sur la pépite, graine 698041536).
         final queued = s.scheduled.where((sc) => sc.kind == 'alarme').length;
         enqueue(
           s,
           Scheduled(
             card: chosen.id,
             kind: 'alarme',
-            dueN: n + queued,
-            deadlineN: n + 2 + queued,
+            dueN: n + 2 * queued,
+            deadlineN: n + 2 + 2 * queued,
             fallback: 'drop',
             sameClub: false,
             payload: {'gauge': g.id, 'side': side},
@@ -817,6 +855,21 @@ class Director {
     return true;
   }
 
+  /// La première étape de [a] est-elle servable **maintenant** (rôle, statut du
+  /// locuteur, `when` de la carte) ? Étape 8 : `forceStory` et `maintainArcs`
+  /// armaient l'intrigue tirée sans le vérifier. Quand la carte d'ouverture
+  /// n'était pas servable — locuteur parti, `when` faux, mauvais rôle —
+  /// l'intrigue était armée pour rien, la purge du tirage suivant l'annulait
+  /// (« annulations par run » : statut, role), et le créneau retombait sur une
+  /// carte de sac : c'est le trou de cadence de fin de saison (écart 4-5) et
+  /// une intrigue brûlée sans avoir été lue.
+  bool _openableNow(GameState s, ArcDef a, EvalContext c) {
+    if (a.steps.isEmpty) return false;
+    final card = content.cards[resolveVariant(a.steps.first, c)];
+    if (card == null || !servable(s, card, step: a.steps.first)) return false;
+    return evalWhen(card.when, c.withCard(card));
+  }
+
   List<ArcDef> eligibleArcs(GameState s, EvalContext c) {
     final out = <ArcDef>[];
     final prog = programmeOf(s);
@@ -871,7 +924,7 @@ class Director {
   void maintainArcs(GameState s, EvalContext c, Rng rng) {
     if (activeForeground(s) >= q.minActive) return;
     if (s.softStepsThisSeason >= q.softStepsMax) return;
-    final eligible = eligibleArcs(s, c);
+    final eligible = eligibleArcs(s, c).where((a) => _openableNow(s, a, c)).toList();
     final fromReserve = _takeFromReserve(s, eligible, foregroundOnly: true);
     if (fromReserve != null) {
       _openSpaced(s, fromReserve, c);
@@ -1010,7 +1063,7 @@ class Director {
     // n'attend plus que la saison suivante (fusée longue) ne tient pas la
     // saison courante et ne doit pas retenir le plafond contre la cadence.
     if (!dueNext && !tooClose && activeForegroundHere(s) < q.maxActive) {
-      final el = eligibleArcs(s, c);
+      final el = eligibleArcs(s, c).where((a) => _openableNow(s, a, c)).toList();
       final fromReserve = _takeFromReserve(s, el);
       if (fromReserve != null) {
         s.stats['reserve_forcee'] = (s.stats['reserve_forcee'] ?? 0) + 1;
@@ -1036,14 +1089,21 @@ class Director {
         }
       }
     }
-    if (const bool.fromEnvironment('GAPDIAG')) {
-      // ignore: avoid_print
-      print('FORCE slot=${s.slot} season=${s.season} soft=${soft.length} dueNext=$dueNext tooClose=$tooClose active=${activeForegroundHere(s)} elig=${eligibleArcs(s, c).length} openings=${s.openingSlots}');
-    }
     // (c) last resort: pull the nearest future step to now (counted).
+    //     Étape 8 (retune) : les paliers entrent dans ce filet. Quand la file
+    //     ne contient plus qu'un palier de relation et que le réservoir est à
+    //     sec, (a), (b) et un (c) restreint aux étapes rendaient tous null :
+    //     l'écart de cadence passait à 4 en S1 (9 saisons sur 1332) et à 5 en
+    //     S2+. Un palier est un temps d'histoire (`_storyKinds`) et il se
+    //     décale déjà d'un créneau à l'autre : l'avancer d'un cran est le
+    //     moindre mal devant quatre cartes de sac d'affilée.
     Scheduled? best;
     for (final sc in _sortedQueue(s)) {
-      if (sc.kind != 'etape' && sc.kind != 'chaine') continue;
+      if (!_softKinds.contains(sc.kind)) continue;
+      // Une étape se tire de n'importe où dans la saison ; un palier, lui, ne
+      // s'avance que s'il allait tomber (trois créneaux) — un palier de
+      // relation programmé loin est une promesse à date, pas un bouche-trou.
+      if (sc.kind == 'palier' && sc.dueN - n > 3) continue;
       if (sc.dueN <= n) continue;
       final card = content.cards[sc.card];
       if (card == null || !servable(s, card, step: stepOf(sc))) continue;

@@ -53,6 +53,15 @@ cards:
     right: {label: "C'est un match", effects: {tribunes: "+"}, answer: "Camille ne répond plus à tes messages."}
 
   # --- Script générique (arcs/common/generique.yaml) : les deux ancres de saison.
+  # Ces deux ancres sont rejouées à CHAQUE saison ("0+") de tout postulat dont le
+  # script s'est arrêté — c'est le cas de « Fin de contrat » dès que le joueur
+  # passe entraîneur au Carrefour (deux carrières sur trois). Sans variante,
+  # elles servaient la même réplique de Josiane au slot 1 et la même de Vukić au
+  # slot 17, saison après saison : mesuré sur 40 traces de trois saisons, dix
+  # rejouaient la rentrée et huit la veille. La spec § 1.2 exige ≥ 2 variantes
+  # par ancre de script ; l'escalier se lit sur `season` et sur les traces du
+  # postulat quitté (`vers_entraineur`, `banc_regarde`, `recule_poste`).
+  # Ordre : le contexte d'abord (une fois, drapeau `_vu`), puis les marches.
   - id: co.script.rentree
     roles: [entraineur, joueur]
     arc: direction
@@ -74,6 +83,94 @@ cards:
     text: "Vukić, la veille du dernier bloc : « Je te le dis parce que personne ne te le dira : le président a deux discours prêts. »"
     left: {label: "On joue le nôtre", effects: {vestiaire: "+", force: 1}, answer: "Le vestiaire connaît le plan. Le président non."}
     right: {label: "On joue le sien", effects: {direction: "+", vestiaire: "-"}, answer: "Le président range un discours. Il garde l'autre."}
+
+  - id: co.script.rentree_encore
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, le même café, le classeur déjà sorti : « Le radiateur a lâché en février, on a mis un pull sur la chaise. Deuxième saison : vous voulez le classeur, ou le pull ? »"
+    left: {label: "Le classeur", effects: {direction: "+"}, answer: "Elle l'ouvre à la page de février. Le pull reste sur la chaise ; il y est encore l'année d'après."}
+    right: {label: "Le pull", effects: {vestiaire: "+"}, answer: "Elle te tend le pull. Il est trop grand ; il a servi à trois personnes avant toi, elle donne les noms."}
+
+  - id: co.script.rentree_troisieme
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, sans café cette fois : « J'en ai vu passer, je vous l'ai déjà dit. Vous, je vous ai vu rester. On refait les comptes de zéro, ou on repart de l'an dernier ? »"
+    left: {label: "De zéro", effects: {direction: "+", caisse: "-"}, answer: "Elle recommence à la première ligne. À midi elle en est à mars ; elle avait raison, l'an dernier était juste."}
+    right: {label: "De l'an dernier", effects: {caisse: "+", direction: "-"}, answer: "Elle repart de sa colonne. Personne ne vérifie ; personne n'a jamais vérifié."}
+
+  - id: co.script.rentree_survetement
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: josiane
+    tone: strategique
+    cooldown: 0
+    text: "Madame Josiane, une pile de survêtements sur le comptoir : « Vous n'êtes plus sur la feuille de match, alors vous êtes sur la mienne. Je vous mets où : au budget, ou aux clés du terrain ? »"
+    left: {label: "Au budget", effects: {direction: "+", vestiaire: "-", set: [rentree_survet_vu]}, answer: "Elle t'inscrit au budget. Tu apprends le prix d'un jeu de chasubles ; tu ne l'oublieras plus."}
+    right: {label: "Aux clés du terrain", effects: {vestiaire: "++", direction: "-", set: [rentree_survet_vu]}, answer: "Elle te donne les clés. Il y en a onze ; deux n'ouvrent plus rien, elle ne sait plus lesquelles."}
+
+  - id: co.script.rentree_quatrieme
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: josiane
+    tone: leger
+    cooldown: 0
+    text: "Madame Josiane, la porte du secrétariat ouverte avec le pied : « Le radiateur, on l'a changé. C'est la nouvelle. On accroche votre photo au couloir, ou on laisse le mur ? »"
+    left: {label: "Accrochez", effects: {tribunes: "+", direction: "-"}, answer: "Elle accroche. La photo est de la deuxième saison ; c'est celle qu'elle préfère, elle ne dit pas pourquoi."}
+    right: {label: "Laissez le mur", effects: {vestiaire: "+"}, answer: "Elle range le cadre dans le placard, avec les autres. Il y en a six ; elle les connaît dans l'ordre."}
+
+  - id: co.script.veille_encore
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: strategique
+    cooldown: 0
+    text: "Vukić, la veille du dernier bloc, le cahier fermé : « Cette année le président n'a qu'un discours, et je te le dis parce que personne ne te le dira : c'est le mauvais. On le devance, ou il le lit ? »"
+    left: {label: "On le devance", effects: {vestiaire: "+", direction: "-"}, answer: "Tu parles avant lui. Il lit quand même, à trois personnes, dans le couloir."}
+    right: {label: "Qu'il le lise", effects: {direction: "+", vestiaire: "-"}, answer: "Il le lit. Le vestiaire écoute debout ; deux joueurs regardent leurs crampons pendant tout le passage sur l'honneur."}
+
+  - id: co.script.veille_troisieme
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    cooldown: 0
+    text: "Vukić, la veille, le cahier ouvert à une page pleine : « Trois ans que je note la veille. Tu veux savoir ce que tu as dit les deux fois d'avant, ou tu préfères pas ? »"
+    left: {label: "Lis-moi ça", effects: {vestiaire: "+", parole: 1}, answer: "Il lit. C'est la même phrase, à un mot près. Le mot qui change est celui qui compte, et il le souligne."}
+    right: {label: "Je préfère pas", effects: {direction: "+", vestiaire: "-"}, answer: "Il referme. Il note la date quand même, et à côté : « n'a pas voulu »."}
+
+  - id: co.script.veille_banc
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    cooldown: 0
+    text: "Vukić, la veille, deux gobelets sur le muret : « Tu as changé de côté de la ligne blanche, et d'ici on voit tout, sauf le score. Tu regardes le match debout, ou assis avec moi ? »"
+    left: {label: "Debout", effects: {tribunes: "+", vestiaire: "-", set: [veille_banc_vu]}, answer: "Tu restes debout tout le match. Le quatrième arbitre te le dit deux fois ; la deuxième, il sourit."}
+    right: {label: "Assis, avec toi", effects: {vestiaire: "+", direction: "+", relation: {vukic: 1}, set: [veille_banc_vu]}, answer: "Tu t'assois. Il te passe le gobelet et le cahier ; le cahier d'abord."}
+
+  - id: co.script.veille_quatrieme
+    roles: [entraineur, joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: leger
+    cooldown: 0
+    text: "Vukić, la veille, le même muret : « Le président a fait imprimer les deux discours cette année, pour gagner du temps. J'en ai récupéré un à la photocopieuse. Tu le lis, ou on le brûle ? »"
+    left: {label: "Fais voir", effects: {direction: "-", parole: 1}, answer: "Tu lis celui qui commence par « après mûre réflexion ». Tu sais maintenant lequel il garde en poche."}
+    right: {label: "On le brûle", effects: {vestiaire: "+", direction: "+"}, answer: "Vous ne le brûlez pas ; vous le laissez sur la photocopieuse, à l'endroit. Le lendemain il n'y est plus."}
 
   # --- « Nouvelles du passé » : une affaire d'un ancien club refait surface (effets = épilogue de l'arc).
   # `once` : le moteur met cette carte en file à chaque intrigue abandonnée pour

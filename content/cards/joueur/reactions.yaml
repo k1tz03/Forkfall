@@ -143,6 +143,47 @@ cards:
       effects: {relation: {camille: -1}}
       answer: "Elle regarde seule. Elle photocopie la page trois, à tout hasard."
 
+  # ----------------------------------- après le mercato d'hiver de la pépite
+  # Défaut de relecture « récurrence du casting en S0 » : Camille, la cinquième
+  # jauge, n'était vue que dans 58 % des premières saisons de la pépite depuis
+  # que jp.camille_bac est redescendu à son poids juste (le bac tenait 96 % des
+  # S0 à lui seul). Le mercato d'hiver, lui, est une ancre : il tombe dans
+  # chaque S0, et c'est la carte du postulat qui la concerne le plus — on lui
+  # apprend qu'on déménage, ou qu'on ne déménage pas.
+  - id: jp.re.camille_janvier
+    roles: [joueur]
+    arc: famille
+    tags: [famille, mercato]
+    speaker: camille
+    tone: strategique
+    when: "!flag('divorce')"
+    text: "« On m'a dit « janvier » à la boulangerie avant que tu me le dises, {toi}. Tu rentres à quelle heure — on fait les cartons ce week-end, ou on attend juin ? »"
+    left:
+      label: "Les cartons ce week-end"
+      effects: {relation: {camille: 1}, vestiaire: "-"}
+      answer: "Vous faites les cartons le samedi. Elle en garde un, ouvert, « pour ce qu'on oublie »."
+    right:
+      label: "On attend juin"
+      effects: {relation: {camille: -1}, direction: "+"}
+      answer: "Elle range le carton vide sous l'escalier. Il y reste jusqu'en juin, ouvert."
+
+  - id: jp.re.camille_juin
+    roles: [joueur]
+    arc: famille
+    tags: [famille, mercato]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce')"
+    text: "« Donc on reste, et je le dis à l'école lundi, parce qu'ils demandent en janvier, eux. Tu rentres à quelle heure — je dis « on reste », ou je dis « on verra » ? »"
+    left:
+      label: "Dis-leur qu'on reste"
+      effects: {relation: {camille: 1}, tribunes: "+"}
+      answer: "Elle le dit lundi. L'école le note au crayon ; à l'école aussi, on connaît les fax de juin."
+    right:
+      label: "Dis-leur qu'on verra"
+      effects: {relation: {camille: -1}, caisse: "+"}
+      answer: "Elle dit « on verra ». Elle le dit bien ; elle a l'habitude de le dire bien."
+
   # --------------------------------------------------- après le double mandat
   - id: jp.re.fardelli_amitie
     roles: [joueur]

@@ -174,7 +174,13 @@ cards:
     speaker: meneche
     tone: leger
     cooldown: 14
-    text: "Massenet, micro posé sur la table : « Trois questions, un journaliste gentil. Juste une question, hors micro. L'objectif, {nom}, vous y croyez ou vous le dites ? »"
+    # Budget « nom » (§ 5.3, « jamais deux cartes de nom direct de suite ») :
+    # ici Massenet ne LÂCHE pas le nom, il s'adresse au coach — c'est sa voix,
+    # donc `{toi}` et pas `{nom}` (spec § 1.8 ; l'Almanach des deux sorties,
+    # lui, garde le nom écrit). La carte a un cooldown de 14 : c'est la seule
+    # carte de nom direct de l'entraîneur qui pouvait revenir plusieurs fois
+    # par carrière, et donc tomber juste avant ou après une autre.
+    text: "Massenet, micro posé sur la table : « Trois questions, un journaliste gentil. Juste une question, hors micro. L'objectif, {toi}, vous y croyez ou vous le dites ? »"
     left:
       label: "Je ne commente pas"
       effects: {var: {no_comment: "+1"}, tribunes: "-", direction: "+", outcome: no_comment, react: {card: en.re.meneche_embuscade, chance: 0.6}, journal: {text: "{annee} : conférence de presse. « Je ne commente pas », a dit {nom}. Massenet a noté le silence.", poids: 1, tags: [presse]}}
@@ -190,6 +196,30 @@ cards:
   # définit une intrigue comme une série de 3 à 5 étapes). Le séquencier est
   # celui de la fiche : tu parles, le président lit, le journaliste garde la
   # phrase — et il ne garde pas la réponse, il garde le temps que tu mets.
+  # Escalier du rituel, première marche. `en.conf_presse` est `every_season`
+  # (trois questions par saison, toute la carrière) : sans variante lue sur
+  # `plays()`, Massenet reposait mot pour mot la même question année après année
+  # — dix traces de trois saisons sur quarante servaient deux fois
+  # `en.presse.trois_questions`. La règle de lint « arc `replay` ⇒ ≥ 1 variante
+  # lisant plays() » ne couvre pas `every_season` ; l'escalier est écrit à la
+  # main, comme celui de `hors_micro`.
+  - id: en.presse.trois_questions_encore
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, piege, retorse]
+    speaker: meneche
+    tone: leger
+    cooldown: 14
+    text: "Massenet, micro posé du même côté de la table : « Trois questions, et la première est la même que l'an dernier ; j'ai relu ce que vous aviez répondu. Vous répondez pareil, {toi}, ou vous corrigez ? »"
+    left:
+      label: "Je réponds pareil"
+      effects: {direction: "+", outcome: no_comment, react: {card: en.re.meneche_embuscade, chance: 0.5}, journal: {text: "{annee} : conférence de presse. {nom} a répondu comme l'an dernier. Massenet avait la page à côté.", poids: 1, tags: [presse]}}
+      answer: "Il repose la page à côté du micro, à l'endroit. Les deux réponses se ressemblent ; l'année entre les deux, non."
+    right:
+      label: "Je corrige"
+      effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}, outcome: franc, set: [presse_franc], react: {card: en.re.lea_confirmez, chance: 0.7}, journal: {text: "{annee} : conférence de presse. {nom} a corrigé sa réponse de l'an dernier. Le titre du samedi porte les deux.", poids: 2, tags: [presse]}}
+      answer: "Il note la correction sous l'ancienne, au crayon. Samedi le titre porte les deux, séparées par un tiret."
+
   - id: en.presse.president_a_lu
     roles: [entraineur]
     arc: direction
@@ -205,6 +235,24 @@ cards:
       label: "Ça retombera"
       effects: {direction: "+", tribunes: "-", relation: {meneche: -1}}
       answer: "Ça retombe. Massenet garde la page, pliée dans la même poche."
+
+  # Deuxième marche : la deuxième fois, le président ne plie plus le journal, il
+  # le garde ouvert sur le bureau depuis la veille.
+  - id: en.presse.president_a_lu_encore
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse, retorse]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg, le journal ouvert sur le bureau depuis la veille : « « Franchement », deuxième année. J'ai pas le temps de démentir deux fois. Vous le dites devant eux, ou je le dis à votre place ? »"
+    left:
+      label: "Je le dis devant eux"
+      effects: {direction: "+", tribunes: "-", relation: {aulard: 1, meneche: -1}, journal: {text: "{annee} : {nom} a démenti son propre mot, devant le président et devant la salle.", poids: 2, tags: [presse, direction]}}
+      answer: "Tu le dis. Massenet ne note rien ; il regarde le président, qui regarde la salle."
+    right:
+      label: "Dites-le à la mienne"
+      effects: {direction: "--", tribunes: "+", relation: {aulard: -1, meneche: 1}, journal: {text: "{annee} : le président a parlé à la place de {nom}. Il a dit « nous » quatre fois.", poids: 2, tags: [presse, direction]}}
+      answer: "Il le dit. Il dit « nous » quatre fois ; à la quatrième, le mot ne veut plus rien dire, et tout le monde l'entend."
 
   - id: en.presse.president_silence
     roles: [entraineur]
@@ -223,6 +271,24 @@ cards:
       answer: "Le silence se remplit tout seul. Samedi, il est rempli par quelqu'un d'autre."
 
   # ------------------------------------------------------- G3 · hors micro
+  # Troisième marche : quand le silence tient deux ans, ce n'est plus un silence,
+  # c'est une méthode — et le président en a une opinion.
+  - id: en.presse.president_silence_encore
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse, retorse]
+    speaker: aulard
+    tone: leger
+    text: "Vaubourg, deux journaux pliés l'un sur l'autre : « Deux ans que vous ne dites rien et deux ans qu'ils titrent. Vous voulez que je vous écrive trois phrases, ou vous continuez comme ça ? »"
+    left:
+      label: "Écrivez-les"
+      effects: {direction: "++", tribunes: "-", relation: {aulard: 1}, journal: {text: "{annee} : {nom} a lu trois phrases écrites par le président. La troisième parlait de patience.", poids: 2, tags: [presse, direction]}}
+      answer: "Il les écrit sur une feuille à en-tête. Tu les lis. La troisième parle de patience ; elle est soulignée."
+    right:
+      label: "Je continue comme ça"
+      effects: {tribunes: "+", direction: "-", parole: 1}
+      answer: "Tu continues. Le samedi, le titre est sur ta photo, sans citation. Il la découpe quand même."
+
   - id: en.presse.hors_micro
     roles: [entraineur]
     arc: presse

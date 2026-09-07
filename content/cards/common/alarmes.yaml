@@ -9,7 +9,11 @@ cards:
     tags: [vestiaire]
     speaker: vukic
     when: "gauges.vestiaire < 25"
-    text: "Vukić, à voix basse : « Je te le dis parce que personne ne te le dira, {prenom} : ils ne veulent plus descendre du bus. Le chauffeur non plus. »"
+    # `{toi}` et non `{prenom}` : Vukić s'adresse à toi, il ne prononce pas
+    # ton nom comme un tiers (spec § 1.8, budget « nom » § 5.3). Une alarme
+    # peut revenir plusieurs fois dans une carrière, donc tomber contre une
+    # autre carte nommée.
+    text: "Vukić, à voix basse : « Je te le dis parce que personne ne te le dira, {toi} : ils ne veulent plus descendre du bus. Le chauffeur non plus. »"
     left: {label: "Je monte leur parler", effects: {vestiaire: "+++", direction: "-", journal: {text: "{annee} : vingt minutes dans le bus. Le chauffeur a pleuré, les autres sont descendus.", poids: 2, tags: [vestiaire]}}, answer: "Vingt minutes dans le bus. Le chauffeur pleure, les autres descendent."}
     right: {label: "Qu'ils restent dedans", effects: {vestiaire: "-", tribunes: "+", set: [bus_menace], react: en.re.vecchio_bus, journal: {text: "{annee} : le bus est reparti sans jouer. Le stade a sifflé le vide.", poids: 2, tags: [vestiaire]}}, answer: "Le bus repart sans jouer. Le stade siffle le vide."}
 

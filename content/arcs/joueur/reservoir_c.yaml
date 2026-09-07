@@ -105,7 +105,11 @@ arcs:
       - id: fax
         card:
           - { id: jp.clause.fax_dernier, if: "gauges.direction <= 30" }
-          - { id: jp.clause.fax_mail, if: "year >= 2010" }
+          # 2010 → 1998 : aucune carrière n'atteint 2010 (médiane 3,3 saisons,
+          # P95 seize) et la variante n'était jamais servie sur 300 carrières.
+          # Le texte parle d'un mail et d'un « serveur de la Ligue en attente » :
+          # le tournant du fax au courriel, c'est la fin des années 1990.
+          - { id: jp.clause.fax_mail, if: "year >= 1998" }
           - { id: jp.clause.fax }
         next: []
 
@@ -114,7 +118,12 @@ arcs:
     title: "L'exil doré"
     kind: serie
     roles: [joueur]
-    postulats: [pepite]
+    # `postulats: [pepite]` était une contre-information : le programme prime
+    # (`eligibleArcs` lit le pool du postulat quand il y en a un), et l'exil est
+    # listé dans les buckets "1" et "2+" de `fin_de_contrat` où il s'ouvre dans
+    # une carrière sur quatre. Vidé comme les autres arcs partagés du réservoir :
+    # c'est le programme qui aiguille.
+    postulats: []
     foreground: true
     weight: 1.0
     once: false
@@ -144,7 +153,14 @@ arcs:
         next: [ { step: dix_pour_cent, in: [1, 9] } ]
       - id: dix_pour_cent
         card:
-          - { id: jp.exil.vendu_en_dormant, if: "flag('agent_fardelli') && relation.fardelli <= -2" }
+          # PORTE DE LA FIN `jp_agent`. `relation.fardelli <= -2` ne s'ouvrait
+          # jamais : l'ancre du script pose `agent_fardelli` AVEC un +1, il faut
+          # donc trois paliers négatifs pour descendre à −2 alors que l'agent est
+          # le porteur du script et regagne des +1 en route (0 occurrence sur
+          # 5 000 carrières, carte « jamais vue » du rapport `--arc`). Un seul
+          # palier sous zéro suffit à ce qu'il vende son client en dormant :
+          # c'est l'homme qui prend dix pour cent, pas un ennemi juré.
+          - { id: jp.exil.vendu_en_dormant, if: "flag('agent_fardelli') && relation.fardelli <= 0" }
           - { id: jp.exil.dix_pour_cent, if: "flag('agent_fardelli')" }
           - { id: jp.exil.climatisation }
         # [6,16] repoussait la dernière étape d'une saison entière : l'issue
@@ -153,6 +169,11 @@ arcs:
         next: [ { step: cousin, if: "flag('exil_dore')", in: [3, 12] } ]
       - id: cousin
         card:
-          - { id: jp.exil.cousin_compte_plein, if: "gauges.caisse >= 80" }
+          # PORTE DE LA FIN `jp_exil`. `caisse >= 80` était hors d'atteinte pour
+          # une fin de contrat : la caisse part à 60 et l'offre du désert la
+          # monte une fois (+++ = 18, soit 78). Le compte « déborde » à 72 :
+          # au-dessus de ce que gagne un joueur resté au pays, en dessous d'une
+          # borne que le seul palier de l'exil ne franchissait jamais.
+          - { id: jp.exil.cousin_compte_plein, if: "gauges.caisse >= 65 || flag('offshore')" }
           - { id: jp.exil.cousin }
         next: []

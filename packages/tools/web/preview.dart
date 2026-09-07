@@ -64,9 +64,10 @@ String _view() {
     // Album-specific extras: the sticker number, the promise ribbon, the
     // club on the status line and the protagonist's genre (for the portrait).
     'cardNumber': s.turn,
-    'promise': s.objectivePromised
-        ? 'Promis à ${s.entities.named['president'] ?? 'Le président'} : ${s.objectiveLabel}'
-        : null,
+    // Celui à qui la promesse a été faite est le PATRON du rôle courant (le
+    // président sur un banc, l'agent chez un joueur) : c'est lui qui tient la
+    // carte Objectif. `entities.named['president']` ne nomme que le président.
+    'promise': s.objectivePromised ? 'Promis à ${_engine.patronName(s)} : ${s.objectiveLabel}' : null,
     'club': s.entities.named['club'] ?? '',
     'genre': s.entities.genre,
     // The protagonist (names.yaml) for the NOM · FONCTION band of « toi » cards.
@@ -84,7 +85,7 @@ String _view() {
     'journees': beats.length,
     'phase': beats.isEmpty ? '' : beats[beatIndex].phase,
     'division': s.world.division,
-    'promiseTo': s.objectivePromised ? (s.entities.named['president'] ?? 'Le président') : null,
+    'promiseTo': s.objectivePromised ? _engine.patronName(s) : null,
   };
   if (s.over) {
     final e = s.endingId == null ? null : _content.endings[s.endingId];

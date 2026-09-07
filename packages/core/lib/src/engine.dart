@@ -910,6 +910,16 @@ class Engine {
       card.left.answer == card.right.answer &&
       jsonEncode(card.left.effects.toJson()) == jsonEncode(card.right.effects.toJson());
 
+  /// Le nom de celui à qui l'objectif est promis, **au rôle courant** : le
+  /// président pour un entraîneur, l'agent pour un joueur (`patron` du postulat
+  /// ou du rôle). Le bandeau de promesse de l'app et de l'aperçu lisait
+  /// `entities.named['president']` — chez un joueur en fin de contrat, ça
+  /// nommait Vaubourg alors que la carte Objectif est tenue par Fardelli.
+  String patronName(GameState s) {
+    final id = _patronOf(s);
+    return content.characters[id]?.name ?? (s.role == 'entraineur' ? 'Le président' : 'Ton agent');
+  }
+
   String _patronOf(GameState s) {
     final post = content.postulats[s.postulatId];
     final role = content.roles[s.role];

@@ -108,7 +108,12 @@ class _GameScreenState extends State<GameScreen> {
                 _ContextLine(state: s),
                 if (s.objectivePromised) ...[
                   const SizedBox(height: 6),
-                  _Ruban(state: s),
+                  // Le créancier de la promesse est le PATRON du rôle courant
+                  // (le président sur un banc, l'agent chez un joueur) : c'est
+                  // lui qui tient la carte Objectif. `named['president']` ne
+                  // nomme que le président, et le bandeau d'une carrière de
+                  // joueur créditait le mauvais homme.
+                  _Ruban(state: s, creancier: c.engine.patronName(s)),
                 ],
                 // La page de journal du Bilan (spec variété §1.6, §3.8) remplace
                 // la vignette, le texte et la réponse : elle défile, un seul
@@ -348,11 +353,11 @@ class _ContextLine extends StatelessWidget {
 /// Ruban de promesse : « Promis à {créancier} : {promesse} ».
 class _Ruban extends StatelessWidget {
   final GameState state;
-  const _Ruban({required this.state});
+  final String creancier;
+  const _Ruban({required this.state, required this.creancier});
 
   @override
   Widget build(BuildContext context) {
-    final creancier = state.entities.named['president'] ?? 'le président';
     return Semantics(
       label: 'Promesse en cours : promis à $creancier, ${state.objectiveLabel}',
       excludeSemantics: true,

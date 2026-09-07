@@ -51,6 +51,19 @@ Map<String, Set<String>> _issuesRares() {
   return const {};
 }
 
+/// Le dossier `content/` du dépôt, trouvé en remontant depuis le dossier
+/// courant (même stratégie que `_loadContent`).
+String _contentDir() {
+  var dir = Directory.current;
+  for (var i = 0; i < 6; i++) {
+    if (File('${dir.path}/content/build/content.json').existsSync()) return '${dir.path}/content';
+    final p = dir.parent;
+    if (p.path == dir.path) break;
+    dir = p;
+  }
+  return '${Directory.current.path}/content';
+}
+
 Content _loadContent() {
   var dir = Directory.current;
   for (var i = 0; i < 6; i++) {
@@ -110,7 +123,13 @@ int seedOfRun(int i) => i * 2654435761 & 0x7FFFFFFF;
 
 /// « Temps d'histoire » (spec variété §1.1) : `reaction` is counted as soon as
 /// the engine serves it.
-const Set<String> kStoryKinds = {'script', 'etape', 'evenement', 'palier', 'chaine', 'reaction'};
+/// « Temps d'histoire » (spec variété §1.1). `passe` — la carte « Nouvelles du
+/// passé », qui dit ce qu'est devenue une intrigue laissée dans l'ancien club —
+/// s'y ajoute à l'étape 8 : c'est une scène avec un locuteur qui conclut une
+/// histoire, et la mesure de variété la comptait déjà comme carte d'histoire
+/// (`kStoryCardKinds`). Servie en bande 6 au milieu d'un creux, elle laissait
+/// un écart de 4 mesuré alors que le joueur, lui, venait de lire une histoire.
+const Set<String> kStoryKinds = {'script', 'etape', 'evenement', 'palier', 'chaine', 'reaction', 'passe'};
 
 /// « Carte d'histoire » for the Jaccard / noyau fixe sets : everything that is
 /// neither routine nor Nouvelle (alarms and « passe » included : they are
@@ -238,6 +257,7 @@ class SeasonMetrics {
   String maxBacklogKinds = '';
   int samePairs = 0;
   int maxGap = 0;
+  int seed = 0; // graine de la carrière : de quoi rejouer la saison en `--trace`
   int lastStory = 0; // slot of the last story beat (0 = none yet)
   String? lastSpeaker;
   bool lastWasNouvelle = false;
@@ -479,9 +499,6 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
     cur.closed = true;
     final trailing = seasonSlots - cur.lastStory;
     cur.maxGap = math.max(cur.maxGap, trailing);
-    if (const bool.fromEnvironment('GAPDIAG') && cur.maxGap > (curSeason <= 1 ? 3 : 4)) {
-      stderr.writeln('GAPDIAG seed=$seed season=$curSeason maxGap=${cur.maxGap} trailing=$trailing lastStory=${cur.lastStory}');
-    }
   }
 
   void noteTraces(int season) {
@@ -631,7 +648,9 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         if (s.season != curSeason) {
           closeSeason();
           curSeason = s.season;
-          cur = SeasonMetrics()..season = s.season;
+          cur = SeasonMetrics()
+            ..season = s.season
+            ..seed = seed;
           nar.byBucket[nar.bucket(s.season)]!.add(cur);
         }
         final m = cur;
@@ -730,7 +749,7 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         }
       }
       trace?.writeln('S${s.season} · slot ${s.slot.toString().padLeft(2)} · n ${s.ncards.toString().padLeft(3)} · bande $band · ${kind.padRight(9)} · '
-          '${((p.payload['arc'] as String?) ?? '').padRight(24)} ${((p.payload['step'] as String?) ?? '').padRight(12)} · ${(sp ?? '—').padRight(9)} · ${tone.padRight(11)} · ${p.id}'
+          '${((p.payload['arc'] as String?) ?? '').padRight(24)} ${((p.payload['step'] as String?) ?? '').padRight(12)} · ${_visage(content, sp).padRight(26)} · ${tone.padRight(11)} · ${p.id}'
           '${p.payload['forced'] == true ? '  [forcé]' : ''}');
     } else {
       // Les beats (Objectif, Carte Match, Grand Match, Bilan…) sont des écrans
@@ -781,6 +800,41 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         journalBefore = s.journal.length;
       }
       trace?.writeln('S${s.season} ·         · n ${s.ncards.toString().padLeft(3)} ·         · ${p.kind.padRight(9)} · ${p.id}');
+      // La Une composée, en toutes lettres (protocole de relecture § 5.4,
+      // question 6 : « la Une raconte-t-elle la saison ? »). Sans ces lignes,
+      // le trace ne disait que `bilan:une:0` et il fallait croiser --une-check
+      // et le YAML des manchettes pour juger. On imprime ce que le lecteur
+      // voit : le journal, le titre, le sous-titre, la légende de la photo
+      // (l'`answer` de la carte fatale) et les brèves retenues.
+      if (trace != null && p.kind == 'bilan_une') {
+        final pay = p.payload;
+        final jn = pay['journal_nom']?.toString() ?? pay['journal']?.toString() ?? '—';
+        final verdict = '${pay['tenu'] == true ? 'objectif tenu' : 'objectif manqué'}'
+            ' · ${pay['objectif'] ?? '—'} · ${pay['rang'] ?? '—'}e'
+            '${(pay['outcome']?.toString() ?? '').isEmpty ? '' : ' · ${pay['outcome']}'}';
+        trace.writeln('       │ ${jn.toUpperCase()} — ${pay['date'] ?? ''} — ${pay['prix'] ?? ''}'
+            '${(pay['une']?.toString() ?? '').isEmpty ? '' : '   [manchette ${pay['une']}]'}');
+        trace.writeln('       │ « ${pay['titre'] ?? ''} »');
+        final sous = pay['sous']?.toString() ?? '';
+        if (sous.isNotEmpty) trace.writeln('       │   $sous');
+        final photo = pay['photo'];
+        if (photo is Map) {
+          final leg = photo['answer']?.toString() ?? '';
+          trace.writeln('       │ photo : ${photo['card']}'
+              '${leg.isEmpty ? '   ⚠ pas de légende (la sortie n\'a pas d\'`answer`)' : ' — « $leg »'}');
+        } else {
+          trace.writeln('       │ photo : — (aucune carte fatale retenue)');
+        }
+        final breves = pay['breves'];
+        if (breves is List && breves.isNotEmpty) {
+          for (final b in breves) {
+            trace.writeln('       │ brève : ${b is Map ? (b['text'] ?? b).toString() : b.toString()}');
+          }
+        } else {
+          trace.writeln('       │ brève : — (le journal de la saison n\'a rien donné)');
+        }
+        trace.writeln('       │ verdict : $verdict');
+      }
     }
     final seasonBefore = s.season;
     final right = policy(s, step);
@@ -1116,9 +1170,58 @@ Exposition exposition(Content content, PostulatDef post, Set<String> seen, Set<S
     }
   }
   final ids = content.cards.keys.toList()..sort();
+
+  // Une carte-réaction n'est PAS « atteignable par construction » : elle
+  // n'existe que si un `react:` la nomme, et un `react:` vit sur une sortie de
+  // carte ou sur une manchette. Sur le promu, treize réactions du rôle
+  // entraîneur ne sont nommées QUE par le script de l'intérimaire (ou par des
+  // arcs du joueur) : `en.re.aulard_cdd`, `en.re.fardelli_juin`,
+  // `en.re.josiane_cafetiere`… Elles gonflaient le dénominateur d'exposition
+  // du postulat promu et remplissaient sa liste « jamais tirée » d'un défaut
+  // que l'écriture ne peut pas corriger — au même titre qu'une alarme d'un
+  // autre postulat ou qu'une étape d'un arc jamais ouvert, déjà écartées
+  // ci-dessous. Point fixe : une réaction atteinte peut à son tour en poser
+  // une autre (§ 1.4).
+  bool sourceServable(Card c) {
+    if (!c.roles.contains(post.role)) return false;
+    final v = variantOf[c.id];
+    final arcId = v != null ? v[0] as String : c.arcId;
+    if (arcId != null && !arcs.contains(arcId)) return false;
+    if (arcId == null && c.kind == 'alarme' && !alarmes.containsKey(c.id)) return false;
+    return true;
+  }
+
+  final reactionsNommees = <String>{};
+  void nommer(Iterable<ReactVariant> rs) {
+    for (final r in rs) {
+      reactionsNommees.add(r.card);
+    }
+  }
+
+  for (final u in content.unes) {
+    if (u.roles.isNotEmpty && !u.roles.contains(post.role)) continue;
+    if (u.postulats.isNotEmpty && !u.postulats.contains(post.id)) continue;
+    nommer(u.react);
+  }
+  for (var pass = 0; pass < 4; pass++) {
+    final avant = reactionsNommees.length;
+    for (final id in ids) {
+      final c = content.cards[id]!;
+      if (!sourceServable(c)) continue;
+      if (c.kind == 'reaction' && !reactionsNommees.contains(id)) continue;
+      nommer(c.left.effects.react);
+      nommer(c.right.effects.react);
+    }
+    if (reactionsNommees.length == avant) break;
+  }
+
   for (final id in ids) {
     final card = content.cards[id]!;
     if (!card.roles.contains(post.role)) continue;
+    if (card.kind == 'reaction' && !reactionsNommees.contains(id)) {
+      ex.horsPostulat += 1; // réaction qu'aucun `react:` de ce postulat ne nomme
+      continue;
+    }
     // Atteignable ? Une carte d'étape suit son arc ; une alarme suit les
     // listes du rôle et du postulat ; tout le reste (sac, Nouvelles, paliers,
     // retrouvailles, « Nouvelles du passé ») est atteignable par construction.
@@ -1512,7 +1615,7 @@ void _reportReservoir(List<RunRecord> recs, Content content, int postulat) {
       seasonsPlayed[bucketOf(sr.season)] = seasonsPlayed[bucketOf(sr.season)]! + 1;
     }
   }
-  stdout.writeln('  ${'intrigue'.padRight(28)} ${'porteur'.padRight(10)} ${buckets.map((b) => '$b ouv. (forcées)'.padRight(20)).join('')} carrière  slot moy  forcées');
+  stdout.writeln('  ${'intrigue'.padRight(28)} ${'porteur'.padRight(26)} ${buckets.map((b) => '$b ouv. (forcées)'.padRight(20)).join('')} carrière  slot moy  forcées');
   for (final a in reservoir) {
     final cells = <String>[];
     int allOpen = 0, allForced = 0;
@@ -1533,9 +1636,9 @@ void _reportReservoir(List<RunRecord> recs, Content content, int postulat) {
       cells.add(played == 0 ? '—'.padRight(20) : '${_f(100 * open / played, 0)} % (${_f(100 * forced / math.max(1, open), 0)} %)'.padRight(20));
     }
     final career = recs.where((r) => r.intrigues.contains(a.id)).length / math.max(1, n);
-    final carrier = a.cast.isEmpty ? '—' : a.cast.first;
+    final carrier = a.cast.isEmpty ? '—' : _visage(content, a.cast.first);
     final forcedRate = allOpen == 0 ? 0.0 : allForced / allOpen;
-    stdout.writeln('  ${_mark(career >= 0.10 && career <= 0.65)} ${a.id.padRight(26)} ${carrier.padRight(10)} ${cells.join('')} ${_f(100 * career, 0).padLeft(4)} %   ${_f(_mean(slots)).padLeft(5)}   ${_mark(forcedRate <= 0.15)} ${_f(100 * forcedRate, 0)} %');
+    stdout.writeln('  ${_mark(career >= 0.10 && career <= 0.65)} ${a.id.padRight(26)} ${carrier.padRight(26)} ${cells.join('')} ${_f(100 * career, 0).padLeft(4)} %   ${_f(_mean(slots)).padLeft(5)}   ${_mark(forcedRate <= 0.15)} ${_f(100 * forcedRate, 0)} %');
   }
   stdout.writeln('  seuils : carrière ∈ [10 %, 65 %] ; forcées ≤ 15 %');
   // Carrier × season : how many careers each cast face carries at least one intrigue.
@@ -1547,7 +1650,7 @@ void _reportReservoir(List<RunRecord> recs, Content content, int postulat) {
     for (final ch in cast) {
       final share = recs.where((r) => r.intrigues.any((id) => (content.arcs[id]?.cast.isNotEmpty ?? false) && content.arcs[id]!.cast.first == ch)).length / math.max(1, n);
       if (share > 0) carriers += 1;
-      parts.add('$ch ${_f(100 * share, 0)}%');
+      parts.add('${_visage(content, ch)} ${_f(100 * share, 0)}%');
     }
     stdout.writeln('    ${parts.join(' · ')}');
     _line(carriers / cast.length >= 0.80, '  visages du cast porteurs d\'≥ 1 intrigue', '${_f(100 * carriers / cast.length, 0)} % ($carriers/${cast.length})', '≥ 80 %');
@@ -1649,7 +1752,10 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     // `forceStory` n'a plus rien à ouvrir et la saison finit en routines.
     final over = closed.where((m) => m.maxGap > gapLimit).toList();
     final worstSeason = over.isEmpty ? -1 : over.map((m) => m.season).reduce(math.max);
-    final gapWhere = over.isEmpty ? '' : ' · ${over.length}/${closed.length} saisons > $gapLimit, la plus tardive S$worstSeason';
+    final gapWhere = over.isEmpty
+        ? ''
+        : ' · ${over.length}/${closed.length} saisons > $gapLimit, la plus tardive S$worstSeason'
+            ' (graines ${over.take(4).map((m) => m.seed).join(', ')})';
     stdout.writeln('  ${okGap ? '✔' : '✗'} ${'cadence : écart max entre temps d\'histoire (≤ $gapLimit)'.padRight(44)} max $gapMax · moy ${_f(_mean(gaps))} · P95 ${_f(_pct(gaps, 0.95), 0)} · saisons closes$gapWhere'); 
     if (assertBudgets && !okGap) failures.add('[$b] écart max $gapMax > $gapLimit');
     final storyP5 = _pct(stories, 0.05);
@@ -1923,6 +2029,112 @@ void _reportArc(List<RunRecord> recs, Content content, int postulat, String arcI
   }
 }
 
+/// « id (Nom) » pour les colonnes « locuteur » et « porteur ». Les identifiants
+/// sont désynchronisés de leurs noms depuis la reprise par la bible — `aulard`
+/// s'appelle Jean-Marie Vaubourg, `meneche` Pierre Massenet, `nassir` Cheikh
+/// Ilyas, `legruet` Noé Berthomier, `clow` Dan Corven — et une trace qui ne dit
+/// que l'id se lit comme une erreur de casting. On imprime les deux ; renommer
+/// les ids toucherait postulats.yaml, characters.yaml, toutes les cartes et les
+/// sauvegardes.
+String _visage(Content content, String? id) {
+  if (id == null || id.isEmpty) return '—';
+  final n = content.characters[id]?.name;
+  return n == null || n.isEmpty ? id : '$id ($n)';
+}
+
+/// Les vingt Codes de Carrière de référence (spec variété §3.9 « G1 »).
+///
+/// Construction, sans aucun aléa hors graine : les cinq premières graines de
+/// la liste de mesure (`seedOfRun`) × les quatre postulats. Les swipes sont
+/// ceux que jouerait `human_like`, mais ils sont **figés dans le code** : le
+/// rejeu ne dépend plus de la politique, seulement du moteur et du contenu.
+List<CareerCode> _goldenCodes(Engine engine, Content content) {
+  final out = <CareerCode>[];
+  final nPost = content.postulatsByIndex.length;
+  for (int p = 0; p < nPost; p++) {
+    for (int i = 0; i < 5; i++) {
+      final seed = seedOfRun(i);
+      var s = engine.start(seed, postulat: p);
+      final swipes = <bool>[];
+      int step = 0;
+      // Plafond : 400 swipes. Aucune carrière `human_like` n'y arrive (max
+      // mesuré 502 beats, dont les écrans sans choix), et un code plafonné
+      // reste un golden valide — il fige un début de carrière.
+      while (!s.over && swipes.length < 400) {
+        final right = _humanLike(s, step++);
+        swipes.add(right);
+        s = engine.choose(s, right);
+      }
+      out.add(CareerCode(
+        contentVersion: content.version,
+        seed: seed,
+        postulat: p,
+        swipes: swipes,
+      ));
+    }
+  }
+  return out;
+}
+
+/// `--goldens` : rejoue les vingt codes et les compare à
+/// `content/tests/goldens.yaml` ; `--goldens --write` réécrit le fichier.
+void _goldens(Engine engine, Content content, {required bool write, bool recode = false}) {
+  final file = File('${_contentDir()}/tests/goldens.yaml');
+  // Les codes déjà figés sont rejoués tels quels : c'est ce qui rend le
+  // golden lisible. Le contenu change, le code ne bouge pas, et le diff dit
+  // « cette carrière-là ne raconte plus la même chose ». `--recode` (ou un
+  // fichier absent) retire de nouveaux codes de la politique `human_like` —
+  // à ne faire que quand les swipes eux-mêmes n'ont plus de sens (un bump de
+  // `meta.version` qui change le nombre de cartes d'une saison).
+  final existing = file.existsSync() ? parseGoldens(file.readAsStringSync()) : const <GoldenEntry>[];
+  final codes = (recode || existing.isEmpty)
+      ? _goldenCodes(engine, content)
+      : [for (final e in existing) CareerCode.decode(e.code)].whereType<CareerCode>().toList();
+  final runs = codes.map((c) => replayCode(engine, c)).toList();
+  if (write) {
+    file.parent.createSync(recursive: true);
+    file.writeAsStringSync(renderGoldens(runs, contentHash: content.hash, contentVersion: content.version));
+    stdout.writeln('${runs.length} goldens écrits dans ${file.path} (contenu ${content.hash}).');
+    for (final r in runs) {
+      stdout.writeln('  postulat ${r.postulat} · ${r.swipes} swipes · ${r.digest}');
+    }
+    return;
+  }
+  if (!file.existsSync()) {
+    stderr.writeln('${file.path} manquant : lance `--goldens --write`.');
+    exit(1);
+  }
+  final text = file.readAsStringSync();
+  final expected = parseGoldens(text);
+  final declared = goldensContentHash(text);
+  stdout.writeln('── Goldens · ${expected.length} codes · contenu figé $declared · contenu courant ${content.hash} ──');
+  int bad = 0;
+  if (expected.length != runs.length) {
+    stderr.writeln('  ${expected.length} goldens dans le fichier pour ${runs.length} codes attendus.');
+    bad += 1;
+  }
+  for (int i = 0; i < runs.length && i < expected.length; i++) {
+    final got = runs[i];
+    final want = expected[i];
+    if (got.code != want.code) {
+      stderr.writeln('  ✗ #$i le code a changé\n      figé : ${want.code}\n      lu   : ${got.code}');
+      bad += 1;
+      continue;
+    }
+    if (got.digest != want.digest) {
+      stderr.writeln('  ✗ #$i (postulat ${got.postulat})\n      figé : ${want.digest}\n      lu   : ${got.digest}');
+      bad += 1;
+    }
+  }
+  if (bad == 0) {
+    stdout.writeln('  ✔ les ${runs.length} codes racontent la même carrière qu\'au moment où ils ont été figés.');
+    return;
+  }
+  stderr.writeln('$bad golden(s) déplacé(s). Si le changement est voulu :');
+  stderr.writeln('  dart run packages/tools/bin/simulate.dart --goldens --write');
+  exit(1);
+}
+
 void main(List<String> args) {
   final content = _loadContent();
   final engine = Engine(content);
@@ -1931,6 +2143,9 @@ void main(List<String> args) {
   bool narrative = false;
   bool reservoir = false;
   bool uneCheck = false;
+  bool goldens = false;
+  bool goldensWrite = false;
+  bool goldensRecode = false;
   int? postulat;
   int? traceSeed;
   int? diffA, diffB;
@@ -1942,6 +2157,9 @@ void main(List<String> args) {
     if (args[i] == '--narrative') narrative = true;
     if (args[i] == '--reservoir') reservoir = true;
     if (args[i] == '--une-check') uneCheck = true;
+    if (args[i] == '--goldens') goldens = true;
+    if (args[i] == '--write') goldensWrite = true;
+    if (args[i] == '--recode') goldensRecode = true;
     if (args[i] == '--postulat' && i + 1 < args.length) postulat = int.parse(args[i + 1]);
     if (args[i] == '--trace' && i + 1 < args.length) traceSeed = int.parse(args[i + 1]);
     if (args[i] == '--seasons' && i + 1 < args.length) maxSeasons = int.parse(args[i + 1]);
@@ -1952,6 +2170,11 @@ void main(List<String> args) {
     }
   }
   final nPost = content.postulatsByIndex.length;
+
+  if (goldens) {
+    _goldens(engine, content, write: goldensWrite, recode: goldensRecode);
+    return;
+  }
 
   if (traceSeed != null) {
     final p = postulat ?? 0;
@@ -2051,6 +2274,13 @@ void main(List<String> args) {
     final endings = <String, int>{};
     final seen = <String>{};
     int seasonSum = 0;
+    // Étape 8 (retune) : « la première saison n'est ni expédiée ni
+    // interminable ». Une saison a 17 créneaux de carte ; « interminable » ne
+    // peut donc venir que de l'empilement des carrières longues (p95, max).
+    // « Expédiée » se mesure au contraire : part des carrières qui meurent
+    // avant le Bilan de leur première saison.
+    int s0Closed = 0;
+    final saisonsHisto = <int, int>{};
     int roleTransitions = 0;
     int unresolved = 0, rxServed = 0, rxLat1 = 0, rxConsec = 0, rxMissed = 0, uneChecks = 0, uneOk = 0;
     int horsRole = 0, horsStatut = 0;
@@ -2062,6 +2292,8 @@ void main(List<String> args) {
       lengths.add(r.turns);
       endings[r.ending] = (endings[r.ending] ?? 0) + 1;
       seasonSum += r.seasons;
+      if (r.seasons >= 1) s0Closed += 1;
+      saisonsHisto[r.seasons] = (saisonsHisto[r.seasons] ?? 0) + 1;
       roleTransitions += (r.roles - 1);
       unresolved += r.unresolved;
       rxServed += r.reactions;
@@ -2083,7 +2315,13 @@ void main(List<String> args) {
     final avgSeasons = seasonSum / runs;
 
     stdout.writeln('── Politique "${entry.key}" ($runs runs${postulat != null ? ', postulat $postulat' : ''}) ──');
+    final s0Share = s0Closed / runs;
+    final histoLine = (saisonsHisto.keys.toList()..sort())
+        .take(9)
+        .map((k) => '$k:${(100 * saisonsHisto[k]! / runs).toStringAsFixed(0)}%')
+        .join(' ');
     stdout.writeln('  durée cartes : médiane $median · p95 $p95 · max $maxLen · saisons moy ${avgSeasons.toStringAsFixed(1)}');
+    stdout.writeln('  première saison : close dans ${(100 * s0Share).toStringAsFixed(0)} % des carrières · saisons closes $histoLine');
     stdout.writeln('  transitions de rôle : $roleTransitions');
     final topEndings = endings.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final causeLine = topEndings.take(6).map((e) => '${e.key} ${(100 * e.value / runs).toStringAsFixed(0)}%').join(' · ');
@@ -2114,10 +2352,19 @@ void main(List<String> args) {
       check(uneShare >= 1.0, '${entry.key} : la Une ment dans ${uneChecks - uneOk} Bilan(s)');
     }
     if (assertBudgets && entry.key == 'human_like') {
-      check(median >= 20 && median <= 320, 'médiane hors [20,320] : $median');
+      // Étape 8 : les bandes de la commande de retune, resserrées sur celles
+      // de l'étape 0 ([20,320], 1500, 55 %). Elles valent globalement ET par
+      // postulat : `--postulat p --assert` mesure la même chose sur le seul
+      // postulat p, c'est la forme qui tourne en CI (4 exécutions).
+      check(median >= 60 && median <= 200, 'médiane hors [60,200] : $median');
+      check(p95 <= 600, 'p95 trop haut : $p95 > 600');
       check(maxLen <= 1500, 'run trop long : $maxLen > 1500');
+      // « La première saison n'est pas expédiée » : plus d'une carrière sur
+      // deux doit atteindre son premier Bilan (la Une, le Verdict, le
+      // carrefour — tout ce que l'étape 2 a écrit vit là).
+      check(s0Share >= 0.55, 'première saison expédiée : close dans ${(100 * s0Share).toStringAsFixed(0)} % des carrières < 55 %');
       final maxCause = topEndings.isEmpty ? 0.0 : topEndings.first.value / runs;
-      check(maxCause <= 0.55, 'une cause de mort dépasse 55% : ${topEndings.first.key} ${(100 * maxCause).toStringAsFixed(0)}%');
+      check(maxCause <= 0.40, 'une cause de mort dépasse 40 % (§5.3) : ${topEndings.first.key} ${(100 * maxCause).toStringAsFixed(0)} %');
     }
 
     // Coverage report (only meaningful on the exploratory policies).

@@ -45,7 +45,12 @@ arcs:
     title: "Le banc"
     kind: serie
     roles: [joueur]
-    postulats: [pepite]
+    # Déclaration vidée : le programme prime (`eligibleArcs` lit le pool du
+    # postulat quand il y en a un), et « Le banc » est listé dans les buckets
+    # "0" et "2+" de `fin_de_contrat` — où il s'ouvre dans une carrière sur
+    # quatre. `postulats: [pepite]` était une contre-information pour qui
+    # cherchait pourquoi un joueur de trente et un ans se retrouve sur le banc.
+    postulats: []
     foreground: true
     weight: 1.0
     once: false
@@ -76,13 +81,20 @@ arcs:
         card:
           - { id: jp.banc.vukic_encore, if: "plays('jp.banc_hiver') >= 1" }
           - { id: jp.banc.vukic }
-        next: [ { step: loft, in: [2, 11] } ]
+        # Fenêtres resserrées ([2,11] / [1,9] / [2,12] → [1,4] / [1,3] / [1,4]).
+        # L'intrigue se fermait dans 31 % des carrières de « Fin de contrat »
+        # seulement (seuil 50 %) : quatre étapes étalées sur trente cartes ne
+        # tiennent pas dans une carrière où le Carrefour propose le banc de la
+        # réserve dès la première fin de saison — 137 abandons de rôle et 109 de
+        # club sur 535 ouvertures. Refermée en une saison, l'histoire du banc
+        # arrive à son épilogue au lieu d'être coupée par le survêtement.
+        next: [ { step: loft, in: [1, 4] } ]
       - id: loft
         card: jp.banc.loft
-        next: [ { step: recruteurs, if: "flag('agent_fardelli')", in: [1, 9] }, { step: retour, in: [2, 12] } ]
+        next: [ { step: recruteurs, if: "flag('agent_fardelli')", in: [1, 3] }, { step: retour, in: [1, 4] } ]
       - id: recruteurs
         card: jp.banc.recruteurs
-        next: [ { step: retour, in: [2, 12] } ]
+        next: [ { step: retour, in: [1, 4] } ]
       - id: retour
         card:
           - { id: jp.banc.retour, if: "!flag('parti_janvier')" }
@@ -125,6 +137,7 @@ arcs:
         next: [ { step: resultats, in: [2, 10] } ]
       - id: resultats
         card:
+          - { id: jp.bac.resultats_apres, if: "flag('bac_apres')" }
           - { id: jp.bac.resultats_seul, if: "flag('sans_agent')" }
           - { id: jp.bac.resultats }
         next: []

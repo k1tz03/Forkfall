@@ -11,6 +11,37 @@
 # joueur qu'une carte sur quatre, (f) est rejouable sauf mention `once`,
 # (g) parle d'un lieu ou d'un objet, pas d'un enjeu.
 #
+# ── Le plafond d'exposition du sac (mesuré, spec variété § 5.1) ─────────────
+# Budget § 5.1 : « cartes distinctes vues en 10 carrières / cartes du rôle
+# ≥ 70 % ». Il ne peut pas être tenu tant que le calendrier sert le sac au
+# rythme actuel, et c'est une contrainte d'arithmétique, pas d'écriture :
+#   · une carrière du promu sert 3,5 cartes de **sac** (mesuré sur 300
+#     carrières : 17 étapes, 10 Nouvelles, 8 ancres de script, 7 réactions,
+#     3 paliers, 2 alarmes, 1,5 événement… et 3,5 routines) ;
+#   · le sac de l'entraîneur compte 300 cartes ;
+#   · dix carrières font donc **35** tirages de sac au maximum, sans une seule
+#     répétition, pour 300 cartes de sac dans un dénominateur de ~650.
+# Plafond arithmétique de la mesure : (650 − 300 + 35) / 650 ≈ **59 %**, pour
+# un budget de 70 % ; mesure réelle 36 %. Les deux budgets tirent d'ailleurs en
+# sens contraire : § 5.2 (« isolement < 10 % en S0 ») pousse la part des cartes
+# de routine vers le bas, § 5.1 la voudrait vers le haut. Ce qui est réparable
+# côté écriture, c'est le **second** bloc du rapport (exposition sur tous les
+# tirages, seuil interne 90 %) : là, 300 careers font 1 050 tirages de sac,
+# assez pour tout couvrir — et c'est là que se voient les cartes qu'aucune
+# garde ne laisse jamais sortir. Le premier bloc, lui, se lit comme une mesure
+# de rythme, pas comme une dette d'écriture.
+#
+# Ce qui reste hors de portée du promu dans le second bloc, et qui n'est pas
+# une dette d'écriture non plus (mesuré sur 2 000 carrières) : les douze
+# `co.retrouvailles.*` (il faut qu'un visage parte puis revienne, ce qu'une
+# carrière de 2,1 saisons ne fait pas), les onze `co.nouvelle.passe_*` (elles
+# demandent `stats.clubs >= 2` : le promu n'a qu'un club), et les cartes de
+# palier `co.<visage>.faveur_*` / `trahison_*` des visages que le postulat ne
+# fait pas assez parler pour atteindre ±3 de relation (Aubert, Léa, Sabatier,
+# la mère de Mbako). Les treize cartes-réaction du script de l'intérimaire,
+# elles, sont sorties du dénominateur : `simulate.dart` sait maintenant qu'une
+# réaction n'existe que si un `react:` de ce postulat la nomme.
+#
 # ── Écarts d'import assumés (le schéma technique tranche, charte § 5.3) ──────
 # · Le moteur ne connaît que deux rôles (`entraineur`, `joueur`) : les cartes
 #   de la bible réservées au DS, aux présidents, au sélectionneur ou aux
@@ -1573,7 +1604,22 @@ cards:
   # être tordu, sinon le gag meurt. Jamais plus d'une jauge.
   #
   # Mécanique d'import : l'âge se lit avec `seen()` sur la carte de l'âge
-  # précédent ; S0 et S1 sont `once: true`, S2+ est rejouable (la variation).
+  # précédent ; S0 et S1 sont `once: true`, S2+ l'est devenu (voir plus bas).
+  #
+  # `priority: 1` sur les âges S1 et S2 (relecture des quatre postulats, défaut
+  # d'exposition § 5.1). Mesure : une carrière du promu ne tire que **3,5**
+  # cartes de sac (300 cartes dans le sac de l'entraîneur), et l'âge suivant
+  # d'un gag n'était qu'une carte de plus parmi trois cents le jour où sa garde
+  # devenait vraie. Résultat : sur 300 carrières, les vingt-huit cartes
+  # `co.gag.*_s1` / `*_s2` n'étaient **jamais** servies — un running gag qui ne
+  # revient pas n'est pas un gag, c'est une carte de décor. La bande de
+  # priorité est faite pour ça (« la plus haute bande éligible gagne ») : le
+  # jour où le gag a commencé, sa suite passe devant le décor ordinaire, et
+  # elle ne coûte qu'un tirage de sac.
+  # `once: true` ajouté aux âges S2 : sans lui, une carte de priorité 1 sans
+  # `once` reprendrait la main tous les 30 tirages jusqu'à la fin de la
+  # carrière. La variation se voit une fois ; la lignée (le quatrième âge) est
+  # une autre carte.
   # Les six gags manquants (les plantes vertes de l'hôtel du sponsor, le badge
   # vert, « après le Congrès », le stagiaire de l'Écho, la minute de silence,
   # le distributeur d'après 2038) tiennent à des rôles ou à des décennies que
@@ -1608,6 +1654,8 @@ cards:
     speaker: josiane
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "flag('faute_lue')"
     text: "Josiane pose une circulaire du club sur le bureau : « Le nouveau secrétaire a recopié la faute du président, par respect. J'en ai vu passer ; celle-là a trente ans. »"
     left:
@@ -1647,6 +1695,7 @@ cards:
     tone: leger
     once: true
     cooldown: 25
+    priority: 1
     when: "seen('co.gag.journal_s0')"
     text: "Josiane ne dit rien cette fois ; un coin de papier rose dépasse de la pile : « Le courrier est trié, le café est fait. J'en ai vu passer, vous savez : rien d'intéressant aujourd'hui. »"
     left:
@@ -1665,6 +1714,8 @@ cards:
     speaker: josiane
     tone: strategique
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.journal_s1')"
     text: "Josiane ouvre le tiroir du bas sur une chemise pleine de doubles : « J'en garde un exemplaire de chaque, pour le dossier. J'en ai vu passer ; le dossier, lui, ne bouge pas. »"
     left:
@@ -1703,6 +1754,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.canette_s0')"
     text: "Deux canettes orange attendent sur ton bureau depuis son départ. Ilyas, au téléphone : « Vous les avez ouvertes ? Ce n'est pas un club, c'est un actif ; les canettes non plus. »"
     left:
@@ -1720,6 +1772,8 @@ cards:
     tags: [gag, sponsors, absurde]
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.canette_s1')"
     text: "Le distributeur du couloir a été rechargé : il ne vend plus que de l'orange, quarante-huit fentes sur quarante-huit. Le club n'a rien signé et personne ne sait qui a la clé."
     left:
@@ -1761,6 +1815,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.devant_s0') && year <= 2000"
     text: "Corven te regarde sortir du couloir : « Je ne dirais pas que tu es un grand, {toi}. Je dirais que tu es devant. » Puis il se reprend, très vite : « Enfin. On verra en juin. »"
     left:
@@ -1780,6 +1835,8 @@ cards:
     statut_ok: [parti, retraite]
     tone: strategique
     cooldown: 35
+    priority: 1
+    once: true
     when: "seen('co.gag.devant_s1')"
     text: "Corven parle d'un gamin que tu n'as pas retenu : « Celui-là, je ne dirais pas qu'il était bon. Je dirais qu'il était devant. » Il ne dit pas où il joue maintenant."
     left:
@@ -1819,6 +1876,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.bieres_s0')"
     text: "Gérard convertit ton salaire à voix haute, devant quatre témoins et un jambon : « Ça fait mille huit cents bières par mois, à la louche. Ici, on payait en bières ; ça se voyait moins. »"
     left:
@@ -1836,6 +1894,8 @@ cards:
     tags: [gag, caisse, mercato]
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.bieres_s1')"
     text: "Gérard a lu le montant d'un transfert dans le journal et il l'a converti au crayon : « Quatre-vingt mille bières. Ici, on payait en bières ; il faudrait un camion et deux dimanches. »"
     left:
@@ -1873,6 +1933,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.cinquante_et_un_s0') && year <= 2009"
     text: "Mamie Paulette te regarde longuement, dans le couloir : « Votre prédécesseur disait ça aussi, et il le disait mieux. J'étais là en cinquante et un ; lui, il est resté onze mois. »"
     left:
@@ -1890,6 +1951,8 @@ cards:
     tags: [gag, tribunes, sponsors]
     tone: strategique
     cooldown: 35
+    priority: 1
+    once: true
     when: "seen('co.gag.cinquante_et_un_s1') && year <= 2009"
     text: "Mamie Paulette refuse de lire le nouveau nom du stade sur son billet : « Moi, je vais au stade. J'étais là en cinquante et un et il s'appelait comme la rue, ce qui suffisait. »"
     left:
@@ -1926,6 +1989,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.seau_s0')"
     text: "Le seau d'en face porte un numéro peint au pochoir : « seau 4 ». Il voyage en soute, dans une housse, et l'intendant adverse en a la responsabilité écrite."
     left:
@@ -1943,6 +2007,8 @@ cards:
     tags: [gag, absurde, arbitrage]
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.seau_s1')"
     text: "Le règlement du stade interdit désormais tout objet dans la zone technique. L'entraîneur d'en face s'est assis par terre, jambes croisées, et n'a pas dit un mot de la première période."
     left:
@@ -1981,6 +2047,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.radiateur_s0')"
     text: "Dans un bureau de la Fédération, sous un portrait officiel, un radiateur tousse exactement de la même façon. L'huissier hausse les épaules : « Il fait ça depuis quatre présidents. »"
     left:
@@ -1998,6 +2065,8 @@ cards:
     tags: [gag, absurde, caisse]
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.radiateur_s1')"
     text: "Le radiateur neuf, posé il y a trois semaines, garanti dix ans, silencieux sur la notice, a commencé à tousser mardi. Le plombier dit que c'est la tuyauterie, pas lui."
     left:
@@ -2019,6 +2088,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "year <= 2010 && seen('co.dec.bureau_fax_faute')"
     text: "Josiane tient une feuille revenue d'un club adverse, la faute soulignée deux fois en rouge : « Ils nous l'ont renvoyée corrigée. J'en ai vu passer, mais jamais des professeurs. »"
     left:
@@ -2037,6 +2107,8 @@ cards:
     speaker: josiane
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "year >= 2010"
     text: "Josiane a débranché le fax pour de bon : « Le courriel a repris la faute au copier-coller, elle est dans le modèle. J'en ai vu passer, des machines ; celle-là a laissé un héritier. »"
     left:
@@ -2073,6 +2145,7 @@ cards:
     tone: leger
     once: true
     cooldown: 30
+    priority: 1
     when: "seen('co.gag.sifflet_s0')"
     text: "Le sifflet a disparu de la trousse : il est au fond d'un tiroir du bureau, sous les feuilles de match. Rouvier siffle quand même, à l'heure, avec deux doigts dans la bouche."
     left:
@@ -2090,6 +2163,8 @@ cards:
     tags: [gag, vestiaire, formation]
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.sifflet_s1')"
     text: "Rouvier a prêté le sifflet à un jeune kiné qui n'ose pas s'en servir : la séance a douze minutes de retard et personne n'a rien dit. Elle regarde, depuis le bord, sans bouger."
     left:
@@ -2128,6 +2203,7 @@ cards:
     tone: strategique
     once: true
     cooldown: 25
+    priority: 1
     when: "seen('co.gag.groupe_s0')"
     text: "Une chaise cassée, un maillot déchiré au col. Bréhaut ferme la porte : « Le groupe vit bien. Ça arrive, {toi} : deux hommes fatigués et un vestiaire trop petit. »"
     left:
@@ -2147,6 +2223,8 @@ cards:
     statut_ok: [parti, retraite]
     tone: strategique
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.groupe_s1') && season >= 3"
     text: "Bréhaut a un bureau et une cravate maintenant, et il n'est pas descendu au vestiaire depuis six mois : « Le groupe vit bien, je te le dis. On me l'a dit, en tout cas. »"
     left:
@@ -2185,6 +2263,7 @@ cards:
     tone: strategique
     once: true
     cooldown: 25
+    priority: 1
     when: "seen('co.gag.vu_dautres_s0')"
     text: "Le club a encaissé cinq buts et le président a parlé à la radio avant le vestiaire. Vecchio met longtemps à répondre : « J'en ai vu d'autres. Pas celle-là. »"
     left:
@@ -2203,6 +2282,8 @@ cards:
     speaker: vecchio
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.vu_dautres_s1')"
     text: "Vecchio a écrit une liste à la main sur la doublure de son sac, quatre-vingt-onze lignes, la première de 1968 : « J'en ai vu d'autres, et je les compte. Celle-ci fera la douze. »"
     left:
@@ -2239,6 +2320,7 @@ cards:
     tone: leger
     once: true
     cooldown: 25
+    priority: 1
     when: "seen('co.gag.corner_s0')"
     text: "Il manque un ballon depuis novembre et l'intendant a fait deux inventaires. Corner l'a rapporté ce matin, en mars, dégonflé, propre, posé devant la porte du vestiaire."
     left:
@@ -2256,6 +2338,8 @@ cards:
     tags: [gag, absurde, moment]
     tone: leger
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.corner_s1')"
     text: "Le synthétique neuf a été livré et Corner refuse d'y poser une patte : il fait le tour par la piste, tous les jours, depuis huit jours. Lulu trouve ça très significatif."
     left:
@@ -2292,6 +2376,7 @@ cards:
     tone: leger
     once: true
     cooldown: 25
+    priority: 1
     when: "flag('distributeur_groupe')"
     text: "Ils y vont à trois maintenant, le 5, dans la même voiture, et ils rentrent en riant très fort. C'est plus digne à trois, et tout le monde a compris pourquoi ils rient."
     left:
@@ -2309,6 +2394,8 @@ cards:
     tags: [gag, caisse, vestiaire]
     tone: strategique
     cooldown: 30
+    priority: 1
+    once: true
     when: "seen('co.gag.distributeur_s1')"
     text: "Personne ne va plus au distributeur : ils regardent leur téléphone, chacun dans son coin du vestiaire, le 5 à sept heures. C'est pire, parce que c'est silencieux."
     left:

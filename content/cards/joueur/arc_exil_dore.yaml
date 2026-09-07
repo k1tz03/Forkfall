@@ -83,9 +83,15 @@ cards:
       effects: {caisse: "+", force: -1, tribunes: "-"}
       answer: "Tu économises. Tu dors mal. À l'entraînement de sept heures, ça se voit."
 
-  # Câblage de la fin ∃ `jp_exil` (ch. 10 § 6.12 : « si tu pars et que le compte
-  # déborde, Parti pour l'or tombe au Carrefour suivant, caisse >= 80 »).
-  # La fin existait sans porte : aucune carte ne la citait.
+  # Câblage de la fin `jp_exil` (ch. 10 § 6.12 : « si tu pars et que le compte
+  # déborde, Parti pour l'or tombe au Carrefour suivant »). La porte a longtemps
+  # été pourvue sur le papier seulement : `gauges.caisse >= 80` n'était jamais
+  # vraie (la caisse part à 60, l'or la monte une fois de 18 puis elle dérive) et
+  # la sortie gauche, avec un `caisse: ++` par-dessus une caisse déjà haute,
+  # était systématiquement écartée par le joueur simulé. La garde lit maintenant
+  # une caisse de fin de contrat OU la société du cousin déjà ouverte ailleurs
+  # (`offshore`, posé par jp.contrat_image), et la sortie gauche paie en
+  # vestiaire et en tribunes plutôt qu'en caisse.
   - id: jp.exil.cousin_compte_plein
     roles: [joueur]
     arc: caisse
@@ -95,7 +101,7 @@ cards:
     text: "« Le compte des îles a débordé cette nuit ; ton cousin a acheté une troisième montre. On parle d'argent ou d'amitié : tu signes trois ans de plus, ou tu rentres jouer ? »"
     left:
       label: "Trois ans de plus"
-      effects: {caisse: "++", tribunes: "-", set: [compte_cousin, offshore], outcome: cousin, end: jp_exil}
+      effects: {caisse: "+", tribunes: "-", vestiaire: "-", set: [compte_cousin, offshore], outcome: cousin, end: jp_exil}
       answer: "Tu signes. Le niveau reste entre eux, le compte reste rond, et personne au pays ne connaît ton numéro."
     right:
       label: "Je rentre jouer"

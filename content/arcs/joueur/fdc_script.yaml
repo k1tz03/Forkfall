@@ -36,6 +36,12 @@ arcs:
       dernier_annonce:    "{annee} : {prenom} {nom} l'a dit à la maison d'abord. C'était la dernière."
       vers_entraineur:    "{annee} : le survêtement de la réserve était à la taille de {nom}. Il l'avait pris exprès."
       genou_grave:        "{annee} : le genou de {prenom} {nom} a eu le dernier mot. Il l'avait dit avant."
+    traces_retract:
+      # L'été sans club se referme au premier jour de la saison suivante
+      # (s1_premier_jour_sans_club*, `clear: [sans_club]`) : sans cette ligne,
+      # l'Almanach et la gazette gardaient « trente-deux ans, sans club » au
+      # présent pendant que le joueur disputait son derby deux divisions plus bas.
+      sans_club:          "{annee} : {nom} a signé le trente et un août, deux divisions plus bas. Le téléphone était rebranché."
     steps:
       # ------------------------------------------------------------- saison 0
       - id: derniere_annee
@@ -79,7 +85,11 @@ arcs:
       # ------------------------------------------------------------- saison 1
       - id: premier_jour
         card:
-          - { id: jp.fin.s1_premier_jour_sans_club_seul, if: "flag('sans_club') && flag('divorce')" }
+          # `flag('divorce')` seul ne se rencontrait presque jamais avec
+          # `sans_club` : la variante était toujours battue par sa sœur
+          # (« variante perdante » du rapport d'exposition). La maison vide se
+          # lit aussi dans deux paliers négatifs avec Camille.
+          - { id: jp.fin.s1_premier_jour_sans_club_seul, if: "flag('sans_club') && (flag('divorce') || relation.camille <= -2)" }
           - { id: jp.fin.s1_premier_jour_sans_club, if: "flag('sans_club')" }
           - { id: jp.fin.s1_premier_jour_parti,     if: "flag('parti_juin') || flag('maison_pays_signee') || flag('exil_dore')" }
           - { id: jp.fin.s1_premier_jour_prolonge,  if: "flag('prolonge')" }

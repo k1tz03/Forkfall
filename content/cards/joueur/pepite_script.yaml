@@ -66,11 +66,11 @@ cards:
     text: "« Une offre de janvier, {toi}, un club qui paie maintenant et prend en juin. J'ai pas le temps, j'ai une usine : tu dis oui ce soir, ou je vends plus cher ? »"
     left:
       label: "Je viens ce soir"
-      effects: {caisse: "++", direction: "+", tribunes: "--", set: [vente_janvier], react: {card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}}
+      effects: {caisse: "++", direction: "+", tribunes: "--", set: [vente_janvier], react: [{card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')"}, {card: jp.re.camille_janvier}]}
       answer: "Il signe le fax. Josiane le classe sous « janvier », le dossier le plus épais du club."
     right:
       label: "Je finis la saison ici"
-      effects: {tribunes: "++", direction: "-", force: 1, set: [finit_saison]}
+      effects: {tribunes: "++", direction: "-", force: 1, set: [finit_saison], react: jp.re.camille_juin}
       answer: "Il déchire le fax. Il en a une copie ; à l'usine, on a toujours une copie."
 
   - id: jp.pepite.p2_hiver_maison
@@ -82,11 +82,11 @@ cards:
     text: "« Une offre à trente kilomètres de chez ta mère, une autre à six cents. J'ai pas le temps, j'ai une usine : la maison, ou la carrière ? »"
     left:
       label: "La maison"
-      effects: {tribunes: "+", caisse: "-", set: [finit_saison]}
+      effects: {tribunes: "+", caisse: "-", set: [finit_saison], react: jp.re.camille_juin}
       answer: "Il note « maison » sur le fax. Il ne comprend pas ce mot-là ; il le note quand même."
     right:
       label: "La carrière"
-      effects: {caisse: "++", tribunes: "-", set: [vente_janvier]}
+      effects: {caisse: "++", tribunes: "-", set: [vente_janvier], react: jp.re.camille_janvier}
       answer: "Ta mère l'apprend par L'Écho. Elle raccroche en soupirant très fort."
 
   - id: jp.pepite.p2_hiver_bleu
@@ -98,11 +98,11 @@ cards:
     text: "« Une offre de janvier, et depuis que tu joues en bleu cobalt le prix a doublé. J'ai pas le temps, j'ai une usine : on vend ce soir, ou on attend le Continental ? »"
     left:
       label: "Je viens ce soir"
-      effects: {caisse: "+++", direction: "+", tribunes: "--", set: [vente_janvier]}
+      effects: {caisse: "+++", direction: "+", tribunes: "--", set: [vente_janvier], react: jp.re.camille_janvier}
       answer: "Il signe le fax en regardant le chiffre, pas toi. Josiane classe sous « janvier »."
     right:
       label: "J'attends le Continental"
-      effects: {tribunes: "++", direction: "-", force: 1, set: [finit_saison]}
+      effects: {tribunes: "++", direction: "-", force: 1, set: [finit_saison], react: jp.re.camille_juin}
       answer: "Il déchire le fax. Il garde la copie ; à l'usine, on a toujours une copie."
 
   - id: jp.pepite.p2_hiver_bache
@@ -114,11 +114,11 @@ cards:
     text: "« Une offre de janvier, et vingt mètres de bâche à ton nom qui disent le contraire. J'ai pas le temps : tu pars sous la bâche, ou tu restes dessous ? »"
     left:
       label: "Je pars sous la bâche"
-      effects: {caisse: "++", tribunes: "---", parole: -2, relation: {gege: -2}, set: [vente_janvier]}
+      effects: {caisse: "++", tribunes: "---", parole: -2, relation: {gege: -2}, set: [vente_janvier], react: jp.re.camille_janvier}
       answer: "Gégé décroche la bâche lui-même. Il la plie. Il ne la jette pas."
     right:
       label: "Je reste dessous"
-      effects: {tribunes: "++", direction: "-", parole: 1, set: [finit_saison]}
+      effects: {tribunes: "++", direction: "-", parole: 1, set: [finit_saison], react: jp.re.camille_juin}
       answer: "La bâche reste. Le président fait repeindre le prix sur le panneau d'à côté."
 
   # ====================================================== S0 · 3 · le dernier match
@@ -186,6 +186,31 @@ cards:
       label: "Je reste, encore un an"
       effects: {tribunes: "+", vestiaire: "+", direction: "-", caisse: "-", set: [fidele], outcome: fidele}
       answer: "Il range les fax. Il dit « l'an prochain », et l'an prochain, à l'usine, c'est toujours cette année."
+
+  # Le joueur mis au loft en novembre a signé ailleurs en janvier : jp.banc.loft
+  # pose `parti_janvier` et un changement de club DIFFÉRÉ (la saison close garde
+  # son club). Le fax de juin ne le concerne plus. Défaut de relecture (graine
+  # 907) : sans cette variante, Vaubourg lui demandait au slot 17 « le grand
+  # club, ou tu restes ici un an pour le prix ? », il pouvait répondre « je
+  # reste » (drapeau `fidele`), et la S1 s'ouvrait sur « Tu es resté{e}, alors on
+  # fait comme les grands » pendant que le moteur appliquait le changement de
+  # club. Ici, il ne reste qu'un solde de tout compte et une secrétaire qui date
+  # tout depuis 1987. Pas de `club: {change: true}` : le loft l'a déjà posé.
+  - id: jp.pepite.p3_vente_janvier
+    roles: [joueur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: josiane
+    tone: strategique
+    text: "« J'en ai vu passer, des soldes de tout compte, et le vôtre attend depuis janvier : deux primes, une amende, et le stylo qui fuit. Vous signez, ou vous relisez ? »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "+", direction: "+", relation: {josiane: 1}, set: [vendu_d2], outcome: vendu, journal: {text: "{annee} : {prenom} {nom} a signé son solde de tout compte en juin. Il avait quitté l'usine en janvier.", poids: 2, tags: [mercato]}}
+      answer: "Tu signes avec le stylo qui fuit. La tache est sur ta ligne ; elle classe le double sous « janvier »."
+    right:
+      label: "Je relis"
+      effects: {caisse: "++", direction: "-", set: [vendu_d2], outcome: vendu, journal: {text: "{annee} : {prenom} {nom} a relu son solde de tout compte. L'amende de novembre n'y était plus.", poids: 2, tags: [mercato]}}
+      answer: "Tu relis. L'amende de novembre saute ; elle la raye elle-même, et elle ne demande pas au président."
 
   - id: jp.pepite.p3_vente_bache
     roles: [joueur]
@@ -481,6 +506,30 @@ cards:
       answer: "Il hausse les épaules. Il fait la passe quand même, le lendemain, une fois."
 
   # ============================================== alarmes d'override du postulat
+  # Alarme tribunes.high nº 0 (postulats.yaml) : Gégé, avant Léa. La pépite
+  # démarre à 80 de tribune — l'alarme haute est celle qui sonne le plus tôt et
+  # le plus souvent de la S0, et elle n'avait qu'un visage, la chroniqueuse.
+  # Défaut de relecture « récurrence du casting en S0 » : Gégé, le capo que le
+  # cast déclare à 1,5 apparition, n'était vu que dans 59 % des premières
+  # saisons, parce qu'il ne parle en S0 que si jp.tifo est tirée. Le local et la
+  # bâche, eux, existent dès que la tribune chante.
+  - id: jp.pepite.alarme_local_gege
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "« La tribune n'oublie rien, {toi}, mais elle chante un nom qu'elle ne sait pas écrire : deux orthographes sur la bâche. Tu viens l'écrire au local, ou on tire au sort ? »"
+    left:
+      label: "Je viens l'écrire"
+      effects: {tribunes: "+", vestiaire: "-", relation: {gege: 1}, journal: {text: "{annee} : {prenom} {nom} a écrit son nom à la craie au local de la Nord. La bâche a été refaite dessus.", poids: 2, tags: [tribunes]}}
+      answer: "Tu l'écris à la craie sur le mur du local. Gégé repasse au pinceau, sans se tromper."
+    right:
+      label: "Qu'ils tirent au sort"
+      effects: {tribunes: "-", force: 1, relation: {gege: -1}}
+      answer: "Ils tirent au sort. La bâche sort avec une lettre en trop ; elle sortira comme ça pendant deux ans."
+
   # Alarme tribunes.high nº 1 (postulats.yaml) : servie seulement quand la bâche
   # ET le panneau du prix existent (`seen('jp.tifo.prix')`). `once: true` : Léa ne
   # fait confirmer la même photo qu'une fois par carrière.

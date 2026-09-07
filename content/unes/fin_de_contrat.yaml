@@ -5,6 +5,10 @@
 # pas trois ans plus tard sur un jubilé.
 # Aucune ne prétend à une montée, une descente ou un titre : elles parlent de
 # contrats, de genoux et de vestiaires, pas du classement.
+# Les réactions de Camille montent l'escalier écrit pour elles (journal → école
+# → frigo, content/cards/common/reactions.yaml) : `co.re.camille_journal` posé
+# seul revenait mot pour mot d'une saison à l'autre (cinq traces de trois
+# saisons sur quarante servaient deux fois la même scène du journal ouvert).
 unes:
   # -------------------------------------------------------- le contrat (4)
   - id: une.fin.un_an_de_plus
@@ -17,7 +21,7 @@ unes:
     sous: "Trente-deux ans, un genou, une page. Le président « n'a pas le temps », mais il a signé, et le Doc a paraphé en dessous."
     sujet: jp.fin.dernier_contrat
     photo: jp.fin.f3_juin
-    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal } ]
+    react: [ { card: co.re.vecchio_garde, if: "relation.vecchio >= 0" }, { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.vestiaire
     postulats: [fin_de_contrat]
@@ -41,7 +45,7 @@ unes:
     sous: "Le téléphone n'a pas sonné en août. Il était débranché ; personne n'avait remarqué, et personne n'a rappelé pour le dire."
     sujet: jp.fin.dernier_contrat
     photo: jp.fin.f3_juin_aucune
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.quinzieme
     postulats: [fin_de_contrat]
@@ -66,7 +70,7 @@ unes:
     sous: "Le Doc avait dit « tu ne sens plus rien ». C'était le problème. On a compté les croix ; il en manquait une."
     sujet: jp.fin.dernier_contrat
     photo: jp.fin.s1_jambes
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.derriere
     postulats: [fin_de_contrat]
@@ -90,7 +94,7 @@ unes:
     sous: "Deux ans. Le médecin du club « a très envie de vacances ». La kiné, elle, a demandé ce qu'il y avait dans le flacon ; on ne lui a pas dit."
     sujet: co.pharmacie
     photo: jp.pharmacie.flacon_b
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # -------------------------------------------------------- la tribune (3)
   - id: une.fin.jubile
@@ -140,7 +144,7 @@ unes:
     sous: "Les mémoires de {prenom} {nom}, page quarante-sept. Le capitaine a lu. « Le groupe vit bien. » Sans passe, pendant une semaine."
     sujet: jp.memoires
     photo: jp.memoires.chapitre_trois
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.noel
     postulats: [fin_de_contrat]
@@ -201,7 +205,7 @@ unes:
     sous: "Le club de sa ville voulait un nom. Sa mère a appelé le président avant l'agent, et l'agent l'a appris par le journal."
     sujet: jp.maison_pays
     photo: jp.maison.offre_d2
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.dernier_cobalt
     postulats: [fin_de_contrat]
@@ -225,7 +229,7 @@ unes:
     sous: "La journaliste « a les documents » : le nombre de corners, la date, une voix. L'agent, lui, « ne connaît pas Tony » ; il connaît le bar."
     sujet: jp.pari
     photo: jp.pari.plume
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   # ------------------------------------------------- les traces plus rares (4)
   - id: une.fin.noms
@@ -299,7 +303,7 @@ unes:
     sous: "La kiné a lu la feuille trois fois avant de fermer la porte. Elle témoignera ; la commission, elle, ne fait pas la différence."
     sujet: co.pharmacie
     photo: jp.pharmacie.victime
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.vallee
     postulats: [fin_de_contrat]
@@ -351,7 +355,7 @@ unes:
     sous: "Le chiffre est petit et la clause est grande : quinze matchs, ou le contrat s'arrête. La secrétaire coche au crayon, pour pouvoir effacer."
     sujet: jp.fin.dernier_contrat
     photo: jp.fin.f2_offre
-    react: [ { card: co.re.camille_journal } ]
+    react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]
 
   - id: une.fin.vingt_deux_noms
     postulats: [fin_de_contrat]

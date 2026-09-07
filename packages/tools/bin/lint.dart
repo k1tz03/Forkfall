@@ -109,6 +109,11 @@ final RegExp kUneTitreRe = RegExp(r"\bchampion(s|ne|nes)?\b");
 const List<String> kEngineFlags = ['bilan_tenu', 'bilan_manque', 'descente'];
 const List<String> kEngineFlagPrefixes = ['camille_', 'role_was_'];
 
+/// Les kinds narratifs : une de leurs sorties sans `answer:` est une erreur
+/// (voir la boucle de cartes). `routine`, `nouvelle` et `passe` en sont hors :
+/// le sac d'origine en compte des centaines, c'est un manque connu.
+const Set<String> kKindsHistoire = {'etape', 'script', 'evenement', 'palier', 'chaine', 'reaction', 'alarme'};
+
 void main() {
   contentDir = _findContentDir();
   final errors = <String>[];
@@ -230,6 +235,18 @@ void main() {
     }
     for (var i = 0; i < 2; i++) {
       if (hasNamePlaceholder(labels[i])) errors.add('$id/${i == 0 ? 'left' : 'right'}: le nom du joueur n\'entre jamais dans un libellé de bouton');
+    }
+    // Une sortie de carte d'HISTOIRE sans `answer:` est un écran muet : le
+    // swipe ne renvoie rien, et la « carte fatale » de la Une n'a plus de
+    // légende de photo (spec §3.8). Défaut de relecture pépite : deux cartes
+    // servies dans les traces étaient dans ce cas (jp.presse.merguez à droite,
+    // en.direction.fils_president à droite). Le sac d'origine, lui, compte
+    // ~320 routines sans `answer` : c'est un manque connu, hérité, et le lint
+    // ne le crie pas — mais aucune carte de kind narratif ne s'y ajoute.
+    for (var i = 0; i < 2; i++) {
+      if (kKindsHistoire.contains(card['kind']) && answers[i].isEmpty) {
+        errors.add('$id/${i == 0 ? 'left' : 'right'}: sortie de carte d\'histoire (${card['kind']}) sans `answer:` — l\'écran reste muet après le swipe');
+      }
     }
     // Charte § 4.1 : « un seul bouton = deux sorties identiques ». Le moteur
     // rend en un seul bouton toute Nouvelle et toute « Nouvelle du passé »

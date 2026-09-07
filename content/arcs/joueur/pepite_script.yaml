@@ -70,8 +70,15 @@ arcs:
           # cinquième position, elle ne sortait presque jamais, et avec elle
           # l'issue `fidele` de l'enfant du pays (donc l'objectif caché
           # `pepite_enfant_du_club` et la fin dorée `jp_statue`).
+          # `parti_janvier` passe devant tout : le joueur n'est plus là pour
+          # écouter les trois fax de juin (défaut de relecture, graine 907).
+          - { id: jp.pepite.p3_vente_janvier, if: "flag('parti_janvier')" }
           - { id: jp.pepite.p3_vente_bache,   if: "flag('enfant_du_pays') && gauges.tribunes >= 65" }
-          - { id: jp.pepite.p3_vente_or,      if: "relation.nassir >= 1 || gauges.caisse >= 78" }
+          # 78 → 74 : l'issue `exil` est tombée de 15 % à 6 % quand le réservoir
+          # a été rééquilibré (l'exil doré et Ilyas s'ouvrent moins souvent, donc
+          # `relation.nassir >= 1` est plus rare) et que la variante de janvier
+          # est passée devant. Le seuil de caisse rouvre la troisième porte.
+          - { id: jp.pepite.p3_vente_or,      if: "relation.nassir >= 1 || gauges.caisse >= 74" }
           - { id: jp.pepite.p3_vente_signee,  if: "flag('vente_janvier')" }
           - { id: jp.pepite.p3_vente_genou,   if: "flag('genou_cache') || flag('genou')" }
           - { id: jp.pepite.p3_vente_demande, if: "flag('demande_vente')" }
@@ -81,7 +88,9 @@ arcs:
       # ------------------------------------------------------------- saison 2
       - id: premier_jour
         card:
-          - { id: jp.pepite.s1_premier_jour_vendu,  if: "flag('vendu_d1') || flag('vendu_d2')" }
+          # `parti_janvier` compte comme une vente : le joueur ouvre la S1 dans
+          # un vestiaire neuf, il ne peut pas y lire « tu es resté ».
+          - { id: jp.pepite.s1_premier_jour_vendu,  if: "flag('vendu_d1') || flag('vendu_d2') || flag('parti_janvier')" }
           - { id: jp.pepite.s1_premier_jour_fidele, if: "flag('fidele')" }
           - { id: jp.pepite.s1_premier_jour_or,     if: "flag('exil_dore')" }
           - { id: jp.pepite.s1_premier_jour }
@@ -89,7 +98,7 @@ arcs:
         season: "1"
       - id: retour_usine
         card:
-          - { id: jp.pepite.s1_retour_usine_vendu,  if: "flag('vendu_d1') || flag('vendu_d2')" }
+          - { id: jp.pepite.s1_retour_usine_vendu,  if: "flag('vendu_d1') || flag('vendu_d2') || flag('parti_janvier')" }
           - { id: jp.pepite.s1_retour_usine_or,     if: "flag('exil_dore')" }
           - { id: jp.pepite.s1_retour_usine_fidele }
         at: [10, 11]

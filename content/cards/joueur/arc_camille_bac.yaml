@@ -50,6 +50,28 @@ cards:
       effects: {vestiaire: "+", tribunes: "+", relation: {camille: -1}}
       answer: "Tu pars. Elle sort seule, prend le bus jusqu'au stade, arrive à la mi-temps ; tu ne l'as pas vue."
 
+  # Variante des résultats quand la révision a été renvoyée « après le transfert »
+  # (`bac_apres`). Défaut de relecture (« issues » de jp.camille_bac) : l'issue
+  # `apres`, posée à la première étape, était écrasée par le `voiture` de la
+  # dernière — elle tombait à 6 % pour un plancher de 10 %, et la branche « je
+  # révise plus tard » n'avait pas de fin à elle. Ici elle en a une : elle a eu
+  # le bac sans toi, et la voiture ne rachète pas juin.
+  - id: jp.bac.resultats_apres
+    roles: [joueur]
+    arc: famille
+    tags: [famille, agents]
+    speaker: camille
+    tone: strategique
+    text: "« J'ai eu le bac le 4 juillet et tu l'as su le 11, par ta mère. Tu rentres à quelle heure — on fête quoi, mon bac ou ton transfert ? »"
+    left:
+      label: "Ton bac, d'abord"
+      effects: {tribunes: "-", vestiaire: "+", relation: {camille: 1}, outcome: apres, journal: {text: "{annee} : Camille a eu son bac seule. {nom} l'a su une semaine après ; la fête du transfert est annulée.", poids: 2, tags: [famille]}}
+      answer: "Vous fêtez son bac. Personne ne parle du transfert ; c'est une soirée courte, et elle est bien."
+    right:
+      label: "Les deux, le même soir"
+      effects: {caisse: "-", tribunes: "+", relation: {camille: -1}, outcome: apres, journal: {text: "{annee} : deux gâteaux le même soir chez {prenom} {nom}. Les photos sont toutes du côté du transfert.", poids: 2, tags: [famille]}}
+      answer: "Deux gâteaux, une salle louée, trente personnes. Sur les photos, on ne voit qu'un des deux gâteaux."
+
   - id: jp.bac.resultats
     roles: [joueur]
     arc: agents

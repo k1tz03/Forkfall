@@ -8,6 +8,7 @@ export 'src/content.dart';
 export 'src/draw/director.dart';
 export 'src/effects.dart';
 export 'src/engine.dart';
+export 'src/goldens.dart';
 export 'src/rng.dart';
 export 'src/seed_codec.dart';
 export 'src/state.dart';

@@ -261,16 +261,21 @@ void main() {
       final e = Engine(_synth(cards: [
         _card('et.transfert', kind: 'etape', left: {'club': {'change': true, 'division': 2}}),
         _card('et.same', kind: 'etape', arc: 'a.same'),
-        _card('ret.gege_sourire', kind: 'chaine', speaker: 'gege', once: true),
-        _card('ret.gege_noir', kind: 'chaine', speaker: 'gege', once: true),
-        _card('ret.vecchio_sourire', kind: 'chaine', speaker: 'vecchio', once: true),
-        _card('ret.vecchio_noir', kind: 'chaine', speaker: 'vecchio', once: true),
+        _card('ret.gege_sourire', kind: 'chaine', speaker: 'gege', once: true, statutOk: ['parti', 'retraite']),
+        _card('ret.gege_noir', kind: 'chaine', speaker: 'gege', once: true, statutOk: ['parti', 'retraite']),
+        _card('ret.vecchio_sourire', kind: 'chaine', speaker: 'vecchio', once: true, statutOk: ['parti', 'retraite']),
+        _card('ret.vecchio_noir', kind: 'chaine', speaker: 'vecchio', once: true, statutOk: ['parti', 'retraite']),
         _card('re.quelquun', kind: 'reaction', speaker: 'josiane'),
       ]));
       var s = _at(e, 11, 'et.transfert');
       s.relations['gege'] = 2;
       s.relations['vecchio'] = -3;
       s.relations['brehaut'] = 1;
+      // Des retrouvailles ne se jouent qu'avec quelqu'un qui n'est plus là
+      // (`Director.retrouvailles`) : Gégé et Gigi sont partis, Bréhaut est
+      // resté — sa relation est la troisième, et il n'aura rien.
+      s.chars['gege']!.statut = 'parti';
+      s.chars['vecchio']!.statut = 'retraite';
       s.reaction = const ReactionRef(card: 're.quelquun');
       s.alarmFired.add('tribunes:low');
       s.gauges['tribunes'] = 80;
@@ -314,7 +319,10 @@ void main() {
       final ligne = s.journal.firstWhere((j) => j.kind == 'transition');
       expect(ligne.text, contains('signe à'));
       expect(ligne.tags, contains('club'));
-      // Retrouvailles : les deux visages à |relation| maximale, en [2, 6].
+      // Retrouvailles : les deux visages **partis** à |relation| maximale, en
+      // [2, 6]. Un visage resté au club (Bréhaut) n'a pas d'« après » : sa
+      // scène de retrouvailles ne part pas (défaut de relecture pépite — le
+      // personnage faisait ses adieux puis reparlait deux cartes plus tard).
       final retro = s.scheduled.where((sc) => sc.payload['retrouvailles'] == true).toList();
       expect(retro.map((sc) => sc.card).toSet(), {'ret.vecchio_noir', 'ret.gege_sourire'});
       for (final sc in retro) {
