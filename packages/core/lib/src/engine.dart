@@ -5,10 +5,12 @@ library;
 
 import 'dart:convert';
 
+import 'annonce.dart';
 import 'condition.dart';
 import 'content.dart';
 import 'draw/director.dart';
 import 'effects.dart';
+import 'frise.dart';
 import 'naming.dart';
 import 'rng.dart';
 import 'standings.dart';
@@ -491,7 +493,24 @@ class Engine {
     // titre. Chaque ligne porte sa clé en tag (`journal_has('descente')`, et la
     // vérification « la Une ne ment pas » de simulate / du test U2).
     final tenuKey = verdict.objectiveMet ? 'bilan_tenu' : 'bilan_manque';
-    director.addJournalAuto(s, tenuKey, kind: 'bilan', poids: 3, tags: ['bilan', tenuKey], extra: extra);
+    // La ligne de Bilan porte en plus les FAITS de la saison (`rang:`, `div:`,
+    // `obj:`, `club:`) : c'est d'eux que la frise de carrière relit les saisons
+    // passées, sans second registre à tenir (`frise.dart`). Ces tags ne
+    // croisent aucun tag de contenu (`tags.yaml` est une liste fermée).
+    director.addJournalAuto(s, tenuKey,
+        kind: 'bilan',
+        poids: 3,
+        tags: [
+          'bilan',
+          tenuKey,
+          ...friseTagsDeBilan(
+            rang: verdict.rank,
+            division: s.world.division,
+            objectifTarget: s.objectiveTarget,
+            club: s.entities.named['club'] ?? '',
+          ),
+        ],
+        extra: extra);
     // Division movement for next season : `montee` n'existe qu'en Division 2,
     // `descente` qu'en Division 1 (seasonVerdict), donc les gardes ne servent
     // qu'à protéger un contenu de test.
@@ -580,7 +599,7 @@ class Engine {
     // New club force from the target division. Le CALENDRIER, lui, reste celui
     // de la saison en cours : `blocks` compte les blocs de six journées déjà
     // joués, il appartient à l'exercice et non au club (voir `_changeClub`).
-    s.world = WorldState(division: s.world.division, blocks: s.world.blocks);
+    s.world = WorldState(division: s.world.division, blocks: s.world.blocks, blocksDepart: s.world.blocks);
     _updateProvisionalRank(s);
     s.force = divisionBaseForce(s.world.division) + rng.range(-6, 6);
     s.stats['roles'] = (s.stats['roles'] ?? 1) + 1;
@@ -646,7 +665,11 @@ class Engine {
     // Ce qui se remet à zéro : les points (ils sont au club que tu quittes),
     // les séries, le parcours de Coupe et la mémoire du vestiaire.
     final blocs = s.world.blocks;
-    s.world = WorldState(division: (division ?? s.world.division).clamp(1, 2), blocks: blocs);
+    // `blocksDepart` retient ce que la SAISON avait déjà joué le jour de la
+    // signature : `pts` repart de zéro, pas le calendrier. Sans lui, la table
+    // de fin de saison rapportait un total de demi-saison sur trente-six
+    // journées (voir `buildStandings`).
+    s.world = WorldState(division: (division ?? s.world.division).clamp(1, 2), blocks: blocs, blocksDepart: blocs);
     _updateProvisionalRank(s);
     s.force = divisionBaseForce(s.world.division) + rng.range(-6, 6);
     // Le club d'origine est mémorisé au premier départ : c'est lui que `retour`
@@ -798,6 +821,7 @@ class Engine {
       s.stats['saisons'] = (s.stats['saisons'] ?? 0) + 1;
       s.world.pts = 0;
       s.world.blocks = 0;
+      s.world.blocksDepart = 0;
       s.matchTemp = null;
       s.beat = 0;
       // Retirement checks: the player's legs, the coach's licence.
@@ -817,7 +841,16 @@ class Engine {
     }
   }
 
+  /// Sert la carte suivante, puis pose le bandeau « nouvelles cartes » si le
+  /// moment le mérite (`annonce.dart`). La bande ne se pose que sur une carte
+  /// « fraîche » : jamais deux cartes de suite.
   void _draw(GameState s, [Rng? rngIn]) {
+    final precedenteAvaitUneBande = s.pending?.payload['annonce'] != null;
+    _drawCard(s, rngIn);
+    poserAnnonce(content, s, carteFraiche: !precedenteAvaitUneBande);
+  }
+
+  void _drawCard(GameState s, [Rng? rngIn]) {
     final rng = rngIn ?? Rng.fromState(s.rngState);
     final beats = content.seasonBeats[s.role]!;
     if (s.beat >= beats.length) s.beat = 0;
@@ -1109,6 +1142,10 @@ class Engine {
         season: s.season,
         division: s.world.division,
         blocks: s.world.blocks,
+        // Les blocs joués sous ces couleurs-ci : après un changement de club en
+        // cours de saison, `pts` n'en couvre qu'une partie (voir
+        // `buildStandings`, et `WorldState.blocksDepart`).
+        blocksClub: s.world.blocks - s.world.blocksDepart,
         rank: s.world.standingRank,
         pts: s.world.pts,
         monClub: s.entities.named['club'] ?? 'Ton club',
@@ -1116,6 +1153,22 @@ class Engine {
         prefixes: ((content.names['club_prefixes'] as List?) ?? const []).map((e) => e.toString()).toList(),
         villes: ((content.names['villes'] as List?) ?? const []).map((e) => e.toString()).toList(),
       );
+
+  /// **La frise de carrière** (`frise.dart`) : la carrière posée sur le siècle,
+  /// dérivée de l'Almanach et du monde, sans rien stocker de plus.
+  /// [carrieres] est l'arrière-plan — les carrières précédentes du même profil,
+  /// que la coquille tient (le moteur n'en connaît qu'une à la fois).
+  Frise friseOf(GameState s, {List<FriseCarriere> carrieres = const []}) =>
+      buildFrise(content, s, carrieres: carrieres);
+
+  /// La frise s'impose-t-elle d'elle-même à cet instant ? (décennie, changement
+  /// de club ou de rôle, fin de carrière — voir `friseAuto`).
+  bool friseSImpose(GameState s) => friseAuto(s);
+
+  /// La journée de championnat en cours et le total d'une saison : une seule
+  /// définition pour l'aperçu, l'application et les textes (`{journee}`).
+  int journeeOf(GameState s) => journeeDeSaison(s.world.blocks);
+  int get journeesParSaison => kSeasonGames;
 
   /// La carte Classement : un tableau, un bouton. Servie deux fois par saison
   /// (après le bloc aller, et au Bilan avant la Une).
@@ -1160,8 +1213,8 @@ class Engine {
         'standings_complet': [for (final r in table) r.toJson()],
         'rang': rang,
         'pts': s.world.pts,
-        'journee': (s.world.blocks * kGamesPerBlock).clamp(0, kBlocksPerSeason * kGamesPerBlock),
-        'journees': kBlocksPerSeason * kGamesPerBlock,
+        'journee': journeeDeSaison(s.world.blocks),
+        'journees': kSeasonGames,
         'division': s.world.division,
         'finale': finale,
         ..._spPayload('classement', sp),

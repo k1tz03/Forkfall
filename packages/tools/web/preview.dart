@@ -46,6 +46,36 @@
 // moment : la table complète des 18 clubs, chaque ligne
 // `{rang, club, pts, diff, toi}`. La carte Classement, elle, porte en plus la
 // fenêtre de six lignes autour de la tienne dans `card.standings`.
+//
+// LA FRISE — `frise` est exposée EN PERMANENCE elle aussi (un bouton l'ouvre à
+// la demande) :
+//
+//     frise: {
+//       debut, fin,          les années couvertes par la ligne
+//       annee,               l'année courante
+//       saisons: [ {saison, annee, club, division, rang, objectif, tenu,
+//                   evenements: [ {type, annee, label} ]} ],
+//       jalons:  [ {annee, type, label} ],       nouvelle | club | role | intrigue
+//       carrieres: [ {nom, debut, fin, fin_id} ] l'arrière-plan
+//     }
+//
+// `frise_auto` (booléen) dit les moments où elle doit s'imposer SANS qu'on la
+// demande : le passage d'une décennie, un changement de club ou de rôle, la
+// fin d'une carrière. La coquille n'a rien à calculer.
+//
+// LE BANDEAU « NOUVELLES CARTES » — `annonce` porte
+// `{type, titre, sous_titre}` ou `null`. Quatre types : `intrigue` (une
+// intrigue s'ouvre pour la première fois de la carrière), `personnage` (un
+// visage entre en scène), `fin` (une fin devient atteignable), `legende` (un
+// objectif caché atteint, ou tout `unlock:` posé par un choix). Le moteur
+// garantit qu'il est posé une seule fois, jamais sur deux cartes de suite, et
+// au plus deux fois par saison : la coquille se contente de l'afficher tant
+// qu'il est là.
+//
+// LA JOURNÉE — `journee` / `journees` (la journée de championnat et le total
+// d'une saison) viennent du monde simulé, pas du calendrier des beats. C'est
+// la MÊME définition que celle de l'application (`{journee}` de `text.dart`)
+// et que celle de la carte Classement : `journeeDeSaison(world.blocks)`.
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
@@ -55,6 +85,23 @@ import 'package:fusible_core/fusible_core.dart';
 late Content _content;
 late Engine _engine;
 GameState? _state;
+
+/// **L'arrière-plan de la frise** : les carrières déjà closes dans cette page.
+/// Le moteur ne connaît qu'une carrière à la fois (`GameState` est UNE
+/// carrière) ; c'est donc la coquille qui tient la liste des précédentes et la
+/// passe à la frise, comme le fera l'application avec sa sauvegarde.
+final List<FriseCarriere> _carrieres = <FriseCarriere>[];
+
+void _archiverCarriere() {
+  final s = _state;
+  if (s == null || !s.over) return;
+  _carrieres.add(FriseCarriere(
+    nom: s.entities.protagonist,
+    debut: _content.postulats[s.postulatId]?.year ?? Engine.startYear,
+    fin: s.year,
+    finId: s.endingId,
+  ));
+}
 
 String _postulatsJson() {
   final list = <Map<String, dynamic>>[];
@@ -74,15 +121,6 @@ String _postulatsJson() {
   return jsonEncode({'postulats': list, 'startYear': Engine.startYear});
 }
 
-/// La journée courante : le rang du beat parmi les beats hors prologue.
-int _journee(List<Beat> beats, int beatIndex) {
-  var n = 0;
-  for (var i = 0; i <= beatIndex && i < beats.length; i++) {
-    if (beats[i].kind != 'prologue') n += 1;
-  }
-  return n == 0 ? 1 : n;
-}
-
 String _view() {
   final s = _state!;
   final role = _content.roles[s.role]!;
@@ -94,9 +132,9 @@ String _view() {
             'value': s.gauges[g.id] ?? 50,
           })
       .toList();
-  // Le calendrier d'une saison porte un beat par « journée » ; les beats
-  // `prologue` réservés en tête de présaison ne comptent pas (saison 0
-  // seulement, et jamais tous servis).
+  // Le calendrier de la saison : il ne sert plus qu'à nommer la PHASE en cours
+  // (présaison, aller, hiver, retour, sprint, bilan). La journée de
+  // championnat, elle, vient du monde simulé (voir plus bas).
   final beats = _content.seasonBeats[s.role] ?? const <Beat>[];
   final beatIndex = beats.isEmpty ? 0 : s.beat.clamp(0, beats.length - 1);
   final m = <String, dynamic>{
@@ -132,18 +170,31 @@ String _view() {
       'club': s.entities.named['club'] ?? '',
       'ville': s.entities.named['ville'] ?? '',
     },
-    // La « journée » affichée compte les beats JOUÉS d'une saison : les beats
-    // `prologue` réservés en tête de présaison n'en sont pas (ils ne sortent
-    // qu'en saison 0, et jamais tous).
-    'journee': _journee(beats, beatIndex),
-    'journees': beats.where((b) => b.kind != 'prologue').length,
+    // LA JOURNÉE DE CHAMPIONNAT, et il n'y en a qu'une. Elle vient du monde
+    // simulé (`world.blocks` × six), pas du calendrier des beats : le « J » du
+    // bandeau comptait ici les cartes de vestiaire comme des matchs et montait
+    // à 42, quand l'application affichait le `{journee}` de `text.dart`. Même
+    // définition partout, désormais : `journeeDeSaison`.
+    'journee': _engine.journeeOf(s),
+    'journees': _engine.journeesParSaison,
     'phase': beats.isEmpty ? '' : beats[beatIndex].phase,
     'division': s.world.division,
     'promiseTo': s.objectivePromised ? _engine.patronName(s) : null,
     // Le classement complet, à tout moment (voir l'en-tête).
     'standings': [for (final r in _engine.standingsOf(s)) r.toJson()],
-    'standingsJournee': (s.world.blocks * kGamesPerBlock).clamp(0, kSeasonGames),
-    'standingsJournees': kSeasonGames,
+    // Les mêmes nombres, sous les noms que la page du classement lisait déjà.
+    'standingsJournee': _engine.journeeOf(s),
+    'standingsJournees': _engine.journeesParSaison,
+    // LA FRISE (voir `frise.dart`) : la carrière posée sur le siècle. Exposée
+    // en permanence — un bouton l'ouvre à la demande — et `frise_auto` dit les
+    // moments où elle doit s'imposer sans qu'on la demande : le passage d'une
+    // décennie, un changement de club ou de rôle, la fin d'une carrière.
+    'frise': _engine.friseOf(s, carrieres: _carrieres).toJson(),
+    'frise_auto': _engine.friseSImpose(s),
+    // LE BANDEAU « nouvelles cartes » (voir `annonce.dart`) : posé une seule
+    // fois, au moment où le contenu s'ouvre, jamais sur deux cartes de suite,
+    // deux par saison au plus. `null` le reste du temps.
+    'annonce': s.pending?.payload['annonce'],
   };
   if (s.over) {
     // L'écran de fin porte lui aussi son ambiance et son tampon sonore.
@@ -277,6 +328,8 @@ void main() {
           return d == null || d.isEmpty ? null : d;
         }
 
+        // La carrière qui s'achève entre à l'arrière-plan de la frise.
+        _archiverCarriere();
         _state = _engine.start(seed.toDartInt,
             postulat: postulat.toDartInt, prenom: opt(prenom), nom: opt(nom), genre: opt(genre));
         return _view().toJS;

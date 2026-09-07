@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fusible — la bibliothèque d'illustrations</title>
+<!-- Page de contrôle de art.js. Elle ne sert qu'à regarder : rien ici n'entre
+     dans l'aperçu jouable. Fond brun réel, texte crème, monospace — les
+     illustrations sont vues dans les conditions du jeu. -->
+<style>
+  :root {
+    --fond: #1B1109; --fond2: #241608; --creme: #F2E8CE; --creme2: #CBBB92;
+    --framboise: #E0164B; --taille: 200px;
+    --mono: ui-monospace, "SF Mono", "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fond); color: var(--creme); font: 13px/1.5 var(--mono); letter-spacing: .04em; }
+  header { padding: 22px 26px 14px; border-bottom: 1px solid #3A2614; }
+  h1 { margin: 0 0 6px; font-size: 17px; letter-spacing: .18em; text-transform: uppercase; font-weight: 700; }
+  header p { margin: 0; color: var(--creme2); font-size: 12px; max-width: 96ch; }
+  h2 { margin: 0; font-size: 12px; letter-spacing: .26em; text-transform: uppercase; color: var(--framboise); font-weight: 700; }
+  section { padding: 22px 26px 10px; overflow-x: auto; border-bottom: 1px solid #2E1E10; }
+  .barre { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+  .barre span { color: var(--creme2); font-size: 11px; }
+  button { font: inherit; letter-spacing: .12em; text-transform: uppercase; background: transparent;
+           color: var(--creme2); border: 1px solid #4A3220; border-radius: 3px; padding: 8px 14px;
+           min-height: 44px; min-width: 52px; cursor: pointer; }
+  button[aria-pressed="true"] { color: var(--fond); background: var(--creme); border-color: var(--creme); }
+  .grille { display: flex; flex-wrap: wrap; gap: 16px; }
+  .fiche { background: var(--fond2); border-radius: 6px; padding: 9px 10px 10px; }
+  .fiche h3 { margin: 0 0 2px; font-size: 11.5px; letter-spacing: .1em; font-weight: 700; }
+  .fiche .meta { margin: 0 0 7px; font-size: 10.5px; color: var(--creme2); }
+  .rang { display: flex; gap: 7px; }
+  .vue { width: var(--taille); }
+  .vue svg { display: block; width: 100%; height: auto; border-radius: 4px; }
+  .vue b { display: block; font-size: 10px; font-weight: 400; color: var(--creme2); padding-top: 4px; letter-spacing: .12em; }
+  .pastilles { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pastille { width: 100px; }
+  .pastille i { display: block; height: 40px; border-radius: 3px; }
+  .pastille em { display: block; font-style: normal; font-size: 10px; color: var(--creme2); padding-top: 4px; }
+  .picto { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end; }
+  .picto figure { margin: 0; width: 74px; text-align: center; color: var(--creme); }
+  .picto figcaption { font-size: 9.5px; color: var(--creme2); padding-top: 6px; letter-spacing: .06em; word-break: break-word; }
+  .jauges { display: flex; gap: 34px; align-items: flex-end; margin-bottom: 8px; }
+  .jauge { text-align: center; color: var(--creme); }
+  .jauge .sens { color: #3CB44A; }
+  .jauge .danger { color: var(--framboise); }
+  .jauge figcaption { font-size: 10px; color: var(--creme2); padding-top: 6px; letter-spacing: .14em; }
+  table.dec { border-collapse: collapse; }
+  table.dec th { font-size: 10px; letter-spacing: .16em; color: var(--creme2); font-weight: 400; padding: 0 0 8px; }
+  table.dec td { padding: 0 8px 8px 0; vertical-align: top; }
+  table.dec td svg { display: block; width: 112px; height: auto; border-radius: 4px; }
+  table.dec th.nom { text-align: right; padding-right: 10px; }
+  @media (prefers-reduced-motion: no-preference) { .vue svg { transition: none; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Fusible — la bibliothèque d'illustrations</h1>
+  <p>Vectoriel plat, géométrique, sans contour. Sept aplats par image. Fond brun réel, texte crème :
+     ce que la page montre est ce que la carte montrera. Générée par <code>art.js</code> —
+     <span id="version"></span>.</p>
+</header>
+
+<section>
+  <div class="barre"><h2>La palette</h2><span>sept familles nommées ; l'interface n'est jamais colorée</span></div>
+  <div class="pastilles" id="palette"></div>
+</section>
+
+<section>
+  <div class="barre"><h2>Les quatre jauges</h2><span>le pictogramme EST la jauge : à plat, en crème, sans cadre ni barre</span></div>
+  <div class="jauges" id="jauges"></div>
+  <div class="picto" id="pictos"></div>
+</section>
+
+<section>
+  <div class="barre">
+    <h2>Les 42 personnages</h2>
+    <span>buste · serré · large · de dos · objet</span>
+    <span>taille</span>
+    <button type="button" data-taille="96">96</button>
+    <button type="button" data-taille="200" aria-pressed="true">200</button>
+    <button type="button" data-taille="400">400</button>
+    <span>décennie</span>
+    <button type="button" data-annee="1994" aria-pressed="true">1990</button>
+    <button type="button" data-annee="2004">2000</button>
+    <button type="button" data-annee="2024">2020</button>
+    <button type="button" data-annee="2044">2040</button>
+  </div>
+  <div class="grille" id="personnages"></div>
+</section>
+
+<section>
+  <div class="barre"><h2>Toi</h2><span>jamais de face : de dos, de trois quarts perdu, une main, une ombre</span></div>
+  <div class="grille" id="incarne"></div>
+</section>
+
+<section>
+  <div class="barre"><h2>Les neuf lieux</h2><span>trois cadrages chacun : large · moyen · serré</span></div>
+  <div class="grille" id="lieux"></div>
+</section>
+
+<section>
+  <div class="barre"><h2>Les objets qui reviennent</h2></div>
+  <div class="grille" id="objets"></div>
+</section>
+
+<section>
+  <div class="barre"><h2>Le temps qui passe</h2><span>la palette et les accessoires vieillissent avec la décennie</span></div>
+  <table class="dec" id="decennies"></table>
+</section>
+
+<section id="planche-close">
+  <div class="barre"><h2>Gros plan</h2><span>six silhouettes en 400 px : la lecture en une seconde</span></div>
+  <div class="grille" id="close"></div>
+</section>
+
+<script src="art.js"></script>
+<script>
+(function () {
+  "use strict";
+  var FA = window.FusibleArt;
+  var el = function (id) { return document.getElementById(id); };
+  el('version').textContent = 'version ' + FA.version;
+
+  /* La palette, famille par famille. */
+  (function () {
+    var out = '', P = FA.palette;
+    Object.keys(P).forEach(function (fam) {
+      Object.keys(P[fam]).forEach(function (k) {
+        var v = P[fam][k];
+        var list = Array.isArray(v) ? v : [v];
+        list.forEach(function (c, i) {
+          out += '<div class="pastille"><i style="background:' + c + '"></i>' +
+            '<em>' + fam + '.' + k + (list.length > 1 ? '[' + i + ']' : '') + '<br>' + c + '</em></div>';
+        });
+      });
+    });
+    el('palette').innerHTML = out;
+  })();
+
+  /* Les quatre jauges, avec le triangle de sens et la tête de mort. */
+  (function () {
+    var J = [['vestiaire', 'hausse', 0], ['tribunes', 'baisse', 0], ['president', null, 0], ['caisse', null, 1]];
+    var out = '';
+    J.forEach(function (j) {
+      out += '<figure class="jauge">' +
+        (j[2] ? '<div class="danger">' + FA.icon('crane', { size: 20 }) + '</div>'
+              : '<div class="sens">' + (j[1] ? FA.icon(j[1], { size: 14 }) : '<span style="display:block;height:14px"></span>') + '</div>') +
+        FA.icon(j[0], { size: 54 }) + '<figcaption>' + j[0] + '</figcaption></figure>';
+    });
+    el('jauges').innerHTML = out;
+    var p = '';
+    FA.icones().forEach(function (nom) {
+      p += '<figure>' + FA.icon(nom, { size: 34 }) + '<figcaption>' + nom + '</figcaption></figure>';
+    });
+    el('pictos').innerHTML = p;
+  })();
+
+  /* Les 42 personnages, les cinq cadrages. */
+  var ANNEE = 1994;
+  function dessinePersonnages() {
+    var F = FA.fiches(), out = '';
+    Object.keys(F).forEach(function (id) {
+      var f = F[id];
+      out += '<div class="fiche"><h3>' + f.nom + '</h3><p class="meta">' + id + ' · ' + f.camp +
+        ' · ' + f.tn + ' · ' + (f.ac || 'aucun') + '</p><div class="rang">';
+      // Les cinq familles de cadrage : c'est ce qui empêche soixante cartes
+      // d'être soixante fois le même buste.
+      FA.cadragesCarte().forEach(function (cad) {
+        out += '<div class="vue">' + FA.scene({ speaker: id, expression: 'neutre', cadrage: cad, annee: ANNEE, seed: id + cad }) +
+          '<b>' + cad + '</b></div>';
+      });
+      out += '</div></div>';
+    });
+    el('personnages').innerHTML = out;
+  }
+  dessinePersonnages();
+
+  /* Toi : deux rôles, deux genres, quatre cadrages. */
+  (function () {
+    var out = '';
+    [['coach', 'm'], ['coach', 'f'], ['joueur', 'm'], ['joueur', 'f']].forEach(function (c) {
+      out += '<div class="fiche"><h3>' + c[0] + ' · ' + c[1] + '</h3><p class="meta">jamais de face</p><div class="rang">';
+      ['dos', 'troisquarts', 'main', 'ombre'].forEach(function (cad) {
+        out += '<div class="vue">' + FA.scene({ speaker: c[0], genre: c[1], cadrage: cad, annee: 1994, seed: c[0] + cad }) +
+          '<b>' + cad + '</b></div>';
+      });
+      out += '</div></div>';
+    });
+    el('incarne').innerHTML = out;
+  })();
+
+  /* Les neuf lieux, trois cadrages. */
+  (function () {
+    var out = '';
+    FA.lieux().forEach(function (l) {
+      out += '<div class="fiche"><h3>' + l + '</h3><p class="meta">carte sans locuteur</p><div class="rang">';
+      FA.cadrages().forEach(function (c) {
+        out += '<div class="vue">' + FA.scene({ lieu: l, cadrage: c, annee: 1994, seed: l + c }) + '<b>' + c + '</b></div>';
+      });
+      out += '</div></div>';
+    });
+    el('lieux').innerHTML = out;
+  })();
+
+  /* Les objets. */
+  (function () {
+    var out = '<div class="fiche"><h3>objets</h3><p class="meta">ils entrent dans les compositions</p><div class="rang">';
+    FA.objets().forEach(function (o) {
+      out += '<div class="vue">' + FA.objet(o, { annee: 1994 }) + '<b>' + o + '</b></div>';
+    });
+    el('objets').innerHTML = out + '</div></div>';
+  })();
+
+  /* Le temps qui passe : les décennies en colonnes. */
+  (function () {
+    var lignes = [['vukic', 'sourire'], ['mbako', 'neutre'], ['lea', 'sourire'],
+      ['gege', 'noir'], ['coach', null], ['__terrain', null], ['__ballon', null]];
+    var annees = [1994, 2004, 2014, 2024, 2034, 2044];
+    var out = '<tr><th></th>';
+    annees.forEach(function (a) { out += '<th>' + a + '</th>'; });
+    out += '</tr>';
+    lignes.forEach(function (l) {
+      out += '<tr><th class="nom">' + l[0].replace('__', '') + '</th>';
+      annees.forEach(function (a) {
+        var svg;
+        if (l[0] === '__terrain') svg = FA.scene({ lieu: 'terrain', cadrage: 'moyen', annee: a });
+        else if (l[0] === '__ballon') svg = FA.objet('ballon', { annee: a });
+        else if (l[0] === 'coach') svg = FA.scene({ speaker: 'coach', genre: 'm', cadrage: 'dos', annee: a, seed: 'c' });
+        else svg = FA.scene({ speaker: l[0], expression: l[1], annee: a, seed: l[0] });
+        out += '<td>' + svg + '</td>';
+      });
+      out += '</tr>';
+    });
+    el('decennies').innerHTML = out;
+  })();
+
+  /* Le gros plan : six silhouettes à 400 px. */
+  (function () {
+    var six = [['gege', 'noir'], ['vecchio', 'neutre'], ['aulard', 'sourire'],
+      ['sabatier', 'neutre'], ['amsel', 'noir'], ['mbako', 'sourire']];
+    var out = '';
+    six.forEach(function (s) {
+      out += '<div class="fiche"><h3>' + FA.fiches()[s[0]].nom + '</h3><p class="meta">' + s[1] + '</p>' +
+        '<div class="rang"><div class="vue" style="width:400px">' +
+        FA.scene({ speaker: s[0], expression: s[1], annee: 1994, seed: s[0] }) + '</div></div></div>';
+    });
+    el('close').innerHTML = out;
+  })();
+
+  /* Les boutons : taille et décennie. */
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest ? ev.target.closest('button') : null;
+    if (!b) return;
+    var groupe = b.dataset.taille ? 'taille' : b.dataset.annee ? 'annee' : null;
+    if (!groupe) return;
+    var freres = b.parentNode.querySelectorAll('button[data-' + groupe + ']');
+    for (var i = 0; i < freres.length; i++) freres[i].setAttribute('aria-pressed', freres[i] === b ? 'true' : 'false');
+    if (groupe === 'taille') document.documentElement.style.setProperty('--taille', b.dataset.taille + 'px');
+    else { ANNEE = parseInt(b.dataset.annee, 10); dessinePersonnages(); }
+  });
+})();
+</script>
+</body>
+</html>

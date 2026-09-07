@@ -17,7 +17,10 @@
 ///    en queue. On part de ta ligne et on écarte, place par place. C'est ce
 ///    qui garantit que le tableau est cohérent quel que soit ton rang — un
 ///    tirage indépendant, lui, finissait par te mettre 16e avec plus de points
-///    que le 13e.
+///    que le 13e. Une exception, une seule : quand tu as signé en cours de
+///    saison, tes points ne décrivent plus la division (voir `buildStandings`,
+///    paramètre `blocksClub`) — l'ancre devient alors le club sur sa saison
+///    entière, et ta ligne, elle, ne bouge toujours pas.
 /// 3. **Zéro tirage sur le flux de la partie.** Noms, forces et grain sont
 ///    dérivés par hachage de la graine, du postulat et de la saison : rien
 ///    n'est stocké dans `GameState`, rien n'est consommé sur le `Rng` de la
@@ -26,6 +29,7 @@
 library;
 
 import 'rng.dart';
+import 'world.dart';
 
 /// Les clubs d'une division (ton club compris) : la table de `world.dart`
 /// descend jusqu'au 18e, c'est donc dix-huit.
@@ -38,6 +42,16 @@ const int kBlocksPerSeason = 6;
 
 /// Journées d'une saison complète.
 const int kSeasonGames = kGamesPerBlock * kBlocksPerSeason;
+
+/// **La journée de championnat, et il n'y en a qu'une.**
+///
+/// Le « J » du bandeau affichait autre chose dans l'aperçu (le rang du beat
+/// parmi les beats de la saison — un nombre qui montait à 42 et comptait les
+/// cartes de vestiaire comme des matchs) et autre chose dans l'application (le
+/// `{journee}` de `text.dart`). Les deux disaient « J » et ne disaient pas la
+/// même chose. Une seule définition, dérivée du monde simulé et de rien
+/// d'autre : un bloc joué vaut six journées, une saison en compte trente-six.
+int journeeDeSaison(int blocks) => (blocks * kGamesPerBlock).clamp(0, kSeasonGames);
 
 /// Une ligne du classement, telle que la dessinent l'aperçu et l'app.
 class StandingRow {
@@ -143,6 +157,24 @@ int _diffOf(int pts, int played, String salt) {
 ///
 /// [rank] et [pts] sont ceux du moteur (`world.standingRank`, `world.pts`) :
 /// c'est la ligne qui fait foi, les autres sont construites autour d'elle.
+///
+/// [blocks] est le CALENDRIER (les blocs de six journées que la saison a
+/// joués) ; [blocksClub] est ce que TU en as joué sous ces couleurs-ci. Les
+/// deux ne coïncident pas après un changement de club en cours de saison : le
+/// calendrier ne repart pas à zéro le jour où l'on signe, mais les points, si
+/// (ils restent au club qu'on quitte). Sans cette distinction, la table de fin
+/// de saison n'était qu'une demi-saison étirée sur trente-six journées : les
+/// rivaux sont construits AUTOUR de ta ligne (règle 2), et ta ligne portait un
+/// total de dix-huit journées — le champion de la division finissait à 83
+/// points là où il en prend 100 une saison ordinaire. Toute la division
+/// rétrécissait parce qu'un homme avait signé en janvier.
+///
+/// Quand [blocksClub] est plus court que [blocks], c'est donc l'ANCRE de la
+/// colonne qui change, pas ta ligne : on prend le club sur sa saison entière
+/// (ses points ramenés à trente-six journées) et la place que la table de
+/// division lui donne, et on écarte à partir de là. Ta ligne, elle, garde au
+/// point près ce que le moteur compte — `world.pts` et `world.standingRank`,
+/// ceux que lisent la Une, le Verdict et le contrat.
 List<StandingRow> buildStandings({
   required int seed,
   required String postulatId,
@@ -155,9 +187,12 @@ List<StandingRow> buildStandings({
   required String rivalClub,
   required List<String> prefixes,
   required List<String> villes,
+  int? blocksClub,
 }) {
   final b = blocks.clamp(0, kBlocksPerSeason);
   final played = b * kGamesPerBlock;
+  // Les blocs joués sous ces couleurs : par défaut toute la saison.
+  final bClub = (blocksClub ?? b).clamp(0, b);
   final noms = rivalClubNames(
     seed: seed,
     postulatId: postulatId,
@@ -180,7 +215,25 @@ List<StandingRow> buildStandings({
   final monPts = pts.clamp(0, 3 * played);
   // Le facteur d'échelle : les écarts se creusent au fil des journées.
   final echelle = played / kSeasonGames;
-  final ancre = _ecartCumule(k + 1);
+  // L'ANCRE de la colonne : d'ordinaire ta ligne (règle 2 de l'en-tête). Après
+  // un changement de club en cours de saison, tes points ne décrivent plus le
+  // niveau de la division — ils décrivent tes dix-huit journées à toi — et
+  // toute la colonne se retrouvait tirée vers le bas avec eux : le champion
+  // finissait à 83 points là où il en prend 100 une saison ordinaire. La
+  // division entière rétrécissait de moitié parce qu'un homme avait signé en
+  // janvier. Dans ce cas seulement, l'ancre devient le club vu sur sa saison
+  // ENTIÈRE — ses points ramenés à trente-six journées, et la place que la
+  // table de division (`seasonVerdict`, celle-là même que lit le Verdict)
+  // donne à ce total. Ta propre ligne, elle, ne bouge pas d'un point : elle
+  // porte exactement ce que le moteur compte (`world.pts`, `world.standingRank`).
+  var ancreIdx = k;
+  var ancrePts = monPts;
+  if (bClub > 0 && bClub < b) {
+    final ptsSaison = (pts * kBlocksPerSeason / bClub).round().clamp(0, 3 * kSeasonGames);
+    ancreIdx = (seasonVerdict(division, ptsSaison, 'maintien').rank - 1).clamp(0, n - 1);
+    ancrePts = (ptsSaison * echelle).round().clamp(0, 3 * played);
+  }
+  final ancre = _ecartCumule(ancreIdx + 1);
 
   final clubCol = <String>[];
   final ptsCol = <int>[];
@@ -192,10 +245,10 @@ List<StandingRow> buildStandings({
       continue;
     }
     final club = noms[ordre[iRival++]];
-    // Ta ligne, plus l'écart de place à place : le 15e a moins de points que
+    // L'ancre, plus l'écart de place à place : le 15e a moins de points que
     // le 14e, exactement comme dans un vrai tableau.
     final grain = Rng(fnv1a32('grain|$seed|$season|$club')).range(-2, 2) * echelle;
-    final brut = monPts + (ancre - _ecartCumule(i + 1)) * echelle + grain;
+    final brut = ancrePts + (ancre - _ecartCumule(i + 1)) * echelle + grain;
     clubCol.add(club);
     ptsCol.add(brut.round().clamp(0, 3 * played));
   }

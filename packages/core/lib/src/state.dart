@@ -139,6 +139,14 @@ class WorldState {
   int division; // 1 or 2
   int pts;
   int blocks; // blocks/matches played this season
+
+  /// Les blocs que la SAISON avait déjà joués le jour où l'on a signé ici.
+  /// Zéro tant qu'on n'a pas changé de club en cours d'exercice ; sinon
+  /// `blocks - blocksDepart` dit combien de blocs `pts` couvre réellement.
+  /// C'est ce que le classement lit pour ne pas afficher une demi-saison
+  /// (`buildStandings`, paramètre `blocksClub`). Remis à zéro au passage de
+  /// saison, comme `blocks`.
+  int blocksDepart;
   int serieDefaites;
   int serieVictoires;
   int cupRound;
@@ -151,6 +159,7 @@ class WorldState {
     this.division = 2,
     this.pts = 0,
     this.blocks = 0,
+    this.blocksDepart = 0,
     this.serieDefaites = 0,
     this.serieVictoires = 0,
     this.cupRound = 0,
@@ -164,6 +173,7 @@ class WorldState {
         division: division,
         pts: pts,
         blocks: blocks,
+        blocksDepart: blocksDepart,
         serieDefaites: serieDefaites,
         serieVictoires: serieVictoires,
         cupRound: cupRound,
@@ -177,6 +187,7 @@ class WorldState {
         'division': division,
         'pts': pts,
         'blocks': blocks,
+        'blocksDepart': blocksDepart,
         'serieDefaites': serieDefaites,
         'serieVictoires': serieVictoires,
         'cupRound': cupRound,
@@ -190,6 +201,7 @@ class WorldState {
         division: (j['division'] as num).toInt(),
         pts: (j['pts'] as num).toInt(),
         blocks: (j['blocks'] as num).toInt(),
+        blocksDepart: (j['blocksDepart'] as num?)?.toInt() ?? 0,
         serieDefaites: (j['serieDefaites'] as num).toInt(),
         serieVictoires: (j['serieVictoires'] as num).toInt(),
         cupRound: (j['cupRound'] as num).toInt(),
@@ -512,6 +524,19 @@ class GameState {
   /// ancienne ne le porte pas.
   Map<String, CharState> chars;
 
+  /// **Le registre des annonces** (le bandeau « nouvelles cartes »).
+  ///
+  /// Une entrée par annonce déjà posée, dans l'ordre, sous la forme
+  /// `'<saison>|<clé>'` — la clé nommant ce qui s'est débloqué
+  /// (`intrigue:<arc>`, `personnage:<id>`, `fin:<id>`, `legende:<clé>`).
+  /// Une seule liste porte les trois règles du bandeau : jamais deux fois la
+  /// même annonce (la clé y est déjà), au plus deux par saison (les entrées de
+  /// la saison courante se comptent), et jamais deux cartes de suite (la carte
+  /// précédente porte la sienne dans son `payload`, on n'a rien à stocker).
+  /// Hors empreinte : le bandeau ne change pas d'un iota ce que la graine
+  /// raconte.
+  List<String> annonces;
+
   Pending? pending;
   String? endingId;
   String? lastAnswer;
@@ -587,6 +612,7 @@ class GameState {
     this.lastUne,
     this.lastStoryCard,
     Map<String, CharState>? chars,
+    List<String>? annonces,
     required this.pending,
     required this.endingId,
     required this.lastAnswer,
@@ -606,7 +632,8 @@ class GameState {
         openingSlots = openingSlots ?? [],
         carriersLastSeason = carriersLastSeason ?? {},
         journal = journal ?? [],
-        chars = chars ?? {};
+        chars = chars ?? {},
+        annonces = annonces ?? [];
 
   GameState clone() => GameState(
         contentVersion: contentVersion,
@@ -678,6 +705,7 @@ class GameState {
         lastUne: lastUne,
         lastStoryCard: lastStoryCard,
         chars: chars.map((k, v) => MapEntry(k, v.clone())),
+        annonces: List.of(annonces),
         pending: pending,
         endingId: endingId,
         lastAnswer: lastAnswer,
@@ -755,6 +783,7 @@ class GameState {
         'lastUne': lastUne,
         'lastStoryCard': lastStoryCard?.toJson(),
         'chars': {for (final k in chars.keys.toList()..sort()) k: chars[k]!.toJson()},
+        'annonces': annonces,
         'pending': pending?.toJson(),
         'endingId': endingId,
         'lastAnswer': lastAnswer,
@@ -834,6 +863,7 @@ class GameState {
         lastUne: j['lastUne'] as String?,
         lastStoryCard: j['lastStoryCard'] == null ? null : LastStoryCard.fromJson((j['lastStoryCard'] as Map).cast<String, dynamic>()),
         chars: ((j['chars'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), CharState.fromJson((v as Map).cast<String, dynamic>()))),
+        annonces: (j['annonces'] as List?)?.cast<String>(),
         pending: j['pending'] == null ? null : Pending.fromJson((j['pending'] as Map).cast<String, dynamic>()),
         endingId: j['endingId'] as String?,
         lastAnswer: j['lastAnswer'] as String?,

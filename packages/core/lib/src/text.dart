@@ -53,7 +53,8 @@ String formatText(
     'rang': '${s.world.standingRank}',
     'pts': '${s.world.pts}',
     // La journée courante du championnat : six blocs de six journées.
-    'journee': '${(s.world.blocks * kGamesPerBlock).clamp(0, kBlocksPerSeason * kGamesPerBlock)}',
+    // Une seule définition de la journée, partout (`standings.dart`).
+    'journee': '${journeeDeSaison(s.world.blocks)}',
     'annee': '${s.year}',
     'saison': '${s.season + 1}',
     'objectif': objectiveLabelFr(s.objectiveTarget),
