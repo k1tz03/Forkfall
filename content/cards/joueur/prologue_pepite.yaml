@@ -152,15 +152,15 @@ cards:
     speaker: fardelli
     tone: strategique
     once: true
-    text: "Fardelli t'attrape le coude dans le couloir : « Taper dans les mains, ça ne se vend pas, {toi}. Quatre décident si tu joues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    text: "Fardelli t'attrape le coude dans le couloir : « Taper dans les mains, ça ne se vend pas, {toi}. Quatre décident si tu joues : le vestiaire, les tribunes, le club, ton compte. »"
     left:
-      label: "Qui compte, alors ?"
+      label: "Et mon compte ?"
       effects: {}
-      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+      answer: "« C'est moi qui le remplis », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
     right:
-      label: "Qui compte, alors ?"
+      label: "Et mon compte ?"
       effects: {}
-      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+      answer: "« C'est moi qui le remplis », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
 
   - id: jp.pepite.pro5_quatre
     roles: [joueur]
@@ -169,15 +169,15 @@ cards:
     speaker: fardelli
     tone: strategique
     once: true
-    text: "Fardelli t'attrape le coude dans le couloir : « Tu es rentré sans regarder la tribune, {toi} ; c'est bien. Quatre décident si tu joues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    text: "Fardelli t'attrape le coude : « Tu es rentré sans regarder la tribune, {toi} ; c'est bien. Quatre décident si tu joues : le vestiaire, les tribunes, le club, ton compte. »"
     left:
-      label: "Qui compte, alors ?"
+      label: "Et mon compte ?"
       effects: {}
-      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+      answer: "« C'est moi qui le remplis », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
     right:
-      label: "Qui compte, alors ?"
+      label: "Et mon compte ?"
       effects: {}
-      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+      answer: "« C'est moi qui le remplis », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
 
   # ------------------------------------------------------- 6/6 · le seuil
   # Le rendez-vous : la voiture au parking. La carte suivante est l'agent qui
@@ -198,3 +198,59 @@ cards:
       label: "Descendre au parking"
       effects: {}
       answer: "Elle classe le fax avant que tu aies pu lire l'en-tête. Elle classe vite, elle aussi."
+
+  # ══ deuxièmes variantes (lot « rejouabilité du prologue ») ═════════════════
+  # Les trois fils rouges de la pépite (le prix, le terrain, la maison)
+  # déplacent chacun une carte différente de l'ouverture : sur deux parties du
+  # même postulat, quatre des six scènes changent.
+
+  - id: jp.pepite.pro2_bouteilles_prix
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: brehaut
+    tone: leger
+    once: true
+    text: "Titi Bréhaut te met une caisse de bouteilles dans les bras : « Le groupe vit bien, {toi}, et il a lu le chiffre au tableau. Tu portes l'eau, ou tu vas t'échauffer ? »"
+    left:
+      label: "Je porte"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu portes. À la troisième caisse, personne ne parle plus du chiffre. On ne l'efface pas non plus."
+    right:
+      label: "Je vais m'échauffer"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu poses la caisse au milieu du couloir. Le chiffre, lui, reste au tableau jusqu'en octobre."
+
+  - id: jp.pepite.pro3_place_terrain
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vecchio
+    tone: leger
+    once: true
+    text: "Gigi Vecchio épluche une orange, une seule : « J'en ai vu d'autres, {toi}. Le terrain est gelé jusqu'à midi : on s'assoit près du radiateur, ou près de la porte ? »"
+    left:
+      label: "Près du radiateur"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il te donne un quartier. Il en garde un pour Paulette ; il le dit chaque fois."
+    right:
+      label: "Près de la porte"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "C'est la place de ceux qui partent tôt. Il regarde la porte, puis son orange."
+
+  - id: jp.pepite.pro6_parking_maison
+    roles: [joueur]
+    arc: direction
+    tags: [direction, famille, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, un fax encore chaud : « Votre agent attend au parking, moteur allumé. Votre mère a appelé aussi ; j'en ai vu passer, des voitures qui attendent. »"
+    left:
+      label: "Descendre au parking"
+      effects: {}
+      answer: "Elle classe le fax sans te le montrer. Le message de ta mère, elle te le tend en main propre."
+    right:
+      label: "Descendre au parking"
+      effects: {}
+      answer: "Elle classe le fax sans te le montrer. Le message de ta mère, elle te le tend en main propre."

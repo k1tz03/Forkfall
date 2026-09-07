@@ -539,6 +539,86 @@ __FONTS_CSS__
   .btn-ghost:focus-visible { outline: 3px solid var(--ui-orange); outline-offset: 2px; opacity: 1; }
   .seedline { font-size: 11px; color: var(--creme); opacity: .6; font-variant-numeric: tabular-nums; font-family: var(--font-paper); text-align: center; }
 
+  /* ================================================================== SON */
+  /* Le réglage du son : un seul bouton, trois états (tout · gestes · muet),
+     posé dans le coin du téléphone. Il ne reprend que des jetons existants
+     (crème, condensé, orange du focus) et ne pousse aucun écran. */
+  /* Le dessin reste à 24 px ; la CIBLE fait 44 px (le doigt, pas la souris) :
+     le rembourrage est transparent et le bouton ne mange rien à l'écran,
+     `background-clip: content-box` gardant la pastille à sa taille. */
+  .son {
+    position: absolute; top: 0; right: 0; z-index: 40;
+    width: 44px; height: 44px; padding: 10px; margin: 0; border: 0; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--creme); background: rgba(16,18,16,.55); background-clip: content-box;
+    box-shadow: none;
+    opacity: .4; transition: opacity var(--t-text) linear;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .son::before { content: ""; position: absolute; left: 10px; top: 10px; width: 24px; height: 24px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(239,228,198,.22); pointer-events: none; }
+  .son svg { width: 14px; height: 14px; display: block; }
+  .son:hover, .son:focus-visible { opacity: 1; }
+  .son[data-mode="muet"] { color: #A9A395; }
+  .son[data-mode="gestes"] { color: var(--creme-2); }
+  .son:focus-visible { outline: 2px solid var(--ui-orange); outline-offset: 2px; }
+  .son .tip {
+    position: absolute; top: 38px; right: 6px; white-space: nowrap;
+    font-family: var(--font-cond); font-weight: 700; font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+    background: rgba(16,18,16,.85); color: var(--creme); padding: 3px 6px; border-radius: 2px;
+    opacity: 0; pointer-events: none; transition: opacity var(--t-text) linear;
+  }
+  .son:hover .tip, .son:focus-visible .tip, .son.dit .tip { opacity: 1; }
+  .son.dit { opacity: 1; }
+
+  /* ========================================================== CLASSEMENT */
+  /* Le tableau du championnat — retour client : « parfois on parle de
+     classement mais cela n'est indiqué nulle part ». Le moteur le construit
+     depuis toujours (`card.standings`, `view.standings`) ; il fallait
+     l'AFFICHER. C'est une feuille de papier punaisée : elle emprunte le papier
+     de la Une (--journal, --encre, --journal-bleu), les filets pointillés de
+     l'Almanach et le scotch des vignettes. Aucune couleur, aucune fonte, aucun
+     jeton nouveau. */
+  .feuille { position: relative; background: var(--journal); color: var(--encre); padding: 10px 11px 8px; box-shadow: 0 14px 24px rgba(0,0,0,.5); }
+  .feuille::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.05) 0 1px, transparent 1px 3px); }
+  .feuille .tape.tl { left: -14px; top: -7px; transform: rotate(-32deg); }
+  .feuille .tape.tr { right: -14px; top: -7px; transform: rotate(32deg); }
+  .feuille .fh { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; border-bottom: 2.5px solid var(--journal-bleu); padding-bottom: 4px; margin-bottom: 4px; }
+  .feuille .fh b { font-family: var(--font-cond); font-weight: 800; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--journal-bleu); }
+  .feuille .fh span { font-family: var(--font-cond); font-weight: 700; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .feuille .qui { margin-top: 6px; padding-top: 4px; border-top: 1.5px solid var(--encre); display: flex; align-items: center; justify-content: space-between; gap: 6px; font-family: var(--font-cond); font-weight: 700; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--encre-2); }
+  .feuille .qui span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feuille .plus { flex: none; border: 1px solid var(--encre); background: none; cursor: pointer; font-family: var(--font-cond); font-weight: 800; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--journal-bleu); padding: 3px 6px; }
+  .feuille .plus:focus-visible { outline: 2px solid var(--ui-orange); outline-offset: 2px; }
+  /* la vignette-classement occupe la place de la vignette, penchée pareil */
+  .cardwrap .feuille { width: 300px; max-width: 100%; margin-top: 16px; transform: rotate(-1deg); }
+
+  .tbl { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; table-layout: fixed; }
+  .tbl th { font-family: var(--font-cond); font-weight: 700; font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--encre-3); border-bottom: 1px solid var(--encre-3); padding: 0 0 2px; text-align: right; }
+  .tbl th.c { text-align: left; padding-left: 2px; }
+  .tbl th.r { width: 26px; padding-right: 7px; }
+  .tbl th.p { width: 36px; }
+  .tbl th.d { width: 34px; }
+  .tbl td { font-family: var(--font-paper); font-size: 11px; line-height: 1.25; color: var(--encre); padding: 3px 0; border-top: 1px dotted var(--encre-3); text-align: right; white-space: nowrap; }
+  .tbl tr:first-child td { border-top: 0; }
+  .tbl td.r { font-family: var(--font-cond); font-weight: 800; font-size: 11px; color: var(--encre-2); padding-right: 7px; }
+  .tbl td.c { text-align: left; padding-left: 2px; overflow: hidden; text-overflow: ellipsis; }
+  .tbl td.p { font-family: var(--font-cond); font-weight: 800; font-size: 12px; }
+  .tbl td.d { font-size: 10px; color: var(--encre-2); }
+  .tbl tr.toi td { background: rgba(28,76,154,.10); font-weight: 700; }
+  .tbl tr.toi td.r, .tbl tr.toi td.p { color: var(--journal-bleu); }
+  .tbl tr.toi td.c::before { content: "\25B8 "; color: var(--tampon); }
+
+  /* l'écran complet : les dix-huit clubs, par-dessus le jeu */
+  .plein { position: absolute; inset: 12px; z-index: 60; border-radius: 30px; overflow: hidden; background: rgba(16,24,18,.94); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 16px 14px; }
+  @media (max-width: 420px) { .plein { inset: 0; border-radius: 0; } }
+  .plein .feuille { width: 100%; max-width: 320px; max-height: calc(100% - 46px); overflow-y: auto; transform: rotate(-.6deg); }
+  .plein .tbl td { padding-top: 2px; padding-bottom: 2px; }
+
+  /* la ligne de contexte : le rang ouvre le tableau */
+  .context .rang { border: 0; background: none; padding: 0; margin: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+  .context .rang:focus-visible { outline: 3px solid var(--ui-orange); outline-offset: 2px; }
+  .context .rang[disabled] { color: var(--creme); opacity: .55; cursor: default; text-decoration: none; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
     .stamp, .une, .cardtext { opacity: 1 !important; }
@@ -556,6 +636,10 @@ __FONTS_CSS__
     <symbol id="ic-fauteuil" viewBox="0 0 24 24"><path d="M6 11V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5 M3 11h18v5H3z M6 16v3 M18 16v3 M8 11V8h8v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
     <symbol id="ic-billets" viewBox="0 0 24 24"><path d="M3 8h16v10H3z M6 5h15v10 M11 13a2.5 2.5 0 1 0 0-0.01 M5 10h1 M16 16h1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
     <symbol id="ic-sablier" viewBox="0 0 24 24"><path d="M6 3h12 M6 21h12 M8 3v4l4 5 4-5V3 M8 21v-4l4-5 4 5v4 M10 6h4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <!-- les trois états du son : tout, gestes seulement, muet -->
+    <symbol id="ic-son-tout" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z M16 8.5a5 5 0 0 1 0 7 M19 6a9 9 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="ic-son-gestes" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="ic-son-muet" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z M17 9.5l5 5 M22 9.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
     <symbol id="ecu" viewBox="0 0 28 30"><path d="M14 1l12 4v9c0 7-5 11-12 15C7 25 2 21 2 14V5z" fill="#F2E9CF" stroke="#0F2B1B" stroke-width="1.5"/><path d="M14 1l12 4v9c0 7-5 11-12 15z" fill="#1F5A32"/><circle cx="14" cy="14" r="4.5" fill="#fff" stroke="#0F2B1B" stroke-width="1.5"/></symbol>
   </defs>
 </svg>
@@ -691,6 +775,15 @@ __FONTS_CSS__
 
     <div class="cardwrap" id="cardwrap">
       <div class="story-banner" id="storyBanner" role="status" hidden><span class="tape"></span>Nouvelle histoire : <i id="storyBannerTitle"></i></div>
+      <!-- La carte Classement : la feuille remplace la vignette, comme la page
+           de journal remplace tout au Bilan. Les six lignes autour de la
+           tienne viennent de `card.standings` ; le bouton ouvre les dix-huit. -->
+      <div class="feuille" id="tableau" hidden>
+        <div class="tape tl"></div><div class="tape tr"></div>
+        <div class="fh"><b id="tblTitre">Classement</b><span id="tblJournee"></span></div>
+        <table class="tbl"><thead><tr><th class="r">Rg</th><th class="c">Club</th><th class="p">Pts</th><th class="d">Diff</th></tr></thead><tbody id="tblRows"></tbody></table>
+        <div class="qui"><span id="tblQui"></span><button class="plus" id="btnTblPlus" type="button">Tout le tableau</button></div>
+      </div>
       <article class="card" id="card" data-camp="terrain" tabindex="0" aria-label="Vignette">
         <span class="shadow" aria-hidden="true"><i></i></span>
         <span class="pin" aria-hidden="true"></span>
@@ -794,11 +887,33 @@ __FONTS_CSS__
       <div class="seedline" id="seedline"></div>
     </div>
   </section>
+
+  <!-- ======================================================= 4. CLASSEMENT -->
+  <!-- Les dix-huit clubs, par-dessus le jeu : `view.standings` est exposé en
+       permanence par preview.dart, exprès pour cet écran. -->
+  <div class="plein" id="standingsFull" role="dialog" aria-modal="true" aria-label="Classement du championnat" hidden>
+    <div class="feuille">
+      <div class="tape tl"></div><div class="tape tr"></div>
+      <div class="fh"><b>Le championnat</b><span id="fullJournee"></span></div>
+      <table class="tbl"><thead><tr><th class="r">Rg</th><th class="c">Club</th><th class="p">Pts</th><th class="d">Diff</th></tr></thead><tbody id="fullRows"></tbody></table>
+    </div>
+    <button class="btn-ghost" id="btnFullClose" type="button">Refermer le classement</button>
+  </div>
+
+  <!-- ============================================================== 5. SON -->
+  <!-- Trois états, un geste : tout · gestes seulement · muet. Rien ne sonne
+       tant que le joueur n'a pas touché la page (politique de lecture
+       automatique) ; le choix est mémorisé d'une partie à l'autre. -->
+  <button class="son" id="btnSon" type="button" data-mode="tout" aria-label="Son : ambiances et musique ; toucher pour changer">
+    <svg aria-hidden="true"><use href="#ic-son-tout" id="btnSonUse"/></svg>
+    <span class="tip" id="btnSonTip" aria-hidden="true">Ambiances et musique</span>
+  </button>
 </div>
 
 <script id="fusible-content" type="application/json">__CONTENT_JSON__</script>
 <script>__ENGINE_JS__</script>
 <script>__PORTRAITS_JS__</script>
+<script>__AUDIO_JS__</script>
 <script>
 (function () {
   "use strict";
@@ -892,6 +1007,98 @@ __FONTS_CSS__
   function discovered() { return Object.keys(profile.endings).length; }
   if (!profile.name || typeof profile.name !== "object") profile.name = { prenom: "", nom: "", genre: "m" };
 
+  // --- le son (audio.js) : les ambiances, la nappe, les gestes ---
+  // Le moteur nomme (card.ambiance, card.sfx), la page joue. Trois états, un
+  // seul bouton ; rien ne sonne tant que le joueur n'a pas touché la page (les
+  // navigateurs refusent un AudioContext sans geste, et un jeu qui chante tout
+  // seul à l'ouverture est un jeu qu'on referme). `prefers-reduced-motion` ne
+  // change rien au son : c'est le choix du joueur qui décide, et lui seul.
+  var SON_MODES = ["tout", "gestes", "muet"];
+  var SON_TIP = { tout: "Ambiances et musique", gestes: "Gestes seulement", muet: "Muet" };
+  var audio = window.FusibleAudio || null;
+  var sonMode = SON_MODES.indexOf(profile.son) >= 0 ? profile.son : "tout";
+  var btnSon = $("btnSon");
+  // La tension de la nappe par créneau : elle monte dans les moments forts et
+  // se retire partout ailleurs (0 = décor, 1 = on retient son souffle).
+  var SON_TENSION = {
+    gm_annonce: .75, gm_te: .9, aftermatch: .5, bilan_une: .7, bilan_verdict: .85,
+    bilan_contrat: .6, bilan_carrefour: .55, classement: .4, objective: .35, ending: 1
+  };
+  var dangerSeen = {};   // les jauges déjà au bord : on ne resonne pas pour rien
+
+  function renderSon() {
+    btnSon.setAttribute("data-mode", sonMode);
+    $("btnSonUse").setAttribute("href", "#ic-son-" + sonMode);
+    $("btnSonTip").textContent = SON_TIP[sonMode];
+    btnSon.setAttribute("aria-label", "Son : " + SON_TIP[sonMode].toLowerCase() + " ; toucher pour changer");
+  }
+  function setSon(m) {
+    sonMode = m;
+    profile.son = m; saveProfile(profile);
+    if (audio) audio.setMode(m);
+    renderSon();
+  }
+  // Sous le doigt, il n'y a ni survol ni focus : l'étiquette se montre une
+  // seconde après le tap, le temps de lire l'état qu'on vient de choisir.
+  var sonTimer = null;
+  function ditSon() {
+    if (sonTimer) clearTimeout(sonTimer);
+    btnSon.classList.add("dit");
+    sonTimer = setTimeout(function () { btnSon.classList.remove("dit"); sonTimer = null; }, 1200);
+  }
+  btnSon.addEventListener("click", function () {
+    setSon(SON_MODES[(SON_MODES.indexOf(sonMode) + 1) % SON_MODES.length]);
+    ditSon();
+    if (audio && sonMode !== "muet") audio.unlock();
+  });
+  renderSon();
+
+  // Le premier geste, quel qu'il soit : c'est là que le contexte audio naît.
+  function premierGeste() {
+    document.removeEventListener("pointerdown", premierGeste, true);
+    document.removeEventListener("keydown", premierGeste, true);
+    if (audio && sonMode !== "muet") { audio.setMode(sonMode); audio.unlock(); }
+  }
+  document.addEventListener("pointerdown", premierGeste, true);
+  document.addEventListener("keydown", premierGeste, true);
+
+  // Le décor d'un écran : le lieu, la décennie, la tension, puis les gestes.
+  function sonScene() {
+    if (!audio || !view) return;
+    audio.setYear(view.year || 1990);
+    var evts, tension;
+    if (view.over) {
+      audio.setAmbiance(view.ambiance || "nuit");
+      audio.setTension(1);
+      evts = (view.sfx || ["tampon_fin"]).slice();
+    } else {
+      var c = view.card || {};
+      audio.setAmbiance(c.ambiance || "couloir");
+      evts = (c.sfx || []).slice();
+      tension = SON_TENSION[c.beatKind] || 0;
+      if (evts.indexOf("alarme") >= 0) tension = Math.max(tension, .85);
+      if (evts.indexOf("jauge_danger") >= 0) tension = Math.max(tension, .5);
+      audio.setTension(tension);
+    }
+    // Les deux sorties ne sont pas des sons d'arrivée : elles se jouent au
+    // moment du swipe (voir choose()).
+    evts = evts.filter(function (e) { return e !== "choix_gauche" && e !== "choix_droite"; });
+    // « Une jauge est au bord » se dit une fois, quand elle y arrive — pas à
+    // chaque carte (les Tribunes du promu démarrent à 80 : ce serait un tic).
+    var bord = {}, neuf = false;
+    (view.gauges || []).forEach(function (g) {
+      if (g.value <= GAUGE_MIN_DANGER || g.value >= GAUGE_MAX_DANGER) { bord[g.id] = 1; if (!dangerSeen[g.id]) neuf = true; }
+    });
+    dangerSeen = bord;
+    if (!neuf) evts = evts.filter(function (e) { return e !== "jauge_danger"; });
+    audio.playAll(evts.slice(0, 4));
+  }
+  function sonSwipe(right) {
+    if (!audio || !view || !view.card) return;
+    var l = view.card.sfx || [];
+    audio.play(right && l.indexOf("choix_droite") >= 0 ? "choix_droite" : "choix_gauche");
+  }
+
   // --- le nom (spec variété §1.8) : saisi sur la page 1 de l'album, mémorisé,
   // hors graine (le moteur conserve ses tirages puis écrase le nom affiché) ---
   var inPrenom = $("inPrenom"), inNom = $("inNom"), btnGenre = $("btnGenre");
@@ -954,8 +1161,15 @@ __FONTS_CSS__
     currentSeed = (typeof seed === "number") ? seed : randomSeed();
     var nm = nameValues();
     view = JSON.parse(window.fusibleStart(currentSeed, postulat, nm.prenom, nm.nom, nm.genre));
+    closeStandings();
     lastCard = null;
     answerLog = [];
+    // Les jauges déjà au bord au coup d'envoi (les Tribunes du promu partent à
+    // 80) ne sonnent pas l'alerte : on ne s'alarme que de ce qui bouge.
+    dangerSeen = {};
+    (view.gauges || []).forEach(function (g) {
+      if (g.value <= GAUGE_MIN_DANGER || g.value >= GAUGE_MAX_DANGER) dangerSeen[g.id] = 1;
+    });
     logAnswer(view.lastAnswer);
     runCount++; profile.runs = runCount; saveProfile(profile);
     show("game");
@@ -983,6 +1197,7 @@ __FONTS_CSS__
     if (busy || !view || view.over) return;
     busy = true;
     dragging = false;
+    sonSwipe(right);
     if (reduce) { advance(right); return; }
     var w = card.getBoundingClientRect().width || 222;
     card.classList.remove("pop");
@@ -1038,6 +1253,7 @@ __FONTS_CSS__
       wrap.appendChild(b);
     });
     renderCimetiere();
+    if (audio) { audio.setAmbiance("maison"); audio.setTension(0); }
     show("title");
   }
   function renderCimetiere() {
@@ -1062,6 +1278,46 @@ __FONTS_CSS__
     return { name: name, label: label, camp: camp, genre: genre, id: id };
   }
 
+  // ---------------------------------------------------------- LE CLASSEMENT
+  // Retour client : « parfois on parle de classement mais cela n'est indiqué
+  // nulle part, aucune carte avec le classement n'apparaît ». Le moteur donne
+  // deux tableaux : la fenêtre de six lignes sur la carte Classement
+  // (`card.standings`) et la table entière, à tout moment (`view.standings`).
+  // Ici, on les DESSINE — rien n'est recalculé côté page.
+  function standingsRows(tbody, rows) {
+    tbody.innerHTML = "";
+    (rows || []).forEach(function (r) {
+      var tr = document.createElement("tr");
+      if (r.toi) tr.className = "toi";
+      var d = r.diff >= 0 ? "+" + r.diff : "" + r.diff;
+      tr.innerHTML = '<td class="r">' + escapeHtml(r.rang) + '</td><td class="c">' + escapeHtml(r.club) +
+        '</td><td class="p">' + escapeHtml(r.pts) + '</td><td class="d">' + escapeHtml(d) + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+  function journeeLabel() {
+    var j = view && view.standingsJournee ? view.standingsJournee : 0;
+    var t = view && view.standingsJournees ? view.standingsJournees : 36;
+    return j ? (j + "e journée sur " + t) : "avant la première journée";
+  }
+  var fullOpener = null; // à qui rendre le clavier en refermant
+  function openStandings(opener) {
+    if (!view || !view.standings || !view.standings.length) return;
+    fullOpener = opener || null;
+    $("fullJournee").textContent = journeeLabel() + " · Division " + (view.division || 1);
+    standingsRows($("fullRows"), view.standings);
+    $("standingsFull").hidden = false;
+    $("btnFullClose").focus();
+  }
+  function closeStandings() {
+    $("standingsFull").hidden = true;
+    if (fullOpener && fullOpener.focus) fullOpener.focus();
+    fullOpener = null;
+  }
+  $("btnFullClose").addEventListener("click", closeStandings);
+  $("standingsFull").addEventListener("click", function (e) { if (e.target === $("standingsFull")) closeStandings(); });
+  $("btnTblPlus").addEventListener("click", function () { openStandings($("btnTblPlus")); });
+
   var bannerTimer = null;
   function showStoryBanner(title) {
     var b = $("storyBanner");
@@ -1077,6 +1333,7 @@ __FONTS_CSS__
     if (c.beatKind !== "bilan_une") lastCard = c; // la page de journal n'est pas une vignette
     renderRail(view.gauges, null);
     showStoryBanner(c.unlockedStory || null);
+    sonScene();
     var isUne = c.beatKind === "bilan_une" && c.une;
     $("unePage").hidden = !isUne;
     $("cardwrap").hidden = !!isUne;
@@ -1084,14 +1341,40 @@ __FONTS_CSS__
     $("answer").hidden = !!isUne;
     if (isUne) { renderUnePage(c); return; }
 
+    // Le prologue (six cartes, hors créneau) : on ne compte pas les journées
+    // d'un championnat qui n'a pas commencé, on compte les cartes qui restent
+    // avant que le jeu commence vraiment.
+    var pro = c.prologue ? c.prologue + " / " + (c.prologueTotal || c.prologue) : null;
+    // Un rang n'existe qu'à partir de la première journée jouée : avant, le
+    // bandeau annonçait « 10ᵉ » à un club qui n'a pas encore joué (et c'est ce
+    // chiffre-là que le joueur trouvait sorti de nulle part).
+    var joue = (view.standingsJournee || 0) > 0;
     $("statusClub").textContent = view.club || "";
-    $("statusMid").textContent = "Saison " + view.season + (view.journee ? " · J " + view.journee : "");
+    $("statusMid").textContent = "Saison " + view.season + (pro || !view.journee ? "" : " · J " + view.journee);
     $("statusRole").textContent = view.roleName || view.role || "";
 
     var ctx = $("context");
-    var parts = ["Saison " + view.season, "" + view.year, view.age + " ans", view.rank + "ᵉ"];
+    var parts = ["Saison " + view.season, "" + view.year, view.age + " ans"];
     ctx.innerHTML = parts.map(function (t) { return "<span>" + escapeHtml(t) + "</span>"; }).join('<span class="sep">·</span>');
+    ctx.innerHTML += '<span class="sep">·</span><button class="rang" id="btnRang" type="button"' +
+      (joue ? ' title="Voir le classement">' + escapeHtml(view.rank) + 'ᵉ'
+            : ' disabled title="Le championnat n\'a pas commencé">—') + '</button>';
     if (view.objective) ctx.innerHTML += '<span class="sep">·</span><span class="obj">Objectif : ' + escapeHtml(String(view.objective).toLowerCase()) + '</span>';
+    if (joue) $("btnRang").addEventListener("click", function () { openStandings($("btnRang")); });
+
+    // La carte Classement : la feuille prend la place de la vignette (le texte
+    // de la carte, lui, reste dessous et commente ce qu'on voit).
+    var tbl = c.beatKind === "classement" && c.standings && c.standings.length ? c.standings : null;
+    $("tableau").hidden = !tbl;
+    card.hidden = !!tbl;
+    if (tbl) {
+      $("tblTitre").textContent = c.classementFinal ? "Classement final" : "Classement";
+      $("tblJournee").textContent = (c.journeeClassement ? c.journeeClassement + "e journée" : journeeLabel()) +
+        " · D" + (view.division || 1);
+      standingsRows($("tblRows"), tbl);
+      var qui = speakerInfo(c);
+      $("tblQui").textContent = c.speaker ? (qui.name + (qui.label ? " · " + qui.label : "")) : (view.club || "");
+    }
 
     var ruban = $("ruban");
     if (view.promise) { ruban.hidden = false; $("rubanText").textContent = view.promise; } else { ruban.hidden = true; }
@@ -1113,7 +1396,10 @@ __FONTS_CSS__
     var isReaction = c.kind === "reaction";
     $("cardTape").hidden = !isReaction;
     $("cardNumber").hidden = isReaction;
-    $("cardNumber").textContent = "n° " + (view.cardNumber || view.turn);
+    // Pendant le prologue, le numéro de vignette cède la place à la
+    // progression : le joueur doit voir qu'il est dans une entrée en matière
+    // bornée, et qu'elle va s'arrêter.
+    $("cardNumber").textContent = pro ? pro : "n° " + (view.cardNumber || view.turn);
 
     text.textContent = c.text;
     text.style.opacity = 1;
@@ -1282,6 +1568,7 @@ __FONTS_CSS__
 
   function renderEnding() {
     var e = view.ending || {};
+    sonScene();
     var golden = !!e.golden;
     var sideFull = e.side === "plein";
     var guiltyId = e.gauge || null;
@@ -1560,6 +1847,14 @@ __FONTS_CSS__
 
   // --- clavier ---
   document.addEventListener("keydown", function (e) {
+    // L'écran de classement est modal : Échap le referme, et rien d'autre ne
+    // passe (un swipe au clavier derrière un tableau ouvert, c'est une carte
+    // jouée sans l'avoir lue).
+    if (!$("standingsFull").hidden) {
+      if (e.key === "Escape" || e.key === "Enter" || e.key === " ") { e.preventDefault(); closeStandings(); }
+      else if (e.key === "ArrowLeft" || e.key === "ArrowRight") e.preventDefault();
+      return;
+    }
     if (elGame.hidden || !view || view.over || busy) return;
     var onButton = e.target && e.target.tagName === "BUTTON";
     if (view.card && view.card.single) {

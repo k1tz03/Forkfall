@@ -148,13 +148,13 @@ cards:
     speaker: fardelli
     tone: strategique
     once: true
-    text: "Fardelli, à la portière, moteur allumé : « Une couverture ne prolonge personne, {toi}. Quatre décident si tu rejoues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    text: "Fardelli, à la portière, moteur allumé : « Une couverture ne prolonge personne, {toi}. Quatre décident si tu rejoues : le vestiaire, les tribunes, le club, ton compte. »"
     left:
-      label: "Et qui compte ?"
+      label: "Et mon compte ?"
       effects: {}
       answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
     right:
-      label: "Et qui compte ?"
+      label: "Et mon compte ?"
       effects: {}
       answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
 
@@ -165,13 +165,13 @@ cards:
     speaker: fardelli
     tone: strategique
     once: true
-    text: "Fardelli, à la portière, moteur allumé : « Tu as laissé la couverture au petit, {toi}. Quatre décident si tu rejoues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    text: "Fardelli, à la portière, moteur allumé : « Tu as laissé la couverture au petit, {toi}. Quatre décident si tu rejoues : le vestiaire, les tribunes, le club, ton compte. »"
     left:
-      label: "Et qui compte ?"
+      label: "Et mon compte ?"
       effects: {}
       answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
     right:
-      label: "Et qui compte ?"
+      label: "Et mon compte ?"
       effects: {}
       answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
 
@@ -194,3 +194,58 @@ cards:
       label: "Y aller"
       effects: {}
       answer: "Il te laisse la feuille de match. Il en a une autre, avec des ratures et un nom en moins."
+
+  # ══ deuxièmes variantes (lot « rejouabilité du prologue ») ═════════════════
+  # Les trois fils rouges de la fin de contrat (le genou, l'agent, le
+  # vestiaire) déplacent chacun une carte différente de l'ouverture.
+
+  - id: jp.fin.pro2_table_agent
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, agents, risk:vestiaire]
+    speaker: sabatier
+    tone: strategique
+    once: true
+    text: "Doc Sabatier tape sur la table de soins avec son capuchon : « Ça reste entre la table et moi : ton agent a réclamé ton dossier ce matin. Tu montes maintenant, ou après ? »"
+    left:
+      label: "Maintenant"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il glisse la radio dans une enveloppe et écrit ton nom dessus. Ton nom, et rien d'autre."
+    right:
+      label: "Après la séance"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu fais la séance entière. L'enveloppe attend sur la table, sans nom dessus."
+
+  - id: jp.fin.pro3_place_genou
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: mbako
+    tone: leger
+    once: true
+    text: "Lian Mbako s'est assis à ta place : « Je veux jouer. Maintenant. On dit que ton genou a parlé cet hiver. Je bouge, ou vous vous mettez à côté ? »"
+    left:
+      label: "Bouge, c'est ma place"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il bouge sans discuter. Il regarde ton genou, puis la place, puis ton genou."
+    right:
+      label: "Reste, je me mets là"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Il reste. Il demande si ça fait mal le matin ; tu réponds que non, et c'est faux."
+
+  - id: jp.fin.pro6_onze_heures_vestiaire
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    text: "Titi Bréhaut s'assoit à côté de toi, la feuille de match à la main : « Le groupe vit bien, et il t'attend à onze heures chez le Doc. Il a déjà écrit un chiffre. »"
+    left:
+      label: "Y aller"
+      effects: {}
+      answer: "Il te laisse la feuille. Il en a une autre dans la poche, avec un nom en moins."
+    right:
+      label: "Y aller"
+      effects: {}
+      answer: "Il te laisse la feuille. Il en a une autre dans la poche, avec un nom en moins."

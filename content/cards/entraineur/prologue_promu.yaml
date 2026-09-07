@@ -159,7 +159,7 @@ cards:
     speaker: gege
     tone: strategique
     once: true
-    text: "Gégé, les doigts dans la grille : « Vous dormez à l'hôtel, nous on part à cinq heures ; la tribune n'oublie rien. Ici, quatre décident si tu restes : le vestiaire, nous, le président, la caisse. »"
+    text: "Gégé, doigts dans la grille : « L'hôtel pour vous, cinq heures pour nous : la tribune n'oublie rien. Quatre décident si tu restes : le vestiaire, les tribunes, le président, le budget. »"
     left:
       label: "Je note les quatre"
       effects: {}
@@ -176,7 +176,7 @@ cards:
     speaker: gege
     tone: strategique
     once: true
-    text: "Gégé, les doigts dans la grille : « Cinq heures du matin, comme nous ; la tribune n'oublie rien, et elle a vu le car. Ici, quatre décident si tu restes : le vestiaire, nous, le président, la caisse. »"
+    text: "Gégé, doigts dans la grille : « Cinq heures du matin comme nous, et la tribune n'oublie rien : elle a vu le car. Quatre décident si tu restes : le vestiaire, les tribunes, le président, le budget. »"
     left:
       label: "Je note les quatre"
       effects: {}
@@ -204,3 +204,61 @@ cards:
       label: "Monter au premier"
       effects: {}
       answer: "L'ascenseur est en panne depuis mars. Deux étages, et le temps de choisir une phrase."
+
+  # ══ deuxièmes variantes (lot « rejouabilité du prologue ») ═════════════════
+  # Les beats 2, 3 et 6 n'avaient qu'une carte : la moitié de l'ouverture
+  # revenait mot pour mot à chaque nouvelle partie du même postulat. Chaque
+  # beat reçoit ici une seconde version, lue sur le fil rouge de la saison —
+  # même lieu, même locuteur, autre angle. Les trois fils du promu (tribune,
+  # président, argent) déplacent donc chacun une carte différente.
+
+  - id: en.promu.pro2_cles_tribune
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane pose deux clés sur le comptoir : « Le bureau et le local à ballons, {toi}. Le virage a déjà peint votre nom sur un drap ; j'en ai vu passer, vous savez. »"
+    left:
+      label: "Je prends les deux"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle note l'heure sur son carnet à spirale. Le drap, lui, est accroché depuis mardi."
+    right:
+      label: "Le local me suffit"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Elle garde la clé du bureau dans son tiroir. « Il sera à vous quand vous y serez. »"
+
+  - id: en.promu.pro3_cafe_president
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: leger
+    once: true
+    text: "Vukić pose deux tasses, une seule sucrée : « Le président descend à sept heures moins le quart, et il compte les voitures. Je te le dis parce que personne ne te le dira. »"
+    left:
+      label: "Je serai garé avant lui"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: 1}}
+      answer: "Ta voiture est là avant la sienne. Il ne dit rien ; il touche le capot, qui est froid."
+    right:
+      label: "Il comptera sans moi"
+      effects: {vestiaire: "+", direction: "-", tribunes: "-"}
+      answer: "Tu arrives avec le groupe, à sept heures. En haut, on a compté quand même."
+
+  - id: en.promu.pro6_rendezvous_argent
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, decor]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane, la main sur le combiné : « Le président vous attend au premier, avec le classeur vert. J'en ai vu passer, vous savez : le vert, c'est celui des factures. »"
+    left:
+      label: "Monter au premier"
+      effects: {}
+      answer: "Le classeur est plus lourd que l'an dernier. On l'entend au bruit qu'il fait sur la table."
+    right:
+      label: "Monter au premier"
+      effects: {}
+      answer: "Le classeur est plus lourd que l'an dernier. On l'entend au bruit qu'il fait sur la table."

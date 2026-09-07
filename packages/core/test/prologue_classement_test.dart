@@ -404,26 +404,99 @@ void main() {
       final content = _real();
       final engine = Engine(content);
       var compares = 0;
-      for (final seed in [909, 12345, 77, 4242, 31337]) {
-        var s = engine.start(seed, postulat: 0);
-        var g = 0;
-        int? rangClassement;
-        while (!s.over && g < 400) {
-          final p = s.pending!;
-          if (p.kind == 'classement' && p.payload['finale'] == true) rangClassement = p.payload['rang'] as int;
-          if (p.kind == 'bilan_une' && rangClassement != null) {
-            // Le classement final tombe deux cartes avant la Une : les deux
-            // lisent le même championnat, ils doivent dire le même rang.
-            expect(p.payload['rang'], rangClassement,
-                reason: 'graine $seed : le classement final et la Une ne disent pas le même rang');
-            compares += 1;
-            rangClassement = null;
+      // Les quatre postulats et une graine qui change de club en cours de
+      // saison (226010632, postulat 0 : l'aller sous un maillot, le retour
+      // sous un autre).
+      for (final postulat in [0, 1, 2, 3]) {
+        for (final seed in [909, 12345, 77, 4242, 31337, 226010632]) {
+          var s = engine.start(seed, postulat: postulat);
+          var g = 0;
+          int? rangClassement;
+          while (!s.over && g < 400) {
+            final p = s.pending!;
+            if (p.kind == 'classement' && p.payload['finale'] == true) {
+              rangClassement = p.payload['rang'] as int;
+              // Le Bilan clôt SIX blocs de six journées, changement de club ou
+              // non : le championnat ne rétrécit pas de moitié parce que tu as
+              // signé ailleurs en janvier. C'est la saison qui porte le
+              // calendrier, pas le club.
+              expect(p.payload['journee'], kSeasonGames,
+                  reason: 'graine $seed (postulat $postulat) : le classement final compte '
+                      '${p.payload['journee']} journées au lieu de $kSeasonGames');
+              expect(p.id, 'classement:${s.season}:$kBlocksPerSeason',
+                  reason: 'graine $seed (postulat $postulat) : identifiant ${p.id} — les blocs de la saison');
+              // L'ordre de grandeur : 108 points au plus pour six blocs, et la
+              // table entière tient sous ce plafond.
+              final pts = p.payload['pts'] as int;
+              expect(pts, inInclusiveRange(0, 3 * kSeasonGames));
+              for (final r in (p.payload['standings_complet'] as List).cast<Map<String, dynamic>>()) {
+                expect(r['pts'] as int, inInclusiveRange(0, 3 * kSeasonGames));
+              }
+            }
+            if (p.kind == 'bilan_une' && rangClassement != null) {
+              // Le classement final tombe deux cartes avant la Une : les deux
+              // lisent le même championnat, ils doivent dire le même rang.
+              expect(p.payload['rang'], rangClassement,
+                  reason: 'graine $seed : le classement final et la Une ne disent pas le même rang');
+              compares += 1;
+              rangClassement = null;
+            }
+            s = engine.choose(s, p.single ? true : g.isEven);
+            g++;
           }
-          s = engine.choose(s, p.single ? true : g.isEven);
-          g++;
         }
       }
-      expect(compares, greaterThan(0), reason: 'aucun Bilan atteint sur les cinq graines');
+      expect(compares, greaterThan(0), reason: 'aucun Bilan atteint sur les graines');
+    });
+
+    test('C8 · le calendrier de la saison ne recule jamais (club ou rôle qui change)', () {
+      // Le défaut, tel que le joueur le voyait : après une signature ou une
+      // reconversion en cours d'exercice, le moteur repartait à zéro bloc au
+      // milieu de la saison. Le classement du Bilan sortait alors sous
+      // l'identifiant `classement:n:3`, annonçait « 18e journée » et une
+      // colonne de points de demi-saison — juste avant une Une qui titrait sur
+      // le championnat complet. On vérifie ici l'invariant à la source : dans
+      // une même saison, le compteur de blocs ne recule pas.
+      final content = _real();
+      final engine = Engine(content);
+      var saisonsVues = 0;
+      var changementsEnCours = 0;
+      for (final postulat in [0, 1, 2, 3]) {
+        for (final seed in [909, 12345, 77, 4242, 31337, 226010632, 5150, 8080]) {
+          var s = engine.start(seed, postulat: postulat);
+          var g = 0;
+          var saison = s.season;
+          var blocs = s.world.blocks;
+          var club = s.entities.named['club'];
+          var role = s.role;
+          while (!s.over && g < 400) {
+            final p = s.pending!;
+            s = engine.choose(s, p.single ? true : g.isEven);
+            g++;
+            if (s.season != saison) {
+              saison = s.season;
+              blocs = s.world.blocks;
+              club = s.entities.named['club'];
+              role = s.role;
+              saisonsVues += 1;
+              continue;
+            }
+            if (s.entities.named['club'] != club || s.role != role) {
+              changementsEnCours += 1;
+              club = s.entities.named['club'];
+              role = s.role;
+            }
+            expect(s.world.blocks, greaterThanOrEqualTo(blocs),
+                reason: 'graine $seed (postulat $postulat) : le calendrier de la saison $saison '
+                    'est reparti de ${s.world.blocks} bloc(s) après $blocs');
+            blocs = s.world.blocks;
+          }
+        }
+      }
+      expect(saisonsVues, greaterThan(0));
+      expect(changementsEnCours, greaterThan(0),
+          reason: 'aucun changement de club ou de rôle en cours de saison sur ces graines : '
+              'le test ne prouve rien');
     });
   });
 

@@ -9,6 +9,7 @@ import 'card_data.dart';
 import 'widgets/album_rail.dart';
 import 'widgets/magnets.dart';
 import 'widgets/paper.dart';
+import 'widgets/standings_table.dart';
 import 'widgets/swipe_card.dart';
 import 'widgets/une_page.dart';
 import 'widgets/vignette.dart';
@@ -76,6 +77,9 @@ class _GameScreenState extends State<GameScreen> {
       _onNewCard(p);
     }
     final isUne = p.kind == 'bilan_une';
+    // La fenêtre de six lignes autour de la tienne, telle que le moteur la
+    // sert sur la carte Classement (`payload['standings']`).
+    final standings = p.kind == 'classement' ? standingRowsFrom(p.payload['standings']) : null;
 
     void choose(bool right) {
       setState(() => _dx = 0);
@@ -105,7 +109,20 @@ class _GameScreenState extends State<GameScreen> {
                 const SizedBox(height: 10),
                 AlbumRail(role: role, gauges: s.gauges, preview: preview),
                 const SizedBox(height: 10),
-                _ContextLine(state: s),
+                _ContextLine(
+                  state: s,
+                  // Le rang n'existe qu'à partir de la première journée jouée
+                  // (avant, le bandeau annonçait un 10e à un club qui n'a pas
+                  // encore joué) ; à partir de là, il ouvre le tableau.
+                  onRang: s.world.blocks == 0
+                      ? null
+                      : () => showStandings(
+                            context,
+                            rows: c.engine.standingsOf(s),
+                            sousTitre: '${s.world.blocks * kGamesPerBlock}e journée sur $kSeasonGames'
+                                ' · Division ${s.world.division}',
+                          ),
+                ),
                 if (s.objectivePromised) ...[
                   const SizedBox(height: 6),
                   // Le créancier de la promesse est le PATRON du rôle courant
@@ -164,20 +181,44 @@ class _GameScreenState extends State<GameScreen> {
                                   clipBehavior: Clip.none,
                                   alignment: Alignment.topCenter,
                                   children: [
-                                    Positioned(
-                                      top: 12,
-                                      child: SwipeCard(
-                                        key: _cardKey,
-                                        width: _cardWidth,
-                                        leftLabel: p.leftLabel,
-                                        rightLabel: p.rightLabel,
-                                        single: p.single,
-                                        reduceMotion: reduced,
-                                        onDrag: (dx) => setState(() => _dx = dx),
-                                        onChosen: choose,
-                                        child: Vignette(data: data, width: _cardWidth),
+                                    // La carte Classement montre le tableau, pas
+                                    // un visage : le texte de la carte, dessous,
+                                    // commente ce que le joueur a sous les yeux.
+                                    if (standings != null)
+                                      Positioned(
+                                        top: 12,
+                                        child: SizedBox(
+                                          width: _cardWidth + 2 * 39,
+                                          child: StandingsSheet(
+                                            rows: standings,
+                                            titre: p.payload['finale'] == true ? 'Classement final' : 'Classement',
+                                            sousTitre: '${p.payload['journee'] ?? s.world.blocks * kGamesPerBlock}e journée'
+                                                ' · D${p.payload['division'] ?? s.world.division}',
+                                            pied: _quiParle(p, s, content),
+                                            onPlus: () => showStandings(
+                                              context,
+                                              rows: c.engine.standingsOf(s),
+                                              sousTitre: '${p.payload['journee'] ?? s.world.blocks * kGamesPerBlock}e journée'
+                                                  ' sur $kSeasonGames · Division ${p.payload['division'] ?? s.world.division}',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      Positioned(
+                                        top: 12,
+                                        child: SwipeCard(
+                                          key: _cardKey,
+                                          width: _cardWidth,
+                                          leftLabel: p.leftLabel,
+                                          rightLabel: p.rightLabel,
+                                          single: p.single,
+                                          reduceMotion: reduced,
+                                          onDrag: (dx) => setState(() => _dx = dx),
+                                          onChosen: choose,
+                                          child: Vignette(data: data, width: _cardWidth),
+                                        ),
                                       ),
-                                    ),
                                     if (_banner != null) Positioned(top: -8, child: _StoryBanner(title: _banner!, reduced: reduced)),
                                   ],
                                 ),
@@ -244,6 +285,17 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 
+/// Qui commente le tableau : le locuteur de la carte (nom · fonction), ou le
+/// club quand le classement tombe sans personne pour le dire.
+String _quiParle(Pending p, GameState s, Content content) {
+  final id = p.speaker;
+  if (id == null) return s.entities.named['club'] ?? '';
+  final ch = content.characters[id];
+  final nom = (p.payload['speakerName'] as String?) ?? ch?.name ?? id;
+  final fonction = (p.payload['speakerLabel'] as String?) ?? ch?.label ?? '';
+  return fonction.isEmpty ? nom : '$nom · $fonction';
+}
+
 /// Statut (44 px) : écusson, club, « Saison n · J x », étiquette de rôle.
 class _StatusLine extends StatelessWidget {
   final GameState state;
@@ -254,7 +306,11 @@ class _StatusLine extends StatelessWidget {
   Widget build(BuildContext context) {
     final club = (state.entities.named['club'] ?? state.entities.named['clubShort'] ?? '').toUpperCase();
     final clubShort = (state.entities.named['clubShort'] ?? club).toUpperCase();
-    final season = 'SAISON\u00A0${state.season + 1}\u00A0·\u00A0J\u00A0${state.world.blocks}';
+    // « J x » compte les blocs de six journées joués : avant le premier, il
+    // n'y a pas de journée à annoncer (le prologue et la présaison).
+    final season = state.world.blocks == 0
+        ? 'SAISON\u00A0${state.season + 1}'
+        : 'SAISON\u00A0${state.season + 1}\u00A0·\u00A0J\u00A0${state.world.blocks}';
     final style = FusibleFonts.cond_(13, weight: FontWeight.w700, height: 1, spacing: .06, color: FusibleColors.creme);
     return SizedBox(
       height: 44,
@@ -322,7 +378,11 @@ class _StatusLine extends StatelessWidget {
 /// Ligne de contexte : saison · année · âge · rang · objectif (Manrope 600 12).
 class _ContextLine extends StatelessWidget {
   final GameState state;
-  const _ContextLine({required this.state});
+
+  /// Ouvre le classement complet ; `null` tant qu'aucune journée n'est jouée
+  /// (le rang s'affiche alors « — » : il n'y a rien à ouvrir, et rien à croire).
+  final VoidCallback? onRang;
+  const _ContextLine({required this.state, this.onRang});
 
   @override
   Widget build(BuildContext context) {
@@ -337,7 +397,34 @@ class _ContextLine extends StatelessWidget {
         sep,
         TextSpan(text: '${state.age} ans'),
         sep,
-        ordinalSpan(rank, style),
+        if (onRang == null)
+          TextSpan(text: '—', style: style.copyWith(color: FusibleColors.creme.withValues(alpha: .55)))
+        else
+          WidgetSpan(
+            alignment: PlaceholderAlignment.baseline,
+            baseline: TextBaseline.alphabetic,
+            child: Semantics(
+              button: true,
+              label: 'Classement : ${rank}e. Voir le tableau',
+              excludeSemantics: true,
+              child: GestureDetector(
+                onTap: onRang,
+                behavior: HitTestBehavior.opaque,
+                // Un peu de marge autour du chiffre : c'est un doigt qui vise,
+                // pas une souris. La hauteur de ligne, elle, ne bouge pas.
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Text.rich(
+                    ordinalSpan(rank, style),
+                    style: style.copyWith(
+                      decoration: TextDecoration.underline,
+                      decorationColor: FusibleColors.creme.withValues(alpha: .6),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
         if (state.objectiveLabel.isNotEmpty) ...[
           sep,
           TextSpan(text: 'Objectif : ${state.objectiveLabel}', style: style.copyWith(color: FusibleColors.uiJauneVert)),

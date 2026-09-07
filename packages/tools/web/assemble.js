@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 // Assemble l'aperçu web jouable (identité « album de vignettes ») :
 //   node packages/tools/web/assemble.js --engine <engine.js> --out <fichier.html>
-// Le gabarit (preview_template.html) contient trois placeholders remplacés
+// Le gabarit (preview_template.html) contient cinq placeholders remplacés
 // littéralement (split/join, aucune interprétation regex) :
 //   __CONTENT_JSON__  ← app/assets/content.json (bundle compilé par build_content)
 //   __ENGINE_JS__     ← le moteur Dart compilé en JS (dart compile js preview.dart)
 //   __PORTRAITS_JS__  ← packages/tools/web/portraits.js (bustes paper doll)
+//   __AUDIO_JS__      ← packages/tools/web/audio.js (l'univers sonore, tout
+//                       synthétisé : aucun fichier audio, aucune URL)
 //   __FONTS_CSS__     ← app/assets/fonts/*.ttf en @font-face data: (hors ligne)
 'use strict';
 const fs = require('fs');
@@ -81,15 +83,17 @@ function main() {
   const opts = parseArgs(process.argv.slice(2));
   const tplPath = path.join(HERE, 'preview_template.html');
   const portraitsPath = path.join(HERE, 'portraits.js');
+  const audioPath = path.join(HERE, 'audio.js');
   const contentPath = path.join(ROOT, 'app', 'assets', 'content.json');
 
   let tpl = fs.readFileSync(tplPath, 'utf8');
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const portraits = fs.readFileSync(portraitsPath, 'utf8');
+  const audio = fs.readFileSync(audioPath, 'utf8');
   let content = fs.readFileSync(contentPath, 'utf8');
   JSON.parse(content); // le bundle doit être un JSON valide avant d'être incrusté
 
-  const PLACEHOLDERS = ['__CONTENT_JSON__', '__ENGINE_JS__', '__PORTRAITS_JS__', '__FONTS_CSS__'];
+  const PLACEHOLDERS = ['__CONTENT_JSON__', '__ENGINE_JS__', '__PORTRAITS_JS__', '__AUDIO_JS__', '__FONTS_CSS__'];
   for (const p of PLACEHOLDERS) {
     if (tpl.indexOf(p) < 0) throw new Error('placeholder absent du gabarit : ' + p);
   }
@@ -98,10 +102,12 @@ function main() {
   content = content.split('</').join('<\\/');
   const safeEngine = engine.split('</script').join('<\\/script');
   const safePortraits = portraits.split('</script').join('<\\/script');
+  const safeAudio = audio.split('</script').join('<\\/script');
 
   tpl = tpl.split('__CONTENT_JSON__').join(content);
   tpl = tpl.split('__ENGINE_JS__').join(safeEngine);
   tpl = tpl.split('__PORTRAITS_JS__').join(safePortraits);
+  tpl = tpl.split('__AUDIO_JS__').join(safeAudio);
   tpl = tpl.split('__FONTS_CSS__').join(fontsCss(path.join(ROOT, 'app', 'assets', 'fonts')));
 
   const left = PLACEHOLDERS.filter((p) => tpl.indexOf(p) >= 0);

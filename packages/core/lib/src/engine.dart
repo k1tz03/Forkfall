@@ -546,6 +546,12 @@ class Engine {
   }
 
   void _updateProvisionalRank(GameState s) {
+    // Aucun bloc joué, aucun rang à projeter : la table de division lirait
+    // « 0 point » et poserait le club dernier avant le premier match. On garde
+    // la valeur en place (le rang de la saison passée, ou le 10e neutre du
+    // départ) ; l'aperçu et l'app, eux, ne l'affichent pas tant que la
+    // première journée n'est pas jouée.
+    if (s.world.blocks == 0) return;
     // Interpolate current points onto the division table (no live standings).
     final pts = s.world.pts;
     final projected = s.world.blocks == 0 ? 0 : (pts * 6 ~/ s.world.blocks);
@@ -571,8 +577,11 @@ class Engine {
       'direction': 55,
       'caisse': 50,
     };
-    // New club force from the target division.
-    s.world = WorldState(division: s.world.division);
+    // New club force from the target division. Le CALENDRIER, lui, reste celui
+    // de la saison en cours : `blocks` compte les blocs de six journées déjà
+    // joués, il appartient à l'exercice et non au club (voir `_changeClub`).
+    s.world = WorldState(division: s.world.division, blocks: s.world.blocks);
+    _updateProvisionalRank(s);
     s.force = divisionBaseForce(s.world.division) + rng.range(-6, 6);
     s.stats['roles'] = (s.stats['roles'] ?? 1) + 1;
     s.entities.named['club'] = _makeClub(rng);
@@ -623,7 +632,22 @@ class Engine {
 
   void _changeClub(GameState s, Rng rng, {int? division, bool retour = false, bool gauges = true}) {
     if (gauges) _leaveClub(s);
-    s.world = WorldState(division: (division ?? s.world.division).clamp(1, 2));
+    // Le CLUB change, pas le CALENDRIER. `blocks` compte les blocs de six
+    // journées déjà joués dans la saison : il n'appartient pas au club, il
+    // appartient à l'exercice, et seul le passage de saison le remet à zéro
+    // (`_advance`). Un `WorldState` neuf le ramenait à 0 en plein mois de
+    // janvier : les blocs retour se renumérotaient `match:retour:0/1/2`, le
+    // classement du Bilan sortait sous l'identifiant `classement:1:3` avec
+    // « 18e journée » au lieu de la 36e, et sa colonne de points était celle
+    // d'une demi-saison — un championnat qui rétrécit de moitié sous les yeux
+    // du joueur. Le rang provisoire (`pts × 6 ÷ blocs`) extrapolait dans le
+    // même temps par deux, puis le Verdict, lui, lisait les points bruts :
+    // c'est ce décalage que C7 relevait entre le classement final et la Une.
+    // Ce qui se remet à zéro : les points (ils sont au club que tu quittes),
+    // les séries, le parcours de Coupe et la mémoire du vestiaire.
+    final blocs = s.world.blocks;
+    s.world = WorldState(division: (division ?? s.world.division).clamp(1, 2), blocks: blocs);
+    _updateProvisionalRank(s);
     s.force = divisionBaseForce(s.world.division) + rng.range(-6, 6);
     // Le club d'origine est mémorisé au premier départ : c'est lui que `retour`
     // rend, et lui seul (l'usine reprend ce qu'elle a vendu).

@@ -40,6 +40,17 @@
 ///   ne tombaient plus sur les mêmes cartes. Codes **retirés à neuf**
 ///   (`--goldens --write --recode`). Le prologue ne consomme aucun tirage (test
 ///   P3) : le déplacement vient du calendrier et du contenu, pas du hasard.
+/// · **Le classement visible et la rejouabilité du prologue** (lot « les
+///   correctifs »). Trois causes, toutes voulues : (a) `_transitionTo` et
+///   `_changeClub` ne remettent plus le calendrier de la saison à zéro — un
+///   changement de club ou de rôle en cours d'exercice laissait le championnat
+///   rétrécir de moitié, et le rang provisoire extrapolait par deux ; (b) les
+///   beats 2, 3 et 6 de chaque prologue ont une seconde variante lue sur le fil
+///   rouge ; (c) les quatre cartes « les quatre qui décident » nomment
+///   désormais les jauges comme le rail les nomme. Les VINGT codes sont
+///   inchangés (`--goldens --write`, sans `--recode`) : même fin, même nombre
+///   de cartes, même empreinte d'état final pour les vingt carrières — seul le
+///   hachage des ids servis bouge, là où le prologue sert une autre variante.
 library;
 
 import 'dart:io';

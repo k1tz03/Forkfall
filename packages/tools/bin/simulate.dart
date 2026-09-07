@@ -651,6 +651,11 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
         faute = 'rang ${moi.first['rang']} ≠ ${s.world.standingRank}';
       } else if (moi.first['pts'] != s.world.pts) {
         faute = 'pts ${moi.first['pts']} ≠ ${s.world.pts}';
+      } else if (p.payload['finale'] == true && p.payload['journee'] != kSeasonGames) {
+        // Le classement du Bilan clôt six blocs de six journées, changement de
+        // club ou de rôle en cours de route ou non : un championnat qui
+        // rétrécit de moitié se voit ici.
+        faute = 'journée ${p.payload['journee']} ≠ $kSeasonGames au Bilan';
       } else {
         for (var i = 1; i < rows.length; i++) {
           if ((rows[i]['pts'] as int) > (rows[i - 1]['pts'] as int)) {
@@ -1917,13 +1922,25 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
   final portes = reachableEndings(content, post, nar.openedArcs);
   final atteintes = nar.endings.keys.where((e) => e != 'en cours' && e != 'inconnu').toSet();
   final jamais = (portes.difference(atteintes).toList())..sort();
+  // Le compteur comparait deux ensembles qui ne se recouvrent pas : TOUTES les
+  // fins vues au numérateur, les seules fins jugées atteignables au
+  // dénominateur. D'où des « 27/20 », et un « 22/22 » affiché juste au-dessus
+  // de deux fins jamais atteintes. Le numérateur est désormais l'intersection ;
+  // les fins vues HORS `portes` sont listées à part — ce sont elles qui disent
+  // que `reachableEndings` est trop étroit, et elles ne sont pas un défaut de
+  // tirage.
+  final tenues = portes.intersection(atteintes);
+  final horsPortes = (atteintes.difference(portes).toList())..sort();
   final finsOk = jamais.isEmpty;
-  stdout.writeln('  ${finsOk ? '✔' : '✗'} ${'fins atteintes / fins ouvertes au postulat'.padRight(44)} ${atteintes.length}/${portes.length} · seuil chaque fin ≥ 1 fois');
+  stdout.writeln('  ${finsOk ? '✔' : '✗'} ${'fins atteintes / fins ouvertes au postulat'.padRight(44)} ${tenues.length}/${portes.length} · seuil chaque fin ≥ 1 fois');
   final finsTri = nar.endings.entries.where((e) => e.key != 'en cours').toList()
     ..sort((a, b) => a.value != b.value ? b.value.compareTo(a.value) : a.key.compareTo(b.key));
   stdout.writeln('    · ${'toutes les fins servies'.padRight(42)} ${finsTri.map((e) => '${e.key} ${_f(100 * e.value / math.max(1, nar.runs), 1)}%').join(' · ')}');
   if (jamais.isNotEmpty) {
     stdout.writeln('    · ${'jamais atteintes (${jamais.length})'.padRight(42)} ${jamais.join(', ')}');
+  }
+  if (horsPortes.isNotEmpty) {
+    stdout.writeln('    · ${'atteintes hors portes (${horsPortes.length})'.padRight(42)} ${horsPortes.join(', ')}');
   }
   // Non asserté : la lecture statique des portes compte aussi les fins que ce
   // postulat ne peut pas atteindre en pratique (l'âge de la retraite, le repli
