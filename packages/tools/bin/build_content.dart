@@ -77,9 +77,18 @@ const Set<String> kStatuts = {'present', 'club', 'vendu', 'staff', 'parti', 'ret
 
 /// Les beats moteur dont le texte est auteurisable (content/setpieces.yaml).
 const List<String> kSetpieceBeats = [
-  'objective', 'match', 'cup', 'gm_annonce', 'gm_te', 'aftermatch',
+  'objective', 'classement', 'match', 'cup', 'gm_annonce', 'gm_te', 'aftermatch',
   'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
 ];
+
+/// Les beats que `calendar.yaml` peut écrire (le moteur ne sait rien servir
+/// d'autre : un beat inconnu tomberait sur la carte de bouche-trou).
+/// `prologue` n'est servi qu'en saison 0, `classement` deux fois par saison.
+const Set<String> kBeatKinds = {
+  'prologue', 'card', 'objective', 'classement', 'match', 'cup',
+  'gm_annonce', 'gm_te', 'aftermatch',
+  'bilan_une', 'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
+};
 
 /// « où|id » de chaque effet `char:` rencontré : le personnage est vérifié
 /// une fois le casting chargé.
@@ -449,6 +458,30 @@ void main() {
     calendar[role.toString()] = (phases as List)
         .map((p) => {'phase': (p as Map)['phase'], 'beats': (p['beats'] as List).map((b) => b.toString()).toList()})
         .toList();
+    // Beats fermés, et le prologue seulement en tête de présaison : le tirage
+    // compte les beats `prologue` qui précèdent le beat courant pour savoir
+    // quelle carte du prologue servir. Éparpillés, ils ne voudraient plus rien
+    // dire.
+    var vus = 0;
+    var autreVu = false;
+    for (final ph in calendar[role.toString()] as List) {
+      for (final b in (ph as Map)['beats'] as List) {
+        final k = b.toString();
+        if (!kBeatKinds.contains(k)) {
+          errors.add('calendar.yaml: $role: beat « $k » inconnu (${kBeatKinds.join(' | ')})');
+          continue;
+        }
+        if (k == 'prologue') {
+          vus += 1;
+          if (autreVu) errors.add('calendar.yaml: $role: un beat `prologue` après un autre beat — le prologue ouvre la saison');
+        } else {
+          autreVu = true;
+        }
+      }
+    }
+    if (vus > 0 && (vus < 4 || vus > 6)) {
+      errors.add('calendar.yaml: $role: $vus beats `prologue` — il en faut entre 4 et 6');
+    }
   });
   final director = (calendarDoc['director'] as Map?)?.cast<String, dynamic>() ?? <String, dynamic>{};
 
@@ -596,7 +629,7 @@ void main() {
       final m = Map<String, dynamic>.of((raw as Map).cast<String, dynamic>());
       final id = m['id'].toString();
       final kind = m['kind']?.toString() ?? 'serie';
-      if (!const {'serie', 'postulat', 'evenement'}.contains(kind)) errors.add('$rel: arc $id: kind « $kind » inconnu');
+      if (!const {'serie', 'postulat', 'evenement', 'prologue'}.contains(kind)) errors.add('$rel: arc $id: kind « $kind » inconnu');
       final compiled = <String, dynamic>{
         'id': id,
         if (m['title'] != null) 'title': m['title'].toString(),
@@ -677,6 +710,25 @@ void main() {
       if (kind == 'postulat' && (compiled['steps'] as List).any((s) => (s as Map)['at'] == null)) {
         errors.add('$rel: arc $id: toutes les étapes d\'un arc postulat doivent avoir `at`');
       }
+      // Le prologue (beat `prologue`, saison 0). C'est la mise en situation :
+      // quatre à six scènes servies DANS L'ORDRE DU FICHIER, hors créneau
+      // narratif, sans le moindre tirage. D'où les gardes : pas de fenêtre
+      // `at` (le prologue n'est pas une ancre de script), pas de `next` (la
+      // suite est l'ordre du fichier), et aucun effet capable de tirer un dé
+      // ou de téléporter la carrière. Les jauges bougent peu : le prologue
+      // n'est pas un piège, il apprend au joueur ce que font les quatre
+      // jauges.
+      if (kind == 'prologue') {
+        final steps = compiled['steps'] as List;
+        if (steps.length < 4 || steps.length > 6) {
+          errors.add('$rel: arc $id: un prologue fait 4 à 6 étapes (${steps.length} écrite(s))');
+        }
+        for (final s in steps) {
+          final sm = s as Map<String, dynamic>;
+          if (sm['at'] != null) errors.add('$rel: arc $id: étape ${sm['id']} : `at` sur une étape de prologue (l\'ordre du fichier suffit)');
+          if ((sm['next'] as List).isNotEmpty) errors.add('$rel: arc $id: étape ${sm['id']} : `next` sur une étape de prologue');
+        }
+      }
       arcs.add(compiled);
     }
   }
@@ -711,6 +763,18 @@ void main() {
         errors.add('postulats: $id: opening_arc « ${m['opening_arc']} » inexistant');
       } else if (oa['kind'] != 'postulat') {
         errors.add('postulats: $id: opening_arc « ${m['opening_arc']} » n\'est pas de kind postulat');
+      }
+    }
+    // Le prologue du postulat : l'arc `kind: prologue` servi en saison 0 avant
+    // la carte Objectif (4 à 6 scènes, dans l'ordre du fichier).
+    if (m['prologue'] != null) {
+      final pa = arcById[m['prologue'].toString()];
+      if (pa == null) {
+        errors.add('postulats: $id: prologue « ${m['prologue']} » inexistant');
+      } else if (pa['kind'] != 'prologue') {
+        errors.add('postulats: $id: prologue « ${m['prologue']} » n\'est pas de kind prologue');
+      } else if (!(pa['roles'] as List).contains(m['role'])) {
+        errors.add('postulats: $id: prologue « ${m['prologue']} » ne joue pas le rôle « ${m['role']} »');
       }
     }
     m['pitch'] = m['pitch']?.toString() ?? '';
@@ -1063,7 +1127,9 @@ void main() {
 
   for (final a in arcs) {
     final arcId = a['id'].toString();
-    final kind = a['kind'] == 'postulat' ? 'script' : (a['kind'] == 'evenement' ? 'evenement' : 'etape');
+    final kind = a['kind'] == 'postulat'
+        ? 'script'
+        : (a['kind'] == 'evenement' ? 'evenement' : (a['kind'] == 'prologue' ? 'prologue' : 'etape'));
     for (final s in a['steps'] as List) {
       final sm = s as Map<String, dynamic>;
       for (final v in sm['card'] as List) {
@@ -1150,6 +1216,28 @@ void main() {
     for (final side in ['left', 'right']) {
       final eff = (c[side] as Map)['effects'] as Map<String, dynamic>;
       if (eff['outcome'] != null && c['arcId'] == null) errors.add('${c['id']}/$side: `outcome` sur une carte qui n\'est pas une étape d\'arc');
+    }
+  }
+  // Les cartes de prologue : servies hors créneau, sans tirage, en saison 0.
+  // Un effet qui tire un dé (`rand`), qui pose une réaction, qui met une carte
+  // en file, qui change de rôle ou de club, ou qui termine la carrière n'a rien
+  // à faire dans une mise en situation — et casserait le « zéro tirage ». Les
+  // jauges bougent au plus d'un cran moyen : le prologue apprend au joueur ce
+  // que font les quatre jauges, il ne le met pas déjà en danger.
+  const interditsPrologue = ['rand', 'react', 'schedule', 'next', 'end', 'role', 'club', 'arc', 'enemy', 'outcome'];
+  for (final c in cards) {
+    if (c['kind'] != 'prologue') continue;
+    for (final side in ['left', 'right']) {
+      final eff = (c[side] as Map)['effects'] as Map<String, dynamic>;
+      for (final k in interditsPrologue) {
+        if (eff[k] != null) errors.add('${c['id']}/$side: `$k` sur une carte de prologue (hors créneau, sans tirage)');
+      }
+      for (final g in ['vestiaire', 'tribunes', 'direction', 'caisse']) {
+        final v = eff[g];
+        if (v is int && v.abs() > balance['medium']!) {
+          errors.add('${c['id']}/$side: $g $v sur une carte de prologue (au plus ±${balance['medium']}, le prologue n\'est pas un piège)');
+        }
+      }
     }
   }
   for (final c in cards) {

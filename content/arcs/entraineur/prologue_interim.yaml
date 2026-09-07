@@ -1,0 +1,43 @@
+# « Jusqu'à nouvel ordre » — le prologue du postulat `interimaire` (index 1).
+#
+# Arc `kind: prologue` : six étapes servies dans l'ordre du fichier, en saison 0
+# seulement, hors créneau et sans tirage. Déclaré par
+# `prologue: en.interim.prologue` dans content/postulats.yaml.
+#
+# Il s'arrête là où l'ancre I1 commence : le bureau, les cartons et la plaque
+# sont à I1 (`en.interim.i1_bureau`, créneau 1 de la saison 0), le prologue
+# prend ce qui vient avant — le parking sous la pluie, le tiroir, la compo de
+# l'autre encore punaisée, la phrase que le groupe attend, et l'ascenseur.
+arcs:
+  - id: en.interim.prologue
+    title: "Jusqu'à nouvel ordre"
+    kind: prologue
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: false
+    theme: direction
+    carrier: josiane
+    cast: [josiane, vukic, brehaut, meneche, vecchio]
+    issues: []
+    hint: "Une place de parking peinte au nom d'un autre, et un sifflet resté dans un tiroir."
+    steps:
+      - id: parking
+        card:
+          - { id: en.interim.pro1_parking_vestiaire, if: "fil_rouge == 'vestiaire'" }
+          - { id: en.interim.pro1_parking_diplome, if: "fil_rouge == 'diplome'" }
+          - { id: en.interim.pro1_parking_grand_nom, if: "fil_rouge == 'grand_nom'" }
+          - { id: en.interim.pro1_parking }
+      - id: sifflet
+        card: en.interim.pro2_sifflet
+      - id: compo
+        card: en.interim.pro3_compo
+      - id: phrase
+        card:
+          - { id: en.interim.pro4_phrase_vestiaire, if: "fil_rouge == 'vestiaire'" }
+          - { id: en.interim.pro4_phrase }
+      - id: quatre
+        card:
+          - { id: en.interim.pro5_quatre_verite, if: "flag('prologue_six_semaines')" }
+          - { id: en.interim.pro5_quatre }
+      - id: ascenseur
+        card: en.interim.pro6_ascenseur

@@ -1,0 +1,42 @@
+# « Le crochet du fond » — le prologue du postulat `pepite` (index 2).
+#
+# Arc `kind: prologue` : six étapes servies dans l'ordre du fichier, en saison 0
+# seulement, hors créneau et sans tirage. Déclaré par
+# `prologue: jp.pepite.prologue` dans content/postulats.yaml.
+#
+# Il s'arrête avant l'ancre P1 du script (`jp.pepite.p1_valeur`, la voiture de
+# Fardelli, les dix pour cent) : le prologue amène jusqu'à la portière, il ne
+# l'ouvre pas. Le premier vrai choix — aller taper dans les mains du grillage —
+# se voit sur une jauge, et l'agent le relève à la scène suivante.
+arcs:
+  - id: jp.pepite.prologue
+    title: "Le crochet du fond"
+    kind: prologue
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: false
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vecchio, gege, fardelli, josiane]
+    issues: []
+    hint: "Un nom au feutre sur du sparadrap, et la sirène de l'usine à seize heures."
+    steps:
+      - id: crochet
+        card:
+          - { id: jp.pepite.pro1_crochet_prix, if: "fil_rouge == 'prix'" }
+          - { id: jp.pepite.pro1_crochet_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.pepite.pro1_crochet }
+      - id: bouteilles
+        card: jp.pepite.pro2_bouteilles
+      - id: place
+        card: jp.pepite.pro3_place
+      - id: grillage
+        card:
+          - { id: jp.pepite.pro4_grillage_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.pepite.pro4_grillage }
+      - id: quatre
+        card:
+          - { id: jp.pepite.pro5_quatre_grillage, if: "flag('prologue_grillage')" }
+          - { id: jp.pepite.pro5_quatre }
+      - id: parking
+        card: jp.pepite.pro6_parking

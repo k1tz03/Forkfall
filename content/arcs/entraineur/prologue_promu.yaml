@@ -1,0 +1,47 @@
+# « Le premier matin » — le prologue du postulat `promu` (index 0).
+#
+# Un arc `kind: prologue` : six étapes servies DANS L'ORDRE DU FICHIER, en
+# saison 0 seulement, hors créneau narratif et sans le moindre tirage. Ni `at`
+# (ce n'est pas une ancre de script), ni `next` (la suite est l'ordre du
+# fichier) ; la variante de chaque étape est choisie par parcours de liste,
+# comme un set-piece. Déclaré par `prologue: en.promu.prologue` dans
+# content/postulats.yaml.
+#
+# Ce que les six scènes font, sans jamais l'expliquer : où tu es (le couloir),
+# qui tu es (les deux clés), qui sont les gens (le café de Vukić, le car de
+# Bréhaut, la grille de Gégé), ce que tu joues (le car de dimanche, dont la
+# conséquence se voit sur la caisse et que Gégé relève à la scène suivante),
+# ce qui te tue (les quatre qui décident), et le seuil (le président t'attend,
+# la carte suivante est la sienne).
+arcs:
+  - id: en.promu.prologue
+    title: "Le premier matin"
+    kind: prologue
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: false
+    theme: direction
+    carrier: josiane
+    cast: [josiane, vukic, brehaut, gege]
+    issues: []
+    hint: "Un couloir repeint jusqu'à hauteur d'homme, et deux clés sur un comptoir."
+    steps:
+      - id: couloir
+        card:
+          - { id: en.promu.pro1_couloir_tribune, if: "fil_rouge == 'tribune'" }
+          - { id: en.promu.pro1_couloir_argent, if: "fil_rouge == 'argent'" }
+          - { id: en.promu.pro1_couloir }
+      - id: cles
+        card: en.promu.pro2_cles
+      - id: cafe
+        card: en.promu.pro3_cafe
+      - id: car
+        card:
+          - { id: en.promu.pro4_car_argent, if: "fil_rouge == 'argent'" }
+          - { id: en.promu.pro4_car }
+      - id: quatre
+        card:
+          - { id: en.promu.pro5_quatre_veille, if: "flag('prologue_veille')" }
+          - { id: en.promu.pro5_quatre }
+      - id: rendezvous
+        card: en.promu.pro6_rendezvous

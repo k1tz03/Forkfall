@@ -1,0 +1,196 @@
+# Les six scènes d'ouverture du postulat « Fin de contrat à 31 ans »
+# (content/arcs/joueur/prologue_fin_de_contrat.yaml, arc `jp.fin.prologue`).
+#
+# Trente et un ans, la D1, un genou qui a un avis (bible ch. 10 § 4) : le
+# couloir en travaux, la table de soins qui sent le camphre, le gamin de seize
+# ans assis à ta place, la plaquette du club, la portière de l'agent. Le
+# prologue s'arrête avant l'ancre F1 du script (`jp.fin.f1_derniere_annee`, le
+# restaurant et les dix pour cent) : il ne parle ni de mandat, ni de contrat.
+#
+# Jauges : vestiaire 50, tribunes 50, direction 45, caisse 60. Effets faibles.
+# Bréhaut, Vecchio et Sabatier appellent un joueur « petit » à l'expression
+# neutre : à trente et un ans c'est faux, donc leurs cartes n'écrivent pas
+# `{toi}` — elles s'adressent à toi sans adresse.
+#
+# Une carte à un bouton = deux sorties strictement identiques (charte § 4.1).
+cards:
+  # ------------------------------------------------------- 1/6 · le couloir en travaux
+  # Le décor, sans locuteur. Trois variantes lues sur le fil rouge.
+  - id: jp.fin.pro1_couloir
+    roles: [joueur]
+    arc: moment
+    tags: [decor, vestiaire]
+    tone: leger
+    once: true
+    text: "Le couloir de {club} est en travaux : la moitié des photos sont sous bâche. La tienne est dessous, deuxième rangée, et à sept heures la salle de soins sent déjà le camphre."
+    left:
+      label: "Entrer quand même"
+      effects: {}
+      answer: "Tu reconnais chaque joint du carrelage. Ça, au moins, les travaux n'y ont pas touché."
+    right:
+      label: "Entrer quand même"
+      effects: {}
+      answer: "Tu reconnais chaque joint du carrelage. Ça, au moins, les travaux n'y ont pas touché."
+
+  - id: jp.fin.pro1_couloir_genou
+    roles: [joueur]
+    arc: moment
+    tags: [decor, vestiaire]
+    tone: leger
+    once: true
+    text: "Le couloir de {club} est en travaux, et la salle de soins sent le camphre dès sept heures. Sur le négatoscope, la radio de ton genou est restée allumée toute la nuit."
+    left:
+      label: "Entrer quand même"
+      effects: {}
+      answer: "Le néon grésille. On voit très bien l'endroit ; c'est le seul endroit qu'on voit bien."
+    right:
+      label: "Entrer quand même"
+      effects: {}
+      answer: "Le néon grésille. On voit très bien l'endroit ; c'est le seul endroit qu'on voit bien."
+
+  - id: jp.fin.pro1_couloir_vestiaire
+    roles: [joueur]
+    arc: moment
+    tags: [decor, vestiaire]
+    tone: leger
+    once: true
+    text: "Le couloir de {club} est en travaux. Dans le vestiaire, ta place est encore la première à droite, celle des anciens ; personne ne te l'a jamais dit, et tout le monde le sait."
+    left:
+      label: "Entrer quand même"
+      effects: {}
+      answer: "Trois crochets plus loin, un sac neuf, une paire de crampons neufs, et seize ans dedans."
+    right:
+      label: "Entrer quand même"
+      effects: {}
+      answer: "Trois crochets plus loin, un sac neuf, une paire de crampons neufs, et seize ans dedans."
+
+  # ------------------------------------------------------- 2/6 · la table
+  # Qui tu es : un genou de trente et un ans qui a parlé cet hiver.
+  - id: jp.fin.pro2_table
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction, risk:vestiaire]
+    speaker: sabatier
+    tone: strategique
+    once: true
+    text: "Doc Sabatier tape sur la table de soins avec le capuchon de son stylo : « Ça reste entre la table et moi : ton genou a trente et un ans, et il l'a dit cet hiver. Tu montes maintenant, ou après ? »"
+    left:
+      label: "Maintenant"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il plie, il écoute, il ne note rien. Chez lui, ne rien noter est plutôt une bonne nouvelle."
+    right:
+      label: "Après la séance"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu fais la séance entière. Il t'attend à la table à midi ; il n'a pas déjeuné, exprès."
+
+  # ------------------------------------------------------- 3/6 · la place des anciens
+  # La relève, seize ans, assise à ta place. Deux sorties.
+  - id: jp.fin.pro3_place
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: mbako
+    tone: leger
+    once: true
+    text: "Lian Mbako s'est assis à ta place, la première à droite : « Je veux jouer. Maintenant. On m'a dit de me mettre là. Je bouge, ou vous vous mettez à côté ? »"
+    left:
+      label: "Bouge, c'est ma place"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il bouge sans discuter. Il s'assoit deux crochets plus loin et continue de regarder la place."
+    right:
+      label: "Reste, je me mets là"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Il reste. Il demande comment on fait pour durer ; tu n'as pas encore la réponse."
+
+  # ------------------------------------------------------- 4/6 · la plaquette
+  # Le choix minuscule et vrai : la couverture, toi ou le petit. Il se voit sur
+  # les tribunes, et l'agent le relève à la scène suivante. Deux variantes.
+  - id: jp.fin.pro4_plaquette
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes, vestiaire]
+    speaker: lea
+    tone: leger
+    once: true
+    text: "Léa tient la maquette de la plaquette du club : « Vous confirmez ? En couverture, c'est vous en grand, ou le petit Mbako en grand. On me demande de vous demander avant l'imprimeur. »"
+    left:
+      label: "Moi en grand"
+      effects: {tribunes: "+", vestiaire: "-", set: [prologue_couverture]}
+      answer: "Ta photo passe en couverture. On a repris celle de la montée, il y a six ans."
+    right:
+      label: "Le petit"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Le gamin fait la couverture. Il en achète trois et en envoie une, sans mot dedans."
+
+  - id: jp.fin.pro4_plaquette_genou
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes, vestiaire]
+    speaker: lea
+    tone: leger
+    once: true
+    text: "Léa tient la maquette de la plaquette : « Vous confirmez ? En couverture, c'est vous, mais la seule photo nette montre le genou bandé. Sinon c'est le petit Mbako. Je demande avant l'imprimeur. »"
+    left:
+      label: "Moi, bandage compris"
+      effects: {tribunes: "+", vestiaire: "-", set: [prologue_couverture]}
+      answer: "Le bandage fait la couverture avec toi. À l'imprimerie, personne ne le remarque."
+    right:
+      label: "Le petit"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Le gamin fait la couverture. Ta photo passe en page quatre, avec les jeunes du centre."
+
+  # ------------------------------------------------------- 5/6 · les quatre
+  # La règle du jeu, dite par l'agent. Deux variantes : il a vu la maquette.
+  - id: jp.fin.pro5_quatre_couverture
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato, decor]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, à la portière, moteur allumé : « Une couverture ne prolonge personne, {toi}. Quatre décident si tu rejoues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    left:
+      label: "Et qui compte ?"
+      effects: {}
+      answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
+    right:
+      label: "Et qui compte ?"
+      effects: {}
+      answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
+
+  - id: jp.fin.pro5_quatre
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato, decor]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli, à la portière, moteur allumé : « Tu as laissé la couverture au petit, {toi}. Quatre décident si tu rejoues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    left:
+      label: "Et qui compte ?"
+      effects: {}
+      answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
+    right:
+      label: "Et qui compte ?"
+      effects: {}
+      answer: "Il remonte la vitre à moitié. Il laisse toujours la moitié, pour la phrase d'après."
+
+  # ------------------------------------------------------- 6/6 · le seuil
+  # Le rendez-vous : la salle de soins, à onze heures. La carte suivante est
+  # celle où l'on te fixe l'objectif de la saison.
+  - id: jp.fin.pro6_onze_heures
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vukic
+    tone: strategique
+    once: true
+    text: "Vukić s'assoit à côté de toi, la feuille de match sur les genoux : « Le Doc t'attend à onze heures avec ta radio. Je te le dis parce que personne ne te le dira : il a déjà écrit un chiffre. »"
+    left:
+      label: "Y aller"
+      effects: {}
+      answer: "Il te laisse la feuille de match. Il en a une autre, avec des ratures et un nom en moins."
+    right:
+      label: "Y aller"
+      effects: {}
+      answer: "Il te laisse la feuille de match. Il en a une autre, avec des ratures et un nom en moins."

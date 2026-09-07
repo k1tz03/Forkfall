@@ -5,6 +5,47 @@
 // The whole GameState lives on the Dart side; JS only sends choices and renders
 // the returned view-model JSON. This keeps the preview 100% faithful to the
 // engine's determinism and content.
+//
+// ---------------------------------------------------------------------------
+// LE SON — le vocabulaire fermé que la vue expose (retour client : « un jeu
+// sans univers musical est un jeu vide »). Le moteur ne joue rien : il nomme.
+// La définition fait autorité dans packages/core/lib/src/sfx.dart ; elle est
+// recopiée ici parce que c'est ce fichier que la couche sonore lit.
+//
+// `ambiance` — UNE valeur, le lieu de la carte courante :
+//     vestiaire | tribune | bureau | couloir | terrain | ville | maison |
+//     presse | nuit
+//
+// `sfx` — une LISTE d'événements, toujours dans cet ordre (ordre stable :
+//   deux lectures de la même carte donnent la même liste) :
+//     carte_arrivee   la carte se pose
+//     choix_gauche    swipe gauche disponible (toujours présent)
+//     choix_droite    swipe droit disponible (absent des cartes à un bouton)
+//     jauge_danger    une jauge est à ≤ 20 ou ≥ 80
+//     alarme          carte d'alarme (une jauge vient de franchir un seuil)
+//     reaction        quelqu'un rebondit sur ton dernier choix
+//     nouvelle        Carte Nouvelle / Nouvelles du passé — le monde parle
+//     une             la Une du Bilan
+//     match_debut     bloc de six journées, tour de Coupe, coup d'envoi du Grand Match
+//     match_but       le swipe précédent a marqué / gagné
+//     match_encaisse  le swipe précédent a encaissé / perdu
+//     sifflet_final   fin du Grand Match
+//     tampon_fin      écran de fin de carrière
+//     classement      la carte Classement
+//     palier_haut     palier de relation franchi vers le haut
+//     palier_bas      palier de relation franchi vers le bas
+//     promesse        la carte Objectif (la promesse au patron)
+//     argent          la carte parle d'argent, ou une sortie touche la Caisse
+//
+// Aucune de ces valeurs ne coûte un tirage : elles sont dérivées du beat, du
+// `kind` de la carte, de ses tags, du camp du locuteur, des jauges et de la
+// phrase que le dernier swipe a produite.
+//
+// LE CLASSEMENT — `standings` est exposé EN PERMANENCE (pas seulement sur la
+// carte Classement), pour qu'un écran « classement » puisse s'ouvrir à tout
+// moment : la table complète des 18 clubs, chaque ligne
+// `{rang, club, pts, diff, toi}`. La carte Classement, elle, porte en plus la
+// fenêtre de six lignes autour de la tienne dans `card.standings`.
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
@@ -33,6 +74,15 @@ String _postulatsJson() {
   return jsonEncode({'postulats': list, 'startYear': Engine.startYear});
 }
 
+/// La journée courante : le rang du beat parmi les beats hors prologue.
+int _journee(List<Beat> beats, int beatIndex) {
+  var n = 0;
+  for (var i = 0; i <= beatIndex && i < beats.length; i++) {
+    if (beats[i].kind != 'prologue') n += 1;
+  }
+  return n == 0 ? 1 : n;
+}
+
 String _view() {
   final s = _state!;
   final role = _content.roles[s.role]!;
@@ -44,8 +94,9 @@ String _view() {
             'value': s.gauges[g.id] ?? 50,
           })
       .toList();
-  // The season calendar has one beat per « journée » (34 for both roles);
-  // the current beat therefore doubles as the matchday shown on the status bar.
+  // Le calendrier d'une saison porte un beat par « journée » ; les beats
+  // `prologue` réservés en tête de présaison ne comptent pas (saison 0
+  // seulement, et jamais tous servis).
   final beats = _content.seasonBeats[s.role] ?? const <Beat>[];
   final beatIndex = beats.isEmpty ? 0 : s.beat.clamp(0, beats.length - 1);
   final m = <String, dynamic>{
@@ -81,13 +132,26 @@ String _view() {
       'club': s.entities.named['club'] ?? '',
       'ville': s.entities.named['ville'] ?? '',
     },
-    'journee': beatIndex + 1,
-    'journees': beats.length,
+    // La « journée » affichée compte les beats JOUÉS d'une saison : les beats
+    // `prologue` réservés en tête de présaison n'en sont pas (ils ne sortent
+    // qu'en saison 0, et jamais tous).
+    'journee': _journee(beats, beatIndex),
+    'journees': beats.where((b) => b.kind != 'prologue').length,
     'phase': beats.isEmpty ? '' : beats[beatIndex].phase,
     'division': s.world.division,
     'promiseTo': s.objectivePromised ? _engine.patronName(s) : null,
+    // Le classement complet, à tout moment (voir l'en-tête).
+    'standings': [for (final r in _engine.standingsOf(s)) r.toJson()],
+    'standingsJournee': (s.world.blocks * kGamesPerBlock).clamp(0, kSeasonGames),
+    'standingsJournees': kSeasonGames,
   };
   if (s.over) {
+    // L'écran de fin porte lui aussi son ambiance et son tampon sonore.
+    final pend = s.pending;
+    if (pend != null) {
+      m['ambiance'] = ambianceOf(s, pend);
+      m['sfx'] = sfxOf(s, pend);
+    }
     final e = s.endingId == null ? null : _content.endings[s.endingId];
     final payload = s.pending?.payload ?? const {};
     // « Ce qui s'est passé » (spec variété §1.7, §3.8) : l'épitaphe rendue
@@ -135,6 +199,16 @@ String _view() {
       'previewRight': p.previewRight.map((h) => {'g': h.gauge, 'm': h.magnitude}).toList(),
       // Bandeau « Nouvelle histoire : {titre} » (spec variété §3.8).
       if (p.payload['unlocked_story'] != null) 'unlockedStory': p.payload['unlocked_story'],
+      // Le son (voir l'en-tête) : le lieu, puis les événements de la carte.
+      'ambiance': ambianceOf(s, p),
+      'sfx': sfxOf(s, p),
+      // Le prologue (saison 0) : « 2 / 5 », de quoi afficher une progression.
+      if (p.payload['prologue'] != null) 'prologue': p.payload['prologue'],
+      if (p.payload['prologue_total'] != null) 'prologueTotal': p.payload['prologue_total'],
+      // La carte Classement : la fenêtre de six lignes autour de la tienne.
+      if (p.payload['standings'] != null) 'standings': p.payload['standings'],
+      if (p.payload['journee'] != null) 'journeeClassement': p.payload['journee'],
+      if (p.payload['finale'] != null) 'classementFinal': p.payload['finale'],
     };
     if (p.kind == 'bilan_une') m['card']['une'] = _unePayload(s, p);
   }

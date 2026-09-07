@@ -89,7 +89,13 @@ void main() {
         expect(find.bySemanticsLabel(RegExp(r'^Réplique, ')), findsOneWidget);
         expect(find.textContaining('n° '), findsNothing, reason: 'une réplique n\'a pas de numéro de créneau');
       }
-      await tapMagnet(tester, controller, right: i % 3 != 2);
+      // Le rythme de swipes est figé pour que la carrière soit reproductible.
+      // `i % 3 != 2` a cessé d'atteindre le premier Bilan le jour où le
+      // calendrier a gagné le prologue et les deux cartes Classement : les
+      // mêmes gestes ne tombent plus sur les mêmes cartes, et cette
+      // carrière-là mourait au seizième écran. `i % 4 != 3` la ramène à son
+      // Bilan (37 écrans, fin en_sms) sans changer ce que le test vérifie.
+      await tapMagnet(tester, controller, right: i % 4 != 3);
     }
     expect(unes, greaterThan(0), reason: 'au moins un Bilan (page de journal) dans la carrière');
     expect(controller.ended, isTrue, reason: 'la carrière se termine en moins de 400 cartes');
@@ -129,7 +135,15 @@ void main() {
       await tester.tap(byLabel('Pochette 1 : Le promu sans un sou'));
       await settle(tester, ms: 1200);
 
-      // La première carte est l'objectif de saison ; sans promesse, pas de ruban.
+      // Une carrière s'ouvre désormais sur le PROLOGUE : quatre à six scènes de
+      // mise en situation (beat `prologue`, saison 0) avant que le président ne
+      // réclame un objectif. On les traverse — swipe droit, qui marche aussi
+      // sur les cartes à un seul bouton — jusqu'à la carte Objectif.
+      for (var i = 0; i < 8 && controller.state!.pending!.kind == 'prologue'; i++) {
+        await tapMagnet(tester, controller, right: true);
+      }
+
+      // La carte suivante est l'objectif de saison ; sans promesse, pas de ruban.
       final p = controller.state!.pending!;
       expect(p.kind, 'objective');
       expect(p.leftLabel, 'Je m\'engage');

@@ -11,6 +11,7 @@ import 'draw/director.dart';
 import 'effects.dart';
 import 'naming.dart';
 import 'rng.dart';
+import 'standings.dart';
 import 'state.dart';
 import 'text.dart';
 import 'world.dart';
@@ -136,6 +137,20 @@ class Engine {
 
   void _applyPending(GameState s, Pending p, bool right, Rng rng) {
     switch (p.kind) {
+      // Le prologue (spec : « on est jeté dans la fosse aux lions ») : une
+      // scène hors créneau. Ses effets s'appliquent — c'est ce qui apprend au
+      // joueur que les jauges bougent — mais rien d'autre ne se passe : pas de
+      // dérive passive, pas d'avancée d'intrigue, pas de palier, pas de slot.
+      case 'prologue':
+        _applyEffects(s, right ? p.rightEffects : p.leftEffects, rng,
+            arcId: p.payload['arc'] as String?, stepId: p.payload['step'] as String?, phase: 'presaison');
+        s.lastAnswer = right ? (p.payload['answerRight'] as String?) : (p.payload['answerLeft'] as String?);
+        _updateCentered(s);
+        break;
+      // Le classement : un tableau, un bouton. Il ne coûte rien et ne change
+      // rien — il montre ce que les cartes affirment depuis toujours.
+      case 'classement':
+        break;
       case 'narrative':
       case 'objective':
         final choice = right ? p.rightEffects : p.leftEffects;
@@ -809,11 +824,25 @@ class Engine {
       }
       director.openSeason(s, rng);
     }
+    // Le prologue occupe six beats en tête de présaison (`calendar.yaml`).
+    // Une carrière qui n'en a pas — ou une saison qui n'est pas la première —
+    // les saute ici, sans consommer ni tour ni tirage : la carte suivante est
+    // l'Objectif, exactement comme avant.
+    for (var garde = 0; garde < beats.length; garde++) {
+      if (beats[s.beat].kind != 'prologue' || _prologueCardAt(s) != null) break;
+      s.beat = (s.beat + 1) % beats.length;
+    }
     final beat = beats[s.beat];
     s.turn += 1;
     switch (beat.kind) {
       case 'card':
         s.pending = director.drawNarrative(s, beat.phase, rng);
+        break;
+      case 'prologue':
+        s.pending = _prologueCard(s, rng) ?? _filler(s);
+        break;
+      case 'classement':
+        s.pending = _classementCard(s, beat.phase);
         break;
       case 'objective':
         s.pending = _objectiveCard(s, rng);
@@ -854,7 +883,7 @@ class Engine {
 
   /// Resolve a card into what the UI renders. `extra` comes from the director
   /// (band, kind, arc/step, alarm gauge, epilogue of a « Nouvelles du passé »).
-  Pending _cardToPending(GameState s, Card card, String phase, Rng rng, Map<String, dynamic> extra) {
+  Pending _cardToPending(GameState s, Card card, String phase, Rng rng, Map<String, dynamic> extra, {String pendingKind = 'narrative'}) {
     final ch = card.speaker == null ? null : content.characters[card.speaker];
     final speakerGenre = ch?.genre ?? 'm';
     final rel = card.speaker == null ? 0 : (s.relations[card.speaker] ?? 0);
@@ -876,7 +905,7 @@ class Engine {
 
     return Pending(
       id: card.id,
-      kind: 'narrative',
+      kind: pendingKind,
       speaker: card.speaker,
       text: text,
       leftLabel: fmt(card.left.label),
@@ -978,6 +1007,143 @@ class Engine {
         'setpiece_variante': sp?.index ?? -1,
         'setpiece_secours': sp == null || sp.secours,
       };
+
+  // ---------------------------------------------------------------------------
+  // Le prologue (saison 0).
+  // ---------------------------------------------------------------------------
+
+  /// Les cartes du prologue, dans l'ordre du fichier. Elles viennent de l'arc
+  /// `kind: prologue` que le postulat désigne (`prologue:` dans
+  /// `postulats.yaml`). Rien à tirer : la variante d'une étape est choisie par
+  /// parcours de liste, comme un set-piece.
+  ///
+  /// Vide dès la saison 1, vide pour un postulat qui n'en déclare pas — le
+  /// tirage saute alors les beats et la carrière commence sur l'Objectif,
+  /// comme avant.
+  List<Card> _prologueCards(GameState s) {
+    if (s.season != 0) return const [];
+    final post = content.postulats[s.postulatId];
+    if (post == null || post.role != s.role) return const [];
+    final arcId = post.prologueArc;
+    if (arcId == null) return const [];
+    final arc = content.arcs[arcId];
+    if (arc == null || arc.kind != 'prologue' || !arc.roles.contains(s.role)) return const [];
+    final c = EvalContext(s, 'presaison', slotsTotal: content.cardSlots(s.role), cast: post.cast.keys.toSet());
+    final out = <Card>[];
+    for (final step in arc.steps) {
+      final card = content.cards[director.resolveVariant(step, c)];
+      if (card != null) out.add(card);
+    }
+    return out;
+  }
+
+  /// Le rang du beat courant parmi les beats `prologue` du calendrier.
+  int _prologueIndex(GameState s) {
+    final beats = content.seasonBeats[s.role]!;
+    var i = 0;
+    for (var b = 0; b < s.beat && b < beats.length; b++) {
+      if (beats[b].kind == 'prologue') i += 1;
+    }
+    return i;
+  }
+
+  /// La carte du beat `prologue` courant, ou null s'il n'y en a plus (le
+  /// calendrier en réserve six, un postulat peut n'en écrire que quatre).
+  Card? _prologueCardAt(GameState s) {
+    final cards = _prologueCards(s);
+    final i = _prologueIndex(s);
+    return i < cards.length ? cards[i] : null;
+  }
+
+  Pending? _prologueCard(GameState s, Rng rng) {
+    final card = _prologueCardAt(s);
+    if (card == null) return null;
+    final cards = _prologueCards(s);
+    final i = _prologueIndex(s);
+    return _cardToPending(s, card, 'presaison', rng, {
+      'phase': 'presaison',
+      'band': 0,
+      'kind': 'prologue',
+      if (card.arcId != null) 'arc': card.arcId,
+      if (card.stepId != null) 'step': card.stepId,
+      'prologue': i + 1,
+      'prologue_total': cards.length,
+    }, pendingKind: 'prologue');
+  }
+
+  // ---------------------------------------------------------------------------
+  // Le classement.
+  // ---------------------------------------------------------------------------
+
+  /// Le classement complet du championnat, ton club à `world.standingRank`
+  /// avec `world.pts`. Dérivé (voir `standings.dart`) : rien n'est stocké dans
+  /// l'état, rien n'est tiré sur le `Rng` de la carrière. L'aperçu et l'app
+  /// l'appellent aussi pour ouvrir un écran « classement » à tout moment.
+  List<StandingRow> standingsOf(GameState s) => buildStandings(
+        seed: s.seed,
+        postulatId: s.postulatId,
+        season: s.season,
+        division: s.world.division,
+        blocks: s.world.blocks,
+        rank: s.world.standingRank,
+        pts: s.world.pts,
+        monClub: s.entities.named['club'] ?? 'Ton club',
+        rivalClub: s.entities.named['rival'] ?? '',
+        prefixes: ((content.names['club_prefixes'] as List?) ?? const []).map((e) => e.toString()).toList(),
+        villes: ((content.names['villes'] as List?) ?? const []).map((e) => e.toString()).toList(),
+      );
+
+  /// La carte Classement : un tableau, un bouton. Servie deux fois par saison
+  /// (après le bloc aller, et au Bilan avant la Une).
+  Pending _classementCard(GameState s, String phase) {
+    final finale = phase == 'bilan';
+    // Le classement du Bilan ARRÊTE le rang de la saison : entre les blocs,
+    // `world.standingRank` est une projection (`pts × 6 ÷ blocs`,
+    // `_updateProvisionalRank`) — elle vaut exactement les points quand la
+    // saison a joué ses six blocs, mais elle extrapole quand elle en a joué
+    // moins, et un changement de club en cours de route remet les blocs à
+    // zéro. Le classement final annonçait alors 17e là où la Une, deux cartes
+    // plus loin, titrait 18e (test C7, relevé en écrivant les prologues). À
+    // partir d'ici, la Une, le Verdict, le contrat et l'écran de classement
+    // lisent tous le même nombre : celui du Verdict.
+    if (finale) {
+      s.world.standingRank = seasonVerdict(s.world.division, s.world.pts, s.objectiveTarget).rank;
+    }
+    final rang = s.world.standingRank;
+    final table = standingsOf(s);
+    final fenetre = standingsWindow(table);
+    final sp = _setpiece(s, 'classement', phase);
+    final extra = {'rang': '$rang', 'pts': '${s.world.pts}'};
+    String f(String x) => _fmtFor(s, x, speaker: sp?.v.speaker, extra: extra);
+    final label = f(sp?.v.left ?? (finale ? 'Refermer le journal' : 'Retour au travail'));
+    final secours = finale
+        ? 'CLASSEMENT FINAL · {journee}e journée. {club} finit {rang}e avec {pts} points.'
+        : 'CLASSEMENT · {journee}e journée. {club} est {rang}e avec {pts} points.';
+    return Pending(
+      id: 'classement:${s.season}:${s.world.blocks}',
+      kind: 'classement',
+      speaker: sp?.v.speaker,
+      text: _spText(s, sp, secours, speaker: sp?.v.speaker, extra: extra),
+      leftLabel: label,
+      rightLabel: label,
+      leftEffects: const EffectSet(),
+      rightEffects: const EffectSet(),
+      single: true,
+      payload: {
+        // Les six lignes autour de la tienne (le haut ou le bas aux extrêmes).
+        'standings': [for (final r in fenetre) r.toJson()],
+        // La table entière, pour un écran qui s'ouvre en grand.
+        'standings_complet': [for (final r in table) r.toJson()],
+        'rang': rang,
+        'pts': s.world.pts,
+        'journee': (s.world.blocks * kGamesPerBlock).clamp(0, kBlocksPerSeason * kGamesPerBlock),
+        'journees': kBlocksPerSeason * kGamesPerBlock,
+        'division': s.world.division,
+        'finale': finale,
+        ..._spPayload('classement', sp),
+      },
+    );
+  }
 
   Pending _objectiveCard(GameState s, Rng rng) {
     final target = s.objectiveTarget.isEmpty || s.season > 0 || s.postulat >= 2

@@ -19,6 +19,27 @@
 ///
 /// Le fichier garde les MÊMES codes d'une régénération à l'autre : c'est ce
 /// qui rend le diff lisible.
+///
+/// ── Journal des régénérations ────────────────────────────────────────────────
+/// · **Prologue et classement** (lot « le moteur »). Le calendrier d'une saison
+///   a changé de forme : six beats `prologue` en tête de présaison (servis en
+///   saison 0 seulement, sautés sans rien coûter quand le postulat n'en déclare
+///   pas) et deux beats `classement` (fin du bloc aller, puis Bilan avant la
+///   Une). Une saison rend donc deux cartes de plus : les swipes figés ne
+///   tombaient plus sur les mêmes cartes, et les vingt carrières racontaient
+///   autre chose. Les codes ont été **retirés à neuf**
+///   (`--goldens --write --recode`), comme le prévoit la règle « quand les
+///   swipes eux-mêmes n'ont plus de sens : une saison qui change de longueur ».
+///   Ni le prologue ni le classement ne consomment de tirage : le déplacement
+///   vient du calendrier, pas du hasard.
+/// · **Les prologues et les anecdotes d'époque** (lot « l'auteur »). Les quatre
+///   postulats déclarent enfin un `prologue:` : la saison 0 sert six scènes de
+///   mise en situation avant la carte Objectif, et les beats réservés par le
+///   calendrier ne sont plus sautés. Une première saison rend donc six cartes
+///   de plus, et le sac s'est enrichi des Nouvelles d'époque : les swipes figés
+///   ne tombaient plus sur les mêmes cartes. Codes **retirés à neuf**
+///   (`--goldens --write --recode`). Le prologue ne consomme aucun tirage (test
+///   P3) : le déplacement vient du calendrier et du contenu, pas du hasard.
 library;
 
 import 'dart:io';

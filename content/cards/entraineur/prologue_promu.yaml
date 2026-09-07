@@ -1,0 +1,206 @@
+# Les six scènes d'ouverture du postulat « Le promu sans un sou »
+# (content/arcs/entraineur/prologue_promu.yaml, arc `en.promu.prologue`).
+#
+# Servies hors créneau, dans l'ordre du fichier, avant la carte Objectif :
+# le couloir, les clés, le café de sept heures, le car de dimanche, les quatre
+# qui décident, le rendez-vous au premier. Effets faibles, aucun drame, aucun
+# tirage — le prologue apprend à jouer en jouant.
+#
+# Les jauges du promu : tribunes 80 (au plafond — l'alarme haute se déclenche
+# AU-DESSUS de 80, donc aucune carte de ce prologue ne monte les tribunes),
+# caisse 30, vestiaire 50, direction 52. Le car de dimanche joue sur la caisse
+# et le vestiaire ; le reste sur direction / vestiaire.
+#
+# Une carte à un bouton = deux sorties strictement identiques (charte § 4.1) :
+# même libellé, mêmes effets, même conséquence. Elles sont recopiées à la main
+# des deux côtés, sans ancre YAML, pour rester relisibles.
+#
+# Répliques reprises de la bible : ch. 01 § 1.7 « Le premier café » (Vukić,
+# à la lettre), ch. 11 § 2.1 (le cast du promu), ch. 31 (le décor : la peinture
+# à hauteur d'homme, la cale sous la porte, le car qui attend).
+cards:
+  # ------------------------------------------------------- 1/6 · le couloir
+  # Le décor, sans locuteur : c'est le narrateur qui te tutoie. Trois variantes
+  # lues sur le fil rouge de la saison — la relance ne rouvre pas sur la même
+  # phrase.
+  - id: en.promu.pro1_couloir
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, direction]
+    tone: leger
+    once: true
+    text: "Le couloir de {club} sent le liniment et la peinture fraîche : on a repeint jusqu'à hauteur d'homme, pas plus haut. Au bout, une porte, une cale sous la porte, vingt-deux hommes derrière."
+    left:
+      label: "Pousser la porte"
+      effects: {}
+      answer: "La cale est neuve. C'est la seule chose neuve du couloir, avec la peinture du bas."
+    right:
+      label: "Pousser la porte"
+      effects: {}
+      answer: "La cale est neuve. C'est la seule chose neuve du couloir, avec la peinture du bas."
+
+  - id: en.promu.pro1_couloir_tribune
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, tribunes]
+    tone: leger
+    once: true
+    text: "Le couloir de {club} sent le liniment et la peinture fraîche. Dehors, la Tribune Nord répète un chant où ton nom est déjà dedans, et personne ne t'a encore vu de près."
+    left:
+      label: "Pousser la porte"
+      effects: {}
+      answer: "Ils butent sur la deuxième syllabe. Ils recommencent ; ils ont tout l'été."
+    right:
+      label: "Pousser la porte"
+      effects: {}
+      answer: "Ils butent sur la deuxième syllabe. Ils recommencent ; ils ont tout l'été."
+
+  - id: en.promu.pro1_couloir_argent
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, sponsors]
+    tone: leger
+    once: true
+    text: "Le couloir de {club} sent le liniment et la peinture fraîche. Sur la façade, le panneau du sponsor est vide : on a laissé les vis en place, au cas où quelqu'un signerait."
+    left:
+      label: "Pousser la porte"
+      effects: {}
+      answer: "Quatre vis, quatre trous, et de la rouille autour. Le panneau attend depuis deux étés."
+    right:
+      label: "Pousser la porte"
+      effects: {}
+      answer: "Quatre vis, quatre trous, et de la rouille autour. Le panneau attend depuis deux étés."
+
+  # ------------------------------------------------------- 2/6 · les deux clés
+  # Qui tu es, dit par le secrétariat en une phrase : on t'a pris parce qu'on
+  # ne pouvait payer personne d'autre. Premier choix à deux sorties.
+  - id: en.promu.pro2_cles
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane pose deux clés sur le comptoir : « Le bureau et le local à ballons, {toi}. On vous a pris parce qu'on ne pouvait payer personne d'autre ; j'en ai vu passer, vous savez. »"
+    left:
+      label: "Je prends les deux"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle note l'heure sur un carnet à spirale. Elle note toujours l'heure ; c'est son métier."
+    right:
+      label: "Le local me suffit"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Elle garde la clé du bureau au chaud dans son tiroir. « Il sera à vous quand vous y serez. »"
+
+  # ------------------------------------------------------- 3/6 · le premier café
+  # Bible ch. 01 § 1.7, scène « Le premier café » : reprise à la lettre, avec
+  # ses deux sorties. C'est l'adjoint qui t'apprend l'heure du président.
+  - id: en.promu.pro3_cafe
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: leger
+    once: true
+    text: "Vukić pose deux tasses, une seule sucrée : « Le café est à sept heures, le président à six heures et demie. Je te le dis parce que personne ne te le dira : il aime qu'on soit déjà là. »"
+    left:
+      label: "Demain, six heures et quart"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: 1}}
+      answer: "Le président te trouve devant la machine. Il ne dit rien ; il note l'heure, lui aussi."
+    right:
+      label: "Sept heures, c'est mon heure"
+      effects: {vestiaire: "+", direction: "-", tribunes: "-"}
+      answer: "Le vestiaire apprend que le coach dort ; en ville aussi. On trouve ça humain, puis inquiétant."
+
+  # ------------------------------------------------------- 4/6 · le car de dimanche
+  # Le choix minuscule et vrai : la veille à l'hôtel, ou cinq heures du matin.
+  # Il se voit tout de suite sur la caisse (30) et sur le vestiaire, et Gégé le
+  # relève à la scène suivante. Deux variantes, lues sur le fil rouge.
+  - id: en.promu.pro4_car
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse, risk:caisse]
+    speaker: brehaut
+    tone: leger
+    once: true
+    text: "Titi Bréhaut tape sur la tôle du car : « Le groupe vit bien, {toi}, et dimanche on joue à trois cents kilomètres. On dort là-bas la veille, ou on part à cinq heures du matin ? »"
+    left:
+      label: "On dort là-bas la veille"
+      effects: {vestiaire: "+", caisse: "-", set: [prologue_veille]}
+      answer: "Deux chambres pour quatre, près d'une sortie d'autoroute. Ils dorment mal, mais ils dorment."
+    right:
+      label: "Départ à cinq heures"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Cinq heures, le parking noir, personne ne parle. Le chauffeur, lui, trouve ça normal."
+
+  - id: en.promu.pro4_car_argent
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse, risk:caisse]
+    speaker: brehaut
+    tone: leger
+    once: true
+    text: "Titi Bréhaut tape sur la tôle du car : « Le groupe vit bien, {toi}, mais le car est loué à la journée, et la journée commence à minuit. La veille sur place, ou cinq heures du matin ? »"
+    left:
+      label: "On dort là-bas la veille"
+      effects: {vestiaire: "+", caisse: "-", set: [prologue_veille]}
+      answer: "Le loueur compte deux journées. Josiane paie la seconde avec l'enveloppe des arbitres."
+    right:
+      label: "Départ à cinq heures"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Une journée, une seule. Le chauffeur dort dans le car pendant le match ; il fait ça partout."
+
+  # ------------------------------------------------------- 5/6 · les quatre
+  # La règle du jeu dite par un homme du virage, sans jamais dire « jauge ».
+  # Deux variantes : il a vu ce que tu as décidé pour le car.
+  - id: en.promu.pro5_quatre_veille
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, decor]
+    speaker: gege
+    tone: strategique
+    once: true
+    text: "Gégé, les doigts dans la grille : « Vous dormez à l'hôtel, nous on part à cinq heures ; la tribune n'oublie rien. Ici, quatre décident si tu restes : le vestiaire, nous, le président, la caisse. »"
+    left:
+      label: "Je note les quatre"
+      effects: {}
+      answer: "Il repart en sifflant le chant du dimanche. Il le siffle faux, exprès, pour voir si tu suis."
+    right:
+      label: "Je note les quatre"
+      effects: {}
+      answer: "Il repart en sifflant le chant du dimanche. Il le siffle faux, exprès, pour voir si tu suis."
+
+  - id: en.promu.pro5_quatre
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, decor]
+    speaker: gege
+    tone: strategique
+    once: true
+    text: "Gégé, les doigts dans la grille : « Cinq heures du matin, comme nous ; la tribune n'oublie rien, et elle a vu le car. Ici, quatre décident si tu restes : le vestiaire, nous, le président, la caisse. »"
+    left:
+      label: "Je note les quatre"
+      effects: {}
+      answer: "Il repart en sifflant le chant du dimanche. Il le siffle faux, exprès, pour voir si tu suis."
+    right:
+      label: "Je note les quatre"
+      effects: {}
+      answer: "Il repart en sifflant le chant du dimanche. Il le siffle faux, exprès, pour voir si tu suis."
+
+  # ------------------------------------------------------- 6/6 · le seuil
+  # Le rendez-vous. La carte suivante est le président qui réclame un objectif.
+  - id: en.promu.pro6_rendezvous
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane, la main sur le combiné : « Le président vous attend au premier. Il a déjà écrit un chiffre sur son sous-main ; j'en ai vu passer, vous savez, celui-là écrit avant de demander. »"
+    left:
+      label: "Monter au premier"
+      effects: {}
+      answer: "L'ascenseur est en panne depuis mars. Deux étages, et le temps de choisir une phrase."
+    right:
+      label: "Monter au premier"
+      effects: {}
+      answer: "L'ascenseur est en panne depuis mars. Deux étages, et le temps de choisir une phrase."

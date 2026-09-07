@@ -1,6 +1,6 @@
 # FUSIBLE — le texte des beats moteur (spec variété §1.12, §2.7)
 #
-# Les neuf beats ci-dessous gardent leur **mécanique** en Dart (effets, match,
+# Les dix beats ci-dessous gardent leur **mécanique** en Dart (effets, match,
 # verdict, transitions, Rng) et prennent leur **texte** ici. C'est ce qui
 # empêche « la moitié des écrans d'une S2+ est la même qu'en S0 » : Vaubourg ne
 # dit plus « cette saison, l'objectif c'est le maintien » de la même façon
@@ -39,6 +39,7 @@
 #   partout          {prenom} {nom} {NOM} {toi} {club} {ville} {rival} {annee}
 #                    {saison} {age} {age_<id>} {division} {objectif} {rang}
 #   objective        {patron} (le nom du patron du rôle) · {objectif_min}
+#   classement       {rang} · {pts} · {journee} (la journée du championnat)
 #   match            {adversite} (★★★☆☆) · {vestiaire_mot}
 #   cup              {tour}
 #   gm_te            {minute} · {score}
@@ -53,6 +54,27 @@
 # le fil rouge, les traces, les issues, les âges et les statuts. Le rapport de
 # `simulate --narrative` affiche la **part des set-pieces servis en variante
 # non-secours** : sous 50 %, la saison 2 ressemble encore trop à la saison 0.
+#
+# ── Le beat `classement` (nouveau) ───────────────────────────────────────────
+# Servi deux fois par saison : à la fin du bloc aller, et au Bilan AVANT la Une
+# (`content/calendar.yaml`). Une carte, **un seul bouton** : `left` suffit,
+# `right` est ignoré. Le TABLEAU (six lignes autour de ta position, avec rang,
+# club, points et différence de buts) est dessiné par l'interface depuis le
+# `payload` — le texte de la variante est la phrase au-dessus du tableau, pas
+# le tableau. `when` peut lire `phase('bilan')` pour distinguer le classement
+# final de celui de la trêve, et `{rang}`/`{pts}`/`{journee}` disent où tu en es.
+# Secours en dur si aucune variante n'est écrite : « CLASSEMENT · {journee}e
+# journée. {club} est {rang}e avec {pts} points. »
+#
+# ── Le beat `prologue` (nouveau) n'est PAS ici ───────────────────────────────
+# Le prologue de la saison 0 (quatre à six scènes avant la carte Objectif) est
+# écrit comme une intrigue, pas comme un set-piece : un arc `kind: prologue`
+# dans `content/arcs/`, désigné par `prologue:` dans `postulats.yaml`, dont les
+# étapes sortent dans l'ordre du fichier. Il porte donc de vrais locuteurs, de
+# vraies sorties et de vraies conséquences — ce qu'un set-piece ne sait pas
+# faire. Ses cartes sont hors créneau, sans tirage : `rand`, `react`,
+# `schedule`, `next`, `end`, `role` et `club` y sont refusés par le build, et
+# une jauge n'y bouge que d'un cran moyen au plus.
 #
 # ── Ce que ce fichier ne fait pas ────────────────────────────────────────────
 # Il ne change aucun effet, aucun libellé de jauge, aucune mécanique. `match` et
@@ -218,6 +240,110 @@ setpieces:
       right: "Je ne promets rien"
       answer_left: "Promesse publique : {objectif}."
       answer_right: "Tu gardes les mains libres."
+
+  # ══ classement — le tableau, deux fois par saison (retour joueur) ══════════
+  # « parfois on parle de classement mais cela n'est indiqué nulle part » : le
+  # beat sort à la fin du bloc aller et au Bilan, avant la Une. UN bouton
+  # (`left` suffit) ; le TABLEAU est dessiné par l'interface depuis le payload.
+  # La variante est la phrase AU-DESSUS du tableau : elle ne récite jamais les
+  # chiffres — la colonne les dit mieux — elle dit ce qu'un visage en fait.
+  # `world.rang` vaut 1 (tête), 4 (haut de tableau), 5-17 (le ventre), 18 (le
+  # fond) : ce sont les seules valeurs que le moteur projette en cours de
+  # saison, d'où les bornes ci-dessous. `phase('bilan')` distingue le tableau
+  # de juin de celui de la trêve.
+  classement:
+    # ---- Juin, le tableau qui reste (phase bilan)
+    - roles: [entraineur]
+      when: "phase('bilan') && world.division >= 2 && world.rang == 1"
+      speaker: gege
+      text: "Gégé a punaisé la feuille à l'envers, pour la lire d'en bas : « J'ai commencé par la fin, par habitude. Cette année, la fin ne nous regarde pas. »"
+      left: "Lire dans l'autre sens"
+    - roles: [entraineur]
+      when: "phase('bilan') && world.rang == 1"
+      speaker: josiane
+      text: "Josiane pose le tableau sur le bureau sans le lâcher : « J'en ai vu passer, des feuilles de juin. Celle-là, je la photocopie avant qu'on la salisse. »"
+      left: "La laisser photocopier"
+    - roles: [entraineur]
+      when: "phase('bilan') && world.rang >= 18"
+      speaker: aulard
+      text: "Vaubourg tient la feuille à bout de bras, la dernière ligne en bas : « J'ai pas le temps, j'ai un empire. Pour ça, j'ai trouvé le temps de descendre au vestiaire. »"
+      left: "Le laisser descendre"
+    - roles: [entraineur]
+      when: "phase('bilan') && world.rang >= 15"
+      speaker: brehaut
+      text: "Bréhaut plie la feuille en quatre avant de la rendre : « Le groupe vit bien. Il vivait bien deux lignes plus haut, et il le sait depuis février. »"
+      left: "Reprendre la feuille"
+    - roles: [entraineur]
+      when: "phase('bilan') && objective == 'maintien' && world.rang <= 4"
+      speaker: aulard
+      text: "Vaubourg relit le haut du tableau, puis le contrat, puis le haut du tableau : « On avait dit autre chose en août. Je n'ai jamais aimé avoir tort si haut. »"
+      left: "Le laisser relire"
+    - roles: [joueur]
+      when: "phase('bilan') && world.rang <= 4"
+      speaker: fardelli
+      text: "Fardelli a fait imprimer la feuille sur du papier épais : « Mon ami, on parle d'argent ou d'amitié ? On parle de cette page-là, et elle vaut les deux. »"
+      left: "Lui laisser la page"
+    - roles: [joueur]
+      when: "phase('bilan') && world.rang >= 15"
+      speaker: vecchio
+      text: "Vecchio regarde le tableau sans s'asseoir : « J'en ai vu d'autres. Celui-là, il a été écrit un mardi de novembre, pas en juin. »"
+      left: "Rester debout aussi"
+    - when: "phase('bilan')"
+      speaker: meneche
+      text: "Massenet range la feuille dans son carnet sans la lire : « Juste une question, hors micro : vous la relirez en août ? Moi oui, et je la ressortirai. »"
+      left: "Refermer le journal"
+    # ---- La trêve, au bout du bloc aller
+    - roles: [entraineur]
+      when: "world.rang == 1 && objective == 'maintien'"
+      speaker: aulard
+      text: "Vaubourg tapote la première ligne avec deux doigts : « J'ai pas le temps, j'ai un empire. J'ai quand même trouvé cinq minutes pour changer d'objectif. »"
+      left: "Ne rien changer"
+    - roles: [entraineur]
+      when: "world.rang == 1"
+      speaker: gege
+      text: "Gégé a recompté les points avant toi, deux fois, au stylo bille : « La tribune n'oublie rien. Elle a déjà réservé le car de la dernière journée. »"
+      left: "Le laisser réserver"
+    - roles: [entraineur]
+      when: "world.rang >= 18"
+      speaker: josiane
+      text: "Josiane a affiché la feuille au vestiaire sans qu'on lui demande : « J'en ai vu passer. Je l'ai mise à hauteur des yeux, pas à hauteur du plafond. »"
+      left: "La laisser affichée"
+    - roles: [entraineur]
+      when: "world.rang >= 15"
+      speaker: vukic
+      text: "Vukić a entouré trois lignes au crayon, et pas la tienne : « Je te le dis parce que personne ne te le dira : ce sont ces trois-là qu'on double. »"
+      left: "Regarder les trois"
+    - roles: [entraineur]
+      when: "world.rang <= 4"
+      speaker: meneche
+      text: "Massenet arrive avec la feuille déjà pliée à la bonne ligne : « Juste une question, hors micro : à partir d'où vous commencez à y croire, {toi} ? »"
+      left: "Ne pas répondre"
+    - roles: [entraineur]
+      speaker: aulard
+      text: "Vaubourg regarde le tableau, pas les matchs : « Le milieu, c'est l'endroit où personne ne me téléphone. J'ai pas le temps ; continue comme ça. »"
+      left: "Continuer comme ça"
+    - roles: [joueur]
+      when: "world.rang == 1"
+      speaker: brehaut
+      text: "Bréhaut a scotché la feuille au-dessus du banc, à l'envers : « Le groupe vit bien. On la remettra à l'endroit en mai, pas avant. »"
+      left: "Ne pas y toucher"
+    - roles: [joueur]
+      when: "world.rang >= 15"
+      speaker: sabatier
+      text: "Le Doc a posé la feuille sur la table de soins, entre deux bandes : « Ça reste entre la table et moi : on soigne plus de dos le lundi quand on lit ça. »"
+      left: "Se rasseoir"
+    - roles: [joueur]
+      when: "world.rang <= 4"
+      speaker: vecchio
+      text: "Vecchio montre la colonne de droite avec le dos du gant : « J'en ai vu d'autres. C'est la seule colonne qui ne ment pas, et ce n'est pas celle des points. »"
+      left: "Regarder la colonne"
+    - roles: [joueur]
+      speaker: gege
+      text: "Gégé a recompté au dos d'un ticket de caisse, à la buvette : « La tribune n'oublie rien. Elle sait compter aussi, même quand ça ne sert à rien. »"
+      left: "Reprendre le ticket"
+    # ---- Secours commun
+    - text: "La feuille du championnat est punaisée dans le couloir, à hauteur des yeux. Personne ne passe devant sans ralentir."
+      left: "Regarder le tableau"
 
   # ══ match — le bloc de six journées ════════════════════════════════════════
   # La bible ne commente pas ce beat : il reste un état de match.

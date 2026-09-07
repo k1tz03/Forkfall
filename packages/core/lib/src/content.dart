@@ -568,7 +568,9 @@ class ArcDef {
   bool get isEverySeason => everySeason || (replay?.ritual ?? false);
 
   /// The queue entry kind for this arc's steps.
-  String get entryKind => kind == 'postulat' ? 'script' : (kind == 'evenement' ? 'evenement' : 'etape');
+  String get entryKind => kind == 'postulat'
+      ? 'script'
+      : (kind == 'evenement' ? 'evenement' : (kind == 'prologue' ? 'prologue' : 'etape'));
 
   StepDef? stepById(String id) {
     for (final s in steps) {
@@ -824,6 +826,12 @@ class PostulatDef {
   final bool camille;
   final Map<String, CastEntry> cast;
   final String? openingArc;
+
+  /// Le prologue (beat `prologue`, saison 0) : l'arc `kind: prologue` dont les
+  /// étapes sont servies dans l'ordre du fichier AVANT la carte Objectif.
+  /// C'est la mise en situation que le joueur réclamait : où l'on est, qui
+  /// l'on est, ce que font les quatre jauges.
+  final String? prologueArc;
   final List<SeedDef> seeds; // déprécié : gardé pour les tests synthétiques et les postulats en chantier
   final Map<String, List<AlarmEntry>> alarmOverrides;
   final String pitch;
@@ -850,6 +858,7 @@ class PostulatDef {
     this.camille = false,
     this.cast = const {},
     this.openingArc,
+    this.prologueArc,
     this.seeds = const [],
     this.alarmOverrides = const {},
     this.pitch = '',
@@ -887,6 +896,7 @@ class PostulatDef {
       camille: j['camille'] == true,
       cast: cast,
       openingArc: j['opening_arc'] as String?,
+      prologueArc: j['prologue'] as String?,
       seeds: (j['seeds'] as List?)?.map((e) => SeedDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
       alarmOverrides: overrides,
       pitch: j['pitch'] as String? ?? '',

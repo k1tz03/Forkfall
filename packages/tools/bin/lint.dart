@@ -316,6 +316,12 @@ void main() {
     }
     final seeds = (p['seeds'] as List?) ?? const [];
     if (seeds.isNotEmpty) warnings.add('postulat ${p['id']}: `seeds` est déprécié (remplacé par `programme`, spec variété §1.2)');
+    // Le prologue (beat `prologue`, saison 0). Sans lui, la toute première
+    // carte d'une carrière est le président qui réclame un objectif : « on est
+    // jeté dans la fosse aux lions sans savoir ce qu'est vraiment le jeu ».
+    if (p['prologue'] == null) {
+      warnings.add('postulat ${p['id']}: aucun `prologue:` — la carrière commence sur la carte Objectif, sans mise en situation');
+    }
     for (final sd in seeds) {
       scanAst((sd as Map)['if'], 'postulat ${p['id']}/seeds');
     }
@@ -531,6 +537,8 @@ void main() {
         final t = v[key];
         if (t is! String) continue;
         for (final ph in unknownPlaceholders(t, {...knownPlaceholders, 'patron', 'objectif_min', 'adversite', 'vestiaire_mot', 'tour', 'minute', 'score', 'gm_score'})) {
+          // `{rang}`, `{pts}` et `{journee}` sont dans kKnownPlaceholders : le
+          // beat `classement` les fournit comme le Bilan fournit `{rang}`.
           errors.add('$where/$key: placeholder inconnu {$ph}');
         }
         if (placeholdersOf(t).any((x) => x == 'toi' || x == 'Toi') && v['speaker'] == null) {

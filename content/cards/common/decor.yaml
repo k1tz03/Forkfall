@@ -2576,3 +2576,174 @@ cards:
       label: "Je la garde fermée"
       effects: {direction: "+", tribunes: "+"}
       answer: "Elle retourne dans le carton. Elle vaut plus fermée, et tout le monde le sait."
+
+  # ==========================================================================
+  # § 12 — L'époque, en deux boutons (lot « anecdotes d'époque »)
+  # Les cartes de `epoque_*.yaml` sont des constats : un bouton, on encaisse.
+  # Ici, la même matière — l'histoire réelle du SPORT, jamais un nom réel — a
+  # deux sorties et des effets faibles, parce que le décor de l'époque se
+  # traverse aussi en décidant quelque chose de minuscule. La fenêtre se lit
+  # sur `year` : la carte disparaît quand l'usage disparaît, comme le cendrier
+  # du vestiaire ou le magnétoscope de la salle vidéo.
+  # Règle du lot, sans exception : le sport est réel, le monde reste fictif.
+  # ==========================================================================
+
+  - id: co.ep.dec.cigarette_vestiaire
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: sabatier
+    tone: leger
+    cooldown: 35
+    when: "year <= 1998"
+    text: "Le Doc désigne un cendrier plein posé sur le banc : « Trois qui fument avant, deux qui fument après, et personne ne trouve ça bizarre. Ça reste entre la table et moi. »"
+    left:
+      label: "Je vide le cendrier"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Le cendrier disparaît un mardi. Il revient sous le banc, à sa place exacte, en février."
+    right:
+      label: "Je le laisse où il est"
+      effects: {vestiaire: "+"}
+      answer: "« On fume moins quand personne ne compte », dit le Doc. Il ne le croit pas non plus."
+
+  - id: co.ep.dec.car_sans_clim
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    tone: leger
+    cooldown: 35
+    when: "year <= 1999"
+    text: "Norbert a ouvert les six lucarnes du car et calé la porte avec un plot. Il fait trente-quatre degrés, il reste trois cents kilomètres, et la glacière ne tient que des sodas tièdes."
+    left:
+      label: "Je fais arrêter le car"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Quinze minutes à l'ombre d'un pont d'autoroute. On repart avec de l'eau froide et une heure de retard."
+    right:
+      label: "On roule"
+      effects: {vestiaire: "-", force: 1}
+      answer: "On arrive collés aux sièges. Le premier quart d'heure se joue au ralenti, et ça se voit de la tribune."
+
+  - id: co.ep.dec.repondeur_lundi
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, direction, gag]
+    speaker: josiane
+    tone: leger
+    cooldown: 30
+    when: "year >= 1993 && year <= 2003"
+    text: "Josiane rembobine la bande du répondeur avec la pointe d'un crayon : « Vingt-deux messages depuis dimanche soir, dont dix-huit du même numéro. J'en ai vu passer, jamais un qui chante. »"
+    left:
+      label: "J'écoute les vingt-deux"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Le dix-huitième message est une chanson entière, sans un mot dedans. Elle garde la bande."
+    right:
+      label: "J'efface tout"
+      effects: {direction: "+"}
+      answer: "La bande repart à zéro. Le même numéro rappelle le mardi, et il chante encore."
+
+  - id: co.ep.dec.magnetoscope_mange
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, absurde]
+    speaker: vukic
+    tone: leger
+    cooldown: 35
+    when: "year >= 1993 && year <= 2005"
+    text: "Vukić tient une bande entortillée autour de deux doigts : « L'appareil a mangé les vingt minutes d'eux, juste avant la séance. Je te le dis parce que personne ne te le dira : je les ai en tête. »"
+    left:
+      label: "Je le laisse parler"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Il parle quarante minutes sans une image. Deux joueurs prennent des notes pour la première fois de leur vie."
+    right:
+      label: "On va sur le terrain"
+      effects: {vestiaire: "+"}
+      answer: "On refait la séance à onze contre sept, avec des plots. Ça marche aussi, et ça fatigue davantage."
+
+  - id: co.ep.dec.terrain_gele
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    tone: leger
+    cooldown: 35
+    when: "year <= 2005"
+    text: "Le terrain est gelé sur trois centimètres et la mairie ne prête pas le gymnase avant midi. Le vieux Dédé propose de faire des feux dans des bidons, comme en soixante-trois."
+    left:
+      label: "On allume les bidons"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Trois bidons, deux heures, un carré dégelé de vingt mètres. On y joue à cinq, et on y croit."
+    right:
+      label: "On court sur la route"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Neuf kilomètres le long du port, dans le vent de face. Deux joueurs rentrent en marchant."
+
+  - id: co.ep.dec.seance_video
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    cooldown: 30
+    when: "year >= 2000 && year <= 2014"
+    text: "Bréhaut se regarde courir après un adversaire, en boucle, quatre fois de suite : « On ne s'était jamais vus de dos, avant. Le groupe vit bien ; le groupe se voit mal. »"
+    left:
+      label: "Je passe à la suite"
+      effects: {vestiaire: "+"}
+      answer: "Il réclame la séquence sur une cassette, le soir même. Il la regarde encore trois ans plus tard."
+    right:
+      label: "Je la repasse une fois"
+      effects: {vestiaire: "-", force: 1}
+      answer: "Personne ne parle jusqu'au parking. Le dimanche, il ne perd pas un duel de la journée."
+
+  - id: co.ep.dec.note_sur_un_site
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, presse, gag]
+    speaker: lea
+    tone: leger
+    cooldown: 30
+    when: "year >= 2006 && year <= 2020"
+    text: "Léa fait défiler une page de notes sur dix, joueur par joueur : « C'est une machine qui les calcule, personne ne sait comment. Vous confirmez qu'on les publie le lundi ? »"
+    left:
+      label: "Je réponds à la note"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "La note remonte de deux dixièmes la semaine suivante. Personne ne sait pourquoi, elle non plus."
+    right:
+      label: "Je ne lis pas les notes"
+      effects: {vestiaire: "+"}
+      answer: "Le vestiaire les lit pour toi, à voix haute, le lundi. On en rit jusqu'au jour où un joueur sort."
+
+  - id: co.ep.dec.tableau_des_donnees
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, gag]
+    speaker: vecchio
+    tone: leger
+    cooldown: 30
+    when: "year >= 2011"
+    text: "Vecchio lit le tableau des distances scotché près de la porte, sans ses lunettes : « Je suis dernier de la liste, et je suis gardien. J'en ai vu d'autres, jamais un classement. »"
+    left:
+      label: "Je décroche le tableau"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le tableau finit dans le bureau de l'adjoint. Il y est encore, et il est toujours à jour."
+    right:
+      label: "Je le laisse au mur"
+      effects: {force: 1, vestiaire: "-"}
+      answer: "Deux joueurs courent pour le tableau et non pour le match. Ça se voit dès la mi-novembre."
+
+  - id: co.ep.dec.telephones_confisques
+    roles: [entraineur, joueur]
+    arc: routine
+    tags: [decor, vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    cooldown: 30
+    when: "year >= 2014"
+    text: "Vukić montre une boîte en plastique avec onze téléphones dedans, à l'entrée du vestiaire : « Deux heures sans écran avant le coup d'envoi. Personne ne te le dira : ça se voit à la trentième. »"
+    left:
+      label: "Je pose le mien dedans"
+      effects: {vestiaire: "+"}
+      answer: "La boîte se remplit sans un mot. Trois joueurs se parlent pour la première fois de la saison."
+    right:
+      label: "Je garde le mien"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Onze téléphones dans la boîte, un dans ta poche. Le vestiaire compte très bien jusqu'à douze."

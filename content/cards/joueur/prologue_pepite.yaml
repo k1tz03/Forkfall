@@ -1,0 +1,200 @@
+# Les six scènes d'ouverture du postulat « La pépite du club-usine »
+# (content/arcs/joueur/prologue_pepite.yaml, arc `jp.pepite.prologue`).
+#
+# Dix-neuf ans, la D2, le club-usine (bible ch. 10 § 3) : la sirène de seize
+# heures, le crochet du fond, la caisse de bouteilles, l'orange de Gigi, le
+# grillage de Gégé. Le prologue s'arrête avant l'ancre P1 du script
+# (`jp.pepite.p1_valeur`, la voiture de Fardelli au parking, les dix pour cent) :
+# il ne parle donc ni de prix, ni de pourcentage, ni de mandat.
+#
+# Jauges de la pépite : vestiaire 50, tribunes 80 (au plafond — l'alarme haute
+# se déclenche AU-DESSUS de 80, donc aucune carte de ce prologue ne monte les
+# tribunes), direction 50, caisse 45.
+#
+# Une carte à un bouton = deux sorties strictement identiques (charte § 4.1).
+# Bréhaut, Vecchio, Gégé et Josiane vouvoient ou tutoient selon leur adresse ;
+# `{toi}` la résout tout seul.
+cards:
+  # ------------------------------------------------------- 1/6 · l'usine en face
+  # Le décor, sans locuteur. Trois variantes lues sur le fil rouge.
+  - id: jp.pepite.pro1_crochet
+    roles: [joueur]
+    arc: moment
+    tags: [decor, vestiaire]
+    tone: leger
+    once: true
+    text: "L'usine est de l'autre côté du parking de {club} : la sirène de seize heures, puis l'entraînement. Ton nom est écrit au feutre sur un bout de sparadrap, au-dessus du crochet du fond."
+    left:
+      label: "Accrocher le sac"
+      effects: {}
+      answer: "Le crochet du fond est celui des jeunes. Il tient au mur avec une vis et beaucoup de colle."
+    right:
+      label: "Accrocher le sac"
+      effects: {}
+      answer: "Le crochet du fond est celui des jeunes. Il tient au mur avec une vis et beaucoup de colle."
+
+  - id: jp.pepite.pro1_crochet_prix
+    roles: [joueur]
+    arc: moment
+    tags: [decor, mercato]
+    tone: leger
+    once: true
+    text: "L'usine est de l'autre côté du parking de {club}. Sur le tableau d'affichage, à côté de ton nom, quelqu'un a écrit un chiffre au crayon. Personne ne l'a effacé depuis mardi."
+    left:
+      label: "Accrocher le sac"
+      effects: {}
+      answer: "Le chiffre a sept traits. Deux joueurs passent devant, le lisent, et ne disent rien."
+    right:
+      label: "Accrocher le sac"
+      effects: {}
+      answer: "Le chiffre a sept traits. Deux joueurs passent devant, le lisent, et ne disent rien."
+
+  - id: jp.pepite.pro1_crochet_maison
+    roles: [joueur]
+    arc: moment
+    tags: [decor, famille]
+    tone: leger
+    once: true
+    text: "L'usine est de l'autre côté du parking de {club}. Ta mère finit au bâtiment C à seize heures ; elle passe devant le grillage et elle ralentit, chaque fois, sans jamais s'arrêter."
+    left:
+      label: "Accrocher le sac"
+      effects: {}
+      answer: "Elle ralentit, elle regarde, elle repart. Vous avez convenu de ça sans en parler."
+    right:
+      label: "Accrocher le sac"
+      effects: {}
+      answer: "Elle ralentit, elle regarde, elle repart. Vous avez convenu de ça sans en parler."
+
+  # ------------------------------------------------------- 2/6 · les bouteilles
+  # Bible ch. 01 § 2.4, scène « Les bouteilles » : le capitaine te jauge en te
+  # donnant une caisse. Deux sorties.
+  - id: jp.pepite.pro2_bouteilles
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    tone: leger
+    once: true
+    text: "Titi Bréhaut te met une caisse de bouteilles dans les bras : « Le groupe vit bien, {toi}, et ici le plus jeune porte l'eau. Tu portes, ou tu vas t'échauffer avec les grands ? »"
+    left:
+      label: "Je porte"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu portes. Personne ne dit merci ; à la troisième caisse, Vecchio te tient la porte."
+    right:
+      label: "Je vais m'échauffer"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu poses la caisse au milieu du couloir. Elle y reste jusqu'à ce qu'un autre la prenne."
+
+  # ------------------------------------------------------- 3/6 · la place
+  # Le gardien de quarante et un ans, une orange, et le choix de son crochet.
+  - id: jp.pepite.pro3_place
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vecchio
+    tone: leger
+    once: true
+    text: "Gigi Vecchio épluche une orange, une seule : « J'en ai vu d'autres, {toi}. Il y a une place au fond, près du radiateur, et une près de la porte. Tu t'assois où ? »"
+    left:
+      label: "Au fond, près du radiateur"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il te donne un quartier. Il en garde un pour Paulette ; il le dit chaque fois."
+    right:
+      label: "Près de la porte"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "C'est la place de ceux qui partent tôt. Il ne le dit pas ; il regarde la porte."
+
+  # ------------------------------------------------------- 4/6 · le grillage
+  # Le choix minuscule et vrai : aller taper dans les mains, ou filer. Il se
+  # voit tout de suite sur une jauge, et Fardelli le relève à la scène d'après.
+  # Les tribunes sont à 80 : on ne les monte pas, on peut seulement les perdre.
+  - id: jp.pepite.pro4_grillage
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, vestiaire]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "Gégé a les doigts dans le grillage : « La tribune n'oublie rien, {toi}. Après la séance, tu viens taper dans les mains, ou tu files aux vestiaires comme les grands ? »"
+    left:
+      label: "Je viens taper"
+      effects: {vestiaire: "-", relation: {gege: 1}, set: [prologue_grillage]}
+      answer: "Quatre mains, une par maille. Derrière toi, deux anciens comptent les secondes tout haut."
+    right:
+      label: "Je file aux vestiaires"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Tu files. Il reste au grillage jusqu'à ce que le gardien du stade lui demande de partir."
+
+  - id: jp.pepite.pro4_grillage_maison
+    roles: [joueur]
+    arc: ultras
+    tags: [ultras, tribunes, famille]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "Gégé a les doigts dans le grillage : « La tribune n'oublie rien, {toi}, et ta mère passe ici à seize heures. Tu viens taper dans les mains, ou tu files aux vestiaires ? »"
+    left:
+      label: "Je viens taper"
+      effects: {vestiaire: "-", relation: {gege: 1}, set: [prologue_grillage]}
+      answer: "Elle passe pendant. Elle ne s'arrête pas ; le soir, elle raconte la scène à sa sœur."
+    right:
+      label: "Je file aux vestiaires"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Tu files. Gégé salue ta mère à travers le grillage ; elle ne sait pas qui c'est."
+
+  # ------------------------------------------------------- 5/6 · les quatre
+  # La règle du jeu, dite par l'agent, sans jamais dire « jauge ». Deux
+  # variantes : il a vu si tu es allé au grillage.
+  - id: jp.pepite.pro5_quatre_grillage
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato, decor]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli t'attrape le coude dans le couloir : « Taper dans les mains, ça ne se vend pas, {toi}. Quatre décident si tu joues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    left:
+      label: "Qui compte, alors ?"
+      effects: {}
+      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+    right:
+      label: "Qui compte, alors ?"
+      effects: {}
+      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+
+  - id: jp.pepite.pro5_quatre
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato, decor]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    text: "Fardelli t'attrape le coude dans le couloir : « Tu es rentré sans regarder la tribune, {toi} ; c'est bien. Quatre décident si tu joues : le vestiaire, la tribune, le président, et celui qui compte. »"
+    left:
+      label: "Qui compte, alors ?"
+      effects: {}
+      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+    right:
+      label: "Qui compte, alors ?"
+      effects: {}
+      answer: "« Moi », dit-il, comme on rend un service. Il ne lâche pas le coude tout de suite."
+
+  # ------------------------------------------------------- 6/6 · le seuil
+  # Le rendez-vous : la voiture au parking. La carte suivante est l'agent qui
+  # réclame un objectif de saison.
+  - id: jp.pepite.pro6_parking
+    roles: [joueur]
+    arc: direction
+    tags: [direction, mercato, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, un fax encore chaud à la main : « Votre agent est redescendu à sa voiture, moteur allumé, {toi}. J'en ai vu passer, vous savez, des voitures qui attendent. »"
+    left:
+      label: "Descendre au parking"
+      effects: {}
+      answer: "Elle classe le fax avant que tu aies pu lire l'en-tête. Elle classe vite, elle aussi."
+    right:
+      label: "Descendre au parking"
+      effects: {}
+      answer: "Elle classe le fax avant que tu aies pu lire l'en-tête. Elle classe vite, elle aussi."

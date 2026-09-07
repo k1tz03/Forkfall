@@ -1,0 +1,42 @@
+# « La première à droite » — le prologue du postulat `fin_de_contrat` (index 3).
+#
+# Arc `kind: prologue` : six étapes servies dans l'ordre du fichier, en saison 0
+# seulement, hors créneau et sans tirage. Déclaré par
+# `prologue: jp.fin.prologue` dans content/postulats.yaml.
+#
+# Il s'arrête avant l'ancre F1 du script (`jp.fin.f1_derniere_annee`, le
+# restaurant et les dix pour cent) : le prologue amène jusqu'à la portière, il
+# ne l'ouvre pas. Le premier vrai choix — la couverture de la plaquette — se
+# voit sur les tribunes, et l'agent le relève à la scène suivante.
+arcs:
+  - id: jp.fin.prologue
+    title: "La première à droite"
+    kind: prologue
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    theme: corps
+    carrier: sabatier
+    cast: [sabatier, mbako, lea, fardelli, vukic]
+    issues: []
+    hint: "Une photo sous bâche, deuxième rangée, et une radio restée allumée sur le négatoscope."
+    steps:
+      - id: couloir
+        card:
+          - { id: jp.fin.pro1_couloir_genou, if: "fil_rouge == 'genou'" }
+          - { id: jp.fin.pro1_couloir_vestiaire, if: "fil_rouge == 'vestiaire'" }
+          - { id: jp.fin.pro1_couloir }
+      - id: table
+        card: jp.fin.pro2_table
+      - id: place
+        card: jp.fin.pro3_place
+      - id: plaquette
+        card:
+          - { id: jp.fin.pro4_plaquette_genou, if: "fil_rouge == 'genou'" }
+          - { id: jp.fin.pro4_plaquette }
+      - id: quatre
+        card:
+          - { id: jp.fin.pro5_quatre_couverture, if: "flag('prologue_couverture')" }
+          - { id: jp.fin.pro5_quatre }
+      - id: onze_heures
+        card: jp.fin.pro6_onze_heures

@@ -161,6 +161,13 @@ class RunStats {
   int horsRole = 0;
   int horsStatut = 0;
   final List<String> fuitesSamples = [];
+  /// Cartes Classement servies, et celles dont le tableau ne dit pas ce que le
+  /// moteur compte (ta ligne au mauvais rang, tes points faux, une colonne de
+  /// points qui remonte). Invariant : zéro incohérence — le joueur lit le
+  /// tableau comme la vérité du championnat.
+  int classements = 0;
+  int classementsIncoherents = 0;
+  final List<String> classementSamples = [];
   int uneChecks = 0; // Bilans où la Une a été comparée au verdict appliqué
   int uneChecksOk = 0; // … et disait vrai (payload.tenu / payload.rang / payload.outcome et les mots du titre)
   final List<String> uneCheckFailures = [];
@@ -251,6 +258,13 @@ class SeasonMetrics {
   int forced = 0;
   int nouvelles = 0;
   int consecutiveNouvelles = 0;
+  /// Cartes d'époque servies dans la saison : les Nouvelles qui portent un
+  /// `year:` (content/cards/common/epoque_*.yaml et nouvelles_datees.yaml).
+  /// Retour joueur : « les anecdotes liées au foot dans son histoire
+  /// générale, je ne les ai jamais retrouvées » — d'où la mesure par saison,
+  /// et le créneau de la première (une carrière doit en croiser une tôt).
+  int datees = 0;
+  int firstDateeSlot = 0; // 0 = aucune carte d'époque dans la saison
   int alarms = 0;
   int events = 0; // events armed this season (engine counter)
   int maxBacklog = 0;
@@ -621,6 +635,35 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
       stats.setpieces += 1;
       if (p.payload['setpiece_secours'] != true) stats.setpiecesVariantes += 1;
     }
+    // Le classement dit-il la vérité ? (retour client : « on parle de
+    // classement mais cela n'est indiqué nulle part ») Ta ligne porte le rang
+    // et les points du moteur, et la colonne des points décroît de haut en bas.
+    if (p.kind == 'classement') {
+      stats.classements += 1;
+      final rows = (p.payload['standings_complet'] as List?)?.cast<Map<String, dynamic>>() ?? const [];
+      final moi = rows.where((r) => r['toi'] == true).toList();
+      String? faute;
+      if (rows.length != 18) {
+        faute = '${rows.length} lignes';
+      } else if (moi.length != 1) {
+        faute = '${moi.length} lignes « toi »';
+      } else if (moi.first['rang'] != s.world.standingRank) {
+        faute = 'rang ${moi.first['rang']} ≠ ${s.world.standingRank}';
+      } else if (moi.first['pts'] != s.world.pts) {
+        faute = 'pts ${moi.first['pts']} ≠ ${s.world.pts}';
+      } else {
+        for (var i = 1; i < rows.length; i++) {
+          if ((rows[i]['pts'] as int) > (rows[i - 1]['pts'] as int)) {
+            faute = 'ligne ${i + 1} au-dessus de la ${i}e en points';
+            break;
+          }
+        }
+      }
+      if (faute != null) {
+        stats.classementsIncoherents += 1;
+        if (stats.classementSamples.length < 5) stats.classementSamples.add('${p.id} : $faute');
+      }
+    }
     if (p.kind == 'narrative') {
       // Invariant de sélection : la carte servie joue le rôle courant et son
       // locuteur parle encore. Vérifié sur toute politique, sur chaque carte.
@@ -673,7 +716,11 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           m.nouvelles += 1;
           if (m.lastWasNouvelle) m.consecutiveNouvelles += 1;
         }
-        if (kind == 'nouvelle' && content.cards[p.id]?.year != null) stats.nouvellesDatees += 1;
+        if (kind == 'nouvelle' && content.cards[p.id]?.year != null) {
+          stats.nouvellesDatees += 1;
+          m.datees += 1;
+          if (m.firstDateeSlot == 0) m.firstDateeSlot = s.slot;
+        }
         m.lastWasNouvelle = kind == 'nouvelle';
         if (kind == 'alarme') {
           m.alarms += 1;
@@ -834,6 +881,20 @@ RunStats runOne(Engine engine, int seed, int postulat, Policy policy, Set<String
           trace.writeln('       │ brève : — (le journal de la saison n\'a rien donné)');
         }
         trace.writeln('       │ verdict : $verdict');
+      }
+      // Le classement, en toutes lettres : le joueur le voit maintenant deux
+      // fois par saison, la relecture doit le voir aussi.
+      if (trace != null && p.kind == 'classement') {
+        final rows = p.payload['standings'];
+        if (rows is List) {
+          for (final r in rows) {
+            final m = (r as Map).cast<String, dynamic>();
+            final diff = (m['diff'] as num).toInt();
+            trace.writeln('       │ ${m['toi'] == true ? '▸' : ' '} ${m['rang'].toString().padLeft(2)}. '
+                '${m['club'].toString().padRight(22)} ${m['pts'].toString().padLeft(3)} pts  '
+                '${diff >= 0 ? '+' : ''}$diff');
+          }
+        }
       }
     }
     final seasonBefore = s.season;
@@ -1775,6 +1836,20 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     final nouvOk = nouv.where((v) => v == 3 || v == 4).length / nc >= 0.95 && ms.every((m) => m.consecutiveNouvelles == 0);
     stdout.writeln('  ${nouvOk ? '✔' : '✗'} ${'Nouvelles par saison (3-4, jamais deux d\'affilée)'.padRight(44)} moy ${_f(_mean(nouv))} · 3-4 dans ${_f(100 * nouv.where((v) => v == 3 || v == 4).length / nc, 0)} % · consécutives ${ms.fold<int>(0, (a, m) => a + m.consecutiveNouvelles)} · saisons closes');
     if (assertBudgets && !nouvOk) failures.add('[$b] Nouvelles');
+    // Cartes d'époque (spec variété §1.5 ; retour joueur « je ne les ai jamais
+    // retrouvées ») : combien par saison, dans quelle part des saisons, et à
+    // quel créneau la première tombe. Budget : ≥ 2 par saison servies, et une
+    // carte d'époque dans ≥ 80 % des premières saisons (S0), au plus tard au
+    // douzième créneau.
+    final dat = ms.map((m) => m.datees).toList();
+    final avecDatee = ms.where((m) => m.datees > 0).length;
+    final tot = ms.isEmpty ? 1 : ms.length;
+    final premiers = ms.where((m) => m.firstDateeSlot > 0).map((m) => m.firstDateeSlot).toList()..sort();
+    final premierMed = premiers.isEmpty ? 0 : premiers[premiers.length ~/ 2];
+    final tot12 = ms.where((m) => m.firstDateeSlot > 0 && m.firstDateeSlot <= 12).length;
+    final datOk = _mean(dat) >= 2.0 && (b != 'S0' || (avecDatee / tot >= 0.80 && tot12 / tot >= 0.80));
+    stdout.writeln('  ${datOk ? '✔' : '✗'} ${'cartes d\'époque par saison'.padRight(44)} moy ${_f(_mean(dat), 2)} · saison en servant ≥ 1 ${_f(100 * avecDatee / tot, 0)} % · dans les 12 premiers créneaux ${_f(100 * tot12 / tot, 0)} % · 1er créneau médian $premierMed · seuil ≥ 2 ; ≥ 80 % en S0');
+    if (assertBudgets && !datOk) failures.add('[$b] cartes d\'époque');
     final alarmsOk = alarms.every((v) => v <= 3);
     stdout.writeln('  ${alarmsOk ? '✔' : '✗'} ${'alarmes par saison (≤ 3)'.padRight(44)} moy ${_f(_mean(alarms))} · max ${alarms.isEmpty ? 0 : alarms.reduce(math.max)}');
     final evMean = _mean(events);
@@ -1869,18 +1944,36 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
   }
   // Exposition sur l'ensemble des runs, dénominateur honnête (rôle + postulat)
   // et cartes jamais vues classées par cause probable.
-  _printExposition(exposition(content, post, nar.seenCards, nar.openedArcs, maxYear: nar.maxYear), seuil: 0.90);
+  final expo = exposition(content, post, nar.seenCards, nar.openedArcs, maxYear: nar.maxYear);
+  _printExposition(expo, seuil: 0.90);
   stdout.writeln('  ${nar.s0Sequences.length >= 25 ? '✔' : '✗'} ${'entropie : séquences S0 distinctes (tous ids)'.padRight(44)} ${nar.s0Sequences.length}');
   // Set-pieces (spec variété §1.12) : tant que content/setpieces.yaml n'a que
   // ses secours, la part servie en variante reste basse — c'est la mesure du
   // « la S2+ ressemble à la S0 ».
   final spShare = nar.setpieces == 0 ? 0.0 : nar.setpiecesVariantes / nar.setpieces;
   stdout.writeln('  ${spShare >= 0.50 ? '✔' : '✗'} ${'set-pieces servis en variante (hors secours)'.padRight(44)} ${_f(100 * spShare, 0)} % (${nar.setpiecesVariantes}/${nar.setpieces}) · seuil 50 %');
-  // Nouvelles datées (spec variété §1.5) : celles dont la fenêtre s'est fermée
-  // sans qu'elles soient servies sont perdues pour la carrière.
+  // Cartes d'époque / Nouvelles datées (spec variété §1.5). Le budget a changé
+  // avec le lot « anecdotes d'époque » : le retour joueur était « les anecdotes
+  // liées au foot dans son histoire générale, je ne les ai jamais retrouvées »,
+  // donc ce qui se mesure d'abord est ce que la carrière VOIT — ≥ 2 par saison.
+  // Les « perdues » ne sont plus un plafond : la banque d'époque est
+  // volontairement plus profonde que les quatre créneaux réservés d'une saison
+  // (deux à trois cartes par année vécue), pour que deux carrières de la même
+  // décennie ne lisent pas la même chronologie. Une carte laissée de côté par
+  // CETTE carrière n'est pas du contenu mort ; du contenu mort, ce serait une
+  // carte que PERSONNE ne voit — et c'est ce que la seconde moitié du test
+  // vérifie, sur l'ensemble des runs (`datées vues x/x` du bloc exposition).
   final dateesTotal = content.cards.values.where((c) => c.year != null && c.roles.contains(post.role)).length;
   final perduesParRun = nar.nouvellesDateesPerdues / math.max(1, nar.runs);
-  stdout.writeln('  ${perduesParRun <= 1.0 ? '✔' : '✗'} ${'Nouvelles datées : servies / perdues par run'.padRight(44)} ${_f(nar.nouvellesDatees / math.max(1, nar.runs), 2)} / ${_f(perduesParRun, 2)} ($dateesTotal écrites) · seuil 1,0');
+  final dateesParSaison = nar.nouvellesDatees / math.max(1, saisons);
+  // « Vues au moins une fois » se lit sur l'ensemble des runs, pas par carrière :
+  // une carte de 1999 n'est à portée que des carrières qui vivent jusque-là, et
+  // il y en a peu. D'où 95 % et non 100 % — ce qui se surveille, c'est une
+  // carte d'époque qu'AUCUNE carrière ne peut atteindre, pas la queue de
+  // distribution des carrières longues.
+  final partVues = expo.datees == 0 ? 1.0 : expo.dateesVues / expo.datees;
+  final dateesOk = dateesParSaison >= 2.0 && partVues >= 0.95;
+  stdout.writeln('  ${dateesOk ? '✔' : '✗'} ${'cartes d\'époque : par saison / par run / laissées'.padRight(44)} ${_f(dateesParSaison, 2)} / ${_f(nar.nouvellesDatees / math.max(1, nar.runs), 2)} / ${_f(perduesParRun, 2)} ($dateesTotal écrites · ${expo.dateesVues}/${expo.datees} vues au moins une fois) · seuil ≥ 2 par saison ; ≥ 95 % vues');
   if (assertBudgets && failures.isNotEmpty) {
     stderr.writeln('${failures.length} budget(s) narratif(s) violé(s) :');
     for (final f in failures) {
@@ -2283,7 +2376,8 @@ void main(List<String> args) {
     final saisonsHisto = <int, int>{};
     int roleTransitions = 0;
     int unresolved = 0, rxServed = 0, rxLat1 = 0, rxConsec = 0, rxMissed = 0, uneChecks = 0, uneOk = 0;
-    int horsRole = 0, horsStatut = 0;
+    int horsRole = 0, horsStatut = 0, classements = 0, classementsKo = 0;
+    final classementSamples = <String>[];
     final fuites = <String>[];
     final samples = <String>[];
     for (int i = 0; i < runs; i++) {
@@ -2303,6 +2397,9 @@ void main(List<String> args) {
       uneChecks += r.uneChecks;
       uneOk += r.uneChecksOk;
       horsRole += r.horsRole;
+      classements += r.classements;
+      classementsKo += r.classementsIncoherents;
+      if (classementSamples.length < 5) classementSamples.addAll(r.classementSamples);
       horsStatut += r.horsStatut;
       if (fuites.length < 5) fuites.addAll(r.fuitesSamples.take(5 - fuites.length));
       if (samples.length < 3) samples.addAll([...r.unresolvedSamples, ...r.uneCheckFailures].take(3 - samples.length));
@@ -2343,8 +2440,11 @@ void main(List<String> args) {
 
     stdout.writeln('  sélection : cartes servies hors rôle $horsRole · locuteur muet $horsStatut'
         '${fuites.isEmpty ? '' : ' : ${fuites.join(' ; ')}'}');
+    stdout.writeln('  classement : $classements tableaux servis · incohérents $classementsKo'
+        '${classementSamples.isEmpty ? '' : ' : ${classementSamples.take(3).join(' ; ')}'}');
     if (assertBudgets) {
       check(horsRole == 0, '${entry.key} : $horsRole carte(s) servie(s) hors du rôle courant');
+      check(classementsKo == 0, '${entry.key} : $classementsKo classement(s) incohérent(s) avec le moteur');
       check(horsStatut == 0, '${entry.key} : $horsStatut carte(s) servie(s) par un locuteur qui ne parle plus');
       check(unresolved == 0, '${entry.key} : $unresolved placeholder(s) non résolu(s)');
       check(rxConsec == 0, '${entry.key} : $rxConsec réaction(s) consécutive(s)');

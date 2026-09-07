@@ -11,6 +11,8 @@ export 'src/engine.dart';
 export 'src/goldens.dart';
 export 'src/rng.dart';
 export 'src/seed_codec.dart';
+export 'src/sfx.dart';
+export 'src/standings.dart';
 export 'src/state.dart';
 export 'src/naming.dart';
 export 'src/text.dart' show formatText, placeholdersOf, kKnownPlaceholders, kNamePlaceholders;

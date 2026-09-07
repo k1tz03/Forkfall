@@ -5,7 +5,7 @@
 ///
 /// Placeholders du nom, de la saison et de la Une (spec variété §1.6, §1.8) :
 /// `{prenom} {nom} {NOM} {initiales} {toi} {Toi} {numero} {rang} {pts} {annee}
-/// {saison} {objectif} {division} {CLUB} {VILLE} {age}` en plus des entités
+/// {saison} {objectif} {division} {CLUB} {VILLE} {age} {journee}` en plus des entités
 /// nommées (`{club}`, `{ville}`, `{rival}`, `{coach}`, `{president}`…).
 /// `{toi}` est résolu par l'appelant (adresse du locuteur selon le rôle et la
 /// relation) et interpolé récursivement (profondeur ≤ 2) ; défaut « coach »
@@ -14,6 +14,7 @@
 library;
 
 import 'naming.dart';
+import 'standings.dart';
 import 'state.dart';
 import 'world.dart';
 
@@ -21,7 +22,7 @@ import 'world.dart';
 /// les Unes, le journal et les épitaphes ; les entités nommées s'y ajoutent).
 const Set<String> kKnownPlaceholders = {
   'joueur', 'protagoniste', 'prenom', 'nom', 'NOM', 'initiales', 'toi', 'Toi', 'numero',
-  'rang', 'pts', 'annee', 'saison', 'objectif', 'division', 'CLUB', 'VILLE', 'age',
+  'rang', 'pts', 'journee', 'annee', 'saison', 'objectif', 'division', 'CLUB', 'VILLE', 'age',
   'club', 'clubShort', 'rival', 'president', 'capitaine', 'ville', 'coach', 'camille_metier', 'passe_titre', 'fil_rouge',
   // Fournis par le moteur au moment de l'écriture (Une, journal, fin).
   'tenu', 'TENU', 'perso', 'perso_tic', 'objectif_titre', 'fin_titre',
@@ -51,6 +52,8 @@ String formatText(
     'numero': e.named['numero'] ?? '',
     'rang': '${s.world.standingRank}',
     'pts': '${s.world.pts}',
+    // La journée courante du championnat : six blocs de six journées.
+    'journee': '${(s.world.blocks * kGamesPerBlock).clamp(0, kBlocksPerSeason * kGamesPerBlock)}',
     'annee': '${s.year}',
     'saison': '${s.season + 1}',
     'objectif': objectiveLabelFr(s.objectiveTarget),

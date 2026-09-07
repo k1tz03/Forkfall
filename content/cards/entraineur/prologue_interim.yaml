@@ -1,0 +1,209 @@
+# Les six scènes d'ouverture du postulat « L'intérimaire »
+# (content/arcs/entraineur/prologue_interim.yaml, arc `en.interim.prologue`).
+#
+# La situation, bible ch. 11 § 3.1 : l'entraîneur {coach} a été viré après huit
+# journées, le président te nomme « jusqu'à nouvel ordre », et Vukić — qui
+# était son adjoint — est le tien. Le prologue se joue AVANT l'ancre I1 (le
+# bureau encore à son nom) : il ne touche donc ni aux cartons, ni à la plaque,
+# ni à la cafetière, qui sont à elle. Il prend le parking, le tiroir, la compo
+# punaisée, la phrase attendue par le groupe, et l'ascenseur.
+#
+# Jauges de l'intérimaire : vestiaire 45, tribunes 50, direction 40, caisse 50.
+# Effets faibles (± un cran petit), jamais deux fois le même locuteur
+# d'affilée, une carte à un bouton = deux sorties strictement identiques.
+cards:
+  # ------------------------------------------------------- 1/6 · la pluie sur la tôle
+  # Le décor, sans locuteur. Quatre variantes : trois fils rouges plus le repli.
+  - id: en.interim.pro1_parking
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, direction]
+    tone: leger
+    once: true
+    text: "Il pleut sur la tôle du parking de {club}. Le car attend, moteur allumé, et sur la place peinte « ENTRAÎNEUR » il y a encore la voiture de l'autre, avec un sapin en carton au rétroviseur."
+    left:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "La pluie sur la tôle fait le bruit d'un stade plein. C'est le seul de la saison, pour l'instant."
+    right:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "La pluie sur la tôle fait le bruit d'un stade plein. C'est le seul de la saison, pour l'instant."
+
+  - id: en.interim.pro1_parking_vestiaire
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, vestiaire]
+    tone: leger
+    once: true
+    text: "Il pleut sur la tôle du parking de {club}. Par la fenêtre du vestiaire, on voit la compo de l'autre, toujours punaisée, et une dizaine de dos qui la regardent en enlevant leurs chaussures."
+    left:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "Personne ne se retourne. Ils ont entendu la portière ; ils ont décidé de ne pas l'entendre."
+    right:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "Personne ne se retourne. Ils ont entendu la portière ; ils ont décidé de ne pas l'entendre."
+
+  - id: en.interim.pro1_parking_diplome
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, direction]
+    tone: leger
+    once: true
+    text: "Il pleut sur la tôle du parking de {club}. Dans ta boîte à gants, l'attestation de stage n'a que trois tampons sur quatre, et la Fédération a rappelé deux fois avant huit heures."
+    left:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "Tu replies l'attestation en quatre. Le quatrième tampon manque toujours au même endroit."
+    right:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "Tu replies l'attestation en quatre. Le quatrième tampon manque toujours au même endroit."
+
+  - id: en.interim.pro1_parking_grand_nom
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, presse]
+    tone: leger
+    once: true
+    text: "Il pleut sur la tôle du parking de {club}. Un journaliste attend sous l'auvent avec deux noms dans son carnet ; le tien est le second, et il est écrit au crayon."
+    left:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "Il ne t'aborde pas. Il regarde l'heure, puis la route ; il attend l'autre voiture."
+    right:
+      label: "Descendre de voiture"
+      effects: {}
+      answer: "Il ne t'aborde pas. Il regarde l'heure, puis la route ; il attend l'autre voiture."
+
+  # ------------------------------------------------------- 2/6 · le tiroir
+  # Qui tu es : appelé à vingt-deux heures, nommé sans date. Deux sorties.
+  - id: en.interim.pro2_sifflet
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane ouvre le tiroir du bureau : « Il a laissé son sifflet, {toi}, et on vous a appelé hier à vingt-deux heures. J'en ai vu passer, vous savez. Vous prenez le sien ? »"
+    left:
+      label: "Je prends le sien"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle referme le tiroir. Le sifflet est tiède ; c'est le radiateur, sûrement."
+    right:
+      label: "J'ai le mien"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Elle laisse le tiroir entrouvert. « Au cas où », dit-elle, sans dire au cas où quoi."
+
+  # ------------------------------------------------------- 3/6 · la compo au mur
+  # Vukić était l'adjoint de l'autre. C'est sa première phrase, et c'est son tic.
+  - id: en.interim.pro3_compo
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: strategique
+    once: true
+    text: "Vukić, le cahier fermé sur les genoux : « La compo de dimanche est encore au mur, et ce n'est pas la tienne. Je te le dis parce que personne ne te le dira. Je la décroche ? »"
+    left:
+      label: "Décroche-la"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il la décroche, la plie en quatre, la range dans le cahier. Il ne la jette pas."
+    right:
+      label: "Laisse-la jusqu'à dimanche"
+      effects: {vestiaire: "+", direction: "-", relation: {vukic: 1}}
+      answer: "Elle reste. À sept heures, ils la regardent comme une photo de famille un peu ancienne."
+
+  # ------------------------------------------------------- 4/6 · la phrase
+  # Le choix minuscule et vrai : dire six semaines, ou dire juin. Il se voit
+  # tout de suite sur le vestiaire, et Massenet le relève à la scène suivante.
+  - id: en.interim.pro4_phrase
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction, risk:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    text: "Titi Bréhaut tient la porte du vestiaire avec le pied : « Le groupe vit bien, {toi}, et il attend une phrase. On vous donne six semaines. Vous leur dites, ou vous dites autre chose ? »"
+    left:
+      label: "Six semaines, c'est vrai"
+      effects: {vestiaire: "+", direction: "-", set: [prologue_six_semaines]}
+      answer: "Tu le dis. Personne ne répond ; deux joueurs se regardent, ce qui est une réponse."
+    right:
+      label: "Je dis jusqu'en juin"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu dis juin. Bréhaut relâche la porte, qui se referme toute seule, très doucement."
+
+  - id: en.interim.pro4_phrase_vestiaire
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction, risk:vestiaire]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    text: "Titi Bréhaut tient la porte avec le pied : « Le groupe vit bien, {toi} ; il vivait bien avec l'autre aussi. On vous donne six semaines. Vous leur dites, ou vous dites autre chose ? »"
+    left:
+      label: "Six semaines, c'est vrai"
+      effects: {vestiaire: "+", direction: "-", set: [prologue_six_semaines]}
+      answer: "Tu le dis. Le capitaine hoche la tête une fois, pour lui, pas pour toi."
+    right:
+      label: "Je dis jusqu'en juin"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu dis juin. Il ne te contredit pas ; il compte les têtes, et il en trouve deux qui sourient."
+
+  # ------------------------------------------------------- 5/6 · les quatre
+  # La règle du jeu, dite hors micro. Deux variantes : il sait ce que tu as dit.
+  - id: en.interim.pro5_quatre_verite
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction, decor]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Massenet, carnet fermé : « Juste une question, hors micro : vous leur avez dit six semaines. Ici, quatre décident si vous restez — le vestiaire, la tribune, le président, et le comptable. »"
+    left:
+      label: "Hors micro, alors"
+      effects: {}
+      answer: "Il range le carnet sans rien noter. Il notera dans la voiture, de mémoire, et sans erreur."
+    right:
+      label: "Hors micro, alors"
+      effects: {}
+      answer: "Il range le carnet sans rien noter. Il notera dans la voiture, de mémoire, et sans erreur."
+
+  - id: en.interim.pro5_quatre
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction, decor]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Massenet, carnet fermé : « Juste une question, hors micro : vous leur avez dit juin, et je n'ai pas juin. Ici, quatre décident si vous restez : le vestiaire, la tribune, le président, le comptable. »"
+    left:
+      label: "Hors micro, alors"
+      effects: {}
+      answer: "Il range le carnet sans rien noter. Il notera dans la voiture, de mémoire, et sans erreur."
+    right:
+      label: "Hors micro, alors"
+      effects: {}
+      answer: "Il range le carnet sans rien noter. Il notera dans la voiture, de mémoire, et sans erreur."
+
+  # ------------------------------------------------------- 6/6 · le seuil
+  # Le rendez-vous. La carte suivante est le président qui réclame un objectif.
+  - id: en.interim.pro6_ascenseur
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: vecchio
+    tone: leger
+    once: true
+    text: "Gigi Vecchio, ses gants sous le bras, devant l'ascenseur : « J'en ai vu d'autres, {toi} : quatre en huit ans. Le président t'attend au premier, et il n'attend jamais longtemps. »"
+    left:
+      label: "Monter au premier"
+      effects: {}
+      answer: "Il remet ses gants pour te serrer la main. C'est sa façon de ne rien promettre."
+    right:
+      label: "Monter au premier"
+      effects: {}
+      answer: "Il remet ses gants pour te serrer la main. C'est sa façon de ne rien promettre."
