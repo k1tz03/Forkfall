@@ -80,11 +80,11 @@ Les lieux que les dix histoires se partagent, avec leur clé : l'appartement de 
 
 **Les fils qui traversent le livre** :
 
-- **Le cadavre.** Tibo Rancé, le gamin de dix-sept ans que la directrice sportive de *23 h 58* est sommée de vendre en 2003, est retrouvé mort chambre 12 en 2011 (*Chambre 12*). Joachim Ferlac, le stagiaire qui tape les fax de 23 h 58, est retrouvé mort dans sa voiture en 2023, et sa voix parle encore dans l'oreillette de 2024 (*L'Oreillette*). Jean-Marie Vaubourg meurt à son bureau en 2026, à l'heure que le modèle avait donnée. La berline de l'entraîneur disparu de 1990 sort de la Rive en 2000, vide, le sapin en carton encore au rétroviseur (*La Maquette*).
-- **Le témoin.** Sandrine Lavergne, la fille à la mobylette de la nuit de 1984 (*La Route de la Rive*), est en 2011 la réceptionniste de nuit de l'hôtel de la Rive : elle a vu le tableau des clés à 2 h 10 (*Chambre 12*). Didier Vallin, le gamin dont le nom est sous ton sparadrap en 1990 (*La Sirène*), vit à la friche ; en 1999, il a vu qui a mis le feu à la tribune Est (*La Maquette*). Josiane photocopie chaque fax avant qu'il ne blanchisse (2003) ; en 2024, elle sort les photocopies d'un carton ; en 2030, elle a gardé dans sa cave la copie d'un procès-verbal de 2010.
+- **Le cadavre.** Tibo Rancé, le gamin du centre de formation que la directrice sportive de *23 h 58* est sommée de brader, est retrouvé mort chambre 12 en 2011 (*Chambre 12*). Joachim Ferlac, le stagiaire qui tape les fax de 23 h 58, est retrouvé mort dans sa voiture en 2023, et sa voix parle encore dans l'oreillette de 2024 (*L'Oreillette*). Jean-Marie Vaubourg meurt à son bureau en 2026, à l'heure que le modèle avait donnée. La berline de l'entraîneur disparu de 1990 sort de la Rive en 2000, vide, le sapin en carton encore au rétroviseur (*La Maquette*).
+- **Le témoin.** Sandrine Lavergne, la fille à la mobylette de la nuit de 1984 (*La Route de la Rive*), est en 2011 la réceptionniste de nuit de l'hôtel de la Rive : elle a vu le tableau des clés à 2 h 10 (*Chambre 12*). Didier Vallin, le gamin dont le nom est sous ton sparadrap en 1990 (*La Sirène*), vit à la friche ; en 1999, il a vu qui a mis le feu à la tribune Est (*La Maquette*). Josiane photocopie chaque fax avant qu'il ne blanchisse (2003) ; en 2024, elle rouvre le classeur, et les originaux, devenus blancs, dorment dans un carton du grenier ; en 2030, elle a gardé dans sa cave la copie d'un procès-verbal de 2010.
 - **Le juge.** Judith Amsel, la procureure, fait geler les berges quand la berline sort de la vase, en 2000, et instruit le dossier du Conseil ; en 2011, c'est elle qui fait sceller la chambre 12. Madame Aubert, maire en 1990, députée en 1999, ministre en 2010, décide du sort des autres pendant quarante ans — et en 2030, c'est elle qu'on juge.
 - **La colonne vertébrale.** Lian Mbako a seize ans en 1990 : il est assis à ta place dans *La Route de la Rive*, il est le gamin d'après dans *La Sirène*. En 2011, il est le capitaine mutin qui a trouvé le corps de la chambre 12. En 2030, il sélectionne le Kambara contre les Cobalts. En 2038, président de la Fédération, il a écrit la loi qui ferme l'escalier. Le livre commence avec un garçon qui veut jouer tout de suite et finit avec l'homme qui ferme la porte aux garçons.
-- **Les objets.** Les trois mille masques en carton de 1990 reviennent en 2040 : le virage porte le visage de Gégé pour son dernier match. La maquette des Terrasses de la Rive reste dans la vitrine de Madame Tessandier de 1999 à 2040, jaunit, et revient dans le plan du consortium. La photo de 1974 descend l'escalier du club-house dans *Trois mille visages* et remonte dans *Les Deux Téléphones*.
+- **Les objets.** Les trois mille masques en carton de 1990 reviennent en 2040 : le virage porte le visage de Gégé pour son dernier match. La maquette des Terrasses de la Rive reste dans la vitrine de l'agence Tessandier de 1999 à 2040, jaunit, et revient dans le plan du consortium. La photo de 1974 descend l'escalier du club-house dans *Trois mille visages* et peut y remonter dans *Les Deux Téléphones*.
 
 ### 1.9 La forme d'une histoire d'une heure
 
@@ -99,13 +99,13 @@ Une heure de jeu, c'est cent cinquante à deux cents cartes vécues, soit trois 
 
 ### 1.10 Ce que le moteur doit apprendre
 
-Les rôles directeur sportif, président et sélectionneur sont écrits dans la bible et **pas branchés** : six des dix histoires en ont besoin. Ce qu'il faut, dans l'ordre :
+Pendant que ce livre s'écrivait, le moteur a appris l'essentiel de ce que les dix histoires lui demandent (`CLAUDE.md`, « Écrire à plusieurs sans se marcher dessus »). Ce qui est en place :
 
-- **Trois rôles** dans `content/roles.yaml`, avec les jauges et les fins de la charte (`docs/bible/00_charte.md` § 3.1) : `ds` (le staff, les tribunes, le président, la masse salariale ; jauge fragile la caisse), `president` (le club, les tribunes, les actionnaires, la trésorerie ; jauge fragile la caisse), `selectionneur` (le groupe, le pays, la Fédération, les moyens ; jauge fragile le vestiaire ; l'année civile et ses quatre fenêtres, la chaîne Tournoi).
-- **Les lieux des nouveaux rôles** dans `content/ville.yaml` : le bureau du directeur sportif et celui du président au club-house (le bureau du président est à l'étage, la photo de 1974 dans l'escalier), le sélectionneur logé à l'hôtel de la Rive pendant les fenêtres, et pour chacun quatre à six activités (le directeur sportif : regarder les jeunes au centre, le café des agents au café de la Mairie, le fax de nuit, le banquier ; le président : la loge, la banque, la mairie, la buvette, la visite au vestiaire ; le sélectionneur : voir un joueur à l'entraînement, la conférence à L'Écho, la séance au stade, la veillée à l'hôtel).
-- **La ville fixée** : les six nouveaux postulats déclarent leur ville et leur club (Aubérive, Racing Aubérive) ; les quatre de 1990 aussi, sans toucher à leurs ids, index, années, jauges et divisions (les goldens en dépendent).
-- **Trois formes de carte** : l'**intermède** (un tag `intermede`, rendu à part, § 1.2), la **ligne d'ordre** (une carte d'ordre sans locuteur, rendue comme un fax, un répondeur, une oreillette ou un écran de portable selon l'histoire), et la **chaîne hors ville** (la chaîne Tournoi de *Vingt degrés dedans* se joue à Al-Dorado : la coquille montre le Dôme et non Aubérive).
-- **Les fins** de chaque histoire dans `content/endings/` (une fiche par histoire), et les nouvelles lignes `epitaph_plus` de `co_garde_a_vue`.
+- **Trois rôles branchés** dans `content/roles.yaml` et `content/calendar.yaml` : `ds`, `president`, `selectionneur`, avec les quatre jauges sous leurs noms (charte § 3.1), leurs fins de jauge (`content/endings/roles_bureau.yaml`) et leur calendrier ; le sélectionneur vit l'année civile et ses fenêtres, contre des nations inventées. Leurs transitions de carrière (d'un rôle à l'autre, au Carrefour) ne sont pas écrites.
+- **La ville des nouveaux rôles** : le sélectionneur loge à l'hôtel de la Rive pendant les fenêtres ; le directeur sportif, le président et le sélectionneur ont leurs activités (le fax de nuit, le café des agents au café de la Mairie, la loge, la banque, la mairie, la visite au vestiaire, la veillée à l'hôtel). Les lieux restent les mêmes pour tous les rôles.
+- **La ville fixée** : un postulat impose son `club`, sa `ville` et son `rival` ; les quatre postulats de 1990 gardent leurs ids, index, années, jauges et divisions (les goldens en dépendent).
+- **Trois formes de carte** : l'**intermède** (le tag `intermede` : une carte à part, plus sombre, sans locuteur, § 1.2), la **ligne d'ordre** rendue selon son support (`fax`, `repondeur`, `portable`, `oreillette`, `telephone`), et **`lieu: ailleurs`** pour ce qui se joue hors de la ville : la chaîne Tournoi de *Vingt degrés dedans*, à Al-Dorado, où la coquille montre le Dôme et non Aubérive.
+- **Les lots** : chaque histoire écrit ses fins (`content/endings/hN.yaml`), ses manchettes, ses variantes de set-piece et sa ville (`paroles`, `missions`, `presences`, `rencontres`, `lieux_variantes`) dans ses propres fichiers, et ajoute ses lignes d'épitaphe à `co_garde_a_vue` par `epitaph_plus_ajouts:`.
 - **Les visages** : dix-sept personnages existent dans `content/characters.yaml`. Les autres ids cités ici sont ceux de la bible (charte § 2.3 : `amsel`, `barbier`, `dauzat`, `dembo`, `fauvel`, `klopf`, `la_plume`, `malbec`, `paulette`, `rossard`, `rouvier`, `sacha`, `solvang`, `vence`, `vialat`) et se créent avec leur âge de 1990, leur statut et leur adresse dans les rôles nouveaux (bible ch. 01 § 0.1, ch. 02). Les visages nouveaux de chaque histoire sont des voix sans relation, sauf mention : on ne les crée dans `characters.yaml` que s'ils portent une intrigue sur plus d'une saison (Mercadier, Didier Vallin, Sandrine Lavergne, Joachim Ferlac, Nino).
 
 ### 1.11 Le gabarit des dix fiches
@@ -180,21 +180,21 @@ Trente-huit ans en 1990, entraîneur de clubs de troisième zone depuis quinze a
 
 - **Henri Ravenel** (mort en 1975) — le père. Il ne parle que dans les intermèdes et dans sa lettre. Ce qu'il voulait : payer le traitement de sa femme. Son secret : il a pris l'enveloppe.
 - **Odette Marsal**, 72 ans — photographe de L'Écho en 1974, aujourd'hui à la librairie-papeterie. Elle a une pellicule jamais tirée : le couloir, après la finale. Ce qu'elle veut : qu'on la lui demande enfin. Son secret : elle a vendu une autre photo de ce couloir à Vaubourg, en 1977, pour payer sa boutique.
-- **L'inspecteur Lhoste**, 45 ans, police judiciaire de Portclair — il enquête sur les nuits masquées et veut un visage pour son procès-verbal. Son secret : il était dans le virage en 1974, il avait douze ans, sur les épaules de son père.
+- **L'inspecteur Lhoste**, 45 ans, police judiciaire de Portclair — il enquête sur les nuits masquées et veut un visage pour son procès-verbal. Son secret : il était dans le virage en 1974, à vingt-neuf ans, et il a pleuré au coup de sifflet final ; personne ne le sait au commissariat.
 - **Nino**, six ans — le neveu de Gégé. Il ramasse les masques au square et les revend dix francs aux autres gamins. En 2038, il sera le capo (*Les Deux Téléphones*).
 
 ### 5. La structure
 
 **Saison 1 (1990-1991) — Le visage.** Le prologue pose la photo grattée, les deux clés, le chant qui contient déjà ton nom. Au premier match à domicile, les trois mille masques se lèvent ; Vaubourg n'a rien payé et le dit. Tu achètes, ou non, le maillot de 1974 aux enchères de la boutique. Le gardien du cimetière te dit qui a payé la plaque sans nom. À l'ancre d'hiver, au local, Gégé déroule la bâche de 1971 : il sait qui tu es. La saison finit sur l'homme masqué sous ta fenêtre. Le réservoir du promu tourne autour (le prodige, les salaires, Ilyas) ; une phrase dite trop vite à la buvette (« Ceux de 74 paieront ») est la graine qui reviendra peinte sur un mur.
 
-**Saison 2 (1991-1992) — Les nuits.** Les masques sortent. La berline de Vaubourg brûle sur le parking, un masque posé sur le capot. La vitrine de la Banque Aubérivoise porte « 1974 » à la peinture. Les archives de L'Écho disparaissent. L'inspecteur Lhoste s'installe dans ton bureau. Odette tire sa pellicule : le couloir de 1974, Vaubourg, une enveloppe kraft. Puis le cri sous la passerelle : Gigi, la mâchoire cassée, un masque à la main. Ta voiture est saisie devant la Nord, un masque dans le coffre. La saison finit sur l'ardoise de Gigi : « TON PÈRE A PRIS L'ENVELOPPE. »
+**Saison 2 (1991-1992) — Les nuits.** Les masques sortent. La berline de Vaubourg brûle sur le parking, un masque posé sur le capot. La vitrine de la Banque Aubérivoise porte « 1974 » à la peinture. Les archives de L'Écho disparaissent. L'inspecteur Lhoste s'installe dans ton bureau. Odette tire sa pellicule : le couloir de 1974, Vaubourg, une enveloppe kraft. Puis le cri sous la passerelle : Gigi, la mâchoire cassée, un masque à la main. Ta voiture est saisie à l'aube devant chez toi, un masque dans le coffre. La saison finit sur l'ardoise de Gigi : « TON PÈRE A PRIS L'ENVELOPPE. »
 
 **Saison 3 (1992-1993) — Le dernier soir.** La lettre de 1975, lue jusqu'au bout. Le ticket de pari caché derrière le carton du maillot encadré, de la main de ton père. Vaubourg ouvre son coffre : la confession signée d'Henri, jamais publiée ; il la garde si les masques s'arrêtent, il la donne à L'Écho s'ils continuent. Gégé prépare la dernière nuit, après le dernier match : les Hauts-de-Rive, la maison du président. L'acte final : la veille, le feu de palettes de la friche, et la salle de presse pleine.
 
 **Les vingt scènes clés**
 
 1. **La photo** — *escalier du club-house, prologue.* Seize joueurs dans la boue de la finale de 1974 ; le cinquième visage est gratté au couteau jusqu'au carton. Josiane descend avec deux clés : « Le bureau, et le local à ballons. Les archives, on n'y monte plus. » ← *Je prends les deux* · → *Le local me suffit*
-2. **Le chant** — *grillage de la Tribune Nord, prologue.* Le virage répète un chant où ton nom est déjà, et Gégé, les doigts dans le grillage : « On l'a appris en juin. Tu veux savoir pourquoi on t'aime déjà ? » ← *Dites-le-moi* · → *Je ne veux pas savoir*
+2. **Le chant** — *grillage de la Tribune Nord, prologue.* Le virage répète un chant où ton nom est déjà, et Gégé bat la mesure du plat de la main sur le grillage : « On l'a appris en juin. Tu veux savoir pourquoi on t'aime déjà ? » ← *Dites-le-moi* · → *Je ne veux pas savoir*
 3. **Trois mille visages** — *stade, premier match à domicile.* La Nord se lève au coup d'envoi : trois mille fois ta figure en carton, noir sur blanc. Vaubourg, dans la loge, au téléphone : « Qui a payé ça ? Pas moi. » ← *Je salue le virage* · → *Je regarde le terrain*
 4. **La première bière** — *buvette, soir.* Gégé pose une bière tiède et un masque plié en quatre : « Le premier sorti de l'imprimerie. Ceux de 74 n'ont jamais payé, tu le sais, ça ? » ← *Ils paieront* · → *74, c'est fini*
 5. **Le maillot** — *boutique, mercredi après-midi.* Aux enchères, le maillot de la finale, le 5, la boue encore sur le numéro. Tu lèves la main et les anciens du premier rang se retournent. ← *J'enchéris jusqu'au bout* · → *Je le laisse partir*
@@ -207,7 +207,7 @@ Trente-huit ans en 1990, entraîneur de clubs de troisième zone depuis quinze a
 12. **Six heures** — *téléphone de l'appartement.* Vukić : on a trouvé Gigi sous la passerelle, la mâchoire cassée, un masque dans la main. « Il demande à te voir. Toi, pas la police. » ← *J'y vais maintenant* · → *La police d'abord*
 13. **L'ardoise** — *cabinet du Doc.* Gigi, la mâchoire tenue par des fils, écrit à la craie : TON PÈRE A PRIS L'ENVELOPPE. J'AI LAISSÉ PASSER LES TROIS. Il efface avec sa manche avant que tu aies fini de lire. ← *Écrivez-le encore* · → *Effacez tout*
 14. **Intermède : le virage** — *rêve.* La Nord est pleine ; trois mille personnes portent ton visage et chantent avec ta voix. Au dernier rang, une seule tête sans masque regarde ailleurs, vers la Rive. Un bouton : *Je monte les marches*
-15. **La saisie** — *parking du stade, après le match.* La dépanneuse de la police emporte ta voiture devant la Nord qui sort ; dans le coffre, sous scellés, un masque que tu n'y as pas mis. Gégé, à la grille : « On chante, ou on se tait ? » ← *Chantez* · → *Taisez-vous*
+15. **La saisie** — *rue des Lilas, six heures du matin.* Lhoste fait monter ta voiture sur une dépanneuse ; dans le coffre, sous scellés, un masque que tu n'y as pas mis. Au coin de la rue, un gamin du square porte ton visage, et cette fois il ne court pas. ← *Ce masque n'est pas à moi* · → *Prenez-la*
 16. **La lettre** — *appartement, nuit.* La dernière lettre d'Henri, lue jusqu'au bout : « J'ai fait ce qu'il fallait pour ta mère. Le reste, Vaubourg le sait. Ne reviens pas. » ← *Je la brûle* · → *Je la garde sur moi*
 17. **Le cadre** — *appartement.* Derrière le carton du maillot encadré, un ticket du tabac du Quai daté de la veille de la finale : Racing perdant, trois buts d'écart. L'écriture est celle de la lettre. ← *Je le montre à Gégé* · → *Je le garde pour moi*
 18. **Le coffre** — *bureau du président, à l'étage.* Vaubourg sort une confession signée d'Henri, 1975, jamais publiée : « Les masques s'arrêtent, elle reste ici. Ils continuent, L'Écho l'a demain matin. » ← *Gardez-la, j'arrête tout* · → *Publiez. Moi aussi*
@@ -242,7 +242,7 @@ Trente-huit ans en 1990, entraîneur de clubs de troisième zone depuis quinze a
 - **Cartonnages de la Rive** (propre, en apparence) — l'imprimeur des masques propose de les vendre à la boutique, quinze francs pièce, son nom sur le short en échange. L'argent est propre (`ville_francs`) ; les masques se multiplient, et le compte de Gégé devient faux.
 - **Les Courses du Quai** (louche) — le fils du bookmaker de 1974 offre une « prime de maintien » en liquide, versée si le Racing perd par moins de deux buts contre trois clubs désignés. L'argent est sale (`ville_francs_sales`) ; c'est 1974 qui recommence, et le joueur qui accepte le sait. La dette de Gigi à l'arrière-salle du Terminus (l'intrigue existante `en.sp.gigi`) reste au réservoir : Gigi rejoue sa jeunesse sous tes yeux.
 
-**Les biens et la saisie.** Un entraîneur promu sans un sou gagne vingt-cinq mille francs par mois : le **maillot de 1974** (trente-cinq mille, aux enchères de la boutique) coûte plus d'un mois de salaire, et c'est le seul achat qui compte — il paie en saison 3 (scène 17). Le **costume de confection** de Brunel sert au plateau du dimanche soir. La villa des Hauts-de-Rive, si l'intrigue existante de *La maquette* l'offre, est la cage dorée de Vaubourg. **La saisie** est le tournant de la saison 2 : la police emporte ta voiture du parking du stade devant la Nord qui sort (`saisie_vehicules`), un masque sous scellés dans le coffre (scène 15). Si l'argent du Quai a payé quelque chose, la brigade revient en saison 3 pour le reste (`saisie_luxe`).
+**Les biens et la saisie.** Un entraîneur promu sans un sou gagne vingt-cinq mille francs par mois : le **maillot de 1974** (trente-cinq mille, aux enchères de la boutique) coûte plus d'un mois de salaire, et c'est le seul achat qui compte — il paie en saison 3 (scène 17). Le **costume de confection** de Brunel sert au plateau du dimanche soir. La villa des Hauts-de-Rive, si l'intrigue existante de *La maquette* l'offre, est la cage dorée de Vaubourg. **La saisie** est le tournant de la saison 2 : à six heures du matin, la police emporte ta voiture de la rue des Lilas sous les yeux des voisins (`saisie_vehicules`), un masque sous scellés dans le coffre (scène 15). Si l'argent du Quai a payé quelque chose, la brigade revient en saison 3 pour le reste (`saisie_luxe`).
 
 ### 7. Ce que dit la ville
 
@@ -259,7 +259,7 @@ Trente-huit ans en 1990, entraîneur de clubs de troisième zone depuis quinze a
 - *Passant, sombre* — si `flag(passerelle)` : « Sous la passerelle, ils ont tout lavé au jet. Il reste une tache sur la pierre. Les gamins font le tour par le pont. »
 - *Gigi Vecchio, toi* — si `flag(ardoise_lue)` : « Le filet de 74 est dans le placard de la buvette. Je ne l'ai jamais rendu à personne. Tu le veux ? »
 - *Le buraliste du Quai, argent* — si `possede(maillot_1974)` : « Le maillot du 5, c'est vous ? Mon père prenait les paris, cette année-là. Il disait que le 5 ne regardait jamais les tribunes. »
-- *Fan, sombre* — si `flag(voiture_saisie)` : « Ils ont emmené votre voiture devant toute la Nord. On a chanté votre nom quand même. Plus fort, même. »
+- *Fan, sombre* — si `flag(voiture_saisie)` : « Ils ont emmené votre voiture à six heures du matin, comme celle d'un voleur. Samedi, la Nord chantera votre nom plus fort, vous verrez. »
 - *Ancien, époque* — si `flag(nom_grave)` : « Ravenel, sur la plaque. Il était temps. On a eu honte assez longtemps à sa place, ou à la nôtre. »
 
 ### 8. Les fins
@@ -269,7 +269,7 @@ Trente-huit ans en 1990, entraîneur de clubs de troisième zone depuis quinze a
 - **Le virage sans masque** (`promu_brasero`, rare) — Gégé connaît le ticket, la relation tient à +2, les masques brûlent à la friche, le Racing se maintient. *« La veille du dernier match, {prenom} {nom} et Gégé ont brûlé deux mille huit cents visages dans le feu de la friche, et le Racing s'est maintenu sans en porter un seul. Gigi a rendu le filet de 1974 ; il pend au local, au-dessus de la porte. »*
 - **Le visage** (`promu_visage`, pire que la garde à vue) — tu montes aux Hauts-de-Rive avec le masque ; un gamin du virage tombe du mur de la villa. *« Un garçon de dix-neuf ans est tombé du mur des Hauts-de-Rive, un masque sur la figure : c'était celle de {prenom} {nom}. Le procès a duré deux ans, et la Nord n'a plus jamais imprimé personne. »*
 - **Le car de six heures** (`promu_car`) — tu repars sans rien publier. *« {prenom} {nom} a repris le car de six heures, comme sa mère en 1975, le négatif dans la poche. La plaque du caveau est restée sans nom ; le gardien dit qu'on vient la regarder. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — le carton de Gégé trouvé chez toi, ou l'argent du Quai. *Epitaph_plus : « Quarante-huit heures au commissariat avec un carton de masques comme pièce à conviction ; à la fin, Lhoste a demandé lequel était le vrai. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — le carton de Gégé trouvé chez toi, ou l'argent du Quai. *« On a posé sur la table un carton de masques, comme pièce à conviction ; à la fin, Lhoste a demandé lequel était le vrai. »*
 - **L'otage du kop** (`en_otage`, ligne propre) — *« Le virage a gardé {nom} comme on garde un visage : imprimé, plié, ressorti les soirs de match. »*
 - **Le coupable désigné** (`en_coupable`, ligne propre) — *« On a mis les nuits masquées sur le compte de {nom}, et le budget à zéro par-dessus ; le président a parlé de complot. »*
 
@@ -417,9 +417,9 @@ Quarante-trois ans, entraîneur des moins de dix-sept ans du Racing, trois tampo
 
 - **Le revenant** (`interim_revenant`, la vérité) — Mercadier témoigne avec la cassette et le carnet ; Norbert est arrêté, deux joueurs suspendus, le Racing rétrogradé sur tapis vert. *« {prenom} {nom} a ramené Roland Mercadier du wagon de la friche jusqu'au tribunal de Portclair, et le Racing est descendu sur tapis vert. On lui a pris le banc ; on lui a laissé la cassette. »*
 - **La place de l'autre** (`interim_place`, le prix) — Mercadier est déclaré mort en avril, l'assurance paie, tu signes. *« Roland Mercadier est mort sur le papier un mardi d'avril, et {prenom} {nom} a signé son contrat le mercredi. Le lundi, à sept heures, le répondeur ne clignote plus ; on le regarde quand même. »*
-- **Les deux bancs** (`interim_deux_bancs`, rare) — le carnet est retrouvé, Vukić et Josiane sont à +2, tu mets son nom sur la feuille et le Racing tient. *« Le dernier match s'est joué avec deux entraîneurs, l'un sur le banc, l'autre en casquette au premier rang du virage. Au coup de sifflet, la casquette a pris le car de six heures dix ; {prenom} {nom} a gardé le sifflet. »*
-- **Le suivant** (`interim_suivant`, pire) — tu cours seul vers Norbert, sans Vukić ni Josiane derrière toi. *« Au printemps, un nouvel intérimaire a trouvé une compo punaisée au mur, une cafetière tiède et une voiture garée sur la place ENTRAÎNEUR. C'était celle de {prenom} {nom}, et personne n'avait assisté au départ. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — trouvé près du wagon en feu, ou l'argent de Dembo tracé. *« Quarante-huit heures pour expliquer la friche à deux heures du matin, un carnet de paris dans la poche et l'odeur d'essence sur les manches. »*
+- **Les deux bancs** (`interim_deux_bancs`, rare) — le carnet est retrouvé, Vukić et Josiane sont à +2, tu mets son nom sur la feuille et le Racing tient. *« Le dernier match s'est joué avec deux entraîneurs, l'un sur le banc, l'autre en casquette au premier rang du virage. Au coup de sifflet, la casquette est sortie par la grille de la Nord avant tout le monde ; le sifflet est resté au cou de {prenom} {nom}. »*
+- **Le suivant** (`interim_suivant`, pire) — tu cours seul vers Norbert, sans Vukić ni Josiane derrière toi. *« Au printemps, un nouvel intérimaire a trouvé une compo punaisée au mur, une cafetière tiède et, sur la place ENTRAÎNEUR, la voiture de {prenom} {nom}. Personne n'avait assisté au départ. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — trouvé près du wagon en feu, ou l'argent de Dembo tracé. *« Il a fallu expliquer la friche à deux heures du matin, un carnet de paris dans la poche et l'odeur d'essence sur les manches. »*
 - **Le message de 23 h 47** (`en_sms`, ligne propre) — *« Vaubourg l'a écrit avec une faute, comme toujours ; Roland, lui, aurait appelé. »*
 - **Le dauphin** (`en_dauphin`, ligne propre) — *« Vukić a pris le banc et gardé les deux plaques dans le tiroir du milieu. »*
 
@@ -564,9 +564,9 @@ Dix-neuf ans, né dans la cité de la Tréfilerie. Le père est mort à la tréf
 
 - **La sirène** (`pepite_sirene`, la vérité) — avec Didier, Josiane et Léa, tu dis la machine : les avances, l'ardoise, la licence vendue. Fardelli et Vaubourg sont mis en examen ; le Racing perd sa licence professionnelle ; on ne te vend plus à personne. *« {prenom} {nom} a raconté la machine à L'Écho, avec le nom de Didier Vallin écrit en entier, et plus personne n'a voulu l'acheter. Le dimanche, en National, trois cents personnes qui ont connu son père applaudissent encore. »*
 - **Le petit club** (`pepite_petit_club`, le prix) — tu signes le fax de Fardelli ; le papier de 1986 est payé ; tu pars. *« {prenom} {nom} a signé pour un petit club au grand avenir et rendu à Fardelli ses trente pour cent, avec les intérêts. Deux ans plus tard, le petit club revend sa licence dix fois plus cher ; Didier dort toujours dans la halle. »*
-- **Seize heures** (`pepite_seize_heures`, rare) — la clé de la tour rendue à Didier, la boîte refusée ou jetée, Odile à +1, et tu joues jusqu'au bout. *« À seize heures, la sirène de l'usine a sonné en plein match pour la fin d'un poste, et {prenom} {nom} a fini sur une jambe. Dans la tour de la grande halle, Didier Vallin a lâché la poignée et applaudi tout seul. »*
+- **Seize heures** (`pepite_seize_heures`, rare) — la clé de la tour rendue à Didier, la boîte refusée ou jetée, Odile à +1, et tu joues jusqu'au bout. *« À seize heures, la sirène de l'usine a sonné en plein match, longue comme une fin de journée, et {prenom} {nom} a fini sur une jambe. Dans la tour de la grande halle, Didier Vallin a lâché la poignée et applaudi tout seul. »*
 - **La grande halle** (`pepite_halle`, pire) — tu as porté l'enveloppe, pris la boîte jusqu'au bout, perdu la maison et le genou. *« On a vu {prenom} {nom} repasser à la craie la ligne de touche d'un terrain dessiné sur le béton de la grande halle. Il y a deux crochets au mur, maintenant, et deux noms. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — l'enveloppe de Portclair arrêtée au contrôle, ou la boîte trouvée. *« Quarante-huit heures pour une enveloppe que tu n'avais pas ouverte ; ta mère a attendu sur le banc du couloir, avec le fanion de 1958 dans son sac. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — l'enveloppe de Portclair arrêtée au contrôle, ou la boîte trouvée. *« L'enveloppe, tu ne l'avais pas ouverte ; ta mère a attendu sur le banc du couloir, avec le fanion de 1958 dans son sac. »*
 - **Les croisés** (`jp_croises`, ligne propre) — la visite passée grâce à la boîte, la vente tombée quand même, et le genou qui lâche au premier match de la saison suivante. *« Le genou a tenu une visite, pas un match. »*
 - **Sans club** (`jp_sansclub`, ligne propre) — *« Fardelli a fait suivre ton dossier à onze clubs. Aucun n'a rappelé ; il en a acheté un autre. »*
 
@@ -694,13 +694,13 @@ Trente et un ans, le vétéran, la tête dans la lucarne de la montée de 1984. 
 - *Ancien, époque* — si `saison == 1` : « La montée de 84, c'est vous, la tête dans la lucarne. J'étais derrière le but. Le soir, on a fêté jusqu'au pont. »
 - *Passante, quartier* — si `flag(premier_morceau)` : « Il y a une femme en fauteuil qui découpe des photos dans le square, sur le banc du fond. Elle ne dit bonjour à personne. »
 - *Sacha, toi* — si `flag(reve_route)` : « Dans la voiture, on joue à gauche ou à droite ? Tu dis toujours à gauche, toi. Pourquoi tu dis toujours à gauche ? »
-- *Monsieur Abel, le gardien du cimetière, sombre* — si `flag(quatorze_mai)` : « Monsieur Bertin n'a jamais eu autant de fleurs que depuis sa mort. Vous étiez de la famille ? »
-- *Fan, club* — si `tribunes < 40` : « La tête dans la lucarne, en 84. Depuis, tu marques moins et tu boites plus. On t'aime quand même, un peu moins fort. »
+- *Monsieur Abel, le gardien du cimetière, sombre* — si `flag(quatorze_mai)` : « Monsieur Bertin n'a jamais eu autant de fleurs que depuis sa mort. De son vivant, personne ne venait. »
+- *Fan, club* — si `tribunes < 40` : « Le but de 84, je l'ai encore dans les yeux. Depuis, tu marques moins et tu boites plus. On t'aime quand même, un peu moins fort. »
 - *Nadia Rouvier, toi* — si `flag(infiltration)` : « Tu parles en dormant, sur la table. Tu dis "freine". Je n'écris rien. »
-- *Pierre Massenet, rumeur* — si `flag(corbeau_lea)` : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait enlever huit. Il me reste les deux du milieu. »
+- *Pierre Massenet, rumeur* — si `flag(corbeau_lea)` : « J'ai relu mes deux lignes du milieu, hier soir. Elles disent "vivante" depuis 1984, à qui veut bien ouvrir le tiroir. »
 - *Passant, sombre* — si `flag(lavergne_fenetre)` : « Le buraliste du Quai était sous vos fenêtres hier, à minuit. Il ne fumait même pas. Il regardait. »
 - *Camille, toi* — si `flag(camille_cimetiere)` : « Qui est Jules Bertin ? Ne me dis pas un ami. On n'apporte pas des chrysanthèmes à un ami tous les 14 mai. »
-- *La fleuriste des Immortelles, achat* — si `flag(quatorze_mai)` : « Votre abonnement du 14 mai, on le renouvelle ? Monsieur Fardelli l'avait payé pour dix ans. Il en reste trois. »
+- *La fleuriste des Immortelles, achat* — si `flag(quatorze_mai)` : « Chaque 14 mai, mon livreur monte au carré ancien. Il m'a dit un jour : c'est drôle, ce Bertin, pas de famille et des fleurs. »
 - *Titi Bréhaut, toi* — si `flag(photo_entiere)` : « Le groupe a vu les morceaux de photo dans ton casier. Ils ne demandent rien. Moi non plus. Tu devrais les jeter. »
 - *Passante, rumeur* — si `flag(standard_vu)` : « La fille du buraliste, au standard de l'hôtel ? Elle passe les appels de toute la ville. Elle sait qui appelle qui. »
 - *Ancien, époque* — si `flag(jubile_annonce)` : « Ton jubilé, on viendra. On était au pont, en 84, pour la fête. Pas après. Après, on dormait. »
@@ -710,10 +710,10 @@ Trente et un ans, le vétéran, la tête dans la lucarne de la montée de 1984. 
 
 - **Le micro** (`fdc_micro`, la vérité) — au jubilé, tu dis qui conduisait et qui s'est tu ; le civil suit ; le pavillon est vendu. *« Au rond central de son jubilé, {prenom} {nom} a dit au micro qui conduisait le 14 mai 1984, et qui s'était tu ensuite. Le pavillon des Lilas a payé ce que le tribunal a compté ; Sandrine Lavergne a encaissé le chèque du juge, jamais l'autre. »*
 - **Les chrysanthèmes** (`fdc_chrysanthemes`, le prix) — tu te tais pour Bréhaut et pour toi ; tu paies en secret. *« Chaque mois, {prenom} {nom} a envoyé un chèque au tabac du Quai, et chaque mois le chèque est revenu, non encaissé. Les chrysanthèmes sont allés à Jules Bertin jusqu'au bout de l'abonnement. »*
-- **Le tour d'honneur** (`fdc_tour_honneur`, rare) — Sandrine entendue en privé, Jean Lavergne à +1, Bréhaut convaincu : c'est lui qui prend le micro. *« Le jour de son jubilé, {prenom} {nom} a fait le tour du terrain en poussant un fauteuil, et c'est Titi Bréhaut qui a pris le micro. Sandrine Lavergne n'a pas pardonné ; elle a regardé le stade se lever. »*
+- **Le tour d'honneur** (`fdc_tour_honneur`, rare) — Sandrine entendue en privé, Jean Lavergne à +1, Bréhaut convaincu : c'est lui qui prend le micro. *« {prenom} {nom} a fait le tour du terrain en poussant un fauteuil, et c'est Titi Bréhaut qui a pris le micro. Sandrine Lavergne n'a pas pardonné ; elle a regardé le stade se lever. »*
 - **La route** (`fdc_route`, pire) — « J'accélère », la dernière nuit. *« On a arrêté {prenom} {nom} à deux heures du matin au bout de la route de la Rive, ivre, le moteur chaud, à dix mètres d'un fauteuil vide sous le réverbère. Le procès-verbal donne l'heure exacte : celle de 1984. »*
 - **Prescrit** (`fdc_prescrit`) — tu vas te dénoncer au commissariat sans prévenir personne, ni Sandrine ni Bréhaut. *« Le commissaire a écouté {prenom} {nom} jusqu'au bout, puis il a refermé le dossier : prescrit. On ne punit plus personne pour 1984, et c'est la pire chose qu'on pouvait lui répondre. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — le dossier de l'hôpital, ou le faux certificat. *« Quarante-huit heures pour une photocopie d'hôpital ; la seule faute de 1984 qu'on ait pu te reprocher était celle-là. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — le dossier de l'hôpital, ou le faux certificat. *« Une photocopie d'hôpital : c'est la seule faute de 1984 qu'on ait jamais pu te reprocher. »*
 - **Les croisés** (`jp_croises`, ligne propre) — *« Le genou a lâché au quinzième match, comme Sabatier l'avait écrit en marge d'une radio, au crayon gras. »*
 - **Le jubilé** (`jubile`, ligne propre) — tu ne parles que du match. *« Au micro, {nom} a remercié la tribune, le club et sa famille. Au premier rang de l'Est, un fauteuil est reparti avant la fin. »*
 
@@ -735,7 +735,7 @@ La porte du Carrefour reste ouverte : le survêtement de Vukić et le banc de la
 
 ### 1. La fiche
 
-**Rôle** : président (`president`, rôle à brancher, § 1.10) · **Postulat** : `geant_dechu` (bible ch. 13 § 4), année 1999, Division 2, après le dépôt de bilan ; jauges de la bible (vestiaire 45, tribunes 90, direction 50, caisse 10), drapeaux `depot_de_bilan` et `deux_titres` · **Club** : le Racing Aubérive, champion en 1962, vainqueur de la Coupe en 1966, finaliste en 1974, redescendu en deuxième division et déposé au greffe cet été · **Patron du moteur** : Jean-Marie Vaubourg (`aulard`), président de la Ligue depuis 1998, qui a quitté le Racing en laissant ses dettes · **Entraîneur** : Zoran Vukić · **Directeur sportif** : Titi Bréhaut · **Saisons** : 1999-2000, 2000-2001, 2001-2002 (les écus arrivent pour la dernière).
+**Rôle** : président (`president`, rôle branché, § 1.10) · **Postulat** : `geant_dechu` (bible ch. 13 § 4), année 1999, Division 2, après le dépôt de bilan ; jauges de la bible (vestiaire 45, tribunes 90, direction 50, caisse 10), drapeaux `depot_de_bilan` et `deux_titres` · **Club** : le Racing Aubérive, champion en 1962, vainqueur de la Coupe en 1966, finaliste en 1974, redescendu en deuxième division et déposé au greffe cet été · **Patron du moteur** : Jean-Marie Vaubourg (`aulard`), président de la Ligue depuis 1998, qui a quitté le Racing en laissant ses dettes · **Entraîneur** : Zoran Vukić · **Directeur sportif** : Titi Bréhaut · **Saisons** : 1999-2000, 2000-2001, 2001-2002 (les écus arrivent pour la dernière).
 
 > **Quatrième de couverture**
 >
@@ -861,9 +861,9 @@ Cinquante-quatre ans, patron d'une entreprise de bâtiment de la vallée, né da
 - **Le stade est resté** (`geant_stade_reste`, la vérité) — l'acte au conseil, la cassette, le fax, le témoin : Dorian et Madame Tessandier mis en examen, Camille radiée du barreau ; le Racing liquidé, refondé deux divisions plus bas, le terrain protégé. *« {prenom} {nom} a lu l'acte de 1931 devant le conseil municipal, et le terrain de la Rive est resté aux enfants du quartier. Le Racing, lui, est reparti de deux divisions plus bas, sous le même nom et sans un sou. »*
 - **Les Terrasses** (`geant_terrasses`, le prix) — tu soutiens le projet ; ton entreprise a le chantier ; la procureure gèle tout pour une voiture repêchée dans la vase. *« {prenom} {nom} a signé la cession du terrain de la Rive, et la procureure a gelé les berges la semaine suivante pour une épave sortie de la vase. La maquette est restée dans la vitrine ; le stade aussi ; la signature aussi. »*
 - **L'Inspecteur compte autre chose** (`geant_vialat`, rare) — la cassette, l'acte, le fax et le témoin montrés à Vialat, aucune valise prise, la relation de Vialat à +1. *« Madame Vialat a compté une dernière fois, et pour la première fois elle a compté autre chose que les chiffres : le Racing a passé l'été. {prenom} {nom} a rendu les clés en juin, sans maison, sans Camille, avec un stade. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — la valise de Malbec, la nuit du cadastre, ou le contrat des Terrasses daté d'avant ta présidence. *« Quarante-huit heures pour un contrat signé trop tôt ; la procureure a laissé la maquette sur la table pendant tout l'interrogatoire. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — la valise de Malbec, la nuit du cadastre, ou le contrat des Terrasses daté d'avant ta présidence. *« Le contrat avait été signé trop tôt ; la procureure a laissé la maquette sur la table pendant tout l'interrogatoire. »*
 - **Le siège du siège** (`pr_siege`, ligne propre) — *« Le kop a dormi trois semaines au club-house ; le président, lui, a fini par dormir ailleurs. »*
-- **La Commission des comptes** (`pr_commission`, ligne propre) — *« Elle a compté, pas dans le même sens ; dans son sac, la coupure de 1992 a eu une voisine. »*
+- **La Commission des comptes** (`pr_commission`, ligne propre) — *« Dans le sac de Madame Vialat, la coupure de 1992 a eu une voisine. »*
 - **Le pantin** (`pr_pantin`, ligne propre) — tu as signé tout ce que le cabinet de Camille a rédigé. *« Tout était signé de sa main, rien n'était de sa plume. »*
 
 ### 9. La question de saison et les objectifs
@@ -882,7 +882,7 @@ Cinquante-quatre ans, patron d'une entreprise de bâtiment de la vallée, né da
 
 ### 1. La fiche
 
-**Rôle** : directeur sportif (`ds`, rôle à brancher, § 1.10) — héroïne par défaut, la directrice sportive · **Postulat** : `vendre_trente` (bible ch. 12 § 2), année 2003, Division 1 ; jauges de la bible (vestiaire 50, tribunes 45, direction 60, caisse 35), drapeau `objectif_trente` · **Club** : le Racing Aubérive, en première division, qui ne vit que de ses ventes · **Président** : Arnaud Vaubourg, le fils, sur le papier ; le père, président de la Ligue, au téléphone (patron du moteur : `aulard`) · **Entraîneur** : Vogler (`klopf`), son adjoint Vukić · **Saisons** : 2003-2004, 2004-2005, 2005-2006 · **Ancien titre** : *Vendre trente millions par an*.
+**Rôle** : directeur sportif (`ds`, rôle branché, § 1.10) — héroïne par défaut, la directrice sportive · **Postulat** : `vendre_trente` (bible ch. 12 § 2), année 2003, Division 1 ; jauges de la bible (vestiaire 50, tribunes 45, direction 60, caisse 35), drapeau `objectif_trente` · **Club** : le Racing Aubérive, en première division, qui ne vit que de ses ventes · **Président** : Arnaud Vaubourg, le fils, sur le papier ; le père, président de la Ligue, au téléphone (patron du moteur : `aulard`) · **Entraîneur** : Vogler (`klopf`), son adjoint Vukić · **Saisons** : 2003-2004, 2004-2005, 2005-2006 · **Ancien titre** : *Vendre trente millions par an*.
 
 > **Quatrième de couverture**
 >
@@ -993,10 +993,10 @@ Quarante-deux ans, ancienne adjointe de Lucien Barbier au recrutement dans les a
 - *Fan, club* — si `flag(dembo_vendu)` : « Dembo à Valentienne, à trente-sept ans. Vous auriez pu le laisser finir ici. On l'aurait porté jusqu'à la buvette. »
 - *La libraire-papetière, rumeur* — si `flag(fax_nuit)` : « Mon fax public ferme à dix-neuf heures. Personne n'envoie rien d'ici à minuit. Il est sous clé, je vous dis. »
 - *Enfant, toi* — si `flag(tibo_vendu)` : « Tibo Rancé, il est parti où ? Il m'avait promis un maillot. Il n'a pas eu le temps, je crois. »
-- *Passante, sombre* — si `flag(voiture_photo)` : « Il y avait un homme dans une voiture devant chez vous cette nuit, avec un appareil. Il a pris votre porte. Rien que la porte. »
+- *Passante, sombre* — si `flag(voiture_photo)` : « Cette nuit, un homme attendait dans une voiture devant chez vous, avec un appareil. Il a pris votre porte. Rien que la porte. »
 - *Lucien Barbier, toi* — si `flag(barbier_soupconne)` : « Je l'ai vu jouer sous la pluie, le gaucher de Kerbrouck. Je l'ai dit au petit stagiaire. Je dis tout au petit stagiaire. »
 - *Vogler, club* — si `flag(trois_ventes)` : « Trois départs depuis août. Je vous demande un latéral gauche, vous m'enlevez un milieu. Vous vendez pour qui ? »
-- *Le buraliste du Quai, argent* — si `flag(prix_bas)` : « Au Quai, on parie sur vos ventes, maintenant, plus sur les matchs. Le petit Rancé à quatre millions, c'est à trois contre un. »
+- *Le buraliste du Quai, argent* — si `flag(prix_bas)` : « Au Quai, on parie sur vos ventes, maintenant, plus sur les matchs. Le fils Rancé sous les cinq millions, c'est à trois contre un. »
 - *Pierre Massenet, rumeur* — si `flag(vitre)` : « Dimanche, je dis à l'antenne que vos prix sont bas. Lundi, quelqu'un me dira pourquoi. Il y a toujours quelqu'un. »
 - *Fan, sombre* — si `flag(pere_rance)` : « Le père Rancé joue au Terminus tous les soirs depuis que son fils a signé. Il gagne, pour une fois. Ça ne lui va pas. »
 - *Passant, quartier* — si `possede(residence_rive)` : « De la résidence, on voit le terrain de la seconde tranche. Ils disaient un parc. C'est toujours un parking, à moitié. »
@@ -1009,9 +1009,9 @@ Quarante-deux ans, ancienne adjointe de Lucien Barbier au recrutement dans les a
 - **L'associée** (`trente_associe`, le prix) — tu t'associes ; les ventes se font au prix du modèle ; Tibo part. *« Trente millions, deux saisons de suite, et un associé qu'on ne voyait jamais : {prenom} {nom} a vendu tous les noms que le fax imprimait à 23 h 58. Dix ans plus tard, on ne vendait plus personne sans le modèle de Joachim Ferlac. »*
 - **Le petit reste** (`trente_petit_reste`, rare) — Tibo gardé, l'ardoise du père payée proprement, Ferlac piégé sans violence, Vialat à +1, les trente millions faits quand même. *« Tibo Rancé a joué au Racing jusqu'à vingt ans, et {prenom} {nom} a fait ses trente millions sans le vendre. Le fax s'est tu un jeudi ; Josiane a rangé le classeur en haut de l'armoire, pour plus tard. »*
 - **Une heure** (`trente_une_heure`, pire) — tu laisses le père Rancé et les hommes du Terminus prendre le stagiaire « une heure ». *« On a retrouvé le stagiaire au matin sur le quai, vivant, le nez cassé, ses ordinateurs dans la Rive, et l'on a mis en examen {prenom} {nom} pour complicité. Le fax ne sonne plus ; on reçoit encore, certains soirs, des pages blanches. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — les primes de la Mutuelle remontées par la brigade. *« Quarante-huit heures pour expliquer des enveloppes ; la seule photo qu'ils ont posée sur la table était de 1999. »*
-- **Le roi du mercato** (`ds_roi_mercato`, ligne propre) — *« Trop de commissions, trop bien rangées : l'enquête a commencé par le bureau du recrutement et fini au sous-sol. »*
-- **D'un commun accord** (`ds_commun_accord`, ligne propre) — *« Arnaud Vaubourg a lu le communiqué de trois lignes à la presse ; c'était son père qui l'avait écrit. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — les primes de la Mutuelle remontées par la brigade. *« On t'a demandé d'expliquer des enveloppes ; la seule photo posée sur la table était de 1999. »*
+- **Le roi du mercato** (`ds_roi_mercato`, ligne propre) — *« Les enquêteurs ont mis deux jours à trouver la ligne de la buanderie ; ils ont mis le sous-sol sous scellés, et ton bureau avec. »*
+- **D'un commun accord** (`ds_commun_accord`, ligne propre) — *« Arnaud Vaubourg l'a lu à la presse sans lever les yeux ; son père l'avait dicté au téléphone. »*
 
 ### 9. La question de saison et les objectifs
 
@@ -1029,7 +1029,7 @@ Quarante-deux ans, ancienne adjointe de Lucien Barbier au recrutement dans les a
 
 ### 1. La fiche
 
-**Rôle** : sélectionneur (`selectionneur`, rôle à brancher, § 1.10) · **Postulat** : `apres_fiasco` (bible ch. 14 § 4), année 2011, les Cobalts ; jauges de la bible (vestiaire 40, tribunes 20, direction 55, caisse 50), drapeaux `apres_fiasco`, `fiasco_2010`, `bus_menace` · **Base** : après le fiasco, la Fédération prépare les fenêtres loin de la capitale, à l'hôtel de la Rive et au stade de la Rive — la ville de son président · **Patron du moteur** : Jean-Marie Vaubourg (`aulard`), président de la Fédération · **Années** : 2011, 2012, 2013 (années civiles, quatre fenêtres par an) · **Ancien titre** : *Après le fiasco*.
+**Rôle** : sélectionneur (`selectionneur`, rôle branché, § 1.10) · **Postulat** : `apres_fiasco` (bible ch. 14 § 4), année 2011, les Cobalts ; jauges de la bible (vestiaire 40, tribunes 20, direction 55, caisse 50), drapeaux `apres_fiasco`, `fiasco_2010`, `bus_menace` · **Base** : après le fiasco, la Fédération prépare les fenêtres loin de la capitale, à l'hôtel de la Rive et au stade de la Rive — la ville de son président · **Patron du moteur** : Jean-Marie Vaubourg (`aulard`), président de la Fédération · **Années** : 2011, 2012, 2013 (années civiles, quatre fenêtres par an) · **Ancien titre** : *Après le fiasco*.
 
 > **Quatrième de couverture**
 >
@@ -1079,7 +1079,7 @@ Cinquante-deux ans, entraîneur de club honorable, nommé parce que personne d'a
 
 **2012 — Les portes.** Chaque fenêtre ramène les Cobalts au même étage ; la 12 reste scellée, puis fermée. La photo de 1 h 47 ; Ferrol. Rossard à l'antenne. Les bougies et la pierre. Le cahier de nuit de Sandrine. Le Continental en juin, si le barrage a été gagné. L'année finit dans le bus du fiasco, la nuit, avec Mbako.
 
-**2013 — Les signatures.** Le dossier de 2010 et ta signature dessous. La docteure Arzel et sa valise. Le procès-verbal de Dauzat. Au printemps, « le ministre » dissout le comité fédéral (`sous_tutelle`) : Vaubourg n'est plus là pour choisir les heures, et le registre reste à Dauzat. L'appartement de fonction repris, et la seule chambre libre de l'hôtel : la 11. L'acte final : la dernière fenêtre, la porte de la 12 ouverte sur la mère de Rancé, et la conférence de presse après le match de qualification.
+**2013 — Les signatures.** Le dossier de 2010 et ta signature dessous. La docteure Arzel et sa valise. Le procès-verbal de Dauzat. Cette année-là, « le ministre » dissout le comité fédéral (`sous_tutelle`) : Vaubourg n'est plus là pour choisir les heures, et le registre reste à Dauzat. L'appartement de fonction repris, et la seule chambre libre de l'hôtel : la 11. L'acte final : la dernière fenêtre, la porte de la 12 ouverte sur la mère de Rancé, et la conférence de presse après le match de qualification.
 
 **Les vingt scènes clés**
 
@@ -1141,7 +1141,7 @@ Cinquante-deux ans, entraîneur de club honorable, nommé parce que personne d'a
 - *La fleuriste des Immortelles, sombre* — si `flag(rance_mort)` : « Des gerbes bordeaux et grises pour le petit Rancé. Il était d'ici, vous savez. Le Racing l'avait vendu gamin. »
 - *Enfant, rumeur* — si `flag(selfie)` : « Mon cousin a la photo de 1 h 47. On voit une main dans le coin. Il dit que c'est la main d'un nouveau. »
 - *Sandrine Lavergne, toi* — si `tranche == nuit` : « Vous descendez tous les soirs regarder mes crochets. Ils ne bougent pas quand vous les regardez. C'est après, qu'ils bougent. »
-- *Ancien, époque* — si `flag(rossard_plateau)` : « Rossard a dit le nom de Mbako à la télé. En 1990, il pleurait sur le même plateau. On l'a moins aimé, ce soir. »
+- *Ancien, époque* — si `flag(rossard_plateau)` : « Rossard a lâché le nom de Mbako à la télé. En 1990, il pleurait sur le même plateau. On l'a moins aimé, ce soir. »
 - *Passante, sombre* — si `flag(bougies)` : « Des bougies devant l'hôtel, et une pierre dans la fenêtre du 14. On ne sait pas qui a fait quoi. Les deux, peut-être. »
 - *Madame Josiane, toi* — si `flag(visites_signees)` : « Le trombone rouge, je l'avais mis sur le premier dossier. On ne lit plus les trombones. »
 - *Nadia Rouvier, toi* — si `flag(dossier_arzel)` : « J'ai cousu son numéro sur vingt-cinq manches, cette nuit-là. Depuis, je ne couds plus de numéros. »
@@ -1157,9 +1157,9 @@ Cinquante-deux ans, entraîneur de club honorable, nommé parce que personne d'a
 - **On l'a laissé** (`fiasco_laisse`, la vérité) — au micro, tout : le cœur, la docteure, le sachet, la porte de 2 h 10, l'heure choisie à quatre heures, et ta signature. *« "On l'a laissé", a dit {prenom} {nom} devant les caméras, et le pays a appris la différence entre mourir et être laissé. La lettre de la Fédération est arrivée à minuit et une ; la chambre 12 n'a jamais été relouée. »*
 - **Malaise cardiaque** (`fiasco_malaise`, le prix) — la version officielle tient ; les Cobalts se qualifient. *« Les Cobalts ont joué le Mondial avec un numéro cousu sur la manche, et {prenom} {nom} n'a jamais dit autre chose que "malaise cardiaque". Chaque novembre, une gerbe bordeaux et grise arrive au caveau du Racing, sans carte. »*
 - **Le tableau complet** (`fiasco_tableau`, rare) — la dernière nuit de 2013, les vingt-six doubles restent aux crochets jusqu'au matin ; Mbako et Arzel parlent d'eux-mêmes ; Sandrine le note. *« La dernière nuit de la fenêtre de 2013, les vingt-six doubles sont restés au tableau jusqu'au matin, et Sandrine Lavergne l'a écrit dans son cahier. Mbako a parlé avant {prenom} {nom}, et c'était mieux ainsi. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — les scellés brisés, ou la page du cahier gardée pendant l'enquête. *« Quarante-huit heures pour une page de cahier gardée dans une poche ; la commandante a demandé l'heure exacte de chaque chose, et tu les savais toutes. »*
-- **Les deux clans** (`sl_clans`, ligne propre) — mutins contre nouveaux. *« Deux clans, un couloir, une seule porte fermée ; on dort encore au deuxième en se tournant le dos. »*
-- **Minuit et une** (`sl_minuit`, ligne propre) — *« La Fédération a attendu minuit et une, comme d'habitude ; Josiane a mis un trombone rouge sur la lettre. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — les scellés brisés, ou la page du cahier gardée pendant l'enquête. *« Une page de cahier gardée dans une poche ; la commandante a demandé l'heure exacte de chaque chose, et tu les savais toutes. »*
+- **Les deux clans** (`sl_clans`, ligne propre) — mutins contre nouveaux. *« Au deuxième étage, on dort encore en se tournant le dos, et personne ne passe devant la 12. »*
+- **Minuit et une** (`sl_minuit`, ligne propre) — *« La lettre est arrivée le lendemain, un trombone rouge dans le coin ; Josiane n'avait rien écrit d'autre. »*
 - **L'homme du président** (`sl_homme_president`, ligne propre) — *« Quand Vaubourg est tombé, la chambre 12 est tombée avec lui, et sur toi. »*
 
 ### 9. La question de saison et les objectifs
@@ -1209,7 +1209,7 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 - **Karim Fauvel** (`fauvel`) — président du syndicat des joueurs : soixante-douze matchs, un mort, et la grève mondiale de 2026.
 - **Léa** (`lea`) — rédactrice en chef du Quotidien ; elle achète, pour le prouver, les battements de cœur de tes joueurs à un revendeur de données.
 - **Gégé** (`gege`) — quatre-vingt-un ans, et « le vieux », le compte anonyme du virage, qui poste à trois heures du matin. Une nuit, ce n'est pas lui.
-- **Nino** (voix sans portrait, le neveu de Gégé, capo depuis 2020) — trente-neuf ans, le virage d'aujourd'hui.
+- **Nino** (voix sans portrait, le neveu de Gégé, capo depuis 2020) — quarante ans, le virage d'aujourd'hui.
 - **Nadia Rouvier** (`rouvier`) — kiné à Saint-Étoile, de passage : elle te fait respirer, et enlève ton bracelet.
 - **Ingrid Solvang** (`solvang`) — l'agente qui a repris le carnet de Fardelli et « vend à la machine ».
 - **Nathalie Vence** (`vence`) — directrice de l'information, qui passe la vidéo truquée à l'antenne et la dément le lendemain.
@@ -1243,7 +1243,7 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 10. **Le vieux** — *appartement, 3 h (événement sombre).* Le compte que le virage appelle « le vieux » poste : « Le DS du Racing entend des voix. On a l'adresse. » En bas, une voiture ralentit. ← *J'appelle Gégé* · → *J'éteins tout*
 11. **À cette heure-ci** — *bureau, nuit.* Une offre pour ton capitaine à l'écran. La voix, calme : « Tu vas refuser. Tu refuses toujours à cette heure-ci. » ← *J'accepte* · → *Je refuse*
 12. **La laverie** — *laverie, minuit (événement sombre).* Tu te réveilles sur la chaise en plastique, sous le néon ; ta chemise tourne dans la 4. Le gérant : « C'est la troisième fois ce soir. Vous voulez que je l'arrête ? » ← *Arrêtez-la* · → *Laissez tourner*
-13. **La grève** — *vestiaire, 2026.* Fauvel pose une feuille sur le banc : « Soixante-douze matchs, un mort. Les joueurs du monde entier s'arrêtent vendredi. Votre modèle l'avait prévu ? » ← *Je soutiens la grève* · → *Le club joue*
+13. **La grève** — *vestiaire, 2026.* Fauvel scotche une affiche sur la porte du vestiaire : « Soixante-douze matchs, un mort. Les joueurs du monde entier s'arrêtent vendredi. Votre modèle l'avait prévu ? » ← *Je soutiens la grève* · → *Le club joue*
 14. **Intermède : la pelouse** — *rêve.* Tu cours sous les projecteurs ; Kerdal court à côté de toi et ne transpire pas. Il dit, avec la voix de Ferlac : « Il te reste trois cent douze jours. » Un bouton : *Je m'arrête*
 15. **Le service de nuit** — *hall de l'hôtel de la Rive.* Une jeune femme en parka : « Je suis la voix. Enfin, je la lis. De vingt-deux heures à six heures. L'après-midi, je fais les assurances. » ← *Pourquoi Kerdal ?* · → *Pourquoi moi ?*
 16. **Les courbes** — *bureau de Léa, de passage à L'Écho.* Léa étale des feuilles : les battements de cœur de tes joueurs, la nuit, vendus par le sponsor des bracelets. « La vôtre est dedans. Vous dormez deux heures. » ← *Publiez tout* · → *Pas la mienne*
@@ -1265,14 +1265,14 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 - **La vidéo** — appartement (`domicile`), minuit, saison 2. Scène 9.
 - **Le vieux** — appartement, 3 h, saison 2 : l'événement existant *Ils t'attendent*, à l'ère du Flux. Scène 10.
 - **La laverie** — laverie (`laverie`), minuit, saison 2. Scène 12 : la laverie de la rue du Stade, où l'on venait recevoir des enveloppes, est devenue l'endroit où l'on se réveille.
-- **La friche** — friche (`friche`), soir, saison 2 : la place où l'on a trouvé la voiture de Ferlac ; des bougies électriques, une oreillette posée sur une palette, encore allumée. Tu la prends, ou tu la laisses à la pluie.
+- **La friche** — friche (`friche`), soir, saison 3, après la saisie : la place où l'on a trouvé la voiture de Ferlac ; des bougies électriques, une oreillette posée sur une palette, encore allumée. Tu la prends, ou tu la laisses à la pluie.
 - **La porte** — club-house (`bureau`), 6 h 30, fin de saison 2. Scène 17 : le mort de ce livre est celui de tous les autres, et il meurt à l'heure qu'on avait donnée.
 - **Deux heures** — appartement, nuit, saison 3. Scène 19.
 
 **Les missions** (trois) :
 
 - **Le nom de la voix** — donneur : un ancien développeur de Ferlac Analytique, au comptoir du Terminus (`terminus`, soir), si `flag(voix_ferlac)`. Il vend le nom et l'horaire de l'opératrice de nuit. Pose `vl_nom_voix` ; ouvre la scène 15.
-- **Les cartons de l'escalier** — donneuse : Madame Josiane (`clubhouse`, après-midi). Elle ne monte plus l'escalier ; elle te demande de redescendre trois cartons d'archives du grenier du club-house. Dans le troisième, le classeur de 2003. Pose `vl_classeur`.
+- **Les cartons de l'escalier** — donneuse : Madame Josiane (`clubhouse`, après-midi). Elle ne monte plus l'escalier ; elle te demande de redescendre trois cartons d'archives du grenier du club-house. Dans le troisième, un second classeur : les fax originaux de 2003, devenus des pages blanches, qu'elle n'a jamais pu jeter. Pose `vl_classeur`.
 - **De quoi dormir** — l'intrigue de ville existante *La cure du préparateur* (`cure_preparateur`, salle de muscu, soir), réhabillée : un préparateur sans club propose « quelque chose pour dormir vraiment ». Le sommeil vient ; le contrôle aussi, peut-être.
 
 **Les sponsors** :
@@ -1280,7 +1280,7 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 - **Pari-Rive** (louche) — l'application de paris floquée sur le maillot ; elle veut la composition une heure avant sa publication. L'argent est sale (`ville_francs_sales`), et c'est un délit d'initié qui dit son nom.
 - **Cadence** (gris) — le sponsor des bracelets offre un bracelet à chacun : joueurs, staff, président d'honneur, anciens du virage. Il revend les courbes à Almadis. Pour toi, une **montre connectée** (`cadeau_montre_connectee`) qui compte tes nuits.
 
-**Les biens et la saisie.** Le directeur sportif de 2024 vit dans un **duplex à la Tréfilerie** — l'usine de 1990 devenue lofts, « on a gardé le pont roulant » —, roule dans une **berline électrique** prêtée par le fonds, porte la **montre** de Cadence. **La saisie est le dépouillement** de la saison 3 : le fonds reprend sa voiture (`saisie_vehicules`), son téléphone, son ordinateur et son oreillette, et la voix reste. Si l'argent de Pari-Rive a payé quelque chose, la brigade financière prend le reste (`saisie_luxe`), et le duplex de la Tréfilerie redevient une vitrine chez Madame Tessandier.
+**Les biens et la saisie.** Le directeur sportif de 2024 vit dans un **duplex à la Tréfilerie** — l'usine de 1990 devenue lofts, « on a gardé le pont roulant » —, roule dans une **berline électrique** prêtée par le fonds, porte la **montre** de Cadence. **La saisie est le dépouillement** de la saison 3 : le fonds reprend sa voiture (`saisie_vehicules`), son téléphone, son ordinateur et son oreillette, et la voix reste. Si l'argent de Pari-Rive a payé quelque chose, la brigade financière prend le reste (`saisie_luxe`), et le duplex de la Tréfilerie redevient une photo dans la vitrine de l'agence Tessandier.
 
 ### 7. Ce que dit la ville
 
@@ -1289,13 +1289,13 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 - *Le pharmacien, achat* — si `flag(comprimes)` : « Votre ordonnance du docteur Ober, encore. Je vous la sers. Je vous dis juste que la dernière fois, vous l'aviez déjà prise. »
 - *Fan, sombre* — si `flag(kerdal_mort)` : « Kerdal, soixante-dix matchs l'an dernier. Trouvé entre deux bancs à la muscu. On devrait jouer moins, non ? »
 - *Ancien, époque* — si `annee >= 2026` : « La grève de tous les joueurs du monde. En 1990, on aurait ri. Mon petit-fils dit que c'est la première bonne nouvelle du football. »
-- *Madame Josiane, club* — si `flag(classeur_lu)` : « Le petit Ferlac tapait les rapports de Barbier, en 2003. Il disait bonjour à tout le monde. Il m'appelait Josie. Personne ne m'appelle Josie. »
+- *Madame Josiane, club* — si `flag(classeur_lu)` : « Le petit Ferlac tapait les rapports de Barbier, en 2003. Poli comme une lettre recommandée, et il retenait tout ce qu'on lui répondait. »
 - *Lian Mbako, toi* — si `relation.mbako >= 1` : « Mon premier entraîneur me regardait courir. Ton modèle regarde mon cœur la nuit. Je préférais qu'on me regarde courir. »
 - *Passante, sombre* — si `flag(video)` : « Je vous ai vu dire des horreurs sur le Flux. Puis ma fille m'a dit que ce n'était pas vous. Je ne sais plus ce que j'ai vu. »
 - *Gégé, rumeur* — si `flag(compte_vieux)` : « Le compte du vieux, c'est moi. Mais ce soir-là, ce n'était pas moi. Quelqu'un a mon mot de passe. Je l'avais écrit sur le frigo. »
 - *Le vendeur du garage du Pont, achat* — si `flag(voiture_rendue)` : « Ils ont repris votre berline ce matin. Elle est montée toute seule sur le plateau du camion. Elle aussi, elle obéit. »
 - *Passant, quartier* — si `possede(duplex_trefilerie)` : « Vous habitez à la Tréfilerie ? Mon grand-père y tirait du fil. Il disait que la sirène lui parlait la nuit. Vous dormez bien, là-bas ? »
-- *Nadia Rouvier, toi* — si `flag(insomnie)` : « Respire. Ton bracelet dit cent dix au repos. Enlève-le, et dis-moi ce que dit ta poitrine. »
+- *Nadia Rouvier, toi* — si `flag(insomnie)` : « Ton bracelet dit cent dix au repos. Enlève-le, et dis-moi ce que dit ta poitrine. »
 - *Fan, club* — si `flag(vaubourg_mort)` : « Vaubourg, mort à son bureau à six heures et demie. On dit que le modèle avait l'heure. Mon père dit que Vaubourg avait toujours l'heure, lui. »
 - *Léa, rumeur* — si `flag(courbes)` : « Le cœur de vos joueurs se vend quatre écus la nuit. Le vôtre, six. Vous êtes plus rare. »
 - *Ancien, époque* — si `flag(sans_oreillette)` : « Vous avez enlevé votre machine ? On vous voit regarder les gens, maintenant. On n'avait plus l'habitude. »
@@ -1304,11 +1304,11 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 
 - **Le silence** (`modele_silence`, la vérité) — tu enlèves l'oreillette pour de bon, et tu donnes à Léa les courbes, la voix, le nom de Kerdal et la ligne de 2017 que tu as écrite. Le fonds vend le Racing ; le docteur Ober est mis en examen. *« {prenom} {nom} a enlevé l'oreillette pour de bon et donné à Léa les courbes, la voix et sa propre ligne de code ; le fonds a vendu le Racing au printemps. On dit qu'à la Tréfilerie, une fenêtre s'éteint maintenant avant minuit. »*
 - **La voix** (`modele_voix`, le prix) — tu obéis jusqu'au bout ; le Racing gagne ce que le modèle avait prévu ; Almadis te garde, au siège. *« Le Racing a gagné ce que le modèle avait prévu, et {prenom} {nom} a gardé la voix jusqu'au bout. L'année suivante, dans l'oreille du directeur sportif d'après, c'était sa voix qui disait : on commence par les ventes ? »*
-- **Six heures et demie** (`modele_six_heures`, rare) — Vaubourg à +1, le classeur lu, l'oreillette posée avant la date, Mbako à +1 : la veille, tu montes t'asseoir en face de lui. *« Le modèle avait l'heure, il n'avait pas la chaise : {prenom} {nom} était assis en face de Jean-Marie Vaubourg quand il est mort à son bureau, à six heures et demie. Le vieux président a dit, à la fin, qu'il n'avait jamais aimé le téléphone. »*
+- **Six heures et demie** (`modele_six_heures`, rare) — Vaubourg à +1, le classeur lu, l'oreillette posée avant la date, Mbako à +1 : la veille, tu montes t'asseoir en face de lui. *« Le modèle avait l'heure, il n'avait pas la chaise : {prenom} {nom} était assis en face de Jean-Marie Vaubourg quand il est mort, à l'heure dite. Le vieux président a dit, à la fin, qu'il n'avait jamais aimé le téléphone. »*
 - **La clinique** (`modele_clinique`, pire) — tu as gardé l'oreillette quand on te l'a reprise, et la voix n'a plus quitté la chambre. *« À la clinique des Hauts-de-Rive, {prenom} {nom} demande chaque soir qu'on éteigne la voix, et l'infirmière répond doucement qu'il n'y a personne. Personne ne sait lequel des deux a raison ; la voix, elle, dit l'heure. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — les compositions envoyées à Pari-Rive. *« Quarante-huit heures sans téléphone, sans écran, sans oreillette ; c'est la première fois en trois ans que personne ne t'a parlé à l'oreille. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — les compositions envoyées à Pari-Rive. *« Ni téléphone, ni écran, ni oreillette : pour la première fois en trois ans, personne ne t'a parlé à l'oreille. »*
 - **Le burn-out** (`burn_out`, ligne propre) — *« Soixante-douze matchs par saison, deux heures de sommeil par nuit ; le corps a pris la décision que la voix n'avait pas prévue. »*
-- **D'un commun accord** (`ds_commun_accord`, ligne propre) — *« Le communiqué tenait en trois lignes ; il avait été rédigé par le modèle. »*
+- **D'un commun accord** (`ds_commun_accord`, ligne propre) — *« Le nom du suivant, c'est le modèle qui l'avait proposé, trois semaines plus tôt. »*
 
 ### 9. La question de saison et les objectifs
 
@@ -1332,7 +1332,7 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 >
 > Janvier 2029, cimetière d'Aubérive. Un cercueil scellé arrive d'Al-Dorado : Kévin Marçais, vingt-quatre ans, électricien sur le chantier du Dôme. Cause du décès : « malaise ». Sa mère pétrit ton pain tous les matins, rue des Lilas. Elle ne te pose qu'une question : « Vous irez quand même ? »
 >
-> Tu es la première sélectionneuse des Cobalts. Le Mondial se joue en décembre 2030 sous un dôme à vingt degrés, dans un pays à cinquante. Le ministère t'appelle sans dire son nom. L'émirat t'envoie une montre, puis une voiture, puis les clés d'un appartement. Ton capitaine veut porter un brassard noir, taillé dans la chemise de travail d'un mort.
+> Tu es la première sélectionneuse des Cobalts. Le Mondial se joue en décembre 2030 sous un dôme à vingt degrés, dans un pays où l'été monte à cinquante. Le ministère t'appelle sans dire son nom. L'émirat t'envoie une montre, puis une voiture, puis les clés d'un appartement. Ton capitaine veut porter un brassard noir, taillé dans la chemise de travail d'un mort.
 >
 > Et dans une cave d'Aubérive, une très vieille secrétaire garde la copie d'un vote de 2010 qui n'aurait jamais dû avoir lieu.
 
@@ -1344,21 +1344,21 @@ Quarante-six ans, analyste devenu directeur sportif. De 2015 à 2020, il a trava
 
 ### 3. Le personnage joué
 
-Cinquante ans, quarante sélections avec les Cobaltes dans les années 1990, entraîneuse de Mirevaux (la première section professionnelle), adjointe des Cobalts, nommée en 2028 : la première femme sur ce banc. **Ce qu'elle veut** : gagner le Mondial, et le faire droit ; dormir. **Ce qu'elle cache** : la « clause de réserve » de son contrat (aucune déclaration « non sportive ») et le fait qu'elle savait, en signant, que le ministère la choisissait aussi pour l'image ; et les listes que sa fille lui envoie chaque semaine.
+Cinquante ans, quarante sélections avec les Cobaltes dans les années 2000, entraîneuse de Mirevaux (la première section professionnelle), adjointe des Cobalts, nommée en 2028 : la première femme sur ce banc. **Ce qu'elle veut** : gagner le Mondial, et le faire droit ; dormir. **Ce qu'elle cache** : la « clause de réserve » de son contrat (aucune déclaration « non sportive ») et le fait qu'elle savait, en signant, que le ministère la choisissait aussi pour l'image ; et les listes que sa fille lui envoie chaque semaine.
 
 ### 4. La distribution
 
 - **Sacha** (`sacha`) — vingt-sept ans, ta fille, dans l'association qui compte les ouvriers morts sur les chantiers du Mondial. Elle recompte chaque semaine. Elle ne te demande pas de ne pas y aller ; elle te demande ce que tu vas dire.
-- **Madame Aubert** (`aubert`) — quatre-vingt-six ans, ancienne maire d'Aubérive, ancienne ministre des Sports (2002-2012). Le soir du vote de décembre 2010, son cabinet a appelé le délégué du pays à 23 h 40. Elle ne nie rien : « Un stade, ça se vote. » C'est la coupable du livre, et la seule à le dire sans baisser les yeux.
+- **Madame Aubert** (`aubert`) — quatre-vingt-cinq ans, ancienne maire d'Aubérive, ancienne ministre des Sports (2002-2012). Le soir du vote de décembre 2010, son cabinet a appelé le délégué du pays à 23 h 40. Elle ne nie rien : « Un stade, ça se vote. » C'est la coupable du livre, et la seule à le dire sans baisser les yeux.
 - **Madame Josiane** (`josiane`) — quatre-vingt-onze ans. Secrétaire de la Fédération en 2010, elle a tapé le procès-verbal, et en a fait une copie de trop, qui dort dans sa cave.
 - **Titi Bréhaut** (`brehaut`) — soixante-douze ans, président de la Fédération ; il veut le Mondial sans histoire et sait ce que coûte une histoire.
-- **Cheikh Ilyas** (`nassir`) — soixante-quatorze ans, président de la Ligue, ancien membre du comité du Mondial ; c'est par lui que passent les cadeaux et les bons mots.
+- **Cheikh Ilyas** (`nassir`) — soixante-treize ans, président de la Ligue, ancien membre du comité du Mondial ; c'est par lui que passent les cadeaux et les bons mots.
 - **Lian Mbako** (`mbako`) — sélectionneur du Kambara, dans le groupe des Cobalts : le Kambara portera le brassard noir. Il appelle pour savoir si tu le porteras aussi.
 - **Karim Fauvel** (`fauvel`) — président du syndicat des joueurs jusqu'en 2030 : il soutient le brassard, et le ministre lui demande son âge.
 - **Léa** (`lea`) — rédactrice en chef du Quotidien : elle publiera les listes de Sacha, et l'heure de 2010 si on la lui donne.
 - **Nathalie Vence** (`vence`) — directrice de l'information, qui diffuse le match d'ouverture et sait où sont les caméras du tunnel.
-- **Gigi Vecchio** (`vecchio`) — quatre-vingt-un ans, à la buvette des anciens : il demande qu'on lui rapporte « un peu de leur fraîcheur ». Il meurt en 2031.
-- **Gégé** (`gege`) — quatre-vingt-sept ans : le virage ne regardera pas ce Mondial-là, exprès.
+- **Gigi Vecchio** (`vecchio`) — quatre-vingts ans, à la buvette des anciens : il demande qu'on lui rapporte « un peu de leur fraîcheur ». Il meurt en 2031.
+- **Gégé** (`gege`) — quatre-vingt-six ans : le virage ne regardera pas ce Mondial-là, exprès.
 
 **Les visages nouveaux**
 
@@ -1388,7 +1388,7 @@ Cinquante ans, quarante sélections avec les Cobaltes dans les années 1990, ent
 9. **La voiture blanche** — *parking du stade, 2030.* Une berline électrique blanche, un nœud sur le capot, les clés au contact, une carte : « Avec les compliments de Dorada. » ← *Je la rends* · → *Je la garde*
 10. **La cave** — *chez Josiane, soir.* Elle descend à la cave avec une lampe : « J'ai tapé tous leurs procès-verbaux. Celui-là, j'en ai fait une copie de trop. Décembre 2010. Lisez l'heure. » ← *Je lis* · → *Remettez-le à sa place*
 11. **23 h 40** — *cave de Josiane.* « 23 h 40 : appel du cabinet de la ministre. 23 h 52 : le délégué du pays modifie son vote. » En bas de la page, les initiales de Josiane. ← *Je photographie la page* · → *Je la lui laisse*
-12. **La rue Haute** — *maison de Madame Aubert, soir.* Une couverture sur les genoux, la fenêtre ouverte sur le stade : « Un port, du gaz pour vingt ans, et un tournoi. Un stade, ça se vote. Le reste se perd. » ← *Vous saviez, pour les morts* · → *Pourquoi me le dire ?*
+12. **La rue Haute** — *maison de Madame Aubert, soir.* Un plaid écossais sur les jambes, la fenêtre ouverte sur le stade : « Un port, du gaz pour vingt ans, et un tournoi. Un stade, ça se vote. Le reste se perd. » ← *Vous saviez, pour les morts* · → *Pourquoi me le dire ?*
 13. **Le fisc** — *appartement, 20 h (événement sombre).* Un recommandé : contrôle fiscal sur trois ans ; dans la liste des biens « non déclarés », une montre en or et une berline électrique. ← *J'appelle une avocate* · → *J'appelle Sauvan*
 14. **Le local forcé** — *au-dessus du kiosque du quai, nuit (événement sombre).* Le petit local de l'association de Sacha : la porte forcée, les ordinateurs partis, les listes imprimées éparpillées dans l'escalier. ← *Je porte plainte* · → *Je ramasse les feuilles*
 15. **Les deux listes** — *salon de l'hôtel de la Rive.* Ta liste des vingt-six, et celle que Sauvan a apportée, où le nom de Noa Vandel est barré au crayon : « Le capitaine est fatigué, dit le ministère. » ← *Ma liste, avec Noa* · → *Leur liste*
@@ -1423,10 +1423,10 @@ Cinquante ans, quarante sélections avec les Cobaltes dans les années 1990, ent
 
 **Les sponsors** :
 
-- **Dorada** (louche) — la compagnie aérienne de l'émirat transporte gratuitement les Cobalts et offre ce qu'il faut : la montre en or (`cadeau_montre_or`), la berline électrique (`cadeau_electrique`), puis les clés d'un dernier étage avec terrasse chez Madame Tessandier (`cadeau_penthouse`), d'où l'on voit le stade, la mairie, et la fenêtre de ton ancien deux-pièces.
+- **Dorada** (louche) — la compagnie aérienne de l'émirat transporte gratuitement les Cobalts et offre ce qu'il faut : la montre en or (`cadeau_montre_or`), la berline électrique (`cadeau_electrique`), puis les clés d'un dernier étage avec terrasse, à l'agence Tessandier (`cadeau_penthouse`), d'où l'on voit le stade, la mairie, et la fenêtre de ton ancien deux-pièces.
 - **Gazéo** (gris) — la compagnie nationale du gaz, sponsor principal des Cobalts depuis le contrat de 2010 ; elle souhaite « un tournoi positif » et paie des primes qui arrivent toujours avant les matchs importants.
 
-**Les biens et la saisie.** La sélectionneuse ne s'achète rien : on lui donne. **La saisie est le retournement de l'État** : le jour où elle commence à poser des questions (la cave, la rue Haute), le fisc requalifie les cadeaux de l'émirat en avantages non déclarés et les saisit (`saisie_luxe`, puis `saisie_vehicules`) ; l'appartement de la terrasse retourne dans la vitrine de Madame Tessandier (`saisie_logement`). Le même État qui a fait livrer la montre envoie l'huissier la reprendre.
+**Les biens et la saisie.** La sélectionneuse ne s'achète rien : on lui donne. **La saisie est le retournement de l'État** : le jour où elle commence à poser des questions (la cave, la rue Haute), le fisc requalifie les cadeaux de l'émirat en avantages non déclarés et les saisit (`saisie_luxe`, puis `saisie_vehicules`) ; l'appartement de la terrasse retourne dans la vitrine de l'agence Tessandier (`saisie_logement`). Le même État qui a fait livrer la montre envoie l'huissier la reprendre.
 
 ### 7. Ce que dit la ville
 
@@ -1437,7 +1437,7 @@ Cinquante ans, quarante sélections avec les Cobaltes dans les années 1990, ent
 - *Fan, club* — si `tribunes >= 70` : « On sera devant l'écran de la place du marché. Si le capitaine met le brassard, on se lève. Sinon, on reste assis. »
 - *Gégé, sombre* — si `annee == 2030` : « Le virage ne regardera pas ce Mondial-là. On a soixante ans de matchs dans les jambes ; on peut en rater un. Celui-là, exprès. »
 - *Madame Josiane, toi* — si `flag(pv_lu)` : « J'ai tapé ce procès-verbal avec deux doigts, à minuit. Je savais déjà. On sait toujours, quand on tape. »
-- *Passant, rumeur* — si `possede(montre_or)` : « Une montre en or gravée "Dôme 2030" ? Le courtier de l'hôtel en avait trois dans sa vitrine. Ils en ont fait pour tout le monde. »
+- *Passant, rumeur* — si `possede(montre_or)` : « Votre montre du Dôme ? Le courtier de l'hôtel en avait trois dans sa vitrine. Ils en ont fait pour tout le monde. »
 - *Karim Fauvel, club* — si `flag(syndicat_brassard)` : « Le syndicat soutient le brassard. Je l'ai dit au ministre. Il m'a demandé mon âge. »
 - *Passant, quartier* — si `flag(local_force)` : « Ils ont forcé le petit local au-dessus du kiosque. Ils n'ont pas touché à la caisse. Que les ordinateurs. »
 - *Ancien, sombre* — si `flag(fisc)` : « Un contrôle fiscal pour une montre qu'on vous a offerte ? Mon père disait : quand l'État te fait un cadeau, garde le reçu. »
@@ -1452,9 +1452,9 @@ Cinquante ans, quarante sélections avec les Cobaltes dans les années 1990, ent
 - **Vingt degrés** (`mondial_vingt_degres`, le prix) — tu joues, tu te tais ; demi-finale. *« Les Cobalts sont allés jusqu'en demi-finale sous le Dôme, à vingt degrés, et {prenom} {nom} n'a rien dit d'autre que le score. En rentrant, on a changé de boulangerie. »*
 - **Le dos** (`mondial_dos`, rare) — ta liste avec Noa, le brassard porté au dernier match, la page de 2010 entre les mains de Léa, Sacha à +1 : les Cobalts gagnent. *« Les Cobalts ont gagné le Mondial d'hiver, et sur la photo officielle, à côté du chef d'État, on ne voit de {prenom} {nom} que le dos. Le trophée est passé de main en main jusqu'au brassard noir ; la photo n'a jamais été encadrée. »*
 - **Le ministère** (`mondial_ministre`, la fin *Le Ministre* de la bible) — tu acceptes, au retour, le portefeuille qu'on te propose. *« Au printemps suivant, on a confié à {prenom} {nom} le ministère des Sports, dans le bureau qu'avait occupé Madame Aubert. Le dossier de 2010 est resté dans le premier tiroir ; c'est l'usage. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — le brassard trouvé dans ta valise à l'aéroport d'Al-Dorado. *« Quarante-huit heures dans un bureau climatisé de l'aéroport, pour un morceau de chemise noire ; on t'a rendu ton passeport, pas le brassard. »*
-- **L'ambassade** (`sl_ambassadeur`, ligne propre) — *« Trop populaire pour rester : une ambassade aux îles Basses, loin des boulangeries. »*
-- **Minuit et une** (`sl_minuit`, ligne propre) — *« La Fédération a appelé à minuit et une, comme toujours ; c'est Bréhaut qui a lu la lettre, lui-même. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — le brassard trouvé dans ta valise à l'aéroport d'Al-Dorado. *« Ce n'était pas un commissariat, mais un bureau climatisé de l'aéroport d'Al-Dorado ; pour un morceau de chemise noire, on t'a rendu ton passeport, pas le brassard. »*
+- **L'ambassadeur** (`sl_ambassadeur`, ligne propre) — *« Aux îles Basses, la boulangerie de l'ambassade ouvre avant le jour ; personne n'y demande rien. »*
+- **Minuit et une** (`sl_minuit`, ligne propre) — *« Au bout du fil, c'était Bréhaut lui-même ; il s'est excusé de l'heure, pas du reste. »*
 
 ### 9. La question de saison et les objectifs
 
@@ -1497,11 +1497,11 @@ Cinquante-huit ans, ancienne milieu de la section féminine du Racing (2008-2016
 ### 4. La distribution
 
 - **Gégé** (`gege`) — quatre-vingt-quatorze ans, socio numéro 1, la bâche de son père pliée au pied de son lit, au-dessus du local. Il veut voir la première division une fois. Il entend tout, et il a entendu les deux clapets. Il meurt en février 2040 et laisse une lettre.
-- **Lian Mbako** (`mbako`) — soixante-trois ans, président de la Fédération depuis 2036. Il a écrit la loi des franchises avec la Ligue : sans elle, huit clubs de première division déposent le bilan ; avec elle, plus aucun gamin ne monte. Il a eu la Fédération en échange. Il était le gamin de 1990 qui voulait jouer tout de suite.
+- **Lian Mbako** (`mbako`) — soixante-trois ans, président de la Fédération depuis 2032. Il a écrit la loi des franchises avec la Ligue : sans elle, huit clubs de première division déposent le bilan ; avec elle, plus aucun gamin ne monte. Il a eu la Fédération en échange. Il était le gamin de 1990 qui voulait jouer tout de suite.
 - **Cheikh Ilyas** (`nassir`) — quatre-vingt-un ans, président de la Ligue, qui a fait écrire que la Ligue n'a pas de limite d'âge. Le patriarche du consortium. « Ce n'est pas un club, c'est une place. »
-- **Madame Josiane** (`josiane`) — cent ans, à la maison de retraite derrière l'église Saint-Aubin. Elle a gardé la photo de 1974, celle de l'escalier du club-house, et le clou est toujours au mur.
+- **Madame Josiane** (`josiane`) — quatre-vingt-dix-neuf ans, cent l'année suivante, à la maison de retraite derrière l'église Saint-Aubin. Elle a gardé la photo de 1974, celle de l'escalier du club-house, et le clou est toujours au mur.
 - **Léa** (`lea`) — soixante-douze ans, retraitée ; elle écrit chaque semaine la lettre de lecteur de L'Écho, le dernier journal papier du pays, qui ne paraît plus que le dimanche. Elle a gardé un dictaphone de 1995.
-- **Nadia Rouvier** (`rouvier`) — soixante-dix-sept ans, toujours à son cabinet : « Respire. Encore. » Elle sait reconnaître quelqu'un qui a deux téléphones.
+- **Nadia Rouvier** (`rouvier`) — soixante-dix-sept ans, revenue à Aubérive, où elle soigne encore les anciens du virage, chez elle. Elle sait reconnaître quelqu'un qui a deux téléphones.
 - **La voix de Gigi Vecchio** — générée par la chaîne qui diffuse la deuxième division ; elle commente les matchs du Racing et dit « magnifique », un mot que Gigi n'a jamais prononcé.
 
 **Les visages nouveaux**
@@ -1526,12 +1526,12 @@ Cinquante-huit ans, ancienne milieu de la section féminine du Racing (2008-2016
 3. **La première marche** — *escalier nord du stade.* Un maçon mure la première marche, sans se presser : « Par sécurité, présidente. Une par mois. Je mure, je ne décide pas. » ← *Arrêtez ce chantier* · → *Combien de marches ?*
 4. **La troisième tranche** — *vitrine Tessandier.* La vieille maquette jaunie des Terrasses a été repeinte : « troisième tranche, 2041 ». À la place du stade, un parc, et une plaque : Racing Capitale, centre de formation. ← *J'entre* · → *Je passe*
 5. **La voix de Gigi** — *loge, jour de match.* Les haut-parleurs commentent avec la voix de Gigi Vecchio, mort en 2031. Gégé, à côté de toi : « Il n'a jamais parlé autant de sa vie. Et il ne disait pas "magnifique". » ← *Coupez cette voix* · → *Laissez-le parler*
-6. **Le président de la Fédération** — *ton bureau.* Mbako s'assoit sous le clou où pendait la photo de 1974 — ou sous la photo, si tu l'as raccrochée : « Sans la loi, huit clubs déposent le bilan. Je sauve ce qu'on peut sauver. Tu étais où, toi, en 1990 ? » ← *Je jouais au foot* · → *Je vous écoutais*
+6. **Le président de la Fédération** — *palier du club-house, devant ton bureau.* Mbako s'arrête sous le clou de 1974, qui n'a plus rien à porter — ou sous la photo, si tu l'as raccrochée : « Sans la loi, huit clubs déposent le bilan. Je sauve ce qu'on peut sauver. Tu étais où, toi, en 1990 ? » ← *Je jouais au foot* · → *Je vous écoutais*
 7. **La première commande** — *clapet, nuit.* « Le petit Brac ira à la capitale cet hiver. Ce sera bien pour lui. Ce sera bien pour vous. » Puis la tonalité. ← *Il reste* · → *Il partira*
 8. **La photo** — *appartement, 3 h (événement sombre).* Une photo circule depuis trois heures : toi, au bar de l'hôtel de la Rive, en face d'une femme en manteau d'automne. Dessous : « La présidente boit avec qui ? » ← *Je dis la vérité* · → *Je dis : une amie*
 9. **La seconde sonnerie** — *local du kop, soir (événement sombre).* Pendant que Nino parle aux socios, une sonnerie de 1995 sort de sa veste pendue à la patère. La même que la tienne. Gégé, près du poêle, te regarde. ← *Je décroche* · → *Je laisse sonner*
 10. **La lettre du dimanche** — *kiosque du quai.* Léa, soixante-douze ans, attend son Écho : « La loi est votée, il reste dix-huit mois. J'écris la lettre de lecteur. Je la signe de mon nom, ou de celui du virage ? » ← *De votre nom* · → *Du virage*
-11. **L'hélicoptère** — *pelouse du stade, mardi matin.* Un hélicoptère blanc se pose au rond central ; le pilote te tend une carte : « Avec les compliments de Rive Capital. Il se pose sur un terrain de football. Le vôtre, par exemple. » ← *Renvoyez-le* · → *Je le garde*
+11. **L'hélicoptère** — *pelouse du stade, mardi matin.* Un hélicoptère blanc se pose au rond central ; le pilote te tend une enveloppe crème : « De la part de Rive Capital. Il se pose sur un terrain de football. Le vôtre, par exemple. » ← *Renvoyez-le* · → *Je le garde*
 12. **Intermède : l'escalier** — *rêve.* Tu montes l'escalier nord dans le noir ; à chaque marche, derrière toi, un bruit de truelle. En haut, tu te retournes : il n'y a plus que le mur, et de l'autre côté, Gégé qui frappe. Un bouton : *Je frappe aussi*
 13. **Les pales** — *pelouse, entraînement ouvert du soir (la saisie).* Deux huissiers devant la Nord qui arrive : l'hélicoptère est saisi, la « donation » était un prêt. Le virage regarde les pales s'arrêter. ← *Je parle au virage* · → *Je rentre au club-house*
 14. **Le neveu** — *buvette, nuit.* Nino seul au zinc, la veste sur l'épaule, son clapet posé à côté du tien : « Deux téléphones, une seule défaite. Ils nous paient pour la même chose, présidente. » ← *On les trahit ensemble* · → *Chacun pour soi*
@@ -1579,26 +1579,26 @@ Cinquante-huit ans, ancienne milieu de la section féminine du Racing (2008-2016
 - *Enfant, quartier* — si `flag(marche_muree)` : « Le monsieur mure une marche de l'escalier tous les mois. On compte avec ma sœur. Il en reste onze. Après, on passe par où ? »
 - *Passant, rumeur* — si `flag(maquette_trois)` : « La maquette de chez Tessandier, ils l'ont repeinte. Ma mère dit qu'elle était déjà dans la vitrine quand elle était petite. »
 - *Ancien, sombre* — si `flag(voix_gigi)` : « La voix de Gigi au micro, ça me fait pleurer et ça me fait peur. Il dit des choses qu'il n'aurait jamais dites. Il dit "magnifique". »
-- *Le buraliste du Quai, argent* — si `possede(helico)` : « Un hélicoptère sur la pelouse ? Au Quai, on parie sur le temps qu'il va rester. Les socios disent Noël. »
+- *Le buraliste du Quai, argent* — si `possede(helico)` : « Un hélicoptère sur la pelouse ? Les habitués du Quai ont ouvert une cote sur le temps qu'il va rester. Les socios disent Noël. »
 - *Passante, sombre* — si `flag(photo_hotel)` : « Au bar de l'hôtel avec une dame en manteau, à minuit ? Ma fille dit que c'est une agente. À cette heure-là, on n'a pas d'agente. »
 - *Gégé, toi* — si `relation.gege >= 2` : « J'ai vu la Nord se lever pour dix présidents. Elle se lèvera pour toi si tu montes. Sinon, elle se lèvera quand même, pour partir. »
 - *Fan, club* — si `flag(second_clapet)` : « Nino a parlé une heure de l'accord de franchise, ce soir, au local. Avant, il ne parlait que des tambours. »
-- *Madame Josiane, toi* — si `mission(photo_1974)` : « Le clou était toujours là. Je l'avais dit à tout le monde, en 1991. Merci d'avoir écouté une vieille dame ; il était temps, j'ai cent ans. »
+- *Madame Josiane, toi* — si `mission(photo_1974)` : « Le clou était toujours là. Je l'avais dit à tout le monde, en 1991. Merci d'avoir écouté une vieille dame ; il était temps, je vais avoir cent ans. »
 - *Le vendeur du garage du Pont, achat* — si `flag(helico_saisi)` : « Votre hélicoptère est parti sur un camion, les pales repliées comme un oiseau mort. Mon fils a filmé. Tout le monde a filmé. »
 - *Nadia Rouvier, toi* — si `annee >= 2039` : « Respire. Encore. Je fais ça à tout le monde depuis 1990. Toi, tu respires comme quelqu'un qui a deux téléphones. »
-- *Fan, sombre* — si `flag(gege_mort)` : « Trois mille visages de Gégé, imprimés dans la nuit. Mon père dit qu'en 1990 on avait fait pareil pour quelqu'un. Il ne se rappelle plus pour qui. »
+- *Fan, sombre* — si `flag(gege_mort)` : « Toute la Nord avec la tête de Gégé en carton, imprimée dans la nuit. Mon père dit qu'en 1990 on avait fait pareil pour quelqu'un. Il ne sait plus qui. »
 - *Ancien, époque* — si `annee >= 2040` : « L'escalier est fermé. Mon petit-fils demande ce que c'était, monter. Je lui ai dit : un dimanche soir dans la rue, et personne ne dormait. »
-- *Léa, toi* — si `flag(clapets_montres)` : « Deux clapets sur une table d'assemblée. J'ai écrit soixante ans pour voir une chose pareille. Je la raconterai dimanche. »
+- *Léa, toi* — si `flag(clapets_montres)` : « Deux clapets sur une table d'assemblée. J'ai écrit cinquante ans pour voir une chose pareille. Je la raconterai dimanche. »
 
 ### 8. Les fins
 
-- **Les deux clapets** (`escalier_clapets`, la vérité) — à l'assemblée, tu poses les deux téléphones et le dictaphone de Léa ; l'accord n'est pas voté ; tu démissionnes ; l'enquête commence chez Rive Capital. *« À l'assemblée des socios, {prenom} {nom} a posé sur la table deux portables à clapet, le sien et celui du capo, et l'accord de franchise n'a pas été voté. L'escalier a fermé quand même ; le Racing, lui, est resté au bord de la Rive, sous son nom. »*
+- **Les deux clapets** (`escalier_clapets`, la vérité) — à l'assemblée, tu poses les deux téléphones et le dictaphone de Léa ; l'accord n'est pas voté ; tu démissionnes ; l'enquête commence chez Rive Capital. *« À l'assemblée des socios, {prenom} {nom} a sorti de sa veste deux portables à clapet, le sien et celui du capo, et l'accord de franchise n'a pas été voté. L'escalier a fermé quand même ; le Racing, lui, est resté au bord de la Rive, sous son nom. »*
 - **La franchise** (`escalier_franchise`, le prix) — le dernier match perdu, l'accord voté, le nom vendu, le siège obtenu. *« Le Racing a perdu son dernier match d'un but, et l'assemblée a vendu son nom le lendemain ; {prenom} {nom} siège depuis au conseil de la Ligue des franchises. Dans la vitrine de l'agence, la troisième tranche n'a jamais été aussi verte. »*
 - **La dernière montée** (`escalier_montee`, rare) — le match gagné, la dernière marche laissée ouverte, Nino retourné, la photo de 1974 raccrochée, Gégé à +2 avant sa mort. *« Le Racing est monté en première division le dernier soir où l'on pouvait encore monter, et trois mille visages de Gégé ont envahi la pelouse. Le consortium a pris à {prenom} {nom} tout ce qui était à son nom ; l'escalier nord a gardé sa dernière marche. »*
 - **Le mur** (`escalier_mur`, pire) — la dernière marche murée, le match perdu exprès, la lettre de Gégé lue par Nino pour se sauver. *« Le soir de la dernière journée, l'escalier nord a été muré jusqu'en haut, et le lendemain les socios ont lu une lettre de Gégé qui parlait de deux téléphones. On a vu brûler la villa des hauteurs depuis toute la ville ; {prenom} {nom} n'était déjà plus à Aubérive. »*
-- **La garde à vue** (`co_garde_a_vue`, ligne propre) — l'argent de Rive Capital remonté par la brigade, ou la truelle payée avec. *« Quarante-huit heures pendant que l'escalier fermait ; dans la cellule, on t'a laissé un seul téléphone, celui du mur. »*
-- **Le pantin** (`pr_pantin`, ligne propre) — *« Deux téléphones et pas de voix : la carte de la Ligue des franchises était signée avant que le club soit vendu. »*
-- **Le siège du siège** (`pr_siege`, ligne propre) — *« Les socios ont occupé le club-house la nuit de la photo ; ils ont rendu les clés au suivant. »*
+- **La garde à vue** (`co_garde_a_vue`, ligne propre) — l'argent de Rive Capital remonté par la brigade, ou la truelle payée avec. *« L'escalier a fermé pendant ces deux jours ; dans la cellule, on t'a laissé un seul téléphone, celui du mur. »*
+- **Le pantin** (`pr_pantin`, ligne propre) — *« Le jour de la vente, les deux téléphones ont sonné en même temps ; tu as décroché celui qui payait. »*
+- **Le siège du siège** (`pr_siege`, ligne propre) — *« La nuit de la photo, les cartes de socio ont été déposées une à une sur ton bureau ; au matin, il n'en manquait aucune. »*
 
 ### 9. La question de saison et les objectifs
 
@@ -1612,3 +1612,52 @@ Cinquante-huit ans, ancienne milieu de la section féminine du Racing (2008-2016
 
 ---
 
+## La relecture de l'éditeur
+
+Le livre a été relu d'un bout à l'autre avec les trois questions de la commande — dix histoires vraiment différentes ? chacune arrive-t-elle quelque part ? chacune se joue-t-elle dans la ville ? —, puis corrigé là où il se contredisait. Voici ce que la relecture établit, ce qu'elle a changé, et ce qu'elle laisse aux auteurs.
+
+### Dix histoires, pas dix fois la même
+
+Chaque livre a son genre, son mécanisme et sa vérité, et aucun des trois ne sert ailleurs :
+
+- *Trois mille visages* — la vengeance, les masques. Personne n'est innocent sur la photo de 1974 : Vaubourg a vendu la finale, Gigi a laissé passer les trois buts, Henri a pris l'enveloppe, et Gégé fait d'un deuil de virage une arme.
+- *Le Sapin en carton* — la disparition, le répondeur et la voiture. L'homme qu'on cherche est vivant ; celui qui a besoin qu'il soit mort conduit le car du club.
+- *La Sirène* — la descente aux enfers, la sirène. Personne n'a poussé le gamin : une machine casse les jeunes pour les racheter, et une secrétaire a signé une seule fausse licence.
+- *La Route de la Rive* — la rédemption impossible, la route rêvée. Tu n'as pas conduit, elle n'est pas morte, et ton capitaine a bâti sa vie sur la phrase qui te le faisait croire.
+- *La Maquette* — le complot, la maquette et le Conseil. Trois personnes ordinaires tuent un club avec des signatures, et la troisième dort à côté de toi.
+- *23 h 58* — le chantage, le fax. Le maître chanteur est le stagiaire qui tape les rapports des autres.
+- *Chambre 12* — le huis clos, le tableau des clés. Il n'y a pas d'assassin : une chaîne de gens qui ont laissé faire, et ta signature au bas de la pile.
+- *L'Oreillette* — la folie, la voix. La machine qui sait tout est une intérimaire qui lit un écran la nuit, et la ligne qui a condamné Kerdal, c'est toi qui l'as écrite.
+- *Vingt degrés dedans* — la corruption d'État, le brassard noir. Une ancienne ministre a vendu un vote en 2010, et l'État qui t'offre une montre envoie le fisc la reprendre.
+- *Les Deux Téléphones* — le double jeu, les deux clapets. Le gamin de 1990 a écrit la loi qui ferme l'escalier, et le neveu de Gégé porte le même téléphone que toi.
+
+Les époques ne se recouvrent qu'en 1990, où quatre postulats partagent le même été sans s'appuyer l'un sur l'autre (§ 1.8) ; les six autres tiennent chacune leur tranche, de 1999 à 2040. Chaque rôle a ses deux histoires, et elles ne se ressemblent pas.
+
+### Chacune arrive quelque part
+
+Chaque fiche a un acte final de deux ou trois cartes, une révélation qui change le sens de ce qui précède, et au moins trois fins à elle : la vérité, le prix, une fin rare qui se mérite sur trois saisons ; sept livres y ajoutent une fin pire, et tous habillent d'une ligne la garde à vue. Aucune ne s'arrête sur « la carrière continue » : si la carrière continue, la saison d'après est un épilogue.
+
+### Chacune se joue dans la ville
+
+Les dix fiches ont le même équipement, et chaque pièce sert l'intrigue au lieu de l'accompagner :
+
+- **des soirs à un lieu précis** — huit ou neuf par fiche, ancres de nuit et réservoir (§ 1.4) ;
+- **trois missions**, dont une au moins rapporte une preuve, une dette ou une trahison (le registre du cimetière, la clé de la tour, le dossier de l'hôpital, la cave de Josiane) ;
+- **deux sponsors**, un louche, un gris ou propre ; l'argent sale rend saisissable ce qu'il paie ;
+- **des biens et une saisie qui fait tournant** : la voiture au masque sous scellés, l'appartement de Mercadier repris, le coupé devant la Nord puis le pavillon d'Odile, le pavillon des Lilas payé à la famille Lavergne, la maison à l'en-tête du cabinet de Camille, les montres bloquées par Vialat, l'appartement de fonction et la chambre 11, le dépouillement par le fonds, les cadeaux de l'émirat requalifiés par le fisc, l'hélicoptère sur la pelouse ;
+- **quinze lignes de ville** par fiche, qui changent avec ce que la ville sait.
+
+### Ce que la relecture a changé
+
+- **La règle des soirs (§ 1.4).** Elle distingue maintenant les ancres de nuit, servies par le script, du réservoir d'événements sombres que le metteur en scène arme (deux par saison au plus, jamais à moins de cinq créneaux), avec un plafond de quatre soirs par saison pour les deux ensemble.
+- **Le moteur (§ 1.10).** La section dit ce qui est branché (les trois rôles, l'intermède, la ligne d'ordre, `lieu: ailleurs`, les lots) et ce qui reste (les transitions de carrière des nouveaux rôles).
+- **Les âges et les dates**, recalés sur la charte (l'âge de 1990, plus les années) : Aubert, Ilyas, Gigi et Gégé dans *Vingt degrés dedans* ; Josiane, presque centenaire, et Mbako, président de la Fédération depuis 2032, dans *Les Deux Téléphones* ; Nino, né en 1984, d'un livre à l'autre ; Lhoste, qui avait vingt-neuf ans en 1974 ; les sélections de la sélectionneuse, dans les années 2000.
+- **Les contradictions** : Massenet est au Quotidien, pas à la Gazette ; la vente de la pépite tombe dans les deux cas parce que Fardelli la fait tomber ; Fardelli est passé au cimetière la veille du premier 14 mai, et il reste trois livraisons de chrysanthèmes, pas quatre ; le cahier de Vukić met Titi au volant et le petit endormi, comme Bréhaut le dira ; la berline sortie de la Rive est vide, et personne ne sait comment elle y est arrivée ; la coupure de Vialat est celle de Vaucastel ; le Rideau Rouge a vendu la photo l'été de la signature ; le bus du fiasco reste près de deux ans sur le parking, et la Fédération passe sous tutelle en 2013 ; le classeur de photocopies est chez Josiane, les fax originaux, devenus blancs, au grenier ; Mbako attend sur le palier, sous le clou.
+- **Les répétitions** : la ligne de garde à vue de chaque livre ne commence plus par les mots de l'épitaphe commune, et les lignes ajoutées aux fins des rôles ne redisent plus leur épitaphe ; une ligne de ville ne répète plus mot pour mot la scène qu'elle commente ; les gestes et les tournures qui passaient d'un livre à l'autre ont été changés ; la saisie de *Trois mille visages* a quitté le parking de la Nord, que garde *La Sirène* ; la phrase de Nadia Rouvier ne sert plus qu'une fois.
+
+### Ce que les auteurs gardent en tête
+
+- La prose de ce livre dit « il » par commodité ; les cartes, les lignes de ville et les épitaphes ne supposent rien (§ 1.6), et les trois héroïnes par défaut restent jouables en homme.
+- Ceux qui attendent sous ta fenêtre (l'événement existant *Ils t'attendent* et ses cousins) reviennent dans six livres ; *Trois mille visages* et *La Route de la Rive* partagent même le titre « L'homme sous la fenêtre » et la rue des Lilas. Chaque habillage garde son tour — le masque immobile, le père qui ne dit rien, les deux hommes qui regardent la fenêtre d'une mère, le photographe qui ne prend que la porte, la voiture qui ralentit après un message, les cartes de socio levées —, et deux livres ne partagent pas une phrase. Il en va de même du coup de fil de trois heures (*Trois mille visages*, *Le Sapin en carton*, *La Route de la Rive*).
+- Un livre ne cite des autres que ce qu'ils laissent au monde, et ces faits sont vrais quelle que soit la fin.
+- Les ids de ce livre (fins, drapeaux, missions) sont des propositions : le préfixe de l'histoire (`hN_`, `en.hN.…`) les range sans les renommer.

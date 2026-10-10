@@ -3,13 +3,26 @@
 # § 7, ch. 13 § 9, ch. 14 § 9, pour ce qui ne dépend d'aucune histoire).
 # Schéma et règles : en-tête de content/unes.yaml.
 #
-# Chaque rôle a deux manchettes de verdict (priorité 1, poids 2 : elles passent
-# devant les génériques de content/unes.yaml sans les faire taire), des
-# manchettes d'état (priorité 2 : une jauge, un drapeau qui dure) et des
-# manchettes de trace (priorité 3), qui ne lisent que ce qui s'est passé cette
-# saison (`journal_has`, la ligne d'Almanach de l'alarme porte le drapeau en
-# tag). Le sélectionneur n'écrit pas dans L'Écho de {ville} (sa « ville » est
-# un pays) : il a le Quotidien et la Gazette.
+# Chaque rôle a deux manchettes de verdict, des manchettes d'état (priorité 2 :
+# une jauge, un drapeau qui dure) et des manchettes de trace (priorité 3), qui
+# ne lisent que ce qui s'est passé cette saison (`journal_has`, la ligne
+# d'Almanach de l'alarme porte le drapeau en tag).
+#
+# Le rang des verdicts n'est pas le même pour les trois rôles. Celui du
+# directeur sportif est en priorité 1, poids 2 : il passe devant les
+# génériques de verdict (content/unes.yaml, priorité 1, sans `roles:`) sans
+# les faire taire — elles parlent d'un club, et il est dans un club. Celui du
+# président et du sélectionneur est en priorité 2, poids 3 : ces génériques
+# parlent du président à la troisième personne (« disait le président en
+# août », « {NOM}, lui, a une porte »), du local du virage, d'août et
+# d'Aubérive, ce qui ne va ni à l'un ni à l'autre ; une manchette de priorité
+# 2 les écarte (la bande la plus haute gagne). La descente a sa manchette chez
+# le directeur sportif et le sélectionneur (priorité 4, poids 9) : les trois
+# génériques de descente (priorité 4, poids 1) titrent sur « le banc »,
+# qu'aucun des deux n'occupe ; à poids 9, la leur passe trois fois sur quatre.
+#
+# Le sélectionneur n'écrit pas dans L'Écho de {ville}, et ses manchettes ne
+# nomment ni {ville} ni {club} : il a le Quotidien et la Gazette, et un pays.
 unes:
   # ------------------------------------------------------ directeur sportif
   - id: une.ds.mercato_tenu
@@ -54,14 +67,18 @@ unes:
     titre: "LE COACH ET LE DS NE SE PARLENT PLUS"
     sous: "Deux portes au même étage, deux versions de la saison. Le capitaine a choisi la sienne ; {nom} n'était pas à la conférence de presse."
     sujet: vestiaire
-  - id: une.ds.homme
+  # La descente. Sans elle, une fois sur trois, la Une titrait « {NOM} garde
+  # le banc » (une.generic.descente_chauffage). Elle remplace une « créature
+  # du président » qui doublait une.generic.creature, mot pour mot ou presque.
+  - id: une.ds.descente
     roles: [ds]
-    journal: gazette
-    priority: 2
-    when: "flag('homme_president') && gauges.direction >= 70"
-    titre: "{NOM}, LA CRÉATURE DU PRÉSIDENT"
-    sous: "{pg, select, f{Elle} other{Il}} signe ce que le beau-frère apporte, dit-on au club. Le jour où le président tombera, on saura qui tombe avec lui."
-    sujet: direction
+    journal: echo
+    priority: 4
+    poids: 9
+    when: "bilan.outcome == 'descente'"
+    titre: "{VILLE} DESCEND, LES AGENTS SONT LÀ"
+    sous: "{rang}e et l'étage du dessous. Trois agents attendaient au parking avant le coup de sifflet final ; {prenom} {nom} est sorti{pg, select, f{e} other{}} par la porte du personnel."
+    sujet: bilan
   - id: une.ds.bache
     roles: [ds]
     journal: gazette
@@ -83,8 +100,8 @@ unes:
   - id: une.pr.rang_comptes
     roles: [president]
     journal: quotidien
-    priority: 1
-    poids: 2
+    priority: 2
+    poids: 3
     when: "bilan.tenu"
     titre: "{NOM} TIENT LE RANG ET LES COMPTES"
     sous: "{rang}e en juin, objectif « {objectif} » tenu. Le conseil d'administration a applaudi, et l'a fait inscrire au procès-verbal."
@@ -92,8 +109,8 @@ unes:
   - id: une.pr.chaise_vide
     roles: [president]
     journal: echo
-    priority: 1
-    poids: 2
+    priority: 2
+    poids: 3
     when: "!bilan.tenu"
     titre: "{VILLE} ATTEND {pg, select, f{SA PRÉSIDENTE} other{SON PRÉSIDENT}} AU LOCAL"
     sous: "Objectif « {objectif} » manqué, {rang}e. Au local du virage, on a gardé une chaise pour {prenom} {nom}, devant, face à la tribune. Elle est restée vide."
@@ -151,8 +168,8 @@ unes:
   - id: une.sl.merci
     roles: [selectionneur]
     journal: quotidien
-    priority: 1
-    poids: 2
+    priority: 2
+    poids: 3
     when: "bilan.tenu"
     titre: "LE PAYS DIT MERCI À {NOM}"
     sous: "{objectif} : tenu. Le pays a klaxonné jusqu'à deux heures du matin. {pg, select, f{La sélectionneuse} other{Le sélectionneur}} est rentré{pg, select, f{e} other{}} à pied, sans un mot pour les micros."
@@ -160,8 +177,8 @@ unes:
   - id: une.sl.sa_liste
     roles: [selectionneur]
     journal: gazette
-    priority: 1
-    poids: 2
+    priority: 2
+    poids: 3
     when: "!bilan.tenu"
     titre: "LE PAYS A SA LISTE. ET {NOM} ?"
     sous: "{objectif} : manqué. Au café, chacun a ses vingt-six noms ; aucune ne porte le nom {pg, select, f{de la sélectionneuse} other{du sélectionneur}}. Le Rosé : 4 sur 20."
@@ -207,12 +224,13 @@ unes:
     sous: "Le sponsor du maillot verse le 3 du mois. À qui, la Fédération « vérifie ». {prenom} {nom} n'a pas répondu à nos appels ; son avocat, si."
     sujet: sponsors
   # Le premier groupe des nations perdu : sans elle, la Une titrait sur le
-  # club et « le banc » (les manchettes génériques de descente, priorité 4).
+  # club, le local et « le banc » (les génériques de descente, priorité 4,
+  # poids 1, sans `roles:`).
   - id: une.sl.groupe
     roles: [selectionneur]
     journal: quotidien
     priority: 4
-    poids: 4
+    poids: 9
     when: "bilan.outcome == 'descente'"
     titre: "LE PAYS QUITTE LE PREMIER GROUPE"
     sous: "La sélection descend d'un étage au classement des nations, {rang}e sur dix-huit. {prenom} {nom} « assume » ; la Fédération réunit son bureau mardi."

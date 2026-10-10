@@ -142601,42 +142601,29 @@
       "sujet": "vestiaire"
     },
     {
-      "id": "une.ds.homme",
+      "id": "une.ds.descente",
       "postulats": [],
       "roles": [
         "ds"
       ],
-      "journal": "gazette",
-      "priority": 2,
-      "poids": 1.0,
+      "journal": "echo",
+      "priority": 4,
+      "poids": 9.0,
       "when": [
-        "and",
+        "cmp",
+        "==",
         [
-          "call",
-          "flag",
-          [
-            [
-              "lit",
-              "homme_president"
-            ]
-          ]
+          "path",
+          "bilan.outcome"
         ],
         [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "gauges.direction"
-          ],
-          [
-            "lit",
-            70
-          ]
+          "lit",
+          "descente"
         ]
       ],
-      "titre": "{NOM}, LA CRÉATURE DU PRÉSIDENT",
-      "sous": "{pg, select, f{Elle} other{Il}} signe ce que le beau-frère apporte, dit-on au club. Le jour où le président tombera, on saura qui tombe avec lui.",
-      "sujet": "direction"
+      "titre": "{VILLE} DESCEND, LES AGENTS SONT LÀ",
+      "sous": "{rang}e et l'étage du dessous. Trois agents attendaient au parking avant le coup de sifflet final ; {prenom} {nom} est sorti{pg, select, f{e} other{}} par la porte du personnel.",
+      "sujet": "bilan"
     },
     {
       "id": "une.ds.bache",
@@ -142717,8 +142704,8 @@
         "president"
       ],
       "journal": "quotidien",
-      "priority": 1,
-      "poids": 2.0,
+      "priority": 2,
+      "poids": 3.0,
       "when": [
         "path",
         "bilan.tenu"
@@ -142734,8 +142721,8 @@
         "president"
       ],
       "journal": "echo",
-      "priority": 1,
-      "poids": 2.0,
+      "priority": 2,
+      "poids": 3.0,
       "when": [
         "not",
         [
@@ -142937,8 +142924,8 @@
         "selectionneur"
       ],
       "journal": "quotidien",
-      "priority": 1,
-      "poids": 2.0,
+      "priority": 2,
+      "poids": 3.0,
       "when": [
         "path",
         "bilan.tenu"
@@ -142954,8 +142941,8 @@
         "selectionneur"
       ],
       "journal": "gazette",
-      "priority": 1,
-      "poids": 2.0,
+      "priority": 2,
+      "poids": 3.0,
       "when": [
         "not",
         [
@@ -143124,7 +143111,7 @@
       ],
       "journal": "quotidien",
       "priority": 4,
-      "poids": 4.0,
+      "poids": 9.0,
       "when": [
         "cmp",
         "==",
@@ -143474,6 +143461,548 @@
   },
   "setpieces": {
     "objective": [
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "aulard",
+        "text": "Vaubourg tapote la page deux de ton contrat, le téléphone coincé contre l'épaule : « L'équipe vise {objectif_min}. Toi, tu vises ce chiffre de ventes, là. Le coach n'a pas à lire la page deux. Tu signes ? »",
+        "left": "Je signe la page deux",
+        "right": "Le coach lira tout",
+        "answer_left": "Il plie la page deux vers l'intérieur avant de ranger le contrat dans le tiroir.",
+        "answer_right": "Il raccroche pour mieux te regarder. « Alors c'est toi qui la lui liras. »"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "bilan_manque"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "aulard",
+        "text": "Vaubourg a gardé le classement de juin sous son sous-main, plié en quatre : « Cette année, {objectif_min}. Je ne veux plus lire mon club en bas d'une page. Tu t'engages, cette fois ? »",
+        "left": "Cette fois, je m'engage",
+        "right": "Pas sur une feuille pliée",
+        "answer_left": "Il déplie la feuille de juin et la jette à la corbeille, devant toi.",
+        "answer_right": "Il remet la feuille sous le sous-main. Elle y reste jusqu'à l'été."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "commission_lettre"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "josiane",
+        "text": "Madame Josiane pose la lettre de la Commission à côté du contrat de l'entraîneur : « Masse salariale sous le seuil au 30 juin, et l'équipe vise {objectif_min}. Vous promettez les deux, ou je réponds qu'on étudie ? »",
+        "left": "Je promets les deux",
+        "right": "Répondez qu'on étudie",
+        "answer_left": "Elle tape ta réponse en deux exemplaires. Le premier part à la Commission, le second dort dans ton tiroir.",
+        "answer_right": "Elle écrit « à l'étude » au bas de la lettre, la date à côté, et la classe dans le dossier rouge."
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            0
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "{patron} te remet les clés du bureau des recrutements ; l'étiquette porte encore le nom de ton prédécesseur. « L'équipe vise {objectif_min}. Le reste, tu me le diras. Tu t'engages ? »",
+        "left": "Je m'y engage",
+        "right": "Pas avant d'avoir vu",
+        "answer_left": "Promesse publique : {objectif}. Il décolle l'étiquette de l'ancien avec l'ongle, et la jette dans ta corbeille.",
+        "answer_right": "Il hausse les épaules. L'étiquette reste sur la clé jusqu'à Noël."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "bilan_manque"
+              ]
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "{patron} a punaisé le classement de juin au mur de ton bureau, à hauteur d'yeux : « Il reste là jusqu'à ce qu'un meilleur le remplace. Cette année, {objectif_min}. Tu t'engages ? »",
+        "left": "Décrochez-le en juin",
+        "right": "Laissez-le au mur",
+        "answer_left": "Promesse publique : {objectif}. Il te met la punaise dans la main : c'est toi qui le décrocheras.",
+        "answer_right": "La feuille jaunit au mur. Tu finis par ne plus la voir ; tes visiteurs, si."
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Encore un été. {patron} ne monte plus pour l'objectif : un mot collé sur ta lampe de bureau, « {objectif_min} ? », le point d'interrogation souligné deux fois.",
+        "left": "Je réponds « oui »",
+        "right": "Je ne réponds pas",
+        "answer_left": "Promesse publique : {objectif}. Le lendemain, ton « oui » est sur son bureau, sous verre.",
+        "answer_right": "Le mot reste sur la lampe tout l'automne. La chaleur de l'ampoule en jaunit les bords."
+      },
+      {
+        "roles": [
+          "ds"
+        ],
+        "text": "{patron} déplie la liste des contrats sur le bureau, un trait rouge sous le plus cher : « Pour l'équipe, {objectif_min}. Pour toi, un mercato qui ne me réveille pas la nuit. Tu t'engages ? »",
+        "left": "Je m'engage",
+        "right": "Je ne promets rien",
+        "answer_left": "Promesse publique : {objectif}. Le trait rouge reste sur la liste, en face d'un nom que tu connais.",
+        "answer_right": "Tu gardes les mains libres. Il replie la liste en suivant les anciens plis."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "josiane",
+        "text": "Madame Josiane pose six classeurs sur ton bureau, un par président avant toi : « Tous avaient un objectif écrit en août. Le vôtre, c'est {objectif_min}. Je l'écris en tête du septième ? »",
+        "left": "Écrivez-le en tête",
+        "right": "Laissez la page blanche",
+        "answer_left": "Elle l'écrit au stylo-plume, en capitales, et souffle sur l'encre avant de refermer.",
+        "answer_right": "Elle range le septième classeur avec les autres. C'est la seule tranche sans étiquette."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "bilan_manque"
+              ]
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "nassir",
+        "text": "Ilyas a imprimé la courbe de l'an dernier et l'a coupée aux ciseaux au mois de juin : « Le conseil veut {objectif_min}, et une courbe qui ne s'arrête pas là. Vous la prolongez au crayon, devant nous ? »",
+        "left": "Je prolonge la courbe",
+        "right": "Je ne dessine rien",
+        "answer_left": "Il te tend un crayon taillé des deux côtés. Tu traces ; il compare avec une règle.",
+        "answer_right": "Il glisse la courbe coupée dans sa serviette, avec les ciseaux."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "relation.gege"
+            ],
+            [
+              "lit",
+              -1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "gege",
+        "text": "Gégé a fait monter par l'escalier de service un drap plié en huit. Dessus, à la peinture : « {objectif} », et la date de ton élection. « Le conseil a son papier, nous on a le drap. Tu signes lequel ? »",
+        "left": "Je signe le drap",
+        "right": "Je ne signe rien",
+        "answer_left": "Le drap flotte dimanche en tribune Nord, ta signature en bas, tenue à l'envers.",
+        "answer_right": "Le drap reste plié sur la chaise. Le soir, quelqu'un est monté le reprendre."
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            0
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Ton premier conseil. Le fauteuil du bout de table est encore réglé pour ton prédécesseur, le dossier trop bas. {patron} propose {objectif_min} : « On le vote ce soir, à main levée ? »",
+        "left": "À main levée",
+        "right": "Pas ce soir",
+        "answer_left": "Promesse publique : {objectif}. Douze mains, la tienne la première ; personne ne règle le fauteuil.",
+        "answer_right": "Le vote est reporté. Tu passes la soirée à chercher la molette du fauteuil ; il ne remonte pas."
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "{patron} arrive au conseil avec deux stylos : un pour signer {objectif_min}, l'autre pour le barrer en juin, si besoin. « Vous prenez lequel ? »",
+        "left": "Celui pour signer",
+        "right": "Gardez les deux",
+        "answer_left": "Promesse publique : {objectif}. Il range l'autre stylo dans sa poche intérieure, capuchon fermé.",
+        "answer_right": "Il les remet tous les deux dans son plumier, sans un mot."
+      },
+      {
+        "roles": [
+          "president"
+        ],
+        "text": "{patron} fait glisser une seule feuille sur la table du conseil, une ligne surlignée : {objectif_min}. « Le conseil la signe en septembre. Avec votre nom à côté, ou sans ? »",
+        "left": "Avec mon nom",
+        "right": "Sans mon nom",
+        "answer_left": "Promesse publique : {objectif}. Ta ligne est signée avant la sienne ; ton nom est en gras.",
+        "answer_right": "La case reste vide. Le conseil la remarquera : c'est son métier."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "speaker": "legruet",
+        "text": "Berthomier signe ta nomination sur le capot de sa voiture, devant le siège de la Fédération : « Le Congrès attend {objectif_min} au classement des nations. Vous le dites aux micros, ou à moi seul ? »",
+        "left": "Je le dis aux micros",
+        "right": "Aucun chiffre en public",
+        "answer_left": "Il te pousse vers les caméras et reste en retrait, la main sur la portière.",
+        "answer_right": "Il hoche la tête. Le Congrès lira ton silence dans le communiqué du soir."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "bilan_manque"
+              ]
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{patron} a fait souligner au crayon rouge, par le juriste, la ligne de l'objectif et l'article neuf : « L'an dernier, la ligne n'a pas tenu. Cette année, {objectif_min}. Vous la re-signez ? »",
+        "left": "Je re-signe la ligne",
+        "right": "Lisez-moi l'article neuf",
+        "answer_left": "Le juriste te tend un stylo de la Fédération, et repart avec le tien.",
+        "answer_right": "Le juriste lit à voix basse : rupture possible le 30, à minuit, sans motif. Puis il referme le classeur."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "relation.legruet"
+            ],
+            [
+              "lit",
+              -1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "speaker": "legruet",
+        "text": "Berthomier te reçoit debout, le manteau encore sur les épaules, entre deux réunions de districts : « Le Congrès vote au printemps. D'ici là, {objectif_min}. Je ne le demanderai pas deux fois. »",
+        "left": "Vous l'aurez",
+        "right": "Demandez-le au Congrès",
+        "answer_left": "Il regarde sa montre, pas toi, et inscrit l'heure de ta réponse dans un agenda vert.",
+        "answer_right": "Il remet ses gants, un doigt après l'autre, sans répondre."
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            0
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Ta nomination tient sur une page, que {patron} lit à voix haute devant trois journalistes. À la dernière ligne, il s'arrête : « Objectif, {objectif_min}. Vous le dites vous-même ? »",
+        "left": "Je le dis moi-même",
+        "right": "Je n'ai rien à ajouter",
+        "answer_left": "Promesse publique : {objectif}. Les trois stylos écrivent en même temps.",
+        "answer_right": "Il replie la page. Les journalistes écrivent « pas d'objectif chiffré », et le soulignent."
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Janvier. {patron} t'envoie l'objectif de l'année par courrier interne, dans une enveloppe déjà servie deux fois, les anciens noms barrés : « {objectif_min}. Signez et renvoyez. »",
+        "left": "Je signe et je renvoie",
+        "right": "Je renvoie sans signer",
+        "answer_left": "Promesse publique : {objectif}. L'enveloppe repart avec ton nom sous les deux autres, pas encore barré.",
+        "answer_right": "L'enveloppe repart vide. Elle revient le lendemain, ton nom souligné au crayon rouge."
+      },
+      {
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{patron} pose sur la table la liste de l'an dernier, vingt-six noms, dont douze rayés au crayon par une autre main : « Cette année, {objectif_min}. Les noms, c'est vous. Vous vous engagez ? »",
+        "left": "Je m'engage",
+        "right": "Je ne promets rien",
+        "answer_left": "Promesse publique : {objectif}. La vieille liste part dans un dossier neuf, à ton nom.",
+        "answer_right": "Tu gardes les mains libres. Il garde la liste, et ses douze traits."
+      },
       {
         "when": [
           "and",
@@ -143869,381 +144398,6 @@
         "answer_right": "Tu gardes les mains libres. Lui aussi : il tourne la page devant toi."
       },
       {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "aulard",
-        "text": "Vaubourg tapote la page deux de ton contrat, le téléphone coincé contre l'épaule : « L'équipe vise {objectif_min}. Toi, tu vises ce chiffre de ventes, là. Le coach n'a pas à lire la page deux. Tu signes ? »",
-        "left": "Je signe la page deux",
-        "right": "Le coach lira tout",
-        "answer_left": "Il plie la page deux vers l'intérieur avant de ranger le contrat dans le tiroir.",
-        "answer_right": "Il raccroche pour mieux te regarder. « Alors c'est toi qui la lui liras. »"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "bilan_manque"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "aulard",
-        "text": "Vaubourg a gardé le classement de juin sous son sous-main, plié en quatre : « Cette année, {objectif_min}. Je ne veux plus lire mon club en bas d'une page. Tu t'engages, cette fois ? »",
-        "left": "Cette fois, je m'engage",
-        "right": "Pas sur une feuille pliée",
-        "answer_left": "Il déplie la feuille de juin et la jette à la corbeille, devant toi.",
-        "answer_right": "Il remet la feuille sous le sous-main. Elle y reste jusqu'à l'été."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "commission_lettre"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "josiane",
-        "text": "Madame Josiane pose la lettre de la Commission à côté du contrat de l'entraîneur : « Masse salariale sous le seuil au 30 juin, et l'équipe vise {objectif_min}. Vous promettez les deux, ou je réponds qu'on étudie ? »",
-        "left": "Je promets les deux",
-        "right": "Répondez qu'on étudie",
-        "answer_left": "Elle tape ta réponse en deux exemplaires. Le premier part à la Commission, le second dort dans ton tiroir.",
-        "answer_right": "Elle écrit « à l'étude » au bas de la lettre, la date à côté, et la classe dans le dossier rouge."
-      },
-      {
-        "roles": [
-          "ds"
-        ],
-        "text": "{patron} déplie la liste des contrats sur le bureau, un trait rouge sous le plus cher : « Pour l'équipe, {objectif_min}. Pour toi, un mercato qui ne me réveille pas la nuit. Tu t'engages ? »",
-        "left": "Je m'engage",
-        "right": "Je ne promets rien",
-        "answer_left": "Promesse publique : {objectif}. Le trait rouge reste sur la liste, en face d'un nom que tu connais.",
-        "answer_right": "Tu gardes les mains libres. Il replie la liste en suivant les anciens plis."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "josiane",
-        "text": "Madame Josiane pose six classeurs sur ton bureau, un par président avant toi : « Tous avaient un objectif écrit en août. Le vôtre, c'est {objectif_min}. Je l'écris en tête du septième ? »",
-        "left": "Écrivez-le en tête",
-        "right": "Laissez la page blanche",
-        "answer_left": "Elle l'écrit au stylo-plume, en capitales, et souffle sur l'encre avant de refermer.",
-        "answer_right": "Elle range le septième classeur avec les autres. C'est la seule tranche sans étiquette."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "bilan_manque"
-              ]
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "nassir",
-        "text": "Ilyas a imprimé la courbe de l'an dernier et l'a coupée aux ciseaux au mois de juin : « Le conseil veut {objectif_min}, et une courbe qui ne s'arrête pas là. Vous la prolongez au crayon, devant nous ? »",
-        "left": "Je prolonge la courbe",
-        "right": "Je ne dessine rien",
-        "answer_left": "Il te tend un crayon taillé des deux côtés. Tu traces ; il compare avec une règle.",
-        "answer_right": "Il glisse la courbe coupée dans sa serviette, avec les ciseaux."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "<=",
-            [
-              "path",
-              "relation.gege"
-            ],
-            [
-              "lit",
-              -1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "gege",
-        "text": "Gégé a fait monter par l'escalier de service un drap plié en huit. Dessus, à la peinture : « {objectif} », et la date de ton élection. « Le conseil a son papier, nous on a le drap. Tu signes lequel ? »",
-        "left": "Je signe le drap",
-        "right": "Je ne signe rien",
-        "answer_left": "Le drap flotte dimanche en tribune Nord, ta signature en bas, tenue à l'envers.",
-        "answer_right": "Le drap reste plié sur la chaise. Le soir, quelqu'un est monté le reprendre."
-      },
-      {
-        "roles": [
-          "president"
-        ],
-        "text": "{patron} fait glisser une seule feuille sur la table du conseil, une ligne surlignée : {objectif_min}. « Le conseil la signe en septembre. Avec votre nom à côté, ou sans ? »",
-        "left": "Avec mon nom",
-        "right": "Sans mon nom",
-        "answer_left": "Promesse publique : {objectif}. Ta ligne est signée avant la sienne ; ton nom est en gras.",
-        "answer_right": "La case reste vide. Le conseil la remarquera : c'est son métier."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "speaker": "legruet",
-        "text": "Berthomier signe ta nomination sur le capot de sa voiture, devant le siège de la Fédération : « Le Congrès attend {objectif_min} au classement des nations. Vous le dites aux micros, ou à moi seul ? »",
-        "left": "Je le dis aux micros",
-        "right": "Aucun chiffre en public",
-        "answer_left": "Il te pousse vers les caméras et reste en retrait, la main sur la portière.",
-        "answer_right": "Il hoche la tête. Le Congrès lira ton silence dans le communiqué du soir."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "bilan_manque"
-              ]
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "{patron} a fait souligner au crayon rouge, par le juriste, la ligne de l'objectif et l'article neuf : « L'an dernier, la ligne n'a pas tenu. Cette année, {objectif_min}. Vous la re-signez ? »",
-        "left": "Je re-signe la ligne",
-        "right": "Lisez-moi l'article neuf",
-        "answer_left": "Le juriste te tend un stylo de la Fédération, et repart avec le tien.",
-        "answer_right": "Le juriste lit à voix basse : rupture possible le 30, à minuit, sans motif. Puis il referme le classeur."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "<=",
-            [
-              "path",
-              "relation.legruet"
-            ],
-            [
-              "lit",
-              -1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "speaker": "legruet",
-        "text": "Berthomier te reçoit debout, le manteau encore sur les épaules, entre deux réunions de districts : « Le Congrès vote au printemps. D'ici là, {objectif_min}. Je ne le demanderai pas deux fois. »",
-        "left": "Vous l'aurez",
-        "right": "Demandez-le au Congrès",
-        "answer_left": "Il regarde sa montre, pas toi, et inscrit l'heure de ta réponse dans un agenda vert.",
-        "answer_right": "Il remet ses gants, un doigt après l'autre, sans répondre."
-      },
-      {
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "{patron} pose sur la table la liste de l'an dernier, vingt-six noms, dont douze rayés au crayon par une autre main : « Cette année, {objectif_min}. Les noms, c'est vous. Vous vous engagez ? »",
-        "left": "Je m'engage",
-        "right": "Je ne promets rien",
-        "answer_left": "Promesse publique : {objectif}. La vieille liste part dans un dossier neuf, à ton nom.",
-        "answer_right": "Tu gardes les mains libres. Il garde la liste, et ses douze traits."
-      },
-      {
         "text": "{patron} : « Cette saison, l'objectif c'est {objectif_min}. Tu t'engages ? »",
         "left": "Je m'engage",
         "right": "Je ne promets rien",
@@ -144252,6 +144406,274 @@
       }
     ],
     "classement": [
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "bilan"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.rang"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "josiane",
+        "text": "Madame Josiane a ajouté au crayon, à droite du classement de juin, une colonne que personne n'a demandée : la masse salariale de chaque club. La nôtre est la cinquième. Elle ne gomme pas.",
+        "left": "Laisser la colonne"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "world.rang"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "aulard",
+        "text": "Vaubourg appelle avant que la feuille soit punaisée : « Premiers à la trêve. D'ici mai, tu ne vends personne, même ceux qu'on te réclame. Surtout ceux-là. »",
+        "left": "Ne vendre personne"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.rang"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "vukic",
+        "text": "Vukić a entouré au feutre les trois clubs juste au-dessus de nous : « Eux ont recruté en janvier, l'an dernier. Nous, on a regardé. » Il laisse le feutre débouché sur ton bureau.",
+        "left": "Reboucher le feutre"
+      },
+      {
+        "when": [
+          "call",
+          "phase",
+          [
+            [
+              "lit",
+              "bilan"
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Le classement de juin. La secrétaire en tire deux photocopies : une pour le président, l'autre pour les agents qui la demanderont avant midi. Il en viendra trois.",
+        "left": "Garder l'original"
+      },
+      {
+        "when": [
+          "cmp",
+          "<=",
+          [
+            "path",
+            "world.rang"
+          ],
+          [
+            "lit",
+            3
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Le classement à la trêve : sur le podium. Trois agents ont demandé un rendez-vous dans l'heure ; tu les fais attendre dans le même couloir, sur trois chaises alignées.",
+        "left": "Les recevoir un par un"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "world.rang"
+          ],
+          [
+            "lit",
+            15
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Le classement à la trêve, la zone rouge à deux points. L'entraîneur a posé sur ton bureau une feuille courte : les joueurs qu'il ne veut plus voir à l'entraînement.",
+        "left": "Lire la feuille"
+      },
+      {
+        "roles": [
+          "ds"
+        ],
+        "text": "Le classement est punaisé à côté du tableau des contrats, à la même hauteur. Les deux feuilles se lisent ensemble : chaque point a un salaire en face.",
+        "left": "Comparer les deux"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "bilan"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.rang"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "nassir",
+        "text": "Ilyas a renvoyé la feuille de juin au siège avec une seule annotation, au stylo fin : un cercle autour de la ligne du club et, à côté, le mot « valeur », suivi d'un point d'interrogation.",
+        "left": "Garder la feuille"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "bilan"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "world.rang"
+            ],
+            [
+              "lit",
+              4
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "La mairie a fait encadrer le classement de juin dans son hall, entre le plan du futur stade et les horaires de la piscine. On a demandé ta photo. Pas celle de l'entraîneur.",
+        "left": "Envoyer la photo"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "world.rang"
+          ],
+          [
+            "lit",
+            18
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Sous ta fenêtre, quelqu'un a recopié le classement à la craie sur le trottoir du siège, à l'envers : la dernière ligne en haut. La nôtre.",
+        "left": "Fermer la fenêtre"
+      },
+      {
+        "roles": [
+          "president"
+        ],
+        "text": "Le classement arrive au courrier du conseil, entre deux relevés de banque. Quelqu'un a déjà passé la ligne du club au surligneur, et noté dans la marge la recette du dernier match.",
+        "left": "Lire la ligne"
+      },
       {
         "when": [
           "and",
@@ -144714,127 +145136,11 @@
         "left": "Reprendre le ticket"
       },
       {
-        "when": [
-          "and",
-          [
-            "call",
-            "phase",
-            [
-              [
-                "lit",
-                "bilan"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "world.rang"
-            ],
-            [
-              "lit",
-              15
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "josiane",
-        "text": "Madame Josiane a ajouté au crayon, à droite du classement de juin, une colonne que personne n'a demandée : la masse salariale de chaque club. La nôtre est la cinquième. Elle ne gomme pas.",
-        "left": "Laisser la colonne"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "world.rang"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "aulard",
-        "text": "Vaubourg appelle avant que la feuille soit punaisée : « Premiers à la trêve. D'ici mai, tu ne vends personne, même ceux qu'on te réclame. Surtout ceux-là. »",
-        "left": "Ne vendre personne"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "world.rang"
-            ],
-            [
-              "lit",
-              15
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "vukic",
-        "text": "Vukić a entouré au feutre les trois clubs juste au-dessus de nous : « Eux ont recruté en janvier, l'an dernier. Nous, on a regardé. » Il laisse le feutre débouché sur ton bureau.",
-        "left": "Reboucher le feutre"
-      },
-      {
-        "roles": [
-          "ds"
-        ],
-        "text": "Le classement est punaisé à côté du tableau des contrats, à la même hauteur. Les deux feuilles se lisent ensemble : chaque point a un salaire en face.",
-        "left": "Comparer les deux"
-      },
+        "text": "La feuille du championnat est punaisée dans le couloir, à hauteur des yeux. Personne ne passe devant sans ralentir.",
+        "left": "Regarder le tableau"
+      }
+    ],
+    "match": [
       {
         "when": [
           "and",
@@ -144844,40 +145150,7 @@
             [
               [
                 "lit",
-                "bilan"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "world.rang"
-            ],
-            [
-              "lit",
-              15
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "nassir",
-        "text": "Ilyas a renvoyé la feuille de juin au siège avec une seule annotation, au stylo fin : un cercle autour de la ligne du club et, à côté, le mot « valeur », suivi d'un point d'interrogation.",
-        "left": "Garder la feuille"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "call",
-            "phase",
-            [
-              [
-                "lit",
-                "bilan"
+                "aller"
               ]
             ]
           ],
@@ -144886,52 +145159,1152 @@
             "<=",
             [
               "path",
-              "world.rang"
+              "slot"
             ],
             [
               "lit",
-              4
+              5
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "salaires_retard"
+              ]
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La paie est partie le 12 ; six matchs à jouer avec des joueurs qui ont vérifié leur compte avant de lacer."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              7
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.direction"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. En loge, le président a changé ton fauteuil de place : te voilà au bout de la rangée, à côté du traiteur."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              7
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. En tribune de presse, deux recruteurs étrangers prennent des notes sur tes joueurs. Ils ne sont pas venus pour l'adversaire."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              8
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.serie_defaites"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs perdus, et l'entraîneur a laissé sa liste de janvier sur ton bureau : un seul nom, souligné deux fois.",
+        "left": "Je lui trouve son nom",
+        "right": "Je garde la caisse"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              8
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.serie_victoires"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs gagnés : trois clubs ont appelé pour ton milieu. Son prix monte à chaque victoire, et l'envie de vendre aussi.",
+        "left": "Il reste, on joue",
+        "right": "J'écoute les offres"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              8
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier avant la trêve. Ta liste de janvier tient sur une page ; chaque match y raye un nom, ou en ajoute un."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              14
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La fenêtre de janvier est fermée : ce que tu n'as pas acheté ne viendra plus, et ce que tu as vendu joue ailleurs."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              16
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.caisse"
+            ],
+            [
+              "lit",
+              30
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le banquier du club s'est abonné en tribune d'honneur. Il ne suit pas le ballon : il compte les salaires qui entrent sur la pelouse."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              16
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le printemps des contrats : les agents de tes titulaires appellent déjà pour juin, et chaque but fait monter une prolongation."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              17
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier. Sur ton bureau, deux chemises cartonnées pour l'été, « départs » et « arrivées ». Le classement dira laquelle grossit."
+      },
+      {
+        "roles": [
+          "ds"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs, et sur chaque feuille des noms que tu as fait venir. On les jugera, eux, et toi avec."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              5
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "relation.gege"
+            ],
+            [
+              "lit",
+              -1
             ]
           ]
         ],
         "roles": [
           "president"
         ],
-        "text": "La mairie a fait encadrer le classement de juin dans son hall, entre le plan du futur stade et les horaires de la piscine. On a demandé ta photo. Pas celle de l'entraîneur.",
-        "left": "Envoyer la photo"
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le kop entre à la vingtième minute pendant six matchs. Le premier quart d'heure, on entend tes chaussures dans la loge."
       },
       {
         "when": [
-          "cmp",
-          ">=",
+          "and",
           [
-            "path",
-            "world.rang"
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
           ],
           [
-            "lit",
-            18
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              7
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.caisse"
+            ],
+            [
+              "lit",
+              30
+            ]
           ]
         ],
         "roles": [
           "president"
         ],
-        "text": "Sous ta fenêtre, quelqu'un a recopié le classement à la craie sur le trottoir du siège, à l'envers : la dernière ligne en haut. La nôtre.",
-        "left": "Fermer la fenêtre"
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Trois matchs à domicile sur six : chacun paie une semaine de salaires. Le secrétariat les a cochés en rouge au calendrier."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              7
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Un conseil d'administration après chaque bloc : le procès-verbal commence par le score, et l'ordre du jour s'écrit après."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              8
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.serie_victoires"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs gagnés, et le conseil demande déjà si l'on peut augmenter le prix des places. Pendant la série, pas après."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              8
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.serie_defaites"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs perdus. Le banquier a demandé une place en loge pour le prochain match ; il n'aime pas le football, il aime savoir avant les autres."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              8
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier avant la trêve. La loge se remplit d'invités qu'on ne voit qu'en décembre : ils viennent voir de près dans quel état tu passeras l'hiver."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              14
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La billetterie rouvre après la trêve. Au guichet, on range les abonnements non renouvelés dans une boîte à chaussures, sous le comptoir."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              16
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le printemps : la saison où le conseil commence à convertir les points en budget, et les défaites en questions."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              17
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.direction"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier. Deux actionnaires ont pris des places hors de ta loge, en tribune Ouest, au milieu des abonnés. D'ici, on les voit très bien."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              17
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier. Les actionnaires sont tous venus, même ceux qu'on ne voit qu'aux assemblées. Ils regardent le tableau d'affichage, puis ta loge."
       },
       {
         "roles": [
           "president"
         ],
-        "text": "Le classement arrive au courrier du conseil, entre deux relevés de banque. Quelqu'un a déjà passé la ligne du club au surligneur, et noté dans la marge la recette du dernier match.",
-        "left": "Lire la ligne"
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs vus de la loge, derrière une vitre qui garde le bruit dehors. La mi-temps, elle, se joue dans le couloir."
       },
       {
-        "text": "La feuille du championnat est punaisée dans le couloir, à hauteur des yeux. Personne ne passe devant sans ralentir.",
-        "left": "Regarder le tableau"
-      }
-    ],
-    "match": [
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              5
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2010
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La liste est partie par fax jeudi ; deux clubs ont rappelé pour demander si ce n'était pas une erreur."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              5
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.vestiaire"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Au dîner d'avant-match, deux tables et une chaise vide entre les deux. Personne ne l'a déplacée."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.direction"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. En tribune officielle, le fauteuil du président de la Fédération reste vide. Son chauffeur attend au parking, moteur allumé."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "aller"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Juin. Les joueurs arrivent de leur saison de club avec des jambes de fin mai ; toi, tu comptes déjà les jours jusqu'à novembre."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              14
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.tribunes"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Septembre, un stade à moitié vide, et la moitié présente qui siffle l'hymne adverse pour avoir quelque chose à siffler."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              14
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La rentrée : des joueurs qui ont changé de club cet été, et que tu découvres sous leurs nouvelles couleurs."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "world.serie_defaites"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Deux rencontres perdues, et la presse compte les jours jusqu'à novembre. À l'hôtel, le réceptionniste te souhaite bon courage en rendant ta clé."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "phase",
+            [
+              [
+                "lit",
+                "retour"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "slot"
+            ],
+            [
+              "lit",
+              15
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Octobre, la dernière fenêtre avant le Grand Match. Chaque titulaire sait qu'il joue sa place de novembre ; les remplaçants le savent mieux."
+      },
+      {
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Vingt-six joueurs, trois entraînements, un hymne. Le pays regarde le onze avant de regarder le score."
+      },
       {
         "when": [
           "call",
@@ -145094,134 +146467,176 @@
         "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs pour se faire une place, ou la perdre."
       },
       {
+        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}."
+      }
+    ],
+    "cup": [
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.caisse"
+            ],
+            [
+              "lit",
+              30
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "josiane",
+        "text": "Tour de Coupe. Madame Josiane a déjà calculé la recette d'un huitième de finale à domicile : deux mois de salaires. Elle a écrit le chiffre au crayon, au dos de la feuille de match.",
+        "left": "Jouer pour la recette"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "relation.fardelli"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "fardelli",
+        "text": "Tour de Coupe. Fardelli a trois clients sur la feuille adverse, tous en fin de contrat. Il sera derrière le but avec son carnet, et il t'a gardé la place d'à côté.",
+        "left": "Prendre la place"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "world.division"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Tour de Coupe. En face, un club amateur dont l'avant-centre a été refusé par ton centre de formation, à quinze ans. Il s'en souvient. Son père aussi, en tribune.",
+        "left": "On y va"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Tour de Coupe. En face joue l'attaquant que tu as vendu l'été dernier. Il t'a fait réserver deux places par l'intendant, au premier rang, derrière son banc.",
+        "left": "Prendre les places"
+      },
+      {
+        "roles": [
+          "ds"
+        ],
+        "text": "Tour de Coupe. Un club de deux divisions plus bas, un terrain gras, et dans la petite tribune, trois recruteurs venus voir tes titulaires de près.",
+        "left": "Les laisser regarder"
+      },
+      {
         "when": [
           "call",
           "flag",
           [
             [
               "lit",
-              "salaires_retard"
+              "commission_lettre"
             ]
           ]
         ],
         "roles": [
-          "ds"
+          "president"
         ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La paie est partie le 12 ; six matchs à jouer avec des joueurs qui ont vérifié leur compte avant de lacer."
+        "text": "Tour de Coupe. Un beau parcours ferait taire la Commission un mois. Un mois, pas deux : la lettre est sur ton bureau, sous la feuille du tirage.",
+        "left": "Viser le mois"
       },
       {
         "when": [
-          "cmp",
-          ">=",
+          "and",
           [
-            "path",
-            "world.serie_defaites"
-          ],
-          [
-            "lit",
-            2
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs perdus, et l'entraîneur a laissé sa liste de janvier sur ton bureau : un seul nom, souligné deux fois.",
-        "left": "Je lui trouve son nom",
-        "right": "Je garde la caisse"
-      },
-      {
-        "when": [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "world.serie_victoires"
-          ],
-          [
-            "lit",
-            2
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs gagnés : trois clubs ont appelé pour ton milieu. Son prix monte à chaque victoire, et l'envie de vendre aussi.",
-        "left": "Il reste, on joue",
-        "right": "J'écoute les offres"
-      },
-      {
-        "when": [
-          "call",
-          "phase",
-          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "relation.aubert"
+            ],
             [
               "lit",
-              "retour"
+              1
             ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La fenêtre de janvier est fermée : ce que tu n'as pas acheté ne viendra plus, et ce que tu as vendu joue ailleurs."
-      },
-      {
-        "roles": [
-          "ds"
-        ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs, et sur chaque feuille des noms que tu as fait venir. On les jugera, eux, et toi avec."
-      },
-      {
-        "when": [
-          "cmp",
-          "<=",
-          [
-            "path",
-            "relation.gege"
           ],
           [
-            "lit",
-            -1
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le kop entre à la vingtième minute pendant six matchs. Le premier quart d'heure, on entend tes chaussures dans la loge."
-      },
-      {
-        "when": [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "world.serie_victoires"
-          ],
-          [
-            "lit",
-            2
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs gagnés, et le conseil demande déjà si l'on peut augmenter le prix des places. Pendant la série, pas après."
-      },
-      {
-        "when": [
-          "call",
-          "phase",
-          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
             [
               "lit",
-              "retour"
+              2013
             ]
           ]
         ],
         "roles": [
           "president"
         ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le printemps : la saison où le conseil commence à convertir les points en budget, et les défaites en questions."
+        "speaker": "aubert",
+        "text": "Tour de Coupe. Madame Aubert veut donner le coup d'envoi, avec son écharpe d'élue et un photographe. Elle a prévenu la presse avant de te prévenir.",
+        "left": "Lui laisser le ballon"
       },
       {
         "when": [
@@ -145239,146 +146654,16 @@
         "roles": [
           "president"
         ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Trois matchs à domicile sur six : chacun paie une semaine de salaires. Le secrétariat les a cochés en rouge au calendrier."
+        "text": "Tour de Coupe. La recette d'un tour à domicile paierait le chauffage jusqu'en mars. Au siège, on a ouvert un cahier exprès, à couverture verte.",
+        "left": "Ouvrir les guichets tôt"
       },
       {
         "roles": [
           "president"
         ],
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs vus de la loge, derrière une vitre qui garde le bruit dehors. La mi-temps, elle, se joue dans le couloir."
+        "text": "Tour de Coupe. Le petit club adverse demande si ta loge fera le déplacement. Il a prévu une table, une nappe en papier, et le maire du village en cravate.",
+        "left": "Accepter la nappe"
       },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2010
-            ]
-          ],
-          [
-            "call",
-            "phase",
-            [
-              [
-                "lit",
-                "aller"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La liste est partie par fax jeudi ; deux clubs ont rappelé pour demander si ce n'était pas une erreur."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "call",
-            "phase",
-            [
-              [
-                "lit",
-                "aller"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "gauges.vestiaire"
-            ],
-            [
-              "lit",
-              35
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Au dîner d'avant-match, deux tables et une chaise vide entre les deux. Personne ne l'a déplacée."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "call",
-            "phase",
-            [
-              [
-                "lit",
-                "retour"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "gauges.tribunes"
-            ],
-            [
-              "lit",
-              35
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Septembre, un stade à moitié vide, et la moitié présente qui siffle l'hymne adverse pour avoir quelque chose à siffler."
-      },
-      {
-        "when": [
-          "call",
-          "phase",
-          [
-            [
-              "lit",
-              "retour"
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La rentrée : des joueurs qui ont changé de club cet été, et que tu découvres sous leurs nouvelles couleurs."
-      },
-      {
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Vingt-six joueurs, trois entraînements, un hymne. Le pays regarde le onze avant de regarder le score."
-      },
-      {
-        "text": "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}."
-      }
-    ],
-    "cup": [
       {
         "when": [
           "or",
@@ -145735,74 +147020,27 @@
         "left": "On y va"
       },
       {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "gauges.caisse"
-            ],
-            [
-              "lit",
-              30
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "josiane",
-        "text": "Tour de Coupe. Madame Josiane a déjà calculé la recette d'un huitième de finale à domicile : deux mois de salaires. Elle a écrit le chiffre au crayon, au dos de la feuille de match.",
-        "left": "Jouer pour la recette"
-      },
+        "text": "Tour de Coupe. Le tirage t'offre un adversaire surprise. On y va ?",
+        "left": "On joue le coup"
+      }
+    ],
+    "gm_annonce": [
       {
         "when": [
-          "and",
+          "call",
+          "flag",
           [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "relation.fardelli"
-            ],
             [
               "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
+              "bache_ds"
             ]
           ]
         ],
         "roles": [
           "ds"
         ],
-        "speaker": "fardelli",
-        "text": "Tour de Coupe. Fardelli a trois clients sur la feuille adverse, tous en fin de contrat. Il sera derrière le but avec son carnet, et il t'a gardé la place d'à côté.",
-        "left": "Prendre la place"
+        "text": "GRAND MATCH. La bâche de vingt mètres est roulée sous la tribune Nord. Gégé a dit qu'elle descendrait à la première erreur d'une de tes recrues. Coup d'envoi.",
+        "left": "Coup d'envoi"
       },
       {
         "when": [
@@ -145810,25 +147048,63 @@
           ">=",
           [
             "path",
-            "world.division"
+            "stats.titres"
           ],
           [
             "lit",
-            2
+            1
           ]
         ],
         "roles": [
           "ds"
         ],
-        "text": "Tour de Coupe. En face, un club amateur dont l'avant-centre a été refusé par ton centre de formation, à quinze ans. Il s'en souvient. Son père aussi, en tribune.",
-        "left": "On y va"
+        "text": "GRAND MATCH. Onze noms sur la feuille, dont neuf passés par ton bureau. Le champion se défend avec ce que tu as acheté, et ce que tu n'as pas vendu.",
+        "left": "Coup d'envoi"
+      },
+      {
+        "when": [
+          "cmp",
+          "<=",
+          [
+            "path",
+            "relation.aulard"
+          ],
+          [
+            "lit",
+            -1
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "GRAND MATCH. Le président regarde depuis sa loge, son beau-frère à côté de lui. Ils ne suivent pas le terrain : ils suivent tes recrues à l'échauffement.",
+        "left": "Coup d'envoi"
       },
       {
         "roles": [
           "ds"
         ],
-        "text": "Tour de Coupe. Un club de deux divisions plus bas, un terrain gras, et dans la petite tribune, trois recruteurs venus voir tes titulaires de près.",
-        "left": "Les laisser regarder"
+        "text": "GRAND MATCH. Le stade est plein, et la moitié des noms de la feuille sont passés par ton bureau. Ce soir, on les juge ensemble. Coup d'envoi.",
+        "left": "Coup d'envoi"
+      },
+      {
+        "when": [
+          "cmp",
+          "<=",
+          [
+            "path",
+            "relation.gege"
+          ],
+          [
+            "lit",
+            -1
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "GRAND MATCH. La tribune Nord entrera à la vingtième minute, en silence, dos au terrain. Tu l'as appris par le journal du matin.",
+        "left": "Coup d'envoi"
       },
       {
         "when": [
@@ -145837,15 +147113,15 @@
           [
             [
               "lit",
-              "commission_lettre"
+              "pantin"
             ]
           ]
         ],
         "roles": [
           "president"
         ],
-        "text": "Tour de Coupe. Un beau parcours ferait taire la Commission un mois. Un mois, pas deux : la lettre est sur ton bureau, sous la feuille du tirage.",
-        "left": "Viser le mois"
+        "text": "GRAND MATCH. Dans ta loge, les invités du fonds ont les meilleures places. Ta chaise est au second rang, ton nom sur un carton, bien en vue.",
+        "left": "Coup d'envoi"
       },
       {
         "when": [
@@ -145855,11 +147131,52 @@
             ">=",
             [
               "path",
-              "relation.aubert"
+              "world.division"
             ],
             [
               "lit",
-              1
+              2
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "GRAND MATCH. Un stade de deuxième division plein pour la première fois depuis des années. Le guichetier a vendu certaines places debout deux fois.",
+        "left": "Coup d'envoi"
+      },
+      {
+        "roles": [
+          "president"
+        ],
+        "text": "GRAND MATCH. Pas une place libre, la loge comprise. Dans le tiroir de ton bureau, deux discours attendent la fin du match. Coup d'envoi.",
+        "left": "Coup d'envoi"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2002
             ]
           ],
           [
@@ -145873,14 +147190,25 @@
               "lit",
               2013
             ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "relation.aubert"
+            ],
+            [
+              "lit",
+              1
+            ]
           ]
         ],
         "roles": [
-          "president"
+          "selectionneur"
         ],
-        "speaker": "aubert",
-        "text": "Tour de Coupe. Madame Aubert veut donner le coup d'envoi, avec son écharpe d'élue et un photographe. Elle a prévenu la presse avant de te prévenir.",
-        "left": "Lui laisser le ballon"
+        "text": "GRAND MATCH. La ministre des Sports est descendue au vestiaire avant toi. Elle a serré vingt-six mains et oublié la tienne. Coup d'envoi.",
+        "left": "Coup d'envoi"
       },
       {
         "when": [
@@ -145888,32 +147216,58 @@
           "<",
           [
             "path",
-            "gauges.caisse"
+            "gauges.tribunes"
           ],
           [
             "lit",
-            30
+            35
           ]
         ],
         "roles": [
-          "president"
+          "selectionneur"
         ],
-        "text": "Tour de Coupe. La recette d'un tour à domicile paierait le chauffage jusqu'en mars. Au siège, on a ouvert un cahier exprès, à couverture verte.",
-        "left": "Ouvrir les guichets tôt"
+        "text": "GRAND MATCH. Le stade a sifflé l'hymne adverse, puis le nôtre, plus fort. Le capitaine a gardé les yeux fermés pendant les deux.",
+        "left": "Coup d'envoi"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "bilan_manque"
+              ]
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "GRAND MATCH. Novembre, encore. Les mêmes tribunes que l'an dernier et, au premier rang de la presse, celui qui avait demandé ta tête en décembre.",
+        "left": "Coup d'envoi"
       },
       {
         "roles": [
-          "president"
+          "selectionneur"
         ],
-        "text": "Tour de Coupe. Le petit club adverse demande si ta loge fera le déplacement. Il a prévu une table, une nappe en papier, et le maire du village en cravate.",
-        "left": "Accepter la nappe"
+        "text": "GRAND MATCH. Novembre. Un pays entier devant ses postes de télévision, et vingt-six joueurs qui se connaissent depuis trois jours. Coup d'envoi.",
+        "left": "Coup d'envoi"
       },
-      {
-        "text": "Tour de Coupe. Le tirage t'offre un adversaire surprise. On y va ?",
-        "left": "On joue le coup"
-      }
-    ],
-    "gm_annonce": [
       {
         "when": [
           "cmp",
@@ -146251,40 +147605,28 @@
         "left": "Coup d'envoi"
       },
       {
+        "text": "GRAND MATCH. Le stade est plein, tout se joue ici. Coup d'envoi.",
+        "left": "Coup d'envoi"
+      }
+    ],
+    "gm_te": [
+      {
         "when": [
           "call",
           "flag",
           [
             [
               "lit",
-              "bache_ds"
+              "commission_occulte"
             ]
           ]
         ],
         "roles": [
           "ds"
         ],
-        "text": "GRAND MATCH. La bâche de vingt mètres est roulée sous la tribune Nord. Gégé a dit qu'elle descendrait à la première erreur d'une de tes recrues. Coup d'envoi.",
-        "left": "Coup d'envoi"
-      },
-      {
-        "when": [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "stats.titres"
-          ],
-          [
-            "lit",
-            1
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "GRAND MATCH. Onze noms sur la feuille, dont neuf passés par ton bureau. Le champion se défend avec ce que tu as acheté, et ce que tu n'as pas vendu.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. La recrue que Fardelli t'a vendue s'échauffe le long de la ligne. Le banc regarde vers ta tribune : c'est ton joueur, c'est ton signe.",
+        "left": "Qu'il reste au chaud",
+        "right": "Qu'il entre"
       },
       {
         "when": [
@@ -146302,15 +147644,57 @@
         "roles": [
           "ds"
         ],
-        "text": "GRAND MATCH. Le président regarde depuis sa loge, son beau-frère à côté de lui. Ils ne suivent pas le terrain : ils suivent tes recrues à l'échauffement.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. Le président a quitté sa loge pour venir s'asseoir à côté de toi. Il ne dit rien. Il attend que tu fasses quelque chose.",
+        "left": "Je ne bouge pas",
+        "right": "Je descends au bord"
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "vars.gm_te_index"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "{minute}e minute · {score}. Mi-temps. Dans le couloir des loges, un recruteur étranger te tend une carte de visite, un chiffre écrit au dos, pour ton meilleur joueur.",
+        "left": "Je la range sans lire",
+        "right": "Je la lis devant lui"
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "vars.gm_te_index"
+          ],
+          [
+            "lit",
+            3
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "{minute}e minute · {score}. Dernier quart d'heure. Le plus jeune du banc s'échauffe, celui que trois clubs ont appelé cette semaine. L'entraîneur te cherche des yeux.",
+        "left": "Le banc décide",
+        "right": "Je fais signe : lui"
       },
       {
         "roles": [
           "ds"
         ],
-        "text": "GRAND MATCH. Le stade est plein, et la moitié des noms de la feuille sont passés par ton bureau. Ce soir, on les juge ensemble. Coup d'envoi.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. De ta place en tribune, tu vois ce que le banc ne voit pas : leur latéral boite. Le téléphone qui relie la tribune au banc est à portée de main.",
+        "left": "Je laisse le coach",
+        "right": "J'appelle le banc"
       },
       {
         "when": [
@@ -146328,8 +147712,9 @@
         "roles": [
           "president"
         ],
-        "text": "GRAND MATCH. La tribune Nord entrera à la vingtième minute, en silence, dos au terrain. Tu l'as appris par le journal du matin.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. Le kop scande ton nom, et pas pour te remercier. Deux caméras cherchent ta loge.",
+        "left": "Je baisse la tête",
+        "right": "Je me lève et salue"
       },
       {
         "when": [
@@ -146345,49 +147730,77 @@
         "roles": [
           "president"
         ],
-        "text": "GRAND MATCH. Dans ta loge, les invités du fonds ont les meilleures places. Ta chaise est au second rang, ton nom sur un carton, bien en vue.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. L'émissaire du fonds lève sa coupe vers toi à travers la vitre. Le score n'a pas encore décidé si c'est un toast.",
+        "left": "Je lève la mienne",
+        "right": "Je descends en tribune"
       },
       {
         "when": [
-          "and",
+          "cmp",
+          "==",
           [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "world.division"
-            ],
-            [
-              "lit",
-              2
-            ]
+            "path",
+            "vars.gm_te_index"
           ],
           [
-            "cmp",
-            "==",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              0
-            ]
+            "lit",
+            2
           ]
         ],
         "roles": [
           "president"
         ],
-        "text": "GRAND MATCH. Un stade de deuxième division plein pour la première fois depuis des années. Le guichetier a vendu certaines places debout deux fois.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. Mi-temps. Le couloir du vestiaire est vide, la porte entrouverte, et l'entraîneur parle fort. On entend ton nom, une fois.",
+        "left": "Je remonte en loge",
+        "right": "J'entre au vestiaire"
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "vars.gm_te_index"
+          ],
+          [
+            "lit",
+            3
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "{minute}e minute · {score}. Une bâche descend du toit de la tribune Est, ton nom dessus en lettres d'un mètre. Les stadiers attendent ton signe.",
+        "left": "Je la lis jusqu'au bout",
+        "right": "Faites-la décrocher"
       },
       {
         "roles": [
           "president"
         ],
-        "text": "GRAND MATCH. Pas une place libre, la loge comprise. Dans le tiroir de ton bureau, deux discours attendent la fin du match. Coup d'envoi.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. Le remplaçant que tu as fait signer en janvier s'échauffe depuis vingt minutes. Un mot de toi au banc, et il entre.",
+        "left": "Je laisse l'entraîneur",
+        "right": "Je fais passer le mot"
+      },
+      {
+        "when": [
+          "cmp",
+          "<",
+          [
+            "path",
+            "gauges.vestiaire"
+          ],
+          [
+            "lit",
+            35
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{minute}e minute · {score}. Les deux clans ne se passent plus le ballon au milieu. Le capitaine te regarde : il attend un changement qui choisisse un camp.",
+        "left": "Je ne touche à rien",
+        "right": "Je sors un cadre"
       },
       {
         "when": [
@@ -146397,11 +147810,11 @@
             ">=",
             [
               "path",
-              "year"
+              "relation.vecchio"
             ],
             [
               "lit",
-              2002
+              1
             ]
           ],
           [
@@ -146413,92 +147826,101 @@
             ],
             [
               "lit",
-              2013
-            ]
-          ],
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "relation.aubert"
-            ],
-            [
-              "lit",
-              1
+              2016
             ]
           ]
         ],
         "roles": [
           "selectionneur"
         ],
-        "text": "GRAND MATCH. La ministre des Sports est descendue au vestiaire avant toi. Elle a serré vingt-six mains et oublié la tienne. Coup d'envoi.",
-        "left": "Coup d'envoi"
-      },
-      {
-        "when": [
-          "cmp",
-          "<",
-          [
-            "path",
-            "gauges.tribunes"
-          ],
-          [
-            "lit",
-            35
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "GRAND MATCH. Le stade a sifflé l'hymne adverse, puis le nôtre, plus fort. Le capitaine a gardé les yeux fermés pendant les deux.",
-        "left": "Coup d'envoi"
+        "speaker": "vecchio",
+        "text": "{minute}e minute · {score}. Gigi Vecchio, l'entraîneur des gardiens, montre du menton le jeune qui s'échauffe : « Il est prêt. Plus que l'autre, ce soir. »",
+        "left": "Le titulaire reste",
+        "right": "Le jeune entre"
       },
       {
         "when": [
           "and",
           [
             "cmp",
-            ">=",
+            "==",
             [
               "path",
-              "season"
+              "vars.gm_te_index"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
             ],
             [
               "lit",
               1
-            ]
-          ],
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "bilan_manque"
-              ]
             ]
           ]
         ],
         "roles": [
           "selectionneur"
         ],
-        "text": "GRAND MATCH. Novembre, encore. Les mêmes tribunes que l'an dernier et, au premier rang de la presse, celui qui avait demandé ta tête en décembre.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. On mène. Le pays chante déjà, et le banc d'en face fait entrer deux attaquants d'un coup.",
+        "left": "Je ferme derrière",
+        "right": "Je garde trois devant"
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "vars.gm_te_index"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{minute}e minute · {score}. Mi-temps dans un vestiaire prêté, sans eau chaude. Trois cadres demandent à parler avant toi.",
+        "left": "Je parle seul",
+        "right": "Les cadres parlent"
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "vars.gm_te_index"
+          ],
+          [
+            "lit",
+            3
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{minute}e minute · {score}. Dernier quart d'heure. Un gamin de vingt ans, deuxième sélection, demande à tirer le coup franc. Le capitaine a déjà posé le ballon.",
+        "left": "Le capitaine tire",
+        "right": "Le gamin tire"
       },
       {
         "roles": [
           "selectionneur"
         ],
-        "text": "GRAND MATCH. Novembre. Un pays entier devant ses postes de télévision, et vingt-six joueurs qui se connaissent depuis trois jours. Coup d'envoi.",
-        "left": "Coup d'envoi"
+        "text": "{minute}e minute · {score}. L'hymne est loin, le pays retient son souffle, et ton banc n'a que des cadres fatigués et des jeunes qui n'ont jamais joué ici.",
+        "left": "Les cadres tiennent",
+        "right": "Les jeunes entrent"
       },
-      {
-        "text": "GRAND MATCH. Le stade est plein, tout se joue ici. Coup d'envoi.",
-        "left": "Coup d'envoi"
-      }
-    ],
-    "gm_te": [
       {
         "when": [
           "call",
@@ -147010,206 +148432,33 @@
         "right": "Je tente le geste"
       },
       {
-        "when": [
-          "call",
-          "flag",
-          [
-            [
-              "lit",
-              "commission_occulte"
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "{minute}e minute · {score}. La recrue que Fardelli t'a vendue s'échauffe le long de la ligne. Le banc regarde vers ta tribune : c'est ton joueur, c'est ton signe.",
-        "left": "Qu'il reste au chaud",
-        "right": "Qu'il entre"
-      },
-      {
-        "when": [
-          "cmp",
-          "<=",
-          [
-            "path",
-            "relation.aulard"
-          ],
-          [
-            "lit",
-            -1
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "{minute}e minute · {score}. Le président a quitté sa loge pour venir s'asseoir à côté de toi. Il ne dit rien. Il attend que tu fasses quelque chose.",
-        "left": "Je ne bouge pas",
-        "right": "Je descends au bord"
-      },
-      {
-        "when": [
-          "cmp",
-          "==",
-          [
-            "path",
-            "vars.gm_te_index"
-          ],
-          [
-            "lit",
-            2
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "{minute}e minute · {score}. Mi-temps. Dans le couloir des loges, un recruteur étranger te tend une carte de visite, un chiffre écrit au dos, pour ton meilleur joueur.",
-        "left": "Je la range sans lire",
-        "right": "Je la lis devant lui"
-      },
-      {
-        "when": [
-          "cmp",
-          "==",
-          [
-            "path",
-            "vars.gm_te_index"
-          ],
-          [
-            "lit",
-            3
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "{minute}e minute · {score}. Dernier quart d'heure. Le plus jeune du banc s'échauffe, celui que trois clubs ont appelé cette semaine. L'entraîneur te cherche des yeux.",
-        "left": "Le banc décide",
-        "right": "Je fais signe : lui"
-      },
-      {
-        "roles": [
-          "ds"
-        ],
-        "text": "{minute}e minute · {score}. De ta place en tribune, tu vois ce que le banc ne voit pas : leur latéral boite. Le téléphone qui relie la tribune au banc est à portée de main.",
-        "left": "Je laisse le coach",
-        "right": "J'appelle le banc"
-      },
-      {
-        "when": [
-          "cmp",
-          "<=",
-          [
-            "path",
-            "relation.gege"
-          ],
-          [
-            "lit",
-            -1
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "{minute}e minute · {score}. Le kop scande ton nom, et pas pour te remercier. Deux caméras cherchent ta loge.",
-        "left": "Je baisse la tête",
-        "right": "Je me lève et salue"
-      },
-      {
-        "when": [
-          "call",
-          "flag",
-          [
-            [
-              "lit",
-              "pantin"
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "{minute}e minute · {score}. L'émissaire du fonds lève sa coupe vers toi à travers la vitre. Le score n'a pas encore décidé si c'est un toast.",
-        "left": "Je lève la mienne",
-        "right": "Je descends en tribune"
-      },
-      {
-        "when": [
-          "cmp",
-          "==",
-          [
-            "path",
-            "vars.gm_te_index"
-          ],
-          [
-            "lit",
-            2
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "{minute}e minute · {score}. Mi-temps. Le couloir du vestiaire est vide, la porte entrouverte, et l'entraîneur parle fort. On entend ton nom, une fois.",
-        "left": "Je remonte en loge",
-        "right": "J'entre au vestiaire"
-      },
-      {
-        "when": [
-          "cmp",
-          "==",
-          [
-            "path",
-            "vars.gm_te_index"
-          ],
-          [
-            "lit",
-            3
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "{minute}e minute · {score}. Une bâche descend du toit de la tribune Est, ton nom dessus en lettres d'un mètre. Les stadiers attendent ton signe.",
-        "left": "Je la lis jusqu'au bout",
-        "right": "Faites-la décrocher"
-      },
-      {
-        "roles": [
-          "president"
-        ],
-        "text": "{minute}e minute · {score}. Le remplaçant que tu as fait signer en janvier s'échauffe depuis vingt minutes. Un mot de toi au banc, et il entre.",
-        "left": "Je laisse l'entraîneur",
-        "right": "Je fais passer le mot"
-      },
-      {
-        "when": [
-          "cmp",
-          "<",
-          [
-            "path",
-            "gauges.vestiaire"
-          ],
-          [
-            "lit",
-            35
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "{minute}e minute · {score}. Les deux clans ne se passent plus le ballon au milieu. Le capitaine te regarde : il attend un changement qui choisisse un camp.",
-        "left": "Je ne touche à rien",
-        "right": "Je sors un cadre"
-      },
+        "text": "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble.",
+        "left": "On assure",
+        "right": "On y va"
+      }
+    ],
+    "aftermatch": [
       {
         "when": [
           "and",
           [
             "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
             ">=",
             [
               "path",
-              "relation.vecchio"
+              "relation.aulard"
             ],
             [
               "lit",
@@ -147225,17 +148474,19 @@
             ],
             [
               "lit",
-              2016
+              2020
             ]
           ]
         ],
         "roles": [
-          "selectionneur"
+          "ds"
         ],
-        "speaker": "vecchio",
-        "text": "{minute}e minute · {score}. Gigi Vecchio, l'entraîneur des gardiens, montre du menton le jeune qui s'échauffe : « Il est prêt. Plus que l'autre, ce soir. »",
-        "left": "Le titulaire reste",
-        "right": "Le jeune entre"
+        "speaker": "aulard",
+        "text": "Vaubourg t'appelle au coup de sifflet, puis rappelle cinq minutes après : « Ton attaquant a couru pour deux. Maintenant, je veux savoir combien il vaut, et à qui. »",
+        "left": "Il n'est pas à vendre",
+        "right": "Je fais une estimation",
+        "answer_left": "Il raccroche sans dire au revoir. Dans le couloir, l'entraîneur lève le pouce vers toi, sans un mot.",
+        "answer_right": "Tu dis un chiffre. Le lendemain, il est dans la Gazette, arrondi au-dessus."
       },
       {
         "when": [
@@ -147245,13 +148496,86 @@
             "==",
             [
               "path",
-              "vars.gm_te_index"
+              "vars.gm_won"
             ],
             [
               "lit",
-              2
+              0
             ]
           ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "salaires_retard"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "josiane",
+        "text": "Madame Josiane attend devant le vestiaire, l'enveloppe des primes contre la poitrine : « Il y a de quoi payer les primes de ce soir, ou rattraper le retard du 12. Pas les deux. »",
+        "left": "Les primes de ce soir",
+        "right": "Rien ce soir",
+        "answer_left": "Elle distribue les enveloppes une par une. Le capitaine compte la sienne devant tout le monde.",
+        "answer_right": "Elle remonte l'enveloppe au coffre. Le vestiaire entend la porte du coffre à travers le mur."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.vestiaire"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Le capitaine sort du vestiaire avec la liste de ceux qui veulent partir cet été, pliée en quatre : « Je n'ai pas compté. Je n'ai pas osé. »",
+        "left": "Je la lis ici",
+        "right": "Pas ce soir",
+        "answer_left": "Six noms. Le sien en dernier, d'une autre encre.",
+        "answer_right": "Il la remet dans sa poche. Tu la reliras en juillet, sur le bureau d'un agent."
+      },
+      {
+        "when": [
+          "and",
           [
             "cmp",
             "==",
@@ -147263,14 +148587,28 @@
               "lit",
               1
             ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
           ]
         ],
         "roles": [
-          "selectionneur"
+          "ds"
         ],
-        "text": "{minute}e minute · {score}. On mène. Le pays chante déjà, et le banc d'en face fait entrer deux attaquants d'un coup.",
-        "left": "Je ferme derrière",
-        "right": "Je garde trois devant"
+        "text": "À la sortie des loges, l'entraîneur adverse te serre la main un peu trop longtemps : « Ton milieu, je le prends en juin, s'il est à vendre. Il l'est ? »",
+        "left": "Il ne l'est pas",
+        "right": "Tout l'est, en juin",
+        "answer_left": "Il te lâche la main en souriant, comme si tu venais de dire un prix.",
+        "answer_right": "Il hoche la tête. Le lendemain, son président appelle le tien."
       },
       {
         "when": [
@@ -147278,19 +148616,169 @@
           "==",
           [
             "path",
-            "vars.gm_te_index"
+            "vars.gm_won"
           ],
           [
             "lit",
-            2
+            1
           ]
         ],
         "roles": [
-          "selectionneur"
+          "ds"
         ],
-        "text": "{minute}e minute · {score}. Mi-temps dans un vestiaire prêté, sans eau chaude. Trois cadres demandent à parler avant toi.",
-        "left": "Je parle seul",
-        "right": "Les cadres parlent"
+        "text": "Dans le couloir, l'entraîneur sort du vestiaire trempé de champagne : « Tes deux recrues, ce soir… Je retire ce que j'ai dit en août. Pas tout. »",
+        "left": "Je vais trinquer",
+        "right": "La loge m'attend",
+        "answer_left": "Tu entres. On te verse du champagne dans le col. Personne ne reparle de l'été.",
+        "answer_right": "Le président te sert un whisky et parle déjà de la saison prochaine. En bas, ils chantent sans toi."
+      },
+      {
+        "roles": [
+          "ds"
+        ],
+        "text": "L'entraîneur t'attend à la porte du vestiaire, bras croisés, pendant que les joueurs passent sans lever la tête : « Ce soir, on a joué avec ce que tu m'as donné. »",
+        "left": "J'entre leur parler",
+        "right": "Je file chez le président",
+        "answer_left": "Tu entres. Personne ne se tait pour toi ; tu parles quand même, deux minutes.",
+        "answer_right": "Le président t'écoute dix minutes. À la onzième, il te demande un nom d'entraîneur pour juin."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "relation.gege"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "gege",
+        "text": "Gégé, sous la loge, l'écharpe tendue à bout de bras : « Ils ont chanté ton nom avant celui de l'entraîneur. L'abonnement du virage à moitié prix, tu y penses, maintenant ? »",
+        "left": "J'y pense ce soir",
+        "right": "Le conseil fixe les prix",
+        "answer_left": "Il lève l'écharpe plus haut. En bas, quelqu'un écrit déjà « moitié prix » sur un drap.",
+        "answer_right": "Il baisse l'écharpe et la noue à son poignet. Il ne dit pas au revoir."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "relation.nassir"
+            ],
+            [
+              "lit",
+              -1
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "nassir",
+        "text": "Ilyas ne descend pas de la loge. Il te fait porter un mot plié par le maître d'hôtel : « Demain, huit heures, avec le conseil. Le résultat de ce soir est déjà sur la table. »",
+        "left": "Je descends au vestiaire",
+        "right": "Je prépare les chiffres",
+        "answer_left": "Une heure avec les joueurs, sur un banc mouillé. À huit heures, tu n'as pas dormi.",
+        "answer_right": "Une nuit sur les comptes. À huit heures, le conseil a les mêmes, en couleur."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "brehaut",
+        "text": "Bréhaut, ton directeur sportif, ouvre le champagne du vestiaire avec un couteau de cuisine : « Les joueurs veulent la prime doublée, ce soir, à chaud. Je leur dis oui, ou tu le fais ? »",
+        "left": "Dis-leur oui",
+        "right": "On en parle lundi",
+        "answer_left": "Le vestiaire crie ton nom. Lundi, le conseil demande d'où sort la ligne « prime exceptionnelle ».",
+        "answer_right": "Bréhaut transmet. Le champagne se boit quand même, un peu moins vite."
       },
       {
         "when": [
@@ -147298,35 +148786,225 @@
           "==",
           [
             "path",
-            "vars.gm_te_index"
+            "vars.gm_won"
           ],
           [
             "lit",
-            3
+            1
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Dans la loge, les actionnaires se lèvent pour toi, un par un, puis se rassoient pour parler du prix des places. Le serveur te tend un verre que tu n'as pas demandé.",
+        "left": "Je descends au vestiaire",
+        "right": "Je reste avec eux",
+        "answer_left": "En bas, le capitaine te lance le ballon du match. Tu le gardes sous le bras jusqu'à la voiture.",
+        "answer_right": "Ils votent une hausse du prix des places avant le dessert. Tu lèves la main avec eux."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.tribunes"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Le virage n'est pas rentré : il attend devant la porte du siège, en silence, assis sur les marches. Le gardien demande s'il faut ouvrir.",
+        "left": "Ouvrez, je descends",
+        "right": "Laissez fermé",
+        "answer_left": "Une heure sur le trottoir, sous les projecteurs éteints. On t'écoute ; on ne t'applaudit pas.",
+        "answer_right": "Ils restent jusqu'à deux heures. Au matin, les marches sont balayées, et quelqu'un a laissé un mot sous la porte."
+      },
+      {
+        "roles": [
+          "president"
+        ],
+        "text": "L'entraîneur sort du vestiaire, la feuille de match roulée dans le poing : « Ils attendent de savoir si {pg, select, f{la présidente} other{le président}} descend. Là-haut, les actionnaires aussi. »",
+        "left": "Je descends les voir",
+        "right": "Je monte au conseil",
+        "answer_left": "Tu entres sans un mot et tu t'assois avec eux. L'entraîneur referme la porte derrière toi.",
+        "answer_right": "Là-haut, on te sert un verre et on te montre le score sur un écran, comme si tu l'avais manqué."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "relation.legruet"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
           ]
         ],
         "roles": [
           "selectionneur"
         ],
-        "text": "{minute}e minute · {score}. Dernier quart d'heure. Un gamin de vingt ans, deuxième sélection, demande à tirer le coup franc. Le capitaine a déjà posé le ballon.",
-        "left": "Le capitaine tire",
-        "right": "Le gamin tire"
+        "speaker": "legruet",
+        "text": "Berthomier traverse le vestiaire en costume, serre des mains mouillées et s'arrête devant toi : « La Fédération offre le dîner. Le dîner, pas l'hôtel des familles. »",
+        "left": "Les familles viennent",
+        "right": "Le dîner suffira",
+        "answer_left": "Tu paies les chambres des familles sur ta prime. Berthomier fait semblant de ne pas l'apprendre.",
+        "answer_right": "Le dîner a lieu sans les familles. Le capitaine porte un toast court, puis se rassoit."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "gauges.tribunes"
+            ],
+            [
+              "lit",
+              35
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "À la sortie, le car attend sous les sifflets, phares allumés. Le capitaine te demande s'il faut descendre parler aux gens, ou démarrer sans regarder.",
+        "left": "On descend leur parler",
+        "right": "On démarre",
+        "answer_left": "Vingt minutes sur le trottoir, sous la pluie. Les sifflets s'arrêtent avant la fin.",
+        "answer_right": "Le car démarre. Une canette frappe la vitre arrière ; personne ne se retourne."
+      },
+      {
+        "when": [
+          "cmp",
+          "==",
+          [
+            "path",
+            "vars.gm_won"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Le vestiaire chante l'hymne une seconde fois, faux, debout sur les bancs. Le délégué de la Fédération te rappelle que le car part à minuit, pas après.",
+        "left": "Qu'ils chantent encore",
+        "right": "Le car part à minuit",
+        "answer_left": "Ils chantent jusqu'à une heure. Le délégué inscrit l'heure du départ dans son rapport.",
+        "answer_right": "À minuit, le car est plein et silencieux. Au fond, quelqu'un fredonne pour lui seul."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "vars.gm_won"
+            ],
+            [
+              "lit",
+              0
+            ]
+          ],
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              1
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Après la défaite, le kiné te glisse que deux cadres ont réservé l'avion du retour pour ce soir, avant le dîner de la Fédération. Ils attendent ta réponse dans le couloir.",
+        "left": "Qu'ils partent",
+        "right": "Le dîner d'abord",
+        "answer_left": "Ils partent avant le dessert. Le président de la Fédération remarque leur absence, et la note sur sa serviette.",
+        "answer_right": "Ils restent, en survêtement, et ne touchent pas à leur assiette."
       },
       {
         "roles": [
           "selectionneur"
         ],
-        "text": "{minute}e minute · {score}. L'hymne est loin, le pays retient son souffle, et ton banc n'a que des cadres fatigués et des jeunes qui n'ont jamais joué ici.",
-        "left": "Les cadres tiennent",
-        "right": "Les jeunes entrent"
+        "text": "Les joueurs rangent leurs affaires en silence. Demain, chacun rentre dans son club. Le capitaine te demande ce qu'ils doivent emporter de ce soir.",
+        "left": "Un mot de moi",
+        "right": "La liste de mars",
+        "answer_left": "Deux minutes près de la porte. Le plus jeune écrit quelque chose au stylo, dans le creux de sa main.",
+        "answer_right": "Ils comprennent que certains ne reviendront pas. Ils partent un par un, chacun vers son club."
       },
-      {
-        "text": "{minute}e minute · {score}. Le match bascule ici. Deux façons de faire, une seule qui te ressemble.",
-        "left": "On assure",
-        "right": "On y va"
-      }
-    ],
-    "aftermatch": [
       {
         "when": [
           "and",
@@ -147905,572 +149583,10 @@
         "text": "Score final {gm_score}. Le vestiaire exulte."
       },
       {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "relation.aulard"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "aulard",
-        "text": "Vaubourg t'appelle au coup de sifflet, puis rappelle cinq minutes après : « Ton attaquant a couru pour deux. Maintenant, je veux savoir combien il vaut, et à qui. »",
-        "left": "Il n'est pas à vendre",
-        "right": "Je fais une estimation",
-        "answer_left": "Il raccroche sans dire au revoir. Dans le couloir, l'entraîneur lève le pouce vers toi, sans un mot.",
-        "answer_right": "Tu dis un chiffre. Le lendemain, il est dans la Gazette, arrondi au-dessus."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ],
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "salaires_retard"
-              ]
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "josiane",
-        "text": "Madame Josiane attend devant le vestiaire, l'enveloppe des primes contre la poitrine : « Il y a de quoi payer les primes de ce soir, ou rattraper le retard du 12. Pas les deux. »",
-        "left": "Les primes de ce soir",
-        "right": "Rien ce soir",
-        "answer_left": "Elle distribue les enveloppes une par une. Le capitaine compte la sienne devant tout le monde.",
-        "answer_right": "Elle remonte l'enveloppe au coffre. Le vestiaire entend la porte du coffre à travers le mur."
-      },
-      {
-        "when": [
-          "cmp",
-          "==",
-          [
-            "path",
-            "vars.gm_won"
-          ],
-          [
-            "lit",
-            1
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "Dans le couloir, l'entraîneur sort du vestiaire trempé de champagne : « Tes deux recrues, ce soir… Je retire ce que j'ai dit en août. Pas tout. »",
-        "left": "Je vais trinquer",
-        "right": "La loge m'attend",
-        "answer_left": "Tu entres. On te verse du champagne dans le col. Personne ne reparle de l'été.",
-        "answer_right": "Le président te sert un whisky et parle déjà de la saison prochaine. En bas, ils chantent sans toi."
-      },
-      {
-        "roles": [
-          "ds"
-        ],
-        "text": "L'entraîneur t'attend à la porte du vestiaire, bras croisés, pendant que les joueurs passent sans lever la tête : « Ce soir, on a joué avec ce que tu m'as donné. »",
-        "left": "J'entre leur parler",
-        "right": "Je file chez le président",
-        "answer_left": "Tu entres. Personne ne se tait pour toi ; tu parles quand même, deux minutes.",
-        "answer_right": "Le président t'écoute dix minutes. À la onzième, il te demande un nom d'entraîneur pour juin."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "relation.gege"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "gege",
-        "text": "Gégé, sous la loge, l'écharpe tendue à bout de bras : « Ils ont chanté ton nom avant celui de l'entraîneur. L'abonnement du virage à moitié prix, tu y penses, maintenant ? »",
-        "left": "J'y pense ce soir",
-        "right": "Le conseil fixe les prix",
-        "answer_left": "Il lève l'écharpe plus haut. En bas, quelqu'un écrit déjà « moitié prix » sur un drap.",
-        "answer_right": "Il baisse l'écharpe et la noue à son poignet. Il ne dit pas au revoir."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ],
-          [
-            "cmp",
-            "<=",
-            [
-              "path",
-              "relation.nassir"
-            ],
-            [
-              "lit",
-              -1
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "nassir",
-        "text": "Ilyas ne descend pas de la loge. Il te fait porter un mot plié par le maître d'hôtel : « Demain, huit heures, avec le conseil. Le résultat de ce soir est déjà sur la table. »",
-        "left": "Je descends au vestiaire",
-        "right": "Je prépare les chiffres",
-        "answer_left": "Une heure avec les joueurs, sur un banc mouillé. À huit heures, tu n'as pas dormi.",
-        "answer_right": "Une nuit sur les comptes. À huit heures, le conseil a les mêmes, en couleur."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "brehaut",
-        "text": "Bréhaut, ton directeur sportif, ouvre le champagne du vestiaire avec un couteau de cuisine : « Les joueurs veulent la prime doublée, ce soir, à chaud. Je leur dis oui, ou tu le fais ? »",
-        "left": "Dis-leur oui",
-        "right": "On en parle lundi",
-        "answer_left": "Le vestiaire crie ton nom. Lundi, le conseil demande d'où sort la ligne « prime exceptionnelle ».",
-        "answer_right": "Bréhaut transmet. Le champagne se boit quand même, un peu moins vite."
-      },
-      {
-        "roles": [
-          "president"
-        ],
-        "text": "L'entraîneur sort du vestiaire, la feuille de match roulée dans le poing : « Ils attendent de savoir si {pg, select, f{la présidente} other{le président}} descend. Là-haut, les actionnaires aussi. »",
-        "left": "Je descends les voir",
-        "right": "Je monte au conseil",
-        "answer_left": "Tu entres sans un mot et tu t'assois avec eux. L'entraîneur referme la porte derrière toi.",
-        "answer_right": "Là-haut, on te sert un verre et on te montre le score sur un écran, comme si tu l'avais manqué."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "relation.legruet"
-            ],
-            [
-              "lit",
-              1
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "speaker": "legruet",
-        "text": "Berthomier traverse le vestiaire en costume, serre des mains mouillées et s'arrête devant toi : « La Fédération offre le dîner. Le dîner, pas l'hôtel des familles. »",
-        "left": "Les familles viennent",
-        "right": "Le dîner suffira",
-        "answer_left": "Tu paies les chambres des familles sur ta prime. Berthomier fait semblant de ne pas l'apprendre.",
-        "answer_right": "Le dîner a lieu sans les familles. Le capitaine porte un toast court, puis se rassoit."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "vars.gm_won"
-            ],
-            [
-              "lit",
-              0
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "gauges.tribunes"
-            ],
-            [
-              "lit",
-              35
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "À la sortie, le car attend sous les sifflets, phares allumés. Le capitaine te demande s'il faut descendre parler aux gens, ou démarrer sans regarder.",
-        "left": "On descend leur parler",
-        "right": "On démarre",
-        "answer_left": "Vingt minutes sur le trottoir, sous la pluie. Les sifflets s'arrêtent avant la fin.",
-        "answer_right": "Le car démarre. Une canette frappe la vitre arrière ; personne ne se retourne."
-      },
-      {
-        "when": [
-          "cmp",
-          "==",
-          [
-            "path",
-            "vars.gm_won"
-          ],
-          [
-            "lit",
-            1
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Le vestiaire chante l'hymne une seconde fois, faux, debout sur les bancs. Le délégué de la Fédération te rappelle que le car part à minuit, pas après.",
-        "left": "Qu'ils chantent encore",
-        "right": "Le car part à minuit",
-        "answer_left": "Ils chantent jusqu'à une heure. Le délégué inscrit l'heure du départ dans son rapport.",
-        "answer_right": "À minuit, le car est plein et silencieux. Au fond, quelqu'un fredonne pour lui seul."
-      },
-      {
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Les joueurs rangent leurs affaires en silence. Demain, chacun rentre dans son club. Le capitaine te demande ce qu'ils doivent emporter de ce soir.",
-        "left": "Un mot de moi",
-        "right": "La liste de mars",
-        "answer_left": "Deux minutes près de la porte. Le plus jeune écrit quelque chose au stylo, dans le creux de sa main.",
-        "answer_right": "Ils comprennent que certains ne reviendront pas. Ils partent un par un, chacun vers son club."
-      },
-      {
         "text": "Le match est terminé. Il faut parler au groupe."
       }
     ],
     "bilan_verdict": [
-      {
-        "when": [
-          "and",
-          [
-            "path",
-            "bilan.tenu"
-          ],
-          [
-            "cmp",
-            "<=",
-            [
-              "path",
-              "bilan.rang"
-            ],
-            [
-              "lit",
-              3
-            ]
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. Le président a fait imprimer la photo de famille. Tu es dessus, au bord.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "path",
-            "bilan.tenu"
-          ],
-          [
-            "path",
-            "objective.promised"
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. {objectif} : tenu. La promesse d'août tient encore debout, à une semaine près.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "path",
-          "bilan.tenu"
-        ],
-        "text": "Le verdict tombe : {rang}e. {objectif} : tenu. Josiane a déjà rangé le dossier {nom} sous les autres.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "not",
-            [
-              "path",
-              "bilan.tenu"
-            ]
-          ],
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "bilan.outcome"
-            ],
-            [
-              "lit",
-              "descente"
-            ]
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. Le mot « descente » est écrit en petit, en bas de la lettre.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "not",
-            [
-              "path",
-              "bilan.tenu"
-            ]
-          ],
-          [
-            "cmp",
-            "==",
-            [
-              "path",
-              "bilan.outcome"
-            ],
-            [
-              "lit",
-              "lanterne"
-            ]
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. Dernier. Le classement tient sur une ligne, et c'est la dernière.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "not",
-            [
-              "path",
-              "bilan.tenu"
-            ]
-          ],
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "salaires_retard"
-              ]
-            ]
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. Les salaires de mai ne sont pas tombés non plus. Deux lignes dans le même courrier.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "not",
-            [
-              "path",
-              "bilan.tenu"
-            ]
-          ],
-          [
-            "path",
-            "objective.promised"
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. La Gazette a ressorti la phrase d'août, avec la date.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "not",
-            [
-              "path",
-              "bilan.tenu"
-            ]
-          ],
-          [
-            "cmp",
-            "<=",
-            [
-              "path",
-              "bilan.rang"
-            ],
-            [
-              "lit",
-              6
-            ]
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. À un point de ce qu'on t'avait demandé. On a refait la photo sans toi.",
-        "left": "Voir le classement"
-      },
-      {
-        "when": [
-          "not",
-          [
-            "path",
-            "bilan.tenu"
-          ]
-        ],
-        "text": "Le verdict tombe : {rang}e. {objectif} : manqué. Le dossier {nom} fait deux pages, et la deuxième est vide.",
-        "left": "Voir le classement"
-      },
       {
         "when": [
           "and",
@@ -148814,11 +149930,509 @@
         "left": "Voir le classement"
       },
       {
+        "when": [
+          "and",
+          [
+            "path",
+            "bilan.tenu"
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "bilan.rang"
+            ],
+            [
+              "lit",
+              3
+            ]
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. Le président a fait imprimer la photo de famille. Tu es dessus, au bord.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "path",
+            "bilan.tenu"
+          ],
+          [
+            "path",
+            "objective.promised"
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. {objectif} : tenu. La promesse d'août tient encore debout, à une semaine près.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "path",
+          "bilan.tenu"
+        ],
+        "text": "Le verdict tombe : {rang}e. {objectif} : tenu. Josiane a déjà rangé le dossier {nom} sous les autres.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "not",
+            [
+              "path",
+              "bilan.tenu"
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "bilan.outcome"
+            ],
+            [
+              "lit",
+              "descente"
+            ]
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. Le mot « descente » est écrit en petit, en bas de la lettre.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "not",
+            [
+              "path",
+              "bilan.tenu"
+            ]
+          ],
+          [
+            "cmp",
+            "==",
+            [
+              "path",
+              "bilan.outcome"
+            ],
+            [
+              "lit",
+              "lanterne"
+            ]
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. Dernier. Le classement tient sur une ligne, et c'est la dernière.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "not",
+            [
+              "path",
+              "bilan.tenu"
+            ]
+          ],
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "salaires_retard"
+              ]
+            ]
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. Les salaires de mai ne sont pas tombés non plus. Deux lignes dans le même courrier.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "not",
+            [
+              "path",
+              "bilan.tenu"
+            ]
+          ],
+          [
+            "path",
+            "objective.promised"
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. La Gazette a ressorti la phrase d'août, avec la date.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "not",
+            [
+              "path",
+              "bilan.tenu"
+            ]
+          ],
+          [
+            "cmp",
+            "<=",
+            [
+              "path",
+              "bilan.rang"
+            ],
+            [
+              "lit",
+              6
+            ]
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. À un point de ce qu'on t'avait demandé. On a refait la photo sans toi.",
+        "left": "Voir le classement"
+      },
+      {
+        "when": [
+          "not",
+          [
+            "path",
+            "bilan.tenu"
+          ]
+        ],
+        "text": "Le verdict tombe : {rang}e. {objectif} : manqué. Le dossier {nom} fait deux pages, et la deuxième est vide.",
+        "left": "Voir le classement"
+      },
+      {
         "text": "Le verdict de la saison tombe. Objectif : {objectif}. En haut du dossier, un nom : {nom}.",
         "left": "Voir le classement"
       }
     ],
     "bilan_contrat": [
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "commission_occulte"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "fardelli",
+        "text": "Fardelli t'invite au bar de l'hôtel, pas au bureau, et fait tourner sa gourmette : « Ton contrat se discute en haut. Nos affaires, elles, continuent. Tu demandes plus au président, ou tu restes sage ? »",
+        "left": "Je reste sage",
+        "right": "Je demande plus",
+        "answer_left": "Il paie les deux verres et laisse un pourboire trop gros, bien en vue sous la soucoupe.",
+        "answer_right": "Il sourit. Le lendemain, le président reçoit ta demande, et un coup de fil de Fardelli."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "homme_president"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2020
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "aulard",
+        "text": "Vaubourg prolonge ton contrat au téléphone, sans le relire : « Je garde les gens fidèles. Tu veux un budget plus gros pour l'été, ou tu me fais confiance, comme d'habitude ? »",
+        "left": "Comme d'habitude",
+        "right": "Un budget plus gros",
+        "answer_left": "Tu l'entends signer au bout du fil. Le contrat arrive le lendemain au secrétariat, déjà paraphé.",
+        "answer_right": "Il rit, puis il se tait. Le budget arrive en juillet, avec une liste du beau-frère agrafée dessus."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "bilan_manque"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "speaker": "josiane",
+        "text": "Madame Josiane pose deux contrats côte à côte, le tien et celui de l'entraîneur : « Le président n'en prolongera qu'un aux mêmes conditions. Il m'a demandé lequel coûte le moins à rompre. »",
+        "left": "Je reste aux mêmes",
+        "right": "Je réclame un mercato",
+        "answer_left": "Elle range le contrat de l'entraîneur sous le tien. Elle ne dit pas lequel a été choisi.",
+        "answer_right": "Elle reporte ta demande au crayon, dans la marge. Le président l'entoure au stylo rouge."
+      },
+      {
+        "when": [
+          "call",
+          "flag",
+          [
+            [
+              "lit",
+              "bilan_manque"
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "{patron} a fait préparer deux feuilles : ton contrat prolongé d'un an, et une fin de mission déjà datée. « Je signe la première si tu ne me demandes rien. Tu demandes ? »",
+        "left": "Je ne demande rien",
+        "right": "Je demande un mercato",
+        "answer_left": "Il signe la première. La seconde part dans un tiroir qu'il ne ferme pas à clé.",
+        "answer_right": "Il signe, puis ajoute à la main une ligne de budget. La seconde feuille, il la garde sous le coude."
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "{patron} relit ton contrat en cochant au crayon les clauses que tu n'as jamais utilisées : la voiture, le logement, la prime au titre. « On les garde, ou tu me demandes celles qui servent ? »",
+        "left": "Gardez-les",
+        "right": "Celles qui servent",
+        "answer_left": "Il gomme ses coches une à une, avec soin.",
+        "answer_right": "Il raye la voiture et le logement, et double la ligne du recrutement. Le conseil, lui, raye ta prime."
+      },
+      {
+        "roles": [
+          "ds"
+        ],
+        "text": "{patron} a posé une feuille blanche à côté de ton contrat : « Tu restes aux mêmes conditions, ou tu m'écris sur cette feuille ce qu'il te faut pour l'été ? »",
+        "left": "Mêmes conditions",
+        "right": "J'écris sur la feuille",
+        "answer_left": "La feuille blanche retourne dans le tiroir. Elle n'en ressortira pas.",
+        "answer_right": "Tu écris trois lignes. Il en raye une sans la lire, et signe sous les deux autres."
+      },
+      {
+        "when": [
+          "call",
+          "flag",
+          [
+            [
+              "lit",
+              "pantin"
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "nassir",
+        "text": "Ilyas te tend un stylo du fonds gravé à ton nom, avant même d'ouvrir le dossier : « Le visage reste, bien sûr. Le conseil se demande seulement s'il faut lui donner plus de moyens. »",
+        "left": "Le visage suffit",
+        "right": "Donnez les moyens",
+        "answer_left": "Il range ton dossier sans l'ouvrir. Le stylo, lui, reste dans ta poche.",
+        "answer_right": "Il ouvre le dossier à une page déjà cornée. Les moyens y sont, avec leurs conditions."
+      },
+      {
+        "when": [
+          "call",
+          "flag",
+          [
+            [
+              "lit",
+              "tentation_mairie"
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "nassir",
+        "text": "Ilyas a découpé dans le journal la page des municipales et l'a posée sur ton mandat : « On vous prête une candidature. Le conseil vous garde, s'il sait pour combien de temps. Il vous faut plus pour rester ? »",
+        "left": "Je reste, sans plus",
+        "right": "Il me faut plus",
+        "answer_left": "Il range la coupure dans son portefeuille, derrière une photo. Il la gardera.",
+        "answer_right": "Le conseil t'accorde une rallonge. La mairie apprend le montant avant toi."
+      },
+      {
+        "when": [
+          "call",
+          "flag",
+          [
+            [
+              "lit",
+              "bilan_manque"
+            ]
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "speaker": "nassir",
+        "text": "Le conseil siège vingt minutes sans toi. Puis Ilyas te fait entrer et lit lui-même : « Le mandat est renouvelé. Les moyens, non. » Il te tend le stylo.",
+        "left": "Je signe",
+        "right": "Je réclame les moyens",
+        "answer_left": "Tu signes. Personne n'applaudit ; quelqu'un empile déjà les chaises.",
+        "answer_right": "Il reprend le stylo. On te demande de ressortir vingt minutes de plus."
+      },
+      {
+        "roles": [
+          "president"
+        ],
+        "text": "{patron} pose deux feuilles sur la table du conseil : ton mandat, et le budget de l'an prochain. « Vous signez la première telle quelle, ou on rouvre la seconde ? »",
+        "left": "Je signe telle quelle",
+        "right": "On rouvre le budget",
+        "answer_left": "Vous signez en même temps, sur la même table. Le budget reste fermé, sous son coude.",
+        "answer_right": "Il retire son coude. La nuit sera longue ; le conseil commande des sandwichs."
+      },
+      {
+        "when": [
+          "call",
+          "flag",
+          [
+            [
+              "lit",
+              "primes_sponsor"
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{patron} relit ton contrat ligne à ligne, le juriste debout derrière lui, et s'arrête aux revenus annexes : « Le sponsor vous verse quelque chose ? Je préférerais l'apprendre ici plutôt qu'un dimanche. »",
+        "left": "Je re-signe, c'est tout",
+        "right": "Que la Fédération paie",
+        "answer_left": "Il tourne la page sans relever la tête. Derrière lui, le juriste souligne l'article au crayon, très légèrement.",
+        "answer_right": "Il note ta demande et, en dessous, le nom du sponsor, suivi d'un point d'interrogation."
+      },
+      {
+        "when": [
+          "and",
+          [
+            "call",
+            "flag",
+            [
+              [
+                "lit",
+                "homme_president"
+              ]
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "speaker": "legruet",
+        "text": "Berthomier signe ta prolongation avant toi et te tend son stylo : « Le Congrès, c'est en mai de l'an prochain. Ceux que j'ai nommés restent jusque-là. Un charter de plus, ou ma parole vous suffit ? »",
+        "left": "Votre parole suffit",
+        "right": "Un charter de plus",
+        "answer_left": "Il reprend son stylo. Au Congrès, tu seras assis{pg, select, f{e} other{}} au deuxième rang, juste derrière lui.",
+        "answer_right": "Il ajoute la ligne lui-même, à la main. Elle porte ses initiales, pas celles du trésorier."
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            1
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{patron} te tend ton contrat retapé par sa secrétaire, un trombone sur l'article des moyens : « Elle l'a relu deux fois. L'article est vide, comme l'an dernier. Je le laisse vide ? »",
+        "left": "Laissez-le vide",
+        "right": "Remplissez-le",
+        "answer_left": "La secrétaire agrafe, et pose un trombone rouge sur la page vide. Pour plus tard.",
+        "answer_right": "La secrétaire écrit un chiffre au crayon, le sien, plus haut que celui que tu aurais osé."
+      },
+      {
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "{patron} t'attend dans le salon de la Fédération, ton contrat ouvert à la page des déplacements : « Vous continuez avec ce que vous avez, ou on parle d'argent devant le bureau fédéral ? »",
+        "left": "Je continue ainsi",
+        "right": "Parlons-en au bureau",
+        "answer_left": "Il referme le contrat avec soin, comme on ferme une boîte de cigares.",
+        "answer_right": "Le bureau fédéral t'écoute une heure, te donne la moitié, et le pays l'apprend lundi."
+      },
       {
         "when": [
           "cmp",
@@ -149241,88 +150855,46 @@
         "answer_right": "Il note un chiffre, le barre, en note un autre. Il ne te le montre pas."
       },
       {
+        "text": "{patron} : « On continue l'aventure, ou tu tentes autre chose ? »",
+        "left": "Je reste",
+        "right": "Je réclame plus de moyens",
+        "answer_left": "Il repose le carnet à souches sans l'ouvrir. La saison suivante est déjà écrite.",
+        "answer_right": "Il repose le carnet à souches et regarde par la fenêtre. « On verra en juin. »"
+      }
+    ],
+    "bilan_carrefour": [
+      {
         "when": [
-          "and",
+          "cmp",
+          "<",
           [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "commission_occulte"
-              ]
-            ]
+            "path",
+            "gauges.caisse"
           ],
           [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2020
-            ]
+            "lit",
+            30
           ]
         ],
         "roles": [
           "ds"
         ],
-        "speaker": "fardelli",
-        "text": "Fardelli t'invite au bar de l'hôtel, pas au bureau, et fait tourner sa gourmette : « Ton contrat se discute en haut. Nos affaires, elles, continuent. Tu demandes plus au président, ou tu restes sage ? »",
-        "left": "Je reste sage",
-        "right": "Je demande plus",
-        "answer_left": "Il paie les deux verres et laisse un pourboire trop gros, bien en vue sous la soucoupe.",
-        "answer_right": "Il sourit. Le lendemain, le président reçoit ta demande, et un coup de fil de Fardelli."
+        "text": "L'été sert à faire de la place. Trois casiers vidés, trois contrats rompus à l'amiable, et une ligne de moins sur la feuille que l'Inspectrice relira en août.",
+        "left": "Repartir plus léger"
       },
       {
         "when": [
           "and",
           [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "homme_president"
-              ]
-            ]
-          ],
-          [
             "cmp",
-            "<",
+            "<=",
             [
               "path",
-              "year"
+              "gauges.direction"
             ],
             [
               "lit",
-              2020
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "speaker": "aulard",
-        "text": "Vaubourg prolonge ton contrat au téléphone, sans le relire : « Je garde les gens fidèles. Tu veux un budget plus gros pour l'été, ou tu me fais confiance, comme d'habitude ? »",
-        "left": "Comme d'habitude",
-        "right": "Un budget plus gros",
-        "answer_left": "Tu l'entends signer au bout du fil. Le contrat arrive le lendemain au secrétariat, déjà paraphé.",
-        "answer_right": "Il rit, puis il se tait. Le budget arrive en juillet, avec une liste du beau-frère agrafée dessus."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "bilan_manque"
-              ]
+              30
             ]
           ],
           [
@@ -149341,43 +150913,87 @@
         "roles": [
           "ds"
         ],
-        "speaker": "josiane",
-        "text": "Madame Josiane pose deux contrats côte à côte, le tien et celui de l'entraîneur : « Le président n'en prolongera qu'un aux mêmes conditions. Il m'a demandé lequel coûte le moins à rompre. »",
-        "left": "Je reste aux mêmes",
-        "right": "Je réclame un mercato",
-        "answer_left": "Elle range le contrat de l'entraîneur sous le tien. Elle ne dit pas lequel a été choisi.",
-        "answer_right": "Elle reporte ta demande au crayon, dans la marge. Le président l'entoure au stylo rouge."
+        "text": "Le président part en vacances sans dire où. Il laisse à Josiane un numéro, et la consigne de ne te le donner qu'en cas de vente.",
+        "left": "Ne rien vendre"
+      },
+      {
+        "when": [
+          "and",
+          [
+            "cmp",
+            ">=",
+            [
+              "path",
+              "season"
+            ],
+            [
+              "lit",
+              2
+            ]
+          ],
+          [
+            "cmp",
+            "<",
+            [
+              "path",
+              "year"
+            ],
+            [
+              "lit",
+              2008
+            ]
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "En juillet, d'anciennes recrues repassent au club chercher leurs affaires. Josiane leur rend leur photo de licence, une par une, sans rien ajouter.",
+        "left": "Rendre les photos"
+      },
+      {
+        "when": [
+          "cmp",
+          "<",
+          [
+            "path",
+            "gauges.vestiaire"
+          ],
+          [
+            "lit",
+            35
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Juillet. Le capitaine t'envoie une carte postale de vacances, sans un mot au dos, juste sa signature. L'an dernier, il avait rempli la carte jusqu'au bord.",
+        "left": "La punaiser"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "ds"
+        ],
+        "text": "Juillet. Au centre d'entraînement fermé, le jardinier refait la pelouse. Sans lever la tête, il te demande combien de nouveaux il faudra marquer sur le planning d'août.",
+        "left": "Lui donner un chiffre"
       },
       {
         "roles": [
           "ds"
         ],
-        "text": "{patron} a posé une feuille blanche à côté de ton contrat : « Tu restes aux mêmes conditions, ou tu m'écris sur cette feuille ce qu'il te faut pour l'été ? »",
-        "left": "Mêmes conditions",
-        "right": "J'écris sur la feuille",
-        "answer_left": "La feuille blanche retourne dans le tiroir. Elle n'en ressortira pas.",
-        "answer_right": "Tu écris trois lignes. Il en raye une sans la lire, et signe sous les deux autres."
-      },
-      {
-        "when": [
-          "call",
-          "flag",
-          [
-            [
-              "lit",
-              "pantin"
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "nassir",
-        "text": "Ilyas te tend un stylo du fonds gravé à ton nom, avant même d'ouvrir le dossier : « Le visage reste, bien sûr. Le conseil se demande seulement s'il faut lui donner plus de moyens. »",
-        "left": "Le visage suffit",
-        "right": "Donnez les moyens",
-        "answer_left": "Il range ton dossier sans l'ouvrir. Le stylo, lui, reste dans ta poche.",
-        "answer_right": "Il ouvre le dossier à une page déjà cornée. Les moyens y sont, avec leurs conditions."
+        "text": "L'été arrive par le téléphone : le premier appel tombe le lendemain du dernier match, à huit heures, et c'est un agent. Le mercato a commencé avant toi.",
+        "left": "Décrocher"
       },
       {
         "when": [
@@ -149393,99 +151009,91 @@
         "roles": [
           "president"
         ],
-        "speaker": "nassir",
-        "text": "Ilyas a découpé dans le journal la page des municipales et l'a posée sur ton mandat : « On vous prête une candidature. Le conseil vous garde, s'il sait pour combien de temps. Il vous faut plus pour rester ? »",
-        "left": "Je reste, sans plus",
-        "right": "Il me faut plus",
-        "answer_left": "Il range la coupure dans son portefeuille, derrière une photo. Il la gardera.",
-        "answer_right": "Le conseil t'accorde une rallonge. La mairie apprend le montant avant toi."
+        "text": "Juillet, au marché. Deux personnes te demandent si tu te présentes en mars ; la troisième, quand le club recrute. Tu fais aux trois la même réponse.",
+        "left": "Sourire aux trois"
       },
       {
         "when": [
-          "call",
-          "flag",
+          "cmp",
+          "<",
           [
-            [
-              "lit",
-              "bilan_manque"
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "speaker": "nassir",
-        "text": "Le conseil siège vingt minutes sans toi. Puis Ilyas te fait entrer et lit lui-même : « Le mandat est renouvelé. Les moyens, non. » Il te tend le stylo.",
-        "left": "Je signe",
-        "right": "Je réclame les moyens",
-        "answer_left": "Tu signes. Personne n'applaudit ; quelqu'un empile déjà les chaises.",
-        "answer_right": "Il reprend le stylo. On te demande de ressortir vingt minutes de plus."
-      },
-      {
-        "roles": [
-          "president"
-        ],
-        "text": "{patron} pose deux feuilles sur la table du conseil : ton mandat, et le budget de l'an prochain. « Vous signez la première telle quelle, ou on rouvre la seconde ? »",
-        "left": "Je signe telle quelle",
-        "right": "On rouvre le budget",
-        "answer_left": "Vous signez en même temps, sur la même table. Le budget reste fermé, sous son coude.",
-        "answer_right": "Il retire son coude. La nuit sera longue ; le conseil commande des sandwichs."
-      },
-      {
-        "when": [
-          "call",
-          "flag",
-          [
-            [
-              "lit",
-              "primes_sponsor"
-            ]
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "{patron} relit ton contrat ligne à ligne, le juriste debout derrière lui, et s'arrête aux revenus annexes : « Le sponsor vous verse quelque chose ? Je préférerais l'apprendre ici plutôt qu'un dimanche. »",
-        "left": "Je re-signe, c'est tout",
-        "right": "Que la Fédération paie",
-        "answer_left": "Il tourne la page sans relever la tête. Derrière lui, le juriste souligne l'article au crayon, très légèrement.",
-        "answer_right": "Il note ta demande et, en dessous, le nom du sponsor, suivi d'un point d'interrogation."
-      },
-      {
-        "when": [
-          "and",
-          [
-            "call",
-            "flag",
-            [
-              [
-                "lit",
-                "homme_president"
-              ]
-            ]
+            "path",
+            "gauges.tribunes"
           ],
           [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
+            "lit",
+            30
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "L'été, le kop ne part pas en vacances. Une banderole reste nouée aux grilles du siège tout le mois d'août ; les jardiniers tondent autour.",
+        "left": "La laisser"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "season"
+          ],
+          [
+            "lit",
+            2
+          ]
+        ],
+        "roles": [
+          "president"
+        ],
+        "text": "Au siège, on change les cadres du couloir pour la rentrée. La photo de ta première saison recule d'un cran pour faire de la place à la dernière.",
+        "left": "Regarder les deux"
+      },
+      {
+        "roles": [
+          "president"
+        ],
+        "text": "L'été au siège : les bureaux vides, la pelouse qu'on refait, et le conseil qui envoie déjà son calendrier. Première réunion le 2 août, à huit heures.",
+        "left": "Noter la date"
+      },
+      {
+        "when": [
+          "cmp",
+          ">=",
+          [
+            "path",
+            "gauges.tribunes"
+          ],
+          [
+            "lit",
+            70
           ]
         ],
         "roles": [
           "selectionneur"
         ],
-        "speaker": "legruet",
-        "text": "Berthomier signe ta prolongation avant toi et te tend son stylo : « Le Congrès, c'est en mai de l'an prochain. Ceux que j'ai nommés restent jusque-là. Un charter de plus, ou ma parole vous suffit ? »",
-        "left": "Votre parole suffit",
-        "right": "Un charter de plus",
-        "answer_left": "Il reprend son stylo. Au Congrès, tu seras assis{pg, select, f{e} other{}} au deuxième rang, juste derrière lui.",
-        "answer_right": "Il ajoute la ligne lui-même, à la main. Elle porte ses initiales, pas celles du trésorier."
+        "text": "Décembre. Dans la rue, on t'arrête pour une photo, puis une autre. Une dame te demande de dire bonjour à son fils au téléphone, pour Noël.",
+        "left": "Dire bonjour"
+      },
+      {
+        "when": [
+          "cmp",
+          "<",
+          [
+            "path",
+            "gauges.tribunes"
+          ],
+          [
+            "lit",
+            30
+          ]
+        ],
+        "roles": [
+          "selectionneur"
+        ],
+        "text": "Décembre. Quelqu'un a écrit le score de novembre à la craie sur la porte de ton garage. Il pleut depuis trois jours ; la craie tient.",
+        "left": "Laisser pleuvoir"
       },
       {
         "when": [
@@ -149503,31 +151111,16 @@
         "roles": [
           "selectionneur"
         ],
-        "text": "{patron} te tend ton contrat retapé par sa secrétaire, un trombone sur l'article des moyens : « Elle l'a relu deux fois. L'article est vide, comme l'an dernier. Je le laisse vide ? »",
-        "left": "Laissez-le vide",
-        "right": "Remplissez-le",
-        "answer_left": "La secrétaire agrafe, et pose un trombone rouge sur la page vide. Pour plus tard.",
-        "answer_right": "La secrétaire écrit un chiffre au crayon, le sien, plus haut que celui que tu aurais osé."
+        "text": "L'hiver entre deux années. Tu passes tes dimanches dans des stades de club, au troisième rang, à regarder des joueurs qui font semblant de ne pas te voir.",
+        "left": "Prendre des notes"
       },
       {
         "roles": [
           "selectionneur"
         ],
-        "text": "{patron} t'attend dans le salon de la Fédération, ton contrat ouvert à la page des déplacements : « Vous continuez avec ce que vous avez, ou on parle d'argent devant le bureau fédéral ? »",
-        "left": "Je continue ainsi",
-        "right": "Parlons-en au bureau",
-        "answer_left": "Il referme le contrat avec soin, comme on ferme une boîte de cigares.",
-        "answer_right": "Le bureau fédéral t'écoute une heure, te donne la moitié, et le pays l'apprend lundi."
+        "text": "Décembre. Les joueurs sont rentrés dans leurs clubs, la liste de mars n'existe pas encore, et pour trois mois, la sélection tient dans un carnet.",
+        "left": "Ouvrir le carnet"
       },
-      {
-        "text": "{patron} : « On continue l'aventure, ou tu tentes autre chose ? »",
-        "left": "Je reste",
-        "right": "Je réclame plus de moyens",
-        "answer_left": "Il repose le carnet à souches sans l'ouvrir. La saison suivante est déjà écrite.",
-        "answer_right": "Il repose le carnet à souches et regarde par la fenêtre. « On verra en juin. »"
-      }
-    ],
-    "bilan_carrefour": [
       {
         "when": [
           "call",
@@ -149792,226 +151385,6 @@
         "text": "« {Toi}, l'été est long et mon carnet est court. On recommence ici, ou je fais deux appels ? »",
         "left": "On recommence ici",
         "right": "Fais tes deux appels"
-      },
-      {
-        "when": [
-          "cmp",
-          "<",
-          [
-            "path",
-            "gauges.caisse"
-          ],
-          [
-            "lit",
-            30
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "L'été sert à faire de la place. Trois casiers vidés, trois contrats rompus à l'amiable, et une ligne de moins sur la feuille que l'Inspectrice relira en août.",
-        "left": "Repartir plus léger"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            "<=",
-            [
-              "path",
-              "gauges.direction"
-            ],
-            [
-              "lit",
-              30
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "Le président part en vacances sans dire où. Il laisse à Josiane un numéro, et la consigne de ne te le donner qu'en cas de vente.",
-        "left": "Ne rien vendre"
-      },
-      {
-        "when": [
-          "and",
-          [
-            "cmp",
-            ">=",
-            [
-              "path",
-              "season"
-            ],
-            [
-              "lit",
-              2
-            ]
-          ],
-          [
-            "cmp",
-            "<",
-            [
-              "path",
-              "year"
-            ],
-            [
-              "lit",
-              2008
-            ]
-          ]
-        ],
-        "roles": [
-          "ds"
-        ],
-        "text": "En juillet, d'anciennes recrues repassent au club chercher leurs affaires. Josiane leur rend leur photo de licence, une par une, sans rien ajouter.",
-        "left": "Rendre les photos"
-      },
-      {
-        "roles": [
-          "ds"
-        ],
-        "text": "L'été arrive par le téléphone : le premier appel tombe le lendemain du dernier match, à huit heures, et c'est un agent. Le mercato a commencé avant toi.",
-        "left": "Décrocher"
-      },
-      {
-        "when": [
-          "call",
-          "flag",
-          [
-            [
-              "lit",
-              "tentation_mairie"
-            ]
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "Juillet, au marché. Deux personnes te demandent si tu te présentes en mars ; la troisième, quand le club recrute. Tu fais aux trois la même réponse.",
-        "left": "Sourire aux trois"
-      },
-      {
-        "when": [
-          "cmp",
-          "<",
-          [
-            "path",
-            "gauges.tribunes"
-          ],
-          [
-            "lit",
-            30
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "L'été, le kop ne part pas en vacances. Une banderole reste nouée aux grilles du siège tout le mois d'août ; les jardiniers tondent autour.",
-        "left": "La laisser"
-      },
-      {
-        "when": [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "season"
-          ],
-          [
-            "lit",
-            2
-          ]
-        ],
-        "roles": [
-          "president"
-        ],
-        "text": "Au siège, on change les cadres du couloir pour la rentrée. La photo de ta première saison recule d'un cran pour faire de la place à la dernière.",
-        "left": "Regarder les deux"
-      },
-      {
-        "roles": [
-          "president"
-        ],
-        "text": "L'été au siège : les bureaux vides, la pelouse qu'on refait, et le conseil qui envoie déjà son calendrier. Première réunion le 2 août, à huit heures.",
-        "left": "Noter la date"
-      },
-      {
-        "when": [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "gauges.tribunes"
-          ],
-          [
-            "lit",
-            70
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Décembre. Dans la rue, on t'arrête pour une photo, puis une autre. Une dame te demande de dire bonjour à son fils au téléphone, pour Noël.",
-        "left": "Dire bonjour"
-      },
-      {
-        "when": [
-          "cmp",
-          "<",
-          [
-            "path",
-            "gauges.tribunes"
-          ],
-          [
-            "lit",
-            30
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Décembre. Quelqu'un a écrit le score de novembre à la craie sur la porte de ton garage. Il pleut depuis trois jours ; la craie tient.",
-        "left": "Laisser pleuvoir"
-      },
-      {
-        "when": [
-          "cmp",
-          ">=",
-          [
-            "path",
-            "season"
-          ],
-          [
-            "lit",
-            1
-          ]
-        ],
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "L'hiver entre deux années. Tu passes tes dimanches dans des stades de club, au troisième rang, à regarder des joueurs qui font semblant de ne pas te voir.",
-        "left": "Prendre des notes"
-      },
-      {
-        "roles": [
-          "selectionneur"
-        ],
-        "text": "Décembre. Les joueurs sont rentrés dans leurs clubs, la liste de mars n'existe pas encore, et pour trois mois, la sélection tient dans un carnet.",
-        "left": "Ouvrir le carnet"
       },
       {
         "text": "L'été passe. Le téléphone sonne une fois, deux fois, puis plus. On repart.",
@@ -155069,6 +156442,214 @@
         "texte": "Ton roadster vert est passé devant la brasserie. Les deux anciens du fond se sont levés. Ils ne se lèvent plus pour personne. Même pas pour moi."
       }
     ],
+    "match": {
+      "joueurs": [
+        {
+          "id": "brehaut",
+          "de": 1990,
+          "a": 1996
+        },
+        {
+          "id": "mbako",
+          "de": 1991,
+          "a": 2006
+        },
+        {
+          "id": "vecchio",
+          "de": 1990,
+          "a": 1992,
+          "gardien": true
+        }
+      ],
+      "postes": [
+        "ton avant-centre",
+        "le numéro 9",
+        "ton ailier gauche",
+        "le meneur de jeu",
+        "ton arrière droit",
+        "le remplaçant entré à l'heure de jeu",
+        "le jeune ailier",
+        "ton milieu défensif"
+      ],
+      "gardien": "ton gardien",
+      "textes": {
+        "pour": [
+          {
+            "texte": "{Qui}, de la tête, au premier poteau. Le kop déborde jusqu'à la main courante : {score}."
+          },
+          {
+            "texte": "Une frappe de {qui} à ras de terre, entre les jambes du défenseur. Le gardien de {adv} n'a pas bougé : {score}."
+          },
+          {
+            "texte": "Penalty. {Qui} pose le ballon, recule de quatre pas sans quitter le point des yeux. Plat du pied, à gauche : {score}."
+          },
+          {
+            "texte": "{Qui} récupère au milieu, élimine deux joueurs et croise sous la barre : {score}."
+          },
+          {
+            "texte": "Coup franc à vingt mètres. {Qui} le frappe par-dessus le mur ; la balle redescend juste à temps : {score}."
+          },
+          {
+            "texte": "Un corner mal dégagé, la balle traîne dans les six mètres, et {qui} la pousse au fond du pied gauche : {score}."
+          },
+          {
+            "texte": "{Qui} part dans le dos de la défense de {adv}, seul face au gardien, et le prend à contre-pied : {score}."
+          },
+          {
+            "texte": "Une volée de {qui} à l'entrée de la surface. Le filet tremble encore quand le stade se lève : {score}."
+          },
+          {
+            "texte": "{Qui} reprend le centre au second poteau, de l'extérieur du pied. Le gardien touche la balle, pas assez : {score}."
+          },
+          {
+            "texte": "Un tir contré, puis un autre. Au troisième, {qui} ne se pose plus de question : {score}."
+          }
+        ],
+        "pour_toi": [
+          {
+            "texte": "Le ballon arrive dans ta course. Tu frappes avant d'avoir réfléchi, et le filet se gonfle : {score}."
+          },
+          {
+            "texte": "Tu prends le défenseur de vitesse le long de la ligne, tu lèves la tête : personne. Alors tu tires toi-même : {score}."
+          },
+          {
+            "texte": "De la tête, sur le corner. Tu n'as pas vu la balle entrer, seulement les bras du kop qui se lèvent : {score}."
+          },
+          {
+            "texte": "Penalty. Tu poses le ballon, le stade se tait. Tu choisis ton côté au dernier moment : {score}."
+          },
+          {
+            "texte": "Une remise en une touche, une frappe enroulée. Tu cours vers le kop sans savoir pourquoi : {score}."
+          },
+          {
+            "texte": "Tu récupères un ballon que personne ne voulait et tu traverses la moitié du terrain. Le gardien sort trop tard : {score}."
+          }
+        ],
+        "contre": [
+          {
+            "texte": "Corner pour {adv}. Personne ne saute avec leur numéro 5, et le silence tombe sur la Rive : {score}."
+          },
+          {
+            "texte": "Contre-attaque de {adv}, trois contre deux. Leur ailier centre en retrait : {score}."
+          },
+          {
+            "texte": "Une perte de balle au milieu, une passe en profondeur, et leur avant-centre trompe {gardien} : {score}."
+          },
+          {
+            "texte": "Penalty pour {adv}. Le stade siffle pendant toute la course d'élan ; le ballon entre quand même : {score}."
+          },
+          {
+            "texte": "Une frappe lointaine, déviée par un genou. {Gardien} est parti du mauvais côté : {score}."
+          },
+          {
+            "texte": "Coup franc pour {adv} à l'entrée de la surface. Le mur s'est ouvert au mauvais moment : {score}."
+          },
+          {
+            "texte": "Leur numéro 10 dribble deux fois le même défenseur et croise. Personne ne siffle sur la Rive : {score}."
+          },
+          {
+            "texte": "Une sortie manquée de {gardien} sur un centre sans danger. Leur attaquant n'a plus qu'à pousser : {score}."
+          },
+          {
+            "texte": "Un ballon perdu dans les pieds de leur milieu, un tir du droit à vingt mètres : {score}. Le kop se rassoit."
+          },
+          {
+            "texte": "{Adv} marque sur sa première occasion, une tête plongeante. Leurs supporters chantent, seuls : {score}."
+          }
+        ],
+        "poteau": [
+          {
+            "texte": "{Qui} trouve le poteau. Le bruit du ballon sur le fer s'entend jusqu'au tabac-presse."
+          },
+          {
+            "texte": "La frappe de {qui} frôle la lucarne. Dans la populaire, un homme a déjà levé les bras ; il les rabaisse lentement."
+          },
+          {
+            "texte": "{Qui} se retrouve seul au point de penalty et tire au-dessus. Il garde longtemps les mains sur la tête."
+          },
+          {
+            "texte": "Une tête de {qui} sur la barre. La balle retombe sur la ligne ; personne ne sait si elle est entrée. L'arbitre, si : non."
+          },
+          {
+            "texte": "Le gardien de {adv} sort dans les pieds de {qui} ; le ballon file le long de la ligne et finit sur le poteau."
+          },
+          {
+            "texte": "{Qui} enroule sa frappe. Elle passe à un mètre du poteau, et tout le stade fait le même bruit."
+          }
+        ],
+        "arret": [
+          {
+            "texte": "{Gardien} sort dans les pieds de leur avant-centre et se relève en se tenant l'épaule. Il reste."
+          },
+          {
+            "texte": "Une tête à bout portant. {Gardien} la sort d'une main, sans savoir comment, et le kop scande son nom."
+          },
+          {
+            "texte": "Penalty pour {adv}. {Gardien} part du bon côté et bloque la balle contre sa poitrine."
+          },
+          {
+            "texte": "Un tir de {adv} en pleine lucarne. {Gardien} vole ; le bout des doigts suffit : corner."
+          },
+          {
+            "texte": "{Gardien} plonge dans les pieds d'un attaquant lancé. Le stade retient son souffle, puis applaudit."
+          },
+          {
+            "texte": "Une frappe déviée, un rebond traître. {Gardien} se détend du mauvais côté et rattrape la balle avec le pied."
+          }
+        ],
+        "fin_v": [
+          {
+            "texte": "Coup de sifflet final. Le kop chante encore quand les joueurs sont rentrés au vestiaire."
+          },
+          {
+            "texte": "C'est fini. Dans la populaire, un drapeau bordeaux tourne au-dessus des têtes jusqu'à ce qu'on éteigne les projecteurs."
+          },
+          {
+            "texte": "L'arbitre siffle la fin. Sur la piste, un gamin des pupilles court derrière les joueurs avec un ballon trop grand."
+          },
+          {
+            "texte": "Le stade se vide lentement, sans se presser. Ce soir, la buvette du kop fermera tard."
+          },
+          {
+            "texte": "Fin du match. Les joueurs vont saluer la populaire, qui leur renvoie leur nom un par un."
+          }
+        ],
+        "fin_n": [
+          {
+            "texte": "Coup de sifflet final. On applaudit poliment ; on se demande si c'est un point de gagné ou deux de perdus."
+          },
+          {
+            "texte": "C'est fini. Le kop siffle un peu, applaudit un peu, et rentre."
+          },
+          {
+            "texte": "Fin du match. Personne ne sort heureux, personne n'est fâché ; on parlera surtout de l'arbitre."
+          },
+          {
+            "texte": "L'arbitre siffle la fin sur une dernière occasion. Le stade reste debout une seconde de trop."
+          },
+          {
+            "texte": "Un point. Dans les tribunes, les vieux disent qu'ils ont vu pire, et les jeunes qu'ils ont vu mieux."
+          }
+        ],
+        "fin_d": [
+          {
+            "texte": "Coup de sifflet final. Le kop tourne le dos à la pelouse, en silence."
+          },
+          {
+            "texte": "C'est fini. Des coussins volent depuis la tribune ouest ; un seul atteint la pelouse."
+          },
+          {
+            "texte": "Fin du match. Les joueurs saluent la populaire, qui ne leur répond pas."
+          },
+          {
+            "texte": "L'arbitre siffle la fin. Dans le tunnel, quelqu'un crie ton nom, et ce n'est pas pour te féliciter."
+          },
+          {
+            "texte": "Le stade se vide vite, sans un chant. Sur le parking, on klaxonne pour les visiteurs."
+          }
+        ]
+      }
+    },
     "missions": [
       {
         "id": "sac_preparateur",
@@ -157213,5 +158794,5 @@
       }
     ]
   },
-  "hash": "efc67810"
+  "hash": "35c1d4d6"
 }

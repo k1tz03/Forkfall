@@ -66,6 +66,28 @@ setpieces:
       right: "Répondez qu'on étudie"
       answer_left: "Elle tape ta réponse en deux exemplaires. Le premier part à la Commission, le second dort dans ton tiroir."
       answer_right: "Elle écrit « à l'étude » au bas de la lettre, la date à côté, et la classe dans le dossier rouge."
+    # Sans époque (les variantes nommées s'arrêtent avant 2020) : la première saison, la saison d'après un objectif manqué, les suivantes.
+    - roles: [ds]
+      when: "season == 0"
+      text: "{patron} te remet les clés du bureau des recrutements ; l'étiquette porte encore le nom de ton prédécesseur. « L'équipe vise {objectif_min}. Le reste, tu me le diras. Tu t'engages ? »"
+      left: "Je m'y engage"
+      right: "Pas avant d'avoir vu"
+      answer_left: "Promesse publique : {objectif}. Il décolle l'étiquette de l'ancien avec l'ongle, et la jette dans ta corbeille."
+      answer_right: "Il hausse les épaules. L'étiquette reste sur la clé jusqu'à Noël."
+    - roles: [ds]
+      when: "season >= 1 && flag('bilan_manque')"
+      text: "{patron} a punaisé le classement de juin au mur de ton bureau, à hauteur d'yeux : « Il reste là jusqu'à ce qu'un meilleur le remplace. Cette année, {objectif_min}. Tu t'engages ? »"
+      left: "Décrochez-le en juin"
+      right: "Laissez-le au mur"
+      answer_left: "Promesse publique : {objectif}. Il te met la punaise dans la main : c'est toi qui le décrocheras."
+      answer_right: "La feuille jaunit au mur. Tu finis par ne plus la voir ; tes visiteurs, si."
+    - roles: [ds]
+      when: "season >= 2"
+      text: "Encore un été. {patron} ne monte plus pour l'objectif : un mot collé sur ta lampe de bureau, « {objectif_min} ? », le point d'interrogation souligné deux fois."
+      left: "Je réponds « oui »"
+      right: "Je ne réponds pas"
+      answer_left: "Promesse publique : {objectif}. Le lendemain, ton « oui » est sur son bureau, sous verre."
+      answer_right: "Le mot reste sur la lampe tout l'automne. La chaleur de l'ampoule en jaunit les bords."
     - roles: [ds]
       text: "{patron} déplie la liste des contrats sur le bureau, un trait rouge sous le plus cher : « Pour l'équipe, {objectif_min}. Pour toi, un mercato qui ne me réveille pas la nuit. Tu t'engages ? »"
       left: "Je m'engage"
@@ -97,6 +119,21 @@ setpieces:
       right: "Je ne signe rien"
       answer_left: "Le drap flotte dimanche en tribune Nord, ta signature en bas, tenue à l'envers."
       answer_right: "Le drap reste plié sur la chaise. Le soir, quelqu'un est monté le reprendre."
+    # Sans époque (Madame Josiane s'arrête en 2008) : le premier conseil, puis les étés d'après.
+    - roles: [president]
+      when: "season == 0"
+      text: "Ton premier conseil. Le fauteuil du bout de table est encore réglé pour ton prédécesseur, le dossier trop bas. {patron} propose {objectif_min} : « On le vote ce soir, à main levée ? »"
+      left: "À main levée"
+      right: "Pas ce soir"
+      answer_left: "Promesse publique : {objectif}. Douze mains, la tienne la première ; personne ne règle le fauteuil."
+      answer_right: "Le vote est reporté. Tu passes la soirée à chercher la molette du fauteuil ; il ne remonte pas."
+    - roles: [president]
+      when: "season >= 2"
+      text: "{patron} arrive au conseil avec deux stylos : un pour signer {objectif_min}, l'autre pour le barrer en juin, si besoin. « Vous prenez lequel ? »"
+      left: "Celui pour signer"
+      right: "Gardez les deux"
+      answer_left: "Promesse publique : {objectif}. Il range l'autre stylo dans sa poche intérieure, capuchon fermé."
+      answer_right: "Il les remet tous les deux dans son plumier, sans un mot."
     - roles: [president]
       text: "{patron} fait glisser une seule feuille sur la table du conseil, une ligne surlignée : {objectif_min}. « Le conseil la signe en septembre. Avec votre nom à côté, ou sans ? »"
       left: "Avec mon nom"
@@ -127,6 +164,21 @@ setpieces:
       right: "Demandez-le au Congrès"
       answer_left: "Il regarde sa montre, pas toi, et inscrit l'heure de ta réponse dans un agenda vert."
       answer_right: "Il remet ses gants, un doigt après l'autre, sans répondre."
+    # Sans époque (Berthomier s'arrête en 2008) : la nomination, puis les janviers d'après.
+    - roles: [selectionneur]
+      when: "season == 0"
+      text: "Ta nomination tient sur une page, que {patron} lit à voix haute devant trois journalistes. À la dernière ligne, il s'arrête : « Objectif, {objectif_min}. Vous le dites vous-même ? »"
+      left: "Je le dis moi-même"
+      right: "Je n'ai rien à ajouter"
+      answer_left: "Promesse publique : {objectif}. Les trois stylos écrivent en même temps."
+      answer_right: "Il replie la page. Les journalistes écrivent « pas d'objectif chiffré », et le soulignent."
+    - roles: [selectionneur]
+      when: "season >= 2"
+      text: "Janvier. {patron} t'envoie l'objectif de l'année par courrier interne, dans une enveloppe déjà servie deux fois, les anciens noms barrés : « {objectif_min}. Signez et renvoyez. »"
+      left: "Je signe et je renvoie"
+      right: "Je renvoie sans signer"
+      answer_left: "Promesse publique : {objectif}. L'enveloppe repart avec ton nom sous les deux autres, pas encore barré."
+      answer_right: "L'enveloppe repart vide. Elle revient le lendemain, ton nom souligné au crayon rouge."
     - roles: [selectionneur]
       text: "{patron} pose sur la table la liste de l'an dernier, vingt-six noms, dont douze rayés au crayon par une autre main : « Cette année, {objectif_min}. Les noms, c'est vous. Vous vous engagez ? »"
       left: "Je m'engage"
@@ -153,6 +205,19 @@ setpieces:
       speaker: vukic
       text: "Vukić a entouré au feutre les trois clubs juste au-dessus de nous : « Eux ont recruté en janvier, l'an dernier. Nous, on a regardé. » Il laisse le feutre débouché sur ton bureau."
       left: "Reboucher le feutre"
+    # Sans époque : juin, puis la trêve vue d'en haut et d'en bas.
+    - roles: [ds]
+      when: "phase('bilan')"
+      text: "Le classement de juin. La secrétaire en tire deux photocopies : une pour le président, l'autre pour les agents qui la demanderont avant midi. Il en viendra trois."
+      left: "Garder l'original"
+    - roles: [ds]
+      when: "world.rang <= 3"
+      text: "Le classement à la trêve : sur le podium. Trois agents ont demandé un rendez-vous dans l'heure ; tu les fais attendre dans le même couloir, sur trois chaises alignées."
+      left: "Les recevoir un par un"
+    - roles: [ds]
+      when: "world.rang >= 15"
+      text: "Le classement à la trêve, la zone rouge à deux points. L'entraîneur a posé sur ton bureau une feuille courte : les joueurs qu'il ne veut plus voir à l'entraînement."
+      left: "Lire la feuille"
     - roles: [ds]
       text: "Le classement est punaisé à côté du tableau des contrats, à la même hauteur. Les deux feuilles se lisent ensemble : chaque point a un salaire en face."
       left: "Comparer les deux"
@@ -178,54 +243,125 @@ setpieces:
   # Gauche : la première posture du rôle (roles.yaml), droite : la seconde.
   # Une variante qui change les libellés garde ce sens : à gauche l'élan
   # (« Le 9 », descendre, les cadres), à droite la prudence.
+  # Le moteur ne saute pas une variante déjà servie (il le fait pour gm_te,
+  # pas pour match) : sans repère, la même ligne revenait trois blocs de suite.
+  # Chaque bloc a donc sa place dans la saison, lue par `slot`, qui ne bouge
+  # pas d'une carrière à l'autre (relevé sur sept cents carrières) — club :
+  # 5, 7, 9 à l'aller, 14, 16, 17 au retour ; sélection : 5 (deux rencontres,
+  # mars), 9 (juin), 14 (deux rencontres, septembre), 17 (octobre). Une
+  # variante d'état (série, drapeau, jauge) ne vaut que pour UNE place. Les
+  # deux rencontres d'une fenêtre partagent leur ligne (rien ne les distingue
+  # dans le langage des `when`) : c'est le bandeau de la fenêtre, écrit pour
+  # être lu deux fois. La base de chaque rôle, sans `when`, sert la première
+  # place et tout bloc qu'un calendrier futur ajouterait.
   match:
     # ---- Directeur sportif (« Le 9 » / « Le trader »)
+    # Premier bloc (slot 5) : la base, en fin de rôle ; la paie en retard d'abord.
     - roles: [ds]
-      when: "flag('salaires_retard')"
+      when: "phase('aller') && slot <= 5 && flag('salaires_retard')"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La paie est partie le 12 ; six matchs à jouer avec des joueurs qui ont vérifié leur compte avant de lacer."
+    # Deuxième bloc (slot 7) : l'automne, vu de la tribune.
     - roles: [ds]
-      when: "world.serie_defaites >= 2"
+      when: "phase('aller') && slot >= 6 && slot <= 7 && gauges.direction < 35"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. En loge, le président a changé ton fauteuil de place : te voilà au bout de la rangée, à côté du traiteur."
+    - roles: [ds]
+      when: "phase('aller') && slot >= 6 && slot <= 7"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. En tribune de presse, deux recruteurs étrangers prennent des notes sur tes joueurs. Ils ne sont pas venus pour l'adversaire."
+    # Troisième bloc (slot 9) : la série, puis la liste de janvier.
+    - roles: [ds]
+      when: "phase('aller') && slot >= 8 && world.serie_defaites >= 2"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs perdus, et l'entraîneur a laissé sa liste de janvier sur ton bureau : un seul nom, souligné deux fois."
       left: "Je lui trouve son nom"
       right: "Je garde la caisse"
     - roles: [ds]
-      when: "world.serie_victoires >= 2"
+      when: "phase('aller') && slot >= 8 && world.serie_victoires >= 2"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs gagnés : trois clubs ont appelé pour ton milieu. Son prix monte à chaque victoire, et l'envie de vendre aussi."
       left: "Il reste, on joue"
       right: "J'écoute les offres"
     - roles: [ds]
-      when: "phase('retour')"
+      when: "phase('aller') && slot >= 8"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier avant la trêve. Ta liste de janvier tient sur une page ; chaque match y raye un nom, ou en ajoute un."
+    # Retour : la fenêtre refermée (slot 14), le printemps des contrats (16), le dernier (17).
+    - roles: [ds]
+      when: "phase('retour') && slot <= 14"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La fenêtre de janvier est fermée : ce que tu n'as pas acheté ne viendra plus, et ce que tu as vendu joue ailleurs."
+    - roles: [ds]
+      when: "phase('retour') && slot >= 15 && slot <= 16 && gauges.caisse < 30"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le banquier du club s'est abonné en tribune d'honneur. Il ne suit pas le ballon : il compte les salaires qui entrent sur la pelouse."
+    - roles: [ds]
+      when: "phase('retour') && slot >= 15 && slot <= 16"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le printemps des contrats : les agents de tes titulaires appellent déjà pour juin, et chaque but fait monter une prolongation."
+    - roles: [ds]
+      when: "phase('retour') && slot >= 17"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier. Sur ton bureau, deux chemises cartonnées pour l'été, « départs » et « arrivées ». Le classement dira laquelle grossit."
     - roles: [ds]
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs, et sur chaque feuille des noms que tu as fait venir. On les jugera, eux, et toi avec."
     # ---- Président (« Je descends au vestiaire » / « Je reste en loge »)
+    # Premier bloc (slot 5) : la base, en fin de rôle ; le kop fâché d'abord.
     - roles: [president]
-      when: "relation.gege <= -1"
+      when: "phase('aller') && slot <= 5 && relation.gege <= -1"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le kop entre à la vingtième minute pendant six matchs. Le premier quart d'heure, on entend tes chaussures dans la loge."
+    # Deuxième bloc (slot 7) : le conseil, la recette.
     - roles: [president]
-      when: "world.serie_victoires >= 2"
+      when: "phase('aller') && slot >= 6 && slot <= 7 && gauges.caisse < 30"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Trois matchs à domicile sur six : chacun paie une semaine de salaires. Le secrétariat les a cochés en rouge au calendrier."
+    - roles: [president]
+      when: "phase('aller') && slot >= 6 && slot <= 7"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Un conseil d'administration après chaque bloc : le procès-verbal commence par le score, et l'ordre du jour s'écrit après."
+    # Troisième bloc (slot 9) : la série, puis les invités de décembre.
+    - roles: [president]
+      when: "phase('aller') && slot >= 8 && world.serie_victoires >= 2"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs gagnés, et le conseil demande déjà si l'on peut augmenter le prix des places. Pendant la série, pas après."
     - roles: [president]
-      when: "phase('retour')"
+      when: "phase('aller') && slot >= 8 && world.serie_defaites >= 2"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Deux blocs perdus. Le banquier a demandé une place en loge pour le prochain match ; il n'aime pas le football, il aime savoir avant les autres."
+    - roles: [president]
+      when: "phase('aller') && slot >= 8"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier avant la trêve. La loge se remplit d'invités qu'on ne voit qu'en décembre : ils viennent voir de près dans quel état tu passeras l'hiver."
+    # Retour : la billetterie (slot 14), le printemps du conseil (16), le dernier (17).
+    - roles: [president]
+      when: "phase('retour') && slot <= 14"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. La billetterie rouvre après la trêve. Au guichet, on range les abonnements non renouvelés dans une boîte à chaussures, sous le comptoir."
+    - roles: [president]
+      when: "phase('retour') && slot >= 15 && slot <= 16"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le printemps : la saison où le conseil commence à convertir les points en budget, et les défaites en questions."
     - roles: [president]
-      when: "gauges.caisse < 30"
-      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Trois matchs à domicile sur six : chacun paie une semaine de salaires. Le secrétariat les a cochés en rouge au calendrier."
+      when: "phase('retour') && slot >= 17 && gauges.direction < 35"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier. Deux actionnaires ont pris des places hors de ta loge, en tribune Ouest, au milieu des abonnés. D'ici, on les voit très bien."
+    - roles: [president]
+      when: "phase('retour') && slot >= 17"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier. Les actionnaires sont tous venus, même ceux qu'on ne voit qu'aux assemblées. Ils regardent le tableau d'affichage, puis ta loge."
     - roles: [president]
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs vus de la loge, derrière une vitre qui garde le bruit dehors. La mi-temps, elle, se joue dans le couloir."
     # ---- Sélectionneur (« Les cadres » / « Les jeunes ») : une rencontre de la fenêtre
+    # Mars (slot 5, deux rencontres) : la base, en fin de rôle ; le fax, le dîner à deux tables d'abord.
     - roles: [selectionneur]
-      when: "year < 2010 && phase('aller') && season == 0"
+      when: "phase('aller') && slot <= 5 && year < 2010 && season == 0"
       text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La liste est partie par fax jeudi ; deux clubs ont rappelé pour demander si ce n'était pas une erreur."
     - roles: [selectionneur]
-      when: "phase('aller') && gauges.vestiaire < 35"
+      when: "phase('aller') && slot <= 5 && gauges.vestiaire < 35"
       text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Au dîner d'avant-match, deux tables et une chaise vide entre les deux. Personne ne l'a déplacée."
+    # Juin (slot 9) : une rencontre.
     - roles: [selectionneur]
-      when: "phase('retour') && gauges.tribunes < 35"
+      when: "phase('aller') && slot >= 6 && gauges.direction < 35"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. En tribune officielle, le fauteuil du président de la Fédération reste vide. Son chauffeur attend au parking, moteur allumé."
+    - roles: [selectionneur]
+      when: "phase('aller') && slot >= 6"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Juin. Les joueurs arrivent de leur saison de club avec des jambes de fin mai ; toi, tu comptes déjà les jours jusqu'à novembre."
+    # Septembre (slot 14, deux rencontres).
+    - roles: [selectionneur]
+      when: "phase('retour') && slot <= 14 && gauges.tribunes < 35"
       text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Septembre, un stade à moitié vide, et la moitié présente qui siffle l'hymne adverse pour avoir quelque chose à siffler."
     - roles: [selectionneur]
-      when: "phase('retour')"
+      when: "phase('retour') && slot <= 14"
       text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La rentrée : des joueurs qui ont changé de club cet été, et que tu découvres sous leurs nouvelles couleurs."
+    # Octobre (slot 17) : la dernière avant le Grand Match.
+    - roles: [selectionneur]
+      when: "phase('retour') && slot >= 15 && world.serie_defaites >= 2"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Deux rencontres perdues, et la presse compte les jours jusqu'à novembre. À l'hôtel, le réceptionniste te souhaite bon courage en rendant ta clé."
+    - roles: [selectionneur]
+      when: "phase('retour') && slot >= 15"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Octobre, la dernière fenêtre avant le Grand Match. Chaque titulaire sait qu'il joue sa place de novembre ; les remplaçants le savent mieux."
     - roles: [selectionneur]
       text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Vingt-six joueurs, trois entraînements, un hymne. Le pays regarde le onze avant de regarder le score."
 
@@ -246,6 +382,11 @@ setpieces:
       when: "world.division >= 2"
       text: "Tour de Coupe. En face, un club amateur dont l'avant-centre a été refusé par ton centre de formation, à quinze ans. Il s'en souvient. Son père aussi, en tribune."
       left: "On y va"
+    # Sans époque : un ancien joueur, de l'autre côté.
+    - roles: [ds]
+      when: "season >= 1"
+      text: "Tour de Coupe. En face joue l'attaquant que tu as vendu l'été dernier. Il t'a fait réserver deux places par l'intendant, au premier rang, derrière son banc."
+      left: "Prendre les places"
     - roles: [ds]
       text: "Tour de Coupe. Un club de deux divisions plus bas, un terrain gras, et dans la petite tribune, trois recruteurs venus voir tes titulaires de près."
       left: "Les laisser regarder"
@@ -431,6 +572,21 @@ setpieces:
       right: "Rien ce soir"
       answer_left: "Elle distribue les enveloppes une par une. Le capitaine compte la sienne devant tout le monde."
       answer_right: "Elle remonte l'enveloppe au coffre. Le vestiaire entend la porte du coffre à travers le mur."
+    # Sans époque : la défaite qui vide le vestiaire, la victoire qui fait monter les prix.
+    - roles: [ds]
+      when: "vars.gm_won == 0 && gauges.vestiaire < 35"
+      text: "Le capitaine sort du vestiaire avec la liste de ceux qui veulent partir cet été, pliée en quatre : « Je n'ai pas compté. Je n'ai pas osé. »"
+      left: "Je la lis ici"
+      right: "Pas ce soir"
+      answer_left: "Six noms. Le sien en dernier, d'une autre encre."
+      answer_right: "Il la remet dans sa poche. Tu la reliras en juillet, sur le bureau d'un agent."
+    - roles: [ds]
+      when: "vars.gm_won == 1 && season >= 1"
+      text: "À la sortie des loges, l'entraîneur adverse te serre la main un peu trop longtemps : « Ton milieu, je le prends en juin, s'il est à vendre. Il l'est ? »"
+      left: "Il ne l'est pas"
+      right: "Tout l'est, en juin"
+      answer_left: "Il te lâche la main en souriant, comme si tu venais de dire un prix."
+      answer_right: "Il hoche la tête. Le lendemain, son président appelle le tien."
     - roles: [ds]
       when: "vars.gm_won == 1"
       text: "Dans le couloir, l'entraîneur sort du vestiaire trempé de champagne : « Tes deux recrues, ce soir… Je retire ce que j'ai dit en août. Pas tout. »"
@@ -462,13 +618,28 @@ setpieces:
       answer_left: "Une heure avec les joueurs, sur un banc mouillé. À huit heures, tu n'as pas dormi."
       answer_right: "Une nuit sur les comptes. À huit heures, le conseil a les mêmes, en couleur."
     - roles: [president]
-      when: "vars.gm_won == 1 && year < 2020"
+      when: "vars.gm_won == 1 && year < 2020 && season == 0"
       speaker: brehaut
       text: "Bréhaut, ton directeur sportif, ouvre le champagne du vestiaire avec un couteau de cuisine : « Les joueurs veulent la prime doublée, ce soir, à chaud. Je leur dis oui, ou tu le fais ? »"
       left: "Dis-leur oui"
       right: "On en parle lundi"
       answer_left: "Le vestiaire crie ton nom. Lundi, le conseil demande d'où sort la ligne « prime exceptionnelle »."
       answer_right: "Bréhaut transmet. Le champagne se boit quand même, un peu moins vite."
+    # Sans époque (Gégé et Bréhaut s'arrêtent en 2020) : la victoire en loge, la défaite sur les marches.
+    - roles: [president]
+      when: "vars.gm_won == 1"
+      text: "Dans la loge, les actionnaires se lèvent pour toi, un par un, puis se rassoient pour parler du prix des places. Le serveur te tend un verre que tu n'as pas demandé."
+      left: "Je descends au vestiaire"
+      right: "Je reste avec eux"
+      answer_left: "En bas, le capitaine te lance le ballon du match. Tu le gardes sous le bras jusqu'à la voiture."
+      answer_right: "Ils votent une hausse du prix des places avant le dessert. Tu lèves la main avec eux."
+    - roles: [president]
+      when: "vars.gm_won == 0 && gauges.tribunes < 35"
+      text: "Le virage n'est pas rentré : il attend devant la porte du siège, en silence, assis sur les marches. Le gardien demande s'il faut ouvrir."
+      left: "Ouvrez, je descends"
+      right: "Laissez fermé"
+      answer_left: "Une heure sur le trottoir, sous les projecteurs éteints. On t'écoute ; on ne t'applaudit pas."
+      answer_right: "Ils restent jusqu'à deux heures. Au matin, les marches sont balayées, et quelqu'un a laissé un mot sous la porte."
     - roles: [president]
       text: "L'entraîneur sort du vestiaire, la feuille de match roulée dans le poing : « Ils attendent de savoir si {pg, select, f{la présidente} other{le président}} descend. Là-haut, les actionnaires aussi. »"
       left: "Je descends les voir"
@@ -498,6 +669,14 @@ setpieces:
       right: "Le car part à minuit"
       answer_left: "Ils chantent jusqu'à une heure. Le délégué inscrit l'heure du départ dans son rapport."
       answer_right: "À minuit, le car est plein et silencieux. Au fond, quelqu'un fredonne pour lui seul."
+    # Sans époque : la défaite, quand le groupe se défait avant le dîner.
+    - roles: [selectionneur]
+      when: "vars.gm_won == 0 && season >= 1"
+      text: "Après la défaite, le kiné te glisse que deux cadres ont réservé l'avion du retour pour ce soir, avant le dîner de la Fédération. Ils attendent ta réponse dans le couloir."
+      left: "Qu'ils partent"
+      right: "Le dîner d'abord"
+      answer_left: "Ils partent avant le dessert. Le président de la Fédération remarque leur absence, et la note sur sa serviette."
+      answer_right: "Ils restent, en survêtement, et ne touchent pas à leur assiette."
     - roles: [selectionneur]
       text: "Les joueurs rangent leurs affaires en silence. Demain, chacun rentre dans son club. Le capitaine te demande ce qu'ils doivent emporter de ce soir."
       left: "Un mot de moi"
@@ -599,6 +778,21 @@ setpieces:
       right: "Je réclame un mercato"
       answer_left: "Elle range le contrat de l'entraîneur sous le tien. Elle ne dit pas lequel a été choisi."
       answer_right: "Elle reporte ta demande au crayon, dans la marge. Le président l'entoure au stylo rouge."
+    # Sans époque : après un objectif manqué, puis les contrats de longue date.
+    - roles: [ds]
+      when: "flag('bilan_manque')"
+      text: "{patron} a fait préparer deux feuilles : ton contrat prolongé d'un an, et une fin de mission déjà datée. « Je signe la première si tu ne me demandes rien. Tu demandes ? »"
+      left: "Je ne demande rien"
+      right: "Je demande un mercato"
+      answer_left: "Il signe la première. La seconde part dans un tiroir qu'il ne ferme pas à clé."
+      answer_right: "Il signe, puis ajoute à la main une ligne de budget. La seconde feuille, il la garde sous le coude."
+    - roles: [ds]
+      when: "season >= 2"
+      text: "{patron} relit ton contrat en cochant au crayon les clauses que tu n'as jamais utilisées : la voiture, le logement, la prime au titre. « On les garde, ou tu me demandes celles qui servent ? »"
+      left: "Gardez-les"
+      right: "Celles qui servent"
+      answer_left: "Il gomme ses coches une à une, avec soin."
+      answer_right: "Il raye la voiture et le logement, et double la ligne du recrutement. Le conseil, lui, raye ta prime."
     - roles: [ds]
       text: "{patron} a posé une feuille blanche à côté de ton contrat : « Tu restes aux mêmes conditions, ou tu m'écris sur cette feuille ce qu'il te faut pour l'été ? »"
       left: "Mêmes conditions"
@@ -683,6 +877,15 @@ setpieces:
       when: "season >= 2 && year < 2008"
       text: "En juillet, d'anciennes recrues repassent au club chercher leurs affaires. Josiane leur rend leur photo de licence, une par une, sans rien ajouter."
       left: "Rendre les photos"
+    # Sans époque : le vestiaire qui se tait, le planning d'août.
+    - roles: [ds]
+      when: "gauges.vestiaire < 35"
+      text: "Juillet. Le capitaine t'envoie une carte postale de vacances, sans un mot au dos, juste sa signature. L'an dernier, il avait rempli la carte jusqu'au bord."
+      left: "La punaiser"
+    - roles: [ds]
+      when: "season >= 2"
+      text: "Juillet. Au centre d'entraînement fermé, le jardinier refait la pelouse. Sans lever la tête, il te demande combien de nouveaux il faudra marquer sur le planning d'août."
+      left: "Lui donner un chiffre"
     - roles: [ds]
       text: "L'été arrive par le téléphone : le premier appel tombe le lendemain du dernier match, à huit heures, et c'est un agent. Le mercato a commencé avant toi."
       left: "Décrocher"
