@@ -1,0 +1,107 @@
+# HISTOIRE 3 — LA SIRÈNE : les soirs qui ne sont pas des ancres
+# (docs/histoires/00_les_dix_histoires.md, § 6 de la fiche ; charte § 5).
+#
+# Les soirs numérotés de la fiche sont servis à leur heure par le script ou
+# leur intrigue (la porte sans poignée, la boîte, trois heures, les photos, la
+# dépanneuse, l'enveloppe). Ces trois-là sont des événements du metteur en
+# scène : ils naissent de l'état de la chute, deux par saison au plus, jamais à
+# moins de cinq créneaux d'un autre, et ils ne sont pas rattrapés.
+#
+#  1. Devant la maison (S1-S2) — deux hommes de l'arrière-salle sous le
+#     réverbère, qui regardent la fenêtre de ta mère ; le lendemain, Didier les
+#     a déjà vus en 1989 devant chez la sienne, Irène dit à qui ils sont (si
+#     elle a vendu ta page), ou Odile a compté les mégots.
+#  2. La douche (S2+) — Momo tombe sous la douche ; on n'entend que l'eau.
+#     La carte d'après : le vestiaire vide, le sol mouillé, Vukić qui ferme le
+#     robinet. Le prix de la boîte, sur un autre que toi.
+#  3. La brigade (S2+, si l'enveloppe a été portée) — six heures du matin, la
+#     brigade financière fait l'inventaire de ce qui reste (`saisie_luxe`) ; si
+#     la boîte est encore dans le sac de sport, c'est la garde à vue.
+#
+# Aucune carte en `tone: drame` (le metteur en scène n'en sert qu'une par
+# carrière) ; aucun n'apparaît hors de l'Histoire 3 (`histoire_h3`).
+arcs:
+  # ════════════════════════════════════════════ 1 · DEVANT LA MAISON
+  - id: jp.h3.ev.devant
+    title: "Devant la maison"
+    kind: evenement
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: false
+    weight: 1.0
+    once: true
+    # Ce qui attire l'arrière-salle sous la fenêtre : une page vendue à
+    # Fardelli, une enveloppe refusée, un but marqué quand il ne fallait pas,
+    # ou les photos du masque dans la Gazette.
+    when: "flag('histoire_h3') && season >= 1 && season <= 2 && stats.clubs <= 1 && (flag('h3_ardoise_fardelli') || flag('h3_enveloppe_refusee') || flag('h3_match_trahi') || flag('h3_photos_gazette'))"
+    chance: 0.3
+    cast: [odile, steph, vallin, irene]
+    same_club: true
+    fallback: drop
+    traces:
+      h3_devant: "{annee} : deux hommes sous le réverbère, en face de la fenêtre de la mère de {nom}, jusqu'à deux heures."
+    steps:
+      - id: fenetre
+        card: jp.h3.ev.devant
+        next: [ { step: lendemain, in: [2, 4] } ]
+      - id: lendemain
+        card:
+          - { id: jp.h3.ev.devant_didier, if: "flag('h3_halle_vue')" }
+          # La page vendue à Fardelli : Irène sait à qui sont les deux hommes.
+          - { id: jp.h3.ev.devant_irene, if: "flag('h3_ardoise_fardelli')" }
+          - { id: jp.h3.ev.devant_odile }
+        next: []
+
+  # ════════════════════════════════════════════ 2 · LA DOUCHE
+  - id: jp.h3.ev.douche
+    title: "La douche"
+    kind: evenement
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: false
+    weight: 1.0
+    once: true
+    # Momo a pris la boîte de Steph, comme toi, ou parce que tu l'y as envoyé.
+    when: "flag('histoire_h3') && season >= 2 && stats.clubs <= 1 && (flag('h3_boite_prise') || flag('h3_steph_vu'))"
+    chance: 0.35
+    cast: [vukic, sabatier, steph]
+    same_club: true
+    fallback: drop
+    traces:
+      h3_douche: "{annee} : Momo, le latéral gauche du Racing, est tombé sous la douche du vestiaire. On a dit le cœur."
+    steps:
+      - id: eau
+        card: jp.h3.ev.douche
+        next: [ { step: robinet, in: [1, 2] } ]
+      - id: robinet
+        card:
+          - { id: jp.h3.ev.douche_robinet_steph, if: "flag('h3_momo_steph')" }
+          - { id: jp.h3.ev.douche_robinet }
+        next: []
+
+  # ════════════════════════════════════════════ 3 · LA BRIGADE
+  - id: jp.h3.ev.brigade
+    title: "La brigade"
+    kind: evenement
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h3') && season >= 2 && stats.clubs <= 1 && flag('h3_enveloppe_portee')"
+    chance: 0.35
+    cast: [odile, fardelli, irene]
+    same_club: true
+    fallback: drop
+    traces:
+      h3_brigade: "{annee} : six heures du matin, la brigade financière chez {nom}. Elle a tout noté, jusqu'aux manchettes."
+    steps:
+      - id: aube
+        # La boîte encore dans le sac de sport : l'inspecteur la pose sur la table.
+        card:
+          - { id: jp.h3.ev.brigade_boite, if: "flag('h3_boite_prise') && !flag('h3_boite_jetee') && !flag('h3_boite_arretee')" }
+          - { id: jp.h3.ev.brigade }
+        next: [ { step: apres, in: [2, 4] } ]
+      - id: apres
+        card: jp.h3.ev.brigade_apres
+        next: []

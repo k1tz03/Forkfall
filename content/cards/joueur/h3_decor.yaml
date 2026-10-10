@@ -1,0 +1,303 @@
+# HISTOIRE 3 — LA SIRÈNE : le décor (cartes du sac, `priority: 1`, une fois).
+#
+# Quand l'Histoire 3 tire une carte de sac, elle tire d'abord celles-ci : la
+# cité, l'épicerie, le grillage, la tour, le feu de palettes, le local de la
+# Nord. Chacune lit `histoire_h3` et le moment de la chute (avant ou après la
+# fermeture, la boîte, la halle), et les visages nouveaux (Odile, Didier,
+# Madame Irène, Steph) y ont chacun leur carte de routine.
+cards:
+  - id: jp.h3.dc.epicerie
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    lieu: rue
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && season <= 1 && !flag('h3_maison_perdue')"
+    text: "L'épicière de la cité ouvre sous le comptoir le cahier des ardoises, à la page de ta mère, sans que tu demandes : trois cent douze francs, réglés par petites sommes, depuis 1986."
+    left:
+      label: "Je règle la page"
+      effects: {caisse: "-"}
+      answer: "Elle raye la page d'un trait. « Elle va me le reprocher. » La semaine suivante, ta mère paie quand même : trois cents francs d'avance."
+    right:
+      label: "Elle paiera"
+      effects: {relation: {odile: 1}}
+      answer: "L'épicière referme le cahier, et te rend la monnaie d'un paquet de chewing-gums que tu n'as pas pris."
+
+  - id: jp.h3.dc.lulu
+    roles: [joueur]
+    arc: decor
+    tags: [decor]
+    lieu: stade
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_sirene_nuit') && stats.clubs <= 1"
+    text: "Lulu, le gardien du stade, a fait une croix à la craie sur la porte de sa loge pour chaque nuit de sirène. Il y en a quatre. « Je les compte. Le jour où ça s'arrête, je saurai qu'il est parti. »"
+    left:
+      label: "Qui ça, il ?"
+      effects: {direction: "-"}
+      answer: "« Celui qui tire. » Lulu essuie la craie de ses doigts sur son pantalon. « Il y a toujours quelqu'un qui tire. »"
+    right:
+      label: "Comptez pour moi"
+      effects: {tribunes: "+"}
+      answer: "Il ne promet rien. Le samedi suivant, il y a une cinquième croix sur la porte, et la date à côté, au crayon, toute petite."
+
+  - id: jp.h3.dc.blouse
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: odile
+    lieu: friche
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && !flag('h3_usine_fermee') && season == 0"
+    text: "Odile sort du bâtiment C, sa blouse bleue roulée sous le bras. « Ils nous laissent les blouses. C'est le cadeau de départ. » Elle te la tend. « Pour laver ta voiture ? »"
+    left:
+      label: "Garde-la"
+      effects: {relation: {odile: 1}}
+      answer: "Elle la déroule, la secoue, la replie au carré. « Je la garde pour le jour où ils rouvrent. » Elle ne rit pas en le disant."
+    right:
+      label: "Je la prends"
+      effects: {vestiaire: "+"}
+      answer: "Tu la mets dans ton sac de sport. Au vestiaire, Gigi la reconnaît à l'odeur d'huile de coupe, et n'en dit rien."
+
+  - id: jp.h3.dc.steph_rameur
+    roles: [joueur]
+    arc: corps
+    tags: [decor]
+    speaker: steph
+    lieu: muscu
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && season <= 1 && !flag('h3_boite_prise')"
+    text: "Steph, au rameur, survêtement neuf, compte ses tirages à voix basse et s'arrête à cent. « Tu ménages la jambe gauche, à la presse. Les autres ne voient rien. Moi, je vois. »"
+    left:
+      label: "Et alors ?"
+      effects: {relation: {steph: 1}}
+      answer: "« Alors rien. » Il reprend à cent un. « Quand tu voudras, je suis là. Je suis toujours au rameur. »"
+    right:
+      label: "Je ne ménage rien"
+      effects: {direction: "+"}
+      answer: "« D'accord. » Il reprend à cent un. En sortant, tu fais attention à ta jambe gauche jusqu'au coin de la rue."
+
+  - id: jp.h3.dc.irene_lingere
+    roles: [joueur]
+    arc: scandale
+    tags: [decor]
+    speaker: irene
+    lieu: rue
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_ardoise')"
+    text: "Madame Irène t'arrête devant le Rideau, en plein jour, sans maquillage. « J'ai lavé les maillots du Racing pendant vingt ans. Je connais ton numéro à la couture. Il se découd à l'épaule. »"
+    left:
+      label: "Recousez-le"
+      effects: {relation: {irene: 1}, caisse: "-"}
+      answer: "Elle le recoud le soir même, au fil bordeaux. C'est la seule chose qu'elle n'inscrira jamais sur ton ardoise."
+    right:
+      label: "Le club a une lingère"
+      effects: {relation: {irene: -1}}
+      answer: "« Plus maintenant. » Elle rentre au Rideau. La porte sans poignée se referme derrière elle sans un bruit, de l'intérieur."
+
+  - id: jp.h3.dc.vallin_palettes
+    roles: [joueur]
+    arc: formation
+    tags: [decor]
+    speaker: vallin
+    lieu: friche
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_halle_vue') && season <= 2"
+    text: "Au feu de palettes, Didier fait griller une pomme de terre au bout d'un fil de fer de la Tréfilerie. « Ton père en tirait, de ce fil. Moi, je fais cuire mon dîner dessus. C'est la même usine. »"
+    left:
+      label: "Je reste dîner"
+      effects: {relation: {vallin: 1}}
+      answer: "Il coupe la pomme de terre en deux avec un couteau qui ne coupe plus. La plus grosse moitié est pour toi ; il ne discute pas."
+    right:
+      label: "Je dois rentrer"
+      effects: {direction: "+"}
+      answer: "« Rentre. » Il souffle sur la braise. Dans ton dos, il fredonne l'air que la Nord chante pour toi, faux, très bas."
+
+  - id: jp.h3.dc.costume
+    roles: [joueur]
+    arc: agents
+    tags: [agents, decor]
+    speaker: fardelli
+    lieu: rue
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && season == 0 && flag('agent_fardelli')"
+    text: "Fardelli t'attend chez Brunel, le tailleur, le mètre ruban autour du cou du vieux. « Pour ta première Une, {toi}, un costume qui tient debout tout seul. C'est réglé. »"
+    left:
+      label: "Merci, monsieur Fardelli"
+      effects: {relation: {fardelli: 1}, var: {cadeau_costume_sur_mesure: "+1"}}
+      answer: "Trois essayages. Au dernier, Brunel coud une étiquette à l'intérieur : ton nom, et sous ton nom, celui de qui a payé."
+    right:
+      label: "Je le paierai moi-même"
+      effects: {caisse: "-", relation: {fardelli: -1}}
+      answer: "Brunel range le mètre. « Monsieur Fardelli a déjà réglé. Je le rembourse, ou je le coupe quand même ? » Fardelli sourit."
+
+  - id: jp.h3.dc.bache_pliee
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras, decor]
+    speaker: gege
+    lieu: buvette
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && stats.clubs <= 1"
+    text: "Au local de la Nord, Gégé plie une bâche de vingt mètres en accordéon, à genoux. Ce n'est pas la tienne. « Le gamin d'avant. Puis celui d'avant. J'en ai plié trois. Je plie bien. »"
+    left:
+      label: "Vous plierez la mienne ?"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "« Le jour venu, proprement. » Il range la bâche sur l'étagère, à côté des deux autres. Il reste de la place pour une quatrième."
+    right:
+      label: "Il était comment, avant ?"
+      effects: {vestiaire: "+"}
+      answer: "« Brun. » Gégé tapote la bâche pliée. « Il jouait près de la porte. Il était bien. » Il ne dit pas son nom, et toi non plus."
+
+  - id: jp.h3.dc.mere_mbako
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mere_mbako
+    lieu: terrain
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && season >= 1 && stats.clubs <= 1"
+    text: "La mère de Lian Mbako écrit dans son carnet, au bord du terrain annexe. Elle tourne la page vers toi : « Fardelli a parlé à Lian, quatre minutes, près des vestiaires. »"
+    left:
+      label: "Notez aussi le reste"
+      effects: {relation: {mere_mbako: 1}}
+      answer: "« Je note toujours le reste. » Elle tourne la page. La suivante est déjà remplie, d'une écriture plus petite."
+    right:
+      label: "Ce n'est rien"
+      effects: {relation: {mere_mbako: -1}}
+      answer: "« Quatre minutes, ce n'est rien. » Elle referme le carnet. « Votre mère aurait dû noter, elle aussi. »"
+
+  - id: jp.h3.dc.cite_muree
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    lieu: rue
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_usine_fermee') && season >= 1 && !flag('h3_maison_perdue') && !flag('h3_cite_muree')"
+    text: "La cité de la Tréfilerie, un dimanche. Les maçons du liquidateur ont muré une rangée entière ; quelqu'un a peint un numéro sur chaque parpaing de fenêtre, pour se rappeler qui vivait là."
+    left:
+      label: "Je cherche les nôtres"
+      effects: {relation: {odile: 1}}
+      answer: "La maison de ta mère est dans la rangée d'après. Pas encore. Sur le premier parpaing, au pinceau : 7, et dessous, plus petit, DUTHEIL."
+    right:
+      label: "Je passe vite"
+      effects: {direction: "+"}
+      answer: "Tu passes vite. Les numéros te suivent jusqu'au bout de la rue, peints de plus en plus grands, comme si le peintre avait eu peur d'oublier."
+
+  - id: jp.h3.dc.brehaut_genou
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: brehaut
+    lieu: vestiaire
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && (flag('h3_genou_cache') || flag('h3_genou_ecrit'))"
+    text: "Bréhaut, en short sur le banc, se masse le genou droit avec une pommade qui sent le camphre. Il te tend le tube sans lever la tête. « Le gauche, toi. On en a chacun un. Ça fait une paire. »"
+    left:
+      label: "Je prends le tube"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "La pommade brûle, puis plus rien. Bréhaut range le tube dans ton casier à toi. « Il est à toi. J'en ai un autre. »"
+    right:
+      label: "Ça va, mon genou"
+      effects: {relation: {brehaut: -1}}
+      answer: "« Bien sûr. » Il revisse le bouchon. « Le mien aussi, ça va. Depuis 1983. » Il se lève en deux temps."
+
+  - id: jp.h3.dc.josiane_v
+    roles: [joueur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    lieu: secretariat
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_halle_vue')"
+    text: "Madame Josiane classe les licences de la saison, lettre par lettre. Elle s'arrête à V plus longtemps qu'aux autres. « Vous allez à la friche, le soir. On me l'a dit. »"
+    left:
+      label: "J'y vois un ami"
+      effects: {relation: {josiane: 1}}
+      answer: "Elle range la lettre V sans répondre. Le lendemain, une couverture pliée attend sur un banc de la friche, l'étiquette du club cousue dedans."
+    right:
+      label: "On vous ment"
+      effects: {relation: {josiane: -1}}
+      answer: "« Sûrement. » Elle referme l'armoire à clé, ce qu'elle ne fait qu'à midi, d'habitude. Il est dix heures."
+
+  - id: jp.h3.dc.vaubourg_lettre
+    roles: [joueur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: aulard
+    lieu: bureau
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_usine_fermee') && stats.clubs <= 1"
+    text: "Vaubourg te montre une lettre du liquidateur : le club garde le terrain annexe, l'usine garde la tribune Est et la loue au Racing. « Le prix d'un café par an. Pour l'instant. »"
+    left:
+      label: "Et après ?"
+      effects: {direction: "-"}
+      answer: "« Après, on vendra ce qui pousse. » Il range la lettre dans le classeur rouge et te raccompagne jusqu'à l'escalier, la main sur ton épaule."
+    right:
+      label: "C'est votre affaire"
+      effects: {direction: "+"}
+      answer: "« Exactement. » Il sourit. Il ne sourit pas souvent ; c'est pour ça que tu t'en souviens, dans l'escalier."
+
+  - id: jp.h3.dc.vukic_carnet
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vukic
+    lieu: terrain
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('coach_critique')"
+    text: "Vukić t'arrête au bord du terrain annexe, son cahier sous le bras. « Ta phrase sur le coach, dans le journal. Il l'a découpée. Elle est dans son portefeuille, avec la photo de ses enfants. »"
+    left:
+      label: "Je m'excuse"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Vukić note quelque chose dans son cahier. « Je lui dirai. Il gardera la phrase quand même : on ne jette pas ce qu'on a découpé. »"
+    right:
+      label: "Je la pensais"
+      effects: {direction: "-", relation: {vukic: 1}}
+      answer: "« Je sais. » Il referme le cahier. « C'est pour ça qu'il l'a gardée. Les autres, il les jette. »"
+
+  - id: jp.h3.dc.tour
+    roles: [joueur]
+    arc: decor
+    tags: [decor]
+    lieu: terrain
+    once: true
+    priority: 1
+    tone: leger
+    when: "flag('histoire_h3') && flag('h3_usine_fermee') && stats.clubs <= 1 && season <= 2"
+    text: "Du terrain annexe, on voit la tour de la grande halle par-dessus les thuyas. Depuis Noël, les pigeons y sont rentrés. Ce matin, ils en sortent tous d'un coup, sans bruit."
+    left:
+      label: "Je regarde la tour"
+      effects: {direction: "-"}
+      answer: "Rien d'autre ne bouge. À la fenêtre du haut, une forme pourrait être une veste pendue à un clou. Le coach siffle la reprise."
+    right:
+      label: "Je fais mon footing"
+      effects: {vestiaire: "+"}
+      answer: "Trois tours de terrain. Au troisième, les pigeons sont rentrés dans la tour, tous, comme si on les avait appelés."

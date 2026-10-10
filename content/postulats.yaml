@@ -304,262 +304,138 @@ postulats:
   - id: pepite
     index: 2
     role: joueur
-    title: "La pépite du club-usine"
-    question: "Tout le monde veut te vendre. Toi, tu veux jouer."
+    # HISTOIRE 3 — LA SIRÈNE (docs/histoires/00_les_dix_histoires.md ; ancien
+    # titre « La pépite du club-usine »). L'id, l'index, l'année, la division,
+    # l'âge, les jauges de départ, la force, le drapeau `pepite` et le président
+    # narratif (Fardelli) ne bougent pas : les Codes de Carrière en dépendent.
+    # Le livre : la descente aux enfers, l'argent (S0), la nuit (S1), le corps
+    # (S2), l'épilogue (S3). Le script (jp.h3.script) porte la colonne
+    # vertébrale et ouvre les intrigues qui ne doivent pas manquer (la maison,
+    # le genou, l'ardoise, le coupé rouge, la ligne de touche, le journal,
+    # l'arrière-salle si l'ardoise) ; le réservoir tire l'épilogue (S3) et, en
+    # S0 puis en S3+, une intrigue du réservoir de la pépite.
+    title: "La Sirène"
+    question: "Qu'est-ce qui te tient debout : le prix qu'on t'a mis, le terrain, ou la maison de ta mère ?"
     division: 2
     year: 1990
-    # Bible ch. 10 § 3 : « Âge : 19 ». Sans ce champ le rôle joueur tirait à plat
-    # 19-31, et 46 % des carrières démarraient la « pépite » entre 26 et 31 ans :
-    # `p2b_dernier_bloc` disait « tu as 30 ans » à un joueur que le postulat
-    # appelle « petit », l'objectif `pepite_brassard_22` (age <= 22) tombait à
-    # 3 %, et la porte de transition `age >= 32` s'ouvrait dès la S0. Le tirage
-    # du rôle reste consommé (engine §1.8) : « même code, même carrière » tient.
+    ville: Aubérive
+    club: Racing Aubérive
+    # Bible ch. 10 § 3 : « Âge : 19 ». Le tirage du rôle reste consommé (engine
+    # §1.8) : « même code, même carrière » tient.
     age: 19
     gauges: { vestiaire: 50, tribunes: 80, direction: 50, caisse: 45 }
     force: 58
-    flags: [pepite]
+    flags: [pepite, histoire_h3]
     president: fardelli
     camille: true
-    # Casting de la bible ch. 10 § 3 : Fardelli vend, Vaubourg tient le prix
-    # (le président de l'usine), Bréhaut teste, Mbako pousse derrière.
-    # Cibles relues sur ce que la S0 porte vraiment (défaut « récurrence du
-    # casting en S0 »). Le `target` n'est pas qu'un budget de contrôle : il
-    # entre dans `faceFactor` (`expected = cardSlots / target`), donc une cible
-    # au-dessus de ce que le contenu porte ne fait pas revenir le visage, elle
-    # fait seulement échouer la mesure. Le réservoir tire 3 intrigues sur 10 :
-    # un porteur ne peut pas dépasser ~30 % de S0, et les visages qui tiennent
-    # 80 % ou plus sont ceux du script, des Nouvelles, des alarmes et des
-    # réactions. D'où : Fardelli et Bréhaut passent d'une cible « deux fois par
-    # saison » (75 % et 57 %, seuil 90 %) à « une fois » ; Mbako passe sous 1
-    # (à dix-neuf ans, LE prodige c'est toi — « celui qui prend ta place » est
-    # un visage de S1+, mesuré 19 % des S1 et 43 % des S2+) ; Gégé, Vecchio,
-    # Vukić et Camille montent au contraire, pour que la dette de visage les
-    # rappelle plus tôt dans le sac.
+    # Les visages du livre. Odile, Didier Vallin, Madame Irène et Steph sont
+    # les visages nouveaux (content/characters.yaml) ; les cibles sont celles
+    # que le script et les intrigues portent vraiment (Fardelli et Odile à
+    # chaque saison ; Didier, Steph, Vaubourg et Léa à partir de la nuit ;
+    # Josiane au prologue puis au corps).
     cast:
-      fardelli:   { fonction: vautour,      target: 1.9 }
-      aulard:     { fonction: patron,       target: 2 }
-      brehaut:    { fonction: capitaine,    target: 1.9 }
-      mbako:      { fonction: horloge,      target: 0.9 }
-      gege:       { fonction: creancier,    target: 1.9 }
-      lea:        { fonction: chroniqueur,  target: 1.5 }
-      # Gigi et Vukić sont des visages de carrière, pas de première saison : le
-      # gardien qui conseille et l'adjoint qui « te le dit parce que personne ne
-      # te le dira » entrent avec le banc, le diplôme et la retraite du gardien,
-      # toutes des intrigues de S1+ (mesuré : Vecchio 62 % des S1 et 85 % des
-      # S2+, Vukić 48 % et 70 %, contre 67 % et 52 % des S0). Sous 1, la mesure
-      # de récurrence ne les exige plus en S0 — elle continue de les compter.
-      vecchio:    { fonction: coeur,        target: 0.9 }
-      vukic:      { fonction: messager,     target: 0.9 }
-      sabatier:   { fonction: horloge,      target: 1 }
-      josiane:    { fonction: choeur,       target: 1 }
-      camille:    { fonction: jauge5,       target: 1.9 }
-      meneche:    { fonction: chroniqueur,  target: 1 }
-      nassir:     { fonction: tentateur,    target: 0.5 }
-      mere_mbako: { fonction: famille,      target: 0.5 }
-      legruet:    { fonction: instances,    target: 0.5 }
-    pitch: "Tout le monde veut te vendre. Toi, tu veux jouer. Et le genou a un avis."
-    chantier: false                   # relu à l'intégration : les budgets de réservoir sont bloquants
-    opening_arc: jp.pepite.club_usine
-    # Le prologue amène jusqu'à la portière de Fardelli ; l'ancre P1 du script
-    # (`jp.pepite.p1_valeur`, les dix pour cent) l'ouvre juste après.
-    prologue: jp.pepite.prologue
-    questions:                        # fil rouge tiré à l'ouverture de saison
+      fardelli:   { fonction: vautour,     target: 1.9 }
+      odile:      { fonction: famille,     target: 1.5 }
+      vallin:     { fonction: fantome,     target: 0.9 }
+      josiane:    { fonction: choeur,      target: 0.9 }
+      aulard:     { fonction: patron,      target: 0.8 }
+      steph:      { fonction: tentateur,   target: 0.9 }
+      irene:      { fonction: tentateur,   target: 0.9 }
+      sabatier:   { fonction: horloge,     target: 1 }
+      vecchio:    { fonction: coeur,       target: 1 }
+      brehaut:    { fonction: capitaine,   target: 1 }
+      gege:       { fonction: creancier,   target: 1.5 }
+      lea:        { fonction: chroniqueur, target: 0.8 }
+      mbako:      { fonction: horloge,     target: 0.6 }
+      mere_mbako: { fonction: famille,     target: 0.5 }
+      meneche:    { fonction: chroniqueur, target: 0.5 }
+      vukic:      { fonction: messager,    target: 0.5 }
+      camille:    { fonction: jauge5,      target: 0.5 }
+    pitch: "Dix-neuf ans, l'usine ferme à Noël, et tu es la dernière chose que cette ville fabrique. Tout le monde veut te vendre ; la nuit, la sirène de l'usine morte hurle pour les gamins qui tombent."
+    chantier: false
+    opening_arc: jp.h3.script
+    # Six scènes avant la carte Objectif : le crochet, les bouteilles, la place
+    # de la porte, le grillage, la licence, la cuisine.
+    prologue: jp.h3.prologue
+    questions:                        # le fil rouge, tiré à chaque ouverture de saison
       - { id: prix,    poids: 1.0 }
       - { id: terrain, poids: 1.0 }
       - { id: maison,  poids: 1.0 }
-    programme:                        # le réservoir (bible ch. 10 § 3, « Programme »)
-      # SUBSTITUTIONS BIBLE → BASE (ch. 10 § 3, « Programme et Cast ») — voulues,
-      # pas des oublis :
-      #   jp.dembo_rival    → co.mbako_rival   (le prodige d'après tient le rôle
-      #                       du coéquipier rival ; dembo n'a pas de visage)
-      #   jp.genou_20       → jp.genou_parle   (même scène, écrite sans borne
-      #                       d'âge : le genou parle quand il parle)
-      #   jp.coach_qui_te_veut → non écrite ; abandon acté (ch. 10 § 3, note de
-      #                       relecture) : le coach qui te veut est déjà dit par
-      #                       jp.banc_hiver (le coach qui ne te veut PAS) et par
-      #                       jp.clause. Rien à écrire de neuf pour le dire.
-      # Rebranchées à la relecture (défaut « réservoir plus maigre que la
-      # bible ») : co.pharmacie, co.derby et jp.pari étaient écrites et
-      # n'étaient dans aucun bucket ; s'y ajoutent cinq intrigues que la bible
-      # cite dans les variantes de la pépite et qui n'existaient que pour la fin
-      # de contrat — jp.vestiaire_porte (le vestiaire signe pour qu'on te garde :
-      # c'est LA scène du club-usine qui veut vendre), jp.consultant,
-      # jp.memoires, jp.derniere_selection et jp.jubile. Le réservoir passe de
-      # 15 à 23 intrigues ; chacune est arrivée avec une garde d'âge ou de
-      # carrière, parce qu'elles ont été écrites pour un joueur de 31 ans.
-      # Cast : la bible nomme dembo et rouvier, absents de characters.yaml (17
-      # visages) ; leurs fonctions sont tenues par mbako et sabatier.
-      # Poids relus sur le rapport de réservoir (spec § 5.1, bande
-      # [10 %, 65 %], signature [50 %, 65 %]). Cinq intrigues débordaient :
-      # jp.tifo 80 % (la prime `signature` ×3 en S0 sur un poids déjà à 1,2),
-      # jp.genou_parle 90 % (seule intrigue de thème `corps` : jamais éteinte
-      # par le voisin, et la prime « thème neuf » ×1,5 à chaque tirage),
-      # co.mbako_rival, jp.conseils_gigi et jp.brassard_test entre 66 et 74 %.
-      # Les poids des cinq baissent, ceux du bas de tableau (le banc, le bac,
-      # le brassard, le diplôme, la clause, le retour) montent : c'est le même
-      # nombre d'intrigues par saison, mieux réparti.
-      # L'ORDRE DU `pool` compte autant que les poids : la réserve prend « les
-      # premiers candidats restants dans l'ordre du fichier », et une réserve
-      # s'arme sur le premier trou de cadence. jp.tifo en tête du bucket "0" et
-      # jp.genou_parle en tête du bucket "1" étaient donc tirées ou repêchées
-      # presque à chaque saison (80 % et 90 %), et repêchées tard — d'où le
-      # slot moyen 13,8 du genou. Les deux passent en fin de liste ; les
-      # intrigues du bas de tableau passent devant.
+    # LE RÉSERVOIR. Les intrigues ouvertes par une carte du script (la maison,
+    # le genou, l'ardoise, le coupé rouge, la ligne de touche, le journal
+    # étranger, l'arrière-salle) n'y sont pas : un tirage les ouvrirait une
+    # deuxième fois. Les quatre postulats de 1990 gardent leurs réservoirs
+    # partagés ; celui-ci n'en reprend que ce qui ne contredit pas le livre (ni
+    # changement de club, ni `genou`, qui proposerait le banc d'entraîneur à
+    # vingt ans).
+    #   S0 : une intrigue du réservoir de la pépite, au poids — la saison est
+    #        pleine d'ancres et d'étapes, une suffit.
+    #   S1 : le derby, si une place se libère (la saison de la nuit est pleine).
+    #   S2 : rien (l'acte final tient la saison).
+    #   S3+ : l'épilogue (le crochet du fond), puis le réservoir de carrière.
+    programme:
       "0":
-        prendre: 3
-        # [2,9] → [1,12] : le slot de première ouverture est le minimum de
-        # trois tirages ; sur huit valeurs son écart-type tombait à 1,34
-        # (budget § 5.1 : ≥ 1,8).
-        fenetre: [1, 12]
+        prendre: 1
+        fenetre: [2, 12]
         reserve: 1
         pool:
-          # SUR-CORRECTION CORRIGÉE (défaut « réservoir de S0 déséquilibré ») :
-          # la passe précédente avait remonté le banc à 2,3 et le bac à 3,8
-          # pendant que les sept autres restaient entre 0,12 et 0,20. Pour trois
-          # tirages sans remise, les deux étaient quasi certains — 96 % et 99 %
-          # de couverture de carrière pour un plafond de 65 %, 23 ensembles S0
-          # distincts pour un seuil de 25, et jp.tifo, l'intrigue signature,
-          # vue dans 39 % des carrières au lieu des 50-65 % demandés. Les deux
-          # redescendent, le bas de tableau remonte vers 0,4-0,6, et le pool
-          # gagne jp.vestiaire_porte (le vestiaire qui signe pour qu'on te
-          # garde : la scène du club-usine, et la deuxième intrigue de Bréhaut
-          # en S0).
-          - { arc: jp.banc_hiver,      poids: 0.5, if: "world.serie_defaites >= 1 || gauges.direction < 45 || flag('coach_critique') || age <= 21" }
-          - { arc: jp.camille_bac,     poids: 0.45, if: "age <= 24" }
           - { arc: jp.premiere_une,    poids: 0.5 }
-          - { arc: jp.selection,       poids: 0.5, if: "gauges.tribunes >= 55" }
-          - { arc: jp.contrat_image,   poids: 0.45, if: "gauges.caisse >= 45" }
-          - { arc: jp.brassard_test,   poids: 0.6 }
-          - { arc: co.mbako_rival,     poids: 0.6 }
-          - { arc: jp.vestiaire_porte, poids: 0.5 }
-          - { arc: jp.conseils_gigi,   poids: 0.4 }
-          # `signature: true` multiplie déjà le poids par trois en S0 (et la prime
-          # « thème neuf » par 1,5) : 0,3 rend un poids effectif de 1,35.
-          - { arc: jp.tifo,            poids: 0.34, signature: true, if: "gauges.tribunes >= 65" }
+          - { arc: jp.brassard_test,   poids: 0.5 }
+          - { arc: co.mbako_rival,     poids: 0.4 }
+          - { arc: jp.vestiaire_porte, poids: 0.4 }
+          - { arc: jp.camille_bac,     poids: 0.3, if: "age <= 24" }
+          - { arc: jp.conseils_gigi,   poids: 0.3 }
+          # Gégé et ses vingt mètres de bâche : « il en a déjà plié trois ».
+          - { arc: jp.tifo,            poids: 0.4, signature: true, if: "gauges.tribunes >= 65" }
       "1":
-        # 3 → 2 : avec la reprise du bucket "0", quinze intrigues et cinq
-        # saisons de carrière, trois tirages par saison les ouvraient presque
-        # toutes (couverture 66-90 %, plafond 65 %). Deux tirées plus une de
-        # réserve suffisent : le temps d'histoire de S1 reste au-dessus du
-        # budget (médiane 14 pour un seuil de 10).
-        prendre: 2
-        # [1,12] → [1,9] (défaut « échéances en S1 ») : le bucket "1" tire deux
-        # intrigues NEUVES par-dessus la reprise du bucket "0", et une ouverture
-        # au slot 11 ou 12 pousse ses trois étapes dans les cinq derniers
-        # créneaux — 44 % des étapes de la S1 arrivaient à l'échéance (bande 6)
-        # et le backlog P99 montait à 3. Ouvrir avant le slot 9 laisse la place
-        # aux étapes ; le budget de fenêtre du bucket "0" ([1,12]) n'a pas ce
-        # problème, il n'a rien à reprendre.
-        fenetre: [1, 9]
+        prendre: 1
+        fenetre: [1, 6]
         reserve: 1
         reprise: true
         pool:
-          - { arc: jp.clause,        poids: 0.85, if: "gauges.tribunes >= 55" }
-          # NB : `entriesUpTo` déduplique par arc et garde la PREMIÈRE entrée
-          # rencontrée, buckets antérieurs d'abord — le poids réécrit ici pour
-          # un arc déjà listé au bucket "0" est inerte. C'est le poids du
-          # bucket "0" qui commande aussi la reprise en S1.
-          - { arc: jp.camille_bac,   poids: 0.25, if: "age <= 24" }
-          # Rebranchées (bible ch. 10 § 3) : la pharmacie du club et le derby.
-          # La pharmacie est portée par la kiné et le flacon blanc, pas par
-          # l'âge : la variante « à ton âge on ne demande pas » attend 28 ans,
-          # la scène de base est écrite pour n'importe quel joueur.
-          - { arc: co.pharmacie,     poids: 0.5, if: "relation.sabatier >= 0" }
-          - { arc: co.derby,         poids: 0.55, if: "gauges.tribunes >= 50" }
-          # Les intrigues de S0 restent au tirage en S1 (reprise) ; on les
-          # remet explicitement pour que le bucket "1" ne soit pas si étroit
-          # que tout s'ouvre la même saison.
-          - { arc: jp.contrat_image, poids: 0.22, if: "gauges.caisse >= 45" }
-          - { arc: jp.selection,     poids: 0.32, if: "gauges.tribunes >= 55" }
-          - { arc: jp.brassard_test, poids: 0.28 }
-          - { arc: co.mbako_rival,   poids: 0.35 }
-          - { arc: jp.conseils_gigi, poids: 0.1 }
-          # 0,28 → 0,18 et en fin de pool : troisième du bucket, la première Une
-          # était la réserve dès que la clause et le bac étaient tirés (la
-          # réserve lit l'ordre du fichier) — 32 % d'ouvertures en S1 et 74 % de
-          # couverture, pour un plafond de 65 %.
-          - { arc: jp.premiere_une,  poids: 0.18 }
-          - { arc: jp.genou_parle,   poids: 0.22 }
-          # 0,5 → 0,38 et en fin de pool : l'exil doré s'ouvrait dans 67 % des
-          # carrières (plafond 65 %) et devait 16 % de ses ouvertures au forçage —
-          # troisième du pool, il était la réserve du bucket dès que la clause et
-          # le bac étaient tirés (la réserve lit l'ordre du fichier).
-          - { arc: jp.exil_dore,     poids: 0.38, if: "relation.nassir >= 0 || year >= 1999" }
-          # Les sponsors (content/arcs/*/sponsors_louches.yaml), dès la S1 : le garage du
-          # Pont et les crampons Bourrel (propres), la table du jeudi et le Rideau Rouge.
-          - { arc: jp.sp.garage,           poids: 0.24 }
-          - { arc: jp.sp.bourrel,          poids: 0.2 }
-          - { arc: jp.sp.tripot,           poids: 0.22 }
-          - { arc: co.sp.rideau,           poids: 0.32, if: "gauges.tribunes >= 40" }
+          - { arc: co.derby,           poids: 0.4, if: "gauges.tribunes >= 50" }
       "2+":
-        # Mesuré : à `prendre: 3` la couverture moyenne descend bien (58 → 55 %),
-        # mais le pool des saisons tardives se vide et la cadence forcée ouvre le
-        # rituel de Gigi pour boucher les trous (68 % de couverture, 20 %
-        # d'ouvertures forcées). Quatre tirages restent le bon compte ; c'est le
-        # `weight` du rituel qui a été baissé (arcs/joueur/reservoir_b.yaml).
-        prendre: 4
-        fenetre: [1, 12]
-        reserve: 2
-        reprise: true
+        # Sans reprise : en S2, rien ne s'ouvre (l'acte final tient la saison) ;
+        # l'épilogue et les intrigues de carrière attendent la S3.
+        prendre: 2
+        fenetre: [1, 6]
+        reserve: 1
         pool:
-          - { arc: jp.retour_usine,    poids: 2.2, if: "flag('vendu_d1')" }
-          - { arc: jp.brassard_20,     poids: 2.1, if: "relation.brehaut >= 2 || !flag('capitaine')" }
-          - { arc: jp.diplome_joueur,  poids: 2.6, if: "age >= 26 || flag('genou') || flag('banc_bosse') || flag('diplome_reporte')" }
-          - { arc: jp.conseils_gigi,   poids: 0.08 }    # rituel
-          - { arc: jp.contrat_image,   poids: 0.2 }     # replay after 2
-          - { arc: jp.banc_hiver,      poids: 0.9 }     # replay after 2
-          - { arc: jp.exil_dore,       poids: 0.45 }    # replay after 3
-          - { arc: jp.clause,          poids: 0.6, if: "gauges.tribunes >= 55" }
-          - { arc: jp.genou_parle,     poids: 0.4 }
-          # LES CINQ INTRIGUES DE FIN DE CARRIÈRE, rebranchées (défaut
-          # « réservoir plus maigre que la bible »). Elles ont été écrites pour
-          # un joueur de 31 ans : chacune reçoit ici la garde qui lui manquait,
-          # sinon on proposait des mémoires et un jubilé à quelqu'un de vingt
-          # ans. Le pari et le derby n'ont pas d'âge : c'est le compte à sec et
-          # la ville qui les ouvrent.
-          - { arc: jp.pari,            poids: 1.6, if: "gauges.caisse < 55 || relation.fardelli <= 0" }
-          - { arc: co.derby,           poids: 0.7, if: "gauges.tribunes >= 50" }
-          - { arc: co.pharmacie,       poids: 0.6, if: "relation.sabatier >= 0" }
-          - { arc: jp.consultant,      poids: 1.5, if: "age >= 23 && (relation.meneche >= 0 || relation.lea >= 1)" }
-          - { arc: jp.memoires,        poids: 2.0, if: "age >= 23 || stats.saisons >= 4" }
-          # « Je vous prends pour le vestiaire, plus pour les jambes » : il faut
-          # avoir porté le cobalt, et des jambes qui commencent à parler.
-          # Deux portes, sinon l'intrigue est sous le plancher de 10 % : le
-          # cobalt déjà porté (jp.selection, issue `cobalts`, ~10 % des
-          # carrières), ou la carrière longue avec l'homme de la Fédération —
-          # « je vous prends pour le vestiaire, plus pour les jambes » se dit
-          # aussi à quelqu'un qu'on rappelle une dernière fois.
-          - { arc: jp.derniere_selection, poids: 2.2, if: "flag('international') || flag('capitaine') || (stats.saisons >= 5 && relation.legruet >= 1)" }
-          # LA PORTE DE LA FIN `jubile` (défaut bloquant). La fin était posée par
-          # le seul `s.role == 'joueur' && s.age >= 38` du passage de saison :
-          # inatteignable pour une carrière qui commence à 19 ans et à qui la
-          # transition entraîneur est proposée dès 32. Comme les autres fins de
-          # destin (bible ch. 10 § 6), elle a maintenant sa porte de contenu :
-          # `jp.jubile.jour*` la pose sur « Je raccroche ». La tribune haute et
-          # six saisons au compteur en font une fin qu'on gagne, pas qu'on subit.
-          - { arc: jp.jubile,          poids: 2.6, if: "stats.saisons >= 4 && gauges.tribunes >= 60" }
-    objectifs:                        # 3 objectifs cachés (bible ch. 10 § 3)
-      - { id: pepite_destination,    titre: "Choisir sa destination",      when: "flag('vendu_d1') && flag('sans_agent')", indice: "Un agent choisit pour toi. Sauf si tu n'en as pas." }
-      - { id: pepite_enfant_du_club, titre: "L'enfant du club",            when: "flag('enfant_du_pays') && flag('fidele') && stats.saisons >= 3", indice: "Vingt mètres de bâche, ça engage." }
+          - { arc: jp.h3.crochet,      poids: 40 }
+          - { arc: jp.brassard_20,     poids: 1.0, if: "season >= 3 && (relation.brehaut >= 2 || !flag('capitaine'))" }
+          - { arc: jp.pari,            poids: 0.8, if: "season >= 3 && (gauges.caisse < 55 || relation.fardelli <= 0)" }
+          # Le diplôme ne propose pas le banc (roles.yaml : âge ou `genou`) ; ses
+          # deux portes de la pépite d'origine restent lues ici.
+          - { arc: jp.diplome_joueur,  poids: 0.6, if: "season >= 3 && (age >= 26 || flag('genou') || flag('banc_bosse') || flag('diplome_reporte'))" }
+          - { arc: co.derby,           poids: 0.6, if: "season >= 3 && gauges.tribunes >= 50" }
+          - { arc: jp.conseils_gigi,   poids: 0.2, if: "season >= 3" }
+          # Les sponsors (content/arcs/joueur/sponsors_louches.yaml), après le
+          # livre : le garage du Pont et les crampons Bourrel. Ni le Rideau
+          # Rouge du sponsor (son « patron » contredirait Madame Irène), ni la
+          # table du jeudi (le livre a déjà son ardoise).
+          - { arc: jp.sp.garage,       poids: 0.35, if: "season >= 3" }
+          - { arc: jp.sp.bourrel,      poids: 0.35, if: "season >= 3" }
+    objectifs:                        # 3 objectifs cachés (les ids restent)
+      - { id: pepite_destination,    titre: "Choisir sa destination",      when: "flag('h3_fax_dechire') && (flag('h3_fini_debout') || flag('h3_sorti'))", indice: "Un fax, ça se déchire. L'autre papier, non." }
+      - { id: pepite_enfant_du_club, titre: "L'enfant du club",            when: "stats.saisons >= 3 && stats.clubs <= 1 && (flag('h3_sirene_achetee') || (flag('enfant_du_pays') && flag('fidele')))", indice: "Vingt mètres de bâche, ça engage. Une sirène aussi." }
       - { id: pepite_brassard_22,    titre: "Le brassard avant vingt-deux ans", when: "flag('capitaine') && age <= 22", indice: "Bréhaut a un genou. Et un brassard." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
+      # Les alarmes du livre d'abord, une fois chacune ; les alarmes de la
+      # pépite restent derrière (et dans la liste : sans elle, leurs cartes
+      # retomberaient dans le sac de tous les joueurs).
       tribunes.high:
-        # Gégé d'abord (défaut « récurrence du casting en S0 ») : la pépite ouvre
-        # à 80 de tribune, cette alarme est celle qui sonne le plus tôt, et elle
-        # n'avait que Léa. Le capo est le seul visage du cast dont la présence en
-        # S0 tenait à une seule intrigue (jp.tifo).
+        - { card: jp.h3.al.bache, when: "!seen('jp.h3.al.bache') && !seen('jp.tifo.bache')" }
         - { card: jp.pepite.alarme_local_gege, when: "!seen('jp.tifo.bache')" }
-        # La porte lit l'EXISTENCE de la scène, pas sa clôture : `!= 'done'` était
-        # vrai aussi quand jp.tifo n'avait jamais été armée, et Léa demandait de
-        # confirmer une bâche qui n'existait pas — ou doublait jp.tifo.bache trois
-        # cartes plus loin. `seen('jp.tifo.prix')` garantit les deux moitiés de sa
-        # phrase : les vingt mètres peints ET le prix peint dessous.
         - { card: jp.pepite.alarme_tifo_lea, when: "seen('jp.tifo.prix')" }
-        # La pépite sans tifo : la tribune monte quand même, et Léa n'a que la
-        # cote, la Une et le prix — pas de bâche à faire confirmer.
         - { card: jp.pepite.alarme_cote_lea }
       caisse.low:
+        - { card: jp.h3.al.ardoise, when: "!seen('jp.h3.al.ardoise') && flag('h3_ardoise') && !flag('h3_ardoise_payee')" }
+        - { card: jp.h3.al.chomage, when: "!seen('jp.h3.al.chomage') && flag('h3_usine_fermee')" }
         - { card: jp.pepite.alarme_fardelli_avance, when: "flag('agent_fardelli')" }
+      direction.low:
+        - { card: jp.h3.al.buvard, when: "!seen('jp.h3.al.buvard')" }
+      vestiaire.low:
+        - { card: jp.h3.al.sac_poubelle, when: "!seen('jp.h3.al.sac_poubelle') && (flag('h3_ardoise') || flag('h3_sirene_nuit'))" }
 
   - id: fin_de_contrat
     index: 3

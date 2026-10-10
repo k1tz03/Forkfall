@@ -1,0 +1,465 @@
+# HISTOIRE 3 — LA SIRÈNE : ce que dit la ville pendant la chute
+# (docs/histoires/00_les_dix_histoires.md, § 7 de la fiche).
+#
+# La ville sait avant que la carte ne le dise : la sirène qui ne sonne plus à
+# seize heures, le coupé devant la vitrine de l'épicière, la page trois de la
+# Gazette, les cartons sur le trottoir, la dernière fenêtre allumée de la cité.
+# Les quinze répliques de la fiche sont là ; les autres sont celles des visages
+# du livre (Odile, Didier, Madame Irène, Steph) et des témoins de la cité.
+#
+# Conventions de content/ville/paroles_personnages.yaml : aucun accord sur le
+# protagoniste, pas de phrase-signature, une tournure ne revient pas deux fois.
+# Les saisons de la ville comptent à partir de 1 (saison 1 = 1990-1991).
+paroles:
+  # ════════════════════════════════════════ LES QUINZE DE LA FICHE
+  - qui: ancien
+    sujet: epoque
+    si: "flag(histoire_h3) && saison == 1 && !flag(h3_usine_fermee)"
+    texte: "Ton père, à la tréfileuse, il chantait en tirant le fil. Toi tu cours en chantant. C'est la même famille."
+  - qui: commercant
+    sujet: argent
+    si: "flag(histoire_h3) && possede(coupe_sport)"
+    texte: "Un coupé rouge devant ma vitrine. Ta mère paie encore son ardoise chez moi, tu sais ? Le jeudi, en liquide."
+  - qui: passante
+    sujet: quartier
+    si: "flag(histoire_h3) && flag(h3_usine_fermee)"
+    texte: "La sirène ne sonne plus à seize heures. Je regarde la pendule à sa place. Elle ne dit pas la même chose."
+  - qui: enfant
+    sujet: toi
+    si: "flag(histoire_h3) && tribunes >= 80"
+    texte: "Tu me signes mon crochet ? Celui de l'école, au portemanteau. Je veux ton nom au-dessus du mien."
+  - qui: fan
+    sujet: club
+    si: "flag(histoire_h3) && flag(enfant_du_pays)"
+    texte: "Vingt mètres de bâche à ton nom. Gégé dit que si tu pars, on la plie. Il l'a dit à trois autres."
+  - qui: ancien
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_sirene_nuit)"
+    texte: "Trois heures, la sirène. Le quartier dit que c'est le vent dans la tour. Le vent ne sait pas tirer une poignée."
+  - qui: vecchio
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_halle_vue)"
+    texte: "Didier ? Il avait ta place, près de la porte. Il est parti en juin. Enfin, c'est ce qu'on a écrit."
+  - qui: passant
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_photos_gazette)"
+    texte: "Page trois de la Gazette, toi à trois heures du matin, un masque à la main. Ma femme demande si c'était un bal."
+  - qui: irene
+    sujet: toi
+    si: "flag(histoire_h3) && tranche == nuit && flag(h3_irene_ment)"
+    texte: "Rentrez. Votre mère a appelé ; je lui ai dit que vous n'étiez plus ici depuis longtemps. Ne me faites pas mentir deux fois."
+  - qui: commercant
+    sujet: achat
+    si: "flag(histoire_h3) && flag(h3_coupe_saisi)"
+    texte: "Votre coupé est dans ma cour, sous scellés. Il me prend une place. Les huissiers ne paient pas de loyer."
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_boite_jetee)"
+    texte: "J'ai jeté ta boîte dans la Rive, du haut du pont. J'aurais dû jeter les cachets de ton père aussi, en 86."
+  - qui: fan
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_douche)"
+    texte: "Momo, sous la douche. On dit le cœur. Au vestiaire, personne ne dit rien, et le carrelage est encore mouillé."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_lea_ecrit)"
+    texte: "Didier Vallin, blond, un mètre quatre-vingt-dix ? Il est brun, Didier. Je l'ai vu hier soir au feu de palettes."
+  - qui: josiane
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_josiane_temoin)"
+    texte: "Je range les licences par ordre alphabétique. La sienne, je l'ai mise à la fin. Je ne sais pas pourquoi."
+  - qui: ancien
+    sujet: epoque
+    si: "flag(histoire_h3) && flag(h3_fini_debout)"
+    texte: "Seize heures, la sirène, en plein match. Toute la tribune s'est levée. Ceux de l'usine ont regardé leur montre."
+
+  # ════════════════════════════════════════ ODILE
+  # La mère. On la croise à l'épicerie le matin, à la laverie le soir. Elle ne
+  # se plaint de rien ; elle compte.
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && !flag(h3_usine_fermee)"
+    texte: "Je sors à seize heures. Si tu es au grillage, je te verrai. Ne viens pas pour moi : viens pour eux, ils t'attendent."
+  - qui: odile
+    sujet: quartier
+    si: "flag(histoire_h3) && flag(h3_usine_fermee) && saison == 1"
+    texte: "Les voisines me demandent si je cherche du travail. Je dis que je cherche une blouse à ma taille. Ça les fait rire, c'est déjà ça."
+  - qui: odile
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_maison_achetee) && !flag(h3_maison_perdue)"
+    texte: "La maison est à nous. Je le dis tout haut le matin, dans la cuisine, pour voir si les murs y croient."
+  - qui: odile
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_cheque_refuse)"
+    texte: "Fardelli m'a saluée à la boulangerie. Il a payé mon pain avant que je sorte ma monnaie. Je l'ai laissé sur le comptoir."
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_ardoise) && !flag(h3_ardoise_payee)"
+    texte: "Tu rentres à l'heure où ton père se levait. Je ne te demande rien. Je mets juste une assiette sous le torchon."
+  - qui: odile
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_sirene_nuit)"
+    texte: "La sirène, cette nuit. J'ai mis mes chaussures sans réfléchir, comme pour aller pointer. Puis je me suis rassise."
+  - qui: odile
+    sujet: quartier
+    si: "flag(histoire_h3) && flag(h3_pavillon) && !flag(h3_maison_perdue)"
+    texte: "Le pavillon a un jardin. Je n'y ai rien planté. On ne plante pas chez quelqu'un d'autre."
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_maison_perdue) && !flag(h3_studio_fardelli)"
+    texte: "Tes deux pièces sont trop petites pour mes cartons et pour moi. Les cartons ont gagné. Je dors bien sur ton canapé."
+  - qui: odile
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_studio_fardelli)"
+    texte: "Le studio est propre. En bas, ils jouent aux cartes jusqu'à quatre heures. Je compte les rires au lieu des moutons."
+  - qui: odile
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_cite_muree)"
+    texte: "On m'a proposé de partir trois fois. J'ai dit non trois fois. La quatrième, ils ont muré les voisins. Je reste."
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_papier_vu)"
+    texte: "Tu as vu le papier. Je ne vais pas te dire pardon : je le signerais encore, pour l'enterrement. Pas pour le reste."
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && relation.odile >= 2"
+    texte: "Le samedi, je découpe ton nom dans L'Écho. J'ai une boîte à chaussures pleine. Ton père aurait acheté un classeur."
+  - qui: odile
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_boite_trouvee) && !flag(h3_boite_jetee)"
+    texte: "Ta boîte, je l'ai remise dans ton sac. Je n'y touche plus. Mais je sais combien il en reste : je compte, le soir."
+  - qui: odile
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_brigade)"
+    texte: "Ils ont pris la pendule. Je regarde l'heure à la fenêtre d'en face, chez la voisine. Elle avance."
+
+  # ════════════════════════════════════════ DIDIER VALLIN
+  # La grande halle le soir, le feu de palettes la nuit. Il ne demande rien,
+  # sauf qu'on dise son nom.
+  - qui: vallin
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_halle_vue)"
+    texte: "Le terrain fait cinquante mètres. Le vrai en fait cent. Je joue dans la moitié qu'on m'a laissée."
+  - qui: vallin
+    sujet: quartier
+    si: "flag(histoire_h3) && flag(h3_halle_vue)"
+    texte: "La craie, je la prends à l'école, le dimanche. La maîtresse sait. Elle en laisse une boîte sur le rebord de la fenêtre."
+  - qui: vallin
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_halle_vue) && flag(h3_place_porte)"
+    texte: "La place près de la porte. Le courant d'air, au bout de deux ans, on ne le sent plus. C'est là qu'il faut se méfier."
+  - qui: vallin
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_sirene_nuit) && flag(h3_halle_vue)"
+    texte: "Trois heures, c'est l'heure où on vend les gamins. Le jour, ça se verrait."
+  - qui: vallin
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_lea_ecrit)"
+    texte: "Le blond du journal marque des doublés. Avec mon nom, il marque mieux que moi. Je lui souhaite de garder le reste."
+  - qui: vallin
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_boite_prise) && flag(h3_halle_vue)"
+    texte: "Steph m'en donnait trois par jour. Le genou ne disait plus rien. Après, c'est moi qui ne disais plus rien."
+  - qui: vallin
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_halle_vue)"
+    texte: "Ma mère a touché l'argent de ma licence. Elle m'a envoyé une carte postale du bord de mer. Sans un mot. Juste la mer."
+  - qui: vallin
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_cle_sirene)"
+    texte: "La clé est dans ma poche. Je la touche quand il pleut. Je ne tirerai que pour quelqu'un qui reste debout."
+  - qui: vallin
+    sujet: epoque
+    si: "flag(histoire_h3) && flag(h3_halle_vue) && saison == 4"
+    texte: "Le liquidateur abat la tour au printemps. Les pigeons ne le savent pas encore. Moi, si."
+  - qui: vallin
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_didier_nom)"
+    texte: "Mon nom est sur le mur. Les gamins de la cité viennent le lire, le dimanche. Ils le lisent fort. Je leur ai demandé."
+  - qui: vallin
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_halle_vue) && tranche == nuit"
+    texte: "Le wagon est froid, mais il ne fuit pas. Le Racing non plus, il ne fuyait pas, avant."
+  - qui: vallin
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_halle_vue) && flag(h3_did_arrache)"
+    texte: "Tu as arraché mes trois lettres, au crochet. Les autres aussi les arrachaient. Ce n'est rien : je sais encore les écrire."
+  - qui: vallin
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_devant)"
+    texte: "Les deux du réverbère comptent jusqu'à trois. Le troisième soir, il faut avoir décidé quelque chose."
+
+  # ════════════════════════════════════════ MADAME IRÈNE
+  # Le Rideau Rouge, le soir ; le fleuriste et le cimetière, le matin. Elle
+  # vouvoie tout le monde, et ne promet rien.
+  - qui: irene
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_ardoise) && tranche == nuit"
+    texte: "La porte n'a pas de poignée pour qu'on réfléchisse avant d'entrer. Personne ne réfléchit. C'est pour ça qu'elle tient."
+  - qui: irene
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_ardoise) && !flag(h3_ardoise_payee)"
+    texte: "Votre page, je la tiens à l'encre violette. Le violet, ça ne passe pas au soleil. J'ai essayé."
+  - qui: irene
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_ardoise)"
+    texte: "J'ai lavé les maillots du club pendant vingt ans. Les numéros, je les reconnais à l'odeur. Le vôtre sent le neuf."
+  - qui: irene
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_photos_gazette)"
+    texte: "Le photographe ne venait pas de chez moi. Chez moi, personne n'a d'appareil. Il attendait dehors, sous la pluie. Il avait de la patience."
+  - qui: irene
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_ardoise_fardelli)"
+    texte: "Monsieur Fardelli a votre page. Il paie bien, il ne discute pas. C'est le seul client que je n'aime pas servir."
+  - qui: irene
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_ardoise_payee)"
+    texte: "Votre page est rayée. Le nom reste dessous, c'est la règle. Mais rayé, il ne fait plus de bruit."
+  - qui: irene
+    sujet: quartier
+    si: "flag(histoire_h3) && tranche == matin"
+    texte: "Le matin, je vais au cimetière. Le soir, je tiens la porte. Entre les deux, je dors avec la radio allumée."
+  - qui: irene
+    sujet: sponsor
+    si: "flag(histoire_h3) && flag(h3_coupe)"
+    texte: "Monsieur Daubrac paie les soirées de votre coupé. Il paie aussi les miennes. On n'a jamais su qui payait les siennes."
+  - qui: irene
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_douche)"
+    texte: "Le petit Momo venait le jeudi. Il commandait un jus d'orange et regardait la porte. Le jus, je ne le notais pas."
+  - qui: irene
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_maison_perdue)"
+    texte: "On m'a dit, pour les cartons de votre mère. Je l'ai eue deux fois au téléphone. Elle a une voix qui ne demande rien. C'est rare."
+
+  # ════════════════════════════════════════ STEPH
+  # La salle de muscu l'après-midi, le Terminus la nuit. Il ne vend jamais :
+  # il propose, et il attend.
+  - qui: steph
+    sujet: toi
+    si: "flag(histoire_h3) && !flag(h3_boite_prise)"
+    texte: "Tu soulèves bien. Tu soulèves comme quelqu'un qui a peur de son genou. Ça se soigne, la peur."
+  - qui: steph
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_boite_prise)"
+    texte: "La première boîte, c'est un cadeau. La deuxième, un service. La troisième, une habitude. Tu en es où ?"
+  - qui: steph
+    sujet: club
+    si: "flag(histoire_h3)"
+    texte: "J'ai joué ici, en 1981, latéral droit. On m'a vendu à la réserve d'un club de Portclair. Je connais le chemin du vestiaire, va."
+  - qui: steph
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_halle_vue)"
+    texte: "Didier ? Il avait de meilleures jambes que toi. Elles sont restées à la friche avec le reste."
+  - qui: steph
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_enveloppe_portee)"
+    texte: "L'enveloppe est arrivée. Tu vois, ce n'était pas compliqué. La prochaine fois, ce sera encore moins compliqué."
+  - qui: steph
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_enveloppe_refusee)"
+    texte: "La cuisine du Terminus, c'est la sortie de ceux qui reviennent. On reviendra te voir, ou tu reviendras. C'est pareil."
+  - qui: steph
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_match_trahi)"
+    texte: "Joli but, à la trente-huitième. Il a coûté cher à des gens qui ne regardent pas les buts. Ils regardent les montres."
+  - qui: steph
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_steph_vu)"
+    texte: "Ce soir-là, à la salle, tes mains tremblaient. Les miennes aussi, la première fois. Ça passe, les mains."
+  - qui: steph
+    sujet: quartier
+    si: "flag(histoire_h3) && tranche == nuit"
+    texte: "Le Terminus ferme à deux heures. L'arrière-salle, elle, ne ferme pas : elle s'endort, comme un chien."
+  - qui: steph
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_douche)"
+    texte: "Momo n'a rien pris de chez moi. Il a pris de chez lui. Retiens ça, au cas où quelqu'un demanderait."
+  - qui: steph
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_vente_promise)"
+    texte: "Ton nom est entouré sur le buvard. Moi aussi, j'ai été entouré, en 1983. Le crayon, c'était le même modèle."
+
+  # ════════════════════════════════════════ LES AUTRES VISAGES
+  - qui: fardelli
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_maison_achetee)"
+    texte: "Ta mère dort chez elle. Moi, je dors bien aussi. On n'a pas de raison de mal dormir, ni l'un ni l'autre."
+  - qui: fardelli
+    sujet: toi
+    si: "flag(histoire_h3) && flag(sans_agent)"
+    texte: "Tu ne me dois rien, c'est entendu. Ta mère, c'est une autre conversation. Elle a commencé avant toi."
+  - qui: fardelli
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_dette_pere)"
+    texte: "Ton père m'a serré la main pour dix mille francs, en 85. Il n'a jamais regretté. Moi non plus."
+  - qui: fardelli
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_vente_tombee) && saison >= 2"
+    texte: "On ne vend pas un gamin qui monte. On attend qu'il tombe, et on le rachète. Ce n'est pas méchant : c'est le calendrier."
+  - qui: fardelli
+    sujet: sponsor
+    si: "flag(histoire_h3) && flag(h3_coupe)"
+    texte: "Daubrac est un ami. Il prête des voitures comme d'autres prêtent l'oreille. Lui, au moins, on sait ce qu'il veut."
+  - qui: josiane
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_halle_vue) && !flag(h3_josiane_temoin)"
+    texte: "Le classeur des pros est dans l'armoire du fond. La clé, je la porte sur moi depuis juin 1989. Avant, je la laissais sur la porte."
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h3) && saison == 1"
+    texte: "Votre licence est rangée à la lettre de votre nom. Les autres aussi, toutes. Je vérifie chaque lundi."
+  - qui: josiane
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_mbako_designe)"
+    texte: "Le président m'a demandé un dossier de transfert au nom de Lian Mbako. Je l'ai préparé. Je ne l'ai pas encore monté."
+  - qui: vecchio
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_genou_cache)"
+    texte: "Le seau de glace est au local du matériel. Je le remplis le vendredi soir. Personne ne me l'a demandé."
+  - qui: vecchio
+    sujet: epoque
+    si: "flag(histoire_h3) && flag(h3_usine_fermee)"
+    texte: "En 1979, l'usine payait nos primes en heures de repos. On marquait, on gagnait une matinée. J'en ai encore à prendre."
+  - qui: gege
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_coupe_saisi)"
+    texte: "Un coupé rouge sur une dépanneuse, devant la Nord. On en parlera encore au local quand on aura oublié le score."
+  - qui: gege
+    sujet: sponsor
+    si: "flag(histoire_h3) && flag(h3_coupe)"
+    texte: "Les lettres d'or de Daubrac, on les voit depuis la Nord. Ça lui fait de la publicité gratuite. Pour lui."
+  - qui: gege
+    sujet: quartier
+    si: "flag(histoire_h3) && flag(h3_sirene_achetee)"
+    texte: "La sirène est sous le toit de la Nord, avec ses sangles. On ne la tire pas. On la regarde. Le jour où on la tirera, tu le sauras."
+  - qui: lea
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_lea_ecrit)"
+    texte: "Le papier passe mercredi si j'ai une deuxième signature. Sinon il passe quand même, tout seul. On oublie vite les papiers seuls."
+  - qui: lea
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_sirene_nuit)"
+    texte: "Le liquidateur parle du vent. J'ai appelé la station météo de Portclair : cette nuit-là, il n'y avait pas un souffle."
+  - qui: sabatier
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_genou_ecrit)"
+    texte: "Trois lignes dans ton dossier. Je les ai relues ce matin. Elles sont justes. C'est ce qui me gêne."
+  - qui: sabatier
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_boite_arretee)"
+    texte: "Ta boîte est dans mon tiroir du bas. Je ne l'ai pas ouverte. Je ne la jetterai pas non plus : un jour, quelqu'un demandera."
+  - qui: brehaut
+    sujet: club
+    si: "flag(histoire_h3)"
+    texte: "Le dernier arrivé porte l'eau. Moi, je l'ai portée trois ans. Après, j'ai eu un genou et un brassard. Dans cet ordre-là."
+  - qui: mbako
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_mbako_designe)"
+    texte: "Mon nom est entouré sur le buvard. Ma mère dit qu'un cercle, c'est une cible. Moi, je trouve que c'est joli."
+  - qui: mbako
+    sujet: club
+    si: "flag(histoire_h3) && saison >= 4"
+    texte: "J'ai dix-neuf ans, l'âge que tu avais. Ma mère lit mes contrats deux fois, et une troisième fois à voix haute."
+  - qui: mere_mbako
+    sujet: toi
+    si: "flag(histoire_h3)"
+    texte: "Je lis tout ce que Lian signe. Votre mère, elle, n'a pas pu tout lire. Ce n'est pas un reproche. C'est une remarque."
+
+  # ════════════════════════════════════════ LES TÉMOINS DE LA CITÉ
+  - qui: passant
+    sujet: quartier
+    si: "flag(histoire_h3) && !flag(h3_usine_fermee)"
+    texte: "Seize heures, la sirène. Ça fait trente ans que je règle ma montre dessus. Après Noël, je ne sais pas sur quoi je la réglerai."
+  - qui: commercant
+    sujet: achat
+    si: "flag(histoire_h3) && possede(costume_sur_mesure)"
+    texte: "Brunel dit que votre costume a été payé par un monsieur qui ne se mouille pas les doigts pour compter. Il dit ça de tout le monde."
+  - qui: ancien
+    sujet: quartier
+    si: "flag(histoire_h3) && flag(h3_cite_muree)"
+    texte: "Ils murent la cité rangée par rangée. Il reste une lampe, le soir, au bout. Tout le quartier la regarde avant d'aller se coucher."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(histoire_h3) && flag(h3_maison_perdue)"
+    texte: "Les cartons sur le trottoir, devant tout le monde. Moi, j'ai porté celui de la vaisselle. Il ne manquait rien. Elle a vérifié."
+  - qui: enfant
+    sujet: toi
+    si: "flag(histoire_h3) && flag(h3_sirene_nuit)"
+    texte: "Mon frère dit que c'est un fantôme qui tire la sirène. Moi je dis que les fantômes, ça ne se lève pas à trois heures."
+  - qui: fan
+    sujet: match
+    si: "flag(histoire_h3) && flag(h3_usine_fermee) && serie_d >= 1"
+    texte: "On perd, et la Tréfilerie ne sonne plus pour couvrir les sifflets. Avant, à seize heures, on n'entendait personne siffler."
+  - qui: passant
+    sujet: argent
+    si: "flag(histoire_h3) && flag(h3_pavillon)"
+    texte: "Un pavillon aux Lilas, avec garage. Payé comment ? On ne demande pas. On regarde le garage."
+  - qui: commercant
+    sujet: achat
+    si: "flag(histoire_h3) && possede(montre_or)"
+    texte: "Une montre en or au poignet de quelqu'un de la cité. Mon père en a eu une pour ses trente ans d'usine. Elle était en plaqué."
+  - qui: ancien
+    sujet: club
+    si: "flag(histoire_h3) && flag(h3_crochet_rendu)"
+    texte: "Au crochet du fond, il y a trois noms, maintenant, l'un sur l'autre. Le gamin de seize ans dit que ça porte chance. On verra."
+  - qui: passante
+    sujet: sombre
+    si: "flag(histoire_h3) && flag(h3_coupe_saisi)"
+    texte: "La dépanneuse est passée devant chez moi avec le coupé rouge dessus. Les lettres d'or brillaient. On aurait dit un char de carnaval."
+
+# On croise les visages du livre à leur heure (s'ils sont de la distribution).
+presences:
+  - {qui: odile, lieu: epicerie, tranches: [matin]}
+  - {qui: odile, lieu: laverie, tranches: [soir]}
+  - {qui: vallin, lieu: halle, tranches: [soir]}
+  - {qui: vallin, lieu: feu, tranches: [nuit]}
+  - {qui: irene, lieu: club_prive, tranches: [soir, nuit]}
+  - {qui: irene, lieu: fleuriste, tranches: [matin]}
+  - {qui: steph, lieu: muscu, tranches: [aprem, soir]}
+  - {qui: steph, lieu: terminus, tranches: [nuit]}
+
+# Où leurs cartes les attendent quand elles ne disent pas de lieu (toutes en
+# disent un ; c'est un filet). Didier n'y est pas : sa fiche est commune avec
+# l'Histoire 5, qui le loge peut-être ailleurs.
+rencontres:
+  odile: epicerie
+  irene: club_prive
+  steph: muscu
+
+# Ce qu'on voit en entrant, pendant le livre (la première vraie l'emporte).
+lieux_variantes:
+  - lieu: appartement
+    si: "flag(histoire_h3) && !flag(h3_maison_perdue) && saison <= 2"
+    texte: "La maison de la cité de la Tréfilerie : la toile cirée usée aux coins, la photo de ton père en bleu de travail sur le buffet, et à seize heures les vitres qui tremblent."
+  - lieu: appartement
+    si: "flag(histoire_h3) && flag(h3_maison_perdue) && !flag(h3_studio_fardelli)"
+    texte: "Deux pièces au-dessus de la boulangerie, rue des Lilas. Les cartons de ta mère contre le mur du salon ; elle n'en a ouvert qu'un, celui de la vaisselle."
+  - lieu: appartement
+    si: "flag(histoire_h3) && flag(h3_studio_fardelli)"
+    texte: "Deux pièces rue des Lilas. Sur la table, la clé du studio du Terminus, que ta mère t'a laissée « au cas où ». Tu ne t'en sers jamais."
+  - lieu: halle
+    si: "flag(histoire_h3) && flag(h3_didier_nom)"
+    texte: "La grande halle. Sur le mur du fond, à la craie, en lettres d'un mètre : DIDIER VALLIN. Personne ne l'efface. Les pigeons évitent ce mur-là."
+  - lieu: halle
+    si: "flag(histoire_h3) && flag(h3_halle_vue)"
+    texte: "La grande halle : le toit troué, le terrain tracé à la craie sur le béton, et une capote militaire pliée sur le poteau de corner."
+  - lieu: friche
+    si: "flag(histoire_h3) && !flag(h3_usine_fermee)"
+    texte: "La Tréfilerie, de l'autre côté du parking : les halles mortes depuis 1984, le bâtiment C qui tourne encore, et la tour de la sirène au-dessus de tout."
+  - lieu: garage
+    si: "flag(histoire_h3) && flag(h3_coupe_saisi)"
+    texte: "Le garage du Pont. Au fond de la cour, une bâche sur un coupé, un plomb d'huissier sur la portière, et une feuille scotchée sur des lettres d'or."
+  - lieu: tripot
+    si: "flag(histoire_h3) && flag(h3_studio_fardelli)"
+    texte: "L'arrière-salle du Terminus. Au plafond, on entend marcher : le studio du dessus. Les joueurs baissent la voix quand le plancher craque."
+  - lieu: club_prive
+    si: "flag(histoire_h3) && flag(h3_ardoise)"
+    texte: "Le Rideau Rouge. La porte sans poignée s'ouvre avant que tu frappes. Sur le comptoir, sous la lampe, le cahier des ardoises, ouvert à une page que tu connais."
+  - lieu: epicerie
+    si: "flag(histoire_h3) && saison <= 2"
+    texte: "L'épicerie de la cité : des conserves, des bières, et sous le comptoir le cahier des ardoises, où le nom de ta mère revient chaque semaine."
+  - lieu: voiture
+    si: "flag(histoire_h3) && possede(coupe_sport)"
+    texte: "Le coupé rouge, garé de travers. Sur la portière, en lettres d'or : SPIRITUEUX DAUBRAC. Les gamins de la cité passent le doigt dessus, pour voir si c'est de l'or."

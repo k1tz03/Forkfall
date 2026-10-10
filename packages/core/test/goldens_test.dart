@@ -99,6 +99,16 @@
 ///   sans `--recode`. Les tests C8 et C9, dont l'appel du Sporting Montoya était
 ///   le seul témoin, servent désormais eux-mêmes une signature synthétique au
 ///   deuxième bloc (une transition de rôle, qui change de club sur-le-champ).
+/// · **Histoire 3, « La Sirène »** (la branche `histoire-h3`). La pépite
+///   devient un livre (l'argent, la nuit, le corps, puis l'épilogue), et ses
+///   cinq carrières racontent autre chose. Avec les deux livres d'avant, six
+///   codes sur vingt vivaient plus longtemps que leurs swipes figés et
+///   s'arrêtaient sans fin : sous le seuil de G1c, les swipes ne racontaient
+///   plus des carrières entières. Codes **retirés à neuf**
+///   (`--goldens --write --recode`), et les vingt atteignent une fin. Le tirage
+///   des codes s'en tient aux quatre postulats de 1990 (index 0 à 3) : les
+///   postulats des rôles de bureau, désormais dans le contenu, auraient porté
+///   le fichier à cinquante codes.
 library;
 
 import 'dart:io';

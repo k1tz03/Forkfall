@@ -2161,12 +2161,14 @@ String _visage(Content content, String? id) {
 /// Les vingt Codes de Carrière de référence (spec variété §3.9 « G1 »).
 ///
 /// Construction, sans aucun aléa hors graine : les cinq premières graines de
-/// la liste de mesure (`seedOfRun`) × les quatre postulats. Les swipes sont
+/// la liste de mesure (`seedOfRun`) × les quatre postulats de 1990 (index 0
+/// à 3, ceux que G1c attend ; les postulats des rôles de bureau n'entrent pas
+/// dans les goldens, le moteur qu'ils rejouent est le même). Les swipes sont
 /// ceux que jouerait `human_like`, mais ils sont **figés dans le code** : le
 /// rejeu ne dépend plus de la politique, seulement du moteur et du contenu.
 List<CareerCode> _goldenCodes(Engine engine, Content content) {
   final out = <CareerCode>[];
-  final nPost = content.postulatsByIndex.length;
+  final nPost = math.min(4, content.postulatsByIndex.length);
   for (int p = 0; p < nPost; p++) {
     for (int i = 0; i < 5; i++) {
       final seed = seedOfRun(i);

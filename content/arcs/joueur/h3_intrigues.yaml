@@ -1,0 +1,370 @@
+# HISTOIRE 3 — LA SIRÈNE : les intrigues (docs/histoires/00_les_dix_histoires.md).
+#
+# Le script (h3_script.yaml) tient la colonne vertébrale ; ces huit intrigues
+# portent la chute, en trois temps — l'argent, la nuit, le corps.
+#
+#  1. La maison de la cité (S0 → S1, ouverte par la main de Fardelli) — la
+#     lettre de l'usine sur la toile cirée, le chèque déjà rempli, le fanion de
+#     1958 que le directeur ne vend pas aux enchères ; puis le pavillon des
+#     Lilas, payé sur un transfert qui ne vient pas, et les cartons qu'Odile ne
+#     défait pas « au cas où ». Elle se paie au créneau 17 de la S1 (l'ancre des
+#     cartons) et en S2 (le porte-monnaie).
+#  2. Le genou (S0 → S1, ouvert par la main de Fardelli) — la porte du genou
+#     chez Sabatier (écrire ou garder), le seau de glace de Gigi qui ne finit pas
+#     sa phrase sur Didier ; puis la boîte : Momo qui en veut, ou Steph qui la
+#     repose sur le banc ; le sac vidé sur la table comme les poches du père le
+#     vendredi ; le Doc qui propose d'arrêter. Il se paie à la visite (S0, 16-17)
+#     et à seize heures (S2, 17).
+#  3. L'ardoise (S0 → S1, ouverte par le chèque) — la porte sans poignée, le
+#     masque ; Irène qui ment à ta mère au téléphone ; les photos sous la
+#     soucoupe du café de la Mairie ; la page vendue à Fardelli. Elle se paie à
+#     l'arrière-salle du Terminus (S2).
+#  4. Le coupé rouge (S0 → S1, ouvert par la dernière sirène) — la bâche du
+#     garage du Pont et les lettres d'or de SPIRITUEUX DAUBRAC ; Gégé qui en
+#     fait le tour sans le toucher ; la dépanneuse des huissiers devant la
+#     Nord. LA saisie du livre, au milieu de la saison de la nuit.
+#  5. La ligne de touche (S1 → S2, ouverte par trois heures du matin) — Didier
+#     Vallin, vivant, qui repasse à la craie la ligne de son terrain ; la clé de
+#     la tour ; la loge du gardien et son chien ; son nom écrit en entier.
+#  6. Le journal étranger (S2, ouvert par le porte-monnaie) — Léa et le doublé
+#     d'un garçon blond ; Gigi qui dit que Didier était brun ; le papier qui
+#     attend une deuxième signature.
+#  7. L'arrière-salle (S2, ouverte par le porte-monnaie, si l'ardoise) —
+#     l'enveloppe de Portclair, la départementale, la trente-huitième minute.
+#  8. Le crochet du fond (réservoir, S3+, l'épilogue) — la laverie où Odile lave
+#     les maillots du club, la sirène vendue aux enchères, le sparadrap du gamin
+#     d'après.
+#
+# Les intrigues ouvertes par une carte (`schedule:`) ne sont pas au réservoir :
+# un tirage les ouvrirait une deuxième fois. Toutes lisent `histoire_h3`.
+# Les longues fusées (`at_season: 1`) ont toujours une sœur sans fusée, pour le
+# cas où l'étape d'avant aurait glissé dans la saison suivante.
+arcs:
+  # ════════════════════════════════════════════ 1 · LA MAISON DE LA CITÉ
+  - id: jp.h3.maison
+    title: "La maison de la cité"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    when: "flag('histoire_h3')"
+    theme: famille
+    carrier: odile
+    cast: [odile, fardelli, aulard]
+    same_club: true
+    fallback: drop
+    issues: [achetee, refuse]
+    hint: "Une lettre sur la toile cirée, cent quatre-vingt mille francs, et un chèque déjà rempli."
+    traces:
+      h3_maison_achetee: "{annee} : la maison de la cité de la Tréfilerie, payée par un chèque de Rocco Fardelli."
+      h3_cheque_refuse:  "{annee} : {nom} a rendu un chèque déjà rempli à Rocco Fardelli, par la vitre baissée."
+      h3_fanion:         "{annee} : le fanion du club de l'usine, 1958, le seul objet de la Tréfilerie qu'on n'a pas mis aux enchères."
+      h3_pavillon:       "{annee} : un pavillon aux Lilas pour la mère de {nom}, sur l'argent d'un transfert qui ne vient pas."
+    steps:
+      - id: lettre
+        card: jp.h3.maison.lettre
+        next: [ { step: cheque, in: [1, 2] } ]
+      - id: cheque
+        card:
+          - { id: jp.h3.maison.cheque_lachee, if: "flag('h3_maison_lachee')" }
+          - { id: jp.h3.maison.cheque }
+        # Le fanion de l'usine ne se donne pas quand la saison parle de prix :
+        # le directeur le garde, et le pavillon arrive sans lui.
+        next:
+          - { step: fanion, if: "fil_rouge != 'prix'", in: [5, 8] }
+          - { step: pavillon, if: "season == 0", at_season: 1, at: [4, 7], in: [4, 7] }
+          - { step: pavillon, in: [3, 5] }
+      - id: fanion
+        card: jp.h3.maison.fanion
+        next:
+          - { step: pavillon, if: "season == 0", at_season: 1, at: [4, 7], in: [4, 7] }
+          - { step: pavillon, in: [3, 5] }
+      - id: pavillon
+        card:
+          - { id: jp.h3.maison.pavillon_cite, if: "flag('h3_maison_achetee')" }
+          - { id: jp.h3.maison.pavillon }
+        next: [ { step: garage, if: "flag('h3_pavillon')", in: [3, 5] } ]
+      - id: garage
+        card: jp.h3.maison.garage
+        next: []
+
+  # ════════════════════════════════════════════ 2 · LE GENOU
+  - id: jp.h3.genou
+    title: "Le genou"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    when: "flag('histoire_h3')"
+    theme: corps
+    carrier: sabatier
+    cast: [sabatier, vecchio, steph, odile]
+    same_club: true
+    fallback: drop
+    issues: [ecrit, cache, jetee, arretee, gardee]
+    hint: "Un genou qui a un avis, un médecin qui écoute les portes, et une boîte sans étiquette."
+    traces:
+      h3_genou_ecrit:   "{annee} : dans le dossier médical de {nom}, trois lignes du Doc Sabatier sur un genou."
+      h3_boite_jetee:   "{annee} : une boîte sans étiquette jetée dans la Rive, du haut du pont, par la mère de {nom}."
+      h3_boite_arretee: "{annee} : {nom} a posé une boîte entamée sur le bureau du Doc Sabatier, pour qu'il la garde."
+    steps:
+      - id: porte
+        card: jp.h3.genou.porte
+        next: [ { step: seau, in: [3, 5] } ]
+      - id: seau
+        card: jp.h3.genou.seau
+        next:
+          - { step: banc, if: "season == 0", at_season: 1, at: [3, 6], in: [3, 6] }
+          - { step: banc, in: [2, 4] }
+      - id: banc
+        # La boîte prise la veille de la visite : Momo en veut. Laissée sur le
+        # banc, ou jamais vue : Steph la repose, avec le nom de Didier.
+        card:
+          - { id: jp.h3.genou.momo, if: "flag('h3_boite_prise')" }
+          - { id: jp.h3.genou.banc }
+        next: [ { step: sac, if: "flag('h3_boite_prise')", in: [3, 5] } ]
+      - id: sac
+        card: jp.h3.genou.sac
+        next: [ { step: arret, if: "!flag('h3_boite_jetee')", in: [3, 5] } ]
+      - id: arret
+        card: jp.h3.genou.arret
+        next: []
+
+  # ════════════════════════════════════════════ 3 · L'ARDOISE
+  - id: jp.h3.ardoise
+    title: "L'ardoise"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    when: "flag('histoire_h3')"
+    theme: argent
+    carrier: irene
+    cast: [irene, odile, meneche, fardelli]
+    same_club: true
+    fallback: drop
+    issues: [refuse, payee, vendue]
+    hint: "Une porte sans poignée, un masque de soie noire, et ton nom dans un cahier."
+    traces:
+      h3_ardoise:          "{annee} : au Rideau Rouge, une page du cahier des ardoises au nom de {nom}."
+      h3_photos_gazette:   "{annee} : page trois de la Gazette Rose, {nom} à trois heures du matin, un masque de soie à la main."
+      h3_ardoise_fardelli: "{annee} : Madame Irène a vendu à Rocco Fardelli la page de {nom}, avec les intérêts."
+    steps:
+      - id: porte
+        card: jp.h3.ardoise.porte
+        next: [ { step: mere, if: "flag('h3_ardoise')", in: [3, 5] } ]
+      - id: mere
+        card: jp.h3.ardoise.mere
+        next:
+          - { step: photos, if: "season == 0", at_season: 1, at: [3, 6], in: [3, 6] }
+          - { step: photos, in: [3, 5] }
+      - id: photos
+        card: jp.h3.ardoise.photos
+        next: [ { step: rachat, in: [4, 6] } ]
+      - id: rachat
+        card: jp.h3.ardoise.rachat
+        next: []
+
+  # ════════════════════════════════════════════ 4 · LE COUPÉ ROUGE (ouvert par la dernière sirène)
+  - id: jp.h3.coupe
+    title: "Le coupé rouge"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h3') && stats.clubs <= 1"
+    theme: contrat
+    carrier: fardelli
+    cast: [fardelli, gege, mbako, aulard]
+    same_club: true
+    fallback: drop
+    issues: [refuse, chante, rentre, rendu]
+    # Le coupé rendu au garage avant les huissiers ne se joue qu'en ville (la
+    # mission de la revente) : le simulateur ne le voit pas.
+    issues_rares: [rendu]
+    hint: "Une bâche au fond du garage du Pont, et des lettres d'or sur une portière rouge."
+    traces:
+      h3_coupe:       "{annee} : un coupé rouge prêté à {nom}, SPIRITUEUX DAUBRAC en lettres d'or sur la portière."
+      h3_coupe_saisi: "{annee} : la dépanneuse des huissiers a emporté un coupé rouge devant la tribune Nord."
+    steps:
+      - id: bache
+        card: jp.h3.coupe.bache
+        next: [ { step: lettres, in: [3, 5] } ]
+      - id: lettres
+        card:
+          - { id: jp.h3.coupe.lettres_mbako, if: "flag('h3_coupe_mbako')" }
+          - { id: jp.h3.coupe.lettres }
+        next:
+          - { step: depanneuse, if: "season == 0", at_season: 1, at: [7, 10], in: [7, 10] }
+          - { step: depanneuse, in: [4, 6] }
+      - id: depanneuse
+        # Le coupé rendu au garage avant les huissiers (la mission de la ville) ;
+        # refusé, il est passé au petit Mbako ; sinon c'est le tien.
+        card:
+          - { id: jp.h3.coupe.depanneuse_rendu, if: "flag('h3_coupe_rendu')" }
+          - { id: jp.h3.coupe.depanneuse_mbako, if: "flag('h3_coupe_mbako')" }
+          - { id: jp.h3.coupe.depanneuse }
+        next: []
+
+  # ════════════════════════════════════════════ 5 · LA LIGNE DE TOUCHE
+  - id: jp.h3.didier
+    title: "La ligne de touche"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.3
+    once: true
+    when: "flag('histoire_h3')"
+    theme: formation
+    carrier: vallin
+    cast: [vallin, vecchio, josiane]
+    same_club: true
+    fallback: drop
+    issues: [nom, silence]
+    hint: "Un terrain tracé à la craie sur le béton de la grande halle, et trois lettres sous ton nom."
+    traces:
+      h3_halle_vue:  "{annee} : dans la grande halle, {nom} a rencontré Didier Vallin, qu'on disait parti jouer à l'étranger."
+      h3_cle_sirene: "{annee} : la clé de la tour de la sirène a quitté la loge du gardien de la Tréfilerie."
+      h3_didier_nom: "{annee} : à la craie, sur le mur de la grande halle, DIDIER VALLIN, en lettres d'un mètre."
+    steps:
+      - id: ligne
+        card:
+          - { id: jp.h3.didier.ligne_did, if: "flag('h3_did_garde')" }
+          - { id: jp.h3.didier.ligne }
+        next: [ { step: cle, in: [1, 3] } ]
+      - id: cle
+        card: jp.h3.didier.cle
+        next:
+          - { step: loge, if: "season == 1 && flag('h3_cle_promise')", at_season: 1, at: [2, 5], in: [2, 5] }
+          - { step: loge, if: "flag('h3_cle_promise')", in: [2, 4] }
+          - { step: nom, if: "season == 1", at_season: 1, at: [4, 8], in: [4, 8] }
+          - { step: nom, in: [3, 5] }
+      - id: loge
+        # La clé déjà décrochée en ville (la mission de Didier) : il la tient.
+        card:
+          - { id: jp.h3.didier.loge_faite, if: "flag('h3_cle_sirene')" }
+          - { id: jp.h3.didier.loge }
+        next: [ { step: nom, in: [3, 5] } ]
+      - id: nom
+        card: jp.h3.didier.nom
+        next: []
+
+  # ════════════════════════════════════════════ 6 · LE JOURNAL ÉTRANGER
+  - id: jp.h3.journal
+    title: "Le journal étranger"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.3
+    once: true
+    when: "flag('histoire_h3')"
+    theme: presse
+    carrier: lea
+    cast: [lea, vallin, vecchio, josiane]
+    same_club: true
+    fallback: drop
+    # L'issue est celle de la page : ton nom sous celui de Léa, ou Léa seule.
+    issues: [signe, seule]
+    hint: "Un journal d'un pays qu'on ne nomme pas, et un garçon blond que personne ici ne connaît."
+    traces:
+      h3_lea_ecrit: "{annee} : Léa a commencé un papier sur un joueur qui marque des doublés dans un pays où il n'est jamais allé."
+      h3_signe_lea: "{annee} : sous le papier de Léa sur Didier Vallin, un deuxième nom, {prenom} {nom}."
+    steps:
+      - id: journal
+        card:
+          - { id: jp.h3.journal.inconnu, if: "!flag('h3_halle_vue')" }
+          - { id: jp.h3.journal.journal }
+        next: [ { step: photo, in: [2, 4] } ]
+      - id: photo
+        card:
+          - { id: jp.h3.journal.feu, if: "flag('h3_didier_prevenu') && flag('h3_halle_vue')" }
+          - { id: jp.h3.journal.photo }
+        next: [ { step: une, in: [2, 4] } ]
+      - id: une
+        card:
+          - { id: jp.h3.journal.tiroir, if: "!flag('h3_lea_ecrit')" }
+          - { id: jp.h3.journal.une }
+        next: []
+
+  # ════════════════════════════════════════════ 7 · L'ARRIÈRE-SALLE (ouverte par le porte-monnaie, S2)
+  - id: jp.h3.terminus
+    title: "L'arrière-salle"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 2
+    when: "flag('histoire_h3') && flag('h3_ardoise') && stats.clubs <= 1"
+    theme: argent
+    carrier: steph
+    cast: [steph, irene, fardelli]
+    same_club: true
+    fallback: drop
+    issues: [portee, refusee, vendu, trahi]
+    # La trente-huitième minute ne vient qu'après l'enveloppe portée et la
+    # départementale passée : vendu et trahi sont le fond du puits, pas la règle.
+    issues_rares: [vendu, trahi]
+    hint: "Une enveloppe pour Portclair, et un but qu'il ne faut pas marquer avant la mi-temps."
+    traces:
+      h3_enveloppe_portee: "{annee} : une enveloppe portée à Portclair un dimanche, dans la boîte à gants de {nom}."
+      h3_match_vendu:      "{annee} : à la trente-huitième minute, seul devant le but, {nom} a tiré à côté."
+    steps:
+      - id: enveloppe
+        # La page payée au Rideau : il reste celle de ta mère, à l'épicerie.
+        card:
+          - { id: jp.h3.terminus.enveloppe_mere, if: "flag('h3_ardoise_payee')" }
+          - { id: jp.h3.terminus.enveloppe }
+        next: [ { step: route, if: "flag('h3_enveloppe_portee')", in: [2, 3] } ]
+      - id: route
+        card: jp.h3.terminus.route
+        next: [ { step: mi_temps, in: [1, 3] } ]
+      - id: mi_temps
+        card: jp.h3.terminus.mi_temps
+        next: []
+
+  # ════════════════════════════════════════════ 8 · LE CROCHET DU FOND (réservoir, l'épilogue)
+  - id: jp.h3.crochet
+    title: "Le crochet du fond"
+    kind: serie
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 3
+    when: "flag('histoire_h3') && stats.clubs <= 1"
+    theme: famille
+    carrier: odile
+    cast: [odile, vallin, gege, mere_mbako]
+    same_club: true
+    fallback: drop
+    # L'issue est celle du crochet ; la sirène achetée ou laissée est un drapeau.
+    issues: [nom, pansement]
+    hint: "Une laverie qui lave les maillots du club, une sirène aux enchères, et un crochet à rendre."
+    traces:
+      h3_sirene_achetee: "{annee} : la sirène de la Tréfilerie, vendue aux enchères, rachetée par la tribune Nord."
+      h3_crochet_rendu:  "{annee} : au crochet du fond, un nom neuf au feutre sur du sparadrap. {nom} a gardé le sien dans sa poche."
+    steps:
+      - id: laverie
+        card: jp.h3.crochet.laverie
+        next: [ { step: encheres, in: [3, 5] } ]
+      - id: encheres
+        card: jp.h3.crochet.encheres
+        next: [ { step: sparadrap, in: [3, 6] } ]
+      - id: sparadrap
+        card:
+          - { id: jp.h3.crochet.sparadrap_did, if: "flag('h3_did_garde')" }
+          - { id: jp.h3.crochet.sparadrap }
+        next: []

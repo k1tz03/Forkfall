@@ -107,7 +107,9 @@ arcs:
     # tenue au kop (la bâche « enfant du pays », puis la demande de départ),
     # le huis clos dont on te fait porter le poids, ou des noms donnés à la
     # police après la bagarre de la buvette (restée ouverte : tu as parlé).
-    when: "(gauges.tribunes < 30 && world.serie_defaites >= 1) || relation.gege <= -2 || (flag('enfant_du_pays') && flag('demande_vente')) || flag('sb_huis_clos') || (flag('sb_bagarre') && !flag('sb_buvette_fermee'))"
+    # Pas dans l'Histoire 3 (La Sirène) : ceux qui attendent sous la fenêtre
+    # y sont les hommes de l'arrière-salle (jp.h3.ev.devant).
+    when: "!flag('histoire_h3') && ((gauges.tribunes < 30 && world.serie_defaites >= 1) || relation.gege <= -2 || (flag('enfant_du_pays') && flag('demande_vente')) || flag('sb_huis_clos') || (flag('sb_bagarre') && !flag('sb_buvette_fermee')))"
     chance: 0.10
     cast: [camille, gege]
     same_club: true
@@ -227,8 +229,9 @@ arcs:
     once: true
     # Le moral bas : le vestiaire qui ne te parle plus, les défaites qui
     # s'enchaînent, ou les nuits sans sommeil depuis le car dans le fossé —
-    # les nuits où l'on sort.
-    when: "season >= 1 && (gauges.vestiaire < 40 || world.serie_defaites >= 2 || flag('sb_car'))"
+    # les nuits où l'on sort. Pas dans l'Histoire 3 (La Sirène) : ses photos
+    # sont celles du masque, au café de la Mairie (jp.h3.ardoise).
+    when: "season >= 1 && !flag('histoire_h3') && (gauges.vestiaire < 40 || world.serie_defaites >= 2 || flag('sb_car'))"
     chance: 0.07
     cast: [camille]
     same_club: true
@@ -287,8 +290,9 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    # Le genou qui parle, ou les jambes qui ne suivent plus.
-    when: "flag('genou') || flag('infiltre') || force < 45"
+    # Le genou qui parle, ou les jambes qui ne suivent plus. Pas dans
+    # l'Histoire 3 (La Sirène) : sa boîte est celle de Steph (jp.h3.genou).
+    when: "!flag('histoire_h3') && (flag('genou') || flag('infiltre') || force < 45)"
     chance: 0.06
     cast: [sabatier, vukic]
     same_club: true
@@ -373,7 +377,9 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "season >= 2"
+    # Pas dans l'Histoire 3 (La Sirène) : l'ancien du club qui vit à la friche
+    # de la Tréfilerie, c'est Didier Vallin (jp.h3.didier).
+    when: "season >= 2 && !flag('histoire_h3')"
     chance: 0.05
     cast: []
     same_club: true

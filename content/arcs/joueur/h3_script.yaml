@@ -1,0 +1,210 @@
+# HISTOIRE 3 — LA SIRÈNE (postulat `pepite`, index 2 ; docs/histoires/00_les_dix_histoires.md).
+#
+# Le prologue et le script de l'histoire. Les intrigues sont dans
+# h3_intrigues.yaml, les événements sombres dans h3_sombres.yaml ; les cartes
+# dans content/cards/joueur/h3_*.yaml.
+#
+# Le livre en une ligne : dix-neuf ans, la cité de la Tréfilerie, une usine qui
+# ferme à Noël ; sous ton nom, au crochet du fond, trois lettres (DID) ; et la
+# sirène de l'usine morte qui se remet à hurler la nuit, chaque fois qu'un
+# gamin du Racing descend.
+#
+# Le script porte la colonne vertébrale, sans aléa :
+#   saison 0 (1990-1991, l'argent) — la main de Fardelli (1), la dernière
+#     sirène du 24 décembre (10-11), la veille de la visite (16), la visite ou
+#     la boîte de Steph (17). La vente tombe à l'eau dans tous les cas.
+#   saison 1 (1991-1992, la nuit) — une vente par an (1-2), trois heures du
+#     matin dans la grande halle (12), les cartons (17).
+#   saison 2 (1992-1993, le corps) — le porte-monnaie d'Odile (1-2), « Une
+#     seule » (13), le petit club (15), seize heures (17) : l'acte final, trois
+#     cartes et une respiration entre chacune (l'intermède de l'usine, à 14).
+#   saison 3 (l'épilogue) — le gamin d'après (1-2), seize heures sans sirène (17).
+# Les fins tombent sur « Le petit club » et sur « Seize heures » ; la variante
+# servie est la première dont la condition tient (rare, la halle, vérité, les
+# croisés, puis la porte de l'épilogue).
+#
+# Les ancres ouvrent les fils par `schedule:` — la main de Fardelli : la lettre
+# de l'usine et le genou ; la dernière sirène : l'intermède du crochet et la
+# bâche du coupé ; trois heures du matin : Didier ; le porte-monnaie : le
+# journal étranger et l'arrière-salle. Rien de ce qui porte le livre n'est
+# laissé au tirage. Les ancres lisent `stats.clubs <= 1` : l'histoire est celle
+# d'Aubérive, elle ne suit pas un joueur qui a quitté la ville.
+arcs:
+  # ════════════════════════════════════════════════════════════════ PROLOGUE
+  # Six scènes avant la carte Objectif, sans tirage : le crochet et la sirène,
+  # les bouteilles, la place du gamin d'avant, le grillage, la licence, la
+  # cuisine. Le lieu, la blessure (le père mort à la tréfileuse, la mère au
+  # bâtiment C), la graine (DID) et le mécanisme (la sirène de seize heures).
+  - id: jp.h3.prologue
+    title: "Le crochet du fond"
+    kind: prologue
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: false
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vecchio, gege, josiane, odile]
+    issues: []
+    hint: "Un nom au feutre sur du sparadrap, trois lettres dessous, et la sirène de seize heures."
+    steps:
+      - id: crochet
+        card:
+          - { id: jp.h3.pro_crochet_prix, if: "fil_rouge == 'prix'" }
+          - { id: jp.h3.pro_crochet_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.h3.pro_crochet }
+      - id: bouteilles
+        card:
+          - { id: jp.h3.pro_bouteilles_prix, if: "fil_rouge == 'prix'" }
+          - { id: jp.h3.pro_bouteilles }
+      - id: place
+        card:
+          - { id: jp.h3.pro_place_terrain, if: "fil_rouge == 'terrain'" }
+          - { id: jp.h3.pro_place }
+      - id: grillage
+        card:
+          - { id: jp.h3.pro_grillage_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.h3.pro_grillage }
+      - id: licence
+        card:
+          - { id: jp.h3.pro_licence_did, if: "flag('h3_did_garde')" }
+          - { id: jp.h3.pro_licence }
+      - id: cuisine
+        card:
+          - { id: jp.h3.pro_cuisine_grillage, if: "flag('h3_grillage_odile')" }
+          - { id: jp.h3.pro_cuisine }
+
+  # ════════════════════════════════════════════════════════════════ LE SCRIPT
+  - id: jp.h3.script
+    title: "La Sirène"
+    kind: postulat
+    roles: [joueur]
+    postulats: [pepite]
+    foreground: true
+    weight: 1.0
+    theme: famille
+    carrier: fardelli
+    cast: [fardelli, odile, aulard, steph, josiane, vecchio, gege]
+    same_club: true
+    fallback: drop
+    issues: [verite, prix, seize_heures, halle, debout]
+    # Les fins de seize heures se gagnent : la clé rendue avec Odile à côté, le
+    # fond du puits, ou le genou qui tient debout sans fin écrite.
+    issues_rares: [seize_heures, halle, debout]
+    # Les traces du script : chacune écrit sa ligne d'Almanach quand elle est
+    # posée, et c'est cette ligne que lisent les manchettes (`journal_has`).
+    traces:
+      h3_usine_fermee:  "{annee} : la Tréfilerie a fermé le 24 décembre, à seize heures. La sirène a sonné une dernière fois."
+      h3_vente_tombee:  "{annee} : le grand club a pris un gamin de Portclair. {prenom} {nom} reste à l'usine."
+      h3_vente_promise: "{annee} : sur le buvard du président, le nom de {nom}, souligné deux fois. La vente de l'an prochain."
+      h3_mbako_designe: "{annee} : sur le buvard du président, le nom de Lian Mbako entouré. {nom} l'a désigné."
+      h3_sirene_nuit:   "{annee} : la sirène de l'usine morte a hurlé à trois heures. {nom} s'est réveillé{pg, select, f{e} other{}} dans la halle."
+      h3_maison_perdue: "{annee} : les cartons de la mère de {nom} sur un trottoir d'Aubérive, les voisins aux fenêtres."
+      h3_studio_fardelli: "{annee} : la mère de {nom} dort au-dessus du Terminus, dans un studio au nom de Fardelli."
+      h3_fini_debout:   "{annee} : seize heures, la sirène en plein match. {prenom} {nom} a fini sur une jambe."
+      h3_sorti:         "{annee} : seize heures, la sirène en plein match. {prenom} {nom} est sorti{pg, select, f{e} other{}} en boitant."
+      h3_fax_dechire:   "{annee} : un fax d'un petit club au grand avenir, déchiré sur un tableau de bord. Fardelli a gardé l'autre papier."
+      h3_cite_muree:    "{annee} : à la cité de la Tréfilerie, toutes les fenêtres murées sauf une, celle de la mère de {nom}."
+    steps:
+      # ---------------------------------------------------------- saison 0
+      - id: main
+        card:
+          - { id: jp.h3.s0_main_prix,   if: "fil_rouge == 'prix'" }
+          - { id: jp.h3.s0_main_maison, if: "fil_rouge == 'maison'" }
+          - { id: jp.h3.s0_main }
+        at: [1, 1]
+        season: "0"
+      - id: derniere_sirene
+        card:
+          - { id: jp.h3.s0_sirene_cles,    if: "flag('h3_maison_achetee')" }
+          - { id: jp.h3.s0_sirene_cartons, if: "flag('h3_maison_lachee') || flag('h3_cheque_refuse')" }
+          - { id: jp.h3.s0_sirene }
+        at: [10, 11]
+        season: "0"
+      - id: veille
+        card:
+          - { id: jp.h3.s0_veille_ecrit, if: "flag('h3_genou_ecrit')" }
+          - { id: jp.h3.s0_veille }
+        at: [16, 16]
+        season: "0"
+      - id: visite
+        card:
+          - { id: jp.h3.s0_boite, if: "flag('h3_steph_vu')" }
+          - { id: jp.h3.s0_visite }
+        at: [17, 17]
+        season: "0"
+      # ---------------------------------------------------------- saison 1
+      - id: vente_par_an
+        card:
+          - { id: jp.h3.s1_vente_boite, if: "flag('h3_boite_prise')" }
+          - { id: jp.h3.s1_vente }
+        at: [1, 2]
+        season: "1"
+      - id: trois_heures
+        card:
+          - { id: jp.h3.s1_trois_heures_boite,  if: "flag('h3_boite_prise') && !flag('h3_boite_jetee') && !flag('h3_boite_arretee')" }
+          - { id: jp.h3.s1_trois_heures_rideau, if: "flag('h3_ardoise')" }
+          - { id: jp.h3.s1_trois_heures }
+        at: [12, 12]
+        season: "1"
+      - id: cartons
+        card:
+          - { id: jp.h3.s1_cartons_pavillon, if: "flag('h3_pavillon')" }
+          - { id: jp.h3.s1_cartons_cite,     if: "flag('h3_maison_achetee')" }
+          - { id: jp.h3.s1_cartons_muree }
+        at: [17, 17]
+        season: "1"
+      # ---------------------------------------------------------- saison 2
+      - id: porte_monnaie
+        card:
+          - { id: jp.h3.s2_porte_monnaie_studio, if: "flag('h3_studio_fardelli')" }
+          - { id: jp.h3.s2_porte_monnaie }
+        at: [1, 2]
+        season: "2"
+      - id: une_seule
+        card:
+          - { id: jp.h3.s2_une_seule_inconnu,  if: "!flag('h3_halle_vue')" }
+          - { id: jp.h3.s2_une_seule_prevenue, if: "flag('h3_josiane_prevenue')" }
+          - { id: jp.h3.s2_une_seule }
+        at: [13, 13]
+        season: "2"
+      - id: petit_club
+        card:
+          - { id: jp.h3.s2_petit_club_aveu,   if: "flag('h3_boite_prise') || flag('h3_photos_payees')" }
+          - { id: jp.h3.s2_petit_club_papier, if: "flag('h3_papier_vu')" }
+          - { id: jp.h3.s2_petit_club }
+        at: [15, 15]
+        season: "2"
+      - id: seize_heures
+        card:
+          # La fin rare : la clé rendue à Didier, la boîte refusée ou jetée, Odile
+          # à côté de toi. C'est lui qui tire la poignée, en plein jour.
+          - { id: jp.h3.s2_seize_heures_rare,    if: "flag('h3_cle_sirene') && (!flag('h3_boite_prise') || flag('h3_boite_jetee') || flag('h3_boite_arretee')) && relation.odile >= 1" }
+          # Le pire : l'enveloppe portée, et le match vendu à la trente-huitième
+          # ou la boîte gardée jusqu'au bout (avec la maison perdue ou le genou
+          # caché) — sauf si tu as signé le papier de Léa : ton nom sous le
+          # sien, c'est la vérité qui passe devant.
+          - { id: jp.h3.s2_seize_heures_halle,   if: "flag('h3_enveloppe_portee') && !flag('h3_signe_lea') && (flag('h3_match_vendu') || (flag('h3_boite_prise') && !flag('h3_boite_jetee') && !flag('h3_boite_arretee') && (flag('h3_maison_perdue') || flag('h3_genou_cache'))))" }
+          # La vérité : Léa a de quoi écrire, et quelqu'un signe à côté d'elle
+          # (Josiane, Didier, ou toi).
+          - { id: jp.h3.s2_seize_heures_verite,  if: "flag('h3_lea_ecrit') && (flag('h3_josiane_temoin') || flag('h3_didier_nom') || flag('h3_signe_lea'))" }
+          # La boîte de Steph gardée jusqu'au bout : le genou a tenu un hiver,
+          # pas un match.
+          - { id: jp.h3.s2_seize_heures_croises, if: "flag('h3_boite_prise') && !flag('h3_boite_jetee') && !flag('h3_boite_arretee')" }
+          - { id: jp.h3.s2_seize_heures }
+        at: [17, 17]
+        season: "2"
+      # ---------------------------------------------------------- l'épilogue
+      # Une saison, deux cartes : le gamin d'après, et seize heures sans
+      # sirène. Ensuite la carrière continue sans le script.
+      - id: gamin_d_apres
+        card:
+          - { id: jp.h3.s3_gamin_didier, if: "flag('h3_didier_nom') || flag('h3_cle_sirene')" }
+          - { id: jp.h3.s3_gamin }
+        at: [1, 2]
+        season: "3"
+      - id: sans_sirene
+        card:
+          - { id: jp.h3.s3_sans_sirene_nord, if: "flag('h3_sirene_achetee')" }
+          - { id: jp.h3.s3_sans_sirene }
+        at: [17, 17]
+        season: "3"

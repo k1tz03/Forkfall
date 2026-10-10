@@ -1,0 +1,97 @@
+# HISTOIRE 3 — LA SIRÈNE : les alarmes propres au livre (postulat `pepite`,
+# `alarm_overrides`). Elles passent avant les alarmes de la pépite et du rôle,
+# quand leur condition tient ; sinon le moteur reprend la liste existante.
+cards:
+  # tribunes.high — la bâche, avant le tifo
+  - id: jp.h3.al.bache
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Gégé t'attend au parking, un pot de peinture bordeaux à la main. « La Nord veut vingt mètres de bâche à ton nom, {toi}. On en a fait une pareille pour un autre, avant. Tu poses pour le pochoir ? »"
+    left:
+      label: "Peignez-la sans moi"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "« Sans toi, alors. » Il repart avec son pot. Samedi, ton nom est peint sur vingt mètres, avec une lettre de travers."
+    right:
+      label: "Je pose"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Une heure debout contre le mur du local, la lampe dans les yeux. Gégé découpe ta silhouette au cutter, en tirant la langue."
+
+  # caisse.low — l'ardoise, puis l'enveloppe du chômage
+  - id: jp.h3.al.ardoise
+    roles: [joueur]
+    arc: scandale
+    tags: []
+    speaker: irene
+    lieu: rue
+    once: true
+    tone: strategique
+    text: "Madame Irène t'attend au volant d'une petite voiture grise, devant le stade. « Votre page dépasse ce que votre compte peut porter, {toi}. Je ne viens pas réclamer. Je viens prévenir. »"
+    left:
+      label: "Un mois de plus"
+      effects: {caisse: "+", tribunes: "-", relation: {irene: -1}}
+      answer: "Elle écrit une ligne au crayon, pas à l'encre. « Le crayon, ça part à la gomme. Pas le reste. » Elle démarre."
+    right:
+      label: "Je paierai en juin"
+      effects: {direction: "-"}
+      answer: "« Juin. » Elle le note au dos de sa main, comme une écolière. Elle ne sourit pas. Elle a l'air triste pour toi."
+
+  - id: jp.h3.al.chomage
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Odile pose sur la table l'enveloppe de son chômage, encore fermée. « Prends ce qu'il te faut. Je mange chez la voisine, le midi. » Elle le dit comme on parle du temps."
+    left:
+      label: "Je n'en veux pas"
+      effects: {caisse: "+", relation: {odile: 1}}
+      answer: "Elle range l'enveloppe dans le buffet, toujours fermée. Le lendemain, tu trouves deux billets dans la poche de ton blouson."
+    right:
+      label: "Je prends un billet"
+      effects: {caisse: "++", relation: {odile: -1}}
+      answer: "Tu prends un billet de deux cents. Elle referme l'enveloppe avec de la salive, soigneusement, comme si la poste allait passer."
+
+  # direction.low — le buvard et la gomme
+  - id: jp.h3.al.buvard
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    lieu: bureau
+    once: true
+    tone: strategique
+    text: "Vaubourg referme la porte de son bureau et pose le doigt sur ton nom, au buvard. « Le club ne te paie pas pour que tu sortes la nuit, {toi}. » Il tient une gomme blanche entre deux doigts."
+    left:
+      label: "Je rentrerai tôt"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "« Tôt. » Il gomme un coin du buvard, pas ton nom, juste à côté, pour que tu voies la gomme travailler. Puis il te raccompagne."
+    right:
+      label: "Gommez"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il ne gomme rien. « Tu vois, c'est ça le problème avec toi : tu crois que j'ai besoin de ta permission. »"
+
+  # vestiaire.low — le sac poubelle
+  - id: jp.h3.al.sac_poubelle
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: vestiaire
+    once: true
+    tone: strategique
+    text: "Bréhaut a vidé ton casier dans un sac poubelle, posé sur ton banc. « Le groupe ne te reconnaît plus, {toi}. Tu rentres à trois heures, tu arrives à neuf. Tu reprends tes affaires ? »"
+    left:
+      label: "Je reprends mes affaires"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Tu les ranges une par une. Bréhaut regarde sans aider, puis te tend le cintre oublié. « Demain, huit heures moins le quart. »"
+    right:
+      label: "Descends le sac"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Il le descend au local du matériel, à côté des ballons crevés. Le sac reste là deux jours ; personne n'y touche, pas même toi."

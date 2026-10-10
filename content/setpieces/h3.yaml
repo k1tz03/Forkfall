@@ -1,0 +1,105 @@
+# HISTOIRE 3 — LA SIRÈNE : les variantes de set-piece du livre (schéma : en-tête
+# de content/setpieces.yaml). Jamais de secours : chaque variante lit
+# `histoire_h3`. Le build les range en tête de leur beat (branche principale),
+# devant les variantes de base du joueur.
+#
+# Les objectifs des trois saisons sont ceux de la fiche : jouer et garder la
+# maison (Fardelli) ; ne plus rien devoir à personne (Odile) ; choisir où l'on
+# va (Gigi). Le match se joue avec la sirène tant qu'elle sonne.
+setpieces:
+  objective:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 0"
+      speaker: fardelli
+      text: "Fardelli ouvre son carnet sur le capot : « Cette saison, {toi}, deux choses : jouer tout de suite, et que ta mère garde sa maison. La deuxième dépend de la première. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Il écrit MAISON en haut de la page, en capitales."
+      answer_right: "Tu gardes les mains libres. Il écrit MAISON quand même, et dessous, plus petit, un chiffre."
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 1"
+      speaker: odile
+      text: "Odile aligne sur la toile cirée ce que vous devez : l'épicerie, Fardelli, le reste. « Cette saison, une seule chose : ne plus rien devoir à personne. Tu me le promets ? »"
+      left: "Je te le promets"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Elle range la liste dans le buffet, sous la photo, pliée en quatre."
+      answer_right: "« Moi non plus, alors. » Elle range la liste dans le buffet, sous la photo. Elle ne la ressort pas."
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 2"
+      speaker: vecchio
+      text: "Gigi Vecchio lace ses gants jaunes, assis sous le crochet d'à côté : « Cette saison, choisis où tu vas, avant qu'on le choisisse pour toi. Didier n'a pas choisi. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Gigi tape ses gants l'un contre l'autre, une fois, comme pour en chasser la poussière."
+      answer_right: "« Ne pas promettre, c'est déjà choisir. » Il retourne à ses gants."
+
+  match:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && !flag('h3_usine_fermee')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. À seize heures, la sirène de la Tréfilerie couvre le coup de sifflet de la reprise."
+    - roles: [joueur]
+      when: "flag('histoire_h3') && flag('h3_sirene_nuit') && season == 1"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le gardien du stade compte les nuits de sirène à la craie, sur la porte de sa loge."
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season >= 1 && season <= 2"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. À seize heures, ceux de l'usine regardent encore vers la tour, en plein match."
+
+  classement:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && phase('bilan')"
+      speaker: josiane
+      text: "Madame Josiane punaise le classement final dans l'escalier du club-house, sous la photo de 1974, avec quatre punaises. Elle recule d'un pas pour voir s'il est droit. Il l'est."
+      left: "Regarder le tableau"
+    - roles: [joueur]
+      when: "flag('histoire_h3') && flag('h3_usine_fermee') && season <= 2"
+      speaker: gege
+      text: "Gégé a recopié le classement à la craie sur le mur de la buvette, comme l'usine affichait les primes de rendement. « On n'a plus de primes. On a gardé le mur. »"
+      left: "Lire le mur"
+
+  cup:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 0"
+      text: "Tour de Coupe chez un club de la vallée. Un ancien de la Tréfilerie tient la buvette ; ton père est sur une photo au mur, en short, l'année de la finale."
+      left: "On y va"
+
+  gm_annonce:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && flag('h3_coupe_saisi') && season <= 2"
+      text: "GRAND MATCH. Au parking du stade, la Nord a gardé une place vide au premier rang, pour une voiture qui ne viendra pas. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  aftermatch:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && vars.gm_won == 1 && flag('h3_ardoise') && !flag('h3_ardoise_payee')"
+      speaker: irene
+      text: "Madame Irène attend à la sortie du tunnel, sans maquillage, un manteau sur sa robe. « La porte est ouverte, ce soir, {toi}. Pour une victoire, l'ardoise attendra. Vous venez ? »"
+      left: "Je viens"
+      right: "Je rentre"
+      answer_left: "Elle ouvre la portière arrière d'un taxi qui attendait déjà. Le compteur tourne depuis la mi-temps."
+      answer_right: "« Une autre fois. » Elle le dit sans insister, et note quand même la date dans son agenda."
+    - roles: [joueur]
+      when: "flag('histoire_h3') && vars.gm_won == 0 && flag('h3_genou_cache')"
+      speaker: sabatier
+      text: "Le Doc ferme la porte de la salle de soins. « Tu as boité trois foulées, à la soixantième. En juin, je l'écris, comme convenu. Juin, c'est dans six semaines, {toi}. »"
+      left: "Écrivez-le maintenant"
+      right: "Juin, c'était convenu"
+      answer_left: "Il écrit trois lignes, datées, et te les lit. Ce ne sont pas celles qu'il aurait écrites en juin."
+      answer_right: "« Convenu. » Il range le stylo. En sortant, tu l'entends ouvrir ton dossier quand même, et le refermer."
+
+  bilan_contrat:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 0"
+      speaker: aulard
+      text: "Vaubourg signe ta prolongation sans la relire. « L'usine est fermée, {toi}. Le club, c'est ce qui reste à vendre dans cette ville. Tu restes aux mêmes conditions ? »"
+      left: "Je reste comme ça"
+      right: "Payez-moi mieux"
+      answer_left: "Il souffle sur l'encre et range le contrat dans le classeur rouge, celui des ventes, pas celui des prolongations."
+      answer_right: "« Mieux ? » Il rit, une fois. « L'an prochain, on verra ce que tu vaux. » Il écrit un chiffre au crayon dans la marge, et le gomme."
+
+  bilan_verdict:
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 0 && bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. À la cité, quelqu'un a collé la page de L'Écho sur la porte de l'épicerie, avec du sparadrap."
+    - roles: [joueur]
+      when: "flag('histoire_h3') && season == 0 && !bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : manqué. L'usine est fermée depuis six mois ; à la cité, personne ne s'en étonne, ni ne t'en veut."

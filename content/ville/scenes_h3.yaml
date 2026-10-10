@@ -1,0 +1,398 @@
+# HISTOIRE 3 — LA SIRÈNE : les scènes de la semaine (format : en-tête de
+# content/ville/scenes_communes.yaml, branche principale).
+#
+# Ce que la ville vit pendant la chute, entre deux cartes : la sirène de seize
+# heures tant qu'elle sonne, les casiers numérotés pour la vente, le coupé
+# devant la boulangerie puis sous scellés, la Gazette épuisée à sept heures, la
+# dernière fenêtre allumée de la cité murée, le feu de palettes, la tour où l'on
+# dit qu'un fantôme tire la poignée. Les témoins ne commentent pas : ils
+# montrent. Aucune ne pose de drapeau ; elles lisent ceux de l'histoire, et la
+# vente de juin s'annonce sur le panneau de la mairie avant d'avoir lieu.
+#
+# Saisons de la ville (1, 2, 3, 4) = saisons du moteur (0, 1, 2, 3).
+# Rien n'est accordé au protagoniste.
+scenes:
+  # ----------------------------------------------- la première saison (l'argent)
+  - id: h3.sc.pointeuse
+    titre: "Quarante-deux jours de pointeuse"
+    roles: [joueur]
+    lieu: friche
+    tranches: [aprem]
+    qui: ancien
+    si: "flag('histoire_h3') && !flag('h3_usine_fermee') && saison == 1"
+    texte: "Seize heures, la sirène. Un vieux du bâtiment C sort le dernier, sa carte de pointage à la main. « Il m'en reste quarante-deux. Après Noël, elles iront où, les cartes ? Tu le sais, toi ? »"
+    choix:
+      - label: "Gardez la dernière"
+        reponse: "Il glisse la carte dans la poche de sa veste, contre le cœur, comme une photo. « La dernière, je la garde. Les autres, ils peuvent les brûler. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je n'en sais rien"
+        reponse: "« Personne ne sait. » Il remonte son col et rejoint les autres au grillage. La sirène s'arrête net au milieu de sa phrase suivante."
+
+  - id: h3.sc.ouvrieres
+    titre: "Les ouvrières du bâtiment C"
+    roles: [joueur]
+    lieu: terrain
+    tranches: [aprem]
+    jours: [lun, mar, mer, jeu, ven]
+    qui: passante
+    si: "flag('histoire_h3') && !flag('h3_usine_fermee')"
+    texte: "La sirène de seize heures. Les ouvrières du bâtiment C longent le grillage du terrain annexe en blouse bleue. L'une d'elles s'arrête : « C'est toi qu'Odile découpe dans L'Écho ? »"
+    choix:
+      - label: "Elle découpe quoi ?"
+        reponse: "« Tes matchs. Même ceux où tu ne joues pas : ton nom dans la liste des remplaçants, au ciseau à ongles. Elle colle tout dans son casier. »"
+      - label: "Dites-lui bonjour"
+        reponse: "« Dis-le-lui toi-même, elle sort dans cinq minutes. » Ta mère sort à seize heures cinq, ralentit au grillage, et ne s'arrête pas."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h3.sc.cite_voisin
+    titre: "Les cent quatre-vingt mille"
+    roles: [joueur]
+    lieu: rue
+    tranches: [soir]
+    qui: ancien
+    si: "flag('histoire_h3') && flag('h3_maison_achetee') && !flag('h3_maison_perdue')"
+    texte: "Le voisin de ta mère rentre son vélo dans la cité. « Odile a acheté, à ce qu'on dit. Nous, on n'a pas les cent quatre-vingt mille. On partira en mars, chez ma sœur. »"
+    choix:
+      - label: "Je peux aider"
+        reponse: "« Aider à quoi ? À partir ? » Il rit sans méchanceté et range son vélo contre le mur. « Garde ton argent. Ta mère en aura besoin. »"
+      - label: "Ce n'est pas mon argent"
+        reponse: "« Alors c'est l'argent de qui ? » Il te regarde jusqu'à ce que tu baisses les yeux, puis rentre. La lumière de son couloir reste éteinte."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h3.sc.cite_cheque
+    titre: "Le chèque sous le pare-soleil"
+    roles: [joueur]
+    lieu: rue
+    tranches: [soir]
+    qui: ancien
+    si: "flag('histoire_h3') && flag('h3_cheque_refuse') && !flag('h3_maison_perdue')"
+    texte: "Le voisin de ta mère t'arrête au bout de la cité. « On dit que Fardelli t'a tendu un chèque, et que tu l'as laissé sous son pare-soleil. C'est vrai, ça ? »"
+    choix:
+      - label: "C'est vrai"
+        reponse: "Il hoche la tête, longtemps. « Mon père avait refusé aussi, en 1958, pour la maison. Il était fier. On a déménagé quand même. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "On dit beaucoup de choses"
+        reponse: "« On dit, oui. » Il te regarde partir. Le lendemain, toute la cité sait que tu n'as pas démenti."
+
+  - id: h3.sc.casiers
+    titre: "Les casiers du bâtiment C"
+    roles: [joueur]
+    lieu: friche
+    tranches: [matin]
+    qui: ancien
+    si: "flag('histoire_h3') && flag('h3_usine_fermee') && saison == 1"
+    texte: "Devant le bâtiment C, les hommes du liquidateur numérotent les casiers vidés à la peinture blanche. Un ancien regarde le sien, le 214. « Trente et un ans là-dedans. Ils le vendent au kilo. »"
+    choix:
+      - label: "Je l'achète pour vous"
+        francs: -200
+        reponse: "Le liquidateur te fait un reçu au dos d'un bon de livraison. L'ancien charge le casier sur une brouette et repart sans se retourner."
+        effets: {jauges: {tribunes: 2}}
+      - label: "C'est de la ferraille"
+        reponse: "« Oui. » Il le dit sans colère. Il touche la porte du 214, une fois, et s'en va avant que le camion n'arrive."
+
+  - id: h3.sc.epicerie_cafe
+    titre: "Le paquet de café"
+    roles: [joueur]
+    lieu: epicerie
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h3') && saison <= 2"
+    texte: "L'épicière met de côté le dernier paquet de café, sous le comptoir, avec le cahier des ardoises. « Pour ta mère. Elle n'aime pas qu'on lui fasse cadeau, alors je le mets de côté, c'est tout. »"
+    choix:
+      - label: "Je le paie maintenant"
+        francs: -12
+        reponse: "Elle encaisse, mais laisse le paquet sous le comptoir. « Je lui dirai qu'il est payé. Elle m'en voudra une semaine. Ça passera. »"
+      - label: "Elle le paiera"
+        reponse: "« Elle paie tout, ta mère. » Elle referme le cahier. « Même la semaine de l'enterrement, elle est venue payer. »"
+
+  # ----------------------------------------------- la deuxième saison (la nuit)
+  - id: h3.sc.lulu_thermos
+    titre: "Le thermos du gardien"
+    roles: [joueur]
+    lieu: stade
+    tranches: [nuit]
+    qui: ancien
+    si: "flag('histoire_h3') && flag('h3_sirene_nuit')"
+    texte: "Lulu, le gardien du stade, ouvre le portail en pleine nuit et te tend la tasse de son thermos. « Tu reviens de la friche. Ça se sent, le béton mouillé. Bois, avant de rentrer. »"
+    choix:
+      - label: "Je bois"
+        reponse: "Le café est trop sucré, comme celui de l'usine. Lulu attend que tu aies fini pour reprendre la tasse. « La prochaine fois, passe par ici avant. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je rentre"
+        reponse: "Il revisse le thermos. « Comme tu veux. » Au coin de la rue, il est toujours au portail, la lampe éteinte."
+
+  - id: h3.sc.tour_gamins
+    titre: "Le défi de la tour"
+    roles: [joueur]
+    lieu: friche
+    tranches: [aprem]
+    qui: enfant
+    si: "flag('histoire_h3') && flag('h3_sirene_nuit') && saison <= 3"
+    texte: "Trois gamins, au pied de la tour de la grande halle, se lancent des défis. Le plus petit te reconnaît. « On dit que c'est un fantôme qui tire la sirène. C'est vrai ? Tu l'as vu ? »"
+    choix:
+      - label: "C'est le vent"
+        reponse: "« Le vent, ça ne tire pas. » Le petit croise les bras, déçu. Les deux autres le poussent vers l'escalier de la tour ; il recule de trois pas."
+      - label: "C'est quelqu'un"
+        reponse: "Les trois se taisent d'un coup. Le petit regarde longtemps la fenêtre du haut. « Quelqu'un comment ? » Tu ne réponds pas ; ils rentrent chez eux."
+
+  - id: h3.sc.boulangere_coupe
+    titre: "Le coupé devant la boulangerie"
+    roles: [joueur]
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h3') && flag('h3_coupe') && !flag('h3_coupe_saisi')"
+    texte: "La boulangère regarde le coupé rouge garé devant sa vitrine, les lettres d'or sur la portière. « Daubrac. C'est lui qui livrait le vin de la cantine de l'usine. Il prenait cher. »"
+    choix:
+      - label: "Une baguette, merci"
+        reponse: "Elle emballe la baguette sans la regarder, les yeux sur les lettres d'or. Quand tu repars, elle note quelque chose dans le carnet des commandes."
+      - label: "Il est prêté"
+        reponse: "« Tout est prêté, avec lui. » Elle te rend la monnaie. « La cantine aussi, on la lui a laissée pour un franc. Regarde ce qu'il en a fait. »"
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h3.sc.garage_scelles
+    titre: "Le papier sur les lettres d'or"
+    roles: [joueur]
+    lieu: garage
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h3') && flag('h3_coupe_saisi')"
+    texte: "Au garage du Pont, le coupé rouge dort sous scellés, un plomb sur la portière. Le vendeur a collé une feuille sur les lettres d'or. « Les clients demandaient. J'en avais assez d'expliquer. »"
+    choix:
+      - label: "Je peux le voir ?"
+        reponse: "Il soulève un coin de la bâche. Sous la feuille, le D de Daubrac dépasse, doré. Le vendeur rabat la bâche avant que tu n'aies fini de regarder."
+      - label: "Arrachez la feuille"
+        reponse: "« Pour que tout le monde relise ? Non. » Il range le scotch dans sa poche de blouse. « La feuille, c'est ma politesse. Pas la tienne. »"
+
+  - id: h3.sc.irene_fleuriste
+    titre: "Les glaïeuls blancs"
+    roles: [joueur]
+    lieu: fleuriste
+    tranches: [matin]
+    qui: irene
+    si: "flag('histoire_h3') && flag('h3_ardoise')"
+    texte: "Chez le fleuriste, en plein jour, Madame Irène sans maquillage choisit des glaïeuls blancs, un par un. Elle te voit dans la vitrine. « Pour le cimetière. On a tous quelqu'un, le matin. »"
+    choix:
+      - label: "Je vous les porte"
+        reponse: "Elle te laisse porter les glaïeuls jusqu'à la grille du cimetière, et les reprend là. « Merci. Le reste, c'est à moi. » Elle ne dit pas à qui ils vont."
+      - label: "Je passe mon chemin"
+        reponse: "Elle paie en petites coupures, comptées sur le comptoir. Le fleuriste les ramasse sans regarder : il sait d'où elles viennent, et il les prend."
+
+  - id: h3.sc.kiosque_gazette
+    titre: "La Gazette épuisée"
+    roles: [joueur]
+    lieu: kiosque
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h3') && flag('h3_photos_gazette')"
+    texte: "Le kiosquier montre la pile vide de la Gazette Rose. « Épuisée à sept heures. Une dame de la cité a tout pris, trente exemplaires. Elle a payé en pièces de dix francs. »"
+    choix:
+      - label: "C'était ma mère"
+        reponse: "« Je sais. » Il range la monnaie. « Elle m'a demandé de ne pas en recommander. Je n'ai pas le droit de dire oui. J'ai dit oui. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Recommandez-en"
+        reponse: "Il te regarde par-dessus ses lunettes. « Non. » Il coupe la ficelle d'un paquet de L'Écho et pose le premier exemplaire devant toi, gratuit."
+
+  - id: h3.sc.cafe_garcon
+    titre: "La table du fond"
+    roles: [joueur]
+    lieu: cafe_mairie
+    tranches: [midi]
+    qui: commercant
+    si: "flag('histoire_h3') && flag('h3_photos_payees')"
+    texte: "Au café de la Mairie, le garçon pose ta soucoupe sans le café. « Le monsieur à l'enveloppe est revenu hier. Il a demandé si vous preniez toujours la table du fond. »"
+    choix:
+      - label: "Qu'avez-vous répondu ?"
+        reponse: "« Que je ne retiens pas les tables. » Il pose enfin le café. « Mais je retiens les visages. Le sien, je le servirai froid. »"
+      - label: "Je change de table"
+        reponse: "Tu t'assois près de la vitre, en pleine lumière. Le garçon approuve d'un signe, et pose la soucoupe à l'endroit, sans rien dessous."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h3.sc.halle_ficelle
+    titre: "La ficelle et la craie"
+    roles: [joueur]
+    lieu: halle
+    tranches: [soir]
+    qui: vallin
+    si: "flag('histoire_h3') && flag('h3_halle_vue')"
+    texte: "Didier tend une ficelle d'un poteau à l'autre de la grande halle, pour tracer la ligne médiane bien droite. Il t'en tend un bout. « Tiens-la tendue. Ne bouge pas, même si j'éternue. »"
+    choix:
+      - label: "Je tiens la ficelle"
+        reponse: "Tu tiens. Il trace, à genoux, la craie contre la ficelle, sur vingt mètres. À la fin, il recule, regarde, et dit seulement : « Droite. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Pourquoi droite ?"
+        reponse: "« Parce que personne ne la verra, alors il faut qu'elle soit juste. » Il te reprend la ficelle et l'attache à son propre poignet."
+
+  - id: h3.sc.feu_wagon
+    titre: "Le marchepied du wagon"
+    roles: [joueur]
+    lieu: feu
+    tranches: [nuit]
+    qui: passant
+    si: "flag('histoire_h3') && flag('h3_halle_vue')"
+    texte: "Autour du feu de palettes, un homme en parka tend les mains vers les braises. « Tu cherches Didier ? Quand il gèle, il dort au wagon, porte tirée. Il ne faut pas frapper. »"
+    choix:
+      - label: "Je ne frappe pas"
+        reponse: "Tu restes près du feu jusqu'à ce que la lumière du wagon s'éteigne. L'homme te tend une pomme de terre cuite dans la braise, sans rien demander."
+      - label: "Je lui laisse ça"
+        francs: -50
+        reponse: "Tu poses un billet sur le marchepied du wagon, sous un caillou. Le matin, le billet est toujours là, plié en quatre, le caillou dessus."
+
+  # ----------------------------------------------- les cartons, et ce qui reste
+  - id: h3.sc.cite_fenetre
+    titre: "La dernière fenêtre"
+    roles: [joueur]
+    lieu: rue
+    tranches: [soir]
+    qui: passante
+    si: "flag('histoire_h3') && flag('h3_cite_muree')"
+    texte: "Dans la rangée murée de la cité, une seule fenêtre est allumée. Une femme de la rue d'à côté y pose un pain sur le rebord, frappe deux fois au carreau, et repart sans attendre."
+    choix:
+      - label: "Je la remercie"
+        reponse: "« De quoi ? C'est le pain d'hier. » Elle ne se retourne pas. Derrière le carreau, ta mère prend le pain et le pose sur la table, à côté du sien."
+      - label: "Je frappe aussi"
+        reponse: "Ta mère ouvre. La toile cirée est mise, deux assiettes. « Je savais que quelqu'un viendrait. Je ne savais pas qui. »"
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h3.sc.lilas_canape
+    titre: "Le canapé de la rue des Lilas"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [soir]
+    si: "flag('histoire_h3') && flag('h3_maison_perdue') && !flag('h3_studio_fardelli')"
+    texte: "Rue des Lilas, les cartons de ta mère montent jusqu'au plafond du salon. Elle dort sur le canapé, une main posée sur un carton, comme sur une épaule."
+    choix:
+      - label: "Je lui laisse mon lit"
+        reponse: "Elle refuse trois fois, puis accepte. Le matin, le lit est fait au carré, comme à l'usine, et elle est déjà retournée au canapé."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "J'éteins sans bruit"
+        reponse: "Tu éteins. Dans le noir, elle dit : « Je ne dors pas. » Puis, plus bas : « Mais merci pour la lumière. »"
+
+  - id: h3.sc.terminus_verres
+    titre: "Les verres du Terminus"
+    roles: [joueur]
+    lieu: terminus
+    tranches: [soir]
+    qui: odile
+    si: "flag('histoire_h3') && flag('h3_studio_fardelli')"
+    texte: "Ta mère essuie des verres derrière le comptoir du Terminus, un torchon sur l'épaule. « Le patron m'a proposé, pour le loyer d'en haut. » Elle ne dit pas que le loyer, c'est Fardelli."
+    choix:
+      - label: "Je paie le loyer"
+        francs: -1500
+        reponse: "Elle repose le verre et te regarde comme on regarde un orage par la fenêtre. « Il ne veut pas d'argent. Il veut que je sois au comptoir quand tu passes. »"
+      - label: "Tu n'as pas à faire ça"
+        reponse: "« Non. » Elle range le verre avec les autres, à l'envers, en ligne droite. « Mais je sais le faire, et ça occupe les mains. »"
+
+  - id: h3.sc.agence_vendu
+    titre: "La vitrine de Tessandier"
+    roles: [joueur]
+    lieu: agence
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h3') && flag('h3_pavillon') && !flag('h3_maison_perdue')"
+    texte: "Dans la vitrine de l'agence Tessandier, la photo du pavillon des Lilas porte un bandeau VENDU en travers. L'employé sort fumer. « C'est votre mère, l'acheteuse ? Le dossier est allé vite. »"
+    choix:
+      - label: "Vite comment ?"
+        reponse: "« Un virement de Portclair, un marchand de spiritueux. Ici, on n'avait jamais vu ça pour un pavillon. » Il écrase sa cigarette et rentre sans finir."
+      - label: "Ce ne sont pas vos affaires"
+        reponse: "« Non. » Il rentre. Par la vitrine, tu le vois décoller le bandeau VENDU, puis le recoller droit, au millimètre."
+
+  - id: h3.sc.muscu_cadenas
+    titre: "Le cadenas neuf"
+    roles: [joueur]
+    lieu: muscu
+    tranches: [soir]
+    qui: enfant
+    si: "flag('histoire_h3') && flag('h3_douche')"
+    texte: "La salle de muscu est fermée, un cadenas neuf sur la porte du garage Mazurier. Un gamin de la réserve tire dessus, deux fois. « Steph n'est plus là ? Il m'avait promis un truc pour mes cuisses. »"
+    choix:
+      - label: "Rentre chez toi"
+        reponse: "Il hausse les épaules et part en shootant dans une canette. Au coin de la rue, il se retourne pour regarder le cadenas, comme une vitrine."
+      - label: "Il ne reviendra pas"
+        reponse: "« Tant pis. » Il le dit vite, trop vite. Tu le regardes partir vers le Terminus, les mains dans les poches, et tu ne sais pas s'il va y entrer."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h3.sc.pont_epuisette
+    titre: "L'épuisette"
+    roles: [joueur]
+    lieu: rue
+    tranches: [matin]
+    qui: ancien
+    si: "flag('histoire_h3') && flag('h3_boite_jetee')"
+    texte: "Sous le pont de la Rive, un pêcheur remonte son épuisette : une boîte sans étiquette, gonflée d'eau. Il la retourne, la secoue, et lève les yeux vers le parapet. « C'est à quelqu'un ? »"
+    choix:
+      - label: "À personne"
+        reponse: "Il la jette dans la poubelle du quai, au fond, sous les papiers gras. Puis il relance sa ligne au même endroit, comme si de rien n'était."
+      - label: "Je la reprends"
+        reponse: "Il te la tend par-dessus le parapet. Elle est vide, l'eau a tout pris. Tu la gardes dans ta poche toute la journée, légère comme rien."
+
+  - id: h3.sc.echo_lampe
+    titre: "La lampe de L'Écho"
+    roles: [joueur]
+    lieu: echo
+    tranches: [soir]
+    qui: lea
+    si: "flag('histoire_h3') && flag('h3_lea_ecrit')"
+    texte: "À la rédaction de L'Écho, la lampe de Léa est la seule allumée. Elle tape, s'arrête, relit. « Le paragraphe sur le crochet du fond. Vous voulez l'entendre avant tout le monde ? »"
+    choix:
+      - label: "Lisez-le"
+        reponse: "Elle lit trois phrases. Ton nom n'y est pas ; le crochet, si, les trois lettres, le sparadrap. Elle relève les yeux pour voir si c'est juste."
+        effets: {jauges: {direction: -1}}
+      - label: "Je le lirai mercredi"
+        reponse: "« Comme tout le monde, alors. » Elle se remet à taper. Le bruit de la machine te suit jusqu'en bas de l'escalier."
+
+  - id: h3.sc.eglise_cierge
+    titre: "Le cierge des ouvriers"
+    roles: [joueur]
+    lieu: eglise
+    tranches: [aprem]
+    qui: odile
+    si: "flag('histoire_h3') && saison >= 2"
+    texte: "À l'église Saint-Aubin, ta mère allume un cierge devant la statue des ouvriers de l'usine. Elle te voit à la porte. « Ton père n'aimait pas les églises. Moi non plus. On vient quand même. »"
+    choix:
+      - label: "J'en allume un aussi"
+        francs: -10
+        reponse: "Tu allumes le tien au sien. Elle redresse la mèche du bout des doigts, sans se brûler, un geste de tréfileuse. « Il penche toujours, le tien. »"
+      - label: "Je t'attends dehors"
+        reponse: "Elle reste dix minutes de plus. Quand elle sort, elle a les yeux secs et une boîte d'allumettes à la main, qu'elle te donne. « Pour la prochaine fois. »"
+
+  - id: h3.sc.loge_registre
+    titre: "Le registre du gardien"
+    roles: [joueur]
+    lieu: loge
+    tranches: [matin]
+    qui: ancien
+    si: "flag('histoire_h3') && saison >= 2"
+    texte: "À la loge du cimetière, le gardien tourne son registre vers toi. « Votre mère vient tous les dimanches, à neuf heures. Vous, je vous inscris pour la première fois. Je mets quelle heure ? »"
+    choix:
+      - label: "Mettez neuf heures"
+        reponse: "Il écrit neuf heures, sur la même ligne que ta mère. « Comme ça, je saurai que c'était ensemble. Même si ce n'est pas vrai. »"
+      - label: "N'écrivez rien"
+        reponse: "Il referme le registre. « Ceux qui ne veulent pas être notés viennent quand même. Je les reconnais à leur façon de fermer la grille. »"
+
+  - id: h3.sc.mairie_affiche
+    titre: "L'affiche de la vente"
+    roles: [joueur]
+    lieu: mairie
+    tranches: [matin]
+    qui: passant
+    si: "flag('histoire_h3') && flag('h3_usine_fermee') && saison >= 3"
+    texte: "Sur le panneau de la mairie, l'affiche du liquidateur : vente aux enchères de la Tréfilerie, en juin. Un passant suit la liste du doigt. « Lot 112, sirène, cuivre. Ils vendent même le bruit. »"
+    choix:
+      - label: "Qui l'achètera ?"
+        reponse: "« Un ferrailleur, pour le cuivre. Ou personne. » Il hausse les épaules. « Gégé dit que la Nord va se cotiser. Gégé dit beaucoup de choses. »"
+      - label: "Je passe"
+        reponse: "Tu passes. Le lendemain, quelqu'un a entouré le lot 112 au feutre rouge, et écrit dessous : POUR LA NORD."
+
+# Les phrases d'action du match du samedi, propres au livre (`si` de la ville).
+match_textes:
+  pour:
+    - {texte: "Seize heures. La sirène de la Tréfilerie hurle au moment où {qui} frappe ; le ballon entre dans le bruit : {score}.", si: "flag('histoire_h3') && !flag('h3_usine_fermee')"}
+    - {texte: "{Qui} marque sous la tour de la grande halle. En tribune Est, les anciens de l'usine applaudissent sans bruit : {score}.", si: "flag('histoire_h3') && flag('h3_usine_fermee') && saison <= 3"}
+  pour_toi:
+    - {texte: "Le ballon arrive dans ta course, le genou se tait pour une fois. Tu frappes : {score}. Au grillage, une blouse bleue s'est arrêtée.", si: "flag('histoire_h3') && !flag('h3_usine_fermee')"}
+    - {texte: "Tu marques, et la Nord chante ton nom sur l'air de la sirène, une note longue, tenue jusqu'à l'engagement : {score}.", si: "flag('histoire_h3') && flag('h3_sirene_nuit')"}
+    - {texte: "Tu frappes du mauvais côté, sur le mauvais genou. Ça tient. Le filet tremble avant la douleur : {score}.", si: "flag('histoire_h3') && flag('h3_genou_cache')"}
+  contre:
+    - {texte: "Ton genou refuse un appui, une seconde. Leur avant-centre n'en demandait pas plus : {score}.", si: "flag('histoire_h3') && flag('h3_genou_cache')"}
+    - {texte: "{Adv} marque pendant que la tribune regarde la tour de la grande halle, où rien ne bouge : {score}.", si: "flag('histoire_h3') && flag('h3_sirene_nuit') && saison <= 3"}
