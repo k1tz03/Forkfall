@@ -2278,6 +2278,135 @@
     return !!(rdv && rdv.type === "match" && rdv.beat === "match" && S.jour === 5 && S.tranche <= 2 && semaineDe(rdv.debut) === S.semaine);
   }
 
+  // ─────────────────────────────────────────────────────────────── les scènes de la semaine
+  // Le moteur sert deux ou trois cartes entre deux samedis ; le reste de la
+  // semaine, la ville a sa vie. Chaque jour sans carte, et souvent le soir, elle
+  // programme une scène de content/ville/scenes*.yaml, à son lieu et à son
+  // heure, ou qui vient à toi (on t'arrête dans la rue ; le téléphone sonne chez
+  // toi). Quand l'heure arrive — le temps passe : une activité, « Attendre »,
+  // « Y aller », le réveil —, la ville s'y rend d'un fondu, comme pour un
+  // rendez-vous : on ne saute plus trois jours sans que rien n'arrive. Deux
+  // choix, des effets légers que le moteur applique sans rien tirer
+  // (Engine.mission, étape `scene`) ; une fois par carrière.
+  var SCENE = {};
+  function lieuScene(sc) { return sc.lieu === "domicile" ? chezToi() : sc.lieu === "rue" ? "rue" : (LIEU[sc.lieu] ? sc.lieu : null); }
+  function sceneOk(sc, jour) {
+    if (sc.roles && sc.roles.indexOf(S.role) < 0) return false;
+    if (!sc.rejouable && S.scenesVues && S.scenesVues[sc.id] != null) return false;
+    if (sc.jours && sc.jours.indexOf(JOURS[jour]) < 0) return false;
+    var cle = lieuScene(sc);
+    if (!cle) return false;
+    return siVrai(sc.si, cle === "rue" ? null : cle);
+  }
+  // les tranches où la scène peut se jouer ce jour-là, à partir de `depuis` (un lieu a ses heures)
+  function tranchesScene(sc, jour, depuis, permises) {
+    var cle = lieuScene(sc), def = cle && TEXTE_LIEU[cle];
+    return sc.tranches.filter(function (t) {
+      var i = TRANCHES.indexOf(t);
+      if (i < depuis || permises.indexOf(t) < 0) return false;
+      return !(def && (def.heures || def.jours)) || ouvertA(def, tDe(S.semaine, jour, i));
+    });
+  }
+  function planifierScenes() {
+    if (!S) return;
+    var cle = S.semaine + ":" + S.jour;
+    if (S.scenesJour && S.scenesJour.cle === cle) return;
+    var jour = S.jour, depuis = S.tranche, plan = [];
+    // le jour a son rendez-vous du moteur (une carte qui s'ouvre, le match, le dimanche) : pas de scène de jour
+    var occupeJour = !!(rdv && !rdv.sombre && rdv.type !== "ici" && semaineDe(rdv.debut) === S.semaine && jourDe(rdv.debut) === jour);
+    var g = (coquille && coquille.graine && coquille.graine()) || {};
+    var r = de(hache(g.seed || 0, "scenes", S.semaine, jour, (vue && vue.season) || 1, (vue && vue.year) || 0));
+    var tous = Object.keys(SCENE).sort().map(function (id) { return SCENE[id]; });
+    function placer(permises) {
+      var cands = tous.filter(function (sc) {
+        return !plan.some(function (p) { return p.id === sc.id; }) && sceneOk(sc, jour) && tranchesScene(sc, jour, depuis, permises).length > 0;
+      });
+      if (!cands.length) return;
+      // les plus précises (une histoire, un drapeau, une époque) pèsent plus
+      var poids = cands.map(function (sc) { return (+sc.poids || 1) * (1 + (sc.si ? String(sc.si).split("&&").length * 1.5 : 0)); });
+      var tot = poids.reduce(function (a, b) { return a + b; }, 0), x = r() * tot, sc = cands[0];
+      for (var i = 0; i < cands.length; i++) { x -= poids[i]; if (x < 0) { sc = cands[i]; break; } }
+      var ts = tranchesScene(sc, jour, depuis, permises);
+      plan.push({ id: sc.id, t: tDe(S.semaine, jour, TRANCHES.indexOf(ts[Math.floor(r() * ts.length)])), fait: false });
+    }
+    if (!occupeJour) placer(["matin", "midi", "aprem"]);
+    if (r() < (occupeJour ? 0.5 : 0.35)) placer(["soir", "nuit"]);
+    S.scenesJour = { cle: cle, plan: plan };
+  }
+  // l'heure d'une scène est venue (le temps vient de passer, ou l'on se réveille) : la ville s'y rend
+  function sceneDue() {
+    if (!S || carteOn || occupe || MATCH) return false;
+    planifierScenes();
+    var t = tNow(), plan = (S.scenesJour && S.scenesJour.plan) || [];
+    for (var i = 0; i < plan.length; i++) {
+      var p = plan[i];
+      if (p.fait) continue;
+      if (p.t < t) { p.fait = true; continue; }
+      if (p.t === t && SCENE[p.id] && sceneOk(SCENE[p.id], S.jour)) { p.fait = true; jouerScene(SCENE[p.id]); return true; }
+    }
+    return false;
+  }
+  function jouerScene(sc) {
+    occupe = true;
+    fermerPorte();
+    var cle = lieuScene(sc), titre = JOUR_MOT[S.jour] + ", " + HEURE[TRANCHES[S.tranche]];
+    titre = titre.charAt(0).toUpperCase() + titre.slice(1);
+    fonduTexte(titre, cle === "rue" ? "Dans la rue" : nomLieu(LIEU[cle]), "", function () {
+      if (cle !== "rue" && LIEU[cle]) { var c = centre(LIEU[cle].door); poser(c[0], c[1]); S.lieu = cle; }
+      var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
+      recaler();
+    }, function () {
+      occupe = false;
+      ouvrirScene(sc);
+    });
+  }
+  function ouvrirScene(sc) {
+    var cle = lieuScene(sc), e = sc.etapes[0], el = $("villePorte");
+    porteOuverte = cle === "rue" ? null : cle;
+    var qui = sc.qui ? (CHARS[sc.qui] ? nomDe(sc.qui) : (NOM_GENS[sc.qui] || "")) : "";
+    var ou = cle === "rue" ? "dans la rue" : nomLieu(LIEU[cle]);
+    var html = '<h2>' + esc(sc.titre) + '</h2><p class="v-sous">' + esc((qui ? qui + " · " : "") + ou) + "</p>" +
+      '<p class="v-texte">' + esc(remplir(e.texte)) + '</p><div class="v-acts">';
+    (e.choix || []).forEach(function (c) {
+      var non = c.francs < 0 && S.francs + c.francs < 0 ? "Tu n'as pas cette somme." : "";
+      html += '<button type="button" class="v-act v-choix" data-c="' + esc(c.id) + '"' + (non ? " disabled" : "") + "><b>" + esc(c.label) + "</b>" +
+        (c.francs ? '<span class="cout"><span class="' + (c.francs > 0 ? "up" : "dn") + '">' + (c.francs > 0 ? "+" : "") + esc(argent(c.francs)) + (c.sale ? " · sale" : "") + "</span></span>" : "") +
+        (non ? '<span class="pourquoi">' + esc(non) + "</span>" : "") + "</button>";
+    });
+    html += "</div>";
+    el.innerHTML = html;
+    el.classList.remove("v-mission");
+    el.classList.add("on", "v-scene");
+    el.querySelectorAll(".v-choix").forEach(function (b) {
+      b.addEventListener("click", function () { choisirScene(sc, b.getAttribute("data-c")); });
+    });
+  }
+  function choisirScene(sc, cid) {
+    var e = sc.etapes[0], c = (e.choix || []).filter(function (x) { return x.id === cid; })[0];
+    if (!c || carteOn || occupe) return;
+    if (c.francs) {
+      S.francs += c.francs;
+      if (c.sale && c.francs > 0) S.sale = (S.sale || 0) + c.francs;
+      gain(c.francs);
+    }
+    if (c.effets) {
+      vue = coquille.mission(sc.id, "scene", c.id);
+      pont(vue);
+      if (vue.over) return;
+    }
+    S.scenesVues = S.scenesVues || {};
+    S.scenesVues[sc.id] = S.semaine;
+    S.missionsFaites[sc.id] = true;   // `mission(<id>)` lit une scène vue : deux scènes s'enchaînent
+    majHud(); sauver();
+    var cle = lieuScene(sc), el = $("villePorte"), reponse = remplir(c.reponse);
+    el.classList.remove("v-scene");
+    if (cle !== "rue" && LIEU[cle]) { ouvrirPorte(cle, reponse); annoncer(); return; }
+    el.innerHTML = '<h2>' + esc(sc.titre) + '</h2><p class="v-sous">dans la rue</p><p class="v-texte">' + esc(reponse) + '</p><button type="button" class="v-sortir">Continuer</button>';
+    el.classList.add("on");
+    el.querySelector(".v-sortir").addEventListener("click", fermerPorte);
+    annoncer();
+  }
+
   // ─────────────────────────────────────────────────────────────── le temps qui passe
   function avancer(n) {
     for (var i = 0; i < n; i++) {
@@ -2298,11 +2427,13 @@
     if (S.energie <= 0) { effondrement(); return false; }
     echeanceMission();
     if (echeance()) return false;
+    if (sceneDue()) return false;
     return true;
   }
   function nouveauJour() {
     S.jour++;
     S.jourFaits = {};
+    S.scenesJour = null;
     if (S.jour > 6) { S.jour = 0; nouvelleSemaine(); }
   }
   function nouvelleSemaine() {
@@ -2343,6 +2474,7 @@
     fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", recaler, function () {
       suiteFondus();
       if (echeance()) { allerApresNuit = false; return; }
+      if (sceneDue()) { allerApresNuit = false; return; }
       if (allerApresNuit) {
         allerApresNuit = false;
         if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
@@ -2876,6 +3008,7 @@
       S.vus = S.vus || {}; S.faits = S.faits || {}; S.jourFaits = S.jourFaits || {};
       S.biens = S.biens || {}; S.sale = S.sale || 0; S.pont = S.pont || {}; S.missionsFaites = S.missionsFaites || {};
       S.offres = S.offres || {}; S.dits = S.dits || {}; if (S.derniereOffre == null) S.derniereOffre = -99;
+      S.scenesVues = S.scenesVues || {};
       annonces = [];
       dernierVu = rdv ? rdv.cle : "";
       lancer();
@@ -2911,6 +3044,7 @@
       (D.lieux || []).forEach(function (l) { TEXTE_LIEU[l.key] = l; });
       (D.objets || []).forEach(function (o) { OBJET[o.id] = o; });
       (D.missions || []).forEach(function (m) { MISSION[m.id] = m; });
+      (D.scenes || []).forEach(function (sc) { SCENE[sc.id] = sc; });
       construire();
       charger();
       boutonReprendre();
@@ -2926,7 +3060,7 @@
           x: 0, y: 0, lieu: v.role === "selectionneur" && LIEU.hotel ? "hotel" : "appartement", cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
           journeeDebut: v.journee || 0, auMatch: false, zoom: 0,
           biens: {}, sale: 0, pont: {}, mission: null, missionsFaites: {}, offres: {}, derniereOffre: -99, dits: {},
-          blocsVus: v.blocs || 0, panneau: null
+          blocsVus: v.blocs || 0, panneau: null, scenesVues: {}, scenesJour: null
         };
         annonces = [];
         rdv = null; dernierVu = ""; figurants = []; passants = []; acteurs = {};
@@ -3020,6 +3154,8 @@
         cacherCarte();
         jouerMatch(v2, function () { if (S.tranche < 3) S.tranche = 3; majHud(); });
       }
+      if (quoi === "scene" && SCENE[val] && !carteOn && !occupe) jouerScene(SCENE[val]);
+      if (quoi === "plan") { planifierScenes(); return S.scenesJour; }
       if (quoi === "tranche") { while (TRANCHES[S.tranche] !== val) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } majHud(); }
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },

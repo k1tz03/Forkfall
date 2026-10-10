@@ -115,6 +115,10 @@ List<String> rivalClubNames({
     // un préfixe vide : des nations (le sélectionneur), sans quota de préfixe
     if (!libre && pre.isNotEmpty && (parPrefixe[pre] ?? 0) >= maxParPrefixe) continue;
     if (!libre && (parVille[ville] ?? 0) >= maxParVille) continue;
+    // pas de rival de ta propre ville : « AS Aubérive » face au « Racing
+    // Aubérive » se lisait comme une erreur (la ville d'un postulat est posée
+    // après les tirages, elle peut tomber sur un nom de la liste)
+    if (monClub.split(' ').contains(ville)) continue;
     final nom = pre.isEmpty ? ville : '$pre $ville';
     if (!pris.add(nom)) continue;
     parPrefixe[pre] = (parPrefixe[pre] ?? 0) + 1;

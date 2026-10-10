@@ -1377,8 +1377,12 @@ class Content {
           (a as Map)['id'].toString(): ActiviteDef.fromJson(a.cast<String, dynamic>()),
       },
       ville: (j['ville'] as Map?)?.cast<String, dynamic>() ?? const {},
+      // les missions, et les scènes de la semaine : une mission d'une seule
+      // étape (`scene`), que la ville programme les jours sans carte
       missions: {
         for (final m in (((j['ville'] as Map?)?['missions'] as List?) ?? const []))
+          (m as Map)['id'].toString(): MissionDef.fromJson(m.cast<String, dynamic>()),
+        for (final m in (((j['ville'] as Map?)?['scenes'] as List?) ?? const []))
           (m as Map)['id'].toString(): MissionDef.fromJson(m.cast<String, dynamic>()),
       },
       objets: {

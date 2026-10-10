@@ -1655,7 +1655,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes']) {
+      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -1800,7 +1800,11 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   // --- la grammaire de la ville (champ `si`) : ET seulement, voir
   // packages/tools/web/ville.js (`siVrai`) — les deux doivent rester d'accord.
   final objetIds = <String>{for (final o in (m['objets'] as List? ?? const [])) if (o is Map) o['id'].toString()};
-  final missionIds = <String>{for (final o in (m['missions'] as List? ?? const [])) if (o is Map) o['id'].toString()};
+  final missionIds = <String>{
+    for (final o in (m['missions'] as List? ?? const [])) if (o is Map) o['id'].toString(),
+    // une scène vue se lit comme une mission faite : `mission(sc.boulangere)` enchaîne deux scènes
+    for (final o in (m['scenes'] as List? ?? const [])) if (o is Map) o['id'].toString(),
+  };
   const numeriques = {'rang', 'division', 'journee', 'serie_v', 'serie_d', 'pts', 'vestiaire', 'tribunes', 'direction', 'caisse',
     'annee', 'saison', 'age', 'francs', 'energie', 'faim', 'semaine'};
   final mots = {
@@ -1983,6 +1987,74 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     lieuxVariantes.add({'lieu': lieu, 'si': e['si']?.toString() ?? '', 'texte': texte});
   }
 
+  // --- les scènes de la semaine (ville.js, « les scènes ») : entre les deux ou
+  // trois cartes du moteur, la ville programme une scène les jours sans carte,
+  // et souvent le soir. Une scène est une mission d'une seule étape (`scene`),
+  // sans donneur ni hasard : le moteur en applique le choix (Engine.mission)
+  // sans rien tirer. Elle se joue à son lieu, ou vient à toi (`rue` : on
+  // t'arrête ; `domicile` : chez toi, le soir), une fois par carrière sauf
+  // `rejouable: true`.
+  final scenes = <Map<String, dynamic>>[];
+  final vusSc = <String>{};
+  const joursOk = {'lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'};
+  for (final e in (m['scenes'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/scenes/$id';
+    if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(id) || !vusSc.add(id)) errors.add('$where: id vide, en double, ou hors de [a-z0-9_.]');
+    if ((m['missions'] as List? ?? const []).any((o) => o is Map && o['id'].toString() == id)) errors.add('$where: une mission porte déjà cet id');
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    final lieu = e['lieu']?.toString() ?? '';
+    if (lieu != 'rue' && lieu != 'domicile' && !cles.contains(lieu)) errors.add('$where: lieu « $lieu » : `rue`, `domicile` ou une clé de `lieux`');
+    var tr = _strList(e['tranches']);
+    for (final t in tr) {
+      if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue');
+    }
+    if (tr.isEmpty) tr = lieu == 'domicile' ? ['soir', 'nuit'] : ['matin', 'midi', 'aprem'];
+    final jours = _strList(e['jours']);
+    for (final j in jours) {
+      if (!joursOk.contains(j)) errors.add('$where: jour « $j » (lun mar mer jeu ven sam dim)');
+    }
+    final qui = e['qui']?.toString();
+    if (qui != null && !quiAnonymes.contains(qui) && !characterIds.contains(qui)) errors.add('$where: qui « $qui » inconnu (${quiAnonymes.join(' ')} ou un personnage)');
+    si(e['si'], where);
+    final titre = txt(e, 'titre', where, 40);
+    final texte = txt(e, 'texte', where, 200);
+    final choix = (e['choix'] as List? ?? const []).whereType<Map<dynamic, dynamic>>().toList();
+    if (choix.isEmpty || choix.length > 2) errors.add('$where: un ou deux choix');
+    final outC = <Map<String, dynamic>>[];
+    var ic = 0;
+    for (final c in choix) {
+      final cid = c['id']?.toString() ?? (ic == 0 ? 'a' : 'b');
+      ic++;
+      final w3 = '$where/$cid';
+      txt(c, 'label', w3, 28);
+      txt(c, 'reponse', w3, 200);
+      if (c['francs'] != null && c['francs'] is! int) errors.add('$w3: `francs` doit être un entier');
+      final ef = c['effets'] != null ? effet(c['effets'], w3) : const <String, dynamic>{};
+      if (ef['fin'] != null) errors.add('$w3: une scène de la semaine ne finit pas une carrière (pas de `fin`)');
+      outC.add({
+        'id': cid, 'label': c['label'].toString(), 'reponse': c['reponse'].toString(),
+        if (c['francs'] != null) 'francs': c['francs'],
+        if (c['sale'] == true) 'sale': true,
+        if (ef.isNotEmpty) 'effets': ef,
+      });
+    }
+    final poids = e['poids'];
+    if (poids != null && (poids is! num || poids <= 0)) errors.add('$where: `poids` positif');
+    scenes.add({
+      'id': id, 'titre': titre, if (roles.isNotEmpty) 'roles': roles, 'lieu': lieu, 'tranches': tr,
+      if (jours.isNotEmpty) 'jours': jours, if (qui != null) 'qui': qui, if (e['si'] != null) 'si': e['si'].toString(),
+      'poids': poids ?? 1, if (e['rejouable'] == true) 'rejouable': true,
+      'etapes': [
+        {'id': 'scene', 'texte': texte, 'choix': outC},
+      ],
+    });
+  }
+
   // --- les missions
   final missions = <Map<String, dynamic>>[];
   final vusM = <String>{};
@@ -2134,6 +2206,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (paroles.isNotEmpty) 'paroles': paroles,
     if (matchOut.isNotEmpty) 'match': matchOut,
     if (missions.isNotEmpty) 'missions': missions,
+    if (scenes.isNotEmpty) 'scenes': scenes,
     if (objets.isNotEmpty) 'objets': objets,
   };
 }
