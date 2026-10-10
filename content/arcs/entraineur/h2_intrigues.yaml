@@ -1,0 +1,283 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les intrigues (docs/histoires/00_les_dix_histoires.md).
+#
+# Six fils, tous ouverts par l'épine (content/arcs/entraineur/h2_script.yaml)
+# ou les uns par les autres — une carte d'étape mise en file par `schedule:`
+# ouvre son intrigue à cette étape. La berline et la Prévoyance sont aussi au
+# réservoir du postulat, en filet (une saison plus tard, si l'épine n'a pas pu
+# les ouvrir) : c'est le filet, pas le chemin.
+#
+#   Le répondeur (S0)    la diode → le premier message → samedi
+#   La berline (S0)      dix heures → trois mètres (sombre) → le sapin neuf
+#   L'arrière-salle      le café de Norbert (S0) → les Cars du Quai (S1) → le fond du car
+#   Le wagon (S1)        « parti en train » → la cabine → le cabas → (le mot) →
+#                        le wagon → la roue de secours → le garage du Pont
+#   La Prévoyance        la visite d'Achard (S1) → (S2) les maillots → les vacances
+#   Un an et un jour (S2) la toux → Monique → le chemin → le dernier message
+# La nuit du wagon (la poursuite ou la banquette, le lendemain) est tenue par
+# l'épine, en ancres consécutives : rien ne doit s'y intercaler.
+#
+# Les graines et ce qui les paie : le sapin neuf (trois mètres) → l'habitude
+# du premier du mois (Monique) → le sapin qui tourne sur la Rive ; l'ancien
+# sapin posé sur le tableau de bord → celui qui flotte, quand le neuf reste au
+# rétroviseur ; la cafetière chaude → le cabas de Josiane ; « avec lui » → la
+# panne ; le pull des cartons → le cabas ; le rasoir → la toux ; la cassette et
+# le carnet → l'audience.
+arcs:
+  # ======================================================== LE RÉPONDEUR (S0)
+  - id: en.h2.repondeur
+    title: "Le répondeur"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: contrat
+    carrier: josiane
+    cast: [josiane, vukic, brehaut]
+    issues: [ecoute, efface]
+    traces:
+      h2_premier_efface: "{annee} : {nom} a effacé le premier message du répondeur sans l'écouter. Le samedi, Bréhaut s'est blessé."
+      h2_brehaut_banc:   "{annee} : {nom} a mis Bréhaut sur le banc, sur la foi d'un message. Le genou a lâché à l'échauffement."
+    hint: "Lundi, sept heures : une diode rouge clignote sur le répondeur d'un bureau qui n'est pas encore le tien."
+    start: [2, 3]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le répondeur du bureau de {nom} a parlé, un lundi. On ne sait pas qui l'a entendu d'autre."
+    steps:
+      - id: diode
+        card: en.h2.rep.diode
+        next:
+          - { step: message, if: "!flag('h2_premier_efface')", in: [1, 1] }
+          - { step: samedi, in: [4, 5] }
+      - id: message
+        card: en.h2.rep.message1
+        next: [ { step: samedi, in: [3, 4] } ]
+      - id: samedi
+        card:
+          - { id: en.h2.rep.samedi_banc,      if: "flag('h2_brehaut_banc')" }
+          - { id: en.h2.rep.samedi_titulaire, if: "flag('h2_brehaut_titulaire')" }
+          - { id: en.h2.rep.samedi_efface }
+        next: []
+
+  # ========================================================== LA BERLINE (S0)
+  - id: en.h2.berline
+    title: "La berline"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: famille
+    carrier: monique
+    cast: [monique, josiane, vukic]
+    issues: [crue, doute]
+    traces:
+      h2_trois_metres: "{annee} : la berline de Mercadier a bougé de trois mètres pendant la nuit. Boue blanche, sapin neuf."
+      h2_monique_crue: "{annee} : {nom} a cru Monique Mercadier : le sapin neuf, c'était lui. Il le change le premier du mois."
+    hint: "Une berline grise qui n'a pas bougé depuis octobre, et une femme qui appelle tous les matins à dix heures."
+    start: [4, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : à {club}, une berline grise a passé l'automne sur la place ENTRAÎNEUR. Elle a bougé, une nuit."
+    steps:
+      - id: dix_heures
+        card: en.h2.berl.dix_heures
+        next: [ { step: trois_metres, in: [2, 2] } ]
+      - id: trois_metres
+        card:
+          - { id: en.h2.berl.trois_metres_cote, if: "flag('h2_gare_a_cote')" }
+          - { id: en.h2.berl.trois_metres }
+        next: [ { step: sapin, in: [1, 2] } ]
+      - id: sapin
+        card:
+          - { id: en.h2.berl.sapin_parking, if: "flag('h2_monique_parking')" }
+          - { id: en.h2.berl.sapin }
+        next: []
+
+  # ================================================ L'ARRIÈRE-SALLE (S0 → S1)
+  - id: en.h2.norbert
+    title: "L'arrière-salle"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: argent
+    carrier: norbert
+    cast: [norbert, aulard, vecchio]
+    issues: [questions, bu]
+    traces:
+      h2_questions_norbert: "{annee} : {nom} a demandé à Norbert quelles questions posait Mercadier. Norbert a essuyé une tasse propre."
+      h2_cars_du_quai:      "{annee} : les Cars du Quai ont offert un car neuf à {club}, chauffeur compris. Le cousin, Norbert."
+      h2_fond_du_car:       "{annee} : {nom} a appris ce qui se paie au fond du car, au retour des déplacements."
+    hint: "Un café servi entre le tapis vert et le cendrier, par un homme que tout le monde trouve normal."
+    start: [2, 3]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : l'arrière-salle du Terminus a fermé plus tard que d'habitude, cette saison-là. Norbert faisait la caisse."
+    steps:
+      - id: cafe
+        card:
+          - { id: en.h2.nor.cafe_promis, if: "flag('h2_cafe_norbert')" }
+          - { id: en.h2.nor.cafe }
+        next: [ { step: cars, at_season: 1, at: [9, 9] } ]
+      - id: cars
+        card: en.h2.nor.cars
+        next: [ { step: fond, in: [3, 3] } ]
+      - id: fond
+        card:
+          - { id: en.h2.nor.fond_cars, if: "flag('h2_cars_du_quai')" }
+          - { id: en.h2.nor.fond }
+        next: []
+
+  # ============================================================ LE WAGON (S1)
+  - id: en.h2.wagon
+    title: "Le wagon"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: direction
+    carrier: josiane
+    cast: [josiane, mercadier, lea, vukic, norbert]
+    issues: [carnet, sans_carnet]
+    traces:
+      h2_cabine_vue: "{annee} : lundi, six heures quarante, un homme en casquette a raccroché en voyant {nom} dans la vitre."
+      h2_wagon_vu:   "{annee} : {nom} a trouvé Roland Mercadier vivant, dans un wagon de la friche, une radio à piles sur le matelas."
+      h2_carnet:     "{annee} : {nom} a sorti un carnet de paris de la roue de secours d'une berline, la nuit, au garage du Pont."
+    hint: "« Si on te demande, je suis parti en train. » Derrière la voix, un haut-parleur de gare routière."
+    start: [3, 4]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : un homme a vécu tout un hiver dans un wagon de la friche, à cinq cents mètres du stade de {club}."
+    steps:
+      - id: message
+        card:
+          - { id: en.h2.wag.message_efface, if: "flag('h2_efface_janvier')" }
+          - { id: en.h2.wag.message }
+        next: [ { step: cabine, in: [2, 2] } ]
+      - id: cabine
+        card:
+          - { id: en.h2.wag.cabine_lea, if: "flag('h2_lea_cabine')" }
+          - { id: en.h2.wag.cabine }
+        next: [ { step: cabas, in: [1, 1] } ]
+      - id: cabas
+        card:
+          - { id: en.h2.wag.cabas_pull, if: "flag('h2_cartons_gardes')" }
+          - { id: en.h2.wag.cabas }
+        next:
+          - { step: wagon, if: "flag('h2_cabas_suivi')", in: [1, 1] }
+          - { step: mot, in: [1, 1] }
+      - id: mot
+        card: en.h2.wag.mot
+        next: [ { step: wagon, in: [1, 1] } ]
+      - id: wagon
+        card:
+          - { id: en.h2.wag.wagon_titulaire, if: "flag('h2_brehaut_titulaire')" }
+          - { id: en.h2.wag.wagon_efface,    if: "flag('h2_premier_efface')" }
+          - { id: en.h2.wag.wagon }
+        next: [ { step: roue, in: [1, 1] } ]
+      - id: roue
+        card: en.h2.wag.roue
+        next: [ { step: garage, in: [1, 1] } ]
+      - id: garage
+        card:
+          - { id: en.h2.wag.garage_deja, if: "flag('h2_carnet')" }
+          - { id: en.h2.wag.garage_rive, if: "flag('h2_rive')" }
+          - { id: en.h2.wag.garage,      if: "flag('h2_cherche_voiture')" }
+          - { id: en.h2.wag.garage_oubli }
+        next: []
+
+  # ================================================= LA PRÉVOYANCE (S1 → S2)
+  - id: en.h2.prevoyance
+    title: "La Prévoyance"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: president
+    carrier: achard
+    cast: [achard, aulard, gege]
+    issues: [maillots, refus]
+    traces:
+      h2_cassette_achard:     "{annee} : l'assureur a écouté la cassette du répondeur deux fois, les yeux fermés. Il a recopié l'heure."
+      h2_maillots_prevoyance: "{annee} : LA PRÉVOYANCE en lettres blanches sur le maillot de {club}. Le virage a sifflé les lettres."
+      h2_achard_sait:         "{annee} : {nom} a dit à l'assureur où dormait Mercadier. L'assureur a écrit « wagon » et refermé son carnet."
+    hint: "Deux millions, homme-clé. L'assureur est le seul, en ville, qui a besoin qu'il soit vivant."
+    start: [6, 8]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : La Prévoyance Aubérivoise a classé le dossier homme-clé de {club}, avec un trombone."
+    steps:
+      - id: visite
+        card:
+          - { id: en.h2.prev.visite_cassette, if: "flag('h2_cassette')" }
+          - { id: en.h2.prev.visite }
+        next: [ { step: maillots, in: [4, 6] } ]
+      - id: maillots
+        card: en.h2.prev.maillots
+        next: [ { step: vacances, in: [3, 5] } ]
+      - id: vacances
+        card:
+          - { id: en.h2.prev.vacances_cassette, if: "flag('h2_cassette_achard')" }
+          - { id: en.h2.prev.vacances }
+        next: []
+
+  # ======================================================= UN AN ET UN JOUR (S2)
+  - id: en.h2.un_an
+    title: "Un an et un jour"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: instances
+    carrier: monique
+    cast: [monique, mercadier, vukic, sabatier]
+    issues: [doc, cachets]
+    traces:
+      h2_doc_wagon:    "{annee} : le Doc est venu à pied, la nuit, écouter une poitrine dans un wagon. Il a dit : pas un deuxième hiver."
+      h2_monique_aveu: "{annee} : Monique Mercadier a avoué qu'il l'avait appelée, une fois, de la cabine. Elle n'avait rien dit."
+      h2_ordre_obei:   "{annee} : « Si le wagon brûle, ne viens pas. » Pour une fois, {nom} a obéi au répondeur."
+    hint: "Une convocation pour avril, une toux dans un wagon, et un car garé là où il n'a rien à faire."
+    start: [2, 3]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : un an et un jour ont passé depuis la disparition de Roland Mercadier. Le tribunal a fixé avril."
+    steps:
+      - id: toux
+        card:
+          - { id: en.h2.an.toux_rasoir, if: "flag('h2_rasoir')" }
+          - { id: en.h2.an.toux }
+        next: [ { step: monique, in: [2, 3] } ]
+      - id: monique
+        card:
+          - { id: en.h2.an.monique_crue, if: "flag('h2_monique_crue')" }
+          - { id: en.h2.an.monique }
+        next: [ { step: chemin, in: [2, 3] } ]
+      - id: chemin
+        card: en.h2.an.chemin
+        next: [ { step: message, in: [1, 2] } ]
+      - id: message
+        card: en.h2.an.message
+        next: []

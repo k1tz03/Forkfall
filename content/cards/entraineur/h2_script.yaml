@@ -1,0 +1,831 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les ancres du script (arc `en.h2.script`,
+# content/arcs/entraineur/h2_script.yaml). Servies à leur créneau, quoi qu'il
+# arrive ; leurs variantes lisent ce que la carrière a déjà posé.
+#
+# La ligne d'ordre de ce livre est le répondeur à microcassette du bureau
+# (tag `repondeur`, aucune voix nommée, aucun locuteur) : une phrase courte,
+# un nom, une heure, et derrière, toujours le même bruit. Les nuits (la place
+# vide, la panne, la Rive, le wagon) portent le tag `sombre` et leur `lieu:` ;
+# les trois intermèdes, un par saison, portent `intermede`.
+cards:
+  # ═════════════════════════════════════════════ S0 · 1 · Les cartons
+  - id: en.h2.s0.cartons
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Madame Josiane hésite entre le tournevis et le scotch, devant la plaque à son nom : « Il n'a rien demandé, rien emporté. Je jette ses cartons, {toi}, ou je les garde ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "-", relation: {josiane: -1}, set: [h2_cartons_jetes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle dévisse la plaque. Elle descend les cartons elle-même, un par un, et laisse la cafetière branchée sur le bureau."
+    right:
+      label: "Gardez-les six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, set: [h2_cartons_gardes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle scotche les cartons sans les fermer tout à fait. Le soir, elle en rouvre un, prend quelque chose, et le referme."
+
+  - id: en.h2.s0.cartons_vestiaire
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Madame Josiane, tournevis en main, devant la plaque à son nom : « Deux joueurs m'ont demandé son adresse, ce matin. Je n'ai pas su quoi répondre. Je jette ses cartons, {toi} ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "--", relation: {josiane: -1}, set: [h2_cartons_jetes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle dévisse la plaque. Les deux joueurs passent devant les cartons sans les regarder, ce qui est une façon de les regarder."
+    right:
+      label: "Gardez-les six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, set: [h2_cartons_gardes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle scotche les cartons. Le soir, elle en rouvre un, en sort un pull bordeaux, et le referme sans bruit."
+
+  - id: en.h2.s0.cartons_diplome
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Madame Josiane, la main sur le combiné : « La Fédération, pour votre papier : troisième appel. Et le bureau est toujours à son nom. Je jette ses cartons, {toi}, ou je les garde ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "-", relation: {josiane: -1}, set: [h2_cartons_jetes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle dévisse la plaque, puis rappelle la Fédération pour dire que vous êtes en réunion. Elle garde la cafetière."
+    right:
+      label: "Gardez-les six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, set: [h2_cartons_gardes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle scotche les cartons et pose le message de la Fédération dessus, comme un presse-papier qui ne pèse rien."
+
+  - id: en.h2.s0.cartons_grand_nom
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Madame Josiane, un message rose à la main : « Un agent a appelé : il a un grand nom pour janvier, et il demande si le bureau est libre. Je jette ses cartons, {toi} ? »"
+    left:
+      label: "Jetez, c'est mon bureau"
+      effects: {direction: "+", vestiaire: "-", relation: {josiane: -1}, set: [h2_cartons_jetes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle dévisse la plaque. Le message rose reste au milieu du bureau, bien à plat, sous la cafetière."
+    right:
+      label: "Gardez-les six semaines"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, set: [h2_cartons_gardes], schedule: [{card: en.h2.rep.diode, in: [1, 1]}, {card: en.h2.berl.dix_heures, in: [4, 5]}]}
+      answer: "Elle scotche les cartons et jette le message rose. Elle ne le dit pas ; tu le retrouves dans la corbeille."
+
+  # ═════════════════════════════════════════════ S0 · 10 · Le verdict, et le quai
+  # L'appartement du quai est un cadeau du club (la ville le loge à la place de
+  # la rue des Lilas) ; il est repris la nuit de la Rive (S1 · 17).
+  - id: en.h2.s0.verdict
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg, le combiné contre l'épaule : « Six semaines, ni bon ni mauvais. Un mois de plus, sans prime. Et tu prends l'appartement du quai, {toi} : il y dormait, c'est payé jusqu'en juin. »"
+    left:
+      label: "Je prends"
+      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge, h2_quai], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Il te lance un trousseau par-dessus le bureau. Une des clés porte une étiquette à l'encre : « R. M. — ne pas perdre »."
+    right:
+      label: "Je veux un papier"
+      effects: {direction: "-", parole: 1, set: [interim_prolonge, h2_quai], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Il écrit trois lignes sur un papier à en-tête, sans les dater, et pose le trousseau du quai dessus. « Voilà ton papier. »"
+
+  - id: en.h2.s0.verdict_confirme
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg tapote un contrat d'une page : « Deux victoires : je te confirme jusqu'en juin. Le titre, je ne peux pas, il est encore à lui sur le papier. Et le quai est à toi, {toi}. »"
+    left:
+      label: "Je signe"
+      effects: {direction: "++", set: [cdi_signe, h2_quai], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Tu signes. Il pousse vers toi le trousseau du quai ; une clé porte une étiquette à l'encre : « R. M. — ne pas perdre »."
+    right:
+      label: "Je lis d'abord"
+      effects: {direction: "-", vestiaire: "+", set: [interim_prolonge, h2_quai], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Il reprend le contrat sans un mot. Le trousseau du quai, il te le laisse : c'est toujours ça qu'il ne paiera pas à l'hôtel."
+
+  - id: en.h2.s0.verdict_regle
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg signe un autre papier en te parlant : « J'en voulais un vrai. Tant qu'il n'a pas démissionné, je ne peux pas en payer deux. Tu restes, {toi}, jusqu'à ce que ce soit réglé. »"
+    left:
+      label: "Réglé comment ?"
+      effects: {direction: "-", parole: 1, set: [interim_prolonge, h2_quai, h2_regle], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Il ne répond pas. Il pousse vers toi les clés du quai, et un formulaire de la Prévoyance qu'il retourne aussitôt, face contre le bois."
+    right:
+      label: "Je reste"
+      effects: {direction: "+", vestiaire: "-", set: [interim_prolonge, h2_quai], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Il te lance les clés du quai. « Il y dormait la semaine. C'est calme ; la nuit, on entend la Rive. »"
+
+  # ═════════════════════════════════════════════ S0 · 11 · Ne me cherche pas
+  - id: en.h2.s0.message
+    roles: [entraineur]
+    arc: direction
+    tags: [repondeur, vestiaire]
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Lundi, sept heures, la diode. « Ne me cherche pas. Garde le banc. Et ne monte jamais seul dans le car avec lui. » Derrière, des pièces qui tombent dans une cabine, puis la tonalité."
+    left:
+      label: "Je garde la cassette"
+      effects: {direction: "-", set: [h2_cassette], react: en.h2.re.josiane_cassettes}
+      answer: "Tu sors la microcassette et en glisses une neuve. L'ancienne voyage désormais dans ta poche intérieure, avec tes clés."
+    right:
+      label: "J'efface le message"
+      effects: {vestiaire: "+", set: [h2_efface_janvier]}
+      answer: "La bande rembobine en couinant. Le soir, au quai, tu te surprends à répéter la phrase à voix haute : « avec lui »."
+
+  - id: en.h2.s0.message_efface
+    roles: [entraineur]
+    arc: direction
+    tags: [repondeur, vestiaire]
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Lundi, la diode, encore. « Cette fois, écoute jusqu'au bout. Ne me cherche pas. Garde le banc. Et ne monte jamais seul dans le car avec lui. » Des pièces qui tombent, puis la tonalité."
+    left:
+      label: "Je garde la cassette"
+      effects: {direction: "-", set: [h2_cassette], react: en.h2.re.josiane_cassettes}
+      answer: "Cette fois, tu sors la microcassette avant qu'elle ne rembobine. Elle passe la nuit sous ton oreiller, au quai."
+    right:
+      label: "J'efface le message"
+      effects: {vestiaire: "+", set: [h2_efface_janvier]}
+      answer: "Tu effaces, comme la première fois. La diode s'éteint ; la phrase, elle, reste allumée toute la semaine : « avec lui »."
+
+  # ═════════════════════════════════════════════ S0 · 12 · La place vide
+  - id: en.h2.s0.place_vide
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: parking
+    text: "Minuit, parking du stade, sous la pluie. La place ENTRAÎNEUR est vide : un rectangle d'asphalte encore sec, une flaque d'huile, et au-dessus, le seul réverbère éteint du parking."
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", parole: 1, set: [h2_place_vide, h2_plainte], react: en.h2.re.lea_fusible, schedule: [{card: en.h2.nor.cafe, in: [2, 3]}]}
+      answer: "Au commissariat, on tape « véhicule disparu, propriétaire disparu », puis on s'arrête de taper. Le planton demande si c'est une blague."
+    right:
+      label: "Je fais repeindre la place"
+      effects: {direction: "+", tribunes: "-", set: [h2_place_vide, h2_place_repeinte], react: en.h2.re.lea_fusible, schedule: [{card: en.h2.nor.cafe, in: [2, 3]}]}
+      answer: "Le lendemain, un peintre efface ENTRAÎNEUR au rouleau. Il demande quoi écrire à la place ; personne ne sait lui répondre."
+
+  - id: en.h2.s0.place_vide_guet
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: parking
+    text: "Minuit. De ta place au fond du parking, tu vois ce qui manque : sur la place ENTRAÎNEUR, un rectangle sec sous la pluie, une flaque d'huile. Au-dessus de toi, ton réverbère est éteint."
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", parole: 1, set: [h2_place_vide, h2_plainte], react: en.h2.re.lea_fusible, schedule: [{card: en.h2.nor.cafe, in: [2, 3]}]}
+      answer: "Au commissariat, on tape « véhicule disparu, propriétaire disparu », puis on s'arrête de taper. Le planton demande si c'est une blague."
+    right:
+      label: "Je fais repeindre la place"
+      effects: {direction: "+", tribunes: "-", set: [h2_place_vide, h2_place_repeinte], react: en.h2.re.lea_fusible, schedule: [{card: en.h2.nor.cafe, in: [2, 3]}]}
+      answer: "Un peintre efface ENTRAÎNEUR au rouleau. Tu gardes ta place au fond, sous le réverbère, qu'on a rallumé le lendemain."
+
+  # ═════════════════════════════════════════════ S0 · 15 · Intermède : la bande
+  - id: en.h2.s0.intermede
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede]
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "La tête sur le cahier, au bureau, tu dors. La diode clignote. La voix dit « {prenom} », puis « ne mets pas… », et le nom se noie. Derrière, pas un car qui manœuvre : de l'eau. Beaucoup d'eau."
+    left:
+      label: "Je rembobine"
+      effects: {}
+      answer: "La bande tourne dans le vide. Au réveil, la diode est éteinte, et la cafetière de l'autre est chaude."
+    right:
+      label: "Je rembobine"
+      effects: {}
+      answer: "La bande tourne dans le vide. Au réveil, la diode est éteinte, et la cafetière de l'autre est chaude."
+
+  # ═════════════════════════════════════════════ S0 · 17 · La porte, et la police
+  - id: en.h2.s0.porte
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg relit une police d'assurance, l'index sur une ligne : « homme-clé ». Il la range. « On tient, tu as trois pages en juin, {toi}. On tombe, la porte. Tu me promets quoi ? »"
+    left:
+      label: "Le maintien, propre"
+      effects: {direction: "+", vestiaire: "+", force: -1, set: [h2_police_vue]}
+      answer: "Bloc bas. Il range la police dans le tiroir de gauche, celui qui ferme à clé, et laisse la clé dessus."
+    right:
+      label: "La montée, en réponse"
+      effects: {tribunes: "++", direction: "-", force: 2, parole: 1, promise: true, set: [montee_promise, h2_police_vue]}
+      answer: "Le mot sort du bureau avant toi. Le soir même, au Terminus, Norbert le répète à la table du fond, mot pour mot."
+
+  - id: en.h2.s0.porte_diplome
+    roles: [entraineur]
+    arc: instances
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg, le stylo en travers d'une police d'assurance : « Sans papier, tu n'as rien, {toi}, et la dérogation finit en juin. L'examen cet été, ou quelqu'un qui signe à ta place ? »"
+    left:
+      label: "Je passe l'examen"
+      effects: {parole: 1, direction: "+", set: [examen_promis, h2_police_vue]}
+      answer: "Il note « juillet » au dos de la police, sous la ligne « homme-clé ». Il ne voit pas où il écrit ; toi, si."
+    right:
+      label: "Quelqu'un signera"
+      effects: {direction: "++", parole: -1, relation: {aulard: 1}, set: [diplome_arrange, h2_police_vue]}
+      answer: "Il connaît quelqu'un. Il connaît toujours quelqu'un. Il range la police dans le même tiroir que ton dossier."
+
+  # ═════════════════════════════════════════════ S1 · 1 · L'assureur
+  - id: en.h2.s1.assureur
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Monsieur Achard pose sa serviette sur le bureau du président : « Deux millions, homme-clé. Sans corps, c'est un départ en vacances. Nous ne remboursons pas les vacances. » Vaubourg te regarde."
+    left:
+      label: "Il est parti, c'est tout"
+      effects: {direction: "+", relation: {aulard: 1, achard: -1}, set: [h2_dit_parti], schedule: [{card: en.h2.wag.message, in: [1, 1]}, {card: en.h2.prev.visite, in: [14, 14]}]}
+      answer: "Achard note « parti » et souligne deux fois. « Alors il reviendra chercher ses affaires. On revient toujours pour ses affaires. »"
+    right:
+      label: "Il n'est pas parti"
+      effects: {direction: "-", parole: 1, relation: {achard: 1}, set: [h2_dit_pas_parti], schedule: [{card: en.h2.wag.message, in: [1, 1]}, {card: en.h2.prev.visite, in: [14, 14]}]}
+      answer: "Achard te regarde pour la première fois. « Voilà quelqu'un qui me fait économiser deux millions. » Vaubourg range la police."
+
+  - id: en.h2.s1.assureur_plainte
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Monsieur Achard, ta plainte de décembre à la main : « Véhicule disparu, propriétaire disparu. Une plainte, c'est un vivant qui manque. Et sans corps, nous ne payons pas. » Vaubourg te regarde."
+    left:
+      label: "Il est parti, c'est tout"
+      effects: {direction: "+", relation: {aulard: 1, achard: -1}, set: [h2_dit_parti], schedule: [{card: en.h2.wag.message, in: [1, 1]}, {card: en.h2.prev.visite, in: [14, 14]}]}
+      answer: "Achard plie ta plainte en deux. « Parti, avec sa voiture, sans son rasoir. Je note. » Il ne note rien ; il regarde Vaubourg."
+    right:
+      label: "Il n'est pas parti"
+      effects: {direction: "-", parole: 1, relation: {achard: 1}, set: [h2_dit_pas_parti], schedule: [{card: en.h2.wag.message, in: [1, 1]}, {card: en.h2.prev.visite, in: [14, 14]}]}
+      answer: "Achard sourit sans les dents. « Vous et moi, nous allons bien nous entendre. » Vaubourg range la police dans le tiroir."
+
+  # ═════════════════════════════════════════════ S1 · 13 · La panne
+  - id: en.h2.s1.panne
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: gare
+    text: "Vingt kilomètres avant Aubérive, le car s'arrête dans la neige. Les joueurs partent en taxi. Norbert coupe le moteur : « Il faut quelqu'un pour signer le bon de la dépanneuse. Vous, ou Vukić ? »"
+    left:
+      label: "Je reste avec lui"
+      effects: {vestiaire: "+", set: [h2_panne_seul], react: en.h2.re.norbert_panne}
+      answer: "Le dernier taxi s'éloigne, ses feux rouges rapetissent dans la neige. Norbert remet le chauffage et allume la radio, tout bas."
+    right:
+      label: "Vukić reste"
+      effects: {direction: "+", relation: {vukic: -1}, set: [h2_panne_vukic], react: en.h2.re.vukic_panne}
+      answer: "Vukić s'assoit au premier rang sans un mot. Dans le taxi, tu te retournes : le car est déjà noir, phares éteints."
+
+  - id: en.h2.s1.panne_averti
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: gare
+    text: "Neige, vingt kilomètres avant Aubérive. Le car est mort, les joueurs partent en taxi. Norbert : « Quelqu'un pour le bon de la dépanneuse. Vous, coach ? » Ne monte jamais seul dans le car avec lui."
+    left:
+      label: "Je reste quand même"
+      effects: {vestiaire: "+", set: [h2_panne_seul], react: en.h2.re.norbert_panne}
+      answer: "Tu signes le bon. Le dernier taxi s'en va. Norbert ferme les portes, remet le chauffage, et dit : « On est bien, là. »"
+    right:
+      label: "Vukić et moi, on reste"
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h2_panne_deux]}
+      answer: "Vukić s'assoit à côté de toi, au premier rang. Norbert vous regarde dans le rétroviseur toute la nuit, sans dire un mot."
+
+  # ═════════════════════════════════════════════ S1 · 14 · Intermède : le car de nuit
+  - id: en.h2.s1.intermede
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede]
+    tone: leger
+    once: true
+    lieu: rue
+    text: "Le car du club roule sur le quai, phares éteints, sans chauffeur. Tous les sièges sont vides. Sur celui du chauffeur, une veste pliée, bien droite ; au rétroviseur, un sapin tourne."
+    left:
+      label: "Je m'approche du volant"
+      effects: {}
+      answer: "Le car s'arrête au bord de l'eau. Le moteur tourne longtemps, comme quelqu'un qui réfléchit. Tu te réveilles au quai, la fenêtre ouverte."
+    right:
+      label: "Je m'approche du volant"
+      effects: {}
+      answer: "Le car s'arrête au bord de l'eau. Le moteur tourne longtemps, comme quelqu'un qui réfléchit. Tu te réveilles au quai, la fenêtre ouverte."
+
+  # ═════════════════════════════════════════════ S1 · 16 · La Rive
+  - id: en.h2.s1.rive
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: rue
+    text: "Une heure du matin, sous tes fenêtres du quai. Un bruit d'eau énorme, puis plus rien. Le car du club est garé, tous feux éteints. Dans la Rive, des bulles, et un sapin en carton qui tourne."
+    left:
+      label: "Je cours vers le car"
+      effects: {direction: "-", set: [h2_rive, h2_rive_couru]}
+      answer: "Le car démarre avant que tu arrives, sans phares. Sur le quai, une odeur d'essence, et deux traces de pneus qui finissent dans l'eau."
+    right:
+      label: "Je reste dans l'ombre"
+      effects: {vestiaire: "-", set: [h2_rive, h2_rive_vu]}
+      answer: "Un homme descend du car, regarde l'eau longtemps, allume une cigarette. À la flamme du briquet, une moustache. Il remonte sans phares."
+
+  # ═════════════════════════════════════════════ S1 · 17 · Les deux sacs (la saisie)
+  - id: en.h2.s1.saisie
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: domicile
+    text: "Madame Josiane te tend deux sacs-poubelle pliés : « Le président reprend l'appartement du quai. Pour l'assurance, tout doit être en ordre, a-t-il dit. Je vous aide, {toi} ? »"
+    left:
+      label: "Je prends son rasoir aussi"
+      effects: {relation: {josiane: 1}, set: [h2_rasoir], var: {saisie_logement: "+1"}}
+      answer: "Deux sacs jusqu'à la rue des Lilas. Le rasoir est dans le second, roulé dans une serviette du club, avec le blaireau."
+    right:
+      label: "Je ne prends que les miens"
+      effects: {direction: "+", var: {saisie_logement: "+1"}}
+      answer: "Deux sacs jusqu'à la rue des Lilas. Au quai, la robe de chambre reste derrière la porte, pour personne."
+
+  - id: en.h2.s1.saisie_rive
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: domicile
+    text: "Madame Josiane, deux sacs-poubelle pliés : « Le président reprend le quai. On vous a vu courir sur le quai à une heure du matin ; pour l'assurance, c'est mauvais. Je vous aide, {toi} ? »"
+    left:
+      label: "Je prends son rasoir aussi"
+      effects: {relation: {josiane: 1}, set: [h2_rasoir], var: {saisie_logement: "+1"}}
+      answer: "Deux sacs jusqu'à la rue des Lilas. Le rasoir est dans le second, roulé dans une serviette du club. Josiane porte l'autre."
+    right:
+      label: "Je ne prends que les miens"
+      effects: {direction: "+", var: {saisie_logement: "+1"}}
+      answer: "Deux sacs jusqu'à la rue des Lilas. Josiane reste au quai pour fermer ; elle éteint la lumière de la salle de bains en dernier."
+
+  # ═════════════════════════════════════════════ S2 · 1 · Un an et un jour
+  - id: en.h2.s2.un_an
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg pose une convocation sur le bureau : tribunal de Portclair, avril, « jugement déclaratif de décès ». « Ce jour-là, tu as ton contrat, {toi}. Il est mort, pour toi ? »"
+    left:
+      label: "Il est mort pour moi"
+      effects: {direction: "++", relation: {aulard: 1}, set: [h2_mort_pour_moi], schedule: [{card: en.h2.an.toux, in: [2, 3]}]}
+      answer: "Il range la convocation comme un billet de loterie. Dans la journée, il dit « avril » trois fois, à trois personnes différentes."
+    right:
+      label: "Il est vivant"
+      effects: {direction: "--", parole: 1, relation: {aulard: -1}, set: [h2_vivant], schedule: [{card: en.h2.an.toux, in: [2, 3]}]}
+      answer: "Il ne demande pas comment tu le sais. Il range la convocation et décroche le téléphone ; il n'appelle personne, il écoute la tonalité."
+
+  - id: en.h2.s2.un_an_pas_parti
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: aulard
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Vaubourg, une convocation à la main : « L'assureur me répète ce que tu lui as dit. Tribunal de Portclair, avril : jugement déclaratif de décès. Il est mort, pour toi, {toi}, oui ou non ? »"
+    left:
+      label: "Il est mort pour moi"
+      effects: {direction: "++", relation: {aulard: 1}, set: [h2_mort_pour_moi], schedule: [{card: en.h2.an.toux, in: [2, 3]}]}
+      answer: "« Enfin. » Il range la convocation et appelle l'assureur devant toi, pour qu'il entende ta phrase dans sa bouche à lui."
+    right:
+      label: "Il est vivant"
+      effects: {direction: "--", parole: 1, relation: {aulard: -1}, set: [h2_vivant], schedule: [{card: en.h2.an.toux, in: [2, 3]}]}
+      answer: "Il te regarde comme on regarde un chèque refusé. « Alors trouve-le avant avril. Ou tais-toi après. »"
+
+  # ═════════════════════════════════════════════ S2 · 10 · Intermède : le banc dans la brume
+  - id: en.h2.s2.intermede
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede]
+    tone: leger
+    once: true
+    lieu: terrain
+    text: "Six heures, le brouillard sur le terrain annexe. Sur le banc, un homme en manteau siffle sans bruit. Il se retourne : c'est toi, avec dix ans de plus."
+    left:
+      label: "Je m'assois à côté"
+      effects: {}
+      answer: "Vous regardez le terrain sans rien dire. Il porte ton manteau. Quand le brouillard se lève, le banc est mouillé des deux côtés."
+    right:
+      label: "Je m'assois à côté"
+      effects: {}
+      answer: "Vous regardez le terrain sans rien dire. Il porte ton manteau. Quand le brouillard se lève, le banc est mouillé des deux côtés."
+
+  - id: en.h2.s2.intermede_sifflet
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede]
+    tone: leger
+    once: true
+    lieu: terrain
+    text: "Six heures, le brouillard sur le terrain annexe. Sur le banc, un homme en manteau siffle sans bruit, dans le sifflet de l'autre. Il se retourne : c'est toi, avec dix ans de plus."
+    left:
+      label: "Je m'assois à côté"
+      effects: {}
+      answer: "Il te tend le sifflet sans un mot. La lanière est raide, comme le premier jour. Quand le brouillard se lève, le banc est vide."
+    right:
+      label: "Je m'assois à côté"
+      effects: {}
+      answer: "Il te tend le sifflet sans un mot. La lanière est raide, comme le premier jour. Quand le brouillard se lève, le banc est vide."
+
+  # ═════════════════════════════════════════════ S2 · 13 · Le wagon brûle
+  - id: en.h2.s2.wagon_brule
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Deux heures, la friche. Le wagon flambe. Roland tousse dans la boue, en chaussettes. Derrière le feu de palettes, une veste de chauffeur s'éloigne. Josiane arrive en courant, sans son cabas."
+    left:
+      label: "Je cours vers la veste"
+      effects: {set: [h2_feu, h2_course]}
+      answer: "Tu cours. Derrière toi, Josiane crie un nom ; ce n'est pas le tien."
+    right:
+      label: "J'emmène Roland"
+      effects: {relation: {josiane: 1}, set: [h2_feu]}
+      answer: "Il pèse moins qu'un sac de ballons et sent la fumée. Josiane lui tient la tête jusqu'à ta voiture, sans le lâcher des yeux."
+
+  - id: en.h2.s2.wagon_brule_obei
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Deux heures, le téléphone. Josiane, essoufflée : « Le wagon brûle. » Quand tu arrives, Roland tousse dans la boue ; derrière le feu de palettes, une veste de chauffeur s'éloigne."
+    left:
+      label: "Je cours vers la veste"
+      effects: {set: [h2_feu, h2_course]}
+      answer: "Tu cours. Derrière toi, Josiane crie un nom ; ce n'est pas le tien."
+    right:
+      label: "J'emmène Roland"
+      effects: {relation: {josiane: 1}, set: [h2_feu]}
+      answer: "« Tu ne devais pas venir », souffle-t-il quand tu le soulèves. Josiane lui tient la tête jusqu'à ta voiture."
+
+  - id: en.h2.s2.wagon_brule_inconnu
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Deux heures, la friche, les pompiers. Le vieux wagon flambe. Josiane est là, sans son cabas. Dans la boue, un homme tousse : sous la barbe, Roland Mercadier. Une veste de chauffeur s'éloigne."
+    left:
+      label: "Je cours vers la veste"
+      effects: {set: [h2_feu, h2_course]}
+      answer: "Tu cours. Derrière toi, Josiane crie un nom ; ce n'est pas le tien."
+    right:
+      label: "J'emmène Roland"
+      effects: {relation: {josiane: 1}, set: [h2_feu]}
+      answer: "Il te reconnaît. « L'intérimaire. » Il rit, et la toux l'arrête. Josiane lui tient la tête jusqu'à ta voiture."
+
+  # ═════════════════════════════════════════════ S2 · 16 · L'audience
+  # Tribunal de Portclair : loin d'Aubérive (`lieu: ailleurs`).
+  - id: en.h2.s2.audience
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "Tribunal de Portclair, un mardi d'avril. Le juge demande si quelqu'un a un signe de vie. Monique regarde ses mains. Achard te regarde, toi. Tu n'as rien dans les poches qu'une vieille clé."
+    left:
+      label: "Il est vivant, je l'ai vu"
+      effects: {direction: "--", relation: {aulard: -1}, set: [h2_mort_papier]}
+      answer: "Le greffier note « témoignage sans pièce ». Le juge déclare le décès à onze heures dix. Vaubourg ne te regarde plus de la journée."
+    right:
+      label: "Je me tais"
+      effects: {direction: "+", set: [h2_mort_papier, cdi_signe]}
+      answer: "Le juge déclare le décès à onze heures dix. Monique signe un registre. Dans le couloir, Achard range un stylo qu'il n'a pas ouvert."
+
+  - id: en.h2.s2.audience_cassette
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "Tribunal de Portclair, un mardi d'avril. Le juge demande un signe de vie. Dans ta poche, la cassette de janvier, une voix qui dit « Garde le banc ». Vaubourg ne te regarde pas."
+    left:
+      label: "Je dépose la cassette"
+      effects: {direction: "---", parole: 2, relation: {aulard: -1, achard: 1}, set: [h2_vivant_papier]}
+      answer: "Le greffier cherche un magnétophone pendant vingt minutes. La voix remplit la salle. Le juge ajourne ; Vaubourg sort sans manteau."
+    right:
+      label: "Je me tais"
+      effects: {direction: "+", set: [h2_mort_papier, cdi_signe]}
+      answer: "Le juge déclare le décès à onze heures dix. La cassette pèse dans ta poche toute la journée, comme une pierre."
+
+  - id: en.h2.s2.audience_preuves
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "Tribunal de Portclair, un mardi d'avril. Le juge demande un signe de vie. Dans ta poche, la cassette de janvier ; dans ton sac, quatre ans de paris d'une écriture serrée. Léa attend dehors."
+    left:
+      label: "Je dépose les deux"
+      effects: {end: interim_revenant}
+      answer: "Le juge écoute la voix, lit trois pages du carnet, et suspend. Le lendemain, Roland entre au tribunal par la grande porte, rasé."
+    right:
+      label: "Je me tais"
+      effects: {direction: "+", set: [h2_mort_papier, cdi_signe]}
+      answer: "Le juge déclare le décès à onze heures dix. Dans le couloir, Léa te regarde passer avec ton sac, sans rien demander."
+
+  - id: en.h2.s2.audience_hopital
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "Tribunal de Portclair. L'audience dure quatre minutes : un homme est vivant à l'hôpital d'Aubérive, sous son nom. Le juge lève la séance. Achard sourit. Vaubourg sort sans manteau."
+    left:
+      label: "Je vais voir Roland"
+      effects: {relation: {josiane: 1}, set: [h2_vivant_papier]}
+      answer: "Chambre 4, une perfusion, un journal plié sur le drap. « On a gagné, samedi ? » demande-t-il avant bonjour."
+    right:
+      label: "Je rattrape Vaubourg"
+      effects: {direction: "+", set: [h2_vivant_papier]}
+      answer: "Sur les marches, Vaubourg allume une cigarette, les mains qui tremblent. « Deux millions. Tu sais combien de joueurs ça fait ? »"
+
+  - id: en.h2.s2.audience_hopital_carnet
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "L'audience dure quatre minutes : Roland est vivant, à l'hôpital, sous son nom. Dans le couloir, Léa : « Il est vivant, vous avez le carnet. Il peut parler, maintenant. Il veut ? »"
+    left:
+      label: "Il veut parler"
+      effects: {end: interim_revenant}
+      answer: "Il parle trois heures, la perfusion au bras, devant un juge et une greffière. Il commence par octobre et finit par le car."
+    right:
+      label: "Pas encore"
+      effects: {set: [h2_vivant_papier]}
+      answer: "Léa referme son carnet. « Un jour, il faudra. » Dans la chambre 4, Roland demande seulement le score de samedi."
+
+  # ═════════════════════════════════════════════ S2 · 17 · La feuille de match
+  - id: en.h2.s2.feuille
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Dernier match. Au premier rang du virage, entre deux écharpes, une casquette grise que tu reconnais. Vukić a vu aussi : « Sur la feuille, je mets son nom, ou le tien ? »"
+    left:
+      label: "Le sien"
+      effects: {end: en_sms}
+      answer: "Vukić écrit MERCADIER en capitales. Le soir, à 23 h 47, le président t'écrit trois lignes ; il y a une faute dans la deuxième."
+    right:
+      label: "Le mien"
+      effects: {vestiaire: "+", direction: "+", set: [h2_parti_mi_temps]}
+      answer: "Vukić écrit ton nom. À la mi-temps, la casquette n'est plus dans le virage ; à sa place, sur le béton, un sapin en carton."
+
+  - id: en.h2.s2.feuille_mort
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Mort mardi sur le papier ; ton contrat attend chez le président. Dernier match : au premier rang du virage, une casquette grise. Vukić a vu aussi : « Sur la feuille, son nom, ou le tien ? »"
+    left:
+      label: "Le sien"
+      effects: {end: en_sms}
+      answer: "Vukić écrit le nom d'un mort sur une feuille de match. Le soir, à 23 h 47, le président t'écrit trois lignes, avec une faute."
+    right:
+      label: "Le mien"
+      effects: {set: [cdi_signe], end: interim_place}
+      answer: "Vukić écrit ton nom sans lever les yeux. À la soixantième, la casquette quitte le virage ; personne ne la voit partir."
+
+  - id: en.h2.s2.feuille_deux_bancs
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Dernier match. Josiane a apporté une écharpe neuve au premier rang du virage, pour une casquette grise. Vukić tend la feuille : « Son nom, ou le tien ? Le carnet est en lieu sûr. »"
+    left:
+      label: "Le sien"
+      effects: {end: interim_deux_bancs}
+      answer: "Vukić écrit MERCADIER, puis ton nom dessous, plus petit. Toute la Nord se retourne vers la casquette, puis vers le banc."
+    right:
+      label: "Le mien"
+      effects: {set: [h2_parti_mi_temps]}
+      answer: "Vukić écrit ton nom. À la mi-temps, la casquette s'en va, l'écharpe neuve autour du cou. Josiane ne dit rien de la semaine."
+
+  - id: en.h2.s2.feuille_deux_bancs_mort
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Mort sur le papier depuis mardi. Pourtant Josiane a apporté une écharpe neuve au premier rang du virage, pour une casquette grise. Vukić : « Son nom, ou le tien ? »"
+    left:
+      label: "Le sien"
+      effects: {end: interim_deux_bancs}
+      answer: "Vukić écrit le nom d'un mort, puis le tien dessous, plus petit. Toute la Nord se retourne vers la casquette."
+    right:
+      label: "Le mien"
+      effects: {set: [cdi_signe], end: interim_place}
+      answer: "Vukić écrit ton nom. La casquette regarde tout le match, l'écharpe neuve au cou, et s'en va au coup de sifflet."
+
+  # ═════════════════════════════════════════════ S3 · l'épilogue (une fois)
+  - id: en.h2.s3.rentree
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Madame Josiane ouvre le tiroir du milieu : deux plaques, la tienne et la sienne, l'une sur l'autre. « Je les garde ensemble. Je ne sais pas laquelle visser, cette année. Vous, {toi} ? »"
+    left:
+      label: "La mienne"
+      effects: {direction: "+"}
+      answer: "Elle visse la tienne. L'autre retourne dans le tiroir, face contre le bois, avec le sifflet et sa lanière."
+    right:
+      label: "Aucune"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "La porte reste nue toute la saison. Les nouveaux frappent quand même, deux coups, sans savoir pourquoi deux."
+
+  - id: en.h2.s3.rentree_vivant
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Une carte postale de la côte, sans signature, punaisée au-dessus du répondeur. Madame Josiane : « Arrivée lundi, au courrier de sept heures. Je la laisse au mur, {toi} ? »"
+    left:
+      label: "Laissez-la"
+      effects: {vestiaire: "+"}
+      answer: "Elle la laisse. Au dos, d'une écriture penchée, une compo en 4-4-2, et un nom souligné deux fois : le tien."
+    right:
+      label: "Rangez-la"
+      effects: {direction: "+"}
+      answer: "Elle la range dans le tiroir du milieu, avec les deux plaques. Au dos, une compo, et ton nom souligné deux fois."
+
+  # La veille, quand la casquette est partie à la mi-temps et que Vukić tient
+  # à toi : une carte postale lui laisse le banc, si tu le lui laisses (fin
+  # commune en_dauphin ; l'épitaphe du livre est dans content/endings/h2.yaml).
+  - id: en.h2.s3.veille_dauphin
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "La veille du dernier bloc, Vukić pose une carte postale de la côte sur la feuille vierge. L'écriture penchée : « Zoran, prends le banc, s'il te le laisse. » Lui : « Tu me le laisses ? »"
+    left:
+      label: "Prends le banc"
+      effects: {end: en_dauphin}
+      answer: "Il ne dit pas merci. Il punaise la carte au-dessus du répondeur, l'écriture contre le mur, et va chercher les plots."
+    right:
+      label: "Pas encore"
+      effects: {vestiaire: "+", relation: {vukic: -1}}
+      answer: "Il glisse la carte dans son cahier, entre deux pages blanches. « Pas encore », répète-t-il, et il va poser les plots."
+
+  - id: en.h2.s3.veille
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "La veille du dernier bloc. Le répondeur ne clignote plus depuis longtemps ; tu le regardes quand même en entrant. Vukić pose la feuille vierge : « Tu joues quoi, demain ? »"
+    left:
+      label: "Le bloc bas"
+      effects: {direction: "+", vestiaire: "+", force: -1}
+      answer: "Bloc bas. Vukić pose les plots à sept heures. Le répondeur reste éteint, et tu as cessé de l'attendre ; presque."
+    right:
+      label: "On attaque, une fois"
+      effects: {tribunes: "++", force: 2, vestiaire: "-"}
+      answer: "La Nord se lève à la vingtième. Au premier rang, une place reste libre, à côté d'une écharpe bordeaux posée là."
+
+  # ═════════════════════════════════════════════ variantes de relecture
+  # La panne : tu as demandé à Norbert, au Terminus, quelles questions posait
+  # Roland (h2_questions_norbert). Il s'en souvient.
+  - id: en.h2.s1.panne_questions
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: gare
+    text: "Neige, vingt kilomètres avant Aubérive. Le car est mort, les joueurs partent en taxi. Norbert coupe le moteur : « Il faut quelqu'un pour le bon de la dépanneuse. Vous, qui aimez les questions ? »"
+    left:
+      label: "Je reste avec lui"
+      effects: {vestiaire: "+", set: [h2_panne_seul], react: en.h2.re.norbert_panne}
+      answer: "Le dernier taxi s'éloigne. Norbert remet le chauffage : « Au Terminus, vous demandiez ce que Roland demandait. On a toute la nuit. »"
+    right:
+      label: "Vukić reste"
+      effects: {direction: "+", relation: {vukic: -1}, set: [h2_panne_vukic], react: en.h2.re.vukic_panne}
+      answer: "Vukić monte sans un mot et s'assoit derrière le chauffeur. Le taxi démarre ; dans la lunette arrière, le car éteint ses phares."
+
+  # L'audience : le carnet sans la cassette ni l'hôpital. La dernière page est
+  # datée de décembre, après son départ : on ne déclare pas mort un homme qui
+  # écrit encore.
+  - id: en.h2.s2.audience_carnet
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "Tribunal de Portclair, un mardi d'avril. Le juge demande un signe de vie. Dans ton sac, quatre ans de paris d'une écriture penchée, la même que sur la compo du vestiaire."
+    left:
+      label: "Je dépose le carnet"
+      effects: {direction: "--", parole: 1, relation: {aulard: -1}, set: [h2_vivant_papier, h2_carnet_police]}
+      answer: "Le juge lit trois pages, puis la dernière, datée de décembre. Il ajourne : on ne déclare pas mort un homme qui écrit encore."
+    right:
+      label: "Je me tais"
+      effects: {direction: "+", set: [h2_mort_papier, cdi_signe]}
+      answer: "Le juge déclare le décès à onze heures dix. Le carnet reste dans ton sac, contre ta jambe, toute l'audience."
+
+  # L'audience : Monique a avoué l'appel de la cabine (h2_monique_aveu), et elle
+  # jure le contraire devant le juge.
+  - id: en.h2.s2.audience_monique
+    roles: [entraineur]
+    arc: instances
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: ailleurs
+    text: "Tribunal de Portclair, un mardi d'avril. Le juge demande à Monique Mercadier si elle a eu des nouvelles de son mari. Elle dit non. En le disant, elle te regarde."
+    left:
+      label: "Il est vivant, je l'ai vu"
+      effects: {direction: "--", relation: {aulard: -1, monique: -1}, set: [h2_mort_papier]}
+      answer: "« Témoignage sans pièce. » Le juge déclare le décès à onze heures dix. Monique sort la première, sans attendre son avocat."
+    right:
+      label: "Je me tais"
+      effects: {direction: "+", set: [h2_mort_papier, cdi_signe]}
+      answer: "Le juge déclare le décès à onze heures dix. Sur les marches, Monique te serre la main longtemps : un merci, ou une excuse."

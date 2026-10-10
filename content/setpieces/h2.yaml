@@ -1,0 +1,93 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les set-pieces (schéma : en-tête de
+# content/setpieces.yaml). Des variantes seulement, jamais un secours : toutes
+# portent `roles: [entraineur]` et `flag('histoire_h2')`. L'objectif de chaque
+# saison dit la saison du livre (six semaines, l'assureur, avril) ; le match,
+# le classement et le verdict regardent ce qu'on regarde à Aubérive cette
+# année-là : la berline au parking, le car neuf, le tribunal.
+setpieces:
+  objective:
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 0"
+      speaker: aulard
+      text: "Vaubourg ferme la porte du bureau : « Six semaines, {toi}, jusqu'à nouvel ordre. L'objectif, c'est {objectif_min}. Et ne touche pas à sa voiture. »"
+      left: "Je m'engage"
+      right: "Six semaines, pas plus"
+      answer_left: "Il note la date sur son sous-main, à côté d'un numéro de police d'assurance qu'il recouvre de la main."
+      answer_right: "« Six semaines, c'est déjà beaucoup, pour un intérimaire. » Il range le sous-main dans le tiroir."
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 1"
+      speaker: aulard
+      text: "« L'objectif, {toi} : {objectif_min}. Et un assureur arrive lundi. Tu lui diras ce que je te dirai de dire. »"
+      left: "Je m'engage"
+      right: "Je dirai ce que je sais"
+      answer_left: "Il hoche la tête et regarde par la fenêtre, vers le parking, la place peinte."
+      answer_right: "« Tu ne sais rien. » Il le dit comme on donne un ordre, pas comme on constate."
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 2"
+      speaker: aulard
+      text: "Vaubourg pose le calendrier de la saison à côté d'une convocation : « {objectif_min}, {toi}. Et en avril, un mardi sans match. Je te le garde. »"
+      left: "Je m'engage"
+      right: "Pas le mardi"
+      answer_left: "Il entoure le mardi au feutre rouge, puis il range la convocation sous le calendrier."
+      answer_right: "« Tout le monde y sera, ce mardi-là. Toi aussi. » Il ne lève pas les yeux."
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season >= 3"
+      speaker: aulard
+      text: "« L'objectif, {toi} : {objectif_min}. Il n'y a plus d'autre nom sur la porte, et plus de police dans mon tiroir. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il signe sans relire. Le tiroir de gauche ne ferme plus à clé ; il n'y a plus rien à y fermer."
+      answer_right: "« Lui non plus, il ne promettait rien. » Il le dit, puis il regrette de l'avoir dit."
+
+  classement:
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 0 && !phase('bilan')"
+      speaker: josiane
+      text: "Madame Josiane punaise le classement de la trêve à côté de la compo de l'autre : « Je mets les deux au même mur. Comme ça, on compare. »"
+      left: "Laisser les deux"
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && phase('bilan') && flag('h2_rive')"
+      speaker: meneche
+      text: "Massenet a plié le classement de juin autour d'une photo du quai : « La saison s'est jouée sur le terrain. Le reste s'est joué dans la Rive. »"
+      left: "Lire le classement"
+
+  match:
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 0 && !flag('h2_place_vide')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Au parking, la berline grise attend sur sa place peinte ; elle a vu tous les départs."
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && flag('h2_cars_du_quai') && season == 1"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six déplacements dans le car neuf, rideaux tirés au fond, Norbert au volant."
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 2"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le tribunal a fixé avril. Le calendrier, lui, ne le sait pas."
+
+  aftermatch:
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && vars.gm_won == 1 && flag('h2_wagon_vu') && !flag('h2_feu')"
+      speaker: josiane
+      text: "Score final {gm_score}. Dans le couloir, Madame Josiane te glisse : « La radio à piles a capté le match. Il a entendu le but. Vous passez, ce soir ? »"
+      left: "Je passe ce soir"
+      right: "Pas ce soir"
+      answer_left: "Vingt heures, le wagon. Il a noté le score à la craie sur la paroi, à côté des autres. Il en manque un, celui d'octobre."
+      answer_right: "« Il comprendra. » Elle repart avec son cabas, plus lourd que d'habitude : une bouteille, ce soir."
+
+  bilan_verdict:
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 0 && bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. Sur la feuille du président, ton nom est écrit au crayon, le sien au stylo."
+      left: "Voir le classement"
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 0 && !bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : manqué. Le président relit une police d'assurance pendant que tu parles."
+      left: "Voir le classement"
+
+  bilan_contrat:
+    - roles: [entraineur]
+      when: "flag('histoire_h2') && season == 0"
+      speaker: aulard
+      text: "« On continue, {toi} ? Le titre, je ne peux pas : sur le papier, il est encore à lui. Le reste, je peux. »"
+      left: "On continue"
+      right: "Je veux le titre"
+      answer_left: "Il signe en bas d'une page où ton nom est écrit plus petit que le sien."
+      answer_right: "« Le jour où il sera mort, tu l'auras. » Il le dit sans baisser la voix."

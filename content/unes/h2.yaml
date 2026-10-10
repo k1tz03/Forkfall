@@ -1,0 +1,149 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les manchettes (schéma : en-tête de
+# content/unes.yaml). La presse ne sait que ce qui se voit : une voiture qui
+# bouge, une place vide, un car neuf, un sapin dans la Rive, un tribunal. Le
+# wagon, la cabine et le carnet restent hors des journaux. Fraîcheur : chaque
+# manchette lit une trace par `journal_has` (posée cette saison). Le nom de
+# l'entraîneur disparu s'écrit en entier : c'est l'affaire du livre.
+unes:
+  # ------------------------------------------------------------------ S0
+  - id: une.h2.voiture_bouge
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('h2_trois_metres') && journal_has('h2_trois_metres')"
+    titre: "LA VOITURE QUI BOUGE LA NUIT"
+    sous: "Trois mètres, de la boue blanche, un sapin neuf : au parking de la Rive, la berline de l'ancien entraîneur se promène. Le gardien ne dort plus."
+    sujet: en.h2.berline
+    photo: en.h2.berl.trois_metres
+
+  - id: une.h2.premier_lundi
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('h2_brehaut_banc') && journal_has('h2_brehaut_banc')"
+    titre: "L'INTÉRIMAIRE AVAIT RAISON"
+    sous: "Bréhaut sur le banc, et son genou qui lâche à l'échauffement. À {ville}, on se demande qui renseigne {nom}."
+    sujet: en.h2.repondeur
+    photo: en.h2.rep.samedi_banc
+
+  - id: une.h2.monique
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('h2_monique_crue') && journal_has('h2_monique_crue')"
+    titre: "« IL CHANGE SON SAPIN LE PREMIER »"
+    sous: "Monique Mercadier appelle le club chaque matin à dix heures. Elle dit que son mari est vivant. À {ville}, quelqu'un la croit."
+    sujet: en.h2.berline
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" } ]
+
+  - id: une.h2.ou_est
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h2_place_vide') && journal_has('h2_place_vide')"
+    titre: "OÙ EST MERCADIER ?"
+    sous: "Sa berline a quitté la place ENTRAÎNEUR une nuit de décembre, réverbère éteint. Le club parle d'un départ. {club} finit {rang}e."
+    photo: en.h2.s0.place_vide
+
+  - id: une.h2.place_sans_nom
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('h2_place_repeinte') && journal_has('h2_place_repeinte')"
+    titre: "LA PLACE SANS NOM"
+    sous: "Au parking du stade de {ville}, la place ENTRAÎNEUR a été repeinte au rouleau. Le peintre attend toujours qu'on lui dise quoi écrire."
+
+  # ------------------------------------------------------------------ S1
+  - id: une.h2.car_neuf
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('h2_cars_du_quai') && journal_has('h2_cars_du_quai')"
+    titre: "UN CAR NEUF POUR {CLUB}"
+    sous: "Les Cars du Quai offrent deux saisons de déplacements, chauffeur compris. Des rideaux aux vitres : le confort des grands."
+    sujet: en.h2.norbert
+
+  - id: une.h2.fond_du_car
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('h2_fond_du_car') && journal_has('h2_fond_du_car')"
+    titre: "CARTES ET RIDEAUX AU FOND DU CAR"
+    sous: "La Gazette a des prénoms, pas de preuves. Le chauffeur de {club} répond qu'il ne regarde que la route. Le club ne répond pas."
+    sujet: en.h2.norbert
+
+  - id: une.h2.assureur_maillot
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('h2_maillots_prevoyance') && journal_has('h2_maillots_prevoyance')"
+    titre: "L'ASSUREUR SUR LE MAILLOT"
+    sous: "La Prévoyance Aubérivoise s'affiche en lettres blanches sur le maillot de {club}. La Nord a répondu par une bâche : ON N'EST PAS ASSURÉS."
+    sujet: en.h2.prevoyance
+    photo: en.h2.prev.maillots
+
+  - id: une.h2.rive
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h2_rive') && journal_has('h2_rive')"
+    titre: "UN SAPIN DANS LA RIVE"
+    sous: "Les pompiers ont plongé jusqu'à minuit sous le quai de {ville}. Ils ont remonté un sapin en carton. La voiture, la vase l'a gardée."
+    photo: en.h2.s1.rive
+    react: [ { card: co.re.josiane_a_lu, if: "!seen('co.re.josiane_a_lu')" } ]
+
+  - id: une.h2.car_fouille
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('h2_car_fouille') && journal_has('h2_car_fouille')"
+    titre: "LES GENDARMES OUVRENT LES SOUTES"
+    sous: "Contrôle au péage de Portclair : le car de {club} fouillé de nuit, sous la neige. Des sacs de ballons, et un chauffeur souriant."
+
+  # ------------------------------------------------------------------ S2+
+  - id: une.h2.mort_papier
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h2_mort_papier') && journal_has('h2_mort_papier')"
+    titre: "MERCADIER DÉCLARÉ MORT"
+    sous: "Tribunal de Portclair, un mardi d'avril : jugement déclaratif de décès. L'assurance versera deux millions à {club}."
+    photo: en.h2.s2.audience
+
+  - id: une.h2.vivant
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h2_hopital') && journal_has('h2_hopital')"
+    titre: "MERCADIER EST VIVANT"
+    sous: "Retrouvé la nuit où un wagon de la friche a brûlé, il est à l'hôpital de {ville}, sous son nom. Le président n'a pas fait de commentaire."
+
+  - id: une.h2.chauffeur
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "flag('h2_norbert_pris') && journal_has('h2_norbert_pris')"
+    titre: "LE CHAUFFEUR"
+    sous: "Norbert, chauffeur du car de {club} depuis douze ans, entendu après l'incendie de la friche. « Il passait par là », dit son avocat."
+
+  - id: une.h2.doc
+    postulats: [interimaire]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('h2_doc') && journal_has('h2_doc')"
+    titre: "LE DOC FERME SON CABINET"
+    sous: "« Une semaine, pour raisons personnelles », dit la pancarte. Le soir, chez lui, la lumière reste allumée jusqu'à l'aube."

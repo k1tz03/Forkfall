@@ -1,0 +1,68 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les événements du livre.
+#
+# Neuf nuits dans la fiche (docs/histoires/00_les_dix_histoires.md, § 6). Cinq
+# sont tenues par l'épine ou par ses intrigues, parce que le metteur en scène
+# n'arme ses événements qu'entre les créneaux 4 et 14 et jamais près d'une
+# échéance : les trois mètres (en.h2.berline), la place vide, la panne, la Rive
+# et le wagon qui brûle (en.h2.script). Quatre sont les événements communs de
+# l'entraîneur, habillés pour ce livre par une variante gardée par
+# `flag('histoire_h2')` (content/cards/entraineur/h2_variantes.yaml) : la
+# palette, le coup de fil de trois heures, l'homme au blouson gris, et le car
+# (fouillé au péage, pas au fossé). Restent ici les deux nuits propres à la
+# troisième saison, l'une ou l'autre : la maison visitée, rue des Lilas, après
+# la saisie ; ou l'assureur qui compte, au bout de la rue de la friche, ceux
+# qui viennent la nuit. Elles se partagent les créneaux 4 à 9 de la S2 : le
+# wagon brûle au 13, l'écart de cinq cartes tient.
+#
+# Les traces des variantes communes sont déclarées ici (leur ligne d'Almanach
+# est celle du livre, pas celle de l'arc commun) : la palette, le coup de fil,
+# les deux premières enveloppes, le car fouillé.
+arcs:
+  - id: en.h2.evt.maison
+    title: "La maison visitée"
+    kind: evenement
+    roles: [entraineur]
+    postulats: [interimaire]
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h2') && season == 2 && slot >= 4 && slot <= 9 && !flag('h2_achard_nuit')"
+    chance: 0.30
+    cast: [monique, norbert]
+    same_club: true
+    fallback: drop
+    traces:
+      h2_maison:         "{annee} : on a fouillé la maison de {nom}, rue des Lilas, sans rien prendre. Même les boîtes d'allumettes."
+      h2_palette:        "{annee} : Dembo devait de l'argent à l'arrière-salle du Terminus. Il le devait aussi, disait-on, à quelqu'un d'autre."
+      h2_appel_nuit:     "{annee} : à trois heures du matin, une voix a demandé à {nom} : « Il est où ? » Puis la tonalité."
+      h2_laverie_page:   "{annee} : à la laverie, une page de carnet : un match, deux noms du vestiaire, une cote, une écriture penchée."
+      h2_laverie_police: "{annee} : à la laverie, la copie d'une police « homme-clé » de 1989. Le mot « décès » souligné au crayon."
+      h2_car_fouille:    "{annee} : le car de {club} fouillé au péage de Portclair. Les gendarmes n'ont trouvé que des ballons."
+    steps:
+      - id: lilas
+        card:
+          - { id: en.h2.evt.maison_cassette, if: "flag('h2_cassette')" }
+          - { id: en.h2.evt.maison }
+        next: []
+
+  - id: en.h2.evt.achard
+    title: "L'assureur qui compte"
+    kind: evenement
+    roles: [entraineur]
+    postulats: [interimaire]
+    theme: president
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h2') && season == 2 && flag('h2_wagon_vu') && slot >= 4 && slot <= 9 && !flag('h2_maison')"
+    chance: 0.30
+    cast: [achard, norbert]
+    same_club: true
+    fallback: drop
+    traces:
+      h2_achard_nuit: "{annee} : l'assureur a passé ses nuits au bout de la rue de la friche, phares éteints, à compter ceux qui y allaient."
+    steps:
+      - id: rue
+        card: en.h2.evt.achard
+        next: []

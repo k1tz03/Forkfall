@@ -1,0 +1,251 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · ce que le livre change au reste du club.
+#
+# 1. Les variantes d'histoire posées dans les arcs communs, toutes gardées par
+#    `flag('histoire_h2')` (une ligne ajoutée en tête, ou juste avant la
+#    variante de base, de la liste `card:` de l'étape ; rien d'autre ne change
+#    dans ces arcs) :
+#      · le réservoir de l'intérimaire (interim_longues.yaml, interim_courtes.yaml) :
+#        le diplôme, le grand nom, le kop qui doute, le pari de Massenet — ils
+#        lisent la disparition ;
+#      · les événements sombres communs (sombres.yaml) : la palette (Dembo à la
+#        friche), le coup de fil de trois heures, l'homme au blouson gris (trois
+#        enveloppes : une page du carnet, la police « homme-clé », un mot), et
+#        le car — qui, dans ce livre, ne finit pas au fossé : Norbert conduit
+#        jusqu'au bout.
+#    Les variantes reprennent les effets de la carte de base, sauf les traces
+#    dont la ligne d'Almanach contredirait le livre (le virement de Valdorne,
+#    les licences du centre, la jambe cassée de Norbert) : elles posent leurs
+#    propres traces, déclarées dans content/arcs/entraineur/h2_sombres.yaml.
+# 2. Les alarmes du postulat (alarm_overrides, en tête de liste).
+cards:
+  # ═══════════════════════════════════════════════ le réservoir de l'intérimaire
+  - id: en.h2.var.diplome_appel
+    roles: [entraineur]
+    arc: instances
+    tags: [direction]
+    speaker: legruet
+    tone: strategique
+    when: "!flag('diplome')"
+    text: "Berthomier, au téléphone, un bruit de tampon derrière lui : « {Toi}, sur nos registres, l'entraîneur du Racing s'appelle encore Mercadier. Vous n'avez pas le papier. Six mois, et un stage ? »"
+    left:
+      label: "Six mois, et le stage"
+      effects: {direction: "+", caisse: "-", parole: 1, set: [derogation], outcome: derogation, react: en.re.legruet_tampon}
+      answer: "Il tamponne. Le tampon manque une signature, et le registre garde l'autre nom, au-dessus du tien, barré d'un trait fin."
+    right:
+      label: "J'ai un autre moyen"
+      effects: {direction: "+", parole: -2, relation: {aulard: 1, legruet: -1}, set: [diplome_arrange], outcome: arrange}
+      answer: "Le président connaît quelqu'un. Le papier arrive un vendredi, le tampon est parfait, et le nom de Mercadier a disparu du registre."
+
+  - id: en.h2.var.grand_nom_president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg relit le télex de l'agent : « Il signe le jour où le banc est libre. Libre sur le papier, {toi}. Lui en janvier avec toi à côté, ou toi seul jusqu'en juin, et lui en loge ? »"
+    left:
+      label: "Moi en juin, lui en loge"
+      effects: {direction: "-", vestiaire: "+", tribunes: "+", relation: {fardelli: -1}, set: [loco_evince], outcome: evince}
+      answer: "Il regarde tes matchs depuis la loge, assis sur un seau qu'il a apporté. Il demande à Josiane quand le tribunal siège."
+    right:
+      label: "Lui en janvier, moi à côté"
+      effects: {direction: "++", vestiaire: "--", relation: {fardelli: 1}, set: [adjoint_de_loco], outcome: adjoint}
+      answer: "Tu poses les plots avec Vukić. Lui s'assoit sur le banc à la place de l'autre, sans demander à qui elle était."
+
+  - id: en.h2.var.kop_vingtieme
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, ultras, tribunes]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet, montre en main : « Vingtième minute : quatre minutes de Mercadier, j'ai chronométré. Au grillage du virage, une écharpe bordeaux que personne ne réclame. Je titre ? »"
+    left:
+      label: "« Elle chante encore »"
+      effects: {tribunes: "-", parole: 1, set: [kop_hostile], outcome: siffle}
+      answer: "Il titre. Au match suivant, la Nord chante Mercadier cinq minutes au lieu de quatre. Gégé est venu avec un chronomètre."
+    right:
+      label: "Titrez sur l'absent"
+      effects: {tribunes: "+", parole: -1, relation: {gege: 1}, set: [ancien_sali], outcome: sali}
+      answer: "« Parti sans dire au revoir. » Au local, sa photo descend du mur ; Gégé la range face contre le bois, pas à la poubelle."
+
+  - id: en.h2.var.cote
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, caisse]
+    speaker: meneche
+    tone: leger
+    text: "Massenet montre une cote griffonnée au dos d'un ticket : « Le tabac du Quai vous donne à quatre contre un pour juin, et Mercadier de retour avant Noël à dix contre un. Cent francs sur vous ? »"
+    left:
+      label: "Cent francs sur moi"
+      effects: {caisse: "-", tribunes: "+", parole: 1, set: [pari_interim], outcome: parie, react: en.re.meneche_une_parie}
+      answer: "Il note. Il propose deux titres ; le second est « sur sa tête ». Au tabac, on prend plus de paris sur l'autre que sur toi."
+    right:
+      label: "Pas de commentaire"
+      effects: {parole: -1, var: {no_comment: "+1"}, outcome: no_comment, react: en.re.meneche_embuscade}
+      answer: "Il note le silence. Il mise lui-même, dix francs, sur le retour avant Noël. Il ne dit pas pourquoi."
+
+  # ═══════════════════════════════════════════════ les événements sombres communs
+  # La palette (en.sb.disparu) : les traces communes conviennent au livre.
+  - id: en.h2.sb.palette
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: vukic
+    lieu: friche
+    tone: strategique
+    once: true
+    text: "La friche. Dembo en survêtement sur une palette ; deux hommes comptent sur leurs doigts. Vukić, à ta portière : « Il leur doit. Il devait une explication à Roland. Tu paies, ou je le ramène ? »"
+    left:
+      label: "Je paie, en liquide"
+      effects: {caisse: "-", vestiaire: "+", set: [sb_disparu, sb_dette_joueur, h2_palette]}
+      answer: "Les deux hommes recomptent et repartent vers le Terminus. Dans la voiture, Dembo dit seulement : « Ce n'est pas à eux que je dois. »"
+    right:
+      label: "Ramène-le sans payer"
+      effects: {vestiaire: "-", force: -2, set: [sb_disparu, h2_palette]}
+      answer: "Les deux hommes notent le numéro de son maillot. « Le chauffeur sait où il habite », dit l'un ; l'autre lui donne un coup de coude."
+
+  # Le coup de fil de trois heures (en.sb.appel_nuit) : sa propre trace.
+  - id: en.h2.sb.appel
+    roles: [entraineur]
+    arc: direction
+    tags: [scandale, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures douze. Le téléphone sonne dans l'entrée. Une voix calme, sans bonjour : « Il est où ? » Un silence. « Tu sais de qui je parle. » Puis la tonalité."
+    left:
+      label: "Je débranche"
+      effects: {direction: "-", set: [h2_appel_nuit]}
+      answer: "Tu dors mal, le fil enroulé autour du poignet. À sept heures, en rebranchant, la sonnerie part aussitôt : Josiane, pour la réunion."
+    right:
+      label: "J'appelle le commissariat"
+      effects: {parole: 1, vestiaire: "-", set: [h2_appel_nuit]}
+      answer: "Le planton note « appel anonyme, une phrase ». Il demande si tu sais de qui la voix parlait. Tu dis non ; il note aussi le non."
+
+  # L'homme au blouson gris (en.sb.laverie) : trois enveloppes kraft sur le
+  # hublot de la 4. Il est le frère de Josiane ; il ne lave jamais rien.
+  - id: en.h2.sb.laverie_page
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, sombre]
+    lieu: laverie
+    tone: strategique
+    once: true
+    text: "Laverie de la rue du Stade, 22 h. Les maillots tournent dans la 4. Un homme en blouson gris pose sur le hublot une enveloppe kraft : « Lisez ça avant samedi. » Il n'a pas de linge."
+    left:
+      label: "J'ouvre l'enveloppe"
+      effects: {direction: "-", set: [h2_laverie_page]}
+      answer: "Une page arrachée à un carnet à spirale : un match, deux noms de ton vestiaire, une cote. L'écriture penchée de la compo du mur."
+    right:
+      label: "Je cours la lui rendre"
+      effects: {parole: -1, set: [sb_laverie_rendue]}
+      answer: "Tu le rattrapes au coin de la rue. Il reprend l'enveloppe sans l'ouvrir : « Elle reviendra. Elle n'est pas à moi. »"
+
+  - id: en.h2.sb.laverie_police
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, sombre]
+    lieu: laverie
+    tone: strategique
+    once: true
+    text: "La 4 tourne. L'homme au blouson gris est revenu. Deuxième enveloppe : la photocopie d'une police de 1989, « homme-clé », deux millions. Un mot souligné au crayon : « décès »."
+    left:
+      label: "Je la montre au président"
+      effects: {direction: "--", relation: {aulard: -1}, set: [h2_laverie_police]}
+      answer: "Vaubourg lit debout et plie la feuille en quatre. « Qui vous a donné ça ? » Le soir même, la serrure du secrétariat est changée."
+    right:
+      label: "Je la garde, je me tais"
+      effects: {parole: -1, set: [h2_laverie_police]}
+      answer: "Tu la glisses sous le tapis de ta voiture. L'homme se lève : « La troisième sera la dernière. Elle tiendra en un mot. »"
+
+  - id: en.h2.sb.laverie_nom
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale, sombre]
+    lieu: laverie
+    tone: strategique
+    once: true
+    text: "Laverie. Troisième enveloppe, un seul mot au feutre : NORBERT. L'homme au blouson gris boutonne son blouson : « Ma sœur vous fait dire de ne jamais monter seul dans le car. »"
+    left:
+      label: "Je porte tout au juge"
+      effects: {direction: "--", parole: 1, outcome: livre, set: [sb_laverie_3]}
+      answer: "Trois enveloppes chez le juge, ton nom en bas. Il demande qui est Norbert. Tu dis : le chauffeur. Il écrit « chauffeur », sans majuscule."
+    right:
+      label: "Je garde tout, au cas où"
+      effects: {direction: "+", parole: -1, outcome: garde, set: [sb_laverie_3]}
+      answer: "Les trois enveloppes vont sous le tapis de ta voiture. Au déplacement suivant, Norbert règle son rétroviseur sur toi, et sourit."
+
+  # Le car (en.sb.car) : dans ce livre, il n'y a pas d'accident d'hiver.
+  # Norbert conduit jusqu'au bout ; ce sont les gendarmes qui arrêtent le car.
+  - id: en.h2.sb.car
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: vecchio
+    lieu: gare
+    tone: strategique
+    once: true
+    text: "Péage de Portclair, deux heures, la neige. Les gendarmes font descendre l'équipe et ouvrent les soutes. Norbert tend ses papiers en souriant. Gigi, sous une couverture : « On dort ici ? »"
+    left:
+      label: "On dort à l'hôtel d'ici"
+      effects: {vestiaire: "+", caisse: "-", set: [h2_car_fouille]}
+      answer: "Un hôtel de péage, des lits trop courts. Le matin, le car est propre, lavé de frais, et Norbert sifflote en vérifiant les pneus."
+    right:
+      label: "On rentre cette nuit"
+      effects: {vestiaire: "-", direction: "+", set: [h2_car_fouille]}
+      answer: "Les gendarmes ne trouvent que des sacs de ballons. Le car repart à trois heures. Au fond, personne ne joue aux cartes, cette nuit-là."
+
+  # ═══════════════════════════════════════════════ les alarmes du postulat
+  - id: en.h2.alarme.direction
+    roles: [entraineur]
+    once: true
+    arc: direction
+    tags: [direction, rescue:direction]
+    speaker: aulard
+    tone: strategique
+    when: "flag('histoire_h2')"
+    text: "Vaubourg relit la police « homme-clé », l'index sur une ligne : « Les intérimaires, l'assurance ne les couvre pas. Si tu tombes, j'en prends un autre lundi. Une raison de te garder ? »"
+    left:
+      label: "Le maintien, ligne à ligne"
+      effects: {direction: "++", vestiaire: "-"}
+      answer: "Tu parles une heure, les chiffres d'abord. Il range la police dans le tiroir de gauche et te raccompagne jusqu'à l'escalier."
+    right:
+      label: "Je sais des choses"
+      effects: {direction: "+", parole: 1, relation: {aulard: -1}}
+      answer: "Il te regarde longtemps. « Tout le monde sait des choses, ici. » Il ne te raccompagne pas ; il ne te renvoie pas non plus."
+
+  - id: en.h2.alarme.vestiaire
+    roles: [entraineur]
+    once: true
+    arc: vestiaire
+    tags: [vestiaire, rescue:vestiaire]
+    speaker: vukic
+    tone: strategique
+    when: "flag('histoire_h2') && chars.vukic.statut != 'rival'"
+    text: "Vukić ferme la porte du vestiaire derrière toi : « Ils jouent encore pour un homme qui n'est pas là. Il faudrait qu'ils jouent pour toi. Tu leur dis quoi, ce soir ? »"
+    left:
+      label: "Une partie de la vérité"
+      effects: {vestiaire: "++", direction: "-"}
+      answer: "Tu dis qu'il n'a dit au revoir à personne, toi non plus, et que tu restes. Bréhaut se lève le premier pour l'échauffement."
+    right:
+      label: "Rien. On court."
+      effects: {vestiaire: "+", force: -1}
+      answer: "Quarante minutes de fractionné sous la pluie. Personne ne parle de lui. Personne ne parle de rien ; c'est déjà ça."
+
+  - id: en.h2.alarme.tribunes
+    roles: [entraineur]
+    once: true
+    arc: ultras
+    tags: [ultras, tribunes, rescue:tribunes]
+    speaker: gege
+    tone: strategique
+    when: "flag('histoire_h2')"
+    text: "Gégé, devant le local, une bâche roulée sous le bras : « La Nord ne chante plus Mercadier à la vingtième. Elle le chante tout le match. Il faut que tu viennes leur dire quelque chose. »"
+    left:
+      label: "Je monte au local"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "Une bière tiède, quarante écharpes. Tu parles du match, pas de lui. À la fin, quelqu'un lève son verre « aux deux bancs »."
+    right:
+      label: "Qu'ils chantent"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Ils chantent. Au match suivant, ton nom arrive à la soixantième, une fois, mal accentué. Gégé le répète pour corriger l'accent."

@@ -338,17 +338,20 @@ arcs:
     steps:
       - id: enveloppe
         card:
+          - { id: en.h2.sb.laverie_page, if: "flag('histoire_h2')" }
           - { id: en.sb.laverie_huissier, if: "flag('sb_huissier')" }
           - { id: en.sb.laverie }
         # Il revient la saison suivante, dans les premiers créneaux.
         next: [ { step: retour, at_season: 1, at: [2, 6], in: [2, 6] } ]
       - id: retour
         card:
+          - { id: en.h2.sb.laverie_police, if: "flag('histoire_h2')" }
           - { id: en.sb.laverie_retour_rendue, if: "flag('sb_laverie_rendue')" }
           - { id: en.sb.laverie_retour }
         next: [ { step: nom, in: [5, 9] } ]
       - id: nom
         card:
+          - { id: en.h2.sb.laverie_nom, if: "flag('histoire_h2')" }
           - { id: en.sb.laverie_nom_ancien, if: "flag('sb_ancien')" }
           - { id: en.sb.laverie_nom_josiane, if: "relation.josiane >= 3" }
           - { id: en.sb.laverie_nom_mere, if: "chars.mbako.statut != 'vendu' && relation.mere_mbako >= 0 && relation.mbako >= 0" }
@@ -448,7 +451,9 @@ arcs:
       sb_car: "{annee} : le car du club au fossé, de nuit, dans la neige. Norbert, le chauffeur, a eu la jambe cassée."
     steps:
       - id: gare
-        card: en.sb.car
+        card:
+          - { id: en.h2.sb.car, if: "flag('histoire_h2')" }
+          - { id: en.sb.car }
         next: []
 
   # =================================================================== LA NUIT
@@ -472,7 +477,9 @@ arcs:
       sb_dette_joueur: "{annee} : {nom} a payé les dettes de Dembo à deux types de la friche, en liquide."
     steps:
       - id: friche
-        card: en.sb.disparu
+        card:
+          - { id: en.h2.sb.palette, if: "flag('histoire_h2')" }
+          - { id: en.sb.disparu }
         next: []
 
   - id: en.sb.appel_nuit
@@ -497,6 +504,7 @@ arcs:
       - id: telephone
         card:
           - { id: en.sb.appel_nuit_dette, if: "flag('sb_disparu') && !flag('sb_dette_joueur')" }
+          - { id: en.h2.sb.appel, if: "flag('histoire_h2')" }
           - { id: en.sb.appel_nuit }
         next: []
 

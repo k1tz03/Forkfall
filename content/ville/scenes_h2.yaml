@@ -1,0 +1,340 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les scènes de la semaine (format :
+# en-tête de content/ville/scenes_communes.yaml). Ce que la ville vit pendant
+# le livre, les jours sans carte : les témoins (Lulu et sa craie, Paulette au
+# guichet 14B, la boulangère du lundi, le garagiste, le fleuriste, le
+# marbrier), les voisins (Monique, rue des Lilas), et les graines qui
+# reviennent — la casquette grise, la lampe du lavoir, le sapin qui sèche sur
+# le parapet. Toutes lisent `flag(histoire_h2)` ; `saison` est celle de la
+# ville (1 pour 1990-1991). Roland Mercadier ne se croise qu'au wagon, la
+# nuit, et au Corner quand il est vivant sur le papier.
+#
+# Deux scènes s'enchaînent : la casquette vue à la cabine revient au wagon
+# (`mission(h2.sc.casquette)`).
+scenes:
+  # ═══════════════════════════════════════════════════════════ 1990-1991
+  - id: h2.sc.lulu_craie
+    titre: "Les traits à la craie"
+    roles: [entraineur]
+    lieu: voiture
+    tranches: [nuit]
+    qui: ancien
+    si: "flag(histoire_h2) && saison == 1 && !flag(h2_trois_metres)"
+    texte: "Minuit, le parking du stade. Lulu, le gardien, trace à la craie un trait devant chaque pneu de la berline grise, à genoux, sa lampe entre les dents. « Comme ça, je saurai. »"
+    choix:
+      - label: "Je tiens la lampe"
+        reponse: "Vous tracez les quatre traits ensemble. Le chien de Lulu renifle le pare-chocs, puis s'assoit et regarde la rue, longtemps, sans aboyer."
+      - label: "Rentrez dormir, Lulu"
+        reponse: "« Je ne dors pas. Je fais semblant, à la loge, pour le président. » Il finit son quatrième trait sans toi, et souffle sur la craie."
+
+  - id: h2.sc.paulette
+    titre: "Le guichet 14B"
+    roles: [entraineur]
+    lieu: stade
+    tranches: [aprem]
+    jours: [sam]
+    qui: passante
+    si: "flag(histoire_h2) && saison == 1"
+    texte: "Au guichet 14B, Paulette compte les billets invendus en mouillant son pouce. « Il me disait au revoir tous les samedis. Le dernier, il est passé sans me voir. Il regardait le car. »"
+    choix:
+      - label: "Il regardait le car ?"
+        reponse: "« Le car du club, garé au bout. Comme on regarde quelqu'un qui vous attend. » Elle reprend son compte où elle l'avait laissé, à cent douze."
+      - label: "Je vous dirai au revoir"
+        reponse: "Le soir, en partant, tu lui dis au revoir. Elle répond « à samedi » sans lever les yeux de sa caisse, comme elle répondait à l'autre."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h2.sc.boulangere
+    titre: "Le pain du lundi"
+    roles: [entraineur]
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    jours: [lun]
+    qui: commercant
+    si: "flag(histoire_h2) && saison <= 2"
+    texte: "La boulangère emballe ta baguette : « L'autre entraîneur prenait un pain de campagne le lundi, et deux croissants. Il disait que le lundi, il fallait du courage. Je vous mets pareil ? »"
+    choix:
+      - label: "La même chose"
+        francs: -12
+        reponse: "Elle emballe les croissants dans le papier à fanions. « Il reviendra les chercher, un jour. On revient toujours pour ses croissants. »"
+      - label: "Une baguette, merci"
+        reponse: "« Comme vous voulez. » Elle range deux croissants sous le comptoir, à part, dans un sac déjà plié, comme tous les lundis."
+
+  - id: h2.sc.monique_square
+    titre: "Deux sandwiches"
+    roles: [entraineur]
+    lieu: square
+    tranches: [aprem]
+    qui: monique
+    si: "flag(histoire_h2) && saison == 1"
+    texte: "Monique Mercadier, sur un banc du square des Lilas, deux sandwiches dans du papier d'aluminium. Elle t'en tend un. « Il les prenait au marché, le mercredi. J'en achète encore deux. »"
+    choix:
+      - label: "Je m'assois avec elle"
+        reponse: "Jambon-beurre, trop de beurre. Vous mangez sans parler. Quand tu te lèves, elle replie l'aluminium en un carré parfait et le garde dans son sac."
+      - label: "Je n'ai pas le temps"
+        reponse: "« Lui non plus. » Elle donne le second sandwich aux pigeons, morceau par morceau, en comptant à voix basse."
+
+  - id: h2.sc.terminus_vitre
+    titre: "Par la vitre du Terminus"
+    roles: [entraineur]
+    lieu: terminus
+    tranches: [soir]
+    si: "flag(histoire_h2) && flag(h2_place_vide) && !flag(h2_feu)"
+    texte: "Par la vitre du Terminus, Norbert derrière le comptoir de l'arrière-salle, qui essuie un verre propre. Un homme lui glisse une enveloppe sous la soucoupe. Norbert ne la regarde pas."
+    choix:
+      - label: "J'entre boire un café"
+        reponse: "Norbert te sert sans que tu demandes. L'enveloppe a disparu ; la soucoupe est restée, propre. « Le café est pour moi, coach. Comme toujours. »"
+      - label: "Je passe mon chemin"
+        reponse: "Tu passes. Dans la vitre, ton reflet et celui de Norbert se superposent une seconde : il a levé les yeux en même temps que toi."
+
+  # ═══════════════════════════════════════════════════════════ 1991-1992
+  - id: h2.sc.enfant_friche
+    titre: "Le monsieur de la friche"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [aprem]
+    qui: enfant
+    si: "flag(histoire_h2) && saison == 2 && !flag(h2_feu)"
+    texte: "Un gamin te tire la manche, un ballon sous le bras : « Vous êtes l'entraîneur ? Il y a un monsieur, à la friche, qui connaît tous les joueurs. Il m'a demandé le score. Il a pleuré. »"
+    choix:
+      - label: "Tu lui as dit quoi ?"
+        reponse: "« Deux-un pour nous. » Il fait rebondir son ballon. « Il a dit merci comme on dit merci au docteur. Après, il a monté sa radio. »"
+      - label: "Ne va plus à la friche"
+        reponse: "« Tout le monde va à la friche. » Il repart en dribblant un réverbère, puis un deuxième, et te fait un signe de loin."
+
+  - id: h2.sc.casquette
+    titre: "La casquette grise"
+    roles: [entraineur]
+    lieu: gareRoutiere
+    tranches: [matin]
+    jours: [lun]
+    si: "flag(histoire_h2) && flag(h2_cabine_vue) && !flag(h2_feu)"
+    texte: "Gare routière, lundi. Sur la tablette de la cabine du quai deux, une casquette grise oubliée. À l'intérieur, cousues au fil rouge, deux initiales : R. M."
+    choix:
+      - label: "Je la prends"
+        reponse: "Tu la plies dans ta poche. Elle sent le feu de bois et le tabac froid. Le lundi suivant, la cabine est occupée par une femme qui appelle sa fille."
+      - label: "Je la laisse"
+        reponse: "Tu la laisses. Le soir, en repassant, elle n'est plus là. Quelqu'un est revenu la chercher, ou quelqu'un l'a prise."
+
+  - id: h2.sc.casquette_rendue
+    titre: "Je l'ai laissée exprès"
+    roles: [entraineur]
+    lieu: wagon
+    tranches: [nuit]
+    qui: mercadier
+    si: "flag(histoire_h2) && flag(h2_wagon_vu) && !flag(h2_feu) && mission(h2.sc.casquette)"
+    texte: "Au wagon, Roland, nu-tête, la radio contre l'oreille : « Ma casquette, à la cabine. Je l'ai laissée exprès. Je voulais savoir qui la trouverait. Tu l'as vue ? »"
+    choix:
+      - label: "Je l'ai prise"
+        reponse: "Tu la sors de ta poche. Il la met, l'enlève, la remet. Elle est trop grande, maintenant ; il a maigri du crâne aussi, dit-il, et il rit."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je l'ai laissée"
+        reponse: "« Alors quelqu'un d'autre l'a prise. » Il baisse la radio, longtemps, puis la remonte : un but, ailleurs, chez des gens qu'il ne connaît pas."
+
+  - id: h2.sc.garage_bache
+    titre: "Le gardiennage"
+    roles: [entraineur]
+    lieu: garage
+    tranches: [aprem]
+    qui: commercant
+    si: "flag(histoire_h2) && saison == 2 && flag(h2_wagon_vu) && !flag(h2_rive)"
+    texte: "Le garage du Pont. Le garagiste répare une citadine, radio à fond. Dans la cour, sous une bâche grise, une forme de berline. « Celle-là n'est pas à vendre. Gardiennage. »"
+    choix:
+      - label: "Gardiennage pour qui ?"
+        reponse: "« Pour quelqu'un qui paie d'avance, en liquide. » Il baisse la radio. « Et qui n'aime pas qu'on lui pose la question. »"
+      - label: "Je cherche une citadine"
+        reponse: "Il te montre une petite rouge, trop chère. En partant, tu vois un chien couché devant la bâche, la tête sur les pattes, qui ne te quitte pas des yeux."
+
+  - id: h2.sc.lavoir
+    titre: "La lampe du lavoir"
+    roles: [entraineur]
+    lieu: lavoir
+    tranches: [soir]
+    jours: [jeu]
+    si: "flag(histoire_h2) && flag(h2_chemin_avoue) && !flag(h2_feu)"
+    texte: "Jeudi soir, le lavoir. Personne. Sur la margelle, une lampe de poche allumée, posée là pour toi, qui éclaire le chemin de la friche et pas un mètre de plus."
+    choix:
+      - label: "Je prends la lampe"
+        reponse: "Elle est tiède : quelqu'un l'a tenue longtemps. Au bout du chemin, deux coups frappés de l'intérieur du wagon avant que tu frappes toi-même."
+      - label: "Je fais demi-tour"
+        reponse: "Tu la laisses allumée. Le lendemain, Vukić te rend la monnaie d'une pile, sans un mot ; il l'avait achetée pour toi."
+
+  - id: h2.sc.quai_moteur
+    titre: "Une heure douze"
+    roles: [entraineur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h2) && flag(h2_quai) && saison == 2 && !flag(h2_rive)"
+    texte: "Une heure du matin, au quai. Sous tes fenêtres, une voiture s'arrête, moteur allumé, phares éteints. Cinq minutes. Puis elle repart vers le pont, sans allumer."
+    choix:
+      - label: "Je note l'heure"
+        reponse: "Une heure douze. Tu l'écris sur le calendrier de la cuisine, à côté des matchs. La semaine suivante, tu en notes une autre, à la même minute."
+      - label: "Je tire le rideau"
+        reponse: "Tu tires le rideau et tu restes derrière, dans le noir, jusqu'à ce que le bruit du moteur se perde du côté de la Rive."
+
+  - id: h2.sc.car_ardoise
+    titre: "L'ardoise du fond"
+    roles: [entraineur]
+    lieu: gareRoutiere
+    tranches: [matin]
+    si: "flag(histoire_h2) && flag(h2_cars_du_quai) && !flag(h2_feu)"
+    texte: "Au dépôt, le car neuf du club, porte ouverte, personne. Au fond, sur la banquette, un paquet de cartes et une petite ardoise où des prénoms sont barrés à la craie."
+    choix:
+      - label: "Je lis l'ardoise"
+        reponse: "Six prénoms, quatre barrés. Dembo n'est pas barré. Au bout du quai, quelqu'un tousse ; tu reposes l'ardoise exactement où elle était."
+      - label: "Je redescends"
+        reponse: "Tu redescends. Norbert arrive en sifflotant, une thermos à la main. « Vous cherchiez quelqu'un, coach ? Le car, c'est chez moi, un peu. »"
+
+  - id: h2.sc.pompier_sapin
+    titre: "Le sapin sur le parapet"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [matin]
+    qui: passant
+    si: "flag(histoire_h2) && flag(h2_rive)"
+    texte: "Sur le quai, un pompier en combinaison étend un sapin en carton sur le parapet, pour qu'il sèche. Des passants s'arrêtent, regardent, repartent. « Pièce à conviction », dit-il sans rire."
+    choix:
+      - label: "Je regarde le sapin"
+        reponse: "Il est neuf, encore vert sous la vase. Le pompier le retourne : au dos, au stylo, une date, celle du premier du mois."
+      - label: "Je passe"
+        reponse: "Tu passes. Derrière toi, quelqu'un demande au pompier s'il y avait quelqu'un dans la voiture. Il répond : « Pas que je sache. »"
+
+  - id: h2.sc.doc_piles
+    titre: "Le sirop et les piles"
+    roles: [entraineur]
+    lieu: pharmacie
+    tranches: [matin]
+    qui: sabatier
+    si: "flag(histoire_h2) && flag(h2_doc_wagon) && !flag(h2_feu)"
+    texte: "À la pharmacie, le Doc achète trois flacons de sirop au thym et une boîte de piles. Il te voit derrière lui dans la file. « Les piles, c'est pour ma radio. »"
+    choix:
+      - label: "Je paie les piles"
+        francs: -30
+        reponse: "Il te laisse payer sans protester. Dehors, il te rend le ticket de caisse plié en quatre. « Pour vos notes de frais. On ne sait jamais. »"
+      - label: "Je ne dis rien"
+        reponse: "Il paie, range tout dans sa sacoche et sort en saluant la pharmacienne par son prénom. Il n'a pas de radio ; tout le monde le sait."
+
+  - id: h2.sc.achard_mots
+    titre: "Sept lettres"
+    roles: [entraineur]
+    lieu: hotel
+    tranches: [soir]
+    qui: achard
+    si: "flag(histoire_h2) && saison >= 2 && saison <= 3"
+    texte: "Au bar de l'hôtel, Monsieur Achard fait les mots croisés de L'Écho, au stylo. « Sept lettres : disparu sans laisser d'adresse. J'hésite depuis une heure. Une idée ? »"
+    choix:
+      - label: "Éclipsé"
+        reponse: "Il compte sur ses doigts, écrit, souffle. « Éclipsé. Une éclipse, ça finit toujours. C'est ce qui me rassure, dans ce mot-là. »"
+      - label: "Pas de mots croisés"
+        reponse: "« Moi non plus, avant. On m'a donné du temps, cette année. » Il laisse la case vide et passe à la suivante, horizontalement."
+
+  # ═══════════════════════════════════════════════════════════ 1992-1993
+  - id: h2.sc.fleuriste
+    titre: "La couronne sans nom"
+    roles: [entraineur]
+    lieu: fleuriste
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h2) && saison == 3 && flag(h2_mort_pour_moi)"
+    texte: "La fleuriste noue un ruban violet sur une couronne : « Commandée pour avril, par le club. Le président veut qu'on n'écrive rien dessus. Un ruban sans nom, je n'en fais pas souvent. »"
+    choix:
+      - label: "Écrivez son nom"
+        reponse: "« Ce n'est pas vous qui payez. » Elle hésite, puis écrit au crayon, au revers du ruban, là où personne ne regarde : Roland."
+      - label: "Laissez-le sans nom"
+        reponse: "Elle range la couronne dans la chambre froide, à côté des bouquets de mariage. « Elle attendra. Elles attendent toujours, ici. »"
+
+  - id: h2.sc.caveau
+    titre: "La plaque vierge"
+    roles: [entraineur]
+    lieu: caveau
+    tranches: [aprem]
+    si: "flag(histoire_h2) && saison == 3 && !flag(h2_mort_papier)"
+    texte: "Au caveau du Racing, un marbrier mesure une plaque vierge contre la pierre, entre deux capitaines. « On me l'a commandée pour mai. Le nom viendra après. »"
+    choix:
+      - label: "Qui l'a commandée ?"
+        reponse: "« Le club. Le président a payé d'avance. » Il range son mètre. « D'habitude, on attend que les gens soient morts. Pas toujours. »"
+      - label: "Je repars"
+        reponse: "Tu repars par l'allée centrale. Derrière toi, le marbrier siffle un air que la Nord chantait, avant, à la vingtième minute."
+
+  - id: h2.sc.monique_balai
+    titre: "Le trottoir propre"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [soir]
+    qui: monique
+    si: "flag(histoire_h2) && flag(h2_maison)"
+    texte: "Rue des Lilas. Monique Mercadier balaie devant chez elle un trottoir déjà propre. « Je regarde votre porte, depuis. Je ne sais pas ce que je ferais si je voyais quelqu'un. »"
+    choix:
+      - label: "Merci, Monique"
+        reponse: "« Ne me remerciez pas. Lui aussi, je le regardais partir le matin. Ça n'a rien empêché. » Elle continue de balayer, plus lentement."
+      - label: "Rentrez chez vous"
+        reponse: "Elle range le balai contre le mur et rentre. Derrière ses rideaux, la lampe reste allumée jusqu'à minuit."
+
+  - id: h2.sc.halle
+    titre: "Les pas dans la halle"
+    roles: [entraineur]
+    lieu: halle
+    tranches: [aprem]
+    si: "flag(histoire_h2) && flag(h2_feu)"
+    texte: "La grande halle, de jour. Dans la poussière, des traces de pas partent du côté du feu et s'arrêtent au milieu, contre un pilier, comme si quelqu'un avait attendu là."
+    choix:
+      - label: "Je mesure la trace"
+        reponse: "Même pointure que la tienne, à un demi-centimètre près. Tu ressors par la porte du fond, en marchant à côté des pas, pas dedans."
+      - label: "Je ressors"
+        reponse: "Tu ressors par où tu es entré. Sur le pilier, à hauteur d'homme, une marque de cendre : la forme d'une main posée à plat."
+
+  - id: h2.sc.repondeur_silence
+    titre: "Un message de silence"
+    roles: [entraineur]
+    lieu: clubhouse
+    tranches: [soir]
+    si: "flag(histoire_h2) && flag(h2_feu) && saison == 3"
+    texte: "Le soir, au club-house, la diode du répondeur clignote. Un seul message : du silence, longtemps, puis un car qui manœuvre, le bip d'une marche arrière, et rien."
+    choix:
+      - label: "Je garde la bande"
+        reponse: "Tu changes la microcassette et ranges l'ancienne dans le tiroir du milieu. Le lendemain matin, Josiane la sort, l'écoute, et la remet."
+      - label: "J'efface"
+        reponse: "La bande rembobine. Tu restes devant l'appareil éteint, le doigt sur la touche, à écouter le bruit du radiateur."
+
+  - id: h2.sc.corner_roland
+    titre: "Je n'avais plus de piles"
+    roles: [entraineur]
+    lieu: bar
+    tranches: [soir]
+    qui: mercadier
+    si: "flag(histoire_h2) && flag(h2_vivant_papier)"
+    texte: "Au Corner, Roland Mercadier, rasé de frais, dans un costume trop grand pour lui maintenant. Il pousse une chaise vers toi du bout du pied. « On a gagné, samedi ? Je n'avais plus de piles. »"
+    choix:
+      - label: "Je m'assois"
+        reponse: "Vous parlez du match, rien que du match, pendant une heure. En partant, il paie ton verre et dit : « Garde le banc. Pour de vrai, maintenant. »"
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Pas ce soir"
+        reponse: "« Pas ce soir. » Il le répète comme on note une composition. Quand tu ressors, il regarde la porte, pas toi."
+
+  # ═══════════════════════════════════════════════════════════ après le livre
+  - id: h2.sc.kiosque_sapins
+    titre: "Des sapins au kiosque"
+    roles: [entraineur]
+    lieu: kiosque
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h2) && saison >= 4"
+    texte: "Le kiosquier vend des sapins en carton, maintenant, pendus à côté des journaux. « On m'en demande depuis l'histoire. Les gens les accrochent pour la chance. Vous en voulez un ? »"
+    choix:
+      - label: "Un, à la vanille"
+        francs: -8
+        reponse: "Il te tend le sapin dans sa cellophane. « Il avait horreur de la vanille, l'autre, il paraît. » Il le dit comme une chose que tout le monde sait."
+      - label: "Pas de sapin"
+        reponse: "« Vous avez raison. Ça ne porte pas chance à tout le monde. » Il en remet un droit, celui qui tournait sur son fil."
+
+match_textes:
+  pour:
+    - texte: "{Qui} marque à la vingtième. La Nord chante un autre nom pendant quatre minutes, puis le sien : {score}."
+      si: "flag(histoire_h2) && saison == 1"
+  contre:
+    - texte: "{Adv} marque. Derrière la tribune, sur le parking, un moteur de car démarre et s'éloigne avant la fin : {score}."
+      si: "flag(histoire_h2) && flag(h2_cars_du_quai) && !flag(h2_feu)"
+  fin_v:
+    - texte: "Coup de sifflet final. Au grillage du virage, une écharpe bordeaux nouée là depuis l'automne prend le vent."
+      si: "flag(histoire_h2) && saison <= 2"
+  fin_d:
+    - texte: "C'est fini. Au parking, la place ENTRAÎNEUR est vide, et personne ne s'y gare, même ce soir."
+      si: "flag(histoire_h2) && flag(h2_place_vide)"

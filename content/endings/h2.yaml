@@ -1,0 +1,62 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les fins (docs/histoires/00_les_dix_histoires.md, § 8).
+#
+# Quatre fins neuves, toutes posées par un `end:` de l'épine ou du dénouement :
+#   · Le revenant (la vérité) — à l'audience de Portclair, la cassette et le
+#     carnet (en.h2.s2.audience_preuves), ou l'hôpital et le carnet
+#     (en.h2.s2.audience_hopital_carnet) ;
+#   · La place de l'autre (le prix) — mort sur le papier, « le mien » sur la
+#     feuille de match (en.h2.s2.feuille_mort, feuille_deux_bancs_mort) ;
+#   · Les deux bancs (la fin rare) — le carnet retrouvé, Vukić et Josiane à
+#     +2, « le sien » sur la feuille (en.h2.s2.feuille_deux_bancs*) ;
+#   · Le suivant (le pire) — seul, dans le noir de la grande halle
+#     (en.h2.fin.poursuite_seul).
+# Et trois lignes ajoutées à des fins communes : la garde à vue (les pompiers,
+# l'enveloppe du cousin ou la dette de Dembo), le message de 23 h 47 (« le
+# sien » sur la feuille, sans les deux bancs), le dauphin (la veille d'une
+# saison d'épilogue, quand Vukić demande le banc).
+endings:
+  - id: interim_revenant
+    cause: choix
+    rarity: epique
+    golden: true
+    title: "Le revenant"
+    epitaph: "{prenom} {nom} a ramené Roland Mercadier du wagon de la friche jusqu'au tribunal de Portclair. Le Racing est descendu sur tapis vert ; Norbert a sorti son ticket de 1987, et Roland a pris la même peine que les joueurs du carnet."
+    epitaph_plus:
+      - { when: "flag('h2_cassette')",    text: "La cassette de janvier est au dossier, pièce numéro un. Au tribunal, toute la salle a entendu un mort dire : « Garde le banc. »" }
+      - { when: "flag('h2_fond_du_car')", text: "Au fond du car, on a trouvé une ardoise et douze prénoms. Roland est venu entendre sa peine rasé de frais ; {nom} a perdu le banc la même semaine." }
+
+  - id: interim_place
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "La place de l'autre"
+    epitaph: "Roland Mercadier est mort sur le papier un mardi d'avril, et {prenom} {nom} a signé son contrat le mercredi. Le lundi, à sept heures, le répondeur ne clignote plus ; on le regarde quand même."
+    epitaph_plus:
+      - { when: "flag('h2_achard_sait')", text: "L'assureur a payé les deux millions sans un mot. Il savait où dormait le mort ; il a pris sa retraite en mai, et n'a plus jamais pris le car." }
+      - { when: "flag('h2_doc')",         text: "Le Doc a gardé sa table de massage contre le radiateur jusqu'en mai. Un matin, elle était repliée, et le malade parti par le car de six heures quarante." }
+
+  - id: interim_deux_bancs
+    cause: choix
+    rarity: epique
+    golden: true
+    title: "Les deux bancs"
+    epitaph: "Le dernier match s'est joué avec deux entraîneurs, l'un sur le banc, l'autre en casquette au premier rang du virage. Au coup de sifflet, la casquette est sortie par la grille de la Nord avant tout le monde ; le sifflet est resté au cou de {prenom} {nom}."
+    epitaph_plus:
+      - { when: "flag('h2_sifflet_pris')", text: "C'était le sien, le sifflet du tiroir du milieu. La lanière n'était plus raide." }
+      - { when: "flag('h2_norbert_pris')", text: "Norbert n'a pas vu le match. Il l'a écouté dans une cellule de Portclair, sur une radio à piles réglée sur les résultats." }
+
+  - id: interim_suivant
+    cause: choix
+    rarity: rare
+    golden: false
+    share: false
+    title: "Le suivant"
+    epitaph: "Au printemps, un nouvel intérimaire a trouvé une compo punaisée au mur, une cafetière tiède et, sur la place ENTRAÎNEUR, la voiture de {prenom} {nom}. Personne n'avait assisté au départ."
+    epitaph_plus:
+      - { when: "flag('h2_cabine_vue')", text: "Le lundi suivant, à six heures quarante, la cabine du quai deux a sonné longtemps. Personne n'a décroché." }
+      - { when: "flag('h2_cassette')",   text: "La cassette de janvier n'était pas dans les poches de {nom}. Josiane a rebranché le répondeur, au cas où." }
+
+epitaph_plus_ajouts:
+  - { fin: co_garde_a_vue, when: "flag('histoire_h2') && flag('h2_feu')", text: "Il a fallu expliquer la friche à deux heures du matin, l'odeur d'essence sur les manches de {nom}, et une enveloppe blanche dans la boîte à gants." }
+  - { fin: en_sms,         when: "flag('histoire_h2')", text: "Vaubourg l'a écrit avec une faute, comme toujours ; Roland, lui, aurait appelé." }
+  - { fin: en_dauphin,     when: "flag('histoire_h2')", text: "Vukić a pris le banc, et gardé les deux plaques dans le tiroir du milieu, l'une sur l'autre." }

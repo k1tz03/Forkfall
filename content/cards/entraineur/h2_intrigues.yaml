@@ -1,0 +1,925 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les cartes des intrigues
+# (content/arcs/entraineur/h2_intrigues.yaml).
+#
+# Les voix (charte § 3) : Josiane avertit par un geste (une tasse en plus, une
+# porte fermée à clé) ; Vukić dit ce qu'il a vu, l'heure, la jambe ; Vaubourg
+# parle argent, au téléphone, « mon club » ; Massenet échange ; Léa vérifie et
+# cite. Les visages nouveaux : Roland Mercadier ne finit jamais une phrase sur
+# lui-même, il parle du match de samedi ; Norbert est poli, précis, serviable,
+# et ne fait jamais payer le café ; Monique Mercadier appelle à dix heures et
+# raccroche la première ; Monsieur Achard compte, à genoux s'il le faut.
+# Roland est le premier à nommer le chauffeur, au wagon ; les autres le
+# servent sans le nommer.
+cards:
+  # ══════════════════════════════════════════════════════════ LE RÉPONDEUR
+  - id: en.h2.rep.diode
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, direction, objet]
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Lundi, sept heures, ton bureau. La cafetière de l'autre est chaude ; seule Madame Josiane a la clé. Sur le répondeur à microcassette, une diode rouge clignote."
+    left:
+      label: "J'écoute"
+      effects: {outcome: ecoute}
+      answer: "Tu appuies sur LECTURE. La bande rembobine, hésite, repart. Un souffle, un moteur au loin, puis une voix que tout le club connaît."
+    right:
+      label: "J'efface sans écouter"
+      effects: {direction: "+", set: [h2_premier_efface], outcome: efface}
+      answer: "Tu appuies sur EFFACER. La diode s'éteint. Dans le couloir, Josiane s'arrête une seconde devant ta porte, puis repart."
+
+  - id: en.h2.rep.message1
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [repondeur, vestiaire]
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "« C'est Roland. Ne mets pas Bréhaut samedi. Son genou a sonné jeudi, il ne te le dira pas. » Derrière la voix, un car qui manœuvre, le bip d'une marche arrière. Puis plus rien."
+    left:
+      label: "Bréhaut sur le banc"
+      effects: {vestiaire: "-", relation: {brehaut: -1}, set: [h2_brehaut_banc]}
+      answer: "Bréhaut lit la feuille deux fois. Il ne demande rien ; il lace ses chaussures avec une lenteur qui est une question."
+    right:
+      label: "Bréhaut titulaire"
+      effects: {vestiaire: "+", set: [h2_brehaut_titulaire]}
+      answer: "Tu laisses le capitaine à sa place. Le soir, tu réécoutes le message deux fois, et tu le rembobines, pour rien."
+
+  - id: en.h2.rep.samedi_banc
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Vukić, gris, au retour des vestiaires : « Bréhaut s'est échauffé avec les remplaçants. Au deuxième sprint, le genou a lâché. Tu savais, toi. Comment tu savais ? »"
+    left:
+      label: "Un pressentiment"
+      effects: {vestiaire: "+", relation: {vukic: -1}}
+      answer: "Il hoche la tête comme on prend note d'un mensonge poli. Il range le cahier sans l'ouvrir."
+    right:
+      label: "Le répondeur me l'a dit"
+      effects: {relation: {vukic: 1}, set: [h2_vukic_sait]}
+      answer: "Vukić s'assoit. « Le répondeur. » Il ne pose pas de question. « Il appelait le lundi, avant. De la gare routière. »"
+
+  - id: en.h2.rep.samedi_titulaire
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Quatorze heures cinquante, l'échauffement. Bréhaut part en sprint, s'arrête net, se tient le genou. Vukić, déjà penché sur lui : « Tu changes la feuille. Maintenant. »"
+    left:
+      label: "Je change la feuille"
+      effects: {vestiaire: "-", force: -1}
+      answer: "Tu écris un autre nom à la place du sien, au stylo, devant tout le monde. Bréhaut te regarde écrire depuis le banc."
+    right:
+      label: "Je l'aide à se relever"
+      effects: {vestiaire: "+", force: -1, relation: {brehaut: 1}}
+      answer: "Il pèse sur ton épaule jusqu'au vestiaire. Dans le couloir, il souffle : « Lui, il m'aurait laissé sur le banc. »"
+
+  - id: en.h2.rep.samedi_efface
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Échauffement. Bréhaut part en sprint et s'effondre, le genou dans les mains. Vukić, penché sur lui, lève les yeux vers toi : « Josiane dit qu'il y avait un message, lundi. Tu l'as écouté ? »"
+    left:
+      label: "Je l'ai effacé"
+      effects: {vestiaire: "-", relation: {vukic: 1}}
+      answer: "Il ne dit rien. Le soir, tu restes devant le répondeur éteint, le doigt sur LECTURE, à écouter une bande vide."
+    right:
+      label: "Quel message ?"
+      effects: {relation: {vukic: -1}}
+      answer: "« Quel message », répète-t-il, sans point d'interrogation. Il va soutenir Bréhaut, et ne te regarde plus de la journée."
+
+  # ════════════════════════════════════════════════════════════ LA BERLINE
+  - id: en.h2.berl.dix_heures
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, direction]
+    speaker: monique
+    tone: leger
+    once: true
+    lieu: secretariat
+    text: "Dix heures, le téléphone du secrétariat. Monique Mercadier, comme chaque matin : « Il n'a pas emporté son rasoir. Un homme qu'on vire emporte son rasoir. Vous l'avez vue, sa voiture ? »"
+    left:
+      label: "Elle est au parking"
+      effects: {direction: "-", relation: {monique: 1}, set: [h2_monique_parking]}
+      answer: "« Alors il n'est pas parti en train. » Elle raccroche doucement. Le lendemain, à dix heures, elle rappelle pour dire merci."
+    right:
+      label: "Je ne sais rien"
+      effects: {direction: "+", relation: {monique: -1}}
+      answer: "« Personne ne sait rien, ici. » Elle raccroche. Josiane note l'appel dans un cahier où il y en a déjà quarante."
+
+  - id: en.h2.berl.trois_metres
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: parking
+    text: "Nuit, parking du stade. Lulu, le gardien, promène sa lampe sur la berline : trois mètres plus loin que la veille. De la boue blanche sur les roues, le siège reculé, un sapin neuf au rétroviseur."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", parole: 1, set: [h2_trois_metres, h2_berline_police], react: en.h2.re.norbert_berline}
+      answer: "Deux agents, une heure plus tard. L'un ouvre la portière avec un cintre, l'autre note « sapin » sur son carnet. Ils repartent."
+    right:
+      label: "Je note, je me tais"
+      effects: {direction: "+", set: [h2_trois_metres], react: en.h2.re.norbert_berline}
+      answer: "Tu notes : boue blanche, siège reculé, sapin neuf. Sur le tableau de bord, l'ancien sapin, posé à plat, comme une feuille morte."
+
+  - id: en.h2.berl.trois_metres_cote
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sombre]
+    tone: strategique
+    once: true
+    lieu: parking
+    text: "Nuit, parking. Lulu promène sa lampe sur la berline : elle a avancé de trois mètres, jusqu'à toucher ta portière. Boue blanche sur les roues, siège reculé, un sapin neuf au rétroviseur."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", parole: 1, set: [h2_trois_metres, h2_berline_police], react: en.h2.re.norbert_berline}
+      answer: "Deux agents, une heure plus tard. L'un mesure l'écart entre les deux pare-chocs avec son pouce, puis il note « contact »."
+    right:
+      label: "Je note, je me tais"
+      effects: {direction: "+", set: [h2_trois_metres], react: en.h2.re.norbert_berline}
+      answer: "Tu notes tout. Sur le tableau de bord, l'ancien sapin, posé à plat. Ta portière a une rayure neuve, à hauteur de poignée."
+
+  - id: en.h2.berl.sapin
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: monique
+    tone: leger
+    once: true
+    lieu: secretariat
+    text: "Dix heures. Monique Mercadier, au téléphone : « Lulu m'a parlé du sapin neuf. Roland change son sapin le premier du mois, depuis vingt-deux ans. Le premier, c'était jeudi. Vous me croyez ? »"
+    left:
+      label: "Je vous crois"
+      effects: {relation: {monique: 1}, set: [h2_monique_crue], outcome: crue}
+      answer: "Un silence. « Alors il a froid, quelque part. » Elle raccroche la première, et s'excuse en raccrochant."
+    right:
+      label: "Ça ne prouve rien"
+      effects: {direction: "+", relation: {monique: -1}, set: [h2_monique_doute], outcome: doute}
+      answer: "« Non. Ça ne prouve rien. » Le lendemain, à dix heures, le téléphone ne sonne pas. Le surlendemain, si."
+
+  - id: en.h2.berl.sapin_parking
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: monique
+    tone: leger
+    once: true
+    lieu: secretariat
+    text: "Dix heures, Monique, plus bas que d'habitude : « Vous aviez raison, elle est au parking. Lulu dit qu'elle a bougé, avec un sapin neuf. Roland le change le premier du mois. Vous me croyez ? »"
+    left:
+      label: "Je vous crois"
+      effects: {relation: {monique: 1}, set: [h2_monique_crue], outcome: crue}
+      answer: "« Merci. » Elle le dit comme on raccroche. Puis, avant de raccrocher pour de bon : « Il a horreur des sapins à la vanille. »"
+    right:
+      label: "Ça ne prouve rien"
+      effects: {direction: "+", relation: {monique: -1}, set: [h2_monique_doute], outcome: doute}
+      answer: "« Vous parlez comme le président. » Elle raccroche. Le lendemain, à dix heures pile, elle rappelle quand même."
+
+  # ═══════════════════════════════════════════════════════ L'ARRIÈRE-SALLE
+  - id: en.h2.nor.cafe
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [scandale, vestiaire]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: tripot
+    text: "L'arrière-salle du Terminus, minuit. Norbert te sert un café entre le tapis vert et le cendrier : « On parle de vous, ici. En bien. Roland, lui, posait trop de questions. »"
+    left:
+      label: "Quelles questions ?"
+      effects: {direction: "-", set: [h2_questions_norbert], outcome: questions}
+      answer: "Il essuie une tasse déjà propre. « Des questions de carnet. Qui joue, qui perd, qui doit. » Au fond, Dembo baisse la tête sur ses cartes."
+    right:
+      label: "Je bois et je pars"
+      effects: {vestiaire: "+", outcome: bu}
+      answer: "Le café est bon. Au fond, Dembo retourne ses cartes en te voyant. Norbert ne te fait pas payer ; il ne fait jamais payer, dit-on."
+
+  - id: en.h2.nor.cafe_promis
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [scandale, vestiaire]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: tripot
+    text: "L'arrière-salle du Terminus, minuit. Norbert t'attendait, la cafetière chaude : « Je vous avais promis un café. On parle de vous, ici. En bien. Roland, lui, posait trop de questions. »"
+    left:
+      label: "Quelles questions ?"
+      effects: {direction: "-", set: [h2_questions_norbert], outcome: questions}
+      answer: "« Des questions de carnet. Qui joue, qui perd, qui doit. » Il ressert. Au fond, Dembo baisse la tête sur ses cartes."
+    right:
+      label: "Je bois et je pars"
+      effects: {vestiaire: "+", outcome: bu}
+      answer: "Tu bois debout. Au fond, Dembo retourne ses cartes en te voyant. Norbert lave ta tasse avant que tu aies passé la porte."
+
+  - id: en.h2.nor.cars
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sponsors, caisse]
+    speaker: aulard
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Vaubourg tapote une brochure : « Les Cars du Quai nous offrent un car neuf pour deux saisons. Chauffeur compris : Norbert reste, c'est le cousin. Je signe, {toi} ? »"
+    left:
+      label: "Signez"
+      effects: {caisse: "++", direction: "+", set: [h2_cars_du_quai], react: en.h2.re.norbert_enveloppe}
+      answer: "Le car neuf arrive un lundi, bordeaux et gris, des rideaux aux vitres. Norbert passe la matinée à régler son rétroviseur."
+    right:
+      label: "Gardez le vieux car"
+      effects: {caisse: "-", direction: "-", vestiaire: "+"}
+      answer: "Il range la brochure. Norbert garde le vieux car, celui qui chauffe mal ; il dit que c'est très bien comme ça."
+
+  - id: en.h2.nor.fond
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Gigi Vecchio, à voix basse dans le couloir : « Au retour des déplacements, certains gars vont s'asseoir tout au fond du car. Ils reviennent avec moins d'argent. Ça se faisait avant toi. »"
+    left:
+      label: "Qui va au fond ?"
+      effects: {vestiaire: "-", set: [h2_fond_du_car]}
+      answer: "« Dembo. Sorel, parfois. » Il mâche la fin des noms. « Roland avait posé la même question. En octobre. »"
+    right:
+      label: "Ça ne me regarde pas"
+      effects: {vestiaire: "+", relation: {vecchio: -1}}
+      answer: "Gigi hausse les épaules. « Lui aussi, il disait ça. Jusqu'en octobre. »"
+
+  - id: en.h2.nor.fond_cars
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    lieu: stade
+    text: "Gigi Vecchio, à voix basse : « Le car neuf a des rideaux. Tu sais à quoi servent des rideaux, dans un car ? Au retour, certains vont s'asseoir au fond, et reviennent avec moins d'argent. »"
+    left:
+      label: "Qui va au fond ?"
+      effects: {vestiaire: "-", set: [h2_fond_du_car]}
+      answer: "« Dembo. Sorel, parfois. » Il tire un rideau imaginaire. « Roland avait posé la même question. En octobre. »"
+    right:
+      label: "Ça ne me regarde pas"
+      effects: {vestiaire: "+", relation: {vecchio: -1}}
+      answer: "« C'est ce qu'on dit, au début. » Il retourne à ses gants. Au déplacement suivant, il s'assoit au premier rang, juste derrière le chauffeur."
+
+  # ═════════════════════════════════════════════════════════════ LE WAGON
+  - id: en.h2.wag.message
+    roles: [entraineur]
+    arc: direction
+    tags: [repondeur, direction]
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Lundi, la diode. « C'est moi. Ils ont pris la voiture. Si on te demande, je suis parti en train. » Derrière, un haut-parleur : « …le car de six heures quarante, quai numéro deux… »"
+    left:
+      label: "J'en parle à Léa"
+      effects: {direction: "-", relation: {lea: 1}, set: [h2_lea_cabine]}
+      answer: "Léa sort un carnet à spirale : « Six heures quarante, chaque lundi, la même cabine. Je l'avais noté sans savoir pourquoi. »"
+    right:
+      label: "J'irai à la gare lundi"
+      effects: {vestiaire: "+"}
+      answer: "Tu notes « 6 h 40 » au dos d'un ticket de car. Le dimanche soir, tu remontes le réveil deux fois, par précaution."
+
+  - id: en.h2.wag.message_efface
+    roles: [entraineur]
+    arc: direction
+    tags: [repondeur, direction]
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Lundi, la diode. « Tu effaces mes messages. Je parle quand même. Ils ont pris la voiture ; si on te demande, je suis parti en train. » Un haut-parleur : « …six heures quarante, quai deux… »"
+    left:
+      label: "J'en parle à Léa"
+      effects: {direction: "-", relation: {lea: 1}, set: [h2_lea_cabine]}
+      answer: "Léa ne s'étonne de rien. « Six heures quarante, le lundi, la cabine du quai deux. Je l'avais noté. Je ne sais plus pourquoi. »"
+    right:
+      label: "J'irai à la gare lundi"
+      effects: {vestiaire: "+"}
+      answer: "Cette fois, tu n'effaces pas. Tu notes « 6 h 40 » au dos d'un ticket de car, et tu remontes le réveil deux fois."
+
+  - id: en.h2.wag.cabine
+    roles: [entraineur]
+    arc: moment
+    tags: [moment]
+    tone: strategique
+    once: true
+    lieu: gare
+    text: "Gare routière, lundi, six heures quarante, avant le premier car. Dans la cabine, un homme en casquette glisse des pièces. Il te voit dans la vitre, et raccroche."
+    left:
+      label: "Je dis son prénom"
+      effects: {set: [h2_cabine_vue, h2_cabine_prenom]}
+      answer: "« Roland. » Il s'arrête, la main sur la porte, sans se retourner. Le car de six heures quarante passe entre vous ; après, plus personne."
+    right:
+      label: "Je le laisse partir"
+      effects: {set: [h2_cabine_vue]}
+      answer: "Il passe à un mètre de toi, casquette basse. Il sent le feu de bois et le froid. Il prend la rue de la friche, sans se presser."
+
+  - id: en.h2.wag.cabine_lea
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, presse]
+    tone: strategique
+    once: true
+    lieu: gare
+    text: "Gare routière, lundi, six heures quarante. Léa dans sa voiture, phares éteints, carnet ouvert. Dans la cabine, un homme en casquette glisse des pièces. Il te voit dans la vitre, et raccroche."
+    left:
+      label: "Je dis son prénom"
+      effects: {set: [h2_cabine_vue, h2_cabine_prenom]}
+      answer: "« Roland. » Il s'arrête, la main sur la porte. Derrière toi, Léa a cessé d'écrire. Le car passe entre vous ; après, plus personne."
+    right:
+      label: "Je le laisse partir"
+      effects: {set: [h2_cabine_vue]}
+      answer: "Il passe à un mètre de toi. Léa note l'heure, puis ferme son carnet : « Je n'écris rien. Pas encore. » Il prend la rue de la friche."
+
+  - id: en.h2.wag.cabas
+    roles: [entraineur]
+    arc: moment
+    tags: [moment]
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Vingt heures. Madame Josiane traverse la friche sans lampe, un cabas au bras ; elle sait où elle met les pieds. Au bout de la voie morte, elle frappe deux fois à la porte d'un wagon."
+    left:
+      label: "Je la rejoins"
+      effects: {relation: {josiane: 1}, set: [h2_cabas_suivi]}
+      answer: "Elle ne sursaute pas. « Vous avez mis le temps. » Elle frappe une troisième fois : le signal pour dire qu'elle n'est pas seule."
+    right:
+      label: "Je rentre"
+      effects: {}
+      answer: "Tu rentres sans bruit. Le lendemain matin, une tasse de plus t'attend sur ton bureau, posée à côté du répondeur."
+
+  - id: en.h2.wag.cabas_pull
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, objet]
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Vingt heures. Josiane traverse la friche sans lampe. De son cabas dépasse la manche d'un pull bordeaux, celui des cartons. Au bout de la voie morte, elle frappe deux fois à la porte d'un wagon."
+    left:
+      label: "Je la rejoins"
+      effects: {relation: {josiane: 1}, set: [h2_cabas_suivi]}
+      answer: "Elle ne sursaute pas. « Vous avez gardé ses cartons ; il le sait. » Elle frappe une troisième fois : elle n'est pas seule."
+    right:
+      label: "Je rentre"
+      effects: {}
+      answer: "Tu rentres sans bruit. Le lendemain, la manche bordeaux dépasse encore du cabas, accroché derrière la porte du secrétariat."
+
+  - id: en.h2.wag.mot
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: strategique
+    once: true
+    lieu: bureau
+    text: "Madame Josiane ferme la porte du bureau à clé, ce qu'elle ne fait jamais : « Ce soir, vingt heures, au bout de la voie morte. Il veut vous voir, vous. Pas le président. »"
+    left:
+      label: "J'y serai"
+      effects: {relation: {josiane: 1}}
+      answer: "Elle déverrouille la porte et sort sans un mot de plus. Sur ton bureau, elle a laissé une lampe de poche, éteinte."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {}
+      answer: "« Parce que vous avez tenu son banc. » Elle déverrouille la porte. « Et parce que vous ne buvez pas au Terminus. »"
+
+  - id: en.h2.wag.wagon
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mercadier
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Roland Mercadier, maigre, en manteau sur un matelas, une radio à piles qui donne les résultats : « Assieds-toi. Tu as laissé Bréhaut sur le banc, samedi ? Il n'est plus le même, depuis le genou. »"
+    left:
+      label: "Je vous ramène"
+      effects: {set: [h2_wagon_vu], react: [{card: en.h2.re.vukic_mange, if: "relation.vukic >= 0"}]}
+      answer: "« Me ramener où ? À la police ? Quelqu'un garde un ticket de 1987 à mon nom : une Coupe que j'ai jouée contre nous. » Il monte le son."
+    right:
+      label: "Je reviendrai"
+      effects: {set: [h2_wagon_vu], react: [{card: en.h2.re.vukic_mange, if: "relation.vukic >= 0"}]}
+      answer: "« Reviens le lundi. Le lundi, Norbert dort tard. » Il le dit comme on donne l'heure d'une messe, et retourne à sa radio."
+
+  - id: en.h2.wag.wagon_titulaire
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mercadier
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Roland Mercadier, maigre, sur un matelas, une radio à piles qui donne les résultats : « Assieds-toi. Tu as fait jouer Bréhaut quand même, en octobre. J'aurais fait pareil, à ta place. »"
+    left:
+      label: "Je vous ramène"
+      effects: {set: [h2_wagon_vu], react: [{card: en.h2.re.vukic_mange, if: "relation.vukic >= 0"}]}
+      answer: "« Me ramener où ? À la police ? Quelqu'un garde un ticket de 1987 à mon nom : une Coupe que j'ai jouée contre nous. » Il monte le son."
+    right:
+      label: "Je reviendrai"
+      effects: {set: [h2_wagon_vu], react: [{card: en.h2.re.vukic_mange, if: "relation.vukic >= 0"}]}
+      answer: "« Reviens le lundi. Le lundi, Norbert dort tard. » Il le dit comme on donne l'heure d'une messe, et retourne à sa radio."
+
+  - id: en.h2.wag.wagon_efface
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mercadier
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Roland Mercadier, maigre, sur un matelas, une radio à piles allumée : « Assieds-toi. Tu as effacé mon premier message sans l'écouter. À ta place, j'aurais fait pareil. »"
+    left:
+      label: "Je vous ramène"
+      effects: {set: [h2_wagon_vu], react: [{card: en.h2.re.vukic_mange, if: "relation.vukic >= 0"}]}
+      answer: "« Me ramener où ? À la police ? Quelqu'un garde un ticket de 1987 à mon nom : une Coupe que j'ai jouée contre nous. » Il monte le son."
+    right:
+      label: "Je reviendrai"
+      effects: {set: [h2_wagon_vu], react: [{card: en.h2.re.vukic_mange, if: "relation.vukic >= 0"}]}
+      answer: "« Reviens le lundi. Le lundi, Norbert dort tard. » Il le dit comme on donne l'heure d'une messe, et retourne à sa radio."
+
+  - id: en.h2.wag.roue
+    roles: [entraineur]
+    arc: direction
+    tags: [scandale, direction]
+    speaker: mercadier
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Roland baisse la radio : « Le carnet est dans la roue de secours de ma voiture. Quatre ans de paris, les noms, les matchs. Norbert a la voiture. Celui qui a la voiture aura le carnet. »"
+    left:
+      label: "Je trouve la voiture"
+      effects: {direction: "-", set: [h2_cherche_voiture]}
+      answer: "« Le garage du Pont. Sous une bâche, dans la cour. La nuit, le chien dort côté rue. » Il sait tout ; il ne peut rien."
+    right:
+      label: "Oubliez ce carnet"
+      effects: {vestiaire: "+"}
+      answer: "Il te regarde comme on regarde un joueur qui ne veut pas tirer le penalty. « Alors c'est lui qui le retrouvera. »"
+
+  - id: en.h2.wag.garage
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, scandale]
+    tone: strategique
+    once: true
+    lieu: rue
+    text: "Deux heures, la cour du garage du Pont. Sous une bâche, la berline grise ; le chien dort côté rue. Le coffre cède au tournevis. La roue de secours est lourde, trop lourde."
+    left:
+      label: "Je l'ouvre ici"
+      effects: {set: [h2_carnet], outcome: carnet}
+      answer: "Dans la jante, un carnet à spirale sous plastique, quatre ans d'écriture serrée. Le chien se lève. Tu cours, le carnet contre le ventre."
+    right:
+      label: "Je reviens avec Vukić"
+      effects: {relation: {vukic: 1}, set: [h2_garage_vide], outcome: sans_carnet}
+      answer: "Le lendemain soir, Vukić et toi trouvez la cour vide. La bâche est pliée sur un établi, bien carrée, comme un drap rendu."
+
+  # La Rive a pris la berline avant que tu viennes (variante de l'étape).
+  - id: en.h2.wag.garage_rive
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, objet]
+    tone: strategique
+    once: true
+    lieu: rue
+    text: "Le garage du Pont. La cour est vide ; sur un établi, la bâche grise, pliée bien carrée, prend la poussière. Le garagiste ne lève pas la tête de son moteur."
+    left:
+      label: "La berline était ici ?"
+      effects: {set: [h2_garage_vide], outcome: sans_carnet}
+      answer: "« Ici ? Jamais. » Il serre un écrou de trop. Sur l'établi, à côté de la bâche, l'ancien sapin en carton, posé à plat."
+    right:
+      label: "Je rentre par le quai"
+      effects: {set: [h2_garage_vide], outcome: sans_carnet}
+      answer: "Le carnet est au fond de la Rive, dans une jante, sous la vase. Tu rentres par le quai sans regarder l'eau."
+
+  - id: en.h2.wag.garage_oubli
+    roles: [entraineur]
+    arc: moment
+    tags: [moment]
+    tone: leger
+    once: true
+    lieu: rue
+    text: "Mardi, en passant devant le garage du Pont, tu vois dans la cour une bâche grise, et dessous la forme d'une berline. Le garagiste te regarde passer, un chiffon propre à la main."
+    left:
+      label: "Je m'arrête"
+      effects: {set: [h2_garage_vide], outcome: sans_carnet}
+      answer: "« Une bâche ? Quelle bâche ? » Il essuie ses mains sur le chiffon propre, longtemps. Le lendemain, la cour est vide."
+    right:
+      label: "Je continue"
+      effects: {set: [h2_garage_vide], outcome: sans_carnet}
+      answer: "Tu continues jusqu'au stade. Le lendemain, la cour est vide, et la bâche pliée sur un établi, bien carrée."
+
+  - id: en.h2.wag.garage_deja
+    roles: [entraineur]
+    arc: moment
+    tags: [moment, scandale]
+    tone: leger
+    once: true
+    lieu: rue
+    text: "Le garage du Pont, au matin. La cour est vide, la bâche pliée sur un établi. Le garagiste a porté plainte pour une roue volée, rien d'autre. Le carnet dort sous ton matelas."
+    left:
+      label: "Je passe mon chemin"
+      effects: {outcome: carnet}
+      answer: "Le soir, tu relis trois pages du carnet. Tu reconnais deux noms de ton vestiaire, et l'écriture de la colonne des sommes."
+    right:
+      label: "Je passe mon chemin"
+      effects: {outcome: carnet}
+      answer: "Le soir, tu relis trois pages du carnet. Tu reconnais deux noms de ton vestiaire, et l'écriture de la colonne des sommes."
+
+  # ═════════════════════════════════════════════════════════ LA PRÉVOYANCE
+  - id: en.h2.prev.visite
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: parking
+    text: "Monsieur Achard mesure la place ENTRAÎNEUR au mètre ruban, à genoux dans l'huile : « Vivant, il ne me coûte rien. Avez-vous quelque chose qui parle ? Une lettre, une voix ? »"
+    left:
+      label: "Rien du tout"
+      effects: {direction: "+", relation: {achard: -1}}
+      answer: "Il range son mètre. « Rien, c'est beaucoup, pour quelqu'un qui dort dans le lit d'un absent. » Il te salue d'un doigt."
+    right:
+      label: "Demandez au président"
+      effects: {direction: "-", relation: {achard: 1}}
+      answer: "« Le président m'a prié de ne rien vous demander. » Il note quelque chose. « C'est pour ça que je suis venu vous voir. »"
+
+  - id: en.h2.prev.visite_cassette
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: parking
+    text: "Monsieur Achard, à genoux dans l'huile de la place ENTRAÎNEUR, un mètre ruban à la main : « Vivant, il ne me coûte rien. Vous avez quelque chose qui parle ? Une lettre, une voix ? »"
+    left:
+      label: "Je vous fais écouter"
+      effects: {direction: "-", relation: {achard: 2}, set: [h2_cassette_achard]}
+      answer: "Il écoute deux fois, les yeux fermés. « C'est lui. Et c'est un lundi : on entend le car de six heures quarante. » Il recopie l'heure."
+    right:
+      label: "Rien du tout"
+      effects: {direction: "+", relation: {achard: -1}}
+      answer: "Il range son mètre et regarde ta poche intérieure, juste une seconde. « Rien, c'est beaucoup. » Il te salue d'un doigt."
+
+  - id: en.h2.prev.maillots
+    roles: [entraineur]
+    arc: direction
+    tags: [sponsors, direction, caisse]
+    speaker: aulard
+    tone: leger
+    once: true
+    lieu: bureau
+    text: "Vaubourg, une maquette de maillot sur le bureau, LA PRÉVOYANCE en lettres blanches : « Ils floquent si on renouvelle toutes nos polices. Ils préfèrent payer un sponsor qu'un mort. On signe ? »"
+    left:
+      label: "On signe"
+      effects: {caisse: "++", tribunes: "-", set: [h2_maillots_prevoyance], outcome: maillots}
+      answer: "Au match suivant, le virage siffle les lettres blanches. Gégé fait peindre une bâche : ON N'EST PAS ASSURÉS."
+    right:
+      label: "Pas sur le maillot"
+      effects: {caisse: "-", tribunes: "+", outcome: refus}
+      answer: "Vaubourg range la maquette. « Ils paieront quand même, d'une façon ou d'une autre. Les assureurs finissent toujours par payer. »"
+
+  - id: en.h2.prev.vacances
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: hotel
+    text: "Hôtel de la Rive, au bar. Achard tourne un sucre dans son café sans le faire fondre : « Après avril, il sera mort, et je ne pourrai plus rien pour lui. Vous savez où il dort ? »"
+    left:
+      label: "Je ne sais rien"
+      effects: {relation: {achard: -1}}
+      answer: "« Alors je paierai. » Il pose le sucre sur la soucoupe, intact. « Et quelqu'un sera très content, qui n'est pas sa femme. »"
+    right:
+      label: "Dans un wagon, à la friche"
+      effects: {relation: {achard: 1}, set: [h2_achard_sait]}
+      answer: "Il note « wagon » et referme son carnet. « N'y retournez pas cette semaine. On suit toujours ceux qui y vont. »"
+
+  - id: en.h2.prev.vacances_cassette
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: hotel
+    text: "Hôtel de la Rive. Achard pose une copie de ta cassette près de sa tasse : « Un juge n'écoutera pas ça sans un corps qui respire. Après avril, je paie. Vous savez où il dort ? »"
+    left:
+      label: "Je ne sais rien"
+      effects: {relation: {achard: -1}}
+      answer: "Il range la copie dans sa serviette, à côté d'un chéquier. « Alors elle ne servira qu'à moi, pour dormir. »"
+    right:
+      label: "Dans un wagon, à la friche"
+      effects: {relation: {achard: 1}, set: [h2_achard_sait]}
+      answer: "Il note « wagon » sous l'heure de la cassette. « N'y retournez pas cette semaine. On suit toujours ceux qui y vont. »"
+
+  # ══════════════════════════════════════════════════════ UN AN ET UN JOUR
+  - id: en.h2.an.toux
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: mercadier
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Le wagon sent la fièvre. Roland tousse dans son poing, puis regarde son poing : « Si je vais à l'hôpital, je suis vivant. Si je suis vivant, ils me trouvent. Le Doc, lui, ne parle pas. »"
+    left:
+      label: "Je fais venir le Doc"
+      effects: {vestiaire: "-", relation: {sabatier: 1}, set: [h2_doc_wagon], outcome: doc}
+      answer: "Sabatier vient à pied, sa sacoche sous le manteau. Il écoute la poitrine longtemps, et dit seulement : « Pas un deuxième hiver. »"
+    right:
+      label: "J'apporte des cachets"
+      effects: {outcome: cachets}
+      answer: "La pharmacienne ne pose pas de question sur une toux qui n'est pas la tienne. Josiane ajoute du sirop dans le cabas, sans un mot."
+
+  - id: en.h2.an.toux_rasoir
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment, objet]
+    speaker: mercadier
+    tone: leger
+    once: true
+    lieu: friche
+    text: "Sur la caisse qui sert de table, le rasoir rapporté du quai, jamais déplié. Roland tousse dans son poing : « Je me rase pour qui ? À l'hôpital, je serais vivant. Ils me trouveraient. »"
+    left:
+      label: "Je fais venir le Doc"
+      effects: {vestiaire: "-", relation: {sabatier: 1}, set: [h2_doc_wagon], outcome: doc}
+      answer: "Sabatier vient à pied, écoute la poitrine longtemps, puis rase Roland lui-même, à l'eau froide. « Pas un deuxième hiver. »"
+    right:
+      label: "J'apporte des cachets"
+      effects: {outcome: cachets}
+      answer: "Tu reviens avec du sirop et des cachets. Le rasoir n'a pas bougé de la caisse ; il est posé comme une promesse."
+
+  - id: en.h2.an.monique
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: monique
+    tone: leger
+    once: true
+    lieu: domicile
+    text: "Monique Mercadier sur ton palier, rue des Lilas, son sac serré contre elle : « Il m'a appelée une fois, de la cabine. Je n'ai rien dit. L'assurance rembourse la maison, vous comprenez ? »"
+    left:
+      label: "Je comprends"
+      effects: {relation: {monique: 1}, set: [h2_monique_aveu]}
+      answer: "Elle hoche la tête, soulagée qu'on ne lui demande rien d'autre. Dans l'escalier, elle s'arrête : « Il mange, au moins ? »"
+    right:
+      label: "Allez le voir"
+      effects: {relation: {monique: -1}, set: [h2_monique_aveu, h2_rasoir_neuf]}
+      answer: "Elle descend sans répondre. Le lendemain, dans le cabas de Josiane, il y a un rasoir neuf, encore dans sa boîte."
+
+  - id: en.h2.an.chemin
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: terrain
+    text: "Vukić, en ramassant les plots : « Hier soir, le car du club était garé derrière la friche, moteur coupé. Norbert n'habite pas par là. Tu y vas souvent, à la friche ? »"
+    left:
+      label: "Plus que je ne devrais"
+      effects: {relation: {vukic: 1}, set: [h2_chemin_avoue]}
+      answer: "Il pose le dernier plot. « Change de chemin. Passe par le lavoir, le jeudi, quand il fait les courses du club. »"
+    right:
+      label: "Je n'y vais jamais"
+      effects: {relation: {vukic: -1}}
+      answer: "« Alors c'est quelqu'un qui marche comme toi. » Il range les plots dans le filet, un par un, en les comptant à voix haute."
+
+  - id: en.h2.an.message
+    roles: [entraineur]
+    arc: direction
+    tags: [repondeur, direction]
+    tone: strategique
+    once: true
+    lieu: bureau
+    when: "!flag('h2_feu')"
+    text: "La diode, un mardi, pour la première fois. « Ils ont trouvé le chemin. Si le wagon brûle, ne viens pas. Garde le banc ; c'est tout ce que je te demande. » Une quinte de toux. La tonalité."
+    left:
+      label: "J'irai quand même"
+      effects: {direction: "-"}
+      answer: "Tu gardes la bande. Ce soir-là, tu dors avec tes chaussures au pied du lit, les lacets défaits, une lampe de poche sous l'oreiller."
+    right:
+      label: "J'obéis"
+      effects: {direction: "+", set: [h2_ordre_obei]}
+      answer: "Tu effaces. Pour la première fois, tu fais exactement ce que dit le répondeur, et c'est la nuit la plus longue de la saison."
+
+  # ═════════════════════════════════════════════════════════ LE DÉNOUEMENT
+  - id: en.h2.fin.poursuite_seul
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Tu cours vers la veste, et personne ne court derrière toi. La silhouette entre dans la grande halle, s'arrête dans le noir, et se retourne. Elle t'attend."
+    left:
+      label: "J'entre dans la halle"
+      effects: {end: interim_suivant}
+      answer: "Le noir sent l'huile et le carton mouillé. Quelqu'un dit « coach », très doucement, juste derrière toi."
+    right:
+      label: "Je reviens vers le feu"
+      effects: {set: [h2_hopital]}
+      answer: "Les pompiers emportent Roland sur un brancard, sous son vrai nom : Josiane l'a crié au chef. Il est vivant, officiellement."
+
+  - id: en.h2.fin.poursuite_vukic
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: vukic
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Tu cours vers la veste. Au grillage, un souffle derrière toi : Vukić, qui avait suivi. À deux, vous coincez l'homme contre le grillage. Dans la lueur du feu, une moustache."
+    left:
+      label: "On le tient"
+      effects: {relation: {vukic: 1}, set: [h2_norbert_pris]}
+      answer: "Norbert ne se débat pas. Il regarde le wagon brûler par-dessus ton épaule. « Il aimait trop les carnets », dit-il, poliment."
+    right:
+      label: "Je le laisse filer"
+      effects: {relation: {vukic: -1}, set: [h2_norbert_libre]}
+      answer: "Tu lâches. Vukić te regarde sans comprendre. La veste disparaît derrière la halle ; quelque part, un car démarre sans phares."
+
+  - id: en.h2.fin.poursuite_josiane
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Tu cours. Derrière toi, Josiane crie « Norbert ! » ; la veste se retourne une seconde dans la lueur du feu. C'est bien lui. Puis il court vers la halle, et la nuit le prend."
+    left:
+      label: "Je reviens vers Roland"
+      effects: {relation: {josiane: 1}, set: [h2_hopital]}
+      answer: "Josiane a déjà crié son nom au chef des pompiers. Roland part sur un brancard, sous son nom. Vivant, officiellement."
+    right:
+      label: "Je relève sa plaque"
+      effects: {set: [h2_norbert_libre]}
+      answer: "Derrière la halle, le car du club démarre sans phares. Tu as le numéro, pas le visage ; Josiane, elle, a les deux."
+
+  - id: en.h2.fin.pompiers
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale]
+    tone: strategique
+    once: true
+    lieu: friche
+    text: "Tu perds la veste dans la halle. Quand tu reviens, les pompiers sont là, et un gendarme qui renifle tes manches : « Essence. Et ces billets, dans votre boîte à gants, ils viennent d'où ? »"
+    left:
+      label: "Je suis le gendarme"
+      effects: {end: co_garde_a_vue}
+      answer: "On te fait asseoir à l'arrière d'une voiture bleue. Par la vitre, tu vois Josiane qui parle au chef des pompiers, en montrant le wagon."
+    right:
+      label: "Je suis le gendarme"
+      effects: {end: co_garde_a_vue}
+      answer: "On te fait asseoir à l'arrière d'une voiture bleue. Par la vitre, tu vois Josiane qui parle au chef des pompiers, en montrant le wagon."
+
+  - id: en.h2.fin.banquette
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: josiane
+    tone: strategique
+    once: true
+    lieu: rue
+    text: "Roland sur ta banquette arrière, la tête sur les genoux de Josiane. Il tousse du noir. Josiane : « L'hôpital, et il est vivant pour tout le monde. Le Doc, et il reste mort. Vous choisissez. »"
+    left:
+      label: "L'hôpital"
+      effects: {relation: {josiane: 1}, set: [h2_hopital]}
+      answer: "À l'accueil, Josiane épelle MERCADIER lettre par lettre. L'infirmière lève la tête à la troisième lettre, et décroche son téléphone."
+    right:
+      label: "Chez le Doc"
+      effects: {relation: {sabatier: 1}, set: [h2_doc]}
+      answer: "Sabatier ouvre en pyjama, ne pose aucune question, et pousse sa table de massage contre le radiateur. « Personne ne vient ici la nuit. »"
+
+  - id: en.h2.fin.lendemain_pris_carnet
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    tone: strategique
+    once: true
+    lieu: echo
+    text: "Léa, au matin, la voix cassée par la fumée : « Norbert est en garde à vue. Il ne dit rien. Sans pièce, ils le relâchent jeudi. Vous l'avez, le carnet, non ? »"
+    left:
+      label: "Je le leur donne"
+      effects: {parole: 1, relation: {lea: 1}, set: [h2_carnet_police]}
+      answer: "Le carnet passe de main en main au commissariat, sous plastique. Jeudi, Norbert n'est pas relâché. Vendredi non plus."
+    right:
+      label: "Je le garde pour mardi"
+      effects: {parole: -1}
+      answer: "« Mardi, c'est l'audience. Vous jouez gros. » Jeudi, Norbert ressort du commissariat et prend le car de midi, côté chauffeur."
+
+  - id: en.h2.fin.lendemain_pris
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    tone: strategique
+    once: true
+    lieu: echo
+    text: "Léa, au matin : « Norbert est en garde à vue. Il dit qu'il passait par là, qu'il a vu le feu, qu'il a eu peur. Sans pièce, ils le relâchent jeudi. Vous témoignez ? »"
+    left:
+      label: "Je témoigne"
+      effects: {parole: 1, relation: {lea: 1}}
+      answer: "Tu signes une déposition de deux pages. Jeudi, on le relâche quand même ; il te salue de la main depuis le car, poliment."
+    right:
+      label: "Je n'ai rien vu"
+      effects: {parole: -1}
+      answer: "Jeudi, on le relâche. Samedi, il conduit le car au déplacement, et règle son rétroviseur pour te voir, toi."
+
+  - id: en.h2.fin.lendemain_hopital
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: rue
+    text: "Couloir de l'hôpital, une gerbe de la Prévoyance sous le bras de Monsieur Achard : « Vivant, et sous son nom. Mes deux millions vous remercient. Le président, lui, n'est pas venu. »"
+    left:
+      label: "Remerciez Josiane"
+      effects: {relation: {achard: 1, josiane: 1}}
+      answer: "« C'est fait. Je lui ai offert un cabas neuf ; elle l'a refusé. » Il pose la gerbe sur une chaise et repart sans elle."
+    right:
+      label: "Il n'est pas sauvé"
+      effects: {relation: {achard: -1}}
+      answer: "« Non. Il est vivant ; ce n'est pas pareil. » Achard regarde la porte de la chambre 4, et l'agent en civil assis devant."
+
+  - id: en.h2.fin.lendemain
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: strategique
+    once: true
+    lieu: secretariat
+    text: "Madame Josiane, au secrétariat, les yeux rouges de fumée : « Il dort chez le Doc. Le président a appelé trois fois pour savoir si l'audience est toujours mardi. Je lui dis quoi ? »"
+    left:
+      label: "Que oui, mardi"
+      effects: {direction: "+"}
+      answer: "Elle le dit au téléphone avec une voix que tu ne lui connaissais pas, une voix de pierre. Le président raccroche, satisfait."
+    right:
+      label: "Qu'il est vivant"
+      effects: {direction: "-", relation: {josiane: 1}}
+      answer: "Elle le dit, mot pour mot. Un long silence au bout du fil, puis : « Vivant où ? » Elle raccroche sans répondre."
+
+  # ═══════════════════════════════════════════════ variantes de relecture
+  # Monique, sur le palier : elle avait été crue, pour le sapin (h2_monique_crue).
+  - id: en.h2.an.monique_crue
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: monique
+    tone: leger
+    once: true
+    lieu: domicile
+    text: "Monique Mercadier sur ton palier, rue des Lilas : « Vous m'aviez crue, pour le sapin. Je vous dois la suite. Il m'a appelée une fois, de la cabine. Je n'ai rien dit. Pour la maison. »"
+    left:
+      label: "Je comprends"
+      effects: {relation: {monique: 1}, set: [h2_monique_aveu]}
+      answer: "« Vous êtes le seul à qui je le dis. Josiane le sait sans que je le dise. » Elle descend une marche, puis remonte : « Il tousse ? »"
+    right:
+      label: "Allez le voir"
+      effects: {relation: {monique: -1}, set: [h2_monique_aveu, h2_rasoir_neuf]}
+      answer: "« Il ne veut pas. Il dit que je perdrais la maison. » Le lendemain, un rasoir neuf dans sa boîte attend au fond du cabas de Josiane."
+
+  # La banquette : le Doc est déjà venu au wagon (h2_doc_wagon).
+  - id: en.h2.fin.banquette_doc
+    roles: [entraineur]
+    arc: famille
+    tags: [famille]
+    speaker: josiane
+    tone: strategique
+    once: true
+    lieu: rue
+    text: "Roland sur ta banquette arrière, la tête sur les genoux de Josiane, il tousse du noir. Josiane : « Le Doc connaissait le chemin du wagon. Chez lui, il reste mort. L'hôpital, il est vivant. »"
+    left:
+      label: "L'hôpital"
+      effects: {relation: {josiane: 1}, set: [h2_hopital]}
+      answer: "Josiane remplit elle-même la fiche d'admission, au stylo du bureau. À la ligne « profession », elle écrit : entraîneur."
+    right:
+      label: "Chez le Doc"
+      effects: {relation: {sabatier: 1}, set: [h2_doc]}
+      answer: "Sabatier attend sur son perron, un manteau sur son pyjama : il savait. « Pas un deuxième hiver, j'avais dit. Il est encore en hiver. »"

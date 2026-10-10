@@ -1,0 +1,58 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les cartes des deux événements de la
+# troisième saison (content/arcs/entraineur/h2_sombres.yaml).
+cards:
+  # La maison visitée, rue des Lilas, après la saisie du quai. Variante : la
+  # cassette de janvier est dans ta poche — c'est elle qu'on cherchait.
+  - id: en.h2.evt.maison
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Rue des Lilas, minuit. La porte n'est pas forcée. Tiroirs ouverts, matelas retourné, rien de pris : ni la télé, ni l'argent du bocal. Même les boîtes d'allumettes sont ouvertes."
+    left:
+      label: "Je change la serrure"
+      effects: {caisse: "-", set: [h2_maison]}
+      answer: "Le serrurier vient à sept heures. En partant, il dit que la porte a été ouverte avec une clé, une vraie, et pas avec un double."
+    right:
+      label: "Je ne touche à rien"
+      effects: {vestiaire: "-", set: [h2_maison]}
+      answer: "Tu laisses tout en l'état. Au matin, Monique Mercadier t'attend sur le trottoir : « Un homme en veste de chauffeur. Onze heures. »"
+
+  - id: en.h2.evt.maison_cassette
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, sombre, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Rue des Lilas, minuit. La porte n'est pas forcée. Tiroirs ouverts, matelas retourné, rien de pris. On cherchait une voix. Elle est dans ta poche intérieure, avec tes clés, depuis janvier."
+    left:
+      label: "Je change la serrure"
+      effects: {caisse: "-", set: [h2_maison]}
+      answer: "Le serrurier vient à sept heures. Il dit que la porte a été ouverte avec une clé, une vraie. Tu dors avec la cassette sous l'oreiller."
+    right:
+      label: "Je dors avec ma veste"
+      effects: {vestiaire: "-", set: [h2_maison]}
+      answer: "Tu dors habillé, la cassette contre toi. Au matin, Monique Mercadier attend sur le trottoir : « Une veste de chauffeur. Onze heures. »"
+
+  # L'assureur qui compte, au bout de la rue de la friche. Il ne suit personne :
+  # il attend, et il a compris avant toi ce que le car vient faire là.
+  - id: en.h2.evt.achard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: achard
+    lieu: friche
+    tone: strategique
+    once: true
+    text: "Onze heures, au bout de la rue de la friche. Une voiture banalisée, phares éteints. Monsieur Achard baisse la vitre : « Je compte ceux qui viennent la nuit. Vous êtes deux : vous, et un car. »"
+    left:
+      label: "Partez, vous le ferez tuer"
+      effects: {relation: {achard: -1}, set: [h2_achard_nuit]}
+      answer: "« Ce n'est pas moi qu'on suit. » Il remonte la vitre et démarre sans phares, jusqu'au bout de la rue. Puis il revient, et se gare plus loin."
+    right:
+      label: "Comptez bien"
+      effects: {relation: {achard: 1}, direction: "-", set: [h2_achard_nuit]}
+      answer: "Il note l'heure dans un carnet à souches. « Le car vient les soirs de match, pendant votre dîner d'équipe. Il ne s'arrête pas. Il regarde. »"
