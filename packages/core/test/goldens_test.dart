@@ -126,6 +126,12 @@
 ///   visages de plus (Kerdal, Ober, Inès Kara). Aucune des vingt carrières ne
 ///   bouge, seule la part « personnages » de l'empreinte change.
 ///   `--goldens --write`.
+/// · **Histoire 4, « La Route de la Rive »** (la branche `histoire-h4`, reprise
+///   sur notre base : son auteur avait recopié trois de nos commits). Le joueur
+///   en fin de contrat devient un livre, de la photo de la montée de 1984 au
+///   jubilé du 15 mai 1993, avec six visages de plus. Ses cinq carrières
+///   racontent autre chose ; une seule des vingt s'arrête sans fin. Mêmes
+///   codes, `--goldens --write`.
 library;
 
 import 'dart:io';

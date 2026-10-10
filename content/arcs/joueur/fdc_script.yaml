@@ -7,6 +7,23 @@
 # Le président narratif est Vaubourg (`aulard`) ; le fonds est Ilyas (`nassir`).
 # Deux alarmes d'override (jp.fin.alarme_*) sont déclarées dans postulats.yaml.
 # Semé par `opening_arc: jp.fin.dernier_contrat`.
+#
+# HISTOIRE 4 — « La Route de la Rive » (docs/histoires/00_les_dix_histoires.md).
+# Le postulat porte `histoire_h4` dès le départ : chaque étape lit d'abord ses
+# variantes `jp.h4.*` (content/cards/joueur/h4_script.yaml), et les variantes
+# historiques `jp.fin.*` ne restent que comme secours, jamais servis. Les
+# ancres ouvrent les intrigues du livre par `schedule:` (content/arcs/joueur/
+# h4_intrigues.yaml) :
+#   S0 · 1 le restaurant (Fardelli) · 10-11 le rabais (Vaubourg) · 16 la
+#        quinzième (le Doc) · 17 le 14 mai (le cimetière, Camille)
+#   S1 · 1-2 le registre (le gardien) · 10-11 la fiche de l'hôpital (la kiné) ·
+#        17 le capot (Bréhaut)
+#   S2 · 1-2 l'affiche du jubilé (Vaubourg) · 10-11 la déclaration (le coffre) ·
+#        16 la route, pour de vrai · 17 le rond central (les fins du livre)
+#   S3+ · l'épilogue de qui s'est tu : les deux ancres rejouables d'avant,
+#        décalées d'une saison, avec leurs variantes de silence.
+# Les étapes historiques gardent leurs ids (les manchettes de
+# content/unes/fin_de_contrat.yaml citent leurs cartes en photo).
 arcs:
   - id: jp.fin.dernier_contrat
     title: "La dernière année"
@@ -36,6 +53,16 @@ arcs:
       dernier_annonce:    "{annee} : {prenom} {nom} l'a dit à la maison d'abord. C'était la dernière."
       vers_entraineur:    "{annee} : le survêtement de la réserve était à la taille de {nom}. Il l'avait pris exprès."
       genou_grave:        "{annee} : le genou de {prenom} {nom} a eu le dernier mot. Il l'avait dit avant."
+      # HISTOIRE 4 — les ancres du livre laissent leur ligne à l'Almanach (et les
+      # manchettes de content/unes/h4.yaml les lisent par `journal_has`).
+      h4_quatorze_mai:    "{annee} : le 14 mai, au carré ancien, {nom} a lu la pierre pour la première fois. Jules Bertin, 1902-1983."
+      h4_registre:        "{annee} : le registre du gardien. Fardelli, une seule visite : le 13 mai 1985, la veille."
+      h4_fiche_hopital:   "{annee} : une fiche d'admission du 14 mai 1984, deux heures quarante. Lavergne Sandrine, quinze ans, vivante."
+      h4_capot:           "{annee} : parking du stade, la nuit. Titi Bréhaut, assis sur son capot : « J'ai conduit. Tu dormais. »"
+      h4_jubile_annonce:  "{annee} : l'affiche du jubilé de {nom}, samedi 15 mai. La veille est un 14."
+      h4_accelere:        "{annee} : la nuit du 14 au 15 mai, sur la route de la Rive, {nom} n'a pas freiné."
+      h4_rond_central:    "{annee} : le jubilé de {nom}. Un micro au rond central, un fauteuil au premier rang de l'Est."
+      h4_silence:         "{annee} : au rond central, {nom} a rendu le micro sans un mot."
     traces_retract:
       # L'été sans club se referme au premier jour de la saison suivante
       # (s1_premier_jour_sans_club*, `clear: [sans_club]`) : sans cette ligne,
@@ -46,6 +73,9 @@ arcs:
       # ------------------------------------------------------------- saison 0
       - id: derniere_annee
         card:
+          - { id: jp.h4.a1_derniere_annee_genou,     if: "flag('histoire_h4') && fil_rouge == 'genou'" }
+          - { id: jp.h4.a1_derniere_annee_vestiaire, if: "flag('histoire_h4') && fil_rouge == 'vestiaire'" }
+          - { id: jp.h4.a1_derniere_annee,           if: "flag('histoire_h4')" }
           - { id: jp.fin.f1_derniere_annee_genou,     if: "fil_rouge == 'genou'" }
           - { id: jp.fin.f1_derniere_annee_vestiaire, if: "fil_rouge == 'vestiaire'" }
           - { id: jp.fin.f1_derniere_annee }
@@ -57,6 +87,8 @@ arcs:
       # président. Réciproque dans fdc_reservoir_a.yaml, étape offre_d2.
       - id: offre
         card:
+          - { id: jp.h4.a2_rabais_agent, if: "flag('histoire_h4') && fil_rouge == 'agent'" }
+          - { id: jp.h4.a2_rabais,       if: "flag('histoire_h4')" }
           - { id: jp.fin.f2_offre_or,           if: "relation.nassir >= 1 || gauges.caisse >= 62 || year >= 1999" }
           - { id: jp.fin.f2_offre_maison_refus, if: "flag('pays_refuse')" }
           - { id: jp.fin.f2_offre_maison,       if: "(flag('maison_pays') || flag('promis_camille')) && !flag('maison_pays_signee') && !flag('pays_refuse') && !flag('divorce')" }
@@ -66,12 +98,17 @@ arcs:
         season: "0"
       - id: quinzieme
         card:
+          - { id: jp.h4.a3_quinzieme_chiffre, if: "flag('histoire_h4') && flag('h4_chiffre_demande')" }
+          - { id: jp.h4.a3_quinzieme,         if: "flag('histoire_h4')" }
           - { id: jp.fin.f2b_quinzieme_clause, if: "flag('prolonge_rabais')" }
           - { id: jp.fin.f2b_quinzieme }
         at: [16, 16]
         season: "0"
       - id: juin
         card:
+          # Le 14 mai 1991 : la saison du livre finit au carré ancien.
+          - { id: jp.h4.a4_quatorze_mai,      if: "flag('histoire_h4') && !flag('divorce')" }
+          - { id: jp.h4.a4_quatorze_mai_seul, if: "flag('histoire_h4')" }
           - { id: jp.fin.f3_juin_rabais,    if: "flag('prolonge_rabais')" }
           # L'issue `sans_club` arme toute une branche (s1_premier_jour_sans_club,
           # une.fin.sans_club, la fin jp_sansclub) : elle était vue par 1 % des
@@ -85,6 +122,8 @@ arcs:
       # ------------------------------------------------------------- saison 1
       - id: premier_jour
         card:
+          - { id: jp.h4.a5_registre_mission, if: "flag('histoire_h4') && flag('h4_vl_registre')" }
+          - { id: jp.h4.a5_registre,         if: "flag('histoire_h4')" }
           # `flag('divorce')` seul ne se rencontrait presque jamais avec
           # `sans_club` : la variante était toujours battue par sa sœur
           # (« variante perdante » du rapport d'exposition). La maison vide se
@@ -98,6 +137,8 @@ arcs:
         season: "1"
       - id: jambes
         card:
+          - { id: jp.h4.a6_fiche_mission, if: "flag('histoire_h4') && flag('h4_vl_dossier')" }
+          - { id: jp.h4.a6_fiche,         if: "flag('histoire_h4')" }
           - { id: jp.fin.s1_jambes_gigi, if: "flag('gigi_genou_ecoute') || relation.vecchio >= 2" }
           - { id: jp.fin.s1_jambes_quinzieme, if: "flag('quinzieme_jouee')" }
           - { id: jp.fin.s1_jambes }
@@ -105,12 +146,51 @@ arcs:
         season: "1"
       - id: veille
         card:
+          - { id: jp.h4.a7_capot_cahier, if: "flag('histoire_h4') && flag('h4_cahier_lu')" }
+          - { id: jp.h4.a7_capot_appel,  if: "flag('histoire_h4') && flag('h4_appel_brehaut')" }
+          - { id: jp.h4.a7_capot,        if: "flag('histoire_h4')" }
           - { id: jp.fin.s1_veille_ailleurs, if: "flag('vukic_dauphin') || flag('banc_regarde') || relation.vukic >= 2" }
           - { id: jp.fin.s1_veille_petition, if: "flag('petition_portee') || flag('petition_presse') || flag('prolonge_vestiaire')" }
           - { id: jp.fin.s1_veille }
         at: [17, 17]
         season: "1"
-      # ------------------------------------------------------------ saisons 2+
+      # ------------------------------------------------------------- saison 2
+      # Le dernier acte de « La Route de la Rive » : l'affiche du jubilé, le
+      # coffre du président, la dernière nuit sur la route, le rond central.
+      - id: h4_jubile
+        card:
+          - { id: jp.h4.a8_jubile_exige, if: "flag('histoire_h4') && flag('h4_capot_exige')" }
+          - { id: jp.h4.a8_jubile }
+        at: [1, 2]
+        season: "2"
+      - id: h4_declaration
+        card:
+          - { id: jp.h4.a9_declaration_cahier, if: "flag('h4_cahier_lu')" }
+          - { id: jp.h4.a9_declaration }
+        at: [9, 10]
+        season: "2"
+      - id: h4_route
+        card:
+          - { id: jp.h4.a10_route_bouteille, if: "flag('h4_bouteille')" }
+          - { id: jp.h4.a10_route }
+        at: [16, 16]
+        season: "2"
+      # Le rond central : la fin rare (Bréhaut prend le micro) demande Sandrine
+      # écoutée en privé, le buraliste à +1 et Bréhaut convaincu ; la nuit
+      # passée à accélérer ferme le micro ; les chèques changent le prix du
+      # silence.
+      - id: h4_rond_central
+        card:
+          - { id: jp.h4.a11_tour_honneur, if: "flag('h4_brehaut_convaincu') && flag('h4_sandrine_entendue') && relation.lavergne >= 1 && !flag('h4_accelere')" }
+          - { id: jp.h4.a11_silence, if: "flag('h4_accelere')" }
+          - { id: jp.h4.a11_cheques, if: "flag('h4_cheques') && !flag('h4_promesse_micro')" }
+          - { id: jp.h4.a11_rond_central }
+        at: [17, 17]
+        season: "2"
+      # ------------------------------------------------------------ saisons 3+
+      # (HISTOIRE 4) Les deux ancres rejouables commencent en saison 3 :
+      # l'épilogue. Leur première variante est celle de qui s'est tu au rond
+      # central (`h4_silence`), une fois chacune.
       # Les deux ancres de S2+ sont les seules du script à être rejouées saison
       # après saison : leurs variantes doivent monter un escalier, pas s'agripper
       # à un drapeau. `recule_poste`, `banc_regarde`, `divorce`, `jubile_fait` et
@@ -122,17 +202,19 @@ arcs:
       # `season` / la marche précédente passe devant.
       - id: saison_de_plus
         card:
+          - { id: jp.h4.e1_tabac, if: "flag('h4_silence') && !flag('h4_tabac_ferme')" }
           - { id: jp.fin.s2_saison_de_plus_recule, if: "(flag('recule_poste') || flag('banc_regarde')) && !flag('s2_recule_vu')" }
           - { id: jp.fin.s2_saison_de_plus_vrai,   if: "flag('s2_saison_encore')" }
           - { id: jp.fin.s2_saison_de_plus_encore, if: "season >= 3 || flag('une_de_plus') || flag('s2_saison_marche')" }
           - { id: jp.fin.s2_saison_de_plus }
         at: [1, 2]
-        season: "2+"
+        season: "3+"
       - id: veille_maison
         card:
+          - { id: jp.h4.e2_cheque, if: "flag('h4_silence') && !flag('h4_cheque_revenu')" }
           - { id: jp.fin.s2_veille_josiane, if: "(flag('divorce') || relation.camille <= -2) && !flag('s2_josiane_vu')" }
           - { id: jp.fin.s2_veille_jubile,  if: "(flag('jubile_fait') || flag('jubile_reporte')) && !flag('s2_jubile_vu')" }
           - { id: jp.fin.s2_veille_encore,  if: "flag('s2_veille_marche')" }
           - { id: jp.fin.s2_veille }
         at: [17, 17]
-        season: "2+"
+        season: "3+"

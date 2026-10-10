@@ -1,0 +1,142 @@
+# HISTOIRE 4 — « La Route de la Rive » : les cartes des soirs que le metteur
+# en scène arme lui-même (content/arcs/joueur/h4_sombres.yaml). Aucune n'est
+# en drame : le seul drame d'une carrière ne se vole pas.
+cards:
+  # ------------------------------------------------- le corbeau (L'Écho)
+  - id: jp.h4.sb.corbeau
+    roles: [joueur]
+    arc: presse
+    tags: [sombre, presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    text: "À L'Écho, Léa garde une lettre retournée sous sa main : pas de timbre, pas de signature. « Elle parle de vous, et d'une date. Vous voulez que je la lise à voix haute ? »"
+    left:
+      label: "Lisez-la"
+      effects: {tribunes: "-", vestiaire: "+", relation: {lea: 1}, set: [h4_corbeau]}
+      answer: "« Demandez-lui où il était le 14 mai 1984. » Elle replie la lettre. « Je ne publie pas les lettres anonymes. Je les garde. »"
+    right:
+      label: "Brûlez-la"
+      effects: {direction: "-", relation: {lea: -1}, set: [h4_corbeau]}
+      answer: "« Je ne brûle rien. » Elle la glisse dans le tiroir de Massenet, sans l'ouvrir. « Ce tiroir-là a l'habitude. »"
+
+  # ------------------------------------------------- le capot gravé (le parking)
+  - id: jp.h4.sb.capot_grave
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, tribunes]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, après l'entraînement du soir. Sur le capot de ta voiture, gravé à la clé : 14-5-84. Le gardien balaie un coin déjà propre, très appliqué, sans lever la tête."
+    left:
+      label: "Je fais repeindre"
+      effects: {caisse: "-", direction: "+", set: [h4_capot_grave]}
+      answer: "Le carrossier ponce, apprête, repeint. Sous la peinture neuve, au soleil couchant, on devine encore les chiffres."
+    right:
+      label: "Je roule avec"
+      effects: {tribunes: "-", vestiaire: "+", set: [h4_capot_grave]}
+      answer: "Aux feux rouges, les gens lisent ton capot. Personne ne comprend la date. Une seule personne, en ville, la reconnaîtrait."
+
+  # ------------------------------------------------- la table (le cabinet du Doc, 21 h)
+  - id: jp.h4.sb.table_serene
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, vestiaire]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Cabinet du Doc, vingt et une heures. Sabatier pose tes ampoules de Sérène près d'un carnet noir : « 14 mai 1984, refusé de dire qui conduisait. Tes ampoules, je les refuse aussi. Ça fait deux. »"
+    left:
+      label: "Piquez quand même"
+      effects: {force: 1, set: [h4_table]}
+      answer: "Il pique, avec son produit à lui. « J'ai refusé de mentir. Je n'ai pas refusé de me taire. Ça ne tient pas dans un carnet. »"
+    right:
+      label: "Plus d'aiguille"
+      effects: {force: -1, set: [h4_table]}
+      answer: "Il range la seringue avec le carnet, dans le même tiroir. « Alors tu ne rêveras plus. Tu boiteras réveillé{pg, select, f{e} other{}}. »"
+
+  - id: jp.h4.sb.table_su
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, vestiaire]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Cabinet du Doc, vingt et une heures. Sabatier ouvre un carnet noir : « 14 mai 1984, refusé de dire qui conduisait. » Puis : « Bréhaut t'a parlé, ça se voit. Moi, j'ai écrit une ligne. »"
+    left:
+      label: "Piquez quand même"
+      effects: {force: 1, set: [h4_table]}
+      answer: "Il pique. Pendant que le froid monte, il range le carnet. « Une ligne, et je me suis tu. Ça ne tient pas dans un carnet. »"
+    right:
+      label: "Plus d'aiguille"
+      effects: {force: -1, set: [h4_table]}
+      answer: "Il range la seringue avec le carnet, dans le même tiroir. « Alors tu ne rêveras plus. Tu boiteras réveillé{pg, select, f{e} other{}}. »"
+
+  - id: jp.h4.sb.table
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, vestiaire]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Cabinet du Doc, vingt et une heures. Sabatier ouvre le tiroir de la table, un carnet noir : « 14 mai 1984, refusé de dire qui conduisait. Je l'ai écrit le 15. Je n'ai rien fait d'autre. »"
+    left:
+      label: "Piquez quand même"
+      effects: {force: 1, set: [h4_table]}
+      answer: "Il pique. Pendant que le froid monte, il range le carnet. « J'ai refusé de mentir. Je n'ai pas refusé de me taire. »"
+    right:
+      label: "Plus d'aiguille"
+      effects: {force: -1, set: [h4_table]}
+      answer: "Il range la seringue avec le carnet, dans le même tiroir. « Alors tu ne rêveras plus. Tu boiteras réveillé{pg, select, f{e} other{}}. »"
+
+  # ------------------------------------------------- les ampoules (la cuisine, saison 2)
+  - id: jp.h4.sb.ampoules
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille pose sur la table une boîte d'ampoules sans notice, trouvée derrière le lait : « Sacha l'avait ouverte. Elle voulait en donner une à sa poupée. C'est quoi, {toi} ? »"
+    left:
+      label: "Je les jette"
+      effects: {vestiaire: "+", relation: {camille: 1}}
+      answer: "Tu les vides dans les toilettes, une à une. Camille compte avec toi, à voix basse, jusqu'à vingt-quatre."
+    right:
+      label: "Ça ne te regarde pas"
+      effects: {force: 1, relation: {camille: -2}}
+      answer: "Elle range la boîte en haut du placard, derrière les verres à pied. Le lendemain, la boîte n'y est plus. Camille ne demande rien."
+
+  - id: jp.h4.sb.ampoules_seul
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    lieu: domicile
+    tone: strategique
+    text: "La cuisine, une heure du matin. Derrière une bouteille de lait tourné, la boîte d'ampoules de Sérène. Il en manque deux. Tu ne te souviens pas de les avoir prises."
+    left:
+      label: "Je les jette"
+      effects: {vestiaire: "+"}
+      answer: "Tu les vides dans l'évier, une à une, en les comptant. Vingt-deux. Tu recomptes. Il en manque toujours deux."
+    right:
+      label: "J'en prends une"
+      effects: {force: 1, tribunes: "-"}
+      answer: "Elle se casse net entre tes doigts. Tu bois, comme on t'a dit. Cette nuit-là, la route est plus longue, et la lumière ne vient pas."
+
+  # ------------------------------------------------- la photocopie (le risque de la mission de Rouvier)
+  - id: jp.h4.vl.inspecteur
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    speaker: rouvier
+    lieu: cabinet
+    tone: strategique
+    text: "Rouvier ferme la porte du cabinet à clé, le visage gris : « Mon amie des archives est convoquée. On a vu la photocopieuse tourner à minuit. Ils cherchent qui a demandé. »"
+    left:
+      label: "Je dis que c'est moi"
+      effects: {set: [h4_denonce], end: co_garde_a_vue}
+      answer: "Tu le dis au commissariat du Quai. On te garde la nuit pour une photocopie. Pour 1984, personne ne te pose une seule question."
+    right:
+      label: "Je ne dis rien"
+      effects: {direction: "+", relation: {rouvier: -3}, char: {rouvier: parti}}
+      answer: "Son amie perd sa place le lundi. Le mardi, le cabinet a une autre blouse, et une autre main sur ton genou."

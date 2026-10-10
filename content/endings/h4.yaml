@@ -1,0 +1,73 @@
+# HISTOIRE 4 — « La Route de la Rive » : les fins du livre (docs/histoires
+# § Histoire 4, 8). Schéma : en-tête de content/endings.yaml. Toutes ont leur
+# porte dans les cartes du livre (`end:`) :
+#   · fdc_micro — le rond central, « Je dis qui conduisait » (la vérité) ;
+#   · fdc_chrysanthemes — le silence payé : « Je parle du match » après les
+#     chèques, ou le chèque de l'épilogue renvoyé une fois de plus ;
+#   · fdc_tour_honneur — Bréhaut prend le micro (rare : Sandrine écoutée au
+#     square, le buraliste à +1, Bréhaut convaincu, la route freinée) ;
+#   · fdc_route — « J'accélère », la dernière nuit, après la poire du Corner ;
+#   · fdc_prescrit — le commissariat, seul, sans avoir prévenu personne.
+# Et trois lignes ajoutées à des fins communes, qui ne parlent que dans ce
+# livre (`flag('histoire_h4')`) : la garde à vue, les croisés, le jubilé.
+endings:
+  - id: fdc_micro
+    cause: choix
+    rarity: epique
+    golden: true
+    share: false
+    title: "Le micro"
+    epitaph: "Au rond central de son jubilé, {prenom} {nom} a dit au micro qui conduisait le 14 mai 1984, et qui s'était tu ensuite. Le pavillon des Lilas a payé ce que le tribunal a compté."
+    epitaph_plus:
+      - { when: "flag('h4_promesse_micro')", text: "Au premier rang de la tribune Est, Sandrine Lavergne n'a pas applaudi. Elle est restée jusqu'au bout." }
+      - { when: "flag('h4_cheques')",        text: "Elle a encaissé le chèque du juge. Jamais ceux de {nom}, qui revenaient chaque mois." }
+
+  - id: fdc_chrysanthemes
+    cause: choix
+    rarity: rare
+    golden: false
+    share: false
+    title: "Les chrysanthèmes"
+    epitaph: "Chaque mois, {prenom} {nom} a envoyé un chèque au tabac du Quai, et chaque mois le chèque est revenu, non encaissé. Les chrysanthèmes sont allés à Jules Bertin jusqu'au bout de l'abonnement."
+    epitaph_plus:
+      - { when: "flag('h4_brehaut_convaincu')", text: "Titi Bréhaut avait demandé le micro. {nom} ne le lui a jamais rendu." }
+      - { when: "flag('h4_abonnement_arrete')", text: "L'abonnement, {nom} l'avait arrêté. Il a fallu le reprendre, à son nom, pour Monsieur Bertin." }
+
+  - id: fdc_tour_honneur
+    cause: choix
+    rarity: legendaire
+    golden: true
+    share: false
+    title: "Le tour d'honneur"
+    epitaph: "{prenom} {nom} a fait le tour du terrain en poussant un fauteuil, et c'est Titi Bréhaut qui a pris le micro. Sandrine Lavergne n'a pas pardonné ; elle a regardé le stade se lever."
+    epitaph_plus:
+      - { when: "flag('h4_cahier_lu')", text: "Le soir, au Corner, Vukić a lu une seule ligne de son cahier de 1984, à voix haute. Deux fois." }
+      - { when: "relation.lavergne >= 2", text: "Le lundi, au tabac du Quai, Jean Lavergne a posé L'Écho sur le comptoir à l'endroit, la Une vers {nom}." }
+
+  - id: fdc_route
+    cause: choix
+    rarity: rare
+    golden: false
+    share: false
+    title: "La route"
+    epitaph: "On a arrêté {prenom} {nom} à deux heures du matin au bout de la route de la Rive, ivre, le moteur chaud, à dix mètres d'un fauteuil vide sous le réverbère. Le procès-verbal donne l'heure exacte : celle de 1984."
+    epitaph_plus:
+      - { when: "flag('h4_promesse_micro')", text: "Au jubilé, le micro est resté sur son pied, au rond central. Le fauteuil de l'Est n'est pas venu." }
+      - { when: "!flag('divorce')",          text: "Camille est venue chercher {nom} au poste, à l'aube. Elle n'a pas demandé les clés." }
+
+  - id: fdc_prescrit
+    cause: choix
+    rarity: epique
+    golden: false
+    share: false
+    title: "Prescrit"
+    epitaph: "Le commissaire a écouté {prenom} {nom} jusqu'au bout, puis il a refermé le dossier : prescrit. On ne punit plus personne pour 1984, et c'est la pire chose qu'on pouvait lui répondre."
+    epitaph_plus:
+      - { when: "flag('h4_fiche_hopital')", text: "La déposition de {nom} dort aux archives du commissariat, à côté d'une fiche d'hôpital qui dit : vivante." }
+
+# Les lignes du livre sous des fins communes : elles passent après les
+# variantes de la fin elle-même.
+epitaph_plus_ajouts:
+  - { fin: co_garde_a_vue, when: "flag('histoire_h4') && flag('h4_denonce')", text: "Une photocopie d'hôpital : c'est la seule faute de 1984 qu'on ait jamais pu reprocher à {nom}." }
+  - { fin: jp_croises,     when: "flag('histoire_h4')", text: "Le genou de {nom} a lâché comme Sabatier l'avait écrit en marge de chaque radio depuis 1984, au crayon gras : 14/5." }
+  - { fin: jubile,         when: "flag('histoire_h4')", text: "Au micro, {nom} a remercié la tribune, le club et sa famille. Au premier rang de l'Est, un fauteuil est reparti avant la fin." }

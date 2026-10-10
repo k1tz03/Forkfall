@@ -142,7 +142,9 @@ arcs:
     once: true
     # Après les écharpes sous la fenêtre, la tribune au plus bas, ou le jour
     # où l'on apprend que tu as demandé à partir : MERCENAIRE.
-    when: "flag('sb_devant_chez_toi') || gauges.tribunes < 30 || flag('demande_vente')"
+    # Pas dans « La Route de la Rive » : son capot porte déjà une date gravée
+    # à la clé (jp.h4.sb_capot_grave).
+    when: "!flag('histoire_h4') && (flag('sb_devant_chez_toi') || gauges.tribunes < 30 || flag('demande_vente'))"
     chance: 0.08
     cast: [gege]
     same_club: true
@@ -324,8 +326,9 @@ arcs:
     once: true
     # Avant un match qui compte (le haut ou le bas du classement, au retour),
     # après la laverie (quelqu'un sait que tu sais), ou après la friche (les
-    # amis de l'ancien ont ton numéro).
-    when: "season >= 1 && ((slot >= 11 && (world.rang <= 4 || world.rang >= 16)) || flag('sb_laverie_3') || flag('sb_ancien'))"
+    # amis de l'ancien ont ton numéro). Pas dans « La Route de la Rive » : le
+    # téléphone de trois heures y est déjà le moteur d'une mobylette.
+    when: "season >= 1 && !flag('histoire_h4') && ((slot >= 11 && (world.rang <= 4 || world.rang >= 16)) || flag('sb_laverie_3') || flag('sb_ancien'))"
     chance: 0.08
     cast: [vukic, josiane]
     same_club: true

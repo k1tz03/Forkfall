@@ -7,12 +7,13 @@ session, alors ce qui n'était pas encore fusionné est sauvé ici, en patchs.
 
 | Patch | Livre | État | Base (commit de cette branche) |
 |---|---|---|---|
-| `h4_la_route_de_la_rive.patch` | 4, « La Route de la Rive » (joueur, `fin_de_contrat`) | commité par son auteur, rapport non reçu | `6e5b132` |
 | `h7_en_cours.patch` | 7 (sélectionneur) | **en cours d'écriture**, instantané partiel | `f681cac` |
 | `h9_en_cours.patch` | 9 (sélectionneur) | **en cours d'écriture**, instantané partiel | `f681cac` |
 | `h10_en_cours.patch` | 10 (président) | **en cours d'écriture**, instantané partiel | `f681cac` |
 
-Le livre 8, « L'Oreillette », a été fusionné depuis (son patch est retiré).
+Les livres 8, « L'Oreillette », et 4, « La Route de la Rive », ont été fusionnés
+depuis (leurs patchs sont retirés). Les auteurs des livres 7, 9 et 10 ont été
+arrêtés avec la session : leurs instantanés attendent qu'on les relance.
 Le bundle généré (`app/assets/content.json`) n'est dans aucun patch. Les
 instantanés en cours peuvent contenir des scripts jetables de leur auteur
 (`packages/tools/bin/h7_lire_tmp.dart`, `_h10_lire.dart`, `_h10_stats.dart`) et,

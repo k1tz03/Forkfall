@@ -1,0 +1,513 @@
+# HISTOIRE 4 — « La Route de la Rive » : les ancres du script (l'arc
+# `jp.fin.dernier_contrat`, content/arcs/joueur/fdc_script.yaml). Chaque carte
+# est la première variante de son étape ; les variantes historiques `jp.fin.*`
+# restent derrière elle, en secours jamais servi.
+#
+# Ce que tiennent ces douze ancres : le 14 mai 1984. Une fête au pont après la
+# montée ; une voiture du club sur la route de la Rive à deux heures ; une
+# fille de quinze ans sur sa mobylette. On a dit au joueur qu'il conduisait et
+# qu'elle était morte. Titi Bréhaut conduisait ; Sandrine Lavergne a vécu. On
+# ne montre jamais la nuit elle-même : l'avant (la fête, le départ du pont à
+# une heure cinquante) et l'après (la pierre, les fleurs, le silence).
+#
+# Bréhaut et Sabatier ne disent jamais `{toi}` : leur adresse neutre est
+# « petit », fausse à trente et un ans et fausse pour une joueuse. Le joueur
+# peut être une femme : aucun accord masculin, `{pg, select, f{e} other{}}`.
+cards:
+  # =================================================== S0 · slot 1 · le restaurant
+  # La dernière année. Fardelli tient l'agenda depuis 1984, y compris le 14 mai.
+  # Les deux sorties ouvrent le livre : le premier morceau (créneaux 4-5) et la
+  # première infiltration (6-7).
+  - id: jp.h4.a1_derniere_annee
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli coupe sa viande sans te regarder : « Dernière année, {toi}. Je m'occupe du contrat, toi du genou. Et le 14 mai, comme chaque année, je t'ai bloqué la journée. »"
+    left:
+      label: "Garde le mandat"
+      effects: {direction: "+", caisse: "-", relation: {fardelli: 1}, set: [agent_fardelli], schedule: [{card: jp.h4.morceaux.premier, in: [3, 5]}, {card: jp.h4.route.piqure, in: [4, 7]}]}
+      answer: "Il écrit « 14/5 » dans son agenda, à l'encre, sur une page déjà marquée au crayon. Puis il commande deux cafés et n'en boit qu'un."
+    right:
+      label: "Je cherche sans toi"
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent], schedule: [{card: jp.h4.morceaux.premier, in: [3, 5]}, {card: jp.h4.route.piqure, in: [4, 7]}]}
+      answer: "Il replie la nappe sur le contrat. « Sans moi, le 14 mai, qui t'emmène ? » Il paie l'addition sans regarder le montant."
+
+  - id: jp.h4.a1_derniere_annee_genou
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli beurre son pain, les yeux sur la nappe : « J'ai demandé ta radio au Doc, {toi}. Il me l'a refusée, comme chaque été depuis 1984. Je négocie quand même ? »"
+    left:
+      label: "Négocie sans radio"
+      effects: {direction: "+", caisse: "-", relation: {fardelli: 1}, set: [agent_fardelli, radio_demandee], schedule: [{card: jp.h4.morceaux.premier, in: [3, 5]}, {card: jp.h4.route.piqure, in: [4, 7]}]}
+      answer: "« Sans radio, je vends un nom, pas un genou. Ça tombe bien : ton nom, je le connais par cœur. » Il plie la nappe et la met dans sa poche."
+    right:
+      label: "Laisse ma radio au Doc"
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent, radio_demandee], schedule: [{card: jp.h4.morceaux.premier, in: [3, 5]}, {card: jp.h4.route.piqure, in: [4, 7]}]}
+      answer: "Il sourit comme on referme un classeur. « Le Doc garde tout. Même ce qu'il ne devrait pas. » Il demande l'addition à voix trop haute."
+
+  - id: jp.h4.a1_derniere_annee_vestiaire
+    roles: [joueur]
+    arc: contrat
+    tags: [agents, vestiaire]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli pousse la salière vers toi : « Titi Bréhaut m'a appelé hier, {toi}. Il voulait savoir si tu allais bien. Six ans qu'il me pose la même question, chaque mois d'août. »"
+    left:
+      label: "Dis-lui que oui"
+      effects: {direction: "+", caisse: "-", relation: {fardelli: 1, brehaut: 1}, set: [agent_fardelli], schedule: [{card: jp.h4.morceaux.premier, in: [3, 5]}, {card: jp.h4.route.piqure, in: [4, 7]}]}
+      answer: "« Je le lui dis tous les ans. » Il te tend le stylo pour le mandat. Sur la nappe, il a écrit « Titi », puis il l'a barré."
+    right:
+      label: "Qu'il me le demande"
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, set: [sans_agent], schedule: [{card: jp.h4.morceaux.premier, in: [3, 5]}, {card: jp.h4.route.piqure, in: [4, 7]}]}
+      answer: "« Il ne te le demandera pas. Il a besoin que quelqu'un d'autre le fasse. » Il paie, et garde le ticket."
+
+  # =================================================== S0 · slots 10-11 · le rabais
+  # Fardelli a dit oui pour toi. Le chiffre est plus petit que l'ancien ; la
+  # feuille de 1984 dort dans le même tiroir. La réaction de l'agent est le
+  # sponsor propre et cruel du livre : l'auto-école de la Rive.
+  - id: jp.h4.a2_rabais
+    roles: [joueur]
+    arc: contrat
+    tags: [direction, mercato]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg pousse une page vers toi, un chiffre plus petit que l'ancien : « Fardelli a dit oui pour toi. Il dit que tu sais pourquoi tu signes moins que les autres. »"
+    left:
+      label: "Je signe"
+      effects: {direction: "++", caisse: "-", set: [prolonge_rabais], react: jp.h4.re.fardelli_panneau}
+      answer: "Tu signes sous le chiffre. Il range la page dans le tiroir de gauche, sur une feuille plus jaune que tu n'as pas le temps de lire."
+    right:
+      label: "Je veux savoir pourquoi"
+      effects: {direction: "-", caisse: "-", set: [prolonge_rabais, h4_rabais_pourquoi], react: jp.h4.re.fardelli_panneau_pourquoi}
+      answer: "« Demande à ton agent. Moi, je paie ce qu'on me demande. » Il te tend le stylo ; tu signes quand même, sous la ligne."
+
+  - id: jp.h4.a2_rabais_agent
+    roles: [joueur]
+    arc: contrat
+    tags: [direction, agents]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg pousse une page vers toi. Derrière ta chaise, Fardelli a déjà la main sur ton épaule : « Un an de plus, moins cher. Il sait pourquoi, président. » Vaubourg : « Alors il signe. »"
+    left:
+      label: "Je signe"
+      effects: {direction: "++", caisse: "-", relation: {fardelli: 1}, set: [prolonge_rabais], react: jp.h4.re.fardelli_panneau}
+      answer: "La main quitte ton épaule quand le stylo touche le papier. Vaubourg range la page dans un tiroir, sur une feuille jaunie."
+    right:
+      label: "Enlève ta main"
+      effects: {direction: "-", caisse: "-", set: [prolonge_rabais, h4_rabais_pourquoi], react: jp.h4.re.fardelli_panneau_pourquoi}
+      answer: "Il l'enlève, sans vexation, comme on rend un objet prêté. Tu signes quand même. Vaubourg regarde ailleurs pendant que tu signes."
+
+  # =================================================== S0 · slot 16 · la quinzième
+  # Quinze, c'est la clause. Sur la radio, « 14/5 » n'a jamais été un compte :
+  # c'est le jour où le genou s'est cassé (et le livre le paiera deux fois).
+  - id: jp.h4.a3_quinzieme
+    roles: [joueur]
+    arc: corps
+    tags: [moment, vestiaire]
+    speaker: sabatier
+    tone: strategique
+    text: "Sabatier pose son capuchon sur la quatorzième croix du calendrier : « Quinze matchs, c'est la clause du président. Sur ta radio, le chiffre n'a jamais été un compte. Dimanche, tu joues ? »"
+    left:
+      label: "Je joue la quinzième"
+      effects: {tribunes: "++", force: -1, set: [quinzieme_jouee], react: [{card: jp.h4.re.vukic_freine, if: "flag('h4_reve_freine')"}, {card: jp.re.fardelli_quinze}]}
+      answer: "Tu joues la quinzième. Au vestiaire, le Doc écrit une date sur ta fiche de soins, au crayon gras, et l'entoure deux fois."
+    right:
+      label: "Je regarde, radio propre"
+      effects: {direction: "+", tribunes: "-", force: 1, set: [quinzieme_tribune]}
+      answer: "Tu regardes depuis la tribune. Le Doc s'assoit à côté de toi à la mi-temps et ne parle que du temps qu'il fera dimanche."
+
+  - id: jp.h4.a3_quinzieme_chiffre
+    roles: [joueur]
+    arc: corps
+    tags: [moment, vestiaire]
+    speaker: sabatier
+    tone: strategique
+    text: "Sabatier pose son capuchon sur la quatorzième croix : « En août, tu m'as demandé le chiffre de ta radio. C'est le jour où ton genou s'est cassé, pas un compte. Dimanche, tu joues ? »"
+    left:
+      label: "Je joue la quinzième"
+      effects: {tribunes: "++", force: -1, set: [quinzieme_jouee], react: [{card: jp.h4.re.vukic_freine, if: "flag('h4_reve_freine')"}, {card: jp.re.fardelli_quinze}]}
+      answer: "Tu joues. Le genou tient. Tu cherches toute la soirée ce que tu faisais un 14 mai avec un genou, et tu ne trouves que des fleurs."
+    right:
+      label: "Cassé comment ?"
+      effects: {direction: "+", tribunes: "-", force: 1, set: [quinzieme_tribune]}
+      answer: "« Contre quelque chose de dur, à hauteur de genou, en position assise. » Il range son calendrier. « Je n'y étais pas. Après, si. »"
+
+  # =================================================== S0 · slot 17 · le 14 mai
+  # La saison finit au carré ancien. Six ans de chrysanthèmes, et on n'avait
+  # jamais lu la pierre.
+  - id: jp.h4.a4_quatorze_mai
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    lieu: cimetiere
+    tone: strategique
+    text: "Cimetière, carré ancien, dix-huit heures. Tu poses les chrysanthèmes. Derrière toi, dans l'allée, Camille, ton manteau sur le bras : « Qui est Jules Bertin ? »"
+    left:
+      label: "Je te dois la vérité"
+      effects: {parole: 1, relation: {camille: 1}, set: [h4_quatorze_mai, h4_camille_cimetiere, h4_verite_camille]}
+      answer: "Tu dis la fête, la route, la fille. Elle écoute jusqu'au bout, puis lit la pierre à voix haute : 1902-1983. « Quinze ans, tu dis ? »"
+    right:
+      label: "Un ami de mon père"
+      effects: {set: [h4_quatorze_mai, h4_camille_cimetiere, h4_mensonge_camille]}
+      answer: "Elle te rend le manteau et repart seule. Tu restes, et pour la première fois en six ans tu lis la pierre : Jules Bertin, 1902-1983."
+
+  # Secours : Camille est partie. Le gardien passe dans l'allée.
+  - id: jp.h4.a4_quatorze_mai_seul
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: abel
+    lieu: cimetiere
+    tone: strategique
+    text: "Cimetière, carré ancien, dix-huit heures. Tu poses les chrysanthèmes. Le gardien s'arrête dans l'allée, son registre sous le bras : « Pour Monsieur Bertin, encore ? Vous étiez de la famille ? »"
+    left:
+      label: "C'était une jeune fille"
+      effects: {set: [h4_quatorze_mai]}
+      answer: "Il relit la pierre, puis te regarde. « Monsieur Bertin avait quatre-vingt-un ans. » Tu lis la pierre pour la première fois : 1902-1983."
+    right:
+      label: "Je ne réponds pas"
+      effects: {set: [h4_quatorze_mai]}
+      answer: "Il écrit l'heure dans son registre. En sortant, tu relis la pierre ; tu ne l'avais jamais lue. Jules Bertin, 1902-1983."
+
+  # =================================================== S1 · slots 1-2 · le registre
+  # Le gardien note qui vient, et quand. Il ouvre l'intrigue « Jules Bertin ».
+  - id: jp.h4.a5_registre
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: abel
+    tone: leger
+    text: "Monsieur Abel ouvre son registre sur le comptoir de la loge : « Vous, chaque 14 mai depuis 1985. Monsieur Fardelli, une fois, la veille de votre première visite. Pour Monsieur Bertin. »"
+    left:
+      label: "Où est la vraie tombe ?"
+      effects: {relation: {abel: 1}, set: [h4_registre, h4_tombe_inconnue], schedule: [{card: jp.h4.bertin.fleuriste, in: [3, 5]}]}
+      answer: "« Une jeune fille de quinze ans, en mai 1984 ? Personne de cet âge n'est entré chez moi cette année-là. J'ai vérifié deux fois. »"
+    right:
+      label: "Je repars"
+      effects: {set: [h4_registre], schedule: [{card: jp.h4.bertin.fleuriste, in: [3, 5]}]}
+      answer: "Tu repars par l'allée centrale. Derrière toi, il trempe sa plume, et tu l'entends écrire l'heure, puis ton nom."
+
+  # La mission de la ville (content/ville/missions_h4.yaml) : on a déjà payé les
+  # allées et vu la page de 1985.
+  - id: jp.h4.a5_registre_mission
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: abel
+    tone: leger
+    text: "Monsieur Abel rouvre le registre à la page que tu as payée cinq cents francs : « Fardelli, R. — 13 mai 1985 — pour M. Bertin. » Il ne referme pas : « La suite vous intéresse aussi ? »"
+    left:
+      label: "Montrez-moi la suite"
+      effects: {relation: {abel: 1}, set: [h4_registre, h4_tombe_inconnue], schedule: [{card: jp.h4.bertin.fleuriste, in: [3, 5]}]}
+      answer: "Six lignes à ton nom, une par 14 mai. Et aucune jeune fille de quinze ans, en 1984, dans tout le registre. « J'ai regardé avant vous. »"
+    right:
+      label: "J'en ai assez vu"
+      effects: {set: [h4_registre], schedule: [{card: jp.h4.bertin.fleuriste, in: [3, 5]}]}
+      answer: "Il referme le registre sur son doigt, pour garder la page. « Elle restera ouverte, si vous revenez. »"
+
+  # =================================================== S1 · slots 10-11 · la fiche
+  # Le retournement de la saison : « vivante ». Le nom mène au tabac du Quai,
+  # où l'on achète L'Écho depuis six ans.
+  - id: jp.h4.a6_fiche
+    roles: [joueur]
+    arc: corps
+    tags: [moment, famille]
+    speaker: rouvier
+    tone: strategique
+    text: "Nadia Rouvier pose une photocopie sur la table de massage : « Lavergne Sandrine, 15 ans, admise le 14 mai 1984 à 2 h 40. Vivante. Colonne touchée. » Puis : « Je n'ai rien vu. Je ne sais pas lire. »"
+    left:
+      label: "Je cherche cette famille"
+      effects: {relation: {rouvier: 1}, set: [h4_fiche_hopital], schedule: [{card: jp.h4.standard.standard, in: [1, 4]}], react: jp.h4.re.lavergne_licence}
+      answer: "Lavergne. Six ans que tu lis ce nom au-dessus d'une caisse, chaque matin, en payant L'Écho."
+    right:
+      label: "Je range la feuille"
+      effects: {set: [h4_fiche_hopital], schedule: [{card: jp.h4.standard.standard, in: [1, 4]}], react: jp.h4.re.lavergne_licence}
+      answer: "Tu la plies en quatre dans ta poche. Elle y reste toute la nuit ; tu la touches à chaque fois que tu te retournes."
+
+  - id: jp.h4.a6_fiche_mission
+    roles: [joueur]
+    arc: corps
+    tags: [moment, famille]
+    speaker: rouvier
+    tone: strategique
+    text: "La photocopie sortie des archives de Portclair est sur la table de massage. Rouvier ne la touche pas : « Lavergne Sandrine, 15 ans, 2 h 40, vivante. Mon amie a eu peur. Moi aussi. »"
+    left:
+      label: "Je cherche cette famille"
+      effects: {relation: {rouvier: 1}, set: [h4_fiche_hopital], schedule: [{card: jp.h4.standard.standard, in: [1, 4]}], react: jp.h4.re.lavergne_licence}
+      answer: "Lavergne. Le nom est peint au-dessus de la caisse du tabac du Quai, où tu paies L'Écho tous les matins depuis six ans."
+    right:
+      label: "Brûlez-la"
+      effects: {relation: {rouvier: 1}, set: [h4_fiche_hopital], schedule: [{card: jp.h4.standard.standard, in: [1, 4]}], react: jp.h4.re.lavergne_licence}
+      answer: "Elle la brûle dans le lavabo de la salle de soins. Les mots restent : vivante, deux heures quarante, et un nom de buraliste."
+
+  # =================================================== S1 · slot 17 · le capot
+  # L'aveu, sur le parking du stade. Les deux sorties ouvrent « Le capot »
+  # (saison 2, créneaux 3-5).
+  - id: jp.h4.a7_capot
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire]
+    speaker: brehaut
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, la nuit. Titi Bréhaut est assis sur le capot de sa voiture, le brassard dans le poing : « J'ai conduit. Tu dormais. Je t'ai mis au volant, j'avais vingt-sept ans et un contrat. »"
+    left:
+      label: "Tu vas le dire"
+      effects: {vestiaire: "-", parole: 1, relation: {brehaut: -1}, set: [h4_capot, h4_capot_exige], schedule: [{card: jp.h4.capot.supplie, in: [2, 4]}]}
+      answer: "Il regarde le brassard comme un objet trouvé. « Le dire à qui ? Elle le sait. Toi aussi, maintenant. Ça fait déjà deux. »"
+    right:
+      label: "Rentre chez toi"
+      effects: {vestiaire: "+", set: [h4_capot], schedule: [{card: jp.h4.capot.supplie, in: [2, 4]}]}
+      answer: "Il descend du capot. « Tu dormais si bien. Je me suis dit que tu ne t'en souviendrais pas, et que moi, je ne l'oublierais jamais. »"
+
+  - id: jp.h4.a7_capot_cahier
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire]
+    speaker: brehaut
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, la nuit. Bréhaut, assis sur son capot, voit le cahier de Vukić sous ton bras : « Une heure cinquante. Il a tout noté, alors. Oui, j'ai conduit. Tu dormais. »"
+    left:
+      label: "Tu vas le dire"
+      effects: {vestiaire: "-", parole: 1, relation: {brehaut: -1}, set: [h4_capot, h4_capot_exige], schedule: [{card: jp.h4.capot.supplie, in: [2, 4]}]}
+      answer: "« Zoran l'a écrit en 1984 et il s'est tu. Moi, je l'ai fait et je me suis tu. Tu veux que je sois le seul à parler ? »"
+    right:
+      label: "Rentre chez toi"
+      effects: {vestiaire: "+", set: [h4_capot], schedule: [{card: jp.h4.capot.supplie, in: [2, 4]}]}
+      answer: "Il descend du capot et te prend le cahier des mains, doucement, pour lire la ligne lui-même. Il la lit deux fois. Il te le rend."
+
+  - id: jp.h4.a7_capot_appel
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire]
+    speaker: brehaut
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, la nuit. Bréhaut t'attend assis sur son capot, le brassard dans le poing : « Tu m'as appelé jeudi sans rien dire. J'ai compris au silence. J'ai conduit. Tu dormais. »"
+    left:
+      label: "Tu vas le dire"
+      effects: {vestiaire: "-", parole: 1, relation: {brehaut: -1}, set: [h4_capot, h4_capot_exige], schedule: [{card: jp.h4.capot.supplie, in: [2, 4]}]}
+      answer: "« J'avais vingt-sept ans et un contrat. Je t'ai porté jusqu'au volant. » Il serre le brassard. « Je n'ai pas fini de te porter. »"
+    right:
+      label: "Rentre chez toi"
+      effects: {vestiaire: "+", set: [h4_capot], schedule: [{card: jp.h4.capot.supplie, in: [2, 4]}]}
+      answer: "Il ne bouge pas. Tu pars en premier. Dans le rétroviseur, il est toujours assis sur le capot, et les phares le découpent."
+
+  # =================================================== S2 · slots 1-2 · l'affiche
+  # Le jubilé est fixé au samedi 15 mai 1993 : la nuit d'avant est un 14 mai.
+  - id: jp.h4.a8_jubile
+    roles: [joueur]
+    arc: tribune
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg déroule l'affiche sur son bureau : ta tête dans la lucarne, 1984, en noir et blanc. « Ton jubilé, samedi 15 mai. Un micro au rond central : tu dis merci, on vend des maillots. »"
+    left:
+      label: "Le 15 mai, d'accord"
+      effects: {direction: "+", set: [h4_jubile_annonce, jubile_prevu], react: jp.h4.re.lea_micro}
+      answer: "Il signe le bon à tirer sans le relire. Le 15 est imprimé en rouge. La veille, le 14, personne n'a pensé à l'imprimer."
+    right:
+      label: "Pas cette date-là"
+      effects: {direction: "-", set: [h4_jubile_annonce, jubile_prevu, h4_date_refusee], react: jp.h4.re.lea_micro}
+      answer: "« La Ligue fait le calendrier, pas toi. » Il roule une affiche et te la tend. « Pour la cuisine. »"
+
+  - id: jp.h4.a8_jubile_exige
+    roles: [joueur]
+    arc: tribune
+    tags: [direction, tribunes]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg déroule l'affiche du jubilé, samedi 15 mai, ta tête dans la lucarne : « Bréhaut est passé hier soir. Il dit que tu veux parler. Au micro, on remercie. C'est compris ? »"
+    left:
+      label: "On remercie"
+      effects: {direction: "+", set: [h4_jubile_annonce, jubile_prevu], react: jp.h4.re.lea_micro}
+      answer: "Il signe le bon à tirer. « Je savais que tu étais raisonnable. Tu l'as toujours été, même en dormant. » Il ne sourit pas en le disant."
+    right:
+      label: "On verra au micro"
+      effects: {direction: "--", set: [h4_jubile_annonce, jubile_prevu, h4_date_refusee], react: jp.h4.re.lea_micro}
+      answer: "Il pose la main à plat sur l'affiche, sur ta tête de 1984. « Alors on verra aussi ce qu'il y a dans mon coffre. »"
+
+  # =================================================== S2 · slots 10-11 · le coffre
+  # « J'étais au volant », signé de ta main en 1984. Au pénal, prescrit ; au
+  # civil, non. Rouvrir envoie l'huissier aux Lilas (la saisie du livre) ;
+  # laisser dormir laisse Fardelli dire ce qu'il savait.
+  - id: jp.h4.a9_declaration
+    roles: [joueur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg ouvre le coffre et pose une feuille de 1984 sur le sous-main, signée de ta main : « J'étais au volant. » « Au pénal, c'est prescrit. Au civil, non. Tu veux vraiment qu'on rouvre ? »"
+    left:
+      label: "Rouvrez"
+      effects: {direction: "--", parole: 1, schedule: [{card: jp.h4.declaration.huissier, in: [1, 4]}], react: jp.h4.re.josiane_carton}
+      answer: "Il glisse la feuille dans une enveloppe kraft, pour un avocat de Portclair. « Le civil commence toujours par celui qui a signé. »"
+    right:
+      label: "Laissez dormir ça"
+      effects: {direction: "+", schedule: [{card: jp.h4.declaration.prescrit, in: [1, 4]}]}
+      answer: "Il remet la feuille dans le coffre et tourne la molette, deux fois. « Elle dort ici depuis 1984. Elle a l'habitude. »"
+
+  - id: jp.h4.a9_declaration_cahier
+    roles: [joueur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: aulard
+    tone: strategique
+    text: "Vaubourg pose la feuille de 1984 à côté du cahier de Vukić, ouvert à la même date : « Son écriture contre ta signature. Au pénal, c'est prescrit ; au civil, non. On rouvre ? »"
+    left:
+      label: "Rouvrez"
+      effects: {direction: "--", parole: 1, schedule: [{card: jp.h4.declaration.huissier, in: [1, 4]}], react: jp.h4.re.josiane_carton}
+      answer: "Il glisse la feuille dans une enveloppe pour un avocat de Portclair. Le cahier, il te le rend sans l'avoir lu ; il n'en a pas besoin."
+    right:
+      label: "Laissez dormir ça"
+      effects: {direction: "+", schedule: [{card: jp.h4.declaration.prescrit, in: [1, 4]}]}
+      answer: "Il range la feuille dans le coffre, le cahier ne l'intéresse pas. « Un adjoint, ça note tout. Ça ne signe rien. »"
+
+  # =================================================== S2 · slot 16 · la route
+  # La veille du jubilé, la nuit du 14 au 15 mai. Au bout du pont, sous le
+  # réverbère, un fauteuil vide (personne ne dira qui l'a laissé là).
+  - id: jp.h4.a10_route
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, moment]
+    lieu: rue
+    tone: strategique
+    text: "Deux heures, la nuit du 14 au 15 mai. Sur la banquette, le gilet de Sacha ; dans ta tête, sa voix : « À gauche ou à droite ? » Au bout du pont, sous le réverbère, un fauteuil vide."
+    left:
+      label: "Je freine"
+      effects: {force: -1, react: [{card: jp.h4.re.camille_aube, if: "!flag('divorce')"}]}
+      answer: "Tu t'arrêtes à dix mètres. Le fauteuil est attaché au réverbère par un antivol. Tu rentres à pied, les clés serrées dans le poing."
+    right:
+      label: "J'accélère"
+      effects: {force: -1, set: [h4_accelere]}
+      answer: "Tu passes à côté sans le toucher. Dans le rétroviseur, le fauteuil rapetisse, puis le réverbère s'éteint, comme à une heure dite."
+
+  # On a bu au Corner avec Bréhaut, comme en 1984. Accélérer, c'est la fin du
+  # livre la pire : la berline part en fourrière au bout du pont.
+  - id: jp.h4.a10_route_bouteille
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, moment]
+    lieu: rue
+    tone: strategique
+    text: "Deux heures, la nuit du 14 au 15 mai. La bouteille du Corner roule sur le siège passager à chaque virage. Au bout du pont, sous le réverbère, un fauteuil vide."
+    left:
+      label: "Je freine"
+      effects: {force: -1, react: [{card: jp.h4.re.camille_aube, if: "!flag('divorce')"}]}
+      answer: "Tu freines trop tard et trop fort. La voiture s'arrête en travers, à deux mètres du fauteuil. Tu rentres à pied, les clés dans le poing."
+    right:
+      label: "J'accélère"
+      effects: {set: [h4_accelere], var: {saisie_vehicules: "+1"}, end: fdc_route}
+      answer: "Les gendarmes t'arrêtent au bout de la route de la Rive, le moteur chaud. L'un d'eux regarde sa montre et écrit l'heure deux fois."
+
+  # =================================================== S2 · slot 17 · le rond central
+  # Les fins du livre. Le micro est ouvert si l'on a freiné ; fermé si l'on a
+  # accéléré sobre (on peut encore se taire, et la carrière continue : c'est
+  # l'épilogue). Les chèques changent le prix du silence.
+  - id: jp.h4.a11_rond_central
+    roles: [joueur]
+    arc: tribune
+    tags: [tribunes, moment]
+    speaker: lea
+    lieu: stade
+    tone: strategique
+    text: "Le rond central, le stade debout. Bréhaut est à côté de toi, en costume. Léa te tend le micro. Au premier rang de la tribune Est, un fauteuil."
+    left:
+      label: "Je dis qui conduisait"
+      effects: {set: [h4_rond_central, jubile_fait], var: {saisie_logement: "+1"}, end: fdc_micro}
+      answer: "Tu dis le pont, une heure cinquante, le volant, ton sommeil, et les six ans d'après. Bréhaut ne bouge pas. Le stade non plus."
+    right:
+      label: "Je parle du match"
+      effects: {set: [h4_rond_central, jubile_fait], end: jubile}
+      answer: "Tu remercies la tribune, le club, ta famille. Au premier rang de l'Est, le fauteuil recule et s'en va avant la fin de ta phrase."
+
+  - id: jp.h4.a11_tour_honneur
+    roles: [joueur]
+    arc: tribune
+    tags: [tribunes, moment]
+    speaker: brehaut
+    lieu: stade
+    tone: strategique
+    text: "Le rond central, le stade debout. Léa te tend le micro ; Bréhaut, en costume, pose la main dessus avant toi : « Laisse. C'est à moi. » Au premier rang de l'Est, un fauteuil."
+    left:
+      label: "Je lui laisse le micro"
+      effects: {set: [h4_rond_central, jubile_fait], end: fdc_tour_honneur}
+      answer: "Il dit l'heure, le pont, ton sommeil, sa main sur ton épaule. Le stade se tait. Toi, tu descends vers la tribune Est."
+    right:
+      label: "Je le dis moi-même"
+      effects: {set: [h4_rond_central, jubile_fait], var: {saisie_logement: "+1"}, end: fdc_micro}
+      answer: "Tu reprends le micro. Il n'insiste pas ; il reste à côté de toi pendant que tu dis son nom, et il hoche la tête à chaque phrase."
+
+  - id: jp.h4.a11_silence
+    roles: [joueur]
+    arc: tribune
+    tags: [tribunes, moment]
+    speaker: lea
+    lieu: stade
+    tone: strategique
+    text: "Le rond central, le stade debout. Tu n'as pas dormi. Léa te tend le micro. Au premier rang de l'Est, un fauteuil, et la place d'à côté, vide."
+    left:
+      label: "Je parle du match"
+      effects: {set: [h4_rond_central, jubile_fait], end: jubile}
+      answer: "Tu remercies tout le monde, dans l'ordre. Ta voix ne tremble pas ; c'est la seule chose qui tienne debout, ce jour-là."
+    right:
+      label: "Je rends le micro"
+      effects: {tribunes: "-", set: [h4_rond_central, jubile_fait, h4_silence]}
+      answer: "Tu rends le micro sans un mot. Le stade applaudit quand même, longtemps, comme on applaudit quelqu'un qui pleure. Tu ne pleures pas."
+
+  - id: jp.h4.a11_cheques
+    roles: [joueur]
+    arc: tribune
+    tags: [tribunes, moment]
+    speaker: lea
+    lieu: stade
+    tone: strategique
+    text: "Le rond central, le stade debout. Dans ta poche, le dernier chèque au tabac du Quai, revenu non encaissé. Léa te tend le micro. Au premier rang de l'Est, un fauteuil."
+    left:
+      label: "Je dis qui conduisait"
+      effects: {set: [h4_rond_central, jubile_fait], var: {saisie_logement: "+1"}, end: fdc_micro}
+      answer: "Tu dis le pont et le volant. Puis tu sors le chèque de ta poche et tu le déchires devant la tribune Est, en petits morceaux."
+    right:
+      label: "Je parle du match"
+      effects: {set: [h4_rond_central, jubile_fait], end: fdc_chrysanthemes}
+      answer: "Tu parles du match. Le lundi, tu postes un chèque de plus au tabac du Quai. Il reviendra ; tu le savais en fermant l'enveloppe."
+
+  # =================================================== S3+ · l'épilogue de qui s'est tu
+  - id: jp.h4.e1_tabac
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: lavergne
+    tone: strategique
+    text: "Le tabac du Quai, sept heures. Jean Lavergne pose L'Écho sur le comptoir et repousse ta pièce du bout du doigt : « Je ne vous vends plus rien. Le tabac du stade ouvre à six heures et demie. »"
+    left:
+      label: "J'irai au stade"
+      effects: {tribunes: "-", set: [h4_tabac_ferme]}
+      answer: "Tu reprends ta pièce. Au tabac du stade, on te sert sans te regarder. L'Écho a la même Une, et le café y est meilleur."
+    right:
+      label: "Je laisse la pièce"
+      effects: {relation: {lavergne: -1}, set: [h4_tabac_ferme]}
+      answer: "Tu laisses la pièce sur le comptoir. Le lendemain, elle est dans ta boîte aux lettres, dans une enveloppe sans timbre."
+
+  - id: jp.h4.e2_cheque
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    lieu: domicile
+    tone: strategique
+    text: "Mai. Le chèque du mois est revenu du tabac du Quai, non encaissé, avec une coupure de L'Écho pliée dedans : JUBILÉ, LE SILENCE DU ROND CENTRAL."
+    left:
+      label: "J'en envoie un autre"
+      effects: {caisse: "-", set: [h4_cheque_revenu, h4_cheques], end: fdc_chrysanthemes}
+      answer: "Le même montant, la même écriture, le même timbre. Au carré ancien, ce matin-là, le livreur des Immortelles monte un bouquet de plus."
+    right:
+      label: "Je vais sonner chez eux"
+      effects: {set: [h4_cheque_revenu]}
+      answer: "Tu sonnes à la porte de derrière du tabac. Personne n'ouvre. Dans la cour, une mobylette sur sa béquille, le moteur froid."

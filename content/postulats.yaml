@@ -440,10 +440,20 @@ postulats:
   - id: fin_de_contrat
     index: 3
     role: joueur
-    title: "Fin de contrat à 31 ans"
-    question: "Ton genou a un avis, ton agent en a un autre."
+    # HISTOIRE 4 — « La Route de la Rive » (docs/histoires/00_les_dix_histoires.md,
+    # Histoire 4 ; ancien titre : « Fin de contrat à 31 ans »). L'id, l'index,
+    # l'année, les jauges, la force, le drapeau `genou` et le président ne
+    # bougent pas. Le livre : content/arcs/joueur/fdc_script.yaml (les ancres),
+    # h4_intrigues.yaml, h4_sombres.yaml, content/cards/joueur/h4_*.yaml,
+    # content/endings/h4.yaml, content/unes/h4.yaml, content/setpieces/h4.yaml,
+    # content/ville/*_h4.yaml.
+    title: "La Route de la Rive"
+    question: "Qui te tient encore : ton genou, ton agent, ou le vestiaire de 1984 ?"
     division: 1
     year: 1990
+    # Le livre se passe à Aubérive, au Racing (la ville dessinée).
+    ville: Aubérive
+    club: Racing Aubérive
     gauges: { vestiaire: 50, tribunes: 50, direction: 45, caisse: 60 }
     force: 52
     # Le postulat s'appelle « Fin de contrat à 31 ans » : l'âge se déclare, il
@@ -453,7 +463,7 @@ postulats:
     # rôle ne tenait que par le drapeau. Mesuré à l'aperçu (capture
     # `40_p3_carte.png` de l'étape 8).
     age: 31
-    flags: [genou]
+    flags: [genou, histoire_h4]
     # `president` nomme le président (`{president}` dans les manchettes et les
     # épitaphes) ; `patron` nomme celui qui te tient (l'Objectif et le Bilan du
     # contrat). Chez un joueur en fin de contrat, ce n'est pas le même homme :
@@ -493,15 +503,15 @@ postulats:
       vecchio:  { fonction: coeur,        target: 0.9 }
       vukic:    { fonction: messager,     target: 0.9 }
       camille:  { fonction: maison,       target: 1 }
-      josiane:  { fonction: choeur,       target: 1 }
+      josiane:  { fonction: choeur,       target: 0.9 }
       lea:      { fonction: chroniqueur,  target: 0.9 }
-      meneche:  { fonction: chroniqueur,  target: 1 }
+      meneche:  { fonction: chroniqueur,  target: 0.9 }
       gege:     { fonction: tribune,      target: 0.9 }
       mbako:    { fonction: releve,       target: 0.9 }
       aulard:   { fonction: direction,    target: 1 }
       nassir:   { fonction: tentateur,    target: 0.5 }
       legruet:  { fonction: instances,    target: 0.5 }
-    pitch: "Ton genou a un avis, ton agent en a un autre. Le maintien, et le sas vers le banc."
+    pitch: "Chaque 14 mai, des chrysanthèmes sur une tombe de 1984. Cet automne, la photo de la montée arrive par morceaux."
     chantier: false                   # relu à l'intégration : les budgets de réservoir sont bloquants
     opening_arc: jp.fin.dernier_contrat
     # Le prologue amène jusqu'à la portière ; l'ancre F1 du script
@@ -511,26 +521,45 @@ postulats:
       - { id: genou,     poids: 1.0 }
       - { id: agent,     poids: 1.0 }
       - { id: vestiaire, poids: 1.0 }
+    # HISTOIRE 4 : le livre occupe les trois premières saisons (son script et
+    # ses sept intrigues sont ouverts par `schedule:`, hors réservoir). Le
+    # réservoir existant reste, au plus juste :
+    #   · trois saisons denses → on tire moins : une intrigue en S0 (3 → 1),
+    #     aucune en S1 (« La tombe vide » remplit la saison : ses onze
+    #     échéances et ses quatre Nouvelles), aucune en S2 (l'acte final). Les
+    #     entrées de "1" et de « 2+ » attendent l'épilogue (`season >= 3`), la
+    #     reprise des entrées de "0" aussi ; la réserve ne force plus (0) ;
+    #   · ce qui changerait de club (la maison du pays, l'exil doré, le banc
+    #     de janvier) attend l'épilogue (`season >= 3`) : le livre se passe à
+    #     Aubérive, ses intrigues sont `same_club` (la « porte de sortie » de
+    #     content/cards/common/fins_du_lot.yaml attend aussi) ;
+    #   · ce qui raconte une autre fin de carrière au même moment (le jubilé de
+    #     la Nord, l'adieu au calendrier) attend aussi l'épilogue : le jubilé du
+    #     livre est celui de Vaubourg, le 15 mai 1993 ;
+    #   · la pharmacie du club (un flacon sans étiquette) et la table du jeudi
+    #     (un second sponsor louche) ne doublent pas les ampoules de Sérène.
+    # Gardés tels quels, comme le veut le livre : le genou qui parle, le
+    # brassard, la dernière sélection, les mémoires.
     programme:                        # le réservoir (bible ch. 10 § 4, « Programme »)
       "0":
-        prendre: 3
+        prendre: 1
         # [2,9] → [1,12] : le slot de première ouverture est le minimum de trois
         # tirages ; sur huit valeurs son écart-type tombait à 1,34 (budget § 5.1 :
         # ≥ 1,8) et 2 % des S0 ouvraient deux intrigues à moins de trois créneaux.
         # [2,11] ne le remonte qu'à 1,50 : c'est la borne basse qui compte, et
         # douze valeurs à partir de 1 (comme le promu et la pépite) rendent au
         # minimum de trois tirages la dispersion que le budget demande (1,84).
-        fenetre: [1, 12]
-        reserve: 1
+        fenetre: [1, 7]               # HISTOIRE 4 : l'intrigue du réservoir s'ouvre tôt et déborde moins sur la saison 1
+        reserve: 0
         pool:
-          - { arc: jp.vestiaire_porte,   poids: 0.35, signature: true, if: "gauges.vestiaire >= 50" }
-          - { arc: jp.derniere_selection, poids: 1.1, if: "flag('international') || gauges.tribunes >= 45" }
-          - { arc: jp.maison_pays,       poids: 0.8 }
-          - { arc: jp.memoires,          poids: 1.0 }
-          - { arc: jp.contrat_image,     poids: 0.9 }
-          - { arc: jp.banc_hiver,        poids: 0.9 }    # « le banc, à trente et un ans » (arc partagé)
-          - { arc: jp.conseils_gigi,     poids: 0.8 }
-          - { arc: co.mbako_rival,       poids: 0.8 }
+          - { arc: jp.vestiaire_porte,   poids: 0.35, signature: true, if: "gauges.vestiaire >= 50 && (season == 0 || season >= 3)" }
+          - { arc: jp.derniere_selection, poids: 1.1, if: "(flag('international') || gauges.tribunes >= 45) && (season == 0 || season >= 3)" }
+          - { arc: jp.maison_pays,       poids: 0.8, if: "season >= 3" }
+          - { arc: jp.memoires,          poids: 1.0, if: "season == 0 || season >= 3" }
+          - { arc: jp.contrat_image,     poids: 0.9, if: "season == 0 || season >= 3" }
+          - { arc: jp.banc_hiver,        poids: 0.9, if: "season >= 3" }    # « le banc, à trente et un ans » (arc partagé ; son départ de janvier changerait de club)
+          - { arc: jp.conseils_gigi,     poids: 0.8, if: "season == 0 || season >= 3" }
+          - { arc: co.mbako_rival,       poids: 0.8, if: "season == 0 || season >= 3" }
       "1":
         # 2 → 4 (`k = prendre - carry`). Avec deux tirages, la S1 manquait de
         # matière : la cadence forcée y montait à 0,72 ouverture-forcée par
@@ -538,7 +567,7 @@ postulats:
         # 15 % de leurs ouvertures au metteur en scène (le derby 18 %, la
         # pharmacie 19 %, le consultant 18 %, l'exil 19 %, le genou 21 %, le
         # jubilé 16 %, le pari 16 %). À quatre, la cadence forcée retombe à 0,39.
-        prendre: 4
+        prendre: 1                    # HISTOIRE 4 : entrées réservées à l'épilogue (voir plus haut)
         fenetre: [2, 12]              # fenêtre large : les ouvertures s'étalent
         reserve: 0
         reprise: true                 # les entrées de "0" non tirées restent candidates
@@ -550,23 +579,23 @@ postulats:
         # retombe sur le tirage pondéré du réservoir et le forçage se répartit.
         # Les buckets "0" et "2+" gardent leur réserve : la cadence y force moins.
         pool:
-          - { arc: co.pharmacie,         poids: 1.1 }
+          - { arc: co.pharmacie,         poids: 1.1, if: "season >= 3" }
           # 1,2 → 1,9 : l'objectif caché « Debout » se joue au jubilé, et
           # l'intrigue ne s'ouvrait que dans 16 % des carrières — dont deux
           # tiers reportaient. Sous ce taux, l'objectif restait sous son
           # plancher de 5 % quelle que soit sa condition.
-          - { arc: jp.jubile,            poids: 1.9, if: "gauges.tribunes >= 50" }
-          - { arc: jp.genou_parle,       poids: 1.4 }
-          - { arc: jp.consultant,        poids: 1.1 }
-          - { arc: co.derby,             poids: 1.3 }
-          - { arc: jp.pari,              poids: 1.2, if: "gauges.caisse < 55" }
-          - { arc: jp.exil_dore,         poids: 1.3 }   # 0,9 → 1,3 : 16 % de ses ouvertures venaient du forçage (plafond 15 %)
-          - { arc: jp.vestiaire_porte,   poids: 0.9, if: "gauges.vestiaire >= 55" }
+          - { arc: jp.jubile,            poids: 1.9, if: "gauges.tribunes >= 50 && season >= 3 && !flag('h4_jubile_annonce')" }
+          - { arc: jp.genou_parle,       poids: 1.4, if: "season >= 3" }
+          - { arc: jp.consultant,        poids: 1.1, if: "season >= 3" }
+          - { arc: co.derby,             poids: 1.3, if: "season >= 3" }
+          - { arc: jp.pari,              poids: 1.2, if: "gauges.caisse < 55 && season >= 3" }
+          - { arc: jp.exil_dore,         poids: 1.3, if: "season >= 3" }   # 0,9 → 1,3 : 16 % de ses ouvertures venaient du forçage (plafond 15 %)
+          - { arc: jp.vestiaire_porte,   poids: 0.9, if: "gauges.vestiaire >= 55 && season >= 3" }
           # Les sponsors (content/arcs/joueur/sponsors_louches.yaml) : la table du jeudi
           # seule, et en S1 seulement. C'est le réservoir le plus serré (jp.pari,
           # jp.diplome_joueur, jp.vecchio_exemple à 9-11 %) : ouverte en S2+, elle faisait
           # passer le diplôme et le rituel de Gigi sous le plancher (mesuré à 6 000 carrières).
-          - { arc: jp.sp.tripot,           poids: 1.6, if: "season <= 1" }
+          - { arc: jp.sp.tripot,           poids: 1.6, if: "season >= 3 && !flag('h4_sp_serene')" }
       "2+":
         # 5 → 4. Le passage à 5 visait l'écart de cadence des saisons tardives
         # (« max 6 pour un budget de 4 ») : mesuré à 2 000 et 5 000 carrières, il
@@ -576,50 +605,33 @@ postulats:
         # backlog à 2 sans rien changer à l'écart ; la couverture des deux
         # intrigues qui tombaient au plancher (le diplôme et le rituel de Gigi)
         # est rendue par leur poids, ci-dessous.
-        prendre: 4
+        prendre: 2
         fenetre: [1, 11]
-        reserve: 2
+        reserve: 0
         reprise: true
         pool:
-          - { arc: jp.adieu,             poids: 2.4, if: "age >= 32 || stats.saisons >= 2" }
+          - { arc: jp.adieu,             poids: 2.4, if: "season >= 3 && (age >= 32 || stats.saisons >= 2)" }
           # 2,0 → 2,6 et 2,8 → 3,4 : avec quatre prises au lieu de cinq, le
           # rituel de Gigi et le diplôme retombaient à 10 % de couverture, le
           # plancher exact du budget § 5.1. Le poids leur rend leurs 12 %.
-          - { arc: jp.vecchio_exemple,   poids: 2.6 }    # rituel (replay: ritual)
-          - { arc: jp.jubile,            poids: 2.4, if: "gauges.tribunes >= 50" }
-          - { arc: jp.brassard_20,       poids: 1.5, if: "age >= 29 || stats.saisons >= 2" }
+          - { arc: jp.vecchio_exemple,   poids: 2.6, if: "season >= 3" }    # rituel (replay: ritual)
+          - { arc: jp.jubile,            poids: 2.4, if: "gauges.tribunes >= 50 && season >= 3 && !flag('h4_jubile_annonce')" }
+          - { arc: jp.brassard_20,       poids: 1.5, if: "season >= 3 && (age >= 29 || stats.saisons >= 2)" }
           # 1,8 → 2,8 : le diplôme ne s'ouvrait que dans 10 % des carrières, à la
           # limite du plancher, et son échantillon d'issues n'était pas mesurable.
-          - { arc: jp.diplome_joueur,    poids: 3.4, if: "age >= 32 || flag('genou') || flag('banc_regarde')" }
-          - { arc: co.derby,             poids: 0.9 }    # replay after 1
-          - { arc: jp.consultant,        poids: 0.9 }
-          - { arc: jp.pari,              poids: 0.8 }
-          - { arc: jp.genou_parle,       poids: 0.8 }
-          - { arc: jp.conseils_gigi,     poids: 0.7 }    # rituel
-    objectifs:                        # 3 objectifs cachés (bible ch. 10 § 4)
-      # Budget § 5.3 : 30-60 % des carrières atteignent ≥ 1 objectif, et chaque
-      # objectif ∈ [5 %, 60 %]. Les trois conditions transcrites de la bible
-      # donnaient 80 % / 64 % / 50 % / 1 % : « rejouer une saison entière » était
-      # la définition d'une carrière normale (deux saisons sans genou grave),
-      # « le passeur » demandait un seul palier avec l'adjoint, et « debout »
-      # exigeait la conjonction d'un jubilé JOUÉ (5 % des carrières) et du seul
-      # drapeau `prolonge` (26 %).
-      # — saison entière : quatre saisons de joueur, sans genou grave ET sans
-      #   avoir reculé d'un cran (reculer, c'est justement ne plus la jouer
-      #   entière). Mesuré 22 % (contre 64 % pour « deux saisons sans genou ») ;
-      - { id: fin_saison_entiere, titre: "Rejouer une saison entière", when: "stats.saisons >= 4 && !flag('genou_grave') && !flag('recule_poste')", indice: "Le genou a toujours raison. Sauf si tu l'écoutes à temps." }
-      # — le passeur : deux paliers avec Vukić, pas un, et la page lue ou le
-      #   train du lundi — les notes partagées se ramassaient trop souvent en
-      #   passant. Mesuré 32 % (contre 50 %) ;
-      - { id: fin_passeur,        titre: "Le passeur",                 when: "relation.vukic >= 2 && (flag('page_lue_vukic') || flag('suit_vukic'))", indice: "Quelqu'un tient un cahier depuis ton premier jour. Demande à le lire." }
-      # — debout : le jubilé joué OU seulement daté (l'affiche a une date en mars
-      #   et on joue en avril : c'est l'image de la bible), et la carrière qui
-      #   continue — soit une prolongation sous n'importe laquelle de ses trois
-      #   formes, soit la dernière saison jamais annoncée (`dernier_annonce` est
-      #   posé par les sorties qui referment la carrière). Mesuré 6 % (contre
-      #   1 %), avec le poids de jp.jubile relevé dans les buckets "1" et "2+".
-      #   Union des trois : 51 % des carrières, chacun ∈ [5 %, 60 %].
-      - { id: fin_debout,         titre: "Debout",                     when: "(flag('jubile_fait') || flag('jubile_prevu')) && (!flag('dernier_annonce') || flag('prolonge') || flag('prolonge_rabais') || flag('prolonge_vestiaire'))", indice: "Un jubilé, c'est une fin. Sauf si tu rejoues le lendemain." }
+          - { arc: jp.diplome_joueur,    poids: 3.4, if: "season >= 3 && (age >= 32 || flag('genou') || flag('banc_regarde'))" }
+          - { arc: co.derby,             poids: 0.9, if: "season >= 3" }    # replay after 1
+          - { arc: jp.consultant,        poids: 0.9, if: "season >= 3" }
+          - { arc: jp.pari,              poids: 0.8, if: "season >= 3" }
+          - { arc: jp.genou_parle,       poids: 0.8, if: "season >= 3" }
+          - { arc: jp.conseils_gigi,     poids: 0.7, if: "season >= 3" }    # rituel
+    objectifs:                        # 3 objectifs cachés (ids gardés ; docs/histoires § Histoire 4, 9)
+      # HISTOIRE 4. Les trois objectifs du livre : tenir la quinzième et savoir
+      # qui dort sous la pierre ; lire le cahier de Vukić (« Titi au volant ») ;
+      # monter au rond central du jubilé.
+      - { id: fin_saison_entiere, titre: "Une saison de plus",  when: "flag('quinzieme_jouee') && flag('h4_pas_de_tombe')", indice: "Quinze matchs, et la bonne question à ton agent." }
+      - { id: fin_passeur,        titre: "Le passeur",          when: "flag('h4_cahier_lu')", indice: "Quelqu'un tient un cahier depuis 1984. Il attend que tu ne cries plus." }
+      - { id: fin_debout,         titre: "Debout",              when: "flag('h4_rond_central') && !flag('h4_accelere')", indice: "Freiner, la veille. Puis un micro au rond central." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
       tribunes.low:
         - { card: jp.fin.alarme_gege_papy }

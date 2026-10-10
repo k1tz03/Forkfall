@@ -1,0 +1,373 @@
+# HISTOIRE 4 — « La Route de la Rive » (docs/histoires/00_les_dix_histoires.md,
+# Histoire 4 ; postulat `fin_de_contrat`, drapeau `histoire_h4`).
+#
+# Les intrigues du livre. Aucune n'est au réservoir : le script (l'arc
+# `jp.fin.dernier_contrat`, content/arcs/joueur/fdc_script.yaml) les ouvre par
+# `schedule:` à leur heure, et chacune enchaîne la suivante. C'est un livre :
+# les graines tombent dans l'ordre où elles doivent revenir.
+#
+#   saison 0 (1990-1991, « La faute ») : les morceaux (le premier morceau, le
+#     moteur de trois heures, le deuxième morceau) ; la route (la première
+#     infiltration, les deux premiers rêves).
+#   saison 1 (1991-1992, « La tombe vide ») : Jules Bertin (la fleuriste,
+#     Fardelli) ; les deux lignes (le tiroir de Massenet) ; le standard (la
+#     standardiste, et le square le lendemain) ; la photo entière ; la route
+#     (deux rêves de plus ; Sérène est une carte du sac de la saison).
+#   saison 2 (1992-1993, « Le micro ») : le standard (le buraliste sous le
+#     réverbère, puis la commande) ; le capot (Bréhaut supplie, menace,
+#     propose) ; la déclaration (l'huissier, ou Fardelli et le mot « prescrit ») ;
+#     les deux lignes (la onzième ligne, l'épreuve) ; la route (le dernier
+#     rêve). Le script finit le livre : la route pour de vrai, puis le rond
+#     central.
+#
+# Une étape qui glisse d'une saison (la file était pleine) ne repousse pas la
+# suite d'un an : chaque fusée longue a un second `next`, relatif, qui sert
+# quand la source a été jouée en retard (`if: "season == …"`).
+#
+# Les étapes dont le locuteur peut se taire (Camille, après la valise) ont une
+# variante sans elle : une étape ne tombe jamais faute de voix. Les étapes
+# qui peuvent arriver dans le désordre (un rêve après le capot, Massenet après
+# l'hôpital) ont une variante qui le sait.
+#
+# Les intermèdes (la route rêvée) portent le tag `intermede` : jamais deux de
+# suite, deux par saison au plus, aucune jauge qui bouge.
+arcs:
+  # ======================================================== Les morceaux
+  # La photo de la montée, découpée dans L'Écho du 15 mai 1984, arrive par
+  # morceaux, un mardi par mois. Un visage manque : on croit le sien.
+  - id: jp.h4.morceaux
+    title: "Les morceaux"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: sandrine
+    cast: [sandrine, camille, sacha]
+    start: [3, 5]
+    same_club: true
+    fallback: drop
+    hint: "Sous la porte, un morceau de la photo de 1984. Un visage découpé, proprement."
+    issues: [appelee, rangee]
+    traces:
+      h4_premier_morceau: "{annee} : sous la porte de {nom}, un morceau de la photo de 1984. Un visage découpé aux ciseaux."
+      h4_moteur:          "{annee} : trois heures, le téléphone. Un moteur de mobylette au ralenti, et personne."
+      h4_photo_entiere:   "{annee} : la photo de 1984, entière sur une toile cirée. Le trou n'était pas à la place de {nom}."
+    epilogue:
+      journal: "{annee} : un morceau de papier journal par mois, toujours un mardi. La photo de la montée était complète."
+    steps:
+      - id: premier
+        card: jp.h4.morceaux.premier
+        next: [ { step: moteur, in: [3, 6] } ]
+      - id: moteur
+        card: jp.h4.morceaux.moteur
+        next: [ { step: deuxieme, in: [3, 6] } ]
+      # Le deuxième morceau : si Camille a vu le premier, c'est elle qui ouvre
+      # l'enveloppe ; s'il a brûlé et que la prise est arrachée la nuit, c'est
+      # Sacha qui ramasse les suivants (un puzzle, pour elle) ; sinon, on
+      # guette le mardi derrière le rideau.
+      - id: deuxieme
+        card:
+          - { id: jp.h4.morceaux.deuxieme_sacha, if: "flag('h4_morceau_brule') && flag('h4_prise_debranchee') && !flag('divorce')" }
+          - { id: jp.h4.morceaux.deuxieme_camille, if: "flag('h4_morceau_montre') && !flag('divorce')" }
+          - { id: jp.h4.morceaux.deuxieme }
+        # La saison d'après, au printemps ; si le deuxième morceau a glissé à
+        # l'ouverture de la saison suivante, quelques cartes plus tard.
+        next: [ { step: entiere, at_season: 1, at: [9, 13], if: "season == 0" }, { step: entiere, in: [4, 8] } ]
+      - id: entiere
+        card:
+          # Si la file a débordé et que le capot est passé avant : on sait déjà.
+          - { id: jp.h4.morceaux.entiere_su, if: "flag('h4_capot')" }
+          - { id: jp.h4.morceaux.entiere_sacha, if: "flag('h4_puzzle_sacha') && !flag('divorce')" }
+          - { id: jp.h4.morceaux.entiere_archives, if: "flag('h4_photo_archives')" }
+          - { id: jp.h4.morceaux.entiere_cadre }
+        next: []
+
+  # ======================================================== La route
+  # Les infiltrations du Doc, et les nuits d'après : la route de la Rive à deux
+  # heures, une lumière de mobylette au bout du pont. Chaque rêve change un
+  # détail vrai : la chanson, la voix qui dit « freine », les mains sur le
+  # volant, les mains sur les genoux, la montre arrêtée.
+  - id: jp.h4.route
+    title: "La route"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: corps
+    carrier: sabatier
+    cast: [sabatier, rouvier, vukic]
+    start: [5, 7]
+    same_club: true
+    fallback: drop
+    hint: "Depuis les infiltrations, chaque nuit, tu reprends le volant."
+    issues: [passager, lumiere]
+    traces:
+      h4_infiltration:    "{annee} : première infiltration du Doc dans le genou de {nom}. La nuit d'après, la route."
+      h4_reve_route:      "{annee} : deux heures, la route de la Rive, une lumière au bout du pont. {nom} s'est réveillé{pg, select, f{e} other{}} avant."
+      h4_sp_serene:       "{annee} : des ampoules sans notice, et quinze mille francs sous une soucoupe de l'hôtel de la Rive."
+      h4_reve_genoux:     "{annee} : dans le rêve, les mains de {nom} étaient posées sur ses genoux. Quelqu'un d'autre conduisait."
+    epilogue:
+      journal: "{annee} : le dernier rêve de la route. La montre du tableau de bord marquait une heure cinquante."
+    steps:
+      - id: piqure
+        card: jp.h4.route.piqure
+        next: [ { step: premier_reve, in: [1, 3] } ]
+      - id: premier_reve
+        card: jp.h4.route.premier_reve
+        next: [ { step: deuxieme_reve, in: [4, 7] } ]
+      - id: deuxieme_reve
+        card:
+          - { id: jp.h4.route.deuxieme_reve_gauche, if: "flag('h4_reve_gauche')" }
+          - { id: jp.h4.route.deuxieme_reve }
+        next:
+          - { step: troisieme_reve, at_season: 1, at: [4, 8], if: "season == 0 && flag('h4_infiltration')" }
+          - { step: troisieme_reve, in: [3, 6], if: "flag('h4_infiltration')" }
+          - { step: quatrieme_reve, at_season: 1, at: [10, 14], if: "season == 0" }
+          - { step: quatrieme_reve, in: [6, 9] }
+      # Saison 1 : deux rêves. Le visiteur des Laboratoires Sérène (le sponsor
+      # louche du livre) est une carte du sac de la même saison
+      # (jp.h4.route.serene) : s'il est passé avant, le rêve le sait.
+      - id: troisieme_reve
+        card:
+          - { id: jp.h4.route.troisieme_reve_serene, if: "flag('h4_sp_serene')" }
+          - { id: jp.h4.route.troisieme_reve }
+        next: [ { step: quatrieme_reve, in: [4, 7] } ]
+      # Le rêve d'après (scène 15) : un seul bouton. S'il arrive après le
+      # capot (la file a débordé), il sait ce que le joueur sait.
+      - id: quatrieme_reve
+        card:
+          - { id: jp.h4.route.quatrieme_reve_su, if: "flag('h4_capot')" }
+          - { id: jp.h4.route.quatrieme_reve }
+        next: [ { step: cinquieme_reve, at_season: 1, at: [6, 10], if: "season == 1" }, { step: cinquieme_reve, in: [4, 7] } ]
+      - id: cinquieme_reve
+        card: jp.h4.route.cinquieme_reve
+        next: []
+
+  # ======================================================== Jules Bertin
+  # La tombe du carré ancien n'était pas la sienne. Le registre du gardien
+  # (l'ancre de saison 1) ouvre l'intrigue ; la fleuriste et Fardelli disent qui
+  # a choisi la pierre. La dernière livraison de l'abonnement n'arrive que pour
+  # qui se tait jusqu'en 1994 (l'épilogue).
+  - id: jp.h4.bertin
+    title: "Jules Bertin"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: agent
+    carrier: fardelli
+    cast: [fardelli, abel, camille]
+    start: [3, 5]
+    same_club: true
+    fallback: drop
+    hint: "Six ans de chrysanthèmes sur la tombe d'un inconnu. Quelqu'un a choisi la pierre."
+    issues: [arrete, renouvele]
+    traces:
+      h4_abonnement_arrete:   "{annee} : {nom} a arrêté l'abonnement du 14 mai aux Immortelles. Il restait trois livraisons."
+      h4_abonnement_renouvele: "{annee} : l'abonnement du 14 mai renouvelé aux Immortelles. Pour Monsieur Bertin, cette fois."
+      h4_pas_de_tombe:        "{annee} : « Il n'y en a jamais eu d'autre. » Fardelli parlait de la tombe."
+    epilogue:
+      journal: "{annee} : Jules Bertin, 1902-1983, carré ancien. Il n'avait pas de famille ; il a eu des fleurs."
+    steps:
+      - id: fleuriste
+        card: jp.h4.bertin.fleuriste
+        next: [ { step: fardelli, in: [3, 8] } ]
+      - id: fardelli
+        card:
+          - { id: jp.h4.bertin.fardelli_pourquoi, if: "flag('h4_rabais_pourquoi')" }
+          - { id: jp.h4.bertin.fardelli }
+        next: [ { step: livraison, at_season: 2, at: [14, 16], if: "season == 1" }, { step: livraison, at_season: 1, at: [14, 16] } ]
+      - id: livraison
+        card:
+          - { id: jp.h4.bertin.livraison_arrete, if: "flag('h4_abonnement_arrete')" }
+          - { id: jp.h4.bertin.livraison }
+        next: []
+
+  # ======================================================== Les deux lignes
+  # Massenet a tapé dix lignes pour L'Écho du 15 mai 1984 ; on lui en a fait
+  # barrer huit. Celles du milieu disent « vivante ». La saison d'après, il
+  # veut la onzième : le nom du conducteur.
+  - id: jp.h4.deux_lignes
+    title: "Les deux lignes"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: meneche
+    cast: [meneche, lea]
+    start: [7, 9]
+    same_club: true
+    fallback: drop
+    hint: "Dans un tiroir de L'Écho, deux lignes de 1984 que personne n'a barrées."
+    issues: [blanc, nom]
+    traces:
+      h4_deux_lignes:  "{annee} : deux lignes de 1984, dans un tiroir de L'Écho : « La jeune fille a été transportée vivante. »"
+      h4_nom_imprime:  "{annee} : un nom dans les épreuves de L'Écho, à la onzième ligne. {nom} l'avait dicté."
+    epilogue:
+      journal: "{annee} : les dix lignes de Massenet, enfin entières. Ou toujours dans le tiroir."
+    steps:
+      - id: tiroir
+        card:
+          - { id: jp.h4.deux_lignes.tiroir_corbeau, if: "flag('h4_corbeau')" }
+          - { id: jp.h4.deux_lignes.tiroir_hopital, if: "flag('h4_fiche_hopital')" }
+          - { id: jp.h4.deux_lignes.tiroir }
+        # Après le capot (la fin de la saison 1) : la onzième ligne demande
+        # qu'on sache qui conduisait.
+        next: [ { step: onze, at_season: 1, at: [2, 5], if: "season == 1" }, { step: onze, in: [3, 6] } ]
+      - id: onze
+        card:
+          - { id: jp.h4.deux_lignes.onze }
+        next: [ { step: epreuve, in: [2, 5] } ]
+      - id: epreuve
+        card:
+          - { id: jp.h4.deux_lignes.epreuve, if: "flag('h4_nom_dicte')" }
+          - { id: jp.h4.deux_lignes.epreuve_blanche }
+        next: []
+
+  # ======================================================== Le standard
+  # Sandrine Lavergne, au standard de l'hôtel de la Rive ; son père, le
+  # buraliste du Quai, sous le réverbère ; puis, la saison d'après, ce qu'elle
+  # demande : le micro du jubilé.
+  - id: jp.h4.standard
+    title: "Le standard"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: famille
+    carrier: sandrine
+    cast: [sandrine, lavergne]
+    start: [11, 13]
+    same_club: true
+    fallback: drop
+    hint: "Au standard de l'hôtel de la Rive, une voix passe les appels de toute la ville."
+    issues: [promesse, refus]
+    traces:
+      h4_standard_vu:       "{annee} : {nom} est entré{pg, select, f{e} other{}} à l'hôtel de la Rive. Au standard, on lui a dit : « Pas vous. Le passager. »"
+      h4_lavergne_fenetre:  "{annee} : minuit, rue des Lilas. Le buraliste du Quai sous les fenêtres de {nom}, sans cigarette."
+      h4_promesse_micro:    "{annee} : {nom} a promis le micro du rond central à la standardiste de l'hôtel de la Rive."
+    epilogue:
+      journal: "{annee} : la standardiste de l'hôtel de la Rive a raccroché. Elle avait demandé une phrase."
+    steps:
+      - id: standard
+        card:
+          - { id: jp.h4.standard.standard_prise, if: "flag('h4_prise_debranchee')" }
+          - { id: jp.h4.standard.standard }
+        # Le buraliste sous le réverbère : à l'ouverture de la saison d'après,
+        # quand on sait qui conduisait et qu'on se tait encore.
+        next: [ { step: reverbere, at_season: 1, at: [2, 4], if: "season == 1" }, { step: reverbere, in: [2, 4] } ]
+      - id: reverbere
+        card:
+          - { id: jp.h4.standard.reverbere, if: "!flag('divorce')" }
+          - { id: jp.h4.standard.reverbere_seul }
+        next: [ { step: commande, in: [3, 6] } ]
+      - id: commande
+        card:
+          - { id: jp.h4.standard.commande_saisie, if: "flag('h4_saisie')" }
+          - { id: jp.h4.standard.commande_entendue, if: "flag('h4_sandrine_entendue')" }
+          - { id: jp.h4.standard.commande }
+        next: []
+
+  # ======================================================== Le capot
+  # Après l'aveu du parking (l'ancre de fin de saison 1) : Bréhaut supplie,
+  # menace, puis propose de parler à ta place.
+  - id: jp.h4.capot
+    title: "Le capot"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vukic]
+    start: [3, 5]
+    same_club: true
+    fallback: drop
+    hint: "« J'ai conduit. Tu dormais. » Et maintenant, le capitaine a besoin de toi."
+    issues: [convaincu, a_moi]
+    traces:
+      h4_bouteille:          "{annee} : un verre au Corner avec Titi Bréhaut, le même alcool qu'en 1984. Il a reconduit {nom}."
+      h4_brehaut_convaincu:  "{annee} : « Laisse-le-moi. » Titi Bréhaut a demandé le micro du jubilé de {nom}."
+    epilogue:
+      journal: "{annee} : le capitaine et {nom} ne prennent plus la même voiture."
+    steps:
+      - id: supplie
+        card:
+          - { id: jp.h4.capot.supplie_exige, if: "flag('h4_capot_exige') && !flag('divorce')" }
+          - { id: jp.h4.capot.supplie, if: "!flag('divorce')" }
+          - { id: jp.h4.capot.supplie_seul }
+        next: [ { step: menace, in: [2, 4] } ]
+      - id: menace
+        card:
+          - { id: jp.h4.capot.menace_promesse, if: "flag('h4_promesse_brehaut')" }
+          - { id: jp.h4.capot.menace }
+        next: [ { step: propose, in: [2, 4] } ]
+      - id: propose
+        card:
+          - { id: jp.h4.capot.propose_menace, if: "flag('h4_menace_dire')" }
+          - { id: jp.h4.capot.propose }
+        next: []
+
+  # ======================================================== La déclaration
+  # Le coffre de Vaubourg (l'ancre d'hiver de saison 2) : « Rouvrez » envoie la
+  # feuille de 1984 à un avocat, et l'huissier vient aux Lilas (la saisie du
+  # livre) ; « Laissez dormir ça » laisse Fardelli dire ce qu'il savait. Qui
+  # n'a prévenu personne peut aller seul au commissariat.
+  - id: jp.h4.declaration
+    title: "La déclaration"
+    kind: serie
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: direction
+    carrier: aulard
+    cast: [aulard, fardelli, camille]
+    start: [11, 12]
+    same_club: true
+    fallback: drop
+    hint: "« J'étais au volant. » Une feuille de 1984, signée de ta main, dans un coffre."
+    issues: [rouvert, endormi]
+    traces:
+      h4_saisie:   "{annee} : un huissier devant le pavillon de {nom}, aux Lilas. Les voisins étaient aux fenêtres."
+      h4_cheques:  "{annee} : un chèque par mois au tabac du Quai, sans lettre. Il revient chaque fois."
+    epilogue:
+      journal: "{annee} : la déclaration de 1984 est sortie du coffre du président. Ou elle y dort encore."
+    steps:
+      - id: huissier
+        card:
+          - { id: jp.h4.declaration.huissier, if: "!flag('divorce')" }
+          - { id: jp.h4.declaration.huissier_seul }
+        outcome: rouvert
+        next: []
+      - id: prescrit
+        card:
+          - { id: jp.h4.declaration.prescrit_seul, if: "!flag('h4_capot_exige') && !flag('h4_menace_dire') && !flag('h4_promesse_micro')" }
+          - { id: jp.h4.declaration.prescrit }
+        outcome: endormi
+        next: []
+      - id: commissariat
+        card: jp.h4.declaration.commissariat
+        next: []
