@@ -1,0 +1,260 @@
+# « Les Deux Téléphones » — histoire 10 du livre (docs/histoires/00_les_dix_histoires.md),
+# postulat `escalier_ferme` (index 9), la présidente du Racing Aubérive, 2037-2040.
+#
+# Deux arcs ici : le prologue (six scènes avant la carte Objectif) et le script,
+# c'est-à-dire la colonne vertébrale du livre, servie à heure fixe :
+#
+#   Saison 0 (2037-2038) — Le clapet. La première marche (1), la voix de Gigi
+#     (5-6), l'intermède des deux sonneries (8-9), la première commande de
+#     Madame Janvier (10-11), la feuille aux trente-trois cases (14, avril),
+#     Mbako sur le palier (16), Madame Mai (17).
+#   Saison 1 (2038-2039) — La seconde sonnerie. La photo de l'hôtel (1, soir),
+#     l'appel de Madame Septembre (2-3), l'hélicoptère (4-5), la sonnerie dans
+#     la veste de Nino (10, soir),
+#     l'intermède de l'escalier (12), les pales (15, soir, la saisie), le neveu
+#     au zinc (17).
+#   Saison 2 (2039-2040) — La dernière marche. Madame Septembre, la dernière
+#     (1-2), le café de novembre (7), la lettre de Gégé (11), la nuit de
+#     Gégé (12, soir), trois mille
+#     visages (14), l'intermède des masques (15), Madame Mai (16), la dernière
+#     marche (17, soir). Puis le dernier match (le Grand Match du moteur,
+#     habillé par content/setpieces/h10.yaml), le Bilan et l'Objectif de la
+#     saison 3, habillés en veille d'assemblée.
+#   Saison 3 (2040) — L'assemblée (1) : l'acte final, toutes ses sorties
+#     ferment le livre.
+#
+# Les mois : créneaux 1-3 septembre, 4-5 octobre, 6-7 novembre, 8-9 décembre,
+# 10-11 janvier, 12 février, 13 mars, 14-15 avril, 16-17 mai. La femme du
+# clapet ne dit son nom de mois que sur les ancres (le créneau est sûr).
+#
+# Les soirs (§ 1.4 du livre) : jamais plus de quatre par saison, jamais deux à
+# moins de cinq créneaux. La saison 0 n'a pas d'ancre de nuit : son réservoir
+# (le ciment frais) tombe après le créneau 8. La saison 1 en porte trois, tous
+# ancrés (1, 10, 15) : son réservoir se tait. La saison 2 en porte deux (12,
+# 17), et laisse son unique événement tomber entre les créneaux 4 et 7
+# (arcs/president/h10_sombres.yaml). La brigade n'est pas un soir de plus : elle
+# attend sous l'escalier nord la nuit de la dernière marche, si la truelle a été
+# payée avec l'enveloppe de Rive Capital.
+#
+# Un intermède par saison (8-9, 12, 15), jamais à côté d'un soir.
+#
+# Les ancres à deux créneaux (5-6, 8-9 en S0 ; 4-5 en S1) ne bloquent pas les
+# ouvertures d'intrigue : le tirage de saison n'écarte les intrigues que des
+# ancres à créneau unique, et avec la voix de Gigi au 5 et l'intermède au 8,
+# les trois intrigues de S0 ne pouvaient s'ouvrir qu'au 2 et après le 11 —
+# elles débordaient sur la saison suivante.
+#
+# « Monté » (l'assemblée, les fins) : le Racing est en première division le
+# soir où l'escalier ferme (`world.division == 1`), ou il a gagné le dernier
+# match d'une saison finie à la place du barrage (`world.rang_final == 4 &&
+# vars.gm_won == 1`) : le dernier match est alors le barrage.
+# « La preuve » : la lettre de Gégé gardée, la bande du dictaphone, Nino
+# retourné au zinc, ou l'enquête ouverte par la brigade.
+arcs:
+  - id: pr.h10.prologue
+    title: "Le soir de l'élection"
+    kind: prologue
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: false
+    theme: direction
+    carrier: gege
+    cast: [gege, josiane, owen, brac]
+    issues: []
+    hint: "Deux mille cartes de socio levées dans une buvette, et un clapet dans une veste."
+    steps:
+      - id: election
+        card:
+          - { id: pr.h10.pro1_election_socios, if: "fil_rouge == 'socios'" }
+          - { id: pr.h10.pro1_election }
+      - id: clou
+        card: pr.h10.pro2_clou
+      - id: vestiaire
+        card: pr.h10.pro3_vestiaire
+      - id: banque
+        card:
+          - { id: pr.h10.pro4_banque_consortium, if: "fil_rouge == 'consortium'" }
+          - { id: pr.h10.pro4_banque }
+      - id: voiture
+        card: pr.h10.pro5_voiture
+      - id: septembre
+        card: pr.h10.pro6_septembre
+
+  - id: pr.h10.script
+    title: "Les deux téléphones"
+    kind: postulat
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    cast: [tazi, gege, mbako, nino]
+    same_club: true
+    fallback: drop
+    # Les traces publiques du script : ce que la ville a vu. Les secrets (la
+    # défaite promise, le pacte du zinc, la sonnerie entendue, la bande du
+    # dictaphone) n'ont pas de ligne d'Almanach : un journal ne publie pas ce
+    # qu'un clapet a entendu.
+    traces:
+      h10_promesse_gege: "{annee} : « Monte-nous avant qu'ils ferment. » {prenom} {nom} l'a promis à Gégé, dans la buvette."
+      h10_escalier: "{annee} : première marche murée à l'escalier nord de la Rive. Il y en a trente-trois."
+      h10_voix_coupee: "{annee} : {nom} a fait couper la voix de Gigi Vecchio dans les haut-parleurs."
+      h10_brac_vendu: "{annee} : le petit Brac vendu à la capitale en janvier. Il a pris le car de huit heures."
+      h10_brac_garde: "{annee} : le petit Brac reste à {ville}. La capitale a rappelé deux fois."
+      h10_mbako_visite: "{annee} : Lian Mbako sur le palier du club-house. Il n'est pas entré dans le bureau."
+      h10_photo_hotel: "{annee} : une photo de {nom} au bar de l'hôtel de la Rive, en face d'une femme en manteau."
+      h10_helico: "{annee} : un hélicoptère blanc posé au rond central, de la part de Rive Capital."
+      h10_helico_saisi: "{annee} : l'hélicoptère saisi sur la pelouse, devant la Nord. Tout le monde a filmé."
+      h10_helico_renvoye: "{annee} : un hélicoptère blanc renvoyé du rond central de la Rive. Les pales ont emporté trois mètres carrés de pelouse."
+      h10_voiture_saisie: "{annee} : la voiture sans volant de {nom} saisie devant la Nord. Elle est montée seule sur la dépanneuse."
+      h10_parle_virage: "{annee} : {nom} a parlé au virage, debout sur le banc des remplaçants, le soir de la saisie."
+      h10_gege_mort: "{annee} : Gégé est mort en février, au-dessus du local. Il avait quatre-vingt-seize ans."
+      h10_debout_masques: "{annee} : trois mille visages de Gégé dans la Nord, et {nom} debout dans la loge."
+      h10_reste_assis: "{annee} : pendant la minute pour Gégé, une seule place est restée assise dans la loge : celle de {nom}."
+      h10_marche_ouverte: "{annee} : la dernière marche de l'escalier nord est restée ouverte. Le ciment n'a pas pris."
+      h10_marche_muree: "{annee} : l'escalier nord muré jusqu'en haut, la veille du dernier match."
+    steps:
+      # ================================================== saison 0 · Le clapet
+      - id: s0_marche
+        card:
+          - { id: pr.h10.a1_marche_ville, if: "fil_rouge == 'ville'" }
+          - { id: pr.h10.a1_marche_consortium, if: "fil_rouge == 'consortium'" }
+          - { id: pr.h10.a1_marche }
+        at: [1, 1]
+        season: 0
+      - id: s0_voix
+        card: pr.h10.a2_voix
+        at: [5, 6]
+        season: 0
+      - id: s0_intermede
+        card: pr.h10.a_intermede
+        at: [8, 9]
+        season: 0
+      - id: s0_commande
+        card:
+          - { id: pr.h10.a3_commande_titulaire, if: "flag('h10_brac_titulaire')" }
+          - { id: pr.h10.a3_commande_froid, if: "flag('h10_clapet_froid')" }
+          - { id: pr.h10.a3_commande }
+        at: [10, 11]
+        season: 0
+      # L'horloge au printemps : sans elle, les deux intrigues de S0 finies, la
+      # saison restait muette du créneau 12 au 16 (écart de cadence 4-5 dans
+      # 4 % des saisons).
+      - id: s0_avril
+        card: pr.h10.a_avril
+        at: [14, 14]
+        season: 0
+      - id: s0_mbako
+        card:
+          - { id: pr.h10.a4_mbako_photo, if: "flag('h10_photo_raccrochee')" }
+          - { id: pr.h10.a4_mbako_cadre, if: "flag('h10_clou_occupe')" }
+          - { id: pr.h10.a4_mbako }
+        at: [16, 16]
+        season: 0
+      - id: s0_mai
+        card:
+          - { id: pr.h10.a5_mai_brac, if: "flag('h10_brac_garde')" }
+          - { id: pr.h10.a5_mai_haut, if: "world.rang <= 6" }
+          - { id: pr.h10.a5_mai }
+        at: [17, 17]
+        season: 0
+      # ======================================== saison 1 · La seconde sonnerie
+      - id: s1_photo
+        card: pr.h10.b1_photo
+        at: [1, 1]
+        season: 1
+      - id: s1_appel
+        card: pr.h10.b1_appel
+        at: [2, 3]
+        season: 1
+      - id: s1_helico
+        card:
+          - { id: pr.h10.b2_helico_d1, if: "world.division == 1" }
+          - { id: pr.h10.b2_helico }
+        at: [4, 5]
+        season: 1
+      - id: s1_sonnerie
+        card:
+          - { id: pr.h10.b3_sonnerie_recompte, if: "flag('h10_socios_recompte')" }
+          - { id: pr.h10.b3_sonnerie }
+        at: [10, 10]
+        season: 1
+      - id: s1_intermede
+        card: pr.h10.b4_intermede
+        at: [12, 12]
+        season: 1
+      - id: s1_pales
+        card:
+          - { id: pr.h10.b5_pales_renvoye, if: "flag('h10_helico_renvoye')" }
+          - { id: pr.h10.b5_pales }
+        at: [15, 15]
+        season: 1
+      - id: s1_neveu
+        card:
+          - { id: pr.h10.b6_neveu_decroche, if: "flag('h10_voix_entendue')" }
+          - { id: pr.h10.b6_neveu }
+        at: [17, 17]
+        season: 1
+      # ========================================= saison 2 · La dernière marche
+      - id: s2_septembre
+        card:
+          - { id: pr.h10.c1_septembre_deux, if: "flag('h10_clapet_nino')" }
+          - { id: pr.h10.c1_septembre }
+        at: [1, 2]
+        season: 2
+      # Le déclin de Gégé, quatre créneaux avant sa lettre : sans lui, une
+      # intrigue tardive finie au créneau 5 laissait la saison muette
+      # jusqu'au 11 (écart de cadence 5-6 dans 5 % des saisons). Au 8, il
+      # prenait le créneau d'une Nouvelle.
+      - id: s2_novembre
+        card: pr.h10.c_novembre
+        at: [7, 7]
+        season: 2
+      - id: s2_lettre
+        card:
+          - { id: pr.h10.c2_lettre_promesse, if: "flag('h10_promesse_gege')" }
+          - { id: pr.h10.c2_lettre }
+        at: [11, 11]
+        season: 2
+      - id: s2_nuit
+        card:
+          - { id: pr.h10.c3_nuit_clapet, if: "flag('h10_nino_retourne')" }
+          - { id: pr.h10.c3_nuit }
+        at: [12, 12]
+        season: 2
+      - id: s2_masques
+        card:
+          - { id: pr.h10.c4_masques_coupee, if: "flag('h10_voix_coupee')" }
+          - { id: pr.h10.c4_masques }
+        at: [14, 14]
+        season: 2
+      - id: s2_intermede
+        card: pr.h10.c_intermede
+        at: [15, 15]
+        season: 2
+      - id: s2_mai
+        card:
+          - { id: pr.h10.c5_mai_d1, if: "world.division == 1" }
+          - { id: pr.h10.c5_mai_deux, if: "flag('h10_clapet_nino')" }
+          - { id: pr.h10.c5_mai }
+        at: [16, 16]
+        season: 2
+      - id: s2_marche
+        card:
+          - { id: pr.h10.c6_marche_brigade, if: "flag('h10_truelle_sale')" }
+          - { id: pr.h10.c6_marche_payee, if: "flag('h10_truelle_payee')" }
+          - { id: pr.h10.c6_marche }
+        at: [17, 17]
+        season: 2
+      # ================================================= saison 3 · L'assemblée
+      # Les variantes se lisent dans l'ordre : la fin rare, le mur, puis la
+      # montée et la preuve. « Monté » = première division, ou barrage gagné.
+      - id: s3_assemblee
+        card:
+          - { id: pr.h10.d1_assemblee_rare, if: "(world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)) && flag('h10_marche_ouverte') && flag('h10_nino_retourne') && flag('h10_photo_raccrochee') && relation.gege >= 2" }
+          - { id: pr.h10.d1_assemblee_mur, if: "world.division == 2 && !(world.rang_final == 4 && vars.gm_won == 1) && flag('h10_marche_muree') && flag('h10_defaite_promise') && flag('h10_lettre_nino') && !flag('h10_nino_retourne')" }
+          - { id: pr.h10.d1_assemblee_monte_preuve, if: "(world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)) && flag('h10_clapet_nino') && (flag('h10_lettre_gardee') || flag('h10_enregistrement') || flag('h10_nino_retourne') || flag('h10_enquete'))" }
+          - { id: pr.h10.d1_assemblee_monte, if: "world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)" }
+          - { id: pr.h10.d1_assemblee_preuve, if: "flag('h10_clapet_nino') && (flag('h10_lettre_gardee') || flag('h10_enregistrement') || flag('h10_nino_retourne') || flag('h10_enquete'))" }
+          - { id: pr.h10.d1_assemblee }
+        at: [1, 1]
+        season: 3

@@ -1,0 +1,165 @@
+# « Les Deux Téléphones » — le prologue (arcs/president/h10_script.yaml,
+# pr.h10.prologue) : six scènes servies avant la carte Objectif, dans l'ordre du
+# fichier d'arc. Ce qu'elles posent, et qui le relit :
+#   · l'élection et la promesse à Gégé (h10_promesse_gege, h10_promesse_essai) →
+#     la lettre de Gégé, en saison 2 ;
+#   · le clou de l'escalier du club-house (h10_clou_vide, h10_clou_occupe) → la
+#     visite de Mbako, au créneau 16 ;
+#   · le petit Brac (h10_brac_titulaire) → la première commande du clapet ;
+#   · le relevé de banque (h10_releve) → la ville, l'assemblée ;
+#   · la voiture sans volant (cadeau de Rive Capital : `cadeau_autonome`) → les
+#     pales, en saison 1, et la villa des hauteurs (`cadeau_villa`, l'hypothèque
+#     levée) → la fin du pire ;
+#   · Madame Septembre (h10_clapet_ecoute, h10_clapet_froid) → la commande de
+#     janvier, la ville.
+# Le prologue ne tire rien, ne met rien en file, ne pose aucune réaction : il
+# apprend la ville et les deux téléphones. La présidente peut être un président :
+# aucune phrase n'accorde le personnage joué sans `{pg, select, …}`.
+cards:
+  # 1 · L'élection — buvette du kop. Deux variantes : le fil rouge « socios »
+  # compte les cartes ; la base compte les voix.
+  - id: pr.h10.pro1_election_socios
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Nino lit au micro : « Socio 212, mille quatre cent trois cartes. » Au premier rang, Gégé, socio numéro 1, te fait signe d'approcher : « Monte-nous avant qu'ils ferment, et je meurs content. »"
+    left:
+      label: "Je vous le promets"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_promesse_gege]}
+      answer: "Il serre ta main dans les deux siennes et ne la lâche plus. Nino attend, le micro baissé, que le vieux ait fini."
+    right:
+      label: "Je promets d'essayer"
+      effects: {tribunes: "-", direction: "+", set: [h10_promesse_essai]}
+      answer: "Gégé hoche la tête, lentement. « Essayer, mon père disait ça aussi. » Il se rassoit avant les applaudissements."
+
+  - id: pr.h10.pro1_election
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Buvette du kop, deux mille cartes levées. Nino lit au micro ton nom, socio 212. Au premier rang, Gégé te fait signe d'approcher : « Monte-nous avant qu'ils ferment, et je meurs content. »"
+    left:
+      label: "Je vous le promets"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_promesse_gege]}
+      answer: "Il serre ta main dans les deux siennes et ne la lâche plus. Nino attend, le micro baissé, que le vieux ait fini."
+    right:
+      label: "Je promets d'essayer"
+      effects: {tribunes: "-", direction: "+", set: [h10_promesse_essai]}
+      answer: "Gégé hoche la tête, lentement. « Essayer, mon père disait ça aussi. » Il se rassoit avant les applaudissements."
+
+  # 2 · Le clou — l'escalier du club-house. La nièce de Madame Josiane tient le
+  # secrétariat ; sa tante a quatre-vingt-dix-neuf ans et garde la photo de 1974.
+  - id: pr.h10.pro2_clou
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "L'escalier du club-house : un clou au-dessus de la troisième marche, rien autour. Mireille, la nièce de Madame Josiane, au secrétariat depuis 2022 : « Ma tante dit : le clou, on n'y touche pas. »"
+    left:
+      label: "Je laisse le clou"
+      effects: {tribunes: "-", direction: "+", set: [h10_clou_vide]}
+      answer: "Mireille note quelque chose dans un cahier à spirale. « Elle sera contente. Elle a quatre-vingt-dix-neuf ans, elle demande tout. »"
+    right:
+      label: "J'y accroche ma photo"
+      effects: {tribunes: "-", set: [h10_clou_occupe]}
+      answer: "Ta dernière équipe, 2016, en maillot bordeaux. Mireille ne dit rien ; elle téléphone à sa tante dans l'heure, porte fermée."
+
+  # 3 · Le vestiaire — Owen Corven et le petit Brac.
+  - id: pr.h10.pro3_vestiaire
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: owen
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Owen Corven, l'entraîneur, un verre d'eau à la main : « Elias Brac, dix-sept ans, né rue du Stade. Le meilleur que j'aie vu ici. Je le lance samedi, ou je le cache jusqu'en janvier ? »"
+    left:
+      label: "Il joue samedi"
+      effects: {direction: "-", vestiaire: "+", force: 1, relation: {owen: 1}, set: [h10_brac_titulaire]}
+      answer: "Owen boit son verre d'un trait. Samedi, à la soixantième minute, la Nord apprend un nom qu'elle chantera tout l'hiver."
+    right:
+      label: "Qu'il attende janvier"
+      effects: {vestiaire: "-", direction: "+", relation: {owen: -1}}
+      answer: "Owen pose le verre sur le rebord de la fenêtre. « En janvier, ils viendront le chercher. Vous le savez, ça. »"
+
+  # 4 · La banque — la ligne du 2 septembre. Variante : le fil rouge
+  # « consortium » laisse le conseiller sourire.
+  - id: pr.h10.pro4_banque_consortium
+    roles: [president]
+    arc: caisse
+    tags: [caisse, sponsors]
+    lieu: banque
+    tone: leger
+    once: true
+    text: "Banque Aubérivoise. Trésorerie du club : jusqu'en février. Ligne du 2 septembre : « Rive Capital, solde de tout compte ». Le conseiller sourit : « Vous avez des amis qui paient avant qu'on demande. »"
+    left:
+      label: "Imprimez-moi le relevé"
+      effects: {direction: "-", var: {cadeau_villa: "+1"}, set: [h10_releve]}
+      answer: "Il plie la feuille en trois, la glisse dans une enveloppe à fenêtre. Ta villa des hauteurs n'a plus d'hypothèque ; elle a un ami."
+    right:
+      label: "Effacez cette ligne"
+      effects: {tribunes: "-", caisse: "+", var: {cadeau_villa: "+1"}, set: [h10_ligne_archivee]}
+      answer: "« On n'efface rien, chez nous. On archive. » Il tape trois touches. La ligne quitte l'écran, pas la banque."
+
+  - id: pr.h10.pro4_banque
+    roles: [president]
+    arc: caisse
+    tags: [caisse, sponsors]
+    lieu: banque
+    tone: leger
+    once: true
+    text: "Banque Aubérivoise. Le conseiller tourne l'écran : la trésorerie du club tient jusqu'en février. Ligne du 2 septembre : tes dettes et l'hypothèque de ta villa, soldées par Rive Capital."
+    left:
+      label: "Imprimez-moi le relevé"
+      effects: {direction: "-", var: {cadeau_villa: "+1"}, set: [h10_releve]}
+      answer: "L'imprimante met un temps fou. Il plie la feuille en trois et la glisse dans une enveloppe à fenêtre, comme une facture."
+    right:
+      label: "Effacez cette ligne"
+      effects: {tribunes: "-", caisse: "+", var: {cadeau_villa: "+1"}, set: [h10_ligne_archivee]}
+      answer: "« On n'efface rien, chez nous. On archive. » Il tape trois touches. La ligne quitte l'écran, pas la banque."
+
+  # 5 · La voiture sans volant — un cadeau qui connaît le chemin (et le dit).
+  - id: pr.h10.pro5_voiture
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, objet]
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Sur le parking du club, une voiture sans volant t'attend, portière ouverte, moteur muet. Sur le siège, une carte : « Rive Capital. Elle connaît déjà le chemin. »"
+    left:
+      label: "Je monte"
+      effects: {tribunes: "-", direction: "+", var: {cadeau_autonome: "+1"}}
+      answer: "Elle démarre avant que tu boucles ta ceinture et prend la route des hauteurs. Tu n'as dit à personne où tu habites."
+    right:
+      label: "Je rentre à pied"
+      effects: {direction: "-", tribunes: "+", var: {cadeau_autonome: "+1"}}
+      answer: "Tu rentres par le pont. Le lendemain, elle est garée devant ta grille, portière ouverte, comme un chien qui attend."
+
+  # 6 · Madame Septembre — minuit, le bureau. La ligne d'ordre sur son support.
+  - id: pr.h10.pro6_septembre
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Minuit, ton bureau. Dans la veste pendue au portemanteau, un clapet sonne : une sonnerie de 1995. « Ici Madame Septembre. Félicitations. Nous parlerons des objectifs. »"
+    left:
+      label: "Je n'ai pas d'objectifs"
+      effects: {direction: "-", set: [h10_clapet_froid]}
+      answer: "Un silence. « Tout le monde en a. » Elle raccroche la première. Le clapet reste tiède dans ta main, longtemps."
+    right:
+      label: "Je vous écoute"
+      effects: {tribunes: "-", direction: "+", set: [h10_clapet_ecoute]}
+      answer: "« Pas ce soir. Vous êtes fatigué{pg, select, f{e} other{}}. » Elle raccroche. Tu n'avais rien dit qui ressemble à de la fatigue."

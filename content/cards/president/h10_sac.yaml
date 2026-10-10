@@ -1,0 +1,507 @@
+# « Les Deux Téléphones » — le sac (cartes de routine) de la présidente,
+# 2037-2040 : ce qui remplit les créneaux que ni le script ni le réservoir ne
+# prennent. Toutes gardées par `flag('histoire_h10')` — le rôle de président
+# est partagé avec *La Maquette* (1999) — et toutes `once` : la saison est
+# courte et rien ne doit revenir deux fois. Chaque visage du casting y a au
+# moins une scène. Les objets datés (la puce, le drone, la voix générée) sont
+# de l'année du livre ; l'époque est tenue par le drapeau d'histoire.
+cards:
+  # ----------------------------------------------------------------- Gégé
+  - id: pr.h10.sac.gege_thermos
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season == 0"
+    text: "Gégé fait monter au bureau un thermos de café de la buvette, sans sucre : « En haut, {toi}, tu bois le café des autres présidents. Celui-là, c'est le nôtre. Il est mauvais, c'est le principe. »"
+    left:
+      label: "Je le bois"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "Il te regarde boire jusqu'au fond, puis reprend le thermos sans un mot. Le jeudi suivant, il en remonte un."
+    right:
+      label: "Je garde le mien"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Chacun son café. » Il repart avec le thermos plein. Mireille, au secrétariat, en boit une tasse, par politesse."
+
+  - id: pr.h10.sac.gege_plis
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1"
+    text: "Au-dessus du local, la bâche de 1971 dépliée sur le lit de Gégé. Il te demande de l'aider à la replier : « Mon père faisait seize plis. Le petit en fait quatorze. Ça tient moins. »"
+    left:
+      label: "Seize, alors"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "Seize plis, vingt minutes, ses mains sur les tiennes aux coins. La bâche tient dans un carré de la taille d'un missel."
+    right:
+      label: "Quatorze suffisent"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Quatorze. » Il dit le nombre comme on dit l'heure d'un enterrement. Il refait les deux derniers plis seul, après toi."
+
+  - id: pr.h10.sac.gege_masques_1990
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season == 2"
+    text: "Au grenier du local, Gégé ouvre un carton de masques en carton, jaunis, l'élastique cuit : « On avait fait ça pour quelqu'un, en 1990. Trois mille. Je ne sais plus qui. »"
+    left:
+      label: "On cherchera"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Vous cherchez une heure dans les vieux Écho du grenier. Le visage ressemble à beaucoup de gens, et à personne."
+    right:
+      label: "Laissez-les dormir"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il referme le carton et le pousse sous l'escalier du grenier. « Un jour, on en refera. Pour moi, tiens. » Il rit."
+
+  - id: pr.h10.sac.gege_assis
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1"
+    text: "Gégé, au premier rang de la Nord pendant l'échauffement, montre la tribune Est : « En 1990, on était debout là-bas aussi. Maintenant ils sont assis, et on les entend moins que la voix. »"
+    left:
+      label: "On rouvrira l'Est debout"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "« Rouvrir, c'est le mot à la mode. » Il te tape sur l'épaule, deux fois, comme on vérifie qu'un mur tient."
+    right:
+      label: "Ils paient leur siège"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "« Ils paient le siège, et le silence avec. » Il se tourne vers la pelouse et ne dit plus rien jusqu'au coup d'envoi."
+
+  # ----------------------------------------------------------------- Nino
+  - id: pr.h10.sac.nino_decibels
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, direction]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Nino, une lettre de la Ligue à la main : « Interdiction des tambours de plus de quatre-vingts décibels, {toi}, dès janvier. Ils ont mesuré les nôtres au mois d'août, sans prévenir. »"
+    left:
+      label: "On paiera l'amende"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "Le premier samedi, la Nord tape à cent quatre. L'amende arrive le mardi, avec un graphique en couleur."
+    right:
+      label: "Tapez moins fort"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Ils tapent moins fort, et chantent plus fort. La Ligue n'a rien prévu pour les voix. Pas encore."
+
+  - id: pr.h10.sac.nino_puces
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, objet]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1"
+    text: "Nino distribue les nouvelles cartes de socio, avec une puce dedans : « La Ligue dit qu'elles comptent toutes seules, maintenant. On n'aura plus besoin de moi pour compter. »"
+    left:
+      label: "Gardez les anciennes"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}}
+      answer: "Les anciennes restent dans les portefeuilles, à côté des neuves. À la buvette, on lève les deux, pour être sûr."
+    right:
+      label: "Tant mieux"
+      effects: {tribunes: "-", direction: "+", relation: {nino: -1}}
+      answer: "« Tant mieux », répète-t-il, et il range sa propre carte, la vieille, dans la poche intérieure de sa veste."
+
+  - id: pr.h10.sac.nino_recette
+    roles: [president]
+    arc: caisse
+    tags: [caisse, ultras]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Nino, au zinc, compte la recette de la buvette en écus, puis la recompte : « Le jour où la buvette fera moins que le parking, on aura perdu. On n'y est pas. Pas encore. »"
+    left:
+      label: "Baissez la bière"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "La bière baisse de dix centimes. La recette monte quand même. Nino recompte deux fois, pour comprendre."
+    right:
+      label: "Montez les prix"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Il écrit les nouveaux prix à la craie, lentement, et laisse les anciens dessous, à peine effacés."
+
+  # ----------------------------------------------------------------- Tazi
+  - id: pr.h10.sac.tazi_permis
+    roles: [president]
+    arc: escalier
+    tags: [direction, objet]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && flag('h10_escalier')"
+    text: "Tazi déjeune assis sur la marche du mois, une gamelle sur les genoux : « La bétonnière a besoin d'un permis pour stationner sur le parking. La mairie dit de voir avec vous, {toi}. »"
+    left:
+      label: "Je signe le permis"
+      effects: {direction: "-"}
+      answer: "Tu signes sur le couvercle de sa gamelle. Il souffle sur l'encre. « Vous avez signé pour le mur, maintenant. »"
+    right:
+      label: "Garez-la ailleurs"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il la gare devant la buvette du kop. Le jeudi, les socios posent leurs verres dessus, comme sur un comptoir."
+
+  - id: pr.h10.sac.tazi_piece
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && flag('h10_escalier') && season >= 1"
+    text: "Tazi te montre la marche du mois : un gamin y a posé, à plat dans le ciment frais, une pièce de dix centimes. « Mon grand-père disait que ça porte chance aux maisons. Ce n'est pas une maison. »"
+    left:
+      label: "Laissez la pièce"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il lisse le ciment autour, sans la toucher. Le lendemain, il y en a trois. À la fin du mois, l'escalier a sa monnaie."
+    right:
+      label: "Retirez-la"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il la retire avec la pointe de la truelle et la met dans sa poche. « Pour le gamin, s'il revient. » Il ne revient pas."
+
+  - id: pr.h10.sac.tazi_compter
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, famille]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && flag('h10_escalier')"
+    text: "Deux enfants comptent les marches murées à voix haute, sous l'œil de Tazi. Ils ne tombent pas d'accord. « Eux comptent celles qui restent, moi celles qui sont faites. Ça ne fait jamais pareil. »"
+    left:
+      label: "Comptez avec eux"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il compte avec eux, en reculant d'une marche à chaque nombre. À la fin, ils sont d'accord, et lui ne l'est plus."
+    right:
+      label: "Faites votre métier"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il retourne à son ciment. Les enfants comptent sans lui, puis s'en vont en se disputant sur le nombre."
+
+  # ----------------------------------------------------------------- Owen
+  - id: pr.h10.sac.owen_drone
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, sponsors]
+    speaker: owen
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Au-dessus du terrain, un drone blanc filme la séance depuis septembre. Owen lève son verre d'eau vers lui chaque matin : « Il est à Rive Capital, {toi}. Je lui montre la mauvaise tactique. »"
+    left:
+      label: "Faites-le descendre"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le gardien le descend du premier coup, d'un dégagement. Le drone repart en boitant, et revient le lendemain, neuf."
+    right:
+      label: "Continuez le spectacle"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Owen fait répéter un coin à rentrer qu'il ne jouera jamais. Le samedi suivant, l'adversaire défend contre."
+
+  - id: pr.h10.sac.owen_lit
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, famille]
+    speaker: owen
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Owen te montre un lit de camp dans le local du matériel : « Le gardien dort ici depuis que sa femme l'a mis dehors. Je le laisse, ou je l'envoie à l'hôtel aux frais du club ? »"
+    left:
+      label: "Qu'il dorme ici"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Il dort entre les filets et les plots. Il ne prend plus un but pendant trois semaines. Personne n'ose en tirer de conclusion."
+    right:
+      label: "À l'hôtel"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "L'hôtel de la Rive lui donne la chambre du fond. Le barman te dit qu'il ne boit que de l'eau, comme son entraîneur."
+
+  - id: pr.h10.sac.owen_puce
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: owen
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1"
+    text: "Owen, sur le banc d'un match amical : « Ils ont mis une puce dans le ballon. Elle mesure la vitesse de mes joueurs, et elle l'envoie à la capitale avant de me l'envoyer. »"
+    left:
+      label: "On joue avec l'ancien"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le vieux ballon sort du placard, un peu dégonflé. Les joueurs le regonflent à la bouche, à tour de rôle, en riant."
+    right:
+      label: "On s'en accommode"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "À la mi-temps, Owen fait courir ses joueurs au ralenti, exprès. La capitale reçoit les chiffres d'une équipe de vétérans."
+
+  # ----------------------------------------------------------------- Brac
+  - id: pr.h10.sac.brac_mere
+    roles: [president]
+    arc: formation
+    tags: [formation, famille]
+    speaker: brac
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season == 0"
+    text: "Elias Brac te demande deux places pour samedi, pour sa mère : « Elle n'est jamais venue. Elle entend les matchs de la cuisine, on habite à côté. Elle dit que c'est pareil. »"
+    left:
+      label: "Deux places en loge"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Elle vient en loge, en manteau du dimanche, et ne s'assoit pas une seule fois. Elle dit que d'ici, on entend moins bien."
+    right:
+      label: "Qu'elle vienne en Nord"
+      effects: {vestiaire: "-", tribunes: "+"}
+      answer: "Elle vient en Nord, entre deux socios qui la connaissent depuis l'école. Ils lui apprennent les chansons ; elle les savait."
+
+  - id: pr.h10.sac.brac_voix
+    roles: [president]
+    arc: formation
+    tags: [formation, presse]
+    speaker: brac
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && flag('h10_voix_gardee')"
+    text: "Brac, après le match, vexé : « La voix du stade dit “Brak”, avec un K. Le vrai Gigi l'aurait dit juste ; c'est mon grand-père qui me l'a dit, il l'a connu. »"
+    left:
+      label: "Je ferai corriger"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "La chaîne corrige en trois semaines. La voix dit « Brac » au match suivant, une fois, puis « Brak » le reste de la saison."
+    right:
+      label: "Marque, ils apprendront"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "Il marque deux fois en trois matchs. La voix dit « Brak » les deux fois. La Nord crie « Brac » par-dessus, plus fort."
+
+  # ------------------------------------------------------------- Clémence
+  - id: pr.h10.sac.clemence_brochure
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, tribunes]
+    speaker: clemence
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Clémence Tessandier vend des appartements « vue sur stade » dans la deuxième tranche. Elle te demande une photo de la Nord pleine : « Pour la brochure, {toi}. Une vue morte, ça ne se vend pas. »"
+    left:
+      label: "Prenez-la samedi"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Samedi, son photographe monte sur le toit de la Est. La Nord le voit, et lui tourne le dos pendant toute la première mi-temps."
+    right:
+      label: "La Nord n'est pas à vendre"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "« Tout est à vendre, sauf ce qui n'a pas de vue. » Elle prend la photo quand même, depuis la rue, à travers la grille."
+
+  - id: pr.h10.sac.clemence_cocktail
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, direction]
+    speaker: clemence
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1"
+    text: "Une invitation de l'agence Tessandier : cocktail des résidents de la deuxième tranche, terrasse sur la Rive. Clémence a écrit au dos : « Venez. Ils adorent les présidents ; ils les voient d'en haut. »"
+    left:
+      label: "J'y vais"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "On te demande trois fois si le stade restera. Tu dis oui trois fois. Clémence note les trois oui sur un carnet vert."
+    right:
+      label: "Je décline"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Le lendemain, une photo du cocktail paraît dans L'Écho. Ta chaise vide est au premier plan, avec un carton à ton nom."
+
+  # -------------------------------------------------------------- Rouvier
+  - id: pr.h10.sac.rouvier_rangee_h
+    roles: [president]
+    arc: corps
+    tags: [tribunes, famille]
+    speaker: rouvier
+    lieu: cabinet
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Nadia Rouvier masse les mollets d'un vieil abonné de la Nord, rangée H : « Il monte encore jusqu'au stade, à quatre-vingt-sept ans. Le jour où il ne pourra plus, il lui faudra une place en bas. »"
+    left:
+      label: "On lui en garde une"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Une chaise pliante au bas de la Nord, avec son nom au feutre. Il ne s'y assoit jamais ; il la montre aux autres."
+    right:
+      label: "L'escalier tiendra"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« L'escalier, oui. Lui, on verra. » Elle reprend le massage en sifflotant un air de 1984, faux exprès."
+
+  - id: pr.h10.sac.rouvier_chrono
+    roles: [president]
+    arc: corps
+    tags: [famille, retorse]
+    speaker: rouvier
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1"
+    text: "Nadia Rouvier chronomètre ta montée de l'escalier du club-house : « Trente-quatre secondes, deux étages. Tu souffles comme un fumeur, et tu n'as jamais fumé. Qu'est-ce qui pèse ? »"
+    left:
+      label: "Le club"
+      effects: {relation: {rouvier: 1}}
+      answer: "« Le club pèse sur les épaules. Toi, ça te pèse sur la poitrine, à gauche. » Elle range le chronomètre sans insister."
+    right:
+      label: "Rien"
+      effects: {relation: {rouvier: -1}}
+      answer: "Elle siffle, une fois, très court : la fin d'un exercice que tu n'as pas fait. Puis elle redescend, en marchant vite."
+
+  # ------------------------------------------------------------------ Léa
+  - id: pr.h10.sac.lea_invendus
+    roles: [president]
+    arc: presse
+    tags: [presse, caisse]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Léa, au kiosque du quai, compte les exemplaires invendus de L'Écho du dimanche : « Quatre cents, {toi}. C'est le chiffre de 1955. On revient en arrière, et personne ne rajeunit. »"
+    left:
+      label: "Le club prend un encart"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "L'encart du Racing paraît en page deux, entre un faire-part et une annonce de bois de chauffage. Léa l'a placé elle-même."
+    right:
+      label: "Le papier tiendra"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Le papier tient. C'est le lecteur qui ne tient plus. » Elle ficelle les invendus, deux nœuds, comme en 1990."
+
+  - id: pr.h10.sac.lea_cameras
+    roles: [president]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && season >= 1 && !flag('h10_gege_mort')"
+    text: "Léa : « La chaîne de la deuxième division filme vos matchs avec trois caméras et un drone. En 1990, Télé-Stade en avait douze pour un nul. Vous trouvez ça juste ? »"
+    left:
+      label: "Je réclame des caméras"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "La chaîne ajoute une caméra, dans la Nord, fixée sur Gégé. Il la regarde à chaque but, droit dans l'objectif."
+    right:
+      label: "Trois suffisent"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Trois suffisent pour voir. Pas pour se souvenir. » Elle le note pour sa lettre de dimanche ; elle ne l'écrit pas."
+
+  # ----------------------------------------------- Mbako, Ilyas, Josiane
+  - id: pr.h10.sac.mbako_mere
+    roles: [president]
+    arc: instances
+    tags: [direction, famille]
+    speaker: mbako
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Lian Mbako appelle la ligne du bureau, un dimanche : « Deux places pour samedi, au nom de ma mère. Pas en loge. Elle veut la Nord, comme en 1990, quand elle venait me voir jouer. »"
+    left:
+      label: "Deux places en Nord"
+      effects: {direction: "-", tribunes: "+", relation: {mbako: 1}}
+      answer: "Samedi, une vieille dame en manteau bleu chante en Nord, un carnet sur les genoux. Elle note l'heure de chaque but."
+    right:
+      label: "En loge, par prudence"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle vient en loge, salue tout le monde et repart à la mi-temps. « D'ici, on ne voit pas les visages. »"
+
+  - id: pr.h10.sac.ilyas_escalier
+    roles: [president]
+    arc: contrat
+    tags: [direction, sponsors]
+    speaker: nassir
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Cheikh Ilyas, en visite au stade, quatre-vingt-un ans, refuse l'ascenseur de la tribune : « Je monte l'escalier, tant qu'il y en a un. » Il s'arrête à chaque palier, pas pour souffler : pour regarder."
+    left:
+      label: "Je monte avec vous"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Vous montez ensemble, lentement. En haut, il regarde l'escalier nord et ses marches murées. « Joli travail. Propre. »"
+    right:
+      label: "Je prends l'ascenseur"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Tu l'attends en haut quatre minutes. Il arrive sans être essoufflé, et te tend la main comme s'il t'avait battu."
+
+  - id: pr.h10.sac.josiane_clou
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h10')"
+    text: "Madame Josiane appelle le secrétariat, de la maison de retraite derrière Saint-Aubin : « Mireille dit que vous montez l'escalier du club-house deux à deux. On ne monte pas cet escalier deux à deux. »"
+    left:
+      label: "Je monterai une à une"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Merci. Il y a un clou, vous comprenez. » Elle raccroche. Mireille te regarde monter, une à une, en souriant."
+    right:
+      label: "Pourquoi pas ?"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Un long silence au bout du fil. « Parce qu'on regarde le clou en montant. Deux à deux, on ne le voit pas. »"
+
+  # ---------------------------------------------------- Sans locuteur
+  - id: pr.h10.sac.voiture_kop
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: parking
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && !flag('h10_voiture_saisie') && !flag('h10_helico_saisi')"
+    text: "La voiture sans volant refuse de se garer devant la buvette du kop : « Zone non recommandée. » Elle te dépose deux rues plus loin, devant l'agence Tessandier, et coupe le moteur."
+    left:
+      label: "Je marche jusqu'au kop"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Deux rues à pied. Au local, quelqu'un a vu la voiture repartir seule vers les hauteurs, sans toi, en clignotant."
+    right:
+      label: "J'entre à l'agence"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Clémence t'attendait, un café déjà servi. « Elle s'arrête toujours ici. Je ne sais pas qui l'a programmée. »"
+
+  - id: pr.h10.sac.voix_score
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, decor]
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h10') && flag('h10_voix_gardee')"
+    text: "Fin de match. La voix de Gigi dans les haut-parleurs : « Score final. Magnifique. » Le Racing a perdu. Deux gamins de la Nord rient ; le vieux d'à côté, non."
+    left:
+      label: "Faites corriger"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "La chaîne envoie un technicien. La semaine suivante, après une défaite, la voix dit : « Score final. » Et puis rien."
+    right:
+      label: "Laissez dire"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "La voix dit « magnifique » après chaque défaite jusqu'en mai. Les gamins finissent par le dire avec elle."

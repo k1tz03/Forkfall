@@ -1,0 +1,350 @@
+# « Les Deux Téléphones » (histoire 10, 2037-2040) — les scènes de la semaine
+# (format : en-tête de content/ville/scenes_communes.yaml). La ville en
+# programme une chaque jour sans carte, souvent le soir. Ici : les socios et la
+# buvette, le maçon de l'escalier nord, le clapet qui vibre au mauvais moment,
+# et les graines du livre qui reviennent (la maquette, la voiture qui sait
+# l'adresse de l'hôtel, la dame en manteau, les masques imprimés d'avance).
+# Une scène ne fait pas avancer l'intrigue : elle prouve qu'elle avance.
+# Aucune ne pose de drapeau ; leurs effets restent à la marge (±1 à ±3).
+# Les textes n'accordent rien au personnage joué.
+scenes:
+  - id: h10.sc.carte_3004
+    titre: "La carte 3004"
+    roles: [president]
+    lieu: buvette
+    tranches: [soir]
+    jours: [jeu]
+    qui: fan
+    si: "flag('histoire_h10') && saison == 1"
+    texte: "Jeudi soir, buvette. Un socio de vingt ans te tend sa carte, numéro 3004, plastifiée à la maison : « La 212, c'est vous ? Signez au dos, à côté de mon numéro. »"
+    choix:
+      - label: "Je signe au dos"
+        reponse: "Il souffle sur l'encre et glisse la carte dans la coque de son téléphone, côté écran. « Comme ça, je la vois tout le temps. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Pas sur une carte"
+        reponse: "« Pas sur une carte. » Il répète la phrase à son voisin, qui la répète au comptoir. À minuit, c'est une règle de la buvette."
+
+  - id: h10.sc.marche_du_mois
+    titre: "La marche du mois"
+    roles: [president]
+    lieu: stade
+    tranches: [matin]
+    jours: [lun]
+    qui: ancien
+    si: "flag('histoire_h10') && flag('h10_escalier')"
+    texte: "Premier lundi du mois, sept heures. Tazi gâche le ciment au pied de l'escalier nord. Deux vieux de la Nord sont là, comme à un enterrement, les mains dans le dos."
+    choix:
+      - label: "Je reste avec eux"
+        reponse: "Personne ne parle. Quand la marche est lissée, un des vieux enlève sa casquette, la remet, et s'en va. L'autre reste jusqu'à ce qu'elle sèche."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je passe mon chemin"
+        reponse: "Un des vieux te suit du regard jusqu'au parking. Il ne dit rien. Il n'a pas besoin."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h10.sc.clapet_conseil
+    titre: "Le clapet en plein conseil"
+    roles: [president]
+    lieu: clubhouse
+    tranches: [aprem]
+    si: "flag('histoire_h10')"
+    texte: "Conseil des socios, au club-house. Au milieu du budget, le clapet vibre dans ta veste. Trois têtes se tournent. Nino, lui, ne lève pas les yeux de ses chiffres."
+    choix:
+      - label: "Je sors décrocher"
+        reponse: "Dans le couloir, une voix de femme te demande l'heure qu'il est, puis raccroche. Quand tu reviens, le budget est voté sans toi."
+        effets: {jauges: {direction: -1}}
+      - label: "Je laisse vibrer"
+        reponse: "Il vibre neuf fois. Au neuvième, quelqu'un plaisante sur ta vie privée. Personne ne rit, sauf Nino, trop tard."
+        effets: {jauges: {direction: 1}}
+
+  - id: h10.sc.tambours_vendredi
+    titre: "Les tambours du vendredi"
+    roles: [president]
+    lieu: buvette
+    tranches: [soir]
+    jours: [ven]
+    qui: nino
+    si: "flag('histoire_h10')"
+    texte: "Vendredi soir, sous la Nord. Des gamins répètent les tambours pour samedi ; Nino bat la mesure avec une cuillère sur un verre. Il te tend une baguette."
+    choix:
+      - label: "Je tape"
+        reponse: "Tu tapes à contretemps, deux mesures. Les gamins rient, puis ils te suivent, à contretemps aussi. Nino laisse faire."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je regarde"
+        reponse: "Tu regardes. Nino range la baguette dans sa veste, dans la poche qui pèse déjà quelque chose."
+
+  - id: h10.sc.vitrine_minuit
+    titre: "La vitrine, à minuit"
+    roles: [president]
+    lieu: agence
+    tranches: [nuit]
+    si: "flag('histoire_h10') && flag('h10_maquette_trois')"
+    texte: "Minuit. La vitrine de l'agence Tessandier est éclairée pour personne. Dans la maquette, une figurine minuscule promène un chien dans le parc, là où était le rond central."
+    choix:
+      - label: "Je regarde la figurine"
+        reponse: "Elle est peinte à la main. Le chien est bordeaux et gris, aux couleurs du club. Quelqu'un, à l'agence, a de l'humour, ou du chagrin."
+      - label: "Je rentre"
+        reponse: "Tu rentres. Dans ton dos, la vitrine s'éteint toute seule, à minuit et quart, comme tous les soirs."
+
+  - id: h10.sc.voiture_hotel
+    titre: "La destination habituelle"
+    roles: [president]
+    lieu: rue
+    tranches: [soir]
+    si: "flag('histoire_h10') && possede(autonome)"
+    texte: "Dans la voiture sans volant, une voix douce : « Destination habituelle : hôtel de la Rive. » Tu n'as jamais donné cette adresse."
+    choix:
+      - label: "Je change de route"
+        reponse: "« Destination modifiée. » Elle prend la route des hauteurs puis, au rond-point, en fait le tour deux fois avant de choisir."
+        effets: {jauges: {direction: -1}}
+      - label: "Je laisse faire"
+        reponse: "Elle te dépose devant l'hôtel. Au bar, une femme en manteau d'automne lève son verre vers la vitre, sans te regarder."
+
+  - id: h10.sc.gege_rampe
+    titre: "L'escalier du local"
+    roles: [president]
+    lieu: buvette
+    tranches: [midi]
+    qui: gege
+    si: "flag('histoire_h10') && !flag('h10_gege_mort') && saison >= 2"
+    texte: "Gégé descend l'escalier du local une marche à la fois, la main sur la rampe, la bâche de 1971 sous le bras pour l'aérer : « Tu m'aides, ou tu me regardes ? »"
+    choix:
+      - label: "Je l'aide"
+        reponse: "Il s'appuie sur ton épaule, plus lourd qu'on ne croirait. En bas, il te remercie d'une tape sur la joue, comme on fait aux gamins."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je le regarde"
+        reponse: "« C'est bien aussi. » Il arrive en bas, essoufflé, content. « Il faut quelqu'un qui regarde, sinon ça ne compte pas. »"
+
+  - id: h10.sc.mardi_rouvier
+    titre: "Le mardi de Nadia Rouvier"
+    roles: [president]
+    lieu: cabinet
+    tranches: [aprem]
+    jours: [mar]
+    qui: rouvier
+    si: "flag('histoire_h10')"
+    texte: "Mardi, dans la pièce du fond. Trois anciens du virage attendent en chaussettes sur des chaises de cuisine. Nadia Rouvier te montre une quatrième chaise : « Toi aussi. Après eux. »"
+    choix:
+      - label: "Je m'assieds"
+        reponse: "Elle te masse la nuque cinq minutes, sans un mot, puis te renvoie. Les anciens disent que tu as une nuque de président. Ce n'est pas un compliment."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Pas le temps"
+        reponse: "« Personne ne l'a, ici. C'est pour ça qu'ils viennent. » Elle siffle la fin de ta visite, très court."
+
+  - id: h10.sc.fenetre_numero_9
+    titre: "La fenêtre du numéro 9"
+    roles: [president]
+    lieu: rue
+    tranches: [soir]
+    si: "flag('histoire_h10') && !flag('h10_brac_vendu')"
+    texte: "Rue du Stade, numéro 9. Au premier, Elias Brac fait ses devoirs à la fenêtre, la radio allumée sur le match d'une autre division. Il te voit, lève la main."
+    choix:
+      - label: "Je lui fais signe"
+        reponse: "Il ouvre la fenêtre. « Mon petit frère compte les marches. Il dit qu'elles seront finies avant moi. » Il referme en riant."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je passe"
+        reponse: "Il baisse la radio. Quand tu tournes au coin de la rue, il la remonte, plus fort qu'avant."
+
+  - id: h10.sc.car_huit_heures
+    titre: "Le car de huit heures"
+    roles: [president]
+    lieu: gareRoutiere
+    tranches: [matin]
+    qui: passante
+    si: "flag('histoire_h10') && flag('h10_brac_vendu') && saison == 1"
+    texte: "Gare routière, huit heures moins dix. Le car de la capitale attend, moteur en marche. Une femme seule sur le quai tient un sac de sport qui n'est pas le sien."
+    choix:
+      - label: "Je lui parle"
+        reponse: "« Il a oublié ses protège-tibias. Il dit qu'on lui en donnera là-bas. Je les lui apporte quand même. » Le car part à l'heure."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je reste à distance"
+        reponse: "Le car part à huit heures. Elle reste sur le quai avec le sac jusqu'au car suivant, qui part sans elle."
+
+  - id: h10.sc.echo_dimanche
+    titre: "L'Écho du dimanche"
+    roles: [president]
+    lieu: kiosque
+    tranches: [matin]
+    jours: [dim]
+    qui: lea
+    si: "flag('histoire_h10')"
+    texte: "Dimanche, kiosque du quai. Léa attend son Écho, la monnaie exacte dans la main, comme depuis cinquante ans. « Vous l'achetez pour le lire, ou pour qu'il existe ? »"
+    choix:
+      - label: "Pour qu'il existe"
+        francs: -15
+        reponse: "« C'est la bonne réponse. Il n'y en a qu'une. » Elle te rend une pièce : tu avais trop donné."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Pour le lire"
+        reponse: "« Alors lisez la page six. C'est la seule où l'on dit encore quelque chose. »"
+
+  - id: h10.sc.terrasse_tranche
+    titre: "La terrasse de la deuxième tranche"
+    roles: [president]
+    lieu: agence
+    tranches: [soir]
+    qui: clemence
+    si: "flag('histoire_h10') && saison >= 2"
+    texte: "Terrasse de la deuxième tranche, vue sur la Rive. Clémence Tessandier te présente aux résidents : « Ils adorent qu'on leur montre le stade. D'en haut, il a l'air petit. »"
+    choix:
+      - label: "Je trinque"
+        reponse: "On te demande trois fois si le stade restera. Tu dis oui trois fois. Clémence note les trois oui sur un carnet vert."
+        effets: {jauges: {direction: 1}}
+      - label: "Je regarde le stade"
+        reponse: "D'ici, l'escalier nord ressemble à une fermeture éclair qu'on remonte. Clémence te tend un verre sans rien dire."
+
+  - id: h10.sc.gamelle
+    titre: "La gamelle du maçon"
+    roles: [president]
+    lieu: stade
+    tranches: [midi]
+    qui: tazi
+    si: "flag('histoire_h10') && flag('h10_escalier')"
+    texte: "Midi. Tazi déjeune assis sur la marche murée du mois, une gamelle de semoule sur les genoux. Il te fait de la place à côté de lui, sur la marche d'avant."
+    choix:
+      - label: "Je m'assois"
+        reponse: "Vous mangez sans parler. Il montre du menton les enfants qui comptent, en bas : « Eux savent combien il en reste. Nous, on fait semblant. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je reste debout"
+        reponse: "« Debout, on voit mieux le mur. » Il racle la gamelle du dos de la cuillère, comme on lisse le ciment."
+
+  - id: h10.sc.aurore_sonnerie
+    titre: "Une sonnerie à L'Aurore"
+    roles: [president]
+    lieu: cinema
+    tranches: [soir]
+    si: "flag('histoire_h10')"
+    texte: "Cinéma L'Aurore, une vieille copie d'un film de 1995. Au milieu de la séance, une sonnerie de 1995 dans la salle. Toutes les têtes se tournent. Ce n'est pas la tienne."
+    choix:
+      - label: "Je cherche qui"
+        reponse: "Trois rangs devant, un homme sort en se baissant, la veste sous le bras. Tu ne vois que sa nuque. Elle ressemble à beaucoup de nuques."
+      - label: "Je regarde le film"
+        reponse: "À la sortie, la caissière te demande si tu as entendu la sonnerie. « Celle du film, je veux dire. Elle était dans le film. »"
+
+  - id: h10.sc.trous_patins
+    titre: "Les trous des patins"
+    roles: [president]
+    lieu: stade
+    tranches: [matin]
+    qui: ancien
+    si: "flag('histoire_h10') && flag('h10_helico')"
+    texte: "Le jardinier de la Rive mesure au mètre ruban les trous laissés dans sa pelouse par les patins de l'hélicoptère : « Vingt-deux centimètres. Je les rebouche, ou on les garde ? »"
+    choix:
+      - label: "Rebouchez"
+        reponse: "Il rebouche avec de la terre du bord de la Rive, la vraie. Trois semaines plus tard, on ne voit plus rien. Lui, si."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Gardez-les"
+        reponse: "Il plante un petit drapeau dans chaque trou. Le samedi, les enfants de la Nord les montrent du doigt à leurs parents."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h10.sc.rotatives
+    titre: "L'imprimerie de la zone"
+    roles: [president]
+    lieu: friche
+    tranches: [nuit]
+    si: "flag('histoire_h10') && flag('h10_gege_mort')"
+    texte: "Trois heures du matin, zone industrielle. Les rotatives de l'imprimerie tournent ; par la porte entrouverte, le visage de Gégé sort mille fois, puis mille fois encore."
+    choix:
+      - label: "J'entre"
+        reponse: "L'imprimeur ne lève pas la tête. « Tout est réglé. La photo, on l'avait depuis l'hiver. » Il te tend un masque encore chaud."
+      - label: "Je reste dehors"
+        reponse: "Tu restes dehors jusqu'à l'aube. Le premier camion part à six heures, chargé de cartons plats, sans adresse."
+
+  - id: h10.sc.sous_le_clou
+    titre: "Sous le clou"
+    roles: [president]
+    lieu: clubhouse
+    tranches: [matin]
+    jours: [mar, jeu]
+    qui: josiane
+    si: "flag('histoire_h10')"
+    texte: "Madame Josiane, dans son fauteuil, au pied de l'escalier du club-house. Elle regarde le clou au-dessus de la troisième marche : « On ne monte pas cet escalier deux à deux. »"
+    choix:
+      - label: "Je monte une à une"
+        reponse: "Tu montes une à une, lentement. Au clou, tu entends derrière toi un petit rire de cent ans."
+        effets: {jauges: {direction: 1}}
+      - label: "J'ai un rendez-vous"
+        reponse: "« Tout le monde en a un. Le clou aussi. » Elle ferme les yeux. Mireille te fait signe de la laisser dormir."
+
+  - id: h10.sc.trois_heures
+    titre: "Trois heures, sur les hauteurs"
+    roles: [president]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag('histoire_h10') && possede(villa)"
+    texte: "Trois heures du matin, la villa des hauteurs. On voit tout Aubérive, et le stade éclairé pour personne. Sur la table de nuit, le clapet clignote : un appel manqué, sans numéro."
+    choix:
+      - label: "Je rappelle"
+        reponse: "« Ce numéro n'est pas attribué. » Tu raccroches. Le clapet clignote aussitôt : un appel manqué, à trois heures."
+      - label: "Je le retourne"
+        reponse: "Tu le retournes, écran contre le bois. Toute la nuit, tu sens la table vibrer, ou tu crois la sentir."
+
+  - id: h10.sc.derniere_saison
+    titre: "« Dernière saison ouverte »"
+    roles: [president]
+    lieu: boutique
+    tranches: [aprem]
+    qui: commercant
+    si: "flag('histoire_h10') && saison == 3"
+    texte: "Boutique du club. Des écharpes neuves, bordeaux et gris, brodées : DERNIÈRE SAISON OUVERTE. Deux cents vendues ce matin. « On en refait ? Après mai, elles ne voudront plus rien dire. »"
+    choix:
+      - label: "On en refait"
+        reponse: "Elle en commande mille. En juin, il en restera six cents, dans un carton ; un collectionneur les rachètera toutes, dans dix ans."
+        effets: {jauges: {caisse: 2}}
+      - label: "On arrête là"
+        reponse: "Les deux cents du matin restent les seules. En mai, on se les prête pour la photo, de main en main."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h10.sc.local_minuit
+    titre: "Le local, après minuit"
+    roles: [president]
+    lieu: buvette
+    tranches: [nuit]
+    qui: nino
+    si: "flag('histoire_h10') && flag('h10_clapet_nino')"
+    texte: "Après minuit, la lumière du local est encore allumée. Par la fenêtre, Nino, seul, assis face à la patère, regarde sa veste comme on regarde quelqu'un."
+    choix:
+      - label: "Je frappe"
+        reponse: "Il ouvre, sans surprise. « Je savais que tu viendrais, un soir. Pas celui-là. » Il éteint la lumière derrière toi."
+      - label: "Je passe"
+        reponse: "Au coin de la rue, la lumière s'éteint. Tu te demandes s'il t'avait vu passer, ou s'il attendait que tu passes."
+
+  - id: h10.sc.enfants_comptent
+    titre: "Les enfants qui comptent"
+    roles: [president]
+    lieu: stade
+    tranches: [aprem]
+    qui: enfant
+    si: "flag('histoire_h10') && flag('h10_escalier') && saison >= 2"
+    texte: "Deux enfants au pied de l'escalier nord comptent les marches murées. Ils ne sont pas d'accord. La plus petite te demande d'arbitrer : « Il en reste combien, pour vous ? »"
+    choix:
+      - label: "Je compte avec eux"
+        reponse: "Vous comptez à trois, à voix haute, et tombez sur trois nombres. La petite les note tous les trois sur sa main, au stylo."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Demandez au maçon"
+        reponse: "« Lui, il compte celles qui sont faites. Nous, celles qui restent. Ça ne fait jamais pareil. »"
+
+  - id: h10.sc.pigeons
+    titre: "Les pigeons du square"
+    roles: [president]
+    lieu: square
+    tranches: [aprem]
+    qui: mere_mbako
+    si: "flag('histoire_h10') && flag('h10_mbako_visite')"
+    texte: "Square des Lilas. Une vieille dame en manteau bleu nourrit les pigeons avec méthode. Elle te reconnaît : « Mon fils a écrit une loi. Je la relis le soir. Je ne la comprends pas. »"
+    choix:
+      - label: "Je la lui explique"
+        reponse: "Les franchises, les marches, la date. Elle hoche la tête à chaque phrase. « Alors il a fait ça pour huit clubs. Il a toujours aimé les petits nombres. »"
+      - label: "Moi non plus"
+        reponse: "« Ça me rassure. » Elle jette le reste du pain d'un coup. Les pigeons s'envolent ensemble, vers la Nord."
+
+# Les phrases d'action du match du samedi, propres au livre (placeholders de
+# ville.yaml `match` : {Qui} {qui} {score} {adv} {Adv} {gardien} {Gardien}).
+match_textes:
+  pour:
+    - {texte: "{Qui} marque, et la voix des haut-parleurs dit « magnifique ». Au premier rang de la Nord, un vieux se bouche une oreille : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "{Qui} marque devant la Nord. Trois mille masques de carton se lèvent d'un seul geste, sans un cri : {score}.", si: "flag(histoire_h10) && flag(h10_gege_mort)"}
+    - {texte: "But de {qui}. Les tambours de Nino repartent à contretemps, puis le stade les rattrape : {score}.", si: "flag(histoire_h10)"}
+    - {texte: "{Qui} trompe le gardien de {adv}. Au pied de l'escalier nord, le maçon lève sa truelle comme un drapeau : {score}.", si: "flag(histoire_h10) && flag(h10_escalier)"}
+  contre:
+    - {texte: "{Adv} marque. Dans ta poche, le clapet vibre une fois, une seule, comme un applaudissement : {score}.", si: "flag(histoire_h10)"}
+    - {texte: "But de {adv}. La voix des haut-parleurs dit « magnifique » quand même ; la Nord la siffle plus fort que le buteur : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "Leur avant-centre marque au pied de la Nord. Les masques de Gégé ne bougent pas ; on ne sait pas s'ils ont vu : {score}.", si: "flag(histoire_h10) && flag(h10_gege_mort)"}
