@@ -147,9 +147,11 @@ async function main() {
   // LES QUATRE POSTULATS, pas seulement le premier : le défaut portait sur
   // « Le promu sans un sou » ET « La pépite du club-usine », qui démarrent
   // tous deux avec des tribunes à 80.
-  const nbPostulats = await page.locator('#postulats .postulat').count();
-  for (let i = 0; i < nbPostulats; i++) {
-    if (i) { await page.reload(); await page.waitForSelector('#titleScreen:not([hidden])'); }
+  // les index des histoires affichées : une histoire en chantier ne se montre
+  // pas, et laisse un trou dans la numérotation
+  const indexPostulats = await page.$$eval('#postulats .postulat', (bs) => bs.map((b) => +b.getAttribute('data-index')));
+  for (const i of indexPostulats) {
+    if (i !== indexPostulats[0]) { await page.reload(); await page.waitForSelector('#titleScreen:not([hidden])'); }
     const titre = (await page.locator(`#postulats .postulat[data-index="${i}"] .t`).innerText()).trim();
     await page.click(`#postulats .postulat[data-index="${i}"]`);
     await page.waitForSelector('#gameScreen:not([hidden])');

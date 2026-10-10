@@ -169,6 +169,16 @@ Ce que la ville porte en plus des cartes :
   ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
   l'écu après `monde_ecus`).
 - **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
+- **L'accueil** : la porte d'Aubérive en pixel art. Le panorama de la ville défile sous le
+  titre (au crépuscule, de nuit de minuit à 5 h), FUSIBLE est posé au pixel, et chaque
+  histoire est une cartouche : une vignette découpée dans la ville à son lieu et à son heure
+  (le stade la nuit, la gare routière, la friche au coucher…), sa couleur, l'heure que le
+  livre fait revenir (16:00, 23:58, 06:10…), ses puces (rôle, division, année, « Jouée ×n »)
+  et « Nouveau » quand elle n'était pas là à la visite précédente. Les images sortent de
+  `docs/design/pixel_iso/accueil.js` (les rendus de la ville → `packages/tools/web/accueil/*.webp`,
+  commités, embarqués en `data:` par `assemble.js`) ; la couleur et l'heure de chaque histoire,
+  de la table `HISTOIRES` du gabarit. **Un livre qui arrive** prend une entrée dans les deux
+  (l'assemblage prévient d'une histoire livrée sans vignette).
 
 ```bash
 # les images (une fois ; ~4 min) : la zone de jour, au crépuscule, de nuit, sa profondeur, la grille
@@ -242,6 +252,13 @@ Deux mécaniques manquantes, vues chez *Reigns* et demandées :
 
 Bonne nouvelle pour qui reprend : ce style est *dessinable en code* (SVG plat,
 formes géométriques, palette courte). Il ne demande aucun générateur d'images.
+
+**Depuis la ville, la direction a bougé** (retour du porteur, octobre 2026) : l'accueil
+« de la version Reigns » n'était « plus du tout d'actualité » — pas de pixel art, trop
+monotone, on ne distinguait pas les aventures. L'accueil est désormais en pixel art, tiré
+des rendus de la ville, avec une couleur par histoire (voir « L'accueil » plus haut). Les
+écrans de jeu (la carte, la fin, les panneaux) gardent encore le brun et le crème : ils
+sont les prochains à rejoindre la ville.
 
 ## Ce qui reste connu et ouvert
 

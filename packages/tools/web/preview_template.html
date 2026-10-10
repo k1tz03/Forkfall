@@ -103,78 +103,173 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .menu button svg{display:block;width:21px;height:21px}
 .menu button[data-on="1"]{color:var(--creme)}
 
-/* ═══ 1. TITRE ══════════════════════════════════════════════════════════ */
-#titleScreen{gap:0}
-.title-mid{margin:min(5vh,34px) 0 0;flex:0 0 auto}
-.logo{
-  margin:0;font-size:clamp(46px,15vw,60px);font-weight:700;line-height:.98;
-  letter-spacing:.13em;text-indent:.13em;color:var(--creme);
+/* ═══ 1. L'ACCUEIL ═════════════════════════════════════════════════════════
+   La porte d'Aubérive : la ville en pixel art au crépuscule, le titre posé au
+   pixel, et les histoires comme des cartouches — une vignette tirée de la
+   ville, une couleur, une heure. Le reste du jeu garde son brun ; l'accueil
+   prend l'encre de prune du ciel du soir, qui tient avec le rendu de la ville.
+   ═══════════════════════════════════════════════════════════════════════ */
+#titleScreen{
+  --a-fond:#120E1C;     /* l'encre de prune : le fond de l'accueil */
+  --a-fond2:#1C1630;    /* le panneau, la cartouche */
+  --a-ligne:#352B52;    /* les bords tracés au pixel */
+  --a-ombre:#06040B;    /* l'ombre portée, dure, sans flou */
+  --a-texte:#F6E9CF;
+  --a-texte2:#CBC1E2;   /* 10,6:1 sur le panneau */
+  --a-texte3:#A79CC4;   /* 7,1:1 sur le fond */
+  --a-or:#FFC94D;
+  --pix:"Pixelify Sans","Space Mono","DejaVu Sans Mono",ui-monospace,monospace;
+  background:var(--a-fond);color:var(--a-texte);
+  padding-top:0;gap:0;
 }
-.tagline{
-  margin:12px 0 0;font-size:11.5px;line-height:1.7;letter-spacing:.2em;
-  color:var(--creme3);text-transform:uppercase;
-}
-.tagline b{color:var(--creme2);font-weight:400}
+html:has(#titleScreen:not([hidden])),html:has(#titleScreen:not([hidden])) body,
+html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
 
-/* L'enseigne : une bande d'image, rognée par ses bords. Elle cède la place
-   dès que l'écran est court — le nom, la saisie et les quatre départs
-   passent avant elle. */
-.enseigne{
-  margin:16px calc(-1 * var(--pad)) 0;height:clamp(80px,15vh,126px);
-  overflow:hidden;flex:0 0 auto;background:var(--fond);
+/* le haut : la ville qui défile, de bord à bord */
+.acc-hero{
+  position:relative;margin:0 calc(-1 * var(--pad));
+  height:clamp(300px,46svh,400px);overflow:hidden;background:#24151B;
+  padding:calc(8px + env(safe-area-inset-top)) var(--pad) 14px;
+  display:flex;flex-direction:column;justify-content:space-between;flex:0 0 auto;
 }
-.enseigne svg{display:block;width:100%;height:100%}
-@media (max-height:640px){ .enseigne{display:none} }
+.acc-pano{
+  position:absolute;inset:0;
+  background-repeat:no-repeat;background-size:auto 112%;background-position:32% 58%;
+  animation:accPan 80s ease-in-out infinite alternate;
+}
+.acc-pano.vide{background:linear-gradient(180deg,#2B1830,#5A2E2A 60%,#24151B)}
+/* du stade à la place de la mairie, et retour : la ville qui se montre */
+@keyframes accPan{from{background-position:32% 58%}to{background-position:88% 58%}}
+.acc-hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(18,14,28,.62) 0%,rgba(18,14,28,.18) 22%,rgba(18,14,28,0) 36%,
+    rgba(18,14,28,0) 58%,rgba(18,14,28,.7) 84%,#120E1C 100%);
+}
+.acc-hero > :not(.acc-pano){position:relative;z-index:1}
+.acc-hero .menu button{background:rgba(6,4,11,.5);box-shadow:inset 0 0 0 2px rgba(246,233,207,.08)}
+.acc-hero .menu{gap:8px}
+.acc-titre{margin-top:auto}
+.acc-logo{margin:0;line-height:0;font-size:0}
+.acc-logo svg{display:block;width:min(318px,80vw);height:auto;filter:drop-shadow(0 0 18px rgba(255,150,60,.25))}
+/* la mèche : le fusible qui brûle, une étincelle qui court sous le titre */
+.acc-meche{
+  position:relative;width:min(318px,80vw);height:4px;margin:8px 0 0;
+  background:repeating-linear-gradient(90deg,#8C6A3A 0 6px,transparent 6px 10px);
+}
+.acc-meche i{
+  position:absolute;top:-4px;left:0;width:12px;height:12px;
+  background:
+    linear-gradient(#FFF6C8,#FFF6C8) 4px 4px/4px 4px no-repeat,
+    linear-gradient(#FFC94D,#FFC94D) 4px 0/4px 12px no-repeat,
+    linear-gradient(#FF7A2E,#FF7A2E) 0 4px/12px 4px no-repeat;
+  animation:accMeche 7s steps(48) infinite;
+}
+@keyframes accMeche{from{left:0}to{left:calc(100% - 12px)}}
+.acc-tag{
+  margin:10px 0 0;font-family:var(--pix);font-size:15px;line-height:1.35;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--a-texte);text-shadow:2px 2px 0 var(--a-ombre);
+}
+.acc-tag b{color:var(--a-or);font-weight:600}
 
-/* la saisie du nom : une ligne, deux champs, deux boutons. Rien d'autre. */
-.ident{margin:20px 0 0;display:flex;flex-direction:column;gap:6px}
-.ident .lab{font-size:11px;letter-spacing:.26em;color:var(--creme3);text-transform:uppercase}
+/* le nom : une ligne, deux champs, deux boutons, dans un panneau au pixel */
+.ident{display:flex;flex-direction:column;gap:6px}
 .ident .fields{display:flex;gap:10px}
 .ident input{
   flex:1 1 0;min-width:0;background:transparent;border:0;border-bottom:1px solid var(--fond3);
   padding:9px 2px;font-size:15px;letter-spacing:.05em;color:var(--creme);
 }
-.ident input::placeholder{color:var(--creme3);font-style:italic;letter-spacing:.04em}
-.ident input:focus{outline:0;border-bottom-color:var(--creme2)}
+.ident input::placeholder{font-style:italic;letter-spacing:.04em}
+.ident input:focus{outline:0}
 .ident .tools{display:flex;align-items:center;gap:14px;min-height:44px}
-.ident .tools button{
-  min-height:44px;padding:0 2px;font-size:11.5px;letter-spacing:.2em;
-  text-transform:uppercase;color:var(--creme2);
-}
-.ident .tools button:hover,.ident .tools button:focus-visible{color:var(--creme)}
+.ident .tools button{min-height:44px;padding:0 2px;text-transform:uppercase}
 .ident .tools #btnGenre{font-size:19px;letter-spacing:0;min-width:44px;text-align:left}
-.ident .who{margin-left:auto;font-size:11px;letter-spacing:.2em;color:var(--creme3);font-style:italic}
+.ident .who{margin-left:auto}
+.cimetiere{display:flex;justify-content:space-between;gap:10px;text-transform:uppercase}
+.acc-panneau{
+  margin:14px 0 0;padding:12px 14px 4px;background:var(--a-fond2);
+  box-shadow:0 0 0 2px var(--a-ligne),4px 4px 0 2px var(--a-ombre);
+}
+#titleScreen .ident .lab{font-family:var(--pix);font-size:13px;letter-spacing:.08em;color:var(--a-texte2)}
+#titleScreen .ident input{border-bottom:2px solid var(--a-ligne);color:var(--a-texte)}
+#titleScreen .ident input::placeholder{color:var(--a-texte3)}
+#titleScreen .ident input:focus{border-bottom-color:var(--a-or)}
+#titleScreen .ident .tools button{font-family:var(--pix);font-size:13px;letter-spacing:.08em;color:var(--a-texte2)}
+#titleScreen .ident .tools button:hover,#titleScreen .ident .tools button:focus-visible{color:var(--a-or)}
+#titleScreen .ident .who{font-family:var(--pix);color:var(--a-texte3);font-style:normal;letter-spacing:.08em}
 
-/* les quatre points de départ : une liste sobre, rien de plus */
-.starts{margin:16px 0 0;display:flex;flex-direction:column;flex:1 1 auto}
-.starts .lab{font-size:11px;letter-spacing:.26em;color:var(--creme3);text-transform:uppercase;margin-bottom:6px}
+/* les histoires : des cartouches, chacune sa couleur (--acc) */
+.starts{margin:18px 0 0;display:flex;flex-direction:column;flex:1 1 auto}
+.acc-h{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  margin:6px 0 12px;font-family:var(--pix);font-size:21px;font-weight:600;line-height:1.2;color:var(--a-texte);
+}
+.acc-h small{font-size:13px;font-weight:400;letter-spacing:.06em;color:var(--a-texte3);text-transform:uppercase}
+.acc-liste{display:flex;flex-direction:column;gap:20px;padding:0 5px 6px 0}
 .postulat{
-  display:block;width:100%;text-align:left;min-height:52px;
-  padding:9px 26px 9px 0;border-bottom:1px solid var(--fond3);position:relative;
-  transition:padding-left var(--t) ease;
+  --acc:#F6E9CF;
+  display:block;width:100%;text-align:left;padding:0;position:relative;color:var(--a-texte);
+  background:var(--a-fond2);
+  box-shadow:0 0 0 3px var(--acc),6px 6px 0 3px var(--a-ombre);
+  transition:transform 120ms steps(2),box-shadow 120ms steps(2);
 }
-.postulat:first-of-type{border-top:1px solid var(--fond3)}
-.postulat .t{display:block;font-size:15px;font-weight:700;letter-spacing:.045em;color:var(--creme)}
-.postulat .s{display:block;font-size:11px;letter-spacing:.19em;color:var(--creme3);text-transform:uppercase;margin-top:3px}
+.postulat:hover,.postulat:focus-visible{outline:0;transform:translate(-2px,-2px);box-shadow:0 0 0 3px var(--acc),8px 8px 0 3px var(--a-ombre)}
+.postulat:active{transform:translate(3px,3px);box-shadow:0 0 0 3px var(--acc),2px 2px 0 3px var(--a-ombre)}
+.postulat .cov{display:block;position:relative;aspect-ratio:16/8.4;overflow:hidden;background:#0B0814}
+.postulat .cov img{display:block;width:100%;height:100%;object-fit:cover}
+.postulat .cov::before{
+  content:"";position:absolute;inset:auto 0 0 0;height:45%;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(28,22,48,0),rgba(28,22,48,.85));
+}
+.postulat .num,.postulat .neuf,.postulat .heure{position:absolute;z-index:2;font-family:var(--pix);line-height:1}
+.postulat .num{left:0;top:0;background:var(--acc);color:#0B0814;font-size:13px;font-weight:700;letter-spacing:.06em;padding:5px 8px 4px}
+.postulat .neuf{right:0;top:0;background:var(--a-or);color:#0B0814;font-size:12px;font-weight:700;letter-spacing:.08em;padding:5px 8px 4px;text-transform:uppercase}
+.postulat .heure{
+  right:9px;bottom:9px;background:rgba(6,4,11,.82);color:var(--acc);
+  font-size:15px;letter-spacing:.08em;padding:4px 7px 3px;box-shadow:0 0 0 2px rgba(6,4,11,.82);
+}
+.postulat .heure i{font-style:normal;animation:accClign 1s steps(1) infinite}
+@keyframes accClign{50%{opacity:0}}
+.postulat .corps{display:block;padding:13px 14px 15px}
+.postulat .t{display:block;font-family:var(--pix);font-size:22px;font-weight:600;line-height:1.15;color:var(--a-texte)}
+.postulat .puces{display:flex;flex-wrap:wrap;gap:8px 9px;margin-top:9px}
+.postulat .puce{
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--pix);font-size:13px;line-height:1;
+  letter-spacing:.05em;text-transform:uppercase;padding:4px 7px 3px;background:#0F0C18;color:var(--a-texte2);
+  box-shadow:0 0 0 2px var(--a-ligne);
+}
+.postulat .puce.role{color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.postulat .puce svg{display:block;width:14px;height:14px;flex:0 0 auto}
 .postulat .q{
-  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
-  font-size:12px;font-style:italic;color:var(--creme2);margin-top:4px;line-height:1.4;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden;
+  font-size:13px;font-style:italic;color:var(--a-texte2);margin-top:10px;line-height:1.5;
 }
-.postulat::after{
-  content:"";position:absolute;right:6px;top:50%;width:7px;height:7px;
-  border-right:1.5px solid var(--trait);border-top:1.5px solid var(--trait);
-  transform:translateY(-50%) rotate(45deg);transition:border-color var(--t) linear;
-}
-.postulat:hover,.postulat:focus-visible{outline:0;padding-left:9px}
-.postulat:hover .t,.postulat:focus-visible .t{color:var(--creme)}
-.postulat:hover::after,.postulat:focus-visible::after{border-color:var(--framboise)}
-.postulat.go{opacity:.35;transition:opacity 320ms linear}
+.postulat.go{animation:accGo 300ms steps(3) both}
+@keyframes accGo{40%{filter:brightness(1.7)}100%{filter:brightness(1);opacity:.45}}
 
-.cimetiere{
-  margin-top:16px;display:flex;justify-content:space-between;gap:10px;
-  font-size:11px;letter-spacing:.2em;color:var(--creme3);text-transform:uppercase;
+/* la vie dans les vignettes : la pluie sur la gare, le feu de la friche, le fumigène du kop */
+.fx-pluie::after{
+  content:"";position:absolute;inset:-30px;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(104deg,transparent 0 11px,rgba(196,218,255,.2) 11px 12px,transparent 12px 26px);
+  animation:accPluie 520ms linear infinite;
 }
-.cimetiere b{color:var(--creme2);font-weight:400}
+@keyframes accPluie{from{transform:translate(0,0)}to{transform:translate(-6px,26px)}}
+.fx-feu::after,.fx-fumigene::after{
+  content:"";position:absolute;z-index:1;pointer-events:none;width:36%;aspect-ratio:1;
+  transform:translate(-50%,-50%);mix-blend-mode:screen;
+}
+.fx-feu::after{left:59%;top:58%;background:radial-gradient(closest-side,rgba(255,160,50,.6),rgba(255,90,20,0));animation:accFeu 1.4s steps(5) infinite alternate}
+.fx-fumigene::after{left:18%;top:80%;width:46%;background:radial-gradient(closest-side,rgba(255,60,50,.45),rgba(255,40,40,0));animation:accFeu 2.2s steps(6) infinite alternate}
+@keyframes accFeu{0%{opacity:.35}35%{opacity:.85}65%{opacity:.55}100%{opacity:1}}
+
+#titleScreen .cimetiere{
+  margin-top:22px;padding-top:12px;border-top:2px solid var(--a-ligne);
+  font-family:var(--pix);font-size:13px;letter-spacing:.08em;color:var(--a-texte3);
+}
+#titleScreen .cimetiere b{color:var(--a-or);font-weight:600}
+
+@media (prefers-reduced-motion:reduce){
+  .acc-pano,.acc-meche i,.postulat .heure i,.fx-pluie::after,.fx-feu::after,.fx-fumigene::after{animation:none}
+}
 
 /* ═══ 2. JEU ════════════════════════════════════════════════════════════ */
 #gameScreen{gap:0}
@@ -404,7 +499,12 @@ button{background:none;border:0;padding:0;cursor:pointer}
 .stage .feuille table.tbl{font-size:12px}
 .stage .feuille table.tbl td,.stage .feuille table.tbl th{padding:3px 3px}
 .stage .feuille .fh{padding-bottom:6px;margin-bottom:4px}
-.stage .feuille .qui{margin-top:auto;flex-wrap:wrap;gap:0 10px}
+.stage .feuille .qui{margin-top:auto;flex-wrap:wrap;gap:0 10px;flex:0 0 auto}
+/* Quand la carte rapetisse (petit écran), le tableau se rogne au cadre et se
+   cale sur ta ligne : la ligne « qui » et son bouton restent dans la carte,
+   au lieu de déborder sur les boutons de choix. */
+.stage .feuille{overflow:hidden}
+.stage .feuille .tbl-zone{flex:1 1 auto;min-height:0;overflow:hidden}
 /* Tant que la feuille est là, la cartouche du nom se tait : c'est la ligne
    « qui » de la feuille qui nomme le locuteur. */
 .stage.feuille-on .marks.bot{display:none}
@@ -657,24 +757,26 @@ __VILLE_CSS__
 
   <!-- ============================================================ 1. TITRE -->
   <section class="screen" id="titleScreen">
-    <nav class="menu" aria-label="Menu">
-      <button id="btnCimetiere" type="button" aria-label="Le cimetière des fins"></button>
-      <button id="btnFriseTitle" type="button" aria-label="L'almanach : la frise des carrières"></button>
-      <button id="btnReglages" type="button" aria-label="Les réglages"></button>
-    </nav>
+    <!-- L'ACCUEIL : Aubérive au crépuscule (de nuit de minuit à 5 h), qui défile
+         lentement sous le titre ; puis le nom ; puis les histoires, chacune
+         avec sa vignette découpée dans la ville, à son lieu et à son heure,
+         et sa couleur. Les images viennent des rendus de la ville
+         (docs/design/pixel_iso/accueil.js), embarquées par assemble.js. -->
+    <header class="acc-hero" id="accHero">
+      <div class="acc-pano" id="accPano" aria-hidden="true"></div>
+      <nav class="menu" aria-label="Menu">
+        <button id="btnCimetiere" type="button" aria-label="Le cimetière des fins"></button>
+        <button id="btnFriseTitle" type="button" aria-label="L'almanach : la frise des carrières"></button>
+        <button id="btnReglages" type="button" aria-label="Les réglages"></button>
+      </nav>
+      <div class="acc-titre">
+        <h1 class="acc-logo" id="accLogo" aria-label="Fusible">FUSIBLE</h1>
+        <div class="acc-meche" aria-hidden="true"><i></i></div>
+        <p class="acc-tag">Une carrière de football<br><b>Aubérive · <span id="tagYears">1990 → 2050</span></b></p>
+      </div>
+    </header>
 
-    <div class="title-mid">
-      <h1 class="logo">FUSIBLE</h1>
-      <p class="tagline">Une carrière de football<br><b id="tagYears">1990 → 2050</b></p>
-    </div>
-
-    <!-- L'objet-signature du titre : le rond central, la ligne médiane, le
-         ballon posé au point d'engagement. Une seule image, à plat, dans la
-         seule palette de l'interface — c'était le dernier écran où rien ne
-         sentait le gazon ni le jeu de cartes. -->
-    <div class="enseigne" id="enseigne" aria-hidden="true"></div>
-
-    <form class="ident" id="nameForm" autocomplete="off" aria-label="Ton nom">
+    <form class="ident acc-panneau" id="nameForm" autocomplete="off" aria-label="Ton nom">
       <div class="lab">Ton nom</div>
       <div class="fields">
         <input id="inPrenom" type="text" maxlength="14" placeholder="prénom" spellcheck="false" aria-label="Prénom">
@@ -688,8 +790,8 @@ __VILLE_CSS__
     </form>
 
     <div class="starts">
-      <div class="lab" id="postulatsLabel">Où ça commence</div>
-      <div id="postulats" role="group" aria-labelledby="postulatsLabel"></div>
+      <h2 class="acc-h"><span id="postulatsLabel">Choisis ton histoire</span><small id="postulatsCompte"></small></h2>
+      <div id="postulats" class="acc-liste" role="group" aria-labelledby="postulatsLabel"></div>
     </div>
 
     <div class="cimetiere" id="cimetiere"></div>
@@ -726,7 +828,7 @@ __VILLE_CSS__
            était la seule du jeu sans image, et la grammaire se rompait là. -->
       <div class="feuille" id="tableau" hidden>
         <div class="fh"><b id="tblTitre">Classement</b><span id="tblJournee"></span></div>
-        <table class="tbl"><thead><tr><th class="r">Rg</th><th class="c">Club</th><th class="p">Pts</th><th class="d">Diff</th></tr></thead><tbody id="tblRows"></tbody></table>
+        <div class="tbl-zone"><table class="tbl"><thead><tr><th class="r">Rg</th><th class="c">Club</th><th class="p">Pts</th><th class="d">Diff</th></tr></thead><tbody id="tblRows"></tbody></table></div>
         <div class="qui"><span id="tblQui"></span><button class="plus" id="btnTblPlus" type="button">Tout le tableau</button></div>
       </div>
       <div class="badge left" id="badgeLeft" aria-hidden="true"></div>
@@ -847,6 +949,7 @@ __VILLE_CSS__
 <script>__ENGINE_JS__</script>
 <script>__ART_JS__</script>
 <script>__AUDIO_JS__</script>
+<script>__ACCUEIL_JS__</script>
 <!-- LA VILLE : la couche ville (ville.js) se déclare AVANT la coquille, qui la
      trouve dans window.FusibleVille. Vide dans l'aperçu simple. -->
 <script>__VILLE_JS__</script>
@@ -1392,7 +1495,6 @@ __VILLE_CSS__
       });
     } else { car.hidden = true; }
   }
-  try { if (ART && ART.enseigne) $("enseigne").innerHTML = ART.enseigne({ fond: "#1B1109" }); } catch (e) {}
   $("tagYears").textContent = SIECLE_DEBUT + " \u2192 " + SIECLE_FIN;
 
   $("btnFriseGame").innerHTML = icon("frise", 21);
@@ -1449,33 +1551,156 @@ __VILLE_CSS__
   if (meta.startYear) $("tagYears").textContent = meta.startYear + " → 2050";
   renderGenre();
 
+  // ── l'accueil au pixel ───────────────────────────────────────────────────
+  var ACCUEIL = window.FUSIBLE_ACCUEIL || { couv: {}, panorama: {} };
+  // Chaque histoire : sa couleur et son heure (celle que le livre fait revenir :
+  // la sirène de seize heures, le fax de 23 h 58…) ; `fx`, la vie dans sa
+  // vignette. Une histoire qui n'est pas ici prend la couleur de son rôle.
+  var HISTOIRES = {
+    promu:          { c: "#FF5A4E", h: "DIMANCHE",   fx: "fumigene" },
+    interimaire:    { c: "#6FB0E8", h: "LUNDI",      fx: "pluie" },
+    pepite:         { c: "#FF9A3C", h: "16:00",      fx: "feu" },
+    fin_de_contrat: { c: "#FFD84D", h: "02:40" },
+    geant_dechu:    { c: "#7ED37E", h: "MAR. 18:00" },
+    vendre_trente:  { c: "#B49BFF", h: "23:58" },
+    le_modele:      { c: "#4FE3FF", h: "06:10" },
+    apres_fiasco:   { c: "#FF79B0" },
+    mondial_hiver:  { c: "#DDEFFF" },
+    escalier_ferme: { c: "#FFB547" }
+  };
+  var ROLE_COULEUR = { entraineur: "#FF5A4E", joueur: "#FF9A3C", president: "#7ED37E", ds: "#B49BFF", selectionneur: "#4FE3FF" };
+  // Les rôles en pictogrammes de 9 × 9 : la planchette de l'entraîneur, le
+  // maillot du joueur, la mallette du président, le contrat du directeur
+  // sportif, le drapeau du sélectionneur.
+  var ICONES = {
+    entraineur:    ["..#####..", ".##...##.", "#########", "#.......#", "#.#...#.#", "#..#.#..#", "#...#...#", "#.......#", "#########"],
+    joueur:        ["##.....##", "###...###", "#########", ".#######.", "..#####..", "..##.##..", "..#####..", "..#####..", "..#####.."],
+    president:     ["...###...", "...#.#...", "#########", "#.......#", "#########", "#...#...#", "#.......#", "#.......#", "#########"],
+    ds:            ["######...", "#....##..", "#.....##.", "#.###..#.", "#.......#", "#.####..#", "#.......#", "#.##.##.#", "#########"],
+    selectionneur: ["##.......", "######...", "#########", "######...", "##.......", "#........", "#........", "#........", "#........"]
+  };
+  function svgPixels(rows, couleur) {
+    var r = "";
+    rows.forEach(function (ligne, y) {
+      var x = 0;
+      while (x < ligne.length) {
+        if (ligne[x] !== "#") { x++; continue; }
+        var d = x; while (x < ligne.length && ligne[x] === "#") x++;
+        r += '<rect x="' + d + '" y="' + y + '" width="' + (x - d) + '" height="1"/>';
+      }
+    });
+    return '<svg viewBox="0 0 ' + rows[0].length + ' ' + rows.length + '" shape-rendering="crispEdges" aria-hidden="true" fill="' + (couleur || "currentColor") + '">' + r + '</svg>';
+  }
+  // Le titre au pixel : des lettres de 5 × 7 posées en trois couches — l'ombre
+  // portée framboise, le contour d'encre, la face éclairée du haut (crème,
+  // puis or, puis orange : le ciel du crépuscule derrière).
+  var GLYPHES = {
+    F: ["#####", "#....", "#....", "####.", "#....", "#....", "#...."],
+    U: ["#...#", "#...#", "#...#", "#...#", "#...#", "#...#", ".###."],
+    S: [".####", "#....", "#....", ".###.", "....#", "....#", "####."],
+    I: ["###", ".#.", ".#.", ".#.", ".#.", ".#.", "###"],
+    B: ["####.", "#...#", "#...#", "####.", "#...#", "#...#", "####."],
+    L: ["#....", "#....", "#....", "#....", "#....", "#....", "#####"],
+    E: ["#####", "#....", "#....", "####.", "#....", "#....", "#####"]
+  };
+  function logoPixel(mot) {
+    var on = {}, x = 1, W, H = 7 + 3;
+    mot.split("").forEach(function (ch) {
+      var g = GLYPHES[ch];
+      if (!g) { x += 3; return; }
+      g.forEach(function (ligne, y) { for (var i = 0; i < ligne.length; i++) if (ligne[i] === "#") on[(x + i) + "," + (y + 1)] = 1; });
+      x += g[0].length + 1;
+    });
+    W = x + 1;
+    var bord = {};
+    Object.keys(on).forEach(function (k) {
+      var p = k.split(","), px = +p[0], py = +p[1];
+      for (var dx = -1; dx <= 1; dx++) for (var dy = -1; dy <= 1; dy++) bord[(px + dx) + "," + (py + dy)] = 1;
+    });
+    function rects(cases, dx, dy, couleur) {
+      return Object.keys(cases).map(function (k) {
+        var p = k.split(",");
+        return '<rect x="' + (+p[0] + dx) + '" y="' + (+p[1] + dy) + '" width="1" height="1" fill="' + (typeof couleur === "function" ? couleur(+p[1]) : couleur) + '"/>';
+      }).join("");
+    }
+    var face = function (y) { return y <= 2 ? "#FFF4D8" : (y <= 4 ? "#FFD27A" : "#FF9A3C"); };
+    return '<svg viewBox="-1 0 ' + (W + 1) + ' ' + H + '" shape-rendering="crispEdges" role="img" aria-label="Fusible">' +
+      rects(bord, 1, 1, "#8A1238") + rects(bord, 0, 0, "#0B0814") + rects(on, 0, 0, face) + '</svg>';
+  }
+  function heureHtml(h) { return escapeHtml(h).replace(/(\d\d):(\d\d)/, "$1<i>:</i>$2"); }
+
+  function renderHero() {
+    var heure = new Date().getHours();
+    var nuit = heure >= 23 || heure < 5;
+    var src = (nuit && ACCUEIL.panorama.nuit) || ACCUEIL.panorama.crepuscule || ACCUEIL.panorama.nuit;
+    var pano = $("accPano");
+    if (src) pano.style.backgroundImage = "url(" + src + ")"; else pano.classList.add("vide");
+    $("accLogo").innerHTML = logoPixel("FUSIBLE");
+  }
+  renderHero();
+
   function renderTitle() {
     var wrap = $("postulats");
     wrap.innerHTML = "";
+    if (!profile.histoires || typeof profile.histoires !== "object") profile.histoires = {};
+    // « Nouveau » : une histoire qui n'était pas là la dernière fois que tu as
+    // vu l'accueil (rien au tout premier passage : tout serait nouveau).
+    var vues = Array.isArray(profile.accueilVues) ? profile.accueilVues : null, ici = [];
     postulats.forEach(function (p) {
       // une histoire en chantier attend d'être écrite (?chantier pour la voir quand même)
       if (p.chantier && !/[?&]chantier/.test(location.search)) return;
+      ici.push(p.id);
+      var h = HISTOIRES[p.id] || {};
+      var couleur = h.c || ROLE_COULEUR[p.role] || "#F6E9CF";
+      var couv = ACCUEIL.couv[p.id] || ACCUEIL.couv.promu || "";
+      var joue = profile.histoires[p.id] | 0;
       var b = document.createElement("button");
       b.className = "postulat";
       b.type = "button";
       b.setAttribute("data-index", String(p.index));
-      b.innerHTML = '<span class="t"></span><span class="s"></span><span class="q"></span>';
+      b.style.setProperty("--acc", couleur);
+      b.innerHTML =
+        '<span class="cov' + (h.fx ? " fx-" + h.fx : "") + '">' +
+          (couv ? '<img alt="" src="' + couv + '" decoding="async">' : "") +
+          '<span class="num">N° ' + pad2(p.index + 1) + '</span>' +
+          (vues && vues.indexOf(p.id) < 0 ? '<span class="neuf">Nouveau</span>' : "") +
+          (h.h ? '<span class="heure">' + heureHtml(h.h) + '</span>' : "") +
+        '</span>' +
+        '<span class="corps"><span class="t"></span><span class="puces"></span><span class="q"></span></span>';
       b.querySelector(".t").textContent = p.title;
+      var puces = b.querySelector(".puces");
+      var role = document.createElement("span");
+      role.className = "puce role";
+      role.innerHTML = ICONES[p.role] ? svgPixels(ICONES[p.role]) : "";
+      role.appendChild(document.createTextNode(p.roleName || p.role));
+      puces.appendChild(role);
       // le sélectionneur n'a pas de division : son année suffit
-      b.querySelector(".s").textContent = "n° " + pad2(p.index + 1) + " · " + (p.roleName || p.role) + (p.role === "selectionneur" ? "" : " · D" + p.division) + (p.year ? " · " + p.year : "");
+      var infos = [p.role === "selectionneur" ? "" : "D" + p.division, p.year ? String(p.year) : "", joue ? "Jouée ×" + joue : ""];
+      infos.forEach(function (t) {
+        if (!t) return;
+        var c = document.createElement("span");
+        c.className = "puce";
+        c.textContent = t;
+        puces.appendChild(c);
+      });
       var q = b.querySelector(".q");
       // la quatrième de couverture quand l'histoire en a une, sinon sa question
       if (p.pitch) q.textContent = p.pitch; else if (p.question) q.textContent = p.question; else q.hidden = true;
-      b.setAttribute("aria-label", p.title + ", " + (p.roleName || p.role) + ", division " + p.division);
+      b.setAttribute("aria-label", p.title + ", " + (p.roleName || p.role) + (p.role === "selectionneur" ? "" : ", division " + p.division) + (p.year ? ", " + p.year : ""));
       b.addEventListener("click", function () {
         if (busy) return;
         busy = true;
         b.classList.add("go");
+        profile.histoires[p.id] = (profile.histoires[p.id] | 0) + 1;
+        saveProfile(profile);
         var go = function () { b.classList.remove("go"); busy = false; startRun(p.index); };
-        if (reduce) go(); else setTimeout(go, 260);
+        if (reduce) go(); else setTimeout(go, 300);
       });
       wrap.appendChild(b);
     });
+    profile.accueilVues = ici;
+    saveProfile(profile);
+    $("postulatsCompte").textContent = plural(ici.length, "histoire", "histoires");
     renderCimetiere();
     if (audio) { audio.setAmbiance("maison"); audio.setTension(0); }
     show("title");
@@ -1646,6 +1871,7 @@ __VILLE_CSS__
       $("tblTitre").textContent = c.classementFinal ? "Classement final" : "Classement";
       $("tblJournee").textContent = (c.journeeClassement ? ord(c.journeeClassement, true) + " journée" : journeeLabel()) + " · D" + (view.division || 1);
       standingsRows($("tblRows"), tbl);
+      caleFeuille();
       var qui = speakerInfo(c);
       $("tblQui").textContent = c.speaker ? (qui.name + (qui.label ? " · " + qui.label : "")) : (view.club || "");
     }
@@ -1724,6 +1950,14 @@ __VILLE_CSS__
     if (gs.hidden || st.hidden || !st.offsetParent) return;
     var trop = Math.ceil(gs.getBoundingClientRect().height - window.innerHeight);
     if (trop > 0) gs.style.setProperty("--carte", Math.max(180, st.offsetWidth - trop) + "px");
+    caleFeuille();
+  }
+  // le classement dans la carte : ta ligne au milieu de ce qui tient
+  function caleFeuille() {
+    var zone = $("tableau").querySelector(".tbl-zone");
+    if (!zone || $("tableau").hidden) return;
+    var toi = zone.querySelector("tr.toi");
+    zone.scrollTop = toi ? Math.max(0, toi.offsetTop - (zone.clientHeight - toi.offsetHeight) / 2) : 0;
   }
   window.addEventListener("resize", function () { if (view && !view.over) ajusterCarte(); });
   function mkAct(cls, label, before, after, on) {

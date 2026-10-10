@@ -110,6 +110,8 @@ String _postulatsJson() {
     final p = posts[i];
     list.add({
       'index': i,
+      // l'id du postulat : l'accueil y accroche la vignette et la couleur de l'histoire
+      'id': p.id,
       'title': p.title,
       'question': p.question,
       'role': p.role,

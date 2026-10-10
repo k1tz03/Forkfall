@@ -2,7 +2,7 @@
 // Assemble l'aperçu web jouable (la grammaire de *Reigns*, matériaux du
 // football) :
 //   node packages/tools/web/assemble.js --engine <engine.js> --out <fichier.html>
-// Le gabarit (preview_template.html) contient cinq placeholders remplacés
+// Le gabarit (preview_template.html) contient ses placeholders, remplacés
 // littéralement (split/join, aucune interprétation regex) :
 //   __CONTENT_JSON__  ← app/assets/content.json (bundle compilé par build_content)
 //   __ENGINE_JS__     ← le moteur Dart compilé en JS (dart compile js preview.dart)
@@ -13,8 +13,11 @@
 //                       assemblé — ne pas le rebrancher.)
 //   __AUDIO_JS__      ← packages/tools/web/audio.js (l'univers sonore, tout
 //                       synthétisé : aucun fichier audio, aucune URL)
-//   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono (la seule
-//                       ressource externe de tout le fichier)
+//   __ACCUEIL_JS__    ← packages/tools/web/accueil/*.webp en data: (les
+//                       vignettes des histoires et le panorama de la ville,
+//                       découpés par docs/design/pixel_iso/accueil.js)
+//   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Pixelify
+//                       Sans (la seule ressource externe de tout le fichier)
 //   __VILLE_CSS__, __VILLE_JS__ ← vides, sauf avec --ville <dossier> : la
 //                       version jouable (la ville d'Aubérive en pixel art,
 //                       ville.css + ville.js). Le dossier donné porte les
@@ -74,8 +77,28 @@ function fontsCss() {
     '<link rel="preconnect" href="https://fonts.googleapis.com">',
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
     '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?' +
+      'family=Pixelify+Sans:wght@400;500;600;700&' +
       'family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">',
   ].join('\n');
+}
+
+/// L'ACCUEIL — les vignettes des histoires et le panorama de la ville
+/// (packages/tools/web/accueil/*.webp, découpés dans les rendus de la ville par
+/// docs/design/pixel_iso/accueil.js), embarqués en data: pour que l'accueil
+/// tienne dans le fichier seul, avec ou sans la ville à côté.
+///   couv_<postulat>.webp → FUSIBLE_ACCUEIL.couv[<postulat>]
+///   panorama_<heure>.webp → FUSIBLE_ACCUEIL.panorama[<heure>]
+function accueilJs() {
+  const dir = path.join(HERE, 'accueil');
+  const out = { couv: {}, panorama: {} };
+  if (fs.existsSync(dir)) {
+    for (const f of fs.readdirSync(dir).sort()) {
+      const m = /^(couv|panorama)_([a-z0-9_]+)\.webp$/.exec(f);
+      if (!m) continue;
+      out[m[1]][m[2]] = 'data:image/webp;base64,' + fs.readFileSync(path.join(dir, f)).toString('base64');
+    }
+  }
+  return 'window.FUSIBLE_ACCUEIL = ' + JSON.stringify(out) + ';';
 }
 
 function main() {
@@ -90,9 +113,17 @@ function main() {
   const art = fs.readFileSync(artPath, 'utf8');
   const audio = fs.readFileSync(audioPath, 'utf8');
   let content = fs.readFileSync(contentPath, 'utf8');
-  JSON.parse(content); // le bundle doit être un JSON valide avant d'être incrusté
+  const bundle = JSON.parse(content); // le bundle doit être un JSON valide avant d'être incrusté
+  // une histoire livrée sans vignette prend celle du promu : on le dit
+  const vignettes = new Set(fs.existsSync(path.join(HERE, 'accueil'))
+    ? fs.readdirSync(path.join(HERE, 'accueil')).map((f) => (/^couv_([a-z0-9_]+)\.webp$/.exec(f) || [])[1]).filter(Boolean) : []);
+  for (const p of bundle.postulats || []) {
+    if (!p.chantier && !vignettes.has(p.id)) {
+      console.warn(`accueil : le postulat ${p.id} n'a pas de vignette (docs/design/pixel_iso/accueil.js, VIGNETTES)`);
+    }
+  }
 
-  const PLACEHOLDERS = ['__CONTENT_JSON__', '__ENGINE_JS__', '__ART_JS__', '__AUDIO_JS__', '__FONTS_CSS__', '__VILLE_CSS__', '__VILLE_JS__'];
+  const PLACEHOLDERS = ['__CONTENT_JSON__', '__ENGINE_JS__', '__ART_JS__', '__AUDIO_JS__', '__ACCUEIL_JS__', '__FONTS_CSS__', '__VILLE_CSS__', '__VILLE_JS__'];
   for (const p of PLACEHOLDERS) {
     if (tpl.indexOf(p) < 0) throw new Error('placeholder absent du gabarit : ' + p);
   }
@@ -108,6 +139,7 @@ function main() {
   tpl = tpl.split('__ART_JS__').join(safeArt);
   tpl = tpl.split('__AUDIO_JS__').join(safeAudio);
   tpl = tpl.split('__FONTS_CSS__').join(fontsCss());
+  tpl = tpl.split('__ACCUEIL_JS__').join(accueilJs());
   // LA VILLE : la feuille et la couche, ou rien.
   let villeCss = '', villeJs = '';
   if (opts.ville) {
