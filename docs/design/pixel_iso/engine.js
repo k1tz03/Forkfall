@@ -35,13 +35,14 @@ function rng(seed) { let s = seed >>> 0; return () => { s = (Math.imul(s, 166452
 
 // ---------------------------------------------------------------- matériaux
 const MATS = [null];
-function material(name, shade, flags = {}) { MATS.push(Object.assign({ name, shade }, flags)); return MATS.length - 1; }
+function material(name, shade, flags = {}) { if (MATS.length > 255) throw new Error('trop de matières (255 au plus) : ' + name); MATS.push(Object.assign({ name, shade }, flags)); return MATS.length - 1; }
 const OVERLAYS = {};
 function overlay(type, fn) { OVERLAYS[type] = fn; }
 
 // ---------------------------------------------------------------- le monde
 class World {
-  constructor(X, Y, Z) {
+  // ox, oy : décalage du quartier en cours de construction ; zl : sol logique (on peut creuser sous la rue).
+  constructor(X, Y, Z, zl = 0) {
     this.X = X; this.Y = Y; this.Z = Z;
     this.mat = new Uint8Array(X * Y * Z);
     this.tag = new Uint16Array(X * Y * Z);
@@ -49,19 +50,23 @@ class World {
     this.lights = [];
     this.sprites = [];
     this.leaf = new Float32Array(X * Y); // densité de feuilles mortes au sol
+    this.ox = 0; this.oy = 0; this.zl = zl;
   }
-  idx(x, y, z) { return (z * this.Y + y) * this.X + x; }
-  inb(x, y, z) { return x >= 0 && y >= 0 && z >= 0 && x < this.X && y < this.Y && z < this.Z; }
+  at(ox, oy) { this.ox = ox; this.oy = oy; return this; }
+  idx(x, y, z) { return ((z + this.zl) * this.Y + (y + this.oy)) * this.X + (x + this.ox); }
+  inb(x, y, z) { x += this.ox; y += this.oy; z += this.zl; return x >= 0 && y >= 0 && z >= 0 && x < this.X && y < this.Y && z < this.Z; }
   get(x, y, z) { return this.inb(x, y, z) ? this.mat[this.idx(x, y, z)] : 0; }
   set(x, y, z, m, t = 0) { if (!this.inb(x, y, z)) return; const k = this.idx(x, y, z); this.mat[k] = m; this.tag[k] = t; }
   box(x0, y0, z0, x1, y1, z1, m, t = 0) {
-    x0 = Math.max(0, Math.round(x0)); y0 = Math.max(0, Math.round(y0)); z0 = Math.max(0, Math.round(z0));
-    x1 = Math.min(this.X, Math.round(x1)); y1 = Math.min(this.Y, Math.round(y1)); z1 = Math.min(this.Z, Math.round(z1));
-    for (let z = z0; z < z1; z++) for (let y = y0; y < y1; y++) { let k = this.idx(x0, y, z); for (let x = x0; x < x1; x++, k++) { this.mat[k] = m; this.tag[k] = t; } }
+    x0 = Math.max(0, Math.round(x0) + this.ox); y0 = Math.max(0, Math.round(y0) + this.oy); z0 = Math.max(0, Math.round(z0) + this.zl);
+    x1 = Math.min(this.X, Math.round(x1) + this.ox); y1 = Math.min(this.Y, Math.round(y1) + this.oy); z1 = Math.min(this.Z, Math.round(z1) + this.zl);
+    for (let z = z0; z < z1; z++) for (let y = y0; y < y1; y++) { let k = (z * this.Y + y) * this.X + x0; for (let x = x0; x < x1; x++, k++) { this.mat[k] = m; this.tag[k] = t; } }
   }
-  obj(o) { this.objects.push(o); return this.objects.length - 1; }
-  light(l) { this.lights.push(Object.assign({ spot: 0, shadow: true }, l)); }
+  obj(o) { o.ox = this.ox; o.oy = this.oy; this.objects.push(o); return this.objects.length - 1; }
+  light(l) { this.lights.push(Object.assign({ spot: 0, shadow: true }, l, { x: l.x + this.ox, y: l.y + this.oy, z: l.z + this.zl })); }
+  sprite(s) { this.sprites.push(Object.assign({}, s, { x: s.x + this.ox, y: s.y + this.oy, z: s.z + this.zl })); }
   stampLeaves(cx, cy, r, amt) {
+    cx += this.ox; cy += this.oy;
     for (let y = Math.max(0, Math.floor(cy - r)); y < Math.min(this.Y, cy + r); y++)
       for (let x = Math.max(0, Math.floor(cx - r)); x < Math.min(this.X, cx + r); x++) {
         const d = Math.hypot(x - cx, y - cy) / r; if (d < 1) this.leaf[y * this.X + x] += amt * (1 - d) * (1 - d);
@@ -71,7 +76,9 @@ class World {
 
 // ---------------------------------------------------------------- rayon de vue
 // Le rayon passe par le centre du pixel et descend selon −(1,1,1).
-function castRay(W, u, v, R) {
+// cutS : plan de coupe arrière (x + y < cutS : rien) ; cutF, cutZ : coupe avant, au-dessus du sol (x + y > cutF et z > cutZ : rien),
+// pour que les immeubles du premier plan ne cachent pas le personnage
+function castRay(W, u, v, R, cutS = -1e9, cutF = 1e9, cutZ = 0) {
   const X = W.X, Y = W.Y, Z = W.Z, mat = W.mat;
   const uc = u + 0.5, vc = v + 0.5;
   const x0 = (vc + 2 * Z + uc / 2) / 2, y0 = (vc + 2 * Z - uc / 2) / 2;
@@ -80,21 +87,23 @@ function castRay(W, u, v, R) {
   const xFirst = fx < fy;
   R.x0 = x0; R.y0 = y0;
   let m;
-  if (ix >= 0 && iy >= 0 && ix < X && iy < Y && (m = mat[(iz * Y + iy) * X + ix])) return hitAt(R, TOP, 0, ix, iy, iz, m, Z);
+  const cut = (x, y, z) => x + y > cutF && z > cutZ;
+  if (ix >= 0 && iy >= 0 && ix < X && iy < Y && (m = mat[(iz * Y + iy) * X + ix]) && !cut(ix, iy, iz)) return hitAt(R, TOP, 0, ix, iy, iz, m, Z);
   for (let k = 0; k <= Z; k++) {
+    if (ix + iy < cutS) return false;
     if (xFirst) {
       ix--; if (ix < 0) return false;
-      if (iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix])) return hitAt(R, RIGHT, k + fx, ix, iy, iz, m, Z);
+      if (iy >= 0 && iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix]) && !cut(ix, iy, iz)) return hitAt(R, RIGHT, k + fx, ix, iy, iz, m, Z);
       iy--; if (iy < 0) return false;
-      if (iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix])) return hitAt(R, LEFT, k + fy, ix, iy, iz, m, Z);
+      if (ix >= 0 && iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix]) && !cut(ix, iy, iz)) return hitAt(R, LEFT, k + fy, ix, iy, iz, m, Z);
     } else {
       iy--; if (iy < 0) return false;
-      if (iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix])) return hitAt(R, LEFT, k + fy, ix, iy, iz, m, Z);
+      if (ix >= 0 && iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix]) && !cut(ix, iy, iz)) return hitAt(R, LEFT, k + fy, ix, iy, iz, m, Z);
       ix--; if (ix < 0) return false;
-      if (iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix])) return hitAt(R, RIGHT, k + fx, ix, iy, iz, m, Z);
+      if (iy >= 0 && iy < Y && ix < X && (m = mat[(iz * Y + iy) * X + ix]) && !cut(ix, iy, iz)) return hitAt(R, RIGHT, k + fx, ix, iy, iz, m, Z);
     }
     iz--; if (iz < 0) return false;
-    if (ix < X && iy < Y && (m = mat[(iz * Y + iy) * X + ix])) return hitAt(R, TOP, k + 1, ix, iy, iz, m, Z);
+    if (ix >= 0 && iy >= 0 && ix < X && iy < Y && (m = mat[(iz * Y + iy) * X + ix]) && !cut(ix, iy, iz)) return hitAt(R, TOP, k + 1, ix, iy, iz, m, Z);
   }
   return false;
 }
@@ -160,6 +169,7 @@ function reflectRay(W, px, py, pz, dx, dy, dz, maxT, out, ctx) {
 
 // ---------------------------------------------------------------- matière + calques
 function shadeSurface(W, c, m, k) {
+  c.hz -= W.zl;
   if (c.face === TOP) { c.a = Math.floor(2 * c.hx); c.b = Math.floor(2 * c.hy); }
   else if (c.face === LEFT) { c.a = Math.floor(2 * c.hx); c.b = Math.floor(2 * c.hz); }
   else { c.a = -Math.floor(2 * c.hy); c.b = Math.floor(2 * c.hz); }
@@ -167,7 +177,10 @@ function shadeSurface(W, c, m, k) {
   c.W = W;
   MATS[m].shade(c);
   const tg = W.tag[k];
-  if (tg) { const o = W.objects[tg]; const f = OVERLAYS[o.type]; if (f) f(o, c); }
+  if (tg) {
+    const o = W.objects[tg]; const f = OVERLAYS[o.type];
+    if (f) { const ox = o.ox || 0, oy = o.oy || 0; c.hx -= ox; c.hy -= oy; f(o, c); c.hx += ox; c.hy += oy; }
+  }
 }
 
 // ---------------------------------------------------------------- occlusion ambiante
@@ -230,7 +243,7 @@ function render(W, opt) {
   for (let py = 0; py < FH; py++) {
     for (let px = 0; px < FW; px++) {
       const k = py * FW + px, k3 = k * 3;
-      if (!castRay(W, px + opt.cu, py + opt.cv, R)) {
+      if (!castRay(W, px + opt.cu, py + opt.cv, R, opt.cutS, opt.cutF, opt.cutZ)) {
         const bg = opt.backdrop(px, py);
         col[k3] = bg[0]; col[k3 + 1] = bg[1]; col[k3 + 2] = bg[2];
         emi[k3] = bg[3] || 0; emi[k3 + 1] = bg[4] || 0; emi[k3 + 2] = bg[5] || 0;
@@ -276,7 +289,8 @@ function render(W, opt) {
         qr += L.cr * w; qg += L.cg * w; qb += L.cb * w;
       }
       const bt = bayer(px, py);
-      qr = Math.floor(qr * Q + bt) / Q; qg = Math.floor(qg * Q + bt) / Q; qb = Math.floor(qb * Q + bt) / Q;
+      const lmax = Math.max(qr, qg, qb);
+      if (lmax > 0) { const qq = Math.floor(lmax * Q + bt) / Q, kq = qq / lmax; qr *= kq; qg *= kq; qb *= kq; }
       lr += qr * (0.55 + 0.45 * ao); lg += qg * (0.55 + 0.45 * ao); lb += qb * (0.55 + 0.45 * ao);
       let r = c.cr * lr, g = c.cg * lg, b = c.cb * lb;
       // sol mouillé : reflet
@@ -374,6 +388,8 @@ function blur(src, W, H, r) {
 // Un sprite est une image de pixels debout sur le sol ; son relief suit la hauteur de chaque ligne.
 function drawSprite(W, sp, opt, col, emi, dv) {
   const FW = opt.width, FH = opt.height;
+  // derrière le plan de coupe d'une vue de jeu, un personnage n'existe pas
+  if (opt.cutS != null && sp.x + sp.y < opt.cutS) return;
   const fu = 2 * (sp.x - sp.y) - opt.cu, fv = sp.x + sp.y - 2 * sp.z - opt.cv;
   const rows = sp.rows, h = rows.length, w = rows[0].length;
   const ax = sp.ax != null ? sp.ax : Math.floor(w / 2);

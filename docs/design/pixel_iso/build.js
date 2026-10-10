@@ -280,4 +280,23 @@ function pylon(W, x, y, zg, h, o = {}) {
   }
 }
 
-module.exports = { Facade, gableRoof, mansard, dormer, flatRoof, chimney, antenna, streetLamp, planeTree, car, bench, bollard, bin, terraceTable, chair, parasol, keg, crates, phoneBooth, busShelter, kiosk, railing, moped, pylon };
+// le car du club : bordeaux à bande grise, vitres, le nom sur le flanc
+function clubBus(W, x, y, zg, o = {}) {
+  W.box(x, y + 1, zg + 2, x + 60, y + 12, zg + 6, M.CAR_BORD);
+  W.box(x, y + 1, zg + 6, x + 60, y + 12, zg + 7, M.SEAT_GREY);
+  W.box(x, y + 1, zg + 7, x + 60, y + 12, zg + 12, M.CAR_GLASS);
+  for (let i = 0; i < 60; i += 7) W.box(x + i, y + 1, zg + 7, x + i + 1, y + 12, zg + 12, M.CAR_BORD);
+  W.box(x, y + 1, zg + 12, x + 60, y + 12, zg + 14, M.CAR_BORD);
+  W.box(x + 2, y + 2, zg + 14, x + 58, y + 11, zg + 15, M.METAL);
+  for (const wx of [x + 6, x + 46]) { W.box(wx, y, zg, wx + 5, y + 1, zg + 4, M.TIRE); W.box(wx, y + 12, zg, wx + 5, y + 13, zg + 4, M.TIRE); }
+  const side = new Facade(W, LEFT, x, y + 1, 60, 11);
+  side.sign(14, zg + 6, 'RACING AUBÉRIVE', { fg: [0.86, 0.80, 0.62], depth: 0 });
+  if (o.lit) {
+    for (let i = 1; i < 60; i += 7) side.rect(i, zg + 8, i + 6, zg + 11, 0, M.SKYLIGHT);
+    W.set(x + 59, y + 2, zg + 3, M.HEADLIGHT); W.set(x + 59, y + 10, zg + 3, M.HEADLIGHT);
+    W.light({ x: x + 62, y: y + 6, z: zg + 3, r: 80, fall: 1.5, cr: 1.1, cg: 1.0, cb: 0.8, axis: [0.99, 0, -0.14], c0: 0.8, c1: 0.97, spill: 0, skip: 1 });
+    W.light({ x: x + 30, y: y + 14, z: zg + 9, r: 26, cr: 0.6, cg: 0.45, cb: 0.25, shadow: false });
+  }
+}
+
+module.exports = { clubBus, Facade, gableRoof, mansard, dormer, flatRoof, chimney, antenna, streetLamp, planeTree, car, bench, bollard, bin, terraceTable, chair, parasol, keg, crates, phoneBooth, busShelter, kiosk, railing, moped, pylon };

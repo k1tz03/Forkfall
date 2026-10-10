@@ -131,9 +131,9 @@ function vestiaire(W, x, y, S, T) {
   wx.set(24, T + 16, -1, M.METAL_DARK); wx.set(24, T + 15, -1, M.BULB);
   W.light({ x: x + 4, y: y + 15.5, z: T + 15, r: 60, fall: 1.3, cr: 1.3, cg: 1.0, cb: 0.6, skip: 1.2 });
   W.light({ x: x + 24, y: y + 5, z: T + 12, r: 22, cr: 0.5, cg: 0.32, cb: 0.14, shadow: false });
-  W.sprites.push(Object.assign({ x: x + 16.5, y: y + 9, z: T }, SP.BREHAUT));
-  W.sprites.push(Object.assign({ x: x + 7, y: y + 14, z: T }, SP.PLAYER));
-  W.sprites.push(Object.assign({ x: x + 26, y: y + 17, z: T }, SP.COACH));
+  W.sprite(Object.assign({ x: x + 16.5, y: y + 9, z: T }, SP.BREHAUT));
+  W.sprite(Object.assign({ x: x + 7, y: y + 14, z: T }, SP.PLAYER));
+  W.sprite(Object.assign({ x: x + 26, y: y + 17, z: T }, SP.COACH));
 }
 
 function bureau(W, x, y, S, T) {
@@ -153,7 +153,7 @@ function bureau(W, x, y, S, T) {
   W.box(x + 13, y + 15, T + 4, x + 15, y + 17, T + 5, M.METAL_DARK);
   // le fauteuil et le président
   W.box(x + 17, y + 9, T, x + 23, y + 13, T + 3, M.LEATHER); W.box(x + 17, y + 8, T, x + 23, y + 10, T + 9, M.LEATHER);
-  W.sprites.push(Object.assign({ x: x + 20, y: y + 12.5, z: T }, SP.VAUBOURG));
+  W.sprite(Object.assign({ x: x + 20, y: y + 12.5, z: T }, SP.VAUBOURG));
   // chaises visiteurs
   for (const cx of [x + 14, x + 23]) { W.box(cx, y + 25, T, cx + 3, y + 28, T + 3, M.LEATHER); W.box(cx, y + 27, T, cx + 3, y + 28, T + 7, M.LEATHER); }
   // le coffre, la télé, les trophées, les photos
@@ -199,11 +199,97 @@ function laverie(W, x, y, S, T) {
   W.box(x + 14, y + 28, T, x + 15, y + 29, T + 4, M.METAL_DARK); W.box(x + 12, y + 27, T + 4, x + 22, y + 31, T + 5, M.WHITE);
   W.box(x + 15, y + 28, T + 5, x + 19, y + 30, T + 6, M.JERSEY);
   W.box(x + 28, y + 26, T, x + 32, y + 29, T + 3, M.CANVAS); W.box(x + 29, y + 27, T + 3, x + 31, y + 28, T + 4, M.JERSEY);
-  W.sprites.push(Object.assign({ x: x + 21.5, y: y + 22, z: T }, SP.COACH_SIT));
+  W.sprite(Object.assign({ x: x + 21.5, y: y + 22, z: T }, SP.COACH_SIT));
 }
 
+
+M.BLANKET = material('couverture', c => { rgb(c, 0.42, 0.12, 0.17); if (mod(c.a + c.b, 6) === 0) rgb(c, 0.52, 0.18, 0.22); grain(c, 0.05); });
+M.CLOCK = material('réveil', c => { rgb(c, 0.1, 0.1, 0.1); if (c.face !== TOP) { c.er = 0.9; c.eg = 0.08; c.eb = 0.06; } }, { noAOrecv: true });
+M.MINITEL = material('minitel', c => { rgb(c, 0.62, 0.58, 0.48); if (c.face === LEFT) { rgb(c, 0.05, 0.06, 0.05); c.er = 0.12; c.eg = 0.32; c.eb = 0.16; } });
+
+// l'appartement : 6 h 40 le lundi, ou dimanche 10 h avec L'Écho sur la table
+function appartement(o) { return (W, x, y, S, T) => {
+  W.box(x, y, T - 1, x + S, y + S, T, M.WOOD);
+  const { wy, wx } = room(W, x, y, S, T, M.WALLPAPER, M.WALLPAPER, 6);
+  const dawn = o.when === 'aube';
+  { wy.rect(16, T + 6, 28, T + 15, 0, 0); const id = W.obj({ type: 'window', face: LEFT, a0: wy.a0(16), z0: T + 6, w: 12, h: 9, state: 'lit', col: dawn ? [0.45, 0.55, 0.85] : [1.0, 0.95, 0.85], k: dawn ? 0.45 : 0.75, curtain: [0.6, 0.5, 0.35] }); wy.rect(16, T + 6, 28, T + 15, 1, M.GLASS, id); }
+  W.light({ x: x + 22, y: y + 5, z: T + 10, r: 40, cr: dawn ? 0.35 : 0.9, cg: dawn ? 0.42 : 0.85, cb: dawn ? 0.65 : 0.7, shadow: false });
+  // le lit, Camille endormie
+  W.box(x + 3, y + 16, T, x + 16, y + 31, T + 3, M.WOOD_DARK); W.box(x + 3, y + 16, T + 3, x + 16, y + 31, T + 4, M.WHITE);
+  W.box(x + 3, y + 21, T + 4, x + 16, y + 31, T + 5, M.BLANKET); W.box(x + 4, y + 17, T + 4, x + 8, y + 21, T + 5, M.WHITE); W.box(x + 10, y + 17, T + 4, x + 14, y + 21, T + 5, M.WHITE);
+  if (dawn) { W.box(x + 10, y + 22, T + 5, x + 15, y + 29, T + 6, M.BLANKET); W.box(x + 11, y + 18, T + 5, x + 14, y + 20, T + 6, M.WOOD_DARK); }
+  W.box(x + 3, y + 32, T, x + 7, y + 36, T + 4, M.WOOD_DARK); W.box(x + 4, y + 33, T + 4, x + 6, y + 34, T + 5, M.CLOCK);
+  W.box(x + 4, y + 34, T + 4, x + 5, y + 35, T + 7, M.GOLD); W.set(x + 4, y + 34, T + 7, M.BULB);
+  if (dawn) W.light({ x: x + 5, y: y + 36, z: T + 7, r: 30, fall: 1.4, cr: 1.2, cg: 0.85, cb: 0.45, skip: 1.2 });
+  // la table, le planning, le café, le journal du dimanche
+  W.box(x + 21, y + 21, T, x + 22, y + 22, T + 4, M.WOOD_DARK); W.box(x + 29, y + 27, T, x + 30, y + 28, T + 4, M.WOOD_DARK);
+  W.box(x + 20, y + 20, T + 4, x + 31, y + 29, T + 5, M.WOOD);
+  W.box(x + 22, y + 22, T + 5, x + 27, y + 26, T + 6, M.PAPER); W.set(x + 28, y + 23, T + 5, M.WHITE);
+  if (!dawn) W.box(x + 25, y + 24, T + 5, x + 30, y + 28, T + 6, M.PAPER);
+  for (const [cx, cy] of [[x + 18, y + 23], [x + 31, y + 23]]) { W.box(cx, cy, T, cx + 2, cy + 2, T + 2, M.WOOD_DARK); W.box(cx, cy, T + 2, cx + 2, cy + 1, T + 6, M.WOOD_DARK); }
+  // le coin cuisine
+  W.box(x + 2, y + 2, T, x + 7, y + 6, T + 9, M.ENAMEL); W.box(x + 8, y + 2, T, x + 14, y + 5, T + 4, M.METAL); W.box(x + 8, y + 2, T + 4, x + 14, y + 5, T + 5, M.METAL_DARK);
+  W.box(x + 30, y + 2, T, x + 38, y + 5, T + 4, M.WOOD); W.box(x + 30, y + 2, T + 9, x + 38, y + 4, T + 13, M.WOOD);
+  // l'écharpe du club au mur, le sac de maillots près de la porte, la télé
+  wy.rect(31, T + 13, 37, T + 14, -1, M.JERSEY);
+  wx.rect(5, T + 7, 9, T + 11, -1, M.JERSEY);
+  W.box(x + 34, y + 33, T, x + 38, y + 37, T + 3, M.TOWEL);
+  W.box(x + 2, y + 9, T, x + 6, y + 14, T + 3, M.WOOD_DARK); W.box(x + 2, y + 10, T + 3, x + 5, y + 13, T + 7, M.METAL_DARK); W.box(x + 5, y + 10, T + 3, x + 6, y + 13, T + 7, dawn ? M.GLASS : M.CRT);
+  if (dawn) W.sprite(Object.assign({ x: x + 13, y: y + 33, z: T }, SP.COACH_SIT));
+  else W.sprite(Object.assign({ x: x + 25, y: y + 31, z: T }, SP.COACH_SIT));
+}; }
+
+// le bureau de Josiane, le secrétariat du club, 9 h 30
+function secretariat(W, x, y, S, T) {
+  W.box(x, y, T - 1, x + S, y + S, T, M.TILE_FLOOR);
+  const { wy, wx } = room(W, x, y, S, T, M.PANEL, M.PAINT_CREAM, 7);
+  { wy.rect(22, T + 7, 34, T + 15, 0, 0); const id = W.obj({ type: 'stadium', face: LEFT, a0: wy.a0(22), z0: T + 7, w: 12, h: 8 }); wy.rect(22, T + 7, 34, T + 15, 1, M.GLASS, id); }
+  W.light({ x: x + 28, y: y + 5, z: T + 11, r: 40, cr: 0.6, cg: 0.65, cb: 0.7, shadow: false });
+  for (let i = 0; i < 4; i++) { W.box(x + 2, y + 6 + i * 5, T, x + 6, y + 10 + i * 5, T + 10, M.METAL); }
+  // le bureau, la machine à écrire, les piles de licences, le minitel, la lampe
+  W.box(x + 14, y + 16, T, x + 30, y + 23, T + 4, M.WOOD_DARK);
+  W.box(x + 16, y + 18, T + 4, x + 20, y + 21, T + 6, M.METAL_DARK); W.box(x + 17, y + 18, T + 6, x + 19, y + 19, T + 7, M.PAPER);
+  for (const [px, py, h] of [[x + 22, y + 17, 3], [x + 24, y + 17, 2], [x + 22, y + 20, 4], [x + 26, y + 19, 2]]) W.box(px, py, T + 4, px + 2, py + 2, T + 4 + h, M.PAPER);
+  W.box(x + 27, y + 16, T + 4, x + 30, y + 19, T + 7, M.MINITEL);
+  W.box(x + 14, y + 16, T + 4, x + 15, y + 17, T + 8, M.GOLD); W.set(x + 14, y + 16, T + 8, M.BULB);
+  W.light({ x: x + 14.5, y: y + 17.5, z: T + 8, r: 34, fall: 1.4, cr: 1.2, cg: 0.85, cb: 0.45, skip: 1.2 });
+  W.box(x + 20, y + 11, T, x + 24, y + 15, T + 3, M.WOOD_DARK); W.box(x + 20, y + 11, T, x + 24, y + 12, T + 7, M.WOOD_DARK);
+  W.sprite(Object.assign({ x: x + 22, y: y + 14.5, z: T }, SP.JOSIANE));
+  W.sprite(Object.assign({ x: x + 23, y: y + 29, z: T }, SP.COACH));
+  // le calendrier, le fanion, la photo d'équipe, le portemanteau, la plante
+  { const id = W.obj({ type: 'poster', face: LEFT, a0: wy.a0(6), z0: T + 9, w: 6, h: 5, title: '1990', bg: [0.82, 0.78, 0.66], fg: [0.42, 0.10, 0.16], seed: 41 }); for (let s = 6; s < 12; s++) for (let z = T + 9; z < T + 14; z++) wy.tag(s, z, 0, id); }
+  wx.crest(26, T + 10, 4, 5);
+  { const id = W.obj({ type: 'poster', face: RIGHT, a0: wx.a0(31), z0: T + 9, w: 7, h: 4, bg: [0.55, 0.52, 0.46], seed: 42 }); for (let s = 31; s < 38; s++) for (let z = T + 9; z < T + 13; z++) wx.set(s, z, -1, M.WOOD_DARK, id); }
+  W.box(x + 34, y + 34, T, x + 37, y + 37, T + 3, M.PLASTIC_RED); W.box(x + 33, y + 33, T + 3, x + 38, y + 38, T + 8, M.HEDGE);
+}
+
+// le couloir des Remparts, chez l'adversaire, 19 h 40
+function couloir(W, x, y, S, T) {
+  W.box(x, y, T - 1, x + S, y + S, T, M.CONCRETE);
+  const { wy, wx } = room(W, x, y, S, T, M.FAIENCE, M.PAINT_GREEN, 6);
+  wy.rect(8, T + 15, 34, T + 16, -1, M.TUBE); wx.rect(8, T + 15, 34, T + 16, -1, M.TUBE);
+  W.light({ x: x + 20, y: y + 5, z: T + 14, r: 48, fall: 1.3, cr: 0.78, cg: 0.88, cb: 0.86, skip: 1.2 });
+  W.light({ x: x + 5, y: y + 20, z: T + 14, r: 48, fall: 1.3, cr: 0.78, cg: 0.88, cb: 0.86, skip: 1.2 });
+  // la porte vers la pelouse, aveuglante
+  { wy.rect(28, T, 36, T + 12, 0, 0); wy.rect(28, T, 36, T + 12, 1, 0); const id = W.obj({ type: 'shop', kind: 'door', face: LEFT, a0: wy.a0(28), z0: T, w: 8, h: 12, k: 1.6 }); wy.rect(28, T, 36, T + 12, 2, M.GLASS, id); }
+  wy.sign(27, T + 15, 'VISITEURS', { fg: [0.86, 0.86, 0.82], plate: [0.2, 0.2, 0.22], depth: -1, padX: 1, padY: 1 });
+  W.light({ x: x + 32, y: y + 5, z: T + 6, r: 34, cr: 1.0, cg: 1.0, cb: 0.9, skip: 2 });
+  // les bancs, les joueurs, les sacs, les crampons
+  W.box(x + 2, y + 2, T + 2, x + 26, y + 4, T + 3, M.WOOD); W.box(x + 2, y + 2, T + 2, x + 4, y + 36, T + 3, M.WOOD);
+  for (let i = 4; i < 26; i += 7) W.box(x + i, y + 2, T, x + i + 1, y + 4, T + 2, M.METAL_DARK);
+  for (let i = 6; i < 36; i += 7) W.box(x + 2, y + i, T, x + 4, y + i + 1, T + 2, M.METAL_DARK);
+  W.sprite(Object.assign({ x: x + 9, y: y + 5, z: T }, SP.PLAYER_SIT)); W.sprite(Object.assign({ x: x + 18, y: y + 5, z: T }, SP.PLAYER_SIT));
+  W.sprite(Object.assign({ x: x + 5, y: y + 14, z: T }, SP.PLAYER_SIT)); W.sprite(Object.assign({ x: x + 5, y: y + 26, z: T }, SP.PLAYER_SIT));
+  W.sprite(Object.assign({ x: x + 14, y: y + 16, z: T }, SP.BREHAUT)); W.sprite(Object.assign({ x: x + 22, y: y + 20, z: T }, SP.VUKIC)); W.sprite(Object.assign({ x: x + 25, y: y + 23, z: T }, SP.COACH));
+  for (const [bx, by] of [[x + 10, y + 30], [x + 14, y + 33], [x + 30, y + 14]]) W.box(bx, by, T, bx + 4, by + 2, T + 2, M.CANVAS);
+  for (let i = 0; i < 6; i++) W.box(x + 7 + i * 3, y + 9, T, x + 8 + i * 3, y + 10, T + 1, M.TIRE);
+  W.box(x + 30, y + 28, T, x + 34, y + 32, T + 3, M.BALLS);
+}
+
+const STORY_INT = { appartementAube: appartement({ when: 'aube' }), appartementDimanche: appartement({ when: 'dimanche' }), secretariat, couloir };
+
 const INTERIEURS = [['vestiaire', vestiaire], ['bureau', bureau], ['laverie', laverie]];
-module.exports = { INTERIEURS };
+module.exports = { INTERIEURS, STORY_INT, vestiaire, bureau, laverie };
 
 if (require.main === module) {
   for (const [name, fn] of INTERIEURS) {

@@ -240,6 +240,7 @@ M.CANVAS = material('toile', c => { rgb(c, 0.62, 0.56, 0.44); grain(c, 0.06); })
 M.SEAT = material('siège', c => { rgb(c, 0.42, 0.12, 0.16); grain(c, 0.08); });
 M.SEAT_GREY = material('siège gris', c => { rgb(c, 0.48, 0.49, 0.50); grain(c, 0.08); });
 M.FLAG = material('fanion', c => { rgb(c, 0.72, 0.62, 0.15); if (mod(c.b, 2)) rgb(c, 0.45, 0.12, 0.18); });
+M.NET = material('filet', c => { rgb(c, 0.75, 0.75, 0.72); }, { trans: 0.8, noAO: true });
 M.WHITE = material('blanc', c => { rgb(c, 0.78, 0.77, 0.72); grain(c, 0.05); });
 M.KEG = material('fût', c => { rgb(c, 0.48, 0.49, 0.50); if (c.face !== TOP && mod(c.b, 4) === 0) mul(c, 0.7); grain(c, 0.05); });
 M.CRATE_RED = material('casier rouge', c => { rgb(c, 0.50, 0.15, 0.13); if (mod(c.a, 2) && c.face !== TOP) mul(c, 0.7); });

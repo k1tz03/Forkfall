@@ -224,4 +224,55 @@ const VAUBOURG = {
 // Toi, assis, de profil, en survêtement du club.
 const COACH_SIT = Object.assign({}, FAN_SIT, { pal: pal({ c: [0.44, 0.13, 0.18], m: [0.44, 0.13, 0.18], M: [0.62, 0.62, 0.60], j: [0.44, 0.13, 0.18], J: [0.28, 0.08, 0.12] }) });
 
-module.exports = { BREHAUT, PLAYER, VAUBOURG, COACH_SIT, COACH, GEGE, FAN, FAN_SIT, KID, BALL, CAT, COAT, WALKER, WALKER2 };
+
+// Josiane, la secrétaire : chignon gris, lunettes rondes, gilet violet.
+const JOSIANE = {
+  rows: [
+    '....kkk....',
+    '...kgggk...',
+    '..kkgggkk..',
+    '.kgggggggk.',
+    '.kgsssssgk.',
+    '.kgOsOsOgk.',
+    '..ksssssk..',
+    '...kSSSk...',
+    '..kvvwvvk..',
+    '.kvvvwvvvk.',
+    '.kvvvwvvvk.',
+    'kvvvvvvvvvk',
+    'ksvvvvvvvsk',
+    '.kppppppk..',
+    '.kppppppk..',
+    '..ksk.ksk..',
+    '..kok.kok..',
+    '...k...k...',
+  ],
+  pal: pal({ g: [0.62, 0.62, 0.60], O: [0.12, 0.12, 0.14], v: [0.40, 0.25, 0.48], w: [0.85, 0.84, 0.80], p: [0.35, 0.35, 0.36] }), ax: 5,
+};
+// Vukić, l'adjoint : moustache, survêtement marine, sifflet.
+const VUKIC = {
+  rows: [
+    '...kkkkk...',
+    '..khhhhhk..',
+    '..khssshk..',
+    '..ksksksk..',
+    '..kshhhsk..',
+    '...kSSSk...',
+    '..knnnnnk..',
+    '.knnwnwnnk.',
+    '.knnnynnnk.',
+    '.knwnnnwnk.',
+    '.ksnnnnnsk.',
+    '..knnnnnk..',
+    '..knnknnk..',
+    '..kwnkwnk..',
+    '..knnknnk..',
+    '..kookook..',
+    '...kk.kk...',
+  ],
+  pal: pal({ n: [0.18, 0.24, 0.40], w: [0.80, 0.80, 0.78], y: [0.80, 0.78, 0.60], h: [0.22, 0.15, 0.10] }), ax: 5,
+};
+// Un joueur assis sur le banc, en tenue.
+const PLAYER_SIT = Object.assign({}, FAN_SIT, { pal: pal({ c: [0.46, 0.12, 0.18], m: [0.46, 0.12, 0.18], M: [0.62, 0.62, 0.60], j: [0.45, 0.45, 0.45], J: [0.35, 0.35, 0.35] }) });
+
+module.exports = { JOSIANE, VUKIC, PLAYER_SIT, BREHAUT, PLAYER, VAUBOURG, COACH_SIT, COACH, GEGE, FAN, FAN_SIT, KID, BALL, CAT, COAT, WALKER, WALKER2 };

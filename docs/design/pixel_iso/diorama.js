@@ -46,7 +46,7 @@ function renderDiorama(build, o = {}) {
   }
   const pad = o.pad || 8;
   const FW = o.FW || (u1 - u0 + 2 * pad), FH = o.FH || (v1 - v0 + 2 * pad);
-  const cu = Math.round((u0 + u1) / 2 - FW / 2), cv = Math.round((v0 + v1) / 2 - FH / 2);
+  const cu = Math.round((u0 + u1) / 2 - FW / 2 + (o.du || 0)), cv = Math.round((v0 + v1) / 2 - FH / 2 + (o.dv || 0));
   const bg = (px, py) => {
     const t = py / FH, dx = (px - FW / 2) / FW, dy = (py - FH * 0.45) / FH;
     const v = Math.exp(-(dx * dx + dy * dy) * 3.2);

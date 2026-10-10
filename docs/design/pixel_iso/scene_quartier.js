@@ -12,13 +12,13 @@ const NEON_OFF = { fg: [0.78, 0.42, 0.55] };
 let NEON = NEON_ON;
 const norm = (a, b, c) => { const l = Math.hypot(a, b, c); return [a / l, b / l, c / l]; };
 
-function buildQuartier(o = {}) {
+function buildQuartier(o = {}, Wext = null) {
   const night = o.time !== 'day';
   const bad = o.mood === 'bad';
   const R = rng(o.seed || 1991);
   NEON = night ? NEON_ON : NEON_OFF;
-  const W = new World(340, 340, 100);
-  W.baseWet = o.wet != null ? o.wet : (night ? 0.16 : 0.06);
+  const W = Wext || new World(340, 340, 100);
+  if (!Wext) W.baseWet = o.wet != null ? o.wet : (night ? 0.16 : 0.06);
   const G = 2;
 
   // ------------------------------------------------ sol, trottoirs, bordures
@@ -51,6 +51,16 @@ function buildQuartier(o = {}) {
   chalk(16, 128, 121, 129); chalk(120, 16, 121, 129);
   for (let a = 0; a <= 16; a++) { const t = a / 16 * Math.PI / 2; W.set(Math.round(120 - Math.cos(t) * 5), Math.round(128 - Math.sin(t) * 5), 1, M.CHALK); }
   chalk(16, 74, 121, 75);
+  for (let a = 0; a < 360; a += 3) { const t = a * Math.PI / 180; W.set(Math.round(68 + Math.cos(t) * 16), Math.round(74.5 + Math.sin(t) * 16), 1, M.CHALK); }
+  for (const gy of [16, 128]) {
+    const dir = gy === 16 ? -1 : 1;
+    chalk(46, gy + (dir < 0 ? 0 : -18), 47, gy + (dir < 0 ? 18 : 0)); chalk(90, gy + (dir < 0 ? 0 : -18), 91, gy + (dir < 0 ? 18 : 0)); chalk(46, gy + dir * 18 - (dir < 0 ? 0 : 1), 91, gy + dir * 18 + (dir < 0 ? 1 : 0));
+    // le but : deux poteaux, la barre, le filet
+    for (const px of [58, 79]) { W.box(px, gy, 2, px + 1, gy + 1, 14, M.WHITE); W.box(px, gy + dir * 6, 2, px + 1, gy + dir * 6 + 1, 8, M.WHITE); }
+    W.box(58, gy, 14, 80, gy + 1, 15, M.WHITE);
+    for (let x = 59; x < 79; x++) for (let z = 2; z < 14; z++) if ((x + z) % 2 === 0) { const back = gy + dir * 6; W.set(x, back, z < 8 ? z : z, M.NET); }
+    for (let x = 59; x < 79; x += 2) for (let k = 1; k < 6; k++) W.set(x, gy + dir * k, 13 - k, M.NET);
+  }
   W.box(120, 128, 2, 121, 129, 9, M.WHITE); W.box(120, 129, 7, 121, 131, 9, M.FLAG);
   // panneaux le long de la touche
   const boards = new Facade(W, LEFT, 60, 130, 62, 2);
@@ -82,7 +92,8 @@ function buildQuartier(o = {}) {
   wallY.poster(132, 5, 20, 9, { title: 'SAMEDI 20H', bg: [0.80, 0.76, 0.66], fg: [0.42, 0.10, 0.16], band: [0.42, 0.10, 0.16], seed: 1, torn: bad ? 0.35 : 0.04 });
   wallY.poster(40, 5, 12, 8, { title: 'COUPE', bg: [0.75, 0.72, 0.62], fg: [0.12, 0.12, 0.12], seed: 2, torn: 0.15 });
   // pylône d'éclairage dans l'angle
-  B.pylon(W, 146, 140, G, 66, { on: night && !bad, I: 1.1, r: 300, spill: 0.06 });
+  const floodOn = night && !bad && o.floodOn !== false;
+  B.pylon(W, 146, 140, G, 66, { on: floodOn, I: 1.1, r: 300, spill: 0.06 });
   if (bad) { const g2 = new Facade(W, LEFT, 95, 136, 34, 22); g2.sign(9, 15, 'FERMÉ PAR ARRÊTÉ', { plate: [0.82, 0.78, 0.68], plateMat: M.CANVAS, fg: [0.45, 0.08, 0.12], depth: -1, padX: 1, padY: 1 }); wallX.sign(14, 13, 'VAUBOURG DÉMISSION', { scale: 1, fg: [0.86, 0.84, 0.80], depth: 0 }); }
   // l'entrée : guichets et grilles
   W.box(95, 136, 2, 129, 158, 28, M.BRICK_OLD);
@@ -110,7 +121,7 @@ function buildQuartier(o = {}) {
   cf.awning(2, 32, 14, 6, M.AWNING);
   if (!bad) {
     cf.sign(4, 32, 'BUVETTE', Object.assign({ scale: 2, depth: 0, light: { r: 52, c: [0.85, 0.24, 0.46] } }, NEON));
-    cf.sign(11, 25, 'DU KOP', Object.assign({ scale: 1, depth: 0 }, NEON));
+    cf.sign(7, 25, 'DES ANCIENS', Object.assign({ scale: 1, depth: 0 }, NEON));
   } else {
     cf.sign(4, 32, 'BUVETTE', { scale: 2, depth: 0, fg: [0.30, 0.26, 0.26] });
     cf.poster(8, 20, 14, 4, { title: 'FERMÉ', bg: [0.85, 0.82, 0.72], fg: [0.42, 0.10, 0.16], seed: 9 });
@@ -245,8 +256,10 @@ function buildQuartier(o = {}) {
   lamp(150, 160, 0, 1); lamp(199, 146, -1, 0); lamp(248, 160, 0, 1); lamp(161, 228, 1, 0); lamp(222, 204, 0, -1); lamp(300, 204, 0, -1); lamp(161, 300, 1, 0); lamp(84, 160, 0, 1); lamp(246, 236, 0, 1);
 
   // ------------------------------------------------ les gens
-  const sp = (def, x, y, z, extra = {}) => W.sprites.push(Object.assign({ x, y, z }, def, extra));
-  if (!night) {
+  const sp = (def, x, y, z, extra = {}) => W.sprite(Object.assign({ x, y, z }, def, extra));
+  if (o.people === false) {
+    // les gens sont posés par la scène appelante
+  } else if (!night) {
     sp(S.COACH, 228.5, 228, G);
     sp(S.GEGE, 234.5, 157.3, G);
     sp(S.FAN, 222, 162.5, G);
@@ -269,7 +282,20 @@ function buildQuartier(o = {}) {
     sp(S.WALKER, 292, 204, G); sp(S.WALKER2, 294.5, 203, G);
   }
 
-  // ------------------------------------------------ la coupe : au-delà, la brume et la Capitale
+  // ------------------------------------------------ dans la grande zone : le stade complet ; seul : la coupe vers la brume
+  if (Wext) {
+    W.box(0, 0, 2, 155, 3, 16, M.BRICK); W.box(0, 0, 16, 155, 3, 17, M.STONE);
+    W.box(0, 0, 2, 3, 153, 16, M.BRICK); W.box(0, 0, 16, 3, 153, 17, M.STONE);
+    B.railing(W, 1, 1, 154, 1, 17, 4); B.railing(W, 1, 1, 1, 152, 17, 4);
+    for (let k = 0; k < 4; k++) W.box(3 + k * 3, 16, 1, 6 + k * 3, 132, G + 2 * (k + 1), M.CONCRETE_STEP);
+    for (let k = 0; k < 4; k++) for (let y = 17; y < 131; y += 2) if (hash(k, y, 7, 4) > 0.15) W.set(4 + k * 3, y, G + 2 * (k + 1), hash(k, y, 8, 4) < 0.7 ? M.SEAT : M.SEAT_GREY);
+    B.pylon(W, 4, 4, G, 60, { on: floodOn, I: 0.9, r: 260, aim: [0.55, 0.55, -0.62], spill: 0.04 });
+    B.pylon(W, 4, 134, G, 60, { on: floodOn, I: 0.9, r: 260, aim: [0.55, -0.55, -0.62], spill: 0.04 });
+    B.pylon(W, 132, 4, G, 60, { on: floodOn, I: 0.9, r: 260, aim: [-0.55, 0.55, -0.62], spill: 0.04 });
+    W.box(66, 14, 2, 72, 16, 9, M.WHITE); W.box(66, 14, 9, 72, 18, 10, M.WHITE);
+    W.box(66, 130, 2, 72, 132, 9, M.WHITE); W.box(66, 128, 9, 72, 132, 10, M.WHITE);
+    return W;
+  }
   for (let y = 0; y < W.Y; y++) for (let x = 0; x < W.X; x++) if (x + y < 176) for (let z = 0; z < W.Z; z++) W.mat[W.idx(x, y, z)] = 0;
   return W;
 }
@@ -279,9 +305,9 @@ function nightSky(FW, FH, o) {
   const N = FW * FH;
   const col = new Float32Array(N * 3), emi = new Float32Array(N * 3), fog = new Float32Array(N * 3);
   const Hb = o.horizon, fl = o.flood;
-  const top = [0.04, 0.03, 0.04], hor = [0.17, 0.13, 0.122];
+  const top = o.top || [0.04, 0.03, 0.04], hor = o.hor || [0.17, 0.13, 0.122];
   const R = rng(4242);
-  const glow = (x, y) => { const dx = x - fl[0], dy = y - fl[1]; return Math.exp(-(dx * dx + dy * dy) / (2 * 78 * 78)); };
+  const glow = fl ? (x, y) => { const dx = x - fl[0], dy = y - fl[1]; return Math.exp(-(dx * dx + dy * dy) / (2 * 78 * 78)); } : () => 0;
   for (let y = 0; y < FH; y++) for (let x = 0; x < FW; x++) {
     const k = (y * FW + x) * 3;
     const t = clamp(y / Hb, 0, 1), kk = Math.pow(t, 1.7);
@@ -298,7 +324,7 @@ function nightSky(FW, FH, o) {
     fog[k] = hor[0] + 0.13 * gl + 0.03 * hg; fog[k + 1] = hor[1] + 0.125 * gl + 0.018 * hg; fog[k + 2] = hor[2] + 0.11 * gl + 0.01 * hg;
   }
   // quelques étoiles timides en haut
-  for (let i = 0; i < 26; i++) { const x = Math.floor(R() * FW), y = Math.floor(R() * Hb * 0.45); const k = (y * FW + x) * 3; const v = 0.12 + R() * 0.12; col[k] += v; col[k + 1] += v * 0.95; col[k + 2] += v * 0.9; }
+  for (let i = 0; i < (o.stars != null ? o.stars : 26); i++) { const x = Math.floor(R() * FW), y = Math.floor(R() * Hb * 0.45); const k = (y * FW + x) * 3; const v = 0.12 + R() * 0.12; col[k] += v; col[k + 1] += v * 0.95; col[k + 2] += v * 0.9; }
   const put = (x, y, c, e) => { if (x < 0 || y < 0 || x >= FW || y >= FH) return; const k = (y * FW + x) * 3; col[k] = c[0]; col[k + 1] = c[1]; col[k + 2] = c[2]; if (e) { col[k] += e[0]; col[k + 1] += e[1]; col[k + 2] += e[2]; emi[k] = e[0]; emi[k + 1] = e[1]; emi[k + 2] = e[2]; } };
   const rect = (x0, y0, w, h, c) => { for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) put(x, y, c); };
   const WIN = [[0.55, 0.40, 0.20], [0.45, 0.45, 0.40], [0.50, 0.30, 0.16]];
@@ -388,7 +414,7 @@ function renderQuartier(o = {}) {
   }
   const W = buildQuartier(o);
   const FW = o.width || 656, FH = o.height || 370, cu = o.cu != null ? o.cu : -328, cv = o.cv != null ? o.cv : 130;
-  const sky = nightSky(FW, FH, { horizon: 48, flood: [2 * (148 - 142) - cu, 148 + 142 - 2 * 72 - cv] });
+  const sky = nightSky(FW, FH, { horizon: 48, flood: o.mood === 'bad' ? null : [2 * (148 - 142) - cu, 148 + 142 - 2 * 72 - cv] });
   const opt = {
     width: FW, height: FH, cu, cv,
     ambient: o.ambient || [0.095, 0.085, 0.115], faceAmb: [1.0, 0.74, 0.55],
@@ -400,7 +426,7 @@ function renderQuartier(o = {}) {
   return { W, res: E.render(W, opt) };
 }
 
-module.exports = { buildQuartier, renderQuartier, nightSky };
+module.exports = { buildQuartier, renderQuartier, nightSky, daySky };
 
 if (require.main === module) {
   const t = Date.now();
