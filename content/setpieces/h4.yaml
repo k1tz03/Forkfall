@@ -1,0 +1,126 @@
+# HISTOIRE 4 — « La Route de la Rive » : les variantes de set-piece du livre.
+# Format : l'en-tête de content/setpieces.yaml. Un lot d'histoire n'écrit
+# jamais de secours : chaque variante porte `roles: [joueur]` et un `when` qui
+# lit `flag('histoire_h4')`. Le build les sert avant le socle commun.
+#
+# Les objectifs de saison du livre (docs/histoires § Histoire 4, 9) : tenir
+# quinze matchs ; savoir qui dort sous la pierre ; le jubilé. Le Grand Match
+# porte la même place vide de la tribune Est qu'on retrouvera au rond central.
+# Au Carrefour, la porte vers le banc de la réserve reste ouverte (« pour qui
+# a dit, ou pour qui ne dira jamais ») : en saison 1, c'est Bréhaut qui la
+# tient, après le capot.
+setpieces:
+  # ══ objective ══════════════════════════════════════════════════════════════
+  objective:
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 0"
+      speaker: aulard
+      text: "Vaubourg ne lève pas les yeux de son agenda : « L'équipe vise {objectif_min}. Toi, quinze matchs : c'est la clause. Au quinzième, on reparle de toi. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il écrit « 15 » dans la marge de ton contrat, au crayon gras, et l'entoure. Un chiffre entouré, encore un."
+      answer_right: "« Le genou promettra pour toi. » Il referme l'agenda sur son stylo, qu'il laisse dedans."
+    - roles: [joueur]
+      when: "flag('histoire_h4') && flag('h4_silence')"
+      speaker: aulard
+      text: "Depuis le rond central, Vaubourg ne te regarde plus en face : « L'équipe vise {objectif_min}. Pour le reste, on a dit merci, et le stade a applaudi. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il signe la feuille d'objectifs sans la lire. Sur son bureau, l'affiche du jubilé a jauni au soleil."
+      answer_right: "« Tu as déjà tenu la promesse la plus chère. » Il range ta feuille sous l'affiche."
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 1"
+      speaker: fardelli
+      text: "Fardelli te tend l'agenda de la saison : le 14 mai est déjà coché, à l'encre. « L'équipe vise {objectif_min}, {toi}. Et toi, cette année, tu cherches quoi au carré ancien ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Fardelli tourne les pages jusqu'en mai, et s'arrête un peu trop longtemps."
+      answer_right: "« Ne promets rien, ça te va bien. » Il referme l'agenda. Il ne répond pas à ta question non plus."
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 2"
+      speaker: aulard
+      text: "Vaubourg signe ta licence de la saison sans la lire : « La dernière, {toi}. L'équipe vise {objectif_min}. Au mois de mai, j'ai une surprise pour toi. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il tamponne la licence. Sur le bureau, sous un dossier, dépasse le coin d'une affiche roulée."
+      answer_right: "« Tu promettras au micro, alors. » Il ne dit pas quel micro. Il sourit pour lui."
+
+  # ══ gm_annonce ═════════════════════════════════════════════════════════════
+  gm_annonce:
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 0"
+      text: "GRAND MATCH. Dans le tunnel, Bréhaut te tape sur l'épaule, là où sa main était sur la photo de 1984. Le stade est plein. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "flag('histoire_h4') && flag('h4_silence')"
+      text: "GRAND MATCH. Le stade chante ton nom comme au jubilé. Tu as rendu le micro ; il te reste les jambes. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 1"
+      text: "GRAND MATCH. Tribune Est, au bord de la main courante, la place des fauteuils est vide. Tu la regardes à l'échauffement, puis plus. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  # ══ bilan_contrat ══════════════════════════════════════════════════════════
+  # Gauche : rester (le club +). Droite : réclamer (le club −, la caisse +).
+  bilan_contrat:
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 0"
+      speaker: fardelli
+      text: "Fardelli, au téléphone du club-house : « Vaubourg te reprend un an, au même rabais, {toi}. Je signe pour toi, ou je réclame le reste ? »"
+      left: "Signe pour moi"
+      right: "Réclame le reste"
+      answer_left: "Il signe sur le capot de sa voiture, comme toujours. Dans son agenda, le 14 mai de l'an prochain est déjà coché."
+      answer_right: "Il réclame. Vaubourg rit au bout du fil, puis plus du tout : « Demande-lui s'il veut vraiment qu'on parle de chiffres. »"
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 1"
+      speaker: fardelli
+      text: "Fardelli ne s'assoit pas : « Bréhaut m'a appelé cette nuit, {toi}. Il pleurait. Vaubourg te propose une dernière année. Je signe, ou on parle d'argent ? »"
+      left: "Signe"
+      right: "Parlons d'argent"
+      answer_left: "Il signe debout. « La dernière, alors. Après, je ne te devrai plus rien. Toi non plus. »"
+      answer_right: "« L'argent, c'est le seul sujet qu'on ait jamais eu, toi et moi. » Il obtient le double. Il ne dit pas comment."
+    - roles: [joueur]
+      when: "flag('histoire_h4') && flag('h4_silence')"
+      speaker: aulard
+      text: "Vaubourg te tend un contrat d'un an, déjà signé de sa main : « Tu as su te taire au bon moment, {toi}. Ça se paie. Tu signes, ou tu veux plus ? »"
+      left: "Je signe"
+      right: "Je veux plus"
+      answer_left: "Tu signes sous sa signature. Le stylo est lourd, plaqué or, gravé au nom du club."
+      answer_right: "Il ajoute un zéro sans discuter. C'est la première fois qu'il ne discute pas. Tu comprends pourquoi."
+
+  # ══ bilan_carrefour ════════════════════════════════════════════════════════
+  # La porte du joueur vers le banc de la réserve (roles.yaml) : ouverte dès la
+  # première saison par le genou. Les variantes `transition:` en disent le
+  # prix dans le livre ; sans transition, la carte n'a qu'un bouton.
+  bilan_carrefour:
+    - roles: [joueur]
+      transition: entraineur
+      when: "flag('histoire_h4') && flag('h4_silence')"
+      speaker: vukic
+      text: "Vukić te tend le survêtement de la réserve, plié au carré, son cahier par-dessus : « Tu n'as rien dit au micro, {toi}. Sur un banc, on parle peu. Tu viens ? »"
+      left: "Je joue encore"
+      right: "Je viens sur le banc"
+    - roles: [joueur]
+      transition: entraineur
+      when: "flag('histoire_h4') && season == 1"
+      speaker: brehaut
+      text: "Bréhaut t'attend à la porte du vestiaire, le brassard dans la main : « Vaubourg cherche quelqu'un pour la réserve. Prends le banc, et on n'en parle plus jamais. Jamais. »"
+      left: "Je joue encore"
+      right: "Je prends la réserve"
+    - roles: [joueur]
+      transition: entraineur
+      when: "flag('histoire_h4') && season == 0"
+      speaker: sabatier
+      text: "Le Doc glisse toutes tes radios dans une enveloppe kraft, celles de 1984 comprises : « Prends le banc de la réserve, et je range ça au fond du tiroir. Le genou, le chiffre, tout. »"
+      left: "Je joue encore"
+      right: "Je prends le banc"
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 0 && !flag('divorce')"
+      speaker: camille
+      text: "Camille plie ton manteau, celui du carré ancien, et le range pour l'été : « En septembre, tu me diras tout. Pas un ami de ton père. Tout. »"
+      left: "En septembre"
+    - roles: [joueur]
+      when: "flag('histoire_h4') && season == 1"
+      speaker: josiane
+      text: "Madame Josiane range le classeur de la saison : « Monsieur Bréhaut est passé deux fois cet été. Il n'a pas laissé de message. Il a demandé si vous dormiez bien. »"
+      left: "On repart"

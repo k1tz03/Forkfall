@@ -1,0 +1,123 @@
+# HISTOIRE 4 — « La Route de la Rive » : les soirs que le metteur en scène
+# arme lui-même (charte d'écriture § 5 ; docs/histoires § 1.4). Les soirs qui
+# portent un numéro de scène clé (le premier morceau, le moteur, le buraliste
+# sous le réverbère, le capot de Bréhaut, la route) sont des ANCRES : leur
+# intrigue ou le script les sert à leur heure (content/arcs/joueur/
+# h4_intrigues.yaml, fdc_script.yaml). Ceux-ci n'ont pas d'heure fixe : ils
+# naissent de ce que le joueur a remué.
+#
+#   · Le corbeau (L'Écho) — après le registre, avant l'aveu de Bréhaut.
+#   · Le capot (le parking du stade) — quand la famille sait qu'on cherche.
+#   · La table (le cabinet du Doc, 21 h) — le carnet des refus, et la même
+#     date sur une autre radio.
+#   · Les ampoules (la cuisine) — ce que Sérène a laissé dans le frigo.
+#   · La photocopie (le parking) — si l'on a fait sortir la fiche de
+#     l'hôpital par la mission de Rouvier : le prix de la seule faute qu'on
+#     pourra jamais te reprocher.
+#
+# `armEvents` ne lit pas `postulats:` : chaque `when` commence par le drapeau
+# d'histoire. Le metteur en scène en sert deux par saison au plus, à cinq
+# créneaux d'écart, en concurrence avec les événements communs du joueur.
+arcs:
+  - id: jp.h4.sb_corbeau
+    title: "Le corbeau"
+    kind: evenement
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h4') && season >= 1 && flag('h4_registre') && !flag('h4_capot')"
+    chance: 0.18
+    cast: [lea, meneche]
+    same_club: true
+    fallback: drop
+    traces:
+      h4_corbeau: "{annee} : à L'Écho, une lettre sans signature : « Demandez-lui où il était le 14 mai 1984. »"
+    steps:
+      - id: lettre
+        card: jp.h4.sb.corbeau
+        next: []
+
+  - id: jp.h4.sb_capot_grave
+    title: "Le capot"
+    kind: evenement
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h4') && season == 1 && !flag('sb_voiture') && (flag('h4_tombe_inconnue') || flag('h4_corbeau') || flag('h4_fiche_hopital'))"
+    chance: 0.14
+    cast: [sandrine, lavergne]
+    same_club: true
+    fallback: drop
+    traces:
+      h4_capot_grave: "{annee} : gravé à la clé sur le capot de la voiture de {nom}, au parking du stade : 14-5-84."
+    steps:
+      - id: capot
+        card: jp.h4.sb.capot_grave
+        next: []
+
+  - id: jp.h4.sb_table
+    title: "La table"
+    kind: evenement
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h4') && season == 2 && flag('h4_infiltration') && flag('h4_registre')"
+    chance: 0.22
+    cast: [sabatier, rouvier]
+    same_club: true
+    fallback: drop
+    traces:
+      h4_table: "{annee} : dans le tiroir de la table du Doc, un carnet : « 14 mai 1984 — refusé de dire qui conduisait. »"
+    steps:
+      - id: tiroir
+        card:
+          - { id: jp.h4.sb.table_serene, if: "flag('h4_sp_serene')" }
+          - { id: jp.h4.sb.table_su, if: "flag('h4_capot')" }
+          - { id: jp.h4.sb.table }
+        next: []
+
+  - id: jp.h4.sb_ampoules
+    title: "Les ampoules"
+    kind: evenement
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h4') && season >= 2 && flag('h4_sp_serene')"
+    chance: 0.14
+    cast: [sacha, camille]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: frigo
+        card:
+          - { id: jp.h4.sb.ampoules, if: "!flag('divorce')" }
+          - { id: jp.h4.sb.ampoules_seul }
+        next: []
+
+  - id: jp.h4.vl_dossier
+    title: "La photocopie"
+    kind: evenement
+    roles: [joueur]
+    postulats: [fin_de_contrat]
+    foreground: false
+    weight: 1.0
+    once: true
+    # Après la fiche seulement : Rouvier partie avant l'ancre d'hiver, la fiche
+    # (sa carte) tomberait de la file, et le standard avec elle.
+    when: "flag('histoire_h4') && flag('h4_vl_dossier') && flag('h4_fiche_hopital')"
+    chance: 0.15
+    cast: [rouvier]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: inspecteur
+        card: jp.h4.vl.inspecteur
+        next: []

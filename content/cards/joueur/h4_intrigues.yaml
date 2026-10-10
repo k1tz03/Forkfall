@@ -1,0 +1,691 @@
+# HISTOIRE 4 — « La Route de la Rive » : les cartes des intrigues du livre
+# (content/arcs/joueur/h4_intrigues.yaml). Les rêves de la route sont à part,
+# dans h4_route.yaml.
+#
+# Les graines et ce qui les paie (docs/histoires § Histoire 4, 5) :
+#   · la photo du carton (prologue) → les morceaux → la photo entière : le
+#     visage découpé est celui d'à droite, au-dessus d'une main à chevalière ;
+#   · la mobylette qu'on guette un mardi soir → le moteur au téléphone → la
+#     cour du tabac du Quai ;
+#   · la prise arrachée à trois heures → « Vous débranchez la prise, la nuit »
+#     au standard ;
+#   · la feuille jaunie du tiroir de Vaubourg (le rabais) → Fardelli, « je
+#     négocie contre elle » → le coffre (l'ancre d'hiver de la saison 2) ;
+#   · le verre de poire au Corner → la bouteille sur le siège passager, la
+#     dernière nuit.
+#
+# Personne n'accorde rien au joueur : il peut être une joueuse.
+cards:
+  # =========================================================== LES MORCEAUX
+  # ------------------------------------------------- 1 · le premier morceau
+  - id: jp.h4.morceaux.premier
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    lieu: domicile
+    tone: strategique
+    text: "Rue des Lilas, vingt-deux heures. Sous la porte, une enveloppe sans timbre : un morceau de la photo de la montée, découpé dans L'Écho de 1984. Un visage manque, ôté aux ciseaux."
+    left:
+      label: "Je le montre à Camille"
+      effects: {vestiaire: "+", set: [h4_premier_morceau, h4_morceau_montre]}
+      answer: "Elle le tient sous la lampe de la cuisine. « Il manque une tête. » Tu dis : la mienne. Tu le crois, en le disant."
+    right:
+      label: "Je le brûle dans l'évier"
+      effects: {tribunes: "-", set: [h4_premier_morceau, h4_morceau_brule]}
+      answer: "Le papier journal brûle vite. Dans la grille de l'évier, il reste un coin noirci, un bout de maillot. Sacha le trouve au matin."
+
+  # ------------------------------------------------- 2 · le moteur
+  - id: jp.h4.morceaux.moteur
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    lieu: domicile
+    tone: strategique
+    text: "Trois heures. Le téléphone de l'entrée sonne dans le noir. Au bout du fil, personne : un moteur de mobylette au ralenti, longtemps, puis la tonalité."
+    left:
+      label: "Je décroche la prise"
+      effects: {direction: "-", vestiaire: "+", set: [h4_moteur, h4_prise_debranchee], react: jp.h4.re.lavergne_matin}
+      answer: "Tu arraches la prise du mur. Le silence d'après est pire. À six heures, tu la rebranches, pour le club, pour l'agent, pour personne."
+    right:
+      label: "J'attends qu'on rappelle"
+      effects: {vestiaire: "-", set: [h4_moteur], react: jp.h4.re.lavergne_matin}
+      answer: "Tu attends sur la dernière marche, le combiné sur les genoux. Il ne sonne plus. Le moteur, tu l'entends encore à l'entraînement."
+
+  # ------------------------------------------------- 3 · le deuxième morceau
+  - id: jp.h4.morceaux.deuxieme_sacha
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: sacha
+    lieu: domicile
+    tone: leger
+    text: "Sacha a étalé trois morceaux de papier journal sur la moquette de sa chambre : « Il y en a un sous la porte, chaque mardi. C'est un puzzle de footballeurs. Je peux le finir, {toi} ? »"
+    left:
+      label: "Donne-les-moi"
+      effects: {vestiaire: "+", relation: {sacha: -1}}
+      answer: "Elle te les tend un par un, en comptant. « Il y en a un sans tête. » Tu les glisses dans ta poche intérieure, contre ta licence."
+    right:
+      label: "Finis-le, toi"
+      effects: {relation: {sacha: 1}, set: [h4_puzzle_sacha]}
+      answer: "Elle les range dans une boîte à chaussures marquée PUZZLE, au feutre rouge. Chaque mardi soir, en pyjama, elle guette la porte."
+
+  - id: jp.h4.morceaux.deuxieme_camille
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille pose une deuxième enveloppe ouverte sur la table : Gigi, un bout de banderole, MONTÉE. « Un mardi, encore. Celui qui découpe a tout son temps. Qui t'en veut à ce point, {toi} ? »"
+    left:
+      label: "Quelqu'un de 1984"
+      effects: {relation: {camille: 1}}
+      answer: "« En 1984, tout le monde t'aimait. » Elle range l'enveloppe avec la première, dans sa boîte à couture, et ne pose plus la question."
+    right:
+      label: "Un supporter, rien de plus"
+      effects: {relation: {camille: -1}}
+      answer: "« Un supporter qui garde L'Écho six ans. » Elle jette l'enveloppe à la poubelle. Le soir, tu l'y reprends sans faire de bruit."
+
+  - id: jp.h4.morceaux.deuxieme
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    lieu: domicile
+    tone: strategique
+    text: "Mardi, vingt-deux heures, sous la porte : un autre morceau. Gigi au premier rang, un bout de banderole, MONTÉE. Quelqu'un découpe avec patience, et sait où tu dors."
+    left:
+      label: "Je les garde ensemble"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Tu les ranges dans l'enveloppe de ta licence de 1984. Ils s'emboîtent mal ; il manque tout le milieu."
+    right:
+      label: "Je guette le mardi"
+      effects: {tribunes: "-", set: [h4_mobylette_vue]}
+      answer: "Mardi, derrière le rideau. Une mobylette s'arrête au portail, moteur au ralenti, le temps d'une enveloppe, et repart sans phare."
+
+  # ------------------------------------------------- 4 · la photo entière
+  - id: jp.h4.morceaux.entiere_su
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    lieu: domicile
+    tone: strategique
+    text: "Cuisine, minuit. Les morceaux de 1984 sur la toile cirée, enfin tous. Tu savais quel visage manquerait. Tu le cherches quand même, à ta droite, et il n'y est pas."
+    left:
+      label: "J'appelle Bréhaut"
+      effects: {vestiaire: "-", set: [h4_photo_entiere, h4_appel_brehaut], outcome: appelee}
+      answer: "Il décroche à la deuxième sonnerie. Tu ne dis rien ; lui non plus. Au bout d'une minute, c'est lui qui raccroche."
+    right:
+      label: "Je range les morceaux"
+      effects: {direction: "+", set: [h4_photo_entiere], outcome: rangee}
+      answer: "Tu les fais glisser dans une enveloppe, un par un, celui du trou en dernier. Tu ne rêves pas, cette nuit-là."
+
+  - id: jp.h4.morceaux.entiere_sacha
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sacha
+    lieu: domicile
+    tone: strategique
+    text: "Sacha a fini son puzzle sur la toile cirée de la cuisine. Elle pose le doigt sur toi, au milieu, puis sur le trou à ta droite : « Lui, il n'a pas de tête. C'est qui, {toi} ? »"
+    left:
+      label: "J'appelle Bréhaut"
+      effects: {vestiaire: "-", set: [h4_photo_entiere, h4_appel_brehaut], outcome: appelee}
+      answer: "Il décroche à la deuxième sonnerie. Tu ne dis rien ; lui non plus. Au bout d'une minute, c'est lui qui raccroche."
+    right:
+      label: "Je range les morceaux"
+      effects: {relation: {sacha: -1}, set: [h4_photo_entiere], outcome: rangee}
+      answer: "« Il est fini, pourtant. » Tu fermes la boîte et tu la poses en haut de l'armoire, là où elle ne monte pas."
+
+  - id: jp.h4.morceaux.entiere_archives
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    lieu: domicile
+    tone: strategique
+    text: "Cuisine, minuit. Les morceaux sur la toile cirée ; l'original est parti aux archives, il a fallu l'assembler de mémoire. Le visage découpé n'est pas le tien. C'est celui de ta droite."
+    left:
+      label: "J'appelle Bréhaut"
+      effects: {vestiaire: "-", set: [h4_photo_entiere, h4_appel_brehaut], outcome: appelee}
+      answer: "Il décroche à la deuxième sonnerie. Tu ne dis rien ; lui non plus. Au bout d'une minute, c'est lui qui raccroche."
+    right:
+      label: "Je range les morceaux"
+      effects: {direction: "+", set: [h4_photo_entiere], outcome: rangee}
+      answer: "Tu les fais glisser dans une enveloppe, un par un, celui du trou en dernier. Tu dors mal. Tu ne rêves pas."
+
+  - id: jp.h4.morceaux.entiere_cadre
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    lieu: domicile
+    tone: strategique
+    text: "Cuisine, minuit. Les morceaux assemblés à côté de la photo sauvée du carton. Le trou n'est pas à ta place : il est à ta droite, au-dessus d'une main à chevalière posée sur ton épaule."
+    left:
+      label: "J'appelle Bréhaut"
+      effects: {vestiaire: "-", set: [h4_photo_entiere, h4_appel_brehaut], outcome: appelee}
+      answer: "Il décroche à la deuxième sonnerie. Tu ne dis rien ; lui non plus. Au bout d'une minute, c'est lui qui raccroche."
+    right:
+      label: "Je range les morceaux"
+      effects: {direction: "+", set: [h4_photo_entiere], outcome: rangee}
+      answer: "Tu retournes le cadre contre le mur, comme à midi dans le couloir, il y a deux ans. La main reste sur ton épaule, de l'autre côté."
+
+  # =========================================================== JULES BERTIN
+  # ------------------------------------------------- 1 · le fleuriste
+  - id: jp.h4.bertin.fleuriste
+    roles: [joueur]
+    arc: famille
+    tags: [famille, caisse]
+    speaker: huguette
+    tone: leger
+    text: "Aux Immortelles, Madame Huguette ouvre son cahier de commandes : « Votre abonnement du 14 mai, on le renouvelle ? Monsieur Fardelli l'avait payé pour dix ans, en 1985. Il en reste trois. »"
+    left:
+      label: "Arrêtez l'abonnement"
+      effects: {caisse: "+", set: [h4_abonnement_arrete], outcome: arrete, react: [{card: jp.h4.re.camille_facture, if: "flag('h4_mensonge_camille') && !flag('divorce')"}]}
+      answer: "Elle raye la ligne d'un trait de règle. « Monsieur Bertin s'en remettra. Il a l'habitude d'être seul. »"
+    right:
+      label: "Renouvelez-le"
+      effects: {caisse: "-", set: [h4_abonnement_renouvele], outcome: renouvele, react: [{card: jp.h4.re.camille_facture, if: "flag('h4_mensonge_camille') && !flag('divorce')"}]}
+      answer: "« À votre nom, cette fois ? » Tu hésites. Elle écrit : pour Monsieur Bertin. Elle souligne deux fois, sans te regarder."
+
+  # ------------------------------------------------- 2 · Fardelli
+  # Les deux sorties ouvrent « Les deux lignes » (le tiroir de Massenet).
+  - id: jp.h4.bertin.fardelli
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli remue un café sans sucre : « Oui, j'ai choisi la pierre, {toi}. En 1985, il te fallait une tombe, et le carré ancien en avait une sans visite. Bertin ne s'est jamais plaint. »"
+    left:
+      label: "Et la vraie tombe ?"
+      effects: {direction: "-", set: [h4_pas_de_tombe], schedule: [{card: jp.h4.deux_lignes.tiroir, in: [3, 8]}]}
+      answer: "« Il n'y en a jamais eu d'autre. » Il pose un billet sur la soucoupe. « Réfléchis à ce que ça veut dire, et ne me le dis pas. »"
+    right:
+      label: "Six ans devant un inconnu"
+      effects: {direction: "-", vestiaire: "+", relation: {fardelli: -1}, schedule: [{card: jp.h4.deux_lignes.tiroir, in: [3, 8]}]}
+      answer: "« Un inconnu, c'était plus simple qu'une adresse. » Il paie les deux cafés. « Je t'ai évité une sonnette, pendant six ans. »"
+
+  - id: jp.h4.bertin.fardelli_pourquoi
+    roles: [joueur]
+    arc: agents
+    tags: [agents, direction]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli remue un café sans sucre : « Tu voulais savoir pourquoi tu signes au rabais, {toi}. Vaubourg garde une feuille de 1984 dans son coffre. Je négocie contre elle depuis six ans. »"
+    left:
+      label: "Et la tombe de Bertin ?"
+      effects: {direction: "-", set: [h4_pas_de_tombe], schedule: [{card: jp.h4.deux_lignes.tiroir, in: [3, 8]}]}
+      answer: "« La pierre, c'est moi. Il n'y en a jamais eu d'autre. » Il pose un billet sur la soucoupe. « Réfléchis à ce que ça veut dire. »"
+    right:
+      label: "Quelle feuille ?"
+      effects: {direction: "-", caisse: "+", set: [h4_feuille_sue], schedule: [{card: jp.h4.deux_lignes.tiroir, in: [3, 8]}]}
+      answer: "« Celle que tu as signée à l'hôpital, entre deux piqûres. Tu ne t'en souviens pas : c'était fait pour. » Il paie et s'en va."
+
+  # ------------------------------------------------- 3 · la dernière livraison (l'épilogue, 1994)
+  - id: jp.h4.bertin.livraison
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: abel
+    lieu: cimetiere
+    tone: leger
+    text: "14 mai 1994. Sur la tombe de Jules Bertin, des chrysanthèmes livrés à huit heures. Monsieur Abel les redresse du bout de sa chaussure : « Vous restez un peu, cette année ? »"
+    left:
+      label: "Je reste avec lui"
+      effects: {tribunes: "-", relation: {abel: 1}}
+      answer: "Tu t'assois sur le banc du carré ancien jusqu'à la fermeture. Bertin n'avait personne. Il t'a, maintenant, et tu sais pourquoi."
+    right:
+      label: "Je vais au tabac du Quai"
+      effects: {vestiaire: "-"}
+      answer: "Au tabac du Quai, le rideau de fer est à mi-hauteur. Tu attends qu'on le relève. Personne ne le relève."
+
+  - id: jp.h4.bertin.livraison_arrete
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: abel
+    lieu: cimetiere
+    tone: leger
+    text: "14 mai 1994. La tombe de Jules Bertin est nue pour la première fois depuis 1985. Monsieur Abel l'a remarqué avant toi : « Il a perdu son seul visiteur. Je l'écris dans le registre ? »"
+    left:
+      label: "Écrivez-le"
+      effects: {relation: {abel: -1}}
+      answer: "Il trempe sa plume. « Bertin, J. — personne. » Il souffle sur l'encre. « Ça lui ressemble plus que les fleurs. »"
+    right:
+      label: "Je lui en apporte"
+      effects: {caisse: "-", relation: {abel: 1}}
+      answer: "Tu redescends aux Immortelles et tu remontes avec un pot, à tes frais. Abel ne l'écrit pas. Il te regarde le poser."
+
+  # =========================================================== LES DEUX LIGNES
+  # ------------------------------------------------- 1 · le tiroir
+  - id: jp.h4.deux_lignes.tiroir_hopital
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet lit ta photocopie de l'hôpital sans la toucher, puis ouvre un tiroir : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait barrer huit. Celles du milieu disaient la même chose. »"
+    left:
+      label: "Qui vous l'a demandé ?"
+      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes]}
+      answer: "« Ton président, au téléphone, à minuit. Mon rédacteur en chef a dit oui avant moi. Moi, j'ai barré. J'avais un crayon. »"
+    right:
+      label: "Republiez les dix"
+      effects: {tribunes: "-", vestiaire: "+", set: [h4_deux_lignes]}
+      answer: "« Pas sans la onzième. » Il referme le tiroir à clé. « Le nom de celui qui conduisait. Tu me l'apporteras, un jour ? »"
+
+  - id: jp.h4.deux_lignes.tiroir_corbeau
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Sur le bureau de Massenet, la lettre du corbeau ; à côté, un tiroir ouvert : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait barrer huit. J'ai gardé celles du milieu. »"
+    left:
+      label: "Qui vous l'a demandé ?"
+      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes]}
+      answer: "Il te tend la feuille : « La jeune fille a été transportée vivante. » « Ton président a appelé à minuit. Moi, j'ai barré. »"
+    right:
+      label: "Republiez les dix"
+      effects: {tribunes: "-", vestiaire: "+", set: [h4_deux_lignes]}
+      answer: "« Pas sans la onzième : le nom du conducteur. » Il pose la lettre du corbeau sur les deux lignes, et ferme le tiroir à clé."
+
+  - id: jp.h4.deux_lignes.tiroir
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet ouvre un tiroir, à L'Écho : « Le 15 mai 1984, j'ai écrit dix lignes. On m'en a fait barrer huit. Il me reste celles du milieu : la jeune fille a été transportée vivante. »"
+    left:
+      label: "Qui vous l'a demandé ?"
+      effects: {direction: "-", tribunes: "+", relation: {meneche: 1}, set: [h4_deux_lignes]}
+      answer: "« Ton président, au téléphone, à minuit. Mon rédacteur en chef a dit oui avant moi. Moi, j'ai barré. J'avais un crayon. »"
+    right:
+      label: "Republiez les dix"
+      effects: {tribunes: "-", vestiaire: "+", set: [h4_deux_lignes]}
+      answer: "« Pas sans la onzième. » Il referme le tiroir à clé. « Le nom de celui qui conduisait. Tu me l'apporteras, un jour ? »"
+
+  # ------------------------------------------------- 2 · la onzième ligne (saison 2)
+  - id: jp.h4.deux_lignes.onze
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet a remis les deux lignes de 1984 dans une épreuve, avec une ligne blanche en dessous : « La onzième, c'est le nom du conducteur. Tu me la dictes, {toi} ? »"
+    left:
+      label: "Je la dicte"
+      effects: {tribunes: "+", vestiaire: "--", parole: 1, set: [h4_nom_dicte]}
+      answer: "Tu dis un prénom et un nom. Il les tape à deux doigts. « Je ne la publierai pas sans toi. Mais elle existe, maintenant. »"
+    right:
+      label: "Laissez-la blanche"
+      effects: {vestiaire: "+", outcome: blanc}
+      answer: "Il passe la règle sur la ligne blanche. « Huit barrées, une blanche. Un journal finit toujours par ressembler à quelqu'un. »"
+
+  # ------------------------------------------------- 3 · l'épreuve
+  - id: jp.h4.deux_lignes.epreuve
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet pose l'épreuve du samedi devant toi, l'encre encore fraîche : onze lignes, et un nom à la dernière. « La rotative tourne à minuit. Je l'arrête, ou je la laisse ? »"
+    left:
+      label: "Laissez-la tourner"
+      effects: {tribunes: "+", vestiaire: "--", set: [h4_nom_imprime], outcome: nom}
+      answer: "Au matin, le nom de Bréhaut est en page sept, à la onzième ligne, sous un titre qui ne dit rien. Imprimé n'est pas dit."
+    right:
+      label: "Arrêtez-la"
+      effects: {vestiaire: "+", outcome: blanc}
+      answer: "Il décroche le téléphone de l'atelier : « Enlevez la onzième. » Il raccroche. « La deuxième fois, c'est plus facile. C'est ça, le pire. »"
+
+  - id: jp.h4.deux_lignes.epreuve_blanche
+    roles: [joueur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: meneche
+    tone: strategique
+    text: "Massenet t'apporte l'épreuve du samedi : dix lignes de 1984, et une blanche. « Je ne l'imprimerai jamais comme ça. Tu as jusqu'à minuit pour me dicter le nom. »"
+    left:
+      label: "Je dicte le nom"
+      effects: {tribunes: "+", vestiaire: "--", set: [h4_nom_imprime], outcome: nom}
+      answer: "Il le tape debout, sur l'épreuve. Au matin, le nom est en page sept, à la onzième ligne. Le kiosque du quai en vend douze."
+    right:
+      label: "Gardez votre blanc"
+      effects: {vestiaire: "+", outcome: blanc}
+      answer: "Il plie l'épreuve en quatre et la glisse dans le tiroir, sur les deux lignes. « Elles vont finir par s'y sentir à l'étroit. »"
+
+  # =========================================================== LE STANDARD
+  # ------------------------------------------------- 1 · « Pas vous. Le passager. »
+  - id: jp.h4.standard.standard_prise
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    text: "Hôtel de la Rive. Au standard, une jeune femme en fauteuil, le casque sur les oreilles : « Vous débranchez la prise, la nuit. Ça ne change rien. » Puis, plus bas : « Pas vous. Le passager. »"
+    left:
+      label: "J'étais au volant"
+      effects: {direction: "+", caisse: "-", set: [h4_standard_vu], react: jp.h4.re.square}
+      answer: "Elle enfiche un autre appel : « Hôtel de la Rive, bonsoir. » Pour toi, plus un mot. Le veilleur de nuit te raccompagne à la porte."
+    right:
+      label: "Qui conduisait ?"
+      effects: {direction: "-", vestiaire: "+", set: [h4_standard_vu], react: jp.h4.re.square}
+      answer: "Elle ôte son casque une seconde : « Ce n'est pas à moi de vous le dire. » Elle le remet, et passe un appel pour une chambre du deuxième."
+
+  - id: jp.h4.standard.standard
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    text: "Hôtel de la Rive. Derrière le standard, une jeune femme en fauteuil, un casque sur les oreilles, enfiche un appel. Elle te voit entrer et ne dit qu'une chose : « Pas vous. Le passager. »"
+    left:
+      label: "J'étais au volant"
+      effects: {direction: "+", caisse: "-", set: [h4_standard_vu], react: jp.h4.re.square}
+      answer: "Elle enfiche un autre appel : « Hôtel de la Rive, bonsoir. » Pour toi, plus un mot. Le veilleur de nuit te raccompagne à la porte."
+    right:
+      label: "Qui conduisait ?"
+      effects: {direction: "-", vestiaire: "+", set: [h4_standard_vu], react: jp.h4.re.square}
+      answer: "Elle ôte son casque une seconde : « Ce n'est pas à moi de vous le dire. » Elle le remet, et passe un appel pour une chambre du deuxième."
+
+  # ------------------------------------------------- 2 · le buraliste sous le réverbère
+  - id: jp.h4.standard.reverbere
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    speaker: lavergne
+    lieu: domicile
+    tone: strategique
+    text: "Minuit. Camille t'appelle à la fenêtre sans allumer. Sous le réverbère de la rue des Lilas, le buraliste du Quai, les mains dans les poches. Il ne fume pas. Il regarde chez vous."
+    left:
+      label: "Je descends lui parler"
+      effects: {parole: 1, relation: {lavergne: 1}, set: [h4_lavergne_fenetre]}
+      answer: "Il te laisse traverser la rue. « Vous l'avez vue, au standard. » Ce n'est pas une question. Il repart à pied vers le Quai."
+    right:
+      label: "Je tire le rideau"
+      effects: {relation: {lavergne: -1}, set: [h4_lavergne_fenetre]}
+      answer: "Camille rouvre le rideau d'un doigt, une heure plus tard. Il est toujours là. À deux heures, le réverbère s'éteint ; lui, non."
+
+  - id: jp.h4.standard.reverbere_seul
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    speaker: lavergne
+    lieu: domicile
+    tone: strategique
+    text: "Minuit. Depuis la valise, tu ne dors plus avant deux heures. Sous le réverbère de la rue des Lilas, le buraliste du Quai, les mains dans les poches. Il ne fume pas. Il regarde ta fenêtre."
+    left:
+      label: "Je descends lui parler"
+      effects: {parole: 1, relation: {lavergne: 1}, set: [h4_lavergne_fenetre]}
+      answer: "Il te laisse traverser la rue. « Vous l'avez vue, au standard. » Ce n'est pas une question. Il repart à pied vers le Quai."
+    right:
+      label: "Je tire le rideau"
+      effects: {relation: {lavergne: -1}, set: [h4_lavergne_fenetre]}
+      answer: "Une heure plus tard, tu écartes le rideau d'un doigt. Il est toujours là. À deux heures, le réverbère s'éteint ; lui, non."
+
+  # ------------------------------------------------- 3 · la commande (saison 2)
+  - id: jp.h4.standard.commande_saisie
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    text: "Au standard, Sandrine a L'Écho ouvert sur l'huissier des Lilas. « On ne voulait pas votre maison. On voulait une phrase. Au jubilé, il y a un micro au rond central : dites-la là. »"
+    left:
+      label: "Je la dirai"
+      effects: {parole: 1, promise: true, set: [h4_promesse_micro], outcome: promesse}
+      answer: "Elle replie le journal. « Je serai au premier rang de l'Est. Je n'applaudirai pas. » Le tableau clignote ; elle reprend les appels."
+    right:
+      label: "Je ne peux pas"
+      effects: {relation: {sandrine: -1}, outcome: refus}
+      answer: "« Vous pouvez. Vous ne voulez pas. Ce n'est pas pareil, mais ça finit pareil. » Elle remet son casque et ne te voit plus."
+
+  - id: jp.h4.standard.commande_entendue
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    text: "Au standard, Sandrine finit un appel : « Au square, vous m'avez écoutée sans m'interrompre. Alors écoutez encore. Au jubilé, il y a un micro au rond central. Vous le direz là. »"
+    left:
+      label: "Je le dirai"
+      effects: {parole: 1, promise: true, relation: {sandrine: 1}, set: [h4_promesse_micro], outcome: promesse}
+      answer: "Elle hoche la tête, une fois. « Je serai au premier rang de l'Est. Je n'applaudirai pas. Mais je serai là. »"
+    right:
+      label: "Je ne peux pas"
+      effects: {relation: {sandrine: -1}, outcome: refus}
+      answer: "« Vous pouvez. Vous ne voulez pas. Ce n'est pas pareil, mais ça finit pareil. » Elle remet son casque et ne te voit plus."
+
+  - id: jp.h4.standard.commande
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    text: "Au standard, Sandrine ôte son casque entre deux appels : « Au jubilé, il y a un micro au rond central. Vous le direz là, devant eux. Sinon, n'achetez plus le journal chez mon père. »"
+    left:
+      label: "Je le dirai"
+      effects: {parole: 1, promise: true, set: [h4_promesse_micro], outcome: promesse}
+      answer: "Elle remet son casque. « Je serai au premier rang de l'Est. Je n'applaudirai pas. » Le tableau clignote ; elle reprend les appels."
+    right:
+      label: "Je ne peux pas"
+      effects: {relation: {sandrine: -1}, outcome: refus}
+      answer: "« Vous pouvez. Vous ne voulez pas. Ce n'est pas pareil, mais ça finit pareil. » Elle remet son casque et ne te voit plus."
+
+  # =========================================================== LE CAPOT
+  # ------------------------------------------------- 1 · Bréhaut supplie
+  - id: jp.h4.capot.supplie_exige
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, famille]
+    speaker: brehaut
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche midi, Bréhaut sonne avec un carton de gâteaux, comme avant. Il attend que Camille soit en cuisine : « Tu m'as dit que j'allais le dire. Je ne peux pas. J'ai deux filles. »"
+    left:
+      label: "Dis-le pour elles"
+      effects: {vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Il pose le carton sur la table sans l'ouvrir. « Pour elles, je me tais. C'est la seule chose que je sache faire pour elles. »"
+    right:
+      label: "Je ne dirai rien"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_promesse_brehaut]}
+      answer: "Il te serre dans ses bras sur le palier, longtemps, comme après un but. Camille vous regarde depuis la cuisine, un couteau à la main."
+
+  - id: jp.h4.capot.supplie
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, famille]
+    speaker: brehaut
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche midi, Bréhaut sonne avec un carton de gâteaux, comme avant. Il attend que Camille soit en cuisine, et il parle bas : « Tu ne diras rien, hein. J'ai deux filles. »"
+    left:
+      label: "Dis-le pour elles"
+      effects: {vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Il pose le carton sur la table sans l'ouvrir. « Pour elles, je me tais. C'est la seule chose que je sache faire pour elles. »"
+    right:
+      label: "Je ne dirai rien"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_promesse_brehaut]}
+      answer: "Il te serre dans ses bras sur le palier, longtemps, comme après un but. Camille vous regarde depuis la cuisine, un couteau à la main."
+
+  - id: jp.h4.capot.supplie_seul
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, famille]
+    speaker: brehaut
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche midi, Bréhaut sonne avec un carton de gâteaux, comme avant. Il voit les murs nus, les cartons de Camille partis : « Toi, tu n'as plus rien à perdre. Moi, j'ai deux filles. »"
+    left:
+      label: "Dis-le pour elles"
+      effects: {vestiaire: "-", relation: {brehaut: -1}}
+      answer: "Il pose le carton sur la table sans l'ouvrir. « Pour elles, je me tais. C'est la seule chose que je sache faire pour elles. »"
+    right:
+      label: "Je ne dirai rien"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_promesse_brehaut]}
+      answer: "Il ouvre le carton lui-même. Vous mangez les gâteaux debout, dans la cuisine vide, sans assiettes. Il en laisse un, pour plus tard."
+
+  # ------------------------------------------------- 2 · Bréhaut menace
+  - id: jp.h4.capot.menace_promesse
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: strategique
+    text: "Vestiaire vide. Bréhaut ferme ton casier du plat de la main : « Tu as promis, je te crois. Mais si tu changes d'avis, Vaubourg sort ta signature de 1984, et c'est ta maison qu'ils prennent. »"
+    left:
+      label: "Qu'il la sorte"
+      effects: {vestiaire: "-", parole: 1, relation: {brehaut: -1}, set: [h4_menace_dire]}
+      answer: "Il te regarde comme un tir qui passe au-dessus. « Tu ne sais pas ce que coûte une maison. La mienne, je l'ai payée avec ton silence. »"
+    right:
+      label: "Laisse ma maison"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "« Je ne touche à rien. Vaubourg garde les papiers ; moi, je garde le brassard. » Il le serre, comme sur le capot."
+
+  - id: jp.h4.capot.menace
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: strategique
+    text: "Vestiaire vide, après l'entraînement. Bréhaut ferme ton casier du plat de la main : « Si tu parles, Vaubourg sort la feuille que tu as signée en 1984. Au civil, c'est ta maison qu'ils prendront. »"
+    left:
+      label: "Qu'il la sorte"
+      effects: {vestiaire: "-", parole: 1, relation: {brehaut: -1}, set: [h4_menace_dire]}
+      answer: "Il te regarde comme un tir qui passe au-dessus. « Tu ne sais pas ce que coûte une maison. La mienne, je l'ai payée avec ton silence. »"
+    right:
+      label: "Laisse ma maison"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "« Je ne touche à rien. Vaubourg garde les papiers ; moi, je garde le brassard. » Il le serre, comme sur le capot."
+
+  # ------------------------------------------------- 3 · Bréhaut propose
+  - id: jp.h4.capot.propose_menace
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    lieu: bar
+    tone: strategique
+    text: "Le Corner, tard. Bréhaut pose deux verres de poire sur le zinc, la même qu'au pont : « Au vestiaire, j'ai compris que tu ne lâcherais pas. Alors laisse-moi le micro. C'est à moi de le dire. »"
+    left:
+      label: "Il est à toi"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_brehaut_convaincu], outcome: convaincu}
+      answer: "Il vide ton verre dans l'évier du bar, puis le sien. « Neuf ans que je te le dois. Je te le rendrai au rond central. »"
+    right:
+      label: "Je bois, et je le dirai"
+      effects: {vestiaire: "-", set: [h4_bouteille], outcome: a_moi}
+      answer: "Tu bois les deux verres. À une heure cinquante, il te dépose aux Lilas et laisse la bouteille sur le siège passager : « Pour la route. »"
+
+  - id: jp.h4.capot.propose
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    lieu: bar
+    tone: strategique
+    text: "Le Corner, tard. Bréhaut pose deux verres de poire sur le zinc, la même qu'au pont en 1984 : « Au jubilé, laisse-moi le micro. Je conduisais ; c'est à moi de le dire. »"
+    left:
+      label: "Il est à toi"
+      effects: {vestiaire: "+", relation: {brehaut: 1}, set: [h4_brehaut_convaincu], outcome: convaincu}
+      answer: "Il vide ton verre dans l'évier du bar, puis le sien. « Neuf ans que je te le dois. Je te le rendrai au rond central. »"
+    right:
+      label: "Je bois, et je le dirai"
+      effects: {vestiaire: "-", set: [h4_bouteille], outcome: a_moi}
+      answer: "Tu bois les deux verres. À une heure cinquante, il te dépose aux Lilas et laisse la bouteille sur le siège passager : « Pour la route. »"
+
+  # =========================================================== LA DÉCLARATION
+  # ------------------------------------------------- 1a · l'huissier (Rouvrez)
+  - id: jp.h4.declaration.huissier
+    roles: [joueur]
+    arc: direction
+    tags: [direction, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Mardi, huit heures, aux Lilas. Un huissier fait l'inventaire du salon pour le compte de la famille Lavergne. Camille le suit de pièce en pièce : « Tu as rouvert ça sans me le dire, {toi} ? »"
+    left:
+      label: "Je devais le faire"
+      effects: {direction: "-", tribunes: "+", relation: {camille: -1}, set: [h4_saisie]}
+      answer: "Elle regarde l'huissier soupeser la montre de la montée, lire la gravure, la reposer. « Ça ne vaut rien, une montre gravée », dit-il."
+    right:
+      label: "Pardon de ne rien dire"
+      effects: {caisse: "-", relation: {camille: 1}, set: [h4_saisie]}
+      answer: "« Pas à moi. » Elle tend un stylo à l'huissier, qui a oublié le sien. Il note le piano, la berline, les deux vélos de Sacha."
+
+  - id: jp.h4.declaration.huissier_seul
+    roles: [joueur]
+    arc: direction
+    tags: [direction, famille]
+    lieu: domicile
+    tone: strategique
+    text: "Mardi, huit heures, aux Lilas. Un huissier fait l'inventaire pour le compte de la famille Lavergne. Il n'y a plus grand-chose : la valise de Camille a déjà fait le tri."
+    left:
+      label: "Je lui ouvre tout"
+      effects: {direction: "-", tribunes: "+", set: [h4_saisie]}
+      answer: "Il soupèse la montre de la montée, lit la gravure, la repose sur la cheminée. « Ça ne vaut rien, une montre gravée. »"
+    right:
+      label: "Je reste dans l'entrée"
+      effects: {caisse: "-", set: [h4_saisie]}
+      answer: "Tu l'entends ouvrir les placards un par un, compter à voix basse, s'excuser auprès de personne. Les voisins sont aux fenêtres."
+
+  # ------------------------------------------------- 1b · prescrit (Laissez dormir ça)
+  # Qui n'a prévenu personne (ni exigé de Bréhaut, ni promis à Sandrine) peut
+  # aller seul au commissariat : la fin « Prescrit ».
+  - id: jp.h4.declaration.prescrit_seul
+    roles: [joueur]
+    arc: agents
+    tags: [agents, direction]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    text: "Fardelli compte sur ses doigts, au café de la Mairie : « Le pénal, trois ans : prescrit depuis 1987. Le civil, dix ans : jusqu'au 14 mai 1994. Tu te tais un an de plus, et tout le monde est quitte. »"
+    left:
+      label: "J'enverrai de l'argent"
+      effects: {caisse: "-", vestiaire: "+", set: [h4_cheques]}
+      answer: "« Un chèque par mois, sans lettre, au tabac du Quai. Ils ne l'encaisseront pas. » Il hausse les épaules. « Toi, tu auras payé. »"
+    right:
+      label: "Je vais au commissariat"
+      effects: {direction: "-", relation: {fardelli: -1}, next: {step: commissariat, in: [1, 1]}}
+      answer: "« Pour t'entendre dire quoi ? » Tu laisses ton café. Il ne te retient pas ; il finit la tasse, puis la tienne."
+
+  - id: jp.h4.declaration.prescrit
+    roles: [joueur]
+    arc: agents
+    tags: [agents, direction]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    text: "Fardelli compte sur ses doigts, au café de la Mairie : « Le pénal, trois ans : prescrit depuis 1987. Le civil, dix ans : jusqu'au 14 mai 1994. Tu te tais un an de plus, et tout le monde est quitte. »"
+    left:
+      label: "J'enverrai de l'argent"
+      effects: {caisse: "-", vestiaire: "+", set: [h4_cheques]}
+      answer: "« Un chèque par mois, sans lettre, au tabac du Quai. Ils ne l'encaisseront pas. » Il hausse les épaules. « Toi, tu auras payé. »"
+    right:
+      label: "Personne ne sera quitte"
+      effects: {direction: "-", relation: {fardelli: -1}}
+      answer: "« Personne ne l'est jamais. Mais on fait comme si, et ça marche presque. » Il paie les deux cafés, encore une fois."
+
+  # ------------------------------------------------- 2 · le commissariat
+  - id: jp.h4.declaration.commissariat
+    roles: [joueur]
+    arc: direction
+    tags: [direction, moment]
+    lieu: rue
+    tone: strategique
+    text: "Commissariat du Quai, dix-sept heures. Le commissaire écoute tout, la fête, le pont, une heure cinquante, sans prendre une note. Puis il referme un dossier vide : « C'est prescrit. »"
+    left:
+      label: "Je signe quand même"
+      effects: {end: fdc_prescrit}
+      answer: "Il tape ta déposition à deux doigts, la tamponne et la range dans un classeur marqué ARCHIVES. Il te serre la main à la porte."
+    right:
+      label: "Je repars sans signer"
+      effects: {vestiaire: "-"}
+      answer: "« Comme vous voudrez. » Sur le trottoir, l'horloge du Quai marque dix-sept heures dix. Il te reste le jubilé."

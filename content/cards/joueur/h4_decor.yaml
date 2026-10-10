@@ -1,0 +1,291 @@
+# HISTOIRE 4 — « La Route de la Rive » : le décor. Des cartes du sac (sans
+# intrigue), qui ne se tirent que dans ce livre (`flag('histoire_h4')`) et une
+# fois chacune. Elles lisent ce que le joueur a déjà vu : le panneau planté
+# au bord de la route, la chevalière du rêve, la standardiste du square.
+#
+# Le décor donne du souffle entre deux coups : Mbako qui ne demande rien sur
+# 1984, Sacha qui joue à gauche ou à droite, le gardien qui taille des
+# chrysanthèmes gelés. Personne n'accorde rien au joueur.
+cards:
+  # ------------------------------------------------- Sacha
+  - id: jp.h4.d.sacha_carrefour
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha
+    lieu: parking
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && !flag('divorce')"
+    text: "Feu rouge, carrefour de la Mairie. Sacha, attachée à l'arrière, tape sur ton appuie-tête : « À gauche ou à droite, {toi} ? C'est moi qui choisis, aujourd'hui. »"
+    left:
+      label: "À gauche"
+      effects: {vestiaire: "+", relation: {sacha: -1}}
+      answer: "« Non ! C'est moi qui choisis ! » Le feu passe au vert. Derrière, quelqu'un klaxonne. Tu tournes à gauche quand même."
+    right:
+      label: "Choisis, toi"
+      effects: {tribunes: "+", relation: {sacha: 1}}
+      answer: "« À droite ! » Tu tournes à droite. Elle applaudit comme au stade. Ce n'est pas le chemin de l'école ; tu le prends quand même."
+
+  - id: jp.h4.d.sacha_freine
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_reve_freine') && !flag('divorce')"
+    text: "Sacha joue sur le tapis du salon, une petite voiture dans chaque main. Elle les fait foncer l'une vers l'autre en criant : « Freine ! Freine ! »"
+    left:
+      label: "Où as-tu appris ça ?"
+      effects: {vestiaire: "-", relation: {sacha: -1}}
+      answer: "« C'est toi qui le dis, la nuit. À travers le mur. » Elle refait foncer les deux voitures. Elles ne se touchent jamais."
+    right:
+      label: "Je joue avec elle"
+      effects: {tribunes: "+", relation: {sacha: 1}}
+      answer: "Tu prends une voiture, elle prend l'autre. « Freine ! » Tu freines. Elle rit. Tu ris aussi, une seconde trop tard."
+
+  # ------------------------------------------------- le tabac du Quai
+  - id: jp.h4.d.lavergne_monnaie
+    roles: [joueur]
+    arc: famille
+    tags: [decor]
+    speaker: lavergne
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && !flag('h4_fiche_hopital')"
+    text: "Tabac du Quai, sept heures. Le buraliste te tend L'Écho plié et ta monnaie, sans un mot, comme chaque matin depuis 1985. Ce matin, il garde la dernière pièce dans sa main une seconde de trop."
+    left:
+      label: "Je compte la monnaie"
+      effects: {direction: "+"}
+      answer: "Le compte est juste. Il est toujours juste. Tu ne sais pas pourquoi tu as compté, ni pourquoi il te regardait le faire."
+    right:
+      label: "Je pars sans compter"
+      effects: {tribunes: "+"}
+      answer: "Sur le quai, tu sens son regard dans ton dos jusqu'au coin de la rue. Comme hier. Comme tous les matins, en fait."
+
+  - id: jp.h4.d.lavergne_envers
+    roles: [joueur]
+    arc: famille
+    tags: [decor]
+    speaker: lavergne
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_fiche_hopital') && !flag('h4_silence')"
+    text: "Tabac du Quai. Tu sais son nom, maintenant, et il sait que tu le sais. Jean Lavergne pose L'Écho sur le comptoir à l'envers, la Une contre le bois."
+    left:
+      label: "Je le retourne"
+      effects: {relation: {lavergne: -1}}
+      answer: "Tu retournes le journal. Il le retourne à nouveau. Vous faites ça trois fois. La quatrième, il te laisse gagner."
+    right:
+      label: "Je le prends tel quel"
+      effects: {relation: {lavergne: 1}}
+      answer: "Tu le prends à l'envers et tu le lis dehors, sur le quai. La Une parle de toi. Tu ne la lis pas."
+
+  # ------------------------------------------------- le panneau de l'auto-école
+  - id: jp.h4.d.panneau_toi
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_panneau_toi')"
+    text: "Route de la Rive, le matin. À cent mètres du pont, ta tête sur quatre mètres de contreplaqué : « Le permis, c'est la vie. » On a collé sur ta bouche un carré de papier journal."
+    left:
+      label: "Je l'arrache"
+      effects: {tribunes: "-"}
+      answer: "Tu grimpes sur le talus. Le papier vient d'un vieil Écho : un bout de colonne, le 15 mai 1984, et une ligne barrée au crayon."
+    right:
+      label: "Je passe sans m'arrêter"
+      effects: {direction: "+"}
+      answer: "Le soir, au retour, le papier n'y est plus. Ta bouche a été repeinte, plus rouge qu'avant."
+
+  - id: jp.h4.d.panneau_titi
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_panneau_brehaut')"
+    text: "Bréhaut lace ses chaussures sans te regarder : « Tu as vu ma tête, au bord de la Rive ? Le permis, c'est la vie. J'ai demandé qu'ils déplacent le panneau. Ils ont dit non. »"
+    left:
+      label: "Pourquoi le déplacer ?"
+      effects: {vestiaire: "-", relation: {brehaut: -1}}
+      answer: "« C'est pour les gamins. Si un seul ralentit, ça vaut le coup. » Il serre le lacet jusqu'à ce qu'il casse."
+    right:
+      label: "Elle est bien, ta tête"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Il rit, trop fort. Le lendemain matin, il prend la route du haut, celle qui ne passe pas par le pont."
+
+  # ------------------------------------------------- le vestiaire
+  - id: jp.h4.d.mbako_crampons
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, formation, decor]
+    speaker: mbako
+    tone: leger
+    once: true
+    when: "flag('histoire_h4')"
+    text: "Lian Mbako te tend ses crampons neufs, trop raides, la semelle encore blanche : « Comment on les casse, ceux-là ? Vous, vous avez fait comment, la première fois, {toi} ? »"
+    left:
+      label: "Dans l'eau chaude"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Il les trempe et les garde aux pieds jusqu'à ce qu'ils sèchent, au milieu du vestiaire. Pendant une heure, personne ne parle de 1984."
+    right:
+      label: "Tu les portes, c'est tout"
+      effects: {direction: "+"}
+      answer: "« Et ça fait mal ? » Ça fait mal. Il hoche la tête comme on reçoit un secret. Il ne sait pas que c'en est un."
+
+  - id: jp.h4.d.brehaut_genou
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && !flag('h4_capot')"
+    text: "Au vestiaire, Bréhaut masse son genou avec la même pommade que toi, le même genou : « Depuis 1984, il me parle, celui-là. Le tien aussi ? »"
+    left:
+      label: "Le mien a cogné"
+      effects: {vestiaire: "+"}
+      answer: "« Contre quoi ? » Tu ne sais pas. Lui, si : il change de jambe et se met à lacer sa chaussure, longtemps."
+    right:
+      label: "Le mien se tait"
+      effects: {direction: "+"}
+      answer: "« Tant mieux. » Il rebouche la pommade. « Un genou qui se tait, c'est un genou qui a oublié. »"
+
+  - id: jp.h4.d.chevaliere
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_chevaliere') && !flag('h4_capot')"
+    text: "Avant l'entraînement, Bréhaut ôte sa chevalière et la pose sur le banc, comme chaque jour depuis 1984. Ce matin, c'est toi qui la regardes le plus longtemps."
+    left:
+      label: "Je la lui tends"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Il la remet à l'annulaire droit, chaton tourné vers la paume, comme on la tourne pour tenir un volant."
+    right:
+      label: "Je la laisse là"
+      effects: {vestiaire: "-"}
+      answer: "Après la séance, il la cherche partout. Elle est sur le banc, là où il l'a posée. Il ne la voyait plus."
+
+  - id: jp.h4.d.gigi_ticket
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vecchio
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && season >= 1 && !flag('h4_capot')"
+    text: "Dans le car, Vecchio sort de son portefeuille un ticket de buvette plié en huit : « La fête de la montée. Moi, je suis parti à minuit. Toi, tu dormais déjà, sur l'épaule de Titi. »"
+    left:
+      label: "Tu es sûr ?"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "« Sûr. Titi te tenait la tête pour qu'elle ne tape pas la vitre. » Il replie le ticket, une fois de trop, et il se déchire."
+    right:
+      label: "Range ça"
+      effects: {direction: "+"}
+      answer: "Il le range. « Je le garde pour mon jubilé à moi. Un ticket de bière, c'est tout ce qui me reste de ce soir-là. »"
+
+  - id: jp.h4.d.vukic_survetement
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && season >= 1"
+    text: "Vukić sort de son sac un survêtement de la réserve, plié au carré, à ta taille : « Pour le jour où le genou dira non. Il est dans mon sac depuis deux saisons, {toi}. »"
+    left:
+      label: "Garde-le encore"
+      effects: {vestiaire: "+"}
+      answer: "Il le replie, coin sur coin. « Je ne suis pas pressé. Le banc non plus. »"
+    right:
+      label: "Donne, je l'essaie"
+      effects: {direction: "+", relation: {vukic: 1}}
+      answer: "Il te va. Les manches sont un peu longues. « On les reprendra, ou tu grandiras. » Il rit tout seul, puis plus du tout."
+
+  # ------------------------------------------------- l'hôtel de la Rive
+  - id: jp.h4.d.standard_appel
+    roles: [joueur]
+    arc: famille
+    tags: [telephone, decor]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_standard_vu')"
+    text: "Le téléphone sonne. « Hôtel de la Rive. Je vous passe votre agent. » La voix de la standardiste, neutre, puis celle de Fardelli. Elle n'a pas raccroché : tu l'entends respirer."
+    left:
+      label: "Raccrochez, s'il vous plaît"
+      effects: {direction: "-"}
+      answer: "Un déclic. Puis Fardelli : « Allô ? Tu es là ? » Tu es là. Tu ne sais plus ce que tu voulais lui dire."
+    right:
+      label: "Je parle quand même"
+      effects: {caisse: "+"}
+      answer: "Tu parles contrat, genou, prime. Elle écoute tout. À la fin, c'est elle qui raccroche, après vous deux."
+
+  # ------------------------------------------------- le cimetière et les Immortelles
+  - id: jp.h4.d.abel_secateur
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: abel
+    lieu: cimetiere
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_registre')"
+    text: "Monsieur Abel, à la grille, te tend un sécateur : « Les chrysanthèmes de Monsieur Bertin ont gelé. Vous les taillez, ou je les jette ? Je ne sais plus très bien à qui ils sont. »"
+    left:
+      label: "Je les taille"
+      effects: {tribunes: "+", relation: {abel: 1}}
+      answer: "Tu tailles à genoux sur le gravier, le genou qui proteste. Abel te regarde faire. « Vous avez le geste. Six ans, ça donne le geste. »"
+    right:
+      label: "Jetez-les"
+      effects: {direction: "+"}
+      answer: "Il les jette dans la brouette. « Monsieur Bertin ne dira rien. C'est le meilleur client que j'aie. »"
+
+  - id: jp.h4.d.huguette_kraft
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: huguette
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_quatorze_mai') && !flag('h4_abonnement_arrete')"
+    text: "Madame Huguette emballe un pot de chrysanthèmes dans du papier kraft : « Le livreur monte celui de l'abonnement à huit heures. Vous, vous montez le vôtre à six. Monsieur Bertin est gâté. »"
+    left:
+      label: "Ce n'est pas pour lui"
+      effects: {vestiaire: "+"}
+      answer: "« Je sais. Le livreur aussi. Il n'y a que Monsieur Bertin qui ne le sait pas. » Elle noue la ficelle en double."
+    right:
+      label: "Mettez-le sur mon compte"
+      effects: {caisse: "-"}
+      answer: "« Votre compte, c'est Monsieur Fardelli. Depuis 1985, vous n'avez jamais rien payé ici. » Elle te rend le stylo."
+
+  - id: jp.h4.d.camille_bouquet
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: camille
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h4') && flag('h4_verite_camille') && flag('h4_tombe_inconnue') && !flag('divorce')"
+    text: "Camille rentre avec un bouquet des Immortelles et le pose sur la table, sans vase : « Pour la vraie, quand tu sauras où elle est. Ou pour Bertin, si tu ne cherches plus. »"
+    left:
+      label: "Je cherche encore"
+      effects: {vestiaire: "+", relation: {camille: 1}}
+      answer: "Elle met le bouquet dans un broc. « Alors il attendra. Les fleurs, ça attend mal, mais ça attend. »"
+    right:
+      label: "Pour Bertin, alors"
+      effects: {relation: {camille: -1}}
+      answer: "Elle te le met dans les bras. « Vas-y ce soir. Et ne reviens pas avec la même tête. »"

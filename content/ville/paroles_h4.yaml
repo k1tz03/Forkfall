@@ -1,0 +1,500 @@
+# HISTOIRE 4 — « La Route de la Rive » : ce que dit la ville pendant le livre
+# (docs/histoires § Histoire 4, 7). Format : en-tête de paroles_personnages.yaml.
+#
+# La ville sait ce qu'on voit d'une fenêtre, d'un comptoir, d'une loge : un
+# buraliste sous un réverbère, une mobylette sans phare le mardi, des
+# chrysanthèmes pour un mort sans famille, une standardiste qui sait qui
+# appelle qui. Elle ne sait pas qui conduisait ; elle s'en doute, à la fin.
+# `saison` est celle de la ville (1 = 1990-1991). Aucun accord sur le joueur,
+# aucune adresse genrée ; les visages nouveaux du livre (Sandrine, son père,
+# le gardien, la kiné, Sacha, la fleuriste) ne se montrent qu'une fois
+# rencontrés dans une carte.
+rencontres:
+  sandrine: square
+  lavergne: tabac
+  abel: loge
+  rouvier: cabinet
+  sacha: appartement
+  huguette: fleuriste
+
+presences:
+  - {qui: sandrine, lieu: hotel, tranches: [matin, aprem, soir]}
+  - {qui: sandrine, lieu: square, tranches: [midi]}
+  - {qui: lavergne, lieu: tabac, tranches: [matin, midi, aprem]}
+  - {qui: abel, lieu: loge, tranches: [matin, aprem]}
+  - {qui: rouvier, lieu: cabinet, tranches: [aprem]}
+  - {qui: sacha, lieu: appartement, tranches: [soir]}
+  - {qui: huguette, lieu: fleuriste, tranches: [matin, aprem]}
+
+# La montre de la montée : offerte par le club en 1984 (le prologue la rend au
+# joueur), gravée, invendable, jamais en vitrine.
+objets:
+  - id: montre_montee
+    nom: "La montre de la montée"
+    categorie: montre
+    lieu: hotel
+    prix: 4000
+    annees: [1984, 1984]
+    roles: [joueur]
+    texte: "Une montre en or offerte par le club en mai 1984, gravée au dos : « Montée — merci ». Elle retarde de deux minutes depuis cette nuit-là."
+    revente: 0
+
+lieux_variantes:
+  - {lieu: cimetiere, si: "flag(histoire_h4) && flag(h4_quatorze_mai)", texte: "Le cimetière d'Aubérive. Au carré ancien, une tombe sans famille, et des chrysanthèmes qu'on ne laisse jamais faner : Jules Bertin, 1902-1983."}
+  - {lieu: loge, si: "flag(histoire_h4) && flag(h4_registre)", texte: "La loge du gardien. Le registre est ouvert sur la table, à une page de 1985. Monsieur Abel ne le referme plus quand tu entres."}
+  - {lieu: fleuriste, si: "flag(histoire_h4) && flag(h4_quatorze_mai)", texte: "Aux Immortelles. Dans le cahier des commandes, une ligne revient chaque année : 14 mai, carré ancien, payé d'avance."}
+  - {lieu: hotel, si: "flag(histoire_h4) && flag(h4_standard_vu)", texte: "L'hôtel de la Rive. Derrière la vitre du standard, une jeune femme en fauteuil enfiche les appels sans lever les yeux."}
+  - {lieu: tabac, si: "flag(histoire_h4) && flag(h4_fils_mobylette) && tranche == soir", texte: "Le tabac du Quai baisse son rideau. Dans la cour, une mobylette bleue tourne au ralenti, sans personne dessus."}
+  - {lieu: tabac, si: "flag(histoire_h4) && flag(h4_fiche_hopital)", texte: "Le tabac du Quai. Au-dessus de la caisse, la licence encadrée au nom de Lavergne, et la photo d'une fille sur une mobylette bleue."}
+  - {lieu: appartement, si: "flag(histoire_h4) && flag(h4_photo_entiere)", texte: "Chez toi. Sur la table de la cuisine, la photo de 1984 refaite en morceaux de papier journal. Il manque un visage, à droite."}
+  - {lieu: appartement, si: "flag(histoire_h4) && flag(h4_premier_morceau)", texte: "Chez toi. Sur le buffet, une enveloppe kraft où s'empilent des morceaux de papier journal, un par mardi."}
+  - {lieu: voiture, si: "flag(histoire_h4) && flag(h4_capot_grave)", texte: "Ta voiture, garée de travers. Sur le capot, quatre chiffres que personne ne te demande de lire : 14-5-84."}
+  - {lieu: square, si: "flag(histoire_h4) && flag(h4_standard_vu)", texte: "Le square des Lilas. Sous le banc du fond, des chutes de papier journal découpées aux ciseaux d'écolier."}
+  - {lieu: stade, si: "flag(histoire_h4) && flag(h4_jubile_annonce)", texte: "Le stade de la Rive. Sur les grilles du guichet, l'affiche du jubilé : ta tête dans la lucarne, samedi 15 mai."}
+  - {lieu: echo, si: "flag(histoire_h4) && flag(h4_deux_lignes)", texte: "L'Écho. Dans le bureau de Massenet, un tiroir fermé à clé que toute la rédaction regarde en passant."}
+  - {lieu: cabinet, si: "flag(histoire_h4) && flag(h4_table)", texte: "Le cabinet du Doc. Dans le tiroir de la table d'examen, un carnet noir qui n'en ressortira plus."}
+  - {lieu: clubhouse, si: "flag(histoire_h4) && flag(h4_photo_archives)", texte: "Le club-house du Racing. Dans le couloir repeint, des clous nus là où pendaient les anciens. Celui de 1984 aussi."}
+
+paroles:
+  # ============================================================ LES GENS
+  - qui: ancien
+    sujet: epoque
+    si: "flag(histoire_h4) && saison == 1"
+    texte: "La montée de 84, c'est vous, la tête dans la lucarne. J'étais derrière le but. Le soir, on a fêté jusqu'au pont."
+  - qui: passante
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_premier_morceau)"
+    texte: "Il y a une femme en fauteuil qui découpe des photos dans le square, sur le banc du fond. Elle ne dit bonjour à personne."
+  - qui: fan
+    sujet: club
+    si: "flag(histoire_h4) && tribunes < 40"
+    texte: "Le but de 84, je l'ai encore dans les yeux. Depuis, tu marques moins et tu boites plus. On t'aime quand même, un peu moins fort."
+  - qui: passant
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_lavergne_fenetre)"
+    texte: "Le buraliste du Quai était sous vos fenêtres hier, à minuit. Il ne fumait même pas. Il regardait."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_standard_vu)"
+    texte: "La fille du buraliste, au standard de l'hôtel ? Toute la ville passe par son tableau. Elle sait qui appelle qui, et à quelle heure."
+  - qui: ancien
+    sujet: epoque
+    si: "flag(histoire_h4) && flag(h4_jubile_annonce)"
+    texte: "Ton jubilé, on viendra. On était au pont, en 84, pour la fête. Pas après. Après, on dormait."
+  - qui: passant
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_capot_grave)"
+    texte: "Vous avez vu votre capot ? Quatorze, cinq, quatre-vingt-quatre. Mon beau-frère dit que c'est un numéro de loto."
+  - qui: enfant
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_panneau_toi)"
+    texte: "C'est vous, sur le panneau du pont ! Mon grand frère passe son permis. Il dit que vous conduisez mal, dans la vraie vie."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_mobylette_vue)"
+    texte: "Une mobylette sans phare dans la rue des Lilas, le mardi soir. Le gamin du tabac, je crois. Il roule sans casque."
+  - qui: ancien
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_corbeau)"
+    texte: "La nuit de la montée, la voiture du club a quitté le pont vers deux heures. Je la voyais de ma fenêtre. Volée, ils ont dit."
+  - qui: fan
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_silence)"
+    texte: "Le jubilé, j'y étais. Vous avez rendu le micro. Moi, j'ai pleuré. Je ne sais toujours pas pourquoi vous, non."
+  - qui: passante
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_saisie)"
+    texte: "L'huissier aux Lilas, c'était chez vous ? Ma sœur habite en face. Elle dit qu'il a regardé votre montre très longtemps."
+  - qui: ancien
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_nom_imprime)"
+    texte: "J'ai lu la page sept. Onze lignes, un nom. Moi, je l'aurais mis en première page, ce nom. Mais je ne suis pas journaliste."
+  - qui: passant
+    sujet: sponsor
+    si: "flag(histoire_h4) && flag(h4_panneau_brehaut)"
+    texte: "Le capitaine sur le panneau de l'auto-école, à l'entrée du pont. Ça ralentit les gens, je dois dire. Ils le regardent."
+  - qui: commercant
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_tabac_ferme) && lieu == kiosque"
+    texte: "L'Écho ? Le tabac du Quai est à vingt mètres, mais vous venez chez moi, maintenant. Je ne demande pas pourquoi."
+  - qui: passante
+    sujet: achat
+    si: "flag(histoire_h4) && flag(h4_sp_serene)"
+    texte: "Le monsieur des Laboratoires Sérène loge à l'hôtel de la Rive. Il laisse de gros pourboires et ne parle à personne."
+
+  # ============================================================ SANDRINE LAVERGNE
+  # Au standard de l'hôtel, ou au square le midi. Elle ne pardonne pas, ne
+  # menace pas, n'explique rien : elle constate.
+  - qui: sandrine
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_standard_vu) && !flag(h4_capot)"
+    texte: "Le passager. Je l'ai dit une fois, au comptoir. Je ne le redirai pas dans la rue."
+  - qui: sandrine
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_prise_debranchee) && flag(h4_standard_vu)"
+    texte: "Vous débranchez la prise, la nuit. Mon frère, lui, ne dort pas. Il laisse tourner le moteur dans la cour."
+  - qui: sandrine
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_capot)"
+    texte: "Il vous a parlé, sur le parking. Ça se voit à votre façon de marcher : vous regardez à droite, maintenant."
+  - qui: sandrine
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_promesse_micro)"
+    texte: "Vous avez promis. Je n'écris pas les promesses, je les attends. Le 15 mai, premier rang de l'Est."
+  - qui: sandrine
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_sandrine_entendue) && lieu == square"
+    texte: "Le banc du fond est à moi depuis 1985. Vous pouvez vous asseoir au bout. Pas au milieu."
+  - qui: sandrine
+    sujet: epoque
+    si: "flag(histoire_h4) && flag(h4_standard_vu) && lieu == square"
+    texte: "Je découpe L'Écho depuis sept ans. Vous y êtes souvent. Lui aussi, le capitaine. Toujours à côté de vous."
+  - qui: sandrine
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_photo_entiere) && flag(h4_standard_vu)"
+    texte: "Vous avez fini le puzzle. Le trou était à droite, n'est-ce pas ? J'ai mis une heure à le découper. Proprement."
+  - qui: sandrine
+    sujet: argent
+    si: "flag(histoire_h4) && flag(h4_saisie)"
+    texte: "Mon père ne voulait pas de procès. C'est moi. Il fallait que quelqu'un d'autre que moi paie quelque chose."
+  - qui: sandrine
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_standard_vu) && phase == retour"
+    texte: "Le printemps, c'est la saison des mobylettes. J'en entends passer sous la fenêtre du standard. Je les compte."
+  - qui: sandrine
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_silence)"
+    texte: "Vous avez rendu le micro. J'ai entendu le stade applaudir votre silence. C'est le pire bruit que je connaisse."
+  - qui: sandrine
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_deux_lignes) && flag(h4_standard_vu)"
+    texte: "Massenet est venu à l'hôpital, en 1984. Il voulait ma version. Après, on lui a fait barrer huit lignes. Pas à moi."
+  - qui: sandrine
+    sujet: sponsor
+    si: "flag(histoire_h4) && flag(h4_sp_serene) && flag(h4_standard_vu)"
+    texte: "L'homme des ampoules appelle la Capitale tous les soirs, de la chambre six. Je ne répète rien. Je vous le dis à vous."
+  - qui: sandrine
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_brehaut_convaincu)"
+    texte: "Le capitaine est venu au standard. Il est resté debout une heure sans rien dire. Puis il a dit : samedi."
+
+  # ============================================================ JEAN LAVERGNE
+  # Le tabac du Quai. Il sert, il compte, il se tait ; il hait le silence du
+  # joueur, et pourtant il le sert tous les matins.
+  - qui: lavergne
+    sujet: toi
+    si: "flag(histoire_h4) && saison == 1 && tranche == matin"
+    texte: "L'Écho, comme tous les matins. Gardez votre monnaie, je n'en veux pas."
+  - qui: lavergne
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_moteur) && !flag(h4_fiche_hopital)"
+    texte: "Mal dormi ? Ça se voit. Ici, on ouvre à six heures et demie, que les gens aient dormi ou pas."
+  - qui: lavergne
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_fils_mobylette)"
+    texte: "Mon fils répare sa mobylette la nuit, dans la cour. Je lui ai dit d'arrêter. Il ne m'écoute plus depuis 1984."
+  - qui: lavergne
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_fiche_hopital) && !flag(h4_lavergne_fenetre)"
+    texte: "Vous me regardez autrement, ce matin. Vous avez lu quelque chose ? On lit beaucoup, dans votre métier."
+  - qui: lavergne
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_lavergne_fenetre)"
+    texte: "J'étais sous votre réverbère, oui. C'est une rue publique. J'y retournerai quand il me plaira."
+  - qui: lavergne
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_capot)"
+    texte: "Le capitaine achète ses cigarettes au tabac du stade, depuis sept ans. Pas ici. Vous savez pourquoi, maintenant."
+  - qui: lavergne
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_promesse_micro)"
+    texte: "Elle m'a dit, pour le micro. Je viendrai au stade. Ce sera la première fois depuis 1984."
+  - qui: lavergne
+    sujet: argent
+    si: "flag(histoire_h4) && flag(h4_cheques)"
+    texte: "Votre chèque est revenu ? C'est moi qui l'ai renvoyé. Ma fille ne l'a même pas vu passer."
+  - qui: lavergne
+    sujet: argent
+    si: "flag(histoire_h4) && flag(h4_saisie)"
+    texte: "L'huissier, ce n'était pas mon idée. Mais je ne l'ai pas arrêté. Ça nous fait un point commun."
+  - qui: lavergne
+    sujet: epoque
+    si: "flag(histoire_h4) && flag(h4_quatorze_mai) && saison <= 2"
+    texte: "Le 14 mai, je ferme à midi. Tous les ans. Je ne vous ai jamais demandé où vous alliez, ce jour-là."
+  - qui: lavergne
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_jubile_annonce)"
+    texte: "L'affiche de votre jubilé est arrivée avec les journaux. Je l'ai mise sous le comptoir. Face contre le bois."
+  - qui: lavergne
+    sujet: quartier
+    si: "flag(histoire_h4) && tranche == aprem && lieu == tabac"
+    texte: "Les mariniers parient sur vos matchs, à la table du fond. Moi, je ne parie jamais. Ni sur vous, ni contre."
+
+  # ============================================================ MONSIEUR ABEL
+  # La loge du cimetière. L'humour à froid de quelqu'un qui tient les comptes
+  # des morts et des visites.
+  - qui: abel
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_quatorze_mai)"
+    texte: "Monsieur Bertin n'a jamais eu autant de fleurs que depuis sa mort. De son vivant, personne ne venait."
+  - qui: abel
+    sujet: epoque
+    si: "flag(histoire_h4) && !flag(h4_registre)"
+    texte: "Le registre, c'est la seule chose ici qui n'oublie personne. Les pierres, elles, s'effacent à la pluie."
+  - qui: abel
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_registre)"
+    texte: "Votre agent n'est venu qu'une fois. Il a choisi la tombe la moins visitée du carré. Il avait l'œil."
+  - qui: abel
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_tombe_inconnue)"
+    texte: "J'ai cherché une jeune fille de 1984 dans mes registres. Aucune. Celle que vous fleurissez avait quatre-vingt-un ans."
+  - qui: abel
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_abonnement_arrete)"
+    texte: "Plus de livreur des Immortelles, le 14 mai ? Je l'écrirai. Il faut bien que quelqu'un s'en aperçoive."
+  - qui: abel
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_abonnement_renouvele)"
+    texte: "Renouvelé, à ce qu'on m'a dit. Monsieur Bertin va finir par croire qu'il avait de la famille."
+  - qui: abel
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_fiche_hopital)"
+    texte: "Vivante, alors. Je vous l'avais dit : personne de cet âge n'est entré chez moi en 1984. Je ne me trompe pas sur les entrées."
+  - qui: abel
+    sujet: quartier
+    si: "flag(histoire_h4) && tranche == matin && lieu == loge"
+    texte: "Le portail ouvre à huit heures. Les premiers sont toujours les veuves, puis les chiens, puis les gens comme vous."
+  - qui: abel
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_capot)"
+    texte: "On ne fleurit pas les vivants. Pour eux, il faut sonner à une porte. C'est plus difficile, je sais."
+  - qui: abel
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_silence) && saison >= 4"
+    texte: "Encore vous, au carré ancien. Monsieur Bertin s'habitue. Moi aussi, et ça m'inquiète."
+  - qui: abel
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_corbeau)"
+    texte: "Une voix de femme a demandé votre nom dans mon registre, au téléphone. Je ne donne rien par téléphone. Même aux gentilles."
+
+  # ============================================================ NADIA ROUVIER
+  - qui: rouvier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_infiltration)"
+    texte: "Vous parlez en somnolant, sur ma table. Toujours le même mot. Je ne l'écris nulle part."
+  - qui: rouvier
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_tombe_inconnue) && !flag(h4_fiche_hopital)"
+    texte: "J'ai une amie aux archives de l'hôpital de Portclair. Je dis ça comme ça. Détendez la jambe."
+  - qui: rouvier
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_fiche_hopital)"
+    texte: "Je n'ai rien vu, je ne sais pas lire, et mon amie n'a jamais eu de photocopieuse. On est d'accord ?"
+  - qui: rouvier
+    sujet: sponsor
+    si: "flag(histoire_h4) && flag(h4_sp_serene)"
+    texte: "Ces ampoules, le Doc n'y touchera pas. Moi non plus. Je masse, je ne pique pas."
+  - qui: rouvier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_reve_genoux)"
+    texte: "Hier, sur la table, vous avez posé les mains à plat sur vos genoux. Comme un passager."
+  - qui: rouvier
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_vl_dossier)"
+    texte: "Mon amie a peur. Si on vous demande d'où vient la feuille, vous l'avez trouvée sous votre porte. Comme le reste."
+  - qui: rouvier
+    sujet: toi
+    si: "flag(histoire_h4) && tranche == aprem && lieu == cabinet"
+    texte: "Allongez-vous. Le genou gauche d'abord : il ment moins que le droit."
+  - qui: rouvier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_capot)"
+    texte: "Vous ne dites plus le mot, depuis le parking. Vous ne dites plus rien. C'est pire, pour la nuque."
+  - qui: rouvier
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_table)"
+    texte: "Le Doc m'a montré son carnet noir, une fois. Une seule ligne m'a fait peur : celle du 14 mai."
+  - qui: rouvier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_chevaliere)"
+    texte: "Vous frottez votre annulaire, sur la table, comme s'il y manquait une bague. Vous n'en avez jamais porté."
+
+  # ============================================================ SACHA
+  # À la maison, le soir ; plus après la valise.
+  - qui: sacha
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_reve_route) && !flag(divorce)"
+    texte: "Dans la voiture, on joue à gauche ou à droite ? Tu dis toujours à gauche, toi. Pourquoi tu dis toujours à gauche ?"
+  - qui: sacha
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_reve_freine) && !flag(divorce)"
+    texte: "Cette nuit, tu as encore dit le mot, à travers le mur. Je ne le dis à personne. C'est notre secret, d'accord ?"
+  - qui: sacha
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_puzzle_sacha) && !flag(divorce)"
+    texte: "Il manque toujours un morceau à mon puzzle. Un monsieur sans tête. Tu crois qu'il arrive mardi ?"
+  - qui: sacha
+    sujet: sponsor
+    si: "flag(histoire_h4) && flag(h4_panneau_toi) && !flag(divorce)"
+    texte: "À l'école, ils disent que tu es sur un panneau près du pont. Le permis, c'est la vie. C'est quoi, le permis ?"
+  - qui: sacha
+    sujet: epoque
+    si: "flag(histoire_h4) && !flag(divorce) && tranche == soir"
+    texte: "Tu me racontes le but de la lucarne ? Pas celui de la télé. Le vrai, celui d'avant que je sois née."
+  - qui: sacha
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_jubile_annonce) && !flag(divorce)"
+    texte: "Le jour de ton jubilé, je peux venir au rond central ? Je mettrai ma robe rouge. Tu diras mon nom au micro ?"
+  - qui: sacha
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_chevaliere) && !flag(divorce)"
+    texte: "Pourquoi tu regardes les mains des gens ? Au supermarché, tu regardais les mains du monsieur de la caisse."
+  - qui: sacha
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_morceau_brule) && !flag(divorce)"
+    texte: "J'ai trouvé un bout de papier brûlé dans l'évier. Il y avait un maillot dessus. C'était le tien ?"
+
+  # ============================================================ MADAME HUGUETTE
+  - qui: huguette
+    sujet: achat
+    si: "flag(histoire_h4) && flag(h4_quatorze_mai)"
+    texte: "Chaque 14 mai, mon livreur va au carré ancien. Il m'a dit un jour : c'est drôle, ce Bertin, pas de famille et des fleurs."
+  - qui: huguette
+    sujet: achat
+    si: "flag(histoire_h4) && saison == 1"
+    texte: "Des chrysanthèmes en octobre, tout le monde en veut. En mai, il n'y a que vous."
+  - qui: huguette
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_abonnement_arrete)"
+    texte: "J'ai rayé votre ligne. Le livreur demande s'il doit encore passer par le carré ancien. Je lui ai dit que non."
+  - qui: huguette
+    sujet: achat
+    si: "flag(histoire_h4) && flag(h4_abonnement_renouvele)"
+    texte: "Votre abonnement court jusqu'en 1995, maintenant. Je l'ai écrit au crayon, au cas où vous changeriez d'avis."
+  - qui: huguette
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_pas_de_tombe)"
+    texte: "Monsieur Fardelli m'avait dit : la tombe la plus seule du carré. J'ai cru que c'était pour un ami."
+  - qui: huguette
+    sujet: achat
+    si: "flag(histoire_h4) && flag(h4_fiche_hopital)"
+    texte: "Un bouquet pour quelqu'un de vivant ? On en fait aussi, bien sûr. Il suffit de me dire pour qui."
+  - qui: huguette
+    sujet: quartier
+    si: "flag(histoire_h4) && tranche == matin && lieu == fleuriste"
+    texte: "Les chrysanthèmes, je les rentre le soir. Le gel les prend par les bords, comme les gens."
+
+  # ============================================================ LE VESTIAIRE, LE BUREAU, LA PRESSE
+  - qui: brehaut
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_photo_entiere) && !flag(h4_capot)"
+    texte: "Le groupe a vu les morceaux de photo dans ton casier. Ils ne demandent rien. Moi non plus. Tu devrais les jeter."
+  - qui: brehaut
+    sujet: sponsor
+    si: "flag(histoire_h4) && flag(h4_panneau_brehaut)"
+    texte: "Mon panneau, au bord de la Rive, je ne le regarde pas. Je prends la route du haut. Ça rallonge de dix minutes."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_capot) && !flag(h4_brehaut_convaincu)"
+    texte: "Ne me regarde pas comme ça à l'entraînement. Les gamins voient tout. Mbako surtout."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_brehaut_convaincu)"
+    texte: "J'écris ce que je dirai au micro. Je n'ai pas dépassé la première ligne. Elle commence par ton nom."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_bouteille)"
+    texte: "La poire du Corner, c'était une connerie. Je n'aurais pas dû te laisser la bouteille. J'y ai pensé toute la nuit."
+  - qui: fardelli
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_registre) && !flag(h4_pas_de_tombe)"
+    texte: "Le gardien t'a montré son registre ? Les gardiens notent tout. Les agents, eux, oublient ce qu'il faut."
+  - qui: fardelli
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_pas_de_tombe)"
+    texte: "Ne me demande pas pardon, et je ne te le demanderai pas. On est quittes depuis 1985, dans mes comptes."
+  - qui: fardelli
+    sujet: sponsor
+    si: "flag(histoire_h4) && flag(h4_panneau_toi)"
+    texte: "Le panneau rapporte. Tu n'as pas à le regarder ; il suffit qu'il soit là."
+  - qui: fardelli
+    sujet: argent
+    si: "flag(histoire_h4) && flag(h4_cheques)"
+    texte: "Tes chèques reviennent ? Garde les enveloppes. Un jour, un juge voudra savoir que tu as essayé."
+  - qui: sabatier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_chiffre_demande) && !flag(h4_table)"
+    texte: "Le chiffre de ta radio ? Un compte, je t'ai dit. Ne me fais pas répéter un mensonge, c'est mauvais à mon âge."
+  - qui: sabatier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_table)"
+    texte: "Le carnet est retourné dans le tiroir. Il n'en ressortira plus. Toi, tu as fini de le lire ?"
+  - qui: sabatier
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_infiltration) && !flag(h4_table)"
+    texte: "Tu rêves, depuis la piqûre ? Tout le monde rêve. Les rêves ne sont pas sur l'ordonnance."
+  - qui: vukic
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_cahier_lu)"
+    texte: "Le cahier est dans mon sac, ouvert à la bonne page. Si tu as besoin de le relire, tu sais où est le banc."
+  - qui: vukic
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_reve_freine) && !flag(h4_cahier_lu)"
+    texte: "Dans le car, tu as encore dit le mot. Les gamins rigolent. Moi pas."
+  - qui: meneche
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_corbeau)"
+    texte: "J'ai relu mes deux lignes du milieu, hier soir. Elles disent “vivante” depuis 1984, à qui veut bien ouvrir le tiroir."
+  - qui: meneche
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_nom_dicte) && !flag(h4_nom_imprime)"
+    texte: "Ta onzième ligne est dans l'épreuve. Elle attend. Les lignes ont plus de patience que les gens."
+  - qui: meneche
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_nom_imprime)"
+    texte: "Page sept, onzième ligne. Personne ne lit la page sept. C'est pour ça que je l'ai choisie."
+  - qui: lea
+    sujet: rumeur
+    si: "flag(histoire_h4) && flag(h4_corbeau)"
+    texte: "La lettre est toujours dans le tiroir de Massenet. Je ne l'ai pas montrée au rédacteur en chef. Pas encore."
+  - qui: lea
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_jubile_annonce)"
+    texte: "Le discours que Vaubourg m'a dicté pour vous fait une page. “1984” y est quatre fois. “Route”, jamais."
+  - qui: aulard
+    sujet: argent
+    si: "flag(histoire_h4) && flag(h4_rabais_pourquoi)"
+    texte: "Ton agent ne t'a pas dit pourquoi ? C'est un bon agent."
+  - qui: aulard
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_jubile_annonce)"
+    texte: "Le jubilé fera le plein. Les gens aiment les fins. Fais-en une belle."
+  - qui: aulard
+    sujet: club
+    si: "flag(histoire_h4) && flag(h4_date_refusee)"
+    texte: "Le 15 mai, c'est la Ligue qui l'a choisi. Moi, je l'ai seulement fait imprimer en rouge."
+  - qui: fardelli
+    sujet: sombre
+    si: "flag(histoire_h4) && flag(h4_feuille_sue)"
+    texte: "La feuille du coffre, tu l'as signée sur un lit d'hôpital, la main qui tremblait. C'est moi qui tenais le stylo."
+  - qui: sacha
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_dernier_reve) && !flag(divorce)"
+    texte: "Cette nuit, tu n'as pas dit le mot. Tu as dit : une heure cinquante. C'est l'heure de quoi ?"
+  - qui: josiane
+    sujet: epoque
+    si: "flag(histoire_h4) && flag(h4_photo_archives)"
+    texte: "Le carton de 1984 est à la cave. J'ai souligné l'année deux fois, je ne sais plus pourquoi. Ça me reviendra."
+  - qui: camille
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_camille_cimetiere) && flag(h4_mensonge_camille) && !flag(divorce) && lieu == appartement"
+    texte: "Qui est Jules Bertin ? Ne me dis pas un ami. On n'apporte pas des chrysanthèmes à un ami tous les 14 mai."
+  - qui: camille
+    sujet: toi
+    si: "flag(histoire_h4) && flag(h4_verite_camille) && !flag(divorce) && lieu == appartement"
+    texte: "Quinze ans, tu as dit. Sacha en aura quinze en 1999. Je n'arrête pas de faire le calcul."
+  - qui: camille
+    sujet: quartier
+    si: "flag(histoire_h4) && flag(h4_premier_morceau) && !flag(divorce) && lieu == appartement"
+    texte: "Encore un mardi. Je ne relève plus le courrier le mardi. Je te laisse la porte."

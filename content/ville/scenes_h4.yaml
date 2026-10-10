@@ -1,0 +1,301 @@
+# HISTOIRE 4 — « La Route de la Rive » : les scènes de la semaine du livre.
+# Format : en-tête de content/ville/scenes_communes.yaml. Chaque scène lit le
+# drapeau d'histoire ; une fois par carrière ; des effets légers.
+#
+# Ce que les jours sans carte gardent du livre : le pont et son réverbère, la
+# cour du tabac où tourne une mobylette, le banc du square, la loge, la
+# fleuriste, l'école de Sacha, la tribune Est où l'on repeint la place des
+# fauteuils. Les scènes ne disent rien que les cartes n'aient semé : elles
+# rendent la ville témoin.
+scenes:
+  - id: h4.sc.lucarne
+    titre: "Derrière le but, en 84"
+    roles: [joueur]
+    lieu: rue
+    tranches: [matin, aprem]
+    qui: ancien
+    si: "flag(histoire_h4) && saison == 1"
+    texte: "Un vieux en casquette t'arrête devant la boulangerie : « La lucarne de 84, je l'ai vue du virage. Après, on est tous allés au pont. Vous, vous étiez où, après ? »"
+    choix:
+      - label: "Au pont, comme vous"
+        reponse: "« Alors on a trinqué ensemble sans le savoir. » Il te serre la main longtemps. Tu ne te souviens pas de lui. Tu ne te souviens de presque rien."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je ne m'en souviens plus"
+        reponse: "« C'est normal, à votre âge, on ne se souvenait de rien le lendemain. » Il rit. Toi, tu ris une seconde après lui."
+
+  - id: h4.sc.ralentis
+    titre: "RALENTIS"
+    roles: [joueur]
+    lieu: rue
+    tranches: [soir]
+    si: "flag(histoire_h4) && flag(h4_reve_route)"
+    texte: "Au bout du pont de la Rive, sur le poteau du réverbère, quelqu'un a peint à la main, en lettres blanches qui ont coulé : RALENTIS."
+    choix:
+      - label: "Je ralentis"
+        reponse: "Tu passes au pas. Derrière toi, une camionnette klaxonne, double, et file. Le réverbère grésille quand tu passes dessous."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je regarde ailleurs"
+        reponse: "Tu passes sans tourner la tête. Dans le rétroviseur, les lettres blanches restent allumées plus longtemps que le réverbère."
+
+  - id: h4.sc.cour_tabac
+    titre: "La cour du tabac"
+    roles: [joueur]
+    lieu: tabac
+    tranches: [soir]
+    qui: passant
+    si: "flag(histoire_h4) && flag(h4_fils_mobylette)"
+    texte: "Par la porte de la cour du tabac, un garçon de vingt ans penché sur une mobylette bleue. Il relève la tête, te reconnaît, et relance le moteur. Longtemps."
+    choix:
+      - label: "J'entre dans la cour"
+        reponse: "Il coupe le moteur. « La cour est privée. » Il attend que tu repartes, une clé de douze à la main, sans la lever."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je reste sur le trottoir"
+        reponse: "Le moteur tourne au ralenti jusqu'à ce que tu aies tourné le coin de la rue. Puis il s'arrête net."
+
+  - id: h4.sc.ciseaux
+    titre: "Les chutes de papier"
+    roles: [joueur]
+    lieu: square
+    tranches: [aprem]
+    qui: enfant
+    si: "flag(histoire_h4) && flag(h4_standard_vu)"
+    texte: "Une petite fille ramasse des chutes de papier journal sous le banc du fond et te les tend : « La dame en fauteuil les a oubliées. Vous la connaissez ? »"
+    choix:
+      - label: "Je les garde pour elle"
+        reponse: "Tu les glisses dans ta poche. Des bouts de colonnes, des moitiés de visages. Sur l'un, la moitié du tien."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "Jette-les"
+        reponse: "Elle les jette dans la poubelle verte, consciencieusement, puis te regarde comme si tu avais dit un gros mot."
+
+  - id: h4.sc.ardoise
+    titre: "Prix d'hiver"
+    roles: [joueur]
+    lieu: fleuriste
+    tranches: [matin]
+    qui: huguette
+    si: "flag(histoire_h4) && flag(h4_quatorze_mai)"
+    texte: "Aux Immortelles, Madame Huguette écrit à la craie sur l'ardoise : CHRYSANTHÈMES, PRIX D'HIVER. « Pour Monsieur Bertin, ce sera comme d'habitude ? »"
+    choix:
+      - label: "Un pot, comme d'habitude"
+        francs: -60
+        reponse: "Elle choisit le plus fourni et le tourne vers la lumière. « Il ne verra pas la différence. Moi, si. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Pas cette fois"
+        reponse: "Elle efface la ligne du bout du doigt, puis la réécrit, plus petite. « Je la laisse au cas où. »"
+
+  - id: h4.sc.bache
+    titre: "La bâche sur la tombe"
+    roles: [joueur]
+    lieu: cimetiere
+    tranches: [aprem]
+    si: "flag(histoire_h4) && flag(h4_registre)"
+    texte: "Il pleut sur le carré ancien. Monsieur Abel a tendu une bâche au-dessus de la tombe de Jules Bertin, pour les fleurs. Personne ne le lui a demandé."
+    choix:
+      - label: "Je tiens un coin"
+        reponse: "Vous tenez la bâche à deux jusqu'à l'averse suivante. Il ne dit rien. Toi non plus. Les fleurs sont sèches."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je reste sous le porche"
+        reponse: "Tu regardes de loin. Le gardien ajuste la bâche, tire sur une corde, recule, et la regarde comme on regarde un but."
+
+  - id: h4.sc.dessin
+    titre: "Le dessin du cartable"
+    roles: [joueur]
+    lieu: ecole
+    tranches: [aprem]
+    si: "flag(histoire_h4) && flag(h4_reve_freine) && !flag(divorce)"
+    texte: "À la sortie de l'école, la maîtresse te tend le cahier de Sacha à signer. Au crayon de couleur, une voiture rouge sur un pont, et un rond jaune au bout."
+    choix:
+      - label: "Je signe sans rien dire"
+        reponse: "Tu signes. Sacha te prend la main dans la rue. « Le rond jaune, c'est le soleil. » Il est deux heures du matin, sur le dessin."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "Je demande ce que c'est"
+        reponse: "« C'est toi qui conduis », dit Sacha, très fière. La maîtresse te regarde un peu trop longtemps en refermant le cahier."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h4.sc.veilleur
+    titre: "Le veilleur de nuit"
+    roles: [joueur]
+    lieu: hotel
+    tranches: [soir]
+    qui: passant
+    si: "flag(histoire_h4) && flag(h4_standard_vu)"
+    texte: "Dans le hall de l'hôtel de la Rive, le veilleur de nuit te reconnaît : « La standardiste finit à vingt-deux heures. Elle ne veut pas qu'on l'attende. Je vous le dis quand même. »"
+    choix:
+      - label: "J'attends dehors"
+        reponse: "À vingt-deux heures, son père la sort par la porte de service et la soulève jusqu'à la voiture. Il te voit. Il ne s'arrête pas."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "Je rentre"
+        reponse: "« C'est mieux », dit le veilleur, et il retourne à ses mots croisés. Il remplit une case avant que tu aies passé la porte."
+
+  - id: h4.sc.poire
+    titre: "La bouteille du patron"
+    roles: [joueur]
+    lieu: bar
+    tranches: [soir]
+    qui: commercant
+    si: "flag(histoire_h4) && flag(h4_capot)"
+    texte: "Au Corner, le patron pose une bouteille de poire sur le zinc sans que tu la demandes : « Le capitaine dit que c'était la vôtre, en 84. La maison offre. »"
+    choix:
+      - label: "Rangez-la"
+        reponse: "Il la range sans discuter, sur l'étagère du haut, l'étiquette tournée vers le mur."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Un verre, pas plus"
+        reponse: "Un verre. Le patron ne ressert pas. Tu rentres à pied, en suivant le bord du trottoir comme une ligne de touche."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h4.sc.place_fauteuil
+    titre: "La place des fauteuils"
+    roles: [joueur]
+    lieu: stade
+    tranches: [aprem]
+    qui: passant
+    si: "flag(histoire_h4) && flag(h4_promesse_micro)"
+    texte: "Tribune Est, vide en semaine. Au premier rang, une bande blanche fraîche au sol : la place des fauteuils. Le jardinier te voit regarder : « Repeinte lundi. »"
+    choix:
+      - label: "Je m'assois à côté"
+        reponse: "Tu t'assois sur le siège d'à côté, face au rond central. D'ici, le micro sera tout petit. La voix, non."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je redescends"
+        reponse: "Tu redescends par l'escalier de la tribune. Le jardinier repasse un coup de pinceau sur la bande, là où ton ombre était."
+
+  - id: h4.sc.toussaint
+    titre: "La Toussaint"
+    roles: [joueur]
+    lieu: cimetiere
+    tranches: [matin]
+    qui: ancien
+    si: "flag(histoire_h4) && flag(h4_quatorze_mai) && phase == aller"
+    texte: "La Toussaint : la foule dans les allées, des chrysanthèmes partout. Pour une fois, ceux de Jules Bertin ne se remarquent pas. Un vieux te salue de la tête, en passant."
+    choix:
+      - label: "Je passe le voir"
+        reponse: "Tu restes cinq minutes devant la pierre. Autour, des familles entières. Devant Bertin, personne d'autre que toi."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je reste à la grille"
+        reponse: "Tu regardes la foule monter le carré ancien. Ce jour-là, tout le monde fleurit quelqu'un. Ça ne console de rien."
+
+  - id: h4.sc.voisine
+    titre: "La voisine d'en face"
+    roles: [joueur]
+    lieu: rue
+    tranches: [matin]
+    qui: passante
+    si: "flag(histoire_h4) && flag(h4_saisie)"
+    texte: "La voisine d'en face, en robe de chambre, ramasse son journal devant la haie : « L'huissier reviendra ? Je demande pour mes petits, qu'ils ne voient pas ça deux fois. »"
+    choix:
+      - label: "Il reviendra"
+        reponse: "« Alors je les emmènerai chez ma mère ce jour-là. » Elle rentre sans te dire bonjour, mais sans claquer la porte."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je n'en sais rien"
+        reponse: "« Personne ne sait jamais rien, dans cette rue. » Elle plie son journal en deux, la Une à l'intérieur."
+
+  - id: h4.sc.sifflet
+    titre: "Le sifflet de la réserve"
+    roles: [joueur]
+    lieu: terrain
+    tranches: [matin]
+    qui: vukic
+    si: "flag(histoire_h4) && flag(h4_cahier_lu)"
+    texte: "Sur le terrain annexe, Vukić pose les plots sans te regarder, puis te tend le sifflet de la réserve : « Siffle la fin de l'exercice, pour voir. »"
+    choix:
+      - label: "Je siffle"
+        reponse: "Un coup sec. Douze gamins s'arrêtent net et te regardent. Vukić reprend le sifflet. « Tu vois. Ils écoutent. »"
+        effets: {jauges: {direction: 1}}
+      - label: "Je te le rends"
+        reponse: "Il le remet à son cou. « Le jour où tu voudras, il sera là. Le cahier aussi. »"
+
+  - id: h4.sc.cierge
+    titre: "Un cierge"
+    roles: [joueur]
+    lieu: eglise
+    tranches: [aprem]
+    si: "flag(histoire_h4) && flag(h4_fiche_hopital)"
+    texte: "Dans l'église, un présentoir de cierges, une boîte en fer pour les pièces. Une vieille femme en allume un pour quelqu'un. Tu sais maintenant que la tienne vit."
+    choix:
+      - label: "J'en allume un"
+        francs: -5
+        reponse: "Tu le plantes au bout de la rangée. On n'allume pas de cierge pour les vivants, dit la vieille femme. Tu le laisses brûler quand même."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je ressors"
+        reponse: "Dehors, la place est vide. Il n'y a rien à allumer pour quelqu'un qui passe les appels de l'hôtel de la Rive."
+
+  - id: h4.sc.kiosque
+    titre: "Le kiosque du quai"
+    roles: [joueur]
+    lieu: kiosque
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h4) && flag(h4_tabac_ferme)"
+    texte: "Au kiosque du quai, le vendeur plie L'Écho et te le tend sans un mot. Vingt mètres plus loin, le tabac du Quai lève son rideau."
+    choix:
+      - label: "Je paie et je pars"
+        francs: -4
+        reponse: "Il te rend la monnaie sans compter. C'est la première fois depuis des années qu'on ne la compte pas devant toi."
+      - label: "Je regarde le tabac"
+        reponse: "Le rideau finit de monter. Derrière la vitre, le buraliste te voit, et retourne la pancarte sur FERMÉ."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h4.sc.carton_cave
+    titre: "La cave du club-house"
+    roles: [joueur]
+    lieu: clubhouse
+    tranches: [aprem]
+    qui: josiane
+    si: "flag(histoire_h4) && flag(h4_photo_archives) && flag(h4_registre)"
+    texte: "Madame Josiane remonte de la cave avec une lampe de poche : « Il y a un carton ARCHIVES 1984, en bas, sous les autres. Je l'ai changé de place. Je ne sais plus pourquoi. »"
+    choix:
+      - label: "Laissez-le où il est"
+        reponse: "« C'est ce que je fais de mieux. » Elle range la lampe dans le tiroir, avec les clés de la cave."
+      - label: "Montrez-le-moi"
+        reponse: "Elle te tend la lampe. « Le troisième en partant de la gauche. Je n'ai rien vu, moi. » Le carton sent la poussière et le vernis."
+        effets: {jauges: {direction: -1}}
+
+  - id: h4.sc.mobylette_bleue
+    titre: "La mobylette bleue"
+    roles: [joueur]
+    lieu: rue
+    tranches: [soir]
+    si: "flag(histoire_h4) && flag(h4_mobylette_vue) && !flag(h4_standard_vu)"
+    texte: "Sur le quai, une mobylette bleue te dépasse au ralenti, sans phare, et s'arrête vingt mètres plus loin, moteur allumé. Le conducteur ne se retourne pas."
+    choix:
+      - label: "Je m'approche"
+        reponse: "Elle repart quand tu arrives à sa hauteur. Sur le porte-bagages, une enveloppe kraft maintenue par un tendeur."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "Je traverse"
+        reponse: "Tu traverses le quai. Le moteur tourne encore longtemps derrière toi, au même endroit, puis il s'éteint."
+
+  - id: h4.sc.panneau_nuit
+    titre: "Le panneau, la nuit"
+    roles: [joueur]
+    lieu: rue
+    tranches: [nuit]
+    si: "flag(histoire_h4) && flag(h4_panneau_toi)"
+    texte: "Deux heures du matin, au bord de la Rive. Le spot du panneau de l'auto-école éclaire ton sourire de quatre mètres et rien d'autre. Le pont est dans le noir."
+    choix:
+      - label: "Je coupe le spot"
+        reponse: "Le boîtier n'est pas fermé. Tu baisses le levier. Ton visage s'éteint, et le pont réapparaît, avec sa lumière à lui."
+        effets: {jauges: {direction: -1}}
+      - label: "Je rentre"
+        reponse: "Tu rentres. Dans le rétroviseur, ton sourire reste allumé jusqu'au virage, puis tu ne le vois plus."
+
+  - id: h4.sc.annuaire
+    titre: "L'annuaire de la cabine"
+    roles: [joueur]
+    lieu: rue
+    tranches: [soir]
+    si: "flag(histoire_h4) && flag(h4_fiche_hopital)"
+    texte: "Dans la cabine du quai, l'annuaire pend à sa chaîne. À la lettre L, un seul Lavergne : tabac du Quai. Tu composes le numéro avant d'avoir décidé quoi que ce soit."
+    choix:
+      - label: "Je raccroche avant"
+        reponse: "Tu raccroches à la première sonnerie. La pièce ne revient pas. Tu restes dans la cabine jusqu'à ce que quelqu'un frappe à la vitre."
+      - label: "Je laisse sonner"
+        reponse: "« Tabac du Quai. » Tu ne dis rien. Il attend. Puis il raccroche, doucement, comme on ferme une porte sur quelqu'un qui dort."
+        effets: {jauges: {vestiaire: -1}}
+
+match_textes:
+  pour_toi:
+    - {texte: "Une tête au premier poteau, comme en 1984. Le stade se lève ; toi, tu restes à genoux une seconde de plus : {score}.", si: "flag(histoire_h4)"}
+    - {texte: "Tu frappes du gauche, le genou d'abord, sans réfléchir. Le ballon passe sous la barre, et tu cherches des yeux la tribune Est : {score}.", si: "flag(histoire_h4) && flag(h4_standard_vu)"}
+  pour:
+    - {texte: "Le filet tremble. Bréhaut te prend par le cou, comme sur la photo de 1984, et ne te lâche plus : {score}.", si: "flag(histoire_h4) && !flag(h4_capot)"}
+  contre:
+    - {texte: "Une perte de balle, la tienne : le genou se dérobe au mauvais moment. Leur avant-centre ne se fait pas prier : {score}.", si: "flag(histoire_h4) && flag(h4_infiltration)"}

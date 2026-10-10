@@ -1,0 +1,86 @@
+# HISTOIRE 4 — « La Route de la Rive » : les deux missions du livre (la
+# troisième, le certificat, est la mission commune de la pharmacie). Format :
+# en-tête de content/ville/missions.yaml.
+#
+#   · h4.registre — Monsieur Abel, à la loge, le matin : cinq cents francs
+#     « pour l'entretien des allées », et le registre ouvert le temps d'un
+#     café. C'est la scène du registre, prise d'avance (ou reprise par qui
+#     était reparti sans demander) : le nom de Fardelli, le 13 mai 1985, et
+#     aucune jeune fille de quinze ans en 1984. Pose h4_vl_registre ; l'ancre
+#     de la saison 2 la lit.
+#   · h4.dossier_hopital — Nadia Rouvier, au cabinet, l'après-midi, quand on
+#     sait que la tombe n'est pas la bonne : une amie aux archives de
+#     l'hôpital de Portclair, une photocopie, une nuit. Le vol d'un dossier
+#     médical est un délit : h4_vl_dossier arme l'événement « La photocopie »
+#     (content/arcs/joueur/h4_sombres.yaml), et la garde à vue.
+missions:
+  - id: h4.registre
+    titre: "Le registre du gardien"
+    roles: [joueur]
+    donneur: {sprite: abel, nom: "Monsieur Abel", lieu: loge, tranches: [matin]}
+    si: "flag(histoire_h4) && flag(h4_quatorze_mai) && !flag(h4_tombe_inconnue)"
+    chance: 0.5
+    etapes:
+      - id: offre
+        texte: "Monsieur Abel essuie ses lunettes sur le pas de la loge : « Les allées coûtent cher. Pour {montant}, je vous laisse le registre le temps d'un café. Vous cherchez une date, je crois. »"
+        choix:
+          - id: payer
+            label: "Je paie les allées"
+            francs: -500
+            reponse: "Il plie les billets sans les compter. « Revenez demain matin. Le registre est lourd ; je le sors une fois par jour. »"
+            suite: registre
+          - id: non
+            label: "Je ne cherche rien"
+            reponse: "« Personne ne cherche rien, ici. » Il rentre dans la loge et laisse la porte entrouverte, au cas où."
+            suite: fin
+      - id: registre
+        objectif: {lieu: loge, tranches: [matin], delai: 3}
+        texte: "Le registre est ouvert sur la table, à mai 1985. « Fardelli, R. — 13 mai — pour M. Bertin. » En dessous, ton nom, le lendemain. Et en mai 1984, aucune jeune fille."
+        choix:
+          - id: recopier
+            label: "Je recopie la ligne"
+            reponse: "Tu recopies au dos d'un ticket de caisse. Abel souffle sur son café. « Prenez la date aussi. Les dates, c'est ce qui reste. »"
+            effets: {set: [h4_vl_registre, h4_tombe_inconnue]}
+            suite: fin
+          - id: refermer
+            label: "Je referme le registre"
+            reponse: "Tu le refermes doucement, sur la page. « Il se rouvrira tout seul à cet endroit, maintenant. Ils font tous ça. »"
+            effets: {set: [h4_vl_registre]}
+            suite: fin
+        echec:
+          texte: "Le registre est rangé. Monsieur Abel ne le ressort pas : « Je l'ouvre une fois par jour, je vous l'avais dit. L'argent des allées, je le garde. »"
+
+  - id: h4.dossier_hopital
+    titre: "Le dossier de l'hôpital"
+    roles: [joueur]
+    donneur: {sprite: rouvier, nom: "Nadia Rouvier", lieu: cabinet, tranches: [aprem]}
+    si: "flag(histoire_h4) && flag(h4_tombe_inconnue) && !flag(h4_fiche_hopital)"
+    chance: 0.5
+    etapes:
+      - id: offre
+        texte: "Rouvier masse ton genou en silence, puis : « Une amie aux archives de Portclair peut sortir une fiche de 1984, une nuit, le temps d'une photocopie. C'est un délit. Vous voulez ? »"
+        choix:
+          - id: oui
+            label: "Demandez-lui"
+            reponse: "Elle hoche la tête sans lever les yeux du genou. « Revenez la semaine prochaine. Et ne m'appelez pas pour demander. »"
+            suite: archives
+          - id: non
+            label: "Pas votre amie"
+            reponse: "« Vous avez raison. » Elle reprend le massage, plus doucement, comme pour s'excuser d'avoir proposé."
+            suite: fin
+      - id: archives
+        objectif: {lieu: cabinet, tranches: [aprem], delai: 7}
+        texte: "Une enveloppe kraft sur la table de massage. Rouvier ne la touche pas. « Mon amie veut {montant} pour le taxi de nuit. Elle a eu peur, en sortant. »"
+        choix:
+          - id: payer
+            label: "Je paie le taxi"
+            francs: -2000
+            reponse: "Tu poses les billets à côté de l'enveloppe. Elle les prend, et te laisse l'enveloppe. « Je ne l'ai pas ouverte. Vous non plus, ici. »"
+            effets: {set: [h4_vl_dossier]}
+            suite: fin
+          - id: rendre
+            label: "Rendez-la fermée"
+            reponse: "Elle range l'enveloppe dans sa blouse. « Elle retournera aux archives cette nuit. Personne ne saura qu'elle en est sortie. »"
+            suite: fin
+        echec:
+          texte: "Rouvier a rendu l'enveloppe à son amie, fermée. « Personne n'est venu la chercher. Elle est retournée aux archives. Tant mieux. »"

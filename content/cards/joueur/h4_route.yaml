@@ -1,0 +1,180 @@
+# HISTOIRE 4 — « La Route de la Rive » : la route (l'arc `jp.h4.route`,
+# content/arcs/joueur/h4_intrigues.yaml). La touche du livre.
+#
+# Les infiltrations du Doc, et les nuits d'après : deux heures, la route de la
+# Rive, une lumière de mobylette au bout du pont. Le joueur glisse à gauche ou
+# à droite, et c'est le volant qu'il tourne. Chaque rêve change un détail vrai,
+# et un seul : la chanson, la voix qui dit « freine », la chevalière sur la
+# main qui tient le volant, les mains posées sur les genoux, la montre arrêtée.
+#
+# Les rêves sont des intermèdes (tag `intermede`) : sans locuteur, sans jauge,
+# la coquille les sert la nuit, où que l'on soit. Jamais deux de suite : entre
+# deux rêves, le jour reprend (le Doc, la kiné, le car de Vukić, l'hôtel).
+cards:
+  # ------------------------------------------------- la première infiltration
+  - id: jp.h4.route.piqure
+    roles: [joueur]
+    arc: corps
+    tags: [vestiaire, moment]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Le Doc remplit une seringue face au négatoscope, sans te regarder : « Une infiltration, et le genou tient jusqu'à Noël. Mais on rêve, après la première. Tout le monde rêve. »"
+    left:
+      label: "Piquez"
+      effects: {direction: "+", force: 1, set: [h4_infiltration]}
+      answer: "L'aiguille entre sous la rotule. Le froid monte jusqu'à la hanche. « Ne conduis pas ce soir », dit le Doc, en rangeant la seringue."
+    right:
+      label: "Rien qu'un cachet"
+      effects: {vestiaire: "-", force: -1}
+      answer: "Il range la seringue. « Alors tu boiteras, et tu dormiras mal quand même. » Il te tend deux comprimés dans un papier plié."
+
+  # ------------------------------------------------- le premier rêve : la chanson
+  - id: jp.h4.route.premier_reve
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "Deux heures, la route de la Rive. À la radio, une chanson de l'été 1984 dont tu ne connais pas les paroles, et pourtant tu chantes. Au bout du pont, la lumière d'une mobylette."
+    left:
+      label: "Je tourne à gauche"
+      effects: {set: [h4_reve_route, h4_reve_gauche]}
+      answer: "Le volant tourne seul, plus loin que tes mains. Tu te réveilles assis{pg, select, f{e} other{}} dans le lit, les bras tendus devant toi."
+    right:
+      label: "Je tourne à droite"
+      effects: {set: [h4_reve_route]}
+      answer: "La lumière grossit, blanche, sans un bruit. Tu te réveilles avant. Dans la chambre de Sacha, la veilleuse est allumée."
+
+  # ------------------------------------------------- le deuxième rêve : « freine »
+  - id: jp.h4.route.deuxieme_reve_gauche
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "Deux heures, la même route. Tu tournes à gauche avant le pont, comme l'autre nuit, mais la route revient sous les roues. Quelqu'un, à ta droite, dit « freine », doucement."
+    left:
+      label: "Je freine"
+      effects: {set: [h4_reve_freine], react: jp.h4.re.rouvier_table}
+      answer: "La pédale s'enfonce jusqu'au plancher, sans résistance, comme une marche qui manque. Tu te réveilles en disant le mot."
+    right:
+      label: "Je ne freine pas"
+      effects: {set: [h4_reve_freine], react: jp.h4.re.rouvier_table}
+      answer: "La lumière passe à côté, ou à travers. Tu te réveilles dans le car du club, le front contre la vitre. Personne ne te regarde."
+
+  - id: jp.h4.route.deuxieme_reve
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "Deux heures, la même route. La chanson s'est tue. Quelqu'un, à ta droite, dit « freine », doucement, comme on réveille un enfant. Au bout du pont, la lumière."
+    left:
+      label: "Je freine"
+      effects: {set: [h4_reve_freine], react: jp.h4.re.rouvier_table}
+      answer: "La pédale s'enfonce jusqu'au plancher, sans résistance, comme une marche qui manque. Tu te réveilles en disant le mot."
+    right:
+      label: "Je ne freine pas"
+      effects: {set: [h4_reve_freine], react: jp.h4.re.rouvier_table}
+      answer: "La lumière passe à côté, ou à travers. Tu te réveilles dans le car du club, le front contre la vitre. Personne ne te regarde."
+
+  # ------------------------------------------------- Sérène (le sponsor louche, saison 1)
+  # Au bar de l'hôtel de la Rive. Derrière la vitre du standard, quelqu'un te
+  # voit signer : la graine du standard (« Pas vous. Le passager. »). Une
+  # carte du sac (une fois, en saison 1, après la piqûre) : la saison 1 du
+  # livre est assez pleine d'échéances.
+  - id: jp.h4.route.serene
+    roles: [joueur]
+    arc: corps
+    tags: [sponsors, scandale]
+    lieu: hotel
+    tone: strategique
+    once: true
+    weight: 2.0
+    when: "flag('histoire_h4') && season == 1 && flag('h4_infiltration')"
+    text: "Bar de l'hôtel de la Rive. Un visiteur des Laboratoires Sérène pose une boîte d'ampoules sans notice sur la nappe, et une enveloppe dessous : « Contre l'inflammation. Quinze mille pour essayer. »"
+    left:
+      label: "J'essaie"
+      effects: {caisse: "+", force: 1, set: [h4_sp_serene], var: {ville_francs_sales: "+15000"}}
+      answer: "Tu glisses l'enveloppe dans ta veste. Derrière la vitre du standard, une jeune femme au casque te regarde faire, sans ciller."
+    right:
+      label: "Remballez"
+      effects: {direction: "+"}
+      answer: "Il remballe sans se vexer et laisse sa carte sous la soucoupe. « Le genou changera d'avis. Ils changent tous, à votre âge. »"
+
+  # ------------------------------------------------- le troisième rêve : la chevalière
+  - id: jp.h4.route.troisieme_reve_serene
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "Deux heures, la route. Les ampoules de Sérène tintent dans la boîte à gants. Les mains sur le volant sont à dix heures dix, et à l'annulaire droit brille une chevalière."
+    left:
+      label: "Je l'enlève"
+      effects: {set: [h4_chevaliere]}
+      answer: "Elle ne passe pas la phalange. Tu tires, la route tourne, la lumière arrive. Au réveil, ton doigt est rouge, et nu."
+    right:
+      label: "Je regarde la route"
+      effects: {set: [h4_chevaliere]}
+      answer: "La route ne tourne pas, la lumière ne grossit pas. Rien ne finit. Tu te réveilles à quatre heures, la main droite engourdie."
+
+  - id: jp.h4.route.troisieme_reve
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "Deux heures, la route de la Rive. Les mains sur le volant sont à dix heures dix, comme on l'apprend. À l'annulaire droit, une chevalière. Tu n'en as jamais porté."
+    left:
+      label: "Je l'enlève"
+      effects: {set: [h4_chevaliere]}
+      answer: "Elle ne passe pas la phalange. Tu tires, la route tourne, la lumière arrive. Au réveil, ton doigt est rouge, et nu."
+    right:
+      label: "Je regarde la route"
+      effects: {set: [h4_chevaliere]}
+      answer: "La route ne tourne pas, la lumière ne grossit pas. Rien ne finit. Tu te réveilles à quatre heures, la main droite engourdie."
+
+  # ------------------------------------------------- le rêve d'après : les mains sur les genoux
+  # Un seul bouton (deux sorties identiques, charte § 4.1).
+  - id: jp.h4.route.quatrieme_reve_su
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "La même route. Tes mains sont posées sur tes genoux. Tu sais qui conduit, maintenant ; dans le rêve, il chante la chanson de l'été 1984, et il dit « ça va aller »."
+    left:
+      label: "Je tourne la tête"
+      effects: {set: [h4_reve_genoux], react: jp.h4.re.vukic_cahier}
+      answer: "Il te sourit, vingt-sept ans, le brassard au poignet. Tu te réveilles avant le pont, pour la première fois sans la lumière."
+    right:
+      label: "Je tourne la tête"
+      effects: {set: [h4_reve_genoux], react: jp.h4.re.vukic_cahier}
+      answer: "Il te sourit, vingt-sept ans, le brassard au poignet. Tu te réveilles avant le pont, pour la première fois sans la lumière."
+
+  - id: jp.h4.route.quatrieme_reve
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "La même route, la même lumière au bout du pont. Cette fois, tu regardes tes mains : elles sont posées sur tes genoux. Quelqu'un d'autre tient le volant et dit « ça va aller »."
+    left:
+      label: "Je tourne la tête"
+      effects: {set: [h4_reve_genoux], react: jp.h4.re.vukic_cahier}
+      answer: "Le siège du conducteur est flou, comme une photo dont on aurait découpé le visage. Tu te réveilles sans crier."
+    right:
+      label: "Je tourne la tête"
+      effects: {set: [h4_reve_genoux], react: jp.h4.re.vukic_cahier}
+      answer: "Le siège du conducteur est flou, comme une photo dont on aurait découpé le visage. Tu te réveilles sans crier."
+
+  # ------------------------------------------------- le dernier rêve : la montre (saison 2)
+  - id: jp.h4.route.cinquieme_reve
+    roles: [joueur]
+    arc: corps
+    tags: [intermede]
+    tone: leger
+    text: "Deux heures. Tu marches pieds nus sur la route de la Rive, à côté de la voiture du club qui roule au pas, vide. À ton poignet, la montre de la montée s'est arrêtée à une heure cinquante."
+    left:
+      label: "Je monte, côté passager"
+      effects: {set: [h4_dernier_reve], outcome: passager}
+      answer: "La portière est ouverte. Tu t'assois. La voiture s'arrête au bout du pont, à dix mètres de la lumière, et attend avec toi."
+    right:
+      label: "Je marche vers la lumière"
+      effects: {set: [h4_dernier_reve], outcome: lumiere}
+      answer: "C'est un phare de mobylette, posé sur la route, allumé. Personne autour. Tu te penches pour l'éteindre, et tu te réveilles."

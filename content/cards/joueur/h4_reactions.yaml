@@ -1,0 +1,219 @@
+# HISTOIRE 4 — « La Route de la Rive » : les réactions. Servies au tirage
+# suivant, hors créneau ; jamais de `end`, jamais de drame, jamais deux
+# d'affilée. Le build leur pose `kind: reaction` par le `react:` qui les cite.
+#
+# Ce qu'elles tiennent : le lendemain des choses. Le matin d'après le moteur
+# (le tabac du Quai, une odeur d'essence dans la cour) ; le panneau de
+# l'auto-école (le sponsor propre, et cruel) ; le car où l'on dit « freine » ;
+# le cahier de Vukić ; le carton des archives, que Josiane descend au mauvais
+# étage.
+cards:
+  # ------------------------------------------------- après le moteur (saison 0)
+  - id: jp.h4.re.lavergne_matin
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: lavergne
+    tone: leger
+    text: "Tabac du Quai, sept heures. Jean Lavergne pose L'Écho sur le comptoir. Par la porte de la cour, une odeur d'essence, et le tic-tac d'un moteur qui refroidit. « Votre monnaie. »"
+    left:
+      label: "Vous avez une mobylette ?"
+      effects: {tribunes: "+", set: [h4_fils_mobylette]}
+      answer: "« Mon fils. Il la répare la nuit ; il ne dort pas non plus. » Il ferme la porte de la cour d'un coup de talon."
+    right:
+      label: "Gardez la monnaie"
+      effects: {caisse: "-"}
+      answer: "Il la pose quand même sur la Une, pièce par pièce, et attend que tu la ramasses. Tu la ramasses."
+
+  # ------------------------------------------------- le panneau (saison 0, après le rabais)
+  # L'auto-école de la Rive : l'argent est propre ; le panneau est planté à
+  # cent mètres du pont. Qui refuse y laisse la place au capitaine.
+  - id: jp.h4.re.fardelli_panneau
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, agents]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli déroule une maquette sur le capot de sa voiture : ta tête, quatre mètres de haut, « Le permis, c'est la vie ». « L'auto-école de la Rive, {toi}. Argent propre. À cent mètres du pont. »"
+    left:
+      label: "Signe pour moi"
+      effects: {caisse: "++", tribunes: "-", set: [h4_panneau_toi], var: {ville_francs: "+20000"}}
+      answer: "Il signe sur le capot. « Ils ne savent rien, à l'auto-école. Personne ne sait. C'est tout le métier. » Le panneau monte en novembre."
+    right:
+      label: "Pas à cet endroit"
+      effects: {caisse: "-", relation: {fardelli: -1}, set: [h4_panneau_brehaut]}
+      answer: "Il roule la maquette. « Ils mettront Bréhaut, alors. Il a dit oui avant toi. » Le panneau monte en novembre, le capitaine dessus."
+
+  - id: jp.h4.re.fardelli_panneau_pourquoi
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, agents]
+    speaker: fardelli
+    tone: leger
+    text: "Fardelli te rattrape dans l'escalier, une maquette sous le bras : « Le pourquoi, je te le dirai un jour, {toi}. En attendant, une auto-école veut ta tête sur un panneau. Argent propre. »"
+    left:
+      label: "Signe pour moi"
+      effects: {caisse: "++", tribunes: "-", set: [h4_panneau_toi], var: {ville_francs: "+20000"}}
+      answer: "Il signe sur la rampe. Sous ta tête, sur la maquette : « Le permis, c'est la vie. » Le panneau monte en novembre, près du pont."
+    right:
+      label: "Pas ma tête"
+      effects: {caisse: "-", relation: {fardelli: -1}, set: [h4_panneau_brehaut]}
+      answer: "« Ils prendront Bréhaut. Il a dit oui sans lire le slogan. » Il te le montre quand même : « Le permis, c'est la vie. »"
+
+  # ------------------------------------------------- « freine » (saison 0, après la quinzième)
+  - id: jp.h4.re.vukic_freine
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    tone: leger
+    text: "Dans le car du retour, Vukić s'assoit à côté de toi, un cahier d'écolier sur les genoux : « Les gars t'entendent, la nuit, dans le car. Tu dis “freine” en dormant. Depuis quand, {toi} ? »"
+    left:
+      label: "Depuis 1984"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Il ouvre le cahier à une page cornée, la relit, et le referme sans te la montrer. « Moi aussi, j'ai une date. Un jour, je te la lirai. »"
+    right:
+      label: "Je ne rêve jamais"
+      effects: {vestiaire: "-"}
+      answer: "« Alors c'est quelqu'un d'autre qui dort à ta place. » Il remonte deux rangs plus loin. Tu fais semblant de dormir jusqu'à Aubérive."
+
+  # ------------------------------------------------- la table de massage (saison 0)
+  - id: jp.h4.re.rouvier_table
+    roles: [joueur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: rouvier
+    tone: leger
+    text: "Le lendemain, sur la table de massage, Nadia Rouvier travaille ton genou en silence. Puis : « Vous parlez, quand vous somnolez ici. Une route, un pont. Je n'écris rien, {toi}. »"
+    left:
+      label: "Qu'est-ce que je dis ?"
+      effects: {relation: {rouvier: 1}}
+      answer: "« “Freine.” Toujours le même mot, toujours poli. » Elle reprend le massage. « Les noms, ce n'est pas mon métier. »"
+    right:
+      label: "Oubliez ça"
+      effects: {relation: {rouvier: -1}}
+      answer: "« C'est déjà fait. » Elle met plus de force dans ses pouces, juste là où ça fait mal, et ne parle plus que du temps."
+
+  # ------------------------------------------------- la facture des Immortelles (saison 1)
+  # Pour qui a menti au cimetière : Camille croit à une autre femme, et on
+  # peut la laisser y croire.
+  - id: jp.h4.re.camille_facture
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: strategique
+    text: "Camille pose la facture des Immortelles sur ton assiette : « Des chrysanthèmes payés d'avance par ton agent, pour un mort de 1983. Tu me prends pour qui, {toi} ? »"
+    left:
+      label: "C'est une autre histoire"
+      effects: {relation: {camille: -1}}
+      answer: "« Une autre femme, tu veux dire. » Elle déchire la facture en quatre. Tu ne la détrompes pas : c'est plus simple."
+    right:
+      label: "Une fille, en 1984"
+      effects: {parole: 1, relation: {camille: 1}, set: [h4_verite_camille]}
+      answer: "Tu dis la fête, la route, la fille. Elle recolle la facture au scotch. « Six ans, et tu choisis le dîner pour me le dire. »"
+
+  # ------------------------------------------------- la licence (saison 1, après la fiche)
+  - id: jp.h4.re.lavergne_licence
+    roles: [joueur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: lavergne
+    tone: leger
+    text: "Tabac du Quai, sept heures. Au-dessus de la caisse, la licence encadrée : LAVERGNE Jean. À côté, la photo d'une fille sur une mobylette bleue. Il attend ta monnaie, la main ouverte."
+    left:
+      label: "C'est votre fille ?"
+      effects: {relation: {lavergne: -1}}
+      answer: "« Elle travaille. » Il rend la monnaie et la compte deux fois. « Le journal est au même prix qu'hier. »"
+    right:
+      label: "Je paie sans un mot"
+      effects: {tribunes: "-"}
+      answer: "Il te rend la monnaie, la compte deux fois, et ne te quitte pas des yeux jusqu'à la porte."
+
+  # ------------------------------------------------- le cahier (saison 1, après le rêve d'après)
+  - id: jp.h4.re.vukic_cahier
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "Le car du club, au petit jour. Vukić s'assoit à côté de toi et ouvre son cahier de 1984 à une page cornée : « Tu n'as pas crié, cette nuit. Alors tu peux lire ça. »"
+    left:
+      label: "Je lis la page"
+      effects: {relation: {vukic: 1}, set: [h4_cahier_lu]}
+      answer: "14 mai 1984. « Départ du pont, 1 h 50. Titi au volant, {pg, select, f{la petite} other{le petit}} dort. » L'écriture penche, l'encre a bavé."
+    right:
+      label: "Ferme ce cahier"
+      effects: {relation: {vukic: -1}}
+      answer: "Il le ferme, sans vexation. « Il sera dans mon sac, au banc de la réserve, à côté d'un survêtement à ta taille. »"
+
+  # ------------------------------------------------- le micro de Vaubourg (saison 2)
+  - id: jp.h4.re.lea_micro
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    tone: leger
+    text: "Léa, au bord du terrain, son bloc ouvert : « Vaubourg veut un micro au rond central pour votre jubilé. Il a déjà écrit votre discours ; il me l'a dicté. Vous le lirez, {toi} ? »"
+    left:
+      label: "Je lirai le mien"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "« Alors je garderai deux colonnes blanches, le lundi. » Elle referme son bloc. « C'est rare, deux colonnes blanches. »"
+    right:
+      label: "Je lirai le sien"
+      effects: {direction: "+"}
+      answer: "Elle te tend la page : trois remerciements, la montée de 1984, « la plus belle nuit de ma vie ». « Vous direz ça aussi ? »"
+
+  # ------------------------------------------------- le carton des archives (saison 2)
+  # Le carton du prologue, descendu à la cave en 1990, remonte au mauvais étage.
+  - id: jp.h4.re.josiane_carton
+    roles: [joueur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane pose un carton sur ton casier, ARCHIVES 1984 : « Le président m'a demandé de le descendre à la cave avant l'avocat. Je me suis trompée d'étage, {toi}. »"
+    left:
+      label: "Je l'ouvre"
+      effects: {direction: "-", relation: {josiane: 1}}
+      answer: "La photo de la montée, sous un verre fêlé ; une facture de dépanneuse du 14 mai 1984 ; une déclaration de vol, datée du 15."
+    right:
+      label: "Remontez-le"
+      effects: {direction: "+"}
+      answer: "« Je ne remonte jamais rien. » Elle le laisse sur le casier. Le lendemain, il n'y est plus, et elle ne te regarde pas."
+
+  # ------------------------------------------------- l'aube (saison 2, après la route)
+  - id: jp.h4.re.camille_aube
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    tone: strategique
+    text: "Six heures. Camille te trouve sur la marche du perron, les clés de la voiture dans la main, le jour qui se lève sur les Lilas : « Tu es rentré{pg, select, f{e} other{}} à pied ? »"
+    left:
+      label: "Je le dirai cet après-midi"
+      effects: {relation: {camille: 1}}
+      answer: "Elle te prend les clés et les glisse dans sa poche. « Alors je viens. Au premier rang, à côté du fauteuil. »"
+    right:
+      label: "Je ne sais pas encore"
+      effects: {relation: {camille: -1}}
+      answer: "« Tu as jusqu'à quinze heures. » Elle rentre faire du café. Tu restes sur la marche jusqu'à ce que le laitier passe."
+
+  # ------------------------------------------------- le square (saison 1, après le standard)
+  # La fin rare (« Sandrine entendue en privé ») se gagne ici, en se taisant à
+  # côté d'elle.
+  - id: jp.h4.re.square
+    roles: [joueur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: sandrine
+    tone: strategique
+    text: "Le lendemain, square des Lilas. Sur le banc du fond, la standardiste de l'hôtel découpe des photos dans L'Écho avec des ciseaux d'écolier. Elle te voit. Elle continue."
+    left:
+      label: "Je m'assois au bout"
+      effects: {vestiaire: "-", relation: {sandrine: 1}, set: [h4_sandrine_entendue]}
+      answer: "Elle parle sans lever les ciseaux : le phare, la lumière, le visage de celui qui conduisait. Tu ne dis rien. C'était ce qu'elle voulait."
+    right:
+      label: "Je passe mon chemin"
+      effects: {direction: "+"}
+      answer: "Tu passes. Derrière toi, le bruit des ciseaux s'arrête, puis reprend, plus vite."
