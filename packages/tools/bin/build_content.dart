@@ -1653,7 +1653,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['paroles', 'missions', 'objets', 'presences']) {
+      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -1903,6 +1903,22 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     paroles.add({'qui': qui, 'sujet': sujet, if (e['si'] != null) 'si': e['si'].toString(), 'texte': texte});
   }
 
+  // --- ce qu'on voit en entrant, selon le moment : `lieux_variantes` (dans
+  // ville.yaml ou un lot), la première vraie remplace le texte du lieu — la
+  // maquette de la vitrine qui change à chaque saison, la plaque gravée…
+  final lieuxVariantes = <Map<String, dynamic>>[];
+  var iv = 0;
+  for (final e in (m['lieux_variantes'] as List? ?? const [])) {
+    final where = 'ville/lieux_variantes[${iv++}]';
+    if (e is! Map) { errors.add('$where: une table {lieu, si, texte}'); continue; }
+    final lieu = e['lieu']?.toString() ?? '';
+    if (!cles.contains(lieu)) errors.add('$where: lieu « $lieu » absent de `lieux`');
+    if (e['si'] == null) errors.add('$where: une variante porte un `si`');
+    si(e['si'], where);
+    final texte = txt(e, 'texte', where, 200);
+    lieuxVariantes.add({'lieu': lieu, 'si': e['si']?.toString() ?? '', 'texte': texte});
+  }
+
   // --- les missions
   final missions = <Map<String, dynamic>>[];
   final vusM = <String>{};
@@ -2045,6 +2061,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     'lieux': lieux,
     'cartes_lieux': cartesLieux,
     if (ailleurs.isNotEmpty) 'ailleurs': ailleurs,
+    if (lieuxVariantes.isNotEmpty) 'lieux_variantes': lieuxVariantes,
     'rencontres': rencontres,
     'beats': beats,
     'genres': genres,

@@ -1756,9 +1756,13 @@
     var el = $("villePorte");
     el.classList.remove("v-mission");
     var acts = activitesIci(cle);
+    // ce qu'on voit en entrant : la première variante vraie (la vitrine qui
+    // change, la plaque gravée…), sinon le texte du lieu
+    var vu = (D.lieux_variantes || []).filter(function (v) { return v.lieu === cle && siVrai(v.si, cle); })[0];
+    var texteLieu = vu ? remplir(vu.texte) : def.texte;
     var html = '<h2>' + esc(nomLieu(l)) + '</h2>' +
       '<p class="v-sous">' + esc(JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]].toLowerCase()) + (lieuOuvert ? "" : " · fermé") + '</p>' +
-      (def.texte ? '<p class="v-texte">' + esc(def.texte) + '</p>' : "") +
+      (texteLieu ? '<p class="v-texte">' + esc(texteLieu) + '</p>' : "") +
       '<p class="v-fait"' + (fait ? "" : " hidden") + '>' + esc(fait || "") + '</p>';
     // le rendez-vous de plus tard, s'il est ici
     if (rdv && rdv.lieu === cle && !rdv.sombre && tNow() < rdv.debut) {

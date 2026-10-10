@@ -12,7 +12,7 @@ import 'widgets/paper.dart';
 import 'widgets/portrait.dart';
 
 /// L'écran titre (§4.6) : l'album fermé sur la table du vestiaire, le sticker
-/// « Nouvel album », les quatre pochettes (postulats) et la plaque Cimetière.
+/// « Nouvel album », les pochettes des histoires livrées (postulats) et la plaque Cimetière.
 class TitleScreen extends StatefulWidget {
   final GameController controller;
   const TitleScreen({super.key, required this.controller});
@@ -690,7 +690,8 @@ class _PostulatGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final content = controller.engine.content;
-    final items = postulats.take(4).toList();
+    // les histoires livrées (une histoire en chantier ne se montre pas), deux par rangée
+    final items = postulats.where((p) => !p.chantier).toList();
     final rows = <Widget>[];
     for (var r = 0; r < items.length; r += 2) {
       rows.add(Row(
@@ -701,14 +702,14 @@ class _PostulatGrid extends StatelessWidget {
             Expanded(
               child: k < items.length
                   ? _Pochette(
-                      index: k,
+                      index: items[k].index,
                       def: items[k],
                       roleName: content.roles[items[k].role]?.name ?? items[k].role,
                       tilt: (k == 1 || k == 2) ? .6 : 0,
                       objectifsDone: controller.profile.objectifsDone(items[k].id),
                       storiesSeen: controller.profile.storiesSeen(items[k].id),
                       storiesTotal: controller.storiesTotal(items[k]),
-                      onStart: () => onStart(k),
+                      onStart: () => onStart(items[k].index),
                     )
                   : const SizedBox.shrink(),
             ),
