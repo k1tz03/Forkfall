@@ -1453,6 +1453,8 @@ __VILLE_CSS__
     var wrap = $("postulats");
     wrap.innerHTML = "";
     postulats.forEach(function (p) {
+      // une histoire en chantier attend d'être écrite (?chantier pour la voir quand même)
+      if (p.chantier && !/[?&]chantier/.test(location.search)) return;
       var b = document.createElement("button");
       b.className = "postulat";
       b.type = "button";
@@ -2021,7 +2023,13 @@ __VILLE_CSS__
   }
 
   $("btnNew").addEventListener("click", function () {
-    startRun((currentPostulat + 1) % Math.max(1, postulats.length));
+    // l'histoire suivante — en sautant celles qui sont encore en chantier
+    var n = Math.max(1, postulats.length), i = currentPostulat;
+    for (var k = 0; k < n; k++) {
+      i = (i + 1) % n;
+      if (!postulats[i] || !postulats[i].chantier || /[?&]chantier/.test(location.search)) break;
+    }
+    startRun(i);
   });
   $("btnReplay").addEventListener("click", function () { startRun(currentPostulat, currentSeed); });
 

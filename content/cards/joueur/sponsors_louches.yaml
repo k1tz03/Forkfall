@@ -16,7 +16,7 @@ cards:
     speaker: josiane
     lieu: secretariat
     tone: leger
-    text: "Madame Josiane pose sur le comptoir une clé du garage du Pont : « Monsieur Ravenel prête une voiture à un joueur du club depuis 1979. Votre nom sur la portière, un samedi par mois au garage. »"
+    text: "Madame Josiane pose sur le comptoir une clé du garage du Pont : « Monsieur Ravenel prête une voiture à un joueur du club depuis 1979 : votre nom sur la portière, un samedi par mois. Je dis oui ? »"
     left:
       label: "Dites-lui oui"
       effects: {caisse: "+", vestiaire: "-", var: {ville_francs: "+5000"}, set: [sp_garage]}
@@ -139,11 +139,11 @@ cards:
     text: "Vecchio pose sur ton banc des crampons emballés dans L'Écho : « Bourrel, de Montbéliac. Il fait mes gants depuis 1971. Il veut te chausser trois saisons ; il paie peu, mais il paie. Tu essaies ? »"
     left:
       label: "Je les lace"
-      effects: {caisse: "+", relation: {vecchio: 1}, var: {ville_francs: "+4000"}, set: [sp_bourrel]}
+      effects: {vestiaire: "+", relation: {vecchio: 1}, var: {ville_francs: "+4000"}, set: [sp_bourrel]}
       answer: "Le cuir sent la colle et le cirage. Gigi te regarde faire les nœuds, puis refait le gauche sans un mot."
     right:
       label: "J'ai mes chaussures"
-      effects: {force: 1, relation: {vecchio: -1}, outcome: refus}
+      effects: {vestiaire: "-", force: 1, relation: {vecchio: -1}, outcome: refus}
       answer: "Il remballe la paire dans le même journal, page des sports dessus. Le lendemain, un gamin de la réserve les porte à l'entraînement."
 
   - id: jp.sp.bourrel.ampoule
@@ -174,11 +174,11 @@ cards:
     text: "Fardelli, au bar de l'hôtel de la Rive, pose la photo de L'Écho près de son verre : tes pieds, sans les Bourrel. « Une grande marque l'a vue aussi. Cinq fois ton cordonnier. On rompt proprement ? »"
     left:
       label: "J'ai donné ma parole"
-      effects: {caisse: "-", tribunes: "+", relation: {fardelli: -1, vecchio: 1}, set: [sp_bourrel_tenu], outcome: tenu}
+      effects: {direction: "-", relation: {fardelli: -1, vecchio: 1}, set: [sp_bourrel_tenu], outcome: tenu}
       answer: "Fardelli replie la photo en deux : « Alors porte-les, au moins. » Le samedi suivant, tu remets les Bourrel ; le talon a durci."
     right:
       label: "Rompez, proprement"
-      effects: {caisse: "++", tribunes: "-", relation: {vecchio: -2}, var: {ville_francs: "+20000"}, set: [sp_bourrel_rompu], outcome: rompu}
+      effects: {caisse: "+", direction: "+", relation: {vecchio: -2}, var: {ville_francs: "+20000"}, set: [sp_bourrel_rompu], outcome: rompu}
       answer: "Lundi, des chaussures neuves t'attendent au vestiaire, dans une boîte plus belle qu'elles. Gigi range ses gants Bourrel à part."
 
   - id: jp.sp.bourrel.marque
@@ -191,11 +191,11 @@ cards:
     text: "Fardelli, au bar de l'hôtel de la Rive, glisse un contrat sous son verre : « Une grande marque de la Capitale : cinq fois ton cordonnier, des chaussures comme des chaussons. On rompt proprement ? »"
     left:
       label: "J'ai donné ma parole"
-      effects: {caisse: "-", tribunes: "+", relation: {fardelli: -1, vecchio: 1}, set: [sp_bourrel_tenu], outcome: tenu}
+      effects: {direction: "-", relation: {fardelli: -1, vecchio: 1}, set: [sp_bourrel_tenu], outcome: tenu}
       answer: "Il replie le contrat en quatre et le glisse dans ta poche : « Pour le jour où le vieux ne sera plus là. » Il paie les verres."
     right:
       label: "Rompez, proprement"
-      effects: {caisse: "++", tribunes: "-", relation: {vecchio: -2}, var: {ville_francs: "+20000"}, set: [sp_bourrel_rompu], outcome: rompu}
+      effects: {caisse: "+", direction: "+", relation: {vecchio: -2}, var: {ville_francs: "+20000"}, set: [sp_bourrel_rompu], outcome: rompu}
       answer: "Lundi, des chaussures neuves t'attendent au vestiaire, dans une boîte plus belle qu'elles. Gigi range ses gants Bourrel à part."
 
   # Parole tenue : le vieux est mort dimanche.
@@ -231,7 +231,7 @@ cards:
       answer: "Samedi, tu joues en Bourrel. Lundi, la grande marque retient une amende sur ton virement ; Gigi, lui, te paie un café."
     right:
       label: "Rendez-les à son fils"
-      effects: {caisse: "+", relation: {vecchio: -1}}
+      effects: {direction: "+", relation: {vecchio: -1}}
       answer: "Gigi les remballe dans L'Écho du jour. Il ne les rend pas : il les range dans son casier, à côté de ses gants."
 
   # ============================================== 3 · La table du jeudi (louche)
@@ -261,12 +261,12 @@ cards:
     text: "Le quatrième jeudi, la chance tourne. À deux heures, l'homme du casino range tes reconnaissances de dette dans une boîte à cigares : « Quarante mille. Rien ne presse. Un jour, un petit service. »"
     left:
       label: "Je paie, en trois fois"
-      effects: {caisse: "--", parole: 1, var: {ville_amende: "+40000"}}
-      answer: "Trois chèques, trois mois. Il les encaisse sans un mot ; la boîte à cigares reste sur la table, vide, et il la garde quand même."
+      effects: {direction: "-", parole: 1, var: {ville_amende: "+40000"}}
+      answer: "Trois chèques, trois mois. Vaubourg trouve que ça ne se fait pas, entre amis ; l'homme du casino garde la boîte à cigares, vide."
     right:
       label: "J'attendrai son service"
-      effects: {set: [sp_tripot_dette]}
-      answer: "Il glisse la boîte dans sa veste, contre le cœur. Le jeudi suivant, ta chaise n'est plus à la table ; il n'en a plus besoin."
+      effects: {direction: "+", set: [sp_tripot_dette]}
+      answer: "Il glisse la boîte dans sa veste, contre le cœur. Vaubourg te raccompagne jusqu'au car, une main sur ton épaule, comme un père."
 
   # La dette laissée : le service.
   - id: jp.sp.tripot.service_portable
@@ -279,11 +279,11 @@ cards:
     text: "Au Corner, l'homme du casino pose sur le flipper sa boîte à cigares et un téléphone portable neuf : « Samedi, à la demi-heure, un carton jaune. Le téléphone, c'est pour la suite. »"
     left:
       label: "Un jaune, rien de plus"
-      effects: {parole: -1, var: {cadeau_portable: "+1"}, set: [sp_tripot_service], outcome: service}
+      effects: {direction: "+", parole: -1, var: {cadeau_portable: "+1"}, set: [sp_tripot_service], outcome: service}
       answer: "Le téléphone sonne dans ta poche avant que tu sois rentré. Une voix dit « bonne nuit », et raccroche avant ta réponse."
     right:
       label: "Je vous paierai"
-      effects: {caisse: "--", parole: 1, var: {ville_amende: "+40000"}, outcome: paye}
+      effects: {caisse: "-", direction: "-", parole: 1, var: {ville_amende: "+40000"}, outcome: paye}
       answer: "Il remet le téléphone dans sa poche, pas la boîte. Trois chèques, trois mois ; le troisième arrive avec un jour de retard, et il le note."
 
   - id: jp.sp.tripot.service
@@ -295,11 +295,11 @@ cards:
     text: "Au Corner, l'homme du casino pose sa boîte à cigares sur le flipper : « Samedi, à la demi-heure, un carton jaune pour vous. Rien de plus. Et la boîte brûle. »"
     left:
       label: "Un jaune, rien de plus"
-      effects: {parole: -1, set: [sp_tripot_service], outcome: service}
+      effects: {direction: "+", parole: -1, set: [sp_tripot_service], outcome: service}
       answer: "Il met une pièce dans le flipper et te laisse la partie. Les billes tombent l'une après l'autre ; tu ne tires pas une fois."
     right:
       label: "Je vous paierai"
-      effects: {caisse: "--", parole: 1, var: {ville_amende: "+40000"}, outcome: paye}
+      effects: {caisse: "-", direction: "-", parole: 1, var: {ville_amende: "+40000"}, outcome: paye}
       answer: "Il sourit comme à un enfant qui promet. Trois chèques, trois mois ; le troisième arrive avec un jour de retard, et il le note."
 
   # La dette payée : l'affiche.

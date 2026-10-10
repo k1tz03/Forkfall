@@ -19,15 +19,18 @@
 #    metteur en scène (`chance` par créneau, deux événements par saison au
 #    plus, cinq créneaux d'écart). `same_club: false` : la police suit qui elle
 #    cherche, même après un transfert.
-#    · L'inventaire (domicile) — six heures du matin, la brigade financière,
-#      un inventaire tapé à la machine : l'hélicoptère, le pavillon, la montre,
-#      le coupé ou les espèces. Saisies par `saisie_*`, amendes par
-#      `ville_amende`. Mentir pose `sp_nie`.
+#    · L'inventaire (domicile) — un dimanche soir, au retour du match, un
+#      commissaire en imperméable sur le palier, le carnet saisi chez le
+#      sponsor à la main : l'hélicoptère, la villa, la montre, le coupé ou les
+#      espèces. Saisies par `saisie_*`, amendes par `ville_amende`. Mentir pose
+#      `sp_nie`. (Pas « six heures du matin » : c'est la scène de la brigade
+#      des biens, content/arcs/*/biens.yaml.)
 #    · Le contrôle (rue) — une heure du matin, quai sud, l'enveloppe dans la
 #      boîte à gants, ou le coupé du casino.
-#    · Quarante-huit heures (parking) — deux inspecteurs contre ta voiture.
-#      Donner les noms, ou se taire : se taire ferme la carrière
-#      (`end: co_garde_a_vue`, content/endings/police.yaml).
+#    · Quarante-huit heures (terrain annexe) — deux inspecteurs traversent la
+#      pelouse en chaussures de ville, devant tout l'entraînement. Donner les
+#      noms, ou se taire : se taire ferme la carrière (`end: co_garde_a_vue`,
+#      content/endings/police.yaml).
 #    · La commission (hôtel) — Berthomier au petit salon de l'hôtel de la Rive :
 #      un match vendu, un carton jaune à la minute, des ampoules sans notice.
 #      Nier, ou signer : signer ferme la carrière (`end: co_radiation`,
@@ -115,9 +118,9 @@ arcs:
     same_club: false
     fallback: drop
     traces:
-      sp_perquisition: "{annee} : six heures du matin, la brigade financière chez {nom}, un inventaire tapé à la machine."
+      sp_perquisition: "{annee} : un dimanche soir, un commissaire sur le palier de {nom}, le carnet d'un sponsor à la main."
     steps:
-      - id: aube
+      - id: palier
         card:
           - { id: co.sp.inventaire_helico, if: "flag('sp_terrain_helico')" }
           - { id: co.sp.inventaire_villa, if: "flag('sp_terrain_villa')" }
@@ -166,7 +169,7 @@ arcs:
     traces:
       sp_garde_a_vue: "{annee} : quatre heures au commissariat central. {nom} en est sorti{pg, select, f{e} other{}} en donnant des noms."
     steps:
-      - id: parking
+      - id: terrain
         # « Je n'ai rien à dire » ferme la carrière (end: co_garde_a_vue) ;
         # « Je donne les noms » pose sp_garde_a_vue et ouvre la sortie.
         card:

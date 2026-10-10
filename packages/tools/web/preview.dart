@@ -118,6 +118,8 @@ String _postulatsJson() {
       'year': p.year,
       // la quatrième de couverture, sous la pochette (les dix histoires)
       'pitch': p.pitch,
+      // une histoire en cours d'écriture ne se montre pas sur l'écran titre
+      'chantier': p.chantier,
     });
   }
   // La ville (content/ville.yaml), telle quelle : la coquille de la version

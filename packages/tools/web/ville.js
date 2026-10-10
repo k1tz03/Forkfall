@@ -994,6 +994,9 @@
     mesBiens().forEach(function (id) { var o = OBJET[id]; if (o.logement && (!best || o.prix > best.prix)) best = o; });
     return best;
   }
+  // chez toi : le deux-pièces de la rue des Lilas ; le sélectionneur, lui, loge à
+  // l'hôtel de la Rive (la Fédération paie la note)
+  function chezToi() { return S && S.role === "selectionneur" && LIEU.hotel ? "hotel" : "appartement"; }
   function nomLieu(l) {
     if (l && l.key === "appartement") { var o = logement(); if (o) return o.logement.nom; }
     return l ? l.label : "";
@@ -1376,12 +1379,12 @@
   // ─────────────────────────────────────────────────────────────── où va une carte
   function lieuDe(c) {
     var B = D.beats || {}, CL = D.cartes_lieux || {}, R = D.rencontres || {}, GN = D.genres || {};
-    if (B[c.beatKind]) return B[c.beatKind];
-    if (c.lieu && CL[c.lieu]) return CL[c.lieu];
+    if (B[c.beatKind]) return B[c.beatKind] === "appartement" ? chezToi() : B[c.beatKind];
+    if (c.lieu && CL[c.lieu]) return CL[c.lieu] === "appartement" ? chezToi() : CL[c.lieu];
     if (c.kind && GN[c.kind] === "ici") return "ici";
-    if (c.speaker && R[c.speaker]) return R[c.speaker];
-    if (c.kind && GN[c.kind]) return GN[c.kind];
-    return S.tranche >= 3 ? "appartement" : "clubhouse";
+    if (c.speaker && R[c.speaker]) return R[c.speaker] === "appartement" ? chezToi() : R[c.speaker];
+    if (c.kind && GN[c.kind]) return GN[c.kind] === "appartement" ? chezToi() : GN[c.kind];
+    return S.tranche >= 3 ? chezToi() : "clubhouse";
   }
   function estSombre(c) { return (c.tags || []).indexOf("sombre") >= 0; }
   function cleVue(v) { return v && v.card ? (v.turn + ":" + v.card.id + ":" + v.season) : ""; }
@@ -1407,14 +1410,14 @@
       r.type = "normal"; r.lieu = "stade"; r.fin = Math.min(maintenant + 6, prochain(5, 1, false));
       r.force = "vient";
     } else if (bk === "classement" || bk === "bilan_une") {
-      r.type = "dimanche"; r.lieu = "appartement";
+      r.type = "dimanche"; r.lieu = chezToi();
       r.debut = r.fin = (S.jour === 6 || S.jour === 5 && S.tranche >= 3) ? maintenant : prochain(6, 0, false);
       if (bk === "bilan_une") r.debut = r.fin = maintenant;
       r.force = "scene";
     } else if (bk === "bilan_verdict" || bk === "bilan_contrat") {
       r.lieu = "clubhouse"; r.fin = maintenant + 3; r.force = "vient";
     } else if (bk === "bilan_carrefour") {
-      r.lieu = "appartement"; r.debut = r.fin = maintenant; r.force = "scene";
+      r.lieu = chezToi(); r.debut = r.fin = maintenant; r.force = "scene";
     } else if (bk === "prologue") {
       r.type = "prologue"; r.fin = maintenant + 4; r.force = "vient";
     } else if (c.lieu === "ailleurs") {
@@ -1652,9 +1655,9 @@
   }
   var attente = [];
   function effondrement() {
-    var l = LIEU.appartement, c = centre(l.door);
+    var chez = chezToi(), l = LIEU[chez], c = centre(l.door);
     fonduTexte("Tu t'effondres", JOUR_MOT[S.jour] + ", " + HEURE[TRANCHES[S.tranche]], "On te ramène chez toi. Tu dors jusqu'au lendemain midi.", function () {
-      poser(c[0], c[1]); S.lieu = "appartement";
+      poser(c[0], c[1]); S.lieu = chez;
       while (S.tranche !== 1 || !S._dormi) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); S._dormi = true; } }
       S._dormi = false;
       S.energie = 45; S.faim = clamp(S.faim, 10, 100);
@@ -1981,7 +1984,7 @@
     if (carteOn || occupe) return;
     fermerPorte();
     if (S.tranche === 4) {
-      if (S.lieu === "appartement") { dormir(); return; }
+      if (S.lieu === chezToi()) { dormir(); return; }
       toast("Il est tard. Rentre dormir : la nuit, tout peut arriver.");
     }
     avancer(1);
@@ -2136,7 +2139,7 @@
     while (tNow() < t && garde++ < 80) {
       if (S.tranche === 4) {
         // la nuit, on rentre dormir — et au réveil, on reprend le chemin du rendez-vous
-        var c = centre(LIEU.appartement.door); poser(c[0], c[1]); S.lieu = "appartement";
+        var chez = chezToi(), c = centre(LIEU[chez].door); poser(c[0], c[1]); S.lieu = chez;
         allerApresNuit = true;
         dormir();
         return;
@@ -2232,19 +2235,23 @@
       var faire = function () {
         S = {
           v: 1, nom: (v.entities && v.entities.protagonist) || "", role: v.role,
-          semaine: 1, jour: 0, tranche: 0, energie: 80, faim: 70, francs: 1240,
-          x: 0, y: 0, lieu: "appartement", cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
+          // en poche au départ : une semaine de la paie du rôle (le promu n'a pas un sou, son entraîneur si)
+          semaine: 1, jour: 0, tranche: 0, energie: 80, faim: 70,
+          francs: Math.max(1240, (SALAIRE[v.role] || SALAIRE.entraineur)[clamp((v.division || 1) - 1, 0, 2)]),
+          x: 0, y: 0, lieu: v.role === "selectionneur" && LIEU.hotel ? "hotel" : "appartement", cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
           journeeDebut: v.journee || 0, auMatch: false, zoom: 0,
           biens: {}, sale: 0, pont: {}, mission: null, missionsFaites: {}, offres: {}, derniereOffre: -99, dits: {}
         };
         annonces = [];
         rdv = null; dernierVu = ""; figurants = []; passants = []; acteurs = {};
         lancer();
-        var c = centre(LIEU.appartement.door); poser(c[0], c[1]);
+        var c = centre(LIEU[S.lieu].door); poser(c[0], c[1]);
         var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1];
         recaler();
-        fonduTexte((v.entities && v.entities.ville ? v.entities.ville : "Aubérive"), moisCourant(),
-          "Deux pièces au troisième, rue des Lilas. Le " + ((v.entities && v.entities.club) || "club") + " t'attend. La ville aussi.", null, function () {
+        var club = (v.entities && v.entities.club) || "club", leClub = (/^[AEIOUYÉÈÊaeiouyéèê]/.test(club) ? "L'" : "Le ") + club;
+        var accueil = S.lieu === "hotel" ? "L'hôtel de la Rive, une chambre sur le quai. La Fédération paie la note ; elle la relira." :
+          "Deux pièces au troisième, rue des Lilas. " + leClub + " t'attend. La ville aussi.";
+        fonduTexte((v.entities && v.entities.ville ? v.entities.ville : "Aubérive"), moisCourant(), accueil, null, function () {
             toast("Touche la ville pour marcher, un nom pour y aller. En rouge : là où l'on t'attend.");
           });
       };
