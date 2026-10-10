@@ -1,0 +1,323 @@
+# Histoire 9 — « Vingt degrés dedans » : les variantes de set-piece du livre
+# (format : en-tête de content/setpieces.yaml). Toutes lisent
+# `flag('histoire_h9')` ; aucune n'est un secours. Les effets restent ceux du
+# moteur : seuls le texte, les libellés et les réponses changent.
+#
+# Le calendrier du sélectionneur, lu comme un livre :
+#   · 2029 — la Carte Match d'après le créneau 17 est le barrage aller, à
+#     l'extérieur ; le Grand Match, le barrage retour à la Rive (le ministre en
+#     tribune ; à la mi-temps, son vestiaire, ou la porte fermée).
+#   · 2030 — les deux Cartes Match d'après le créneau 14 sont les matchs de
+#     préparation à huis clos, à Al-Dorado ; celle d'après le tunnel (17), la
+#     phase de poules au Dôme ; le Grand Match, le troisième match contre le
+#     Kambara si le brassard est entré (la délégation est rappelée ensuite),
+#     sinon la finale contre Al-Dorado, le pays hôte.
+#   · 2031 et après — la Rive, et une place vide au bout du banc.
+# `vars.gm_won` reste celui du dernier Grand Match : l'Objectif de 2030 sait si
+# le barrage a été perdu (le repêchage), le retour de 2031 si la finale a été
+# gagnée.
+setpieces:
+  # ══ objective ════════════════════════════════════════════════════════════
+  objective:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0"
+      speaker: brehaut
+      text: "À la Fédération, Bréhaut signe ta feuille de route debout : « 2029, la qualification, {pg, select, f{madame} other{monsieur}} {nom} : {objectif_min} au classement des nations, et le barrage en novembre. Vous le dites aux micros ? »"
+      left: "Je le dis aux micros"
+      right: "Aucun chiffre en public"
+      answer_left: "Promesse publique : {objectif}. Devant les caméras, tu ne parles que de football. Sauvan, au fond, prend des notes quand même."
+      answer_right: "Il hoche la tête. « Le ministère aime les gens qui ne promettent rien. Il les croit plus faciles. »"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && vars.gm_won == 0"
+      speaker: brehaut
+      text: "Bréhaut a la lettre de la FédéMonde à la main : la Cormandie est suspendue pour ingérence, les Cobalts sont repêchés. « Ne demandez pas comment, {pg, select, f{madame} other{monsieur}} {nom}. Et visez {objectif_min}. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Il range la lettre dans le tiroir du haut, celui qui ferme à clé. Tu ne demandes pas comment."
+      answer_right: "« Vous avez raison. Un pays repêché ne promet rien : il remercie. » Il ne dit pas qui."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1"
+      speaker: brehaut
+      text: "Bréhaut a punaisé au mur une photo du Dôme prise d'avion, blanche sur le sable : « 2030, le Mondial, {pg, select, f{madame} other{monsieur}} {nom}. Décembre, à Al-Dorado, vingt degrés dedans. Et {objectif_min}. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Il entoure le Dôme au feutre rouge, sur la photo, comme on entoure une date."
+      answer_right: "Tu gardes les mains libres. Il regarde la photo, longtemps. « Moi non plus, je ne promettrais rien, là-bas. »"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 2"
+      speaker: brehaut
+      text: "2031. Bréhaut a décroché la photo du Dôme ; il en reste la marque claire sur le mur. « Ce qui reste, {pg, select, f{madame} other{monsieur}} {nom} : {objectif_min}, et pas de vagues. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Il essuie la marque claire avec sa manche. Elle ne part pas."
+      answer_right: "« Pas de vagues, au moins. Promettez-moi ça. » Tu ne promets pas ça non plus."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9')"
+      text: "{patron} pose la liste de mars sur la table : vingt-six noms tapés à la machine sous le tien, {NOM}, sans une rature. « Une année de plus, et {objectif_min}. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. La liste part au ministère « pour information ». Elle revient sans un trait."
+      answer_right: "Tu gardes les mains libres. La liste, elle, part quand même au ministère, pour information."
+
+  # ══ match — la Carte Match ═══════════════════════════════════════════════
+  match:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && slot >= 17"
+      text: "Barrage aller, à l'extérieur. Adversité : {adversite} · {vestiaire_mot}. Un stade froid, l'hymne sifflé, et le retour à la Rive dans quatre jours. Le ministre a déjà réservé sa loge."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && slot >= 17 && flag('h9_brassard_porte')"
+      text: "Le Dôme, la phase de poules. Adversité : {adversite} · {vestiaire_mot}. Le brassard noir au bras du capitaine ; à chaque touche de balle, quatre-vingt mille personnes sifflent, poliment, à vingt degrés."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && slot >= 17"
+      text: "Le Dôme, la phase de poules. Adversité : {adversite} · {vestiaire_mot}. Trois hymnes, trois matchs, vingt degrés. À Aubérive, il fait moins quatre, et la place du marché regarde l'écran."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_depart')"
+      text: "Al-Dorado, matchs de préparation à huis clos, sur un terrain d'entraînement climatisé. Adversité : {adversite} · {vestiaire_mot}. Dehors, cinquante et un ; dedans, des plots orange et un ventilateur."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_virage_face')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Le virage Nord est debout, de face, comme promis. Gégé a prévenu : en décembre aussi, si le capitaine entre comme il faut."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_virage_dos')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Le virage Nord est plein et regarde la pelouse, de face. Le dos, c'est pour décembre, devant l'écran."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && flag('h9_banderole') && season <= 1"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Au virage Nord, la banderole pour Kévin Marçais est repliée sur la rambarde. Prête, pas déroulée."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season >= 2 && flag('h9_vecchio_mort')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Au bout du banc, une place que personne ne prend, et dessus, une paire de gants jaunes au cuir fendu."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Vingt-six joueurs, trois entraînements, un hymne. Au premier rang, une boulangère en manteau sur son tablier."
+
+  # ══ gm_annonce ═══════════════════════════════════════════════════════════
+  gm_annonce:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && flag('h9_ministre_vestiaire')"
+      text: "BARRAGE RETOUR, stade de la Rive. Le ministre est en tribune présidentielle, une écharpe des Cobalts neuve sur son manteau, l'étiquette encore au revers. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && flag('h9_prime_gazeo')"
+      text: "BARRAGE RETOUR, stade de la Rive. La prime de Gazéo est tombée hier soir, comme toujours la veille. Au vestiaire, personne n'en parle ; tout le monde a vérifié. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0"
+      text: "BARRAGE RETOUR, stade de la Rive, novembre. Quarante mille personnes, et dans la file de la boulangerie, ce matin, on ne parlait que de ça. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_porte') && flag('h9_mbako_doute')"
+      text: "TROISIÈME MATCH, le Dôme. Au rond central, Mbako te serre la main, brassard noir au bras : « Vous avez su, finalement. » La télévision d'Al-Dorado a coupé le son. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_porte')"
+      text: "TROISIÈME MATCH, le Dôme. En face, le Kambara : deux brassards noirs dans le même rond central. La télévision d'Al-Dorado a coupé le son du stade. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1"
+      text: "LA FINALE. Le Dôme est plein, vingt degrés, la pelouse parfaite. En face, Al-Dorado, le pays hôte, sous les yeux de son chef d'État. À Aubérive, la place du marché retient son souffle. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season >= 2"
+      text: "GRAND MATCH, la Rive, novembre : le premier depuis le Dôme. Au premier rang du virage, une place vide, et dessus, une baguette posée en travers. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  # ══ gm_te — trois temps forts (gauche : SÛR, droite : RISQUÉ) ════════════
+  gm_te:
+    # ---- 2029 : le barrage retour
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Le barrage tient à un fil. Noa ramasse un ballon devant la tribune Nord et le garde une seconde de trop contre sa poitrine, côté gauche."
+      left: "Les cadres tiennent"
+      right: "Les jeunes entrent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_te_index == 2 && flag('h9_ministre_vestiaire')"
+      text: "{minute}e minute · {score}. Mi-temps. Le ministre serre des mains mouillées et parle neuf minutes. Il en reste deux pour le football. Noa garde le poing fermé."
+      left: "Je parle après lui"
+      right: "Je le coupe"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_te_index == 2 && flag('h9_vestiaire_ferme')"
+      text: "{minute}e minute · {score}. Mi-temps, porte fermée. On frappe deux fois, poliment. Dans le couloir, tu entends Sauvan expliquer à quelqu'un que c'est le vent."
+      left: "On garde le plan"
+      right: "On change tout"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_te_index == 2"
+      text: "{minute}e minute · {score}. Mi-temps. Le chauffage du vestiaire est trop fort ; quelqu'un ouvre la fenêtre sur la nuit de novembre. Personne ne la referme."
+      left: "Je parle seul"
+      right: "Les cadres parlent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure du barrage. Le ministre se lève dans sa loge pour mieux voir ; tout le stade se lève derrière lui, sans le savoir."
+      left: "On ferme derrière"
+      right: "On va chercher le but"
+    # ---- 2030 : le Dôme
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_porte') && vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Les deux capitaines portent le même brassard noir. La télévision d'Al-Dorado ne montre plus que les pieds des joueurs."
+      left: "Les cadres tiennent"
+      right: "Les jeunes entrent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Le Dôme est une salle d'attente géante : vingt degrés, un souffle d'air sous chaque siège. En tribune officielle, le chef d'État regarde sa montre."
+      left: "Les cadres tiennent"
+      right: "Les jeunes entrent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && vars.gm_te_index == 2"
+      text: "{minute}e minute · {score}. Mi-temps sous le Dôme. Les bouches d'air du vestiaire soufflent un froid de chambre froide. Noa pose une serviette sur ses épaules, comme un vieux."
+      left: "Je parle seul"
+      right: "Les cadres parlent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && vars.gm_te_index == 3 && flag('h9_brassard_rendu') && flag('h9_liste_a_moi') && flag('h9_page_lea')"
+      text: "{minute}e minute · {score}. Dernier quart d'heure de la finale. Noa te regarde, la main sur la poche de son short. Tu sais ce qu'il y a dedans. Lui aussi."
+      left: "Pas maintenant"
+      right: "Maintenant, ou jamais"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && vars.gm_te_index == 3 && flag('h9_gants_gigi')"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Derrière le but, le troisième gardien s'échauffe avec des gants jaunes au cuir fendu. Personne ne lui a dit d'entrer."
+      left: "On ferme derrière"
+      right: "On va chercher le but"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. À Aubérive, il fait moins quatre et la place regarde l'écran. Ici, il fait vingt, et personne ne transpire, sauf toi."
+      left: "On ferme derrière"
+      right: "On va chercher le but"
+    # ---- 2031 et après
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season >= 2 && vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Il pleut sur la Rive, une vraie pluie de novembre, qui mouille. Dans la tribune, personne n'ouvre son parapluie."
+      left: "Les cadres tiennent"
+      right: "Les jeunes entrent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season >= 2 && vars.gm_te_index == 2"
+      text: "{minute}e minute · {score}. Mi-temps. Le vestiaire de la Rive sent la pluie et le camphre. Sur le banc du fond, quelqu'un a gravé une date au canif. Celle de Kévin."
+      left: "Je parle seul"
+      right: "Les cadres parlent"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season >= 2 && vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Au virage Nord, Gégé ne chante pas ; il compte les minutes sur ses doigts, comme Gigi les comptait."
+      left: "On ferme derrière"
+      right: "On va chercher le but"
+
+  # ══ aftermatch ═══════════════════════════════════════════════════════════
+  # Gauche : avec le groupe (VESTIAIRE +). Droite : avec le patron ou la
+  # fermeté (VESTIAIRE −, DIRECTION +).
+  aftermatch:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_won == 1"
+      text: "Qualifiés. Le vestiaire chante, debout sur les bancs. Sur le parking, Marie-Jo attend dans le froid avec un sac de croissants pour vingt-six. Elle dit seulement : « Alors vous irez. »"
+      left: "On sort la saluer"
+      right: "Le car part à minuit"
+      answer_left: "Vingt-six joueurs mangent des croissants sur un parking, à minuit, en claquettes. Marie-Jo les regarde comme on regarde un fils."
+      answer_right: "Le car démarre. Par la vitre, tu la vois tendre le sac au chauffeur du car d'en face, qui ne comprend pas, et qui accepte."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0"
+      text: "Éliminés aux portes du Mondial. Le vestiaire se tait. Dans le couloir, Sauvan téléphone à voix basse : « Non. Non. Peut-être. Je vous rappelle. » Il a l'air soulagé, puis il a l'air de rien."
+      left: "Je reste avec eux"
+      right: "Je vais voir Sauvan"
+      answer_left: "Tu restes jusqu'à la dernière douche. Noa sort le dernier, le brassard dans le poing. « Il n'y aura pas de tunnel, alors. »"
+      answer_right: "Il raccroche en te voyant. « Rien n'est fini. Les qualifications, ce n'est qu'un chiffre. » Tu ne comprends pas encore."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_porte')"
+      text: "La délégation devait repartir le lendemain du premier match. Le ministère a attendu le troisième : trois matchs de télévision, c'était signé avec Gazéo. L'avion décolle à l'aube."
+      left: "Je rentre avec eux"
+      right: "Je voyage devant"
+      answer_left: "Dans l'avion, Noa dort la tête contre le hublot, le brassard noué au poignet. Personne ne lui demande de l'enlever."
+      answer_right: "Devant, Sauvan te sert lui-même un verre d'eau gravée DÔME 2030. Il ne dit rien du brassard. Il n'en a plus besoin."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_rendu') && vars.gm_won == 1 && flag('h9_liste_a_moi') && flag('h9_page_lea') && relation.sacha >= 1"
+      text: "Champions. Pour la remise du trophée, Noa noue à son bras ce qui reste du brassard noir, devant le chef d'État. Le photographe officiel te demande de te tourner. Tu regardes la tribune."
+      left: "Je regarde la tribune"
+      right: "Je me retourne"
+      answer_left: "Le flash part. Sur la photo officielle, le chef d'État, le trophée, vingt-six joueurs, et toi, de dos, face aux gradins."
+      answer_right: "Tu te retournes trop tard ; l'éclair est déjà parti. Sur la photo officielle, on ne voit de toi que le dos."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_rendu') && vars.gm_won == 1"
+      text: "Champions du monde, sous un toit, à vingt degrés. Le chef d'État serre vingt-six mains, puis la tienne. Pendant l'hymne, tu gardes l'autre main dans ta poche, fermée."
+      left: "Je fête avec eux"
+      right: "Je pose pour la photo"
+      answer_left: "Ils te jettent en l'air trois fois. À la troisième, tu vois le toit du Dôme, de l'intérieur. Il n'y a personne, dessus."
+      answer_right: "Sur la photo officielle, tu souris, de face, à côté du chef d'État. Le lendemain, elle est dans tous les journaux du pays."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_rendu')"
+      text: "Finale perdue. Le Dôme applaudit poliment, comme on applaudit un orchestre. Dans le vestiaire, la climatisation tourne pour personne. Personne n'a rien porté au bras ; personne n'en parle."
+      left: "Je reste avec eux"
+      right: "Je salue la loge officielle"
+      answer_left: "Personne ne pleure. Noa ôte ses chaussures, très lentement, lacet par lacet. Le vestiaire sent le froid neuf, et pas la sueur."
+      answer_right: "Le chef d'État te serre la main sans te regarder. Derrière lui, Sauvan te fait un signe de tête : c'est bien, c'est fini."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1"
+      text: "Le Dôme se vide en vingt minutes, par des portes qui s'ouvrent seules. Dehors, la nuit est à trente-huit degrés. Le car attend, moteur tournant, climatisé."
+      left: "On rentre ensemble"
+      right: "Je reste un moment"
+      answer_left: "Dans le car, quelqu'un ouvre une fenêtre, par erreur. La chaleur entre d'un coup ; personne ne la referme tout de suite."
+      answer_right: "Tu restes sur les marches. Au bout de cinq minutes, ta chemise colle. Au bout de dix, tu comprends quelque chose, sans pouvoir le dire."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season >= 2"
+      text: "Au vestiaire de la Rive, quelqu'un a punaisé au-dessus du banc une photo de Gigi Vecchio en gants jaunes, en 1974. Personne ne sait qui. Personne ne demande."
+      left: "Je la laisse"
+      right: "Je la fais encadrer"
+      answer_left: "Elle reste punaisée de travers. Les joueurs la touchent en sortant, du bout des doigts, sans se concerter."
+      answer_right: "La Fédération paie le cadre. Josiane choisit le bois : du chêne, « parce que ça ne craint pas la pluie »."
+
+  # ══ bilan_verdict (un bouton) ════════════════════════════════════════════
+  bilan_verdict:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0 && vars.gm_won == 1"
+      text: "Le verdict de l'année : {rang}e nation. {objectif} : {tenu}. Les Cobalts iront au Dôme, en décembre prochain. Rue des Lilas, une boulangère l'a appris par la radio."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0"
+      text: "Le verdict de l'année : {rang}e nation. {objectif} : {tenu}. Barrage perdu : le Mondial se jouera sans les Cobalts. Sauf si quelqu'un, quelque part, en décide autrement."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1 && flag('h9_brassard_porte')"
+      text: "Le verdict : {rang}e nation. {objectif} : {tenu}. Le classement ne dit pas qu'une délégation est rentrée plus tôt, ni pourquoi. Un classement ne dit jamais pourquoi."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1"
+      text: "Le verdict : {rang}e nation. {objectif} : {tenu}. Un Mondial joué jusqu'au dernier soir, à vingt degrés. Dans les cafés, on ne dit plus « la sélection » ; on dit « là-bas »."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9')"
+      text: "Le verdict de l'année : {rang}e. {objectif} : {tenu}. Un an après le Dôme, le pays a presque tout oublié. Il se souvient de ce qu'il a vu, pas de ce qu'on lui a dit."
+      left: "Voir le classement"
+
+  # ══ bilan_contrat ════════════════════════════════════════════════════════
+  # Gauche : continuer aux mêmes conditions (DIRECTION +). Droite : réclamer
+  # (DIRECTION −, CAISSE +).
+  bilan_contrat:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0"
+      speaker: brehaut
+      text: "Bréhaut relit ton contrat avant de le prolonger et s'arrête sur la clause de réserve : « Aucune déclaration non sportive, {pg, select, f{madame} other{monsieur}} {nom}. Vous la re-signez telle quelle, ou on en parle au bureau ? »"
+      left: "Telle quelle"
+      right: "Parlons-en au bureau"
+      answer_left: "Il signe avant toi et te tend son stylo. La clause est en page neuf ; tu ne tournes pas jusqu'à la page neuf."
+      answer_right: "Le bureau fédéral t'écoute une heure. On t'accorde un charter de plus. La clause, on n'y touche pas : « Elle protège tout le monde. »"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1"
+      text: "Le bureau fédéral, au retour du Dôme. {patron} a ouvert ton contrat à la clause de réserve, soulignée deux fois : au crayon, puis au stylo. « On continue ainsi, {pg, select, f{madame} other{monsieur}} {nom}, ou on renégocie ? »"
+      left: "On continue ainsi"
+      right: "On renégocie"
+      answer_left: "Il referme le contrat avec soin. Le trait de crayon et le trait de stylo restent l'un sur l'autre, comme deux avis."
+      answer_right: "Le bureau t'accorde plus de moyens, et une ligne de plus à la clause : « y compris par le geste ». Tu signes quand même."
+    - roles: [selectionneur]
+      when: "flag('histoire_h9')"
+      text: "{patron} prolonge ton contrat sans le relire : « Vous connaissez la clause de réserve par cœur, maintenant, {pg, select, f{madame} other{monsieur}} {nom}. Comme moi. On continue, ou on parle d'argent ? »"
+      left: "On continue"
+      right: "Parlons d'argent"
+      answer_left: "Il signe au crayon, puis repasse au stylo. Il fait ça depuis 1991, disait Josiane ; personne ne sait pourquoi."
+      answer_right: "Le bureau fédéral t'accorde un peu, et le pays l'apprend le lundi, en page trois, sous une photo du Dôme vide."
+
+  # ══ bilan_carrefour (un bouton) ══════════════════════════════════════════
+  bilan_carrefour:
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 0"
+      text: "Décembre 2029. Marie-Jo a accroché une guirlande au-dessus de la photo de Kévin. Elle te demande si tu iras, l'an prochain. Elle redemandera demain, à la même heure."
+      left: "Prendre sa baguette"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9') && season == 1"
+      text: "Décembre 2030. Sur la place du marché, on démonte l'écran géant panneau par panneau. Il fait moins quatre. C'est presque un soulagement, le froid, quand on rentre de là-bas."
+      left: "Rentrer à pied"
+    - roles: [selectionneur]
+      when: "flag('histoire_h9')"
+      text: "L'hiver entre deux années. Rue des Lilas, la clochette de la boulangerie colle toujours : elle sonne deux fois quand tu entres, une fois quand tu sors."
+      left: "Entrer"
