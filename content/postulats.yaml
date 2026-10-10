@@ -1039,20 +1039,121 @@ postulats:
       caisse.high:
         - { card: ds.h8.alarme.caisse_haut }
 
+  # Histoire 9 — « Vingt degrés dedans » (docs/histoires/00_les_dix_histoires.md).
+  # La sélectionneuse des Cobalts, 2029-2031 : le cercueil scellé de Kévin
+  # Marçais, le Mondial d'hiver sous le Dôme d'Al-Dorado, et un brassard noir
+  # taillé dans une chemise de chantier. Le script (content/arcs/selectionneur/
+  # h9_script.yaml) porte le livre ; le réservoir (h9_intrigues.yaml) varie les
+  # carrières ; les fins se décident dans le tunnel du Dôme et se paient en
+  # 2031, à la minute de silence (content/endings/h9.yaml).
   - id: mondial_hiver
     index: 8
     role: selectionneur
     title: "Vingt degrés dedans"
+    question: "Pour qui joues-tu : pour le pays, pour le ministère, ou pour ceux qui ont construit le stade ?"
     division: 1
     year: 2029
+    age: 50
     ville: Aubérive
     club: Cobalts
-    gauges: { vestiaire: 50, tribunes: 55, direction: 50, caisse: 50 }
+    rival: Kambara
+    gauges: { vestiaire: 55, tribunes: 60, direction: 50, caisse: 70 }
     force: 64
     objective: maintien
-    flags: [histoire_h9]
-    pitch: ""
-    chantier: true
+    flags: [histoire_h9, mondial_hiver]
+    patron: brehaut                   # Titi Bréhaut, président de la Fédération depuis 2028 (au-dessus de lui, « le ministère », une voix)
+    president: brehaut
+    camille: false
+    cast:
+      brehaut:  { fonction: patron,      target: 1 }
+      mariejo:  { fonction: coeur,       target: 2.5 }
+      sacha:    { fonction: maison,      target: 1.5 }
+      vandel:   { fonction: capitaine,   target: 1.5 }
+      sauvan:   { fonction: tentateur,   target: 2 }
+      josiane:  { fonction: choeur,      target: 0.8 }
+      aubert:   { fonction: instance,    target: 0.5 }
+      lea:      { fonction: chroniqueur, target: 0.8 }
+      vence:    { fonction: messager,    target: 0.6 }
+      gege:     { fonction: creancier,   target: 1 }
+      vecchio:  { fonction: mentor,      target: 0.8 }
+      nassir:   { fonction: vautour,     target: 0.6 }
+    pitch: "Janvier 2029 : un cercueil scellé arrive d'Al-Dorado, et la mère du mort pétrit ton pain. Le Mondial se joue sous un dôme, à vingt degrés dedans ; ton capitaine veut y porter un brassard noir."
+    chantier: false                   # livré : prologue, script, quinze intrigues, quatre soirs, cinq fins
+    opening_arc: sl.h9.script
+    # Le prologue (six scènes de janvier 2029, avant la carte Objectif) : la
+    # veillée, le cimetière, le pain, les listes de Sacha, le brassard de Noa,
+    # le premier appel du ministère.
+    prologue: sl.h9.prologue
+    questions:
+      - { id: pays,      poids: 1.0 }
+      - { id: ministere, poids: 1.0 }
+      - { id: ouvriers,  poids: 1.0 }
+    programme:
+      # 2029 : deux intrigues tirées sur six (la S0 porte déjà cinq ancres et
+      # quatre Nouvelles) ; le brassard est la signature du livre, à poids bas :
+      # le script le porte déjà (le café, le vestiaire, le tunnel), l'intrigue
+      # l'approfondit dans six carrières sur dix.
+      "0":
+        prendre: 2
+        fenetre: [2, 6]
+        reserve: 0
+        pool:
+          - { arc: sl.h9.brassard,  poids: 1.5, signature: true }
+          - { arc: sl.h9.four,      poids: 1.0 }
+          - { arc: sl.h9.virage,    poids: 1.0 }
+          - { arc: sl.h9.gazeo,     poids: 0.8 }
+          - { arc: sl.h9.listes,    poids: 1.6 }
+          - { arc: sl.h9.fraicheur, poids: 0.8 }
+      # 2030 : les deux listes et la rue Haute s'ouvrent par le script (la
+      # voiture blanche, la cave) ; le réservoir tire deux intrigues, moins
+      # celles qui continuent de 2029 — le Kambara, les clés de la terrasse —,
+      # sans reprendre celles de 2029 : l'année du Dôme est assez pleine.
+      "1":
+        prendre: 2
+        fenetre: [2, 4]
+        reserve: 0
+        reprise: false
+        pool:
+          - { arc: sl.h9.kambara,     poids: 2.0 }
+          - { arc: sl.h9.cadeaux,     poids: 2.0 }
+          - { arc: sl.h9.deux_listes, poids: 0.3 }
+          - { arc: sl.h9.rue_haute,   poids: 0.3, if: "flag('h9_cave_vue')" }
+      # 2031 : la dernière pluie de Gigi Vecchio, et une tardive derrière sa
+      # graine (la tente blanche s'ouvre aussi par le retour, C1). 2032 et
+      # après : l'épilogue (min_season 3), ce qui reste après la minute.
+      "2+":
+        prendre: 2
+        fenetre: [2, 5]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: sl.h9.pluie,       poids: 3.0 }
+          - { arc: sl.h9.proces,      poids: 3.0, if: "flag('h9_page_lea')" }
+          - { arc: sl.h9.boulangerie, poids: 3.0, if: "flag('h9_brassard_rendu')" }
+          - { arc: sl.h9.exhumation,  poids: 3.0, if: "flag('h9_exhumation')" }
+          - { arc: sl.h9.apres,       poids: 2.0, if: "flag('h9_vecchio_mort')" }
+          - { arc: sl.h9.carton,      poids: 2.0, if: "flag('h9_four_paye') && flag('h9_cave_vue') && !flag('h9_page_lea')" }
+    objectifs:
+      - { id: mondial_liste_a_moi,    titre: "Les vingt-six, sans une rature", when: "flag('h9_liste_a_moi')",   indice: "Le capitaine n'est pas fatigué." }
+      - { id: mondial_brassard_porte, titre: "Le brassard au Dôme",            when: "flag('h9_brassard_porte')", indice: "Un morceau de chemise pèse plus lourd qu'un trophée." }
+      - { id: mondial_pain,           titre: "Une baguette, après",            when: "flag('h9_pain_repris')",    indice: "Elle demande tous les matins." }
+    alarm_overrides:
+      vestiaire.low:
+        - { card: sl.h9.alarme.vestiaire_bas_noa }
+      vestiaire.high:
+        - { card: sl.h9.alarme.vestiaire_haut_brehaut }
+      tribunes.low:
+        - { card: sl.h9.alarme.tribunes_bas_file }
+      tribunes.high:
+        - { card: sl.h9.alarme.tribunes_haut_vence }
+      direction.low:
+        - { card: sl.h9.alarme.direction_bas_sauvan }
+      direction.high:
+        - { card: sl.h9.alarme.direction_haut_brehaut }
+      caisse.low:
+        - { card: sl.h9.alarme.caisse_bas_josiane }
+      caisse.high:
+        - { card: sl.h9.alarme.caisse_haut_ilyas }
 
   - id: escalier_ferme
     index: 9

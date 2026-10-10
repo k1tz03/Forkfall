@@ -1,0 +1,104 @@
+# Histoire 9 — « Vingt degrés dedans » : les événements sombres (charte
+# d'écriture § 5 ; docs/histoires/00_les_dix_histoires.md, Histoire 9 § 6).
+# Le metteur en scène les arme (`chance` par créneau, deux par saison au
+# plus, jamais à moins de cinq cartes d'écart) ; ils ne sont pas filtrés par
+# postulat dans le moteur : chacun lit `flag('histoire_h9')`.
+#
+# Les autres soirs du livre sont ailleurs : la veillée et le premier appel au
+# prologue, la montre de vingt-deux heures et le couloir vitré dans le script,
+# le fisc et le local forcé dans leurs intrigues (h9_intrigues.yaml).
+#
+#   · La voiture noire (2029) — deux soirs de suite sous ta fenêtre, moteur
+#     tournant ; le troisième, une cigarette encore allumée sur le trottoir.
+#   · On vous rappelle (2030, puis 2031) — la voix sans nom revient une fois par
+#     saison, chaque fois plus courte ; en 2030, elle sait pour la cave.
+#   · La voiture du capitaine (2030) — elle brûle sur le parking du centre, et
+#     un mot sur le mur dont on ne sait pas s'il est contre le brassard ou pour.
+arcs:
+  - id: sl.h9.sb.voiture_noire
+    title: "La voiture noire"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h9') && season == 0"
+    chance: 0.35
+    cast: [sauvan, sacha]
+    same_club: true
+    fallback: drop
+    traces:
+      h9_voiture_noire: "{annee} : deux soirs de suite, une voiture noire sous les fenêtres de {nom}, moteur tournant."
+    steps:
+      - id: soir
+        card:
+          - { id: sl.h9.sb.voiture_noire_sacha, if: "flag('h9_listes_lues') || relation.sacha >= 1" }
+          - { id: sl.h9.sb.voiture_noire }
+        next: []
+
+  - id: sl.h9.sb.rappel
+    title: "On vous rappelle"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h9') && season == 1 && !flag('h9_depart')"
+    chance: 0.3
+    cast: [sauvan]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: appel
+        card:
+          - { id: sl.h9.sb.rappel_cave, if: "flag('h9_cave_vue')" }
+          - { id: sl.h9.sb.rappel }
+        next: []
+
+  - id: sl.h9.sb.voiture_capitaine
+    title: "La voiture du capitaine"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h9') && season == 1 && !flag('h9_depart')"
+    chance: 0.3
+    cast: [vandel, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      h9_voiture_brulee: "{annee} : la voiture de Noa Vandel a brûlé sur le parking du centre. Un mot à la bombe, sur le mur."
+    steps:
+      - id: parking
+        card:
+          - { id: sl.h9.sb.voiture_capitaine_fatigue, if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.sb.voiture_capitaine }
+        next: []
+
+  - id: sl.h9.sb.rappel_fin
+    title: "On vous rappelle, encore"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h9') && season >= 2"
+    chance: 0.3
+    cast: [sauvan]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: appel
+        card:
+          - { id: sl.h9.sb.rappel_bureau, if: "flag('h9_bureau_refuse')" }
+          - { id: sl.h9.sb.rappel_fin }
+        next: []

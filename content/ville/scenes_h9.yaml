@@ -1,0 +1,311 @@
+# Histoire 9 — « Vingt degrés dedans » : les scènes de la semaine (format :
+# en-tête de content/ville/scenes_communes.yaml, branche principale). La ville
+# les programme les jours sans carte, souvent le soir. Chacune lit
+# `flag(histoire_h9)` ; le temps se lit par `annee` (2029 le cercueil, 2030 le
+# Mondial, 2031 la minute), deux scènes s'enchaînent par `mission(h9.sc.…)`.
+# Aucune ne pose de drapeau : elles colorent la semaine, l'histoire se décide
+# dans les cartes. La sélectionneuse dort rue des Lilas (`domiciles`), en face
+# de la boulangerie.
+scenes:
+  # ═══════════════════════════════════════════ LA BOULANGERIE DE LA RUE DES LILAS
+  - id: h9.sc.fournee
+    titre: "La première fournée"
+    roles: [selectionneur]
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    qui: mariejo
+    si: "flag(histoire_h9) && annee == 2029"
+    texte: "Six heures. La boutique n'est pas ouverte, mais la porte du fournil l'est. Marie-Jo te fait signe d'entrer : « Vous êtes debout. Autant manger chaud. »"
+    choix:
+      - label: "J'entre"
+        reponse: "Elle te tend la baguette du bout, brûlante. Vous la mangez debout, sans parler, pendant que la fournée lève. C'est presque une conversation."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je repasserai"
+        reponse: "« Comme vous voulez. » La porte du fournil se referme doucement. L'odeur te suit jusqu'au coin de la rue, puis te lâche."
+
+  - id: h9.sc.monnaie
+    titre: "Une pièce de trop"
+    roles: [selectionneur]
+    lieu: boulangerie_residentiel
+    tranches: [matin, midi]
+    qui: mariejo
+    si: "flag(histoire_h9) && annee <= 2030"
+    texte: "Marie-Jo compte ta monnaie deux fois, comme toujours. Aujourd'hui, elle se trompe dans le bon sens : une pièce de trop, au creux de ta main."
+    choix:
+      - label: "Je la lui rends"
+        reponse: "Elle la reprend, la regarde, la remet dans la caisse. « Kévin aussi rendait la monnaie. Même aux touristes. Surtout aux touristes. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je la garde"
+        reponse: "Elle s'en aperçoit : sa main s'arrête une seconde au-dessus de la caisse. Elle ne dit rien. Le lendemain, elle recompte trois fois."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h9.sc.photo_travers
+    titre: "La photo de travers"
+    roles: [selectionneur]
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    si: "flag(histoire_h9) && annee == 2029 && mission(h9.sc.fournee)"
+    texte: "Au-dessus de la caisse, la photo de Kévin est toujours de travers. Marie-Jo voit ton regard : « Je la laisse comme ça. Droite, on dirait qu'il est mort. »"
+    choix:
+      - label: "Je ne dis rien"
+        reponse: "Tu prends ta baguette. En sortant, tu penches la tête, sans le vouloir, du même côté que la photo."
+
+  - id: h9.sc.cierge
+    titre: "Le cierge de Saint-Aubin"
+    roles: [selectionneur]
+    lieu: eglise
+    tranches: [soir]
+    si: "flag(histoire_h9) && annee == 2029"
+    texte: "L'église Saint-Aubin, presque vide. Devant la statue, la photo d'un électricien en casque, et un cierge neuf, allumé il y a peu. Personne dans la nef."
+    choix:
+      - label: "J'allume un cierge"
+        francs: -5
+        reponse: "La flamme hésite, puis tient. Derrière toi, la porte s'ouvre : Marie-Jo, qui venait faire la même chose. Elle te laisse la place."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je m'assois un moment"
+        reponse: "Tu restes jusqu'à ce que le cierge ait baissé d'un doigt. Dehors, il fait nuit, il fait froid, et c'est un soulagement."
+        effets: {jauges: {vestiaire: 1}}
+
+  # ═══════════════════════════════════════════════════ LES CADEAUX DE L'ÉMIRAT
+  - id: h9.sc.tic_tac
+    titre: "Le tic-tac du tiroir"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h9) && possede(montre_or)"
+    texte: "Trois heures du matin. Dans le tiroir du buffet, la montre en or fait un bruit que tu n'avais jamais remarqué. Régulier. Elle ne s'arrête jamais, elle."
+    choix:
+      - label: "Je la mets au poignet"
+        reponse: "Elle est froide, puis tiède. Tu t'endors avec. Au réveil, elle donne l'heure d'Al-Dorado. Tu ne l'as pas réglée."
+        effets: {jauges: {direction: 1}}
+      - label: "Je la mets au frigo"
+        reponse: "Le tic-tac s'étouffe sous le ronron du moteur. Tu dors jusqu'à sept heures. Le frigo, lui, a l'air d'attendre quelque chose."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h9.sc.gants_blancs
+    titre: "Les gants blancs"
+    roles: [selectionneur]
+    lieu: rue
+    tranches: [soir]
+    si: "flag(histoire_h9) && flag(h9_montre_gardee)"
+    texte: "Dans la rue, tu croises le coursier aux gants blancs, à pied, sans écrin. Il te salue d'un signe de tête, comme un voisin. Il habite peut-être ici, maintenant."
+    choix:
+      - label: "Je le suis"
+        reponse: "Il entre à l'hôtel de la Rive par la porte de service. Il en ressort sans ses gants. Sans eux, ses mains sont celles de n'importe qui."
+      - label: "Je rentre"
+        reponse: "Tu rentres par le chemin le plus long. Sur ton palier, il n'y a rien. Tu vérifies deux fois. Il n'y a rien."
+
+  - id: h9.sc.berline_lavee
+    titre: "La berline lavée"
+    roles: [selectionneur]
+    lieu: voiture
+    tranches: [matin]
+    si: "flag(histoire_h9) && possede(electrique)"
+    texte: "Ta berline blanche t'attend, rechargée, propre comme au premier jour. Quelqu'un l'a lavée pendant la nuit. Sur le siège passager, une bouteille d'eau gravée DÔME 2030."
+    choix:
+      - label: "Je bois l'eau"
+        reponse: "Elle est fraîche, comme sortie d'un frigo. Il a gelé cette nuit. Tu roules jusqu'au stade sans allumer la radio."
+        effets: {jauges: {direction: 1}}
+      - label: "Je la pose dehors"
+        reponse: "Tu la poses sur le trottoir, debout. Le soir, elle y est encore. Le lendemain, quelqu'un l'a prise, ou rangée."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h9.sc.double_cles
+    titre: "Le double des clés"
+    roles: [selectionneur]
+    lieu: agence
+    tranches: [matin, aprem]
+    si: "flag(histoire_h9) && possede(penthouse)"
+    texte: "Madame Tessandier te remet un double des clés de la terrasse, « au cas où ». Au dos du porte-clés, une étiquette oubliée : « Offert ». Elle ne la retire pas."
+    choix:
+      - label: "Je retire l'étiquette"
+        reponse: "Elle se décolle mal, en deux fois. Il reste sur le cuir une trace blanche, la forme exacte du mot. Ça ne s'enlève pas."
+      - label: "Je la laisse"
+        reponse: "Madame Tessandier hoche la tête, comme devant un bon client. « Les gens la retirent, d'habitude. Ça ne change rien. »"
+
+  # ═════════════════════════════════════════════════════════ SACHA, LES LISTES
+  - id: h9.sc.diner_dimanche
+    titre: "Le dîner du dimanche"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [soir]
+    jours: [dim]
+    qui: sacha
+    si: "flag(histoire_h9) && annee <= 2030"
+    texte: "Sacha arrive avec deux plats et un classeur. Elle pose les plats sur la table, le classeur sur la chaise libre. « Il dîne avec nous. »"
+    choix:
+      - label: "J'ouvre le classeur"
+        reponse: "Des photos, une par page : des hommes en casque, souriants, à des mariages, à des anniversaires. Pas une seule sur un chantier."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "On mange d'abord"
+        reponse: "Vous mangez. Le classeur reste sur la chaise. En partant, Sacha le serre dans ses bras, comme on porte un enfant qui dort."
+
+  - id: h9.sc.deux_heures
+    titre: "Deux heures du matin"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h9) && annee == 2030 && mission(h9.sc.diner_dimanche)"
+    texte: "Ton téléphone vibre à deux heures. Sacha : un nom, un âge, un chantier, sans un mot de plus. Le quatre cent quarante-septième."
+    choix:
+      - label: "Je lui réponds"
+        reponse: "Tu écris : « Je l'ai lu. » Elle répond « Merci » à deux heures et une. Personne ne dort, des deux côtés de la ville."
+        effets: {jauges: {vestiaire: -1}}
+      - label: "Je retourne le téléphone"
+        reponse: "Face contre la table. La lumière de l'écran fait encore un carré pâle sur le bois, puis s'éteint."
+
+  - id: h9.sc.affichette
+    titre: "L'affichette du kiosque"
+    roles: [selectionneur]
+    lieu: kiosque
+    tranches: [matin, midi]
+    si: "flag(histoire_h9) && flag(h9_local_force)"
+    texte: "Au kiosque du quai, le vendeur a scotché sur sa vitre une affichette de l'association : « On recompte quand même. » Il te regarde la lire."
+    choix:
+      - label: "Je donne quelque chose"
+        francs: -200
+        reponse: "Il glisse le billet dans une boîte à chaussures, sous le comptoir, avec d'autres. « Pour les ordinateurs. Ils en rachèteront. Ils rachètent toujours. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je prends le journal"
+        francs: -6
+        reponse: "Il te rend la monnaie, pièce par pièce. « Votre fille est passée ce matin. Elle a lu le journal debout, sans l'acheter. »"
+
+  # ═════════════════════════════════════════════════ LE MINISTÈRE, LA TÉLÉ
+  - id: h9.sc.cafe_paye
+    titre: "Le café déjà payé"
+    roles: [selectionneur]
+    lieu: cafe_mairie
+    tranches: [matin]
+    si: "flag(histoire_h9) && annee <= 2030"
+    texte: "Au café de la Mairie, ton café est déjà payé. Le serveur montre la table du fond : vide, deux tasses, une serviette pliée en quatre."
+    choix:
+      - label: "Je le bois"
+        reponse: "Il est encore chaud. Quelqu'un est parti à la minute où la porte s'est ouverte. Sur la serviette, rien d'écrit. Tu as vérifié."
+        effets: {jauges: {direction: 1}}
+      - label: "Je paie le mien"
+        reponse: "Le serveur encaisse deux fois, sans discuter. « Ça arrive souvent, ici, depuis l'hiver. On ne demande plus. »"
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h9.sc.repetition
+    titre: "La répétition"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [soir]
+    qui: vence
+    si: "flag(histoire_h9) && annee <= 2030"
+    texte: "Dans le hall de l'hôtel de la Rive, Nathalie Vence répète son lancement devant une plante verte. Elle s'arrête en te voyant : « Vous, vous ne répétez jamais ? »"
+    choix:
+      - label: "Jamais"
+        reponse: "« Ça se voit. C'est pour ça qu'on vous regarde. » Elle reprend devant la plante, plus bas, en changeant un mot."
+      - label: "Tous les soirs"
+        reponse: "« Devant quoi ? » Tu ne réponds pas. Elle note quelque chose dans son carnet, puis le barre, soigneusement."
+
+  # ══════════════════════════════════════════════════════ LE VIRAGE, LE CAPITAINE
+  - id: h9.sc.boulons
+    titre: "Les boulons de l'écran"
+    roles: [selectionneur]
+    lieu: marche
+    tranches: [aprem]
+    qui: gege
+    si: "flag(histoire_h9) && annee == 2030"
+    texte: "Place du marché, des ouvriers montent l'écran géant du Mondial. Gégé est assis sur le banc d'en face et compte les boulons à voix haute. Il en est à trois cent douze."
+    choix:
+      - label: "Je m'assois à côté"
+        reponse: "Il te passe la moitié de son sandwich sans s'arrêter de compter. À quatre cent douze, il s'arrête net, et ne dit plus rien."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je passe mon chemin"
+        reponse: "« Trois cent treize », dit-il dans ton dos, comme une insulte qu'on garde pour soi."
+
+  - id: h9.sc.quai_six_heures
+    titre: "Six heures, le quai"
+    roles: [selectionneur]
+    lieu: rue
+    tranches: [matin]
+    qui: vandel
+    si: "flag(histoire_h9) && annee <= 2030"
+    texte: "Noa court sur le quai, à six heures, un brassard noir au bras, seul. Il te voit, ralentit, et repart sans s'arrêter, la main gauche levée."
+    choix:
+      - label: "Je lève la main aussi"
+        reponse: "Il ne se retourne pas. Mais au bout du quai, il fait demi-tour et repasse devant toi, exprès, la main gauche toujours levée."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h9.sc.marches
+    titre: "Les marches du club-house"
+    roles: [selectionneur]
+    lieu: clubhouse
+    tranches: [aprem]
+    qui: josiane
+    si: "flag(histoire_h9) && flag(h9_cave_vue)"
+    texte: "Madame Josiane descend les marches du club-house une à une, une main sur la rampe, l'autre sur son sac : « Vous savez ce qu'il y a dedans ? Rien. Le reste, je l'ai rangé. »"
+    choix:
+      - label: "Je lui offre mon bras"
+        reponse: "Elle le prend sans se faire prier. Elle pèse moins que son sac. En bas, elle te tapote la main, deux fois, comme on tamponne un document."
+        effets: {jauges: {direction: 1}}
+
+  - id: h9.sc.radio_rue_haute
+    titre: "La radio de la rue Haute"
+    roles: [selectionneur]
+    lieu: rue
+    tranches: [soir]
+    si: "flag(histoire_h9) && flag(h9_aubert_vue)"
+    texte: "Rue Haute, le soir. La fenêtre de Madame Aubert est ouverte en plein hiver. La radio passe un vieux match, commenté par une voix qui s'est tue depuis longtemps."
+    choix:
+      - label: "J'écoute le match"
+        reponse: "Un match de 1998 ; tu reconnais le score avant la fin. Là-haut, quelqu'un applaudit le but, seul, avec trente ans de retard."
+      - label: "Je passe vite"
+        reponse: "En passant, tu entends la radio baisser, comme si quelqu'un, là-haut, voulait entendre tes pas."
+
+  # ═════════════════════════════════════════════════════════════ APRÈS LE DÔME
+  - id: h9.sc.sac_de_pain
+    titre: "Le sac de pain"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [soir]
+    si: "flag(histoire_h9) && annee >= 2031"
+    texte: "En rentrant, un sac de pain sur ta table, posé par quelqu'un qui a une clé. Dedans, une baguette de la rue des Lilas, et un mot : « Il fait froid, c'est bien. »"
+    choix:
+      - label: "Je mange la baguette"
+        reponse: "Elle est d'hier, mais elle est de chez Marie-Jo : tu la reconnais au goût avant de reconnaître l'écriture. Celle de Sacha."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je garde le mot"
+        reponse: "Tu le glisses dans ton portefeuille, derrière ta licence. Il y rejoint un ticket de café du ministère, que tu n'as pas jeté."
+
+  - id: h9.sc.burin
+    titre: "Le burin"
+    roles: [selectionneur]
+    lieu: cimetiere
+    tranches: [matin]
+    si: "flag(histoire_h9) && flag(h9_plaque)"
+    texte: "Devant la tombe de Kévin, un homme en bleu de travail regrave au burin le mot « Dôme », que quelqu'un a rayé dans la nuit. Il ne te regarde pas."
+    choix:
+      - label: "Je reste"
+        reponse: "Il souffle sur la pierre, l'essuie avec sa manche, range son burin. « Troisième fois. Elle paie à chaque fois. Moi, je ne fais plus payer. »"
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h9.sc.gants_au_clou
+    titre: "Les gants au clou"
+    roles: [selectionneur]
+    lieu: buvette
+    tranches: [soir]
+    si: "flag(histoire_h9) && flag(h9_vecchio_mort)"
+    texte: "À la buvette, une paire de gants jaunes pend à un clou, entre les écharpes. Gégé surveille qu'on n'y touche pas. Un gamin tend la main ; Gégé ne dit rien."
+    choix:
+      - label: "Je laisse le gamin"
+        reponse: "Il les touche du bout des doigts, puis retire sa main comme d'un poêle. « Ils sont mouillés », dit-il. Ils ne le sont pas."
+      - label: "Je retiens le gamin"
+        reponse: "Gégé te remercie d'un signe de tête. Puis il décroche les gants lui-même et les pose dans les mains du gamin. « Tiens. Fais attention. »"
+        effets: {jauges: {tribunes: 1}}
+
+# Les phrases du match de la Rive (ville.yaml `match:`), propres au livre.
+match_textes:
+  pour:
+    - {texte: "{Qui} marque et court vers le virage Nord, le bras gauche levé, sans rien autour. Le virage comprend quand même : {score}.", si: "flag(histoire_h9) && flag(h9_banderole)"}
+    - {texte: "{Qui} pousse le ballon au fond et va le chercher dans les filets pour le rendre à l'arbitre au plus vite : {score}. Le temps effectif, ça s'apprend.", si: "flag(histoire_h9) && annee == 2029"}
+  contre:
+    - {texte: "{Adv} marque. Au premier rang, une boulangère en manteau sur son tablier ne bouge pas d'un millimètre : {score}.", si: "flag(histoire_h9)"}
+  arret:
+    - {texte: "{Gardien} sort en deux temps, comme on le lui a appris à l'aube, dans la rosée de la Rive. Ballon capté, serré contre la poitrine.", si: "flag(histoire_h9) && flag(h9_troisieme_gigi)"}
+  fin_v:
+    - {texte: "Coup de sifflet final. Au virage Nord, la banderole pour Kévin Marçais est déroulée, puis roulée soigneusement, comme un drapeau qu'on rentre.", si: "flag(histoire_h9) && flag(h9_banderole)"}
+  fin_d:
+    - {texte: "C'est fini. Le virage siffle peu : il garde ses forces pour décembre, dit Gégé, qui ne siffle pas du tout.", si: "flag(histoire_h9) && annee == 2030"}

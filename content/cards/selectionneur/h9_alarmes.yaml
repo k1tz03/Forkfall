@@ -1,0 +1,140 @@
+# Histoire 9 — « Vingt degrés dedans » : les alarmes du postulat
+# (`alarm_overrides` de `mondial_hiver`, servies avant celles du rôle). Une
+# jauge au bord du vide ou du trop-plein, et un visage du livre qui vient le
+# dire. Chaque carte porte son seuil : redressée avant, elle se tait.
+cards:
+  - id: sl.h9.alarme.vestiaire_bas_noa
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    when: "gauges.vestiaire < 25"
+    tone: strategique
+    text: "Le groupe s'est coupé en deux : ceux qui veulent le brassard, ceux qui veulent leur prime. Noa, debout au milieu du vestiaire : « Dites-leur quelque chose, {toi}. N'importe quoi, mais à tous. »"
+    left:
+      label: "Je parle à tous"
+      effects: {vestiaire: "+++", direction: "-"}
+      answer: "Tu parles de Kévin, puis de la prime, puis de Kévin encore. Personne n'applaudit. Mais tout le monde sort par la même porte."
+    right:
+      label: "Parle, toi"
+      effects: {vestiaire: "+", tribunes: "-", relation: {vandel: 1}}
+      answer: "Noa parle deux minutes, à voix basse. Le vestiaire se ressoude autour de lui, pas de toi. Tu le notes. Eux aussi."
+
+  - id: sl.h9.alarme.vestiaire_haut_brehaut
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    when: "gauges.vestiaire > 75"
+    tone: strategique
+    text: "Bréhaut, dans le couloir de la Fédération : « Vos joueurs vous aiment. Le ministère n'aime pas qu'on aime quelqu'un d'autre que lui, {toi}. Il appelle ça un clan. »"
+    left:
+      label: "Je reprends mes distances"
+      effects: {vestiaire: "--", direction: "+"}
+      answer: "Tu reviens au vouvoiement, à l'entraînement. Le lendemain, le capitaine te vouvoie aussi, très poliment. Ça fait plus mal."
+    right:
+      label: "Qu'ils m'aiment"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "« Alors qu'ils vous aiment en silence. » Il remonte le couloir sans se retourner, en boitant un peu plus que d'habitude."
+
+  - id: sl.h9.alarme.tribunes_bas_file
+    roles: [selectionneur]
+    arc: famille
+    tags: [tribunes, famille]
+    speaker: mariejo
+    when: "gauges.tribunes < 25"
+    tone: strategique
+    text: "À la boulangerie, la file se tait quand tu entres. Une dame te laisse passer devant, pour ne pas rester derrière toi. Marie-Jo te sert sans un mot, sans même le prix."
+    left:
+      label: "Je fais la queue"
+      effects: {tribunes: "+++", direction: "-"}
+      answer: "Tu reprends ta place, derrière la dame, qui finit par se retourner. Elle te parle de son petit-fils, gardien. Tu l'écoutes jusqu'au bout."
+    right:
+      label: "Je prends mon pain"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Tu paies, tu sors. Derrière la vitrine, la file recommence à parler, plus fort, comme une radio qu'on remet après la publicité."
+
+  - id: sl.h9.alarme.tribunes_haut_vence
+    roles: [selectionneur]
+    arc: presse
+    tags: [tribunes, presse]
+    speaker: vence
+    when: "gauges.tribunes > 75"
+    tone: strategique
+    text: "Nathalie Vence, hors antenne, le micro coupé : « Le chef d'État veut une photo avec vous. Le pays vous aime trop, {toi}. Là-haut, ça se remarque, et ça se mesure. »"
+    left:
+      label: "Pas de photo"
+      effects: {tribunes: "-", direction: "-"}
+      answer: "« Il ne demandera pas deux fois. » Elle rallume son micro. Le soir, le journal parle de toi trente secondes de moins."
+    right:
+      label: "Une photo, une seule"
+      effects: {tribunes: "--", direction: "++"}
+      answer: "Sur la photo, il te tient le bras, à l'endroit du brassard. Le lendemain, dans la rue, on te regarde un peu moins longtemps."
+
+  - id: sl.h9.alarme.direction_bas_sauvan
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    when: "gauges.direction < 25"
+    tone: strategique
+    text: "Sauvan pose ton contrat ouvert à l'article neuf : « Minuit, sans motif. Le ministère n'y pense pas, {toi}. Il voulait seulement que vous sachiez qu'il sait lire. »"
+    left:
+      label: "Je rappelle le ministère"
+      effects: {direction: "+++", tribunes: "-"}
+      answer: "Tu appelles. Une voix jeune et polie te remercie de ton appel. On ne te passe personne. Le lendemain, Sauvan te paie un café."
+    right:
+      label: "Qu'il lise"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Sauvan referme le contrat avec précaution, comme une boîte qui contient quelque chose de vivant. « Je lui dirai que vous lisez aussi. »"
+
+  - id: sl.h9.alarme.direction_haut_brehaut
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: brehaut
+    when: "gauges.direction > 75"
+    tone: strategique
+    text: "Bréhaut, à voix basse, dans l'ascenseur de la Fédération : « Le ministère ne dit plus rien de mal de vous. Méfiez-vous, {toi}. C'est comme ça qu'on finit dans un bureau. »"
+    left:
+      label: "Je me méfie"
+      effects: {direction: "--", vestiaire: "+"}
+      answer: "Tu refuses le dîner du vendredi. Le samedi, le ministère dit enfin un peu de mal de toi. Tu dors mieux."
+    right:
+      label: "Les bureaux sont chauds"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "« Les bureaux sont chauffés, oui. » Les portes s'ouvrent. Il sort sans te serrer la main, pour la première fois depuis janvier."
+
+  - id: sl.h9.alarme.caisse_bas_josiane
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, sponsors]
+    speaker: josiane
+    when: "gauges.caisse < 25"
+    tone: strategique
+    text: "Madame Josiane pose la facture des charters sur ton bureau : « La Fédération ne peut plus payer l'avion du stage. Gazéo propose le sien, {toi}. Avec la flamme sur la carlingue. »"
+    left:
+      label: "L'avion de Gazéo"
+      effects: {caisse: "+++", direction: "+", tribunes: "-"}
+      answer: "Sur la photo de l'aéroport, vingt-six joueurs sous une flamme bleue de dix mètres. Josiane la découpe et la range dans le dossier 2030."
+    right:
+      label: "On prendra le car"
+      effects: {caisse: "+", vestiaire: "-", tribunes: "+"}
+      answer: "Neuf heures de car. Les joueurs dorment les uns sur les autres. Noa reste éveillé tout le trajet, le front contre la vitre."
+
+  - id: sl.h9.alarme.caisse_haut_ilyas
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, sponsors]
+    speaker: nassir
+    when: "gauges.caisse > 75"
+    tone: strategique
+    text: "Cheikh Ilyas te félicite, au salon de l'hôtel de la Rive : « Vos comptes sont les plus sains de la Ligue. C'est rare, {toi}. Ça attire les curieux. Et les contrôleurs. »"
+    left:
+      label: "Je redistribue"
+      effects: {caisse: "--", vestiaire: "+"}
+      answer: "La réserve part en primes de présence et en billets pour les familles. Ilyas applaudit trois fois, sans bruit, du bout des doigts."
+    right:
+      label: "Je garde la réserve"
+      effects: {caisse: "+", direction: "-"}
+      answer: "« Gardez, gardez. » Il note quelque chose dans un carnet relié de cuir. Ce n'est pas un chiffre ; c'est ton nom."

@@ -1,0 +1,637 @@
+# Histoire 9 — « Vingt degrés dedans » : le réservoir (postulat `mondial_hiver`,
+# `programme` dans content/postulats.yaml). Quatorze intrigues, trois buckets.
+# Cartes : content/cards/selectionneur/h9_intrigues_*.yaml.
+#
+#   2029 (bucket "0") — Le brassard (signature : Noa, son frère sur le toit du
+#     Dôme, Bréhaut qui soupèse le brassard), Le four (la dette de la
+#     boulangerie, le secret de Marie-Jo, l'intermède du vélo), Le virage de dos
+#     (Gégé, la banderole, l'écran de la place), Le contrat du gaz (Gazéo,
+#     Ilyas, la photo bras nus), Les listes (Sacha, Léa, le local forcé), Un peu
+#     de leur fraîcheur (Gigi Vecchio, les gants jaunes, la bouteille du Dôme).
+#   2030 (bucket "1") — Les deux listes (ouverte par la voiture blanche, B1 :
+#     « Le capitaine est fatigué »), Le Kambara (Mbako au téléphone, Vence en
+#     direct), Les cadeaux (les clés de la terrasse, le coursier, le fisc), La
+#     rue Haute (ouverte par la cave, B2 : Madame Aubert, Léa, Josiane témoin).
+#   2031 (bucket "2+", tardives) — La tente blanche (ouverte par le retour,
+#     C1 : la contre-autopsie, la plaque, la page six), Le palais (la mise en
+#     examen d'Aubert), L'autre boulangerie (le prix du silence).
+#
+# Le Mondial ne se passe pas à Aubérive : du départ (S1, créneau 13) au tunnel
+# (17), la sélection est à Al-Dorado. Une étape qui tombe dans ces créneaux-là
+# a une variante `_loin` (`season == 1 && flag('h9_depart')`), relue à chaque
+# tirage par le metteur en scène : le coup de fil à l'hôtel, la salle de presse
+# du Dôme, l'enveloppe glissée sous la porte.
+#
+# Les sauts d'intrigue (une carte d'étape planifiée par `schedule:`) :
+#   · B1 la voiture blanche → sl.h9.deux_listes.listes ;
+#   · B2 la cave → sl.h9.rue_haute.visite, qui déclenche le soir même le fisc
+#     (la réaction sl.h9.re.fisc : l'État reprend ce que l'émirat a donné) ;
+#   · B3 le départ → sl.h9.brassard.fouille (Noa garde le brassard sur lui) ou
+#     sl.h9.brassard.douane (dans ta valise), chacun tiré par `rand:` ;
+#   · C1 le retour → sl.h9.exhumation.resultat (le cercueil ouvert).
+arcs:
+  # ══════════════════════════════════════════════════════════════ 2029 (S0)
+  - id: sl.h9.brassard
+    title: "Le brassard"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.2
+    once: true
+    theme: vestiaire
+    carrier: vandel
+    cast: [vandel, mariejo, brehaut, sauvan, vence]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [porte, cache]
+    traces:
+      h9_brassard_photo: "{annee} : Noa Vandel s'est entraîné brassard noir au bras. Télé-Stade a filmé ; {nom} a laissé faire."
+      h9_brassard_cache: "{annee} : aux photos officielles, le brassard noir dormait sous le protège-tibia de Noa Vandel."
+      h9_frere_appel: "{annee} : le frère de Noa Vandel a appelé du chantier du Dôme. Il travaille encore sur le toit."
+      h9_brassard_promis: "{annee} : devant Bréhaut, {nom} a promis que Noa Vandel porterait le brassard noir."
+    hint: "Un brassard cousu main, un capitaine, et un pays qui préférerait des bras nus."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: entrainement
+        card:
+          - { id: sl.h9.brassard.entrainement_permis, if: "flag('h9_brassard_permis')" }
+          - { id: sl.h9.brassard.entrainement }
+        next: [ { step: frere, in: [2, 3] } ]
+      - id: frere
+        card:
+          - { id: sl.h9.brassard.frere_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.brassard.frere }
+        next: [ { step: serment, in: [2, 4] } ]
+      - id: serment
+        card:
+          - { id: sl.h9.brassard.serment_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.brassard.serment }
+        next: []
+      # La fouille du capitaine et la douane de ta valise ne sont plus des
+      # sauts : le départ (B3) les tire par `rand:` (vars.h9_fouille), et
+      # l'aéroport (B35, une ancre du script au créneau 13) les sert.
+
+  - id: sl.h9.four
+    title: "Le four"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: famille
+    carrier: mariejo
+    cast: [mariejo]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [caution, refus]
+    traces:
+      h9_four_secret: "{annee} : Marie-Jo Marçais a dit à {nom} pourquoi Kévin était parti travailler au Dôme."
+      h9_four_caution: "{annee} : {nom} s'est porté{pg, select, f{e} other{}} caution du four neuf de la boulangerie Marçais."
+      h9_four_refus: "{annee} : la boulangerie Marçais doit toujours son four à la banque. {nom} n'a rien signé."
+    hint: "Un four neuf qui n'est pas payé, et une mère qui sait pourquoi son fils est parti."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: lettre
+        card: sl.h9.four.lettre
+        next: [ { step: fournil, in: [2, 4] } ]
+      - id: fournil
+        card: sl.h9.four.fournil
+        next: [ { step: banque, in: [2, 4] } ]
+      - id: banque
+        card: sl.h9.four.banque
+        next: [ { step: velo, in: [2, 5] } ]
+      # L'intermède de 2029 (une nuit qu'on ne se rappelle pas) ; plus tard,
+      # le vélo remonte de la cave pour de vrai.
+      - id: velo
+        card:
+          - { id: sl.h9.four.velo, if: "season == 0" }
+          - { id: sl.h9.four.velo_cave }
+        next: []
+
+  - id: sl.h9.virage
+    title: "Le virage de dos"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: tribune
+    carrier: gege
+    cast: [gege, mariejo, vecchio]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [dos, face]
+    traces:
+      h9_banderole: "{annee} : le virage Nord a déroulé KÉVIN MARÇAIS 2004-2028 avant le coup d'envoi. Personne n'y a touché."
+      h9_banderole_decrochee: "{annee} : {nom} a fait décrocher la banderole pour Kévin Marçais. Gégé l'a roulée lui-même."
+      h9_virage_dos: "{annee} : le virage d'Aubérive regardera le Mondial de dos, devant l'écran de la place du marché."
+      h9_virage_face: "{annee} : Gégé a promis que le virage regarderait le Mondial de face. À une condition."
+    hint: "Soixante ans de virage, et un Mondial qu'on regardera de dos."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: buvette
+        card: sl.h9.virage.buvette
+        next: [ { step: banderole, in: [2, 4] } ]
+      - id: banderole
+        card: sl.h9.virage.banderole
+        next: [ { step: ecran, in: [2, 4] } ]
+      - id: ecran
+        card:
+          - { id: sl.h9.virage.ecran_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.virage.ecran }
+        next: []
+
+  - id: sl.h9.gazeo
+    title: "Le contrat du gaz"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 0.9
+    once: true
+    theme: contrat
+    carrier: brehaut
+    cast: [brehaut, nassir, vandel]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [pose, refuse]
+    traces:
+      h9_prime_gazeo: "{annee} : la prime de Gazéo est tombée la veille d'un grand match. Elle tombe toujours la veille."
+      h9_prime_bloquee: "{annee} : {nom} a bloqué la prime de Gazéo jusqu'après le Mondial. Le vestiaire l'a su le soir même."
+      h9_photo_gazeo: "{annee} : les Cobalts ont posé devant la flamme bleue de Gazéo, souriants, les bras nus."
+      h9_photo_refusee: "{annee} : pas de photo devant la flamme bleue. Gazéo s'est dite « déçue », par communiqué."
+    hint: "Le gaz paie les primes depuis 2010. Il paie aussi pour le sourire."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: prime
+        card: sl.h9.gazeo.prime
+        next: [ { step: ligne, in: [2, 4] } ]
+      - id: ligne
+        card: sl.h9.gazeo.ligne
+        next: [ { step: photo, in: [2, 4] } ]
+      - id: photo
+        card:
+          - { id: sl.h9.gazeo.photo_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.gazeo.photo_brassard, if: "flag('h9_brassard_photo') || flag('h9_brassard_promis')" }
+          - { id: sl.h9.gazeo.photo }
+        next: []
+
+  - id: sl.h9.listes
+    title: "Les listes"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: corps
+    carrier: sacha
+    cast: [sacha, lea, mariejo]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [publiees, gardees]
+    traces:
+      h9_recompte: "{annee} : quatre cent trente noms sur les listes de Sacha. Dix-huit de plus depuis janvier."
+      h9_listes_publiees: "{annee} : Le Quotidien a publié les listes de Sacha sur six pages, sans un mot de {nom}."
+      h9_listes_gardees: "{annee} : à la demande de {nom}, Le Quotidien garde les listes de Sacha pour après le Mondial."
+      h9_local_force: "{annee} : le local de l'association de Sacha, au-dessus du kiosque du quai, a été forcé."
+    hint: "Une fille qui recompte chaque semaine, et un journal qui attend une phrase."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: recompte
+        card: sl.h9.listes.recompte
+        next: [ { step: quotidien, in: [2, 4] } ]
+      - id: quotidien
+        card:
+          - { id: sl.h9.listes.quotidien_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.listes.quotidien }
+        next:
+          - { step: local, if: "season == 0", at_season: 1, at: [3, 10] }
+          - { step: local, in: [2, 5] }
+      - id: local
+        card:
+          - { id: sl.h9.listes.local_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.listes.local }
+        next: []
+
+  - id: sl.h9.fraicheur
+    title: "Un peu de leur fraîcheur"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 0.9
+    once: true
+    theme: formation
+    carrier: vecchio
+    cast: [vecchio, gege, vandel]
+    when: "flag('histoire_h9') && season <= 1 && chars.vecchio.statut != 'mort'"
+    issues: [promis, oublie]
+    traces:
+      h9_gants_gigi: "{annee} : le troisième gardien des Cobalts plonge avec les gants jaunes de Gigi Vecchio."
+      h9_fraicheur_promise: "{annee} : {nom} a promis à Gigi Vecchio de lui rapporter un peu de la fraîcheur du Dôme."
+      h9_fraicheur_rapportee: "{annee} : Gigi Vecchio a tenu à deux mains une bouteille d'eau du Dôme. Il ne l'a pas bue."
+    hint: "Un vieux gardien qui a pris la pluie quarante ans veut savoir ce que vaut un toit."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: gants
+        card: sl.h9.fraicheur.gants
+        next: [ { step: aube, in: [2, 4] } ]
+      - id: aube
+        card:
+          - { id: sl.h9.fraicheur.aube_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.fraicheur.aube }
+        next: [ { step: promesse, in: [2, 4] } ]
+      - id: promesse
+        card:
+          - { id: sl.h9.fraicheur.promesse_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.fraicheur.promesse }
+        next:
+          - { step: retour, if: "season == 0", at_season: 2, at: [2, 7] }
+          - { step: retour, if: "season == 1", at_season: 1, at: [2, 7] }
+      - id: retour
+        card:
+          - { id: sl.h9.fraicheur.retour_bouteille, if: "flag('h9_fraicheur_promise')" }
+          - { id: sl.h9.fraicheur.retour }
+        next: []
+
+  # ══════════════════════════════════════════════════════════════ 2030 (S1)
+  - id: sl.h9.deux_listes
+    title: "Les deux listes"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.5
+    once: true
+    min_season: 1
+    theme: selection
+    carrier: sauvan
+    cast: [sauvan, vandel, brehaut]
+    when: "flag('histoire_h9')"
+    issues: [a_moi, ministere]
+    traces:
+      h9_liste_a_moi: "{annee} : sur la liste des vingt-six de {nom}, le nom de Noa Vandel. Sans une rature."
+      h9_liste_ministere: "{annee} : sur la liste des vingt-six, Noa Vandel est barré au crayon. « Fatigué. »"
+      h9_syndicat_brassard: "{annee} : le syndicat des joueurs soutient le brassard. Le ministre a demandé son âge à Karim Fauvel."
+    hint: "Deux listes de vingt-six noms, identiques à un trait de crayon près."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: listes
+        this_season: true
+        on_expire: skip
+        card: sl.h9.deux_listes.listes
+        next: [ { step: suite, in: [3, 4] } ]
+      - id: suite
+        this_season: true
+        on_expire: skip
+        card:
+          - { id: sl.h9.deux_listes.noa, if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.deux_listes.syndicat }
+        next: [ { step: medecin, in: [2, 4] } ]
+      # Les capteurs des protège-tibias (la Nouvelle de 2029) contre le mot du
+      # ministère : la fatigue, il faut quelqu'un pour la signer.
+      - id: medecin
+        this_season: true
+        on_expire: skip
+        card:
+          - { id: sl.h9.deux_listes.medecin_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.deux_listes.medecin_capteurs, if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.deux_listes.medecin }
+        next: []
+
+  - id: sl.h9.kambara
+    title: "Le Kambara"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: vence
+    cast: [vence, sauvan, lea]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [oui, doute]
+    traces:
+      h9_mbako_oui: "{annee} : au téléphone, {nom} a dit oui à Lian Mbako, sélectionneur du Kambara. Oui au brassard."
+      h9_mbako_doute: "{annee} : Lian Mbako a demandé si les Cobalts porteraient le brassard. {nom} n'a pas su répondre."
+      h9_direct_tunnel: "{annee} : en direct sur Télé-Stade, {nom} a donné rendez-vous au pays dans le tunnel du Dôme."
+    hint: "Une autre sélection portera le brassard noir. Elle demande si tu suivras."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: appel
+        this_season: true
+        on_expire: skip
+        card:
+          - { id: sl.h9.kambara.appel_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.kambara.appel }
+        next: [ { step: direct, in: [2, 3] } ]
+      - id: direct
+        this_season: true
+        on_expire: skip
+        card:
+          - { id: sl.h9.kambara.direct_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.kambara.direct }
+        next: [ { step: lettre, at_season: 1, at: [2, 9] } ]
+      - id: lettre
+        card:
+          - { id: sl.h9.kambara.lettre_porte, if: "flag('h9_brassard_porte')" }
+          - { id: sl.h9.kambara.lettre }
+        next: []
+
+  - id: sl.h9.cadeaux
+    title: "Les cadeaux"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: argent
+    carrier: nassir
+    cast: [nassir, sauvan, aubert]
+    when: "flag('histoire_h9') && season <= 1"
+    issues: [gardes, rendus]
+    traces:
+      h9_cles_gardees: "{annee} : les clés d'un dernier étage avec terrasse, quai de la Rive, pendent au trousseau de {nom}."
+      h9_cles_rendues: "{annee} : {nom} a laissé les clés de la terrasse du quai sur le velours. Elles attendent ailleurs."
+      h9_fisc: "{annee} : contrôle fiscal sur trois ans chez {nom}. On cherchait une montre, une berline et des clés."
+      h9_fisc_suspendu: "{annee} : le contrôle fiscal de {nom} est « suspendu ». Sauvan a passé un coup de fil."
+    hint: "Une montre, une voiture, puis des clés. On ne vous demande rien. Pas encore."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: cles
+        card:
+          - { id: sl.h9.cadeaux.cles_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.cadeaux.cles }
+        next: [ { step: coursier, in: [2, 4] } ]
+      - id: coursier
+        card:
+          - { id: sl.h9.cadeaux.coursier_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.cadeaux.coursier_cles, if: "flag('h9_cles_rendues')" }
+          - { id: sl.h9.cadeaux.coursier }
+        next: [ { step: terrasse, at_season: 1, at: [2, 9] } ]
+      # Un an après : la terrasse gardée, saisie (le fisc de la rue Haute,
+      # une réaction : sl.h9.re.fisc), ou toujours en vitrine.
+      - id: terrasse
+        card:
+          - { id: sl.h9.cadeaux.terrasse_saisie, if: "flag('h9_cles_gardees') && flag('h9_fisc') && !flag('h9_fisc_suspendu')" }
+          - { id: sl.h9.cadeaux.terrasse, if: "flag('h9_cles_gardees')" }
+          - { id: sl.h9.cadeaux.terrasse_vitrine }
+        next: []
+
+  - id: sl.h9.rue_haute
+    title: "La rue Haute"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 0.6
+    once: true
+    min_season: 1
+    theme: direction
+    carrier: aubert
+    cast: [aubert, josiane, lea]
+    when: "flag('histoire_h9') && flag('h9_cave_vue')"
+    issues: [page_lea, page_gardee]
+    traces:
+      h9_aubert_vue: "{annee} : rue Haute, Madame Aubert a reçu {nom} sous un plaid, fenêtre ouverte sur le stade."
+      h9_page_lea: "{annee} : la page de décembre 2010 est sur le bureau de Léa, au Quotidien. 23 h 40, 23 h 52."
+      h9_page_gardee: "{annee} : {nom} garde la page de 2010 pour après le Mondial. Léa a dit qu'elle attendrait."
+      h9_josiane_temoin: "{annee} : Madame Josiane a témoigné devant le juge, assise, son sac sur les genoux."
+    hint: "Une ancienne ministre qui ne nie rien, et une page qui attend un journal."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: visite
+        card: sl.h9.rue_haute.visite
+        next: [ { step: lea, in: [2, 3] } ]
+      - id: lea
+        this_season: true
+        on_expire: skip
+        card:
+          - { id: sl.h9.rue_haute.lea_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.rue_haute.lea_sans_photo, if: "flag('h9_page_laissee')" }
+          - { id: sl.h9.rue_haute.lea_gardees, if: "flag('h9_listes_gardees')" }
+          - { id: sl.h9.rue_haute.lea }
+        next:
+          - { step: temoin, if: "season <= 1", at_season: 1, at: [2, 8] }
+          - { step: temoin, in: [2, 4] }
+      - id: temoin
+        card:
+          - { id: sl.h9.rue_haute.temoin_seule, if: "flag('h9_page_gardee')" }
+          - { id: sl.h9.rue_haute.temoin }
+        next: []
+
+  # ═════════════════════════════════════════════════════ 2031 (S2, tardives)
+  - id: sl.h9.exhumation
+    title: "La tente blanche"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: famille
+    carrier: mariejo
+    cast: [mariejo, sacha, lea]
+    when: "flag('histoire_h9') && flag('h9_exhumation')"
+    issues: [lu, tu]
+    traces:
+      h9_coup_de_chaleur: "{annee} : la contre-autopsie de Kévin Marçais dit « coup de chaleur ». Plus « malaise »."
+      h9_plaque: "{annee} : sur la tombe de Kévin Marçais, une plaque neuve : « Mort au Dôme d'Al-Dorado. »"
+      h9_plaque_metier: "{annee} : sur la tombe de Kévin Marçais, une plaque neuve, un seul mot : « Électricien. »"
+      h9_page_six: "{annee} : Sacha a corrigé la page six de ses listes. Kévin Marçais n'est plus un « malaise »."
+    hint: "On a ouvert le cercueil. Il reste un mot à changer."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: resultat
+        card: sl.h9.exhumation.resultat
+        next: [ { step: plaque, in: [2, 4] } ]
+      - id: plaque
+        card: sl.h9.exhumation.plaque
+        next: [ { step: page_six, in: [2, 4] } ]
+      - id: page_six
+        card: sl.h9.exhumation.page_six
+        next: []
+
+  - id: sl.h9.proces
+    title: "Le palais"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: presse
+    carrier: lea
+    cast: [lea, aubert, josiane]
+    when: "flag('histoire_h9') && flag('h9_page_lea')"
+    issues: [temoigne, avocat]
+    traces:
+      h9_aubert_examen: "{annee} : Madame Aubert, ancienne ministre des Sports, est mise en examen. Elle a gardé son plaid."
+      h9_temoignage: "{annee} : {nom} a témoigné devant le juge d'instruction sur un appel de décembre 2010."
+      h9_avocat: "{annee} : convoqué{pg, select, f{e} other{}} par le juge, {nom} est venu{pg, select, f{e} other{}} avec un avocat, pas avec la page."
+    hint: "Une ancienne ministre, un juge, et une heure tapée à la machine."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: une
+        card: sl.h9.proces.une
+        next: [ { step: couloir, in: [2, 4] } ]
+      - id: couloir
+        card: sl.h9.proces.couloir
+        next: [ { step: sortie, in: [2, 4] } ]
+      - id: sortie
+        card: sl.h9.proces.sortie
+        next: []
+
+  - id: sl.h9.boulangerie
+    title: "L'autre boulangerie"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: famille
+    carrier: sacha
+    cast: [sacha, mariejo, gege]
+    when: "flag('histoire_h9') && flag('h9_brassard_rendu')"
+    issues: [revenu, parti]
+    traces:
+      h9_autre_boulangerie: "{annee} : {nom} achète son pain place du marché, maintenant. La file regarde ailleurs."
+      h9_boulangerie_retour: "{annee} : {nom} est retourné{pg, select, f{e} other{}} rue des Lilas. Marie-Jo n'a rien demandé."
+    hint: "Il y a une autre boulangerie, place du marché. Le pain y est plus blanc."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: place
+        card: sl.h9.boulangerie.place
+        next: [ { step: sacha, in: [2, 4] } ]
+      - id: sacha
+        card: sl.h9.boulangerie.sacha
+        next: [ { step: lilas, in: [2, 4] } ]
+      - id: lilas
+        card: sl.h9.boulangerie.lilas
+        next: []
+
+  # 2031 : Gigi Vecchio s'en va avant sa minute. La troisième étape le dit
+  # (`char: {vecchio: mort}`) ; la minute du script (C3) le pleure.
+  - id: sl.h9.pluie
+    title: "La dernière pluie"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: formation
+    carrier: vecchio
+    cast: [vecchio, gege]
+    when: "flag('histoire_h9') && season == 2 && chars.vecchio.statut != 'mort'"
+    issues: [nuit, demain]
+    traces:
+      h9_gigi_nuit: "{annee} : {nom} a passé la dernière nuit de Gigi Vecchio sur une chaise, à l'hôpital, côté fenêtre."
+    hint: "Un vieux gardien ne veut pas qu'on fasse une minute de silence pour lui. Ça fait trop."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: main_courante
+        card: sl.h9.pluie.main_courante
+        next: [ { step: appel, in: [2, 3] } ]
+      - id: appel
+        card: sl.h9.pluie.appel
+        next: [ { step: sac, in: [2, 3] } ]
+      - id: sac
+        card:
+          - { id: sl.h9.pluie.sac_nuit, if: "flag('h9_gigi_nuit')" }
+          - { id: sl.h9.pluie.sac_vide, if: "flag('h9_gants_gigi')" }
+          - { id: sl.h9.pluie.sac }
+        next: []
+
+  # ═══════════════════════════════════════ 2032 ET APRÈS (l'épilogue, S3+)
+  # La carrière ne continue après la minute que sur un chemin : le brassard est
+  # entré, la page de 2010 n'est pas partie, et tu es resté immobile. Ce qui
+  # suit n'est pas une redite : ce sont les cicatrices.
+  - id: sl.h9.apres
+    title: "Après"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 3
+    theme: selection
+    carrier: vandel
+    cast: [vandel, sacha, mariejo]
+    when: "flag('histoire_h9') && flag('h9_vecchio_mort')"
+    issues: [garde, rendu]
+    traces:
+      h9_apres_garde: "{annee} : Noa Vandel a raccroché. Le brassard noir dort dans le tiroir de {nom}."
+      h9_apres_rendu: "{annee} : Noa Vandel a raccroché. Le brassard noir est retourné rue des Lilas."
+      h9_listes_josiane: "{annee} : les listes de Sacha sont dans la cave de Josiane, entre 2010 et 2011."
+      h9_four_paye: "{annee} : la boulangerie Marçais a fini de payer son four. Marie-Jo a fait une baguette d'un mètre."
+    hint: "Le capitaine raccroche, la fille s'en va, le four est payé. Ce qui reste."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: raccroche
+        card: sl.h9.apres.raccroche
+        next: [ { step: depart_sacha, in: [3, 5] } ]
+      - id: depart_sacha
+        card: sl.h9.apres.depart_sacha
+        next: [ { step: four_paye, in: [3, 5] } ]
+      - id: four_paye
+        card: sl.h9.apres.four_paye
+        next: []
+
+  - id: sl.h9.carton
+    title: "Le carton de 2010"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 3
+    theme: presse
+    carrier: lea
+    cast: [lea, aubert, josiane]
+    when: "flag('histoire_h9') && !flag('h9_page_lea') && flag('h9_cave_vue') && flag('h9_four_paye')"
+    issues: [publiee, dormante]
+    traces:
+      h9_carton_josiane: "{annee} : Madame Josiane est morte en dormant. Elle a laissé à {nom} un carton marqué 2010."
+      h9_page_tardive: "{annee} : la page de décembre 2010 paraît enfin dans Le Quotidien, avec trois ans de retard."
+      h9_page_dormante: "{annee} : la page de décembre 2010 dort dans le buffet de {nom}, sous les factures."
+    hint: "Une vieille secrétaire meurt, et laisse un carton. Dedans, une heure."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: legs
+        card: sl.h9.carton.legs
+        next: [ { step: lea, in: [3, 5] } ]
+      - id: lea
+        card: sl.h9.carton.lea
+        next: [ { step: fenetre, in: [3, 5] } ]
+      - id: fenetre
+        card:
+          - { id: sl.h9.carton.fenetre_publiee, if: "flag('h9_page_tardive')" }
+          - { id: sl.h9.carton.fenetre }
+        next: []

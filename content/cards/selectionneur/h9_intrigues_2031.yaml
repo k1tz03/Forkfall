@@ -1,0 +1,262 @@
+# Histoire 9 — « Vingt degrés dedans » : les cartes des tardives de 2031
+# (content/arcs/selectionneur/h9_intrigues.yaml) — La tente blanche, Le
+# palais, L'autre boulangerie. Ce que coûtent, un an après, le brassard porté,
+# la page donnée, le silence gardé.
+cards:
+  # ══════════════════════════════════════════════════════ LA TENTE BLANCHE
+  - id: sl.h9.exhumation.resultat
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, scandale]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Marie-Jo te tend une enveloppe, sans tampon doré cette fois : la contre-autopsie. Elle a souligné deux mots elle-même, au crayon gras : « coup de chaleur »."
+    left:
+      label: "Je vous la lis"
+      effects: {relation: {mariejo: 1}, set: [h9_coup_de_chaleur], outcome: lu}
+      answer: "Tu lis jusqu'au bout. Elle répète « chaleur » plusieurs fois, comme un mot étranger qu'on apprend. Puis elle ouvre la boutique."
+    right:
+      label: "Vous l'avez lue"
+      effects: {vestiaire: "+", set: [h9_coup_de_chaleur], outcome: tu}
+      answer: "« Trois fois. » Elle replie la feuille et la glisse sous la photo de Kévin, au-dessus de la caisse, à moitié cachée."
+
+  - id: sl.h9.exhumation.plaque
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    lieu: cimetiere
+    tone: leger
+    once: true
+    text: "Cimetière, devant la tombe. Le marbrier attend, une plaque vierge sur l'épaule. Marie-Jo hésite entre deux lignes : « Électricien », ou « Mort au Dôme d'Al-Dorado »."
+    left:
+      label: "Électricien"
+      effects: {vestiaire: "+", set: [h9_plaque_metier]}
+      answer: "Le marbrier grave à la main, lettre par lettre. Marie-Jo dit que Kévin aurait voulu les lettres plus grosses. Il recommence le É."
+    right:
+      label: "Mort au Dôme"
+      effects: {direction: "-", tribunes: "+", set: [h9_plaque]}
+      answer: "Le marbrier demande deux fois l'orthographe d'Al-Dorado. Un mois après, quelqu'un raye « Dôme » au tournevis. Marie-Jo le fait regraver."
+
+  - id: sl.h9.exhumation.page_six
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, scandale]
+    speaker: sacha
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Sacha pose sur ta table la page six, imprimée. Elle barre « malaise » d'un trait et écrit au-dessus « coup de chaleur » : « Le premier qu'on corrige. Il en reste quatre cent soixante. »"
+    left:
+      label: "Corrige les autres"
+      effects: {relation: {sacha: 1}, set: [h9_page_six]}
+      answer: "Elle te tend un crayon. Vous en corrigez onze avant minuit. Pour les autres, il faudrait ouvrir quatre cent cinquante cercueils."
+    right:
+      label: "Garde celle-là"
+      effects: {vestiaire: "+", set: [h9_page_six]}
+      answer: "Elle la plie en quatre et la glisse dans ton portefeuille, derrière ta licence. « Comme ça, tu l'as sur toi. »"
+
+  # ═════════════════════════════════════════════════════════════ LE PALAIS
+  - id: sl.h9.proces.une
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    once: true
+    text: "Au Quotidien, Léa te montre l'épreuve de la une de demain : MADAME AUBERT MISE EN EXAMEN. « Le juge vous convoque mardi. Vous y allez avec un avocat, {toi}, ou avec la page ? »"
+    left:
+      label: "Avec la page"
+      effects: {tribunes: "+", direction: "-", set: [h9_aubert_examen, h9_temoignage], outcome: temoigne}
+      answer: "« Avec la page, alors. » Léa corrige une virgule dans le titre, une seule, et envoie la une à l'imprimerie à vingt-trois heures quarante."
+    right:
+      label: "Avec un avocat"
+      effects: {tribunes: "-", direction: "+", set: [h9_aubert_examen, h9_avocat], outcome: avocat}
+      answer: "« C'est votre droit. » Elle n'écrit rien. Le lendemain, sous le titre, une ligne : la sélection « n'a pas souhaité s'exprimer »."
+
+  - id: sl.h9.proces.couloir
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: aubert
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Palais de justice, couloir du deuxième étage. Madame Aubert attend sur un banc, son plaid écossais sur les genoux par une chaleur d'orage. Elle tapote la place à côté d'elle."
+    left:
+      label: "Je m'assois"
+      effects: {relation: {aubert: 1}, set: [h9_plaid]}
+      answer: "Vous attendez ensemble, sans parler. Quand on l'appelle, elle te laisse le plaid sur les genoux, et ne revient pas le chercher."
+    right:
+      label: "Je reste debout"
+      effects: {direction: "+"}
+      answer: "« Debout, c'est bien. Moi, je n'ai jamais su attendre debout. » On l'appelle. Elle marche vers la porte sans canne, très droite."
+
+  - id: sl.h9.proces.sortie
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Sur les marches du palais, Madame Josiane remonte son col malgré la chaleur : « Ils m'ont demandé si j'étais sûre de l'heure. J'ai tapé l'heure. On est toujours sûr de ce qu'on tape. »"
+    left:
+      label: "Je vous raccompagne"
+      effects: {relation: {josiane: 1}}
+      answer: "Dans le car, elle s'endort contre la vitre, son sac serré contre elle. À Aubérive, elle se réveille d'un coup et dit : « 23 h 52. »"
+    right:
+      label: "Merci, Josiane"
+      effects: {tribunes: "+"}
+      answer: "« Ne me remerciez pas. J'aurais dû la donner il y a vingt ans. » Elle descend les marches une à une, en comptant tout bas."
+
+  # ════════════════════════════════════════════════════ L'AUTRE BOULANGERIE
+  - id: sl.h9.boulangerie.place
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, tribunes]
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Place du marché, l'autre boulangerie. Le pain y est plus blanc, la boulangère plus jeune. Elle te reconnaît, et ne parle pas du Mondial, exprès, très fort."
+    left:
+      label: "Une baguette"
+      effects: {vestiaire: "+", set: [h9_autre_boulangerie]}
+      answer: "Elle te rend la monnaie en souriant trop. Dans la file, derrière toi, quelqu'un dit « vingt degrés », assez bas pour que tu entendes."
+    right:
+      label: "Je ressors"
+      effects: {tribunes: "-"}
+      answer: "Ici, la clochette ne colle pas ; elle sonne une seule fois, propre. Tu rentres sans pain. Tu n'as pas faim, de toute façon."
+
+  - id: sl.h9.boulangerie.sacha
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sacha
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Sacha pose deux baguettes sur ta table, l'une de la place, l'autre de la rue des Lilas : « Goûte. Tu verras laquelle tu manges en premier, {toi}. »"
+    left:
+      label: "Celle de Marie-Jo"
+      effects: {relation: {sacha: 1}}
+      answer: "Tu la manges jusqu'au bout, sans t'asseoir. Sacha range l'autre dans le sac à pain, pour demain, ou pour personne."
+    right:
+      label: "Celle de la place"
+      effects: {vestiaire: "+", relation: {sacha: -1}}
+      answer: "Elle hoche la tête et mange l'autre, seule, debout à la fenêtre qui donne sur la rue des Lilas."
+
+  - id: sl.h9.boulangerie.lilas
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Rue des Lilas, six heures et demie. Marie-Jo te voit entrer, finit de servir la dame d'avant, puis te tend ta baguette comme si de rien n'était. Elle ne demande rien."
+    left:
+      label: "Je paie"
+      effects: {tribunes: "+", set: [h9_pain_repris, h9_boulangerie_retour], outcome: revenu}
+      answer: "Elle compte ta monnaie deux fois, comme au premier jour, et ne se trompe pas. La clochette colle toujours ; elle sonne deux fois."
+    right:
+      label: "Je ne peux pas"
+      effects: {vestiaire: "-", set: [h9_autre_boulangerie], outcome: parti}
+      answer: "Tu reposes la baguette sur le comptoir. Elle la remet dans la panière, sans un mot, pour le client suivant."
+
+  # ══════════════════════════════════════════════════════ LA DERNIÈRE PLUIE
+  # 2031 : Gigi Vecchio s'en va avant la minute qu'on lui fera. On ne le voit
+  # pas mourir : une chaise au bord du terrain, un téléphone, un sac de sport.
+  - id: sl.h9.pluie.main_courante
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Gigi Vecchio s'est assis sur une chaise pliante au bord du terrain, ce qu'il ne faisait jamais. Il ferme les yeux : « Raconte-moi les plongeons du petit. Je veux les entendre. »"
+    left:
+      label: "Je vous les raconte"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "La course, l'appel, la main qui part avant le corps. Il hoche la tête à chaque plongeon : « Trop tôt. Trop tôt. Bien. »"
+    right:
+      label: "Venez les voir de près"
+      effects: {tribunes: "+"}
+      answer: "Il se lève, fait trois pas dans l'herbe mouillée, puis se rassoit. « De loin, c'est pareil. De près, ça mouille. »"
+
+  - id: sl.h9.pluie.appel
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un soir, le téléphone. Gigi, de l'hôpital, la voix toute petite : « Ils m'ont mis côté fenêtre. On voit un bout du toit de la tribune Nord. C'est assez de toit pour moi. »"
+    left:
+      label: "Je viens demain"
+      effects: {direction: "+", relation: {vecchio: 1}, outcome: demain}
+      answer: "« Demain, oui. N'apporte rien. » Il raccroche le premier, pour une fois. Le lendemain, la chambre est déjà refaite."
+    right:
+      label: "Je viens ce soir"
+      effects: {vestiaire: "-", relation: {vecchio: 1}, set: [h9_gigi_nuit], outcome: nuit}
+      answer: "Une nuit sur une chaise, à côté du lit. Il parle de 1990, de la neige, d'un penalty arrêté. Au matin, il dort. Tu pars sans le réveiller."
+
+  - id: sl.h9.pluie.sac_nuit
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && !flag('h9_vecchio_mort')"
+    text: "Gégé t'attend devant la buvette, le vieux sac de sport de Gigi à la main : « L'infirmière dit que tu étais là, la dernière nuit. Il a laissé une consigne : pas de minute de silence. Ça fait trop. »"
+    left:
+      label: "Une minute, quand même"
+      effects: {tribunes: "+", relation: {gege: 1}, char: {vecchio: mort}}
+      answer: "« Une, alors. Pas deux. » Gégé referme le sac comme il peut. La fermeture résiste. Il la laisse ouverte."
+    right:
+      label: "Comme il a dit"
+      effects: {vestiaire: "+", char: {vecchio: mort}}
+      answer: "Gégé hoche la tête, pas convaincu. « La Fédération en fera une quand même. Elle fait toujours ce qu'on ne lui demande pas. »"
+
+  - id: sl.h9.pluie.sac_vide
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && !flag('h9_vecchio_mort')"
+    text: "Gégé t'attend devant la buvette avec le vieux sac de sport de Gigi, vide, la fermeture cassée : « Ses gants sont partis au Mondial. Il a dit : pas de minute de silence. Ça fait trop. »"
+    left:
+      label: "Une minute, quand même"
+      effects: {tribunes: "+", relation: {gege: 1}, char: {vecchio: mort}}
+      answer: "« Une, alors. Pas deux. » Gégé plie le sac en quatre et le glisse sous le comptoir, à la place des gants."
+    right:
+      label: "Comme il a dit"
+      effects: {vestiaire: "+", char: {vecchio: mort}}
+      answer: "Gégé hoche la tête, pas convaincu. « La Fédération en fera une quand même. Elle fait toujours ce qu'on ne lui demande pas. »"
+
+  - id: sl.h9.pluie.sac
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && !flag('h9_vecchio_mort')"
+    text: "Gégé t'attend devant la buvette avec le vieux sac de sport de Gigi. Dedans, les gants jaunes au cuir fendu : « Pour le petit gardien. Et il a dit : pas de minute de silence. Ça fait trop. »"
+    left:
+      label: "Une minute, quand même"
+      effects: {tribunes: "+", relation: {gege: 1}, char: {vecchio: mort}}
+      answer: "« Une, alors. Pas deux. » Il te tend les gants. Ils sentent encore la pluie. Personne ne les a lavés."
+    right:
+      label: "Comme il a dit"
+      effects: {vestiaire: "+", char: {vecchio: mort}}
+      answer: "Gégé hoche la tête, pas convaincu. « La Fédération en fera une quand même. Elle fait toujours ce qu'on ne lui demande pas. »"

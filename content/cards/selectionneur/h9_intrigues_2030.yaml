@@ -1,0 +1,495 @@
+# Histoire 9 — « Vingt degrés dedans » : les cartes des intrigues de 2030
+# (content/arcs/selectionneur/h9_intrigues.yaml) — Les deux listes, Le
+# Kambara, Les cadeaux, La rue Haute.
+#
+# Karim Fauvel n'a pas de fiche dans ce lot (elle vient avec la branche de
+# *Chambre 12*) : il parle ici sans portrait, comme une voix qu'on rapporte.
+cards:
+  # ═══════════════════════════════════════════════════════ LES DEUX LISTES
+  - id: sl.h9.deux_listes.listes
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Hôtel de la Rive. Ta liste des vingt-six, signée {nom}, et celle de Sauvan : la même, au nom de Noa Vandel près, barré au crayon. « Le capitaine est fatigué, dit le ministère. »"
+    left:
+      label: "Ma liste, avec Noa"
+      effects: {vestiaire: "++", direction: "--", relation: {sauvan: -1, vandel: 1}, set: [h9_liste_a_moi], outcome: a_moi, react: {card: sl.h9.re.vence_liste}}
+      answer: "Sauvan gomme son trait, longtemps, jusqu'à ce que le nom revienne. « Il était fatigué. Il ne l'est plus. On me demandera pourquoi. »"
+    right:
+      label: "Leur liste"
+      effects: {direction: "++", vestiaire: "--", relation: {vandel: -2}, set: [h9_liste_ministere], outcome: ministere, react: {card: sl.h9.re.brehaut_listes}}
+      answer: "Tu signes sous le trait de crayon. Sauvan souffle sur l'encre, comme si elle pouvait couler. « Le pays vous remerciera. Pas tout de suite. »"
+
+  - id: sl.h9.deux_listes.syndicat
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    lieu: parking
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Parking de la Fédération. Karim Fauvel, président du syndicat des joueurs, t'attend avec un thermos : « Le syndicat soutient le brassard. Je l'ai dit au ministre. Il m'a demandé mon âge. »"
+    left:
+      label: "Qu'avez-vous répondu ?"
+      effects: {vestiaire: "+", set: [h9_syndicat_brassard]}
+      answer: "« Plus vieux que lui. Il a noté. » Il te verse un café dans le bouchon du thermos. Il est froid ; il s'excuse, et le boit lui-même."
+    right:
+      label: "Laissez-moi en dehors"
+      effects: {direction: "+", vestiaire: "-", set: [h9_syndicat_brassard]}
+      answer: "« Vous êtes dedans depuis janvier. » Il revisse le thermos et repart à pied vers la gare, sans se retourner."
+
+  - id: sl.h9.deux_listes.noa
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Noa t'attend sur le parking, sac sur l'épaule, la liste pliée dans la poche de son survêtement : « Fatigué. C'est vous qui l'avez écrit, {toi}, ou on vous l'a dicté ? »"
+    left:
+      label: "On me l'a dicté"
+      effects: {vestiaire: "+", direction: "-", relation: {vandel: 1}}
+      answer: "Il remonte son sac sur l'épaule. « Alors on est deux à être fatigués. » Il part vers la gare à pied. Il ne court plus."
+    right:
+      label: "Je l'ai signé"
+      effects: {direction: "+", relation: {vandel: -1}}
+      answer: "Il hoche la tête, lentement. « Merci de ne pas mentir. » Il s'en va sans courir. Pour un fatigué, il marche vite."
+
+  - id: sl.h9.deux_listes.medecin
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Le médecin de la Fédération pose sur ta table un certificat déjà signé : « État de fatigue, repos conseillé six semaines. Noa Vandel. » Il ne manque que ta signature, en bas, à gauche."
+    left:
+      label: "Je le déchire"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "Tu le déchires en deux, puis en quatre. Le médecin ramasse les morceaux un par un et les range dans sa mallette. « Il en faudra un autre. »"
+    right:
+      label: "Je le range"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu le glisses dans le tiroir, sous la liste. Il y reste. Mais il est là, et tu sais qu'il est là, chaque fois que tu ouvres."
+
+  - id: sl.h9.deux_listes.medecin_capteurs
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Le médecin de la Fédération te montre les courbes des capteurs. Celle de Noa Vandel ne descend jamais. « Fatigué, dit le ministère. Les capteurs disent le contraire. Je signe quoi ? »"
+    left:
+      label: "Ce que disent les capteurs"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "Il imprime la courbe et la signe, en bas, au stylo. Une feuille qui ne change rien à la liste. Il la garde quand même, dans sa mallette."
+    right:
+      label: "Ce que dit le ministère"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il signe sans lire. En partant, il éteint l'écran ; la courbe de Noa reste allumée une seconde de plus que les autres."
+
+  - id: sl.h9.deux_listes.medecin_loin
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Al-Dorado, l'infirmerie de l'hôtel. Le médecin de la Fédération te tend un certificat déjà signé : « État de fatigue. » Pour le capitaine, la veille du match. Il ne manque que ta signature."
+    left:
+      label: "Je le déchire"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "Les morceaux tombent dans la corbeille de l'infirmerie, à côté des pansements. Le médecin te regarde faire comme on regarde un orage."
+    right:
+      label: "Je le range"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu le plies dans ta poche de veste, avec le reste. Il ne sert pas. Il pèse."
+
+  # ════════════════════════════════════════════════════════════ LE KAMBARA
+  - id: sl.h9.kambara.appel
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, telephone]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Minuit, un numéro de l'étranger. Lian Mbako, sélectionneur du Kambara : « Le Kambara portera le brassard noir à son match d'ouverture. On vous joue au troisième. Les Cobalts le porteront ? »"
+    left:
+      label: "Oui"
+      effects: {tribunes: "+", direction: "-", set: [h9_mbako_oui], outcome: oui}
+      answer: "« Alors on se verra au troisième match. » Il raccroche sans dire au revoir. Au Kambara, la minute coûte cher."
+    right:
+      label: "Je ne sais pas"
+      effects: {tribunes: "-", direction: "+", set: [h9_mbako_doute], outcome: doute}
+      answer: "Un silence. « Moi non plus, je ne savais pas, il y a un mois. On a trois matchs pour savoir. » Il raccroche le premier."
+
+  - id: sl.h9.kambara.appel_loin
+    roles: [selectionneur]
+    arc: instances
+    tags: [al_dorado, telephone]
+    lieu: ailleurs
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Al-Dorado, l'hôtel des délégations. Le téléphone de la chambre sonne à minuit : Lian Mbako, du Kambara, trois étages plus bas. « On le porte demain. Les Cobalts le porteront ? »"
+    left:
+      label: "Oui"
+      effects: {tribunes: "+", direction: "-", set: [h9_mbako_oui], outcome: oui}
+      answer: "« Alors on se croisera au troisième match. » Il raccroche. Trois étages plus bas, une fenêtre s'éteint."
+    right:
+      label: "Je ne sais pas"
+      effects: {tribunes: "-", direction: "+", set: [h9_mbako_doute], outcome: doute}
+      answer: "« Moi non plus, il y a un mois. » Un silence. « On a trois matchs pour savoir. Dormez, si vous y arrivez. »"
+
+  - id: sl.h9.kambara.direct
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: vence
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Télé-Stade a monté son plateau dans le grand salon de l'hôtel de la Rive. Vence passe les images du Kambara, brassards noirs au bras. Le voyant rouge s'allume : « Et les Cobalts, {toi} ? »"
+    left:
+      label: "Rendez-vous au tunnel"
+      effects: {tribunes: "+", direction: "-", set: [h9_direct_tunnel]}
+      answer: "Vence laisse trois secondes de silence à l'antenne, ce qui est beaucoup. Puis elle passe à la météo d'Al-Dorado : cinquante et un."
+    right:
+      label: "Parlons football"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Elle te laisse parler football quatre minutes, sans t'interrompre. En régie, on repasse les images du Kambara en fond, en boucle."
+
+  - id: sl.h9.kambara.direct_loin
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, al_dorado]
+    speaker: vence
+    lieu: ailleurs
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Salle de presse du Dôme, climatisée à dix-neuf degrés. Nathalie Vence a gardé la première question : « Le Kambara a joué brassard au bras, hier. Et les Cobalts, {toi} ? »"
+    left:
+      label: "Rendez-vous au tunnel"
+      effects: {tribunes: "+", direction: "-", set: [h9_direct_tunnel]}
+      answer: "Trois secondes de silence en direct, devant quarante caméras. Au fond de la salle, Sauvan regarde sa montre comme un compte à rebours."
+    right:
+      label: "Parlons football"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Tu parles football. Vence te laisse finir, puis pose sa deuxième question : « Il fait combien, dehors ? » Tu ne sais pas."
+
+  - id: sl.h9.kambara.lettre
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Une lettre du Kambara, timbre à l'éléphant. Lian Mbako : « On a perdu en huitième, brassard au bras. Vous êtes allés plus loin, sans. Je ne sais pas ce que ça coûte. Vous, si. »"
+    left:
+      label: "Je lui réponds"
+      effects: {tribunes: "+"}
+      answer: "Tu écris trois pages, tu en envoies une. Il ne répond pas. Au printemps, un colis : un brassard noir, plié, sans un mot."
+    right:
+      label: "Je la range"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle va dans le tiroir du buffet, avec les lettres qu'on ne relit pas. Le tiroir ferme mal, maintenant."
+
+  - id: sl.h9.kambara.lettre_porte
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Une lettre du Kambara, timbre à l'éléphant. Lian Mbako : « Au troisième match, on était deux à le porter. La télévision ne l'a pas montré. Le stade l'a vu. Merci de ne pas m'avoir laissé seul. »"
+    left:
+      label: "Je lui réponds"
+      effects: {tribunes: "+"}
+      answer: "Tu lui écris une ligne : « Le stade l'a vu. » Il te renvoie la même, au dos d'une photo des deux équipes, bras noirs levés."
+    right:
+      label: "Je la garde sur moi"
+      effects: {vestiaire: "+"}
+      answer: "Tu la glisses dans ta veste de banc, poche intérieure, avec ta licence. Tu ne la relis pas. Tu sais ce qu'elle dit."
+
+  # ══════════════════════════════════════════════════════════ LES CADEAUX
+  - id: sl.h9.cadeaux.cles
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: nassir
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Hôtel de la Rive. Cheikh Ilyas te tend deux clés sur un coussin de velours : « Un dernier étage, quai de la Rive, avec terrasse. On y voit le stade, la mairie, et votre ancienne fenêtre. »"
+    left:
+      label: "Je prends les clés"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_cles_gardees], var: {cadeau_penthouse: "+1"}, outcome: gardes}
+      answer: "Il pose les clés dans ta paume et referme tes doigts dessus, un à un. « L'émirat n'offre pas. Il accueille. »"
+    right:
+      label: "Gardez-les"
+      effects: {tribunes: "+", direction: "-", relation: {nassir: -1}, set: [h9_cles_rendues], outcome: rendus}
+      answer: "Il repose les clés sur le velours, sans vexation. « Elles attendront chez Madame Tessandier. Les clés attendent mieux que les gens. »"
+
+  - id: sl.h9.cadeaux.cles_loin
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, al_dorado]
+    speaker: nassir
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Al-Dorado, la loge présidentielle du Dôme. Cheikh Ilyas te glisse deux clés dans la main : « Un dernier étage, quai de la Rive, avec terrasse. Pour le retour. On y voit votre ancienne fenêtre. »"
+    left:
+      label: "Je prends les clés"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_cles_gardees], var: {cadeau_penthouse: "+1"}, outcome: gardes}
+      answer: "Il referme tes doigts sur les clés, un à un. « L'émirat n'offre pas. Il accueille. » En bas, on arrose une pelouse qui n'a pas soif."
+    right:
+      label: "Gardez-les"
+      effects: {tribunes: "+", direction: "-", relation: {nassir: -1}, set: [h9_cles_rendues], outcome: rendus}
+      answer: "Il remet les clés dans sa poche de poitrine. « Elles attendront à Aubérive. Les clés attendent mieux que les gens. »"
+
+  - id: sl.h9.cadeaux.coursier
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, sombre]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Vingt-deux heures. Le coursier aux gants blancs, cette fois sans écrin : une enveloppe crème, une phrase à l'encre violette, sans signature. « Nous savons attendre. »"
+    left:
+      label: "Je la brûle"
+      effects: {tribunes: "+"}
+      answer: "Elle brûle mal, comme un papier trop épais. L'odeur reste dans la cuisine jusqu'au matin, sucrée, presque un parfum."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu la ranges dans le tiroir du buffet, sous les factures. Chaque fois que tu l'ouvres, tu vérifies qu'elle y est encore."
+
+  - id: sl.h9.cadeaux.coursier_cles
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Vingt-deux heures. Le coursier aux gants blancs revient, sans écrin : une enveloppe crème, et dedans, les deux clés de la terrasse. Une phrase à l'encre violette : « Nous savons attendre. »"
+    left:
+      label: "Je les jette"
+      effects: {tribunes: "+"}
+      answer: "Tu les jettes dans la Rive, du pont, à minuit. Elles ne font presque pas de bruit. Le lendemain, Madame Tessandier fait changer la serrure."
+    right:
+      label: "Je les garde"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu les poses dans la coupe de l'entrée, avec les tiennes. Le matin, tu prends le mauvais trousseau, deux fois de suite."
+
+  - id: sl.h9.cadeaux.coursier_loin
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [al_dorado, sombre]
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "L'hôtel des délégations, vingt-deux heures. Un coursier en gants blancs, le même ou son frère, glisse sous ta porte une enveloppe crème : « Nous savons attendre. »"
+    left:
+      label: "Je la déchire"
+      effects: {tribunes: "+"}
+      answer: "Pas d'allumettes : l'hôtel est non-fumeur. Tu la déchires en seize et tu la jettes dans les toilettes. Elle flotte."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu la glisses dans la doublure de ta valise, là où il y a de la place, maintenant. Elle voyagera avec toi."
+
+  # La terrasse, un an après (2031) : gardée, saisie, ou toujours en vitrine.
+  - id: sl.h9.cadeaux.terrasse_saisie
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    text: "La terrasse du quai est revenue dans la vitrine de l'agence Tessandier, saisie. Sur la photo de l'annonce, on voit encore ta tasse, oubliée sur la balustrade."
+    left:
+      label: "Je regarde la photo"
+      effects: {vestiaire: "+"}
+      answer: "Madame Tessandier sort sur le trottoir et te demande si tu veux la tasse. Tu dis non. Elle la garde ; elle va bien avec la vue."
+    right:
+      label: "Je change de trottoir"
+      effects: {tribunes: "+"}
+      answer: "De l'autre côté de la rue, tu vois mieux la vitrine. C'est souvent comme ça, avec les vitrines."
+
+  - id: sl.h9.cadeaux.terrasse
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Un dimanche, tu montes enfin à la terrasse du quai. D'en haut, le stade, la mairie, et ta fenêtre de la rue des Lilas, où tu as laissé la lumière allumée."
+    left:
+      label: "Je reste un moment"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Le vent tourne. On entend la clochette de la boulangerie jusqu'ici, deux fois, parce qu'elle colle. Tu redescends avant la nuit."
+    right:
+      label: "Je redescends"
+      effects: {vestiaire: "+"}
+      answer: "Tu laisses les clés sur la balustrade, en évidence. Le lundi, elles y sont encore. Le mardi, plus. Personne ne t'appelle."
+
+  - id: sl.h9.cadeaux.terrasse_vitrine
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Dans la vitrine de l'agence Tessandier, la terrasse du quai est toujours à vendre. Le prix a baissé deux fois. Sur la photo, la balustrade donne sur ta rue."
+    left:
+      label: "Je regarde le prix"
+      effects: {caisse: "+"}
+      answer: "Encore trop cher pour un salaire, plus assez pour un cadeau. Madame Tessandier te fait un signe derrière la vitre. Tu ne rentres pas."
+    right:
+      label: "Je regarde la rue"
+      effects: {tribunes: "+"}
+      answer: "Sur la photo, on reconnaît la boulangerie, en bas à gauche, et une silhouette en tablier sur le seuil. La photo a été prise un matin."
+
+  # ══════════════════════════════════════════════════════════ LA RUE HAUTE
+  - id: sl.h9.rue_haute.visite
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: aubert
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Rue Haute, fenêtre ouverte sur le stade. Madame Aubert, {age_aubert} ans, un plaid écossais sur les genoux : « Un port, du gaz pour vingt ans, et un tournoi. Un stade, ça se vote. Le reste se perd. »"
+    left:
+      label: "Vous saviez, pour les morts"
+      effects: {tribunes: "+", relation: {aubert: -1}, set: [h9_aubert_vue], react: [{card: sl.h9.re.fisc, if: "flag('h9_montre_gardee') || flag('h9_voiture_gardee') || flag('h9_cles_gardees')"}, {card: sl.h9.re.fisc_rien}]}
+      answer: "« On sait toujours. On ne sait jamais combien. » Elle remonte le plaid. Dehors, l'arrosage automatique du stade se met en route."
+    right:
+      label: "Pourquoi me le dire ?"
+      effects: {tribunes: "-", direction: "+", set: [h9_aubert_vue], react: [{card: sl.h9.re.fisc, if: "flag('h9_montre_gardee') || flag('h9_voiture_gardee') || flag('h9_cles_gardees')"}, {card: sl.h9.re.fisc_rien}]}
+      answer: "« Parce que vous ne pouvez rien en faire. » Elle sonne pour le thé. Personne ne vient ; elle vit seule depuis dix ans."
+
+  - id: sl.h9.rue_haute.lea
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Rédaction du Quotidien, porte fermée. Léa a tes photos de la page sous la main : « 23 h 40, 23 h 52. Je publie l'heure le soir du match d'ouverture, ou j'attends votre retour ? »"
+    left:
+      label: "Le soir du match"
+      effects: {tribunes: "+", direction: "--", relation: {lea: 1}, set: [h9_page_lea], outcome: page_lea, react: {card: sl.h9.re.sacha_page}}
+      answer: "Elle range les photos dans une chemise sans nom. « Le soir même. Le temps qu'ils comprennent, vous serez déjà dans le tunnel. »"
+    right:
+      label: "À mon retour"
+      effects: {tribunes: "-", direction: "+", set: [h9_page_gardee], outcome: page_gardee}
+      answer: "« J'attendrai. » Elle écrit la date du retour sur la chemise, au crayon. « Je n'attends jamais deux fois, {toi}. »"
+
+  - id: sl.h9.rue_haute.lea_sans_photo
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Rédaction du Quotidien. Léa sait, pour la cave : « Vous avez laissé la page à Josiane. Josiane me l'a lue au téléphone, heure par heure. Je publie le soir du match, ou j'attends ? »"
+    left:
+      label: "Le soir du match"
+      effects: {tribunes: "+", direction: "--", relation: {lea: 1}, set: [h9_page_lea], outcome: page_lea, react: {card: sl.h9.re.sacha_page}}
+      answer: "« Le soir même, alors. » Elle tape l'heure sur sa machine, deux fois, pour entendre le bruit des chiffres."
+    right:
+      label: "À mon retour"
+      effects: {tribunes: "-", direction: "+", set: [h9_page_gardee], outcome: page_gardee}
+      answer: "« J'attendrai. Josiane, elle, n'attendra peut-être pas. » Elle raccroche le téléphone qu'elle tenait encore à la main."
+
+  - id: sl.h9.rue_haute.lea_gardees
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Rédaction du Quotidien. Léa a tes photos de la page : « Vous m'avez déjà fait attendre les listes de votre fille. 23 h 40, 23 h 52 : je publie le soir du match, ou j'attends encore ? »"
+    left:
+      label: "Le soir du match"
+      effects: {tribunes: "+", direction: "--", relation: {lea: 1}, set: [h9_page_lea], outcome: page_lea, react: {card: sl.h9.re.sacha_page}}
+      answer: "« Enfin. » Elle range les photos avec les listes de Sacha, dans la même chemise. « Comme ça, elles sortent ensemble. »"
+    right:
+      label: "À mon retour"
+      effects: {tribunes: "-", direction: "+", set: [h9_page_gardee], outcome: page_gardee}
+      answer: "« Deux fois, alors. » Elle écrit la date au crayon sur la chemise, sous l'autre date, déjà barrée. « La troisième, je n'attends pas. »"
+
+  - id: sl.h9.rue_haute.lea_loin
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, al_dorado]
+    speaker: lea
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Al-Dorado, l'hôtel des délégations. Léa t'appelle : « 23 h 40, 23 h 52. J'ai la page. Je publie l'heure le soir du match d'ouverture, ou j'attends votre retour ? »"
+    left:
+      label: "Le soir du match"
+      effects: {tribunes: "+", direction: "--", relation: {lea: 1}, set: [h9_page_lea], outcome: page_lea, react: {card: sl.h9.re.sacha_page}}
+      answer: "« Le soir même. » Elle raccroche. Par la fenêtre, le Dôme s'allume, blanc, comme un frigo qu'on ouvre la nuit."
+    right:
+      label: "À mon retour"
+      effects: {tribunes: "-", direction: "+", set: [h9_page_gardee], outcome: page_gardee}
+      answer: "« J'attendrai. » Un silence sur la ligne, cher, de pays à pays. « Je n'attends jamais deux fois. »"
+
+  - id: sl.h9.rue_haute.temoin
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane t'attend devant le club-house, assise sur le muret, son sac à main sur les genoux : « Le juge m'a écrit. J'ai {age_josiane} ans, je témoignerai assise. Vous m'accompagnez ? »"
+    left:
+      label: "Je vous accompagne"
+      effects: {tribunes: "+", direction: "-", relation: {josiane: 1}, set: [h9_josiane_temoin]}
+      answer: "Dans le car, elle relit sa déposition, tapée à deux doigts. Au palais, elle demande une chaise avant qu'on la lui propose."
+    right:
+      label: "Prenez le car"
+      effects: {tribunes: "-", direction: "+", set: [h9_josiane_temoin]}
+      answer: "Elle prend le car de huit heures. Le soir, un double de sa déposition attend dans ta boîte aux lettres, avec un trombone rouge."
+
+  - id: sl.h9.rue_haute.temoin_seule
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane t'attend devant le club-house : « Vous avez gardé la page, vous. Moi, j'ai gardé l'original. Le juge m'a écrit, j'irai. Vous m'accompagnez, ou vous gardez encore ? »"
+    left:
+      label: "Je vous accompagne"
+      effects: {tribunes: "+", direction: "-", relation: {josiane: 1}, set: [h9_josiane_temoin]}
+      answer: "Tu portes son sac jusqu'au car. Au palais, elle sort l'original de son sac à main, plié dans un mouchoir, et le pose devant le juge."
+    right:
+      label: "Prenez le car"
+      effects: {tribunes: "-", direction: "+", set: [h9_josiane_temoin]}
+      answer: "« Comme vous voudrez. » Elle prend le car de huit heures. L'original voyage dans son sac à main, plié dans un mouchoir."

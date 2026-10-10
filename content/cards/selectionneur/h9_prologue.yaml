@@ -1,0 +1,170 @@
+# Histoire 9 — « Vingt degrés dedans » : le prologue (arc sl.h9.prologue,
+# content/arcs/selectionneur/h9_script.yaml). Janvier 2029, six scènes hors
+# créneau, avant la carte Objectif de Titi Bréhaut.
+#
+# Ce que les six scènes posent, sans l'expliquer : la blessure (le cercueil
+# plombé, l'étiquette de fret à 4 °C), la question qui revient chaque matin
+# (« Vous irez quand même ? »), le rituel du pain et la photo au-dessus de la
+# caisse (Kévin faisait la tournée des baguettes à vélo : la graine de
+# l'intermède du Dôme), les listes de Sacha (page six), le mécanisme (le
+# brassard noir taillé dans la chemise de Kévin), et la voix sans nom du
+# ministère (« On vous rappelle »).
+cards:
+  - id: sl.h9.pro1_veillee
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: mariejo
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Église Saint-Aubin, la veille de l'enterrement. Un cercueil plombé dans la nef froide, un cierge. Marie-Jo Marçais demande au gendarme qu'on l'ouvre. « Scellé sanitaire. » Elle te regarde."
+    left:
+      label: "Je parle au gendarme"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_gendarme]}
+      answer: "Il t'écoute, la main posée sur le zinc froid. « Je n'ai pas la clé, {pg, select, f{madame} other{monsieur}}. Personne ici ne l'a. »"
+    right:
+      label: "Je reste au fond"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Tu restes près du bénitier. Marie-Jo ne te regarde plus ; elle regarde le cierge, jusqu'à ce qu'il coule sur le zinc."
+
+  - id: sl.h9.pro1_veillee_ministere
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: mariejo
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Église Saint-Aubin, la veille. Le cercueil plombé, un cierge, et au dernier rang un jeune homme en manteau gris qui compte les présents. Marie-Jo, tout bas : « Il est de chez vous ? »"
+    left:
+      label: "Je vais lui parler"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Il se lève avant que tu arrives et te serre la main sur le parvis. « Aymeric Sauvan. Nous nous reverrons, pour un café. »"
+    right:
+      label: "Je ne le connais pas"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "C'est vrai, ce soir encore. Il sort avant la fin sans signer le registre. Sa voix, tu la reconnaîtras plus tard, au téléphone."
+
+  - id: sl.h9.pro2_cercueil
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: mariejo
+    lieu: cimetiere
+    tone: strategique
+    once: true
+    text: "Cimetière d'Aubérive, au matin. Sur le zinc, une étiquette de fret oubliée : « Température de transport : 4 °C ». Marie-Jo, son manteau sur son tablier : « Vous irez quand même ? »"
+    left:
+      label: "Je ne sais pas"
+      effects: {tribunes: "-", relation: {mariejo: 1}, set: [h9_reponse_doute], char: {aubert: {age: "85"}, brehaut: {age: "72"}, gege: {age: "86"}, josiane: {age: "91"}, lea: {age: "64"}, nassir: {age: "73"}, vecchio: {age: "80"}}}
+      answer: "Elle hoche la tête, comme pour une commande qu'on lui confirme. Elle redemandera. Elle redemande toujours."
+    right:
+      label: "J'irai"
+      effects: {direction: "+", tribunes: "+", set: [h9_reponse_irai], char: {aubert: {age: "85"}, brehaut: {age: "72"}, gege: {age: "86"}, josiane: {age: "91"}, lea: {age: "64"}, nassir: {age: "73"}, vecchio: {age: "80"}}}
+      answer: "Elle te regarde enfin. « Alors vous lui direz bonjour, là-bas. » Les fossoyeurs attendent qu'elle recule pour descendre."
+
+  - id: sl.h9.pro3_pain
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Six heures et demie, rue des Lilas. Marie-Jo te tend ta baguette sans lever les yeux. Au-dessus de la caisse, punaisé de travers, Kévin en casque de chantier, qui rit."
+    left:
+      label: "Je paie et je sors"
+      effects: {vestiaire: "+"}
+      answer: "Les pièces tombent dans la soucoupe. Derrière toi, la clochette de la porte sonne deux fois, parce qu'elle colle."
+    right:
+      label: "Je reste un moment"
+      effects: {relation: {mariejo: 1}, set: [h9_pain_reste]}
+      answer: "Elle range les croissants un à un. « Il faisait la tournée à vélo, avant. Les baguettes sous le bras, comme des épées. »"
+
+  - id: sl.h9.pro3_pain_ouvriers
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Six heures et demie. Marie-Jo te tend ta baguette. Sous la photo de Kévin, elle a punaisé une coupure : « Mondial d'hiver : 412 ouvriers morts, selon une association. » Elle ne dit rien."
+    left:
+      label: "Je paie et je sors"
+      effects: {vestiaire: "+"}
+      answer: "Dehors, tu reconnais le nom de l'association en bas de la coupure. C'est celle de Sacha. Marie-Jo le sait aussi."
+    right:
+      label: "Je lis la coupure"
+      effects: {relation: {mariejo: 1}, set: [h9_pain_reste]}
+      answer: "Tu la lis deux fois. « Votre fille compte bien, dit Marie-Jo. Elle a compté Kévin. Les autres, je ne les connais pas. »"
+
+  - id: sl.h9.pro4_listes
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sacha
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Sacha pose son ordinateur sur ta table, entre le pain et le courrier. Quatre cent douze noms, des âges, des chantiers. « Kévin est à la page six. Tu vas les lire, ou les compter ? »"
+    left:
+      label: "Je les lis tous"
+      effects: {vestiaire: "-", relation: {sacha: 1}, set: [h9_listes_lues]}
+      answer: "Il est deux heures quand tu arrives à la page six. Sacha s'est endormie sur le canapé, ses chaussures aux pieds."
+    right:
+      label: "Pas ce soir"
+      effects: {direction: "+", set: [h9_listes_remises]}
+      answer: "Elle referme l'écran sans bruit. « Je te les renvoie lundi. Il y en aura plus. Il y en a toujours plus le lundi. »"
+
+  - id: sl.h9.pro4_listes_pays
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sacha
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Sacha pose son ordinateur sur ta table : quatre cent douze noms. « Le pays regardera le score, toi tu regarderas le pays. Kévin est à la page six. Tu regardes, ou tu comptes ? »"
+    left:
+      label: "Je regarde la page six"
+      effects: {vestiaire: "-", relation: {sacha: 1}, set: [h9_listes_lues]}
+      answer: "Kévin Marçais, vingt-quatre ans, électricien, « malaise ». Sacha a souligné le mot au crayon, comme on corrige une copie."
+    right:
+      label: "Pas ce soir"
+      effects: {direction: "+", set: [h9_listes_remises]}
+      answer: "Elle laisse l'ordinateur ouvert en partant. Le ventilateur tourne toute la nuit, comme quelqu'un qui respire dans la pièce."
+
+  - id: sl.h9.pro5_brassard
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire de la Rive. Noa Vandel, ton capitaine, déplie un brassard noir cousu main : « Taillé dans la chemise de Kévin. Je le porterai au match d'ouverture. Vous m'en empêchez ? »"
+    left:
+      label: "Porte-le"
+      effects: {vestiaire: "++", direction: "-", relation: {vandel: 1}, set: [h9_brassard_permis]}
+      answer: "Il le plie en quatre et le glisse sous son protège-tibia gauche. « Le premier qui demande, je dis que c'est vous. »"
+    right:
+      label: "Attends qu'on en parle"
+      effects: {direction: "+", vestiaire: "-", set: [h9_brassard_attente]}
+      answer: "Il le range sous ses crampons. « On en parlera. Vous avez jusqu'en décembre de l'an prochain. Moi aussi. »"
+
+  - id: sl.h9.pro6_appel
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, telephone]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures, numéro masqué. Une voix jeune, polie, qui sourit en parlant : « On vous rappelle que la sélection ne s'exprime pas sur ce qui n'est pas sportif. Bonne soirée. »"
+    left:
+      label: "Qui êtes-vous ?"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Un silence, comme une page qu'on tourne. « Quelqu'un qui vous souhaite une bonne soirée. » Puis la tonalité, longue."
+    right:
+      label: "Je raccroche"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Tu raccroches la première. Dans la cuisine, le frigo se remet à ronronner, comme s'il avait attendu la fin."
