@@ -149,7 +149,12 @@ Ce que la ville porte en plus des cartes :
   programme une scène (un texte, un ou deux choix, des effets légers), à son lieu et à son
   heure ou qui vient à toi (`rue`, `domicile`). Quand l'heure arrive (une activité,
   « Attendre », « Y aller », le réveil), la ville s'y rend d'un fondu : on ne saute plus trois
-  jours sans que rien n'arrive. Une scène est une mission d'une seule étape (`scene`) que le
+  jours sans que rien n'arrive. **« Attendre »** (en bas, ou « Attendre ici » dans le panneau
+  d'un lieu) fait passer le temps jusqu'à ce qu'il arrive quelque chose — une scène, quelqu'un
+  qui vient te chercher, le rendez-vous qui s'ouvre (un toast dit où), l'heure d'une mission ;
+  la nuit, on rentre dormir et l'attente reprend au réveil (deux nuits au plus d'un geste).
+  Mesuré en jouant l'histoire 4 en n'attendant que : 3,3 gestes vides entre deux choses
+  avant, 1,3 après. Une scène est une mission d'une seule étape (`scene`) que le
   moteur applique sans tirage ; une fois par carrière ; `mission(<id>)` lit une scène vue. Le
   plan du jour se tire de la graine, de la semaine et du jour.
 - **Le match à la Rive**, le samedi : la ville va au stade (les passants vers les grilles,

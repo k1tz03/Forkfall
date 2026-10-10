@@ -2513,13 +2513,18 @@
     majHud(); sauver();
     var titre = JOUR_MOT[S.jour] + ", 7 h";
     fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", recaler, function () {
+      var suite = attenteSuite, fondus = attente.length > 0;
+      attenteSuite = null;
       suiteFondus();
       if (echeance()) { allerApresNuit = false; return; }
       if (sceneDue()) { allerApresNuit = false; return; }
       if (allerApresNuit) {
         allerApresNuit = false;
         if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
+        return;
       }
+      // on attendait qu'il se passe quelque chose : l'attente reprend au réveil
+      if (suite && !fondus) attendre(suite);
     });
   }
   function suiteFondus() {
@@ -2638,8 +2643,9 @@
     // on t'attend ailleurs : le chemin, d'un geste
     var ailleurs = rdvVisible() && rdv.lieu !== cle && LIEU[rdv.lieu];
     if (ailleurs) html += '<button type="button" class="v-sortir v-y">' + esc((rdv.qui ? nomDe(rdv.qui) + " t'attend · " : "On t'attend · ") + nomLieu(LIEU[rdv.lieu])) + ' →</button>';
-    html += '<button type="button" class="v-sortir">Sortir</button>';
+    html += '<div class="v-pied"><button type="button" class="v-sortir v-att">Attendre ici</button><button type="button" class="v-sortir">Sortir</button></div>';
     el.innerHTML = html;
+    el.querySelector(".v-att").addEventListener("click", function () { attendre(); });
     var y = el.querySelector(".v-y");
     if (y) y.addEventListener("click", function () { allerAuLieu(rdv.lieu); });
     el.classList.add("on");
@@ -2659,7 +2665,7 @@
     });
     var bm = el.querySelector(".v-mi");
     if (bm) bm.addEventListener("click", function () { ouvrirMission(cle); });
-    el.querySelector(".v-sortir:not(.v-y)").addEventListener("click", fermerPorte);
+    el.querySelector(".v-sortir:not(.v-y):not(.v-att)").addEventListener("click", fermerPorte);
   }
   function fermerPorte() {
     porteOuverte = null;
@@ -2817,19 +2823,58 @@
     });
     brancherPlan();
   }
-  // attendre : une tranche passe, là où tu es
-  function attendre() {
+  // attendre : le temps passe jusqu'à ce qu'il arrive quelque chose — une
+  // scène, quelqu'un qui vient te chercher, le rendez-vous qui s'ouvre, l'heure
+  // d'une mission ; la nuit tombée, on rentre dormir. Retour client : « on passe
+  // une grande partie de son temps à passer des demi-journées, il n'y a rien à
+  // faire entre les dialogues qui arrivent plusieurs jours plus tard » — une
+  // tranche par geste, c'était trois gestes vides en moyenne entre deux choses,
+  // onze parfois. Et le panneau du lieu ne se rouvre plus tout seul après
+  // l'attente : il couvrait le bouton, on ne pouvait plus passer.
+  function aLaPorte(cle) {
+    var l = LIEU[cle];
+    if (!l || !l.door) return false;
+    var c = caseDe(heros.x, heros.y);
+    return Math.abs(c[0] - l.door[0]) + Math.abs(c[1] - l.door[1]) <= 1;
+  }
+  function missionOuverte() {
+    var sm = S.mission;
+    return !!(sm && !sm.offre && MISSION[sm.id] && missionIci(sm.lieu));
+  }
+  function rentrerDormir() {
+    var chez = chezToi();
+    if (LIEU[chez] && LIEU[chez].door) { var c = centre(LIEU[chez].door); poser(c[0], c[1]); S.lieu = chez; }
+    dormir();
+  }
+  // `suite` : l'attente reprend au réveil (rien n'est arrivé de la nuit) ; deux
+  // nuits au plus d'un seul geste, puis la main revient
+  var attenteSuite = null;
+  function attendre(suite) {
     if (carteOn || occupe) return;
     fermerPorte();
-    if (S.tranche === 4) {
-      if (S.lieu === chezToi()) { dormir(); return; }
-      toast("Il est tard. Rentre dormir : la nuit, tout peut arriver.");
+    heros.chemin = null; heros.arrivee = null;
+    var rdvAvant = suite ? suite.rdv : !!rdvVisible(), miAvant = suite ? suite.mi : missionOuverte(), nuits = suite ? suite.nuits : 0, garde = 0;
+    function arret() { return (!rdvAvant && rdvVisible()) || (!miAvant && missionOuverte()); }
+    if (!(suite && arret())) {
+      while (garde++ < 12) {
+        if (S.tranche === 4) {
+          if (nuits < 2) attenteSuite = { nuits: nuits + 1, rdv: rdvAvant, mi: miAvant };
+          rentrerDormir();
+          return;
+        }
+        if (!pas()) { majHud(); sauver(); return; }
+        if (arret()) break;
+      }
     }
-    avancer(1);
-    if (!carteOn && !occupe && S.lieu && LIEU[S.lieu] && TEXTE_LIEU[S.lieu]) {
-      var c = caseDe(heros.x, heros.y), l = LIEU[S.lieu];
-      if (Math.abs(c[0] - l.door[0]) + Math.abs(c[1] - l.door[1]) <= 1) ouvrirPorte(S.lieu);
-    }
+    majHud(); sauver();
+    if (attente.length) { suiteFondus(); return; }
+    // le rendez-vous (ou la mission) est là où tu attends : il commence
+    if (rdvVisible() && aLaPorte(rdv.lieu)) { arriver(rdv.lieu); return; }
+    if (missionOuverte() && aLaPorte(S.mission.lieu)) { arriver(S.mission.lieu); return; }
+    var dit = JOUR_MOT[S.jour].charAt(0).toUpperCase() + JOUR_MOT[S.jour].slice(1) + ", " + HEURE[TRANCHES[S.tranche]] + ".";
+    if (rdvVisible()) dit += " " + (rdv.type === "match" ? "Le match · " : (rdv.qui ? nomDe(rdv.qui) + " t'attend · " : "On t'attend · ")) + nomLieu(LIEU[rdv.lieu]) + ".";
+    else if (missionOuverte()) dit += " " + MISSION[S.mission.id].titre + " · " + nomLieu(LIEU[S.mission.lieu]) + " : c'est l'heure.";
+    toast(dit);
   }
 
   // ─────────────────────────────────────────────────────────────── la sauvegarde
@@ -2975,7 +3020,7 @@
     zp.addEventListener("click", function () { zoom(1); });
     zm.addEventListener("click", function () { zoom(-1); });
     $("villePlan").addEventListener("click", ouvrirPlan);
-    $("villeAttendre").addEventListener("click", attendre);
+    $("villeAttendre").addEventListener("click", function () { attendre(); });
     $("villeBiens").addEventListener("click", function () { if (!carteOn && !occupe) ouvrirInventaire(); });
     $("villeRdv").addEventListener("click", function () {
       if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
