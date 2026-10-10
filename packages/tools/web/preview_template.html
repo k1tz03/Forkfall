@@ -1136,9 +1136,35 @@ __VILLE_CSS__
   document.addEventListener("pointerdown", premierGeste, true);
   document.addEventListener("keydown", premierGeste, true);
 
+  // LA MUSIQUE (audio.js, les thèmes) : l'accueil a son hymne ; la ville a le
+  // marché le jour, le Terminus le soir et la nuit, le match au stade ; une
+  // carte sombre (un événement, un intermède) a la nuit qui tombe ; la fin, le
+  // dernier tour de terrain. Sans ville (l'aperçu des cartes seules), le jour,
+  // et le match sur les cartes de match.
+  function themeDuMoment() {
+    if (!view) return "accueil";
+    if (view.over) return "fin";
+    var c = view.card || {}, tags = c.tags || [];
+    var sombre = tags.indexOf("sombre") >= 0 || tags.indexOf("intermede") >= 0;
+    var V = window.FusibleVille;
+    if (V && V.moment && document.body.classList.contains("ville-on")) {
+      var m = V.moment();
+      if (m.match) return "match";
+      if (m.carte && sombre) return "sombre";
+      return m.nuit ? "ville_nuit" : "ville_jour";
+    }
+    if (sombre) return "sombre";
+    if (/^(match|cup|gm_annonce|gm_te)$/.test(c.beatKind || "")) return "match";
+    return "ville_jour";
+  }
+  function sonTheme() {
+    if (!audio || !audio.setTheme || !elTitle.hidden) return;
+    audio.setTheme(themeDuMoment());
+  }
   function sonScene() {
     if (!audio || !view) return;
     audio.setYear(view.year || 1990);
+    sonTheme();
     var evts, tension;
     if (view.over) {
       audio.setAmbiance(view.ambiance || "nuit");
@@ -1705,6 +1731,7 @@ __VILLE_CSS__
         b.classList.add("go");
         profile.histoires[p.id] = (profile.histoires[p.id] | 0) + 1;
         saveProfile(profile);
+        if (audio && audio.jingle) audio.jingle("depart");
         var go = function () { b.classList.remove("go"); busy = false; startRun(p.index); };
         if (reduce) go(); else setTimeout(go, 300);
       });
@@ -1714,7 +1741,7 @@ __VILLE_CSS__
     saveProfile(profile);
     $("postulatsCompte").textContent = plural(ici.length, "histoire", "histoires");
     renderCimetiere();
-    if (audio) { audio.setAmbiance("maison"); audio.setTension(0); }
+    if (audio) { audio.setAmbiance("maison"); audio.setTension(0); if (audio.setTheme) audio.setTheme("accueil"); }
     show("title");
   }
   function renderCimetiere() {
@@ -2383,6 +2410,8 @@ __VILLE_CSS__
         majJauges();
         return view;
       },
+      // la musique suit la ville (le jour, le soir, le stade)
+      sonTheme: function () { sonTheme(); },
       // la ruine : le découvert a duré, l'huissier n'a plus rien trouvé
       banqueroute: function () {
         view = JSON.parse(window.fusibleBanqueroute());

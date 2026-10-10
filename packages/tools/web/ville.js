@@ -1618,6 +1618,7 @@
   }
   function cacherCarte() {
     carteOn = false;
+    sonVille();
     decorAilleurs(null);
     $("gameScreen").classList.remove("carte-on");
     $("villeVoile").classList.remove("on");
@@ -2028,6 +2029,7 @@
     M.ballon = { a: 0.5, b: 0.5, z: 0, vol: null };
     M.porteur = null; M.equipe = 0; M.decision = 1;
     MATCH = M; FOULE = null; PANNEAU = null;
+    sonVille();
     occupe = true; passants = []; figurants = [];
     document.body.classList.add("v-au-stade");
     var el = $("villeMatch");
@@ -2283,6 +2285,7 @@
     var M = MATCH;
     if (!M) return;
     MATCH = null; FOULE = null; PANNEAU = null;
+    sonVille();
     $("villeMatch").hidden = true;
     document.body.classList.remove("v-au-stade");
     occupe = false;
@@ -2688,9 +2691,12 @@
   // ─────────────────────────────────────────────────────────────── le HUD
   var CHARS = {};
   function nomDe(id) { var c = CHARS[id]; return c ? c.name : id; }
+  // la musique suit la ville : le jour, le soir, le stade (la coquille choisit le thème)
+  function sonVille() { if (coquille && coquille.sonTheme) coquille.sonTheme(); }
   function majHud() {
     var h = $("villeHud");
     if (!h || !S) return;
+    sonVille();
     h.querySelector(".v-temps b").textContent = JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]];
     h.querySelector(".v-temps span").textContent = "Sem. " + S.semaine + " · " + moisCourant();
     var fr = h.querySelector(".v-francs");
@@ -3192,6 +3198,8 @@
       if (quoi === "paie") { attente = []; ruine(); majHud(); suiteFondus(); return { francs: S.francs, dette: S.dette, attente: attente.length }; }
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
+    // ce que la musique doit savoir : le soir et la nuit, le stade, une carte à l'écran
+    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif }; },
     _toucher: function (uid) {
       var g = passants.filter(function (q) { return q.uid === uid; })[0];
       if (!g) Object.keys(acteurs).forEach(function (id) { if (acteurs[id].uid === uid) g = acteurs[id]; });

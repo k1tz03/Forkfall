@@ -184,6 +184,15 @@ Ce que la ville porte en plus des cartes :
   ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
   l'écu après `monde_ecus`).
 - **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
+- **La musique** (`packages/tools/web/audio.js`, `MUSIQUE`) : six thèmes écrits note à note
+  et synthétisés (aucun fichier son) — l'hymne d'Aubérive à l'accueil, le marché le jour, le
+  Terminus le soir et la nuit, le match au stade, la nuit qui tombe sur une carte sombre, le
+  dernier tour de terrain à la fin — en fondu enchaîné, et un jingle au départ d'une histoire.
+  Le timbre de la mélodie suit l'époque (8 bits avant 1998, un synthé, puis plus doux après
+  2013). La grille : seize cases par mesure, une note attaque, `-` la tient, `.` se tait ;
+  la basse et les accords en degrés sur la grille d'accords. On vérifie sans haut-parleur :
+  `NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --out /tmp/son`
+  rend chaque thème en WAV, avec ses niveaux et un spectrogramme.
 - **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
   s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
   d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,
