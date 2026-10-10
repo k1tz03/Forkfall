@@ -112,6 +112,24 @@ sauvegarde par l'état entier du moteur (le Code de Carrière ne rejoue pas la v
 
 Ce que la ville porte en plus des cartes :
 
+- **Les scènes de la semaine** (`content/ville/scenes*.yaml`) : le moteur ne sert que deux ou
+  trois cartes entre deux samedis ; chaque jour sans carte, et souvent le soir, la ville
+  programme une scène (un texte, un ou deux choix, des effets légers), à son lieu et à son
+  heure ou qui vient à toi (`rue`, `domicile`). Quand l'heure arrive (une activité,
+  « Attendre », « Y aller », le réveil), la ville s'y rend d'un fondu : on ne saute plus trois
+  jours sans que rien n'arrive. Une scène est une mission d'une seule étape (`scene`) que le
+  moteur applique sans tirage ; une fois par carrière ; `mission(<id>)` lit une scène vue. Le
+  plan du jour se tire de la graine, de la semaine et du jour.
+- **Le match à la Rive**, le samedi : la ville va au stade (les passants vers les grilles,
+  puis la sortie), vingt-deux joueurs, l'arbitre et le ballon sur la pelouse, les deux tribunes
+  remplies selon la jauge tribunes (peintes une fois avec la profondeur du décor), deux ou trois
+  actions racontées à leur minute (`ville.yaml` `match:` et les lots `match_textes:`), le tableau,
+  la mi-temps, le résultat, et le score peint sur le mur est jusqu'au samedi suivant. Le moteur
+  joue un bloc de six journées d'un tirage ; la ville met en scène la dernière, et son score se
+  tire de la lettre (V, N, D) pour l'écran seulement.
+- **Le domicile** (`ville.yaml` `domiciles`) : par rôle (le sélectionneur à l'hôtel de la Rive),
+  et une histoire peut en décider autrement par un drapeau.
+
 - **Les gens** : personne n'apparaît au milieu de la rue ; un passant sort d'une porte ou
   arrive du hors-champ, et marche au large des murs (une grille érodée, des chemins qui ne
   rasent aucun angle). Les personnages connus (`presences`), celui qui t'attend et les
@@ -129,7 +147,8 @@ Ce que la ville porte en plus des cartes :
   saisies.
 - **Le pont** : une carte agit sur la ville par des compteurs `var:` en francs de 1990 —
   `ville_francs`, `ville_francs_sales` (l'argent sale salit ce qu'il paie : saisi en premier),
-  `ville_amende`, `cadeau_<objet>`, `saisie_vehicules|logement|luxe|tout`, `vol_luxe` ; la
+  `ville_amende`, `cadeau_<objet>`, `rendre_<objet>` (un seul objet rendu),
+  `saisie_vehicules|logement|luxe|tout`, `vol_luxe` ; la
   ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
   l'écu après `monde_ecus`).
 - **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
@@ -212,8 +231,9 @@ formes géométriques, palette courte). Il ne demande aucun générateur d'image
 - La ville : un changement de club garde le même plan de ville (seuls les noms changent) ;
   tous les rôles ont les mêmes lieux ; un logement acheté change le nom de « chez toi », pas
   sa porte ; les statistiques (physique, tactique…) de la préproduction ne sont pas
-  branchées ; un match est une carte (le bloc de six journées du moteur), pas encore une
-  scène au stade.
+  branchées. Le match du samedi est mis en scène, mais tous à domicile, et la Coupe et le
+  Grand Match restent des cartes. Les scènes de la semaine s'épuisent si le réservoir est
+  court (une fois par carrière) : il en faut beaucoup, par rôle et par époque.
 
 - Le « J » du bandeau n'affiche pas la vraie journée de championnat, et ne dit
   pas la même chose dans l'aperçu web et dans l'application.
