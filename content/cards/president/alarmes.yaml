@@ -1,0 +1,267 @@
+# Les alarmes du président de club pro (bible ch. 30 § 2.6, ch. 13 § 10) :
+# quand une jauge franchit 20 ou 80, une de ces cartes entre dans les trois
+# cartes suivantes (content/alarms.yaml, clé `president:`, l'ordre des
+# porteurs). Chaque carte porte son propre seuil (25 / 75). Jamais de drame,
+# jamais de `end:` : une sortie soulage la jauge en danger et coûte ailleurs,
+# l'autre la creuse (ou la gonfle) et paie autre chose.
+#
+# Jauges du rôle (roles.yaml) : VESTIAIRE = le club (les salariés, le staff,
+# l'entraîneur, le directeur sportif), TRIBUNES = le public, DIRECTION = les
+# actionnaires, CAISSE = la trésorerie. `{toi}` vaut l'adresse du rôle :
+# « président » ou « présidente ».
+#
+# Le casting du bureau (bible ch. 13 § 0.2) : Ilyas et le fonds au conseil,
+# Vukić à l'entraînement, Bréhaut directeur sportif, Josiane au secrétariat,
+# Gégé sous la fenêtre, Vaubourg à la Ligue (« cher collègue », jusqu'en 2008),
+# Madame Aubert à la mairie (jusqu'en 2002). Les visages ont leur époque
+# (bornes dans content/alarms.yaml : Josiane avant 2008, Vukić, Bréhaut,
+# Fardelli et Gégé avant 2020, Massenet avant 2030) ; chaque alarme finit sur
+# un porteur sans époque — une voix sans portrait (l'entraîneur, le chef
+# jardinier, le capo du virage, l'Inspectrice, le banquier) ou le fonds —, qui
+# tient de 1999 à 2050. La présidente est prévue : `{pg, select, …}`.
+#
+# Drapeaux posés (déclarés à la fin de content/flags.yaml) et leurs lecteurs :
+# tentation_mairie (bilan_contrat, bilan_carrefour, une.pr.mairie), pantin
+# (gm_annonce, gm_te, bilan_contrat, une.pr.visage), commission_lettre (cup,
+# une.pr.lettre).
+cards:
+  # ══════════════════════════════════ Le club (VESTIAIRE) bas — vers la grève
+  - id: pr.alarme.vestiaire_bas_brehaut
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    when: "gauges.vestiaire < 25"
+    text: "Bréhaut, ton directeur sportif, dans un costume encore trop neuf, pose un préavis sur ton bureau : « Les jardiniers, les kinés, la lingerie. Pour le derby. Ils veulent te voir, toi. »"
+    left: {label: "Je les reçois ce soir", effects: {vestiaire: "+++", caisse: "-", journal: {text: "{annee} : quarante minutes à la lingerie pour {nom}. Le préavis du derby est reparti plié en quatre.", poids: 2, tags: [vestiaire]}}, answer: "Quarante minutes à la lingerie, deux cafés, une prime de match pour tout le monde. Le préavis repart plié en quatre."}
+    right: {label: "Bréhaut s'en occupe", effects: {vestiaire: "-", direction: "+"}, answer: "Dimanche matin, Bréhaut tond la pelouse lui-même, en costume. Les jardiniers le regardent faire depuis le parking."}
+
+  - id: pr.alarme.vestiaire_bas_josiane
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: josiane
+    when: "gauges.vestiaire < 25"
+    text: "Madame Josiane a trouvé une lettre glissée sous la porte du secrétariat : vingt-deux signatures, les femmes de ménage en premier. « Elles ne demandent pas d'argent, {toi}. Un bonjour. »"
+    left: {label: "Je fais le tour des bureaux", effects: {vestiaire: "+++", direction: "-", relation: {josiane: 1}}, answer: "De la lingerie à la chaufferie, porte par porte. Ça prend la matinée ; le conseil t'attendait à dix heures."}
+    right: {label: "Je réponds par écrit", effects: {vestiaire: "-", direction: "+"}, answer: "Ta lettre est polie, tapée, signée. Josiane l'affiche à côté de la leur, sur le même panneau."}
+
+  - id: pr.alarme.vestiaire_bas_vukic
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: vukic
+    when: "gauges.vestiaire < 25"
+    text: "Vukić tient son sifflet sans s'en servir, au bord d'un terrain vide : « Les joueurs ont voté. Pas d'entraînement tant que les primes de mars ne sont pas payées. Je ne siffle pas contre eux. »"
+    left: {label: "Je paie les primes", effects: {vestiaire: "+++", caisse: "-", journal: {text: "{annee} : les primes de mars payées le soir du vote. Le sifflet de Vukić s'est entendu jusqu'au siège.", poids: 2, tags: [vestiaire, caisse]}}, answer: "Les primes partent le soir même. Le lendemain, le sifflet de Vukić s'entend jusqu'au siège."}
+    right: {label: "Pas sous la menace", effects: {vestiaire: "-", direction: "+", relation: {vukic: -1}}, answer: "Deux jours sans entraînement. Le troisième, ils reviennent un par un, sans regarder la loge."}
+
+  - id: pr.alarme.vestiaire_bas_jardinier
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire]
+    when: "gauges.vestiaire < 25"
+    text: "Le chef jardinier attend devant ton bureau, la casquette à la main : « La tondeuse est en panne depuis mars. On a voté : dimanche, pour le derby, on ne tond pas. »"
+    left: {label: "J'achète une tondeuse", effects: {vestiaire: "+++", caisse: "-"}, answer: "La tondeuse neuve arrive vendredi. Dimanche, les lignes sont droites, et le chef jardinier te salue de la tribune."}
+    right: {label: "On tondra sans eux", effects: {vestiaire: "-", direction: "+", journal: {text: "{annee} : un sous-traitant a tondu la pelouse du derby, de travers. La télé l'a filmée en gros plan.", poids: 1, tags: [vestiaire]}}, answer: "Un sous-traitant tond de travers dimanche matin. La télé filme la pelouse en gros plan."}
+
+  # ═════════════════════════ Le club (VESTIAIRE) haut — vers le président fantôme
+  - id: pr.alarme.vestiaire_haut_brehaut
+    roles: [president]
+    arc: direction
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    when: "gauges.vestiaire > 75"
+    text: "Bréhaut te montre le courrier qu'il a signé cette semaine « pour {pg, select, f{la présidente} other{le président}} » : trente lettres. « Ça va plus vite, {toi}. Personne ne s'en plaint. »"
+    left: {label: "Je reprends le courrier", effects: {vestiaire: "--", direction: "+"}, answer: "Tu relis les trente lettres. Deux engagent le club ; Bréhaut s'excuse pour l'une des deux."}
+    right: {label: "Signe pour moi", effects: {vestiaire: "+", direction: "--"}, answer: "La pile grandit chaque semaine. Au conseil, on reçoit des lettres signées « P. O. », et personne n'a nommé personne."}
+
+  - id: pr.alarme.vestiaire_haut_coach
+    roles: [president]
+    arc: direction
+    tags: [vestiaire, direction]
+    when: "gauges.vestiaire > 75"
+    text: "L'entraîneur signe le bon de commande des ballons sur ton bureau, avec ton stylo : « Les recrues, les contrats, les cartes de vœux, je fais tout, et ça marche. Tu passes encore le mardi ? »"
+    left: {label: "Je reprends la signature", effects: {vestiaire: "--", direction: "+"}, answer: "Une semaine à tout signer toi-même. Il boude proprement : il te laisse même les cartes de vœux."}
+    right: {label: "Continue, ça marche", effects: {vestiaire: "+", direction: "--", journal: {text: "{annee} : l'entraîneur signe les recrues et les cartes de vœux. Au conseil, on a demandé qui préside.", poids: 2, tags: [direction, vestiaire]}}, answer: "Il repart avec ton stylo. Au conseil, quelqu'un demande qui préside, et personne ne rit."}
+
+  - id: pr.alarme.vestiaire_haut_josiane
+    roles: [president]
+    arc: direction
+    tags: [vestiaire, direction]
+    speaker: josiane
+    when: "gauges.vestiaire > 75"
+    text: "Madame Josiane te montre le tampon du club, posé sur son bureau à elle : Bréhaut l'a emprunté lundi, rendu ce matin. « Ils signent bien, {toi}. C'est ce qui m'inquiète. »"
+    left: {label: "Le tampon reste chez moi", effects: {vestiaire: "--", direction: "+"}, answer: "Tu ranges le tampon dans ton tiroir, à clé. Bréhaut vient le demander deux fois par jour, poliment."}
+    right: {label: "Prêtez-le-leur", effects: {vestiaire: "+", direction: "--"}, answer: "Le tampon fait la navette toute la semaine. Le conseil reçoit des papiers que tu n'as jamais lus."}
+
+  # ═══════════════════════════════════ TRIBUNES bas — vers le siège du siège
+  - id: pr.alarme.tribunes_bas_gege
+    roles: [president]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé, sous ta fenêtre, le mégaphone baissé : « Dimanche, on entre à la vingtième, dos au terrain. On l'a dit à la presse avant toi. Tu descends nous voir avant, {toi}, ou après ? »"
+    left: {label: "Je descends au virage", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}, journal: {text: "{annee} : {nom} est descendu{pg, select, f{e} other{}} au virage boire une bière tiède, debout, sans écharpe.", poids: 2, tags: [ultras, tribunes]}}, answer: "Une bière tiède, debout, sans écharpe. La photo fait le tour du conseil avant que tu sois remonté."}
+    right: {label: "Je reste là-haut", effects: {tribunes: "-", direction: "+", relation: {gege: -1}, journal: {text: "{annee} : vingt minutes de silence en tribune Nord, dos au terrain. La loge est restée fermée.", poids: 2, tags: [ultras, tribunes]}}, answer: "Vingt minutes de silence dimanche, filmées en plan large. Ton téléphone ne sonne pas."}
+
+  - id: pr.alarme.tribunes_bas_meneche
+    roles: [president]
+    arc: presse
+    tags: [presse, ultras]
+    speaker: meneche
+    when: "gauges.tribunes < 25"
+    text: "Massenet pose sur ta table de restaurant la lettre ouverte que le kop publie demain : « Quatre pages. La quatrième, c'est votre adresse. Je la coupe, ou vous me répondez avant ? »"
+    left: {label: "Je vous réponds ce soir", effects: {tribunes: "+++", direction: "-"}, answer: "Une heure d'entretien. Il coupe la quatrième page ; ta réponse paraît en face de la leur."}
+    right: {label: "Publiez tout", effects: {tribunes: "-", direction: "+", relation: {meneche: -1}}, answer: "La lettre paraît en entier. Le soir, deux écharpes attendent au bout de ta rue, sans rien dire."}
+
+  - id: pr.alarme.tribunes_bas_capo
+    roles: [president]
+    arc: ultras
+    tags: [ultras, tribunes]
+    when: "gauges.tribunes < 25"
+    text: "Une trentaine d'écharpes s'est assise dans le hall du siège à neuf heures, en silence. Le capo du virage a apporté des thermos. Ils resteront jusqu'à ce que tu descendes."
+    left: {label: "Je descends m'asseoir", effects: {tribunes: "+++", direction: "-", journal: {text: "{annee} : le kop assis dans le hall du siège. {nom} est descendu{pg, select, f{e} other{}} boire leur café.", poids: 2, tags: [ultras, tribunes]}}, answer: "Tu t'assois par terre avec eux. On te sert un café de thermos ; le conseil te regarde depuis la galerie."}
+    right: {label: "J'attends qu'ils partent", effects: {tribunes: "-", direction: "+"}, answer: "Ils partent à minuit en ramassant leurs gobelets. Le lendemain, à neuf heures, ils sont deux fois plus."}
+
+  # ═════════════════════════════════════════ TRIBUNES haut — vers la mairie
+  - id: pr.alarme.tribunes_haut_meneche
+    roles: [president]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    when: "gauges.tribunes > 75"
+    text: "Massenet t'attend au pied de la tribune d'honneur, carnet fermé : « Porté{pg, select, f{e} other{}} comme ça par le kop, on finit sur une liste municipale. Vous y pensez, ou on y pense pour vous ? »"
+    left: {label: "Je pense au club", effects: {tribunes: "--", direction: "+"}, answer: "Tu démens en deux phrases. La seconde est de trop ; il la garde pour son titre."}
+    right: {label: "Je ne dis pas non", effects: {tribunes: "+", direction: "--", set: [tentation_mairie], journal: {text: "{annee} : « Je ne dis pas non. » Massenet a noté la phrase de {nom} sur la mairie.", poids: 3, tags: [presse, tentation_mairie]}}, answer: "Il note « ne dit pas non ». Quelque part à la mairie, une affiche existe déjà, pliée dans un tiroir."}
+
+  - id: pr.alarme.tribunes_haut_camille
+    roles: [president]
+    arc: famille
+    tags: [famille, tribunes]
+    speaker: camille
+    when: "gauges.tribunes > 75 && !flag('divorce')"
+    text: "Camille pose le journal plié à la page des municipales à côté de ta tasse : « Le boulanger m'a demandé si tu te présentais. Il avait l'air content. Moi, je ne sais pas si je le suis. »"
+    left: {label: "Je ne me présente pas", effects: {tribunes: "--", direction: "+", relation: {camille: 1}}, answer: "Elle replie le journal et le pose sur la pile du recyclage. Le boulanger, lui, reposera sa question."}
+    right: {label: "Je n'ai rien décidé", effects: {tribunes: "+", direction: "--", relation: {camille: -1}, set: [tentation_mairie], journal: {text: "{annee} : « rien décidé » pour la mairie. Camille a laissé le journal ouvert à la page des municipales.", poids: 2, tags: [famille, tentation_mairie]}}, answer: "Elle laisse le journal ouvert sur la table. Le soir, il y est encore, ta tasse froide posée dessus."}
+
+  - id: pr.alarme.tribunes_haut_aubert
+    roles: [president]
+    arc: direction
+    tags: [tribunes, direction]
+    speaker: aubert
+    when: "gauges.tribunes > 75"
+    text: "Madame Aubert t'arrête au vin d'honneur, près du buffet : « Vous êtes plus applaudi{pg, select, f{e} other{}} que moi à l'inauguration de ma propre piscine. D'habitude, ça s'appelle une candidature. »"
+    left: {label: "Je n'en serai pas", effects: {tribunes: "--", direction: "+", relation: {aubert: 1}}, answer: "Elle sourit et te présente au député. Tu comprends que c'était un examen, et que tu l'as passé."}
+    right: {label: "Les gens décideront", effects: {tribunes: "+", direction: "--", relation: {aubert: -1}, set: [tentation_mairie], journal: {text: "{annee} : « Les gens décideront », a dit {nom} à la maire. La subvention du club attend sa date.", poids: 2, tags: [direction, tentation_mairie]}}, answer: "Elle pose son verre à moitié plein. La semaine suivante, la subvention du club passe en commission, sans date."}
+
+  - id: pr.alarme.tribunes_haut_affiche
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    when: "gauges.tribunes > 75"
+    text: "Sur la vitrine de la boulangerie, une affiche faite main : ton visage, et en dessous, au feutre, « À LA MAIRIE ! ». Au siège, personne ne sait qui l'a collée. Tout le monde l'a vue."
+    left: {label: "Je la fais décoller", effects: {tribunes: "--", direction: "+"}, answer: "Elle est décollée à midi. À deux heures, il y en a une autre, au tabac-presse du carrefour."}
+    right: {label: "Je la laisse", effects: {tribunes: "+", direction: "--", set: [tentation_mairie], journal: {text: "{annee} : « À la mairie ! » sous le visage de {nom}, à la boulangerie. L'affiche a tenu l'hiver.", poids: 2, tags: [tribunes, tentation_mairie]}}, answer: "Elle tient l'hiver. Au conseil, on te demande si tu comptes rester {pg, select, f{présidente} other{président}}, ou devenir autre chose."}
+
+  # ═══════════════════════════════════ Actionnaires (DIRECTION) bas — vers l'AG
+  - id: pr.alarme.direction_bas_nassir
+    roles: [president]
+    arc: direction
+    tags: [direction]
+    speaker: nassir
+    when: "gauges.direction < 25"
+    text: "Ilyas fait annuler votre déjeuner par sa secrétaire, puis déjeune au même restaurant, à la table voisine, avec deux de tes administrateurs. Il te fait un signe de la main, sans se lever."
+    left: {label: "Je m'invite à leur table", effects: {direction: "+++", caisse: "-", relation: {nassir: 1}}, answer: "Tu prends une chaise sans qu'on te l'offre, et tu paies l'addition des trois. Au café, l'un d'eux te passe le sucre."}
+    right: {label: "Je rentre au club", effects: {direction: "-", vestiaire: "+", relation: {nassir: -1}}, answer: "Tu manges à la cantine du centre, avec les jeunes. Au restaurant, on parle de toi sans te regarder."}
+
+  - id: pr.alarme.direction_bas_convocation
+    roles: [president]
+    arc: direction
+    tags: [direction]
+    when: "gauges.direction < 25"
+    text: "La convocation arrive en recommandé, un samedi : assemblée extraordinaire des actionnaires, un seul point à l'ordre du jour. Ton nom y est écrit en entier, sans titre devant."
+    left: {label: "Je prépare l'assemblée", effects: {direction: "+++", caisse: "-", journal: {text: "{annee} : trois nuits sur les comptes avant l'assemblée extraordinaire. Deux administrateurs retournés.", poids: 2, tags: [direction]}}, answer: "Trois nuits sur les comptes, deux administrateurs retournés au restaurant. L'ordre du jour ne change pas ; le vote, peut-être."}
+    right: {label: "Qu'ils votent", effects: {direction: "-", tribunes: "+"}, answer: "Tu pars trois jours voir des matchs de jeunes. Le kop trouve ça bien ; le conseil, moins."}
+
+  - id: pr.alarme.direction_bas_fardelli
+    roles: [president]
+    arc: direction
+    tags: [direction, agents]
+    speaker: fardelli
+    when: "gauges.direction < 25"
+    text: "Fardelli te rejoint au bar de l'hôtel, un verre à la main : « Deux de tes actionnaires vendent leurs parts à un ami à moi. Il vote toujours comme on le lui dit. Je lui dis quoi ? »"
+    left: {label: "Je rachète leurs parts", effects: {direction: "+++", caisse: "-", relation: {fardelli: 1}}, answer: "Tu rachètes à un prix d'ami, mais pas le tien. Fardelli paie les verres : il a gagné quelque chose."}
+    right: {label: "Qu'il vote ce qu'il veut", effects: {direction: "-", caisse: "+", relation: {fardelli: -1}}, answer: "L'ami achète. À la réunion suivante, il vote deux fois contre toi, et sourit les deux fois."}
+
+  # ══════════════════════════════════ Actionnaires (DIRECTION) haut — le pantin
+  - id: pr.alarme.direction_haut_nassir
+    roles: [president]
+    arc: direction
+    tags: [direction]
+    speaker: nassir
+    when: "gauges.direction > 75"
+    text: "Ilyas fait accrocher ta photo dans le hall du fonds, à côté de la sienne, même cadre : « Vous êtes notre visage. Un visage se remplace plus vite qu'un club. Ce n'est pas une menace. »"
+    left: {label: "Je pose mes conditions", effects: {direction: "--", tribunes: "+"}, answer: "Tu obtiens une clause : deux ans, et ton mot à dire sur le maillot. Elle tient deux ans."}
+    right: {label: "Je suis des vôtres", effects: {direction: "+", tribunes: "--", relation: {nassir: 1}, set: [pantin], journal: {text: "{annee} : la photo de {nom} accrochée dans le hall du fonds, à côté de celle d'Ilyas, même cadre.", poids: 3, tags: [direction, pantin]}}, answer: "On te photographie beaucoup ; on te consulte peu. Le kop a remarqué les deux."}
+
+  - id: pr.alarme.direction_haut_aulard
+    roles: [president]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    when: "gauges.direction > 75"
+    text: "Vaubourg, président de la Ligue, t'appelle « collègue » pour la troisième fois de la semaine : « Un bureau est libre au deuxième étage de la Ligue. Avec une fenêtre. Vous passez le voir ? »"
+    left: {label: "Je reste au club", effects: {direction: "--", tribunes: "+"}, answer: "Il dit « dommage » et raccroche. Le bureau reste libre ; il te le rappelle à chaque assemblée."}
+    right: {label: "Je passe le voir", effects: {direction: "+", vestiaire: "--", set: [pantin], journal: {text: "{annee} : un bureau à la Ligue pour {nom}, le nom déjà sur la porte, au crayon.", poids: 2, tags: [direction, pantin]}}, answer: "Tu passes un mardi. Le bureau donne sur le fleuve, et ton nom est déjà sur la porte, au crayon."}
+
+  # ═══════════════════════ Trésorerie (CAISSE) basse — vers la Commission des comptes
+  - id: pr.alarme.caisse_bas_nassir
+    roles: [president]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: nassir
+    when: "gauges.caisse < 25"
+    text: "Ilyas referme ton relevé de banque comme on referme un livre qu'on n'a pas aimé : « Le fonds peut avancer la paie de mars. Contre deux sièges de plus au conseil. »"
+    left: {label: "Prenez les deux sièges", effects: {caisse: "+++", tribunes: "-", journal: {text: "{annee} : la paie de mars avancée par le fonds. Deux sièges de plus au conseil, deux vestes qu'on ne retire pas.", poids: 2, tags: [caisse, direction]}}, answer: "La paie tombe le 30. Au conseil suivant, deux chaises neuves, deux hommes qui ne retirent pas leur veste."}
+    right: {label: "Je trouverai ailleurs", effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}}, answer: "Tu fais trois banques en une semaine. La troisième dit oui, à un taux qu'elle ne répète qu'une fois."}
+
+  - id: pr.alarme.caisse_bas_vialat
+    roles: [president]
+    arc: caisse
+    tags: [caisse]
+    when: "gauges.caisse < 25"
+    text: "L'Inspectrice de la Commission attend dans le couloir, manteau fermé, sa serviette contre les jambes : « Deuxième exercice négatif. Vous vendez avant le 31, ou nous bloquons vos recrutements. »"
+    left: {label: "Je vends avant le 31", effects: {caisse: "+++", tribunes: "--"}, answer: "La tribune apprend le prix avant le nom. Le soir, une écharpe est nouée à la grille du siège."}
+    right: {label: "Bloquez, on tiendra", effects: {caisse: "-", vestiaire: "+", set: [commission_lettre], journal: {text: "{annee} : recrutements bloqués par la Commission. {nom} a gardé l'effectif entier.", poids: 3, tags: [caisse, commission_lettre]}}, answer: "La lettre arrive jeudi, avec accusé de réception et un délai de quinze jours. L'effectif reste entier."}
+
+  # ═════════════════════════════════════ Trésorerie (CAISSE) haute — vers le fonds
+  - id: pr.alarme.caisse_haut_brehaut
+    roles: [president]
+    arc: mercato
+    tags: [caisse, mercato]
+    speaker: brehaut
+    when: "gauges.caisse > 75"
+    text: "Bréhaut pose sur ton bureau une liste de quatre noms et un seul chiffre : « Le coffre est plein, et on joue avec les mêmes. Le virage le sait. Le vestiaire aussi, {toi}. »"
+    left: {label: "J'ouvre le coffre", effects: {caisse: "--", tribunes: "+"}, answer: "Les quatre signent en dix jours. Le virage déplie une bâche neuve, ton nom dessus, pour une fois sans insulte."}
+    right: {label: "Le coffre reste fermé", effects: {caisse: "+", vestiaire: "--", relation: {brehaut: -1}}, answer: "Bréhaut replie la liste en quatre et la glisse dans la poche intérieure de son costume."}
+
+  - id: pr.alarme.caisse_haut_fardelli
+    roles: [president]
+    arc: direction
+    tags: [caisse, agents]
+    speaker: fardelli
+    when: "gauges.caisse > 75"
+    text: "Fardelli pose sur ton bureau la carte d'un homme d'affaires « qui aime les trésoreries propres » : « Il achète le club avec ce qu'il y a dedans. Toi, tu restes. Il me l'a promis. »"
+    left: {label: "Je dépense avant lui", effects: {caisse: "--", vestiaire: "+"}, answer: "Trois recrues, des vestiaires refaits. La trésorerie redevient ordinaire ; l'homme d'affaires ne rappelle pas."}
+    right: {label: "J'écoute l'offre", effects: {caisse: "+", direction: "--", journal: {text: "{annee} : trois hommes en costume ont visité le centre de formation. Ils ont compté les fenêtres.", poids: 2, tags: [caisse, direction]}}, answer: "Trois hommes en costume visitent le centre de formation un samedi. Ils comptent les fenêtres, pas les joueurs."}
+
+  - id: pr.alarme.caisse_haut_banquier
+    roles: [president]
+    arc: caisse
+    tags: [caisse, direction]
+    when: "gauges.caisse > 75"
+    text: "Le directeur de la Banque Aubérivoise t'invite à déjeuner, une première. Au dessert, il parle d'un client « qui aime les clubs bien tenus », et qui voudrait acheter le tien."
+    left: {label: "Je réinvestis tout", effects: {caisse: "--", vestiaire: "+"}, answer: "Un centre de formation repeint, des vestiaires neufs. La banque te rappelle moins souvent ; le client, plus du tout."}
+    right: {label: "Donnez-lui mon numéro", effects: {caisse: "+", direction: "--"}, answer: "Le client appelle le lendemain, depuis un numéro étranger. Le conseil l'apprend avant que tu aies raccroché."}

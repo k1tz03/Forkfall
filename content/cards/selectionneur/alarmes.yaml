@@ -1,0 +1,249 @@
+# Les alarmes du sélectionneur (bible ch. 30 § 2.7, ch. 14 § 10) : quand une
+# jauge franchit 20 ou 80, une de ces cartes entre dans les trois cartes
+# suivantes (content/alarms.yaml, clé `selectionneur:`, l'ordre des porteurs).
+# Chaque carte porte son propre seuil (25 / 75). Jamais de drame, jamais de
+# `end:` : une sortie soulage la jauge en danger et coûte ailleurs, l'autre la
+# creuse (ou la gonfle) et paie autre chose.
+#
+# Jauges du rôle (roles.yaml) : VESTIAIRE = le groupe, TRIBUNES = le pays,
+# DIRECTION = la Fédération, CAISSE = les moyens. `{toi}` vaut « coach ».
+#
+# Les fenêtres du monde, tenues par content/alarms.yaml (bornes d'années) :
+# Berthomier préside la Fédération avant 2008 (bible ch. 14 § 0.4 ; en 2011,
+# dans Chambre 12, c'est Vaubourg ; le jeu le fait partir en 2016, la borne
+# basse tient pour les deux) ; Gégé tient le virage avant 2020, Massenet sa
+# chronique avant 2030 ;
+# Madame Aubert est ministre des Sports de 2002 à 2012 ; Mbako porte le
+# brassard des années 2004-2012 ; Gigi Vecchio entraîne les gardiens jusqu'en
+# 2015 ; Sabatier soigne la sélection jusqu'en 2002, puis le kiné de la
+# sélection (voix sans portrait) prend la porte. Écart avec la bible (ch. 14
+# § 0.4, Josiane secrétaire de la Fédération 2008-2016) : les Nouvelles datées
+# du jeu gardent Josiane au club jusqu'à sa retraite de 2022
+# (co.nv.2022_josiane_retraite) ; la Fédération a donc sa secrétaire, une voix
+# sans portrait. Le capitaine, le juriste, le trésorier et la secrétaire de la
+# Fédération, le standard d'une radio, le plan de table du Congrès portent les
+# alarmes de base, valables de 1999 à 2050. La sélectionneuse est prévue :
+# `{pg, select, …}` pour les accords.
+#
+# Drapeaux posés (déclarés à la fin de content/flags.yaml) et leurs lecteurs :
+# homme_president (bilan_contrat, une.sl.homme), primes_sponsor (bilan_contrat,
+# une.sl.prime).
+cards:
+  # ═════════════════════════════════════ Le groupe (VESTIAIRE) bas — les clans
+  - id: sl.alarme.vestiaire_bas_mbako
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    when: "gauges.vestiaire < 25"
+    text: "Mbako, le brassard roulé dans la poche, au bout du couloir de l'hôtel : « Deux tables au dîner, {toi}. Deux étages. Les jeunes en haut, nous en bas. Tu manges où, ce soir ? »"
+    left: {label: "Au milieu, avec tous", effects: {vestiaire: "+++", direction: "-", relation: {mbako: 1}, journal: {text: "{annee} : deux tables au dîner de la sélection. Au dessert, il n'en restait qu'une.", poids: 2, tags: [vestiaire]}}, answer: "Tu changes de table à chaque plat. Personne n'est dupe ; au dessert, les deux tables n'en font plus qu'une."}
+    right: {label: "Je renvoie les meneurs", effects: {vestiaire: "-", tribunes: "+", journal: {text: "{annee} : deux cadres renvoyés chez eux en pleine fenêtre. Le pays a aimé l'autorité.", poids: 2, tags: [vestiaire]}}, answer: "Deux cadres rentrent chez eux le lendemain. La liste est plus courte, plus calme, et le pays aime l'autorité."}
+
+  - id: sl.alarme.vestiaire_bas_vecchio
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    when: "gauges.vestiaire < 25"
+    text: "Gigi Vecchio, l'entraîneur des gardiens, pose ses gants sur ta table de chevet : « En 82, j'ai vu une équipe se couper en deux. Trois matchs, trois défaites. Les buts, c'est moi qui les ai pris. »"
+    left: {label: "Je leur parle ce soir", effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}}, answer: "Tu les réunis dans la salle de massage, debout. Gigi ferme la porte et reste devant, les bras croisés."}
+    right: {label: "Le terrain tranchera", effects: {vestiaire: "-", force: 2}, answer: "Deux séances très dures. Ils se rentrent dedans, ils courent plus. Gigi reprend ses gants sans un mot."}
+
+  - id: sl.alarme.vestiaire_bas_capitaine
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    when: "gauges.vestiaire < 25"
+    text: "Le capitaine frappe à ta porte à minuit, une feuille à la main : douze signatures, pas vingt-six. « Ce soir, on est deux groupes. Vous la lisez au vestiaire, ou je la lis à la télévision ? »"
+    left: {label: "Au vestiaire, demain", effects: {vestiaire: "+++", direction: "-"}, answer: "Tu la lis à voix haute, nom par nom. Douze noms ; les quatorze autres écoutent sans bouger."}
+    right: {label: "Lisez-la à la télévision", effects: {vestiaire: "-", direction: "+", journal: {text: "{annee} : la lettre des douze lue en direct par le capitaine. La Fédération a salué le calme de {nom}.", poids: 2, tags: [vestiaire, presse]}}, answer: "Il la lit en direct, sans trembler. La Fédération salue ton calme ; le groupe, beaucoup moins."}
+
+  # ═══════════════════════════════════════ Le groupe (VESTIAIRE) haut — la fête
+  - id: sl.alarme.vestiaire_haut_secretaire
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    when: "gauges.vestiaire > 75"
+    text: "La secrétaire de la Fédération te tend la note du bar de l'hôtel : « Elle est au nom de la sélection. Et au vôtre, juste en dessous. Quatre heures du matin, pour la dernière tournée. »"
+    left: {label: "Je retiens sur les primes", effects: {vestiaire: "--", caisse: "+"}, answer: "Les primes de novembre arrivent amputées. Le capitaine te remercie pour l'addition, sans sourire."}
+    right: {label: "La Fédération paiera", effects: {vestiaire: "+", direction: "--"}, answer: "Elle classe la note dans « Divers ». Le trésorier ouvre le dossier « Divers » en décembre, au Congrès."}
+
+  - id: sl.alarme.vestiaire_haut_sabatier
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: sabatier
+    when: "gauges.vestiaire > 75"
+    text: "Le Doc Sabatier pose trois cafés devant trois joueurs qui ne les boiront pas : « Rentrés à quatre heures. Ils t'aiment tellement qu'ils ont glissé une photo de la soirée sous ta porte. »"
+    left: {label: "Couvre-feu à minuit", effects: {vestiaire: "--", direction: "+"}, answer: "Un gardien de nuit dans le couloir, deux plaintes au capitaine. La photo reste dans ton tiroir."}
+    right: {label: "Je leur fais confiance", effects: {vestiaire: "+", tribunes: "--"}, answer: "Une autre photo sort quand même, ailleurs, en couleur. Le pays la regarde plus longtemps que le match."}
+
+  - id: sl.alarme.vestiaire_haut_kine
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    when: "gauges.vestiaire > 75"
+    text: "Le kiné de la sélection frappe avec la feuille des soins du matin, vide : « Personne n'a mal. Ils sont rentrés à quatre heures, tous ensemble, en chantant votre nom dans l'ascenseur. »"
+    left: {label: "Je ferme l'étage à minuit", effects: {vestiaire: "--", direction: "+"}, answer: "Un vigile au bout du couloir, des portes qui claquent à minuit. Le capitaine vient se plaindre, poliment."}
+    right: {label: "Ils ont gagné, non ?", effects: {vestiaire: "+", tribunes: "--", journal: {text: "{annee} : la vidéo de l'ascenseur de l'hôtel au journal du soir. On y entend {nom}, chanté faux.", poids: 2, tags: [vestiaire, presse]}}, answer: "Le lendemain, la vidéo de l'ascenseur passe au journal télévisé. On y entend ton nom, chanté faux."}
+
+  # ════════════════════════════════════ Le pays (TRIBUNES) bas — l'ennemi public
+  - id: sl.alarme.tribunes_bas_gege
+    roles: [selectionneur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé t'appelle à l'hôtel au nom « des virages de tout le pays », une première : « Samedi, ils ont sifflé le maillot. Pas toi, le maillot. Tu viens à notre réunion, {toi}, ou on continue ? »"
+    left: {label: "Je viens à la réunion", effects: {tribunes: "+++", direction: "-", relation: {gege: 1}, journal: {text: "{annee} : trois heures dans une arrière-salle avec quarante écharpes de vingt clubs. {nom} y était.", poids: 2, tags: [ultras, tribunes]}}, answer: "Trois heures dans une arrière-salle, quarante écharpes de vingt clubs. Ils sifflent moins ; ils te sifflent toi."}
+    right: {label: "Qu'ils sifflent", effects: {tribunes: "-", vestiaire: "+"}, answer: "Les joueurs te remercient de ne pas avoir cédé. Personne d'autre ne te remercie."}
+
+  - id: sl.alarme.tribunes_bas_meneche
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    when: "gauges.tribunes < 25"
+    text: "Massenet refait ta liste chaque lundi dans sa chronique, et raye au feutre ceux qu'il ne prendrait pas. Il t'attend à l'aéroport : « Vous venez la défendre à l'antenne, ou je continue seul ? »"
+    left: {label: "Je viens à l'antenne", effects: {tribunes: "+++", vestiaire: "-"}, answer: "Une heure de direct. Tu défends chaque nom ; il en raye un devant toi. Le joueur écoutait, chez lui."}
+    right: {label: "Continuez seul", effects: {tribunes: "-", direction: "+", relation: {meneche: -1}}, answer: "Il continue. Chaque lundi, une liste de plus ; chaque mardi, la Fédération t'assure de son soutien."}
+
+  - id: sl.alarme.tribunes_bas_radio
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, tribunes]
+    when: "gauges.tribunes < 25"
+    text: "Une radio nationale a ouvert son standard à ceux qui veulent ton départ. Il sonne sans arrêt depuis six heures du matin. On te propose d'appeler, en direct, à midi."
+    left: {label: "J'appelle à midi", effects: {tribunes: "+++", direction: "-", journal: {text: "{annee} : vingt minutes d'antenne pour {nom}, au standard de ceux qui voulaient son départ.", poids: 2, tags: [presse, tribunes]}}, answer: "Vingt minutes d'antenne. Un chauffeur de taxi te traite de tous les noms, puis te souhaite bonne chance."}
+    right: {label: "Je n'appelle pas", effects: {tribunes: "-", vestiaire: "+"}, answer: "Le standard sonne jusqu'au soir. Les joueurs écoutent la radio dans le car, et l'éteignent avant toi."}
+
+  # ═══════════════════════════════════ Le pays (TRIBUNES) haut — l'ambassadeur
+  - id: sl.alarme.tribunes_haut_aubert
+    roles: [selectionneur]
+    arc: direction
+    tags: [tribunes, direction]
+    speaker: aubert
+    when: "gauges.tribunes > 75"
+    text: "Madame Aubert, ministre des Sports, te reçoit entre deux portes du ministère : « Vous êtes plus populaire que le gouvernement. Le président de la République s'en inquiète. Il parle des îles Basses. »"
+    left: {label: "Je baisse le ton", effects: {tribunes: "--", direction: "+", relation: {aubert: 1}}, answer: "Tu annules deux émissions et un défilé. On te trouve modeste ; l'ambassade des îles Basses reste vacante."}
+    right: {label: "Je continue", effects: {tribunes: "+", direction: "--", relation: {aubert: -1}}, answer: "Une lettre à en-tête t'invite à « réfléchir à l'intérêt de la nation ». Elle n'est pas signée."}
+
+  - id: sl.alarme.tribunes_haut_lea
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, sponsors]
+    speaker: lea
+    when: "gauges.tribunes > 75"
+    text: "Léa pose un paquet de café sur la table de conférence : ton visage, en grand, sur l'emballage. « La Fédération a signé ce contrat. Vous, vous l'avez signé ? »"
+    left: {label: "Retirez mon visage", effects: {tribunes: "--", vestiaire: "+"}, answer: "Les paquets quittent les rayons en un mois. Les joueurs, qui riaient en douce, arrêtent de rire."}
+    right: {label: "Je garde les paquets", effects: {tribunes: "+", caisse: "+", vestiaire: "-"}, answer: "Ton visage se vend par deux en grande surface. Au petit-déjeuner du stage, il y en a un sur chaque table."}
+
+  # ════════════════════════════════════ La Fédération (DIRECTION) basse — minuit
+  - id: sl.alarme.direction_bas_secretaire
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    when: "gauges.direction < 25"
+    text: "La secrétaire de la Fédération te fait signe de fermer la porte : « On m'a demandé deux lettres pour le 30. Une qui vous remercie, une qui vous prolonge. Je n'ai tapé que la première. »"
+    left: {label: "Je vois le président", effects: {direction: "+++", vestiaire: "-"}, answer: "Tu forces la porte du président le soir même. Elle tape la seconde lettre pendant que tu parles, au cas où."}
+    right: {label: "Gardez la première", effects: {direction: "-", tribunes: "+"}, answer: "Elle range la lettre dans le tiroir du haut, sans le fermer, et laisse la machine allumée."}
+
+  - id: sl.alarme.direction_bas_legruet
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: legruet
+    when: "gauges.direction < 25"
+    text: "Berthomier te parle dans l'ascenseur de la Fédération, entre deux étages : « Le bureau fédéral se réunit le 30, à minuit. Votre contrat expire le 30, à minuit. Le calendrier fait bien les choses. »"
+    left: {label: "Je demande une réunion", effects: {direction: "+++", vestiaire: "-", relation: {legruet: 1}}, answer: "Quarante minutes, un café, aucune signature. Il te raccompagne à l'ascenseur et appuie sur le bouton pour toi."}
+    right: {label: "J'attends minuit", effects: {direction: "-", tribunes: "+", journal: {text: "{annee} : le 30, à minuit, {nom} attendait près du téléphone. Il a sonné à minuit et une, pour autre chose.", poids: 2, tags: [direction]}}, answer: "Le 30, tu attends près du téléphone. Il sonne à minuit et une, pour autre chose. La prochaine fois, ce sera pour toi."}
+
+  - id: sl.alarme.direction_bas_juriste
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, caisse]
+    when: "gauges.direction < 25"
+    text: "Le juriste de la Fédération t'arrête au pied de l'escalier, ton contrat sous le bras : « Article neuf : la Fédération peut rompre à minuit le 30, sans motif. Je préfère que vous l'entendiez de moi. »"
+    left: {label: "Je demande un avenant", effects: {direction: "+++", caisse: "-"}, answer: "Il rédige l'avenant dans la nuit. Il te coûte une ligne de budget, et ne sera signé qu'après Noël."}
+    right: {label: "Je laisse courir", effects: {direction: "-", vestiaire: "+"}, answer: "Il remet le contrat sous son bras et remonte l'escalier sans se presser. Les joueurs n'en sauront rien."}
+
+  # ═════════════════════════ La Fédération (DIRECTION) haute — l'homme du président
+  - id: sl.alarme.direction_haut_legruet
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: legruet
+    when: "gauges.direction > 75"
+    text: "Berthomier te fait monter dans sa voiture officielle pour trois cents mètres : « On dit partout que je vous ai dans la poche. Je le dis aussi, ça fait gagner du temps. Le Congrès vote dans deux ans. »"
+    left: {label: "Je descends ici", effects: {direction: "--", tribunes: "+"}, answer: "Tu descends au feu rouge et finis à pied. Il fait signe au chauffeur de te suivre au pas, puis renonce."}
+    right: {label: "Je reste dans la voiture", effects: {direction: "+", vestiaire: "--", relation: {legruet: 1}, set: [homme_president], journal: {text: "{annee} : {nom} est resté{pg, select, f{e} other{}} dans la voiture du président de la Fédération. Le vestiaire l'a su.", poids: 3, tags: [direction, homme_president]}}, answer: "Tu restes. Le vestiaire apprend qui décide de la liste ; au Congrès, tu seras le premier nom des siens."}
+
+  - id: sl.alarme.direction_haut_meneche
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: meneche
+    when: "gauges.direction > 75"
+    text: "À l'antenne, Massenet a dit que ta liste se faisait « dans le bureau du président ». Il t'attend à la sortie du stage : « Ce n'est pas une insulte. C'est une date de péremption. »"
+    left: {label: "Je prends mes distances", effects: {direction: "--", tribunes: "+"}, answer: "Tu refuses le dîner de la Fédération, poliment. Le président note la politesse, et l'absence."}
+    right: {label: "Je n'ai qu'un patron", effects: {direction: "+", vestiaire: "--", set: [homme_president], journal: {text: "{annee} : « Je n'ai qu'un patron », a dit {nom} à Massenet. Le car de la sélection a lu le journal.", poids: 2, tags: [presse, homme_president]}}, answer: "Il l'écrit mot pour mot. Dans le car, les joueurs se passent le journal sans un commentaire."}
+
+  - id: sl.alarme.direction_haut_plan_de_table
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    when: "gauges.direction > 75"
+    text: "Au dîner du Congrès, le plan de table te place à la droite du président de la Fédération. Ton nom est écrit au feutre, plus gros que les autres. Les districts l'ont vu en entrant."
+    left: {label: "Je change de place", effects: {direction: "--", tribunes: "+"}, answer: "Tu échanges ton carton avec un délégué de district. Le président parle à ta chaise vide toute la soirée."}
+    right: {label: "Je reste à sa droite", effects: {direction: "+", vestiaire: "--", set: [homme_president], journal: {text: "{annee} : au dîner du Congrès, {nom} était à la droite du président de la Fédération.", poids: 2, tags: [direction, homme_president]}}, answer: "Tu passes la soirée à sa droite. Le lendemain, deux joueurs te demandent qui fera la liste de mars."}
+
+  # ═══════════════════════════════════════ Les moyens (CAISSE) bas — les charters
+  - id: sl.alarme.caisse_bas_secretaire
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    when: "gauges.caisse < 25"
+    text: "La secrétaire de la Fédération, au téléphone : « Le charter de novembre est annulé. Il reste un vol à deux escales, ou le train de nuit. Le trésorier veut votre réponse avant midi. »"
+    left: {label: "Le train de nuit", effects: {caisse: "+++", vestiaire: "--", journal: {text: "{annee} : quatorze heures de train de nuit pour la sélection, deux malades, une victoire.", poids: 2, tags: [caisse, vestiaire]}}, answer: "Quatorze heures de train, deux joueurs malades, une victoire. On en parle encore dans les couloirs de l'hôtel."}
+    right: {label: "Je paie le charter", effects: {caisse: "-", vestiaire: "+"}, answer: "L'avion décolle à l'heure. La facture arrive en juin, à ton nom, avec un mot de la secrétaire agrafé dessus."}
+
+  - id: sl.alarme.caisse_bas_legruet
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: legruet
+    when: "gauges.caisse < 25"
+    text: "Berthomier pose devant toi le budget de l'année, une ligne rayée au crayon, les déplacements : « Les districts ont voté contre les charters. Trois cents voix. Vous trouverez ; les autres trouvent. »"
+    left: {label: "On voyagera en car", effects: {caisse: "+++", vestiaire: "--"}, answer: "Neuf heures de car pour un match aller. Le capitaine dort sur le porte-bagages ; personne ne rit."}
+    right: {label: "Je vais voir les districts", effects: {caisse: "-", tribunes: "+"}, answer: "Trois assemblées de district en deux semaines. Ils t'applaudissent debout, et revotent pareil."}
+
+  - id: sl.alarme.caisse_bas_tresorier
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse]
+    when: "gauges.caisse < 25"
+    text: "Le trésorier de la Fédération raye au crayon, devant toi, une ligne du budget : les stages de juin. « Les charters ou les stages. Les deux, c'était l'an dernier. »"
+    left: {label: "Plus de stage en juin", effects: {caisse: "+++", vestiaire: "--"}, answer: "Chacun s'entraîne dans son club cet été. En septembre, il faut réapprendre des prénoms."}
+    right: {label: "Je le dis à la presse", effects: {caisse: "-", tribunes: "+"}, answer: "Le pays apprend que sa sélection voyagera en car. Il le prend mal, et le dit à la Fédération, pas à toi."}
+
+  # ══════════════════════════════════ Les moyens (CAISSE) haut — les primes cachées
+  - id: sl.alarme.caisse_haut_nassir
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: nassir
+    when: "gauges.caisse > 75"
+    text: "Ilyas, sponsor du maillot depuis l'été, t'invite à déjeuner dans un restaurant sans carte : « Le sponsor verse une prime au sélectionneur. De sa part. La Fédération n'a pas besoin de le savoir. »"
+    left: {label: "Déclarée, ou rien", effects: {caisse: "--", direction: "+", relation: {nassir: -1}}, answer: "La prime est déclarée, plus petite. Ilyas paie l'addition sans regarder le montant."}
+    right: {label: "Entre nous, alors", effects: {caisse: "+", direction: "--", relation: {nassir: 1}, set: [primes_sponsor], journal: {text: "{annee} : une prime du sponsor au sélectionneur, le 3 du mois. La Fédération n'en sait rien.", poids: 3, tags: [sponsors, caisse, primes_sponsor]}}, answer: "Le virement arrive le 3 du mois, sur un compte que tu n'avais pas la veille."}
+
+  - id: sl.alarme.caisse_haut_fardelli
+    roles: [selectionneur]
+    arc: agents
+    tags: [agents, caisse]
+    speaker: fardelli
+    when: "gauges.caisse > 75"
+    text: "Fardelli, l'agent du capitaine, t'offre un stylo qui vaut un mois de ton salaire : « Les joueurs veulent leurs primes en liquide, comme dans les grandes sélections. Un avion peut les apporter. »"
+    left: {label: "Virements, comme toujours", effects: {caisse: "--", direction: "+"}, answer: "Les primes partent par virement, avec une semaine de retard. Le capitaine compte les jours à voix haute."}
+    right: {label: "Que l'avion vienne", effects: {caisse: "+", vestiaire: "+", direction: "--"}, answer: "L'avion se pose un jeudi. Les valises passent la douane sans qu'on les ouvre ; quelqu'un, quelque part, l'a noté."}

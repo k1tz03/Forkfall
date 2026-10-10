@@ -1,0 +1,249 @@
+# Les alarmes du directeur sportif (bible ch. 30 § 2.4, ch. 12 § 8) : quand une
+# jauge franchit 20 ou 80, une de ces cartes entre dans les trois cartes
+# suivantes (content/alarms.yaml, clé `ds:`, l'ordre des porteurs). Chaque
+# carte porte son propre seuil (25 / 75) : si la jauge est revenue avant
+# l'échéance, l'alarme expire en silence. Jamais de drame, jamais de `end:` :
+# une main courante. Une sortie soulage la jauge en danger et coûte ailleurs,
+# l'autre la creuse (ou la gonfle) et paie autre chose ; aucune n'est la bonne.
+#
+# Jauges du rôle (roles.yaml) : VESTIAIRE = le staff (le coach, l'adjoint, le
+# médecin, le capitaine), TRIBUNES = le public, DIRECTION = le président,
+# CAISSE = la masse salariale. `{toi}` vaut l'adresse du rôle, le prénom.
+#
+# Écarts d'import (casting) : le coach (Vogler, Vaz) n'a pas de portrait — il
+# parle par Vukić, son adjoint, ou en voix ; Vialat, l'Inspectrice de la
+# Commission, et le capitaine sont des voix sans portrait ; Barbier et le
+# beau-frère du président sont cités, jamais porteurs. Les visages ont leur
+# époque (bornes dans content/alarms.yaml) : Vaubourg patron avant 2020,
+# Josiane au secrétariat avant 2008, Gégé, Vukić, Fardelli avant 2020. Chaque
+# alarme finit sur un porteur sans époque, qui tient de 2003 à 2050. Les
+# héroïnes sont prévues : `{pg, select, …}` pour les accords.
+#
+# Drapeaux posés (déclarés à la fin de content/flags.yaml) et leurs lecteurs :
+# bache_ds (gm_annonce, une.ds.bache), commission_occulte (gm_te, bilan_contrat,
+# une.ds.frais), commission_lettre (objective), homme_president (bilan_contrat,
+# une.ds.homme), salaires_retard (match, aftermatch).
+cards:
+  # ═════════════════════════════════ Le staff (VESTIAIRE) bas — vers la fronde
+  - id: ds.alarme.vestiaire_bas_vukic
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    when: "gauges.vestiaire < 25"
+    text: "Vukić referme la porte du bureau avec le talon, son cahier contre la poitrine : « Le coach parle à la presse jeudi, le capitaine à côté de lui. Ils ne parleront pas de jeu, {toi}. »"
+    left: {label: "Je descends au vestiaire", effects: {vestiaire: "+++", direction: "-", journal: {text: "{annee} : {nom} est descendu{pg, select, f{e} other{}} au vestiaire avant la conférence. Jeudi, on a parlé de jeu.", poids: 2, tags: [vestiaire]}}, answer: "Tu parles quatre minutes, debout. Personne ne te coupe, personne n'applaudit. Jeudi, ils parlent de jeu."}
+    right: {label: "Qu'ils parlent", effects: {vestiaire: "-", direction: "+", journal: {text: "{annee} : le coach et le capitaine ont parlé à la presse. Le nom de {nom} est revenu neuf fois.", poids: 2, tags: [vestiaire, presse]}}, answer: "Jeudi, ils parlent vingt minutes. Ton nom revient neuf fois ; Vukić les a comptées dans son cahier."}
+
+  - id: ds.alarme.vestiaire_bas_sabatier
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: sabatier
+    when: "gauges.vestiaire < 25"
+    text: "Le Doc Sabatier pose sur ton bureau quatre certificats signés de ce matin : « Ils ne sont pas blessés, {toi}. Ils protestent contre tes recrues. Le cinquième, ce sera le capitaine. »"
+    left: {label: "Je viens leur parler", effects: {vestiaire: "+++", direction: "-", journal: {text: "{annee} : une matinée sur la table de soins pour {nom}. Deux certificats déchirés avant midi.", poids: 2, tags: [vestiaire]}}, answer: "Tu passes la matinée sur la table de soins, entre deux joueurs qui n'ont rien. À midi, deux certificats sont déchirés."}
+    right: {label: "Je vends le capitaine", effects: {vestiaire: "-", caisse: "++", tribunes: "-", journal: {text: "{annee} : le capitaine vendu un mardi. Quatre certificats dorment dans le tiroir du Doc.", poids: 2, tags: [vestiaire, mercato]}}, answer: "Il part un mardi, pour un bon prix. Le Doc range les quatre certificats dans un tiroir qui ferme à clé."}
+
+  - id: ds.alarme.vestiaire_bas_vecchio
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    when: "gauges.vestiaire < 25"
+    text: "Gigi Vecchio, l'entraîneur des gardiens, s'assoit sans qu'on l'y invite : « Le staff mange à la cuisine, maintenant, plus au réfectoire. Pour ne pas passer devant ton bureau. »"
+    left: {label: "Je déjeune avec eux", effects: {vestiaire: "+++", direction: "-", relation: {vecchio: 1}, journal: {text: "{annee} : {nom} a posé son plateau à la table du staff. Gigi lui a fait une place, au bout.", poids: 1, tags: [vestiaire]}}, answer: "Tu poses ton plateau à leur table. Personne ne se pousse ; Gigi te fait une place au bout, à côté des gants."}
+    right: {label: "Ils mangent où ils veulent", effects: {vestiaire: "-", direction: "+"}, answer: "La porte de la cuisine reste fermée à midi. Le président te félicite pour « la distance » ; Gigi ne te salue plus."}
+
+  - id: ds.alarme.vestiaire_bas_coach
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    when: "gauges.vestiaire < 25"
+    text: "L'entraîneur a fait changer le code de la porte du vestiaire. Tu l'apprends devant le clavier, le dossier des recrues sous le bras ; de l'autre côté, quelqu'un rit."
+    left: {label: "Je frappe et j'entre", effects: {vestiaire: "+++", direction: "-", journal: {text: "{annee} : le code du vestiaire a changé. {nom} a frappé trois coups, et on a fini par ouvrir.", poids: 2, tags: [vestiaire]}}, answer: "On t'ouvre au troisième coup. Tu parles cinq minutes entre les douches ; le lendemain, le nouveau code est sous ta porte."}
+    right: {label: "Je redescends au bureau", effects: {vestiaire: "-", direction: "+"}, answer: "Tu redescends. Le président t'en félicite. Le code de la porte, lui, ne te sera jamais donné."}
+
+  # ═══════════════════════════ Le staff (VESTIAIRE) haut — le club des copains
+  - id: ds.alarme.vestiaire_haut_vukic
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    when: "gauges.vestiaire > 75"
+    text: "Vukić te sert le premier au barbecue du staff : « Les gars disent que tu es {pg, select, f{la seule} other{le seul}} à venir aux barbecues. Le coach le dit aussi. Au président. »"
+    left: {label: "Je pars avant le dessert", effects: {vestiaire: "--", direction: "+"}, answer: "Tu pars avant le café. Lundi, le coach te parle de nouveau comme à un directeur, et toi aussi."}
+    right: {label: "Je reste jusqu'au bout", effects: {vestiaire: "+", direction: "--", journal: {text: "{annee} : {nom} a chanté à minuit au barbecue du staff. Le président connaît les paroles.", poids: 1, tags: [vestiaire, direction]}}, answer: "Tu chantes avec eux à minuit. Le président l'apprend par le coach, paroles comprises."}
+
+  - id: ds.alarme.vestiaire_haut_josiane
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: josiane
+    when: "gauges.vestiaire > 75"
+    text: "Madame Josiane laisse ouvert sur le comptoir le registre du personnel : trois embauches cet été, trois personnes que vous tutoyez, {toi}. « L'Inspectrice lit aussi les registres. »"
+    left: {label: "Je rouvre les trois postes", effects: {vestiaire: "--", direction: "+"}, answer: "Deux des trois repostulent et sont repris. Le troisième ne te dit plus bonjour au parking."}
+    right: {label: "Je garde mes gens", effects: {vestiaire: "+", direction: "--", journal: {text: "{annee} : trois embauches de l'été au staff, trois amis de {nom}. Josiane a mis un trombone rouge à la page.", poids: 2, tags: [vestiaire, direction]}}, answer: "Josiane referme le registre et glisse un trombone rouge à la page de l'été."}
+
+  - id: ds.alarme.vestiaire_haut_capitaine
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    when: "gauges.vestiaire > 75"
+    text: "Le capitaine passe par ton bureau avant d'aller au vestiaire, comme chaque matin maintenant : « Les gars viennent te voir avant de voir le coach. Lui l'a remarqué. Il a compté. »"
+    left: {label: "Je vous renvoie au coach", effects: {vestiaire: "--", direction: "+"}, answer: "La file se disperse. Elle revient le lundi suivant ; elle a pris l'habitude."}
+    right: {label: "Ma porte reste ouverte", effects: {vestiaire: "+", direction: "--", journal: {text: "{annee} : la porte de {nom} est restée ouverte aux joueurs. Le coach a compté les visites.", poids: 2, tags: [vestiaire, direction]}}, answer: "Le coach l'apprend par le capitaine lui-même. Le président, par le coach."}
+
+  # ═════════════════════════════════════ TRIBUNES bas — vers le mercato raté
+  - id: ds.alarme.tribunes_bas_gege
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25"
+    text: "Gégé déroule sur le parking une bâche de vingt mètres, encore sèche : « DS = DÉMISSION SPORTIVE ». « Mon cousin a fait un prix. Tu signes quelqu'un avant dimanche, ou on la monte ? »"
+    left: {label: "Je signe quelqu'un vendredi", effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}, journal: {text: "{annee} : un attaquant signé un vendredi soir. La bâche de Gégé est restée roulée, dans son coffre.", poids: 2, tags: [ultras, mercato]}}, answer: "Un attaquant signe le vendredi soir. La bâche reste roulée ; Gégé la range dans son coffre, au cas où."}
+    right: {label: "Montez-la", effects: {tribunes: "-", direction: "+", set: [bache_ds], journal: {text: "{annee} : « DS = Démission sportive », vingt mètres en tribune Nord. Massenet a fait la photo.", poids: 3, tags: [ultras, tribunes, bache_ds]}}, answer: "Elle est droite, bien tendue, sans faute d'orthographe. Massenet la photographie de face pour sa une."}
+
+  - id: ds.alarme.tribunes_bas_meneche
+    roles: [ds]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    when: "gauges.tribunes < 25"
+    text: "Massenet baisse la vitre de sa voiture au feu rouge du parking : « Sept recrues, deux titulaires. Je titre lundi sur le mercato. Vous me donnez un nom pour l'hiver, ou je titre sur le vôtre ? »"
+    left: {label: "Je lui donne un nom", effects: {tribunes: "+++", caisse: "-", journal: {text: "{annee} : un nom lâché à Massenet par la vitre. Le prix du joueur a pris dix pour cent avant midi.", poids: 2, tags: [presse, mercato]}}, answer: "Le nom paraît lundi. Avant midi, le prix du joueur a pris dix pour cent ; son agent t'appelle pour te remercier."}
+    right: {label: "Titrez sur le mien", effects: {tribunes: "-", direction: "+", relation: {meneche: -1}}, answer: "Lundi, ton nom fait toute la largeur de la page. Le président appelle : au moins, rien n'a fuité."}
+
+  - id: ds.alarme.tribunes_bas_lea
+    roles: [ds]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    when: "gauges.tribunes < 25"
+    text: "Léa t'attend devant la grille du centre, carnet ouvert : « Le joueur vendu en janvier a marqué deux fois dimanche. Deux sources disent que vous le saviez meilleur que son prix. »"
+    left: {label: "Je réponds sur le fond", effects: {tribunes: "+++", direction: "-"}, answer: "Vingt minutes, chiffres à l'appui. Elle cite tout, y compris la phrase que tu voulais retirer."}
+    right: {label: "Aucun commentaire", effects: {tribunes: "-", vestiaire: "+"}, answer: "Elle écrit « aucun commentaire » et, juste en dessous, le prix de la vente."}
+
+  # ═════════════════════════════════════════ TRIBUNES haut — vers l'architecte
+  - id: ds.alarme.tribunes_haut_gege
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes > 75"
+    text: "Gégé, au comptoir de la buvette des anciens, te fait servir avant tout le monde : « Le virage chante ton nom avant celui du coach. Il l'entend, tu sais. On chante le sien, ou on continue ? »"
+    left: {label: "Chantez le coach", effects: {tribunes: "--", vestiaire: "+"}, answer: "Ils chantent le coach, faux, exprès. Il sourit quand même, et lève la main vers la tribune."}
+    right: {label: "Continuez", effects: {tribunes: "+", vestiaire: "--", relation: {gege: 1}, journal: {text: "{annee} : le virage a chanté {nom} avant le coach. Le coach ne s'est pas retourné.", poids: 2, tags: [ultras, vestiaire]}}, answer: "Vingt minutes de ton nom. Le coach ne se retourne pas vers la tribune ; il a compris."}
+
+  - id: ds.alarme.tribunes_haut_meneche
+    roles: [ds]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: meneche
+    when: "gauges.tribunes > 75"
+    text: "Massenet range son carnet, pour une fois : « Un grand club étranger a demandé votre dossier à la Ligue. Ils prennent les architectes et les usent en dix-huit mois. Je l'écris ? »"
+    left: {label: "Écrivez : c'est le coach", effects: {tribunes: "--", vestiaire: "+"}, answer: "Il écrit que le mérite revient au coach. Le coach découpe l'article et le punaise au vestiaire."}
+    right: {label: "Laissez courir", effects: {tribunes: "+", direction: "--", journal: {text: "{annee} : un grand club étranger a demandé le dossier de {nom}. La rumeur a couru trois jours.", poids: 2, tags: [presse, direction]}}, answer: "La rumeur court trois jours. Le président te demande si tes valises sont faites, en riant à moitié."}
+
+  # ══════════════════════════ Le président (DIRECTION) bas — d'un commun accord
+  - id: ds.alarme.direction_bas_aulard
+    roles: [ds]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    when: "gauges.direction < 25"
+    text: "Vaubourg t'appelle de sa voiture, la radio en fond : « Mon beau-frère a deux noms pour janvier. Tu me les signes, {toi}, ou je trouve quelqu'un qui sait signer ? »"
+    left: {label: "Je les signe", effects: {direction: "+++", vestiaire: "-", relation: {aulard: 1}, journal: {text: "{annee} : deux attaquants du beau-frère signés en janvier. Le coach les a découverts à l'entraînement.", poids: 2, tags: [direction, mercato]}}, answer: "Deux attaquants de trente et un ans, un genou valide pour deux. Le coach les découvre à l'entraînement."}
+    right: {label: "Je signe les miens", effects: {direction: "-", tribunes: "+", relation: {aulard: -1}, journal: {text: "{annee} : un communiqué de trois lignes a dormi dans le tiroir du président, {nom} à la deuxième.", poids: 2, tags: [direction]}}, answer: "Il raccroche. Le lendemain, Josiane trouve un brouillon de communiqué : trois lignes, ton nom à la deuxième."}
+
+  - id: ds.alarme.direction_bas_josiane
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    when: "gauges.direction < 25"
+    text: "Madame Josiane te tend une feuille trouvée dans le bac du photocopieur : trois lignes, « d'un commun accord », la date en blanc. « Je ne l'ai pas lue, {toi}. Vous non plus. »"
+    left: {label: "Je force sa porte", effects: {direction: "+++", vestiaire: "-"}, answer: "Une heure dans son bureau. Il ne parle pas du brouillon ; tu promets une vente, et le coach apprend laquelle le soir."}
+    right: {label: "Je la remets au bac", effects: {direction: "-", vestiaire: "+", relation: {josiane: 1}}, answer: "Elle la replace à l'endroit exact. Le lendemain, la feuille a quitté le bac, et la date est remplie."}
+
+  - id: ds.alarme.direction_bas_parking
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    when: "gauges.direction < 25"
+    text: "Le gardien du parking t'arrête à la barrière : le conseil s'est réuni à huit heures, sans toi. Sur ta place, quelqu'un a collé un nom au ruban adhésif, en attendant la plaque."
+    left: {label: "Je monte au conseil", effects: {direction: "+++", vestiaire: "-"}, answer: "Tu entres en pleine séance. On ajoute une chaise en bout de table, et on reprend au point trois."}
+    right: {label: "Je me gare dans la rue", effects: {direction: "-", tribunes: "+", journal: {text: "{annee} : un autre nom au ruban adhésif sur la place de parking de {nom}. Le ruban est parti, pas le nom.", poids: 2, tags: [direction]}}, answer: "Tu te gares dans la rue, comme les supporters. Le lendemain, le ruban adhésif a disparu ; le nom, non."}
+
+  # ═══════════════════════ Le président (DIRECTION) haut — l'homme du président
+  - id: ds.alarme.direction_haut_aulard
+    roles: [ds]
+    arc: direction
+    tags: [direction, mercato]
+    speaker: aulard
+    when: "gauges.direction > 75"
+    text: "Vaubourg te fait asseoir dans son propre fauteuil, « pour voir » : « Je n'ai confiance qu'en toi, {toi}. Mon beau-frère t'apporte deux joueurs. Tu signes sans lire, entre nous. »"
+    left: {label: "Je lis d'abord", effects: {direction: "--", vestiaire: "+"}, answer: "Tu lis tout, page par page. Il rit et dit « lis vite ». Le beau-frère attend dans le couloir, sans chaise."}
+    right: {label: "Je signe sans lire", effects: {direction: "+", caisse: "--", set: [homme_president], journal: {text: "{annee} : deux joueurs du beau-frère signés sans lecture. Au club, on dit que {nom} appartient au président.", poids: 3, tags: [direction, homme_president]}}, answer: "Tu signes. Il reprend le stylo avant que l'encre sèche. Au club, on dit désormais que tu appartiens au président."}
+
+  - id: ds.alarme.direction_haut_nassir
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: nassir
+    when: "gauges.direction > 75"
+    text: "Ilyas visite le centre avec deux hommes qui gardent leur manteau : « Le club peut changer de mains au printemps. Un nouveau propriétaire vient toujours avec ses gens. Vous, vous êtes à qui ? »"
+    left: {label: "Je suis au club", effects: {direction: "--", tribunes: "+"}, answer: "Il note ta réponse au dos d'une carte de visite qui n'est pas la sienne. Les deux hommes regardent les terrains."}
+    right: {label: "Je suis au président", effects: {direction: "+", vestiaire: "--", set: [homme_president], journal: {text: "{annee} : « au président », a répondu {nom} au fonds. Quelqu'un relira la réponse au printemps.", poids: 2, tags: [direction, homme_president]}}, answer: "Il hoche la tête comme on coche une case. Au printemps, quelqu'un relira la case."}
+
+  # ═══════════════════ Masse salariale (CAISSE) basse — les contrats impayables
+  - id: ds.alarme.caisse_bas_josiane
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    speaker: josiane
+    when: "gauges.caisse < 25"
+    text: "Madame Josiane pose le relevé du mois sur la pile des contrats : « Vingt-quatre salaires, et des recettes pour dix-neuf. La banque demande lesquels sont en trop, {toi}. »"
+    left: {label: "J'en vends deux", effects: {caisse: "+++", vestiaire: "--", journal: {text: "{annee} : deux joueurs vendus pour la banque. Le coach a recompté sa liste à voix haute.", poids: 2, tags: [caisse, mercato]}}, answer: "Deux casiers vides le lundi. Le coach recompte sa liste à voix haute, devant toi."}
+    right: {label: "La paie partira le 12", effects: {caisse: "-", direction: "+", set: [salaires_retard], journal: {text: "{annee} : les salaires sont partis le 12. Le capitaine est venu regarder le calendrier.", poids: 2, tags: [caisse, vestiaire, salaires_retard]}}, answer: "La paie part le 12 au lieu du 1er. Le capitaine vient demander pourquoi ; tu lui montres le calendrier."}
+
+  - id: ds.alarme.caisse_bas_vialat
+    roles: [ds]
+    arc: caisse
+    tags: [caisse]
+    when: "gauges.caisse < 25"
+    text: "L'Inspectrice de la Commission refuse la chaise et ouvre un cahier quadrillé sur ton bureau : « Vingt-quatre contrats ; vos recettes en paient dix-neuf. Lesquels rompez-vous avant janvier ? »"
+    left: {label: "Trois, avant Noël", effects: {caisse: "+++", vestiaire: "--"}, answer: "Trois casiers vides avant Noël. Elle recompte devant toi, à voix basse, et referme le cahier."}
+    right: {label: "Écrivez votre lettre", effects: {caisse: "-", vestiaire: "+", set: [commission_lettre], journal: {text: "{annee} : la lettre de la Commission est arrivée un mardi, au nom de {nom}, avec accusé de réception.", poids: 3, tags: [caisse, commission_lettre]}}, answer: "La lettre arrive un mardi, en recommandé : quinze jours pour répondre. Dans le vestiaire, personne ne part."}
+
+  # ═════════════════════ Masse salariale (CAISSE) haute — le roi du mercato
+  - id: ds.alarme.caisse_haut_fardelli
+    roles: [ds]
+    arc: mercato
+    tags: [agents, caisse]
+    speaker: fardelli
+    when: "gauges.caisse > 75"
+    text: "Fardelli fait tourner sa gourmette, assis sur le coin de ton bureau : « Tu as vendu tout le monde cet été. Les ventes ont des frais, et les frais ont des cousins. Je mets une ligne ? »"
+    left: {label: "Pas de ligne", effects: {caisse: "--", direction: "+", relation: {fardelli: -1}}, answer: "Il range sa serviette lentement, pour que tu le voies. « On en reparle en janvier. » Il en reparle en janvier."}
+    right: {label: "Mettez la ligne", effects: {caisse: "+", vestiaire: "--", relation: {fardelli: 1}, set: [commission_occulte], journal: {text: "{annee} : une ligne « conseil extérieur » au bas d'un contrat de vente. Pas de nom, un numéro de compte.", poids: 3, tags: [agents, caisse, commission_occulte]}}, answer: "Une ligne « conseil extérieur » au bas de la page dix. Pas de nom ; un numéro de compte."}
+
+  - id: ds.alarme.caisse_haut_mere_mbako
+    roles: [ds]
+    arc: mercato
+    tags: [agents, caisse]
+    speaker: mere_mbako
+    when: "gauges.caisse > 75"
+    text: "La mère de Mbako pose son carnet sur ton bureau : vingt noms, vingt joueurs qu'elle représente, l'heure de chaque appel. « Trois pour cent sur chaque vente. C'est la règle, maintenant. »"
+    left: {label: "Je réinvestis au centre", effects: {caisse: "--", vestiaire: "+"}, answer: "L'argent des ventes repart dans les terrains du centre. Elle inscrit la date, l'heure, et « refus »."}
+    right: {label: "Va pour trois pour cent", effects: {caisse: "+", tribunes: "--", relation: {mere_mbako: 1}}, answer: "Elle écrit le chiffre au stylo, devant toi. Le lendemain, deux autres agents réclament la même règle."}
+
+  - id: ds.alarme.caisse_haut_josiane
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, mercato]
+    speaker: josiane
+    when: "gauges.caisse > 75"
+    text: "Madame Josiane a refait le compte des ventes à la règle, deux fois : « Le budget de trois clubs, {toi}. Le président a déjà demandé si l'on pouvait acheter un car neuf. Et un second. »"
+    left: {label: "Je rachète des joueurs", effects: {caisse: "--", vestiaire: "+"}, answer: "Trois arrivées en une semaine. Le coach découvre qu'on peut aussi lui acheter quelqu'un."}
+    right: {label: "On garde tout", effects: {caisse: "+", tribunes: "--"}, answer: "L'argent dort à la banque. Le virage, lui, fait ses comptes : vendus, achetés, et la différence."}

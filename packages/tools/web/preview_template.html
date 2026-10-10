@@ -1713,7 +1713,19 @@ __VILLE_CSS__
       card.classList.add("pop");
       if (c.kind === "alarme") setTimeout(function () { card.classList.remove("pop"); void card.offsetWidth; card.classList.add("shake"); }, 200);
     }
+    ajusterCarte();
   }
+  // Sur un petit écran, un texte de scène long poussait les choix et le bandeau
+  // hors de l'écran : l'illustration rapetisse (jamais sous 180 px), et le texte,
+  // les choix et le bandeau restent entiers, sans qu'on ait à faire défiler.
+  function ajusterCarte() {
+    var gs = $("gameScreen"), st = $("cardwrap");
+    gs.style.removeProperty("--carte");
+    if (gs.hidden || st.hidden || !st.offsetParent) return;
+    var trop = Math.ceil(gs.getBoundingClientRect().height - window.innerHeight);
+    if (trop > 0) gs.style.setProperty("--carte", Math.max(180, st.offsetWidth - trop) + "px");
+  }
+  window.addEventListener("resize", function () { if (view && !view.over) ajusterCarte(); });
   function mkAct(cls, label, before, after, on) {
     var b = document.createElement("button");
     b.className = cls; b.type = "button";

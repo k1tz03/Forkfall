@@ -164,6 +164,16 @@ postulats:
           # l'intrigue était seule à être listée. `min_season` est passé de 2 à
           # 1 dans l'arc : Gigi range ses gants en S0, il parle dès la S1.
           - { arc: en.gigi_staff,          poids: 6.0, if: "flag('gigi_staff') || flag('vecchio_promis') || flag('gardien_jeune')" }
+          # Les sponsors (content/arcs/*/sponsors_louches.yaml) : dès la S1, en fin de pool
+          # (la réserve et la cadence forcée lisent l'ordre du fichier). Trois sur les cinq
+          # de l'entraîneur : le réservoir est à somme nulle — chaque ouverture d'un sponsor
+          # est prise à une autre intrigue — et en.retour_mbako tient à peine son plancher de
+          # 10 %. Les biscuits Dornois (une parole contre la canette du fonds) et la maquette
+          # (le président) sont des histoires de promu ; le laboratoire et la dette de Gigi
+          # vont à l'intérimaire. Poids d'arc 0,4 : la cadence forcée les ouvre peu.
+          - { arc: en.sp.dornois,          poids: 0.5, if: "gauges.caisse < 60" }
+          - { arc: en.sp.terrain,          poids: 0.5 }
+          - { arc: co.sp.rideau,           poids: 0.45, if: "gauges.tribunes >= 40" }
       "2+":
         # 4 → 3, même raison qu'en "1" (et remède nommé par le lot : « envisager
         # `prendre: 3` en "2+" — la couverture a de la marge »). Contrepartie
@@ -387,6 +397,12 @@ postulats:
           # Manquent encore au pool "1" de la bible : co.derby et co.pharmacie,
           # écrites côté joueur seulement (roles: [joueur], postulats:
           # [fin_de_contrat]) ; à remettre ici dès que leur versant banc existe.
+          # Les sponsors (content/arcs/*/sponsors_louches.yaml), dès la S1 : le laboratoire
+          # (Vukić), la dette de Gigi (le réseau de paris) et le Rideau Rouge. Pas les
+          # biscuits ni la maquette : en.nassir_proprietaire est à 12 % de couverture ici.
+          - { arc: en.sp.labo,             poids: 0.55 }
+          - { arc: en.sp.gigi,             poids: 0.7 }
+          - { arc: co.sp.rideau,           poids: 0.45, if: "gauges.tribunes >= 40" }
       "2+":
         prendre: 3
         fenetre: [1, 11]
@@ -637,6 +653,12 @@ postulats:
           # troisième du pool, il était la réserve du bucket dès que la clause et
           # le bac étaient tirés (la réserve lit l'ordre du fichier).
           - { arc: jp.exil_dore,     poids: 0.38, if: "relation.nassir >= 0 || year >= 1999" }
+          # Les sponsors (content/arcs/*/sponsors_louches.yaml), dès la S1 : le garage du
+          # Pont et les crampons Bourrel (propres), la table du jeudi et le Rideau Rouge.
+          - { arc: jp.sp.garage,           poids: 0.24 }
+          - { arc: jp.sp.bourrel,          poids: 0.2 }
+          - { arc: jp.sp.tripot,           poids: 0.22 }
+          - { arc: co.sp.rideau,           poids: 0.32, if: "gauges.tribunes >= 40" }
       "2+":
         # Mesuré : à `prendre: 3` la couverture moyenne descend bien (58 → 55 %),
         # mais le pool des saisons tardives se vide et la cadence forcée ouvre le
@@ -832,6 +854,11 @@ postulats:
           - { arc: jp.pari,              poids: 1.2, if: "gauges.caisse < 55" }
           - { arc: jp.exil_dore,         poids: 1.3 }   # 0,9 → 1,3 : 16 % de ses ouvertures venaient du forçage (plafond 15 %)
           - { arc: jp.vestiaire_porte,   poids: 0.9, if: "gauges.vestiaire >= 55" }
+          # Les sponsors (content/arcs/joueur/sponsors_louches.yaml) : la table du jeudi
+          # seule, et en S1 seulement. C'est le réservoir le plus serré (jp.pari,
+          # jp.diplome_joueur, jp.vecchio_exemple à 9-11 %) : ouverte en S2+, elle faisait
+          # passer le diplôme et le rituel de Gigi sous le plancher (mesuré à 6 000 carrières).
+          - { arc: jp.sp.tripot,           poids: 1.6, if: "season <= 1" }
       "2+":
         # 5 → 4. Le passage à 5 visait l'écart de cadence des saisons tardives
         # (« max 6 pour un budget de 4 ») : mesuré à 2 000 et 5 000 carrières, il

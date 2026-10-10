@@ -72,6 +72,14 @@
 ///   s'arment que sur des drapeaux que pose la ville (`vl_*`, `bn_*`, `sp_*`),
 ///   et les nouveaux rôles ont leurs postulats à eux. Seule l'empreinte du
 ///   contenu change (`--goldens --write`, sans `--recode`).
+/// · **Les sponsors louches dans les programmes** (lot « sponsors »). Onze
+///   entrées s'ajoutent au bucket de première saison des quatre postulats
+///   livrés (les biscuits Dornois, le laboratoire, la maquette, la dette de
+///   Gigi, le Rideau Rouge, la voiture du garage du Pont, les crampons Bourrel,
+///   la table du jeudi) : le réservoir est plus large, le tirage d'ouverture
+///   tombe ailleurs, et dix carrières sur vingt racontent autre chose. Les
+///   swipes ont toujours un sens (même calendrier) : mêmes codes,
+///   `--goldens --write` sans `--recode`, et les vingt atteignent une fin.
 library;
 
 import 'dart:io';

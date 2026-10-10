@@ -264,7 +264,32 @@
     VW = Math.ceil(W / k); VH = Math.ceil(H / k);
     cv.width = VW; cv.height = VH;
     ctx.imageSmoothingEnabled = false;
+    mesurerUI();
   }
+
+  // La bande de ville : ce que l'interface laisse voir entre le haut (menu, rail,
+  // l'heure) et le bas (le rendez-vous, les actions, le bandeau). Mesurée quand
+  // une taille change ; la caméra y centre le héros, la flèche et les noms des
+  // lieux s'y tiennent, et les deux dégradés s'arrêtent où l'interface s'arrête.
+  var UI = { haut: 0, bas: 0, decal: 0 };
+  function mesurerUI() {
+    var gs = $("gameScreen"), hud = $("villeHud");
+    if (carteOn || !gs || !hud || !hud.offsetParent) return;
+    var H = window.innerHeight, haut = 0, bas = H;
+    [gs.querySelector(".menu"), $("rail"), hud].forEach(function (e) {
+      if (e && e.offsetParent) haut = Math.max(haut, e.getBoundingClientRect().bottom);
+    });
+    [$("villeBas"), gs.querySelector(".v-actions"), $("bandeau")].forEach(function (e) {
+      if (!e || !e.offsetParent) return;
+      var r = e.getBoundingClientRect();
+      if (r.height > 0) bas = Math.min(bas, r.top);
+    });
+    UI.haut = Math.round(haut); UI.bas = Math.round(H - bas); UI.decal = (UI.haut - UI.bas) / 2;
+    var st = document.documentElement.style;
+    st.setProperty("--v-haut", UI.haut + "px"); st.setProperty("--v-bas", UI.bas + "px");
+  }
+  // où regarde la caméra : le héros, au milieu de la bande de ville
+  function visee() { var p = versImage(heros.x, heros.y, ZSOL + 8); return [p[0], p[1] - UI.decal / k]; }
 
   // ─────────────────────────────────────────────────────────────── les gens
   // Un sprite : rangées de caractères + palette (sprites.json, tirés du moteur voxel).
@@ -944,8 +969,10 @@
       el.classList.toggle("muet", b.muet);
     }
     el.hidden = false;
-    var W = VW * k, bw = el.offsetWidth || 220;
-    var sx = clamp(b.g.tete[0] * k, bw / 2 + 8, W - bw / 2 - 8), sy = Math.max(b.g.tete[1] * k - 6, el.offsetHeight + 70);
+    // dans la bande de ville : jamais sous le rail ni sous les actions
+    var W = VW * k, bw = el.offsetWidth || 220, bh = el.offsetHeight || 60;
+    var sx = clamp(b.g.tete[0] * k, bw / 2 + 8, W - bw / 2 - 8);
+    var sy = Math.max(Math.min(b.g.tete[1] * k - 6, VH * k - UI.bas - 10), UI.haut + bh + 12);
     el.style.left = Math.round(sx) + "px"; el.style.top = Math.round(sy) + "px";
   }
 
@@ -1273,7 +1300,7 @@
     dernier = ts;
     if (!occupe && !carteOn) { majMarche(dt); majPassants(dt, ts); majActeurs(dt, ts); }
     // la caméra suit le héros, sauf si on l'a déplacée à la main
-    var p = versImage(heros.x, heros.y, ZSOL + 8);
+    var p = visee();
     if (!cam.libre) { cam.x += (p[0] - cam.x) * Math.min(1, dt * 6); cam.y += (p[1] - cam.y) * Math.min(1, dt * 6); }
     dessiner(ts);
     placerEtiquettes();
@@ -1321,39 +1348,42 @@
 
   // ─────────────────────────────────────────────────────────────── les étiquettes
   var etiquettes = {}, fleche = null;
+  function chevauche(b, pris, bb) {
+    function sur(p) { return b[0] < p[2] + 2 && b[2] > p[0] - 2 && b[1] < p[3] + 2 && b[3] > p[1] - 2; }
+    return (bb && sur(bb)) || pris.some(sur);
+  }
+  function boiteBulle() {
+    var el = $("villeBulle");
+    if (!el || el.hidden) return null;
+    var x = parseFloat(el.style.left) || 0, y = parseFloat(el.style.top) || 0, w = el.offsetWidth, h = el.offsetHeight;
+    return [x - w / 2, y - h - 6, x + w / 2, y];
+  }
   function placerEtiquettes() {
     var couche = $("villeCouche");
     if (!couche) return;
     majBulle();
     var x0 = cam.x - VW / 2, y0 = cam.y - VH / 2;
     var hc = caseDe(heros.x, heros.y), cible = rdvVisible() ? rdv.lieu : null;
-    var vus = {};
+    var vus = {}, cands = [];
     for (var i = 0; i < L.places.length; i++) {
       var l = L.places[i];
       if (!l.door) continue;
       var sx = (l.u - x0) * k, sy = (l.v - y0) * k;
-      var dedans = sx > -40 && sy > 30 && sx < VW * k + 40 && sy < VH * k + 40;
+      // dans la bande de ville seulement : un nom sous le rail ou sous les actions
+      // serait invisible, et on le toucherait quand même
+      var dedans = sx > -40 && sy > UI.haut + 26 && sx < VW * k + 40 && sy < VH * k - UI.bas + 4;
       var dist = Math.abs(l.door[0] - hc[0]) + Math.abs(l.door[1] - hc[1]);
       var montrer = dedans && (l.key === cible || dist < 34 || (k <= 1 && TEXTE_LIEU[l.key]));
-      if (!montrer) continue;
-      vus[l.key] = 1;
-      var e = etiquettes[l.key];
-      if (!e) {
-        e = document.createElement("button");
-        e.type = "button"; e.className = "v-lieu";
-        e.addEventListener("click", (function (cle) { return function (ev) { ev.stopPropagation(); allerAuLieu(cle); }; })(l.key));
-        couche.appendChild(e); etiquettes[l.key] = e;
-      }
-      var nm = nomLieu(l);
-      if (e.textContent !== nm) e.textContent = nm;
-      var ew = e.offsetWidth || 90;
-      e.style.left = Math.round(clamp(sx, ew / 2 + 6, VW * k - ew / 2 - 6)) + "px"; e.style.top = Math.round(sy) + "px";
-      e.classList.toggle("rdv", l.key === cible);
-      e.classList.toggle("loin", dist >= 20 && l.key !== cible);
-      e.hidden = false;
+      if (montrer) cands.push({ l: l, sx: sx, sy: sy, dist: dist, rdv: l.key === cible });
     }
-    for (var key in etiquettes) if (!vus[key]) etiquettes[key].hidden = true;
-    // la flèche vers le rendez-vous, quand il est hors de l'écran
+    // Deux noms ne se chevauchent jamais : le rendez-vous d'abord, puis du plus
+    // proche au plus loin ; un nom qui tomberait sur un autre (ou sur la bulle de
+    // celui qui parle) monte d'un cran, ou descend, ou se tait. Il garde le cran
+    // de l'image d'avant tant qu'il y tient : les noms ne sautillent pas.
+    cands.sort(function (a, b) { return (b.rdv - a.rdv) || (a.dist - b.dist) || (a.l.key < b.l.key ? -1 : 1); });
+    var pris = [], bb = boiteBulle(), W = VW * k, bas = VH * k - UI.bas;
+    // la flèche vers le rendez-vous, quand il est hors de la bande : posée la
+    // première, au bord, dans la direction du lieu
     if (!fleche) {
       fleche = document.createElement("button");
       fleche.type = "button"; fleche.className = "v-fleche";
@@ -1361,19 +1391,57 @@
       couche.appendChild(fleche);
     }
     var L2 = cible && LIEU[cible];
-    if (L2 && !vus[cible]) {
-      var W = VW * k, H = VH * k, cx = W / 2, cy = H / 2;
+    if (L2 && !(cands.length && cands[0].rdv)) {
+      var H = VH * k, cx = W / 2, hb = H - UI.bas - 24, hh = UI.haut + 24;
+      var cy = (hh + hb) / 2, demi = Math.max(30, (hb - hh) / 2);
       var tx = (L2.u - x0) * k, ty = (L2.v - y0) * k, dx = tx - cx, dy = ty - cy;
-      var m = Math.max(Math.abs(dx) / (W / 2 - 70), Math.abs(dy) / (H / 2 - 150), 1);
-      fleche.style.left = Math.round(cx + dx / m) + "px"; fleche.style.top = Math.round(cy + dy / m) + "px";
+      var m = Math.max(Math.abs(dx) / (W / 2 - 70), Math.abs(dy) / demi, 1);
       var ang = Math.atan2(dy, dx), dir = ["→", "↘", "↓", "↙", "←", "↖", "↑", "↗"][(Math.round(ang / (Math.PI / 4)) + 8) % 8];
       var txt = dir + " " + nomLieu(L2);
-      if (fleche.textContent !== txt) fleche.textContent = txt;
-      fleche.hidden = false;
-      // la flèche entière dans l'écran, jamais coupée par un bord
-      var fw = fleche.offsetWidth || 120, fx = clamp(cx + dx / m, fw / 2 + 10, W - fw / 2 - 10);
-      fleche.style.left = Math.round(fx) + "px";
+      if (fleche.textContent !== txt) { fleche.textContent = txt; fleche.hidden = false; fleche._w = fleche.offsetWidth; fleche._h = fleche.offsetHeight; }
+      // la flèche entière dans l'écran, jamais coupée par un bord ; si la bulle
+      // de quelqu'un tombe dessus, elle glisse au-dessus ou au-dessous, ou se tait
+      // le temps qu'il parle
+      var fw = fleche._w || 120, fh = fleche._h || 24, fx = clamp(cx + dx / m, fw / 2 + 10, W - fw / 2 - 10), fy = null;
+      var essais = [cy + dy / m].concat(bb ? [bb[3] + fh / 2 + 6, bb[1] - fh / 2 - 6] : []);
+      for (var q = 0; q < essais.length && fy === null; q++) {
+        var y = essais[q], bf = [fx - fw / 2, y - fh / 2, fx + fw / 2, y + fh / 2];
+        if (y - fh / 2 >= UI.haut + 6 && y + fh / 2 <= H - UI.bas - 6 && !chevauche(bf, [], bb)) fy = y;
+      }
+      if (fy !== null) {
+        fleche.style.left = Math.round(fx) + "px"; fleche.style.top = Math.round(fy) + "px";
+        fleche.hidden = false;
+        pris.push([fx - fw / 2, fy - fh / 2, fx + fw / 2, fy + fh / 2]);
+      } else fleche.hidden = true;
     } else fleche.hidden = true;
+    for (var j = 0; j < cands.length; j++) {
+      var c = cands[j], e = etiquettes[c.l.key];
+      if (!e) {
+        e = document.createElement("button");
+        e.type = "button"; e.className = "v-lieu"; e._dy = 0;
+        e.addEventListener("click", (function (cle) { return function (ev) { ev.stopPropagation(); allerAuLieu(cle); }; })(c.l.key));
+        couche.appendChild(e); etiquettes[c.l.key] = e;
+      }
+      var nm = nomLieu(c.l);
+      if (e.textContent !== nm || e._rdv !== c.rdv) {
+        e.textContent = nm; e._rdv = c.rdv;
+        e.classList.toggle("rdv", c.rdv);
+        e.hidden = false; e._w = e.offsetWidth; e._h = e.offsetHeight;
+      }
+      e.classList.toggle("loin", c.dist >= 20 && !c.rdv);
+      var ew = e._w || 90, eh = e._h || 20, x = clamp(c.sx, ew / 2 + 6, W - ew / 2 - 6);
+      var crans = c.rdv ? [0] : [e._dy, 0, -(eh + 3), eh + 3, -2 * (eh + 3)], place = null;
+      for (var n = 0; n < crans.length && !place; n++) {
+        var t = c.sy + crans[n], boite = [x - ew / 2, t - eh, x + ew / 2, t];
+        if (!c.rdv && (t - eh < UI.haut + 6 || t > bas)) continue;
+        if (c.rdv || !chevauche(boite, pris, bb)) place = { t: t, dy: crans[n], boite: boite };
+      }
+      if (!place) continue;
+      pris.push(place.boite); vus[c.l.key] = 1; e._dy = place.dy;
+      e.style.left = Math.round(x) + "px"; e.style.top = Math.round(place.t) + "px";
+      e.hidden = false;
+    }
+    for (var key in etiquettes) if (!vus[key]) etiquettes[key].hidden = true;
   }
 
   // ─────────────────────────────────────────────────────────────── où va une carte
@@ -1502,7 +1570,7 @@
     decorAilleurs(vue);
     $("gameScreen").classList.add("carte-on");
     $("villeVoile").classList.add("on");
-    document.body.classList.add("v-carte");
+    document.body.classList.add("v-en-scene");
     if (rdv) {
       if (rdv.type === "normal" || rdv.type === "prologue") S.cartesSemaine += (rdv.type === "normal" ? 1 : 0);
       if (rdv.qui) S.vus[rdv.qui] = 1;
@@ -1517,7 +1585,7 @@
     decorAilleurs(null);
     $("gameScreen").classList.remove("carte-on");
     $("villeVoile").classList.remove("on");
-    document.body.classList.remove("v-carte");
+    document.body.classList.remove("v-en-scene");
   }
   // Ce qui se passe quand l'heure du rendez-vous est passée : on vient te
   // chercher, ou la scène a lieu (le match, l'événement, le dimanche).
@@ -1600,7 +1668,7 @@
     if (r.type === "match" && vue && vue.card && vue.card.beatKind === "cup") sous = "La Coupe · " + nomLieu(l);
     fonduTexte(titre, sous, r.sombre ? "" : "", function () {
       poser(c[0], c[1]); S.lieu = l.key;
-      var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
+      var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
       recaler();
       figurants = [];
       var f = FIGURANTS[l.key];
@@ -1661,7 +1729,7 @@
       while (S.tranche !== 1 || !S._dormi) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); S._dormi = true; } }
       S._dormi = false;
       S.energie = 45; S.faim = clamp(S.faim, 10, 100);
-      var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
+      var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
       recaler();
     }, function () { majHud(); sauver(); echeance(); });
   }
@@ -1861,13 +1929,13 @@
     var h = $("villeHud");
     if (!h || !S) return;
     h.querySelector(".v-temps b").textContent = JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]];
-    h.querySelector(".v-temps span").textContent = "Semaine " + S.semaine + " · " + moisCourant();
+    h.querySelector(".v-temps span").textContent = "Sem. " + S.semaine + " · " + moisCourant();
     var be = h.querySelector(".v-energie"), bf = h.querySelector(".v-faim");
     be.querySelector("u").style.width = S.energie + "%"; be.classList.toggle("bas", S.energie <= 20);
     bf.querySelector("u").style.width = S.faim + "%"; bf.classList.toggle("bas", S.faim <= 15);
     var fr = h.querySelector(".v-francs");
     fr.textContent = argent(S.francs); fr.classList.toggle("bas", S.francs < 100);
-    var r = h.querySelector(".v-rdv");
+    var hb = $("villeBas"), r = hb.querySelector(".v-rdv");
     if (rdv && !rdv.sombre && rdv.lieu !== "ici" && rdv.lieu !== "rue" && LIEU[rdv.lieu]) {
       var qui = rdv.qui ? nomDe(rdv.qui) : "On";
       var ou = nomLieu(LIEU[rdv.lieu]);
@@ -1878,7 +1946,7 @@
       else txt = "<b>" + esc(qui) + "</b> t'attend · " + esc(ou) + " · avant " + esc(quand(rdv.fin));
       r.innerHTML = txt; r.hidden = false;
     } else r.hidden = true;
-    var mh = h.querySelector(".v-mi-hud"), sm = S.mission, m = sm && MISSION[sm.id];
+    var mh = hb.querySelector(".v-mi-hud"), sm = S.mission, m = sm && MISSION[sm.id];
     if (m && !sm.offre && LIEU[sm.lieu]) {
       mh.innerHTML = "<b>" + esc(m.titre) + "</b> · " + esc(nomLieu(LIEU[sm.lieu])) + (sm.tranches && sm.tranches.length ? ", " + esc(sm.tranches.map(function (t) { return TRANCHE_MOT[t].toLowerCase(); }).join(" ou ")) : "") + " · avant " + esc(quand(sm.jusqua));
       mh.hidden = false;
@@ -1950,7 +2018,7 @@
     occupe = true;
     fonduTexte("L'hélicoptère", nomLieu(l), "Le pilote ne pose pas de questions. Aubérive tient dans le hublot.", function () {
       var c = centre(l.door); poser(c[0], c[1]);
-      var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
+      var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
       recaler();
     }, function () { occupe = false; arriver(cle); });
   }
@@ -2092,11 +2160,13 @@
     var hud = document.createElement("div"); hud.className = "v-hud"; hud.id = "villeHud";
     hud.innerHTML = '<div class="v-temps"><b></b><span></span></div>' +
       '<div class="v-corps"><div class="v-besoin v-energie"><i>Énergie</i><div class="barre"><u></u></div></div>' +
-      '<div class="v-besoin v-faim"><i>Faim</i><div class="barre"><u></u></div></div><div class="v-argent"><div class="v-francs"></div><span class="v-gain" aria-live="polite"></span></div></div>' +
-      '<p class="v-rdv" hidden></p><p class="v-rdv v-mi-hud" hidden></p>';
+      '<div class="v-besoin v-faim"><i>Faim</i><div class="barre"><u></u></div></div><div class="v-argent"><div class="v-francs"></div><span class="v-gain" aria-live="polite"></span></div></div>';
     var rail = $("rail");
     rail.parentNode.insertBefore(hud, rail.nextSibling);
     var espace = document.createElement("div"); espace.className = "v-espace";
+    // le rendez-vous et la mission en cours, au-dessus du bouton qui y mène
+    var basHud = document.createElement("div"); basHud.className = "v-bas"; basHud.id = "villeBas";
+    basHud.innerHTML = '<p class="v-rdv" hidden></p><p class="v-rdv v-mi-hud" hidden></p>';
     var actions = document.createElement("div"); actions.className = "v-actions";
     actions.innerHTML = '<button type="button" id="villePlan">' + icone("carte", 15) + 'Plan</button>' +
       '<button type="button" id="villeAttendre">' + icone("horloge", 15) + 'Attendre</button>' +
@@ -2104,7 +2174,12 @@
       '<button type="button" id="villeRdv">' + icone("fleche", 15) + 'Y aller</button>';
     var bandeau = $("bandeau");
     gs.insertBefore(espace, bandeau);
+    gs.insertBefore(basHud, bandeau);
     gs.insertBefore(actions, bandeau);
+    if (window.ResizeObserver) {
+      var ro = new ResizeObserver(function () { mesurerUI(); });
+      [hud, basHud, actions, bandeau, rail].forEach(function (e) { ro.observe(e); });
+    }
     var porte = document.createElement("div"); porte.className = "v-porte"; porte.id = "villePorte"; porte.setAttribute("role", "dialog"); porte.setAttribute("aria-label", "Le lieu");
     document.body.appendChild(porte);
     var fondu = document.createElement("div"); fondu.className = "v-fondu"; fondu.id = "villeFondu"; fondu.setAttribute("aria-live", "polite");
@@ -2200,7 +2275,7 @@
       dernierVu = rdv ? rdv.cle : "";
       lancer();
       poser(S.x, S.y);
-      var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1];
+      var p = visee(); cam.x = p[0]; cam.y = p[1];
       vue = coquille.reprendre(s.moteur, s.graine && s.graine.postulat, s.graine && s.graine.seed);
       acteurs = {};
       recaler();
@@ -2250,7 +2325,7 @@
         rdv = null; dernierVu = ""; figurants = []; passants = []; acteurs = {};
         lancer();
         var c = centre(LIEU[S.lieu].door); poser(c[0], c[1]);
-        var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1];
+        var p = visee(); cam.x = p[0]; cam.y = p[1];
         recaler();
         var club = (v.entities && v.entities.club) || "club", leClub = (/^[AEIOUYÉÈÊaeiouyéèê]/.test(club) ? "L'" : "Le ") + club;
         var accueil = S.lieu === "hotel" ? "L'hôtel de la Rive, une chambre sur le quai. La Fédération paie la note ; elle la relira." :
@@ -2318,7 +2393,7 @@
         var m = MISSION[val];
         S.mission = { id: m.id, etape: m.etapes[0].id, offre: true, lieu: m.donneur.lieu, jusqua: tNow() + 10 };
       }
-      if (quoi === "aller" && LIEU[val]) { var c = centre(LIEU[val].door); poser(c[0], c[1]); var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1]; recaler(); arriver(val); }
+      if (quoi === "aller" && LIEU[val]) { var c = centre(LIEU[val].door); poser(c[0], c[1]); var p = visee(); cam.x = p[0]; cam.y = p[1]; recaler(); arriver(val); }
       if (quoi === "tranche") { while (TRANCHES[S.tranche] !== val) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } majHud(); }
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu };
     },

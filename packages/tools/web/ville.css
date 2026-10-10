@@ -12,7 +12,11 @@
 
 :root{color-scheme:dark}
 body.ville-on{background:#0E0906}
-body.ville-on #device{background:transparent;position:relative;z-index:2}
+/* la colonne passe au-dessus de la ville, mais un doigt posé à travers elle
+   touche la ville (le canvas, les noms des lieux) : seuls ses écrans et ses
+   panneaux attrapent le geste */
+body.ville-on #device{background:transparent;position:relative;z-index:2;pointer-events:none}
+body.ville-on #device > *{pointer-events:auto}
 body.ville-on #titleScreen,body.ville-on #endingScreen{background:var(--fond)}
 
 #villeCanvas{
@@ -23,21 +27,23 @@ body.ville-on #titleScreen,body.ville-on #endingScreen{background:var(--fond)}
 #villeCanvas[hidden]{display:none}
 #villeCouche{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 #villeCouche[hidden]{display:none}
-body.v-carte #villeCouche{visibility:hidden}
+/* une scène est ouverte : la page porte `v-en-scene` (et non `v-carte`, la classe du plan) */
+body.v-en-scene #villeCouche{visibility:hidden}
 
 /* ── la colonne de jeu, transparente quand on marche ─────────────────────── */
 body.ville-on #gameScreen{background:transparent;pointer-events:none;position:relative}
 body.ville-on #gameScreen > *{pointer-events:auto}
 body.ville-on #gameScreen .menu,
 body.ville-on #gameScreen .jauges{position:relative;z-index:3}
-/* le haut et le bas de la colonne gardent un fond, pour qu'on lise le rail et le nom */
+/* le haut et le bas de la colonne gardent un fond, pour qu'on lise le rail et le nom ;
+   ville.js mesure où l'interface s'arrête (--v-haut, --v-bas) et le fondu s'arrête là */
 body.ville-on #gameScreen::before{
-  content:"";position:fixed;left:0;right:0;top:0;height:236px;z-index:0;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(20,13,8,.97) 0,rgba(20,13,8,.93) 72%,rgba(20,13,8,0) 100%);
+  content:"";position:fixed;left:0;right:0;top:0;height:calc(var(--v-haut,150px) + 22px);z-index:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(20,13,8,.96) 0,rgba(20,13,8,.9) calc(100% - 30px),rgba(20,13,8,0) 100%);
 }
 body.ville-on #gameScreen::after{
-  content:"";position:fixed;left:0;right:0;bottom:0;height:196px;z-index:0;pointer-events:none;
-  background:linear-gradient(to top,rgba(20,13,8,.96) 0,rgba(20,13,8,.88) 58%,rgba(20,13,8,0) 100%);
+  content:"";position:fixed;left:0;right:0;bottom:0;height:calc(var(--v-bas,130px) + 22px);z-index:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(20,13,8,.95) 0,rgba(20,13,8,.86) calc(100% - 30px),rgba(20,13,8,0) 100%);
 }
 body.ville-on #gameScreen > .bandeau{position:relative;z-index:3}
 
@@ -49,6 +55,7 @@ body.ville-on #gameScreen:not(.carte-on) > .une,
 body.ville-on #gameScreen:not(.carte-on) > .ruban,
 body.ville-on #gameScreen:not(.carte-on) > .controls{display:none}
 body.ville-on #gameScreen.carte-on > .v-hud,
+body.ville-on #gameScreen.carte-on > .v-bas,
 body.ville-on #gameScreen.carte-on > .v-actions{display:none}
 body.ville-on #gameScreen.carte-on > .answer,
 body.ville-on #gameScreen.carte-on > .scene-text,
@@ -71,32 +78,36 @@ body.ville-on #gameScreen.carte-on .v-espace{display:none}
 #villeVoile .v-ailleurs b{font-size:clamp(34px,8vw,84px);font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(242,232,206,.10);line-height:1}
 #villeVoile .v-ailleurs span{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,232,206,.22)}
 
-/* ── l'état de la ville, sous le rail ───────────────────────────────────── */
-.v-hud{position:relative;z-index:3;margin:10px 2px 0;display:flex;flex-direction:column;gap:7px;flex:0 0 auto}
-.v-hud .v-temps{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.v-hud .v-temps b{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--creme)}
-.v-hud .v-temps span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--creme3);white-space:nowrap}
-.v-corps{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:center}
-.v-besoin{display:flex;flex-direction:column;gap:3px;min-width:0}
-.v-besoin i{font-style:normal;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--creme3)}
-.v-besoin .barre{height:5px;background:var(--fond3);border-radius:3px;overflow:hidden}
-.v-besoin .barre u{display:block;height:100%;background:var(--creme2);border-radius:3px;transition:width 300ms ease}
+/* ── l'état de la ville, sous le rail : deux lignes, pas une de plus ──────── */
+.v-hud{position:relative;z-index:3;margin:4px 2px 0;display:flex;flex-direction:column;gap:5px;flex:0 0 auto}
+.v-hud .v-temps{display:flex;align-items:baseline;justify-content:space-between;gap:10px;white-space:nowrap;min-width:0;line-height:1.3}
+.v-hud .v-temps b{flex:0 0 auto;font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--creme)}
+.v-hud .v-temps span{min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--creme3)}
+.v-corps{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:center;line-height:1.2}
+.v-besoin{display:flex;align-items:center;gap:6px;min-width:0}
+.v-besoin i{flex:0 0 auto;font-style:normal;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--creme3)}
+.v-besoin .barre{flex:1 1 auto;min-width:24px;height:4px;background:var(--fond3);border-radius:2px;overflow:hidden}
+.v-besoin .barre u{display:block;height:100%;background:var(--creme2);border-radius:2px;transition:width 300ms ease}
 .v-besoin.bas .barre u{background:var(--framboise)}
 .v-besoin.bas i{color:#FF5C7F}
-.v-francs{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--creme);font-variant-numeric:tabular-nums;white-space:nowrap}
+.v-francs{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--creme);font-variant-numeric:tabular-nums;white-space:nowrap}
 .v-francs.bas{color:#FF5C7F}
+
+/* ── le rendez-vous et la mission, juste au-dessus du bouton qui y mène ──── */
+.v-bas{position:relative;z-index:3;display:flex;flex-direction:column;gap:4px;margin:0 0 6px;flex:0 0 auto}
 .v-rdv{
-  font-size:12px;font-style:italic;line-height:1.4;color:var(--creme2);
-  border-left:2px solid var(--framboise);padding:5px 8px 5px 9px;margin:0;
-  background:rgba(20,13,8,.82);border-radius:0 2px 2px 0;
+  font-size:11px;font-style:italic;line-height:1.32;color:var(--creme2);
+  border-left:2px solid var(--framboise);padding:4px 8px 4px 9px;margin:0;
+  background:rgba(20,13,8,.86);border-radius:0 2px 2px 0;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;
 }
 .v-rdv[hidden]{display:none}
 .v-rdv b{font-style:normal;color:var(--creme);font-weight:700;letter-spacing:.04em}
 
 /* ── les actions de la ville, au-dessus du bandeau ──────────────────────── */
-.v-actions{position:relative;z-index:3;display:flex;gap:8px;margin:0 0 10px;flex:0 0 auto}
+.v-actions{position:relative;z-index:3;display:flex;gap:8px;margin:0 0 6px;flex:0 0 auto}
 .v-actions button{
-  flex:1 1 0;min-height:44px;display:flex;align-items:center;justify-content:center;gap:7px;
+  flex:1 1 0;min-height:40px;display:flex;align-items:center;justify-content:center;gap:7px;
   font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--creme2);
   background:rgba(36,22,8,.92);border:1px solid var(--fond3);border-radius:3px;padding:0 8px;
   transition:color var(--t) linear,border-color var(--t) linear;
@@ -107,7 +118,7 @@ body.ville-on #gameScreen.carte-on .v-espace{display:none}
 
 /* ── le message du récit (ce que ton dernier choix a produit, ce qui arrive) ─ */
 .v-toast{
-  position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));z-index:5;
+  position:fixed;left:50%;bottom:calc(var(--v-bas,150px) + 10px);z-index:5;
   transform:translateX(-50%);width:min(386px,calc(100vw - 44px));
   background:rgba(20,13,8,.95);border-left:2px solid var(--framboise);
   padding:10px 12px;font-size:12.5px;font-style:italic;line-height:1.45;color:var(--creme);
@@ -306,7 +317,7 @@ body.ville-on #gameScreen.carte-on .menu button.v-z{visibility:hidden}
 
 /* ── la bulle : ce que dit celui qu'on a touché ─────────────────────────── */
 .v-bulle{
-  position:absolute;transform:translate(-50%,-100%);pointer-events:auto;cursor:pointer;
+  position:absolute;z-index:2;transform:translate(-50%,-100%);pointer-events:auto;cursor:pointer;
   max-width:min(300px,calc(100vw - 32px));width:max-content;
   background:rgba(242,232,206,.97);color:#1C120B;border-radius:3px;padding:8px 11px 9px;
   box-shadow:0 2px 0 rgba(0,0,0,.45);
@@ -330,4 +341,35 @@ body.ville-on #gameScreen.carte-on .menu button.v-z{visibility:hidden}
   .v-actions{gap:6px}
   .v-actions button{letter-spacing:.04em;padding:0 4px;gap:4px;font-size:10.5px}
   .v-actions button svg{width:13px;height:13px}
+}
+
+/* ── la ville prend l'écran : un haut et un bas serrés ──────────────────────
+   Sur un téléphone, le menu, le rail, l'heure, le rendez-vous et le bandeau
+   prenaient la moitié de la hauteur. La ville en a désormais les trois quarts :
+   le menu et le rail se serrent (les deux modes, pour que rien ne saute quand
+   une carte s'ouvre) ; quand on marche, le bandeau tient sur une ligne, le nom
+   et l'année, et la carte qui s'ouvre le rend en entier. */
+body.ville-on #gameScreen{padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+body.ville-on #gameScreen .menu{min-height:38px}
+body.ville-on #gameScreen .menu button{height:38px}
+body.ville-on #gameScreen .menu button svg{width:19px;height:19px}
+body.ville-on #gameScreen .jauges{padding-top:0}
+body.ville-on #gameScreen .gauge{gap:1px}
+body.ville-on #gameScreen .gauge .top{height:10px}
+body.ville-on #gameScreen .gauge .skull svg{width:10px;height:10px}
+body.ville-on #gameScreen .gauge .pic svg{width:28px;height:28px}
+body.ville-on #gameScreen .gauge .pulse{margin-top:2px}
+body.ville-on #gameScreen:not(.carte-on) > .bandeau{padding-top:6px}
+body.ville-on #gameScreen:not(.carte-on) > .bandeau .line{align-items:center}
+body.ville-on #gameScreen:not(.carte-on) > .bandeau .nom{font-size:12px}
+body.ville-on #gameScreen:not(.carte-on) > .bandeau .poste,
+body.ville-on #gameScreen:not(.carte-on) > .bandeau .etats{display:none}
+body.ville-on #gameScreen:not(.carte-on) > .bandeau .an svg{height:20px}
+/* un écran bas (un téléphone couché) : l'heure et les besoins sur une seule ligne */
+@media (max-height:560px){
+  .v-hud{flex-direction:row;align-items:center;gap:14px}
+  .v-hud .v-temps{flex:0 1 auto}
+  .v-hud .v-temps span{display:none}
+  .v-corps{flex:1 1 auto}
+  body.ville-on #gameScreen:not(.carte-on) > .bandeau{display:none}
 }

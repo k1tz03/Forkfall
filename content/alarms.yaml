@@ -67,3 +67,122 @@ alarms:
       # Porteur 3 (bible ch. 30 § 2.2) : la maison est payée, et le cousin a une idée.
       - { card: jp.alarme.caisse_haut_camille, when: "!flag('divorce')" }
       - { card: jp.alarme.caisse_haut_fardelli }
+  # ══ LES RÔLES DE BUREAU ET DE BANC NATIONAL (bible ch. 30 § 2.4, 2.6, 2.7) ══
+  # Les cartes : content/cards/{ds,president,selectionneur}/alarmes.yaml. Même
+  # règle que plus haut : le premier candidat vrai gagne, le dernier est sans
+  # `when`. Les porteurs nommés tournent (`!seen` : chacun parle une fois par
+  # carrière) et ont leur époque, prise dans le monde (Nouvelles datées, fiches
+  # des dix histoires) : Josiane au secrétariat du club avant 2008, Vaubourg
+  # patron avant 2020 et à la Ligue avant 2008, Gégé au virage, Vukić, Bréhaut,
+  # Fardelli avant 2020, Massenet avant 2030, Madame Aubert maire avant 2002 et
+  # ministre jusqu'en 2012, Berthomier à la Fédération avant 2008, Mbako
+  # capitaine de la sélection en 2004-2012. Le dernier porteur de chaque alarme
+  # n'a pas d'époque (une voix sans portrait, Léa, Ilyas, la mère de Mbako) :
+  # il tient de 1999 à 2050.
+  ds:
+    vestiaire.low:
+      # La variante tardive (S2+ ou Gigi au staff) : le staff mange à la cuisine.
+      - { card: ds.alarme.vestiaire_bas_vecchio, when: "(season >= 2 || flag('gigi_staff')) && year < 2020 && !seen('ds.alarme.vestiaire_bas_vecchio')" }
+      - { card: ds.alarme.vestiaire_bas_sabatier, when: "season >= 1 && year < 2015 && !seen('ds.alarme.vestiaire_bas_sabatier')" }
+      - { card: ds.alarme.vestiaire_bas_vukic, when: "year < 2020 && !seen('ds.alarme.vestiaire_bas_vukic')" }
+      - { card: ds.alarme.vestiaire_bas_coach }
+    vestiaire.high:
+      - { card: ds.alarme.vestiaire_haut_vukic, when: "year < 2020 && !seen('ds.alarme.vestiaire_haut_vukic')" }
+      - { card: ds.alarme.vestiaire_haut_josiane, when: "year < 2008 && !seen('ds.alarme.vestiaire_haut_josiane')" }
+      - { card: ds.alarme.vestiaire_haut_capitaine }
+    tribunes.low:
+      # La bâche d'abord (elle pose bache_ds) ; puis la presse.
+      - { card: ds.alarme.tribunes_bas_gege, when: "year < 2020 && !seen('ds.alarme.tribunes_bas_gege')" }
+      - { card: ds.alarme.tribunes_bas_meneche, when: "year < 2030 && !seen('ds.alarme.tribunes_bas_meneche')" }
+      - { card: ds.alarme.tribunes_bas_lea }
+    tribunes.high:
+      - { card: ds.alarme.tribunes_haut_gege, when: "year < 2020 && !seen('ds.alarme.tribunes_haut_gege')" }
+      - { card: ds.alarme.tribunes_haut_meneche }
+    direction.low:
+      - { card: ds.alarme.direction_bas_aulard, when: "year < 2020 && !seen('ds.alarme.direction_bas_aulard')" }
+      - { card: ds.alarme.direction_bas_josiane, when: "year < 2008 && !seen('ds.alarme.direction_bas_josiane')" }
+      - { card: ds.alarme.direction_bas_parking }
+    direction.high:
+      - { card: ds.alarme.direction_haut_aulard, when: "year < 2020 && !seen('ds.alarme.direction_haut_aulard')" }
+      - { card: ds.alarme.direction_haut_nassir }
+    caisse.low:
+      # La jauge fragile du rôle : le relevé du mois, puis l'Inspectrice (elle
+      # pose commission_lettre).
+      - { card: ds.alarme.caisse_bas_josiane, when: "year < 2008 && !seen('ds.alarme.caisse_bas_josiane')" }
+      - { card: ds.alarme.caisse_bas_vialat }
+    caisse.high:
+      - { card: ds.alarme.caisse_haut_fardelli, when: "year < 2020 && !seen('ds.alarme.caisse_haut_fardelli')" }
+      - { card: ds.alarme.caisse_haut_josiane, when: "year < 2008 && !seen('ds.alarme.caisse_haut_josiane')" }
+      # La mère de Mbako, agente de vingt joueurs : elle tient la jauge jusqu'au bout.
+      - { card: ds.alarme.caisse_haut_mere_mbako }
+  president:
+    vestiaire.low:
+      - { card: pr.alarme.vestiaire_bas_vukic, when: "season >= 1 && year < 2020 && !seen('pr.alarme.vestiaire_bas_vukic')" }
+      - { card: pr.alarme.vestiaire_bas_josiane, when: "year < 2008 && !seen('pr.alarme.vestiaire_bas_josiane')" }
+      - { card: pr.alarme.vestiaire_bas_brehaut, when: "year < 2020 && !seen('pr.alarme.vestiaire_bas_brehaut')" }
+      - { card: pr.alarme.vestiaire_bas_jardinier }
+    vestiaire.high:
+      - { card: pr.alarme.vestiaire_haut_brehaut, when: "year < 2020 && !seen('pr.alarme.vestiaire_haut_brehaut')" }
+      - { card: pr.alarme.vestiaire_haut_josiane, when: "year < 2008 && !seen('pr.alarme.vestiaire_haut_josiane')" }
+      - { card: pr.alarme.vestiaire_haut_coach }
+    tribunes.low:
+      - { card: pr.alarme.tribunes_bas_gege, when: "year < 2020 && !seen('pr.alarme.tribunes_bas_gege')" }
+      - { card: pr.alarme.tribunes_bas_meneche, when: "season >= 1 && year < 2030 && !seen('pr.alarme.tribunes_bas_meneche')" }
+      - { card: pr.alarme.tribunes_bas_capo }
+    tribunes.high:
+      # Quatre porteurs de la même tentation (ils posent tentation_mairie) : la
+      # maire tant qu'elle l'est, la presse, la maison, l'affiche.
+      - { card: pr.alarme.tribunes_haut_aubert, when: "year < 2002 && !seen('pr.alarme.tribunes_haut_aubert')" }
+      - { card: pr.alarme.tribunes_haut_meneche, when: "year < 2030 && !seen('pr.alarme.tribunes_haut_meneche')" }
+      - { card: pr.alarme.tribunes_haut_camille, when: "!flag('divorce') && !seen('pr.alarme.tribunes_haut_camille')" }
+      - { card: pr.alarme.tribunes_haut_affiche }
+    direction.low:
+      - { card: pr.alarme.direction_bas_nassir, when: "!seen('pr.alarme.direction_bas_nassir')" }
+      - { card: pr.alarme.direction_bas_fardelli, when: "season >= 1 && year < 2020 && !seen('pr.alarme.direction_bas_fardelli')" }
+      - { card: pr.alarme.direction_bas_convocation }
+    direction.high:
+      - { card: pr.alarme.direction_haut_aulard, when: "year < 2008 && !seen('pr.alarme.direction_haut_aulard')" }
+      - { card: pr.alarme.direction_haut_nassir }
+    caisse.low:
+      # La jauge fragile du rôle : le fonds propose, puis la Commission compte
+      # (elle pose commission_lettre).
+      - { card: pr.alarme.caisse_bas_nassir, when: "!seen('pr.alarme.caisse_bas_nassir')" }
+      - { card: pr.alarme.caisse_bas_vialat }
+    caisse.high:
+      - { card: pr.alarme.caisse_haut_brehaut, when: "year < 2020 && !seen('pr.alarme.caisse_haut_brehaut')" }
+      - { card: pr.alarme.caisse_haut_fardelli, when: "year < 2020 && !seen('pr.alarme.caisse_haut_fardelli')" }
+      - { card: pr.alarme.caisse_haut_banquier }
+  selectionneur:
+    vestiaire.low:
+      # La jauge fragile du rôle : le capitaine de l'époque, le vieux gardien,
+      # puis le capitaine sans nom, à minuit, avec sa feuille.
+      - { card: sl.alarme.vestiaire_bas_mbako, when: "year >= 2004 && year <= 2012 && !seen('sl.alarme.vestiaire_bas_mbako')" }
+      - { card: sl.alarme.vestiaire_bas_vecchio, when: "year < 2016 && !seen('sl.alarme.vestiaire_bas_vecchio')" }
+      - { card: sl.alarme.vestiaire_bas_capitaine }
+    vestiaire.high:
+      - { card: sl.alarme.vestiaire_haut_sabatier, when: "year < 2003 && !seen('sl.alarme.vestiaire_haut_sabatier')" }
+      - { card: sl.alarme.vestiaire_haut_secretaire, when: "!seen('sl.alarme.vestiaire_haut_secretaire')" }
+      - { card: sl.alarme.vestiaire_haut_kine }
+    tribunes.low:
+      - { card: sl.alarme.tribunes_bas_gege, when: "year < 2020 && !seen('sl.alarme.tribunes_bas_gege')" }
+      - { card: sl.alarme.tribunes_bas_meneche, when: "year < 2030 && !seen('sl.alarme.tribunes_bas_meneche')" }
+      - { card: sl.alarme.tribunes_bas_radio }
+    tribunes.high:
+      - { card: sl.alarme.tribunes_haut_aubert, when: "year >= 2002 && year < 2013 && !seen('sl.alarme.tribunes_haut_aubert')" }
+      - { card: sl.alarme.tribunes_haut_lea }
+    direction.low:
+      - { card: sl.alarme.direction_bas_legruet, when: "year < 2008 && !seen('sl.alarme.direction_bas_legruet')" }
+      - { card: sl.alarme.direction_bas_secretaire, when: "!seen('sl.alarme.direction_bas_secretaire')" }
+      - { card: sl.alarme.direction_bas_juriste }
+    direction.high:
+      - { card: sl.alarme.direction_haut_legruet, when: "year < 2008 && !seen('sl.alarme.direction_haut_legruet')" }
+      - { card: sl.alarme.direction_haut_meneche, when: "year < 2030 && !seen('sl.alarme.direction_haut_meneche')" }
+      - { card: sl.alarme.direction_haut_plan_de_table }
+    caisse.low:
+      - { card: sl.alarme.caisse_bas_legruet, when: "year < 2008 && !seen('sl.alarme.caisse_bas_legruet')" }
+      - { card: sl.alarme.caisse_bas_secretaire, when: "!seen('sl.alarme.caisse_bas_secretaire')" }
+      - { card: sl.alarme.caisse_bas_tresorier }
+    caisse.high:
+      - { card: sl.alarme.caisse_haut_fardelli, when: "year < 2020 && !seen('sl.alarme.caisse_haut_fardelli')" }
+      # Ilyas et la prime du sponsor (elle pose primes_sponsor) tiennent la jauge.
+      - { card: sl.alarme.caisse_haut_nassir }

@@ -1,0 +1,219 @@
+# Les manchettes génériques des rôles de bureau et de banc national : le
+# directeur sportif, le président de club pro, le sélectionneur (bible ch. 12
+# § 7, ch. 13 § 9, ch. 14 § 9, pour ce qui ne dépend d'aucune histoire).
+# Schéma et règles : en-tête de content/unes.yaml.
+#
+# Chaque rôle a deux manchettes de verdict (priorité 1, poids 2 : elles passent
+# devant les génériques de content/unes.yaml sans les faire taire), des
+# manchettes d'état (priorité 2 : une jauge, un drapeau qui dure) et des
+# manchettes de trace (priorité 3), qui ne lisent que ce qui s'est passé cette
+# saison (`journal_has`, la ligne d'Almanach de l'alarme porte le drapeau en
+# tag). Le sélectionneur n'écrit pas dans L'Écho de {ville} (sa « ville » est
+# un pays) : il a le Quotidien et la Gazette.
+unes:
+  # ------------------------------------------------------ directeur sportif
+  - id: une.ds.mercato_tenu
+    roles: [ds]
+    journal: quotidien
+    priority: 1
+    poids: 2
+    when: "bilan.tenu"
+    titre: "{NOM}, LE MERCATO QUI TIENT"
+    sous: "{club} termine {rang}e, objectif « {objectif} » tenu. Les recrues de l'été ont joué ; {pg, select, f{la directrice sportive} other{le directeur sportif}} n'a rien promis pour l'hiver."
+    sujet: bilan
+  - id: une.ds.sept_recrues
+    roles: [ds]
+    journal: gazette
+    priority: 1
+    poids: 2
+    when: "!bilan.tenu"
+    titre: "SEPT RECRUES, ET POUR QUOI ?"
+    sous: "{rang}e, objectif « {objectif} » manqué. {prenom} {nom} « assume le mercato ». Le Rosé, lui, assume un 5 sur 20."
+    sujet: bilan
+  - id: une.ds.lumiere
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "season >= 2"
+    titre: "À {VILLE}, LE BUREAU DU DS NE DORT PAS"
+    sous: "Rubrique « Au local » : la lumière {pg, select, f{de la directrice sportive} other{du directeur sportif}} s'éteint après minuit. On y voit passer plus d'agents que de joueurs ; {prenom} {nom} dit que c'est le métier."
+    sujet: mercato
+  - id: une.ds.masse
+    roles: [ds]
+    journal: quotidien
+    priority: 2
+    when: "gauges.caisse < 30"
+    titre: "{VILLE} PAIE PLUS QU'ELLE NE GAGNE"
+    sous: "La masse salariale de {club} dépasse les recettes de la saison. {prenom} {nom} annonce « des départs cet été » ; la banque, elle, n'annonce rien."
+    sujet: caisse
+  - id: une.ds.deux_portes
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "gauges.vestiaire < 30"
+    titre: "LE COACH ET LE DS NE SE PARLENT PLUS"
+    sous: "Deux portes au même étage, deux versions de la saison. Le capitaine a choisi la sienne ; {nom} n'était pas à la conférence de presse."
+    sujet: vestiaire
+  - id: une.ds.homme
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('homme_president') && gauges.direction >= 70"
+    titre: "{NOM}, LA CRÉATURE DU PRÉSIDENT"
+    sous: "{pg, select, f{Elle} other{Il}} signe ce que le beau-frère apporte, dit-on au club. Le jour où le président tombera, on saura qui tombe avec lui."
+    sujet: direction
+  - id: une.ds.bache
+    roles: [ds]
+    journal: gazette
+    priority: 3
+    when: "flag('bache_ds') && journal_has('bache_ds')"
+    titre: "« DS = DÉMISSION SPORTIVE », VINGT MÈTRES"
+    sous: "Le cousin de Gégé a fait un prix sur la toile ; Massenet a fait la photo. {prenom} {nom} « signera quelqu'un », assure son entourage."
+    sujet: ultras
+  - id: une.ds.frais
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    when: "flag('commission_occulte') && journal_has('commission_occulte')"
+    titre: "{VILLE} A DES FRAIS. QUI LES TOUCHE ?"
+    sous: "Une ligne « conseil extérieur » au bas d'un contrat de vente, sans nom, avec un numéro de compte. La Commission « regarde » ; {nom} ne regarde pas les photographes."
+    sujet: agents
+
+  # ------------------------------------------------------------------ président
+  - id: une.pr.rang_comptes
+    roles: [president]
+    journal: quotidien
+    priority: 1
+    poids: 2
+    when: "bilan.tenu"
+    titre: "{NOM} TIENT LE RANG ET LES COMPTES"
+    sous: "{rang}e en juin, objectif « {objectif} » tenu. Le conseil d'administration a applaudi, et l'a fait inscrire au procès-verbal."
+    sujet: bilan
+  - id: une.pr.chaise_vide
+    roles: [president]
+    journal: echo
+    priority: 1
+    poids: 2
+    when: "!bilan.tenu"
+    titre: "{VILLE} ATTEND {pg, select, f{SA PRÉSIDENTE} other{SON PRÉSIDENT}} AU LOCAL"
+    sous: "Objectif « {objectif} » manqué, {rang}e. Au local du virage, on a gardé une chaise pour {prenom} {nom}, devant, face à la tribune. Elle est restée vide."
+    sujet: bilan
+  - id: une.pr.loge_vide
+    roles: [president]
+    journal: gazette
+    priority: 2
+    when: "gauges.direction < 35"
+    titre: "LA LOGE ÉTAIT VIDE À {VILLE}"
+    sous: "Les actionnaires ont regardé le dernier match ailleurs. {prenom} {nom} était seul{pg, select, f{e} other{}} derrière la vitre, avec deux chaises et un serveur."
+    sujet: direction
+  - id: une.pr.siege
+    roles: [president]
+    journal: gazette
+    priority: 2
+    when: "gauges.tribunes < 30"
+    titre: "LE KOP CAMPE SOUS LES FENÊTRES DU SIÈGE"
+    sous: "Trente écharpes, un pot de colle, et la photo {pg, select, f{de la présidente} other{du président}} sur la porte, une par heure. {nom} « reçoit qui veut », mais pas sur le trottoir."
+    sujet: ultras
+  - id: une.pr.coffre
+    roles: [president]
+    journal: echo
+    priority: 2
+    when: "gauges.caisse >= 80"
+    titre: "UN COFFRE PLEIN, UN BANC COURT"
+    sous: "Rubrique « Au local » : {club} n'a jamais eu autant d'argent, ni aussi peu de remplaçants. {prenom} {nom} « réfléchit ». Le virage aussi."
+    sujet: caisse
+  - id: une.pr.mairie
+    roles: [president]
+    journal: quotidien
+    priority: 3
+    when: "flag('tentation_mairie') && journal_has('tentation_mairie')"
+    titre: "{NOM} NE DIT PAS NON À LA MAIRIE"
+    sous: "« Je ne dis pas non », a confié {pg, select, f{la présidente} other{le président}} de {club}. À la mairie, on « prend acte ». Au conseil d'administration, on prend des notes."
+    sujet: presse
+  - id: une.pr.lettre
+    roles: [president]
+    journal: quotidien
+    priority: 3
+    when: "flag('commission_lettre') && journal_has('commission_lettre')"
+    titre: "{VILLE} A DES DETTES. LA LETTRE EST LÀ"
+    sous: "Deux exercices négatifs, quinze jours de délai, des recrutements bloqués. {prenom} {nom} « tient jusqu'en juin » ; la Commission tient le calendrier."
+    sujet: caisse
+  - id: une.pr.visage
+    roles: [president]
+    journal: gazette
+    priority: 3
+    when: "flag('pantin') && journal_has('pantin')"
+    titre: "LE VISAGE DU FONDS, C'EST {NOM}"
+    sous: "Sa photo est accrochée dans le hall du fonds, à côté de celle d'Ilyas, même cadre. Le Rosé note le cadre 8 sur 20, {pg, select, f{la présidente} other{le président}} 4."
+    sujet: direction
+
+  # --------------------------------------------------------------- sélectionneur
+  - id: une.sl.merci
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 1
+    poids: 2
+    when: "bilan.tenu"
+    titre: "LE PAYS DIT MERCI À {NOM}"
+    sous: "{objectif} : tenu. Le pays a klaxonné jusqu'à deux heures du matin. {pg, select, f{La sélectionneuse} other{Le sélectionneur}} est rentré{pg, select, f{e} other{}} à pied, sans un mot pour les micros."
+    sujet: bilan
+  - id: une.sl.sa_liste
+    roles: [selectionneur]
+    journal: gazette
+    priority: 1
+    poids: 2
+    when: "!bilan.tenu"
+    titre: "LE PAYS A SA LISTE. ET {NOM} ?"
+    sous: "{objectif} : manqué. Au café, chacun a ses vingt-six noms ; aucune ne porte le nom {pg, select, f{de la sélectionneuse} other{du sélectionneur}}. Le Rosé : 4 sur 20."
+    sujet: bilan
+  - id: une.sl.bouillant
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 2
+    when: "gauges.tribunes >= 75"
+    titre: "LE PAYS : BOUILLANT"
+    sous: "Le visage de {prenom} {nom} dans les vitrines des boulangeries. Au ministère, on demande qui a donné l'autorisation."
+    sujet: tribunes
+  - id: une.sl.glacial
+    roles: [selectionneur]
+    journal: gazette
+    priority: 2
+    when: "gauges.tribunes < 30"
+    titre: "LE PAYS : GLACIAL"
+    sous: "Le maillot sifflé à domicile, l'hymne aussi. {nom} « ne lit pas les journaux » ; les journaux, eux, {pg, select, f{la} other{le}} lisent tous les jours."
+    sujet: tribunes
+  - id: une.sl.deux_tables
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 2
+    when: "gauges.vestiaire < 30"
+    titre: "DEUX TABLES AU DÎNER DE LA SÉLECTION"
+    sous: "Les cadres en bas, les jeunes en haut, et {pg, select, f{la sélectionneuse} other{le sélectionneur}} « au milieu », selon la Fédération. L'hôtel, lui, compte deux étages et une seule porte."
+    sujet: vestiaire
+  - id: une.sl.homme
+    roles: [selectionneur]
+    journal: gazette
+    priority: 2
+    when: "flag('homme_president') && gauges.direction >= 70"
+    titre: "{NOM} ROULE POUR LE PRÉSIDENT"
+    sous: "{pg, select, f{Elle} other{Il}} prend place dans la voiture officielle, raconte-t-on à la Fédération. Le Congrès dira le reste ; il a toujours dit le reste."
+    sujet: direction
+  - id: une.sl.prime
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('primes_sponsor') && journal_has('primes_sponsor')"
+    titre: "UNE PRIME QUE LA FÉDÉRATION IGNORE"
+    sous: "Le sponsor du maillot verse le 3 du mois. À qui, la Fédération « vérifie ». {prenom} {nom} n'a pas répondu à nos appels ; son avocat, si."
+    sujet: sponsors
+  # Le premier groupe des nations perdu : sans elle, la Une titrait sur le
+  # club et « le banc » (les manchettes génériques de descente, priorité 4).
+  - id: une.sl.groupe
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 4
+    when: "bilan.outcome == 'descente'"
+    titre: "LE PAYS QUITTE LE PREMIER GROUPE"
+    sous: "La sélection descend d'un étage au classement des nations, {rang}e sur dix-huit. {prenom} {nom} « assume » ; la Fédération réunit son bureau mardi."
+    sujet: bilan
