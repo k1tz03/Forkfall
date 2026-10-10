@@ -302,8 +302,8 @@
     var rows = def.rows, h = rows.length, w = rows[0].length;
     var miroir = !!opt.miroir, pas = opt.pas || 0, alpha = opt.alpha == null ? 1 : opt.alpha;
     if (alpha <= 0.02) return null;
-    var ax = miroir ? w - 1 - def.ax : def.ax;
-    var p = versImage(x, y, ZSOL), u0 = Math.round(p[0]), v0 = Math.round(p[1]);
+    var ax = miroir ? w - 1 - def.ax : def.ax, z = opt.z == null ? ZSOL : opt.z;
+    var p = versImage(x, y, z), u0 = Math.round(p[0]), v0 = Math.round(p[1]);
     var ox = u0 - Math.round(cam.x - VW / 2), oy = v0 - Math.round(cam.y - VH / 2);
     if (ox + w < -2 || oy < -2 || ox - w > VW + 2 || oy - h > VH + 2) return null;
     // l'ombre au sol
@@ -322,7 +322,7 @@
         var col = (pal && pal[ch]) || def.pal[ch];
         if (!col) continue;
         var px = u0 - ax + j, py = v0 - (h - 1) + i;
-        var ds = x + y + ZSOL + (h - 1 - i) / 2, sc = profondeur(px, py);
+        var ds = x + y + z + (h - 1 - i) / 2, sc = profondeur(px, py);
         var cache = sc && ds < sc - TOLERANCE;
         var o = (i * w + j) * 4;
         if (cache) {
@@ -584,6 +584,7 @@
       tr === 1 ? { passant: 3, passante: 3, ancien: 1, enfant: 1 } :
       { passant: 2, passante: 2, ancien: 2, enfant: 2, fan: 1 };
     if (S.jour === 5 && tr <= 2) poids.fan = 6;
+    if (S.sortieStade === tNow()) poids.fan = 8;
     if (S.jour === 6 && tr <= 1) poids.ancien = (poids.ancien || 0) + 2;
     var tot = 0, k;
     for (k in poids) tot += poids[k];
@@ -592,7 +593,7 @@
     return "passant";
   }
   function voulusPassants() {
-    var base = [9, 10, 10, 6, 3][S.tranche];
+    var base = [9, 10, 10, 6, 3][S.tranche] * (jourDeMatch() || S.sortieStade === tNow() ? 1.7 : 1);
     return clamp(Math.round(base * VW * VH / 180000), S.tranche === 4 ? 1 : 2, 22);
   }
   // Un passant : d'une porte ou du hors-champ, vers une porte ou le hors-champ.
@@ -603,6 +604,7 @@
       miroir: false, pas: 0, dist: Math.random() * 16, alpha: 1, arret: 0, gens: true, uid: ++UID };
     var portes = portesProches(), dep = null, depDedans = null, cleDep = null;
     if (enScene) dep = aLEcranAuHasard();
+    else if (S.sortieStade === tNow() && aPorte("stade") && Math.random() < 0.6) { cleDep = "stade"; dep = LIEU.stade.door.slice(); depDedans = dedans("stade"); }
     else if (portes.length && Math.random() < 0.5) { cleDep = auHasard(portes); dep = LIEU[cleDep].door.slice(); depDedans = dedans(cleDep); }
     else dep = horsChamp(null);
     if (!dep) return null;
@@ -613,7 +615,8 @@
     portes = portes || portesProches();
     var autres = portes.filter(function (c) { return c !== eviter && Math.abs(LIEU[c].door[0] - dep[0]) + Math.abs(LIEU[c].door[1] - dep[1]) > 8; });
     var arr, arrDedans = null;
-    if (autres.length && Math.random() < (q.trop ? 1 : 0.45)) { var c2 = auHasard(autres); arr = LIEU[c2].door.slice(); arrDedans = dedans(c2); }
+    if (jourDeMatch() && aPorte("stade") && eviter !== "stade" && Math.random() < (q.sp === "fan" ? 0.8 : 0.4)) { arr = LIEU.stade.door.slice(); arrDedans = dedans("stade"); }
+    else if (autres.length && Math.random() < (q.trop ? 1 : 0.45)) { var c2 = auHasard(autres); arr = LIEU[c2].door.slice(); arrDedans = dedans(c2); }
     else arr = horsChamp(dep);
     if (!arr) return false;
     var ch = chemin(dep, arr, true);
@@ -1299,9 +1302,10 @@
     var dt = dernier ? Math.min(0.05, (ts - dernier) / 1000) : 0;
     dernier = ts;
     if (!occupe && !carteOn) { majMarche(dt); majPassants(dt, ts); majActeurs(dt, ts); }
-    // la caméra suit le héros, sauf si on l'a déplacée à la main
+    if (MATCH) majMatch(dt, ts);
+    // la caméra suit le héros, sauf si on l'a déplacée à la main (ou si le match la tient)
     var p = visee();
-    if (!cam.libre) { cam.x += (p[0] - cam.x) * Math.min(1, dt * 6); cam.y += (p[1] - cam.y) * Math.min(1, dt * 6); }
+    if (!cam.libre && !MATCH) { cam.x += (p[0] - cam.x) * Math.min(1, dt * 6); cam.y += (p[1] - cam.y) * Math.min(1, dt * 6); }
     dessiner(ts);
     placerEtiquettes();
   }
@@ -1325,20 +1329,28 @@
       fondu = Math.min(1, fondu + 0.03);
       dessinerTuiles(amb, fondu);
     } else { amb0 = amb; fondu = 1; dessinerTuiles(amb, 1); }
+    // le panneau du mur est (le dernier score), la foule les jours de match
+    dessinerPanneau();
+    dessinerFoule(ts);
     // les gens, du fond vers l'avant (x + y croissant) ; on garde la boîte de
     // chacun, pour qu'un doigt puisse le toucher
     var gens = [];
     for (var i = 0; i < passants.length; i++) gens.push(passants[i]);
     for (var id in acteurs) gens.push(acteurs[id]);
     figurants.forEach(function (g) { gens.push(g); });
-    gens.push({ sp: S.role === "joueur" ? "joueur" : "coach", x: heros.x, y: heros.y, miroir: heros.miroir, pas: heros.pas, heros: true });
+    if (MATCH) {
+      gensDuMatch(gens);
+      // au match : l'entraîneur et le sélectionneur sur le banc ; le joueur est sur la pelouse ; les autres en loge
+      if (S.role === "entraineur" || S.role === "selectionneur") gens.push({ sp: "coach", x: STADE.banc[0], y: STADE.banc[1], miroir: true, pas: 0, heros: true });
+    } else gens.push({ sp: S.role === "joueur" ? "joueur" : "coach", x: heros.x, y: heros.y, miroir: heros.miroir, pas: heros.pas, heros: true });
     gens.sort(function (a, b) { return (a.x + a.y) - (b.x + b.y); });
     dessines = [];
     for (var j = 0; j < gens.length; j++) {
       var g = gens[j];
-      var bx = dessinerSprite(g.sp, g.x, g.y, { miroir: g.miroir, pas: g.pas, silhouette: !!g.heros, pal: g.pal, alpha: g.alpha });
+      if (g.ballon) { dessinerBallon(g); continue; }
+      var bx = dessinerSprite(g.sp, g.x, g.y, { miroir: g.miroir, pas: g.pas, silhouette: !!g.heros || !!g.silhouette, pal: g.pal, alpha: g.alpha, z: g.z });
       g.tete = bx ? bx.tete : null;
-      if (bx && !g.heros) { bx.g = g; dessines.push(bx); }
+      if (bx && !g.heros && !g.match) { bx.g = g; dessines.push(bx); }
     }
     // la marque du rendez-vous (jamais pour un événement sombre)
     var m = marqueRdv();
@@ -1361,6 +1373,12 @@
   function placerEtiquettes() {
     var couche = $("villeCouche");
     if (!couche) return;
+    if (MATCH) {
+      for (var cle0 in etiquettes) etiquettes[cle0].hidden = true;
+      if (fleche) fleche.hidden = true;
+      if ($("villeBulle")) $("villeBulle").hidden = true;
+      return;
+    }
     majBulle();
     var x0 = cam.x - VW / 2, y0 = cam.y - VH / 2;
     var hc = caseDe(heros.x, heros.y), cible = rdvVisible() ? rdv.lieu : null;
@@ -1460,7 +1478,7 @@
   // La semaine : deux ou trois cartes, et le samedi ne bouge pas.
   function planifier(v) {
     var c = v.card, maintenant = tNow(), bk = c.beatKind, lieu = lieuDe(c);
-    var r = { cle: cleVue(v), lieu: lieu, qui: c.speaker || null, type: "normal", debut: maintenant, fin: maintenant, force: "vient", sombre: false };
+    var r = { cle: cleVue(v), lieu: lieu, qui: c.speaker || null, type: "normal", debut: maintenant, fin: maintenant, force: "vient", sombre: false, beat: bk };
     function prochain(jour, tr, apresMaintenant) {
       var t = tDe(S.semaine, jour, tr);
       if (t < maintenant || (apresMaintenant && t === maintenant)) t += 35;
@@ -1680,6 +1698,584 @@
       occupe = false;
       setTimeout(montrerCarte, r.sombre ? 900 : 300);
     });
+  }
+
+  // ─────────────────────────────────────────────────────────────── le match
+  // Le samedi, la ville se rend au stade : les passants prennent le chemin des
+  // grilles, les deux tribunes se remplissent, vingt-deux joueurs entrent sur la
+  // pelouse. Le moteur joue un bloc de six journées d'un seul tirage (six
+  // lettres : V, N, D) ; la ville met en scène la dernière, celle d'aujourd'hui,
+  // chez nous. Le score se tire de la lettre, les buts et leurs minutes du
+  // score : pour l'écran seulement, sans toucher au moteur ni au Code de
+  // Carrière. Deux ou trois actions sont racontées à leur minute (les phrases
+  // de ville.yaml `match:`), la populaire se lève sur nos buts, et le panneau
+  // du mur est garde le résultat jusqu'au samedi suivant.
+  //
+  // Le stade (docs/design/pixel_iso/scene_quartier.js, posé en 330, 420 dans la
+  // zone, le monde 10 plus haut) : la pelouse (le but nord en y0), les gradins
+  // de la populaire à l'est (qui montent vers le mur, on y voit des dos) et de
+  // la tribune ouest (des visages), le panneau sur le mur est, côté rue.
+  var STADE = {
+    x0: 346, x1: 451, y0: 436, y1: 549, poteaux: [388, 409],
+    tribunes: [
+      { n: 6, x: function (k) { return 463.5 + 4 * k; }, z: function (k) { return 15 + 3 * k; }, y0: 458, y1: 553, pas: 2, dos: true, kop: true },
+      { n: 4, x: function (k) { return 335 + 3 * k; }, z: function (k) { return 14 + 2 * k; }, y0: 438, y1: 551, pas: 2.2, dos: false, kop: false }
+    ],
+    panneau: { x: 488.3, yG: 521, yD: 479, zH: 25 },
+    banc: [457, 497]
+  };
+  // le 4-4-2 de ceux qui défendent le but sud (a : la largeur, d'ouest en est ;
+  // b : la longueur, du but nord au but sud) ; les visiteurs le jouent en miroir
+  var ONZE = [[0.5, 0.95], [0.15, 0.8], [0.38, 0.84], [0.62, 0.84], [0.85, 0.8], [0.14, 0.63], [0.38, 0.66], [0.62, 0.66], [0.86, 0.63], [0.4, 0.5], [0.6, 0.49]];
+  var MAILLOTS = [
+    { t: [44, 74, 140], A: [44, 74, 140], w: [44, 74, 140], p: [232, 230, 222] },
+    { t: [214, 172, 44], A: [214, 172, 44], w: [214, 172, 44], p: [32, 30, 28] },
+    { t: [232, 230, 222], A: [232, 230, 222], w: [232, 230, 222], p: [32, 30, 28] },
+    { t: [46, 112, 64], A: [46, 112, 64], w: [232, 230, 222], p: [232, 230, 222] },
+    { t: [26, 26, 28], A: [26, 26, 28], w: [200, 64, 52], p: [26, 26, 28] }
+  ];
+  var DOMICILE = { p: [226, 220, 204], w: [214, 206, 190] };   // le Racing : bordeaux rayé, short blanc
+  var GARDIENS = [{ t: [70, 128, 74], A: [70, 128, 74], w: [70, 128, 74], p: [30, 30, 30] }, { t: [226, 128, 44], A: [226, 128, 44], w: [226, 128, 44], p: [30, 30, 30] }];
+  var ARBITRE = { t: [22, 22, 24], A: [22, 22, 24], w: [22, 22, 24], p: [22, 22, 24] };
+  var CHEVEUX_J = [{ y: [36, 26, 20], Y: [56, 41, 31] }, { y: [120, 84, 44], Y: [92, 64, 34] }, { y: [196, 156, 92], Y: [160, 122, 70] }, { y: [20, 16, 14], Y: [36, 28, 24] }, { y: [150, 150, 146], Y: [110, 110, 106] }];
+  var PEAUX_J = [{ s: [140, 97, 69], S: [107, 71, 51] }, { s: [219, 176, 140], S: [168, 122, 94] }, { s: [196, 150, 110], S: [150, 108, 78] }, { s: [96, 64, 44], S: [72, 46, 32] }];
+  var SCORES = { V: [[1, 0], [2, 0], [2, 1], [3, 1], [1, 0], [2, 1], [3, 0], [3, 2], [4, 1], [2, 0]], N: [[0, 0], [1, 1], [1, 1], [2, 2], [0, 0], [1, 1]], D: [[0, 1], [1, 2], [0, 2], [1, 3], [0, 1], [2, 3]] };
+  var MATCH = null;
+
+  // un dé qui ne bouge pas : la même carrière, le même samedi, le même score
+  function hache() {
+    var h = 2166136261;
+    for (var i = 0; i < arguments.length; i++) {
+      var s = String(arguments[i]);
+      for (var j = 0; j < s.length; j++) { h ^= s.charCodeAt(j); h = Math.imul(h, 16777619); }
+      h ^= 31; h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+  function de(graine) {
+    var a = graine >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) >>> 0;
+      var t = Math.imul(a ^ (a >>> 15), a | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function sansAccent(s) { return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  // « Olympique de Saint-Machin » → « Saint-Machin » : on parle d'un club par sa ville
+  var PREFIXES = /^(fc|ac|as|us|sc|rc|cs|es|ol|og|sa|ca|af|aj|ea|sco|stade|racing|club|olympique|sporting|athletic|union|association|sportive|sportif|real|entente|avenir|etoile|étoile|jeunesse|de|du|des|la|le|les|d|l)$/i;
+  function villeDuClub(nom) {
+    var mots = String(nom || "").replace(/[’']/g, "' ").split(/\s+/).filter(Boolean), i = 0;
+    while (i < mots.length - 1 && PREFIXES.test(mots[i].replace(/'$/, ""))) i++;
+    return mots.slice(i).join(" ").replace(/' /g, "'") || String(nom || "");
+  }
+  function surPanneau(nom) { return sansAccent(nom).toUpperCase().replace(/[^A-Z0-9 -]/g, "").trim().slice(0, 9).trim(); }
+
+  // le match d'aujourd'hui, tiré de la dernière lettre du bloc
+  function preparerMatch(v) {
+    var lettres = String(v.resultats || "").trim().split(/\s+/).filter(Boolean);
+    var lettre = lettres[lettres.length - 1] || "N";
+    var g = (coquille && coquille.graine && coquille.graine()) || {};
+    var r = de(hache(g.seed || 0, v.season, v.journee, v.blocs, lettres.join("")));
+    var sc = SCORES[lettre] || SCORES.N, s = sc[Math.floor(r() * sc.length)];
+    var autres = (v.standings || []).filter(function (x) { return !x.toi && x.club; });
+    var advNom = autres.length ? autres[Math.floor(r() * autres.length)].club : "les visiteurs";
+    var nous = (v.entities && v.entities.club) || v.club || "Racing Aubérive";
+    var M = {
+      lettre: lettre, lettres: lettres, gf: s[0], ga: s[1], r: r,
+      nous: nous, nousCourt: surPanneau(villeDuClub(nous)), adv: advNom, advVille: villeDuClub(advNom), advCourt: surPanneau(villeDuClub(advNom)),
+      maillot: MAILLOTS[Math.floor(r() * MAILLOTS.length)], role: v.role, journee: v.journee, rang: v.rank
+    };
+    M.ev = evenements(M.gf, M.ga, r);
+    distribuer(M, v);
+    return M;
+  }
+  // les buts et une occasion, à leur minute ; on en raconte trois au plus
+  function evenements(gf, ga, r) {
+    var ev = [], pris = {};
+    function minute(lo, hi) {
+      for (var k = 0; k < 40; k++) {
+        var m = lo + Math.floor(r() * (hi - lo + 1)), libre = true;
+        for (var d = -3; d <= 3; d++) if (pris[m + d]) libre = false;
+        if (libre) { pris[m] = 1; return m; }
+      }
+      return lo + Math.floor(r() * (hi - lo + 1));
+    }
+    for (var i = 0; i < gf; i++) ev.push({ t: "pour", m: minute(4, 88) });
+    for (var j = 0; j < ga; j++) ev.push({ t: "contre", m: minute(4, 88) });
+    if (gf + ga < 2) ev.push({ t: r() < 0.55 ? "poteau" : "arret", m: minute(9, 84) });
+    ev.sort(function (a, b) { return a.m - b.m; });
+    var a = 0, b = 0;
+    ev.forEach(function (e) { if (e.t === "pour") a++; if (e.t === "contre") b++; e.score = a + "-" + b; });
+    (ev.length <= 3 ? ev : [ev[0], ev[Math.floor(ev.length / 2)], ev[ev.length - 1]]).forEach(function (e) { e.dit = true; });
+    return ev;
+  }
+  // qui marque chez nous, qui garde nos buts : les visages de l'effectif à l'âge
+  // où ils jouent (ville.yaml `match.joueurs`), le protagoniste s'il est joueur,
+  // et sinon un poste (« ton avant-centre »)
+  function distribuer(M, v) {
+    var MD = D.match || {}, an = v.year || 1990, st = v.statuts || {}, r = M.r;
+    var gens = [], gardien = null;
+    (MD.joueurs || []).forEach(function (j) {
+      if (an < j.de || an > j.a || !CHARS[j.id]) return;
+      if (st[j.id] && st[j.id] !== "present") return;
+      if (j.gardien) gardien = nomDe(j.id); else gens.push(nomDe(j.id));
+    });
+    var postes = (MD.postes || ["ton avant-centre"]).slice();
+    M.gardien = gardien || MD.gardien || "ton gardien";
+    M.ev.forEach(function (e) {
+      if (e.t !== "pour" && e.t !== "poteau") return;
+      if (M.role === "joueur" && e.t === "pour" && r() < 0.45) { e.toi = true; return; }
+      var pool = gens.concat(gens).concat(postes);
+      e.qui = pool[Math.floor(r() * pool.length)];
+    });
+  }
+  // une phrase, la moins dite d'abord, et ses trous remplis (« de le numéro 9 » → « du numéro 9 »)
+  function phraseMatch(type, M) {
+    var T = ((D.match && D.match.textes) || {})[type] || [], ok = [];
+    for (var i = 0; i < T.length; i++) if (siVrai(T[i].si)) ok.push(i);
+    if (!ok.length) return "";
+    S.phrasesMatch = S.phrasesMatch || {};
+    var cle = function (i) { return type + ":" + i; };
+    var min = Infinity;
+    ok.forEach(function (i) { min = Math.min(min, S.phrasesMatch[cle(i)] || 0); });
+    var pool = ok.filter(function (i) { return (S.phrasesMatch[cle(i)] || 0) === min; });
+    var pick = pool[Math.floor(M.r() * pool.length)];
+    S.phrasesMatch[cle(pick)] = (S.phrasesMatch[cle(pick)] || 0) + 1;
+    return T[pick].texte;
+  }
+  function remplirMatch(t, V) {
+    function maj(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+    var X = { qui: V.qui, Qui: maj(V.qui), adv: V.adv, Adv: maj(V.adv), gardien: V.gardien, Gardien: maj(V.gardien), score: V.score };
+    return String(t).replace(/(^|[\s(«])([Dd])e \{(\w+)\}/g, function (m, avant, d, k) {
+      var x = X[k];
+      if (x == null) return m;
+      if (/^[AEIOUYÉÈÊÂÎÔaeiouyéèêâîô]/.test(x)) return avant + d + "'" + x;
+      if (/^le /.test(x)) return avant + (d === "D" ? "Du " : "du ") + x.slice(3);
+      if (/^les /.test(x)) return avant + (d === "D" ? "Des " : "des ") + x.slice(4);
+      return avant + d + "e " + x;
+    }).replace(/\{(\w+)\}/g, function (m, k) { return X[k] != null ? X[k] : m; });
+  }
+  function texteAction(e, M) {
+    var type = e.t === "pour" && e.toi ? "pour_toi" : e.t;
+    var t = phraseMatch(type, M);
+    var score = e.t === "contre" ? e.score.split("-").reverse().join("-") : e.score;
+    return remplirMatch(t, { qui: e.qui || "", adv: M.advVille, gardien: M.gardien, score: score });
+  }
+
+  // ─── la foule : les deux tribunes, peintes une fois par match dans l'image de
+  // la ville (la profondeur du décor cache ce que les murs cachent), en trois
+  // poses : deux pour respirer, une pour se lever
+  var FOULE = null;
+  var MANTEAUX_F = [[58, 46, 40], [74, 62, 52], [40, 44, 58], [96, 82, 64], [66, 60, 58], [110, 96, 80], [52, 58, 48], [120, 40, 46], [150, 140, 120], [88, 30, 38]];
+  var PEAUX_F = [[219, 176, 140], [196, 150, 110], [140, 97, 69], [96, 64, 44]];
+  var CHEVEUX_F = [[36, 26, 20], [92, 61, 36], [150, 150, 146], [196, 156, 92], [20, 16, 14], [60, 44, 30]];
+  function couchefoule(M) {
+    var amb = ambiance(), cle = amb + ":" + M.remplissage + ":" + M.graineFoule;
+    if (FOULE && FOULE.cle === cle) return FOULE;
+    var u0 = 1500, v0 = 880, w = 700, h = 440, profAmb = PROFONDEUR[amb];
+    // la profondeur des tuiles du stade doit être là, sinon les murs ne cacheraient rien
+    for (var r0 = Math.floor(v0 / TUILE); r0 <= Math.floor((v0 + h) / TUILE); r0++)
+      for (var c0 = Math.floor(u0 / TUILE); c0 <= Math.floor((u0 + w) / TUILE); c0++)
+        if (!profTuile(nomTuile(profAmb, r0 * COLS + c0))) return null;
+    var poses = [0, 1, 2].map(function () { var c = document.createElement("canvas"); c.width = w; c.height = h; return c; });
+    var ctxs = poses.map(function (c) { return c.getContext("2d"); });
+    var r = de(M.graineFoule), teinte = TEINTE[amb];
+    function col(c) { return "rgb(" + Math.round(c[0] * teinte[0]) + "," + Math.round(c[1] * teinte[1]) + "," + Math.round(c[2] * teinte[2]) + ")"; }
+    STADE.tribunes.forEach(function (T) {
+      for (var k = 0; k < T.n; k++) for (var y = T.y0; y <= T.y1; y += T.pas) {
+        if (r() > M.remplissage) continue;
+        var X = T.x(k) + (r() - 0.5) * 0.8, Y = y + (r() - 0.5) * 0.6, Z = T.z(k);
+        var visiteur = !T.kop && Y < 466 && r() < 0.85;
+        var manteau = visiteur ? M.maillot.t : MANTEAUX_F[Math.floor(r() * MANTEAUX_F.length)];
+        var echarpe = visiteur ? M.maillot.p : (T.kop ? (r() < 0.6 ? [128, 28, 44] : r() < 0.3 ? [214, 206, 190] : null) : (r() < 0.25 ? [128, 28, 44] : null));
+        var peau = PEAUX_F[Math.floor(r() * PEAUX_F.length)], cheveux = CHEVEUX_F[Math.floor(r() * CHEVEUX_F.length)];
+        var bonnet = r() < 0.15 ? (r() < 0.5 ? [128, 28, 44] : [214, 206, 190]) : null;
+        var bouge = r() < 0.3;
+        var p = versImage(X, Y, Z), u = Math.round(p[0]), v = Math.round(p[1]);
+        // la silhouette : 3 de large, 5 de haut, les pieds en (u, v)
+        var fig = [
+          [null, bonnet || cheveux, null],
+          [null, T.dos ? (bonnet || cheveux) : peau, null],
+          [echarpe || manteau, echarpe || manteau, manteau],
+          [manteau, manteau, manteau],
+          [null, fonce(manteau, 0.6), null]
+        ];
+        for (var pose = 0; pose < 3; pose++) {
+          var dv = pose === 2 ? -2 : (pose === 1 && bouge ? -1 : 0);
+          for (var i = 0; i < 5; i++) for (var j = 0; j < 3; j++) {
+            var c = fig[i][j];
+            if (pose === 2 && i === 1 && j !== 1) c = manteau;            // les bras levés
+            if (!c) continue;
+            var pu = u - 1 + j, pv = v - 4 + i + dv;
+            var ds = X + Y + Z + (4 - i - dv) / 2, sc = profondeur(pu, pv);
+            if (sc && ds < sc - TOLERANCE) continue;
+            ctxs[pose].fillStyle = col(c);
+            ctxs[pose].fillRect(pu - u0, pv - v0, 1, 1);
+          }
+        }
+      }
+    });
+    FOULE = { cle: cle, u0: u0, v0: v0, poses: poses };
+    return FOULE;
+  }
+  function dessinerFoule(ts) {
+    if (!MATCH) return;
+    var F = couchefoule(MATCH);
+    if (!F) return;
+    var pose = MATCH.liesse > 0 ? (Math.floor(ts / 140) % 2 ? 2 : 0) : (Math.floor(ts / 520) % 2);
+    var x0 = Math.round(cam.x - VW / 2), y0 = Math.round(cam.y - VH / 2);
+    ctx.drawImage(F.poses[pose], F.u0 - x0, F.v0 - y0);
+  }
+
+  // ─── le panneau du mur est : deux noms et un score, en petites lettres de
+  // trois points sur cinq, posé de biais sur la brique comme tout le reste
+  var GLYPHES = {
+    "0": "111101101101111", "1": "010110010010111", "2": "111001111100111", "3": "111001111001111", "4": "101101111001001",
+    "5": "111100111001111", "6": "111100111101111", "7": "111001010010010", "8": "111101111101111", "9": "111101111001111",
+    A: "010101111101101", B: "110101110101110", C: "011100100100011", D: "110101101101110", E: "111100110100111",
+    F: "111100110100100", G: "011100101101011", H: "101101111101101", I: "111010010010111", J: "001001001101010",
+    K: "101101110101101", L: "100100100100111", M: "101111111101101", N: "110101101101101", O: "010101101101010",
+    P: "110101110100100", Q: "010101101110011", R: "110101110101101", S: "011100010001110", T: "111010010010010",
+    U: "101101101101111", V: "101101101101010", W: "101101111111101", X: "101101010101101", Y: "101101010010010",
+    Z: "111001010100111", "-": "000000111000000", " ": "000000000000000"
+  };
+  function ecrire(c2, txt, x, y, echelle, couleur) {
+    c2.fillStyle = couleur;
+    for (var n = 0; n < txt.length; n++) {
+      var g = GLYPHES[txt.charAt(n)] || GLYPHES[" "];
+      for (var i = 0; i < 15; i++) if (g.charAt(i) === "1") c2.fillRect(x + n * 4 * echelle + (i % 3) * echelle, y + Math.floor(i / 3) * echelle, echelle, echelle);
+    }
+  }
+  function largeur(txt, echelle) { return txt.length * 4 * echelle - echelle; }
+  var PANNEAU = null;
+  function panneauCanvas() {
+    var P0 = (MATCH && MATCH.enCours) ? { dom: MATCH.nousCourt, ext: MATCH.advCourt, gf: MATCH.score[0], ga: MATCH.score[1] } : S.panneau;
+    if (!P0) return null;
+    var amb = ambiance(), cle = [P0.dom, P0.ext, P0.gf, P0.ga, amb].join("|");
+    if (PANNEAU && PANNEAU.cle === cle) return PANNEAU.c;
+    var c = PANNEAU && PANNEAU.c || document.createElement("canvas");
+    c.width = 84; c.height = 20;
+    var x = c.getContext("2d"), t = TEINTE[amb], nuit = amb !== "jour";
+    function col(a, lum) { var f = lum ? 1 : 1; return "rgb(" + Math.round(a[0] * (lum ? 1 : t[0]) * f) + "," + Math.round(a[1] * (lum ? 1 : t[1]) * f) + "," + Math.round(a[2] * (lum ? 1 : t[2]) * f) + ")"; }
+    x.clearRect(0, 0, 84, 20);
+    x.fillStyle = col([58, 44, 34]); x.fillRect(0, 0, 84, 20);
+    x.fillStyle = col([20, 16, 13]); x.fillRect(1, 1, 82, 18);
+    ecrire(x, P0.dom, 3, 3, 1, col([226, 214, 186], nuit));
+    ecrire(x, P0.ext, 81 - largeur(P0.ext, 1), 3, 1, col([226, 214, 186], nuit));
+    var sc = P0.gf + "-" + P0.ga;
+    ecrire(x, sc, 42 - Math.floor(largeur(sc, 2) / 2), 9, 2, col([255, 184, 72], true));
+    PANNEAU = { cle: cle, c: c };
+    return c;
+  }
+  function dessinerPanneau() {
+    var c = panneauCanvas();
+    if (!c) return;
+    var P0 = STADE.panneau, p = versImage(P0.x, P0.yG, P0.zH);
+    var ox = Math.round(p[0] - (cam.x - VW / 2)), oy = Math.round(p[1] - (cam.y - VH / 2));
+    if (ox > VW + 10 || ox < -100 || oy > VH + 70 || oy < -70) return;
+    ctx.save();
+    ctx.setTransform(1, -0.5, 0, 1, ox, oy);
+    ctx.drawImage(c, 0, 0);
+    ctx.restore();
+  }
+
+  // ─── la scène : l'entrée des joueurs, le jeu, les actions, la fin
+  function aPied(a, b) { return [STADE.x0 + a * (STADE.x1 - STADE.x0), STADE.y0 + b * (STADE.y1 - STADE.y0)]; }
+  function jouerMatch(v, ensuite) {
+    if (MATCH) return;
+    var M = preparerMatch(v);
+    var g = (coquille && coquille.graine && coquille.graine()) || {};
+    M.graineFoule = hache(g.seed || 0, v.season, v.journee, "foule");
+    var tr = (v.gauges || []).filter(function (x) { return x.id === "tribunes"; })[0];
+    M.remplissage = Math.round(clamp(0.35 + ((tr ? tr.value : 50) / 100) * 0.55, 0.3, 0.92) * 20) / 20;
+    M.minute = 0; M.vitesse = 0; M.score = [0, 0]; M.prochain = 0; M.liesse = 0; M.pause = 0;
+    M.enCours = true; M.phase = "entree"; M.t = 0; M.ensuite = ensuite;
+    M.lignes = [];
+    // les vingt-deux, l'arbitre ; le protagoniste joueur porte le numéro 9 de chez nous
+    var rj = de(hache(g.seed || 0, "maillots", v.season));
+    M.joueurs = [];
+    for (var eq = 0; eq < 2; eq++) for (var n = 0; n < 11; n++) {
+      var base = eq === 0 ? ONZE[n] : [1 - ONZE[n][0], 1 - ONZE[n][1]];
+      var pal = {}, kit = n === 0 ? GARDIENS[eq] : (eq === 0 ? DOMICILE : M.maillot), k2;
+      for (k2 in kit) pal[k2] = kit[k2];
+      var pe = PEAUX_J[Math.floor(rj() * PEAUX_J.length)], ch = CHEVEUX_J[Math.floor(rj() * CHEVEUX_J.length)];
+      for (k2 in pe) pal[k2] = pe[k2];
+      for (k2 in ch) pal[k2] = ch[k2];
+      var j = { eq: eq, n: n, base: base, a: 0.86 + rj() * 0.06, b: 1.04, pal: pal, sp: "joueur", miroir: false, pas: 0, dist: rj() * 10, vit: 0.1 + rj() * 0.03 };
+      if (eq === 0 && n === 9 && M.role === "joueur") { j.heros = true; j.pal = null; }
+      M.joueurs.push(j);
+    }
+    M.arbitre = { a: 0.9, b: 1.04, sp: "joueur", pal: ARBITRE, miroir: false, pas: 0, dist: 0, vit: 0.12, base: [0.55, 0.5] };
+    M.ballon = { a: 0.5, b: 0.5, z: 0, vol: null };
+    M.porteur = null; M.equipe = 0; M.decision = 1;
+    MATCH = M; FOULE = null; PANNEAU = null;
+    occupe = true; passants = []; figurants = [];
+    document.body.classList.add("v-au-stade");
+    var el = $("villeMatch");
+    el.querySelector(".dom").textContent = villeDuClub(M.nous);
+    el.querySelector(".ext").textContent = M.advVille;
+    el.querySelector(".fin").hidden = true;
+    el.querySelector(".v-match-legende").hidden = true;
+    majTableau();
+    el.hidden = false;
+    cam.libre = true;
+    var c = aPied(0.5, 0.5), p = versImage(c[0], c[1], ZSOL);
+    cam.x = p[0]; cam.y = p[1] - UI.decal / k;
+    legende(remplirMatch("{Adv} à la Rive.", { adv: M.advVille }) + " " + (M.remplissage >= 0.75 ? "Les deux tribunes sont pleines." : M.remplissage >= 0.55 ? "La populaire est pleine, l'ouest à moitié." : "Il reste des places partout."), 3200);
+  }
+  function majTableau() {
+    var el = $("villeMatch"), M = MATCH;
+    if (!el || !M) return;
+    el.querySelector(".sc").textContent = M.score[0] + " – " + M.score[1];
+    var mn = Math.min(90, Math.floor(M.minute));
+    el.querySelector(".mn").textContent = M.phase === "entree" ? "" : M.phase === "fin" ? "Fin" : M.phase === "mi" ? "Mi-temps" : mn + "'";
+  }
+  var legendeFin = 0;
+  function legende(txt, ms) {
+    var el = $("villeMatch").querySelector(".v-match-legende");
+    el.textContent = txt; el.hidden = false;
+    el.classList.remove("on"); void el.offsetWidth; el.classList.add("on");
+    legendeFin = performance.now() + (ms || 3800);
+  }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function passer(vers, duree, haut) {
+    var B = MATCH.ballon;
+    B.vol = { a0: B.a, b0: B.b, a1: vers.a, b1: vers.b, t: 0, d: duree, h: haut || 0, vers: vers.j || null, fin: vers.fin || null };
+    MATCH.porteur = null;
+  }
+  function plusProches(eq, a, b, n) {
+    return MATCH.joueurs.filter(function (j) { return j.eq === eq && j.n !== 0; })
+      .sort(function (x, y) { return Math.hypot(x.a - a, x.b - b) - Math.hypot(y.a - a, y.b - b); }).slice(0, n);
+  }
+  // une action écrite : le ballon va au buteur, près du but, puis au fond (ou sur le poteau, ou dans les gants)
+  function lancerAction(e) {
+    var M = MATCH, nous = e.t === "pour" || e.t === "poteau", eq = nous ? 0 : 1;
+    var butB = nous ? -0.02 : 1.02, sens = nous ? 1 : -1;
+    var tireur = e.toi ? M.joueurs.filter(function (j) { return j.heros; })[0] : null;
+    if (!tireur) tireur = M.joueurs.filter(function (j) { return j.eq === eq && (j.n === 9 || j.n === 10); })[Math.floor(M.r() * 2)];
+    var ra = 0.3 + M.r() * 0.4, rb = nous ? 0.17 + M.r() * 0.06 : 0.83 - M.r() * 0.06;
+    tireur.force = [ra, rb];
+    M.action = { e: e, tireur: tireur, etape: "approche", t: 0 };
+    M.equipe = eq;
+    var passeur = plusProches(eq, ra, rb + sens * 0.18, 2)[1] || plusProches(eq, ra, rb, 1)[0];
+    M.ballon.a = passeur.a; M.ballon.b = passeur.b;
+    passer({ a: ra, b: rb, j: tireur }, 0.7, 2);
+    M.action.butB = butB;
+  }
+  function tirer() {
+    var M = MATCH, A = M.action, e = A.e;
+    var px = (STADE.poteaux[0] - STADE.x0) / (STADE.x1 - STADE.x0), qx = (STADE.poteaux[1] - STADE.x0) / (STADE.x1 - STADE.x0);
+    var cible;
+    if (e.t === "pour" || e.t === "contre") cible = { a: lerp(px, qx, 0.2 + M.r() * 0.6), b: A.butB, fin: "but" };
+    else if (e.t === "poteau") cible = { a: M.r() < 0.5 ? px : qx, b: A.butB + 0.02, fin: "poteau" };
+    else cible = { a: 0.5 + (M.r() - 0.5) * 0.08, b: 0.94, fin: "arret" };
+    passer(cible, 0.42, e.t === "poteau" ? 3 : 1.5);
+    A.etape = "tir";
+  }
+  function finAction(fin) {
+    var M = MATCH, A = M.action, e = A.e;
+    e.fait = true;
+    if (fin === "but") {
+      if (e.t === "pour") { M.score[0]++; M.liesse = 3.2; } else M.score[1]++;
+      majTableau();
+      PANNEAU = null;
+    }
+    var txt = e.dit ? e.m + "e · " + texteAction(e, M) : e.m + "e · " + (e.t === "pour" ? "But ! " + M.score[0] + "-" + M.score[1] + "." : e.t === "contre" ? "But pour " + M.advVille + " : " + M.score[0] + "-" + M.score[1] + "." : texteAction(e, M));
+    M.lignes.push(txt);
+    legende(txt, e.dit ? 4600 : 2200);
+    M.pause = e.dit ? 3.4 : 1.6;
+    A.etape = "fete";
+    if (fin === "poteau") { M.ballon.vol = null; passer({ a: M.ballon.a + (M.r() - 0.5) * 0.2, b: 0.2 }, 0.5, 1); }
+    if (fin === "arret") { var gk = M.joueurs[0]; M.ballon.vol = null; M.porteur = gk; M.equipe = 0; }
+  }
+  function engagement(eq) {
+    var M = MATCH;
+    M.joueurs.forEach(function (j) { j.force = null; });
+    M.ballon.a = 0.5; M.ballon.b = 0.5; M.ballon.z = 0; M.ballon.vol = null;
+    var avant = M.joueurs.filter(function (j) { return j.eq === eq && j.n === 9; })[0];
+    M.porteur = avant; M.equipe = eq; M.decision = 0.8;
+    avant.a = 0.5; avant.b = 0.5;
+  }
+  function majMatch(dt, ts) {
+    var M = MATCH;
+    if (!M) return;
+    M.t += dt;
+    if (M.liesse > 0) M.liesse -= dt;
+    var leg = $("villeMatch").querySelector(".v-match-legende");
+    if (!leg.hidden && performance.now() > legendeFin) leg.hidden = true;
+    // l'horloge : vite entre les actions, lentement à leur approche, arrêtée pendant les fêtes
+    if (M.phase === "entree") {
+      if (M.t > 3.4) { M.phase = "jeu"; engagement(0); majTableau(); }
+    } else if (M.phase === "jeu" || M.phase === "mi") {
+      if (M.pause > 0) {
+        M.pause -= dt;
+        if (M.pause <= 0) {
+          if (M.phase === "mi") { M.phase = "jeu"; engagement(1); }
+          else if (M.action) { var e0 = M.action.e; M.action = null; if (e0.t === "pour") engagement(1); else if (e0.t === "contre") engagement(0); }
+        }
+      } else if (!M.action) {
+        var e = M.ev[M.prochain], avance = e ? e.m - M.minute : 99;
+        var vit = avance < 1.6 ? 1.3 : 6.5;
+        var avant = M.minute;
+        M.minute += vit * dt;
+        if (avant < 45 && M.minute >= 45 && (!e || e.m > 45)) { M.minute = 45; M.phase = "mi"; M.pause = 1.8; legende("Mi-temps · " + M.score[0] + "-" + M.score[1] + ".", 1800); }
+        else if (e && M.minute >= e.m) { M.minute = e.m; M.prochain++; lancerAction(e); }
+        else if (M.minute >= 90) { finirMatch(); return; }
+        majTableau();
+      }
+    }
+    if (M.phase === "fin") { cameraMatch(dt); return; }
+    // le ballon
+    var B = M.ballon;
+    if (B.vol) {
+      var V = B.vol;
+      V.t += dt;
+      var q = Math.min(1, V.t / V.d);
+      B.a = lerp(V.a0, V.a1, q); B.b = lerp(V.b0, V.b1, q); B.z = V.h * 4 * q * (1 - q);
+      if (q >= 1) {
+        B.vol = null; B.z = 0;
+        if (V.fin) finAction(V.fin);
+        else if (V.vers) {
+          M.porteur = V.vers; M.decision = 0.5 + M.r() * 0.9;
+          if (M.action && M.action.etape === "approche" && V.vers === M.action.tireur) { M.action.etape = "controle"; M.action.t = 0; }
+        }
+      }
+    } else if (M.porteur && M.phase === "jeu" && M.pause <= 0) {
+      var p = M.porteur, sens = p.eq === 0 ? -1 : 1;
+      B.a = p.a + 0.006; B.b = p.b + sens * 0.012; B.z = 0;
+      if (M.action && M.action.etape === "controle") {
+        M.action.t += dt;
+        if (M.action.t > 0.55) tirer();
+      } else if (!M.action) {
+        M.decision -= dt;
+        if (M.decision <= 0) {
+          var adverse = p.eq === 0 ? 1 : 0;
+          var danger = p.eq === 0 ? p.b < 0.3 : p.b > 0.7;
+          if (danger || M.r() < 0.16) {
+            // le ballon change de camp : un tacle, une interception
+            var t2 = plusProches(adverse, p.a, p.b, 1)[0];
+            passer({ a: t2.a, b: t2.b, j: t2 }, 0.3, 0);
+          } else {
+            var amis = plusProches(p.eq, p.a, p.b + sens * 0.2, 4).filter(function (j) { return j !== p; });
+            var choix = amis[Math.floor(M.r() * amis.length)];
+            var d = Math.hypot(choix.a - p.a, choix.b - p.b);
+            passer({ a: choix.a, b: choix.b, j: choix }, clamp(d / 0.55, 0.25, 1), d > 0.28 ? 2.5 : 0);
+          }
+        }
+      }
+    }
+    // un ballon perdu (un poteau, un dégagement) : le plus proche le ramasse
+    var libre = !B.vol && !M.porteur && M.phase === "jeu" && !(M.action && M.action.etape !== "fete");
+    if (libre) {
+      var pr = M.joueurs.slice().sort(function (x, y) { return Math.hypot(x.a - B.a, x.b - B.b) - Math.hypot(y.a - B.a, y.b - B.b); })[0];
+      if (Math.hypot(pr.a - B.a, pr.b - B.b) < 0.035) { M.porteur = pr; M.equipe = pr.eq; M.decision = 0.6 + M.r() * 0.6; libre = false; }
+    }
+    // les joueurs : le bloc suit le ballon, le plus proche presse, le gardien glisse sur sa ligne
+    var ba = B.vol ? B.vol.a1 : B.a, bb = B.vol ? B.vol.b1 : B.b;
+    var presseur = M.phase === "jeu" ? plusProches(M.equipe === 0 ? 1 : 0, ba, bb, 1)[0] : null;
+    var chasseur = libre ? plusProches(M.equipe, ba, bb, 1)[0] : null;
+    M.joueurs.concat([M.arbitre]).forEach(function (j) {
+      var ta, tb;
+      if (M.phase === "entree") { ta = j.base[0]; tb = j.base[1] < 0.5 ? Math.max(0.3, j.base[1]) : Math.min(0.7, j.base[1]); if (j === M.arbitre) { ta = 0.55; tb = 0.5; } }
+      else if (j.force) { ta = j.force[0]; tb = j.force[1]; }
+      else if (j === M.arbitre) { ta = clamp(ba + 0.12, 0.1, 0.9); tb = clamp(bb + 0.06, 0.1, 0.9); }
+      else if (j.n === 0) { ta = 0.5 + (ba - 0.5) * 0.3; tb = j.eq === 0 ? 0.96 : 0.04; }
+      else {
+        var att = M.equipe === j.eq ? (j.eq === 0 ? -0.08 : 0.08) : 0;
+        ta = clamp(j.base[0] + (ba - 0.5) * 0.35, 0.04, 0.96);
+        tb = clamp(j.base[1] + (bb - 0.5) * 0.5 + att, 0.04, 0.96);
+        if (j === presseur || j === chasseur || j === M.porteur) { ta = ba; tb = bb; }
+      }
+      if (M.action && M.action.etape === "fete" && M.action.e.t === "pour" && j === M.action.tireur) { ta = 1.02; tb = 0.3; }
+      var da = ta - j.a, db = tb - j.b, d = Math.hypot(da, db), pasMax = j.vit * dt * (j === M.porteur ? 0.7 : 1);
+      if (d > 0.004) {
+        var f = Math.min(1, pasMax / d);
+        j.a += da * f; j.b += db * f;
+        var w = STADE.x1 - STADE.x0, l = STADE.y1 - STADE.y0, du = 2 * (da * w - db * l);
+        if (Math.abs(du) > 0.01) j.miroir = du < 0;
+        j.dist += pasMax * 120;
+        var ph = Math.floor(j.dist / 4) % 4;
+        j.pas = ph === 1 ? 1 : ph === 3 ? -1 : 0;
+      } else j.pas = 0;
+    });
+    cameraMatch(dt);
+  }
+  function cameraMatch(dt) {
+    var M = MATCH, B = M.ballon, c = aPied(clamp(B.a, 0.15, 0.85), clamp(B.b, 0.1, 0.9)), p = versImage(c[0], c[1], ZSOL);
+    var ty = p[1] - UI.decal / k;
+    cam.x += (p[0] - cam.x) * Math.min(1, dt * 1.8); cam.y += (ty - cam.y) * Math.min(1, dt * 1.8);
+  }
+  // les vingt-deux, l'arbitre, le ballon : ajoutés aux gens que la ville dessine
+  function gensDuMatch(gens) {
+    var M = MATCH;
+    if (!M) return;
+    M.joueurs.concat([M.arbitre]).forEach(function (j) {
+      var w = aPied(j.a, j.b);
+      gens.push({ sp: j.sp, x: w[0], y: w[1], miroir: j.miroir, pas: j.pas, pal: j.pal, silhouette: !!j.heros, match: true });
+    });
+    var B = M.ballon, wb = aPied(B.a, B.b);
+    gens.push({ ballon: true, x: wb[0], y: wb[1], z: B.z });
+  }
+  function dessinerBallon(g) {
+    var p = versImage(g.x, g.y, ZSOL), ox = Math.round(p[0] - (cam.x - VW / 2)), oy = Math.round(p[1] - (cam.y - VH / 2));
+    ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.fillRect(ox - 1, oy, 3, 1);
+    var h = Math.round(g.z * 3);
+    ctx.fillStyle = "#F4F0E6"; ctx.fillRect(ox - 1, oy - 2 - h, 2, 2);
+    ctx.fillStyle = "#9A948A"; ctx.fillRect(ox, oy - 1 - h, 1, 1);
+  }
+  function finirMatch() {
+    var M = MATCH;
+    M.phase = "fin"; M.enCours = false; M.minute = 90;
+    // si l'on a passé : les buts qui manquent tombent d'un coup
+    M.ev.forEach(function (e) {
+      if (e.fait) return;
+      e.fait = true;
+      if (e.t === "pour") M.score[0]++; else if (e.t === "contre") M.score[1]++;
+      if (e.dit) M.lignes.push(e.m + "e · " + texteAction(e, M));
+    });
+    M.prochain = M.ev.length; M.action = null;
+    S.panneau = { dom: M.nousCourt, ext: M.advCourt, gf: M.score[0], ga: M.score[1] };
+    PANNEAU = null;
+    majTableau();
+    if (M.score[0] > M.score[1]) M.liesse = 4;
+    var el = $("villeMatch"), f = el.querySelector(".fin");
+    el.querySelector(".v-match-legende").hidden = true;
+    f.querySelector(".v-match-score .d").textContent = M.nous;
+    f.querySelector(".v-match-score .s").textContent = M.score[0] + " – " + M.score[1];
+    f.querySelector(".v-match-score .e").textContent = M.adv;
+    f.querySelector(".v-match-sifflet").textContent = remplirMatch(phraseMatch(M.lettre === "V" ? "fin_v" : M.lettre === "D" ? "fin_d" : "fin_n", M), { adv: M.advVille, gardien: M.gardien });
+    var ul = f.querySelector("ul");
+    ul.innerHTML = "";
+    M.lignes.forEach(function (l) { var li = document.createElement("li"); li.textContent = l; ul.appendChild(li); });
+    var j1 = Math.max(1, (M.journee || 6) - M.lettres.length + 1), puces = f.querySelector(".v-match-bloc");
+    puces.innerHTML = "";
+    M.lettres.forEach(function (l, i) {
+      var s = document.createElement("span");
+      s.className = "v-puce " + (l === "V" ? "v" : l === "D" ? "d" : "n");
+      s.innerHTML = "<i>J" + (j1 + i) + "</i><b>" + l + "</b>";
+      puces.appendChild(s);
+    });
+    var pts = M.lettres.reduce(function (t, l) { return t + (l === "V" ? 3 : l === "N" ? 1 : 0); }, 0);
+    f.querySelector(".v-match-pts").textContent = "Six journées, " + pts + " point" + (pts > 1 ? "s" : "") + (M.rang ? " · " + (M.rang === 1 ? "1er" : M.rang + "e") + " au classement" : "");
+    f.hidden = false;
+    f.querySelector("button").focus();
+  }
+  function quitterStade() {
+    var M = MATCH;
+    if (!M) return;
+    MATCH = null; FOULE = null; PANNEAU = null;
+    $("villeMatch").hidden = true;
+    document.body.classList.remove("v-au-stade");
+    occupe = false;
+    cam.libre = false;
+    S.sortieStade = tDe(S.semaine, S.jour, 3);
+    var ensuite = M.ensuite;
+    if (ensuite) ensuite();
+  }
+  // le samedi avant le match : la ville va au stade
+  function jourDeMatch() {
+    return !!(rdv && rdv.type === "match" && rdv.beat === "match" && S.jour === 5 && S.tranche <= 2 && semaineDe(rdv.debut) === S.semaine);
   }
 
   // ─────────────────────────────────────────────────────────────── le temps qui passe
@@ -2187,6 +2783,15 @@
     document.body.appendChild(fondu);
     var t = document.createElement("div"); t.className = "v-toast"; t.id = "villeToast"; t.setAttribute("role", "status");
     document.body.appendChild(t);
+    // le match : le tableau, la phrase de l'action, le résultat
+    var vm = document.createElement("div"); vm.className = "v-match"; vm.id = "villeMatch"; vm.hidden = true;
+    vm.innerHTML = '<div class="v-match-tableau" aria-live="polite"><b class="dom"></b><span class="sc">0 – 0</span><b class="ext"></b><i class="mn"></i></div>' +
+      '<button type="button" class="v-match-passer">Passer ›</button><p class="v-match-legende" role="status" hidden></p>' +
+      '<div class="fin" role="dialog" aria-label="Le résultat" hidden><span class="v-match-sur">Fin du match</span><div class="v-match-score"><b class="d"></b><span class="s"></span><b class="e"></b></div><p class="v-match-sifflet"></p><ul></ul>' +
+      '<div class="v-match-bloc"></div><p class="v-match-pts"></p><button type="button" class="v-match-quitter">Quitter le stade</button></div>';
+    document.body.appendChild(vm);
+    vm.querySelector(".v-match-passer").addEventListener("click", function () { if (MATCH && MATCH.phase !== "fin") finirMatch(); });
+    vm.querySelector(".v-match-quitter").addEventListener("click", quitterStade);
     // la bulle de celui qui te parle (au-dessus de sa tête ; un geste la ferme)
     var bu = document.createElement("div"); bu.className = "v-bulle"; bu.id = "villeBulle"; bu.hidden = true; bu.setAttribute("role", "status");
     bu.innerHTML = "<b></b><p></p>";
@@ -2277,6 +2882,7 @@
       poser(S.x, S.y);
       var p = visee(); cam.x = p[0]; cam.y = p[1];
       vue = coquille.reprendre(s.moteur, s.graine && s.graine.postulat, s.graine && s.graine.seed);
+      if (S.blocsVus == null) S.blocsVus = (vue && vue.blocs) || 0;
       acteurs = {};
       recaler();
     };
@@ -2319,7 +2925,8 @@
           francs: Math.max(1240, (SALAIRE[v.role] || SALAIRE.entraineur)[clamp((v.division || 1) - 1, 0, 2)]),
           x: 0, y: 0, lieu: v.role === "selectionneur" && LIEU.hotel ? "hotel" : "appartement", cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
           journeeDebut: v.journee || 0, auMatch: false, zoom: 0,
-          biens: {}, sale: 0, pont: {}, mission: null, missionsFaites: {}, offres: {}, derniereOffre: -99, dits: {}
+          biens: {}, sale: 0, pont: {}, mission: null, missionsFaites: {}, offres: {}, derniereOffre: -99, dits: {},
+          blocsVus: v.blocs || 0, panneau: null
         };
         annonces = [];
         rdv = null; dernierVu = ""; figurants = []; passants = []; acteurs = {};
@@ -2352,12 +2959,24 @@
         var avant = carteOn;
         dernierVu = cle;
         figurants = figurants.filter(function () { return false; });
-        if (v.lastAnswer && avant) setTimeout(function () { toast(v.lastAnswer); }, 380);
-        // le match prend l'après-midi ; on rentre au vestiaire, puis le soir tombe
         var etait = rdv;
         rdv = planifier(v);
+        // le bloc vient d'être joué : la ville met le match en scène, puis le soir tombe
+        if (etait && etait.type === "match" && etait.beat === "match" && v.resultats && (v.blocs || 0) > (S.blocsVus || 0) && (D.match && D.match.textes)) {
+          S.blocsVus = v.blocs || 0;
+          cacherCarte();
+          majHud();
+          jouerMatch(v, function () { S.auMatch = false; if (S.tranche < 3) S.tranche = 3; majHud(); sauver(); suite(false); });
+          return;
+        }
+        if (v.blocs != null) S.blocsVus = Math.max(S.blocsVus || 0, v.blocs);
+        if (v.lastAnswer && avant) setTimeout(function () { toast(v.lastAnswer); }, 380);
+        // le match prend l'après-midi ; on rentre au vestiaire, puis le soir tombe
         if (etait && etait.type === "match" && rdv.type !== "match") { S.auMatch = false; if (S.tranche < 3) S.tranche = 3; }
-        // la carte suivante est-elle pour tout de suite ?
+        suite(avant);
+      };
+      // la suite d'une vue : la carte d'après est-elle pour tout de suite ?
+      var suite = function (avant) {
         var t = tNow();
         if (rdv.force === "ici" || (rdv.lieu === S.lieu && t >= rdv.debut && rdv.force !== "rue" && !rdv.sombre) || (rdv.force === "scene" && t >= rdv.fin && rdv.type !== "sombre" && rdv.lieu === S.lieu)) {
           if (avant) { decorAilleurs(v); if (coquille) coquille.carte(); carteOn = true; if (rdv.qui) S.vus[rdv.qui] = 1; rdv.montree = true; majHud(); sauver(); return; }
@@ -2394,8 +3013,15 @@
         S.mission = { id: m.id, etape: m.etapes[0].id, offre: true, lieu: m.donneur.lieu, jusqua: tNow() + 10 };
       }
       if (quoi === "aller" && LIEU[val]) { var c = centre(LIEU[val].door); poser(c[0], c[1]); var p = visee(); cam.x = p[0]; cam.y = p[1]; recaler(); arriver(val); }
+      if (quoi === "match" && vue && !MATCH) {
+        var v2 = {}, kk;
+        for (kk in vue) v2[kk] = vue[kk];
+        v2.resultats = val || "V N V D V V"; v2.blocs = (vue.blocs || 0) + 1;
+        cacherCarte();
+        jouerMatch(v2, function () { if (S.tranche < 3) S.tranche = 3; majHud(); });
+      }
       if (quoi === "tranche") { while (TRANCHES[S.tranche] !== val) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } majHud(); }
-      return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu };
+      return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
     _toucher: function (uid) {
       var g = passants.filter(function (q) { return q.uid === uid; })[0];
