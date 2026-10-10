@@ -401,6 +401,14 @@ void main() {
         _state = _engine.biens(_state!, objet.toDart, acquis.toDart);
         return _view().toJS;
       }).toJS);
+  // La ruine : la ville a vu le découvert durer et l'huissier repartir les
+  // mains vides ; le moteur pose la banqueroute.
+  globalContext.setProperty(
+      'fusibleBanqueroute'.toJS,
+      (() {
+        _state = _engine.banqueroute(_state!);
+        return _view().toJS;
+      }).toJS);
   // La sauvegarde d'une carrière jouée en ville : l'état entier (le Code de
   // Carrière ne rejoue pas les activités).
   globalContext.setProperty(

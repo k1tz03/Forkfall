@@ -800,12 +800,13 @@ void main() {
   //   * l'effet `end:` d'un choix, d'une variante de set-piece ou d'une étape
   //     d'arc (toute autre `cause:` — choix, chaîne, objectif, destin, âge…) ;
   //   * le moteur lui-même, en Dart : `grand_deballage` (parole ≤ −5),
-  //     `jubile` (joueur de 38 ans), `en_retraite` (entraîneur de 65 ans) et
-  //     `generique` (le repli de fin de carrière). Ces quatre-là ne s'écrivent
+  //     `jubile` (joueur de 38 ans), `en_retraite` (entraîneur de 65 ans),
+  //     `co_banqueroute` (la ruine, que la ville déclare : `Engine.banqueroute`)
+  //     et `generique` (le repli de fin de carrière). Celles-là ne s'écrivent
   //     pas en contenu : elles sont exemptées, `cause:` comprise.
   // Une fin sans porte est inatteignable et compte quand même au Cimetière :
   // c'est une ERREUR, pas un avertissement — le dépôt refuse une fin orpheline.
-  const enginePosed = {'generique', 'grand_deballage', 'jubile', 'en_retraite'};
+  const enginePosed = {'generique', 'grand_deballage', 'jubile', 'en_retraite', 'co_banqueroute'};
   final endsTargeted = <String>{};
   void collectEnds(Object? node) {
     if (node is Map) {
@@ -828,6 +829,16 @@ void main() {
     final cause = e['cause']?.toString();
     final parJauge = gaugeEndings.contains(eid);
     final parEnd = endsTargeted.contains(eid);
+    // Le mode histoire : une fin que seule une jauge posait dort (build_content
+    // la marque `dormante` et la sort du Cimetière). Elle n'est pas orpheline.
+    if (e['dormante'] == true) {
+      if (parEnd) errors.add('fin « $eid » marquée dormante alors qu\'un `end:` la vise');
+      // une fin dormante est une fin de jauge : sa `cause:` doit le dire
+      if (cause != null && cause != 'jauge') {
+        errors.add('fin « $eid » : « cause: $cause » demande un `end: $eid` (carte, set-piece ou étape) ; seule une jauge la pose');
+      }
+      continue;
+    }
     if (!parJauge && !parEnd) {
       errors.add('fin « $eid » sans porte : ni fin de jauge (roles.yaml), ni cible d\'un `end:`'
           '${cause == null ? '' : ' — elle se déclare pourtant « cause: $cause »'}');

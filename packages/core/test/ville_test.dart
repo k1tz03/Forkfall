@@ -54,16 +54,22 @@ void main() {
     expect(jsonEncode(engine.activite(s0, 'fonte').toJson()), jsonEncode(s0.toJson()), reason: 'la fonte est au joueur');
   });
 
-  test('la tournée de trop finit la carrière, et une carrière finie ne bouge plus', () {
+  test('la tournée de trop pousse les jauges au bord sans finir la carrière (mode histoire)', () {
     var s = engine.start(99, postulat: 0);
-    var n = 0;
-    while (!s.over && n < 60) {
+    for (var n = 0; n < 60; n++) {
       s = engine.activite(s, 'tournee');
-      n++;
     }
+    expect(s.over, isFalse, reason: 'les jauges ne tuent plus (calendar.yaml jauges_fatales: false)');
+    expect(s.gauges['tribunes'], 100, reason: 'mais le climat bouge : les tribunes sont au bord');
+  });
+
+  test('une carrière finie ne bouge plus', () {
+    // le grand déballage (la parole à -5) finit toujours la carrière
+    var s = engine.start(99, postulat: 0);
+    s.parole = -5;
+    s = engine.activite(s, 'tournee');
     expect(s.over, isTrue);
-    final tribunes = content.roles['entraineur']!.gauges.firstWhere((g) => g.id == 'tribunes');
-    expect(s.endingId, anyOf(tribunes.fullEnding, content.roles['entraineur']!.gauges.firstWhere((g) => g.id == 'direction').emptyEnding));
+    expect(s.endingId, 'grand_deballage');
     expect(s.pending, isNotNull, reason: 'l\'écran de fin a sa carte');
     final apres = engine.activite(s, 'seance');
     expect(jsonEncode(apres.toJson()), jsonEncode(s.toJson()));

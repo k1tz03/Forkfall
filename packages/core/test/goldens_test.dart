@@ -132,6 +132,12 @@
 ///   jubilé du 15 mai 1993, avec six visages de plus. Ses cinq carrières
 ///   racontent autre chose ; une seule des vingt s'arrête sans fin. Mêmes
 ///   codes, `--goldens --write`.
+/// · **Le mode histoire** (calendar.yaml `jauges_fatales: false`). Les quatre
+///   jauges ne tuent plus : une carrière ne s'arrête plus quand l'une d'elles
+///   se vide ou déborde, elle va jusqu'à la fin de son livre (ou la police, la
+///   blessure, le grand déballage). Les carrières sont plus longues et
+///   finissent ailleurs : les swipes figés ne racontaient plus des carrières
+///   entières. Codes **retirés à neuf** (`--goldens --write --recode`).
 library;
 
 import 'dart:io';

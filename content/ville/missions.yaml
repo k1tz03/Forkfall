@@ -62,7 +62,8 @@ missions:
     titre: "Le sac du préparateur"
     roles: [joueur]
     donneur: {sprite: inconnu, nom: "Un préparateur sans club", lieu: muscu, tranches: [soir]}
-    si: "energie < 60"
+    # les jambes qui ne répondent plus : il vient après deux défaites de suite
+    si: "serie_d >= 2"
     chance: 0.3
     etapes:
       - id: offre
@@ -342,7 +343,8 @@ missions:
     titre: "Le certificat"
     roles: [joueur]
     donneur: {sprite: passant, nom: "Un médecin sans cabinet", lieu: pharmacie, tranches: [matin]}
-    si: "energie < 50"
+    # l'assurance qui paie les blessés : il vient quand l'argent manque
+    si: "francs < 1000"
     chance: 0.2
     etapes:
       - id: offre

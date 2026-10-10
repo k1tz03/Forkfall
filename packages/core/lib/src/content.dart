@@ -982,6 +982,15 @@ class DirectorConfig {
   final int ouvertureEcheance;
   final Map<String, Map<String, double>> phaseMult; // tag -> phase -> multiplier
 
+  /// Le mode histoire (retour du porteur, octobre 2026) : les quatre jauges ne
+  /// tuent plus. Une jauge vide ou pleine n'arrête pas la carrière, et la fin
+  /// qu'elle portait n'est plus annoncée ; elles restent un climat caché qui
+  /// choisit les variantes (`gauges.tribunes >= 40`) et fait parler les
+  /// alarmes. La carrière s'arrête par l'histoire : la fin d'un livre, la
+  /// police, la ruine, la blessure, le grand déballage. Vrai par défaut (les
+  /// contenus de test) ; le contenu du jeu le pose à faux (calendar.yaml).
+  final bool jaugesFatales;
+
   const DirectorConfig({
     this.nouvelleSlots = const {},
     this.nouvellesMax = 4,
@@ -997,6 +1006,7 @@ class DirectorConfig {
     this.journalParSaison = 12,
     this.ouvertureEcart = 3,
     this.ouvertureEcheance = 2,
+    this.jaugesFatales = true,
     this.phaseMult = const {
       'mercato': {'presaison': 4, 'hiver': 4, 'aller': 0.2, 'retour': 0.2},
       'moment': {'retour': 2},
@@ -1030,6 +1040,7 @@ class DirectorConfig {
       journalParSaison: (j['journal_par_saison'] as num?)?.toInt() ?? d.journalParSaison,
       ouvertureEcart: (j['ouverture_ecart'] as num?)?.toInt() ?? d.ouvertureEcart,
       ouvertureEcheance: (j['ouverture_echeance'] as num?)?.toInt() ?? d.ouvertureEcheance,
+      jaugesFatales: (j['jauges_fatales'] as bool?) ?? d.jaugesFatales,
       phaseMult: pm.isEmpty ? d.phaseMult : pm,
     );
   }

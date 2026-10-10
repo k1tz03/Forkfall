@@ -115,18 +115,20 @@ void main() {
         });
       }
 
-      test('une jauge vide finit la carrière par la fin du rôle', () {
-        // une activité du rôle qui ne touche pas la jauge fragile : appliquée
-        // quand cette jauge est à zéro, elle doit finir la carrière
+      test('en mode histoire, une jauge vide n\'arrête pas la carrière (la fin du rôle reste écrite)', () {
+        // une activité du rôle qui ne touche pas la jauge fragile, appliquée
+        // quand cette jauge est à zéro : le contenu du jeu a les jauges non
+        // fatales (calendar.yaml `jauges_fatales: false`), la carrière continue
         final r = content.roles[role]!;
         final fragile = r.fragileGauge;
+        expect(content.director.jaugesFatales, isFalse);
         final a = content.activites.values.firstWhere((a) => a.roles.contains(role) && !a.jauges.containsKey(fragile));
         var s = engine.start(5, postulat: index);
         s.gauges[fragile] = 0;
         s = engine.activite(s, a.id);
-        expect(s.over, isTrue);
-        expect(s.endingId, r.gauge(fragile).emptyEnding);
-        expect(content.endings.containsKey(s.endingId), isTrue, reason: s.endingId);
+        expect(s.over, isFalse);
+        expect(s.gauges[fragile], 0, reason: 'la jauge reste un climat : elle garde sa valeur');
+        expect(content.endings.containsKey(r.gauge(fragile).emptyEnding), isTrue, reason: r.gauge(fragile).emptyEnding);
       });
     });
   }

@@ -6,6 +6,9 @@
 // Ce script tient les contraintes qu'on ne peut pas voir dans le code, et qui
 // sont revenues une fois du contrôle client. Chacune a coûté une passe :
 //
+//   0. LE MODE HISTOIRE (calendar.yaml `jauges_fatales: false`) : les jauges
+//      ne sont plus à l'écran. Les contrôles 1 et 2 lisent encore le rail
+//      caché, qui reste le climat de la partie.
 //   1. LE PICTO EST LA JAUGE. Le rognage de remplissage doit SUIVRE la valeur,
 //      monotone, et deux valeurs éloignées doivent donner deux hauteurs
 //      franchement différentes. (L'ancienne version ne codait la valeur que
@@ -76,8 +79,12 @@ const LIRE = () => {
     };
   });
   const who = $('cardWho');
+  const rail = $('rail');
   return {
     jauges,
+    // le mode histoire : les jauges quittent l'écran (le rail n'est plus affiché)
+    histoire: document.body.classList.contains('mode-histoire'),
+    railVisible: !!rail && getComputedStyle(rail).display !== 'none',
     cadrage: svg ? svg.getAttribute('data-cadrage') : null,
     // Une empreinte, pas une longueur : deux images différentes peuvent
     // peser le même nombre d'octets.
@@ -156,6 +163,9 @@ async function main() {
     await page.click(`#postulats .postulat[data-index="${i}"]`);
     await page.waitForSelector('#gameScreen:not([hidden])');
     const z = await page.evaluate(LIRE);
+    if (z.histoire) {
+      check(!z.railVisible, `carte zéro · « ${titre} » : mode histoire, les jauges ne sont pas à l'écran`);
+    }
     check(!z.jauges.some((g) => g.danger),
       `carte zéro · « ${titre} » : aucune tête de mort allumée (${z.jauges.map((g) => g.label).join(' | ')})`);
     check(z.jauges.length === 4 && z.jauges.every((g) => g.y !== null),

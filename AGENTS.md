@@ -5,10 +5,14 @@ reprendre le travail sans poser de question. Il vaut aussi comme `CLAUDE.md`.
 
 ## Ce qu'est le jeu
 
-Un jeu mobile façon *Reigns*, sur une carrière de football. Une carte est une
-scène ; on glisse à gauche ou à droite ; quatre équilibres (vestiaire, tribunes,
-président, caisse) se vident ou débordent, et la carrière s'arrête. On rejoue
-avec un successeur. La chronologie va de 1990 à 2050, dans un pays qui n'existe
+Un jeu mobile né de *Reigns*, sur une carrière de football. Une carte est une
+scène ; on glisse à gauche ou à droite ; on vit une histoire — un livre, avec ses
+fins — dans une ville en pixel art, Aubérive. **Le mode histoire** (octobre 2026) :
+la carrière s'arrête par l'histoire (la fin du livre, la police, la ruine, la
+blessure, le grand déballage), plus par les quatre équilibres d'origine
+(vestiaire, tribunes, président, caisse), qui ne tuent plus et ne se montrent
+plus : ils restent un climat caché qui choisit les variantes des cartes. On
+rejoue avec un successeur. La chronologie va de 1990 à 2050, dans un pays qui n'existe
 pas : villes, clubs, journaux, compétitions, personnes — tout est inventé.
 Français uniquement pour le moment.
 
@@ -24,7 +28,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 2 480 cartes, 235 arcs, 90 fins, 175 Nouvelles datées, 389 manchettes de Une, 459 variantes de set-piece, 41 personnages ; la ville : 292 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif — six histoires livrées sur dix (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 131 tests, 20 goldens |
+| Moteur | Dart pur, déterministe, 132 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (6 avertissements connus : les postulats sans prologue des livres à venir, la part des Unes qui nomment le héros, `histoire_h4`) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
@@ -77,6 +81,15 @@ docs/balance/      les rapports d'équilibrage, avant/après
 | `sfx.dart` | quelle ambiance et quels sons pour la carte servie |
 | `goldens.dart` | rejoue un Code de Carrière et en calcule l'empreinte |
 
+**Le mode histoire** (`DirectorConfig.jaugesFatales`, faux dans le contenu du jeu, vrai par
+défaut pour les contenus de test) : une jauge à 0 ou 100 n'arrête plus la carrière, le
+bandeau « une fin devient atteignable » se tait, et l'aperçu ne montre plus les jauges (le
+rail, l'écran de fin, les activités de la ville). Les fins que seule une jauge posait
+« dorment » : `build_content` les marque `dormante`, elles sortent du Cimetière, et le lint
+les accepte tant que leur `cause:` dit `jauge` ; un `end:` qui les vise les réveille. Mesuré
+au changement : 40 à 89 % des carrières d'un livre s'arrêtaient sur une jauge, au milieu du
+livre ; elles finissent maintenant sur les fins écrites.
+
 **Le déterminisme est le socle de tout le reste** (partage d'un run, défi entre
 amis, sauvegarde, tests). Trois règles à ne jamais casser :
 
@@ -96,7 +109,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 131 tests
+cd packages/core && dart test                    # 132 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -124,8 +137,10 @@ La couche « Punch Club » de la préproduction, branchée sur le vrai moteur :
 montre : chaque carte a un lieu (son `lieu:`, sinon son locuteur, sinon son beat) et une
 fenêtre dans la semaine (deux ou trois cartes du lundi au vendredi, le match le samedi à
 15 h, le classement le dimanche) ; un événement sombre ne s'annonce pas, il tombe le soir.
-Le temps, l'énergie, la faim et l'argent sont tenus par la coquille ; la partie se
-sauvegarde par l'état entier du moteur (le Code de Carrière ne rejoue pas la ville).
+Le temps et l'argent sont tenus par la coquille (l'énergie et la faim de la préproduction
+sont parties avec le mode histoire ; un compteur caché, `eveil`, dit seulement depuis combien
+de tranches on n'a pas dormi, pour les répliques) ; la partie se sauvegarde par l'état entier
+du moteur (le Code de Carrière ne rejoue pas la ville).
 
 Ce que la ville porte en plus des cartes :
 
@@ -169,6 +184,11 @@ Ce que la ville porte en plus des cartes :
   ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
   l'écu après `monde_ecus`).
 - **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
+- **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
+  s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
+  d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,
+  le tribunal de commerce : la fin `co_banqueroute` (`content/endings/ruine.yaml`), posée
+  par `Engine.banqueroute`.
 - **L'accueil** : la porte d'Aubérive en pixel art. Le panorama de la ville défile sous le
   titre (au crépuscule, de nuit de minuit à 5 h), FUSIBLE est posé au pixel, et chaque
   histoire est une cartouche : une vignette découpée dans la ville à son lieu et à son heure
@@ -269,6 +289,11 @@ sont les prochains à rejoindre la ville.
   Grand Match restent des cartes. Les scènes de la semaine s'épuisent si le réservoir est
   court (une fois par carrière) : il en faut beaucoup, par rôle et par époque.
 
+- Le mode histoire : l'application Flutter montre encore les quatre jauges (le moteur ne les
+  rend plus mortelles, mais l'écran de l'app n'a pas suivi). Le grand déballage (la parole
+  à −5, les promesses non tenues) reste une fin mécanique ; c'est désormais la cause de fin
+  la plus fréquente du joueur simulé (un tiers des carrières, les postulats en chantier
+  compris), à rattacher aux histoires si on le juge trop présent.
 - Le « J » du bandeau n'affiche pas la vraie journée de championnat, et ne dit
   pas la même chose dans l'aperçu web et dans l'application.
 - Après un changement de club en cours de saison, le classement de fin de saison

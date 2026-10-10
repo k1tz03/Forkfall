@@ -1532,6 +1532,7 @@ void main() {
     'setpieces': setpieces,
     if (ville.isNotEmpty) 'ville': ville,
   };
+  _marquerFinsDormantes(bundle, director);
   final hash = fnv1a32(json.encode(bundle)).toRadixString(16);
   bundle['hash'] = hash;
 
@@ -1788,8 +1789,6 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       'texte': texte,
       if (a['nuit'] == true) 'nuit': true,
       'tranches': entier('tranches', 1),
-      'energie': entier('energie', 0),
-      'faim': entier('faim', 0),
       'francs': entier('francs', 0),
       if (a['max_jour'] != null) 'max_jour': entier('max_jour', 1),
       if (jauges.isNotEmpty) 'jauges': jauges,
@@ -1806,7 +1805,9 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     for (final o in (m['scenes'] as List? ?? const [])) if (o is Map) o['id'].toString(),
   };
   const numeriques = {'rang', 'division', 'journee', 'serie_v', 'serie_d', 'pts', 'vestiaire', 'tribunes', 'direction', 'caisse',
-    'annee', 'saison', 'age', 'francs', 'energie', 'faim', 'semaine'};
+    // `eveil` : les tranches depuis le dernier sommeil (l'énergie et la faim
+    // sont parties avec le mode histoire)
+    'annee', 'saison', 'age', 'francs', 'eveil', 'semaine'};
   final mots = {
     'role': roleById.keys.toSet(),
     'phase': {'presaison', 'aller', 'hiver', 'retour', 'sprint', 'bilan'},
@@ -2158,7 +2159,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     si(e['si'], where);
     final usage = (e['usage'] as Map?) ?? const {};
     for (final k in usage.keys) {
-      if (!const {'vitesse', 'repos', 'faim', 'deplacement'}.contains(k.toString())) errors.add('$where: usage « $k » inconnu (vitesse repos faim deplacement)');
+      if (!const {'vitesse', 'deplacement'}.contains(k.toString())) errors.add('$where: usage « $k » inconnu (vitesse deplacement)');
     }
     final log = e['logement'];
     if (log is Map && (log['nom']?.toString() ?? '').isEmpty) errors.add('$where: logement.nom vide');
@@ -2226,4 +2227,44 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (scenes.isNotEmpty) 'scenes': scenes,
     if (objets.isNotEmpty) 'objets': objets,
   };
+}
+
+/// Le mode histoire (calendar.yaml `director.jauges_fatales: false`) : une
+/// jauge au bord n'arrête plus la carrière. Une fin que SEULE une jauge posait
+/// (roles.yaml, aucun `end:` du contenu ne la vise, le moteur ne la pose pas)
+/// devient « dormante » : elle reste écrite, mais sort du Cimetière, où elle
+/// compterait sans pouvoir arriver. Le jour où un livre lui ouvre une porte
+/// (un `end:`), elle se réveille d'elle-même.
+void _marquerFinsDormantes(Map<String, dynamic> bundle, Map<String, dynamic> director) {
+  if (director['jauges_fatales'] != false) return;
+  const enginePosed = {'generique', 'grand_deballage', 'jubile', 'en_retraite', 'co_banqueroute'};
+  final parJauge = <String>{};
+  for (final r in (bundle['roles'] as List).cast<Map<String, dynamic>>()) {
+    for (final g in ((r['gauges'] as List?) ?? const []).cast<Map<String, dynamic>>()) {
+      for (final k in const ['empty', 'full']) {
+        final e = g[k];
+        if (e is String) parJauge.add(e);
+      }
+    }
+  }
+  final vises = <String>{};
+  void collecte(Object? n) {
+    if (n is Map) {
+      final e = n['end'];
+      if (e is String) vises.add(e);
+      for (final v in n.values) {
+        collecte(v);
+      }
+    } else if (n is List) {
+      for (final v in n) {
+        collecte(v);
+      }
+    }
+  }
+
+  collecte(bundle);
+  for (final e in (bundle['endings'] as List).cast<Map<String, dynamic>>()) {
+    final id = e['id'].toString();
+    if (parJauge.contains(id) && !vises.contains(id) && !enginePosed.contains(id)) e['dormante'] = true;
+  }
 }

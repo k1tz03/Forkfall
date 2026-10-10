@@ -257,8 +257,11 @@ void main() {
         }
       }
       expect(total, greaterThan(20), reason: 'le bandeau ne sort jamais : le test ne prouve rien');
-      // Les trois sources que le contenu actuel sait produire.
-      expect(vus, containsAll(<String>['personnage', 'fin', 'intrigue']));
+      // Les sources que le contenu actuel sait produire. Le mode histoire
+      // (calendar.yaml `jauges_fatales: false`) n'annonce plus de fin : une
+      // jauge au bord n'en ouvre aucune.
+      expect(vus, containsAll(<String>['personnage', 'intrigue']));
+      expect(vus, isNot(contains('fin')), reason: 'mode histoire : une jauge au bord n\'annonce plus de fin');
     });
 
     test('A2 · le bandeau ne coûte ni tirage ni jauge : il annonce, il n\'agit pas', () {

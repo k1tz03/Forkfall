@@ -13,9 +13,13 @@
        la frise, la fin — elle ne sait pas qu'il y a une ville, sauf par les
        crochets `window.FusibleVille` (ce fichier) et `window.FusibleCoquille`
        (ce qu'elle prête) ;
-     · la VILLE (ici) décide OÙ et QUAND la carte se montre, tient le temps, le
-       corps (énergie, faim) et les francs, et applique les activités par
-       `FusibleCoquille.activite(id)` → `Engine.activite` (les jauges seules).
+     · la VILLE (ici) décide OÙ et QUAND la carte se montre, tient le temps et
+       les francs, et applique les activités par `FusibleCoquille.activite(id)`
+       → `Engine.activite` (les jauges seules, un climat caché : le mode
+       histoire ne les montre plus). L'énergie et la faim de la préproduction
+       sont parties (retour du porteur, octobre 2026) : on ne surveille plus de
+       barres, on vit la semaine. La ruine, elle, reste : le découvert qui dure
+       appelle l'huissier, et l'huissier qui ne trouve plus rien, la banqueroute.
 
    Les données : content/ville.yaml (dans le bundle, section `ville`) dit les
    lieux, qui on y trouve, ce qu'on y fait ; les images (dossier `ville/` à côté
@@ -831,8 +835,8 @@
       case "saison": return v.season || 1;
       case "age": return v.age || 0;
       case "francs": return Math.round(S.francs);
-      case "energie": return S.energie;
-      case "faim": return S.faim;
+      // l'éveil : les tranches depuis le dernier sommeil (5 et plus : une nuit blanche)
+      case "eveil": return S.eveil || 0;
       case "semaine": return S.semaine;
     }
     return null;
@@ -2430,15 +2434,11 @@
     sauver();
     return true;
   }
-  // une tranche : le corps s'use, et l'heure du rendez-vous peut sonner
+  // une tranche : l'heure du rendez-vous peut sonner
   function pas() {
-    var nuit = S.tranche === 4;
-    S.faim = clamp(S.faim - (nuit ? 4 : 8), 0, 100);
-    S.energie = clamp(S.energie - (nuit ? 8 : 2) - (S.faim <= 0 ? 6 : 0), 0, 100);
+    S.eveil = (S.eveil || 0) + 1;
     S.tranche++;
     if (S.tranche > 4) { S.tranche = 0; nouveauJour(); }
-    if (S.faim <= 0) S.energie = Math.min(S.energie, 50);
-    if (S.energie <= 0) { effondrement(); return false; }
     echeanceMission();
     if (echeance()) return false;
     if (sceneDue()) return false;
@@ -2461,26 +2461,50 @@
     S.francs += paie;
     var phrase = dj >= 3 ? dj + " semaines plus tard" : dj >= 1 ? "Quelques semaines plus tard" : "La semaine suivante";
     attente.push({ titre: phrase, sous: moisCourant(), texte: "La paie est tombée : " + argent(paie) + "." + (S.francs - paie < 0 && S.francs >= 0 ? " Le découvert est comblé." : "") });
+    ruine();
+  }
+  // LA RUINE (le mode histoire : la carrière s'arrête par l'histoire, et la
+  // banqueroute en est une). Le découvert qui survit à la paie : la banque
+  // écrit. La semaine suivante, s'il dure : l'huissier passe et vend ce qui se
+  // vend (le moins nécessaire d'abord, à la moitié du prix). Quand il n'y a
+  // plus rien à prendre et que le trou dépasse encore une paie, c'est le
+  // tribunal de commerce : la fin `co_banqueroute`.
+  function ruine() {
+    if (S.francs >= 0) { S.dette = 0; return; }
+    S.dette = (S.dette || 0) + 1;
+    var seuil = -salaire();
+    // la première semaine, la banque écrit toujours : on n'apprend pas la ruine par l'huissier
+    if (S.dette === 1) {
+      attente.push({ titre: "La banque", sous: moisCourant(), texte: "Une lettre de la Banque Aubérivoise : ton compte est à découvert de " + argent(-S.francs) + ". La prochaine paie devra le combler." });
+      return;
+    }
+    var vendus = [];
+    ["luxe", "vehicules", "logement", "tout"].forEach(function (q) {
+      if (S.francs >= 0) return;
+      aSaisir(q).forEach(function (id) {
+        if (S.francs >= 0 || !possede(id)) return;
+        S.francs += Math.round(OBJET[id].prix * 0.5);
+        vendus.push(OBJET[id].nom.charAt(0).toLowerCase() + OBJET[id].nom.slice(1));
+        delete S.biens[id]; vue = coquille.biens(id, false);
+      });
+    });
+    if (vendus.length) {
+      attente.push({ titre: "L'huissier", sous: moisCourant(), texte: "Il a emporté " + liste(vendus) + "." + (S.francs < 0 ? " Il reste " + argent(-S.francs) + " à rembourser." : " La dette est soldée.") });
+      if (S.francs >= 0) S.dette = 0;
+      return;
+    }
+    if (S.francs < seuil) {
+      attente.push({ titre: "Le tribunal de commerce", sous: moisCourant(), texte: "L'huissier est revenu les mains vides. Il manque " + argent(-S.francs) + ", et plus rien ne se vend.", banqueroute: true });
+    } else {
+      attente.push({ titre: "La banque", sous: moisCourant(), texte: "Le découvert dure : " + argent(-S.francs) + ". La banque ne relance plus par lettre ; elle passera." });
+    }
   }
   var attente = [];
-  function effondrement() {
-    var chez = chezToi(), l = LIEU[chez], c = centre(l.door);
-    fonduTexte("Tu t'effondres", JOUR_MOT[S.jour] + ", " + HEURE[TRANCHES[S.tranche]], "On te ramène chez toi. Tu dors jusqu'au lendemain midi.", function () {
-      poser(c[0], c[1]); S.lieu = chez;
-      while (S.tranche !== 1 || !S._dormi) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); S._dormi = true; } }
-      S._dormi = false;
-      S.energie = 45; S.faim = clamp(S.faim, 10, 100);
-      var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
-      recaler();
-    }, function () { majHud(); sauver(); echeance(); });
-  }
   var allerApresNuit = false;
   function dormir() {
     // jusqu'au matin suivant ; la nuit peut être interrompue par un rendez-vous (ou un événement)
     var depart = S.semaine;
-    var lg = logement();
-    S.energie = clamp(S.energie + 60 + clamp(Math.max(usage("repos"), lg ? +lg.logement.repos || 0 : 0), 0, 30), 0, 100);
-    S.faim = clamp(S.faim - 10 + clamp(usage("faim"), 0, 30), 0, 100);
+    S.eveil = 0;
     var garde = 0;
     do { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } while (S.tranche !== 0 && ++garde < 10);
     majHud(); sauver();
@@ -2498,7 +2522,8 @@
   function suiteFondus() {
     if (!attente.length) return;
     var a = attente.shift();
-    fonduTexte(a.titre, a.sous, a.texte, null, suiteFondus);
+    // le tribunal de commerce : après son texte, l'écran de fin de la banqueroute
+    fonduTexte(a.titre, a.sous, a.texte, null, a.banqueroute ? function () { attente = []; sauver(); coquille.banqueroute(); } : suiteFondus);
   }
 
   // ─────────────────────────────────────────────────────────────── le fondu
@@ -2537,7 +2562,6 @@
   function pourquoiPas(a, lieuOuvert) {
     if (!lieuOuvert) return "Fermé à cette heure.";
     if (!ouvert(a)) return "Pas à cette heure-ci.";
-    if (a.energie < 0 && S.energie + a.energie < 0) return "Tu n'as plus l'énergie.";
     if (a.francs < 0 && S.francs + a.francs < 0) return "Pas assez d'argent.";
     if (a.max_jour && (S.jourFaits[a.id] || 0) >= a.max_jour) return "Déjà fait aujourd'hui.";
     if (a.tranches > 0 && S.tranche === 4 && !a.nuit) return "Il est trop tard.";
@@ -2547,10 +2571,9 @@
     var out = [];
     if (a.tranches > 0) out.push('<span>' + (a.tranches === 1 ? "1 tranche" : a.tranches + " tranches") + '</span>');
     if (a.nuit) out.push('<span>la nuit</span>');
-    if (a.energie) out.push('<span class="' + (a.energie > 0 ? "up" : "dn") + '">énergie ' + (a.energie > 0 ? "+" : "−") + Math.abs(a.energie) + '</span>');
-    if (a.faim) out.push('<span class="' + (a.faim > 0 ? "up" : "dn") + '">faim ' + (a.faim > 0 ? "+" : "−") + Math.abs(a.faim) + '</span>');
     if (a.francs) out.push('<span class="' + (a.francs > 0 ? "up" : "dn") + '">' + (a.francs > 0 ? "+" : "") + argent(a.francs) + '</span>');
-    var J = a.jauges || {};
+    // le mode histoire ne montre pas les jauges : l'activité ne les annonce plus
+    var J = document.body.classList.contains("mode-histoire") ? {} : (a.jauges || {});
     Object.keys(J).sort().forEach(function (g) {
       var deja = S.faits[a.id] === S.semaine;
       out.push('<span class="j ' + (deja ? "" : J[g] > 0 ? "up" : "dn") + '">' + icone(g === "direction" ? "president" : g, 13) + (deja ? "·" : (J[g] > 0 ? "▲" : "▼")) + '</span>');
@@ -2647,8 +2670,6 @@
     var cle = porteOuverte;
     if (pourquoiPas(a, true)) return;
     S.francs += a.francs || 0;
-    S.faim = clamp(S.faim + (a.faim || 0), 0, 100);
-    if (!a.nuit) S.energie = clamp(S.energie + (a.energie || 0), 0, 100);
     S.jourFaits[a.id] = (S.jourFaits[a.id] || 0) + 1;
     var texte = a.texte;
     if (a.jauges && S.faits[a.id] !== S.semaine) {
@@ -2672,9 +2693,6 @@
     if (!h || !S) return;
     h.querySelector(".v-temps b").textContent = JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]];
     h.querySelector(".v-temps span").textContent = "Sem. " + S.semaine + " · " + moisCourant();
-    var be = h.querySelector(".v-energie"), bf = h.querySelector(".v-faim");
-    be.querySelector("u").style.width = S.energie + "%"; be.classList.toggle("bas", S.energie <= 20);
-    bf.querySelector("u").style.width = S.faim + "%"; bf.classList.toggle("bas", S.faim <= 15);
     var fr = h.querySelector(".v-francs");
     fr.textContent = argent(S.francs); fr.classList.toggle("bas", S.francs < 100);
     var hb = $("villeBas"), r = hb.querySelector(".v-rdv");
@@ -2901,8 +2919,7 @@
     // l'état de la ville, sous le rail ; un espace ; les actions, au-dessus du bandeau
     var hud = document.createElement("div"); hud.className = "v-hud"; hud.id = "villeHud";
     hud.innerHTML = '<div class="v-temps"><b></b><span></span></div>' +
-      '<div class="v-corps"><div class="v-besoin v-energie"><i>Énergie</i><div class="barre"><u></u></div></div>' +
-      '<div class="v-besoin v-faim"><i>Faim</i><div class="barre"><u></u></div></div><div class="v-argent"><div class="v-francs"></div><span class="v-gain" aria-live="polite"></span></div></div>';
+      '<div class="v-corps"><div class="v-argent"><div class="v-francs"></div><span class="v-gain" aria-live="polite"></span></div></div>';
     var rail = $("rail");
     rail.parentNode.insertBefore(hud, rail.nextSibling);
     var espace = document.createElement("div"); espace.className = "v-espace";
@@ -3069,7 +3086,7 @@
         S = {
           v: 1, nom: (v.entities && v.entities.protagonist) || "", role: v.role,
           // en poche au départ : une semaine de la paie du rôle (le promu n'a pas un sou, son entraîneur si)
-          semaine: 1, jour: 0, tranche: 0, energie: 80, faim: 70,
+          semaine: 1, jour: 0, tranche: 0, eveil: 0, dette: 0,
           francs: Math.max(1240, (SALAIRE[v.role] || SALAIRE.entraineur)[clamp((v.division || 1) - 1, 0, 2)]),
           x: 0, y: 0, lieu: domicileDe(v.role, v.flags), cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
           journeeDebut: v.journee || 0, auMatch: false, zoom: 0,
@@ -3171,6 +3188,8 @@
       if (quoi === "scene" && SCENE[val] && !carteOn && !occupe) jouerScene(SCENE[val]);
       if (quoi === "plan") { planifierScenes(); return S.scenesJour; }
       if (quoi === "tranche") { while (TRANCHES[S.tranche] !== val) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } majHud(); }
+      // la ruine : une paie qui tombe sur un découvert (la banque, l'huissier, le tribunal)
+      if (quoi === "paie") { attente = []; ruine(); majHud(); suiteFondus(); return { francs: S.francs, dette: S.dette, attente: attente.length }; }
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
     _toucher: function (uid) {

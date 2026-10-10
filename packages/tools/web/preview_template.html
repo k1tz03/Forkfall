@@ -271,6 +271,10 @@ html:has(#titleScreen:not([hidden])) #device{background:#120E1C}
   .acc-pano,.acc-meche i,.postulat .heure i,.fx-pluie::after,.fx-feu::after,.fx-fumigene::after{animation:none}
 }
 
+/* le mode histoire : plus de jauges à l'écran (le rail du haut, les jauges
+   éteintes de l'écran de fin) — elles restent un climat caché */
+body.mode-histoire #rail,body.mode-histoire #deadRail{display:none}
+
 /* ═══ 2. JEU ════════════════════════════════════════════════════════════ */
 #gameScreen{gap:0}
 
@@ -1041,10 +1045,18 @@ __VILLE_CSS__
   var postulats = meta.postulats || [];
   var CHARS = {};
   (Array.isArray(content.characters) ? content.characters : []).forEach(function (c) { if (c && c.id) CHARS[c.id] = c; });
-  var endingsList = Array.isArray(content.endings) ? content.endings : Object.keys(content.endings || {}).map(function (k) { return content.endings[k]; });
+  // LE MODE HISTOIRE (calendar.yaml `director.jauges_fatales: false`) : les
+  // quatre jauges ne tuent plus et quittent l'écran ; elles restent un climat
+  // caché. Les fins que seule une jauge posait dorment (build_content les
+  // marque `dormante`) : elles sortent du Cimetière, où elles compteraient sans
+  // pouvoir arriver.
+  var MODE_HISTOIRE = !!(content.director && content.director.jauges_fatales === false);
+  if (MODE_HISTOIRE) document.body.classList.add("mode-histoire");
+  var toutesFins = Array.isArray(content.endings) ? content.endings : Object.keys(content.endings || {}).map(function (k) { return content.endings[k]; });
+  var endingsList = toutesFins.filter(function (e) { return e && !e.dormante; });
   var ENDINGS_TOTAL = endingsList.length;
   var ENDINGS = {};
-  endingsList.forEach(function (e) { if (e && e.id) ENDINGS[e.id] = e; });
+  toutesFins.forEach(function (e) { if (e && e.id) ENDINGS[e.id] = e; });
   var JOURNAUX = {}, UNES = {};
   (Array.isArray(content.journaux) ? content.journaux : []).forEach(function (j) { if (j && j.id) JOURNAUX[j.id] = j; });
   (Array.isArray(content.unes) ? content.unes : []).forEach(function (u) { if (u && u.id) UNES[u.id] = u; });
@@ -1141,7 +1153,7 @@ __VILLE_CSS__
       if (evts.indexOf("jauge_danger") >= 0) tension = Math.max(tension, .5);
       audio.setTension(tension);
     }
-    evts = evts.filter(function (e) { return e !== "choix_gauche" && e !== "choix_droite"; });
+    evts = evts.filter(function (e) { return e !== "choix_gauche" && e !== "choix_droite" && !(MODE_HISTOIRE && e === "jauge_danger"); });
     var bord = {}, neuf = false;
     (view.gauges || []).forEach(function (g) {
       if (g.value <= GAUGE_MIN_DANGER || g.value >= GAUGE_MAX_DANGER) { bord[g.id] = 1; if (!dangerSeen[g.id]) neuf = true; }
@@ -1815,7 +1827,7 @@ __VILLE_CSS__
     } else {
       e("div", "horloge", "avant la 1re journée");
     }
-    var dangers = (view.gauges || []).filter(function (g) { return g.value <= GAUGE_MIN_DANGER || g.value >= GAUGE_MAX_DANGER; });
+    var dangers = MODE_HISTOIRE ? [] : (view.gauges || []).filter(function (g) { return g.value <= GAUGE_MIN_DANGER || g.value >= GAUGE_MAX_DANGER; });
     if (dangers.length) e("div", "crane", plural(dangers.length, "alerte", "alertes"), "alerte");
     else if (view.objective) e("div", "tampon", String(view.objective).toLowerCase());
   }
@@ -2041,10 +2053,15 @@ __VILLE_CSS__
   function stampText(e) {
     var id = String(e.id || "");
     var flags = e.flags || [];
+    if (ENDINGS[id] && ENDINGS[id].tampon) return ENDINGS[id].tampon;
     if (e.golden) return "Retraité";
-    if (id === "grand_deballage" || id === "en_coupable" || id === "jp_panama") return "En garde à vue";
+    if (/garde_a_vue|^grand_deballage$|^en_coupable$|^jp_panama$/.test(id)) return "En garde à vue";
+    if (id === "co_banqueroute") return "Ruiné";
     if (id.indexOf("blesse") >= 0 || flags.indexOf("genou") >= 0) return "Blessé";
-    return "Viré";
+    // les renvois : le SMS du président, le placard, la porte des bureaux
+    if (/^(en_sms|en_placard|ds_commun_accord|pr_ag|sl_minuit|jp_place14b|co_relegation)$/.test(id)) return "Viré";
+    // le mode histoire : la carrière finit avec son livre, pas forcément à la porte
+    return MODE_HISTOIRE ? "Fin de l'histoire" : "Viré";
   }
   function gaugeLabel(id) {
     var g = (view.gauges || []).filter(function (x) { return x.id === id; })[0];
@@ -2364,6 +2381,12 @@ __VILLE_CSS__
         view = JSON.parse(window.fusibleBiens(id, !!acquis));
         if (view.over) { advanceEnd(); return view; }
         majJauges();
+        return view;
+      },
+      // la ruine : le découvert a duré, l'huissier n'a plus rien trouvé
+      banqueroute: function () {
+        view = JSON.parse(window.fusibleBanqueroute());
+        if (view.over) advanceEnd();
         return view;
       },
       sauver: function () { return window.fusibleEtat ? window.fusibleEtat() : ""; },

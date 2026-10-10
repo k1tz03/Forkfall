@@ -4,8 +4,9 @@
 # Rive. On y marche, on y fait ce qu'une semaine demande, et les cartes y
 # attendent : chaque carte a un lieu, chaque personnage un endroit où on le
 # trouve. Le moteur ne lit de ce fichier que `activites[].jauges`
-# (`Engine.activite`) ; le temps, l'énergie, la faim et les francs sont tenus par
-# la coquille (packages/tools/web/ville.js), qui lit tout le reste.
+# (`Engine.activite`) ; le temps et les francs sont tenus par la coquille
+# (packages/tools/web/ville.js), qui lit tout le reste. L'énergie et la faim de
+# la préproduction sont parties (le mode histoire, octobre 2026).
 #
 # Les clés de lieu sont celles du rendu de la ville (docs/design/pixel_iso,
 # `lieux.json`) : la porte de chaque lieu y est posée sur la grille où l'on marche.
@@ -266,10 +267,11 @@ lieux:
 
 # Ce qu'on fait entre deux cartes. `jauges` : ce que le moteur applique (petit :
 # la carte tranche, la ville répare à la marge), une fois par semaine jouée — la
-# deuxième fois fatigue sans rien changer. `tranches` : le temps que ça prend
-# (0 : le temps de rien). `energie`, `faim`, `francs` : ce que ça coûte ou
-# rapporte au corps et au portefeuille. `max_jour` : pas plus souvent dans une
-# journée. `roles` absent : les deux rôles.
+# deuxième fois ne change plus rien. `tranches` : le temps que ça prend
+# (0 : le temps de rien). `francs` : ce que ça coûte ou rapporte. `max_jour` :
+# pas plus souvent dans une journée. `roles` absent : tous les rôles. Les
+# jauges ne se montrent plus (le mode histoire) : l'activité les bouge en
+# coulisse, et ce climat choisit les variantes des cartes.
 activites:
   # — le corps (les deux rôles)
   - id: dormir
@@ -277,46 +279,18 @@ activites:
     label: Dormir
     texte: "Tu tires les rideaux. La rue se tait vers minuit, la chaudière vers une heure."
     nuit: true
-    energie: 60
-    faim: -10
     heures: [soir, nuit]
-  - id: sieste
-    lieu: appartement
-    label: Une heure sur le canapé
-    texte: "Tu fermes les yeux devant la télé. Tu les rouvres sur la météo."
-    tranches: 1
-    energie: 15
-    heures: [midi, aprem]
-  - id: frigo
-    lieu: appartement
-    label: Manger un morceau
-    texte: "Des pâtes froides, debout devant le frigo ouvert."
-    tranches: 0
-    faim: 35
-    max_jour: 2
-    heures: [matin, midi, soir, nuit]
-  - id: sandwich
-    lieu: boulangerie_residentiel
-    label: Un sandwich, un café
-    texte: "Jambon-beurre et café serré. La boulangère te demande le score."
-    tranches: 0
-    faim: 25
-    francs: -12
-    heures: [matin, midi]
   - id: comptoir
     lieu: cafe_mairie
     label: Un café au comptoir
     texte: "Au comptoir, on parle du match de samedi comme d'un enterrement. Tu écoutes, tu ne dis rien."
     tranches: 1
-    energie: 5
-    faim: 10
     francs: -6
   - id: plat_du_jour
     lieu: brasserie
     label: Le plat du jour
     texte: "Blanquette, quart de rouge. Au fond de la salle, deux anciens refont l'équipe de 1962."
     tranches: 1
-    faim: 50
     francs: -45
     heures: [midi, soir]
   - id: recueillement
@@ -324,7 +298,6 @@ activites:
     label: Rester un moment
     texte: "Tu lis les noms sur le caveau. Tu en connais trois. Tu repars plus lentement que tu n'es venu."
     tranches: 1
-    energie: -5
 
   # — l'entraîneur
   - id: seance
@@ -333,8 +306,6 @@ activites:
     label: Diriger la séance
     texte: "Toro, oppositions, coups de pied arrêtés. Le groupe finit rincé et, pour une fois, personne ne discute."
     tranches: 1
-    energie: -20
-    faim: -10
     jauges: {vestiaire: 3}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -344,7 +315,6 @@ activites:
     label: Le mercredi des jeunes
     texte: "Tu regardes les U17 jouer en cinq contre cinq. Un parent filme. Le président saura que tu es venu."
     tranches: 1
-    energie: -15
     jauges: {direction: 1, tribunes: 1}
     heures: [aprem]
     jours: [mer]
@@ -354,7 +324,6 @@ activites:
     label: Les papiers avec Josiane
     texte: "Licences, feuilles de match, le relevé de la banque. Josiane tient la règle, toi le stylo."
     tranches: 1
-    energie: -10
     jauges: {direction: 3}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -364,7 +333,6 @@ activites:
     label: Payer ta tournée
     texte: "Tu paies la tournée au comptoir. Le kop trinque à ta santé ; au club-house, quelqu'un le notera."
     tranches: 1
-    faim: 20
     francs: -60
     jauges: {tribunes: 3, direction: -1}
     heures: [midi, soir]
@@ -374,7 +342,6 @@ activites:
     label: Laver les maillots
     texte: "Vingt maillots, deux machines, une heure à attendre sur une chaise en plastique. Lundi, les joueurs le remarqueront."
     tranches: 1
-    energie: -10
     francs: -35
     jauges: {vestiaire: 2}
     heures: [matin, midi, aprem, soir]
@@ -384,7 +351,6 @@ activites:
     label: Voir le banquier
     texte: "Tu négocies un échéancier pour les primes. Il hoche la tête, il note, il ne promet rien, mais il signe."
     tranches: 1
-    energie: -10
     jauges: {caisse: 3}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -394,7 +360,6 @@ activites:
     label: Plaider à la mairie
     texte: "Tu parles éclairage, vestiaires, jeunesse. La maire t'écoute ; ton président apprendra que tu es passé par-dessus lui."
     tranches: 1
-    energie: -15
     jauges: {caisse: 2, direction: -1}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -404,7 +369,6 @@ activites:
     label: Répondre à L'Écho
     texte: "Une demi-heure avec le journaliste. Tu défends ton équipe, tu en dis un peu trop sur un joueur."
     tranches: 1
-    energie: -10
     jauges: {tribunes: 2, vestiaire: -1}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven, sam]
@@ -414,7 +378,6 @@ activites:
     label: Étudier l'adversaire
     texte: "Trois matchs de l'adversaire en accéléré. À une heure du matin, tu as compris leur coin droit."
     tranches: 1
-    energie: -10
     jauges: {vestiaire: 1}
     heures: [soir]
   - id: infirmerie
@@ -423,7 +386,6 @@ activites:
     label: Le point sur les blessés
     texte: "Le doc t'énumère les genoux, les adducteurs, les mensonges. Tu sais enfin qui peut jouer samedi."
     tranches: 1
-    energie: -5
     jauges: {vestiaire: 1}
     heures: [matin, aprem]
 
@@ -434,8 +396,6 @@ activites:
     label: T'entraîner
     texte: "Des sprints, des frappes, le jeu à deux touches. Tu rentres au vestiaire le dernier, les jambes pleines."
     tranches: 1
-    energie: -20
-    faim: -10
     jauges: {vestiaire: 2}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -445,26 +405,15 @@ activites:
     label: Une heure de fonte
     texte: "Développé couché, squats, gainage. Le préparateur note tes charges dans un carnet que le club lit."
     tranches: 1
-    energie: -25
-    faim: -10
     francs: -10
     jauges: {direction: 2}
     heures: [matin, midi, aprem, soir]
-  - id: soins
-    lieu: cabinet
-    roles: [joueur]
-    label: La table du Doc
-    texte: "Massage, glace, une infiltration que tu ne voulais pas. Les jambes reviennent."
-    tranches: 1
-    energie: 20
-    heures: [matin, aprem]
   - id: dedicaces
     lieu: boutique
     roles: [joueur]
     label: Signer à la boutique
     texte: "Une heure à signer des posters. Une gamine te demande pourquoi tu as raté le penalty."
     tranches: 1
-    energie: -10
     jauges: {tribunes: 3}
     heures: [aprem]
     jours: [mer, sam]
@@ -474,7 +423,6 @@ activites:
     label: Un verre avec le kop
     texte: "Gégé te sert une bière et te présente comme son fils. Le capitaine le saura demain."
     tranches: 1
-    faim: 20
     francs: -40
     jauges: {tribunes: 2, vestiaire: -1}
     heures: [midi, soir]
@@ -484,7 +432,6 @@ activites:
     label: Placer tes primes
     texte: "Le banquier te parle d'un livret, puis d'un appartement à crédit. Tu signes pour le livret."
     tranches: 1
-    energie: -5
     jauges: {caisse: 3}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -494,7 +441,6 @@ activites:
     label: Une interview
     texte: "Le journaliste veut une phrase sur le coach. Tu lui en donnes une, et tu la regrettes en la relisant."
     tranches: 1
-    energie: -10
     jauges: {tribunes: 2, direction: -1}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven, sam]
@@ -504,7 +450,6 @@ activites:
     label: Voir les gamins du centre
     texte: "Tu tapes la balle avec les U17. L'un d'eux te demande comment on devient pro. Tu ne sais pas quoi répondre."
     tranches: 1
-    energie: -10
     jauges: {vestiaire: 1, tribunes: 1}
     heures: [aprem]
     jours: [mer]
@@ -516,7 +461,6 @@ activites:
     label: Visionner des recrues
     texte: "Trois cassettes, trois ailiers, la même action filmée de trois tribunes. Le coach a demandé un latéral gauche. Tu rembobines."
     tranches: 1
-    energie: -10
     jauges: {vestiaire: 2}
     heures: [matin, aprem, soir]
   - id: dejeuner_agent
@@ -525,7 +469,6 @@ activites:
     label: Le café des agents
     texte: "Il commande pour deux, parle de son fils, glisse une feuille sous la soucoupe. Une page, un pourcentage, et pas de date."
     tranches: 1
-    faim: 10
     francs: -25
     jauges: {caisse: 3, tribunes: -1}
     heures: [matin, midi]
@@ -535,7 +478,6 @@ activites:
     label: Attendre le fax de nuit
     texte: "Le bureau éteint, la machine allumée. À vingt-trois heures quarante, elle avale une feuille vierge et la rend. Tu attends la suivante."
     tranches: 1
-    energie: -15
     jauges: {direction: 2}
     heures: [soir, nuit]
   - id: banquier_ds
@@ -544,7 +486,6 @@ activites:
     label: Voir le banquier
     texte: "Il a ta grille de salaires sous les yeux et ton tableau de ventes à côté. « Vos deux colonnes ne se parlent pas. »"
     tranches: 1
-    energie: -10
     jauges: {caisse: 2, vestiaire: -1}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -554,7 +495,6 @@ activites:
     label: Le rapport au président
     texte: "Il lit la première page, retourne la deuxième, signe la troisième sans la lire. « Et le petit, on le vend quand ? »"
     tranches: 1
-    energie: -5
     jauges: {direction: 3}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -564,7 +504,6 @@ activites:
     label: Passer au centre
     texte: "Les U17 jouent sur le synthétique. Le chef du recrutement te montre un gamin du doigt, puis un autre, puis le premier."
     tranches: 1
-    energie: -10
     jauges: {vestiaire: 1, tribunes: 1}
     heures: [aprem]
     jours: [mar, mer, jeu]
@@ -576,7 +515,6 @@ activites:
     label: Présider le conseil
     texte: "Sept chaises, six administrateurs, un ordre du jour d'une page. Le représentant du fonds prend des notes sur ce que tu ne dis pas."
     tranches: 1
-    energie: -15
     jauges: {direction: 3}
     heures: [matin, aprem]
     jours: [lun, mer, ven]
@@ -586,7 +524,6 @@ activites:
     label: Voir le banquier
     texte: "Il a ton bilan ouvert à la page des dettes. « Votre prédécesseur aussi croyait aux recettes du derby. »"
     tranches: 1
-    energie: -10
     jauges: {caisse: 3, direction: -1}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -596,7 +533,6 @@ activites:
     label: Passer voir les salariés
     texte: "L'intendante plie les maillots, le jardinier boit son café debout. Personne ne te tutoie ; tout le monde te regarde."
     tranches: 1
-    energie: -5
     jauges: {vestiaire: 2}
     heures: [matin, aprem]
   - id: loge_president
@@ -605,7 +541,6 @@ activites:
     label: Recevoir en loge
     texte: "Le maire, un banquier, deux élus, le petit four froid. On te demande le score à la mi-temps ; tu le donnes avec le sourire du score d'avant."
     tranches: 1
-    faim: 15
     francs: -400
     jauges: {direction: 2, tribunes: -1}
     heures: [aprem]
@@ -616,7 +551,6 @@ activites:
     label: Monter à la mairie
     texte: "Madame Aubert te reçoit debout, le dossier du stade sous le bras. « La Ville aime le Racing. La Ville aime aussi ses écoles. »"
     tranches: 1
-    energie: -10
     jauges: {caisse: 2, tribunes: -1}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -626,7 +560,6 @@ activites:
     label: Descendre au vestiaire
     texte: "Tu frappes avant d'entrer. Le capitaine se lève, les autres non. L'entraîneur te regarde comme on regarde un huissier poli."
     tranches: 1
-    energie: -5
     jauges: {vestiaire: 2, direction: -1}
     heures: [matin, aprem]
   - id: buvette_president
@@ -646,7 +579,6 @@ activites:
     label: Superviser un match de club
     texte: "La tribune présidentielle te fait une place. Tu notes un nom, tu le rayes, tu le réécris. Le président du club regarde ton carnet."
     tranches: 2
-    energie: -15
     jauges: {vestiaire: 2}
     heures: [aprem, soir]
     jours: [mer, sam, dim]
@@ -656,7 +588,6 @@ activites:
     label: Rappeler la Fédération
     texte: "Berthomier n'est pas là. Sa secrétaire prend le message, le relit à voix haute, et te demande si c'est bien tout."
     tranches: 1
-    energie: -5
     jauges: {direction: 3}
     heures: [matin, aprem]
     jours: [lun, mar, mer, jeu, ven]
@@ -666,7 +597,6 @@ activites:
     label: Répondre à L'Écho
     texte: "Massenet pose sa question en premier, et la deuxième aussi. Tu donnes un nom ; demain, il sera en gros."
     tranches: 1
-    energie: -10
     jauges: {tribunes: 2, vestiaire: -1}
     heures: [matin, aprem]
   - id: joueur_entrainement
@@ -675,7 +605,6 @@ activites:
     label: Voir un joueur s'entraîner
     texte: "Tu restes derrière la haie, le col relevé. Le gamin rate deux centres, réussit le troisième, et regarde vers la haie comme s'il savait."
     tranches: 1
-    energie: -10
     jauges: {vestiaire: 1, tribunes: 1}
     heures: [matin, aprem]
   - id: seance_selection
@@ -684,8 +613,6 @@ activites:
     label: Diriger la séance
     texte: "Vingt-trois joueurs, onze chasubles, deux clans qui s'évitent dans les toros. Tu mélanges les couleurs ; à la pause, chacun a retrouvé les siens."
     tranches: 1
-    energie: -20
-    faim: -10
     jauges: {vestiaire: 3}
     heures: [matin, aprem]
   - id: veillee_hotel
@@ -694,7 +621,6 @@ activites:
     label: La veillée à l'hôtel
     texte: "Le salon du rez-de-chaussée, la télé sans le son, les cartes. Tu passes de table en table ; à la dernière, on cache quelque chose sous le tapis."
     tranches: 1
-    energie: -5
     jauges: {vestiaire: 2, direction: -1}
     heures: [soir]
   - id: dormir_hotel
@@ -703,8 +629,6 @@ activites:
     label: Monter dormir
     texte: "La chambre donne sur la Rive. Le veilleur de nuit note l'heure de ta clé sur le tableau, comme pour tout le monde."
     nuit: true
-    energie: 60
-    faim: -10
     heures: [soir, nuit]
   - id: sponsor_selection
     lieu: hotel
@@ -712,7 +636,6 @@ activites:
     label: Le déjeuner du sponsor
     texte: "Le sponsor de la sélection a réservé la salle du fond. Il veut une photo avec le capitaine ; il paiera l'hôtel du stage."
     tranches: 1
-    faim: 30
     jauges: {caisse: 3, vestiaire: -1}
     heures: [midi]
 

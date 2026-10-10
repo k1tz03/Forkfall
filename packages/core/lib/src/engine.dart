@@ -216,6 +216,20 @@ class Engine {
     return s;
   }
 
+  /// LA VILLE — la ruine (le mode histoire : « la carrière s'arrête par
+  /// l'histoire », et la banqueroute en est une). C'est la coquille qui en
+  /// décide, puisqu'elle tient l'argent : le découvert a duré, l'huissier est
+  /// passé et n'a plus rien trouvé à saisir. Le moteur pose la fin
+  /// `co_banqueroute` et son écran. Aucun tirage.
+  GameState banqueroute(GameState prev) {
+    final s = prev.clone();
+    if (s.over || !content.endings.containsKey('co_banqueroute')) return s;
+    s.endingId = 'co_banqueroute';
+    s.over = true;
+    _buildEndingPending(s);
+    return s;
+  }
+
   void _appliquerVille(GameState s, EffetVille e) {
     // Le Rng n'est là que pour la signature : un effet de la ville n'a ni `rand`
     // ni `react`, et l'état du générateur n'est pas réécrit.
@@ -801,6 +815,8 @@ class Engine {
       s.over = true;
       return;
     }
+    // Le mode histoire : une jauge au bord n'arrête rien (DirectorConfig.jaugesFatales).
+    if (!content.director.jaugesFatales) return;
     final role = content.roles[s.role]!;
     for (final g in role.gauges) {
       final v = s.gauges[g.id] ?? 50;

@@ -17,8 +17,8 @@
 #
 # Ce qu'un objet fait :
 #   · `usage` : en ville — `vitesse` (la marche multipliée, pour un véhicule),
-#     `repos` (+énergie à chaque nuit), `faim` (+faim au réveil),
-#     `deplacement: libre` (l'hélicoptère : partout d'un coup).
+#     `deplacement: libre` (l'hélicoptère : partout d'un coup). (Le repos et la
+#     faim sont partis avec l'énergie et la faim de la ville.)
 #   · `logement` : il remplace le deux-pièces loué de la rue des Lilas.
 #   · `effets` : ce que le moteur applique à l'achat (`Engine.biens`) — de
 #     petites touches aux jauges (±5 au plus) et des drapeaux `bn_*`, retirés
@@ -137,7 +137,6 @@ objets:
     prix: 950
     annees: [1990, 2050]
     texte: "Le pharmacien moule tes semelles dans une mousse tiède : « Votre voûte s'affaisse à gauche. Vos genoux paient pour vos pieds depuis des années. »"
-    usage: {repos: 2}
     revente: 0
 
   - id: baskets_collection
@@ -187,7 +186,6 @@ objets:
     prix: 2300
     annees: [2015, 2050]
     texte: "Le buraliste te montre comment la montre compte tes pas, ton cœur, tes heures de sommeil : « Elle sait tout de vous. À qui elle le dit, c'est écrit en petit. »"
-    usage: {repos: 2}
     revente: 0.1
 
   # ================================================================ TÉLÉPHONES
@@ -371,7 +369,7 @@ objets:
     prix: 540000
     annees: [1990, 2050]
     texte: "Madame Tessandier ouvre les volets : la Rive en bas, le pont à gauche, le stade au fond. « Le chauffage marche. Je vous le dis, parce qu'on me le demande toujours. »"
-    logement: {nom: "Le trois-pièces du quai", repos: 10}
+    logement: {nom: "Le trois-pièces du quai"}
     revente: 0.9
 
   - id: residence_rive
@@ -381,7 +379,7 @@ objets:
     prix: 760000
     annees: [1993, 2050]
     texte: "La maquette de la vitrine est devenue un immeuble. Madame Tessandier te confie les clés d'un appartement qui sent encore la peinture : « Personne n'y a jamais pleuré. »"
-    logement: {nom: "La résidence de la Rive", repos: 14}
+    logement: {nom: "La résidence de la Rive"}
     revente: 0.85
 
   - id: pavillon
@@ -391,7 +389,7 @@ objets:
     prix: 880000
     annees: [1990, 2050]
     texte: "Trois chambres, un garage, une haie de troènes. Madame Tessandier te sert le café qu'on ne propose qu'une fois : « Les voisins sont calmes. Ils regardent, c'est tout. »"
-    logement: {nom: "Le pavillon des Lilas", repos: 15}
+    logement: {nom: "Le pavillon des Lilas"}
     effets: {set: [bn_pavillon]}
     revente: 0.9
 
@@ -402,7 +400,7 @@ objets:
     prix: 1150000
     annees: [2005, 2050]
     texte: "L'usine a perdu ses machines et gagné des baies vitrées. Madame Tessandier tapote une poutre d'acier : « On a gardé le pont roulant. Les gens adorent. Pas tous. »"
-    logement: {nom: "Le duplex de la Tréfilerie", repos: 16}
+    logement: {nom: "Le duplex de la Tréfilerie"}
     effets: {jauges: {tribunes: -2}, set: [bn_duplex_trefilerie]}
     revente: 0.85
 
@@ -413,7 +411,7 @@ objets:
     prix: 3200000
     annees: [1990, 2050]
     texte: "La villa des Hauts-de-Rive domine la ville : la piscine vide, les tilleuls. Madame Tessandier signe le compromis sans lever les yeux : « On vous verra d'en bas, vous savez. »"
-    logement: {nom: "La villa des Hauts-de-Rive", repos: 25}
+    logement: {nom: "La villa des Hauts-de-Rive"}
     effets: {jauges: {direction: -2, tribunes: -1}, set: [bn_villa]}
     revente: 0.85
 
@@ -424,7 +422,7 @@ objets:
     prix: 2600000
     annees: [2010, 2050]
     texte: "Le dernier étage du quai, une terrasse au-dessus des toits. Madame Tessandier ouvre la baie : d'ici, on voit le stade, la mairie, et la fenêtre de ton ancien deux-pièces."
-    logement: {nom: "La terrasse du quai", repos: 22}
+    logement: {nom: "La terrasse du quai"}
     effets: {jauges: {direction: -1, tribunes: -1}, set: [bn_penthouse]}
     revente: 0.85
 
@@ -436,7 +434,7 @@ objets:
     annees: [1990, 2050]
     si: "francs >= 3000000"
     texte: "Douze pièces, un parc qui descend jusqu'à la Rive. Madame Tessandier te tend un trousseau de vingt clés : « Les anciens propriétaires ont tout perdu. Rien à voir avec vous. »"
-    logement: {nom: "Le manoir des Tilleuls", repos: 30}
+    logement: {nom: "Le manoir des Tilleuls"}
     effets: {jauges: {direction: -3, tribunes: -2, vestiaire: -1}, set: [bn_manoir]}
     revente: 0.8
 
@@ -580,7 +578,6 @@ objets:
     annees: [1990, 2050]
     roles: [joueur]
     texte: "Le pharmacien serre les sangles sur ta jambe tendue : « Elle ne répare rien. Elle empêche de faire pire. Comme votre docteur, en somme. »"
-    usage: {repos: 3}
     revente: 0
 
   # =================================================================== MAISON
@@ -591,7 +588,6 @@ objets:
     prix: 4800
     annees: [1990, 2004]
     texte: "L'épicier te prête son catalogue de vente par correspondance. Trois semaines plus tard, un livreur monte la télé couleur au troisième en jurant à chaque palier."
-    usage: {repos: 2}
     revente: 0.2
 
   - id: magnetoscope
@@ -610,7 +606,6 @@ objets:
     prix: 1300
     annees: [1990, 2004]
     texte: "Deux manettes et une cartouche de football où ton club n'existe pas. L'épicier la coche dans son catalogue en clignant de l'œil : « Pour les enfants, hein. »"
-    usage: {repos: 1}
     revente: 0.3
 
   - id: ecran_plat
@@ -620,7 +615,6 @@ objets:
     prix: 13000
     annees: [2004, 2050]
     texte: "L'épicerie est devenue point relais. Le carton de l'écran plat t'attend derrière les packs d'eau, plus haut que l'épicier lui-même."
-    usage: {repos: 3}
     revente: 0.2
 
   - id: console_ligne
@@ -630,7 +624,6 @@ objets:
     prix: 3200
     annees: [2005, 2050]
     texte: "Le carton t'attend au point relais de l'épicerie. Le soir même, un gamin de Valentienne te bat en ligne, avec ton propre club."
-    usage: {repos: 1}
     revente: 0.3
 
   - id: congelateur
@@ -640,7 +633,6 @@ objets:
     prix: 2600
     annees: [1990, 2050]
     texte: "L'épicier le livre dans sa camionnette et le remplit lui-même de ce qu'il n'a pas vendu : « Vous me réglerez en fin de mois. Je vous mets sur le cahier. »"
-    usage: {faim: 8}
     revente: 0.2
 
   - id: lit
@@ -650,7 +642,6 @@ objets:
     prix: 5500
     annees: [1990, 2050]
     texte: "Le matelas arrive roulé dans du plastique, commandé par l'épicier. La première nuit, la chaudière cogne toujours ; tu ne l'entends plus."
-    usage: {repos: 6}
     revente: 0.1
 
   - id: flipper
