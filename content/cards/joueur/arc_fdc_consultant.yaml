@@ -8,7 +8,7 @@ cards:
     tags: [presse]
     speaker: meneche
     tone: strategique
-    text: "« Juste une question, hors micro, {toi} : le dimanche soir vous êtes libre, et il y a un fauteuil vide à côté du mien. Vous jugez les autres, ou vous restez juge de vous-même ? »"
+    text: "Au studio de la télé régionale, Massenet tapote l'accoudoir d'un fauteuil vide : « Le dimanche soir, à côté de moi, {toi}. On paie bien pour juger les autres. Ça vous tente ? »"
     left:
       label: "Je prends le fauteuil"
       effects: {tribunes: "+", vestiaire: "-", caisse: "+", set: [consultant], outcome: accepte}
@@ -24,11 +24,11 @@ cards:
     tags: [direction, presse]
     speaker: aulard
     tone: strategique
-    text: "« Tu juges mes joueurs le dimanche, et j'ai pas le temps de regarder, mais Josiane me raconte. Tu arrêtes, ou tu continues et tu ne joues plus le samedi ? »"
+    text: "Vaubourg montre du menton la télé éteinte de son bureau : « Tu juges mes joueurs le dimanche. Je ne regarde pas ; Josiane me raconte. Tu arrêtes, ou tu ne joues plus le samedi ? »"
     left:
       label: "J'arrête"
       effects: {direction: "++", caisse: "-", clear: [consultant], react: co.re.josiane_a_lu}
-      answer: "Tu arrêtes. Il l'annonce à l'antenne ; il le dit deux fois, avec ton nom."
+      answer: "Tu arrêtes. Le dimanche suivant, Massenet l'annonce à l'antenne, deux fois, avec ton nom."
     right:
       label: "Je continue"
       effects: {direction: "--", tribunes: "++", set: [consultant_assume]}
@@ -40,13 +40,13 @@ cards:
     tags: [direction, formation]
     speaker: vukic
     tone: strategique
-    text: "« Je te le dis parce que personne ne te le dira, {toi} : je note ce que tu dis à l'antenne, et tu as raison une fois sur deux, c'est beaucoup. Tu me montres tes notes, ou tu les gardes ? »"
+    text: "Dans le vestiaire vide, Vukić lit une de tes phrases du dimanche, sans intonation : « Je note ce que tu dis à l'antenne, {toi}. Une fois sur deux, tu as raison. Tu me montres tes notes ? »"
     left:
       label: "Je te les montre"
       effects: {relation: {vukic: 1}, vestiaire: "+", set: [notes_partagees]}
       answer: "Vous comparez. Vous êtes d'accord une fois sur deux ; c'est beaucoup."
     right:
-      label: "Pour l'antenne"
+      label: "Je les garde pour l'antenne"
       effects: {relation: {vukic: -1}, tribunes: "+"}
       answer: "Il ferme le cahier. Il regarde quand même, chaque dimanche ; il prend des notes sur toi."
 
@@ -58,11 +58,11 @@ cards:
     tags: [presse, moment, chaine]
     speaker: meneche
     tone: strategique
-    text: "« Le fauteuil du dimanche est à vous à l'année, et le samedi vous jouez un quart d'heure. Juste une question, hors micro : vous gardez lequel des deux ? »"
+    text: "Massenet, carnet fermé, à la sortie du studio : « La chaîne vous offre le fauteuil à l'année. Le samedi, vous jouez un quart d'heure. On ne tient pas longtemps les deux. Vous gardez lequel ? »"
     left:
       label: "Je garde le dimanche"
       effects: {tribunes: "+", direction: "-", set: [consultant, consultant_assume], outcome: accepte, end: jp_consultant}
-      answer: "Tu gardes le fauteuil. Le samedi, on te juge ; le dimanche, c'est toi. Le président « n'a pas le temps » de regarder."
+      answer: "Tu gardes le fauteuil. Le samedi, on te jugeait ; le dimanche, c'est toi qui juges, et Vaubourg éteint la télé."
     right:
       label: "Je garde le samedi"
       effects: {tribunes: "-", vestiaire: "+", force: 2, parole: 1, outcome: refuse}
@@ -74,11 +74,11 @@ cards:
     tags: [presse, moment]
     speaker: lea
     tone: strategique
-    text: "« Vous confirmez ? On est en direct, et vous venez de dire que votre propre coach « joue trop bas » ; c'est passé. Un mot pour lui, ou un mot pour vous ? »"
+    text: "Léa t'attend à la sortie du studio, carnet ouvert : « En direct, vous avez dit que votre propre coach « joue trop bas ». C'est passé. Je l'imprime demain : un mot pour lui, ou un mot pour vous ? »"
     left:
       label: "Pour lui : pardon"
       effects: {direction: "+", tribunes: "-", parole: 1}
-      answer: "Tu dis pardon. Il l'entend. Il ne te met pas samedi ; c'est sa réponse."
+      answer: "Ton pardon est imprimé. Il le lit. Samedi, il ne te met pas ; c'est sa réponse."
     right:
       label: "Pour moi : j'assume"
       effects: {tribunes: "++", direction: "--", set: [consultant_assume], outcome: accepte}
@@ -90,12 +90,12 @@ cards:
     tags: [presse, moment]
     speaker: lea
     tone: strategique
-    text: "« Vous confirmez ? Votre coach vient de dire, dans l'autre studio, qu'il était d'accord avec vous « une fois sur deux ». Vous répondez, ou vous le laissez conclure ? »"
+    text: "Léa, au téléphone de L'Écho : « Vukić m'a dit ce matin qu'il était d'accord avec vous « une fois sur deux ». C'est la dernière phrase de mon article. Vous répondez, ou je le laisse conclure ? »"
     left:
       label: "Je le laisse conclure"
       effects: {vestiaire: "+", relation: {vukic: 1}}
-      answer: "Il conclut. Il est bon aussi ; c'est le problème, à deux."
+      answer: "L'article finit sur sa phrase. Le lundi, il la découpe et la colle dans son cahier, à ta page."
     right:
       label: "Je réponds"
       effects: {tribunes: "++", relation: {vukic: -1}, set: [consultant_assume], outcome: accepte}
-      answer: "Tu réponds. La régie coupe ; trop tard."
+      answer: "Ta phrase prend la place de la sienne, en dernière ligne. Il ne te la reproche pas ; il la recopie."

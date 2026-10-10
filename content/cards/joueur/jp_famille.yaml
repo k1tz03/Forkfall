@@ -4,41 +4,45 @@ cards:
     arc: famille
     tags: [famille]
     speaker: camille
-    text: "Camille : « On ne sort plus jamais, {toi}. Ce soir, resto en amoureux, le derby attendra bien. »"
+    text: "Camille a punaisé l'affiche du bal de la grande halle sur le frigo : « Samedi soir, {toi}. La dernière fois qu'on est sortis, c'était pour fêter ton contrat. Je mets ma robe, ou il y a le derby ? »"
     left:
       label: "Je t'emmène danser"
       effects: { relation: { camille: 1 }, vestiaire: "-", force: -1 }
-      answer: "Tu rentres à 2h, jambes lourdes et cœur léger."
+      answer: "Vous rentrez à deux heures, les jambes lourdes. Dimanche, Vukić te sort à l'heure de jeu ; Camille chante dans la cuisine."
     right:
-      label: "Après le derby"
+      label: "On ira après le derby"
       effects: { relation: { camille: -1 }, tribunes: "+" }
+      answer: "Elle décroche l'affiche et la plie en quatre. Elle la range dans le tiroir de la cuisine, avec les autres."
 
   - id: jp.famille.mariage_finale
     roles: [joueur]
     arc: famille
     tags: [famille, moment]
     speaker: camille
-    text: "Camille : « Ma sœur se marie le jour de la demi-finale, {toi}. Tu es témoin, tu avais promis. »"
+    text: "Camille a posé le faire-part de sa sœur à côté du calendrier de la Coupe. La même date, entourée deux fois : « Tu as promis d'être témoin, {toi}. Je dis quoi à ma sœur ? »"
     left:
       label: "Je serai témoin"
       effects: { relation: { camille: 2 }, tribunes: "--", vestiaire: "-" }
+      answer: "À l'heure du coup d'envoi, tu signes le registre à la mairie. Ta belle-sœur pleure ; au club, on parle de toi sans toi."
     right:
-      label: "C'est une demi-finale"
+      label: "Je joue la demi-finale"
       effects: { relation: { camille: -2 }, tribunes: "+", vestiaire: "+" }
-      answer: "Camille part au mariage sans toi, et sans un mot."
+      answer: "Camille part au mariage seule. Sur les photos, une chaise vide au premier rang ; sa sœur les lui envoie toutes."
 
   - id: jp.famille.podcast
     roles: [joueur]
     arc: famille
     tags: [famille, presse]
     speaker: camille
-    text: "Camille : « Je lance un podcast sur les femmes de footballeurs. Je peux raconter nos coulisses ? »"
+    text: "Camille, la main plaquée sur le combiné : « Radio Tribune m'offre un quart d'heure le jeudi soir, sur la vie des femmes de joueurs. Je raconte la nôtre ? »"
     left:
       label: "Raconte tout"
       effects: { relation: { camille: 1 }, tribunes: "+", set: [podcast], schedule: [{ card: jp.famille.podcast_carton, in: [3, 6] }] }
+      answer: "Le premier jeudi, le vestiaire écoute l'émission dans le bus du retour. Camille parle bien ; elle parle aussi des autres."
     right:
       label: "Garde ça pour nous"
       effects: { relation: { camille: -1 }, direction: "+" }
+      answer: "Elle raccroche doucement. Le jeudi suivant, une autre femme de joueur prend le quart d'heure."
 
   - id: jp.famille.podcast_carton
     roles: [joueur]
@@ -47,13 +51,15 @@ cards:
     speaker: brehaut
     sablier: true
     when: "flag('podcast')"
-    text: "Bréhaut : « Ta femme a raconté mon divorce dans l'épisode 4. Tout le vestiaire l'écoute, figure-toi. »"
+    text: "Bréhaut pose une cassette sur ton banc : « L'émission de jeudi. Ta femme y raconte un divorce de vestiaire, sans les noms. Les gars ont reconnu le mien. Tu lui en parles ? »"
     left:
       label: "J'en parle à Camille"
       effects: { relation: { camille: -1 }, vestiaire: "+" }
+      answer: "Camille t'écoute sans couper. Le jeudi suivant, elle ouvre l'émission par des excuses, sans dire à qui."
     right:
-      label: "C'est son podcast"
+      label: "Je ne m'en mêle pas"
       effects: { vestiaire: "--" }
+      answer: "Bréhaut reprend sa cassette. Au toro, le ballon fait le tour du cercle sans jamais passer par toi."
 
   - id: jp.famille.naissance
     roles: [joueur]
@@ -61,13 +67,15 @@ cards:
     tags: [famille, moment]
     speaker: camille
     once: true
-    text: "Camille, essoufflée : « Le travail a commencé. Et il y a match dans quatre heures. »"
+    text: "Josiane te tend le téléphone du secrétariat. Au bout du fil, Camille souffle entre deux contractions : « C'est maintenant. Ton coup d'envoi est dans quatre heures. Tu viens ? »"
     left:
       label: "Je fonce à la maternité"
       effects: { relation: { camille: 2 }, tribunes: "-", set: [jeune_papa], schedule: [{ card: jp.famille.nuit_blanche, in: [2, 5] }] }
+      answer: "Tu arrives à temps. La sage-femme te tend une petite fille ; au stade, ton numéro est sur le dos d'un autre."
     right:
       label: "J'arrive après le match"
       effects: { relation: { camille: -2 }, tribunes: "+", set: [jeune_papa], schedule: [{ card: jp.famille.nuit_blanche, in: [2, 5] }] }
+      answer: "Tu joues. À la mi-temps, Josiane fait passer un mot au banc : « Une fille. » Tu arrives à la maternité à vingt et une heures."
 
   - id: jp.famille.nuit_blanche
     roles: [joueur]
@@ -76,51 +84,58 @@ cards:
     speaker: camille
     sablier: true
     when: "flag('jeune_papa')"
-    text: "Camille, cernée : « Trois biberons cette nuit, tu t'entraînes dans deux heures. Je prends le relais ? »"
+    text: "Cinq heures du matin, la petite pleure depuis minuit. Camille, assise sur le carrelage de la cuisine, un biberon tiède à la main : « Tu as entraînement à neuf heures. Je continue, ou tu la prends ? »"
     left:
-      label: "Dors, je gère le petit"
+      label: "Donne-la-moi, dors"
       effects: { relation: { camille: 1 }, vestiaire: "+", force: -1 }
+      answer: "Tu la promènes dans le couloir jusqu'au jour. À l'entraînement, Vecchio te voit bâiller ; le groupe t'apporte trois cafés."
     right:
-      label: "Repose-toi, j'ai match"
+      label: "Je dors, j'ai match samedi"
       effects: { relation: { camille: -1 }, force: "+" }
+      answer: "Tu dors quatre heures pleines. Au petit-déjeuner, Camille pose ton café devant toi sans te regarder."
 
   - id: jp.famille.frere_envahissant
     roles: [joueur]
     arc: famille
     tags: [famille, caisse]
-    text: "Mon grand frère, sac à l'épaule : « Je m'installe chez toi le temps de rebondir. Deux mois, promis. »"
+    text: "Ton grand frère, sur le palier, un sac de sport à l'épaule : « Le garage m'a mis dehors. Deux mois chez toi, le temps de rebondir. Tu me fais une place ? »"
     left:
       label: "Fais comme chez toi"
       effects: { caisse: "-", vestiaire: "-", relation: { camille: -1 } }
+      answer: "Il prend le canapé, puis tes places en tribune, puis la parole au Corner. Au vestiaire, on te répète ce qu'il raconte de toi."
     right:
       label: "Je te paie un studio"
       effects: { caisse: "--" }
+      answer: "Tu signes six mois de loyer pour un studio près de la gare routière. Le deuxième soir, il te demande l'adresse d'un garage qui embauche."
 
   - id: jp.famille.maison_pays
     roles: [joueur]
     arc: famille
     tags: [famille, caisse]
-    text: "Ma mère, au téléphone du pays : « Construis la grande maison au village. Tout le quartier n'attend que ça. »"
+    text: "Une enveloppe du pays, l'écriture de ta mère : les plans de la grande maison, et la photo d'un terrain où ton oncle a planté un piquet. Au dos : « Le quartier attend. Tu envoies l'argent ? »"
     left:
-      label: "On construit la maison"
+      label: "J'envoie l'argent"
       effects: { caisse: "--", relation: { camille: -1 }, set: [maison_pays] }
+      answer: "Le mandat part lundi. Une photo revient : des fondations, et le quartier qui pose devant. Camille la regarde longtemps."
     right:
-      label: "Plus tard"
+      label: "Je réponds : pas encore"
       effects: { caisse: "+", relation: { camille: 1 } }
-      answer: "Ta mère raccroche en soupirant très fort."
+      answer: "Ta mère ne répond pas pendant un mois. Puis une carte arrive : le terrain t'attend, le piquet aussi."
 
   - id: jp.famille.equilibre
     roles: [joueur]
     arc: famille
     tags: [famille]
     speaker: camille
-    text: "Camille : « Tu es là, {toi}, mais ta tête est au stade. Je te parle et tu revois le but encaissé. »"
+    text: "Camille éteint le magnétoscope au milieu du but encaissé : « Tu l'as vu six fois, {toi}. Moi, je te parle du toit qui fuit depuis mardi. Tu m'écoutes, ou tu rembobines ? »"
     left:
       label: "Je coupe tout ce soir"
       effects: { relation: { camille: 1 }, force: -1 }
+      answer: "Vous montez au grenier avec une bassine et une lampe de poche. Le but encaissé revient quand même, vers trois heures du matin."
     right:
-      label: "Je reste concentré"
+      label: "Je rembobine"
       effects: { relation: { camille: -1 }, force: "+" }
+      answer: "Tu rembobines. Elle monte seule mettre une bassine sous la fuite ; tu entends les gouttes jusqu'à minuit."
 
   - id: jp.famille.diner_rescue
     roles: [joueur]
@@ -128,35 +143,41 @@ cards:
     tags: [famille, rescue:vestiaire]
     speaker: camille
     when: "gauges.vestiaire < 30"
-    text: "Camille : « Le groupe se déchire ? Invite-les à la maison, mon grand plat du pays soude n'importe quel vestiaire. »"
+    text: "Camille a sorti la grande cocotte de sa mère, celle des baptêmes : « Josiane m'a dit que ton vestiaire ne se parle plus. Invite-les dimanche, je cuisine. Tu les appelles ? »"
     left:
-      label: "Toute l'équipe à dîner"
+      label: "J'invite toute l'équipe"
       effects: { vestiaire: "+++", caisse: "-", relation: { camille: 1 } }
+      answer: "Dimanche, vingt-deux couverts et les chaises de la voisine. Le capitaine fait la vaisselle ; le plus jeune emporte la recette pour sa mère."
     right:
-      label: "Pas ce soir"
+      label: "Je n'invite personne"
       effects: { vestiaire: "-" }
+      answer: "Camille range la cocotte en haut du placard. Lundi, au vestiaire, chacun se change face à son casier."
 
   - id: jp.famille.beau_pere_loge
     roles: [joueur]
     arc: famille
     tags: [famille, direction]
-    text: "Mon beau-père, dans la loge : « Ton coach joue bien trop bas. Dis-le-lui, de ma part. »"
+    text: "Ton beau-père, en tribune d'honneur avec l'invitation que tu lui as obtenue, tapote le programme : « Ton entraîneur joue beaucoup trop bas. Tu lui dis lundi, de ma part ? »"
     left:
-      label: "Je transmets, papy"
+      label: "Je lui dirai lundi"
       effects: { direction: "-", relation: { camille: 1 } }
+      answer: "Lundi, tu répètes la phrase au coach, mot pour mot. Vukić la recopie dans son cahier, avec le nom de ton beau-père à côté."
     right:
-      label: "Reste dans la loge"
+      label: "Je ne transmets rien"
       effects: { direction: "+", relation: { camille: -1 } }
+      answer: "Tu changes de sujet. Ton beau-père boude jusqu'au dessert, et Camille t'en parle jusqu'au lendemain."
 
   - id: jp.famille.anniversaire
     roles: [joueur]
     arc: famille
     tags: [famille, moment]
     speaker: camille
-    text: "Camille : « Dix ans de mariage, {toi}, et tu as réservé... le stage de reprise. Je sais, ne dis rien. »"
+    text: "Camille a posé le planning du stage de reprise sur la table, une date entourée au feutre : « Nos dix ans de mariage, {toi}. Ce jour-là, tu cours dans la montagne avec le groupe. Tu le savais ? »"
     left:
-      label: "J'annule le stage"
+      label: "Je rate un jour de stage"
       effects: { relation: { camille: 2 }, vestiaire: "-", force: -1 }
+      answer: "Vous dînez au restaurant du port. Le lendemain, à la montagne, Vukić te fait courir le premier tour à part, sans commentaire."
     right:
-      label: "Lune de miel après"
+      label: "On fêtera après le stage"
       effects: { relation: { camille: -1 }, force: "+" }
+      answer: "Tu pars courir dans la montagne. Le soir des dix ans, tu appelles de la cabine de l'hôtel ; c'est sa sœur qui décroche."

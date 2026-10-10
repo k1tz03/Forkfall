@@ -5,14 +5,15 @@ cards:
     tags: [scandale, agents, chaine]
     speaker: fardelli
     once: true
-    text: "Un pote bookmaker mise gros si tu ranges ton match de samedi. Tu lèves le pied en douce, on partage, la caisse te dit merci."
+    text: "Fardelli, moteur allumé devant l'hôtel de l'équipe, la veille du match : « Un ami a misé gros sur une défaite, samedi. Tu traînes un peu, rien qui se voie, et il partage. Je l'appelle ? »"
     left:
-      label: "Je range mon match"
+      label: "Je lève le pied samedi"
       effects: { caisse: "++", force: -2, set: [pari], relation: { fardelli: 1 }, schedule: [{ card: jp.scandale.brigade_financiere, in: [4, 9] }] }
-      answer: "Fardelli me glisse une enveloppe et un clin d'œil."
+      answer: "Fardelli te glisse une enveloppe dans la poche de la veste. Samedi, tu rates une passe facile ; personne ne voit rien, sauf toi."
     right:
       label: "Je joue pour gagner"
       effects: { vestiaire: "+", tribunes: "+", relation: { fardelli: -1 } }
+      answer: "Fardelli coupe le moteur. Samedi, tu joues jusqu'à la dernière seconde ; il ne te rappelle pas de la semaine."
 
   - id: jp.scandale.brigade_financiere
     roles: [joueur]
@@ -21,14 +22,15 @@ cards:
     once: true
     sablier: true
     when: "flag('pari')"
-    text: "La brigade des jeux débarque au centre d'entraînement : « Des paris anonymes sur vos défaites, quelle coïncidence. On en parle ? »"
+    text: "Deux inspecteurs t'attendent à la sortie du vestiaire, devant le groupe : « Brigade des jeux. Des mises sur vos matchs, placées loin d'ici par des gens que vous connaissez. Ici, ou au bureau ? »"
     left:
       label: "Je nie tout en bloc"
       effects: { direction: "--", tribunes: "-", clear: [pari] }
-      answer: "Ils repartent avec mes relevés et un sourire poli."
+      answer: "Ils repartent avec tes relevés de banque et un sourire poli. Le groupe a tout vu ; personne ne te pose de question."
     right:
       label: "J'avoue et rembourse"
       effects: { caisse: "---", vestiaire: "+", direction: "-", clear: [pari] }
+      answer: "Tu signes six pages de déposition et un chèque. Sur le parking, Bréhaut t'attend pour te ramener, et se tait jusqu'à chez toi."
 
   - id: jp.scandale.vitamines
     roles: [joueur]
@@ -36,14 +38,15 @@ cards:
     tags: [scandale, chaine]
     speaker: sabatier
     once: true
-    text: "Ces petites vitamines te feront courir jusqu'à la 95e sans souffler. Rien d'interdit, ou presque, et surtout aucune trace."
+    text: "Dans le bus du retour, Sabatier remonte l'allée avec une boîte de comprimés sans étiquette : « Pour récupérer. Rien qui se trouve dans une analyse. La moitié du groupe en a pris. Tu tends la main ? »"
     left:
-      label: "J'avale les vitamines"
+      label: "Je tends la main"
       effects: { force: 4, vestiaire: "+", set: [vitamines], relation: { sabatier: 1 }, schedule: [{ card: jp.scandale.controle_positif, in: [5, 11] }] }
-      answer: "Sabatier range le flacon dans ma poche, l'air de rien."
+      answer: "Sabatier fait tomber deux comprimés dans ta paume et passe au suivant. Tu dors comme une pierre jusqu'à {ville}."
     right:
       label: "Je bois de l'eau"
       effects: { force: -1, vestiaire: "+", relation: { sabatier: -1 } }
+      answer: "Tu gardes ta bouteille d'eau sur les genoux. Sabatier passe sans s'arrêter ; deux rangs plus loin, Vecchio refuse aussi."
 
   - id: jp.scandale.controle_positif
     roles: [joueur]
@@ -52,13 +55,15 @@ cards:
     once: true
     sablier: true
     when: "flag('vitamines')"
-    text: "Le contrôle antidopage revient « non conforme ». Le labo réclame un second flacon, et mon médecin a soudain très envie de vacances."
+    text: "Le facteur te fait signer une lettre recommandée de la Fédération : ton échantillon est « non conforme ». Au cabinet de Sabatier, une affichette sur la porte : fermé pour congés. Tu contestes ?"
     left:
       label: "Je conteste le labo"
       effects: { direction: "-", caisse: "-", tribunes: "+", clear: [vitamines] }
+      answer: "Maître Vidal demande la contre-expertise, et ses honoraires d'avance. Au local, une banderole dit : ON TE CROIT."
     right:
       label: "J'accepte la sanction"
       effects: { vestiaire: "--", force: -3, direction: "-", clear: [vitamines] }
+      answer: "Tu signes l'accusé de réception de ta suspension. Samedi, au vestiaire, quelqu'un a mis du scotch sur ton nom."
 
   - id: jp.scandale.valise
     roles: [joueur]
@@ -66,13 +71,15 @@ cards:
     tags: [scandale, agents, chaine]
     speaker: fardelli
     once: true
-    text: "Un émir fan de toi laisse une valise « pour tes chaussures ». Elle est lourde, elle ne fait pas de bruit, elle ne pose pas de questions."
+    text: "Fardelli dépose une valise de cuir sur le lit de ta chambre d'hôtel : « Un admirateur d'Al-Dorado. Il dit que c'est pour tes crampons. Elle est lourde. Je la laisse, ou je la rends ? »"
     left:
       label: "Je garde la valise"
       effects: { caisse: "+++", direction: "-", set: [valise], relation: { fardelli: 1 }, schedule: [{ card: jp.scandale.valise_douane, in: [4, 10] }] }
+      answer: "Tu la glisses sous le lit sans l'ouvrir. Au matin, tu l'ouvres, et tu la refermes très vite."
     right:
       label: "Je rends la valise"
       effects: { direction: "+", vestiaire: "+", relation: { fardelli: -1 } }
+      answer: "Fardelli la reprend sans discuter. Au petit-déjeuner, le groupe sait déjà qu'une valise est repartie ; personne ne demande vers où."
 
   - id: jp.scandale.valise_douane
     roles: [joueur]
@@ -81,13 +88,15 @@ cards:
     once: true
     sablier: true
     when: "flag('valise')"
-    text: "À l'aéroport, la douane ouvre ma valise « à chaussures ». Le douanier compte les liasses tout haut, la file d'attente adore le spectacle."
+    text: "Au retour d'un déplacement, un douanier ouvre la valise de cuir devant tout l'aéroport et compte les liasses à voix haute. Le groupe attend derrière toi, sacs à l'épaule. Tu dis quoi ?"
     left:
       label: "Je dis que j'ignorais"
       effects: { direction: "--", tribunes: "-", clear: [valise] }
+      answer: "Le douanier écrit « déclare ignorer » sur le procès-verbal. Le président l'apprend avant que le bus ait quitté le parking."
     right:
       label: "Je laisse tout saisir"
       effects: { caisse: "--", vestiaire: "+", clear: [valise] }
+      answer: "Les liasses partent dans un sac scellé. Dans le bus, le groupe te garde la place du fond, sans commentaire."
 
   - id: jp.scandale.offshore
     roles: [joueur]
@@ -95,13 +104,15 @@ cards:
     tags: [scandale, agents, chaine]
     speaker: fardelli
     once: true
-    text: "Ton image vaut de l'or, logeons tes droits dans une société bien au chaud sur une île sans hiver ni impôt. Signe ici, ne lis pas trop."
+    text: "Au restaurant du port, un notaire ouvre un dossier bleu près des huîtres. Fardelli pose le stylo dessus : « Tes droits d'image, dans une société des îles. Tu signes au bas de chaque page, sans lire. »"
     left:
       label: "Je signe les yeux fermés"
       effects: { caisse: "++", set: [offshore], relation: { fardelli: 1 }, schedule: [{ card: jp.scandale.panama, in: [6, 14] }] }
+      answer: "Tu signes onze fois. Le notaire range le dossier bleu ; Fardelli commande le dessert pour toute la table."
     right:
-      label: "Je paie mes impôts"
+      label: "Je lis chaque page"
       effects: { caisse: "-", direction: "+", tribunes: "+" }
+      answer: "À la page sept, tu refermes le dossier. Le notaire repart avec ; tu paies tes impôts ici, comme le boucher."
 
   - id: jp.scandale.panama
     roles: [joueur]
@@ -111,13 +122,15 @@ cards:
     once: true
     sablier: true
     when: "flag('offshore')"
-    text: "Je publie demain : ton nom dans les fichiers d'une île à palmiers et à secrets. Un mot avant que tout le pays le lise au petit-déjeuner ?"
+    text: "Massenet, au téléphone, à l'heure du bouclage : « Le registre des îles est arrivé à la rédaction. Quarante noms, dont un ministre et vous. Ça sort à six heures. Vous me dites quelque chose avant ? »"
     left:
       label: "Je fais le mort"
       effects: { rand: [{ p: 0.35, end: jp_panama }, { direction: "--", tribunes: "--", caisse: "-" }], clear: [offshore] }
+      answer: "Tu raccroches. À six heures, ton nom est en page une, entre celui du ministre et celui d'un marchand d'armes."
     right:
-      label: "Je déballe avant lui"
+      label: "Je parle avant six heures"
       effects: { tribunes: "-", caisse: "-", direction: "+", clear: [offshore] }
+      answer: "Tu lui dictes une déclaration, mot à mot. À six heures, ton nom est en page une, avec ta version en encadré."
 
   - id: jp.scandale.mecene_douteux
     roles: [joueur]
@@ -126,13 +139,15 @@ cards:
     speaker: fardelli
     weight: 1.2
     when: "gauges.caisse < 30"
-    text: "La caisse est vide ? Un « ami » discret veut sponsoriser ton maillot, cash, sans facture, contre quelques photos gênantes plus tard."
+    text: "Fardelli, au fond du Terminus : « Un ami tient une boîte de nuit sur la nationale. Il paie en liquide, sans facture, si tu y passes le samedi soir. Ton compte est à zéro, je le sais. Il t'attend ? »"
     left:
       label: "Je prends le cash"
       effects: { caisse: "+++", direction: "-", vestiaire: "-", relation: { fardelli: 1 } }
+      answer: "Le samedi, tu serres des mains sous des néons jusqu'à deux heures. Le dimanche, au vestiaire, on sent la fumée sur toi."
     right:
       label: "Je refuse l'argent sale"
       effects: { caisse: "-", vestiaire: "+", direction: "+" }
+      answer: "Tu rentres à pied par le quai sud. Lundi, Bréhaut t'avance un mois de loyer ; le groupe le sait, et c'est voulu."
 
   - id: jp.scandale.photo_casino
     roles: [joueur]
@@ -140,13 +155,15 @@ cards:
     tags: [scandale, presse, risk:tribunes]
     speaker: meneche
     cooldown: 20
-    text: "Une photo de toi au casino à 4h du matin, la veille du derby, circule dans ma rédaction. Beau tapis vert, jolie martingale, sale timing."
+    text: "Massenet fait glisser une photo sur la table : toi, au casino de Fontenaire, quatre heures du matin, la veille du derby. « Elle circule à la rédaction depuis hier. Je n'ai pas encore choisi la page. »"
     left:
       label: "Je jure que c'est faux"
       effects: { tribunes: "-", direction: "-", relation: { meneche: -1 } }
+      answer: "Massenet range la photo et en sort une deuxième, prise de plus près. Il ne répond rien ; il recopie ta phrase dans son carnet."
     right:
       label: "J'assume, j'ai gagné"
       effects: { tribunes: "--", vestiaire: "+", caisse: "+" }
+      answer: "La photo sort, avec la somme gagnée en légende. Au vestiaire, on te demande ta martingale ; en tribune, on te demande des comptes."
 
   - id: jp.scandale.interview_verite
     roles: [joueur]
@@ -154,13 +171,15 @@ cards:
     tags: [scandale, presse, piege]
     speaker: meneche
     cooldown: 18
-    text: "Micro tendu en zone mixte : « Une seule question. Tous ces bruits sur les paris, les valises, les vitamines... vous démentez tout ? »"
+    text: "En zone mixte, Massenet tend son micro par-dessus deux épaules : « Les paris, la valise, les comprimés : à la rédaction, on parle plus de vous que du match. Vous démentez tout, ici, devant eux ? »"
     left:
       label: "Je démens fermement"
       effects: { tribunes: "+", direction: "-", parole: 1 }
+      answer: "Tu démens tout, d'une traite. Massenet te remercie et garde l'enregistrement, au cas où une seule chose serait vraie."
     right:
       label: "Je pars sans un mot"
       effects: { tribunes: "--", direction: "-", relation: { meneche: -1 } }
+      answer: "Tu passes devant le micro sans tourner la tête. L'Écho publie la photo de ton dos, sous le titre « Pas un mot »."
 
   - id: jp.scandale.certificat
     roles: [joueur]
@@ -168,13 +187,15 @@ cards:
     tags: [scandale, risk:direction]
     speaker: sabatier
     cooldown: 18
-    text: "Je te signe un petit certificat : blessure imaginaire, tu sautes la commission de discipline et le gros match. Personne ne vérifie jamais."
+    text: "Sabatier tient son stylo au-dessus d'un certificat vierge : « Une élongation, huit jours. Tu ne vas pas à la convocation de la salle 3, et tu ne joues pas dimanche. Je signe ? »"
     left:
-      label: "Je prends l'arrêt"
+      label: "Signe-le, Doc"
       effects: { direction: "-", vestiaire: "+", force: 1, relation: { sabatier: 1 } }
+      answer: "Il signe sans relever les yeux et date de la veille. Dimanche, tu regardes le match depuis la tribune, la cuisse bandée pour rien."
     right:
       label: "Je vais à la commission"
       effects: { direction: "+", vestiaire: "-", tribunes: "+" }
+      answer: "Salle 3, deux heures d'attente sur une chaise en plastique, puis trois matchs de suspension. Le groupe aurait préféré huit jours de faux."
 
   - id: jp.scandale.blanchi
     roles: [joueur]
@@ -183,13 +204,15 @@ cards:
     speaker: lea
     weight: 1.2
     when: "gauges.tribunes < 30"
-    text: "Bonne nouvelle : j'ai retourné la presse, te voilà « victime d'un complot ». Le public t'adore de nouveau, souris et ferme-la deux semaines."
+    text: "Léa étale trois journaux sur la table, le même mot souligné dans chacun : complot. « Deux jours au téléphone. Vous êtes une victime, maintenant. Il suffit de vous taire quinze jours. Vous tenez ? »"
     left:
       label: "Je joue la victime"
       effects: { tribunes: "+++", vestiaire: "-", relation: { lea: 1 } }
+      answer: "Tu te tais quinze jours. Le virage chante de nouveau ton nom ; au vestiaire, ceux qui savent changent de place sur le banc."
     right:
       label: "Je dis la vérité"
       effects: { tribunes: "-", vestiaire: "+", direction: "+" }
+      answer: "Tu donnes ta version à L'Écho, sans arrondir. Le virage siffle encore ; Bréhaut vient s'asseoir à côté de toi dans le bus."
 
   - id: jp.scandale.deballage_tv
     roles: [joueur]
@@ -199,10 +222,12 @@ cards:
     once: true
     sablier: true
     when: "seen('jp.scandale.panama') || seen('jp.scandale.controle_positif')"
-    text: "Prime time dimanche : deux heures d'enquête sur toi, paris, valises, vitamines, paradis fiscaux. Je t'offre trois minutes pour tout dire."
+    text: "Massenet a vendu son dossier à Télé-Stade. En salle de montage, l'image est arrêtée sur ton visage : « Dimanche soir, deux heures sur vous. Il reste trois minutes à remplir. Vous venez les remplir ? »"
     left:
       label: "Je passe à l'émission"
       effects: { rand: [{ p: 0.3, end: grand_deballage }, { tribunes: "-", direction: "--", caisse: "+" }] }
+      answer: "Tu t'assois sous les projecteurs, face à ta propre photo. Les trois minutes en durent onze ; personne ne coupe."
     right:
       label: "Je boycotte le plateau"
       effects: { tribunes: "--", direction: "-", vestiaire: "+" }
+      answer: "Le plateau cadre ta chaise vide pendant trois minutes. Lundi, le vestiaire t'attend au complet devant ton casier."

@@ -11,7 +11,7 @@ cards:
     tags: [direction, absurde]
     speaker: josiane
     tone: leger
-    text: "Madame Josiane, deux tasses, une meilleure que l'autre : « Sa cafetière fait un meilleur café que celle du club. J'en ai vu passer, vous savez. Je la garde ? »"
+    text: "Madame Josiane pose deux tasses sur le bureau, une de sa cafetière à lui, une de celle du club : « Goûtez. Il l'a laissée branchée en partant, lundi soir. Je la garde ? »"
     left:
       label: "Gardez-la"
       effects: {relation: {josiane: 1}}
@@ -19,7 +19,7 @@ cards:
     right:
       label: "Renvoyez-la"
       effects: {direction: "+"}
-      answer: "Elle la renvoie. Le café du club revient ; il est à l'image du chauffage."
+      answer: "Elle l'emballe dans L'Écho de la veille et la poste à l'ancien, sans un mot. Il ne répond pas."
 
   - id: en.re.camille_six_semaines
     roles: [entraineur]
@@ -28,11 +28,11 @@ cards:
     speaker: camille
     tone: leger
     when: "!flag('divorce')"
-    text: "Camille au téléphone, un carton derrière elle, pas encore ouvert : « Six semaines, c'est un délai ou un contrat ? Tu rentres à quelle heure, pendant six semaines ? »"
+    text: "Camille au téléphone, à deux cents kilomètres, un carton vide plié contre le mur : « Six semaines, c'est un délai ou un contrat ? Je fais les cartons, ou j'attends la septième ? »"
     left:
       label: "Un délai"
       effects: {relation: {camille: 1}}
-      answer: "Elle ne fait pas de carton. Elle compte six semaines et entoure la septième."
+      answer: "Elle laisse le carton plié. Sur le calendrier de la cuisine, elle entoure la septième semaine."
     right:
       label: "Un contrat"
       effects: {relation: {camille: -1}, direction: "+"}
@@ -45,11 +45,11 @@ cards:
     tags: [vestiaire]
     speaker: brehaut
     tone: leger
-    text: "Bréhaut, sur le pas de la porte : « Le groupe vit bien. Il vous fait dire merci. Il vous fait dire aussi qu'il reviendra. »"
+    text: "Bréhaut, sur le pas de la porte, sans entrer : « Les gars te remercient pour le tableau. Ils ont appelé l'ancien hier soir ; il leur a dit qu'il reviendrait. »"
     left:
-      label: "Merci à lui"
+      label: "Remercie-les pour moi"
       effects: {vestiaire: "+"}
-      answer: "Tu remercies. Le groupe transmet ; il transmet tout."
+      answer: "Bréhaut transmet. Il transmet tout, y compris à l'ancien, le soir même."
     right:
       label: "Qu'il revienne, alors"
       effects: {vestiaire: "-", direction: "+"}
@@ -62,15 +62,15 @@ cards:
     tags: [presse]
     speaker: meneche
     tone: leger
-    text: "Massenet, deux titres au feutre : « La Une de demain : « L'INTÉRIMAIRE PARIE SUR LUI ». Ça vous va, ou je mets « SUR SA TÊTE » ? »"
+    text: "Massenet, deux titres au feutre : « La Une de demain : « L'INTÉRIMAIRE PARIE SUR {pg, select, f{ELLE} other{LUI}} ». Ça vous va, ou je mets « SUR SA TÊTE » ? »"
     left:
-      label: "« Sur lui »"
+      label: "Le premier titre"
       effects: {tribunes: "+", parole: 1}
       answer: "Il imprime. Le bookmaker du port baisse la cote ; il a lu."
     right:
       label: "« Sur sa tête », plus vrai"
       effects: {tribunes: "+", relation: {meneche: 1}, direction: "-"}
-      answer: "Il imprime. Le président lit « tête » ; il n'a pas le temps de lire le reste."
+      answer: "Il imprime. Le président lit « tête », et s'arrête là."
 
   # ------------------------------------------- après I2 (prolongé, déchu) · le local
   # Récurrence du casting (§ 5.2) : Gégé, l'« horloge » du postulat, n'apparaît
@@ -84,7 +84,7 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: leger
-    text: "Gégé, l'écharpe roulée sous le bras : « « Jusqu'à nouvel ordre », c'est écrit dans le journal, et le journal on l'a lu au local. La tribune n'oublie rien : on t'attend, ou on attend l'autre ? »"
+    text: "Gégé, l'écharpe roulée sous le bras : « « Jusqu'à nouvel ordre » : c'est dans L'Écho, on l'a découpé, il est au-dessus du bar. Au virage, on t'attend, toi, ou on attend le suivant ? »"
     left:
       label: "Attendez-moi"
       effects: {tribunes: "+", relation: {gege: 1}}
@@ -103,7 +103,7 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     tone: leger
-    text: "Fardelli, le cigare éteint contre la vitre de ta voiture : « Mon ami, on parle d'argent ou d'amitié ? En juin, ton président aura trois pages à signer, et moi trois noms. Tu es lequel ? »"
+    text: "Fardelli tapote ta vitre avec son cigare éteint, la gourmette qui tinte : « {Toi}, entre nous : en juin, ton président aura trois pages à signer, et moi trois noms à lui souffler. Tu es lequel ? »"
     left:
       label: "Le premier"
       effects: {direction: "-", parole: 1, relation: {fardelli: 1}}
@@ -124,7 +124,7 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     tone: leger
-    text: "Fardelli, le cigare éteint : « Mon ami, on parle d'argent ou d'amitié ? Ton bureau est encore à son nom et le mien a déjà trois numéros dessus. Je te lis les trois, ou je les garde ? »"
+    text: "Fardelli, le cigare éteint, un carnet de cuir sur les genoux : « Ton bureau est encore à son nom, {toi}, et mon carnet a déjà trois numéros pour le reprendre. Je te les lis, ou je les garde ? »"
     left:
       label: "Lisez-les"
       effects: {direction: "-", relation: {fardelli: 1}}
@@ -145,7 +145,7 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     tone: leger
-    text: "Fardelli, le cigare rallumé : « Il veut visiter le vestiaire jeudi. Avec son seau. Mon ami, on parle d'argent ou d'amitié ? Jeudi, on parle de seau. »"
+    text: "Fardelli, le cigare rallumé, appelle d'une cabine du port : « Il veut voir ton vestiaire jeudi, {toi}. Avec son seau ; il ne s'assoit sur rien d'autre. Je lui dis oui ? »"
     left:
       label: "Jeudi, d'accord"
       effects: {direction: "+", vestiaire: "-"}
@@ -162,13 +162,13 @@ cards:
     tags: [direction]
     speaker: legruet
     tone: leger
-    text: "Berthomier, la dérogation tamponnée et une ligne vide : « Le tampon, lui, on le voit maintenant. Il manque une signature. On verra ça après le Congrès. »"
+    text: "Berthomier, au téléphone, tourne une page : « Votre dérogation est tamponnée. Il manque la signature de la directrice technique, en tournée jusqu'en juin. Ce n'est pas pressé. »"
     left:
       label: "Je vais la chercher"
       effects: {parole: 1, direction: "-"}
-      answer: "Quelqu'un signe. On lit ton dossier avant ; on note un chiffre."
+      answer: "Tu fais quatre heures de route. Elle signe après avoir lu ton dossier, et note un chiffre dans la marge."
     right:
-      label: "Après le Congrès, alors"
+      label: "J'attends juin"
       effects: {direction: "+"}
       answer: "La ligne reste vide six mois. Quelqu'un finira par la regarder."
 
@@ -179,7 +179,7 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: strategique
-    text: "Gégé, enfin au parking, pas pour longtemps : « Lui, il venait. La tribune n'oublie rien. Elle compte aussi. »"
+    text: "Gégé, au parking, sa mobylette qui tourne au ralenti : « Lui, il venait. Tous les jeudis au local, dix-neuf heures. Quarante et un jeudis, j'ai compté. »"
     left:
       label: "Je viendrai jeudi"
       effects: {tribunes: "+", parole: 1, promise: true}
@@ -187,7 +187,7 @@ cards:
     right:
       label: "Je ne suis pas lui"
       effects: {tribunes: "-", relation: {gege: -1}}
-      answer: "Il repart. Le stagiaire reste, avec l'écharpe ; il ne sait pas quoi dire."
+      answer: "Il repart sans répondre. Jeudi, au local, la photo de l'ancien reste au-dessus du bar."
 
   # --------------------------------------------- après le verdict · le CDI-CDD
   - id: en.re.aulard_cdd
@@ -196,7 +196,7 @@ cards:
     tags: [direction]
     speaker: aulard
     tone: leger
-    text: "Vaubourg sort la page deux, qui existe finalement : « Le CDI est un CDD de douze mois. J'ai pas le temps, j'ai un empire. Tu signes ? »"
+    text: "Vaubourg pose la page deux, qui existe finalement, sur la première : « Le CDI est un CDD de douze mois. Je l'ai rédigé moi-même ; j'étais avocat, avant le football. Tu signes ? »"
     left:
       label: "Je signe quand même"
       effects: {direction: "+", parole: -1, set: [cdi_signe]}
@@ -214,7 +214,7 @@ cards:
     speaker: vukic
     tone: leger
     when: "relation.vukic >= 0"
-    text: "Vukić tient le journal ouvert, pas à la bonne page, à la page d'après : « Il était dans la boîte du président. Je te le dis parce que personne ne te le dira : il l'a lu deux fois. »"
+    text: "Vukić tient le journal ouvert à la page d'après, pas à la bonne : « Il était dans la boîte du président à six heures et demie. À sept heures, il était plié dans l'autre sens. Il l'a lu deux fois. »"
     left:
       label: "Merci de me le dire"
       effects: {relation: {vukic: 1}, direction: "-"}
@@ -240,4 +240,4 @@ cards:
     right:
       label: "Une raison : le vestiaire"
       effects: {direction: "+", vestiaire: "+", relation: {brehaut: 1}, force: -1}
-      answer: "Bréhaut monte et dit « le groupe vit bien » devant les trois CV. Il en range un."
+      answer: "Bréhaut monte sans frapper et pose son brassard sur les trois CV. Le président en range un."

@@ -1,0 +1,520 @@
+# Les événements sombres de l'entraîneur (docs/bible/charte_histoire.md § 5).
+# Des arcs `kind: evenement` : le metteur en scène les arme quand leur `when`
+# est vrai (ils naissent de l'état du monde : la tribune qui se vide, la caisse
+# à sec, une trace d'un événement précédent), avec une `chance` par créneau,
+# une fois par carrière, jamais rattrapés (`fallback: drop`), jamais au premier
+# plan. Le quota (`events_max`, `events_ecart` de calendar.yaml) les espace.
+# Les cartes sont dans content/cards/entraineur/sombres.yaml.
+#
+# Les fils qui reviennent (charte § 5.2), par les `when` qui lisent les traces :
+#   · La tribune : manif → envahissement (lit sb_manif) → cercueil (lit
+#     sb_envahissement ; sa variante lit sb_huis_clos). Autour : la bagarre de
+#     la buvette (lit sb_manif, sb_envahissement), le feu au local (lit
+#     sb_bagarre ; variante sb_buvette_fermee), le terrain brûlé (lit
+#     sb_cercueil, sb_manif, sb_local_brule ; le cercueil lit sb_terrain_brule).
+#     La minute de silence (sb_mort_tribune) fait naître une manifestation.
+#   · La maison : devant chez toi → la voiture (lit sb_devant_chez_toi ; variante
+#     sb_police_appelee) → la lettre (lit sb_voiture). La lettre et le corbeau
+#     sont de la même main : chacun lit la trace de l'autre (sb_corbeau,
+#     sb_lettre).
+#   · L'homme au blouson gris : un seul arc, trois passages à la laverie sur
+#     deux saisons (fusée longue vers S+1, puis [5, 9]). La troisième fois, on
+#     sait qui l'envoie : Émile Sorbier, l'ancien trésorier (variante si tu l'as
+#     vu à la friche, sb_ancien), Madame Josiane, la mère de Mbako, ou Sorbier
+#     qu'on te présente. Issues : livre (au juge) | garde. La perquisition lit
+#     l'issue et les traces de la laverie.
+#   · L'argent : la perquisition → la grève (lit sb_perquisition, et sb_car en
+#     variante) → l'huissier (lit sb_greve) → la laverie (variante sb_huissier).
+#     La nuit : le joueur qui ne vient pas → le coup de fil de trois heures
+#     (lit sb_disparu, sb_dette_joueur) → l'ancien (variante sb_appel_nuit) →
+#     la perquisition (variante sb_service_rendu).
+# Ton : `strategique` partout, sauf la minute de silence (`drame`, gardée par
+# `drames < 1` : le moteur ne sert qu'un drame par carrière). Les visages qui
+# peuvent se taire (Vukić `rival`, Mbako `vendu`, Bréhaut `parti`/`staff`,
+# Camille après `divorce`) sont gardés dans le `when` ou par une variante.
+arcs:
+  # ================================================================== LA TRIBUNE
+  - id: en.sb.manif
+    title: "La manifestation"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "gauges.tribunes < 35 || (world.serie_defaites >= 1 && gauges.tribunes < 50) || flag('sb_mort_tribune')"
+    chance: 0.10
+    cast: [gege, aulard, aubert]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_manif: "{annee} : trois cents écharpes sous les fenêtres de la mairie, une banderole contre Vaubourg et contre {nom}."
+      sb_manif_parle: "{annee} : {nom} a parlé à la manifestation, sur les marches de la mairie, sans micro."
+    steps:
+      - id: mairie
+        card:
+          - { id: en.sb.manif_escalier, if: "flag('sb_mort_tribune')" }
+          - { id: en.sb.manif }
+        next: [ { step: stade, in: [3, 6] } ]
+      - id: stade
+        card:
+          - { id: en.sb.manif_stade_parle, if: "flag('sb_manif_parle')" }
+          - { id: en.sb.manif_stade }
+        next: []
+
+  - id: en.sb.envahissement
+    title: "L'envahissement"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "chars.vukic.statut != 'rival' && ((flag('sb_manif') && gauges.tribunes < 50) || gauges.tribunes < 25)"
+    chance: 0.08
+    cast: [vukic, gege, legruet]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_envahissement: "{annee} : à la quatre-vingtième minute, un homme a sauté la grille de la Nord et couru jusqu'au banc de {nom}."
+      sb_huis_clos: "{annee} : un match à huis clos. Depuis la rue, on entendait le ballon frapper le poteau."
+    steps:
+      - id: grille
+        card: en.sb.envahissement
+        next: [ { step: commission, in: [2, 4] } ]
+      - id: commission
+        card: en.sb.envahissement_commission
+        next: []
+
+  - id: en.sb.cercueil
+    title: "Le cercueil"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    # Fin de saison (créneaux 10+), le bas du classement, et la colère déjà
+    # passée par la pelouse ou par l'essence — ou une tribune à vide.
+    when: "season >= 1 && slot >= 10 && chars.vukic.statut != 'rival' && world.rang >= 12 && (flag('sb_envahissement') || flag('sb_terrain_brule') || gauges.tribunes < 25)"
+    chance: 0.12
+    cast: [vukic, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_cercueil: "{annee} : un cercueil aux couleurs du club devant la grille du stade, le nom de {nom} peint sur le couvercle."
+    steps:
+      - id: grille
+        card:
+          - { id: en.sb.cercueil_huis_clos, if: "flag('sb_huis_clos')" }
+          - { id: en.sb.cercueil }
+        next: []
+
+  - id: en.sb.bagarre_buvette
+    title: "La bagarre de la buvette"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('sb_manif') || flag('sb_envahissement') || (gauges.tribunes < 30 && world.serie_defaites >= 1)"
+    chance: 0.07
+    cast: [gege]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_bagarre: "{annee} : bagarre à la buvette des anciens, deux bandes de la Nord. Gégé a reçu six points à l'arcade."
+      sb_buvette_fermee: "{annee} : la buvette des anciens fermée par arrêté. Le rideau est resté baissé jusqu'à l'été."
+    steps:
+      - id: buvette
+        card: en.sb.bagarre_buvette
+        next: []
+
+  - id: en.sb.local_feu
+    title: "Le feu au local"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "relation.gege <= -1 || flag('sb_bagarre')"
+    chance: 0.05
+    cast: [gege]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_local_brule: "{annee} : le local de la Nord a brûlé dans la nuit. Gégé a sorti la bâche de son père avant les pompiers."
+    steps:
+      - id: local
+        card:
+          - { id: en.sb.local_feu_buvette, if: "flag('sb_buvette_fermee')" }
+          - { id: en.sb.local_feu }
+        next: []
+
+  - id: en.sb.terrain_brule
+    title: "Le terrain brûlé"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('sb_cercueil') || flag('sb_manif') || flag('sb_local_brule'))"
+    chance: 0.06
+    cast: [aubert]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_terrain_brule: "{annee} : HONTE, en lettres brûlées dans la pelouse du terrain annexe. L'herbe a repoussé en juin."
+    steps:
+      - id: annexe
+        card: en.sb.terrain_brule
+        next: []
+
+  # La minute de silence : le seul drame du lot. La tribune vétuste a été laissée
+  # en l'état (la tribune Nord du promu « attend l'été prochain », ou l'événement
+  # `en.evt.tribune` a reçu un « on verra ») et n'est pas fermée.
+  - id: en.sb.mort_tribune
+    title: "La minute de silence"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && drames < 1 && !flag('tribune_fermee') && (flag('tribune_a_renover') || count('tribune_ignoree') >= 1)"
+    chance: 0.08
+    cast: [gege, aulard]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_mort_tribune: "{annee} : Marcel, rangée H de la Nord, est mort d'un malaise pendant le match. Les secours ont mis vingt minutes."
+    steps:
+      - id: escalier
+        card: en.sb.mort_tribune
+        next: []
+
+  # ================================================================== LA MAISON
+  - id: en.sb.devant_chez_toi
+    title: "Ils t'attendent"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    # Après une série perdue avec une tribune basse, ou une promesse faite au
+    # kop (le pacte de la craie) que Gégé ne pardonne plus.
+    when: "(gauges.tribunes < 30 && world.serie_defaites >= 1) || gauges.tribunes < 20 || (flag('pacte_gege') && relation.gege <= -1)"
+    chance: 0.08
+    cast: [camille]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_devant_chez_toi: "{annee} : cinq écharpes de la Nord ont attendu {nom} sous ses fenêtres, rue des Lilas, jusqu'à deux heures."
+      sb_police_appelee: "{annee} : {nom} a appelé la police contre cinq écharpes de la Nord, devant sa propre porte."
+    steps:
+      - id: fenetre
+        card:
+          - { id: en.sb.devant_chez_toi_seul, if: "flag('divorce')" }
+          - { id: en.sb.devant_chez_toi }
+        next: []
+
+  - id: en.sb.voiture
+    title: "La voiture"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('sb_devant_chez_toi') || gauges.tribunes < 25"
+    chance: 0.08
+    cast: [gege, camille]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_voiture: "{annee} : VENDU, à la bombe rouge sur le capot de la voiture de {nom}, au parking du stade."
+    steps:
+      - id: parking
+        card:
+          - { id: en.sb.voiture_police, if: "flag('sb_police_appelee')" }
+          - { id: en.sb.voiture }
+        # Le constat se remplit à deux : sans Camille, pas de seconde scène.
+        next: [ { step: assurance, if: "!flag('divorce')", in: [2, 4] } ]
+      - id: assurance
+        card: en.sb.voiture_assurance
+        next: []
+
+  - id: en.sb.lettre
+    title: "La lettre"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    # Le petit est au club ; la peur est déjà entrée chez toi (la voiture), ou
+    # le corbeau a commencé, ou le petit est mis en avant (lancé, capitaine).
+    when: "season >= 1 && chars.mbako.statut != 'vendu' && (flag('sb_voiture') || flag('sb_corbeau') || flag('mbako_lance') || flag('brassard_mbako'))"
+    chance: 0.06
+    cast: [camille, mbako, mere_mbako]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_lettre: "{annee} : une lettre anonyme chez {nom}, en lettres découpées dans L'Écho, contre Lian Mbako."
+    steps:
+      - id: boite
+        card:
+          - { id: en.sb.lettre_seul, if: "flag('divorce')" }
+          - { id: en.sb.lettre }
+        next: [ { step: petit, in: [2, 4] } ]
+      - id: petit
+        card: en.sb.lettre_mbako
+        next: []
+
+  - id: en.sb.corbeau
+    title: "Le corbeau"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: presse
+    foreground: false
+    weight: 1.0
+    once: true
+    # Après un succès : un bloc gagné, ou le haut du classement.
+    when: "season >= 1 && (world.serie_victoires >= 1 || world.rang <= 4)"
+    chance: 0.05
+    cast: [meneche, camille]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_corbeau: "{annee} : des lettres anonymes sur {nom} chez le président, à la mairie et à L'Écho."
+    steps:
+      - id: lettres
+        card:
+          - { id: en.sb.corbeau_meme_main, if: "flag('sb_lettre')" }
+          - { id: en.sb.corbeau }
+        next: []
+
+  # ===================================================== L'HOMME AU BLOUSON GRIS
+  - id: en.sb.laverie
+    title: "L'homme au blouson gris"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1"
+    chance: 0.06
+    cast: [josiane, mere_mbako, aulard]
+    issues: [livre, garde]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_laverie_lue: "{annee} : une enveloppe kraft à la laverie. Dedans, un virement du club vers un compte de Valdorne."
+      sb_laverie_rendue: "{annee} : à la laverie, {nom} a rendu fermée l'enveloppe d'un homme en blouson gris."
+      sb_laverie_2: "{annee} : l'homme au blouson gris est revenu à la laverie, avec les licences du centre de formation."
+      sb_laverie_3: "{annee} : la troisième enveloppe de la laverie portait un nom ; on a su qui l'envoyait."
+    steps:
+      - id: enveloppe
+        card:
+          - { id: en.sb.laverie_huissier, if: "flag('sb_huissier')" }
+          - { id: en.sb.laverie }
+        # Il revient la saison suivante, dans les premiers créneaux.
+        next: [ { step: retour, at_season: 1, at: [2, 6], in: [2, 6] } ]
+      - id: retour
+        card:
+          - { id: en.sb.laverie_retour_rendue, if: "flag('sb_laverie_rendue')" }
+          - { id: en.sb.laverie_retour }
+        next: [ { step: nom, in: [5, 9] } ]
+      - id: nom
+        card:
+          - { id: en.sb.laverie_nom_ancien, if: "flag('sb_ancien')" }
+          - { id: en.sb.laverie_nom_josiane, if: "relation.josiane >= 2" }
+          - { id: en.sb.laverie_nom_mere, if: "flag('mbako_lance') && relation.mere_mbako >= 1 && chars.mbako.statut != 'vendu'" }
+          - { id: en.sb.laverie_nom }
+        next: []
+
+  # ==================================================================== L'ARGENT
+  - id: en.sb.perquisition
+    title: "Six heures du matin"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    # Le dossier de la laverie porté au juge ; ou les deux enveloppes lues et
+    # le président qui vacille ; ou, en S2+, une direction qui s'effondre.
+    when: "season >= 1 && ((flag('sb_laverie_3') && arc_outcome('en.sb.laverie') == 'livre') || (flag('sb_laverie_lue') && flag('sb_laverie_2') && gauges.direction < 35) || (season >= 2 && gauges.direction < 20))"
+    chance: 0.10
+    cast: [josiane, aulard]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_perquisition: "{annee} : la police financière au club-house à six heures. Les cartons de Vaubourg ont descendu l'escalier."
+    steps:
+      - id: aube
+        card:
+          - { id: en.sb.perquisition_dossier, if: "arc_outcome('en.sb.laverie') == 'livre'" }
+          - { id: en.sb.perquisition_carton, if: "flag('sb_service_rendu')" }
+          - { id: en.sb.perquisition }
+        next: []
+
+  - id: en.sb.greve
+    title: "La grève"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    # La paie en retard, les comptes saisis après la perquisition, la caisse à
+    # sec — ou le car du fossé, quand le vestiaire n'en peut plus. Bréhaut
+    # porte la feuille : il doit encore être joueur au club.
+    when: "season >= 1 && chars.brehaut.statut != 'parti' && chars.brehaut.statut != 'staff' && (flag('salaires_retard') || flag('sb_perquisition') || gauges.caisse < 20 || (flag('sb_car') && gauges.vestiaire < 50))"
+    chance: 0.07
+    cast: [brehaut, aulard]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_greve: "{annee} : grève à l'entraînement. Vingt-deux signatures sur une feuille à carreaux, le capitaine en premier."
+    steps:
+      - id: feuille
+        card:
+          - { id: en.sb.greve_car, if: "flag('sb_car')" }
+          - { id: en.sb.greve }
+        next: []
+
+  - id: en.sb.huissier
+    title: "L'huissier"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "gauges.caisse < 25 || (flag('sb_greve') && gauges.caisse < 40)"
+    chance: 0.08
+    cast: [josiane, aulard]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_huissier: "{annee} : un huissier et deux déménageurs au club-house. Madame Josiane s'était mise devant la porte."
+    steps:
+      - id: porte
+        card: en.sb.huissier
+        next: []
+
+  - id: en.sb.car
+    title: "Le car"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    # Un déplacement d'hiver (créneaux 10-12).
+    when: "season.phase == 'hiver'"
+    chance: 0.07
+    cast: [vecchio, aulard]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_car: "{annee} : le car du club au fossé, de nuit, dans la neige. Norbert, le chauffeur, a eu la jambe cassée."
+    steps:
+      - id: gare
+        card: en.sb.car
+        next: []
+
+  # =================================================================== LA NUIT
+  - id: en.sb.disparu
+    title: "Le joueur qui ne vient pas"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    # Dembo, l'avant-centre, joue au club jusqu'en 2008 (bible ch. 01 § 13).
+    when: "gauges.vestiaire < 45 && year <= 2008 && chars.vukic.statut != 'rival'"
+    chance: 0.06
+    cast: [vukic]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_disparu: "{annee} : Dembo n'est pas venu à l'entraînement. On l'a retrouvé à la friche, devant deux créanciers."
+      sb_dette_joueur: "{annee} : {nom} a payé les dettes de Dembo à deux types de la friche, en liquide."
+    steps:
+      - id: friche
+        card: en.sb.disparu
+        next: []
+
+  - id: en.sb.appel_nuit
+    title: "Le coup de fil de trois heures"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    # Avant un match qui compte : la fin de saison, le haut du classement — ou
+    # une dette de joueur restée ouverte.
+    when: "season >= 1 && (flag('sb_disparu') || slot >= 12 || world.rang <= 3)"
+    chance: 0.05
+    cast: [vecchio]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_appel_nuit: "{annee} : un coup de fil à trois heures du matin chez {nom}. Une voix calme, une phrase, puis plus rien."
+    steps:
+      - id: telephone
+        card:
+          - { id: en.sb.appel_nuit_dette, if: "flag('sb_disparu') && !flag('sb_dette_joueur')" }
+          - { id: en.sb.appel_nuit }
+        next: []
+
+  - id: en.sb.ancien
+    title: "L'ancien"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 2"
+    chance: 0.04
+    cast: [aulard]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_ancien: "{annee} : Émile Sorbier, trésorier du club avant Vaubourg, sorti de la centrale, a demandé un service à {nom}."
+      sb_service_rendu: "{annee} : {nom} a gardé le carton ficelé d'Émile Sorbier, sans l'ouvrir."
+    steps:
+      - id: friche
+        card:
+          - { id: en.sb.ancien_voix, if: "flag('sb_appel_nuit')" }
+          - { id: en.sb.ancien }
+        next: []

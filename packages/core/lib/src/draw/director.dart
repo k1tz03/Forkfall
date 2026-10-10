@@ -790,6 +790,8 @@ class Director {
   void armEvents(GameState s, EvalContext c, Rng rng) {
     if (s.eventsThisSeason >= q.eventsMax) return;
     if (s.scheduled.any((sc) => sc.kind == 'evenement')) return;
+    // Jamais deux événements trop près l'un de l'autre (charte d'écriture § 4).
+    if (q.eventsEcart > 0 && s.ncards - s.lastEventN < q.eventsEcart) return;
     final total = content.cardSlots(s.role);
     if (s.slot < 4 || s.slot > total - 3) return; // never on the opening nor the finale
     if (s.season == 0 && s.slot < 8) return;
@@ -807,6 +809,7 @@ class Director {
       acc += a.chance;
       if (roll < acc) {
         s.eventsThisSeason += 1;
+        s.lastEventN = s.ncards;
         armArc(s, a, c, dueN: s.ncards, deadlineN: s.ncards + 1);
         return;
       }

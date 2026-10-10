@@ -7,9 +7,9 @@ cards:
     tags: [direction, mercato]
     speaker: aulard
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Jean-Marie Vaubourg : « J'ai signé un attaquant ce matin. Tu l'apprends par la presse. Tu le fais jouer ? »"
-    left: {label: "Il joue", effects: {direction: "+", vestiaire: "-"}}
-    right: {label: "Il file à la réserve", effects: {direction: "--", vestiaire: "+"}, answer: "L'attaquant appelle un journaliste."}
+    text: "Vaubourg, au téléphone, de sa voiture : « J'ai signé un attaquant ce matin, par fax. Tu le liras dans L'Écho demain. Je l'ai vu marquer à la télé. Tu le fais jouer samedi ? »"
+    left: {label: "Il joue samedi", effects: {direction: "+", vestiaire: "-"}, answer: "Il joue samedi, à la place de Dembo. Dembo le regarde s'échauffer depuis le banc, les bras croisés."}
+    right: {label: "Il file à la réserve", effects: {direction: "--", vestiaire: "+"}, answer: "Le lendemain, l'attaquant parle à L'Écho de « choix incompréhensibles ». Le président découpe l'article."}
 
   - id: en.vestiaire.star_ne_defend_pas
     roles: [entraineur]
@@ -17,9 +17,9 @@ cards:
     tags: [vestiaire, direction]
     speaker: brehaut
     when: "gauges.direction > 40"
-    text: "Bréhaut : « Notre numéro 10 refuse de défendre. Le président l'a payé une fortune. Tu le mets sur le banc ? »"
-    left: {label: "Sur le banc", effects: {vestiaire: "++", direction: "-", set: [star_banc]}}
-    right: {label: "Titulaire quand même", effects: {vestiaire: "-", direction: "+"}}
+    text: "Bréhaut, en sueur, au retour du footing : « Dembo ne revient jamais défendre. Samedi, j'ai couvert son couloir tout le match. Le président l'a payé plus cher que nous tous réunis. Tu le sors ? »"
+    left: {label: "Je le mets au banc", effects: {vestiaire: "++", direction: "-", set: [star_banc]}, answer: "Dembo s'assoit au bout du banc, le survêtement fermé jusqu'au menton. Le président quitte la loge à la mi-temps."}
+    right: {label: "Titulaire quand même", effects: {vestiaire: "-", direction: "+"}, answer: "Dembo joue et marque. Bréhaut court pour deux, et n'en reparle plus de la saison."}
 
   - id: en.presse.pas_vu
     roles: [entraineur]
@@ -27,9 +27,9 @@ cards:
     tags: [presse, arbitrage]
     speaker: lea
     when: "gauges.vestiaire < 60"
-    text: "Micro tendu, après le carton rouge de ton milieu : « Vous avez vu l'action , coach ? »"
-    left: {label: "Je n'ai pas vu", effects: {vestiaire: "++", tribunes: "-"}}
-    right: {label: "Il mérite le rouge", effects: {vestiaire: "--", tribunes: "+"}}
+    text: "Léa, de L'Écho, au bord du tunnel, le carnet ouvert : « Votre milieu a pris un rouge pour un coude, à la demi-heure. Notre photographe a l'image, le coude est très net. Vous l'avez vu ? »"
+    left: {label: "Je n'ai pas vu", effects: {vestiaire: "++", tribunes: "-"}, answer: "Elle écrit « n'a pas vu » et referme le carnet. Samedi, la photo est en page cinq, ta phrase en légende."}
+    right: {label: "Il mérite le rouge", effects: {vestiaire: "--", tribunes: "+"}, answer: "Il l'apprend dans le car, par le journal du lendemain. Il ne s'assoit plus jamais à côté de toi."}
 
   # en.formation.gamin est remplacée par l'arc B « Le prodige » (arc_prodige.yaml).
   - id: en.vestiaire.sechecheveux
@@ -37,9 +37,9 @@ cards:
     arc: vestiaire
     tags: [vestiaire, moment]
     speaker: brehaut
-    text: "À la mi-temps, mené 0-2, Bréhaut : « Ils attendent que tu gueules. Ou pas. »"
-    left: {label: "Coup de gueule", effects: {vestiaire: "-", force: "+"}}
-    right: {label: "Calme, tableau tactique", effects: {vestiaire: "+"}}
+    text: "À la pause, menés 0-2, dans un vestiaire visiteurs qui sent l'eau de Javel. Bréhaut, à voix basse : « Ils attendent que tu cries. Moi, je crois qu'ils ont besoin d'autre chose. »"
+    left: {label: "Je hausse le ton", effects: {vestiaire: "-", force: "+"}, answer: "Tu cries. Ils regardent leurs chaussures ; à la reprise, ils courent plus, et jouent moins bien."}
+    right: {label: "Calme, tableau tactique", effects: {vestiaire: "+"}, answer: "Deux flèches à la craie, trois phrases. Ils reviennent à 2-1 ; Bréhaut te cherche du regard depuis le rond central."}
 
   - id: en.direction.homme_president
     roles: [entraineur]
@@ -47,9 +47,9 @@ cards:
     tags: [direction, retorse]
     speaker: aulard
     when: "gauges.direction > 60"
-    text: "Vaubourg : « Signe cette déclaration : le président a raison de tout. Tu es mon homme, non ? »"
-    left: {label: "Je signe", effects: {direction: "++", vestiaire: "-", parole: -1, set: [homme_president]}}
-    right: {label: "Je garde ma liberté", effects: {direction: "-"}}
+    text: "Vaubourg fait glisser une feuille dactylographiée vers toi : « Dix lignes pour L'Écho : le banc soutient le président et son projet. Tu es des miens, non ? Signe là. »"
+    left: {label: "Je signe", effects: {direction: "++", vestiaire: "-", parole: -1, set: [homme_president]}, answer: "L'Écho publie les dix lignes samedi, ta signature en bas. Au vestiaire, quelqu'un les a punaisées près des douches."}
+    right: {label: "Je ne signe pas", effects: {direction: "-"}, answer: "Il reprend la feuille, la plie en deux et la glisse dans sa poche intérieure. Il ne la jette pas."}
 
   - id: en.famille.podcast
     roles: [entraineur, joueur]
@@ -57,15 +57,15 @@ cards:
     tags: [famille]
     speaker: camille
     when: "gauges.tribunes < 55"
-    text: "Camille : « Je lance un podcast sur notre vie. Premier épisode : pourquoi le vestiaire compte plus que moi. »"
-    left: {label: "Je te soutiens", effects: {tribunes: "-", vestiaire: "-"}}
-    right: {label: "Pas question", effects: {vestiaire: "+"}, answer: "Le dîner est silencieux."}
+    text: "Camille, une lettre pliée sur la table de la cuisine : « J'ai écrit à L'Écho, pour « On nous écrit ». Sur nous, sur les dimanches. Ils la publient samedi, si tu ne dis pas non. »"
+    left: {label: "Qu'ils la publient", effects: {tribunes: "-", vestiaire: "-"}, answer: "Samedi, la lettre est en page six. Au vestiaire, elle passe de main en main ; personne ne t'en parle."}
+    right: {label: "Garde-la pour nous", effects: {vestiaire: "+"}, answer: "Elle replie la lettre et la range dans le tiroir de la cuisine. Le dîner est silencieux."}
 
   - id: en.piege.projet
     roles: [entraineur]
     arc: divers
     tags: [piege]
     speaker: aulard
-    text: "Vaubourg : « On fait du surplace. Il nous faut un projet, coach. Tu prends position ou tu subis ? »"
-    left: {label: "Je prends un risque fort", effects: {direction: "++", vestiaire: "--"}}
-    right: {label: "On continue tranquille", effects: {direction: "--", tribunes: "-"}}
+    text: "Vaubourg, dans la loge, après un 0-0 contre {rival} : « Les gens sont partis à la 80e. Lundi, je dois vendre un projet à la mairie, et je n'ai rien. Toi, tu as quoi ? »"
+    left: {label: "Je lance quatre jeunes", effects: {direction: "++", vestiaire: "--"}, answer: "Quatre gamins du centre titulaires samedi. Le président a son projet ; le vestiaire, quatre places de moins."}
+    right: {label: "On continue comme ça", effects: {direction: "--", tribunes: "-"}, answer: "Il ne répond pas. Lundi, il monte seul à la mairie, et revient avec un projet où ton nom n'est pas."}

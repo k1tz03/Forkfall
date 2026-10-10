@@ -30,13 +30,31 @@ class Engine {
   /// cosmétiques : les trois tirages de `_makeEntities` (genre, prénom, nom)
   /// sont conservés puis écrasés, donc « même code, même carrière » tient
   /// (test N1). Un nom vide ou sur liste noire est remplacé par le nom tiré.
-  GameState start(int seed, {int postulat = 0, String? prenom, String? nom, String? genre}) {
+  GameState start(int seed, {int postulat = 0, String? prenom, String? nom, String? genre, String? ville, String? club}) {
     final rng = Rng(seed);
     final posts = content.postulatsByIndex;
     if (posts.isEmpty) throw StateError('Aucun postulat dans le contenu (content/postulats.yaml).');
     final post = posts[postulat % posts.length];
     final role = content.roles[post.role]!;
     final entities = _makeEntities(rng, post.role);
+    // LA VILLE (la version jouable) : la ville et le club peuvent être imposés —
+    // la ville dessinée s'appelle Aubérive et son club-house porte « RACING
+    // AUBÉRIVE ». Comme le nom saisi (§1.8), c'est cosmétique : le tirage est
+    // consommé quand même, le Code de Carrière ne change pas.
+    if (ville != null && ville.trim().isNotEmpty) {
+      final v = ville.trim();
+      final tiree = entities.named['ville'] ?? '';
+      entities.named['ville'] = v;
+      // le rival ne peut pas être de la même ville : il prend celle qu'on a remplacée
+      final rival = entities.named['rival'] ?? '';
+      if (rival.endsWith(' $v') && tiree.isNotEmpty && tiree != v) {
+        entities.named['rival'] = '${rival.substring(0, rival.length - v.length)}$tiree';
+      }
+    }
+    if (club != null && club.trim().isNotEmpty) {
+      entities.named['club'] = club.trim();
+      entities.named['clubShort'] = club.trim().split(' ').last;
+    }
     entities.named['president'] = content.characters[post.president ?? role.patron ?? '']?.name ?? 'Le président';
     // Le tirage est TOUJOURS consommé (déterminisme : même code, même carrière),
     // puis écrasé par le postulat quand il fixe un âge — comme le nom saisi en
@@ -129,6 +147,33 @@ class Engine {
     final rng2 = Rng.fromState(s.rngState);
     _draw(s, rng2);
     s.rngState = rng2.state;
+    if (s.over) _buildEndingPending(s);
+    return s;
+  }
+
+  /// LA VILLE (la version jouable) : une activité faite entre deux cartes.
+  ///
+  /// Pure comme `choose` (clone puis applique), mais elle ne tire RIEN : ni
+  /// carte, ni aléa — `rngState`, la file et la carte en attente ne bougent
+  /// pas. Elle ne touche que les jauges déclarées par `content/ville.yaml`,
+  /// bornées à [0, 100], et elle peut finir une carrière comme n'importe quel
+  /// choix : la tournée de trop à la buvette remplit les tribunes jusqu'au bout.
+  /// Une activité inconnue, d'un autre rôle, ou une carrière finie : l'état
+  /// revient tel quel.
+  ///
+  /// Le Code de Carrière (graine + swipes) ne la rejoue pas : une carrière
+  /// jouée en ville se sauvegarde par son `GameState` (toJson / fromJson).
+  GameState activite(GameState prev, String id) {
+    final s = prev.clone();
+    final a = content.activites[id];
+    if (s.over || a == null || (a.roles.isNotEmpty && !a.roles.contains(s.role))) return s;
+    final role = content.roles[s.role]!;
+    for (final g in role.gauges) {
+      final d = a.jauges[g.id] ?? 0;
+      if (d == 0) continue;
+      s.gauges[g.id] = ((s.gauges[g.id] ?? 50) + d).clamp(0, 100);
+    }
+    _checkEndings(s);
     if (s.over) _buildEndingPending(s);
     return s;
   }
@@ -984,6 +1029,7 @@ class Engine {
         'expression': expression,
         'kind': card.kind,
         'tone': card.tone,
+        if (card.lieu != null) 'lieu': card.lieu,
         ...extra,
       },
     );

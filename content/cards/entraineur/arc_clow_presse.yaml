@@ -18,7 +18,7 @@ cards:
     # Seuil 75 comme la bible ; season <= 1 (et non == 0) en filet : la S0
     # du promu est presque entièrement réservée (script, semis, Nouvelles).
     when: "gauges.tribunes >= 75 && season <= 1 && !flag('clow_ingrat')"
-    text: "Dan Corven, un verre d'eau devant lui : « Une jauge pleine tue autant qu'une vide, petit. Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. »"
+    text: "Dan Corven, au bar d'en face, un verre d'eau plein devant lui : « En soixante-huit, ils chantaient mon nom comme ça, petit. En novembre, ils l'ont peint sur un drap, barré d'une croix. »"
     left:
       label: "Je note"
       effects: {var: {clow_conseils: "+1"}, relation: {clow: 1}}
@@ -38,7 +38,7 @@ cards:
     speaker: clow
     tone: leger
     once: true
-    text: "Corven, un comptoir derrière la voix : « Au stage, petit, tu écrivais tout, même ce que je ne disais pas. Peur du président ? Je ne dirais pas que j'étais un grand ; j'étais devant les sans-peur. »"
+    text: "Corven, un comptoir derrière la voix : « Au stage, petit, tu écrivais tout. Écris ça : en 1971, j'ai eu peur de mon président pendant cinquante-neuf jours. Le soixantième, il a envoyé un télégramme. »"
     left:
       label: "Je l'écoute"
       # Jauges retirées des deux côtés : la politique de recentrage ne lit que
@@ -61,7 +61,7 @@ cards:
     speaker: clow
     tone: leger
     once: true
-    text: "Corven, au téléphone : « Peur du président, {toi} ? Cinquante-neuf jours à Capitale FC, en 1971. Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. »"
+    text: "Corven, au téléphone, un bar derrière la voix : « Tu as peur de ton président, {toi}, ça s'entend. Moi, c'était Capitale FC, en 1971 : cinquante-neuf jours, puis un télégramme. Tu veux la suite ? »"
     left:
       label: "Je l'écoute"
       # Même correctif de jauges que la variante `_stage` ci-dessus.
@@ -100,7 +100,7 @@ cards:
     speaker: clow
     tone: leger
     once: true
-    text: "Corven, répondeur : « Tu n'appelles plus. Bon signe, un coach qui écoute n'en est pas un. Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. »"
+    text: "Le répondeur, et la voix de Corven, plus lente qu'avant : « Tu n'appelles plus. Bon signe : un coach qui écoute n'en est pas un. Je suis au bar jeudi, au fond. Je garde le tabouret. »"
     left:
       label: "Je le rappelle"
       effects: {set: [clow_ingrat], relation: {clow: 1}}
@@ -137,15 +137,15 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, une enveloppe : « Il a laissé ça pour vous, {toi}. Dedans, une phrase et un choix : dire ce que vous pensez, ou voir ce que les autres cachent. »"
+    text: "Madame Josiane te tend une enveloppe : « Pour vous, {toi}. Monsieur Corven l'a dictée à l'infirmière. » Dedans, deux mots l'un sous l'autre, « franchement » et « regarde », et en bas : « Un seul. »"
     left:
-      label: "Franc-parler"
+      label: "Je garde « franchement »"
       effects: {set: [franc_parler], outcome: ecoute, journal: {text: "{annee} : Dan Corven a laissé une enveloppe à {nom}. Dedans, une phrase et un choix : le franc-parler.", poids: 3, tags: [moment, direction]}}
-      answer: "La phrase : « Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. » Tu la dis en conférence samedi. Massenet note."
+      answer: "Samedi, en conférence, tu dis « franchement » sans point d'interrogation. Massenet l'écrit tel quel, pour une fois."
     right:
-      label: "Nez à joueurs"
+      label: "Je garde « regarde »"
       effects: {set: [nez_a_joueurs], outcome: ecoute, journal: {text: "{annee} : Dan Corven a laissé une enveloppe à {nom}. Dedans, une phrase et un choix : le nez à joueurs.", poids: 3, tags: [moment, direction]}}
-      answer: "La phrase : « Je ne dirais pas que j'étais un grand. Je dirais que j'étais devant. » Tu la gardes. Tu regardes les autres, désormais."
+      answer: "Tu glisses le mot dans ton portefeuille. Depuis, tu regardes les jeunes du centre comme il regardait : longtemps, sans rien dire."
 
   - id: en.clow.testament_ingrat
     roles: [entraineur]
@@ -154,7 +154,7 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, les mains vides : « Il n'a rien laissé. Le fils de Corven a demandé qu'on ne vous prévienne pas de l'enterrement. J'en ai vu passer, vous savez. »"
+    text: "Madame Josiane, les mains vides : « Monsieur Corven n'a rien laissé pour vous. Son fils a demandé qu'on ne vous prévienne pas de l'enterrement. C'est demain, dix heures. »"
     left:
       label: "Je comprends"
       effects: {set: [clow_ingrat], outcome: ingrat}
@@ -180,11 +180,11 @@ cards:
     # lui, garde le nom écrit). La carte a un cooldown de 14 : c'est la seule
     # carte de nom direct de l'entraîneur qui pouvait revenir plusieurs fois
     # par carrière, et donc tomber juste avant ou après une autre.
-    text: "Massenet, micro posé sur la table : « Trois questions, un journaliste gentil. Juste une question, hors micro. L'objectif, {toi}, vous y croyez ou vous le dites ? »"
+    text: "Massenet pose le micro sur la table, puis son carnet, fermé : « Trois questions, et je n'en écrirai qu'une. L'objectif du président, {toi} : vous y croyez, ou vous le récitez ? »"
     left:
       label: "Je ne commente pas"
       effects: {var: {no_comment: "+1"}, tribunes: "-", direction: "+", outcome: no_comment, react: {card: en.re.meneche_embuscade, chance: 0.6}, journal: {text: "{annee} : conférence de presse. « Je ne commente pas », a dit {nom}. Massenet a noté le silence.", poids: 1, tags: [presse]}}
-      answer: "Il note le silence. Il note toujours. Le président apprécie qu'on note peu."
+      answer: "Il écrit trois mots, « ne commente pas », et referme le carnet. Le président apprécie qu'on écrive peu."
     right:
       label: "Franchement"
       effects: {tribunes: "+", parole: 1, promise: true, relation: {meneche: 1}, outcome: franc, set: [presse_franc], react: {card: en.re.lea_confirmez, chance: 0.7}, journal: {text: "{annee} : conférence de presse. « Franchement », a dit {nom}. Titre du samedi, avec un point d'interrogation.", poids: 1, tags: [presse]}}
@@ -226,13 +226,13 @@ cards:
     tags: [direction, presse]
     speaker: aulard
     tone: leger
-    text: "Vaubourg, le journal plié sur le titre : « « Franchement. » Vous avez dit franchement, et moi j'ai un empire à tenir. J'ai pas le temps de démentir. Vous répétez, ou ça retombe ? »"
+    text: "Vaubourg, le journal plié sur le titre, le téléphone contre l'autre oreille : « « Franchement ? » En une, sur mon club. Mon banquier m'a appelé à sept heures. Vous répétez, ou ça retombe ? »"
     left:
       label: "Je répète"
       effects: {tribunes: "+", direction: "--", parole: 1, relation: {aulard: -1, meneche: 1}, journal: {text: "{annee} : {nom} a répété le mot, devant le président. Le titre a vécu une semaine de plus.", poids: 2, tags: [presse, direction]}}
       answer: "Tu répètes. Le mot vit une semaine de plus ; le président aussi, plus mal."
     right:
-      label: "Ça retombera"
+      label: "Je laisse retomber"
       effects: {direction: "+", tribunes: "-", relation: {meneche: -1}}
       answer: "Ça retombe. Massenet garde la page, pliée dans la même poche."
 
@@ -244,7 +244,7 @@ cards:
     tags: [direction, presse, retorse]
     speaker: aulard
     tone: strategique
-    text: "Vaubourg, le journal ouvert sur le bureau depuis la veille : « « Franchement », deuxième année. J'ai pas le temps de démentir deux fois. Vous le dites devant eux, ou je le dis à votre place ? »"
+    text: "Vaubourg, le journal ouvert sur le bureau depuis la veille : « « Franchement », deuxième année. Je ne paie pas deux fois le même démenti. Vous le dites devant eux, ou je le dis à votre place ? »"
     left:
       label: "Je le dis devant eux"
       effects: {direction: "+", tribunes: "-", relation: {aulard: 1, meneche: -1}, journal: {text: "{annee} : {nom} a démenti son propre mot, devant le président et devant la salle.", poids: 2, tags: [presse, direction]}}
@@ -295,11 +295,11 @@ cards:
     tags: [presse, moment]
     speaker: meneche
     tone: leger
-    text: "Massenet sur le parking, micro rangé : « Hors micro, pour de vrai : vous y croyez ? Je n'écris pas ce que vous répondez. J'écris le temps que vous mettez à répondre. »"
+    text: "Massenet sur le parking, le micro dans le coffre, le carnet fermé : « Vous y croyez ? Je n'écrirai pas la réponse. J'écrirai combien de temps vous avez mis à la trouver. »"
     left:
       label: "J'y crois"
       effects: {tribunes: "+", parole: 1, relation: {meneche: 1}}
-      answer: "Il ne note rien. Il note l'heure plus tard, de mémoire, et elle est juste."
+      answer: "Il ne note rien sur le moment. Le soir, de mémoire, il écrit « quatre secondes » ; c'est juste."
     right:
       label: "Je réponds au printemps"
       effects: {direction: "+", relation: {meneche: -1}}
@@ -311,7 +311,7 @@ cards:
     tags: [presse, moment, retorse]
     speaker: meneche
     tone: leger
-    text: "Massenet, même parking, même carnet : « L'an dernier vous avez mis quatre secondes. Je les ai comptées, hors micro. Cette année je compte encore, ou vous répondez tout de suite ? »"
+    text: "Massenet, même parking, même carnet : « L'an dernier, vous avez mis quatre secondes à répondre. Je les ai comptées, et je les ai écrites. Cette année, je recompte, ou vous répondez tout de suite ? »"
     left:
       label: "Tout de suite : j'y crois"
       effects: {tribunes: "+", parole: 1, relation: {meneche: 1}, journal: {text: "{annee} : hors micro, {nom} n'a pas mis quatre secondes. Massenet a compté quand même.", poids: 1, tags: [presse]}}
@@ -333,7 +333,7 @@ cards:
     once: true
     priority: 2
     when: "count('no_comment') >= 3"
-    text: "Massenet, une photocopie à la main : « Trois « je ne commente pas ». Votre visage est partout avec la légende. Juste une question, hors micro. Vous en riez ? »"
+    text: "Massenet pose une photocopie sur ta table : ta photo et, dessous, « Je ne commente pas », trois fois. « Elle est punaisée dans tous les bars du quai sud. Vous en riez, ou vous attaquez ? »"
     left:
       label: "J'en ris"
       effects: {tribunes: "+", relation: {meneche: 1}}
@@ -341,7 +341,7 @@ cards:
     right:
       label: "Je porte plainte"
       effects: {tribunes: "--", relation: {meneche: -2}}
-      answer: "La plainte fait un deuxième mème. Avec la même légende, en plus gros."
+      answer: "La plainte fait la une de L'Écho, avec ta photo et la même légende, en plus gros."
 
   # ------------------------------------------------------ Réactions des arcs
   # Le build dérive `kind: reaction` de tout `react:` qui les cite : ne pas
@@ -354,15 +354,15 @@ cards:
     tags: [direction, presse]
     speaker: josiane
     tone: leger
-    text: "Madame Josiane, le combiné encore dans la main : « Le président a appelé trois fois ; j'ai dit que vous étiez avec un ancien. J'en ai vu passer, vous savez, des anciens. »"
+    text: "Madame Josiane, le combiné encore à la main : « Le président a appelé trois fois pendant votre heure de téléphone. J'ai dit que vous parliez avec un ancien. Il a demandé l'heure exacte. »"
     left:
       label: "Vous avez bien fait"
       effects: {direction: "-", relation: {josiane: 1}}
-      answer: "Elle note l'heure sur un post-it. Elle le colle sous le sous-main, pas dessus."
+      answer: "Elle note l'heure sur un papier jaune. Elle le glisse sous le sous-main, pas dessus."
     right:
       label: "Ne notez rien"
       effects: {direction: "-", relation: {josiane: 1}}
-      answer: "Elle note l'heure sur un post-it quand même. Elle le colle sous le sous-main."
+      answer: "Elle note l'heure quand même, sur un papier jaune, et le glisse sous le sous-main."
 
   # Après en.presse.trois_questions (→ Franchement) : le lendemain, la stagiaire
   # de L'Écho rappelle pour faire confirmer le mot (ch. 90 § 2.4).
@@ -372,12 +372,12 @@ cards:
     tags: [presse]
     speaker: lea
     tone: leger
-    text: "Léa, un carnet et un stylo qui ne marche pas : « Vous avez dit « franchement » hier, et tout le monde l'a repris ce matin, en titre. Vous confirmez ? »"
+    text: "Léa, sur le pas de la porte, un stylo qui marche mal : « Massenet a titré « Franchement ? », avec un point d'interrogation. Moi, je l'écris sans, si c'est bien votre mot. Je vérifie avant. »"
     left:
-      label: "Je confirme"
+      label: "C'est bien le mot"
       effects: {tribunes: "+", relation: {lea: 1}}
       answer: "Elle écrit le mot deux fois. La seconde, entre guillemets, avec ton nom devant."
     right:
-      label: "Je confirme"
+      label: "C'est bien le mot"
       effects: {tribunes: "+", relation: {lea: 1}}
       answer: "Elle écrit le mot deux fois. La seconde, entre guillemets, avec ton nom devant."

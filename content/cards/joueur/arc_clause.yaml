@@ -8,15 +8,15 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     tone: strategique
-    text: "« {rival} a payé ta clause au centime près ; on parle d'argent ou d'amitié, et là c'est de l'argent : le club fulmine et ne peut rien. Tes valises, ou tu déclines ? »"
+    text: "Fardelli te montre la photocopie d'un chèque, l'original dans sa veste : « {rival} a payé ta clause au centime, {toi}. Le président hurle, et il ne peut rien. Tes valises, ou tu déclines ? »"
     left:
       label: "Mes valises"
       effects: {caisse: "++", tribunes: "--", direction: "-", set: [parti_chez_rival], club: {change: true}, outcome: part, react: jp.re.gege_blason}
-      answer: "Tu pars chez le rival. Gégé décroche ton nom du local. Il ne le brûle pas ; il le garde pour le derby."
+      answer: "Tu pars chez le rival. Gégé décroche ton nom du local ; il ne le brûle pas, il le garde pour le derby."
     right:
       label: "Je décline"
       effects: {tribunes: "+", direction: "+", relation: {fardelli: -1}, set: [fidele], outcome: refuse}
-      answer: "Tu déclines. Il dit « on parlait d'amitié, alors ». Il n'insiste pas ; il attend l'an prochain."
+      answer: "Tu déclines. Il plie la photocopie en quatre, la range avec l'original, et attend l'an prochain."
 
   - id: jp.clause.rival_gigi
     roles: [joueur]
@@ -24,15 +24,15 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     tone: strategique
-    text: "« {rival} a payé la clause au centime, et je sais qu'on t'a conseillé de me dire non une fois. On parle d'argent ou d'amitié : c'est le moment, ou pas ? »"
+    text: "Fardelli cale la photocopie du chèque contre le volant : « {rival} a payé ta clause au centime. Gigi t'a conseillé de me dire non une fois, je sais. C'est ce soir, ou tu fais tes valises ? »"
     left:
       label: "Mes valises"
       effects: {caisse: "++", tribunes: "--", direction: "-", set: [parti_chez_rival], club: {change: true}, outcome: part, react: jp.re.gege_blason}
       answer: "Tu pars chez le rival. Gégé décroche ton nom du local ; il le garde pour le derby."
     right:
-      label: "C'est le moment : non"
+      label: "C'est ce soir : non"
       effects: {tribunes: "+", direction: "+", relation: {fardelli: -2}, set: [fidele], outcome: refuse}
-      answer: "Tu dis non. Il range la photocopie. Il la garde ; il garde tout ce qu'on lui refuse."
+      answer: "Tu dis non. Il range la photocopie ; il garde tout ce qu'on lui refuse."
 
   - id: jp.clause.page_deux
     roles: [joueur]
@@ -40,11 +40,11 @@ cards:
     tags: [direction, mercato]
     speaker: aulard
     tone: strategique
-    text: "« La page deux, {toi}, dit que si tu restes, ta clause double : je l'ai écrite pour qu'on ne te la lève plus. J'ai pas le temps : tu signes, ou tu restes au prix d'avant ? »"
+    text: "Vaubourg repasse au stylo un cercle, page deux : « Si tu restes, ta clause double. Je l'ai écrite cette nuit, {toi}, pour que plus personne ne puisse la lever. Tu signes, ou au prix d'avant ? »"
     left:
       label: "Je signe la page deux"
       effects: {caisse: "++", direction: "+", tribunes: "-", set: [mercenaire], outcome: double, react: {card: jp.re.josiane_classeur, chance: 0.5}}
-      answer: "Tu signes. Le club paie pour que tu restes. La Gazette Rose écrit « le mercenaire fidèle » ; les deux mots sont vrais."
+      answer: "Tu signes, et le club paie pour que tu restes. La Gazette Rose écrit « le mercenaire fidèle » ; les deux mots sont vrais."
     right:
       label: "Au prix d'avant"
       effects: {tribunes: "++", caisse: "-", set: [fidele], outcome: refuse}
@@ -56,7 +56,7 @@ cards:
     tags: [direction, mercato]
     speaker: aulard
     tone: strategique
-    text: "« Tu es le seul à avoir lu la page deux avant moi, et elle dit que ta clause double si tu restes. J'ai pas le temps, j'ai une usine : tu signes, ou tu la relis ? »"
+    text: "Vaubourg pose son stylo à côté de la ligne entourée : « Toi, tu l'as lue avant moi, la page deux, dès ton premier jour. Ta clause double si tu restes. Tu signes, ou tu la relis encore ? »"
     left:
       label: "Je signe"
       effects: {caisse: "++", direction: "+", tribunes: "-", set: [mercenaire], outcome: double}
@@ -64,7 +64,7 @@ cards:
     right:
       label: "Je la relis"
       effects: {direction: "-", caisse: "+", tribunes: "+", set: [fidele], outcome: refuse}
-      answer: "Tu la relis. Il y a une ligne sur les primes de match qu'il espérait que tu ne lises pas. Tu la lis."
+      answer: "Tu la relis. Il y a une ligne sur les primes de match qu'il espérait que tu ne lirais pas ; tu la lis."
 
   - id: jp.clause.blason
     roles: [joueur]
@@ -72,15 +72,15 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: strategique
-    text: "« Les autres partent pour des valises, toi tu es d'ici : embrasse le blason devant la Nord, la tribune n'oublie rien. Tu l'embrasses, ou tu prends les billets ? »"
+    text: "Gégé tend son écharpe par-dessus la main courante, le blason vers toi : « Les autres partent pour des valises. Toi, tu es d'ici : embrasse-le devant la Nord. Ou tu prends les billets ? »"
     left:
       label: "J'embrasse le blason"
       effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}, set: [blason_embrasse], react: [ { card: co.re.gege_decoupe_mur, if: "seen('co.re.gege_decoupe_1987')", chance: 0.5 }, { card: co.re.gege_decoupe_1987, if: "seen('co.re.gege_decoupe')", chance: 0.5 }, { card: co.re.gege_decoupe, chance: 0.5 } ]}
-      answer: "Tu l'embrasses. La Nord chante. En loge, on regarde la clause doublée ; on a payé le baiser."
+      answer: "Tu l'embrasses, et la Nord chante ton nom. En loge, le président applaudit du bout des doigts ; il calcule ce que vaut un baiser."
     right:
       label: "Je prends les billets"
       effects: {caisse: "+", tribunes: "--"}
-      answer: "Tu ne l'embrasses pas. L'écharpe reste tendue. Il la range ; il ne la range pas vite."
+      answer: "Tu ne l'embrasses pas ; l'écharpe reste tendue. Il la range, et il ne la range pas vite."
 
   - id: jp.clause.blason_mercenaire
     roles: [joueur]
@@ -88,11 +88,11 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: strategique
-    text: "« Tu as fait doubler ta clause pour rester, on l'a lu ; la tribune n'oublie rien, même ce qu'elle préférerait. Tu embrasses le blason, ou le chèque ? »"
+    text: "Gégé tend l'écharpe, puis la retire d'un centimètre : « On a lu la Gazette : ta clause a doublé pour que tu restes. On a fait le calcul au local, à la craie. Tu embrasses le blason, ou le chèque ? »"
     left:
       label: "Le blason"
       effects: {tribunes: "++", caisse: "-", relation: {gege: 1}, set: [blason_embrasse]}
-      answer: "Tu l'embrasses. La Nord chante à moitié. La moitié qui chante, c'est celle qui n'a pas lu."
+      answer: "Tu l'embrasses, et la Nord chante à moitié. La moitié qui chante, c'est celle qui n'a pas lu."
     right:
       label: "Le chèque, honnêtement"
       effects: {caisse: "+", tribunes: "--", relation: {gege: -1}}
@@ -107,11 +107,11 @@ cards:
     tags: [mercato, absurde, chaine]
     speaker: josiane
     tone: strategique
-    text: "« 23 h 58, la page trois est coincée, et le président a dit que c'était le dernier transfert qu'il signerait pour vous. J'en ai vu passer. Je tire, ou je l'appelle chez lui ? »"
+    text: "Madame Josiane tient la page coincée par un coin : « 23 h 58, et c'est la trois qui bloque. Le président a dit que c'était la dernière fois qu'il signait pour vous. Je tire, ou je l'appelle ? »"
     left:
       label: "Tirez"
       effects: {direction: "--", tribunes: "-", set: [fax_rate], end: jp_fax}
-      answer: "Elle tire. La page se déchire en biais, sur le numéro de licence. Le fax imprime minuit une."
+      answer: "Elle tire ; la page se déchire en biais, sur le numéro de licence. Le fax imprime minuit une."
     right:
       label: "Appelez-le chez lui"
       effects: {direction: "-", caisse: "+", relation: {josiane: 1}, set: [fax_passe]}
@@ -123,15 +123,15 @@ cards:
     tags: [mercato, absurde]
     speaker: josiane
     tone: strategique
-    text: "« Il est 23 h 58, {toi}, le fax du transfert arrive page par page, et la page trois est coincée ; j'en ai vu passer, jamais un qui se coince. Je tire, ou j'attends ? »"
+    text: "Tout est éteint au secrétariat, sauf le fax qui crache page par page. Madame Josiane : « 23 h 58, {toi}, et la page trois est coincée, celle des signatures. Je tire dessus, ou j'attends ? »"
     left:
       label: "Tirez"
       effects: {rand: [{p: 0.6, caisse: "++", set: [fax_passe]}, {direction: "--", tribunes: "-", set: [fax_rate]}]}
-      answer: "Elle tire. La page vient, ou elle se déchire. Le fax imprime l'heure ; il ne ment pas."
+      answer: "Elle tire ; la page vient, ou elle se déchire. Le fax imprime l'heure, et il ne ment pas."
     right:
       label: "Attendez"
       effects: {rand: [{p: 0.5, caisse: "++", set: [fax_passe]}, {direction: "--", set: [fax_rate]}]}
-      answer: "Elle attend. Le fax finit à minuit une. Il a été promu depuis ; toi, non."
+      answer: "Elle attend. La dernière page sort, l'heure imprimée en haut ; elle la lit avant de te la tendre."
 
   - id: jp.clause.fax_mail
     roles: [joueur]
@@ -139,12 +139,12 @@ cards:
     tags: [mercato, absurde]
     speaker: josiane
     tone: strategique
-    text: "« Le mail du transfert est parti à 23 h 58 et le serveur de la Ligue dit « en attente » ; j'en ai vu passer, mais jamais un serveur. On rappelle, ou on attend ? »"
+    text: "Madame Josiane fixe l'écran du secrétariat, sa tasse froide : « Le contrat est parti sur le serveur de la Ligue à 23 h 58. Depuis, l'écran dit « en attente ». On rappelle, ou on attend ? »"
     left:
       label: "On rappelle"
       effects: {rand: [{p: 0.6, caisse: "++", set: [fax_passe]}, {direction: "--", tribunes: "-", set: [fax_rate]}]}
-      answer: "Elle rappelle. Quelqu'un décroche, ou pas. L'horodatage, lui, ne discute pas."
+      answer: "Elle rappelle ; quelqu'un décroche, ou pas. L'horodatage, lui, ne discute pas."
     right:
       label: "On attend"
       effects: {rand: [{p: 0.5, caisse: "++", set: [fax_passe]}, {direction: "--", set: [fax_rate]}]}
-      answer: "Elle attend. Le serveur répond à minuit une. Il a été remplacé depuis ; toi, non."
+      answer: "Elle attend. L'écran finit par changer ; elle lit la ligne deux fois avant de te la dire."

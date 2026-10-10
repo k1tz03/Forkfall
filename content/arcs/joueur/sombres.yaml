@@ -1,0 +1,408 @@
+# Les événements sombres du joueur (docs/bible/charte_histoire.md § 5) : arcs
+# `kind: evenement`, tirés par le metteur en scène quand leur `when` est vrai
+# (`chance` par créneau éligible, deux par saison au plus, cinq créneaux
+# d'écart), une fois par carrière, jamais rattrapés (`fallback: drop`), jamais
+# de premier plan. Ils naissent de l'état du monde et de la vie du joueur :
+# l'appartement de la rue des Lilas (deux pièces au-dessus de la boulangerie),
+# Camille, le terrain annexe, la salle de muscu, la laverie de la rue du
+# Stade, le Terminus, la buvette des anciens, la friche de la Tréfilerie.
+#
+#  1. L'homme au blouson gris (laverie, S1+) — le fil sur deux saisons : une
+#     enveloppe ; la saison suivante, la liste des licences (ton nom deux fois,
+#     deux salaires) ; la troisième fois, on sait qui l'envoie : Josiane (son
+#     frère tenait les comptes), ou Massenet qui l'a appris si tu lui as porté
+#     les papiers. Fusée longue (`at_season: 1`), et `same_club: false` : le
+#     fil suit le joueur vendu, sinon la pépite ne le finissait presque jamais.
+#  2. Ils t'attendent (domicile) — cinq écharpes sous la fenêtre ; le lendemain,
+#     Gégé si tu as appelé la police, Camille sinon.
+#  3. La voiture (parking) — VENDU sur le capot ; Gégé sait qui.
+#  4. La lettre (domicile → terrain annexe) — des mots découpés contre Lian
+#     Mbako ; puis Mbako, qui en reçoit depuis septembre et qui joue samedi.
+#     Le racisme des tribunes sans complaisance : le mot n'est jamais écrit,
+#     on dit où il est crié ; le visé a la dernière réplique.
+#     Les trois forment « la maison » (§ 5.2) : devant chez toi → voiture → lettre.
+#  5. L'envahissement (stade) — un homme saute la grille et court vers toi ;
+#     le match d'après se joue à huis clos.
+#  6. Les photos (Terminus → rue des Lilas ou maison) — le chantage.
+#  7. La rue (rue des Lilas → cabinet du Doc) — trois écharpes du rival le soir
+#     d'un derby perdu ; le certificat dit « coups » ou « escalier ».
+#  8. La boîte (salle de muscu) — « Pour le genou. Tout le monde en prend. »
+#  9. Le coup de fil de trois heures (domicile → stade) — avant un match qui
+#     compte ; après la laverie, la voix parle de la laverie.
+# 10. Le car (gare routière, retour de Haute-Combe dans la neige) — le fossé,
+#     Norbert ; puis le bon de commande des pneus neige, annulé.
+# 11. L'ancien (friche, S2+) — sorti de prison, un carton à garder ; il connaît
+#     le photographe ou la voix de trois heures si tu les as croisés.
+# 12. La bagarre de la buvette — la police veut des noms.
+#
+# Les fils se lisent entre eux : le huis clos et les noms donnés à la buvette
+# ramènent les écharpes sous la fenêtre ; la lettre, la rue, l'envahissement et
+# les plaintes allument la buvette ; la laverie rallume le téléphone de nuit ;
+# le chantage payé et l'appel de nuit envoient à la friche.
+#
+# Aucune carte n'est en `tone: drame` : le metteur en scène n'en sert qu'UNE
+# par carrière (`drameAllowed`, `drames < 1`). Un événement en drame volerait
+# ce drame à la rechute du genou ou au tifo, ou serait perdu après huit reports.
+arcs:
+  # ======================================================= 1 · L'homme au blouson gris
+  - id: jp.sb.laverie
+    title: "L'homme au blouson gris"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1"
+    chance: 0.07
+    cast: [josiane, meneche]
+    same_club: false
+    fallback: drop
+    traces:
+      sb_laverie_lue:    "{annee} : une enveloppe kraft sur une machine de la laverie. {nom} l'a ouverte."
+      sb_laverie_rendue: "{annee} : {nom} a rendu une enveloppe kraft sans l'ouvrir. Le blouson gris l'a reprise."
+      sb_laverie_2:      "{annee} : le blouson gris est revenu à la laverie, avec la liste des licences."
+      sb_laverie_3:      "{annee} : la troisième fois, on a su qui envoyait l'homme au blouson gris."
+    steps:
+      - id: enveloppe
+        card: jp.sb.laverie
+        next: [ { step: liste, at_season: 1, at: [3, 8], in: [3, 8] } ]
+      - id: liste
+        # « Je porte tout à Massenet » pose `next: massenet` sur la carte ;
+        # tout le reste va à Josiane.
+        card:
+          - { id: jp.sb.laverie_retour, if: "flag('sb_laverie_rendue')" }
+          - { id: jp.sb.laverie_liste }
+        next: [ { step: josiane, in: [4, 7] } ]
+      - id: massenet
+        card: jp.sb.laverie_massenet
+        next: []
+      - id: josiane
+        # Deux enveloppes rendues sans être lues : elle vient quand même.
+        card:
+          - { id: jp.sb.laverie_josiane_rendue, if: "flag('sb_laverie_2') && !flag('sb_laverie_lue')" }
+          - { id: jp.sb.laverie_josiane }
+        next: []
+
+  # ======================================================= 2 · Ils t'attendent
+  - id: jp.sb.devant_chez_toi
+    title: "Ils t'attendent"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # La tribune qui déborde après une défaite, Gégé fâché, le huis clos dont
+    # on te fait porter le poids, ou des noms donnés à la police après la
+    # bagarre de la buvette (la buvette est restée ouverte : tu as parlé).
+    when: "(gauges.tribunes < 30 && world.serie_defaites >= 1) || relation.gege <= -2 || flag('sb_huis_clos') || (flag('sb_bagarre') && !flag('sb_buvette_fermee'))"
+    chance: 0.10
+    cast: [camille, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_devant_chez_toi: "{annee} : cinq écharpes sous les fenêtres de {nom}, rue des Lilas, à minuit."
+      sb_police_appelee:  "{annee} : {nom} a appelé la police contre des supporters. Un gamin a dormi au poste."
+    steps:
+      - id: fenetre
+        # Camille parle ; si elle est partie, la carte « seul » prend la place.
+        card:
+          - { id: jp.sb.devant_chez_toi }
+          - { id: jp.sb.devant_chez_toi_seul }
+        next: [ { step: lendemain, in: [2, 4] } ]
+      - id: lendemain
+        card:
+          - { id: jp.sb.devant_chez_toi_gege, if: "flag('sb_police_appelee')" }
+          - { id: jp.sb.devant_chez_toi_matin }
+          - { id: jp.sb.devant_chez_toi_terminus }
+        next: []
+
+  # ======================================================= 3 · La voiture
+  - id: jp.sb.voiture
+    title: "La voiture"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('sb_devant_chez_toi') || gauges.tribunes < 25"
+    chance: 0.08
+    cast: [gege]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_voiture: "{annee} : VENDU à la bombe rouge sur le capot de {nom}, au parking du stade."
+      sb_plainte: "{annee} : {nom} a porté plainte pour un capot tagué. Deux gamins de la Nord ont été convoqués."
+    steps:
+      - id: capot
+        # « Je porte plainte » pose `next: plainte` sur la carte.
+        card:
+          - { id: jp.sb.voiture_echarpe, if: "flag('sb_devant_chez_toi')" }
+          - { id: jp.sb.voiture }
+        next: [ { step: qui, in: [2, 5] } ]
+      - id: qui
+        card: jp.sb.voiture_qui
+        next: []
+      - id: plainte
+        card: jp.sb.voiture_plainte
+        next: []
+
+  # ======================================================= 4 · La lettre
+  - id: jp.sb.lettre
+    title: "La lettre"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Lian Mbako mis en avant (on l'a vu au moins deux fois), ou la peur qui
+    # est déjà entrée par la voiture (« la maison », § 5.2).
+    when: "season >= 1 && chars.mbako.statut in ['present', 'club'] && (appearances('mbako') >= 2 || flag('sb_voiture'))"
+    chance: 0.06
+    cast: [camille, mbako]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_lettre: "{annee} : une lettre sans timbre chez {nom}, des mots découpés dans L'Écho, contre Lian Mbako."
+    steps:
+      - id: enveloppe
+        card:
+          - { id: jp.sb.lettre }
+          - { id: jp.sb.lettre_seul }
+        next: [ { step: petit, in: [2, 4] } ]
+      - id: petit
+        card: jp.sb.lettre_petit
+        next: []
+
+  # ======================================================= 5 · L'envahissement
+  - id: jp.sb.envahissement
+    title: "L'envahissement"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (gauges.tribunes < 25 || world.serie_defaites >= 3)"
+    chance: 0.10
+    cast: [vecchio]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_envahissement: "{annee} : à la 80e, un homme a sauté la grille de la Nord et couru vers {nom}."
+      sb_huis_clos:     "{annee} : huis clos sur décision de la commission. On a entendu le ballon jusqu'au parking."
+    steps:
+      - id: grille
+        card: jp.sb.envahissement
+        next: [ { step: huis_clos, in: [2, 4] } ]
+      - id: huis_clos
+        card: jp.sb.envahissement_huis_clos
+        next: []
+
+  # ======================================================= 6 · Les photos
+  - id: jp.sb.photos
+    title: "Les photos"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Le moral bas : le vestiaire qui ne te parle plus, les défaites qui
+    # s'enchaînent, ou les nuits sans sommeil depuis le car dans le fossé —
+    # les nuits où l'on sort.
+    when: "season >= 1 && (gauges.vestiaire < 40 || world.serie_defaites >= 2 || flag('sb_car'))"
+    chance: 0.07
+    cast: [camille]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_photos:        "{annee} : des photos de {nom} devant la Comète, trois heures du matin, la veille d'un match."
+      sb_chantage_paye: "{annee} : {nom} a payé pour que des photos dorment. Elles se sont réveillées."
+    steps:
+      - id: terminus
+        card: jp.sb.photos
+        next: [ { step: suite, in: [3, 6] } ]
+      - id: suite
+        card:
+          - { id: jp.sb.photos_encore, if: "flag('sb_chantage_paye')" }
+          - { id: jp.sb.photos_gazette, if: "flag('sb_photos')" }
+          - { id: jp.sb.photos_vestiaire }
+        next: []
+
+  # ======================================================= 7 · La rue
+  - id: jp.sb.rue
+    title: "La rue"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Après un derby perdu (co.derby, issue `perdu`), tant qu'on en parle encore.
+    when: "since_arc('co.derby') <= 12 && arc_outcome('co.derby') == 'perdu'"
+    chance: 0.12
+    cast: [sabatier]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_agression: "{annee} : trois écharpes de {rival} attendaient {nom} rue des Lilas. Deux côtes fêlées."
+      sb_plainte:   "{annee} : {nom} a porté plainte. Le certificat du Doc disait « coups »."
+    steps:
+      - id: lilas
+        card: jp.sb.rue
+        next: [ { step: certificat, in: [1, 3] } ]
+      - id: certificat
+        card: jp.sb.rue_certificat
+        next: []
+
+  # ======================================================= 8 · La boîte
+  - id: jp.sb.boite
+    title: "La boîte"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Le genou qui parle, ou les jambes qui ne suivent plus.
+    when: "flag('genou') || flag('infiltre') || force < 45"
+    chance: 0.06
+    cast: [sabatier, vukic]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_dopage:      "{annee} : une boîte sans étiquette sur le banc de {nom}, à la salle de muscu."
+      sb_boite_prise: "{annee} : {nom} a gardé la boîte sans étiquette. Le genou s'est tu trois semaines."
+    traces_retract:
+      sb_boite_prise: "{annee} : la boîte sans étiquette a fini dans la poubelle des seringues du Doc."
+    steps:
+      - id: muscu
+        card: jp.sb.boite
+        next: [ { step: suite, in: [3, 6] } ]
+      - id: suite
+        # Gardée : le Doc l'a trouvée. Laissée sur le banc : quelqu'un d'autre l'a prise.
+        card:
+          - { id: jp.sb.boite_doc, if: "flag('sb_dopage') && flag('sb_boite_prise')" }
+          - { id: jp.sb.boite_vukic }
+        next: []
+
+  # ======================================================= 9 · Le coup de fil de trois heures
+  - id: jp.sb.appel_nuit
+    title: "Le coup de fil de trois heures"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Avant un match qui compte (le haut ou le bas du classement, au retour),
+    # après la laverie (quelqu'un sait que tu sais), ou après la friche (les
+    # amis de l'ancien ont ton numéro).
+    when: "season >= 1 && ((slot >= 11 && (world.rang <= 4 || world.rang >= 16)) || flag('sb_laverie_3') || flag('sb_ancien'))"
+    chance: 0.08
+    cast: [vukic, josiane]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_appel_nuit: "{annee} : le téléphone de {nom} a sonné à trois heures du matin. Une voix calme, puis la tonalité."
+    steps:
+      - id: appel
+        # La variante « laverie » pose `next: end` sur ses deux sorties.
+        card:
+          - { id: jp.sb.appel_nuit_laverie, if: "flag('sb_laverie_3')" }
+          - { id: jp.sb.appel_nuit }
+        next: [ { step: vingtieme, in: [1, 3] } ]
+      - id: vingtieme
+        card: jp.sb.appel_nuit_vingtieme
+        next: []
+
+  # ======================================================= 10 · Le car
+  - id: jp.sb.car
+    title: "Le car"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # Un déplacement d'hiver (créneaux 10-13).
+    when: "season >= 1 && slot >= 10 && slot <= 13"
+    chance: 0.06
+    cast: [vecchio, josiane]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_car: "{annee} : retour de Haute-Combe dans la neige, le car du club dans le fossé. Norbert ne conduit plus."
+    steps:
+      - id: fosse
+        card: jp.sb.car
+        next: [ { step: facture, in: [2, 5] } ]
+      - id: facture
+        card: jp.sb.car_facture
+        next: []
+
+  # ======================================================= 11 · L'ancien
+  - id: jp.sb.ancien
+    title: "L'ancien"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 2"
+    chance: 0.05
+    cast: []
+    same_club: true
+    fallback: drop
+    traces:
+      sb_ancien:         "{annee} : un ancien du club, sorti de prison, a donné rendez-vous à {nom} à la friche."
+      sb_service_rendu:  "{annee} : {nom} a gardé un carton pour un ancien du club. Il pesait plus lourd que du linge."
+    steps:
+      - id: friche
+        card:
+          - { id: jp.sb.ancien_photos, if: "flag('sb_chantage_paye')" }
+          - { id: jp.sb.ancien_appel, if: "flag('sb_appel_nuit')" }
+          - { id: jp.sb.ancien }
+        next: [ { step: suite, in: [3, 6] } ]
+      - id: suite
+        # Le carton pris : la police à six heures. Refusé : un autre l'a pris.
+        card:
+          - { id: jp.sb.ancien_police, if: "flag('sb_service_rendu')" }
+          - { id: jp.sb.ancien_gamin }
+        next: []
+
+  # ======================================================= 12 · La bagarre de la buvette
+  - id: jp.sb.buvette
+    title: "La bagarre de la buvette"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    # La Nord qui se déchire : après la lettre, la rue, l'envahissement, une
+    # plainte, ou dans la semaine d'un derby.
+    when: "season >= 1 && (flag('sb_lettre') || flag('sb_agression') || flag('sb_envahissement') || flag('sb_plainte') || since_arc('co.derby') <= 6)"
+    chance: 0.08
+    cast: [gege, vecchio]
+    same_club: true
+    fallback: drop
+    traces:
+      sb_bagarre:        "{annee} : deux bandes de la Nord se sont battues à la buvette des anciens. {nom} y était."
+      sb_buvette_fermee: "{annee} : personne n'avait rien vu. La buvette des anciens a fermé un mois."
+    steps:
+      - id: bagarre
+        card:
+          - { id: jp.sb.buvette_lettre, if: "flag('sb_lettre')" }
+          - { id: jp.sb.buvette }
+        next: [ { step: suite, in: [3, 6] } ]
+      - id: suite
+        card:
+          - { id: jp.sb.buvette_fermee, if: "flag('sb_buvette_fermee')" }
+          - { id: jp.sb.buvette_pere }
+        next: []

@@ -5,13 +5,15 @@ cards:
     tags: [moment]
     speaker: sabatier
     when: "age >= 28"
-    text: "Doc Sabatier presse ton genou et fait la moue : « Ça, c'est un genou qui a des choses à te dire. On l'écoute maintenant, ou en mai ? »"
+    text: "Sabatier remonte ses lunettes sur le front et appuie sous ta rotule, longtemps : « Il y a de l'eau, là. Rien de cassé, pas encore. Je te mets au repos cette semaine, ou on en reparle en mai ? »"
     left:
-      label: "On écoute maintenant"
+      label: "Je m'arrête cette semaine"
       effects: {force: 4, tribunes: "-"}
+      answer: "Tu regardes samedi depuis la tribune, en civil. L'Écho écrit « ménagé » ; la Nord, elle, demande où tu es."
     right:
-      label: "En mai, en mai"
+      label: "On en reparle en mai"
       effects: {tribunes: "+", force: -3}
+      answer: "Tu joues samedi. Le soir, tu montes l'escalier de chez toi une marche après l'autre, la main sur la rampe."
 
   - id: jp.corps.verdict_genou
     roles: [joueur]
@@ -20,13 +22,15 @@ cards:
     speaker: sabatier
     once: true
     when: "age >= 30 && !flag('genou')"
-    text: "Doc Sabatier, radio en main : « Verdict : ce genou est fêlé. Tu peux finir la saison, mais après on parle très sérieusement. »"
+    text: "Dans son cabinet, Sabatier colle la radio contre la vitre, face au magnolia : « Ce trait, c'est une fêlure. Tu peux finir la saison dessus. Après, je ne signe plus rien. Tu choisis quoi ? »"
     left:
       label: "Je finis la saison"
       effects: {tribunes: "++", force: -4, set: [genou]}
+      answer: "Il range la radio dans le tiroir, pas dans le dossier. Dimanche, tu joues ; au club, personne ne sait ce que vaut ton genou."
     right:
       label: "J'arrête tout de suite"
       effects: {direction: "+", tribunes: "--", set: [genou]}
+      answer: "Le club annonce « blessure » sans dire laquelle. À la buvette des anciens, on parle déjà de toi au passé."
 
   - id: jp.corps.infiltration
     roles: [joueur]
@@ -35,14 +39,15 @@ cards:
     speaker: sabatier
     once: true
     when: "flag('genou')"
-    text: "Doc Sabatier prépare deux plateaux : « À gauche, le bistouri et six mois de tribune. À droite, une piqûre et le match de dimanche. »"
+    text: "Samedi, sept heures : ton genou a doublé de volume. Sabatier pose une seringue sur la table, sous une compresse : « Une piqûre, et tu joues ce soir. Sinon je t'opère lundi, et c'est six mois. »"
     left:
-      label: "Le bistouri"
+      label: "Opère-moi lundi"
       effects: {tribunes: "--", force: 6, direction: "-"}
+      answer: "Lundi, le bloc, puis six mois de tribune. Tu regardes le match suivant la jambe tendue sur le siège de devant."
     right:
-      label: "La piqûre"
+      label: "Pique, je joue ce soir"
       effects: {tribunes: "+", set: [infiltre], schedule: [{card: jp.corps.rechute, in: [3, 6]}]}
-      answer: "Tu ne sens plus rien. C'est bien ça, le problème."
+      answer: "Tu joues quatre-vingt-dix minutes sans rien sentir. Sabatier note la dose sur une fiche qui ne va pas au dossier."
 
   - id: jp.corps.rechute
     roles: [joueur]
@@ -51,13 +56,15 @@ cards:
     speaker: sabatier
     sablier: true
     when: "flag('infiltre')"
-    text: "Doc Sabatier te montre l'écran sans un mot. « Le genou a lâché à l'échauffement. Je t'avais dit de ne rien sentir. »"
+    text: "À l'échauffement, ton genou se dérobe sur un appui. Sabatier traverse la pelouse en courant, lui qui ne court jamais : « La piqûre a tenu, pas le genou. Tu reviens vite, ou pour de bon ? »"
     left:
       label: "Je reviens vite"
       effects: {tribunes: "-", force: -6, clear: [infiltre]}
+      answer: "Six semaines plus tard, tu rejoues. Le genou tient ; il prévient seulement, chaque matin, dans l'escalier."
     right:
-      label: "Cette fois, j'opère"
+      label: "Cette fois, opère"
       effects: {tribunes: "--", direction: "-", force: 4, clear: [infiltre]}
+      answer: "Tu signes la décharge au bloc. Devant toi, Sabatier déchire la fiche des piqûres et la jette dans la corbeille."
 
   - id: jp.corps.la_liste
     roles: [joueur]
@@ -65,13 +72,15 @@ cards:
     tags: [moment]
     speaker: legruet
     when: "gauges.tribunes > 55 && !flag('international')"
-    text: "Noé Berthomier : « Je vous appelle en sélection, {toi}. Ton club va râler pour ton genou, mais moi c'est ta patte gauche que je veux. »"
+    text: "Noé Berthomier te retient par la manche dans le couloir des vestiaires : « Votre nom est sur ma liste de mars, {toi}. Votre président m'a appelé deux fois pour l'en retirer. Vous venez ? »"
     left:
       label: "Je réponds présent"
       effects: {tribunes: "++", direction: "-", set: [international]}
+      answer: "La liste paraît dans Le Quotidien du lundi, ton nom au milieu. Au club, le président passe devant toi sans te voir."
     right:
       label: "Je décline poliment"
       effects: {direction: "+", tribunes: "-"}
+      answer: "Berthomier rature ton nom sur sa feuille, sans colère. Le lendemain, ton président te paie un café ; c'est une première."
 
   - id: jp.corps.forfait
     roles: [joueur]
@@ -79,13 +88,15 @@ cards:
     tags: [moment, risk:direction]
     speaker: legruet
     when: "flag('international') && flag('genou')"
-    text: "Noé Berthomier, sec : « Ton médecin de club te déclare forfait pour la sélection. Étrange, il t'a aligné dimanche. »"
+    text: "Noé Berthomier, au téléphone, le certificat de Sabatier sous les yeux : « Votre médecin vous déclare inapte pour le match du pays. Vous avez joué dimanche, je l'ai vu. Qui dois-je croire ? »"
     left:
       label: "Je déclare forfait"
       effects: {direction: "++", tribunes: "--"}
+      answer: "Berthomier classe le certificat. Le Quotidien titre sur les clubs qui retiennent leurs joueurs, et te cite en exemple."
     right:
       label: "Je joue pour le pays"
       effects: {tribunes: "++", direction: "--", force: -3}
+      answer: "Tu joues pour le pays sur un genou tenu par trois bandes. Sabatier regarde le match à la télé du club-house, les bras croisés."
 
   - id: jp.corps.reeducation
     roles: [joueur]
@@ -93,13 +104,15 @@ cards:
     tags: [moment]
     speaker: sabatier
     when: "flag('genou')"
-    text: "Doc Sabatier, chrono en main : « Encore vingt flexions. La rééduc, c'est pas glamour, mais c'est ça ou la place 14B. »"
+    text: "Salle de muscu, sept heures du soir, le vieux garage sent encore l'huile. Sabatier relance le chronomètre : « Encore vingt. Les autres sont au Corner, ils t'ont gardé une chaise. Tu continues ? »"
     left:
-      label: "Je serre les dents"
+      label: "Encore vingt, je reste"
       effects: {force: 7, vestiaire: "-"}
+      answer: "Tu finis à neuf heures, le genou brûlant. Au Corner, ta chaise a servi de portemanteau toute la soirée."
     right:
-      label: "J'en garde sous le pied"
+      label: "Je les rejoins au Corner"
       effects: {vestiaire: "+", force: -2}
+      answer: "Tu arrives au dessert ; Bréhaut pousse une assiette vers toi. Sur sa fiche, Sabatier écrit « séance écourtée »."
 
   - id: jp.corps.preparateur
     roles: [joueur]
@@ -107,13 +120,15 @@ cards:
     tags: [moment, caisse]
     speaker: sabatier
     when: "age >= 30 && flag('genou')"
-    text: "Un préparateur suisse hors de prix te jauge : « Je remets ce genou à neuf en trois mois. Reste à convaincre la direction de payer. »"
+    text: "Sabatier pose une carte de visite sur la table, du bout des doigts : « Un préparateur du continent. Il promet ton genou à neuf en trois mois. Le club ne paiera pas. Toi, tu peux. »"
     left:
-      label: "La direction paie"
+      label: "Je le paie de ma poche"
       effects: {caisse: "-", force: 8, set: [prepa]}
+      answer: "Il arrive avec des élastiques, un chronomètre et des méthodes qu'il n'écrit nulle part. Sabatier ne demande jamais ce qu'il te fait."
     right:
-      label: "Je bosse tout seul"
+      label: "Je bosse de mon côté"
       effects: {vestiaire: "+", force: -3}
+      answer: "Tu rends la carte. Le matin, tu fais tes exercices au fond du vestiaire ; Vecchio te tient les chevilles sans qu'on lui demande."
 
   - id: jp.corps.retour_terrain
     roles: [joueur]
@@ -121,13 +136,15 @@ cards:
     tags: [moment, rescue:tribunes]
     speaker: brehaut
     when: "gauges.tribunes < 30 && flag('genou')"
-    text: "Titi Bréhaut te pousse vers la pelouse : « Le kop scande ton nom depuis dix minutes. Vas-y, montre-leur que le genou tient. »"
+    text: "Soixante-dixième minute. Bréhaut vient jusqu'au banc, les mains sur les hanches : « La Nord t'appelle depuis dix minutes. Le coach dit que c'est à toi de voir, pour le genou. Tu entres ? »"
     left:
       label: "Je rentre sous les cris"
       effects: {tribunes: "+++", force: -2}
+      answer: "Tu entres sous ton nom scandé : vingt minutes, un centre, une frappe au-dessus. Le soir, le genou a la taille d'une orange."
     right:
-      label: "Trop tôt, je reste assis"
+      label: "Trop tôt, je reste au banc"
       effects: {direction: "+", tribunes: "-"}
+      answer: "Tu gardes la serviette sur le genou. La Nord siffle le coach ; derrière toi, Sabatier te pose la main sur l'épaule."
 
   - id: jp.corps.age_qui_vient
     roles: [joueur]
@@ -135,13 +152,15 @@ cards:
     tags: [moment, piege]
     speaker: vukic
     when: "age >= 32"
-    text: "Zoran Vukić, tableau tactique sorti : « Tes jambes ont trente-deux ans, {toi}. On adapte ton jeu, ou tu cours après ta jeunesse ? »"
+    text: "Vukić a tracé ton couloir à la craie sur le tableau, puis l'a raccourci de moitié : « Tu ne fais plus les deux sens, {toi}. Je te monte d'un cran ; tu toucheras moins de ballons. D'accord ? »"
     left:
       label: "J'adapte mon jeu"
       effects: {force: 5, tribunes: "-"}
+      answer: "Tu joues trente mètres plus haut et tu cours deux fois moins. La Nord trouve que tu te caches ; Vukić, que tu respires."
     right:
       label: "Je cours quand même"
       effects: {tribunes: "+", force: -6}
+      answer: "Tu fais tes allers-retours comme avant, et la Nord applaudit. À la soixantième, tes jambes s'arrêtent avant que Vukić lève le panneau."
 
   - id: jp.corps.derniere_liste
     roles: [joueur]
@@ -150,13 +169,15 @@ cards:
     speaker: legruet
     once: true
     when: "age >= 34 && flag('international')"
-    text: "Noé Berthomier, presque ému : « C'est sans doute ta dernière liste. Je te prends pour le vestiaire, plus pour les jambes. »"
+    text: "Noé Berthomier te reçoit au siège de la Fédération, sous les portraits des anciens présidents : « Une dernière liste. Pas pour vos jambes : pour les jeunes du vestiaire. Vous acceptez ce rôle ? »"
     left:
       label: "J'y vais pour transmettre"
       effects: {vestiaire: "++", tribunes: "+"}
+      answer: "Tu joues dix minutes en tout et tu parles des heures. Dans le bus, les jeunes te questionnent sur des matchs qu'ils n'ont pas vus."
     right:
-      label: "Place aux jeunes"
+      label: "Je laisse ma place"
       effects: {direction: "+", vestiaire: "+", relation: {mbako: 2}}
+      answer: "Berthomier raye ton nom et écrit celui de Mbako à la place. Le petit l'apprend par la radio, et t'appelle le soir même."
 
   - id: jp.corps.genou_hiver
     roles: [joueur]
@@ -164,13 +185,15 @@ cards:
     tags: [moment, absurde]
     speaker: sabatier
     when: "flag('genou')"
-    text: "Doc Sabatier tapote ton genou comme un baromètre : « Il va pleuvoir. Ton genou le sait avant la météo. Repos ou pommade ? »"
+    text: "Le terrain annexe est blanc de givre. Sabatier masse ton genou au camphre, porte ouverte sur le froid : « Par ce temps, il gonfle dans l'heure. Je te garde au chaud, ou je te strappe ? »"
     left:
-      label: "Repos, il a raison"
+      label: "Je reste au chaud"
       effects: {tribunes: "-", force: 3}
+      answer: "Tu pédales sur le vélo de la salle de soins, face à la vitre givrée. Dehors, les anciens de la grille demandent où tu es."
     right:
-      label: "Pommade, et j'y vais"
+      label: "Strappe-moi, j'y vais"
       effects: {tribunes: "+", force: -2}
+      answer: "Il serre la bande en trois tours. Tu finis la séance sous les applaudissements de la grille ; le soir, tu boites."
 
   - id: jp.corps.visite_medicale
     roles: [joueur]
@@ -178,14 +201,15 @@ cards:
     tags: [moment, rescue:direction, retorse]
     speaker: sabatier
     when: "gauges.direction < 30 && age >= 30"
-    text: "Doc Sabatier, dossier fermé : « La direction veut ton bilan avant de prolonger. Je peux l'arrondir, ou dire toute la vérité. »"
+    text: "Sabatier a posé deux stylos sur la table, un bleu, un noir : « Le président veut ton bilan avant de prolonger. Au bleu, j'écris ce qu'il veut lire ; au noir, ce que je vois. Lequel ? »"
     left:
-      label: "Arrondis-le"
+      label: "Prends le bleu"
       effects: {direction: "+++"}
-      answer: "Ta signature en dépend. Ton genou aussi."
+      answer: "Le bilan tient sur une page, au bleu. Le président prolonge le lendemain ; Sabatier garde une copie au noir dans son tiroir."
     right:
-      label: "Dis la vérité"
+      label: "Prends le noir"
       effects: {direction: "-", tribunes: "+"}
+      answer: "Trois pages au noir. Le président repousse la prolongation ; à la buvette des anciens, on dit que toi, tu n'as pas menti."
 
   - id: jp.corps.raccrocher
     roles: [joueur]
@@ -194,10 +218,12 @@ cards:
     speaker: sabatier
     once: true
     when: "age >= 36 && gauges.tribunes > 65"
-    text: "Doc Sabatier, main sur ton épaule : « Ce genou t'a tout donné. Un dernier tour d'honneur, ou une saison de trop ? »"
+    text: "Sabatier glisse ta dernière radio dans l'enveloppe kraft, avec toutes les autres : « Il est las, ce genou. La Nord t'aime encore ; dans un an, je ne sais pas. Tu t'arrêtes en juin ? »"
     left:
-      label: "Le tour d'honneur"
+      label: "Je fais le tour d'honneur"
       effects: {end: jubile}
+      answer: "En juin, tu fais le tour du stade au pas, le maillot à la main. À la sortie du tunnel, Sabatier te tend l'enveloppe des radios."
     right:
-      label: "Une saison de plus"
+      label: "Je signe une saison de plus"
       effects: {tribunes: "+", force: -8, direction: "-"}
+      answer: "Tu signes. En septembre, Sabatier ajoute une radio à l'enveloppe, puis deux en novembre ; il ne commente plus."

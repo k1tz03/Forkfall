@@ -1,0 +1,752 @@
+# Cartes des événements sombres du joueur (arcs jp.sb.*, content/arcs/joueur/
+# sombres.yaml ; charte d'écriture § 5). Toutes hors du sac. `arc:` est le
+# THÈME de la carte, pas l'id de l'arc ; `lieu:` est l'endroit où la ville met
+# la scène. Les variantes sans locuteur (« seul », « vestiaire »…) sont les
+# secours quand Camille est partie (`divorce`) : une étape ne tombe jamais
+# faute de voix. Personne ne crie, personne ne fait la morale ; le mot raciste
+# n'est jamais écrit, on dit où il est crié.
+cards:
+  # ============================================== 1 · L'homme au blouson gris (S, puis S+1)
+  - id: jp.sb.laverie
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    lieu: laverie
+    tone: strategique
+    text: "Laverie de la rue du Stade, vingt-deux heures. Tes maillots tournent dans la 4. Un homme en blouson gris pose une enveloppe kraft sur le hublot : « Lisez ça avant samedi. » Il sort sans laver."
+    left:
+      label: "J'ouvre l'enveloppe"
+      effects: {direction: "-", force: -1, set: [sb_laverie_lue]}
+      answer: "Un virement du club, quatre cent mille, vers un compte à Valdorne. Libellé : « formation ». Le lendemain, Josiane te demande si tu as dormi."
+    right:
+      label: "Je cours la lui rendre"
+      effects: {direction: "+", relation: {josiane: -1}, set: [sb_laverie_rendue]}
+      answer: "Tu le rattrapes au coin de la rue. Il reprend l'enveloppe sans un mot, comme on reprend une chose qu'on rapportera."
+
+  # Saison suivante, tu l'avais ouverte.
+  - id: jp.sb.laverie_liste
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    lieu: laverie
+    tone: strategique
+    text: "Une saison a passé. Le blouson gris pose une deuxième enveloppe sur ta machine : la liste des licences du club. Ton nom y est deux fois, avec deux salaires. Tu n'en touches qu'un."
+    left:
+      label: "Je porte tout à Massenet"
+      effects: {direction: "--", relation: {meneche: 1}, set: [sb_laverie_2], next: {step: massenet, in: [3, 6]}}
+      answer: "Massenet lit au comptoir du Terminus sans ôter son manteau. Il recopie ton nom deux fois dans son carnet et paie les cafés."
+    right:
+      label: "Je range tout chez moi"
+      effects: {direction: "+", force: -1, parole: -1, set: [sb_laverie_2]}
+      answer: "Les deux enveloppes dorment sous le matelas. Le 5, deux salaires partent à ton nom ; un seul arrive sur ton compte."
+
+  # Saison suivante, tu l'avais rendue.
+  - id: jp.sb.laverie_retour
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    lieu: laverie
+    tone: strategique
+    text: "Une saison a passé. Le même blouson gris pose une enveloppe plus épaisse sur ta machine : « Vous l'avez rendue. Elle revient avec la liste des licences, et votre nom dedans. »"
+    left:
+      label: "Cette fois, je lis"
+      effects: {direction: "-", force: -1, set: [sb_laverie_lue, sb_laverie_2]}
+      answer: "Ton nom, deux fois, avec deux salaires, et un virement vers Valdorne. Tu relis jusqu'à ce que le séchoir s'arrête."
+    right:
+      label: "Je la rends encore"
+      effects: {direction: "+", relation: {josiane: -1}, set: [sb_laverie_2]}
+      answer: "Il la reprend. Sur le pas de la porte, il dit « elle sera déçue », et il ne dit pas qui."
+
+  # La troisième fois, si tu as porté les papiers au journal : Massenet sait.
+  - id: jp.sb.laverie_massenet
+    roles: [joueur]
+    arc: presse
+    tags: [sombre, scandale, presse]
+    speaker: meneche
+    lieu: laverie
+    tone: strategique
+    text: "Massenet t'attend entre deux séchoirs, ton enveloppe sur les genoux : « Le blouson gris, c'est le frère de Josiane. Le compte, le beau-frère de Vaubourg. On signe ensemble, ou je cite le frère ? »"
+    left:
+      label: "Je signe, à visage découvert"
+      effects: {tribunes: "++", direction: "--", parole: 1, relation: {meneche: 1}, set: [sb_laverie_3]}
+      answer: "L'article sort un mardi, avec ta photo et pas celle du frère. Vaubourg ne te serre plus la main ; Josiane, si, longtemps."
+    right:
+      label: "Je reprends mes papiers"
+      effects: {direction: "+", relation: {meneche: -2, josiane: -1}, set: [sb_laverie_3]}
+      answer: "Il te les rend. L'article sort quand même, plus court, et cite « un ancien comptable ». Lundi, Josiane n'est pas à son bureau."
+
+  # La troisième fois : Josiane vient elle-même.
+  - id: jp.sb.laverie_josiane
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: josiane
+    lieu: laverie
+    tone: strategique
+    text: "Madame Josiane pose son cabas sur la 4 ; dehors, le blouson gris attend sous la pluie : « C'est mon frère. Le compte de Valdorne est au beau-frère de Vaubourg. Vous en faites quoi, {toi} ? »"
+    left:
+      label: "Je porte tout à la Fédé"
+      effects: {direction: "--", parole: 1, relation: {josiane: 1}, set: [sb_laverie_3]}
+      answer: "Berthomier reçoit le dossier un jeudi et dit qu'il examine. Le 5, il n'y a plus qu'un salaire à ton nom ; Vaubourg ne te salue plus."
+    right:
+      label: "Je vous rends tout"
+      effects: {direction: "+", parole: -1, relation: {josiane: -1}, set: [sb_laverie_3]}
+      answer: "Elle range les enveloppes dans son cabas, sous le linge propre. Son frère lui tient la porte ; il ne te regarde pas."
+
+  # La troisième fois, après deux enveloppes rendues sans être lues.
+  - id: jp.sb.laverie_josiane_rendue
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: josiane
+    lieu: laverie
+    tone: strategique
+    text: "Madame Josiane, son cabas sur la 4, le blouson gris derrière la vitre : « Vous l'avez rendue deux fois. Alors je viens moi-même : c'est mon frère. Votre nom est dedans. Vous lisez, ou je brûle ? »"
+    left:
+      label: "Je lis, devant vous"
+      effects: {direction: "-", relation: {josiane: 1}, set: [sb_laverie_lue, sb_laverie_3]}
+      answer: "Deux salaires à ton nom, un compte à Valdorne, le beau-frère de Vaubourg. Elle attend que tu aies fini pour plier ton linge."
+    right:
+      label: "Brûlez-la"
+      effects: {direction: "+", parole: -1, relation: {josiane: -1}, set: [sb_laverie_3]}
+      answer: "Elle la brûle dans l'évier du fond. Le patron ouvre la fenêtre sans rien demander ; ça sent le papier jusqu'à samedi."
+
+  # ============================================== 2 · Ils t'attendent
+  - id: jp.sb.devant_chez_toi
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, ultras, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille a éteint le salon et parle derrière le rideau : « Ils sont cinq en bas, avec des écharpes. La boulangère a fermé ses volets. Tu descends, ou j'appelle la police ? »"
+    left:
+      label: "Je descends leur parler"
+      effects: {tribunes: "+", relation: {camille: -1}, set: [sb_devant_chez_toi]}
+      answer: "Ils te parlent du match de dimanche, très près du visage. Camille regarde par la fente du rideau jusqu'à ce que tu remontes."
+    right:
+      label: "Appelle la police"
+      effects: {tribunes: "-", relation: {gege: -1}, set: [sb_devant_chez_toi, sb_police_appelee]}
+      answer: "Deux sont rattrapés au square des Lilas. L'un a seize ans ; sa mère vient le chercher au poste en robe de chambre."
+
+  # Secours : Camille est partie.
+  - id: jp.sb.devant_chez_toi_seul
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: domicile
+    tone: strategique
+    text: "Minuit, rue des Lilas. Cinq écharpes sous ta fenêtre, et l'appartement trop grand depuis que Camille est partie. L'un d'eux crie ton numéro, puis ton étage."
+    left:
+      label: "Je descends leur parler"
+      effects: {tribunes: "+", force: -1, set: [sb_devant_chez_toi]}
+      answer: "Ils te parlent du match très près du visage. Quand tu remontes, personne ne t'attend en haut de l'escalier."
+    right:
+      label: "J'appelle la police"
+      effects: {tribunes: "-", relation: {gege: -1}, set: [sb_devant_chez_toi, sb_police_appelee]}
+      answer: "Deux sont rattrapés au square des Lilas. L'un a seize ans ; sa mère vient le chercher au poste en robe de chambre."
+
+  # Le lendemain, la police appelée : Gégé.
+  - id: jp.sb.devant_chez_toi_gege
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: cafe
+    tone: strategique
+    text: "Gégé au comptoir du Terminus, une bière fermée devant lui : « Le gamin de seize ans, c'est le fils d'un gars de la Nord. Il a dormi au poste. Tu passes au local t'expliquer, {toi} ? »"
+    left:
+      label: "Je passe au local"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
+      answer: "Au local, personne ne te parle pendant une heure. Puis le père du gamin te tend une bière, et tu la bois."
+    right:
+      label: "Je n'ai rien à expliquer"
+      effects: {tribunes: "--", direction: "+", relation: {gege: -1}}
+      answer: "Il ouvre enfin sa bière et la laisse sur le comptoir, pleine. Dimanche, la Nord chante tous les noms sauf le tien."
+
+  # Le lendemain, tu es descendu leur parler : Camille.
+  - id: jp.sb.devant_chez_toi_matin
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille, le café froid entre les mains, n'a pas dormi : « La boulangère m'a demandé si on déménageait. J'ai dit que je ne savais pas. Ce soir, je sais quoi ? »"
+    left:
+      label: "On cherche ailleurs"
+      effects: {caisse: "-", relation: {camille: 1}}
+      answer: "Vous visitez un deux-pièces derrière la gare routière. Elle demande d'abord s'il y a un verrou, ensuite s'il y a du soleil."
+    right:
+      label: "Ils ne reviendront pas"
+      effects: {vestiaire: "+", parole: -1, relation: {camille: -1}}
+      answer: "Elle hoche la tête. Le soir, elle met la chaîne à la porte, et tu fais semblant de ne pas l'entendre."
+
+  # Secours : tu es descendu, et Camille n'est plus là pour en parler.
+  - id: jp.sb.devant_chez_toi_terminus
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: cafe
+    tone: strategique
+    text: "Gégé au Terminus, la casquette sur le comptoir : « Cinq gars sous ta fenêtre, et toi qui descends leur parler. Ça s'est su. Ce n'est pas moi qui les ai envoyés. Tu me crois ? »"
+    left:
+      label: "Je te crois"
+      effects: {direction: "-", relation: {gege: 1}}
+      answer: "Il paie les deux cafés. En sortant, il serre la main de deux des cinq, sur le trottoir, sans se cacher."
+    right:
+      label: "Je ne crois plus personne"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "Il remet sa casquette et sort sans payer. Le patron du Terminus met les deux cafés sur ta note."
+
+  # ============================================== 3 · La voiture
+  # Après les écharpes sous la fenêtre.
+  - id: jp.sb.voiture_echarpe
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, après l'entraînement. Sur ton capot, à la bombe rouge : VENDU. Le pneu avant est à plat, et une écharpe de la Nord est nouée à l'essuie-glace, comme un ruban."
+    left:
+      label: "Je roule avec, une semaine"
+      effects: {tribunes: "+", direction: "-", set: [sb_voiture]}
+      answer: "Tu traverses la ville avec VENDU sur le capot. Les gamins de l'école le lisent à voix haute, en détachant les syllabes."
+    right:
+      label: "Je porte plainte"
+      effects: {tribunes: "-", caisse: "-", set: [sb_voiture, sb_plainte], next: {step: plainte, in: [2, 5]}}
+      answer: "L'agent tape la plainte avec deux doigts et demande si tu as « une idée ». Tu en as une ; tu la gardes."
+
+  - id: jp.sb.voiture
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, après l'entraînement. Sur ton capot, à la bombe rouge : VENDU. Le pneu avant gauche est à plat. Un stadier regarde ailleurs avec beaucoup d'application."
+    left:
+      label: "Je roule avec, une semaine"
+      effects: {tribunes: "+", direction: "-", set: [sb_voiture]}
+      answer: "Tu traverses la ville avec VENDU sur le capot. Les gamins de l'école le lisent à voix haute, en détachant les syllabes."
+    right:
+      label: "Je porte plainte"
+      effects: {tribunes: "-", caisse: "-", set: [sb_voiture, sb_plainte], next: {step: plainte, in: [2, 5]}}
+      answer: "L'agent tape la plainte avec deux doigts et demande si tu as « une idée ». Tu en as une ; tu la gardes."
+
+  - id: jp.sb.voiture_qui
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    text: "Gégé à la buvette des anciens, la casquette sur le comptoir : « Ton capot, c'est deux gamins de la Nord, seize ans. Je les ramène s'excuser, ou je règle ça à ma façon ? »"
+    left:
+      label: "Ramène-les"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
+      answer: "Ils viennent le samedi, la casquette à la main, devant tout le parking. L'un pleure ; l'autre regarde ses chaussures jusqu'au bout."
+    right:
+      label: "À ta façon"
+      effects: {tribunes: "+", parole: -2}
+      answer: "Lundi, le plus jeune a le bras en écharpe. Quand il te croise rue du Stade, il change de trottoir."
+
+  - id: jp.sb.voiture_plainte
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    text: "Gégé à la buvette des anciens : « Les deux gamins de ton capot ont reçu leur convocation. Seize ans. Leur mère pleure au local depuis midi. Tu retires ta plainte, {toi} ? »"
+    left:
+      label: "Je la retire"
+      effects: {tribunes: "+", parole: -1, relation: {gege: 1}}
+      answer: "Tu la retires le lundi. Le mardi, ta voiture est lavée, le pneu changé, et personne ne sait par qui."
+    right:
+      label: "Je la maintiens"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Le juge leur donne cent heures au stade, à laver les sièges. Le tien, ils le lavent tous les samedis, en te regardant."
+
+  # ============================================== 4 · La lettre
+  - id: jp.sb.lettre
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, ultras, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille tient la lettre par un coin. Pas de timbre, des mots découpés dans L'Écho : « SI LE PETIT JOUE SAMEDI », puis le mot que la Nord crie quand Mbako touche le ballon. Tu la montres à qui ?"
+    left:
+      label: "À la police"
+      effects: {direction: "-", relation: {camille: 1}, set: [sb_lettre]}
+      answer: "Au commissariat, on la photocopie et on te la rend : « Des lettres découpées, on en a un tiroir plein. »"
+    right:
+      label: "À personne, je la brûle"
+      effects: {direction: "+", parole: -1, relation: {camille: -1}, set: [sb_lettre]}
+      answer: "L'Écho brûle mal. Camille ouvre la fenêtre et ne te parle plus jusqu'au lendemain matin."
+
+  # Secours : Camille est partie.
+  - id: jp.sb.lettre_seul
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: domicile
+    tone: strategique
+    text: "Sous la porte, sans timbre, des mots découpés dans L'Écho : « SI LE PETIT JOUE SAMEDI », puis le mot que la Nord crie quand Mbako touche le ballon. Tu la relis debout, dans l'entrée."
+    left:
+      label: "Je la porte à la police"
+      effects: {direction: "-", parole: 1, set: [sb_lettre]}
+      answer: "Au commissariat, on la photocopie et on te la rend : « Des lettres découpées, on en a un tiroir plein. »"
+    right:
+      label: "Je la brûle"
+      effects: {direction: "+", parole: -1, set: [sb_lettre]}
+      answer: "L'Écho brûle mal dans l'évier. L'odeur reste dans l'appartement jusqu'au samedi."
+
+  # Le visé a la dernière réplique.
+  - id: jp.sb.lettre_petit
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire, formation]
+    speaker: mbako
+    lieu: terrain
+    tone: strategique
+    text: "Mbako, les mains dans les manches, au bord du terrain annexe : « J'en reçois depuis septembre. Je les garde dans une boîte à chaussures. Samedi, je joue. Toi, tu dis quoi, au vestiaire ? »"
+    left:
+      label: "Je le dis devant tous"
+      effects: {vestiaire: "-", tribunes: "-", relation: {mbako: 2}}
+      answer: "Tu le dis avant l'entraînement. Deux gars rient, trop tôt. Le capitaine pose son sac et demande lesquels."
+    right:
+      label: "Rien. Je joue"
+      effects: {vestiaire: "+", relation: {mbako: -1}}
+      answer: "Samedi, il marque. Il ne célèbre pas ; il regarde la Nord une seconde, sans bouger. Tu ne cours pas vers lui."
+
+  # ============================================== 5 · L'envahissement
+  - id: jp.sb.envahissement
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, tribunes, moment]
+    lieu: stade
+    tone: strategique
+    text: "Quatre-vingtième minute. Un homme saute la grille de la Nord et court vers toi, les mains vides. Les stadiers arrivent de trois côtés. Il crie ton nom comme on appelle quelqu'un."
+    left:
+      label: "Je me mets entre eux"
+      effects: {tribunes: "+", direction: "-", force: -1, set: [sb_envahissement]}
+      answer: "Un coude t'ouvre la lèvre. L'homme s'accroche à ton maillot et dit « merci », puis « vendu », dans le même souffle."
+    right:
+      label: "Je le laisse emmener"
+      effects: {tribunes: "-", direction: "+", set: [sb_envahissement]}
+      answer: "Ils le plaquent à deux mètres de toi. Il ne se débat pas ; il te regarde jusqu'au tunnel, la joue dans la pelouse."
+
+  - id: jp.sb.envahissement_huis_clos
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, tribunes]
+    speaker: vecchio
+    lieu: stade
+    tone: strategique
+    text: "Huis clos par décision de la commission. Vecchio tape dans ses gants ; l'écho revient de la Nord vide : « Trente ans que je n'entendais plus le ballon. Tu leur fais quoi, à ceux qui manquent ? »"
+    left:
+      label: "Je salue la Nord vide"
+      effects: {tribunes: "++", direction: "-", set: [sb_huis_clos]}
+      answer: "Tu lèves le bras vers quatre mille sièges vides. Le lendemain, la photo est au-dessus du bar du local, découpée au ciseau."
+    right:
+      label: "Je joue, c'est tout"
+      effects: {vestiaire: "+", tribunes: "-", set: [sb_huis_clos]}
+      answer: "On entend chacun de tes appels, et chaque fois que tu jures. Le rapport du délégué en compte trois."
+
+  # ============================================== 6 · Les photos
+  - id: jp.sb.photos
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: cafe
+    tone: strategique
+    text: "Au Terminus, un homme que tu n'as jamais vu glisse une enveloppe sous ta soucoupe : toi, trois heures du matin, la veille du match, devant la Comète. « Dix mille, et elles dorment. »"
+    left:
+      label: "Je paie"
+      effects: {caisse: "--", set: [sb_photos, sb_chantage_paye]}
+      answer: "Il compte les billets sous la table, sans se presser. Il laisse un numéro de téléphone, « pour la prochaine fois »."
+    right:
+      label: "Publiez-les"
+      effects: {tribunes: "-", force: -1, set: [sb_photos]}
+      answer: "Il range les photos sans se presser. Le soir même, un photographe de la Gazette Rose attend au coin de la rue des Lilas."
+
+  # Tu as payé : il revient.
+  - id: jp.sb.photos_encore
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Rue des Lilas, sous le réverbère de la boulangerie. Le même homme, une enveloppe plus épaisse : « Le prix a monté. Il y a deux photos de plus, dont une de ta porte. »"
+    left:
+      label: "Je paie, une dernière fois"
+      effects: {caisse: "--", parole: -1}
+      answer: "Il prend l'argent. Il ne dit pas « dernière » ; il dit « à bientôt », et il traverse sans regarder."
+    right:
+      label: "Je vais au commissariat"
+      effects: {tribunes: "-", direction: "-", parole: 1}
+      answer: "L'inspecteur feuillette les photos plus longtemps qu'il ne faut. La semaine suivante, la Gazette Rose a les mêmes."
+
+  # Tu n'as pas payé : la Gazette, et la boulangère.
+  - id: jp.sb.photos_gazette
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, scandale, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille a posé la Gazette Rose ouverte à la page trois : toi devant la Comète, trois heures du matin. « La boulangère l'a lue avant moi. Tu lui dis quoi, à la boulangère ? »"
+    left:
+      label: "La vérité, à tout le monde"
+      effects: {tribunes: "-", parole: 1, relation: {camille: 1}}
+      answer: "Tu dis la nuit, la Comète, l'homme du Terminus. La boulangère te rend la monnaie sans te regarder ; Camille, si."
+    right:
+      label: "Que c'est un montage"
+      effects: {tribunes: "+", parole: -2, relation: {camille: -1}}
+      answer: "Tu le dis à la boulangère, au club, au journal. Camille découpe la photo et la range dans le tiroir de la cuisine."
+
+  # Secours : Camille est partie.
+  - id: jp.sb.photos_vestiaire
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, scandale, vestiaire]
+    lieu: vestiaire
+    tone: strategique
+    text: "Lundi, la Gazette Rose est punaisée dans le vestiaire, page trois : toi devant la Comète, trois heures du matin, la veille du match. Quelqu'un a entouré l'heure au feutre rouge."
+    left:
+      label: "Je l'arrache"
+      effects: {vestiaire: "-", tribunes: "-"}
+      answer: "Tu l'arraches. Le lendemain, il y en a une autre au même endroit, avec la même heure entourée."
+    right:
+      label: "Je la laisse au mur"
+      effects: {vestiaire: "+", tribunes: "-", parole: 1}
+      answer: "Elle reste trois semaines, jusqu'à ce que le capitaine la décroche et la plie en quatre dans sa poche."
+
+  # ============================================== 7 · La rue
+  - id: jp.sb.rue
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras, moment]
+    lieu: rue
+    tone: strategique
+    text: "Rue des Lilas, le soir du derby perdu. Trois écharpes de {rival} sous le réverbère de la boulangerie. Le plus grand dit ton nom, lentement, comme on le lit dans le journal."
+    left:
+      label: "Je cours jusqu'à la porte"
+      effects: {tribunes: "-", force: -2, set: [sb_agression]}
+      answer: "Un coup dans le dos, un autre au sol, avant la porte. Momo freine en klaxonnant. En face, on racontera que tu as couru."
+    right:
+      label: "Je pose mon sac"
+      effects: {tribunes: "+", caisse: "-", force: -3, set: [sb_agression]}
+      answer: "Le premier coup vient de côté. Quand Momo arrive en courant, l'un a ton sac, l'autre ta montre, et tu as du sang plein la bouche."
+
+  - id: jp.sb.rue_certificat
+    roles: [joueur]
+    arc: corps
+    tags: [sombre]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Doc Sabatier compte tes côtes du bout des doigts : « Deux fêlées. Je peux écrire « chute dans l'escalier », ou « coups ». La police lira ce que j'écris. J'écris quoi ? »"
+    left:
+      label: "Écrivez « coups »"
+      effects: {direction: "-", parole: 1, set: [sb_plainte]}
+      answer: "Il écrit « coups » en appuyant. Au commissariat, on te fait attendre deux heures à côté d'un homme qui saigne."
+    right:
+      label: "Écrivez « escalier »"
+      effects: {direction: "+", parole: -1, relation: {sabatier: 1}}
+      answer: "Il écrit « escalier ». Dimanche, la Nord déploie une bâche : LES LILAS SONT À NOUS. Elle ne parle pas d'escalier."
+
+  # ============================================== 8 · La boîte
+  - id: jp.sb.boite
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    lieu: muscu
+    tone: strategique
+    text: "Salle de muscu, sept heures, personne. Un homme en survêtement neuf pose une boîte sans étiquette sur ton banc : « Pour le genou. Tout le monde en prend, ici. Deux le matin. »"
+    left:
+      label: "Je la mets dans mon sac"
+      effects: {tribunes: "+", force: 3, parole: -1, set: [sb_dopage, sb_boite_prise]}
+      answer: "Le genou se tait trois semaines. Toi aussi : tu n'en parles à personne, pas même au Doc."
+    right:
+      label: "Je la laisse sur le banc"
+      effects: {direction: "-", force: -1, set: [sb_dopage]}
+      answer: "Le lendemain, la boîte n'est plus sur le banc. À l'échauffement, tu regardes les mollets de tout le monde."
+
+  # Tu l'as gardée : le Doc l'a trouvée.
+  - id: jp.sb.boite_doc
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Doc Sabatier a ta boîte ouverte sur la table : « Trouvée dans ton casier. Ce n'est pas pour un genou, c'est pour un cheval. Le contrôle passe jeudi. Tu me la laisses, {toi} ? »"
+    left:
+      label: "Gardez-la, Doc"
+      effects: {tribunes: "-", force: -3, relation: {sabatier: 1}, clear: [sb_boite_prise]}
+      answer: "Il la vide dans la poubelle des seringues. Jeudi, le flacon est propre ; toi, tu cours comme avant la boîte, c'est-à-dire moins."
+    right:
+      label: "Rendez-la-moi"
+      effects: {direction: "-", force: 2, parole: -1, relation: {sabatier: -2}}
+      answer: "Il te la rend sans un mot et note la date dans le carnet du tiroir. Jeudi, tu bois trois litres d'eau avant le contrôle."
+
+  # Tu l'as laissée : quelqu'un d'autre l'a prise.
+  - id: jp.sb.boite_vukic
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    text: "Vukić au bord du terrain annexe, le sifflet dans le poing : « Le type de la muscu, en survêtement neuf. Momo a pris sa boîte. Ce matin, il est tombé sous la douche. Tu savais ? »"
+    left:
+      label: "Je dis ce que j'ai vu"
+      effects: {vestiaire: "-", parole: 1, relation: {vukic: 1}}
+      answer: "Il écrit l'heure et le banc dans son cahier. Le soir, le type n'est plus à la muscu ; Momo ne te parle plus."
+    right:
+      label: "Je n'ai rien vu"
+      effects: {vestiaire: "+", parole: -1, relation: {vukic: -1}}
+      answer: "Il referme le cahier. La semaine suivante, deux autres arrivent à l'entraînement les yeux trop brillants."
+
+  # ============================================== 9 · Le coup de fil de trois heures
+  # Après la laverie : quelqu'un sait que tu sais.
+  - id: jp.sb.appel_nuit_laverie
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Trois heures. Le téléphone du couloir. Une voix d'homme, très calme : « La laverie ferme à vingt-deux heures. Lave chez toi, maintenant. » Puis la tonalité, longtemps."
+    left:
+      label: "Je débranche le téléphone"
+      effects: {caisse: "-", force: -1, set: [sb_appel_nuit], next: end}
+      answer: "Le lendemain, tu achètes une machine à laver d'occasion. Tu ne remets plus les pieds rue du Stade après la nuit tombée."
+    right:
+      label: "Je le dis à Josiane"
+      effects: {direction: "-", relation: {josiane: 1}, set: [sb_appel_nuit], next: end}
+      answer: "Elle écrit l'heure au dos d'une enveloppe, puis la déchire en quatre. « Mon frère a reçu le même, mardi. »"
+
+  - id: jp.sb.appel_nuit
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: domicile
+    tone: strategique
+    text: "Trois heures. Le téléphone du couloir. Une voix d'homme, calme : « Samedi, ta cuisse lâche à la vingtième. Tu sors, et tu ne dis rien. » La tonalité. Tu restes pieds nus dans le couloir."
+    left:
+      label: "J'appelle Vukić à l'aube"
+      effects: {direction: "-", relation: {vukic: 1}, set: [sb_appel_nuit]}
+      answer: "Vukić écoute sans parler, puis demande l'heure exacte. Il l'écrit dans le cahier, sous la compo de samedi."
+    right:
+      label: "Je n'en parle à personne"
+      effects: {direction: "+", force: -1, parole: -1, set: [sb_appel_nuit]}
+      answer: "Tu te recouches. Vers cinq heures, tu te demandes s'ils savent aussi où tu gares ta voiture."
+
+  - id: jp.sb.appel_nuit_vingtieme
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, moment]
+    lieu: stade
+    tone: strategique
+    text: "Vingtième minute. Ta cuisse va très bien. Dans la tribune d'honneur, un homme en manteau clair regarde sa montre, puis te regarde, toi."
+    left:
+      label: "Je joue jusqu'au bout"
+      effects: {tribunes: "+", force: -1}
+      answer: "Tu joues quatre-vingt-dix minutes. Lundi, ta boîte aux lettres est arrachée, proprement, sans un mot dedans."
+    right:
+      label: "Je me tiens la cuisse"
+      effects: {tribunes: "-", parole: -2}
+      answer: "Tu sors en boitant. Le Doc palpe une cuisse qui n'a rien et ne dit rien. Le manteau clair est parti à la mi-temps."
+
+  # ============================================== 10 · Le car
+  - id: jp.sb.car
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire, moment]
+    lieu: gare
+    tone: strategique
+    text: "Retour de Haute-Combe, deux heures du matin, la neige. Le car du club est couché dans le fossé. Norbert ne répond pas. Vecchio a déjà ouvert la trappe du toit."
+    left:
+      label: "Je vais jusqu'à Norbert"
+      effects: {vestiaire: "++", force: -2, set: [sb_car]}
+      answer: "Il respire. Tu tiens sa tête quarante minutes, jusqu'aux pompiers ; tes mains sentent le gasoil jusqu'à dimanche."
+    right:
+      label: "Je sors par le toit"
+      effects: {vestiaire: "-", relation: {vecchio: -1}, set: [sb_car]}
+      answer: "Tu sors le premier, dans la neige jusqu'aux genoux. Derrière toi, Vecchio porte Norbert seul ; il ne te demande rien."
+
+  - id: jp.sb.car_facture
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    text: "Madame Josiane referme la porte du secrétariat : « Les pneus neige étaient commandés en novembre. La commande a été annulée en décembre, signée par le président. Vous voulez la voir ? »"
+    left:
+      label: "Montrez-la au vestiaire"
+      effects: {vestiaire: "+", direction: "--", relation: {josiane: 1}}
+      answer: "Le bon passe de main en main au vestiaire. Le lendemain, le car de remplacement a des pneus neufs ; personne ne remercie personne."
+    right:
+      label: "Je ne veux pas la voir"
+      effects: {direction: "+", parole: -1, relation: {josiane: -1}}
+      answer: "Elle range le bon dans le classeur, sous les autres. Norbert sort de l'hôpital en mars ; il ne conduit plus."
+
+  # ============================================== 11 · L'ancien
+  # Il connaît l'homme des photos (tu as payé).
+  - id: jp.sb.ancien_photos
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: friche
+    tone: strategique
+    text: "Friche de la Tréfilerie, sous le néon mort. Un ancien du club, sorti de prison en mars : « Le type de tes photos, je le connais. Il peut perdre les négatifs. Tu gardes un carton pour moi ? »"
+    left:
+      label: "Je prends le carton"
+      effects: {caisse: "+", parole: -1, set: [sb_ancien, sb_service_rendu]}
+      answer: "Il pèse plus lourd qu'un carton de linge. La semaine suivante, le numéro du Terminus ne répond plus, ni ce jour-là ni après."
+    right:
+      label: "Je repars sans rien"
+      effects: {caisse: "-", set: [sb_ancien]}
+      answer: "Il rit sans bruit : « Tu paieras le photographe, alors. » Le néon grésille deux fois quand tu passes la grille."
+
+  # Il connaît la voix de trois heures.
+  - id: jp.sb.ancien_appel
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: friche
+    tone: strategique
+    text: "Friche de la Tréfilerie, sous le néon mort. Un ancien du club, sorti de prison en mars : « La voix de trois heures, je la connais. Elle peut se taire. Tu gardes un carton pour moi ? »"
+    left:
+      label: "Je prends le carton"
+      effects: {direction: "-", force: 1, parole: -1, set: [sb_ancien, sb_service_rendu]}
+      answer: "Il pèse plus lourd qu'un carton de linge. Le téléphone du couloir ne sonne plus la nuit ; tu l'écoutes quand même."
+    right:
+      label: "Je repars sans rien"
+      effects: {direction: "+", force: -1, set: [sb_ancien]}
+      answer: "Il hausse les épaules : « Elle rappellera, alors. » Le néon grésille deux fois quand tu passes la grille."
+
+  - id: jp.sb.ancien
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: friche
+    tone: strategique
+    text: "Friche de la Tréfilerie, sous le néon mort. Un ancien du club, sorti de prison en mars, te tend un carton fermé : « Un mois, pas plus. Personne ne fouille chez un joueur. »"
+    left:
+      label: "Je prends le carton"
+      effects: {caisse: "+", parole: -1, set: [sb_ancien, sb_service_rendu]}
+      answer: "Il pèse plus lourd qu'un carton de linge. Tu le ranges à la cave, derrière les pneus ; il t'a laissé une liasse « pour le dérangement »."
+    right:
+      label: "Je repars sans rien"
+      effects: {tribunes: "-", set: [sb_ancien]}
+      answer: "Il rit : il jouait ici avant toi, il trouvera bien un autre joueur. Dimanche, la Nord chante son nom à la mi-temps."
+
+  # Tu as pris le carton.
+  - id: jp.sb.ancien_police
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures du matin, rue des Lilas. Deux policiers en civil sur le palier, un chien dans l'escalier : « On cherche un carton. On a une adresse : la vôtre. »"
+    left:
+      label: "Je descends à la cave"
+      effects: {direction: "--", parole: 1}
+      answer: "Ils ouvrent le carton sur le palier, devant la voisine du dessus. Le soir, L'Écho a ton nom en page six, sans photo."
+    right:
+      label: "Quel carton ?"
+      effects: {direction: "-", tribunes: "-", parole: -2}
+      answer: "Le chien s'assoit devant la porte de la cave sans aboyer. On ne te passe pas les menottes ; on te demande de suivre."
+
+  # Tu as refusé : il a trouvé quelqu'un d'autre.
+  - id: jp.sb.ancien_gamin
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, formation]
+    lieu: cafe
+    tone: strategique
+    text: "Au Terminus, le patron te tend L'Écho plié aux faits divers : un carton saisi à six heures chez un gamin de la réserve, dix-huit ans. L'ancien de la Tréfilerie avait trouvé un autre joueur."
+    left:
+      label: "Je témoigne pour le gamin"
+      effects: {vestiaire: "+", direction: "-", parole: 1}
+      answer: "Tu racontes la friche, le néon, le carton qu'on t'a tendu d'abord. Le gamin sort le soir ; l'ancien, lui, a déjà disparu."
+    right:
+      label: "Je reste en dehors"
+      effects: {vestiaire: "-", parole: -1}
+      answer: "Le gamin sort trois jours plus tard. Il a compris qui avait refusé avant lui ; il ne te le reproche pas, et c'est pire."
+
+  # ============================================== 12 · La bagarre de la buvette
+  # Après la lettre : ce sont eux.
+  - id: jp.sb.buvette_lettre
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    text: "Gégé, l'arcade ouverte, un torchon sur l'œil : « Ceux de la lettre, je les avais sortis de la Nord. Ils sont revenus ce soir, à la buvette. Les flics veulent des noms, {toi}. Tu as vu qui ? »"
+    left:
+      label: "J'ai vu, je le dirai"
+      effects: {tribunes: "-", parole: 1, relation: {gege: 1}, set: [sb_bagarre]}
+      answer: "Tu donnes trois noms à l'inspecteur. Gégé hoche la tête, lentement : ceux-là, il ne les aurait jamais donnés lui-même."
+    right:
+      label: "Je n'ai rien vu"
+      effects: {tribunes: "+", parole: -1, relation: {mbako: -1}, set: [sb_bagarre, sb_buvette_fermee]}
+      answer: "Personne n'a rien vu. La préfecture ferme la buvette un mois, et ceux de la lettre reviennent en Nord dès samedi."
+
+  - id: jp.sb.buvette
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    text: "Gégé, l'arcade ouverte, un torchon sur l'œil, la buvette des anciens retournée : « Deux bandes de la Nord, une vieille histoire. Les flics veulent des noms, {toi}. Tu as vu quelque chose ? »"
+    left:
+      label: "J'ai vu, je le dirai"
+      effects: {tribunes: "--", parole: 1, relation: {gege: -1}, set: [sb_bagarre]}
+      answer: "Tu donnes deux noms. Le lendemain, une moitié de la Nord te siffle à l'échauffement ; l'autre siffle la première."
+    right:
+      label: "Je n'ai rien vu"
+      effects: {tribunes: "+", parole: -1, relation: {gege: 1}, set: [sb_bagarre, sb_buvette_fermee]}
+      answer: "Personne n'a rien vu. La préfecture ferme la buvette des anciens un mois ; Vecchio garde la clé dans sa poche."
+
+  # Personne n'a rien vu : la buvette est fermée.
+  - id: jp.sb.buvette_fermee
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras, tribunes]
+    speaker: vecchio
+    lieu: buvette
+    tone: strategique
+    text: "Vecchio devant la buvette des anciens, le scellé sur la porte, la clé dans la main : « Quarante ans qu'on boit là après les matchs. La mairie veut une pétition. Tu signes le premier ? »"
+    left:
+      label: "Je signe le premier"
+      effects: {tribunes: "+", direction: "-", relation: {vecchio: 1}}
+      answer: "Ta signature en haut de la page, en gros. Madame Aubert la reçoit un lundi et la glisse sous son presse-papier."
+    right:
+      label: "Je ne signe rien"
+      effects: {tribunes: "-", direction: "+", relation: {vecchio: -1}}
+      answer: "Il remet la clé dans sa poche. Tout le mois, il boit son eau au Terminus, seul au bout du comptoir."
+
+  # Tu as donné des noms.
+  - id: jp.sb.buvette_pere
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: rue
+    tone: strategique
+    text: "Rue du Stade, en sortant du commissariat. Le père d'un des noms que tu as donnés t'attend sur le trottoir, la casquette à la main : « Il a dix-neuf ans. Tu retires ? »"
+    left:
+      label: "Je ne retire rien"
+      effects: {tribunes: "-", parole: 1}
+      answer: "Il remet sa casquette et s'en va à pied vers la gare routière. Au procès, il est assis au premier rang, du côté de son fils."
+    right:
+      label: "Je retire"
+      effects: {tribunes: "+", parole: -2}
+      answer: "Tu retournes au commissariat. L'inspecteur déchire la déposition devant toi, lentement, pour que tu entendes le papier."

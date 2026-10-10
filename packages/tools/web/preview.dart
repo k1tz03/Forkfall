@@ -118,7 +118,9 @@ String _postulatsJson() {
       'year': p.year,
     });
   }
-  return jsonEncode({'postulats': list, 'startYear': Engine.startYear});
+  // La ville (content/ville.yaml), telle quelle : la coquille de la version
+  // jouable y lit les lieux, les rencontres, les présences et les activités.
+  return jsonEncode({'postulats': list, 'startYear': Engine.startYear, 'ville': _content.ville});
 }
 
 String _view() {
@@ -178,6 +180,12 @@ String _view() {
     'journee': _engine.journeeOf(s),
     'journees': _engine.journeesParSaison,
     'phase': beats.isEmpty ? '' : beats[beatIndex].phase,
+    // LA VILLE : le beat courant et ceux de la saison, pour poser la semaine
+    // (combien de cartes avant le prochain match), et la distribution du
+    // postulat (qui peut se montrer en ville).
+    'beat': beatIndex,
+    'beats': [for (final b in beats) b.kind],
+    'cast': (_content.postulats[s.postulatId]?.cast.keys.toList() ?? <String>[])..sort(),
     'division': s.world.division,
     'promiseTo': s.objectivePromised ? _engine.patronName(s) : null,
     // Le classement complet, à tout moment (voir l'en-tête).
@@ -243,6 +251,10 @@ String _view() {
       'band': p.payload['band'],
       'sablier': p.payload['sablier'] == true,
       'text': p.text,
+      // LA VILLE : où la carte se joue (`lieu:` des événements) et ses tags
+      // (`sombre` : l'événement ne s'annonce pas sur la carte de la ville).
+      if (p.payload['lieu'] != null) 'lieu': p.payload['lieu'],
+      'tags': _content.cards[p.id]?.tags ?? const <String>[],
       'leftLabel': p.leftLabel,
       'rightLabel': p.rightLabel,
       'single': p.single,
@@ -317,12 +329,13 @@ void main() {
         _engine = Engine(_content);
         return _postulatsJson().toJS;
       }).toJS);
-  // fusibleStart(seed, postulat, prenom?, nom?, genre?) : les trois derniers
-  // sont facultatifs ; une chaîne vide (ou absente) laisse le moteur tirer.
+  // fusibleStart(seed, postulat, prenom?, nom?, genre?, ville?, club?) : les
+  // cinq derniers sont facultatifs ; une chaîne vide (ou absente) laisse le
+  // moteur tirer. La ville et le club : la version jouable (la ville dessinée).
   // Le nom n'entre pas dans la graine (spec variété §1.8, test N1).
   globalContext.setProperty(
       'fusibleStart'.toJS,
-      ((JSNumber seed, JSNumber postulat, [JSString? prenom, JSString? nom, JSString? genre]) {
+      ((JSNumber seed, JSNumber postulat, [JSString? prenom, JSString? nom, JSString? genre, JSString? ville, JSString? club]) {
         String? opt(JSString? v) {
           final d = v?.toDart.trim();
           return d == null || d.isEmpty ? null : d;
@@ -331,13 +344,32 @@ void main() {
         // La carrière qui s'achève entre à l'arrière-plan de la frise.
         _archiverCarriere();
         _state = _engine.start(seed.toDartInt,
-            postulat: postulat.toDartInt, prenom: opt(prenom), nom: opt(nom), genre: opt(genre));
+            postulat: postulat.toDartInt, prenom: opt(prenom), nom: opt(nom), genre: opt(genre), ville: opt(ville), club: opt(club));
         return _view().toJS;
       }).toJS);
   globalContext.setProperty(
       'fusibleChoose'.toJS,
       ((JSBoolean right) {
         _state = _engine.choose(_state!, right.toDart);
+        return _view().toJS;
+      }).toJS);
+  // LA VILLE — une activité entre deux cartes (`Engine.activite` : les jauges
+  // seules, aucun tirage). Rend la vue, qui peut être une fin.
+  globalContext.setProperty(
+      'fusibleActivite'.toJS,
+      ((JSString id) {
+        _state = _engine.activite(_state!, id.toDart);
+        return _view().toJS;
+      }).toJS);
+  // La sauvegarde d'une carrière jouée en ville : l'état entier (le Code de
+  // Carrière ne rejoue pas les activités).
+  globalContext.setProperty(
+      'fusibleEtat'.toJS,
+      (() => _state == null ? ''.toJS : jsonEncode(_state!.toJson()).toJS).toJS);
+  globalContext.setProperty(
+      'fusibleReprendre'.toJS,
+      ((JSString j) {
+        _state = GameState.fromJson((jsonDecode(j.toDart) as Map).cast<String, dynamic>());
         return _view().toJS;
       }).toJS);
 }

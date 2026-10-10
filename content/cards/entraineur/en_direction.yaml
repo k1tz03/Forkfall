@@ -4,70 +4,75 @@ cards:
     arc: direction
     tags: [direction, mercato, agents]
     speaker: aulard
-    text: "J'ai recruté un ailier via mon beau-frère agent. Tu le fais jouer titulaire, c'est pas une suggestion, c'est un organigramme."
+    text: "Vaubourg pose une photo d'identité sur ton bureau : « Un ailier. Mon beau-frère s'occupe de ses intérêts ; il a signé hier soir. Dimanche, il commence. Je ne te demande pas ton avis, {toi}. »"
     left:
       label: "Je le titularise"
       effects: { direction: "++", vestiaire: "--", caisse: "-" }
-      answer: "Le vestiaire compte les passes du protégé: zéro."
+      answer: "Il joue soixante minutes sans recevoir une passe. Au vestiaire, on ne l'appelle plus que « le beau-frère »."
     right:
       label: "Je le mets au banc"
       effects: { direction: "--", vestiaire: "+", force: 2 }
+      answer: "L'ailier s'assoit sur le banc, en survêtement neuf. Vaubourg quitte la tribune à la mi-temps ; le vestiaire l'a vu partir."
 
   - id: en.direction.dernier_avertissement
     roles: [entraineur]
     arc: direction
     tags: [direction, presse, retorse]
     speaker: aulard
-    text: "Trois matchs, pas un de plus. Après je te remplace par un tableau blanc: il perd aussi, mais il fait moins de fautes en conférence."
+    text: "Vaubourg, au téléphone, passé minuit : « Trois matchs. Après le troisième, je parle à la presse, et pas pour te remercier. J'ai déjà un nom pour la suite, {toi}. Je ne te le donne pas. »"
     left:
       label: "Je promets le sursaut"
       effects: { direction: "+", tribunes: "-", parole: 1, promise: true }
-      answer: "Vaubourg note la date, au stylo rouge."
+      answer: "Au bout du fil, tu l'entends écrire. Il note la date ; il note tout ce qu'on lui promet."
     right:
-      label: "Je réponds sec"
+      label: "Je lui réponds sec"
       effects: { direction: "--", vestiaire: "++" }
+      answer: "Tu raccroches avant lui. Le lendemain, le vestiaire le sait ; Bréhaut te serre la main plus longtemps que d'habitude."
 
   - id: en.direction.adjoint_confiance
     roles: [entraineur]
     arc: direction
     tags: [direction, vestiaire, retorse]
     speaker: vukic
-    text: "Vaubourg m'a nommé ton adjoint 'de confiance'. Je prends des notes même quand tu te tais, surtout quand tu te tais."
+    text: "Vukić ferme la porte du vestiaire avec le talon : « Le président veut un rapport sur toi chaque lundi. Tes compos, tes horaires, qui tu vois le soir. Je les écris, ou tu me sors du staff ? »"
     left:
-      label: "Je l'intègre au staff"
+      label: "Écris tes rapports"
       effects: { direction: "++", vestiaire: "-", set: [homme_president] }
-      answer: "Il a déjà un badge parking mieux placé que le tien."
+      answer: "Chaque lundi, une page tapée monte au premier étage. Les joueurs apprennent vite à parler bas quand Vukić entre."
     right:
-      label: "Je le tiens à l'écart"
+      label: "Je te sors des réunions"
       effects: { direction: "--", vestiaire: "+", relation: { aulard: -1 } }
+      answer: "Vukić ne vient plus aux réunions. Le lundi, le président trouve sur son bureau une page blanche, pliée en quatre."
 
   - id: en.direction.budget_coupe
     roles: [entraineur]
     arc: direction
     tags: [direction, caisse, mercato]
     speaker: aulard
-    text: "Le budget mercato est coupé de moitié. Officiellement 'rigueur', officieusement j'ai racheté une écurie de trot."
+    text: "Vaubourg, la veste sur le fauteuil : « Le budget de janvier est coupé de moitié. La banque, la rigueur, tu connais. Et j'ai trois chevaux de course à nourrir, mais ça, tu ne l'as pas entendu. »"
     left:
       label: "J'encaisse sans broncher"
       effects: { direction: "+", caisse: "-", vestiaire: "-" }
+      answer: "Janvier passe sans une recrue. Bréhaut demande pourquoi ; tu n'as pas de réponse qu'il puisse répéter aux gars."
     right:
-      label: "Je gueule au board"
+      label: "Je le dis au conseil"
       effects: { direction: "--", tribunes: "+", caisse: "+" }
-      answer: "Un membre du board applaudit, puis se ravise."
+      answer: "Au conseil, tu parles des chevaux. Le budget remonte d'un quart ; Vaubourg ne te dit plus bonjour jusqu'en mars."
 
   - id: en.direction.enveloppe_promise
     roles: [entraineur]
     arc: direction
     tags: [direction, mercato, chaine]
     speaker: aulard
-    text: "Tiens bon jusqu'à l'hiver et je t'ouvre une enveloppe mercato 'historique'. J'ai dit historique, pas garantie."
+    text: "Vaubourg, une main sur ton épaule, devant Josiane : « Tiens jusqu'à l'hiver, et je t'ouvre une enveloppe pour le mercato. Une vraie. Josiane est témoin. » Elle ne lève pas les yeux."
     left:
-      label: "Je fais confiance"
+      label: "Je lui fais confiance"
       effects: { direction: "+", relation: { aulard: 1 }, set: [enveloppe_promise], schedule: [{ card: en.direction.enveloppe_vide, in: [6, 12] }] }
-      answer: "Vaubourg scelle l'enveloppe, elle sonne creux."
+      answer: "Il te tapote l'épaule deux fois. Josiane, sans lever la tête, écrit « enveloppe » dans son agenda."
     right:
-      label: "Je veux du concret"
+      label: "Je veux un chiffre écrit"
       effects: { direction: "-", caisse: "+" }
+      answer: "Il écrit un chiffre au dos d'une carte de visite. C'est moins que promis, mais c'est écrit, et signé."
 
   - id: en.direction.enveloppe_vide
     roles: [entraineur]
@@ -76,14 +81,15 @@ cards:
     sablier: true
     when: "flag('enveloppe_promise')"
     speaker: josiane
-    text: "L'enveloppe 'historique' est arrivée. Dedans: un bon de réduction jardinerie et les félicitations manuscrites du président."
+    text: "Madame Josiane pose une enveloppe kraft sur ton bureau, déjà ouverte : « L'enveloppe du mercato. Le président l'a cachetée lui-même. Dedans, une lettre de félicitations. Rien d'autre. »"
     left:
-      label: "J'avale la couleuvre"
+      label: "Je la range sans un mot"
       effects: { direction: "-", vestiaire: "--", clear: [enveloppe_promise] }
+      answer: "Le mercato ferme sans une recrue. Les joueurs le comprennent avant que tu le dises ; certains l'avaient parié."
     right:
-      label: "Je fais fuiter à la presse"
+      label: "Je l'apporte à Massenet"
       effects: { direction: "---", tribunes: "++", clear: [enveloppe_promise] }
-      answer: "Massenet titre: 'L'enveloppe fantôme'."
+      answer: "Massenet publie la lettre en entier, virgules comprises. Vaubourg découpe l'article et le range avec les noms qu'il garde."
 
   - id: en.direction.reunion_crise
     roles: [entraineur]
@@ -91,28 +97,30 @@ cards:
     tags: [direction, rescue:direction, moment]
     when: "gauges.direction < 25"
     speaker: aulard
-    text: "Réunion de crise à huis clos. Tu as dix minutes pour me convaincre, et j'ai déjà mis huit minutes à trouver le parking."
+    text: "Vaubourg ferme la porte de la salle du conseil. Trois administrateurs, une carafe, une pendule : « Tu as dix minutes. Après, on vote, et pas pour te prolonger. Je t'écoute, {toi}. »"
     left:
       label: "Je plaide mon projet"
       effects: { direction: "+++", vestiaire: "-", parole: 1 }
-      answer: "Le board hoche la tête, un vrai, pour une fois."
+      answer: "Tu parles neuf minutes, le cahier ouvert. Un administrateur hoche la tête ; Vaubourg range le stylo qui devait signer."
     right:
       label: "Je noie le poisson"
       effects: { direction: "--", vestiaire: "+" }
+      answer: "Tu parles du groupe, jamais des résultats. Le vote est reporté à jeudi ; le vestiaire apprend que tu l'as défendu."
 
   - id: en.direction.felicitations
     roles: [entraineur]
     arc: direction
     tags: [direction, presse, retorse]
     speaker: aulard
-    text: "Bravo pour la victoire! Je ne t'en croyais pas capable, et je l'ai dit à trois journalistes avant de te le dire à toi."
+    text: "Vaubourg entre au vestiaire, un cigare éteint aux lèvres : « Bravo. Vendredi, j'ai dit à trois journalistes que tu ne passerais pas l'hiver. Demain, je leur dirai que je t'avais deviné. »"
     left:
       label: "Je souris et je remercie"
       effects: { direction: "+", vestiaire: "-", relation: { aulard: 1 } }
+      answer: "Il te serre la main devant les joueurs. Le lendemain, dans le journal, la victoire est à lui."
     right:
       label: "Je relève la pique"
       effects: { direction: "--", tribunes: "+", vestiaire: "+" }
-      answer: "Vaubourg rit jaune, nuance rare chez lui."
+      answer: "« Vendredi, vous aviez raison », dis-tu, assez fort pour le couloir. Il sort sans rallumer son cigare."
 
   # Étape 1 de l'intrigue « Le fils du président »
   # (content/arcs/entraineur/fils_aulard.yaml) : hors du sac depuis la reprise
@@ -123,43 +131,45 @@ cards:
     arc: direction
     tags: [direction, vestiaire, absurde]
     speaker: aulard
-    text: "Le fils de Vaubourg veut 'juste s'entraîner avec les pros'. Il a 34 ans, une clause de confidentialité et un genou de moins que moi."
+    text: "Vaubourg regarde la fenêtre : « Mon fils veut s'entraîner avec les pros. Trente-quatre ans, des crampons neufs, une clause de confidentialité. Mes affaires ne l'intéressent pas. Ton terrain, si. »"
     left:
       label: "Je l'accueille au groupe"
       effects: { direction: "++", vestiaire: "--", set: [fils_joueur], outcome: joueur }
-      answer: "Il réclame déjà le brassard et une doublure."
+      answer: "Il arrive mardi avec des crampons neufs. Le groupe les regarde plus que lui."
     right:
       label: "Je refuse poliment"
       effects: { direction: "--", vestiaire: "+", relation: { aulard: -1 }, set: [fils_refuse], outcome: refuse, next: { step: bureau, in: [3, 6] } }
-      answer: "Le fils repart avec son sac neuf. Le père note la date ; il note tout, depuis 1987."
+      answer: "Le père note « poliment ». Au fils, il dit seulement que le coach n'a pas voulu."
 
   - id: en.direction.nassir_injection
     roles: [entraineur]
     arc: direction
     tags: [direction, caisse, sponsors]
     speaker: nassir
-    text: "Mon fonds injecte de quoi respirer. En échange, le maillot devient un panneau publicitaire et toi, mon ambassadeur souriant."
+    text: "Cheikh Ilyas fait poser une canette orange sur ton bureau : « Le fonds comble votre trou de trésorerie jusqu'en juin. En échange, notre nom sur le maillot, et votre visage sur nos affiches. »"
     left:
       label: "Je signe le partenariat"
       effects: { direction: "+", caisse: "+++", tribunes: "-" }
-      answer: "Le maillot clignote presque, les ultras plissent les yeux."
+      answer: "Le nom orange arrive sur le maillot en octobre. Au virage, la première banderole dit « VENDUS », en orange aussi."
     right:
-      label: "Je garde le blason nu"
+      label: "Je garde le maillot nu"
       effects: { direction: "-", caisse: "--", tribunes: "+" }
+      answer: "Il reprend la canette sans un mot. La paie de novembre tombe avec deux jours de retard ; Gégé, lui, t'offre une bière."
 
   - id: en.direction.josiane_lettre
     roles: [entraineur]
     arc: direction
     tags: [direction, absurde, moment]
     speaker: josiane
-    text: "J'ai déjà tapé ta lettre de licenciement, 'au cas où'. Je l'ai même relue: il manquait une virgule, je l'ai corrigée pour toi."
+    text: "Madame Josiane laisse une chemise ouverte sur ton bureau, une lettre tapée, sans date : « Le président me l'a dictée hier. Je ne l'ai pas encore mise sous enveloppe. Je peux taper lentement. »"
     left:
-      label: "Je la remercie, glacé"
+      label: "Je referme la chemise"
       effects: { direction: "+", vestiaire: "-" }
+      answer: "Elle remet la lettre au président à midi, pour son tiroir. Il te sourit dans l'escalier ; les joueurs, eux, ont vu la chemise."
     right:
-      label: "J'en fais mon alliée"
+      label: "Tapez lentement, Josiane"
       effects: { relation: { josiane: 2 }, tribunes: "+" }
-      answer: "Josiane range la lettre dans le tiroir du haut, accessible."
+      answer: "Elle tape une ligne par jour. La lettre dort sous son buvard, sans date, et le président n'en reparle pas."
 
   - id: en.direction.tuyau_josiane
     roles: [entraineur]
@@ -167,68 +177,74 @@ cards:
     tags: [direction, rescue:direction, retorse]
     when: "gauges.direction < 25"
     speaker: josiane
-    text: "Entre nous: Vaubourg vote ton départ jeudi. Si tu lui apportes le sponsor avant mercredi, il 'oublie' l'ordre du jour."
+    text: "Madame Josiane pose une tasse de trop sur l'ordre du jour de jeudi : « Point quatre : votre contrat. Almadis attend une signature depuis lundi. Le président aime les bonnes nouvelles le mercredi. »"
     left:
       label: "Je cours signer Ilyas"
       effects: { direction: "+++", caisse: "+", vestiaire: "-" }
-      answer: "Vaubourg déchire l'ordre du jour, il en garde une photo."
+      answer: "Tu signes mardi soir. Jeudi, le point quatre a disparu de l'ordre du jour, retapé sans laisser de trace."
     right:
-      label: "Je refuse de ramper"
+      label: "Je ne ramperai pas"
       effects: { direction: "--", tribunes: "+", vestiaire: "+" }
+      answer: "Jeudi, on parle de toi une heure à huis clos. Tu restes, à une voix près ; le vestiaire t'attend sur le parking."
 
   - id: en.direction.porte_entrouverte
     roles: [entraineur]
     arc: direction
     tags: [direction, mercato, moment]
-    text: "Un président rival me glisse sa carte au parking: 'Chez nous, l'entraîneur choisit ses joueurs.' La carte sent le cuir et la trahison."
+    text: "Au parking du stade, Hubert Malbec, le président de Valentienne, glisse sa carte sous ton essuie-glace : « Chez nous, l'entraîneur choisit ses joueurs. Le banc est froid ; le contrat ne l'est pas. »"
     left:
       label: "Je garde la carte"
       effects: { direction: "-", vestiaire: "+", set: [porte_ouverte] }
-      answer: "Elle reste dans ma poche, et elle chauffe."
+      answer: "Elle reste dans la poche de ton survêtement. Tu la sens chaque fois que Vaubourg te parle."
     right:
-      label: "Je la rends poliment"
+      label: "Je la lui rends"
       effects: { direction: "++", parole: 1 }
+      answer: "Tu la lui rends sans la lire. Vaubourg l'apprend avant midi et te garde une place à sa table samedi."
 
   - id: en.direction.piege_immobilisme
     roles: [entraineur]
     arc: direction
     tags: [direction, piege, mercato]
     speaker: aulard
-    text: "Le board attend ta décision sur la vente du prodige. Ne rien décider, c'est décider que je décide à ta place."
+    text: "Vaubourg, le fax de Capitale FC à la main : « Six millions pour le petit Lorrain, ton gardien de la réserve. Le conseil vote demain à neuf heures. Si tu ne dis rien d'ici là, c'est moi qui décide. »"
     left:
       label: "Je bloque la vente"
       effects: { direction: "--", vestiaire: "++", caisse: "-" }
+      answer: "Tu dis non au conseil, contre quatre voix. Le petit Lorrain l'apprend au vestiaire ; les gars tapent sur les casiers."
     right:
       label: "Je valide la vente"
       effects: { direction: "++", caisse: "++", vestiaire: "--" }
-      answer: "Le prodige part, le vestiaire fait ses cartons."
+      answer: "Le petit vide son casier le soir même. Il laisse ses gants sur le banc ; personne n'ose les ranger."
 
   - id: en.direction.nassir_controle
     roles: [entraineur]
     arc: direction
     tags: [direction, sponsors, retorse]
     speaker: nassir
-    text: "Mon fonds veut un siège au board et un mot sur la compo. Rassure-toi, je ne connais rien au foot, juste aux tableurs."
+    text: "Cheikh Ilyas, seul en tribune : « Le fonds veut un siège au conseil, et un avis sur la compo avant chaque match. Un avis, pas un ordre. J'ai été gardien remplaçant ; je ne suis jamais entré. »"
     left:
       label: "J'accepte son siège"
       effects: { direction: "+", caisse: "++", vestiaire: "-", relation: { nassir: 1 } }
+      answer: "Le vendredi, une feuille arrive du fonds, onze noms tapés. Tu en changes deux ; Vukić demande lesquels, et pourquoi pas plus."
     right:
-      label: "Je verrouille la compo"
+      label: "La compo reste à moi"
       effects: { direction: "--", vestiaire: "+", relation: { nassir: -1 } }
+      answer: "Il regarde la pelouse longtemps sans répondre. Le lundi, le fonds demande les comptes du trimestre, ligne par ligne."
 
   - id: en.direction.coup_com
     roles: [entraineur]
     arc: direction
     tags: [direction, presse, sponsors]
     speaker: aulard
-    text: "J'organise une conférence pour annoncer une 'révolution'. Tu montes sur scène, tu souris, et surtout tu ne dis pas qu'on n'a plus un rond."
+    text: "Vaubourg ajuste sa cravate devant le miroir : « Conférence à onze heures, la presse, les partenaires. J'annonce un grand projet. Toi, tu souris, et tu ne parles pas des salaires de mars. »"
     left:
-      label: "Je joue la comédie"
+      label: "Je souris sur l'estrade"
       effects: { direction: "++", tribunes: "+", caisse: "-" }
-      answer: "Les sponsors applaudissent, le comptable pleure en régie."
+      answer: "Les partenaires applaudissent le grand projet. Dans le couloir, Josiane recompte les chèques du traiteur."
     right:
-      label: "Je dis la vérité"
+      label: "Je parle des salaires"
       effects: { direction: "---", tribunes: "++", vestiaire: "+" }
+      answer: "Tu dis « mars » au micro. Massenet note l'heure ; Vaubourg quitte l'estrade avant les questions."
 
   - id: en.direction.vecchio_solde
     roles: [entraineur]
@@ -237,21 +253,22 @@ cards:
     speaker: aulard
     # Pas pendant l'arc E « Le vieux gardien » ni une fois Gigi passé au staff.
     when: "!flag('gigi_staff') && arc('en.vieux_gardien') != 'active'"
-    text: "Ton vieux gardien coûte cher en salaire et en nostalgie. Solde-le cet hiver, la nostalgie ne remplit pas les caisses."
+    text: "Vaubourg, la masse salariale ouverte aux gardiens : « Vecchio coûte un salaire de titulaire. Il a passé quarante ans. Corbelin le reprend cet hiver si tu signes. Je n'y mets aucun sentiment. »"
     left:
       label: "Je garde Vecchio"
       effects: { direction: "--", vestiaire: "++", caisse: "-" }
-      answer: "Vecchio ne saura jamais, tant mieux."
+      answer: "Vecchio ne saura jamais. Le dimanche suivant, il arrête un penalty et regarde longtemps la tribune présidentielle."
     right:
       label: "Je le laisse partir"
       effects: { direction: "++", caisse: "++", vestiaire: "--", relation: { vecchio: -2 } }
+      answer: "Il vide son casier un mardi, seul. Il laisse sur le banc la Une qu'il gardait pliée, pour toi."
 
   - id: en.direction.promotion_piege
     roles: [entraineur]
     arc: direction
     tags: [direction, retorse, moment]
     speaker: aulard
-    text: "Je te propose un beau titre: 'manager général'. Plus de pouvoir sur le papier, moins de budget dans la vraie vie."
+    text: "Vaubourg fait glisser sur la table une plaque dorée, « MANAGER GÉNÉRAL » : « Un titre, un bureau au premier, un fax rien qu'à toi. Le budget, on en reparlera. Tu signes avant le déjeuner ? »"
     left:
       label: "J'accepte le titre"
       effects: { direction: "+++", caisse: "--", parole: -1 }
@@ -259,3 +276,4 @@ cards:
     right:
       label: "Je reste entraîneur"
       effects: { direction: "-", vestiaire: "+", force: 1 }
+      answer: "Tu reposes la plaque sur la table. Il la range dans un tiroir ; elle servira au suivant."

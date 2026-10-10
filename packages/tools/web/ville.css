@@ -1,0 +1,212 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUSIBLE — LA VILLE (la version jouable). assemble.js --ville pose cette
+   feuille après celle de la coquille : la ville d'Aubérive en pixel art,
+   dessinée sur un <canvas> plein écran, et la colonne de la coquille par-dessus
+   (le rail des quatre jauges en haut, le bandeau du nom en bas). Les cartes ne
+   s'affichent plus d'elles-mêmes : la couche ville les montre au lieu où elles
+   attendent, à leur heure, sous un voile.
+
+   Même grammaire que la coquille : le brun, la crème, la monospace, un seul
+   accent framboise. La ville est la seule chose en couleur.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+body.ville-on{background:#0E0906}
+body.ville-on #device{background:transparent;position:relative;z-index:2}
+body.ville-on #titleScreen,body.ville-on #endingScreen{background:var(--fond)}
+
+#villeCanvas{
+  position:fixed;inset:0;width:100vw;height:100vh;height:100svh;z-index:0;display:block;
+  image-rendering:pixelated;image-rendering:crisp-edges;touch-action:none;background:#0E0906;
+  cursor:pointer;
+}
+#villeCanvas[hidden]{display:none}
+#villeCouche{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+#villeCouche[hidden]{display:none}
+
+/* ── la colonne de jeu, transparente quand on marche ─────────────────────── */
+body.ville-on #gameScreen{background:transparent;pointer-events:none;position:relative}
+body.ville-on #gameScreen > *{pointer-events:auto}
+body.ville-on #gameScreen .menu,
+body.ville-on #gameScreen .jauges{position:relative;z-index:3}
+/* le haut et le bas de la colonne gardent un fond, pour qu'on lise le rail et le nom */
+body.ville-on #gameScreen::before{
+  content:"";position:fixed;left:0;right:0;top:0;height:178px;z-index:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(20,13,8,.94) 0,rgba(20,13,8,.86) 62%,rgba(20,13,8,0) 100%);
+}
+body.ville-on #gameScreen::after{
+  content:"";position:fixed;left:0;right:0;bottom:0;height:196px;z-index:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(20,13,8,.96) 0,rgba(20,13,8,.88) 58%,rgba(20,13,8,0) 100%);
+}
+body.ville-on #gameScreen > .bandeau{position:relative;z-index:3}
+
+/* sans carte : seuls le menu, le rail, l'état de la ville, les actions et le bandeau */
+body.ville-on #gameScreen:not(.carte-on) > .answer,
+body.ville-on #gameScreen:not(.carte-on) > .scene-text,
+body.ville-on #gameScreen:not(.carte-on) > .stage,
+body.ville-on #gameScreen:not(.carte-on) > .une,
+body.ville-on #gameScreen:not(.carte-on) > .ruban,
+body.ville-on #gameScreen:not(.carte-on) > .controls{display:none}
+body.ville-on #gameScreen.carte-on > .v-hud,
+body.ville-on #gameScreen.carte-on > .v-actions{display:none}
+body.ville-on #gameScreen.carte-on > .answer,
+body.ville-on #gameScreen.carte-on > .scene-text,
+body.ville-on #gameScreen.carte-on > .stage,
+body.ville-on #gameScreen.carte-on > .controls,
+body.ville-on #gameScreen.carte-on > .ruban{position:relative;z-index:3}
+body.ville-on #gameScreen .v-espace{flex:1 1 auto;pointer-events:none}
+body.ville-on #gameScreen.carte-on .v-espace{display:none}
+
+/* le voile : la ville s'efface derrière la carte */
+#villeVoile{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:rgba(14,9,6,.86);opacity:0;transition:opacity 260ms linear;
+}
+#villeVoile.on{opacity:1;pointer-events:auto}
+
+/* ── l'état de la ville, sous le rail ───────────────────────────────────── */
+.v-hud{position:relative;z-index:3;margin:10px 2px 0;display:flex;flex-direction:column;gap:7px;flex:0 0 auto}
+.v-hud .v-temps{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.v-hud .v-temps b{font-size:12.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--creme)}
+.v-hud .v-temps span{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--creme3);white-space:nowrap}
+.v-corps{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:center}
+.v-besoin{display:flex;flex-direction:column;gap:3px;min-width:0}
+.v-besoin i{font-style:normal;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--creme3)}
+.v-besoin .barre{height:5px;background:var(--fond3);border-radius:3px;overflow:hidden}
+.v-besoin .barre u{display:block;height:100%;background:var(--creme2);border-radius:3px;transition:width 300ms ease}
+.v-besoin.bas .barre u{background:var(--framboise)}
+.v-besoin.bas i{color:#FF5C7F}
+.v-francs{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--creme);font-variant-numeric:tabular-nums;white-space:nowrap}
+.v-francs.bas{color:#FF5C7F}
+.v-rdv{
+  font-size:12px;font-style:italic;line-height:1.4;color:var(--creme2);
+  border-left:2px solid var(--framboise);padding:1px 0 1px 9px;
+}
+.v-rdv[hidden]{display:none}
+.v-rdv b{font-style:normal;color:var(--creme);font-weight:700;letter-spacing:.04em}
+
+/* ── les actions de la ville, au-dessus du bandeau ──────────────────────── */
+.v-actions{position:relative;z-index:3;display:flex;gap:8px;margin:0 0 10px;flex:0 0 auto}
+.v-actions button{
+  flex:1 1 0;min-height:44px;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--creme2);
+  background:rgba(36,22,8,.92);border:1px solid var(--fond3);border-radius:3px;padding:0 8px;
+  transition:color var(--t) linear,border-color var(--t) linear;
+}
+.v-actions button:hover,.v-actions button:focus-visible{color:var(--creme);border-color:var(--creme3);outline:0}
+.v-actions button svg{display:block;width:15px;height:15px;flex:0 0 auto}
+.v-actions button[disabled]{opacity:.45;cursor:default}
+
+/* ── le message du récit (ce que ton dernier choix a produit, ce qui arrive) ─ */
+.v-toast{
+  position:fixed;left:50%;bottom:calc(150px + env(safe-area-inset-bottom));z-index:5;
+  transform:translateX(-50%);width:min(386px,calc(100vw - 44px));
+  background:rgba(20,13,8,.95);border-left:2px solid var(--framboise);
+  padding:10px 12px;font-size:12.5px;font-style:italic;line-height:1.45;color:var(--creme);
+  opacity:0;transition:opacity 260ms linear;pointer-events:none;
+}
+.v-toast.on{opacity:1}
+
+/* ── les noms des lieux, posés sur la ville ─────────────────────────────── */
+.v-lieu{
+  position:absolute;transform:translate(-50%,-100%);white-space:nowrap;pointer-events:auto;
+  font-family:inherit;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--creme);background:rgba(20,13,8,.84);padding:4px 7px;border-radius:2px;cursor:pointer;
+  border:0;line-height:1.2;
+}
+.v-lieu:hover,.v-lieu:focus-visible{background:rgba(20,13,8,.98);outline:1px solid var(--creme3)}
+.v-lieu.rdv{background:var(--framboise);color:var(--creme)}
+.v-lieu.loin{opacity:.72;font-weight:400}
+.v-fleche{
+  position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
+  font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
+  color:var(--creme);background:var(--framboise);padding:5px 8px;border-radius:2px;border:0;
+}
+.v-fleche[hidden]{display:none}
+
+/* ── la porte : ce qu'on voit en entrant, ce qu'on peut y faire ─────────── */
+.v-porte{
+  position:fixed;left:50%;bottom:0;z-index:6;transform:translate(-50%,104%);
+  width:min(430px,100vw);max-height:78vh;overflow-y:auto;
+  background:var(--fond2);border-top:1px solid var(--fond3);
+  padding:18px var(--pad) calc(18px + env(safe-area-inset-bottom));
+  transition:transform 240ms ease;
+}
+.v-porte.on{transform:translate(-50%,0)}
+.v-porte h2{margin:0;font-size:15px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--creme);text-wrap:balance}
+.v-porte .v-sous{margin:4px 0 0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--creme3)}
+.v-porte .v-texte{margin:12px 0 0;font-size:14px;font-style:italic;line-height:1.5;color:var(--creme)}
+.v-porte .v-fait{
+  margin:12px 0 0;font-size:13px;font-style:italic;line-height:1.5;color:var(--creme);
+  border-left:2px solid var(--framboise);padding-left:10px;
+}
+.v-porte .v-fait[hidden]{display:none}
+.v-acts{display:flex;flex-direction:column;gap:8px;margin:16px 0 0}
+.v-act{
+  display:grid;grid-template-columns:1fr auto;gap:4px 10px;align-items:center;text-align:left;
+  min-height:48px;padding:9px 11px;background:var(--fond);border:1px solid var(--fond3);border-radius:3px;
+  transition:border-color var(--t) linear;
+}
+.v-act:hover:not([disabled]),.v-act:focus-visible{border-color:var(--creme3);outline:0}
+.v-act[disabled]{opacity:.5;cursor:default}
+.v-act b{font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--creme)}
+.v-act .cout{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;font-size:11px;letter-spacing:.06em;color:var(--creme2);font-variant-numeric:tabular-nums}
+.v-act .cout .j{display:inline-flex;align-items:center;gap:2px}
+.v-act .cout .j svg{display:block;width:13px;height:13px}
+.v-act .cout .up{color:var(--vert)}
+.v-act .cout .dn{color:#FF5C7F}
+.v-act .pourquoi{grid-column:1 / -1;font-size:11px;font-style:italic;color:var(--creme3)}
+.v-porte .v-sortir{
+  margin:16px 0 0;width:100%;min-height:46px;font-size:12px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--creme2);border-top:1px solid var(--fond3);
+}
+.v-porte .v-sortir:hover,.v-porte .v-sortir:focus-visible{color:var(--creme);outline:0}
+
+/* ── le fondu : les heures qui sautent, la semaine qui passe, la scène ───── */
+.v-fondu{
+  position:fixed;inset:0;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;padding:0 28px;text-align:center;background:#0B0705;opacity:0;pointer-events:none;
+  transition:opacity 420ms linear;
+}
+.v-fondu.on{opacity:1;pointer-events:auto}
+.v-fondu b{font-size:clamp(22px,7vw,30px);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--creme);text-wrap:balance}
+.v-fondu span{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--creme3)}
+.v-fondu p{margin:8px 0 0;max-width:34ch;font-size:14px;font-style:italic;line-height:1.5;color:var(--creme2)}
+.v-fondu button{
+  margin-top:18px;min-height:44px;padding:0 18px;font-size:12px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--creme);border:1px solid var(--creme3);border-radius:3px;
+}
+.v-fondu button[hidden]{display:none}
+
+/* ── le plan : tous les lieux, et où l'on t'attend ──────────────────────── */
+.v-plan{display:flex;flex-direction:column;gap:2px}
+.v-plan h3{margin:14px 0 4px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--creme3);font-weight:400}
+.v-plan button{
+  display:flex;justify-content:space-between;gap:10px;text-align:left;min-height:40px;align-items:center;
+  font-size:12.5px;letter-spacing:.04em;color:var(--creme);border-bottom:1px solid var(--fond3);padding:0 2px;
+}
+.v-plan button:hover,.v-plan button:focus-visible{color:#fff;outline:0;border-bottom-color:var(--creme3)}
+.v-plan button i{font-style:normal;font-size:11px;color:var(--creme3);letter-spacing:.08em;white-space:nowrap}
+.v-plan button.rdv i{color:#FF5C7F}
+.v-carte-mini{display:block;width:100%;height:auto;border-radius:3px;background:#0B0705;image-rendering:pixelated}
+
+/* ── le zoom ────────────────────────────────────────────────────────────── */
+.v-zoom{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:6px}
+.v-zoom button{
+  width:40px;height:40px;display:grid;place-items:center;font-size:18px;font-weight:700;color:var(--creme2);
+  background:rgba(36,22,8,.9);border:1px solid var(--fond3);border-radius:3px;
+}
+.v-zoom button:hover,.v-zoom button:focus-visible{color:var(--creme);border-color:var(--creme3);outline:0}
+body.ville-on #gameScreen.carte-on ~ .v-zoom{display:none}
+
+/* reprendre la partie, sur l'écran titre */
+.v-reprendre{
+  margin:16px 0 0;display:flex;flex-direction:column;gap:3px;text-align:left;padding:12px 14px;
+  background:var(--fond2);border:1px solid var(--fond3);border-radius:3px;
+}
+.v-reprendre b{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--creme)}
+.v-reprendre span{font-size:11.5px;color:var(--creme3);letter-spacing:.04em}
+.v-reprendre:hover,.v-reprendre:focus-visible{border-color:var(--creme3);outline:0}
+
+@media (prefers-reduced-motion: reduce){
+  .v-porte,.v-fondu,.v-toast,#villeVoile{transition:none}
+}

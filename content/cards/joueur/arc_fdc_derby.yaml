@@ -8,13 +8,13 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: leger
-    text: "« La tribune n'oublie rien, {toi}, et dimanche c'est le derby, le seul match qu'on regarde deux fois. Tu viens au local jeudi peindre le tifo, ou tu restes concentré ? »"
+    text: "Gégé peint une bâche à même le sol du local : « Dimanche, c'est le derby, {toi}. La ville le regarde deux fois : le jour même, et toute l'année d'après. Tu viens peindre jeudi ? »"
     left:
       label: "Jeudi, au local"
       effects: {tribunes: "++", force: -1, set: [ami_ultras]}
       answer: "Tu peins. Tu as de la peinture sur les mains dimanche ; le rival la voit."
     right:
-      label: "Concentré"
+      label: "Je reste concentré"
       effects: {force: 1, tribunes: "-"}
       answer: "Tu ne viens pas. Le tifo est beau ; ton nom n'y est pas."
 
@@ -24,7 +24,7 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: leger
-    text: "« La tribune n'oublie rien, et l'an dernier tu avais de la peinture sur les mains jusqu'au coup d'envoi. Jeudi on refait la bâche, ou tu as déjà donné ? »"
+    text: "Gégé te tend un pinceau sec, celui de l'an dernier : « Au coup d'envoi, l'an passé, tu avais encore de la peinture sur les mains. La photo est au-dessus du bar. Jeudi, on refait la bâche ? »"
     left:
       label: "Je repeins"
       effects: {tribunes: "++", force: -1, relation: {gege: 1}}
@@ -40,7 +40,7 @@ cards:
     tags: [moment, tribunes]
     speaker: vecchio
     tone: strategique
-    text: "« Le derby de cinquante et un, on l'a perdu quatre à zéro, et c'est celui dont tout le monde parle encore ; j'en ai vu d'autres. Tu joues pour marquer, ou pour ne pas perdre ? »"
+    text: "Dans le tunnel, Vecchio enfile ses gants un doigt après l'autre : « Mon premier derby, j'en ai pris quatre. C'est le seul dont on me parle encore. Tu joues pour marquer, ou pour ne pas perdre ? »"
     left:
       label: "Pour marquer"
       effects: {tribunes: "++", rand: [{p: 0.5, set: [derby_gagne], outcome: gagne}, {set: [derby_perdu], tribunes: "-", outcome: perdu}]}
@@ -48,7 +48,7 @@ cards:
     right:
       label: "Pour ne pas perdre"
       effects: {vestiaire: "+", rand: [{p: 0.65, set: [derby_gagne], outcome: gagne}, {set: [derby_perdu], outcome: perdu}]}
-      answer: "Tu joues derrière. Il dit que c'est ce que faisait son gardien préféré."
+      answer: "Tu joues derrière. Il approuve d'un signe de gant : c'est comme ça qu'on n'en prend pas quatre."
 
   - id: co.derby.lendemain
     roles: [joueur]
@@ -56,13 +56,13 @@ cards:
     tags: [famille, presse]
     speaker: camille
     tone: leger
-    text: "« Tu rentres à quelle heure, {toi} — hier, trois heures du matin, gagné ou perdu, je ne sais plus lequel. Tu me racontes, ou je lis le journal ? »"
+    text: "Camille a L'Écho ouvert sur la table de la cuisine, le doigt sur le titre du derby : « La porte a claqué à trois heures du matin, {toi}. Gagné ou perdu, je ne sais pas. Tu racontes, ou je lis ? »"
     left:
       label: "Je raconte"
       effects: {relation: {camille: 1}, tribunes: "-", react: [ { card: co.re.camille_journal_frigo, if: "!flag('divorce') && seen('co.re.camille_journal_ecole')" }, { card: co.re.camille_journal_ecole, if: "!flag('divorce') && seen('co.re.camille_journal')" }, { card: co.re.camille_journal } ]}
       answer: "Elle écoute. Elle a déjà lu ; elle écoute quand même."
     right:
-      label: "Lis"
+      label: "Lis le journal"
       effects: {relation: {camille: -1}, force: 1}
       answer: "Elle lit. Le journal dit « tête haute ». Elle demande à qui ; tu ne sais pas."
 
@@ -72,7 +72,7 @@ cards:
     tags: [ultras, presse]
     speaker: gege
     tone: leger
-    text: "« La tribune n'oublie rien, et le lendemain d'un derby, elle relit le journal à voix haute au local, ligne par ligne. Tu viens l'entendre, ou tu laisses dire ? »"
+    text: "Gégé, au téléphone du local, des voix derrière lui : « Le lendemain d'un derby, on relit L'Écho à voix haute, ligne par ligne, avec les notes. La tienne arrive bientôt. Tu viens l'entendre ? »"
     left:
       label: "Je viens l'entendre"
       effects: {tribunes: "+", vestiaire: "-", relation: {gege: 1}}
@@ -88,7 +88,7 @@ cards:
     tags: [ultras, moment]
     speaker: gege
     tone: strategique
-    text: "« La tribune n'oublie rien, et aujourd'hui tu es en face, avec leur maillot ; on a ton nom en deux morceaux, un pour l'aller, un pour le retour. Tu salues le virage, ou pas ? »"
+    text: "Derrière la grille, Gégé tient ton nom découpé en deux morceaux de bâche : « Aujourd'hui, tu es en face, avec leur maillot. Un morceau pour l'aller, un pour le retour. Tu salues le virage ? »"
     left:
       label: "Je salue le virage"
       effects: {tribunes: "+", vestiaire: "-", relation: {gege: 1}, set: [salue_ancien_virage], react: jp.re.gege_blason}

@@ -617,6 +617,9 @@ table.tbl tr.toi td.r{color:var(--framboise)}
   .annonce.anim{animation:none}
 }
 </style>
+<!-- LA VILLE (la version jouable) : assemble.js --ville y pose la feuille de
+     la couche ville ; l'aperçu simple n'y met rien. -->
+__VILLE_CSS__
 
 <div id="device">
 
@@ -812,6 +815,9 @@ table.tbl tr.toi td.r{color:var(--framboise)}
 <script>__ENGINE_JS__</script>
 <script>__ART_JS__</script>
 <script>__AUDIO_JS__</script>
+<!-- LA VILLE : la couche ville (ville.js) se déclare AVANT la coquille, qui la
+     trouve dans window.FusibleVille. Vide dans l'aperçu simple. -->
+<script>__VILLE_JS__</script>
 <script>
 (function () {
   "use strict";
@@ -822,6 +828,10 @@ table.tbl tr.toi td.r{color:var(--framboise)}
   // était `>= 80`. Un signal permanent n'est plus un signal.
   //   · 12 / 88 : le crâne. Ce qui tue à court terme, et rien d'autre.
   //   · 20 / 80 : le frémissement du pictogramme, sans crâne ni alerte.
+  // LA VILLE : quand la couche ville est là, c'est elle qui décide QUAND une
+  // carte se montre (au lieu où elle attend, à son heure) ; la coquille garde
+  // tout le reste — la carte, le geste, la Une, la frise, la fin.
+  var VILLE = window.FusibleVille || null;
   var GAUGE_MAX_DANGER = 88, GAUGE_MIN_DANGER = 12;
   var GAUGE_MAX_BORD = 80, GAUGE_MIN_BORD = 20;
   // Le pictogramme de chaque équilibre, dans le vocabulaire de FusibleArt.
@@ -1066,7 +1076,8 @@ table.tbl tr.toi td.r{color:var(--framboise)}
     currentPostulat = postulat;
     currentSeed = (typeof seed === "number") ? seed : randomSeed();
     var nm = nameValues();
-    view = JSON.parse(window.fusibleStart(currentSeed, postulat, nm.prenom, nm.nom, nm.genre));
+    var vn = (VILLE && VILLE.noms) || {};
+    view = JSON.parse(window.fusibleStart(currentSeed, postulat, nm.prenom, nm.nom, nm.genre, vn.ville || "", vn.club || ""));
     closeAll();
     lastCard = null;
     answerLog = [];
@@ -1081,7 +1092,16 @@ table.tbl tr.toi td.r{color:var(--framboise)}
     show("game");
     elGame.scrollTop = 0;
     window.scrollTo(0, 0);
-    renderGame();
+    if (VILLE) VILLE.debut(view);
+    presenter();
+  }
+
+  // La carte suivante : tout de suite dans l'aperçu ; dans la ville, la couche
+  // ville la pose à son lieu et rappelle `FusibleCoquille.carte()` à l'heure.
+  // Les jauges, elles, bougent tout de suite — c'est le choix qui les a bougées.
+  function presenter() {
+    if (VILLE) { majJauges(); VILLE.vue(view); }
+    else renderGame();
   }
 
   function advance(right) {
@@ -1089,18 +1109,15 @@ table.tbl tr.toi td.r{color:var(--framboise)}
     busy = false;
     logAnswer(view.lastAnswer);
     if (view.over) {
-      var eid = view.ending && view.ending.id;
-      if (eid && !profile.endings[eid]) { profile.endings[eid] = 1; saveProfile(profile); }
-      renderEnding();
-      show("ending");
-      if (view.frise_auto) openFrise(null);
+      advanceEnd();
     } else {
-      renderGame();
+      presenter();
     }
   }
 
   function choose(right) {
     if (busy || !view || view.over) return;
+    if (VILLE && !VILLE.carteVisible()) return;
     busy = true;
     dragging = false;
     sonSwipe(right);
@@ -1542,19 +1559,26 @@ table.tbl tr.toi td.r{color:var(--framboise)}
     else if (view.objective) e("div", "tampon", String(view.objective).toLowerCase());
   }
 
-  function renderGame() {
-    var c = view.card;
-    if (c.beatKind !== "bilan_une") lastCard = c;
-
-    // le sens du dernier changement de chaque jauge
+  // Le sens du dernier changement de chaque jauge, une fois par vue : la ville
+  // l'affiche dès le choix (ou l'activité), la carte suivante ne le remet pas à zéro.
+  var vueJaugee = null;
+  function majJauges() {
+    if (vueJaugee === view) return;
+    vueJaugee = view;
     var d = {};
     (view.gauges || []).forEach(function (g) { d[g.id] = prevGauge ? (g.value - prevGauge[g.id]) : 0; });
     gaugeDelta = d;
     prevGauge = {};
     (view.gauges || []).forEach(function (g) { prevGauge[g.id] = g.value; });
-
     renderRail(view.gauges, null);
     renderBandeau();
+  }
+
+  function renderGame() {
+    var c = view.card;
+    if (c.beatKind !== "bilan_une") lastCard = c;
+
+    majJauges();
     // Le bandeau d'annonce du moteur d'abord ; à défaut, l'ouverture d'histoire.
     showAnnonce(view.annonce || (c.unlockedStory ? { titre: "Nouvelle histoire", sous_titre: c.unlockedStory } : null));
     sonScene();
@@ -2006,6 +2030,7 @@ table.tbl tr.toi td.r{color:var(--framboise)}
       return;
     }
     if (elGame.hidden || !view || view.over || busy) return;
+    if (VILLE && !VILLE.carteVisible()) return;
     if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
     var onButton = e.target && e.target.tagName === "BUTTON";
     if (view.card && view.card.single) {
@@ -2016,7 +2041,50 @@ table.tbl tr.toi td.r{color:var(--framboise)}
     else if (e.key === "ArrowRight") { e.preventDefault(); choose(true); }
   });
 
+  // ═══ LA VILLE : ce que la coquille prête à la couche ville ═══════════════
+  if (VILLE) {
+    window.FusibleCoquille = {
+      vue: function () { return view; },
+      // montrer la carte en attente (la couche ville a déjà levé son voile)
+      carte: function () { if (view && !view.over) renderGame(); },
+      // une activité : les jauges bougent (ou la carrière finit)
+      activite: function (id) {
+        view = JSON.parse(window.fusibleActivite(id));
+        if (view.over) { advanceEnd(); return view; }
+        majJauges();
+        return view;
+      },
+      sauver: function () { return window.fusibleEtat ? window.fusibleEtat() : ""; },
+      reprendre: function (etat, postulat, seed) {
+        view = JSON.parse(window.fusibleReprendre(etat));
+        currentPostulat = postulat || 0; currentSeed = seed || 0;
+        closeAll(); lastCard = null; answerLog = []; prevGauge = null; gaugeDelta = {}; vueJaugee = null;
+        friseSeen = ""; dangerSeen = {};
+        show("game");
+        if (view.over) { advanceEnd(); return view; }
+        presenter();
+        return view;
+      },
+      graine: function () { return { seed: currentSeed, postulat: currentPostulat }; },
+      frise: function () { openFrise(null); },
+      classement: function () { openStandings(null); },
+      panneau: function (titre, html) { openPanel("ville", titre, html, null); },
+      fermer: closeAll,
+      panneauOuvert: anyPanelOpen,
+      ecran: show
+    };
+  }
+  function advanceEnd() {
+    var eid = view.ending && view.ending.id;
+    if (eid && !profile.endings[eid]) { profile.endings[eid] = 1; saveProfile(profile); }
+    if (VILLE) VILLE.fin(view);
+    renderEnding();
+    show("ending");
+    if (view.frise_auto) openFrise(null);
+  }
+
   // --- c'est parti ---
   renderTitle();
+  if (VILLE) VILLE.pret();
 })();
 </script>

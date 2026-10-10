@@ -5,72 +5,74 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Fardelli : j'ai un ailier de 18 ans, une vraie fusée, trois clubs sont dessus. Vous signez ce soir ou il file, mon ami."
+    text: "Fardelli, d'une cabine, les pièces qui tombent : « Un ailier de dix-huit ans, à Puymarin. Trois amis à moi le veulent ; c'est à toi que je l'offre d'abord, {toi}. Le fax part ce soir, ou jamais. »"
     left:
-      label: "Je signe la fusée"
+      label: "Je signe le gamin"
       effects: { caisse: "--", force: 8, set: [pepite], relation: { fardelli: 1 } }
-      answer: "Fardelli sourit. Sa commission aussi."
+      answer: "Josiane envoie le contrat à 22 h 10. Fardelli rappelle à 22 h 15 pour te remercier ; il ne parle pas de sa part."
     right:
       label: "Je passe mon tour"
       effects: { caisse: "+", relation: { fardelli: -1 } }
-      answer: "Il ira briller ailleurs, promis juré."
+      answer: "Il raccroche gentiment. Le gamin signe à Terrenoire le lendemain ; Fardelli t'envoie la coupure de presse."
   - id: en.mercato.reclame_neuf
     roles: [entraineur]
     arc: mercato
     tags: [mercato, vestiaire, piege]
     speaker: brehaut
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Brehaut : coach, on n'a pas de vrai numéro 9 et je m'épuise dos au but. Ramenez-moi un buteur ou je perds la foi."
+    text: "Bréhaut, une feuille de stats pliée en quatre : « Quatre buts en neuf matchs, coach, dont deux par des défenseurs. Les gars veulent un vrai neuf avant février. Je leur dis quoi, de ta part ? »"
     left:
-      label: "Je te promets un 9"
+      label: "Je vous promets un neuf"
       effects: { vestiaire: "+", parole: 2, promise: true, relation: { brehaut: 1 } }
-      answer: "Il te croit. Pour l'instant."
+      answer: "Il répète la phrase aux gars, mot pour mot. Sur le tableau du vestiaire, quelqu'un écrit « février »."
     right:
-      label: "Débrouille-toi devant"
+      label: "Débrouillez-vous devant"
       effects: { vestiaire: "--", force: -3, relation: { brehaut: -1 } }
+      answer: "Il replie la feuille. À l'entraînement, il joue en pointe lui-même, dos au but, et ne dit plus rien."
   - id: en.mercato.vente_cadre
     roles: [entraineur]
     arc: mercato
     tags: [mercato, direction, caisse]
     speaker: aulard
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Vaubourg : on m'offre un pont d'or pour votre milieu. La caisse en a besoin, et moi de vacances."
+    text: "Vaubourg, au téléphone, de bonne humeur : « Marsange m'offre douze millions pour ton numéro six. Douze ! La banque m'appelle chaque lundi, {toi}. Je dis oui ce soir, sauf si tu as une raison. »"
     left:
       label: "Je vends, on renfloue"
       effects: { caisse: "+++", force: -8, vestiaire: "-", relation: { aulard: 1 } }
-      answer: "Vaubourg signe avant que vous changiez d'avis."
+      answer: "Il signe avant le journal de vingt heures. Le six vide son casier le lendemain, sans dire au revoir."
     right:
-      label: "Il reste, point final"
+      label: "Le six reste, point final"
       effects: { direction: "--", caisse: "-", relation: { aulard: -1 } }
-      answer: "Le président boude déjà le prochain conseil."
+      answer: "Il raccroche sans un mot. Au conseil suivant, ta chaise est en bout de table."
   - id: en.mercato.jeune_reserve
     roles: [entraineur]
     arc: mercato
     tags: [mercato, formation]
     when: "season.phase == 'presaison'"
-    text: "Le coach de la réserve : j'ai un gamin de 17 ans qui met des roulettes à mes défenseurs. Il moisit chez moi ou il monte chez les grands ?"
+    text: "Sur le terrain annexe, l'entraîneur de la réserve montre un gamin de dix-sept ans qui vient d'effacer deux défenseurs : « Il s'ennuie chez moi. Tu le prends en haut, ou je le prête à Kerbrouck ? »"
     left:
       label: "Je le monte en pro"
       effects: { force: 5, caisse: "+", tribunes: "+", set: [pepite] }
-      answer: "Le vestiaire le surnomme déjà le môme."
+      answer: "Il s'entraîne avec les pros dès lundi. Au troisième dribble, la tribune Nord connaît déjà son prénom."
     right:
-      label: "Je le prête pour le blinder"
+      label: "Je le prête à Kerbrouck"
       effects: { caisse: "++", force: -2 }
-      answer: "Il reviendra plus fort. Ou pas."
+      answer: "Il part à Kerbrouck avec un sac trop grand. Le club touche un loyer ; toi, une carte postale en décembre."
   - id: en.mercato.veteran_libre
     roles: [entraineur]
     arc: mercato
     tags: [mercato, agents, vestiaire]
     speaker: fardelli
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Fardelli : un vieux lion libre, 34 ans, plus un genou pour deux. Mais quel vestiaire, il parle et tout le monde se tait."
+    text: "Fardelli, garé sur le quai sud, tend une radio de genou par la vitre : « L'ancien capitaine de Vaucastel. Libre, trente-quatre ans, et ce genou-là. Mais quand il parle, un vestiaire se tait. »"
     left:
-      label: "Je prends le patron"
+      label: "Je prends le capitaine"
       effects: { vestiaire: "++", force: 3, caisse: "-", set: [genou] }
-      answer: "Sabatier soupire déjà devant les radios."
+      answer: "Le Doc tient la radio contre la fenêtre et ne dit rien. Au premier entraînement, le vestiaire se tait quand il parle."
     right:
       label: "Trop vieux, je refuse"
       effects: { vestiaire: "-", caisse: "+", relation: { fardelli: -1 } }
+      answer: "La vitre remonte. Le capitaine signe chez {rival} ; Fardelli t'envoie la photo de la signature."
   - id: en.mercato.deadline_day
     roles: [entraineur]
     arc: mercato
@@ -78,87 +80,90 @@ cards:
     speaker: fardelli
     once: true
     when: "season.phase == 'hiver'"
-    text: "Fardelli : onze minutes avant la fermeture, j'ai un attaquant en visio depuis un parking. On tente le coup de folie ?"
+    text: "Fardelli, d'une cabine, le souffle court : « J'ai un attaquant de Portclair qui signe ce soir si le fax part avant minuit. Il a un genou, je ne te mens pas. Tu le prends ? »"
     left:
-      label: "On tente la folie"
+      label: "Le fax part ce soir"
       effects: { rand: [{ p: 0.5, force: 9, caisse: "--", tribunes: "+" }, { caisse: "-", tribunes: "--" }] }
-      answer: "Le parking avait mauvaise connexion."
+      answer: "Le fax part à 23 h 52. Le genou arrive avec lui."
     right:
       label: "Je ferme la boutique"
       effects: { caisse: "+", direction: "-" }
-      answer: "Zéro recrue, zéro risque, zéro frisson."
+      answer: "Tu raccroches. À minuit, Josiane débranche le fax ; le président apprend le lendemain que tu n'as rien tenté."
   - id: en.mercato.fax_panne
     roles: [entraineur]
     arc: mercato
     tags: [mercato, absurde]
     speaker: josiane
     when: "season.phase == 'hiver'"
-    text: "Josiane : le fax a rendu l'âme à trois minutes de la clôture, les papiers ne partent pas. Je cours à la poste ou on laisse tomber ?"
+    text: "Madame Josiane, le contrat à la main : « Le fax a avalé la page deux à 23 h 41. Le seul autre fax ouvert, c'est celui du tabac d'en face, et le patron est abonné chez {rival}. »"
     left:
-      label: "Fonce à la poste, cours !"
+      label: "Courez au tabac"
       effects: { force: 6, caisse: "-", relation: { josiane: 1 } }
-      answer: "Josiane part en baskets, dossier sous le bras."
+      answer: "Elle traverse en chaussons. Le patron fait payer la page double ; elle passe à 23 h 57, et tout le quartier le sait."
     right:
-      label: "Tant pis, on abandonne"
+      label: "On laisse tomber"
       effects: { force: -4, tribunes: "--" }
-      answer: "Le transfert meurt dans un dernier bip."
+      answer: "La page deux reste froissée dans la machine. Le lendemain, la tribune apprend que le joueur a signé ailleurs."
   - id: en.mercato.algo_data
     roles: [entraineur]
     arc: mercato
     tags: [mercato, absurde]
     speaker: nassir
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Ilyas : mon algorithme a scanné quarante mille joueurs et recommande un latéral letton que personne ne connaît. Les chiffres ne mentent jamais."
+    text: "Cheikh Ilyas pose un classeur sur ta table : « Un cabinet a compté, sur cassette, les ballons touchés de quatre cents défenseurs. Le premier de la liste joue en Vestrie. Personne ne le connaît. »"
     left:
       label: "Je crois les chiffres"
       effects: { rand: [{ p: 0.6, force: 7, caisse: "-" }, { force: -5, caisse: "--" }] }
-      answer: "L'algorithme jure que c'est la faute de la pelouse."
+      answer: "Il arrive en février avec un interprète. Dès le premier match, tu sais ce que le classeur ne disait pas."
     right:
-      label: "Je crois mes yeux"
+      label: "Je veux le voir jouer"
       effects: { force: 2, direction: "-", relation: { nassir: -1 } }
-      answer: "Ilyas range son ordinateur, vexé."
+      answer: "Tu envoies Vukić le voir jouer, deux jours de train. Ilyas reprend son classeur ; le fonds n'aime pas qu'on doute."
   - id: en.mercato.president_coup_coeur
     roles: [entraineur]
     arc: mercato
     tags: [mercato, direction, retorse]
     speaker: aulard
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Vaubourg : j'ai flashé sur un joueur vu à la télé entre deux pubs. Il est cher, il est lent, mais quel sourire, signez-le."
+    text: "Vaubourg, une cassette à la main : « Je l'ai vu dimanche à la télévision. Un milieu de Marsange, élégant, il a souri après son but. Ma femme ne parle que de lui. Tu me le signes, {toi} ? »"
     left:
-      label: "J'obéis au président"
+      label: "Je le signe pour vous"
       effects: { direction: "++", caisse: "--", force: -2, relation: { aulard: 1 } }
-      answer: "Le sourire coûte cher au mètre carré."
+      answer: "Il signe en souriant pour les photographes. Sur le terrain, il sourit aussi ; il ne court pas beaucoup plus."
     right:
       label: "Je refuse ce caprice"
       effects: { direction: "--", force: 3, relation: { aulard: -1 } }
+      answer: "Vaubourg range la cassette dans sa veste. Il ne te parle plus de joueurs ; il en parle à Fardelli."
   - id: en.mercato.sponsor_impose
     roles: [entraineur]
     arc: mercato
     tags: [mercato, sponsors]
     speaker: nassir
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Ilyas : mon sponsor exige qu'on recrute son poulain pour vendre des maillots en Asie. Le joueur, détail ; le marché, immense."
+    text: "Cheikh Ilyas, un catalogue de maillots ouvert : « Nos partenaires veulent un joueur de Sylvanie dans l'effectif. Là-bas, le maillot se vendra par milliers. Qu'il joue ou non nous importe peu. »"
     left:
       label: "Je signe pour les maillots"
       effects: { caisse: "++", force: -4, vestiaire: "-", relation: { nassir: 1 } }
-      answer: "Les maillots partent, les points restent au vestiaire."
+      answer: "Le garçon passe la saison sur le banc, poli, seul à table. Son maillot se vend mieux que celui de Dembo."
     right:
-      label: "Le sportif d'abord"
+      label: "Le terrain d'abord"
       effects: { caisse: "--", force: 2, relation: { nassir: -1 } }
+      answer: "Ilyas referme le catalogue. Le fonds retarde son versement d'un mois ; Josiane te le dit en baissant la voix."
   - id: en.mercato.echange_sec
     roles: [entraineur]
     arc: mercato
     tags: [mercato, agents, retorse]
     speaker: fardelli
     when: "season.phase == 'hiver'"
-    text: "Fardelli : un échange sec, votre gardien remplaçant contre leur défenseur ronchon. Personne ne sort d'argent, tout le monde ronchonne."
+    text: "Fardelli, au téléphone, un bruit de restaurant : « Ton deuxième gardien contre le stoppeur de Haute-Combe. Pas un sou ne bouge. Le stoppeur a mauvais caractère ; ton gardien, des amis chez moi. »"
     left:
       label: "Je fais l'échange"
       effects: { force: 4, vestiaire: "-", relation: { fardelli: 1 } }
-      answer: "Deux vestiaires soulagés, deux coachs méfiants."
+      answer: "Le stoppeur arrive en râlant et gagne ses duels. Ton ancien gardien serre la main de tout le monde, sauf la tienne."
     right:
       label: "Je garde mon gardien"
       effects: { force: -1, caisse: "-" }
+      answer: "Fardelli dit « dommage », très gentiment. Une semaine plus tard, ton gardien demande une augmentation."
   - id: en.mercato.solde_hiver
     roles: [entraineur]
     arc: mercato
@@ -166,14 +171,15 @@ cards:
     speaker: aulard
     cooldown: 18
     when: "gauges.caisse < 25 && (season.phase == 'hiver' || season.phase == 'presaison')"
-    text: "Vaubourg : la caisse crie famine. Un club riche veut deux de vos remplaçants tout de suite, c'est laid mais ça respire."
+    text: "Vaubourg, le relevé de la banque déplié : « La paie du 5 ne passe pas sans une vente. Terrenoire prend deux de tes remplaçants, tout de suite, à leur prix. Je n'ai pas d'autre fax sur la table. »"
     left:
       label: "Je solde pour respirer"
       effects: { caisse: "+++", force: -6, vestiaire: "-" }
-      answer: "La caisse remercie, le banc dégarni moins."
+      answer: "Les deux partent par le train du soir. La paie du 5 passe ; dimanche, le banc n'a que quatre noms."
     right:
       label: "Je ne brade personne"
       effects: { caisse: "-", direction: "--", relation: { aulard: -1 } }
+      answer: "La paie arrive le 9, sans explication. Vaubourg te croise dans l'escalier et regarde sa montre."
   - id: en.mercato.renfort_vestiaire
     roles: [entraineur]
     arc: mercato
@@ -181,44 +187,45 @@ cards:
     speaker: brehaut
     cooldown: 18
     when: "gauges.vestiaire < 25 && (season.phase == 'hiver' || season.phase == 'presaison')"
-    text: "Brehaut : le groupe est à cran, les gars pensent qu'on ne recrute que des figurants. Un vrai renfort et je te rends un vestiaire soudé."
+    text: "Bréhaut, seul dans le vestiaire, le brassard sur le genou : « Les gars se comptent, coach : onze titulaires, et sept qui ne se parlent plus. Un vrai cadre de plus, et je te les ramène. Sinon, rien. »"
     left:
-      label: "Je recrute un cadre fort"
+      label: "Je recrute un cadre"
       effects: { vestiaire: "+++", caisse: "--", force: 4, relation: { brehaut: 1 } }
-      answer: "Le vestiaire respire, le comptable moins."
+      answer: "Un ancien de Marsange arrive jeudi, trente et un ans, une voix qui porte. Le vendredi, on se reparle à table."
     right:
       label: "Je fais avec l'effectif"
       effects: { vestiaire: "--", relation: { brehaut: -1 } }
+      answer: "Il remet le brassard sans un mot. Le lendemain, deux joueurs se battent au toro ; il les sépare, lentement."
   - id: en.mercato.surenchere
     roles: [entraineur]
     arc: mercato
     tags: [mercato, agents, piege]
     speaker: fardelli
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Fardelli : un club vous double sur votre cible, il faut surenchérir maintenant ou disparaître. L'argent parle plus vite que vous, mon ami."
+    text: "Fardelli, à minuit, d'une cabine de la gare : « Capitale FC met un million de plus sur ton attaquant. Il t'aime bien, {toi}, mais il aime aussi les millions. Tu suis, ou je le laisse filer ? »"
     left:
-      label: "Je surenchéris, tant pis"
+      label: "Je suis, quoi qu'il coûte"
       effects: { caisse: "---", force: 7, tribunes: "+" }
-      answer: "La cible signe, votre banquier s'évanouit."
+      answer: "Il signe à une heure du matin. Le lendemain, Josiane relit le contrat deux fois avant de le classer."
     right:
       label: "Je reste raisonnable"
       effects: { force: -3, tribunes: "-", relation: { fardelli: -1 } }
-      answer: "Raisonnable, donc les mains vides."
+      answer: "Il signe à Capitale FC avant l'aube. Fardelli ne rappelle pas de la semaine ; d'habitude, il rappelle le lendemain."
   - id: en.mercato.pari_cassette
     roles: [entraineur]
     arc: mercato
     tags: [mercato, agents, chaine]
     speaker: fardelli
     when: "season.phase == 'presaison' || season.phase == 'hiver'"
-    text: "Fardelli : un buteur sur une cassette VHS granuleuse, quarante buts en troisième division. Faites-moi confiance les yeux fermés."
+    text: "Fardelli glisse une cassette vidéo sur ton bureau, l'étiquette écrite à la main : « Quarante buts en National, la saison dernière. L'image est mauvaise, le garçon ne l'est pas. Crois-moi, une fois. »"
     left:
       label: "Je parie sur la cassette"
       effects: { caisse: "--", set: [pari_9], schedule: [{ card: en.mercato.revele_9, in: [6, 12] }], relation: { fardelli: 1 } }
-      answer: "Fardelli disparaît avant qu'on rembobine."
+      answer: "Tu signes avant la fin de la cassette. Fardelli repart avant que tu rembobines."
     right:
       label: "Je veux le voir en vrai"
       effects: { force: -1, relation: { fardelli: -1 } }
-      answer: "Pas de cassette, pas de miracle."
+      answer: "Il reprend la cassette. Le garçon signe ailleurs sans que personne l'ait vu jouer, sauf Fardelli."
   - id: en.mercato.revele_9
     roles: [entraineur]
     arc: mercato
@@ -226,7 +233,7 @@ cards:
     speaker: fardelli
     sablier: true
     when: "flag('pari_9')"
-    text: "Fardelli : votre pari débarque enfin à l'aéroport. Surprise, il a le pied... on va vite savoir lequel."
+    text: "Fardelli, sur le quai de la gare routière, à côté d'un garçon et d'un sac de sport : « Le voilà, celui de la cassette. Douze heures de car. Il est plus petit qu'à l'image ; l'image était mauvaise. »"
     left:
       label: "Je le lance titulaire"
       effects: { rand: [{ p: 0.5, force: 10, tribunes: "++", clear: [pari_9] }, { force: -6, tribunes: "--", clear: [pari_9] }] }

@@ -14,7 +14,7 @@ cards:
     speaker: aulard
     tone: leger
     once: true
-    text: "Vaubourg : « Un promu, ça fait rêver, {toi}. Je vends le rêve, toi tu le fais tenir trente-quatre journées. J'ai pas le temps, j'ai un empire. Un budget ou un projet ? »"
+    text: "Vaubourg, la main sur le combiné d'un abonné qui attend : « Un promu, ça fait rêver, {toi}. Moi, je vends le rêve ; toi, tu le fais tenir jusqu'en mai. Un budget, ou un projet ? »"
     left:
       label: "Un budget, ou rien"
       effects: {caisse: "+", direction: "--", relation: {aulard: -1}, react: {card: en.re.josiane_cheque, chance: 0.7}, journal: {text: "{annee} : « Un budget, ou rien. » Le président a signé un chèque pour {nom}. Sans le dater.", poids: 2, tags: [direction, caisse]}}
@@ -32,15 +32,15 @@ cards:
     speaker: meneche
     tone: leger
     once: true
-    text: "Massenet : « Cinq mille contre un pour le titre, un contre cinq pour la descente, disent les bookmakers. Juste une question, hors micro. Vous avez parié ? »"
+    text: "Massenet pose la page des cotes sur la table : « Cinq mille contre un pour le titre, cinq contre un pour le maintien. Vous avez parié ? Dites-le-moi, et je vous dis qui a parié contre. »"
     left:
       label: "Sur le maintien, cent francs"
       effects: {tribunes: "++", parole: 1, set: [pari_promu], relation: {meneche: 1}}
-      answer: "Il note la somme. Il note toujours."
+      answer: "Il note la somme. En échange, il te souffle un nom du conseil d'administration : celui-là a misé sur la descente."
     right:
       label: "Je ne commente pas"
       effects: {var: {no_comment: "+1"}, relation: {meneche: -1}, direction: "+", journal: {text: "{annee} : cinq mille contre un pour le titre. {nom} n'a pas commenté la cote ; Massenet a noté le silence.", poids: 1, tags: [presse]}}
-      answer: "Il note le silence."
+      answer: "Il referme le carnet sur le nom. « Tant pis, coach. Je le vendrai à quelqu'un d'autre. »"
 
   # 3 · L'encaissement — le pari tient (classement de l'instant ≤ 13)
   - id: en.cote.encaissement_gagne
@@ -50,7 +50,7 @@ cards:
     speaker: meneche
     tone: leger
     once: true
-    text: "Massenet, votre ticket entre deux doigts : « Cent francs sur le maintien, et le maintien tient. Juste une question, hors micro. Vous encaissez, ou vous laissez courir ? »"
+    text: "Massenet, ton ticket entre deux doigts : « Cent francs sur le maintien, et le maintien tient. L'homme du conseil, lui, a doublé sur la descente. Vous encaissez, ou vous laissez courir ? »"
     left:
       label: "J'encaisse"
       effects: {caisse: "+", tribunes: "+", outcome: pari_tenu, relation: {meneche: 1}, journal: {text: "{annee} : {nom} a encaissé cinq cents francs : cent sur le maintien, à cinq contre un. Photo du ticket en Une.", poids: 2, tags: [presse, caisse]}}
@@ -68,11 +68,11 @@ cards:
     speaker: meneche
     tone: strategique
     once: true
-    text: "Massenet, sans ticket : « Cent francs sur le maintien, et le classement dit autre chose. Juste une question, hors micro. Vous doublez ? »"
+    text: "Massenet, sans ticket : « Cent francs sur le maintien, et le classement dit autre chose. L'homme du conseil qui a misé contre vous sourit depuis lundi. Vous doublez ? »"
     left:
       label: "Je double"
       effects: {tribunes: "+", caisse: "-", parole: -1, outcome: pari_perdu, journal: {text: "{annee} : le pari était mal parti ; {nom} a doublé. Massenet a noté la perte, il note surtout celles-là.", poids: 2, tags: [presse, caisse]}}
-      answer: "Il note. Il note toujours, surtout les pertes."
+      answer: "Il inscrit la nouvelle somme sous l'ancienne et souligne le total deux fois."
     right:
       label: "Je ne joue plus"
       effects: {direction: "+", tribunes: "-", outcome: pari_perdu, relation: {meneche: -1}, journal: {text: "{annee} : « Il ne joue plus », a titré Massenet. Vaubourg a découpé l'article.", poids: 2, tags: [presse, direction]}}
@@ -86,7 +86,7 @@ cards:
     speaker: meneche
     tone: leger
     once: true
-    text: "Massenet, calepin ouvert : « Le président dit « projet » depuis août. Juste une question, hors micro. Le projet, en un mot ? »"
+    text: "Massenet, calepin ouvert sur une page où « projet » est écrit onze fois : « Le président le dit depuis août, et je n'ai toujours pas la suite. Le projet, en un mot ? »"
     left:
       label: "Le maintien"
       effects: {parole: 1, direction: "-", outcome: jamais_parie, relation: {meneche: 1}, journal: {text: "{annee} : « Le projet, en un mot ? — Le maintien. » {nom} l'a dit, Massenet l'a écrit en gros.", poids: 2, tags: [presse, direction]}}
@@ -104,7 +104,7 @@ cards:
     speaker: josiane
     tone: leger
     once: true
-    text: "Madame Josiane, un bordereau à la main : « Les cotes de janvier, {toi} : cinq cents contre un pour le titre, maintenant. J'en ai vu passer, vous savez. On les affiche ? »"
+    text: "Madame Josiane tend un bordereau découpé dans le journal : « Les cotes de janvier, {toi}. Cinq cents contre un pour le titre ; en août, c'était cinq mille. On l'affiche au vestiaire ? »"
     left:
       label: "On affiche"
       effects: {vestiaire: "+", tribunes: "+", outcome: jamais_parie, journal: {text: "{annee} : cinq cents contre un en janvier. Les cotes affichées au vestiaire ; Bréhaut les a encadrées.", poids: 1, tags: [caisse, vestiaire]}}

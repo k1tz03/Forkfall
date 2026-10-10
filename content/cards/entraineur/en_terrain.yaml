@@ -5,27 +5,27 @@ cards:
     tags: [moment, vestiaire, rescue:vestiaire]
     speaker: vukic
     when: "gauges.vestiaire < 35"
-    text: "Vukić à la pause : « On est menés et ils ont les jambes coupées. Tu gueules ou tu les rassures ? »"
-    left: {label: "Je hurle un bon coup", effects: {vestiaire: "-", force: 3, tribunes: "+"}, answer: "Ça pique, mais le groupe se réveille."}
-    right: {label: "Je les rassure", effects: {vestiaire: "++", force: -1}}
+    text: "Vukić, à la pause, referme la porte du vestiaire sur le bruit du stade : « Menés d'un but. Ils ont les jambes coupées et la tête dans les serviettes. Tu as dix minutes. »"
+    left: {label: "Je hurle un bon coup", effects: {vestiaire: "-", force: 3, tribunes: "+"}, answer: "Une bouteille d'eau traverse le vestiaire. Ils ressortent en courant ; le virage a tout entendu à travers le mur."}
+    right: {label: "Je les rassure", effects: {vestiaire: "++", force: -1}, answer: "Tu parles bas, joueur par joueur. Ils ressortent calmes, peut-être trop ; Vukić regarde l'horloge du couloir."}
 
   - id: en.terrain.tactique_semaine
     roles: [entraineur]
     arc: moment
     tags: [moment, vestiaire]
     speaker: vukic
-    text: "Vukić, au tableau blanc : « Cette semaine, pressing haut ou bloc bas ? On n'a pas le temps des deux. »"
-    left: {label: "Je mise le pressing haut", effects: {force: 3, vestiaire: "-"}}
-    right: {label: "Je verrouille en bloc bas", effects: {force: 2, tribunes: "-"}}
+    text: "Vukić, une craie à la main devant le tableau noir : « Cette semaine, on presse haut comme les équipes du Nord, ou on garde le libéro et on attend ? On n'a pas le temps de travailler les deux. »"
+    left: {label: "Je mise le pressing haut", effects: {force: 3, vestiaire: "-"}, answer: "Trois jours à courir derrière des plots au terrain annexe. Mercredi, deux anciens vomissent derrière le but ; les jeunes en redemandent."}
+    right: {label: "Je verrouille en bloc bas", effects: {force: 2, tribunes: "-"}, answer: "Libéro, marquage à la culotte, passes en retrait. Dimanche, le virage siffle dès la vingtième minute."}
 
   - id: en.terrain.blessure_avant_match
     roles: [entraineur]
     arc: moment
     tags: [moment, vestiaire]
     speaker: sabatier
-    text: "Sabatier, la trousse à la main : « Bréhaut a le genou en compote. Il veut jouer le choc, moi je dis non. »"
-    left: {label: "Il joue, c'est le capitaine", effects: {force: 4, vestiaire: "+", relation: {sabatier: -1}, set: [pari_genou], schedule: [{card: en.terrain.genou_lache, in: [2, 5]}]}, answer: "Sabatier range sa trousse en soupirant."}
-    right: {label: "Je le mets au repos", effects: {force: -4, relation: {brehaut: -1, sabatier: 1}}}
+    text: "Sabatier, les lunettes remontées sur le front, palpe le genou de Bréhaut : « Le ligament a du jeu. Il veut jouer dimanche. Si je l'infiltre, il joue ; après, je ne réponds de rien. »"
+    left: {label: "Il joue, c'est le capitaine", effects: {force: 4, vestiaire: "+", relation: {sabatier: -1}, set: [pari_genou], schedule: [{card: en.terrain.genou_lache, in: [2, 5]}]}, answer: "Sabatier sort la seringue sans un mot. Bréhaut fixe le plafond pendant la piqûre."}
+    right: {label: "Je le mets au repos", effects: {force: -4, relation: {brehaut: -1, sabatier: 1}}, answer: "Bréhaut renfile son jean en silence. Dimanche, il regarde le match de la tribune, le brassard dans la poche."}
 
   - id: en.terrain.genou_lache
     roles: [entraineur]
@@ -34,9 +34,9 @@ cards:
     speaker: sabatier
     sablier: true
     when: "flag('pari_genou')"
-    text: "Sabatier, blanc comme un linge : « Le genou a lâché à l'échauffement. Je te l'avais dit, non ? »"
-    left: {label: "J'assume devant le groupe", effects: {vestiaire: "+", force: -3, relation: {sabatier: 1}, clear: [pari_genou]}}
-    right: {label: "Je dis: pas de chance", effects: {vestiaire: "--", relation: {sabatier: -1}, clear: [pari_genou]}}
+    text: "Sabatier, blanc, la porte de l'infirmerie dans le dos : « Le genou de Bréhaut a lâché à l'échauffement. Le ligament, cette fois. J'avais dit non ; c'est écrit dans mon carnet. »"
+    left: {label: "J'assume devant le groupe", effects: {vestiaire: "+", force: -3, relation: {sabatier: 1}, clear: [pari_genou]}, answer: "Tu dis « c'est moi » devant tout le vestiaire. Bréhaut, sur la civière, lève le pouce sans te regarder."}
+    right: {label: "Je parle de malchance", effects: {vestiaire: "--", relation: {sabatier: -1}, clear: [pari_genou]}, answer: "« Pas de chance », dis-tu. Sabatier referme son carnet ; au vestiaire, personne ne répond."}
 
   - id: en.terrain.lancer_mbako
     roles: [entraineur]
@@ -45,81 +45,81 @@ cards:
     speaker: mbako
     # Hors de l'arc B « Le prodige » seulement : jamais après le lancement ni la vente.
     when: "!flag('mbako_lance') && !flag('mbako_vendu') && arc('en.prodige') != 'active'"
-    text: "Mbako, dans le couloir : « Seize ans et j'attends toujours. Je veux jouer. Maintenant. Vous me lancez titulaire ou je moisis sur le banc ? »"
-    left: {label: "Je te lance d'entrée", effects: {force: 3, vestiaire: "-", tribunes: "+", relation: {mbako: 2}}, answer: "Les anciens font la gueule, les tribunes sourient."}
-    right: {label: "Tu entres en fin de match", effects: {force: 1, relation: {mbako: -1}}}
+    text: "Mbako attend devant ton bureau, son sac de sport à ses pieds : « Six matchs sur le banc. Un autre club a écrit à ma mère. J'ai pas ouvert la lettre. Je joue samedi ? »"
+    left: {label: "Je te lance d'entrée", effects: {force: 3, vestiaire: "-", tribunes: "+", relation: {mbako: 2}}, answer: "Titulaire samedi. Les anciens ne lui font pas une passe avant la pause ; à la 60e, le virage scande son nom."}
+    right: {label: "Tu entres en fin de match", effects: {force: 1, relation: {mbako: -1}}, answer: "Il entre à la 85e et touche deux ballons. Le soir, sa mère ouvre la lettre."}
 
   - id: en.terrain.vecchio_crise
     roles: [entraineur]
     arc: moment
     tags: [moment, vestiaire]
     speaker: vecchio
-    text: "Vecchio, mâchoire serrée : « Trois boulettes en deux matchs, je sais. Tu me laisses me refaire ou tu me sors ? »"
-    left: {label: "Tu restes dans les buts", effects: {force: -2, vestiaire: "+", relation: {vecchio: 2}}}
-    right: {label: "Le jeune prend ta place", effects: {force: 2, vestiaire: "--", relation: {vecchio: -2}}}
+    text: "Vecchio, seul au fond du car, au retour d'un 3-1 sous la pluie : « Trois buts de ma faute en deux matchs. Le dernier, je l'ai vu partir, et mes bras ne sont pas venus. Tu me sors, coach ? »"
+    left: {label: "Tu restes dans les buts", effects: {force: -2, vestiaire: "+", relation: {vecchio: 2}}, answer: "Il hoche la tête et regarde la route. Dimanche, il arrive à l'échauffement une heure avant tout le monde."}
+    right: {label: "Le jeune prend ta place", effects: {force: 2, vestiaire: "--", relation: {vecchio: -2}}, answer: "Il dit « bien, coach », et c'est tout. Au vestiaire, le jeune Lorrain n'ose pas toucher le casier d'à côté."}
 
   - id: en.terrain.superstition
     roles: [entraineur]
     arc: moment
     tags: [moment, absurde]
     speaker: brehaut
-    text: "Bréhaut, très sérieux : « On a gagné avec ces chaussettes trouées. Tu gardes la même compo, hein coach ? »"
-    left: {label: "On touche à rien qui gagne", effects: {vestiaire: "+", force: -1, tribunes: "+"}}
-    right: {label: "La science avant tout", effects: {force: 2, vestiaire: "-", relation: {brehaut: -1}}}
+    text: "Bréhaut, devant le tableau de la compo : « Cinq victoires avec le même onze, les mêmes places dans le car, les chaussettes de Gigi jamais lavées. Change un nom, et les gars le prendront mal. »"
+    left: {label: "Je ne touche à rien", effects: {vestiaire: "+", force: -1, tribunes: "+"}, answer: "Même onze, mêmes places dans le car. Le nouvel arrière, qui a tout donné à l'entraînement, regarde le match en tribune."}
+    right: {label: "Je change deux joueurs", effects: {force: 2, vestiaire: "-", relation: {brehaut: -1}}, answer: "Tu changes deux noms. Dans le car, Bréhaut s'assoit à une autre place, exprès, et le fait savoir."}
 
   - id: en.terrain.prepa_physique
     roles: [entraineur]
     arc: moment
     tags: [moment, risk:vestiaire]
     speaker: vukic
-    text: "Vukić relaie le prépa : « Il veut doubler les séances, ils sont tendres. Double dose ou on lève le pied ? »"
-    left: {label: "Double dose, ça forge", effects: {force: 4, vestiaire: "--"}}
-    right: {label: "On lève le pied", effects: {force: -2, vestiaire: "+"}}
+    text: "Vukić, chronomètre au cou, au bord du terrain annexe : « Le test des douze minutes : ils ont tous perdu trois cents mètres depuis août. Je double les séances ? Sinon, ils te lâchent en mars. »"
+    left: {label: "Double les séances", effects: {force: 4, vestiaire: "--"}, answer: "Deux séances par jour jusqu'à Noël. La kiné masse jusqu'à vingt heures, et Dembo arrive en retard deux fois, exprès."}
+    right: {label: "On lève le pied", effects: {force: -2, vestiaire: "+"}, answer: "Tu allèges. Ils sourient à l'entraînement ; Vukić note leurs temps dans le cahier, sans un commentaire."}
 
   - id: en.terrain.jour_de_jeune
     roles: [entraineur]
     arc: moment
     tags: [moment, vestiaire]
     speaker: mbako
-    text: "Mbako, timide : « Coach, je jeûne cette semaine. Je peux pas tricher, mais je veux pas vous lâcher. »"
-    left: {label: "Je t'adapte les horaires", effects: {vestiaire: "++", force: -1, relation: {mbako: 2}}}
-    right: {label: "Séance normale pour tous", effects: {force: 2, vestiaire: "--", relation: {mbako: -2}}}
+    text: "Mbako, sa gourde vide à la main, à la séance de seize heures : « Ce mois-ci, je jeûne jusqu'au coucher du soleil. Je ne bois pas, même là. Je cours quand même. Je voulais que vous le sachiez. »"
+    left: {label: "Je t'adapte les horaires", effects: {vestiaire: "++", force: -1, relation: {mbako: 2}}, answer: "La séance passe à dix-neuf heures pour tout le monde. Personne ne râle ; Vecchio apporte des dattes dans un sac en papier."}
+    right: {label: "Séance normale pour tous", effects: {force: 2, vestiaire: "--", relation: {mbako: -2}}, answer: "Il court sous le soleil sans boire. À la fin, il vomit derrière le but ; deux anciens rient, Sabatier non."}
 
   - id: en.terrain.arbitre_avant_match
     roles: [entraineur]
     arc: moment
     tags: [moment, arbitrage]
     speaker: vukic
-    text: "Vukić, tout bas : « L'arbitre de dimanche nous déteste depuis 2019. On chauffe la presse ou on la ferme ? »"
-    left: {label: "Je chauffe la presse", effects: {tribunes: "+", direction: "-", caisse: "-"}, answer: "L'instance n'apprécie pas la sortie."}
-    right: {label: "Je la ferme, on verra", effects: {vestiaire: "-", force: 1}}
+    text: "Vukić, la désignation des arbitres à la main : « Dimanche, c'est celui du penalty de mars. Gégé a déjà peint son nom sur une bâche. Tu parles aux journalistes avant, ou tu te tais ? »"
+    left: {label: "Je chauffe la presse", effects: {tribunes: "+", direction: "-", caisse: "-"}, answer: "Ta phrase fait la Une de L'Écho. Jeudi, une lettre de la Fédération arrive, avec une amende."}
+    right: {label: "Je me tais", effects: {vestiaire: "-", force: 1}, answer: "Tu ne dis rien. Dimanche, à la 80e, il siffle encore contre vous ; le vestiaire te regarde, toi, pas lui."}
 
   - id: en.terrain.qui_tire_penos
     roles: [entraineur]
     arc: moment
     tags: [moment, vestiaire]
     speaker: brehaut
-    text: "Bréhaut, ballon sous le bras : « Les penos, c'est moi depuis dix ans. Le petit veut tirer, tu tranches ? »"
-    left: {label: "Le capitaine garde les penos", effects: {force: 1, relation: {brehaut: 1, mbako: -1}}}
-    right: {label: "Le petit tire, il a le pied", effects: {force: 3, vestiaire: "-", relation: {mbako: 1, brehaut: -1}}}
+    text: "Bréhaut, un ballon sous le bras, au point de penalty du terrain annexe : « Les penaltys, c'est moi depuis que je suis au club. Le petit Mbako en a mis dix sur dix ce matin. Tu choisis, devant lui. »"
+    left: {label: "Le capitaine garde les penos", effects: {force: 1, relation: {brehaut: 1, mbako: -1}}, answer: "Bréhaut pose le ballon sur le point. Mbako ramasse les ballons derrière le but, sans lever la tête."}
+    right: {label: "Le petit tire, il a le pied", effects: {force: 3, vestiaire: "-", relation: {mbako: 1, brehaut: -1}}, answer: "Mbako prend le ballon sans remercier. Bréhaut lui montre où le gardien plonge, puis rentre seul au vestiaire."}
 
   - id: en.terrain.repos_vecchio
     roles: [entraineur]
     arc: moment
     tags: [moment, vestiaire]
     speaker: sabatier
-    text: "Sabatier, carnet en main : « Vecchio, 41 ans, trois matchs en huit jours. Tu le reposes ou tu le grilles ? »"
-    left: {label: "Repos, on protège le vieux", effects: {force: -2, vestiaire: "+", relation: {vecchio: 1}}}
-    right: {label: "Il enchaîne, il est costaud", effects: {force: 3, vestiaire: "-", relation: {vecchio: -1, sabatier: -1}}}
+    text: "Sabatier fait tourner l'épaule droite de Vecchio, allongé sur la table : « Trois matchs en huit jours. L'épaule ne monte plus au-dessus de la tête, et il dit que ça va. Il joue mercredi ? »"
+    left: {label: "Il se repose mercredi", effects: {force: -2, vestiaire: "+", relation: {vecchio: 1}}, answer: "Lorrain joue mercredi. Vecchio regarde du banc, l'épaule dans la glace, et ne quitte pas le jeune des yeux."}
+    right: {label: "Il enchaîne, il est costaud", effects: {force: 3, vestiaire: "-", relation: {vecchio: -1, sabatier: -1}}, answer: "Il joue. À la 60e, il plonge du mauvais côté exprès, pour ne pas tomber sur l'épaule. Sabatier l'a vu."}
 
   - id: en.terrain.avant_derby
     roles: [entraineur]
     arc: moment
     tags: [moment, ultras]
     speaker: brehaut
-    text: "Bréhaut, poing sur le casier : « C'est le derby. On promet la victoire aux ultras ou on reste humble ? »"
-    left: {label: "Je promets aux ultras", effects: {tribunes: "++", parole: 2, force: 1, promise: true}, answer: "Les banderoles se préparent déjà."}
-    right: {label: "On reste concentrés, motus", effects: {vestiaire: "+", force: 2}}
+    text: "Bréhaut, le poing posé sur ton casier, la veille du derby contre {rival} : « Gégé veut que quelqu'un du staff monte au local ce soir pour promettre la victoire. Les gars disent que ça porte malheur. »"
+    left: {label: "Je promets aux ultras", effects: {tribunes: "++", parole: 2, force: 1, promise: true}, answer: "Tu montes au local et tu promets. Ils écrivent la date et le score à la craie, au-dessus du bar."}
+    right: {label: "Je ne promets rien", effects: {vestiaire: "+", force: 2}, answer: "Personne ne monte au local. Le lendemain, la bâche du virage dit « ILS ONT PEUR » ; les joueurs la lisent en entrant."}
 
   - id: en.terrain.entrainement_ouvert
     roles: [entraineur]
@@ -127,6 +127,6 @@ cards:
     tags: [moment, tribunes, rescue:tribunes]
     speaker: brehaut
     when: "gauges.tribunes < 35"
-    text: "Bréhaut propose : « Les gens nous sifflent. On ouvre l'entraînement aux gamins ou on se planque ? »"
-    left: {label: "Portes ouvertes au public", effects: {tribunes: "++", force: -1, vestiaire: "+"}, answer: "Cent gosses débarquent avec des ballons."}
-    right: {label: "Huis clos, on bosse", effects: {force: 2, tribunes: "-"}}
+    text: "Bréhaut, au retour du marché du dimanche : « La boulangère m'a servi sans un mot, et on m'a sifflé jusqu'au parking. On ouvre le terrain annexe aux gamins du quartier, mercredi ? »"
+    left: {label: "Portes ouvertes au public", effects: {tribunes: "++", force: -1, vestiaire: "+"}, answer: "Mercredi, cent gamins derrière la main courante, des ballons sous le bras. Bréhaut signe des plâtres et des cahiers."}
+    right: {label: "Huis clos, on bosse", effects: {force: 2, tribunes: "-"}, answer: "Les grilles du terrain annexe restent fermées. Derrière, trois gamins regardent quand même, les doigts dans le grillage."}

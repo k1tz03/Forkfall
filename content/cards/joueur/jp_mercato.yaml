@@ -6,13 +6,15 @@ cards:
     speaker: fardelli
     once: true
     when: "gauges.tribunes > 60 && season >= 1"
-    text: "Rocco Fardelli : « Un émir met sur la table le prix d'un pont. Le club encaisse une fortune, toi tu déménages loin de tout. »"
+    text: "Fardelli pose un fax sur la table du Terminus, chiffre contre le bois : « Un club d'Al-Dorado. Ce montant-là, ton président ne l'a jamais vu. Le désert, et plus personne pour te siffler. »"
     left:
-      label: "Je signe pour le pont"
+      label: "Je signe pour le désert"
       effects: {caisse: "+++", tribunes: "--", relation: {fardelli: 1}}
+      answer: "Tu paraphes l'accord sur le fax même. Le soir, Radio Tribune annonce le chiffre ; la Nord ne chante plus ton nom."
     right:
       label: "Je reste au pays"
       effects: {tribunes: "++", direction: "-", caisse: "-"}
+      answer: "Fardelli replie le fax sans le montrer à personne. Ton président, qui comptait sur la vente, oublie de te saluer pendant un mois."
 
   - id: jp.mercato.arret_bosquet
     roles: [joueur]
@@ -20,26 +22,30 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     when: "age >= 27"
-    text: "Fardelli brandit un texte de loi : « L'arrêt Bosquet, petit : fin de contrat, tu pars libre et gratuit. Le club ne touche pas un centime. »"
+    text: "Fardelli déplie ton contrat sur le capot, la dernière page dessus : « Juin, et plus rien ne te tient. Tu pars libre, le club ne touche rien. Personne ne t'attend encore ailleurs. On tente ? »"
     left:
       label: "Je pars libre"
       effects: {caisse: "--", direction: "--", tribunes: "-"}
+      answer: "Le président l'apprend par Fardelli lui-même, au téléphone. L'été commence sans club, et juillet sans salaire."
     right:
       label: "Je prolonge"
       effects: {direction: "++", caisse: "+", tribunes: "+"}
+      answer: "Tu signes dans le bureau du président, qui te sert un whisky à onze heures du matin. Fardelli touche sa part quand même."
 
   - id: jp.mercato.frere_agent
     roles: [joueur]
     arc: mercato
     tags: [mercato, agents, famille]
     when: "season >= 1"
-    text: "Mon petit frère, casquette à l'envers : « Laisse tomber Fardelli, je te négocie le transfert. La commission reste en famille, non ? »"
+    text: "Au repas du dimanche, ton petit frère te tend une carte de visite toute neuve, « agent de joueurs » : « Pourquoi laisser une part à Fardelli ? Avec moi, la commission reste dans la famille. »"
     left:
-      label: "Je signe avec frérot"
+      label: "Je signe avec mon frère"
       effects: {caisse: "--", direction: "-", relation: {fardelli: -2}}
+      answer: "Il négocie ton contrat depuis la cabine du square, avec des pièces. Le club le reçoit une fois ; il ne le rappelle pas."
     right:
       label: "Je garde Fardelli"
       effects: {tribunes: "+", relation: {fardelli: 1}}
+      answer: "Ton frère range ses cartes et finit son assiette en silence. Fardelli l'apprend et te fait livrer une caisse de vin, sans carte."
 
   - id: jp.mercato.clause
     roles: [joueur]
@@ -47,13 +53,15 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     when: "gauges.tribunes > 55 && !flag('parti_chez_rival') && !flag('mercenaire')"
-    text: "Fardelli, tout sourire : « Un rival a payé ta clause au centime près, {toi}. Le club fulmine et ne peut absolument rien faire. »"
+    text: "Fardelli entre au secrétariat sans frapper et pose un chèque de banque sur le bureau de Josiane : « Ta clause, au centime, {toi}. Ton président peut crier, il ne peut rien. Je leur dis oui ? »"
     left:
       label: "Je fais mes valises"
       effects: {caisse: "++", tribunes: "--", direction: "-"}
+      answer: "Josiane photocopie le chèque avant de le rendre. Le soir, Radio Tribune annonce ton départ ; au local, on décroche ta photo."
     right:
-      label: "Je décline poliment"
+      label: "Je dis non, je reste"
       effects: {tribunes: "+", direction: "+", relation: {fardelli: -1}}
+      answer: "Fardelli reprend le chèque et le plie dans son portefeuille, sans hâte. Le président te serre la main dans le couloir ; il serre fort."
 
   - id: jp.mercato.exil_dore
     roles: [joueur]
@@ -61,13 +69,15 @@ cards:
     tags: [mercato, sponsors]
     speaker: nassir
     when: "season >= 1 && !flag('exil_dore')"
-    text: "Cheikh Ilyas : « Chez nous, le championnat brille comme l'or et paie comme l'or, {toi}. Le niveau sportif restera entre nous. »"
+    text: "En loge, Ilyas ouvre un catalogue à la page d'un stade climatisé, posé dans le sable : « Al-Dorado FC vous veut deux saisons, {toi}. Le niveau est faible ; le salaire, non. Je réponds oui ? »"
     left:
       label: "Je pars pour l'or"
       effects: {caisse: "+++", tribunes: "--", force: -1}
+      answer: "Ilyas inscrit la date dans un carnet relié de cuir. La rumeur arrive au local avant toi ; on y parle déjà de toi à l'imparfait."
     right:
-      label: "Je garde l'ambition"
+      label: "Je refuse l'or"
       effects: {tribunes: "+", direction: "+"}
+      answer: "Il referme le catalogue sans insister. En partant, il laisse sa carte sur la table, retournée, un numéro écrit au dos."
 
   # « Toi t'es d'ici » : la carte ne vaut qu'au club d'origine. Après une vente
   # qui a changé de club, Gégé n'est plus dans ce virage-là — c'est la variante
@@ -78,13 +88,15 @@ cards:
     tags: [mercato, ultras]
     speaker: gege
     when: "stats.clubs <= 1 && !role_was('joueur')"
-    text: "Gégé, écharpe au poing : « Les autres partent pour des valises de billets. Toi t'es d'ici, alors embrasse le blason. »"
+    text: "Au local, Gégé déplie sous le bar la vieille bâche de son père : LE PRÉSIDENT VEND, LE VIRAGE RESTE. « Il paraît qu'on t'a fait une offre. Toi, tu es d'ici. Tu restes, ou tu fais comme les autres ? »"
     left:
       label: "J'embrasse le blason"
       effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}}
+      answer: "Dimanche, tu embrasses l'écusson devant la Nord. Gégé replie la bâche de son père ; il dit qu'elle a encore servi."
     right:
       label: "Je prends les billets"
       effects: {caisse: "+", tribunes: "--"}
+      answer: "Gégé remet la bâche sous le bar, pliée en huit. Dimanche, ton nom est sifflé à l'appel des joueurs."
 
   - id: jp.mercato.rester_loyal_ailleurs
     roles: [joueur]
@@ -109,13 +121,15 @@ cards:
     arc: mercato
     tags: [mercato, agents]
     speaker: fardelli
-    text: "Fardelli, l'air gêné : « J'ai fait visiter ton dossier à trois clubs sans te prévenir, {toi}. C'était pour ton bien, fais-moi confiance. »"
+    text: "Josiane a posé trois fax sur ton casier : trois clubs qui ont « bien reçu le dossier ». Fardelli, au téléphone, ne nie pas : « Je l'ai montré sans te le dire, {toi}. Pour savoir ce que tu vaux. »"
     left:
-      label: "Je te recadre"
+      label: "Plus jamais sans moi"
       effects: {relation: {fardelli: -2}, direction: "+", tribunes: "+"}
+      answer: "Fardelli dit « bien sûr » trois fois de suite. Le président apprend que tu as tapé du poing ; il y voit de la loyauté."
     right:
       label: "Je te laisse faire"
       effects: {caisse: "+", relation: {fardelli: 1}, tribunes: "-"}
+      answer: "Fardelli raccroche, content. Une semaine plus tard, ton nom traîne dans les rubriques transferts ; à la Nord, on te demande si c'est vrai."
 
   - id: jp.mercato.loft
     roles: [joueur]
@@ -123,14 +137,15 @@ cards:
     tags: [mercato, retorse]
     speaker: aulard
     when: "gauges.direction < 55 && !flag('loft_tenu') && !flag('parti_janvier')"
-    text: "Le président Vaubourg, glacial : « Tu refuses de partir, {toi} ? Alors tu t'entraîneras seul avec les U17, loin des caméras. »"
+    text: "Vaubourg t'attend au bord du terrain annexe où trottinent les U17, le manteau sur les épaules : « Tu ne veux pas partir, {toi} ? Alors tu t'entraînes ici, avec eux, jusqu'à ce que tu changes d'avis. »"
     left:
-      label: "Je craque, je pars"
+      label: "Je signe mon départ"
       effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}}
-      answer: "Il te tend un stylo qui fuit, déjà."
+      answer: "Tu signes dans sa voiture, sur l'accoudoir. Il garde le stylo et range le contrat dans une chemise marquée « ventes »."
     right:
-      label: "Je tiens le loft"
+      label: "Je reste avec les gamins"
       effects: {vestiaire: "-", tribunes: "+", direction: "--", relation: {aulard: -1}}
+      answer: "Tu cours avec des gamins de seize ans. Le groupe ne te voit plus ; la Nord, elle, vient chanter ton nom derrière le grillage."
 
   - id: jp.mercato.offshore_montage
     when: "!flag('offshore') && !flag('image_propre')"
@@ -139,14 +154,15 @@ cards:
     tags: [mercato, agents, scandale]
     speaker: fardelli
     once: true
-    text: "Fardelli baisse la voix : « Ta prime, on la loge dans une société aux îles lointaines. Zéro impôt, fais-moi confiance. »"
+    text: "Fardelli baisse la vitre, un dossier sur les genoux : « Ta prime de signature, on la fait passer par une société aux îles. Ici on n'en voit rien, là-bas personne ne demande. Tu signes ? »"
     left:
       label: "Monte la société"
       effects: {caisse: "++", relation: {fardelli: 1}, set: [offshore], schedule: [{card: jp.mercato.fisc_lointain, in: [4, 8]}]}
-      answer: "Un dossier de vingt pages atterrit dans un tiroir."
+      answer: "Tu signes la procuration sur le volant. Fardelli la range dans la boîte à gants, sous les cartes routières."
     right:
       label: "Je paie mes impôts"
       effects: {caisse: "-", tribunes: "+"}
+      answer: "Fardelli remonte la vitre. Ta prime arrive entière, moins la part de l'État ; il te le fait remarquer au centime près."
 
   - id: jp.mercato.fisc_lointain
     roles: [joueur]
@@ -155,26 +171,30 @@ cards:
     speaker: meneche
     sablier: true
     when: "flag('offshore') && !flag('regularise')"
-    text: "Massenet, dossier en main : « Les îles lointaines ont fuité : ton nom, ta prime, ta société. Le fisc va adorer, pas toi. »"
+    text: "Massenet t'attend au parking, la photocopie des statuts de ta société des îles sous pochette : « Le fisc a la même depuis hier. Moi, je peux attendre une semaine avant d'écrire. Vous régularisez ? »"
     left:
       label: "Je régularise"
       effects: {caisse: "--", direction: "-", clear: [offshore]}
+      answer: "Tu passes deux matinées chez le percepteur avec Maître Vidal. Massenet tient sa semaine ; son papier se contente d'écrire : en règle."
     right:
       label: "Je nie tout"
       effects: {tribunes: "--", direction: "--", relation: {meneche: -1}}
+      answer: "Massenet range la pochette. Jeudi, la photocopie est en page trois, ton nom en gras ; le fisc écrit lundi."
 
   - id: jp.mercato.prime_signature
     roles: [joueur]
     arc: mercato
     tags: [mercato, famille]
     speaker: fardelli
-    text: "Fardelli claque des doigts : « Le rival triple ta prime à la signature. Camille a déjà repéré la maison sur la colline. »"
+    text: "Fardelli étale une offre de {rival} sur la table de ta cuisine : « Ils triplent ta prime de signature. » Derrière lui, Camille tient déjà les clés d'une maison à visiter, sur la colline."
     left:
       label: "On déménage"
       effects: {caisse: "++", tribunes: "-", relation: {camille: 1}}
+      answer: "Fardelli faxe ton accord de principe le soir même. La nouvelle fait le tour du Corner avant que le fax ait fini de sortir."
     right:
       label: "On reste ici"
       effects: {tribunes: "+", direction: "+", relation: {camille: -1}}
+      answer: "Camille repose les clés sur la table, doucement. Le lendemain, le président te serre la main deux fois."
 
   - id: jp.mercato.rescue_caisse
     roles: [joueur]
@@ -182,14 +202,15 @@ cards:
     tags: [mercato, rescue:caisse]
     speaker: fardelli
     when: "gauges.caisse < 25"
-    text: "Fardelli, providentiel : « Le club est à sec et un acheteur pose une malle de billets pour toi. Tu sauves la baraque en partant. »"
+    text: "Fardelli t'attend devant la banque, ton chèque de loyer refusé entre deux doigts : « Un ami à Villebranle te paierait ce que tu vaux, avec une avance tout de suite. Tu pars cet hiver, tu respires. »"
     left:
-      label: "Je me sacrifie"
+      label: "Dis oui à Villebranle"
       effects: {caisse: "+++", tribunes: "-"}
-      answer: "Le comptable du club pleure de joie dans son classeur."
+      answer: "L'avance tombe sur ton compte le lendemain. Au local, on t'appelle déjà « le Villebranlais », et ce n'est pas tendre."
     right:
       label: "Je refuse de fuir"
       effects: {tribunes: "++", caisse: "--"}
+      answer: "Fardelli te rend le chèque et s'en va. Tu finis le mois à crédit chez l'épicier ; au virage, l'histoire circule, et on t'applaudit."
 
   - id: jp.mercato.rescue_tribunes
     roles: [joueur]
@@ -197,13 +218,15 @@ cards:
     tags: [mercato, rescue:tribunes]
     speaker: lea
     when: "gauges.tribunes < 25"
-    text: "Léa, plan com en main : « Les tribunes te détestent, {toi}. On annonce que tu retires ta demande de transfert et que tu restes. »"
+    text: "Léa a tapé le communiqué à la machine ; il ne manque que ta signature : « Vous retirez votre demande de transfert, {toi}. La Nord vous siffle depuis trois matchs. Ce papier l'arrête. Je l'envoie ? »"
     left:
       label: "Je retire ma demande"
       effects: {tribunes: "+++", caisse: "-", direction: "-"}
+      answer: "Le fax part à midi. Dimanche, la Nord t'applaudit à l'échauffement ; le président, lui, rappelle son acheteur pour annuler."
     right:
       label: "J'assume mon départ"
       effects: {tribunes: "-", caisse: "+"}
+      answer: "Léa déchire le communiqué en deux, proprement. Dimanche, on siffle ton nom à l'appel ; lundi, Fardelli a deux offres de plus."
 
   - id: jp.mercato.rescue_direction
     roles: [joueur]
@@ -211,13 +234,15 @@ cards:
     tags: [mercato, rescue:direction]
     speaker: aulard
     when: "gauges.direction < 25"
-    text: "Le président Vaubourg, contrat tendu : « Signe la prolongation aujourd'hui. Je dois prouver aux actionnaires que tu restes. »"
+    text: "Vaubourg pose ta prolongation ouverte à la dernière page, le stylo en travers : « Le banquier vient à seize heures. Il veut voir que mon club garde ses joueurs. Tu signes avant qu'il arrive ? »"
     left:
       label: "Je prolonge"
       effects: {direction: "+++", tribunes: "-", caisse: "-"}
+      answer: "Tu signes sans relire la page des salaires. À seize heures, le banquier repart rassuré ; dimanche, le président t'invite en loge."
     right:
       label: "Je reste libre"
       effects: {direction: "--", caisse: "+"}
+      answer: "Tu reposes le stylo. Le banquier repart sans signature ; Vaubourg te croise dans le couloir et regarde à travers toi."
 
   - id: jp.mercato.piege_indecis
     roles: [joueur]
@@ -225,13 +250,15 @@ cards:
     tags: [mercato, piege]
     speaker: fardelli
     when: "season >= 2"
-    text: "Fardelli, agacé : « Trois mercatos que tu réfléchis à voix haute. À force de ne jamais trancher, plus personne ne t'appelle. »"
+    text: "Fardelli feuillette son carnet devant toi : « Il y a deux ans, trois clubs. L'an dernier, un. Cette année, personne n'a appelé. Tu décides aujourd'hui, ou on attend que ça tombe à zéro ? »"
     left:
       label: "Je tranche : je pars"
       effects: {caisse: "+", tribunes: "-", relation: {fardelli: 1}}
+      answer: "Fardelli décroche le téléphone devant toi et compose un numéro de mémoire. Le virage apprend la nouvelle par Radio Tribune."
     right:
       label: "Je réfléchis encore"
       effects: {tribunes: "--", caisse: "-", direction: "-"}
+      answer: "Fardelli referme le carnet. L'été passe sans un appel ; le club le sait, et ta prochaine fiche de paie aussi."
 
   - id: jp.mercato.enchere
     roles: [joueur]
@@ -239,10 +266,12 @@ cards:
     tags: [mercato, agents]
     speaker: fardelli
     when: "gauges.tribunes > 50"
-    text: "Fardelli étale deux offres : « À gauche un grand club et zéro prime, à droite un club moyen et une fortune. Fais-moi confiance. »"
+    text: "Fardelli pose deux enveloppes sur la nappe du restaurant du port. Dans l'une, Capitale FC et un salaire ordinaire ; dans l'autre, un club de milieu de tableau et une fortune. « J'en ouvre une. »"
     left:
-      label: "Je vise le prestige"
+      label: "Je prends le grand club"
       effects: {tribunes: "++", caisse: "-", force: 1}
+      answer: "Fardelli déchire l'autre enveloppe sans la montrer. Ton nom paraît à côté de celui de Capitale FC ; au Corner, on te regarde autrement."
     right:
       label: "Je prends la fortune"
       effects: {caisse: "+++", tribunes: "-", force: -1}
+      answer: "Fardelli glisse l'enveloppe ouverte dans sa veste, côté cœur. Au local, Gégé raconte l'histoire en comptant sur ses doigts."

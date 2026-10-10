@@ -11,7 +11,7 @@ cards:
     tags: [direction]
     speaker: aulard
     tone: strategique
-    text: "« Quatre millions, m'a dit ton agent. Ou trois. J'ai pas le temps, j'ai une usine : tu marques dimanche ? »"
+    text: "Vaubourg te croise dans le couloir et ne s'arrête pas : « Quatre millions, m'a dit ton agent. Ou trois. Ça dépend de dimanche. Tu marques ? »"
     left:
       label: "Je marque"
       effects: {direction: "+", force: -1}
@@ -28,7 +28,7 @@ cards:
     tags: [agents]
     speaker: fardelli
     tone: strategique
-    text: "« J'ai regardé ma montre pendant le tour d'honneur, on me l'a reproché. On parle d'argent ou d'amitié : lundi, huit heures, la visite. Tu seras là ? »"
+    text: "Fardelli remet sa montre au poignet, sous la gourmette : « On m'a vu la regarder pendant le tour d'honneur ; tant pis. La visite médicale, c'est lundi, huit heures. Tu y seras ? »"
     left:
       label: "Je serai là"
       effects: {direction: "+", caisse: "+"}
@@ -45,13 +45,13 @@ cards:
     tags: [presse]
     speaker: lea
     tone: strategique
-    text: "« Vous confirmez ? « Un chèque et un aller simple », c'est la manchette de demain ; ils ont le chiffre avant moi. Un mot pour la tribune, ou pas de mot ? »"
+    text: "Léa, le combiné contre l'épaule : « La Gazette a votre chiffre pour demain, avant moi. Il me reste une ligne pour la Nord, en bas de page. Vous me la dictez, ou elle reste blanche ? »"
     left:
       label: "Un mot : merci"
       effects: {tribunes: "+", parole: 1}
       answer: "Elle l'ajoute en dernière ligne. C'est petit ; c'est là."
     right:
-      label: "Pas de mot"
+      label: "Laissez-la blanche"
       effects: {tribunes: "-"}
       answer: "La Une part sans. Gégé la découpe sans."
 
@@ -62,13 +62,13 @@ cards:
     tags: [presse, tribunes]
     speaker: lea
     tone: strategique
-    text: "« Vous confirmez ? Vous venez de parler au micro du stade, devant vingt mètres de bâche. Je le mets dans le communiqué, ou je laisse la bâche parler ? »"
+    text: "Léa a déjà la photo de la bâche sur son bureau : « Vingt mètres, une phrase dessous, et maintenant la vôtre. Je l'imprime mot pour mot demain, ou je laisse la photo parler seule ? »"
     left:
-      label: "Mettez-le"
+      label: "Imprimez-la"
       effects: {tribunes: "+", parole: 1}
-      answer: "C'est écrit. Deux fois, donc."
+      answer: "C'est imprimé sous la photo. Deux fois, donc : sur la bâche, et dans le journal."
     right:
-      label: "Laissez la bâche parler"
+      label: "Laissez parler la photo"
       effects: {direction: "+"}
       answer: "Elle n'écrit rien. La Gazette Rose, si ; avec la date."
 
@@ -79,7 +79,7 @@ cards:
     tags: [vestiaire]
     speaker: vecchio
     tone: leger
-    text: "« Tu as porté les bouteilles tout l'hiver et tu lui as laissé le ballon ; j'en ai vu d'autres faire l'inverse, et finir seuls. Tu recommences la saison prochaine ? »"
+    text: "Vecchio porte une caisse de bouteilles : « Tout l'hiver tu les as portées, et ce soir tu lui as laissé le ballon. Ceux qui le gardent finissent seuls à table. Tu recommences l'an prochain ? »"
     left:
       label: "Je recommence"
       effects: {vestiaire: "+"}
@@ -87,7 +87,7 @@ cards:
     right:
       label: "Au tour d'un autre"
       effects: {tribunes: "+", vestiaire: "-"}
-      answer: "Il porte la caisse seul. Il ne dit rien ; il en a vu d'autres."
+      answer: "Il porte la caisse seul. Il ne dit rien ; il le racontera plus tard, à un autre petit."
 
   # ------------------------------------------------ après le brassard (brassard)
   - id: jp.re.vukic_capitaine
@@ -96,11 +96,11 @@ cards:
     tags: [direction, vestiaire]
     speaker: vukic
     tone: strategique
-    text: "« Je t'ai vu le prendre, et je te le dis parce que personne ne te le dira : un brassard, ça se porte le lundi aussi. Tu passes au bureau lundi ? »"
+    text: "Vukić, le cahier sous le bras, à la sortie du vestiaire : « Je t'ai vu le mettre. Un brassard, ça se porte aussi le lundi, au bureau, quand on parle des primes. Tu passes lundi ? »"
     left:
       label: "Je passe lundi"
       effects: {direction: "+", relation: {vukic: 1}, set: [capitaine_lundi]}
-      answer: "Tu passes. Il note ce que tu dis. Il l'utilise ; pas contre toi."
+      answer: "Tu passes ; il note ce que tu dis. Il s'en sert, mais pas contre toi."
     right:
       label: "Le dimanche suffit"
       effects: {vestiaire: "+", direction: "-"}
@@ -113,15 +113,15 @@ cards:
     tags: [vestiaire, presse]
     speaker: brehaut
     tone: strategique
-    text: "« Le groupe a découpé l'article ; il est dans ton casier, la phrase en jaune. Le groupe vit bien quand tout le monde a lu. Tu as lu ? »"
+    text: "Bréhaut tient une paire de ciseaux qui n'est pas à lui : « L'article est dans ton casier, ta phrase passée au surligneur jaune. Tout le monde l'a lue avant l'entraînement. Toi, tu l'as lue ? »"
     left:
-      label: "J'ai lu"
+      label: "Je l'ai lue"
       effects: {vestiaire: "-"}
       answer: "Tu as lu. Ils t'ont regardé lire."
     right:
       label: "Pas encore"
       effects: {vestiaire: "-", tribunes: "+"}
-      answer: "Tu lis plus tard. Seul. C'est pire ; c'est mieux."
+      answer: "Tu la lis plus tard, seul. C'est pire, et c'est mieux."
 
   # ------------------------------------------------- après la société aux îles
   - id: jp.re.camille_montre
@@ -133,15 +133,15 @@ cards:
     # Après la valise (co.camille.valise pose `divorce`), Camille ne demande
     # plus l'heure : même garde que co.re.camille_journal.
     when: "!flag('divorce')"
-    text: "« Ton cousin est passé, avec une montre neuve et un dossier bleu. Tu rentres à quelle heure, pour qu'on regarde le dossier bleu ensemble ? »"
+    text: "Camille pose un dossier bleu entre les assiettes : « Un homme l'a déposé à midi, avec une montre que je ne pourrais pas m'offrir. On le lit ensemble ce soir, ou après ton entraînement ? »"
     left:
-      label: "Tôt, ce soir"
+      label: "Ce soir, ensemble"
       effects: {relation: {camille: 1}, vestiaire: "-"}
-      answer: "Tu rentres tôt. Vous lisez la page trois ; elle est en anglais ; vous ne la comprenez ni l'un ni l'autre."
+      answer: "Vous lisez la page trois. Elle est écrite dans une langue que ni l'un ni l'autre ne lit."
     right:
       label: "Après l'entraînement"
       effects: {relation: {camille: -1}}
-      answer: "Elle regarde seule. Elle photocopie la page trois, à tout hasard."
+      answer: "Elle n'attend pas. Elle le lit seule, et photocopie la page trois, à tout hasard."
 
   # ----------------------------------- après le mercato d'hiver de la pépite
   # Défaut de relecture « récurrence du casting en S0 » : Camille, la cinquième
@@ -157,7 +157,7 @@ cards:
     speaker: camille
     tone: strategique
     when: "!flag('divorce')"
-    text: "« On m'a dit « janvier » à la boulangerie avant que tu me le dises, {toi}. Tu rentres à quelle heure — on fait les cartons ce week-end, ou on attend juin ? »"
+    text: "Camille rapporte des cartons de la boulangerie, pliés sous le bras : « On m'a dit « janvier » au comptoir avant que tu me le dises, {toi}. On les remplit ce week-end, ou on attend juin ? »"
     left:
       label: "Les cartons ce week-end"
       effects: {relation: {camille: 1}, vestiaire: "-"}
@@ -174,15 +174,15 @@ cards:
     speaker: camille
     tone: leger
     when: "!flag('divorce')"
-    text: "« Donc on reste, et je le dis à l'école lundi, parce qu'ils demandent en janvier, eux. Tu rentres à quelle heure — je dis « on reste », ou je dis « on verra » ? »"
+    text: "Camille a la lettre du propriétaire sur les genoux : « Donc on reste jusqu'en juin. Lui veut savoir dès maintenant si on garde l'appartement. J'écris « on reste », ou j'écris « on verra » ? »"
     left:
-      label: "Dis-leur qu'on reste"
+      label: "Écris qu'on reste"
       effects: {relation: {camille: 1}, tribunes: "+"}
-      answer: "Elle le dit lundi. L'école le note au crayon ; à l'école aussi, on connaît les fax de juin."
+      answer: "Elle répond le soir même. Le propriétaire renouvelle au crayon ; lui aussi connaît les fax de juin."
     right:
-      label: "Dis-leur qu'on verra"
+      label: "Écris « on verra »"
       effects: {relation: {camille: -1}, caisse: "+"}
-      answer: "Elle dit « on verra ». Elle le dit bien ; elle a l'habitude de le dire bien."
+      answer: "Elle écrit « on verra ». Le propriétaire fait visiter l'appartement à un couple, un samedi, au cas où."
 
   # --------------------------------------------------- après le double mandat
   - id: jp.re.fardelli_amitie
@@ -191,15 +191,15 @@ cards:
     tags: [agents]
     speaker: fardelli
     tone: strategique
-    text: "« On parlait d'amitié, alors. Deux factures, tu dis ; moi je dis deux services. Tu me laisses finir l'année, ou je rends les clés ce soir ? »"
+    text: "Fardelli rappelle une heure après, la voix trop douce : « J'ai bien entendu. Ton dossier est sur mon siège passager, notre accord court jusqu'en juin. Je le garde, ou je te le rends ce soir ? »"
     left:
-      label: "Finis l'année"
+      label: "Garde-le jusqu'en juin"
       effects: {caisse: "-", relation: {fardelli: 1}}
-      answer: "Il finit l'année. Il facture l'année. C'est une amitié qui se solde en juin."
+      answer: "Il le garde. Il facture la garde chaque mois, avec un petit mot gentil au dos de la facture."
     right:
-      label: "Rends-les ce soir"
+      label: "Rends-le ce soir"
       effects: {direction: "+", relation: {fardelli: -1}}
-      answer: "Il pose le trousseau sur le capot. Il garde une clé ; il dit que c'est celle de son bureau."
+      answer: "Il le dépose dans ta boîte aux lettres à minuit. La page trois manque ; il dit qu'elle n'a jamais existé."
 
   # ------------------------------------------------- après le faux certificat
   - id: jp.re.sabatier_certificat
@@ -208,7 +208,7 @@ cards:
     tags: [scandale]
     speaker: sabatier
     tone: strategique
-    text: "« Un certificat pour une blessure que tu n'as pas ; ça reste entre la table et moi, mais la table commence à être encombrée. C'est la dernière fois ? »"
+    text: "Sabatier signe sans lire, puis il lit : « Une entorse que tu n'as pas, pour trois recruteurs venus quand même. Mon tiroir commence à être plein. C'est la dernière fois ? »"
     left:
       label: "La dernière"
       effects: {relation: {sabatier: 1}}
@@ -225,7 +225,7 @@ cards:
     tags: [risk:tribunes]
     speaker: sabatier
     tone: strategique
-    text: "« Ça reste entre la table et moi — et entre la table et ton agent, qui a demandé la radio ce matin. Je lui donne le dossier, ou le tiroir reste fermé ? »"
+    text: "Sabatier pose la main à plat sur le tiroir : « Ton agent a demandé ta radio ce matin, très poliment. Elle est là-dedans. Je la lui donne, ou le tiroir reste fermé ? »"
     left:
       label: "Le tiroir reste fermé"
       effects: {direction: "-", relation: {sabatier: 1}, set: [radio_cachee]}
@@ -242,15 +242,15 @@ cards:
     tags: [presse]
     speaker: lea
     tone: strategique
-    text: "« Vous confirmez ? Le club dit « cheville », la Fédération dit « en pleine forme », et j'ai les deux communiqués sur le même bureau. J'en sors un ? »"
+    text: "Au parking du stade, Léa pose deux feuilles sur le capot de ta voiture : le communiqué du club, et tes mots à toi. « Ils ne disent pas la même chose. Demain, j'en imprime un. Lequel ? »"
     left:
-      label: "Sortez celui du club"
+      label: "Celui du club"
       effects: {direction: "+", tribunes: "-"}
-      answer: "Elle sort celui du club. La Fédération lit ; elle ne répond pas ; elle note."
+      answer: "Elle imprime celui du club. Tes mots restent dans son carnet ; elle ne jette jamais un carnet."
     right:
-      label: "Sortez les deux"
+      label: "Les deux, côte à côte"
       effects: {tribunes: "+", direction: "-"}
-      answer: "Elle sort les deux, côte à côte. C'est la mise en page qui fait le scandale."
+      answer: "Elle imprime les deux, côte à côte. C'est la mise en page qui fait le scandale."
 
   # ------------------------------------------------------ après la mère du petit
   - id: jp.re.mere_mbako_note
@@ -259,13 +259,13 @@ cards:
     tags: [formation]
     speaker: mere_mbako
     tone: strategique
-    text: "« Mon fils n'a besoin de personne, et pourtant il répète vos gestes devant la glace du couloir. Je vous demande une chose : vous lui direz quand vous partirez ? »"
+    text: "La mère de Mbako t'arrête dans le couloir, son carnet contre la poitrine : « Ce que vous lui avez dit sur la vente, il me l'a répété mot pour mot. Le jour où on le vendra, vous l'appellerez ? »"
     left:
-      label: "Je lui dirai"
+      label: "Je l'appellerai"
       effects: {relation: {mere_mbako: 1, mbako: 1}}
-      answer: "Elle note quelque chose dans un carnet à couverture souple. Ce n'est pas un chiffre, pour une fois."
+      answer: "Elle écrit ton nom dans le carnet de comptes, sur une page sans chiffre. C'est la première."
     right:
-      label: "Il l'apprendra"
+      label: "Il l'apprendra seul"
       effects: {tribunes: "+", relation: {mere_mbako: -1}}
       answer: "Elle referme le carnet. « Comme tout le monde, alors », dit-elle, et elle a raison."
 
@@ -276,13 +276,13 @@ cards:
     tags: [direction]
     speaker: josiane
     tone: leger
-    text: "« J'en ai vu passer, vous savez, des contrats qui changent de dossier en une nuit. Le vôtre est passé dans le classeur vert. Vous voulez savoir ce qu'est le vert ? »"
+    text: "Madame Josiane change ton contrat de classeur : « Votre dossier a déménagé cette nuit. Il est dans le vert, maintenant. Vous voulez savoir ce que veut dire le vert ? »"
     left:
       label: "Dites-moi"
       effects: {direction: "+", relation: {josiane: 1}}
       answer: "Le vert, c'est « en cours de vente ». Il y a aussi un rouge ; elle ne dit pas ce qu'est le rouge."
     right:
-      label: "Je préfère pas"
+      label: "Je préfère ne pas savoir"
       effects: {tribunes: "+", relation: {josiane: -1}}
       answer: "Elle range le classeur vert. Elle le range plus haut que les autres, pour qu'on le voie."
 
@@ -293,15 +293,15 @@ cards:
     tags: [ultras, tribunes]
     speaker: gege
     tone: strategique
-    text: "« Tu pars chez eux, {toi}, et la tribune n'oublie rien : ton nom est encore peint au local. Je le décroche ce soir, ou je le laisse jusqu'au derby ? »"
+    text: "Gégé tient la planche à ton nom, décrochée du mur du local : « Elle ne retournera pas au mur, {toi}. Tu viens la chercher, ou on la garde pour te la montrer à chaque derby ? »"
     left:
-      label: "Décroche-le"
+      label: "Je viens la chercher"
       effects: {tribunes: "-", relation: {gege: 1}}
-      answer: "Il le décroche. Il le roule proprement. Il pose le rouleau derrière le bar, debout."
+      answer: "Tu descends au local un mardi, sans photographe. Il te tend la planche ; il garde le clou."
     right:
-      label: "Laisse-le"
+      label: "Gardez-la, montrez-la"
       effects: {tribunes: "--", relation: {gege: -1}}
-      answer: "Il le laisse. Au derby, il le montre du doigt pendant quatre-vingt-dix minutes."
+      answer: "Au derby, la planche passe de main en main dans la Nord, qui siffle chaque fois que tu touches le ballon."
 
   # -------------------------------------------------------- après l'or refusé
   - id: jp.re.nassir_reviendrai
@@ -310,15 +310,15 @@ cards:
     tags: [mercato, sponsors]
     speaker: nassir
     tone: leger
-    text: "« Vous avez dit non, et ce n'est pas grave : ce n'est pas un club, c'est un actif, et un actif a le temps. Je vous laisse la maquette, ou je la remporte ? »"
+    text: "Ilyas laisse sur la table la plaquette d'un stade à toit ouvrant, ton nom déjà imprimé en page deux : « Vous avez dit non ; je l'ai noté, sans rancune. Je vous la laisse, ou je la remporte ? »"
     left:
       label: "Laissez-la"
       effects: {caisse: "+", relation: {nassir: 1}}
-      answer: "La maquette reste sur ton étagère. Le toit s'ouvre encore ; tu l'ouvres, parfois, sans raison."
+      answer: "La plaquette reste sur ton étagère. Tu l'ouvres parfois à la page deux, sans raison."
     right:
       label: "Remportez-la"
       effects: {tribunes: "+", relation: {nassir: -1}}
-      answer: "Il la remporte sous le bras. Elle réapparaît trois ans plus tard, plus grande."
+      answer: "Il la remporte sous le bras. Elle revient trois ans plus tard, plus épaisse."
 
   # -------------------------------------------------------- après la sélection
   - id: jp.re.aulard_cheville
@@ -327,12 +327,12 @@ cards:
     tags: [direction]
     speaker: aulard
     tone: strategique
-    text: "« Ta cheville allait très bien pour la Fédération et très mal pour moi. J'ai pas le temps, j'ai une usine : tu reviens entier, ou je facture la Fédération ? »"
+    text: "Vaubourg tient une radio de cheville à l'envers : « Pour la Fédération, elle va très bien. Pour moi, elle allait mal. Tu me la ramènes entière, ou j'envoie la facture à Berthomier ? »"
     left:
-      label: "Entier, promis"
+      label: "Entière, promis"
       effects: {direction: "+", parole: 1, promise: true}
       answer: "Il note. Il facture quand même, pour le principe."
     right:
-      label: "Facturez-la"
+      label: "Envoyez la facture"
       effects: {direction: "-", tribunes: "+"}
-      answer: "Il facture. On « verra ça après le Congrès ». Il n'y a pas de Congrès."
+      answer: "Il facture. La Fédération répond par une lettre qui annonce une commission ; la commission ne se réunit jamais."

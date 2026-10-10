@@ -183,6 +183,8 @@ function buildZone(o = {}) {
     for (let y = RIVER[0] - 4; y < RIVER[1] + 4; y++) { W.set(x0, y, 6, M.METAL_DARK); W.set(x1 - 1, y, 6, M.METAL_DARK); if (y % 3 === 0) for (let z = 2; z < 6; z++) { W.set(x0, y, z, M.METAL_DARK); W.set(x1 - 1, y, z, M.METAL_DARK); } }
     for (const y of [RIVER[0] + 20, RIVER[1] - 20]) W.box(x0 + 5, y, -8, x1 - 5, y + 3, 1, M.METAL_DARK);
   }
+  // la rambarde des quais s'ouvre devant les deux ponts (elle les barrait : on ne passait plus la Rive)
+  for (const y of [RIVER[0] - 2, RIVER[1] + 1]) { W.box(490, y, 2, 530, y + 1, 8, 0); W.box(221, y, 2, 233, y + 1, 6, 0); }
 
   // ------------------------------------------------ le quartier du stade, posé au centre
   W.box(QX, QY, 0, QX + 340, QY + 340, 2, 0);

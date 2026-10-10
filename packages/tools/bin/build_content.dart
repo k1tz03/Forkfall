@@ -9,7 +9,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fusible_core/fusible_core.dart' show fnv1a32;
+import 'package:fusible_core/fusible_core.dart' show fnv1a32, kLieux;
 import 'package:yaml/yaml.dart';
 
 import 'src/condition_parser.dart';
@@ -1047,7 +1047,12 @@ void main() {
         // Nouvelle datée (spec variété §1.5) : l'année de sa fenêtre [year, year + 1].
         if (m['year'] != null) 'year': (m['year'] as num).toInt(),
         if (m['statut_ok'] != null) 'statut_ok': _statutOk(m['statut_ok'], errors, '$rel/$id'),
+        // Le lieu où la ville met la carte en scène (charte d'écriture § 5) : facultatif.
+        if (m['lieu'] != null) 'lieu': m['lieu'].toString(),
       };
+      if (m['lieu'] != null && !kLieux.contains(m['lieu'].toString())) {
+        errors.add('$rel: $id: lieu « ${m['lieu']} » inconnu (${kLieux.join(' | ')})');
+      }
       final yr = m['year'];
       if (yr != null) {
         final y = (yr as num).toInt();
@@ -1436,6 +1441,9 @@ void main() {
     }
   }
 
+  // La ville (la version jouable) : content/ville.yaml.
+  final ville = _compileVille(errors, roleById, characterIds);
+
   final bundle = <String, dynamic>{
     'version': (_loadYaml('meta.yaml') as Map?)?['version'] ?? 1,
     'roles': roles,
@@ -1458,6 +1466,7 @@ void main() {
     'blacklist': blacklist,
     'theme_labels': themeLabels,
     'setpieces': setpieces,
+    if (ville.isNotEmpty) 'ville': ville,
   };
   final hash = fnv1a32(json.encode(bundle)).toRadixString(16);
   bundle['hash'] = hash;
@@ -1559,4 +1568,138 @@ Map<String, dynamic> _loadPortraits(List<Map<String, dynamic>> characters, Set<S
     if (!out.containsKey(id)) errors.add('portraits: la fiche « $id » (joueur incarné) est obligatoire');
   }
   return out;
+}
+
+/// LA VILLE (content/ville.yaml) : les lieux, qui on y trouve, et ce qu'on y
+/// fait entre deux cartes. Le moteur n'en lit que `activites[].jauges`
+/// (`Engine.activite`) ; tout le reste est pour la coquille. Le fichier est
+/// facultatif : sans lui, pas de section `ville` dans le bundle.
+Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, dynamic>> roleById, Set<String> characterIds) {
+  final raw = _loadYaml('ville.yaml');
+  if (raw == null) return const {};
+  final m = (raw as Map).cast<String, dynamic>();
+  const tranches = {'matin', 'midi', 'aprem', 'soir', 'nuit'};
+  const jours = {'lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'};
+  final lieux = <Map<String, dynamic>>[];
+  final cles = <String>{};
+  void heures(Map<String, dynamic> e, Map<String, dynamic> out, String where) {
+    final h = _strList(e['heures']);
+    for (final t in h) {
+      if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue (${tranches.join(' | ')})');
+    }
+    final j = _strList(e['jours']);
+    for (final d in j) {
+      if (!jours.contains(d)) errors.add('$where: jour « $d » inconnu (${jours.join(' | ')})');
+    }
+    if (h.isNotEmpty) out['heures'] = h;
+    if (j.isNotEmpty) out['jours'] = j;
+  }
+  for (final e in (m['lieux'] as List? ?? const [])) {
+    final l = (e as Map).cast<String, dynamic>();
+    final key = l['key']?.toString() ?? '';
+    final where = 'ville.yaml/lieux/$key';
+    if (key.isEmpty || !cles.add(key)) errors.add('$where: clé vide ou en double');
+    final texte = l['texte']?.toString() ?? '';
+    if (texte.length > 200) errors.add('$where: texte de ${texte.length} caractères (> 200)');
+    final out = <String, dynamic>{'key': key, if (texte.isNotEmpty) 'texte': texte};
+    heures(l, out, where);
+    lieux.add(out);
+  }
+  // `rue`, `ici` : pas un lieu de la carte, une consigne (là où tu es).
+  bool lieuOk(String k) => cles.contains(k) || k == 'rue' || k == 'ici';
+  Map<String, String> table(String nom, Set<String>? domaine, String quoi) {
+    final out = <String, String>{};
+    ((m[nom] as Map?) ?? const {}).forEach((k, v) {
+      final key = k.toString(), val = v.toString();
+      if (domaine != null && !domaine.contains(key)) errors.add('ville.yaml/$nom: $quoi « $key » inconnu');
+      if (!lieuOk(val)) errors.add('ville.yaml/$nom/$key: lieu « $val » absent de `lieux`');
+      out[key] = val;
+    });
+    return out;
+  }
+  final cartesLieux = table('cartes_lieux', kLieux, 'lieu moteur');
+  final rencontres = table('rencontres', characterIds, 'personnage');
+  final beats = table('beats', {...kSetpieceBeats, 'classement', 'bilan_une'}, 'beat');
+  final genres = table('genres', null, 'genre');
+  for (final k in kLieux) {
+    if (!cartesLieux.containsKey(k)) errors.add('ville.yaml/cartes_lieux: le lieu moteur « $k » ne mène nulle part');
+  }
+  final presences = <Map<String, dynamic>>[];
+  for (final e in (m['presences'] as List? ?? const [])) {
+    final p = (e as Map).cast<String, dynamic>();
+    final qui = p['qui']?.toString() ?? '', lieu = p['lieu']?.toString() ?? '';
+    if (!characterIds.contains(qui)) errors.add('ville.yaml/presences: personnage « $qui » inconnu');
+    if (!cles.contains(lieu)) errors.add('ville.yaml/presences/$qui: lieu « $lieu » absent de `lieux`');
+    final t = _strList(p['tranches']);
+    for (final x in t) {
+      if (!tranches.contains(x)) errors.add('ville.yaml/presences/$qui: tranche « $x » inconnue');
+    }
+    presences.add({'qui': qui, 'lieu': lieu, 'tranches': t});
+  }
+  final activites = <Map<String, dynamic>>[];
+  final ids = <String>{};
+  for (final e in (m['activites'] as List? ?? const [])) {
+    final a = (e as Map).cast<String, dynamic>();
+    final id = a['id']?.toString() ?? '';
+    final where = 'ville.yaml/activites/$id';
+    if (id.isEmpty || !ids.add(id)) errors.add('$where: id vide ou en double');
+    final lieu = a['lieu']?.toString() ?? '';
+    if (!cles.contains(lieu)) errors.add('$where: lieu « $lieu » absent de `lieux`');
+    final roles = _strList(a['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    final label = a['label']?.toString() ?? '';
+    if (label.isEmpty || label.length > 28) errors.add('$where: libellé vide ou de plus de 28 caractères');
+    final texte = a['texte']?.toString() ?? '';
+    if (texte.isEmpty || texte.length > 200) errors.add('$where: texte vide ou de plus de 200 caractères');
+    // Les jauges : celles de chaque rôle concerné, et à la marge (± 5 au plus).
+    final jauges = <String, int>{};
+    ((a['jauges'] as Map?) ?? const {}).forEach((k, v) {
+      final g = k.toString();
+      for (final r in roles.isEmpty ? roleById.keys : roles) {
+        final ids = ((roleById[r]?['gauges'] as List?) ?? const []).map((x) => (x as Map)['id'].toString()).toSet();
+        if (!ids.contains(g)) errors.add('$where: jauge « $g » inconnue du rôle $r');
+      }
+      if (v is! int || v.abs() > 5 || v == 0) {
+        errors.add('$where: jauge $g : un entier non nul entre -5 et 5 (la ville répare à la marge)');
+      } else {
+        jauges[g] = v;
+      }
+    });
+    int entier(String k, int defaut) {
+      final v = a[k];
+      if (v == null) return defaut;
+      if (v is! int) {
+        errors.add('$where: `$k` doit être un entier');
+        return defaut;
+      }
+      return v;
+    }
+    final out = <String, dynamic>{
+      'id': id,
+      'lieu': lieu,
+      if (roles.isNotEmpty) 'roles': roles,
+      'label': label,
+      'texte': texte,
+      if (a['nuit'] == true) 'nuit': true,
+      'tranches': entier('tranches', 1),
+      'energie': entier('energie', 0),
+      'faim': entier('faim', 0),
+      'francs': entier('francs', 0),
+      if (a['max_jour'] != null) 'max_jour': entier('max_jour', 1),
+      if (jauges.isNotEmpty) 'jauges': jauges,
+    };
+    heures(a, out, where);
+    activites.add(out);
+  }
+  return {
+    'lieux': lieux,
+    'cartes_lieux': cartesLieux,
+    'rencontres': rencontres,
+    'beats': beats,
+    'genres': genres,
+    'presences': presences,
+    'activites': activites,
+  };
 }

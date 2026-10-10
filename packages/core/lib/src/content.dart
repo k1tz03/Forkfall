@@ -56,6 +56,11 @@ class Card {
   /// ne parle plus : la carte est écartée du tirage et purgée de la file.
   final List<String> statutOk;
 
+  /// Le lieu où la ville met la carte en scène (charte d'écriture § 5) :
+  /// `domicile`, `laverie`, `stade`… (liste fermée [kLieux]). Sans lieu, la
+  /// coquille le déduit du locuteur.
+  final String? lieu;
+
   const Card({
     required this.id,
     required this.roles,
@@ -80,6 +85,7 @@ class Card {
     this.title,
     this.year,
     this.statutOk = const [],
+    this.lieu,
   });
 
   factory Card.fromJson(Map<String, dynamic> j) => Card(
@@ -106,8 +112,15 @@ class Card {
         title: j['title'] as String?,
         year: (j['year'] as num?)?.toInt(),
         statutOk: (j['statut_ok'] as List?)?.cast<String>() ?? const [],
+        lieu: j['lieu'] as String?,
       );
 }
+
+/// Les lieux où la ville peut mettre une carte en scène (charte d'écriture § 5).
+const Set<String> kLieux = {
+  'domicile', 'laverie', 'stade', 'vestiaire', 'bureau', 'secretariat', 'buvette', 'parking', 'mairie',
+  'gare', 'friche', 'cimetiere', 'terrain', 'rue', 'echo', 'muscu', 'cabinet', 'banque', 'cafe',
+};
 
 /// Les statuts d'un personnage (charte de la bible § 2.4 et § 2.4 bis,
 /// spec variété §1.10). `present` est le statut de départ des visages du club ;
@@ -921,6 +934,9 @@ class DirectorConfig {
   final int minActive;
   final int maxActive;
   final int eventsMax;
+  /// Créneaux narratifs minimum entre deux événements (les événements sombres,
+  /// charte d'écriture § 4-5 : « pas un toutes les 30 secondes »). 0 = sans garde.
+  final int eventsEcart;
   final int alarmsMax;
   final int reactionsMax;
   final int unesBreves;
@@ -943,6 +959,7 @@ class DirectorConfig {
     this.minActive = 2,
     this.maxActive = 3,
     this.eventsMax = 1,
+    this.eventsEcart = 0,
     this.alarmsMax = 3,
     this.reactionsMax = 4,
     this.unesBreves = 3,
@@ -975,6 +992,7 @@ class DirectorConfig {
       minActive: (j['min_active'] as num?)?.toInt() ?? d.minActive,
       maxActive: (j['max_active'] as num?)?.toInt() ?? d.maxActive,
       eventsMax: (j['events_max'] as num?)?.toInt() ?? d.eventsMax,
+      eventsEcart: (j['events_ecart'] as num?)?.toInt() ?? d.eventsEcart,
       alarmsMax: (j['alarms_max'] as num?)?.toInt() ?? d.alarmsMax,
       reactionsMax: (j['reactions_max'] as num?)?.toInt() ?? d.reactionsMax,
       unesBreves: (j['unes_breves'] as num?)?.toInt() ?? d.unesBreves,
@@ -1037,6 +1055,25 @@ const List<String> kSetpieceBeats = [
   'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
 ];
 
+/// LA VILLE (la version jouable, `content/ville.yaml`) : une activité faite
+/// entre deux cartes — la séance du mardi, les papiers chez Josiane, la tournée
+/// à la buvette. Le moteur n'en lit que les jauges (`Engine.activite`) : le
+/// temps, l'énergie, la faim et les francs sont l'affaire de la coquille, qui
+/// lit le reste dans `Content.ville`. Aucune activité ne tire quoi que ce soit.
+class ActiviteDef {
+  final String id;
+  final List<String> roles;
+  /// Jauge → delta (petit : la carte tranche, la ville répare à la marge).
+  final Map<String, int> jauges;
+  const ActiviteDef({required this.id, this.roles = const [], this.jauges = const {}});
+
+  factory ActiviteDef.fromJson(Map<String, dynamic> j) => ActiviteDef(
+        id: j['id'] as String,
+        roles: (j['roles'] as List? ?? const []).map((e) => e.toString()).toList(),
+        jauges: ((j['jauges'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), (v as num).toInt())),
+      );
+}
+
 class Content {
   final int version;
   final String hash;
@@ -1062,6 +1099,11 @@ class Content {
   /// Beat moteur → variantes de texte, dans l'ordre du fichier
   /// (content/setpieces.yaml, spec variété §2.7).
   final Map<String, List<SetpieceVariant>> setpieces;
+  /// La ville (content/ville.yaml) : les activités que le moteur applique…
+  final Map<String, ActiviteDef> activites;
+  /// …et la section entière, telle quelle, pour la coquille (lieux, rencontres,
+  /// horaires, textes). `{}` quand le fichier est absent.
+  final Map<String, dynamic> ville;
 
   // Derived indexes.
   final Map<String, List<Card>> _cardsByRole = {};
@@ -1098,6 +1140,8 @@ class Content {
     this.blacklist = const [],
     this.themeLabels = const {},
     this.setpieces = const {},
+    this.activites = const {},
+    this.ville = const {},
   }) {
     final ids = cards.keys.toList()..sort();
     for (final id in ids) {
@@ -1216,6 +1260,11 @@ class Content {
             k.toString(),
             (v as List).map((e) => SetpieceVariant.fromJson((e as Map).cast<String, dynamic>())).toList(),
           )),
+      activites: {
+        for (final a in (((j['ville'] as Map?)?['activites'] as List?) ?? const []))
+          (a as Map)['id'].toString(): ActiviteDef.fromJson(a.cast<String, dynamic>()),
+      },
+      ville: (j['ville'] as Map?)?.cast<String, dynamic>() ?? const {},
     );
   }
 }

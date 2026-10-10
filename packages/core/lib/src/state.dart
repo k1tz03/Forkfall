@@ -498,6 +498,8 @@ class GameState {
   int storyThisSeason;
   int softStepsThisSeason;
   int eventsThisSeason;
+  /// `ncards` du dernier événement armé (garde `events_ecart`) ; −1000 = aucun.
+  int lastEventN;
   int alarmsThisSeason;
   int nouvellesThisSeason;
   int tension;
@@ -592,6 +594,7 @@ class GameState {
     this.storyThisSeason = 0,
     this.softStepsThisSeason = 0,
     this.eventsThisSeason = 0,
+    this.lastEventN = -1000,
     this.alarmsThisSeason = 0,
     this.nouvellesThisSeason = 0,
     this.tension = 0,
@@ -685,6 +688,7 @@ class GameState {
         storyThisSeason: storyThisSeason,
         softStepsThisSeason: softStepsThisSeason,
         eventsThisSeason: eventsThisSeason,
+        lastEventN: lastEventN,
         alarmsThisSeason: alarmsThisSeason,
         nouvellesThisSeason: nouvellesThisSeason,
         tension: tension,
@@ -763,6 +767,7 @@ class GameState {
         'storyThisSeason': storyThisSeason,
         'softStepsThisSeason': softStepsThisSeason,
         'eventsThisSeason': eventsThisSeason,
+        if (lastEventN != -1000) 'lastEventN': lastEventN,
         'alarmsThisSeason': alarmsThisSeason,
         'nouvellesThisSeason': nouvellesThisSeason,
         'tension': tension,
@@ -843,6 +848,7 @@ class GameState {
         storyThisSeason: (j['storyThisSeason'] as num?)?.toInt() ?? 0,
         softStepsThisSeason: (j['softStepsThisSeason'] as num?)?.toInt() ?? 0,
         eventsThisSeason: (j['eventsThisSeason'] as num?)?.toInt() ?? 0,
+        lastEventN: (j['lastEventN'] as num?)?.toInt() ?? -1000,
         alarmsThisSeason: (j['alarmsThisSeason'] as num?)?.toInt() ?? 0,
         nouvellesThisSeason: (j['nouvellesThisSeason'] as num?)?.toInt() ?? 0,
         tension: (j['tension'] as num?)?.toInt() ?? 0,

@@ -9,7 +9,7 @@ cards:
     tags: [risk:tribunes]
     speaker: sabatier
     tone: strategique
-    text: "« Fêlé, là, et ça reste entre la table et moi — mais ton agent a demandé la radio ce matin. Tu finis la saison avec, ou tu la finis vraiment, maintenant ? »"
+    text: "Doc Sabatier tient la radio contre le néon, le capuchon du stylo sur la fissure : « Fêlé, là. On m'a demandé cette radio ce matin, au téléphone. Tu finis la saison avec, ou tu la finis vraiment ? »"
     left:
       label: "Je finis la saison avec"
       effects: {tribunes: "++", force: -3, set: [genou], react: {card: jp.re.sabatier_radio_agent, if: "flag('agent_fardelli')"}}
@@ -25,13 +25,13 @@ cards:
     tags: [risk:tribunes]
     speaker: sabatier
     tone: strategique
-    text: "« Ça, {toi}, c'est un genou qui a des choses à te dire, à vingt ans, et ça reste entre la table et moi. On l'écoute maintenant, ou en mai ? »"
+    text: "Doc Sabatier palpe ton genou, les mains froides ; il fait la moue avant de parler : « Ça, {toi}, ça a des choses à dire. À {age} ans, on l'écoute maintenant, ou en mai ? »"
     left:
-      label: "Maintenant"
+      label: "Je lève le pied maintenant"
       effects: {force: 3, tribunes: "-", set: [genou_ecoute]}
       answer: "Tu lèves le pied six semaines. Personne ne comprend pourquoi ; toi non plus, tout à fait."
     right:
-      label: "En mai"
+      label: "On verra en mai"
       effects: {tribunes: "+", force: -2, set: [genou], react: {card: jp.re.sabatier_radio_agent, if: "flag('agent_fardelli')"}}
       answer: "En mai, il a d'autres choses à dire. Il les dira plus fort."
 
@@ -41,13 +41,13 @@ cards:
     tags: [risk:tribunes]
     speaker: sabatier
     tone: strategique
-    text: "« À gauche le bistouri et six mois de tribune ; à droite une piqûre et le match de dimanche. Ça reste entre la table et moi, le nombre de piqûres. Lequel ? »"
+    text: "Doc Sabatier a posé deux plateaux sur la table et ne touche à aucun : à gauche le bistouri, six mois de tribune ; à droite la seringue, et dimanche. « Les piqûres, c'est moi qui les compte. Lequel ? »"
     left:
-      label: "Le bistouri"
+      label: "Je prends le bistouri"
       effects: {tribunes: "-", direction: "-", force: 6, set: [genou_opere], outcome: bistouri}
       answer: "Tu t'allonges. Six mois. On te fait respirer tous les matins ; on compte les flexions à voix haute."
     right:
-      label: "La piqûre"
+      label: "Je prends la piqûre"
       effects: {tribunes: "+", vestiaire: "-", caisse: "-", set: [infiltre], rand: [{p: 0.5, set: [genou_grave_arme]}, {}], outcome: piqure}
       answer: "Tu ne sens plus rien. C'est bien ça, le problème."
 
@@ -64,7 +64,7 @@ cards:
     # n'était jamais servie (2 000 carrières × 8 saisons).
     tone: strategique
     once: true
-    text: "« Il a relâché une deuxième fois, et cette fois j'ai regardé la radio devant toi. Ça reste entre la table et moi : tu rejoues dimanche, ou tu t'arrêtes ce soir ? »"
+    text: "Doc Sabatier pose la radio à plat devant toi, sans le néon cette fois : « Il a lâché une deuxième fois. Je ne cache plus rien. Tu rejoues dimanche, ou tu t'arrêtes ce soir ? »"
     left:
       label: "Je rejoue dimanche"
       effects: {tribunes: "+", force: -8, set: [genou_grave], end: jp_croises}
@@ -97,7 +97,7 @@ cards:
     tags: [famille]
     speaker: camille
     tone: strategique
-    text: "« Tu rentres à quelle heure, {toi}, je ne demande plus ; je demande à quelle heure tu diras au Doc que tu boites dans l'escalier. Tu lui dis, ou je lui dis ? »"
+    text: "Camille t'attend en bas de l'escalier ; elle a compté les marches avec toi, à l'oreille : « Tu t'arrêtes à la quatrième, {toi}, depuis dimanche. Tu le dis au Doc, ou c'est moi qui l'appelle ? »"
     left:
       label: "Je lui dis"
       effects: {direction: "-", force: 1, relation: {camille: 1}, set: [genou_dit], outcome: silence}
@@ -105,7 +105,7 @@ cards:
     right:
       label: "Ne dis rien, s'il te plaît"
       effects: {tribunes: "+", relation: {camille: -1}, set: [genou_cache], outcome: silence}
-      answer: "Elle ne dit rien. Elle regarde l'escalier tous les soirs ; elle compte les marches, elle aussi."
+      answer: "Elle ne dit rien. Le soir, elle laisse la lumière de l'escalier allumée, et elle écoute quand même."
 
   - id: jp.genou.maison_medecin
     roles: [joueur]
@@ -113,7 +113,7 @@ cards:
     tags: [famille]
     speaker: camille
     tone: strategique
-    text: "« Tu boites, et je suis médecin, je vois ça depuis la cuisine. Tu rentres à quelle heure demain : je t'examine ici, ou tu vas voir le Doc du club ? »"
+    text: "Camille te regarde traverser la cuisine, un torchon sur l'épaule : « J'ai fait assez de médecine pour voir ça d'ici : tu poses le talon en dernier. Je t'examine ce soir, ou tu vas voir le Doc ? »"
     left:
       label: "Examine-moi"
       effects: {force: 2, relation: {camille: 1}, set: [genou_dit], outcome: silence}
@@ -129,15 +129,15 @@ cards:
     tags: [vestiaire]
     speaker: vukic
     tone: strategique
-    text: "« Tu montes l'escalier du vestiaire en trois temps depuis mardi, et je te le dis parce que personne ne te le dira. Tu vois le Doc, ou je ne t'ai rien dit ? »"
+    text: "Vukić referme son cahier quand tu passes : « Mardi et jeudi, dans l'escalier du vestiaire : une pause à chaque marche, toujours sur la même jambe. Tu vois le Doc, ou je n'ai rien vu ? »"
     left:
       label: "Je vois le Doc"
       effects: {direction: "-", force: 1, relation: {vukic: 1}, set: [genou_dit], outcome: silence}
       answer: "Tu y vas. Le Doc note « escalier », et note aussi qui l'a vu avant lui."
     right:
-      label: "Tu ne m'as rien dit"
+      label: "Tu n'as rien vu"
       effects: {tribunes: "+", relation: {vukic: -1}, set: [genou_cache], outcome: silence}
-      answer: "Il n'a rien dit. Il regarde l'escalier, le mardi suivant, sans en avoir l'air."
+      answer: "Il n'a rien vu. Le mardi suivant, il se poste en haut de l'escalier, le cahier fermé, sans en avoir l'air."
 
   - id: jp.genou.visite
     roles: [joueur]

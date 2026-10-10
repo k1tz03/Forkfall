@@ -1,0 +1,470 @@
+# LA VILLE — la version jouable (la couche « Punch Club » de la préproduction RPG).
+#
+# Aubérive : deux cents mètres de côté, sept quartiers autour du stade de la
+# Rive. On y marche, on y fait ce qu'une semaine demande, et les cartes y
+# attendent : chaque carte a un lieu, chaque personnage un endroit où on le
+# trouve. Le moteur ne lit de ce fichier que `activites[].jauges`
+# (`Engine.activite`) ; le temps, l'énergie, la faim et les francs sont tenus par
+# la coquille (packages/tools/web/ville.js), qui lit tout le reste.
+#
+# Les clés de lieu sont celles du rendu de la ville (docs/design/pixel_iso,
+# `lieux.json`) : la porte de chaque lieu y est posée sur la grille où l'on marche.
+#
+# Une semaine jouée : du lundi matin au dimanche soir, cinq tranches par jour
+# (matin, midi, après-midi, soir, nuit). Les cartes de la semaine ont chacune un
+# lieu et une fenêtre ; le match du samedi ne bouge pas. Entre deux semaines
+# jouées, un fondu : « Trois semaines plus tard. »
+
+# Où mène une carte qui déclare un `lieu:` (les lieux du moteur, kLieux).
+# `rue` : là où tu te trouves, dehors — l'événement te tombe dessus en marchant.
+cartes_lieux:
+  domicile: appartement
+  laverie: laverie
+  stade: stade
+  vestiaire: stade
+  bureau: clubhouse
+  secretariat: clubhouse
+  buvette: buvette
+  parking: voiture
+  mairie: mairie
+  gare: gareRoutiere
+  friche: friche
+  cimetiere: cimetiere
+  terrain: terrain
+  rue: rue
+  echo: echo
+  muscu: muscu
+  cabinet: cabinet
+  banque: banque
+  cafe: cafe_mairie
+
+# Où l'on trouve chacun quand sa carte ne dit pas de lieu.
+rencontres:
+  aulard: clubhouse
+  josiane: clubhouse
+  vukic: terrain
+  gege: buvette
+  brehaut: stade
+  vecchio: stade
+  sabatier: cabinet
+  camille: appartement
+  meneche: echo
+  lea: echo
+  aubert: mairie
+  fardelli: cafe_mairie
+  nassir: hotel
+  legruet: hotel
+  clow: brasserie
+  mbako: centre
+  mere_mbako: centre
+
+# Les beats du moteur qui ont leur lieu à eux (ils passent avant le locuteur :
+# un match se joue au stade, même quand c'est l'adjoint qui parle).
+beats:
+  objective: clubhouse
+  match: stade
+  cup: stade
+  gm_annonce: stade
+  gm_te: stade
+  aftermatch: stade
+  classement: appartement
+  bilan_une: appartement
+  bilan_verdict: clubhouse
+  bilan_contrat: clubhouse
+  bilan_carrefour: appartement
+
+# Les cartes d'un genre à part, quand rien d'autre ne les place.
+genres:
+  nouvelle: presse          # le monde parle : le journal du matin, au comptoir de la maison de la presse
+  passe: cimetiere          # ce qui revient d'avant
+  alarme: ici               # l'alarme ne prend pas rendez-vous : elle sonne là où tu es
+
+# Où l'on croise les gens, sans carte : un visage à sa place rend la ville vivante.
+# Seuls ceux qui sont déjà entrés dans ta carrière s'y montrent.
+presences:
+  - {qui: gege, lieu: buvette, tranches: [midi, soir]}
+  - {qui: josiane, lieu: clubhouse, tranches: [matin, aprem]}
+  - {qui: vukic, lieu: terrain, tranches: [matin, aprem]}
+  - {qui: sabatier, lieu: cabinet, tranches: [matin, aprem]}
+  - {qui: meneche, lieu: echo, tranches: [matin, aprem, soir]}
+  - {qui: aulard, lieu: clubhouse, tranches: [aprem]}
+  - {qui: brehaut, lieu: stade, tranches: [aprem]}
+  - {qui: fardelli, lieu: cafe_mairie, tranches: [midi]}
+  - {qui: aubert, lieu: mairie, tranches: [matin]}
+  - {qui: mbako, lieu: centre, tranches: [aprem]}
+  - {qui: camille, lieu: appartement, tranches: [soir, nuit]}
+
+# Les lieux : ce qu'on voit en poussant la porte, et quand elle est ouverte.
+# `heures` absent : toujours ouvert (ou dehors). Un rendez-vous ouvre la porte,
+# même fermée : on t'attend.
+lieux:
+  - key: appartement
+    texte: "Deux pièces au troisième, la chaudière qui cogne, un frigo à moitié vide. La fenêtre donne sur la rue des Lilas."
+  - key: clubhouse
+    texte: "Le club-house du Racing : le secrétariat au rez-de-chaussée, le bureau du président à l'étage, la photo de 1974 dans l'escalier."
+    heures: [matin, aprem, soir]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  - key: stade
+    texte: "Le stade de la Rive. Les grilles du guichet, l'odeur de la pelouse arrosée, le couloir qui descend aux vestiaires."
+  - key: terrain
+    texte: "Le terrain annexe : des plots, deux buts sans filet, une haie de thuyas derrière laquelle on peut tout voir."
+    heures: [matin, aprem, soir]
+  - key: centre
+    texte: "Le centre de formation : un préfabriqué, douze lits, les crampons des gamins alignés dans le couloir."
+    heures: [aprem]
+    jours: [mer, sam]
+  - key: buvette
+    texte: "La buvette du kop. Le comptoir en zinc, les écharpes au plafond, et la table du fond où personne ne s'assoit sans y être invité."
+    heures: [midi, aprem, soir]
+  - key: laverie
+    texte: "La laverie : cinq machines, trois qui tournent. Un néon qui clignote au-dessus des sèche-linge. On y attend longtemps."
+    heures: [matin, midi, aprem, soir]
+  - key: boutique
+    texte: "La boutique du club : des écharpes, des fanions, des maillots de la saison dernière soldés à moitié prix."
+    heures: [aprem]
+    jours: [mer, sam]
+  - key: tabac_stade
+    texte: "Le tabac-presse du carrefour. Les journaux du matin, la grille du loto, et le patron qui sait le score avant tout le monde."
+    heures: [matin, midi, aprem]
+  - key: banque
+    texte: "La Banque Aubérivoise. Un guichet, une plante verte, un banquier qui a le relevé du club sous le coude avant que tu t'assoies."
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - key: cabinet
+    texte: "Le cabinet du Doc Sabatier : une table d'examen, une armoire fermée à clé, et le doc qui sait des choses qu'il ne dira pas."
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  - key: muscu
+    texte: "La salle de muscu, dans l'ancien garage Mazurier. La fonte rouille, la radio crache, l'odeur d'huile n'est jamais partie."
+    heures: [matin, midi, aprem, soir]
+  - key: bar
+    texte: "Le Corner, le bar du quartier : trois tables, un flipper, et la télé allumée sur les résultats."
+    heures: [midi, aprem, soir]
+  - key: mairie
+    texte: "La mairie. Un escalier de pierre, un huissier qui demande ton nom, et le bureau de Madame Aubert au fond du couloir."
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - key: echo
+    texte: "La rédaction de L'Écho d'Aubérive : deux bureaux, une machine à écrire, les épreuves du lendemain punaisées au mur."
+    heures: [matin, aprem, soir]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  - key: cafe_mairie
+    texte: "Le café de la Mairie. Les conseillers municipaux au comptoir, les retraités en terrasse, et toujours quelqu'un qui te reconnaît."
+    heures: [matin, midi, aprem, soir]
+  - key: brasserie
+    texte: "La brasserie du Pont : banquettes en moleskine, plat du jour à l'ardoise, une photo de l'équipe de 1962 au-dessus de la caisse."
+    heures: [midi, soir]
+  - key: hotel
+    texte: "L'hôtel de la Rive. Le hall sent la cire. Ceux qui viennent de la Capitale descendent ici, et ne restent jamais longtemps."
+  - key: presse
+    texte: "La maison de la presse de la rue des Lilas : L'Écho, le quotidien sportif, et les gros titres que tu lis avant de les vivre."
+    heures: [matin, midi, aprem]
+  - key: boulangerie_residentiel
+    texte: "La boulangerie du coin. La boulangère te garde une baguette et te demande le score, dans cet ordre."
+    heures: [matin, midi]
+    jours: [mar, mer, jeu, ven, sam, dim]
+  - key: epicerie
+    texte: "L'épicerie : des conserves, des bières, le cahier des ardoises sous le comptoir."
+    heures: [matin, aprem, soir]
+  - key: ecole
+    texte: "L'école publique. À la sortie, les gamins jouent avec un ballon dégonflé contre le mur du préau."
+  - key: terminus
+    texte: "Le Terminus, le bar des chauffeurs de car. On y boit debout, on y parle peu."
+    heures: [matin, midi, aprem, soir]
+  - key: gareRoutiere
+    texte: "La gare routière : trois quais, un abri, le car du club garé au bout, et les horaires que personne ne respecte."
+  - key: square
+    texte: "Le square des Lilas : deux bancs, un bac à sable, des pigeons. Le soir, des gamins s'y passent un ballon."
+  - key: voiture
+    texte: "Ta voiture, garée de travers. Le pare-brise ramasse les prospectus et, parfois, autre chose."
+  - key: cimetiere
+    texte: "Le cimetière d'Aubérive. Le caveau du Racing est au fond à gauche : les présidents, deux capitaines, un soigneur."
+  - key: caveau
+    texte: "Le caveau du Racing. Des noms gravés, des écharpes délavées, une plaque neuve dont personne n'a voulu parler."
+  - key: friche
+    texte: "La friche de l'usine. Des palettes, des tags, un feu certains soirs. On n'y vient pas pour rien."
+  - key: feu
+    texte: "Le feu de palettes. Quelques silhouettes autour, qui se taisent quand tu approches."
+  - key: wagon
+    texte: "Le wagon abandonné, au bout de la voie de l'usine. Quelqu'un y a mis un matelas."
+  - key: halle
+    texte: "La grande halle : un toit troué, des pigeons, et la trace d'un terrain tracé à la craie sur le béton."
+  - key: eglise
+    texte: "L'église Saint-Aubin. La porte est ouverte, la nef est froide, il y a toujours un cierge allumé."
+  - key: monument
+    texte: "Le monument aux morts. Les noms de 1914, ceux de 1940, et une gerbe fanée aux couleurs du club."
+  - key: fontaine
+    texte: "La fontaine de la place. Le jour du marché, on y trempe les pieds ; le soir, on s'y donne rendez-vous."
+  - key: marche
+    texte: "La place du marché. Le dimanche, les maraîchers ; le reste de la semaine, des voitures et du vent."
+  - key: kiosque
+    texte: "Le kiosque à journaux du quai. Le vendeur te tend L'Écho sans que tu le demandes."
+    heures: [matin, midi]
+  - key: cinema
+    texte: "Le cinéma L'Aurore : une salle, un film par semaine, et l'affiche qui pâlit dans la vitrine."
+    heures: [soir]
+  - key: librairie
+    texte: "La librairie-papeterie : des cahiers, des cartes postales du pont, et le dernier livre d'un ancien joueur que personne n'achète."
+    heures: [matin, aprem]
+  - key: pharmacie
+    texte: "La pharmacie. La croix verte clignote, le pharmacien connaît le nom de tous tes joueurs."
+    heures: [matin, aprem]
+  - key: tabac
+    texte: "Le tabac du Quai. Les mariniers y prennent leur café ; on y parie sur tout, y compris sur toi."
+    heures: [matin, midi, aprem, soir]
+  - key: lavoir
+    texte: "Le vieux lavoir, au bout de la rue haute. L'eau coule encore. On y entend ce qui se dit sur la place."
+  - key: materiel
+    texte: "Le local du matériel : des filets, des chasubles, une tondeuse en panne et le cadenas que tout le monde connaît."
+  - key: loge
+    texte: "La loge du gardien du cimetière. Il note qui vient, et quand."
+  - key: columbarium
+    texte: "Le mur des plaques. Des photos sous verre, des dates, un maillot plié dans une niche."
+  - key: fleuriste
+    texte: "Aux Immortelles, fleuriste. Des chrysanthèmes toute l'année, et des gerbes aux couleurs du club les jours de deuil."
+    heures: [matin, aprem]
+
+# Ce qu'on fait entre deux cartes. `jauges` : ce que le moteur applique (petit :
+# la carte tranche, la ville répare à la marge), une fois par semaine jouée — la
+# deuxième fois fatigue sans rien changer. `tranches` : le temps que ça prend
+# (0 : le temps de rien). `energie`, `faim`, `francs` : ce que ça coûte ou
+# rapporte au corps et au portefeuille. `max_jour` : pas plus souvent dans une
+# journée. `roles` absent : les deux rôles.
+activites:
+  # — le corps (les deux rôles)
+  - id: dormir
+    lieu: appartement
+    label: Dormir
+    texte: "Tu tires les rideaux. La rue se tait vers minuit, la chaudière vers une heure."
+    nuit: true
+    energie: 60
+    faim: -10
+    heures: [soir, nuit]
+  - id: sieste
+    lieu: appartement
+    label: Une heure sur le canapé
+    texte: "Tu fermes les yeux devant la télé. Tu les rouvres sur la météo."
+    tranches: 1
+    energie: 15
+    heures: [midi, aprem]
+  - id: frigo
+    lieu: appartement
+    label: Manger un morceau
+    texte: "Des pâtes froides, debout devant le frigo ouvert."
+    tranches: 0
+    faim: 35
+    max_jour: 2
+    heures: [matin, midi, soir, nuit]
+  - id: sandwich
+    lieu: boulangerie_residentiel
+    label: Un sandwich, un café
+    texte: "Jambon-beurre et café serré. La boulangère te demande le score."
+    tranches: 0
+    faim: 25
+    francs: -12
+    heures: [matin, midi]
+  - id: comptoir
+    lieu: cafe_mairie
+    label: Un café au comptoir
+    texte: "Au comptoir, on parle du match de samedi comme d'un enterrement. Tu écoutes, tu ne dis rien."
+    tranches: 1
+    energie: 5
+    faim: 10
+    francs: -6
+  - id: plat_du_jour
+    lieu: brasserie
+    label: Le plat du jour
+    texte: "Blanquette, quart de rouge. Au fond de la salle, deux anciens refont l'équipe de 1962."
+    tranches: 1
+    faim: 50
+    francs: -45
+    heures: [midi, soir]
+  - id: recueillement
+    lieu: caveau
+    label: Rester un moment
+    texte: "Tu lis les noms sur le caveau. Tu en connais trois. Tu repars plus lentement que tu n'es venu."
+    tranches: 1
+    energie: -5
+
+  # — l'entraîneur
+  - id: seance
+    lieu: terrain
+    roles: [entraineur]
+    label: Diriger la séance
+    texte: "Toro, oppositions, coups de pied arrêtés. Le groupe finit rincé et, pour une fois, personne ne discute."
+    tranches: 1
+    energie: -20
+    faim: -10
+    jauges: {vestiaire: 3}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: jeunes
+    lieu: centre
+    roles: [entraineur]
+    label: Le mercredi des jeunes
+    texte: "Tu regardes les U17 jouer en cinq contre cinq. Un parent filme. Le président saura que tu es venu."
+    tranches: 1
+    energie: -15
+    jauges: {direction: 1, tribunes: 1}
+    heures: [aprem]
+    jours: [mer]
+  - id: papiers
+    lieu: clubhouse
+    roles: [entraineur]
+    label: Les papiers avec Josiane
+    texte: "Licences, feuilles de match, le relevé de la banque. Josiane tient la règle, toi le stylo."
+    tranches: 1
+    energie: -10
+    jauges: {direction: 3}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: tournee
+    lieu: buvette
+    roles: [entraineur]
+    label: Payer ta tournée
+    texte: "Tu paies la tournée au comptoir. Le kop trinque à ta santé ; au club-house, quelqu'un le notera."
+    tranches: 1
+    faim: 20
+    francs: -60
+    jauges: {tribunes: 3, direction: -1}
+    heures: [midi, soir]
+  - id: laver_maillots
+    lieu: laverie
+    roles: [entraineur]
+    label: Laver les maillots
+    texte: "Vingt maillots, deux machines, une heure à attendre sur une chaise en plastique. Lundi, les joueurs le remarqueront."
+    tranches: 1
+    energie: -10
+    francs: -35
+    jauges: {vestiaire: 2}
+    heures: [matin, midi, aprem, soir]
+  - id: banquier
+    lieu: banque
+    roles: [entraineur]
+    label: Voir le banquier
+    texte: "Tu négocies un échéancier pour les primes. Il hoche la tête, il note, il ne promet rien, mais il signe."
+    tranches: 1
+    energie: -10
+    jauges: {caisse: 3}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: subvention
+    lieu: mairie
+    roles: [entraineur]
+    label: Plaider à la mairie
+    texte: "Tu parles éclairage, vestiaires, jeunesse. La maire t'écoute ; ton président apprendra que tu es passé par-dessus lui."
+    tranches: 1
+    energie: -15
+    jauges: {caisse: 2, direction: -1}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: interview
+    lieu: echo
+    roles: [entraineur]
+    label: Répondre à L'Écho
+    texte: "Une demi-heure avec le journaliste. Tu défends ton équipe, tu en dis un peu trop sur un joueur."
+    tranches: 1
+    energie: -10
+    jauges: {tribunes: 2, vestiaire: -1}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  - id: cassettes
+    lieu: appartement
+    roles: [entraineur]
+    label: Étudier l'adversaire
+    texte: "Trois matchs de l'adversaire en accéléré. À une heure du matin, tu as compris leur coin droit."
+    tranches: 1
+    energie: -10
+    jauges: {vestiaire: 1}
+    heures: [soir]
+  - id: infirmerie
+    lieu: cabinet
+    roles: [entraineur]
+    label: Le point sur les blessés
+    texte: "Le doc t'énumère les genoux, les adducteurs, les mensonges. Tu sais enfin qui peut jouer samedi."
+    tranches: 1
+    energie: -5
+    jauges: {vestiaire: 1}
+    heures: [matin, aprem]
+
+  # — le joueur
+  - id: entrainement
+    lieu: terrain
+    roles: [joueur]
+    label: T'entraîner
+    texte: "Des sprints, des frappes, le jeu à deux touches. Tu rentres au vestiaire le dernier, les jambes pleines."
+    tranches: 1
+    energie: -20
+    faim: -10
+    jauges: {vestiaire: 2}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: fonte
+    lieu: muscu
+    roles: [joueur]
+    label: Une heure de fonte
+    texte: "Développé couché, squats, gainage. Le préparateur note tes charges dans un carnet que le club lit."
+    tranches: 1
+    energie: -25
+    faim: -10
+    francs: -10
+    jauges: {direction: 2}
+    heures: [matin, midi, aprem, soir]
+  - id: soins
+    lieu: cabinet
+    roles: [joueur]
+    label: La table du Doc
+    texte: "Massage, glace, une infiltration que tu ne voulais pas. Les jambes reviennent."
+    tranches: 1
+    energie: 20
+    heures: [matin, aprem]
+  - id: dedicaces
+    lieu: boutique
+    roles: [joueur]
+    label: Signer à la boutique
+    texte: "Une heure à signer des posters. Une gamine te demande pourquoi tu as raté le penalty."
+    tranches: 1
+    energie: -10
+    jauges: {tribunes: 3}
+    heures: [aprem]
+    jours: [mer, sam]
+  - id: verre_kop
+    lieu: buvette
+    roles: [joueur]
+    label: Un verre avec le kop
+    texte: "Gégé te sert une bière et te présente comme son fils. Le capitaine le saura demain."
+    tranches: 1
+    faim: 20
+    francs: -40
+    jauges: {tribunes: 2, vestiaire: -1}
+    heures: [midi, soir]
+  - id: placement
+    lieu: banque
+    roles: [joueur]
+    label: Placer tes primes
+    texte: "Le banquier te parle d'un livret, puis d'un appartement à crédit. Tu signes pour le livret."
+    tranches: 1
+    energie: -5
+    jauges: {caisse: 3}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: interview_joueur
+    lieu: echo
+    roles: [joueur]
+    label: Une interview
+    texte: "Le journaliste veut une phrase sur le coach. Tu lui en donnes une, et tu la regrettes en la relisant."
+    tranches: 1
+    energie: -10
+    jauges: {tribunes: 2, direction: -1}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  - id: gamins
+    lieu: centre
+    roles: [joueur]
+    label: Voir les gamins du centre
+    texte: "Tu tapes la balle avec les U17. L'un d'eux te demande comment on devient pro. Tu ne sais pas quoi répondre."
+    tranches: 1
+    energie: -10
+    jauges: {vestiaire: 1, tribunes: 1}
+    heures: [aprem]
+    jours: [mer]

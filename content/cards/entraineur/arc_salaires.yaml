@@ -13,7 +13,7 @@ cards:
     tags: [caisse, vestiaire]
     speaker: josiane
     tone: leger
-    text: "Madame Josiane tient le relevé par un coin : « La banque a refusé le virement, {toi}, et le vestiaire l'a su hier au distributeur. J'en ai vu passer ; je dis quoi, lundi ? »"
+    text: "Madame Josiane tient le relevé par un coin, comme une chose mouillée : « La banque a refusé les salaires, {toi}. Ils l'ont su hier soir au distributeur. Lundi, ils seront à ma porte. Je dis quoi ? »"
     left:
       label: "Dites que je m'en occupe"
       effects: {vestiaire: "+", direction: "-", parole: 1, promise: true}
@@ -30,11 +30,11 @@ cards:
     tags: [caisse, vestiaire, retorse]
     speaker: josiane
     tone: leger
-    text: "Madame Josiane, le relevé déjà plié : « La banque a encore refusé, et cette fois ils attendaient devant le distributeur. J'en ai vu passer ; deux fois le même, jamais. »"
+    text: "Madame Josiane a déjà plié le relevé en quatre : « La banque a encore refusé. Cette fois, ils ne l'ont pas appris au distributeur : ils attendaient devant. Je leur redis la même phrase ? »"
     left:
       label: "Dites que je m'en occupe"
       effects: {vestiaire: "+", direction: "-", parole: 1, promise: true}
-      answer: "Elle le dit. Deux joueurs hochent la tête ; les autres regardent l'écran du distributeur."
+      answer: "Elle la redit. Deux joueurs hochent la tête ; les autres ont déjà sorti leur relevé de la poche."
     right:
       label: "Dites que c'est la banque"
       effects: {vestiaire: "-", direction: "+", relation: {josiane: -1}, var: {paie_retard: "+1"}, react: {card: en.re.vecchio_distributeur, chance: 0.6}}
@@ -47,7 +47,7 @@ cards:
     tags: [vestiaire, caisse]
     speaker: brehaut
     tone: strategique
-    text: "Bréhaut ne s'assoit pas, un relevé de banque à la main, le pouce sur une ligne : « Le groupe vit bien. Pas à crédit. Le 5, c'était il y a douze jours, {toi}. Tu savais ? »"
+    text: "Bréhaut ne s'assoit pas, un relevé à la main, le pouce sur une ligne : « Les gars ont des loyers, des crédits, un qui vient d'avoir un bébé. Le 5, c'était il y a douze jours, {toi}. Tu savais ? »"
     left:
       label: "Je savais, je m'en occupe"
       effects: {vestiaire: "-", parole: 1, promise: true, relation: {brehaut: 1}, set: [salaires_avances], outcome: avance, react: en.re.aulard_avance}
@@ -64,7 +64,7 @@ cards:
     tags: [vestiaire, caisse]
     speaker: brehaut
     tone: strategique
-    text: "Bréhaut ne s'assoit pas : « Le groupe vit bien, pas à crédit, et un brassard ne rend pas la banque plus patiente. Le 5, c'était il y a douze jours, {toi}. Tu savais ? »"
+    text: "Bréhaut ne s'assoit pas : « Un brassard, ça ne fait pas patienter une banque, on le sait tous les deux. Il y a un loyer derrière chaque casier. Le 5, c'était il y a douze jours, {toi}. Tu savais ? »"
     left:
       label: "Je savais, je m'en occupe"
       effects: {vestiaire: "+", parole: 1, promise: true, relation: {brehaut: 2}, set: [salaires_avances], outcome: avance, react: en.re.aulard_avance}
@@ -72,7 +72,7 @@ cards:
     right:
       label: "Première nouvelle"
       effects: {vestiaire: "--", direction: "+", relation: {brehaut: -1}, set: [salaires_retard], outcome: patience}
-      answer: "Il te croit, parce qu'il t'a vu porter le brassard. C'est pire."
+      answer: "Il te croit, d'un capitaine à l'autre. C'est pire."
 
   # ------------------------------------------------------- S3 · le président
   - id: en.salaires.aulard
@@ -81,7 +81,7 @@ cards:
     tags: [direction, caisse]
     speaker: aulard
     tone: strategique
-    text: "Vaubourg raccroche sans avoir parlé dedans : « La paie c'est la trésorerie, et le comptable est en arrêt. J'ai pas le temps, j'ai un empire : on vend quelqu'un, ou quelqu'un paie ? »"
+    text: "Vaubourg raccroche sans avoir parlé dedans : « La paie, c'est la trésorerie, et mon comptable est en arrêt maladie depuis que la banque a appelé. On vend quelqu'un, ou quelqu'un paie ? »"
     left:
       label: "On vend quelqu'un"
       effects: {caisse: "++", vestiaire: "--", force: -3, relation: {brehaut: -1}}
@@ -98,7 +98,7 @@ cards:
     tags: [direction, caisse, retorse]
     speaker: aulard
     tone: strategique
-    text: "Vaubourg, sans lever les yeux : « Tu as avancé la paie de ta poche et le vestiaire croit que le président c'est toi. J'ai pas le temps : tu me rends la facture, ou tu la gardes ? »"
+    text: "Vaubourg, sans lever les yeux de son chéquier : « Tu as avancé la paie de ta poche, et dans mon club, le vestiaire croit que le président, c'est toi. Tu me rends la facture, ou tu la gardes ? »"
     left:
       label: "Je la garde"
       effects: {direction: "--", vestiaire: "++", relation: {aulard: -1}}
@@ -115,7 +115,7 @@ cards:
     tags: [sponsors, caisse, vestiaire]
     speaker: nassir
     tone: strategique
-    text: "Cheikh Ilyas, un chéquier fermé à la main : « Un club qui ne paie pas ses joueurs est un passif. Nous payons deux mois, sans maillot ; prévenez-nous avant la banque. »"
+    text: "Cheikh Ilyas tient un chéquier fermé : « Des joueurs impayés font baisser la valeur de tout ce qui les entoure. Nous payons deux mois, sans condition sur le maillot. Prévenez-nous avant la banque. »"
     left:
       label: "Payez, et merci"
       effects: {caisse: "++", vestiaire: "++", direction: "-", set: [nassir_paie], relation: {nassir: 1}, outcome: nassir}
@@ -157,11 +157,11 @@ cards:
     tone: strategique
     when: "flag('salaires_retard')"
     cooldown: 20
-    text: "Bréhaut, debout au milieu d'un rond central assis : « Le groupe ne s'entraîne pas tant que le 5 n'est pas tombé, et il vit bien assis : il a apporté des oranges. Tu t'assois, {toi} ? »"
+    text: "Bréhaut, debout au milieu d'un rond central assis : « Personne ne s'entraîne tant que le 5 n'est pas tombé. On a apporté des oranges, on tiendra la journée. Tu t'assois avec nous, {toi} ? »"
     left:
       label: "Je m'assois avec eux"
       effects: {vestiaire: "+++", direction: "--", relation: {brehaut: 1}, parole: 1, promise: true}
-      answer: "Le président compte douze personnes assises depuis la loge. Toi comprise dans le compte."
+      answer: "Depuis la loge, le président compte les gens assis dans le rond central. Douze, dont toi."
     right:
       label: "Je siffle, on verra"
       effects: {vestiaire: "-", direction: "++", force: -2, relation: {brehaut: -1}, set: [bus_menace], react: {card: en.re.vecchio_bus, chance: 0.7}}

@@ -5,14 +5,15 @@ cards:
     tags: [presse, sponsors]
     speaker: lea
     cooldown: 20
-    text: "Léa : « Tu as repoussé les bouteilles du sponsor hors du cadre. Eux parlent de rupture, moi de facture. »"
+    text: "Léa referme la porte de la salle de presse : « Vous avez poussé les canettes du sponsor hors du champ. Ils ont appelé le président avant la fin de la conférence. Ils veulent vous voir boire. »"
     left:
-      label: "Je descends le soda cul sec"
+      label: "J'en bois une, devant eux"
       effects: {caisse: "++", tribunes: "-"}
-      answer: "Tu grimaces, c'est filmé sous tous les angles."
+      answer: "Tu bois la canette orange face aux caméras. Le lendemain, la photo est au local, au-dessus du bar, avec un mot au feutre."
     right:
       label: "Je bois de l'eau"
       effects: {tribunes: "++", caisse: "--", direction: "-"}
+      answer: "Le sponsor suspend ta prime d'image. Au Corner, le patron retourne l'affiche de la canette contre le mur."
 
   - id: jp.presse.yacht
     roles: [joueur]
@@ -20,39 +21,44 @@ cards:
     tags: [presse, risk:tribunes]
     speaker: meneche
     when: "flag('genou')"
-    text: "Massenet, ravi : « Toi au soleil sur un yacht, l'équipe sous la pluie. On met la photo en Une, ou tu rentres courir ? »"
+    text: "Massenet glisse une photo sur le comptoir : toi, le genou bandé au soleil sur le bateau d'un sponsor ; le groupe, lui, court sous la pluie. « Elle sort jeudi. Vous rentrez avant ? »"
     left:
       label: "Je rentre m'entraîner"
       effects: {tribunes: "+", vestiaire: "+", caisse: "-"}
+      answer: "Tu prends le train du soir. Jeudi, la photo sort quand même, en petit, avec une ligne : retour la veille."
     right:
       label: "Je reste au soleil"
       effects: {tribunes: "--", vestiaire: "-", caisse: "+"}
+      answer: "La photo sort en Une jeudi, ton genou en gros plan. Au vestiaire, quelqu'un l'a scotchée sur ton casier."
 
   - id: jp.presse.morsure
     roles: [joueur]
     arc: presse
     tags: [presse, absurde]
     speaker: lea
-    text: "Léa : « Tu as mordu un défenseur, {toi}, le web te surnomme le Requin. J'ai deux communiqués : un sérieux, un rigolo. »"
+    text: "Léa tient deux feuilles devant elle, sans les tendre : « Le défenseur d'en face montre la marque de vos dents à toutes les caméras, {toi}. La commission se réunit mardi. Des excuses, ou rien ? »"
     left:
-      label: "Le communiqué sérieux"
+      label: "Je signe les excuses"
       effects: {direction: "+", tribunes: "-"}
+      answer: "Léa lit le communiqué au téléphone à L'Écho, mot à mot. Au local, Gégé le découpe et écrit dessous, au feutre : mou."
     right:
-      label: "J'assume la dent"
+      label: "Je ne m'excuse pas"
       effects: {tribunes: "++", direction: "-", vestiaire: "-"}
+      answer: "La Nord chante ton nom en montrant les dents. Au vestiaire, Bréhaut compte sur ses doigts les matchs de suspension."
 
   - id: jp.presse.cm
     roles: [joueur]
     arc: presse
     tags: [presse, absurde]
-    text: "Ton nouveau community manager, 19 ans : « File-moi les clés du compte. Une nuit et tu es viral, promis. »"
+    text: "Un garçon de dix-neuf ans t'attend sur le parking du stade, un classeur sous le bras : « Un service Minitel à votre nom. Les supporters vous écrivent, je réponds la nuit à votre place. On signe ? »"
     left:
-      label: "Tiens, les clés"
+      label: "Vas-y, réponds pour moi"
       effects: {caisse: "-", set: [cm_solo], schedule: [{card: jp.presse.cm_derapage, in: [3, 7]}]}
-      answer: "Il part déjà filmer l'intérieur de ton frigo."
+      answer: "Tu lui signes un chèque et une procuration. La première nuit, il répond à quarante supporters et signe de ton prénom."
     right:
-      label: "Je poste moi-même"
+      label: "Je répondrai moi-même"
       effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Deux soirs de suite, tu tapes tes réponses au club-house. Les supporters les impriment ; au vestiaire, on te reproche ces soirées."
 
   - id: jp.presse.cm_derapage
     roles: [joueur]
@@ -61,27 +67,30 @@ cards:
     speaker: lea
     sablier: true
     when: "flag('cm_solo')"
-    text: "Léa, à 4h du matin : « Ton CM a liké une horreur depuis ton compte. C'est déjà en story partout, je fais quoi ? »"
+    text: "Léa t'appelle à quatre heures du matin : « Le garçon du Minitel a répondu à un supporter cette nuit. Des horreurs sur les joueurs noirs du club, signées de votre prénom. L'Écho a la page. »"
     left:
-      label: "Je crie au piratage"
+      label: "Je parle de piratage"
       effects: {direction: "-", tribunes: "-", clear: [cm_solo]}
-      answer: "Personne n'y croit, mais ça occupe la nuit."
+      answer: "Léa répète « piratage » à trois rédactions. L'Écho imprime le mot entre guillemets ; les guillemets disent tout."
     right:
-      label: "Je le vire en direct"
+      label: "Je le vire, et je le dis"
       effects: {caisse: "-", tribunes: "+", vestiaire: "+", clear: [cm_solo]}
+      answer: "Tu le congédies sur le parking et tu donnes son nom à L'Écho. À l'entraînement, le lendemain, les ballons reviennent vers toi."
 
   - id: jp.presse.sponsor_paris
     roles: [joueur]
     arc: presse
     tags: [presse, sponsors, agents]
     speaker: fardelli
-    text: "Fardelli : « Un site de paris des îles lointaines veut ton visage. L'argent est énorme, et comment dire, liquide. »"
+    text: "Fardelli ouvre une mallette sur le capot, des liasses rangées par couleur : « Une maison de paris des îles veut ta tête sur ses affiches. Pas de contrat, pas de facture, pas de questions. On prend ? »"
     left:
-      label: "Je signe, l'argent est vert"
+      label: "Je prends la mallette"
       effects: {caisse: "+++", direction: "--", tribunes: "-"}
+      answer: "Ton visage part sur des affiches que tu ne verras jamais. Le club, lui, reçoit une lettre de la Fédération qui cite ton nom."
     right:
-      label: "Jamais les paris"
+      label: "Referme ta mallette"
       effects: {tribunes: "+", direction: "+"}
+      answer: "Fardelli la referme sans se vexer. Il dit qu'il connaît quelqu'un d'autre, moins regardant ; il le dit pour que tu l'entendes."
 
   - id: jp.presse.pub_orange
     roles: [joueur]
@@ -89,13 +98,15 @@ cards:
     tags: [presse, sponsors]
     speaker: nassir
     cooldown: 25
-    text: "Cheikh Ilyas : « Deux jours à tourner la pub de la boisson orange. En pleine semaine de derby, mais quel cachet, l'ami. »"
+    text: "Ilyas fait rouler une canette orange sur la table jusqu'à toi : « Deux jours de tournage, mardi et mercredi. Votre image se valorise la semaine du derby, c'est mécanique. Vous tournez ? »"
     left:
       label: "Je tourne la pub"
       effects: {caisse: "++", force: "-", vestiaire: "-"}
+      answer: "Deux jours debout sous les projecteurs. Jeudi, Bréhaut voit la canette dans ton sac ; il en garde une pareille, jamais ouverte."
     right:
-      label: "Le derby d'abord"
+      label: "Je refuse, c'est le derby"
       effects: {caisse: "-", tribunes: "+"}
+      answer: "Ilyas reprend la canette sans insister. Dimanche, la Nord chante ton nom par-dessus le panneau orange."
 
   - id: jp.presse.rescue_hopital
     roles: [joueur]
@@ -103,14 +114,15 @@ cards:
     tags: [presse, rescue:tribunes]
     speaker: lea
     when: "gauges.tribunes < 25"
-    text: "Léa : « Les tribunes te détestent. Visite surprise à l'hôpital des enfants demain, caméras comprises, et tu souris. »"
+    text: "Léa a déjà tapé le programme : « Pédiatrie, demain dix heures, L'Écho et Télé-Stade sont prévenus. La Nord vous siffle depuis trois semaines ; des enfants malades, on ne les siffle pas. On y va ? »"
     left:
       label: "J'y vais et je souris"
       effects: {tribunes: "+++", direction: "-"}
-      answer: "Un gamin te fait un câlin, la Une s'attendrit."
+      answer: "Un enfant te fait signer son plâtre ; la photo fait la Une de L'Écho. Le président trouve que tu souris un peu trop."
     right:
-      label: "Pas de caméra, pas moi"
+      label: "J'irai, mais sans caméras"
       effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Tu y vas un mardi, sans prévenir. Une infirmière le raconte au Corner ; le vestiaire le sait le lendemain, la Nord siffle encore."
 
   - id: jp.presse.rescue_maillot
     roles: [joueur]
@@ -118,96 +130,105 @@ cards:
     tags: [presse, rescue:tribunes, moment]
     speaker: gege
     when: "gauges.tribunes < 25"
-    text: "Gégé, la voix cassée : « Le virage doute. Tu marques, tu cours vers nous, tu balances ton maillot, et on oublie tout. »"
+    text: "Gégé, accroché à la grille de la Nord après l'entraînement : « Le virage siffle ton nom depuis trois dimanches. Samedi, si tu marques, tu viens jusqu'à nous, et le maillot, tu nous le lances. »"
     left:
       label: "Je cours vers le virage"
       effects: {tribunes: "+++", vestiaire: "-"}
-      answer: "Le kop rugit ton nom, tu chiales un peu."
+      answer: "Samedi, tu marques et tu traverses le terrain jusqu'à la Nord. Gégé attrape le maillot ; tes coéquipiers fêtent le but sans toi."
     right:
-      label: "Après le match, au calme"
+      label: "Je fêterai avec le groupe"
       effects: {tribunes: "-"}
+      answer: "Samedi, tu marques et tu cours vers tes coéquipiers. Derrière la grille, Gégé replie son écharpe sans applaudir."
 
   - id: jp.presse.interview_piege
     roles: [joueur]
     arc: presse
     tags: [presse, piege]
     speaker: meneche
-    text: "Massenet, magnéto allumé : « Qui commande ce vestiaire, {toi}, toi ou le coach ? Réponds, ou j'écris la réponse à ta place. »"
+    text: "Au Terminus, Massenet pose son magnétophone entre les tasses et appuie sur la touche rouge, sans se cacher : « Le coach dit qu'il fait l'équipe. Le vestiaire dit que c'est vous, {toi}. Qui ment ? »"
     left:
-      label: "Le collectif, voyons"
+      label: "Je parle du collectif"
       effects: {tribunes: "--", direction: "+"}
-      answer: "La langue de bois, ça n'a jamais rempli un stade."
+      answer: "Massenet arrête le magnétophone au milieu de ta phrase. Le lendemain, son article tient en trois lignes, sous le titre « Langue de bois »."
     right:
       label: "Moi, et il le sait"
       effects: {vestiaire: "-", tribunes: "++", direction: "-"}
+      answer: "Ta phrase est en Une le lendemain, en gras. Le coach la lit à voix haute au vestiaire, sans te regarder."
 
   - id: jp.presse.tweet_nuit
     roles: [joueur]
     arc: presse
     tags: [presse, arbitrage]
     speaker: lea
-    text: "Léa, au téléphone à 2h : « Tu as tweeté sur l'arbitre, c'est déjà repris partout. On efface ou on assume ? »"
+    text: "Léa t'appelle à deux heures du matin : « Vous avez appelé Radio Tribune en direct pour parler de l'arbitre. La radio régionale reprend la bande au journal de sept heures. Je la fais retirer ? »"
     left:
-      label: "J'efface tout"
+      label: "Faites retirer la bande"
       effects: {direction: "+", tribunes: "-"}
+      answer: "La bande ne passe pas à sept heures. Au local, on se la repasse quand même, et on dit que tu as eu peur."
     right:
-      label: "J'assume mon tweet"
+      label: "J'assume chaque mot"
       effects: {tribunes: "+", direction: "-", caisse: "-"}
+      answer: "La phrase passe à sept, huit et neuf heures. La commission t'envoie une amende ; au local, on l'a recopiée à la craie."
 
   - id: jp.presse.docu
     roles: [joueur]
     arc: presse
     tags: [presse]
     speaker: meneche
-    text: "Massenet : « Un doc immersif : caméras au vestiaire, chez toi, partout. Du brut, du vrai, une audience énorme. »"
+    text: "Massenet est venu avec un homme de Télé-Stade qui garde son manteau : « Une saison avec vous. Une caméra au vestiaire, une dans votre cuisine. Ils paient bien, et ils montent tout. Vous signez ? »"
     left:
-      label: "Caméras partout, banco"
+      label: "Je signe pour la saison"
       effects: {caisse: "++", vestiaire: "--"}
-      answer: "Le vestiaire trouve les micros, ambiance de plomb."
+      answer: "Le deuxième jour, Vecchio trouve un micro scotché sous le banc. Depuis, au vestiaire, on ne parle plus qu'en chuchotant."
     right:
-      label: "Ma vie reste à moi"
+      label: "Je garde ma porte fermée"
       effects: {vestiaire: "+", caisse: "-"}
+      answer: "L'homme de Télé-Stade repart avec son contrat. Bréhaut l'apprend et le répète aux gars : chez nous, on se change sans caméra."
 
   - id: jp.presse.crampons
     roles: [joueur]
     arc: presse
     tags: [presse, sponsors, absurde]
     speaker: nassir
-    text: "Cheikh Ilyas : « Nos crampons orange, dimanche, aux pieds. Peu importe les ampoules, l'important c'est qu'ils brillent. »"
+    text: "Ilyas fait poser une boîte sur ton banc : des crampons aux couleurs de la canette, neufs, raides comme du bois. « Dimanche, à vos pieds, devant les caméras. Le contrat le prévoit page quatre. »"
     left:
-      label: "Je les mets, ça brille"
+      label: "Je les mets dimanche"
       effects: {caisse: "++", force: "-"}
+      answer: "À la mi-temps, Sabatier découpe tes chaussettes : deux ampoules ouvertes. Le contrat, lui, est respecté jusqu'à la page quatre."
     right:
-      label: "Mes crampons fétiches"
+      label: "Je garde mes vieux crampons"
       effects: {caisse: "-", force: "+", tribunes: "+"}
+      answer: "Tu joues avec tes vieux crampons recousus. Ilyas fait noter le manquement ; la Nord, elle, a vu tes godasses et applaudit."
 
   - id: jp.presse.faux_compte
     roles: [joueur]
     arc: presse
     tags: [presse, absurde]
     speaker: lea
-    text: "Léa : « Un faux compte à ton nom, {toi}, signe des autographes et vend des posters. Il a plus de succès que le vrai toi. »"
+    text: "Léa pose sur ton casier l'affiche d'une fête de village, « dédicace de {toi} » : « Ce n'est pas vous. Il signe votre nom depuis un mois, et il encaisse le cachet. Je préviens les gendarmes ? »"
     left:
       label: "Je porte plainte"
       effects: {caisse: "-", direction: "+"}
+      answer: "Les gendarmes l'arrêtent à la fête de Montbéliac, un feutre à la main. Dans son coffre, trois affiches de plus, pour trois autres villages."
     right:
-      label: "Qu'il bosse pour moi"
+      label: "Je lui propose un partage"
       effects: {tribunes: "-", caisse: "+"}
+      answer: "Vous coupez le cachet en deux au Terminus. Quand L'Écho l'apprend, il titre : « Deux signatures, un seul nom »."
 
   - id: jp.presse.merguez
     roles: [joueur]
     arc: presse
     tags: [presse, sponsors, absurde]
     speaker: fardelli
-    text: "Fardelli : « Le boucher du coin te sponsorise : pas un rond, mais des merguez à vie et tout le quartier avec toi. »"
+    text: "Fardelli, devant la boucherie de la rue du Stade : « Le boucher veut ta photo dans sa vitrine. Il ne paie rien, je te préviens ; il nourrit le quartier les soirs de match. Tu acceptes ? »"
     left:
-      label: "Va pour les merguez"
+      label: "J'accepte pour le quartier"
       effects: {tribunes: "++", caisse: "-"}
-      answer: "Ton nom fleurit sur les murs, avec amour et gras."
+      answer: "Ta photo entre dans la vitrine, entre les terrines. Les soirs de match, le boucher grille devant sa porte et la rue chante ton nom."
     right:
       label: "Je vise plus gros"
       effects: {caisse: "+", tribunes: "-"}
-      answer: "Le boucher retire ton affiche de la vitrine. Il la garde ; il la remettra le jour où tu reviendras."
+      answer: "Le boucher retire ton affiche de la vitrine. Il la garde dans l'arrière-boutique, pour le jour où tu reviens."
 
   - id: jp.presse.excuses_recyclees
     roles: [joueur]
@@ -215,10 +236,12 @@ cards:
     tags: [presse]
     speaker: lea
     cooldown: 30
-    text: "Léa, blasée : « J'ai ressorti ton communiqué d'excuses habituel, {toi}, j'ai juste changé la date. Tu signes ? »"
+    text: "Léa sort de son classeur ton communiqué d'excuses de novembre : « J'ai changé la date et le nom de l'adversaire, {toi}. C'est le troisième. Vous signez, ou vous l'écrivez vous-même ? »"
     left:
-      label: "Je signe, comme d'hab"
+      label: "Je signe le même"
       effects: {direction: "+", tribunes: "-"}
+      answer: "Le communiqué part par fax à midi. L'Écho le publie à côté des deux précédents, pour qu'on compare."
     right:
       label: "J'écris moi-même"
       effects: {tribunes: "+", vestiaire: "+", direction: "-"}
+      answer: "Tu écris trois lignes à la main, avec une faute. Léa la laisse ; au vestiaire, on trouve que ça te ressemble."
