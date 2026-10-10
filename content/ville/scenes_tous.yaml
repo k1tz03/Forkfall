@@ -1,0 +1,271 @@
+# LES SCÈNES DE LA SEMAINE — tous les rôles (format : scenes_communes.yaml).
+#
+# Ce qu'Aubérive fait à quiconque y vit un métier de football, du banc à la
+# Fédération : on t'arrête sur le pont, on glisse une carte sous ta porte, on
+# te photographie au mauvais endroit. Écrites pour tenir partout : chez toi, ce
+# peut être le deux-pièces de la rue des Lilas comme la chambre d'hôtel du
+# sélectionneur (rien dans ces scènes ne nomme la pièce). Une chaîne : la carte
+# du pont → la dame aux cartes (`mission(...)`, quel qu'ait été le choix).
+scenes:
+  - id: sc.quand_vous_gagnerez
+    titre: "Quand vous gagnerez"
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    qui: ancien
+    texte: "À la boulangerie, la machine refuse ta carte pour une baguette. Derrière toi, un vieil homme en casquette pose déjà une pièce sur le comptoir. « Vous me la rendrez quand vous gagnerez. »"
+    choix:
+      - label: "J'accepte la pièce"
+        reponse: "Il refuse que tu notes son nom. Trois semaines plus tard, tu lui rends sa pièce sur le trottoir ; il la regarde, puis toi, et demande : « Déjà ? »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je laisse la baguette"
+        reponse: "Tu reposes le pain. Le vieil homme l'achète quand même et te le tend sur le trottoir, sans un mot, avant de partir à petits pas vers l'église."
+
+  - id: sc.portefeuille_rendu
+    titre: "Le portefeuille rendu"
+    lieu: rue
+    tranches: [soir]
+    qui: passant
+    texte: "Un homme qui dort sous le pont te rattrape et te tend ton portefeuille. « Je te l'ai pris au marché, ce matin. Puis j'ai vu ce qu'il y avait dedans. Je ne vole pas les gens du stade. »"
+    choix:
+      - label: "Je lui laisse un billet"
+        francs: -50
+        reponse: "Il range le billet dans sa chaussure sans le regarder. « Le reste est là. J'ai gardé le ticket de la laverie. Il me faut une adresse, l'hiver. »"
+      - label: "Je vérifie le contenu"
+        reponse: "Tu comptes devant lui. Il ne manque rien. Il attend que tu aies fini, hoche la tête et retourne sous le pont, sans se presser, les mains dans les poches."
+
+  - id: sc.carte_du_pont
+    titre: "Une carte du pont"
+    lieu: domicile
+    tranches: [soir]
+    texte: "Une carte postale du pont d'Aubérive, jaunie, a été glissée sous ta porte, sans timbre. Au dos, une écriture appliquée : « Vous ne savez pas qui je suis. Moi, je sais où vous dormez. Bienvenue. »"
+    choix:
+      - label: "Je la garde"
+        reponse: "Tu la poses contre le miroir. Dans la nuit, tu te lèves deux fois pour vérifier le verrou, et la seconde fois tu ris de toi-même, sans conviction."
+      - label: "Je la jette"
+        reponse: "Elle tombe dans la corbeille, face vers le haut. Le lendemain matin, tu la ressors et la poses sur la table, à l'envers, sans savoir pourquoi."
+
+  - id: sc.dame_aux_cartes
+    titre: "La dame aux cartes"
+    lieu: fontaine
+    tranches: [matin, aprem]
+    qui: passante
+    si: "mission(sc.carte_du_pont)"
+    texte: "Une vieille dame en manteau du dimanche t'arrête près de la fontaine, un paquet de cartes du pont dans son cabas. « Les cartes, c'est moi. J'en envoie à tous ceux qui arrivent. Personne ne répond. »"
+    choix:
+      - label: "Je vous répondrai"
+        reponse: "Le lendemain, tu glisses une carte du pont dans sa boîte, avec trois mots. Le soir même, elle l'a punaisée à sa fenêtre, côté rue, pour que tu la voies en passant."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Arrêtez, s'il vous plaît"
+        reponse: "Elle range le paquet au fond de son cabas. À la boulangerie, on raconte qu'elle n'envoie plus rien à personne depuis l'automne."
+
+  - id: sc.sondage_du_stade
+    titre: "Une voix comme tout le monde"
+    lieu: marche
+    tranches: [matin]
+    jours: [dim]
+    qui: passante
+    texte: "Au marché, une étudiante fait un sondage, une planchette contre la poitrine. « Le stade de la Rive : le rénover, le vendre ou le laisser ? Vous comptez pour une voix, comme tout le monde. »"
+    choix:
+      - label: "Le rénover"
+        reponse: "Elle coche la case, puis dessine une petite étoile dans la marge. Tu lui demandes pourquoi ; elle dit que c'est pour les gens qu'on reconnaît."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je ne vote pas ici"
+        reponse: "Elle écrit « ne se prononce pas » de sa plus belle écriture, puis te demande quand même ton âge, ta profession, et si tu as un chien."
+
+  - id: sc.bureau_de_vote
+    titre: "Une poignée de main"
+    lieu: ecole
+    tranches: [matin, aprem]
+    jours: [dim]
+    qui: passant
+    texte: "À la sortie du bureau de vote de l'école, un candidat te tend la main devant le photographe de L'Écho, le sourire déjà prêt. « Une poignée de main, c'est tout. Ça ne vous engage à rien. »"
+    choix:
+      - label: "Je serre la main"
+        reponse: "Le flash part. Lundi, la photo est en page trois, sous un titre qui t'engage à tout. On te la montre trois fois avant midi."
+        effets: {jauges: {direction: -1, tribunes: 1}}
+      - label: "Mains dans les poches"
+        reponse: "Le candidat serre la main du photographe à la place, en riant trop fort. Lundi, la photo est en page trois, et toi au fond, flou, de dos."
+
+  - id: sc.valse_lente
+    titre: "En valse lente"
+    lieu: hotel
+    tranches: [soir]
+    qui: passant
+    texte: "Le pianiste de l'hôtel de la Rive joue le chant de la Nord en valse lente, sans lever les yeux du clavier. « Une pièce, et je joue celui de vos adversaires. Deux, et j'arrête. »"
+    choix:
+      - label: "Une pièce"
+        francs: -5
+        reponse: "Il enchaîne sur le chant d'en face, plus lent encore, comme un enterrement. Au comptoir, deux hommes en costume rient sans comprendre."
+      - label: "Deux pièces"
+        francs: -10
+        reponse: "Il ferme le couvercle du piano et boit son verre, enfin. Le silence dure jusqu'à ce que quelqu'un, au fond du bar, siffle l'air de la Nord, faux."
+
+  - id: sc.avis_de_deces
+    titre: "Les avis de L'Écho"
+    lieu: echo
+    tranches: [matin, aprem]
+    qui: passante
+    si: "annee <= 2035"
+    texte: "Au guichet des avis de L'Écho, une veuve dicte celui de son mari, abonné depuis toujours. Elle s'interrompt en te voyant. « Il vous aimait bien. Je mets votre nom dedans ? »"
+    choix:
+      - label: "Ajoutez mon nom"
+        reponse: "L'employée l'ajoute à la fin, entre « ses amis de la Nord » et « son chien Tango ». Le lendemain, la boulangère te présente ses condoléances en rendant la monnaie."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Écrivez « le football »"
+        reponse: "La veuve hoche la tête. « C'est mieux. Ça ne part pas, le football. » L'employée compte les mots à voix basse et annonce le prix."
+
+  - id: sc.hymne_des_cm1
+    titre: "L'hymne des CM1"
+    lieu: ecole
+    tranches: [matin, aprem]
+    jours: [lun, mar, jeu, ven]
+    qui: passant
+    texte: "Dans la cour de l'école, l'instituteur fait répéter l'hymne national aux CM1 pour la visite du préfet. Il t'aperçoit à la grille et arrête tout. « Vous le connaissez par cœur ? Montrez-leur. »"
+    choix:
+      - label: "Je chante"
+        reponse: "Tu chantes faux dès le deuxième vers. Les enfants te rattrapent et te portent jusqu'à la fin, plus fort que toi, en tapant du pied sous le préau."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je ne chante jamais"
+        reponse: "« Comme les joueurs, alors. » Il reprend au premier couplet ; les enfants te regardent le temps d'une mesure, puis reviennent à leur instituteur."
+
+  - id: sc.calendrier_pompiers
+    titre: "Le calendrier des pompiers"
+    lieu: rue
+    tranches: [matin, aprem]
+    qui: passant
+    si: "phase == hiver"
+    texte: "Deux pompiers en uniforme t'arrêtent au carrefour, une pile de calendriers sous le bras. « Celui-là, il est spécial. Le mois de mars, c'est la caserne en maillot du club. »"
+    choix:
+      - label: "J'en prends un"
+        francs: -50
+        reponse: "Le plus jeune te l'ouvre au mois de mars : la caserne en maillot, devant la grande échelle, le capitaine assis sur un casque. « On avait perdu, ce jour-là. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "J'en ai déjà un"
+        reponse: "« Pas celui-là. » Ils repartent vers la porte suivante, et tu les entends dire ton nom à la voisine, comme un argument de vente."
+
+  - id: sc.une_seule_lumiere
+    titre: "Une seule lumière"
+    lieu: domicile
+    tranches: [nuit]
+    texte: "Le sommeil ne vient pas. Par la fenêtre, à trois heures, une seule lumière est encore allumée dans toute la ville, du côté du stade. Elle clignote, comme une main qui hésite."
+    choix:
+      - label: "Je descends marcher"
+        reponse: "La ville est à toi jusqu'au pont. Un chat te suit, puis renonce. Au retour, la lumière est éteinte, et tu t'endors sans te déshabiller, en travers du lit."
+      - label: "Je reste à la fenêtre"
+        reponse: "La lumière s'éteint à trois heures vingt. Tu restes devant le carreau noir jusqu'à ce que les premiers camions du marché passent dans la rue."
+
+  - id: sc.cabine_qui_sonne
+    titre: "La cabine qui sonne"
+    lieu: rue
+    tranches: [aprem, soir]
+    si: "annee <= 2000"
+    texte: "La cabine téléphonique du carrefour se met à sonner au moment où tu passes. Personne d'autre dans la rue. Elle sonne, sonne, comme si elle savait exactement qui passait."
+    choix:
+      - label: "Je décroche"
+        reponse: "Une voix d'homme, calme : « Pas vous. » Puis la tonalité. Quand tu tournes au coin de la rue, la cabine s'est remise à sonner."
+      - label: "Je laisse sonner"
+        reponse: "Elle sonne onze fois. Au douzième coup, une femme sort de la boulangerie en courant, décroche et dit : « Oui. C'est moi. J'écoute. »"
+
+  - id: sc.brin_de_muguet
+    titre: "Un brin pour le stade"
+    lieu: mairie
+    tranches: [matin, aprem]
+    qui: enfant
+    si: "phase == sprint"
+    texte: "Une gamine vend du muguet sur les marches de la mairie, une caisse en bois pour comptoir. « Un brin pour le stade. Il porte bonheur jusqu'en juin. Après, il faut en racheter un, sinon ça s'arrête. »"
+    choix:
+      - label: "J'en prends un brin"
+        francs: -10
+        reponse: "Elle choisit elle-même le brin le plus fourni et le glisse à ta boutonnière, sur la pointe des pieds. Il fane le soir même ; tu le gardes quand même."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je n'y crois pas"
+        reponse: "« Moi non plus, mais je les vends. » Elle te le donne quand même, et tu repars avec un brin que tu n'as pas payé, tenu comme une cigarette."
+
+  - id: sc.micro_trottoir
+    titre: "Micro-trottoir"
+    lieu: rue
+    tranches: [aprem]
+    qui: passante
+    texte: "Une équipe de la télé régionale fait un micro-trottoir sur le pont. La journaliste ne sait pas qui tu es. « Le football, pour vous, c'est encore un sport, ou c'est de l'argent ? »"
+    choix:
+      - label: "Encore un sport"
+        reponse: "On te coupe au montage. Le soir, ta silhouette passe, floue, derrière un retraité qui dit « de l'argent », et ta mère te reconnaît à ta façon de marcher."
+      - label: "De l'argent"
+        reponse: "Le soir, ta phrase passe en entier, ton nom en dessous : quelqu'un, au montage, savait. Le lendemain, au marché, on te salue d'un clin d'œil, ou on ne te salue plus."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: sc.une_seule_main
+    titre: "Une seule main"
+    lieu: tripot
+    tranches: [nuit]
+    texte: "À l'arrière-salle du Terminus, le donneur te fait une place sans demander ton nom. « Une seule main. Si tu gagnes, tu ne reviens jamais. Si tu perds, pareil. C'est la règle de la maison. »"
+    choix:
+      - label: "Je mise"
+        francs: -200
+        reponse: "Tu perds avec deux paires. Le donneur pose ta mise à part, sous le cendrier, avec un papier à ton nom. « On ne la mélange pas avec les autres. »"
+      - label: "Je regarde seulement"
+        reponse: "On te sert un verre d'eau. À trois heures, l'homme à ta droite perd sa voiture, pose les clés sur le tapis vert et sort à pied par la porte de la cour."
+
+  - id: sc.payee_pour_etre_vue
+    titre: "Payée pour être vue"
+    lieu: club_prive
+    tranches: [nuit]
+    texte: "Une femme en robe de soirée s'assoit à ta table du Rideau Rouge sans rien demander. « Je ne veux rien. On m'a payée pour qu'on me voie avec vous. Je bois mon verre, et je m'en vais. »"
+    choix:
+      - label: "Buvez votre verre"
+        reponse: "Elle boit lentement, regarde sa montre, se lève à minuit pile. Dans l'entrée, un flash, un seul. Elle ne se retourne pas."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je paie et je pars"
+        francs: -150
+        reponse: "Tu laisses des billets sur la table. Elle les pousse vers le seau à glace du bout d'un ongle. « Ce n'est pas vous qui payez, ce soir. »"
+
+  - id: sc.pour_l_echelle
+    titre: "Pour l'échelle"
+    lieu: rue
+    tranches: [aprem]
+    qui: ancien
+    texte: "Un peintre du dimanche a planté son chevalet de travers sur le quai, face au stade et à la Rive. « Restez devant une minute. Pour l'échelle. On ne comprend un stade que s'il y a quelqu'un devant. »"
+    choix:
+      - label: "Je pose une minute"
+        reponse: "Il te peint en trois coups de pinceau, une silhouette de rien devant le stade. Le tableau est en vente chez la fleuriste ; ta silhouette y est devenue quelqu'un d'autre."
+      - label: "Peignez-le vide"
+        reponse: "Il hausse les épaules et continue. Le tableau, en vitrine chez la fleuriste, montre un stade vide sous un ciel trop bleu. Il ne se vend pas."
+
+  - id: sc.les_invendus
+    titre: "Les invendus"
+    lieu: presse
+    tranches: [matin, midi]
+    qui: commercant
+    texte: "La vendeuse de la maison de la presse a retrouvé dans sa réserve un paquet de L'Écho jamais vendus, ficelés depuis des années. En une, le club. « Je les jette, ou vous les voulez ? »"
+    choix:
+      - label: "Je les prends"
+        francs: -20
+        reponse: "Le soir, tu défais la ficelle : vingt fois la même Une, une défaite de mars, un titre en capitales. Tu en gardes une ; les autres finissent à la laverie, pour ceux qui attendent."
+      - label: "Jetez-les"
+        reponse: "Elle les pose sur le trottoir, à côté des cartons. Le lendemain, il n'en reste aucun : quelqu'un les a emportés pendant la nuit, ficelle comprise."
+
+  - id: sc.coffre_dix_sept
+    titre: "Le coffre 17"
+    lieu: banque
+    tranches: [matin, aprem]
+    qui: passant
+    texte: "Le banquier ouvre pour toi la grille de la salle des coffres. « Dans votre métier, tout le monde finit par avoir quelque chose à mettre ici. Je vous en réserve un, au nom que vous voudrez. »"
+    choix:
+      - label: "À mon nom"
+        francs: -100
+        reponse: "Il te remet une clé plate au numéro gravé. « Le 17. Celui de votre prédécesseur était le 16. Il l'a laissé plein, et il n'est jamais revenu le vider. »"
+      - label: "Je n'ai rien à cacher"
+        reponse: "« Personne n'a rien à cacher, en arrivant. » Il referme la grille et te raccompagne jusqu'à la plante verte, sans hâte."
+
+  - id: sc.course_offerte
+    titre: "Course offerte"
+    lieu: rue
+    tranches: [nuit]
+    si: "annee >= 2036"
+    texte: "Une voiture sans volant s'arrête à ta hauteur, portière ouverte, vide. Sur l'écran du tableau de bord : ton prénom, et « Course offerte par un ami ». La destination est déjà entrée."
+    choix:
+      - label: "Je monte"
+        reponse: "Elle roule sans un bruit jusqu'au Rideau Rouge et s'arrête devant la porte sans poignée. Sur l'écran : « Destination atteinte. » La porte s'ouvre avant que tu frappes."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je ferme la portière"
+        reponse: "La voiture attend dix secondes, puis repart à vide vers le pont. Le lendemain, la même te suit au pas jusqu'à la boulangerie, et s'en va quand tu entres."

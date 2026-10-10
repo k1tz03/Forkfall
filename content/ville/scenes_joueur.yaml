@@ -1,0 +1,597 @@
+# LES SCÈNES DE LA SEMAINE — le joueur (format : scenes_communes.yaml).
+#
+# Un corps qu'on loue, un nom qu'on achète : l'agent adossé à la voiture, le
+# genou de trois heures du matin, le coéquipier sur le paillasson, la ville qui
+# veut un bout de toi. Deux chaînes (la seconde lit la première par
+# `mission(...)`, et tient quel qu'ait été le choix) : le car de six heures
+# quarante → le contrat de Portclair ; le troisième message du répondeur → la
+# même voix, en direct. Visages bornés : Gigi Vecchio garde les buts jusqu'en
+# 1992, Bréhaut porte le brassard jusqu'en 1995, Mbako a seize ans en 1990.
+scenes:
+  - id: sc.semelle_brunel
+    titre: "La semelle qui bâille"
+    roles: [joueur]
+    lieu: tailleur
+    tranches: [matin, aprem]
+    qui: commercant
+    texte: "Brunel tient ta chaussure de match à la lumière de la vitrine, du bout des doigts. « La semelle bâille au talon. Je la recouds pour samedi, ou vous rejouez avec du ruban adhésif ? »"
+    choix:
+      - label: "Recousez-la"
+        francs: -60
+        reponse: "Il coud à la main, sans lunettes, en comptant les points à mi-voix. Samedi, la chaussure tient tout le match. C'est la semelle de l'autre pied qui lâche."
+      - label: "Le ruban suffira"
+        reponse: "« Le ruban, c'est pour les colis. » Il range ses aiguilles dans une boîte à pastilles et ne te regarde pas sortir."
+
+  - id: sc.chocolats_portclair
+    titre: "Les chocolats de Portclair"
+    roles: [joueur]
+    lieu: voiture
+    tranches: [soir]
+    qui: fardelli
+    si: "annee <= 2010"
+    texte: "Fardelli t'attend adossé à ta voiture, une boîte de chocolats sous le bras. « Pour ta mère. Des amis de Portclair voudraient te voir jouer dimanche matin, en réserve, sous un autre nom. »"
+    choix:
+      - label: "J'irai à Portclair"
+        reponse: "Dimanche, sur un terrain gras de Portclair, tu portes le 14 et le nom d'un autre. Au bord du terrain, trois hommes en manteau ne regardent que tes appuis."
+        effets: {jauges: {caisse: 2, direction: -2}}
+      - label: "Je joue ici"
+        reponse: "Il pose quand même la boîte sur ton capot. « Pour ta mère. Ce n'était pas une condition. » Les chocolats ont fondu quand tu la retrouves, le lendemain."
+        effets: {jauges: {direction: 1}}
+
+  - id: sc.genou_brique
+    titre: "Chaud comme une brique"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [nuit]
+    texte: "Ton genou te réveille à trois heures, chaud comme une brique. Le bac à glaçons est vide. Sur le palier, la voisine qui rentre de la clinique regarde ta jambe, puis sa propre clé."
+    choix:
+      - label: "Je frappe chez elle"
+        reponse: "Elle revient avec une poche de froid de la clinique et un torchon propre. « Vingt minutes, pas plus. » Elle reste les vingt minutes, adossée au chambranle, sans parler de football."
+      - label: "Je tiens jusqu'au matin"
+        reponse: "Tu mets le genou sous l'eau froide, assis sur le rebord de la baignoire, jusqu'à ce que le chauffe-eau se déclenche. À la séance, tu boites du côté qui ne se voit pas."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: sc.tablier_boucher
+    titre: "Au-dessus des rôtis"
+    roles: [joueur]
+    lieu: marche
+    tranches: [matin]
+    jours: [dim]
+    qui: commercant
+    texte: "Le boucher de la place, au marché du dimanche, te tend un tablier rayé. « Ta photo là-dedans, dans ma vitrine, au-dessus des rôtis. Un colis de viande par semaine. Le club n'en saura rien. »"
+    choix:
+      - label: "Je pose en tablier"
+        reponse: "Le photographe de L'Écho fait trois clichés entre deux clientes. Lundi, ta tête est au-dessus des rôtis ; mardi, le président te demande le prix du bœuf."
+        effets: {jauges: {tribunes: 2, direction: -1}}
+      - label: "Je ne pose pas"
+        reponse: "Il replie le tablier sur son avant-bras. « Le gardien a dit oui, lui. » Le dimanche suivant, c'est ton gardien au-dessus des rôtis, l'air d'avoir arrêté un penalty."
+
+  - id: sc.oreiller_sous_le_bras
+    titre: "L'oreiller sous le bras"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [nuit]
+    texte: "Ton arrière droit sur le paillasson, à une heure du matin, un sac de sport et un oreiller sous le bras. « Elle a changé la serrure. Juste cette nuit. Le coach ne doit pas savoir. »"
+    choix:
+      - label: "Entre"
+        reponse: "Il dort sur le canapé sans se déshabiller, les crampons à côté de la tête. Au matin, la vaisselle est faite et il est parti. Sur la table : « Merci. Pas un mot. »"
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Va à l'hôtel"
+        reponse: "Il redescend l'escalier en cognant l'oreiller contre la rampe. À la séance, il te fait toutes les passes sur le mauvais pied, sans un regard."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: sc.cartables_poteaux
+    titre: "Deux cartables pour poteaux"
+    roles: [joueur]
+    lieu: square
+    tranches: [soir]
+    qui: enfant
+    texte: "Au square des Lilas, deux cartables posés dans l'herbe font les poteaux. Trois gamins t'attendent avec un ballon. « Un penalty. Tu le rates, tu nous paies des bonbons. Tu le marques, on te croit. »"
+    choix:
+      - label: "Je tire"
+        francs: -10
+        reponse: "Le plus petit plonge du bon côté et sort ta frappe du bout des doigts. Ses copains le portent jusqu'à la fontaine en hurlant. Tu paies les bonbons."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je garde les buts"
+        reponse: "Tu plonges une seconde trop tard, exprès. Le tireur fait le tour du square bras écartés, sous les fenêtres. Une mère applaudit depuis son balcon."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: sc.procuration
+    titre: "La procuration"
+    roles: [joueur]
+    lieu: banque
+    tranches: [matin, aprem]
+    qui: passant
+    texte: "Le guichetier de la Banque Aubérivoise retourne un relevé vers toi : un retrait sur ton compte, mardi, par ton père, avec une procuration signée il y a des années. « On la laisse ? »"
+    choix:
+      - label: "Annulez-la"
+        reponse: "Il tamponne le formulaire trois fois, à petits coups secs. Le soir, ton père appelle pour parler du match, seulement du match, et raccroche plus tôt que d'habitude."
+        effets: {jauges: {caisse: 2}}
+      - label: "Laissez-la"
+        reponse: "Il range le formulaire sans tamponner. Le mois suivant, le retrait est le double, et dans ta boîte aux lettres, un mot plié : « Merci. Papa. »"
+        effets: {jauges: {caisse: -1}}
+
+  - id: sc.carnet_mere_mbako
+    titre: "Un nom dans le carnet"
+    roles: [joueur]
+    lieu: centre
+    tranches: [aprem]
+    qui: mere_mbako
+    si: "annee <= 1991 && !flag(mbako_vendu)"
+    texte: "La mère de Mbako t'attend au grillage du centre, son carnet ouvert à la page du jour. « Au vestiaire, qui lui parle ? Je veux un nom, un seul : quelqu'un qui le ramène pour dix-neuf heures. »"
+    choix:
+      - label: "Moi"
+        reponse: "Elle écrit ton nom dans le carnet, avec l'heure, et souligne deux fois. Le soir même, à dix-neuf heures cinq, elle appelle pour savoir où vous êtes."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Il est assez grand"
+        reponse: "Elle referme le carnet sur son stylo. « À seize ans, on n'est grand que pour les autres. » Elle part sans attendre son fils, qui la regarde s'éloigner."
+
+  - id: sc.vingt_penaltys
+    titre: "Vingt penaltys à droite"
+    roles: [joueur]
+    lieu: stade
+    tranches: [aprem]
+    qui: vecchio
+    si: "annee <= 1992"
+    texte: "Gigi Vecchio, sur le banc de touche vide, recoud un gant avec du fil de pêche. « Tire-moi vingt penaltys, à droite. Le samedi, je pars toujours à gauche. Je veux savoir si c'est moi ou le poteau. »"
+    choix:
+      - label: "Je tire les vingt"
+        reponse: "Il en arrête trois, tous en partant à gauche. Il hoche la tête et range le fil de pêche dans sa boîte à chaussures. « C'est moi. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Pas aujourd'hui, Gigi"
+        reponse: "Il continue de coudre. Le fil casse au troisième point ; il refait le nœud avec les dents, lentement, comme s'il avait tout l'hiver devant lui."
+
+  - id: sc.caisse_menage
+    titre: "La caisse de la femme de ménage"
+    roles: [joueur]
+    lieu: terrain
+    tranches: [matin]
+    qui: brehaut
+    si: "annee <= 1995"
+    texte: "Bréhaut te prend à part après le toro, la main sur ta nuque. « Les gars font une caisse pour la femme de ménage du club : son mari est à l'hôpital. Tu mets combien, et devant qui ? »"
+    choix:
+      - label: "Trois cents, devant eux"
+        francs: -300
+        reponse: "Tu poses les billets sur le banc. Bréhaut les compte à voix haute ; à trois cents, on applaudit. Derrière la vitre du club-house, elle ne sait pas pourquoi."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Cent, discrètement"
+        francs: -100
+        reponse: "Il glisse ton billet dans l'enveloppe sans le regarder. « Cent. C'est noté. » Il ne dit pas où, ni pour qui."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: sc.car_six_quarante
+    titre: "Le car de six heures quarante"
+    roles: [joueur]
+    lieu: gareRoutiere
+    tranches: [matin]
+    texte: "Quai 1, gare routière : ton remplaçant attend le car de six heures quarante pour Portclair, un sac neuf entre les pieds. « Un essai, deux jours. Si le coach demande, j'ai la grippe. Tu me couvres ? »"
+    choix:
+      - label: "Je te couvre"
+        reponse: "Il monte sans se retourner. Mardi, au rassemblement, tu dis « grippe » avant que personne ne demande rien, et le coach te regarde longtemps."
+        effets: {jauges: {vestiaire: 1, direction: -1}}
+      - label: "Dis-le-lui toi-même"
+        reponse: "Il reste sur le quai, le sac à la main, pendant que le car part sans lui. À neuf heures, il est le premier sur le terrain, et ne te parle plus."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: sc.contrat_remplacant
+    titre: "Le contrat de Portclair"
+    roles: [joueur]
+    lieu: bar
+    tranches: [soir]
+    si: "mission(sc.car_six_quarante)"
+    texte: "Ton ancien remplaçant pose un contrat plié sur le zinc du Corner, à côté de ton demi. « Portclair. Je pars lundi. C'est grâce à toi, ou malgré toi. Je n'ai pas encore décidé. »"
+    choix:
+      - label: "Je paie la tournée"
+        francs: -60
+        reponse: "Le patron sert tout le comptoir. Ton ancien remplaçant boit son demi d'un trait, s'essuie la bouche du revers de la main. « Grâce à toi. Voilà. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je trinque, c'est tout"
+        reponse: "Vos verres se cognent un peu fort. Il range le contrat dans sa poche intérieure, tapote sa poitrine deux fois, et part sans finir son verre."
+
+  - id: sc.lait_en_poudre
+    titre: "Lait en poudre et bières"
+    roles: [joueur]
+    lieu: epicerie
+    tranches: [soir]
+    qui: commercant
+    texte: "La patronne de l'épicerie ouvre le cahier des ardoises à une page : ton coéquipier, onze lignes, des bières et du lait en poudre. « Il a un bébé, et pas de prime depuis deux mois. »"
+    choix:
+      - label: "J'efface son ardoise"
+        francs: -300
+        reponse: "Elle arrache la page, la plie en quatre et la glisse dans ton sac, entre tes courses. « Il ne saura pas. » Il le saura dès le lendemain : elle le lui dira."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je ne paie que la mienne"
+        francs: -40
+        reponse: "Elle referme le cahier sur son doigt pour garder la page. En sortant, tu croises ton coéquipier sur le trottoir, la poussette devant lui, qui attend son tour."
+
+  - id: sc.lettre_maison_arret
+    titre: "Une lettre de Valdorne"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [soir]
+    texte: "Entre deux factures, une lettre de la maison d'arrêt de Valdorne. Un détenu te demande un maillot signé pour la finale du tournoi de la cour. Il a joint un timbre."
+    choix:
+      - label: "Je poste un maillot signé"
+        francs: -20
+        reponse: "Trois semaines plus tard, une photo : douze hommes en blanc dans une cour grise, ton maillot sur le gardien, trop grand. Au dos : « Perdu 3-2. Merci quand même. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je ne réponds pas"
+        reponse: "La lettre reste sous l'aimant du frigo. Un mois plus tard, une seconde arrive, plus courte, avec le même timbre joint : « Pas grave. »"
+
+  - id: sc.vingt_trois_cinquante_deux
+    titre: "23:52"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "annee >= 2010"
+    texte: "Minuit : ton téléphone vibre. Un message privé sur le Flux, d'un compte sans photo : ta voiture devant le Rideau Rouge, l'heure en bas à droite, 23:52. Pas de demande. Pas encore."
+    choix:
+      - label: "Je réponds « Et alors ? »"
+        reponse: "La réponse arrive tout de suite : un pouce levé, rien d'autre. Le lendemain, la photo circule au Corner, ton message à côté, en capture d'écran."
+        effets: {jauges: {tribunes: -1}}
+      - label: "J'efface et je bloque"
+        reponse: "Le compte disparaît. À une heure, un autre compte sans photo t'envoie la même image, avec une autre heure : 00:58. Tu poses le téléphone face contre la table."
+
+  - id: sc.troisieme_message
+    titre: "Le troisième message"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [soir]
+    si: "annee <= 2000"
+    texte: "Le répondeur clignote : trois messages. Ta mère, ton agent, et une voix d'homme que tu ne connais pas, qui dit seulement un score : celui de samedi, avant qu'il ait eu lieu. Puis il raccroche."
+    choix:
+      - label: "Je garde la microcassette"
+        reponse: "Tu la glisses dans une enveloppe, l'enveloppe dans le tiroir de la cuisine, sous les couverts. Samedi, à la mi-temps, tu ne penses qu'au tiroir."
+      - label: "J'efface la bande"
+        reponse: "La bande se rembobine en sifflant. Ta mère, ton agent, la voix : tout part ensemble. Samedi, le score final n'est pas celui du message. Il s'en faut d'un but."
+
+  - id: sc.meme_voix
+    titre: "La même voix"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "mission(sc.troisieme_message) && annee <= 2000"
+    texte: "Cette fois, c'est le téléphone, passé minuit. La voix du répondeur, en direct, très calme : « Samedi, à la soixantième, tu glisses. Rien de plus. Il y a deux mille pour toi sous le paillasson. »"
+    choix:
+      - label: "Je raccroche"
+        reponse: "Tu débranches la prise. Au matin, il n'y a rien sous le paillasson. Le surlendemain, il y a une enveloppe vide, ouverte, ton nom écrit dessus au crayon."
+        effets: {jauges: {direction: 1}}
+      - label: "Je soulève le paillasson"
+        francs: 2000
+        sale: true
+        reponse: "L'enveloppe est déjà là. Tu comptes les billets dans l'escalier, à la lueur de la minuterie. Samedi, à la soixantième, tu ne glisses pas. Personne ne rappelle."
+        effets: {jauges: {vestiaire: -2}}
+
+  - id: sc.cinq_kilos
+    titre: "Cinq kilos au crayon"
+    roles: [joueur]
+    lieu: muscu
+    tranches: [matin, aprem]
+    qui: passant
+    texte: "À la salle de muscu, le préparateur ajoute cinq kilos au crayon dans son carnet, sans les mettre sur ta barre. « Le club lit ce carnet. Toi, tu soulèves ce que tu peux. »"
+    choix:
+      - label: "Écrivez les vrais chiffres"
+        reponse: "Il gomme, souffle sur la page, réécrit. « Comme tu veux. » La semaine suivante, ton nom descend d'une ligne sur la feuille que le président reçoit le lundi."
+        effets: {jauges: {direction: -1, vestiaire: 1}}
+      - label: "Laissez les cinq kilos"
+        reponse: "Il referme le carnet sur le crayon. En mars, tu soulèves enfin les cinq kilos, un mardi, seul dans la salle, et personne ne le note nulle part."
+        effets: {jauges: {direction: 1}}
+
+  - id: sc.meilleur_pied
+    titre: "Combien, à votre avis ?"
+    roles: [joueur]
+    lieu: brasserie
+    tranches: [soir]
+    qui: aulard
+    si: "annee <= 1997"
+    texte: "Vaubourg dîne à la brasserie du Pont avec un homme qui ne mange pas. Il te fait signe d'approcher, la main sur ton épaule : « Le meilleur pied du club. Combien, à votre avis ? »"
+    choix:
+      - label: "Je ne suis pas à vendre"
+        reponse: "L'homme sourit pour la première fois. « Tout le monde dit ça avant le dessert. » Vaubourg rit trop fort et commande les desserts pour trois."
+        effets: {jauges: {direction: -1, tribunes: 1}}
+      - label: "Je m'assois"
+        reponse: "L'homme te regarde manger comme on regarde un cheval à la foire : les mains, les dents. Il règle l'addition en liquide et s'en va sans t'avoir adressé un mot."
+        effets: {jauges: {direction: 1}}
+
+  - id: sc.decapotable_rouge
+    titre: "Une semaine d'essai"
+    roles: [joueur]
+    lieu: garage
+    tranches: [matin, aprem]
+    qui: commercant
+    texte: "Le vendeur du garage du Pont fait sauter des clés dans sa main. « La décapotable rouge, une semaine, gratuite. Juste une photo de vous au volant pour la vitrine. Et le sourire. »"
+    choix:
+      - label: "Je prends les clés"
+        reponse: "Une semaine de décapotable. Le vendredi, ta photo est en vitrine, au-dessus du prix. Le samedi, la Nord chante le prix, en entier, sur l'air de ton chant."
+        effets: {jauges: {tribunes: -1, direction: -1}}
+      - label: "Je rentre à pied"
+        reponse: "Il range les clés dans sa poche et décroche de la vitrine la photo jaunie d'un ancien du club, au volant de la même, dix ans plus tôt."
+
+  - id: sc.gros_sel
+    titre: "Le gros sel"
+    roles: [joueur]
+    lieu: rue
+    tranches: [matin, aprem]
+    qui: ancien
+    texte: "Un vieil homme t'arrête devant la pharmacie et te tend un sachet de gros sel. « Pour le genou. Dans une chaussette, au four, et sur l'articulation. Mon père a joué dix ans comme ça. »"
+    choix:
+      - label: "Merci, je le prends"
+        reponse: "Le soir, la chaussette chauffe au four ; tout l'appartement sent le pain grillé. Pour une nuit, le genou se tait. Tu ne le dis à personne, surtout pas au médecin."
+      - label: "J'ai un médecin"
+        reponse: "« Mon père aussi, il avait un médecin. » Il range le sachet dans sa poche et repart en boitant un peu, du même genou que toi."
+
+  - id: sc.signe_mouille
+    titre: "Signé mouillé"
+    roles: [joueur]
+    lieu: laverie
+    tranches: [soir]
+    qui: fan
+    texte: "Une fille de la Nord lave à la laverie le maillot que tu as lancé dans le virage samedi. « Je le lave une fois, et après il ne voit plus jamais d'eau. Tu me le signes mouillé ? »"
+    choix:
+      - label: "Je le signe mouillé"
+        reponse: "L'encre file dans les fibres, et ton nom devient un nuage bleu sur le numéro. Elle trouve ça plus beau. Elle le plie dans du papier de soie qu'elle avait apporté."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Laisse-le sécher"
+        reponse: "Vous attendez le sèche-linge ensemble, sans parler, quarante minutes. Tu signes le maillot tiède ; elle le serre contre elle et oublie de payer sa machine."
+
+  - id: sc.donnees_transmises
+    titre: "Données transmises"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "annee >= 2024"
+    texte: "Ton bracelet du club vibre à trois heures du matin : « Sommeil insuffisant. Données transmises au staff. » Tu ne dormais plus depuis une heure. Maintenant, ils le savent aussi."
+    choix:
+      - label: "J'enlève le bracelet"
+        reponse: "Tu le poses dans le tiroir de la table de nuit, sous un livre. À sept heures, un message du préparateur : « Bracelet hors ligne à 3 h 04. On en parle ? »"
+        effets: {jauges: {direction: -1}}
+      - label: "Je le garde au poignet"
+        reponse: "Tu fixes le plafond en respirant comme le préparateur l'a montré. À quatre heures, le bracelet vibre encore, plus doucement : « Amélioration. »"
+        effets: {jauges: {direction: 1}}
+
+  - id: sc.voix_mi_temps
+    titre: "Ta voix, à la mi-temps"
+    roles: [joueur]
+    lieu: domicile
+    tranches: [soir]
+    si: "annee >= 2032"
+    texte: "Pendant la pub de la mi-temps, ta voix — ta voix exacte, ton accent, ton rire — vante une assurance auto. Tu n'as jamais rien enregistré. Le téléphone sonne : ta sœur a reconnu le rire."
+    choix:
+      - label: "J'appelle un avocat"
+        francs: -800
+        reponse: "L'avocat écoute la pub trois fois en hochant la tête au rire. « Ils ont racheté votre voix avec vos droits d'image. Article neuf de votre contrat. » Il facture l'écoute."
+        effets: {jauges: {caisse: 1}}
+      - label: "Je laisse courir"
+        reponse: "La pub repasse tout le week-end. Au marché, une dame te remercie pour le conseil sur les franchises ; tu la remercies en retour, avec ta vraie voix."
+
+  - id: sc.carte_oubliee
+    titre: "La carte oubliée"
+    roles: [joueur]
+    lieu: club_prive
+    tranches: [nuit]
+    qui: commercant
+    texte: "Le portier du Rideau Rouge te tend ta carte d'identité entre deux doigts. « Vous l'aviez laissée ici samedi dernier. Vous ne vous en souvenez pas ? Moi non plus. »"
+    choix:
+      - label: "Je n'étais pas là"
+        reponse: "« Évidemment. » Tu la reprends. Au dos, au feutre, quelqu'un a écrit une heure : 2 h 40. La porte sans poignée s'est refermée avant que tu relèves la tête."
+      - label: "Combien pour oublier ?"
+        francs: -300
+        reponse: "Il prend tes billets sans les compter et déchire une page de son carnet, devant toi, lentement. Tu ne sauras jamais ce qu'il y avait d'écrit dessus."
+
+  - id: sc.meme_poste
+    titre: "Le même poste"
+    roles: [joueur]
+    lieu: feu
+    tranches: [nuit]
+    texte: "Autour du feu de palettes de la friche, un homme se retourne à ta voix. Tu le reconnais à sa démarche : la réserve, il y a des années, ton poste. « Un genou. Tu as un billet, pour le genou ? »"
+    choix:
+      - label: "Je lui donne un billet"
+        francs: -100
+        reponse: "Il le plie en quatre et le glisse dans sa chaussette, comme avant un match. « Pour le genou », dit-il, et il rit, et les autres autour du feu rient avec lui."
+      - label: "Je m'assois au feu"
+        reponse: "Vous ne parlez pas de football. Au matin, ton blouson garde une odeur de palette brûlée que la laverie ne fera jamais partir."
+
+  - id: sc.article_neuf
+    titre: "L'article neuf"
+    roles: [joueur]
+    lieu: clubhouse
+    tranches: [matin, aprem]
+    qui: josiane
+    si: "annee <= 2005"
+    texte: "Ton avenant de contrat t'attend sur le bureau de Madame Josiane, un coin corné. « Vous avez signé sans lire l'article neuf. Tout le monde le fait. J'ai corné la page pour le jour où vous voudrez. »"
+    choix:
+      - label: "Je le lis maintenant"
+        reponse: "L'article neuf cède ton image au club pour dix ans, avec une somme au crayon dans la marge, de la main du président. Josiane défroisse le coin corné, soigneusement."
+        effets: {jauges: {caisse: 1, direction: -1}}
+      - label: "Je vous fais confiance"
+        reponse: "Elle range l'avenant dans le classeur rouge, le coin toujours corné, entre deux autres pareils. « Moi aussi, je fais confiance. Je corne quand même. »"
+        effets: {jauges: {direction: 1}}
+
+  - id: sc.brassard_noir
+    titre: "Le brassard noir"
+    roles: [joueur]
+    lieu: cafe_mairie
+    tranches: [matin]
+    texte: "Ton coéquipier tourne sa cuillère depuis dix minutes, au café de la Mairie. Samedi, des cris de singe à chacun de ses ballons. « Au prochain match, je porte un brassard noir. Toi aussi ? »"
+    choix:
+      - label: "Je le porte aussi"
+        reponse: "Samedi, vous êtes deux à l'échauffement, puis cinq, puis l'équipe entière. Le club fait dire que ce n'était pas prévu. Personne ne l'enlève."
+        effets: {jauges: {vestiaire: 2, direction: -1}}
+      - label: "Pas de politique"
+        reponse: "Il pose la cuillère sur la soucoupe, sans bruit. « Moi non plus, je n'en faisais pas. » Il paie son café, et le tien, et s'en va."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: sc.deux_pointures
+    titre: "Deux pointures de trop"
+    roles: [joueur]
+    lieu: centre
+    tranches: [aprem]
+    qui: enfant
+    texte: "Un gamin de la réserve court dans tes vieux crampons, repêchés dans la poubelle du vestiaire : deux pointures de trop, du papier journal tassé au bout."
+    choix:
+      - label: "Je lui en offre une paire"
+        francs: -250
+        reponse: "Samedi, il porte les neufs, l'étiquette encore au talon. Les vieux, il les garde pendus par les lacets au-dessus de son lit, au préfabriqué."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je lui apprends à lacer"
+        reponse: "Tu lui montres le laçage serré, celui qui tient le pied dans une chaussure trop grande. Il refait le nœud dix fois, puis court sans perdre une seule chaussure."
+
+  - id: sc.cachemire
+    titre: "Du cachemire, à ta taille"
+    roles: [joueur]
+    lieu: hotel
+    tranches: [soir]
+    qui: passant
+    texte: "Dans le hall de l'hôtel de la Rive, un homme en costume pose un carton de tailleur sur tes genoux. « Du cachemire, à votre taille. Mon client n'aime pas qu'on ait froid. Il ne demande rien. »"
+    choix:
+      - label: "Je garde le manteau"
+        reponse: "Il est à ta taille au centimètre près. L'homme laisse sur le carton une carte sans nom : un numéro de la Capitale, écrit à la main, à l'encre bleue."
+        effets: {var: {cadeau_manteau_cachemire: "+1"}, jauges: {direction: -1}}
+      - label: "Rendez-le à votre client"
+        reponse: "Il reprend le carton sans vexation. « Il en a d'autres. Des tailles, et des clients. » Le concierge te regarde partir les mains vides, et en prend note."
+
+  - id: sc.ballons_comptes
+    titre: "Les ballons sont comptés"
+    roles: [joueur]
+    lieu: materiel
+    tranches: [aprem]
+    qui: ancien
+    texte: "Devant le local du matériel, trois gamins du square attendent avec un ballon crevé. Lulu compte ceux du club sur son registre. « Ils sont comptés. Si tu en sors un, c'est sur ta prime. »"
+    choix:
+      - label: "J'en sors un"
+        francs: -80
+        reponse: "Lulu note le ballon à ton nom, et souligne. Les gamins partent en le portant à deux mains, comme un gâteau, sans oser le poser par terre avant le square."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je recolle le leur"
+        reponse: "Rustine, colle, la pompe de Lulu. Le ballon tient le temps d'un match au square ; le soir, il est sur le toit du préfabriqué, et personne ne monte le chercher."
+
+  - id: sc.mot_qui_manque
+    titre: "Le mot qui manque"
+    roles: [joueur]
+    lieu: pharmacie
+    tranches: [matin, aprem]
+    texte: "Au comptoir de la pharmacie, ton nouveau coéquipier, arrivé de loin la semaine dernière, montre sa gorge et cherche un mot qu'il n'a pas. La file s'impatiente derrière vous."
+    choix:
+      - label: "Je traduis avec les mains"
+        reponse: "Tu mimes la fièvre, la toux, la nuit blanche. Le pharmacien comprend au troisième geste. Ton coéquipier répète « sirop » toute la journée, avec ton accent."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je l'attends dehors"
+        reponse: "Il ressort dix minutes plus tard avec un sac plein de choses qu'il n'a pas demandées, et le ticket de caisse le plus long que tu aies jamais vu."
+
+  - id: sc.carton_avant_mi_temps
+    titre: "Un carton avant la mi-temps"
+    roles: [joueur]
+    lieu: terminus
+    tranches: [aprem]
+    qui: passant
+    texte: "Un chauffeur de car te montre, au comptoir du Terminus, un ticket du tabac du Quai : il a misé sur ton carton jaune avant la mi-temps, à trois contre un. « Je ne demande rien, hein. »"
+    choix:
+      - label: "Tu le perdras"
+        reponse: "Il range le ticket dans son portefeuille, sans rancune. Samedi, tu joues la première mi-temps les mains dans le dos à chaque duel, et il perd sa mise en riant."
+        effets: {jauges: {direction: 1}}
+      - label: "On verra samedi"
+        reponse: "Il glisse le ticket contre la photo de sa fille. Samedi, à la quarante et unième, tu fais une faute que tu ne fais jamais, et tu le sais en la faisant."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: sc.bocaux
+    titre: "Les bocaux de ta mère"
+    roles: [joueur]
+    lieu: gareRoutiere
+    tranches: [aprem]
+    qui: passante
+    texte: "Ta mère descend du car de Montbéliac avec un cabas plein de bocaux. « Je reste deux jours. J'ai pris le car sans prévenir, sinon tu aurais dit non. »"
+    choix:
+      - label: "Je l'installe chez moi"
+        reponse: "Deux jours de bocaux, de questions, de ménage dans tes tiroirs. Le dimanche, elle repart avec ton linge sale, « pour le faire comme il faut »."
+      - label: "Je lui paie l'hôtel"
+        francs: -250
+        reponse: "Elle accepte sans discuter et prend la chambre la moins chère, côté cour. Le soir, elle t'appelle de la réception pour te souhaiter bonne nuit, à vingt heures."
+
+  - id: sc.stand_forain
+    titre: "Le stand du forain"
+    roles: [joueur]
+    lieu: marche
+    tranches: [soir]
+    qui: commercant
+    texte: "La fête foraine s'est installée sur la place du marché. Le forain du stand de tirs au but te reconnaît et coupe la musique. « Pour vous, c'est gratuit. Mais si vous ratez, je le dis au micro. »"
+    choix:
+      - label: "Je tire les trois"
+        reponse: "Tu les marques tous. Il hurle ton nom au micro et accroche une peluche géante à ton bras. Au bout de l'allée, tu la donnes au premier gamin qui la regarde."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je passe"
+        reponse: "Il remet la musique plus fort. Derrière toi, au micro, tu l'entends dire que tu as « refusé l'obstacle », et la file rit."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: sc.la_coutume
+    titre: "La coutume"
+    roles: [joueur]
+    lieu: brasserie
+    tranches: [soir]
+    qui: commercant
+    texte: "La table des anciens du vestiaire se lève d'un bloc à la fin du repas, à la brasserie du Pont. Le patron pose l'addition devant toi, la dernière signature du club. « Coutume. »"
+    choix:
+      - label: "Je paie"
+        francs: -450
+        reponse: "Tu paies. Le capitaine revient chercher son écharpe oubliée, voit le reçu, et glisse un billet dans ta poche sans rien dire."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Je paie ma part"
+        francs: -40
+        reponse: "Tu poses ta part et tu sors. Le lendemain, ta serviette du vestiaire est nouée en boule au fond de la douche, trempée."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: sc.frappe_enroulee
+    titre: "La frappe enroulée"
+    roles: [joueur]
+    lieu: terrain
+    tranches: [aprem]
+    texte: "Le jeune qui joue à ton poste reste sur le terrain annexe après la séance, un sac de ballons à ses pieds. « Montre-moi ta frappe enroulée. Le coach dit que personne d'autre ne la sait. »"
+    choix:
+      - label: "Je lui montre"
+        reponse: "Vous tirez jusqu'à la nuit. À la vingtième, sa frappe s'enroule comme la tienne. Il ne dit pas merci ; il ramasse tous les ballons, seul."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Cherche tout seul"
+        reponse: "Il reste tirer sous les projecteurs éteints. Le lendemain, sa frappe ne s'enroule toujours pas. Le surlendemain, si, et il évite ton regard."
+
+  - id: sc.cravate_fan_club
+    titre: "Le cadeau du fan-club"
+    roles: [joueur]
+    lieu: cafe_mairie
+    tranches: [aprem]
+    qui: fan
+    texte: "Le président de ton fan-club — douze membres, une carte plastifiée — pose un paquet sur la table du café de la Mairie. « La cotisation de l'année. On a tout mis dans un cadeau. Pour toi. »"
+    choix:
+      - label: "Je l'ouvre devant eux"
+        reponse: "Une cravate bordeaux et grise, en soie, trop longue. Les douze applaudissent. Tu la noues sur ton survêtement, et ils prennent une photo pour le bulletin."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je l'ouvrirai chez moi"
+        reponse: "Il hoche la tête, un peu déçu. Le soir, tu trouves une cravate trop longue, et une carte : « Pour le jour où tu signeras ailleurs. Qu'on te reconnaisse. »"
+
+  - id: sc.feu_du_pont
+    titre: "Au feu du pont"
+    roles: [joueur]
+    lieu: rue
+    tranches: [nuit]
+    qui: passant
+    texte: "Un gendarme t'arrête au feu du pont, à deux heures, sa lampe dans l'habitacle. Il te reconnaît et baisse la lumière. « Vous soufflez, ou vous me signez un mot pour mon fils et vous rentrez à pied. »"
+    choix:
+      - label: "Je souffle"
+        reponse: "L'appareil bipe deux fois. Il regarde le chiffre, puis toi, puis il éteint sa lampe. « Je n'ai pas bien lu. Rentrez à pied quand même. Les clés. »"
+      - label: "Je signe pour son fils"
+        reponse: "Tu signes au dos d'un procès-verbal vierge. Il le plie dans sa poche de poitrine. Ta voiture reste au feu du pont jusqu'au matin, feux de détresse allumés."
+        effets: {jauges: {direction: -1}}
+
+  - id: sc.recit_du_but
+    titre: "Raconte-moi le but"
+    roles: [joueur]
+    lieu: stade
+    tranches: [aprem]
+    qui: fan
+    si: "flag(sb_envahissement)"
+    texte: "L'homme qui avait sauté la grille t'arrête devant la Nord, une écharpe roulée dans la poche. « Interdit de stade pour deux ans. Raconte-moi juste le but de samedi. Lentement. »"
+    choix:
+      - label: "Je raconte"
+        reponse: "Tu racontes le but deux fois, la seconde plus lentement. Il ferme les yeux pendant la course du ballon et les rouvre au moment où il entre."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je n'ai pas le droit"
+        reponse: "Il hoche la tête comme devant un guichet fermé, et repart le long du grillage jusqu'au parking, la main sur les mailles."
+        effets: {jauges: {tribunes: -1}}
