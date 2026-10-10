@@ -1,0 +1,317 @@
+# Histoire 7 · Chambre 12 — les manchettes du Bilan (schéma : en-tête de
+# content/unes.yaml). Le Quotidien du Ballon tient le registre officiel, la
+# Gazette Rose la canette et la télévision, L'Écho d'Aubérive la ville : les
+# bougies, la photo de 1 h 47, le vote.
+#
+# Fraîcheur : chaque manchette de trace lit `journal_has` (la ligne d'Almanach
+# de l'année), pour ne pas titrer en 2013 sur une nuit de 2011. Aucune ne dit
+# une descente, une montée ou un titre : le sélectionneur vit un classement de
+# nations, et ces trois années-là, on ne titre pas sur le classement.
+#
+# Les bandes : en 2011, « Chambre 12 » est toujours éligible, en 2013 « Le
+# groupe a été digne » aussi (qui arrive au Bilan de 2013 a dit la phrase). Une
+# manchette qui doit pouvoir sortir ces années-là est donc en priorité 3, et
+# le tirage se fait au poids, dans la bande.
+unes:
+  # ══════════════════════════════════════════════ la descente, chaque année
+  # Les manchettes génériques de descente (priorité 4) parlent d'un club qui
+  # refait ses cartons ; celles-ci, au poids fort dans la même bande, disent ce
+  # que le pays lit cette année-là. Elles lisent l'issue (lint).
+  - id: une.h7.descente_deuil
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 12
+    when: "season == 0 && bilan.outcome == 'descente'"
+    titre: "{VILLE} EN DEUIL, LES COBALTS DEHORS"
+    sous: "{rang}e : la sélection quitte le premier groupe des nations. À Aubérive, on ne parle que de la chambre 12 ; le classement tient en deux lignes."
+    sujet: sl.h7.chambre_douze
+    photo: sl.h7.a3_deux_heures_dix
+
+  - id: une.h7.descente_portes
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 4
+    poids: 12
+    when: "season == 1 && bilan.outcome == 'descente'"
+    titre: "LES COBALTS QUITTENT LE PREMIER GROUPE"
+    sous: "{rang}e nation, objectif {tenu}. Un an après la nuit de la Rive, la sélection descend ; le bus de 2010, lui, n'a toujours pas quitté le parking."
+
+  - id: une.h7.descente_tutelle
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 4
+    poids: 12
+    when: "season >= 2 && bilan.outcome == 'descente'"
+    titre: "LES COBALTS, SOUS TUTELLE ET DEHORS"
+    sous: "{rang}e nation : la sélection quitte le premier groupe. Le comité provisoire « prend acte ». À la Rive, la 12 n'a toujours pas été relouée."
+
+  - id: une.h7.remontee
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 4
+    poids: 12
+    when: "season >= 1 && bilan.outcome == 'montee'"
+    titre: "LES COBALTS REMONTENT"
+    sous: "{rang}e nation : la sélection retrouve le premier groupe. À la Rive, Escande a fait servir le mousseux de 2009, que personne n'avait ouvert."
+
+  # ══════════════════════════════════════════════════════════════ 2011
+  - id: une.h7.chambre_douze
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_rance_mort') && journal_has('h7_rance_mort')"
+    titre: "CHAMBRE 12"
+    sous: "Tibo Rancé, vingt-cinq ans, retrouvé mort à l'hôtel de la Rive. Les Cobalts finissent {rang}e ; objectif {tenu}, et personne ne s'en soucie."
+    sujet: sl.h7.chambre_douze
+    photo: sl.h7.a3_deux_heures_dix
+    react: [ { card: sl.h7.re.gege_une } ]
+
+  - id: une.h7.malaise
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_quatre_heures_accord') && journal_has('h7_quatre_heures_accord')"
+    titre: "MALAISE CARDIAQUE, DIT LA FÉDÉRATION"
+    sous: "Constaté à six heures par la kiné, selon le communiqué. {prenom} {nom} n'a rien ajouté. Le barrage s'est joué le samedi."
+    sujet: sl.h7.chambre_douze
+    photo: sl.h7.a4_quatre_heures
+    react: [ { card: sl.h7.re.gege_une } ]
+
+  - id: une.h7.barrage_noir
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_rance_mort') && season == 0 && vars.gm_won == 1"
+    titre: "{NOM} : LE BARRAGE, EN NOIR"
+    sous: "Qualifiés avec un 26 cousu sur chaque manche. Le vestiaire n'a pas chanté ; {prenom} {nom} n'a pas fait de discours."
+    react: [ { card: sl.h7.re.gege_une } ]
+
+  - id: une.h7.barrage_deuil
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_rance_mort') && season == 0 && vars.gm_won == 0"
+    titre: "{VILLE} PLEURE, LES COBALTS TOMBENT"
+    sous: "Le barrage perdu, une semaine après la nuit de la Rive. L'Écho n'a pas eu le cœur de noter les joueurs."
+    react: [ { card: sl.h7.re.gege_une } ]
+
+  - id: une.h7.derniere_photo
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_photo_main') && journal_has('h7_photo_main')"
+    titre: "LA DERNIÈRE PHOTO DU GAMIN DU CENTRE"
+    sous: "Dans les filets du terrain annexe, à l'aube, une main sur la poitrine. L'Écho l'avait gardée ; Aubérive la découpe et la punaise."
+    photo: sl.h7.l3_photo_apres
+
+  - id: une.h7.report
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    poids: 0.8
+    when: "flag('h7_report_demande') && journal_has('h7_report_demande')"
+    titre: "{NOM} VOULAIT ATTENDRE"
+    sous: "{prenom} {nom} avait demandé de reporter le barrage. La Fédération a refusé à neuf heures du matin, par téléphone."
+
+  # ══════════════════════════════════════════════════════════════ 2012
+  - id: une.h7.une_heure_47
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_main_vue') && journal_has('h7_main_vue')"
+    titre: "1 H 47"
+    sous: "Une photo, un lit, un garçon vivant, et une main dans le coin. L'Écho ne publie pas le nom ; il publie la main."
+    sujet: sl.h7.main
+    photo: sl.h7.m1_photo
+    react: [ { card: sl.h7.re.lea_une } ]
+
+  - id: une.h7.rossard
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_rossard_plateau') && journal_has('h7_rossard_plateau')"
+    titre: "ROSSARD DIT UN NOM"
+    sous: "Deux heures vingt-cinq, et un capitaine. La Fédération « regrette des propos ». {prenom} {nom} n'a rien regretté en public."
+    sujet: sl.h7.plateau
+    photo: sl.h7.p2_dimanche
+    react: [ { card: sl.h7.re.lea_une } ]
+
+  - id: une.h7.bougies
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_bougies') && journal_has('h7_bougies')"
+    titre: "{VILLE} : DES BOUGIES ET UNE PIERRE"
+    sous: "Devant l'hôtel de la Rive, le virage pour le gamin du centre. Une vitre du deuxième étage brisée, et personne n'a vu qui."
+    photo: sl.h7.b1_bougies
+
+  - id: une.h7.fulgor
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_fulgor_dit') && journal_has('h7_fulgor_dit')"
+    titre: "{NOM}, « MALAISE » ET UNE CANETTE"
+    sous: "Au journal de vingt heures, le mot de la Fédération, une boisson orange à portée de main. Le partenaire remercie {prenom} {nom}."
+    sujet: sl.h7.fulgor
+    photo: sl.h7.f3_plateau_canette
+
+  - id: une.h7.hotel
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_hotel_gratuit') && journal_has('h7_hotel_gratuit')"
+    titre: "L'HÔTEL DE LA RIVE OFFRE TROIS ANS"
+    sous: "Gratuité totale pour les Cobalts, annonce la Fédération. L'hôtel « ne commente pas les événements passés »."
+    sujet: sl.h7.hotel
+
+  - id: une.h7.quatre_heures
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_quatre_heures_dite') && journal_has('h7_quatre_heures_dite')"
+    titre: "{NOM} : « QUATRE HEURES »"
+    sous: "Selon nos informations, {prenom} {nom} a décrit à la police une réunion tenue à la Rive deux heures avant le « malaise ». Chaise par chaise."
+    sujet: sl.h7.nuit_du_14
+    photo: sl.h7.n1_heures
+
+  - id: une.h7.homme_droit
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_mbako_defendu') && journal_has('h7_mbako_defendu')"
+    titre: "{NOM} DÉFEND MBAKO"
+    sous: "« Un homme droit », a dit {prenom} {nom} à la radio, sans dire de quoi. Le standard de la Fédération a sauté à dix heures."
+    sujet: sl.h7.plateau
+    photo: sl.h7.p3_quatorze
+
+  - id: une.h7.fulgor_sans
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_fulgor_refuse') && journal_has('h7_fulgor_refuse')"
+    titre: "FULGOR SIGNE SANS {NOM}"
+    sous: "Le « partenaire nutrition » des Cobalts a signé avec la présidence. Selon un proche du dossier, {prenom} {nom} « fait des manières »."
+    sujet: sl.h7.fulgor
+
+  - id: une.h7.canette
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_canette_poussee') && journal_has('h7_canette_poussee')"
+    titre: "{NOM} POUSSE LA CANETTE"
+    sous: "En direct, du dos de la main, hors du champ. Fulgor « étudie la clause ». Les téléspectateurs, eux, n'ont retenu que ce geste."
+    sujet: sl.h7.fulgor
+    photo: sl.h7.f3_plateau_canette
+
+  - id: une.h7.bus
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 1
+    when: "season == 1"
+    titre: "LE BUS DE 2010 VA PARTIR"
+    sous: "Deux ans derrière l'hôtel de la Rive. La Fédération a payé le loueur, la dépanneuse viendra lundi. Les Cobalts finissent {rang}e, objectif {tenu}."
+
+  # ══════════════════════════════════════════════════════════════ 2013
+  - id: une.h7.groupe
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_parle_groupe') && journal_has('h7_parle_groupe')"
+    titre: "{NOM} : « LE GROUPE A ÉTÉ DIGNE »"
+    sous: "Une phrase, la veille du match, et pas une de plus. {club} : {rang}e nation, objectif {tenu}. La question de la nuit n'a pas été posée."
+    sujet: sl.h7.chambre_douze
+    react: [ { card: sl.h7.re.josiane_une } ]
+
+  - id: une.h7.arzel
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_arzel_six_heures') && journal_has('h7_arzel_six_heures')"
+    titre: "LA DOCTEURE DES COBALTS ENTENDUE"
+    sous: "Six heures du matin, une valise faite la veille. La Fédération sous tutelle « prend acte ». {prenom} {nom} était, dit-on, dans l'escalier."
+    react: [ { card: sl.h7.re.josiane_une } ]
+
+  - id: une.h7.tutelle
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    poids: 0.6
+    when: "season >= 2"
+    titre: "{CLUB} SOUS TUTELLE"
+    sous: "Le ministre a dissous le comité fédéral. Les Cobalts finissent {rang}e ; à la Rive, la 12 n'a toujours pas été relouée."
+
+  - id: une.h7.registre
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_copie_pv') && journal_has('h7_copie_pv')"
+    titre: "QUATRE HEURES OU SIX HEURES ?"
+    sous: "Une copie du registre fédéral circule : deux heures d'écart entre le procès-verbal et le communiqué. La procureure Amsel « examine »."
+    sujet: sl.h7.proces_verbal
+    react: [ { card: sl.h7.re.josiane_une } ]
+
+  - id: une.h7.vote
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_vote_verite') && journal_has('h7_vote_verite')"
+    titre: "{NOM} A LEVÉ LA MAIN"
+    sous: "À l'hôtel de la Rive, les Cobalts ont voté de dire la nuit du 14. Le syndicat confirme ; la Fédération « ne commente pas un vote »."
+    sujet: sl.h7.fauvel
+
+  - id: une.h7.vote_arrete
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h7_vote_refuse') && journal_has('h7_vote_refuse')"
+    titre: "{NOM} ARRÊTE LE VOTE"
+    sous: "Le syndicat voulait vingt-six mains levées, à la Rive. « Une sélection, pas une assemblée », a tranché {prenom} {nom}. Une main est restée en l'air."
+    sujet: sl.h7.fauvel
+    photo: sl.h7.k3_vote
+
+  - id: une.h7.source
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h7_rossard_source') && journal_has('h7_rossard_source')"
+    titre: "ROSSARD : « ON M'AVAIT DONNÉ L'HEURE »"
+    sous: "L'ancien sélectionneur ne dit pas qui. Au comité provisoire, on « ne commente pas ». {prenom} {nom} non plus, et Lian Mbako n'a pas rappelé."
+    sujet: sl.h7.proces_verbal
+
+  - id: une.h7.docteure_gardee
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h7_demission_refusee') && journal_has('h7_demission_refusee')"
+    titre: "{NOM} GARDE SA DOCTEURE"
+    sous: "La démission de la docteure Arzel, « pour raisons personnelles », refusée jusqu'au match. Elle n'a plus lâché sa mallette, même sur le banc."
+    sujet: sl.h7.arzel

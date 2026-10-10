@@ -1,0 +1,188 @@
+# Histoire 7 · Chambre 12 — le prologue (arc `sl.h7.prologue`,
+# content/arcs/selectionneur/h7_script.yaml). Mars 2011, la première fenêtre :
+# dix jours avant les autres à l'hôtel de la Rive.
+#
+# Six scènes, hors créneau, sans tirage (ni `react`, ni `next`, ni `end`), une
+# jauge au plus d'un cran moyen : le bus du fiasco et les deux trousseaux, la
+# chambre sous la 12, les visites signées sans lire, la docteure et ses
+# soixante minutes, la fenêtre de la 12, le tableau des clés à minuit. Trois
+# variantes lues sur le fil rouge (la presse filme le bus, les nouveaux sont
+# dans la 12, les deux crochets vides sont des mutins).
+#
+# Le pays est à vingt : aucune scène du prologue ne fait baisser les tribunes.
+# Les deux sorties du bus donnent le trois-pièces du quai que la Fédération
+# prête pendant les fenêtres (`cadeau_appartement_quai`), celui que le comité
+# provisoire reprendra en 2013 à qui pose des questions.
+#
+# Les graines : les noms au sparadrap (le dernier rang, seul, RANCÉ) reviennent
+# dans le bus de 2012 ; l'auréole d'eau au plafond de la 9 revient à 2 h 10 ;
+# le trombone rouge revient avec Josiane et la copie de Rouvier ; « soixante »
+# revient à la liste de septembre et chez Fardelli ; le carnet à élastique
+# rouge revient sous les scellés et chez le cardiologue ; les doubles pris
+# « pour ne pas me réveiller » reviennent dans le cahier de nuit.
+cards:
+  # ─────────────────────────────────────────────────────────── 1/6 · le bus
+  - id: sl.h7.pro1_bus
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, vestiaire]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Parking de l'hôtel de la Rive. Le bus de 2010 est garé de travers, la banderole MONDIAL collée au pare-brise. Madame Josiane tient deux trousseaux : « On le rend, ou vous montez dedans d'abord ? »"
+    left:
+      label: "Je monte dedans"
+      effects: {vestiaire: "+", set: [h7_bus_monte], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Sur chaque appui-tête, un nom au sparadrap. Au dernier rang, seul : RANCÉ. Josiane te tend l'autre trousseau, celui du trois-pièces du quai."
+    right:
+      label: "Rendez-le ce matin"
+      effects: {direction: "-", caisse: "-", set: [h7_bus_rendu], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Le loueur ne le reprend pas : la Fédération lui doit sept mois. Le bus reste derrière l'hôtel. Josiane te tend l'autre trousseau, le quai."
+
+  - id: sl.h7.pro1_bus_presse
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, presse]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Parking de la Rive. Une caméra de Télé-Stade filme le bus de 2010, garé de travers, la banderole MONDIAL au pare-brise. Josiane, deux trousseaux à la main : « On le rend, ou vous montez d'abord ? »"
+    left:
+      label: "Je monte dedans"
+      effects: {vestiaire: "+", set: [h7_bus_monte], var: {cadeau_appartement_quai: "+1"}}
+      answer: "La caméra te suit jusqu'à la marche. Au dernier rang, un nom au sparadrap : RANCÉ. Josiane te tend l'autre trousseau, celui du quai."
+    right:
+      label: "Rendez-le ce matin"
+      effects: {direction: "-", caisse: "-", set: [h7_bus_rendu], var: {cadeau_appartement_quai: "+1"}}
+      answer: "Tu le dis face à la caméra. Le loueur ne le reprend pas : on lui doit sept mois. Josiane te tend l'autre trousseau, celui du quai."
+
+  # ─────────────────────────────────────────────────────── 2/6 · la chambre
+  - id: sl.h7.pro2_chambre
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, direction]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Le hall sent la cire. Monsieur Escande pose une clé sur le comptoir, un 9 gravé dans le laiton : « Votre chambre est sous la 12, {toi}. On entend tout, d'en dessous. Les entraîneurs aiment savoir. »"
+    left:
+      label: "Je prends la 9"
+      effects: {direction: "+", set: [h7_chambre_neuf]}
+      answer: "Au plafond de la 9, une auréole d'eau juste au-dessus du lit. Escande la regarde aussi : « La 12 prend des bains. »"
+    right:
+      label: "Je veux le deuxième"
+      effects: {vestiaire: "+", set: [h7_chambre_deuxieme]}
+      answer: "Il échange la clé : la 15, au bout du couloir des joueurs. « Là, vous n'entendrez rien. C'est ce que tout le monde demande. »"
+
+  # ─────────────────────────────────────────────────────── 3/6 · les visites
+  - id: sl.h7.pro3_visites
+    roles: [selectionneur]
+    arc: corps
+    tags: [decor, direction]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Le salon de l'hôtel. Madame Josiane pose vingt-six dossiers médicaux sur la table basse, un trombone rouge sur celui du dessus : « Les visites de la docteure. Ici, tout le monde signe sans lire. »"
+    left:
+      label: "Je lis le premier"
+      effects: {direction: "-", set: [h7_visites_lues]}
+      answer: "Rancé, Tibo, vingt-cinq ans : « apte », signé Arzel. La page deux saute à la page quatre. Tu signes sous la docteure."
+    right:
+      label: "Je signe la pile"
+      effects: {direction: "+", set: [h7_visites_signees]}
+      answer: "Vingt-six signatures en quatre minutes. Josiane retire le trombone rouge du premier dossier et le glisse dans sa poche."
+
+  # ─────────────────────────────────────────────────────── 4/6 · la docteure
+  - id: sl.h7.pro4_docteure
+    roles: [selectionneur]
+    arc: corps
+    tags: [decor, vestiaire]
+    speaker: arzel
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Chambre 3. La docteure Hélène Arzel referme sa mallette à deux tours de clé avant de te répondre : « Une seule consigne médicale pour toute l'année. Rancé, jamais plus de soixante minutes. »"
+    left:
+      label: "Pourquoi soixante ?"
+      effects: {relation: {arzel: -1}, set: [h7_soixante_question]}
+      answer: "« Parce que c'est un chiffre rond. » Elle range la clé de la mallette dans la poche de sa blouse, et t'ouvre la porte."
+    right:
+      label: "Soixante, c'est noté"
+      effects: {direction: "+", relation: {arzel: 1}}
+      answer: "Elle hoche la tête. Dans ton carnet, tu écris 60 à côté du nom ; le chiffre a l'air d'une note de match."
+
+  # ─────────────────────────────────────────────────────── 5/6 · la fenêtre
+  - id: sl.h7.pro5_fenetre
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, formation]
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "La porte de la 12 est ouverte. Tibo Rancé est à la fenêtre, un carnet à spirale sous le bras : « D'ici, on voit le terrain annexe du Racing. J'ai appris là. En novembre, je joue ? »"
+    left:
+      label: "Tu joueras"
+      effects: {vestiaire: "+", set: [h7_promesse_tibo]}
+      answer: "Il referme le carnet sur un élastique rouge. « Je le note. » Il ne te dit pas ce qu'il y a dedans, et tu ne demandes pas."
+    right:
+      label: "On verra en novembre"
+      effects: {direction: "+"}
+      answer: "Il garde les yeux sur le terrain annexe. « En novembre, il fait nuit à cinq heures. » Il le dit comme une information."
+
+  - id: sl.h7.pro5_fenetre_nouveaux
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, formation]
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "La porte de la 12 est ouverte. Tibo Rancé et Yanis Ferrol, le nouveau de Valdorne, comparent leurs crampons sur le lit. Tibo montre la fenêtre : « J'ai appris là, en bas. En novembre, je joue ? »"
+    left:
+      label: "Tu joueras"
+      effects: {vestiaire: "+", set: [h7_promesse_tibo]}
+      answer: "Ferrol lui tape dans la main. Tibo referme son carnet sur un élastique rouge : « Je le note. » Il ne dit pas ce qu'il note."
+    right:
+      label: "On verra en novembre"
+      effects: {direction: "+"}
+      answer: "Ferrol hausse les épaules à sa place. Tibo garde les yeux sur le terrain annexe : « En novembre, il fait nuit à cinq heures. »"
+
+  # ─────────────────────────────────────────────────────── 6/6 · le tableau
+  - id: sl.h7.pro6_tableau
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Réception, minuit. Vingt-six crochets derrière le comptoir, vingt-six doubles. Sandrine Lavergne fait pivoter son fauteuil vers toi : « Ce soir, il en manque deux. Vous voulez savoir lesquels ? »"
+    left:
+      label: "Lesquels ?"
+      effects: {relation: {sandrine: 1}, set: [h7_tableau_demande]}
+      answer: "« Le 12 et le 14 : le petit Rancé et M. Mbako, au Corner. Ils ont pris les doubles pour ne pas me réveiller. Je ne dors pas. »"
+    right:
+      label: "Je ne surveille personne"
+      effects: {vestiaire: "+"}
+      answer: "« Moi si. » Elle tourne la page de son cahier ; l'heure est déjà écrite en haut, à l'encre bleue."
+
+  - id: sl.h7.pro6_tableau_mutins
+    roles: [selectionneur]
+    arc: selection
+    tags: [decor, vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Réception, minuit. Vingt-six crochets, vingt-six doubles. Sandrine Lavergne fait pivoter son fauteuil : « Il en manque deux ce soir, {toi}, et les deux étaient dans le bus l'an dernier. Les noms ? »"
+    left:
+      label: "Les noms"
+      effects: {relation: {sandrine: 1}, set: [h7_tableau_demande]}
+      answer: "« Le 14, M. Mbako. Le 12, le petit Rancé, le dernier rang du bus. Au Corner. Ils ont pris les doubles pour ne pas me réveiller. »"
+    right:
+      label: "Je ne surveille personne"
+      effects: {vestiaire: "+"}
+      answer: "« Moi si. » Elle écrit l'heure en haut de la page, à l'encre bleue, et souligne deux fois le mot bus."

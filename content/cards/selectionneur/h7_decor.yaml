@@ -1,0 +1,424 @@
+# Histoire 7 · Chambre 12 — le décor : les cartes de sac du huis clos (des
+# scènes de couloir, de salle du petit-déjeuner, de parking), une au moins par
+# visage du casting de `apres_fiasco`, et quatre pour l'hôtel lui-même (le bus
+# derrière, le bol de trop, la moquette, le stagiaire de jour).
+#
+# Toutes lisent `flag('histoire_h7')` : ce sac est celui du rôle sélectionneur,
+# que l'autre histoire du rôle partage. Pas de `react`, pas de `journal` (des
+# cartes de routine) ; des effets petits ; une réplique qui fait vivre un
+# personnage qu'on reverra, jamais un gag.
+cards:
+  - id: sl.h7.dc.aulard_hall
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: aulard
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season == 0"
+    text: "Vaubourg traverse le hall au téléphone, sans s'arrêter : « Dix jours, vingt-six chambres, le salon pour la presse. » Il te serre le bras en passant, deux doigts, comme on tâte un fruit au marché."
+    left:
+      label: "Je le raccompagne"
+      effects: {direction: "+", relation: {aulard: 1}}
+      answer: "Sur le parking, il raccroche enfin. « Vous êtes encore là ? » Il te tend sa carte, comme à un inconnu, puis se ravise."
+    right:
+      label: "Je le laisse filer"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il ne se retourne pas. À la réception, Josiane note l'heure de son départ dans un carnet qui n'est pas celui de Sandrine."
+
+  - id: sl.h7.dc.josiane_bouton
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season <= 1"
+    text: "Madame Josiane recoud le bouton de ta veste dans le hall, sans t'avoir demandé ton avis : « La Fédération vous regarde à la télévision. Elle regarde aussi les boutons. »"
+    left:
+      label: "Merci, Josiane"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle coupe le fil avec les dents et range l'aiguille dans le revers de son tailleur. « Le prochain, vous le recousez vous-même. »"
+    right:
+      label: "Je n'ai pas le temps"
+      effects: {direction: "-"}
+      answer: "Elle finit quand même, en trois points, et te rend la veste sans un mot. Le bouton tiendra jusqu'en 2013."
+
+  - id: sl.h7.dc.dauzat_croissants
+    roles: [selectionneur]
+    arc: instances
+    tags: [caisse, decor]
+    speaker: dauzat
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "Aurélien Dauzat compte la caisse des petits frais dans le salon, les pièces en piles de dix : « Vingt-six croissants par matin, dix matins. La Fédération n'a jamais compté autant de croissants. »"
+    left:
+      label: "Comptez-les tous"
+      effects: {caisse: "+", vestiaire: "-"}
+      answer: "Il les compte tous, à voix basse, et écrit le total dans le registre. Le registre a une colonne pour tout."
+    right:
+      label: "Laissez les croissants"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "« Comme vous voudrez. » Il referme la boîte. Le lendemain, il y a vingt-huit croissants ; personne ne sait qui a commandé les deux de trop."
+
+  - id: sl.h7.dc.mbako_escalier
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: mbako
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    text: "Mbako apprend aux jeunes à monter l'escalier de l'hôtel deux marches à la fois, sans bruit : « Sandrine entend tout. Mais elle n'écrit que ce qu'on lui dit, {toi}. »"
+    left:
+      label: "Laisse-les monter"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Ils montent en file, deux marches à la fois. Sandrine les regarde passer et n'écrit rien : personne ne lui a rien dit."
+    right:
+      label: "Prenez l'ascenseur"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "« Il est en panne depuis 2009 », dit Mbako. Tout le monde le savait sauf toi. Ils montent quand même, deux marches à la fois."
+
+  - id: sl.h7.dc.ferrol_mur
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: ferrol
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "Ferrol s'entraîne seul, après les autres, contre le mur du terrain annexe. Cent frappes du gauche, cent du droit : « Je compte à voix haute, {toi}. Sinon, je pense. »"
+    left:
+      label: "Je compte avec lui"
+      effects: {vestiaire: "+", relation: {ferrol: 1}}
+      answer: "Vous comptez jusqu'à deux cents. À cent quatre-vingt-dix, il se trompe exprès, pour voir si tu suis. Tu suis."
+    right:
+      label: "Je le laisse compter"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Du parking, tu l'entends encore compter. À deux cents, il recommence, plus bas."
+
+  - id: sl.h7.dc.sandrine_thermos
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire, decor]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "Trois heures du matin. Sandrine Lavergne verse le café de sa thermos dans deux gobelets sans te demander si tu en veux : « Ceux qui descendent à trois heures en veulent toujours. »"
+    left:
+      label: "Je reste un peu"
+      effects: {vestiaire: "+", relation: {sandrine: 1}}
+      answer: "Vous buvez sans parler. Elle note l'heure de ta descente, puis, sans lever les yeux : « Vous avez la même tête que les joueurs. »"
+    right:
+      label: "Je remonte"
+      effects: {direction: "+"}
+      answer: "Elle boit les deux gobelets, l'un après l'autre. Dans le cahier : 3 h 00, café refusé, et ton numéro de chambre."
+
+  - id: sl.h7.dc.arzel_table
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, decor]
+    speaker: arzel
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "La docteure Arzel prend son petit-déjeuner seule, à la table du fond, la mallette sur la chaise d'à côté comme un invité. Elle te fait signe de ne pas t'asseoir."
+    left:
+      label: "Je m'assois quand même"
+      effects: {relation: {arzel: -1}}
+      answer: "Elle déplace la mallette sur ses genoux. Vous mangez sans un mot. En partant, elle laisse un pourboire pour deux."
+    right:
+      label: "Je prends une autre table"
+      effects: {direction: "+"}
+      answer: "Elle hoche la tête, soulagée. La mallette reste sur la chaise jusqu'à ce qu'elle ait fini, une main posée dessus."
+
+  - id: sl.h7.dc.rouvier_bandes
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, decor]
+    speaker: rouvier
+    lieu: cabinet
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "Nadia Rouvier découpe des bandes de strapping à la longueur exacte d'une cheville : « Vingt-six chevilles, quatre bandes chacune. Je les prépare le soir. Le matin, je n'aime pas penser. »"
+    left:
+      label: "Je vous aide"
+      effects: {vestiaire: "+", relation: {rouvier: 1}}
+      answer: "Elle te montre la longueur une seule fois. Au bout d'une heure, tes bandes sont aussi droites que les siennes ; elle les recoupe quand même."
+    right:
+      label: "Bonne soirée, Nadia"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "« Bonne soirée. » Elle continue de couper. Tu entends les ciseaux jusqu'au bout du couloir."
+
+  - id: sl.h7.dc.lea_bar
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: lea
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Léa boit un café au bar de l'hôtel, son carnet fermé à côté de la tasse : « Je ne travaille pas. Je regarde qui descend, et à quelle heure. C'est un hôtel très intéressant, à certaines heures. »"
+    left:
+      label: "Je m'assois avec vous"
+      effects: {tribunes: "+", direction: "-", relation: {lea: 1}}
+      answer: "Elle ne pose aucune question. Au bout d'une demi-heure, elle ouvre le carnet et y écrit l'heure de ton arrivée."
+    right:
+      label: "Je remonte"
+      effects: {direction: "+"}
+      answer: "« Bonne nuit. » Elle note l'heure quand même. Au deuxième, une porte se ferme doucement."
+
+  - id: sl.h7.dc.rossard_photos
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: rossard
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Aimé Rossard signe des photos dans le hall de la Rive : lui, sur un banc, en 1990. « Ils me demandent encore ma signature. Pour la vôtre, {toi}, il faudra attendre vingt ans. »"
+    left:
+      label: "J'attendrai"
+      effects: {tribunes: "+"}
+      answer: "« Moi aussi, j'attendais. » Il signe une photo de plus, souffle sur l'encre et te la tend. La dédicace dit : « Au suivant. »"
+    right:
+      label: "Signez-en une pour moi"
+      effects: {direction: "+", relation: {rossard: 1}}
+      answer: "Il écrit ton prénom, puis le sien, très grand. En dessous, la date. Rien sur la chambre 12 ; il a de la tenue, à sa façon."
+
+  - id: sl.h7.dc.benali_cafe
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, decor]
+    speaker: benali
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Sept heures, la commandante Benali prend un café debout au comptoir de la réception. Elle n'interroge personne : elle regarde le tableau des clés, longtemps, comme un plan de métro."
+    left:
+      label: "Bonjour, commandante"
+      effects: {direction: "-", relation: {benali: 1}}
+      answer: "« Bonjour. » Elle pose la tasse, compte les crochets du doigt sans les toucher, et s'en va avant que tu lui demandes pourquoi."
+    right:
+      label: "Je prends l'escalier"
+      effects: {direction: "+"}
+      answer: "Quand tu redescends, elle est partie. Sur le comptoir, sa tasse vide ; dans le cahier, l'heure de ton passage."
+
+  - id: sl.h7.dc.fardelli_gamin
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents, decor]
+    speaker: fardelli
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Fardelli, au bar de l'hôtel, un gamin de dix-neuf ans à côté de lui : « Un milieu de Portclair. Il a besoin de minutes. Vous lui en donnerez combien ? » Il s'arrête : il a entendu sa phrase."
+    left:
+      label: "Aucune, pour l'instant"
+      effects: {direction: "+"}
+      answer: "Fardelli hoche la tête, soulagé, comme si tu avais dit autre chose. Le gamin finit son jus d'orange sans rien comprendre."
+    right:
+      label: "Je vais le regarder"
+      effects: {vestiaire: "+", relation: {fardelli: 1}}
+      answer: "« Regardez-le bien. » Fardelli paie les deux verres. Sur le ticket, au stylo, il écrit : « pas plus de deux ans »."
+
+  - id: sl.h7.dc.escande_ampoules
+    roles: [selectionneur]
+    arc: contrat
+    tags: [direction, decor]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Monsieur Escande change lui-même les ampoules du couloir du deuxième, perché sur un escabeau : « Les clients se plaignent. La lumière est trop forte devant certaines portes. »"
+    left:
+      label: "Je tiens l'escabeau"
+      effects: {direction: "+", relation: {escande: 1}}
+      answer: "Il change cinq ampoules. Devant la 12, il en visse une plus faible, sans commentaire, et descend en s'appuyant sur ton épaule."
+    right:
+      label: "Je vous laisse"
+      effects: {vestiaire: "+"}
+      answer: "Tu l'entends visser jusqu'au bout du couloir. Le soir, la lumière devant la 12 est jaune, comme dans un vieux film."
+
+  - id: sl.h7.dc.desforges_coffrets
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, decor]
+    speaker: desforges
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Carole Desforges fait déposer un coffret orange dans chaque chambre du deuxième, sauf une : « On ne met rien à la 12. On n'est pas des monstres. On est un partenaire nutrition. »"
+    left:
+      label: "Retirez-les tous"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "Elle les fait retirer un par un, sans discuter. Dans le coffre de sa voiture, vingt-cinq coffrets, et la place d'un vingt-sixième."
+    right:
+      label: "Laissez les coffrets"
+      effects: {caisse: "+"}
+      answer: "Les joueurs les ouvrent le soir même. Mbako pose le sien sur le palier, devant la porte de la 12, sans l'ouvrir."
+
+  - id: sl.h7.dc.fauvel_tracts
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: fauvel
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "Karim Fauvel pose un tract du syndicat dans chaque assiette de la salle du petit-déjeuner : « Réunion jeudi, au salon du bas. Les joueurs viennent. Vous aussi, {toi}, si vous voulez écouter. »"
+    left:
+      label: "Je viendrai"
+      effects: {vestiaire: "+", direction: "-", relation: {fauvel: 1}}
+      answer: "Jeudi, tu restes debout au fond du salon. Personne ne te demande de partir ; personne ne te demande ton avis."
+    right:
+      label: "Pas de réunion ici"
+      effects: {direction: "+", relation: {fauvel: -1}}
+      answer: "« Alors au Corner. » Il reprend ses tracts, sauf un, qu'il laisse sous ta tasse, la date entourée au feutre."
+
+  - id: sl.h7.dc.aubert_marches
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, decor]
+    speaker: aubert
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && year <= 2012"
+    text: "Madame Aubert, ministre des Sports, se fait photographier avec les Cobalts sur les marches de l'hôtel. Elle cherche des yeux qui mettre à côté d'elle : « Le plus jeune, et vous. »"
+    left:
+      label: "Je me mets à côté"
+      effects: {tribunes: "+", relation: {aubert: 1}}
+      answer: "Sur la photo, elle tient ton bras comme on tient une rampe. Le plus jeune a fermé les yeux au flash."
+    right:
+      label: "Mettez le capitaine"
+      effects: {vestiaire: "+", relation: {aubert: -1}}
+      answer: "Elle se tourne vers le capitaine sans cesser de sourire. La photo paraît le lendemain, coupée à ton épaule."
+
+  - id: sl.h7.dc.gege_trottoir
+    roles: [selectionneur]
+    arc: tribune
+    tags: [ultras, decor]
+    speaker: gege
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    text: "Gégé t'attend sur le trottoir de l'hôtel, l'écharpe du Racing nouée deux fois : « Ici, on ne supporte pas les Cobalts. On supporte les gamins d'ici qui jouent chez vous. Vous en avez combien ? »"
+    left:
+      label: "Un seul : Rancé"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "« Le petit du centre. » Il dénoue son écharpe et la renoue. « Alors on viendra pour lui. » Ça se voit, qu'il l'a noté."
+    right:
+      label: "Je ne compte pas"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Nous, si. » Il remonte la rue sans se retourner. Le samedi suivant, dans la Nord à moitié vide, un drapeau : RANCÉ 26."
+
+  - id: sl.h7.dc.mere_biscuits
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: rance_mere
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && flag('h7_rance_mort') && season >= 1"
+    text: "La mère de Tibo pose une boîte de biscuits sur le comptoir de la réception : « Pour les garçons du deuxième. J'en ai fait vingt-six. J'ai compté deux fois. »"
+    left:
+      label: "Je les monte moi-même"
+      effects: {vestiaire: "+", relation: {rance_mere: 1}}
+      answer: "Tu les distribues porte par porte. Il en reste un au fond de la boîte. Personne ne le prend ; Mbako referme le couvercle."
+    right:
+      label: "Laissez-les ici"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle pose la boîte, remet ses gants et repart sans attendre. Le soir, la boîte est vide, sauf un biscuit."
+
+  # ─────────────────────────────────────────────────────────── l'hôtel lui-même
+  - id: sl.h7.dc.bol
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire, decor]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && flag('h7_rance_mort')"
+    text: "La salle du petit-déjeuner, sept heures. Vingt-cinq bols, et un vingt-sixième que la serveuse pose par habitude, puis retire. Le lendemain, elle le pose encore."
+    left:
+      label: "Laissez le bol"
+      effects: {vestiaire: "+"}
+      answer: "Le bol reste, retourné, au bout de la table. Personne ne s'y assoit. La serveuse le lave quand même, chaque matin."
+    right:
+      label: "Retirez-le"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle le retire. Le lendemain, elle le pose encore, puis s'excuse ; elle le posera jusqu'à la fin de la fenêtre."
+
+  - id: sl.h7.dc.bus_vitres
+    roles: [selectionneur]
+    arc: selection
+    tags: [tribunes, decor]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season <= 1"
+    text: "Derrière l'hôtel, le bus de 2010 prend la poussière. Des gamins du quartier écrivent au doigt sur les vitres sales : TRAÎTRES, sur toutes, sauf la dernière."
+    left:
+      label: "Je fais laver le bus"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "Le laveur passe deux jours dessus. Le lendemain, les vitres propres portent déjà un mot, un seul, sur la première."
+    right:
+      label: "Je les laisse écrire"
+      effects: {direction: "+"}
+      answer: "Les mots tiennent jusqu'à la pluie. Après la pluie, il en reste un, sur la dernière vitre, que l'eau n'a pas pris."
+
+  - id: sl.h7.dc.moquette
+    roles: [selectionneur]
+    arc: contrat
+    tags: [direction, decor]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && season >= 1"
+    text: "Escande a fait changer la moquette du deuxième étage. Toute la moquette, sauf un carré devant la 12, sous la plante, où personne n'a voulu soulever le pot."
+    left:
+      label: "Faites déplacer le pot"
+      effects: {direction: "-"}
+      answer: "Quatre hommes soulèvent le pot. Dessous, l'ancienne moquette, bordeaux, et le cercle plus pâle du pot. Rien d'autre."
+    right:
+      label: "Laissez le carré"
+      effects: {direction: "+"}
+      answer: "Le carré reste, plus foncé, comme un paillasson. Les joueurs ne marchent pas dessus. Personne ne leur a dit de ne pas le faire."
+
+  - id: sl.h7.dc.stagiaire
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire, decor]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7')"
+    text: "En journée, un stagiaire tient la réception. Il ne regarde jamais le tableau des clés. Quand un joueur lui demande un double, il appelle Sandrine chez elle, et attend."
+    left:
+      label: "Laissez dormir Sandrine"
+      effects: {vestiaire: "-"}
+      answer: "Le stagiaire donne le double sans rien noter. Le soir, Sandrine trouve un crochet vide et une heure qui manque, et elle ne dit rien."
+    right:
+      label: "Appelez-la"
+      effects: {vestiaire: "+"}
+      answer: "Sandrine décroche à la première sonnerie. Elle dicte au stagiaire la colonne où écrire l'heure, et l'encre à utiliser."

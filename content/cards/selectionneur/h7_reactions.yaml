@@ -1,0 +1,248 @@
+# Histoire 7 · Chambre 12 — les réactions (bible README § 3.4) : servies au
+# tirage qui suit la carte qui les pose, hors créneau, un locuteur, de petits
+# effets, ni `end`, ni `react`, ni `drame`. Le moteur n'en sert que quatre par
+# saison ; celles de 2011 sont réglées pour tenir dans ce plafond (le brassard,
+# la liste, quatre heures, les scellés).
+#
+#   · le perdant du brassard : Ferrol dans l'escalier, ou Mbako sous la fenêtre ;
+#   · les deux listes de Josiane (la tienne, sans Rancé ; celle de Vaubourg, avec) ;
+#   · six heures moins le quart : Rouvier devant la 12, à qui l'on a dit de trouver ;
+#   · « Passez-moi la 12 » : l'agent, la nuit d'après (deux versions : si l'on
+#     a fait dire au standard que le petit dormait, il le rappelle) ;
+#   · la plante qui pousse trop vite (Sandrine) ; Mbako qui sait pour la page ;
+#   · six heures du matin chez la docteure (deux versions : ensemble, seule) ;
+#   · ceux qui ont lu la Une : Gégé et les bougies (2011), Léa (2012), Josiane (2013).
+cards:
+  - id: sl.h7.re.ferrol_bracelet
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: ferrol
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Ferrol, dans l'escalier de service, fait tourner son bracelet rouge et noir : « À Valdorne, on donne le brassard à celui qui court le plus. Ici, c'est à celui qui est resté dans le bus ? »"
+    left:
+      label: "Ici, c'est moi qui choisis"
+      effects: {direction: "+", relation: {ferrol: -1}}
+      answer: "Il hoche la tête et remonte deux marches à la fois. Le soir, il court encore quand les autres sont rentrés."
+    right:
+      label: "Cours plus, on verra"
+      effects: {vestiaire: "+", relation: {ferrol: 1}}
+      answer: "« On verra », répète-t-il. Il le prend comme une promesse, et il a tort, ou pas ; tu ne sais pas encore."
+
+  - id: sl.h7.re.mbako_fenetre
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mbako, assis sous la fenêtre du salon, le vieux brassard sur les genoux : « Je te le rends plié comme je l'ai reçu, {toi}. C'est tout ce que je sais encore bien faire. »"
+    left:
+      label: "Garde-le dans ta poche"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Il le remet dans sa poche, au fond, avec la fiche bristol de l'hymne qu'il n'a jamais rendue. Il ne dit pas merci."
+    right:
+      label: "Rends-le à la Fédération"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "Josiane le range dans une enveloppe kraft, avec la mention « 2010 » au crayon. Mbako regarde l'enveloppe partir."
+
+  - id: sl.h7.re.josiane_deux_listes
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Josiane pose deux listes côte à côte : la tienne, sans Rancé, et celle revenue de la présidence, avec. « Laquelle j'envoie aux clubs ? La sienne est signée. La vôtre aussi. »"
+    left:
+      label: "La sienne"
+      effects: {direction: "+"}
+      answer: "Elle agrafe la liste de Vaubourg et range la tienne dans son classeur. « Je garde toujours les deux. » Elle ne dit pas pourquoi."
+    right:
+      label: "La mienne"
+      effects: {direction: "-"}
+      answer: "Elle envoie la tienne. Le lendemain, les clubs reçoivent un fax de la présidence : « liste corrigée ». Le nom y est revenu."
+
+  - id: sl.h7.re.rouvier_six_heures
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: rouvier
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Six heures moins le quart. Nadia Rouvier, en blouse, devant la porte de la 12 : « On m'a dit que c'est moi qui le trouve, à six heures. Je frappe combien de fois, {toi} ? »"
+    left:
+      label: "Une seule fois"
+      effects: {vestiaire: "-"}
+      answer: "Elle frappe une fois, attend une minute entière, puis ouvre avec le double. Dans le procès-verbal, elle aura frappé trois fois."
+    right:
+      label: "Ne frappez pas"
+      effects: {relation: {rouvier: 1}}
+      answer: "Elle ne frappe pas. Elle entre, ressort aussitôt, et crie quand même, dans le couloir, parce qu'on le lui a demandé."
+
+  - id: sl.h7.re.fardelli_standard
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: fardelli
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Trois heures du matin, la nuit d'après. Le standard te passe une voix d'homme âgé, essoufflée : « Passez-moi la 12. C'est son agent. Il ne répond plus depuis hier. »"
+    left:
+      label: "Je lui dis"
+      effects: {relation: {fardelli: 1}, set: [h7_fardelli_su]}
+      answer: "Tu le dis en trois phrases. Au bout du fil, un long silence, puis : « Il me devait un rappel. » Il raccroche le premier."
+    right:
+      label: "Je raccroche"
+      effects: {relation: {fardelli: -1}, set: [h7_fardelli_raccroche]}
+      answer: "Le standard ne rappelle pas. Au matin, Sandrine a noté l'appel à l'encre bleue : 3 h 02, M. Fardelli, la 12, raccroché."
+
+  - id: sl.h7.re.fardelli_standard_dort
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: fardelli
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Trois heures du matin, la nuit d'après. Le standard te passe Fardelli, essoufflé : « Lundi, mardi, mercredi, on m'a dit qu'il dormait. Passez-moi la 12. Il ne répond plus depuis hier. »"
+    left:
+      label: "Je lui dis"
+      effects: {relation: {fardelli: 1}, set: [h7_fardelli_su]}
+      answer: "Tu le dis en trois phrases. Il ne dit rien. Puis : « Il dormait, donc. » Il raccroche avant toi."
+    right:
+      label: "Je raccroche"
+      effects: {relation: {fardelli: -1}, set: [h7_fardelli_raccroche]}
+      answer: "Sandrine note l'appel : 3 h 02, M. Fardelli, la 12. En dessous, elle écrit « il dort », et le barre."
+
+  - id: sl.h7.re.sandrine_plante
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Sandrine, à la réception : « La plante de la 12, ce n'est pas moi qui l'arrose. Je ne monte jamais : l'ascenseur de service est en panne depuis 2009. Le veilleur dit qu'elle pousse trop vite. »"
+    left:
+      label: "Qu'il l'arrose moins"
+      effects: {direction: "+"}
+      answer: "« Il a essayé. » Elle tourne une page du cahier. « Elle pousse quand même. »"
+    right:
+      label: "Faites réparer l'ascenseur"
+      effects: {caisse: "-", relation: {sandrine: 1}}
+      answer: "Elle rit, pour la première fois devant toi. « Escande dit que ça coûte une chambre par an. La 12, par exemple. »"
+
+  - id: sl.h7.re.mbako_page
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Mbako t'attend en haut de l'escalier, les mains dans les poches, comme en 2010 dans le bus : « Sandrine dit que tu as la page. Tu l'as lue, ou tu l'as seulement prise ? »"
+    left:
+      label: "Je l'ai lue"
+      effects: {relation: {mbako: 1}}
+      answer: "Il hoche la tête. « Alors tu sais l'heure. Le reste, je te le dirai dans le bus. » Il ne dit pas quand."
+    right:
+      label: "Je l'ai seulement prise"
+      effects: {relation: {mbako: -1}}
+      answer: "« Comme le double. » Il redescend sans te frôler. La porte de la 14 se ferme doucement, sans claquer."
+
+  - id: sl.h7.re.six_heures_ensemble
+    roles: [selectionneur]
+    arc: corps
+    tags: [direction]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Six heures du matin. La commandante Benali et deux imperméables devant la chambre 3. Arzel ouvre, déjà en manteau : « C'est moi qui l'ai appelée, hier soir. Vous venez, {toi} ? »"
+    left:
+      label: "Je viens"
+      effects: {direction: "-", tribunes: "+", set: [h7_arzel_six_heures], char: {arzel: {statut: parti}}}
+      answer: "Vous descendez l'escalier côte à côte, sans menottes. Au comptoir, Sandrine écrit : 6 h 04, Mme Arzel, et ton nom."
+    right:
+      label: "Je vous rejoins"
+      effects: {direction: "+", set: [h7_arzel_six_heures], char: {arzel: {statut: parti}}}
+      answer: "La voiture part sans toi. Tu la rejoins à neuf heures, au commissariat ; Arzel parle depuis deux heures, sans t'attendre."
+
+  - id: sl.h7.re.six_heures_seule
+    roles: [selectionneur]
+    arc: corps
+    tags: [direction]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Six heures du matin. La commandante Benali et deux imperméables frappent à la chambre 3. La valise est faite depuis la veille ; la docteure Arzel la porte elle-même jusqu'à la voiture."
+    left:
+      label: "Je descends avec elle"
+      effects: {tribunes: "+", set: [h7_arzel_six_heures], char: {arzel: {statut: parti}}}
+      answer: "Elle ne te regarde pas dans l'escalier. Devant la voiture, elle te tend la valise une seconde, le temps de remettre son gant."
+    right:
+      label: "Je reste à la fenêtre"
+      effects: {direction: "+", set: [h7_arzel_six_heures], char: {arzel: {statut: parti}}}
+      answer: "De la fenêtre de ta chambre, tu vois la voiture tourner au coin du quai. La valise est sur la banquette arrière, pas dans le coffre."
+
+  - id: sl.h7.re.gege_une
+    roles: [selectionneur]
+    arc: tribune
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Gégé plie L'Écho sur la photo de l'hôtel et la pose sur le comptoir de la réception : « Le petit était d'ici. Le virage viendra devant la Rive, avec des bougies. On vous prévient, c'est tout. »"
+    left:
+      label: "Venez quand vous voulez"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "« On ne demandait pas la permission. » Il reprend son journal, le plie en quatre, et le glisse sous son écharpe."
+    right:
+      label: "Pas devant l'hôtel"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Le trottoir est à tout le monde. » Il laisse le journal sur le comptoir. Sandrine le range dans son tiroir, avec le double du 12."
+
+  - id: sl.h7.re.lea_une
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    once: true
+    text: "Léa, au téléphone, le soir du Bilan : « Notre Une a été reprise par tout le monde, sauf par la Fédération. Votre service de presse ne rappelle pas. Vous, vous rappelez ? »"
+    left:
+      label: "Je vous rappelle demain"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "Tu rappelles le lendemain, à huit heures. Elle décroche à la première sonnerie ; elle n'avait pas raccroché la veille."
+    right:
+      label: "Voyez la Fédération"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "« Elle ne rappelle pas, je viens de vous le dire. » Elle raccroche sans colère. Le lendemain, L'Écho titre sur ton silence."
+
+  - id: sl.h7.re.josiane_une
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Josiane découpe la Une au cutter, proprement, et la colle dans un classeur neuf : « 2013. J'ouvre un classeur par année depuis la nuit du 14. Celui-là, je le range à côté des autres ? »"
+    left:
+      label: "À côté des autres"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle range le classeur sur l'étagère du bureau des licences. Trois tranches, trois années, la même étiquette : RANCÉ."
+    right:
+      label: "Jetez-les tous"
+      effects: {direction: "-", relation: {josiane: -1}}
+      answer: "« Non. » Elle le dit doucement, pour la première fois en trente ans. Le classeur reste sur l'étagère."

@@ -1,0 +1,104 @@
+# Histoire 7 · Chambre 12 — les trois missions de la ville (fiche § 6). Rares,
+# une à la fois, au sélectionneur seulement : chacune rapporte une preuve, et
+# son risque est un soir du moteur (content/arcs/selectionneur/h7_sombres.yaml) :
+#
+#   · Le deuxième étage — Sandrine Lavergne, la réception, la nuit. L'ascenseur
+#     de service est en panne depuis 2009 ; avec Rouvier, on la porte dans
+#     l'escalier jusqu'à la 12, et elle donne la page du cahier de nuit
+#     (h7_vl_cahier_nuit → la conférence avec la page en poche, et « La page »,
+#     où la commandante la réclame : la garde à vue pour qui la nie).
+#   · Le dossier de 2010 — Nadia Rouvier, le cabinet, l'après-midi. La mallette
+#     de la docteure, une photocopie à la pharmacie (h7_vl_dossier_arzel →
+#     « L'original », le vol de pièce médicale).
+#   · La photo effacée — un adolescent du square, le soir. La capture du post
+#     de 1 h 47, vendue (h7_vl_capture → « La capture », vendue deux fois).
+#
+# `{montant}` : une seule somme par mission, dans l'étape qui la porte. Les
+# textes ne datent rien et n'accordent rien au protagoniste.
+missions:
+  - id: h7_deuxieme_etage
+    titre: "Le deuxième étage"
+    roles: [selectionneur]
+    donneur: {sprite: passante, nom: "Sandrine Lavergne", lieu: hotel, tranches: [nuit]}
+    si: "flag(histoire_h7) && flag(h7_tableau_demande) && flag(h7_rance_mort)"
+    chance: 0.4
+    etapes:
+      - id: offre
+        texte: "Réception, une heure du matin. Sandrine Lavergne pose les mains sur les roues de son fauteuil : « L'ascenseur de service est en panne depuis 2009. Je n'ai jamais vu le deuxième. Vous me montez ? »"
+        choix:
+          - id: porter
+            label: "Avec Rouvier, on vous porte"
+            reponse: "« Demain, même heure. Rouvier sait porter. » Elle écrit le rendez-vous dans son cahier avant même que tu aies dit oui."
+            suite: escalier
+          - id: refuser
+            label: "Je ne peux pas"
+            reponse: "« Personne ne peut. » Elle retourne à son cahier. L'escalier de service reste noir jusqu'au matin."
+            suite: fin
+      - id: escalier
+        objectif: {lieu: hotel, tranches: [nuit], delai: 3}
+        texte: "L'escalier de service, une heure du matin. Rouvier prend les jambes, toi le dossier du fauteuil. Au palier, Sandrine compte les marches à voix basse : vingt-deux."
+        choix:
+          - id: monter
+            label: "Jusqu'à la 12"
+            effets: {jauges: {vestiaire: 2}, set: [h7_vl_cahier_nuit]}
+            reponse: "Devant la porte, elle sort une page pliée de son cahier : « 2 h 10, 2 h 25. Prenez-la. Moi, je me souviens. » Elle regarde la 12 longtemps."
+            suite: fin
+        echec:
+          texte: "Sandrine a attendu au pied de l'escalier jusqu'à quatre heures. Le lendemain, elle te rend ta clé sans te regarder."
+          effets: {jauges: {vestiaire: -2}}
+
+  - id: h7_dossier_2010
+    titre: "Le dossier de 2010"
+    roles: [selectionneur]
+    donneur: {sprite: passante, nom: "Nadia Rouvier", lieu: cabinet, tranches: [aprem]}
+    si: "flag(histoire_h7) && flag(h7_rance_mort) && annee >= 2012"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Le cabinet, après le massage. Nadia Rouvier baisse la voix : « La mallette de la docteure, deux tours de clé. Le dossier de 2010 est dedans. Le temps d'une photocopie, et je le remets. »"
+        choix:
+          - id: guet
+            label: "Je fais le guet"
+            reponse: "« Mardi, pendant le dîner. Elle pose la mallette sous sa chaise, à la table du fond. » Rouvier range ses ciseaux sans te regarder."
+            suite: pharmacie
+          - id: non
+            label: "Laisse cette mallette"
+            reponse: "« Alors on attendra qu'elle l'ouvre elle-même. Ça peut prendre dix ans. » Elle coupe un sparadrap avec les dents."
+            suite: fin
+      - id: pharmacie
+        objectif: {lieu: pharmacie, tranches: [matin, aprem], delai: 4}
+        texte: "La pharmacie, la photocopieuse du fond. Le pharmacien fait semblant de ranger des boîtes. Rouvier pose la première page sur la vitre ; la machine chauffe, lentement."
+        choix:
+          - id: tout
+            label: "On copie tout"
+            effets: {set: [h7_vl_dossier_arzel]}
+            reponse: "Six pages, encore tièdes. Rouvier remet l'original dans la mallette avant le dessert. Personne n'a rien vu, sauf le pharmacien, qui se tait."
+            suite: fin
+          - id: page
+            label: "Seulement la page trois"
+            effets: {set: [h7_vl_dossier_arzel]}
+            reponse: "Une page, celle qui manquait en mars 2011. Rouvier la plie en quatre et te la donne : « La page trois. Le reste, elle le dira. »"
+            suite: fin
+        echec:
+          texte: "Mardi, la docteure garde sa mallette sur ses genoux pendant tout le dîner. Rouvier ne t'en reparle jamais."
+
+  - id: h7_photo_effacee
+    titre: "La photo effacée"
+    roles: [selectionneur]
+    donneur: {sprite: enfant, nom: "Un adolescent du square", lieu: square, tranches: [soir]}
+    si: "flag(histoire_h7) && flag(h7_main_vue)"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Le square des Lilas, le soir. Un adolescent te montre son téléphone : la capture du post de 1 h 47, la main dans le coin. « Il a été effacé à deux heures. Moi, je l'ai gardé. Vous l'achetez ? »"
+        choix:
+          - id: acheter
+            label: "Je l'achète"
+            francs: -3000
+            effets: {set: [h7_vl_capture]}
+            reponse: "Il compte les billets deux fois : {montant}. Il t'envoie la capture, puis l'efface de son téléphone devant toi. Tu ne le crois pas."
+            suite: fin
+          - id: refuser
+            label: "Efface-la"
+            reponse: "Il hausse les épaules. « D'autres l'achèteront. » Il range son téléphone et repart vers les jeux en sifflant."
+            suite: fin
