@@ -1,0 +1,323 @@
+# Histoire 6 — « 23 h 58 » : les scènes de la semaine (format : en-tête de
+# content/ville/scenes_communes.yaml). Ce que la ville voit pendant que le fax
+# sonne : les témoins qui comptent les marches, les voisins que le fax réveille,
+# le papier qui pâlit, les graines des cartes qui reviennent dans la rue.
+# Aucune ne se passe au Rideau Rouge (un rendez-vous, jamais une scène).
+# Quatre témoins font avancer l'enquête (`var: h6_indices`, lu par la nuit du
+# sous-sol) ; les autres ne bougent qu'une jauge, ou rien.
+# `saison` est celle de la ville : 1 = 2003-2004, 2 = 2004-2005, 3 = 2005-2006.
+scenes:
+  # ═══════════════════════════════════════════════ saison 1 — le premier nom
+  - id: h6.sc.rame
+    titre: "Une rame de plus"
+    roles: [ds]
+    lieu: librairie
+    tranches: [aprem]
+    qui: commercant
+    si: "flag('histoire_h6') && saison == 1 && phase != presaison"
+    texte: "La papetière pose une rame de papier blanc sur le comptoir avant que tu la demandes. « Pour le Racing ? Madame Josiane en prend une de plus chaque lundi, depuis septembre. De sa poche. »"
+    choix:
+      - label: "J'en prends une aussi"
+        francs: -25
+        reponse: "Elle l'emballe dans du kraft. « Le papier du fax ne tient pas l'année, à ce qu'elle dit. Celui-ci tiendra. » Elle ne sait pas pourquoi elle te le répète."
+      - label: "Juste le journal"
+        reponse: "Elle range la rame sous le comptoir, à côté d'une autre déjà ficelée, un « J. » écrit dessus au crayon."
+
+  - id: h6.sc.page_pale
+    titre: "La page du carnet"
+    roles: [ds]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag('histoire_h6') && flag('h6_page_gardee') && saison == 1 && phase == retour"
+    texte: "Dans ton carnet, la page de 23 h 58, pliée en quatre depuis août. Tu la déplies sous la lampe : on lit encore DEMBO, à peine. Le chiffre, lui, est déjà parti."
+    choix:
+      - label: "Je recopie ce qui reste"
+        reponse: "Tu recopies sur une page vierge, au stylo bille : DEMBO, et un blanc à la place du prix. L'original continue de pâlir à côté, sans se presser."
+      - label: "Je la laisse pâlir"
+        reponse: "Tu la replies. Bientôt, ton carnet tiendra une page blanche, et tu seras seul à savoir ce qu'elle disait. Seul avec celui qui l'a envoyée."
+
+  - id: h6.sc.registre
+    titre: "Le registre du cimetière"
+    roles: [ds]
+    lieu: loge
+    tranches: [matin]
+    qui: ancien
+    si: "flag('histoire_h6') && flag('h6_page_trois_signee')"
+    texte: "Le gardien du cimetière ouvre son registre à ton arrivée. « Le père Vaubourg vient chaque Toussaint, au caveau du Racing. Le fils, jamais. Vous, c'est la première fois. Je vous note ? »"
+    choix:
+      - label: "Notez-moi"
+        reponse: "Il écrit ton nom, l'heure, et « Racing » entre parenthèses. Puis il souffle sur l'encre, exactement comme Arnaud Vaubourg sur ton contrat, en août."
+      - label: "Ne notez rien"
+        reponse: "« Je note tout, c'est le métier. » Il écrit quand même, et ajoute en dessous, de la même encre : « a demandé qu'on ne note pas »."
+
+  - id: h6.sc.coursier
+    titre: "Retour à l'envoyeur"
+    roles: [ds]
+    lieu: clubhouse
+    tranches: [matin]
+    qui: passant
+    si: "flag('histoire_h6') && flag('h6_montre_acier') && flag('h6_montres_renvoi')"
+    texte: "Un coursier attend devant le club-house, le casque sous le bras, un paquet de kraft ficelé dans la main. « Retour à l'envoyeur, c'est noté. Il m'avait payé l'aller et le retour, d'avance. »"
+    choix:
+      - label: "Il savait, alors"
+        reponse: "« Il paie toujours les deux. » Il cale le paquet dans son top-case, entre un bouquet et une boîte à pizza. « Les gens comme lui, je ne repars jamais à vide. »"
+      - label: "Ne le perdez pas"
+        reponse: "« Je ne perds rien, moi. » Il démarre, le paquet posé sur le réservoir, et le tient d'une main jusqu'au feu rouge."
+
+  - id: h6.sc.square
+    titre: "La canette du square"
+    roles: [ds]
+    lieu: square
+    tranches: [aprem]
+    qui: enfant
+    si: "flag('histoire_h6') && flag('h6_canette_signee')"
+    texte: "Au square des Lilas, trois gamins jouent avec une canette orange vide en guise de ballon. « C'est la boisson du maillot ! Elle est pas bonne. Mais elle roule mieux que le vrai ballon. »"
+    choix:
+      - label: "Je vous offre un ballon"
+        francs: -40
+        reponse: "Ils jouent avec le ballon neuf et gardent la canette dans une poche, pour plus tard. Le plus petit l'a déjà remplie de sable."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Jetez-la, elle coupe"
+        reponse: "Le plus petit la jette dans la poubelle, puis la ressort dès que tu as le dos tourné. Elle roule mieux, c'est vrai."
+
+  - id: h6.sc.trebignac
+    titre: "Une parole, ça se signe ?"
+    roles: [ds]
+    lieu: centre
+    tranches: [aprem]
+    qui: enfant
+    si: "flag('histoire_h6') && flag('h6_oeil_barbier')"
+    texte: "Le gamin de Trébignac t'attend à la porte du préfabriqué, ses crampons à la main. « Monsieur Barbier dit que vous avez signé sur sa parole. C'est vrai qu'on peut signer sur une parole ? »"
+    choix:
+      - label: "Sur la sienne, oui"
+        reponse: "Il hoche la tête, sérieux comme un notaire. Le lendemain, il porte le sac de Barbier jusqu'à l'arrêt du car, sans que personne le lui ait demandé."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Sur un contrat, surtout"
+        reponse: "« Ah. » Il réfléchit. « Alors je le relirai. » Il repart avec ses crampons, et tu te demandes qui lui a appris à se méfier si jeune."
+
+  # ═══════════════════════════════════════════════ saison 2 — les suspects
+  - id: h6.sc.car_dembo
+    titre: "Le car de Valentienne"
+    roles: [ds]
+    lieu: gareRoutiere
+    tranches: [matin]
+    qui: dembo
+    si: "flag('histoire_h6') && flag('h6_dembo_vendu') && saison == 2 && phase == presaison"
+    texte: "Dembo attend le car de Valentienne avec un seul sac. « Le club m'a proposé une voiture. J'ai dit non : je veux voir la Rive jusqu'au pont. » Il ne demande pas ce que tu fais là."
+    choix:
+      - label: "J'attends avec toi"
+        reponse: "Vous attendez sans parler. Quand le car démarre, il pose sa paume à plat contre la vitre, et la laisse là jusqu'au pont."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Bonne route, capitaine"
+        reponse: "« Capitaine. » Il sourit du mot, pas de toi. Il monte le premier et s'assoit côté Rive, sans se retourner."
+
+  - id: h6.sc.bache
+    titre: "La bâche du virage"
+    roles: [ds]
+    lieu: buvette
+    tranches: [soir]
+    qui: fan
+    si: "flag('histoire_h6') && flag('h6_dembo_reste') && saison == 2"
+    texte: "À la buvette du kop, deux supporters déroulent une bâche sur le zinc : NEUF MILLIONS, barré d'un trait, et ton nom en dessous. « On la sort à chaque but de Dembo. Vous signez dans le coin ? »"
+    choix:
+      - label: "Je signe dans le coin"
+        reponse: "Tu signes au feutre, sous le trait. Samedi, la bâche monte au virage ; ta signature se lit depuis la tribune d'en face."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Elle est bien sans moi"
+        reponse: "« Comme vous voudrez. » Ils la roulent. Dans le coin, quelqu'un a déjà dessiné une montre au feutre, trop grosse pour le poignet."
+
+  - id: h6.sc.ronde
+    titre: "Quatorze marches"
+    roles: [ds]
+    lieu: clubhouse
+    tranches: [nuit]
+    qui: ancien
+    si: "flag('histoire_h6') && saison >= 2"
+    texte: "Le gardien de nuit fait sa ronde, la lampe éteinte pour ménager les piles. « Quelqu'un descend à la buanderie à onze heures et remonte après minuit. Quatorze marches : je les compte d'ici. »"
+    choix:
+      - label: "Comptez-les encore"
+        reponse: "« Je les compte toutes les nuits. » Il a noté les heures au dos de sa main, au stylo : 23 h 02, 0 h 07. Il te la montre, paume ouverte, comme un ticket de vestiaire."
+        effets: {var: {h6_indices: "+1"}}
+      - label: "C'est la chaudière"
+        reponse: "« Une chaudière ne referme pas la porte doucement derrière elle. » Il rallume sa lampe et part vers le parking sans se retourner."
+
+  - id: h6.sc.laverie
+    titre: "Le séchoir du club"
+    roles: [ds]
+    lieu: laverie
+    tranches: [soir, nuit]
+    qui: ferlac
+    si: "flag('histoire_h6') && saison >= 2"
+    texte: "La laverie, vingt-deux heures. Joachim Ferlac plie des pulls gris tous pareils, en carrés parfaits. Il se lève à moitié : « Bonsoir. Le séchoir du club ne marche plus, alors je viens ici. »"
+    choix:
+      - label: "Quel séchoir ?"
+        reponse: "« Celui de la buanderie. » Il s'arrête, un pull à la main. « Enfin, je crois. Madame Josiane le dirait mieux que moi. » Il reprend son pliage, sans se presser."
+        effets: {var: {h6_indices: "+1"}}
+      - label: "Bonne soirée, Joachim"
+        reponse: "« Bonne soirée à vous. » Le séchoir s'arrête. Il attend que le tambour refroidisse pour ouvrir le hublot, comme on le lui a appris."
+
+  - id: h6.sc.voisin
+    titre: "Le voisin du dessus"
+    roles: [ds]
+    lieu: domicile
+    tranches: [soir]
+    qui: passant
+    si: "flag('histoire_h6') && flag('h6_ligne_branchee')"
+    texte: "Le voisin du dessus frappe chez toi en peignoir, une serviette sur l'épaule. « Votre fax, à minuit moins deux. Le mur est mince. Je ne me plains pas. Je voulais savoir qui écrit si tard. »"
+    choix:
+      - label: "Je vais le débrancher"
+        reponse: "Il lève la main. « Laissez. Les nuits où il ne sonne pas, je me réveille quand même, à moins deux. Alors autant qu'il sonne. »"
+      - label: "Personne n'écrit"
+        reponse: "Il te regarde comme on regarde un voisin qui ment mal. « Alors c'est personne qui me réveille. Bonne nuit. » Au-dessus, le bain coule jusqu'à une heure."
+
+  - id: h6.sc.chauffeur
+    titre: "Le car de vingt-trois heures"
+    roles: [ds]
+    lieu: terminus
+    tranches: [soir]
+    jours: [dim]
+    qui: passant
+    si: "flag('histoire_h6') && saison >= 2"
+    texte: "Au Terminus, le chauffeur du dernier car boit son café debout. « Le dimanche, à 23 h, j'ai un client à la gare routière. Un jeune en pull. Il poste une lettre, et il ne monte jamais. »"
+    choix:
+      - label: "Il ressemble à quoi ?"
+        reponse: "« À personne, c'est ce qui m'a frappé. » Il repose sa tasse. « Il regarde l'heure à la pendule de la gare, jamais à sa montre. Et il attend 23 h pile pour poster. »"
+        effets: {var: {h6_indices: "+1"}}
+      - label: "Je vous offre le café"
+        francs: -5
+        reponse: "Il accepte le café, pas la conversation. « Je conduis, moi. Les gens qui ne montent pas, je ne les regarde pas. »"
+
+  - id: h6.sc.imper
+    titre: "L'imperméable au guichet"
+    roles: [ds]
+    lieu: banque
+    tranches: [matin]
+    qui: passant
+    si: "flag('histoire_h6') && flag('h6_primes_mutuelle')"
+    texte: "À la Banque Aubérivoise, l'homme en imperméable de la Mutuelle des Quais dépose une sacoche au guichet, sans s'asseoir. Il te voit, et touche le bord de son chapeau d'un seul doigt."
+    choix:
+      - label: "Je rends le salut"
+        reponse: "Le banquier a vu le salut. Le soir, ton relevé arrive avec une croix au crayon dans la marge, en face d'un dépôt en liquide."
+        effets: {jauges: {direction: -1}}
+      - label: "Je regarde ailleurs"
+        reponse: "Tu regardes la plante verte. Quand tu te retournes, la sacoche n'est plus sur le guichet, et l'imperméable n'est plus dans la banque."
+
+  - id: h6.sc.tabac
+    titre: "Le fax public"
+    roles: [ds]
+    lieu: tabac
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h6') && flag('h6_verite_dimanche')"
+    texte: "Le patron du tabac du Quai soulève la housse de son fax public. « Depuis que Massenet parle de fax à minuit, on me demande si ça part d'ici. Vous voulez voir le journal des envois ? »"
+    choix:
+      - label: "Montrez-moi le journal"
+        reponse: "Il imprime le relevé : des devis, deux faire-part, un concours de belote. Rien après dix-neuf heures. Il a l'air presque déçu pour toi."
+      - label: "Je vous crois"
+        reponse: "« Vous êtes bien le seul. » Il remet la housse sur la machine, avec le soin qu'on met à couvrir une cage d'oiseau pour la nuit."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h6.sc.bache_rance
+    titre: "Quatre millions au rouleau"
+    roles: [ds]
+    lieu: buvette
+    tranches: [soir]
+    qui: fan
+    si: "flag('histoire_h6') && flag('h6_tibo_vendu') && saison == 2"
+    texte: "À la buvette, on peint une bâche au rouleau : RANCÉ, 4 MILLIONS. Le 4 est plus grand que le nom. « C'est pour samedi. On vous la montre avant : on est polis, au kop. »"
+    choix:
+      - label: "Ne la sortez pas"
+        reponse: "« On ne vous demande pas la permission. » Samedi, elle monte quand même. À la mi-temps, le 4 a été repeint en noir, comme un brassard."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je viendrai la voir"
+        reponse: "Ils rient, puis plus du tout. Samedi, tu la regardes monter jusqu'au bout, et le virage te regarde la regarder."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h6.sc.cinema
+    titre: "La séance du mardi"
+    roles: [ds]
+    lieu: cinema
+    tranches: [soir]
+    jours: [mar]
+    qui: arnaud_vaubourg
+    si: "flag('histoire_h6') && saison >= 2"
+    texte: "Au cinéma L'Aurore, Arnaud Vaubourg est seul au dernier rang, son manteau sur le siège d'à côté. « Mon père n'aime pas le cinéma. Je viens le mardi. Le film, je ne le choisis pas non plus. »"
+    choix:
+      - label: "Je m'assois à côté"
+        reponse: "Il déplace son manteau. Vous ne parlez pas du club. À la sortie, il dit « c'était bien, non ? », et il a l'air d'avoir dix-sept ans."
+        effets: {jauges: {direction: 1}}
+      - label: "Bonne séance, président"
+        reponse: "« Président. » Il répète le mot comme le titre d'un film qu'il n'irait pas voir. La salle s'éteint sur sa nuque."
+
+  # ═══════════════════════════════════════════════ saison 3 — le sous-sol
+  - id: h6.sc.vialat
+    titre: "Une table pour une"
+    roles: [ds]
+    lieu: hotel
+    tranches: [soir]
+    qui: vialat
+    si: "flag('histoire_h6') && saison == 3 && phase == presaison"
+    texte: "Au restaurant de l'hôtel de la Rive, Madame Vialat dîne seule, un classeur ouvert près de l'assiette. Elle te voit, ne t'invite pas, mais repousse la chaise d'en face du bout du pied."
+    choix:
+      - label: "Je m'assois"
+        reponse: "Elle ne parle pas de l'audit. Elle parle des trains de la Capitale et du prix de la sole. Elle ne te demande rien ; c'est ce qui t'empêche de dormir."
+      - label: "Je salue et je sors"
+        reponse: "Elle hoche la tête, une fois. Le lendemain, à l'audit, elle te dit bonjour avec exactement le même hochement."
+
+  - id: h6.sc.cabas
+    titre: "Le cabas de Josiane"
+    roles: [ds]
+    lieu: gareRoutiere
+    tranches: [soir]
+    qui: josiane
+    si: "flag('histoire_h6') && flag('h6_classeur_garde')"
+    texte: "Madame Josiane attend le car de dix-neuf heures, son cabas serré contre elle ; un tricot dépasse du haut. « Il est lourd, ce soir. Je ne conduis plus la nuit, alors je le porte. »"
+    choix:
+      - label: "Je vous raccompagne"
+        reponse: "Elle accepte, à condition de garder le cabas sur ses genoux. Devant chez elle, elle te remercie pour le trajet, pas pour le reste."
+        effets: {jauges: {direction: 1}}
+      - label: "Bonne soirée, Josiane"
+        reponse: "Le car arrive. Elle monte de profil, le cabas devant elle, comme on porte un enfant qui dort."
+
+  - id: h6.sc.rampe
+    titre: "La rampe propre"
+    roles: [ds]
+    lieu: clubhouse
+    tranches: [matin]
+    qui: passante
+    si: "flag('histoire_h6') && saison == 3"
+    texte: "La femme de ménage passe la serpillière dans le couloir, à six heures. « De la poussière partout, sauf sur la rampe de l'escalier du sous-sol. Quelqu'un la tient tous les soirs. Je n'y touche pas. »"
+    choix:
+      - label: "N'y touchez pas"
+        reponse: "Elle hoche la tête, la serpillière en l'air. « Je ne nettoie jamais ce qui est propre. » Elle passe à côté de la rampe, très exactement."
+        effets: {var: {h6_indices: "+1"}}
+      - label: "Faites comme d'habitude"
+        reponse: "Elle passe le chiffon sur la rampe, de haut en bas. Le soir, tu y poses la main ; elle sent la javel, et encore autre chose : la lessive."
+
+  - id: h6.sc.valentienne
+    titre: "Applaudir ou siffler"
+    roles: [ds]
+    lieu: buvette
+    tranches: [soir]
+    qui: fan
+    si: "flag('histoire_h6') && flag('h6_dembo_vendu') && arc(ds.h6.dembo_retour)"
+    texte: "À la buvette, un vieux supporter roule une écharpe du Racing autour de son poing. « Dembo revient samedi, sous le maillot de Valentienne. On l'applaudit, ou c'est vous qu'on siffle ? »"
+    choix:
+      - label: "Applaudissez-le"
+        reponse: "« Et vous ? » Tu ne réponds pas. Samedi, le virage applaudit Dembo pendant tout l'échauffement, sans un regard pour ta tribune."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Faites comme vous voulez"
+        reponse: "« On fait toujours comme on veut. » Il dénoue l'écharpe et la noue autour de son poignet, serrée, comme une montre trop grosse."
+
+# Les phrases du match, quand l'histoire a laissé sa trace au stade.
+match_textes:
+  pour:
+    - texte: "{Qui} marque et court vers le banc, où Dembo tapote son poignet nu, comme on montre l'heure : {score}."
+      si: "flag('histoire_h6') && flag('h6_dembo_reste')"
+    - texte: "Une frappe de {qui} sous la barre. Au virage, la bâche NEUF MILLIONS se soulève d'un coup : {score}."
+      si: "flag('histoire_h6') && flag('h6_dembo_reste')"
+  contre:
+    - texte: "{Adv} marque. Au virage, quelqu'un agite une page blanche au bout d'un manche à balai, sans un mot : {score}."
+      si: "flag('histoire_h6') && flag('h6_verite_dimanche')"
+    - texte: "Une passe en retrait trop courte, et {gardien} est battu. Sur la bâche du virage, le 4 de RANCÉ semble grandir : {score}."
+      si: "flag('histoire_h6') && flag('h6_tibo_vendu')"

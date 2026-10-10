@@ -1,0 +1,102 @@
+# Histoire 6 — « 23 h 58 » : les soirs que le metteur en scène arme (kind
+# `evenement`, un lieu, le tag `sombre` sur la carte). Le fax n'en est pas un :
+# il est le script. Les ancres de nuit du livre (la photo, la maison qui garde
+# tout, la page blanche, la vitre, le tapis vert, 23 h 57) sont servies par le
+# script et la trame ; ceux-ci sont le réservoir, ce que le fax fait arriver
+# autour de toi. Ancres et réservoir ne font jamais plus de quatre soirs dans
+# une saison : les `when` se taisent quand la saison est pleine.
+#
+#   le bureau visité (S1)        — le carnet déplacé d'un centimètre, la molette
+#                                  du coffre ; le lendemain, un café poli
+#   les Glycines (S1-S2)         — ton père a reçu une photo ; l'histoire passe
+#                                  par la seule personne qui n'y est pour rien
+#   la voiture sous la fenêtre (S3) — on photographie ta porte, rien d'autre
+#   quarante-huit heures (S2-S3) — la brigade, pour les primes en liquide
+# Les cartes : content/cards/ds/h6_sombres.yaml.
+arcs:
+  - id: ds.h6.sb.bureau_visite
+    title: "Le bureau visité"
+    kind: evenement
+    roles: [ds]
+    postulats: [vendre_trente]
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season <= 1 && slot >= 7 && slot <= 14"
+    chance: 0.35
+    cast: [josiane, ferlac]
+    same_club: true
+    fallback: drop
+    traces:
+      h6_bureau_visite: "{annee} : quelqu'un a essayé la combinaison du coffre du recrutement. Rien ne manquait."
+    steps:
+      - id: soir
+        card: ds.h6.sb.bureau_visite
+        next: [ { step: lendemain, in: [1, 2] } ]
+      - id: lendemain
+        card: ds.h6.sb.lendemain
+        next: []
+
+  - id: ds.h6.sb.glycines
+    title: "Les Glycines"
+    kind: evenement
+    roles: [ds]
+    postulats: [vendre_trente]
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "slot <= 9 && (vars.h6_fax_refus >= 1 || flag('h6_fax_trahi'))"
+    chance: 0.3
+    cast: [josiane]
+    same_club: true
+    fallback: drop
+    traces:
+      h6_pere_photo: "{annee} : le père de {nom}, aux Glycines, a reçu par la poste une photo de 1999."
+    steps:
+      - id: telephone
+        card: ds.h6.sb.glycines
+        next: []
+
+  - id: ds.h6.sb.voiture
+    title: "La voiture sous la fenêtre"
+    kind: evenement
+    roles: [ds]
+    postulats: [vendre_trente]
+    theme: absurde
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 2 && slot <= 7 && (flag('h6_rideau_vu') || flag('h6_negatifs_offerts'))"
+    chance: 0.4
+    cast: [fardelli]
+    same_club: true
+    fallback: drop
+    traces:
+      h6_voiture_photo: "{annee} : un homme dans une voiture a photographié la porte de {nom}, à minuit. Rien que la porte."
+    steps:
+      - id: porte
+        card: ds.h6.sb.voiture
+        next: []
+
+  - id: ds.h6.sb.brigade
+    title: "Quarante-huit heures"
+    kind: evenement
+    roles: [ds]
+    postulats: [vendre_trente]
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && slot <= 9 && (flag('h6_primes_mutuelle') || flag('h6_vl_ardoise_sale'))"
+    chance: 0.3
+    cast: [vialat, arnaud_vaubourg, legruet]
+    same_club: true
+    fallback: drop
+    traces:
+      h6_brigade_parle: "{annee} : deux inspecteurs dans le bureau de {nom}. Un nom donné : JF Conseil."
+    steps:
+      - id: inspecteurs
+        card: ds.h6.sb.brigade
+        next: []

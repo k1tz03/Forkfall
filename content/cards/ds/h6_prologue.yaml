@@ -1,0 +1,181 @@
+# Histoire 6 — « 23 h 58 » : les six scènes du prologue (août 2003), servies
+# dans l'ordre de content/arcs/ds/h6_prologue.yaml avant la carte Objectif.
+# Hors créneau, sans tirage : ni `schedule`, ni `react`, ni `end` ; une jauge
+# bouge d'un cran moyen au plus. Ce qu'elles plantent, et qui le relit :
+#   h6_page_trois_lue / h6_page_trois_signee → Solvang (la clause), Vialat
+#     (trente pour cent), l'audit de la saison 3, les épitaphes ;
+#   h6_tri_josiane → le presse-papier (ds.h6.photo.presse_papier) ;
+#   h6_carnet_confie / h6_carnet_garde → le faux nom (S3), la nuit du sous-sol ;
+#   h6_gauche_promis → le latéral gauche (ds.h6.lateral) ;
+#   h6_montre_dembo → Valentienne (fin de S1), le retour de Dembo ;
+#   h6_page_jetee / h6_page_gardee → la photo (ancre de S1, créneau 1).
+# Le stagiaire est posé ici comme un meuble : il tape, il se lève quand on
+# entre, il reste jusqu'à vingt-trois heures. Personne ne le regardera plus.
+cards:
+  # ---------------------------------------------------------- 1 · la page deux
+  - id: ds.h6.pro.page_deux
+    roles: [ds]
+    arc: direction
+    tags: [direction, decor]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Arnaud Vaubourg ouvre ton contrat à la page deux : « Trente millions de ventes par an ; vingt et un sont faits, en juin. Mon père a insisté. La page trois, c'est l'usage. » Il garde la main dessus."
+    left:
+      label: "Je lis la page trois"
+      effects: {direction: -3, relation: {arnaud_vaubourg: 1}, set: [h6_page_trois_lue], var: {h6_millions: "=21"}}
+      answer: "Les commissions des intermédiaires, contresignées par la direction sportive « à titre personnel ». Il retire sa main. « L'usage. »"
+    right:
+      label: "Je signe sans lire"
+      effects: {direction: "+", set: [h6_page_trois_signee], var: {h6_millions: "=21"}}
+      answer: "Tu signes {prenom} {nom}, en entier. Il souffle sur l'encre et range le contrat dans une chemise bordeaux, page trois contre le carton."
+
+  - id: ds.h6.pro.page_deux_haut_parleur
+    roles: [ds]
+    arc: direction
+    tags: [direction, decor]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Arnaud Vaubourg a mis son père sur haut-parleur. La voix dit « page deux, trente millions, vingt et un faits en juin, l'usage pour le reste ». Le fils tient la page trois du bout des doigts."
+    left:
+      label: "Je lis la page trois"
+      effects: {direction: -3, relation: {arnaud_vaubourg: 1}, set: [h6_page_trois_lue], var: {h6_millions: "=21"}}
+      answer: "Les commissions des intermédiaires, à ta charge, à titre personnel. Au haut-parleur, le père a déjà raccroché."
+    right:
+      label: "Je signe sans lire"
+      effects: {direction: "+", set: [h6_page_trois_signee], var: {h6_millions: "=21"}}
+      answer: "Tu signes. Le fils souffle sur l'encre, remercie le téléphone, puis toi, dans cet ordre."
+
+  # ------------------------------------------------------------- 2 · le bureau
+  - id: ds.h6.pro.bureau
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Madame Josiane ouvre le bureau du recrutement, fermé depuis mai. Le fax clignote sous la fenêtre : « Les agents envoient la nuit, pour être lus en premier. Je trie à sept heures. Le tri ou le tas ? »"
+    left:
+      label: "Le tri, Josiane"
+      effects: {relation: {josiane: 1}, set: [h6_tri_josiane]}
+      answer: "Trois piles : agents, clubs, inconnus. Elle cale la plus mince, celle des inconnus, sous le presse-papier de verre au fanion de 1974."
+    right:
+      label: "Le tas, sur mon bureau"
+      effects: {direction: 2, set: [h6_tas]}
+      answer: "Elle pose le tas sur ton sous-main, bord à bord, et met dessus le presse-papier de verre où dort un fanion de 1974. « Il retient bien. »"
+
+  # ---------------------------------------------------------- 3 · le stagiaire
+  - id: ds.h6.pro.stagiaire
+    roles: [ds]
+    arc: mercato
+    tags: [formation, decor]
+    speaker: barbier
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Lucien Barbier dicte un rapport, la doudoune fermée, les yeux mi-clos. À la machine, un garçon en pull tape sans regarder ses doigts. « Le petit Ferlac, école de commerce. Lui tape, moi je vois. »"
+    left:
+      label: "Il tapera mon carnet aussi"
+      effects: {relation: {ferlac: 1, barbier: 1}, set: [h6_carnet_confie]}
+      answer: "Joachim Ferlac se lève pour te serrer la main. « Avec plaisir. J'ai l'habitude des écritures pressées. » Sa main est sèche et froide."
+    right:
+      label: "Mon carnet reste à moi"
+      effects: {set: [h6_carnet_garde]}
+      answer: "Le garçon sourit sans se vexer. « Je reste jusqu'à vingt-trois heures, si jamais. » Barbier reprend sa phrase à la virgule."
+
+  - id: ds.h6.pro.stagiaire_scouts
+    roles: [ds]
+    arc: mercato
+    tags: [formation, decor]
+    speaker: barbier
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Trois rapports t'attendent sur ta chaise. Un seul est tapé, celui de Lucien Barbier, mis au propre par le garçon en pull qui se lève quand tu entres. Barbier : « Le petit Ferlac. Il tape, je vois. »"
+    left:
+      label: "Il tapera mon carnet aussi"
+      effects: {relation: {ferlac: 1, barbier: 1}, set: [h6_carnet_confie]}
+      answer: "Il a déjà glissé une feuille vierge dans la machine, au cas où. Barbier, à la fenêtre, ne se retourne pas."
+    right:
+      label: "Mon carnet reste à moi"
+      effects: {set: [h6_carnet_garde]}
+      answer: "Il pose les doigts sur les touches sans rien taper. « Je reste jusqu'à vingt-trois heures, si jamais. »"
+
+  # ------------------------------------------------------- 4 · le latéral gauche
+  - id: ds.h6.pro.gauche
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: klopf
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Vogler traverse le terrain annexe en courant, casquette à l'envers, et s'arrête net : « Un latéral gauche, {pg, select, f{directrice} other{directeur}}. Un vrai. Pas un droit qui regarde son pied. »"
+    left:
+      label: "Vous l'aurez"
+      effects: {vestiaire: "+", relation: {klopf: 1}, set: [h6_gauche_promis]}
+      answer: "Il te claque l'épaule et repart en courant. Au bout du terrain, il lève le pouce sans se retourner."
+    right:
+      label: "On verra au mercato"
+      effects: {vestiaire: "-", relation: {klopf: -1}}
+      answer: "Il sourit, trop blanc. « On verra. » Il repart en marchant, et c'est la seule fois de l'été qu'on le voit marcher."
+
+  - id: ds.h6.pro.gauche_feuille
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: klopf
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Vogler a punaisé sa feuille de match au mur de ton bureau, un trou à la place du latéral gauche : « Trente millions de ventes, ils disent. Moi, je veux un seul achat, et il est gaucher. »"
+    left:
+      label: "Vous l'aurez"
+      effects: {vestiaire: "+", relation: {klopf: 1}, set: [h6_gauche_promis]}
+      answer: "Il entoure le trou au feutre vert et s'en va en courant. La feuille reste au mur jusqu'en janvier."
+    right:
+      label: "On verra au mercato"
+      effects: {vestiaire: "-", relation: {klopf: -1}}
+      answer: "Il décroche la feuille, la plie en huit et la range dans sa poche de survêtement. Il ne la repunaise jamais."
+
+  # ----------------------------------------------------- 5 · la montre de Dembo
+  - id: ds.h6.pro.montre
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: dembo
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Avant le match amical, Dembo défait sa montre, trop grosse pour son poignet, et te la met dans la main : « Tu me la gardes, comme toujours. Trente-sept ans, et personne d'autre à qui la confier. »"
+    left:
+      label: "Je la garde pour toi"
+      effects: {relation: {dembo: 1}, set: [h6_montre_dembo]}
+      answer: "Il marque à la soixantième et te cherche dans la tribune. Tu lèves la montre ; il crie « {prenom} ! » avant d'avoir fini de célébrer."
+    right:
+      label: "Pose-la au vestiaire"
+      effects: {relation: {dembo: -1}}
+      answer: "Il la pose sur le banc. Le soir, l'intendant la range aux objets trouvés, entre deux protège-tibias."
+
+  # ------------------------------------------------------------- 6 · 23 h 58
+  # La première ligne d'ordre : sans locuteur, rendue comme un fax (tag `fax`).
+  - id: ds.h6.pro.fax
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. DEMBO. VALENTIENNE. 6 MILLIONS. AVANT VENDREDI."
+    left:
+      label: "Je jette la page"
+      effects: {set: [h6_page_jetee]}
+      answer: "La page tombe dans la corbeille, roulée sur elle-même, encore tiède. Le fax se tait, comme s'il avait fini sa journée."
+    right:
+      label: "Je la garde"
+      effects: {set: [h6_page_gardee]}
+      answer: "Tu la plies en quatre dans ton carnet. Le papier sent le chaud, l'encre n'est pas de l'encre ; dans six mois, il sera blanc."

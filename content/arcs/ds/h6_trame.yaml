@@ -1,0 +1,186 @@
+# Histoire 6 — « 23 h 58 » : la trame. Cinq intrigues ouvertes par les ancres
+# du script (content/arcs/ds/h6_script.yaml) d'un `schedule` vers leur
+# première carte, jamais tirées au réservoir : l'enquête ne dépend pas du
+# hasard, seulement de ce que tu en fais. Les cartes :
+# content/cards/ds/h6_trame.yaml.
+#
+#   ds.h6.photo     saison 0 : le presse-papier (scène 4), la gourmette
+#                   (scène 5), le carton noir, puis la maison qui garde tout
+#                   (scène 9, le jeudi d'après, à onze heures)
+#   ds.h6.barbier   saison 1 : le gaucher de Kerbrouck (scène 7), la doudoune
+#                   (scène 8), le rapport tapé
+#   ds.h6.tibo      saisons 1-2 : les chaussettes (scène 11), la grille, le
+#                   comptoir (fusée longue vers la saison 2)
+#   ds.h6.vialat    saison 1 : le recompte, le papier (intermède, scène 15),
+#                   trente pour cent (scène 16)
+#   ds.h6.sous_sol  saison 2 : le tableur, l'escalier, la buanderie (intermède)
+#                   — le classeur de Josiane est une ancre du script (créneau
+#                   9), pour qu'aucune nuit du 31 janvier ne s'en passe
+#
+# Les indices (vars.h6_indices) : la maison (Fardelli), le garçon poli (le
+# Rideau), la dictée (Barbier), le prix ajouté (le rapport tapé), la carte
+# « J. F. » (Bertrand), JF Conseil (le comptoir), l'escalier (Vukić), la ligne
+# de la buanderie (Josiane). Trois suffisent pour descendre au bon moment.
+arcs:
+  # ════════════════════════════════════════════════════════════ La photo
+  - id: ds.h6.photo
+    title: "La photo"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: agent
+    carrier: josiane
+    cast: [josiane, fardelli]
+    issues: [copies, jete]
+    traces:
+      h6_photocopies:  "{annee} : Madame Josiane a ouvert un classeur pour les fax de 23 h 58. Elle photocopie tout."
+      h6_tout_jete:    "{annee} : {nom} a fait jeter les fax de nuit. Josiane a déchiré les copies devant témoin."
+      h6_rideau_vu:    "{annee} : {nom} a frappé à la porte sans poignée du Rideau Rouge, un soir à onze heures."
+    hint: "Une photo de 1999 sur du papier qui blanchit, et une secrétaire qui photocopie."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: presse_papier
+        card: ds.h6.photo.presse_papier
+        next: [ { step: gourmette, in: [1, 3] } ]
+      - id: gourmette
+        card:
+          - { id: ds.h6.photo.gourmette_malbec, if: "flag('h6_dembo_promis')" }
+          - { id: ds.h6.photo.gourmette }
+        next: [ { step: carton_noir, in: [2, 4] } ]
+      - id: carton_noir
+        card: ds.h6.photo.carton_noir
+        next: [ { step: maison, in: [2, 4] } ]
+      - id: maison
+        card:
+          - { id: ds.h6.photo.maison_negatifs, if: "flag('h6_vl_negatifs')" }
+          - { id: ds.h6.photo.maison }
+        next: []
+
+  # ════════════════════════════════════════════════════════════ Barbier
+  - id: ds.h6.barbier
+    title: "La doudoune"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: formation
+    carrier: barbier
+    cast: [barbier, ferlac, vukic]
+    issues: [pardon, liste]
+    traces:
+      h6_gaucher_achete: "{annee} : le gaucher de Kerbrouck acheté trois millions, le double de son prix de mai."
+      h6_indice_dicte:   "{annee} : Lucien Barbier dicte ses rapports au stagiaire ; il n'a plus les yeux pour taper."
+    hint: "Trois mots dans un fax de nuit, « sous la pluie », qu'un seul homme écrit."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: gaucher
+        card:
+          - { id: ds.h6.barbier.gaucher_reste, if: "flag('h6_dembo_reste')" }
+          - { id: ds.h6.barbier.gaucher_triche, if: "flag('h6_fax_trahi')" }
+          - { id: ds.h6.barbier.gaucher }
+        next: [ { step: doudoune, in: [1, 3] } ]
+      - id: doudoune
+        card: ds.h6.barbier.doudoune
+        next: [ { step: rapport, in: [3, 5] } ]
+      - id: rapport
+        card: ds.h6.barbier.rapport
+        next: []
+
+  # ════════════════════════════════════════════════════════ Le petit Rancé
+  - id: ds.h6.tibo
+    title: "Le petit Rancé"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: formation
+    carrier: tibo_rance
+    cast: [tibo_rance, bertrand_rance]
+    issues: [conseil_rester, conseil_partir]
+    traces:
+      h6_carte_jf:    "{annee} : une carte blanche sans adresse dans la poche de Bertrand Rancé : « J. F. — Conseil »."
+      h6_indice_jf:   "{annee} : JF Conseil, payé par la Mutuelle des Quais, a réglé les tournées d'un père au Terminus."
+    hint: "Un gamin de dix-sept ans, les chaussettes sur les chevilles, et un père qui doit de l'argent."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: chaussettes
+        card: ds.h6.tibo.chaussettes
+        next: [ { step: grille, in: [4, 7] } ]
+      - id: grille
+        card: ds.h6.tibo.grille
+        next: [ { step: comptoir, at_season: +1, at: [6, 7] } ]
+      - id: comptoir
+        card: ds.h6.tibo.comptoir
+        next: []
+
+  # ════════════════════════════════════════════════════════════ Vialat
+  - id: ds.h6.vialat
+    title: "Trente pour cent"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: instances
+    carrier: vialat
+    cast: [vialat, arnaud_vaubourg]
+    issues: [tout_dit, marche_bas]
+    traces:
+      h6_vialat_sait:   "{annee} : {nom} a tout dit à Madame Vialat, le fax et l'heure. Elle a entouré 23 h 58."
+      h6_vialat_marche: "{annee} : « Le marché est bas », a dit {nom} à la Commission. Elle a rangé sa règle."
+    hint: "Une calculatrice à bande, et trente pour cent qui manquent quelque part."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: recompte
+        card:
+          - { id: ds.h6.vialat.recompte_page_trois, if: "flag('h6_page_trois_lue')" }
+          - { id: ds.h6.vialat.recompte }
+        next: [ { step: papier, in: [2, 4] } ]
+      - id: papier
+        card: ds.h6.vialat.papier
+        next: [ { step: trente, in: [1, 3] } ]
+      - id: trente
+        card: ds.h6.vialat.trente
+        next: []
+
+  # ════════════════════════════════════════════════════════════ Le sous-sol
+  - id: ds.h6.sous_sol
+    title: "Le sous-sol"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: direction
+    carrier: ferlac
+    cast: [ferlac, vukic, josiane]
+    issues: [tableur, mains_libres]
+    traces:
+      h6_tableur_adopte:  "{annee} : le tableau du stagiaire installé sur l'ordinateur du recrutement. Colonne « juste »."
+      h6_indice_escalier: "{annee} : Vukić a écrit, au cas où, les soirs où le stagiaire descend au sous-sol."
+    hint: "Une clé USB posée bien au milieu, un escalier, une ligne qu'on paie depuis 1987."
+    same_club: true
+    fallback: drop
+    steps:
+      - id: tableur
+        card: ds.h6.sous_sol.tableur
+        next: [ { step: escalier, in: [1, 3] } ]
+      - id: escalier
+        card: ds.h6.sous_sol.escalier
+        next: [ { step: buanderie, in: [1, 3] } ]
+      - id: buanderie
+        card: ds.h6.sous_sol.buanderie
+        next: []

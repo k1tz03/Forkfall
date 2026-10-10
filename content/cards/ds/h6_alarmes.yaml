@@ -1,0 +1,200 @@
+# Histoire 6 — « 23 h 58 » : les alarmes du postulat `vendre_trente`
+# (`alarm_overrides`, servies avant celles du rôle). Une jauge franchit 20 ou
+# 80 : quelqu'un vient le dire, avec un objet. Chaque carte porte son seuil
+# (25 / 75) et expire en silence si la jauge revient. Jamais de `end`.
+# Les jauges du rôle : le staff, les tribunes, le président, la masse salariale.
+cards:
+  # ═══════════════════════════════════════════ le staff (VESTIAIRE) bas
+  - id: ds.h6.alarme.vestiaire_bas_banc
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    tone: strategique
+    when: "gauges.vestiaire < 25"
+    text: "Vukić pose sur ton bureau la feuille de match de samedi : quatorze noms, dont trois gamins du centre. « On n'a plus de quoi faire un banc. Vous vendez encore, ou on joue ? »"
+    left:
+      label: "On joue"
+      effects: {vestiaire: "+++", caisse: "-", direction: "-"}
+      answer: "Tu gèles les ventes jusqu'à mai. Vukić recopie la feuille de match au propre, avec un remplaçant de plus, et la punaise."
+    right:
+      label: "Je vends encore"
+      effects: {vestiaire: "-", caisse: "++"}
+      answer: "Il reprend sa feuille et barre un nom au feutre, devant toi, sans appuyer. Il laisse le feutre débouché sur ton bureau."
+
+  - id: ds.h6.alarme.vestiaire_bas_lettre
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: josiane
+    tone: strategique
+    when: "gauges.vestiaire < 25"
+    text: "Madame Josiane te montre une lettre avant de la monter au président : le Doc, l'adjoint et l'intendant demandent qu'on cesse de vendre en cours de saison. Une page, trois signatures. « Je la monte ? »"
+    left:
+      label: "Montez-la"
+      effects: {vestiaire: "+++", direction: "-"}
+      answer: "Le président la lit dans l'escalier, sans s'arrêter de monter. Le lendemain, il annonce qu'on « écoute le staff »."
+    right:
+      label: "Rendez-la-leur"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Elle la leur rend en main propre, une par une. Le Doc la plie en avion et la jette par la fenêtre du cabinet."
+
+  # ═══════════════════════════════════════════ le staff (VESTIAIRE) haut
+  - id: ds.h6.alarme.vestiaire_haut_table
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    tone: strategique
+    when: "gauges.vestiaire > 75"
+    text: "Le staff t'a réservé une chaise à sa table du vendredi, au fond de la brasserie du Pont. On y fait les compositions ; depuis peu, on y fait aussi la liste de ceux que tu ne vendras pas."
+    left:
+      label: "Je ne m'assois pas"
+      effects: {vestiaire: "---", direction: "+"}
+      answer: "Tu restes debout le temps d'un café. Vukić comprend avant les autres ; il replie la liste et la met dans son portefeuille."
+    right:
+      label: "Je prends la chaise"
+      effects: {vestiaire: "+", direction: "-", caisse: "-"}
+      answer: "La liste s'allonge d'un nom à chaque vendredi. Le président apprend que le recrutement se décide à la brasserie."
+
+  # ═══════════════════════════════════════════ les TRIBUNES basses
+  - id: ds.h6.alarme.tribunes_bas_bache
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    tone: strategique
+    when: "gauges.tribunes < 25"
+    text: "Gégé déroule dans le local du kop une bâche de vingt mètres, peinte de la nuit : ON VEND À MINUIT. « Elle descend samedi, au premier joueur vendu après Noël. Tu veux la voir avant les autres ? »"
+    left:
+      label: "Je vends plus personne"
+      effects: {tribunes: "+++", caisse: "-", direction: "-"}
+      answer: "Il roule la bâche, lentement, peinture vers l'intérieur. « Je la garde. Les promesses de minuit, on les vérifie le matin. »"
+    right:
+      label: "Qu'elle descende"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle descend à la vingtième minute, sur toute la largeur du virage. Télé-Stade la filme en entier, lettre par lettre."
+
+  - id: ds.h6.alarme.tribunes_bas_kiosque
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, presse]
+    speaker: meneche
+    tone: strategique
+    when: "gauges.tribunes < 25"
+    text: "Massenet t'appelle de sa voiture : « Un sondage de Télé-Stade, dimanche. Neuf supporters sur dix ne vous connaissent pas, et le dixième vous déteste. Vous voulez venir lui répondre ? »"
+    left:
+      label: "Je viens sur le plateau"
+      effects: {tribunes: "+++", direction: "-"}
+      answer: "Tu parles quatre minutes, sans fiche. Le dixième supporter appelle le standard en direct ; il raccroche avant qu'on le passe."
+    right:
+      label: "Je ne viens pas"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Dimanche, ton nom est écrit en bas de l'écran, sous une photo de la tribune vide. La photo date de 1998."
+
+  # ═══════════════════════════════════════════ les TRIBUNES hautes
+  - id: ds.h6.alarme.tribunes_haut_echarpe
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes]
+    speaker: arnaud_vaubourg
+    tone: strategique
+    when: "gauges.tribunes > 75"
+    text: "Le virage a chanté ton nom avant celui du club, samedi. Arnaud Vaubourg te le rapporte comme on rapporte un vol : « Mon père a entendu, de la Ligue, à la radio. Il demande qui préside, ici. »"
+    left:
+      label: "Vous, monsieur le président"
+      effects: {tribunes: "-", direction: "++"}
+      answer: "Il rougit, content, et va le répéter à son père au téléphone, mot pour mot, avec ton intonation."
+    right:
+      label: "Les tribunes"
+      effects: {tribunes: "+", direction: "--"}
+      answer: "Il ne répond rien. Samedi suivant, il descend au virage pour la première fois de sa vie, et repart à la mi-temps."
+
+  # ═══════════════════════════════════════════ le PRÉSIDENT bas
+  - id: ds.h6.alarme.direction_bas_appel
+    roles: [ds]
+    arc: direction
+    tags: [direction, telephone]
+    speaker: aulard
+    tone: strategique
+    when: "gauges.direction < 25"
+    text: "Le père Vaubourg t'appelle à 23 h 47, la voix tranquille des mauvaises nouvelles : « Mon fils hésite à te garder, {prenom}. Moi, je n'hésite jamais. Une vente avant vendredi. »"
+    left:
+      label: "Vous l'aurez"
+      effects: {direction: "+++", vestiaire: "-", force: -1}
+      answer: "Tu vends un remplaçant le jeudi, à un prix que personne ne t'a soufflé. Le père appelle vendredi pour dire « bien », et rien d'autre."
+    right:
+      label: "Pas sur commande"
+      effects: {direction: "-", parole: 1}
+      answer: "« Tout est sur commande, ici. Toi aussi. » Il raccroche à 23 h 49. Tu regardes le fax jusqu'à minuit."
+
+  - id: ds.h6.alarme.direction_bas_bureau
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: arnaud_vaubourg
+    tone: strategique
+    when: "gauges.direction < 25"
+    text: "Arnaud Vaubourg a posé sur ton bureau un communiqué de trois lignes, encore sans date : « Mon père l'a dicté. Je ne l'ai pas encore envoyé. Dites-moi pourquoi je ne l'enverrais pas. »"
+    left:
+      label: "Parce que je vends"
+      effects: {direction: "+++", caisse: "+", vestiaire: "-"}
+      answer: "Il range le communiqué dans le tiroir, sous les autres. « Pas encore, alors. » Il ne dit pas « jamais »."
+    right:
+      label: "Parce que je dis vrai"
+      effects: {direction: "-", relation: {arnaud_vaubourg: 1}}
+      answer: "Il relit le communiqué, puis le plie en quatre. « Mon père ne me demandera pas pourquoi. Il ne demande jamais. »"
+
+  # ═══════════════════════════════════════════ le PRÉSIDENT haut
+  - id: ds.h6.alarme.direction_haut_titre
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: arnaud_vaubourg
+    tone: strategique
+    when: "gauges.direction > 75"
+    text: "Arnaud Vaubourg veut te nommer {pg, select, f{directrice générale} other{directeur général}} : « Mon père approuve. Vous auriez la clé de mon bureau, et moi la paix. C'est ce qu'il veut, je crois. »"
+    left:
+      label: "Gardez votre bureau"
+      effects: {direction: "---", relation: {arnaud_vaubourg: 1}}
+      answer: "Il a l'air soulagé et déçu à la fois. Il remet la clé à son trousseau et ferme son bureau à double tour, ce soir-là, en partant le dernier."
+    right:
+      label: "Je prends la clé"
+      effects: {direction: "+", caisse: "+", relation: {arnaud_vaubourg: -1}}
+      answer: "On change la plaque de ta porte. Le père appelle pour te féliciter ; désormais, c'est toi qu'il appelle, et plus son fils."
+
+  # ═══════════════════════════════════════════ la MASSE SALARIALE basse
+  - id: ds.h6.alarme.caisse_bas_paie
+    roles: [ds]
+    arc: caisse
+    tags: [caisse]
+    speaker: josiane
+    tone: strategique
+    when: "gauges.caisse < 25"
+    text: "Madame Josiane pose les fiches de paie de mars à côté du relevé : il manque quatre cent mille écus. « La banque propose une avance. Le fax de cette nuit propose une vente. Vous choisissez ? »"
+    left:
+      label: "J'appelle la banque"
+      effects: {caisse: "+++", direction: "-"}
+      answer: "La Banque Aubérivoise avance l'argent au taux des mauvais jours. Josiane agrafe l'échéancier à gauche, avec les ventes."
+    right:
+      label: "Je vends quelqu'un"
+      effects: {caisse: "+++", vestiaire: "--", var: {h6_millions: "+2", h6_ventes: "+1"}}
+      answer: "Tu vends un milieu remplaçant à deux millions, de jour, sans fax. La paie part le 5. Le vestiaire compte les absents."
+
+  # ═══════════════════════════════════════════ la MASSE SALARIALE haute
+  - id: ds.h6.alarme.caisse_haut_vialat
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, scandale]
+    speaker: vialat
+    tone: strategique
+    when: "gauges.caisse > 75"
+    text: "Madame Vialat a remarqué ton compte, trop plein, trop vite : « Vos ventes rapportent plus que votre masse salariale ne coûte. Chez moi, ce n'est pas une qualité. C'est une question. »"
+    left:
+      label: "Je réinvestis tout"
+      effects: {caisse: "---", vestiaire: "+", relation: {vialat: 1}}
+      answer: "Tu recrutes deux joueurs en janvier, payés comptant, factures en double. Elle recompte, et range enfin sa calculatrice."
+    right:
+      label: "Je garde la réserve"
+      effects: {caisse: "+", relation: {vialat: -1}}
+      answer: "« Gardez-la. Je garde la question. » Elle écrit un point d'interrogation dans son cahier, seul sur une ligne."

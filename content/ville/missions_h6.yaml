@@ -1,0 +1,97 @@
+# Histoire 6 — « 23 h 58 » : trois missions de la ville, chacune nourrit
+# l'enquête (le format : l'en-tête de content/ville/missions.yaml).
+#   · Les négatifs du Rideau — le portier, la nuit, après le carton noir
+#     (h6_negatifs_offerts). Racheter les négatifs de 1999 n'efface pas la
+#     photo du maître chanteur ; ça efface toutes les autres. Pose h6_vl_negatifs.
+#   · Les carnets de Barbier — l'après-midi au centre, quand Barbier est
+#     soupçonné (h6_barbier_soupconne) : dans son casier, ses rapports tapés,
+#     annotés d'une autre main. Pose h6_vl_carnets (un indice de plus).
+#   · L'ardoise du père — Bertrand Rancé, au Terminus, la nuit, quand on l'a
+#     laissé jouer (h6_pere_joue). Payée de ta poche, c'est la fin rare qui
+#     s'ouvre (h6_vl_ardoise_propre) ; payée avec l'enveloppe de la Mutuelle,
+#     c'est la porte de la garde à vue (h6_vl_ardoise_sale, lue par
+#     l'événement « Quarante-huit heures »).
+missions:
+  - id: h6_negatifs
+    titre: "Les négatifs du Rideau"
+    roles: [ds]
+    donneur: {sprite: inconnu, nom: "L'homme en costume du Rideau Rouge", lieu: club_prive, tranches: [nuit]}
+    si: "flag(histoire_h6) && flag(h6_negatifs_offerts)"
+    chance: 0.6
+    etapes:
+      - id: offre
+        texte: "La porte sans poignée s'entrouvre. L'homme en costume tient une enveloppe de papier cristal : « Les négatifs de 1999, tous. {montant}, en liquide. Un seul tirage manque : celui-là, il est vendu. »"
+        choix:
+          - id: acheter
+            label: "J'achète les négatifs"
+            francs: -80000
+            effets: {set: [h6_vl_negatifs]}
+            reponse: "Il compte les billets à la lueur du néon rouge, sans hâte. Les négatifs sont froids, un peu gras ; tu les tiens par les bords."
+            suite: fin
+          - id: refuser
+            label: "Je ne paie pas"
+            reponse: "« Ce n'est pas un chantage, c'est un commerce. » La porte se referme. La maison ne vend que ce qu'on lui demande."
+            suite: fin
+
+  - id: h6_carnets
+    titre: "Les carnets de Barbier"
+    roles: [ds]
+    donneur: {sprite: barbier, nom: "Lucien Barbier", lieu: centre, tranches: [aprem]}
+    si: "flag(histoire_h6) && flag(h6_barbier_soupconne)"
+    chance: 0.5
+    etapes:
+      - id: offre
+        texte: "Barbier, la doudoune ouverte au bord du terrain du centre : « Mes vieux carnets sont dans mon casier, au vestiaire. Le petit voulait les ranger. Va les chercher avant lui, tu veux ? »"
+        choix:
+          - id: accepter
+            label: "J'y vais ce soir"
+            reponse: "Il te donne la clé, attachée à un bouchon de liège. « La troisième porte. Lis-les à une table, pas debout. »"
+            suite: casier
+          - id: refuser
+            label: "Laissez-le ranger"
+            reponse: "« Il range bien, c'est vrai. » Barbier referme sa doudoune et regarde le terrain longtemps, sans plus rien voir."
+            suite: fin
+      - id: casier
+        objectif: {lieu: centre, tranches: [soir], delai: 3}
+        texte: "Le casier de Barbier sent la naphtaline et la pluie. Entre les pages des carnets, des photocopies de ses rapports tapés au propre, annotées au crayon d'une écriture qui n'est pas la sienne : des prix."
+        choix:
+          - id: garder
+            label: "Je garde les copies"
+            effets: {set: [h6_vl_carnets], var: {h6_indices: "+1"}}
+            reponse: "L'écriture des marges, tu l'as déjà vue : sur les étiquettes des boîtes du centre, sur les dossiers tapés. Petite, droite, polie."
+            suite: fin
+          - id: rendre
+            label: "Je rends tout à Barbier"
+            effets: {jauges: {vestiaire: 1}}
+            reponse: "Barbier feuillette les copies sous la lampe du vestiaire, sans ses lunettes. « Ces chiffres-là, je ne les ai jamais dits. » Il garde tout."
+            suite: fin
+        echec:
+          texte: "Le casier est vide quand tu y arrives. Les carnets ont été rangés dans des boîtes étiquetées, au bureau du recrutement. Très bien rangés."
+
+  - id: h6_ardoise
+    titre: "L'ardoise du père"
+    roles: [ds]
+    donneur: {sprite: bertrand_rance, nom: "Bertrand Rancé", lieu: tripot, tranches: [nuit]}
+    si: "flag(histoire_h6) && flag(h6_pere_joue)"
+    chance: 0.6
+    etapes:
+      - id: offre
+        texte: "Arrière-salle du Terminus. Bertrand Rancé a l'ardoise sous le coude : « Si elle est soldée avant lundi, mon fils n'a plus de raison de signer. {montant}. Vous avez ça sur vous ? »"
+        choix:
+          - id: propre
+            label: "Je paie de ma poche"
+            francs: -60000
+            effets: {set: [h6_vl_ardoise_propre]}
+            reponse: "Le patron efface l'ardoise au chiffon mouillé, deux fois, pour qu'il n'en reste rien. Bertrand regarde le chiffon, pas toi."
+            suite: fin
+          - id: sale
+            label: "Je paie avec l'enveloppe"
+            si: "flag(h6_primes_mutuelle)"
+            francs: -60000
+            effets: {set: [h6_vl_ardoise_sale]}
+            reponse: "Tu paies avec les billets de la Mutuelle, encore dans leur bande. Le patron les compte et dit seulement : « Ils sont neufs, ceux-là. »"
+            suite: fin
+          - id: non
+            label: "Je ne paie pas"
+            reponse: "Bertrand repousse l'ardoise au milieu de la table. « Alors c'est Tibo qui paiera. Il est jeune, il a le temps. »"
+            suite: fin

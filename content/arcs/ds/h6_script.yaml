@@ -1,0 +1,165 @@
+# Histoire 6 — « 23 h 58 » : le script (`opening_arc` du postulat
+# `vendre_trente`). Les ancres de l'histoire, à leur créneau ; leurs variantes
+# sont relues à chaque tirage (la première vraie gagne). Les cartes :
+# content/cards/ds/h6_script.yaml. Les intrigues de la trame que ces ancres
+# ouvrent par `schedule` (la photo, Barbier, le petit Rancé, Vialat, le
+# sous-sol) sont dans content/arcs/ds/h6_trame.yaml.
+#
+# Saison 0 (2003-2004) — Le premier nom
+#   1      la photo (scène 3 du livre) ............ ouvre ds.h6.photo
+#   10-11  les lacets (scène 6), la fenêtre d'hiver
+#   16     la dernière de Dembo à la Rive
+#   17     Valentienne : la vente, au prix du fax ou à un autre
+# Saison 1 (2004-2005) — Les suspects
+#   1      le ruban de Josiane (les trente millions ; Vogler parti) .. ouvre
+#          ds.h6.barbier, ds.h6.tibo, ds.h6.vialat
+#   10-11  la page blanche, chez toi (scène 10), la nuit où ferme l'hiver
+#   15     le fax du petit (scène 12)
+#   16     la vitre (scène 13)
+#   17     le tapis vert (scène 14)
+# Saison 2 (2005-2006) — Le sous-sol
+#   1      l'audit et la saisie (Vialat, Arnaud qui « ne savait pas ») ........
+#          ouvre ds.h6.sous_sol
+#   5-6    le faux nom (scène 17)
+#   9      le classeur de Josiane : la ligne de la buanderie, depuis 1987
+#   10     23 h 57 (scène 18), le dernier soir du mercato d'hiver
+#   11     le modèle (scène 19) — fin `trente_associe`
+#   12     une heure (scène 20) — fins `trente_classeur`, `trente_petit_reste`,
+#          `trente_une_heure`, `co_garde_a_vue`
+# Saison 3 et suivantes — l'épilogue : un été, une veille. On n'y arrive que si
+#   la nuit du sous-sol n'a pas eu lieu (elle ferme la carrière dans toutes ses
+#   branches).
+arcs:
+  - id: ds.h6.script
+    title: "23 h 58"
+    kind: postulat
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    theme: mercato
+    cast: [josiane, dembo, malbec, vialat, ferlac, bertrand_rance, meneche]
+    same_club: true
+    fallback: drop
+    traces:
+      h6_dembo_prix_fax:    "{annee} : Dembo vendu à Valentienne six millions, le chiffre d'un fax de 23 h 58."
+      h6_dembo_prix_juste:  "{annee} : Dembo vendu à Valentienne neuf millions. Quelqu'un, cette nuit-là, a fait la soustraction."
+      h6_dembo_reste:       "{annee} : {nom} a refusé neuf millions pour Dembo. Il a fini sa carrière à la Rive."
+      h6_tibo_vendu:        "{annee} : Tibo Rancé, dix-huit ans, vendu quatre millions à l'étranger, avant un lundi."
+      h6_tibo_garde:        "{annee} : un fax demandait Tibo Rancé à quatre millions. {nom} a laissé sonner."
+      h6_ardoise_payee:     "{annee} : l'ardoise de Bertrand Rancé au Terminus a été réglée en billets propres, par {nom}."
+      h6_verite_dimanche:   "{annee} : Massenet a dit « fax » et « sans en-tête » à l'antenne, un dimanche."
+      h6_faux_nom:          "{annee} : un milieu de Lusitanie qui n'existe pas est entré dans le carnet de {nom}."
+      h6_indice_ligne:      "{annee} : une ligne de téléphone de trop sur la facture du club : la buanderie, depuis 1987."
+    steps:
+      # ═════════════════════════════════════════════ saison 0 — le premier nom
+      - id: photo
+        card:
+          - { id: ds.h6.sc.photo_corbeille, if: "flag('h6_page_jetee')" }
+          - { id: ds.h6.sc.photo }
+        at: [1, 1]
+        season: 0
+      - id: lacets
+        card:
+          - { id: ds.h6.sc.lacets_signe, if: "flag('h6_dembo_promis')" }
+          - { id: ds.h6.sc.lacets }
+        at: [10, 11]
+        season: 0
+      - id: derniere
+        card:
+          - { id: ds.h6.sc.derniere_reste, if: "flag('h6_dembo_garde_promis') && !flag('h6_dembo_promis')" }
+          - { id: ds.h6.sc.derniere }
+        at: [16, 16]
+        season: 0
+      - id: valentienne
+        card:
+          - { id: ds.h6.sc.valentienne_signe, if: "flag('h6_dembo_promis')" }
+          - { id: ds.h6.sc.valentienne_reste, if: "flag('h6_dembo_garde_promis')" }
+          - { id: ds.h6.sc.valentienne }
+        at: [17, 17]
+        season: 0
+      # ═════════════════════════════════════════════ saison 1 — les suspects
+      - id: ruban
+        card:
+          - { id: ds.h6.sc.ruban_trente, if: "vars.h6_millions >= 30" }
+          - { id: ds.h6.sc.ruban }
+        at: [1, 1]
+        season: 1
+      - id: page_blanche
+        card:
+          - { id: ds.h6.sc.page_blanche_carnet, if: "flag('h6_page_gardee')" }
+          - { id: ds.h6.sc.page_blanche }
+        at: [10, 11]
+        season: 1
+      - id: fax_petit
+        card:
+          - { id: ds.h6.sc.fax_petit_sans_copie, if: "flag('h6_tout_jete') && !flag('h6_classeur_revele')" }
+          - { id: ds.h6.sc.fax_petit }
+        at: [15, 15]
+        season: 1
+      - id: vitre
+        card:
+          - { id: ds.h6.sc.vitre_vendu, if: "flag('h6_tibo_vendu')" }
+          - { id: ds.h6.sc.vitre }
+        at: [16, 16]
+        season: 1
+      - id: tapis
+        card:
+          - { id: ds.h6.sc.tapis_vendu, if: "flag('h6_tibo_vendu')" }
+          - { id: ds.h6.sc.tapis }
+        at: [17, 17]
+        season: 1
+      # ═════════════════════════════════════════════ saison 2 — le sous-sol
+      - id: audit
+        card:
+          - { id: ds.h6.sc.audit_trente, if: "vars.h6_millions >= 30" }
+          - { id: ds.h6.sc.audit }
+        at: [1, 1]
+        season: 2
+      - id: faux_nom
+        card:
+          - { id: ds.h6.sc.faux_nom_pile, if: "flag('h6_carnet_garde')" }
+          - { id: ds.h6.sc.faux_nom }
+        at: [5, 6]
+        season: 2
+      - id: classeur
+        card:
+          - { id: ds.h6.sous_sol.classeur_cache, if: "flag('h6_tout_jete')" }
+          - { id: ds.h6.sous_sol.classeur }
+        at: [9, 9]
+        season: 2
+      - id: sous_sol
+        card:
+          - { id: ds.h6.sc.sous_sol_piege, if: "flag('h6_faux_nom')" }
+          - { id: ds.h6.sc.sous_sol_indices, if: "vars.h6_indices >= 3" }
+          - { id: ds.h6.sc.sous_sol }
+        at: [10, 10]
+        season: 2
+      - id: modele
+        card:
+          - { id: ds.h6.sc.modele_envoi, if: "flag('h6_envoi_vu')" }
+          - { id: ds.h6.sc.modele_tableur, if: "flag('h6_tableur_adopte')" }
+          - { id: ds.h6.sc.modele_colonnes, if: "flag('h6_colonnes_ferlac')" }
+          - { id: ds.h6.sc.modele }
+        at: [11, 11]
+        season: 2
+      - id: heure
+        card:
+          - { id: ds.h6.sc.heure_petit_reste, if: "flag('h6_tibo_garde') && (flag('h6_ardoise_payee') || flag('h6_vl_ardoise_propre')) && (flag('h6_vialat_sait') || flag('h6_audit_parle')) && vars.h6_saisons_trente >= 1 && flag('h6_faux_nom') && !flag('h6_primes_mutuelle') && (flag('h6_photocopies') || flag('h6_classeur_revele'))" }
+          - { id: ds.h6.sc.heure_classeur, if: "flag('h6_photocopies') || flag('h6_classeur_revele')" }
+          - { id: ds.h6.sc.heure }
+        at: [12, 12]
+        season: 2
+      # ═════════════════════════════════════ saison 3 et suivantes — l'épilogue
+      - id: ete
+        card:
+          - { id: ds.h6.sc.ete_encore, if: "seen('ds.h6.sc.ete')" }
+          - { id: ds.h6.sc.ete }
+        at: [1, 1]
+        season: "3+"
+      - id: veille
+        card:
+          - { id: ds.h6.sc.veille_encore, if: "seen('ds.h6.sc.veille')" }
+          - { id: ds.h6.sc.veille }
+        at: [17, 17]
+        season: "3+"

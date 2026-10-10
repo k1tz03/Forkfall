@@ -1,0 +1,1078 @@
+# Histoire 6 — « 23 h 58 » : les cartes du réservoir (content/arcs/ds/h6_reservoir.yaml).
+# Les suspects (Solvang, Fardelli, Arnaud, Malbec), les tentations (la canette
+# orange, la Mutuelle des Quais, les montres), les témoins (Massenet, Léa,
+# Vukić, le Doc, Barbier). Chaque intrigue en sait un peu sur le fax ; aucune
+# ne dit tout. Les initiales « J. F. » circulent sur trois supports (un talon,
+# une carte blanche, un homme en imperméable) : un objet qui voyage, pas une
+# formule.
+cards:
+  # ═════════════════════════════════════════════════════════ LA CLAUSE (Solvang)
+  - id: ds.h6.solvang.page_trois
+    roles: [ds]
+    arc: agents
+    tags: [agents]
+    speaker: solvang
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Ingrid Solvang t'attend au bar de l'hôtel, un dossier fermé devant elle : « Vous avez quitté mon agence en juillet avec deux de mes clients. Je ne viens pas pour ça. Je viens pour votre page trois. »"
+    left:
+      label: "Lisez-la-moi"
+      effects: {relation: {solvang: 1}, set: [h6_solvang_lu]}
+      answer: "Elle la lit à voix basse, comme un horaire de train. « {nom} contresigne les commissions des autres. Qui vous a fait signer ça ? »"
+    right:
+      label: "Mes contrats me regardent"
+      effects: {relation: {solvang: -1}}
+      answer: "Elle range le dossier sans l'avoir ouvert. « Alors regardez-les. » Elle paie les deux verres, au centime près."
+
+  - id: ds.h6.solvang.corbeau
+    roles: [ds]
+    arc: agents
+    tags: [agents, scandale]
+    speaker: solvang
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Solvang a reçu, elle aussi, une page à 23 h 58 : un de ses clients, un prix, aucun en-tête. « Un agent signe toujours, même ses saletés. Votre corbeau ne signe pas. Il n'a jamais rien vendu. »"
+    left:
+      label: "Aidez-moi à le trouver"
+      effects: {relation: {solvang: 1}, set: [h6_indice_pas_agent], var: {h6_indices: "+1"}}
+      answer: "Elle te donne la liste de ses clients qui ont reçu une page. Ils n'ont qu'un point commun : un rapport tapé au Racing."
+    right:
+      label: "Vous êtes suspecte"
+      effects: {relation: {solvang: -2}, set: [h6_solvang_suspecte]}
+      answer: "« Suspecte. » Elle sourit pour la première fois. « Enfin quelqu'un qui me prend au sérieux. » Elle s'en va sans payer."
+
+  - id: ds.h6.solvang.preavis_vestrie
+    roles: [ds]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: solvang
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Solvang pose sur ton bureau le préavis de Vogler, la Vestrie en en-tête : « Mon client part en juin, sélectionneur. La clause de départ se négocie maintenant : un million pour vous, ou rien. »"
+    left:
+      label: "Votre prix sera le mien"
+      effects: {caisse: "+", relation: {solvang: 1}, set: [h6_solvang_alliee], outcome: alliee}
+      answer: "Elle écrit le million à la main, au bas de la page trois, et paraphe. « Vous me devez un client. Je viendrai le chercher. »"
+    right:
+      label: "Rien. Qu'il parte"
+      effects: {caisse: "-", relation: {solvang: -2}, set: [h6_solvang_adverse], outcome: adverse}
+      answer: "Elle range le préavis. « Rien, c'est aussi un prix. » En juin, Vogler part pour la Vestrie sans un écu pour le club."
+
+  - id: ds.h6.solvang.preavis
+    roles: [ds]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: solvang
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Solvang pose un contrat à l'envers sur ton bureau : « Mon client de Kerbrouck vaut un million et demi. Quelqu'un vous en a demandé trois, la nuit. Je fais jouer ma clause, ou vous m'en écrivez une ? »"
+    left:
+      label: "Écrivez-la vous-même"
+      effects: {caisse: "+", relation: {solvang: 1}, set: [h6_solvang_alliee], outcome: alliee}
+      answer: "Elle l'écrit sur un coin de table, en deux lignes, sans rature. « Une clause, c'est une promesse avec une date. »"
+    right:
+      label: "Faites jouer la vôtre"
+      effects: {caisse: "-", relation: {solvang: -2}, set: [h6_solvang_adverse], outcome: adverse}
+      answer: "Elle la fait jouer le lendemain, au centime. La lettre arrive en recommandé ; Josiane la pose sur ta chaise."
+
+  # ═══════════════════════════════════════════════════ LA CANETTE ORANGE (Ilyas)
+  - id: ds.h6.canette.caisse
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, mercato]
+    speaker: nassir
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Cheikh Ilyas a fait monter une caisse de canettes orange dans ton bureau : « Deux millions sur la manche, trois saisons, et la recrue de notre club frère. Elle ne jouera pas : elle se montrera. »"
+    left:
+      label: "Je prends la recrue"
+      effects: {caisse: "+", vestiaire: "-", relation: {nassir: 1}, set: [h6_canette_recrue]}
+      answer: "Il ouvre une canette et la pose devant toi. « La recrue arrive lundi, {prenom}. Elle a déjà son maillot. »"
+    right:
+      label: "Pas de recrue imposée"
+      effects: {relation: {nassir: -1}}
+      answer: "Il referme la caisse de canettes avec soin. « Ailleurs, c'est l'usage. Ici, vous verrez bien. »"
+
+  - id: ds.h6.canette.recrue
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, sponsors]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vukić regarde la recrue d'Ilyas s'échauffer seule, dans un survêtement trop neuf : « Il court bien. Il ne passe jamais le ballon. On nous le prête pour jouer, ou pour la photo du dimanche ? »"
+    left:
+      label: "Cinq minutes par match"
+      effects: {vestiaire: "-", relation: {nassir: 1, vukic: -1}}
+      answer: "Il entre à la quatre-vingt-cinquième, touche deux ballons, salue la tribune présidentielle. Télé-Stade le suit jusqu'au banc."
+    right:
+      label: "Pas une minute"
+      effects: {vestiaire: "+", relation: {nassir: -1, vukic: 1}}
+      answer: "La recrue s'assoit en tribune, en survêtement, juste derrière le photographe. Le lundi, il y a quand même une photo."
+
+  - id: ds.h6.canette.sans_recrue
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors]
+    speaker: nassir
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Ilyas revient, sans canettes cette fois : « Un million sur la manche, sans recrue. C'est moitié moins, mais c'est propre. On m'a dit que vous teniez à ce qui est propre. »"
+    left:
+      label: "Propre, alors"
+      effects: {caisse: "+", relation: {nassir: 1}, set: [h6_canette_propre]}
+      answer: "Il signe sur ton bureau avec ton stylo, puis le remet dans ton pot à crayons, la pointe en bas."
+    right:
+      label: "Toujours non"
+      effects: {relation: {nassir: -1}}
+      answer: "« Toujours. » Il le dit comme on goûte un mot étranger, et repart avec sa mallette et tes deux refus dedans."
+
+  - id: ds.h6.canette.manche
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, tribunes]
+    speaker: nassir
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Ilyas tient le maillot à bout de bras devant le miroir du vestiaire, la canette cousue sur la manche : « Orange sur bordeaux. Vos supporters vont détester, et l'acheter quand même. Trois ans ? »"
+    left:
+      label: "Trois ans"
+      effects: {caisse: "++", tribunes: "-", relation: {nassir: 1}, set: [h6_canette_signee], outcome: signee}
+      answer: "Le maillot se vend mal en août et très bien à Noël. Au virage, on le porte à l'envers, la manche roulée sur le coude."
+    right:
+      label: "Une saison, pas plus"
+      effects: {caisse: "+", relation: {nassir: -1}, set: [h6_canette_courte], outcome: courte}
+      answer: "« Une saison. » Il replie le maillot au carré, manche dessous. « On reparlera de la suite quand vous aurez besoin de moi. »"
+
+  # ═══════════════════════════════════════════════════ LA MUTUELLE DES QUAIS
+  - id: ds.h6.mutuelle.offre
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, scandale]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Arnaud Vaubourg présente le sponsor, la Mutuelle des Quais : un homme en imperméable qui ne s'assoit pas. « Une prime à la direction sportive par vente au-dessus de l'objectif. En liquide. »"
+    left:
+      label: "J'écoute l'offre"
+      effects: {direction: "+", relation: {arnaud_vaubourg: 1}, set: [h6_mutuelle_ecoute]}
+      answer: "L'homme pose une enveloppe sur le coin du bureau, pas au milieu. « Pour la première vente. Une mutuelle, ça fait confiance. »"
+    right:
+      label: "Pas de liquide"
+      effects: {direction: "-", relation: {arnaud_vaubourg: -1}, set: [h6_mutuelle_refusee]}
+      answer: "L'homme reprend son imperméable au portemanteau. Arnaud le raccompagne au parking en s'excusant, deux fois."
+
+  - id: ds.h6.mutuelle.enveloppe
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, scandale]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Après ta dernière vente, une enveloppe de la Mutuelle des Quais attend sous ton sous-main. Dedans, des billets neufs et une carte au nom de {nom} : « Prime de performance. Ne pas déclarer. »"
+    left:
+      label: "Je la garde"
+      effects: {set: [h6_primes_mutuelle], var: {ville_francs_sales: "+40000"}, outcome: primes}
+      answer: "Les billets sentent l'encre. Tu les ranges dans ta poche intérieure, puis dans un tiroir, puis chez toi, sous le lit."
+    right:
+      label: "Je la renvoie"
+      effects: {set: [h6_mutuelle_refusee], outcome: refus}
+      answer: "Tu la renvoies au siège, scellée, en recommandé. L'accusé de réception revient signé d'un nom illisible."
+
+  - id: ds.h6.mutuelle.cheque
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le logo de la Mutuelle des Quais est quand même au dos des maillots. Arnaud t'apporte le chèque de sponsoring : « Il ne manque que votre signature. La vôtre, pas la mienne. Ils ont insisté. »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "++", set: [h6_mutuelle_cheque]}
+      answer: "Tu signes au dos. Le chèque est tiré sur une banque des Quais dont tu n'as jamais vu la façade."
+    right:
+      label: "Le président signe"
+      effects: {direction: "-", relation: {arnaud_vaubourg: -1}, set: [h6_mutuelle_refusee], outcome: refus}
+      answer: "Arnaud signe à ta place, de sa main d'écolier appliqué. Il garde le stylo un moment, comme pour le peser."
+
+  - id: ds.h6.mutuelle.talon
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, scandale]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Dans la deuxième enveloppe de la Mutuelle des Quais, glissé entre deux billets, un talon déchiré : « J. F. — commission — Valentienne ». Aux Quais, quelqu'un ne compte pas ses talons."
+    left:
+      label: "Je garde le talon"
+      effects: {set: [h6_talon_jf], var: {h6_indices: "+1", ville_francs_sales: "+40000"}, outcome: primes}
+      answer: "Tu glisses le talon dans ton carnet, à la page de Dembo. Les billets rejoignent les premiers, sous le lit."
+    right:
+      label: "Je rends tout"
+      effects: {clear: [h6_primes_mutuelle], set: [h6_mutuelle_refusee], var: {ville_amende: "+40000"}, outcome: refus}
+      answer: "Tu rends les deux enveloppes, talon compris, à l'homme en imperméable. Il recompte les billets devant toi, pas le talon."
+
+  - id: ds.h6.mutuelle.impermeable
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, scandale]
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "L'homme en imperméable de la Mutuelle t'attend au parking, contre ta portière : « Vous êtes la seule direction sportive de la Ligue à refuser nos primes. Les autres prennent. Vous voulez les noms ? »"
+    left:
+      label: "Dites-moi qui"
+      effects: {set: [h6_mutuelle_liste], var: {h6_indices: "+1"}, outcome: refus}
+      answer: "Il cite trois clubs, et un cabinet qui « conseille » les trois : deux initiales, J. F. Il remonte son col et s'en va."
+    right:
+      label: "Je ne veux pas savoir"
+      effects: {outcome: refus}
+      answer: "« Personne ne veut. » Il t'ouvre la portière, poliment, et la referme sur toi sans la claquer."
+
+  # ═══════════════════════════════════════════════════ LE LATÉRAL GAUCHE (Vogler)
+  - id: ds.h6.lateral.portclair
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: klopf
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vogler court à côté de toi le long de la main courante : « Le gauche de Portclair. Vingt-quatre ans, il ne regarde jamais son pied. Solvang le représente. Elle en veut quatre millions ; il les vaut. »"
+    left:
+      label: "Je vais le chercher"
+      effects: {relation: {klopf: 1}, set: [h6_lateral_cherche]}
+      answer: "Il accélère, te dépasse et se retourne en courant à reculons. « Quatre ! » Il lève quatre doigts jusqu'au bout du terrain."
+    right:
+      label: "Un droit fera l'affaire"
+      effects: {vestiaire: "-", relation: {klopf: -1}, set: [h6_lateral_droit]}
+      answer: "Il continue de courir sans répondre. Au tour suivant, il ne repasse plus de ton côté de la main courante."
+
+  - id: ds.h6.lateral.prix
+    roles: [ds]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: solvang
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Solvang pose le contrat du gaucher de Portclair à l'envers sur la table : « Quatre millions, pas trois. Quelqu'un fait circuler un prix plus bas que le mien, la nuit. Ce n'est pas moi, ni vous. »"
+    left:
+      label: "Quatre, d'accord"
+      effects: {caisse: "--", vestiaire: "+", force: 2, relation: {solvang: 1}, set: [h6_lateral_signe]}
+      answer: "Elle retourne le contrat, côté signature. « Vous ne discutez pas. C'est rare. Je m'en méfierai la prochaine fois. »"
+    right:
+      label: "Trois, ou rien"
+      effects: {relation: {solvang: -1}, set: [h6_lateral_rate]}
+      answer: "« Rien, alors. » Elle reprend son contrat. Le gaucher signe à {rival} la semaine suivante, à quatre."
+
+  - id: ds.h6.lateral.droitier
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vukić te montre le droitier que Vogler aligne à gauche faute de mieux : « Il est bon. Mais il regarde son pied à chaque passe, et Vogler sourit. Quand il sourit comme ça, c'est mauvais. »"
+    left:
+      label: "Je cherche un gauche"
+      effects: {caisse: "-", relation: {vukic: 1}, set: [h6_lateral_signe]}
+      answer: "Tu trouves un gaucher de vingt-neuf ans en fin de contrat à Montbéliac. Il regarde son pied, lui aussi, mais le bon."
+    right:
+      label: "Le droit restera"
+      effects: {vestiaire: "-", relation: {vukic: -1}}
+      answer: "Vukić hoche la tête et écrit trois mots dans la marge de sa feuille de match. Il ne te montre pas lesquels."
+
+  - id: ds.h6.lateral.verdict_gauche
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: klopf
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vogler fait courir son nouveau gaucher jusqu'à la nuit, sous les projecteurs du terrain annexe : « Celui-là, je le garde. Même si je pars un jour, il reste. Tu me l'as donné, {toi}. »"
+    left:
+      label: "Il est à vous"
+      effects: {vestiaire: "+", relation: {klopf: 1}, set: [h6_klopf_gauche], outcome: gauche}
+      answer: "Il te serre la main trop fort, comme toujours. Le gaucher, lui, ne regarde même pas son pied pour lacer."
+    right:
+      label: "Il est au club"
+      effects: {vestiaire: "+", set: [h6_klopf_gauche], outcome: gauche}
+      answer: "« Au club, oui. » Il le dit sans sourire, pour une fois, et part en courant éteindre lui-même les projecteurs."
+
+  - id: ds.h6.lateral.verdict
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: klopf
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vogler sourit sur le banc, du sourire de ses trois finales perdues. Son droitier joue à gauche et regarde son pied à chaque passe. « Tu as vu son pied ? Moi, je ne vois plus que ça. »"
+    left:
+      label: "Je le vois aussi"
+      effects: {vestiaire: "-", relation: {klopf: -1}, set: [h6_klopf_sans_gauche], outcome: droit}
+      answer: "« Bien. » Il remet sa casquette à l'endroit, ce qu'il ne fait jamais. Il ne te demande plus rien de la saison."
+    right:
+      label: "Il s'y fera"
+      effects: {vestiaire: "--", relation: {klopf: -2}, set: [h6_klopf_sans_gauche], outcome: droit}
+      answer: "Il rit, trop fort. Le vestiaire entend le rire à travers le mur et comprend, mieux que toi, ce qu'il veut dire."
+
+  # ═══════════════════════════════════════════════════ LES MONTRES (Fardelli)
+  - id: ds.h6.montres.ecrin
+    roles: [ds]
+    arc: agents
+    tags: [agents, objet]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Fardelli fait glisser un écrin sur la table du café : une montre de plongée en acier. « Pour le temps que tu me fais gagner. Une à chaque vente, si je suis sur toutes tes ventes. »"
+    left:
+      label: "Je la prends"
+      effects: {relation: {fardelli: 1}, set: [h6_montre_acier], var: {cadeau_montre_acier: "+1", ville_francs_sales: "+2000"}}
+      answer: "Sous l'écrin, une enveloppe : « pour l'essence ». Tu ne l'ouvres pas devant lui ; il le remarque, et ça lui plaît."
+    right:
+      label: "Rangez-la"
+      effects: {relation: {fardelli: -1}, set: [h6_montre_refusee]}
+      answer: "Il remet l'écrin dans sa poche intérieure, côté cœur. « Je la garde pour la prochaine fois. Il y a toujours une prochaine fois. »"
+
+  - id: ds.h6.montres.coffre
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane a reçu au courrier un deuxième écrin, à ton nom : « Une montre de plongée, encore. Vous plongez beaucoup, cette saison. Je la mets avec l'autre, au coffre ? »"
+    left:
+      label: "Au coffre"
+      effects: {relation: {josiane: -1}, set: [h6_montres_coffre]}
+      answer: "Elle l'enferme au coffre avec la première, sans l'ouvrir, et note la date dans un cahier où elle ne note que des dates."
+    right:
+      label: "Renvoyez-les à Fardelli"
+      effects: {relation: {josiane: 1, fardelli: -1}, set: [h6_montres_renvoi]}
+      answer: "Elle fait un seul paquet des deux écrins, ficelle et papier kraft, et l'adresse elle-même, sans « monsieur »."
+
+  - id: ds.h6.montres.recu
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane signe le reçu d'un écrin envoyé par Fardelli : « Il insiste. Il fait dire que c'est la deuxième fois qu'il vous l'offre, et que la troisième sera la bonne. »"
+    left:
+      label: "Renvoyez-la"
+      effects: {relation: {josiane: 1}, set: [h6_montres_renvoi]}
+      answer: "Elle le rend au coursier qui l'a apporté ; le coursier n'a même pas eu le temps de redémarrer."
+    right:
+      label: "Mettez-la au coffre"
+      effects: {set: [h6_montres_coffre]}
+      answer: "Elle la pose au coffre sans l'ouvrir et tourne la molette trois fois, comme on ferme une parenthèse."
+
+  - id: ds.h6.montres.gamin_coffre
+    roles: [ds]
+    arc: agents
+    tags: [agents, scandale]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Fardelli, au café, ajuste sa gourmette : « Tes montres dorment au coffre, on me l'a dit. Le gamin de 1999 joue à Portclair. Il va bien. Il ne sait rien. Moi, je sais, et je me tais. »"
+    left:
+      label: "Je les garde"
+      effects: {relation: {fardelli: 1}, set: [h6_montres_gardees], outcome: gardees}
+      answer: "Il commande deux cafés et parle d'autre chose, de la pluie, de Portclair. Il a obtenu ce qu'il voulait : rien de précis."
+    right:
+      label: "Reprenez-les toutes"
+      effects: {relation: {fardelli: -2}, set: [h6_montres_rendues], outcome: rendues}
+      answer: "« Les montres, je les reprends. Le reste, non. » Il laisse un billet pour deux cafés qu'on n'a pas bus."
+
+  - id: ds.h6.montres.gamin
+    roles: [ds]
+    arc: agents
+    tags: [agents, scandale]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Fardelli te renvoie ses écrins une dernière fois, par coursier, avec une carte : « Le gamin de 1999 joue à Portclair. Il va bien. Il ne sait rien. Garde au moins une montre : pour l'heure. »"
+    left:
+      label: "Je les rends encore"
+      effects: {relation: {fardelli: -1}, set: [h6_montres_rendues], outcome: rendues}
+      answer: "Le coursier repart avec les écrins sur le siège passager, ceinture bouclée. Tu ne revois pas Fardelli de la saison."
+    right:
+      label: "Je garde la plus petite"
+      effects: {relation: {fardelli: 1}, set: [h6_montres_gardees], var: {cadeau_montre_acier: "+1"}, outcome: gardees}
+      answer: "Tu la poses au fond d'un tiroir sans la remonter. Elle s'arrête à une heure que tu ne regardes jamais."
+
+  # ═══════════════════════════════════════════════ LE DIMANCHE DE MASSENET
+  - id: ds.h6.dimanche.studio
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Massenet, tout nouveau consultant de Télé-Stade, te fait visiter le plateau du dimanche, deux fauteuils et une table basse : « Il me faut une voix du club, en off. Le prix de vos ventes m'intéresse. »"
+    left:
+      label: "Je serai votre voix"
+      effects: {relation: {meneche: 1}, set: [h6_massenet_voix]}
+      answer: "Il te donne un numéro, celui de sa voiture. « Après vingt-deux heures, toujours. Je ne dors pas le samedi. »"
+    right:
+      label: "Pas d'off chez moi"
+      effects: {relation: {meneche: -1}}
+      answer: "Il tapote l'accoudoir du fauteuil vide. « Alors je trouverai une autre voix. Il y en a toujours une, dans un club. »"
+
+  - id: ds.h6.dimanche.antenne_source
+    roles: [ds]
+    arc: presse
+    tags: [presse, telephone]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Dimanche, Massenet cite à l'antenne « une source au Racing » : les prix sont bas, quelqu'un les dicte. À 23 h 47, le père Vaubourg t'appelle de la Ligue. « La source, tu la connais ? »"
+    left:
+      label: "Je ne sais pas"
+      effects: {direction: "+", relation: {aulard: 1}}
+      answer: "« Bien. Moi non plus, alors. » Il raccroche. Tu l'entends quand même noter quelque chose avant que la ligne coupe."
+    right:
+      label: "C'est moi"
+      effects: {direction: "--", tribunes: "+", relation: {aulard: -2}, set: [h6_source_avouee]}
+      answer: "Un long silence, puis : « Tu sais ce que ça coûte, une source ? » Il raccroche avant que tu répondes."
+
+  - id: ds.h6.dimanche.antenne
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Massenet a trouvé une autre voix. À l'antenne, il cite « une source au club, jeune, très polie, très bien informée » sur le prix de tes ventes. Lundi, il te demande en off si elle dit vrai."
+    left:
+      label: "Quelle source ?"
+      effects: {set: [h6_indice_source_polie], var: {h6_indices: "+1"}}
+      answer: "« Pas de nom. Elle m'a dit merci deux fois. » Massenet sourit. « C'est rare, chez une source. D'habitude, c'est moi qui remercie. »"
+    right:
+      label: "Je ne commente pas"
+      effects: {relation: {meneche: -1}}
+      answer: "Il note « ne commente pas » en majuscules, puis rature les majuscules. « Je le dirai plus poliment, dimanche. »"
+
+  - id: ds.h6.dimanche.visage
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Massenet t'attend devant la rédaction, le micro rangé dans la poche : « Dimanche, je veux un nom, ou une voix à visage découvert. La vôtre ferait l'affaire. Vous venez sur le plateau ? »"
+    left:
+      label: "Je viens, à découvert"
+      effects: {tribunes: "+", direction: "-", relation: {meneche: 1}, set: [h6_massenet_source], outcome: source}
+      answer: "Sur le plateau, sous ton nom écrit en bas de l'écran, {NOM}, tu dis « les prix sont bas » et rien d'autre."
+    right:
+      label: "Je reste chez moi"
+      effects: {direction: "+", relation: {meneche: -1}, set: [h6_massenet_muet], outcome: muet}
+      answer: "Dimanche, le fauteuil vide est filmé en gros plan pendant dix secondes. Lundi, tout le monde a vu le fauteuil."
+
+  # ═══════════════════════════════════════════════ LA VISITE MÉDICALE (le Doc)
+  - id: ds.h6.doc.radio
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Le Doc Sabatier tient la radio d'un genou contre la fenêtre du cabinet : « Le milieu que vous vendez a un ménisque fendu. Leur médecin verra ce que je vois. Vous voulez que je ne voie rien ? »"
+    left:
+      label: "Ne voyez rien"
+      effects: {caisse: "+", relation: {sabatier: -1}, set: [h6_doc_aveugle]}
+      answer: "Il range la radio dans une chemise, la chemise dans un tiroir, la clé du tiroir dans la poche de sa blouse."
+    right:
+      label: "Dites ce que vous voyez"
+      effects: {caisse: "-", relation: {sabatier: 1}, set: [h6_doc_voit]}
+      answer: "Il écrit trois lignes sur le certificat, lisiblement pour une fois. « Le prix va baisser. Le genou, lui, ne guérira pas plus vite. »"
+
+  - id: ds.h6.doc.acheteur_aveugle
+    roles: [ds]
+    arc: agents
+    tags: [agents, scandale]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Fardelli t'appelle, ravi : « Leur médecin a signé sans regarder ; ils ne regardent jamais, les médecins des acheteurs. Le chèque part demain. Je le dis au Doc, ou tu préfères t'en charger ? »"
+    left:
+      label: "Je le lui dirai"
+      effects: {relation: {sabatier: 1}}
+      answer: "Tu le lui dis. Il hoche la tête sans lever les yeux, et retourne contre le mur le cadre de son diplôme."
+    right:
+      label: "Ne dites rien"
+      effects: {relation: {fardelli: 1, sabatier: -1}}
+      answer: "Personne ne lui dit rien. Il l'apprend par L'Écho, à la page des transferts, et découpe l'article."
+
+  - id: ds.h6.doc.acheteur
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vukić a appris le prix du milieu au ménisque fendu : « Ils l'ont eu pour moitié moins. Le Doc a écrit la vérité, et la vérité a coûté un million. Vous la payez souvent comme ça ? »"
+    left:
+      label: "Quand il faut"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Il hoche la tête lentement. « Alors je vous enverrai mes joueurs avec leurs radios. Toutes. »"
+    right:
+      label: "C'était une erreur"
+      effects: {caisse: "+", relation: {vukic: -1}}
+      answer: "« Une erreur. » Il le répète pour lui, sans colère, et tu comprends qu'il vient d'apprendre quelque chose sur toi."
+
+  - id: ds.h6.doc.certificat
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Le Doc pose sur ton bureau un certificat à signer, le tampon déjà mouillé : « Le club acheteur veut une attestation de bonne santé. Je ne signe pas ce que je n'ai pas vu. Vous, si ? »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "+", relation: {sabatier: -1}, set: [h6_doc_signe], var: {h6_millions: "+3", h6_ventes: "+1"}, outcome: signe}
+      answer: "Tu signes. Il prend le tampon, se ravise, et le repose sur sa boîte sans s'en servir. « Votre nom suffira. »"
+    right:
+      label: "Je reprends le joueur"
+      effects: {caisse: "-", relation: {sabatier: 1}, set: [h6_doc_refuse], outcome: refuse}
+      answer: "La vente tombe. Le milieu reste, boite jusqu'en mars, puis rejoue. Il ne saura jamais qu'une radio l'a gardé ici."
+
+  # ═══════════════════════════════════════════════ LES GAMINS DE BARBIER
+  - id: ds.h6.gamins.averse
+    roles: [ds]
+    arc: mercato
+    tags: [formation]
+    speaker: barbier
+    tone: strategique
+    once: true
+    text: "Barbier rentre trempé d'un match de district : « Un gamin de quinze ans, à Trébignac. Il garde la tête haute sous l'averse, quand les autres la baissent. Je veux qu'il signe au centre. »"
+    left:
+      label: "Qu'il signe"
+      effects: {caisse: "-", relation: {barbier: 1}, set: [h6_gamin_barbier]}
+      answer: "Il essuie ses lunettes avec le bas de sa doudoune, ce qui ne sert à rien, et sourit quand même."
+    right:
+      label: "Je veux des chiffres"
+      effects: {relation: {barbier: -1, ferlac: 1}, set: [h6_chiffres_demandes]}
+      answer: "Barbier regarde le stagiaire, qui a déjà sorti une feuille à colonnes. « Il a des chiffres, lui. Il en a toujours. »"
+
+  - id: ds.h6.gamins.colonnes
+    roles: [ds]
+    arc: mercato
+    tags: [formation, objet]
+    speaker: ferlac
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Joachim Ferlac a mis le gamin de Trébignac sur une feuille à colonnes : vitesse, taille, taille du père. « Les colonnes disent non. Monsieur Barbier dit oui. Je vous laisse choisir. »"
+    left:
+      label: "Les colonnes ont tort"
+      effects: {relation: {barbier: 1, ferlac: -1}, set: [h6_oeil_choisi]}
+      answer: "Il range la feuille sans un mot de trop. Dans la marge, au crayon, il a écrit un prix ; personne ne le lui avait demandé."
+    right:
+      label: "Les colonnes ont raison"
+      effects: {relation: {barbier: -2, ferlac: 1}, set: [h6_colonnes_choisies]}
+      answer: "Barbier remonte sa doudoune jusqu'au menton et sort. Le stagiaire classe la feuille au bon endroit, du premier coup."
+
+  - id: ds.h6.gamins.signature_oeil
+    roles: [ds]
+    arc: mercato
+    tags: [formation]
+    speaker: barbier
+    tone: leger
+    once: true
+    text: "Le gamin de Trébignac signe au centre, sa mère à côté, son père dans la voiture. Barbier assiste, debout, la doudoune ouverte : « Dans trois ans, tu me diras. Si je suis encore là pour l'entendre. »"
+    left:
+      label: "Je vous le dirai"
+      effects: {vestiaire: "+", relation: {barbier: 1}, set: [h6_oeil_barbier], outcome: oeil}
+      answer: "Il serre la main du gamin, puis la tienne, avec la même force. Le gamin a des mains de gardien ; il ne le sait pas encore."
+    right:
+      label: "Les chiffres diront"
+      effects: {set: [h6_oeil_barbier], outcome: oeil}
+      answer: "Barbier rit, d'un rire qui tousse. « Les chiffres ne vont jamais voir les matchs de district, {prenom}. Ils n'ont pas de bottes. »"
+
+  - id: ds.h6.gamins.signature
+    roles: [ds]
+    arc: mercato
+    tags: [formation]
+    speaker: barbier
+    tone: strategique
+    once: true
+    text: "Le gamin de Trébignac a signé à {rival}, devant trois personnes et un parapluie. Barbier te tend la coupure de journal : « Les colonnes avaient raison, sans doute. Elles ont toujours raison. »"
+    left:
+      label: "Elles avaient raison"
+      effects: {relation: {barbier: -1, ferlac: 1}, set: [h6_colonnes_ferlac], outcome: colonnes}
+      answer: "Il plie la coupure en quatre et la glisse dans sa doudoune, avec ses carnets. Il n'en reparle plus."
+    right:
+      label: "J'aurais dû vous écouter"
+      effects: {relation: {barbier: 1}, set: [h6_colonnes_ferlac], outcome: colonnes}
+      answer: "« La prochaine fois. Il pleuvra encore. » Il le dit sans y croire, pour que toi, tu y croies."
+
+  # ═════════════════════════════════════════════════════════ LE FILS (Arnaud)
+  - id: ds.h6.fils.allumettes
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Arnaud Vaubourg ferme à clé la porte du bureau présidentiel : « Mon père décide, et je l'apprends par la Ligue. Un jour, je ferai tout sauter. Vous m'aiderez à trouver la sortie ? »"
+    left:
+      label: "Je vous aiderai"
+      effects: {relation: {arnaud_vaubourg: 1}, set: [h6_arnaud_confie]}
+      answer: "Il rouvre la porte, soulagé, comme si tu venais de signer quelque chose. Il ne dit pas ce qu'il compte faire sauter."
+    right:
+      label: "Ce n'est pas mon rôle"
+      effects: {direction: "+", relation: {arnaud_vaubourg: -1}}
+      answer: "« Non, bien sûr. » Il rouvre et te laisse passer. Derrière toi, tu l'entends refermer à clé."
+
+  - id: ds.h6.fils.ligue
+    roles: [ds]
+    arc: direction
+    tags: [direction, telephone]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "À 23 h 47, le père Vaubourg t'appelle de la Ligue : « Mon fils joue avec des allumettes. Il paraît qu'il reçoit des fax, la nuit. Et toi, tu en reçois ? »"
+    left:
+      label: "Je ne reçois rien"
+      effects: {direction: "+", relation: {aulard: 1}}
+      answer: "« Parfait. » Il raccroche. Cette nuit-là, le fax ne sonne pas, et tu te demandes si c'est une réponse."
+    right:
+      label: "Votre fils non plus"
+      effects: {direction: "-", relation: {aulard: -1, arnaud_vaubourg: 1}, set: [h6_arnaud_couvert]}
+      answer: "Un silence. « Tu le protèges. C'est gentil. Ce n'est pas ton métier. » Il raccroche sans dire bonsoir."
+
+  - id: ds.h6.fils.brouillon
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Arnaud a laissé sur son bureau une lettre de démission au brouillon et, à côté, son fax débranché, le câble enroulé : « Je voulais voir si c'était moi qui recevais vos pages. Ce n'est pas moi. »"
+    left:
+      label: "Je vous crois"
+      effects: {relation: {arnaud_vaubourg: 1}, set: [h6_arnaud_allie], outcome: allie}
+      answer: "Il déchire la lettre de démission en deux, se ravise et la recolle au ruban adhésif, pour plus tard."
+    right:
+      label: "Prouvez-le"
+      effects: {relation: {arnaud_vaubourg: -2}, set: [h6_arnaud_soupconne], outcome: suspect}
+      answer: "Il rebranche le fax, lentement. « Vous savez ce que c'est, d'être soupçonné par son propre père ? Maintenant, oui. »"
+
+  # ═══════════════════════════════════════════════════ L'ORDRE DES FAITS (Léa)
+  - id: ds.h6.lea.enveloppe
+    roles: [ds]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "À la rédaction de L'Écho, Léa te montre une enveloppe arrivée sans timbre : ta photo de 1999, tirée sur papier glacé. « Je ne publie pas ce que je n'ai pas vérifié. Vous m'aidez à vérifier ? »"
+    left:
+      label: "C'est moi, en 1999"
+      effects: {relation: {lea: 1}, set: [h6_lea_aveu]}
+      answer: "Elle range la photo sous son sous-main, face contre le bois. « Je cherche qui l'envoie, avant de chercher qui est {nom}. »"
+    right:
+      label: "C'est un montage"
+      effects: {relation: {lea: -1}, set: [h6_lea_mensonge]}
+      answer: "Elle regarde la photo, puis toi, puis la photo. « Un bon montage. On voit même la gourmette. » Elle la range sans un mot."
+
+  - id: ds.h6.lea.liege
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa a épinglé sur un mur de liège tes ventes et les dates des fax : « Votre nom vient en second ; le premier, je ne l'ai pas. L'enveloppe a été postée à la gare routière, un dimanche, à 23 h. »"
+    left:
+      label: "Continuez"
+      effects: {relation: {lea: 1}, set: [h6_lea_continue]}
+      answer: "Elle déplace une épingle d'un centimètre vers la droite. « Il habite à moins d'une heure de la gare. À pied. »"
+    right:
+      label: "Arrêtez, s'il vous plaît"
+      effects: {relation: {lea: -1}, set: [h6_lea_stop]}
+      answer: "Elle n'arrête pas. Elle recouvre le mur d'un drap, pour que tu ne le voies plus en passant."
+
+  - id: ds.h6.lea.ordre
+    roles: [ds]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa a son article, et un seul nom dedans : {NOM}. « J'attends le second, ou je publie celui que j'ai ? Je vous pose la question parce que c'est vous qui risquez le plus. »"
+    left:
+      label: "Attendez le second"
+      effects: {relation: {lea: 1}, set: [h6_lea_attend], outcome: attend}
+      answer: "Elle range l'article dans un tiroir, sur une pile d'autres articles qu'elle a attendus. Certains ont jauni."
+    right:
+      label: "Publiez"
+      effects: {tribunes: "-", direction: "-", relation: {lea: -1}, set: [h6_lea_publie], outcome: publie}
+      answer: "Le lendemain, ta photo de 1999 est en page trois de L'Écho. Cette nuit-là, le fax imprime une page blanche."
+
+  # ═══════════════════════════════════════════════════ LE BANC DE VUKIĆ
+  - id: ds.h6.vukic.banc
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Vukić a pris le banc de Vogler et refuse de s'asseoir dessus : « Trois milieux vendus en un an. Je joue avec des gamins et un gaucher que personne n'a vu jouer. Vous vendez pour qui ? »"
+    left:
+      label: "Pour le club"
+      effects: {relation: {vukic: -1}}
+      answer: "« Le club. » Il tape du pied dans un plot. « Le club, c'est moi le samedi, et vous le lundi. »"
+    right:
+      label: "Pour quelqu'un d'autre"
+      effects: {relation: {vukic: 1}, set: [h6_vukic_sait]}
+      answer: "Il te regarde longtemps, puis s'assoit enfin sur le banc. « Alors on est deux à le savoir, {prenom}. Ça fait une équipe. »"
+
+  - id: ds.h6.vukic.liste
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: vukic
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vukić te tend sa liste de janvier : un seul nom, souligné deux fois, un milieu de vingt-six ans. « Lui, ou je le dis à la presse. » Il ne bluffe pas ; il ne sait pas bluffer."
+    left:
+      label: "Je vous l'achète"
+      effects: {caisse: "--", vestiaire: "++", force: 2, set: [h6_vukic_milieu]}
+      answer: "Le milieu arrive un mardi, avec un sac trop petit. Vukić l'emmène courir lui-même et revient seul, le sourire en dedans."
+    right:
+      label: "Pas d'achat cet hiver"
+      effects: {vestiaire: "-", relation: {vukic: -1}}
+      answer: "Il plie la liste en deux, puis en quatre, et la range dans sa poche de survêtement, avec le sifflet."
+
+  - id: ds.h6.vukic.vestiaire_achat
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Après la victoire, Vukić t'attend devant le vestiaire, le nouveau milieu derrière lui : « Il a couru pour deux. Je n'ai rien dit à la presse. Je ne dirai rien, même le jour où il le faudra. »"
+    left:
+      label: "Il le faudra peut-être"
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h6_vukic_soutenu], outcome: soutenu}
+      answer: "« Alors vous me direz quand. » Il rentre au vestiaire ; à travers la porte, on entend qu'ils ne chantent pas, et qu'ils sont contents."
+    right:
+      label: "Merci, Zoran"
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h6_vukic_soutenu], outcome: soutenu}
+      answer: "C'est la première fois que tu l'appelles par son prénom. Il fait semblant de ne pas l'avoir remarqué, et le fait mal."
+
+  - id: ds.h6.vukic.vestiaire
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Après la défaite, Vukić t'attend devant le vestiaire, sans colère : « Je n'ai rien dit à la presse. Je joue avec ce que vous me laissez. Mais je garde la liste de ce que vous vendez, maintenant. »"
+    left:
+      label: "Gardez-la"
+      effects: {relation: {vukic: 1}, set: [h6_vukic_lache], outcome: lache}
+      answer: "Il hoche la tête. La liste est punaisée au mur de son bureau, sous le calendrier des matchs, à hauteur d'œil."
+    right:
+      label: "Elle est déjà longue"
+      effects: {vestiaire: "-", relation: {vukic: -1}, set: [h6_vukic_lache], outcome: lache}
+      answer: "« Oui. » Il rentre au vestiaire et ferme la porte sans la claquer, ce qui est pire."
+
+  # ═══════════════════════════════════════════════════ VALENTIENNE (Malbec)
+  - id: ds.h6.malbec.loge_dembo
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hubert Malbec t'invite à déjeuner à l'hôtel de la Rive : « Dembo marque encore pour moi, à trente-huit ans. Je voudrais votre gardien, maintenant. Le prix, on me l'a déjà soufflé. »"
+    left:
+      label: "Qui vous le souffle ?"
+      effects: {relation: {malbec: -1}, set: [h6_malbec_question]}
+      answer: "« Un cabinet de conseil. Très poli. Il conseille aussi Portclair et Kerbrouck. » Il beurre son pain avec soin. « Pas vous ? »"
+    right:
+      label: "Mon prix sera le mien"
+      effects: {relation: {malbec: -1}}
+      answer: "Il pose son couteau en travers de l'assiette, comme on ferme un dossier, et parle de la pluie jusqu'au dessert."
+
+  - id: ds.h6.malbec.loge
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, agents]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hubert Malbec t'invite à déjeuner à l'hôtel de la Rive : « Votre capitaine m'a coûté une saison de discussions. Cette fois, je voudrais votre gardien. Le prix, on me l'a déjà soufflé. »"
+    left:
+      label: "Qui vous le souffle ?"
+      effects: {relation: {malbec: -1}, set: [h6_malbec_question]}
+      answer: "« Un cabinet de conseil. Très poli. Il conseille aussi Portclair et Kerbrouck. » Il beurre son pain avec soin. « Pas vous ? »"
+    right:
+      label: "Mon prix sera le mien"
+      effects: {relation: {malbec: -1}}
+      answer: "Il pose son couteau en travers de l'assiette, comme on ferme un dossier, et parle de la pluie jusqu'au dessert."
+
+  - id: ds.h6.malbec.carte
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, objet]
+    speaker: malbec
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Au café de la Mairie, Malbec pose une carte blanche sur la table : « Le cabinet qui nous souffle vos prix. Pas d'adresse, pas de téléphone. Deux initiales, J. F., et un numéro de fax. »"
+    left:
+      label: "Je peux la garder ?"
+      effects: {set: [h6_carte_malbec], var: {h6_indices: "+1"}}
+      answer: "Il te la donne. Le numéro de fax commence comme ceux du club-house ; il ne finit comme aucun de ceux que tu connais."
+    right:
+      label: "Rangez-la"
+      effects: {relation: {malbec: 1}}
+      answer: "Il la glisse dans son portefeuille, derrière la photo de ses petits-enfants. « Moins on en sait, mieux on dort. »"
+
+  - id: ds.h6.malbec.gardien
+    roles: [ds]
+    arc: mercato
+    tags: [mercato]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Malbec pose sur la nappe son offre pour ton gardien : le prix exact qu'on lui a soufflé, au centime. « On règle ça avant le dessert ? Votre président m'a dit que vous étiez raisonnable. »"
+    left:
+      label: "Avant le dessert"
+      effects: {caisse: "++", vestiaire: "-", force: -2, relation: {malbec: 1}, set: [h6_malbec_complice], var: {h6_millions: "+3", h6_ventes: "+1", h6_prix_bas: "+1"}, outcome: complice}
+      answer: "Il signe sur la nappe, au stylo à encre. Le serveur, en débarrassant, prend soin de ne pas toucher la signature."
+    right:
+      label: "Pas à ce prix"
+      effects: {direction: "-", relation: {malbec: -2}, set: [h6_malbec_brouille], outcome: brouille}
+      answer: "Il plie sa serviette au carré. Le soir, le père Vaubourg t'appelle : « Malbec s'est plaint de {nom}. Je lui ai dit que tu débutais. »"
+
+  # ═══════════════════════════════════════════════════ LE RETOUR DE DEMBO (S3)
+  - id: ds.h6.dembo_retour.echauffement
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: dembo
+    lieu: stade
+    tone: leger
+    once: true
+    statut_ok: [vendu]
+    text: "Valentienne joue à la Rive. Dembo, trente-neuf ans, s'échauffe devant le virage qui chante encore son nom. Il cherche ta tribune des yeux, une montre trop grosse au poignet."
+    left:
+      label: "Je descends le voir"
+      effects: {relation: {dembo: 1}, set: [h6_dembo_descendu]}
+      answer: "Il enlève sa montre pour te serrer la main et te la tend, comme avant le match amical de 2003. « Tu me la gardes ? »"
+    right:
+      label: "Je reste en tribune"
+      effects: {relation: {dembo: -1}}
+      answer: "Il te trouve quand même et lève la main à hauteur d'épaule, pas plus haut. Le virage croit que c'est pour lui."
+
+  - id: ds.h6.dembo_retour.echauffement_reste
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: dembo
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Dembo, trente-neuf ans, finit sa dernière saison sur le banc de la Rive. Avant l'échauffement, il te tend sa montre : « Garde-la. Cette fois, je ne te la redemanderai pas. »"
+    left:
+      label: "Je la garde"
+      effects: {relation: {dembo: 1}, set: [h6_dembo_descendu]}
+      answer: "Elle est lourde et elle retarde de trois minutes, comme en 2003. Tu ne la règles pas."
+    right:
+      label: "Tu la reprendras"
+      effects: {relation: {dembo: 1}}
+      answer: "« Non. » Il rit avant la fin du mot. Il entre à l'heure de jeu et ne marque pas, pour la première fois de l'année."
+
+  - id: ds.h6.dembo_retour.couloir
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: dembo
+    lieu: stade
+    tone: strategique
+    once: true
+    statut_ok: [vendu]
+    text: "Dans le couloir des vestiaires, Dembo s'arrête à ta hauteur, le sac sur l'épaule : « On m'a parlé d'un fax qui donnait mon prix, en 2003, à minuit moins deux. C'était ton prix, ou celui de la nuit ? »"
+    left:
+      label: "Celui de la nuit"
+      effects: {relation: {dembo: 1}, set: [h6_dembo_sait]}
+      answer: "Il hoche la tête. « Alors ce n'est pas toi qui m'as vendu. » Il repart vers le terrain sans se retourner, en riant à moitié."
+    right:
+      label: "Le mien"
+      effects: {relation: {dembo: -1}}
+      answer: "« Le tien. » Il pèse le mot comme une montre trop grosse. Il ne dit rien d'autre, et c'est le pire."
+
+  - id: ds.h6.dembo_retour.montre
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: dembo
+    lieu: stade
+    tone: leger
+    once: true
+    statut_ok: [vendu]
+    text: "Après le match, Dembo revient chercher la montre qu'il a oubliée sur le banc, comme toujours. Il la trouve dans ta main. « Tu me la rends, ou tu la gardes pour la prochaine fois ? »"
+    left:
+      label: "Je te la rends"
+      effects: {relation: {dembo: 1}, set: [h6_dembo_salue], outcome: salue}
+      answer: "Il la remet à son poignet sans la boucler et salue ta tribune avant le virage. Le virage ne lui en veut pas."
+    right:
+      label: "Je la garde"
+      effects: {relation: {dembo: -1}, set: [h6_dembo_evite], outcome: evite}
+      answer: "« Garde-la, alors. » Il s'en va par le couloir, sans repasser devant toi, la manche retroussée sur un poignet nu."
+
+  # ═══════════════════════════════════════════════════ LA COMMISSION (S3)
+  - id: ds.h6.commission.convocation
+    roles: [ds]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Noé Berthomier te reçoit au petit salon de l'hôtel, une convocation à en-tête devant lui : « La Commission s'intéresse au prix de vos ventes. Elle préfère un témoin à un accusé. Vous serez lequel ? »"
+    left:
+      label: "Témoin"
+      effects: {relation: {legruet: 1}, set: [h6_commission_choix_temoin]}
+      answer: "Il prend une feuille vierge, écrit « {nom}, témoin » en haut, puis la date. « Bien. Les témoins, on les écoute plus longtemps. »"
+    right:
+      label: "Ni l'un ni l'autre"
+      effects: {direction: "-", relation: {legruet: -1}}
+      answer: "« Alors accusé. » Il écrit le mot sans hausser le ton et range la feuille dans un dossier qui en contient déjà beaucoup."
+
+  - id: ds.h6.commission.audience
+    roles: [ds]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La Commission siège dans une salle sans fenêtre. Berthomier lit à voix haute la liste de tes ventes, puis s'arrête : « Toutes conclues après 23 h 58, d'après vos fax. Vous dormez quand ? »"
+    left:
+      label: "Je montre les fax"
+      effects: {relation: {legruet: 1}, set: [h6_commission_fax], var: {h6_indices: "+1"}}
+      answer: "Tu poses sur la table ce qu'il reste des fax. Il les compte, les aligne au bord de la table et demande une copie de plus."
+    right:
+      label: "Je ne dors pas"
+      effects: {direction: "-", relation: {legruet: -1}}
+      answer: "« Ça se voit. » Il le note, mot pour mot. Au fond de la salle, quelqu'un rit, puis s'arrête net."
+
+  - id: ds.h6.commission.armoire
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Berthomier tient ton dossier au-dessus de son armoire, sans l'y poser : « Il peut dormir ici des années, ou partir chez le procureur demain. Ça dépend de ce que vous m'apportez. »"
+    left:
+      label: "Un nom, bientôt"
+      effects: {relation: {legruet: 1}, set: [h6_commission_temoin], outcome: temoin}
+      answer: "Il pose le dossier sur la plus haute étagère, à plat. « Bientôt, c'est un mot que j'entends beaucoup. Je le note quand même. »"
+    right:
+      label: "Rien du tout"
+      effects: {direction: "-", relation: {legruet: -1}, set: [h6_commission_accuse], outcome: accuse}
+      answer: "Il garde le dossier sous le bras en partant. Tu ne sais pas où il dormira ce soir-là ; lui non plus, peut-être."
+
+  # ═══════════════════════════════════════════════════ LA LOGE (Ilyas, S3)
+  - id: ds.h6.loge.offre
+    roles: [ds]
+    arc: direction
+    tags: [direction, sponsors]
+    speaker: nassir
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Cheikh Ilyas t'invite dans sa loge, deux sièges, une bouteille fermée : « Le Racing vaut ses dettes, pas un écu de plus. Mon fonds le rachète. Vous restez, si vous m'apportez le fils. »"
+    left:
+      label: "Je parlerai au fils"
+      effects: {relation: {nassir: 1}, set: [h6_loge_messager]}
+      answer: "Il ne sert que toi. « À votre santé, {nom}. Le fils dira oui. C'est le père qui ne sait jamais dire non à temps. »"
+    right:
+      label: "Je ne porte pas d'offres"
+      effects: {relation: {nassir: -1}}
+      answer: "Il remet le bouchon sans avoir servi. « Vous la porterez quand même. Ces offres-là se portent toutes seules. »"
+
+  - id: ds.h6.loge.pere
+    roles: [ds]
+    arc: direction
+    tags: [direction, telephone]
+    speaker: aulard
+    tone: strategique
+    once: true
+    text: "Le père Vaubourg t'appelle de la Ligue, la voix plus basse que d'habitude : « Ilyas veut mon club. Mon fils veut le lui donner. Toi, tu veux quoi ? Réfléchis vite, je raccroche dans une minute. »"
+    left:
+      label: "Que le club reste"
+      effects: {direction: "+", relation: {aulard: 1}, set: [h6_loge_contre]}
+      answer: "« Bonne réponse, mauvaise raison. » Il raccroche à la cinquante-neuvième seconde. Tu as compté."
+    right:
+      label: "Que votre fils décide"
+      effects: {direction: "-", relation: {aulard: -1, arnaud_vaubourg: 1}, set: [h6_loge_pour]}
+      answer: "Un silence. « Mon fils n'a jamais rien décidé. Tu viens de le lui apprendre. » La ligne coupe."
+
+  - id: ds.h6.loge.reponse
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: arnaud_vaubourg
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Arnaud Vaubourg relit l'offre d'Ilyas pour la troisième fois, debout à la fenêtre : « Si je signe, mon père ne me le pardonne pas. Si je ne signe pas, je ne me le pardonne pas. Je fais quoi ? »"
+    left:
+      label: "Signez"
+      effects: {direction: "-", relation: {arnaud_vaubourg: 1, aulard: -1}, set: [h6_loge_vente], outcome: vendu}
+      answer: "Il signe, appelle son père pour le lui dire, et raccroche avant la sonnerie. L'offre part par coursier, pas par fax."
+    right:
+      label: "Rangez-la"
+      effects: {direction: "+", relation: {arnaud_vaubourg: -1}, set: [h6_loge_refus], outcome: garde}
+      answer: "Il la range dans son tiroir, sous la cravate des grands jours de son père, qu'il ne porte jamais."

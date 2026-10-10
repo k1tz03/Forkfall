@@ -1551,7 +1551,9 @@ class Engine {
       photo = {'card': s.lastStoryCard!.id, if (s.lastStoryCard!.answer != null) 'answer': s.lastStoryCard!.answer};
     }
     final annee = s.year;
-    final prix = s.year >= 2002 ? '0,80 €' : '4,50 F';
+    // Le pays passe à l'écu en 2002 (le drapeau `monde_ecus`, posé par la
+    // Nouvelle de la première paie) : la Une de juin suit, comme la ville.
+    final prix = (s.flags.contains('monde_ecus') || s.year >= 2002) ? '0,80 écu' : '4,50 F';
     if (une != null) {
       director.addJournal(s, titre, kind: 'une', poids: 3, tags: ['une', if (sujet != null) sujet], arc: une.id);
       s.lastUne = une.id;

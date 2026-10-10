@@ -115,6 +115,12 @@
 ///   Dorian ; Didier Vallin était déjà venu avec le livre 3). Aucune des
 ///   vingt carrières ne bouge : seule la part « personnages » de l'empreinte
 ///   change (leur nombre et la somme de leurs âges). `--goldens --write`.
+/// · **Histoire 6, « 23 h 58 »** (la branche `histoire-h6`). La directrice
+///   sportive qui doit vendre pour trente millions devient un livre, avec
+///   sept visages de plus (Vogler, Solvang, Barbier, le stagiaire Ferlac, les
+///   Rancé père et fils, Arnaud Vaubourg). Comme pour le livre 5, aucune des
+///   vingt carrières ne bouge : seule la part « personnages » de l'empreinte
+///   change. `--goldens --write`.
 library;
 
 import 'dart:io';

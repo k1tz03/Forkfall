@@ -1,0 +1,523 @@
+# Histoire 6 — « 23 h 58 » : le sac (cartes de routine, tirées au poids quand
+# l'histoire laisse un créneau). Trois familles, toutes bornées par le drapeau
+# d'histoire (l'autre directeur sportif, celui de 2024, n'a ni fax ni écus) :
+#   · les ordres de 23 h 58 que la trame n'a pas besoin de nommer (des noms,
+#     des prix, des délais ; obéir rapporte vite, se taire se compte) ;
+#   · les offres du marché, les vraies, à leur vrai prix ;
+#   · un visage par membre du casting, une scène de bureau, un objet.
+# Les montants sont en millions d'écus (vars.h6_millions, la page deux).
+cards:
+  # ═══════════════════════════════════════════════ les ordres de 23 h 58
+  - id: ds.h6.fax.audouze
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    weight: 2.0
+    once: true
+    when: "flag('histoire_h6') && season == 0 && slot >= 3"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. AUDOUZE, ARRIÈRE DROIT. PORTCLAIR. 2 MILLIONS. AVANT LE 31."
+    left:
+      label: "Je vends Audouze"
+      effects: {caisse: "++", direction: "+", vestiaire: "-", force: -1, var: {h6_millions: "+2", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Il signe à Portclair un mardi. Sous ta signature, {nom}, le prix du fax, à l'écu près, comme tapé d'avance."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", var: {h6_fax_refus: "+1"}}
+      answer: "La page reste dans le bac jusqu'au matin, roulée sur elle-même comme une feuille morte."
+
+  - id: ds.h6.fax.kerfanto
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    weight: 2.0
+    once: true
+    when: "flag('histoire_h6') && season == 0 && slot >= 9"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. KERFANTO, LE NUMÉRO 8. KERBROUCK. 2 MILLIONS. AVANT LE 31 JANVIER, MINUIT."
+    left:
+      label: "Je vends Kerfanto"
+      effects: {caisse: "++", direction: "+", vestiaire: "-", force: -1, var: {h6_millions: "+2", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Le numéro 8 vide son casier en dix minutes. Il laisse une paire de crampons neufs, pour le suivant, avec son nom au feutre."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", var: {h6_fax_refus: "+1"}}
+      answer: "Minuit passe. Le 31 janvier passe. Le fax ne dit rien de plus, et c'est ce silence qui t'empêche de dormir."
+
+  - id: ds.h6.fax.rappel
+    roles: [ds]
+    arc: mercato
+    tags: [fax, scandale]
+    lieu: bureau
+    tone: strategique
+    weight: 3.0
+    once: true
+    when: "flag('histoire_h6') && season <= 1 && vars.h6_fax_refus >= 1"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. VOUS AVEZ LAISSÉ SONNER. LA PHOTO EXISTE EN TROIS TIRAGES. LAGRAULET. VALENTIENNE. 2 MILLIONS."
+    left:
+      label: "Je vends Lagraulet"
+      effects: {caisse: "++", direction: "+", vestiaire: "-", force: -1, var: {h6_millions: "+2", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Lagraulet part à Valentienne sans comprendre pourquoi si vite. Tu ne lui expliques pas ; tu ne saurais pas."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", tribunes: "-", var: {h6_fax_refus: "+1"}}
+      answer: "Tu laisses la page dans le bac. Trois tirages : tu passes la nuit à te demander qui a les deux autres."
+
+  - id: ds.h6.fax.oyonga
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    weight: 2.0
+    once: true
+    when: "flag('histoire_h6') && season == 1"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. OYONGA, MILIEU. PORTCLAIR. 3 MILLIONS. AVANT VENDREDI."
+    left:
+      label: "Je vends Oyonga"
+      effects: {caisse: "++", direction: "+", vestiaire: "-", force: -2, var: {h6_millions: "+3", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Vukić apprend le départ par la radio de sa voiture, sur le parking. Il reste assis dix minutes, moteur coupé."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", var: {h6_fax_refus: "+1"}}
+      answer: "Vendredi passe. Oyonga joue samedi, et marque. Le fax de la nuit suivante ne dit rien du but."
+
+  - id: ds.h6.fax.perrigault
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    weight: 2.0
+    once: true
+    when: "flag('histoire_h6') && season == 1 && slot >= 9"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. PERRIGAULT, GARDIEN REMPLAÇANT. UN CLUB DU NORD. 1 MILLION. CE SOIR."
+    left:
+      label: "Je vends Perrigault"
+      effects: {caisse: "+", direction: "+", vestiaire: "-", var: {h6_millions: "+1", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Tu l'appelles à minuit. Il dit oui sans demander où ; un gardien remplaçant dit toujours oui à minuit."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", var: {h6_fax_refus: "+1"}}
+      answer: "« Ce soir » passe. Le lendemain, Perrigault arrive le premier à l'entraînement, sans savoir qu'il a failli partir."
+
+  - id: ds.h6.fax.merci
+    roles: [ds]
+    arc: mercato
+    tags: [fax, objet]
+    lieu: bureau
+    tone: strategique
+    weight: 3.0
+    once: true
+    when: "flag('histoire_h6') && season >= 1 && vars.h6_prix_bas >= 2"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. MERCI. MERCI."
+    left:
+      label: "Je la garde"
+      effects: {set: [h6_fax_merci], var: {h6_indices: "+1"}}
+      answer: "Deux fois. Tu poses la page sur les autres. Celui qui écrit la nuit a été bien élevé : quelqu'un lui a appris à dire merci deux fois."
+    right:
+      label: "Je la déchire"
+      effects: {set: [h6_fax_merci]}
+      answer: "Tu la déchires en deux, un merci de chaque côté. Les deux moitiés finissent dans la corbeille, polies jusqu'au bout."
+
+  - id: ds.h6.fax.seneclauze
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    weight: 2.0
+    once: true
+    when: "flag('histoire_h6') && season == 2 && slot <= 9"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. SÉNÉCLAUZE, AILIER. KERBROUCK. 2 MILLIONS. AVANT LE 31 JANVIER, MINUIT."
+    left:
+      label: "Je vends Sénéclauze"
+      effects: {caisse: "++", direction: "+", vestiaire: "-", force: -1, var: {h6_millions: "+2", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Le papier de la page sent encore le chaud quand tu composes le numéro de Kerbrouck. On t'attendait : on a déjà le contrat."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", var: {h6_fax_refus: "+1"}}
+      answer: "Tu retournes la page face contre le bureau. Le 31 janvier est entouré sur ton calendrier ; tu ne te rappelles pas l'avoir fait."
+
+  - id: ds.h6.fax.vidalenc
+    roles: [ds]
+    arc: mercato
+    tags: [fax, scandale]
+    lieu: bureau
+    tone: strategique
+    weight: 3.0
+    once: true
+    when: "flag('histoire_h6') && season == 2 && slot <= 9 && flag('h6_audit_parle')"
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. VOUS AVEZ PARLÉ À LA COMMISSION. VIDALENC. VALENTIENNE. 1 MILLION. SANS DISCUTER."
+    left:
+      label: "Je vends Vidalenc"
+      effects: {caisse: "+", direction: "+", vestiaire: "-", var: {h6_millions: "+1", h6_ventes: "+1", h6_prix_bas: "+1"}}
+      answer: "Tu vends sans discuter. Tu te rends compte, en raccrochant, qu'il savait ce que tu avais dit à la Commission, et quand."
+    right:
+      label: "Je laisse sonner"
+      effects: {direction: "-", var: {h6_fax_refus: "+1"}}
+      answer: "Tu laisses sonner. Il savait pour la Commission. Peu de gens savaient ; tu en fais la liste, et la liste est courte."
+
+  # ═══════════════════════════════════════════════ les offres du marché
+  - id: ds.h6.offre.capitale
+    roles: [ds]
+    arc: mercato
+    tags: [agents, mercato]
+    speaker: fardelli
+    tone: strategique
+    once: true
+    when: "flag('histoire_h6') && season <= 1"
+    text: "Fardelli, au téléphone : « Un club de la Capitale veut ton ailier droit. Cinq millions, pas un écu de moins. C'est son vrai prix, pour une fois. Je fais quoi ? »"
+    left:
+      label: "Vendez-le à cinq"
+      effects: {caisse: "++", vestiaire: "-", force: -2, relation: {fardelli: 1}, var: {h6_millions: "+5", h6_ventes: "+1"}}
+      answer: "Le chèque arrive le jeudi, entier. C'est la première vente de l'année qui ne t'empêche pas de dormir."
+    right:
+      label: "Il reste chez nous"
+      effects: {vestiaire: "+", direction: "-", relation: {fardelli: -1}}
+      answer: "Fardelli soupire dans le combiné. « Tu ne vends que quand c'est mal payé, {prenom}. Un jour, il faudra m'expliquer. »"
+
+  - id: ds.h6.offre.valentienne
+    roles: [ds]
+    arc: mercato
+    tags: [mercato]
+    speaker: malbec
+    tone: strategique
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Une lettre de Malbec, à en-tête de Valentienne : « Votre avant-centre m'intéresse. Six millions, le prix du marché, sans personne pour me le souffler. Je vous laisse une semaine. »"
+    left:
+      label: "Six, vendu"
+      effects: {caisse: "++", vestiaire: "-", force: -2, relation: {malbec: 1}, var: {h6_millions: "+6", h6_ventes: "+1"}}
+      answer: "Il signe par retour du courrier. Pour une fois, le prix a été dit en plein jour, sur papier à en-tête."
+    right:
+      label: "Il n'est pas à vendre"
+      effects: {vestiaire: "+", direction: "-", relation: {malbec: -1}}
+      answer: "La semaine passe. Malbec n'écrit plus. Le père Vaubourg, lui, appelle pour demander pourquoi."
+
+  - id: ds.h6.offre.montbeliac
+    roles: [ds]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: solvang
+    tone: strategique
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Solvang, au téléphone : « Mon client de Montbéliac est libre en juin. Gaucher, vingt-six ans, rien à payer au club. Je ne demande que ma commission, déclarée. »"
+    left:
+      label: "Signez-le"
+      effects: {vestiaire: "+", caisse: "-", relation: {solvang: 1}, set: [h6_solvang_libre]}
+      answer: "La commission arrive en facture, avec un numéro de TVA. Josiane l'agrafe à gauche, avec une sorte de soulagement."
+    right:
+      label: "Pas cette fois"
+      effects: {relation: {solvang: -1}}
+      answer: "« Cette fois. » Elle répète le mot comme une date qu'elle note. Le gaucher signe ailleurs en juin, libre."
+
+  # ═══════════════════════════════════════════════ les visages
+  - id: ds.h6.rt.josiane_agrafeuse
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Madame Josiane recharge l'agrafeuse de ton bureau sans te demander : « Vous agrafez beaucoup, ces temps-ci. Les ventes, ça s'agrafe à gauche ; les promesses, à droite. »"
+    left:
+      label: "À gauche, alors"
+      effects: {caisse: 1, relation: {josiane: 1}}
+      answer: "Elle hoche la tête, satisfaite d'une réponse qu'elle n'attendait pas. L'agrafeuse claque, une fois, pour l'essai."
+    right:
+      label: "Et les fax ?"
+      effects: {relation: {josiane: 1}}
+      answer: "« Les fax, on ne les agrafe pas. Ils blanchissent, et l'agrafe rouille dessus. Il ne reste que la rouille. »"
+
+  - id: ds.h6.rt.arnaud_cravate
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: arnaud_vaubourg
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Arnaud Vaubourg essaie trois cravates dans le reflet de ta fenêtre avant la réunion de la Ligue : « Mon père remarque toujours la cravate, jamais ce qu'il y a dessous. Laquelle ? »"
+    left:
+      label: "La bordeaux"
+      effects: {direction: "+", relation: {arnaud_vaubourg: 1}}
+      answer: "Il la noue deux fois, la défait, la renoue. En partant, il se retourne : « Merci. Personne ne m'aide jamais pour ça. »"
+    right:
+      label: "Aucune"
+      effects: {relation: {arnaud_vaubourg: -1}}
+      answer: "Il rit, puis voit que tu ne ris pas. Il part avec la bordeaux, nouée trop serré, et le père la remarque."
+
+  - id: ds.h6.rt.aulard_ligue
+    roles: [ds]
+    arc: direction
+    tags: [direction, telephone]
+    speaker: aulard
+    tone: strategique
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Le père Vaubourg, entre deux réunions de la Ligue : « Mon fils dit que tu es {pg, select, f{sérieuse} other{sérieux}}. Il dit ça de tout le monde. Tes ventes, elles, disent quoi ? »"
+    left:
+      label: "Elles disent trente"
+      effects: {direction: "+", parole: -1}
+      answer: "« J'aime les chiffres qui parlent. » Il raccroche. Trente, tu ne les as pas encore ; tu viens de les promettre."
+    right:
+      label: "Elles disent juste"
+      effects: {direction: "-", parole: 1}
+      answer: "« Juste ? » Il répète le mot comme un mot étranger, et raccroche sans le traduire."
+
+  - id: ds.h6.rt.barbier_thermos
+    roles: [ds]
+    arc: mercato
+    tags: [formation, decor]
+    speaker: barbier
+    tone: leger
+    once: true
+    when: "flag('histoire_h6') && season <= 1"
+    text: "Barbier te tend le gobelet de son thermos au bord du terrain annexe : « Café de six heures, réchauffé à midi. Les jeunes boivent des canettes orange. Moi, je regarde jouer. »"
+    left:
+      label: "Je bois"
+      effects: {relation: {barbier: 1}}
+      answer: "C'est le plus mauvais café d'Aubérive. Tu le bois jusqu'au bout ; il le remarque, et il remplit le gobelet."
+    right:
+      label: "Je regarde avec vous"
+      effects: {vestiaire: 1, relation: {barbier: 1}}
+      answer: "Vous regardez une heure sans parler. Il ne te montre aucun joueur ; à la fin, tu sais lequel il regardait."
+
+  - id: ds.h6.rt.vialat_vendredi
+    roles: [ds]
+    arc: caisse
+    tags: [caisse]
+    speaker: vialat
+    tone: leger
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Madame Vialat attend dans le couloir que Josiane lui ouvre, sa calculatrice à bande sous le bras comme un missel : « Je repasse vendredi. Je repasse toujours le vendredi. »"
+    left:
+      label: "Je serai là"
+      effects: {relation: {vialat: 1}}
+      answer: "Vendredi, tu es là. Elle aussi, à neuf heures, une minute avant l'heure. Elle repart à onze heures, sans avoir rien dit."
+    right:
+      label: "Je serai en déplacement"
+      effects: {caisse: -2, relation: {vialat: -1}}
+      answer: "Vendredi, elle recompte sans toi. Elle laisse un mot sur ta chaise : une seule ligne, soulignée, et un chiffre."
+
+  - id: ds.h6.rt.klopf_footing
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: klopf
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Pendant ta réunion avec deux agents, Vogler fait le tour du terrain annexe et repasse devant ta fenêtre toutes les quatre minutes, en levant le pouce. Les agents finissent par compter les tours."
+    left:
+      label: "Je lève le pouce"
+      effects: {vestiaire: "+", relation: {klopf: 1}}
+      answer: "Au tour suivant, il lève les deux pouces. Les agents signent plus vite, pour pouvoir partir avant le tour d'après."
+    right:
+      label: "Je baisse le store"
+      effects: {relation: {klopf: -1}}
+      answer: "Tu baisses le store. Toutes les quatre minutes, on entend quand même ses pas sur le gravier, et un sifflement."
+
+  - id: ds.h6.rt.vukic_plots
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Vukić range les plots par couleur dans le local du matériel, seul, après la séance : « Ils les laissent partout. Moi, je les range. Il manque un rouge depuis lundi. »"
+    left:
+      label: "Je vous en commande"
+      effects: {caisse: -1, relation: {vukic: 1}}
+      answer: "Il en voulait un, tu en commandes vingt. Il range les dix-neuf de trop au fond, par couleur, sans un mot de reproche."
+    right:
+      label: "Il réapparaîtra"
+      effects: {relation: {vukic: -1}}
+      answer: "Il réapparaît le jeudi, sous le banc des remplaçants, aplati. Vukić le range quand même, avec les autres rouges."
+
+  - id: ds.h6.rt.dembo_sieste
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: dembo
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Dembo dort sur le banc du vestiaire une heure avant l'entraînement, la montre posée sur le ventre. Il ouvre un œil : « Ne dis rien, {prenom}. Je récupère de demain. »"
+    left:
+      label: "Je le laisse dormir"
+      effects: {relation: {dembo: 1}}
+      answer: "Tu fermes la porte doucement. À l'entraînement, il arrive le dernier et marque le premier, ce qui règle la question."
+    right:
+      label: "Je le réveille"
+      effects: {vestiaire: 1, relation: {dembo: -1}}
+      answer: "Il se lève en grognant, oublie la montre sur le banc, et court plus vite que tout le monde, pour te le faire payer."
+
+  - id: ds.h6.rt.ferlac_cartouche
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: ferlac
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Le fax du recrutement est en panne d'encre. Joachim Ferlac change la cartouche en trois gestes, sans se salir les doigts : « Ce modèle-là, je le connais par cœur. On avait le même, chez mes parents. »"
+    left:
+      label: "Merci, Joachim"
+      effects: {relation: {ferlac: 1}}
+      answer: "« Je vous en prie. » Il range l'ancienne cartouche dans son emballage, et l'emballage dans la corbeille de tri."
+    right:
+      label: "Vous êtes doué"
+      effects: {relation: {ferlac: 1}, set: [h6_ferlac_fax]}
+      answer: "Il rougit un peu. « Pour les machines, oui. Les gens, c'est plus long. » Le fax se remet à ronronner sous ses doigts."
+
+  - id: ds.h6.rt.massenet_kiosque
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Massenet t'arrête devant le kiosque du quai, Télé-Stade sous le bras : « Mon émission passe après le film. Personne ne la regarde. Tout le monde en parle le lundi. »"
+    left:
+      label: "J'en parle aussi"
+      effects: {tribunes: 1, relation: {meneche: 1}}
+      answer: "« Alors vous la regardez. » Il sourit, pas dupe, et achète deux journaux concurrents pour voir qui le cite."
+    right:
+      label: "Je dors, à cette heure-là"
+      effects: {relation: {meneche: -1}}
+      answer: "« Vous ne dormez pas à cette heure-là. » Il le dit sans méchanceté, comme on dit qu'il va pleuvoir."
+
+  - id: ds.h6.rt.lea_photocopieuse
+    roles: [ds]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    tone: leger
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Léa fait la queue derrière toi à la photocopieuse de la mairie, une pile de documents contre la poitrine : « Vous aussi, vous copiez tout ? On finit par se ressembler, à force. »"
+    left:
+      label: "Tout, oui"
+      effects: {relation: {lea: 1}}
+      answer: "Elle te laisse passer devant. « Alors faites deux copies. Une pour vous, une pour le jour où on vous prendra la première. »"
+    right:
+      label: "Rien du tout"
+      effects: {relation: {lea: -1}}
+      answer: "Elle regarde la pile que tu tiens, puis toi. « Rien du tout, en vingt pages. » Elle reprend sa place dans la queue."
+
+  - id: ds.h6.rt.solvang_tunnel
+    roles: [ds]
+    arc: agents
+    tags: [agents]
+    speaker: solvang
+    tone: strategique
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Solvang te croise dans le tunnel du stade avant le match, un contrat roulé dans la main : « Votre milieu a une clause libératoire. Je l'ai lue. Vous ne l'avez pas écrite, n'est-ce pas ? »"
+    left:
+      label: "Qui l'a écrite ?"
+      effects: {relation: {solvang: 1}}
+      answer: "« Quelqu'un qui tape bien. Pas de faute, pas de rature, une virgule à chaque endroit où il faut. » Elle déroule le contrat."
+    right:
+      label: "Elle ne jouera pas"
+      effects: {relation: {solvang: -1}}
+      answer: "« Elles jouent toujours, les clauses. Quand on ne s'y attend plus. » Elle remonte le tunnel à contresens de l'équipe."
+
+  - id: ds.h6.rt.ilyas_canette
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, decor]
+    speaker: nassir
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Ilyas boit une canette orange au bord du terrain, la seule qu'on l'ait jamais vu boire : « Trop sucrée. C'est pour ça qu'elle se vend. Les gens n'achètent pas ce qui est bon. »"
+    left:
+      label: "Ils achètent quoi ?"
+      effects: {relation: {nassir: 1}}
+      answer: "« Ce qui les rassure. » Il finit la canette et la plie en deux, proprement, avant de chercher une poubelle."
+    right:
+      label: "Je n'en bois pas"
+      effects: {relation: {nassir: -1}}
+      answer: "« Moi non plus. » Il la pose pleine sur la main courante, pour un gamin qui la prendra, et repart vers sa voiture."
+
+  - id: ds.h6.rt.malbec_voeux
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, objet]
+    speaker: malbec
+    tone: leger
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Une carte de vœux de Valentienne, signée Hubert Malbec : « Bonne année, bonnes ventes. » Dans l'enveloppe, une photo de Dembo qui marque, à trente-huit ans, en maillot d'une autre couleur."
+    left:
+      label: "Je l'épingle au mur"
+      effects: {tribunes: 1, relation: {malbec: 1}}
+      answer: "La photo reste au mur jusqu'en mai. Josiane l'époussette sans jamais la redresser, parce qu'elle penche juste comme il faut."
+    right:
+      label: "Je la range"
+      effects: {relation: {malbec: -1}}
+      answer: "Tu la ranges dans le tiroir, à côté de la montre. Les deux finissent par se ressembler, à force de ne pas servir."
+
+  - id: ds.h6.rt.doc_tension
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: sabatier
+    tone: leger
+    once: true
+    when: "flag('histoire_h6')"
+    text: "Le Doc Sabatier te prend la tension dans le couloir, sans te demander ton avis, le brassard serré sur ta veste : « Quatorze. Vous dormez combien d'heures ? Non, ne répondez pas. »"
+    left:
+      label: "Cinq, à peu près"
+      effects: {vestiaire: 1, relation: {sabatier: 1}}
+      answer: "« À peu près, c'est quatre. » Il range le brassard et te donne une boîte sans rien dessus. « Des tisanes. Rien d'autre. »"
+    right:
+      label: "Assez"
+      effects: {relation: {sabatier: -1}}
+      answer: "« Assez. » Il le note sur sa fiche comme un symptôme. Il ne te reprend plus la tension ; il te regarde, c'est pire."
+
+  - id: ds.h6.rt.berthomier_dejeuner
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: legruet
+    tone: leger
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Noé Berthomier t'invite à déjeuner à la Fédération et parle trois heures de règlement, puis, au café : « On me dit que vos fax arrivent la nuit. La Fédération, elle, ferme à dix-huit heures. »"
+    left:
+      label: "Je viendrai avant dix-huit"
+      effects: {direction: 1, relation: {legruet: 1}}
+      answer: "« Parfait. » Il paie l'addition avec une note de frais déjà remplie, ton nom écrit dessus, au bon endroit."
+    right:
+      label: "Les miens aussi, dommage"
+      effects: {relation: {legruet: -1}}
+      answer: "Il rit poliment, puis note quelque chose au dos du menu. Il emporte le menu ; le serveur n'ose rien dire."
+
+  - id: ds.h6.rt.papier_thermique
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    when: "flag('histoire_h6') && season >= 1"
+    text: "Madame Josiane déballe douze rouleaux de papier pour le fax, la facture agrafée dessus : « Papier thermique, le moins cher. Il ne tient pas un an. Je reprends le même, ou l'autre ? »"
+    left:
+      label: "Le même"
+      effects: {caisse: 1}
+      answer: "Elle range les rouleaux sous le fax, en pyramide. « Le même, alors. On saura toujours depuis combien de temps on a reçu quoi. »"
+    right:
+      label: "Celui qui tient"
+      effects: {caisse: -1, relation: {josiane: 1}}
+      answer: "Elle commande l'autre, le papier ordinaire. Le fax du recrutement n'en voudra pas : il est trop vieux pour le papier qui dure."

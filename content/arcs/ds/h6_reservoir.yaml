@@ -1,0 +1,506 @@
+# Histoire 6 — « 23 h 58 » : le réservoir (`programme` du postulat
+# `vendre_trente`). Quinze intrigues que le metteur en scène tire à
+# l'ouverture des saisons : les suspects, les tentations, les témoins. Aucune
+# n'est un à-côté : chacune sait quelque chose du fax, ou en vit. Les cartes :
+# content/cards/ds/h6_reservoir.yaml.
+#
+#   saison 0 : la clause (Solvang), la canette orange (Ilyas, sponsor gris), la
+#              Mutuelle des Quais (sponsor louche, signature), le latéral gauche
+#              (Vogler), les montres (Fardelli), le dimanche (Massenet), la
+#              visite médicale (le Doc), les gamins de Barbier (l'œil contre
+#              les colonnes du stagiaire)
+#   saison 1 : le fils (Arnaud Vaubourg), l'ordre des faits (Léa), le banc de
+#              Vukić, Valentienne (Malbec)
+#   saison 2 : le retour de Dembo, la Commission (Berthomier), la loge (Ilyas)
+#              — tirées tôt, avant la nuit du 31 janvier, qui peut les couper
+arcs:
+  # ═══════════════════════════════════════════════════════ SAISON 0
+  - id: ds.h6.solvang
+    title: "La clause"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: agent
+    carrier: solvang
+    cast: [solvang, klopf, josiane]
+    issues: [alliee, adverse]
+    traces:
+      h6_solvang_alliee:  "{annee} : Ingrid Solvang a écrit une clause pour {nom}, à la page trois. On lui doit un client."
+      h6_solvang_adverse: "{annee} : Solvang a compté ce que {nom} lui devait. Elle a fait jouer la clause, au centime."
+    hint: "L'agente que tu as quittée en juillet, avec deux de ses clients."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: page_trois
+        card: ds.h6.solvang.page_trois
+        next: [ { step: corbeau, in: [2, 4] } ]
+      - id: corbeau
+        card: ds.h6.solvang.corbeau
+        next: [ { step: preavis, in: [3, 5] } ]
+      - id: preavis
+        card:
+          - { id: ds.h6.solvang.preavis_vestrie, if: "season == 0" }
+          - { id: ds.h6.solvang.preavis }
+        next: []
+
+  - id: ds.h6.canette
+    title: "La canette orange"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: argent
+    carrier: nassir
+    cast: [nassir, klopf, vukic]
+    issues: [signee, courte]
+    traces:
+      h6_canette_signee: "{annee} : une canette orange sur la manche des Aubes, pour trois saisons."
+      h6_canette_courte: "{annee} : la canette orange sur la manche, une saison seulement. {nom} a refusé la suite."
+    hint: "Une caisse de canettes orange, et une recrue qui se montre sans jouer."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: caisse
+        card: ds.h6.canette.caisse
+        next: [ { step: recrue, in: [2, 4] } ]
+      - id: recrue
+        card:
+          - { id: ds.h6.canette.recrue, if: "flag('h6_canette_recrue')" }
+          - { id: ds.h6.canette.sans_recrue }
+        next: [ { step: manche, in: [2, 5] } ]
+      - id: manche
+        card: ds.h6.canette.manche
+        next: []
+
+  - id: ds.h6.mutuelle
+    title: "La Mutuelle des Quais"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: contrat
+    carrier: arnaud_vaubourg
+    cast: [arnaud_vaubourg, fardelli, vialat]
+    issues: [primes, refus]
+    traces:
+      h6_primes_mutuelle:  "{annee} : la Mutuelle des Quais a versé des « primes de performance » à {nom}, en liquide."
+      h6_mutuelle_refusee: "{annee} : {nom} a renvoyé l'enveloppe de la Mutuelle des Quais sans l'ouvrir."
+    hint: "Un sponsor en imperméable qui ne s'assoit jamais, et des primes en liquide."
+    start: [2, 8]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: offre
+        card: ds.h6.mutuelle.offre
+        next: [ { step: enveloppe, in: [2, 4] } ]
+      - id: enveloppe
+        card:
+          - { id: ds.h6.mutuelle.enveloppe, if: "flag('h6_mutuelle_ecoute')" }
+          - { id: ds.h6.mutuelle.cheque }
+        next: [ { step: talon, in: [2, 5] } ]
+      - id: talon
+        card:
+          - { id: ds.h6.mutuelle.talon, if: "flag('h6_primes_mutuelle')" }
+          - { id: ds.h6.mutuelle.impermeable }
+        next: []
+
+  - id: ds.h6.lateral
+    title: "Le latéral gauche"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: vestiaire
+    carrier: klopf
+    cast: [klopf, solvang, vukic, barbier]
+    issues: [gauche, droit]
+    traces:
+      h6_klopf_gauche:      "{annee} : Vogler a eu son latéral gauche. Un gauche, pas un droit qui regarde son pied."
+      h6_klopf_sans_gauche: "{annee} : Vogler n'a pas eu son gauche. Il a souri toute la saison ; le vestiaire a compris."
+    hint: "Un entraîneur qui court partout et ne veut qu'une chose : un pied gauche."
+    start: [2, 8]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: portclair
+        card: ds.h6.lateral.portclair
+        next: [ { step: prix, in: [2, 4] } ]
+      - id: prix
+        card:
+          - { id: ds.h6.lateral.prix, if: "flag('h6_lateral_cherche')" }
+          - { id: ds.h6.lateral.droitier }
+        next: [ { step: verdict, in: [2, 4] } ]
+      - id: verdict
+        card:
+          - { id: ds.h6.lateral.verdict_gauche, if: "flag('h6_lateral_signe')" }
+          - { id: ds.h6.lateral.verdict }
+        next: []
+
+  - id: ds.h6.montres
+    title: "Les montres"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: mercato
+    carrier: fardelli
+    cast: [fardelli, josiane, dembo]
+    issues: [gardees, rendues]
+    traces:
+      h6_montres_gardees: "{annee} : deux montres de plongée de Fardelli dorment dans le coffre du recrutement."
+      h6_montres_rendues: "{annee} : {nom} a renvoyé ses montres à Fardelli, par coursier, dans leurs écrins."
+    hint: "Une montre de plongée en acier, « pour le temps que tu me fais gagner »."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: ecrin
+        card: ds.h6.montres.ecrin
+        next: [ { step: coffre, in: [3, 6] } ]
+      - id: coffre
+        card:
+          - { id: ds.h6.montres.coffre, if: "flag('h6_montre_acier')" }
+          - { id: ds.h6.montres.recu }
+        next: [ { step: gamin, in: [2, 5] } ]
+      - id: gamin
+        card:
+          - { id: ds.h6.montres.gamin_coffre, if: "flag('h6_montres_coffre')" }
+          - { id: ds.h6.montres.gamin }
+        next: []
+
+  - id: ds.h6.dimanche
+    title: "Le dimanche de Massenet"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: presse
+    carrier: meneche
+    cast: [meneche, aulard, lea]
+    issues: [source, muet]
+    traces:
+      h6_massenet_source: "{annee} : « Une source au Racing », a dit Massenet à l'antenne. C'était {nom}, à visage découvert."
+      h6_massenet_muet:   "{annee} : {nom} n'a pas parlé à Massenet. Le dimanche, il a parlé quand même."
+    hint: "Deux fauteuils et une table basse, le dimanche soir, sur Télé-Stade."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: studio
+        card: ds.h6.dimanche.studio
+        next: [ { step: antenne, in: [2, 4] } ]
+      - id: antenne
+        card:
+          - { id: ds.h6.dimanche.antenne_source, if: "flag('h6_massenet_voix')" }
+          - { id: ds.h6.dimanche.antenne }
+        next: [ { step: visage, in: [2, 5] } ]
+      - id: visage
+        card: ds.h6.dimanche.visage
+        next: []
+
+  - id: ds.h6.doc
+    title: "La visite médicale"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: corps
+    carrier: sabatier
+    cast: [sabatier, vukic, fardelli]
+    issues: [signe, refuse]
+    traces:
+      h6_doc_signe:  "{annee} : un milieu vendu avec un ménisque fendu. Le Doc a signé ; leur médecin n'a pas regardé."
+      h6_doc_refuse: "{annee} : le Doc a refusé de ne rien voir. {nom} a repris le joueur, et son genou."
+    hint: "La radio d'un genou, tenue contre la fenêtre du cabinet."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: radio
+        card: ds.h6.doc.radio
+        next: [ { step: acheteur, in: [2, 4] } ]
+      - id: acheteur
+        card:
+          - { id: ds.h6.doc.acheteur_aveugle, if: "flag('h6_doc_aveugle')" }
+          - { id: ds.h6.doc.acheteur }
+        next: [ { step: certificat, in: [1, 3] } ]
+      - id: certificat
+        card: ds.h6.doc.certificat
+        next: []
+
+  - id: ds.h6.gamins
+    title: "Les gamins de Barbier"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    theme: formation
+    carrier: barbier
+    cast: [barbier, ferlac, tibo_rance]
+    issues: [oeil, colonnes]
+    traces:
+      h6_oeil_barbier:    "{annee} : un gamin de Trébignac signé au centre sur l'œil de Barbier, contre les colonnes."
+      h6_colonnes_ferlac: "{annee} : les colonnes du stagiaire ont dit non au gamin de Trébignac. {nom} les a crues."
+    hint: "Un vieux recruteur trempé, et un stagiaire qui a déjà sorti ses colonnes."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: averse
+        card: ds.h6.gamins.averse
+        next: [ { step: colonnes, in: [2, 4] } ]
+      - id: colonnes
+        card: ds.h6.gamins.colonnes
+        next: [ { step: signature, in: [2, 5] } ]
+      - id: signature
+        card:
+          - { id: ds.h6.gamins.signature_oeil, if: "flag('h6_oeil_choisi')" }
+          - { id: ds.h6.gamins.signature }
+        next: []
+
+  # ═══════════════════════════════════════════════════════ SAISON 1
+  - id: ds.h6.fils
+    title: "Le fils"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: president
+    carrier: arnaud_vaubourg
+    cast: [arnaud_vaubourg, aulard, josiane]
+    issues: [allie, suspect]
+    traces:
+      h6_arnaud_allie:     "{annee} : Arnaud Vaubourg a débranché son propre fax pour prouver qu'il n'écrivait pas la nuit."
+      h6_arnaud_soupconne: "{annee} : {nom} a demandé des preuves au président du club. Il n'en avait pas."
+    hint: "Un président sur le papier, une lettre de démission jamais envoyée."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: allumettes
+        card: ds.h6.fils.allumettes
+        next: [ { step: ligue, in: [2, 4] } ]
+      - id: ligue
+        card: ds.h6.fils.ligue
+        next: [ { step: brouillon, in: [2, 5] } ]
+      - id: brouillon
+        card: ds.h6.fils.brouillon
+        next: []
+
+  - id: ds.h6.lea
+    title: "L'ordre des faits"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: lea
+    cast: [lea, meneche, vialat]
+    issues: [attend, publie]
+    traces:
+      h6_lea_attend: "{annee} : Léa garde sur un mur de liège les ventes de {nom} et les fax, dans l'ordre des faits."
+      h6_lea_publie: "{annee} : L'Écho a publié la photo de 1999. Léa n'avait qu'un nom ; c'était celui de {nom}."
+    hint: "Une enveloppe sans timbre à la rédaction de L'Écho, et une journaliste qui vérifie."
+    start: [2, 8]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: enveloppe
+        card: ds.h6.lea.enveloppe
+        next: [ { step: liege, in: [2, 4] } ]
+      - id: liege
+        card: ds.h6.lea.liege
+        next: [ { step: ordre, in: [2, 5] } ]
+      - id: ordre
+        card: ds.h6.lea.ordre
+        next: []
+
+  - id: ds.h6.vukic
+    title: "Le banc de Vukić"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: vestiaire
+    carrier: vukic
+    cast: [vukic, klopf, dembo, tibo_rance, sabatier]
+    issues: [soutenu, lache]
+    traces:
+      h6_vukic_soutenu: "{annee} : Vukić a eu son milieu de janvier, un seul nom souligné deux fois."
+      h6_vukic_lache:   "{annee} : pas de milieu pour Vukić. Il a joué avec des gamins et n'a rien dit à la presse."
+    hint: "L'adjoint devenu entraîneur, qui refuse de s'asseoir sur le banc de Vogler."
+    start: [2, 8]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: banc
+        card: ds.h6.vukic.banc
+        next: [ { step: liste, in: [2, 4] } ]
+      - id: liste
+        card: ds.h6.vukic.liste
+        next: [ { step: vestiaire, in: [2, 5] } ]
+      - id: vestiaire
+        card:
+          - { id: ds.h6.vukic.vestiaire_achat, if: "flag('h6_vukic_milieu')" }
+          - { id: ds.h6.vukic.vestiaire }
+        next: []
+
+  - id: ds.h6.malbec
+    title: "Valentienne"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: malbec
+    cast: [malbec, aulard, dembo]
+    issues: [complice, brouille]
+    traces:
+      h6_malbec_complice: "{annee} : le gardien du Racing vendu à Valentienne, au prix qu'un cabinet avait soufflé à Malbec."
+      h6_malbec_brouille: "{annee} : Malbec s'est plaint de {nom} à la Ligue. Le père Vaubourg a pris la plainte au téléphone."
+    hint: "Une loge à Valentienne, un déjeuner, et des prix qu'on souffle aux présidents."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: loge
+        card:
+          - { id: ds.h6.malbec.loge_dembo, if: "flag('h6_dembo_vendu')" }
+          - { id: ds.h6.malbec.loge }
+        next: [ { step: carte, in: [2, 4] } ]
+      - id: carte
+        card: ds.h6.malbec.carte
+        next: [ { step: gardien, in: [2, 5] } ]
+      - id: gardien
+        card: ds.h6.malbec.gardien
+        next: []
+
+  # ═══════════════════════════════════════════════════════ SAISON 2
+  - id: ds.h6.dembo_retour
+    title: "Le retour de Dembo"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: famille
+    carrier: dembo
+    cast: [dembo, malbec, vukic]
+    issues: [salue, evite]
+    traces:
+      h6_dembo_salue: "{annee} : Dembo, trente-neuf ans, a salué la tribune de {nom} avant de saluer le virage."
+      h6_dembo_evite: "{annee} : Dembo est passé devant {nom} dans le couloir de la Rive sans s'arrêter."
+    hint: "Un avant-centre de trente-neuf ans qui oublie encore sa montre partout."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: echauffement
+        statut_ok: [vendu]
+        card:
+          - { id: ds.h6.dembo_retour.echauffement_reste, if: "flag('h6_dembo_reste')" }
+          - { id: ds.h6.dembo_retour.echauffement }
+        next: [ { step: couloir, in: [1, 1] } ]
+      - id: couloir
+        statut_ok: [vendu]
+        card: ds.h6.dembo_retour.couloir
+        next: [ { step: montre, in: [1, 2] } ]
+      - id: montre
+        statut_ok: [vendu]
+        card: ds.h6.dembo_retour.montre
+        next: []
+
+  - id: ds.h6.commission
+    title: "La Commission"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: contrat              # pas `instances` : Vialat (la trame) l'occupe encore à l'ouverture de la saison 2
+    carrier: legruet
+    cast: [legruet, vialat, meneche]
+    issues: [temoin, accuse]
+    traces:
+      h6_commission_temoin: "{annee} : {nom} a témoigné devant la Commission de Berthomier. Le fax y est entré en pièce jointe."
+      h6_commission_accuse: "{annee} : convocation de {nom} devant la Commission. Berthomier a classé le dossier, pour l'instant."
+    hint: "Une convocation à en-tête, et une armoire où finissent les dossiers."
+    start: [1, 5]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: convocation
+        card: ds.h6.commission.convocation
+        next: [ { step: audience, in: [1, 1] } ]
+      - id: audience
+        card: ds.h6.commission.audience
+        next: [ { step: armoire, in: [1, 2] } ]
+      - id: armoire
+        card: ds.h6.commission.armoire
+        next: []
+
+  - id: ds.h6.loge
+    title: "La loge"
+    kind: serie
+    roles: [ds]
+    postulats: [vendre_trente]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: direction
+    carrier: nassir
+    cast: [nassir, arnaud_vaubourg, aulard]
+    issues: [vendu, garde]
+    traces:
+      h6_loge_vente:  "{annee} : Ilyas a fait une offre pour le Racing. Arnaud Vaubourg l'a lue deux fois avant d'appeler son père."
+      h6_loge_refus:  "{annee} : l'offre d'Ilyas pour le Racing est restée dans le tiroir du père Vaubourg."
+    hint: "Une loge, un fonds, et un club qu'on rachète avec ses dettes."
+    start: [1, 5]
+    same_club: true
+    fallback: nouvelles
+    steps:
+      - id: offre
+        card: ds.h6.loge.offre
+        next: [ { step: pere, in: [1, 1] } ]
+      - id: pere
+        card: ds.h6.loge.pere
+        next: [ { step: reponse, in: [1, 2] } ]
+      - id: reponse
+        card: ds.h6.loge.reponse
+        next: []

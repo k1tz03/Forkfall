@@ -1,0 +1,184 @@
+# Histoire 6 — « 23 h 58 » : les réactions (hors créneau, servies au tirage
+# suivant le choix qui les pose). Quelqu'un a vu, a lu, a entendu ; il le dit
+# le lendemain, avec un objet dans la main. Jamais de drame, jamais de `end`.
+#   dembo_montre   ← Valentienne (la vente, si tu gardais sa montre)
+#   dembo_garde    ← Valentienne (il reste)
+#   vukic_casquette← le ruban de Josiane (Vogler parti pour la Vestrie)
+#   barbier_main   ← la doudoune (« Pardon, Lucien »)
+#   arnaud_tiroir  ← le gaucher de Kerbrouck (la photo dans le tiroir du président)
+#   ferlac_poli    ← la maison garde tout (« un garçon poli »)
+#   lea_page       ← la page blanche
+#   vialat_lettre  ← trente pour cent (« Je vous dis tout »)
+#   massenet_lundi ← la vitre (« la vérité, dimanche »)
+#   tibo_maillot   ← le tapis vert (l'ardoise payée)
+cards:
+  - id: ds.h6.re.dembo_montre
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: dembo
+    statut_ok: [vendu]
+    tone: leger
+    once: true
+    text: "Dembo repasse au club-house prendre ses affaires, le sac déjà fermé. Il tend la main, paume ouverte, sans un mot : sa montre, celle que tu gardes depuis l'été."
+    left:
+      label: "Je la lui rends"
+      effects: {relation: {dembo: 1}}
+      answer: "Il la boucle à son poignet sans la regarder. « Elle retarde, {prenom}. Je ne la règle pas : comme ça, je sais d'où je viens. »"
+    right:
+      label: "Je la garde encore"
+      effects: {relation: {dembo: -1}, set: [h6_montre_gardee]}
+      answer: "Il referme la main sur rien. « Garde-la. Tu me la rendras le jour où tu sauras qui m'a vendu. » Il ne dit pas « toi »."
+
+  - id: ds.h6.re.dembo_garde
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: dembo
+    tone: leger
+    once: true
+    text: "Le lendemain, Dembo t'attend à la grille du terrain annexe, en survêtement, à sept heures, ce qu'il n'a jamais fait de sa vie : « Tu m'as gardé. Maintenant, il faut que je marque. »"
+    left:
+      label: "Alors marque"
+      effects: {vestiaire: "+", relation: {dembo: 1}}
+      answer: "Il part courir avant les autres, seul, et le gardien du centre de formation se souvient encore de la séance."
+    right:
+      label: "Dors, plutôt"
+      effects: {relation: {dembo: 1}}
+      answer: "Il rit avant d'avoir fini sa phrase. « Je dormirai en juin. » Il dort déjà sur le banc à neuf heures."
+
+  - id: ds.h6.re.vukic_casquette
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    tone: leger
+    once: true
+    text: "Vukić décroche la casquette verte de Vogler de la patère et te la tend par la visière : « Il l'a oubliée en partant pour la Vestrie. Je ne la porterai pas. Je ne sais pas où la mettre. »"
+    left:
+      label: "Gardez-la au vestiaire"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Il la pose sur le dernier crochet du vestiaire, au-dessus du banc. Les joueurs la touchent en sortant, sans en parler."
+    right:
+      label: "Renvoyez-la-lui"
+      effects: {relation: {vukic: -1}}
+      answer: "Il la met dans une enveloppe kraft, adressée à la Fédération de Vestrie. Elle revient trois semaines plus tard, signée."
+
+  - id: ds.h6.re.barbier_main
+    roles: [ds]
+    arc: mercato
+    tags: [formation, objet]
+    speaker: barbier
+    tone: leger
+    once: true
+    text: "Barbier pose sur ton bureau un rapport écrit à la main, en grosses lettres penchées : « Celui-là, je l'ai écrit moi-même. Il n'est passé par aucune machine. Lis-le quand tu auras le temps. »"
+    left:
+      label: "Je le lis tout de suite"
+      effects: {relation: {barbier: 1}}
+      answer: "Tu mets vingt minutes à lire une page. Il attend debout, sans rien dire, et ne corrige qu'un seul mot que tu as mal lu."
+    right:
+      label: "Je le garderai"
+      effects: {relation: {barbier: 1}}
+      answer: "Tu le ranges dans le tiroir, loin de la pile à taper. Il voit où tu le ranges, et ça lui suffit."
+
+  - id: ds.h6.re.arnaud_tiroir
+    roles: [ds]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: arnaud_vaubourg
+    tone: strategique
+    once: true
+    text: "Arnaud Vaubourg ouvre le tiroir du haut de son bureau : une enveloppe sans timbre, ta photo de 1999 dedans. « Je l'ai ouverte. Je n'aurais pas dû. Mon père ne la verra pas. Pour l'instant. »"
+    left:
+      label: "Donnez-la-moi"
+      effects: {direction: "-", relation: {arnaud_vaubourg: -1}, set: [h6_photo_rendue]}
+      answer: "Il te la tend, puis retient l'enveloppe une seconde de trop. « Je l'ai déjà vue. Ça, vous ne pouvez pas me le reprendre. »"
+    right:
+      label: "Gardez-la, alors"
+      effects: {direction: "+", relation: {arnaud_vaubourg: 1}}
+      answer: "Il referme le tiroir à clé et glisse la clé dans sa poche de gilet, du côté où son père range la sienne."
+
+  - id: ds.h6.re.ferlac_poli
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: ferlac
+    tone: leger
+    once: true
+    text: "Joachim Ferlac pose ton café du matin à côté du carnet : « Vous rentrez tard, ces temps-ci ; le gardien me l'a dit. Faites attention à vous. Merci. » Il repart, revient. « Merci. »"
+    left:
+      label: "Merci, Joachim"
+      effects: {relation: {ferlac: 1}}
+      answer: "Il sourit, gêné, comme un garçon bien élevé qu'on remercie d'avoir dit merci. Sa machine reprend avant que la porte se ferme."
+    right:
+      label: "De quoi, merci ?"
+      effects: {relation: {ferlac: -1}, set: [h6_merci_note]}
+      answer: "« Pour le café. Pour tout. C'est une habitude, ma mère disait toujours deux fois. » Il le dit sans rougir. Tu le notes."
+
+  - id: ds.h6.re.lea_page
+    roles: [ds]
+    arc: presse
+    tags: [presse, telephone]
+    speaker: lea
+    tone: strategique
+    once: true
+    text: "Léa t'appelle à sept heures, de la rédaction : « Quelqu'un nous a envoyé une page blanche cette nuit, par fax, à 23 h 58. Le directeur dit que c'est une erreur. C'est vous, l'erreur ? »"
+    left:
+      label: "On m'en a envoyé une aussi"
+      effects: {relation: {lea: 1}, set: [h6_lea_page]}
+      answer: "Un stylo gratte. « Deux pages blanches à la même minute, {nom}. Ce n'est pas une erreur, c'est un calendrier. »"
+    right:
+      label: "Je ne sais rien"
+      effects: {relation: {lea: -1}}
+      answer: "« Moi non plus. Mais je garde la page. » Elle raccroche. Tu l'imagines la ranger dans une pochette plastique."
+
+  - id: ds.h6.re.vialat_lettre
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, objet]
+    speaker: vialat
+    tone: leger
+    once: true
+    text: "Une lettre de la Commission, une seule page tapée, à ton nom. Madame Vialat y a ajouté une ligne à la main, sous la signature : « Notez l'heure de chaque fax. L'heure ne ment pas. »"
+    left:
+      label: "Je note les heures"
+      effects: {relation: {vialat: 1}, set: [h6_heures_notees]}
+      answer: "Tu commences un relevé au dos du calendrier : 23 h 58, 23 h 58, 23 h 58. La colonne est parfaite, et c'est ce qui fait peur."
+    right:
+      label: "Je range la lettre"
+      effects: {relation: {vialat: 1}}
+      answer: "Tu la ranges dans le tiroir du bas, avec les pages blanches. Elle tient mieux qu'elles : c'est du papier ordinaire."
+
+  - id: ds.h6.re.massenet_lundi
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: meneche
+    tone: strategique
+    once: true
+    text: "Lundi, Massenet t'appelle de sa voiture : « Après l'émission, j'ai reçu un fax à la rédaction, à 23 h 58. Une page, un seul mot : MERCI. Vous voyez quelqu'un qui remercie, vous ? »"
+    left:
+      label: "Je vois quelqu'un, oui"
+      effects: {relation: {meneche: 1}, set: [h6_merci_massenet], var: {h6_indices: "+1"}}
+      answer: "« Moi aussi. Quelqu'un de bien élevé. » Il coupe le moteur pour mieux réfléchir, et te laisse écouter le silence."
+    right:
+      label: "Personne"
+      effects: {relation: {meneche: -1}}
+      answer: "« Personne ne remercie, dans ce métier. C'est pour ça que je l'ai gardé. » Il raccroche en klaxonnant quelqu'un."
+
+  - id: ds.h6.re.tibo_maillot
+    roles: [ds]
+    arc: vestiaire
+    tags: [formation, objet]
+    speaker: tibo_rance
+    tone: leger
+    once: true
+    text: "Tibo Rancé frappe à ton bureau, un maillot plié sous le bras, celui de son premier match en réserve : « Mon père m'a dit, pour l'ardoise. Il ne vous dira pas merci. Moi, je vous donne ça. »"
+    left:
+      label: "Je le prends"
+      effects: {tribunes: "+", relation: {tibo_rance: 1}}
+      answer: "Le maillot sent la lessive de la buanderie municipale. Tu le poses sur le dossier de ta chaise ; il y restera."
+    right:
+      label: "Tu en auras d'autres"
+      effects: {relation: {tibo_rance: 1}}
+      answer: "Il le remet sous son bras, sans insister. « J'en aurai d'autres, oui. » Il le dit comme une promesse qu'il te fait, à toi."
