@@ -1,0 +1,843 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les cartes du prologue et du script
+# (content/arcs/entraineur/h1_script.yaml, arcs `en.h1.prologue` et
+# `en.h1.visages`).
+#
+# Ce que le joueur sait, et ce que la ville ignore : tu es l'enfant d'Henri
+# Ravenel, numéro 5 et capitaine du Racing de 1974, accusé d'avoir vendu la
+# finale, sorti de la Rive en mars 1975. Tu as pris le car de six heures avec
+# ta mère, et son nom à elle ({nom}). Personne ne le sait à Aubérive, sauf
+# Gégé, qui t'a reconnu sur la photo de L'Écho en juin.
+#
+# Les voix (charte d'écriture § 3) : Gégé dit « nous », retient les dates et
+# les sommes, ne ment jamais, se tait. Vaubourg est pressé, possessif, tape sa
+# chevalière sur ce qu'il touche (la chevalière revient : c'est elle que le
+# neveu de Gégé décrira à Lhoste). Josiane avertit par un geste. Vukić dit
+# l'heure et ce qu'il a vu. Camille parle de ce que la ville coûte. Gigi est
+# lent et regarde trop longtemps. Les intermèdes n'ont pas de locuteur : ils
+# déforment, ils ne mentent pas.
+#
+# Le protagoniste peut être une femme : aucun accord sur « tu » sans
+# `{pg, select, f{e} other{}}`. Henri est « ton père » ; Gégé dit « le tien ».
+# Les ancres lisent `stats.clubs < 2` : hors d'Aubérive, le livre se tait.
+cards:
+  # ═══════════════════════════════════════════════════════════ LE PROLOGUE
+  # 1/6 · La photo — l'escalier du club-house, les deux clés.
+  - id: en.h1.pro1_photo
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Dans l'escalier, la photo de la finale de 1974 : le cinquième visage, gratté au couteau jusqu'au carton. Josiane tend deux clés : « Le bureau, le local à ballons. Les archives, on n'y monte plus. »"
+    left:
+      label: "Je prends les deux"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Elle te les donne sans quitter la photo des yeux. « Personne ne l'a décrochée. Personne ne l'a réparée non plus. »"
+    right:
+      label: "Le local me suffit"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Elle garde la clé du bureau. En remontant, elle redresse le cadre d'un doigt, sans regarder le trou."
+
+  - id: en.h1.pro1_photo_argent
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Dans l'escalier, la photo de la finale de 1974 porte une étiquette de la boutique : à vendre. Le cinquième visage est gratté au couteau. Josiane tend deux clés : « Le bureau, le local à ballons. »"
+    left:
+      label: "Je prends les deux"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "« Le président vend tout ce qui est encadré, cet été. » Elle décolle l'étiquette avec l'ongle, puis la recolle, droite."
+    right:
+      label: "Le local me suffit"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Elle garde la clé du bureau. « Les archives, on n'y monte plus. Elles, au moins, ne sont pas à vendre. »"
+
+  # 2/6 · Le chant — la Tribune Nord vide ; ton nom est déjà dedans.
+  - id: en.h1.pro2_chant
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "La Nord vide. Trente voix répètent un chant où ton nom est déjà, et Gégé bat la mesure du plat de la main sur le grillage : « On l'a appris en juin. Tu veux savoir pourquoi on t'aime déjà ? »"
+    left:
+      label: "Dites-le-moi"
+      effects: {vestiaire: "-", relation: {gege: 1}}
+      answer: "« Parce que tu fais tenir les équipes qui n'ont rien. » Il sourit comme on cache une carte. « C'est ce qu'on dira aux journaux. »"
+    right:
+      label: "Je ne veux pas savoir"
+      effects: {direction: "+"}
+      answer: "« Tant mieux. » Sa main s'arrête. Au couplet suivant, les trente voix ralentissent sur ton nom, exprès, pour que tu l'entendes."
+
+  - id: en.h1.pro2_chant_president
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, direction]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "La Nord vide. Trente voix répètent un chant où ton nom est déjà. Gégé bat la mesure du plat de la main : « Le président croit qu'il t'a trouvé tout seul, {toi}. On le laisse croire ? »"
+    left:
+      label: "Qui m'a trouvé, alors ?"
+      effects: {vestiaire: "-", relation: {gege: 1}}
+      answer: "« Quelqu'un qui lit L'Écho. » Il tapote le journal plié dans sa poche : ta photo en page trois, entourée au stylo bille."
+    right:
+      label: "Laissez-le croire"
+      effects: {direction: "+"}
+      answer: "Il hoche la tête. « On sait faire. » Derrière lui, un ancien fait répéter ton nom aux plus jeunes, syllabe par syllabe."
+
+  # 3/6 · Le café — Vukić a vu ce que le président a vu.
+  - id: en.h1.pro3_cafe
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: vukic
+    tone: leger
+    once: true
+    text: "Vukić pose deux tasses, la sienne ébréchée : « Le président passe devant cette porte à six heures et demie. Ce matin, tu as regardé la photo de l'escalier, et lui t'a regardé faire. Demain ? »"
+    left:
+      label: "Je serai là avant lui"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: 1}}
+      answer: "Il te trouve devant la machine à six heures vingt. Il ne dit rien. Dans l'escalier, il ne lève pas les yeux vers la photo."
+    right:
+      label: "J'arrive avec le groupe"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu arrives à sept heures avec les joueurs. Vukić note l'heure, et une autre ligne dessous, qu'il cache de la main."
+
+  # 4/6 · La lettre — rue des Lilas. La graine que la saison 3 ouvre.
+  - id: en.h1.pro4_lettre
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: camille
+    tone: leger
+    once: true
+    text: "Rue des Lilas, deux pièces au troisième. Camille vide un carton et lève une enveloppe jaunie : « Ta lettre. Tu la changes de poche à chaque veste depuis quinze ans. Je la range où, ici ? »"
+    left:
+      label: "Dans ma veste"
+      effects: {set: [h1_lettre_sur_soi]}
+      answer: "Elle te la tend sans la déplier. « Tu ne l'as jamais lue jusqu'au bout. Moi non plus, rassure-toi. »"
+    right:
+      label: "Dans le tiroir du bas"
+      effects: {relation: {camille: 1}}
+      answer: "Elle la glisse sous les quittances. « Quinze ans que je ne te demande rien sur cette ville. Ce soir non plus. »"
+
+  # 5/6 · Les quatre — dits par le gardien de quarante et un ans.
+  - id: en.h1.pro5_quatre
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vecchio
+    tone: leger
+    once: true
+    text: "Gigi Vecchio scotche ses doigts au bord du terrain annexe : « Ici, quatre décident si tu restes : le vestiaire, les tribunes, le président, la caisse. Dix-neuf entraîneurs, toujours un des quatre. »"
+    left:
+      label: "Je retiens les quatre"
+      effects: {}
+      answer: "Il serre le scotch avec les dents. En partant, il se retourne une fois, comme pour vérifier qu'il ne s'est pas trompé de visage."
+    right:
+      label: "Je retiens les quatre"
+      effects: {}
+      answer: "Il serre le scotch avec les dents. En partant, il se retourne une fois, comme pour vérifier qu'il ne s'est pas trompé de visage."
+
+  # 6/6 · Le seuil — l'escalier condamné depuis 1977.
+  - id: en.h1.pro6_rendezvous
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane, la main sur le combiné : « Le président vous attend au premier. Il a écrit un chiffre sur son sous-main. Prenez l'escalier de gauche ; l'autre est condamné depuis 1977. »"
+    left:
+      label: "Monter au premier"
+      effects: {}
+      answer: "L'escalier craque à la neuvième marche, devant la photo. Le temps de monter, tu choisis une phrase ; lui a déjà son chiffre."
+    right:
+      label: "Monter au premier"
+      effects: {}
+      answer: "L'escalier craque à la neuvième marche, devant la photo. Le temps de monter, tu choisis une phrase ; lui a déjà son chiffre."
+
+  # ═══════════════════════════════════════════════ SAISON 1 — LE VISAGE (S0)
+  # Créneau 1 · Trois mille visages (scène 3). Les masques se lèvent ; l'ancre
+  # ouvre les masques et le maillot, et ferme les nuits génériques qui
+  # doubleraient le livre (voir l'en-tête de l'arc).
+  - id: en.h1.a1_presentation
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Le match de présentation. Au coup d'envoi, la Nord se lève : trois mille fois ton visage en carton, noir sur blanc. Dans la loge, Vaubourg, le téléphone à l'oreille : « Qui a payé ça ? Pas moi. »"
+    left:
+      label: "Je salue le virage"
+      effects:
+        vestiaire: "-"
+        relation: {gege: 1}
+        set: [h1_masques_tifo, h1_salut_virage]
+        react: en.h1.re.vaubourg_salut
+        schedule: [{card: en.h1.masques.biere, in: [1, 1]}, {card: en.h1.maillot.enchere, in: [3, 4]}]
+        arc: [{id: en.sb.local_feu, status: abandonne}, {id: en.sb.cercueil, status: abandonne}, {id: en.sb.devant_chez_toi, status: abandonne}, {id: en.sb.appel_nuit, status: abandonne}, {id: en.sb.laverie, status: abandonne}, {id: en.sb.perquisition, status: abandonne}, {id: en.sb.ancien, status: abandonne}, {id: en.evt.voiture, status: abandonne}]
+      answer: "Trois mille mains se lèvent avec la tienne. Au premier rang, un enfant porte ton visage par-dessus le sien et ne te quitte pas des yeux."
+    right:
+      label: "Je regarde le terrain"
+      effects:
+        direction: "+"
+        tribunes: "-"
+        set: [h1_masques_tifo]
+        schedule: [{card: en.h1.masques.biere, in: [1, 1]}, {card: en.h1.maillot.enchere, in: [3, 4]}]
+        arc: [{id: en.sb.local_feu, status: abandonne}, {id: en.sb.cercueil, status: abandonne}, {id: en.sb.devant_chez_toi, status: abandonne}, {id: en.sb.appel_nuit, status: abandonne}, {id: en.sb.laverie, status: abandonne}, {id: en.sb.perquisition, status: abandonne}, {id: en.sb.ancien, status: abandonne}, {id: en.evt.voiture, status: abandonne}]
+      answer: "Tu fixes le rond central. Derrière toi, trois mille fois ta figure regarde la même pelouse, sans un geste. Le silence tient une minute."
+
+  - id: en.h1.a1_presentation_tribune
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Le match de présentation. Gégé, dos au terrain, lève un bras : la Nord se lève avec trois mille fois ton visage en carton. Il se retourne vers le banc : « Tu nous dois un salut, {toi}. »"
+    left:
+      label: "Je salue le virage"
+      effects:
+        vestiaire: "-"
+        relation: {gege: 1}
+        set: [h1_masques_tifo, h1_salut_virage]
+        react: en.h1.re.vaubourg_salut
+        schedule: [{card: en.h1.masques.biere, in: [1, 1]}, {card: en.h1.maillot.enchere, in: [3, 4]}]
+        arc: [{id: en.sb.local_feu, status: abandonne}, {id: en.sb.cercueil, status: abandonne}, {id: en.sb.devant_chez_toi, status: abandonne}, {id: en.sb.appel_nuit, status: abandonne}, {id: en.sb.laverie, status: abandonne}, {id: en.sb.perquisition, status: abandonne}, {id: en.sb.ancien, status: abandonne}, {id: en.evt.voiture, status: abandonne}]
+      answer: "Trois mille mains se lèvent avec la tienne. Dans la loge, Vaubourg cherche au téléphone qui a payé l'imprimeur."
+    right:
+      label: "Je regarde le terrain"
+      effects:
+        direction: "+"
+        tribunes: "-"
+        relation: {gege: -1}
+        set: [h1_masques_tifo]
+        schedule: [{card: en.h1.masques.biere, in: [1, 1]}, {card: en.h1.maillot.enchere, in: [3, 4]}]
+        arc: [{id: en.sb.local_feu, status: abandonne}, {id: en.sb.cercueil, status: abandonne}, {id: en.sb.devant_chez_toi, status: abandonne}, {id: en.sb.appel_nuit, status: abandonne}, {id: en.sb.laverie, status: abandonne}, {id: en.sb.perquisition, status: abandonne}, {id: en.sb.ancien, status: abandonne}, {id: en.evt.voiture, status: abandonne}]
+      answer: "Tu ne te retournes pas. Gégé baisse le bras lentement ; trois mille visages restent levés, les tiens, à attendre."
+
+  - id: en.h1.a1_presentation_argent
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, caisse, direction]
+    speaker: aulard
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Le match de présentation. La Nord se lève avec trois mille fois ton visage en carton. Vaubourg te tend une facture par-dessus la balustrade : « Cartonnages de la Rive. Qui a commandé ça ? Pas moi. »"
+    left:
+      label: "Je salue le virage"
+      effects:
+        caisse: "-"
+        relation: {gege: 1}
+        set: [h1_masques_tifo, h1_salut_virage]
+        react: en.h1.re.vaubourg_salut
+        schedule: [{card: en.h1.masques.biere, in: [1, 1]}, {card: en.h1.maillot.enchere, in: [3, 4]}]
+        arc: [{id: en.sb.local_feu, status: abandonne}, {id: en.sb.cercueil, status: abandonne}, {id: en.sb.devant_chez_toi, status: abandonne}, {id: en.sb.appel_nuit, status: abandonne}, {id: en.sb.laverie, status: abandonne}, {id: en.sb.perquisition, status: abandonne}, {id: en.sb.ancien, status: abandonne}, {id: en.evt.voiture, status: abandonne}]
+      answer: "Vaubourg plie la facture en quatre et la glisse dans ta poche de survêtement : « Alors c'est toi qui paies. »"
+    right:
+      label: "Je regarde le terrain"
+      effects:
+        direction: "+"
+        tribunes: "-"
+        set: [h1_masques_tifo]
+        schedule: [{card: en.h1.masques.biere, in: [1, 1]}, {card: en.h1.maillot.enchere, in: [3, 4]}]
+        arc: [{id: en.sb.local_feu, status: abandonne}, {id: en.sb.cercueil, status: abandonne}, {id: en.sb.devant_chez_toi, status: abandonne}, {id: en.sb.appel_nuit, status: abandonne}, {id: en.sb.laverie, status: abandonne}, {id: en.sb.perquisition, status: abandonne}, {id: en.sb.ancien, status: abandonne}, {id: en.evt.voiture, status: abandonne}]
+      answer: "Tu laisses la facture dans sa main. Il la regarde, puis la Nord, puis toi, et il compose un numéro sans quitter tes yeux."
+
+  # Créneaux 10-11 · Le local (scène 7). Le grand retournement de la saison :
+  # Gégé sait. En 1971, le capitaine tenait l'autre bout de la bâche.
+  - id: en.h1.a2_local
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Le local, sous la Nord. Gégé déroule une bâche jaunie : LE PRÉSIDENT VEND, LE VIRAGE RESTE. « Mon père l'a peinte en 1971. Le tien en tenait l'autre bout, ce jour-là. » Il attend."
+    left:
+      label: "Qu'est-ce que tu veux ?"
+      effects: {direction: "-", relation: {gege: 1}, set: [h1_local_aveu], schedule: [{card: en.h1.massenet.article, in: [2, 4]}]}
+      answer: "« Que tu restes. Le reste, on s'en occupe. » Il roule la bâche comme on plie un drapeau sur une caisse, sans te quitter des yeux."
+    right:
+      label: "Tu te trompes de visage"
+      effects: {direction: "+", relation: {gege: -1}, schedule: [{card: en.h1.massenet.article, in: [2, 4]}]}
+      answer: "« Alors on se trompe à trois mille. » Il roule la bâche lentement. À la porte, il te tend quand même une bière, tiède."
+
+  - id: en.h1.a2_local_phrase
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, moment]
+    speaker: gege
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Le local. Gégé déroule la bâche de 1971 : « Mon père l'a peinte. Le tien en tenait l'autre bout, ce jour-là. Tu as dit que ceux de 74 paieraient. Lui a payé pour eux. » Il attend."
+    left:
+      label: "Qu'est-ce que tu veux ?"
+      effects: {direction: "-", relation: {gege: 1}, set: [h1_local_aveu], schedule: [{card: en.h1.massenet.article, in: [2, 4]}]}
+      answer: "« Que tu tiennes parole. On t'a entendu{pg, select, f{e} other{}}. » Il roule la bâche comme un drapeau, sans te quitter des yeux."
+    right:
+      label: "Tu te trompes de visage"
+      effects: {direction: "+", relation: {gege: -1}, schedule: [{card: en.h1.massenet.article, in: [2, 4]}]}
+      answer: "« Alors c'était qui, à la buvette, avec ta bouche ? » Il roule la bâche sans se presser et te laisse la porte ouverte."
+
+  # Créneau 12 · Le feu au local (sombre). Qui a pris les masques, qui a mis le
+  # feu : la question de la saison 2. Gégé ne ment pas ; il ne dit pas tout.
+  - id: en.h1.a3_feu
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, sombre]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Minuit, sous la Nord. Le local brûle. Gégé, la bâche de son père sous le bras, compte les cartons sortis à temps : « Il manque quatre cent douze masques. Le radiateur, ils diront. »"
+    left:
+      label: "Qui a pris les masques ?"
+      effects: {direction: "+", set: [h1_incendie]}
+      answer: "Il recompte, à voix haute, jusqu'au bout. Puis il te regarde : « Pas toi. C'est déjà ça. » Les pompiers arrivent sans sirène."
+    right:
+      label: "On refera le local"
+      effects: {caisse: "-", relation: {gege: 1}, set: [h1_incendie]}
+      answer: "Il hoche la tête sans quitter le feu des yeux. « Le radiateur, tu le choisiras toi-même. Comme ça, si ça recommence, on saura qui. »"
+
+  - id: en.h1.a3_feu_vendus
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, sponsors, sombre]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Minuit, sous la Nord. Le local brûle. Gégé compte les cartons sortis : « Quatre cent douze, il en manque, je crois. Depuis que ta boutique les vend quinze francs, mon compte ne veut plus rien dire. »"
+    left:
+      label: "Qui a pris les masques ?"
+      effects: {direction: "+", relation: {gege: -1}, set: [h1_incendie]}
+      answer: "« N'importe qui avec quinze francs. » Il jette un carton vide dans les flammes. « Tu leur as vendu ta figure. Elle sort seule, maintenant. »"
+    right:
+      label: "On refera le local"
+      effects: {caisse: "-", relation: {gege: 1}, set: [h1_incendie]}
+      answer: "Il accepte d'un signe de tête, pour une fois sans compter. La bâche de son père ne quitte pas son bras de la nuit."
+
+  # Créneau 14 · Intermède. La neuvième marche : la photo déformée dit vrai,
+  # le cinquième visage ressemble au tien.
+  - id: en.h1.a4_marche
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede, decor]
+    tone: leger
+    once: true
+    when: "stats.clubs < 2"
+    text: "Tu montes l'escalier du club-house et il ne finit pas. À la neuvième marche, la photo de 1974 est humide comme une peinture fraîche. Le cinquième visage n'est plus gratté : c'est le tien."
+    left:
+      label: "Je monte encore"
+      effects: {}
+      answer: "Tu te réveilles dans le noir, une main sur le montant du lit. Dans l'escalier de l'immeuble, quelqu'un descend sans allumer."
+    right:
+      label: "Je monte encore"
+      effects: {}
+      answer: "Tu te réveilles dans le noir, une main sur le montant du lit. Dans l'escalier de l'immeuble, quelqu'un descend sans allumer."
+
+  # Créneau 17 · L'homme sous la fenêtre (scène 8, sombre). Le masque immobile.
+  - id: en.h1.a5_fenetre
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, tribunes, sombre]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Mardi, minuit, rue des Lilas. En bas, entre deux voitures, un homme en manteau porte ton visage. Il ne bouge pas. Camille a éteint la lampe : « Il est là depuis onze heures. Il attend comme toi. »"
+    left:
+      label: "Je descends"
+      effects: {relation: {camille: -1}, set: [h1_masque_sous_fenetre], react: en.h1.re.camille_manteau}
+      answer: "Quand tu pousses la porte de l'immeuble, il n'y a plus personne. Entre les deux voitures, un masque plié en quatre, encore tiède."
+    right:
+      label: "J'appelle la police"
+      effects: {direction: "+", relation: {gege: -1}, set: [h1_masque_sous_fenetre, h1_police_fenetre]}
+      answer: "La patrouille arrive à une heure dix. Personne entre les voitures. Le brigadier te dévisage longtemps, comme on compare deux photos."
+
+  - id: en.h1.a5_fenetre_seul
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, tribunes, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Mardi, minuit, rue des Lilas. Tu éteins la lampe toi-même. En bas, entre deux voitures, un homme en manteau porte ton visage. Depuis onze heures, il n'a pas bougé d'un pas."
+    left:
+      label: "Je descends"
+      effects: {set: [h1_masque_sous_fenetre]}
+      answer: "Quand tu pousses la porte de l'immeuble, il n'y a plus personne. Entre les deux voitures, un masque plié en quatre, encore tiède."
+    right:
+      label: "J'appelle la police"
+      effects: {direction: "+", relation: {gege: -1}, set: [h1_masque_sous_fenetre, h1_police_fenetre]}
+      answer: "La patrouille arrive à une heure dix. Personne entre les voitures. Le brigadier te dévisage longtemps, comme on compare deux photos."
+
+  # ═══════════════════════════════════════════════ SAISON 2 — LES NUITS (S1)
+  # Créneau 1 · La berline (scène 10, sombre). Le masque sur le capot. L'ancre
+  # ouvre le Quai et l'inspecteur (la vitrine de la banque attend le ticket du
+  # maillot, en saison 3 : neuf fils ouverts à la fois débordaient la file du
+  # metteur en scène).
+  - id: en.h1.b1_berline
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, ultras, sombre]
+    speaker: aulard
+    lieu: parking
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Une heure du matin, parking du stade. La berline du président brûle ; sur le capot, un masque posé bien droit. Vaubourg, en pyjama sous son manteau : « Dis-moi que ce n'est pas toi. »"
+    left:
+      label: "Ce n'est pas moi"
+      effects: {direction: "+", set: [h1_berline_brulee], schedule: [{card: en.h1.quai.offre, in: [1, 1]}, {card: en.h1.lhoste.bureau, in: [2, 3]}]}
+      answer: "« Ils avaient ta tête. » Il ne te croit pas, ou il te croit trop. Le capot se soulève tout seul dans la chaleur, comme une bouche."
+    right:
+      label: "Demandez-vous pourquoi"
+      effects: {direction: "--", tribunes: "+", relation: {aulard: -1}, set: [h1_berline_brulee], schedule: [{card: en.h1.quai.offre, in: [1, 1]}, {card: en.h1.lhoste.bureau, in: [2, 3]}]}
+      answer: "Il te regarde comme un homme qui refait ses comptes. Les pompiers arrivent ; il leur montre le masque, pas la voiture."
+
+  - id: en.h1.b1_berline_president
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, ultras, sombre]
+    speaker: aulard
+    lieu: parking
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Une heure du matin. La berline du président brûle, un masque sur le capot, 1977 griffé dans la portière. Vaubourg, en pyjama : « L'année où je suis devenu président. Pourquoi 1977, à ton avis ? »"
+    left:
+      label: "Je n'en sais rien"
+      effects: {direction: "+", set: [h1_berline_brulee], schedule: [{card: en.h1.quai.offre, in: [1, 1]}, {card: en.h1.lhoste.bureau, in: [2, 3]}]}
+      answer: "« Moi non plus. » Il le dit trop vite. Il frotte sa chevalière contre son pouce, encore et encore, jusqu'aux pompiers."
+    right:
+      label: "Demandez à vos comptes"
+      effects: {direction: "--", tribunes: "+", relation: {aulard: -1}, set: [h1_berline_brulee], schedule: [{card: en.h1.quai.offre, in: [1, 1]}, {card: en.h1.lhoste.bureau, in: [2, 3]}]}
+      answer: "Il ne répond pas. Il regarde brûler la portière jusqu'à ce que le 1977 disparaisse, comme s'il attendait exactement ça."
+
+  # Créneau 11 · La passerelle (sombre). On ne voit rien : un cri, des pas, ton
+  # visage trois fois. La carte d'après est le coup de fil de six heures.
+  - id: en.h1.b2_passerelle
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes, ultras, sombre]
+    lieu: rue
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Vingt-trois heures, sur le quai. Un cri sous la passerelle, un seul. Puis des pas qui courent vers toi : trois silhouettes passent sous la lampe du quai, ton visage sur les trois."
+    left:
+      label: "Je les suis"
+      effects: {set: [h1_passerelle], react: en.h1.re.vukic_six_heures}
+      answer: "Au coin de la friche, le dernier se retourne et lève la main : ton salut du dimanche, exactement. Puis plus rien que les palettes."
+    right:
+      label: "Je reste dans l'ombre"
+      effects: {set: [h1_passerelle], react: en.h1.re.vukic_six_heures}
+      answer: "L'un d'eux s'arrête devant toi une seconde, comme devant un miroir, la tête un peu penchée. Puis il repart en courant."
+
+  # Créneau 14 · Intermède (scène 14). Le virage chante avec ta voix ; une
+  # seule tête sans masque, au dernier rang, regarde la Rive.
+  - id: en.h1.b3_virage
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede, tribunes]
+    tone: leger
+    once: true
+    when: "stats.clubs < 2"
+    text: "La Nord est pleine. Trois mille personnes portent ton visage et chantent avec ta voix, même tes reprises de souffle. Au dernier rang, une seule tête sans masque regarde ailleurs, vers la Rive."
+    left:
+      label: "Je monte les marches"
+      effects: {}
+      answer: "Plus tu montes, plus le dernier rang recule. La tête sans masque a les cheveux mouillés. Tu te réveilles avant qu'elle se retourne."
+    right:
+      label: "Je monte les marches"
+      effects: {}
+      answer: "Plus tu montes, plus le dernier rang recule. La tête sans masque a les cheveux mouillés. Tu te réveilles avant qu'elle se retourne."
+
+  # Créneau 15 · La saisie (scène 15). Six heures du matin, rue des Lilas :
+  # Lhoste fait enlever ta voiture, un masque sous scellés dans le coffre. Ce
+  # n'est pas un soir. Au coin, le neveu de Gégé, qui ne court pas.
+  - id: en.h1.b4_saisie
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Six heures, rue des Lilas. Lhoste fait monter ta voiture sur une dépanneuse. Dans le coffre, sous scellés, un masque que tu n'y as pas mis. Au coin, un gamin porte ton visage. Il ne court pas."
+    left:
+      label: "Ce masque n'est pas à moi"
+      effects: {direction: "+", set: [h1_voiture_saisie], var: {saisie_vehicules: "+1"}}
+      answer: "Lhoste écrit sur le capot : « {nom}, ne reconnaît pas l'objet. » Au coin, le gamin soulève son masque pour mieux voir."
+    right:
+      label: "Prenez-la"
+      effects: {tribunes: "+", relation: {lhoste: 1}, set: [h1_voiture_saisie], var: {saisie_vehicules: "+1"}}
+      answer: "Tu tends les clés avant qu'il les demande. Au coin, le gamin lève la main vers toi : ton salut du dimanche, et il la garde levée."
+
+  - id: en.h1.b4_saisie_quai
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Six heures, rue des Lilas. Lhoste fait monter ta voiture sur une dépanneuse. Sous scellés : un masque que tu n'y as pas mis, et l'enveloppe du Quai, que tu y avais mise. Au coin, un gamin te regarde."
+    left:
+      label: "Ce masque n'est pas à moi"
+      effects: {direction: "-", set: [h1_voiture_saisie], var: {saisie_vehicules: "+1"}}
+      answer: "« Et l'enveloppe ? » Lhoste attend, le stylo levé. Comme rien ne vient, il écrit une ligne très courte, et la souligne."
+    right:
+      label: "Prenez-la"
+      effects: {direction: "--", set: [h1_voiture_saisie], var: {saisie_vehicules: "+1"}}
+      answer: "Tu tends les clés. L'agent qui porte l'enveloppe la tient du bout des doigts, comme une chose mouillée. Au coin, le gamin n'a pas bougé."
+
+  # ═══════════════════════════════════════════ SAISON 3 — LE DERNIER SOIR (S2)
+  # Créneau 1 · La lettre (scène 16), lue jusqu'au bout. Le lendemain matin, la
+  # photo de l'escalier revient sur ton bureau, le cinquième visage intact.
+  - id: en.h1.c1_lettre
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment]
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Deux heures du matin. Tu déplies la lettre d'Henri Ravenel jusqu'au bout, pour la première fois : « J'ai fait ce qu'il fallait pour ta mère. Le reste, Vaubourg le sait. Ne reviens pas. »"
+    left:
+      label: "Je la brûle"
+      effects: {set: [h1_lettre_lue, h1_lettre_brulee], react: en.h1.re.photo_rendue}
+      answer: "Elle brûle mal, le papier est trop vieux. Il reste un coin avec sa signature ; tu le gardes sans savoir pourquoi."
+    right:
+      label: "Je la garde sur moi"
+      effects: {set: [h1_lettre_lue], react: en.h1.re.photo_rendue}
+      answer: "Tu la replies sur ses anciens plis. Elle reprend sa place dans ta poche intérieure, plus lourde qu'avant."
+
+  - id: en.h1.c1_lettre_tiroir
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Deux heures du matin. Camille pose la lettre dépliée sur la table : « Jusqu'au bout, cette fois. » Tu lis : « J'ai fait ce qu'il fallait pour ta mère. Le reste, Vaubourg le sait. Ne reviens pas. »"
+    left:
+      label: "Je la brûle"
+      effects: {relation: {camille: -1}, set: [h1_lettre_lue, h1_lettre_brulee], react: en.h1.re.photo_rendue}
+      answer: "Camille ouvre la fenêtre pour la fumée, sans un mot. Il reste un coin avec la signature ; elle le glisse dans ton portefeuille."
+    right:
+      label: "Je la garde"
+      effects: {relation: {camille: 1}, set: [h1_lettre_lue], react: en.h1.re.photo_rendue}
+      answer: "Camille la replie sur ses vieux plis. « On n'écrit pas “ne reviens pas” à quelqu'un qui ne reviendra pas. Il savait. »"
+
+  # Créneau 10 · L'ordre sans visage, ou le cercueil si le virage s'est retourné
+  # (sombre). L'ordre donne le rendez-vous de l'acte final, des mois d'avance.
+  - id: en.h1.c2_appel
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, telephone, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Trois heures du matin, le téléphone. Une voix calme, qui ne se presse pas : « Le dernier samedi, on finit. Mets ton masque. » On a raccroché avant ton premier mot."
+    left:
+      label: "Je raccroche"
+      effects: {direction: "+", set: [h1_appel]}
+      answer: "Tu reposes le combiné sur une ligne morte. Jusqu'au jour, tu restes près de l'appareil, au cas où il sonnerait pour dire le contraire."
+    right:
+      label: "Qui êtes-vous ?"
+      effects: {tribunes: "+", set: [h1_appel]}
+      answer: "Rien. Puis, très loin derrière le silence, quelqu'un fredonne ton nom sur l'air du dimanche, et la ligne se coupe."
+
+  - id: en.h1.c2_cercueil
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, sombre]
+    speaker: vukic
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "Six heures, devant la grille du stade : un cercueil en contreplaqué, et dessus, peint en blanc, RAVENEL. Vukić : « Il était là à cinq heures. Les jardiniers font le tour pour ne pas passer devant. »"
+    left:
+      label: "Je l'ouvre"
+      effects: {tribunes: "-", set: [h1_cercueil]}
+      answer: "Vide, sauf un masque au fond : ton visage, les yeux découpés au cutter. Le soir même, toute la ville sait comment tu t'appelles."
+    right:
+      label: "Faites-le enlever"
+      effects: {direction: "+", set: [h1_cercueil]}
+      answer: "Les jardiniers l'emportent sur une brouette. À midi, au Corner, on dit déjà « Ravenel » en te regardant entrer."
+
+  # Créneau 14 · Intermède. Le car de six heures, 1975 ; ton père derrière la
+  # vitre du café dit trois mots que la lettre dit aussi.
+  - id: en.h1.c3_car
+    roles: [entraineur]
+    arc: moment
+    tags: [intermede, famille]
+    tone: leger
+    once: true
+    when: "stats.clubs < 2"
+    text: "Six heures, la gare routière, 1975. Ta mère tient les deux billets. Derrière la vitre du café, ton père, en maillot numéro cinq, parle sans un bruit. Le car démarre. Tu as vingt-trois ans."
+    left:
+      label: "Je lis sur ses lèvres"
+      effects: {}
+      answer: "Trois mots, toujours les mêmes, que tu ne comprends qu'en te réveillant : « Ne reviens pas. » Il ne pleure pas. Toi, si."
+    right:
+      label: "Je lis sur ses lèvres"
+      effects: {}
+      answer: "Trois mots, toujours les mêmes, que tu ne comprends qu'en te réveillant : « Ne reviens pas. » Il ne pleure pas. Toi, si."
+
+  # Créneau 16 · La veille du dernier match (sombre). Trois portes : le brasero
+  # (Gégé sait ce qu'a fait ton père, il t'aime, et le Racing se maintient), le
+  # masque neuf, ou sans toi.
+  - id: en.h1.c4_brasero
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, sombre]
+    speaker: gege
+    lieu: friche
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La friche, la veille du dernier match. Gégé vide les cartons de masques dans le feu de palettes. Il en garde un, le regarde longtemps : « Tu lui ressembles quand tu ne dis rien. » Il te le tend."
+    left:
+      label: "Je le jette au feu"
+      effects: {relation: {gege: 1}, end: promu_brasero}
+      answer: "Le carton noircit par les yeux d'abord. Gégé garde la main sur ton épaule tant qu'il brûle, du poids d'une bâche qu'on tient à deux."
+    right:
+      label: "Je le garde"
+      effects: {tribunes: "+", set: [h1_dernier_masque]}
+      answer: "Tu le plies dans ta poche intérieure. Gégé hoche la tête : « Celui-là, je ne le compterai pas. » Le feu prend les autres."
+
+  # La veille, quand le registre du Quai a une page pour toi et que tu as nié :
+  # Lhoste revient, comme il l'avait dit. La police passe avant les masques.
+  - id: en.h1.c4_lhoste
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, sombre]
+    speaker: lhoste
+    lieu: parking
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La veille du dernier match, Lhoste t'attend sur le parking, le registre du Quai sous le bras : « Le nom de celui qui a écrit votre zéro-deux la veille, {toi}. Ou vous finissez la saison chez nous. »"
+    left:
+      label: "Le fils Sauvat"
+      effects: {relation: {lhoste: 1}, set: [h1_sauvat_donne]}
+      answer: "Il note le nom sans lever les yeux. « Son père aussi, en 1974. » Il range le registre. « Allez dormir. Demain, vous avez un match. »"
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {end: co_garde_a_vue}
+      answer: "« Comme vous voudrez. » Il ouvre la portière arrière de sa voiture et attend, une main sur le toit, que tu montes."
+
+  - id: en.h1.c4_masque_neuf
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes, sombre]
+    speaker: gege
+    lieu: friche
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La friche, la veille du dernier match. Gégé te tend un masque neuf, sans trous pour les yeux : « Demain soir, les Hauts-de-Rive. Les quatre cent douze du local sont prêts. Tu viens avec la nôtre ? »"
+    left:
+      label: "Je monte avec vous"
+      effects: {tribunes: "+", end: promu_visage}
+      answer: "Tu prends le masque. Il ne pèse rien. Gégé le pose sur ton visage lui-même, doucement, et tu n'y vois plus."
+    right:
+      label: "Montez sans moi"
+      effects: {direction: "+", relation: {gege: -1}, set: [h1_hauts_sans_toi]}
+      answer: "Il range le masque dans sa veste, contre lui. « Alors on montera avec celle de ton père. Elle, elle ne dit jamais non. »"
+
+  - id: en.h1.c4_sans_toi
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, ultras, sombre]
+    speaker: vukic
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La veille du dernier match, Vukić referme la porte du vestiaire : « Ils montent aux Hauts-de-Rive demain soir, après le match. Sans toi. Gégé a dit : surtout sans {pg, select, f{elle} other{lui}}. »"
+    left:
+      label: "Je préviens Lhoste"
+      effects: {direction: "+", relation: {gege: -1}, set: [h1_lhoste_prevenu]}
+      answer: "Lhoste note l'heure, l'adresse, et ne te remercie pas. « Vous savez ce que vous venez de faire à ce virage ? »"
+    right:
+      label: "Je laisse faire"
+      effects: {tribunes: "+", set: [h1_hauts_sans_toi]}
+      answer: "Vukić rouvre la porte sans un mot. Dans le couloir, un gamin du centre essaie ton visage devant le miroir des douches."
+
+  # Créneau 17 · La salle de presse (scène 20), après le dernier match à
+  # domicile. Toutes les sorties ferment le livre.
+  - id: en.h1.c5_presse
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La salle de presse, après le dernier match à domicile. Massenet est au premier rang, son article de 1974 plié sur les genoux. Le négatif d'Odette est dans ta poche. La salle se tait avant sa question."
+    left:
+      label: "Je dis tout sur 1974"
+      effects: {tribunes: "+", end: promu_plaque}
+      answer: "Tu parles une heure. Massenet n'écrit rien ; à la fin, il déplie son article de 1974 et le déchire en deux, lentement."
+    right:
+      label: "Je parle du match"
+      effects: {direction: "+", end: promu_car}
+      answer: "Tu parles du match. Massenet range son stylo sans avoir posé sa question. Le lendemain, à six heures, le car part à l'heure."
+
+  - id: en.h1.c5_presse_brasero
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La salle de presse. Les masques sont en cendres à la friche ; le dernier est dans ta poche, plié. Massenet, au premier rang, son article de 1974 sur les genoux : « Alors, {toi}, 1974 ? »"
+    left:
+      label: "Je dis tout sur 1974"
+      effects: {tribunes: "+", end: promu_plaque}
+      answer: "Tu poses le masque sur la table. Les flashs partent sur ton visage, puis sur le sien, en carton, puis encore sur le tien."
+    right:
+      label: "Je parle du match"
+      effects: {direction: "+", end: promu_car}
+      answer: "Tu parles du deuxième but et de la pelouse. Dans ta poche, le carton se froisse quand tu croises les bras."
+
+  - id: en.h1.c5_presse_hauts
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La salle de presse. Ce soir, les masques montent aux Hauts-de-Rive ; tu le sais, Massenet le devine. Son article de 1974 sur les genoux : « Vous avez quelque chose à dire, avant minuit ? »"
+    left:
+      label: "Je dis tout sur 1974"
+      effects: {tribunes: "+", end: promu_plaque}
+      answer: "Tu dis tout, en direct. À minuit, devant la villa, Gégé écoute le transistor d'un gamin, puis renvoie tout le monde chez soi."
+    right:
+      label: "Je parle du match"
+      effects: {direction: "+", end: promu_vengeance}
+      answer: "Tu parles du match. À minuit, les fenêtres des Hauts-de-Rive s'allument une à une, et la ville voit monter quatre cents fois ton visage."
+
+  - id: en.h1.c5_presse_lhoste
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    lieu: stade
+    tone: strategique
+    once: true
+    when: "stats.clubs < 2"
+    text: "La salle de presse. Aux Hauts-de-Rive, Lhoste a posté quatre voitures. Massenet, son article de 1974 plié sur les genoux, attend que tu le regardes pour lever la main."
+    left:
+      label: "Je dis tout sur 1974"
+      effects: {tribunes: "+", end: promu_plaque}
+      answer: "Tu dis tout. Cette nuit-là, Lhoste relâche les gamins arrêtés à la grille de la villa ; il garde le dossier de 1974."
+    right:
+      label: "Je parle du match"
+      effects: {direction: "+", end: promu_car}
+      answer: "Tu parles du match. Cette nuit-là, Lhoste ramasse onze masques dans l'herbe des Hauts-de-Rive, et ton nom dans chaque bouche."
+
+  # ═══════════════════════════════════════════════ SAISONS 4+ — L'ÉPILOGUE
+  # Pour la carrière qui aurait traversé l'acte final sans le jouer : une
+  # rentrée, un mois de juin, les cicatrices. Le clou de l'escalier reste vide
+  # (docs/histoires : « le clou est resté au mur »).
+  - id: en.h1.d1_rentree
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: leger
+    when: "stats.clubs < 2"
+    text: "La rentrée. Dans l'escalier, le clou de 1974 n'a toujours rien à porter. Cet été, Madame Josiane y a noué un ruban noir, sans rien demander : « Je l'enlève, {toi}, ou il reste ? »"
+    left:
+      label: "Le ruban reste"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Elle hoche la tête. Le soir, en partant, elle passe devant le clou sans le regarder, comme tous les soirs."
+    right:
+      label: "Enlevez-le"
+      effects: {direction: "+"}
+      answer: "Elle le roule autour de deux doigts et le glisse dans son gilet. Les anciens qui montent te voir regardent quand même le clou."
+
+  - id: en.h1.d1_rentree_plaque
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, famille]
+    speaker: josiane
+    tone: leger
+    when: "stats.clubs < 2"
+    text: "La rentrée. Josiane pose sur ton bureau la facture du marbrier, acquittée : « Ils viennent voir la plaque le dimanche, {toi}. Certains la touchent. Je mets une ligne au budget, pour les fleurs ? »"
+    left:
+      label: "Une ligne pour les fleurs"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "Elle l'écrit en dernier, à la main, sous les ballons et les maillots : « fleurs, caveau ». Elle ne demande pas lesquelles."
+    right:
+      label: "Le virage s'en occupe"
+      effects: {vestiaire: "+"}
+      answer: "Elle range la facture. Le dimanche suivant, il y a du buis frais au caveau, et personne n'a rien demandé à personne."
+
+  - id: en.h1.d2_juin
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, decor]
+    speaker: gege
+    tone: leger
+    when: "stats.clubs < 2"
+    text: "Juin. Gégé a sorti les vieux cartons du local, l'odeur de brûlé encore dedans : « On les garde pour l'an prochain, ou on les rend à la Rive, {toi} ? »"
+    left:
+      label: "On les garde"
+      effects: {tribunes: "+"}
+      answer: "Il recolle les cartons au scotch large, un par un, et écrit l'année sur chacun, comme sur des bocaux de confiture."
+    right:
+      label: "Rendez-les à la Rive"
+      effects: {vestiaire: "+"}
+      answer: "Du haut du pont, ils les lâchent par poignées. La Rive les emmène lentement vers la passerelle, face au ciel."
+
+  - id: en.h1.d2_juin_masque
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, decor]
+    speaker: gege
+    tone: leger
+    when: "stats.clubs < 2"
+    text: "Juin. Gégé compte les masques qui restent, dans le local repeint : « Mille neuf cent six. Les autres sont dans des tiroirs, des greniers, des cercueils peut-être. On en refait, {toi} ? »"
+    left:
+      label: "Plus jamais"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Il écrit 1906 à la craie sur la porte et ne l'efface pas. « Plus jamais, c'est long, ici. Mais d'accord. »"
+    right:
+      label: "Pour le derby, alors"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Il sourit pour la première fois depuis des mois. « Pour le derby. Mais cette fois, c'est toi qui choisis la photo. »"

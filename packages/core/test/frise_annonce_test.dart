@@ -20,6 +20,29 @@ import 'dart:io';
 import 'package:fusible_core/fusible_core.dart';
 import 'package:test/test.dart';
 
+/// Une signature (ou une reconversion) en cours de saison, servie à la place
+/// d'une carte ordinaire au deuxième bloc. Les quatre postulats de 1990 sont
+/// devenus des livres sans départ en cours de route : l'appel du Sporting
+/// Montoya de l'ancien promu était le seul témoin de ces tests, et l'invariant
+/// qu'ils vérifient ne dépend pas du contenu qui y mène. C'est une transition
+/// de rôle (`role:`), comme l'était cet appel : elle change de club tout de
+/// suite, quand un simple `club:` attend le Carrefour.
+const _beatsDuCalendrier = {
+  'match', 'cup', 'classement', 'gm_annonce', 'gm_te', 'aftermatch', 'objective', 'prologue',
+  'bilan_une', 'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
+};
+bool _signerIci(GameState s) => !s.over && s.world.blocks == 2 && s.pending != null && !_beatsDuCalendrier.contains(s.pending!.kind);
+Pending _signature(Pending p, {required String role}) => Pending(
+      id: 'test.signature',
+      kind: p.kind,
+      speaker: null,
+      text: 'Un autre club appelle.',
+      leftLabel: 'Je signe',
+      rightLabel: 'Je reste',
+      leftEffects: EffectSet(role: role),
+      rightEffects: const EffectSet(),
+    );
+
 Content _real() {
   var dir = Directory.current;
   for (var i = 0; i < 6; i++) {
@@ -40,6 +63,26 @@ GameState _joue(Engine e, int seed, int postulat, void Function(GameState s, int
   while (!s.over && g < max) {
     voir(s, g);
     s = e.choose(s, s.pending!.single ? true : g % 3 == 0);
+    g++;
+  }
+  voir(s, g);
+  return s;
+}
+
+/// Comme `_joue`, avec une signature servie au deuxième bloc.
+GameState _joueSigne(Engine e, int seed, int postulat, void Function(GameState s, int g) voir, {int max = 400}) {
+  var s = e.start(seed, postulat: postulat);
+  var g = 0;
+  var signe = false;
+  while (!s.over && g < max) {
+    voir(s, g);
+    var droite = s.pending!.single ? true : g % 3 == 0;
+    if (!signe && _signerIci(s)) {
+      s.pending = _signature(s.pending!, role: s.role);
+      signe = true;
+      droite = false;
+    }
+    s = e.choose(s, droite);
     g++;
   }
   voir(s, g);
@@ -287,7 +330,7 @@ void main() {
       var tablesApresSignature = 0;
       for (final postulat in [0, 1, 2, 3]) {
         for (final seed in List<int>.generate(60, (i) => i + 1)) {
-          _joue(engine, seed, postulat, (s, _) {
+          _joueSigne(engine, seed, postulat, (s, _) {
             final p = s.pending;
             if (p == null || p.kind != 'classement' || p.payload['finale'] != true) return;
             if (s.world.blocksDepart <= 0) return;

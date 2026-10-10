@@ -1,0 +1,114 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les trois missions du livre.
+# Format : en-tête de content/ville/missions.yaml. Chacune nourrit l'intrigue :
+#
+#   · h1_masques_square (Nino, le square, le soir) — le neveu de Gégé revend tes
+#     masques dix francs aux gamins. Racheter son stock fausse le compte de
+#     Gégé, qui le voit (`h1_vl_masques_rachetes`) ; le dénoncer coûte une gifle
+#     au petit (`h1_vl_nino_gifle`). La ville s'en souvient.
+#   · h1_registre_quai (le buraliste du tabac du Quai, le matin, après le
+#     tirage de la pellicule) — la preuve : la page onze du registre des paris
+#     de 1974, « M. Jean-Marie, trente mille sur la défaite ». Le fils du
+#     bookmaker prévient le président le soir même (`h1_vl_registre_lu`, lu par
+#     la fin « Le nom sur la plaque »).
+#   · h1_carton_gege (Gégé, la buvette, le soir, après le feu au local) — la
+#     dette : un carton chez toi, « des masques, et autre chose ». Le garder
+#     arme la perquisition de Lhoste (`h1_vl_carton`, en.h1.sb_perquisition) ;
+#     le rendre (`h1_vl_carton_rendu`) laisse Gégé seul avec ce qu'il contient.
+#
+# Aucun accord sur le protagoniste ; les sommes sont en francs de 1990.
+missions:
+  - id: h1_masques_square
+    titre: "Les masques du square"
+    roles: [entraineur]
+    donneur: {sprite: enfant, nom: "Nino, le neveu de Gégé", lieu: square, tranches: [soir]}
+    si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Au square, un gamin de six ans a vidé un carton de masques sur le banc : ton visage, cinquante fois. « Dix francs pièce. Ou tout le carton, {montant}. Mon oncle compte les siens, pas ceux-là. »"
+        choix:
+          - id: racheter
+            label: "Je prends le carton"
+            francs: -500
+            effets: {set: [h1_vl_masques_rachetes]}
+            reponse: "Il compte tes billets deux fois, en remuant les lèvres. Puis il te tend le carton à deux mains, et s'en va en sautant à cloche-pied."
+            suite: fin
+          - id: denoncer
+            label: "Je le dis à son oncle"
+            effets: {jauges: {tribunes: -1}, set: [h1_vl_nino_gifle]}
+            reponse: "À la buvette, Gégé écoute sans un mot, pose sa bière et sort. Le lendemain, Nino a une joue rouge, et il ne vend plus rien."
+            suite: fin
+        echec:
+          texte: "Le soir suivant, le banc du square est vide. Un masque oublié est resté coincé entre deux lattes, ton visage tourné vers le ciel."
+
+  - id: h1_registre_quai
+    titre: "Le registre du Quai"
+    roles: [entraineur]
+    donneur: {sprite: ancien, nom: "Le buraliste du tabac du Quai", lieu: tabac, tranches: [matin]}
+    si: "flag(histoire_h1) && flag(h1_negatif)"
+    chance: 0.4
+    etapes:
+      - id: offre
+        texte: "Le buraliste du tabac du Quai baisse le rideau à moitié. « Le registre des paris de 1974 est dans ma cave. {montant} pour voir une page. Une seule, et vous ne choisissez pas laquelle. »"
+        choix:
+          - id: payer
+            label: "Je paie"
+            francs: -5000
+            reponse: "Il range les billets dans la caisse des timbres. « Revenez ce soir, après la fermeture. Par la cour, pas par la boutique. »"
+            suite: cave
+          - id: refuser
+            label: "1974 ne se vend pas"
+            reponse: "Il relève le rideau. « Tout se vend, ici. Pas à n'importe quel prix, c'est vrai. » Il te rend la monnaie d'un paquet jamais pris."
+            suite: fin
+      - id: cave
+        objectif: {lieu: tabac, tranches: [soir, nuit], delai: 3}
+        texte: "La cave du tabac, une ampoule nue. Page onze, à l'encre violette : « M. Jean-Marie — trente mille sur la défaite, trois buts d'écart. » Le buraliste tient la lampe sans regarder."
+        choix:
+          - id: recopier
+            label: "Je recopie la ligne"
+            effets: {set: [h1_vl_registre_lu]}
+            reponse: "Tu recopies la ligne au dos d'un ticket de bus. Sur le trottoir d'en face, le fils Sauvat te regarde sortir, et allume une cigarette."
+            suite: fin
+          - id: arracher
+            label: "J'arrache la page"
+            effets: {jauges: {direction: -2}, set: [h1_vl_registre_lu]}
+            reponse: "Le papier cède sans bruit. « Celle-là, vous ne l'avez pas payée. » Le soir même, la voiture du président passe deux fois rue des Lilas."
+            suite: fin
+        echec:
+          texte: "Le rideau du tabac est resté baissé trois soirs de suite. Le quatrième, le buraliste ne te reconnaît plus, et la cave a un cadenas neuf."
+
+  - id: h1_carton_gege
+    titre: "Le carton de Gégé"
+    roles: [entraineur]
+    donneur: {sprite: gege, nom: "Gégé", lieu: buvette, tranches: [soir]}
+    si: "flag(histoire_h1) && flag(h1_incendie) && relation.gege >= 1"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Gégé pousse du pied un carton fermé au scotch sous la table de la buvette. « Garde-le chez toi une semaine. Des masques, et autre chose. Chez moi, ils viendront. Chez toi, pas encore. »"
+        choix:
+          - id: prendre
+            label: "Je le prends"
+            effets: {set: [h1_vl_carton]}
+            reponse: "Il pèse plus lourd que des masques. Tu le portes jusqu'à la rue des Lilas sans le secouer, et tu le glisses sous le lit."
+            suite: semaine
+          - id: refuser
+            label: "Pas chez moi"
+            effets: {jauges: {tribunes: -1}}
+            reponse: "Gégé remet le carton sous la table, du pied. « D'accord. » Il ne dit rien d'autre de la soirée, et il paie ta bière."
+            suite: fin
+      - id: semaine
+        objectif: {lieu: buvette, tranches: [soir], delai: 7}
+        texte: "Une semaine a passé. Le carton est toujours sous ton lit. À la buvette, Gégé fait semblant de ne pas t'attendre, et regarde la porte chaque fois qu'elle s'ouvre."
+        choix:
+          - id: rendre
+            label: "Je le lui rends"
+            effets: {clear: [h1_vl_carton], set: [h1_vl_carton_rendu]}
+            reponse: "Il le reprend sans l'ouvrir et le pose sur ses genoux. « Merci. Ils viennent chez moi demain, je crois. »"
+            suite: fin
+          - id: garder
+            label: "Je le garde encore"
+            reponse: "Il hoche la tête. « Alors tu sais ce qu'il y a dedans. Ne l'ouvre pas quand même. » Il lève sa bière, sans trinquer."
+            suite: fin
+        echec:
+          texte: "La semaine a passé sans buvette. Le carton dort sous ton lit, le scotch intact. Gégé ne le redemande pas ; il attend que tu viennes."

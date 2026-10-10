@@ -1,0 +1,78 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les fins du livre.
+# Elles tombent sur les trois cartes de l'acte final (la veille, la salle de
+# presse) : content/cards/entraineur/h1_script.yaml, c4_* et c5_*.
+#
+#   promu_plaque     la vérité — tu dis tout sur 1974 ; le négatif est publié,
+#                    la plaque est gravée.
+#   promu_vengeance  le prix — les masques montent aux Hauts-de-Rive sans toi,
+#                    et tu te tais ; Vaubourg tombe, le Racing avec lui.
+#   promu_brasero    la fin rare — Gégé sait ce qu'a fait ton père, il t'aime
+#                    encore, le Racing se maintient : on brûle les masques.
+#   promu_visage     la pire — tu montes aux Hauts-de-Rive avec le masque.
+#   promu_car        le départ — tu ne publies rien ; le car de six heures.
+#
+# Et trois lignes du livre sous des fins communes (`epitaph_plus_ajouts`) : la
+# garde à vue (le carton de Gégé, ou l'argent du Quai), l'otage du kop, le
+# coupable désigné.
+endings:
+  - id: promu_plaque
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "Le nom sur la plaque"
+    epitaph: "{prenom} {nom} a fait graver au caveau du Racing le nom de son père et, dessous, ce qu'il avait fait. On le lit encore le jour des Rameaux, et personne ne sait s'il faut s'arrêter devant."
+    epitaph_plus:
+      - { when: "flag('h1_brassard_vu')", text: "En page une, le lendemain, le tirage d'Odette Marsal : une enveloppe, une manche, un brassard. {nom} l'avait donné sans le recadrer." }
+      - { when: "flag('h1_vl_registre_lu')", text: "La page onze du registre du Quai a paru avec le reste. « M. Jean-Marie, trente mille sur la défaite. » Vaubourg a démissionné le mardi." }
+
+  - id: promu_vengeance
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "Les masques ont gagné"
+    epitaph: "Les masques sont montés aux Hauts-de-Rive le soir du dernier match ; Vaubourg est tombé le lundi, et le Racing avec lui. {prenom} {nom} a gardé le dernier masque dans un tiroir, celui qui avait ses yeux."
+    epitaph_plus:
+      - { when: "flag('h1_pacte_coffre')", text: "Le mardi, L'Écho publiait la confession d'Henri Ravenel, une seule page. Vaubourg avait tenu parole, lui ; {nom}, non." }
+      - { when: "flag('h1_local_aveu')", text: "Gégé n'a jamais dit qui portait quel visage, cette nuit-là. Il a rapporté les masques à {nom}, un par un, dans un carton d'imprimeur." }
+
+  - id: promu_brasero
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "Le virage sans masque"
+    epitaph: "La veille du dernier match, {prenom} {nom} et Gégé ont brûlé deux mille huit cents visages dans le feu de la friche, et le Racing s'est maintenu sans en porter un seul."
+    epitaph_plus:
+      - { when: "flag('h1_filet_rendu')", text: "Gigi a rendu le filet de 1974 ; il pend au local, au-dessus de la porte." }
+      - { when: "flag('h1_nom_grave')", text: "Aux Rameaux suivants, Gégé a posé le buis dans les lettres du nom gravé. {nom} tenait son écharpe." }
+
+  - id: promu_visage
+    cause: choix
+    rarity: rare
+    golden: false
+    share: false
+    title: "Le visage"
+    epitaph: "Un garçon de dix-neuf ans est tombé du mur des Hauts-de-Rive, un masque sur la figure : c'était celle de {prenom} {nom}. Le procès a duré deux ans, et la Nord n'a plus jamais imprimé personne."
+    epitaph_plus:
+      - { when: "flag('h1_masques_dehors')", text: "Il avait gardé son masque depuis la présentation, au-dessus de son lit. Sa mère l'a rendu au tribunal, plié en quatre." }
+      - { when: "relation.gege >= 1", text: "Gégé a tout pris pour lui, à l'audience. On ne l'a pas cru, et il le savait ; il voulait seulement que {nom} l'entende." }
+
+  - id: promu_car
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "Le car de six heures"
+    epitaph: "{prenom} {nom} a repris le car de six heures, comme sa mère en 1975, le négatif dans la poche. La plaque du caveau est restée sans nom ; le gardien dit qu'on vient la regarder."
+    epitaph_plus:
+      - { when: "flag('h1_lettre_brulee')", text: "De la lettre de 1975, il ne restait qu'un coin brûlé, avec la signature. {nom} l'avait dans la poche du billet." }
+      - { when: "flag('h1_ticket_garde')", text: "Dans la même poche, le ticket du Quai de 1974. {prenom} {nom} ne l'a jamais montré à personne." }
+
+epitaph_plus_ajouts:
+  - fin: co_garde_a_vue
+    when: "flag('histoire_h1')"
+    text: "On a posé sur la table un carton de masques, comme pièce à conviction ; à la fin, Lhoste a demandé lequel était le vrai."
+  - fin: en_otage
+    when: "flag('histoire_h1')"
+    text: "Le virage a gardé {nom} comme on garde un visage : imprimé, plié, ressorti les soirs de match."
+  - fin: en_coupable
+    when: "flag('histoire_h1')"
+    text: "On a mis les nuits masquées sur le compte de {nom}, et le budget à zéro par-dessus ; le président a parlé de complot."

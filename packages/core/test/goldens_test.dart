@@ -87,6 +87,18 @@
 ///   racontent autre chose, les quinze autres ne bougent que par l'empreinte du
 ///   contenu. Même calendrier : mêmes codes, `--goldens --write` sans
 ///   `--recode`, et les vingt atteignent toujours une fin.
+/// · **Histoire 1, « Trois mille visages »** (la branche `histoire-h1`). Le
+///   postulat du promu devient un livre : un prologue, une épine à créneaux
+///   fixes, neuf intrigues (les masques, la pellicule, le quai, la plaque…) et
+///   son réservoir silencieux à partir de la troisième saison, où les sponsors
+///   louches attendent désormais leur tour. Les cinq carrières du promu
+///   racontent autre chose — trois d'entre elles vivent plus longtemps que
+///   leurs swipes figés et s'arrêtent sans fin (quinze codes sur vingt en
+///   portent une, le seuil de G1c) —, les quinze autres ne bougent que par
+///   l'empreinte du contenu. Même calendrier : mêmes codes, `--goldens --write`
+///   sans `--recode`. Les tests C8 et C9, dont l'appel du Sporting Montoya était
+///   le seul témoin, servent désormais eux-mêmes une signature synthétique au
+///   deuxième bloc (une transition de rôle, qui change de club sur-le-champ).
 library;
 
 import 'dart:io';

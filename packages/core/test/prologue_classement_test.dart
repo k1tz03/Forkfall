@@ -22,6 +22,29 @@ import 'dart:io';
 import 'package:fusible_core/fusible_core.dart';
 import 'package:test/test.dart';
 
+/// Une signature (ou une reconversion) en cours de saison, servie à la place
+/// d'une carte ordinaire au deuxième bloc. Les quatre postulats de 1990 sont
+/// devenus des livres sans départ en cours de route : l'appel du Sporting
+/// Montoya de l'ancien promu était le seul témoin de ces tests, et l'invariant
+/// qu'ils vérifient ne dépend pas du contenu qui y mène. C'est une transition
+/// de rôle (`role:`), comme l'était cet appel : elle change de club tout de
+/// suite, quand un simple `club:` attend le Carrefour.
+const _beatsDuCalendrier = {
+  'match', 'cup', 'classement', 'gm_annonce', 'gm_te', 'aftermatch', 'objective', 'prologue',
+  'bilan_une', 'bilan_verdict', 'bilan_contrat', 'bilan_carrefour',
+};
+bool _signerIci(GameState s) => !s.over && s.world.blocks == 2 && s.pending != null && !_beatsDuCalendrier.contains(s.pending!.kind);
+Pending _signature(Pending p, {required String role}) => Pending(
+      id: 'test.signature',
+      kind: p.kind,
+      speaker: null,
+      text: 'Un autre club appelle.',
+      leftLabel: 'Je signe',
+      rightLabel: 'Je reste',
+      leftEffects: EffectSet(role: role),
+      rightEffects: const EffectSet(),
+    );
+
 // ---------------------------------------------------------------------------
 // Contenu synthétique : le calendrier réel (prologue + classement), un arc de
 // prologue de cinq scènes.
@@ -462,19 +485,25 @@ void main() {
       var saisonsVues = 0;
       var changementsEnCours = 0;
       for (final postulat in [0, 1, 2, 3]) {
-        // 3 et 57 : deux graines du promu qui changent de club en cours de
-        // saison avec ce bot (retirées quand les événements sombres ont
-        // déplacé les tirages : aucune des huit autres n'en changeait plus).
+        // Une signature (postulats 0-1) ou une reconversion en entraîneur
+        // (postulats 2-3) est servie au deuxième bloc de chaque carrière.
         for (final seed in [909, 12345, 77, 4242, 31337, 226010632, 5150, 8080, 3, 57]) {
           var s = engine.start(seed, postulat: postulat);
           var g = 0;
+          var signe = false;
           var saison = s.season;
           var blocs = s.world.blocks;
           var club = s.entities.named['club'];
           var role = s.role;
           while (!s.over && g < 400) {
-            final p = s.pending!;
-            s = engine.choose(s, p.single ? true : g.isEven);
+            var droite = s.pending!.single ? true : g.isEven;
+            if (!signe && _signerIci(s)) {
+              // l'entraîneur signe ailleurs ; le joueur se reconvertit en entraîneur
+              s.pending = _signature(s.pending!, role: 'entraineur');
+              signe = true;
+              droite = false;
+            }
+            s = engine.choose(s, droite);
             g++;
             if (s.season != saison) {
               saison = s.season;

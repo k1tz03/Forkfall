@@ -1,0 +1,59 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les alarmes du livre. Montées en tête
+# des candidats par `alarm_overrides` du postulat `promu` tant que le livre se
+# joue : quand une jauge tombe, ce sont les masques qui viennent réclamer.
+cards:
+  # ------------------------------------------- tribunes basses · les masques coupés
+  - id: en.h1.alarme.tribunes_bas_masques
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    when: "gauges.tribunes < 25 && flag('h1_masques_tifo')"
+    text: "Gégé pose sur ton bureau un sac de masques rendus, déchirés au même endroit, entre les yeux : « Ils les rendent comme ça, maintenant, {toi}. Coupés en deux. Le virage ne sait pas dire autrement. »"
+    left: {label: "Je viens au local", effects: {tribunes: "+++", caisse: "-", relation: {gege: 1}, journal: {text: "{annee} : {nom} au local, un soir de semaine, devant un sac de masques coupés en deux.", poids: 2, tags: [ultras, tribunes]}}, answer: "Le local se tait quand tu entres. Gégé pousse vers toi un rouleau de scotch, et le premier masque à recoller."}
+    right: {label: "Qu'ils les déchirent", effects: {tribunes: "--", direction: "+", journal: {text: "{annee} : les masques du virage reviennent déchirés entre les yeux. {nom} n'est pas passé au local.", poids: 2, tags: [ultras, tribunes]}}, answer: "Il vide le sac sur ton bureau et s'en va. Les deux moitiés de ton visage restent là, chacune regardant de son côté."}
+
+  # ------------------------------------------- tribunes hautes · la ville porte ta tête
+  - id: en.h1.alarme.tribunes_haut_masques
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: vukic
+    tone: leger
+    when: "gauges.tribunes > 75 && flag('h1_masques_tifo')"
+    text: "Vukić, à sept heures : « Ton visage est sur la porte du vestiaire, sur le pare-brise du car et sur le distributeur de la banque, {toi}. Le chauffeur demande s'il peut l'enlever pour conduire. »"
+    left: {label: "Enlevez-les tous", effects: {tribunes: "--", vestiaire: "+", journal: {text: "{annee} : les masques enlevés du car et du vestiaire, sur ordre. Le virage l'a pris pour lui.", poids: 1, tags: [ultras, vestiaire]}}, answer: "Le chauffeur décolle le sien avec l'ongle. Le soir, un autre est collé à sa place, dans l'autre sens."}
+    right: {label: "Le chauffeur conduit", effects: {tribunes: "+", vestiaire: "--", journal: {text: "{annee} : le car du club a roulé tout l'hiver avec le visage de {nom} sur le pare-brise.", poids: 2, tags: [ultras, tribunes]}}, answer: "Le car roule avec ta tête collée sur la vitre. Sur l'autoroute, les automobilistes qui doublent lèvent la main."}
+
+  # ------------------------------------------- direction basse · la porte fermée à clé
+  - id: en.h1.alarme.direction_bas_vaubourg
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    when: "gauges.direction < 25 && flag('h1_masques_tifo')"
+    text: "Vaubourg ferme la porte de son bureau à clé, de l'intérieur, et met la clé dans sa poche : « Les masques, les nuits, la police dans mon couloir. Lequel des trois tu vas faire cesser, {toi} ? »"
+    left: {label: "La police", effects: {direction: "+++", tribunes: "-", journal: {text: "{annee} : {nom} a promis au président que la police quitterait son couloir.", poids: 2, tags: [direction]}}, answer: "« Bien. » Il rouvre la porte. Dans le couloir, Lhoste attend sur une chaise, le chapeau sur les genoux, comme chez le dentiste."}
+    right: {label: "Aucun des trois", effects: {direction: "--", tribunes: "+", journal: {text: "{annee} : « Aucun des trois », a répondu {nom} au président, la porte fermée à clé.", poids: 2, tags: [direction]}}, answer: "Il te regarde longtemps, puis rouvre la porte sans un mot. Sa chevalière tinte contre la poignée, deux fois."}
+
+  # ------------------------------------------- vestiaire bas · Gigi et le banc
+  - id: en.h1.alarme.vestiaire_bas_masques
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    when: "gauges.vestiaire < 25 && flag('h1_masques_tifo')"
+    text: "Gigi Vecchio ramasse un masque piétiné sous le banc du vestiaire : « Ils disent qu'il y a plus de visages à toi dans la Nord que de joueurs avec toi ici, {toi}. Ils ne disent pas lesquels comptent. »"
+    left: {label: "Je leur parle ce soir", effects: {vestiaire: "+++", tribunes: "-", journal: {text: "{annee} : une heure de vestiaire, porte fermée. Gigi Vecchio a gardé la porte.", poids: 2, tags: [vestiaire]}}, answer: "Une heure, porte fermée. Gigi garde la porte, assis dessus, le masque piétiné sur les genoux, qu'il lisse du plat de la main."}
+    right: {label: "Ils jouent, c'est tout", effects: {vestiaire: "--", direction: "+", journal: {text: "{annee} : le vestiaire s'est changé en silence toute une semaine. {nom} n'est pas entré.", poids: 2, tags: [vestiaire]}}, answer: "Gigi jette le masque dans la poubelle des bandages, puis le reprend, et le range dans son sac à gants."}
+
+  # ------------------------------------------- caisse basse · la facture des masques
+  - id: en.h1.alarme.caisse_bas_masques
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, sponsors]
+    speaker: josiane
+    when: "gauges.caisse < 25 && flag('h1_masques_tifo')"
+    text: "Madame Josiane pose la facture des Cartonnages de la Rive sur ta pile : « Le président dit qu'elle est pour vous, {toi}. L'encre, le carton, trois mille têtes. Je la paie, ou je la perds ? »"
+    left: {label: "Perdez-la", effects: {caisse: "+++", tribunes: "-", journal: {text: "{annee} : la facture des masques s'est perdue au secrétariat. L'imprimeur l'a renvoyée deux fois.", poids: 1, tags: [caisse]}}, answer: "Elle la glisse sous le sous-main, là où elle range ce qui se perd. L'imprimeur renvoie un double, puis un troisième."}
+    right: {label: "Payez-la", effects: {caisse: "--", tribunes: "+", journal: {text: "{annee} : le club a payé les trois mille masques. Gégé a encadré le reçu au local.", poids: 2, tags: [caisse, ultras]}}, answer: "Elle paie. Le reçu revient du local deux jours plus tard, encadré, avec un mot au feutre : MERCI LE CLUB. Pas ton nom."}

@@ -1,0 +1,203 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » (postulat `promu`, index 0, 1990).
+# docs/histoires/00_les_dix_histoires.md, Histoire 1. La vengeance : en mars
+# 1975 on a sorti Henri Ravenel, capitaine du Racing de 1974, de la Rive, sous
+# la passerelle ; on l'accusait d'avoir vendu la finale. Quinze ans plus tard,
+# son enfant revient sous le nom de sa mère entraîner le promu, et le virage
+# imprime trois mille masques de son visage — que quelqu'un porte la nuit.
+#
+# Ce fichier porte les deux arcs qui tiennent le livre :
+#
+#  · `en.h1.prologue` (kind prologue) — six scènes avant la carte Objectif :
+#    la photo grattée et les deux clés, le chant qui contient déjà ton nom, le
+#    café de sept heures, la lettre que tu changes de poche depuis quinze ans,
+#    les quatre qui décident (dits par Gigi), l'escalier condamné depuis 1977.
+#
+#  · `en.h1.visages` (kind postulat) — le script. Ses ancres tombent à créneau
+#    fixe ; elles ouvrent les intrigues du livre par `schedule` (et non par le
+#    tirage du réservoir), pour que l'histoire arrive quelque part en trois
+#    saisons quelle que soit la graine :
+#      S0 « Le visage »      1 la présentation (les masques se lèvent ; ouvre
+#                              les masques et le maillot) · 10-11 le local (Gégé
+#                              sait qui tu es) · 12 le feu au local (sombre : il
+#                              manque quatre cent douze masques) · 14 intermède
+#                              (la neuvième marche) · 17 l'homme sous la fenêtre
+#      S1 « Les nuits »      1 la berline (sombre ; ouvre Lhoste et le
+#                              Quai) · 11 la passerelle
+#                              (sombre ; réaction : Vukić à six heures) · 14
+#                              intermède (le virage) · 15 la saisie, rue des
+#                              Lilas, à six heures. Entre la passerelle et le
+#                              virage, l'ardoise de Gigi au cabinet (12-13). La veille, si tu as nié devant la
+#                              brigade du Quai, Lhoste passe avant les masques.
+#      S2 « Le dernier soir » 1 la lettre lue jusqu'au bout (le ticket du
+#                              maillot, 2-3, ouvre la vitrine de la banque, puis
+#                              le coffre, 11-13) · 10 le coup de fil
+#                              de trois heures, ou le cercueil (sombre) · 14
+#                              intermède (le car de six heures) · 16 la veille
+#                              (le brasero, le masque neuf, ou sans toi) · 17 la
+#                              salle de presse. Toutes les sorties de 16-17
+#                              ferment la carrière sur une des cinq fins du livre
+#                              (content/endings/h1.yaml), sauf « Je le garde » et
+#                              les refus, qui mènent à la salle de presse.
+#      S3+                    l'épilogue, pour qui aurait traversé sans finir.
+#
+# Les soirs (docs/histoires § 1.4) : des ancres et des étapes tagguées `sombre`,
+# jamais plus de quatre dans une saison ni deux à moins de cinq créneaux — S0 :
+# le feu (12), la fenêtre (17) ; S1 : la berline (1), les archives de L'Écho
+# (6), la passerelle (11) ; S2 : le coup de fil ou le cercueil (10), la veille
+# (16) — la vitrine de la banque (3-5) se découvre au matin. La saisie et la
+# perquisition tombent à six heures du matin : ce ne sont pas des soirs. Le réservoir d'événements
+# sombres génériques se tait (voir plus bas). Les ancres lisent
+# `stats.clubs < 2` : si la carrière quitte Aubérive, le livre se tait (ses
+# intrigues tombent d'elles-mêmes, `same_club`).
+#
+# La présentation (S0, créneau 1) ferme sept événements sombres génériques qui
+# doublaient le livre (le feu au local, le cercueil, ceux qui attendent sous ta
+# fenêtre, le coup de fil de trois heures, l'homme au blouson gris et sa
+# perquisition, l'ancien trésorier) et la voiture du président brûlée par le
+# vestiaire : ici, ces nuits-là ont un auteur.
+arcs:
+  - id: en.h1.prologue
+    title: "Le cinquième visage"
+    kind: prologue
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: false
+    theme: direction
+    carrier: josiane
+    cast: [josiane, gege, vukic, camille, vecchio]
+    issues: []
+    hint: "Une photo dans un escalier, et un visage gratté jusqu'au carton."
+    steps:
+      - id: photo
+        card:
+          - { id: en.h1.pro1_photo_argent, if: "fil_rouge == 'argent'" }
+          - { id: en.h1.pro1_photo }
+      - id: chant
+        card:
+          - { id: en.h1.pro2_chant_president, if: "fil_rouge == 'president'" }
+          - { id: en.h1.pro2_chant }
+      - id: cafe
+        card: en.h1.pro3_cafe
+      - id: lettre
+        card: en.h1.pro4_lettre
+      - id: quatre
+        card: en.h1.pro5_quatre
+      - id: rendezvous
+        card: en.h1.pro6_rendezvous
+
+  - id: en.h1.visages
+    title: "Trois mille visages"
+    kind: postulat
+    roles: [entraineur]
+    foreground: true
+    weight: 1.0
+    cast: [gege, aulard, vecchio, camille, lhoste, vukic, meneche]
+    same_club: true
+    fallback: drop
+    traces:
+      h1_masques_tifo:        "{annee} : trois mille masques à l'effigie de {nom} dans la Tribune Nord. Le président n'a rien payé."
+      h1_incendie:            "{annee} : le local du virage a brûlé. Il manquait quatre cent douze masques au compte de Gégé."
+      h1_masque_sous_fenetre: "{annee} : un homme masqué, le visage de {nom}, immobile une heure rue des Lilas, un mardi à minuit."
+      h1_berline_brulee:      "{annee} : la berline du président a brûlé sur le parking du stade, un masque posé sur le capot."
+      h1_passerelle:          "{annee} : on a retrouvé Gigi Vecchio sous la passerelle, la mâchoire cassée, un masque à la main."
+      h1_voiture_saisie:      "{annee} : à six heures, rue des Lilas, la police a emmené la voiture de {nom}. Un masque sous scellés."
+      h1_lettre_lue:          "{annee} : {nom} a lu jusqu'au bout la dernière lettre d'Henri Ravenel, dix-sept ans après."
+      h1_cercueil:            "{annee} : un cercueil en contreplaqué devant la grille du stade. Dessus, en blanc : RAVENEL."
+    steps:
+      # ============================================================ saison 1 (S0)
+      - id: presentation
+        card:
+          - { id: en.h1.a1_presentation_tribune, if: "fil_rouge == 'tribune'" }
+          - { id: en.h1.a1_presentation_argent,  if: "fil_rouge == 'argent'" }
+          - { id: en.h1.a1_presentation }
+        at: [1, 1]
+        season: 0
+      - id: local
+        card:
+          - { id: en.h1.a2_local_phrase, if: "flag('h1_phrase_buvette')" }
+          - { id: en.h1.a2_local }
+        at: [10, 11]
+        season: 0
+      - id: feu
+        card:
+          - { id: en.h1.a3_feu_vendus, if: "flag('h1_sp_cartons')" }
+          - { id: en.h1.a3_feu }
+        at: [12, 12]
+        season: 0
+      - id: marche
+        card: en.h1.a4_marche
+        at: [14, 14]
+        season: 0
+      - id: fenetre
+        card:
+          - { id: en.h1.a5_fenetre_seul, if: "flag('divorce')" }
+          - { id: en.h1.a5_fenetre }
+        at: [17, 17]
+        season: 0
+      # ============================================================ saison 2 (S1)
+      - id: berline
+        card:
+          - { id: en.h1.b1_berline_president, if: "fil_rouge == 'president'" }
+          - { id: en.h1.b1_berline }
+        at: [1, 1]
+        season: 1
+      - id: passerelle
+        card: en.h1.b2_passerelle
+        at: [11, 11]
+        season: 1
+      - id: virage
+        card: en.h1.b3_virage
+        at: [14, 14]
+        season: 1
+      - id: saisie
+        card:
+          - { id: en.h1.b4_saisie_quai, if: "flag('h1_quai_paye')" }
+          - { id: en.h1.b4_saisie }
+        at: [15, 15]
+        season: 1
+      # ============================================================ saison 3 (S2)
+      - id: lettre
+        card:
+          - { id: en.h1.c1_lettre_tiroir, if: "!flag('h1_lettre_sur_soi') && !flag('divorce')" }
+          - { id: en.h1.c1_lettre }
+        at: [1, 1]
+        season: 2
+      - id: appel
+        card:
+          - { id: en.h1.c2_cercueil, if: "relation.gege <= -1 || gauges.tribunes < 40" }
+          - { id: en.h1.c2_appel }
+        at: [10, 10]
+        season: 2
+      - id: car
+        card: en.h1.c3_car
+        at: [14, 14]
+        season: 2
+      - id: veille
+        card:
+          - { id: en.h1.c4_lhoste,      if: "flag('h1_quai_nie')" }
+          - { id: en.h1.c4_brasero,     if: "flag('h1_gege_sait') && relation.gege >= 2 && !flag('h1_cercueil') && world.rang <= 14" }
+          - { id: en.h1.c4_sans_toi,    if: "relation.gege <= -1 || flag('h1_cercueil')" }
+          - { id: en.h1.c4_masque_neuf }
+        at: [16, 16]
+        season: 2
+      - id: presse
+        card:
+          - { id: en.h1.c5_presse_brasero, if: "flag('h1_dernier_masque')" }
+          - { id: en.h1.c5_presse_lhoste,  if: "flag('h1_lhoste_prevenu')" }
+          - { id: en.h1.c5_presse_hauts,   if: "flag('h1_hauts_sans_toi')" }
+          - { id: en.h1.c5_presse }
+        at: [17, 17]
+        season: 2
+      # ============================================== saisons 4+ (S3+) : l'épilogue
+      - id: rentree
+        card:
+          - { id: en.h1.d1_rentree_plaque, if: "flag('h1_nom_grave')" }
+          - { id: en.h1.d1_rentree }
+        at: [1, 1]
+        season: "3+"
+      - id: veille_juin
+        card:
+          - { id: en.h1.d2_juin_masque, if: "flag('h1_masques_tifo')" }
+          - { id: en.h1.d2_juin }
+        at: [17, 17]
+        season: "3+"

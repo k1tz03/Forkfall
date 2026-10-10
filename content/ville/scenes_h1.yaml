@@ -1,0 +1,333 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les scènes de la semaine.
+# Ce que la ville vit pendant le livre, entre deux cartes du moteur : les
+# témoins, les voisins, les graines qui reviennent. Format : en-tête de
+# content/ville/scenes_communes.yaml. Une scène vue se lit `mission(<id>)`.
+#
+# Elles suivent le livre saison par saison (`saison`, de 1 à 3 dans la ville) et
+# ce que la ville sait déjà (les drapeaux `h1_*` posés par les cartes). Aucune
+# ne fait avancer l'intrigue ; chacune prouve qu'elle avance. Aucun accord sur
+# le protagoniste.
+scenes:
+  # ======================================================= saison 1 : le visage
+  - id: h1.sc.voisine
+    titre: "La voisine du deuxième"
+    roles: [entraineur]
+    lieu: domicile
+    tranches: [soir]
+    qui: passante
+    si: "flag('histoire_h1') && flag('h1_masques_tifo') && saison == 1"
+    texte: "La voisine du deuxième frappe, un masque à la main. « Mon fils l'a cloué au-dessus de son lit. Il veut savoir si vous dormez, vous, avec trois mille têtes comme la vôtre dehors. »"
+    choix:
+      - label: "Dites-lui que oui"
+        reponse: "Elle remonte rassurée. Le lendemain, une feuille sous la porte, au feutre : un bonhomme qui dort, et ton visage en carton accroché au-dessus."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je signe le masque"
+        reponse: "Tu signes sur le front, là où le carton est le plus lisse. Elle le tient à deux mains dans l'escalier, comme une assiette trop pleine."
+        effets: {jauges: {tribunes: 2}}
+
+  - id: h1.sc.imprimerie
+    titre: "La presse de minuit"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [nuit]
+    qui: passant
+    si: "flag('histoire_h1') && flag('h1_masques_tifo') && saison == 1"
+    texte: "Une fenêtre éclairée, rue du Port : la presse des Cartonnages de la Rive crache des feuilles où ton visage sort par quatre. Un ouvrier fume sur le seuil. « Mille de plus. Personne ne dit qui paie. »"
+    choix:
+      - label: "Qui a commandé ?"
+        reponse: "Il écrase sa cigarette. « Un monsieur en écharpe, en liquide, comme la première fois. Il a demandé qu'on vous fasse les yeux un peu plus tristes. »"
+      - label: "Je rentre"
+        reponse: "Derrière toi, la presse ne s'arrête pas. Au coin de la rue, une feuille s'est envolée ; ton visage, quatre fois, colle au pavé mouillé."
+
+  - id: h1.sc.sous_bock
+    titre: "Le sous-bock"
+    roles: [entraineur]
+    lieu: buvette
+    tranches: [soir]
+    qui: ancien
+    si: "flag('histoire_h1') && flag('h1_phrase_buvette') && saison == 1"
+    texte: "À la buvette, l'ancien qui avait écrit ta phrase sur un sous-bock le fait passer de table en table. Chacun le lit, le retourne, et te regarde. Il arrive jusqu'à toi."
+    choix:
+      - label: "Je le garde"
+        reponse: "Tu le mets dans ta poche. L'ancien hoche la tête, déçu : « Il était à tout le monde, celui-là. » Le lendemain, quelqu'un en a refait un, de la même écriture."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je le fais tourner"
+        reponse: "Tu le rends au voisin de gauche. Il repart de table en table jusqu'à la fermeture, et ne revient pas. Personne ne sait dans quelle poche il a fini."
+        effets: {jauges: {tribunes: 2}}
+
+  - id: h1.sc.buis_sec
+    titre: "Le buis de l'an dernier"
+    roles: [entraineur]
+    lieu: caveau
+    tranches: [matin, aprem]
+    si: "flag('histoire_h1') && saison == 1"
+    texte: "Au caveau du Racing, devant la plaque neuve sans nom, un brin de buis sec, posé à plat, l'an dernier ou celui d'avant. Le gardien ne l'a pas balayé. Les autres plaques n'ont rien."
+    choix:
+      - label: "Je laisse le buis"
+        reponse: "Tu le redresses contre le marbre, c'est tout. En sortant, tu vois le gardien noter quelque chose sans lever la tête de sa loge."
+      - label: "J'en remets un frais"
+        francs: -20
+        reponse: "Un brin de buis du marché, deux francs le bouquet. Tu poses le frais à côté du sec, pas dessus. Le gardien sort pour regarder, puis rentre."
+
+  - id: h1.sc.square_jeu
+    titre: "Le jeu du coach"
+    roles: [entraineur]
+    lieu: square
+    tranches: [aprem]
+    qui: enfant
+    si: "flag('histoire_h1') && flag('h1_masques_dehors')"
+    texte: "Au square, un gamin porte ton visage en carton et donne des ordres aux autres : « Toi, à gauche ! Toi, tu cours ! » Quand il te voit, il se met au garde-à-vous, le masque de travers."
+    choix:
+      - label: "Je lui donne un ordre"
+        reponse: "« Repos. » Il éclate de rire sous le carton. Toute la fin d'après-midi, les gamins se disent « repos » en se croisant, sans savoir pourquoi."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je redresse son masque"
+        reponse: "Tu le remets droit, les yeux en face des siens. Il ne bouge plus du tout. Quand tu t'éloignes, il te salue, exactement comme toi le dimanche."
+
+  - id: h1.sc.laverie_fumee
+    titre: "L'écharpe qui sent le feu"
+    roles: [entraineur]
+    lieu: laverie
+    tranches: [soir]
+    qui: fan
+    si: "flag('histoire_h1') && flag('h1_incendie')"
+    texte: "À la laverie, un gars du virage lave une écharpe qui sent la fumée. « Celle du local. Gégé ne doit pas la sentir comme ça. Il croirait que c'est encore en train de brûler. »"
+    choix:
+      - label: "Je paie le séchage"
+        francs: -10
+        reponse: "Il plie l'écharpe encore tiède en quatre, la renifle, hoche la tête. « Elle sent le Racing, maintenant. Pas le feu. Il ne verra pas la différence. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Qui a mis le feu ?"
+        reponse: "Il arrête la machine d'un coup de pied. « On ne pose pas cette question ici. » Puis, plus bas : « Pas le radiateur. Le radiateur, il n'était même pas branché. »"
+
+  - id: h1.sc.brigadier
+    titre: "Le brigadier de nuit"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [matin]
+    qui: passant
+    si: "flag('histoire_h1') && flag('h1_police_fenetre')"
+    texte: "Le brigadier venu rue des Lilas la nuit du masque t'arrête devant la boulangerie, en civil. « J'ai repensé à votre homme. Il se tenait comme vous, sur le trottoir. Exactement comme vous. »"
+    choix:
+      - label: "C'est un compliment ?"
+        reponse: "« Pas vraiment. » Il achète un pain qu'il ne mange pas tout de suite. « Chez nous, quand deux personnes se tiennent pareil, on cherche un frère. »"
+      - label: "J'étais à la fenêtre"
+        reponse: "« Je sais. Je vous ai vu. Lui aussi, il vous regardait. » Il touche sa casquette qu'il n'a pas et s'en va du côté du stade."
+
+  # ======================================================= saison 2 : les nuits
+  - id: h1.sc.carcasse
+    titre: "La carcasse"
+    roles: [entraineur]
+    lieu: garage
+    tranches: [aprem]
+    qui: commercant
+    si: "flag('histoire_h1') && flag('h1_berline_brulee')"
+    texte: "Au fond du garage du Pont, la berline du président, noire jusqu'aux jantes. Le garagiste soulève une bâche : « Je la garde pour l'expert. Le masque, je l'ai rangé dans la boîte à gants. »"
+    choix:
+      - label: "Montrez-le-moi"
+        reponse: "Il ouvre la boîte à gants avec un chiffon, sans toucher la poignée. Le masque est intact. La chaleur n'a même pas gondolé le carton."
+      - label: "Laissez-le dedans"
+        reponse: "« C'est ce que je fais depuis trois semaines. » Il rabat la bâche. « Il n'est à personne, apparemment. Et personne ne veut que je le jette. »"
+
+  - id: h1.sc.vitrine_lame
+    titre: "Le chiffre sous le blanc"
+    roles: [entraineur]
+    lieu: banque
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h1') && flag('h1_vitrine')"
+    texte: "Devant la Banque Aubérivoise, un employé gratte la vitrine à la lame de rasoir. Le rouge part, le chiffre reste en creux dans la buée : 1974. « Ça revient à chaque averse. »"
+    choix:
+      - label: "Je l'aide"
+        reponse: "Vous grattez à deux jusqu'à l'ouverture. Le directeur vous regarde faire derrière la porte vitrée, sans sortir, une tasse à la main."
+        effets: {jauges: {direction: 1}}
+      - label: "Laissez-le"
+        reponse: "Il range sa lame. « Le directeur dit pareil, au fond. Il dit qu'on ne lave pas une année, qu'on attend qu'elle passe. »"
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h1.sc.veilleur
+    titre: "Le veilleur de L'Écho"
+    roles: [entraineur]
+    lieu: echo
+    tranches: [soir]
+    qui: ancien
+    si: "flag('histoire_h1') && flag('h1_archives')"
+    texte: "Le veilleur de nuit de L'Écho fume devant la porte. « Ils sont entrés avec la clé. Ils ont pris 1974 et laissé 1973. Des gens qui savent lire les étagères. »"
+    choix:
+      - label: "Qui avait la clé ?"
+        reponse: "« Tout le monde, en 1974. On l'accrochait au clou de la photocopieuse. » Il jette sa cigarette dans le caniveau. « Le clou y est encore. »"
+      - label: "Bonne nuit"
+        reponse: "« Bonne nuit, oui. » Il rentre, et tu l'entends tirer les deux verrous, puis un troisième qu'il n'avait pas la semaine dernière."
+
+  - id: h1.sc.fleurs_quai
+    titre: "Des fleurs sur la rambarde"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [aprem]
+    qui: passante
+    si: "flag('histoire_h1') && flag('h1_passerelle')"
+    texte: "Sur le quai, une dame attache des fleurs à la rambarde, au-dessus de la passerelle. « Pour le gardien. Il n'est pas mort, je sais. Mais on ne sait jamais, avec les mâchoires. »"
+    choix:
+      - label: "Il s'en remettra"
+        reponse: "« C'est ce qu'on dit toujours. » Elle serre le nœud. « Mon mari aussi s'en était remis. Il ne parlait plus que de ça, après. »"
+      - label: "J'apporte les fleurs"
+        francs: -30
+        reponse: "Tu rapportes des fleurs du marché. Elle les attache à côté des siennes, en les comptant. Le soir, quelqu'un en ajoute un troisième bouquet."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h1.sc.ardoise_doc
+    titre: "L'ardoise des enfants"
+    roles: [entraineur]
+    lieu: cabinet
+    tranches: [aprem]
+    qui: sabatier
+    si: "flag('histoire_h1') && flag('h1_ardoise_lue')"
+    texte: "Au cabinet, le Doc range l'ardoise de Gigi dans le coffre à jouets. « Elle sert aux enfants, d'habitude, pour montrer où ils ont mal. On voit encore la craie, à contre-jour. »"
+    choix:
+      - label: "Effacez-la à l'eau"
+        reponse: "Il la passe sous le robinet, longtemps. Quand il la ressort, les lettres ont disparu ; il la sèche avec la manche de sa blouse, comme Gigi."
+      - label: "Rangez-la comme ça"
+        reponse: "Il la pose au fond du coffre, sous un camion de pompiers. « Les enfants écrivent par-dessus. À la fin, on ne lit plus rien. C'est fait pour ça. »"
+
+  - id: h1.sc.concierge
+    titre: "La bicyclette de la concierge"
+    roles: [entraineur]
+    lieu: domicile
+    tranches: [matin]
+    qui: passante
+    si: "flag('histoire_h1') && flag('h1_voiture_saisie')"
+    texte: "La concierge de la rue des Lilas t'attend en bas avec sa bicyclette. « Pour vos entraînements, le temps qu'on vous rende la voiture. J'ai vérifié le panier : pas de masque dedans. »"
+    choix:
+      - label: "Je la prends"
+        reponse: "Une semaine à vélo jusqu'au terrain. Au virage du pont, des gamins te dépassent en courant, ton visage en carton sur la figure, et crient « Plus vite ! »."
+        effets: {jauges: {vestiaire: 1, tribunes: 1}}
+      - label: "Je marcherai"
+        reponse: "« Comme vous voulez. » Elle range la bicyclette dans la cour, le guidon tourné vers la rue, au cas où tu changerais d'avis."
+
+  - id: h1.sc.parieur
+    titre: "Le score exact"
+    roles: [entraineur]
+    lieu: tabac
+    tranches: [matin]
+    qui: ancien
+    si: "flag('histoire_h1') && flag('h1_quai_paye')"
+    texte: "Au tabac du Quai, un vieux parieur cache son ticket quand tu entres, puis le ressort. « On prend vos matchs à l'arrière, au score exact. Le zéro-deux paie bien, en ce moment. Bizarre, non ? »"
+    choix:
+      - label: "Ne pariez pas dessus"
+        reponse: "Il plie son ticket très lentement. « Alors c'est que ça paie encore mieux que je pensais. » Il sort sans acheter ses cigarettes."
+        effets: {jauges: {direction: -1}}
+      - label: "Je ne parie pas"
+        reponse: "« Moi non plus, avant 1974. » Il te tient la porte. « Après, on s'est tous mis à parier. Il fallait bien savoir combien ça valait, un capitaine. »"
+
+  - id: h1.sc.clou
+    titre: "Le rectangle clair"
+    roles: [entraineur]
+    lieu: clubhouse
+    tranches: [matin]
+    qui: enfant
+    si: "flag('histoire_h1') && flag('h1_photo_volee')"
+    texte: "Dans l'escalier du club-house, un gamin du centre s'est arrêté devant le clou et le rectangle plus clair du mur. « Il y avait qui, là ? Josiane ne veut pas dire. »"
+    choix:
+      - label: "Le Racing de 1974"
+        reponse: "Il compte les marches jusqu'au clou, comme si la réponse était un nombre. « Et ils ont gagné ? » Tu ne réponds pas. Il comprend tout seul, à ta tête."
+      - label: "Personne"
+        reponse: "« Alors pourquoi on a laissé le clou ? » Il remonte en courant, deux marches à la fois, et saute la neuvième sans savoir pourquoi."
+
+  # ======================================================= saison 3 : le dernier soir
+  - id: h1.sc.cierge
+    titre: "Le cierge de Saint-Aubin"
+    roles: [entraineur]
+    lieu: eglise
+    tranches: [matin]
+    si: "flag('histoire_h1') && flag('h1_lettre_lue')"
+    texte: "À Saint-Aubin, devant le pilier des cierges, un papier plié sous un lumignon : H. R., 1975, d'une écriture tremblée. La flamme est neuve. Quelqu'un est passé ce matin."
+    choix:
+      - label: "J'en allume un autre"
+        francs: -5
+        reponse: "Le tien brûle à côté du sien, un peu plus vite. Le sacristain passe, regarde les deux, et éteint les autres pour économiser."
+      - label: "Je lis le papier"
+        reponse: "Il n'y a que les initiales et la date. Au dos, une seule ligne, plus appuyée : « Pardon, capitaine. » Tu le replies et le remets à sa place."
+
+  - id: h1.sc.car_six_heures
+    titre: "Le car de six heures"
+    roles: [entraineur]
+    lieu: gareRoutiere
+    tranches: [matin]
+    qui: passant
+    si: "flag('histoire_h1') && saison == 3"
+    texte: "Six heures, la gare routière. Le car de six heures attend, moteur allumé. Le chauffeur boit son café debout : « Il part toujours à l'heure, celui-là. Depuis quarante ans. Vous montez ? »"
+    choix:
+      - label: "J'achète un billet"
+        francs: -40
+        reponse: "Tu ne montes pas. Tu plies le billet en deux et le mets dans ta poche intérieure, avec la lettre. Le car part à six heures pile."
+      - label: "Je regarde partir"
+        reponse: "Le car tourne au coin de la rue du Port. Sur la vitre arrière, quelqu'un a collé un masque, ton visage, qui te regarde rapetisser."
+
+  - id: h1.sc.palettes
+    titre: "Les palettes de la friche"
+    roles: [entraineur]
+    lieu: friche
+    tranches: [soir]
+    qui: fan
+    si: "flag('histoire_h1') && flag('h1_appel')"
+    texte: "À la friche, quatre gars du virage empilent des palettes, beaucoup trop pour un soir de froid. « C'est pour le dernier samedi. Gégé veut un feu qui se voie des Hauts-de-Rive. »"
+    choix:
+      - label: "Un feu pour quoi ?"
+        reponse: "Ils se regardent. Le plus jeune ouvre la bouche, l'autre lui donne un coup de coude. « Pour se réchauffer. Il fera froid, ce soir-là. »"
+      - label: "Je vous aide"
+        reponse: "Tu portes trois palettes. Ils te laissent faire sans rien dire. Au troisième voyage, l'un d'eux te tend un gant, sans te regarder."
+        effets: {jauges: {tribunes: 2}}
+
+  - id: h1.sc.hauts_de_rive
+    titre: "Une voiture aux Hauts-de-Rive"
+    roles: [entraineur]
+    lieu: rue
+    tranches: [nuit]
+    qui: passant
+    si: "flag('histoire_h1') && saison == 3 && flag('h1_appel')"
+    texte: "La nuit, sur la route des Hauts-de-Rive, une voiture banalisée stationne devant la villa du président, phares éteints. Le conducteur baisse la vitre en te reconnaissant : « Promenade ? »"
+    choix:
+      - label: "Promenade"
+        reponse: "« Moi aussi. Tous les soirs, depuis lundi. » Il remonte la vitre. Dans le rétroviseur, tu vois sa main noter l'heure."
+      - label: "Je fais demi-tour"
+        reponse: "Tu fais demi-tour. Derrière toi, la villa allume une fenêtre à l'étage, puis l'éteint, comme si quelqu'un vérifiait que tu étais parti."
+
+  - id: h1.sc.plaque_gravee
+    titre: "Les doigts sur le nom"
+    roles: [entraineur]
+    lieu: caveau
+    tranches: [matin, aprem]
+    qui: passante
+    si: "flag('histoire_h1') && flag('h1_nom_grave')"
+    texte: "Au caveau, une vieille dame passe les doigts dans les lettres neuves de la plaque, RAVENEL, comme on lit en braille. « Mon mari était dans la Nord, ce jour-là. Il m'avait dit : pas lui. »"
+    choix:
+      - label: "Il avait raison"
+        reponse: "« Il avait souvent raison, et jamais au bon moment. » Elle laisse ses doigts sur le R, encore un instant, puis les essuie à son manteau."
+      - label: "Il s'est trompé"
+        reponse: "Elle te regarde enfin, de bas en haut. « Vous êtes son enfant. Il n'y a que les enfants qui disent ça. » Elle repart sans se retourner."
+
+# Le match du samedi, mis en scène par la ville : les phrases d'action du livre,
+# tant que la Nord porte les masques. Elles s'ajoutent à celles de ville.yaml.
+match_textes:
+  pour:
+    - texte: "{Qui} marque, et trois mille fois ton visage se lève dans la Nord, d'un seul geste, comme une seule personne : {score}."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+    - texte: "But de {qui}. Des masques volent par-dessus la main courante ; un ramasseur de balles en rapporte quatre au bord du banc : {score}."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+  contre:
+    - texte: "{Adv} marque. Dans la Nord, trois mille visages en carton restent levés, immobiles, comme s'ils n'avaient rien vu : {score}."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+    - texte: "But de {adv}. Au premier rang de la Nord, quelqu'un retourne son masque face contre la marche, puis un autre, puis tout le rang : {score}."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo) && saison >= 2"
+  arret:
+    - texte: "{Gardien} détourne en corner. Derrière le but, la Nord agite ses masques comme des éventails, et le bruit du carton couvre tout."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+  fin_v:
+    - texte: "Coup de sifflet final. La Nord lance ses masques en l'air ; il en pleut sur la pelouse pendant que les joueurs rentrent au vestiaire."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+  fin_n:
+    - texte: "Match nul. Dans la Nord, la moitié des masques est levée, l'autre baissée. Gégé, debout sur la rambarde, compte les deux moitiés."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"
+  fin_d:
+    - texte: "C'est fini. Dans la Nord, on plie les masques en quatre sans un mot et on les glisse dans les poches, pour le prochain samedi."
+      si: "flag(histoire_h1) && flag(h1_masques_tifo)"

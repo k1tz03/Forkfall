@@ -1,0 +1,406 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les intrigues du livre.
+# Le script (h1_script.yaml) les ouvre par `schedule` à leur page ; elles se
+# prolongent d'une saison à l'autre par des fusées longues (`at_season`). Elles
+# sont aussi au réservoir du postulat, mais seulement en secours d'épilogue
+# (`season >= 3`) : le tirage de saison ne les déplace jamais avant l'acte
+# final. Les cartes sont dans content/cards/entraineur/h1_intrigues.yaml.
+#
+#   Les masques (S0)          la bière tiède et la phrase ; le compte à la
+#                             grille ; l'imprimeur qui veut vendre ton visage
+#                             (le sponsor propre, Cartonnages de la Rive).
+#   Le maillot du 5 (S0 → S2) l'enchère contre Gigi ; le ticket du Quai derrière
+#                             le carton du cadre ; ce que Gégé en fait.
+#   La plaque sans nom        le caveau (S0) ; les Rameaux, Gégé et le buis
+#     (S0 → S2)               (S1) ; le marbrier (S2, si tu l'as rejoint).
+#   Ce que Gigi a vu          le placard fermé de la buvette (S0) ; l'ardoise du
+#     (S0 → S2)               cabinet (S1, les jours qui suivent la passerelle,
+#                             la mâchoire encore tenue par des fils) ; le filet
+#                             de la finale (S2).
+#   La pellicule (S0 → S2)    la boîte à chaussures d'Odette ; le tirage (le
+#                             couloir, l'enveloppe, une manche et un brassard) ;
+#                             la photo vendue à Vaubourg en 1977.
+#   L'inspecteur (S1 → S2)    le masque roussi sur ton bureau ; la phrase peinte
+#                             sur le mur des guichets (si tu l'as dite) ; le
+#                             coup de sifflet de 1974, dans la Nord vide.
+#   Massenet, 1974 (S0 → S1)  l'article plié en quatre ; les archives vidées
+#                             (sombre) ; la page jamais publiée, sur un gardien
+#                             qui devait au Quai — les masques l'ont lue, et la
+#                             passerelle vient après.
+#   Le coffre (S2)            la vitrine de la banque, au matin du ticket du
+#                             maillot (qui l'ouvre) ; la confession
+#                             d'Henri dans le coffre du président ; L'Écho du
+#                             lendemain, si tu as dit « Publiez ».
+#   Les Courses du Quai       le fils du bookmaker de 1974 et sa prime de
+#     (S1 → S2)               maintien (le sponsor louche) ; le match à ne pas
+#                             perdre de trop ; la brigade.
+#
+# Plus un événement tiré, `en.h1.sb_perquisition` : la mission « Le carton de
+# Gégé » (content/ville/missions_h1.yaml) laisse un carton sous ton lit ; le
+# metteur en scène décide si Lhoste vient le chercher.
+#
+# Toutes `once`, `same_club: true` (ce sont des gens d'Aubérive) : si la
+# carrière quitte le Racing, elles tombent, et une « Nouvelle du passé » dit ce
+# qu'elles sont devenues (`epilogue.journal`).
+arcs:
+  # ================================================================ LES MASQUES
+  - id: en.h1.masques
+    title: "Les masques"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: tribune
+    carrier: gege
+    cast: [gege, aulard, vecchio]
+    issues: [vendus, gardes]
+    traces:
+      h1_phrase_buvette: "{annee} : « Ceux de 74 paieront », a dit {nom} à la buvette, devant Gégé et une bière tiède."
+      h1_masques_dehors: "{annee} : cent quatre-vingt-huit masques ne sont pas revenus au local. Les gamins dorment avec."
+      h1_sp_cartons:     "{annee} : les Cartonnages de la Rive vendent le visage de {nom} à la boutique, quinze francs pièce."
+    hint: "Trois mille visages en carton, et un homme qui les compte."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : trois mille masques en carton au virage du Racing, et un homme pour les compter à la grille."
+    steps:
+      - id: biere
+        card: en.h1.masques.biere
+        next: [ { step: compte, in: [2, 3] } ]
+      - id: compte
+        card: en.h1.masques.compte
+        next: [ { step: imprimeur, in: [3, 5] } ]
+      - id: imprimeur
+        card: en.h1.masques.imprimeur
+        next: []
+
+  # ================================================================ LE MAILLOT
+  - id: en.h1.maillot
+    title: "Le maillot du 5"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: argent
+    carrier: vecchio
+    cast: [vecchio, gege, camille]
+    issues: [achete, laisse]
+    traces:
+      h1_maillot:       "{annee} : {nom} a payé trente-cinq mille francs le maillot de la finale de 1974, la boue dessus."
+      h1_maillot_gigi:  "{annee} : Gigi Vecchio a emporté aux enchères le maillot de 1974. Il ne l'a pas sorti du papier."
+      h1_ticket_montre: "{annee} : un ticket du Quai, daté de la veille de la finale de 1974, punaisé au-dessus du bar du local."
+    hint: "Un maillot numéro 5, de la boue sur le numéro, et un carton au dos du cadre."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le maillot du 5 de 1974 a quitté la boutique du Racing. Ce qu'il cachait aussi."
+    steps:
+      - id: enchere
+        card: en.h1.maillot.enchere
+        next: [ { step: ticket, at_season: 2, at: [2, 3] } ]
+      - id: ticket
+        card:
+          - { id: en.h1.maillot.ticket_gigi, if: "flag('h1_maillot_gigi')" }
+          - { id: en.h1.maillot.ticket }
+        next: [ { step: aveu, if: "flag('h1_ticket_montre')", in: [3, 5] } ]
+      - id: aveu
+        card: en.h1.maillot.aveu
+        next: []
+
+  # ================================================================ LA PLAQUE
+  - id: en.h1.plaque
+    title: "La plaque sans nom"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: famille
+    carrier: gege
+    cast: [gege, josiane, camille]
+    issues: [nom_grave, attente]
+    traces:
+      h1_plaque_qui: "{annee} : au caveau du Racing, {nom} a demandé qui avait payé la plaque sans nom. Un homme en écharpe."
+      h1_rameaux:    "{annee} : le jour des Rameaux, {nom} et Gégé devant la plaque sans nom, du buis entre eux."
+      h1_nom_grave:  "{annee} : RAVENEL, sur la plaque neuve du caveau du Racing. {nom} a signé à la place du club."
+    hint: "Une plaque neuve au caveau du Racing, et personne pour dire à qui elle est."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : au caveau du Racing, du buis frais devant la plaque neuve. Le gardien note qui s'arrête."
+    steps:
+      - id: caveau
+        card: en.h1.plaque.caveau
+        next: [ { step: rameaux, at_season: 1, at: [13, 13] } ]
+      - id: rameaux
+        card:
+          - { id: en.h1.plaque.rameaux_qui, if: "flag('h1_plaque_qui')" }
+          - { id: en.h1.plaque.rameaux }
+        next: [ { step: graveur, if: "flag('h1_rameaux')", at_season: 1, at: [12, 12] } ]
+      - id: graveur
+        card: en.h1.plaque.graveur
+        next: []
+
+  # ================================================================ CE QUE GIGI A VU
+  - id: en.h1.gigi
+    title: "Ce que Gigi a vu"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: vecchio
+    cast: [vecchio, sabatier, lhoste]
+    issues: [filet_rendu, filet_garde]
+    traces:
+      h1_ardoise_lue:  "{annee} : sur une ardoise, à la craie, Gigi Vecchio a écrit ce qu'il avait fait en 1974. Puis il a effacé."
+      h1_filet_rendu:  "{annee} : Gigi Vecchio a ouvert le placard de la buvette et donné à {nom} le filet de la finale de 1974."
+    hint: "Un placard fermé à la buvette, et un gardien qui ne jette pas les filets."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : Gigi Vecchio recoud au fil rouge les filets du terrain annexe. Il ne dit pas pour qui."
+    steps:
+      - id: placard
+        card: en.h1.gigi.placard
+        next: [ { step: ardoise, at_season: 1, at: [12, 13] } ]
+      - id: ardoise
+        card:
+          - { id: en.h1.gigi.ardoise_police, if: "flag('h1_police_gigi')" }
+          - { id: en.h1.gigi.ardoise }
+        next: [ { step: filet, at_season: 1, at: [5, 6] } ]
+      - id: filet
+        card:
+          - { id: en.h1.gigi.filet, if: "flag('h1_ardoise_lue') && relation.vecchio >= 0" }
+          - { id: en.h1.gigi.filet_ferme }
+        next: []
+
+  # ================================================================ LA PELLICULE
+  - id: en.h1.pellicule
+    title: "La pellicule"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: presse
+    carrier: odette
+    cast: [odette, josiane, aulard]
+    issues: [tiree, gardee]
+    traces:
+      h1_negatif:     "{annee} : le couloir de la finale de 1974, tiré du négatif d'Odette Marsal. Vaubourg y tend une enveloppe."
+      h1_photo_volee: "{annee} : la photo de 1974 a disparu de l'escalier du club-house dans la nuit. Il reste le clou."
+      h1_photo_1977:  "{annee} : Odette Marsal a vendu en 1977 une photo du couloir de la finale. À Jean-Marie Vaubourg."
+    hint: "Une boîte à chaussures sous le comptoir d'une papeterie, et une pellicule jamais tirée."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : Odette Marsal a rangé ses négatifs de 1974. Il en manque un dans la boîte à chaussures."
+    steps:
+      - id: boite
+        card:
+          - { id: en.h1.pellicule.boite_froide, if: "flag('h1_odette_froide')" }
+          - { id: en.h1.pellicule.boite }
+        next: [ { step: tirage, at_season: 1, at: [9, 10] } ]
+      - id: tirage
+        card:
+          - { id: en.h1.pellicule.tirage, if: "flag('h1_negatif_tire')" }
+          - { id: en.h1.pellicule.tirage_negatif }
+        next: [ { step: vendue, at_season: 1, at: [7, 8] } ]
+      - id: vendue
+        card:
+          - { id: en.h1.pellicule.vendue, if: "flag('h1_negatif_tire')" }
+          - { id: en.h1.pellicule.vendue_negatif }
+        next: []
+
+  # ================================================================ L'INSPECTEUR
+  - id: en.h1.lhoste
+    title: "L'inspecteur"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: instances
+    carrier: lhoste
+    cast: [lhoste, gege, aulard]
+    issues: [vaubourg, toi]
+    traces:
+      h1_mur:         "{annee} : CEUX DE 74 PAIERONT, en rouge sur le mur des guichets. L'inspecteur l'a lu à voix haute."
+      h1_lhoste_1974: "{annee} : l'inspecteur Lhoste était dans la Nord à la finale de 1974. Il a dit à {nom} qu'il avait pleuré."
+    hint: "Un masque roussi posé sur ton bureau, côté visage."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : à Portclair, le dossier des nuits masquées tient dans trois cartons. L'inspecteur en a gardé un masque."
+    steps:
+      - id: bureau
+        card:
+          - { id: en.h1.lhoste.bureau_police, if: "flag('h1_police_fenetre')" }
+          - { id: en.h1.lhoste.bureau }
+        next:
+          - { step: mur, if: "flag('h1_phrase_buvette')", in: [3, 4] }
+          - { step: sifflet, at_season: 1, at: [4, 5] }
+      - id: mur
+        card: en.h1.lhoste.mur
+        next: [ { step: sifflet, at_season: 1, at: [4, 5] } ]
+      - id: sifflet
+        card:
+          - { id: en.h1.lhoste.sifflet_nino, if: "flag('h1_voiture_saisie')" }
+          - { id: en.h1.lhoste.sifflet }
+        next: []
+
+  # ================================================================ MASSENET, 1974
+  - id: en.h1.massenet
+    title: "Massenet, 1974"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: presse
+    carrier: meneche
+    cast: [meneche, vecchio, odette]
+    issues: [publie, brule]
+    traces:
+      h1_article_1974:    "{annee} : Massenet a montré à {nom} son article de mai 1974, plié en quatre : LE CAPITAINE A VENDU."
+      h1_archives:        "{annee} : les archives de L'Écho vidées en une nuit. Un masque sur la chaise de Pierre Massenet."
+      h1_massenet_publie: "{annee} : Massenet a publié la page qu'il gardait depuis 1974 : un gardien devait au Quai."
+    hint: "Un titre de mai 1974, plié en quatre dans un portefeuille."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : Pierre Massenet relit encore chaque mars son article de 1974. Il ne le montre plus."
+    steps:
+      - id: article
+        card: en.h1.massenet.article
+        next: [ { step: archives, at_season: 1, at: [6, 6] } ]
+      - id: archives
+        card: en.h1.massenet.archives
+        next: [ { step: notes, in: [1, 3] } ]
+      - id: notes
+        card: en.h1.massenet.notes
+        next: []
+
+  # ================================================================ LE COFFRE
+  - id: en.h1.coffre
+    title: "Le coffre"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: president
+    carrier: aulard
+    cast: [aulard, josiane, gege]
+    issues: [pacte, defi]
+    traces:
+      h1_vitrine:      "{annee} : « 1974 » en rouge sur la vitrine de la Banque Aubérivoise, un masque au distributeur."
+      h1_pacte_coffre: "{annee} : la confession d'Henri Ravenel est restée au coffre du président. {nom} a promis."
+      h1_coffre_defi:  "{annee} : « Publiez. Moi aussi. » {nom} devant le coffre ouvert du président."
+    hint: "Une feuille de 1975 au fond d'un coffre, et une signature que tu connais."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : Jean-Marie Vaubourg a changé la combinaison de son coffre. Il ne dit pas pourquoi."
+    steps:
+      - id: vitrine
+        card: en.h1.coffre.vitrine
+        next: [ { step: coffre, in: [5, 7] } ]
+      - id: coffre
+        card:
+          - { id: en.h1.coffre.coffre_photo, if: "flag('h1_photo_1977')" }
+          - { id: en.h1.coffre.coffre }
+        next: [ { step: echo, if: "flag('h1_coffre_defi')", in: [1, 2] } ]
+      - id: echo
+        card: en.h1.coffre.echo
+        next: []
+
+  # ================================================================ LES COURSES DU QUAI
+  - id: en.h1.quai
+    title: "Les Courses du Quai"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: contrat
+    carrier: vukic
+    cast: [vukic, lhoste, aulard]
+    issues: [prime, refus]
+    traces:
+      h1_quai_paye:   "{annee} : une prime de maintien en liquide, des Courses du Quai. Ce que 1974 avait commencé."
+      h1_quai_refuse: "{annee} : {nom} a refusé l'enveloppe du fils Sauvat, des Courses du Quai. Il a payé le café."
+      h1_quai_trahi:  "{annee} : le Racing est revenu de 0-2 contre un club du Quai. Un homme en imperméable est parti avant la fin."
+    hint: "Une enveloppe sous un cendrier, et un nom de famille qui prenait déjà les paris en 1974."
+    start: [2, 6]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : au tabac du Quai, le fils Sauvat prend toujours les paris sur le Racing. Ses registres datent de 1974."
+    steps:
+      - id: offre
+        card: en.h1.quai.offre
+        next: [ { step: prime, if: "flag('h1_quai_paye')", in: [8, 10] } ]
+      - id: prime
+        card: en.h1.quai.prime
+        next: [ { step: brigade, at_season: 1, at: [8, 8] } ]
+      - id: brigade
+        card:
+          - { id: en.h1.quai.brigade_tenu, if: "flag('h1_quai_tenu')" }
+          - { id: en.h1.quai.brigade }
+        next: []
+
+  # ============================================== ÉVÉNEMENT : LE CARTON DE GÉGÉ
+  # La mission de la ville « Le carton de Gégé » pose `h1_vl_carton` : un
+  # carton sous ton lit, « des masques, et autre chose ». La perquisition est
+  # un tirage du metteur en scène, comme dans la fiche : elle peut ne jamais
+  # venir. Trouvé, le carton ouvre la garde à vue — ou Gégé tombe à ta place.
+  - id: en.h1.sb_perquisition
+    title: "Six heures, ta porte"
+    kind: evenement
+    roles: [entraineur]
+    postulats: [promu]
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h1') && flag('h1_vl_carton') && stats.clubs < 2"
+    chance: 0.3
+    cast: [lhoste, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      h1_carton_livre: "{annee} : Gégé arrêté à la buvette, à midi, pour un carton trouvé chez {nom}."
+    steps:
+      - id: porte
+        card: en.h1.sb.perquisition
+        next: []

@@ -1,0 +1,751 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les cartes des intrigues du livre
+# (content/arcs/entraineur/h1_intrigues.yaml). Le script les ouvre à leur page ;
+# chaque étape garde son lieu et son heure, parce qu'en ville elle attend là.
+#
+# Les graines et ce qui les paie, d'une carte à l'autre :
+#   · le sous-bock de la buvette (la bière) → le mur des guichets (Lhoste) ;
+#   · le placard fermé de Gigi → l'ardoise du cabinet → le filet ;
+#   · le brassard au bord du tirage (la pellicule) → l'ardoise, puis le coffre ;
+#   · le maillot du 5 → le ticket derrière le carton → ce que Gégé en fait ;
+#   · les archives vidées de L'Écho → la passerelle (les masques ont lu les
+#     notes de Massenet sur un gardien qui devait au Quai) ;
+#   · la vitrine de la banque, « 1974 » → le coffre du président.
+#
+# Personne n'est innocent sur la photo : Vaubourg a vendu la finale, Gigi a
+# laissé passer les trois buts, Henri a pris l'enveloppe. Les cartes ne le
+# disent jamais d'un coup ; chaque intrigue en porte un morceau.
+cards:
+  # ══════════════════════════════════════════════════════════ LES MASQUES
+  # 1/3 · La première bière (scène 4). Le soir du premier match.
+  - id: en.h1.masques.biere
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "La buvette, le soir du match. Gégé pose une bière tiède et un masque plié en quatre : « Le premier sorti de l'imprimerie. Ceux de 74 n'ont jamais payé, {toi}. Tu le sais, ça ? »"
+    left:
+      label: "Ils paieront"
+      effects: {relation: {gege: 1}, set: [h1_phrase_buvette], schedule: [{card: en.h1.gigi.placard, in: [5, 6]}]}
+      answer: "Gégé ne répond pas. Au bout du comptoir, un ancien écrit tes deux mots au stylo sur un sous-bock, et le glisse dans sa poche."
+    right:
+      label: "74, c'est fini"
+      effects: {direction: "+", schedule: [{card: en.h1.gigi.placard, in: [5, 6]}]}
+      answer: "« Pour toi, peut-être. » Il déplie le masque sur le zinc, ton visage tourné vers le plafond, et sort en le laissant là."
+
+  # 2/3 · Le compte. L'horloge du livre : Gégé compte comme on tient une caisse.
+  - id: en.h1.masques.compte
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "À la grille de la Nord, Gégé ficelle les masques rendus par paquets de cent : « Deux mille huit cent douze. Il en manque cent quatre-vingt-huit. Les gamins dorment avec. On les reprend ? »"
+    left:
+      label: "Laissez-les-leur"
+      effects: {direction: "-", set: [h1_masques_dehors], react: en.h1.re.nino_square}
+      answer: "Il fait un nœud double. « Cent quatre-vingt-huit gamins qui dorment avec {nom} sous l'oreiller. Ça ne s'était jamais vu, ici. »"
+    right:
+      label: "Récupérez-les tous"
+      effects: {vestiaire: "+", relation: {gege: -1}}
+      answer: "Il écrit le chiffre sur le carton. Le lendemain, deux gamins rendent le leur en pleurant ; un troisième file vers le square."
+
+  # 3/3 · L'imprimeur. Le sponsor propre, en apparence : Cartonnages de la Rive.
+  - id: en.h1.masques.imprimeur
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vaubourg fait entrer Monsieur Pradel, des Cartonnages de la Rive, un short de démonstration à la main, son nom sur la hanche : « Il vend tes masques à la boutique, {toi}. Quinze francs pièce. »"
+    left:
+      label: "Vendez-les"
+      effects: {caisse: "++", tribunes: "-", relation: {aulard: 1}, var: {ville_francs: "+15000"}, set: [h1_sp_cartons], outcome: vendus}
+      answer: "Pradel signe au stylo-plume, Vaubourg contresigne. La semaine suivante, ton visage est en vitrine de la boutique, sous une étiquette rouge."
+    right:
+      label: "Ce visage n'est pas à vendre"
+      effects: {tribunes: "+", caisse: "-", relation: {aulard: -1}, outcome: gardes}
+      answer: "Pradel replie son short sans se vexer. « Le virage me paie l'encre en liquide, vous savez. » Vaubourg, lui, ne replie rien."
+
+  # ══════════════════════════════════════════════════════════ LE MAILLOT DU 5
+  # 1/3 · L'enchère (scène 5). Gigi lève la main contre toi. Odette regarde.
+  - id: en.h1.maillot.enchere
+    roles: [entraineur]
+    arc: caisse
+    tags: [caisse, tribunes]
+    speaker: vecchio
+    tone: strategique
+    once: true
+    text: "Les enchères de la boutique : le maillot de la finale de 1974, le 5, la boue encore sur le numéro. Tu lèves la main. Au premier rang, Gigi Vecchio lève la sienne sans se retourner."
+    left:
+      label: "J'enchéris jusqu'au bout"
+      effects: {var: {ville_amende: "+35000", cadeau_maillot_1974: "+1"}, set: [h1_maillot], outcome: achete, schedule: [{card: en.h1.plaque.caveau, in: [2, 4]}, {card: en.h1.pellicule.boite, in: [10, 12]}], react: en.h1.re.odette_boue}
+      answer: "Trente-cinq mille francs. Gigi baisse la main le dernier, puis vient serrer la tienne. Sa paume est sèche, et elle tremble."
+    right:
+      label: "Je le laisse partir"
+      effects: {relation: {vecchio: 1}, set: [h1_maillot_gigi], outcome: laisse, schedule: [{card: en.h1.plaque.caveau, in: [2, 4]}, {card: en.h1.pellicule.boite, in: [10, 12]}], react: en.h1.re.odette_boue}
+      answer: "Gigi l'emporte à vingt mille. Il ne déplie pas le papier ; il le porte jusqu'à la buvette comme on porte un enfant endormi."
+
+  # 2/3 · Le cadre (scène 17). Après la lettre : la même écriture.
+  - id: en.h1.maillot.ticket
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Tu décroches le maillot pour le dépoussiérer. Derrière le carton du cadre, un ticket du tabac du Quai, daté de la veille de la finale : « Racing perdant, trois buts d'écart ». L'écriture de la lettre."
+    left:
+      label: "Je le montre à Gégé"
+      effects: {relation: {gege: 1}, set: [h1_ticket_montre, h1_gege_sait], schedule: [{card: en.h1.coffre.vitrine, in: [1, 2]}]}
+      answer: "Gégé le lit deux fois sans le toucher, les mains dans le dos. Puis il remet sa casquette, et il sort sans un mot."
+    right:
+      label: "Je le garde pour moi"
+      effects: {direction: "+", set: [h1_ticket_garde], schedule: [{card: en.h1.coffre.vitrine, in: [1, 2]}]}
+      answer: "Tu le glisses avec la lettre, dans la même poche. Le soir, le carton remis en place, le cadre penche un peu à gauche."
+
+  - id: en.h1.maillot.ticket_gigi
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, vestiaire]
+    speaker: vecchio
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Gigi pose sur le zinc un ticket du tabac du Quai, daté de la veille de la finale : « Racing perdant, trois buts d'écart ». « Il était derrière le carton du maillot. Je ne l'ai pas lu. Si. »"
+    left:
+      label: "Je le montre à Gégé"
+      effects: {relation: {gege: 1, vecchio: -1}, set: [h1_ticket_montre, h1_gege_sait], schedule: [{card: en.h1.coffre.vitrine, in: [1, 2]}]}
+      answer: "Gigi recule d'un pas quand Gégé entre. Gégé lit le ticket, puis regarde Gigi longtemps, et c'est Gigi qui baisse les yeux."
+    right:
+      label: "Je le garde pour moi"
+      effects: {relation: {vecchio: 1}, set: [h1_ticket_garde], schedule: [{card: en.h1.coffre.vitrine, in: [1, 2]}]}
+      answer: "Gigi hoche la tête comme pour un arrêt facile. « C'est son écriture, tu sais. Il faisait les mêmes boucles sur les feuilles de match. »"
+
+  # 3/3 · Ce que Gégé en fait. Seulement si le ticket lui a été montré.
+  - id: en.h1.maillot.aveu
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, moment]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le local repeint. Gégé a punaisé le ticket du Quai au-dessus du bar, à côté des Unes découpées : « Le tien pariait contre nous. Je l'ai laissé là pour m'en souvenir. Tu veux que je l'enlève ? »"
+    left:
+      label: "Il pariait pour ma mère"
+      effects: {relation: {gege: 1}, tribunes: "-"}
+      answer: "« Pour ta mère. » Il répète les mots comme on vérifie une addition. Puis il enlève la punaise et te rend le ticket, plié en quatre."
+    right:
+      label: "Laissez-le au mur"
+      effects: {vestiaire: "+", relation: {gege: -1}}
+      answer: "Il le laisse. Les jours de match, les plus jeunes le lisent en attendant les cartons. Personne ne leur dit de qui c'est l'écriture."
+
+  # ══════════════════════════════════════════════════════════ LA PLAQUE SANS NOM
+  # 1/3 · Le caveau (scène 6). Le gardien parle de sa loge.
+  - id: en.h1.plaque.caveau
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    lieu: cimetiere
+    tone: leger
+    once: true
+    text: "Au caveau du Racing, une plaque neuve sans nom, entre deux présidents. Le gardien, de sa loge : « Posée en 1989, payée en liquide par un homme en écharpe. Le club n'a jamais voulu dire pour qui. »"
+    left:
+      label: "Je demande qui"
+      effects: {set: [h1_plaque_qui]}
+      answer: "« Je vois qui vient, pas qui paie. » Puis, plus bas : « Lui, il vient aux Rameaux. Avec du buis, et toujours la même écharpe. »"
+    right:
+      label: "Je pose une fleur"
+      effects: {vestiaire: "+"}
+      answer: "Un œillet du fleuriste, posé à plat sur le marbre. Le gardien sort de sa loge pour le regarder, puis il te regarde, toi."
+
+  # 2/3 · Les Rameaux. Gégé et le buis : l'homme en écharpe.
+  - id: en.h1.plaque.rameaux
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, ultras]
+    speaker: gege
+    lieu: cimetiere
+    tone: leger
+    once: true
+    text: "Dimanche des Rameaux. Devant la plaque sans nom, Gégé pose un brin de buis, son écharpe autour du cou : « Mon père est mort en 89. Il m'avait demandé deux choses : la bâche, et ça. »"
+    left:
+      label: "On la fait graver"
+      effects: {relation: {gege: 1}, set: [h1_rameaux]}
+      answer: "« Le club ne voudra pas. » Il redresse le buis. « Le club, ce sera toi, à ce moment-là. Tu verras bien ce que tu veux. »"
+    right:
+      label: "Elle est bien sans nom"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "Il ne discute pas. En partant, il laisse le buis et emporte son écharpe ; d'habitude, dit le gardien, c'est l'inverse."
+
+  - id: en.h1.plaque.rameaux_qui
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, ultras]
+    speaker: gege
+    lieu: cimetiere
+    tone: leger
+    once: true
+    text: "Dimanche des Rameaux. Gégé pose un brin de buis devant la plaque sans nom : « Le gardien m'a dit que tu avais demandé qui. Mon père, en 89, avant de mourir. Moi, j'ai payé. »"
+    left:
+      label: "On la fait graver"
+      effects: {relation: {gege: 1}, set: [h1_rameaux]}
+      answer: "« Le club ne voudra pas. Le club, un jour, ce sera toi. » Il essuie le marbre avec le bout de son écharpe, une seule fois."
+    right:
+      label: "Elle est bien sans nom"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Comme tu veux. » Il laisse le buis. Au portail, il se retourne, et tu comprends qu'il regardait la plaque, pas toi."
+
+  # 3/3 · Le marbrier. Seulement si tu as dit « On la fait graver ».
+  - id: en.h1.plaque.graveur
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, direction]
+    lieu: cimetiere
+    tone: strategique
+    once: true
+    text: "Le marbrier a apporté son carnet au caveau. Il a déjà écrit HENRI RAVENEL, 1932-1975, au crayon. « Le club n'a pas signé. Vous signez à sa place, et on grave lundi ? »"
+    left:
+      label: "Gravez lundi"
+      effects: {direction: "-", tribunes: "+", set: [h1_nom_grave], outcome: nom_grave}
+      answer: "Lundi, le ciseau s'entend jusqu'à la loge. Le gardien écrit dans son cahier : « Ravenel, enfin », et souligne deux fois."
+    right:
+      label: "Pas encore"
+      effects: {direction: "+", outcome: attente}
+      answer: "Il gomme le nom lentement, en laissant les dates. « Je garde la page. Les gens finissent toujours par revenir à la page. »"
+
+  # ══════════════════════════════════════════════════════════ CE QUE GIGI A VU
+  # 1/3 · Le placard. La clé que Gigi porte au cou.
+  - id: en.h1.gigi.placard
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vecchio
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Au fond de la buvette, Gigi Vecchio tourne une clé dans le placard du fond, puis la remet à son cou sans l'avoir ouvert : « Des filets. Les vieux. On ne jette pas un filet qui a servi. »"
+    left:
+      label: "Montrez-les-moi"
+      effects: {relation: {vecchio: -1}}
+      answer: "« Un autre jour. » Il tapote la porte du plat de la main, comme on rassure un cheval. La clé ne quitte plus son cou."
+    right:
+      label: "Gardez vos filets"
+      effects: {relation: {vecchio: 1}}
+      answer: "Il sourit, soulagé, et trop vite. Tout le reste de la soirée, il reste assis entre le placard et la salle."
+
+  # 2/3 · L'ardoise (scène 13). Le cabinet du Doc ; la mâchoire tenue par des fils.
+  - id: en.h1.gigi.ardoise
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Au cabinet du Doc, Gigi, la mâchoire tenue par des fils, écrit à la craie sur une ardoise : TON PÈRE A PRIS L'ENVELOPPE. J'AI LAISSÉ PASSER LES TROIS. Il efface avant que tu aies fini."
+    left:
+      label: "Écrivez-le encore"
+      effects: {relation: {vecchio: 1}, set: [h1_ardoise_lue]}
+      answer: "Il réécrit, plus lentement, et ajoute dessous : 30 000 AU QUAI. Puis il tend l'ardoise vers toi, pour que tu effaces toi-même."
+    right:
+      label: "Effacez tout"
+      effects: {vestiaire: "+", set: [h1_ardoise_lue]}
+      answer: "Il passe la manche une seconde fois, longtemps, jusqu'à ce que l'ardoise soit noire. Le Doc, à la fenêtre, n'a rien vu."
+
+  - id: en.h1.gigi.ardoise_police
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Au cabinet, Gigi a la mâchoire tenue par des fils. Lhoste sort de la pièce en te croisant. Gigi écrit sur l'ardoise : TON PÈRE A PRIS L'ENVELOPPE. Il efface, montre la porte du menton : PAS POUR LUI."
+    left:
+      label: "Écrivez-le encore"
+      effects: {relation: {vecchio: 1}, set: [h1_ardoise_lue]}
+      answer: "Il ajoute, plus bas : J'AI LAISSÉ PASSER LES TROIS. Puis il cache l'ardoise sous la couverture, tournée contre lui."
+    right:
+      label: "Effacez tout"
+      effects: {vestiaire: "+", set: [h1_ardoise_lue]}
+      answer: "La craie part sous la manche. Par la porte vitrée, tu vois Lhoste noter quelque chose sans lever la tête."
+
+  # 3/3 · Le filet. Le placard s'ouvre, ou ne s'ouvre pas.
+  - id: en.h1.gigi.filet
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vecchio
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Gigi ouvre enfin le placard du fond. Un filet plié, gris de poussière, trois mailles recousues au fil rouge : « Ceux de la finale. J'ai recousu où ils sont passés. Je te le donne, {toi} ? »"
+    left:
+      label: "Je le prends"
+      effects: {relation: {vecchio: 1}, vestiaire: "+", set: [h1_filet_rendu], outcome: filet_rendu}
+      answer: "Il te le pose dans les bras, tout le poids d'un coup. « Le placard, je le garde. Il faut bien un endroit où ne rien mettre. »"
+    right:
+      label: "Gardez-le encore"
+      effects: {relation: {vecchio: -1}, outcome: filet_garde}
+      answer: "Il le replie sur ses anciens plis, le fil rouge dessus. La clé reprend sa place à son cou ; il la touche en parlant."
+
+  - id: en.h1.gigi.filet_ferme
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vecchio
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Le placard du fond de la buvette a un cadenas neuf. Gigi essuie des verres sans te regarder : « Tu cherches quelque chose, {toi} ? Ici, tout est à la buvette, maintenant. »"
+    left:
+      label: "Je cherche le filet"
+      effects: {relation: {vecchio: -1}, outcome: filet_garde}
+      answer: "« Quel filet ? » Il range le verre à l'envers, puis il le remet à l'endroit. Il ne t'offre pas à boire."
+    right:
+      label: "Rien, Gigi"
+      effects: {vestiaire: "+", outcome: filet_garde}
+      answer: "Il hoche la tête. Quand tu sors, il pose son torchon sur le cadenas, comme on couvre une cage pour la nuit."
+
+  # ══════════════════════════════════════════════════════════ LA PELLICULE
+  # 1/3 · La boîte à chaussures (scène 9).
+  - id: en.h1.pellicule.boite
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: odette
+    tone: leger
+    once: true
+    text: "Odette Marsal pose une boîte à chaussures sur le comptoir de la papeterie : « Le couloir, après la finale. Jamais tirée. Vous voulez voir qui tenait l'enveloppe ? »"
+    left:
+      label: "Tirez-la"
+      effects: {relation: {odette: 1}, set: [h1_negatif_tire]}
+      answer: "Elle ferme la boutique à midi pile, retourne la pancarte, et emporte la boîte dans l'arrière-salle sans te dire de la suivre."
+    right:
+      label: "Gardez-la encore"
+      effects: {direction: "+"}
+      answer: "Elle remet le couvercle et l'élastique. « Quinze ans, je ne suis pas à un hiver près. Vous, je ne sais pas. »"
+
+  - id: en.h1.pellicule.boite_froide
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: odette
+    tone: leger
+    once: true
+    text: "Odette Marsal attend que la papeterie soit vide. Elle pose une boîte à chaussures sur le comptoir : « À la boutique, vous n'aviez pas le temps. Vous l'avez, maintenant ? »"
+    left:
+      label: "Tirez-la"
+      effects: {relation: {odette: 1}, set: [h1_negatif_tire]}
+      answer: "« Le couloir, après la finale. Jamais tirée. » Elle retourne la pancarte de la porte et descend à la cave sans t'attendre."
+    right:
+      label: "Gardez-la encore"
+      effects: {direction: "+", relation: {odette: -1}}
+      answer: "Elle range la boîte sous le comptoir, à côté de la caisse. « Vous êtes bien de la famille. Lui non plus ne regardait jamais. »"
+
+  # 2/3 · Le tirage. Le couloir de 1974 ; et la nuit d'après, l'escalier vide.
+  - id: en.h1.pellicule.tirage
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: odette
+    tone: strategique
+    once: true
+    text: "Dans l'arrière-salle, les tirages sèchent sur un fil. Le couloir de 1974 : Vaubourg tend une enveloppe kraft. Au bord de l'image, une main la prend. On ne voit qu'une manche, et un brassard."
+    left:
+      label: "Agrandissez le bord"
+      effects: {relation: {odette: 1}, set: [h1_negatif, h1_brassard_vu], react: en.h1.re.josiane_clou}
+      answer: "« Le grain mange tout, à cette taille. » Elle te tend quand même le tirage. Il n'y avait qu'un brassard sur ce terrain-là."
+    right:
+      label: "Ça me suffit"
+      effects: {direction: "+", set: [h1_negatif], react: en.h1.re.josiane_clou}
+      answer: "Tu emportes Vaubourg et l'enveloppe, plié en deux dans ta veste. Odette range le reste du rouleau sans rien dire."
+
+  - id: en.h1.pellicule.tirage_negatif
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: odette
+    tone: strategique
+    once: true
+    text: "Odette te tend le négatif dans une pochette de papier cristal : « Je ne le tirerai pas. Mettez-le à la lumière. » Le couloir de 1974, Vaubourg, une enveloppe kraft, et une main qui la prend."
+    left:
+      label: "Je le regarde ici"
+      effects: {relation: {odette: 1}, set: [h1_negatif, h1_brassard_vu], react: en.h1.re.josiane_clou}
+      answer: "Contre la vitrine, à contre-jour : la main est blanche, la manche noire, et sur la manche, un brassard plus clair que le reste."
+    right:
+      label: "Je le range"
+      effects: {direction: "+", set: [h1_negatif], react: en.h1.re.josiane_clou}
+      answer: "Tu le glisses dans ton portefeuille, derrière ta carte de licence. Odette te regarde faire, et ne dit plus rien."
+
+  # 3/3 · La photo vendue en 1977. Le secret d'Odette.
+  - id: en.h1.pellicule.vendue
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: odette
+    tone: strategique
+    once: true
+    text: "Odette Marsal ferme la papeterie à clé, de l'intérieur : « En 1977, j'ai vendu une autre photo de ce couloir. Vingt-deux mille francs. C'est avec eux que j'ai payé ma boutique. »"
+    left:
+      label: "À qui ?"
+      effects: {relation: {odette: 1}, set: [h1_photo_1977], outcome: tiree}
+      answer: "« À Monsieur Vaubourg, l'année de sa présidence. Il voulait celle où l'on voit sa main. Je lui ai laissé croire qu'elle était unique. »"
+    right:
+      label: "Gardez votre boutique"
+      effects: {direction: "+", outcome: gardee}
+      answer: "Elle rouvre la porte et retourne la pancarte. « Vous êtes gentil{pg, select, f{le} other{}}. C'est un défaut qu'il avait aussi. »"
+
+  - id: en.h1.pellicule.vendue_negatif
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: odette
+    tone: strategique
+    once: true
+    text: "Odette Marsal te rattrape devant la librairie, sans manteau : « Le négatif que je vous ai donné, j'en ai vendu un tirage en 1977, pour payer ma boutique. Je vous dois au moins le nom. »"
+    left:
+      label: "Dites-le"
+      effects: {relation: {odette: 1}, set: [h1_photo_1977], outcome: tiree}
+      answer: "« Vaubourg, l'année de sa présidence. Il croit qu'elle était unique. » Elle rentre en frottant ses bras, sans se retourner."
+    right:
+      label: "Je ne veux pas le savoir"
+      effects: {direction: "+", outcome: gardee}
+      answer: "Elle hoche la tête, déçue ou soulagée, tu ne sais pas. Le lendemain, la vitrine a une carte postale de moins."
+
+  # ══════════════════════════════════════════════════════════ L'INSPECTEUR
+  # 1/3 · Le masque roussi (scène 11). Lhoste s'installe dans ton bureau.
+  - id: en.h1.lhoste.bureau
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "L'inspecteur Lhoste pose un masque roussi sur ton bureau, côté visage : « Trois témoins vous ont vu au parking à une heure, {toi}. Vous, ou votre tête. Vous étiez où ? »"
+    left:
+      label: "J'étais chez moi"
+      effects: {direction: "+", relation: {lhoste: 1}}
+      answer: "« Seul{pg, select, f{e} other{}} ? » Il ne note pas la réponse. Il retourne le masque face contre le bureau, et le laisse là en partant."
+    right:
+      label: "Demandez au virage"
+      effects: {relation: {lhoste: -1, gege: 1}}
+      answer: "« J'ai demandé. Trois mille personnes m'ont donné votre nom. » Il range le masque dans un sac plastique, et le sac dans sa poche."
+
+  - id: en.h1.lhoste.bureau_police
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Lhoste pose un masque roussi sur ton bureau : « En juin, vous avez appelé pour l'homme masqué de la rue des Lilas. Cette nuit-là, trois témoins l'ont revu au parking. Il vous ressemblait. »"
+    left:
+      label: "J'étais chez moi"
+      effects: {direction: "+", relation: {lhoste: 1}}
+      answer: "« Je sais. J'ai fait surveiller votre porte. » Il le dit comme une politesse, et c'en est peut-être une."
+    right:
+      label: "Demandez au virage"
+      effects: {relation: {lhoste: -1, gege: 1}}
+      answer: "« Le virage m'a dit de chercher rue des Lilas. » Il remet le masque dans son sac, sans le fermer."
+
+  # 2/3 · Le mur des guichets. Seulement si la phrase a été dite à la buvette.
+  - id: en.h1.lhoste.mur
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, ultras]
+    speaker: lhoste
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Sur le mur des guichets, en rouge, à hauteur d'homme : CEUX DE 74 PAIERONT. Lhoste te le lit à voix haute, puis il sort d'un sachet un sous-bock de la buvette, tes deux mots au stylo."
+    left:
+      label: "C'était une phrase"
+      effects: {direction: "+", relation: {lhoste: 1}, set: [h1_mur]}
+      answer: "« Ici, une phrase, ça se peint. » Il range le sous-bock. Le lendemain, on passe le mur au blanc ; le rouge revient sous les trois couches."
+    right:
+      label: "Elle est de moi"
+      effects: {tribunes: "+", relation: {lhoste: -1, gege: 1}, set: [h1_mur]}
+      answer: "Lhoste écrit dans son carnet : « {nom}, reconnaît la phrase. » Puis, sans lever les yeux : « Alors c'est vous qui leur avez donné la date. »"
+
+  # 3/3 · Le coup de sifflet. Lhoste était dans la Nord, en 1974.
+  - id: en.h1.lhoste.sifflet
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, moment]
+    speaker: lhoste
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "La Nord vide, un mardi. Lhoste est assis au douzième rang : « J'étais là, en 1974. Vingt-neuf ans. J'ai pleuré au coup de sifflet. Au commissariat, personne ne le sait. Vous allez le dire ? »"
+    left:
+      label: "Pourquoi me le dire ?"
+      effects: {relation: {lhoste: 1}, set: [h1_lhoste_1974], outcome: toi}
+      answer: "« Parce que mon procès-verbal veut un visage, et que j'ai le même que trois mille autres, ce jour-là. » Il ne se lève pas."
+    right:
+      label: "Ça reste ici"
+      effects: {relation: {lhoste: 1}, set: [h1_lhoste_1974], outcome: vaubourg}
+      answer: "Il hoche la tête. « Merci, {nom}. Je cherche du côté de celui qui ne pleurait pas. » Il regarde la loge présidentielle, vide, en face."
+
+  - id: en.h1.lhoste.sifflet_nino
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, moment]
+    speaker: lhoste
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "La Nord vide. Lhoste, au douzième rang : « Le gamin qui portait votre tête, le matin de la saisie, c'est le neveu de Gégé. Six ans. Moi, j'en avais vingt-neuf, ici, en 1974. J'ai pleuré. »"
+    left:
+      label: "Pourquoi me le dire ?"
+      effects: {relation: {lhoste: 1}, set: [h1_lhoste_1974], outcome: toi}
+      answer: "« Le petit dit qu'un monsieur lui a donné dix francs pour un masque dans votre coffre. Un monsieur à la bague. Je ne l'ai pas noté. »"
+    right:
+      label: "Laissez le petit"
+      effects: {relation: {lhoste: 1, gege: 1}, set: [h1_lhoste_1974], outcome: vaubourg}
+      answer: "« Il est déjà laissé. » Il descend les marches une à une, la main sur la rambarde, comme un homme de son âge."
+
+  # ══════════════════════════════════════════════════════════ MASSENET, 1974
+  # 1/3 · L'article plié en quatre. Mars : il le relit chaque année.
+  - id: en.h1.massenet.article
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: meneche
+    lieu: bar
+    tone: strategique
+    once: true
+    text: "Au Corner, Pierre Massenet, du Quotidien, déplie un papier jauni : LE CAPITAINE A VENDU, L'Écho, mai 1974. « Je le relis tous les ans en mars, {toi}. Vous savez pourquoi je vous le montre ? »"
+    left:
+      label: "Dites-moi pourquoi"
+      effects: {relation: {meneche: 1}, set: [h1_article_1974]}
+      answer: "« Parce que vous avez sa façon de lire : d'abord la signature. » Il replie l'article sur ses plis, usés jusqu'à la trame."
+    right:
+      label: "Rangez ça"
+      effects: {direction: "+", relation: {meneche: -1}, set: [h1_article_1974]}
+      answer: "Il le range dans son portefeuille, derrière une photo d'enfant. « C'est ce que je fais depuis seize ans. Ça ne marche pas. »"
+
+  # 2/3 · Les archives (sombre). Rédaction de L'Écho, 22 h.
+  - id: en.h1.massenet.archives
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, sombre]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Vingt-deux heures, aux archives de L'Écho. Les étagères de 1974 sont vides. Un masque est posé sur la chaise de Massenet : « Ils veulent que je relise ce que j'ai écrit ? Je l'ai relu tous les ans. »"
+    left:
+      label: "Qu'avaient-elles ?"
+      effects: {relation: {meneche: 1}, set: [h1_archives]}
+      answer: "« Mes papiers, les planches d'Odette, et un carnet que je n'ai jamais publié. » Il touche le masque du bout d'un stylo, sans le déplacer."
+    right:
+      label: "Je n'y suis pour rien"
+      effects: {direction: "+", set: [h1_archives]}
+      answer: "« Je n'ai pas dit ça. » Il soulève le masque : derrière, au feutre, un seul mot écrit à l'envers, MERCI."
+
+  # 3/3 · La page jamais publiée (S1, entre les archives et la passerelle) : ce
+  # qui mènera les masques sous la passerelle. Le joueur le sait avant eux.
+  - id: en.h1.massenet.notes
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, moment]
+    speaker: meneche
+    lieu: cafe
+    tone: leger
+    once: true
+    text: "Au café de la Mairie, Massenet pose une photocopie : sa page de 1974, jamais parue. « Le gardien remplaçant devait trente mille francs au Quai. L'original dormait aux archives. Ils l'ont lu. »"
+    left:
+      label: "Publiez-la"
+      effects: {tribunes: "-", relation: {meneche: 1}, set: [h1_massenet_publie], outcome: publie}
+      answer: "Elle sort le jeudi, en page cinq, sous un titre de deux mots. Le soir, la buvette est fermée ; Gigi n'a pas ouvert."
+    right:
+      label: "Brûlez-la"
+      effects: {vestiaire: "+", relation: {meneche: -1}, outcome: brule}
+      answer: "Il la plie dans le cendrier et allume un coin avec son briquet. « L'original est chez eux, de toute façon. Pas chez moi. »"
+
+  # ══════════════════════════════════════════════════════════ LE COFFRE
+  # 1/3 · La vitrine. Le matin d'après le ticket du maillot (S2 ; le ticket la
+  # programme) :
+  # « 1974 » sur la vitrine de la banque,
+  # et le directeur qui attend sur le trottoir (ce n'est pas un soir : la nuit
+  # est passée, on en voit l'après).
+  - id: en.h1.coffre.vitrine
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, scandale]
+    lieu: banque
+    tone: leger
+    once: true
+    text: "Huit heures, la Banque Aubérivoise : « 1974 » à la peinture rouge sur la vitrine, un masque scotché au distributeur. Le directeur t'attend sur le trottoir : « Qu'est-ce que vous voulez, exactement ? »"
+    left:
+      label: "Je ne veux rien"
+      effects: {direction: "+", set: [h1_vitrine]}
+      answer: "« Alors dites-le-leur. » Il ouvre sa porte, puis la referme sans entrer, et reste sur le trottoir à regarder la Nord, au loin."
+    right:
+      label: "Pourquoi 1974 ?"
+      effects: {direction: "-", set: [h1_vitrine]}
+      answer: "Un silence. « C'est nous qui avons prêté au président, en 77. Il a remboursé en liquide. » Puis : « Je n'ai rien dit. »"
+
+  # 2/3 · Le coffre (scène 18). La confession d'Henri, jamais publiée.
+  - id: en.h1.coffre.coffre
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vaubourg ouvre son coffre et pose une feuille signée Henri Ravenel, 1975 : « Ses aveux. Jamais publiés. Les masques s'arrêtent, elle reste ici. Ils continuent, L'Écho l'a demain matin. »"
+    left:
+      label: "Gardez-la, j'arrête tout"
+      effects: {direction: "++", relation: {aulard: 1, gege: -1}, set: [h1_pacte_coffre], outcome: pacte}
+      answer: "Il remet la feuille sous une liasse, sans brouiller la combinaison. « Ta mère t'a donné son nom, {nom}. Lui disait oui pareil. »"
+    right:
+      label: "Publiez. Moi aussi"
+      effects: {direction: "--", tribunes: "+", set: [h1_coffre_defi, h1_gege_sait], outcome: defi}
+      answer: "Il tape sa chevalière sur le coffre, deux fois, comme à une porte. « Tu ne sais pas ce qu'il y a sur la deuxième page. Moi, si. »"
+
+  - id: en.h1.coffre.coffre_photo
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vaubourg ouvre son coffre : une feuille signée Ravenel, 1975, et une photo du couloir achetée en 77. « Ses aveux, et ma main. Les masques s'arrêtent, tout reste ici. Sinon, L'Écho a la feuille. »"
+    left:
+      label: "Gardez-la, j'arrête tout"
+      effects: {direction: "++", relation: {aulard: 1, gege: -1}, set: [h1_pacte_coffre], outcome: pacte}
+      answer: "Il range la feuille sur la photo, face contre face. « Odette a dû te dire qu'elle était unique. Elle m'a menti aussi, alors. »"
+    right:
+      label: "Publiez. Moi aussi"
+      effects: {direction: "--", tribunes: "+", set: [h1_coffre_defi, h1_gege_sait], outcome: defi}
+      answer: "« Le négatif, tu l'as ? » Il le demande sans te regarder. Tu ne réponds pas, et c'est une réponse ; il referme le coffre."
+
+  # 3/3 · L'Écho du lendemain. Seulement si tu as dit « Publiez ».
+  - id: en.h1.coffre.echo
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, presse]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Madame Josiane pose L'Écho sur ton bureau, plié à la page : RAVENEL A AVOUÉ, la feuille de 1975 en fac-similé. Une seule page. Elle a mis un sucre près de ton café : « Je monte le courrier ? »"
+    left:
+      label: "Montez-le"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Douze lettres. Onze disent la même chose avec des mots différents. La douzième contient un brin de buis, sans un mot."
+    right:
+      label: "Brûlez-le"
+      effects: {tribunes: "+", relation: {josiane: -1}}
+      answer: "Elle ne brûle rien : elle range le courrier dans un carton qu'elle étiquette « {annee} », et le monte au grenier elle-même."
+
+  # ══════════════════════════════════════════════════════════ LES COURSES DU QUAI
+  # 1/3 · L'enveloppe (le sponsor louche). Le fils du bookmaker de 1974.
+  - id: en.h1.quai.offre
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, scandale]
+    lieu: bar
+    tone: leger
+    once: true
+    text: "Au Corner, le fils Sauvat, des Courses du Quai, glisse une enveloppe sous le cendrier : « Une prime de maintien, {nom}. Contre trois clubs, vous perdez de moins de deux buts. »"
+    left:
+      label: "Je prends l'enveloppe"
+      effects: {caisse: "++", var: {ville_francs_sales: "+40000"}, set: [h1_quai_paye], outcome: prime}
+      answer: "Il ne la regarde pas disparaître dans ta poche. « Votre père, lui, avait attendu qu'on revienne une deuxième fois. »"
+    right:
+      label: "Rangez ça"
+      effects: {direction: "+", set: [h1_quai_refuse], outcome: refus}
+      answer: "Il la reprend sans se fâcher, et paie ton café. « La première fois, votre père aussi avait dit non. »"
+
+  # 2/3 · Le match désigné. Seulement si l'enveloppe a été prise.
+  - id: en.h1.quai.prime
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: vukic
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Mi-temps, à l'extérieur, contre le premier des trois clubs du Quai. Zéro à deux. Vukić, la craie à la main, devant le tableau : « On pousse, {toi} ? Ils sont fatigués à gauche. »"
+    left:
+      label: "On pousse"
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h1_quai_trahi]}
+      answer: "Deux à deux à la quatre-vingt-dixième. Dans la tribune, un homme en imperméable se lève avant le coup de sifflet, et il ne court pas."
+    right:
+      label: "On tient le score"
+      effects: {vestiaire: "-", relation: {vukic: -1}, set: [h1_quai_tenu]}
+      answer: "Zéro à deux. Vukić efface le tableau avec sa manche, en commençant par le côté gauche, et il ne te regarde pas du voyage."
+
+  # 3/3 · La brigade. L'argent du Quai a payé quelque chose. Si tu as perdu de
+  # deux buts, pile, le registre a une page pour toi : la garde à vue attend.
+  - id: en.h1.quai.brigade_tenu
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Lhoste revient avec la brigade financière : « Le registre des Courses du Quai a une page pour votre zéro-deux, {toi}. Mise, gain, et votre enveloppe. On reprend ce que leur argent a payé. »"
+    left:
+      label: "Prenez ce qu'il faut"
+      effects: {direction: "--", var: {saisie_luxe: "+1"}}
+      answer: "Ils emportent ce qui brille. Lhoste ne touche à rien : il attend sur le palier, et compte les marches à voix basse en descendant."
+    right:
+      label: "Je n'ai rien arrangé"
+      effects: {direction: "---", relation: {lhoste: -1}, set: [h1_quai_nie]}
+      answer: "Lhoste referme le registre sans le claquer. « Je repasserai la veille du dernier match. Vous aurez moins à perdre, ce soir-là. Ou plus. »"
+
+  - id: en.h1.quai.brigade
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Lhoste revient avec la brigade financière et une liste : « Les Courses du Quai tiennent des registres, {toi}. Votre nom y est, à côté d'un match nul qui leur a coûté cher. »"
+    left:
+      label: "Prenez ce qu'il faut"
+      effects: {direction: "-", var: {saisie_luxe: "+1"}}
+      answer: "Ils emportent ce qui brille. Lhoste ne touche à rien : il attend sur le palier, et compte les marches à voix basse en descendant."
+    right:
+      label: "Je n'ai rien pris"
+      effects: {direction: "--", relation: {lhoste: -1}}
+      answer: "« Vous avez pris, et vous avez joué quand même. Ça ne s'efface pas. Ça se plaide. » Il range sa liste sans rien emporter."
+
+  # ══════════════════════════════════════════ ÉVÉNEMENT : LE CARTON DE GÉGÉ
+  # La mission « Le carton de Gégé » laisse un carton sous ton lit. Le metteur
+  # en scène décide si Lhoste vient le chercher (en.h1.sb_perquisition).
+  - id: en.h1.sb.perquisition
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, direction]
+    speaker: lhoste
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Six heures. Lhoste et deux agents à ta porte, une commission rogatoire à la main. Sous ton lit, le carton de Gégé : des masques, et dessous, ce que le virage ne t'a pas dit. « C'est à vous ? »"
+    left:
+      label: "C'est à moi"
+      effects: {end: co_garde_a_vue}
+      answer: "Lhoste referme le carton lui-même, avec soin, comme un colis qu'on n'a pas le droit d'ouvrir deux fois. « Habillez-vous. »"
+    right:
+      label: "C'est à Gégé"
+      effects: {tribunes: "--", relation: {gege: -3}, set: [h1_carton_livre]}
+      answer: "À midi, on arrête Gégé à la buvette, entre deux bières. Il ne dit rien. Le soir, le virage chante, mais pas ton nom."
