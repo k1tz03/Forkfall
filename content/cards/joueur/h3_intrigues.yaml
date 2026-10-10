@@ -1,0 +1,835 @@
+# HISTOIRE 3 — LA SIRÈNE : les cartes des huit intrigues
+# (content/arcs/joueur/h3_intrigues.yaml).
+#
+#   La maison de la cité  : la lettre, le chèque, le fanion de 1958, le pavillon, le garage
+#   Le genou              : la porte du genou, le seau, la boîte (Momo ou Steph), le sac, le tiroir
+#   L'ardoise             : la porte sans poignée, le combiné, les photos, la page vendue
+#   Le coupé rouge        : la bâche, les lettres d'or, la dépanneuse
+#   La ligne de touche    : Didier à la craie, la clé, la loge, le nom
+#   Le journal étranger   : le doublé du garçon blond, Gigi ou le feu, la page composée
+#   L'arrière-salle       : l'enveloppe, la départementale, la trente-huitième minute
+#   Le crochet du fond    : la laverie, la vente aux enchères, le sparadrap du petit
+#
+# Aucune carte en drame ; les soirs (`sombre`) sont mis en scène le soir, à leur
+# lieu, par la ville. Les accords du joueur passent par {pg, select, …} ou une
+# tournure neutre.
+cards:
+  # ═══════════════════════════════════════════════ 1 · LA MAISON DE LA CITÉ
+  - id: jp.h3.maison.lettre
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Odile pose la lettre de l'usine sur la toile cirée : fermeture à Noël, les maisons de la cité vendues aux locataires, cent quatre-vingt mille francs. « On partira. Ce n'est pas grave. »"
+    left:
+      label: "On ne partira pas"
+      effects: {relation: {odile: 1}, caisse: "-"}
+      answer: "Elle replie la lettre en trois, dans les plis de la poste, et la glisse sous la photo de ton père. « Alors il faudra de l'argent. »"
+    right:
+      label: "On partira, maman"
+      effects: {caisse: "+", set: [h3_maison_lachee]}
+      answer: "« Voilà. » Elle se lève pour la vaisselle, qui est faite. Elle la refait quand même, assiette par assiette, le dos tourné."
+
+  - id: jp.h3.maison.cheque
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    lieu: parking
+    once: true
+    tone: strategique
+    text: "Sur le tableau de bord de Fardelli, un chèque déjà rempli : cent quatre-vingt mille. « La maison de ta mère. Tu me rendras quand tu vaudras dix fois plus, {toi}. »"
+    left:
+      label: "Je prends le chèque"
+      effects:
+        caisse: "+"
+        relation: {fardelli: 1}
+        set: [h3_maison_achetee]
+        outcome: achetee
+        schedule: [{card: jp.h3.ardoise.porte, in: [2, 4]}]
+        react: {card: jp.h3.re.odile_cheque}
+      answer: "Le chèque est tiède d'avoir dormi au soleil. Au dos, au crayon, ta date de naissance. Il ne dit pas pourquoi ; tu ne demandes pas."
+    right:
+      label: "Je refuse"
+      effects:
+        direction: "-"
+        relation: {fardelli: -1}
+        set: [h3_cheque_refuse]
+        outcome: refuse
+        schedule: [{card: jp.h3.ardoise.porte, in: [2, 4]}]
+      answer: "Il glisse le chèque sous le pare-soleil sans le plier. « Il restera là. Le pare-soleil, c'est le meilleur coffre de la ville. »"
+
+  - id: jp.h3.maison.cheque_lachee
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    lieu: parking
+    once: true
+    tone: strategique
+    text: "Fardelli, vitre baissée, un chèque déjà rempli sur le tableau de bord : « Ta mère a dit qu'elle partirait. Elle l'a dit à la caisse de l'épicerie, en pleurant. La maison, {toi}. Tu prends ? »"
+    left:
+      label: "Je prends le chèque"
+      effects:
+        caisse: "+"
+        relation: {fardelli: 1}
+        set: [h3_maison_achetee]
+        outcome: achetee
+        schedule: [{card: jp.h3.ardoise.porte, in: [2, 4]}]
+        react: {card: jp.h3.re.odile_cheque}
+      answer: "Le soir, ta mère regarde le chèque posé sur la toile cirée sans le toucher, comme une lettre qui ne serait pas pour elle."
+    right:
+      label: "Je refuse"
+      effects:
+        direction: "-"
+        relation: {fardelli: -1}
+        set: [h3_cheque_refuse]
+        outcome: refuse
+        schedule: [{card: jp.h3.ardoise.porte, in: [2, 4]}]
+      answer: "« Elle pleurera ailleurs, alors. » Il glisse le chèque sous le pare-soleil, sans le plier. « Il attendra. Moi aussi. »"
+
+  - id: jp.h3.maison.fanion
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: friche
+    once: true
+    tone: leger
+    text: "Le bureau du directeur de la Tréfilerie est à moitié vide. Il te tend le fanion du club de l'usine, 1958. « Le chèque des maillots reviendra impayé. Le fanion, on ne le vend pas aux enchères. »"
+    left:
+      label: "Je le prends"
+      effects: {tribunes: "+", set: [h3_fanion]}
+      answer: "Le feutre a passé au soleil, sauf là où la punaise le tenait. Ta mère le range dans son sac à main, pas au mur. Il y restera."
+    right:
+      label: "Gardez-le, monsieur"
+      effects: {tribunes: "-"}
+      answer: "Il le repose sur le bureau vide. Le lendemain, le fanion est sur la liste du liquidateur, lot 340, entre deux machines à écrire."
+
+  - id: jp.h3.maison.pavillon
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    lieu: rue
+    once: true
+    tone: strategique
+    text: "Fardelli tapote la vitrine de l'agence Tessandier : un pavillon aux Lilas, un jardin, un garage. « La cité meurt. J'avance l'argent sur ton prochain transfert, {toi}. Ta mère n'a qu'à signer. »"
+    left:
+      label: "Signez pour ma mère"
+      effects: {caisse: "+", relation: {fardelli: 1}, var: {cadeau_pavillon: "+1"}, set: [h3_pavillon]}
+      answer: "Il signe le compromis sur le capot. L'argent passera par un marchand de spiritueux de Portclair. « Un ami. Il avance pour moi. »"
+    right:
+      label: "Elle reste à la cité"
+      effects: {relation: {fardelli: -1, odile: 1}}
+      answer: "« La cité, alors. » Il regarde encore la vitrine, comme on regarde un plat qu'on n'a pas commandé, et entre seul dans l'agence."
+
+  - id: jp.h3.maison.pavillon_cite
+    roles: [joueur]
+    arc: agents
+    tags: [agents, famille]
+    speaker: fardelli
+    lieu: rue
+    once: true
+    tone: strategique
+    text: "Fardelli devant la vitrine de Tessandier : « La cité se mure, rangée par rangée. Ta mère ne va pas finir entre deux parpaings, {toi}. Le pavillon des Lilas, avec jardin. J'avance. »"
+    left:
+      label: "Signez pour ma mère"
+      effects: {caisse: "+", relation: {fardelli: 1}, var: {cadeau_pavillon: "+1"}, set: [h3_pavillon]}
+      answer: "Il signe sur le capot. « On revend la maison de la cité au liquidateur, on prend le pavillon. Le marchand de Portclair fait le reste. »"
+    right:
+      label: "Elle reste à la cité"
+      effects: {relation: {fardelli: -1, odile: 1}}
+      answer: "« Entre deux parpaings, alors. » Il allume une cigarette, la regarde brûler sans la fumer, et l'écrase dans le cendrier de la portière."
+
+  - id: jp.h3.maison.garage
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: leger
+    text: "Ta mère n'a pas défait les cartons du pavillon. Ils sont dans le garage, empilés, étiquetés au feutre : CUISINE, PAPIERS, TON PÈRE. « Au cas où », dit-elle. Elle ne dit pas au cas où quoi."
+    left:
+      label: "Je les défais avec toi"
+      effects: {relation: {odile: 1}}
+      answer: "Vous ouvrez CUISINE. Elle range trois assiettes dans le placard neuf, puis les remet dans le carton. « Demain. »"
+    right:
+      label: "Ils sont bien là"
+      effects: {relation: {odile: -1}}
+      answer: "« Ils sont bien là », répète-t-elle. Le soir, elle dort sur le canapé du salon, tournée vers la porte du garage."
+
+  # ═══════════════════════════════════════════════ 2 · LE GENOU
+  - id: jp.h3.genou.porte
+    roles: [joueur]
+    arc: corps
+    tags: []
+    speaker: sabatier
+    lieu: cabinet
+    once: true
+    tone: strategique
+    text: "Sabatier plie ton genou lentement, l'oreille presque contre la rotule, comme on écoute à une porte. « Il a un avis. Je l'écris dans ton dossier, ou je le garde pour moi jusqu'en juin ? »"
+    left:
+      label: "Écrivez-le"
+      effects: {direction: "-", relation: {sabatier: 1}, set: [h3_genou_ecrit], outcome: ecrit}
+      answer: "Il écrit trois lignes à l'encre, et date. Il te les lit à voix haute, sans lever les yeux. Tu les sauras par cœur avant juin."
+    right:
+      label: "Gardez-le pour vous"
+      effects:
+        direction: "+"
+        set: [h3_genou_cache]
+        outcome: cache
+        react: {card: jp.h3.re.sabatier_tiroir}
+      answer: "Il repose ta jambe sur la table comme un objet prêté. « Jusqu'en juin. » Il n'écrit rien, et c'est lui qui a l'air de mentir."
+
+  - id: jp.h3.genou.seau
+    roles: [joueur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: vecchio
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Gigi te trouve au local du matériel, le genou dans un seau de glace. Il s'assoit sur le panier de ballons. « Didier mettait le sien dans ce seau-là. Il disait que la glace rend le genou sourd. »"
+    left:
+      label: "Il est parti où, Didier ?"
+      effects: {relation: {vecchio: 1}}
+      answer: "« À l'étranger. C'est ce qu'on a écrit. » Il te tend une serviette pour le genou, et sort sans fermer la porte."
+    right:
+      label: "Pas un mot au coach"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il remet de la glace dans le seau, à la main, et compte jusqu'à soixante pour toi, à voix basse, comme un arbitre."
+
+  - id: jp.h3.genou.momo
+    roles: [joueur]
+    arc: corps
+    tags: [vestiaire]
+    lieu: vestiaire
+    once: true
+    tone: strategique
+    text: "Au vestiaire, Momo, le latéral gauche, attend que les autres soient sous la douche. « La boîte de Steph, il paraît que ça marche. Tu m'en passes deux, en attendant ? »"
+    left:
+      label: "Va voir Steph"
+      effects: {vestiaire: "+", set: [h3_momo_steph]}
+      answer: "« Steph. D'accord. » Il le répète pour s'en souvenir. Le lundi suivant, il porte un survêtement neuf, comme Steph."
+    right:
+      label: "N'y touche pas"
+      effects: {vestiaire: "-"}
+      answer: "Il hausse les épaules. « Toi, tu y touches. » Il va sous la douche et chante faux, plus fort que d'habitude."
+
+  - id: jp.h3.genou.banc
+    roles: [joueur]
+    arc: corps
+    tags: []
+    speaker: steph
+    lieu: muscu
+    once: true
+    tone: strategique
+    text: "Steph s'assoit au bout de ton banc de développé, un sac de sport entre les pieds. « Tu boites à gauche, comme Didier. Lui, il prenait ça. » Il pose une boîte sans étiquette sur la fonte."
+    left:
+      label: "Je la prends"
+      effects: {caisse: "-", set: [h3_boite_prise]}
+      answer: "La boîte tient dans la poche du blouson. Tu la sens à chaque pas jusqu'à la cité, comme une deuxième rotule."
+    right:
+      label: "Je la laisse sur la fonte"
+      effects: {relation: {steph: -1}, tribunes: "-"}
+      answer: "Il la remet dans son sac sans se vexer. « Elle t'attendra. » Quand tu sors, il est au rameur, immobile, les mains sur la poignée."
+
+  - id: jp.h3.genou.sac
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Odile a vidé ton sac de sport sur la table de la cuisine, comme elle vidait les poches de ton père le vendredi. Les protège-tibias, la serviette, et au milieu, sous la lampe, la boîte."
+    left:
+      label: "C'est pour le genou"
+      effects: {relation: {odile: -1}, set: [h3_boite_trouvee], outcome: gardee}
+      answer: "Elle repousse la boîte vers toi du bout de l'index. « Ton père aussi avait mal au genou. » Elle garde la serviette, pour la laver."
+    right:
+      label: "Je ne mens pas"
+      effects: {relation: {odile: 1}, tribunes: "-", set: [h3_boite_trouvee, h3_boite_jetee], outcome: jetee}
+      answer: "Elle met la boîte dans sa poche de blouse et sort sans manteau. Au retour, elle dit seulement : « La Rive. Du haut du pont. »"
+
+  - id: jp.h3.genou.arret
+    roles: [joueur]
+    arc: corps
+    tags: []
+    speaker: sabatier
+    lieu: cabinet
+    once: true
+    tone: strategique
+    text: "Sabatier prend ta tension, la reprend, regarde le cadran sans rien dire, puis ouvre le tiroir du bas, vide. « Tu poses la boîte là-dedans, et on n'en parle plus. Ou tu la gardes. Choisis ici. »"
+    left:
+      label: "Je la pose"
+      effects: {force: -1, relation: {sabatier: 1}, set: [h3_boite_arretee], outcome: arretee}
+      answer: "Le tiroir se referme avec un bruit de dossier. Trois semaines plus tard, le genou fait mal comme avant. C'est presque un soulagement."
+    right:
+      label: "Encore un mois"
+      effects: {caisse: "-", relation: {sabatier: -1}, outcome: gardee}
+      answer: "Il referme le tiroir vide, doucement. « Un mois. » Il note la date dans son carnet, et l'heure, ce qu'il ne fait jamais."
+
+  # ═══════════════════════════════════════════════ 3 · L'ARDOISE
+  - id: jp.h3.ardoise.porte
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    speaker: irene
+    lieu: club_prive
+    once: true
+    tone: strategique
+    text: "Samedi, vingt-trois heures, le match dans les jambes. Derrière la porte sans poignée, Madame Irène te tend un masque de soie noire : « Ici, personne n'a de nom. Vous, si : il est sur l'ardoise. »"
+    left:
+      label: "Je mets le masque"
+      effects: {caisse: "-", tribunes: "-", set: [h3_ardoise]}
+      answer: "La soie sent le parfum de quelqu'un d'autre. À trois heures, Irène écrit un chiffre sous ton nom, à l'encre violette, et souffle dessus."
+    right:
+      label: "Je redescends la rue"
+      effects: {direction: "+", outcome: refuse}
+      answer: "L'homme en costume t'ouvre de l'intérieur. Dehors, il pleut. Le masque est resté sur le velours, plié en deux, pour le suivant."
+
+  - id: jp.h3.ardoise.mere
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: irene
+    lieu: club_prive
+    once: true
+    tone: strategique
+    text: "Trois heures du matin. Madame Irène tient le combiné du bar, la main sur le micro : « Votre mère. Elle demande si vous êtes ici. Je lui dis que vous n'êtes plus là depuis longtemps ? »"
+    left:
+      label: "Mentez-lui"
+      effects: {relation: {irene: 1, odile: -1}, set: [h3_irene_ment]}
+      answer: "« Il y a longtemps, madame. Dormez. » Elle raccroche, et note une ligne de plus sous ton nom. « Le mensonge aussi se paie. »"
+    right:
+      label: "Passez-la-moi"
+      effects: {relation: {odile: 1}, tribunes: "-"}
+      answer: "Ta mère ne dit rien pendant dix secondes. Puis : « Rentre. » Irène t'appelle un taxi, et l'ajoute à l'ardoise."
+
+  - id: jp.h3.ardoise.photos
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: cafe
+    once: true
+    tone: strategique
+    text: "Café de la Mairie. Un inconnu glisse une enveloppe sous ta soucoupe : toi à trois heures, sortant du Rideau, le masque à la main. « La Gazette paie cinq mille. Moi, dix, pour qu'elles dorment. »"
+    left:
+      label: "Je paie"
+      effects: {caisse: "--", var: {ville_amende: "+10000"}, set: [h3_photos_payees]}
+      answer: "Dix mille en liquide, sous la même soucoupe. Il laisse son café payé. Les négatifs, eux, ne sont pas dans l'enveloppe."
+    right:
+      label: "Qu'il les vende"
+      effects:
+        tribunes: "--"
+        set: [h3_photos_gazette]
+        react: {card: jp.h3.re.meneche_photos, if: "relation.meneche >= 0"}
+      answer: "Jeudi, page trois de la Gazette Rose : le masque, l'heure, ton nom en capitales. Ta mère achète tous les exemplaires de l'épicerie."
+
+  - id: jp.h3.ardoise.rachat
+    roles: [joueur]
+    arc: scandale
+    tags: []
+    speaker: irene
+    lieu: club_prive
+    once: true
+    tone: strategique
+    text: "Madame Irène ouvre le cahier à ta page et tourne vers toi le total, à l'encre violette. « Monsieur Fardelli veut racheter votre page. Je la lui vends demain, si vous ne la réglez pas ce soir. »"
+    left:
+      label: "Je règle ce soir"
+      effects: {caisse: "--", var: {ville_amende: "+20000"}, set: [h3_ardoise_payee], outcome: payee}
+      answer: "Tu comptes vingt mille sur le velours. Elle raye ta page d'un trait, sans arracher la feuille. « Le nom reste. Il reste toujours. »"
+    right:
+      label: "Qu'il la rachète"
+      effects: {caisse: "+", relation: {fardelli: -1}, set: [h3_ardoise_fardelli], outcome: vendue}
+      answer: "Le lendemain, au parking, Fardelli tapote la poche de sa veste en te croisant. Il ne dit rien. Il n'a plus besoin de rien dire."
+
+  # ═══════════════════════════════════════════════ 4 · LE COUPÉ ROUGE
+  - id: jp.h3.coupe.bache
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, agents]
+    speaker: fardelli
+    lieu: parking
+    once: true
+    tone: strategique
+    when: "stats.clubs <= 1"
+    text: "Au fond du garage du Pont, Fardelli soulève une bâche : un coupé rouge, et sur la portière, en lettres d'or, SPIRITUEUX DAUBRAC. « Il te le prête, {toi}. Contre une soirée au Rideau par mois. »"
+    left:
+      label: "Je prends les clés"
+      effects: {caisse: "+", tribunes: "-", var: {cadeau_coupe_sport: "+1"}, set: [h3_coupe]}
+      answer: "Le moteur prend au premier tour. Le vendeur t'ouvre le portail en regardant les lettres d'or, pas toi."
+    right:
+      label: "Je garde le car"
+      effects: {direction: "-", set: [h3_coupe_mbako], outcome: refuse}
+      answer: "Fardelli rabat la bâche. « Daubrac le prêtera à un autre. Il y a toujours un autre. » Il regarde vers le centre de formation."
+
+  - id: jp.h3.coupe.lettres
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Gégé fait le tour du coupé sans le toucher, mains dans le dos. « Daubrac, c'est celui qui a racheté la cantine de l'usine pour un franc. » Il s'arrête devant les lettres d'or. « Tu nous ramènes ? »"
+    left:
+      label: "Montez, je vous ramène"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Quatre de la Nord sur la banquette, Gégé devant. Il ne touche à rien. Au feu rouge, il essuie de sa manche la buée de son souffle."
+    right:
+      label: "C'est un prêt"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "« Un prêt. » Il le répète au virage samedi, à voix haute, et la Nord le chante sur l'air d'une berceuse."
+
+  - id: jp.h3.coupe.lettres_mbako
+    roles: [joueur]
+    arc: formation
+    tags: [formation]
+    speaker: mbako
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Le coupé rouge de Daubrac est garé devant le centre de formation. Lian Mbako, {age_mbako} ans, sans permis, fait tourner les clés sur son doigt. « Ils me l'ont prêté. Tu montes ? »"
+    left:
+      label: "Rends-lui les clés"
+      effects: {vestiaire: "-", relation: {mbako: 1}}
+      answer: "Il te regarde comme on regarde un adulte, et garde les clés. « Toi, tu les as rendues. Moi, je n'ai jamais eu de voiture. »"
+    right:
+      label: "Je monte"
+      effects: {tribunes: "-", relation: {mbako: 1}}
+      answer: "Il cale deux fois, rit, repart. Sur la portière, les lettres d'or. Personne ne regarde le conducteur ; tout le monde lit le nom."
+
+  - id: jp.h3.coupe.depanneuse
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Après le match, deux huissiers et une dépanneuse devant ton coupé rouge, au parking du stade. La Nord sort par la grille et s'arrête pour regarder. Gégé : « On chante ton nom, ou on rentre ? »"
+    left:
+      label: "Chantez"
+      effects:
+        tribunes: "+"
+        direction: "-"
+        var: {saisie_vehicules: "+1"}
+        set: [h3_coupe_saisi]
+        outcome: chante
+        react: {card: jp.h3.re.gege_depanneuse}
+      answer: "Ils chantent ton nom pendant que la dépanneuse lève le coupé. L'huissier attend la fin du couplet pour signer son procès-verbal."
+    right:
+      label: "Rentrez chez vous"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}, set: [h3_coupe_saisi], outcome: rentre}
+      answer: "Ils rentrent, sans un mot. Il ne reste que toi, les deux huissiers, et les lettres d'or qui s'éloignent sur le plateau."
+
+  - id: jp.h3.coupe.depanneuse_mbako
+    roles: [joueur]
+    arc: tribunes
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Après le match, la dépanneuse des huissiers lève le coupé rouge de Daubrac. Lian Mbako regarde partir les lettres d'or, les clés encore à la main. Gégé : « On chante son nom, ou on rentre ? »"
+    left:
+      label: "Chantez le sien"
+      effects: {tribunes: "+", relation: {mbako: 1}, set: [h3_coupe_saisi]}
+      answer: "La Nord chante Mbako, pour la première fois. Il ne sait pas quoi faire de ses mains. Il garde les clés d'une voiture qui n'est plus là."
+    right:
+      label: "Rentrez"
+      effects: {tribunes: "-", set: [h3_coupe_saisi]}
+      answer: "La Nord rentre. Lian reste au parking jusqu'à la nuit. Le lendemain, il demande à Josiane à qui rendre les clés. Elle ne sait pas."
+
+  - id: jp.h3.coupe.depanneuse_rendu
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras]
+    speaker: gege
+    lieu: parking
+    once: true
+    tone: leger
+    text: "Après le match, une dépanneuse et deux huissiers entrent au parking du stade. Ta place est vide : le coupé dort déjà sous sa bâche, au garage du Pont. Gégé : « Ils sont venus pour rien ? »"
+    left:
+      label: "Pour rien"
+      effects: {tribunes: "+", outcome: rendu}
+      answer: "L'huissier note « véhicule non présenté », et l'heure. Gégé lit par-dessus son épaule, la bouche ouverte, sans un son."
+    right:
+      label: "Pour moi"
+      effects: {direction: "+", outcome: rendu}
+      answer: "Tu leur donnes l'adresse du garage. Le vendeur leur montre la bâche et la facture de rachat, à moitié prix. Ils repartent bredouilles."
+
+  # ═══════════════════════════════════════════════ 5 · LA LIGNE DE TOUCHE
+  - id: jp.h3.didier.ligne
+    roles: [joueur]
+    arc: formation
+    tags: []
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: leger
+    text: "Grande halle, le soir. Didier Vallin repasse à la craie la ligne de touche de son terrain, à genoux, sans lever la tête. « Ils t'ont mis sur mon crochet. Ils t'ont donné la place près de la porte ? »"
+    left:
+      label: "Tu jouais où, avant ?"
+      effects: {relation: {vallin: 1}, set: [h3_halle_vue]}
+      answer: "« Ici. » Il tape la craie sur le béton. « Avant ici, au stade. Avant le stade, à ta place. » Il se remet à tracer."
+    right:
+      label: "Je ne te connais pas"
+      effects:
+        relation: {vallin: -1}
+        set: [h3_halle_vue]
+        react: {card: jp.h3.re.vallin_craie}
+      answer: "« Personne ne me connaît. C'est le principe. » Il finit sa ligne jusqu'au poteau de béton, et ne se retourne pas."
+
+  - id: jp.h3.didier.ligne_did
+    roles: [joueur]
+    arc: formation
+    tags: []
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: leger
+    text: "Didier Vallin, à genoux sur le béton de la grande halle, repasse la ligne de touche à la craie. « Tu as laissé mes trois lettres sous ton nom. Les autres arrachaient. » Il ne lève pas la tête."
+    left:
+      label: "Tu jouais où, avant ?"
+      effects: {relation: {vallin: 1}, set: [h3_halle_vue]}
+      answer: "« À ta place. Près de la porte. » Il souffle la poussière de craie sur sa ligne. « Le courant d'air, je l'ai eu deux ans. »"
+    right:
+      label: "C'était par hasard"
+      effects:
+        relation: {vallin: -1}
+        set: [h3_halle_vue]
+        react: {card: jp.h3.re.vallin_craie}
+      answer: "« Le hasard, c'est déjà quelque chose. » Il trace jusqu'au poteau, et s'assoit dessus, le dos tourné."
+
+  - id: jp.h3.didier.cle
+    roles: [joueur]
+    arc: formation
+    tags: []
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: leger
+    text: "Didier lève les yeux vers la tour de la grande halle. « La sirène, en février, c'était moi. Depuis, le gardien du liquidateur a repris la clé. Elle pend à sa loge, avec un chien dessous. »"
+    left:
+      label: "J'irai la chercher"
+      effects: {relation: {vallin: 1}, direction: "-", set: [h3_cle_promise]}
+      answer: "« Pas pour moi. Pour le prochain. » Il trace une croix à la craie sur ton blouson, à l'épaule, là où on coud les numéros."
+    right:
+      label: "Pourquoi tu tires ?"
+      effects: {relation: {vallin: 1}}
+      answer: "« Quand un gamin descend, il faut que la ville l'entende. Le club ne le dit pas. » Il range sa craie dans une boîte de pellicule."
+
+  - id: jp.h3.didier.loge
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    lieu: friche
+    once: true
+    tone: leger
+    text: "La loge du gardien de l'usine, une nuit sans lune. Ta lampe sur la fenêtre, le chien du liquidateur qui dort contre la porte. La clé pend à un clou, une étiquette dessus : TOUR."
+    left:
+      label: "Je décroche la clé"
+      effects: {vestiaire: "-", set: [h3_cle_sirene]}
+      answer: "Le clou grince ; le chien ouvre un œil, et le referme. La clé reste froide dans ta poche jusqu'au matin. Didier la prend sans un merci."
+    right:
+      label: "Je laisse dormir le chien"
+      effects: {direction: "+"}
+      answer: "Tu éteins ta lampe et tu attends que la fenêtre redevienne noire. Le chien n'a pas bougé. Didier, lui, ne demande rien."
+
+  - id: jp.h3.didier.loge_faite
+    roles: [joueur]
+    arc: formation
+    tags: []
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: leger
+    text: "Didier fait tourner la clé de la tour entre ses doigts, au-dessus du feu de palettes. « Le chien ne t'a pas entendu. Moi, si. » Il la glisse dans sa capote. « Je ne tirerai plus pour rien. »"
+    left:
+      label: "Tire pour qui tu veux"
+      effects: {relation: {vallin: 1}}
+      answer: "« Pour celui qui finit debout. » Il jette une palette dans le feu. Les étincelles montent jusqu'au toit troué de la halle."
+    right:
+      label: "Tire pour moi"
+      effects: {relation: {vallin: 1}, tribunes: "+"}
+      answer: "« Pour toi, il faudra jouer jusqu'au bout. » Il le dit sans sourire, comme on fixe une heure de rendez-vous."
+
+  - id: jp.h3.didier.nom
+    roles: [joueur]
+    arc: formation
+    tags: []
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: leger
+    text: "Sur le mur de la grande halle, Didier écrit son nom à la craie, en lettres d'un mètre. Il te tend la craie. « Personne ne l'a dit à voix haute depuis juin 1989. Lis-le. Fort. »"
+    left:
+      label: "Je le lis tout haut"
+      effects: {relation: {vallin: 2}, set: [h3_didier_nom], outcome: nom}
+      answer: "Ta voix revient du toit troué, deux fois. Didier écoute l'écho jusqu'au bout, puis il essuie la craie sur sa capote."
+    right:
+      label: "Pas ici, Didier"
+      effects: {relation: {vallin: -1}, outcome: silence}
+      answer: "Il hoche la tête et passe la paume sur son nom, jusqu'à ce qu'il ne reste qu'une tache blanche sur le mur."
+
+  # ═══════════════════════════════════════════════ 6 · LE JOURNAL ÉTRANGER
+  - id: jp.h3.journal.journal
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    once: true
+    tone: strategique
+    text: "Léa déplie un journal d'un pays qu'on ne nomme pas : « DIDIER VALLIN, {age_vallin} ANS, DOUBLÉ EN COUPE ». Sur la photo, un garçon blond que personne ici ne connaît. « Didier est brun. »"
+    left:
+      label: "Il faut l'écrire"
+      effects: {direction: "-", relation: {lea: 1}, set: [h3_lea_ecrit]}
+      answer: "Elle glisse une feuille dans la machine et tape le titre avant le reste : QUI EST DIDIER VALLIN ? « Il me faut un nom à côté du mien. »"
+    right:
+      label: "Laissez-moi lui dire"
+      effects: {relation: {lea: -1, vallin: 1}, set: [h3_didier_prevenu]}
+      answer: "Elle replie le journal et te le tend. « Vingt-quatre heures. Après, je l'écris, avec ou sans lui. » Elle garde la photo."
+
+  - id: jp.h3.journal.inconnu
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    once: true
+    tone: strategique
+    text: "Léa déplie un journal étranger : « DIDIER VALLIN, {age_vallin} ANS, DOUBLÉ EN COUPE », un garçon blond en photo. « Ce nom était sous le vôtre, au crochet. Le vrai dort à la friche. Vous le saviez ? »"
+    left:
+      label: "Il faut l'écrire"
+      effects: {direction: "-", relation: {lea: 1}, set: [h3_lea_ecrit]}
+      answer: "Elle tape le titre avant le reste, QUI EST DIDIER VALLIN ?, et laisse la feuille dans la machine. « Il me faut une signature de plus. »"
+    right:
+      label: "Je ne savais pas"
+      effects: {relation: {lea: -1}}
+      answer: "« Maintenant, si. » Elle range le journal dans le tiroir sous sa machine à écrire, la photo du garçon blond au-dessus."
+
+  - id: jp.h3.journal.photo
+    roles: [joueur]
+    arc: presse
+    tags: [vestiaire, presse]
+    speaker: vecchio
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Gigi Vecchio regarde longtemps la photo du garçon blond dans le journal étranger. « Didier était brun. Il tirait les coups francs du gauche, la main droite dans la poche. » Il rend le journal."
+    left:
+      label: "Dites-le à Léa"
+      effects: {relation: {vecchio: 1, lea: 1}}
+      answer: "Il n'y va pas. Le lendemain, Léa a une ligne de plus dans son papier, entre guillemets, signée « un ancien du club »."
+    right:
+      label: "Gardez ça pour vous"
+      effects: {relation: {vecchio: -1}}
+      answer: "Il remet ses gants, le droit d'abord. « Une chose de plus à garder. J'ai la place. » Il ne te regarde plus de la séance."
+
+  - id: jp.h3.journal.feu
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: strategique
+    text: "Au feu de palettes, Didier lit le journal étranger : son nom en gros, la photo du garçon blond. Il le plie en quatre. « Il marque plus que moi. » Il le tend vers les flammes, sans le lâcher."
+    left:
+      label: "Laisse Léa l'écrire"
+      effects: {relation: {vallin: 1}, set: [h3_lea_ecrit]}
+      answer: "Il retire le journal du feu, un coin noirci. « Qu'elle écrive mon nom. Pas le sien, à lui. » Il te le rend pour Léa."
+    right:
+      label: "Brûle-le"
+      effects: {relation: {vallin: -1}}
+      answer: "Le papier prend d'un coup. Le garçon blond brûle en dernier. Didier regarde jusqu'à la cendre, puis va dormir dans le wagon."
+
+  - id: jp.h3.journal.une
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    once: true
+    tone: strategique
+    text: "Léa a composé la page : QUI EST DIDIER VALLIN ?, la licence de 1989, le garçon blond. « Mercredi, si j'ai une deuxième signature. Josiane hésite. Et vous, {toi} ? »"
+    left:
+      label: "Mettez mon nom"
+      effects: {direction: "--", tribunes: "+", relation: {lea: 1}, set: [h3_signe_lea], outcome: signe}
+      answer: "Elle tape ton nom sous le sien, sans une faute de frappe. « Mercredi. Ne répondez pas au téléphone mardi soir. »"
+    right:
+      label: "Attendez Josiane"
+      effects: {relation: {lea: -1}, set: [h3_josiane_prevenue], outcome: seule}
+      answer: "« Je lui porte la page ce soir. » Elle la glisse dans une chemise cartonnée. Sur la chemise, au feutre : JOSIANE."
+
+  - id: jp.h3.journal.tiroir
+    roles: [joueur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    once: true
+    tone: strategique
+    text: "Léa ouvre le tiroir sous sa machine à écrire : le journal étranger y dort, la photo du garçon blond dessus. « Je ne l'écrirai pas sans quelqu'un du club à côté de moi. Vous êtes du club, {toi}. »"
+    left:
+      label: "Écrivez, je signe"
+      effects: {direction: "--", relation: {lea: 1}, set: [h3_lea_ecrit, h3_signe_lea], outcome: signe}
+      answer: "Elle sort le journal du tiroir. Le soir même, ton nom est tapé sous le sien, en petites capitales, au bas d'une page à venir."
+    right:
+      label: "Refermez le tiroir"
+      effects: {relation: {lea: -1}, outcome: seule}
+      answer: "Elle referme. Le tiroir coince, comme toujours ; elle donne un coup de genou, comme toujours. La photo reste dedans."
+
+  # ═══════════════════════════════════════════════ 7 · L'ARRIÈRE-SALLE
+  - id: jp.h3.terminus.enveloppe
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    speaker: steph
+    lieu: tripot
+    once: true
+    tone: strategique
+    when: "flag('h3_ardoise') && stats.clubs <= 1"
+    text: "L'arrière-salle du Terminus, minuit. Steph pousse une enveloppe sur le tapis vert. « L'ardoise du Rideau, on te la rachète. Portclair, dimanche. Et samedi, tu ne marques pas avant la mi-temps. »"
+    left:
+      label: "Je porte l'enveloppe"
+      effects: {caisse: "++", var: {ville_francs_sales: "+5000"}, set: [h3_enveloppe_portee], outcome: portee}
+      answer: "L'enveloppe est épaisse comme un missel et ne pèse rien. Tu la ranges dans la boîte à gants, sous la carte routière."
+    right:
+      label: "Je sors par la cuisine"
+      effects: {relation: {steph: -2}, set: [h3_enveloppe_refusee], outcome: refusee}
+      answer: "La cuisine, les bacs de vaisselle, la porte de service. Dans la ruelle, deux hommes fument et te regardent passer sans bouger."
+
+  - id: jp.h3.terminus.enveloppe_mere
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, famille]
+    speaker: steph
+    lieu: tripot
+    once: true
+    tone: strategique
+    when: "flag('h3_ardoise') && stats.clubs <= 1"
+    text: "L'arrière-salle du Terminus. Steph pousse une enveloppe sur le tapis vert. « Ta page au Rideau est payée. Celle de ta mère, à l'épicerie, on l'a rachetée ce matin. Portclair, dimanche. »"
+    left:
+      label: "Je porte l'enveloppe"
+      effects: {caisse: "++", var: {ville_francs_sales: "+5000"}, set: [h3_enveloppe_portee], outcome: portee}
+      answer: "Tu prends l'enveloppe. Steph ajoute, sans lever les yeux : « Et samedi, rien avant la mi-temps. » Il le dit comme une recette."
+    right:
+      label: "Je sors par la cuisine"
+      effects: {relation: {steph: -2}, set: [h3_enveloppe_refusee], outcome: refusee}
+      answer: "Tu sors par la cuisine. Le lendemain, l'épicière refuse l'argent de ta mère : « C'est réglé. » Elle regarde la porte en le disant."
+
+  - id: jp.h3.terminus.route
+    roles: [joueur]
+    arc: scandale
+    tags: []
+    lieu: ailleurs
+    once: true
+    tone: strategique
+    text: "Dimanche, la départementale de Portclair. Un gendarme lève la main, se penche à la vitre et reconnaît ta tête. « Contrôle. Ouvrez la boîte à gants, s'il vous plaît. »"
+    left:
+      label: "J'ouvre la boîte à gants"
+      effects: {set: [h3_garde_a_vue], end: co_garde_a_vue}
+      answer: "L'enveloppe glisse sur le tapis de sol. Il la ramasse avec deux doigts, comme une lettre d'amour qui ne serait pas pour lui."
+    right:
+      label: "Elle est coincée"
+      effects: {tribunes: "-"}
+      answer: "Il force le loquet, renonce. « Ma fille a votre photo au-dessus de son lit. » Il te fait signe de passer. Tu trembles jusqu'à Portclair."
+
+  - id: jp.h3.terminus.mi_temps
+    roles: [joueur]
+    arc: moment
+    tags: [moment]
+    lieu: stade
+    once: true
+    tone: strategique
+    text: "Trente-huitième minute. Le ballon te revient sur le pied droit, le gardien est au sol, le but est vide. En tribune Est, Steph est assis, les bras croisés. La mi-temps est dans sept minutes."
+    left:
+      label: "Je tire à côté"
+      effects: {vestiaire: "--", caisse: "+", set: [h3_match_vendu], outcome: vendu}
+      answer: "Le ballon frôle le poteau. Le stade crie, puis se tait. Dans le tunnel, Bréhaut ne te regarde pas : il regarde tes chaussures."
+    right:
+      label: "Je marque"
+      effects: {tribunes: "++", relation: {steph: -2}, set: [h3_match_trahi], outcome: trahi}
+      answer: "Le filet tremble. Tu cours vers la Nord sans regarder l'Est. Quand tu regardes enfin, la place de Steph est vide."
+
+  # ═══════════════════════════════════════════════ 8 · LE CROCHET DU FOND (l'épilogue)
+  - id: jp.h3.crochet.laverie
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: laverie
+    once: true
+    tone: leger
+    text: "La laverie de la rue du Stade. Ta mère y lave les maillots du club depuis que la machine du stade a été saisie. Elle plie le tien, le numéro en dedans. « Tu restes, ou tu as entraînement ? »"
+    left:
+      label: "Je plie avec toi"
+      effects: {relation: {odile: 1}}
+      answer: "Vous pliez vingt-deux maillots, numéro en dedans. Elle te prend le dernier des mains, pour le refaire. « Ton père pliait mal aussi. »"
+    right:
+      label: "J'ai entraînement"
+      effects: {vestiaire: "+"}
+      answer: "Elle pose ton maillot en haut de la pile. Par la vitre, tu la vois le replacer au milieu, dans l'ordre des numéros."
+
+  - id: jp.h3.crochet.encheres
+    roles: [joueur]
+    arc: tribunes
+    tags: [ultras]
+    speaker: gege
+    lieu: mairie
+    once: true
+    tone: leger
+    text: "Salle des fêtes de la mairie, la vente de la Tréfilerie. Lot 112 : la sirène de la grande halle. Gégé lève la main pour la Nord, puis te regarde. « Il nous manque huit cents francs. »"
+    left:
+      label: "Je mets au pot"
+      effects: {caisse: "-", tribunes: "++", relation: {gege: 1}, set: [h3_sirene_achetee]}
+      answer: "Le marteau tombe. Gégé paie en billets de la buvette, froissés, qui sentent la bière. « On la mettra sous le toit. Il faudra des sangles. »"
+    right:
+      label: "Qu'elle parte"
+      effects: {relation: {gege: -1}}
+      answer: "Un ferrailleur de Portclair l'emporte pour le poids du cuivre. Gégé reste assis jusqu'au lot suivant : les casiers du bâtiment C."
+
+  - id: jp.h3.crochet.sparadrap
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Bréhaut te tend un rouleau de sparadrap et un feutre. « Le petit de seize ans veut le crochet du fond. Il dit que le tien porte chance. Tu lui fais de la place, ou tu le gardes ? »"
+    left:
+      label: "Je lui fais de la place"
+      effects: {vestiaire: "+", set: [h3_crochet_rendu], outcome: nom}
+      answer: "Tu écris son nom au feutre, au-dessus du tien, sans arracher le tien. Le petit regarde les deux noms et ne demande rien."
+    right:
+      label: "Je garde le crochet"
+      effects: {vestiaire: "-", outcome: pansement}
+      answer: "Bréhaut range le rouleau. Le petit prend la place près de la porte. Le courant d'air lui passe sur la nuque à chaque entrée."
+
+  - id: jp.h3.crochet.sparadrap_did
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Bréhaut te tend un rouleau de sparadrap : le petit de seize ans veut le crochet du fond. Sous ton nom, les trois lettres de Didier tiennent toujours. « Tu lui en laisses combien, de couches ? »"
+    left:
+      label: "Toutes"
+      effects: {vestiaire: "+", set: [h3_crochet_rendu], outcome: nom}
+      answer: "Ton nom sous le sien, DID sous le tien : trois couches. Il passe le pouce sur les trois lettres. Il ne sait pas pourquoi ; toi, si."
+    right:
+      label: "Aucune"
+      effects: {vestiaire: "-", outcome: pansement}
+      answer: "Tu arraches tout d'un coup, jusqu'à la peinture verte. Le crochet est nu. Le petit y accroche sa veste, et c'est son crochet."

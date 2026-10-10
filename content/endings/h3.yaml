@@ -1,0 +1,62 @@
+# HISTOIRE 3 — LA SIRÈNE : les fins du livre (docs/histoires/00_les_dix_histoires.md,
+# § 8 de la fiche). Toutes tombent sur l'acte final de la saison 2 :
+#
+#   pepite_petit_club   le prix — « Je signe » sur le fax de Fardelli (Le petit club, créneau 15)
+#   pepite_sirene       la vérité — Léa écrit, et Josiane, Didier ou toi signent à côté
+#                       (Seize heures, créneau 17, les deux sorties)
+#   pepite_seize_heures la fin rare — la clé rendue à Didier, la boîte refusée ou jetée,
+#                       Odile à +1, et tu joues jusqu'au bout (Seize heures)
+#   pepite_halle        le pire — l'enveloppe portée, puis le match vendu ou la boîte
+#                       gardée jusqu'au bout, et tu joues jusqu'au bout (Seize heures)
+#
+# Et des lignes ajoutées à trois fins communes : la garde à vue (l'enveloppe ouverte
+# au contrôle de la départementale, ou la boîte posée sur la table par la brigade),
+# les croisés (la boîte de Steph gardée jusqu'au bout), sans club.
+endings:
+  - id: pepite_sirene
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "La sirène"
+    epitaph: "{prenom} {nom} a raconté la machine à L'Écho, avec le nom de Didier Vallin écrit en entier, et plus personne n'a voulu l'acheter. Le dimanche, en troisième division, trois cents personnes qui ont connu son père applaudissent encore."
+    epitaph_plus:
+      - { when: "flag('h3_josiane_temoin')", text: "Madame Josiane a témoigné la première, en tailleur, son classeur sur les genoux. La licence de Didier y était rangée à la fin, après le Z." }
+      - { when: "flag('h3_sorti')", text: "Ce samedi-là, {nom} avait quitté le terrain sous la sirène. La tribune s'était levée quand même, comme à la fin d'un poste." }
+
+  - id: pepite_petit_club
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "Le petit club"
+    epitaph: "{prenom} {nom} a signé pour un petit club au grand avenir et rendu à Fardelli ses trente pour cent, avec les intérêts. Deux ans plus tard, le petit club revend sa licence dix fois plus cher ; Didier dort toujours dans la halle."
+    epitaph_plus:
+      - { when: "flag('h3_papier_vu')", text: "Odile a gardé la copie du papier de 1986 dans son porte-monnaie, pliée en huit, sous la photo. Elle ne l'a jamais jetée." }
+      - { when: "flag('h3_halle_vue')", text: "Le jour du départ de {nom}, une ligne à la craie sur le bitume du parking, de la porte du vestiaire à la grille. Personne n'a dit qui l'avait tracée." }
+
+  - id: pepite_seize_heures
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "Seize heures"
+    epitaph: "À seize heures, la sirène de l'usine a sonné en plein match pour la fin d'un poste, et {prenom} {nom} a fini sur une jambe. Dans la tour de la grande halle, Didier Vallin a lâché la poignée et applaudi tout seul."
+    epitaph_plus:
+      - { when: "relation.odile >= 2", text: "Odile était au grillage, à l'endroit où elle ralentissait chaque jour en sortant du bâtiment C. Ce jour-là, elle s'est arrêtée." }
+      - { when: "flag('h3_did_garde')", text: "Au crochet du fond, sous le nom de {nom}, les trois lettres de Didier tiennent toujours." }
+
+  - id: pepite_halle
+    cause: chaine
+    rarity: rare
+    golden: false
+    title: "La grande halle"
+    epitaph: "On a vu {prenom} {nom} repasser à la craie la ligne de touche d'un terrain dessiné sur le béton de la grande halle. Il y a deux crochets au mur, maintenant, et deux noms."
+    epitaph_plus:
+      - { when: "flag('h3_studio_fardelli')", text: "La mère de {nom} dort toujours au-dessus du Terminus. Le loyer est payé ; elle ne sait pas par qui, et ne demande plus." }
+      - { when: "flag('h3_match_vendu')", text: "À la trente-huitième minute, seul devant le but vide, {nom} avait tiré à côté. La Gazette avait revu l'action six fois." }
+
+# Les lignes du livre sous des fins communes (le `when` lit le drapeau d'histoire).
+epitaph_plus_ajouts:
+  - { fin: co_garde_a_vue, when: "flag('histoire_h3') && flag('h3_garde_a_vue') && flag('h3_fanion')", text: "Quarante-huit heures pour une enveloppe jamais ouverte ; la mère de {nom} a attendu sur le banc du couloir, avec le fanion de 1958 dans son sac." }
+  - { fin: co_garde_a_vue, when: "flag('histoire_h3') && flag('h3_garde_a_vue')", text: "Quarante-huit heures pour une enveloppe jamais ouverte ; la mère de {nom} a attendu sur le banc du couloir, son sac sur les genoux, sans l'ouvrir." }
+  - { fin: co_garde_a_vue, when: "flag('histoire_h3') && flag('h3_brigade')", text: "Une boîte sans étiquette, sous scellés, sur la table de la cuisine. Après le départ des inspecteurs, la mère de {nom} a lavé la table." }
+  - { fin: jp_croises, when: "flag('histoire_h3') && flag('h3_boite_prise') && !flag('h3_boite_jetee') && !flag('h3_boite_arretee')", text: "Le genou a tenu un hiver, pas un match. À l'hôpital, {nom} a reçu une boîte sans étiquette ; personne n'a dit qui l'envoyait." }
+  - { fin: jp_sansclub, when: "flag('histoire_h3')", text: "Fardelli a fait suivre le dossier de {nom} à onze clubs. Aucun n'a rappelé ; il en a acheté un autre." }

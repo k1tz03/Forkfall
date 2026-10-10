@@ -1,0 +1,248 @@
+# HISTOIRE 3 — LA SIRÈNE : le prologue (arc jp.h3.prologue, h3_script.yaml).
+#
+# Six scènes avant la carte Objectif, hors créneau, sans tirage : le crochet et
+# la sirène de seize heures (le mécanisme), les bouteilles (qui porte), la place
+# près de la porte (le gamin d'avant, une phrase que Gigi ne finit pas), le
+# grillage (la mère qui ralentit sans s'arrêter), la licence (le classeur de
+# Josiane, la lettre V), la cuisine (le combiné, Fardelli, le père sur le
+# buffet). La graine : trois lettres sous ton nom, DID.
+#
+# Le prologue ne pose ni réaction, ni file, ni fin (build_content) ; ses jauges
+# bougent d'un cran moyen au plus.
+cards:
+  # ------------------------------------------------------------- 1 · le crochet
+  - id: jp.h3.pro_crochet
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Seize heures : la sirène de la Tréfilerie traverse le parking et fait trembler les vitres du vestiaire. Au-dessus du crochet du fond, au feutre sur du sparadrap : {NOM}. Dessous, mal arraché : DID."
+    left:
+      label: "J'arrache le reste"
+      effects: {direction: "+", set: [h3_did_arrache]}
+      answer: "Le vieux sparadrap part en lambeaux. Tu réécris ton nom au feutre ; l'encre bave sur la peinture verte. Gigi regarde, et se tait."
+    right:
+      label: "Je laisse comme ça"
+      effects: {vestiaire: "+", set: [h3_did_garde]}
+      answer: "Ton nom dessus, le sien dessous. En partant, tu passes le pouce sur les trois lettres, sans savoir pourquoi."
+
+  - id: jp.h3.pro_crochet_prix
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Seize heures, la sirène de l'usine fait trembler les vitres. Au crochet du fond, {NOM} au feutre sur du sparadrap ; quelqu'un a ajouté un chiffre au stylo bille. Dessous, mal arraché : DID."
+    left:
+      label: "J'arrache le reste"
+      effects: {direction: "+", set: [h3_did_arrache]}
+      answer: "Tu arraches tout, le chiffre avec. Le lendemain, il est revenu, au stylo rouge, d'une écriture que tu ne connais pas."
+    right:
+      label: "Je laisse comme ça"
+      effects: {vestiaire: "+", set: [h3_did_garde]}
+      answer: "Ton nom, le chiffre, et trois lettres dessous. Le chiffre est rond. Les trois lettres ne valent plus rien pour personne."
+
+  - id: jp.h3.pro_crochet_maison
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Seize heures : la sirène traverse le parking. Par la vitre du vestiaire, on voit le bâtiment C, où ta mère finit son poste. Au crochet du fond, {NOM} sur du sparadrap ; dessous, arraché : DID."
+    left:
+      label: "J'arrache le reste"
+      effects: {direction: "+", set: [h3_did_arrache]}
+      answer: "Le sparadrap part en lambeaux. Par la vitre, les ouvrières sortent du bâtiment C en se protégeant les yeux, comme d'un soleil."
+    right:
+      label: "Je laisse comme ça"
+      effects: {vestiaire: "+", set: [h3_did_garde]}
+      answer: "Ton nom dessus, le sien dessous. Tu passes le pouce sur les trois lettres. Dehors, la sirène s'arrête net, comme coupée."
+
+  # ----------------------------------------------------------- 2 · les bouteilles
+  - id: jp.h3.pro_bouteilles
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Titi Bréhaut te met le casier de bouteilles dans les bras, devant le groupe : « Le dernier arrivé porte l'eau jusqu'au terrain annexe. » Il ne te regarde pas. Il regarde qui te regarde."
+    left:
+      label: "Je porte tout"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Vingt-quatre bouteilles, le casier qui scie les avant-bras. Au terrain, Bréhaut en prend une sans merci, et la boit d'un trait."
+    right:
+      label: "Chacun la sienne"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Tu poses le casier au milieu du couloir. Personne ne bouge, puis Gigi se baisse. Bréhaut retient qui s'est baissé après lui."
+
+  - id: jp.h3.pro_bouteilles_prix
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Titi Bréhaut te tend le casier de bouteilles : « On m'a dit ton prix, au bureau. Ici, le dernier arrivé porte l'eau quand même. » Derrière lui, le groupe attend de voir tes bras."
+    left:
+      label: "Je porte tout"
+      effects: {vestiaire: "+", relation: {brehaut: 1}}
+      answer: "Tu portes le casier jusqu'au terrain annexe sans le poser. Bréhaut dit à voix haute : « Il pèse le même poids que le mien. »"
+    right:
+      label: "Chacun la sienne"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Tu poses le casier. Bréhaut le reprend lui-même, sans un mot, et le porte devant toi jusqu'au terrain. Tout le monde a vu."
+
+  # -------------------------------------------------------- 3 · la place de la porte
+  - id: jp.h3.pro_place
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Gigi Vecchio épluche une orange sous le crochet d'à côté : « Deux places de libres. Le radiateur, ou près de la porte. Celle de la porte, c'était la sienne, et en juin… » Il mange un quartier."
+    left:
+      label: "La place de la porte"
+      effects: {direction: "+", set: [h3_place_porte]}
+      answer: "Le courant d'air te passe sur la nuque à chaque entrée. Gigi te tend un quartier d'orange, sans finir sa phrase."
+    right:
+      label: "Le radiateur"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Le radiateur cogne toute la séance. Gigi hoche la tête, comme si tu avais répondu à une question qu'il n'a pas posée."
+
+  - id: jp.h3.pro_place_terrain
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vecchio
+    lieu: vestiaire
+    once: true
+    tone: leger
+    text: "Gigi Vecchio pèle une orange d'un seul ruban : « Sur le terrain, tu joues où on te dit. Ici, tu choisis. Le radiateur, ou la porte. La porte, c'était la sienne, et en juin… » Le ruban casse."
+    left:
+      label: "La place de la porte"
+      effects: {direction: "+", set: [h3_place_porte]}
+      answer: "Tu poses ton sac près de la porte. Gigi ramasse le ruban d'orange cassé et le jette dans la poubelle, de loin, sans viser."
+    right:
+      label: "Le radiateur"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Le radiateur est brûlant d'un côté, froid de l'autre. Gigi dit que c'est la meilleure place pour apprendre à choisir son côté."
+
+  # ---------------------------------------------------------------- 4 · le grillage
+  - id: jp.h3.pro_grillage
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, famille]
+    speaker: gege
+    lieu: terrain
+    once: true
+    tone: leger
+    text: "À la sortie du bâtiment C, ta mère ralentit devant le grillage du terrain, comme chaque jour, sans s'arrêter. Gégé, les doigts dans les mailles : « Si tu viens taper dans nos mains, elle te verra. »"
+    left:
+      label: "Je vais au grillage"
+      effects: {tribunes: "+", relation: {gege: 1, odile: 1}, set: [h3_grillage_odile]}
+      answer: "Tu tapes dans douze mains à travers le grillage. Ta mère s'est arrêtée, son cabas contre la jambe. Elle repart sans faire signe."
+    right:
+      label: "Je file au vestiaire"
+      effects: {vestiaire: "+"}
+      answer: "Gégé décroche ses doigts des mailles un par un. Ta mère a déjà tourné au coin de la cité. Elle n'a pas ralenti plus que d'habitude."
+
+  - id: jp.h3.pro_grillage_maison
+    roles: [joueur]
+    arc: tribunes
+    tags: [tribunes, famille]
+    speaker: gege
+    lieu: terrain
+    once: true
+    tone: leger
+    text: "Ta mère sort du bâtiment C en blouse et ralentit devant le grillage sans s'arrêter : la maison de la cité est à quatre cents mètres, à pied. Gégé : « Va taper dans nos mains. Elle te verra. »"
+    left:
+      label: "Je vais au grillage"
+      effects: {tribunes: "+", relation: {gege: 1, odile: 1}, set: [h3_grillage_odile]}
+      answer: "Tu tapes dans les mains de la Nord. Ta mère s'arrête, pour la première fois depuis septembre. Elle compte ses pas en repartant."
+    right:
+      label: "Je file au vestiaire"
+      effects: {vestiaire: "+"}
+      answer: "Ta mère fait ses quatre cents mètres sans se retourner. Gégé la suit des yeux jusqu'au coin, puis te regarde, toi."
+
+  # ---------------------------------------------------------------- 5 · la licence
+  - id: jp.h3.pro_licence
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: secretariat
+    once: true
+    tone: leger
+    text: "Madame Josiane tape ta licence à la machine, deux doigts, sans une faute. Elle la glisse dans le classeur des pros, à ta lettre. « Signez en bas. Vous lisez avant ? Personne ne lit avant. »"
+    left:
+      label: "Je lis tout"
+      effects: {direction: "-", relation: {josiane: 1}}
+      answer: "Tu lis les trois pages. Elle attend, les mains croisées sur le classeur. À la fin, elle dit seulement : « Bien. »"
+    right:
+      label: "Je signe"
+      effects: {direction: "+"}
+      answer: "Tu signes. Elle souffle sur l'encre et range la feuille. Le classeur se referme avec le bruit d'une porte qu'on tire."
+
+  - id: jp.h3.pro_licence_did
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: secretariat
+    once: true
+    tone: leger
+    text: "Madame Josiane range ta licence dans le classeur des pros. En tournant les pages, elle s'arrête sur une fiche à la lettre V, puis tourne plus vite. « Signez. Les autres n'ont pas besoin d'être lues. »"
+    left:
+      label: "Qui est à la lettre V ?"
+      effects: {direction: "-"}
+      answer: "« Un ancien. Parti en juin. » Elle range le classeur dans l'armoire qui ferme à clé, pas dans l'autre."
+    right:
+      label: "Je signe"
+      effects: {direction: "+"}
+      answer: "Tu signes. Elle range le classeur au fond. La clé reste sur la porte de l'armoire ; elle la retire, puis la remet."
+
+  # ---------------------------------------------------------------- 6 · la cuisine
+  - id: jp.h3.pro_cuisine
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: leger
+    text: "Odile pose le combiné sur la toile cirée, sous la photo de ton père en bleu de travail : « Un monsieur Fardelli. Il t'attend demain au parking du stade, huit heures. Ton père le connaissait. »"
+    left:
+      label: "J'irai à huit heures"
+      effects: {caisse: "+"}
+      answer: "Elle ne dit plus rien de la soirée. Avant de se coucher, elle remet droite la photo sur le buffet."
+    right:
+      label: "Qu'il vienne ici"
+      effects: {relation: {odile: 1}}
+      answer: "« Ici ? » Elle regarde la cuisine, la toile cirée usée aux coins. « Non. Pas ici. » Elle débranche le téléphone pour la nuit."
+
+  - id: jp.h3.pro_cuisine_grillage
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: leger
+    text: "Odile sert la soupe sans parler, puis : « Tu as tapé dans les mains de ces gens, au grillage. Ton père le faisait aussi. » Elle pose le combiné près de ton assiette. « Fardelli. Demain, huit heures. »"
+    left:
+      label: "Tu as l'air d'avoir peur"
+      effects: {relation: {odile: 1}}
+      answer: "« Peur ? » Elle rit, une fois. « J'ai signé des papiers, à une époque. Tu signeras les tiens. » Elle débranche le téléphone."
+    right:
+      label: "J'irai"
+      effects: {caisse: "+"}
+      answer: "Demain à huit heures, elle aura déjà pointé au bâtiment C. Elle ne sera pas là. C'est peut-être exprès."

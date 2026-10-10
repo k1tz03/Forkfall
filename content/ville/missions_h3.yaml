@@ -1,0 +1,107 @@
+# HISTOIRE 3 — LA SIRÈNE : les missions secondaires du livre (format :
+# content/ville/missions.yaml). Trois, rares, chacune nourrit l'intrigue :
+#
+#   h3_casier  — Odile (chez toi, le soir, après la fermeture de l'usine) : le
+#                casier 117 de ton père, au bâtiment C, part au kilo samedi.
+#                Dedans, une reconnaissance de dette de 1985 à Rocco Fardelli :
+#                la poignée de main du parking avait un prix (h3_dette_pere).
+#   h3_cle_tour — Didier (la grande halle, le soir) : la clé de la tour de la
+#                sirène, à la loge du gardien de l'usine, sous le chien du
+#                liquidateur. La décrocher pose h3_cle_sirene, la condition de
+#                la fin rare (l'étape « la loge » de jp.h3.didier le sait).
+#   h3_revente — le vendeur du garage du Pont (le matin) : rendre le coupé de
+#                Daubrac à moitié prix, avant les huissiers. La sortie propre, et
+#                l'humiliation d'un coupé rendu au garage qui l'a sorti
+#                (h3_coupe_rendu : la dépanneuse vient pour rien).
+#
+# Les textes n'accordent rien au protagoniste. {montant} : une seule somme par
+# mission.
+missions:
+  - id: h3_casier
+    titre: "Le casier 117"
+    roles: [joueur]
+    donneur: {sprite: passante, nom: "Odile", lieu: appartement, tranches: [soir]}
+    si: "flag(histoire_h3) && flag(h3_usine_fermee) && saison == 1 && !flag(h3_dette_pere)"
+    chance: 0.5
+    etapes:
+      - id: offre
+        texte: "Ta mère, en manteau dans la cuisine. « À la Tréfilerie, on ne vidait pas les casiers des morts. Celui de ton père, le 117, part au kilo samedi. Va le chercher. »"
+        choix:
+          - id: oui
+            label: "J'y vais"
+            reponse: "Elle te donne une petite clé plate, usée, au bout d'un lacet de chaussure. « Il la portait au cou, au travail. »"
+            suite: casier
+          - id: non
+            label: "Le liquidateur l'aura"
+            reponse: "« Alors il l'aura. » Elle enlève son manteau et le raccroche à la patère de l'entrée, lentement."
+            suite: fin
+      - id: casier
+        objectif: {lieu: friche, tranches: [soir, nuit], delai: 3}
+        texte: "Le bâtiment C, à la lampe. Le casier 117 porte encore le nom de ton père, au feutre, sur du sparadrap. Dedans : ses gants, un thermos, et une feuille pliée en quatre."
+        choix:
+          - id: deplier
+            label: "Je déplie la feuille"
+            reponse: "Une reconnaissance de dette, 1985 : dix mille francs, à Rocco Fardelli. Signée de la main de ton père, qui écrivait mal."
+            effets: {set: [h3_dette_pere]}
+            suite: fin
+          - id: rapporter
+            label: "Je rapporte tout"
+            reponse: "Ta mère vide le casier sur la table sans un mot. Elle garde les gants, et brûle la feuille dans l'évier sans la déplier."
+            suite: fin
+        echec:
+          texte: "Samedi, le casier 117 est parti au kilo avec les autres, dans une benne. Ta mère a regardé passer le camion depuis le grillage, sans ralentir."
+
+  - id: h3_cle_tour
+    titre: "La clé de la tour"
+    roles: [joueur]
+    donneur: {sprite: passant, nom: "Didier Vallin", lieu: halle, tranches: [soir, nuit]}
+    si: "flag(histoire_h3) && flag(h3_halle_vue) && !flag(h3_cle_sirene)"
+    chance: 0.6
+    etapes:
+      - id: offre
+        texte: "Didier, au pied de la tour de la grande halle, la tête levée vers la fenêtre du haut. « La clé pend à la loge du gardien, avec un chien dessous. Une nuit, une lampe. Tu y vas ? »"
+        choix:
+          - id: oui
+            label: "J'y vais cette nuit"
+            reponse: "Il te tend une lampe de poche au verre fêlé. « Le chien dort après minuit. Il ronfle, tu l'entendras. »"
+            suite: loge
+          - id: non
+            label: "Pas cette nuit"
+            reponse: "« Une autre nuit, alors. » Il retourne à sa ligne de craie. Il ne te le redemande pas."
+            suite: fin
+      - id: loge
+        objectif: {lieu: friche, tranches: [nuit], delai: 3}
+        texte: "La loge du gardien de l'usine, une nuit sans lune. Le chien du liquidateur ronfle contre la porte. À la lampe, par la fenêtre : la clé, sur un clou, une étiquette dessus. TOUR."
+        choix:
+          - id: decrocher
+            label: "Je décroche la clé"
+            reponse: "Le clou grince ; le chien ouvre un œil, et le referme. Au matin, Didier prend la clé sans un merci, et la serre dans son poing."
+            effets: {set: [h3_cle_sirene], jauges: {vestiaire: -1}}
+            suite: fin
+          - id: renoncer
+            label: "Je laisse dormir le chien"
+            reponse: "Tu éteins la lampe. Le lendemain, Didier ne demande rien. Il a compris à ta façon de traverser la halle."
+            suite: fin
+        echec:
+          texte: "Trois nuits ont passé. La loge a un cadenas neuf, et le chien un collier à clochette. Didier efface sa ligne de craie, et la retrace."
+
+  - id: h3_revente
+    titre: "Le coupé rendu"
+    roles: [joueur]
+    donneur: {sprite: garagiste, nom: "Le vendeur du garage du Pont", lieu: garage, tranches: [matin]}
+    si: "flag(histoire_h3) && possede(coupe_sport) && flag(h3_coupe) && !flag(h3_coupe_saisi)"
+    chance: 0.5
+    etapes:
+      - id: offre
+        texte: "Le vendeur du garage du Pont s'essuie les mains sur un chiffon. « Les huissiers ont demandé l'adresse de Daubrac, hier. Je vous reprends le coupé, {montant}, avant eux. »"
+        choix:
+          - id: rendre
+            label: "Je le rends au garage"
+            francs: 60000
+            reponse: "Il compte les billets sur le capot, puis tire la bâche sur les lettres d'or. Tu rentres à pied. Tu avais oublié la longueur des rues."
+            effets: {set: [h3_coupe_rendu], var: {saisie_vehicules: "+1"}}
+            suite: fin
+          - id: garder
+            label: "Je le garde"
+            reponse: "« Comme vous voudrez. » Il replie son chiffon en quatre. « Les huissiers, eux, ne reprennent pas. Ils prennent. »"
+            suite: fin

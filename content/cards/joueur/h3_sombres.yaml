@@ -1,0 +1,183 @@
+# HISTOIRE 3 — LA SIRÈNE : les cartes des trois événements sombres
+# (content/arcs/joueur/h3_sombres.yaml) — devant la maison, la douche, la
+# brigade. Le choc arrive d'un coup, au bord du cadre ; la carte d'après en
+# montre le prix (charte § 5, livre § 1.2-1.4).
+cards:
+  # ═══════════════════════════════════════════════ 1 · DEVANT LA MAISON
+  - id: jp.h3.ev.devant
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Minuit. Deux hommes de l'arrière-salle du Terminus attendent sur le trottoir d'en face, sous le réverbère. Ils ne regardent pas ta fenêtre. Ils regardent celle de ta mère."
+    left:
+      label: "Je descends"
+      effects: {tribunes: "-", relation: {odile: 1}, set: [h3_devant]}
+      answer: "Le temps de lacer tes chaussures, le trottoir est vide. Sous le réverbère, deux mégots fument encore, côte à côte."
+    right:
+      label: "J'éteins la lampe"
+      effects: {vestiaire: "-", set: [h3_devant]}
+      answer: "Dans le noir, tu les regardes regarder. Ils partent à deux heures, ensemble, sans se presser, comme on quitte un poste."
+
+  - id: jp.h3.ev.devant_didier
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    speaker: vallin
+    lieu: friche
+    once: true
+    tone: strategique
+    text: "Didier attise le feu de palettes. « Les deux du réverbère, devant chez ta mère. En 89, ils étaient devant chez la mienne. Trois soirs. Le quatrième, ma licence est partie à l'étranger. »"
+    left:
+      label: "Qu'a fait ta mère ?"
+      effects: {relation: {vallin: 1}}
+      answer: "« Elle a signé. Elle a touché. Elle ne me parle plus. » Il remet une palette sur le feu, et la regarde prendre."
+    right:
+      label: "Ils reviendront ?"
+      effects: {relation: {vallin: 1}, direction: "-"}
+      answer: "« Ils comptent toujours jusqu'à trois. » Il ramasse une craie et trace trois bâtons sur une palette avant de la jeter au feu."
+
+  - id: jp.h3.ev.devant_irene
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    speaker: irene
+    lieu: club_prive
+    once: true
+    tone: strategique
+    text: "Le Rideau Rouge n'a pas encore ouvert. Madame Irène compte la caisse de la veille sous l'ampoule du bar. « Les deux du réverbère ? Ils ne sont plus à moi. Votre page non plus. »"
+    left:
+      label: "Qui les envoie ?"
+      effects: {relation: {irene: 1}, direction: "-"}
+      answer: "« Celui qui a votre page. » Elle referme le tiroir-caisse d'un coup de hanche. « Il ne les envoie pas. Il les prête. »"
+    right:
+      label: "Ouvrez-moi une page"
+      effects: {caisse: "-", relation: {irene: -1}}
+      answer: "Elle dévisse le capuchon de l'encre violette, regarde la plume, le revisse. « Une page par client. La vôtre est vendue. » Elle éteint."
+
+  - id: jp.h3.ev.devant_odile
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Le matin, Odile balaie le trottoir d'en face, sous le réverbère, ce qu'elle n'a jamais fait. Elle a ramassé les mégots dans une boîte d'allumettes. « Onze. Ils sont restés jusqu'à deux heures. »"
+    left:
+      label: "Je vais voir Fardelli"
+      effects: {relation: {fardelli: -1, odile: 1}}
+      answer: "Fardelli t'écoute sans couper le moteur. « Des fumeurs, sous un réverbère. » Il remonte la vitre. Le soir, ils ne reviennent pas."
+    right:
+      label: "Garde la boîte"
+      effects: {relation: {odile: 1}}
+      answer: "Elle range la boîte d'allumettes dans le buffet, à côté de la photo, comme une pièce à conviction."
+
+  # ═══════════════════════════════════════════════ 2 · LA DOUCHE
+  - id: jp.h3.ev.douche
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, vestiaire]
+    lieu: vestiaire
+    once: true
+    tone: strategique
+    text: "Après l'entraînement, Momo est le dernier sous la douche. Un bruit sourd contre le carrelage. Puis plus rien, que l'eau qui continue de couler."
+    left:
+      label: "Je crie pour le Doc"
+      effects: {vestiaire: "+", relation: {sabatier: 1}, set: [h3_douche]}
+      answer: "Ta voix court dans le couloir carrelé. Le Doc arrive en courant, sa sacoche ouverte. Il te fait sortir, et ferme la porte derrière toi."
+    right:
+      label: "Je cours sous l'eau"
+      effects: {vestiaire: "+", set: [h3_douche]}
+      answer: "L'eau est brûlante. Tu ne vois que la vapeur, et un pied. Le Doc arrive, te tire par le maillot et te pousse dehors."
+
+  - id: jp.h3.ev.douche_robinet
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: vestiaire
+    once: true
+    tone: strategique
+    text: "Le vestiaire est vide, le sol encore mouillé. Vukić ferme le robinet de la dernière douche et s'essuie les mains sur son survêtement. « On dit le cœur. Il prenait quoi, {toi}, pour son cœur ? »"
+    left:
+      label: "La boîte de Steph"
+      effects: {direction: "-", relation: {vukic: 1, steph: -2}}
+      answer: "Vukić écrit le nom de Steph dans son cahier, en capitales, et souligne. Le lendemain, la salle de muscu est fermée, cadenas neuf."
+    right:
+      label: "Je ne sais pas"
+      effects: {vestiaire: "-", relation: {vukic: -1}}
+      answer: "« Personne ne sait. » Il range le cahier sans l'ouvrir. Sur le banc, le sac de Momo est resté ouvert, la serviette encore pliée."
+
+  - id: jp.h3.ev.douche_robinet_steph
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: vestiaire
+    once: true
+    tone: strategique
+    text: "Le vestiaire vide, le sol mouillé. Vukić ferme le robinet de la dernière douche. « Dans l'ambulance, Momo m'a dit que c'est toi qui l'avais envoyé chez Steph. C'est vrai, {toi} ? »"
+    left:
+      label: "C'est vrai"
+      effects: {vestiaire: "--", relation: {vukic: 1}}
+      answer: "Vukić ferme les yeux une seconde. « Merci de ne pas mentir. » Il écrit dans son cahier, puis arrache la page et te la donne. C'est ton nom."
+    right:
+      label: "Il délire"
+      effects: {relation: {vukic: -2}}
+      answer: "« Peut-être. » Vukić essuie le robinet avec sa manche, puis l'essuie encore. « Il délirera moins demain. S'il y a un demain. »"
+
+  # ═══════════════════════════════════════════════ 3 · LA BRIGADE
+  - id: jp.h3.ev.brigade
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Six heures du matin. La brigade financière sonne : trois inspecteurs, et un serrurier qui n'a pas servi. Ils notent tout, la montre, le costume, les boutons de manchette. L'enveloppe était à Daubrac."
+    left:
+      label: "Je signe l'inventaire"
+      effects: {caisse: "--", var: {saisie_luxe: "+1"}, set: [h3_brigade]}
+      answer: "Douze lignes, ta signature en bas. L'inspecteur range ta montre dans un sachet, l'heure notée dessus. Elle avance de deux minutes."
+    right:
+      label: "Je veux un avocat"
+      effects: {caisse: "--", direction: "-", var: {saisie_luxe: "+1"}, set: [h3_brigade]}
+      answer: "« C'est votre droit. » Ils notent ça aussi. L'avocat de Fardelli sonne à huit heures, avant que tu l'aies appelé."
+
+  - id: jp.h3.ev.brigade_boite
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre]
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Six heures. La brigade financière fait l'inventaire de chez toi. Un inspecteur ouvre ton sac de sport et pose sur la table de la cuisine une boîte sans étiquette. « Et ça ? »"
+    left:
+      label: "C'est à moi"
+      effects: {set: [h3_brigade], end: co_garde_a_vue}
+      answer: "Il met la boîte dans un sachet, et le sachet dans sa poche. « Habillez-vous chaudement. Le commissariat central chauffe mal. »"
+    right:
+      label: "C'est à Steph"
+      effects: {relation: {steph: -3}, var: {saisie_luxe: "+1"}, set: [h3_brigade]}
+      answer: "Il écrit le nom sur le sachet, au feutre. Le soir, la salle de muscu est sous scellés. Ta mère a vu les inspecteurs partir avec ta montre."
+
+  - id: jp.h3.ev.brigade_apres
+    roles: [joueur]
+    arc: famille
+    tags: [famille]
+    speaker: odile
+    lieu: domicile
+    once: true
+    tone: strategique
+    text: "Ta mère regarde les marques plus claires sur le mur, là où il y avait la pendule. « Ils ont laissé la photo de ton père. Ils ne savaient pas ce qu'elle valait. »"
+    left:
+      label: "Rien, pour eux"
+      effects: {relation: {odile: 1}}
+      answer: "« Pour eux. » Elle la remet droite sur le buffet, passe le chiffon sur le verre, sur le cadre, puis sur le mur vide à côté."
+    right:
+      label: "Je rachèterai la pendule"
+      effects: {caisse: "-", relation: {odile: -1}}
+      answer: "« Avec quoi ? » Elle ne le dit pas méchamment. Elle le dit comme on lit une étiquette de prix, en plissant les yeux."

@@ -1,0 +1,219 @@
+# HISTOIRE 3 — LA SIRÈNE : les manchettes du Bilan (schéma : en-tête de
+# content/unes.yaml). Chacune lit une trace du livre posée dans la saison
+# (`flag('x') && journal_has('x')`) : la Une ne titre pas trois ans plus tard
+# sur un coupé oublié. Aucune ne parle du classement.
+unes:
+  # ------------------------------------------------------------- l'argent (S0)
+  - id: une.h3.derniere_sirene
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('h3_usine_fermee') && journal_has('h3_usine_fermee')"
+    titre: "LA TRÉFILERIE SONNE UNE DERNIÈRE FOIS"
+    sous: "Le 24 décembre, seize heures. Au grillage, toute la ville ; au premier rang, l'équipe en survêtement pour la photo. Les ouvriers sont sortis avec leurs casiers vidés."
+    sujet: jp.h3.script
+    photo: jp.h3.s0_sirene_cartons
+
+  - id: une.h3.reste
+    postulats: [pepite]
+    roles: [joueur]
+    journal: quotidien
+    priority: 2
+    when: "flag('h3_vente_tombee') && journal_has('h3_vente_tombee')"
+    titre: "{NOM} RESTE À L'USINE"
+    sous: "Le grand club a pris un gamin de Portclair. Rocco Fardelli, agent : « On sait attendre. » L'usine, elle, a fermé à Noël."
+    sujet: jp.h3.script
+
+  # La maison de la cité : le chèque pris ou rendu dispute la Une à la
+  # dernière sirène (même bande), pour que le premier Bilan ne titre pas
+  # toujours sur la même photo.
+  - id: une.h3.maison
+    postulats: [pepite]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('h3_maison_achetee') && journal_has('h3_maison_achetee')"
+    titre: "LA CITÉ PAYÉE PAR L'AGENT"
+    sous: "Un chèque de Rocco Fardelli, cent quatre-vingt mille francs : la mère de {prenom} {nom} garde sa maison de la cité. L'agent : « Un prêt entre amis. »"
+    sujet: jp.h3.maison
+    photo: jp.h3.maison.cheque
+
+  - id: une.h3.cheque_rendu
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('h3_cheque_refuse') && journal_has('h3_cheque_refuse')"
+    titre: "LA PÉPITE REND LE CHÈQUE"
+    sous: "Cent quatre-vingt mille francs pour la maison de sa mère, rendus à l'agent au parking du stade. Rocco Fardelli : « La jeunesse, ça passe. Le chèque attendra. »"
+    sujet: jp.h3.maison
+
+  # --------------------------------------------------------------- la nuit (S1)
+  - id: une.h3.coupe
+    postulats: [pepite]
+    roles: [joueur]
+    journal: gazette
+    priority: 2
+    when: "flag('h3_coupe') && journal_has('h3_coupe')"
+    titre: "LE COUPÉ DE LA PÉPITE"
+    sous: "Rouge, deux portes, des lettres d'or sur la portière : SPIRITUEUX DAUBRAC. {prenom} {nom} le gare devant l'épicerie de la cité."
+    sujet: jp.h3.coupe
+    photo: jp.h3.coupe.bache
+
+  - id: une.h3.depanneuse
+    postulats: [pepite]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('h3_coupe_saisi') && journal_has('h3_coupe_saisi')"
+    titre: "LA DÉPANNEUSE DEVANT LA NORD"
+    sous: "Les huissiers ont levé le coupé rouge à la sortie du match, la tribune a regardé. Joint à Portclair, Daubrac n'a « rien prêté à personne »."
+    sujet: jp.h3.coupe
+    photo: jp.h3.coupe.depanneuse
+
+  - id: une.h3.masque
+    postulats: [pepite]
+    roles: [joueur]
+    journal: gazette
+    priority: 3
+    when: "flag('h3_photos_gazette') && journal_has('h3_photos_gazette')"
+    titre: "LE MASQUE DE {NOM}"
+    sous: "Trois heures du matin, devant une porte sans poignée, un masque de soie à la main. {prenom} {nom} n'a pas souhaité commenter."
+    sujet: jp.h3.ardoise
+    photo: jp.h3.ardoise.photos
+
+  - id: une.h3.trois_heures
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('h3_sirene_nuit') && journal_has('h3_sirene_nuit')"
+    titre: "{VILLE} : LA SIRÈNE À TROIS HEURES"
+    sous: "Le liquidateur parle du vent dans la tour. Le gardien du stade parle d'autre chose, mais pas au journal."
+    sujet: jp.h3.script
+
+  - id: une.h3.vente_par_an
+    postulats: [pepite]
+    roles: [joueur]
+    journal: quotidien
+    priority: 2
+    when: "flag('h3_mbako_designe') && journal_has('h3_mbako_designe')"
+    titre: "{CLUB} : UNE VENTE PAR AN"
+    sous: "Au club-house, on parle d'un nom entouré au crayon sur le buvard du président : Lian Mbako. Le président dément. Le crayon ne dément rien."
+    sujet: jp.h3.script
+
+  - id: une.h3.cartons
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('h3_maison_perdue') && journal_has('h3_maison_perdue')"
+    titre: "DES CARTONS SUR LE TROTTOIR"
+    sous: "Les huissiers à la porte, les voisins aux fenêtres. La mère de {prenom} {nom} a porté le dernier carton elle-même."
+    sujet: jp.h3.script
+    photo: jp.h3.s1_cartons_pavillon
+
+  - id: une.h3.fenetre
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('h3_cite_muree') && journal_has('h3_cite_muree')"
+    titre: "LA DERNIÈRE FENÊTRE DE LA CITÉ"
+    sous: "Toute la rangée est murée, sauf une fenêtre, éclairée le soir. Une mère y attend les résultats de {club}, le samedi."
+    sujet: jp.h3.script
+    photo: jp.h3.s1_cartons_muree
+
+  # -------------------------------------------------------------- le corps (S2)
+  - id: une.h3.qui_est
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('h3_lea_ecrit') && journal_has('h3_lea_ecrit')"
+    titre: "QUI EST DIDIER VALLIN ?"
+    sous: "Un joueur marque des doublés à l'étranger sous un nom d'Aubérive. Le vrai dort à la friche, écrit Léa. {prenom} {nom} ne dément pas."
+    sujet: jp.h3.journal
+
+  - id: une.h3.enveloppe
+    postulats: [pepite]
+    roles: [joueur]
+    journal: gazette
+    priority: 2
+    when: "flag('h3_enveloppe_portee') && journal_has('h3_enveloppe_portee')"
+    titre: "UNE ENVELOPPE POUR PORTCLAIR"
+    sous: "Un dimanche, une boîte à gants, une départementale. La Gazette sait ce qu'il y avait dedans ; elle ne l'écrit pas encore."
+    sujet: jp.h3.terminus
+
+  - id: une.h3.match_vendu
+    postulats: [pepite]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h3_match_vendu') && journal_has('h3_match_vendu')"
+    titre: "{NOM}, TRENTE-HUITIÈME MINUTE"
+    sous: "Seul devant le but vide, {prenom} {nom} a tiré à côté. Le Quotidien a revu l'action six fois. Le gardien était au sol."
+    sujet: jp.h3.terminus
+    photo: jp.h3.terminus.mi_temps
+
+  - id: une.h3.douche
+    postulats: [pepite]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h3_douche') && journal_has('h3_douche')"
+    titre: "MALAISE SOUS LA DOUCHE"
+    sous: "Un latéral de {club}, vingt-trois ans, évacué du vestiaire après l'entraînement. Le club parle du cœur. La salle de muscu du garage Mazurier est fermée."
+
+  - id: une.h3.fax
+    postulats: [pepite]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h3_fax_dechire') && journal_has('h3_fax_dechire')"
+    titre: "{NOM} DÉCHIRE LE FAX"
+    sous: "Un petit club au grand avenir offrait trois cent mille francs. Rocco Fardelli : « Il y aura d'autres fax. Il y a toujours d'autres fax. »"
+    sujet: jp.h3.script
+
+  - id: une.h3.seize_heures
+    postulats: [pepite]
+    roles: [joueur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h3_fini_debout') && journal_has('h3_fini_debout')"
+    titre: "SEIZE HEURES"
+    sous: "La sirène de l'usine morte a sonné en plein match. {prenom} {nom} a fini sur une jambe ; ceux de l'usine ont regardé leur montre."
+    sujet: jp.h3.script
+    photo: jp.h3.s2_seize_heures
+
+  - id: une.h3.sorti
+    postulats: [pepite]
+    roles: [joueur]
+    journal: gazette
+    priority: 2
+    when: "flag('h3_sorti') && journal_has('h3_sorti')"
+    titre: "{NOM} SORT SOUS LA SIRÈNE"
+    sous: "Soixante-dixième minute, un genou, et la sirène de la Tréfilerie à seize heures pile. Le banc a ouvert une couverture. Personne n'a sifflé."
+    sujet: jp.h3.script
+
+  # ------------------------------------------------------------- l'épilogue (S3)
+  - id: une.h3.sirene_nord
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 3
+    when: "flag('h3_sirene_achetee') && journal_has('h3_sirene_achetee')"
+    titre: "LA NORD A ACHETÉ LA SIRÈNE"
+    sous: "Lot 112, adjugé à la tribune Nord pour le prix du cuivre et huit cents francs de plus. Elle sonnera sous le toit, dit Gégé, avec des sangles."
+    sujet: jp.h3.crochet
+
+  - id: une.h3.crochet
+    postulats: [pepite]
+    roles: [joueur]
+    journal: echo
+    priority: 2
+    when: "flag('h3_crochet_rendu') && journal_has('h3_crochet_rendu')"
+    titre: "UN NOM NEUF AU CROCHET DU FOND"
+    sous: "Un gamin de seize ans a eu le crochet du fond, au vestiaire. {prenom} {nom} a écrit son nom au feutre, au-dessus du sien, sans arracher le sien."
+    sujet: jp.h3.crochet
