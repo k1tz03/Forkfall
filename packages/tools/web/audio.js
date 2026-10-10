@@ -3,13 +3,16 @@
  *
  * Retour client : « un jeu sans univers musical est un jeu vide. » Puis, en
  * octobre 2026 : « la bande principale n'est vraiment pas fun » et « il
- * faudrait d'autres thèmes ». D'où LA MUSIQUE (plus bas, `MUSIQUE`) : six
- * thèmes écrits note à note — l'hymne d'Aubérive à l'accueil, le marché le
- * jour, le Terminus le soir, le match au stade, la nuit qui tombe sur les
- * événements sombres, le dernier tour de terrain à la fin — et un jingle de
- * départ. Quand un thème joue, la nappe se tait ; elle ne revient que sans
- * thème. Le banc d'essai (packages/tools/web/banc_son.js) les rend hors ligne,
- * avec leurs niveaux et un spectrogramme. Les couches d'origine :
+ * faudrait d'autres thèmes ». Puis, la première partition entendue : « ce
+ * n'est pas du tout dans l'esprit du jeu, qui se veut avec des histoires
+ * sombres, là c'est beaucoup trop joyeux ». D'où LA MUSIQUE (plus bas,
+ * `MUSIQUE`) : six thèmes noirs écrits note à note, du synthé de polar —
+ * La Mèche à l'accueil, La Filature en ville le jour, Néons le soir, La Rive
+ * au stade, Le Fusible sur les événements sombres, Le Dernier Tour à la fin —
+ * et un jingle de départ. Quand un thème joue, la nappe se tait ; elle ne
+ * revient que sans thème. Le banc d'essai (packages/tools/web/banc_son.js) les
+ * rend hors ligne, avec leurs niveaux et un spectrogramme. Les couches
+ * d'origine :
  *
  *   1. LES AMBIANCES — le lieu où se joue la carte (`card.ambiance`, une des
  *      neuf valeurs de packages/core/lib/src/sfx.dart). Boucles génératives,
@@ -706,34 +709,52 @@
     }
   };
 
-  // ============================================================== le moteur =
-  // Il tourne sur n'importe quel BaseAudioContext : le direct (AudioContext)
-  // et le banc d'essai (OfflineAudioContext) passent par le même code.
   // ============================================================ la musique =
-  // Retour client (octobre 2026) : « la bande principale n'est vraiment pas
-  // fun », et « il faudrait d'autres thèmes ». La nappe était un décor, pas une
-  // chanson. Voici des THÈMES : une mélodie, une basse, des accords, une
-  // batterie — écrits note à note, joués par des voix synthétisées (toujours
-  // rien qu'oscillateurs et bruit : aucun fichier, aucune URL).
+  // Deux retours du client, en octobre 2026. D'abord : « la bande principale
+  // n'est vraiment pas fun », « il faudrait d'autres thèmes ». Puis, sur la
+  // première partition (un hymne en majeur, un marché qui sifflotait) : « ce
+  // n'est pas du tout dans l'esprit du jeu, qui se veut avec des histoires
+  // sombres, là c'est beaucoup trop joyeux ». La musique est donc NOIRE, et
+  // elle doit rester amusante à écouter : du synthé de polar, des tonalités
+  // mineures, une basse qui pulse en doubles croches, une grosse caisse qui
+  // fait pomper tout le reste, une caisse claire « gated » des années
+  // quatre-vingt, des échos qui rebondissent d'une oreille à l'autre, et pour
+  // chaque thème un motif qu'on garde dans la tête. Toujours rien
+  // qu'oscillateurs et bruit : aucun fichier, aucune URL.
   //
-  //   accueil     l'hymne d'Aubérive — l'écran titre (ré majeur, 136)
-  //   ville_jour  le marché — la ville le jour (fa majeur, 108, balancé)
-  //   ville_nuit  le Terminus à minuit — le soir et la nuit (do mineur, 80)
-  //   match       jour de match — le samedi à la Rive (mi mineur, 144)
-  //   sombre      la nuit tombe — les événements sombres (ré mineur, 70)
-  //   fin         le dernier tour de terrain — l'hymne, lent, à la boîte à musique
+  //   accueil     La Mèche — l'écran titre (la mineur harmonique, 118)
+  //   ville_jour  La Filature — la ville le jour (mi, gamme de blues, 100)
+  //   ville_nuit  Néons — le soir et la nuit (fa mineur, 88, demi-temps)
+  //   match       La Rive — le samedi au stade (mi phrygien, 132)
+  //   sombre      Le Fusible — les événements sombres (ré mineur, 96 : une
+  //               boîte à musique qui boite, cinq notes contre quatre temps)
+  //   fin         Le Dernier Tour — la fin d'une carrière : le motif de La
+  //               Mèche, lent, à la boîte à musique désaccordée
   //
   // L'ÉCRITURE. Une case par double croche, seize par mesure, séparées par des
   // espaces. Une note (C5, F#4, Bb3) attaque ; « - » la tient ; « . » se tait.
-  // La basse, l'arpège et les accords se jouent sur la grille de la section
-  // (« C », « Am7 », « Eb/D » ; « F G » : deux accords dans la mesure) avec des
-  // degrés : R (la basse de l'accord), 1, 3, 5, 7, 8 (l'octave), 9 ; X (tout
-  // l'accord). La batterie : k grosse caisse, s caisse claire, h charleston
-  // fermé, o ouvert, c clap, r cerclage, t tom, x cymbale — combinables
-  // (« kh »). Une voix porte une mesure (répétée) ou une liste de mesures.
-  // `harmo` : la voix double la mélodie une tierce en dessous, dans la gamme.
-  // `epoque` : son timbre suit la décennie (8 bits dans les années 90, un synthé
-  // ensuite, plus doux à partir de 2013) — `setYear` le dit au moteur.
+  // « ~ » devant une note la fait glisser depuis la précédente ; « ! » après
+  // l'accentue (plus fort, le filtre plus ouvert). La basse, l'arpège et les
+  // accords se jouent sur la grille de la section (« Am », « Fm », « F/E » ;
+  // « Dm E » : deux accords dans la mesure) avec des degrés : R (la basse de
+  // l'accord), 1, 3, 5, 7, 8 (l'octave), 9 ; X (tout l'accord). La batterie :
+  // k grosse caisse, K la lourde, s caisse claire, S la caisse « gated », h
+  // charleston fermé, o ouvert, c clap, r cerclage, t tom, T tom basse, x
+  // cymbale, m le métal, i le tic, z la montée (un souffle qui enfle pendant
+  // une demi-mesure : à poser sur la neuvième case), b le boum — combinables
+  // (« kS »). Une voix porte une mesure (répétée) ou une liste de mesures (qui
+  // tourne).
+  //
+  // LES VOIX. `inst` (l'instrument), `vol`, `oct` (l'octave des degrés),
+  // `pan`, `echo` (la part envoyée à l'écho), `pompe` (la voix respire avec la
+  // grosse caisse), `drive` (saturée), `filtre` (un passe-bas sur la voix, que
+  // la clé `ouvre` d'une section balaie : `ouvre: { basse: [150, 2400] }`),
+  // `faux` (la boîte à musique désaccordée, en cents), `epoque` (le timbre suit
+  // la décennie — `setYear` le dit au moteur). `harmo` (dans une section) : la
+  // voix du même nom double la mélodie en dessous, sur une note de l'accord.
+  // Au thème : `pompe` ({ prof, rel } : de combien la grosse caisse creuse le
+  // reste, et en combien de temps il revient), `echo` ({ pas, retour, coupe } :
+  // le retard en doubles croches, la réinjection, le passe-bas du retour).
 
   var PC = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
   function midiDe(n) {
@@ -768,283 +789,428 @@
     }
     return null;
   }
-  // la tierce en dessous, dans la gamme (majeure ou mineure) de la tonique
-  function tierceDessous(m, tonique, mineur) {
-    var gamme = mineur ? [0, 2, 3, 5, 7, 8, 10] : [0, 2, 4, 5, 7, 9, 11];
-    var rel = ((m - tonique) % 12 + 12) % 12, i = gamme.indexOf(rel);
-    if (i < 0) return m - 3;
-    var j = (i - 2 + 7) % 7, d = gamme[i] - gamme[j];
-    if (d <= 0) d += 12;
-    return m - d;
+  // la voix d'harmonie : la plus haute note de l'accord au moins une tierce
+  // mineure sous la mélodie — elle ne fait jamais de fausse note contre la grille
+  function harmonieSous(m, acc) {
+    for (var k = 3; k < 15; k++) {
+      if (acc.iv.indexOf((((m - k - acc.pc) % 12) + 12) % 12) >= 0) return m - k;
+    }
+    return m - 12;
   }
 
+  var SILENCE = '. . . . . . . . . . . . . . . .';
+  // La Filature : le motif de basse, sur chaque accord (la gamme de blues :
+  // la tierce mineure, la quarte, la quinte diminuée qui traîne, la septième)
+  var FIL = {
+    E:  'E2 - . E2 . . G2 - A2 . Bb2 B2 . . D3 -',
+    E2: 'E2 - . E2 . . G2 - A2 . Bb2 B2 . D3 . E3',
+    F:  'F2 - . F2 . . Ab2 - Bb2 . B2 C3 . . Eb3 -',
+    A:  'A2 - . A2 . . C3 - D3 . Eb3 E3 . . G3 -',
+    C:  'C3 - . C3 . . Eb3 - F3 . F#3 G3 . . Bb3 -',
+    B:  'B2 - . B2 . . D#3 - F#3 . A3 - B3 . . .',
+    B2: 'C3 - . B2 . . A2 - G2 . F#2 . F2 . E2 .'
+  };
+  // La Rive : la basse en octaves, et ce qui grince à la fin de la mesure
+  var RIVE = {
+    E:  'E2 E3 E2 E3 E2 E3 E2 E3 E2 E3 E2 E3 G2 G3 F2 F3',
+    E2: 'E2 E3 E2 E3 E2 E3 E2 E3 E2 E3 E2 E3 D2 D3 F2 F3',
+    F:  'F2 F3 F2 F3 F2 F3 F2 F3 F2 F3 F2 F3 A2 A3 G2 G3',
+    C:  'C2 C3 C2 C3 C2 C3 C2 C3 C2 C3 C2 C3 E2 E3 D2 D3',
+    B:  'B1 B2 B1 B2 B1 B2 B1 B2 D#2 D#3 D#2 D#3 F#2 F#3 A2 A3'
+  };
+  // Le Fusible : cinq notes (la, ré, fa, mi bémol, ré) qui tournent en croches
+  // contre une mesure de huit — il faut cinq mesures pour qu'elles retombent
+  var BOITE = [
+    'A4 . D5 . F5 . Eb5 . D5 . A4 . D5 . F5 .',
+    'Eb5 . D5 . A4 . D5 . F5 . Eb5 . D5 . A4 .',
+    'D5 . F5 . Eb5 . D5 . A4 . D5 . F5 . Eb5 .',
+    'D5 . A4 . D5 . F5 . Eb5 . D5 . A4 . D5 .',
+    'F5 . Eb5 . D5 . A4 . D5 . F5 . Eb5 . D5 .'
+  ];
+  // un cœur au repos (pas tout à fait), une horloge, un coup de métal
+  var COEUR = [
+    'k . k . . . . . k . k . . . i .',
+    'k . k . . . . . k . k . . . i .',
+    'k . k . . . i . k . k . . . i .',
+    'k . k . . . . . k . k . . . i .',
+    'k . k . . . . . k . k . m . . .'
+  ];
+  var MECHE = [
+    'E5 - . E5 - . E5 - F5 - E5 - D5 - C5 -',
+    'D5 - . C5 - . A4 - - - - - . . . .',
+    'C5 - . C5 - . C5 - D5 - C5 - A4 - F4 -',
+    'G#4 - . A4 - . B4 - - - - - . . . .'
+  ];
+  var BATT_MECHE = 'k h o h kS h o h k h o h kS h o h';
+
   var MUSIQUE = {
-    // ── L'HYMNE D'AUBÉRIVE ── écrit en do, joué en ré. Une intro de deux
-    // mesures (la mèche qui s'allume), le refrain qu'on siffle (A), le chant
-    // de tribune avec ses claps en réponse (B), le refrain doublé en tierces.
+    // ── LA MÈCHE ── l'écran titre. Une mèche qui grésille (le tic), une basse
+    // en octaves qui s'ouvre, puis le motif : trois mi répétés (3 + 3 + 2) qui
+    // descendent, la réponse qui remonte par le sol dièse — la mineur
+    // harmonique, la couleur du polar. Le refrain passe en si bémol (le
+    // deuxième degré abaissé : la menace), la mélodie en valeurs longues. Le
+    // pont : le motif à la boîte à musique désaccordée, seul au-dessus d'une
+    // basse qui se referme ; puis tout revient, doublé.
     accueil: {
-      bpm: 136, swing: 0, transpose: 2, tonique: 0, gain: 0.9,
+      bpm: 118, gain: 1,
+      pompe: { prof: 0.62, rel: 0.17 },
+      echo: { pas: 3, retour: 0.36, coupe: 2600 },
       voix: {
-        lead:  { inst: 'pulse', duty: 0.25, vol: 0.12 },
-        harmo: { inst: 'pulse', duty: 0.125, vol: 0.055, pan: -0.3 },
-        basse: { inst: 'tri', vol: 0.26, oct: 3 },
-        arp:   { inst: 'pulse', duty: 0.125, vol: 0.03, oct: 5, pan: 0.35 },
-        stab:  { inst: 'cuivre', vol: 0.06, oct: 4, pan: 0.15 },
-        batt:  { vol: 0.85 }
+        lead:  { inst: 'lead', vol: 0.14, echo: 0.22 },
+        harmo: { inst: 'lead', vol: 0.06, pan: -0.3, echo: 0.12 },
+        boite: { inst: 'cloche', vol: 0.11, faux: 22, echo: 0.4, pan: 0.15 },
+        arp:   { inst: 'pluck', vol: 0.05, oct: 3, pan: 0.3, echo: 0.4, pompe: true },
+        nappe: { inst: 'pad', vol: 0.04, oct: 3, pompe: true, pan: -0.1 },
+        basse: { inst: 'basse', vol: 0.17, oct: 1, pompe: true, filtre: 2400 },
+        batt:  { vol: 0.9 }
       },
       sections: {
         intro: {
-          accords: ['C', 'G'],
-          lead: ['G4 . C5 . E5 . G5 - - - - - - - . .', '. . . . . . . . . . . . G4 A4 B4 .'],
-          basse: 'R . R . R . R . R . R . R . R .',
-          batt: ['k . h . k . h . k . h . k . h .', 'k . h . k . h . s . s s s s s s']
+          accords: ['Am', 'Am', 'F', 'E'],
+          ouvre: { basse: [150, 2400] },
+          basse: 'R 8 R 8 R 8 R 8 R 8 R 8 R 8 R 8',
+          arp: [SILENCE, SILENCE, '1 5 8 5 3 5 8 5 1 5 8 5 3 5 8 5', '1 5 8 5 3 5 8 5 1 5 8 5 3 5 8 5'],
+          batt: [
+            'i . i . i . i . i . i . i . i .',
+            'i . i . i . i . i . i . i . i i',
+            'k . i . k . i . k . i . k . i .',
+            'k . i . k . i . kz . i . k . s s'
+          ]
         },
         A: {
-          accords: ['C', 'G', 'Am', 'F', 'C', 'G', 'F G', 'C'],
+          accords: ['Am', 'Am', 'F', 'E', 'Am', 'Am', 'Dm E', 'Am'],
+          lead: MECHE.concat([
+            'E5 - . E5 - . E5 - F5 - E5 - D5 - C5 -',
+            'D5 - . E5 - . A5 - - - G5 - F5 - E5 -',
+            'F5 - - - E5 - D5 - E5 - - - G#5 - - -',
+            'A5 - - - - - - - . . . . B4 C5 D5 .'
+          ]),
+          arp: '1 5 8 5 3 5 8 5 1 5 8 5 3 5 8 5',
+          nappe: 'X - - - - - - - - - - - - - - -',
+          basse: 'R 8 R 8 R 8 R 8 R 8 R 8 R 8 R 8',
+          batt: ['kx h o h kS h o h k h o h kS h o h', BATT_MECHE, BATT_MECHE, BATT_MECHE,
+                 BATT_MECHE, BATT_MECHE, BATT_MECHE, 'k h o h kS h o h k . T . T T s s']
+        },
+        B: {
+          accords: ['Am', 'Bb', 'Am', 'Bb', 'F', 'G', 'E', 'E'],
+          harmo: true,
           lead: [
-            'C5 . C5 . E5 . G5 . G5 - - . E5 . C5 .',
-            'D5 - - . B4 . D5 . G5 - - - - . F5 .',
-            'E5 . E5 . E5 . D5 . C5 - - . A4 . C5 .',
-            'D5 - - - - . C5 . A4 - - . . . G4 .',
-            'C5 . C5 . E5 . G5 . C6 - - . B5 . A5 .',
-            'G5 - - . F5 . E5 . D5 - - . E5 . F5 .',
-            'A5 . G5 . F5 . E5 . D5 . E5 . F5 . D5 .',
-            'C5 - - - - - - - . . . . G4 A4 B4 .'
+            'C6 - - - - - - - B5 - - - A5 - - -',
+            'Bb5 - - - - - - - - - - - F5 - - -',
+            'A5 - - - - - - - G5 - - - E5 - - -',
+            'F5 - - - - - - - D5 - - - - - - -',
+            'C6 - - - - - - - A5 - - - F5 - - -',
+            'D6 - - - - - - - B5 - - - G5 - - -',
+            'G#5 - - - - - - - B5 - - - E6 - - -',
+            'D6 - - - - - - - B5 - - - G#5 - - -'
           ],
-          basse: 'R . 8 . R . 8 . R . 8 . 5 . 8 .',
           arp: '1 3 5 8 5 3 1 3 5 8 5 3 1 3 5 8',
+          nappe: 'X - - - - - - - X - - - - - - -',
+          basse: 'R 8 R 8 R 8 R 8 R 8 R 8 R 8 R 8',
+          batt: ['kx h o h kSc h o h k h o h kSc h o h', 'k h o h kSc h o h k h o h kSc h o h',
+                 'k h o h kSc h o h k h o h kSc h o h', 'k h o h kSc h o h k h o h kSc h o h',
+                 'k h o h kSc h o h k h o h kSc h o h', 'k h o h kSc h o h k h o h kSc h o h',
+                 'k h o h kSc h o h k h o h kSc h o h', 'k h o h kSc h o h kz h o h kSc h s s']
+        },
+        pont: {
+          accords: ['Am', 'Am', 'F', 'E'],
+          ouvre: { basse: [2400, 220] },
+          boite: MECHE,
+          nappe: 'X - - - - - - - - - - - - - - -',
+          basse: 'R - - - - - - - R - - - - - - -',
           batt: [
-            'kx . h . sh . h . kh . kh . sh . h h',
-            'kh . h . sh . h . kh . kh . sh . h h',
-            'kh . h . sh . h k . k kh . sh . o .',
-            'kh . h . sh . h . kh . kh . sh . h h',
-            'kh . h . sh . h . kh . kh . sh . h h',
-            'kh . h . sh . h k . k kh . sh . o .',
-            'kh . h . sh . h . kh . kh . sh . h h',
-            'kh . h . sh . h . s . s s s s s s'
+            'i . i . i . i . i . i . i . i .',
+            'i . i . i . i . i . i . i . i .',
+            'k . i . . . i . k . i . . . i .',
+            'k . i . k . i . kz . i . k . s s'
           ]
         },
-        B: {
-          accords: ['Am', 'F', 'C', 'G', 'Am', 'F', 'Dm', 'G'],
-          lead: [
-            'E5 - . . E5 - . . E5 . D5 . C5 - - .',
-            'C5 - . . A4 - . . C5 - - - - - . .',
-            'E5 - . . E5 - . . E5 . F5 . G5 - - .',
-            'D5 - - - - - - . . . . . . . . .',
-            'E5 - . . E5 - . . A5 . G5 . E5 - - .',
-            'F5 - . . E5 - . . C5 - - - - - . .',
-            'D5 - . . D5 - . . F5 . E5 . D5 - - .',
-            'B4 - - - D5 - - - G5 - - - - - . .'
-          ],
-          basse: 'R - - . R - - . R - - . R . 5 .',
-          stab: 'X - . . . . . . . . . . . . . .',
-          batt: [
-            'k . h . kc . h . k . h . kc . h .',
-            'k . h . kc . h . k . h . kc . h .',
-            'k . h . kc . h . k . h . kc . h .',
-            'k . h . kc . h . c . c . c . . .',
-            'k . h . kc . h . k . h . kc . h .',
-            'k . h . kc . h . k . h . kc . h .',
-            'k . h . kc . h . k . h . kc . h .',
-            'k . h . kc . h . c . c . c . s s'
-          ]
-        },
-        A2: { copie: 'A', harmo: true, batt0: 'kx . h . sh . h . kh . kh . sh . h h' }
+        A2: { copie: 'A', harmo: true }
       },
-      ordre: ['intro', 'A', 'B', 'A2'], boucle: 1
+      ordre: ['intro', 'A', 'B', 'pont', 'A2', 'B'], boucle: 1
     },
 
-    // ── LE MARCHÉ ── la ville le jour : un pincé qui se promène, une basse qui
-    // marche, un cerclage, la cloche du marché en contrechant.
+    // ── LA FILATURE ── la ville le jour : on suit quelqu'un. La basse est le
+    // motif (la gamme de blues de mi, la quinte diminuée qui traîne), un pincé
+    // qui compte les pas avec son écho ; un pas de côté d'un demi-ton (fa
+    // mineur) pour dire qu'on est repéré. La mélodie entre au deuxième passage,
+    // l'air de rien ; un arrêt au coin de la rue, la basse qui se rouvre.
     ville_jour: {
-      bpm: 108, swing: 0.18, transpose: 0, tonique: 5, gain: 0.8,
+      bpm: 100, swing: 0.1, gain: 1.05,
+      pompe: { prof: 0.3, rel: 0.12 },
+      echo: { pas: 3, retour: 0.42, coupe: 2200 },
       voix: {
-        lead:   { inst: 'pluck', vol: 0.13, epoque: true },
-        cloche: { inst: 'cloche', vol: 0.05, oct: 5, pan: 0.3 },
-        basse:  { inst: 'tri', vol: 0.3, oct: 3 },
-        batt:   { vol: 0.55 }
+        lead:   { inst: 'lead', epoque: true, vol: 0.115, echo: 0.25, pan: 0.1 },
+        harmo:  { inst: 'lead', epoque: true, vol: 0.05, pan: -0.3 },
+        gratte: { inst: 'pluck', vol: 0.045, oct: 4, echo: 0.45, pan: 0.35, pompe: true },
+        nappe:  { inst: 'pad', vol: 0.026, oct: 3, pompe: true },
+        basse:  { inst: 'basse', vol: 0.19, pompe: true, filtre: 2600 },
+        batt:   { vol: 0.62 }
       },
       sections: {
         A: {
-          accords: ['F', 'Dm', 'Gm', 'C7', 'F', 'Dm', 'Bb C7', 'F'],
-          lead: [
-            'A4 . C5 . F5 - . . E5 . F5 . C5 - . .',
-            'D5 - . . F5 . A5 . G5 - F5 . D5 - . .',
-            'Bb4 . D5 . G5 - . . F5 . G5 . D5 - . .',
-            'E5 - . . G5 . Bb5 . A5 - G5 . E5 - . .',
-            'F5 - . . A5 . C6 . A5 - F5 . C5 - . .',
-            'D5 - . . F5 . E5 . D5 - . . A4 - . .',
-            'Bb4 . D5 . F5 . D5 . C5 . E5 . G5 . E5 .',
-            'F5 - - - . . . . . . . . F4 . G4 .'
-          ],
-          basse: 'R . . . 5 . . . 8 . . . 5 . 3 .',
-          batt: 'k . h . r . h . k . h k r . h .'
+          accords: ['Em', 'Em', 'Fm', 'Em', 'Am', 'Am', 'B7', 'B7'],
+          basse: [FIL.E, FIL.E, FIL.F, FIL.E, FIL.A, FIL.A, FIL.B, FIL.B2],
+          gratte: '1 . 5 . . 1 . 5 . . 1 . 5 . 3 .',
+          nappe: 'X - - - - - - - - - - - - - - -',
+          batt: ['k . h . c . h k . . h . c . h .', 'k . h . c . h k . . h . c . h .',
+                 'k . h . c . h k . . h . c . h .', 'k . h . c . h k . . h . c . o .',
+                 'k . h . c . h k . . h . c . h .', 'k . h . c . h k . . h . c . h .',
+                 'k . h . c . h k . . h . c . h .', 'k . h . c . h k . . h . c c c c']
         },
         B: {
-          accords: ['Bb', 'F', 'Gm', 'C', 'Am', 'Dm', 'G7', 'C7'],
+          accords: ['Am', 'Am', 'Em', 'Em', 'C', 'B7', 'Em', 'Em'],
+          basse: [FIL.A, FIL.A, FIL.E, FIL.E, FIL.C, FIL.B, FIL.E, FIL.E2],
           lead: [
-            'D5 - - - F5 - - . Bb5 - - - A5 - G5 .',
-            'A5 - - - - - . . F5 - - . C5 - - .',
-            'D5 - - - G5 - - . Bb5 - - - A5 - G5 .',
-            'G5 - - - - - . . E5 - - . C5 - - .',
-            'C5 - - - E5 - - . A5 - - - G5 - E5 .',
-            'F5 - - - - - . . D5 - - . A4 - - .',
-            'B4 - - . D5 - - . F5 - - . G5 - A5 .',
-            'G5 - - - - - - - E5 - - . C5 . . .'
+            '. . . . E5 - - . G5 - E5 . D5 - . .',
+            'C5 - - - - - . . A4 - C5 - D5 - Eb5 -',
+            'E5 - - - - - - - - - . . . . . .',
+            '. . . . B4 - D5 . E5 - G5 . Bb4 - ~B4 -',
+            'G5 - - - E5 - - . C5 - - - D5 - Eb5 -',
+            'D#5 - - - - - . . F#5 - - . A5 - - -',
+            'G5 - - . F#5 - - . E5 - - - - - - -',
+            '. . . . . . . . . . . . B4 . D5 .'
           ],
-          cloche: '8 . . . 5 . . . 3 . . . 5 . . .',
-          basse: 'R - . . 3 - . . 5 - . . 3 - . .',
-          batt: 'k . h . r . h . k . h . r . h h'
-        }
+          gratte: '1 . 5 . . 1 . 5 . . 1 . 5 . 3 .',
+          nappe: 'X - - - - - - - - - - - - - - -',
+          batt: ['k . h . c . h k . . h . c . h .', 'k . h . c . h k . . h . c . o .']
+        },
+        C: {
+          accords: ['Em', 'Em', 'Fm', 'Em'],
+          ouvre: { basse: [380, 2600] },
+          basse: [FIL.E, FIL.E, FIL.F, FIL.E],
+          gratte: '1 . 5 . . 1 . 5 . . 1 . 5 . 3 .',
+          batt: ['. . h . . . h . . . h . . . h .', '. . h . . . h . . . h . . . h .',
+                 'k . h . . . h . k . h . . . h .', 'k . h . c . h k z . h . c . s s']
+        },
+        B2: { copie: 'B', harmo: true }
       },
-      ordre: ['A', 'B'], boucle: 0
+      ordre: ['A', 'B', 'C', 'B2'], boucle: 0
     },
 
-    // ── LE TERMINUS À MINUIT ── le soir et la nuit : un piano électrique qui
-    // plaque, une flûte qui fume, une contrebasse, des balais.
+    // ── NÉONS ── le soir et la nuit : un demi-temps lourd, la caisse claire sur
+    // le troisième temps, une basse qui pompe en croches, un saxophone de
+    // synthèse qui fume, un piano électrique qui plaque à contretemps ; au
+    // refrain, un arpège qui clignote comme une enseigne ; à minuit, rien
+    // qu'une horloge.
     ville_nuit: {
-      bpm: 80, swing: 0.3, transpose: 0, tonique: 0, mineur: true, gain: 0.85,
+      bpm: 88, gain: 1.05,
+      pompe: { prof: 0.55, rel: 0.25 },
+      echo: { pas: 3, retour: 0.45, coupe: 1900 },
       voix: {
-        lead:  { inst: 'flute', vol: 0.1, epoque: true },
-        ep:    { inst: 'epiano', vol: 0.055, oct: 4 },
-        basse: { inst: 'contrebasse', vol: 0.34, oct: 3 },
-        batt:  { vol: 0.42 }
+        lead:  { inst: 'saxo', vol: 0.12, echo: 0.3 },
+        ep:    { inst: 'epiano', vol: 0.05, oct: 4, pan: -0.25, echo: 0.2 },
+        arp:   { inst: 'pluck', vol: 0.04, oct: 4, pan: 0.35, echo: 0.5, pompe: true },
+        nappe: { inst: 'pad', vol: 0.045, oct: 3, pompe: true },
+        basse: { inst: 'basse', vol: 0.18, oct: 2, pompe: true },
+        batt:  { vol: 0.75 }
       },
       sections: {
         A: {
-          accords: ['Cm7', 'Fm7', 'Bb7', 'Ebmaj7', 'Abmaj7', 'Dm7b5', 'G7', 'Cm7'],
+          accords: ['Fm', 'Fm', 'Db', 'Db', 'Bbm', 'Bbm', 'C', 'C'],
           lead: [
-            '. . G4 - Bb4 - - . C5 - - - - - . .',
-            '. . Ab4 - C5 - - . Eb5 - - - D5 - C5 .',
-            'D5 - - - - - . . Ab4 - - . F4 - - .',
-            'G4 - - - - - - - - - - . . . Bb4 .',
-            'C5 - - . Eb5 - - . G5 - - - F5 - Eb5 .',
-            'D5 - - - - - . . Ab4 - - . F4 - - .',
-            'G4 - - . B4 - - . D5 - - . F5 - Eb5 .',
-            'C5 - - - - - - - - - - - . . . .'
+            '. . . . C5 - - - Ab4 - - - F4 - - -',
+            'G4 - - - Ab4 - - - C5 - - - - - . .',
+            '. . . . Db5 - - - C5 - - - Ab4 - - -',
+            'F4 - - - - - - - - - - - . . . .',
+            '. . . . Bb4 - - - Db5 - - - F5 - - -',
+            'Eb5 - - - Db5 - - - C5 - - - Bb4 - - -',
+            'C5 - - - E5 - - - G5 - - - Bb5 - - -',
+            'Ab5 - - - G5 - - - E5 - - - . . . .'
           ],
-          ep: 'X - - - - - . . . . X - - . . .',
-          basse: 'R - . . 3 - . . 5 - . . 7 - . .',
-          batt: 'k . . . r . h . . . k . r . h .'
-        },
-        B: {
-          copie: 'A',
-          lead: [
-            '. . . . G5 - - . Bb5 - - . C6 - - .',
-            'Ab5 - - - - - . . G5 - - . F5 - Eb5 .',
-            'D5 - - - F5 - - . Ab5 - - - - - . .',
-            'G5 - - - - - - - - - . . . . . .',
-            'Eb5 - - . G5 - - . C6 - - - Bb5 - Ab5 .',
-            'F5 - - - - - . . D5 - - . B4 - - .',
-            'D5 - - . F5 - - . Ab5 - - . G5 - F5 .',
-            'Eb5 - - - D5 - - - C5 - - - - - . .'
-          ]
-        }
-      },
-      ordre: ['A', 'B'], boucle: 0
-    },
-
-    // ── JOUR DE MATCH ── la tribune chante (le chœur), les cuivres frappent,
-    // la batterie charge ; une pause où le stade tape dans ses mains.
-    match: {
-      bpm: 144, swing: 0, transpose: 0, tonique: 4, mineur: true, gain: 0.85,
-      voix: {
-        choeur: { inst: 'choeur', vol: 0.11 },
-        stab:   { inst: 'cuivre', vol: 0.075, oct: 4 },
-        basse:  { inst: 'tri', vol: 0.26, oct: 3 },
-        arp:    { inst: 'pulse', duty: 0.125, vol: 0.025, oct: 5, pan: -0.3 },
-        batt:   { vol: 0.9 }
-      },
-      sections: {
-        A: {
-          accords: ['Em', 'C', 'G', 'D', 'Em', 'C', 'D', 'B7'],
-          choeur: [
-            'E4 - - - G4 - - - B4 - - - - - . .',
-            'C5 - - - B4 - - - G4 - - - - - . .',
-            'D5 - - - B4 - - - G4 - - - B4 - - -',
-            'A4 - - - - - - - F#4 - - - - - . .',
-            'E4 - - - G4 - - - B4 - - - E5 - - -',
-            'E5 - - - D5 - - - C5 - - - B4 - - -',
-            'A4 - - - B4 - - - C5 - - - D5 - - -',
-            'D#5 - - - - - - - F#5 - - - - - . .'
-          ],
-          stab: 'X . . X . . X . . . X . X . . .',
-          basse: 'R . R . R . R . R . R . R . 5 .',
-          arp: '1 5 8 5 1 5 8 5 1 5 8 5 1 5 8 5',
-          batt: [
-            'kx . h . sc . h . k . k . sc . h h',
-            'k . h . sc . h . k . k . sc . h h',
-            'k . h . sc . h . k . k . sc . h h',
-            'k . h . sc . h . k . k . sc . h h',
-            'kx . h . sc . h . k . k . sc . h h',
-            'k . h . sc . h . k . k . sc . h h',
-            'k . h . sc . h . k . k . sc . h h',
-            'k . t . t . t . t t t t s s s s'
-          ]
-        },
-        pause: {
-          accords: ['Em', 'Em'],
-          basse: 'R . R . R . R . R . R . R . R .',
-          stab: ['X . . . . . . . . . . . . . . .', '. . . . . . . . X . . . X . X .'],
-          batt: ['k . c . k . c . k . c . k c c c', 'k . c . k . c . k k c . c c c c']
-        }
-      },
-      ordre: ['A', 'pause'], boucle: 0
-    },
-
-    // ── LA NUIT TOMBE ── les événements sombres : un cœur qui bat, une horloge,
-    // une basse qui insiste, une cloche haute qui ne résout jamais.
-    sombre: {
-      bpm: 70, swing: 0, transpose: 0, tonique: 2, mineur: true, gain: 0.8,
-      voix: {
-        cloche: { inst: 'cloche', vol: 0.07 },
-        nappe:  { inst: 'nappe', vol: 0.05, oct: 3 },
-        basse:  { inst: 'saw', vol: 0.13, oct: 2, sombre: true },
-        batt:   { vol: 0.5 }
-      },
-      sections: {
-        A: {
-          accords: ['Dm', 'Dm', 'Eb/D', 'Dm', 'Bb', 'Gm', 'A', 'A'],
-          cloche: [
-            '. . . . . . . . A5 - - - - - - -',
-            '. . . . . . . . F5 - - - E5 - - -',
-            '. . . . . . . . G5 - - - - - - -',
-            '. . . . . . . . . . . . . . . .',
-            '. . . . . . . . D6 - - - - - - -',
-            '. . . . . . . . Bb5 - - - A5 - - -',
-            '. . . . . . . . C#6 - - - - - - -',
-            '. . . . . . . . . . . . . . . .'
-          ],
+          ep: '. . . . X - - . . . . . X - - .',
           nappe: 'X - - - - - - - - - - - - - - -',
           basse: 'R . R . R . R . R . R . R . R .',
-          batt: 'k . h k h . h . k . h k h . h .'
-        }
+          batt: ['k . h . . . h . S . h . . . h k', 'k . h . . . h k S . h . . . h .']
+        },
+        B: {
+          accords: ['Db', 'Eb', 'Fm', 'Fm', 'Db', 'Eb', 'C', 'C'],
+          lead: [
+            'F5 - - - - - - - Eb5 - - - Db5 - - -',
+            'Eb5 - - - - - - - G5 - - - Bb5 - - -',
+            'Ab5 - - - - - - - - - - - G5 - F5 -',
+            'F5 - - - - - - - - - - - . . . .',
+            'Db6 - - - - - - - C6 - - - Ab5 - - -',
+            'Bb5 - - - - - - - G5 - - - Eb5 - - -',
+            'E5 - - - - - - - G5 - - - C6 - - -',
+            'Bb5 - - - - - - - - - - - . . . .'
+          ],
+          arp: '1 . 5 . 8 . 5 . 1 . 5 . 8 . 5 .',
+          nappe: 'X - - - - - - - - - - - - - - -',
+          basse: 'R . R . R . R . R . R . R . R .',
+          batt: ['k . h h . . h . S . h h . . h k', 'k . h h . . h k S . h h . . h .']
+        },
+        C: {
+          accords: ['Fm', 'Fm', 'Db', 'C'],
+          ep: 'X - - - - - - - - - - - - - - -',
+          nappe: 'X - - - - - - - - - - - - - - -',
+          basse: 'R - - - - - - - - - - - - - - -',
+          batt: ['i . . . i . . . i . . . i . . .', 'i . . . i . . . i . . . i . . .',
+                 'i . . . i . . . i . . . i . . .', 'i . . . i . . . z . . . i . . .']
+        },
+        A2: { copie: 'A', arp: '1 . 5 . 8 . 5 . 1 . 5 . 8 . 5 .' }
       },
-      ordre: ['A'], boucle: 0
+      ordre: ['A', 'B', 'C', 'A2', 'B'], boucle: 0
     },
 
-    // ── LE DERNIER TOUR DE TERRAIN ── la fin d'une carrière : l'hymne
-    // d'Aubérive, lent, à la boîte à musique, sur un piano électrique.
-    fin: {
-      bpm: 76, swing: 0, transpose: 0, tonique: 0, gain: 0.85,
+    // ── LA RIVE ── le samedi au stade : des tambours de guerre pour entrer,
+    // une basse saturée qui martèle mi en octaves avec le fa phrygien qui grince
+    // au bout de la mesure, la tribune qui chante en mineur ; au refrain, les
+    // claps du virage (deux, puis trois), une sirène qui monte d'un demi-ton,
+    // une basse acide ; une charge au demi-temps, et ça repart.
+    match: {
+      bpm: 132, gain: 0.85,
+      pompe: { prof: 0.55, rel: 0.13 },
+      echo: { pas: 3, retour: 0.3, coupe: 3000 },
       voix: {
-        lead:  { inst: 'cloche', vol: 0.1 },
-        ep:    { inst: 'epiano', vol: 0.05, oct: 4 },
-        basse: { inst: 'contrebasse', vol: 0.3, oct: 3 }
+        choeur: { inst: 'choeur', vol: 0.13 },
+        sirene: { inst: 'lead', vol: 0.12, echo: 0.3, pan: 0.2, drive: 2.5, filtre: 4500 },
+        acide:  { inst: 'acide', vol: 0.065, oct: 3, pompe: true, echo: 0.2, pan: -0.25 },
+        basse:  { inst: 'basse', vol: 0.18, oct: 1, pompe: true, drive: 2, filtre: 1400 },
+        batt:   { vol: 0.95 }
       },
       sections: {
-        A: { copie: 'accueil.A', ep: 'X - - - - - - - X - - - - - - -', basse: 'R - - - - - - - 5 - - - - - - -', batt: null, arp: null, stab: null }
+        intro: {
+          accords: ['Em', 'Em', 'Em', 'Em'],
+          choeur: ['E4 - - - - - - - - - - - - - - -', SILENCE,
+                   'E4 - - - - - - - G4 - - - - - - -', 'B4 - - - - - - - - - - - . . . .'],
+          basse: [SILENCE, SILENCE, 'E2 . E2 . E2 . E2 . E2 . E2 . E2 . E2 .',
+                  'E2 E2 E2 E2 E2 E2 E2 E2 E2 E2 E2 E2 E2 E2 E2 E2'],
+          batt: [
+            'T . . T . . T . . . T . T . T .',
+            'T . . T . . T . . . T . T T T T',
+            'K . . T . . T . K . T . T . T .',
+            'K . . T . . T . Kz . T . T T T T'
+          ]
+        },
+        A: {
+          accords: ['Em', 'Em', 'F', 'Em', 'Em', 'Em', 'C', 'B7'],
+          choeur: [
+            'E4 - - - E4 - G4 - B4 - - - - - . .',
+            'A4 - - - G4 - - - F#4 - - - E4 - . .',
+            'F4 - - - A4 - - - C5 - - - - - . .',
+            'B4 - - - - - - - - - - - . . . .',
+            'E4 - - - E4 - G4 - B4 - - - E5 - - -',
+            'D5 - - - C5 - - - B4 - - - G4 - . .',
+            'C5 - - - B4 - - - A4 - - - G4 - - -',
+            'F#4 - - - - - - - D#5 - - - - - . .'
+          ],
+          basse: [RIVE.E, RIVE.E2, RIVE.F, RIVE.E, RIVE.E, RIVE.E2, RIVE.C, RIVE.B],
+          batt: ['Kx . h . KS . h . K . h . KS . h h', 'K . h . KS . h . K . h . KS . h h',
+                 'K . h . KS . h . K . h . KS . h h', 'K . h . KS . h . K . h . KS . h h',
+                 'K . h . KS . h . K . h . KS . h h', 'K . h . KS . h . K . h . KS . h h',
+                 'K . h . KS . h . K . h . KS . h h', 'K . h . KS . h . K . T . T T T T']
+        },
+        B: {
+          accords: ['Em', 'Em', 'C', 'C', 'Am', 'Am', 'B7', 'B7'],
+          sirene: [
+            'E4 - - - - - - - F4 - - - - - - -',
+            'E4 - - - - - - - - - - - . . . .',
+            'G4 - - - - - - - Ab4 - - - - - - -',
+            'G4 - - - - - - - - - - - . . . .',
+            'C5 - - - - - - - B4 - - - - - - -',
+            'A4 - - - - - - - - - - - . . . .',
+            'B4 - - - - - - - C5 - - - - - - -',
+            'B4 - - - - - - - D#5 - - - F#5 - - -'
+          ],
+          acide: '1! 1 8 1 5 1 8 1! 1 1 8 1 5 1 8 5',
+          basse: 'R . 8 . R . 8 . R . 8 . R . 8 .',
+          batt: ['Kcx . h . Kc . h . Kc . c . KcS . h .', 'K . h . KS . h . K . h . KS . h h']
+        },
+        charge: {
+          accords: ['Em', 'Em', 'F', 'B7'],
+          choeur: ['E4 - - - - - - - - - - - - - - -', 'G4 - - - - - - - - - - - - - - -',
+                   'A4 - - - - - - - - - - - - - - -', 'B4 - - - - - - - - - - - - - - -'],
+          basse: ['E2 - - - - - - - E2 - - - - - - -', 'E2 - - - - - - - E2 - - - - - - -',
+                  'F2 - - - - - - - F2 - - - - - - -', 'B1 - - - - - - - B1 - - - - - - -'],
+          batt: [
+            'K . . . . . . . S . . . . . . .',
+            'K . . . . . . . S . . . . . . .',
+            'K . . T . . T . S . . T . T T T',
+            'K . T . T . T . Sz . T . T T T T'
+          ]
+        }
       },
-      ordre: ['A'], boucle: 0
+      ordre: ['intro', 'A', 'B', 'charge', 'A', 'B'], boucle: 1
+    },
+
+    // ── LE FUSIBLE ── les événements sombres : une boîte à musique qui boite
+    // (cinq notes contre quatre temps : le motif ne retombe jamais au même
+    // endroit), un cœur qui bat et fait respirer la nappe, une basse profonde,
+    // un mi bémol partout (le deuxième degré abaissé) ; puis une voix grave qui
+    // descend par demi-tons, le triton au milieu ; puis la boîte, seule.
+    sombre: {
+      bpm: 96, gain: 0.95,
+      pompe: { prof: 0.5, rel: 0.32 },
+      echo: { pas: 3, retour: 0.5, coupe: 1600 },
+      voix: {
+        boite: { inst: 'cloche', vol: 0.09, faux: 30, echo: 0.4, pan: 0.15 },
+        lead:  { inst: 'lead', vol: 0.13, echo: 0.35, pan: -0.1, filtre: 2000 },
+        nappe: { inst: 'pad', vol: 0.05, oct: 3, pompe: true },
+        basse: { inst: 'sub', vol: 0.15, oct: 2, pompe: true },
+        batt:  { vol: 0.6 }
+      },
+      sections: {
+        A: {
+          accords: ['Dm', 'Dm', 'Eb', 'Dm', 'A', 'Dm', 'Bb', 'Gm', 'Eb', 'A'],
+          boite: BOITE,
+          nappe: 'X - - - - - - - - - - - - - - -',
+          basse: 'R - - - - - - - - - - - - - - -',
+          batt: COEUR
+        },
+        B: {
+          accords: ['Dm', 'Dm', 'Eb', 'Dm', 'A'],
+          boite: BOITE,
+          lead: [
+            'D4 - - - - - - - - - - - A4 - - -',
+            'Ab4 - - - - - - - - - - - G4 - - -',
+            'F4 - - - - - - - E4 - - - Eb4 - - -',
+            'D4 - - - - - - - - - - - - - - -',
+            'C#4 - - - - - - - - - - - . . . .'
+          ],
+          nappe: 'X - - - - - - - - - - - - - - -',
+          basse: 'R - - - - - - - - - - - - - - -',
+          batt: COEUR
+        },
+        C: {
+          accords: ['Dm', 'Dm', 'Eb', 'Dm', 'A'],
+          boite: BOITE,
+          nappe: 'X - - - - - - - - - - - - - - -',
+          batt: ['b . . . . . . . . . . . i . . .', '. . . . . . . . . . . . i . . .',
+                 '. . . . . . . . . . . . i . . .', '. . . . . . . . . . . . i . . .',
+                 '. . . . . . . . m . . . i . . .']
+        }
+      },
+      ordre: ['A', 'B', 'C'], boucle: 0
+    },
+
+    // ── LE DERNIER TOUR ── la fin d'une carrière : le motif de La Mèche, lent,
+    // à la boîte à musique désaccordée, sur un piano électrique qui égrène
+    // l'arpège ; plus de batterie, rien qu'une basse ronde.
+    fin: {
+      bpm: 70, gain: 1,
+      echo: { pas: 3, retour: 0.45, coupe: 1800 },
+      voix: {
+        lead:  { inst: 'cloche', vol: 0.13, faux: 26, echo: 0.35 },
+        arp:   { inst: 'epiano', vol: 0.032, oct: 3, pan: -0.2, echo: 0.15 },
+        nappe: { inst: 'pad', vol: 0.04, oct: 3 },
+        basse: { inst: 'sub', vol: 0.14, oct: 2 }
+      },
+      sections: {
+        A: { copie: 'accueil.A', basse: 'R - - - - - - - 5 - - - - - - -', batt: null },
+        B: { copie: 'accueil.B', basse: 'R - - - - - - - - - - - - - - -', batt: null, arp: '1 5 8 5 3 5 8 5 1 5 8 5 3 5 8 5' }
+      },
+      ordre: ['A', 'B'], boucle: 0
     }
   };
 
-  // Les courtes phrases jouées une fois (le départ d'une histoire).
+  // Les courtes phrases jouées une fois : le départ d'une histoire (un boum,
+  // une cymbale, la mèche qui monte en la mineur).
   var JINGLES = {
     depart: {
-      bpm: 150, transpose: 2,
-      notes: [['C5', 0, 1], ['E5', 1, 1], ['G5', 2, 1], ['C6', 3, 5]],
-      frappes: [['k', 0], ['x', 3], ['k', 3]]
+      bpm: 150, inst: 'lead', vol: 0.1, frappe: 0.5,
+      notes: [['A3', 0, 1], ['E4', 1, 1], ['A4', 2, 1], ['C5', 3, 1], ['E5', 4, 8], ['A1', 4, 8, 'basse', 0.16]],
+      frappes: [['K', 0], ['K', 4], ['b', 4], ['x', 4]]
     }
   };
 
@@ -1086,41 +1252,50 @@
         var l = a.split(/\s+/), part = 16 / l.length;
         for (var k = 0; k < 16; k++) sous.push(accordDe(l[Math.floor(k / part)]));
       });
+      if (sec.ouvre) Object.keys(sec.ouvre).forEach(function (vn) {
+        if (!th.voix[vn] || !th.voix[vn].filtre) throw new Error(nom + '.' + sn + ' : « ouvre » vise ' + vn + ', une voix sans filtre');
+      });
       var tr = th.transpose || 0;
       Object.keys(th.voix).forEach(function (vn) {
         var voix = th.voix[vn];
         var src = vn === 'harmo' ? (sec.harmo ? sec.lead : null) : sec[vn];
-        if (vn === 'batt' && sec.batt0 && src) src = [sec.batt0].concat(Array.isArray(src) ? src.slice(1) : mesures(src, nb).slice(1));
         var bars = mesures(src, nb);
         if (!bars) return;
         var cases = [];
         bars.forEach(function (b, bi) { cases = cases.concat(grille(b, nom + '.' + sn + '.' + vn + ' m' + (bi + 1))); });
         if (vn === 'batt') {
-          cases.forEach(function (c, i) { if (c !== '.' && c !== '-') parPas[i].push({ v: vn, frappe: c }); });
+          cases.forEach(function (c, i) {
+            if (c === '.' || c === '-') return;
+            if (!/^[kKsShocrtTxmizb]+$/.test(c)) throw new Error(nom + '.' + sn + '.batt : frappe illisible « ' + c + ' »');
+            parPas[i].push({ v: vn, frappe: c });
+          });
           return;
         }
+        var prec = null;
         for (var i = 0; i < cases.length; i++) {
           var c = cases[i];
           if (c === '.' || c === '-') continue;
           var len = 1;
           while (i + len < cases.length && cases[i + len] === '-') len++;
+          var mt = /^(~?)(.+?)(!?)$/.exec(c), corps = mt[2];
           var hauteurs = [];
-          if (c === 'X') {
+          if (corps === 'X') {
             var a = sous[i], o = voix.oct || 4;
             a.iv.forEach(function (iv) { hauteurs.push(12 * (o + 1) + a.pc + iv + tr); });
-          } else if (/^[R135789]$/.test(c)) {
-            var m = degreMidi(sous[i], c, voix.oct || 3);
+          } else if (/^[R135789]$/.test(corps)) {
+            var m = degreMidi(sous[i], corps, voix.oct || 3);
             if (m != null) hauteurs.push(m + tr);
           } else {
-            var mm = midiDe(c);
+            var mm = midiDe(corps);
             if (mm == null) throw new Error(nom + '.' + sn + '.' + vn + ' : note illisible « ' + c + ' »');
-            if (vn === 'harmo') mm = tierceDessous(mm, th.tonique || 0, !!th.mineur);
+            if (vn === 'harmo') mm = harmonieSous(mm, sous[i]);
             hauteurs.push(mm + tr);
           }
-          parPas[i].push({ v: vn, h: hauteurs, len: len });
+          parPas[i].push({ v: vn, h: hauteurs, len: len, acc: mt[3] === '!', de: mt[1] === '~' ? prec : null });
+          prec = hauteurs[hauteurs.length - 1];
         }
       });
-      sections[sn] = { pas: pas, parPas: parPas };
+      sections[sn] = { pas: pas, parPas: parPas, ouvre: sec.ouvre || null, sous: sous };
     });
     return (COMPILES[nom] = { th: th, sections: sections, ordre: th.ordre, boucle: th.boucle || 0, pas: 60 / th.bpm / 4 });
   }
@@ -1146,22 +1321,43 @@
     param.setTargetAtTime(0.0001, off, Math.max(r, 0.005) / 3);
     return off + r * 2 + 0.03;
   }
+  // `filtre` : [ouverture à l'attaque, palier], `fenv` le temps qu'il met à se
+  // refermer ; `detune` : un écart (deux oscillateurs) ou la liste des écarts ;
+  // `sub` : un sinus à la même hauteur, pour le poids ; `vib` : la profondeur
+  // du vibrato (il ne vient que sur les notes tenues).
   var INSTRUMENTS = {
     pulse:       { osc: 'pulse', a: 0.004, d: 0.1, s: 0.72, r: 0.05, vib: 1 },
-    pluck:       { osc: 'pulse', duty: 0.5, a: 0.003, d: 0.24, s: 0.05, r: 0.07, filtre: [4200, 1600] },
+    pluck:       { osc: 'pulse', duty: 0.5, a: 0.003, d: 0.22, s: 0.05, r: 0.07, filtre: [3400, 900] },
     tri:         { osc: 'triangle', a: 0.003, d: 0.08, s: 0.9, r: 0.03 },
     saw:         { osc: 'sawtooth', a: 0.008, d: 0.18, s: 0.6, r: 0.08, filtre: [3000, 1500], detune: 7, vib: 1 },
     cuivre:      { osc: 'sawtooth', a: 0.02, d: 0.14, s: 0.45, r: 0.07, filtre: [2600, 900], detune: 6 },
     nappe:       { osc: 'sawtooth', a: 0.35, d: 0.6, s: 0.85, r: 0.7, filtre: [1100, 900], detune: 10 },
     flute:       { osc: 'triangle', a: 0.05, d: 0.2, s: 0.85, r: 0.12, vib: 1 },
-    contrebasse: { osc: 'triangle', a: 0.004, d: 0.5, s: 0.22, r: 0.12 }
+    contrebasse: { osc: 'triangle', a: 0.004, d: 0.5, s: 0.22, r: 0.12 },
+    // la palette noire
+    basse:       { osc: 'sawtooth', a: 0.003, d: 0.15, s: 0.55, r: 0.05, filtre: [1500, 460], q: 2.2, fenv: 0.05, detune: 7, sub: 0.3 },
+    acide:       { osc: 'sawtooth', a: 0.002, d: 0.13, s: 0.25, r: 0.04, filtre: [2200, 260], q: 11, fenv: 0.045 },
+    lead:        { osc: 'sawtooth', a: 0.008, d: 0.3, s: 0.72, r: 0.14, filtre: [4200, 2600], q: 1.2, fenv: 0.2, detune: 6, vib: 1 },
+    pad:         { osc: 'sawtooth', a: 0.4, d: 0.9, s: 0.85, r: 0.9, filtre: [1500, 1100], fenv: 0.5, detune: [-15, -6, 6, 15] },
+    sub:         { osc: 'sine', a: 0.008, d: 0.2, s: 0.92, r: 0.08 },
+    saxo:        { osc: 'sawtooth', a: 0.035, d: 0.3, s: 0.78, r: 0.16, filtre: [2000, 1100], q: 2.5, fenv: 0.18, detune: 3, vib: 1.4 }
   };
-  // le timbre de l'époque, pour les voix `epoque`
+  // le timbre de l'époque, pour les voix `epoque` : un carré d'avant l'an 2000,
+  // une scie ensuite, et à partir de 2013 un saxophone de synthèse, plus sourd
   function timbreEpoque(inst, year) {
+    if (inst === 'lead') return year < 1998 ? 'pulse' : year < 2013 ? 'lead' : 'saxo';
     if (inst === 'pulse') return year < 1998 ? 'pulse' : year < 2013 ? 'saw' : 'flute';
     if (inst === 'pluck') return year < 1998 ? 'pluck' : year < 2013 ? 'epiano' : 'cloche';
     if (inst === 'flute') return year < 1998 ? 'flute' : year < 2013 ? 'saw' : 'epiano';
     return inst;
+  }
+  // la saturation : une tangente hyperbolique, normalisée (la crête reste à 1)
+  var COURBES = {};
+  function courbeDrive(k) {
+    if (COURBES[k]) return COURBES[k];
+    var n = 2048, c = new Float32Array(n), norme = Math.tanh(k);
+    for (var i = 0; i < n; i++) { var x = i * 2 / (n - 1) - 1; c[i] = Math.tanh(k * x) / norme; }
+    return (COURBES[k] = c);
   }
   function panner(ctx, out, pan) {
     if (!pan || !ctx.createStereoPanner) return out;
@@ -1170,21 +1366,34 @@
     p.connect(out);
     return p;
   }
-  function jouerNote(ctx, out, nom, t, dur, f, vol, voix) {
-    var dest = panner(ctx, out, voix.pan);
+  // une note : `ex.acc` l'accentue, `ex.de` (Hz) la fait glisser depuis là
+  function jouerNote(ctx, out, nom, t, dur, f, vol, voix, ex) {
+    ex = ex || {};
     var g = gain(ctx, 0.0001);
-    g.connect(dest);
+    g.connect(out);
     var fin, oscs = [];
+    if (ex.acc) vol *= 1.35;
     if (nom === 'cloche') {
-      // la boîte à musique : trois sinus inharmoniques qui s'éteignent chacun à leur rythme
+      // la boîte à musique : trois sinus inharmoniques qui s'éteignent chacun à
+      // leur rythme ; `faux` la désaccorde (un écart par note, et un ressort
+      // fatigué qui fait onduler la hauteur)
+      var lg = null, lfo = null, tenue = Math.min(dur, 1);
+      if (voix.faux) {
+        lfo = ctx.createOscillator(); lfo.frequency.value = 0.85;
+        lg = gain(ctx, voix.faux * 0.5);
+        lfo.connect(lg);
+        lfo.start(t); lfo.stop(t + 1.6 + tenue);
+      }
+      var ecart = voix.faux ? (((t * 7919.31) % 1) - 0.5) * voix.faux : 0;
       [[1, 1, 1.5], [2.76, 0.32, 0.6], [5.4, 0.13, 0.25]].forEach(function (p) {
         var o = ctx.createOscillator(), og = gain(ctx, 0.0001);
-        o.type = 'sine'; o.frequency.value = f * p[0];
+        o.type = 'sine'; o.frequency.value = f * p[0]; o.detune.value = ecart;
+        if (lg) lg.connect(o.detune);
         og.gain.setValueAtTime(0.0001, t);
         og.gain.linearRampToValueAtTime(vol * p[1], t + 0.003);
-        og.gain.exponentialRampToValueAtTime(0.0001, t + p[2] + Math.min(dur, 1));
-        o.connect(og).connect(dest);
-        o.start(t); o.stop(t + p[2] + Math.min(dur, 1) + 0.05);
+        og.gain.exponentialRampToValueAtTime(0.0001, t + p[2] + tenue);
+        o.connect(og).connect(out);
+        o.start(t); o.stop(t + p[2] + tenue + 0.05);
       });
       return;
     }
@@ -1216,43 +1425,52 @@
         o.connect(og).connect(mix);
         oscs.push(o);
       });
-      var lfo = ctx.createOscillator(), lg = gain(ctx, 0);
-      lfo.frequency.value = 5.1;
-      lg.gain.setValueAtTime(0, t);
-      lg.gain.linearRampToValueAtTime(f * 0.008, t + 0.35);
-      lfo.connect(lg);
-      oscs.forEach(function (o) { lg.connect(o.frequency); });
+      var vlfo = ctx.createOscillator(), vlg = gain(ctx, 0);
+      vlfo.frequency.value = 5.1;
+      vlg.gain.setValueAtTime(0, t);
+      vlg.gain.linearRampToValueAtTime(f * 0.008, t + 0.35);
+      vlfo.connect(vlg);
+      oscs.forEach(function (o) { vlg.connect(o.frequency); });
       fin = env(g.gain, t, 0.09, 0.3, 0.9, 0.28, dur, vol * 2.4);
       oscs.forEach(function (o) { o.start(t); o.stop(fin); });
-      lfo.start(t); lfo.stop(fin);
+      vlfo.start(t); vlfo.stop(fin);
       return;
     }
     var def = INSTRUMENTS[nom] || INSTRUMENTS.pulse;
     var entree = g;
-    if (def.filtre || voix.sombre) {
+    if (def.filtre) {
       var flt = ctx.createBiquadFilter();
-      flt.type = 'lowpass'; flt.Q.value = 1.2;
-      var hi = voix.sombre ? 900 : def.filtre[0], lo = voix.sombre ? 420 : def.filtre[1];
-      flt.frequency.setValueAtTime(hi, t);
-      flt.frequency.setTargetAtTime(lo, t + def.a, 0.12);
+      flt.type = 'lowpass'; flt.Q.value = (def.q || 1.2) + (ex.acc ? 4 : 0);
+      flt.frequency.setValueAtTime(def.filtre[0] * (ex.acc ? 1.8 : 1), t);
+      flt.frequency.setTargetAtTime(def.filtre[1], t + def.a, def.fenv || 0.12);
       flt.connect(g);
       entree = flt;
     }
-    var detunes = def.detune ? [-def.detune, def.detune] : [0];
+    var detunes = Array.isArray(def.detune) ? def.detune : def.detune ? [-def.detune, def.detune] : [0];
     detunes.forEach(function (dt) {
       var o = ctx.createOscillator();
       if (def.osc === 'pulse') o.setPeriodicWave(onde(ctx, voix.duty || def.duty || 0.5));
       else o.type = def.osc;
-      o.frequency.value = f; o.detune.value = dt;
+      o.detune.value = dt;
       var og = gain(ctx, 1 / detunes.length);
       o.connect(og).connect(entree);
       oscs.push(o);
+    });
+    if (def.sub) {
+      var so = ctx.createOscillator();
+      so.type = 'sine';
+      so.connect(gain(ctx, def.sub)).connect(g);
+      oscs.push(so);
+    }
+    oscs.forEach(function (o) {
+      if (ex.de) { o.frequency.setValueAtTime(ex.de, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.07); }
+      else o.frequency.value = f;
     });
     if (def.vib && dur > 0.28) {
       var v = ctx.createOscillator(), vg = gain(ctx, 0);
       v.frequency.value = 5.4;
       vg.gain.setValueAtTime(0, t + 0.12);
-      vg.gain.linearRampToValueAtTime(f * 0.006, t + 0.32);
+      vg.gain.linearRampToValueAtTime(f * 0.006 * def.vib, t + 0.32);
       v.connect(vg);
       oscs.forEach(function (o) { vg.connect(o.frequency); });
       oscs.push(v);
@@ -1260,15 +1478,39 @@
     fin = env(g.gain, t, def.a, def.d, def.s, def.r, dur, vol);
     oscs.forEach(function (o) { o.start(t); o.stop(fin); });
   }
-  function jouerFrappe(ctx, out, k, t, vol) {
+  // un souffle tenu puis coupé net : la caisse claire « gated » des années
+  // quatre-vingt (la réverbération qu'on ferme d'un coup)
+  function porte(ctx, out, t, o) {
+    var s = src(ctx, t, false, 1);
+    var f = ctx.createBiquadFilter();
+    f.type = o.type || 'bandpass'; f.frequency.value = o.f; f.Q.value = o.q || 0.7;
+    var g = gain(ctx, 0.0001);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(o.peak, t + 0.002);
+    g.gain.exponentialRampToValueAtTime(o.peak * 0.35, t + o.tenue);
+    g.gain.linearRampToValueAtTime(0.0001, t + o.tenue + 0.02);
+    s.connect(f).connect(g).connect(out);
+    s.stop(t + o.tenue + 0.06);
+  }
+  function jouerFrappe(ctx, out, k, t, vol, pas) {
     switch (k) {
       case 'k':
-        tone(ctx, out, t, { type: 'sine', f: 150, f2: 46, dur: 0.26, peak: 0.95 * vol });
+        tone(ctx, out, t, { type: 'sine', f: 150, f2: 50, dur: 0.24, peak: 0.8 * vol });
         burst(ctx, out, t, { type: 'highpass', f: 3000, q: 0.7, dur: 0.012, peak: 0.12 * vol });
+        break;
+      case 'K':
+        tone(ctx, out, t, { type: 'sine', f: 130, f2: 45, dur: 0.36, peak: 0.85 * vol });
+        tone(ctx, out, t, { type: 'triangle', f: 280, f2: 75, dur: 0.06, peak: 0.35 * vol });
+        burst(ctx, out, t, { type: 'highpass', f: 2600, q: 0.7, dur: 0.014, peak: 0.16 * vol });
         break;
       case 's':
         burst(ctx, out, t, { type: 'bandpass', f: 1900, q: 0.7, dur: 0.17, peak: 0.42 * vol });
         tone(ctx, out, t, { type: 'triangle', f: 190, f2: 160, dur: 0.09, peak: 0.3 * vol });
+        break;
+      case 'S':
+        porte(ctx, out, t, { f: 1500, q: 0.55, tenue: 0.17, peak: 0.5 * vol });
+        porte(ctx, out, t, { type: 'highpass', f: 5200, q: 0.7, tenue: 0.15, peak: 0.2 * vol });
+        tone(ctx, out, t, { type: 'triangle', f: 210, f2: 150, dur: 0.11, peak: 0.42 * vol });
         break;
       case 'h':
         burst(ctx, out, t, { type: 'highpass', f: 7600, q: 0.8, dur: 0.035, peak: 0.16 * vol, pan: 0.25 });
@@ -1287,12 +1529,48 @@
       case 't':
         tone(ctx, out, t, { type: 'sine', f: 210, f2: 115, dur: 0.24, peak: 0.55 * vol });
         break;
+      case 'T':
+        tone(ctx, out, t, { type: 'sine', f: 120, f2: 64, dur: 0.38, peak: 0.75 * vol });
+        burst(ctx, out, t, { type: 'lowpass', f: 1100, q: 0.7, dur: 0.05, peak: 0.16 * vol });
+        break;
       case 'x':
         burst(ctx, out, t, { type: 'highpass', f: 5200, q: 0.6, dur: 1.3, peak: 0.13 * vol });
         burst(ctx, out, t, { type: 'bandpass', f: 8200, q: 1.5, dur: 0.6, peak: 0.07 * vol, pan: -0.2 });
         break;
+      case 'm':
+        // le métal : une barre qu'on frappe (quatre partiels qui ne s'accordent pas)
+        [[540, 0.5], [833, 0.36], [1291, 0.26], [1966, 0.18]].forEach(function (p) {
+          tone(ctx, out, t, { type: 'triangle', f: p[0], dur: 0.34, peak: p[1] * 0.22 * vol });
+        });
+        burst(ctx, out, t, { type: 'bandpass', f: 3200, q: 1.2, dur: 0.05, peak: 0.18 * vol });
+        break;
+      case 'i':
+        // le tic : une mèche, une horloge
+        tone(ctx, out, t, { type: 'square', f: 3600, dur: 0.006, peak: 0.05 * vol });
+        burst(ctx, out, t, { type: 'highpass', f: 8000, q: 0.7, dur: 0.008, peak: 0.08 * vol });
+        break;
+      case 'z':
+        // la montée : un souffle qui enfle pendant une demi-mesure, coupé net
+        var dz = (pas || 0.125) * 8, sz = src(ctx, t, false, 1), fz = ctx.createBiquadFilter(), gz = gain(ctx, 0.0001);
+        fz.type = 'bandpass'; fz.Q.value = 0.9;
+        fz.frequency.setValueAtTime(500, t); fz.frequency.exponentialRampToValueAtTime(7000, t + dz);
+        gz.gain.setValueAtTime(0.0001, t);
+        gz.gain.exponentialRampToValueAtTime(0.22 * vol, t + dz);
+        gz.gain.linearRampToValueAtTime(0.0001, t + dz + 0.03);
+        sz.connect(fz).connect(gz).connect(out);
+        sz.stop(t + dz + 0.08);
+        break;
+      case 'b':
+        // le boum : ce qui tombe au fond de la pièce
+        tone(ctx, out, t, { type: 'sine', f: 72, f2: 30, dur: 1.5, peak: 0.85 * vol });
+        burst(ctx, out, t, { type: 'lowpass', f: 600, f2: 90, q: 0.7, dur: 1.0, peak: 0.22 * vol });
+        break;
     }
   }
+
+  // ============================================================== le moteur =
+  // Il tourne sur n'importe quel BaseAudioContext : le direct (AudioContext)
+  // et le banc d'essai (OfflineAudioContext) passent par le même code.
 
   function createEngine(ctx, dest, opt) {
     opt = opt || {};
@@ -1437,28 +1715,96 @@
       return p;
     }
 
+    // ---- l'écho d'un thème : deux retards qui se renvoient la note d'une
+    //      oreille à l'autre, chaque passage plus sourd que le précédent ----
+    function faireEcho(out, e, pas) {
+      var t = Math.min(1.9, (e.pas || 3) * pas);
+      var entree = gain(ctx, 1);
+      var hp = ctx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 280;
+      var d1 = ctx.createDelay(2), d2 = ctx.createDelay(2);
+      d1.delayTime.value = t; d2.delayTime.value = t;
+      var r = e.retour == null ? 0.35 : e.retour;
+      var g1 = gain(ctx, r), g2 = gain(ctx, r);
+      var lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = e.coupe || 2600;
+      entree.connect(hp).connect(d1);
+      d1.connect(panner(ctx, out, -0.6));
+      d1.connect(g1).connect(d2);
+      d2.connect(panner(ctx, out, 0.6));
+      d2.connect(lp).connect(g2).connect(d1);
+      return entree;
+    }
+
     // ---- un thème ----
+    // Chaque voix a son bus (saturation, filtre, niveau, panoramique, envoi à
+    // l'écho) ; les voix `pompe` passent par un gain que chaque grosse caisse
+    // creuse ; la batterie va droit à la sortie.
     function makeTheme(nom, at, fade) {
-      var C = compilerTheme(nom), niveau = C.th.gain || 1;
+      var C = compilerTheme(nom), th = C.th, niveau = th.gain || 1;
       var out = gain(ctx, fade > 0 ? 0.0001 : niveau);
       out.connect(musBus); out.connect(musWet);
       if (fade > 0) { out.gain.setValueAtTime(0.0001, at); out.gain.linearRampToValueAtTime(niveau, at + fade); }
+      var pompe = null;
+      if (th.pompe) { pompe = gain(ctx, 1); pompe.connect(out); }
+      var echo = th.echo ? faireEcho(out, th.echo, C.pas) : null;
+      var bus = {};
+      Object.keys(th.voix).forEach(function (vn) {
+        if (vn === 'batt') return;
+        var v = th.voix[vn], entree = gain(ctx, 1), x = entree, flt = null;
+        if (v.drive) {
+          var ws = ctx.createWaveShaper();
+          ws.curve = courbeDrive(v.drive); ws.oversample = '2x';
+          x.connect(ws); x = ws;
+        }
+        if (v.filtre) {
+          flt = ctx.createBiquadFilter();
+          flt.type = 'lowpass'; flt.frequency.value = v.filtre; flt.Q.value = v.q || 0.7;
+          x.connect(flt); x = flt;
+        }
+        // une voix saturée entre à pleine force dans la saturation : son
+        // niveau ne s'applique qu'après
+        var lvl = gain(ctx, v.drive ? v.vol : 1);
+        x.connect(lvl);
+        lvl.connect(panner(ctx, v.pompe && pompe ? pompe : out, v.pan));
+        if (v.echo && echo) lvl.connect(gain(ctx, v.echo)).connect(echo);
+        bus[vn] = { entree: entree, filtre: flt };
+      });
+      function pomper(tt) {
+        var g = pompe.gain;
+        g.setTargetAtTime(1 - th.pompe.prof, tt, 0.004);
+        g.setTargetAtTime(1, tt + 0.03, (th.pompe.rel || 0.15) / 3);
+      }
+      // le début d'une section : les filtres qu'elle balaie, les autres rendus
+      function debut(sec, tt) {
+        Object.keys(bus).forEach(function (vn) {
+          var b = bus[vn];
+          if (!b.filtre) return;
+          var o = sec.ouvre && sec.ouvre[vn], f = b.filtre.frequency;
+          if (o) { f.setValueAtTime(o[0], tt); f.exponentialRampToValueAtTime(o[1], tt + sec.pas * C.pas); }
+          else f.setValueAtTime(th.voix[vn].filtre, tt);
+        });
+      }
       var idx = 0, step = 0, tStep = at;
       function decalage(n) {
-        var sw = C.th.swing || 0;
+        var sw = th.swing || 0;
         return n % 4 === 2 ? sw * C.pas : (n % 2 === 1 ? sw * C.pas * 0.5 : 0);
       }
       function jouerPas(sec, n, tt) {
         var evs = sec.parPas[n];
         for (var i = 0; i < evs.length; i++) {
-          var e = evs[i], voix = C.th.voix[e.v];
+          var e = evs[i], voix = th.voix[e.v];
           if (e.frappe) {
-            for (var k = 0; k < e.frappe.length; k++) jouerFrappe(ctx, out, e.frappe[k], tt, voix.vol);
+            for (var k = 0; k < e.frappe.length; k++) {
+              var f = e.frappe[k];
+              jouerFrappe(ctx, out, f, tt, voix.vol, C.pas);
+              if (pompe && (f === 'k' || f === 'K')) pomper(tt);
+            }
             continue;
           }
           var inst = voix.epoque ? timbreEpoque(voix.inst, year) : voix.inst;
           var dur = e.len * C.pas * (e.len > 1 ? 0.96 : 0.8);
-          for (var j = 0; j < e.h.length; j++) jouerNote(ctx, out, inst, tt, dur, hzDe(e.h[j]), voix.vol / Math.sqrt(e.h.length), voix);
+          var vol = (voix.drive ? 1 : voix.vol) / Math.sqrt(e.h.length);
+          var ex = { acc: e.acc, de: e.de != null ? hzDe(e.de) : 0 };
+          for (var j = 0; j < e.h.length; j++) jouerNote(ctx, bus[e.v].entree, inst, tt, dur, hzDe(e.h[j]), vol, voix, ex);
         }
       }
       return {
@@ -1469,7 +1815,10 @@
             var sec = C.sections[C.ordre[idx]];
             if (!sec) break;
             var tt = tStep + decalage(step);
-            if (tt >= t0 - 0.02) jouerPas(sec, step, tt);
+            if (tt >= t0 - 0.02) {
+              if (step === 0) debut(sec, tt);
+              jouerPas(sec, step, tt);
+            }
             step++; tStep += C.pas;
             if (step >= sec.pas) { step = 0; idx++; if (idx >= C.ordre.length) idx = C.boucle; }
           }
@@ -1587,8 +1936,11 @@
         var t = o && o.at != null ? o.at : now() + 0.01, p = 60 / J.bpm / 4;
         var g = gain(ctx, 1);
         g.connect(musBus); g.connect(musWet);
-        J.notes.forEach(function (n) { jouerNote(ctx, g, 'pulse', t + n[1] * p, n[2] * p * 0.9, hzDe(midiDe(n[0]) + (J.transpose || 0)), 0.14, { duty: 0.25 }); });
-        J.frappes.forEach(function (f) { jouerFrappe(ctx, g, f[0], t + f[1] * p, 0.8); });
+        J.notes.forEach(function (n) {
+          jouerNote(ctx, g, n[3] || J.inst || 'pulse', t + n[1] * p, n[2] * p * 0.9, hzDe(midiDe(n[0]) + (J.transpose || 0)),
+            n[4] || J.vol || 0.12, { duty: 0.25 }, null);
+        });
+        J.frappes.forEach(function (f) { jouerFrappe(ctx, g, f[0], t + f[1] * p, J.frappe || 0.8, p); });
         if (!offline && global.setTimeout) global.setTimeout(function () { try { g.disconnect(); } catch (e) {} }, 4000);
       },
       // ---- les gestes ----
@@ -1715,6 +2067,7 @@
     jingle: function (nom) { if (live) live.jingle(nom); },
     // le banc d'essai : la partition compilée d'un thème (les erreurs d'écriture sortent ici)
     _compiler: function (nom) { var C = compilerTheme(nom); return { ordre: C.ordre, pas: Object.keys(C.sections).map(function (k) { return k + ':' + C.sections[k].pas; }) }; },
+    _partition: function (nom) { return compilerTheme(nom); },
     play: function (name) { if (live) live.play(name); },
     playAll: function (list, o) { if (live) live.playAll(list, o); },
     stop: function () { if (live) live.dispose(); }

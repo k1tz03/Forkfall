@@ -175,7 +175,7 @@ Ce que la ville porte en plus des cartes :
   (`ville_risques`).
 - **La boutique et les biens** (`content/ville/boutique.yaml`) : vêtements, montres,
   voitures, logements, hélicoptère ; achat en deux gestes, revente, effets par
-  `Engine.biens` (drapeaux `bn_*`), usage en ville (vitesse, repos, faim, l'hélicoptère),
+  `Engine.biens` (drapeaux `bn_*`), usage en ville (la vitesse, l'hélicoptère),
   saisies.
 - **Le pont** : une carte agit sur la ville par des compteurs `var:` en francs de 1990 —
   `ville_francs`, `ville_francs_sales` (l'argent sale salit ce qu'il paie : saisi en premier),
@@ -184,15 +184,24 @@ Ce que la ville porte en plus des cartes :
   ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
   l'écu après `monde_ecus`).
 - **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
-- **La musique** (`packages/tools/web/audio.js`, `MUSIQUE`) : six thèmes écrits note à note
-  et synthétisés (aucun fichier son) — l'hymne d'Aubérive à l'accueil, le marché le jour, le
-  Terminus le soir et la nuit, le match au stade, la nuit qui tombe sur une carte sombre, le
-  dernier tour de terrain à la fin — en fondu enchaîné, et un jingle au départ d'une histoire.
-  Le timbre de la mélodie suit l'époque (8 bits avant 1998, un synthé, puis plus doux après
-  2013). La grille : seize cases par mesure, une note attaque, `-` la tient, `.` se tait ;
-  la basse et les accords en degrés sur la grille d'accords. On vérifie sans haut-parleur :
-  `NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js --out /tmp/son`
-  rend chaque thème en WAV, avec ses niveaux et un spectrogramme.
+- **La musique** (`packages/tools/web/audio.js`, `MUSIQUE`) : six thèmes NOIRS écrits note à
+  note et synthétisés (aucun fichier son) — du synthé de polar, parce que la première
+  partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. La Mèche à
+  l'accueil (la mineur harmonique, une basse en octaves qui pompe, un motif de trois mi
+  répétés), La Filature en ville le jour (une basse en gamme de blues), Néons le soir et la
+  nuit (demi-temps, un saxophone de synthèse), La Rive au stade (mi phrygien, basse saturée,
+  la tribune qui chante, les claps du virage), Le Fusible sur une carte sombre (une boîte à
+  musique désaccordée, cinq notes contre quatre temps, un cœur qui bat), Le Dernier Tour à la
+  fin (le motif de La Mèche, lent) — en fondu enchaîné, et un jingle au départ d'une histoire.
+  Le moteur a ses effets : la grosse caisse fait pomper les voix `pompe`, un écho ping-pong
+  (`echo`), la saturation (`drive`), un filtre par voix que la section balaie (`ouvre`), la
+  caisse claire « gated » (`S`), la montée (`z`). La grille : seize cases par mesure, une note
+  attaque, `-` la tient, `.` se tait, `~` glisse, `!` accentue ; la basse et les accords en
+  degrés sur la grille d'accords ; l'en-tête de `MUSIQUE` dit tout. On vérifie sans
+  haut-parleur : `NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/banc_son.js
+  --out /tmp/son` rend chaque thème en WAV, avec ses niveaux et un spectrogramme (viser une
+  moyenne vers −21 dB, une crête sous −3 dB, et assez d'énergie au-dessus de 250 Hz pour un
+  haut-parleur de téléphone).
 - **La ruine** : le découvert qui survit à la paie du dimanche fait écrire la banque ;
   s'il dure une semaine de plus, l'huissier vend ce qui se vend (le moins nécessaire
   d'abord, à moitié prix) ; quand il ne trouve plus rien et que le trou dépasse une paie,
