@@ -22,12 +22,29 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 1 451 cartes, 105 intrigues (dont 31 événements sombres), 42 fins, 148 Nouvelles datées, 241 manchettes de Une, 173 variantes de set-piece |
-| Rôles jouables | entraîneur, joueur (4 postulats de départ) |
-| Moteur | Dart pur, déterministe, 114 tests, 20 goldens |
-| Qualité | `dart analyze` propre, `lint` 0 erreur 0 avertissement |
+| Contenu | 2 480 cartes, 235 arcs, 90 fins, 175 Nouvelles datées, 389 manchettes de Une, 459 variantes de set-piece, 41 personnages ; la ville : 292 scènes de la semaine |
+| Rôles jouables | entraîneur, joueur, président, directeur sportif — six histoires livrées sur dix (voir « Les dix histoires ») |
+| Moteur | Dart pur, déterministe, 131 tests, 20 goldens |
+| Qualité | `dart analyze` propre, `lint` 0 erreur (6 avertissements connus : les postulats sans prologue des livres à venir, la part des Unes qui nomment le héros, `histoire_h4`) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
+
+## Les dix histoires (où on en est)
+
+Les dix histoires de lancement (`docs/histoires/00_les_dix_histoires.md`) sont des
+livres : chacune remplace le contenu d'un postulat par un prologue, une épine
+d'ancres à créneaux fixes, ses intrigues, ses événements sombres, ses fins, ses
+Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
+
+- **Fusionnés** dans cette branche : 1 « Trois mille visages » (entraîneur, promu),
+  2 « Le Sapin en carton » (entraîneur, intérimaire), 3 « La Sirène » (joueur,
+  pépite), 5 « La Maquette » (président, géant déchu), 6 « 23 h 58 » (directrice
+  sportive, vendre trente). Le menu de l'aperçu montre les six postulats qui ne
+  sont plus `chantier`.
+- **Pas encore fusionnés**, sauvés en patchs dans `docs/histoires/chantier/` avec la
+  procédure de reprise et de fusion : 4 « La Route de la Rive » (commité, sans
+  rapport de son auteur), 8 « L'Oreillette » (fini et validé), et 7, 9, 10 (en
+  cours d'écriture, instantanés partiels).
 
 ## L'arborescence
 
@@ -79,7 +96,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 99 tests
+cd packages/core && dart test                    # 131 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
