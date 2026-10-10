@@ -198,6 +198,10 @@ String _view() {
     'flags': s.flags.toList()..sort(),
     'arcsActifs': [for (final e in s.arcs.entries) if (e.value.status == 'active') e.key]..sort(),
     'monde': {'serie_v': s.world.serieVictoires, 'serie_d': s.world.serieDefaites, 'pts': s.world.pts},
+    // le dernier bloc de six journées (« V N V D V V ») : la ville met en scène
+    // la dernière lettre, le samedi à la Rive ; `blocs` dit qu'un bloc vient d'être joué
+    'resultats': s.world.lastResults,
+    'blocs': s.world.blocks,
     'vars': {
       for (final k in (s.vars.keys.toList()..sort()))
         if (k.startsWith('ville_') || k.startsWith('saisie_') || k.startsWith('cadeau_') || k.startsWith('vol_')) k: s.vars[k],

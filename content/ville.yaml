@@ -708,3 +708,86 @@ activites:
     faim: 30
     jauges: {caisse: 3, vestiaire: -1}
     heures: [midi]
+
+# ═══════════════════════════════════════════════════════════════════ le match
+# Le samedi à la Rive (ville.js, « le match ») : le moteur joue un bloc de six
+# journées d'un seul tirage ; la ville met en scène la dernière, chez nous. Le
+# score se tire de la lettre (V, N, D) et ne touche à rien ; deux ou trois
+# actions sont racontées à leur minute, avec ces phrases. La minute est posée
+# devant par la ville (« 34e · ») ; `{Qui}`/`{qui}` : le buteur de chez nous (un
+# visage de l'effectif à l'âge où il joue, sinon un poste) ; `{adv}`/`{Adv}` :
+# l'adversaire, par le nom de sa ville ; `{gardien}`/`{Gardien}` : notre gardien ;
+# `{score}` : le score après l'action. « de {qui} » s'élide et se contracte tout
+# seul (d'Arvens, du numéro 9). `pour_toi` : quand le protagoniste est le
+# joueur et qu'il marque. Les lots (content/ville/*.yaml) peuvent ajouter des
+# phrases sous `match_textes:` (mêmes clés, et un `si:` par phrase).
+match:
+  # les visages de l'effectif, et les années où ils jouent (sinon : `postes`)
+  joueurs:
+    - {id: brehaut, de: 1990, a: 1996}
+    - {id: mbako, de: 1991, a: 2006}
+    - {id: vecchio, de: 1990, a: 1992, gardien: true}
+  postes: ["ton avant-centre", "le numéro 9", "ton ailier gauche", "le meneur de jeu", "ton arrière droit", "le remplaçant entré à l'heure de jeu", "le jeune ailier", "ton milieu défensif"]
+  gardien: "ton gardien"
+  textes:
+    pour:
+      - "{Qui}, de la tête, au premier poteau. Le kop déborde jusqu'à la main courante : {score}."
+      - "Une frappe de {qui} à ras de terre, entre les jambes du défenseur. Le gardien de {adv} n'a pas bougé : {score}."
+      - "Penalty. {Qui} pose le ballon, recule de quatre pas sans quitter le point des yeux. Plat du pied, à gauche : {score}."
+      - "{Qui} récupère au milieu, élimine deux joueurs et croise sous la barre : {score}."
+      - "Coup franc à vingt mètres. {Qui} le frappe par-dessus le mur ; la balle redescend juste à temps : {score}."
+      - "Un corner mal dégagé, la balle traîne dans les six mètres, et {qui} la pousse au fond du pied gauche : {score}."
+      - "{Qui} part dans le dos de la défense de {adv}, seul face au gardien, et le prend à contre-pied : {score}."
+      - "Une volée de {qui} à l'entrée de la surface. Le filet tremble encore quand le stade se lève : {score}."
+      - "{Qui} reprend le centre au second poteau, de l'extérieur du pied. Le gardien touche la balle, pas assez : {score}."
+      - "Un tir contré, puis un autre. Au troisième, {qui} ne se pose plus de question : {score}."
+    pour_toi:
+      - "Le ballon arrive dans ta course. Tu frappes avant d'avoir réfléchi, et le filet se gonfle : {score}."
+      - "Tu prends le défenseur de vitesse le long de la ligne, tu lèves la tête : personne. Alors tu tires toi-même : {score}."
+      - "De la tête, sur le corner. Tu n'as pas vu la balle entrer, seulement les bras du kop qui se lèvent : {score}."
+      - "Penalty. Tu poses le ballon, le stade se tait. Tu choisis ton côté au dernier moment : {score}."
+      - "Une remise en une touche, une frappe enroulée. Tu cours vers le kop sans savoir pourquoi : {score}."
+      - "Tu récupères un ballon que personne ne voulait et tu traverses la moitié du terrain. Le gardien sort trop tard : {score}."
+    contre:
+      - "Corner pour {adv}. Personne ne saute avec leur numéro 5, et le silence tombe sur la Rive : {score}."
+      - "Contre-attaque de {adv}, trois contre deux. Leur ailier centre en retrait : {score}."
+      - "Une perte de balle au milieu, une passe en profondeur, et leur avant-centre trompe {gardien} : {score}."
+      - "Penalty pour {adv}. Le stade siffle pendant toute la course d'élan ; le ballon entre quand même : {score}."
+      - "Une frappe lointaine, déviée par un genou. {Gardien} est parti du mauvais côté : {score}."
+      - "Coup franc pour {adv} à l'entrée de la surface. Le mur s'est ouvert au mauvais moment : {score}."
+      - "Leur numéro 10 dribble deux fois le même défenseur et croise. Personne ne siffle sur la Rive : {score}."
+      - "Une sortie manquée de {gardien} sur un centre sans danger. Leur attaquant n'a plus qu'à pousser : {score}."
+      - "Un ballon perdu dans les pieds de leur milieu, un tir du droit à vingt mètres : {score}. Le kop se rassoit."
+      - "{Adv} marque sur sa première occasion, une tête plongeante. Leurs supporters chantent, seuls : {score}."
+    poteau:
+      - "{Qui} trouve le poteau. Le bruit du ballon sur le fer s'entend jusqu'au tabac-presse."
+      - "La frappe de {qui} frôle la lucarne. Dans la populaire, un homme a déjà levé les bras ; il les rabaisse lentement."
+      - "{Qui} se retrouve seul au point de penalty et tire au-dessus. Il garde longtemps les mains sur la tête."
+      - "Une tête de {qui} sur la barre. La balle retombe sur la ligne ; personne ne sait si elle est entrée. L'arbitre, si : non."
+      - "Le gardien de {adv} sort dans les pieds de {qui} ; le ballon file le long de la ligne et finit sur le poteau."
+      - "{Qui} enroule sa frappe. Elle passe à un mètre du poteau, et tout le stade fait le même bruit."
+    arret:
+      - "{Gardien} sort dans les pieds de leur avant-centre et se relève en se tenant l'épaule. Il reste."
+      - "Une tête à bout portant. {Gardien} la sort d'une main, sans savoir comment, et le kop scande son nom."
+      - "Penalty pour {adv}. {Gardien} part du bon côté et bloque la balle contre sa poitrine."
+      - "Un tir de {adv} en pleine lucarne. {Gardien} vole ; le bout des doigts suffit : corner."
+      - "{Gardien} plonge dans les pieds d'un attaquant lancé. Le stade retient son souffle, puis applaudit."
+      - "Une frappe déviée, un rebond traître. {Gardien} se détend du mauvais côté et rattrape la balle avec le pied."
+    fin_v:
+      - "Coup de sifflet final. Le kop chante encore quand les joueurs sont rentrés au vestiaire."
+      - "C'est fini. Dans la populaire, un drapeau bordeaux tourne au-dessus des têtes jusqu'à ce qu'on éteigne les projecteurs."
+      - "L'arbitre siffle la fin. Sur la piste, un gamin des pupilles court derrière les joueurs avec un ballon trop grand."
+      - "Le stade se vide lentement, sans se presser. Ce soir, la buvette du kop fermera tard."
+      - "Fin du match. Les joueurs vont saluer la populaire, qui leur renvoie leur nom un par un."
+    fin_n:
+      - "Coup de sifflet final. On applaudit poliment ; on se demande si c'est un point de gagné ou deux de perdus."
+      - "C'est fini. Le kop siffle un peu, applaudit un peu, et rentre."
+      - "Fin du match. Personne ne sort heureux, personne n'est fâché ; on parlera surtout de l'arbitre."
+      - "L'arbitre siffle la fin sur une dernière occasion. Le stade reste debout une seconde de trop."
+      - "Un point. Dans les tribunes, les vieux disent qu'ils ont vu pire, et les jeunes qu'ils ont vu mieux."
+    fin_d:
+      - "Coup de sifflet final. Le kop tourne le dos à la pelouse, en silence."
+      - "C'est fini. Des coussins volent depuis la tribune ouest ; un seul atteint la pelouse."
+      - "Fin du match. Les joueurs saluent la populaire, qui ne leur répond pas."
+      - "L'arbitre siffle la fin. Dans le tunnel, quelqu'un crie ton nom, et ce n'est pas pour te féliciter."
+      - "Le stade se vide vite, sans un chant. Sur le parking, on klaxonne pour les visiteurs."

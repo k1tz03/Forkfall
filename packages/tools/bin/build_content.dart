@@ -979,14 +979,20 @@ void main() {
   final setpieces = <String, List<Map<String, dynamic>>>{};
   // content/setpieces.yaml porte les secours ; content/setpieces/<lot>.yaml (un
   // rôle, une histoire) ajoute des variantes — jamais de secours — que le build
-  // range avant le secours de chaque beat, dans l'ordre des noms de fichiers.
-  // Deux salles d'écriture peuvent ainsi écrire leurs set-pieces en même temps.
+  // range EN TÊTE de chaque beat, dans l'ordre des noms de fichiers. En tête, et
+  // non avant le secours : setpieces.yaml a, pour le joueur et l'entraîneur, des
+  // variantes de base sans `when` (et la transition de base du carrefour) qui
+  // passaient avant toute variante d'histoire — celles-ci ne servaient jamais.
+  // Une variante de lot lit un drapeau d'histoire ou ne vise qu'un rôle de
+  // bureau : la tête ne vole la place à personne d'autre. Deux salles d'écriture
+  // peuvent ainsi écrire leurs set-pieces en même temps.
   final setpiecesRaw = <String, List<MapEntry<String, Map<String, dynamic>>>>{};
   ((_loadYaml('setpieces.yaml') as Map?)?['setpieces'] as Map?)?.forEach((beatRaw, list) {
     final l = (list as List?) ?? const [];
     setpiecesRaw[beatRaw.toString()] = [for (var i = 0; i < l.length; i++) MapEntry('setpieces.yaml/$beatRaw[$i]', (l[i] as Map).cast<String, dynamic>())];
   });
   final dossierSp = Directory('$contentDir/setpieces');
+  final enTete = <String, int>{}; // beat → variantes de lot déjà posées en tête
   if (dossierSp.existsSync()) {
     final fichiers = dossierSp.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()..sort((a, b) => a.path.compareTo(b.path));
     for (final f in fichiers) {
@@ -996,8 +1002,6 @@ void main() {
         final beat = beatRaw.toString();
         final l = (list as List?) ?? const [];
         final cible = setpiecesRaw[beat] ??= [];
-        // avant le secours (le dernier de setpieces.yaml), s'il existe
-        final secours = cible.isNotEmpty && cible.last.value['when'] == null && _strList(cible.last.value['roles']).isEmpty && cible.last.value['transition'] == null;
         final ajout = [
           for (var i = 0; i < l.length; i++) MapEntry('$nom/$beat[$i]', (l[i] as Map).cast<String, dynamic>()),
         ];
@@ -1006,11 +1010,9 @@ void main() {
             errors.add('${e.key}: un lot de set-pieces n\'écrit pas de secours (`roles` ou `when` obligatoire)');
           }
         }
-        if (secours) {
-          cible.insertAll(cible.length - 1, ajout);
-        } else {
-          cible.addAll(ajout);
-        }
+        final n = enTete[beat] ?? 0;
+        cible.insertAll(n, ajout);
+        enTete[beat] = n + ajout.length;
       });
     }
   }
@@ -1657,6 +1659,15 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
+      // les phrases du match en scène (`match_textes:` : type → phrases) s'ajoutent
+      final mt = doc['match_textes'];
+      if (mt is Map) {
+        final base = Map<dynamic, dynamic>.of(((m['match'] as Map?)?['textes'] as Map?) ?? const {});
+        mt.forEach((k, v) {
+          if (v is List) base[k] = [...((base[k] as List?) ?? const []), ...v];
+        });
+        m['match'] = {...((m['match'] as Map?) ?? const {}), 'textes': base};
+      }
       final r = doc['rencontres'];
       if (r is Map) {
         final base = Map<dynamic, dynamic>.of((m['rencontres'] as Map?) ?? const {});
@@ -1903,6 +1914,59 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     paroles.add({'qui': qui, 'sujet': sujet, if (e['si'] != null) 'si': e['si'].toString(), 'texte': texte});
   }
 
+  // --- le match en scène (ville.js, « le match ») : les visages de l'effectif
+  // et leurs années de jeu, les postes qui marquent à défaut, les phrases des
+  // actions par type ; la ville pose la minute devant et remplit les trous.
+  final matchOut = <String, dynamic>{};
+  final mm = m['match'];
+  if (mm is Map) {
+    final joueurs = <Map<String, dynamic>>[];
+    var ij = 0;
+    for (final j in (mm['joueurs'] as List? ?? const [])) {
+      final where = 'ville/match/joueurs[${ij++}]';
+      if (j is! Map) {
+        errors.add('$where: une table attendue');
+        continue;
+      }
+      final id = j['id']?.toString() ?? '';
+      if (!characterIds.contains(id)) errors.add('$where: personnage « $id » inconnu');
+      final de = (j['de'] as num?)?.toInt(), a = (j['a'] as num?)?.toInt();
+      if (de == null || a == null || a < de) errors.add('$where: `de` et `a`, deux années, de ≤ a');
+      joueurs.add({'id': id, 'de': de ?? 0, 'a': a ?? 0, if (j['gardien'] == true) 'gardien': true});
+    }
+    final postes = [for (final p in (mm['postes'] as List? ?? const [])) p.toString()];
+    if (postes.isEmpty) errors.add('ville/match/postes: au moins un poste');
+    const types = {'pour', 'pour_toi', 'contre', 'poteau', 'arret', 'fin_v', 'fin_n', 'fin_d'};
+    const trous = {'Qui', 'qui', 'adv', 'Adv', 'gardien', 'Gardien', 'score'};
+    final textes = <String, List<Map<String, dynamic>>>{};
+    ((mm['textes'] as Map?) ?? const {}).forEach((k, v) {
+      final type = k.toString();
+      if (!types.contains(type)) {
+        errors.add('ville/match/textes/$type: type inconnu (${types.join(' ')})');
+        return;
+      }
+      var it = 0;
+      for (final e in (v as List? ?? const [])) {
+        final where = 'ville/match/textes/$type[${it++}]';
+        final t = e is Map ? (e['texte']?.toString() ?? '') : e.toString();
+        if (t.isEmpty) {
+          errors.add('$where: texte vide');
+          continue;
+        }
+        if (t.length > 190) errors.add('$where: ${t.length} caractères (190 au plus : la minute se pose devant)');
+        for (final tr in RegExp(r'\{(\w+)\}').allMatches(t)) {
+          if (!trous.contains(tr[1])) errors.add('$where: {${tr[1]}} inconnu (${trous.join(' ')})');
+        }
+        if (e is Map) si(e['si'], where);
+        textes.putIfAbsent(type, () => []).add({'texte': t, if (e is Map && e['si'] != null) 'si': e['si'].toString()});
+      }
+    });
+    for (final t in types) {
+      if ((textes[t] ?? const []).isEmpty) errors.add('ville/match/textes: aucune phrase « $t »');
+    }
+    matchOut.addAll({'joueurs': joueurs, 'postes': postes, 'gardien': mm['gardien']?.toString() ?? 'ton gardien', 'textes': textes});
+  }
+
   // --- ce qu'on voit en entrant, selon le moment : `lieux_variantes` (dans
   // ville.yaml ou un lot), la première vraie remplace le texte du lieu — la
   // maquette de la vitrine qui change à chaque saison, la plaque gravée…
@@ -2068,6 +2132,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     'presences': presences,
     'activites': activites,
     if (paroles.isNotEmpty) 'paroles': paroles,
+    if (matchOut.isNotEmpty) 'match': matchOut,
     if (missions.isNotEmpty) 'missions': missions,
     if (objets.isNotEmpty) 'objets': objets,
   };
