@@ -1,0 +1,196 @@
+# « L'Oreillette » (Histoire 8) — les cartes des événements sombres du
+# réservoir (content/arcs/ds/h8_sombres.yaml). Toutes hors du sac, toutes
+# `once`, toutes `sombre`, avec leur lieu : la ville les fait tomber le soir,
+# sans les annoncer. La violence arrive d'un coup et on n'en montre pas le
+# détail ; la drogue est « quelque chose pour dormir », sans nom ni dose.
+#
+# Ce qui se lit d'un soir à l'autre :
+#   · la laverie lit la double dose (h8_double_dose) ; la nuit blanche lit la
+#     montre ôtée chez Nadia Rouvier (h8_bracelet_ote) ;
+#   · la brigade lit l'argent de Pari-Rive ; la saisie du duplex suit
+#     (ds.h8.c2_propriete_pari) ;
+#   · la friche donne une seconde oreillette, celle qui mène à la clinique
+#     (ds.h8.d1_boite_friche, ds.h8.d2_veille_friche).
+cards:
+  # ============================================================ LA LAVERIE
+  - id: ds.h8.sb.laverie_dose
+    roles: [ds]
+    arc: corps
+    tags: [direction, sombre]
+    lieu: laverie
+    tone: strategique
+    once: true
+    text: "Tu te réveilles sur la chaise en plastique de la laverie, sous le néon, un manteau sur ton pyjama. Ta chemise tourne dans la 4. Le gérant : « C'est la troisième fois ce soir. Je l'arrête ? »"
+    left:
+      label: "Arrêtez-la"
+      effects: {vestiaire: "+", direction: "-", set: [h8_laverie], var: {h8_nuits: "+1"}}
+      answer: "Il ouvre le hublot. La chemise est propre depuis deux heures. Il te la plie lui-même, en quatre, comme on plie un drapeau."
+    right:
+      label: "Laissez tourner"
+      effects: {direction: "+", set: [h8_laverie], var: {h8_nuits: "+1"}}
+      answer: "Il remet une pièce dans la fente, de sa poche. « Je ferme à une heure. » À une heure, tu es encore là ; lui aussi."
+
+  - id: ds.h8.sb.laverie
+    roles: [ds]
+    arc: corps
+    tags: [direction, sombre]
+    lieu: laverie
+    tone: strategique
+    once: true
+    text: "Minuit. Tu te réveilles sur la chaise en plastique de la laverie de la rue du Stade. Ta chemise tourne dans la 4. Le gérant : « C'est la troisième fois ce soir. Vous voulez que je l'arrête ? »"
+    left:
+      label: "Arrêtez-la"
+      effects: {vestiaire: "+", direction: "-", set: [h8_laverie], var: {h8_nuits: "+1"}}
+      answer: "Il ouvre le hublot. La chemise est propre depuis deux heures. Il te la plie lui-même, en quatre, comme on plie un drapeau."
+    right:
+      label: "Laissez tourner"
+      effects: {direction: "+", set: [h8_laverie], var: {h8_nuits: "+1"}}
+      answer: "Il remet une pièce dans la fente, de sa poche. « Je ferme à une heure. » À une heure, tu es encore là ; lui aussi."
+
+  # ============================================================= LA FRICHE
+  - id: ds.h8.sb.friche
+    roles: [ds]
+    arc: absurde
+    tags: [direction, sombre]
+    lieu: friche
+    tone: strategique
+    once: true
+    text: "La friche de la Tréfilerie, là où l'on a trouvé la voiture de Ferlac. Des bougies électriques sur une palette, et au milieu, une oreillette couleur peau, encore allumée. Il pleut."
+    left:
+      label: "Je la prends"
+      effects: {direction: "+", vestiaire: "-", set: [h8_oreillette_friche], var: {h8_nuits: "+1"}, react: [{card: ds.h8.re.gege_friche}]}
+      answer: "Elle est tiède. Tu la mets dans ta poche, pas dans ton oreille. Pas encore. Sur le chemin, elle grésille contre ta cuisse."
+    right:
+      label: "Je la laisse à la pluie"
+      effects: {vestiaire: "+", set: [h8_friche_laissee]}
+      answer: "Tu la regardes jusqu'à ce que l'eau monte au bord de la palette. Quand tu pars, elle clignote encore. Puis plus."
+
+  # ============================================================ LA BRIGADE
+  # La porte de la garde à vue (content/endings/police.yaml, co_garde_a_vue).
+  - id: ds.h8.sb.brigade
+    roles: [ds]
+    arc: scandale
+    tags: [sponsors, scandale, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Six heures, le palier de la Tréfilerie. Trois hommes en blouson : « Brigade financière. Les compositions du samedi, envoyées à treize heures cinquante-huit, depuis un an. Vous nous suivez. »"
+    left:
+      label: "Je les suis"
+      effects: {direction: "--", tribunes: "-", end: co_garde_a_vue}
+      answer: "Ils te laissent mettre une chemise propre. Dans l'escalier, le voisin du dessus ne dit pas bonjour, pour la première fois."
+    right:
+      label: "J'appelle un avocat"
+      effects: {direction: "--", caisse: "-", set: [h8_brigade], var: {ville_amende: "+15000"}}
+      answer: "L'avocat obtient une convocation pour jeudi. Tu paies sa provision en liquide ; il ne demande pas d'où vient l'argent."
+
+  # ======================================================= LA NUIT BLANCHE
+  # La porte du burn-out (content/endings/setpieces_fins.yaml, burn_out).
+  - id: ds.h8.sb.nuit_blanche_bracelet
+    roles: [ds]
+    arc: corps
+    tags: [direction, sombre]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Troisième nuit sans dormir, même sans montre. À la conférence de presse de onze heures, les mots arrivent dans le désordre. Une journaliste de L'Écho pose son stylo et te regarde."
+    left:
+      label: "Je finis la conférence"
+      effects: {direction: "-", end: burn_out}
+      answer: "Tu finis la phrase. La suivante, c'est un médecin qui la dit, penché sur toi, sur le carrelage de la salle de presse."
+    right:
+      label: "Je sors"
+      effects: {direction: "--", vestiaire: "+", set: [h8_malaise], var: {h8_nuits: "=0"}}
+      answer: "Tu sors au milieu d'une phrase. Dans le couloir, tu respires en quatre temps, comme chez Nadia Rouvier, jusqu'à ce que ça passe."
+
+  - id: ds.h8.sb.nuit_blanche
+    roles: [ds]
+    arc: corps
+    tags: [direction, sombre, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Troisième nuit sans dormir. À la conférence de presse de onze heures, les mots arrivent dans le désordre, et la voix finit tes phrases avant toi. Une journaliste de L'Écho pose son stylo."
+    left:
+      label: "Je finis la conférence"
+      effects: {direction: "-", end: burn_out}
+      answer: "Tu finis la phrase. La suivante, c'est un médecin qui la dit, penché sur toi, sur le carrelage de la salle de presse."
+    right:
+      label: "Je sors"
+      effects: {direction: "--", vestiaire: "+", set: [h8_malaise], var: {h8_nuits: "=0"}}
+      answer: "Tu sors au milieu d'une phrase. Dans le couloir, la voix la finit pour toi, très bien, avec tes mots. Tu dors douze heures."
+
+  # =========================================================== LE CARNET
+  # Le risque de la mission « De quoi dormir » (content/ville/missions_h8.yaml).
+  - id: ds.h8.sb.carnet
+    roles: [ds]
+    arc: corps
+    tags: [direction, scandale, sombre]
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Un inspecteur t'attend au parking du stade, sur ta place réservée : « On a saisi le carnet d'un préparateur sans club. À la page de mars, votre nom, et trois mots : pour dormir vraiment. »"
+    left:
+      label: "Je témoigne"
+      effects: {direction: "-", tribunes: "-", set: [h8_carnet]}
+      answer: "Deux heures au commissariat central. Tu racontes la muscu, le survêtement neuf, les boîtes. Tu ne racontes pas que tu as dormi."
+    right:
+      label: "Je ne le connais pas"
+      effects: {direction: "--", set: [h8_carnet], var: {ville_amende: "+5000"}}
+      answer: "Il note ta réponse, et l'heure. « Lui vous connaît. » La convocation arrive trois jours plus tard, avec une amende."
+
+  # =========================================================== LA PHOTO
+  # Le risque du nom acheté au Terminus (mission « Le nom de la voix »).
+  - id: ds.h8.sb.photo
+    roles: [ds]
+    arc: direction
+    tags: [direction, sombre]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le délégué pose une photo sur ton bureau : toi, au Terminus, avec l'ancien développeur de Ferlac. Le grain d'une caméra de rue. « Le fonds sait qui vous avez payé. Il voudrait savoir pourquoi. »"
+    left:
+      label: "Pour connaître la voix"
+      effects: {direction: "--", vestiaire: "+", set: [h8_photo_terminus]}
+      answer: "Il range la photo. « La voix, c'est le fonds. Le reste, c'est du personnel. » Il dit « personnel » comme on dit « déchet »."
+    right:
+      label: "Pour rien"
+      effects: {direction: "-", set: [h8_photo_terminus]}
+      answer: "« Deux cents écus pour rien. Le fonds aime savoir que vous dépensez pour rien. » Il te laisse la photo. Elle est bien cadrée."
+
+  # ================================================ LA SALLE DES MACHINES
+  # Après la saisie. Le fonds éteint le modèle d'Aubérive à distance ; on
+  # n'apprend pourquoi qu'à la Une (une.h8.machines).
+  - id: ds.h8.sb.machines_haut
+    roles: [ds]
+    arc: direction
+    tags: [direction, sombre, oreillette]
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Trois heures. Le gardien t'appelle : au premier, dans l'ancien bureau de Vaubourg, les machines du fonds viennent de s'arrêter, toutes ensemble. Il fait froid d'un coup. Une diode clignote encore."
+    left:
+      label: "Je la débranche"
+      effects: {vestiaire: "+", direction: "-", set: [h8_machines_debranchees]}
+      answer: "Tu tires la prise. Le noir est complet. Et dans le noir, très bas, quelqu'un dit l'heure : trois heures quatre. Plus rien n'est branché."
+    right:
+      label: "Je la laisse clignoter"
+      effects: {direction: "+", set: [h8_machines_veillees], var: {h8_nuits: "+1"}}
+      answer: "Tu t'assieds dans le fauteuil de Vaubourg. La diode bat à soixante par minute. Au matin, le gardien te réveille : quatre heures de sommeil."
+
+  - id: ds.h8.sb.machines
+    roles: [ds]
+    arc: direction
+    tags: [direction, sombre, oreillette]
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Trois heures. Le gardien t'appelle du sous-sol : près de la chaudière, les machines du fonds viennent de s'arrêter d'un coup. Son linge sèche encore dessus. Une seule diode clignote."
+    left:
+      label: "Je la débranche"
+      effects: {vestiaire: "+", direction: "-", set: [h8_machines_debranchees]}
+      answer: "Tu tires la prise. Le noir est complet. Et dans le noir, très bas, quelqu'un dit l'heure : trois heures quatre. Plus rien n'est branché."
+    right:
+      label: "Je la laisse clignoter"
+      effects: {direction: "+", set: [h8_machines_veillees], var: {h8_nuits: "+1"}}
+      answer: "Tu t'assieds sur une caisse, près du linge tiède. La diode bat à soixante par minute. Au matin, le gardien te réveille : quatre heures."

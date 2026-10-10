@@ -949,20 +949,133 @@ postulats:
     pitch: ""
     chantier: true
 
+  # « L'Oreillette » (docs/histoires/00_les_dix_histoires.md, Histoire 8) — la
+  # folie. 2024-2027, directeur sportif du Racing Aubérive, propriété du fonds
+  # Almadis ; dans l'oreille, le modèle, avec la voix de Joachim Ferlac, mort
+  # en décembre 2023. Le patron du moteur est Cheikh Ilyas, qui ne parle
+  # qu'une fois ; Jean-Marie Vaubourg, quatre-vingt-douze ans, est président
+  # d'honneur. Arcs : content/arcs/ds/h8_*.yaml ; cartes : content/cards/ds/.
   - id: le_modele
     index: 7
     role: ds
     title: "L'Oreillette"
+    question: "Qui décide, cette saison : le modèle, le vestiaire, ou toi ?"
     division: 1
     year: 2024
+    age: 46
     ville: Aubérive
     club: Racing Aubérive
-    gauges: { vestiaire: 50, tribunes: 50, direction: 60, caisse: 55 }
+    rival: Olympique Lyonnet
+    # Jauges de la fiche : le fonds tient (65), la tribune boude un directeur
+    # sportif qui parle à son oreille (40), le staff attend de voir (45), la
+    # masse salariale est saine (55) — c'est elle que le modèle surveille.
+    gauges: { vestiaire: 45, tribunes: 40, direction: 65, caisse: 55 }
     force: 56
     objective: maintien
-    flags: [histoire_h8]
-    pitch: ""
-    chantier: true
+    flags: [histoire_h8, le_modele, club_actif]
+    president: nassir
+    patron: nassir
+    camille: false
+    cast:
+      mbako:   { fonction: horloge,     target: 1.5 }   # Kerdal, la grève, le Kambara
+      aulard:  { fonction: patron,      target: 1.0 }   # Vaubourg, ses six cent douze jours (meurt en fin de S1)
+      josiane: { fonction: choeur,      target: 1.0 }   # les cartons, le classeur, la page quatorze
+      gege:    { fonction: creancier,   target: 1.0 }   # Cadence, le compte du vieux, Milo
+      ober:    { fonction: tentateur,   target: 1.0 }   # la boîte, les courbes, la juge
+      lea:     { fonction: chroniqueur, target: 0.8 }   # la cote, la vidéo, les courbes, la ligne de 2017
+      kerdal:  { fonction: coeur,       target: 0.6 }   # saison 1 seulement, s'il ne vit pas
+      kara:    { fonction: messager,    target: 0.4 }   # la voix de nuit, à partir de la S1
+      nassir:  { fonction: vautour,     target: 0.2 }   # une phrase dans le livre ; sa voix passe par le délégué
+    pitch: "2024. Un club dans un tableur, et dans ton oreille, la voix d'un mort qui choisit qui vendre."
+    chantier: false
+    opening_arc: ds.h8.oreillette
+    # Le premier jour, de six heures dix à deux heures dix (6 scènes) :
+    # content/arcs/ds/h8_script.yaml, content/cards/ds/h8_prologue.yaml.
+    prologue: ds.h8.prologue
+    questions:
+      - { id: modele,    poids: 1.0 }
+      - { id: vestiaire, poids: 1.0 }
+      - { id: toi,       poids: 1.0 }
+    programme:
+      # Trois intrigues sont ouvertes par le livre lui-même, au créneau voulu :
+      # Kerdal (par Vollaire), De quoi dormir (par le casier de Kerdal), Le
+      # petit de Nino (par la canne). Elles figurent au réservoir avec une
+      # condition fausse au moment du tirage (leur première carte déjà vue) :
+      # elles appartiennent au postulat, le tirage ne les ouvre jamais.
+      # Saison 1 : la colonne (Kerdal, De quoi dormir) prend la moitié des
+      # créneaux ; le tirage en ajoute deux sur cinq, ouvertes après les
+      # premières marches de Kerdal. Six cent douze jours est la signature
+      # (poids bas : le ×3 de la première saison suffit).
+      "0":
+        prendre: 2
+        fenetre: [4, 9]
+        reserve: 0
+        pool:
+          - { arc: ds.h8.kerdal,    poids: 1.0, if: "seen('ds.h8.kerdal.trois_fois')" }
+          - { arc: ds.h8.comprimes, poids: 1.0, if: "seen('ds.h8.cp.un_demi') || seen('ds.h8.cp.un_demi_docile')" }
+          - { arc: ds.h8.vaubourg,  poids: 0.5, signature: true }
+          - { arc: ds.h8.cadence,   poids: 1.0 }
+          - { arc: ds.h8.pari_rive, poids: 1.0 }
+          - { arc: ds.h8.classeur,  poids: 0.9 }
+          - { arc: ds.h8.fonds,     poids: 0.7 }
+      # Saison 2 : le bruit. Pas de reprise : les intrigues de la première
+      # saison ont eu leur chance, et leur seconde chance passe par le
+      # maintien des arcs (jamais après le créneau 11, ni dans la saison de
+      # l'acte final : leur `when`). Mbako peut partir pour le Kambara dès le
+      # printemps 2026 ; la saison 3 n'en sera que plus silencieuse.
+      "1":
+        prendre: 3
+        fenetre: [2, 11]
+        reserve: 0
+        reprise: false
+        pool:
+          - { arc: ds.h8.video,      poids: 1.0 }
+          - { arc: ds.h8.vieux,      poids: 1.0 }
+          - { arc: ds.h8.courbes,    poids: 1.0 }
+          - { arc: ds.h8.operatrice, poids: 1.2 }
+          - { arc: ds.h8.greve,      poids: 1.4 }
+          - { arc: ds.h8.kambara,    poids: 1.0 }
+          - { arc: ds.h8.classeur,   poids: 0.8 }
+          - { arc: ds.h8.fonds,      poids: 0.7 }
+      # Saison 3 : le silence et l'acte final. Les neuf ancres et Le petit de
+      # Nino prennent presque tout : une intrigue tirée, au tout début (l'arc
+      # qui court encore depuis la saison 2 compte dans le tirage). Ce qui n'a
+      # pas eu le temps de finir avant 23 h 58 finit dans l'épilogue, où les
+      # intrigues des deux premières saisons peuvent revenir (reprise ; leur
+      # `when` les tient hors de la saison 3), avec La voix des autres.
+      "2+":
+        prendre: 1
+        fenetre: [2, 3]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: ds.h8.milo,    poids: 1.0, if: "seen('ds.h8.mi.grillage')" }
+          - { arc: ds.h8.kambara, poids: 3.0 }
+          - { arc: ds.h8.ober,    poids: 3.0 }
+          - { arc: ds.h8.suivant, poids: 2.0 }
+    objectifs:
+      - { id: modele_kerdal_vit, titre: "Kerdal a dormi",          when: "flag('h8_kerdal_vit')", indice: "Une courbe rouge n'est pas une date." }
+      - { id: modele_sans_voix,  titre: "Une saison sans la voix", when: "flag('h8_rentree_sans') && flag('h8_sans_oreillette')", indice: "On peut entendre un vestiaire sans machine." }
+      - { id: modele_mbako,      titre: "Le car de six heures",    when: "flag('h8_mbako_embrasse')", indice: "Il préfère qu'on le regarde courir." }
+    alarm_overrides:                  # passent devant les alarmes communes du directeur sportif
+      vestiaire.low:
+        - { card: ds.h8.alarme.vestiaire_bas_mbako, when: "!flag('h8_mbako_parti') && !flag('h8_mbako_embrasse')" }
+        - { card: ds.h8.alarme.vestiaire_bas_staff }
+      vestiaire.high:
+        - { card: ds.h8.alarme.vestiaire_haut }
+      tribunes.low:
+        - { card: ds.h8.alarme.tribunes_bas }
+      tribunes.high:
+        - { card: ds.h8.alarme.tribunes_haut }
+      direction.low:
+        - { card: ds.h8.alarme.direction_bas }
+      direction.high:
+        - { card: ds.h8.alarme.direction_haut }
+      caisse.low:
+        - { card: ds.h8.alarme.caisse_bas_voix, when: "!flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')" }
+        - { card: ds.h8.alarme.caisse_bas }
+      caisse.high:
+        - { card: ds.h8.alarme.caisse_haut }
 
   - id: mondial_hiver
     index: 8

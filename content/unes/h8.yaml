@@ -1,0 +1,308 @@
+# « L'Oreillette » (Histoire 8) — les manchettes. Schéma et règles : en-tête
+# de content/unes.yaml. Chacune lit une trace de l'histoire, fraîche de la
+# saison (`journal_has`, la ligne d'Almanach porte le drapeau en tag) : la Une
+# ne titre pas trois ans plus tard sur une chemise lavée trois fois.
+# Le Quotidien du Ballon (Léa), La Gazette Rose, L'Écho de la ville.
+unes:
+  # ------------------------------------------------------------- saison 1
+  - id: une.h8.kerdal
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    when: "flag('h8_kerdal_mort') && journal_has('h8_kerdal_mort') && !flag('h8_kerdal_vendu')"
+    titre: "KERDAL, SOIXANTE-DIX MATCHS"
+    sous: "Le défenseur de {club} a été retrouvé un lundi soir entre deux bancs de la salle de muscu. Le club parle de fatigue. Le virage parle d'autre chose."
+    sujet: ds.h8.kerdal
+    photo: ds.h8.kerdal.lundi
+    react: [ { card: ds.h8.re.josiane_lundi, if: "!seen('ds.h8.re.josiane_lundi')" } ]
+  - id: une.h8.kerdal_portclair
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 3
+    when: "flag('h8_kerdal_mort') && journal_has('h8_kerdal_mort') && flag('h8_kerdal_vendu')"
+    titre: "KERDAL NE PARTIRA PAS À PORTCLAIR"
+    sous: "Vendu un vendredi à 23 h 57, le défenseur de {club} était revenu le lundi soir vider son casier. On l'a trouvé entre deux bancs. Le club ne commente pas la vente."
+    sujet: ds.h8.kerdal
+    photo: ds.h8.kerdal.lundi_vendu
+    react: [ { card: ds.h8.re.josiane_lundi, if: "!seen('ds.h8.re.josiane_lundi')" } ]
+  - id: une.h8.kerdal_dort
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 3
+    when: "flag('h8_kerdal_vit') && journal_has('h8_kerdal_vit')"
+    titre: "{CLUB} : KERDAL A DORMI"
+    sous: "L'écran le disait fini ; il a joué jusqu'en mai. {prenom} {nom} n'a rien expliqué à l'écran, ni à nous."
+    sujet: ds.h8.kerdal
+  - id: une.h8.trois_fois
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_kerdal_trois') && journal_has('h8_kerdal_trois')"
+    titre: "{NOM} : TROIS MATCHS EN SEPT JOURS"
+    sous: "Le calendrier le voulait, la machine aussi, et {prenom} {nom} a signé. Le défenseur de {club} demandait l'heure dans le vestiaire."
+    sujet: ds.h8.kerdal
+  - id: une.h8.vollaire_vendu
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_vollaire_vendu') && journal_has('h8_vollaire_vendu')"
+    titre: "VOLLAIRE, VENDU À MINUIT MOINS DEUX"
+    sous: "L'enfant du quai part à Valentienne. La bâche de vingt mètres dort dans le coffre d'un ancien du virage."
+  - id: une.h8.vollaire_garde
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_vollaire_garde') && journal_has('h8_vollaire_garde')"
+    titre: "{NOM} GARDE VOLLAIRE"
+    sous: "Contre l'avis de la machine du fonds, l'enfant du quai reste à {club}. La bâche aussi, avec un nom de plus dans un coin."
+  - id: une.h8.cote
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    when: "flag('h8_cote_vue') && journal_has('h8_cote_vue')"
+    titre: "{CLUB} : LA COTE SAVAIT TOUT"
+    sous: "Chaque samedi, la cote du milieu de {club} tombait à 13 h 58. La feuille de match était publiée à 14 h 58. Pari-Rive dément."
+    sujet: ds.h8.pari_rive
+  - id: une.h8.pari_refuse
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_pari_refuse') && journal_has('h8_pari_refuse')"
+    titre: "PARI-RIVE BAISSE SON CHÈQUE"
+    sous: "Le sponsor maillot de {club} « révise sa coopération ». Ce qu'il voulait savoir avant tout le monde, personne ne le lui a dit."
+    sujet: ds.h8.pari_rive
+  - id: une.h8.cadence
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_sp_cadence') && journal_has('h8_sp_cadence')"
+    titre: "{VILLE} : UN BRACELET PAR POIGNET"
+    sous: "{club} équipe gratuitement les anciens du virage. Le sponsor revend leurs nuits ; le club dit que c'est pour leur santé."
+    sujet: ds.h8.cadence
+  - id: une.h8.cadence_refuse
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_cadence_refuse') && journal_has('h8_cadence_refuse')"
+    titre: "LE VIRAGE GARDE SES NUITS"
+    sous: "{prenom} {nom} a refusé les bracelets du sponsor pour les anciens de la Nord. Ils les ont reçus quand même, à la buvette, avec une bière."
+    sujet: ds.h8.cadence
+  - id: une.h8.bureau
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_bureau_garde') && journal_has('h8_bureau_garde') || flag('h8_chaise') && journal_has('h8_chaise')"
+    titre: "VAUBOURG GARDE SON ESCALIER"
+    sous: "Les machines du fonds iront au sous-sol. Le président d'honneur, quatre-vingt-douze ans, garde son bureau, son escalier et son heure."
+    sujet: ds.h8.vaubourg
+  # ------------------------------------------------------------- saison 2
+  - id: une.h8.vaubourg
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    poids: 2
+    when: "flag('h8_vaubourg_mort') && journal_has('h8_vaubourg_mort')"
+    titre: "LE MODÈLE AVAIT L'HEURE"
+    sous: "Jean-Marie Vaubourg est mort à son bureau du club-house, à six heures et demie. On dit qu'une machine l'avait prévu. Lui avait toujours l'heure."
+    photo: ds.h8.b4_porte
+    react: [ { card: ds.h8.re.josiane_vaubourg } ]
+  - id: une.h8.qui_parle
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 3
+    when: "flag('h8_video') && journal_has('h8_video') && flag('h8_plainte')"
+    titre: "QUI PARLE DANS L'OREILLETTE ?"
+    sous: "Une vidéo, une voix, des mots jamais dits. {prenom} {nom} a porté plainte contre X. X ne répond pas aux journaux."
+    sujet: ds.h8.video
+  - id: une.h8.video
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 3
+    when: "flag('h8_video') && journal_has('h8_video')"
+    titre: "{NOM} SANS FILTRE"
+    sous: "Trois cent mille vues pour une vidéo démentie le lendemain. Le démenti en a fait onze mille."
+    sujet: ds.h8.video
+  - id: une.h8.coeur
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    when: "flag('h8_courbes_publiees') && journal_has('h8_courbes_publiees')"
+    titre: "LE CŒUR À QUATRE ÉCUS"
+    sous: "Le Quotidien publie les nuits des joueurs de {club}, revendues par le sponsor des bracelets. Quarante nuits, deux pages, aucun nom."
+    sujet: ds.h8.courbes
+  - id: une.h8.pas_la_mienne
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_pas_la_mienne') && journal_has('h8_pas_la_mienne')"
+    titre: "{NOM} CACHE SA NUIT"
+    sous: "Quarante nuits publiées, une retirée : celle de {prenom} {nom}. La Gazette a demandé pourquoi. Pas de réponse avant minuit."
+    sujet: ds.h8.courbes
+  - id: une.h8.virage
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_virage_parle') && journal_has('h8_virage_parle')"
+    titre: "{NOM} DANS LA NORD"
+    sous: "Ni micro ni oreillette : {prenom} {nom} a passé la quatrième minute au milieu du virage, sans connaître les paroles."
+    sujet: ds.h8.vieux
+  - id: une.h8.greve
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 3
+    when: "flag('h8_greve_soutenue') && journal_has('h8_greve_soutenue')"
+    titre: "{VILLE} : LE STADE OUVERT ET VIDE"
+    sous: "Pendant la grève mondiale, {club} a laissé son stade éclairé. Un seul supporter dans la Nord, avec un thermos et deux gobelets."
+    sujet: ds.h8.greve
+  - id: une.h8.forfait
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_club_joue') && journal_has('h8_club_joue')"
+    titre: "{CLUB} ATTENDAIT L'ARBITRE"
+    sous: "Le club voulait jouer pendant la grève. Personne n'est venu, pas même l'arbitre. Le procès-verbal dit « forfait »."
+    sujet: ds.h8.greve
+  - id: une.h8.peyrard
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    when: "flag('h8_peyrard_vendu') && journal_has('h8_peyrard_vendu')"
+    titre: "{NOM} VEND LE CAPITAINE À 1 H 04"
+    sous: "Peyrard rejoint {rival}. La signature est partie au milieu de la nuit ; il l'a appris au petit-déjeuner, devant ses enfants."
+  - id: une.h8.ines
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 2
+    when: "flag('h8_ines_aveu') && journal_has('h8_ines_aveu')"
+    titre: "LA VOIX DE NUIT A UN NOM"
+    sous: "La nuit, une intérimaire lisait à {club} ce que le modèle du fonds affichait. Quand l'écran était vide, elle improvisait."
+    sujet: ds.h8.operatrice
+  # ------------------------------------------------------------- saison 3
+  - id: une.h8.inventaire
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 3
+    when: "flag('h8_oreillette_gardee') && journal_has('h8_oreillette_gardee')"
+    titre: "UNE OREILLETTE MANQUE À L'INVENTAIRE"
+    sous: "Berline, téléphone, ordinateur : le fonds a repris l'équipement de {prenom} {nom}. L'oreillette, elle, est « perdue »."
+  - id: une.h8.outils
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_oreillette_rendue') && journal_has('h8_oreillette_rendue')"
+    titre: "{NOM} REND TOUT AU FONDS"
+    sous: "La berline de {prenom} {nom} est partie sur le plateau d'un camion, sans un bruit. Depuis, on voit {nom} aller au stade à pied, par le quai."
+  - id: une.h8.ilyas
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 2
+    when: "flag('h8_ilyas_vu') && journal_has('h8_ilyas_vu')"
+    titre: "UNE HEURE À {VILLE}, UNE PHRASE"
+    sous: "Cheikh Ilyas, propriétaire de {club}, a visité le club-house sans ôter son manteau. Il n'a parlé qu'une fois."
+    sujet: ds.h8.fonds
+  - id: une.h8.page
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_page_rayee') && journal_has('h8_page_rayee')"
+    titre: "{NOM} RAYE LA PAGE QUATORZE"
+    sous: "{prenom} {nom} refuse que ses nuits appartiennent au fonds. Le fonds n'a pas rendu la copie. Une secrétaire à la retraite, si."
+    sujet: ds.h8.fonds
+  - id: une.h8.milo
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_milo_rouge') && journal_has('h8_milo_rouge')"
+    titre: "FIN DE CYCLE À SEIZE ANS"
+    sous: "Au centre de formation de {club}, une règle de 2017 classe les gamins. Le fils du capo est rouge. Le virage l'a appris."
+    sujet: ds.h8.milo
+  - id: une.h8.regle
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 2
+    when: "flag('h8_regle_changee') && journal_has('h8_regle_changee')"
+    titre: "QUATORZE GAMINS NE SONT PLUS ROUGES"
+    sous: "Une ligne de code de 2017 réécrite en une nuit, et tout le centre de formation de {club} recalculé. Personne ne sait par qui."
+    sujet: ds.h8.milo
+  - id: une.h8.juge
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 3
+    when: "flag('h8_ober_temoin') && journal_has('h8_ober_temoin')"
+    titre: "{NOM} DEVANT LA JUGE"
+    sous: "{prenom} {nom} a témoigné à Valdorne. Le médecin de {club} est entendu cette semaine sur la revente des nuits des joueurs."
+    sujet: ds.h8.ober
+  - id: une.h8.cabinet
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_ober_couvert') && journal_has('h8_ober_couvert')"
+    titre: "LE DOCTEUR GARDE SON CABINET"
+    sous: "Devant la juge de Valdorne, la direction sportive de {club} « ne savait rien » des courbes. Le docteur Ober non plus."
+    sujet: ds.h8.ober
+  - id: une.h8.minuit_passe
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 3
+    when: "flag('h8_pas_signe') && journal_has('h8_pas_signe')"
+    titre: "À 23 H 58, PERSONNE N'A SIGNÉ"
+    sous: "Le dernier mercato s'est fermé sur une offre pour un gamin du centre. Milo reste. {prenom} {nom} n'a pas expliqué pourquoi."
+  # ------------------------------------------------------- l'épilogue
+  - id: une.h8.machines
+    postulats: [le_modele]
+    roles: [ds]
+    journal: echo
+    priority: 2
+    when: "flag('h8_machines_debranchees') && journal_has('h8_machines_debranchees') || flag('h8_machines_veillees') && journal_has('h8_machines_veillees')"
+    titre: "LE MODÈLE A QUITTÉ {VILLE}"
+    sous: "Une nuit, à trois heures, les machines de {club} se sont tues : le modèle tourne désormais à la capitale. {prenom} {nom} était sur place. Personne ne sait pourquoi."
+    sujet: ds.h8.sb.machines
+
+  - id: une.h8.voix_retiree
+    postulats: [le_modele]
+    roles: [ds]
+    journal: quotidien
+    priority: 2
+    when: "flag('h8_voix_retiree') && journal_has('h8_voix_retiree')"
+    titre: "{NOM} REPREND SA VOIX"
+    sous: "Le directeur sportif de {club} a fait retirer sa voix du modèle d'Almadis. Le fonds confirme : une voix « équivalente » l'a remplacée."
+    sujet: ds.h8.suivant
+  - id: une.h8.voix_laissee
+    postulats: [le_modele]
+    roles: [ds]
+    journal: gazette
+    priority: 2
+    when: "flag('h8_voix_laissee') && journal_has('h8_voix_laissee')"
+    titre: "À CASTÉRAC, ON ENTEND {NOM}"
+    sous: "Dans l'oreillette d'un club de Castérac, une voix bien connue à {ville}. Le fonds parle d'un « héritage de modèle ». {prenom} {nom} ne s'y est pas opposé."
+    sujet: ds.h8.suivant

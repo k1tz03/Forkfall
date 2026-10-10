@@ -1,0 +1,476 @@
+# « L'Oreillette » (Histoire 8) — les intrigues de la saison 1, « La voix »
+# (content/arcs/ds/h8_intrigues.yaml) : Kerdal et De quoi dormir, qui
+# s'ouvrent à coup sûr (Vollaire met Kerdal en file, le casier de Kerdal met
+# le docteur Ober en file), puis le réservoir : Cadence, Pari-Rive, Six cent
+# douze jours. `arc:` est le THÈME de la carte, pas l'id de l'arc.
+#
+# Les graines et ce qui les paie :
+#   · « Kerdal ne dort plus » (Mbako) → lundi, la muscu, 23 h ; le seul moyen
+#     de le sauver : le reposer ici ET refuser de le vendre (ds.h8.a2) ;
+#   · la boîte d'Ober et la montre la nuit → la vidéo (S1), les courbes de
+#     Léa (S1), la dernière boîte (S2) ;
+#   · le bracelet de Vaubourg (Gégé le dit, Cadence) → la date, la porte ;
+#   · la composition à 13 h 58 → la cote du Corner, la brigade, la saisie
+#     du duplex (ds.h8.c2_propriete_pari).
+cards:
+  # ============================================================== KERDAL
+  # ----------------------------------------- 1 · Trois fois (terrain annexe)
+  - id: ds.h8.kerdal.trois_fois
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    speaker: mbako
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Mbako regarde ses joueurs courir, pas ton écran : « Ton modèle veut Kerdal trois fois cette semaine. Kerdal ne dort plus. Je le fais jouer, {toi} ? »"
+    left:
+      label: "Le modèle a raison"
+      effects: {direction: "+", vestiaire: "-", relation: {mbako: -1}, set: [h8_kerdal_trois], var: {h8_obei: "+1"}}
+      answer: "Kerdal joue mercredi, samedi, mardi. Le mardi, il demande l'heure trois fois dans le vestiaire, à trois personnes différentes."
+    right:
+      label: "Il se repose"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h8_kerdal_repose], var: {h8_refus: "+1"}, react: [{card: ds.h8.re.kerdal_tribune}]}
+      answer: "Samedi, Kerdal est en tribune, en civil, la capuche sur la tête. Dans ton oreille : « Écart à la recommandation : un. »"
+
+  # --------------------------------------------- 2 · Le casier (vestiaire)
+  # Les deux sorties mettent le docteur Ober en file : « De quoi dormir ».
+  - id: ds.h8.kerdal.casier_repos
+    roles: [ds]
+    arc: corps
+    tags: [vestiaire, objet]
+    speaker: ober
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Le docteur Ober referme le casier de Kerdal sur trois boîtes sans étiquette. « Reposé ou pas, il ne dort pas. Je lui donne de quoi, ou on attend qu'il tombe ? »"
+    left:
+      label: "Donnez-lui de quoi"
+      effects: {vestiaire: "+", direction: "-", set: [h8_kerdal_boites], schedule: [{card: ds.h8.cp.un_demi_docile, in: [2, 4]}]}
+      answer: "Il tourne les étiquettes vers le fond. À la porte : « Vous aussi, vous avez la tête. Passez au cabinet ce soir, neuf heures. »"
+    right:
+      label: "Pas de boîtes pour lui"
+      effects: {direction: "+", vestiaire: "-", relation: {ober: -1}, schedule: [{card: ds.h8.cp.un_demi_docile, in: [2, 4]}]}
+      answer: "Il remet les boîtes dans sa sacoche, sans discuter. « Vous, en revanche, passez au cabinet. Neuf heures. Vous avez la tête. »"
+
+  - id: ds.h8.kerdal.casier
+    roles: [ds]
+    arc: corps
+    tags: [vestiaire, objet]
+    speaker: ober
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Trois matchs en sept jours. Le docteur Ober range trois boîtes sans étiquette dans le casier de Kerdal : « Une pour le genou, deux pour dormir. Il me faut votre paraphe : joueur sous contrat. »"
+    left:
+      label: "Je paraphe"
+      effects: {vestiaire: "+", direction: "+", set: [h8_kerdal_boites], var: {h8_obei: "+1"}, schedule: [{card: ds.h8.cp.un_demi_docile, in: [2, 4]}]}
+      answer: "Tes initiales sur un registre à spirale, sous celles de l'ancien directeur sportif. « Et vous, passez au cabinet ce soir. Neuf heures. »"
+    right:
+      label: "Pas sans un nom dessus"
+      effects: {direction: "-", relation: {ober: -1}, var: {h8_refus: "+1"}, schedule: [{card: ds.h8.cp.un_demi_docile, in: [2, 4]}]}
+      answer: "Il écrit KERDAL au feutre sur chaque boîte, en capitales, et les range quand même. « Vous, passez au cabinet. Neuf heures. »"
+
+  # -------------------------------------- 3 · Lundi (muscu, 23 h ; un soir)
+  # Mis en file par l'ancre de l'hiver (ds.h8.a2_fin_de_cycle). La première
+  # variante vraie gagne quand la carte sort. Avant, après ; jamais le corps.
+  - id: ds.h8.kerdal.lundi_vit
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: muscu
+    tone: strategique
+    once: true
+    text: "Lundi, vingt-trois heures. La salle de muscu est éclairée, la radio crache ; entre les bancs, personne. Mbako t'appelle : « Il dort. Depuis vingt heures. Sa mère est assise à côté. »"
+    left:
+      label: "Je passe le voir"
+      effects: {vestiaire: "++", relation: {kerdal: 1, mbako: 1}, set: [h8_kerdal_vit], outcome: vit}
+      answer: "Tu restes sur le palier sans sonner. Par la fenêtre, une lampe de chevet, et une femme qui tricote dans un fauteuil."
+    right:
+      label: "Laissez-le dormir"
+      effects: {vestiaire: "+", relation: {mbako: 1}, set: [h8_kerdal_vit], outcome: vit}
+      answer: "Tu éteins la muscu toi-même, et la radio. Dans ton oreille, longtemps après : « Écart à la prédiction : un. »"
+
+  - id: ds.h8.kerdal.lundi_vendu
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, sombre, oreillette]
+    lieu: muscu
+    tone: strategique
+    once: true
+    text: "Lundi, vingt-trois heures. Kerdal partait pour Portclair au matin ; il est revenu vider son casier. L'agent d'entretien t'appelle : il l'a trouvé entre deux bancs. La voix : « C'était lundi. »"
+    left:
+      label: "J'appelle le docteur"
+      effects: {direction: "-", vestiaire: "--", set: [h8_kerdal_mort, h8_ober_appele], char: {kerdal: mort}, outcome: mort, react: [{card: ds.h8.re.josiane_lundi}]}
+      answer: "Ober arrive en dix minutes, sa sacoche à la main, et te demande d'attendre dans le couloir. La radio joue encore."
+    right:
+      label: "J'enlève l'oreillette"
+      effects: {direction: "--", vestiaire: "-", set: [h8_kerdal_mort, h8_sans_oreillette], char: {kerdal: mort}, outcome: mort, var: {h8_refus: "+1"}, react: [{card: ds.h8.re.josiane_lundi}]}
+      answer: "Tu la poses sur le banc d'à côté. Elle continue de parler, toute petite, pendant que tu composes le numéro des secours."
+
+  - id: ds.h8.kerdal.lundi
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, sombre, oreillette]
+    lieu: muscu
+    tone: strategique
+    once: true
+    text: "Lundi, vingt-trois heures. La salle de muscu est éclairée, la radio crache. L'agent d'entretien t'appelle : il a trouvé Kerdal entre deux bancs. Dans ton oreille, rien, puis : « C'était lundi. »"
+    left:
+      label: "J'appelle le docteur"
+      effects: {direction: "-", vestiaire: "--", set: [h8_kerdal_mort, h8_ober_appele], char: {kerdal: mort}, outcome: mort, react: [{card: ds.h8.re.josiane_lundi}]}
+      answer: "Ober arrive en dix minutes, sa sacoche à la main, et te demande d'attendre dans le couloir. La radio joue encore."
+    right:
+      label: "J'enlève l'oreillette"
+      effects: {direction: "--", vestiaire: "-", set: [h8_kerdal_mort, h8_sans_oreillette], char: {kerdal: mort}, outcome: mort, var: {h8_refus: "+1"}, react: [{card: ds.h8.re.josiane_lundi}]}
+      answer: "Tu la poses sur le banc d'à côté. Elle continue de parler, toute petite, pendant que tu composes le numéro des secours."
+
+  # -------------------------------------------- 4 · Après (le lendemain)
+  - id: ds.h8.kerdal.apres_vit
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: kerdal
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Mardi, Kerdal arrive à l'entraînement avec la marque de l'oreiller sur la joue. Il s'arrête devant toi : « Douze heures, {toi}. Je ne savais plus que ça existait. Ta machine, elle le sait ? »"
+    left:
+      label: "Elle le saura"
+      effects: {vestiaire: "+", direction: "+", relation: {kerdal: 1}}
+      answer: "Le soir, la courbe est toujours rouge. Elle n'a pas de case pour douze heures de sommeil. Tu ne lui en fais pas une."
+    right:
+      label: "Ça reste entre nous"
+      effects: {vestiaire: "++", direction: "-", relation: {kerdal: 1}, set: [h8_kerdal_secret]}
+      answer: "Il rit, pour la première fois depuis août, et part rejoindre les autres en trottinant. Mbako ne siffle pas : il le regarde."
+
+  - id: ds.h8.kerdal.apres
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Le surlendemain, Mbako fait courir l'équipe sans sifflet. Il s'arrête à ta hauteur, sans te regarder : « Vendredi, je lui ai dit de dormir. Toi, tu lui as dit quoi ? »"
+    left:
+      label: "Rien"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« Moi non plus, au fond. » Il repart. Les joueurs font un tour de plus que prévu, sans qu'on le leur demande."
+    right:
+      label: "Ce que disait l'écran"
+      effects: {direction: "+", vestiaire: "-", relation: {mbako: -1}}
+      answer: "Il hoche la tête, lentement. « Alors c'est l'écran qui ira à l'enterrement. » Il siffle enfin, une seule fois, très fort."
+
+  # ===================================================== DE QUOI DORMIR
+  # ------------------------- 1 · Un demi-comprimé (cabinet, 21 h) — la 1re
+  # prédiction. La voix de jour, qui vouvoie, prédit le geste d'après ce que
+  # tu as déjà fait (vars.h8_obei, vars.h8_refus). Mis en file par le casier.
+  - id: ds.h8.cp.un_demi_docile
+    roles: [ds]
+    arc: corps
+    tags: [direction, oreillette]
+    speaker: ober
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Vingt et une heures, au cabinet. Ober tend une boîte : « Un demi, pas plus. Et gardez votre montre la nuit, j'ai besoin de vos courbes. » Dans ton oreille : « Vous allez la prendre. »"
+    left:
+      label: "Je prends la boîte"
+      effects: {direction: "+", vestiaire: "-", set: [h8_comprimes], var: {h8_obei: "+1"}, outcome: boite}
+      answer: "La voix n'ajoute rien. Elle n'en a pas besoin. Ober écrit « un demi » sur le couvercle, au feutre, deux fois."
+    right:
+      label: "Je garde mes courbes"
+      effects: {vestiaire: "+", direction: "-", set: [h8_courbes_gardees], var: {h8_refus: "+1"}, outcome: courbes, react: [{card: ds.h8.re.ober_montre}]}
+      answer: "Un temps, dans ton oreille. Puis, sur un ton que tu ne lui connais pas : « Noté. » Ober range la boîte sans la refermer."
+
+  - id: ds.h8.cp.un_demi
+    roles: [ds]
+    arc: corps
+    tags: [direction, oreillette]
+    speaker: ober
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Vingt et une heures, au cabinet. Ober tend une boîte : « Un demi, pas plus. Et gardez votre montre la nuit, j'ai besoin de vos courbes. » Dans ton oreille : « Vous allez refuser. »"
+    left:
+      label: "Je prends la boîte"
+      effects: {direction: "+", vestiaire: "-", set: [h8_comprimes], var: {h8_obei: "+1"}, outcome: boite}
+      answer: "Un temps, dans ton oreille. Puis, sur un ton que tu ne lui connais pas : « Noté. » Ober écrit « un demi » sur le couvercle."
+    right:
+      label: "Je garde mes courbes"
+      effects: {vestiaire: "+", direction: "-", set: [h8_courbes_gardees], var: {h8_refus: "+1"}, outcome: courbes, react: [{card: ds.h8.re.ober_montre}]}
+      answer: "La voix n'ajoute rien. Elle n'en a pas besoin. Ober range la boîte dans un tiroir, à côté d'autres, à des noms du club."
+
+  # ------------------------------------------------ 2 · La deuxième boîte
+  - id: ds.h8.cp.deuxieme_boite
+    roles: [ds]
+    arc: corps
+    tags: [direction, objet]
+    speaker: ober
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Trois semaines plus tard, ta boîte est vide. Ober en pose une deuxième, plus grosse : « Si un demi ne suffit plus, un entier. Votre montre dit que vous dormez deux heures. Elle ne ment pas. »"
+    left:
+      label: "Un entier"
+      effects: {direction: "+", vestiaire: "-", set: [h8_double_dose], var: {h8_obei: "+1"}}
+      answer: "Tu te réveilles au bureau à six heures dix, la joue contre le clavier. Tu ne te rappelles pas la route. La berline, si."
+    right:
+      label: "Je reste au demi"
+      effects: {vestiaire: "+", direction: "-", var: {h8_nuits: "+1"}}
+      answer: "Il raye « un entier » et réécrit « un demi », en appuyant. Tu dors deux heures. Ta montre le sait avant toi."
+
+  - id: ds.h8.cp.deuxieme_poutres
+    roles: [ds]
+    arc: corps
+    tags: [direction, decor]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Deux heures, troisième nuit de la semaine. Tu comptes les rivets du pont roulant, au-dessus du lit. Ta montre vibre : « Sommeil insuffisant. » Puis un message d'Ober : « Ma porte est ouverte. »"
+    left:
+      label: "J'irai au cabinet"
+      effects: {direction: "+", set: [h8_comprimes], var: {h8_nuits: "+1"}}
+      answer: "Il t'attend à neuf heures, la boîte déjà sur le bureau. « Un demi. » Il ne te demande pas ce qui t'a fait changer d'avis."
+    right:
+      label: "Je compte les rivets"
+      effects: {vestiaire: "+", var: {h8_nuits: "+1"}}
+      answer: "Cent douze rivets. À quatre heures, tu recommences par l'autre bout pour vérifier : cent treize. Tu ne dors pas pour savoir."
+
+  # ---------------------------------------- 3 · Le poignet (S1, fusée longue)
+  # Nadia Rouvier, kiné à Saint-Étoile, de passage : elle te fait respirer et
+  # t'enlève ta montre. Voix sans portrait.
+  - id: ds.h8.cp.poignet
+    roles: [ds]
+    arc: corps
+    tags: [vestiaire, objet]
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Nadia Rouvier, kiné à Saint-Étoile, de passage pour un genou, défait ta montre sans demander et la retourne sur la table : « Maintenant, l'oreillette. Je ne travaille pas devant du public. »"
+    left:
+      label: "Je l'enlève aussi"
+      effects: {vestiaire: "+", direction: "-", set: [h8_bracelet_ote, h8_sans_oreillette], var: {h8_refus: "+1"}}
+      answer: "Vingt minutes, quatre temps : inspirer, tenir, souffler, attendre. Personne ne compte avec toi. Tu sors sans la remettre."
+    right:
+      label: "Juste la montre"
+      effects: {vestiaire: "+", set: [h8_bracelet_ote]}
+      answer: "Elle te fait respirer vingt minutes, quatre temps. Dans ton oreille, la voix compte avec elle, une seconde en avance."
+
+  # ============================================================ CADENCE
+  # Le sponsor gris : un bracelet pour chaque poignet, jusqu'au virage.
+  - id: ds.h8.cd.offre
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Gégé pose sur le zinc un bracelet noir, encore emballé : « Cadence veut en mettre un au poignet des anciens du virage. Gratuit. J'ai quatre-vingt-un ans, {toi}, je sais ce que gratuit veut dire. »"
+    left:
+      label: "Je signe pour le virage"
+      effects: {caisse: "++", tribunes: "-", relation: {gege: -1}, set: [h8_sp_cadence], outcome: signe}
+      answer: "Il remet le bracelet dans sa boîte, la boîte dans sa poche. « Je le porterai. Ils sauront quand je dors : jamais. »"
+    right:
+      label: "Pas le virage"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}, set: [h8_cadence_refuse], outcome: refuse}
+      answer: "Il laisse le bracelet sur le zinc. « Garde-le. Ils en ont déjà mis un à ton président d'honneur. Il le porte, tu sais. »"
+
+  - id: ds.h8.cd.buvette_signe
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, ultras, oreillette]
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "À la buvette, les anciens comparent leurs bracelets comme des montres de communion. Celui de Gégé est dans le pot à pourboires. Dans ton oreille : « Le compte G. ne transmet pas. »"
+    left:
+      label: "Je le lui remets"
+      effects: {direction: "+", tribunes: "-", relation: {gege: -1}, var: {h8_obei: "+1"}}
+      answer: "Gégé tend le poignet sans un mot et te regarde fermer le fermoir. Puis il commande une bière et la paie avec ta monnaie."
+    right:
+      label: "Il est bien dans le pot"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}, var: {h8_refus: "+1"}}
+      answer: "Tu y laisses une pièce, sur le bracelet. Le soir, quelqu'un a ajouté un caillou blanc. Personne ne dit qui."
+
+  - id: ds.h8.cd.buvette
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Cadence a ouvert un stand à la buvette malgré ton refus : un bracelet offert avec chaque bière. Gégé regarde les anciens tendre le poignet. « Tu as dit non, {toi}. Eux, on ne leur a rien demandé. »"
+    left:
+      label: "Je fais fermer le stand"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
+      answer: "Le stand est démonté avant la mi-temps. Les bracelets déjà donnés restent aux poignets ; ils clignotent pendant les chants."
+    right:
+      label: "Ils sont grands"
+      effects: {caisse: "+", tribunes: "-", relation: {gege: -1}}
+      answer: "À la fin du mois, Cadence verse une prime au club « pour l'engagement des supporters ». Gégé en découpe l'annonce."
+
+  - id: ds.h8.cd.nuits
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, oreillette]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Six heures dix. La voix, avant le café : « Le virage dort mal le vendredi. Cinquante-deux pour cent. Avancez les matchs au vendredi soir : ils viendront fatigués, ils chanteront moins. »"
+    left:
+      label: "J'avance les matchs"
+      effects: {direction: "+", tribunes: "--", var: {h8_obei: "+1"}}
+      answer: "Vendredi soir, le virage est plein et se tait aux trois quarts. Gégé chante seul la moitié d'un couplet, puis s'assoit."
+    right:
+      label: "Le virage dormira"
+      effects: {tribunes: "+", direction: "-", var: {h8_refus: "+1"}}
+      answer: "« Préférence enregistrée. » Tu bois ton café debout, à la fenêtre. En bas, sur le quai, un ancien promène un chien qui boite."
+
+  # ========================================================== PARI-RIVE
+  # Le sponsor louche : la composition une heure avant tout le monde.
+  - id: ds.h8.pr.compo
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, scandale, portable]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Samedi, treize heures cinquante-huit. « Pari-Rive, votre sponsor maillot. La composition, s'il vous plaît. Vous la publiez à quatorze heures cinquante-huit ; nous, une heure avant. »"
+    left:
+      label: "Je l'envoie"
+      effects: {caisse: "++", direction: "+", set: [h8_sp_pari], var: {ville_francs_sales: "+20000"}, outcome: envoie, react: [{card: ds.h8.re.mbako_compo}]}
+      answer: "Une photo de la feuille, partie à 13 h 59. À 14 h 01, un seul mot en retour : « Merci. » Le logo vert brille sous la pluie."
+    right:
+      label: "Je raccroche"
+      effects: {caisse: "-", tribunes: "+", set: [h8_pari_refuse], outcome: refuse}
+      answer: "Ils rappellent à 14 h 10, puis à 14 h 30. Au troisième appel, une voix plus polie parle du contrat, et de sa page huit."
+
+  - id: ds.h8.pr.virement_sale
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, scandale, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Le premier du mois, une enveloppe kraft dans ta boîte aux lettres de la Tréfilerie, sans timbre. Des billets neufs, et un ticket de Pari-Rive, gagnant : ton milieu titulaire."
+    left:
+      label: "Je la garde"
+      effects: {caisse: "+", var: {ville_francs_sales: "+30000"}}
+      answer: "Tu la ranges sous le pont roulant, dans une boîte à chaussures. Le ticket, tu le gardes dans ton portefeuille, sans savoir pourquoi."
+    right:
+      label: "Je la leur rends"
+      effects: {direction: "-", set: [h8_enveloppe_rendue]}
+      answer: "Tu la déposes à leur agence du quai, sans un mot. L'employée la prend comme on prend un colis : elle signe un reçu à ton nom."
+
+  - id: ds.h8.pr.virement_cheque
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, caisse, oreillette]
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Le chèque trimestriel de Pari-Rive arrive amputé de moitié, avec une ligne tapée : « révision pour manque de coopération ». La voix : « Masse salariale : moins deux pour cent. Compensez. »"
+    left:
+      label: "Je compense"
+      effects: {caisse: "+", vestiaire: "-", var: {h8_obei: "+1"}}
+      answer: "Deux contrats de la réserve ne sont pas renouvelés. Les gamins l'apprennent par une lettre type, signée par la machine du club."
+    right:
+      label: "Je renvoie le chèque"
+      effects: {tribunes: "+", caisse: "--", var: {h8_refus: "+1"}}
+      answer: "Le chèque repart sous enveloppe, déchiré en deux. Au match suivant, le logo vert est toujours sur les maillots. Il est payé, lui."
+
+  - id: ds.h8.pr.cote
+    roles: [ds]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: bar
+    tone: leger
+    once: true
+    text: "Léa t'attend au Corner, son téléphone à plat sur le comptoir : « La cote de votre milieu tombe tous les samedis à treize heures cinquante-huit. Une heure avant votre feuille. Qui la lit avant nous ? »"
+    left:
+      label: "Pari-Rive"
+      effects: {tribunes: "+", direction: "-", relation: {lea: 1}, set: [h8_cote_vue]}
+      answer: "Elle note le nom et rien d'autre. « Je ne vous ai pas demandé qui l'envoie. Je vous le demanderai une autre fois. »"
+    right:
+      label: "Personne"
+      effects: {direction: "+", relation: {lea: -1}, set: [h8_cote_vue]}
+      answer: "Elle range son téléphone. « La cote, elle, a quelqu'un. Je trouverai le nom sans vous ; ce sera moins gentil. »"
+
+  # ================================================= SIX CENT DOUZE JOURS
+  - id: ds.h8.vb.bureau
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    speaker: aulard
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Vaubourg t'attend en haut de l'escalier, un plan plié sous le bras : « Le fonds veut mon bureau pour ses machines. Ses machines n'ont pas de canne. Vous avez votre mot à dire, paraît-il. »"
+    left:
+      label: "Il garde son bureau"
+      effects: {direction: "-", vestiaire: "+", relation: {aulard: 1}, set: [h8_bureau_garde], outcome: garde}
+      answer: "Les machines descendent au sous-sol, près de la chaudière. Elles chauffent tant que le gardien y fait sécher son linge."
+    right:
+      label: "Les machines montent"
+      effects: {direction: "+", relation: {aulard: -1}, set: [h8_bureau_cede], outcome: cede, react: [{card: ds.h8.re.josiane_serveurs}]}
+      answer: "Il plie le plan en huit. « Je garderai la clé. » Les machines montent en mars. Lui aussi, chaque matin, avec la clé."
+
+  - id: ds.h8.vb.bracelet_salle
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    speaker: aulard
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Six heures et demie. Vaubourg est assis dans la salle des serveurs, sur la chaise de son ancien bureau, au milieu des lumières vertes. Il lève le poignet : « Ce truc vibre. Enlevez-le-moi. »"
+    left:
+      label: "Je le lui enlève"
+      effects: {direction: "-", relation: {aulard: 1}, set: [h8_bracelet_vaubourg], var: {h8_refus: "+1"}}
+      answer: "Le fermoir résiste ; ses doigts ne savent plus. Il frotte la marque blanche sur sa peau. « Ça ronronne, ici. Comme un stade la veille. »"
+    right:
+      label: "Il en a besoin"
+      effects: {direction: "+", relation: {aulard: -1}, var: {h8_obei: "+1"}}
+      answer: "Il rabat sa manche dessus. « Alors qu'il me surveille. Je lui ai survécu, à votre fonds. Pas à l'escalier. »"
+
+  - id: ds.h8.vb.bracelet
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    speaker: aulard
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Vaubourg te montre le bracelet de Cadence à son poignet : « Il vibre quand je monte l'escalier. Il me dit de ralentir. À mon âge, on ne ralentit plus, on s'arrête. Enlevez-le-moi. »"
+    left:
+      label: "Je le lui enlève"
+      effects: {direction: "-", relation: {aulard: 1}, set: [h8_bracelet_vaubourg], var: {h8_refus: "+1"}}
+      answer: "Le fermoir résiste ; ses doigts à lui ne savent plus. Il frotte la marque blanche sur sa peau, comme on efface une date."
+    right:
+      label: "Il en a besoin"
+      effects: {direction: "+", relation: {aulard: -1}, var: {h8_obei: "+1"}}
+      answer: "Il rabat sa manche dessus. « Alors qu'il me surveille. Il n'a jamais vu de vieux monter un escalier, ce truc. »"
+
+  - id: ds.h8.vb.chaise
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane a fait descendre du grenier une chaise du conseil de 1977, velours râpé, et l'a posée devant le bureau de Vaubourg : « Pour vous. Il ne vous le demandera pas. Asseyez-vous, parfois. »"
+    left:
+      label: "Je m'assieds"
+      effects: {direction: "+", relation: {aulard: 1, josiane: 1}, set: [h8_chaise], react: [{card: ds.h8.re.aulard_chaise}]}
+      answer: "Elle grince à gauche. Vaubourg lève les yeux de son journal, puis les baisse, et tourne la page avec un temps de retard."
+    right:
+      label: "Je reste debout"
+      effects: {vestiaire: "+", relation: {josiane: -1}}
+      answer: "La chaise reste où elle est, face au bureau. Il y pose son chapeau. Le chapeau y reste jusqu'au printemps."

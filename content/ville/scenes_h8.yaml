@@ -1,0 +1,362 @@
+# « L'Oreillette » (Histoire 8) — les scènes de la semaine. Format : l'en-tête
+# de content/ville/scenes_communes.yaml (branche principale). La ville en
+# programme une chaque jour sans carte, souvent le soir ; ici, ce sont les
+# nuits d'un directeur sportif qui ne dort plus : la laverie, les projecteurs,
+# les rivets du pont roulant, la voix du matin, et les graines du livre qui
+# reviennent (la friche et ses bougies, le caillou de la muscu, la canne).
+#
+# Une scène n'accorde rien au protagoniste ; elle lit le drapeau d'histoire,
+# et parfois une autre scène (`mission(h8.sc.…)`) : la friche se joue en deux
+# soirs. Elles ne posent pas de drapeau : ce qu'elles laissent, la ville le
+# garde en mémoire, pas le moteur.
+scenes:
+  # ------------------------------------------------------------- les nuits
+  - id: h8.sc.laverie
+    titre: "La machine de quelqu'un d'autre"
+    roles: [ds]
+    lieu: laverie
+    tranches: [soir]
+    si: "flag(histoire_h8)"
+    texte: "La laverie, vingt-deux heures. Tu n'as rien à laver. Tu es là quand même, sur la chaise en plastique, à regarder tourner la machine de quelqu'un d'autre."
+    choix:
+      - label: "Je reste jusqu'au bout"
+        reponse: "Une femme vient vider la machine, plie trois chemises d'homme et une robe d'enfant. Elle te dit bonsoir comme on le dit à un habitué. Tu en es un."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je rentre"
+        reponse: "Dans la rue, tu entends encore le tambour tourner derrière toi, longtemps, plus longtemps que la distance ne le permet."
+
+  - id: h8.sc.rivets
+    titre: "Cent douze rivets"
+    roles: [ds]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h8) && possede(duplex_trefilerie)"
+    texte: "Deux heures. Pour la troisième nuit de suite, tu comptes les rivets du pont roulant, au-dessus du lit. Cent douze. Sur la table de nuit, la montre compte avec toi."
+    choix:
+      - label: "Je me lève"
+        reponse: "Tu fais du café à deux heures et demie, debout dans la cuisine, devant la baie. Le stade est éteint. Tu attends qu'il s'allume, sans savoir pourquoi."
+        effets: {jauges: {direction: 1, vestiaire: -1}}
+      - label: "Je recommence"
+        reponse: "Cent douze. Puis cent treize, par l'autre bout. Tu t'endors entre les deux, sans savoir lequel des deux chiffres est le vrai."
+
+  - id: h8.sc.projecteurs
+    titre: "Trois heures, le stade"
+    roles: [ds]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h8) && flag(h8_projecteurs) && !flag(h8_cycle_trois_heures)"
+    texte: "Trois heures. Par la fenêtre, le stade de la Rive s'allume encore, les quatre projecteurs d'un coup. Tu cherches la silhouette le long de la touche. Ce soir, personne."
+    choix:
+      - label: "J'attends quatre heures"
+        reponse: "À quatre heures, le noir revient d'un coup. Tu as compté les minutes. Soixante, exactement. Une silhouette n'a pas besoin d'une heure ronde."
+      - label: "Je tire le rideau"
+        reponse: "Le rideau ne suffit pas : la lumière passe sur les bords, en deux bandes blanches, jusqu'au plafond. Tu les regardes jusqu'à ce qu'elles s'éteignent."
+
+  - id: h8.sc.projecteurs_entretien
+    titre: "Le cycle d'entretien"
+    roles: [ds]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h8) && flag(h8_cycle_trois_heures)"
+    texte: "Trois heures. Le stade s'allume, tout seul : le cycle d'entretien, programmé par le fonds. Tu le sais, maintenant. Tu regardes quand même la ligne de touche."
+    choix:
+      - label: "Je regarde jusqu'au bout"
+        reponse: "Rien ne court. L'herbe brille. À quatre heures, le noir. Savoir ne rassure pas : ça ne fait qu'enlever une excuse pour regarder."
+
+  - id: h8.sc.tiroir
+    titre: "Le tiroir qui vibre"
+    roles: [ds]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h8) && flag(h8_sans_oreillette) && !flag(h8_voiture_rendue)"
+    texte: "Trois heures. Le tiroir de la table de nuit vibre, une fois. L'oreillette dort dedans. Tu ne l'ouvres pas. Tu poses la main dessus, à plat, comme sur un animal."
+    choix:
+      - label: "Je garde la main"
+        reponse: "Il ne vibre plus. Ta main reste dessus jusqu'au matin. À six heures dix, tu as un pli rouge dans la paume, la forme du bouton du tiroir."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "J'ouvre"
+        reponse: "Elle est éteinte, froide, tournée vers le mur. Tu refermes. Tu ne sais plus si c'est elle qui a vibré, ou le tiroir, ou toi."
+        effets: {jauges: {direction: 1}}
+
+  - id: h8.sc.noir
+    titre: "Le bruit du silence"
+    roles: [ds]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag(histoire_h8) && flag(h8_voiture_rendue)"
+    texte: "Deux heures. Plus d'oreillette, plus d'écran. Tu attends quand même la voix. Le silence a un bruit, la nuit : le frigo, la tuyauterie, ta propre respiration."
+    choix:
+      - label: "Je respire en quatre temps"
+        reponse: "Inspirer, tenir, souffler, attendre. Au bout de vingt minutes, le silence n'est plus que du silence. Tu t'endors avant de le remarquer."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Je dis bonjour"
+        reponse: "Tu dis bonjour au noir, à voix basse. Rien ne répond. Tu le redis, plus fort, pour vérifier. Rien. C'est presque une réponse."
+
+  - id: h8.sc.voix_matin
+    titre: "Six heures dix"
+    roles: [ds]
+    lieu: domicile
+    tranches: [matin]
+    si: "flag(histoire_h8) && !flag(h8_sans_oreillette) && !flag(h8_voiture_rendue)"
+    texte: "Six heures dix. « Bonjour. » Tu réponds bonjour, à voix haute, avant d'avoir ouvert les yeux. Dans la cuisine, la cafetière s'allume toute seule : le fonds l'a programmée."
+    choix:
+      - label: "Je bois le café"
+        reponse: "Il est à la bonne température, au degré près. Tu le bois debout. Tu n'as jamais aimé le café à cette température-là."
+        effets: {jauges: {direction: 1}}
+      - label: "Je débranche la cafetière"
+        reponse: "La prise résiste, puis cède. La voix ne dit rien. Le soir, la cafetière est rebranchée. Tu ne te rappelles pas l'avoir fait."
+        effets: {jauges: {direction: -1, vestiaire: 1}}
+
+  - id: h8.sc.berline
+    titre: "L'heure d'arrivée"
+    roles: [ds]
+    lieu: voiture
+    tranches: [matin, soir]
+    si: "flag(histoire_h8) && !flag(h8_voiture_rendue) && !flag(h8_sans_oreillette)"
+    texte: "Dans la berline, au feu du pont, tu coupes la radio. Il ne reste que la voix, qui donne l'heure d'arrivée à la minute. Tu arrives à la minute. Tu essaies de faire mentir."
+    choix:
+      - label: "Je fais le tour du pâté"
+        reponse: "Un détour par le quai, deux feux de plus. Tu arrives quand même à la minute. La voix avait compté le détour avant toi."
+      - label: "J'arrive à l'heure"
+        reponse: "Tu te gares sans un bruit. Sur le parking, un jardinier te salue. Lui ne sait pas à quelle heure il arrivera chez lui. Tu l'envies."
+
+  # -------------------------------------------------- les visages en ville
+  - id: h8.sc.vaubourg_marches
+    titre: "La onzième marche"
+    roles: [ds]
+    lieu: clubhouse
+    tranches: [matin]
+    qui: aulard
+    si: "flag(histoire_h8) && !flag(h8_vaubourg_mort)"
+    texte: "Six heures et demie. Vaubourg s'arrête à la onzième marche, la main sur la rampe, pour souffler. « Vous comptez avec moi ? Onze. Il en reste onze. »"
+    choix:
+      - label: "Je compte avec lui"
+        reponse: "Douze, treize, quatorze. À vingt-deux, il te tape sur l'épaule. « Voilà. Ça, aucune machine ne le compte à ma place. »"
+        effets: {jauges: {direction: 1}}
+      - label: "Je le laisse monter"
+        reponse: "Tu restes en bas. Tu entends chaque marche, et la canne entre les deux, jusqu'à la porte qui se ferme. Vingt-deux."
+
+  - id: h8.sc.kerdal_heure
+    titre: "Tu as l'heure ?"
+    roles: [ds]
+    lieu: rue
+    tranches: [aprem]
+    qui: kerdal
+    si: "flag(histoire_h8) && annee == 2024 && !flag(h8_kerdal_mort)"
+    texte: "Kerdal t'arrête devant le kiosque, en survêtement, les yeux rouges : « Tu as l'heure ? » Il en a une au poignet, un bracelet du sponsor. Il regarde la tienne."
+    choix:
+      - label: "Je lui donne l'heure"
+        reponse: "Il répète l'heure à voix basse, deux fois, comme un numéro de téléphone. Puis il repart vers le terrain en courant, alors qu'il a le temps."
+      - label: "Il est tard, rentre"
+        reponse: "« Je sais. C'est pour ça que je demande. » Il sourit, un peu. Il ne rentre pas. Il va s'asseoir sur un banc du square, face au stade."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h8.sc.mbako_pluie
+    titre: "Le parapluie fermé"
+    roles: [ds]
+    lieu: terrain
+    tranches: [matin]
+    qui: mbako
+    si: "flag(histoire_h8) && !flag(h8_mbako_parti) && !flag(h8_mbako_embrasse)"
+    texte: "Mbako fait courir les remplaçants sous la pluie, sans sifflet. Il te tend un parapluie qu'il ne déplie pas. « Regarde le 14. Il court pour quelqu'un. On ne sait pas qui. »"
+    choix:
+      - label: "Je reste sous la pluie"
+        reponse: "Vous regardez le 14 jusqu'à la fin, trempés tous les deux, le parapluie fermé entre vous. À la fin, le 14 lève les yeux vers la tribune vide."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Je rentre au sec"
+        reponse: "Il garde le parapluie fermé. Le soir, la courbe du 14 dit « effort anormal ». Mbako, lui, dit qu'il court enfin pour quelqu'un."
+
+  - id: h8.sc.gege_thermos
+    titre: "Le thermos de Gégé"
+    roles: [ds]
+    lieu: buvette
+    tranches: [soir]
+    qui: gege
+    si: "flag(histoire_h8)"
+    texte: "Gégé te sert un café de son thermos, à la buvette fermée. « Tu dors combien, toi ? Moi, quatre heures. À mon âge, c'est un luxe. À ton âge, c'est un aveu. »"
+    choix:
+      - label: "Deux heures"
+        reponse: "Il ne dit rien. Il te ressert, et pousse vers toi la boîte de sucres. « Alors on a le temps de finir le thermos. » Vous le finissez."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Assez"
+        reponse: "« Assez, c'est ce que disait mon frère. Il dormait sur les chantiers. » Il revisse le bouchon du thermos, très serré."
+
+  - id: h8.sc.ober_pouls
+    titre: "Le pouls au poignet"
+    roles: [ds]
+    lieu: cabinet
+    tranches: [aprem]
+    qui: ober
+    si: "flag(histoire_h8)"
+    texte: "Le docteur Ober t'arrête dans le couloir et te prend le pouls au poignet, à l'ancienne, sans montre. Il compte en silence. « Dormez ce soir. Ce n'est pas un conseil. »"
+    choix:
+      - label: "Je dormirai"
+        reponse: "Il lâche ton poignet. « Vous mentez avec un pouls honnête. C'est déjà ça. » Il repart vers son cabinet sans se retourner."
+      - label: "Et vous, vous dormez ?"
+        reponse: "Il s'arrête. « Pas depuis 2019. Depuis le fonds. » Puis il rit, très court, comme quelqu'un qui n'a pas voulu le dire."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h8.sc.lea_reve
+    titre: "Une question qui n'est pas du football"
+    roles: [ds]
+    lieu: echo
+    tranches: [aprem]
+    qui: lea
+    si: "flag(histoire_h8)"
+    texte: "Léa t'attend à la porte de L'Écho, deux cafés à la main. « Une question, et pas sur le football. Quand vous dormez, vous rêvez de quoi ? »"
+    choix:
+      - label: "D'une pelouse"
+        reponse: "Elle hoche la tête, ne note rien. « Moi, d'une salle de rédaction vide. Chacun ses stades. » Elle te laisse le second café."
+      - label: "Je ne dors pas"
+        reponse: "« Je sais. J'ai vos courbes. Je voulais savoir si vous mentiez aussi bien que votre montre. » Elle boit son café, puis le tien."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h8.sc.ines_hall
+    titre: "La ville par cœur"
+    roles: [ds]
+    lieu: hotel
+    tranches: [soir]
+    qui: kara
+    si: "flag(histoire_h8) && flag(h8_ines) && !flag(h8_service_coupe)"
+    texte: "Dans le hall de l'hôtel de la Rive, Inès boit un café en regardant la rue. « La nuit, je lis ta ville. Le jour, je viens vérifier qu'elle existe. » Son train part dans une heure."
+    choix:
+      - label: "Je l'accompagne au train"
+        reponse: "Vous marchez jusqu'à la gare routière sans parler. Sur le quai, elle te dit les noms des rues que vous avez prises, dans l'ordre, sans se tromper."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je la laisse partir"
+        reponse: "Elle hoche la tête. « Ce soir, à vingt-deux heures, je te dirai bonsoir. Tu ne sauras pas si c'est moi. » Elle reprend son café froid."
+
+  # ------------------------------------------------- les graines qui reviennent
+  - id: h8.sc.friche_piles
+    titre: "Les piles des bougies"
+    roles: [ds]
+    lieu: friche
+    tranches: [soir]
+    si: "flag(histoire_h8)"
+    texte: "À la friche de la Tréfilerie, quelqu'un change les piles des bougies électriques, sur la palette. Une silhouette en anorak, de dos. Elle ne se retourne pas quand tu approches."
+    choix:
+      - label: "J'attends qu'elle parte"
+        reponse: "Elle range les vieilles piles dans un sac en papier, l'une après l'autre, et part par le chemin de halage. Les bougies sont toutes allumées."
+      - label: "Je m'en vais"
+        reponse: "Tu repars par le parking. Derrière toi, une à une, les bougies s'allument, comme si on les attendait pour ça."
+
+  - id: h8.sc.friche_mere
+    titre: "Il avait peur du noir"
+    roles: [ds]
+    lieu: friche
+    tranches: [soir]
+    qui: passante
+    si: "flag(histoire_h8) && mission(h8.sc.friche_piles)"
+    texte: "La silhouette en anorak est revenue. C'est une femme âgée, qui pose une photo plastifiée contre une bougie. « Joachim avait peur du noir, petit. Alors je change les piles. »"
+    choix:
+      - label: "Je l'aide"
+        reponse: "Vous changez les piles ensemble, huit bougies. Elle ne demande pas qui tu es. En partant, elle dit : « Il parlait toujours, la nuit. À n'importe qui. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je me tais"
+        reponse: "Elle range son sac. « Vous travaillez au football ? Lui aussi. On ne savait jamais qui lui parlait. » Elle part sans se retourner."
+
+  - id: h8.sc.muscu_caillou
+    titre: "Le caillou entre deux bancs"
+    roles: [ds]
+    lieu: muscu
+    tranches: [soir]
+    si: "flag(histoire_h8) && flag(h8_kerdal_mort)"
+    texte: "La salle de muscu est éclairée, la radio éteinte. L'agent d'entretien passe la serpillière autour d'un caillou blanc posé entre deux bancs. Il ne le touche pas."
+    choix:
+      - label: "J'en pose un aussi"
+        reponse: "Il s'arrête de frotter, te regarde poser le tien à côté, et reprend, un peu plus large. Le lendemain, il y en a trois."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "J'éteins la lumière"
+        reponse: "« Laissez. Je l'éteins toujours en dernier. » Il le dit sans reproche. Tu sors ; derrière toi, la lumière reste longtemps."
+
+  - id: h8.sc.cimetiere
+    titre: "Les écharpes rangées"
+    roles: [ds]
+    lieu: cimetiere
+    tranches: [aprem]
+    qui: passante
+    si: "flag(histoire_h8) && flag(h8_kerdal_mort)"
+    texte: "Au cimetière, la tombe d'Erwan Kerdal est couverte d'écharpes du Racing et de cailloux blancs. Une femme y range les écharpes par couleur, en silence. Sa mère."
+    choix:
+      - label: "Je l'aide à ranger"
+        reponse: "Elle te tend une écharpe sans te regarder. Vous les rangez jusqu'à la dernière. « Il dormait mal depuis l'été. Vous le saviez, vous, au club ? »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je reste à distance"
+        reponse: "Tu restes près du portail, les mains dans les poches. Elle te voit, et ne fait pas signe. Elle continue de ranger, plus lentement."
+
+  - id: h8.sc.eglise
+    titre: "La messe de six heures et demie"
+    roles: [ds]
+    lieu: eglise
+    tranches: [matin]
+    qui: josiane
+    si: "flag(histoire_h8) && flag(h8_vaubourg_mort)"
+    texte: "Une messe pour Jean-Marie Vaubourg, un mardi, à six heures et demie du matin : Josiane a choisi l'heure. Quatorze personnes, et la canne posée sur le premier banc."
+    choix:
+      - label: "Je m'assieds devant"
+        reponse: "Josiane te fait une place, à côté de la canne. Le prêtre regarde sa montre une fois, à six heures trente et une. Personne ne dit rien."
+        effets: {jauges: {direction: 1}}
+      - label: "Je reste au fond"
+        reponse: "Du fond, tu comptes les têtes : quatorze. Gégé est là, sans écharpe. Il se retourne une fois, te voit, hoche la tête."
+
+  - id: h8.sc.milo_grillage
+    titre: "Plus vite que le ballon"
+    roles: [ds]
+    lieu: terrain
+    tranches: [aprem]
+    qui: gege
+    si: "flag(histoire_h8) && annee >= 2026"
+    texte: "Derrière le grillage des moins de dix-sept ans, un gamin court plus vite que le ballon, puis l'attend. Gégé, à côté de toi, ne dit rien. Il te laisse regarder."
+    choix:
+      - label: "Je le regarde courir"
+        reponse: "Dix minutes, sans écran. À la fin, Gégé dit seulement : « Milo. » Comme on dit un nom qu'on voudrait voir écrit quelque part."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je demande sa courbe"
+        reponse: "Gégé retire ses doigts du grillage. « Demande à ta machine. Moi, je n'ai que mes yeux. » Il s'en va avant la fin de la séance."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h8.sc.kiosque_video
+    titre: "C'est vous, ou pas vous ?"
+    roles: [ds]
+    lieu: kiosque
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h8) && flag(h8_video)"
+    texte: "Le kiosquier a la vidéo en tête, pas le journal. « C'était vous, ou ce n'était pas vous ? Je demande pour mes clients. Ils ont parié. »"
+    choix:
+      - label: "Ce n'était pas moi"
+        reponse: "Il hoche la tête et crie vers le fond : « Pas lui ! » Quelqu'un, derrière, paie quelqu'un d'autre. Tu ne vois pas les visages."
+      - label: "Je ne sais plus"
+        reponse: "Il te regarde un long moment. « Alors personne ne gagne. » Il te rend la monnaie d'un journal que tu n'as pas acheté."
+
+  - id: h8.sc.garage_nom
+    titre: "Elle demande encore votre nom"
+    roles: [ds]
+    lieu: garage
+    tranches: [aprem]
+    qui: commercant
+    si: "flag(histoire_h8) && flag(h8_voiture_rendue)"
+    texte: "Au garage du Pont, ta berline attend un autre conducteur, le câble branché. Le garagiste : « Au démarrage, elle demande encore votre nom. On n'arrive pas à l'effacer. »"
+    choix:
+      - label: "Laissez-le"
+        reponse: "« On le laissera. Le suivant s'y fera. » Il tapote le capot, comme on rassure un cheval qu'on vend. Elle ne fait aucun bruit."
+      - label: "Effacez-moi"
+        reponse: "Il essaie devant toi, trois menus, deux codes. Ton nom revient chaque fois, en premier. « Elle est fidèle, au moins. Une qualité. »"
+
+# Les phrases d'action propres à cette histoire, pour le match du samedi à la
+# Rive (content/ville.yaml `match:`). Elles ne sortent que dans ce livre.
+match_textes:
+  pour:
+    - texte: "{Qui} marque. Dans ton oreille, la voix donne la minute une seconde avant le speaker du stade : {score}."
+      si: "flag(histoire_h8) && !flag(h8_sans_oreillette) && !flag(h8_voiture_rendue)"
+    - texte: "{Qui}, de la tête, au second poteau. Le kop chante la minute de Kerdal par-dessus le but : {score}."
+      si: "flag(histoire_h8) && flag(h8_kerdal_mort)"
+    - texte: "Une course de {qui} que personne n'avait prévue, pas même un écran. Le gardien de {adv} non plus : {score}."
+      si: "flag(histoire_h8)"
+  contre:
+    - texte: "But de {adv}. Dans ton oreille, un seul mot, « prévu », pendant que la Nord se rassoit : {score}."
+      si: "flag(histoire_h8) && !flag(h8_sans_oreillette) && !flag(h8_voiture_rendue)"
+    - texte: "Leur ailier part dans le dos de la défense, là où le numéro 4 aurait dû être. {Gardien} plonge trop tard : {score}."
+      si: "flag(histoire_h8) && flag(h8_kerdal_mort)"
+    - texte: "Une frappe de {adv}, déviée par un genou fatigué. Soixante-douze matchs dans les jambes, ça se paie à la soixante-douzième : {score}."
+      si: "flag(histoire_h8)"
