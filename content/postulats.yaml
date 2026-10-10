@@ -934,20 +934,134 @@ postulats:
     pitch: ""
     chantier: true
 
+  # Histoire 7 · Chambre 12 (docs/histoires/00_les_dix_histoires.md) — le huis
+  # clos de l'hôtel de la Rive, 2011-2013, le sélectionneur des Cobalts après le
+  # bus de 2010. Le prologue et le script : content/arcs/selectionneur/h7_script.yaml ;
+  # le réservoir : h7_intrigues.yaml ; les soirs : h7_sombres.yaml. Les quatre
+  # fins (content/endings/h7.yaml) tombent à la conférence de 2013 ou au premier
+  # créneau de 2014 : le livre tient en trois années civiles.
   - id: apres_fiasco
     index: 6
     role: selectionneur
     title: "Chambre 12"
+    question: "À qui rends-tu les Cobalts : aux mutins qui ont tout cassé, aux nouveaux qui n'ont rien vu, ou à la presse qui filme la porte de la chambre 12 ?"
     division: 1
     year: 2011
     ville: Aubérive
     club: Cobalts
-    gauges: { vestiaire: 35, tribunes: 20, direction: 45, caisse: 50 }
-    force: 60
+    rival: "Boréalie"
+    age: 52
+    # Les jauges de la bible (ch. 14 § 4) : le pays est à vingt. Aucune scène du
+    # prologue ne le fait baisser ; les cartes du barrage et du deuil le relèvent.
+    gauges: { vestiaire: 40, tribunes: 20, direction: 55, caisse: 50 }
+    force: 56
     objective: maintien
-    flags: [histoire_h7]
-    pitch: ""
-    chantier: true
+    flags: [histoire_h7, bus_menace]
+    president: aulard
+    patron: aulard
+    camille: false
+    pitch: "En 2010, le bus n'est jamais descendu. À l'hôtel de la Rive, vingt-six doubles pendent au tableau des clés ; la troisième nuit, quelqu'un demande celui de la 12."
+    chantier: false
+    prologue: sl.h7.prologue
+    opening_arc: sl.h7.chambre_douze
+    cast:
+      aulard:     { fonction: patron,     target: 1 }     # quatre heures du matin (A4), l'Objectif ; déposé par la tutelle en 2013
+      sandrine:   { fonction: temoin,     target: 1.5 }   # le tableau du prologue, 2 h 10 (A3), le cahier (R2), le dernier tableau
+      arzel:      { fonction: docteure,   target: 1 }     # la docteure du prologue, la liste de septembre (A2)
+      benali:     { fonction: police,     target: 1 }     # les scellés (A5), la nuit du 14, la page
+      josiane:    { fonction: choeur,     target: 0.9 }   # le bus et les visites du prologue, le trombone rouge
+      escande:    { fonction: hotel,      target: 0.9 }   # la chambre du prologue, la plante (R1), le tarif de la chambre
+      mbako:      { fonction: capitaine,  target: 0.9 }   # le brassard, le bus (R3), la porte de la 12
+      ferrol:     { fonction: nouveau,    target: 0.9 }   # le brassard, le sachet, la main
+      fardelli:   { fonction: agent,      target: 0.8 }   # « Passez-moi la 12 », l'agent du petit
+      rouvier:    { fonction: kine,       target: 0.8 }   # six heures moins le quart, le footing, la copie (S2)
+      dauzat:     { fonction: registre,   target: 0.6 }   # le procès-verbal ; il garde le registre après la tutelle
+      lea:        { fonction: presse,     target: 0.6 }   # 1 h 47
+      rance_mere: { fonction: mere,       target: 0.6 }   # le standard de trois heures, la porte de la 12 (S4)
+      rossard:    { fonction: plateau,    target: 0.5 }   # deux heures vingt-cinq à l'antenne
+      desforges:  { fonction: tentatrice, target: 0.5 }   # Fulgor, le sponsor louche
+      fauvel:     { fonction: syndicat,   target: 0.5 }   # les mutins, puis la vérité, dans cet ordre
+      aubert:     { fonction: ministre,   target: 0.5 }   # l'hymne, la prime gelée (ministre jusqu'en 2012)
+    questions:
+      - { id: mutins,   poids: 1.0 }
+      - { id: nouveaux, poids: 1.0 }
+      - { id: presse,   poids: 1.0 }
+    programme:
+      # 2011 : deux intrigues sur sept (la S0 porte déjà cinq ancres et quatre
+      # Nouvelles). Toutes avant la nuit du 14 : les étapes qui montrent le
+      # petit vivant ont leur variante d'après. La fenêtre [2, 4] : après le
+      # brassard (créneau 1) et la Nouvelle du créneau 3, une intrigue doit
+      # avoir commencé au 4, sinon le metteur en scène en force une ; la
+      # seconde s'ouvre trois créneaux plus loin (`ouverture_ecart`).
+      # Poids : la signature (le vingt-sixième) ×3 au tirage de la S0, d'où
+      # 0,55 pour la tenir dans [50 %, 65 %] ; le brassard, que le metteur en
+      # scène rouvre le plus souvent, est ramené à 0,9. Aucune ne s'ouvre après le 14.
+      "0":
+        prendre: 2
+        fenetre: [2, 4]
+        reserve: 0
+        pool:
+          - { arc: sl.h7.vingt_sixieme, poids: 0.55, signature: true, if: "season == 0 && !flag('h7_rance_mort')" }
+          - { arc: sl.h7.capitaine,     poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
+          - { arc: sl.h7.tableau,       poids: 0.8 }
+          - { arc: sl.h7.hymne,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
+          - { arc: sl.h7.agent,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
+          - { arc: sl.h7.ecrit,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
+          - { arc: sl.h7.linge,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
+      # 2012 : les portes. Deux sur six (plus celles que le metteur en scène
+      # ouvre quand une se ferme), plus le rituel du tableau. À trois, elles
+      # débordaient sur 2013 et lui mangeaient ses Nouvelles.
+      "1":
+        prendre: 2
+        fenetre: [2, 6]
+        reserve: 0
+        reprise: false
+        pool:
+          - { arc: sl.h7.tableau,      poids: 0.5 }
+          - { arc: sl.h7.main,         poids: 1.0, if: "season <= 1" }
+          - { arc: sl.h7.plateau,      poids: 1.0, if: "season <= 1" }
+          - { arc: sl.h7.nuit_du_14,   poids: 1.0, if: "season <= 1" }
+          - { arc: sl.h7.fulgor,       poids: 0.9, if: "season <= 1" }
+          - { arc: sl.h7.hotel,        poids: 0.9, if: "season <= 1" }
+          - { arc: sl.h7.trombone,     poids: 0.9, if: "season <= 1" }
+      # 2013 : les signatures. Deux des quatre tardives, ouvertes tôt : la mère
+      # doit avoir parlé avant la porte de la 12 (créneau 15), la docteure avant
+      # sa valise (13).
+      "2+":
+        prendre: 2
+        fenetre: [2, 4]
+        reserve: 0
+        reprise: false
+        pool:
+          - { arc: sl.h7.tableau,       poids: 0.5 }
+          - { arc: sl.h7.arzel,         poids: 1.0 }
+          - { arc: sl.h7.proces_verbal, poids: 1.0 }
+          - { arc: sl.h7.mere,          poids: 1.0 }
+          - { arc: sl.h7.fauvel,        poids: 1.0 }
+    objectifs:
+      - { id: fiasco_pays_reconquis, titre: "Le pays reconquis", when: "gauges.tribunes >= 60 && stats.saisons >= 1", indice: "Le pays est à vingt. Il revient par le trottoir de l'hôtel, pas par la télévision." }
+      - { id: fiasco_un_brassard, titre: "Le capitaine debout", when: "(flag('h7_capitaine_mbako') && flag('h7_mbako_temoignera')) || (flag('h7_capitaine_ferrol') && flag('h7_ferrol_dira'))", indice: "Celui à qui tu as donné le brassard finira-t-il debout ?" }
+      - { id: fiasco_le_bus_descend, titre: "Le bus descend", when: "flag('h7_mbako_temoignera') && (flag('h7_ferrol_dira') || flag('h7_arzel_ensemble') || flag('h7_vote_verite'))", indice: "En 2010, personne n'est descendu du bus. Ici, il s'agit que personne ne reste dans sa chambre." }
+    alarm_overrides:
+      vestiaire.low:
+        - { card: sl.h7.alarme.vestiaire_bas_couloir, when: "flag('h7_rance_mort') && !seen('sl.h7.alarme.vestiaire_bas_couloir')" }
+        - { card: sl.h7.alarme.vestiaire_bas_numeros, when: "flag('h7_rance_mort')" }
+      tribunes.low:
+        - { card: sl.h7.alarme.tribunes_bas_trottoir, when: "flag('h7_rance_mort') && !seen('sl.h7.alarme.tribunes_bas_trottoir')" }
+        - { card: sl.h7.alarme.tribunes_bas_page }
+      direction.low:
+        - { card: sl.h7.alarme.direction_bas_minuit, when: "chars.aulard.statut != 'parti' && !seen('sl.h7.alarme.direction_bas_minuit')" }
+        - { card: sl.h7.alarme.direction_bas_registre }
+      caisse.low:
+        - { card: sl.h7.alarme.caisse_bas_note }
+      vestiaire.high:
+        - { card: sl.h7.alarme.vestiaire_haut_rires, when: "flag('h7_rance_mort')" }
+      tribunes.high:
+        - { card: sl.h7.alarme.tribunes_haut_plateau }
+      direction.high:
+        - { card: sl.h7.alarme.direction_haut_stylo }
+      caisse.high:
+        - { card: sl.h7.alarme.caisse_haut_prime, when: "flag('h7_fulgor_signe')" }
 
   - id: le_modele
     index: 7

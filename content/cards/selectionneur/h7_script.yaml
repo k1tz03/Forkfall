@@ -1,0 +1,889 @@
+# Histoire 7 · Chambre 12 — les ancres du script (arc `sl.h7.chambre_douze`,
+# content/arcs/selectionneur/h7_script.yaml). Cartes d'étape : elles ne sortent
+# jamais du sac, seulement à leur créneau. `arc:` est le thème de la carte.
+#
+# 2011 · la nuit — le brassard (1) ; la liste de novembre (12-13) ; 2 h 10
+#   (15, le seul soir de l'année) ; quatre heures (16) ; les scellés (17), suivis
+#   de « Passez-moi la 12 » (réaction, content/cards/selectionneur/h7_reactions.yaml).
+# 2012 · les portes — la plante devant la 12 (1-2) ; le cahier de nuit
+#   (12-13) ; le bus, la nuit (17).
+# 2013 · les signatures — la 11 (1) ; la copie (10) ; la valise (13, suivie de
+#   six heures du matin) ; la 12 et la mère (15, la seule carte `drame` de la
+#   carrière) ; le dernier tableau (16, la fin rare) ; la conférence (17).
+# 2014 · la gerbe (1) : la fin « Malaise cardiaque » de qui a parlé du groupe.
+#
+# La mort de la chambre 12 n'est jamais montrée : des pas au-dessus d'un
+# plafond, un téléphone, une docteure assise au bord d'un lit, les mains qui ne
+# font plus rien. La violence est le lendemain : la cire, le registre, la plante.
+cards:
+  # ═════════════════════════════════════════════════ 2011 · A1 · le brassard
+  - id: sl.h7.a1_brassard
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le salon de l'hôtel, avant le premier entraînement. Lian Mbako garde le brassard de 2010 au fond de sa poche ; Yanis Ferrol attend à l'autre bout, près de la fenêtre. Tous deux regardent {nom}."
+    left:
+      label: "Mbako, une dernière fois"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1, ferrol: -1}, set: [h7_capitaine_mbako, h7_capitaine_choisi], react: {card: sl.h7.re.ferrol_bracelet, chance: 0.5}}
+      answer: "Mbako sort le brassard ; il est plié comme en 2010. Ferrol fait tourner son bracelet rouge et noir autour du poignet, deux tours."
+    right:
+      label: "Ferrol, pour la suite"
+      effects: {tribunes: "+", vestiaire: "-", relation: {ferrol: 1, mbako: -1}, set: [h7_capitaine_ferrol, h7_capitaine_choisi], react: {card: sl.h7.re.mbako_fenetre, chance: 0.5}}
+      answer: "Mbako pose le vieux brassard sur la table basse et va s'asseoir sous la fenêtre. Ferrol le ramasse comme on ramasse un objet tombé."
+
+  - id: sl.h7.a1_brassard_presse
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le salon de l'hôtel. Une caméra de Télé-Stade attend derrière la vitre du hall. Mbako garde le brassard de 2010 au fond de sa poche ; Ferrol, près de la fenêtre, regarde l'objectif."
+    left:
+      label: "Mbako, une dernière fois"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1, ferrol: -1}, set: [h7_capitaine_mbako, h7_capitaine_choisi], react: {card: sl.h7.re.ferrol_bracelet, chance: 0.5}}
+      answer: "Mbako sort le brassard devant la vitre ; il est plié comme en 2010. Le soir, Télé-Stade passe l'image de {nom} au ralenti, sans le son."
+    right:
+      label: "Ferrol, pour la suite"
+      effects: {tribunes: "+", vestiaire: "-", relation: {ferrol: 1, mbako: -1}, set: [h7_capitaine_ferrol, h7_capitaine_choisi], react: {card: sl.h7.re.mbako_fenetre, chance: 0.5}}
+      answer: "Ferrol prend le brassard face à la caméra. Mbako est déjà assis sous la fenêtre ; au montage, on le coupe."
+
+  - id: sl.h7.a1_brassard_mutins
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: fauvel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Karim Fauvel, du syndicat, s'est assis entre les deux : Mbako, le brassard de 2010 dans la poche, et Ferrol, le nouveau. « Choisissez, {toi}. Le syndicat notera lequel, et pourquoi. »"
+    left:
+      label: "Mbako, une dernière fois"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1, ferrol: -1, fauvel: 1}, set: [h7_capitaine_mbako, h7_capitaine_choisi], react: {card: sl.h7.re.ferrol_bracelet, chance: 0.5}}
+      answer: "Fauvel écrit « {nom} : Mbako » et souligne. Ferrol fait tourner son bracelet rouge et noir autour du poignet, sans un mot."
+    right:
+      label: "Ferrol, pour la suite"
+      effects: {tribunes: "+", vestiaire: "-", relation: {ferrol: 1, mbako: -1, fauvel: -1}, set: [h7_capitaine_ferrol, h7_capitaine_choisi], react: {card: sl.h7.re.mbako_fenetre, chance: 0.5}}
+      answer: "Fauvel écrit « Ferrol », puis, plus bas, « 2010 », et referme son carnet. Mbako va s'asseoir sous la fenêtre."
+
+  # ════════════════════════════════════════════ 2011 · A2 · la liste (12-13)
+  - id: sl.h7.a2_liste
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "L'automne, la liste de novembre sur la table. La docteure Arzel trace un cercle au crayon autour d'un nom : « Rancé est fatigué. Laissez-le chez lui en novembre. Ne me demandez pas pourquoi. »"
+    left:
+      label: "Je le laisse chez lui"
+      effects: {direction: "-", set: [h7_rance_ecarte, h7_vaubourg_remet], react: {card: sl.h7.re.josiane_deux_listes, chance: 0.6}}
+      answer: "Tu le rayes. Le lendemain, la liste revient de la présidence, le nom rajouté à la main : « Le petit est d'ici. Le barrage aussi. »"
+    right:
+      label: "Il vient en novembre"
+      effects: {vestiaire: "+", set: [h7_rance_garde]}
+      answer: "Elle gomme le cercle jusqu'à ce qu'il n'en reste qu'une trace grise. « Alors soixante minutes. Pas une de plus. »"
+
+  - id: sl.h7.a2_liste_soixante
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "L'automne, la liste de novembre sur la table. Arzel trace un cercle au crayon autour d'un nom : « Vous m'aviez demandé pourquoi soixante. Pour novembre, ce sera zéro. Laissez Rancé chez lui. »"
+    left:
+      label: "Je le laisse chez lui"
+      effects: {direction: "-", set: [h7_rance_ecarte, h7_vaubourg_remet], react: {card: sl.h7.re.josiane_deux_listes, chance: 0.6}}
+      answer: "Tu le rayes. Deux jours plus tard, la liste revient de la présidence, le nom rajouté à l'encre : « Le petit est d'ici. Le barrage aussi. »"
+    right:
+      label: "Il vient en novembre"
+      effects: {vestiaire: "+", set: [h7_rance_garde]}
+      answer: "« Alors soixante, et c'est vous qui signerez la feuille de match. » Elle souffle sur la gomme, longtemps, comme sur une bougie."
+
+  # La côte du Corner (l'événement « Le Corner ») : quelqu'un l'a dit à la docteure.
+  - id: sl.h7.a2_liste_cote
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "L'automne, la liste de novembre sur la table. Arzel trace un cercle au crayon autour d'un nom : « On me dit qu'il s'arrête dans les côtes, la nuit, la main sur la poitrine. Laissez Rancé chez lui. »"
+    left:
+      label: "Je le laisse chez lui"
+      effects: {direction: "-", set: [h7_rance_ecarte, h7_vaubourg_remet], react: {card: sl.h7.re.josiane_deux_listes, chance: 0.6}}
+      answer: "Tu le rayes. Le lendemain, la liste revient de la présidence, le nom rajouté à la main : « Le petit est d'ici. Le barrage aussi. »"
+    right:
+      label: "Il vient en novembre"
+      effects: {vestiaire: "+", set: [h7_rance_garde]}
+      answer: "« C'était la côte, il vous a dit ? » Elle gomme le cercle, lentement. « Alors soixante minutes. Et pas de côtes. »"
+
+  # ═══════════════════════════════════════════ 2011 · A3 · 2 h 10 (le soir)
+  - id: sl.h7.a3_deux_heures_dix
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, sombre]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Novembre, la troisième nuit. Au-dessus de ta chambre, des pas, une porte, puis plus rien. À 2 h 30, le téléphone. Sandrine Lavergne : « Montez au 12. La docteure est déjà là. »"
+    left:
+      label: "J'y monte"
+      effects: {vestiaire: "-", set: [h7_rance_mort, h7_monte_au_douze]}
+      answer: "La porte de la 12 est ouverte. Arzel est assise au bord du lit, les mains qui ne font plus rien. Au fond du couloir, la 14 est entrouverte."
+    right:
+      label: "J'appelle la police"
+      effects: {direction: "-", set: [h7_rance_mort, h7_police_appelee]}
+      answer: "Le standard de l'hôtel sonne dans le vide. À 2 h 41, tu appelles de ta chambre ; une voix d'homme prend ton nom et l'adresse."
+
+  - id: sl.h7.a3_deux_heures_dix_quinze
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, sombre]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Novembre, la troisième nuit. Dans la 15, au bout du couloir, tu n'entends rien. À 2 h 30, le téléphone te réveille. Sandrine : « Allez à la 12, trois portes avant la vôtre. La docteure y est. »"
+    left:
+      label: "J'y vais"
+      effects: {vestiaire: "-", set: [h7_rance_mort, h7_monte_au_douze]}
+      answer: "Trois portes. La 12 est ouverte ; Arzel est assise au bord du lit, les mains qui ne font plus rien. En face, la 14 est entrouverte."
+    right:
+      label: "J'appelle la police"
+      effects: {direction: "-", set: [h7_rance_mort, h7_police_appelee]}
+      answer: "Le standard de l'hôtel ne répond pas. À 2 h 41, tu appelles de ta chambre ; une voix d'homme prend ton nom, l'adresse, et l'heure."
+
+  # ═══════════════════════════════════════ 2011 · A4 · quatre heures (16)
+  - id: sl.h7.a4_quatre_heures
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Quatre heures, le petit salon, rideaux tirés. Vaubourg en robe de chambre, Dauzat et son bloc, Arzel les mains vides : « Malaise cardiaque, constaté à six heures par la kiné. On joue. D'accord ? »"
+    left:
+      label: "Je suis d'accord"
+      effects: {direction: "++", vestiaire: "-", set: [h7_quatre_heures_accord], react: {card: sl.h7.re.rouvier_six_heures}}
+      answer: "Dauzat écrit l'heure en haut de la page : 4 h 12. Vaubourg prend ta main dans les deux siennes et la garde, comme à un enterrement."
+    right:
+      label: "Je veux la police"
+      effects: {direction: "--", vestiaire: "+", set: [h7_quatre_heures_refus]}
+      answer: "« Elle viendra à six heures, comme tout le monde. » Dauzat écrit quand même ta phrase, en bas de la page, plus petit."
+
+  - id: sl.h7.a4_quatre_heures_police
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Quatre heures, le petit salon. Vaubourg en robe de chambre : « Vous avez appelé la police à 2 h 41. L'hôtel n'a aucune trace d'appel. Six heures, la kiné, un malaise. D'accord ? »"
+    left:
+      label: "Je suis d'accord"
+      effects: {direction: "++", vestiaire: "-", set: [h7_quatre_heures_accord], react: {card: sl.h7.re.rouvier_six_heures}}
+      answer: "Dauzat écrit 4 h 12 en haut de la page, et rien sur 2 h 41. Vaubourg prend ta main dans les deux siennes, longtemps."
+    right:
+      label: "J'ai appelé, je maintiens"
+      effects: {direction: "--", vestiaire: "+", set: [h7_quatre_heures_refus]}
+      answer: "« Alors elle viendra. À six heures. » Dauzat écrit 2 h 41 dans la marge, puis le barre d'un trait propre, à la règle."
+
+  # ═══════════════════════════════════════════ 2011 · A5 · les scellés (17)
+  - id: sl.h7.a5_scelles
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, vestiaire]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le couloir du deuxième, sept heures. La commandante Benali pose les scellés sur la 12, puis se retourne : « Personne ne sort avant ce soir. Vous jouez samedi ? Moi, je travaille samedi. »"
+    left:
+      label: "On jouera"
+      effects: {direction: "+", vestiaire: "-", set: [h7_benali_ici], react: [{card: sl.h7.re.fardelli_standard_dort, if: "flag('h7_standard_filtre')"}, {card: sl.h7.re.fardelli_standard}]}
+      answer: "« Alors je les entends ici, un par un, avant le car. » Elle prend la salle du petit-déjeuner ; les croissants restent sur la desserte."
+    right:
+      label: "On ne jouera pas"
+      effects: {direction: "--", vestiaire: "+", tribunes: "+", set: [h7_report_demande], react: [{card: sl.h7.re.fardelli_standard_dort, if: "flag('h7_standard_filtre')"}, {card: sl.h7.re.fardelli_standard}]}
+      answer: "À neuf heures, Vaubourg rappelle : on jouera. Benali note l'heure de l'appel dans son carnet, sans te demander qui c'était."
+
+  - id: sl.h7.a5_scelles_refus
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, vestiaire]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le couloir du deuxième, sept heures. Benali scelle la 12 : « On me dit, {toi}, que vous vouliez la police à quatre heures. Elle est là. Vous jouez samedi ? Moi, je travaille samedi. »"
+    left:
+      label: "On jouera"
+      effects: {direction: "+", vestiaire: "-", set: [h7_benali_ici], react: [{card: sl.h7.re.fardelli_standard_dort, if: "flag('h7_standard_filtre')"}, {card: sl.h7.re.fardelli_standard}]}
+      answer: "« Alors je les entends ici, avant le car. » Elle commence par toi, dans la salle du petit-déjeuner, et note l'heure de chaque réponse."
+    right:
+      label: "On ne jouera pas"
+      effects: {direction: "--", vestiaire: "+", tribunes: "+", set: [h7_report_demande], react: [{card: sl.h7.re.fardelli_standard_dort, if: "flag('h7_standard_filtre')"}, {card: sl.h7.re.fardelli_standard}]}
+      answer: "À neuf heures, Vaubourg rappelle : on jouera. Benali l'écrit sous ta demande de quatre heures, avec la même encre."
+
+  # ═══════════════════════════════════════ 2012 · R1 · les portes (1-2)
+  - id: sl.h7.r1_portes_gagne
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire, direction]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mars 2012. Les Cobalts qualifiés reviennent au deuxième. Une grande plante cache la porte de la 12. Escande : « Nous ne louons plus la 12. À vrai dire, nous ne la louions pas beaucoup avant. »"
+    left:
+      label: "Enlevez cette plante"
+      effects: {vestiaire: "+", set: [h7_barrage_gagne, h7_plante_enlevee]}
+      answer: "Il la fait porter dans le hall. Toute la fenêtre, les joueurs passent devant le numéro en accélérant, comme devant un chien."
+    right:
+      label: "Laissez-la"
+      effects: {direction: "+", set: [h7_barrage_gagne, h7_plante], react: {card: sl.h7.re.sandrine_plante, chance: 0.5}}
+      answer: "La plante reste devant la porte. Les joueurs la contournent sans la toucher, comme on contourne quelqu'un qui dort."
+
+  - id: sl.h7.r1_portes_perdu
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire, direction]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mars 2012. Éliminés, les Cobalts reviennent quand même au deuxième. Une plante cache la porte de la 12. Escande : « Nous ne louons plus la 12. À vrai dire, nous ne la louions pas beaucoup avant. »"
+    left:
+      label: "Enlevez cette plante"
+      effects: {vestiaire: "+", set: [h7_barrage_perdu, h7_plante_enlevee]}
+      answer: "On la porte dans le hall. Le numéro reparaît, en laiton terni. Le premier soir, quelqu'un a collé un 26 au feutre en dessous."
+    right:
+      label: "Laissez-la"
+      effects: {direction: "+", set: [h7_barrage_perdu, h7_plante], react: {card: sl.h7.re.sandrine_plante, chance: 0.5}}
+      answer: "La plante reste. Le soir même, Lascombe, le gardien remplaçant, demande à changer de chambre : la 11 touche la 12."
+
+  # ═══════════════════════════════════ 2012 · R2 · le cahier de nuit (12-13)
+  - id: sl.h7.r2_cahier
+    roles: [selectionneur]
+    arc: instances
+    tags: [vestiaire, direction]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Réception, une heure du matin. Sandrine ouvre son cahier à la page du 14 novembre : « 2 h 10, double du 12 à M. Mbako. 2 h 25, rendu. » « Personne ne me l'a demandé. Vous me le demandez ? »"
+    left:
+      label: "Je vous le demande"
+      effects: {direction: "-", relation: {sandrine: 1}, set: [h7_cahier_lu, h7_page_poche, h7_questions], react: {card: sl.h7.re.mbako_page, chance: 0.6}}
+      answer: "Elle détache la page au cutter, proprement, et te la tend. « Moi, je me souviens. » Dans la marge, au crayon : il tremblait."
+    right:
+      label: "Refermez le cahier"
+      effects: {direction: "+", set: [h7_cahier_ferme]}
+      answer: "Elle referme le cahier sur son crayon, comme sur un marque-page. « Il restera ouvert pour la police. Pas pour vous. »"
+
+  - id: sl.h7.r2_cahier_premier_soir
+    roles: [selectionneur]
+    arc: instances
+    tags: [vestiaire, direction]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Réception, une heure du matin. Sandrine ouvre son cahier au 14 novembre : « 2 h 10, double du 12 à M. Mbako. 2 h 25, rendu. » « Le premier soir, vous m'aviez demandé lesquels. Encore ? »"
+    left:
+      label: "Encore"
+      effects: {direction: "-", relation: {sandrine: 1}, set: [h7_cahier_lu, h7_page_poche, h7_questions], react: {card: sl.h7.re.mbako_page, chance: 0.6}}
+      answer: "Elle détache la page au cutter et te la tend. « Le 12 et le 14, comme le premier soir. » Dans la marge, au crayon : il tremblait."
+    right:
+      label: "Refermez le cahier"
+      effects: {direction: "+", set: [h7_cahier_ferme]}
+      answer: "Elle referme le cahier. « Ce soir-là aussi, vous ne surveilliez personne. » Elle ne le dit pas méchamment ; c'est pire."
+
+  # ══════════════════════════════════════ 2012 · R3 · le bus, la nuit (17)
+  - id: sl.h7.r3_bus
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « En 2010, je suis resté dans le bus. Cette nuit-là, je suis entré. J'ai compté jusqu'à trente, et j'ai eu peur de rester. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "Il pose la bouteille sur le siège du chauffeur. « Debout, alors. Pas dans un bus. » Cette fois, c'est lui qui descend le premier."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "Il hoche la tête longtemps. Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  - id: sl.h7.r3_bus_cahier
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « Sandrine dit que tu as la page. Alors écoute la suite. Je suis entré. J'ai compté jusqu'à trente. Il ne revenait pas. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Avec ta page à côté de ma bouche, oui. » Il pose la bouteille sur le siège du chauffeur et descend le premier, cette fois."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Sauf Sandrine. Et toi. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  - id: sl.h7.r3_bus_plateau
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « Rossard a donné l'heure à la télé. Pas ce que j'ai fait entre 2 h 10 et 2 h 25. J'ai compté jusqu'à trente. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Pour dire les trente. Pas pour Rossard. » Il pose la bouteille sur le siège du chauffeur et descend le premier, cette fois."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Tout le monde sait déjà l'heure. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  # Le Corner (2011) : il l'avait déjà regardé dormir.
+  - id: sl.h7.r3_bus_corner
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « Au Corner, je l'ai regardé dormir, tu te souviens. Cette nuit-là, je suis entré, et je l'ai regardé encore. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Je dirai qu'il ne respirait plus, et que j'ai compté jusqu'à trente. » Il pose la bouteille sur le siège du chauffeur et descend le premier."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Toi, tu sais. Tu étais au Corner. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  # « La justice dira » (« Le plateau ») : la phrase de la radio, rendue.
+  - id: sl.h7.r3_bus_justice
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « À la radio, tu as dit que la justice dirait. Alors elle dira ça : je suis entré. J'ai compté jusqu'à trente. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Pour que ta justice ait quelque chose à dire. » Il pose la bouteille sur le siège du chauffeur et descend le premier."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Même pas ta justice. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  # ═══════════════════════════════════════════════ 2013 · S1 · la 11 (1)
+  # La tutelle : le ministre a dissous le comité fédéral (le set-piece de
+  # l'Objectif de 2013 l'annonce) ; Vaubourg quitte la scène (`parti`).
+  - id: sl.h7.s1_onze
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mars 2013, la Fédération sous tutelle. Le comité provisoire a repris l'appartement du quai. Monsieur Escande pose sur le comptoir la seule clé libre : la 11. « Le mur est mitoyen avec la 12. »"
+    left:
+      label: "Je prends la 11"
+      effects: {caisse: "-", set: [h7_appartement_repris], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}}
+      answer: "La 11 sent le tabac froid de Lascombe, le gardien remplaçant, qui n'a plus voulu y dormir. Le mur ne fait aucun bruit. C'est pire."
+    right:
+      label: "Donnez-moi la 12"
+      effects: {direction: "-", set: [h7_appartement_repris, h7_douze_demandee], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}}
+      answer: "« La 12 n'existe pas. » Escande pousse la clé de la 11 vers toi et retire sa main lentement, comme d'une plaque chaude."
+
+  - id: sl.h7.s1_onze_raisonnable
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: dauzat
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mars 2013, la Fédération sous tutelle. Le comité provisoire a fait l'inventaire des appartements de fonction. Dauzat, le registre sous le bras : « Vous n'avez rien demandé, {toi}. Gardez le quai. »"
+    left:
+      label: "Je le rends quand même"
+      effects: {direction: "-", set: [h7_appartement_rendu], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}}
+      answer: "Dauzat note la remise des clés, avec l'heure. Le soir, Escande te donne la seule chambre libre, la 11 : le mur est mitoyen avec la 12."
+    right:
+      label: "Je le garde"
+      effects: {direction: "+", set: [h7_appartement_garde], char: {aulard: {statut: parti}}}
+      answer: "Dauzat referme le registre. « Personne ne vous reprochera d'avoir dormi. » Il le dit comme on remercie quelqu'un."
+
+  # ═════════════════════════════════════════════ 2013 · S2 · la copie (10)
+  - id: sl.h7.s2_copie
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: rouvier
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Nadia Rouvier pose une photocopie sur la table de massage : 2010, « cardiomyopathie, déconseillé en compétition », signé Arzel. Dessous, la fiche de mars 2011 : apte, signé {nom}."
+    left:
+      label: "Je vais voir Arzel"
+      effects: {direction: "-", set: [h7_copie_vue, h7_arzel_confrontee, h7_questions]}
+      answer: "Rouvier glisse la copie dans une enveloppe kraft. « La page trois du dossier. Vous avez signé sur la page quatre. »"
+    right:
+      label: "Je brûle la copie"
+      effects: {direction: "+", vestiaire: "-", set: [h7_copie_vue, h7_copie_brulee]}
+      answer: "Elle te regarde la tenir au-dessus du cendrier jusqu'au bout. « J'en ai fait deux. » Elle ne dit pas où est l'autre."
+
+  - id: sl.h7.s2_copie_lue
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: rouvier
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Une enveloppe kraft sur la table de massage : 2010, « cardiomyopathie », signé Arzel, et la fiche de 2011, apte, signé {nom}. Rouvier : « La page trois. Vous aviez vu qu'elle manquait. »"
+    left:
+      label: "Je vais voir Arzel"
+      effects: {direction: "-", set: [h7_copie_vue, h7_arzel_confrontee, h7_questions]}
+      answer: "Rouvier referme l'enveloppe. « Vous aviez vu la page qui manquait. Vous n'aviez pas demandé où elle était. »"
+    right:
+      label: "Je brûle la copie"
+      effects: {direction: "+", vestiaire: "-", set: [h7_copie_vue, h7_copie_brulee]}
+      answer: "La page trois brûle en deux secondes, la signature en dernier. « J'en ai fait deux », dit Rouvier, et elle range ses bandes."
+
+  # Le trombone rouge que Josiane t'a remis dans la main (2012).
+  - id: sl.h7.s2_copie_trombone
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: rouvier
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Une enveloppe kraft sur la table de massage : 2010, « cardiomyopathie », signé Arzel, et la fiche de 2011, apte, signé {nom}. Rouvier : « La page du trombone rouge. Il est où, ce trombone ? »"
+    left:
+      label: "Je vais voir Arzel"
+      effects: {direction: "-", set: [h7_copie_vue, h7_arzel_confrontee, h7_questions]}
+      answer: "Tu fixes la copie avec le trombone rouge et tu montes à la chambre 3. Rouvier, derrière toi : « Enfin, il tient quelque chose. »"
+    right:
+      label: "Je brûle la copie"
+      effects: {direction: "+", vestiaire: "-", set: [h7_copie_vue, h7_copie_brulee]}
+      answer: "La page brûle ; le trombone rouge reste au fond du cendrier, noirci. Rouvier le repêche du bout des doigts : « J'en ai fait deux. »"
+
+  # Les visites de 2013 lues page par page (« La docteure ») : il manquait un dossier.
+  - id: sl.h7.s2_copie_pile
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: rouvier
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Une enveloppe kraft sur la table de massage : 2010, « cardiomyopathie », signé Arzel, et la fiche de 2011, apte, signé {nom}. « En mars, vous avez tout lu. Le sien n'était plus dans la pile. »"
+    left:
+      label: "Je vais voir Arzel"
+      effects: {direction: "-", set: [h7_copie_vue, h7_arzel_confrontee, h7_questions]}
+      answer: "Rouvier referme l'enveloppe. « Vous lisez tout, maintenant. Allez lire celle-là à la docteure. »"
+    right:
+      label: "Je brûle la copie"
+      effects: {direction: "+", vestiaire: "-", set: [h7_copie_vue, h7_copie_brulee]}
+      answer: "La page brûle en deux secondes. « J'en ai fait deux », dit Rouvier, et elle range ses bandes sans te regarder."
+
+  # ════════════════════════════════════════════ 2013 · S3 · la valise (13)
+  - id: sl.h7.s3_valise
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Chambre 3. La docteure Arzel range ses ampoules dans une valise ouverte : « Il m'a suppliée. Vendu gamin, ballotté de club en club, il voulait un tournoi, un seul. J'ai signé apte. Vous, en dessous. »"
+    left:
+      label: "On le dira ensemble"
+      effects: {vestiaire: "+", direction: "--", set: [h7_arzel_ensemble], react: {card: sl.h7.re.six_heures_ensemble}}
+      answer: "Elle sort les ampoules une à une et les remet dans l'armoire. « Demain, alors. Vous parlerez après moi. Pas avant. »"
+    right:
+      label: "Vous le direz seule"
+      effects: {direction: "+", set: [h7_arzel_seule], react: {card: sl.h7.re.six_heures_seule}}
+      answer: "Elle boucle la valise, les deux fermoirs d'un coup. « Seule, comme en 2010. J'ai l'habitude, {toi}. »"
+
+  - id: sl.h7.s3_valise_brulee
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Chambre 3. Arzel range ses ampoules : « Rouvier dit que vous avez brûlé la copie. J'ai gardé l'original. Il m'a suppliée, il voulait un tournoi, un seul. J'ai signé apte. Vous, en dessous. »"
+    left:
+      label: "On le dira ensemble"
+      effects: {vestiaire: "+", direction: "--", set: [h7_arzel_ensemble], react: {card: sl.h7.re.six_heures_ensemble}}
+      answer: "Elle pose l'original sur le lit, entre vous deux. « Celui-là ne brûlera pas. Demain, vous parlerez après moi. »"
+    right:
+      label: "Vous le direz seule"
+      effects: {direction: "+", set: [h7_arzel_seule], react: {card: sl.h7.re.six_heures_seule}}
+      answer: "Elle range l'original sous les ampoules et boucle la valise. « Seule, comme en 2010. Vous avez déjà brûlé votre part. »"
+
+  - id: sl.h7.s3_valise_cardiologue
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Chambre 3. Arzel range ses ampoules : « Son cardiologue de Valdorne m'écrivait tous les six mois. Il m'a suppliée, il voulait un tournoi, un seul. J'ai signé apte. Vous, en dessous. »"
+    left:
+      label: "On le dira ensemble"
+      effects: {vestiaire: "+", direction: "--", set: [h7_arzel_ensemble], react: {card: sl.h7.re.six_heures_ensemble}}
+      answer: "Elle sort de la valise six lettres à en-tête de Valdorne, liées d'un élastique. « Demain. Vous parlerez après moi. »"
+    right:
+      label: "Vous le direz seule"
+      effects: {direction: "+", set: [h7_arzel_seule], react: {card: sl.h7.re.six_heures_seule}}
+      answer: "Elle range les lettres de Valdorne sous les ampoules et boucle la valise. « Seule, comme en 2010. J'ai l'habitude. »"
+
+  # La phrase de L'Écho (« La page des sports », 2011), gardée dans la mallette.
+  - id: sl.h7.s3_valise_tournoi
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Chambre 3. Arzel range ses ampoules ; dans le couvercle de la mallette, l'article de L'Écho : un tournoi, un seul. « Il me l'avait dit d'abord à moi, en 2010. J'ai signé apte. Vous, en dessous. »"
+    left:
+      label: "On le dira ensemble"
+      effects: {vestiaire: "+", direction: "--", set: [h7_arzel_ensemble], react: {card: sl.h7.re.six_heures_ensemble}}
+      answer: "Elle décolle l'article du couvercle et le pose sur le lit, entre vous deux. « Demain, alors. Vous parlerez après moi. Pas avant. »"
+    right:
+      label: "Vous le direz seule"
+      effects: {direction: "+", set: [h7_arzel_seule], react: {card: sl.h7.re.six_heures_seule}}
+      answer: "Elle referme la mallette sur l'article. « Seule, comme en 2010. Lui aussi voulait le faire seul, son tournoi. »"
+
+  # La démission contresignée (« La docteure ») : les raisons personnelles, dites.
+  - id: sl.h7.s3_valise_demission
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Chambre 3. Arzel range ses ampoules ; sa démission contresignée part en décembre. « Mes raisons personnelles ? Il m'a suppliée, il voulait un tournoi, un seul. J'ai signé apte. Vous, en dessous. »"
+    left:
+      label: "On le dira ensemble"
+      effects: {vestiaire: "+", direction: "--", set: [h7_arzel_ensemble], react: {card: sl.h7.re.six_heures_ensemble}}
+      answer: "Elle déchire la lettre de démission en deux, puis en quatre. « Demain, alors. Vous parlerez après moi. Pas avant. »"
+    right:
+      label: "Vous le direz seule"
+      effects: {direction: "+", set: [h7_arzel_seule], react: {card: sl.h7.re.six_heures_seule}}
+      answer: "Elle boucle la valise sur la lettre que tu as contresignée. « Seule, comme en 2010. Vous avez déjà signé en dessous. »"
+
+  # ═════════════════════════════════════ 2013 · S4 · la 12 et la mère (15)
+  # La seule carte `drame` de la carrière (le moteur n'en sert qu'une).
+  - id: sl.h7.s4_douze
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: drame
+    once: true
+    text: "Tu demandes le double de la 12. La porte s'ouvre sur un lit fait, une télévision éteinte, et la mère de Tibo assise sur la chaise. « Je savais que vous viendriez. Fermez, il y a un courant d'air. »"
+    left:
+      label: "Je lui dis tout"
+      effects: {direction: "--", tribunes: "+", relation: {rance_mere: 2}, set: [h7_mere_sait]}
+      answer: "Tu dis tout, jusqu'à ta signature. Elle écoute sans bouger, puis lisse le couvre-lit du plat de la main : « Maintenant, dites-le à eux. »"
+    right:
+      label: "Je lui présente mes excuses"
+      effects: {direction: "+", relation: {rance_mere: -1}, set: [h7_mere_excuses]}
+      answer: "« Des excuses. » Elle répète le mot comme on goûte un plat. Elle se lève, te rend le double et ferme la 12 derrière vous deux."
+
+  - id: sl.h7.s4_douze_double
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: drame
+    once: true
+    text: "La porte de la 12 est entrouverte. Un lit fait, une télévision éteinte, et la mère de Tibo sur la chaise, le double de Sandrine dans la main : « Asseyez-vous sur le lit. Lui s'asseyait là. »"
+    left:
+      label: "Je lui dis tout"
+      effects: {direction: "--", tribunes: "+", relation: {rance_mere: 2}, set: [h7_mere_sait]}
+      answer: "Assis où il s'asseyait, tu dis tout, jusqu'à ta signature. Elle écoute, le double serré dans le poing : « Maintenant, dites-le à eux. »"
+    right:
+      label: "Je lui présente mes excuses"
+      effects: {direction: "+", relation: {rance_mere: -1}, set: [h7_mere_excuses]}
+      answer: "« Des excuses. » Elle pose le double sur la télévision éteinte et sort la première. La porte de la 12 reste ouverte derrière elle."
+
+  - id: sl.h7.s4_douze_mbako
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, vestiaire]
+    speaker: rance_mere
+    lieu: hotel
+    tone: drame
+    once: true
+    text: "La porte de la 12 s'ouvre sur un lit fait, une télévision éteinte, la mère de Tibo sur la chaise, et Mbako debout à la fenêtre. Elle : « Lui m'a tout dit, jusqu'à 2 h 25. Et vous ? »"
+    left:
+      label: "Je lui dis tout"
+      effects: {direction: "--", tribunes: "+", relation: {rance_mere: 2, mbako: 1}, set: [h7_mere_sait]}
+      answer: "Tu commences où Mbako s'est arrêté : quatre heures, le petit salon, et ta signature de mars. Elle hoche la tête : « Dites-le à eux. »"
+    right:
+      label: "Je lui présente mes excuses"
+      effects: {direction: "+", relation: {rance_mere: -1, mbako: -1}, set: [h7_mere_excuses]}
+      answer: "« Lui, il m'a dit des heures. Vous, des excuses. » Mbako ouvre la fenêtre de la 12, pour la première fois depuis 2011."
+
+  # Le pull bleu qui manquait au sac rendu par la police (« Le pull bleu », 2011).
+  - id: sl.h7.s4_douze_pull
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: drame
+    once: true
+    text: "La 12 s'ouvre sur la mère de Tibo, assise sur la chaise, un pull bleu plié sur les genoux : « Il était dans le placard. Personne n'avait ouvert le placard. Fermez, il y a un courant d'air. »"
+    left:
+      label: "Je lui dis tout"
+      effects: {direction: "--", tribunes: "+", relation: {rance_mere: 2}, set: [h7_mere_sait]}
+      answer: "Tu dis tout, jusqu'à ta signature. Elle déplie le pull, le replie, une fois par phrase. « Maintenant, dites-le à eux. »"
+    right:
+      label: "Je lui présente mes excuses"
+      effects: {direction: "+", relation: {rance_mere: -1}, set: [h7_mere_excuses]}
+      answer: "« Des excuses. » Elle te tend le pull. « Il avait toujours froid. Gardez-le, vous. » Elle sort la première."
+
+  # Le double refusé (« La mère ») : elle a passé la nuit sur la banquette du hall.
+  - id: sl.h7.s4_douze_hall
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: drame
+    once: true
+    text: "Tu demandes le double de la 12, celui qu'on a refusé à sa mère. La porte s'ouvre sur elle quand même, assise sur la chaise : « Le veilleur de jour m'a ouvert, lui. Fermez, il y a un courant d'air. »"
+    left:
+      label: "Je lui dis tout"
+      effects: {direction: "--", tribunes: "+", relation: {rance_mere: 2}, set: [h7_mere_sait]}
+      answer: "Tu dis tout, jusqu'à ta signature. Elle lisse le couvre-lit du plat de la main : « Une nuit sur la banquette. Maintenant, dites-le à eux. »"
+    right:
+      label: "Je lui présente mes excuses"
+      effects: {direction: "+", relation: {rance_mere: -1}, set: [h7_mere_excuses]}
+      answer: "« Des excuses, après une nuit dans le hall. » Elle se lève et sort la première, sans refermer la 12 derrière elle."
+
+  # Le standard de trois heures (« La mère ») : le téléphone de la chambre.
+  - id: sl.h7.s4_douze_standard
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: drame
+    once: true
+    text: "La 12 s'ouvre sur la mère de Tibo, assise sur la chaise, le téléphone de la chambre sur les genoux : « Je voulais voir d'où il m'appelait, à trois heures. Fermez, il y a un courant d'air. »"
+    left:
+      label: "Je lui dis tout"
+      effects: {direction: "--", tribunes: "+", relation: {rance_mere: 2}, set: [h7_mere_sait]}
+      answer: "Tu dis tout, jusqu'à ta signature. Elle repose le combiné sur son socle, très doucement : « Maintenant, dites-le à eux. »"
+    right:
+      label: "Je lui présente mes excuses"
+      effects: {direction: "+", relation: {rance_mere: -1}, set: [h7_mere_excuses]}
+      answer: "« Des excuses. » Elle débranche le téléphone de la 12, enroule le fil autour, et l'emporte sous le bras."
+
+  # ═══════════════════════════════════════ 2013 · S5 · le dernier tableau (16)
+  - id: sl.h7.s5_tableau_complet
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La dernière nuit de la fenêtre. Minuit, deux heures, quatre heures : les vingt-six doubles ne quittent pas leurs crochets. Sandrine Lavergne écrit l'heure, chaque heure, et tourne le cahier vers toi."
+    left:
+      label: "Je reste jusqu'au matin"
+      effects: {set: [h7_tableau_complet], end: fiasco_tableau}
+      answer: "À six heures, Mbako descend le premier, puis Arzel, puis Ferrol. Ils passent devant le tableau sans prendre de clé : ils vont parler."
+    right:
+      label: "Je reste jusqu'au matin"
+      effects: {set: [h7_tableau_complet], end: fiasco_tableau}
+      answer: "À six heures, Mbako descend le premier, puis Arzel, puis Ferrol. Ils passent devant le tableau sans prendre de clé : ils vont parler."
+
+  - id: sl.h7.s5_tableau
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La dernière nuit de la fenêtre. Minuit : le 14 manque au tableau. Deux heures : le 9, le 15. Sandrine écrit chaque heure : « Ils ne dorment pas. Vous non plus. Demain, vous direz quoi, {toi} ? »"
+    left:
+      label: "Ce que je sais"
+      effects: {vestiaire: "+", set: [h7_veille_verite]}
+      answer: "Elle écrit ta réponse dans la marge, à l'heure exacte : 2 h 10. Tu ne lui demandes pas pourquoi cette heure-là."
+    right:
+      label: "Ce qu'on m'a écrit"
+      effects: {direction: "+", set: [h7_veille_phrase]}
+      answer: "Elle ne l'écrit pas. Elle referme le cahier et éteint la lampe de la réception, pour la première fois depuis 1984."
+
+  # La ronde de minuit (« Le tableau des clés ») : le tabouret au bout du comptoir.
+  - id: sl.h7.s5_tableau_ronde
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La dernière nuit de la fenêtre. Ton tabouret t'attend au bout du comptoir. Minuit : le 14 manque. Deux heures : le 9, le 15. Sandrine écrit chaque heure : « Demain, vous direz quoi, {toi} ? »"
+    left:
+      label: "Ce que je sais"
+      effects: {vestiaire: "+", set: [h7_veille_verite]}
+      answer: "Elle écrit ta réponse dans la colonne des heures, comme un double rendu. Puis elle te laisse le crayon jusqu'au matin."
+    right:
+      label: "Ce qu'on m'a écrit"
+      effects: {direction: "+", set: [h7_veille_phrase]}
+      answer: "Elle range ton tabouret sous le comptoir. « Alors vous n'avez plus besoin de compter. » Elle éteint la lampe."
+
+  # Sandrine a compté seule (« Le tableau des clés ») : tu redescends une fois.
+  - id: sl.h7.s5_tableau_seule
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La dernière nuit de la fenêtre. Tu redescends au tableau pour la première fois depuis longtemps. Sandrine compte seule, comme tu l'as voulu : « Le 14 manque. Demain, vous direz quoi, {toi} ? »"
+    left:
+      label: "Ce que je sais"
+      effects: {vestiaire: "+", set: [h7_veille_verite]}
+      answer: "Elle écrit ta réponse sous la colonne qu'elle a tenue seule, puis te tend le crayon : l'heure, c'est à toi de l'écrire."
+    right:
+      label: "Ce qu'on m'a écrit"
+      effects: {direction: "+", set: [h7_veille_phrase]}
+      answer: "Elle ne l'écrit pas. Elle referme le cahier sur son crayon, et ne te dit pas bonne nuit, pour la première fois."
+
+  # ═══════════════════════════════════════════ 2013 · S6 · la conférence (17)
+  # La veille du match de qualification (écart assumé : voir l'en-tête de l'arc).
+  - id: sl.h7.s6_conference
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Salle de presse du stade, la veille du match. Vence au micro, Léa au fond, Benali près de la porte. Dauzat t'a écrit une phrase sur le groupe, à la main, sur une fiche bristol."
+    left:
+      label: "Je raconte la nuit"
+      effects: {end: fiasco_laisse}
+      answer: "« On l'a laissé. » {prenom} {nom} le dit deux fois, la seconde plus lentement. Léa ne note rien : elle enregistre."
+    right:
+      label: "Je parle du groupe"
+      effects: {direction: "++", tribunes: "+", set: [h7_parle_groupe]}
+      answer: "« Le groupe a été digne. » La phrase de la fiche, mot pour mot. Benali sort avant la fin, sans faire de bruit."
+
+  - id: sl.h7.s6_conference_page
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Salle de presse du stade, la veille du match. Vence au micro, Léa au fond, Benali près de la porte. On t'a préparé une phrase sur le groupe. La page du cahier de nuit est dans ta poche."
+    left:
+      label: "Je raconte la nuit"
+      effects: {end: fiasco_laisse}
+      answer: "{prenom} {nom} déplie la page devant les caméras : 2 h 10, 2 h 25. « On l'a laissé. » Léa se lève pour mieux voir les heures."
+    right:
+      label: "Je parle du groupe"
+      effects: {direction: "++", tribunes: "+", set: [h7_parle_groupe]}
+      answer: "« Le groupe a été digne. » La page reste pliée dans ta poche. Benali regarde ta poche pendant toute la phrase."
+
+  - id: sl.h7.s6_conference_seule
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Salle de presse, la veille du match. La docteure a parlé seule, hier, à la police. Vence au micro : on te demande une heure, et un nom. Au fond, Léa attend la même chose que lui."
+    left:
+      label: "Je donne l'heure, 2 h 10"
+      effects: {end: fiasco_bouc}
+      answer: "« 2 h 10. Lian Mbako. » {prenom} {nom} a donné l'heure ; la salle se vide vers les téléphones. Benali reste assise et te regarde finir."
+    right:
+      label: "Je parle du groupe"
+      effects: {direction: "++", set: [h7_parle_groupe]}
+      answer: "« Le groupe a été digne. » Personne n'écrit la phrase. Ils ont déjà celle de la docteure."
+
+  # Le cahier de nuit sauvé du pilon (« Le tarif de la chambre », 2012).
+  - id: sl.h7.s6_conference_coffre
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Salle de presse du stade, la veille du match. Vence au micro, Léa au fond, Benali près de la porte. Dauzat t'a écrit une phrase sur le groupe. Le cahier de nuit de 2011 dort au coffre de la Rive."
+    left:
+      label: "Je raconte la nuit"
+      effects: {end: fiasco_laisse}
+      answer: "« Le cahier de nuit est au coffre de la Rive. » {prenom} {nom} donne la page, le 14. Benali sort la première : elle va le chercher."
+    right:
+      label: "Je parle du groupe"
+      effects: {direction: "++", tribunes: "+", set: [h7_parle_groupe]}
+      answer: "« Le groupe a été digne. » Benali sort avant la fin. Au coffre de la Rive, le cahier attend le pilon de janvier."
+
+  # ════════════════════════════════════════════ 2014 · E1 · la gerbe (1)
+  - id: sl.h7.e1_gerbe
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mars 2014, la première fenêtre. Monsieur Escande te tend ta clé sans lever les yeux : « Ceci est arrivé pour la 12, {toi}. » Une gerbe bordeaux et grise, sans carte."
+    left:
+      label: "Je la monte moi-même"
+      effects: {end: fiasco_malaise}
+      answer: "Tu la poses devant la plante, au deuxième. Personne ne te voit. C'est ce que tu as choisi, il y a quatre mois, devant les caméras."
+    right:
+      label: "Laissez-la au comptoir"
+      effects: {end: fiasco_malaise}
+      answer: "Elle reste au comptoir toute la fenêtre. Sandrine Lavergne change l'eau chaque nuit et note l'heure dans son cahier."

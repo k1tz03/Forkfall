@@ -1,0 +1,231 @@
+# Histoire 7 · Chambre 12 — les cartes des soirs (arcs `kind: evenement` de
+# content/arcs/selectionneur/h7_sombres.yaml). Hors du sac, `once`, `sombre`,
+# un `lieu:` par carte : la ville les met en scène le soir, à leur place, sans
+# s'annoncer. La violence arrive d'un coup et hors champ (une vitre qui éclate,
+# une cire cassée) ; la carte d'après est le lendemain.
+#
+# Les deux fins qui peuvent tomber ici (`co_garde_a_vue`) ferment une carrière
+# qui a gardé une preuve pendant l'enquête : la page du cahier de nuit, ou le
+# carnet du petit pris sous les scellés. Le refus est une phrase, pas un geste.
+cards:
+  # ═══════════════════════════════════════════════════ 2011 · Le Corner
+  - id: sl.h7.e0_corner
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: bar
+    tone: strategique
+    once: true
+    text: "Le Corner, une heure du matin. Mbako au comptoir, un verre devant lui ; à côté, le petit Rancé, un jus d'orange, essoufflé d'avoir monté la rue. Mbako lève son verre : « On fête quoi, {toi} ? »"
+    left:
+      label: "Je les ramène"
+      effects: {direction: "+", vestiaire: "-", set: [h7_corner_ramenes]}
+      answer: "Dans la côte, le petit s'arrête deux fois, la main à plat sur la poitrine : « C'est la côte. » Mbako le porte presque jusqu'à l'hôtel."
+    right:
+      label: "Je prends un verre"
+      effects: {vestiaire: "+", direction: "-", set: [h7_corner_verre]}
+      answer: "Vous trinquez à rien. À deux heures, le petit dort sur la banquette ; Mbako le regarde respirer, longtemps, sans rien dire."
+
+  # ═══════════════════════════════════ 2012 · Les bougies et la pierre
+  - id: sl.h7.b1_bougies
+    roles: [selectionneur]
+    arc: tribune
+    tags: [ultras, tribunes, sombre]
+    speaker: gege
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Le trottoir de l'hôtel, dix heures. Le virage d'Aubérive pose des bougies pour le gamin du centre. Gégé, une flamme à la main : « Il était d'ici. Vous descendez, ou vous regardez d'en haut ? »"
+    left:
+      label: "Je descends"
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h7_bougies]}
+      answer: "Tu allumes ta bougie à celle de Gégé. Derrière toi, un bruit de verre : une pierre vient de traverser la fenêtre du 14. Personne n'a vu qui."
+    right:
+      label: "Je regarde d'en haut"
+      effects: {direction: "+", tribunes: "-", set: [h7_bougies]}
+      answer: "De ta fenêtre, tu vois les flammes, puis un bras qui se lève dans la même foule. La vitre du 14 éclate. Les bougies, elles, tiennent."
+
+  - id: sl.h7.b2_pierre
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le lendemain, la chambre 14. Du verre sur le couvre-lit, une pierre grosse comme un poing posée sur l'oreiller. Mbako la soupèse : « Les bougies, c'était pour lui. Ça, c'est pour moi. »"
+    left:
+      label: "On change de chambre"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Il refuse. Il dort dans la 14, un carton scotché à la fenêtre, et le lendemain il court plus que tous les autres."
+    right:
+      label: "On porte plainte"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Benali vient chercher la pierre dans un sac plastique. Elle note l'heure, le nom de l'hôtel, puis s'arrête sur celui de Mbako."
+
+  # ═══════════════════════════════════════════════════ 2012 · Les scellés
+  - id: sl.h7.e1_cire
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, sombre]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le couloir du deuxième, une heure du matin. Les scellés de la 12 tiennent à un ruban de cire rouge. La porte n'est pas fermée à clé : la police a gardé la clé, pas la serrure."
+    left:
+      label: "Je casse la cire"
+      effects: {vestiaire: "-", set: [h7_scelles_brises]}
+      answer: "Dans le tiroir de la table de nuit, le carnet à élastique rouge : les tournois qu'il voulait jouer, et une date entourée, mars 2010."
+    right:
+      label: "Je redescends"
+      effects: {direction: "+", set: [h7_scelles_respectes]}
+      answer: "Tu redescends par l'escalier de service sans allumer. Au comptoir, Sandrine écrit une heure dans son cahier : la tienne."
+
+  - id: sl.h7.e2_empreintes
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, sombre]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La commandante Benali pose sur la nappe une photo de la cire de la 12, cassée net : « Vos empreintes sont dessus, {toi}. Le carnet du petit aussi, je suppose. Vous me le donnez ? »"
+    left:
+      label: "Je vous le donne"
+      effects: {direction: "+", set: [h7_carnet_rendu]}
+      answer: "Elle le glisse dans un sachet sans l'ouvrir. « La date entourée, c'est sa dernière visite cardiaque. Vous le saviez ? »"
+    right:
+      label: "Je l'ai laissé là-haut"
+      effects: {direction: "-", set: [h7_carnet_garde]}
+      answer: "« Alors il y est encore. » Elle sait que non. Elle note l'heure de ta phrase, et range son stylo dans sa veste."
+
+  # ════════════════════════════════════════ 2013 · L'arrière-salle du Terminus
+  - id: sl.h7.e3_pere
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, sombre]
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "L'arrière-salle du Terminus, onze heures du soir. Le père de Tibo pose ses cartes à l'envers : « Ils me l'ont acheté à douze ans. J'ai signé. Vous aussi, vous avez signé, je crois ? »"
+    left:
+      label: "Oui, j'ai signé"
+      effects: {tribunes: "-", set: [h7_pere_vu, h7_signature_avouee]}
+      answer: "Il ramasse ses cartes. « Alors on est deux. » Il te paie un verre que tu ne bois pas, et retourne à sa partie."
+    right:
+      label: "Je ne vois pas quoi"
+      effects: {direction: "+", set: [h7_pere_vu]}
+      answer: "« Moi non plus, au début. » Il tire une carte, la regarde longtemps, et la pose sur les autres sans jouer."
+
+  - id: sl.h7.e4_ardoise
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents, sombre]
+    speaker: fardelli
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Au comptoir du Terminus, Fardelli règle l'ardoise du père sans le regarder : « Je lui dois bien ça. J'ai touché dix pour cent du gamin pendant treize ans. Vous, vous avez touché quoi ? »"
+    left:
+      label: "Un barrage"
+      effects: {tribunes: "-", relation: {fardelli: 1}}
+      answer: "« Un barrage. » Il hoche la tête, comme devant un bon prix. Puis il laisse un billet de plus sur le comptoir, pour le père."
+    right:
+      label: "Rien du tout"
+      effects: {direction: "+", relation: {fardelli: -1}}
+      answer: "« Alors il n'y a que vous. » Il remet son manteau, et s'en va sans finir son verre ; le patron le vide dans l'évier."
+
+  # ═════════════════════════════════════════════════════ 2013 · La page
+  - id: sl.h7.e5_page
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, sombre]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le hall de la Rive, tard. Benali, debout, son carnet ouvert : « La page du 14 novembre manque au cahier saisi. Mme Lavergne dit qu'elle l'a détachée pour vous. Vous l'avez, {toi} ? »"
+    left:
+      label: "Elle est dans ma poche"
+      effects: {direction: "-", set: [h7_page_donnee], clear: [h7_page_poche]}
+      answer: "Tu la déplies sur le comptoir. Elle la photographie, puis la range dans un sachet. « Vous l'avez gardée longtemps. Pourquoi ? »"
+    right:
+      label: "Quelle page ?"
+      effects: {end: co_garde_a_vue}
+      answer: "Elle referme son carnet. « Je vous la décris, alors : 2 h 10, 2 h 25, il tremblait. » Les menottes ne sont pas serrées."
+
+  - id: sl.h7.e5_carnet
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, sombre]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le hall de la Rive, tard. Benali tient un sachet vide : « Le carnet du petit, {toi}. Vos empreintes sur la cire, sa date entourée. La procureure veut l'entendre de votre bouche. »"
+    left:
+      label: "Je vous le donne"
+      effects: {direction: "-", set: [h7_carnet_rendu], clear: [h7_carnet_garde]}
+      answer: "Tu le sors de la poche de ton manteau. Elle le glisse dans le sachet sans l'ouvrir : « Mars 2010. Vous avez vu la date. »"
+    right:
+      label: "Je ne l'ai pas"
+      effects: {end: co_garde_a_vue}
+      answer: "« Si. » Elle pose la main sur ta poche, à plat, sans fouiller. La voiture attend devant l'hôtel, phares éteints."
+
+  # ═══════════════════════════════════════════════════ 2013 · Les montres
+  - id: sl.h7.e6_montres
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, sombre]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le hall. La commandante Benali tend un sac plastique ouvert : « Les montres de Fulgor partent sous scellés avec l'information judiciaire. La vôtre aussi, {toi}. Vous l'enlevez, ou je le fais ? »"
+    left:
+      label: "Je l'enlève"
+      effects: {caisse: "-", set: [h7_montres_saisies], var: {saisie_luxe: "+1"}}
+      answer: "Le fermoir résiste ; tu le forces. Dans le sac, la montre continue de marcher. Benali la regarde un moment avant de souder le plastique."
+    right:
+      label: "Faites-le"
+      effects: {tribunes: "-", relation: {benali: -1}, set: [h7_montres_saisies], var: {saisie_luxe: "+1"}}
+      answer: "Elle défait le bracelet sans te toucher la peau. Au fond du sac, les vingt-six autres attendent déjà, dans leurs écrins."
+
+  # ═══════════════════════════════════════════ la ville · L'original, la capture
+  - id: sl.h7.e7_original
+    roles: [selectionneur]
+    arc: corps
+    tags: [direction, sombre]
+    speaker: benali
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Le cabinet, le soir. Benali tient la mallette de la docteure, ouverte : « Le dossier de 2010 a été photocopié à la pharmacie, un mardi. Vol de pièce médicale. Qui tenait la mallette ? »"
+    left:
+      label: "C'était moi"
+      effects: {direction: "--", set: [h7_vol_avoue]}
+      answer: "Elle note l'heure. « Alors la kiné n'y était pas. » Elle sait que si. Elle laisse la mallette ouverte entre vous deux, jusqu'à la fin."
+    right:
+      label: "Demandez à Rouvier"
+      effects: {vestiaire: "--", relation: {rouvier: -2}}
+      answer: "Benali referme la mallette. Le lendemain, Rouvier ne vient pas au massage du matin. Ni le surlendemain."
+
+  - id: sl.h7.e8_capture
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, sombre]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "year >= 2008"
+    text: "L'Écho, le soir. Léa pose sur le bureau la capture de 1 h 47 que tu as achetée au square : « Le gamin me l'a vendue aussi, hier. Deux fois le même prix. Je la publie ? »"
+    left:
+      label: "Publiez-la"
+      effects: {tribunes: "+", direction: "-", set: [h7_capture_publiee]}
+      answer: "Elle sort le lendemain, la main entourée au feutre. Ferrol arrive à l'entraînement avec le journal sous le bras, sans le cacher."
+    right:
+      label: "Gardez-la pour vous"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "« Pour moi ? » Elle la range dans le tiroir où elle garde les photos qu'elle ne publie pas. Le tiroir ferme mal."
