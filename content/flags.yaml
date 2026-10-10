@@ -552,3 +552,131 @@ flags:
   - sb_ancien           # l'ancien sorti de prison
   - sb_service_rendu    # tu lui as rendu le service
   - sb_mort_tribune     # un supporter mort en tribune
+  # ============================================================================
+  # LA BOUTIQUE ET LES BIENS (content/ville/boutique.yaml ; les suites :
+  # content/arcs/{entraineur,joueur}/biens.yaml). Préfixe bn_.
+  # · Posés par un objet (ses `effets`, appliqués par Engine.biens à l'achat ou
+  #   au cadeau d'un sponsor) et RETIRÉS quand l'objet est perdu : saisi, volé,
+  #   revendu. Ils veulent dire « tu possèdes ceci, maintenant ».
+  - bn_costume_sur_mesure  # le costume de Brunel ; lu par la loge (en.bn.loge)
+  - bn_fourrure            # le manteau de fourrure ; lu par l'huissier, la maison visitée
+  - bn_montre_or           # la montre en or ; lu par la montre, l'huissier, la maison visitée
+  - bn_moto                # la moto de route ; lu par la clause du contrat (jp.bn.moto)
+  - bn_berline             # la berline allemande ; lu par la dépanneuse, l'huissier
+  - bn_coupe_sport         # le coupé sport rouge ; lu par la photo du coupé, la dépanneuse, l'huissier
+  - bn_quatre_quatre       # le 4x4 noir ; lu par la place réservée, la dépanneuse, l'huissier
+  - bn_helico              # l'hélicoptère ; lu par l'hélicoptère, le contrôle fiscal
+  - bn_pavillon            # le pavillon des Lilas ; lu par le voisin, la maison visitée, la saisie
+  - bn_duplex_trefilerie   # le duplex de la Tréfilerie ; lu par la Tréfilerie, le voisin, la maison visitée
+  - bn_villa               # la villa des Hauts-de-Rive ; lu par le fisc, le voisin, la maison visitée
+  - bn_penthouse           # la terrasse du quai ; lu par le fisc, le voisin, la maison visitée
+  - bn_manoir              # le manoir des Tilleuls ; lu par le fisc, le voisin, la maison visitée
+  - bn_collier             # le collier de perles ; lu par le collier, l'huissier, la maison visitée
+  - bn_tableau             # la toile du courtier ; lu par le fisc, l'huissier, la maison visitée
+  - bn_bateau              # le bateau de Portclair ; lu par le fisc, l'huissier
+  # · Posés par les cartes des suites (des faits, qui restent).
+  - bn_photo_coupe         # la Gazette Rose devant le coupé ; lu par le fisc (variante), la maison visitée
+  - bn_fisc                # le contrôle fiscal a eu lieu ; lu par le voisin (variante), la brigade
+  - bn_cambriole           # cambriolage déclaré à la police ; lu par la brigade
+  - bn_montre_volee        # la montre en or était dans l'écrin volé ; lu par la suite du cambriolage
+  - bn_denonce             # le voisin a écrit ; lu par la brigade
+  - bn_balance             # un nom donné à la brigade ; lu par la maison visitée
+  - bn_mensonge_camille    # « une prime de match » pour le collier ; lu par la brigade (variante)
+  # ============================================================================
+  # LES MISSIONS DE LA VILLE (content/ville/missions.yaml) et leurs risques
+  # (content/arcs/{entraineur,joueur}/ville_risques.yaml). Préfixe vl_.
+  # · Posés par une mission (Engine.mission) : secrets, sans ligne d'Almanach.
+  #   Aucune carrière simulée ne les pose ; ils n'arment que les événements
+  #   de risque, et les variantes où la ville se souvient d'un service rendu.
+  - vl_produits         # la boîte du préparateur dort chez toi ; lu par la perquisition (jp.vl.perquisition)
+  - vl_dopant           # tu as fait la première ampoule ; lu par le contrôle (jp.vl.controle)
+  - vl_cure             # le carton de la cure est chez toi ; lu par la perquisition (en.vl.perquisition)
+  - vl_equipe_preparee  # la cure a été distribuée au groupe ; lu par le contrôle inopiné (en.vl.controle)
+  - vl_colis            # tu as porté le sac du casier 14 au wagon ; lu par le chien des douanes (*.vl.car)
+  - vl_colis_lache      # tu as laissé le sac en route ; lu par l'ardoise (*.vl.creancier, variante du chauffeur)
+  - vl_match_vendu      # tu as fait ce qu'on demandait à la table du fond ; lu par la photo (*.vl.chantage)
+  - vl_match_trahi      # tu as pris l'enveloppe et joué pour gagner ; lu par l'ardoise (variante de la table)
+  - vl_dette_tripot     # le crédit de la table court ; lu par l'ardoise, et par la mission `ardoise` qui le solde
+  - vl_billets          # tes invitations revendues avec Gégé ; lu par les talons (*.vl.talons)
+  - vl_certificat       # l'entorse de papier, payée par l'assurance ; lu par l'expert (jp.vl.expert) et la photo
+  - vl_gamin            # le Chat est entré au centre grâce à toi ; lu par l'ardoise (il a noté la plaque)
+  - vl_boulangere       # tu as dépanné la boulangère ; lu par la perquisition (elle prévient)
+  - vl_veuve            # Madame Dutheil a retrouvé sa place ; lu par les talons (Josiane sait)
+  - vl_corner           # tu as ramené Corner à Lulu ; lu par le contrôle (Lulu prévient)
+  # · Posés par les cartes des risques (des faits, qui restent).
+  - vl_controle         # le flacon a été pris (trace) ; lu par la suite du contrôle (le laboratoire, Berthomier)
+  - vl_refus            # tu as refusé le flacon ; lu par la suite du contrôle (Berthomier, l'affiche)
+  - vl_sanction         # la Fédération a sanctionné (trace) ; lu par la dernière étape du contrôle (Massenet)
+  - vl_perquisition     # la police est entrée chez toi (trace) ; lu par l'ardoise (Camille, après le juge)
+  - vl_car              # le chien s'est assis devant ton sac (trace) ; lu par la suite du car (le commissariat)
+  - vl_balance          # tu as donné l'homme du Terminus (trace) ; lu par l'ardoise (son frère)
+  - vl_creancier        # les hommes de la voiture grise sont venus (trace) ; lu par la suite de l'ardoise (la maison)
+  - vl_chantage_paye    # tu as racheté la photo (trace) ; lu par la suite de la photo (il revient)
+  - vl_gege_donne       # tu as donné le nom de Gégé (trace) ; lu par la suite des talons (la buvette)
+  # ============================================================================
+  # Les sponsors, propres et louches (content/arcs/*/sponsors_louches.yaml).
+  # Préfixe sp_. L'argent sale pose un drapeau que lisent les événements de
+  # police et de la Fédération (content/arcs/common/sponsors_louches.yaml) :
+  # l'inventaire, le contrôle, la garde à vue, la commission, le chantage.
+  # ============================================================================
+  # Les biscuits Dornois (entraîneur, propre)
+  - sp_dornois          # les biscuits sur les survêtements (trace) ; lu par l'étape « la part de Vaubourg »
+  - sp_dornois_part     # Vaubourg a eu sa moitié ; lu par la canette (sinon Vaubourg fait monter Ilyas)
+  - sp_dornois_tenu     # parole tenue contre la canette (trace) ; lu par la suite (la grille de l'usine)
+  - sp_dornois_vendu    # les survêtements vendus au fonds (trace) ; lu par la suite (la dernière boîte)
+  # Le laboratoire (entraîneur, louche)
+  - sp_labo             # le docteur au triangle bleu est entré (trace) ; lu par l'armoire du Doc
+  - sp_labo_boites      # les cartons sans notice donnés le jeudi (trace) ; lu par la suite, la liste, la commission
+  - sp_labo_continue    # le jeudi jusqu'en mai (trace) ; lu par la liste des clients
+  - sp_labo_enveloppe   # les « honoraires » de la muscu, argent sale (trace) ; lu par l'inventaire et le contrôle
+  # La maquette (entraîneur, louche)
+  - sp_terrain_villa    # le pavillon de la Rive, cadeau du promoteur (trace) ; lu par le bureau, l'acte, l'inventaire
+  - sp_terrain_parle    # a parlé au conseil municipal (trace) ; lu par la fin (l'hélicoptère)
+  - sp_terrain_echo     # a donné la suite 4 à L'Écho (trace) ; lu par l'acte de 1931
+  - sp_terrain_helico   # la clé de l'hélicoptère de Castérac (trace) ; lu par l'inventaire
+  # La dette de Gigi (entraîneur, louche : le réseau de paris)
+  - sp_gigi_dette       # a payé la dette de Gigi au Terminus (trace) ; lu par le manteau clair et la caravane
+  - sp_gigi_vendu       # l'enveloppe du Corner, deux buts d'écart (trace) ; lu par le samedi, la police, la commission
+  - sp_gigi_livre       # a sorti Gigi à la 75e (trace) ; lu par les gants et l'épitaphe de co_radiation
+  - sp_gigi_double      # a pris l'argent sans livrer (trace) ; lu par le pare-brise et la garde à vue
+  # Le Rideau Rouge (les deux rôles, louche)
+  - sp_rideau_vu        # a passé la porte sans poignée (trace) ; lu par le carré et le chantage
+  - sp_rideau_montre    # la montre en or et l'affiche du jeudi (trace) ; lu par l'affiche, l'alibi, la police
+  - sp_rideau_alibi     # faux alibi pour le patron (trace) ; lu par les scellés et la garde à vue
+  # La voiture du garage du Pont (joueur, propre)
+  - sp_garage           # ton nom sur la portière (trace) ; lu par l'étape « la part de Vaubourg »
+  - sp_garage_part      # Vaubourg a eu sa moitié ; lu par la carte grise (sinon le garage ferme)
+  - sp_garage_couvert   # a signé le constat à la place du gamin (trace) ; lu par la carte grise
+  # Les crampons Bourrel (joueur, propre)
+  - sp_bourrel          # chaussé par Bourrel (trace) ; lu par l'étape de l'ampoule
+  - sp_bourrel_cache    # a joué en cachette avec les anciennes ; lu par la grande marque (la photo)
+  - sp_bourrel_tenu     # parole tenue (trace) ; lu par la suite (l'enterrement)
+  - sp_bourrel_rompu    # contrat racheté par la grande marque (trace) ; lu par la suite (les semelles)
+  # La table du jeudi (joueur, louche : l'homme du casino)
+  - sp_tripot           # assis à la table du Terminus (trace) ; lu par l'étape de la dette
+  - sp_tripot_dette     # la dette laissée dans la boîte à cigares (trace) ; lu par le service
+  - sp_tripot_service   # a promis le carton jaune (trace) ; lu par le samedi, l'inventaire, la commission
+  - sp_tripot_coupe     # le coupé du casino (trace) ; lu par l'inventaire et le contrôle
+  - sp_tripot_double    # n'a pas pris le jaune, dette doublée (trace) ; lu par la garde à vue
+  - sp_tripot_affiche   # l'affiche du casino payée en liquide (trace) ; lu par le contrôle
+  # La police et la Fédération (événements communs)
+  - sp_perquisition     # l'inventaire de six heures (trace) ; lu par la garde à vue
+  - sp_controle         # le contrôle du quai sud (trace) ; lu par la garde à vue
+  - sp_nie              # a menti à la police (inventaire, contrôle) ; lu par la garde à vue
+  - sp_garde_a_vue      # a donné des noms au commissariat (trace) ; lu par la sortie et la commission
+  - sp_commission       # a tout nié devant la commission (trace) ; lu par la garde à vue
+  - sp_chantage         # les photos du carré (trace) ; lu par la garde à vue
+  # Les dix histoires de lancement (docs/histoires/00_les_dix_histoires.md) : le
+  # drapeau d'histoire, posé par le postulat, que ses variantes de set-piece et
+  # ses lignes de ville lisent (h1-h4 : promu, interimaire, pepite,
+  # fin_de_contrat ; h5-h10 : les six nouvelles).
+  - histoire_h1
+  - histoire_h2
+  - histoire_h3
+  - histoire_h4
+  - histoire_h5
+  - histoire_h6
+  - histoire_h7
+  - histoire_h8
+  - histoire_h9
+  - histoire_h10

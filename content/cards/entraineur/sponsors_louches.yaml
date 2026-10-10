@@ -1,0 +1,572 @@
+# Cartes des sponsors de l'entraîneur (arcs en.sp.*, content/arcs/entraineur/
+# sponsors_louches.yaml). Toutes hors du sac : ce sont des étapes. `arc:` est
+# le THÈME de la carte ; `lieu:` est l'endroit où la ville met la scène (les
+# rendez-vous louches tombent le soir : `hotel`, `tripot`, `bar`, `muscu`).
+# Les inconnus parlent sans être des personnages déclarés : le docteur au
+# triangle bleu, le promoteur, l'homme au manteau clair n'ont pas d'id ; la
+# carte n'a alors pas de `speaker` et le texte les présente.
+# Personne ne fait la morale. L'argent se compte en gestes (une enveloppe qui
+# tient à peine dans une poche, des clés sur une maquette), jamais en devise :
+# les francs deviennent des écus en cours de carrière.
+cards:
+  # ============================================== 1 · Les biscuits Dornois (propre)
+  - id: en.sp.dornois.boite
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    text: "Madame Josiane pose une boîte en fer sur ton bureau, un chèque sous le couvercle : « Madame Dornois, la biscuiterie des Tanneurs. Son nom sur nos survêtements, et votre photo sur sa boîte de Noël. »"
+    left:
+      label: "Faites-la monter"
+      effects: {caisse: "+", direction: "-", var: {ville_francs: "+4000"}, set: [sp_dornois]}
+      answer: "Elle monte, de la farine sur la manche, et serre ta main deux fois. Josiane dit qu'elle a connu la mère de Gégé à l'emballage."
+    right:
+      label: "Pas de biscuits au club"
+      effects: {caisse: "-", direction: "+", relation: {josiane: -1}, outcome: refus}
+      answer: "Josiane rend le chèque sans ouvrir la boîte. Au printemps, les biscuits Dornois sont sur les panneaux du stade de {rival}."
+
+  # Le président qui veut sa part.
+  - id: en.sp.dornois.part
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, direction]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg fait tourner la boîte de Noël sur son bureau ; ta photo y sourit entre deux sablés : « Ton visage, payé par un sponsor de mon club. Le club en touche combien, là-dessus ? La moitié ? »"
+    left:
+      label: "La moitié, pour le club"
+      effects: {caisse: "+", relation: {aulard: 1}, var: {ville_amende: "+2000"}, set: [sp_dornois_part]}
+      answer: "Il range ta moitié dans le tiroir du milieu, sans compter. « Voilà quelqu'un qui comprend un club », dit-il au téléphone, déjà."
+    right:
+      label: "C'est mon visage"
+      effects: {direction: "-", relation: {aulard: -1}}
+      answer: "Il repose la boîte, le couvercle de travers. Le soir, Josiane note dans l'agenda : dîner, hôtel de la Rive, Cheikh Ilyas."
+
+  # Vaubourg n'a pas eu sa moitié : il fait monter le fonds lui-même.
+  - id: en.sp.dornois.canette_vaubourg
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse, direction]
+    speaker: nassir
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg fait entrer Ilyas sans frapper ; la canette orange se pose sur ta boîte de Noël. « Tout le textile, survêtements compris : dix fois vos biscuits. Ça se défait, une poignée de main ? »"
+    left:
+      label: "Ma parole est donnée"
+      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1, aulard: -1}, set: [sp_dornois_tenu], outcome: tenue}
+      answer: "Ilyas reprend sa canette, pleine. Vaubourg le raccompagne jusqu'au parking et ne remonte pas de l'après-midi."
+    right:
+      label: "J'appelle Madame Dornois"
+      effects: {caisse: "++", tribunes: "-", relation: {josiane: -1}, var: {cadeau_berline: "+1"}, set: [sp_dornois_vendu], outcome: vendue}
+      answer: "Tu appelles toi-même. Elle dit « je comprends », deux fois. Le fonds te laisse une berline de fonction, orange sur les portières."
+
+  - id: en.sp.dornois.canette
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: nassir
+    lieu: bureau
+    tone: strategique
+    text: "Cheikh Ilyas t'attend dans ton bureau, ta boîte de Noël entre les mains : « Vos biscuits paient un survêtement ; nous payons tout le textile, dix fois. Votre président dit que vous décidez. »"
+    left:
+      label: "Ma parole est donnée"
+      effects: {caisse: "-", tribunes: "+", relation: {nassir: -1}, set: [sp_dornois_tenu], outcome: tenue}
+      answer: "Il repose la boîte avec soin, ta photo vers toi. « Nous reviendrons quand elle aura fermé », dit-il, sans méchanceté."
+    right:
+      label: "J'appelle Madame Dornois"
+      effects: {caisse: "++", tribunes: "-", relation: {josiane: -1}, var: {cadeau_berline: "+1"}, set: [sp_dornois_vendu], outcome: vendue}
+      answer: "Tu appelles toi-même. Elle dit « je comprends », deux fois. Le fonds te laisse une berline de fonction, orange sur les portières."
+
+  # Parole tenue : l'usine ferme quand même.
+  - id: en.sp.dornois.grille
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, tribunes, ultras]
+    speaker: gege
+    lieu: rue
+    tone: strategique
+    text: "Gégé, à la grille de la biscuiterie, une banderole sous le bras : « Ma mère a emballé des sablés ici trente ans. Ils ferment en juin. Les filles veulent que tes gars entrent avec leur brassard. »"
+    left:
+      label: "On entre avec le brassard"
+      effects: {tribunes: "++", direction: "-", relation: {gege: 1}}
+      answer: "Onze brassards blancs, DORNOIS au feutre. À l'entrée des joueurs, la Nord se tait une seconde, puis chante le nom de la rue."
+    right:
+      label: "Le club reste hors de ça"
+      effects: {direction: "+", tribunes: "-", relation: {gege: -1}}
+      answer: "Gégé roule la banderole. Samedi, les ouvrières sont en tribune quand même, la boîte de Noël sur les genoux, ta photo dessus."
+
+  # Parole vendue : la dernière boîte.
+  - id: en.sp.dornois.derniere_boite
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    text: "Madame Josiane pose sur ton bureau une dernière boîte en fer, sans chèque : « Madame Dornois l'a apportée elle-même. Elle n'est pas montée. Elle a demandé si l'orange tenait au lavage. »"
+    left:
+      label: "J'irai la voir à l'usine"
+      effects: {tribunes: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Rue des Tanneurs, elle t'offre un café dans le bureau vitré. Elle ferme en juin ; elle ne t'en veut pas, dit-elle, et elle le redit."
+    right:
+      label: "Rangez-la avec les autres"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "Josiane la range sur l'armoire, à côté des fanions. Personne ne l'ouvre, et les sablés durcissent jusqu'à l'été."
+
+  # ============================================== 2 · Le laboratoire (louche)
+  - id: en.sp.labo.docteur
+    roles: [entraineur]
+    arc: corps
+    tags: [sponsors, vestiaire, scandale]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    text: "Vukić, au bord du terrain annexe : « Un docteur que je ne connais pas a pris la tension des gars. Triangle bleu sur la veste, contrat signé du président. Il revient jeudi. Je le laisse entrer ? »"
+    left:
+      label: "Laisse-le entrer"
+      effects: {caisse: "+", force: 1, relation: {vukic: -1}, set: [sp_labo]}
+      answer: "Jeudi, le docteur au triangle bleu déplie une table dans le vestiaire. Vukić écrit l'heure de son arrivée dans le cahier."
+    right:
+      label: "Pas sans le Doc"
+      effects: {direction: "-", relation: {vukic: 1, sabatier: 1}}
+      answer: "Vukić ferme la grille du terrain annexe au cadenas. Jeudi, le docteur au triangle bleu attend devant, puis monte voir le président."
+
+  - id: en.sp.labo.armoire_signe
+    roles: [entraineur]
+    arc: corps
+    tags: [sponsors, scandale, piege]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Doc Sabatier ouvre un carton du laboratoire sur sa table : des ampoules sans notice, des comprimés en vrac, un lot écrit au feutre. « Récupération, dit leur docteur. Je les donne aux gars ? »"
+    left:
+      label: "Sous clé, Doc"
+      effects: {force: -1, caisse: "-", relation: {sabatier: 1}}
+      answer: "Il range les cartons dans l'armoire et passe la clé à la chaîne de sa médaille. Le triangle bleu la lui demande deux fois."
+    right:
+      label: "Donnez-les, le jeudi"
+      effects: {force: 2, vestiaire: "+", set: [sp_labo_boites]}
+      answer: "Le jeudi suivant, les gars courent comme à vingt ans. Le Doc note chaque ampoule dans un registre à part, qu'il range chez lui."
+
+  # Tu as fermé le terrain : les cartons sont arrivés quand même, au nom du Doc.
+  - id: en.sp.labo.armoire
+    roles: [entraineur]
+    arc: corps
+    tags: [sponsors, scandale, piege]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Doc Sabatier a reçu les cartons quand même, livrés à son nom : ampoules sans notice, comprimés en vrac, un lot écrit au feutre. « Le président a signé pour moi. Je les donne, ou sous clé ? »"
+    left:
+      label: "Sous clé, Doc"
+      effects: {force: -1, caisse: "-", relation: {sabatier: 1}}
+      answer: "Il range les cartons dans l'armoire et passe la clé à la chaîne de sa médaille. Le triangle bleu la lui demande deux fois."
+    right:
+      label: "Donnez-les, le jeudi"
+      effects: {force: 2, vestiaire: "+", set: [sp_labo_boites]}
+      answer: "Le jeudi suivant, les gars courent comme à vingt ans. Le Doc note chaque ampoule dans un registre à part, qu'il range chez lui."
+
+  # Les cartons donnés : le retournement.
+  - id: en.sp.labo.saignement
+    roles: [entraineur]
+    arc: corps
+    tags: [sponsors, vestiaire, scandale]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    text: "Vukić, le cahier ouvert à la page des jeudis : « Huit gars qui ne transpirent plus. Rouvier a saigné du nez deux fois à la muscu, après la séance du docteur. Lui dit : la chaleur. Tu arrêtes ? »"
+    left:
+      label: "J'arrête, ce soir"
+      effects: {force: -2, caisse: "-", relation: {vukic: 1}, outcome: arrete}
+      answer: "Le docteur au triangle bleu replie sa table sans discuter. Le chèque du laboratoire n'arrive pas le 5 ; Vaubourg demande pourquoi."
+    right:
+      label: "Jusqu'en mai"
+      effects: {force: 1, vestiaire: "-", relation: {vukic: -1}, set: [sp_labo_continue], outcome: continue}
+      answer: "Vukić referme le cahier. Il n'écrit plus l'heure des jeudis, seulement les noms ; Rouvier n'est plus dans la liste."
+
+  # Les cartons sous clé : le docteur vient acheter la clé, le soir.
+  - id: en.sp.labo.mallette
+    roles: [entraineur]
+    arc: corps
+    tags: [sponsors, scandale, piege]
+    lieu: muscu
+    tone: strategique
+    text: "Salle de muscu, dix heures du soir. Le docteur au triangle bleu t'attend sur un banc, une enveloppe sur les genoux : « Des honoraires de conseil. Le Doc ouvre son armoire jeudi, et c'est à vous. »"
+    left:
+      label: "Je prends l'enveloppe"
+      effects: {direction: "+", vestiaire: "-", parole: -1, var: {ville_francs_sales: "+25000"}, set: [sp_labo_enveloppe, sp_labo_boites, sp_labo_continue], outcome: continue}
+      answer: "Elle tient dans ta poche intérieure, à peine. Le jeudi suivant, l'armoire du Doc est ouverte ; le Doc, lui, ne te parle plus."
+    right:
+      label: "Sortez de ma salle"
+      effects: {caisse: "-", tribunes: "+", parole: 1, relation: {sabatier: 1}, outcome: propre}
+      answer: "Il range l'enveloppe sans se vexer. Le laboratoire résilie le contrat le lundi ; le triangle bleu est décollé du car à la spatule."
+
+  # La liste des clients, saisie : Massenet a les dates.
+  - id: en.sp.labo.liste_mai
+    roles: [entraineur]
+    arc: presse
+    tags: [sponsors, presse, scandale]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    text: "Massenet, le carnet ouvert : « La brigade a saisi la liste des clients du laboratoire. {club} y est, jeudi après jeudi, jusqu'en mai. Vous me donnez une phrase, ou je donne les dates ? »"
+    left:
+      label: "Je vous donne une phrase"
+      effects: {tribunes: "-", parole: 1, relation: {meneche: 1}}
+      answer: "Tu dis « récupération », comme leur docteur. Massenet l'imprime entre guillemets, et les guillemets disent tout le reste."
+    right:
+      label: "Donnez les dates"
+      effects: {tribunes: "--", direction: "-", relation: {meneche: -1}}
+      answer: "Les dates sortent en page trois, en colonne. Dimanche, la Nord compte les jeudis à voix haute pendant l'échauffement."
+
+  - id: en.sp.labo.liste_fevrier
+    roles: [entraineur]
+    arc: presse
+    tags: [sponsors, presse, scandale]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    text: "Massenet, le carnet ouvert : « La brigade a saisi la liste des clients du laboratoire. {club} y est jusqu'en février, puis plus rien. Vous m'expliquez février ? »"
+    left:
+      label: "On a arrêté, voilà tout"
+      effects: {tribunes: "+", parole: 1, relation: {meneche: 1}}
+      answer: "Il écrit « arrêté en février » et souligne. L'article sort court, en bas de page ; Vukić le découpe et le colle dans le cahier."
+    right:
+      label: "Pas de commentaire"
+      effects: {direction: "+", tribunes: "-", relation: {meneche: -1}}
+      answer: "Il imprime « pas de commentaire » sous les dates, en gras. Le lundi, trois mères de joueurs appellent le secrétariat."
+
+  - id: en.sp.labo.liste_rayee
+    roles: [entraineur]
+    arc: presse
+    tags: [sponsors, presse]
+    speaker: meneche
+    lieu: echo
+    tone: strategique
+    text: "Massenet, le carnet ouvert : « La brigade a saisi la liste des clients du laboratoire. {club} y est, rayé au stylo, avec une note : « refus du Doc ». Je cite le Doc, ou vous ? »"
+    left:
+      label: "Citez le Doc"
+      effects: {tribunes: "+", relation: {sabatier: 1}}
+      answer: "L'article dit « le docteur Sabatier ». Le Doc le lit au café de la Mairie et commande, pour une fois, un deuxième café."
+    right:
+      label: "Citez-moi"
+      effects: {tribunes: "++", direction: "-", relation: {sabatier: -1}}
+      answer: "L'article dit ton nom, pas le sien. Le Doc le lit au cabinet, sans un mot, et ferme l'armoire à clé devant toi."
+
+  # ============================================== 3 · La maquette (louche)
+  - id: en.sp.terrain.suite
+    roles: [entraineur]
+    arc: president
+    tags: [sponsors, scandale, piege]
+    lieu: hotel
+    tone: strategique
+    text: "Hôtel de la Rive, suite 4, minuit. Sur la table basse, une résidence en maquette à la place du terrain annexe, et des clés : « Dites que le club n'en a plus besoin. Cette villa est à vous. »"
+    left:
+      label: "Je le dirai"
+      effects: {direction: "+", parole: -1, var: {cadeau_villa: "+1"}, set: [sp_terrain_villa]}
+      answer: "Il pose les clés dans ta main. De la villa des Hauts-de-Rive, on voit le stade et le terrain annexe ; chez le notaire, ton nom est tapé."
+    right:
+      label: "Les gamins y jouent"
+      effects: {direction: "-", parole: 1, relation: {aulard: -1}}
+      answer: "Il remet les clés dans sa poche, sans se presser. Dans l'ascenseur, tu croises Vaubourg qui monte ; il appuie sur le 4."
+
+  - id: en.sp.terrain.vaubourg_villa
+    roles: [entraineur]
+    arc: president
+    tags: [sponsors, direction, scandale]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg t'attend avec deux cafés et la maquette sous le bras : « Le conseil municipal vote jeudi. Vous parlerez avant moi : un entraîneur, ça rassure. La villa vous plaît, {toi} ? »"
+    left:
+      label: "Je parlerai jeudi"
+      effects: {tribunes: "--", direction: "++", set: [sp_terrain_parle]}
+      answer: "Jeudi, tu lis trois phrases que tu n'as pas écrites. Au fond de la salle du conseil, Gégé compte les mains levées sur ses doigts."
+    right:
+      label: "Parlez, vous"
+      effects: {direction: "-", relation: {aulard: -1}}
+      answer: "Il parle seul, et mal. Le soir, il te rappelle que la villa est à ton nom, pas au sien, et il raccroche le premier."
+
+  - id: en.sp.terrain.vaubourg_paie
+    roles: [entraineur]
+    arc: president
+    tags: [sponsors, direction, caisse]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg ferme la porte du bureau du pied : « Vous avez refusé une villa ? Moi, j'ai signé une promesse de vente. La paie de mars est dans ce terrain. Vous la voulez, la paie de mars ? »"
+    left:
+      label: "Je préviens L'Écho"
+      effects: {tribunes: "+", direction: "--", parole: 1, set: [sp_terrain_echo]}
+      answer: "Massenet note le numéro de la suite et l'heure. Vaubourg l'apprend avant le bouclage ; il ne te serre plus la main."
+    right:
+      label: "Je me tais pour la paie"
+      effects: {direction: "+", caisse: "+", parole: -1}
+      answer: "Tu te tais. La paie de mars tombe le 3, en avance pour la première fois. Les gars ne savent pas pourquoi ; toi, si."
+
+  # Le retournement : l'acte de 1931.
+  - id: en.sp.terrain.acte_villa
+    roles: [entraineur]
+    arc: presse
+    tags: [sponsors, presse, scandale]
+    speaker: meneche
+    lieu: terrain
+    tone: strategique
+    text: "Massenet déplie un acte jauni sur ton capot : « Légué en 1931, « aux enfants du quartier, à perpétuité ». La vente est nulle. Votre villa des Hauts-de-Rive, je la connais aussi. Je publie tout ? »"
+    left:
+      label: "Je rends la villa"
+      # La ville reprend la villa (saisie_logement : le seul effet qui
+      # retire un logement) ; la trace se rétracte (traces_retract de l'arc).
+      effects: {tribunes: "+", direction: "--", parole: 1, var: {saisie_logement: "+1"}, clear: [sp_terrain_villa], outcome: sauve}
+      answer: "Tu poses les clés sur le bureau du notaire. L'acte sort en page une ; ton nom n'y est que pour la villa rendue, en dernière ligne."
+    right:
+      label: "Je ne connais pas l'acte"
+      effects: {direction: "+", parole: -1, relation: {meneche: -2}, outcome: rase}
+      answer: "Il replie l'acte. Il te regarde comme une page qu'il écrira plus tard, et remonte dans sa voiture sans claquer la portière."
+
+  - id: en.sp.terrain.acte_echo
+    roles: [entraineur]
+    arc: presse
+    tags: [sponsors, presse]
+    speaker: meneche
+    lieu: terrain
+    tone: strategique
+    text: "Massenet déplie un acte jauni sur ton capot : « Vous m'aviez donné la suite 4. J'ai trouvé mieux : légué en 1931, « aux enfants du quartier, à perpétuité ». Je publie avec votre nom ? »"
+    left:
+      label: "Publiez, avec mon nom"
+      effects: {tribunes: "++", direction: "--", parole: 1, relation: {meneche: 1}, outcome: sauve}
+      answer: "L'acte sort en page une, la signature de la veuve agrandie. Le promoteur ne rappelle pas ; Vaubourg non plus."
+    right:
+      label: "Gardez ça pour vous"
+      effects: {direction: "+", parole: -1, relation: {meneche: -1}, outcome: rase}
+      answer: "Il replie l'acte dans son carnet. « Pour plus tard », dit-il, et tu comprends que plus tard est une date."
+
+  - id: en.sp.terrain.acte
+    roles: [entraineur]
+    arc: presse
+    tags: [sponsors, presse]
+    speaker: meneche
+    lieu: terrain
+    tone: strategique
+    text: "Massenet déplie un acte jauni sur ton capot, au bord du terrain annexe : « Légué en 1931 par une veuve de la Tréfilerie, « aux enfants du quartier, à perpétuité ». Je publie avec votre nom ? »"
+    left:
+      label: "Publiez, avec mon nom"
+      effects: {tribunes: "++", direction: "--", parole: 1, relation: {meneche: 1}, outcome: sauve}
+      answer: "L'acte sort en page une, la signature de la veuve agrandie. Le promoteur ne rappelle pas ; Vaubourg non plus."
+    right:
+      label: "Gardez ça pour vous"
+      effects: {direction: "+", parole: -1, relation: {meneche: -1}, outcome: rase}
+      answer: "Il replie l'acte dans son carnet. « Pour plus tard », dit-il, et tu comprends que plus tard est une date."
+
+  # Rasé, et tu as parlé au conseil : le cadeau le plus rare de la ville.
+  - id: en.sp.terrain.helico
+    roles: [entraineur]
+    arc: president
+    tags: [sponsors, scandale, piege]
+    lieu: domicile
+    tone: strategique
+    when: "year >= 1995"
+    text: "Un coursier dépose chez toi une enveloppe du promoteur : une clé, une carte de l'aérodrome de Castérac, un mot. « Le petit hélicoptère du groupe. Je ne vole plus. Il y aura d'autres terrains. »"
+    left:
+      label: "Je garde la clé"
+      effects: {direction: "+", parole: -1, var: {cadeau_helico: "+1"}, set: [sp_terrain_helico]}
+      answer: "La clé pèse moins que celle de la villa. Le dimanche, de la tribune, on voit passer un hélicoptère blanc ; Gégé lève les yeux."
+    right:
+      label: "Je renvoie la clé"
+      effects: {direction: "-", parole: 1}
+      answer: "Tu la renvoies par le même coursier, dans la même enveloppe. Le promoteur ne répond pas ; il achète un autre terrain, à Nerville."
+
+  # Rasé : les pelleteuses.
+  - id: en.sp.terrain.chaines
+    roles: [entraineur]
+    arc: tribunes
+    tags: [sponsors, tribunes, ultras]
+    speaker: gege
+    lieu: terrain
+    tone: strategique
+    text: "Six heures, terrain annexe. Les pelleteuses tournent au ralenti. Gégé et quatre anciens de la Nord se sont enchaînés au but sans filet : « Le commissaire dit que tu dois nous parler. Parle. »"
+    left:
+      label: "Je m'assois avec eux"
+      effects: {tribunes: "++", direction: "--", relation: {gege: 2}}
+      answer: "Tu t'assois dans l'herbe mouillée, contre le poteau. À neuf heures, les pelleteuses reculent ; elles reviennent un mardi, sans prévenir."
+    right:
+      label: "Partez, c'est fini"
+      effects: {tribunes: "--", direction: "+", relation: {gege: -2}}
+      answer: "Gégé défait sa chaîne lui-même et te la tend. À midi, il ne reste du terrain annexe qu'une cabane et un filet roulé dans la boue."
+
+  # Sauvé : la paie de mars est partie avec le promoteur.
+  - id: en.sp.terrain.paie
+    roles: [entraineur]
+    arc: president
+    tags: [sponsors, direction, vestiaire]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg, devant la fenêtre qui donne sur le terrain annexe : « Le promoteur a retiré son offre. La paie de mars aussi. Vous l'annoncez au vestiaire, ou je le fais avec vos mots ? »"
+    left:
+      label: "Je l'annonce moi-même"
+      effects: {vestiaire: "-", relation: {aulard: 1}}
+      answer: "Tu l'annonces debout, sans papier. Le capitaine demande « jusqu'à quand » ; tu dis « je ne sais pas », et c'est ce qu'ils retiennent."
+    right:
+      label: "Avec vos mots à vous"
+      effects: {vestiaire: "+", direction: "-", relation: {aulard: -1}}
+      answer: "Il l'annonce en appuyant sur ton nom. Les gars regardent le terrain annexe par la fenêtre, puis te regardent, toi."
+
+  # ============================================== 4 · La dette de Gigi (louche)
+  - id: en.sp.gigi.terminus
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire, scandale]
+    speaker: vecchio
+    lieu: tripot
+    tone: strategique
+    text: "Arrière-salle du Terminus, deux heures. Gigi ne lève pas les yeux du tapis vert : « Je leur dois trente mille. Deux buts encaissés samedi, et je ne dois plus rien. Tu devais le savoir par moi. »"
+    left:
+      label: "Tu ne joues pas samedi"
+      effects: {vestiaire: "-", force: -1, relation: {vecchio: -1}}
+      answer: "Il hoche la tête, comme s'il l'avait choisi. Samedi, sur le banc, il garde ses gants aux mains jusqu'au coup de sifflet final."
+    right:
+      label: "Je paie ta dette"
+      effects: {vestiaire: "+", relation: {vecchio: 2}, var: {ville_amende: "+30000"}, set: [sp_gigi_dette]}
+      answer: "Tu poses l'argent sur le tapis. L'homme qui tient la table compte deux fois, puis il te regarde, toi, plus longtemps que l'argent."
+
+  # Le réseau vient te voir, toi.
+  - id: en.sp.gigi.manteau_dette
+    roles: [entraineur]
+    arc: scandale
+    tags: [sponsors, scandale, piege]
+    lieu: bar
+    tone: strategique
+    text: "Au Corner, après la fermeture, un manteau clair finit ton verre : « Vous avez payé pour le gardien : vous voilà chez nous. Deux buts d'écart contre {rival}, ou le président apprend le Terminus. »"
+    left:
+      label: "Finissez ailleurs"
+      effects: {direction: "-", parole: 1, outcome: refuse}
+      answer: "Il pose le verre vide à l'envers sur le comptoir et sort sans payer. Le patron du Corner essuie le cercle mouillé deux fois."
+    right:
+      label: "Deux buts, pas un de plus"
+      effects: {parole: -1, var: {ville_francs_sales: "+60000"}, set: [sp_gigi_vendu], outcome: vendu}
+      answer: "L'enveloppe passe sous le comptoir, de sa main à ta poche. Il dit « samedi » comme on dit « bonne nuit », et laisse un pourboire."
+
+  - id: en.sp.gigi.manteau_banc
+    roles: [entraineur]
+    arc: scandale
+    tags: [sponsors, scandale, piege]
+    lieu: bar
+    tone: strategique
+    text: "Au Corner, après la fermeture, un manteau clair finit ton verre : « Le gardien sur le banc, et nous qui avions misé. Deux buts d'écart contre {rival}, ou le président apprend tout. »"
+    left:
+      label: "Finissez ailleurs"
+      effects: {direction: "-", parole: 1, outcome: refuse}
+      answer: "Il pose le verre vide à l'envers sur le comptoir et sort sans payer. Le patron du Corner essuie le cercle mouillé deux fois."
+    right:
+      label: "Deux buts, pas un de plus"
+      effects: {parole: -1, var: {ville_francs_sales: "+60000"}, set: [sp_gigi_vendu], outcome: vendu}
+      answer: "L'enveloppe passe sous le comptoir, de sa main à ta poche. Il dit « samedi » comme on dit « bonne nuit », et laisse un pourboire."
+
+  # Le match vendu : Gigi ne le sait pas, ou le sait trop.
+  - id: en.sp.gigi.samedi_vendu
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [sponsors, scandale, moment]
+    lieu: stade
+    tone: strategique
+    text: "Soixante-dixième, 1-0 pour {rival}. Gigi arrête tout, un penalty compris, et hurle sur sa défense. Sur le banc, ton adjoint te regarde au lieu du terrain. Il te reste un changement."
+    left:
+      label: "Je sors Gigi"
+      effects: {vestiaire: "--", relation: {vecchio: -2}, set: [sp_gigi_livre]}
+      answer: "Le jeune entre à froid. Le deuxième but arrive à la 88e, entre ses jambes. Gigi regarde la fin debout, les gants aux mains."
+    right:
+      label: "Je le laisse jouer"
+      effects: {vestiaire: "+", tribunes: "+", relation: {vecchio: 1}, set: [sp_gigi_double]}
+      answer: "1-0, Gigi sort sous les chants de la Nord. Le soir, dans ta boîte aux lettres, un ticket de pari froissé, et rien d'autre."
+
+  # Le réseau refusé : il se rembourse sur Gigi.
+  - id: en.sp.gigi.doigts
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire, scandale]
+    speaker: vecchio
+    lieu: terrain
+    tone: strategique
+    text: "Gigi arrive à l'entraînement deux doigts de la main gauche strappés ensemble : « Tombé dans l'escalier du Terminus. » Il enfile son gant par-dessus, lentement. « Je joue samedi, ou pas ? »"
+    left:
+      label: "Je porte plainte pour toi"
+      effects: {direction: "-", tribunes: "+", parole: 1, relation: {vecchio: 1}}
+      answer: "L'inspecteur écrit « escalier », puis le raye. La semaine suivante, l'arrière-salle du Terminus est fermée « pour travaux »."
+    right:
+      label: "Tu ne joues pas"
+      effects: {vestiaire: "-", force: -1, relation: {vecchio: -1}}
+      answer: "Il enlève le gant avec les dents. Samedi, le jeune encaisse deux buts ; en tribune d'honneur, un manteau clair applaudit le second."
+
+  # Livré : les gants sur le bureau.
+  - id: en.sp.gigi.gants
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire]
+    lieu: vestiaire
+    tone: strategique
+    text: "Mardi, Gigi pose ses gants jaunes sur ton bureau, et un mot au dos d'une feuille de match : « Pas comme ça. » Il jouera samedi. Il ne te parlera plus."
+    left:
+      label: "Je le rattrape au parking"
+      effects: {vestiaire: "-", relation: {vecchio: 1}}
+      answer: "Il est déjà dans sa voiture. Il baisse la vitre d'un doigt, t'écoute jusqu'au bout, et la remonte sans répondre."
+    right:
+      label: "Je garde les gants"
+      effects: {vestiaire: "--", relation: {vecchio: -1}}
+      answer: "Tu les ranges dans ton tiroir, sur l'enveloppe du Corner. Ils sentent la pelouse et le camphre ; tu ne rouvres plus le tiroir."
+
+  # Trahi : le réseau veut son argent.
+  - id: en.sp.gigi.pare_brise
+    roles: [entraineur]
+    arc: scandale
+    tags: [sponsors, scandale]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade. Ton pare-brise est étoilé, le ticket de pari coincé sous l'essuie-glace, une somme écrite au dos : « Avant dimanche. » Gigi, deux voitures plus loin, a tout vu."
+    left:
+      label: "Je rends l'enveloppe"
+      effects: {direction: "-", parole: 1, relation: {vecchio: 1}, var: {ville_amende: "+60000"}, clear: [sp_gigi_double]}
+      answer: "Tu la glisses, pleine, sous l'essuie-glace d'une voiture grise garée devant le Corner. Le lendemain, ton pare-brise est neuf, sans facture."
+    right:
+      label: "Je garde tout"
+      effects: {tribunes: "-", parole: -1}
+      answer: "Tu fais changer le pare-brise à tes frais. Depuis, Gigi te raccompagne à ta voiture tous les soirs, sans rien demander."
+
+  # Refusé, dette payée : Gigi rembourse.
+  - id: en.sp.gigi.caravane
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire]
+    speaker: vecchio
+    lieu: vestiaire
+    tone: leger
+    text: "Gigi pose sur ton bureau une enveloppe de billets froissés, ses doigts encore strappés : « Ma femme a vendu la caravane. C'est le premier tiers. Tu prends, ou tu me vexes ? »"
+    left:
+      label: "Je prends, c'est réglé"
+      effects: {vestiaire: "+", relation: {vecchio: 1}, var: {ville_francs: "+10000"}}
+      answer: "Il compte devant toi, en mouillant son pouce, et ne laisse pas un billet de plus. En sortant, il dit que la caravane fuyait."
+    right:
+      label: "Garde-la, et la caravane"
+      effects: {vestiaire: "++", relation: {vecchio: 2}}
+      answer: "Il reprend l'enveloppe sans discuter. Samedi, il arrête un penalty, et il le dédie au banc d'un doigt, le seul qui plie encore."
+
+  # Refusé, Gigi sur le banc : le réseau a eu ses buts quand même.
+  - id: en.sp.gigi.petit
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire, formation]
+    speaker: vecchio
+    lieu: bar
+    tone: strategique
+    text: "Gigi s'arrête à ta table, au Corner : « Ils ont eu leurs deux buts, un samedi ou l'autre. Je ne leur dois plus rien. Le petit qui les a pris ne sait pas pourquoi il a pleuré. Tu lui dis ? »"
+    left:
+      label: "Je lui dirai, moi"
+      effects: {vestiaire: "-", parole: 1, relation: {vecchio: -1}}
+      answer: "Le petit écoute sans t'interrompre, puis demande s'il aurait pu les arrêter. Tu dis non. Il ne te croit pas, et il a raison."
+    right:
+      label: "Il ne saura jamais"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Gigi paie ton verre. À l'entraînement, il reste une heure de plus avec le petit, sur les ballons à ras de terre, sans dire pourquoi."

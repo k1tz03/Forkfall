@@ -1,0 +1,249 @@
+# Les sponsors de l'entraîneur — propres et louches (demande du porteur du
+# projet : « des sponsors qui viendraient proposer de l'argent ou des bonus, ou
+# des médicaments, mais que tout ne soit pas forcément clean […] qu'ils
+# essaient de nous acheter, corrompre, que si on le fait on prend un risque avec
+# la police »). Quatre intrigues `kind: serie`, tirées par le réservoir des
+# postulats de l'entraîneur à partir de la saison 1 (content/postulats.yaml).
+# Les cartes sont dans content/cards/entraineur/sponsors_louches.yaml.
+#
+#  1. Les biscuits Dornois (PROPRE) — la biscuiterie de la rue des Tanneurs
+#     paie les survêtements, et ta photo sur sa boîte de Noël. L'argent est
+#     vrai ; la difficulté vient d'ailleurs : Vaubourg veut sa moitié, puis le
+#     fonds d'Ilyas veut tout le textile, dix fois le chèque. Tenir parole ou
+#     vendre. Au bout : l'usine ferme quand même (Gégé, dont la mère y a emballé
+#     des sablés), ou la dernière boîte en fer, sans chèque.
+#  2. Le laboratoire (LOUCHE) — un laboratoire de Montbéliac paie la
+#     récupération ; son docteur au triangle bleu vient le jeudi, et des cartons
+#     sans notice arrivent dans l'armoire du Doc. Si tu les fais donner, un
+#     joueur saigne du nez à la muscu ; si tu refuses, le docteur t'attend le
+#     soir à la salle de muscu avec des « honoraires ». Au bout : la liste des
+#     clients saisie par la brigade, et Massenet qui a les dates.
+#  3. La maquette (LOUCHE) — un promoteur de Portclair, une suite de l'hôtel de
+#     la Rive à minuit, la maquette d'une résidence sur le terrain annexe et les
+#     clés de la villa des Hauts-de-Rive. Vaubourg est déjà monté à la suite.
+#     Le retournement : l'acte de 1931 (« aux enfants du quartier, à
+#     perpétuité ») que Massenet déplie sur ton capot. Au bout : les pelleteuses,
+#     ou la paie de mars perdue ; pour qui est allé jusqu'au conseil municipal,
+#     la clé d'un hélicoptère (le cadeau le plus rare de la ville, après 1995).
+#  4. La dette de Gigi (LOUCHE, le réseau de paris) — Gigi Vecchio doit trente
+#     mille à l'arrière-salle du Terminus ; deux buts encaissés samedi et il ne
+#     doit plus rien. L'homme au manteau clair (celui du coup de fil de trois
+#     heures, côté joueur) vient ensuite te voir, toi. Vendre le match, puis le
+#     livrer ou le trahir ; ou refuser, et Gigi revient avec deux doigts strappés.
+#
+# Le pont avec la ville (`var:`) : `ville_francs` (la photo de Noël, propre),
+# `ville_francs_sales` (les honoraires du laboratoire, l'enveloppe du réseau),
+# `ville_amende` (la moitié pour Vaubourg, la dette de Gigi, l'enveloppe
+# rendue), `cadeau_villa`, `cadeau_berline`, `cadeau_helico`, et
+# `saisie_logement` quand on rend soi-même la villa (la ville la reprend :
+# c'est le seul effet qui retire un logement).
+#
+# Le risque : les drapeaux `sp_*` posés par l'argent sale (sp_labo_boites,
+# sp_labo_enveloppe, sp_terrain_villa, sp_terrain_helico, sp_gigi_vendu,
+# sp_gigi_double) sont lus par les événements de police et de la Fédération
+# (content/arcs/common/sponsors_louches.yaml : l'inventaire, le contrôle, la
+# garde à vue, la commission). Accepter n'est jamais puni à coup sûr : c'est
+# un risque, tiré par le metteur en scène.
+#
+# Tous `once`, `min_season: 1`, `same_club: true` (ce sont des gens
+# d'Aubérive), `fallback: nouvelles`. Aucun `tone: drame`.
+arcs:
+  # ======================================================= 1 · Les biscuits Dornois
+  - id: en.sp.dornois
+    title: "Les biscuits Dornois"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 0.4
+    once: true
+    min_season: 1
+    # « Le contrat » plutôt que « l'argent du club » : l'histoire est celle
+    # d'une parole donnée, et le thème de l'argent (les salaires, le fonds)
+    # est celui des deux intrigues les plus fragiles du réservoir de
+    # l'intérimaire — un thème partagé interdit de les tirer la même saison.
+    theme: contrat
+    carrier: josiane
+    cast: [josiane, aulard, nassir, gege]
+    issues: [refus, tenue, vendue]
+    traces:
+      sp_dornois:       "{annee} : les biscuits Dornois sur les survêtements de {club}, sur une poignée de main."
+      sp_dornois_tenu:  "{annee} : {nom} a refusé la canette du fonds. Les survêtements sont restés aux biscuits."
+      sp_dornois_vendu: "{annee} : la canette orange a pris les survêtements de {club}. Fin des biscuits Dornois."
+    hint: "Une boîte en fer, un chèque plié dedans, et une parole donnée rue des Tanneurs."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : la biscuiterie Dornois a fermé ses grilles. On trouve encore ses boîtes en fer au marché."
+    steps:
+      - id: boite
+        card: en.sp.dornois.boite
+        next: [ { step: part, if: "flag('sp_dornois')", in: [2, 3] } ]
+      - id: part
+        card: en.sp.dornois.part
+        next: [ { step: canette, in: [2, 3] } ]
+      - id: canette
+        # Vaubourg n'a pas eu sa moitié : c'est lui qui fait monter Ilyas.
+        card:
+          - { id: en.sp.dornois.canette_vaubourg, if: "!flag('sp_dornois_part')" }
+          - { id: en.sp.dornois.canette }
+        next:
+          - { step: grille, if: "flag('sp_dornois_tenu')", in: [2, 4] }
+          - { step: derniere_boite, if: "flag('sp_dornois_vendu')", in: [2, 4] }
+      - id: grille
+        card: en.sp.dornois.grille
+        next: []
+      - id: derniere_boite
+        card: en.sp.dornois.derniere_boite
+        next: []
+
+  # ======================================================= 2 · Le laboratoire
+  - id: en.sp.labo
+    title: "Le laboratoire"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 0.4
+    once: true
+    min_season: 1
+    theme: corps
+    carrier: vukic
+    cast: [vukic, sabatier, aulard, meneche]
+    # Vukić ouvre l'intrigue au terrain annexe : passé chez l'adversaire, il
+    # ne la porte plus.
+    when: "chars.vukic.statut != 'rival'"
+    issues: [propre, arrete, continue]
+    traces:
+      sp_labo:          "{annee} : un laboratoire de Montbéliac a payé la récupération de {club}. Un triangle bleu sur le car."
+      sp_labo_boites:   "{annee} : des cartons sans notice dans l'armoire du Doc. {nom} a dit de les donner le jeudi."
+      sp_labo_continue: "{annee} : le docteur au triangle bleu est venu chaque jeudi jusqu'en mai. Vukić n'écrivait plus l'heure."
+      sp_labo_enveloppe: "{annee} : des « honoraires de conseil » du laboratoire, à la salle de muscu, pour {nom}."
+    hint: "Un triangle bleu sur le car, et des cartons sans notice dans l'armoire du Doc."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le laboratoire au triangle bleu a quitté {club}. Ses cartons sont restés dans l'armoire du Doc."
+    steps:
+      - id: docteur
+        card: en.sp.labo.docteur
+        next: [ { step: armoire, in: [2, 3] } ]
+      - id: armoire
+        card:
+          - { id: en.sp.labo.armoire_signe, if: "flag('sp_labo')" }
+          - { id: en.sp.labo.armoire }
+        next: [ { step: jeudi, in: [2, 3] } ]
+      - id: jeudi
+        # Les cartons donnés : un joueur saigne du nez. Gardés sous clé : le
+        # docteur vient acheter la clé, le soir, à la muscu.
+        card:
+          - { id: en.sp.labo.saignement, if: "flag('sp_labo_boites')" }
+          - { id: en.sp.labo.mallette }
+        next: [ { step: liste, in: [2, 4] } ]
+      - id: liste
+        card:
+          - { id: en.sp.labo.liste_mai, if: "flag('sp_labo_continue')" }
+          - { id: en.sp.labo.liste_fevrier, if: "flag('sp_labo_boites')" }
+          - { id: en.sp.labo.liste_rayee }
+        next: []
+
+  # ======================================================= 3 · La maquette
+  - id: en.sp.terrain
+    title: "La maquette"
+    kind: serie
+    roles: [entraineur]
+    postulats: [promu]
+    foreground: true
+    weight: 0.4
+    once: true
+    min_season: 1
+    theme: president
+    carrier: aulard
+    cast: [aulard, meneche, gege]
+    issues: [sauve, rase]
+    traces:
+      sp_terrain_villa:  "{annee} : une villa des Hauts-de-Rive au nom de {nom}, pour une phrase sur le terrain annexe."
+      sp_terrain_parle:  "{annee} : {nom} a parlé au conseil municipal pour la résidence du terrain annexe."
+      sp_terrain_echo:   "{annee} : {nom} a donné à L'Écho le numéro d'une suite de l'hôtel de la Rive."
+      sp_terrain_helico: "{annee} : la clé d'un hélicoptère blanc, aérodrome de Castérac, au nom de {nom}."
+    traces_retract:
+      sp_terrain_villa:  "{annee} : {nom} a rendu chez le notaire les clés de la villa des Hauts-de-Rive."
+    hint: "Une maquette sur une table basse, à la place exacte du terrain annexe."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : la résidence du terrain annexe n'a jamais été construite. Ou alors ailleurs."
+    steps:
+      - id: suite
+        card: en.sp.terrain.suite
+        next: [ { step: bureau, in: [2, 3] } ]
+      - id: bureau
+        card:
+          - { id: en.sp.terrain.vaubourg_villa, if: "flag('sp_terrain_villa')" }
+          - { id: en.sp.terrain.vaubourg_paie }
+        next: [ { step: acte, in: [2, 3] } ]
+      - id: acte
+        # L'acte de 1931 : le retournement. Il pose l'issue (sauve | rase).
+        card:
+          - { id: en.sp.terrain.acte_villa, if: "flag('sp_terrain_villa')" }
+          - { id: en.sp.terrain.acte_echo, if: "flag('sp_terrain_echo')" }
+          - { id: en.sp.terrain.acte }
+        next: [ { step: fin, in: [2, 4] } ]
+      - id: fin
+        card:
+          - { id: en.sp.terrain.helico, if: "arc_outcome('en.sp.terrain') == 'rase' && flag('sp_terrain_parle') && year >= 1995" }
+          - { id: en.sp.terrain.chaines, if: "arc_outcome('en.sp.terrain') == 'rase'" }
+          - { id: en.sp.terrain.paie }
+        next: []
+
+  # ======================================================= 4 · La dette de Gigi
+  - id: en.sp.gigi
+    title: "La dette de Gigi"
+    kind: serie
+    roles: [entraineur]
+    postulats: [interimaire]
+    foreground: true
+    weight: 0.4
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: vecchio
+    cast: [vecchio]
+    # Gigi doit être encore dans les buts : au staff, il n'a plus de match à perdre.
+    when: "chars.vecchio.statut != 'staff' && !flag('gigi_staff')"
+    issues: [refuse, vendu]
+    traces:
+      sp_gigi_dette:  "{annee} : {nom} a payé la dette de Gigi Vecchio sur le tapis vert du Terminus."
+      sp_gigi_vendu:  "{annee} : une enveloppe sous le comptoir du Corner, pour deux buts d'écart contre {rival}."
+      sp_gigi_livre:  "{annee} : {nom} a sorti Gigi Vecchio à la 75e. Le deuxième but est arrivé à la 88e."
+      sp_gigi_double: "{annee} : Gigi a tout arrêté. Un ticket de pari froissé dans la boîte aux lettres de {nom}."
+    hint: "Trente mille sur un tapis vert, et deux buts à encaisser samedi."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : l'arrière-salle du Terminus a fermé « pour travaux ». Gigi n'y joue plus."
+    steps:
+      - id: terminus
+        card: en.sp.gigi.terminus
+        next: [ { step: manteau, in: [2, 3] } ]
+      - id: manteau
+        card:
+          - { id: en.sp.gigi.manteau_dette, if: "flag('sp_gigi_dette')" }
+          - { id: en.sp.gigi.manteau_banc }
+        next: [ { step: samedi, in: [1, 3] } ]
+      - id: samedi
+        card:
+          - { id: en.sp.gigi.samedi_vendu, if: "flag('sp_gigi_vendu')" }
+          - { id: en.sp.gigi.doigts }
+        next: [ { step: apres, in: [2, 4] } ]
+      - id: apres
+        card:
+          - { id: en.sp.gigi.gants, if: "flag('sp_gigi_livre')" }
+          - { id: en.sp.gigi.pare_brise, if: "flag('sp_gigi_double')" }
+          - { id: en.sp.gigi.caravane, if: "flag('sp_gigi_dette')" }
+          - { id: en.sp.gigi.petit }
+        next: []

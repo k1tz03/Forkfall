@@ -218,7 +218,7 @@ String _nameLevel(Content content, GameState s, Pending p) {
   if (sp != null) {
     final rel = s.relations[sp] ?? 0;
     final expr = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
-    adresse = content.characters[sp]?.adresseFor(s.role, expr) ?? (s.role == 'joueur' ? '{prenom}' : 'coach');
+    adresse = content.characters[sp]?.adresseFor(s.role, expr) ?? content.roles[s.role]?.adresse ?? (s.role == 'joueur' ? '{prenom}' : 'coach');
   }
   final adresseNamed = adresse != null && placeholdersOf(adresse).any(kNamePlaceholders.contains);
   var level = '';
@@ -1094,7 +1094,7 @@ Set<String> reachableEndings(Content content, PostulatDef post, Set<String> arcs
   final out = <String>{'grand_deballage'};
   final role = content.roles[post.role];
   if (role != null) {
-    out.add(post.role == 'joueur' ? 'jubile' : 'en_retraite');
+    out.add(post.role == 'joueur' ? 'jubile' : (post.role == 'entraineur' ? 'en_retraite' : (role.retraiteFin ?? 'ta_loge')));
     for (final g in role.gauges) {
       out.add(g.emptyEnding);
       out.add(g.fullEnding);

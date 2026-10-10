@@ -1,0 +1,332 @@
+# LES BIENS DU JOUEUR — ce que les achats de la ville réveillent
+# (content/ville/boutique.yaml). Des arcs `kind: evenement`, comme les
+# événements sombres (docs/bible/charte_histoire.md § 5) : armés quand leur
+# `when` est vrai, une `chance` par créneau, une fois par carrière, jamais
+# rattrapés (`fallback: drop`), jamais au premier plan, dans le même quota que
+# les sombres (deux par saison, cinq créneaux d'écart). Les cartes sont dans
+# content/cards/joueur/biens.yaml.
+#
+# Ils ne lisent que des drapeaux `bn_*` — ceux que la ville pose tant qu'on
+# possède l'objet, retirés quand il est saisi, volé ou revendu, et ceux que
+# leurs propres cartes posent — et `vars.ville_francs_sales`, le cumul de
+# l'argent sale reçu des cartes. Sans la ville, aucun ne s'arme.
+#
+# Ce que les cartes rendent à la ville (`var:`) : `saisie_vehicules`,
+# `saisie_logement`, `saisie_luxe`, `saisie_tout`, `ville_amende`,
+# `ville_francs`, `cadeau_montre_or`, et `vol_luxe` (le cambriolage : ce qui
+# brille et s'emporte, jamais la maison ni ce qui est au coffre ou au port).
+# La porte de sortie : la garde à vue (`co_garde_a_vue`), si l'on n'ouvre pas
+# à l'huissier du juge.
+#
+#  1. La photo du coupé (café → parking) — la Gazette Rose le soir d'une
+#     défaite ; la rayure à la clé si l'on continue de rouler avec.
+#  2. L'huissier (parking | domicile → café) — le compte à sec : le Trésor
+#     emmène la voiture, ou l'huissier inventorie ; Fardelli paie, puis il
+#     présente sa note (Portclair, sa part). Sans agent (`sans_agent`), c'est le
+#     club qui avance.
+#  3. Le contrôle fiscal (parking → domicile | café) — l'homme en gris attend à
+#     la sortie de l'entraînement ; il a lu les espèces, les îles (`offshore`),
+#     la photo, la villa payée comptant.
+#  4. La maison visitée (domicile → vestiaire | tripot) — la montre en or
+#     revient par Vecchio, ou se rachète au Terminus.
+#  5. L'hélicoptère (terrain → mairie) — le vestiaire se change dos à toi.
+#  6. La voisine (rue) — l'institutrice aux géraniums note les plaques.
+#  7. La brigade financière (domicile) — Camille, si tu lui as menti.
+#  8. La clause (secrétariat → quai) — l'article 14 : pas de deux-roues ; la
+#     chute sur les pavés du quai sud si l'on passe outre.
+#  9. La montre (vestiaire) — la prime de match de tout le banc.
+# 10. Le collier (domicile) — Camille connaît les chiffres.
+# 11. La place réservée (rue) — le 4x4 devant la pharmacie, dans L'Écho.
+#
+# Les fils : la photo nourrit le fisc (variante) et la maison visitée ; le fisc
+# nourrit la voisine (variante) et la brigade ; la lettre de la voisine, la
+# plainte du cambriolage et le fisc arment la brigade ; le nom donné à la
+# brigade rallume la maison visitée ; le mensonge sur le collier revient le
+# matin de la brigade.
+arcs:
+  # ============================================================ 1 · La photo du coupé
+  - id: jp.bn.photo_coupe
+    title: "La photo du coupé"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('bn_coupe_sport') && world.serie_defaites >= 1"
+    cancel_if: "!flag('bn_coupe_sport')"
+    chance: 0.12
+    cast: []
+    same_club: true
+    fallback: drop
+    traces:
+      bn_photo_coupe: "{annee} : la Gazette Rose montre {nom} au volant de son coupé rouge, le soir d'une défaite."
+    steps:
+      - id: gazette
+        # « Je ramène le coupé au garage » pose `next: end`.
+        card:
+          - { id: jp.bn.coupe_gazette_serie, if: "world.serie_defaites >= 3" }
+          - { id: jp.bn.coupe_gazette }
+        next: [ { step: rayure, in: [3, 6] } ]
+      - id: rayure
+        card: jp.bn.coupe_rayure
+        next: []
+
+  # ============================================================ 2 · L'huissier
+  - id: jp.bn.huissier
+    title: "L'huissier"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    # Le compte à sec, les impôts impayés, et de quoi saisir : la voiture, ou ce qui brille.
+    when: "gauges.caisse < 20 && (flag('bn_coupe_sport') || flag('bn_berline') || flag('bn_quatre_quatre') || flag('bn_montre_or') || flag('bn_fourrure') || flag('bn_tableau') || flag('bn_collier') || flag('bn_bateau'))"
+    chance: 0.10
+    cast: [fardelli]
+    same_club: false
+    fallback: drop
+    steps:
+      - id: saisie
+        # « J'appelle Fardelli » pose `next: fardelli` ; tout le reste clôt.
+        card:
+          - { id: jp.bn.huissier_depanneuse_seul, if: "flag('sans_agent') && (flag('bn_coupe_sport') || flag('bn_berline') || flag('bn_quatre_quatre'))" }
+          - { id: jp.bn.huissier_depanneuse, if: "flag('bn_coupe_sport') || flag('bn_berline') || flag('bn_quatre_quatre')" }
+          - { id: jp.bn.huissier_palier_seul, if: "flag('sans_agent')" }
+          - { id: jp.bn.huissier_palier }
+        next: []
+      - id: fardelli
+        card: jp.bn.huissier_fardelli
+        next: []
+
+  # ============================================================ 3 · Le contrôle fiscal
+  - id: jp.bn.fisc
+    title: "Le contrôle fiscal"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('bn_villa') || flag('bn_manoir') || flag('bn_penthouse') || flag('bn_helico') || flag('bn_bateau') || flag('bn_tableau'))"
+    chance: 0.07
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      bn_fisc: "{annee} : un inspecteur des impôts attendait {nom} à la sortie de l'entraînement."
+    steps:
+      - id: parking
+        card:
+          - { id: jp.bn.fisc_especes, if: "vars.ville_francs_sales >= 50000" }
+          - { id: jp.bn.fisc_iles, if: "flag('offshore')" }
+          - { id: jp.bn.fisc_gazette, if: "flag('bn_photo_coupe')" }
+          - { id: jp.bn.fisc_villa, if: "flag('bn_villa')" }
+          - { id: jp.bn.fisc }
+        next: []
+      - id: saisie
+        card:
+          - { id: jp.bn.fisc_saisie_maison, if: "flag('bn_villa') || flag('bn_manoir') || flag('bn_penthouse') || flag('bn_pavillon') || flag('bn_duplex_trefilerie')" }
+          - { id: jp.bn.fisc_saisie_biens }
+        next: []
+      - id: avocat
+        card: jp.bn.fisc_avocat
+        next: []
+
+  # ============================================================ 4 · La maison visitée
+  - id: jp.bn.cambriolage
+    title: "La maison visitée"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('bn_villa') || flag('bn_manoir') || flag('bn_penthouse') || flag('bn_pavillon') || flag('bn_duplex_trefilerie')) && (flag('bn_montre_or') || flag('bn_collier') || flag('bn_tableau') || flag('bn_fourrure')) && (gauges.tribunes < 50 || flag('bn_photo_coupe') || flag('sb_devant_chez_toi') || flag('bn_balance'))"
+    chance: 0.07
+    cast: [vecchio]
+    same_club: false
+    fallback: drop
+    traces:
+      bn_cambriole: "{annee} : cambriolage chez {nom} pendant un déplacement à Haute-Combe. La police a pris la liste."
+    steps:
+      - id: salon
+        card:
+          - { id: jp.bn.cambriolage_balance, if: "flag('bn_balance')" }
+          - { id: jp.bn.cambriolage_montre, if: "flag('bn_montre_or')" }
+          - { id: jp.bn.cambriolage }
+        next: [ { step: montre, if: "flag('bn_montre_volee')", in: [3, 6] } ]
+      - id: montre
+        card:
+          - { id: jp.bn.cambriolage_vecchio }
+          - { id: jp.bn.cambriolage_tripot }
+        next: []
+
+  # ============================================================ 5 · L'hélicoptère
+  - id: jp.bn.helico
+    title: "L'hélicoptère"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('bn_helico')"
+    chance: 0.12
+    cast: [brehaut, aubert]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: pales
+        # « Je reviens au car » pose `next: end`.
+        card:
+          - { id: jp.bn.helico_brehaut }
+          - { id: jp.bn.helico_vestiaire }
+        next: [ { step: arrete, in: [3, 6] } ]
+      - id: arrete
+        card:
+          - { id: jp.bn.helico_aubert }
+          - { id: jp.bn.helico_arrete }
+        next: []
+
+  # ============================================================ 6 · La voisine
+  - id: jp.bn.voisin
+    title: "La voisine"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "(flag('bn_pavillon') || flag('bn_villa') || flag('bn_manoir') || flag('bn_penthouse') || flag('bn_duplex_trefilerie')) && vars.ville_francs_sales >= 30000"
+    chance: 0.08
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      bn_denonce: "{annee} : une voisine de {nom} écrit au procureur, en script, comme au tableau noir."
+    steps:
+      - id: geraniums
+        card:
+          - { id: jp.bn.voisin_fisc, if: "flag('bn_fisc')" }
+          - { id: jp.bn.voisin }
+        next: []
+
+  # ============================================================ 7 · La brigade financière
+  - id: jp.bn.perquisition
+    title: "La brigade financière"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "vars.ville_francs_sales >= 100000 && (flag('bn_denonce') || flag('bn_cambriole') || flag('bn_fisc'))"
+    chance: 0.10
+    cast: [camille]
+    same_club: false
+    fallback: drop
+    traces:
+      bn_balance: "{annee} : devant la brigade financière, {nom} a donné un nom."
+    steps:
+      - id: aube
+        card:
+          - { id: jp.bn.perquisition_camille, if: "flag('bn_mensonge_camille')" }
+          - { id: jp.bn.perquisition }
+        next: []
+
+  # ============================================================ 8 · La clause
+  - id: jp.bn.moto
+    title: "La clause"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: contrat
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('bn_moto')"
+    chance: 0.10
+    cast: [josiane]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: contrat
+        # « C'est ma vie privée » pose `next: chute` ; l'autre sortie clôt.
+        card:
+          - { id: jp.bn.moto_josiane }
+          - { id: jp.bn.moto_lettre }
+        next: []
+      - id: chute
+        card: jp.bn.moto_chute
+        next: []
+
+  # ============================================================ 9 · La montre
+  - id: jp.bn.montre
+    title: "La montre"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('bn_montre_or') && (gauges.vestiaire < 55 || world.serie_defaites >= 1)"
+    chance: 0.08
+    cast: [brehaut]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: casier
+        card:
+          - { id: jp.bn.montre_brehaut }
+          - { id: jp.bn.montre_banc }
+        next: []
+
+  # ============================================================ 10 · Le collier
+  - id: jp.bn.collier
+    title: "Le collier"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('bn_collier') && !flag('divorce') && vars.ville_francs_sales >= 1"
+    chance: 0.10
+    cast: [camille]
+    same_club: false
+    fallback: drop
+    steps:
+      - id: ecrin
+        card: jp.bn.collier
+        next: []
+
+  # ============================================================ 11 · La place réservée
+  - id: jp.bn.quatre_quatre
+    title: "La place réservée"
+    kind: evenement
+    roles: [joueur]
+    postulats: []
+    theme: presse
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('bn_quatre_quatre')"
+    chance: 0.08
+    cast: []
+    same_club: false
+    fallback: drop
+    steps:
+      - id: pharmacie
+        card: jp.bn.quatre_quatre
+        next: []

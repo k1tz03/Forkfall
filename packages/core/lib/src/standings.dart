@@ -112,9 +112,10 @@ List<String> rivalClubNames({
     final pre = prefixes[rng.nextInt(prefixes.length)];
     final ville = villes[rng.nextInt(villes.length)];
     final libre = garde >= 500;
-    if (!libre && (parPrefixe[pre] ?? 0) >= maxParPrefixe) continue;
+    // un préfixe vide : des nations (le sélectionneur), sans quota de préfixe
+    if (!libre && pre.isNotEmpty && (parPrefixe[pre] ?? 0) >= maxParPrefixe) continue;
     if (!libre && (parVille[ville] ?? 0) >= maxParVille) continue;
-    final nom = '$pre $ville';
+    final nom = pre.isEmpty ? ville : '$pre $ville';
     if (!pris.add(nom)) continue;
     parPrefixe[pre] = (parPrefixe[pre] ?? 0) + 1;
     parVille[ville] = (parVille[ville] ?? 0) + 1;

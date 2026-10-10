@@ -1,0 +1,371 @@
+# Cartes des sponsors du joueur (arcs jp.sp.*, content/arcs/joueur/
+# sponsors_louches.yaml). Toutes hors du sac. `arc:` est le THÈME de la carte ;
+# `lieu:` est l'endroit où la ville met la scène (la table du jeudi tombe le
+# soir, à l'arrière-salle du Terminus : `tripot`).
+# Les inconnus parlent sans être des personnages déclarés : Monsieur Ravenel
+# du garage du Pont, le vieux Bourrel, l'homme du casino n'ont pas d'id ; leurs
+# mots passent par Josiane, Gigi, Vaubourg, ou par une carte sans `speaker`.
+# L'argent se dit en gestes (trois chèques, une boîte à cigares), jamais en
+# devise : les francs deviennent des écus en cours de carrière.
+cards:
+  # ============================================== 1 · La voiture du garage du Pont (propre)
+  - id: jp.sp.garage.cles
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    text: "Madame Josiane pose sur le comptoir une clé du garage du Pont : « Monsieur Ravenel prête une voiture à un joueur du club depuis 1979. Votre nom sur la portière, un samedi par mois au garage. »"
+    left:
+      label: "Dites-lui oui"
+      effects: {caisse: "+", vestiaire: "-", var: {ville_francs: "+5000"}, set: [sp_garage]}
+      answer: "Le samedi suivant, tu serres des mains entre deux pompes à essence. Ravenel te présente comme « le joueur de la maison », à chaque client."
+    right:
+      label: "Je prendrai le car"
+      effects: {caisse: "-", vestiaire: "+", outcome: refus}
+      answer: "Josiane raccroche la clé au tableau, à côté de celles du car. « Il demandera au suivant », dit-elle, sans dire qui est le suivant."
+
+  # Le président qui veut sa part.
+  - id: jp.sp.garage.part
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, direction]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg a vu la voiture au parking du stade : « Le garage te paie, mon maillot sur le dos. Son panneau en tribune Est lui coûte le double. Tu reverses la moitié au club, ou je retire le panneau ? »"
+    left:
+      label: "La moitié au club"
+      effects: {direction: "+", relation: {aulard: 1}, var: {ville_amende: "+2500"}, set: [sp_garage_part]}
+      answer: "Il encaisse le chèque devant toi et le glisse sous le sous-main. Ravenel l'apprend par Josiane ; il ne dit rien, il te fait le plein."
+    right:
+      label: "C'est mon contrat"
+      effects: {direction: "-", relation: {aulard: -1}}
+      answer: "Lundi, le panneau du garage du Pont n'est plus en tribune Est. Ravenel te le dit sans reproche, en s'essuyant les mains."
+
+  # Le retournement : le parapet du Pont.
+  - id: jp.sp.garage.pont_mbako
+    roles: [joueur]
+    arc: formation
+    tags: [sponsors, formation, piege]
+    speaker: mbako
+    lieu: rue
+    tone: strategique
+    text: "Mbako, trempé, devant ta voiture encastrée dans le parapet du Pont, un phare pendu : « Je l'ai prise pour ramener ma mère. Il pleuvait. Je n'ai pas le permis. Dis que c'était toi. »"
+    left:
+      label: "C'était moi"
+      effects: {caisse: "-", parole: -1, relation: {mbako: 2}, set: [sp_garage_couvert]}
+      answer: "Tu signes le constat à sa place. Ravenel lit ton nom, regarde le petit, et ne dit rien ; il ajoute « conducteur » au crayon."
+    right:
+      label: "Tu le diras toi-même"
+      effects: {vestiaire: "-", parole: 1, relation: {mbako: -1}}
+      answer: "Il le dit à Ravenel, la casquette à la main. Ravenel lui fait balayer l'atelier trois samedis ; le petit revient le quatrième, pour rien."
+
+  - id: jp.sp.garage.pont
+    roles: [joueur]
+    arc: formation
+    tags: [sponsors, formation, piege]
+    lieu: rue
+    tone: strategique
+    text: "Ta voiture est dans le parapet du Pont, un phare pendu. Le gamin de la réserve qui t'avait demandé les clés pour une heure tremble sous l'abribus : « Je n'ai pas le permis. Dis que c'était toi. »"
+    left:
+      label: "C'était moi"
+      effects: {caisse: "-", parole: -1, set: [sp_garage_couvert]}
+      answer: "Tu signes le constat à sa place. Ravenel lit ton nom, regarde le gamin, et ne dit rien ; il ajoute « conducteur » au crayon."
+    right:
+      label: "Tu le diras toi-même"
+      effects: {vestiaire: "-", parole: 1}
+      answer: "Il le dit à Ravenel, la casquette à la main. Ravenel lui fait balayer l'atelier trois samedis ; le gamin revient le quatrième, pour rien."
+
+  # Au bout : la carte grise.
+  - id: jp.sp.garage.carte_grise_constat
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, formation]
+    lieu: rue
+    tone: leger
+    text: "Ravenel pose une carte grise sur le capot réparé, ton nom dessus : « Trois saisons de samedis. Et le constat, je sais le lire. Elle est à toi. Le gamin, je le prends en apprentissage, si tu veux. »"
+    left:
+      label: "Prenez-le, et merci"
+      effects: {vestiaire: "+", var: {cadeau_berline: "+1"}, outcome: carte_grise}
+      answer: "Le gamin commence un lundi, en bleu de travail trop grand. Le samedi, il lave ta voiture avant le match, et signe la buée du doigt."
+    right:
+      label: "Gardez la voiture"
+      effects: {tribunes: "+", parole: 1, outcome: rendue}
+      answer: "Ravenel hoche la tête. Il garde la voiture, et le gamin ; ton nom reste sur la portière tout l'été, il n'a pas eu le temps de l'effacer."
+
+  # Vaubourg a retiré le panneau : le garage ferme.
+  - id: jp.sp.garage.carte_grise_panneau
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, direction]
+    lieu: rue
+    tone: strategique
+    text: "Ravenel baisse la grille du garage à midi, un mardi : « Sans le panneau, plus de clients du stade. Je vends à la chaîne de Lyonnet. La voiture, prends-la ; je ne veux pas qu'ils l'aient. »"
+    left:
+      label: "Je la prends"
+      effects: {caisse: "+", var: {cadeau_berline: "+1"}, outcome: carte_grise}
+      answer: "Tu repars avec la voiture et une carte grise encore tiède de la photocopieuse. Le samedi, la grille du garage reste baissée."
+    right:
+      label: "Je vais voir Vaubourg"
+      effects: {direction: "-", relation: {aulard: -1}, outcome: rendue}
+      answer: "Vaubourg t'écoute en signant autre chose. Le panneau revient en tribune Est en juin ; il est vide, avec un numéro à appeler."
+
+  - id: jp.sp.garage.carte_grise
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, tribunes]
+    lieu: rue
+    tone: leger
+    text: "Ravenel s'essuie les mains et pose une carte grise sur le capot réparé, ton nom dessus : « Trois saisons de samedis. Elle est à toi. Mon fils joue en moins de quinze ans : tu viendras le voir ? »"
+    left:
+      label: "Je viendrai samedi"
+      effects: {tribunes: "+", var: {cadeau_berline: "+1"}, outcome: carte_grise}
+      answer: "Le samedi, tu regardes le fils jouer arrière gauche sous la pluie. Il te ressemble de dos ; Ravenel le dit, et ça le rend fier."
+    right:
+      label: "Donnez-la à un jeune"
+      effects: {vestiaire: "+", parole: 1, outcome: rendue}
+      answer: "Ravenel range la carte grise dans sa combinaison. Au printemps, la voiture est au parking du centre de formation, sans nom sur la portière."
+
+  # ============================================== 2 · Les crampons Bourrel (propre)
+  - id: jp.sp.bourrel.paire
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, vestiaire]
+    speaker: vecchio
+    lieu: vestiaire
+    tone: leger
+    text: "Vecchio pose sur ton banc des crampons emballés dans L'Écho : « Bourrel, de Montbéliac. Il fait mes gants depuis 1971. Il veut te chausser trois saisons ; il paie peu, mais il paie. Tu essaies ? »"
+    left:
+      label: "Je les lace"
+      effects: {caisse: "+", relation: {vecchio: 1}, var: {ville_francs: "+4000"}, set: [sp_bourrel]}
+      answer: "Le cuir sent la colle et le cirage. Gigi te regarde faire les nœuds, puis refait le gauche sans un mot."
+    right:
+      label: "J'ai mes chaussures"
+      effects: {force: 1, relation: {vecchio: -1}, outcome: refus}
+      answer: "Il remballe la paire dans le même journal, page des sports dessus. Le lendemain, un gamin de la réserve les porte à l'entraînement."
+
+  - id: jp.sp.bourrel.ampoule
+    roles: [joueur]
+    arc: corps
+    tags: [sponsors, vestiaire]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Doc Sabatier perce une ampoule large comme une pièce sur ton talon : « Ce cuir est trop dur. Trois semaines comme ça, et c'est le tendon. Tu changes de chaussures, ou je change de pansement ? »"
+    left:
+      label: "Changez les pansements"
+      effects: {force: -1, relation: {sabatier: -1, vecchio: 1}}
+      answer: "Il pose du sparadrap en croix, sans un mot de plus. Samedi, tu joues le talon en feu ; le cuir commence à céder."
+    right:
+      label: "Je remets les anciennes"
+      effects: {force: 1, set: [sp_bourrel_cache]}
+      answer: "Tu joues avec tes vieilles chaussures, les Bourrel au fond du sac. Au troisième match, un photographe de L'Écho cadre tes pieds."
+
+  # La grande marque.
+  - id: jp.sp.bourrel.marque_photo
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, agents]
+    speaker: fardelli
+    lieu: hotel
+    tone: strategique
+    text: "Fardelli, au bar de l'hôtel de la Rive, pose la photo de L'Écho près de son verre : tes pieds, sans les Bourrel. « Une grande marque l'a vue aussi. Cinq fois ton cordonnier. On rompt proprement ? »"
+    left:
+      label: "J'ai donné ma parole"
+      effects: {caisse: "-", tribunes: "+", relation: {fardelli: -1, vecchio: 1}, set: [sp_bourrel_tenu], outcome: tenu}
+      answer: "Fardelli replie la photo en deux : « Alors porte-les, au moins. » Le samedi suivant, tu remets les Bourrel ; le talon a durci."
+    right:
+      label: "Rompez, proprement"
+      effects: {caisse: "++", tribunes: "-", relation: {vecchio: -2}, var: {ville_francs: "+20000"}, set: [sp_bourrel_rompu], outcome: rompu}
+      answer: "Lundi, des chaussures neuves t'attendent au vestiaire, dans une boîte plus belle qu'elles. Gigi range ses gants Bourrel à part."
+
+  - id: jp.sp.bourrel.marque
+    roles: [joueur]
+    arc: sponsors
+    tags: [sponsors, agents]
+    speaker: fardelli
+    lieu: hotel
+    tone: strategique
+    text: "Fardelli, au bar de l'hôtel de la Rive, glisse un contrat sous son verre : « Une grande marque de la Capitale : cinq fois ton cordonnier, des chaussures comme des chaussons. On rompt proprement ? »"
+    left:
+      label: "J'ai donné ma parole"
+      effects: {caisse: "-", tribunes: "+", relation: {fardelli: -1, vecchio: 1}, set: [sp_bourrel_tenu], outcome: tenu}
+      answer: "Il replie le contrat en quatre et le glisse dans ta poche : « Pour le jour où le vieux ne sera plus là. » Il paie les verres."
+    right:
+      label: "Rompez, proprement"
+      effects: {caisse: "++", tribunes: "-", relation: {vecchio: -2}, var: {ville_francs: "+20000"}, set: [sp_bourrel_rompu], outcome: rompu}
+      answer: "Lundi, des chaussures neuves t'attendent au vestiaire, dans une boîte plus belle qu'elles. Gigi range ses gants Bourrel à part."
+
+  # Parole tenue : le vieux est mort dimanche.
+  - id: jp.sp.bourrel.deuil
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire, moment]
+    speaker: vecchio
+    lieu: cimetiere
+    tone: strategique
+    text: "Vecchio, ses gants Bourrel à la main, au portail du cimetière : « Le vieux est mort dimanche. On l'enterre samedi à onze heures ; le match est à quinze. Son fils a fini ta paire. Tu viens ? »"
+    left:
+      label: "Je viens, en survêtement"
+      effects: {tribunes: "+", force: -1, relation: {vecchio: 1}}
+      answer: "Le fils te serre la main sans la lâcher et te tend la paire. L'après-midi, tu joues avec ; le cuir est souple, pour la première fois."
+    right:
+      label: "Je garde mes jambes"
+      effects: {force: 1, relation: {vecchio: -1}}
+      answer: "Gigi y va seul, dans un costume trop grand. À l'échauffement, il te lance la paire neuve sans un mot ; le cuir est souple, enfin."
+
+  # Parole rompue : les vieux crampons, ressemelés.
+  - id: jp.sp.bourrel.semelles
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sponsors, vestiaire]
+    speaker: vecchio
+    lieu: vestiaire
+    tone: strategique
+    text: "Vecchio te rend tes premiers Bourrel, ressemelés, les lacets noués ensemble : « Le vieux les a refaits avant de savoir. Il n'a pas voulu qu'on te les facture. Tu les mets samedi ? »"
+    left:
+      label: "Je les mets samedi"
+      effects: {tribunes: "+", relation: {vecchio: 1}, var: {ville_amende: "+5000"}}
+      answer: "Samedi, tu joues en Bourrel. Lundi, la grande marque retient une amende sur ton virement ; Gigi, lui, te paie un café."
+    right:
+      label: "Rendez-les à son fils"
+      effects: {caisse: "+", relation: {vecchio: -1}}
+      answer: "Gigi les remballe dans L'Écho du jour. Il ne les rend pas : il les range dans son casier, à côté de ses gants."
+
+  # ============================================== 3 · La table du jeudi (louche)
+  - id: jp.sp.tripot.table
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale, piege]
+    speaker: aulard
+    lieu: tripot
+    tone: strategique
+    text: "Vaubourg écarte le rideau de l'arrière-salle du Terminus : « Une table d'amis, le jeudi. L'homme du casino de Fontenaire paie nos panneaux, et il aime perdre contre les joueurs. Tu t'assois ? »"
+    left:
+      label: "Je m'assois"
+      effects: {direction: "+", relation: {aulard: 1}, var: {ville_francs_sales: "+3000"}, set: [sp_tripot]}
+      answer: "Le premier jeudi, tu gagnes. L'homme du casino paie en riant, en petites coupures, et note ton prénom dans un carnet à spirale."
+    right:
+      label: "Je rentre dormir"
+      effects: {direction: "-", relation: {aulard: -1}, outcome: refus}
+      answer: "Vaubourg laisse retomber le rideau. Par la fente, tu vois l'homme du casino distribuer les cartes devant ta chaise vide."
+
+  - id: jp.sp.tripot.dette
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale, caisse]
+    lieu: tripot
+    tone: strategique
+    text: "Le quatrième jeudi, la chance tourne. À deux heures, l'homme du casino range tes reconnaissances de dette dans une boîte à cigares : « Quarante mille. Rien ne presse. Un jour, un petit service. »"
+    left:
+      label: "Je paie, en trois fois"
+      effects: {caisse: "--", parole: 1, var: {ville_amende: "+40000"}}
+      answer: "Trois chèques, trois mois. Il les encaisse sans un mot ; la boîte à cigares reste sur la table, vide, et il la garde quand même."
+    right:
+      label: "J'attendrai son service"
+      effects: {set: [sp_tripot_dette]}
+      answer: "Il glisse la boîte dans sa veste, contre le cœur. Le jeudi suivant, ta chaise n'est plus à la table ; il n'en a plus besoin."
+
+  # La dette laissée : le service.
+  - id: jp.sp.tripot.service_portable
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale, arbitrage]
+    lieu: bar
+    tone: strategique
+    when: "year >= 1995"
+    text: "Au Corner, l'homme du casino pose sur le flipper sa boîte à cigares et un téléphone portable neuf : « Samedi, à la demi-heure, un carton jaune. Le téléphone, c'est pour la suite. »"
+    left:
+      label: "Un jaune, rien de plus"
+      effects: {parole: -1, var: {cadeau_portable: "+1"}, set: [sp_tripot_service], outcome: service}
+      answer: "Le téléphone sonne dans ta poche avant que tu sois rentré. Une voix dit « bonne nuit », et raccroche avant ta réponse."
+    right:
+      label: "Je vous paierai"
+      effects: {caisse: "--", parole: 1, var: {ville_amende: "+40000"}, outcome: paye}
+      answer: "Il remet le téléphone dans sa poche, pas la boîte. Trois chèques, trois mois ; le troisième arrive avec un jour de retard, et il le note."
+
+  - id: jp.sp.tripot.service
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale, arbitrage]
+    lieu: bar
+    tone: strategique
+    text: "Au Corner, l'homme du casino pose sa boîte à cigares sur le flipper : « Samedi, à la demi-heure, un carton jaune pour vous. Rien de plus. Et la boîte brûle. »"
+    left:
+      label: "Un jaune, rien de plus"
+      effects: {parole: -1, set: [sp_tripot_service], outcome: service}
+      answer: "Il met une pièce dans le flipper et te laisse la partie. Les billes tombent l'une après l'autre ; tu ne tires pas une fois."
+    right:
+      label: "Je vous paierai"
+      effects: {caisse: "--", parole: 1, var: {ville_amende: "+40000"}, outcome: paye}
+      answer: "Il sourit comme à un enfant qui promet. Trois chèques, trois mois ; le troisième arrive avec un jour de retard, et il le note."
+
+  # La dette payée : l'affiche.
+  - id: jp.sp.tripot.affiche
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale]
+    lieu: bar
+    tone: strategique
+    text: "Au Corner, l'homme du casino te rend ta boîte à cigares, vide : « Vous êtes le premier qui paie. Le casino de Fontenaire cherche un visage pour son affiche. Vous avez le bon. »"
+    left:
+      label: "Pas à vendre"
+      effects: {tribunes: "+", outcome: paye}
+      answer: "Il glisse la boîte sous son bras. « Tout se vend ; vous n'avez pas encore votre prix », dit-il, et il paie ton verre."
+    right:
+      label: "Combien, pour l'affiche ?"
+      effects: {tribunes: "-", caisse: "+", var: {ville_francs_sales: "+20000"}, set: [sp_tripot_affiche], outcome: paye}
+      answer: "Ton visage apparaît sur les abribus de la nationale, un jeton entre les dents. L'argent arrive en liquide, d'une société inconnue."
+
+  # Le samedi du service.
+  - id: jp.sp.tripot.jaune
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale, arbitrage, moment]
+    lieu: stade
+    tone: strategique
+    text: "Vingt-neuvième minute. L'arbitre regarde sa montre. Tu cherches un tacle à prendre ; au premier rang de la tribune d'honneur, l'homme du casino ne regarde pas le ballon."
+    left:
+      label: "Je prends le jaune"
+      effects: {tribunes: "-", var: {cadeau_coupe_sport: "+1"}, set: [sp_tripot_coupe]}
+      answer: "Un tacle en retard, le jaune à la 31e. Lundi, la boîte à cigares est dans ta boîte aux lettres, brûlée, et un coupé neuf est garé en bas."
+    right:
+      label: "Je ne peux pas"
+      effects: {tribunes: "+", caisse: "-", set: [sp_tripot_double]}
+      answer: "Tu joues propre jusqu'au bout. Dans le car du retour, sur ton siège, le carnet à spirale est ouvert à ta page, le chiffre doublé."
+
+  # Payé : le relevé de banque.
+  - id: jp.sp.tripot.releve
+    roles: [joueur]
+    arc: famille
+    tags: [sponsors, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille a étalé le relevé de banque sur la table de la cuisine, un doigt sur une ligne : « Quarante mille, en trois fois, à une société de Fontenaire. Tu m'expliques, ou je devine ? »"
+    left:
+      label: "Je t'explique tout"
+      effects: {direction: "-", parole: 1, relation: {camille: 1}}
+      answer: "Tu racontes le rideau, la table, la boîte à cigares. Elle écoute en pliant le relevé de plus en plus petit, jusqu'à ce qu'il ne plie plus."
+    right:
+      label: "Une dette d'honneur"
+      effects: {direction: "+", parole: -1, relation: {camille: -1}}
+      answer: "« L'honneur, à Fontenaire ? » Elle range le relevé dans le tiroir de la cuisine, avec les choses qu'elle ne jette pas."
+
+  - id: jp.sp.tripot.releve_seul
+    roles: [joueur]
+    arc: scandale
+    tags: [sponsors, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Ton relevé de banque est arrivé ouvert, comme si quelqu'un l'avait lu avant toi : quarante mille, en trois fois, à une société de Fontenaire. Au dos, au crayon : « Merci. »"
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", parole: 1}
+      answer: "L'inspecteur lit le « merci » plusieurs fois, puis te demande si tu joues encore. Tu dis non. Il l'écrit, sans te croire."
+    right:
+      label: "Je le brûle"
+      effects: {direction: "+", parole: -1}
+      answer: "Le papier brûle mal dans l'évier. Le jeudi suivant, à deux heures, le téléphone sonne une fois, et s'arrête."

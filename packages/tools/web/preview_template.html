@@ -215,6 +215,38 @@ button{background:none;border:0;padding:0;cursor:pointer}
   color:var(--creme);transition:opacity 120ms linear;
 }
 .scene-text[hidden]{display:none}
+/* L'intermède : le fond descend d'un cran, l'image se décolore, personne ne parle. */
+#gameScreen.intermede{background:#0B0705}
+#gameScreen.intermede .scene-text{font-size:16.5px;color:#D9CDB4;letter-spacing:.03em}
+#gameScreen.intermede .card .art{filter:grayscale(.75) brightness(.62) contrast(1.1)}
+#gameScreen.intermede .card .who{display:none}
+#gameScreen.intermede .jauges{opacity:.35}
+/* La ligne d'ordre : une heure, un nom, un prix — sur son support. */
+#gameScreen[data-ordre=fax] .scene-text,#gameScreen[data-ordre=repondeur] .scene-text,
+#gameScreen[data-ordre=portable] .scene-text,#gameScreen[data-ordre=oreillette] .scene-text,
+#gameScreen[data-ordre=telephone] .scene-text{
+  flex-direction:column;align-items:stretch;justify-content:flex-end;gap:6px;font-style:normal;
+}
+.scene-text[data-entete]::before{
+  content:attr(data-entete);display:block;font-size:10px;font-style:normal;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--creme3);
+}
+#gameScreen[data-ordre=fax] .scene-text{
+  font-family:"Courier New",Courier,monospace;font-size:14.5px;text-transform:uppercase;letter-spacing:.04em;
+  color:#2A241C;background:linear-gradient(#EFE7D2,#E4D9BE);padding:10px 12px 12px;border-radius:2px;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);min-height:0;
+}
+#gameScreen[data-ordre=fax] .scene-text[data-entete]::before{color:#7A6E5A;border-bottom:1px dashed #B9AD92;padding-bottom:5px}
+#gameScreen[data-ordre=repondeur] .scene-text{border-left:3px solid var(--framboise);padding-left:11px}
+#gameScreen[data-ordre=repondeur] .scene-text[data-entete]::before{color:#FF5C7F}
+#gameScreen[data-ordre=portable] .scene-text{
+  background:#1C2418;color:#B9D8A0;font-family:"Courier New",Courier,monospace;font-size:14px;
+  padding:10px 12px 12px;border-radius:6px;box-shadow:inset 0 0 0 2px #2E3A27;min-height:0;
+}
+#gameScreen[data-ordre=portable] .scene-text[data-entete]::before{color:#7FA36A}
+#gameScreen[data-ordre=oreillette] .scene-text{font-style:italic;letter-spacing:.04em;color:#CFE3E6}
+#gameScreen[data-ordre=oreillette] .scene-text[data-entete]::before{color:#7FA9B0}
+#gameScreen[data-ordre=telephone] .scene-text{border-left:3px solid var(--creme3);padding-left:11px}
 .answer{
   flex:0 0 auto;margin:0 2px;min-height:14px;
   font-size:11.5px;font-style:italic;letter-spacing:.01em;color:var(--creme3);
@@ -1427,9 +1459,11 @@ __VILLE_CSS__
       b.setAttribute("data-index", String(p.index));
       b.innerHTML = '<span class="t"></span><span class="s"></span><span class="q"></span>';
       b.querySelector(".t").textContent = p.title;
-      b.querySelector(".s").textContent = "n° " + pad2(p.index + 1) + " · " + (p.roleName || p.role) + " · D" + p.division + (p.year ? " · " + p.year : "");
+      // le sélectionneur n'a pas de division : son année suffit
+      b.querySelector(".s").textContent = "n° " + pad2(p.index + 1) + " · " + (p.roleName || p.role) + (p.role === "selectionneur" ? "" : " · D" + p.division) + (p.year ? " · " + p.year : "");
       var q = b.querySelector(".q");
-      if (p.question) q.textContent = p.question; else q.hidden = true;
+      // la quatrième de couverture quand l'histoire en a une, sinon sa question
+      if (p.pitch) q.textContent = p.pitch; else if (p.question) q.textContent = p.question; else q.hidden = true;
       b.setAttribute("aria-label", p.title + ", " + (p.roleName || p.role) + ", division " + p.division);
       b.addEventListener("click", function () {
         if (busy) return;
@@ -1628,6 +1662,16 @@ __VILLE_CSS__
     if (c.sablier) sab.innerHTML = icon("sablier", 14);
     $("cardNumber").textContent = pro ? pro : "n° " + (view.cardNumber || view.turn);
 
+    // Les outils de dérangement des dix histoires (docs/histoires § 1.2) :
+    // l'intermède (une nuit qu'on ne se rappelle pas : plus sombre, sans
+    // locuteur) et la ligne d'ordre, rendue selon son support.
+    var tags = c.tags || [];
+    $("gameScreen").classList.toggle("intermede", tags.indexOf("intermede") >= 0);
+    var ORDRES = { fax: "Télécopie · sans en-tête", repondeur: "Répondeur · un message", portable: "Numéro masqué", oreillette: "Dans l'oreillette", telephone: "La ligne du bureau" };
+    var ordre = "";
+    for (var o in ORDRES) if (tags.indexOf(o) >= 0) ordre = o;
+    $("gameScreen").setAttribute("data-ordre", ordre);
+    if (ordre) text.setAttribute("data-entete", ORDRES[ordre]); else text.removeAttribute("data-entete");
     // Le texte de scène, AU-DESSUS de l'illustration, en italique. Il porte
     // déjà ses guillemets quand il en faut : on n'en rajoute pas.
     text.textContent = c.text;
@@ -2050,6 +2094,20 @@ __VILLE_CSS__
       // une activité : les jauges bougent (ou la carrière finit)
       activite: function (id) {
         view = JSON.parse(window.fusibleActivite(id));
+        if (view.over) { advanceEnd(); return view; }
+        majJauges();
+        return view;
+      },
+      // une mission de la ville (choix vide : l'échec d'une étape) ; un objet
+      // acheté, offert, revendu ou saisi — le moteur applique leurs effets
+      mission: function (m, e, c) {
+        view = JSON.parse(window.fusibleMission(m, e, c || ""));
+        if (view.over) { advanceEnd(); return view; }
+        majJauges();
+        return view;
+      },
+      biens: function (id, acquis) {
+        view = JSON.parse(window.fusibleBiens(id, !!acquis));
         if (view.over) { advanceEnd(); return view; }
         majJauges();
         return view;

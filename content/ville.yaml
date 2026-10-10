@@ -18,6 +18,7 @@
 # Où mène une carte qui déclare un `lieu:` (les lieux du moteur, kLieux).
 # `rue` : là où tu te trouves, dehors — l'événement te tombe dessus en marchant.
 cartes_lieux:
+  ailleurs: ici          # loin d'Aubérive : la carte se joue là où l'on est, la ville s'efface (`ailleurs`, plus bas)
   domicile: appartement
   laverie: laverie
   stade: stade
@@ -37,6 +38,18 @@ cartes_lieux:
   cabinet: cabinet
   banque: banque
   cafe: cafe_mairie
+  hotel: hotel
+  club_prive: club_prive
+  tripot: tripot
+  bar: bar
+
+# Loin d'Aubérive : une carte `lieu: ailleurs` se joue là où l'on est, et la ville
+# s'efface derrière un décor — le premier tag de la carte qui nomme une entrée de
+# cette table, sinon `defaut`. (Le tournoi de *Vingt degrés dedans* se joue à
+# Al-Dorado : docs/histoires/00_les_dix_histoires.md § 1.10.)
+ailleurs:
+  defaut: {titre: "Loin d'Aubérive", sous: "La ville attendra"}
+  al_dorado: {titre: "Al-Dorado", sous: "Le Dôme · vingt degrés dedans"}
 
 # Où l'on trouve chacun quand sa carte ne dit pas de lieu.
 rencontres:
@@ -223,6 +236,26 @@ lieux:
   - key: fleuriste
     texte: "Aux Immortelles, fleuriste. Des chrysanthèmes toute l'année, et des gerbes aux couleurs du club les jours de deuil."
     heures: [matin, aprem]
+  # — les commerces où l'on achète (la boutique : content/ville/boutique.yaml)
+  - key: tailleur
+    texte: "Brunel, tailleur et chausseur depuis trois générations. Un costume sur mesure se prend en trois essayages ; les chaussures, en un."
+    heures: [matin, aprem]
+    jours: [mar, mer, jeu, ven, sam]
+  - key: garage
+    texte: "Le garage du Pont, au fond de la cour : des occasions sous les néons, une voiture neuve sous une bâche, et un vendeur qui connaît ton salaire."
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  - key: agence
+    texte: "Immobilier Tessandier : des photos de pavillons en vitrine, une maquette de résidence au bord de la Rive, et un café qu'on ne te propose qu'une fois."
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven, sam]
+  # — les lieux où l'on ne devrait pas être vu
+  - key: club_prive
+    texte: "Le Rideau Rouge. Une porte sans poignée, un homme en costume derrière, du velours, une musique lente. Ici, personne n'a de nom."
+    heures: [soir, nuit]
+  - key: tripot
+    texte: "L'arrière-salle du Terminus. Une table ronde, un tapis vert taché, des billets sous le cendrier. On joue gros les nuits de match."
+    heures: [soir, nuit]
 
 # Ce qu'on fait entre deux cartes. `jauges` : ce que le moteur applique (petit :
 # la carte tranche, la ville répare à la marge), une fois par semaine jouée — la
@@ -468,3 +501,124 @@ activites:
     jauges: {vestiaire: 1, tribunes: 1}
     heures: [aprem]
     jours: [mer]
+
+  # — le directeur sportif (bible ch. 12 : le téléphone entre trois couloirs)
+  - id: cassettes_recrues
+    lieu: clubhouse
+    roles: [ds]
+    label: Visionner des recrues
+    texte: "Trois cassettes, trois ailiers, la même action filmée de trois tribunes. Le coach a demandé un latéral gauche. Tu rembobines."
+    tranches: 1
+    energie: -10
+    jauges: {vestiaire: 2}
+    heures: [matin, aprem, soir]
+  - id: dejeuner_agent
+    lieu: brasserie
+    roles: [ds]
+    label: Déjeuner avec un agent
+    texte: "Il commande pour deux, parle de son fils, glisse une feuille sous l'addition. Une page, un pourcentage, et pas de date."
+    tranches: 1
+    faim: 30
+    francs: -90
+    jauges: {caisse: 3, tribunes: -1}
+    heures: [midi]
+  - id: rapport_president
+    lieu: clubhouse
+    roles: [ds]
+    label: Le rapport au président
+    texte: "Il lit la première page, retourne la deuxième, signe la troisième sans la lire. « Et le petit, on le vend quand ? »"
+    tranches: 1
+    energie: -5
+    jauges: {direction: 3}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: centre_formation_ds
+    lieu: centre
+    roles: [ds]
+    label: Passer au centre
+    texte: "Les U17 jouent sur le synthétique. Le chef du recrutement te montre un gamin du doigt, puis un autre, puis le premier."
+    tranches: 1
+    energie: -10
+    jauges: {vestiaire: 1, tribunes: 1}
+    heures: [aprem]
+    jours: [mar, mer, jeu]
+
+  # — le président (bible ch. 13 : la loge, la banque, les salariés)
+  - id: conseil_administration
+    lieu: clubhouse
+    roles: [president]
+    label: Présider le conseil
+    texte: "Sept chaises, six administrateurs, un ordre du jour d'une page. Le représentant du fonds prend des notes sur ce que tu ne dis pas."
+    tranches: 1
+    energie: -15
+    jauges: {direction: 3}
+    heures: [matin, aprem]
+    jours: [lun, mer, ven]
+  - id: banquier_president
+    lieu: banque
+    roles: [president]
+    label: Voir le banquier
+    texte: "Il a ton bilan ouvert à la page des dettes. « Votre prédécesseur aussi croyait aux recettes du derby. »"
+    tranches: 1
+    energie: -10
+    jauges: {caisse: 3, direction: -1}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: salaries_club
+    lieu: laverie
+    roles: [president]
+    label: Passer voir les salariés
+    texte: "L'intendante plie les maillots, le jardinier boit son café debout. Personne ne te tutoie ; tout le monde te regarde."
+    tranches: 1
+    energie: -5
+    jauges: {vestiaire: 2}
+    heures: [matin, aprem]
+  - id: buvette_president
+    lieu: buvette
+    roles: [president]
+    label: Un demi à la buvette
+    texte: "Tu paies la tournée avant qu'on te la reproche. Au bout du comptoir, Gégé lève son verre sans le boire."
+    tranches: 1
+    francs: -60
+    jauges: {tribunes: 3, caisse: -1}
+    heures: [aprem, soir]
+
+  # — le sélectionneur (bible ch. 14 : les tournées des clubs, la Fédération, la presse)
+  - id: tournee_clubs
+    lieu: stade
+    roles: [selectionneur]
+    label: Superviser un match de club
+    texte: "La tribune présidentielle te fait une place. Tu notes un nom, tu le rayes, tu le réécris. Le président du club regarde ton carnet."
+    tranches: 2
+    energie: -15
+    jauges: {vestiaire: 2}
+    heures: [aprem, soir]
+    jours: [mer, sam, dim]
+  - id: federation_appel
+    lieu: clubhouse
+    roles: [selectionneur]
+    label: Rappeler la Fédération
+    texte: "Berthomier n'est pas là. Sa secrétaire prend le message, le relit à voix haute, et te demande si c'est bien tout."
+    tranches: 1
+    energie: -5
+    jauges: {direction: 3}
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+  - id: echo_selectionneur
+    lieu: echo
+    roles: [selectionneur]
+    label: Répondre à L'Écho
+    texte: "Massenet pose sa question en premier, et la deuxième aussi. Tu donnes un nom ; demain, il sera en gros."
+    tranches: 1
+    energie: -10
+    jauges: {tribunes: 2, vestiaire: -1}
+    heures: [matin, aprem]
+  - id: sponsor_selection
+    lieu: hotel
+    roles: [selectionneur]
+    label: Le déjeuner du sponsor
+    texte: "Le sponsor de la sélection a réservé la salle du fond. Il veut une photo avec le capitaine ; il paiera l'hôtel du stage."
+    tranches: 1
+    faim: 30
+    jauges: {caisse: 3, vestiaire: -1}
+    heures: [midi]

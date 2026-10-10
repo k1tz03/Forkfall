@@ -1,0 +1,1275 @@
+# CE QUE DISENT LES PERSONNAGES — quand on les touche en ville, entre deux cartes.
+#
+# Ce ne sont pas des cartes : pas de choix, une réplique. Un commentaire, une
+# information, une graine. Chaque réplique sert l'histoire : le match et le
+# classement, ce qu'il y a entre toi et la personne, ce qui se trame (une
+# intrigue en cours, un drapeau posé), les événements sombres dont elle a été
+# témoin, l'argent sale et les achats qui se voient. On croise chacun à son
+# endroit (content/ville.yaml : `presences`, `rencontres`).
+#
+# Les voix sont celles de docs/bible/charte_histoire.md § 3, sans aucune
+# réplique-tic : ni l'ancienne formule de chacun, ni la phrase-signature de
+# content/characters.yaml (`tic`), ni leurs détournements.
+#
+# Format : `qui` (un id de personnage) · `sujet` (match classement club toi
+# argent rumeur quartier epoque sombre sponsor achat) · `si` (facultatif : la
+# grammaire de la ville, ET seulement) · `texte` (≤ 160 caractères, la réplique
+# seule, sans guillemets autour).
+#
+# Conventions tenues partout :
+#   · Le protagoniste peut être une femme : aucun accord sur « tu » ou « vous »
+#     (ni participe, ni adjectif), aucune adresse genrée (« petit », « mon ami »,
+#     « monsieur ») ; seulement les placeholders de la ville.
+#   · Les séries (serie_v, serie_d) comptent des BLOCS de six matchs : une
+#     série, c'est au moins quatre victoires (ou défaites) sur les six derniers.
+#     On n'écrit donc jamais « trois défaites de suite ».
+#   · Le rang ne veut rien dire avant deux blocs : toute réplique sur le rang
+#     porte `journee >= 12`. Dix-huit clubs : le bas du tableau, c'est 16 et plus.
+#   · Les objets datés portent leur année (fax, téléphone de poche, écus,
+#     Télé-Stade, le Flux…), les francs aussi.
+#   · Camille ne se croise qu'à la maison (`lieu == appartement`), et plus après
+#     la valise (`!flag(divorce)`). Fardelli parle surtout au joueur. Mbako et le
+#     Doc vouvoient l'entraîneur et tutoient le joueur.
+#   · Une tournure ne revient pas deux fois chez le même personnage.
+paroles:
+
+  # ============================================================ MADAME JOSIANE
+  # Le secrétariat du club-house, le matin et l'après-midi. Le vouvoiement, les
+  # dates, les papiers ; elle avertit par un geste (une tasse en plus, un
+  # dossier qu'elle ne monte pas), jamais par un commérage.
+  - qui: josiane
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Le président m'a demandé la liste des contrats, avec les dates de fin. Je la lui monte demain matin. Ce soir, elle dort encore dans mon tiroir."
+  - qui: josiane
+    sujet: match
+    si: "serie_v >= 1"
+    texte: "Le téléphone sonne pour les abonnements depuis samedi. J'ai ressorti le carnet à souches de la dernière montée ; il reste douze places en tribune Est."
+  - qui: josiane
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "La Fédération a envoyé le dossier de licence de l'an prochain en deux versions, une par division. Je les ai rangées côte à côte. Pour l'instant."
+  - qui: josiane
+    sujet: toi
+    si: "relation.josiane >= 2"
+    texte: "Je vous ai mis une tasse de plus. Le président monte à dix heures, et il a pris le classeur rouge ; d'habitude, il le laisse sur l'étagère."
+  - qui: josiane
+    sujet: toi
+    si: "relation.josiane <= -1"
+    texte: "Votre courrier est dans le casier, trié par date. Pour le reste, vous lirez L'Écho comme tout le monde ; il sort à six heures."
+  - qui: josiane
+    sujet: argent
+    si: "arc(en.salaires_retard)"
+    texte: "Le banquier a rappelé à huit heures dix. Je lui ai dit que vous étiez au terrain ; c'est vrai jusqu'à midi. Le 5, c'était il y a six jours."
+  - qui: josiane
+    sujet: sombre
+    si: "flag(sb_huissier)"
+    texte: "Ils ont laissé le radiateur, trop lourd. Le reçu de l'huissier est dans le classeur vert, avec la liste de ce qu'ils ont pris. Tout est numéroté."
+  - qui: josiane
+    sujet: sombre
+    si: "flag(sb_perquisition)"
+    texte: "Ils m'ont rendu les classeurs du président, pas les miens. Ils ont gardé ceux où les dates sont justes. Je ne sais pas si c'est un compliment."
+  - qui: josiane
+    sujet: sombre
+    si: "flag(sb_laverie_3)"
+    texte: "Depuis la laverie, je ferme le secrétariat à clé le soir. Je ne l'avais jamais fait. La clé est dans mon sac, à côté de celle de chez moi."
+  - qui: josiane
+    sujet: toi
+    si: "flag(hotel_du_club) && !flag(camille_ici)"
+    texte: "La chambre 12 vous attend encore ce soir. Madame a téléphoné à dix-neuf heures ; j'ai parlé d'une séance qui finissait tard. Elle a dit merci, sèchement."
+  - qui: josiane
+    sujet: sponsor
+    texte: "Trois joueurs ont demandé une avance sur prime ce mois-ci, tous un lundi. Le lundi, on sait ce qu'on a perdu le week-end, à l'arrière-salle du Terminus."
+  - qui: josiane
+    sujet: argent
+    si: "flag(vl_billets)"
+    texte: "Vingt talons d'invitation sont revenus du guichet B, avec vos numéros de série. Je les ai mis dans une enveloppe. Je ne l'ai pas encore montée."
+  - qui: josiane
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Belle montre. Le président avait la même, l'année du maintien. Il l'a revendue l'année d'après ; c'est moi qui ai rempli les papiers."
+  - qui: josiane
+    sujet: toi
+    si: "flag(vl_veuve)"
+    texte: "Madame Dutheil a retrouvé la sept. Elle passe le lundi avec des chocolats pour vous. Je les mange : vous n'êtes jamais là le lundi."
+  - qui: josiane
+    sujet: sponsor
+    si: "flag(sp_dornois_vendu)"
+    texte: "Madame Dornois ferme en juin. Elle m'a demandé si l'orange tenait au lavage. J'ai répondu que je ne savais pas. Je savais."
+  - qui: josiane
+    sujet: toi
+    si: "role == joueur && arc(jp.adieu)"
+    texte: "Le formulaire jaune est toujours en tête du classeur. Je ne vous le tends pas. Je vous dis seulement où il est, au cas où."
+  - qui: josiane
+    sujet: epoque
+    si: "flag(monde_josiane_retraite)"
+    texte: "Je ne viens plus que le jeudi, pour ranger ce que ma nièce a classé. Elle classe par couleur. Je ne dis rien ; je reclasse par date."
+
+  # ================================================================ ZORAN VUKIĆ
+  # Le terrain annexe, le matin et l'après-midi. Peu de mots, des faits de
+  # terrain : l'heure, la jambe, le joueur. Il te met devant la décision et
+  # n'explique jamais pourquoi il te parle.
+  - qui: vukic
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "À la soixantième, ils reviennent trois mètres moins vite sur les replis. Je l'ai mesuré au pas, mardi, sur le terrain annexe. Trois mètres, c'est un but."
+  - qui: vukic
+    sujet: classement
+    si: "rang >= 15 && journee >= 12"
+    texte: "J'ai refait le calendrier de la fin de saison : deux déplacements, deux terrains lourds. On travaille les coups de pied arrêtés, rien d'autre."
+  - qui: vukic
+    sujet: toi
+    si: "relation.vukic >= 2"
+    texte: "{prenom}. Sept heures demain, avant les autres. Le latéral gauche boite quand il croit qu'on ne le regarde pas. Je te le montre ; tu décides."
+  - qui: vukic
+    sujet: toi
+    si: "relation.vukic <= -1"
+    texte: "Les plots sont posés. La compo, tu me la donnes à huit heures, je la recopie au propre. Le reste ne me regarde plus."
+  - qui: vukic
+    sujet: sponsor
+    si: "arc(en.sp.labo)"
+    texte: "Un docteur avec un triangle bleu sur la veste, un contrat signé du président. Je ne le connais pas. Je n'aime pas les docteurs que je ne connais pas."
+  - qui: vukic
+    sujet: sombre
+    si: "flag(sp_labo_continue)"
+    texte: "Je n'écris plus l'heure des jeudis. Seulement les noms. Il y en a un de moins chaque mois, et ce n'est pas parce qu'il va mieux."
+  - qui: vukic
+    sujet: rumeur
+    si: "arc(en.espion_haie)"
+    texte: "Le trou dans la haie, au fond, à gauche du poteau : personne ne l'a bouché. Hier, des jumelles. Ce matin, une casquette. Demain, je change les plots de place."
+  - qui: vukic
+    sujet: club
+    si: "flag(vukic_dauphin)"
+    texte: "Le second discours est toujours dans la veste du président. Il m'a demandé de le relire une deuxième fois. Je l'ai rendu sans l'ouvrir."
+  - qui: vukic
+    sujet: toi
+    si: "role == entraineur && flag(commission_sanction)"
+    texte: "Trois matchs de tribune, c'est fini. Ton banc, ta compo. J'ai laissé une seule page écrite : le changement de la soixantième, celui que tu n'aurais pas fait."
+  - qui: vukic
+    sujet: sombre
+    si: "flag(sb_disparu)"
+    texte: "Dembo arrive à neuf heures, maintenant, avant tout le monde. Il ne passe plus par la friche ; il fait le tour par le quai. Je l'ai suivi deux matins."
+  - qui: vukic
+    sujet: sombre
+    si: "flag(sb_envahissement)"
+    texte: "L'homme de la grille, celui de la quatre-vingtième : il revient chaque samedi, en tribune Est maintenant. Il ne crie plus. Il regarde le banc."
+  - qui: vukic
+    sujet: sombre
+    si: "flag(sb_cercueil)"
+    texte: "J'ai repeint le coin de la benne où le contreplaqué a brûlé. Les joueurs passent devant chaque matin. Depuis lundi, ils ne tournent plus la tête."
+  - qui: vukic
+    sujet: club
+    si: "flag(suit_vukic)"
+    texte: "Ici, le terrain penche vers la gauche. Les autres ne le voient pas. Toi, tu l'as vu le premier jour ; c'est pour ça que je t'ai demandé de venir."
+  - qui: vukic
+    sujet: toi
+    si: "role == joueur && flag(banc_bosse)"
+    texte: "Tu cherches l'homme derrière toi, maintenant, sans tourner la tête. Le coach l'a vu mardi. Il ne dira rien. Il te remettra sur la feuille ; c'est sa façon."
+  - qui: vukic
+    sujet: sombre
+    si: "role == joueur && flag(sb_dopage)"
+    texte: "L'homme en survêtement neuf est revenu à la muscu, mardi, avant la séance. Il a parlé à deux jeunes. J'ai noté leurs noms. Le sien, il ne le donne à personne."
+  - qui: vukic
+    sujet: sponsor
+    texte: "Deux des nôtres sont sortis du Rideau Rouge à trois heures, la veille du match. Je n'y étais pas. Le chauffeur du taxi, si ; il est abonné en Est."
+  - qui: vukic
+    sujet: sombre
+    si: "flag(vl_equipe_preparee)"
+    texte: "Les boîtes sans étiquette sont dans le casier du milieu. Je ne les ai pas ouvertes. Si on me demande, je donnerai l'heure où tu les as apportées. Rien d'autre."
+  - qui: vukic
+    sujet: achat
+    si: "possede(coupe_sport)"
+    texte: "Ton coupé rouge était sur la place réservée. Le président est arrivé à six heures et demie, a fait trois fois le tour du parking, et s'est garé sur l'herbe."
+
+  # ======================================================================= GÉGÉ
+  # La buvette du kop, le midi et le soir. Le « nous » de la tribune, la mémoire
+  # exacte des promesses (une date, une somme) ; fraternel, la menace sous la
+  # table. Il ne crie jamais.
+  - qui: gege
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Au local, on a remis les bâches dans leurs sacs. Celle à ton nom est sur le dessus de la pile. Elle n'a jamais été aussi facile à attraper."
+  - qui: gege
+    sujet: sombre
+    si: "flag(vl_gege_donne)"
+    texte: "Vingt invitations, et c'est mon nom que tu as donné pour les talons. La Nord l'a su le soir même. L'idée était de moi ; les places étaient à toi."
+  - qui: gege
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Le car de samedi est parti aux trois quarts vide. On a quand même payé le chauffeur pour quarante. On paie toujours pour quarante, même quand on est douze."
+  - qui: gege
+    sujet: toi
+    si: "relation.gege >= 2"
+    texte: "Ta place au local est sous la bâche de soixante et onze. Personne ne s'y assoit. Les soirs où tu ne viens pas, on y pose une bière, fermée."
+  - qui: gege
+    sujet: toi
+    si: "relation.gege <= -1"
+    texte: "On a repeint le mur du local. Il restait de la peinture, alors on a fait une banderole. Elle sèche. Je ne te dis pas ce qu'il y a dessus."
+  - qui: gege
+    sujet: club
+    texte: "Les samedis de déplacement, le car de la Nord part à cinq heures. Le chauffeur est le même depuis soixante-quatorze : il sait les chants, n'en chante aucun."
+  - qui: gege
+    sujet: toi
+    si: "flag(pacte_gege)"
+    texte: "La date de ta promesse est toujours au-dessus de la porte du local, à la craie. On la repasse chaque samedi, pour que la pluie ne l'emporte pas."
+  - qui: gege
+    sujet: sombre
+    si: "flag(sb_bagarre)"
+    texte: "Six points à l'arcade, ça se recoud. La Nord, moins bien : deux bandes, deux bars, et moi au milieu avec une écharpe pour tout le monde."
+  - qui: gege
+    sujet: sombre
+    si: "flag(sb_local_brule)"
+    texte: "J'ai sorti la bâche de mon père avant les pompiers. Le reste a brûlé : les Unes découpées, l'ardoise, la photo de 1974. Je sais qui avait les clés."
+  - qui: gege
+    sujet: sombre
+    si: "flag(sb_mort_tribune)"
+    texte: "Marcel, rangée H. On a noué une écharpe sur son siège. Les jours de derby, quand on manque de place, on reste debout à côté. Surtout ces jours-là."
+  - qui: gege
+    sujet: sombre
+    si: "flag(sb_manif) && !flag(sb_manif_parle)"
+    texte: "Sous la mairie, j'ai monté l'escalier pour te chercher, et tu as choisi la fenêtre. Trois cents écharpes ont vu la lumière allumée derrière toi."
+  - qui: gege
+    sujet: sombre
+    si: "flag(sb_manif_parle)"
+    texte: "Dix minutes sur les marches de la mairie, sans micro. Au local, ils le racontent encore, et ça s'allonge : maintenant, tu as parlé une heure."
+  - qui: gege
+    sujet: sombre
+    si: "flag(sb_voiture)"
+    texte: "Les deux gamins de ton capot ont dix-sept ans. Leurs pères sont abonnés depuis soixante-dix-huit. Ça ne les excuse pas ; ça dit où ils ont appris."
+  - qui: gege
+    sujet: sponsor
+    texte: "À l'arrière-salle du Terminus, samedi, des types en manteau ont joué ton match aux cartes. Ils avaient le score avant nous. Eux, ils ne chantent pas."
+  - qui: gege
+    sujet: club
+    si: "flag(sp_terrain_parle)"
+    texte: "Au conseil, j'ai compté les mains levées sur mes doigts. Il m'en restait. Le terrain annexe, c'est là que mon père m'a appris à tirer. Tu le savais ?"
+  - qui: gege
+    sujet: achat
+    si: "possede(coupe_sport)"
+    texte: "Ton coupé, la Nord l'a vu au parking. On a fait le calcul sur un sous-bock : quatre ans d'abonnement pour tout le virage. Il est punaisé derrière la caisse."
+  - qui: gege
+    sujet: sponsor
+    si: "arc(en.sp.dornois)"
+    texte: "Ma mère a emballé des sablés rue des Tanneurs trente ans. Les biscuits Dornois sur nos survêtements, la Nord en est fière. Ne les lâche pas pour une canette."
+  - qui: gege
+    sujet: toi
+    si: "role == joueur && flag(enfant_du_pays)"
+    texte: "« Ici, pour toujours. » On a lavé la bâche au jet, et la peinture a coulé dans l'escalier de la Nord. Ta promesse est dans le béton, maintenant."
+
+  # ======================================================= JEAN-MARIE VAUBOURG
+  # Le bureau du premier étage, l'après-midi. Pressé, possessif (« mon club »),
+  # l'argent comme langue ; il flatte, puis il coupe.
+  - qui: aulard
+    sujet: match
+    si: "serie_v >= 1"
+    texte: "Mon banquier m'appelle par mon prénom depuis samedi. Profites-en pour me demander quelque chose. Mardi, il m'appellera de nouveau par mon nom."
+  - qui: aulard
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Le comptable m'a préparé deux budgets pour l'an prochain. J'ai lu le mince en premier ; c'est lui qui m'empêche de dormir. L'autre, c'est pour la presse."
+  - qui: aulard
+    sujet: toi
+    si: "role == entraineur && relation.aulard >= 2"
+    texte: "Je dis « mon coach » aux journalistes, depuis mardi. Le jour où je dirai « le coach », tu sauras que j'ai déjà le numéro d'un autre."
+  - qui: aulard
+    sujet: toi
+    si: "role == joueur && relation.aulard >= 2"
+    texte: "Mes joueurs, je ne les vends pas, je les place. Toi, je ne te place nulle part cette saison. Prends-le comme un compliment ; je n'en fais pas deux."
+  - qui: aulard
+    sujet: toi
+    si: "relation.aulard <= -1"
+    texte: "J'ai cinq minutes, pas six. Josiane a ton dossier ; elle le connaît mieux que moi, et je préfère que ça reste comme ça."
+  - qui: aulard
+    sujet: club
+    texte: "La tribune Nord me coûte plus en assurance qu'elle ne me rapporte en billets. Gégé dit que c'est le prix de l'âme. Mon assureur ne prend pas l'âme."
+  - qui: aulard
+    sujet: argent
+    si: "arc(en.salaires_retard)"
+    texte: "La paie, c'est mon affaire. Ne passe pas par la banque, ne passe pas par Josiane, et surtout pas par le capitaine. Par moi, ou par personne."
+  - qui: aulard
+    sujet: toi
+    si: "flag(ultimatum)"
+    texte: "Le numéro est toujours dans la poche de ma veste. Je l'ai composé hier soir, et j'ai raccroché avant la première sonnerie. Ne me fais pas recommencer."
+  - qui: aulard
+    sujet: sombre
+    si: "flag(sb_perquisition)"
+    texte: "Ils ont emporté mes cartons, pas mes souvenirs. Mon avocat dit que je n'ai rien à craindre. Il facture comme quelqu'un qui pense le contraire."
+  - qui: aulard
+    sujet: sombre
+    si: "flag(sb_laverie_lue) && !flag(sb_huissier)"
+    texte: "On me dit que tu laves ton linge rue du Stade, maintenant. Le club a ses machines. Ce qu'on lit sous le néon d'une laverie, on le lit mal."
+  - qui: aulard
+    sujet: sombre
+    si: "flag(sb_greve)"
+    texte: "Vingt-deux signatures sur une feuille à carreaux. J'en ai fait encadrer la photocopie. Quand ils me demanderont une augmentation, je l'accrocherai derrière moi."
+  - qui: aulard
+    sujet: sponsor
+    si: "flag(naming_signe)"
+    texte: "Arena Almadis. Mon nom est sous le tableau d'affichage, en petit. Les gens le lisent quand le score est mauvais : c'est là qu'ils lèvent les yeux."
+  - qui: aulard
+    sujet: sponsor
+    texte: "Le patron du Rideau Rouge veut un panneau au bord du terrain. Il paie d'avance, en liquide, sans facture. J'ai dit non deux fois. La troisième, je compte."
+  - qui: aulard
+    sujet: sponsor
+    si: "arc(jp.sp.tripot)"
+    texte: "Le jeudi, au fond du Terminus, il y a une table d'amis. On y parle de tout sauf de football. Mes meilleurs contrats, je les ai signés sur ce tapis vert."
+  - qui: aulard
+    sujet: sponsor
+    si: "role == entraineur && flag(sp_terrain_villa)"
+    texte: "Ton pavillon a un ponton sur la Rive ; le mien n'en a pas. Quand le promoteur rappellera, c'est ton numéro qu'il fera en premier. Prépare ta phrase."
+  - qui: aulard
+    sujet: achat
+    si: "possede(coupe_sport)"
+    texte: "Ton coupé est plus beau que ma berline. Gare-le derrière la tribune. Les abonnés n'aiment pas voir l'argent rouler ; ils préfèrent le voir s'asseoir en loge."
+  - qui: aulard
+    sujet: achat
+    si: "possede(villa)"
+    texte: "Ta villa des Hauts-de-Rive, je l'ai visitée en quatre-vingt-six. Trop chère pour un président. Ton métier paie mieux que le mien, à condition de durer."
+
+  # ================================================================ TITI BRÉHAUT
+  # Le stade, l'après-midi. Il parle pour « les gars », il chiffre, il négocie ;
+  # son ambition se cache derrière le groupe.
+  - qui: brehaut
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Ce midi, douze à table et pas un mot. Onze assiettes finies. Le douzième, c'est le plus jeune ; il croit que c'est sa faute."
+  - qui: brehaut
+    sujet: classement
+    si: "rang >= 15 && journee >= 12"
+    texte: "Au vestiaire, chacun compte les points qui restent sur son bout de papier. Personne ne trouve le même chiffre. Ils ont tous raison ; c'est le problème."
+  - qui: brehaut
+    sujet: toi
+    si: "relation.brehaut >= 2"
+    texte: "Les gars t'ont gardé une place au repas d'avant-match, côté fenêtre. D'habitude, c'est la mienne. Je me mets en bout : de là, on voit qui arrive en retard."
+  - qui: brehaut
+    sujet: toi
+    si: "relation.brehaut <= -1"
+    texte: "Il y a une question pour toi, au vestiaire. Je la poserai demain, devant eux, pas ici. Ici, c'était entre nous, et il n'y a plus vraiment de nous."
+  - qui: brehaut
+    sujet: club
+    texte: "Le club livre vingt bouteilles d'eau pour vingt-deux. Depuis trois ans, j'en achète deux au tabac du carrefour. Personne n'a jamais demandé d'où elles venaient."
+  - qui: brehaut
+    sujet: argent
+    si: "flag(salaires_retard)"
+    texte: "Le 5, les gars vont au distributeur à trois, pour ne pas lire leur solde seuls. Je viens avec eux. Je regarde la rue pendant qu'ils lisent le ticket."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(brehaut_capitaine)"
+    texte: "Dix-huit marches jusqu'au vestiaire. Je les monte en dernier, maintenant, pour qu'on ne compte pas mes pauses. Merci pour le brassard. Je ne le redirai pas."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(brehaut_ecarte)"
+    texte: "Je me change au fond, près de la douche. On y entend tout ce que les gars ne disent pas devant toi. Tu veux que je te le répète, ou tu préfères deviner ?"
+  - qui: brehaut
+    sujet: sombre
+    si: "flag(sb_greve)"
+    texte: "L'original de la feuille à carreaux est plié en huit dans mon casier. Si la paie retarde encore, je n'aurai pas à en racheter une."
+  - qui: brehaut
+    sujet: club
+    si: "flag(groupe_lit_avant)"
+    texte: "Encore la compo apprise par L'Écho, page six. Personne n'est fâché ; tout le monde est informé. Un vestiaire fâché, je sais faire. Informé, non."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(brehaut_staff)"
+    texte: "Le costume me serre aux épaules et les manches sont trop longues. Je ne les fais pas reprendre. Le jour où elles m'iront, je serai quelqu'un d'autre."
+  - qui: brehaut
+    sujet: toi
+    si: "role == joueur && flag(mouton_noir)"
+    texte: "Au toro, les gars ne te font plus la passe. Je ne l'ai pas décidé. Je n'ai rien fait pour l'empêcher non plus. Demain, demande le premier ballon de la journée."
+  - qui: brehaut
+    sujet: toi
+    si: "role == joueur && flag(capitaine)"
+    texte: "Le brassard glisse sur le bras gauche. Mets une épingle à l'intérieur ; moi, j'en mettais deux la première année. Personne ne le savait. Maintenant, toi."
+  - qui: brehaut
+    sujet: club
+    si: "role == joueur && flag(petition_portee)"
+    texte: "Vingt-deux noms. Gigi a signé deux fois, je l'ai laissé faire. Le président l'a pesée avant de la lire ; elle pesait plus lourd qu'il ne croyait."
+  - qui: brehaut
+    sujet: sponsor
+    texte: "Trois des gars jouent aux cartes à l'arrière-salle du Terminus. L'un d'eux doit déjà plus que sa prime. Il me l'a dit comme on demande de l'aide."
+  - qui: brehaut
+    sujet: sombre
+    si: "role == joueur && flag(vl_match_vendu)"
+    texte: "Samedi, à la soixantième, tu as perdu un duel que tu ne perds jamais. Je ne demande rien. Les gars qui perdaient ces duels-là roulaient en voiture neuve."
+  - qui: brehaut
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Belle montre. Mon frère portait la même quand il a vendu mon image, en quatre-vingt-huit. La montre n'y est pour rien. Je regarde qui te l'a vendue."
+
+  # ================================================================ GIGI VECCHIO
+  # Le stade, l'après-midi. Rocailleux, lent, fataliste ; les vieux matchs, la
+  # peur de la fin. Il ne finit pas ses phrases quand elles sont tristes.
+  - qui: vecchio
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Le poteau gauche, je lui parle avant chaque mi-temps. Samedi, il n'a rien répondu. Le droit, je ne lui parle pas, il n'écoute pas…"
+  - qui: vecchio
+    sujet: match
+    si: "serie_v >= 1 && annee >= 1992"
+    texte: "Je n'ai pas lavé les chaussettes de quatre-vingt-dix depuis la série. Paulette dit qu'on les sent depuis la tribune Est. Elle exagère. Un peu."
+  - qui: vecchio
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "On était derniers à Noël, une année. On s'est sauvés le dernier jour, sur un penalty que j'ai… Enfin. Je ne raconte pas la fin, elle porte malheur."
+  - qui: vecchio
+    sujet: toi
+    si: "relation.vecchio >= 2"
+    texte: "Il y a un filet plié dans un placard de la buvette. Un jour, je te dirai de quel but il vient. Pas cette saison. Pas cette…"
+  - qui: vecchio
+    sujet: toi
+    si: "relation.vecchio <= -1"
+    texte: "Les gants sont propres, le maillot est sec. Pour le reste, je n'ai rien à raconter aujourd'hui. Demain, peut-être."
+  - qui: vecchio
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Ta montre en or, au Terminus, finirait sur la table un soir de malchance. J'en ai vu une changer trois fois de poignet en une nuit."
+  - qui: vecchio
+    sujet: argent
+    si: "flag(sp_gigi_dette)"
+    texte: "Je te rembourserai jusqu'au dernier billet. Pas pour toi : pour moi. Je n'avais jamais rien dû à personne avant ce tapis vert."
+  - qui: vecchio
+    sujet: sombre
+    si: "flag(sb_car)"
+    texte: "Norbert est sorti de l'hôpital avec une canne. Il vient au stade quand même, le samedi, et il s'assoit à côté du car de location. Il ne monte plus dedans."
+  - qui: vecchio
+    sujet: toi
+    si: "flag(vecchio_promis)"
+    texte: "« Jusqu'en juin. » Je l'ai répété au vestiaire, à ma femme, aux deux poteaux. Ils l'ont tous entendu. Maintenant, il faut que je tienne jusque-là."
+  - qui: vecchio
+    sujet: club
+    si: "flag(gardien_jeune)"
+    texte: "Le jeune a mes gants. Il les tient bien. Il plonge du bon côté, celui qui ne fait pas mal… Moi, je regarde depuis la main courante. C'est une bonne place."
+  - qui: vecchio
+    sujet: rumeur
+    si: "flag(gigi_staff)"
+    texte: "J'essuie les gants des autres, maintenant. Sous la douche, ils parlent, et moi j'entends. Ce matin, un nom est revenu trois fois. Pas le tien."
+  - qui: vecchio
+    sujet: sombre
+    si: "role == entraineur && flag(sb_appel_nuit)"
+    texte: "Paraît qu'une voix t'a parlé de mon dos, à trois heures du matin. Mon dos va bien. Ce qui m'inquiète, c'est qu'elle ait ton numéro et pas le mien."
+  - qui: vecchio
+    sujet: sombre
+    si: "flag(sb_buvette_fermee)"
+    texte: "Il y a un scellé sur la porte de la buvette. Je bois mon eau au Terminus, au bout du comptoir. Elle a le même goût ; c'est le comptoir qui n'est pas le même."
+  - qui: vecchio
+    sujet: toi
+    si: "role == joueur && flag(gigi_encore_une)"
+    texte: "Encore une saison. Le survêtement, je l'ai payé de ma poche ; le ticket est agrafé dans mon carnet. Celui-là, on ne me le reprendra pas."
+  - qui: vecchio
+    sujet: sponsor
+    texte: "Derrière la porte du fond du Terminus, ça joue aux cartes les nuits de match. Un gardien que j'ai connu y a laissé une prime entière, un soir de…"
+  - qui: vecchio
+    sujet: sombre
+    si: "arc(en.sp.gigi)"
+    texte: "Si on te parle de moi et de l'arrière-salle du Terminus, c'est vrai. Les cartes, c'est comme les penaltys : on croit sentir le côté. On ne sent rien…"
+  - qui: vecchio
+    sujet: toi
+    si: "role == joueur && flag(sp_bourrel_tenu)"
+    texte: "Tu as gardé les Bourrel. Le vieux l'a su avant toi ; il m'a envoyé une paire de gants, sans facture. Une parole, ça se coud aussi."
+  - qui: vecchio
+    sujet: sombre
+    si: "flag(sp_gigi_livre)"
+    texte: "Je joue samedi. Le reste, tu le demandes à l'adjoint."
+
+  # ================================================================= LIAN MBAKO
+  # Le centre de formation, le mercredi et le samedi après-midi. Des phrases
+  # courtes, la fierté, la peur cachée, sa mère toujours dans le dos. Il
+  # vouvoie l'entraîneur, il tutoie le joueur.
+  - qui: mbako
+    sujet: match
+    si: "role == entraineur && serie_d >= 1"
+    texte: "On perd, et moi j'étais en tribune. Pour ma mère, la tribune, ça s'apprend aussi. Je n'apprends pas vite, coach."
+  - qui: mbako
+    sujet: match
+    si: "serie_v >= 1"
+    texte: "On gagne. Au centre, les gamins de douze ans m'attendent à la grille pour toucher le maillot. Je les laisse toucher. Moi aussi, j'ai touché, avant."
+  - qui: mbako
+    sujet: classement
+    si: "rang <= 3 && journee >= 12"
+    texte: "Le président est venu au centre avec un homme en costume clair. Ils ont regardé mes pieds, pas ma figure. Ma mère a tout écrit, sur la page d'après."
+  - qui: mbako
+    sujet: toi
+    si: "role == entraineur && relation.mbako >= 2"
+    texte: "Ma mère dit que vous êtes rare. Elle ne dit jamais ça. Samedi, je marque pour vous. Ne le répétez pas, elle me tuerait."
+  - qui: mbako
+    sujet: toi
+    si: "role == entraineur && relation.mbako <= -1"
+    texte: "J'attends mon tour, coach. Ma mère a le numéro d'un autre club dans sa veste. Elle ne l'a pas appelé. Elle le regarde, le soir."
+  - qui: mbako
+    sujet: toi
+    si: "role == entraineur && flag(mbako_lance)"
+    texte: "Samedi, la Nord a crié mon nom. Deux rangs plus haut, trois types criaient autre chose. Je n'ai entendu que mon nom. Je m'entraîne à ça aussi."
+  - qui: mbako
+    sujet: sombre
+    si: "role == entraineur && flag(sb_lettre)"
+    texte: "Les lettres, je les garde dans une boîte à chaussures. Il y en a sept. Ma mère en connaît deux. Ne lui dites pas le chiffre."
+  - qui: mbako
+    sujet: sombre
+    si: "role == joueur && flag(sb_lettre)"
+    texte: "Toi aussi, tu en as reçu une, à cause de moi. Les miennes sont dans la boîte à chaussures, sous mon lit. Je ne les relis pas. Je les compte."
+  - qui: mbako
+    sujet: toi
+    si: "role == joueur && flag(mentor_mbako)"
+    texte: "Le contrôle orienté, je le fais maintenant sans regarder le ballon. Comme tu m'as montré. Le coach croit que c'est lui. Je le laisse croire."
+  - qui: mbako
+    sujet: toi
+    si: "role == joueur && flag(rival_mbako)"
+    texte: "Le coach a écrit mon nom au feutre et le tien au crayon. Le crayon, ça s'efface. Ce n'est pas moi qui ai choisi le crayon."
+  - qui: mbako
+    sujet: toi
+    si: "role == joueur && flag(mbako_blesse_par_toi)"
+    texte: "Ma mère a noté ton tacle dans son carnet. Moi, je n'ai pas besoin de carnet : je l'ai encore dans la cheville."
+  - qui: mbako
+    sujet: argent
+    si: "flag(mbako_garde) && annee < 2005"
+    texte: "Trente millions. Le fax est dans le portefeuille de Fardelli, et moi je suis ici. Les gars m'appellent « Trente », maintenant. Je fais semblant de rire."
+  - qui: mbako
+    sujet: toi
+    si: "flag(brassard_mbako)"
+    texte: "Le brassard est trop large pour mon bras. Je l'ai serré avec un élastique à cheveux de ma mère. Les anciens ne me parlent pas. Je joue pour eux quand même."
+  - qui: mbako
+    sujet: club
+    si: "flag(vl_gamin)"
+    texte: "Le Chat, le gamin du square, s'entraîne au centre maintenant. Il plonge du mauvais côté et se relève en riant. Il dit que c'est grâce à quelqu'un de la ville."
+  - qui: mbako
+    sujet: club
+    si: "role == joueur"
+    texte: "Le casier près de la porte, c'est le mien maintenant. D'après ma mère, la porte, c'est pour ceux qui partent. Moi, je dis : pour ceux qui arrivent."
+  - qui: mbako
+    sujet: sponsor
+    texte: "Un homme m'a donné une carte à la sortie du centre : le Rideau Rouge, une table à mon nom samedi. J'ai donné la carte à ma mère. Elle l'a déchirée en trois."
+  - qui: mbako
+    sujet: achat
+    si: "role == entraineur && possede(coupe_sport)"
+    texte: "Votre coupé, je l'ai regardé au parking. Chez nous, on achète une voiture avec la deuxième prime, jamais avec la première. Vous en êtes à laquelle ?"
+
+  # ========================================================== LA MÈRE DE MBAKO
+  # Au centre, à côté de son fils. Protectrice, commerçante (la boutique),
+  # méfiante envers le club ; elle lit tout, elle écrit les clauses elle-même.
+  - qui: mere_mbako
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Quand on perd, le président parle de vendre ; quand on gagne, de garder. Mon fils est le même joueur les deux semaines. C'est le prix qui change de voix."
+  - qui: mere_mbako
+    sujet: classement
+    si: "rang <= 3 && journee >= 12"
+    texte: "Trois agents ont appelé la boutique cette semaine. J'ai répondu aux trois que mon fils joue ici. Le troisième a demandé jusqu'à quand. J'ai raccroché."
+  - qui: mere_mbako
+    sujet: toi
+    si: "relation.mere_mbako >= 2"
+    texte: "Vous avez lu la page trois avant de signer. Je l'ai remarqué. Les autres lisent la première et la dernière, comme une lettre d'amour."
+  - qui: mere_mbako
+    sujet: toi
+    si: "relation.mere_mbako <= -1"
+    texte: "Monsieur Fardelli a mon numéro depuis mardi. Vous, vous avez celui de la boutique, aux heures d'ouverture."
+  - qui: mere_mbako
+    sujet: club
+    texte: "Je m'assois en tribune présidentielle sans invitation. On ne m'a jamais demandé de partir. Si on ose un jour, ma réponse est dans mon sac, sous enveloppe."
+  - qui: mere_mbako
+    sujet: argent
+    si: "flag(mbako_mere)"
+    texte: "Le contrat de mon fils dort dans un coffre, à la banque. Trois exemplaires : le vôtre, le mien, et celui du jour où l'un de nous deux mentira."
+  - qui: mere_mbako
+    sujet: argent
+    si: "flag(mbako_vendu) && !flag(mbako_revenu)"
+    texte: "La clause, c'est moi qui l'ai écrite. Une ligne pour le jour où il reviendra. Il reviendra : ils reviennent tous, quand on leur retire le ballon."
+  - qui: mere_mbako
+    sujet: argent
+    si: "flag(mbako_revenu)"
+    texte: "La clause de retour, je l'ai réécrite sur le volant, dans la voiture. Dix pour cent de plus, pour le dérangement. Mon fils a repris le maillot ; moi, la main."
+  - qui: mere_mbako
+    sujet: sponsor
+    si: "flag(option_mbako)"
+    texte: "Une option sur mon fils, signée par deux hommes qui ne l'ont jamais vu jouer. Je l'ai lue, moi. Elle tombe le jour de ses dix-huit ans. Eux ne l'ont pas lue."
+  - qui: mere_mbako
+    sujet: sombre
+    si: "flag(sb_lettre)"
+    texte: "La même lettre est arrivée à la boutique. Au commissariat, le planton m'a demandé si mon fils était « d'ici ». Il est né à la maternité d'en face."
+  - qui: mere_mbako
+    sujet: sombre
+    si: "flag(sb_laverie_2)"
+    texte: "Les licences du centre, je les ai recopiées une par une. Quatre gamins n'existent pas, et le club paie leur formation. Je sais sur quel compte."
+  - qui: mere_mbako
+    sujet: club
+    si: "flag(vl_gamin)"
+    texte: "La mère du Chat est venue à la boutique. Elle voulait savoir ce qu'on signe, au centre. Je lui ai prêté mon stylo. Et un conseil : rien, sans moi."
+  - qui: mere_mbako
+    sujet: toi
+    si: "role == joueur && flag(mbako_blesse_par_toi)"
+    texte: "Votre tacle, je ne le porterai pas devant la commission. Je le garde pour mon fils. Un jour, il voudra savoir qui il avait en face."
+  - qui: mere_mbako
+    sujet: toi
+    si: "role == joueur"
+    texte: "À vous aussi, on a promis la suite : la photo dans L'Écho, le grand club, et quelqu'un derrière vous pour lire les contrats. Ça passe vite, la suite."
+  - qui: mere_mbako
+    sujet: sponsor
+    texte: "Des billets aux gamins du centre, s'ils signent avec un agent. L'argent vient d'un bar de nuit sur la nationale. Je sais lequel ; je n'y mets pas les pieds."
+  - qui: mere_mbako
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Une montre en or. Mon fils m'a demandé s'il pouvait en avoir une. Je lui ai dit : quand tu sauras ce qu'elle a coûté en heures de travail, pas en billets."
+  - qui: mere_mbako
+    sujet: epoque
+    si: "flag(monde_flux)"
+    texte: "Sur le Flux, je publie les clauses en photo, page par page. Les agents détestent. Les mères adorent. Les clubs relisent leurs contrats ; c'est le but."
+
+  # ================================================================ DOC SABATIER
+  # Le cabinet, le matin et l'après-midi. Doux, précis sur le corps, ambigu sur
+  # la morale (les piqûres, les certificats) ; il dit « ça » pour ce qui fait
+  # peur. Il vouvoie l'entraîneur, il tutoie le joueur.
+  - qui: sabatier
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Après une mauvaise série, les genoux parlent plus fort. Ce n'est pas le genou qui monte le volume, c'est la tête. Je soigne les deux ; je n'écris que le genou."
+  - qui: sabatier
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Le classement se lit sur ma table : les adducteurs le lundi, les lombaires le mardi. La peur se loge toujours au même endroit du dos."
+  - qui: sabatier
+    sujet: toi
+    si: "role == joueur && relation.sabatier >= 2"
+    texte: "Ta radio est dans le tiroir, pas dans le dossier. Le tiroir, ton agent ne sait pas qu'il existe. Passe mardi, avant la séance, par la porte du fond."
+  - qui: sabatier
+    sujet: toi
+    si: "role == entraineur && relation.sabatier >= 2"
+    texte: "Votre latéral droit me ment sur son mollet depuis trois semaines. Je vous le signale avant qu'il vous mente à vous aussi, et plus mal."
+  - qui: sabatier
+    sujet: toi
+    si: "relation.sabatier <= -1"
+    texte: "Je regarde les matchs depuis la tribune, maintenant, plus depuis le banc. On voit mieux les jambes. On voit moins les visages."
+  - qui: sabatier
+    sujet: achat
+    si: "role == joueur && possede(coupe_sport)"
+    texte: "Les sièges de ton coupé sont faits pour des pilotes, pas pour des lombaires. Trois heures de route là-dedans, et ton dos me le racontera lundi."
+  - qui: sabatier
+    sujet: sombre
+    si: "arc(en.sp.labo)"
+    texte: "Des cartons livrés à mon nom, signés du président : ampoules sans notice, comprimés en vrac. Je ne donne rien que je n'ai pas lu. Lui signe sans lire."
+  - qui: sabatier
+    sujet: club
+    si: "role == entraineur && flag(brehaut_capitaine)"
+    texte: "Le capitaine monte les dix-huit marches en dernier, pour cacher ses pauses. Je les compte : quatre, mardi. Soixante minutes par match, pas une de plus."
+  - qui: sabatier
+    sujet: toi
+    si: "role == joueur && flag(genou)"
+    texte: "J'ai écrit que le genou avait des choses à dire. Le président a lu « apte ». Il lit vite. Le genou lit lentement, et il a meilleure mémoire que lui."
+  - qui: sabatier
+    sujet: sombre
+    si: "role == joueur && flag(infiltre)"
+    texte: "La piqûre de dimanche, je ne l'ai écrite nulle part. Si on te la demande, tu n'en as pas eu. Si ça lâche, tu viens ici d'abord. Ici, pas aux urgences."
+  - qui: sabatier
+    sujet: sombre
+    si: "flag(sp_labo_boites)"
+    texte: "Chaque ampoule du jeudi est notée dans un registre que je garde chez moi, pas ici. Si on me le demande, je le donnerai. Entier."
+  - qui: sabatier
+    sujet: sombre
+    si: "flag(flacon_b)"
+    texte: "Trois semaines de congés, j'avais annoncé. J'en ai pris deux. Le flacon B a dit ce qu'il avait à dire. Moi, je n'ai rien dit, et c'est ça qui pèse."
+  - qui: sabatier
+    sujet: rumeur
+    si: "arc(co.pharmacie)"
+    texte: "La kiné ne me dit plus bonjour le matin. Elle range l'armoire derrière moi et recompte ce que j'ai compté. Elle a raison de recompter."
+  - qui: sabatier
+    sujet: sombre
+    si: "role == joueur && flag(sb_dopage)"
+    texte: "Ta boîte sans étiquette vient d'un homme en survêtement neuf qui passe par la muscu de l'ancien garage. Ce qu'il vend, c'est pour les chevaux."
+  - qui: sabatier
+    sujet: sombre
+    si: "role == joueur && flag(sb_agression)"
+    texte: "Le bandage est serré exprès : tu respires mal, donc tu ne cours pas après eux. Deux côtes, six semaines. La plainte, c'est à toi de la porter, pas à moi."
+  - qui: sabatier
+    sujet: sombre
+    si: "role == joueur && flag(vl_certificat)"
+    texte: "L'expert de l'assurance a demandé ton dossier. Ta cheville gauche n'a jamais rien eu ; je l'ai écrit en mars. L'entorse de la chambre neuf, je ne l'ai pas vue."
+  - qui: sabatier
+    sujet: sponsor
+    texte: "Des jeunes reviennent du Rideau Rouge le dimanche, les pupilles comme des soucoupes. Ce n'est pas l'alcool. Je ne pose pas de questions ; je les pèse le lundi."
+  - qui: sabatier
+    sujet: epoque
+    si: "annee >= 1991 && annee <= 1999"
+    texte: "Le contrôle arrive sans prévenir, maintenant : une glacière, et un homme qui ne s'assoit jamais. Je lui prête une chaise chaque fois. Il reste debout."
+
+  # ===================================================================== CAMILLE
+  # À la maison seulement, le soir et la nuit. La vie hors du foot : le loyer,
+  # la voisine, la boulangère, la fatigue ; ce que le foot coûte. Dure quand
+  # elle a mal.
+  - qui: camille
+    sujet: match
+    si: "lieu == appartement && !flag(divorce) && serie_d >= 1"
+    texte: "À la boulangerie, on m'a rendu la monnaie sans me regarder. Quand on perd, ça se voit jusque dans les pièces. J'ai pris le pain de la veille, moins cher."
+  - qui: camille
+    sujet: classement
+    si: "lieu == appartement && !flag(divorce) && rang >= 16 && journee >= 12"
+    texte: "J'ai regardé les annonces de location à Portclair. Pour voir. Les deux-pièces y sont moins chers qu'ici, et il y a la mer au bout de la rue."
+  - qui: camille
+    sujet: toi
+    si: "lieu == appartement && !flag(divorce) && relation.camille >= 2"
+    texte: "Le gratin est au four, sous un torchon. Il tient deux heures comme ça. Tu as une heure cinquante de retard ; c'est notre record, il mérite une part."
+  - qui: camille
+    sujet: toi
+    si: "lieu == appartement && !flag(divorce) && relation.camille <= -1"
+    texte: "Le courrier du club est sur le meuble de l'entrée. Je ne l'ai pas ouvert. J'ai appris à ne plus ouvrir ce qui porte ton nom."
+  - qui: camille
+    sujet: sombre
+    si: "lieu == appartement && !flag(divorce) && flag(vl_creancier)"
+    texte: "Deux hommes ont attendu sur le capot de ta voiture, cet après-midi. Polis. Ils m'ont demandé de te dire qu'ils repasseraient. Ils connaissaient ton prénom."
+  - qui: camille
+    sujet: sponsor
+    si: "lieu == appartement && !flag(divorce)"
+    texte: "La pharmacienne dit que des jeunes du club passent au Rideau Rouge le vendredi. Je lui ai dit que tu étais à la maison le vendredi. C'était vrai, jusqu'ici."
+  - qui: camille
+    sujet: toi
+    si: "lieu == appartement && !flag(divorce) && flag(camille_ici)"
+    texte: "Le carton marqué « photos » est toujours au fond du placard, fermé. Ici, on n'a pas encore pris de photo qui mérite d'aller avec les autres."
+  - qui: camille
+    sujet: quartier
+    si: "lieu == appartement && !flag(divorce) && flag(camille_avocate)"
+    texte: "J'ai plaidé ce matin pour un gamin de la Nord : un capot tagué, cent heures au stade. Il dit qu'il te connaît. Il n'a jamais été à vingt mètres de toi."
+  - qui: camille
+    sujet: club
+    si: "lieu == appartement && !flag(divorce) && flag(camille_journaliste)"
+    texte: "À la rédaction, on voulait que j'écrive sur toi. J'ai dit non. Ils ont envoyé quelqu'un d'autre, qui a écrit que tu étais formidable. C'était faux aussi."
+  - qui: camille
+    sujet: toi
+    si: "lieu == appartement && !flag(divorce) && flag(camille_medecin)"
+    texte: "Tu poses le talon en dernier depuis dimanche. Ne me dis pas que c'est la fatigue. La fatigue, je la soigne la nuit aux urgences ; je la connais par son prénom."
+  - qui: camille
+    sujet: quartier
+    si: "lieu == appartement && !flag(divorce) && flag(camille_elue)"
+    texte: "Au conseil, Madame Aubert m'a demandé si tu viendrais inaugurer le gymnase. J'ai répondu que je ne connais jamais tes dimanches à l'avance. Elle a noté."
+  - qui: camille
+    sujet: argent
+    si: "lieu == appartement && !flag(divorce) && flag(camille_agente)"
+    texte: "J'ai relu ton contrat ce soir, à la table de la cuisine. Page cinq, il y a une clause que le président a écrite pour lui. Demain, je la lui rends raturée."
+  - qui: camille
+    sujet: sombre
+    si: "lieu == appartement && !flag(divorce) && flag(sb_devant_chez_toi)"
+    texte: "J'ai mis la chaîne à la porte. Je sais, ça ne sert à rien contre cinq types. Ça me sert à moi : j'écoute le bruit qu'elle fait quand je la mets."
+  - qui: camille
+    sujet: sombre
+    si: "lieu == appartement && !flag(divorce) && flag(sb_lettre)"
+    texte: "Je relève le courrier avant toi, maintenant. Je regarde s'il y a un timbre. Ce qui n'en a pas, je l'ouvre au-dessus de l'évier, l'allumette prête."
+  - qui: camille
+    sujet: sombre
+    si: "lieu == appartement && !flag(divorce) && flag(sb_voiture)"
+    texte: "L'assureur a rappelé. Il voulait savoir si on avait des ennemis. J'ai dit que tu travailles au stade, le samedi, devant dix mille personnes. Il n'a pas insisté."
+  - qui: camille
+    sujet: sombre
+    si: "lieu == appartement && !flag(divorce) && role == joueur && flag(sb_photos)"
+    texte: "La boulangère a gardé la page de la Gazette Rose sous son comptoir. Elle ne me l'a pas montrée. Elle m'a fait cadeau du pain. C'est pire."
+  - qui: camille
+    sujet: achat
+    si: "lieu == appartement && !flag(divorce) && possede(villa)"
+    texte: "La maison est grande. Sept portes entre la cuisine et la chambre. Dans l'appartement d'avant, il y en avait deux, et j'entendais tes clés dans la serrure."
+  - qui: camille
+    sujet: quartier
+    si: "lieu == appartement && !flag(divorce) && flag(vl_boulangere)"
+    texte: "La boulangère m'a mis un croissant de plus, et elle a baissé la voix pour dire merci. Je ne sais pas pourquoi. Toi, si."
+
+  # ============================================================ PIERRE MASSENET
+  # La rédaction de L'Écho. Il échange une information contre une autre, le
+  # carnet ouvert ou fermé selon ce qu'il veut ; l'ironie froide.
+  - qui: meneche
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "J'ai trois titres dans le tiroir pour lundi, du plus poli au plus juste. Lequel sort dépend un peu de vous, et beaucoup de samedi."
+  - qui: meneche
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "J'ai ressorti la photo de la dernière descente du club : même pluie, même parking, un autre visage. Je n'ai pas encore décidé si ce serait le vôtre."
+  - qui: meneche
+    sujet: toi
+    si: "relation.meneche >= 2"
+    texte: "Une information, gratuitement, ce qui ne m'arrive jamais : vendredi, le président a déjeuné avec un agent de la Capitale. On a parlé de vous au dessert."
+  - qui: meneche
+    sujet: toi
+    si: "relation.meneche <= -1"
+    texte: "Mon carnet est fermé. Ça ne veut pas dire que je n'écris pas ; ça veut dire que j'écris ailleurs, plus tard, et sans vous."
+  - qui: meneche
+    sujet: sombre
+    si: "flag(vl_chantage_paye)"
+    texte: "L'homme en imperméable m'a proposé la même photo que vous. Je ne l'ai pas achetée. Il en a tiré trois ; vous avez payé la première."
+  - qui: meneche
+    sujet: rumeur
+    si: "arc(en.dossier_meneche)"
+    texte: "La chemise est sur mon bureau, face cachée. Une seule feuille, et votre nom dessus. Venez la retourner vous-même ; c'est plus élégant que de lire le journal."
+  - qui: meneche
+    sujet: toi
+    si: "flag(dossier_troque)"
+    texte: "Votre exclusivité est parue lundi ; on m'en a fait compliment. Le silence que vous m'avez acheté avec tient bien. Je le garde au frais."
+  - qui: meneche
+    sujet: toi
+    si: "flag(presse_franc)"
+    texte: "« Franchement », avec un point d'interrogation. Le président m'a appelé à sept heures pour le point d'interrogation, pas pour le mot. Il a l'œil."
+  - qui: meneche
+    sujet: sombre
+    si: "flag(sb_corbeau)"
+    texte: "Les lettres du corbeau sont découpées dans mes titres : deux Unes de mars et une manchette de 1987. Votre corbeau lit L'Écho depuis longtemps. C'est un abonné."
+  - qui: meneche
+    sujet: rumeur
+    si: "flag(sb_laverie_lue)"
+    texte: "Un compte à Valdorne, des frais de formation. Je connais le guichetier de là-bas ; il ne parle pas. Sa femme, si : le samedi, chez le coiffeur."
+  - qui: meneche
+    sujet: sponsor
+    texte: "Le Rideau Rouge a payé d'avance une page de publicité pour la saison. Je l'ai refusée ; le directeur l'a prise. Elle est en page sept, à côté de vos chiffres."
+  - qui: meneche
+    sujet: sponsor
+    texte: "À l'arrière-salle du Terminus, on parie sur le nombre de corners. Je ne vous demande pas si vous le saviez. Je vous demande combien il y en aura samedi."
+  - qui: meneche
+    sujet: achat
+    si: "possede(villa)"
+    texte: "Votre villa des Hauts-de-Rive est au cadastre depuis mardi. Le cadastre est public. Je n'en fais rien, tant que personne d'autre n'en fait quelque chose."
+  - qui: meneche
+    sujet: epoque
+    si: "annee >= 2003"
+    texte: "Télé-Stade m'a offert un fauteuil le dimanche soir. Le papier ne paie plus mes cigarettes, et la télévision ne relit pas ce que je dis. C'est reposant."
+  - qui: meneche
+    sujet: toi
+    si: "role == joueur && flag(consultant)"
+    texte: "Le fauteuil d'à côté vous va bien. Vous parlez mieux que vous ne jouez, maintenant. Ce n'est pas un compliment ; c'est une prévision."
+  - qui: meneche
+    sujet: rumeur
+    si: "arc(en.sp.terrain)"
+    texte: "Une maquette de résidence circule à l'hôtel de la Rive, à la place exacte du terrain annexe. Je fouille les archives du notaire. Ce terrain a une histoire."
+  - qui: meneche
+    sujet: toi
+    si: "flag(sp_terrain_echo)"
+    texte: "Le numéro de la suite 4 est dans mon carnet, à côté du vôtre. Le promoteur ne rappelle plus personne. Moi si : je vous dois une page."
+
+  # ======================================================================== LÉA
+  # À L'Écho, puis plus loin. Directe, elle vérifie, elle dit ce qu'elle a et ce
+  # qui lui manque ; elle ne publie pas sans.
+  - qui: lea
+    sujet: rumeur
+    si: "serie_d >= 1"
+    texte: "Samedi soir au Corner, j'ai trois témoins, dont deux joueurs du club. Je n'écris rien tant que je n'en ai pas un troisième qui n'avait pas bu."
+  - qui: lea
+    sujet: match
+    si: "serie_v >= 1"
+    texte: "Le club gagne. J'ai demandé au vestiaire ce qui avait changé : chacun m'a donné une raison différente. C'est souvent le signe que ça va durer."
+  - qui: lea
+    sujet: classement
+    si: "rang <= 3 && journee >= 12"
+    texte: "Un club de la Capitale a demandé votre dossier. J'ai le nom par quelqu'un qui ment souvent, et l'heure par quelqu'un qui ne ment jamais. Je n'ai que l'heure."
+  - qui: lea
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Le club annonce huit cents spectateurs de plus qu'il n'y en a : il compte les abonnés qui ne viennent plus. J'ai compté les sièges vides, rangée par rangée."
+  - qui: lea
+    sujet: toi
+    si: "relation.lea >= 2"
+    texte: "J'ai une histoire sur vous. Je vous appelle avant de l'écrire ; c'est ma règle avec ceux qui répondent. Demain, huit heures, au café de la Mairie."
+  - qui: lea
+    sujet: toi
+    si: "relation.lea <= -1"
+    texte: "Votre silence est noté, avec la date. Il sera dans l'article, entre deux citations de gens qui ont parlé. Un silence, ça prend de la place sur une page."
+  - qui: lea
+    sujet: quartier
+    texte: "Je fais la tournée des bars le lundi : le Corner, le Terminus, la buvette. Pas pour boire. Le lendemain d'un match, on apprend plus que le soir même."
+  - qui: lea
+    sujet: rumeur
+    si: "flag(dossier_lea)"
+    texte: "La boîte de L'Écho est sur mon bureau, entre le téléphone et la fenêtre. Je l'ouvre le dimanche soir. Il reste de la place au fond ; elle vous attend."
+  - qui: lea
+    sujet: toi
+    si: "role == joueur && arc(jp.premiere_une)"
+    texte: "Votre première conférence, je l'ai réécoutée trois fois. Vous avez hésité avant le mot « coach ». La Gazette ne l'a pas entendu. Moi, si."
+  - qui: lea
+    sujet: club
+    si: "role == joueur && flag(petition_presse)"
+    texte: "Les vingt-deux noms sont parus. Trois joueurs m'ont appelée pour dire qu'ils n'avaient pas signé. J'ai les originaux : ils avaient signé."
+  - qui: lea
+    sujet: toi
+    si: "flag(memoires_verite)"
+    texte: "Votre chapitre trois, je ne l'ai pas coupé. L'éditeur voulait. Je lui ai dit qu'on ne coupe pas ce qui est vrai ; on le met en page, avec de la marge."
+  - qui: lea
+    sujet: toi
+    si: "role == joueur && flag(special)"
+    texte: "« Le meilleur, ici, c'est moi. » Je l'ai publié sans un adjectif autour. Les adjectifs, c'est la Gazette Rose. Votre phrase n'en avait pas besoin."
+  - qui: lea
+    sujet: sponsor
+    texte: "Le Rideau Rouge n'a qu'une licence de débit de boissons. Pas de spectacle, pas de jeux. La mairie le sait, le commissariat aussi. Je cherche qui signe pour eux."
+  - qui: lea
+    sujet: sponsor
+    texte: "Trois joueurs de la région ont reçu la même montre en or le même mois. Même courtier, même payeur : une société aux îles. J'ai le reçu. Pas encore le nom."
+  - qui: lea
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Votre montre est du même modèle que celles de mon enquête. Ce n'est peut-être pas la même histoire. J'aimerais savoir d'où elle vient, avant les autres."
+  - qui: lea
+    sujet: achat
+    si: "flag(bn_photo_coupe)"
+    texte: "La Gazette Rose a mis votre coupé en page trois, vous devant. Moi, j'ai la date d'achat au garage du Pont et le montant. Je compare avec votre salaire."
+  - qui: lea
+    sujet: sponsor
+    si: "flag(sp_tripot_affiche)"
+    texte: "Votre visage est sur les abribus de la nationale, un jeton entre les dents. Le casino de Fontenaire n'a pas de société déclarée ici. Qui paie les affiches ?"
+  - qui: lea
+    sujet: epoque
+    si: "flag(monde_lea_redac)"
+    texte: "Je dirige le Quotidien depuis le printemps. Ils ne m'avaient pas prise en quatre-vingt-dix. Leur lettre de refus, je l'envoie aux stagiaires que je refuse."
+
+  # =============================================================== MADAME AUBERT
+  # La mairie, le matin. La politique, l'argent public, les élections, « la
+  # ville » ; elle ne tutoie ni ne prénomme personne.
+  - qui: aubert
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Mon opposition a demandé la parole sur le club au conseil de jeudi. Je la lui ai donnée en fin de séance, à vingt-trois heures. Il restait quatre conseillers."
+  - qui: aubert
+    sujet: club
+    si: "arc(en.sp.terrain)"
+    texte: "Une résidence en maquette, là où les gamins jouent, derrière les thuyas. Le promoteur dit que le club n'en veut plus. Je voudrais l'entendre de vous."
+  - qui: aubert
+    sujet: club
+    si: "flag(sp_terrain_parle)"
+    texte: "Vous avez parlé au conseil pour la résidence. Trois phrases ; on m'a dit qu'elles n'étaient pas de vous. La délibération, elle, porte votre nom."
+  - qui: aubert
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "La subvention se vote après le dernier match. J'ai demandé qu'on avance le conseil d'une semaine. On ne vote pas pour un club qui descend."
+  - qui: aubert
+    sujet: toi
+    si: "relation.aubert >= 2"
+    texte: "Votre club est inscrit au budget de l'an prochain, ligne quatorze. Je l'ai fait remonter de deux lignes. Personne ne lit au-delà de la douzième."
+  - qui: aubert
+    sujet: toi
+    si: "relation.aubert <= -1"
+    texte: "Votre dossier est chez mon adjoint aux sports. Il le lit le vendredi, entre la piscine et le marché couvert. Il lit lentement ; je l'ai choisi pour ça."
+  - qui: aubert
+    sujet: argent
+    texte: "La ville paie l'éclairage du stade, l'eau des douches et la tonte du terrain annexe. Le club paie le reste. D'après vos comptes, le reste, c'est encore moi."
+  - qui: aubert
+    sujet: argent
+    si: "arc(en.mairie_d2)"
+    texte: "Je suis en campagne dans dix-huit mois. Je n'ai rien contre votre club ; j'ai seulement besoin de savoir ce qu'il rapporte à la ville. En voix."
+  - qui: aubert
+    sujet: club
+    si: "flag(tribune_fermee)"
+    texte: "La Nord est fermée par arrêté. Gégé a noué son écharpe à la grille. Mes services voulaient l'enlever ; je l'ai laissée. Une écharpe ne vote pas, elle se voit."
+  - qui: aubert
+    sujet: club
+    si: "flag(tribune_a_renover)"
+    texte: "Le rapport des pompiers sur la Nord est dans mon tiroir de gauche, celui des choses qui attendent l'été. L'été dure longtemps, dans une mairie."
+  - qui: aubert
+    sujet: sombre
+    si: "flag(sb_manif)"
+    texte: "Trois cents écharpes sous mes fenêtres, pendant une réunion sur votre subvention. J'ai fait fermer les volets. Pas pour le bruit : pour les photographes."
+  - qui: aubert
+    sujet: sombre
+    si: "flag(sb_terrain_brule)"
+    texte: "HONTE, deux mètres de haut, à l'essence. L'herbe a repoussé plus vite que la colère. C'est la seule chose que je peux promettre au conseil."
+  - qui: aubert
+    sujet: toi
+    si: "flag(montee_promise)"
+    texte: "Vous avez promis la montée à votre président ; il me l'a répété au conseil. Une promesse répétée en séance figure au procès-verbal. Je l'ai fait recopier."
+  - qui: aubert
+    sujet: argent
+    si: "flag(subvention_perdue)"
+    texte: "J'ai réduit la subvention d'un tiers, comme annoncé. Votre radiateur tousse, paraît-il. Le mien aussi ; on ne s'en plaint pas en séance."
+  - qui: aubert
+    sujet: sponsor
+    texte: "Le Rideau Rouge a demandé une licence de nuit jusqu'à cinq heures. Deux de mes conseillers y ont une table réservée. Je signerai après les élections, ou jamais."
+  - qui: aubert
+    sujet: achat
+    si: "possede(helico)"
+    texte: "Votre hélicoptère s'est posé sur le terrain annexe. Il n'existe aucun arrêté pour ça, j'ai vérifié ce matin. Il en existera un jeudi."
+  - qui: aubert
+    sujet: achat
+    si: "possede(villa)"
+    texte: "Votre villa des Hauts-de-Rive a une piscine. L'été, la ville coupe l'arrosage du stade ; votre piscine, elle, se remplit. On me le fait remarquer au marché."
+  - qui: aubert
+    sujet: epoque
+    si: "flag(aubert_ministre)"
+    texte: "Ministre, et je redescends quand même ici le lundi signer les parapheurs. La Capitale m'a appris une chose : on y perd ses voix plus vite qu'ici."
+
+  # ============================================================== ROCCO FARDELLI
+  # Le café de la Mairie, à midi. Chaleureux, indirect : des amis, des
+  # services, jamais un chiffre. Il parle surtout au joueur, à l'entraîneur
+  # quand il a une enveloppe ou un gamin à vendre.
+  - qui: fardelli
+    sujet: match
+    si: "role == joueur && serie_v >= 1"
+    texte: "Un ami m'a appelé de la Capitale pour savoir si tu étais libre. Je lui ai dit que personne n'est libre, dans ce métier. On est disponible ; c'est différent."
+  - qui: fardelli
+    sujet: classement
+    si: "role == joueur && rang <= 3 && journee >= 12"
+    texte: "Quand le club est en haut, ce n'est pas le moment de vendre : c'est le moment qu'on te voie. Viens déjeuner mardi. Je t'assois face à la fenêtre."
+  - qui: fardelli
+    sujet: toi
+    si: "role == joueur && relation.fardelli >= 2"
+    texte: "{prenom}, j'ai refusé un service à un ami de vingt ans, cette semaine. Pour toi. Je te le dis pour que tu le saches, pas pour que tu me le rendes. Pas encore."
+  - qui: fardelli
+    sujet: toi
+    si: "role == joueur && relation.fardelli <= -1"
+    texte: "Je passe devant ta table sans m'asseoir, tu as vu ? D'habitude, je m'assois. J'ai d'autres clients qui ont faim ; toi, tu préfères manger en silence."
+  - qui: fardelli
+    sujet: argent
+    si: "flag(vl_dette_tripot)"
+    texte: "Le patron de la table, au Terminus, a ton nom à la craie sur son ardoise. Il est patient, jusqu'à un certain point. Je peux lui parler. Un service."
+  - qui: fardelli
+    sujet: argent
+    si: "flag(agent_fardelli)"
+    texte: "Ce que tu me paies, ce n'est pas un contrat. C'est le coup de fil que je passe la veille du jour où tu en auras besoin. Le jour même, c'est trop tard."
+  - qui: fardelli
+    sujet: argent
+    si: "flag(sans_agent)"
+    texte: "Tu cherches sans moi, je sais. Un club m'a demandé ton numéro ; je ne l'ai pas donné. Je le garde pour le jour où c'est toi qui me demanderas le sien."
+  - qui: fardelli
+    sujet: sponsor
+    si: "flag(offshore)"
+    texte: "Ton cousin porte une nouvelle montre. Elle est belle, elle est discrète. Si on te demande, c'est un cadeau de famille. Ce n'est même pas faux."
+  - qui: fardelli
+    sujet: sponsor
+    si: "flag(pari_double)"
+    texte: "Mon ami a perdu gros sur les corners, puis il a tout regagné grâce à toi. Il te remercie. Il ne le fera pas deux fois : personne ne remercie deux fois, ici."
+  - qui: fardelli
+    sujet: sponsor
+    si: "role == joueur"
+    texte: "Je connais celui qui tient le Rideau Rouge. Il aime les joueurs qui passent le samedi ; il les aime en liquide. Je ne te dis pas d'y aller. Il veut ton nom."
+  - qui: fardelli
+    sujet: sponsor
+    si: "flag(sp_rideau_vu)"
+    texte: "Tu as frappé deux fois à la porte sans poignée, je sais. Le patron dit du bien de toi. Il dit du bien de tous ceux qu'il compte garder."
+  - qui: fardelli
+    sujet: sponsor
+    texte: "À l'arrière-salle du Terminus, le samedi soir, on joue gros. Ces gens-là ne veulent pas d'argent. Juste savoir, la veille, qui joue et qui a mal quelque part."
+  - qui: fardelli
+    sujet: achat
+    si: "possede(coupe_sport)"
+    texte: "Un coupé rouge, enfin. Gare-le devant l'hôtel les soirs où un club étranger y dort. Ça ne fait pas monter le prix. Ça ne le fait pas baisser non plus."
+  - qui: fardelli
+    sujet: sombre
+    si: "role == entraineur && flag(enveloppe_refusee)"
+    texte: "Tu m'as dit jamais. Je l'ai entendu, mon ami aussi. Il ne t'en veut pas. Il a seulement retenu ton nom. Au cas où tu changerais de mot."
+  - qui: fardelli
+    sujet: sombre
+    si: "role == entraineur && flag(enveloppe_rival)"
+    texte: "L'enveloppe est arrivée où elle devait. Les trois d'en face roulent dans des voitures neuves. Ton gardien a joué son meilleur match. C'est drôle, la vie."
+  - qui: fardelli
+    sujet: argent
+    si: "role == entraineur && arc(en.prodige)"
+    texte: "Le petit Mbako a deux pieds et une mère. Les pieds valent une fortune ; la mère vaut plus. Si tu veux le garder, c'est elle qu'il faut convaincre, pas lui."
+  - qui: fardelli
+    sujet: epoque
+    si: "flag(monde_licence_agents)"
+    texte: "Ils m'ont donné une licence plastifiée, avec une photo où je ne souris pas. Avant, on me connaissait. Maintenant, on me vérifie. C'est moins chaleureux."
+
+  # ================================================================ CHEIKH ILYAS
+  # L'hôtel de la Rive. Froid, le vocabulaire de la finance ; il a été gardien
+  # remplaçant à quatorze ans et n'est jamais entré.
+  - qui: nassir
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Les défaites font baisser la valeur de tout ce qui porte votre maillot, notre boisson comprise. Nos ventes régionales ont reculé de quatre points."
+  - qui: nassir
+    sujet: sponsor
+    si: "arc(en.sp.dornois)"
+    texte: "Une biscuiterie de la rue des Tanneurs sur vos survêtements, payée en boîtes de fer. Nous paierions dix fois plus, par virement. L'offre tient un mois."
+  - qui: nassir
+    sujet: sponsor
+    si: "flag(sp_dornois_tenu)"
+    texte: "Vous avez gardé les sablés. D'après nos chiffres, la biscuiterie Dornois ne passera pas l'hiver. Nous avons le temps ; c'est même ce que nous avons de plus."
+  - qui: nassir
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Une descente divise les droits de télévision par trois. Nous avons modélisé les deux hypothèses. Dans la seconde, votre poste n'apparaît plus."
+  - qui: nassir
+    sujet: toi
+    si: "relation.nassir >= 2"
+    texte: "À quatorze ans, j'étais gardien remplaçant ; je ne suis jamais entré. Personne au fonds ne le sait. Vous, au moins, vous regardez le banc."
+  - qui: nassir
+    sujet: toi
+    si: "relation.nassir <= -1"
+    texte: "Votre contrat figure dans nos documents à la rubrique des charges fixes. Les charges fixes, on les renégocie en juin. Toutes, sans exception."
+  - qui: nassir
+    sujet: quartier
+    texte: "L'hôtel de la Rive sert le petit-déjeuner jusqu'à dix heures. Je descends à dix heures moins cinq. Le personnel me déteste poliment. C'est très professionnel."
+  - qui: nassir
+    sujet: sponsor
+    si: "arc(en.nassir_proprietaire)"
+    texte: "Votre caisse a un trou, notre boisson a une couleur. Il existe une solution où les deux problèmes disparaissent ensemble. Je vous laisse la trouver."
+  - qui: nassir
+    sujet: sponsor
+    si: "flag(nassir_sponsor)"
+    texte: "Le maillot orange se vend trois fois mieux que l'ancien, sauf dans votre ville. Ici, on l'achète pour le brûler. Je compte les deux comme des ventes."
+  - qui: nassir
+    sujet: sponsor
+    si: "flag(naming_signe)"
+    texte: "Arena Almadis. Quelqu'un gratte nos lettres sur la façade, la nuit. Nous les refaisons le jour. C'est une ligne du budget, comme une autre."
+  - qui: nassir
+    sujet: club
+    si: "flag(club_actif)"
+    texte: "Le fonds a racheté le club. Votre badge ouvre toutes les portes jusqu'au troisième étage. Au quatrième, ce sont nos bureaux. Vous n'y avez rien à faire."
+  - qui: nassir
+    sujet: argent
+    si: "flag(nassir_paie)"
+    texte: "Nous avons payé deux mois de salaires, sans condition. Au bilan, c'est inscrit sous « image ». L'image se rembourse toujours, d'une façon ou d'une autre."
+  - qui: nassir
+    sujet: argent
+    si: "flag(club_a_lancienne)"
+    texte: "Vous avez renvoyé le fonds et sa canette. C'était une décision. Elle a un coût ; je vous en ferai parvenir le chiffre chaque année, par courtoisie."
+  - qui: nassir
+    sujet: toi
+    si: "role == joueur && flag(exil_dore)"
+    texte: "Le toit s'ouvre en deux temps. Les tribunes sont à moitié vides, les caméras pleines. Vous êtes notre ligne la plus chère. Ne regardez pas les tribunes."
+  - qui: nassir
+    sujet: sponsor
+    si: "role == joueur && flag(compte_cousin)"
+    texte: "Votre cousin aux îles ouvre des comptes avec une facilité qui m'inquiète. Nous travaillons avec des banques. Lui travaille avec des cousins."
+  - qui: nassir
+    sujet: sponsor
+    texte: "On me demande si notre argent est propre. Il a une adresse, un numéro de compte et un auditeur. Celui du Rideau Rouge n'a qu'une porte sans poignée."
+  - qui: nassir
+    sujet: achat
+    si: "possede(helico)"
+    texte: "Un hélicoptère perd quinze pour cent de sa valeur chaque année. Un joueur, un peu moins. Vous avez acheté la seule chose ici qui vieillit plus vite que vous."
+  - qui: nassir
+    sujet: epoque
+    si: "flag(monde_fonds)"
+    texte: "À la Capitale, un fonds comme le nôtre vient d'acheter un club. Les supporters ont manifesté trois samedis, puis acheté le maillot. Nous appelons ça la courbe."
+
+  # ============================================================== NOÉ BERTHOMIER
+  # L'hôtel de la Rive, quand il descend de la Capitale. Les délais, les
+  # commissions, le tampon ; l'art de ne pas décider.
+  - qui: legruet
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Votre président m'a écrit pour se plaindre de l'arbitrage. Sa lettre est arrivée avant le dernier match de la série. Il anticipe. Je classe."
+  - qui: legruet
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Le règlement prévoit la descente, le barrage et les recours. Les recours ont un délai de huit jours ; les clubs qui descendent le connaissent par cœur."
+  - qui: legruet
+    sujet: toi
+    si: "relation.legruet >= 2"
+    texte: "Les districts m'ont demandé votre nom pour une conférence. Je le leur ai donné, avec votre numéro. C'est la première fois que je donne les deux."
+  - qui: legruet
+    sujet: toi
+    si: "relation.legruet <= -1"
+    texte: "Votre dossier est en commission. Elle se réunit le troisième mardi du mois, sauf l'été, en décembre et les années d'élection. Celle-ci en est une."
+  - qui: legruet
+    sujet: quartier
+    texte: "L'hôtel de la Rive me garde la chambre du deuxième, celle qui donne sur le stade. Je ne regarde jamais le terrain. Je regarde qui entre en tribune d'honneur."
+  - qui: legruet
+    sujet: rumeur
+    si: "flag(fede_dossier)"
+    texte: "Votre nom est sur la tranche d'une de nos chemises, en majuscules. Les majuscules, c'est pour la retrouver vite. Je ne dis pas qu'on la cherchera."
+  - qui: legruet
+    sujet: toi
+    si: "flag(commission_blanchi)"
+    texte: "La commission a classé votre affaire. Le tampon dit « classé », il ne dit pas « oublié ». Vous me devez une voix ; le Congrès n'a pas encore de date."
+  - qui: legruet
+    sujet: club
+    si: "flag(derogation) && !flag(diplome)"
+    texte: "Votre dérogation court jusqu'en juin. Il manque une signature au tampon : la mienne. Je la donnerai le jour de l'examen, ou pas. Les deux sont réglementaires."
+  - qui: legruet
+    sujet: sombre
+    si: "flag(diplome_arrange)"
+    texte: "Un examinateur en congé a signé votre diplôme un vendredi soir. Je n'ai rien vu. Je l'ai noté dans un carnet qui n'est pas un registre ; la nuance compte."
+  - qui: legruet
+    sujet: sponsor
+    si: "flag(enveloppe_denoncee)"
+    texte: "L'enveloppe de Fardelli dort dans mon tiroir, fermée. Le tiroir n'a pas de clé. Il n'en a jamais eu besoin : personne ne l'ouvre sans moi."
+  - qui: legruet
+    sujet: toi
+    si: "role == joueur && flag(international)"
+    texte: "Vous êtes sur ma liste. Votre club voulait un certificat pour la cheville ; je l'ai rangé sous la liste, pas dessus. L'ordre des papiers, c'est tout mon métier."
+  - qui: legruet
+    sujet: toi
+    si: "role == joueur && flag(selection_refusee)"
+    texte: "Vous avez dit non une fois à la sélection. C'est écrit dans la marge, pas dans le compte rendu. Chez nous, la marge, c'est déjà beaucoup."
+  - qui: legruet
+    sujet: sombre
+    si: "flag(sb_huis_clos)"
+    texte: "Le huis clos a coûté une recette à votre club et une réunion à la commission. Je préfère les amendes. Elles ne font de mal qu'aux comptes."
+  - qui: legruet
+    sujet: sombre
+    si: "flag(vl_sanction)"
+    texte: "La commission antidopage m'a transmis votre dossier : trois lignes de communiqué, quarante pages derrière. Page douze, un homme en survêtement neuf. Sans nom."
+  - qui: legruet
+    sujet: sombre
+    si: "flag(sp_commission)"
+    texte: "Vous avez tout nié dans le petit salon de l'hôtel. J'ai tamponné « nie », en rouge. Le rouge, chez nous, ne s'efface pas."
+  - qui: legruet
+    sujet: sponsor
+    texte: "La commission des paris a reçu trois signalements sur l'arrière-salle du Terminus. Elle examine. Elle examine très bien ; elle n'a jamais rien trouvé."
+  - qui: legruet
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Votre montre vient de la chambre sept. Je passe devant chaque soir pour monter au deuxième. Je n'ai rien contre les montres ; je regarde qui sort de la sept."
+  - qui: legruet
+    sujet: epoque
+    si: "flag(monde_legruet_parti)"
+    texte: "Je ne préside plus rien. Au Congrès, on me laisse parler cinq minutes ; j'en prends six. Personne n'ose couper un ancien. C'est le dernier pouvoir qui me reste."
+
+  # ================================================================== DAN CORVEN
+  # La brasserie du Pont, le midi et le soir. Un ancien : il raconte un match
+  # d'avant pour parler d'aujourd'hui ; le verre d'eau plein, la doudoune verte,
+  # le télégramme de 1971.
+  - qui: clow
+    sujet: match
+    si: "serie_d >= 1"
+    texte: "Cinq défaites d'affilée, je les ai eues à la Toussaint soixante-douze. Le président a fait repeindre mon bureau en blanc. On repeint quand on attend un autre."
+  - qui: clow
+    sujet: match
+    si: "serie_v >= 1"
+    texte: "J'avais aligné quatre victoires avant le télégramme. Une bonne série, c'est le moment où les gens commencent à te regarder. Regarde-les aussi ; ça les calme."
+  - qui: clow
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "Le bas du tableau, j'y ai passé plus de saisons qu'en haut. On y entend mieux le vestiaire. Là-haut, on n'entend que le président."
+  - qui: clow
+    sujet: toi
+    si: "relation.clow >= 2"
+    texte: "{prenom}, je t'ai gardé le tabouret qui ne grince pas. Le verre d'eau est plein : tu le boiras le jour où tu auras gagné quelque chose."
+  - qui: clow
+    sujet: toi
+    si: "relation.clow <= -1"
+    texte: "Tu ne viens plus au bar. Je ne t'en veux pas. Je mange mes cacahuètes et je regarde tes matchs à la télé du fond, sans le son. Sans le son, on voit qui écoute."
+  - qui: clow
+    sujet: club
+    texte: "La doudoune verte ? Je ne l'enlève pas, même ici. Elle a vu plus de bancs que la plupart des entraîneurs, et elle ne m'a jamais demandé de prolongation."
+  - qui: clow
+    sujet: toi
+    si: "arc(en.mentor_clow)"
+    texte: "Tu as peur de ton président ; ça s'entend à ta façon de commander un café. J'ai connu ça, cinquante-neuf jours. Passe à la brasserie, je suis sous la pendule."
+  - qui: clow
+    sujet: toi
+    si: "arc(co.clow_lundi)"
+    texte: "Lundi, huit heures. J'ai fait aligner trois verres sur ma table. Tu viendras, ou je les boirai tous les trois. Enfin, je les regarderai."
+  - qui: clow
+    sujet: toi
+    si: "flag(clow_ingrat)"
+    texte: "Tu as effacé mon message. Je le sais parce que je n'en ai pas laissé d'autre. À mon âge, on en laisse un seul ; le deuxième, c'est le notaire qui l'écrit."
+  - qui: clow
+    sujet: toi
+    si: "flag(telegramme_clow)"
+    texte: "Le télégramme est dans ta poche, maintenant. Ne le relis pas trop. Moi, je l'ai usé jusqu'à la quatrième pliure ; à la fin, on ne lit plus que le pli."
+  - qui: clow
+    sujet: toi
+    si: "flag(clow_trois_verres)"
+    texte: "Le troisième verre, tu l'as bu. Les deux autres sont toujours sur ma table. Je ne les vide pas. Ils me rappellent que j'avais raison une fois sur deux."
+  - qui: clow
+    sujet: club
+    si: "flag(franc_parler)"
+    texte: "« Franchement », sans point d'interrogation, et Massenet l'a imprimé tel quel. Je l'ai découpé. Il est au-dessus du comptoir, à côté du calendrier de 1971."
+  - qui: clow
+    sujet: club
+    si: "flag(nez_a_joueurs)"
+    texte: "Tu regardes les gamins du centre comme je les regardais, le samedi matin, sans rien dire. Les parents croient que tu t'ennuies. Les gamins, eux, ont compris."
+  - qui: clow
+    sujet: toi
+    si: "flag(clow_stage)"
+    texte: "Au stage, ta chaise était au premier rang. J'en ai mis d'autres là, avant toi. Ils sont tous entraîneurs aujourd'hui ; pas un ne m'appelle le lundi."
+  - qui: clow
+    sujet: sponsor
+    texte: "En soixante-quatre, le Terminus avait déjà son arrière-salle. Un arrière droit y a perdu sa voiture aux cartes. Il a joué à pied toute la saison."
+  - qui: clow
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Une montre en or. Un président m'en a offert une, après une série noire. Le lendemain, j'ai compris : c'était pour que je sache l'heure du train."
+  - qui: clow
+    sujet: achat
+    si: "possede(roadster)"
+    texte: "Ton roadster vert est passé devant la brasserie. Les deux anciens du fond se sont levés. Ils ne se lèvent plus pour personne. Même pas pour moi."

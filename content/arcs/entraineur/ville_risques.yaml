@@ -1,0 +1,208 @@
+# Les risques de la ville, côté entraîneur : ce qui revient, un soir, quand on
+# a accepté une mission sale (content/ville/missions.yaml). Des événements
+# sombres (`kind: evenement`, tag `sombre`, un `lieu:` par carte), tirés par le
+# metteur en scène comme les autres (deux par saison au plus, cinq créneaux
+# d'écart), une fois par carrière, jamais rattrapés (`fallback: drop`). Leur
+# `when` ne lit que des drapeaux `vl_*`, que seule la ville pose
+# (Engine.mission) : dans une carrière simulée ils ne s'arment jamais.
+#
+# Ils posent dans la ville l'amende (`var: ville_amende`) et la saisie
+# (`saisie_luxe`, `saisie_vehicules`, `saisie_tout`) ; deux sorties finissent
+# la carrière en garde à vue (`end: co_garde_a_vue`) : le carton jeté par la
+# cour sous les yeux de la police, et le silence devant l'inspecteur après le car.
+#
+#  1. Le contrôle inopiné (vestiaire) — vl_equipe_preparee, la cure donnée au
+#     groupe. Vukić referme la porte : trois de la Fédération, des glacières,
+#     le carton encore dans l'armoire. Puis Berthomier au téléphone : deux
+#     flacons non conformes, « qui, au club ? » — tout assumer ouvre un dossier
+#     (fede_dossier) et la convocation salle 3 (en.commission.convocation,
+#     l'intrigue de la Commission) ; accuser le Doc le met à −3 (son palier :
+#     le dossier médical part à la Commission). Puis Massenet. Lulu (vl_corner)
+#     prévient un quart d'heure avant.
+#  2. La perquisition (domicile) — vl_cure, le carton gardé. La boulangère
+#     (vl_boulangere) a vu les voitures et monte avec ta baguette.
+#  3. Le chien des douanes (gare) — vl_colis. La malle des maillots, puis le
+#     l'inspecteur assis à ton bureau : le Terminus, ou la garde à vue (vl_balance).
+#  4. L'ardoise (parking → domicile) — vl_dette_tripot, vl_match_trahi,
+#     vl_colis_lache, vl_balance. Deux hommes sur le capot de ta voiture ; le
+#     Chat (vl_gamin) a noté la plaque. Puis Camille, ou l'appartement vide.
+#  5. La photo (bar → café) — vl_match_vendu. Le petit homme en casquette du
+#     Corner ; racheter (il revient) ou déchirer (Massenet l'a).
+#  6. Les talons (secrétariat) — vl_billets. Madame Josiane, vingt talons de
+#     ton quota ; elle sait pour Madame Dutheil (vl_veuve). Donner Gégé
+#     (vl_gege_donne) : la buvette, le rideau baissé.
+arcs:
+  # ==================================================== 1 · Le contrôle inopiné
+  - id: en.vl.controle
+    title: "Le contrôle inopiné"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('vl_equipe_preparee')"
+    chance: 0.12
+    cast: [vukic, legruet, meneche]
+    same_club: true
+    fallback: drop
+    traces:
+      vl_controle: "{annee} : contrôle inopiné dans le vestiaire de {nom}. Quatre numéros tirés dans un bonnet."
+      vl_sanction: "{annee} : deux flacons non conformes au club. La Fédération a demandé qui, au club."
+    steps:
+      - id: couloir
+        # Lulu prévient (le chien ramené) ; sinon Vukić ; sinon personne.
+        card:
+          - { id: en.vl.controle_lulu, if: "flag('vl_corner')" }
+          - { id: en.vl.controle }
+          - { id: en.vl.controle_seul }
+        next: [ { step: telephone, if: "flag('vl_controle')", in: [3, 6] } ]
+      - id: telephone
+        card: en.vl.controle_berthomier
+        next: [ { step: echo, if: "flag('vl_sanction')", in: [2, 4] } ]
+      - id: echo
+        card: en.vl.controle_massenet
+        next: []
+
+  # ======================================================== 2 · La perquisition
+  - id: en.vl.perquisition
+    title: "La perquisition"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('vl_cure')"
+    chance: 0.07
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      vl_perquisition: "{annee} : perquisition chez {nom}. Les voisins ont compté les blousons derrière leurs rideaux."
+    steps:
+      - id: alerte
+        card:
+          - { id: en.vl.perquisition_boulangere, if: "flag('vl_boulangere')" }
+          - { id: en.vl.perquisition }
+        next: []
+      - id: palier
+        card:
+          - { id: en.vl.perquisition_trouve, if: "flag('vl_cure')" }
+          - { id: en.vl.perquisition_vide }
+        next: []
+
+  # ================================================== 3 · Le chien des douanes
+  - id: en.vl.car
+    title: "Le chien des douanes"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('vl_colis')"
+    chance: 0.08
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      vl_car: "{annee} : au départ du car, le chien des douanes s'est assis devant la malle des maillots de {nom}."
+      vl_balance: "{annee} : {nom} a donné à la police l'homme du Terminus. Le bar a baissé son rideau."
+    steps:
+      - id: quai
+        card: en.vl.car
+        next: [ { step: commissariat, if: "flag('vl_car')", in: [1, 2] } ]
+      - id: commissariat
+        card: en.vl.car_commissariat
+        next: []
+
+  # ============================================================== 4 · L'ardoise
+  - id: en.vl.creancier
+    title: "L'ardoise"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('vl_dette_tripot') || flag('vl_match_trahi') || flag('vl_colis_lache') || flag('vl_balance')"
+    chance: 0.12
+    cast: [camille]
+    same_club: false
+    fallback: drop
+    traces:
+      vl_creancier: "{annee} : deux hommes attendaient {nom} au parking du stade, assis sur le capot."
+    steps:
+      - id: voiture
+        card:
+          - { id: en.vl.creancier_gamin, if: "flag('vl_gamin')" }
+          - { id: en.vl.creancier_frere, if: "flag('vl_balance')" }
+          - { id: en.vl.creancier_table, if: "flag('vl_match_trahi')" }
+          - { id: en.vl.creancier_sac, if: "flag('vl_colis_lache')" }
+          - { id: en.vl.creancier }
+        next: [ { step: maison, if: "flag('vl_creancier')", in: [2, 4] } ]
+      - id: maison
+        card:
+          - { id: en.vl.creancier_camille_police, if: "flag('vl_perquisition')" }
+          - { id: en.vl.creancier_camille }
+          - { id: en.vl.creancier_seul }
+        next: []
+
+  # ============================================================= 5 · La photo
+  - id: en.vl.chantage
+    title: "La photo"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: presse
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('vl_match_vendu')"
+    chance: 0.08
+    cast: [meneche]
+    same_club: false
+    fallback: drop
+    traces:
+      vl_chantage_paye: "{annee} : {nom} a racheté une photo à un homme en imperméable. Il en avait d'autres."
+    steps:
+      - id: zinc
+        card: en.vl.chantage
+        next: [ { step: suite, in: [3, 6] } ]
+      - id: suite
+        card:
+          - { id: en.vl.chantage_encore, if: "flag('vl_chantage_paye')" }
+          - { id: en.vl.chantage_massenet }
+        next: []
+
+  # ============================================================ 6 · Les talons
+  - id: en.vl.talons
+    title: "Les talons"
+    kind: evenement
+    roles: [entraineur]
+    postulats: []
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('vl_billets')"
+    chance: 0.08
+    cast: [josiane, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      vl_gege_donne: "{annee} : {nom} a donné le nom de Gégé pour vingt invitations revendues. La Nord l'a su le soir."
+    steps:
+      - id: buvard
+        card:
+          - { id: en.vl.talons_veuve, if: "flag('vl_veuve')" }
+          - { id: en.vl.talons }
+        next: [ { step: buvette, if: "flag('vl_gege_donne')", in: [2, 4] } ]
+      - id: buvette
+        card: en.vl.talons_gege
+        next: []

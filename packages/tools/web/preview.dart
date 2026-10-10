@@ -116,6 +116,8 @@ String _postulatsJson() {
       'roleName': _content.roles[p.role]?.name ?? p.role,
       'division': p.division,
       'year': p.year,
+      // la quatrième de couverture, sous la pochette (les dix histoires)
+      'pitch': p.pitch,
     });
   }
   // La ville (content/ville.yaml), telle quelle : la coquille de la version
@@ -171,6 +173,7 @@ String _view() {
       'genre': s.entities.genre,
       'club': s.entities.named['club'] ?? '',
       'ville': s.entities.named['ville'] ?? '',
+      'rival': s.entities.named['rival'] ?? '',
     },
     // LA JOURNÉE DE CHAMPIONNAT, et il n'y en a qu'une. Elle vient du monde
     // simulé (`world.blocks` × six), pas du calendrier des beats : le « J » du
@@ -186,6 +189,21 @@ String _view() {
     'beat': beatIndex,
     'beats': [for (final b in beats) b.kind],
     'cast': (_content.postulats[s.postulatId]?.cast.keys.toList() ?? <String>[])..sort(),
+    // Ce que les gens de la ville savent (les paroles, les missions, la
+    // boutique lisent ces valeurs dans leurs `si`) : les drapeaux posés, les
+    // intrigues en cours, la forme de l'équipe ; et les compteurs par lesquels
+    // une carte agit sur la ville (argent, cadeaux, saisies).
+    'flags': s.flags.toList()..sort(),
+    'arcsActifs': [for (final e in s.arcs.entries) if (e.value.status == 'active') e.key]..sort(),
+    'monde': {'serie_v': s.world.serieVictoires, 'serie_d': s.world.serieDefaites, 'pts': s.world.pts},
+    'vars': {
+      for (final k in (s.vars.keys.toList()..sort()))
+        if (k.startsWith('ville_') || k.startsWith('saisie_') || k.startsWith('cadeau_') || k.startsWith('vol_')) k: s.vars[k],
+    },
+    'relations': {for (final k in (s.relations.keys.toList()..sort())) k: s.relations[k]},
+    // le statut des visages (present, vendu, parti, retraite, rival, mort) : la
+    // ville ne poste pas un mort devant sa porte
+    'statuts': {for (final k in (s.chars.keys.toList()..sort())) k: s.chars[k]!.statut},
     'division': s.world.division,
     'promiseTo': s.objectivePromised ? _engine.patronName(s) : null,
     // Le classement complet, à tout moment (voir l'en-tête).
@@ -359,6 +377,20 @@ void main() {
       'fusibleActivite'.toJS,
       ((JSString id) {
         _state = _engine.activite(_state!, id.toDart);
+        return _view().toJS;
+      }).toJS);
+  // LA VILLE — le choix fait dans une mission (`choix` vide : l'échec d'une
+  // étape), et un objet qui entre dans ta vie ou en sort. Aucun tirage.
+  globalContext.setProperty(
+      'fusibleMission'.toJS,
+      ((JSString mission, JSString etape, JSString choix) {
+        _state = _engine.mission(_state!, mission.toDart, etape.toDart, choix.toDart);
+        return _view().toJS;
+      }).toJS);
+  globalContext.setProperty(
+      'fusibleBiens'.toJS,
+      ((JSString objet, JSBoolean acquis) {
+        _state = _engine.biens(_state!, objet.toDart, acquis.toDart);
         return _view().toJS;
       }).toJS);
   // La sauvegarde d'une carrière jouée en ville : l'état entier (le Code de

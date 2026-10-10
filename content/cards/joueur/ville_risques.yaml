@@ -1,0 +1,477 @@
+# Cartes des risques de la ville, côté joueur (arcs jp.vl.*,
+# content/arcs/joueur/ville_risques.yaml ; les missions qui les arment :
+# content/ville/missions.yaml). Toutes hors du sac, toutes `sombre`, toutes
+# avec un `lieu:`. `arc:` est le THÈME de la carte. Les sommes passent par le
+# pont de la ville (`var: ville_amende`, `saisie_*`), en francs de 1990 ;
+# aucune n'est écrite dans un texte, qui ne date rien.
+#
+# Les voix : le Doc tutoie (« {toi} » = petit), Massenet, Berthomier et
+# Madame Josiane vouvoient, Gégé tutoie. Lulu, la boulangère, le Chat, la
+# casquette du Corner, le médecin en imperméable, les hommes de la voiture
+# grise n'ont pas de fiche : pas de `speaker`, la voix est nommée dans le texte.
+cards:
+  # ================================================================ 1 · Le contrôle
+  # Lulu a vu la glacière au parking (tu lui as ramené Corner).
+  - id: jp.vl.controle_lulu
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    lieu: vestiaire
+    tone: strategique
+    text: "Lulu frappe à la porte des douches, Corner sur les talons. « Deux de la Fédération au parking, avec une glacière. Ils ont demandé ton numéro. Le chien, tu me l'as ramené. Dix minutes. »"
+    left:
+      label: "Je file par les livreurs"
+      effects: {direction: "-", parole: -1}
+      answer: "Tu sors par la porte des livreurs, les cheveux mouillés. Ils repartent avec une glacière vide, et ton nom en haut d'une liste."
+    right:
+      label: "Je les attends"
+      effects: {force: -1, set: [vl_controle]}
+      answer: "Lulu repart sans insister. Les deux hommes entrent, posent la glacière sur le banc, et te tendent un flacon encore sous plastique."
+
+  - id: jp.vl.controle
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    lieu: vestiaire
+    tone: strategique
+    text: "Les douches coulent encore. Deux hommes en blouson de la Fédération attendent près des casiers, une glacière bleue à leurs pieds. « Contrôle. Votre numéro est sorti. On ne vous lâche plus. »"
+    left:
+      label: "Je remplis le flacon"
+      effects: {force: -1, set: [vl_controle]}
+      answer: "Ils scellent deux flacons, A et B, devant toi, et te font signer trois fois. Dans le couloir, le Doc lit ta signature de loin."
+    right:
+      label: "Je refuse le flacon"
+      effects: {direction: "--", set: [vl_controle, vl_refus]}
+      answer: "Ils notent l'heure et le refus, et te font signer le refus. Derrière la porte, le stagiaire de L'Écho a tout entendu."
+
+  # Après un refus : Berthomier, au bar de l'hôtel de la Rive.
+  - id: jp.vl.controle_refus
+    roles: [joueur]
+    arc: instances
+    tags: [sombre, scandale]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    text: "Au bar de l'hôtel de la Rive, Berthomier tourne un café qu'il ne boit pas. « Un refus vaut un positif, dit le règlement. Il ne dit pas combien de matchs. Six, ou l'affiche “Sport propre” ? »"
+    left:
+      label: "Six matchs"
+      effects: {tribunes: "-", caisse: "-", var: {ville_amende: "+30000"}, set: [vl_sanction]}
+      answer: "Il tamponne sans lever les yeux. Six matchs, une amende, et ton nom au communiqué du jeudi, entre deux résultats de district."
+    right:
+      label: "Je pose pour l'affiche"
+      effects: {tribunes: "+", parole: -2, relation: {legruet: 1}, var: {ville_amende: "+10000"}}
+      answer: "Deux matchs, une petite amende, une photo en maillot blanc devant un drapeau. Sous ton visage, en lettres rondes : « Moi, je joue propre. »"
+
+  # Le flacon A a parlé : le Doc a la feuille du laboratoire.
+  - id: jp.vl.controle_labo
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Le Doc ferme la porte du cabinet du pied, une feuille du laboratoire à la main. « Le flacon A parle. Le B sera ouvert dans dix jours ; je sais déjà ce qu'il dira. Et toi, {toi}, tu dis quoi ? »"
+    left:
+      label: "Je vous dis tout, Doc"
+      effects: {tribunes: "-", caisse: "-", relation: {sabatier: 1}, var: {ville_amende: "+40000"}, set: [vl_sanction]}
+      answer: "Il écoute jusqu'au bout sans écrire. Puis il te donne l'adresse de Maître Vidal, et le prix de la contre-expertise, souligné deux fois."
+    right:
+      label: "Le labo s'est trompé"
+      effects: {direction: "--", caisse: "-", relation: {sabatier: -1}, var: {ville_amende: "+60000"}, set: [vl_sanction]}
+      answer: "Il plie la feuille en quatre. « Alors je ne dirai rien non plus. » Maître Vidal plaide l'erreur du laboratoire, et se fait payer d'avance."
+
+  - id: jp.vl.controle_massenet
+    roles: [joueur]
+    arc: presse
+    tags: [sombre, scandale, presse]
+    speaker: meneche
+    lieu: cafe
+    tone: strategique
+    text: "Au café de la Mairie, Massenet a le communiqué de la Fédération sous sa soucoupe. « J'ai le numéro du flacon, pas le nom du vendeur. Donnez-le-moi, et votre nom descend au quatrième paragraphe. »"
+    left:
+      label: "Je donne le vendeur"
+      effects: {tribunes: "+", parole: 1, relation: {meneche: 1}}
+      answer: "L'article sort le jeudi : l'ancien garage, la salle de muscu, un survêtement neuf. Ton nom est au quatrième paragraphe, comme promis."
+    right:
+      label: "Je ne donne personne"
+      effects: {tribunes: "--", relation: {meneche: -1}}
+      answer: "Ton nom est dans le titre, en gras. Le survêtement neuf n'apparaît nulle part ; le soir, à la muscu, il soulève toujours."
+
+  # ============================================================ 2 · La perquisition
+  # La boulangère a vu les voitures (tu l'as dépannée) : elle monte prévenir.
+  - id: jp.vl.perquisition_boulangere
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "La boulangère frappe deux petits coups, en blouse, de la farine jusqu'aux coudes. « Deux voitures sans sigle devant le fournil depuis l'aube. Ils regardent vos fenêtres. Moi, je n'ai rien vu. »"
+    left:
+      label: "Je vide tout dans l'évier"
+      effects: {force: -1, clear: [vl_produits], next: {step: palier, in: [1, 2]}}
+      answer: "Les ampoules dans l'évier, la boîte en morceaux dans la cuvette. Tu tires la chasse deux fois ; en bas, une portière s'ouvre et se referme."
+    right:
+      label: "Je n'ai rien à cacher"
+      effects: {parole: -1, next: {step: palier, in: [1, 2]}}
+      answer: "Elle te regarde un moment, puis redescend en tenant la rampe. Tu entends son rideau de fer se lever, plus tôt que d'habitude."
+
+  # Personne n'a prévenu : la police est sur le palier.
+  - id: jp.vl.perquisition
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "On sonne long, puis on frappe du plat de la main. Sur le palier, trois blousons, un papier du juge, un pied-de-biche posé contre le mur. « Police. Vous ouvrez, ou on ouvre ? »"
+    left:
+      label: "J'ouvre"
+      effects: {direction: "--", tribunes: "-", var: {ville_amende: "+50000", saisie_luxe: "+1"}, clear: [vl_produits], set: [vl_perquisition]}
+      answer: "Ils trouvent la boîte en dix minutes, là où tu la croyais cachée. Tout ce que tu as payé en liquide part sous scellés, numéroté."
+    right:
+      label: "Je jette tout par la cour"
+      effects: {set: [vl_perquisition], end: co_garde_a_vue}
+      answer: "Tout tombe aux pieds du quatrième, celui qui attendait dans la cour, les mains dans les poches. Les menottes se ferment sur le palier."
+
+  - id: jp.vl.perquisition_trouve
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Ils sont trois, avec un papier du juge. L'un ouvre ton sac de sport du bout d'un stylo, l'autre la boîte à chaussures du placard. En bas, la boulangère attend sur son seuil, les bras croisés."
+    left:
+      label: "C'est pour mon genou"
+      effects: {direction: "--", var: {ville_amende: "+50000", saisie_luxe: "+1"}, clear: [vl_produits], set: [vl_perquisition]}
+      answer: "L'inspecteur l'écrit tel quel, entre guillemets. Tes achats en liquide partent sous scellés ; en bas, la boulangère baisse son rideau."
+    right:
+      label: "Je ne dis rien"
+      effects: {direction: "-", tribunes: "-", parole: -1, var: {ville_amende: "+80000", saisie_luxe: "+1"}, clear: [vl_produits], set: [vl_perquisition]}
+      answer: "Ton silence part au dossier, avec la boîte. Le juge te laisse rentrer chez toi contre une caution qui vide ton compte."
+
+  - id: jp.vl.perquisition_vide
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Trois inspecteurs, des gants, une heure. Ils ouvrent tout : le frigo, la chasse d'eau, le sac de sport. Rien. Le plus âgé renifle l'évier un long moment."
+    left:
+      label: "Je leur offre un café"
+      effects: {direction: "-", parole: 1, set: [vl_perquisition]}
+      answer: "Ils le boivent debout. En partant, celui de l'évier dit qu'ils reviendront « pour le reste ». Il ne dit pas quel reste."
+    right:
+      label: "J'appelle Maître Vidal"
+      effects: {direction: "-", caisse: "-", var: {ville_amende: "+8000"}, set: [vl_perquisition]}
+      answer: "Maître Vidal arrive quand ils repartent, et facture le déplacement. La boulangère lui vend une baguette, sans lui rendre toute la monnaie."
+
+  # ===================================================================== 3 · Le car
+  - id: jp.vl.car
+    roles: [joueur]
+    arc: vestiaire
+    tags: [sombre, scandale, vestiaire]
+    lieu: gare
+    tone: strategique
+    text: "Gare routière, le car du club moteur allumé. Des douaniers font descendre les sacs sur le quai. Leur chien en renifle trois, s'assoit devant le tien, et ne bouge plus. Tout le car regarde."
+    left:
+      label: "J'ouvre mon sac"
+      effects: {vestiaire: "-", set: [vl_car]}
+      answer: "Sous tes chaussures de rechange, un paquet gros comme un savon, scotché serré. Tu ne l'as jamais vu. Le douanier te croit à moitié."
+    right:
+      label: "Ce sac n'est pas à moi"
+      effects: {vestiaire: "--", tribunes: "-", set: [vl_car]}
+      answer: "Ils l'ouvrent sur le quai. Le paquet sort de tes chaussures de rechange. Le car part sans toi, et personne ne te fait signe."
+
+  - id: jp.vl.car_commissariat
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: bureau
+    tone: strategique
+    text: "Au club-house, l'inspecteur du car t'attend dans le bureau que Josiane lui a prêté, porte fermée. « Le wagon de la friche, on le surveille depuis l'été. L'homme du Terminus, ou on vous emmène ? »"
+    left:
+      label: "Je donne l'homme"
+      effects: {direction: "-", parole: 1, var: {saisie_tout: "+1"}, clear: [vl_colis], set: [vl_balance]}
+      answer: "Quatre pages de déposition. Le juge saisit tout ce que l'argent du wagon a payé ; à la nuit, le Terminus baisse son rideau."
+    right:
+      label: "Je ne connais personne"
+      effects: {end: co_garde_a_vue}
+      answer: "« Comme vous voudrez. » Il te prend par le coude, sans serrer. Vous traversez le club-house jusqu'à sa voiture ; Josiane se lève."
+
+  # ================================================================= 4 · L'ardoise
+  # Le Chat a vu la voiture grise (tu l'as fait entrer au centre).
+  - id: jp.vl.creancier_gamin
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, formation]
+    lieu: parking
+    tone: strategique
+    text: "Le Chat, le gamin du square, t'attend près de ta voiture, essoufflé. « Deux hommes ont demandé votre étage à la boulangère. Voiture grise. J'ai noté la plaque. » Il te tend un ticket de bus."
+    left:
+      label: "Je porte la plaque au poste"
+      effects: {direction: "-", var: {ville_amende: "+10000"}, clear: [vl_dette_tripot, vl_match_trahi, vl_colis_lache, vl_balance], set: [vl_creancier]}
+      answer: "L'inspecteur recopie la plaque sans poser la question qu'il a envie de poser. La voiture grise ne repasse plus rue des Lilas."
+    right:
+      label: "Je vais les payer"
+      effects: {caisse: "-", var: {ville_amende: "+45000"}, clear: [vl_dette_tripot, vl_match_trahi, vl_colis_lache, vl_balance], set: [vl_creancier]}
+      answer: "Tu vas au-devant d'eux, rue des Lilas, l'enveloppe à la main. Le Chat te regarde la leur tendre ; il ne te demandera plus jamais de signer."
+
+  # Tu as donné l'homme du Terminus : son frère.
+  - id: jp.vl.creancier_frere
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: parking
+    tone: strategique
+    text: "Ta voiture, garée de travers. Un homme que tu n'as jamais vu, le visage de l'homme du Terminus avec quinze ans de moins. « Mon frère est en préventive. Ça a un prix, et tu le connais mieux que moi. »"
+    left:
+      label: "Je paie le prix"
+      effects: {caisse: "-", var: {ville_amende: "+50000"}, clear: [vl_balance], set: [vl_creancier]}
+      answer: "Il empoche l'enveloppe sans l'ouvrir. « Pour sa cantine. » En partant, il tapote ton rétroviseur, deux fois, comme on tape une épaule."
+    right:
+      label: "J'appelle la police"
+      effects: {direction: "-", parole: 1, var: {saisie_vehicules: "+1"}, clear: [vl_balance], set: [vl_creancier]}
+      answer: "Il est parti avant la sirène. Le lendemain, ta voiture brûle au fond de la friche ; les pompiers la regardent finir."
+
+  # Tu as joué pour gagner : l'homme de la table du fond.
+  - id: jp.vl.creancier_table
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: parking
+    tone: strategique
+    text: "Ta voiture, garée de travers. L'homme de la table du fond est assis sur le capot, il épluche une orange au canif. « Tu as joué pour gagner. Moi, j'ai perdu. L'enveloppe, et le dérangement. »"
+    left:
+      label: "Je rends tout"
+      effects: {caisse: "-", var: {ville_amende: "+60000"}, clear: [vl_match_trahi], set: [vl_creancier]}
+      answer: "Il recompte en mangeant son orange, quartier par quartier. Il te laisse le dernier sur le capot, et s'en va à pied."
+    right:
+      label: "Je n'ai plus rien"
+      effects: {vestiaire: "-", var: {saisie_vehicules: "+1"}, clear: [vl_match_trahi], set: [vl_creancier]}
+      answer: "« Si, tu as ça. » Il tapote le capot du plat du canif. La voiture part avec lui ; tu vas à l'entraînement à pied toute la semaine."
+
+  # Tu as laissé le sac au casier : l'homme du Terminus.
+  - id: jp.vl.creancier_sac
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: parking
+    tone: strategique
+    text: "Ta voiture, garée de travers. L'homme en veste de chauffeur est assis sur le capot. « Le sac bleu, on l'a récupéré. Le dérangement, non. Tu le paies en liquide, ou en clés ? »"
+    left:
+      label: "En liquide"
+      effects: {caisse: "-", var: {ville_amende: "+30000"}, clear: [vl_colis_lache], set: [vl_creancier]}
+      answer: "Il compte sur le capot, billet par billet, en mouillant son pouce. Puis il descend, essuie la carrosserie de sa manche, et s'en va."
+    right:
+      label: "En clés"
+      effects: {var: {saisie_vehicules: "+1"}, clear: [vl_colis_lache], set: [vl_creancier]}
+      answer: "Il prend les clés sans te toucher la main. Il règle le siège, le rétroviseur, la radio, et démarre doucement, comme chez lui."
+
+  # La dette de la table.
+  - id: jp.vl.creancier
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: parking
+    tone: strategique
+    text: "Ta voiture, garée de travers. Deux hommes adossés au capot, moteur coupé ; le plus vieux tient une ardoise d'écolier sous le bras. « Le crédit, avec les intérêts. Ce soir, ou on prend la voiture. »"
+    left:
+      label: "Je paie ce soir"
+      effects: {caisse: "-", var: {ville_amende: "+55000"}, clear: [vl_dette_tripot], set: [vl_creancier]}
+      answer: "Tu remontes chercher l'argent ; ils attendent sans s'impatienter. Le vieux efface ton nom de l'ardoise avec sa manche, devant toi."
+    right:
+      label: "Prenez-la"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}, clear: [vl_dette_tripot], set: [vl_creancier]}
+      answer: "Le vieux tend la main pour les clés. Ta voiture tourne au coin de la rue à vingt à l'heure, clignotant mis, comme à l'auto-école."
+
+  # Le lendemain : Camille, après le juge.
+  - id: jp.vl.creancier_camille_police
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille est assise sur un carton que la police n'a pas refermé. « D'abord le juge, maintenant la voiture grise. La boulangère me demande si on déménage. Je lui réponds quoi, {toi} ? »"
+    left:
+      label: "On déménage"
+      effects: {caisse: "-", relation: {camille: 1}}
+      answer: "Elle commence les cartons dans l'heure, par les tiens. Elle les étiquette au feutre rouge, d'une écriture très droite."
+    right:
+      label: "On ne bouge pas"
+      effects: {force: -1, relation: {camille: -1}}
+      answer: "Elle referme le carton au scotch, très serré, et le pousse sous le lit. Il y reste ; elle aussi, pour l'instant."
+
+  - id: jp.vl.creancier_camille
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille a mis la chaîne à la porte et ne l'enlève pas tout de suite. « Les deux hommes de la voiture grise. La boulangère m'a tout dit. Tu leur devais quoi, et tu leur dois encore quoi ? »"
+    left:
+      label: "Je te dois la vérité"
+      effects: {parole: 1, relation: {camille: 1}}
+      answer: "Tu racontes tout : la table, la craie, les enveloppes. Elle écoute debout, puis enlève la chaîne, et la remet derrière toi."
+    right:
+      label: "Rien. C'est réglé."
+      effects: {parole: -1, relation: {camille: -1}}
+      answer: "Elle enlève la chaîne sans répondre. Cette nuit-là, elle laisse la lampe du couloir allumée, et tu fais semblant de ne pas le remarquer."
+
+  # Secours : Camille est partie.
+  - id: jp.vl.creancier_seul
+    roles: [joueur]
+    arc: famille
+    tags: [sombre]
+    lieu: domicile
+    tone: strategique
+    text: "L'appartement, la chaîne mise. Depuis la voiture grise, tu dors mal ; la boulangère te rend la monnaie en surveillant la rue derrière toi, au cas où."
+    left:
+      label: "Je dors chez un coéquipier"
+      effects: {vestiaire: "+", force: -1}
+      answer: "Une semaine sur un canapé trop court, chez un défenseur qui ronfle et ne pose pas de questions. Tu rentres le dimanche, la nuque raide."
+    right:
+      label: "Je laisse la lumière"
+      effects: {tribunes: "-", force: -1}
+      answer: "Tu dors la lumière allumée, une chaise sous la poignée. Au match, tu as deux temps de retard, et la Nord le voit avant toi."
+
+  # =================================================================== 5 · La photo
+  - id: jp.vl.chantage
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: bar
+    tone: strategique
+    text: "Au Corner, un petit homme en casquette retourne une photo sur le zinc : toi, à la table du fond du Terminus, une enveloppe sous le cendrier. « L'original est à vendre. Une fois. »"
+    left:
+      label: "Je rachète l'original"
+      effects: {caisse: "-", var: {ville_amende: "+30000"}, set: [vl_chantage_paye]}
+      answer: "Il recompte sous le zinc et te tend une enveloppe. Le soir, tu brûles la photo dans l'évier : le papier est neuf, tiré la veille."
+    right:
+      label: "Je déchire la photo"
+      effects: {parole: 1}
+      answer: "Il regarde les morceaux sans s'énerver, et finit ton café. « J'en ai d'autres. Le journal aussi en voudra une, je pense. »"
+
+  # La cheville du certificat.
+  - id: jp.vl.chantage_cheville
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: bar
+    tone: strategique
+    text: "Au Corner, le médecin de la chambre neuf, toujours en imperméable, retourne une photo sur le zinc : toi, au square, en plein sprint. « L'assurance paierait cher. Toi aussi. »"
+    left:
+      label: "Je rachète l'original"
+      effects: {caisse: "-", var: {ville_amende: "+30000"}, set: [vl_chantage_paye]}
+      answer: "Il compte sans se presser. Dans l'enveloppe qu'il te tend, la photo, et une autre, plus floue : toi qui boites devant l'hôtel de la Rive."
+    right:
+      label: "Je déchire la photo"
+      effects: {parole: 1}
+      answer: "Il ramasse les morceaux un à un et les met dans sa poche. « L'assurance, je ne sais pas. Le journal, sûrement. »"
+
+  # Tu as payé : il revient.
+  - id: jp.vl.chantage_encore
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: bar
+    tone: strategique
+    text: "Le même homme, au même zinc, un mois plus tard. Il ne s'assoit pas. « J'ai retrouvé un autre tirage au fond d'un tiroir. Les prix ont monté, comme tout le reste. Je t'écoute. »"
+    left:
+      label: "Je paie, une dernière fois"
+      effects: {caisse: "-", var: {ville_amende: "+50000"}}
+      answer: "Il plie les billets en deux et dit « dernière fois » en même temps que toi, exactement, comme s'il l'avait répété."
+    right:
+      label: "Je vais au commissariat"
+      effects: {direction: "-", parole: 1, var: {ville_amende: "+15000"}}
+      answer: "L'inspecteur prend ta plainte, puis ta déposition, plus longue. L'homme ne revient plus au Corner ; ta photo dort dans un dossier."
+
+  # Tu as déchiré : Massenet l'a.
+  - id: jp.vl.chantage_massenet
+    roles: [joueur]
+    arc: presse
+    tags: [sombre, scandale, presse]
+    speaker: meneche
+    lieu: cafe
+    tone: strategique
+    text: "Massenet a la photo sous sa soucoupe, face visible, au café de la Mairie. « On me l'a proposée hier. Je ne l'ai pas achetée. Je peux encore. Vous me racontez ce qu'il y a autour ? »"
+    left:
+      label: "Je vous raconte tout"
+      effects: {tribunes: "-", direction: "-", parole: 2, relation: {meneche: 1}}
+      answer: "Il ouvre son carnet pour la première fois. L'article sort jeudi, sans la photo ; il dit tout, et il dit aussi que c'est toi qui l'as dit."
+    right:
+      label: "Publiez, si vous voulez"
+      effects: {tribunes: "--", direction: "-", relation: {meneche: -1}}
+      answer: "Il l'achète. Jeudi, la photo est en page trois, recadrée serré : on ne voit plus que ton visage, et l'enveloppe."
+
+  # ================================================================== 6 · Les talons
+  # Elle sait à qui tu as donné ta place.
+  - id: jp.vl.talons_veuve
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    text: "Madame Josiane aligne vingt talons d'invitation sur son buvard, tous à votre nom. « Vous avez donné votre place à Madame Dutheil. Je ne vous vois pas vendre les autres. Alors, qui ? »"
+    left:
+      label: "Moi, avec Gégé"
+      effects: {direction: "-", relation: {josiane: 1}, var: {ville_amende: "+10000"}}
+      answer: "Elle range les talons dans une enveloppe et écrit « réglé » dessus. Puis elle te sert un café, ce qu'elle ne fait jamais."
+    right:
+      label: "On me les a volées"
+      effects: {direction: "+", parole: -1, relation: {josiane: -1}}
+      answer: "Elle écrit « volées » sur l'enveloppe, de sa plus belle écriture. Elle ne lève pas les yeux en l'écrivant, ni de toute la matinée."
+
+  - id: jp.vl.talons
+    roles: [joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    text: "Madame Josiane aligne vingt talons d'invitation sur son buvard. « La préfecture les a ramassés devant le guichet, revendus cinq fois le prix. Le président veut un nom lundi : le vôtre, ou un autre ? »"
+    left:
+      label: "Le mien"
+      effects: {direction: "-", caisse: "-", relation: {josiane: 1}, var: {ville_amende: "+10000"}}
+      answer: "Elle écrit ton nom au crayon, pas à l'encre. Lundi, le président retient l'amende sur ta prime, et ne dit rien d'autre."
+    right:
+      label: "Celui de Gégé"
+      effects: {direction: "+", tribunes: "--", relation: {gege: -2, josiane: -1}, set: [vl_gege_donne]}
+      answer: "Elle écrit « Gégé » à l'encre, puis son vrai nom à côté, qu'elle connaît par cœur. Elle referme le dossier en regardant la fenêtre."
+
+  # Tu as donné Gégé.
+  - id: jp.vl.talons_gege
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    text: "Gégé derrière le zinc, le rideau à moitié baissé. « Les flics sont venus au local avec une liste. Vingt gars de la Nord fichés pour des billets. Ça fait quoi, d'être sur une liste, {toi} ? »"
+    left:
+      label: "Je paie leurs amendes"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}, var: {ville_amende: "+20000"}}
+      answer: "Il compte les billets devant toi, un par un, à voix basse. Puis il relève le rideau, mais pas jusqu'en haut."
+    right:
+      label: "Tu connaissais le risque"
+      effects: {tribunes: "--", relation: {gege: -1}}
+      answer: "Il baisse le rideau jusqu'en bas, toi dedans. Il te sert une bière et te regarde la boire, debout, jusqu'au fond."
+
+  # ================================================================== 7 · L'expert
+  - id: jp.vl.expert
+    roles: [joueur]
+    arc: corps
+    tags: [sombre, scandale]
+    speaker: sabatier
+    lieu: cabinet
+    tone: strategique
+    text: "Au cabinet, l'expert de l'assurance lit ton dossier à la fenêtre. Le Doc palpe ta cheville, longtemps, et parle très bas. « Elle n'a jamais été tordue, celle-là. Je signe quoi, {toi} ? »"
+    left:
+      label: "Signez qu'elle a guéri"
+      effects: {direction: "+", parole: -1, relation: {sabatier: -1}, clear: [vl_certificat]}
+      answer: "Il signe « consolidée », plus petit que d'habitude. Le soir, il écrit au carnet du tiroir sa première ligne qui n'est pas un refus."
+    right:
+      label: "Dites la vérité"
+      effects: {caisse: "-", relation: {sabatier: 1}, var: {ville_amende: "+40000"}, clear: [vl_certificat]}
+      answer: "« Aucune lésion, ancienne ou récente. » L'expert te tend une facture : l'arrêt, les frais, une pénalité. Le Doc te raccompagne à l'escalier."

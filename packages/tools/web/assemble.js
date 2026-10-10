@@ -40,6 +40,7 @@ function parseArgs(argv) {
     if (a === '--engine') opts.engine = argv[++i];
     else if (a === '--out') opts.out = argv[++i];
     else if (a === '--ville') opts.ville = argv[++i];
+    else if (a === '--content') opts.content = argv[++i];   // un autre bundle (les essais)
     else if (a.startsWith('--engine=')) opts.engine = a.slice(9);
     else if (a.startsWith('--out=')) opts.out = a.slice(6);
     else if (a === '-h' || a === '--help') {
@@ -82,7 +83,7 @@ function main() {
   const tplPath = path.join(HERE, 'preview_template.html');
   const artPath = path.join(HERE, 'art.js');
   const audioPath = path.join(HERE, 'audio.js');
-  const contentPath = path.join(ROOT, 'app', 'assets', 'content.json');
+  const contentPath = opts.content ? path.resolve(opts.content) : path.join(ROOT, 'app', 'assets', 'content.json');
 
   let tpl = fs.readFileSync(tplPath, 'utf8');
   const engine = fs.readFileSync(opts.engine, 'utf8');

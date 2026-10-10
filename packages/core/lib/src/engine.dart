@@ -41,6 +41,11 @@ class Engine {
     // la ville dessinée s'appelle Aubérive et son club-house porte « RACING
     // AUBÉRIVE ». Comme le nom saisi (§1.8), c'est cosmétique : le tirage est
     // consommé quand même, le Code de Carrière ne change pas.
+    // Ce que l'histoire impose (postulats.yaml : `ville`, `club`, `rival`) passe
+    // devant ce que la coquille propose : un sélectionneur entraîne « la
+    // Sylvanie », pas le Racing de la ville dessinée.
+    ville = post.ville ?? ville;
+    club = post.club ?? club;
     if (ville != null && ville.trim().isNotEmpty) {
       final v = ville.trim();
       final tiree = entities.named['ville'] ?? '';
@@ -55,6 +60,7 @@ class Engine {
       entities.named['club'] = club.trim();
       entities.named['clubShort'] = club.trim().split(' ').last;
     }
+    if (post.rival != null) entities.named['rival'] = post.rival!;
     entities.named['president'] = content.characters[post.president ?? role.patron ?? '']?.name ?? 'Le président';
     // Le tirage est TOUJOURS consommé (déterminisme : même code, même carrière),
     // puis écrasé par le postulat quand il fixe un âge — comme le nom saisi en
@@ -176,6 +182,46 @@ class Engine {
     _checkEndings(s);
     if (s.over) _buildEndingPending(s);
     return s;
+  }
+
+  /// LA VILLE — le choix fait dans une mission de la ville (content/ville/
+  /// missions.yaml), ou l'échec d'une étape (`choix` vide). Comme `activite` :
+  /// pur, aucun tirage, la carte en attente ne bouge pas. Les drapeaux posés
+  /// écrivent leur ligne d'Almanach comme ceux d'une carte ; `fin` peut finir la
+  /// carrière (la garde à vue), et une jauge poussée au bout aussi.
+  GameState mission(GameState prev, String missionId, String etape, String choix) {
+    final s = prev.clone();
+    final m = content.missions[missionId];
+    if (s.over || m == null || (m.roles.isNotEmpty && !m.roles.contains(s.role))) return s;
+    final e = choix.isEmpty ? m.echecs[etape] : m.choix[etape]?[choix];
+    if (e == null || e.vide) return s;
+    _appliquerVille(s, e);
+    return s;
+  }
+
+  /// LA VILLE — un objet de la boutique entre dans ta vie (`acquis`, un achat ou
+  /// un cadeau : ses effets s'appliquent) ou en sort (saisi, revendu : ses
+  /// drapeaux tombent, les jauges ne reviennent pas). Aucun tirage.
+  GameState biens(GameState prev, String objetId, bool acquis) {
+    final s = prev.clone();
+    final o = content.objets[objetId];
+    if (s.over || o == null) return s;
+    if (acquis) {
+      if (!o.effets.vide) _appliquerVille(s, o.effets);
+    } else {
+      for (final f in o.effets.set) {
+        s.flags.remove(f);
+      }
+    }
+    return s;
+  }
+
+  void _appliquerVille(GameState s, EffetVille e) {
+    // Le Rng n'est là que pour la signature : un effet de la ville n'a ni `rand`
+    // ni `react`, et l'état du générateur n'est pas réécrit.
+    _applyEffects(s, e.toEffectSet(jaugesDuRole: s.gauges.keys.toSet()), Rng.fromState(s.rngState));
+    if (!s.over) _checkEndings(s);
+    if (s.over) _buildEndingPending(s);
   }
 
   // ---------------------------------------------------------------------------
@@ -869,12 +915,17 @@ class Engine {
       s.world.blocksDepart = 0;
       s.matchTemp = null;
       s.beat = 0;
-      // Retirement checks: the player's legs, the coach's licence.
+      // Retirement checks: the player's legs, the coach's licence — and, for
+      // the other roles, the age written in roles.yaml (`retraite`).
+      final rd = content.roles[s.role];
       if (s.role == 'joueur' && s.age >= 38) {
         s.endingId = 'jubile';
         s.over = true;
       } else if (s.role == 'entraineur' && s.age >= 65) {
         s.endingId = 'en_retraite';
+        s.over = true;
+      } else if (rd?.retraiteAge != null && rd?.retraiteFin != null && s.age >= rd!.retraiteAge!) {
+        s.endingId = rd.retraiteFin;
         s.over = true;
       }
     } else {
@@ -991,7 +1042,7 @@ class Engine {
     final rel = card.speaker == null ? 0 : (s.relations[card.speaker] ?? 0);
     final expression = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
     // `{toi}` : l'adresse du locuteur selon le rôle et la relation (spec variété §1.8).
-    final adresse = ch?.adresseFor(s.role, expression);
+    final adresse = ch?.adresseFor(s.role, expression) ?? content.roles[s.role]?.adresse;
     String fmt(String t) => formatText(t, s, speakerGenre: speakerGenre, speakerId: card.speaker, adresse: adresse);
     final text = fmt(card.text);
     List<GaugeHint> hintsFor(EffectSet e) {
@@ -1196,8 +1247,13 @@ class Engine {
         pts: s.world.pts,
         monClub: s.entities.named['club'] ?? 'Ton club',
         rivalClub: s.entities.named['rival'] ?? '',
-        prefixes: ((content.names['club_prefixes'] as List?) ?? const []).map((e) => e.toString()).toList(),
-        villes: ((content.names['villes'] as List?) ?? const []).map((e) => e.toString()).toList(),
+        // Le sélectionneur : un classement de nations (names `nations`), pas de clubs.
+        prefixes: s.role == 'selectionneur' && content.names['nations'] is List
+            ? const ['']
+            : ((content.names['club_prefixes'] as List?) ?? const []).map((e) => e.toString()).toList(),
+        villes: ((content.names[s.role == 'selectionneur' && content.names['nations'] is List ? 'nations' : 'villes'] as List?) ?? const [])
+            .map((e) => e.toString())
+            .toList(),
       );
 
   /// **La frise de carrière** (`frise.dart`) : la carrière posée sur le siècle,
@@ -1668,7 +1724,8 @@ class Engine {
     final pris = <String>{};
     final proto = _pickName(rng, genre, pris);
     final club = _makeClub(rng);
-    final rival = _makeClub(rng);
+    // le rival d'un sélectionneur est une nation (names `nations`)
+    final rival = role == 'selectionneur' ? _makeNation(rng) : _makeClub(rng);
     final sp = proto.indexOf(' ');
     return Entities(
       prenom: proto.substring(0, sp),
@@ -1733,6 +1790,15 @@ class Engine {
     final prefixes = (content.names['club_prefixes'] as List).cast<String>();
     final villes = (content.names['villes'] as List).cast<String>();
     return '${prefixes[rng.nextInt(prefixes.length)]} ${villes[rng.nextInt(villes.length)]}';
+  }
+
+  /// Une nation (le rival d'un sélectionneur) : le même nombre de tirages
+  /// qu'un club, pour que la suite de la carrière tire dans le même ordre.
+  String _makeNation(Rng rng) {
+    final prefixes = (content.names['club_prefixes'] as List).cast<String>();
+    final nations = ((content.names['nations'] as List?) ?? (content.names['villes'] as List)).cast<String>();
+    rng.nextInt(prefixes.length);
+    return nations[rng.nextInt(nations.length)];
   }
 
   String _pickVille(Rng rng) {

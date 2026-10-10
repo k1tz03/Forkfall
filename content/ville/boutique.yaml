@@ -1,0 +1,664 @@
+# LA BOUTIQUE ET LES BIENS — ce qu'on achète en ville avec ses francs (puis ses
+# écus), et ce qu'on peut perdre.
+#
+# Les prix sont en FRANCS DE 1990 : la ville applique l'inflation de l'année et
+# le passage à l'écu (drapeau `monde_ecus`). Repères : un entraîneur de
+# deuxième division gagne 25 000 F par mois, un joueur de première division
+# 60 000 F. La villa vaut onze ans du premier, quatre ans et demi du second.
+#
+# Où l'on achète : Brunel, tailleur et chausseur (`tailleur`) ; le garage du
+# Pont (`garage`) ; Immobilier Tessandier (`agence`) ; un courtier de la Capitale,
+# chambre 7 de l'hôtel de la Rive (`hotel`) — les montres, les bijoux, les
+# toiles, le bateau, l'hélicoptère ; le tabac-presse du carrefour
+# (`tabac_stade`) — les montres simples et les téléphones ; l'épicerie, qui
+# prête son catalogue de vente par correspondance puis devient point relais
+# (`epicerie`) ; la papeterie (`librairie`), la pharmacie, la salle de muscu,
+# la banque (le coffre), la boutique du club et le Corner (`bar`).
+#
+# Ce qu'un objet fait :
+#   · `usage` : en ville — `vitesse` (la marche multipliée, pour un véhicule),
+#     `repos` (+énergie à chaque nuit), `faim` (+faim au réveil),
+#     `deplacement: libre` (l'hélicoptère : partout d'un coup).
+#   · `logement` : il remplace le deux-pièces loué de la rue des Lilas.
+#   · `effets` : ce que le moteur applique à l'achat (`Engine.biens`) — de
+#     petites touches aux jauges (±5 au plus) et des drapeaux `bn_*`, retirés
+#     quand l'objet est perdu (saisi, volé, revendu). Un achat voyant coûte :
+#     le coupé fâche la tribune, la montre le vestiaire, la villa le président,
+#     l'hélicoptère tout le monde. Un achat utile aide : les crampons, le
+#     costume de la loge, le magnétoscope de montage, la berline qui ouvre la
+#     barrière des officiels.
+#   · `luxe: true` : saisi par `saisie_luxe` (l'huissier, la brigade) ; un
+#     véhicule tombe aussi par `saisie_vehicules`, un logement par
+#     `saisie_logement`, et `saisie_tout` prend tout. Le cambrioleur (`vol_luxe`)
+#     n'emporte que ce qui est chez toi et tient dans un sac : les objets
+#     `luxe: true` de catégorie montre, vetement ou luxe, sauf le lingot (au
+#     coffre), le bateau (au port) et la part du trotteur.
+#   · `revente` : la part du prix que le vendeur rend (0 : invendable).
+#
+# Les suites — ce que les drapeaux `bn_*` réveillent — sont des événements du
+# moteur : content/arcs/entraineur/biens.yaml et content/arcs/joueur/biens.yaml
+# (la photo du coupé, l'huissier, le contrôle fiscal, la maison visitée,
+# l'hélicoptère, le voisin, la brigade financière, et quelques autres).
+#
+# Les époques : pas de téléphone portable avant 1995, pas de smartphone avant
+# 2008 (le Flux arrive avec lui), pas d'hélicoptère avant 1995, le 4x4 des
+# années de l'argent facile à partir de 1995, l'écran plat en 2004, le duplex de
+# la Tréfilerie quand l'usine devient des logements (2005), la berline
+# électrique en 2015, la voiture sans volant en 2036. Aucune marque : on dit ce
+# que c'est.
+objets:
+  # ================================================================ VÊTEMENTS
+  - id: survetement_club
+    nom: "Le survêtement du club"
+    categorie: vetement
+    lieu: boutique
+    prix: 650
+    annees: [1990, 2050]
+    texte: "La vendeuse de la boutique plie la veste aux couleurs du club, l'écusson bien au milieu : « En ville, les gens aiment voir ça. Les jours de défaite, un peu moins. »"
+    effets: {jauges: {tribunes: 1}}
+    revente: 0.2
+
+  - id: blouson_cuir
+    nom: "Un blouson de cuir"
+    categorie: vetement
+    lieu: tailleur
+    prix: 3800
+    annees: [1990, 2050]
+    texte: "Brunel te fait tourner devant la psyché, une épingle entre les lèvres : « Le cuir prend la forme de qui le porte. Il lui faut un hiver, pas plus. »"
+    revente: 0.3
+
+  - id: costume_confection
+    nom: "Un costume de confection"
+    categorie: vetement
+    lieu: tailleur
+    prix: 2900
+    annees: [1990, 2050]
+    texte: "Un costume gris sur un cintre, retouché en vingt minutes. Brunel tire sur l'ourlet : « Pour la mairie, ça ira. Pour la loge du président, revenez me voir. »"
+    effets: {jauges: {direction: 1}}
+    revente: 0.1
+
+  - id: costume_sur_mesure
+    nom: "Un costume sur mesure"
+    categorie: vetement
+    lieu: tailleur
+    prix: 14000
+    annees: [1990, 2050]
+    texte: "Brunel prend tes mesures avec un ruban jauni, sans rien noter. Trois essayages, une doublure aux couleurs du club : « Celui-là, on le remarque depuis la loge. »"
+    effets: {jauges: {direction: 2}, set: [bn_costume_sur_mesure]}
+    revente: 0
+
+  - id: manteau_cachemire
+    nom: "Un manteau en cachemire"
+    categorie: vetement
+    lieu: tailleur
+    prix: 11000
+    annees: [1990, 2050]
+    texte: "Le cachemire pèse moins que ton imperméable. Brunel relève le col sur ta nuque : « Au bord du terrain, en février, vous penserez à moi. »"
+    effets: {jauges: {direction: 1}}
+    revente: 0.3
+
+  - id: fourrure
+    nom: "Un manteau de fourrure"
+    categorie: vetement
+    lieu: tailleur
+    prix: 48000
+    annees: [1990, 2008]
+    texte: "Le manteau sort d'une housse, dans l'arrière-boutique. Brunel le pose sur tes épaules sans un mot. Dehors, une passante s'arrête devant la vitrine et ne repart pas."
+    effets: {jauges: {tribunes: -2}, set: [bn_fourrure]}
+    luxe: true
+    revente: 0.4
+
+  # =============================================================== CHAUSSURES
+  - id: crampons
+    nom: "Des crampons cousus main"
+    categorie: chaussures
+    lieu: tailleur
+    prix: 2200
+    annees: [1990, 2050]
+    roles: [joueur]
+    texte: "Brunel moule ton pied dans le plâtre, puis coud le cuir à la main, comme pour l'équipe de 1962 : « Huit jours, ils vous feront mal. Après, ils feront partie de vous. »"
+    effets: {jauges: {vestiaire: 1, direction: 1}}
+    revente: 0
+
+  - id: richelieus
+    nom: "Des richelieus cirés"
+    categorie: chaussures
+    lieu: tailleur
+    prix: 2400
+    annees: [1990, 2050]
+    texte: "Brunel cire la pointe des souliers jusqu'à s'y voir : « Un président regarde d'abord les chaussures. Ensuite seulement, il écoute. »"
+    effets: {jauges: {direction: 1}}
+    revente: 0.1
+
+  - id: semelles
+    nom: "Des semelles orthopédiques"
+    categorie: chaussures
+    lieu: pharmacie
+    prix: 950
+    annees: [1990, 2050]
+    texte: "Le pharmacien moule tes semelles dans une mousse tiède : « Votre voûte s'affaisse à gauche. Vos genoux paient pour vos pieds depuis des années. »"
+    usage: {repos: 2}
+    revente: 0
+
+  - id: baskets_collection
+    nom: "Des baskets de collection"
+    categorie: chaussures
+    lieu: tailleur
+    prix: 7500
+    annees: [2010, 2050]
+    texte: "Le petit-fils Brunel sort la boîte de sous la vitrine avec des gants blancs : « Six cents paires en tout. Les jeunes de la réserve vont vous demander de les toucher. »"
+    effets: {jauges: {vestiaire: 1}}
+    revente: 0.8
+
+  # =================================================================== MONTRES
+  - id: montre_quartz
+    nom: "Une montre à quartz"
+    categorie: montre
+    lieu: tabac_stade
+    prix: 390
+    annees: [1990, 2050]
+    texte: "Le patron du tabac décroche la montre du présentoir et la règle sur la pendule du loto : « Étanche à trente mètres. Vous ne plongerez pas, mais c'est bon à savoir. »"
+    revente: 0
+
+  - id: montre_acier
+    nom: "Une montre de plongée en acier"
+    categorie: montre
+    lieu: tailleur
+    prix: 9800
+    annees: [1990, 2050]
+    texte: "Dans la vitrine de Brunel, entre les boutons de manchette, une montre de plongée en acier. Il la sort de son écrin : « Elle survivra à votre carrière. Et à ma boutique. »"
+    revente: 0.6
+
+  - id: montre_or
+    nom: "Une montre en or"
+    categorie: montre
+    lieu: hotel
+    prix: 68000
+    annees: [1990, 2050]
+    texte: "Chambre 7 de l'hôtel de la Rive, un courtier de la Capitale ouvre une mallette de velours. La montre en or pèse dans ta main. « On ne la remonte pas. On la montre. »"
+    effets: {jauges: {vestiaire: -2}, set: [bn_montre_or]}
+    luxe: true
+    revente: 0.6
+
+  - id: montre_connectee
+    nom: "Une montre connectée"
+    categorie: montre
+    lieu: tabac_stade
+    prix: 2300
+    annees: [2015, 2050]
+    texte: "Le buraliste te montre comment la montre compte tes pas, ton cœur, tes heures de sommeil : « Elle sait tout de vous. À qui elle le dit, c'est écrit en petit. »"
+    usage: {repos: 2}
+    revente: 0.1
+
+  # ================================================================ TÉLÉPHONES
+  - id: bip
+    nom: "Un bip à pince"
+    categorie: telephone
+    lieu: tabac_stade
+    prix: 950
+    annees: [1990, 2001]
+    texte: "Le patron du tabac clipse le bip à ta ceinture : « Quand ça sonne, vous cherchez une cabine. Il y en a une devant chez moi ; elle marche une fois sur deux. »"
+    effets: {jauges: {direction: 1}}
+    revente: 0
+
+  - id: portable
+    nom: "Un téléphone portable"
+    categorie: telephone
+    lieu: tabac_stade
+    prix: 2800
+    annees: [1995, 2050]
+    texte: "Le buraliste pose la boîte sur le comptoir, entre deux grilles de loto : « Votre numéro, je l'écris où ? Parce qu'à partir de ce soir, tout le monde va le vouloir. »"
+    effets: {jauges: {direction: 1}}
+    revente: 0.1
+
+  - id: smartphone
+    nom: "Un smartphone dernier cri"
+    categorie: telephone
+    lieu: tabac_stade
+    prix: 4600
+    annees: [2008, 2050]
+    texte: "Le buraliste allume l'écran et le tourne vers toi : ton nom sur le Flux, déjà, et trois cents messages. « Vous voulez que je vous montre comment on les cache ? »"
+    effets: {jauges: {tribunes: 1}}
+    revente: 0.2
+
+  - id: oreillette
+    nom: "Une oreillette qui répond seule"
+    categorie: telephone
+    lieu: tabac_stade
+    prix: 5200
+    annees: [2036, 2050]
+    texte: "Le buraliste dépose l'oreillette au creux de ta main : « Quand vous dormez, elle répond à votre place, avec votre voix. Le président ne verra pas la différence. »"
+    revente: 0.1
+
+  # ================================================================= VÉHICULES
+  - id: velo
+    nom: "Un vélo de course d'occasion"
+    categorie: vehicule
+    lieu: garage
+    prix: 1300
+    annees: [1990, 2050]
+    texte: "Le garagiste sort un vélo de course du fond de la cour, les boyaux secs : « Il a fait le tour du département en 1971. Il fera bien le tour de la ville. »"
+    usage: {vitesse: 1.3}
+    revente: 0.5
+
+  - id: scooter
+    nom: "Un scooter"
+    categorie: vehicule
+    lieu: garage
+    prix: 9500
+    annees: [1990, 2050]
+    texte: "Le garagiste tourne la clé ; le moteur tousse, puis ronronne : « Pas de permis, pas de place à chercher. Le casque est offert. Mettez-le : on vous reconnaît moins. »"
+    usage: {vitesse: 1.5}
+    revente: 0.4
+
+  - id: citadine
+    nom: "Une petite citadine"
+    categorie: vehicule
+    lieu: garage
+    prix: 38000
+    annees: [1990, 2050]
+    texte: "Une petite citadine d'occasion, un seul propriétaire, une institutrice. Le garagiste tape sur le toit : « Elle démarre en janvier. Dans le quartier, c'est une qualité. »"
+    usage: {vitesse: 1.7}
+    revente: 0.5
+
+  - id: moto
+    nom: "Une moto de route"
+    categorie: vehicule
+    lieu: garage
+    prix: 52000
+    annees: [1990, 2050]
+    texte: "Le garagiste pose la main sur le réservoir encore chaud : « Votre contrat dit quoi, sur les deux-roues ? Moi, je ne lis pas les contrats. Je vends des motos. »"
+    usage: {vitesse: 2.0}
+    effets: {jauges: {direction: -1}, set: [bn_moto]}
+    revente: 0.5
+
+  - id: break
+    nom: "Un break familial"
+    categorie: vehicule
+    lieu: garage
+    prix: 85000
+    annees: [1990, 2050]
+    texte: "Cinq places et un coffre où tient un sac de ballons. Le garagiste ouvre le hayon : « Pour les enfants, les courses ou les ballons. Le plus souvent, les trois. »"
+    usage: {vitesse: 1.7}
+    revente: 0.5
+
+  - id: berline
+    nom: "Une berline allemande"
+    categorie: vehicule
+    lieu: garage
+    prix: 165000
+    annees: [1990, 2050]
+    texte: "Une berline gris anthracite sous la bâche. Le garagiste soulève le tissu comme un rideau de théâtre : « Avec celle-là, on vous ouvre la barrière du parking des officiels. »"
+    usage: {vitesse: 1.9}
+    effets: {jauges: {direction: 2}, set: [bn_berline]}
+    revente: 0.55
+
+  - id: coupe_sport
+    nom: "Un coupé sport rouge"
+    categorie: vehicule
+    lieu: garage
+    prix: 180000
+    annees: [1990, 2050]
+    texte: "Le coupé rouge sort de sous la bâche, sous les néons du garage. Le vendeur te tend les clés sans te regarder : « Les gens vont parler. Ils parlent de toute façon. »"
+    usage: {vitesse: 2.2}
+    effets: {jauges: {tribunes: -2, vestiaire: -1}, set: [bn_coupe_sport]}
+    luxe: true
+    revente: 0.5
+
+  - id: quatre_quatre
+    nom: "Un gros 4x4 noir"
+    categorie: vehicule
+    lieu: garage
+    prix: 240000
+    annees: [1995, 2050]
+    texte: "Un 4x4 noir aux vitres teintées, plus haut que le comptoir du garage. Le vendeur claque la portière : « On le voit de loin. C'est ce que vous vouliez, non ? »"
+    usage: {vitesse: 1.9}
+    effets: {jauges: {tribunes: -1}, set: [bn_quatre_quatre]}
+    luxe: true
+    revente: 0.5
+
+  - id: roadster
+    nom: "Un roadster de 1962"
+    categorie: vehicule
+    lieu: garage
+    prix: 290000
+    annees: [1990, 2050]
+    texte: "Vert bouteille, sous une couverture de laine. Le garagiste : « Le même que celui du capitaine de 1962. Au feu rouge, les anciens de la brasserie vont pleurer. »"
+    usage: {vitesse: 1.8}
+    effets: {jauges: {tribunes: 1}}
+    luxe: true
+    revente: 0.9
+
+  - id: electrique
+    nom: "Une berline électrique"
+    categorie: vehicule
+    lieu: garage
+    prix: 150000
+    annees: [2015, 2050]
+    texte: "La berline sort de la cour sans un bruit. Le garagiste débranche le câble : « Le plein se fait la nuit, chez vous. Et personne ne vous entend arriver. »"
+    usage: {vitesse: 1.9}
+    effets: {jauges: {tribunes: 1}}
+    revente: 0.4
+
+  - id: autonome
+    nom: "Une voiture sans volant"
+    categorie: vehicule
+    lieu: garage
+    prix: 210000
+    annees: [2036, 2050]
+    texte: "Pas de volant, deux fauteuils face à face. Le garagiste lui dicte ton adresse à voix haute : « Elle se gare mieux que vous. Ne le prenez pas mal. »"
+    usage: {vitesse: 2.3}
+    revente: 0.4
+
+  - id: helico
+    nom: "Un hélicoptère d'occasion"
+    categorie: vehicule
+    lieu: hotel
+    prix: 4800000
+    annees: [1995, 2050]
+    si: "francs >= 2000000"
+    texte: "Chambre 7 de l'hôtel de la Rive, le courtier déplie une brochure sur le lit : un hélicoptère blanc, quatre places. « Il se pose sur un terrain de football. Le vôtre, par exemple. »"
+    usage: {deplacement: libre}
+    effets: {jauges: {vestiaire: -3, tribunes: -2, direction: -1}, set: [bn_helico]}
+    luxe: true
+    revente: 0.6
+
+  # ================================================================ LOGEMENTS
+  - id: appartement_quai
+    nom: "Un trois-pièces sur le quai"
+    categorie: logement
+    lieu: agence
+    prix: 540000
+    annees: [1990, 2050]
+    texte: "Madame Tessandier ouvre les volets : la Rive en bas, le pont à gauche, le stade au fond. « Le chauffage marche. Je vous le dis, parce qu'on me le demande toujours. »"
+    logement: {nom: "Le trois-pièces du quai", repos: 10}
+    revente: 0.9
+
+  - id: residence_rive
+    nom: "Un appartement neuf sur la Rive"
+    categorie: logement
+    lieu: agence
+    prix: 760000
+    annees: [1993, 2050]
+    texte: "La maquette de la vitrine est devenue un immeuble. Madame Tessandier te confie les clés d'un appartement qui sent encore la peinture : « Personne n'y a jamais pleuré. »"
+    logement: {nom: "La résidence de la Rive", repos: 14}
+    revente: 0.85
+
+  - id: pavillon
+    nom: "Un pavillon aux Lilas"
+    categorie: logement
+    lieu: agence
+    prix: 880000
+    annees: [1990, 2050]
+    texte: "Trois chambres, un garage, une haie de troènes. Madame Tessandier te sert le café qu'on ne propose qu'une fois : « Les voisins sont calmes. Ils regardent, c'est tout. »"
+    logement: {nom: "Le pavillon des Lilas", repos: 15}
+    effets: {set: [bn_pavillon]}
+    revente: 0.9
+
+  - id: duplex_trefilerie
+    nom: "Un duplex à la Tréfilerie"
+    categorie: logement
+    lieu: agence
+    prix: 1150000
+    annees: [2005, 2050]
+    texte: "L'usine a perdu ses machines et gagné des baies vitrées. Madame Tessandier tapote une poutre d'acier : « On a gardé le pont roulant. Les gens adorent. Pas tous. »"
+    logement: {nom: "Le duplex de la Tréfilerie", repos: 16}
+    effets: {jauges: {tribunes: -2}, set: [bn_duplex_trefilerie]}
+    revente: 0.85
+
+  - id: villa
+    nom: "Une villa sur les hauteurs"
+    categorie: logement
+    lieu: agence
+    prix: 3200000
+    annees: [1990, 2050]
+    texte: "La villa des Hauts-de-Rive domine la ville : la piscine vide, les tilleuls. Madame Tessandier signe le compromis sans lever les yeux : « On vous verra d'en bas, vous savez. »"
+    logement: {nom: "La villa des Hauts-de-Rive", repos: 25}
+    effets: {jauges: {direction: -2, tribunes: -1}, set: [bn_villa]}
+    revente: 0.85
+
+  - id: penthouse
+    nom: "Un dernier étage avec terrasse"
+    categorie: logement
+    lieu: agence
+    prix: 2600000
+    annees: [2010, 2050]
+    texte: "Le dernier étage du quai, une terrasse au-dessus des toits. Madame Tessandier ouvre la baie : d'ici, on voit le stade, la mairie, et la fenêtre de ton ancien deux-pièces."
+    logement: {nom: "La terrasse du quai", repos: 22}
+    effets: {jauges: {direction: -1, tribunes: -1}, set: [bn_penthouse]}
+    revente: 0.85
+
+  - id: manoir
+    nom: "Un manoir et son parc"
+    categorie: logement
+    lieu: agence
+    prix: 6800000
+    annees: [1990, 2050]
+    si: "francs >= 3000000"
+    texte: "Douze pièces, un parc qui descend jusqu'à la Rive. Madame Tessandier te tend un trousseau de vingt clés : « Les anciens propriétaires ont tout perdu. Rien à voir avec vous. »"
+    logement: {nom: "Le manoir des Tilleuls", repos: 30}
+    effets: {jauges: {direction: -3, tribunes: -2, vestiaire: -1}, set: [bn_manoir]}
+    revente: 0.8
+
+  # ===================================================================== LUXE
+  - id: collier
+    nom: "Un collier de perles"
+    categorie: luxe
+    lieu: hotel
+    prix: 32000
+    annees: [1990, 2050]
+    texte: "Le courtier de la chambre 7 fait glisser les perles dans un écrin bleu nuit : « Pour quelqu'un qui vous attend le soir ? Alors c'est le bon. On ne vous demandera pas le prix. »"
+    effets: {set: [bn_collier]}
+    luxe: true
+    revente: 0.5
+
+  - id: tableau
+    nom: "Une toile d'un peintre coté"
+    categorie: luxe
+    lieu: hotel
+    prix: 300000
+    annees: [1990, 2050]
+    texte: "Le courtier appuie la toile contre la commode de la chambre 7 : des champs, un ciel lourd. « Elle prendra plus de valeur que votre club. Accrochez-la loin de la fenêtre. »"
+    effets: {set: [bn_tableau]}
+    luxe: true
+    revente: 0.8
+
+  - id: trotteur
+    nom: "Une part d'un trotteur"
+    categorie: luxe
+    lieu: hotel
+    prix: 140000
+    annees: [1990, 2050]
+    texte: "Le courtier pose une photo sur le lit : un trotteur bai, l'œil fou. « Un quart de lui, pour vous. Il court à Valdorne le dimanche. Le dimanche, vous êtes libre ? »"
+    effets: {jauges: {direction: -1}}
+    luxe: true
+    revente: 0.3
+
+  - id: bateau
+    nom: "Un bateau à moteur"
+    categorie: luxe
+    lieu: hotel
+    prix: 650000
+    annees: [1990, 2050]
+    texte: "Le courtier fait défiler les photos : un bateau blanc au ponton de Portclair, deux cabines. « Les gens de la Capitale y passent l'été. Vous, vous y passerez la trêve. »"
+    effets: {jauges: {tribunes: -2}, set: [bn_bateau]}
+    luxe: true
+    revente: 0.5
+
+  - id: lingot
+    nom: "Un lingot d'or au coffre"
+    categorie: luxe
+    lieu: banque
+    prix: 72000
+    annees: [1990, 2050]
+    texte: "Le banquier descend avec toi au sous-sol, ouvre un coffre et pose le lingot sur le velours : « Il ne rapporte rien. Il ne perd rien. Et personne ne le voit. »"
+    luxe: true
+    revente: 0.95
+
+  - id: cave_vins
+    nom: "Une cave de grands vins"
+    categorie: luxe
+    lieu: epicerie
+    prix: 45000
+    annees: [1990, 2050]
+    texte: "L'épicier connaît un négociant à Montbéliac. Six caisses arrivent un mardi, couchées dans la paille : « Gardez-les dix ans. Ou ouvrez-en une le soir du maintien. »"
+    luxe: true
+    revente: 0.6
+
+  - id: maillot_1974
+    nom: "Le maillot de la finale de 1974"
+    categorie: luxe
+    lieu: boutique
+    prix: 35000
+    annees: [1990, 2050]
+    texte: "La boutique met aux enchères le maillot de la finale de 1974, encadré, la boue encore sur le numéro. Quand ta main se lève, les anciens du premier rang applaudissent."
+    effets: {jauges: {tribunes: 3, direction: 1}}
+    luxe: true
+    revente: 0.7
+
+  # =============================================================== ÉQUIPEMENT
+  - id: tableau_tactique
+    nom: "Un tableau magnétique"
+    categorie: equipement
+    lieu: librairie
+    prix: 650
+    annees: [1990, 2050]
+    roles: [entraineur]
+    texte: "La papetière te vend un tableau blanc et une boîte d'aimants rouges et bleus : « Onze et onze, plus deux de rechange. On en perd toujours deux. »"
+    effets: {jauges: {vestiaire: 1}}
+    revente: 0
+
+  - id: magnetoscope_montage
+    nom: "Un magnétoscope de montage"
+    categorie: equipement
+    lieu: librairie
+    prix: 12000
+    annees: [1990, 2004]
+    roles: [entraineur]
+    texte: "Deux têtes de lecture, le ralenti image par image, une molette. La papetière le sort de la réserve : « Le dernier, c'est l'entraîneur de Nerville qui l'a pris. »"
+    effets: {jauges: {vestiaire: 2}}
+    revente: 0.2
+
+  - id: ordinateur_montage
+    nom: "Un ordinateur de montage vidéo"
+    categorie: equipement
+    lieu: librairie
+    prix: 14000
+    annees: [2005, 2050]
+    roles: [entraineur]
+    texte: "La papetière installe le logiciel pendant que tu regardes : « Vous découpez le match, vous montrez l'erreur. Ils vont détester ça. Ils regarderont quand même. »"
+    effets: {jauges: {vestiaire: 2}}
+    revente: 0.2
+
+  - id: drone
+    nom: "Un drone pour filmer les séances"
+    categorie: equipement
+    lieu: librairie
+    prix: 6000
+    annees: [2016, 2050]
+    roles: [entraineur]
+    texte: "La papetière fait monter le drone au-dessus du square. Sur l'écran : les toits, puis le terrain annexe, vu d'en haut, comme le voit le président de sa fenêtre."
+    effets: {jauges: {vestiaire: 1, direction: 1}}
+    revente: 0.3
+
+  - id: banc_muscu
+    nom: "Un banc de musculation"
+    categorie: equipement
+    lieu: muscu
+    prix: 4800
+    annees: [1990, 2050]
+    roles: [joueur]
+    texte: "Le patron de la salle te vend un banc qui a servi, la housse recousue : « Chez vous, la nuit, quand personne ne compte les charges. Sauf vous. »"
+    effets: {jauges: {direction: 1}}
+    revente: 0.3
+
+  - id: genouillere
+    nom: "Une genouillère articulée"
+    categorie: equipement
+    lieu: pharmacie
+    prix: 1500
+    annees: [1990, 2050]
+    roles: [joueur]
+    texte: "Le pharmacien serre les sangles sur ta jambe tendue : « Elle ne répare rien. Elle empêche de faire pire. Comme votre docteur, en somme. »"
+    usage: {repos: 3}
+    revente: 0
+
+  # =================================================================== MAISON
+  - id: television
+    nom: "Une télé couleur"
+    categorie: maison
+    lieu: epicerie
+    prix: 4800
+    annees: [1990, 2004]
+    texte: "L'épicier te prête son catalogue de vente par correspondance. Trois semaines plus tard, un livreur monte la télé couleur au troisième en jurant à chaque palier."
+    usage: {repos: 2}
+    revente: 0.2
+
+  - id: magnetoscope
+    nom: "Un magnétoscope"
+    categorie: maison
+    lieu: epicerie
+    prix: 3400
+    annees: [1990, 2006]
+    texte: "Commandé sur le catalogue de l'épicier. Le soir de la livraison, tu enregistres le résumé du dimanche sur la cassette du baptême de ta nièce. Personne ne le saura avant Noël."
+    revente: 0.2
+
+  - id: console
+    nom: "Une console de salon"
+    categorie: maison
+    lieu: epicerie
+    prix: 1300
+    annees: [1990, 2004]
+    texte: "Deux manettes et une cartouche de football où ton club n'existe pas. L'épicier la coche dans son catalogue en clignant de l'œil : « Pour les enfants, hein. »"
+    usage: {repos: 1}
+    revente: 0.3
+
+  - id: ecran_plat
+    nom: "Un écran plat géant"
+    categorie: maison
+    lieu: epicerie
+    prix: 13000
+    annees: [2004, 2050]
+    texte: "L'épicerie est devenue point relais. Le carton de l'écran plat t'attend derrière les packs d'eau, plus haut que l'épicier lui-même."
+    usage: {repos: 3}
+    revente: 0.2
+
+  - id: console_ligne
+    nom: "Une console en réseau"
+    categorie: maison
+    lieu: epicerie
+    prix: 3200
+    annees: [2005, 2050]
+    texte: "Le carton t'attend au point relais de l'épicerie. Le soir même, un gamin de Valentienne te bat en ligne, avec ton propre club."
+    usage: {repos: 1}
+    revente: 0.3
+
+  - id: congelateur
+    nom: "Un congélateur coffre"
+    categorie: maison
+    lieu: epicerie
+    prix: 2600
+    annees: [1990, 2050]
+    texte: "L'épicier le livre dans sa camionnette et le remplit lui-même de ce qu'il n'a pas vendu : « Vous me réglerez en fin de mois. Je vous mets sur le cahier. »"
+    usage: {faim: 8}
+    revente: 0.2
+
+  - id: lit
+    nom: "Un lit neuf, matelas ferme"
+    categorie: maison
+    lieu: epicerie
+    prix: 5500
+    annees: [1990, 2050]
+    texte: "Le matelas arrive roulé dans du plastique, commandé par l'épicier. La première nuit, la chaudière cogne toujours ; tu ne l'entends plus."
+    usage: {repos: 6}
+    revente: 0.1
+
+  - id: flipper
+    nom: "Le vieux flipper du Corner"
+    categorie: maison
+    lieu: bar
+    prix: 7000
+    annees: [1990, 2050]
+    texte: "Le patron du Corner te vend le flipper à condition qu'il reste en ville. Deux habitués le montent chez toi ; l'un d'eux demande s'il peut repasser jouer le jeudi."
+    effets: {jauges: {tribunes: 1}}
+    revente: 0.5

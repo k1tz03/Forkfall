@@ -1,0 +1,236 @@
+# Les sponsors louches communs aux deux rôles, et ce qui arrive quand on a dit
+# oui : la police et la Fédération. Les cartes sont dans
+# content/cards/common/sponsors_louches.yaml.
+#
+# 1. Le Rideau Rouge (`kind: serie`, entraîneur et joueur) — Fardelli pose sur
+#    le zinc du Corner un carton noir : le patron du club privé veut ton nom
+#    sur ses jeudis. Le carré, la montre en or entre deux verres ; puis
+#    l'affiche chez la boulangère (ou une photo de toi sur son trottoir, même
+#    si tu n'as rien pris) ; puis, pour qui a pris la montre, le patron assis
+#    côté passager dans ta voiture qui te demande un alibi. Au bout : les
+#    scellés sur la porte sans poignée, et ses livres. Le club privé est un lieu
+#    de rendez-vous, pas une scène : on n'y voit que du velours, des verres et
+#    des photos.
+#
+# 2. Les événements (`kind: evenement`, tag `sombre`, `fallback: drop`, une fois
+#    par carrière) : ils ne lisent QUE les drapeaux `sp_*` posés par l'argent
+#    sale des sponsors (le leur, celui des intrigues de l'entraîneur et du
+#    joueur). Ils ne tombent pas à coup sûr : c'est un risque, tiré par le
+#    metteur en scène (`chance` par créneau, deux événements par saison au
+#    plus, cinq créneaux d'écart). `same_club: false` : la police suit qui elle
+#    cherche, même après un transfert.
+#    · L'inventaire (domicile) — six heures du matin, la brigade financière,
+#      un inventaire tapé à la machine : l'hélicoptère, le pavillon, la montre,
+#      le coupé ou les espèces. Saisies par `saisie_*`, amendes par
+#      `ville_amende`. Mentir pose `sp_nie`.
+#    · Le contrôle (rue) — une heure du matin, quai sud, l'enveloppe dans la
+#      boîte à gants, ou le coupé du casino.
+#    · Quarante-huit heures (parking) — deux inspecteurs contre ta voiture.
+#      Donner les noms, ou se taire : se taire ferme la carrière
+#      (`end: co_garde_a_vue`, content/endings/police.yaml).
+#    · La commission (hôtel) — Berthomier au petit salon de l'hôtel de la Rive :
+#      un match vendu, un carton jaune à la minute, des ampoules sans notice.
+#      Nier, ou signer : signer ferme la carrière (`end: co_radiation`,
+#      content/endings/sponsors.yaml).
+#    · Les photos du carré (club privé) — le patron du Rideau Rouge, une fois
+#      l'intrigue finie, étale six photos sur le velours : il ne veut pas
+#      d'argent, il veut tes jeudis.
+#    Ils se lisent entre eux : mentir à l'inventaire ou au contrôle (`sp_nie`),
+#    nier devant la commission (`sp_commission`), céder au chantage
+#    (`sp_chantage`), donner un faux alibi ou trahir le réseau mènent à la
+#    garde à vue ; la garde à vue où l'on parle pose `sp_garde_a_vue`, que la
+#    commission relit.
+arcs:
+  # ======================================================= Le Rideau Rouge
+  - id: co.sp.rideau
+    title: "Le Rideau Rouge"
+    kind: serie
+    roles: [entraineur, joueur]
+    postulats: [promu, interimaire, pepite]
+    foreground: true
+    weight: 0.4
+    once: true
+    min_season: 1
+    theme: agent
+    carrier: fardelli
+    cast: [fardelli, camille, meneche]
+    issues: [refus, carre, alibi]
+    # L'alibi demande deux choix sombres de suite (la montre, puis la voiture) :
+    # issue rare, hors du plancher de 10 % (spec § 5.1).
+    issues_rares: [alibi]
+    traces:
+      sp_rideau_vu:     "{annee} : {nom} a passé la porte sans poignée du Rideau Rouge, une nuit de jeudi."
+      sp_rideau_montre: "{annee} : le nom de {nom} sur l'affiche du jeudi du Rideau Rouge, et une montre en or."
+      sp_rideau_alibi:  "{annee} : {nom} s'est souvenu{pg, select, f{e} other{}} d'une nuit au carré qui n'a pas eu lieu."
+    traces_retract:
+      sp_rideau_montre: "{annee} : {nom} a déposé la montre du Rideau Rouge au commissariat, avec une déposition."
+      sp_rideau_alibi:  "{annee} : {nom} est revenu{pg, select, f{e} other{}} sur la nuit du carré. Le patron a perdu son alibi."
+    hint: "Un carton noir sans adresse, un rideau rouge en relief, et ton nom qu'on veut sur une affiche."
+    start: [2, 9]
+    same_club: true
+    fallback: nouvelles
+    epilogue:
+      journal: "{annee} : le Rideau Rouge a changé de patron, puis d'enseigne. La porte n'a toujours pas de poignée."
+    steps:
+      - id: carton
+        card: co.sp.rideau.carton
+        next:
+          - { step: carre, if: "flag('sp_rideau_vu')", in: [1, 3] }
+          - { step: photo, in: [2, 4] }
+      - id: carre
+        card: co.sp.rideau.carre
+        next: [ { step: photo, in: [2, 3] } ]
+      - id: photo
+        # Camille partie, l'affiche et la photo arrivent sous la porte.
+        card:
+          - { id: co.sp.rideau.affiche, if: "flag('sp_rideau_montre')" }
+          - { id: co.sp.rideau.affiche_seul, if: "flag('sp_rideau_montre')" }
+          - { id: co.sp.rideau.photo, if: "!flag('sp_rideau_montre')" }
+          - { id: co.sp.rideau.photo_seul }
+        next:
+          - { step: alibi, if: "flag('sp_rideau_montre')", in: [2, 3] }
+          - { step: scelles, in: [2, 4] }
+      - id: alibi
+        card: co.sp.rideau.alibi
+        next: [ { step: scelles, in: [2, 4] } ]
+      - id: scelles
+        card:
+          - { id: co.sp.rideau.scelles_alibi, if: "flag('sp_rideau_alibi')" }
+          - { id: co.sp.rideau.scelles_montre, if: "flag('sp_rideau_montre')" }
+          - { id: co.sp.rideau.scelles }
+        next: []
+
+  # ======================================================= L'inventaire
+  - id: co.sp.inventaire
+    title: "L'inventaire"
+    kind: evenement
+    roles: [entraineur, joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('sp_terrain_villa') || flag('sp_terrain_helico') || flag('sp_rideau_montre') || flag('sp_tripot_coupe') || flag('sp_labo_enveloppe') || flag('sp_gigi_vendu') || flag('sp_tripot_service'))"
+    chance: 0.07
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      sp_perquisition: "{annee} : six heures du matin, la brigade financière chez {nom}, un inventaire tapé à la machine."
+    steps:
+      - id: aube
+        card:
+          - { id: co.sp.inventaire_helico, if: "flag('sp_terrain_helico')" }
+          - { id: co.sp.inventaire_villa, if: "flag('sp_terrain_villa')" }
+          - { id: co.sp.inventaire_montre, if: "flag('sp_rideau_montre')" }
+          - { id: co.sp.inventaire_coupe, if: "flag('sp_tripot_coupe')" }
+          - { id: co.sp.inventaire }
+        next: []
+
+  # ======================================================= Le contrôle
+  - id: co.sp.controle
+    title: "Le contrôle"
+    kind: evenement
+    roles: [entraineur, joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('sp_tripot_coupe') || flag('sp_rideau_montre') || flag('sp_rideau_alibi') || flag('sp_gigi_vendu') || flag('sp_labo_enveloppe') || flag('sp_tripot_affiche'))"
+    chance: 0.06
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      sp_controle: "{annee} : contrôle de nuit sur le quai sud. Une enveloppe épaisse dans la boîte à gants de {nom}."
+    steps:
+      - id: quai
+        card:
+          - { id: co.sp.controle_coupe, if: "flag('sp_tripot_coupe')" }
+          - { id: co.sp.controle }
+        next: []
+
+  # ======================================================= Quarante-huit heures
+  - id: co.sp.garde_a_vue
+    title: "Quarante-huit heures"
+    kind: evenement
+    roles: [entraineur, joueur]
+    postulats: []
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('sp_rideau_alibi') || flag('sp_tripot_double') || flag('sp_gigi_double') || flag('sp_chantage') || flag('sp_commission') || (flag('sp_nie') && (flag('sp_perquisition') || flag('sp_controle'))))"
+    chance: 0.08
+    cast: [josiane]
+    same_club: false
+    fallback: drop
+    traces:
+      sp_garde_a_vue: "{annee} : quatre heures au commissariat central. {nom} en est sorti{pg, select, f{e} other{}} en donnant des noms."
+    steps:
+      - id: parking
+        # « Je n'ai rien à dire » ferme la carrière (end: co_garde_a_vue) ;
+        # « Je donne les noms » pose sp_garde_a_vue et ouvre la sortie.
+        card:
+          - { id: co.sp.gav_alibi, if: "flag('sp_rideau_alibi')" }
+          - { id: co.sp.gav_carnet, if: "flag('sp_tripot_double') || flag('sp_gigi_double')" }
+          - { id: co.sp.gav_photos, if: "flag('sp_chantage')" }
+          - { id: co.sp.gav }
+        next: [ { step: sortie, if: "flag('sp_garde_a_vue')", in: [1, 2] } ]
+      - id: sortie
+        card: co.sp.gav_sortie
+        next: []
+
+  # ======================================================= La commission
+  - id: co.sp.commission
+    title: "La commission"
+    kind: evenement
+    roles: [entraineur, joueur]
+    # Ses portes (un match vendu, des ampoules sans notice, un carton jaune à la
+    # minute) ne s'ouvrent que chez l'intérimaire et le joueur : le moteur ne
+    # lit pas `postulats` sur un événement, mais `simulate` en déduit les fins
+    # ouvertes à chaque postulat (co_radiation n'en est pas une du promu).
+    postulats: [interimaire, pepite, fin_de_contrat]
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "season >= 1 && (flag('sp_gigi_vendu') || flag('sp_tripot_service') || flag('sp_labo_boites'))"
+    chance: 0.06
+    cast: [legruet]
+    same_club: false
+    fallback: drop
+    traces:
+      sp_commission: "{annee} : le petit salon de l'hôtel de la Rive, Berthomier, un tampon. {nom} a tout nié."
+    steps:
+      - id: salon
+        # « Je signe » ferme la carrière (end: co_radiation).
+        card:
+          - { id: co.sp.commission_parle, if: "flag('sp_garde_a_vue')" }
+          - { id: co.sp.commission_gigi, if: "flag('sp_gigi_vendu')" }
+          - { id: co.sp.commission_jaune, if: "flag('sp_tripot_service')" }
+          - { id: co.sp.commission_labo }
+        next: []
+
+  # ======================================================= Les photos du carré
+  - id: co.sp.chantage
+    title: "Les photos du carré"
+    kind: evenement
+    roles: [entraineur, joueur]
+    # Il suit le Rideau Rouge, qui n'est pas au réservoir de « Fin de contrat ».
+    postulats: [promu, interimaire, pepite]
+    foreground: false
+    weight: 1.0
+    once: true
+    # Après l'intrigue du Rideau Rouge, pour qui a passé la porte sans donner
+    # d'alibi : le patron garde ce qu'il a photographié.
+    when: "season >= 1 && flag('sp_rideau_vu') && !flag('sp_rideau_alibi') && arc('co.sp.rideau') == 'done'"
+    chance: 0.08
+    cast: []
+    same_club: false
+    fallback: drop
+    traces:
+      sp_chantage: "{annee} : six photos sur le velours du Rideau Rouge. Le patron ne voulait pas d'argent."
+    steps:
+      - id: velours
+        card:
+          - { id: co.sp.chantage_montre, if: "flag('sp_rideau_montre')" }
+          - { id: co.sp.chantage }
+        next: []

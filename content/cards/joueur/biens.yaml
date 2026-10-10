@@ -1,0 +1,634 @@
+# Cartes des biens du joueur (arcs jp.bn.*, content/arcs/joueur/biens.yaml) :
+# ce que les achats de la ville (content/ville/boutique.yaml) réveillent.
+# Toutes hors du sac. `arc:` est le THÈME de la carte ; `lieu:` est l'endroit
+# où la ville met la scène ; `sombre` : la scène ne s'annonce pas, elle tombe le
+# soir. Les variantes sans locuteur sont les secours quand le visage n'est plus
+# là (Bréhaut vendu, Vecchio retraité, Josiane partie, Aubert ministre) ; les
+# variantes `_seul` servent le joueur qui n'a plus d'agent (`sans_agent`).
+#
+# Les compteurs que la ville lit après le choix : `saisie_vehicules`,
+# `saisie_logement`, `saisie_luxe`, `saisie_tout`, `ville_amende` (débit, en
+# francs de 1990), `ville_francs` (crédit), `cadeau_montre_or`, et `vol_luxe`
+# (le cambriolage : ce qui brille et s'emporte — montres, bijoux, toile,
+# fourrure, cave ; un vol, pas une saisie : ni la maison, ni l'hélicoptère, ni
+# le lingot au coffre). Aucune somme n'est écrite dans un texte : la monnaie
+# change en 2002.
+cards:
+  # ================================================= 1 · La photo du coupé
+  # Trois défaites de suite.
+  - id: jp.bn.coupe_gazette_serie
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    lieu: cafe
+    tone: strategique
+    text: "Café de la Mairie. La Gazette Rose ouverte sur le zinc : toi, au volant de ton coupé rouge, le soir de la troisième défaite, un bras par la vitre. Légende : « Enfin une accélération. »"
+    left:
+      label: "Je ramène le coupé au garage"
+      effects: {tribunes: "+", caisse: "-", set: [bn_photo_coupe], next: end}
+      answer: "Le garagiste du Pont le range sous sa bâche, contre un loyer au mois. Tu reviens à l'entraînement en car, avec les jeunes de la réserve."
+    right:
+      label: "Je continue de rouler avec"
+      effects: {tribunes: "--", set: [bn_photo_coupe]}
+      answer: "Tu te gares devant l'entrée des joueurs, comme avant. Les gamins qui attendent les autographes regardent la voiture, pas toi."
+
+  - id: jp.bn.coupe_gazette
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    lieu: cafe
+    tone: strategique
+    text: "Café de la Mairie. La Gazette Rose ouverte sur le zinc : toi, au volant de ton coupé rouge, le soir de la défaite, un bras par la vitre. Légende : « Pressé{pg, select, f{e} other{}} de rentrer. »"
+    left:
+      label: "Je ramène le coupé au garage"
+      effects: {tribunes: "+", caisse: "-", set: [bn_photo_coupe], next: end}
+      answer: "Le garagiste du Pont le range sous sa bâche, contre un loyer au mois. Tu reviens à l'entraînement en car, avec les jeunes de la réserve."
+    right:
+      label: "Je continue de rouler avec"
+      effects: {tribunes: "--", set: [bn_photo_coupe]}
+      answer: "Tu te gares devant l'entrée des joueurs, comme avant. Les gamins qui attendent les autographes regardent la voiture, pas toi."
+
+  - id: jp.bn.coupe_rayure
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, après l'entraînement. Ton coupé porte une rayure de la calandre au feu arrière, faite à la clé. Sur le pare-brise, la page de la Gazette, collée au chewing-gum."
+    left:
+      label: "Je roule avec la rayure"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Un mois durant, la rayure fait le tour de la ville avant toi. Le club te prie de ne plus te garer devant la boutique des supporters."
+    right:
+      label: "Je la fais repeindre"
+      effects: {tribunes: "-", var: {ville_amende: "+9000"}}
+      answer: "Le garagiste repeint l'aile en trois jours. En rendant les clés, il te conseille de te garer ailleurs : « Ici, ils ont la clé facile. »"
+
+  # ================================================= 2 · L'huissier
+  # Le compte à sec, les impôts impayés : le Trésor prend la voiture. Plus d'agent pour payer.
+  - id: jp.bn.huissier_depanneuse_seul
+    roles: [joueur]
+    arc: caisse
+    tags: [sombre, caisse]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, devant les jeunes de la réserve. Une dépanneuse recule vers ta voiture. Un huissier : « Le Trésor. Vos impôts de l'an dernier, trois relances. Les clés, ou je la prends sans ? »"
+    left:
+      label: "Je donne les clés"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}}
+      answer: "Elle part au bout d'un câble, devant la réserve au complet. Le soir, un gamin de dix-sept ans te propose de monter sur son porte-bagages."
+    right:
+      label: "J'appelle le club"
+      effects: {direction: "-", caisse: "-"}
+      answer: "Le club paie le Trésor et retient la somme sur tes primes, jusqu'en juin. Au secrétariat, on te fait signer la reconnaissance, en double."
+
+  - id: jp.bn.huissier_depanneuse
+    roles: [joueur]
+    arc: caisse
+    tags: [sombre, caisse, agents]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, devant les jeunes de la réserve. Une dépanneuse recule vers ta voiture. Un huissier : « Le Trésor. Vos impôts de l'an dernier, trois relances. Les clés, ou je la prends sans ? »"
+    left:
+      label: "Je donne les clés"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}}
+      answer: "Elle part au bout d'un câble, devant la réserve au complet. Le soir, un gamin de dix-sept ans te propose de monter sur son porte-bagages."
+    right:
+      label: "J'appelle Fardelli"
+      effects: {parole: -1, relation: {fardelli: 1}, next: {step: fardelli, in: [4, 8]}}
+      answer: "Fardelli arrive en vingt minutes, une enveloppe à la main. La dépanneuse repart à vide. Fardelli, lui, note la date dans son carnet noir."
+
+  # Rien qui roule : ce qui brille. Plus d'agent.
+  - id: jp.bn.huissier_palier_seul
+    roles: [joueur]
+    arc: caisse
+    tags: [sombre, caisse]
+    lieu: domicile
+    tone: strategique
+    text: "Un huissier sonne à huit heures, un serrurier derrière lui, une liste à la main : « Votre banque a obtenu un jugement. J'inventorie ce qui a de la valeur. J'entre, ou c'est lui qui ouvre ? »"
+    left:
+      label: "Je le laisse entrer"
+      effects: {direction: "-", var: {saisie_luxe: "+1"}}
+      answer: "Il inventorie à voix basse, en touchant chaque objet du bout de son stylo. Il te laisse le lit, la table et la télé : la loi les laisse."
+    right:
+      label: "J'appelle le club"
+      effects: {direction: "-", caisse: "-"}
+      answer: "Le club paie l'huissier et retient la somme sur tes primes, jusqu'en juin. Au secrétariat, on te fait signer la reconnaissance, en double."
+
+  - id: jp.bn.huissier_palier
+    roles: [joueur]
+    arc: caisse
+    tags: [sombre, caisse, agents]
+    lieu: domicile
+    tone: strategique
+    text: "Un huissier sonne à huit heures, un serrurier derrière lui, une liste à la main : « Votre banque a obtenu un jugement. J'inventorie ce qui a de la valeur. J'entre, ou c'est lui qui ouvre ? »"
+    left:
+      label: "Je le laisse entrer"
+      effects: {direction: "-", var: {saisie_luxe: "+1"}}
+      answer: "Il inventorie à voix basse, en touchant chaque objet du bout de son stylo. Il te laisse le lit, la table et la télé : la loi les laisse."
+    right:
+      label: "J'appelle Fardelli"
+      effects: {parole: -1, relation: {fardelli: 1}, next: {step: fardelli, in: [4, 8]}}
+      answer: "Fardelli arrive en vingt minutes, une enveloppe à la main. L'huissier repart sans rien. Fardelli, lui, note la date dans son carnet noir."
+
+  # Fardelli a payé : il présente sa note.
+  - id: jp.bn.huissier_fardelli
+    roles: [joueur]
+    arc: agents
+    tags: [agents, mercato]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    text: "Fardelli tourne son café sans sucre, le carnet noir ouvert à la bonne page : « L'huissier, c'est oublié. Portclair te veut cet été ; ma part, je la prends sur ta signature. On y va ? »"
+    left:
+      label: "Je signe où tu dis"
+      effects: {caisse: "+", direction: "--", relation: {fardelli: 1}}
+      answer: "Tu signes une page encore blanche, en bas à droite. Le lendemain, le président du club sait déjà combien tu vaux à Portclair."
+    right:
+      label: "Je te rembourse"
+      effects: {relation: {fardelli: -1}, var: {ville_amende: "+60000"}}
+      answer: "Tu poses l'argent sur la table, en liasses. Il le compte sans y toucher, du bout de sa cuillère : « Tu apprends vite. Trop vite. »"
+
+  # ================================================= 3 · Le contrôle fiscal
+  # L'argent sale : les dépôts du lundi.
+  - id: jp.bn.fisc_especes
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale, caisse]
+    lieu: parking
+    tone: strategique
+    text: "À la sortie de l'entraînement, un homme en gris attend près de ta voiture : « Contrôle fiscal. Des dépôts en espèces, le lundi, au guichet de la Banque Aubérivoise. Vous m'expliquez ? »"
+    left:
+      label: "Je paie le redressement"
+      effects: {direction: "-", var: {ville_amende: "+150000"}, set: [bn_fisc], next: end}
+      answer: "Il fait le calcul sur ton capot, au crayon. Le redressement tombe en juin, avec les pénalités ; au club, quelqu'un l'a su avant toi."
+    right:
+      label: "Je nie tout"
+      effects: {parole: -1, set: [bn_fisc], next: {step: saisie, in: [4, 8]}}
+      answer: "Il range son crayon : « Comme vous voudrez. Le juge, lui, a tout son temps. » Il te regarde démarrer sans bouger d'un pas."
+
+  # La société des îles (`offshore`).
+  - id: jp.bn.fisc_iles
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, caisse]
+    lieu: parking
+    tone: strategique
+    text: "À la sortie de l'entraînement, un homme en gris attend près de ta voiture : « Contrôle fiscal. Votre train de vie, et une société aux îles au nom de votre cousin. On commence par quoi ? »"
+    left:
+      label: "J'ouvre mes comptes"
+      effects: {direction: "-", var: {ville_amende: "+90000"}, set: [bn_fisc], next: end}
+      answer: "Tu ouvres tout, jusqu'aux relevés du cousin. Le redressement arrive en juin ; le cousin, lui, ne répond plus au téléphone."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat du club te prend en main, à tes frais. Il serre la tienne longtemps : « À partir d'aujourd'hui, vous ne parlez plus qu'à moi. »"
+
+  # La photo du coupé dans la Gazette (jp.bn.photo_coupe).
+  - id: jp.bn.fisc_gazette
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, presse, caisse]
+    lieu: parking
+    tone: strategique
+    text: "À la sortie de l'entraînement, un homme en gris attend, adossé à ton coupé, la Gazette Rose sous le bras : « Contrôle fiscal. Votre photo m'a donné envie de vous voir. On parle de vos achats ? »"
+    left:
+      label: "J'ouvre mes comptes"
+      effects: {direction: "-", var: {ville_amende: "+60000"}, set: [bn_fisc], next: end}
+      answer: "Il épluche tes primes, tes fiches de paie, tes notes de restaurant. Le redressement tombe en juin ; le club l'apprend par la Gazette."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat du club te prend en main, à tes frais. Il serre la tienne longtemps : « À partir d'aujourd'hui, vous ne parlez plus qu'à moi. »"
+
+  - id: jp.bn.fisc_villa
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, caisse]
+    lieu: parking
+    tone: strategique
+    text: "À la sortie de l'entraînement, un homme en gris attend près de ta voiture : « Contrôle fiscal. Votre villa des Hauts-de-Rive, payée comptant. Vous m'expliquez avec quoi ? »"
+    left:
+      label: "J'ouvre mes comptes"
+      effects: {direction: "-", var: {ville_amende: "+60000"}, set: [bn_fisc], next: end}
+      answer: "Il épluche tes primes, tes fiches de paie, tes notes de restaurant. Le redressement tombe en juin ; le club l'apprend par la Gazette."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat du club te prend en main, à tes frais. Il serre la tienne longtemps : « À partir d'aujourd'hui, vous ne parlez plus qu'à moi. »"
+
+  - id: jp.bn.fisc
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale, caisse]
+    lieu: parking
+    tone: strategique
+    text: "À la sortie de l'entraînement, un homme en gris attend près de ta voiture : « Contrôle fiscal. Vos achats de l'année ne ressemblent pas à votre déclaration. Vous m'expliquez ? »"
+    left:
+      label: "J'ouvre mes comptes"
+      effects: {direction: "-", var: {ville_amende: "+60000"}, set: [bn_fisc], next: end}
+      answer: "Il épluche tes primes, tes fiches de paie, tes notes de restaurant. Le redressement tombe en juin ; le club l'apprend par la Gazette."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat du club te prend en main, à tes frais. Il serre la tienne longtemps : « À partir d'aujourd'hui, vous ne parlez plus qu'à moi. »"
+
+  # Tu as nié : le juge. Une maison à saisir…
+  - id: jp.bn.fisc_saisie_maison
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. On sonne longtemps. Sur le perron, un huissier, deux policiers et un serrurier, une ordonnance du juge à la main : « Saisie conservatoire. Les clés, ou la serrure ? »"
+    left:
+      label: "Je remets les clés"
+      effects: {direction: "--", tribunes: "-", var: {saisie_logement: "+1"}}
+      answer: "Tu pars avec ton sac de match et une valise. Le soir, la chaudière du deux-pièces de la rue des Lilas cogne, comme si elle t'attendait."
+    right:
+      label: "Je ne leur ouvre pas"
+      effects: {end: co_garde_a_vue}
+      answer: "Le serrurier met quatre minutes. Les menottes dans l'entrée ; au portail, le photographe de la Gazette, déjà là. Quelqu'un l'a prévenu."
+
+  # … ou seulement ce qui brille et ce qui roule.
+  - id: jp.bn.fisc_saisie_biens
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. Un huissier et deux policiers dans ton entrée, une ordonnance du juge : « Saisie conservatoire de vos biens de valeur. Vous nous les montrez, ou on fouille ? »"
+    left:
+      label: "Je vous les montre"
+      effects: {direction: "--", var: {saisie_luxe: "+1", saisie_vehicules: "+1"}}
+      answer: "Ils emportent ce qui brille et ce qui roule, scellés posés au crayon gras. À sa fenêtre, la voisine compte les cartons à voix basse."
+    right:
+      label: "Fouillez"
+      effects: {direction: "--", tribunes: "-", var: {saisie_tout: "+1"}}
+      answer: "Ils fouillent jusqu'à midi et trouvent tout, jusqu'au tiroir du bas. Ton portefeuille part sous scellé, dans un sachet transparent."
+
+  # Tu as pris un avocat.
+  - id: jp.bn.fisc_avocat
+    roles: [joueur]
+    arc: scandale
+    tags: [scandale]
+    lieu: cafe
+    tone: strategique
+    text: "L'avocat du club t'attend au fond du café de la Mairie, ton dossier sous le coude : « Ils proposent une transaction. Sinon on plaide deux ans, et la Gazette viendra à chaque audience. »"
+    left:
+      label: "On transige"
+      effects: {direction: "-", var: {ville_amende: "+50000"}}
+      answer: "Tu signes sur la nappe en papier, et l'avocat garde le stylo. La somme est plus lourde que prévu ; l'affaire, elle, n'existe plus."
+    right:
+      label: "On plaide"
+      effects: {tribunes: "-", direction: "-", parole: 1}
+      answer: "Deux ans de renvois. À chaque audience, le photographe de la Gazette Rose t'attend sur les marches, toujours à la même place."
+
+  # ================================================= 4 · La maison visitée
+  # Après le nom donné à la brigade : on te répond.
+  - id: jp.bn.cambriolage_balance
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Retour de Haute-Combe, deux heures du matin. Ta porte est ouverte, les tiroirs vidés sur le parquet ; ce qui brillait est parti. Sur ton oreiller, une feuille : le nom que tu as donné."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", var: {vol_luxe: "+1", ville_francs: "+20000"}, set: [bn_cambriole]}
+      answer: "L'inspecteur plie la feuille en quatre : « Ils voulaient que vous sachiez qu'ils savent. Dormez ailleurs, quelques nuits. »"
+    right:
+      label: "Je brûle la feuille"
+      effects: {parole: -1, var: {vol_luxe: "+1"}}
+      answer: "Tu la brûles au-dessus de l'évier. Tu passes la nuit sur le canapé, face à la porte, les clés de la voiture serrées dans la main."
+
+  # La montre en or était sur la table de nuit.
+  - id: jp.bn.cambriolage_montre
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Retour de Haute-Combe, deux heures du matin. Ta porte est ouverte, les tiroirs vidés sur le parquet. Sur la table de nuit, l'écrin de ta montre en or, ouvert, vide."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", var: {vol_luxe: "+1", ville_francs: "+20000"}, set: [bn_cambriole, bn_montre_volee]}
+      answer: "L'inspecteur note chaque objet, et son prix : « Ça fait beaucoup, pour vos primes. L'assurance demandera d'où tout ça vient. »"
+    right:
+      label: "Je ne déclare rien"
+      effects: {parole: -1, var: {vol_luxe: "+1"}, set: [bn_montre_volee]}
+      answer: "Tu remets les tiroirs en place, un à un. Au matin, la boulangère te demande si tout va bien : elle a vu la porte ouverte."
+
+  - id: jp.bn.cambriolage
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Retour de Haute-Combe, deux heures du matin. Ta porte est ouverte, les tiroirs vidés sur le parquet. Ce qui brillait est parti ; tes maillots, eux, sont restés pliés sur la chaise."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", var: {vol_luxe: "+1", ville_francs: "+20000"}, set: [bn_cambriole]}
+      answer: "L'inspecteur note chaque objet, et son prix : « Ça fait beaucoup, pour vos primes. L'assurance demandera d'où tout ça vient. »"
+    right:
+      label: "Je ne déclare rien"
+      effects: {parole: -1, var: {vol_luxe: "+1"}}
+      answer: "Tu remets les tiroirs en place, un à un. Au matin, la boulangère te demande si tout va bien : elle a vu la porte ouverte."
+
+  # La montre réapparaît : Vecchio l'a vue au tripot.
+  - id: jp.bn.cambriolage_vecchio
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: vecchio
+    lieu: vestiaire
+    tone: strategique
+    # La montre est bien partie (la ville l'a retirée) : sinon, rien à retrouver.
+    when: "!flag('bn_montre_or')"
+    text: "Vecchio range ses gants dans son sac, sans te regarder : « Ta montre en or, je l'ai vue hier au Terminus, sur le tapis vert. Un gamin l'a misée contre une paire de rois. Je m'en occupe ? »"
+    left:
+      label: "Occupe-t'en"
+      effects: {relation: {vecchio: 1}, parole: -1, var: {cadeau_montre_or: "+1"}}
+      answer: "Le lendemain, elle est dans ton casier, au fond d'une chaussette de gardien. Vecchio ne dit pas ce qu'elle lui a coûté au poker."
+    right:
+      label: "Laisse-la où elle est"
+      effects: {vestiaire: "+"}
+      answer: "Il hausse les épaules. L'histoire fait le tour du vestiaire : ta montre, misée par un autre au Terminus. On t'envie moins ; on t'aime mieux."
+
+  # Secours : Vecchio n'est plus là ; tu la vois toi-même.
+  - id: jp.bn.cambriolage_tripot
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: tripot
+    tone: strategique
+    # La montre est bien partie (la ville l'a retirée) : sinon, rien à retrouver.
+    when: "!flag('bn_montre_or')"
+    text: "Arrière-salle du Terminus, une heure du matin. Au poignet d'un gamin qui relance sur le tapis vert, ta montre en or. Il te reconnaît, et lève le bras pour que tu la voies mieux."
+    left:
+      label: "Je la lui rachète"
+      effects: {direction: "-", parole: -1, var: {cadeau_montre_or: "+1", ville_amende: "+20000"}}
+      answer: "Il compte les billets deux fois, puis fait glisser la montre entre les jetons : « Elle avance de deux minutes. Comme vous. »"
+    right:
+      label: "Je sors sans un mot"
+      effects: {parole: 1}
+      answer: "Dehors, il pleut sur le quai. Derrière la porte, la partie reprend ; quelqu'un annonce une paire de rois."
+
+  # ================================================= 5 · L'hélicoptère
+  - id: jp.bn.helico_brehaut
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: terrain
+    tone: strategique
+    text: "Bréhaut t'attend au bord du terrain annexe, les bras croisés : « L'hélicoptère s'est posé sur la pelouse où on s'entraîne. Les gars ne te parlent plus. Tu reviens au car, samedi ? »"
+    left:
+      label: "Je reviens au car"
+      effects: {vestiaire: "+", direction: "-", next: end}
+      answer: "Tu t'assois au fond du car. Personne ne se pousse. Le club, lui, avait vendu ton arrivée en hélicoptère à un sponsor, pour la photo."
+    right:
+      label: "Je me pose où je veux"
+      effects: {vestiaire: "--", tribunes: "+"}
+      answer: "Dimanche, la Nord lève la tête et chante ton nom quand tu passes au-dessus. Au vestiaire, on se change dos à toi."
+
+  # Secours : le capitaine n'est plus là.
+  - id: jp.bn.helico_vestiaire
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: vestiaire
+    tone: strategique
+    text: "Au vestiaire, ton casier a été vidé dans le bac des douches. Sur la porte, quelqu'un a scotché la feuille des primes du mois, avec un hélicoptère dessiné dans la marge."
+    left:
+      label: "Je reviens au car"
+      effects: {vestiaire: "+", direction: "-", next: end}
+      answer: "Tu t'assois au fond du car. Personne ne se pousse. Le club, lui, avait vendu ton arrivée en hélicoptère à un sponsor, pour la photo."
+    right:
+      label: "Je me pose où je veux"
+      effects: {vestiaire: "--", tribunes: "+"}
+      answer: "Dimanche, la Nord lève la tête et chante ton nom quand tu passes au-dessus. Lundi, ton casier est de nouveau dans les douches."
+
+  - id: jp.bn.helico_aubert
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    speaker: aubert
+    lieu: mairie
+    tone: strategique
+    text: "Madame Aubert te reçoit debout, l'arrêté déjà signé : « Les parents d'élèves ont écrit. Une pale a frôlé le préau de l'école. Vous ne vous posez plus en ville. C'est compris ? »"
+    left:
+      label: "Je ne me pose plus en ville"
+      effects: {tribunes: "-", relation: {aubert: 1}}
+      answer: "L'hélicoptère dort à l'aérodrome de Valdorne. Le dimanche, tu fais quarante minutes de route pour aller le regarder."
+    right:
+      label: "Verbalisez-moi"
+      effects: {relation: {aubert: -1}, var: {ville_amende: "+20000"}}
+      answer: "Elle signe le procès-verbal sans s'asseoir. Le lendemain, L'Écho publie le montant, au centime près, en page deux."
+
+  # Secours : la maire a changé, l'arrêté reste.
+  - id: jp.bn.helico_arrete
+    roles: [joueur]
+    arc: direction
+    tags: [direction]
+    lieu: stade
+    tone: strategique
+    text: "Sur la grille du stade, un arrêté municipal punaisé : interdiction d'atterrir en ville, sous peine d'amende. Quelqu'un a écrit ton numéro de maillot au feutre, dans la marge."
+    left:
+      label: "Je respecte l'arrêté"
+      effects: {tribunes: "-"}
+      answer: "L'hélicoptère dort à l'aérodrome de Valdorne. Le dimanche, tu fais quarante minutes de route pour aller le regarder."
+    right:
+      label: "Je me pose quand même"
+      effects: {direction: "-", var: {ville_amende: "+20000"}}
+      answer: "Le procès-verbal arrive le lundi, glissé sous l'essuie-glace de l'hélicoptère. Le club le reçoit en copie, et toi, une convocation."
+
+  # ================================================= 6 · La voisine
+  # Le fisc est passé chez elle.
+  - id: jp.bn.voisin_fisc
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Ta voisine, une institutrice en retraite, arrose ses géraniums à l'heure où tu rentres : « Un homme en gris m'a posé des questions sur vous. Sur vos visites du soir. J'ai répondu, bien sûr. »"
+    left:
+      label: "Je l'invite au match"
+      effects: {parole: -1, tribunes: "+"}
+      answer: "Elle vient en tribune d'honneur avec son chapeau du dimanche. À la mi-temps, elle te fait un petit signe ; son carnet dépasse de son sac."
+    right:
+      label: "Je rentre sans répondre"
+      effects: {set: [bn_denonce]}
+      answer: "Le lendemain, au bureau de poste, elle achète un timbre et une enveloppe. Elle écrit l'adresse en script, comme au tableau noir."
+
+  - id: jp.bn.voisin
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Ta voisine, une institutrice en retraite, arrose ses géraniums quand tu rentres : « Vous recevez tard, pour quelqu'un qui joue le samedi. Des hommes en voiture noire. J'ai noté les plaques. »"
+    left:
+      label: "Je l'invite au match"
+      effects: {parole: -1, tribunes: "+"}
+      answer: "Elle vient en tribune d'honneur avec son chapeau du dimanche. À la mi-temps, elle te fait un petit signe ; son carnet dépasse de son sac."
+    right:
+      label: "Je rentre sans répondre"
+      effects: {set: [bn_denonce]}
+      answer: "Le lendemain, au bureau de poste, elle achète un timbre et une enveloppe. Elle écrit l'adresse en script, comme au tableau noir."
+
+  # ================================================= 7 · La brigade financière
+  # Tu avais dit à Camille : une prime de victoire.
+  - id: jp.bn.perquisition_camille
+    roles: [joueur]
+    arc: famille
+    tags: [sombre, scandale, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. Des cartons dans l'entrée, des gants bleus sur la commode. Camille regarde un policier mettre les perles sous scellé : « Une prime de victoire, tu m'avais dit. À eux, tu dis quoi ? »"
+    left:
+      label: "La vérité, devant elle"
+      effects: {parole: 1, direction: "-", relation: {camille: 1}, var: {saisie_luxe: "+1"}, set: [bn_balance]}
+      answer: "Tu donnes le nom, la table, la date. Camille te regarde parler comme on regarde quelqu'un de loin. Après seulement, elle s'assoit."
+    right:
+      label: "Rien, à personne"
+      effects: {direction: "--", relation: {camille: -2}, var: {saisie_tout: "+1"}}
+      answer: "Ils emportent tout. Camille enfile son manteau par-dessus son peignoir et sort marcher ; elle ne rentre qu'à la nuit."
+
+  - id: jp.bn.perquisition
+    roles: [joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. On frappe, on ne sonne pas. La brigade financière entre avec des cartons pliés. L'officier aligne tes factures sur la table de la cuisine : « D'où vient l'argent ? »"
+    left:
+      label: "Je donne un nom"
+      effects: {parole: 1, direction: "-", var: {saisie_luxe: "+1"}, set: [bn_balance]}
+      answer: "Un nom, un lieu, une heure. Ils n'emportent que ce qui brille. Sur le palier, l'officier demande si quelqu'un peut t'héberger, ailleurs."
+    right:
+      label: "Je ne dis rien"
+      effects: {direction: "--", var: {saisie_tout: "+1"}}
+      answer: "Ils emportent tout, jusqu'à ta montre de tous les jours. Le soir, tu retrouves la clé du deux-pièces de la rue des Lilas au fond d'un sac."
+
+  # ================================================= 8 · La clause
+  - id: jp.bn.moto_josiane
+    roles: [joueur]
+    arc: contrat
+    tags: [direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    text: "Madame Josiane ouvre ton contrat à l'article 14 et le tapote d'un ongle : « Pas de deux-roues motorisés. Le président a reconnu votre moto au feu rouge du pont. Sans casque. Je lui réponds quoi ? »"
+    left:
+      label: "Je ne la prends plus"
+      effects: {direction: "+", next: end}
+      answer: "Elle écrit « réglé » au crayon, dans la marge. La moto dort sous une bâche au garage du Pont ; tu passes la voir, le dimanche."
+    right:
+      label: "C'est ma vie privée"
+      effects: {direction: "--", next: {step: chute, in: [3, 7]}}
+      answer: "Elle referme le contrat sans le claquer : « Je lui dirai exactement ça. » Le soir même, tu reprends le quai sud, plus vite."
+
+  # Secours : Josiane n'est plus au secrétariat ; une lettre recommandée.
+  - id: jp.bn.moto_lettre
+    roles: [joueur]
+    arc: contrat
+    tags: [direction]
+    lieu: domicile
+    tone: strategique
+    text: "Une lettre recommandée à l'en-tête du club, l'article 14 de ton contrat surligné en jaune : pas de deux-roues motorisés. En bas, la signature du président, appuyée."
+    left:
+      label: "Je ne la prends plus"
+      effects: {direction: "+", next: end}
+      answer: "La moto dort sous une bâche au garage du Pont. Le dimanche, tu passes la voir et tu fais tourner le moteur deux minutes."
+    right:
+      label: "C'est ma vie privée"
+      effects: {direction: "--", next: {step: chute, in: [3, 7]}}
+      answer: "Tu jettes la lettre dans le tiroir de l'entrée, sous les factures. Le soir même, tu reprends le quai sud, plus vite."
+
+  - id: jp.bn.moto_chute
+    roles: [joueur]
+    arc: corps
+    tags: [sombre]
+    lieu: rue
+    tone: strategique
+    text: "Le quai sud, la pluie, un coup de frein trop tard. La moto glisse sur les pavés jusqu'au parapet. Ta cheville fait un bruit sec ; un marinier appelle les pompiers."
+    left:
+      label: "Je dis la vérité au club"
+      effects: {force: -3, direction: "--", caisse: "-", parole: 1}
+      answer: "Six semaines de plâtre. Le club retient trois mois de salaire au titre de l'article 14, et te l'écrit en recommandé."
+    right:
+      label: "Je parle d'un tacle"
+      effects: {force: -3, vestiaire: "-", parole: -1}
+      answer: "Le Doc écrit « contact à l'entraînement » sans lever les yeux. Le lendemain, au vestiaire, chacun se demande qui t'a taclé."
+
+  # ================================================= 9 · La montre
+  - id: jp.bn.montre_brehaut
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: strategique
+    text: "Bréhaut, en laçant ses chaussures : « Ta montre vaut la prime de match de tout le banc, sur une saison. Les jeunes la regardent plus que le ballon. Tu la portes, samedi ? »"
+    left:
+      label: "Je paie le restaurant"
+      effects: {vestiaire: "+", var: {ville_amende: "+6000"}}
+      answer: "La brasserie du Pont ferme ses volets pour vous. Au dessert, un jeune demande à essayer la montre ; tu la prêtes sans la quitter des yeux."
+    right:
+      label: "Je la porte samedi"
+      effects: {vestiaire: "--", tribunes: "+"}
+      answer: "À l'échauffement, elle brille sous les projecteurs. La Nord adore ; au vestiaire, plus personne ne te demande l'heure."
+
+  # Secours : le capitaine n'est plus là ; la montre est sur le banc.
+  - id: jp.bn.montre_banc
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: vestiaire
+    tone: strategique
+    text: "Ton casier est ouvert. Ta montre en or est posée au milieu du banc du vestiaire, bien en vue. Tout le monde se change autour sans la regarder. Personne ne l'a prise."
+    left:
+      label: "Je paie le restaurant"
+      effects: {vestiaire: "+", var: {ville_amende: "+6000"}}
+      answer: "La brasserie du Pont ferme ses volets pour vous. Personne ne parle de la montre ; tout le monde la regarde quand tu lèves ton verre."
+    right:
+      label: "Je la remets au poignet"
+      effects: {vestiaire: "--", tribunes: "+"}
+      answer: "Tu la reboucles devant tout le monde. Samedi, la Nord la voit briller à l'échauffement ; au vestiaire, on ne te demande plus l'heure."
+
+  # ================================================= 10 · Le collier
+  - id: jp.bn.collier
+    roles: [joueur]
+    arc: famille
+    tags: [famille, scandale]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille fait rouler les perles entre ses doigts, devant la fenêtre : « Ton salaire, tes primes, je connais les chiffres. Celles-là n'y sont pas. Elles viennent d'où, {toi} ? »"
+    left:
+      label: "Je lui dis la vérité"
+      effects: {parole: 1, relation: {camille: -1}}
+      answer: "Tu racontes la table du fond, l'enveloppe, la poignée de main. Elle range les perles : « Un jour, quelqu'un viendra les chercher. »"
+    right:
+      label: "Une prime de victoire"
+      effects: {parole: -1, relation: {camille: 1}, set: [bn_mensonge_camille]}
+      answer: "Elle te croit, ou elle choisit de te croire. Le dimanche, elle les porte au marché, et la boulangère les remarque."
+
+  # ================================================= 11 · La place réservée
+  - id: jp.bn.quatre_quatre
+    roles: [joueur]
+    arc: presse
+    tags: [presse, tribunes]
+    lieu: rue
+    tone: strategique
+    text: "Devant la pharmacie, un attroupement autour de ton 4x4 garé sur la place réservée, une roue sur le trottoir. Le photographe de L'Écho cadre la plaque. Une dame en fauteuil attend derrière."
+    left:
+      label: "Je m'excuse auprès d'elle"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Tu déplaces la voiture et tu pousses le fauteuil jusqu'au comptoir. La photo sort quand même : celle d'avant, pas celle d'après."
+    right:
+      label: "Je démarre sans un mot"
+      effects: {tribunes: "--", var: {ville_amende: "+1500"}}
+      answer: "Le procès-verbal arrive le jeudi, la photo le vendredi, en page deux. Le pharmacien l'a découpée et scotchée dans sa vitrine."

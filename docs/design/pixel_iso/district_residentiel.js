@@ -131,6 +131,15 @@ const VITRINES = {
     if (lb >= 10 && lb <= 17 && cell >= 3 && cell <= 13) return [0.82, 0.88, 0.90, 0.75];
     return [1.0, 0.82, 0.78, 0.6];
   },
+  // le tailleur : un mannequin par travée, une veste de chaque étoffe, la lumière derrière
+  tailleur(la, lb, W2, H2, c) {
+    if (mod(la, 12) === 0 || lb === 0 || lb === H2 - 1) { rgb(c, 0.12, 0.10, 0.09); return null; }
+    const cell = mod(la, 12), n = Math.floor(la / 12);
+    const V = [[0.16, 0.18, 0.26], [0.30, 0.24, 0.18], [0.18, 0.16, 0.16], [0.36, 0.30, 0.26]][n % 4];
+    if (lb >= 4 && lb <= 15 && cell >= 3 && cell <= 9) { rgb(c, V[0], V[1], V[2]); return null; }
+    if (lb >= 16 && lb <= 18 && cell >= 5 && cell <= 7) { rgb(c, 0.55, 0.48, 0.40); return null; }
+    return [1.0, 0.86, 0.70, 0.55];
+  },
   presse(la, lb, W2, H2, c) {
     if (mod(la, 14) === 0 || lb === 0 || lb === H2 - 1) { rgb(c, 0.10, 0.09, 0.08); return null; }
     if (lb < 5) return [0.45, 0.33, 0.20, 0.4];
@@ -910,13 +919,20 @@ function nordOuest(k, P) {
   porteImmeuble(k, b2.fl, 41, { mat: M.WOOD }); lanterne(k, b2.fl, 40, 34, k.night && !(k.bad && k.rh(3, 1, 1) < 0.5));
   // B3 : enduit crème, mansarde
   const b3 = immeuble(k, { x0: 98, x1: 148, y0: 72, y1: 120, et: 4, mur: M.PLASTER_CREAM, volet: M.SHUTTER_BLUE, toit: 'mansarde', baies: [4, 16, 28, 40], antenne: true, balcon: (e, s) => e === 2 && s === 16 ? 'plants' : null });
-  fenetreRdc(k, b3.fl, 5, 103, 120, { barreaux: true }); porteImmeuble(k, b3.fl, 16); fenetreRdc(k, b3.fl, 29, 127, 120, { barreaux: true }); fenetreRdc(k, b3.fl, 40, 138, 120, { volet: M.SHUTTER_BLUE }); lanterne(k, b3.fl, 26, 34, k.night);
+  // Brunel, tailleur et chausseur : la vitrine à gauche, la porte vitrée, l'enseigne
+  devanture(b3.fl, 3, 22, M.WOOD_DARK);
+  if (k.night || k.bad) b3.fl.shop(4, 3, 10, 11, 'rideau'); else vitrine(k, b3.fl, 4, 3, 10, 11, 'tailleur', { light: { r: 26, c: [0.62, 0.52, 0.40] } });
+  b3.fl.door(16, G, 6, 12, { kind: k.night || k.bad ? 'rideau' : 'door', frame: false });
+  b3.fl.sign(6, 17, 'TAILLEUR', { plate: [0.20, 0.14, 0.09], plateMat: M.WOOD_DARK, fg: [0.90, 0.80, 0.56], depth: -1, padX: 2, padY: 1 });
+  fenetreRdc(k, b3.fl, 29, 127, 120, { barreaux: true }); fenetreRdc(k, b3.fl, 40, 138, 120, { volet: M.SHUTTER_BLUE }); lanterne(k, b3.fl, 26, 34, k.night);
+  P.push({ key: 'tailleur', label: 'Brunel, tailleur et chausseur', x: 117, y: 120, z: G + 16 });
   // B4 : pierre de taille, cinq étages, balcons filants, toit-terrasse
   const b4 = immeuble(k, { x0: 148, x1: 196, y0: 70, y1: 120, et: 5, mur: M.STONE, volet: null, toit: 'terrasse', baies: [5, 16, 27, 38], antenne: true, fleurs: 0.25 });
   for (const e of [2, 5]) { const z = 22 + 14 * (e - 1) - 1; b4.fl.rect(1, z, 47, z + 1, -1, M.STONE); b4.fl.rect(1, z, 47, z + 1, -2, M.STONE); for (let s = 1; s < 47; s++) { b4.fl.set(s, z + 4, -2, M.METAL_DARK); if (s % 2) for (let zz = z + 1; zz < z + 4; zz++) b4.fl.set(s, zz, -2, M.METAL_DARK); } }
   fenetreRdc(k, b4.fl, 5, 153, 120, { barreaux: true }); fenetreRdc(k, b4.fl, 12, 160, 120, { barreaux: true });
-  b4.fl.door(20, G, 8, 13, { mat: M.WOOD_DARK, step: true, frameMat: M.STONE });
-  b4.fl.window(20, G + 14, 8, 2, { state: k.night ? 'lit' : 'dark', sill: false, lintel: false, spill: false, k: 0.5 });
+  b4.fl.door(20, G, 8, 13, { kind: 'door', step: true, frameMat: M.STONE });
+  b4.fl.sign(13, 21, 'IMMOBILIER', { plate: [0.86, 0.84, 0.78], plateMat: M.STONE, fg: [0.16, 0.22, 0.36], depth: -1, padX: 2, padY: 1 });
+  P.push({ key: 'agence', label: 'Immobilier Tessandier', x: 172, y: 120, z: G + 16 });
   fenetreRdc(k, b4.fl, 33, 181, 120, { barreaux: true }); fenetreRdc(k, b4.fl, 40, 188, 120, { barreaux: true });
   lanterne(k, b4.fl, 31, 34, k.night && !(k.bad && k.rh(2, 1, 1) < 0.5));
   // B5 : enduit ocre, le pignon peint sur le square
@@ -1158,6 +1174,9 @@ function nordEst(k, P) {
   // E1 : enduit gris, volets bordeaux, mansarde
   const e1 = immeuble(k, { x0: 708, x1: 760, y0: 72, y1: 120, et: 4, mur: M.PLASTER_CREAM, volet: M.SHUTTER_BORD, toit: 'mansarde', baies: [5, 17, 29, 41], antenne: true, balcon: (e, s) => e === 1 && s === 17 ? 'plants' : null });
   porteImmeuble(k, e1.fl, 5); fenetreRdc(k, e1.fl, 17, 725, 120, { volet: M.SHUTTER_BORD }); porteCochere(k, e1.fl, 28, 10); fenetreRdc(k, e1.fl, 42, 750, 120, { volet: M.SHUTTER_BORD });
+  // le garage du Pont, derrière la porte cochère (l'enseigne peinte au-dessus)
+  e1.fl.sign(26, 21, 'GARAGE', { plate: [0.15, 0.20, 0.30], plateMat: M.SHUTTER_BLUE, fg: [0.92, 0.86, 0.66], depth: -1, padX: 2, padY: 1 });
+  P.push({ key: 'garage', label: 'Le garage du Pont', x: 741, y: 120, z: G + 16 });
   lanterne(k, e1.fl, 26, 34, k.night && !k.bad);
   // E2 : brique des années trente, bow-windows, toit-terrasse
   const e2 = immeuble(k, { x0: 760, x1: 812, y0: 74, y1: 120, et: 4, mur: M.BRICK, volet: null, toit: 'terrasse', baies: [4, 23, 42], antenne: true });
@@ -1171,7 +1190,13 @@ function nordEst(k, P) {
       bw.window(2, z0 + 3, 6, 9, { state: st.state, curtain: st.curtain, spill: false, sill: false });
     }
   }
-  porteImmeuble(k, e2.fl, 22); fenetreRdc(k, e2.fl, 4, 764, 120, { barreaux: true }); fenetreRdc(k, e2.fl, 43, 803, 120, { barreaux: true }); lanterne(k, e2.fl, 28, 34, k.night && !k.bad);
+  // le Rideau Rouge : une porte capitonnée, une enseigne qui ne s'allume que le soir
+  e2.fl.door(22, G, 6, 12, { mat: M.SHUTTER_BORD, step: true, frameMat: M.METAL_DARK });
+  const RR = k.night ? { fg: [1.0, 0.32, 0.36], emit: [1.5, 0.22, 0.28] } : { fg: [0.62, 0.30, 0.32] };
+  e2.fl.sign(12, 18, 'RIDEAU ROUGE', Object.assign({ plate: [0.10, 0.05, 0.06], plateMat: M.METAL_DARK, depth: -1, padX: 2, padY: 1 }, RR));
+  if (k.night) W.light({ x: 785, y: 123, z: 12, r: 24, cr: 0.9, cg: 0.08, cb: 0.12, skip: 2 });
+  fenetreRdc(k, e2.fl, 4, 764, 120, { barreaux: true }); fenetreRdc(k, e2.fl, 43, 803, 120, { barreaux: true });
+  P.push({ key: 'club_prive', label: 'Le Rideau Rouge', x: 785, y: 120, z: G + 14 });
   // E3 : le Terminus, café du coin de la gare
   const e3 = immeuble(k, { x0: 812, x1: 862, y0: 72, y1: 120, et: 3, mur: M.PLASTER_OCHRE, volet: M.SHUTTER_GREEN, toit: 'tuiles', baies: [4, 15, 26, 37], fw: 5, droite: true, baiesD: [] });
   for (const s of [28, 38]) { const st = etat(k, 862, 120 - s, 22); e3.fr.window(s, 22, 5, 9, { state: st.state, shutter: M.SHUTTER_GREEN, closed: st.closed, curtain: st.curtain, spill: false }); }
@@ -1184,6 +1209,11 @@ function nordEst(k, P) {
   e3.fl.sign(6, 17, 'LE TERMINUS', Object.assign({ plate: [0.32, 0.09, 0.12], plateMat: BX, depth: -1, padX: 2, padY: 1 }, NE));
   e3.fr.sign(3, 17, 'BAR · TABAC', Object.assign({ plate: [0.32, 0.09, 0.12], plateMat: BX, depth: -1, padX: 2, padY: 1 }, NE));
   e3.fr.blade(0, 21, 8, 3, M.RED_SIGN);
+  // l'arrière-salle : une porte de service sur le flanc, une ampoule nue, pas d'enseigne
+  e3.fr.door(29, G, 5, 11, { mat: M.WOOD_DARK, frameMat: M.STONE });
+  e3.fr.set(31, G + 13, -1, M.METAL_DARK); e3.fr.set(31, G + 12, -1, k.night ? M.BULB : M.GLASS);
+  if (k.night) W.light({ x: 864, y: 89, z: 14, r: 18, cr: 0.9, cg: 0.62, cb: 0.30, skip: 2 });
+  P.push({ key: 'tripot', label: "L'arrière-salle du Terminus", x: 863, y: 89, z: G + 12 });
   if (k.night) { W.light({ x: 865.5, y: 121, z: 25, r: 26, cr: 0.6, cg: 0.08, cb: 0.06, skip: 3 }); W.light({ x: 836, y: 125, z: 19, r: 40, cr: 0.9, cg: 0.22, cb: 0.18, skip: 2 }); }
   e3.fl.awning(4, 30, 12, 5, M.AWNING);
   // le panneau publicitaire sur le flanc, côté gare

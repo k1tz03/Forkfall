@@ -1,0 +1,484 @@
+# Cartes communes aux deux rôles : le Rideau Rouge (co.sp.rideau) et les
+# événements de police et de la Fédération (co.sp.inventaire, co.sp.controle,
+# co.sp.garde_a_vue, co.sp.commission, co.sp.chantage) — arcs dans
+# content/arcs/common/sponsors_louches.yaml. Toutes hors du sac.
+# Le patron du Rideau Rouge, les inspecteurs, les policiers de la brigade
+# financière n'ont pas d'id : la carte n'a pas de `speaker`, le texte les
+# présente. Les textes servent à l'entraîneur comme au joueur : « ton nom »,
+# jamais « ton équipe » ni « ton contrat ».
+# Les saisies et les amendes passent par le pont `var:` (saisie_tout,
+# saisie_logement, saisie_luxe, saisie_vehicules, ville_amende) : la ville
+# reprend ce que la carte dit qu'on reprend.
+cards:
+  # ============================================== Le Rideau Rouge
+  - id: co.sp.rideau.carton
+    roles: [entraineur, joueur]
+    arc: sponsors
+    tags: [sponsors, agents, piege]
+    speaker: fardelli
+    lieu: bar
+    tone: strategique
+    text: "Fardelli pose sur le zinc du Corner un carton noir sans adresse, un rideau rouge en relief : « Le patron du Rideau Rouge voudrait ton nom sur ses jeudis. Il paie bien les noms. Il t'attend ce soir. »"
+    left:
+      label: "J'irai l'écouter"
+      effects: {relation: {fardelli: 1}, set: [sp_rideau_vu]}
+      answer: "Il glisse le carton dans ta poche de poitrine, comme une pochette. « Frappe deux fois. Il n'y a pas de poignée. »"
+    right:
+      label: "Rends-lui son carton"
+      effects: {relation: {fardelli: -1}, outcome: refus}
+      answer: "Il le reprend du bout des doigts et le range dans son portefeuille, avec d'autres. « Il redemandera. Il redemande toujours. »"
+
+  - id: co.sp.rideau.carre
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sponsors, scandale, piege]
+    lieu: club_prive
+    tone: strategique
+    text: "Le Rideau Rouge, une heure du matin. Au carré, derrière le velours, le patron pose une montre en or entre deux verres : « Ton nom sur l'affiche du jeudi, une heure ici par mois. Et elle, d'abord. »"
+    left:
+      label: "Je mets la montre"
+      effects: {tribunes: "-", parole: -1, var: {cadeau_montre_or: "+1", ville_francs_sales: "+15000"}, set: [sp_rideau_montre], outcome: carre}
+      answer: "Elle est lourde au poignet, plus que tu ne croyais. Le jeudi suivant, ton nom est sur l'affiche, en plus gros que celui du chanteur."
+    right:
+      label: "Je repars sans rien"
+      effects: {tribunes: "+", parole: 1, outcome: refus}
+      answer: "Il te raccompagne à la porte sans poignée. « Tout le monde revient », dit-il, et ce n'est pas une menace : c'est une statistique."
+
+  # La montre prise : l'affiche est chez la boulangère.
+  - id: co.sp.rideau.affiche
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [sponsors, famille, scandale]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille pose sur la table l'affiche du jeudi, arrachée chez la boulangère : ton nom en rouge, sous une danseuse en bas résille. « Elle est en vitrine depuis lundi. Tu y vas, le jeudi ? »"
+    left:
+      label: "Je n'y retourne plus"
+      effects: {direction: "+", relation: {camille: 1}}
+      answer: "Elle plie l'affiche en quatre et la garde. Le jeudi suivant, à minuit, le téléphone sonne trois fois, puis s'arrête."
+    right:
+      label: "C'est du travail"
+      effects: {caisse: "+", relation: {camille: -1}}
+      answer: "Elle ne répond pas. Elle colle l'affiche sur le frigo, ton nom à hauteur des yeux, et la laisse là jusqu'à l'été."
+
+  - id: co.sp.rideau.affiche_seul
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sponsors, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Sous ta porte, l'affiche du jeudi pliée en quatre : ton nom en rouge, sous une danseuse en bas résille. En travers, au crayon, quelqu'un a écrit : « On t'a vu. »"
+    left:
+      label: "Je n'y retourne plus"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Tu brûles l'affiche dans l'évier. Le jeudi suivant, à minuit, le téléphone sonne trois fois, puis s'arrête."
+    right:
+      label: "J'y retourne jeudi"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "Jeudi, au carré, le patron te sert sans rien demander. Sur le velours, quelqu'un a laissé un appareil photo, l'objectif vers toi."
+
+  # Rien pris : une photo quand même.
+  - id: co.sp.rideau.photo
+    roles: [entraineur, joueur]
+    arc: famille
+    tags: [sponsors, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille pose sur la table une photo arrivée sans lettre : toi, sur le trottoir du Rideau Rouge, une heure du matin. « Je ne demande pas qui l'envoie. Je demande ce que tu faisais là. »"
+    left:
+      label: "La vérité, tout"
+      effects: {tribunes: "-", relation: {camille: 1}}
+      answer: "Tu racontes le carton noir, Fardelli, la porte sans poignée. Elle écoute jusqu'au bout, puis range la photo dans la boîte à couture."
+    right:
+      label: "Un rendez-vous d'affaires"
+      effects: {direction: "+", relation: {camille: -1}}
+      answer: "Elle hoche la tête, lentement. Le lendemain, la photo n'est plus sur la table ; elle est dans son sac à main, et elle y reste."
+
+  - id: co.sp.rideau.photo_seul
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sponsors, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Sous ta porte, une enveloppe sans timbre : une photo de toi sur le trottoir du Rideau Rouge, une heure du matin. Au dos, au crayon, un seul mot : « Jeudi ? »"
+    left:
+      label: "Je la porte à la police"
+      effects: {direction: "-", parole: 1}
+      answer: "L'inspecteur la regarde longtemps, puis te la rend : « Un trottoir, c'est à tout le monde. » Il note quand même l'adresse."
+    right:
+      label: "Je la déchire"
+      effects: {tribunes: "-"}
+      answer: "Tu la déchires au-dessus de la poubelle. Le jeudi suivant, une deuxième est sous la porte, prise d'un peu plus près."
+
+  # La montre prise : le patron demande un alibi.
+  - id: co.sp.rideau.alibi
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sponsors, scandale, piege]
+    lieu: parking
+    tone: strategique
+    text: "Deux heures du matin. Le patron du Rideau Rouge t'attend dans ta voiture, côté passager : « Jeudi dernier, de minuit à deux heures, tu étais au carré avec moi. Si on te le demande, tu t'en souviens. »"
+    left:
+      label: "Je m'en souviendrai"
+      effects: {direction: "+", parole: -1, var: {ville_francs_sales: "+15000"}, set: [sp_rideau_alibi], outcome: alibi}
+      answer: "En sortant, il laisse une enveloppe dans la boîte à gants. Le lendemain, L'Écho parle d'un homme roué de coups sur son parking."
+    right:
+      label: "J'étais chez moi"
+      effects: {direction: "-", tribunes: "-", parole: 1}
+      answer: "Il sort sans claquer la portière. Sur le siège, il a laissé un double de ta clé de voiture, que tu n'as jamais fait faire."
+
+  # Les scellés : les livres du patron.
+  - id: co.sp.rideau.scelles_alibi
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [sponsors, presse, scandale]
+    speaker: meneche
+    lieu: rue
+    tone: strategique
+    text: "Des scellés sur la porte sans poignée du Rideau Rouge. Massenet, sur le trottoir d'en face : « Le patron est en garde à vue pour l'homme du parking. Il a un alibi : vous. Vous le maintenez ? »"
+    left:
+      label: "Je le maintiens"
+      effects: {direction: "-", parole: -1, relation: {meneche: -1}}
+      answer: "Massenet écrit « maintient » et souligne deux fois. Le patron sort le surlendemain et t'envoie des fleurs, sans carte."
+    right:
+      label: "Je retire ma parole"
+      effects: {tribunes: "-", parole: 1, relation: {meneche: 1}, clear: [sp_rideau_alibi]}
+      answer: "Tu le redis à l'inspecteur, mot pour mot. Le patron reste en cellule ; le soir, ta boîte aux lettres est arrachée, proprement."
+
+  - id: co.sp.rideau.scelles_montre
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [sponsors, presse, scandale]
+    speaker: meneche
+    lieu: rue
+    tone: strategique
+    text: "Des scellés sur la porte sans poignée du Rideau Rouge. Massenet, en face : « Le patron est tombé, ses livres aussi : les noms des jeudis, et les montres. Le vôtre y est. Une phrase ? »"
+    left:
+      label: "Je la porte à la police"
+      effects: {tribunes: "+", parole: 1, var: {saisie_luxe: "+1"}, clear: [sp_rideau_montre]}
+      answer: "L'inspecteur pose la montre sur une feuille blanche et la décrit à voix haute en tapant. Il garde aussi ta déposition."
+    right:
+      label: "Pas de commentaire"
+      effects: {tribunes: "--", direction: "-"}
+      answer: "L'Écho publie la liste des jeudis, sans les montres. Ton nom est le troisième ; la boulangère colle l'article sur sa caisse."
+
+  - id: co.sp.rideau.scelles
+    roles: [entraineur, joueur]
+    arc: presse
+    tags: [sponsors, presse, agents]
+    speaker: meneche
+    lieu: rue
+    tone: strategique
+    text: "Des scellés sur la porte sans poignée du Rideau Rouge. Massenet, sur le trottoir d'en face : « Le patron est tombé, ses livres aussi. Votre nom n'y est pas ; celui de Fardelli, si. Je cite lequel ? »"
+    left:
+      label: "Citez Fardelli"
+      effects: {tribunes: "+", relation: {fardelli: -2, meneche: 1}}
+      answer: "L'article sort jeudi. Fardelli ne t'appelle plus « mon ami » ; il t'appelle par ton nom de famille, ce qui est pire."
+    right:
+      label: "Ni lui ni moi"
+      effects: {direction: "+", relation: {fardelli: 1, meneche: -1}}
+      answer: "Massenet range son carnet. Le lendemain, Fardelli t'apporte une bouteille sans carte, et ne dit jamais pourquoi."
+
+  # ============================================== L'inventaire (événement)
+  # Pas « six heures » : ce sont les carnets des sponsors qui ont parlé, et le
+  # commissaire lit ce qu'on t'a donné, et qui te l'a donné. Il vient le
+  # dimanche soir, au retour du match, quand le quartier est aux fenêtres.
+  - id: co.sp.inventaire_helico
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche soir, sur ton palier, un commissaire en imperméable lit à voix haute un carnet saisi chez le promoteur : « Un hélicoptère blanc, aérodrome de Castérac, offert. Il vole, au moins ? »"
+    left:
+      label: "Prenez tout"
+      effects: {direction: "-", parole: 1, var: {saisie_tout: "+1"}, set: [sp_perquisition]}
+      answer: "Ils prennent tout, l'hélicoptère d'abord, les petites cuillères ensuite. À minuit, il te reste une valise et un trousseau sans serrures."
+    right:
+      label: "Appelez mon avocat"
+      effects: {direction: "--", parole: -1, var: {saisie_vehicules: "+1", saisie_luxe: "+1", ville_amende: "+40000"}, set: [sp_perquisition, sp_nie]}
+      answer: "L'avocat arrive à dix heures, le pyjama sous le manteau. À minuit, l'hélicoptère est sous scellés ; sa facture arrive le lundi."
+
+  - id: co.sp.inventaire_villa
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche soir, devant la grille de la villa des Hauts-de-Rive : un commissaire en imperméable, deux agents, un serrurier. « Le notaire du promoteur a parlé. Vous ouvrez, ou c'est lui ? »"
+    left:
+      label: "J'ouvre, rien n'est payé"
+      effects: {direction: "-", parole: 1, var: {saisie_logement: "+1"}, set: [sp_perquisition]}
+      answer: "Le commissaire écrit « don » et souligne. À minuit, la villa est sous scellés ; tu redescends vers la ville à pied, un sac à la main."
+    right:
+      label: "Je l'ai payée"
+      effects: {direction: "--", parole: -1, var: {ville_amende: "+30000"}, set: [sp_perquisition, sp_nie]}
+      answer: "« Avec quoi ? » Tu as trois fiches de paie. Il les photocopie toutes, et te laisse une convocation pour la semaine suivante."
+
+  - id: co.sp.inventaire_montre
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche soir, sur ton palier, un commissaire en imperméable, un carnet saisi au Rideau Rouge ouvert à une page : « Une montre en or, un jeudi de mars, à votre nom. Vous l'avez toujours ? »"
+    left:
+      label: "La voilà"
+      effects: {tribunes: "-", parole: 1, var: {saisie_luxe: "+1"}, set: [sp_perquisition]}
+      answer: "Il la glisse dans un sachet, avec une étiquette, devant toi. Le plus jeune des agents regarde ton poignet nu, puis le sien."
+    right:
+      label: "Je l'ai perdue"
+      effects: {direction: "-", parole: -1, var: {ville_amende: "+20000"}, set: [sp_perquisition, sp_nie]}
+      answer: "« Où ? » Tu cherches un nom de rue. Il note ta réponse, et ton silence d'avant la réponse, à la ligne suivante."
+
+  - id: co.sp.inventaire_coupe
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche soir, un commissaire en imperméable fait le tour du coupé rouge garé devant chez toi, le carnet du casino de Fontenaire à la main : « Il est à qui, ce coupé ? À vous, ou à eux ? »"
+    left:
+      label: "À eux, pas à moi"
+      effects: {tribunes: "-", parole: 1, var: {saisie_vehicules: "+1"}, set: [sp_perquisition]}
+      answer: "Une dépanneuse l'emporte avant minuit, phares allumés. Les voisins regardent depuis leurs fenêtres, en robe de chambre."
+    right:
+      label: "Il est à moi"
+      effects: {direction: "-", parole: -1, var: {saisie_vehicules: "+1", ville_amende: "+20000"}, set: [sp_perquisition, sp_nie]}
+      answer: "« Alors l'amende est à vous aussi. » Ils l'emportent quand même, et te laissent un reçu que tu ne sais pas lire."
+
+  - id: co.sp.inventaire
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Dimanche soir, sur ton palier, un commissaire en imperméable, deux agents et un chien : « On a le carnet de vos amis. Votre nom y est, avec une somme. Vous nous montrez la commode ? »"
+    left:
+      label: "Je vous montre tout"
+      effects: {direction: "-", parole: 1, var: {ville_amende: "+30000"}, set: [sp_perquisition]}
+      answer: "Tu ouvres chaque tiroir toi-même. Ils comptent les billets sur la table de la cuisine, deux fois, sans rien renverser."
+    right:
+      label: "Je n'ai rien chez moi"
+      effects: {direction: "--", parole: -1, var: {ville_amende: "+30000"}, set: [sp_perquisition, sp_nie]}
+      answer: "Le chien s'assoit devant la commode et ne bouge plus. Ils emportent tout, et tes relevés de banque des trois dernières années."
+
+  # ============================================== Le contrôle (événement)
+  - id: co.sp.controle_coupe
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Une heure du matin, quai sud, un gyrophare derrière le coupé rouge. Le gendarme en fait le tour, lentement : « Ce coupé appartient à une société du casino de Fontenaire. Elle sait que vous l'avez ? »"
+    left:
+      label: "On me l'a prêté"
+      effects: {direction: "-", parole: 1, var: {saisie_vehicules: "+1"}, set: [sp_controle]}
+      answer: "Le coupé part à la fourrière, et toi à pied. Le lendemain, l'homme du casino t'appelle pour savoir si le plein était fait."
+    right:
+      label: "Il est à moi"
+      effects: {tribunes: "-", parole: -1, var: {ville_amende: "+20000"}, set: [sp_controle, sp_nie]}
+      answer: "Il te laisse repartir avec une amende et un long regard. Dans ton rétroviseur, tu le vois noter ta plaque, deux fois."
+
+  - id: co.sp.controle
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Une heure du matin, quai sud. Un gyrophare dans ton rétroviseur. La lampe du gendarme s'arrête sur la boîte à gants ouverte : une enveloppe épaisse, que tu n'as jamais pensé à ranger ailleurs."
+    left:
+      label: "C'est une prime"
+      effects: {direction: "-", parole: -1, var: {ville_amende: "+15000"}, set: [sp_controle]}
+      answer: "Il compte les billets sur le capot, sous la pluie, et remplit un procès-verbal de deux pages. L'enveloppe part avec lui, sans reçu."
+    right:
+      label: "Je n'en sais rien"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1", ville_amende: "+15000"}, set: [sp_controle, sp_nie]}
+      answer: "La voiture part à la fourrière sur un plateau, l'enveloppe sous scellé. Tu rentres à pied par le quai sud ; L'Écho a la photo."
+
+  # ============================================== Quarante-huit heures (événement)
+  # Ils viennent au terrain annexe, à l'entraînement, devant tout le monde.
+  - id: co.sp.gav_alibi
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: terrain
+    tone: strategique
+    text: "Terrain annexe, dix heures. Deux inspecteurs traversent la pelouse en chaussures de ville : « La caméra du Rideau Rouge vous montre à la porte à deux heures, pas au carré. Vous avez menti pour qui ? »"
+    left:
+      label: "Je donne les noms"
+      effects: {tribunes: "-", direction: "-", parole: 1, set: [sp_garde_a_vue]}
+      answer: "Tu dis le nom du patron, l'heure, la voiture côté passager. L'inspecteur rembobine la cassette devant toi, jusqu'à ta silhouette."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {end: co_garde_a_vue}
+      answer: "Ils te font traverser le terrain devant les gars. Sur la banquette de leur voiture traîne un carton noir, un rideau rouge en relief."
+
+  - id: co.sp.gav_carnet
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: terrain
+    tone: strategique
+    text: "Terrain annexe, dix heures. Deux inspecteurs traversent la pelouse en chaussures de ville : « Un carnet saisi au Terminus. Votre nom y est, une somme, la date d'un match. On écoute, ou on garde ? »"
+    left:
+      label: "Je donne les noms"
+      effects: {tribunes: "-", direction: "-", parole: 1, set: [sp_garde_a_vue]}
+      answer: "Tu dis le Terminus, le tapis vert, l'enveloppe. L'inspecteur recopie la date du match : il la connaissait, il voulait l'entendre."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {end: co_garde_a_vue}
+      answer: "Ils te font traverser le terrain devant les gars. Dans le rétroviseur de leur voiture, un manteau clair traverse le parking sans se presser."
+
+  - id: co.sp.gav_photos
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: terrain
+    tone: strategique
+    text: "Terrain annexe, dix heures. Deux inspecteurs traversent la pelouse, une enveloppe de photos à la main : toi, au carré du Rideau Rouge. « Le patron nous les a données lui-même. Vous savez pourquoi ? »"
+    left:
+      label: "Je donne les noms"
+      effects: {tribunes: "-", direction: "-", parole: 1, set: [sp_garde_a_vue]}
+      answer: "Tu racontes les jeudis, l'affiche, le velours. L'inspecteur range les photos dans l'ordre des dates ; il en manque une, il le note."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {end: co_garde_a_vue}
+      answer: "Ils te font traverser le terrain devant les gars. Les photos restent sur le siège avant de leur voiture, face visible, pour la route."
+
+  - id: co.sp.gav
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: terrain
+    tone: strategique
+    text: "Terrain annexe, dix heures. Deux inspecteurs traversent la pelouse en chaussures de ville ; les gars s'arrêtent de courir. « Vous avez menti. Quarante-huit heures, ou quatre : ça dépend des noms. »"
+    left:
+      label: "Je donne les noms"
+      effects: {tribunes: "-", direction: "-", parole: 1, set: [sp_garde_a_vue]}
+      answer: "Quatre heures dans un bureau qui sent le café froid. Tu donnes les noms dans l'ordre ; l'inspecteur les épelle à voix haute en tapant."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {end: co_garde_a_vue}
+      answer: "Ils te font traverser le terrain devant les gars, sans te toucher. La garde à vue commence à dix heures douze ; l'inspecteur l'écrit."
+
+  - id: co.sp.gav_sortie
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [sombre, direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    text: "Minuit, la lampe du secrétariat est encore allumée. Madame Josiane t'attendait, ton manteau sur sa chaise : « Le président a écrit un communiqué. Je ne l'ai pas encore tapé. Je le tape ? »"
+    left:
+      label: "Tapez-le"
+      effects: {direction: "+", tribunes: "-", relation: {josiane: -1}}
+      answer: "Elle le tape devant toi, sans une faute. Trois lignes ; ton nom y est en entier, et le mot « suspendu » aussi."
+    right:
+      label: "Déchirez-le"
+      effects: {direction: "-", relation: {josiane: 1}}
+      answer: "Elle le plie en deux, puis en quatre, et le range dans son sac. « Il en écrira un autre. Pas ce soir. »"
+
+  # ============================================== La commission (événement)
+  - id: co.sp.commission_parle
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    text: "Berthomier a réservé le petit salon de l'hôtel de la Rive, ta déposition de police sous la main : « Vous avez donné des noms à l'inspecteur. Donnez-les-moi, signés. Ou vous signez pour vous. »"
+    left:
+      label: "Je signe pour eux"
+      effects: {direction: "-", tribunes: "-", parole: 1, relation: {legruet: 1}}
+      answer: "Il tamponne chaque page. Tu signes douze fois ; ta main tremble à la sixième, et il attend sans rien dire qu'elle s'arrête."
+    right:
+      label: "Je signe pour moi"
+      effects: {end: co_radiation}
+      answer: "Tu signes sans relire. Il tamponne deux fois, la seconde plus fort, et il te raccompagne jusqu'au hall, ce qu'il ne fait jamais."
+
+  - id: co.sp.commission_gigi
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    text: "Berthomier a réservé le petit salon de l'hôtel de la Rive : « Des mises de l'étranger sur votre match, toutes sur deux buts d'écart. Votre gardien a parlé de dettes. Vous niez, ou vous signez ? »"
+    left:
+      label: "Je nie tout"
+      effects: {direction: "-", parole: -1, relation: {legruet: -1}, set: [sp_commission]}
+      answer: "Il note « nie ». Il ne tamponne rien ; il range le dossier sur le dessus de la pile, et la pile sur le bord de la table."
+    right:
+      label: "Je signe"
+      effects: {end: co_radiation}
+      answer: "Tu signes sans relire. Il tamponne deux fois, la seconde plus fort, et il te raccompagne jusqu'au hall, ce qu'il ne fait jamais."
+
+  - id: co.sp.commission_jaune
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [sombre, scandale, arbitrage]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    text: "Berthomier, au petit salon de l'hôtel de la Rive, le rapport de l'arbitre ouvert : « Un carton jaune à la trente et unième, et des mises sur ce carton-là, à la minute. Vous niez, ou vous signez ? »"
+    left:
+      label: "Je nie tout"
+      effects: {direction: "-", parole: -1, relation: {legruet: -1}, set: [sp_commission]}
+      answer: "Il note « nie » en face de la minute. Il ne tamponne rien ; il range le rapport de l'arbitre sur le dessus de la pile."
+    right:
+      label: "Je signe"
+      effects: {end: co_radiation}
+      answer: "Tu signes sans relire. Il tamponne deux fois, la seconde plus fort, et il te raccompagne jusqu'au hall, ce qu'il ne fait jamais."
+
+  - id: co.sp.commission_labo
+    roles: [entraineur, joueur]
+    arc: direction
+    tags: [sombre, scandale, direction]
+    speaker: legruet
+    lieu: hotel
+    tone: strategique
+    text: "Berthomier, au petit salon de l'hôtel de la Rive, la liste du laboratoire sous la main : « Votre club, des ampoules sans notice, trois de vos joueurs au contrôle mardi. Vous niez, ou vous signez ? »"
+    left:
+      label: "Je nie tout"
+      effects: {direction: "-", parole: -1, relation: {legruet: -1}, set: [sp_commission]}
+      answer: "Il note « nie ». Mardi, au contrôle, les trois flacons partent au laboratoire fédéral, et ton nom part avec, sur le bordereau."
+    right:
+      label: "Je signe"
+      effects: {end: co_radiation}
+      answer: "Tu signes sans relire. Il tamponne deux fois, la seconde plus fort, et il te raccompagne jusqu'au hall, ce qu'il ne fait jamais."
+
+  # ============================================== Les photos du carré (événement)
+  - id: co.sp.chantage_montre
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: club_prive
+    tone: strategique
+    text: "Le Rideau Rouge, une heure du matin. Le patron étale six photos sur le velours : toi au carré, la montre au poignet, l'heure en bas à droite. « Je ne veux pas d'argent. Je veux tes jeudis. »"
+    left:
+      label: "Mes jeudis sont à vous"
+      effects: {tribunes: "-", parole: -1, var: {ville_francs_sales: "+10000"}, set: [sp_chantage]}
+      answer: "Il ramasse les photos et t'en rend une, la moins grave, « pour mémoire ». Le jeudi, une voiture t'attend en bas, moteur tournant."
+    right:
+      label: "Envoyez-les"
+      effects: {tribunes: "--", relation: {camille: -1}, set: [sp_chantage]}
+      answer: "Elles arrivent à la Gazette Rose le lundi. Le mardi, la boulangère te rend la monnaie sans te regarder, la page ouverte sous le comptoir."
+
+  - id: co.sp.chantage
+    roles: [entraineur, joueur]
+    arc: scandale
+    tags: [sombre, scandale, piege]
+    lieu: club_prive
+    tone: strategique
+    text: "Le Rideau Rouge, une heure du matin. Le patron étale six photos sur le velours : toi au carré, un verre que tu n'as pas bu à la main. « Je ne veux pas d'argent. Je veux tes jeudis. »"
+    left:
+      label: "Mes jeudis sont à vous"
+      effects: {tribunes: "-", parole: -1, var: {ville_francs_sales: "+10000"}, set: [sp_chantage]}
+      answer: "Il ramasse les photos et t'en rend une, la moins grave, « pour mémoire ». Le jeudi, une voiture t'attend en bas, moteur tournant."
+    right:
+      label: "Envoyez-les"
+      effects: {tribunes: "--", relation: {camille: -1}, set: [sp_chantage]}
+      answer: "Elles arrivent à la Gazette Rose le lundi. Le mardi, la boulangère te rend la monnaie sans te regarder, la page ouverte sous le comptoir."

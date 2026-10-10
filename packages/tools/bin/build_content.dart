@@ -516,6 +516,27 @@ void main() {
     endings.add(em);
     }
   }
+  // Une histoire ajoute ses lignes à une fin commune (la garde à vue…) sans
+  // toucher au fichier de cette fin : `epitaph_plus_ajouts:` dans son lot de
+  // fins, une liste de `{fin, when, text}`. Le `when` est obligatoire (il lit
+  // le drapeau de l'histoire) ; les ajouts passent après les variantes de la
+  // fin, et la règle des deux variantes ne compte que celles de la fin.
+  for (final entry in _docsOf('endings.yaml', 'endings', 'epitaph_plus_ajouts')) {
+    for (final v in entry.value) {
+      final vm = (v as Map).cast<String, dynamic>();
+      final fin = vm['fin']?.toString() ?? '';
+      final cible = endings.where((e) => e['id'] == fin).toList();
+      final where = '${entry.key}: epitaph_plus_ajouts/$fin';
+      if (cible.isEmpty) {
+        errors.add('$where: fin inconnue');
+        continue;
+      }
+      if (vm['when'] == null) errors.add('$where: un ajout porte un `when` (le drapeau de son histoire)');
+      final w = _parseWhen(vm['when'], errors, where);
+      if (vm['text'] == null) errors.add('$where: ajout sans `text`');
+      (cible.first['epitaph_plus'] as List).add({if (w != null) 'when': w, 'text': vm['text']?.toString() ?? ''});
+    }
+  }
   final feats = <Map<String, dynamic>>[];
   final featsFile = _loadYaml('feats.yaml');
   if (featsFile != null) {
@@ -565,9 +586,12 @@ void main() {
       }
       adresse[r] = m;
     });
+    // Les deux rôles d'origine sont exigés ; les rôles venus ensuite (directeur
+    // sportif, président, sélectionneur) prennent l'`adresse` de roles.yaml
+    // quand le personnage n'en a pas pour eux.
     if (adresse.isNotEmpty) {
-      for (final r in roleIdsGlobal) {
-        if (!adresse.containsKey(r)) errors.add('characters/$id/adresse: rôle « $r » manquant (l\'adresse couvre les deux rôles quand elle est présente)');
+      for (final r in const ['entraineur', 'joueur']) {
+        if (roleIdsGlobal.contains(r) && !adresse.containsKey(r)) errors.add('characters/$id/adresse: rôle « $r » manquant (l\'adresse couvre les deux rôles quand elle est présente)');
       }
     }
     cm['adresse'] = adresse;
@@ -953,17 +977,53 @@ void main() {
   const twoButtons = {'objective', 'match', 'gm_te', 'aftermatch', 'bilan_contrat', 'bilan_carrefour'};
   const withAnswers = {'objective', 'aftermatch', 'bilan_contrat'};
   final setpieces = <String, List<Map<String, dynamic>>>{};
+  // content/setpieces.yaml porte les secours ; content/setpieces/<lot>.yaml (un
+  // rôle, une histoire) ajoute des variantes — jamais de secours — que le build
+  // range avant le secours de chaque beat, dans l'ordre des noms de fichiers.
+  // Deux salles d'écriture peuvent ainsi écrire leurs set-pieces en même temps.
+  final setpiecesRaw = <String, List<MapEntry<String, Map<String, dynamic>>>>{};
   ((_loadYaml('setpieces.yaml') as Map?)?['setpieces'] as Map?)?.forEach((beatRaw, list) {
-    final beat = beatRaw.toString();
+    final l = (list as List?) ?? const [];
+    setpiecesRaw[beatRaw.toString()] = [for (var i = 0; i < l.length; i++) MapEntry('setpieces.yaml/$beatRaw[$i]', (l[i] as Map).cast<String, dynamic>())];
+  });
+  final dossierSp = Directory('$contentDir/setpieces');
+  if (dossierSp.existsSync()) {
+    final fichiers = dossierSp.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()..sort((a, b) => a.path.compareTo(b.path));
+    for (final f in fichiers) {
+      final nom = 'setpieces/${f.uri.pathSegments.last}';
+      final doc = _loadYaml(nom);
+      ((doc is Map ? doc['setpieces'] : null) as Map?)?.forEach((beatRaw, list) {
+        final beat = beatRaw.toString();
+        final l = (list as List?) ?? const [];
+        final cible = setpiecesRaw[beat] ??= [];
+        // avant le secours (le dernier de setpieces.yaml), s'il existe
+        final secours = cible.isNotEmpty && cible.last.value['when'] == null && _strList(cible.last.value['roles']).isEmpty && cible.last.value['transition'] == null;
+        final ajout = [
+          for (var i = 0; i < l.length; i++) MapEntry('$nom/$beat[$i]', (l[i] as Map).cast<String, dynamic>()),
+        ];
+        for (final e in ajout) {
+          if (e.value['when'] == null && _strList(e.value['roles']).isEmpty && e.value['transition'] == null) {
+            errors.add('${e.key}: un lot de set-pieces n\'écrit pas de secours (`roles` ou `when` obligatoire)');
+          }
+        }
+        if (secours) {
+          cible.insertAll(cible.length - 1, ajout);
+        } else {
+          cible.addAll(ajout);
+        }
+      });
+    }
+  }
+  setpiecesRaw.forEach((beat, entrees) {
     if (!kSetpieceBeats.contains(beat)) {
       errors.add('setpieces.yaml: beat « $beat » inconnu (${kSetpieceBeats.join(' | ')})');
       return;
     }
     final variants = <Map<String, dynamic>>[];
-    final raw = (list as List?) ?? const [];
+    final raw = entrees;
     for (int i = 0; i < raw.length; i++) {
-      final vm = (raw[i] as Map).cast<String, dynamic>();
-      final where = 'setpieces.yaml/$beat[$i]';
+      final vm = raw[i].value;
+      final where = raw[i].key;
       final w = _parseWhen(vm['when'], errors, '$where/when');
       final roles = _strList(vm['roles']);
       for (final r in roles) {
@@ -1441,8 +1501,10 @@ void main() {
     }
   }
 
-  // La ville (la version jouable) : content/ville.yaml.
-  final ville = _compileVille(errors, roleById, characterIds);
+  // La ville (la version jouable) : content/ville.yaml, puis content/ville/*.yaml
+  // (les paroles des gens, les missions, la boutique).
+  final ville = _compileVille(errors, roleById, characterIds,
+      endingIds: endingIdsSeen.keys.toSet(), arcIds: arcs.map((a) => a['id'].toString()).toSet(), cards: cards);
 
   final bundle = <String, dynamic>{
     'version': (_loadYaml('meta.yaml') as Map?)?['version'] ?? 1,
@@ -1574,10 +1636,41 @@ Map<String, dynamic> _loadPortraits(List<Map<String, dynamic>> characters, Set<S
 /// fait entre deux cartes. Le moteur n'en lit que `activites[].jauges`
 /// (`Engine.activite`) ; tout le reste est pour la coquille. Le fichier est
 /// facultatif : sans lui, pas de section `ville` dans le bundle.
-Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, dynamic>> roleById, Set<String> characterIds) {
+Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, dynamic>> roleById, Set<String> characterIds,
+    {Set<String> endingIds = const {}, Set<String> arcIds = const {}, List<Map<String, dynamic>> cards = const []}) {
   final raw = _loadYaml('ville.yaml');
   if (raw == null) return const {};
   final m = (raw as Map).cast<String, dynamic>();
+  // content/ville/*.yaml : chaque fichier apporte des `paroles`, des `missions`
+  // ou des `objets` ; les listes s'ajoutent, dans l'ordre des noms de fichiers.
+  final dossier = Directory('$contentDir/ville');
+  if (dossier.existsSync()) {
+    final fichiers = dossier.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()
+      ..sort((a, b) => a.path.compareTo(b.path));
+    for (final f in fichiers) {
+      final doc = _loadYaml('ville/${f.uri.pathSegments.last}');
+      if (doc is! Map) continue;
+      // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
+      // les tables se complètent (`rencontres` : où un personnage attend), sans
+      // écraser ce qui est déjà écrit
+      for (final cle in ['paroles', 'missions', 'objets', 'presences']) {
+        final l = doc[cle];
+        if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
+      }
+      final r = doc['rencontres'];
+      if (r is Map) {
+        final base = Map<dynamic, dynamic>.of((m['rencontres'] as Map?) ?? const {});
+        r.forEach((k, v) {
+          if (base.containsKey(k)) {
+            errors.add('ville/${f.uri.pathSegments.last}: rencontres/$k déjà écrite ailleurs');
+          } else {
+            base[k] = v;
+          }
+        });
+        m['rencontres'] = base;
+      }
+    }
+  }
   const tranches = {'matin', 'midi', 'aprem', 'soir', 'nuit'};
   const jours = {'lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'};
   final lieux = <Map<String, dynamic>>[];
@@ -1693,13 +1786,272 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     heures(a, out, where);
     activites.add(out);
   }
+  // --- la grammaire de la ville (champ `si`) : ET seulement, voir
+  // packages/tools/web/ville.js (`siVrai`) — les deux doivent rester d'accord.
+  final objetIds = <String>{for (final o in (m['objets'] as List? ?? const [])) if (o is Map) o['id'].toString()};
+  final missionIds = <String>{for (final o in (m['missions'] as List? ?? const [])) if (o is Map) o['id'].toString()};
+  const numeriques = {'rang', 'division', 'journee', 'serie_v', 'serie_d', 'pts', 'vestiaire', 'tribunes', 'direction', 'caisse',
+    'annee', 'saison', 'age', 'francs', 'energie', 'faim', 'semaine'};
+  final mots = {
+    'role': roleById.keys.toSet(),
+    'phase': {'presaison', 'aller', 'hiver', 'retour', 'sprint', 'bilan'},
+    'jour': jours,
+    'tranche': tranches,
+  };
+  final reNum = RegExp(r'^([a-z_]+(?:\.[a-z_]+)?)\s*(<=|>=|==|!=|<|>)\s*(-?\d+)$');
+  final reMot = RegExp(r'^([a-z_]+)\s*(==|!=)\s*([A-Za-z_]+)$');
+  final reAppel = RegExp(r'^(!?)(flag|arc|possede|mission)\(\s*([A-Za-z0-9_.]+)\s*\)$');
+  void si(Object? raw, String where) {
+    if (raw == null) return;
+    final txt = raw.toString().trim();
+    if (txt.isEmpty) return;
+    for (final t0 in txt.split('&&')) {
+      final t = t0.trim().replaceAll("'", '').replaceAll('"', '');
+      final a = reAppel.firstMatch(t);
+      if (a != null) {
+        final quoi = a[2]!, arg = a[3]!;
+        if (quoi == 'arc' && !arcIds.contains(arg)) errors.add('$where: si « $t » : intrigue inconnue');
+        if (quoi == 'possede' && !objetIds.contains(arg)) errors.add('$where: si « $t » : objet inconnu de la boutique');
+        if (quoi == 'mission' && !missionIds.contains(arg)) errors.add('$where: si « $t » : mission inconnue');
+        continue;
+      }
+      final n = reNum.firstMatch(t);
+      if (n != null) {
+        final nom = n[1]!;
+        if (nom.startsWith('relation.')) {
+          if (!characterIds.contains(nom.substring(9))) errors.add('$where: si « $t » : personnage inconnu');
+        } else if (!numeriques.contains(nom)) {
+          errors.add('$where: si « $t » : « $nom » n\'est pas une valeur de la ville (${numeriques.join(' ')} relation.<id>)');
+        }
+        continue;
+      }
+      final w = reMot.firstMatch(t);
+      if (w != null) {
+        final nom = w[1]!, val = w[3]!;
+        if (nom == 'lieu') {
+          if (!cles.contains(val)) errors.add('$where: si « $t » : lieu « $val » absent de `lieux`');
+        } else if (!mots.containsKey(nom)) {
+          errors.add('$where: si « $t » : « $nom » ne se compare pas à un mot');
+        } else if (!mots[nom]!.contains(val)) {
+          errors.add('$where: si « $t » : « $val » n\'est pas une valeur de $nom (${mots[nom]!.join(' ')})');
+        }
+        continue;
+      }
+      errors.add('$where: si « $t » : terme illisible (ET seulement ; voir content/ville.yaml)');
+    }
+  }
+  String txt(Map<dynamic, dynamic> e, String k, String where, int max, {bool requis = true}) {
+    final v = e[k]?.toString() ?? '';
+    if (requis && v.trim().isEmpty) errors.add('$where: `$k` vide');
+    if (v.length > max) errors.add('$where: `$k` de ${v.length} caractères (> $max)');
+    return v;
+  }
+  // Un effet de la ville, appliqué par le moteur (Engine.mission, Engine.biens).
+  Map<String, dynamic> effet(Object? raw, String where) {
+    if (raw == null) return const {};
+    if (raw is! Map) {
+      errors.add('$where: `effets` doit être une table');
+      return const {};
+    }
+    final out = <String, dynamic>{};
+    final j = <String, int>{};
+    ((raw['jauges'] as Map?) ?? const {}).forEach((k, v) {
+      final g = k.toString();
+      final known = roleById.values.expand((r) => ((r['gauges'] as List?) ?? const []).map((x) => (x as Map)['id'].toString())).toSet();
+      if (!known.contains(g)) errors.add('$where: jauge « $g » inconnue');
+      if (v is! int || v == 0 || v.abs() > 5) {
+        errors.add('$where: jauge $g : un entier non nul entre -5 et 5');
+      } else {
+        j[g] = v;
+      }
+    });
+    if (j.isNotEmpty) out['jauges'] = j;
+    for (final k in ['set', 'clear']) {
+      final l = _strList(raw[k]);
+      if (l.isNotEmpty) out[k] = l;
+    }
+    final vars = <String, String>{};
+    ((raw['var'] as Map?) ?? const {}).forEach((k, v) {
+      final nom = k.toString();
+      if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(nom)) errors.add('$where: var « $nom » : un nom en minuscules');
+      if (nom.startsWith('cadeau_') && !objetIds.contains(nom.substring(7))) errors.add('$where: var « $nom » : objet inconnu de la boutique');
+      vars[nom] = v.toString();
+    });
+    if (vars.isNotEmpty) out['var'] = vars;
+    final fin = raw['fin']?.toString();
+    if (fin != null) {
+      if (!endingIds.contains(fin)) errors.add('$where: fin « $fin » inconnue');
+      out['fin'] = fin;
+    }
+    return out;
+  }
+
+  // --- les paroles des gens
+  const quiAnonymes = {'passant', 'passante', 'enfant', 'fan', 'ancien', 'commercant'};
+  const sujets = {'match', 'classement', 'club', 'toi', 'argent', 'rumeur', 'quartier', 'epoque', 'sombre', 'sponsor', 'achat'};
+  final paroles = <Map<String, dynamic>>[];
+  var ip = 0;
+  for (final e in (m['paroles'] as List? ?? const [])) {
+    final where = 'ville/paroles[${ip++}]';
+    if (e is! Map) { errors.add('$where: une table attendue'); continue; }
+    final qui = e['qui']?.toString() ?? '';
+    if (!quiAnonymes.contains(qui) && !characterIds.contains(qui)) errors.add('$where: qui « $qui » inconnu (${quiAnonymes.join(' ')} ou un personnage)');
+    final sujet = e['sujet']?.toString() ?? '';
+    if (!sujets.contains(sujet)) errors.add('$where: sujet « $sujet » inconnu (${sujets.join(' ')})');
+    si(e['si'], where);
+    final texte = txt(e, 'texte', where, 160);
+    paroles.add({'qui': qui, 'sujet': sujet, if (e['si'] != null) 'si': e['si'].toString(), 'texte': texte});
+  }
+
+  // --- les missions
+  final missions = <Map<String, dynamic>>[];
+  final vusM = <String>{};
+  for (final e in (m['missions'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/missions/$id';
+    if (id.isEmpty || !vusM.add(id)) errors.add('$where: id vide ou en double');
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    txt(e, 'titre', where, 40);
+    final d = (e['donneur'] as Map?) ?? const {};
+    if (!cles.contains(d['lieu']?.toString())) errors.add('$where: donneur.lieu « ${d['lieu']} » absent de `lieux`');
+    for (final t in _strList(d['tranches'])) {
+      if (!tranches.contains(t)) errors.add('$where: donneur.tranches : « $t » inconnue');
+    }
+    if ((d['nom']?.toString() ?? '').isEmpty) errors.add('$where: donneur.nom vide');
+    si(e['si'], where);
+    final ch = e['chance'];
+    if (ch is! num || ch <= 0 || ch > 1) errors.add('$where: `chance` entre 0 et 1');
+    final etapes = (e['etapes'] as List? ?? const []).whereType<Map<dynamic, dynamic>>().toList();
+    if (etapes.isEmpty) errors.add('$where: aucune étape');
+    final idsE = <String>{for (final et in etapes) et['id'].toString()};
+    final outE = <Map<String, dynamic>>[];
+    for (final et in etapes) {
+      final eid = et['id'].toString();
+      final w2 = '$where/$eid';
+      txt(et, 'texte', w2, 200);
+      final obj = et['objectif'];
+      if (obj is Map) {
+        if (!cles.contains(obj['lieu']?.toString())) errors.add('$w2: objectif.lieu « ${obj['lieu']} » absent de `lieux`');
+        for (final t in _strList(obj['tranches'])) {
+          if (!tranches.contains(t)) errors.add('$w2: objectif.tranches : « $t » inconnue');
+        }
+        final delai = obj['delai'];
+        if (delai is! int || delai < 1 || delai > 14) errors.add('$w2: objectif.delai : un nombre de jours entre 1 et 14');
+      }
+      final choix = (et['choix'] as List? ?? const []).whereType<Map<dynamic, dynamic>>().toList();
+      if (choix.isEmpty) errors.add('$w2: aucun choix');
+      final outC = <Map<String, dynamic>>[];
+      for (final c in choix) {
+        final cid = c['id']?.toString() ?? '';
+        final w3 = '$w2/$cid';
+        if (cid.isEmpty) errors.add('$w3: choix sans id');
+        txt(c, 'label', w3, 28);
+        txt(c, 'reponse', w3, 140);
+        final suite = c['suite']?.toString() ?? 'fin';
+        if (suite != 'fin' && !idsE.contains(suite)) errors.add('$w3: suite « $suite » : ni une étape ni `fin`');
+        if (c['francs'] != null && c['francs'] is! int) errors.add('$w3: `francs` doit être un entier');
+        si(c['si'], w3);
+        outC.add({
+          'id': cid, 'label': c['label'].toString(), 'reponse': c['reponse'].toString(), 'suite': suite,
+          if (c['francs'] != null) 'francs': c['francs'],
+          if (c['sale'] == true) 'sale': true,
+          if (c['si'] != null) 'si': c['si'].toString(),
+          if (c['effets'] != null) 'effets': effet(c['effets'], w3),
+        });
+      }
+      final ec = et['echec'];
+      outE.add({
+        'id': eid, 'texte': et['texte'].toString(),
+        if (obj is Map) 'objectif': {'lieu': obj['lieu'].toString(), 'tranches': _strList(obj['tranches']), 'delai': obj['delai']},
+        'choix': outC,
+        if (ec is Map) 'echec': {'texte': txt(ec, 'texte', '$w2/echec', 200), if (ec['effets'] != null) 'effets': effet(ec['effets'], '$w2/echec')},
+      });
+    }
+    missions.add({
+      'id': id, 'titre': e['titre'].toString(),
+      if (roles.isNotEmpty) 'roles': roles,
+      'donneur': {'sprite': (d['sprite'] ?? 'inconnu').toString(), 'nom': d['nom'].toString(), 'lieu': d['lieu'].toString(), if (d['tranches'] != null) 'tranches': _strList(d['tranches'])},
+      if (e['si'] != null) 'si': e['si'].toString(),
+      'chance': ch, 'une_fois': e['une_fois'] != false,
+      'etapes': outE,
+    });
+  }
+
+  // --- la boutique
+  const categories = {'vetement', 'chaussures', 'montre', 'telephone', 'vehicule', 'logement', 'luxe', 'equipement', 'maison'};
+  final objets = <Map<String, dynamic>>[];
+  final vusO = <String>{};
+  for (final e in (m['objets'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/objets/$id';
+    if (id.isEmpty || !vusO.add(id) || !RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(id)) errors.add('$where: id vide, en double, ou pas en minuscules');
+    txt(e, 'nom', where, 32);
+    txt(e, 'texte', where, 200);
+    final cat = e['categorie']?.toString() ?? '';
+    if (!categories.contains(cat)) errors.add('$where: catégorie « $cat » inconnue (${categories.join(' ')})');
+    if (!cles.contains(e['lieu']?.toString())) errors.add('$where: lieu « ${e['lieu']} » absent de `lieux`');
+    final prix = e['prix'];
+    if (prix is! int || prix <= 0) errors.add('$where: `prix` : un entier positif (francs de 1990)');
+    final an = (e['annees'] as List?) ?? const [1990, 2050];
+    if (an.length != 2 || an[0] is! int || an[1] is! int || (an[0] as int) > (an[1] as int)) errors.add('$where: `annees` : [début, fin]');
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    si(e['si'], where);
+    final usage = (e['usage'] as Map?) ?? const {};
+    for (final k in usage.keys) {
+      if (!const {'vitesse', 'repos', 'faim', 'deplacement'}.contains(k.toString())) errors.add('$where: usage « $k » inconnu (vitesse repos faim deplacement)');
+    }
+    final log = e['logement'];
+    if (log is Map && (log['nom']?.toString() ?? '').isEmpty) errors.add('$where: logement.nom vide');
+    final rv = e['revente'];
+    if (rv != null && (rv is! num || rv < 0 || rv > 1)) errors.add('$where: `revente` entre 0 et 1');
+    objets.add({
+      'id': id, 'nom': e['nom'].toString(), 'categorie': cat, 'lieu': e['lieu'].toString(), 'prix': prix, 'annees': an,
+      if (roles.isNotEmpty) 'roles': roles,
+      if (e['si'] != null) 'si': e['si'].toString(),
+      'texte': e['texte'].toString(),
+      if (usage.isNotEmpty) 'usage': usage,
+      if (log is Map) 'logement': log,
+      if (e['effets'] != null) 'effets': effet(e['effets'], where),
+      if (e['luxe'] == true) 'luxe': true,
+      'revente': rv ?? 0.5,
+    });
+  }
+  // Un cadeau de carte (`var: {cadeau_<objet>: "+1"}`) doit nommer un objet de la boutique.
+  for (final c in cards) {
+    final dump = json.encode(c);
+    for (final mm in RegExp(r'"cadeau_([a-z0-9_]+)"').allMatches(dump)) {
+      if (!objetIds.contains(mm[1])) errors.add('${c['id']}: cadeau_${mm[1]} : objet inconnu de la boutique (content/ville/boutique.yaml)');
+    }
+  }
+
+  final ailleurs = <String, dynamic>{};
+  ((m['ailleurs'] as Map?) ?? const {}).forEach((k, v) {
+    final cle = k.toString();
+    if (v is! Map || (v['titre']?.toString() ?? '').isEmpty) {
+      errors.add('ville.yaml/ailleurs/$cle: une table {titre, sous}');
+      return;
+    }
+    ailleurs[cle] = {'titre': v['titre'].toString(), 'sous': v['sous']?.toString() ?? ''};
+  });
   return {
     'lieux': lieux,
     'cartes_lieux': cartesLieux,
+    if (ailleurs.isNotEmpty) 'ailleurs': ailleurs,
     'rencontres': rencontres,
     'beats': beats,
     'genres': genres,
     'presences': presences,
     'activites': activites,
+    if (paroles.isNotEmpty) 'paroles': paroles,
+    if (missions.isNotEmpty) 'missions': missions,
+    if (objets.isNotEmpty) 'objets': objets,
   };
 }

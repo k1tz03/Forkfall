@@ -28,3 +28,56 @@ roles:
         when: "age >= 32 || flag('genou')"
         label: "Le coach : « Tes jambes parlent, tu le sais. La réserve n'a pas d'entraîneur. Tu passes ton diplôme cet été ? »"
         answer: "Tu raccroches les crampons pour le survêtement."
+
+  # LES RÔLES DE BUREAU ET DE BANC NATIONAL (bible ch. 12, 13, 14 ; charte § 3.1).
+  # Les quatre jauges gardent leurs emplacements et leurs ids — VESTIAIRE (ceux
+  # avec qui tu travailles), TRIBUNES (le public), DIRECTION (ton patron),
+  # CAISSE (l'argent) : seuls les libellés et les fins changent. Ce qui est
+  # écrit pour une jauge (la ville, les Nouvelles, les set-pieces de secours)
+  # vaut donc pour tous les rôles. `adresse` : comment on t'appelle quand le
+  # locuteur n'a pas d'adresse pour ce rôle ; `retraite` : l'âge où la carrière
+  # s'arrête d'elle-même, et sa fin.
+  - id: ds
+    name: Directeur sportif
+    fragile: caisse
+    age: [36, 54]
+    posture: [Le 9, Le trader]
+    patron: aulard
+    adresse: "{prenom}"
+    retraite: {age: 78, fin: ta_loge}
+    gauges:
+      - {id: vestiaire, label: Le staff, icon: crampon, empty: ds_fronde, full: ds_copains}
+      - {id: tribunes, label: Tribunes, icon: echarpe, empty: ds_mercato_rate, full: ds_architecte}
+      - {id: direction, label: Le président, icon: fauteuil, empty: ds_commun_accord, full: ds_homme_president}
+      - {id: caisse, label: Masse salariale, icon: billets, empty: ds_contrats, full: ds_roi_mercato}
+    transitions: []
+
+  - id: president
+    name: Président
+    fragile: caisse
+    age: [44, 66]
+    posture: [Je descends au vestiaire, Je reste en loge]
+    patron: nassir
+    adresse: "président{pg, select, f{e} other{}}"
+    retraite: {age: 78, fin: ta_loge}
+    gauges:
+      - {id: vestiaire, label: Le club, icon: crampon, empty: pr_greve, full: pr_fantome}
+      - {id: tribunes, label: Tribunes, icon: echarpe, empty: pr_siege, full: pr_mairie}
+      - {id: direction, label: Actionnaires, icon: fauteuil, empty: pr_ag, full: pr_pantin}
+      - {id: caisse, label: Trésorerie, icon: billets, empty: pr_commission, full: pr_fonds}
+    transitions: []
+
+  - id: selectionneur
+    name: Sélectionneur
+    fragile: vestiaire
+    age: [44, 64]
+    posture: [Les cadres, Les jeunes]
+    patron: legruet
+    adresse: "coach"
+    retraite: {age: 78, fin: ta_loge}
+    gauges:
+      - {id: vestiaire, label: Le groupe, icon: crampon, empty: sl_clans, full: sl_fete}
+      - {id: tribunes, label: Le pays, icon: echarpe, empty: sl_ennemi_public, full: sl_ambassadeur}
+      - {id: direction, label: La Fédération, icon: fauteuil, empty: sl_minuit, full: sl_homme_president}
+      - {id: caisse, label: Les moyens, icon: billets, empty: sl_charters, full: sl_primes_cachees}
+    transitions: []

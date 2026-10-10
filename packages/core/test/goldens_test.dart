@@ -65,6 +65,13 @@
 ///   d'une Nouvelle (le tirage de l'événement n'a plus lieu à ces créneaux).
 ///   La ville (`Engine.activite`) ne tire rien et n'entre pas dans les Codes :
 ///   elle ne déplace aucun golden.
+/// · **La ville, deuxième lot, et les rôles de bureau.** Les missions, la
+///   boutique, les sponsors louches, les paroles des passants, et trois rôles
+///   branchés (directeur sportif, président, sélectionneur) avec six postulats
+///   en chantier. Aucune carrière figée ne bouge : les intrigues ajoutées ne
+///   s'arment que sur des drapeaux que pose la ville (`vl_*`, `bn_*`, `sp_*`),
+///   et les nouveaux rôles ont leurs postulats à eux. Seule l'empreinte du
+///   contenu change (`--goldens --write`, sans `--recode`).
 library;
 
 import 'dart:io';

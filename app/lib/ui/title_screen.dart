@@ -766,7 +766,7 @@ class _PochetteState extends State<_Pochette> with SingleTickerProviderStateMixi
 
   @override
   Widget build(BuildContext context) {
-    final coach = widget.def.role == 'entraineur';
+    final coach = widget.def.role != 'joueur';
     final label = 'Pochette ${widget.index + 1} : ${widget.def.title}';
     final bg = coach ? FusibleColors.board : FusibleColors.campTerrain;
     final def = widget.def;

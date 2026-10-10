@@ -1,0 +1,1196 @@
+# LES GENS D'AUBÉRIVE — ce que disent les anonymes quand on les touche en ville.
+#
+# Une réplique sert à quelque chose : elle donne une information (l'humeur du
+# quartier après une mauvaise passe, le classement vu du comptoir, une rumeur qui
+# annonce ou prolonge une intrigue, un conseil), ou elle fait exister la ville (un
+# détail concret du quartier). Pas de remplissage, pas de formule qui revient, pas
+# de sketch : docs/bible/charte_histoire.md fait loi ici comme dans les cartes.
+#
+#   qui   : passant | passante | enfant | fan | ancien | commercant
+#   sujet : match | classement | club | toi | argent | rumeur | quartier | epoque
+#           | sombre | sponsor | achat
+#   si    : la grammaire de la ville, ET seulement (voir content/ville.yaml et le
+#           compilateur) ; sans `si`, la réplique doit tenir en toute circonstance :
+#           toute année de 1990 à 2050, les deux rôles, toute heure, tout état.
+#   texte : 160 caractères au plus, ce que la personne dit, sans guillemets autour.
+#
+# Avant d'ajouter une ligne :
+# - serie_v / serie_d comptent des blocs de six matchs (quatre victoires, ou quatre
+#   défaites, au moins) et un bloc moyen ne les remet pas à zéro : on parle d'une
+#   tendance (« depuis trois semaines »), jamais du score exact de samedi.
+# - le rang provisoire vaut 1, 4, 5 à 17 ou 18 : « en haut », c'est rang <= 4, le
+#   bas du tableau 16 et plus ; il ne veut rien dire avant deux blocs (journee >= 12).
+#   La coquille écrit `{rang}` avec son ordinal (« 1er », « 16e ») : pas de « e » après.
+# - le joueur peut être une femme : aucun accord sur lui ou elle (ni « je t'ai vu »,
+#   ni « tu es venu »). Une passante s'accorde au féminin ; un enfant, un fan, un
+#   ancien ne s'accordent pas.
+# - qui circule quand (packages/tools/web/ville.js) : la nuit, seulement des passants
+#   et des passantes ; un commerçant ne parle que devant le lieu où la coquille le
+#   poste (`COMMERCES`), et son `lieu == ...` est ce lieu-là.
+# - un objet daté (Minitel, cassette, portable, écus, le Flux, la vidéo…) porte sa
+#   condition d'année ou le drapeau `monde_*` qui l'a fait entrer dans le monde.
+# - une rumeur lit une intrigue en cours (`arc(...)`) ou une trace (`flag(...)`) :
+#   la ville apprend ce qui t'arrive, souvent avant toi, parfois de travers.
+paroles:
+
+  # ════════════════════════════════════════════════════ PASSANTS ET PASSANTES
+
+  # — le match (la tendance, vue du trottoir)
+  - qui: passante
+    sujet: match
+    si: "serie_d >= 2"
+    texte: "Mon mari rentre du stade sans un mot depuis trois semaines. Il ne m'explique même plus le hors-jeu. C'est là que je m'inquiète."
+  - qui: passant
+    sujet: match
+    si: "serie_d >= 2 && role == entraineur"
+    texte: "Au café de la Mairie, un conseiller a dit qu'il faudrait « un électrochoc ». Ici, un électrochoc, c'est quelqu'un qu'on renvoie un lundi."
+  - qui: passant
+    sujet: match
+    si: "serie_d >= 2 && role == joueur"
+    texte: "Au café, ils disent qu'il faudrait « du sang neuf ». Du sang neuf, ça veut toujours dire que quelqu'un fait ses valises."
+  - qui: passante
+    sujet: match
+    si: "serie_d >= 3"
+    texte: "À la messe de dimanche, le curé de Saint-Aubin a demandé une prière pour le club. Personne n'a souri. On en est là."
+  - qui: passant
+    sujet: match
+    si: "serie_d >= 1 && tribunes < 40"
+    texte: "Au comptoir du Corner, on ne parle plus du match. On parle de toi, et plus bas quand la porte s'ouvre."
+  - qui: passante
+    sujet: match
+    si: "serie_d >= 1 && jour == dim"
+    texte: "Hier soir, quelqu'un a jeté son écharpe du haut du pont. Elle est restée accrochée à une branche, en bas du quai. Personne ne descend la chercher."
+  - qui: passant
+    sujet: match
+    si: "serie_v >= 2"
+    texte: "La boulangère a ressorti les fanions de sa vitrine. Elle les avait rangés avec les guirlandes de Noël, dans le même carton."
+  - qui: passant
+    sujet: match
+    si: "serie_v >= 1 && jour == dim"
+    texte: "Hier soir, ils chantaient encore sur le pont à minuit. Pour une fois, personne n'a appelé la police. Même pas la voisine du dessus."
+  - qui: passant
+    sujet: match
+    si: "serie_v >= 2 && role == joueur"
+    texte: "Le coiffeur de la rue du Marché a mis ta photo dans sa vitrine. Il dit que si ça tourne mal, il la retourne contre la vitre."
+  - qui: passant
+    sujet: match
+    si: "jour == sam && tranche == matin"
+    texte: "Quinze heures, c'est ça ? Je finis ma tournée de colis à deux heures. Je serai en Nord pour l'échauffement, en tenue de travail."
+
+  # — le classement
+  - qui: passant
+    sujet: classement
+    si: "rang == 1 && journee >= 12"
+    texte: "Premiers. Au café de la Mairie, ils ont découpé le classement de L'Écho et l'ont collé sur le miroir, au-dessus des bouteilles."
+  - qui: passante
+    sujet: classement
+    si: "rang <= 4 && division == 1 && journee >= 12"
+    texte: "Si ça tient jusqu'en mai, on joue la Coupe Continentale. Mon mari a déjà acheté une carte routière du continent. Il la déplie sur le lit."
+  - qui: passant
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "{rang}. Le kiosque du quai n'affiche plus le classement dans sa vitrine. Il a mis la météo à la place, c'est moins triste."
+  - qui: passante
+    sujet: classement
+    si: "rang == 18 && journee >= 12"
+    texte: "Derniers. Ma mère, qui ne connaît rien au football, m'a demandé si c'était grave. J'ai dit non. Elle a vu que je mentais."
+  - qui: passant
+    sujet: classement
+    si: "division == 2"
+    texte: "La {division}, c'est les déplacements en car et les terrains gras. Mon père y allait en train, avec un casse-croûte pour deux jours."
+  - qui: passante
+    sujet: classement
+    si: "phase == presaison"
+    texte: "Les abonnements sont en vente à la boutique du club, le mercredi et le samedi après-midi. Mon mari attend les premiers matchs. Il attend chaque année."
+  - qui: passante
+    sujet: classement
+    si: "phase == bilan"
+    texte: "La saison est finie. Le kiosquier range les écharpes dans un carton jusqu'en août, et il écrit l'année dessus, au feutre."
+  - qui: passant
+    sujet: classement
+    si: "phase == hiver"
+    texte: "La trêve. Le stade est fermé, les grilles cadenassées. On passe devant quand même, le samedi à quinze heures, par habitude."
+
+  # — le club et son argent
+  - qui: passante
+    sujet: argent
+    si: "caisse < 25"
+    texte: "Ma sœur fait le ménage au club-house. Ce mois-ci, sa paie est arrivée en deux fois, la deuxième en liquide, dans une enveloppe."
+  - qui: passant
+    sujet: club
+    si: "caisse < 20"
+    texte: "On dit que le club est à vendre. Un homme est venu mesurer la pelouse avec un décamètre, mardi. Il n'a parlé à personne."
+  - qui: passante
+    sujet: argent
+    si: "caisse > 75"
+    texte: "Le club a fait repeindre les grilles du guichet, deux couches. La dernière fois, c'était pour la visite d'un ministre."
+  - qui: passant
+    sujet: club
+    si: "direction < 25 && role == entraineur"
+    texte: "Le président déjeunait à la brasserie du Pont avec un homme en survêtement d'une autre couleur. Ils ont pris un dessert. Un dessert, c'est long."
+  - qui: passante
+    sujet: club
+    si: "direction < 25 && role == joueur"
+    texte: "Le président a montré ta fiche à un homme, au café de la Mairie. Il la pliait en quatre et la dépliait. Il cherche preneur, si tu veux mon avis."
+  - qui: passant
+    sujet: club
+    si: "direction > 80 && role == entraineur"
+    texte: "Le président dit du bien de toi à tout le monde, au café de la Mairie. Méfie-toi : il disait pareil de ton prédécesseur, en octobre."
+  - qui: passant
+    sujet: club
+    si: "vestiaire < 25"
+    texte: "Les joueurs ne mangent plus ensemble après l'entraînement. Le patron du Corner les voit arriver un par un, chacun à sa table."
+
+  # — toi
+  - qui: passant
+    sujet: toi
+    si: "tribunes > 75 && role == joueur"
+    texte: "Mon fils a voulu ton numéro sur son maillot d'anniversaire. Le flocage coûte plus cher que le maillot. J'ai payé quand même."
+  - qui: passant
+    sujet: toi
+    si: "tribunes < 25"
+    texte: "À ta place, je ne passerais pas par la rue du Stade le soir. Ce n'est pas une menace, c'est de la géographie."
+  - qui: passante
+    sujet: toi
+    si: "tribunes < 25"
+    texte: "Mon mari a craché par terre quand votre nom est passé à la radio. Lui qui ne crache jamais. Je vous le dis pour que vous sachiez."
+  - qui: passant
+    sujet: toi
+    si: "role == entraineur"
+    texte: "Pourquoi le petit gaucher ne joue jamais ? Tout le quartier se pose la question. Moi, je dis que vous savez des choses qu'on ne sait pas."
+  - qui: passant
+    sujet: toi
+    si: "role == joueur && tribunes > 50"
+    texte: "Il y avait une voiture de location devant le terrain annexe, mardi, plaque de la Capitale. Les recruteurs louent toujours ; ça se reconnaît."
+  - qui: passante
+    sujet: toi
+    si: "saison == 1"
+    texte: "C'est vous, au troisième, rue des Lilas ? La chaudière cogne, je sais. Tout l'immeuble l'entend depuis des années. On s'y fait."
+  - qui: passant
+    sujet: toi
+    si: "saison >= 4"
+    texte: "Tu dis « la Rive », maintenant, comme nous, sans dire « le stade de ». Ça fait des saisons que je l'entends. Tu es d'ici, ou presque."
+  - qui: passante
+    sujet: toi
+    si: "energie < 20"
+    texte: "Vous avez une mine de papier mâché. Rentrez dormir. Le pharmacien ne vend pas de sommeil, je lui ai déjà demandé."
+  - qui: passant
+    sujet: toi
+    si: "faim < 20 && tranche != soir && tranche != nuit"
+    texte: "Tu as mangé, aujourd'hui ? Tu as le teint des gars de nuit. La boulangerie fait des sandwichs jusqu'à une heure."
+  - qui: passant
+    sujet: toi
+    si: "relation.gege <= -2"
+    texte: "Gégé ne dit plus ton nom, à la buvette. Il dit « l'autre ». Quand Gégé dit « l'autre », les gens changent de trottoir."
+  - qui: passant
+    sujet: toi
+    si: "relation.meneche <= -2"
+    texte: "Massenet a dit au Corner qu'il garde quelque chose sur toi « pour le bon moment ». Il l'a dit assez fort pour que ça traverse la rue."
+  - qui: passante
+    sujet: toi
+    si: "relation.camille <= -2 && !flag(divorce)"
+    texte: "Camille s'assoit au bord du vieux lavoir, le soir, longtemps. Je la vois de ma fenêtre. Je ne sais pas si je devais vous le dire."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(divorce)"
+    texte: "Camille a pris le car de sept heures pour la Capitale, avec deux valises. La boulangère l'a vue. Maintenant, toute la rue le sait."
+
+  # — l'époque (un objet daté porte son année ou son drapeau de monde)
+  - qui: passant
+    sujet: epoque
+    si: "annee <= 1994"
+    texte: "Les résultats de la journée, je les ai sur le Minitel de ma belle-sœur. Elle me fait payer la minute en café, et elle compte."
+  - qui: passante
+    sujet: epoque
+    si: "annee <= 1996"
+    texte: "Le match passe sur la télé régionale à vingt-trois heures, trois minutes de résumé. Mon père l'enregistre sur cassette pour revoir les buts."
+  - qui: passante
+    sujet: epoque
+    si: "flag(monde_cobalts_1990) && annee <= 1991"
+    texte: "La Coupe d'été perdue au point de penalty… Tout le bar s'est assis d'un coup. Mon fils avait six ans ; il s'en souviendra toute sa vie."
+  - qui: passant
+    sujet: epoque
+    si: "annee >= 1998 && annee <= 2006"
+    texte: "Mon fils a un portable. Il reçoit le score à la mi-temps, par message, et il me le lit à table comme une dépêche."
+  - qui: passante
+    sujet: epoque
+    si: "flag(monde_ecus) && annee <= 2005"
+    texte: "Deux écus le demi au Corner. Je refais le calcul en francs à chaque fois, et à chaque fois je repose le verre."
+  - qui: passante
+    sujet: epoque
+    si: "flag(monde_titre_2002)"
+    texte: "Les Cobalts ont gagné, là-bas. Mon mari a klaxonné jusqu'à quatre heures du matin sur le pont. Il n'avait jamais klaxonné de sa vie."
+  - qui: passant
+    sujet: epoque
+    si: "flag(monde_flux) && annee >= 2008"
+    texte: "Ma fille lit ce qu'on dit de toi sur le Flux, le soir, à voix haute. Il y a des choses que je n'aurais jamais osé crier au stade."
+  - qui: passante
+    sujet: epoque
+    si: "flag(monde_video)"
+    texte: "Maintenant, quand on marque, on attend trois minutes avant de crier. Mon mari crie quand même, et il se rassoit quand ils annulent."
+  - qui: passant
+    sujet: epoque
+    si: "annee >= 2035"
+    texte: "On ne paie plus rien en liquide au stade. La buvette a gardé sa boîte en fer pour les pièces, au cas où. Elle est vide, et elle reste."
+  - qui: passant
+    sujet: epoque
+    si: "flag(monde_franchises)"
+    texte: "La première division est fermée, c'est voté. Fermée comme une boîte : ceux qui sont dehors y restent, ceux qui sont dedans ne risquent plus rien."
+
+  # — le quartier
+  - qui: passante
+    sujet: quartier
+    texte: "La péniche, La Belle Aube, n'a pas bougé du quai depuis trois ans. Le marinier dit qu'il attend une crue. Moi, je crois qu'il attend quelqu'un."
+  - qui: passant
+    sujet: quartier
+    texte: "Le car de sept heures cinq pour la Capitale part du quai 3. Si on le rate, le suivant, c'est demain. On ne le rate pas deux fois."
+  - qui: passante
+    sujet: quartier
+    texte: "Le vieux lavoir de la rue haute, ça résonne sous le toit : on y entend tout ce qui se dit sur la place. Faites attention à ce que vous y dites."
+  - qui: passant
+    sujet: quartier
+    texte: "À Saint-Aubin, il y a toujours un cierge allumé pour le club. Personne ne sait qui le paie. Le curé jure que ce n'est pas lui."
+  - qui: passant
+    sujet: quartier
+    texte: "La friche de l'usine, on y jouait, gamins, entre les bobines de fil de fer. Maintenant on n'y envoie plus les gamins. On n'y envoie plus personne."
+  - qui: passante
+    sujet: quartier
+    texte: "La laverie de la rue du Stade ferme à vingt-deux heures. Après, il ne reste que le néon, et ceux qui n'ont pas de machine chez eux."
+  - qui: passant
+    sujet: quartier
+    texte: "Les biscuits Dornois, « depuis 1921 », sur le pignon du square. Ma grand-mère y emballait des sablés, rue des Tanneurs. Ça sentait le beurre jusqu'au pont."
+  - qui: passant
+    sujet: quartier
+    si: "jour == dim && tranche == matin"
+    texte: "Le dimanche matin, au marché, les maraîchers vous rendent le score avant la monnaie. Et leur avis avec, gratuit."
+  - qui: passante
+    sujet: quartier
+    si: "jour == dim && serie_d >= 1"
+    texte: "Au marché, ce matin, on parlait du temps qu'il fait. Quand on gagne, on ne parle jamais du temps."
+  - qui: passante
+    sujet: quartier
+    si: "annee <= 2010"
+    texte: "Le vidéo-club ferme à vingt heures, mais si on frappe, il rouvre. Il a les matchs de 1974 en cassette, sous le comptoir, pour les habitués."
+  - qui: passante
+    sujet: quartier
+    si: "jour == mer && tranche == aprem"
+    texte: "Le mercredi, les mères attendent devant le préfabriqué du centre de formation. Elles ne se parlent pas. Elles comptent les places."
+
+  # — la nuit
+  - qui: passant
+    sujet: sombre
+    si: "tranche == nuit"
+    texte: "À cette heure-ci, évitez la friche. Il y a un feu de palettes, des types autour, et ils se taisent quand on approche. Ils ont leurs raisons."
+  - qui: passante
+    sujet: sombre
+    si: "tranche == nuit"
+    texte: "Je rentre du service de nuit à la clinique. Ne traînez pas : deux sacs arrachés rue du Stade cette semaine, et pas un témoin."
+  - qui: passant
+    sujet: sombre
+    si: "tranche == nuit"
+    texte: "L'arrière-salle du Terminus est allumée. Quand elle est allumée, il y a de grosses voitures d'ailleurs garées devant la gare routière."
+  - qui: passante
+    sujet: sombre
+    si: "tranche == nuit"
+    texte: "Le wagon au bout de la voie de l'usine, quelqu'un y dort. Un gamin, je crois, avec un sac de sport du club. Je n'ai rien dit à personne."
+  - qui: passant
+    sujet: sombre
+    si: "tranche == nuit && jour == ven && role == joueur"
+    texte: "Tu joues demain et tu traînes dehors à cette heure ? Si quelqu'un te prend en photo, ce sera en page trois lundi. Rentre."
+  - qui: passant
+    sujet: sombre
+    si: "tranche == nuit && jour == ven && role == entraineur"
+    texte: "Ton gardien était au Corner il y a une heure. Il buvait de l'eau, mais il était au Corner, la veille d'un match."
+  - qui: passant
+    sujet: sombre
+    si: "tranche == nuit && tribunes < 30"
+    texte: "Ne rentre pas par la rue des Lilas ce soir. Il y a des écharpes sous le réverbère de la boulangerie, et elles n'attendent pas le pain."
+
+  # — les rumeurs : la ville suit l'histoire (intrigues en cours, traces posées)
+  - qui: passant
+    sujet: rumeur
+    si: "arc(en.salaires_retard)"
+    texte: "Le 5, au distributeur du centre commercial, il y avait trois joueurs à la file. Ils sont repartis sans billets, sans se regarder."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(salaires_avances)"
+    texte: "On dit que vous avez avancé la paie des joueurs de votre poche. C'est la banque qui l'a raconté, avant le président. La banque raconte tout."
+  - qui: passant
+    sujet: rumeur
+    si: "arc(en.nassir_proprietaire)"
+    texte: "Il y a un homme à l'hôtel de la Rive qui commande du thé à minuit et laisse des pourboires en billets neufs. Le portier dit qu'il veut le club."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(en.prodige)"
+    texte: "Le petit Mbako… Une voiture qui n'est pas d'ici l'attend chaque mercredi devant le centre. Sa mère la chasse avec son cabas."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(mbako_vendu)"
+    texte: "Ils ont vendu le petit Mbako. Sa mère a baissé le rideau de sa boutique deux jours, sans un mot sur la vitre. Le troisième, elle a rouvert plus tôt."
+  - qui: passant
+    sujet: rumeur
+    si: "arc(en.espion_haie)"
+    texte: "Il y a un type en casquette derrière les thuyas du terrain annexe, tous les matins. Il ne promène pas de chien. Dans le quartier, tout le monde a un chien."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(en.enveloppe)"
+    texte: "Fardelli, l'agent, déjeunait au café de la Mairie avec un homme qui ne mangeait pas. Il est reparti sans son journal. Le journal était épais."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(enveloppe_rival)"
+    texte: "Trois joueurs de {rival} ont marché tout le match. Mon cousin habite là-bas : il dit que chez eux, on parle d'argent. Et de nous."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(en.fils_aulard)"
+    texte: "Le fils du président s'entraîne avec les pros, à trente-quatre ans. Ses crampons sont neufs. C'est tout ce qu'on dit de lui, et c'est assez."
+  - qui: passant
+    sujet: rumeur
+    si: "arc(en.adjoint_dine)"
+    texte: "Ton adjoint dînait mardi à la brasserie du Pont. Deux couverts, l'addition à son nom. L'autre couvert, ce n'était pas toi."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(en.commission_discipline)"
+    texte: "Vous passez devant la commission, à ce qu'on lit. Salle 3, à la Capitale : mon cousin y est allé en 1987. On attend jusqu'à midi, il dit."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(pari_promu)"
+    texte: "Quelqu'un a misé sur le titre à cinq mille contre un, au tabac du Quai. Le patron jure que c'est quelqu'un du club. Il te regarde en le disant."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(en.dossier_meneche)"
+    texte: "Le stagiaire de L'Écho a vu une chemise cartonnée à votre nom sur le bureau de Massenet. Une seule feuille dedans. Le stagiaire parle trop."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(subvention_perdue)"
+    texte: "La mairie a rogné la subvention du club. Le radiateur du club-house tousse, on l'entend du trottoir. Madame Josiane travaille en manteau."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(kop_hostile)"
+    texte: "Samedi, la Nord a chanté le nom de l'ancien pendant vingt minutes. Ma fille avait honte. Moi aussi, mais j'ai chanté."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(lettre_publiee)"
+    texte: "La lettre anonyme dans L'Écho, avec la faute à « arrangé »… Au café, ils font écrire le mot aux clients sur un sous-bock, pour comparer."
+  - qui: passant
+    sujet: rumeur
+    si: "arc(en.grand_nom)"
+    texte: "Le président cherche un grand nom pour janvier, il l'a dit à son coiffeur. Dire quelque chose au coiffeur, ici, c'est le dire à la ville."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(ancien_rival)"
+    texte: "L'ancien entraîneur a signé chez {rival}. Il dit dans les journaux qu'il connaît nos vestiaires par cœur. Il connaît surtout la serrure."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(rappele_par_aulard)"
+    texte: "Un renvoi le lundi, un rappel le mercredi… La boulangère dit que vous avez pris votre pain les deux jours, comme si de rien n'était."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(fede_dossier)"
+    texte: "La Fédération a ouvert un dossier à votre nom. C'était dans L'Écho, page sept, sous la météo. Les gens lisent toujours la météo."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(gerard_parti)"
+    texte: "Gérard est parti au soleil avec la caisse de la buvette. Vingt ans de bénévolat. La boîte en fer, il l'a laissée sur le comptoir, vide."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(tribune_fermee)"
+    texte: "La Nord fermée par arrêté. Samedi, les gars ont suivi le match depuis le talus de la voie ferrée, avec des jumelles et une radio."
+  - qui: passant
+    sujet: rumeur
+    si: "arc(jp.pari)"
+    texte: "Au Terminus, il y a des gars qui parient sur les corners, maintenant. Pas sur le score : sur les corners. Ça ne se devine pas, les corners."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(pari_double)"
+    texte: "Un gars du Terminus a gagné gros sur les corners de samedi. Il paie des tournées et ne dit pas comment il savait. Il te salue, quand tu passes."
+  - qui: passante
+    sujet: match
+    si: "flag(derby_gagne)"
+    texte: "Le derby gagné… Mon père en parlera jusqu'à Noël. Il l'a déjà raconté trois fois, et il n'était pas au stade."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(international)"
+    texte: "Ta convocation chez les Cobalts, la boulangère l'a découpée dans le journal et collée à côté des croissants. Elle n'a jamais fait ça pour personne."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(memoires_verite)"
+    texte: "Ton livre est en vitrine de la librairie. Le chapitre trois, tout le quartier l'a lu debout, sans l'acheter. Le libraire a fini par mettre une chaise."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(consultant)"
+    texte: "Tu étais à la télé, dimanche soir, à côté du chroniqueur. Tu as dit du mal du latéral gauche. Il habite ma rue ; il a fermé ses volets."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(coach_critique)"
+    texte: "Ce que tu as dit du coach, dans le journal… Au Corner, ils l'ont relu à voix haute en imitant sa voix. Le coach boit au Terminus, maintenant."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(co.mbako_rival)"
+    texte: "Le petit Mbako, seize ans, a déjà ton poste dans la bouche de tout le marché. Les gens aiment les débuts. Ils oublient vite la suite."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(offshore)"
+    texte: "Une société aux îles, avec ton nom dedans, c'est ce que dit L'Écho. Nous autres, on paie nos impôts en février, et on râle en mars."
+  - qui: passante
+    sujet: rumeur
+    si: "flag(petition_portee)"
+    texte: "Vingt-deux joueurs ont signé pour que tu restes. Le gardien a signé deux fois, à ce qu'il paraît. La photocopie a fait le tour du quartier."
+  - qui: passante
+    sujet: rumeur
+    si: "arc(jp.jubile)"
+    texte: "L'affiche de ton jubilé est chez le coiffeur. La date est écrite au feutre, pour pouvoir l'effacer."
+
+  # — les événements sombres, une fois tombés : la ville en parle
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_manif)"
+    texte: "Trois cents écharpes sous les fenêtres de la mairie, et une banderole avec votre nom. Je l'ai vue de mon balcon. Je ne suis pas descendue."
+  - qui: passant
+    sujet: sombre
+    si: "flag(sb_manif_parle)"
+    texte: "Tu as descendu les marches de la mairie pour leur parler, à la manif. Ça, ils ne l'ont pas oublié. Même ceux qui criaient le plus fort."
+  - qui: passant
+    sujet: sombre
+    si: "flag(sb_cercueil)"
+    texte: "Le cercueil devant la grille, avec ton nom dessus… Ma petite l'a vu en allant à l'école. Elle m'a demandé qui était mort. Je n'ai pas su répondre."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_buvette_fermee)"
+    texte: "La buvette des anciens, fermée par la préfecture. Les vieux boivent leur café au Terminus, debout, et ils ont horreur de boire debout."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_terrain_brule)"
+    texte: "HONTE, brûlé dans la pelouse de l'annexe. Les jardiniers de la mairie ont tout retourné avant midi. On voit encore le carré de terre fraîche."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_lettre)"
+    texte: "Une lettre pour le petit, avec des mots découpés dans L'Écho. Le kiosquier dit qu'un homme lui achète trois exemplaires chaque samedi. Il le guette."
+  - qui: passant
+    sujet: sombre
+    si: "flag(sb_corbeau)"
+    texte: "Trois lettres anonymes : la mairie, le président, le journal. Au café de la Mairie, on joue à deviner qui écrit. Tout le monde a une idée, et tort."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_laverie_lue)"
+    texte: "L'homme au blouson gris, celui de la laverie, je l'ai revu à la gare routière. Il prend le car de Valdorne, celui de huit heures quinze."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_laverie_3)"
+    texte: "Le compte de Valdorne, le beau-frère du président… À la brasserie du Pont, on n'en parle qu'à voix basse, et on en parle tout le temps."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_huissier)"
+    texte: "L'huissier a pris la machine à laver du club. Les joueurs rapportent leurs maillots sales chez eux dans des sacs de supermarché. Ça fait peine."
+  - qui: passant
+    sujet: sombre
+    si: "flag(sb_greve)"
+    texte: "Les joueurs ont refusé de s'entraîner. Ils ont fait le tour du terrain au pas, en silence, comme derrière un corbillard. On regardait depuis la haie."
+  - qui: passante
+    sujet: sombre
+    si: "flag(sb_car)"
+    texte: "Le car du club dans le fossé, sous la neige… Norbert ne conduira plus. Il vient quand même à la gare routière, le matin, regarder partir les autres."
+  - qui: passant
+    sujet: sombre
+    si: "flag(sb_disparu)"
+    texte: "Dembo traîne à la friche avec des types qui comptent sur leurs doigts. Ces comptes-là finissent toujours de la même façon."
+  - qui: passant
+    sujet: sombre
+    si: "flag(sb_agression)"
+    texte: "Ceux de {rival} t'attendaient rue des Lilas, paraît-il. Depuis, des gars de la Nord font les cent pas sous ton immeuble, le soir. Pour toi."
+
+  # — sponsors : les costumes, les cadeaux, ceux qui veulent quelque chose
+  - qui: passant
+    sujet: sponsor
+    si: "tranche == soir"
+    texte: "Des costumes qui ne sont pas d'ici entrent au Rideau Rouge trois soirs de suite. Ils demandent ton nom aux chauffeurs de taxi. Les taxis répondent."
+  - qui: passante
+    sujet: sponsor
+    si: "role == joueur && tribunes > 60"
+    texte: "Un homme en costume m'a demandé où vous habitiez. Il avait un paquet doré. Je lui ai indiqué la mauvaise rue. Il reviendra par la bonne."
+  - qui: passant
+    sujet: sponsor
+    si: "tranche == nuit"
+    texte: "Au Rideau Rouge, la porte n'a pas de poignée. On frappe, un homme ouvre, et le lendemain tout le monde sait qui a frappé. Sauf la police."
+  - qui: passant
+    sujet: sponsor
+    si: "flag(nassir_pret)"
+    texte: "Le prêt du fonds n'a pas de date de retour, dit mon beau-frère, qui est à la banque. Ma banque à moi ne prête pas comme ça. Elle a des dates."
+
+  # — ce qu'on achète, ce qu'on fait pour d'autres ou avec d'autres : la rue le voit
+  - qui: passant
+    sujet: achat
+    si: "possede(coupe_sport)"
+    texte: "Ton coupé rouge, garé de travers devant la boulangerie… Les gamins tournent autour comme autour d'un gâteau. Les pères aussi, mais de plus loin."
+  - qui: passante
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Une montre en or à votre poignet… Ma mère disait qu'une montre en or, ça se porte sous la manche, le temps que les gens s'habituent."
+  - qui: passant
+    sujet: achat
+    si: "possede(villa)"
+    texte: "La villa sur les hauteurs, c'est la tienne ? Le facteur dit qu'il faut sonner trois fois au portail. Rue des Lilas, une fois suffisait."
+  - qui: passant
+    sujet: achat
+    si: "possede(helico)"
+    texte: "Ton hélicoptère est passé au-dessus du marché, dimanche. Les maraîchers ont tenu leurs bâches à deux mains et regardé en l'air longtemps."
+  - qui: passant
+    sujet: achat
+    si: "possede(duplex_trefilerie)"
+    texte: "Tu habites la Tréfilerie, maintenant, dans un duplex. Mon père y a laissé deux doigts, à l'atelier 3. Sans reproche : c'était là, c'est tout."
+  - qui: passant
+    sujet: rumeur
+    si: "flag(bn_fisc)"
+    texte: "Le contrôle fiscal chez toi, ça s'est su par le facteur. Il a monté trois recommandés dans la semaine. Il sait compter, le facteur."
+  - qui: passante
+    sujet: sponsor
+    si: "arc(en.sp.dornois)"
+    texte: "La biscuiterie Dornois voudrait ta photo sur sa boîte de Noël. Rue des Tanneurs, les ouvrières l'ont su avant toi."
+  - qui: passant
+    sujet: sponsor
+    si: "arc(en.sp.labo)"
+    texte: "Un car marqué d'un triangle bleu se gare devant le cabinet du Doc, le jeudi. Il repart plus léger. Le chauffeur ne descend jamais."
+  - qui: passant
+    sujet: sponsor
+    si: "arc(en.sp.terrain)"
+    texte: "La grande suite de l'hôtel de la Rive reste allumée tard. Le garçon d'étage parle d'une maquette sur la table basse, avec notre terrain annexe dessus."
+  - qui: passante
+    sujet: sponsor
+    si: "arc(co.sp.rideau)"
+    texte: "Fardelli a laissé un carton noir à ton nom sur le zinc du Corner. Le patron l'a rangé sous la caisse, comme une lettre d'huissier."
+  - qui: passant
+    sujet: sombre
+    si: "flag(vl_dette_tripot)"
+    texte: "Ton nom est sur l'ardoise de l'arrière-salle, à la craie, sous trois noms barrés. Les trois autres, je les connaissais. Je dis bien : connaissais."
+  - qui: passant
+    sujet: sombre
+    si: "flag(vl_colis_lache)"
+    texte: "Des types de la friche ont demandé ton adresse au Terminus. Le patron a dit qu'il ne savait pas. Il sait, et eux savent qu'il sait."
+  - qui: passante
+    sujet: sombre
+    si: "flag(vl_perquisition)"
+    texte: "Six heures du matin, des voitures sans sigle devant chez vous. La voisine du dessus a tout vu, en robe de chambre. Toute la rue l'a su avant midi."
+
+  - qui: passante
+    sujet: club
+    si: "phase == retour"
+    texte: "Pour la phase retour, mon mari a recopié le calendrier sur la porte du frigo. Il coche les matchs qu'il ne faut pas perdre. Il les a tous cochés."
+  # ═══════════════════════════════════════════════════════════════════ ENFANTS
+  - qui: enfant
+    sujet: toi
+    texte: "Tu me signes mon cahier de textes ? Pas sur la couverture, ma mère regarde la couverture. Signe à la page des devoirs de maths."
+  - qui: enfant
+    sujet: toi
+    texte: "Mon père dit que tu ne resteras pas. Il dit ça de tout le monde. Il a raison presque à chaque fois."
+  - qui: enfant
+    sujet: quartier
+    texte: "Notre ballon est crevé. Le gardien du stade en a plein son local, mais il dit qu'ils sont comptés. Toi, tu peux en sortir un ?"
+  - qui: enfant
+    sujet: club
+    texte: "Je veux entrer au centre de formation. Il faut un certificat du docteur, une photo, et que ma mère signe. Ma mère ne veut pas signer."
+  - qui: enfant
+    sujet: club
+    texte: "Le gardien du stade nous laisse entrer par la porte des livreurs, le lundi. Il dit qu'on ne doit marcher que sur les lignes blanches."
+  - qui: enfant
+    sujet: toi
+    si: "role == joueur"
+    texte: "Je fais ta célébration dans la cour, les bras en avion. La maîtresse m'a confisqué le ballon. Ça valait le coup quand même."
+  - qui: enfant
+    sujet: toi
+    si: "role == joueur"
+    texte: "{nom} ! Signe sur mon plâtre, à côté du docteur. Je me suis cassé le bras en essayant ta reprise de volée, contre le mur de l'école."
+  - qui: enfant
+    sujet: toi
+    si: "role == entraineur && vestiaire < 40"
+    texte: "Au square, je fais l'entraîneur : je crie et je montre avec le bras. Personne ne m'écoute. Papa dit que c'est pareil chez toi."
+  - qui: enfant
+    sujet: toi
+    si: "role == entraineur && saison == 1"
+    texte: "C'est toi qui remplaces l'autre ? Papa dit que tu ne connais même pas encore le nom des rues."
+  - qui: enfant
+    sujet: club
+    si: "phase == presaison"
+    texte: "Les essais du centre, c'est le mercredi après-midi. Si je suis pris, je dors là-bas, dans le préfabriqué. Douze lits. J'ai compté par la fenêtre."
+  - qui: enfant
+    sujet: match
+    si: "serie_d >= 2"
+    texte: "Les CM2 disent que ton équipe est nulle. Je ne réponds plus : la dernière fois, j'ai copié cent lignes."
+  - qui: enfant
+    sujet: match
+    si: "serie_v >= 2"
+    texte: "On gagne ! À la cantine, on a chanté le chant de la Nord en tapant les cuillères sur les plateaux. La dame de service a chanté aussi."
+  - qui: enfant
+    sujet: match
+    si: "jour == dim && serie_v >= 1"
+    texte: "Hier, j'étais en Nord, sur les épaules de mon oncle. Je n'ai rien vu du but, mais j'ai tout entendu."
+  - qui: enfant
+    sujet: match
+    si: "jour == sam && tranche == matin"
+    texte: "C'est à quinze heures, le match ? Mon parrain a un billet. Moi, je passe sous le tourniquet ; le contrôleur fait exprès de regarder ailleurs."
+  - qui: enfant
+    sujet: classement
+    si: "rang == 1 && journee >= 12"
+    texte: "On est premiers, c'est écrit dans le journal de mon père. Je l'ai découpé avant qu'il le lise. Il a crié, puis il l'a punaisé."
+  - qui: enfant
+    sujet: toi
+    si: "tribunes < 25"
+    texte: "Ma mère dit qu'il ne faut plus parler de toi à la maison. Alors j'en parle dehors."
+  - qui: enfant
+    sujet: toi
+    si: "tribunes > 75"
+    texte: "J'ai écrit ton nom sur ma trousse, au feutre. Le maître a dit que c'était de la dégradation. Lui, il a ton nom sur sa voiture."
+  - qui: enfant
+    sujet: toi
+    si: "role == joueur && tribunes < 40"
+    texte: "Mon grand frère a jeté ton poster. Je l'ai repris dans la poubelle et je l'ai mis sous mon lit. Faut pas le dire."
+  - qui: enfant
+    sujet: toi
+    si: "energie < 25"
+    texte: "T'as des cernes comme ma mère quand elle fait les nuits. Tu devrais dormir. Elle dit toujours ça, et elle ne dort jamais."
+  - qui: enfant
+    sujet: epoque
+    si: "annee <= 1999"
+    texte: "J'échange deux vignettes de toi contre une de {rival}, c'est le tarif de la cour. Ce n'est pas moi qui décide, c'est la cour."
+  - qui: enfant
+    sujet: epoque
+    si: "annee >= 2010"
+    texte: "J'ai une vidéo de toi avec le téléphone de ma sœur. Tu te grattes le nez. Je ne l'ai pas mise sur le Flux. Pas encore."
+  - qui: enfant
+    sujet: quartier
+    texte: "Le soir, quand ma mère croit que je dors, je regarde le feu de la friche depuis le toit du garage. Il y a des gens qui crient, des fois."
+  - qui: enfant
+    sujet: quartier
+    si: "jour == mer && tranche == aprem"
+    texte: "Le mercredi, le centre de formation est ouvert. On regarde les grands par le grillage. Si tu passes, dis au monsieur de nous laisser entrer."
+  - qui: enfant
+    sujet: quartier
+    si: "phase == hiver"
+    texte: "Le terrain annexe a gelé. On glisse dessus jusqu'au poteau de corner. Lulu crie, mais il crie en souriant."
+  - qui: enfant
+    sujet: club
+    si: "flag(mbako_lance)"
+    texte: "Mbako, il a seize ans et il joue en pro. J'en ai dix. Il me reste six ans, c'est beaucoup ou pas beaucoup ?"
+  - qui: enfant
+    sujet: club
+    si: "flag(mbako_vendu)"
+    texte: "Le petit Mbako est parti. Au centre, ils ont enlevé sa photo du couloir, mais la punaise est restée. On touche la punaise avant les matchs."
+  - qui: enfant
+    sujet: rumeur
+    si: "arc(jp.tifo)"
+    texte: "Mon père peint ton nom sur la bâche, le soir, à la halle. Il m'a laissé faire le bord d'une lettre. La troisième. Regarde bien samedi."
+  - qui: enfant
+    sujet: sombre
+    si: "flag(sb_cercueil)"
+    texte: "On est passés devant le cercueil, avec l'école. La maîtresse nous a fait traverser de l'autre côté. Il y avait ton nom en grand."
+  - qui: enfant
+    sujet: sombre
+    si: "flag(sb_voiture)"
+    texte: "C'est ta voiture, celle avec le mot à la bombe ? Les grands l'ont lu en détachant les syllabes. Moi, je ne savais pas ce que ça voulait dire."
+  - qui: enfant
+    sujet: sombre
+    si: "flag(sb_lettre)"
+    texte: "Le petit Mbako, des gens lui écrivent des méchancetés. À l'école, quelqu'un a dit le mot. La maîtresse l'a fait sortir et elle a claqué la porte."
+
+  - qui: enfant
+    sujet: toi
+    texte: "C'est quoi, ton poste préféré ? Moi, je suis gardien, parce que personne ne veut l'être. Lulu, au stade, dit que c'est comme ça qu'on commence."
+  - qui: enfant
+    sujet: achat
+    si: "possede(montre_or)"
+    texte: "Elle est en vrai or, ta montre ? Mon frère dit que les vraies ne font pas de bruit. Fais-moi écouter."
+  - qui: enfant
+    sujet: rumeur
+    si: "flag(vl_gamin)"
+    texte: "Le Chat est au centre de formation ! Il garde les buts en crampons trop grands. Il dit que c'est grâce à toi. Depuis, tout le square veut garder les buts."
+
+  # ════════════════════════════════════════════════════════ LES SUPPORTERS
+  - qui: fan
+    sujet: club
+    texte: "Le chant de la Nord a sept couplets. Le cinquième, on ne le chante qu'en déplacement, jamais à la Rive. Les gamins ne le connaissent pas encore."
+  - qui: fan
+    sujet: club
+    texte: "Les cars des déplacements partent de la gare routière, quai 2, à six heures. Ceux qui sont en retard suivent en voiture. Personne n'est en retard."
+  - qui: fan
+    sujet: quartier
+    texte: "Le mur « ALLEZ LES AUBES », au carrefour du stade, on le repeint chaque août, même quand personne ne l'a effacé. La peinture coule toujours."
+  - qui: fan
+    sujet: club
+    si: "annee <= 2035"
+    texte: "Au local, sous la Nord, il y a un filet à oranges plein de ballons, un par victoire à l'extérieur. Il est loin d'être plein. On compte quand même."
+  - qui: fan
+    sujet: club
+    si: "annee <= 2030"
+    texte: "Gégé tient le mur des dates, au local : chaque promesse du club, à la craie, avec le jour et la somme. Celles qui n'ont pas été tenues, plus gros."
+  - qui: fan
+    sujet: club
+    si: "annee <= 2030"
+    texte: "Le père de Gégé a été interdit de stade en soixante et onze, pour un dessin. Sa chaise est toujours au local. Personne ne s'y assoit."
+  - qui: fan
+    sujet: match
+    si: "serie_d >= 2"
+    texte: "La semaine prochaine, on ne chante pas les vingt premières minutes. C'est voté. Tu entendras le silence, et tu sauras pour qui il est."
+  - qui: fan
+    sujet: match
+    si: "serie_d >= 3"
+    texte: "Au local, on a sorti la vieille banderole, celle qu'on ne déroule que quand ça va mal. Elle est roulée sur la table. Pas encore dépliée."
+  - qui: fan
+    sujet: match
+    si: "serie_d >= 1 && tribunes < 35"
+    texte: "Samedi, si ça recommence, on tourne le dos au terrain à la mi-temps. Pas de cris, pas de fumigènes. Juste nos dos. C'est pire, tu verras."
+  - qui: fan
+    sujet: match
+    si: "jour == sam && tranche == soir && serie_v >= 1"
+    texte: "Ce soir, la buvette ferme quand on le décide, et on a décidé : pas avant deux heures. Passe, on t'offre le premier."
+  - qui: fan
+    sujet: classement
+    si: "rang >= 16 && journee >= 12"
+    texte: "En bas du tableau, la Nord chante plus fort. C'est comme ça, ici : on chante quand ça coule. Ceux d'en face ne comprennent jamais."
+  - qui: fan
+    sujet: club
+    si: "phase == bilan && rang >= 16"
+    texte: "C'est fini, et mal. Cet été, on repeint le local et on prépare la suite. Ici, on ne quitte pas un club parce qu'il tombe."
+  - qui: fan
+    sujet: club
+    si: "vestiaire < 25"
+    texte: "L'équipe ne salue plus la Nord à la fin. Ils rentrent au vestiaire tête basse, un par un. On a vu. D'en haut, on voit tout."
+  - qui: fan
+    sujet: argent
+    si: "caisse < 25"
+    texte: "Le club ne paie plus nos cars pour les déplacements. On fait la quête à la buvette, avec la boîte en fer. On partira quand même, en voitures."
+  - qui: fan
+    sujet: toi
+    si: "role == entraineur"
+    texte: "Le virage veut voir des gars qui mouillent le maillot. Tes tableaux, tes plots, on s'en fiche. Fais-les courir, et on chantera."
+  - qui: fan
+    sujet: toi
+    si: "role == joueur"
+    texte: "Quand tu viens saluer la Nord après le match, viens jusqu'au grillage. Pas au milieu du terrain : au grillage. On sait faire la différence."
+  - qui: fan
+    sujet: toi
+    si: "tribunes > 60 && tribunes <= 80"
+    texte: "On a un chant pour toi, sur l'air de l'ancien : « {nom}, {nom}… » La suite, on te la chantera quand tu l'auras méritée."
+  - qui: fan
+    sujet: toi
+    si: "tribunes > 80"
+    texte: "Ton nom, on le chante à la soixantième, maintenant. Avant, la soixantième, c'était pour le père de Gégé. Tu mesures ?"
+  - qui: fan
+    sujet: toi
+    si: "tribunes < 20"
+    texte: "Si tu passes devant la buvette ce soir, ne t'arrête pas. Ce n'est pas moi qui le dis. Moi, je te préviens, c'est tout."
+  - qui: fan
+    sujet: toi
+    si: "relation.gege >= 2"
+    texte: "La table du fond du local, personne ne s'y assoit sans invitation. Gégé a dit que tu avais la tienne. Il l'a dit devant tout le monde."
+  - qui: fan
+    sujet: toi
+    si: "relation.gege <= -2"
+    texte: "Gégé a effacé ton nom du mur du local, à l'éponge, devant nous. Il n'efface jamais rien, Gégé. Pour toi, il a fait une exception."
+  - qui: fan
+    sujet: toi
+    si: "flag(ami_ultras)"
+    texte: "On dit au club-house que tu es trop proche de nous. Le président ne vient plus à la buvette ; toi, si. On a remarqué les deux."
+  - qui: fan
+    sujet: sombre
+    si: "tranche == soir"
+    texte: "La nuit, ceux de {rival} viennent coller leurs autocollants sur nos murs. On les attend derrière la buvette. Rentre : ce n'est pas ta guerre."
+  - qui: fan
+    sujet: epoque
+    si: "flag(monde_tout_assis) && annee <= 1996"
+    texte: "Ils veulent nous asseoir. Des sièges dans la Nord ! On a prévenu la mairie : le jour où ils les visseront, on les dévissera. On a nos tournevis."
+  - qui: fan
+    sujet: epoque
+    si: "flag(monde_tout_assis) && annee >= 1997 && annee <= 2040"
+    texte: "Les sièges de la Nord, on monte dessus depuis le premier jour. Les stadiers ne disent rien : leurs pères étaient debout à côté des nôtres."
+  - qui: fan
+    sujet: epoque
+    si: "flag(monde_buvette_anciens)"
+    texte: "La buvette des anciens a rouvert, le dimanche matin. Les verres de 1962, la bière à un écu. Viens un dimanche, on te montrera la photo."
+  - qui: fan
+    sujet: epoque
+    si: "flag(monde_vecchio_mort)"
+    texte: "Gigi Vecchio est mort. Samedi, la minute de silence a duré deux minutes. Personne n'a demandé la deuxième, elle est venue toute seule."
+  - qui: fan
+    sujet: epoque
+    si: "flag(monde_debout_revenu)"
+    texte: "Les places debout sont revenues, avec des barres. On a dévissé le dernier siège de la Nord nous-mêmes. Il est au local, sur une étagère."
+  - qui: fan
+    sujet: rumeur
+    si: "arc(co.derby)"
+    texte: "Le derby contre {rival} : on a peint quarante mètres de bâche au local. Si tu marques, ton nom est déjà prêt, dans un coin, à la peinture fraîche."
+  - qui: fan
+    sujet: match
+    si: "flag(derby_perdu)"
+    texte: "Le derby perdu, on l'a dans le ventre. Ceux de {rival} ont accroché une de nos écharpes à leur grille, à l'envers. On ira la chercher."
+  - qui: fan
+    sujet: match
+    si: "flag(derby_gagne) && annee <= 2030"
+    texte: "Le derby, on l'a ! Gégé a pleuré dans l'escalier de la Nord. Personne n'a rien vu, tout le monde a vu. On en reparlera dans vingt ans."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(onze_du_virage)"
+    texte: "Le onze du virage, on l'a voté au local, à main levée. Tu l'as presque fait jouer. Presque : c'est le mot qu'on a écrit au mur."
+  - qui: fan
+    sujet: rumeur
+    si: "arc(en.kop_qui_aime_trop)"
+    texte: "La Nord est derrière toi. Alors on voudrait un peu plus : des cars payés, une place au conseil, le nom de l'ailier. Tu nous dois bien ça."
+  - qui: fan
+    sujet: rumeur
+    si: "arc(en.kop_doute)"
+    texte: "La moitié de la Nord chante encore le nom de l'ancien. L'autre attend. Gagne deux matchs, on chantera le tien. Perds, on chantera le sien plus fort."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(pacte_gege)"
+    texte: "Tu as un pacte avec Gégé, à ce qu'on raconte au local. Gégé, quand il serre une main, il note la date au mur. Il l'a notée."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(enfant_du_pays)"
+    texte: "Vingt mètres de bâche avec ton nom, et ta promesse dessous, en plus petit. On la déroule à chaque match. On sait lire, tu sais."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(bache_a_la_cave)"
+    texte: "La bâche à ton nom est partie dans ta cave, à ce qu'il paraît. Nous, on en a peint une autre. Sans nom, cette fois."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(blason_embrasse)"
+    texte: "Tu as embrassé le blason devant la Nord. On a la photo. Le jour où tu pars, on la ressort, en grand, sur une bâche."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(jubile_fait) && annee <= 2030"
+    texte: "Ton jubilé, le stade plein, le tour d'honneur… Gégé a dit que c'était le plus beau depuis soixante-quatorze. Il ne dit jamais ça."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(club_actif)"
+    texte: "Le club appartient à un fonds. La Nord, non. On l'a écrit sur une banderole, pour qu'ils sachent faire la différence."
+  - qui: fan
+    sujet: sombre
+    si: "flag(sb_manif)"
+    texte: "La manif, c'était trois cents écharpes. La prochaine, ce sera mille. On ne crie pas, on est là. C'est ça qui leur fait peur, à la mairie."
+  - qui: fan
+    sujet: sombre
+    si: "flag(sb_envahissement)"
+    texte: "Le gars qui a sauté la grille, c'est un des nôtres. Interdit de stade. On a noué son écharpe sur la rambarde, à sa place, tous les samedis."
+  - qui: fan
+    sujet: sombre
+    si: "flag(sb_huis_clos)"
+    texte: "Le huis clos, on l'a suivi depuis le talus, avec une radio. Quand on a marqué, on a crié si fort que l'arbitre s'est retourné. Il nous a entendus."
+  - qui: fan
+    sujet: sombre
+    si: "flag(sb_local_brule)"
+    texte: "Le local a brûlé. La bâche du père de Gégé est noire sur un bord. On a tout repeint, sauf ce bord-là. On le garde comme ça."
+  - qui: fan
+    sujet: sombre
+    si: "flag(sb_bagarre)"
+    texte: "La bagarre de la buvette, ça vient d'une vieille histoire entre deux bandes. Rien à voir avec toi. Enfin, un peu. Tout a un peu à voir avec toi."
+  - qui: fan
+    sujet: sombre
+    si: "flag(sb_police_appelee)"
+    texte: "Tu as appelé la police sur des gars de la Nord. Au local, on a écrit ton nom au mur, à côté de celui du commissaire de 1983. Ce n'est pas un honneur."
+  - qui: fan
+    sujet: sponsor
+    si: "flag(boucher_sponsor)"
+    texte: "Le nom de Dupuis le boucher sur nos dos, cousu de travers. Il a offert les merguez à la buvette ; on lui pardonne le nom. Pas les coutures."
+  - qui: fan
+    sujet: sponsor
+    si: "flag(nassir_sponsor)"
+    texte: "Le fonds sur le maillot, l'hôtel de la Rive plein de costumes… On veut bien leur argent. Leurs têtes, pas en Nord."
+
+  - qui: fan
+    sujet: club
+    si: "phase == retour"
+    texte: "Au retour, on va chez ceux qui nous ont battus à l'aller. On a la liste au local, avec les scores à la craie. Ça occupe le car."
+  - qui: fan
+    sujet: achat
+    si: "possede(coupe_sport) && serie_d >= 1"
+    texte: "Un coupé rouge à ce prix-là, quand on perd… Les gars de la Nord ont noté ta plaque. Je dis ça pour la carrosserie."
+  - qui: fan
+    sujet: achat
+    si: "possede(villa) && tribunes < 40"
+    texte: "Tu as quitté la rue des Lilas pour les hauteurs. La Nord connaît aussi la nouvelle adresse. Elle connaît toutes les adresses."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(vl_corner)"
+    texte: "Lulu a retrouvé son chien. Il raconte à tout le monde que c'est grâce à toi, puis il jure qu'il n'a rien dit."
+  - qui: fan
+    sujet: rumeur
+    si: "flag(vl_billets)"
+    texte: "Vingt gars de la Nord sont entrés avec des places payées cinq fois le prix. Le stadier de la porte B jure qu'il n'a rien vu. Il le jure à qui veut l'entendre."
+  - qui: fan
+    sujet: sombre
+    si: "flag(vl_gege_donne)"
+    texte: "Tu as donné le nom de Gégé. À la buvette, ton verre est retourné sur le comptoir. Chez nous, un verre retourné, ça ne se redresse pas."
+
+  # ═════════════════════════════════════════════════════════════════ ANCIENS
+  - qui: ancien
+    sujet: club
+    texte: "Le caveau du Racing, au fond à gauche : les présidents, deux capitaines, un soigneur. Le soigneur a la plus belle plaque. Il l'a payée lui-même."
+  - qui: ancien
+    sujet: quartier
+    texte: "Au monument aux morts, mon oncle est sur la plaque de quarante, et sur la photo de l'équipe de trente-huit. La gerbe aux couleurs du club, c'est pour lui aussi."
+  - qui: ancien
+    sujet: club
+    texte: "La Tréfilerie payait la moitié des joueurs, avant, à ne rien faire à l'atelier 3. Le club appelait ça un partenariat. L'usine appelait ça autrement."
+  - qui: ancien
+    sujet: sponsor
+    texte: "Le premier sponsor du club, c'était la boucherie de la place. Il payait en entrecôtes, à la buvette. Aujourd'hui, je ne sais plus qui nous paie, ni en quoi."
+  - qui: ancien
+    sujet: club
+    si: "annee <= 2035"
+    texte: "En soixante-deux, l'équipe travaillait à l'usine la semaine. Le samedi, ils jouaient les mains noires. La photo est à la brasserie du Pont : regardez les mains."
+  - qui: ancien
+    sujet: club
+    si: "annee <= 2035"
+    texte: "La photo de soixante-quatorze, dans l'escalier du club-house : treize joueurs, douze noms. Le treizième, c'est mon frère. Il n'avait pas de licence."
+  - qui: ancien
+    sujet: match
+    si: "annee <= 2010"
+    texte: "Mon premier match ici, c'était en quarante-sept, sur les épaules de mon père. On a perdu quatre à zéro. J'étais là le samedi suivant, et tous les autres."
+  - qui: ancien
+    sujet: quartier
+    si: "annee <= 2015"
+    texte: "La crue de cinquante et un, l'eau est montée jusqu'à la barre transversale. On a joué le match suivant sur la place du marché, avec des cageots pour buts."
+  - qui: ancien
+    sujet: match
+    si: "serie_d >= 2 && annee <= 2035"
+    texte: "En soixante-dix-huit, neuf défaites d'affilée. Le président a vendu sa voiture pour payer les primes. On a gagné le dixième. Faites-en ce que vous voulez."
+  - qui: ancien
+    sujet: match
+    si: "serie_v >= 2 && annee <= 2035"
+    texte: "Ça me rappelle soixante-quatorze. Ne vous emballez pas : en soixante-quatorze, on a fini quatrièmes, et le club a failli disparaître l'été d'après."
+  - qui: ancien
+    sujet: club
+    si: "caisse < 25 && annee <= 2035"
+    texte: "Le club a déjà été à vendre, en quatre-vingt-un. Un marchand de bestiaux l'a repris pour un franc symbolique. Il a tenu deux saisons."
+  - qui: ancien
+    sujet: club
+    si: "flag(club_actif)"
+    texte: "Le club appartient à des gens qui ne sont jamais venus à la Rive. En quatre-vingt-un, le marchand de bestiaux, au moins, venait au marché."
+  - qui: ancien
+    sujet: toi
+    si: "role == entraineur && annee <= 2000"
+    texte: "Depuis cinquante-deux, onze personnes se sont assises sur ce banc. Trois ont une rue à leur nom. Les autres, une ligne dans L'Écho."
+  - qui: ancien
+    sujet: toi
+    si: "role == joueur && annee <= 2030"
+    texte: "Le numéro que tu portes, un ailier le portait en soixante-deux. Il est mort il y a peu. Porte-le bien : sa veuve regarde les matchs."
+  - qui: ancien
+    sujet: toi
+    si: "tribunes < 30 && annee <= 2035"
+    texte: "Ils sifflaient aussi le grand ailier de soixante-deux. Il a fini avec une rue à son nom, derrière la gare routière. Courte, la rue, mais elle existe."
+  - qui: ancien
+    sujet: toi
+    si: "tribunes > 75 && annee <= 2035"
+    texte: "Méfiez-vous, quand une ville vous aime trop. En soixante-quinze, on a porté l'entraîneur en triomphe sur le pont. En septembre, on l'a jeté dans la Rive."
+  - qui: ancien
+    sujet: toi
+    si: "saison == 1"
+    texte: "Vous ne connaissez pas encore la Rive. Le vent tourne à la mi-temps, à cause du pont. Les anciens choisissaient de jouer la seconde période dos au vent."
+  - qui: ancien
+    sujet: toi
+    si: "saison >= 8"
+    texte: "Je me souviens de votre premier samedi ici. Vous regardiez la Nord comme on regarde la mer. Maintenant, c'est elle qui vous regarde."
+  - qui: ancien
+    sujet: epoque
+    si: "annee <= 1995"
+    texte: "Avant, on était trois mille debout dans la Nord, épaule contre épaule. Quand on marquait, on descendait de deux marches sans le vouloir."
+  - qui: ancien
+    sujet: epoque
+    si: "flag(monde_libre_1993)"
+    texte: "Maintenant, un joueur part pour rien à la fin de son contrat. De mon temps, on appartenait au club jusqu'à trente-cinq ans, comme une chaise."
+  - qui: ancien
+    sujet: epoque
+    si: "flag(monde_trois_points)"
+    texte: "Trois points la victoire. De mon temps, un nul à l'extérieur, c'était une fête. Maintenant, c'est presque une défaite. Le football a appris à compter."
+  - qui: ancien
+    sujet: epoque
+    si: "flag(monde_josiane_retraite)"
+    texte: "Madame Josiane a rangé son bureau, trente-cinq ans après. Sa nièce a pris la suite. Paraît qu'elle range le journal dessus, et la tante dessous."
+  - qui: ancien
+    sujet: epoque
+    si: "annee >= 2032"
+    texte: "Dans les années quatre-vingt-dix, la Nord tenait debout sur du béton fendu et sur Gégé. Le béton, on l'a refait. Gégé, on ne le refera pas."
+  - qui: ancien
+    sujet: epoque
+    si: "annee >= 2040"
+    texte: "Gamin, je payais ma place en écus, et je râlais déjà. Maintenant on ne voit plus l'argent passer, et on râle pareil. Ça, ça n'a pas changé."
+  - qui: ancien
+    sujet: rumeur
+    si: "arc(en.vieux_gardien)"
+    texte: "Gigi Vecchio annonce sa retraite chaque juin. Moi, j'ai annoncé la mienne en soixante-dix-neuf, et j'ai tenu. Lui a raison de ne pas tenir."
+  - qui: ancien
+    sujet: rumeur
+    si: "flag(naming_signe)"
+    texte: "Ils vont donner le nom d'un fonds au stade. Les marches de la Nord, c'est mon père qui les a coulées, en cinquante-six. Je l'appellerai comme je veux."
+  - qui: ancien
+    sujet: sombre
+    si: "tranche == soir"
+    texte: "À mon âge, on ne dort plus. Je vois passer des voitures sans phares vers la friche, la nuit. Je note les plaques dans un carnet. Personne ne me le demande."
+  - qui: ancien
+    sujet: sombre
+    si: "flag(sb_ancien)"
+    texte: "Sorbier, je l'ai connu trésorier, avec ses cahiers à spirale. Onze ans de centrale pour un compte qui n'était pas le sien. Méfiez-vous de ceux qui l'ont mis là."
+  - qui: ancien
+    sujet: sombre
+    si: "flag(sb_mort_tribune)"
+    texte: "Marcel avait la place à côté de la mienne depuis soixante-neuf, rangée H. Je garde son coussin dans mon sac. Je ne sais pas pour qui."
+  - qui: ancien
+    sujet: sombre
+    si: "flag(sb_perquisition)"
+    texte: "Les cartons du président dans l'escalier, à six heures… J'ai vu la même chose en quatre-vingt-un. Le même escalier. Pas les mêmes cartons."
+
+  - qui: ancien
+    sujet: club
+    si: "phase == aller"
+    texte: "En septembre, tout le monde est premier dans sa tête. On en reparle en mars, quand les jambes auront parlé."
+  - qui: ancien
+    sujet: achat
+    si: "possede(helico) && annee <= 2015"
+    texte: "Un hélicoptère. Le seul qu'on ait vu ici, c'était pour la crue de cinquante et un. Il venait chercher les gens sur les toits."
+  - qui: ancien
+    sujet: rumeur
+    si: "flag(vl_veuve)"
+    texte: "Madame Dutheil a retrouvé la place sept, en tribune d'honneur. À la septième minute, la Nord se lève. Je sais qui a fait ça. Je ne le dirai pas."
+  - qui: ancien
+    sujet: rumeur
+    si: "arc(en.sp.gigi)"
+    texte: "Gigi Vecchio passe ses soirées dans l'arrière-salle du Terminus, à ce qu'on dit. Un gardien qui joue aux cartes, c'est un gardien qui compte mal."
+
+  # ═══════════════════════════════════════════════════════════ COMMERÇANTS
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == boulangerie_residentiel"
+    texte: "La baguette pas trop cuite, je vous la garde sous le comptoir. Et le score, dites-le-moi avant mes clientes, sinon ce sont elles qui me le disent."
+  - qui: commercant
+    sujet: match
+    si: "lieu == boulangerie_residentiel && serie_d >= 2"
+    texte: "Je ne mets plus le fanion du club dans la vitrine. Ce n'est pas contre vous : les clients me parlent du match au lieu de choisir leur pain."
+  - qui: commercant
+    sujet: sombre
+    si: "lieu == boulangerie_residentiel && flag(sb_devant_chez_toi)"
+    texte: "Les cinq de l'autre nuit, j'en connais deux : ils m'achètent des croissants le dimanche. Je leur ai rendu la monnaie en pièces jaunes. Ils ont compris."
+  - qui: commercant
+    sujet: argent
+    si: "lieu == terminus"
+    texte: "Ici, on boit debout et on parle peu. Mais l'arrière-salle a des oreilles. Si on vous y invite un soir, demandez qui paie avant de vous asseoir."
+  - qui: commercant
+    sujet: rumeur
+    si: "lieu == terminus && serie_d >= 2 && !flag(monde_ecus)"
+    texte: "Les chauffeurs de car parient sur la date de ton départ, au comptoir. J'ai mis vingt francs contre. Ce n'est pas de l'amour, c'est de la contradiction."
+  - qui: commercant
+    sujet: toi
+    si: "lieu == pharmacie"
+    texte: "Je connais le nom de tous les joueurs du club, et ce qu'ils prennent pour dormir. Ne me demandez rien, je ne dirai rien. Vous, je n'en sais encore rien."
+  - qui: commercant
+    sujet: sombre
+    si: "lieu == pharmacie && flag(sb_dopage)"
+    texte: "Un homme m'a demandé un produit pour les chevaux, sans ordonnance, en survêtement neuf. J'ai dit non, et j'ai noté l'heure. Vous voulez l'heure ?"
+  - qui: commercant
+    sujet: rumeur
+    si: "lieu == pharmacie && arc(co.pharmacie)"
+    texte: "Le club ne me commande plus rien depuis l'automne. Ni bandes ni vitamines. Alors je me demande ce qu'il y a dans leur armoire, et qui la remplit."
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == kiosque"
+    texte: "L'Écho, je vous le plie à la page des sports. Tout le monde lit les sports d'abord, même ceux qui jurent que non."
+  - qui: commercant
+    sujet: sombre
+    si: "lieu == kiosque && flag(sb_photos)"
+    texte: "La Gazette Rose avec ta photo, je l'ai vendue en une matinée. J'aurais pu ne pas la mettre en vitrine. Je l'ai mise. Je préfère te le dire."
+  - qui: commercant
+    sujet: achat
+    si: "lieu == garage"
+    texte: "Les occasions sont sous les néons, la neuve est sous la bâche. Je ne soulève la bâche que pour ceux qui ont un salaire, et je connais le vôtre."
+  - qui: commercant
+    sujet: achat
+    si: "lieu == tailleur"
+    texte: "Trois essayages pour un costume, un seul pour les chaussures. Les présidents viennent pour le costume, les joueurs pour les chaussures. Et vous ?"
+  - qui: commercant
+    sujet: rumeur
+    si: "lieu == tailleur && direction < 30 && role == entraineur"
+    texte: "Le président m'a commandé un costume noir pour une conférence de presse, en janvier. Je ne demande jamais l'occasion. Mais le noir, en janvier…"
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == epicerie"
+    texte: "Le cahier sous le comptoir, c'est les ardoises du quartier. La moitié de la Nord est dedans. Le jour où le club gagne quelque chose, j'efface tout."
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == fleuriste"
+    texte: "Des gerbes aux couleurs du club, j'en fais cinq ou six par an, pour les enterrements d'abonnés. Les familles demandent toujours l'écharpe en travers."
+  - qui: commercant
+    sujet: argent
+    si: "lieu == tabac"
+    texte: "Les mariniers parient sur le niveau de la Rive, les autres sur le club. Votre cote est à l'ardoise. Vous voulez la voir, ou vous préférez dormir ?"
+  - qui: commercant
+    sujet: match
+    si: "lieu == tabac_stade"
+    texte: "Le score, je l'ai avant tout le monde : le photographe de L'Écho m'appelle depuis la tribune de presse. Vous voulez le savoir juste après moi ?"
+  - qui: commercant
+    sujet: achat
+    si: "lieu == garage && possede(coupe_sport)"
+    texte: "Votre coupé, faites la vidange chez moi, pas à la Capitale. Chez moi, on ne pose pas de questions sur l'argent. Seulement sur l'huile."
+  - qui: commercant
+    sujet: achat
+    si: "lieu == tailleur && possede(costume_sur_mesure)"
+    texte: "Votre costume tombe bien, je le vois d'ici. La doublure, je l'ai faite aux couleurs du club. Vous êtes la seule personne à le savoir."
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == boulangerie_residentiel && flag(vl_boulangere)"
+    texte: "Le four neuf chauffe depuis cinq heures. Je ne dis à personne qui l'a payé. Votre pain est emballé : je vous le garde jusqu'à midi."
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == marche"
+    texte: "Les poireaux viennent de la vallée, les nouvelles aussi. Le dimanche, je vends plus d'avis que de légumes. Les légumes, au moins, je les pèse."
+  - qui: commercant
+    sujet: match
+    si: "lieu == marche && serie_v >= 1"
+    texte: "Quand on gagne, les gens achètent des fraises, même chères. Je lis vos résultats dans mes cageots avant de les lire dans L'Écho."
+  - qui: commercant
+    sujet: match
+    si: "lieu == marche && serie_d >= 2"
+    texte: "Depuis quelque temps, on me prend des pommes de terre et on repart sans parler. Les fraises restent sur l'étal. Je sais lire un classement, moi aussi."
+  - qui: commercant
+    sujet: sponsor
+    si: "lieu == club_prive"
+    texte: "Ce soir, c'est complet. Pour vous, ce sera complet tous les soirs, sauf si quelqu'un vous attend à l'intérieur. Quelqu'un vous attend ?"
+  - qui: commercant
+    sujet: sponsor
+    si: "lieu == club_prive && arc(co.sp.rideau)"
+    texte: "On vous attend jeudi. Le patron a gardé le carré. Venez sans personne, et garez-vous derrière, pas sous le réverbère."
+  - qui: commercant
+    sujet: sombre
+    si: "lieu == club_prive && tranche == nuit"
+    texte: "Moi, je n'ai pas de mémoire. Ceux qui sortent d'ici à cette heure-ci, je ne les ai jamais vus. Et vous non plus, vous ne les avez pas vus."
+  - qui: commercant
+    sujet: match
+    si: "lieu == kiosque && jour == lun"
+    texte: "Le lundi, L'Écho tire deux mille de plus quand on gagne, et mille de plus quand on perd. Les gens aiment aussi lire leurs défaites."
+  - qui: commercant
+    sujet: epoque
+    si: "lieu == kiosque && annee >= 2015"
+    texte: "Les gens lisent tout sur leur téléphone, maintenant. Ils m'achètent quand même L'Écho du lundi, pour le découper. On ne découpe pas un écran."
+  - qui: commercant
+    sujet: sombre
+    si: "lieu == fleuriste && flag(sb_mort_tribune)"
+    texte: "La gerbe pour Marcel, rangée H, la Nord l'a payée en pièces. J'ai compté jusqu'à minuit. Il en manquait un peu ; j'ai complété."
+  - qui: commercant
+    sujet: toi
+    si: "lieu == fleuriste && role == joueur"
+    texte: "Les joueurs viennent chez moi le lundi, après les défaites. Des fleurs pour leur femme, rarement pour leur mère. Jamais pour eux-mêmes."
+  - qui: commercant
+    sujet: argent
+    si: "lieu == epicerie && caisse < 30"
+    texte: "Deux joueurs du club ont leur nom dans le cahier, maintenant. Je ne dis pas lesquels. Je dis seulement que la paie doit être en retard."
+  - qui: commercant
+    sujet: achat
+    si: "lieu == garage && role == joueur"
+    texte: "Les joueurs achètent toujours la voiture d'au-dessus de leurs moyens, et la revendent l'été suivant. Mon parc d'occasions, c'est l'histoire du club."
+  - qui: commercant
+    sujet: rumeur
+    si: "lieu == tailleur && role == entraineur"
+    texte: "Le costume de votre prédécesseur est encore sur un cintre, au fond. Il n'est jamais venu le chercher. Je le garde : on ne sait jamais qui revient."
+  - qui: commercant
+    sujet: match
+    si: "lieu == tabac_stade && jour == sam"
+    texte: "Les jours de match, je vends plus de pastilles à la menthe que de tabac. On ne rentre pas chez soi en sentant la buvette."
+  - qui: commercant
+    sujet: rumeur
+    si: "lieu == tabac && serie_d >= 2"
+    texte: "Votre cote a bougé cette semaine : les mariniers ont misé contre vous. Ils se trompent rarement sur la météo, et souvent sur le reste."

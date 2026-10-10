@@ -1,0 +1,585 @@
+# Cartes des biens de l'entraîneur (arcs en.bn.*, content/arcs/entraineur/
+# biens.yaml) : ce que les achats de la ville (content/ville/boutique.yaml)
+# réveillent. Toutes hors du sac. `arc:` est le THÈME de la carte ; `lieu:` est
+# l'endroit où la ville met la scène ; `sombre` : la scène ne s'annonce pas,
+# elle tombe le soir. Les variantes sans locuteur sont les secours quand le
+# visage n'est plus là (Vukić rival, Gégé parti, Vaubourg remplacé).
+#
+# Les compteurs que la ville lit après le choix : `saisie_vehicules`,
+# `saisie_logement`, `saisie_luxe`, `saisie_tout`, `ville_amende` (débit, en
+# francs de 1990), `ville_francs` (crédit), `cadeau_montre_or`, et `vol_luxe`
+# (le cambriolage : ce qui brille et s'emporte — montres, bijoux, toile,
+# fourrure, cave ; un vol, pas une saisie : ni la maison, ni l'hélicoptère, ni
+# le lingot au coffre). Aucune somme n'est écrite dans un texte : la monnaie
+# change en 2002.
+cards:
+  # ================================================= 1 · La photo du coupé
+  # Trois défaites de suite.
+  - id: en.bn.coupe_gazette_serie
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    lieu: cafe
+    tone: strategique
+    text: "Café de la Mairie. La Gazette Rose est ouverte sur le zinc, page trois : toi, devant ton coupé rouge, le lendemain de la troisième défaite. Légende : « Au moins, la voiture démarre. »"
+    left:
+      label: "Je ramène le coupé au garage"
+      effects: {tribunes: "+", direction: "-", set: [bn_photo_coupe], next: end}
+      answer: "Le garagiste du Pont le range sous sa bâche. Vaubourg l'apprend et soupire : « Cacher une voiture qu'on a payée, ça fait coupable. »"
+    right:
+      label: "Je continue de rouler avec"
+      effects: {tribunes: "--", set: [bn_photo_coupe]}
+      answer: "Tu traverses la place du Marché au pas, vitre baissée. Un ancien crache par terre, pas sur la voiture : à côté, exprès."
+
+  - id: en.bn.coupe_gazette
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, tribunes]
+    lieu: cafe
+    tone: strategique
+    text: "Café de la Mairie. La Gazette Rose est ouverte sur le zinc, page trois : toi, devant ton coupé rouge, le lendemain de la défaite. Légende : « Le coupé va plus vite que l'équipe. »"
+    left:
+      label: "Je ramène le coupé au garage"
+      effects: {tribunes: "+", direction: "-", set: [bn_photo_coupe], next: end}
+      answer: "Le garagiste du Pont le range sous sa bâche. Vaubourg l'apprend et soupire : « Cacher une voiture qu'on a payée, ça fait coupable. »"
+    right:
+      label: "Je continue de rouler avec"
+      effects: {tribunes: "--", set: [bn_photo_coupe]}
+      answer: "Tu traverses la place du Marché au pas, vitre baissée. Un ancien crache par terre, pas sur la voiture : à côté, exprès."
+
+  - id: en.bn.coupe_rayure
+    roles: [entraineur]
+    arc: ultras
+    tags: [sombre, ultras]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade, après la séance. Une rayure court sur ton coupé, de la calandre au feu arrière, faite à la clé. Sous l'essuie-glace, la page de la Gazette, pliée en quatre."
+    left:
+      label: "Je roule avec la rayure"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Un mois durant, la rayure fait le tour de la ville avant toi. Vaubourg refuse d'y monter pour aller voir le banquier."
+    right:
+      label: "Je la fais repeindre"
+      effects: {tribunes: "-", var: {ville_amende: "+9000"}}
+      answer: "Le garagiste repeint l'aile en trois jours et te tend la facture pliée en quatre, comme la Gazette : « Ils reviendront. »"
+
+  # ================================================= 2 · La dépanneuse
+  # Un club qui ne paie plus, des impôts qu'on ne paie plus : le Trésor prend la voiture.
+  - id: en.bn.huissier_depanneuse
+    roles: [entraineur]
+    arc: caisse
+    tags: [sombre, caisse]
+    lieu: parking
+    tone: strategique
+    text: "Parking du stade. Une dépanneuse recule vers ta voiture, gyrophare orange. Un huissier te tend un papier : « Le Trésor. Vos impôts de l'an dernier, quatre relances. Les clés, ou je la prends sans ? »"
+    left:
+      label: "Je donne les clés"
+      effects: {vestiaire: "+", tribunes: "-", var: {saisie_vehicules: "+1"}}
+      answer: "Elle part au bout d'un câble. Le lendemain, le capitaine t'attend au parking : « Le club ne paie plus personne. Monte, je te ramène. »"
+    right:
+      label: "Je paie en liquide, ici"
+      effects: {direction: "--", var: {ville_amende: "+40000"}}
+      answer: "Tu comptes les billets sur le capot. Avant midi, Vaubourg sait que tu as du liquide quand le club n'en a plus."
+
+  # Rien qui roule : ce qui brille.
+  - id: en.bn.huissier_palier
+    roles: [entraineur]
+    arc: caisse
+    tags: [sombre, caisse, direction]
+    lieu: domicile
+    tone: strategique
+    text: "Un huissier en loden devant ta porte, un serrurier derrière lui : « Vos créanciers ont un jugement. Ce qui a de la valeur, je l'inventorie. Vous ouvrez, ou c'est lui qui ouvre ? »"
+    left:
+      label: "J'ouvre la porte"
+      effects: {direction: "-", var: {saisie_luxe: "+1"}}
+      answer: "Il inventorie à voix basse, objet par objet, avec ton propre stylo. Il laisse le lit, la table et la télé : la loi les laisse."
+    right:
+      label: "J'appelle Vaubourg"
+      effects: {direction: "+", parole: -1, relation: {aulard: 1}, set: [homme_president]}
+      answer: "Vaubourg règle tout depuis sa voiture, sans demander de quoi il s'agit. Le soir, il passe : « Entre nous, maintenant, plus de secrets. »"
+
+  # ================================================= 3 · Le contrôle fiscal
+  # L'argent sale : les dépôts du lundi.
+  - id: en.bn.fisc_especes
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale, caisse]
+    lieu: banque
+    tone: strategique
+    text: "Le petit bureau de la Banque Aubérivoise. Un homme en gris a pris ta chaise, tes relevés en éventail : « Contrôle fiscal. Ces dépôts en espèces, le lundi, après les matchs : vous m'expliquez ? »"
+    left:
+      label: "Je paie le redressement"
+      effects: {direction: "-", var: {ville_amende: "+150000"}, set: [bn_fisc], next: end}
+      answer: "Il calcule au crayon, en mouillant la mine. Le redressement arrive en juin, avec ses pénalités. Le banquier ne te raccompagne plus."
+    right:
+      label: "Je nie tout"
+      effects: {parole: -1, set: [bn_fisc], next: {step: saisie, in: [4, 8]}}
+      answer: "Il referme son cartable sans hausser le ton : « Comme vous voudrez. Le juge, lui, s'intéresse beaucoup aux espèces. »"
+
+  # La société des îles (alarme de la caisse, `offshore`).
+  - id: en.bn.fisc_iles
+    roles: [entraineur]
+    arc: scandale
+    tags: [scandale, caisse]
+    lieu: banque
+    tone: strategique
+    text: "Le petit bureau de la Banque Aubérivoise. Un homme en gris a pris ta chaise : « Contrôle fiscal. Votre train de vie, et une société aux îles au nom d'un cousin. On commence par quoi ? »"
+    left:
+      label: "J'ouvre mes classeurs"
+      effects: {direction: "-", var: {ville_amende: "+90000"}, set: [bn_fisc], next: end}
+      answer: "Tu ouvres tout, jusqu'à la chemise du cousin. Le redressement tombe en juin, avec un mot à la main : « Merci de votre coopération. »"
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat de la place du Marché prend un acompte et ta main dans les deux siennes : « À partir d'aujourd'hui, vous ne leur parlez plus. »"
+
+  # La photo du coupé dans la Gazette (en.bn.photo_coupe).
+  - id: en.bn.fisc_gazette
+    roles: [entraineur]
+    arc: scandale
+    tags: [scandale, presse, caisse]
+    lieu: banque
+    tone: strategique
+    text: "Le petit bureau de la Banque Aubérivoise. Un homme en gris a pris ta chaise ; sur tes relevés, la page de la Gazette Rose, ton coupé rouge. « Nos services lisent la presse. On parle de vos achats ? »"
+    left:
+      label: "J'ouvre mes classeurs"
+      effects: {direction: "-", var: {ville_amende: "+60000"}, set: [bn_fisc], next: end}
+      answer: "Il épluche tes primes jusqu'à la fermeture. Le redressement tombe en juin ; Vaubourg l'apprend par le banquier, avant toi."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat de la place du Marché prend un acompte et ta main dans les deux siennes : « À partir d'aujourd'hui, vous ne leur parlez plus. »"
+
+  - id: en.bn.fisc_villa
+    roles: [entraineur]
+    arc: scandale
+    tags: [scandale, caisse]
+    lieu: banque
+    tone: strategique
+    text: "Le petit bureau de la Banque Aubérivoise. Un homme en gris a pris ta chaise : « Contrôle fiscal. Votre villa des Hauts-de-Rive vaut onze ans de votre salaire déclaré. Vous m'expliquez ? »"
+    left:
+      label: "J'ouvre mes classeurs"
+      effects: {direction: "-", var: {ville_amende: "+60000"}, set: [bn_fisc], next: end}
+      answer: "Il épluche tes primes jusqu'à la fermeture. Le redressement tombe en juin ; Vaubourg l'apprend par le banquier, avant toi."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat de la place du Marché prend un acompte et ta main dans les deux siennes : « À partir d'aujourd'hui, vous ne leur parlez plus. »"
+
+  - id: en.bn.fisc
+    roles: [entraineur]
+    arc: scandale
+    tags: [scandale, caisse]
+    lieu: banque
+    tone: strategique
+    text: "Le petit bureau de la Banque Aubérivoise. Un homme en gris a pris ta chaise, tes relevés en éventail : « Contrôle fiscal. Vos achats de l'année valent huit ans de salaire déclaré. Expliquez-moi. »"
+    left:
+      label: "J'ouvre mes classeurs"
+      effects: {direction: "-", var: {ville_amende: "+60000"}, set: [bn_fisc], next: end}
+      answer: "Il épluche tes primes jusqu'à la fermeture. Le redressement tombe en juin ; Vaubourg l'apprend par le banquier, avant toi."
+    right:
+      label: "Voyez mon avocat"
+      effects: {var: {ville_amende: "+25000"}, set: [bn_fisc], next: {step: avocat, in: [4, 8]}}
+      answer: "L'avocat de la place du Marché prend un acompte et ta main dans les deux siennes : « À partir d'aujourd'hui, vous ne leur parlez plus. »"
+
+  # Tu as nié : le juge. Une maison à saisir…
+  - id: en.bn.fisc_saisie_maison
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. Un huissier, deux policiers et un serrurier sur ton perron, une ordonnance du juge à la main : « Saisie conservatoire. Vous nous remettez les clés, ou on change la serrure devant vous ? »"
+    left:
+      label: "Je remets les clés"
+      effects: {direction: "--", tribunes: "-", var: {saisie_logement: "+1"}}
+      answer: "Tu sors avec deux valises. Le soir, tu dors au deux-pièces loué de la rue des Lilas ; la chaudière cogne comme avant."
+    right:
+      label: "Je leur ferme la porte"
+      effects: {end: co_garde_a_vue}
+      answer: "Le serrurier ouvre en quatre minutes. On te passe les menottes dans l'entrée, devant les cartons que tu n'avais jamais défaits."
+
+  # … ou seulement ce qui brille et ce qui roule.
+  - id: en.bn.fisc_saisie_biens
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. Un huissier et deux policiers dans ton entrée, une ordonnance du juge : « Saisie conservatoire de vos biens de valeur. Vous nous montrez où ils sont, ou on cherche ? »"
+    left:
+      label: "Je vous montre"
+      effects: {direction: "--", var: {saisie_luxe: "+1", saisie_vehicules: "+1"}}
+      answer: "Ils emportent ce qui brille et ce qui roule, et posent les scellés au crayon gras. Le soir, toute la rue sait ce que tu avais."
+    right:
+      label: "Cherchez donc"
+      effects: {direction: "--", tribunes: "-", var: {saisie_tout: "+1"}}
+      answer: "Ils cherchent quatre heures. Ils trouvent ce qui brille, ce qui roule, et le tiroir du bas. Ton portefeuille part sous scellé avec le reste."
+
+  # Tu as pris un avocat.
+  - id: en.bn.fisc_avocat
+    roles: [entraineur]
+    arc: scandale
+    tags: [scandale]
+    lieu: cafe
+    tone: strategique
+    text: "L'avocat de la place du Marché t'attend au fond du café de la Mairie, ton dossier sous le coude : « Ils proposent une transaction. Sinon on plaide deux ans, et L'Écho vient à chaque audience. »"
+    left:
+      label: "On transige"
+      effects: {direction: "-", var: {ville_amende: "+50000"}}
+      answer: "Tu signes sur la nappe en papier, entre deux cafés. La somme est plus lourde que prévu ; l'affaire, elle, n'existe plus."
+    right:
+      label: "On plaide"
+      effects: {tribunes: "-", direction: "-", parole: 1}
+      answer: "Deux ans de renvois. À chaque audience, le journaliste de L'Écho est au troisième rang, et il ne prend jamais une note."
+
+  # ================================================= 4 · La maison visitée
+  # Après le nom donné à la brigade : on te répond.
+  - id: en.bn.cambriolage_balance
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Retour de déplacement, une heure du matin. La baie du salon est en miettes, les tiroirs retournés ; ce qui brillait est parti. Sur la table, une feuille tapée à la machine : le nom que tu as donné."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", var: {vol_luxe: "+1", ville_francs: "+20000"}, set: [bn_cambriole]}
+      answer: "L'inspecteur glisse la feuille dans sa poche : « Vous avez parlé, ils ont répondu. Changez de serrure. Et de ville, si vous pouvez. »"
+    right:
+      label: "Je brûle la feuille"
+      effects: {parole: -1, var: {vol_luxe: "+1"}}
+      answer: "La feuille brûle dans l'évier en se tordant. Le nom, lui, reste tapé quelque part dans ta tête, avec le ruban de la machine."
+
+  # La montre en or était dans l'écrin.
+  - id: en.bn.cambriolage_montre
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Retour de déplacement, une heure du matin. La baie du salon est en miettes sur le tapis, les tiroirs retournés. L'écrin de ta montre en or est resté ouvert sur la commode, vide."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", var: {vol_luxe: "+1", ville_francs: "+20000"}, set: [bn_cambriole, bn_montre_volee]}
+      answer: "L'inspecteur relit ta liste, un sourcil levé à chaque ligne : « Tout ça, pour un salaire d'entraîneur ? L'assurance voudra des factures. »"
+    right:
+      label: "Je ne déclare rien"
+      effects: {parole: -1, var: {vol_luxe: "+1"}, set: [bn_montre_volee]}
+      answer: "Tu balaies le verre toi-même, à genoux, jusqu'à trois heures. Ce qui manque, tu en refais la liste dans ta tête, chaque nuit."
+
+  - id: en.bn.cambriolage
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Retour de déplacement, une heure du matin. La baie du salon est en miettes sur le tapis, les tiroirs sont retournés. Ce qui brillait est parti. La télé, elle, est restée."
+    left:
+      label: "J'appelle la police"
+      effects: {direction: "-", var: {vol_luxe: "+1", ville_francs: "+20000"}, set: [bn_cambriole]}
+      answer: "L'inspecteur relit ta liste, un sourcil levé à chaque ligne : « Tout ça, pour un salaire d'entraîneur ? L'assurance voudra des factures. »"
+    right:
+      label: "Je ne déclare rien"
+      effects: {parole: -1, var: {vol_luxe: "+1"}}
+      answer: "Tu balaies le verre toi-même, à genoux, jusqu'à trois heures. Ce qui manque, tu en refais la liste dans ta tête, chaque nuit."
+
+  # La montre réapparaît : Gégé sait où.
+  - id: en.bn.cambriolage_gege
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, scandale]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    # La montre est bien partie (la ville l'a retirée) : sinon, rien à retrouver.
+    when: "!flag('bn_montre_or')"
+    text: "Gégé fait rouler un dé sur la table du fond : « Ta montre en or tourne au tripot du Terminus, au poignet d'un gamin de dix-neuf ans. Un gars de chez nous. Je te la ramène, {toi} ? »"
+    left:
+      label: "Ramène-la"
+      effects: {relation: {gege: 1}, parole: -1, var: {cadeau_montre_or: "+1"}}
+      answer: "Le lendemain, elle est dans ta boîte aux lettres, roulée dans une écharpe de la Nord. Gégé ne dira jamais ce que ça a coûté au gamin."
+    right:
+      label: "Qu'il la garde"
+      effects: {tribunes: "+"}
+      answer: "Gégé hausse un sourcil, puis sourit à moitié. Samedi, le gamin est en Nord, la manche relevée, et il chante plus fort que les autres."
+
+  # Secours : Gégé ne parle plus ; tu la vois toi-même.
+  - id: en.bn.cambriolage_tripot
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: tripot
+    tone: strategique
+    # La montre est bien partie (la ville l'a retirée) : sinon, rien à retrouver.
+    when: "!flag('bn_montre_or')"
+    text: "Arrière-salle du Terminus, minuit. Sur le tapis vert, au poignet d'un gamin de dix-neuf ans qui relance, ta montre en or. Il te reconnaît, et il ne cache pas son poignet."
+    left:
+      label: "Je la lui rachète"
+      effects: {direction: "-", parole: -1, var: {cadeau_montre_or: "+1", ville_amende: "+20000"}}
+      answer: "Il compte les billets deux fois, détache le bracelet et la fait glisser sur le tapis, entre deux jetons : « Elle retarde. »"
+    right:
+      label: "Je sors sans un mot"
+      effects: {parole: 1}
+      answer: "Dehors, il pleut sur le quai. Derrière la porte, quelqu'un éclate de rire, et la partie reprend."
+
+  # ================================================= 5 · L'hélicoptère
+  - id: en.bn.helico_vukic
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: terrain
+    tone: strategique
+    text: "Vukić regarde le cercle d'herbe couchée au milieu du terrain annexe : « Les gars ne te parlent plus depuis l'hélicoptère. Ils ont fait le calcul en primes de match. Tu reviens au car, samedi ? »"
+    left:
+      label: "Je reviens au car"
+      effects: {vestiaire: "+", direction: "-", next: end}
+      answer: "Tu montes le dernier et tu t'assois au fond. Personne ne se pousse. Vaubourg, lui, avait promis un baptême de l'air au banquier."
+    right:
+      label: "Je me pose où je veux"
+      effects: {vestiaire: "--", tribunes: "+"}
+      answer: "Dimanche, les gamins du square courent sous les pales en criant ton nom. Au vestiaire, on se change en silence quand tu entres."
+
+  # Secours : Vukić n'est plus là.
+  - id: en.bn.helico_vestiaire
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: vestiaire
+    tone: strategique
+    text: "Au vestiaire, quand tu entres, les conversations s'arrêtent net. Sur le tableau de la causerie, quelqu'un a dessiné un hélicoptère, et à côté, une prime de match barrée."
+    left:
+      label: "Je reviens au car"
+      effects: {vestiaire: "+", direction: "-", next: end}
+      answer: "Tu montes le dernier et tu t'assois au fond. Personne ne se pousse. Le président, lui, avait promis un baptême de l'air au banquier."
+    right:
+      label: "Je me pose où je veux"
+      effects: {vestiaire: "--", tribunes: "+"}
+      answer: "Dimanche, les gamins du square courent sous les pales en criant ton nom. Lundi, le dessin du tableau a des pales en plus."
+
+  - id: en.bn.helico_aubert
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: aubert
+    lieu: mairie
+    tone: strategique
+    text: "Madame Aubert, un arrêté sous le presse-papier : « Trois plaintes pour le bruit, une haie arrachée derrière l'école. Vous signez que vous ne vous poserez plus au terrain annexe ? »"
+    left:
+      label: "Je signe"
+      effects: {tribunes: "-", relation: {aubert: 1}}
+      answer: "Elle tamponne deux fois. L'hélicoptère dort désormais à l'aérodrome de Valdorne, à quarante minutes de route de ton lit."
+    right:
+      label: "Je paie l'amende"
+      effects: {relation: {aubert: -1}, var: {ville_amende: "+20000"}}
+      answer: "Elle encaisse sans un mot et range le reçu sous le presse-papier, avec l'arrêté, comme une pièce à conviction."
+
+  # Secours : la maire a changé, l'arrêté reste.
+  - id: en.bn.helico_arrete
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    lieu: bureau
+    tone: strategique
+    text: "Sur la porte du club-house, un arrêté municipal : interdiction d'atterrir au terrain annexe, sous peine d'amende. Quelqu'un a souligné ton nom au feutre rouge."
+    left:
+      label: "Je respecte l'arrêté"
+      effects: {tribunes: "-"}
+      answer: "L'hélicoptère dort désormais à l'aérodrome de Valdorne. Les gamins du square ne viennent plus regarder les pales tourner."
+    right:
+      label: "Je me pose quand même"
+      effects: {direction: "-", var: {ville_amende: "+20000"}}
+      answer: "Le procès-verbal arrive le lundi, glissé sous l'essuie-glace de l'hélicoptère, au-dessus du nom du club."
+
+  # ================================================= 6 · Le voisin
+  # Le fisc est passé chez lui.
+  - id: en.bn.voisin_fisc
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Ton voisin, un gendarme en retraite, taille sa haie à l'heure où tu rentres : « L'homme en gris de la banque est venu me voir. Il voulait savoir à quelle heure vous rentrez. Je lui ai dit. »"
+    left:
+      label: "Je lui offre une bouteille"
+      effects: {parole: -1, var: {ville_amende: "+2000"}}
+      answer: "Il prend la bouteille par le goulot, comme un trophée. Le dimanche, il te salue par-dessus la haie ; il a une bonne mémoire."
+    right:
+      label: "Je ferme le portail"
+      effects: {set: [bn_denonce]}
+      answer: "Le portail claque. Le lendemain, au bureau de poste, il achète un timbre et une enveloppe, et prend tout son temps pour l'adresse."
+
+  - id: en.bn.voisin
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: rue
+    tone: strategique
+    text: "Ton voisin, un gendarme en retraite, taille sa haie à l'heure où tu rentres. Il regarde ton sac de sport : « Lourd, pour des maillots. Trente ans de brigade, l'œil ne s'en va pas. »"
+    left:
+      label: "Je lui offre une bouteille"
+      effects: {parole: -1, var: {ville_amende: "+2000"}}
+      answer: "Il prend la bouteille par le goulot, comme un trophée. Le dimanche, il te salue par-dessus la haie ; il a une bonne mémoire."
+    right:
+      label: "Je ferme le portail"
+      effects: {set: [bn_denonce]}
+      answer: "Le portail claque. Le lendemain, au bureau de poste, il achète un timbre et une enveloppe, et prend tout son temps pour l'adresse."
+
+  # ================================================= 7 · La brigade financière
+  # Tu avais dit à Camille : une prime de match.
+  - id: en.bn.perquisition_camille
+    roles: [entraineur]
+    arc: famille
+    tags: [sombre, scandale, famille]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. Des gants bleus fouillent la commode. Camille, en peignoir, regarde un policier glisser le collier sous scellé : « Une prime de match, tu m'avais dit. À eux, tu dis quoi ? »"
+    left:
+      label: "La vérité, devant elle"
+      effects: {parole: 1, direction: "-", relation: {camille: 1}, var: {saisie_luxe: "+1"}, set: [bn_balance]}
+      answer: "Tu dis le nom, l'enveloppe, la date. Camille écoute debout, jusqu'au bout. C'est seulement après qu'elle s'assoit."
+    right:
+      label: "Rien, à personne"
+      effects: {direction: "--", relation: {camille: -2}, var: {saisie_tout: "+1"}}
+      answer: "Ils emportent tout, jusqu'aux clés. Camille regarde les scellés sur l'armoire de la chambre, puis elle appelle sa sœur."
+
+  - id: en.bn.perquisition
+    roles: [entraineur]
+    arc: scandale
+    tags: [sombre, scandale]
+    lieu: domicile
+    tone: strategique
+    text: "Six heures. La brigade financière dans ton salon, des gants bleus, des cartons. L'officier pose sur la table la liste de tes achats de l'année, avec les dates : « D'où vient l'argent ? »"
+    left:
+      label: "Je donne un nom"
+      effects: {parole: 1, direction: "-", var: {saisie_luxe: "+1"}, set: [bn_balance]}
+      answer: "Tu donnes un nom, un lieu, une heure. Ils n'emportent que ce qui brille. En partant, l'officier demande si tu as de la famille loin d'ici."
+    right:
+      label: "Je ne dis rien"
+      effects: {direction: "--", var: {saisie_tout: "+1"}}
+      answer: "Ils emportent tout, jusqu'aux clés de la voiture. Le soir, il te reste un trousseau : celui du deux-pièces loué, rue des Lilas."
+
+  # ================================================= 8 · La loge
+  - id: en.bn.loge_aulard
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sponsors]
+    speaker: aulard
+    lieu: bureau
+    tone: strategique
+    text: "Vaubourg t'arrête dans l'escalier du club-house, l'œil sur ton costume : « Celui-là, tu le mets samedi. Le banquier monte en loge avec sa femme, et c'est elle qui décide. Tu viens ? »"
+    left:
+      label: "Je monte après le match"
+      effects: {direction: "++", vestiaire: "-"}
+      answer: "Tu serres des mains jusqu'à vingt-deux heures, une coupe tiède entre les doigts. En bas, les gars ont mangé sans toi."
+    right:
+      label: "Ma place est en bas"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Vaubourg rajuste ta cravate, comme on range une chose qu'on a payée : « Dommage. Il t'allait bien, ce costume. »"
+
+  # Secours : un autre président, le même carton.
+  - id: en.bn.loge_carton
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, sponsors]
+    lieu: domicile
+    tone: strategique
+    text: "Un carton sous ta porte, à l'en-tête du club : la loge des partenaires, samedi, tenue de ville exigée. Au dos, au stylo, d'une écriture pressée : « Mets le costume. »"
+    left:
+      label: "Je monte après le match"
+      effects: {direction: "++", vestiaire: "-"}
+      answer: "Tu serres des mains jusqu'à vingt-deux heures, une coupe tiède entre les doigts. En bas, les gars ont mangé sans toi."
+    right:
+      label: "Ma place est en bas"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le carton finit sous le pied bancal de la table de la cuisine. Lundi, une note de service te rappelle l'article 9 de ton contrat."
+
+  # ================================================= 9 · La montre
+  - id: en.bn.montre_brehaut
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: brehaut
+    lieu: vestiaire
+    tone: strategique
+    text: "Bréhaut attend que le vestiaire se vide, une serviette autour du cou : « Les gars ont vu ta montre sur la photo du banc. Leur prime de victoire du mois dernier n'est toujours pas tombée. »"
+    left:
+      label: "Je paie leurs primes"
+      effects: {vestiaire: "++", direction: "-", var: {ville_amende: "+30000"}}
+      answer: "Tu fais le tour des casiers avec des enveloppes. Vaubourg l'apprend le lendemain et te remercie, froidement, d'avoir payé à sa place."
+    right:
+      label: "Ma montre ne joue pas"
+      effects: {vestiaire: "--"}
+      answer: "Bréhaut hoche la tête et range sa serviette dans son sac. Samedi, il ne vient pas te serrer la main avant le coup d'envoi."
+
+  # Secours : le capitaine n'est plus là.
+  - id: en.bn.montre_casier
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    lieu: vestiaire
+    tone: strategique
+    text: "Sur la porte de ton bureau, au vestiaire, une page de L'Écho scotchée : la photo du banc, ta montre entourée au feutre, et à côté, à la main : ET NOS PRIMES ?"
+    left:
+      label: "Je paie leurs primes"
+      effects: {vestiaire: "++", direction: "-", var: {ville_amende: "+30000"}}
+      answer: "Tu glisses une enveloppe dans chaque casier. Le président l'apprend le lendemain et te remercie, froidement, d'avoir payé à sa place."
+    right:
+      label: "J'arrache la page"
+      effects: {vestiaire: "--"}
+      answer: "Tu l'arraches. Le lendemain, la même page est scotchée sur chaque casier, sauf sur celui du capitaine."
+
+  # ================================================= 10 · Le collier
+  - id: en.bn.collier
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, scandale]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    text: "Camille ouvre l'écrin bleu nuit, le referme, le rouvre : « C'est beau. C'est trop beau pour un salaire d'entraîneur. Cet argent, il vient d'où, {toi} ? »"
+    left:
+      label: "Je lui dis la vérité"
+      effects: {parole: 1, relation: {camille: -1}}
+      answer: "Tu racontes l'enveloppe, le nom, la table. Elle remet le collier dans l'écrin, et l'écrin dans ta poche : « Garde-le pour le juge. »"
+    right:
+      label: "Une prime de match"
+      effects: {parole: -1, relation: {camille: 1}, set: [bn_mensonge_camille]}
+      answer: "Elle te croit, ou elle décide de te croire. Dimanche, elle le porte au marché, et la boulangère le remarque."
+
+  # ================================================= 11 · La Tréfilerie
+  - id: en.bn.trefilerie_gege
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    text: "Gégé essuie le même verre depuis cinq minutes : « Mon père a laissé trois doigts sous le toit de la Tréfilerie. Maintenant, il y a ta baignoire. Tu m'invites à voir ça, {toi} ? »"
+    left:
+      label: "Viens dimanche"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il reste une heure sous le pont roulant, les mains dans le dos, sans rien toucher. En partant, il dit seulement : « C'était là. »"
+    right:
+      label: "Ce n'est qu'un appartement"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Il repose le verre. Samedi, une banderole descend de la Nord : LA TRÉFILERIE N'EST PAS À VENDRE. Elle l'est déjà."
+
+  # Secours : Gégé n'est plus au comptoir ; la façade parle à sa place.
+  - id: en.bn.trefilerie_facade
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes]
+    lieu: rue
+    tone: strategique
+    text: "Sur la façade de la Tréfilerie, sous tes fenêtres, quelqu'un a peint une nuit, en lettres rouges : ICI ON TRAVAILLAIT. Le syndic veut savoir si tu portes plainte."
+    left:
+      label: "Je fais effacer"
+      effects: {tribunes: "-", var: {ville_amende: "+3000"}}
+      answer: "Le peintre passe deux couches. Les jours de pluie, les lettres reviennent sous le blanc, plus pâles, et tout le monde les lit encore."
+    right:
+      label: "Je laisse l'inscription"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Les autres propriétaires signent une pétition contre toi. L'inscription reste ; les gamins du square viennent la photographier."

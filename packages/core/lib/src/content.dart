@@ -120,6 +120,11 @@ class Card {
 const Set<String> kLieux = {
   'domicile', 'laverie', 'stade', 'vestiaire', 'bureau', 'secretariat', 'buvette', 'parking', 'mairie',
   'gare', 'friche', 'cimetiere', 'terrain', 'rue', 'echo', 'muscu', 'cabinet', 'banque', 'cafe',
+  // les lieux où l'on ne devrait pas être vu (sponsors louches, rendez-vous de nuit)
+  'hotel', 'club_prive', 'tripot', 'bar',
+  // loin d'Aubérive (le tournoi d'Al-Dorado, docs/histoires § 1.10) : la ville
+  // s'efface derrière le décor que nomme le tag de la carte (ville.yaml `ailleurs`)
+  'ailleurs',
 };
 
 /// Les statuts d'un personnage (charte de la bible § 2.4 et § 2.4 bis,
@@ -179,6 +184,12 @@ class RoleDef {
   final String matchPostureLeft;
   final String matchPostureRight;
   final String? patron; // default speaker of the Objectif / Contrat cards
+  /// Comment on s'adresse à toi quand le locuteur n'a pas d'`adresse` pour ce
+  /// rôle (`{toi}`) : « coach », « {prenom} », « président{pg, select, f{e} other{}} ».
+  final String? adresse;
+  /// L'âge où la carrière s'arrête d'elle-même dans ce rôle, et la fin qu'elle prend.
+  final int? retraiteAge;
+  final String? retraiteFin;
 
   const RoleDef({
     required this.id,
@@ -191,6 +202,9 @@ class RoleDef {
     required this.matchPostureLeft,
     required this.matchPostureRight,
     this.patron,
+    this.adresse,
+    this.retraiteAge,
+    this.retraiteFin,
   });
 
   factory RoleDef.fromJson(Map<String, dynamic> j) => RoleDef(
@@ -204,6 +218,9 @@ class RoleDef {
         matchPostureLeft: (j['posture'] as List?)?.first as String? ?? 'Offensif',
         matchPostureRight: (j['posture'] as List?)?.last as String? ?? 'Prudent',
         patron: j['patron'] as String?,
+        adresse: j['adresse'] as String?,
+        retraiteAge: (j['retraite'] as Map?)?['age'] as int?,
+        retraiteFin: (j['retraite'] as Map?)?['fin'] as String?,
       );
 
   GaugeDef gauge(String id) => gauges.firstWhere((g) => g.id == id);
@@ -853,6 +870,14 @@ class PostulatDef {
   final List<QuestionDef> questions;
   final List<ObjectifDef> objectifs;
 
+  /// Le club, la ville et le rival que l'histoire impose (les dix histoires de
+  /// lancement : « la Sylvanie » pour un sélectionneur, le club d'à côté pour
+  /// un président). Cosmétiques comme le nom saisi : posés après tous les
+  /// tirages, ils ne changent ni le Code de Carrière ni la carrière jouée.
+  final String? club;
+  final String? ville;
+  final String? rival;
+
   const PostulatDef({
     required this.id,
     required this.index,
@@ -879,6 +904,9 @@ class PostulatDef {
     this.programme,
     this.questions = const [],
     this.objectifs = const [],
+    this.club,
+    this.ville,
+    this.rival,
   });
 
   factory PostulatDef.fromJson(Map<String, dynamic> j) {
@@ -917,6 +945,9 @@ class PostulatDef {
       programme: j['programme'] == null ? null : ProgrammeDef.fromJson((j['programme'] as Map).cast<String, dynamic>()),
       questions: (j['questions'] as List?)?.map((e) => QuestionDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
       objectifs: (j['objectifs'] as List?)?.map((e) => ObjectifDef.fromJson((e as Map).cast<String, dynamic>())).toList() ?? const [],
+      club: (j['club'] as String?)?.trim().isEmpty ?? true ? null : (j['club'] as String).trim(),
+      ville: (j['ville'] as String?)?.trim().isEmpty ?? true ? null : (j['ville'] as String).trim(),
+      rival: (j['rival'] as String?)?.trim().isEmpty ?? true ? null : (j['rival'] as String).trim(),
     );
   }
 }
@@ -1074,6 +1105,81 @@ class ActiviteDef {
       );
 }
 
+/// LA VILLE — ce qu'une mission de la ville, un achat ou un cadeau fait à la
+/// carrière : de petites touches aux jauges, des drapeaux posés ou retirés, des
+/// compteurs (`var`), et parfois une fin (`fin`, la garde à vue). Appliqué par
+/// `Engine.mission` et `Engine.biens`, sans aucun tirage.
+class EffetVille {
+  final Map<String, int> jauges;
+  final List<String> set;
+  final List<String> clear;
+  final Map<String, String> vars;
+  final String? fin;
+  const EffetVille({this.jauges = const {}, this.set = const [], this.clear = const [], this.vars = const {}, this.fin});
+
+  bool get vide => jauges.isEmpty && set.isEmpty && clear.isEmpty && vars.isEmpty && fin == null;
+
+  factory EffetVille.fromJson(Object? raw) {
+    final j = (raw as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
+    return EffetVille(
+      jauges: ((j['jauges'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), (v as num).toInt())),
+      set: (j['set'] as List? ?? const []).map((e) => e.toString()).toList(),
+      clear: (j['clear'] as List? ?? const []).map((e) => e.toString()).toList(),
+      vars: ((j['var'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
+      fin: j['fin'] as String?,
+    );
+  }
+
+  /// `jaugesDuRole` : les jauges que le rôle courant possède — un effet de la
+  /// ville écrit pour l'entraîneur (`vestiaire`) ne touche pas un rôle qui n'a
+  /// pas cette jauge.
+  EffectSet toEffectSet({Set<String>? jaugesDuRole}) => EffectSet(
+      gauges: jaugesDuRole == null ? jauges : {for (final e in jauges.entries) if (jaugesDuRole.contains(e.key)) e.key: e.value},
+      setFlags: set,
+      clearFlags: clear,
+      vars: vars,
+      end: fin);
+}
+
+/// Une mission de la ville (`content/ville/missions.yaml`) vue par le moteur :
+/// l'effet de chaque choix de chaque étape, et celui de l'échec d'une étape.
+class MissionDef {
+  final String id;
+  final List<String> roles;
+  final Map<String, Map<String, EffetVille>> choix; // étape → choix → effet
+  final Map<String, EffetVille> echecs; // étape → effet de l'échec
+  const MissionDef({required this.id, this.roles = const [], this.choix = const {}, this.echecs = const {}});
+
+  factory MissionDef.fromJson(Map<String, dynamic> j) {
+    final choix = <String, Map<String, EffetVille>>{};
+    final echecs = <String, EffetVille>{};
+    for (final e in (j['etapes'] as List? ?? const [])) {
+      final et = (e as Map).cast<String, dynamic>();
+      final id = et['id'].toString();
+      choix[id] = {
+        for (final c in (et['choix'] as List? ?? const []))
+          (c as Map)['id'].toString(): EffetVille.fromJson(c['effets']),
+      };
+      if (et['echec'] is Map) echecs[id] = EffetVille.fromJson((et['echec'] as Map)['effets']);
+    }
+    return MissionDef(
+      id: j['id'] as String,
+      roles: (j['roles'] as List? ?? const []).map((e) => e.toString()).toList(),
+      choix: choix,
+      echecs: echecs,
+    );
+  }
+}
+
+/// Un objet de la boutique (`content/ville/boutique.yaml`) vu par le moteur :
+/// ce que son achat fait à la carrière. Ses drapeaux tombent quand on le perd.
+class ObjetDef {
+  final String id;
+  final EffetVille effets;
+  const ObjetDef({required this.id, this.effets = const EffetVille()});
+  factory ObjetDef.fromJson(Map<String, dynamic> j) => ObjetDef(id: j['id'] as String, effets: EffetVille.fromJson(j['effets']));
+}
+
 class Content {
   final int version;
   final String hash;
@@ -1104,6 +1210,10 @@ class Content {
   /// …et la section entière, telle quelle, pour la coquille (lieux, rencontres,
   /// horaires, textes). `{}` quand le fichier est absent.
   final Map<String, dynamic> ville;
+  /// Les missions et la boutique de la ville (content/ville/*.yaml) : ce que le
+  /// moteur en applique (`Engine.mission`, `Engine.biens`).
+  final Map<String, MissionDef> missions;
+  final Map<String, ObjetDef> objets;
 
   // Derived indexes.
   final Map<String, List<Card>> _cardsByRole = {};
@@ -1142,6 +1252,8 @@ class Content {
     this.setpieces = const {},
     this.activites = const {},
     this.ville = const {},
+    this.missions = const {},
+    this.objets = const {},
   }) {
     final ids = cards.keys.toList()..sort();
     for (final id in ids) {
@@ -1265,6 +1377,14 @@ class Content {
           (a as Map)['id'].toString(): ActiviteDef.fromJson(a.cast<String, dynamic>()),
       },
       ville: (j['ville'] as Map?)?.cast<String, dynamic>() ?? const {},
+      missions: {
+        for (final m in (((j['ville'] as Map?)?['missions'] as List?) ?? const []))
+          (m as Map)['id'].toString(): MissionDef.fromJson(m.cast<String, dynamic>()),
+      },
+      objets: {
+        for (final o in (((j['ville'] as Map?)?['objets'] as List?) ?? const []))
+          (o as Map)['id'].toString(): ObjetDef.fromJson(o.cast<String, dynamic>()),
+      },
     );
   }
 }

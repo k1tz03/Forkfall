@@ -573,9 +573,11 @@ void main() {
     });
 
     test('propriétés sur 150 runs : slots, file bornée, cooldowns, jauges, famine nulle', () {
-      final nPost = content.postulatsByIndex.length;
+      // les postulats livrés : un postulat « en chantier » (une histoire en cours
+      // d'écriture) n'a pas encore le contenu qui nourrit le tirage
+      final livres = [for (final p in content.postulatsByIndex) if (!p.chantier) p.index];
       for (var seed = 100; seed < 250; seed++) {
-        var s = engine.start(seed, postulat: seed % nPost);
+        var s = engine.start(seed, postulat: livres[seed % livres.length]);
         int step = 0;
         String? prevTone;
         while (!s.over && step < 600) {

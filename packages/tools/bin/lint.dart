@@ -721,6 +721,52 @@ void main() {
     budget(named >= 25, '$named carte(s) du rôle $role portant le nom du joueur (attendu ≥ 25)');
   }
 
+  // LA VILLE (content/ville/*.yaml, compilé sous `ville`) : les missions et la
+  // boutique posent des drapeaux (Engine.mission, Engine.biens) ; les `si` des
+  // paroles, des missions et des objets en lisent. Un drapeau de la ville doit
+  // être déclaré comme les autres.
+  final villeB = (bundle['ville'] as Map?) ?? const {};
+  final reFlag = RegExp(r"flag\(\s*'?([A-Za-z0-9_]+)'?\s*\)");
+  void villeLit(Object? si) {
+    if (si == null) return;
+    for (final mm in reFlag.allMatches(si.toString())) {
+      flagsRead.add(mm[1]!);
+    }
+  }
+  void villeEffet(Object? e, String where) {
+    if (e is! Map) return;
+    for (final k in ['set', 'clear']) {
+      for (final f in (e[k] as List? ?? const [])) {
+        if (!flags.contains(f.toString())) errors.add('$where: drapeau « $f » non déclaré dans flags.yaml');
+        if (k == 'set') {
+          flagsWritten.add(f.toString());
+        } else {
+          flagsRead.add(f.toString());
+        }
+      }
+    }
+  }
+  for (final pr in (villeB['paroles'] as List? ?? const [])) {
+    villeLit((pr as Map)['si']);
+  }
+  for (final mi in (villeB['missions'] as List? ?? const [])) {
+    final m = mi as Map;
+    villeLit(m['si']);
+    for (final et in (m['etapes'] as List? ?? const [])) {
+      for (final c in ((et as Map)['choix'] as List? ?? const [])) {
+        villeLit((c as Map)['si']);
+        villeEffet(c['effets'], 'ville/missions/${m['id']}/${et['id']}/${c['id']}');
+      }
+      final ec = et['echec'];
+      if (ec is Map) villeEffet(ec['effets'], 'ville/missions/${m['id']}/${et['id']}/echec');
+    }
+  }
+  for (final ob in (villeB['objets'] as List? ?? const [])) {
+    final o = ob as Map;
+    villeLit(o['si']);
+    villeEffet(o['effets'], 'ville/objets/${o['id']}');
+  }
+
   // Flags declared but never referenced, and read-but-never-written.
   bool engineWrites(String f) => kEngineFlagPrefixes.any((p) => f.startsWith(p));
   for (final f in flags) {

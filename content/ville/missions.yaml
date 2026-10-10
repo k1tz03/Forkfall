@@ -1,0 +1,519 @@
+# LES MISSIONS SECONDAIRES DE LA VILLE — ce que les gens d'Aubérive te
+# demandent, rarement, quand tu les croises au bon endroit à la bonne heure.
+#
+# « Obtenir des missions secondaires avec des PNJ, mais très rarement, où l'on
+# pourrait gagner de l'argent, obtenir par exemple des dopants, mais si on les
+# prend on prend le risque de se faire prendre par la police. » (le porteur du
+# projet)
+#
+# Une mission s'offre à une rencontre (`chance` à chaque passage du donneur, une
+# seule en cours à la fois), se joue en quelques étapes (une offre, parfois un
+# trajet vers un lieu à une heure dite, une conclusion), rapporte ou coûte des
+# francs (francs de 1990 : la ville convertit), et laisse des drapeaux `vl_*`.
+# Le risque n'est PAS ici : il est dans le moteur, dans des événements sombres
+# qui lisent ces drapeaux (content/arcs/{joueur,entraineur}/ville_risques.yaml,
+# cartes dans content/cards/{joueur,entraineur}/ville_risques.yaml) — le
+# contrôle antidopage, la perquisition, les douaniers du car, le créancier, la
+# photo, les talons des billets, l'expert de l'assurance. Rien n'est puni tout
+# de suite ; tout peut revenir, des semaines plus tard, un soir.
+#
+# Sept missions sales, quatre propres, une pour solder une dette :
+#   · sac_preparateur (joueur) — muscu, soir : la boîte du survêtement neuf
+#     (le même homme que « La boîte », jp.sb.boite). vl_produits (chez toi) →
+#     la perquisition ; vl_dopant (pris) → le contrôle.
+#   · cure_preparateur (entraîneur) — muscu, soir : une cure pour le groupe ;
+#     Vukić voit le carton. vl_cure (le carton) → la perquisition ;
+#     vl_equipe_preparee → le contrôle inopiné, la Commission de Berthomier.
+#   · colis_wagon — Terminus, soir : un sac du casier 14 de la gare routière au
+#     wagon de la friche, la nuit. vl_colis → les douaniers du car, puis
+#     l'inspecteur ; vl_colis_lache → l'homme du Terminus réclame. La course
+#     de trop (Portclair) finit en garde à vue sur-le-champ.
+#   · table_du_fond — tripot, nuit : « Samedi, vous perdez. D'un but. »
+#     vl_match_vendu → la photo ; vl_match_trahi → le créancier.
+#   · credit_tripot — tripot : le crédit sans papier. vl_dette_tripot → le
+#     créancier ; `ardoise` permet de solder la dette avant qu'il ne vienne.
+#   · billets_gege — buvette : tes invitations revendues au triple. vl_billets
+#     → les talons chez Madame Josiane, puis Gégé.
+#   · certificat (joueur) — pharmacie : une entorse sur papier, l'assurance du
+#     club paie. vl_certificat → l'expert de l'assurance devant le Doc ; et la
+#     photo : le médecin de la chambre neuf revient au Corner, avec un cliché
+#     de toi qui sprintes au square. C'était un piège depuis la pharmacie.
+#   · Les propres — gamin_square (le Chat, au centre de formation),
+#     boulangere (le four de Pichon, la banque), veuve (la place sept de Madame
+#     Dutheil), corner (le chien de Lulu, au feu de palettes). Elles posent
+#     vl_gamin, vl_boulangere, vl_veuve, vl_corner, et la ville s'en souvient
+#     quand tout va mal : le Chat a noté la plaque de la voiture grise, la
+#     boulangère a vu les voitures banalisées devant le fournil, Josiane sait
+#     à qui tu as donné ta place, Lulu a vu la glacière de la Fédération au
+#     parking. Une bonne action n'efface rien ; elle donne une chance.
+#
+# `roles` : toutes sont écrites pour le joueur et l'entraîneur, les seuls rôles
+# dont le moteur porte les risques (et le président, Josiane, le vestiaire y
+# sont des tiers). Les rôles de bureau en cours d'ajout n'y ont pas accès.
+#
+# `{montant}` : chaque mission n'a qu'UNE somme (le même nombre partout où elle
+# compte des francs), et `{montant}` n'apparaît que dans une étape dont un
+# choix porte cette somme. Les textes de la ville n'accordent rien au
+# protagoniste (il peut être une femme) et ne datent rien : la mission peut
+# tomber en 1991 comme en 2040.
+missions:
+  # ======================================================================= SALES
+  - id: sac_preparateur
+    titre: "Le sac du préparateur"
+    roles: [joueur]
+    donneur: {sprite: inconnu, nom: "Un préparateur sans club", lieu: muscu, tranches: [soir]}
+    si: "energie < 60"
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "Salle de muscu, la radio éteinte. Un homme en survêtement neuf ouvre un sac de sport sur le banc : des ampoules, des boîtes sans étiquette. « Trois semaines, et tes jambes ne te disent plus non. »"
+        choix:
+          - id: acheter
+            label: "J'achète une boîte"
+            francs: -1500
+            effets: {set: [vl_produits]}
+            reponse: "Il compte les billets sans les regarder : {montant}. La boîte tient dans la poche de ton blouson ; tu la sens à chaque pas jusqu'à chez toi."
+            suite: premiere
+          - id: refuser
+            label: "Je referme son sac"
+            reponse: "Il referme le sac sur ses ampoules et va s'asseoir au rameur. Il y est encore quand tu sors, immobile, les mains sur la poignée."
+            suite: fin
+      - id: premiere
+        objectif: {lieu: appartement, tranches: [soir, nuit], delai: 2}
+        texte: "Ta cuisine, la boîte ouverte sur la toile cirée : six ampoules, une seringue sous plastique, une notice écrite au stylo. « Le soir, avant de dormir. Jamais la veille d'un match. »"
+        choix:
+          - id: piquer
+            label: "Je fais la première"
+            effets: {jauges: {tribunes: 3, vestiaire: 1}, set: [vl_dopant]}
+            reponse: "Tu dors onze heures d'affilée. Le lendemain, à l'entraînement, tes jambes partent avant toi ; tu cours pour les rattraper."
+            suite: fin
+          - id: jeter
+            label: "Je jette tout"
+            effets: {clear: [vl_produits]}
+            reponse: "Les ampoules descendent le vide-ordures une par une. Tu les entends rebondir jusqu'au rez-de-chaussée, puis plus rien."
+            suite: fin
+        echec:
+          texte: "La boîte est restée au fond de ton sac de sport, sous les protège-tibias. Personne ne l'a ouverte. Tu sais quand même, à chaque instant, exactement où elle est."
+
+  - id: cure_preparateur
+    titre: "La cure du préparateur"
+    roles: [entraineur]
+    donneur: {sprite: inconnu, nom: "Un préparateur sans club", lieu: muscu, tranches: [soir]}
+    si: "vestiaire < 60"
+    chance: 0.25
+    etapes:
+      - id: offre
+        texte: "Salle de muscu, après la fermeture. Un homme en survêtement neuf aligne des boîtes sur le banc. « Une cure pour ton groupe, trois semaines, {montant}. En mai, ils courront comme en août. »"
+        choix:
+          - id: acheter
+            label: "Je prends la cure"
+            francs: -12000
+            effets: {set: [vl_cure]}
+            reponse: "Il range les boîtes dans un carton à chaussures, couvercle compris. Tu le portes sous le bras jusqu'à ta voiture, comme des chaussures."
+            suite: vestiaire
+          - id: refuser
+            label: "Ils courront à l'eau"
+            reponse: "Il range ses boîtes une à une, sans se presser. « Ceux de {rival} en prennent depuis la Toussaint. Tu verras bien en mai. »"
+            suite: fin
+      - id: vestiaire
+        objectif: {lieu: stade, tranches: [matin], delai: 3}
+        texte: "Le vestiaire, avant la séance. Le carton est ouvert sur le banc du milieu. Vukić entre, regarde les boîtes, puis toi. « C'est quoi ? » Derrière lui, le capitaine attend, en chaussettes."
+        choix:
+          - id: distribuer
+            label: "Je distribue la cure"
+            effets: {jauges: {vestiaire: 3}, set: [vl_equipe_preparee]}
+            reponse: "Vukić prend une boîte, lit l'absence d'étiquette, la repose. Il sort le premier ; à la séance, il ne siffle pas, il regarde les jambes."
+            suite: fin
+          - id: renoncer
+            label: "Je referme le carton"
+            effets: {clear: [vl_cure]}
+            reponse: "Le carton finit dans la benne du parking, sous les cageots de la buvette. Vukić te regarde faire depuis la fenêtre, et ne demande rien."
+            suite: fin
+        echec:
+          texte: "Le carton est resté dans le coffre de ta voiture, sous la couverture. Chaque fois que tu ouvres le coffre, tu le regardes avant de regarder les ballons."
+
+  - id: colis_wagon
+    titre: "Le colis de la gare routière"
+    roles: [entraineur, joueur]
+    donneur: {sprite: inconnu, nom: "Un homme en veste de chauffeur", lieu: terminus, tranches: [soir]}
+    chance: 0.2
+    etapes:
+      - id: offre
+        texte: "Au Terminus, un homme en veste de chauffeur pose une petite clé près de ton verre. « Casier 14, gare routière, cette nuit. Tu le portes au wagon de la friche. On ne fouille pas les gens du journal. »"
+        choix:
+          - id: cle
+            label: "Je prends la clé"
+            reponse: "Il finit ton verre à ta place et sort sans payer. La clé est tiède : il l'a gardée longtemps dans sa main avant de la poser."
+            suite: casier
+          - id: non
+            label: "Je repousse la clé"
+            reponse: "Il la reprend du bout des doigts et la fait glisser jusqu'à l'homme du bout du comptoir, qui l'empoche sans lever les yeux."
+            suite: fin
+      - id: casier
+        objectif: {lieu: gareRoutiere, tranches: [nuit], delai: 2}
+        texte: "La gare routière, après minuit. Le casier 14 s'ouvre sur un sac de sport bleu, cadenassé, lourd comme des ballons mouillés. Au bout du quai, un car tourne au ralenti, tous feux éteints."
+        choix:
+          - id: porter
+            label: "Je prends le sac"
+            reponse: "Tu le portes à l'épaule, comme après l'entraînement. Le car du bout du quai démarre quand tu passes la barrière, et te suit au pas."
+            suite: wagon
+          - id: laisser
+            label: "Je laisse le sac au casier"
+            effets: {set: [vl_colis_lache]}
+            reponse: "Tu refermes le casier, la clé dedans. Le car coupe son moteur. Quelqu'un, derrière le pare-brise, a vu ton visage ; toi, pas le sien."
+            suite: fin
+        echec:
+          texte: "Deux nuits ont passé. La clé du casier 14 est toujours dans ta poche, et ne sert plus à rien. Au Terminus, on te sert désormais sans te regarder."
+          effets: {set: [vl_colis_lache]}
+      - id: wagon
+        objectif: {lieu: wagon, tranches: [nuit], delai: 1}
+        texte: "Le wagon au bout de la voie. Une lampe de poche sur un matelas, deux hommes. L'un coupe le cadenas à la pince, l'autre compte {montant} sur son genou. « Bien. On a une autre course. »"
+        choix:
+          - id: payer
+            label: "Je prends l'enveloppe"
+            francs: 40000
+            sale: true
+            effets: {set: [vl_colis]}
+            reponse: "Elle est épaisse comme un annuaire. En descendant du wagon, tu entends la pince claquer sur un deuxième cadenas."
+            suite: fin
+          - id: course
+            label: "Quelle autre course ?"
+            reponse: "L'homme à la pince sourit pour la première fois. Il sort de sa poche un trousseau de clés de voiture et le fait tourner autour d'un doigt."
+            suite: route
+        echec:
+          texte: "Le sac bleu a dormi sous ton lit. Au matin, il n'y est plus. La porte n'a pas été forcée, et rien d'autre n'a bougé dans l'appartement."
+          effets: {set: [vl_colis_lache]}
+      - id: route
+        texte: "« Portclair, demain soir. Le coffre est déjà chargé, tu n'as qu'à conduire. Trois fois {montant}. » L'autre homme a cessé de compter. La lampe éclaire tes mains, pas ton visage."
+        choix:
+          - id: conduire
+            label: "Je prends le volant"
+            effets: {fin: co_garde_a_vue}
+            reponse: "Au péage de Portclair, une lampe torche balaie le pare-brise, puis le coffre. Une voix te dit de couper le moteur, les mains sur le volant."
+            suite: fin
+          - id: rentrer
+            label: "Ma part, et je rentre"
+            francs: 40000
+            sale: true
+            effets: {set: [vl_colis]}
+            reponse: "Ils te paient la première course, pas un billet de plus. Les clés retournent dans une poche ; la lampe s'éteint avant que tu descendes."
+            suite: fin
+
+  - id: table_du_fond
+    titre: "La table du fond"
+    roles: [entraineur, joueur]
+    donneur: {sprite: inconnu, nom: "Un joueur de cartes", lieu: tripot, tranches: [nuit]}
+    si: "phase != presaison && phase != bilan"
+    chance: 0.25
+    etapes:
+      - id: offre
+        texte: "L'arrière-salle du Terminus. Un homme distribue sans regarder ses cartes. « Samedi, vous perdez. D'un but, pas plus. {montant} ce soir, autant après. Tu sais mieux que moi comment on fait. »"
+        choix:
+          - id: prendre
+            label: "Je prends l'enveloppe"
+            francs: 25000
+            sale: true
+            reponse: "Il la glisse sous le cendrier et la pousse vers toi du dos de la main. Autour de la table, personne ne lève les yeux de ses cartes."
+            suite: tribune
+          - id: lever
+            label: "Je me lève de table"
+            reponse: "Il ramasse les cartes et redistribue, une main de moins. Quand tu passes la porte, il dit ton prénom, pas plus fort que le reste."
+            suite: fin
+      - id: tribune
+        objectif: {lieu: stade, tranches: [aprem], delai: 6}
+        texte: "Au stade, la tribune d'honneur est vide. L'homme de la table est assis au premier rang, une radio à l'oreille, comme un supporter en avance. Il ne se lève pas. « Toujours d'accord ? »"
+        choix:
+          - id: tenir
+            label: "Je ferai ce qu'il faut"
+            effets: {jauges: {vestiaire: -2}, set: [vl_match_vendu]}
+            reponse: "Il hoche la tête et remonte le son de sa radio. Au vestiaire, tu évites ceux qui parlent du match, c'est-à-dire tout le monde."
+            suite: reste
+          - id: trahir
+            label: "Je joue pour gagner"
+            effets: {set: [vl_match_trahi]}
+            reponse: "Il baisse le son. « Alors tu me dois une enveloppe. Plus ce qu'on appelle ici le dérangement. » Puis il te tourne le dos, et remonte le son."
+            suite: fin
+        echec:
+          texte: "Le rendez-vous de la tribune est passé sans toi. Au Terminus, l'homme de la table a laissé un mot sous le verre où tu bois d'habitude : un chiffre, et ton prénom."
+          effets: {set: [vl_match_trahi]}
+      - id: reste
+        objectif: {lieu: tripot, tranches: [nuit], delai: 5}
+        texte: "La même table, le même tapis vert. L'homme ne parle pas du match. Il pose une deuxième enveloppe, {montant}, puis, à côté, une photo de toi à cette table, prise d'en haut."
+        choix:
+          - id: empocher
+            label: "Je prends l'enveloppe"
+            francs: 25000
+            sale: true
+            reponse: "Tu prends l'enveloppe. La photo, il la range dans la poche de sa chemise, contre son cœur. « Un souvenir. On en a tous un, ici. »"
+            suite: fin
+          - id: photo
+            label: "Je veux la photo"
+            reponse: "« Elle n'est pas à vendre. » Il range la photo et l'enveloppe dans la même poche, et te sert un verre que tu ne bois pas."
+            suite: fin
+        echec:
+          texte: "Personne n'a gardé la deuxième enveloppe pour toi. Au Terminus, on raconte qu'elle est partie avec la photo de quelqu'un, et on te regarde en le racontant."
+
+  - id: credit_tripot
+    titre: "Le crédit de la table"
+    roles: [entraineur, joueur]
+    donneur: {sprite: inconnu, nom: "Le patron de la table", lieu: tripot, tranches: [soir, nuit]}
+    si: "francs < 3000"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Le patron de la table regarde tes jetons, puis ton portefeuille, d'un seul coup d'œil. « Je te fais crédit : {montant}, ce soir, sans papier. Tu rends quand tu peux. Avant la fin du mois. »"
+        choix:
+          - id: credit
+            label: "Je prends le crédit"
+            francs: 30000
+            sale: true
+            effets: {set: [vl_dette_tripot]}
+            reponse: "Il écrit ton nom sur une ardoise d'écolier, à la craie, sous trois autres. Les trois autres sont barrés d'un trait."
+            suite: fin
+          - id: non
+            label: "Je rentre à pied"
+            reponse: "Il range l'ardoise sous le comptoir. « La porte est ouverte toutes les nuits. Le crédit aussi. »"
+            suite: fin
+
+  - id: ardoise
+    titre: "L'ardoise"
+    roles: [entraineur, joueur]
+    donneur: {sprite: inconnu, nom: "Le patron de la table", lieu: tripot, tranches: [soir, nuit]}
+    si: "flag(vl_dette_tripot)"
+    chance: 0.4
+    # Elle revient tant que la dette court : « Pas encore » ne la consomme pas.
+    une_fois: false
+    etapes:
+      - id: offre
+        texte: "Le patron de la table essuie son ardoise au chiffon humide, tous les noms sauf le tien. « Tu viens payer, ou tu viens rejouer ? Avec le temps, la craie a grossi : {montant}. »"
+        choix:
+          - id: payer
+            label: "Je paie tout"
+            francs: -45000
+            effets: {clear: [vl_dette_tripot]}
+            reponse: "Il compte deux fois, puis efface ton nom avec le pouce. La trace de craie reste sur l'ardoise, plus pâle que le reste."
+            suite: fin
+          - id: attendre
+            label: "Pas encore"
+            reponse: "Il repose l'ardoise contre le mur, ton nom tourné vers la salle. « On est patients, ici. Jusqu'à un certain point. »"
+            suite: fin
+
+  - id: billets_gege
+    titre: "Les invitations"
+    roles: [entraineur, joueur]
+    donneur: {sprite: gege, nom: "Gégé", lieu: buvette, tranches: [soir]}
+    si: "relation.gege >= 0"
+    chance: 0.25
+    etapes:
+      - id: offre
+        texte: "Gégé essuie le zinc autour de ton verre. « Tes invitations contre {rival}, tu en fais quoi ? Vingt gars de la Nord paient cinq fois le prix. On partage, et le club n'en sait rien. »"
+        choix:
+          - id: donner
+            label: "Je te donne les miennes"
+            reponse: "Il les recompte deux fois et les glisse dans son portefeuille, derrière sa carte d'abonné de soixante-quatorze. « Au guichet, avant midi. »"
+            suite: guichet
+          - id: gamins
+            label: "Elles sont pour les gamins"
+            effets: {jauges: {tribunes: 1}}
+            reponse: "Il hausse les épaules. Au match, douze gamins de l'école sont au premier rang de la Nord ; Gégé leur apprend un chant à ne pas répéter."
+            suite: fin
+      - id: guichet
+        objectif: {lieu: stade, tranches: [midi], delai: 6}
+        texte: "Au guichet, une heure avant l'ouverture. Gégé t'attend derrière la grille, une liasse roulée dans le poing. « Vingt places, cinq fois le prix. Ta moitié : {montant}. Le stadier est de la Nord. »"
+        choix:
+          - id: part
+            label: "Je prends ma part"
+            francs: 4000
+            sale: true
+            effets: {set: [vl_billets]}
+            reponse: "La liasse tient dans ta poche de pantalon. Le stadier de la porte B te salue un peu trop bas, et un peu trop longtemps."
+            suite: fin
+          - id: garde
+            label: "Garde tout, Gégé"
+            effets: {jauges: {tribunes: 2}, set: [vl_billets]}
+            reponse: "Il range la liasse sans discuter. Le soir, la buvette boit à ta santé, et chacun explique au suivant pourquoi."
+            suite: fin
+        echec:
+          texte: "Gégé a vendu les vingt places sans toi. Ta part t'attend à la buvette, dans une enveloppe à ton nom, posée bien en vue sur la caisse."
+          effets: {set: [vl_billets]}
+
+  - id: certificat
+    titre: "Le certificat"
+    roles: [joueur]
+    donneur: {sprite: passant, nom: "Un médecin sans cabinet", lieu: pharmacie, tranches: [matin]}
+    si: "energie < 50"
+    chance: 0.2
+    etapes:
+      - id: offre
+        texte: "À la pharmacie, un homme en imperméable attend derrière toi, une ordonnance vierge entre deux doigts. « Une entorse, trois semaines d'arrêt. L'assurance du club paie les blessés. On partage. »"
+        choix:
+          - id: oui
+            label: "Je lui donne mon nom"
+            reponse: "Il l'écrit sur l'ordonnance sans demander l'orthographe. « Hôtel de la Rive, chambre neuf, ce soir. Tu boites en entrant. »"
+            suite: chambre
+          - id: non
+            label: "Je n'ai mal nulle part"
+            reponse: "Il range l'ordonnance dans son imperméable. « Ça viendra. » La pharmacienne a tout entendu ; elle te rend la monnaie en comptant tout haut."
+            suite: fin
+      - id: chambre
+        objectif: {lieu: hotel, tranches: [soir], delai: 2}
+        texte: "Hôtel de la Rive, chambre neuf. Il bande ta cheville saine avec soin, comme une vraie. « Ta part : {montant}. Trois semaines. Ne cours jamais là où quelqu'un peut te voir. »"
+        choix:
+          - id: signer
+            label: "Je signe la déclaration"
+            francs: 15000
+            sale: true
+            effets: {jauges: {vestiaire: -2}, set: [vl_certificat]}
+            reponse: "Tu boites jusqu'à l'escalier, puis jusqu'à la rue. Au vestiaire, on te demande des nouvelles de ta cheville, gentiment ; c'est le pire."
+            suite: fin
+          - id: defaire
+            label: "Je défais le bandage"
+            reponse: "Tu le défais toi-même, tour après tour. Il te regarde faire sans t'aider, puis range la bande dans sa sacoche, roulée serrée."
+            suite: fin
+        echec:
+          texte: "La chambre neuf a été rendue. À la réception, on t'assure qu'aucun médecin n'y a jamais dormi, et on te l'assure très poliment."
+
+  # ===================================================================== PROPRES
+  - id: gamin_square
+    titre: "Le gamin du square"
+    roles: [entraineur, joueur]
+    donneur: {sprite: enfant, nom: "Un gamin du square", lieu: square, tranches: [soir]}
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "Au square des Lilas, un gamin de onze ans jongle avec un ballon recousu. Il le bloque sous sa semelle en te voyant. « Le centre fait des essais le mercredi. Il faut un adulte qui signe. Vous ? »"
+        choix:
+          - id: oui
+            label: "Mercredi, je viens"
+            reponse: "Il refait trois jongles pour te montrer, rate le quatrième et rougit jusqu'aux oreilles. « Je suis gardien, en vrai. On m'appelle le Chat. »"
+            suite: centre
+          - id: non
+            label: "Demande à tes parents"
+            reponse: "Il hoche la tête, comme s'il s'y attendait, et retourne contre le mur. Le ballon claque dans le soir longtemps après ton passage."
+            suite: fin
+      - id: centre
+        objectif: {lieu: centre, tranches: [aprem], delai: 7}
+        texte: "Au centre de formation, le Chat attend sur le banc, en chaussures de ville. L'éducateur te prend à part. « Il a de l'œil. Mais sans crampons ni licence payée, je ne peux pas l'inscrire. »"
+        choix:
+          - id: payer
+            label: "Je paie tout"
+            francs: -500
+            effets: {jauges: {tribunes: 1}, set: [vl_gamin]}
+            reponse: "Le mercredi suivant, il a des crampons trop grands d'une pointure, choisis exprès pour durer. Il dort avec, dit sa mère."
+            suite: fin
+          - id: club
+            label: "J'en parle au président"
+            effets: {jauges: {vestiaire: 1, direction: -1}, set: [vl_gamin]}
+            reponse: "Le président signe la licence en soupirant « encore un ». Le Chat s'entraîne en baskets jusqu'à Noël, sans rater une séance."
+            suite: fin
+        echec:
+          texte: "Le mercredi est passé. Au square, le gamin joue toujours contre le mur, et il ne lève plus la tête quand tu passes."
+
+  - id: boulangere
+    titre: "Le four de la boulangerie"
+    roles: [entraineur, joueur]
+    donneur: {sprite: passante, nom: "La boulangère", lieu: boulangerie_residentiel, tranches: [matin]}
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "La boulangère compte ta monnaie deux fois, et se trompe deux fois. Sous la caisse, une lettre de la Banque Aubérivoise, du rouge partout. « Le four neuf. Ils veulent {montant} pour la fin du mois. »"
+        choix:
+          - id: avancer
+            label: "Je vous avance la somme"
+            francs: -15000
+            effets: {jauges: {tribunes: 1}, set: [vl_boulangere]}
+            reponse: "Elle refuse trois fois, puis prend l'enveloppe en baissant la voix, comme si la rue écoutait. Le lendemain, ton pain t'attend, emballé."
+            suite: fin
+          - id: banquier
+            label: "Je vais voir le banquier"
+            reponse: "Elle te donne la lettre pliée en quatre, de la farine dans les plis. « Pichon voulait y aller. Il crie, à la banque. Ça ne sert à rien. »"
+            suite: banque
+          - id: rien
+            label: "Je n'ai pas de quoi"
+            reponse: "Elle range la lettre sous la caisse, exactement où elle était. « Je disais ça comme ça. » Puis elle te demande le score de samedi."
+            suite: fin
+      - id: banque
+        objectif: {lieu: banque, tranches: [matin, aprem], delai: 5}
+        texte: "Le banquier a le dossier de la boulangerie ouvert à côté du tien. « J'étale sur deux ans si quelqu'un se porte caution. Quelqu'un que la ville connaît. Vous, par exemple. »"
+        choix:
+          - id: caution
+            label: "Je me porte caution"
+            effets: {jauges: {tribunes: 2}, set: [vl_boulangere]}
+            reponse: "Tu signes sous le nom de Pichon. Le banquier range les deux dossiers l'un sur l'autre, et pose son stylo dessus, comme un presse-papier."
+            suite: fin
+          - id: refus
+            label: "Je ne signe rien"
+            reponse: "Il referme le dossier. À la fin du mois, la vitrine de la boulangerie a moins de gâteaux, et la boulangère ne te demande plus le score."
+            suite: fin
+        echec:
+          texte: "La fin du mois est passée. Pichon a vendu sa camionnette pour payer le four ; il livre maintenant à vélo, et te salue de loin, sans s'arrêter."
+
+  - id: veuve
+    titre: "La place sept"
+    roles: [entraineur, joueur]
+    donneur: {sprite: passante, nom: "Madame Dutheil", lieu: caveau, tranches: [matin]}
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "Au caveau du Racing, une dame en manteau du dimanche frotte une plaque avec son mouchoir. « Mon mari, l'ailier de soixante-quatorze. Depuis sa mort, le club ne m'envoie plus ma carte. »"
+        choix:
+          - id: aider
+            label: "Je vous trouve une place"
+            reponse: "Elle range le mouchoir dans sa manche. « La sept, tribune d'honneur. C'était la sienne, puis la mienne. Je n'en veux pas une autre. »"
+            suite: secretariat
+          - id: non
+            label: "Je n'y peux rien"
+            reponse: "Elle hoche la tête et recommence à frotter, au même endroit. Le nom brille déjà ; elle frotte quand même."
+            suite: fin
+      - id: secretariat
+        objectif: {lieu: clubhouse, tranches: [matin, aprem], delai: 4}
+        texte: "Madame Josiane sort la fiche du fichier des abonnés d'honneur. « Dutheil : barré au crayon rouge, “décédé”. La sept est vendue depuis l'an dernier, à un ami du président. »"
+        choix:
+          - id: mienne
+            label: "Donnez-lui la mienne"
+            effets: {jauges: {tribunes: 2}, set: [vl_veuve]}
+            reponse: "Josiane barre ton nom et écrit « Dutheil » au-dessus, sans gommer. Au match, la Nord se lève à la septième minute ; Madame Dutheil aussi."
+            suite: fin
+          - id: racheter
+            label: "Je rachète la sept"
+            francs: -2000
+            effets: {jauges: {tribunes: 1, direction: -1}, set: [vl_veuve]}
+            reponse: "L'ami du président reprend son argent en grognant. Madame Dutheil retrouve sa place, son coussin, et le voisin qui la gardait sans le dire."
+            suite: fin
+        echec:
+          texte: "Josiane a gardé la fiche de Madame Dutheil sur son bureau toute la semaine, sous le presse-papier. Puis elle l'a rangée, toujours barrée."
+
+  - id: corner
+    titre: "Le chien de Lulu"
+    roles: [entraineur, joueur]
+    donneur: {sprite: ancien, nom: "Lulu, le gardien du stade", lieu: stade, tranches: [soir]}
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "Lulu fait le tour du stade, une laisse vide à la main. « Corner a filé par le trou du grillage. On l'a vu à la friche, avec ceux du feu. Moi, là-bas, on ne me laisse pas approcher. »"
+        choix:
+          - id: oui
+            label: "J'irai le chercher"
+            reponse: "Il te donne la laisse et un sucre enveloppé dans un mouchoir. « Il vient pour le sucre. Pour son nom, il ne vient plus depuis longtemps. »"
+            suite: feu
+          - id: non
+            label: "Il reviendra de lui-même"
+            reponse: "Lulu range la laisse dans sa poche. Ce soir-là, il laisse la grille du fond entrouverte, avec une gamelle devant."
+            suite: fin
+      - id: feu
+        objectif: {lieu: feu, tranches: [soir, nuit], delai: 3}
+        texte: "Autour du feu de palettes, quatre silhouettes, et Corner couché contre une jambe, une ficelle au cou. L'homme ne quitte pas le feu des yeux. « Il a mangé avec nous trois soirs. Ça se paie, non ? »"
+        choix:
+          - id: payer
+            label: "Je paie ses trois soirs"
+            francs: -100
+            effets: {jauges: {tribunes: 1}, set: [vl_corner]}
+            reponse: "L'homme coupe la ficelle au canif et empoche le billet sans le regarder. À la grille du stade, Lulu pleure en revoyant son chien."
+            suite: fin
+          - id: sucre
+            label: "Je tends le sucre"
+            effets: {set: [vl_corner]}
+            reponse: "Corner se lève pour le sucre. L'homme rit sans bruit et lâche la ficelle. « Dis à Lulu que son chien a plus de manières que lui. »"
+            suite: fin
+        echec:
+          texte: "Trois soirs ont passé. Lulu a raccroché la laisse au clou de sa loge. Il ne t'en parle pas, et c'est pire que s'il t'en parlait."

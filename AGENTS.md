@@ -107,8 +107,32 @@ La couche « Punch Club » de la préproduction, branchée sur le vrai moteur :
 montre : chaque carte a un lieu (son `lieu:`, sinon son locuteur, sinon son beat) et une
 fenêtre dans la semaine (deux ou trois cartes du lundi au vendredi, le match le samedi à
 15 h, le classement le dimanche) ; un événement sombre ne s'annonce pas, il tombe le soir.
-Le temps, l'énergie, la faim et les francs sont tenus par la coquille ; la partie se
+Le temps, l'énergie, la faim et l'argent sont tenus par la coquille ; la partie se
 sauvegarde par l'état entier du moteur (le Code de Carrière ne rejoue pas la ville).
+
+Ce que la ville porte en plus des cartes :
+
+- **Les gens** : personne n'apparaît au milieu de la rue ; un passant sort d'une porte ou
+  arrive du hors-champ, et marche au large des murs (une grille érodée, des chemins qui ne
+  rasent aucun angle). Les personnages connus (`presences`), celui qui t'attend et les
+  commerçants sortent de chez eux et y rentrent. On les **touche** : ils s'arrêtent et disent
+  une réplique du moment, tirée de `content/ville/paroles_*.yaml` selon son `si` (une petite
+  grammaire, ET seulement, que `build_content` valide et que `ville.js` évalue — les deux
+  doivent rester d'accord).
+- **Les missions secondaires** (`content/ville/missions*.yaml`), rares : un donneur à un lieu
+  et une heure, des étapes avec rendez-vous et délai, de l'argent propre ou sale, des effets
+  appliqués par `Engine.mission` ; leurs risques sont des événements sombres du moteur
+  (`ville_risques`).
+- **La boutique et les biens** (`content/ville/boutique.yaml`) : vêtements, montres,
+  voitures, logements, hélicoptère ; achat en deux gestes, revente, effets par
+  `Engine.biens` (drapeaux `bn_*`), usage en ville (vitesse, repos, faim, l'hélicoptère),
+  saisies.
+- **Le pont** : une carte agit sur la ville par des compteurs `var:` en francs de 1990 —
+  `ville_francs`, `ville_francs_sales` (l'argent sale salit ce qu'il paie : saisi en premier),
+  `ville_amende`, `cadeau_<objet>`, `saisie_vehicules|logement|luxe|tout`, `vol_luxe` ; la
+  ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
+  l'écu après `monde_ecus`).
+- **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
 
 ```bash
 # les images (une fois ; ~4 min) : la zone de jour, au crépuscule, de nuit, sa profondeur, la grille
@@ -143,6 +167,19 @@ un texte ≤ 200, une trace posée est lue quelque part, une fin déclarée a un
 porte, `{toi}` exige que le locuteur ait une `adresse`, une réaction ne se pose
 pas sur une carte de routine.
 
+**Écrire à plusieurs sans se marcher dessus** : les fins, les manchettes, les set-pieces
+et la ville se lisent aussi par lots — `content/endings/<lot>.yaml` (et
+`epitaph_plus_ajouts:` pour ajouter une ligne d'épitaphe à une fin commune, comme la garde
+à vue, sans toucher à son fichier), `content/unes/<lot>.yaml`, `content/setpieces/<lot>.yaml`
+(des variantes rangées avant le secours, jamais un secours), `content/ville/<lot>.yaml`
+(`paroles`, `missions`, `objets`, `presences`, `rencontres`). Un postulat peut imposer son
+`club`, sa `ville` et son `rival` (cosmétiques, posés après les tirages). Les dix histoires
+de lancement (`docs/histoires/00_les_dix_histoires.md`) ont leurs outils : le tag
+`intermede` (une carte à part, plus sombre, sans locuteur), la ligne d'ordre selon son
+support (`fax`, `repondeur`, `portable`, `oreillette`, `telephone`), et `lieu: ailleurs`
+(loin d'Aubérive : la ville s'efface derrière le décor que nomme un tag, ville.yaml
+`ailleurs`).
+
 ## Le chantier ouvert : la direction artistique
 
 L'identité visuelle actuelle (« l'album de vignettes ») **est rejetée par le
@@ -173,9 +210,10 @@ formes géométriques, palette courte). Il ne demande aucun générateur d'image
 ## Ce qui reste connu et ouvert
 
 - La ville : un changement de club garde le même plan de ville (seuls les noms changent) ;
-  le joueur et l'entraîneur ont les mêmes lieux ; les statistiques (physique, tactique…)
-  de la préproduction ne sont pas branchées ; un match est une carte (le bloc de six
-  journées du moteur), pas encore une scène au stade.
+  tous les rôles ont les mêmes lieux ; un logement acheté change le nom de « chez toi », pas
+  sa porte ; les statistiques (physique, tactique…) de la préproduction ne sont pas
+  branchées ; un match est une carte (le bloc de six journées du moteur), pas encore une
+  scène au stade.
 
 - Le « J » du bandeau n'affiche pas la vraie journée de championnat, et ne dit
   pas la même chose dans l'aperçu web et dans l'application.
@@ -184,6 +222,10 @@ formes géométriques, palette courte). Il ne demande aucun générateur d'image
 - Deux budgets d'équilibrage restent hors cible et sont documentés dans
   `docs/balance/step4_variete.md` : la récurrence du président en première
   saison, et l'exposition (la part des cartes vues en dix carrières).
-- Les rôles directeur sportif, président, sélectionneur et dirigeant d'instance
-  sont **écrits** dans la bible mais **pas branchés** dans le moteur
-  (`content/roles.yaml` n'en connaît que deux).
+- Le directeur sportif (`ds`), le président (`president`) et le sélectionneur
+  (`selectionneur`) sont **branchés** (`content/roles.yaml`, `calendar.yaml`,
+  `content/endings/roles_bureau.yaml`, `packages/core/test/roles_test.dart`) : mêmes
+  quatre jauges sous d'autres noms, leurs fins, leur calendrier (le sélectionneur vit
+  l'année des fenêtres internationales, son classement est un classement de nations). Leurs
+  transitions de carrière ne sont pas écrites. Le joueur amateur, le président amateur et le
+  dirigeant d'instance restent dans la bible seulement.

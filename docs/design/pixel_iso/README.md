@@ -101,7 +101,16 @@ node ville_post.js                   # la grille finale (praticable de jour ET d
 cd out/ville && mkdir -p web && for p in day:jour dusk:crepuscule night:nuit day_prof:prof_jour night_prof:prof_nuit; do \
   convert ${p%%:*}.png -crop 1024x1024 +repage +adjoin -define webp:lossless=true -define webp:method=6 web/${p##*:}_%02d.webp; done \
   && cp lieux.json grille.json sprites.json web/
+# le plan (la ville vue de loin, au tiers) : ici la perte ne gêne pas, le plan est un repère
+convert day.png -filter Box -resize 33.3333% -quality 82 -define webp:method=6 web/plan.webp
 ```
+
+Les lieux viennent des quartiers (`P.push({ key, label, x, y, z })`, coordonnées locales)
+et de la liste du quartier du stade dans `ville_assets.js`. Le quartier résidentiel porte
+les cinq lieux de la vie d'après : Brunel, tailleur et chausseur (`tailleur`), le garage
+du Pont (`garage`), Immobilier Tessandier (`agence`), le Rideau Rouge (`club_prive`, une
+porte capitonnée et une enseigne qui ne s'allume que le soir) et l'arrière-salle du
+Terminus (`tripot`, une porte de service sur le flanc, une ampoule nue).
 
 La profondeur est codée sur deux octets (rouge = poids fort, vert = poids faible) :
 `(x + y + z) × 8 + 1`, 0 pour le ciel. Le crépuscule a la même géométrie que la nuit ;
