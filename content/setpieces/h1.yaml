@@ -1,0 +1,171 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les variantes de set-piece du livre.
+# Rangées avant le secours de chaque beat ; chacune lit `flag('histoire_h1')`.
+# Elles ne changent aucune mécanique : l'objectif, le match, le Bilan restent
+# ceux du promu ; ce sont les masques qui les regardent.
+setpieces:
+  objective:
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && season == 0"
+      speaker: aulard
+      text: "Vaubourg tourne son sous-main : un chiffre, et dessous, {objectif_min}. « Avec ce budget, c'est beaucoup. Le virage dit qu'il t'a trouvé{pg, select, f{e} other{}} avant moi. Tu t'engages, {toi} ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il souligne le chiffre deux fois. « Le virage, lui, ne signe jamais rien. Toi, si. »"
+      answer_right: "Il tapote sa chevalière sur le sous-main. « Le dernier qui ne promettait rien est parti en octobre. »"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && season == 1 && flag('h1_incendie')"
+      speaker: aulard
+      text: "« Cette saison, {objectif_min}, {toi}. Et pas une nuit de plus comme celle du local. Si les masques ressortent, c'est ton nom qu'on lira dans L'Écho, pas le mien. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il note la date dans la marge, et à côté, au crayon, un mot que tu ne lis pas : « nuits »."
+      answer_right: "« Les masques non plus ne promettent rien. Ils font. » Il range le stylo dans la poche intérieure."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && season == 2"
+      speaker: aulard
+      text: "Vaubourg ne s'assied pas : « Cette saison, {objectif_min}. Ensuite, tu feras ce que tu veux de ton nom, {toi}. Moi, j'ai le mien depuis 1977, et je compte le garder. Tu t'engages ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il te serre la main par-dessus le bureau, trop fort, et ne la lâche qu'au moment où le téléphone sonne."
+      answer_right: "« Comme ton père. Lui non plus ne promettait rien, en 1974. » Il le dit en regardant la fenêtre."
+
+  match:
+    # Une ligne par bloc, jamais deux fois la même : chaque variante lit le
+    # créneau du bloc (`slot` : 5, 7, 9 à l'aller ; 14, 16, 17 au retour).
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_lhoste_1974') && season == 2 && slot <= 5"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Lhoste a pris un billet dans la Nord, au douzième rang, sans masque. Il ne prend pas de notes."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_appel') && season == 2 && slot == 14"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. On compte les samedis qui restent. Toi aussi, depuis la voix qui ne se pressait pas."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_cercueil') && season == 2 && slot == 14"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Depuis le cercueil, la Nord ne chante plus ton nom. Elle chante Ravenel, et tape des mains sur la dernière syllabe."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && (flag('h1_appel') || flag('h1_cercueil')) && season == 2 && slot == 16"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le dernier samedi approche. À la Nord, on recoud les élastiques des masques, un par un."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_berline_brulee') && season == 1 && slot <= 5"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. L'inspecteur a pris une place en tribune, face à la Nord. Il regarde les masques, pas le match."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_passerelle') && season == 1 && slot == 14"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Au premier rang de la Nord, la place de Gigi reste vide. On y a posé un masque, face au terrain."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_voiture_saisie') && season == 1 && slot == 16"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Depuis la saisie, tu viens au stade en bus. Le chauffeur a ton visage plié dans sa sacoche."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_masques_tifo') && season == 0 && slot <= 5"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Dans la Nord, les cartons de masques arrivent avant les joueurs."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_masques_tifo') && season == 0 && slot == 9"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Les masques ont pris la pluie de novembre. À la mi-temps, la Nord les fait sécher sur le grillage."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_incendie') && season == 0 && slot == 14"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Depuis le feu, les cartons dorment chez l'habitant. Le samedi, ils arrivent par vingt, dans des coffres."
+
+  gm_annonce:
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_passerelle') && season == 1"
+      text: "GRAND MATCH. Gigi est en tribune, la mâchoire tenue par des fils. Il ne peut pas chanter ; il tape du pied sur la marche, en retard d'un temps. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && flag('h1_masques_tifo') && season == 0"
+      text: "GRAND MATCH. La Nord a sorti les trois mille. Ton visage regarde le terrain trois mille fois, et le terrain ne sait plus où se mettre. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  aftermatch:
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && vars.gm_won == 1 && flag('h1_passerelle') && season == 1"
+      speaker: gege
+      text: "Score final {gm_score}. Gégé, à la grille : « Ils ont levé ta tête sans chanter, {toi}. Depuis la passerelle, on la lève en silence. Personne ne l'a décidé. »"
+      left: "Qu'ils chantent"
+      right: "Le silence, c'est bien"
+      answer_left: "Il hausse les épaules. « Dis-le-leur toi-même. Moi, ils ne m'écoutent plus quand ils ont ta figure. »"
+      answer_right: "« Pour toi, peut-être. » Il remonte son col et regarde la Nord se vider, rang par rang, sans un mot."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && vars.gm_won == 0 && flag('h1_voiture_saisie') && season == 1"
+      speaker: vukic
+      text: "Score final {gm_score}. Vukić, dans le couloir : « Lhoste était en tribune de presse, {toi}. Il a regardé la Nord tout le match, et la Nord l'a regardé. »"
+      left: "Qu'il regarde"
+      right: "Je vais lui parler"
+      answer_left: "Vukić note l'heure dans la marge de la feuille de match, puis le nom, et souligne le nom."
+      answer_right: "Lhoste t'attend déjà au parking, appuyé à sa voiture. « Joli match. On en reparlera. » Il ne dit pas de quoi."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && vars.gm_won == 1 && flag('h1_masques_tifo') && season == 0"
+      speaker: gege
+      text: "Score final {gm_score}. Gégé, l'écharpe roulée autour du poing : « Deux mille neuf cents masques levés au coup de sifflet, {toi}. J'ai compté ceux qui sont restés baissés. Onze. »"
+      left: "Qui, les onze ?"
+      right: "Ça suffit, le compte"
+      answer_left: "« Des gens qui savent. » Il ne dit pas quoi. Il le dit en regardant la loge du président."
+      answer_right: "Il remet le compte dans sa poche, avec la craie, et chante avec les autres, faux, exprès."
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && vars.gm_won == 0 && flag('h1_masques_tifo') && season == 0"
+      speaker: vukic
+      text: "Score final {gm_score}. Vukić, dans le couloir : « Dans la Nord, ils ont plié les masques en quatre pendant les arrêts de jeu, {toi}. Tous. Personne ne leur a demandé. »"
+      left: "Je monte les voir"
+      right: "Laisse-les plier"
+      answer_left: "Tu montes. Ils te regardent arriver sans un chant, trois mille petits carrés de carton dans les poches."
+      answer_right: "Vukić note l'heure. Sur la feuille de match, il écrit dans la marge : « pliés, 89e »."
+
+  classement:
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && !phase('bilan') && flag('h1_massenet_publie') && season == 1"
+      speaker: vecchio
+      text: "Gigi lit le classement de la trêve punaisé sur la porte de la buvette : « {rang}e. Et moi, page cinq du journal, depuis jeudi. Il y a des classements qui ne remontent pas. »"
+      left: "Lui poser la main à l'épaule"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && !phase('bilan') && flag('h1_photo_volee') && season == 2"
+      speaker: josiane
+      text: "Madame Josiane punaise le classement de la trêve au clou de l'escalier, là où pendait la photo de 1974 : « Un clou vide, ça fait parler. Un classement, moins. »"
+      left: "Regarder le clou"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && phase('bilan') && world.rang >= 16 && season == 0"
+      speaker: gege
+      text: "Gégé lit la feuille du local en partant du bas : « {rang}e. En 1974, on ne parlait pas du classement. On parlait de la finale. Cette année, on parlera de quoi ? »"
+      left: "On verra en août"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && phase('bilan') && season == 1"
+      speaker: odette
+      text: "Odette photographie le tableau du classement, sans flash, puis toi devant : « {rang}e. Dans vingt ans, on regardera ta tête, pas le chiffre. Ne bouge pas. »"
+      left: "Ne pas bouger"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && !phase('bilan') && flag('h1_masques_tifo') && season == 0"
+      speaker: josiane
+      text: "Madame Josiane punaise le classement de la trêve sous la photo de l'escalier, puis se ravise et le met à côté : « Pas sous eux. Ils ont assez vu de classements. »"
+      left: "La laisser faire"
+
+  bilan_verdict:
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && bilan.tenu && season == 0"
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. Dans la Nord, quelqu'un a écrit le rang à la craie sur le front d'un masque, et l'a accroché au grillage."
+      left: "Voir le classement"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && !bilan.tenu && flag('h1_masques_tifo') && season == 0"
+      text: "Le verdict tombe : {rang}e. {objectif} : manqué. Les masques sont rentrés dans leurs cartons sans qu'on les compte, pour la première fois depuis août."
+      left: "Voir le classement"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && bilan.tenu && season == 1 && flag('h1_passerelle')"
+      text: "Le verdict tombe : {rang}e. {objectif} : tenu. Gigi l'écrit sur son ardoise, la tourne vers la Nord, et l'efface du plat de la manche."
+      left: "Voir le classement"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && !bilan.tenu && season == 1"
+      text: "Le verdict tombe : {rang}e. {objectif} : manqué. Le soir, à la laverie, une machine tourne, pleine de masques. Personne ne vient la vider."
+      left: "Voir le classement"
+
+  bilan_contrat:
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && season == 1 && flag('h1_voiture_saisie')"
+      speaker: aulard
+      text: "« Ta voiture est au dépôt de Portclair, et ton nom dans le carnet d'un inspecteur, {toi}. Je te prolonge quand même. Ne me demande pas pourquoi : je ne le sais pas. »"
+      left: "Je reste"
+      right: "Je réclame plus de moyens"
+      answer_left: "Il signe sans relire. Sa chevalière laisse une petite marque ronde sur le papier, à côté de la signature."
+      answer_right: "« Des moyens. » Il rit, un peu. « Tu as déjà trois mille têtes. Qu'est-ce qu'il te faut de plus ? »"
+    - roles: [entraineur]
+      when: "flag('histoire_h1') && season == 0"
+      speaker: aulard
+      text: "« On continue, {toi}. Le virage me l'a fait savoir sur un drap, au-dessus de la Nord, avec ta tête dessus. Je n'ai pas eu à réfléchir longtemps. »"
+      left: "Je reste"
+      right: "Je réclame plus de moyens"
+      answer_left: "Il pousse le contrat vers toi. Sur la page deux, quelqu'un a déjà corrigé ton nom à la main."
+      answer_right: "Il ouvre le carnet à souches, regarde la première ligne, et le referme. « L'imprimeur d'abord. »"

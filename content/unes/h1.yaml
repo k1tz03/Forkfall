@@ -1,0 +1,283 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les manchettes du Bilan. Schéma et
+# règles : en-tête de content/unes.yaml. Chacune lit une trace du livre posée
+# dans la saison (`journal_has`), et passe devant les manchettes génériques du
+# promu (priorité 3, ou 2 pour les plus douces). Les réactions sont celles de
+# content/cards/entraineur/h1_reactions.yaml : la maison, le local, l'inspecteur.
+unes:
+  # ---------------------------------------------------------- saison 1
+  - id: une.h1.visages
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && journal_has('h1_masques_tifo') && seen('en.h1.a1_presentation')"
+    titre: "LE VIRAGE AUX TROIS MILLE VISAGES"
+    sous: "Toute la saison, la Nord a porté le visage de {prenom} {nom}, en carton. Le président affirme n'avoir rien payé ; l'imprimeur, lui, a été payé en liquide."
+    sujet: en.h1.masques
+    photo: en.h1.a1_presentation
+    react: [ { card: en.h1.re.gege_une, if: "relation.gege >= 1" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.visages_tribune
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && journal_has('h1_masques_tifo') && seen('en.h1.a1_presentation_tribune')"
+    titre: "LE VIRAGE AUX TROIS MILLE VISAGES"
+    sous: "Toute la saison, la Nord a porté le visage de {prenom} {nom}, en carton. Le président affirme n'avoir rien payé ; l'imprimeur, lui, a été payé en liquide."
+    sujet: en.h1.masques
+    photo: en.h1.a1_presentation_tribune
+    react: [ { card: en.h1.re.gege_une, if: "relation.gege >= 1" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.visages_argent
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && journal_has('h1_masques_tifo') && seen('en.h1.a1_presentation_argent')"
+    titre: "LE VIRAGE AUX TROIS MILLE VISAGES"
+    sous: "Toute la saison, la Nord a porté le visage de {prenom} {nom}, en carton. Le président affirme n'avoir rien payé ; l'imprimeur, lui, a été payé en liquide."
+    sujet: en.h1.masques
+    photo: en.h1.a1_presentation_argent
+    react: [ { card: en.h1.re.gege_une, if: "relation.gege >= 1" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.phrase
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    poids: 1.4
+    when: "flag('histoire_h1') && flag('h1_phrase_buvette') && journal_has('h1_phrase_buvette')"
+    titre: "CEUX DE 74 PAIERONT, A DIT {NOM}"
+    sous: "Une phrase à la buvette, un soir de match, devant une bière tiède. Un ancien l'a recopiée sur un sous-bock ; la ville l'a apprise par cœur avant la Toussaint."
+    sujet: en.h1.masques
+    photo: en.h1.masques.biere
+    react: [ { card: en.h1.re.gege_une } ]
+
+  - id: une.h1.feu
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_incendie') && journal_has('h1_incendie') && seen('en.h1.a3_feu')"
+    titre: "LE LOCAL DU VIRAGE EN CENDRES"
+    sous: "Le feu a pris sous la Tribune Nord, une nuit d'hiver. Les pompiers parlent d'un radiateur. Au local, on parle de quatre cent douze masques qui manquent au compte."
+    sujet: en.h1.visages
+    photo: en.h1.a3_feu
+    react: [ { card: en.h1.re.gege_une, if: "relation.gege >= 0" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.feu_vendus
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_incendie') && journal_has('h1_incendie') && seen('en.h1.a3_feu_vendus')"
+    titre: "LE LOCAL DU VIRAGE EN CENDRES"
+    sous: "Le feu a pris sous la Tribune Nord, une nuit d'hiver. Les pompiers parlent d'un radiateur. Au local, on parle de quatre cent douze masques qui manquent au compte."
+    sujet: en.h1.visages
+    photo: en.h1.a3_feu_vendus
+    react: [ { card: en.h1.re.gege_une, if: "relation.gege >= 0" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.fenetre
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    poids: 1.2
+    when: "flag('histoire_h1') && flag('h1_masque_sous_fenetre') && journal_has('h1_masque_sous_fenetre') && seen('en.h1.a5_fenetre')"
+    titre: "QUI PORTE LE MASQUE ?"
+    sous: "Un mardi, à minuit, un homme au visage de {nom} est resté une heure rue des Lilas sans bouger. Le vrai dormait-il ? La Gazette a posé la question à trois voisins."
+    sujet: en.h1.visages
+    photo: en.h1.a5_fenetre
+    react: [ { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.fenetre_seul
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    poids: 1.2
+    when: "flag('histoire_h1') && flag('h1_masque_sous_fenetre') && journal_has('h1_masque_sous_fenetre') && seen('en.h1.a5_fenetre_seul')"
+    titre: "QUI PORTE LE MASQUE ?"
+    sous: "Un mardi, à minuit, un homme au visage de {nom} est resté une heure rue des Lilas sans bouger. Le vrai dormait-il ? La Gazette a posé la question à trois voisins."
+    sujet: en.h1.visages
+    photo: en.h1.a5_fenetre_seul
+    react: [ { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.maillot
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_maillot') && journal_has('h1_maillot')"
+    titre: "LE 5 DE 1974 VENDU 35 000 FRANCS"
+    sous: "Aux enchères de la boutique, {prenom} {nom} a payé le maillot de la finale plus cher qu'un mois de salaire. Les anciens du premier rang ont applaudi, puis se sont tus."
+    sujet: en.h1.maillot
+    photo: en.h1.maillot.enchere
+
+  - id: une.h1.maillot_gigi
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_maillot_gigi') && journal_has('h1_maillot_gigi')"
+    titre: "LE MAILLOT DE 1974 RESTE À {VILLE}"
+    sous: "Gigi Vecchio, gardien remplaçant de la finale, a racheté le 5 aux enchères de la boutique. Il ne l'a pas déplié. L'entraîneur de {club} a laissé filer."
+    sujet: en.h1.maillot
+    photo: en.h1.maillot.enchere
+
+  # ---------------------------------------------------------- saison 2
+  - id: une.h1.berline
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_berline_brulee') && journal_has('h1_berline_brulee') && seen('en.h1.b1_berline')"
+    titre: "LA BERLINE DU PRÉSIDENT"
+    sous: "Elle a brûlé sur le parking du stade, une nuit d'août, un masque posé sur le capot. Trois témoins ont vu {nom} au parking, ou son visage. Rue des Lilas, on dit qu'on dormait."
+    sujet: en.h1.visages
+    photo: en.h1.b1_berline
+    react: [ { card: en.h1.re.lhoste_une, if: "relation.lhoste >= 0" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.berline_president
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_berline_brulee') && journal_has('h1_berline_brulee') && seen('en.h1.b1_berline_president')"
+    titre: "LA BERLINE DU PRÉSIDENT"
+    sous: "Elle a brûlé sur le parking du stade, une nuit d'août, un masque posé sur le capot. Trois témoins ont vu {nom} au parking, ou son visage. Rue des Lilas, on dit qu'on dormait."
+    sujet: en.h1.visages
+    photo: en.h1.b1_berline_president
+    react: [ { card: en.h1.re.lhoste_une, if: "relation.lhoste >= 0" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.archives
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    poids: 0.8
+    when: "flag('histoire_h1') && flag('h1_archives') && journal_has('h1_archives')"
+    titre: "L'ÉCHO CAMBRIOLÉ : 1974 A DISPARU"
+    sous: "Les voleurs avaient la clé. Ils ont pris l'année 1974 et laissé les autres, et un masque sur la chaise du chroniqueur qui avait signé LE CAPITAINE A VENDU."
+    sujet: en.h1.massenet
+    photo: en.h1.massenet.archives
+    react: [ { card: en.h1.re.lhoste_une } ]
+
+  - id: une.h1.mur
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_mur') && journal_has('h1_mur')"
+    titre: "1974, EN ROUGE SUR LE MUR DE {VILLE}"
+    sous: "CEUX DE 74 PAIERONT : la phrase de {nom} est peinte sur le mur des guichets. Lavée au blanc lundi, revenue mardi, en trois couches."
+    sujet: en.h1.lhoste
+    photo: en.h1.lhoste.mur
+    react: [ { card: en.h1.re.lhoste_une, if: "relation.lhoste >= 0" }, { card: en.h1.re.gege_une } ]
+
+  - id: une.h1.vitrine
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_vitrine') && journal_has('h1_vitrine')"
+    titre: "« 1974 » SUR LA VITRINE DE LA BANQUE"
+    sous: "Un masque scotché au distributeur, une année à la peinture rouge. La Banque Aubérivoise ne porte pas plainte ; son directeur ne dit pas pourquoi."
+    sujet: en.h1.coffre
+    photo: en.h1.coffre.vitrine
+
+  - id: une.h1.passerelle
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 3
+    poids: 1.3
+    when: "flag('histoire_h1') && flag('h1_passerelle') && journal_has('h1_passerelle')"
+    titre: "SOUS LA PASSERELLE"
+    sous: "Gigi Vecchio, gardien de la finale de 1974, retrouvé à l'aube la mâchoire cassée, un masque dans la main. Il n'a rien dit. Il ne peut pas parler, de toute façon."
+    sujet: en.h1.visages
+    photo: en.h1.b2_passerelle
+    react: [ { card: en.h1.re.lhoste_une, if: "relation.lhoste >= 0" }, { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.saisie
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_voiture_saisie') && journal_has('h1_voiture_saisie') && seen('en.h1.b4_saisie')"
+    titre: "LA VOITURE DE {NOM} SOUS SCELLÉS"
+    sous: "Six heures du matin, rue des Lilas : la police judiciaire emmène la voiture de l'entraîneur de {club}. Dans le coffre, un masque. Le sien, en carton."
+    sujet: en.h1.visages
+    photo: en.h1.b4_saisie
+    react: [ { card: en.h1.re.camille_une, if: "!flag('divorce')" }, { card: en.h1.re.gege_une } ]
+
+  - id: une.h1.saisie_quai
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 3
+    when: "flag('histoire_h1') && flag('h1_voiture_saisie') && journal_has('h1_voiture_saisie') && seen('en.h1.b4_saisie_quai')"
+    titre: "LA VOITURE DE {NOM} SOUS SCELLÉS"
+    sous: "Six heures du matin, rue des Lilas : la police judiciaire emmène la voiture de l'entraîneur de {club}. Dans le coffre, un masque. Le sien, en carton."
+    sujet: en.h1.visages
+    photo: en.h1.b4_saisie_quai
+    react: [ { card: en.h1.re.camille_une, if: "!flag('divorce')" }, { card: en.h1.re.gege_une } ]
+
+  - id: une.h1.quai
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_quai_tenu') && season == 1"
+    titre: "PERDU DE DEUX BUTS, PILE"
+    sous: "Zéro à deux, contre un club que les parieurs du Quai donnaient perdant de deux buts, pile. À {ville}, on se souvient d'un autre score exact, en 1974."
+    sujet: en.h1.quai
+    photo: en.h1.quai.prime
+
+  - id: une.h1.couloir
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_negatif') && journal_has('h1_negatif') && seen('en.h1.pellicule.tirage')"
+    titre: "LE COULOIR DE 1974"
+    sous: "Odette Marsal, photographe de L'Écho le jour de la finale, a tiré une pellicule restée dix-sept ans dans une boîte à chaussures. Elle refuse de dire à qui elle l'a montrée."
+    sujet: en.h1.pellicule
+    photo: en.h1.pellicule.tirage
+
+  # ---------------------------------------------------------- saison 3 (si la saison va jusqu'au Bilan)
+
+  - id: une.h1.couloir_negatif
+    postulats: [promu]
+    roles: [entraineur]
+    journal: echo
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_negatif') && journal_has('h1_negatif') && seen('en.h1.pellicule.tirage_negatif')"
+    titre: "LE COULOIR DE 1974"
+    sous: "Odette Marsal, photographe de L'Écho le jour de la finale, a tiré une pellicule restée dix-sept ans dans une boîte à chaussures. Elle refuse de dire à qui elle l'a montrée."
+    sujet: en.h1.pellicule
+    photo: en.h1.pellicule.tirage_negatif
+
+  # ---------------------------------------------------------- saison 3 (si la saison va jusqu'au Bilan)
+  - id: une.h1.ravenel
+    postulats: [promu]
+    roles: [entraineur]
+    journal: quotidien
+    priority: 4
+    when: "flag('histoire_h1') && stats.clubs < 2 && (flag('h1_cercueil') || flag('h1_coffre_defi') || flag('h1_nom_grave'))"
+    titre: "RAVENEL"
+    sous: "Le nom est revenu à {ville} par un cercueil, un journal ou une plaque, selon à qui l'on parle. L'entraîneur de {club} le portait depuis toujours, sous un autre."
+    sujet: en.h1.visages
+    react: [ { card: en.h1.re.camille_une } ]
+
+  - id: une.h1.quai_trahi
+    postulats: [promu]
+    roles: [entraineur]
+    journal: gazette
+    priority: 2
+    when: "flag('histoire_h1') && flag('h1_quai_trahi') && journal_has('h1_quai_trahi')"
+    titre: "0-2, PUIS 2-2 : LE QUAI PERD GROS"
+    sous: "Deux buts dans le dernier quart d'heure, à l'extérieur. Au tabac du Quai, on dit qu'un monsieur en imperméable a quitté la tribune avant la fin, sans courir."
+    sujet: en.h1.quai
+    photo: en.h1.quai.prime

@@ -1,0 +1,195 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les cartes-réactions. Servies au
+# tirage suivant le swipe qui les pose, hors créneau ; effets petits, jamais
+# `end`, jamais `react`. Le déclencheur est cité au-dessus de chacune.
+#
+# Une réaction qui suit une carte qui nomme le joueur ne le nomme pas.
+cards:
+  # ← A1 « Je salue le virage » : le président a tout vu de la loge.
+  - id: en.h1.re.vaubourg_salut
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, ultras]
+    speaker: aulard
+    tone: leger
+    text: "Après le match, Vaubourg t'attend au bout du couloir, la facture de l'imprimeur pliée dans la main : « Trois mille têtes comme la tienne. Le jour où elles me siffleront, je saurai qui remercier. »"
+    left:
+      label: "Ils sifflent qui ils veulent"
+      effects: {tribunes: "+", relation: {aulard: -1}}
+      answer: "Il tapote la facture contre sa chevalière, deux petits coups secs. « Alors je paierai ce qu'ils veulent, moi aussi. »"
+    right:
+      label: "Je leur parlerai"
+      effects: {direction: "+"}
+      answer: "« Parle-leur de moi, aussi. » Il glisse la facture dans ta poche de survêtement, comme on donne un pourboire."
+
+  # ← les masques, « Laissez-les-leur » : le neveu de Gégé fait commerce.
+  - id: en.h1.re.nino_square
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, decor]
+    speaker: vukic
+    tone: leger
+    text: "Vukić revient du square avec un masque à la main : « Le neveu de Gégé vend ta tête dix francs aux gamins du centre. Six ans, et il fait déjà des prix de gros. Je t'en ai pris un. »"
+    left:
+      label: "Garde-le"
+      effects: {vestiaire: "+"}
+      answer: "Il le plie dans son cahier, entre deux feuilles de match. « Il me servira pour les causeries. Tu parles mieux quand tu te tais. »"
+    right:
+      label: "Rends-le au petit"
+      effects: {}
+      answer: "Vukić retourne au square. Le petit reprend le masque, réfléchit, et lui rend cinq francs. « Il était d'occasion. »"
+
+  # ← le maillot, les deux sorties : la photographe de 1974 était dans la salle.
+  - id: en.h1.re.odette_boue
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: odette
+    tone: leger
+    text: "À la porte de la boutique, une vieille dame en gilet prune te retient par la manche : « Odette Marsal, la papeterie. Ce maillot, je l'ai photographié plein de boue. Et une autre chose, ce jour-là. »"
+    left:
+      label: "Quelle chose ?"
+      effects: {relation: {odette: 1}}
+      answer: "« Pas aujourd'hui. Il faut que je la retrouve, et que j'en aie envie. » Elle note ton nom dans un cahier d'écolier, sous d'autres."
+    right:
+      label: "Pas maintenant, madame"
+      effects: {set: [h1_odette_froide]}
+      answer: "Elle lâche ta manche. Le lendemain, dans sa vitrine, une seule carte postale : la Rive, prise du milieu de la passerelle."
+
+  # ← la fenêtre, « Je descends » : le masque était encore tiède.
+  - id: en.h1.re.camille_manteau
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: camille
+    tone: leger
+    text: "Au matin, Camille a posé sur la toile cirée le masque plié de la nuit : « Il était tiède, tu as senti ? Quelqu'un l'avait sur la figure une minute avant. Quelqu'un qui connaît notre porte. »"
+    left:
+      label: "Jette-le"
+      effects: {relation: {camille: 1}}
+      answer: "Elle le jette, puis le reprend dans la poubelle et le brûle dans l'évier. L'odeur de carton reste dans la cuisine jusqu'au soir."
+    right:
+      label: "Garde-le"
+      effects: {direction: "+"}
+      answer: "Elle le range dans le tiroir du bas, sous les quittances. « Je ne veux pas le voir. Mais je veux savoir où il est. »"
+
+  # ← la berline, « Demandez-vous pourquoi » : le virage a entendu la phrase.
+  - id: en.h1.re.gege_berline
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    text: "Le lendemain, Gégé t'attend à la grille, sans te regarder : « On m'a répété ce que tu as dit au président, cette nuit, devant sa voiture. C'était bien dit. Ne le redis à personne. »"
+    left:
+      label: "Qui était au parking ?"
+      effects: {relation: {gege: -1}}
+      answer: "« Trois cents personnes, à les entendre. » Il ouvre la grille pour toi. « Ceux qui y étaient vraiment ne disent rien. Fais comme eux. »"
+    right:
+      label: "Je ne redirai rien"
+      effects: {relation: {gege: 1}}
+      answer: "Il hoche la tête et te tend un café dans un gobelet du local. Il est froid. Il l'avait gardé pour toi depuis sept heures."
+
+  # ← la passerelle, les deux sorties : six heures, le téléphone (scène 12).
+  - id: en.h1.re.vukic_six_heures
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "Six heures, le téléphone. Vukić : « On a trouvé Gigi sous la passerelle, la mâchoire cassée, un masque dans la main. Il demande à te voir. Toi, pas la police. »"
+    left:
+      label: "J'y vais maintenant"
+      effects: {relation: {vecchio: 1}}
+      answer: "Sur le quai, deux employés municipaux déroulent un tuyau. Gigi est déjà chez le Doc ; il tient encore le masque, et refuse de le lâcher."
+    right:
+      label: "La police d'abord"
+      effects: {direction: "+", set: [h1_police_gigi]}
+      answer: "Vukić se tait trois secondes. « D'accord. » Quand tu arrives au cabinet, Lhoste y est déjà, assis sur la seule chaise."
+
+  # ← la pellicule, le tirage : la nuit d'après, l'escalier du club-house.
+  - id: en.h1.re.josiane_clou
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: leger
+    text: "Madame Josiane t'attend en haut de l'escalier, un chiffon à la main. La photo de 1974 n'est plus au mur. « Cette nuit. Ils ont pris le cadre et laissé le clou. On porte plainte ? »"
+    left:
+      label: "Portez plainte"
+      effects: {direction: "+", set: [h1_photo_volee]}
+      answer: "Elle tape la plainte elle-même, en deux exemplaires. À la ligne « objet », elle écrit : une photo d'équipe, un visage manquant."
+    right:
+      label: "Laissez le clou"
+      effects: {vestiaire: "+", set: [h1_photo_volee]}
+      answer: "« Je n'y touchais pas. » Elle passe le chiffon sur le rectangle plus clair du mur, autour du clou, sans le toucher."
+
+  # ← la lettre, les deux sorties : le lendemain matin, le cadre revient.
+  - id: en.h1.re.photo_rendue
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: josiane
+    tone: strategique
+    text: "Madame Josiane a trouvé le cadre volé sur ton bureau, ce matin. Le cinquième visage est revenu, découpé dans un tirage neuf, collé au bon endroit. « Pas de mot. Un masque, sous le verre. »"
+    left:
+      label: "Laissez-la au bureau"
+      effects: {direction: "+", set: [h1_photo_rendue]}
+      answer: "Elle la pose contre le mur, face à ton fauteuil. Tu évites de lever les yeux toute la journée ; le soir, tu la regardes une heure."
+    right:
+      label: "Gardez-la chez vous"
+      effects: {relation: {josiane: 1}, set: [h1_photo_rendue]}
+      answer: "Elle l'enveloppe dans un torchon propre, sans regarder le visage. « Chez moi, alors. Le clou, je n'y touche pas. »"
+
+  # ← la Une (content/unes/h1.yaml) : la maison lit le journal.
+  - id: en.h1.re.camille_une
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, presse]
+    speaker: camille
+    tone: leger
+    when: "!flag('divorce') && !seen('en.h1.re.camille_une')"
+    text: "Camille a déplié L'Écho sur la table de la cuisine : ta photo en Une, à côté d'un masque. « On ne sait plus lequel est toi. Moi si. Mais je suis la seule, dans cette ville. »"
+    left:
+      label: "Ça passera"
+      effects: {relation: {camille: -1}}
+      answer: "« Ça passera, oui. » Elle replie le journal en quatre, le visage en dedans, et le glisse sous le pied de la table bancale."
+    right:
+      label: "Découpe-la"
+      effects: {relation: {camille: 1}}
+      answer: "Elle découpe la photo, pas le masque, et la range dans la boîte à couture. Le masque part avec le reste du journal."
+
+  # ← la Une : l'inspecteur la lit au comptoir.
+  - id: en.h1.re.lhoste_une
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, presse]
+    speaker: lhoste
+    tone: leger
+    when: "flag('h1_berline_brulee') && !seen('en.h1.re.lhoste_une')"
+    text: "Au Corner, Lhoste tapote la Une du bout de l'index : « Ils ont mis votre tête en première page. Moi, je l'ai en quatre cents exemplaires dans un sac, au commissariat. »"
+    left:
+      label: "Rendez-les au virage"
+      effects: {relation: {lhoste: -1, gege: 1}}
+      answer: "« Les pièces à conviction ne se rendent pas. Elles se classent. » Il paie son café avec la monnaie exacte, et la tienne."
+    right:
+      label: "Brûlez-les"
+      effects: {direction: "+", relation: {lhoste: 1}}
+      answer: "Il sourit pour la première fois. « C'est ce que je dirais, à votre place. C'est pour ça que je ne suis pas à votre place. »"
+
+  # ← la Une : le local la punaise au-dessus du bar.
+  - id: en.h1.re.gege_une
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, presse]
+    speaker: gege
+    tone: leger
+    when: "!seen('en.h1.re.gege_une')"
+    text: "Gégé a punaisé la Une au-dessus du bar du local, à côté de celles de 1974 jaunies : « Tu es sur le mur, maintenant, avec eux. Je n'ai pas choisi la place. Le clou était libre. »"
+    left:
+      label: "Enlève-la"
+      effects: {relation: {gege: -1}}
+      answer: "Il l'enlève, la plie, et la range dans sa doudoune, contre lui. Le clou reste au mur, libre, comme l'autre."
+    right:
+      label: "Laisse-la"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il lisse le papier du plat de la main. Les jours de match, les plus jeunes la lisent en attendant les cartons de masques."

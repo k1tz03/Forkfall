@@ -1,0 +1,300 @@
+# HISTOIRE 1 — « TROIS MILLE VISAGES » : les cartes de décor et de routine.
+# Elles sont au sac (tirées dans les créneaux libres), et seulement pendant le
+# livre (`flag('histoire_h1')`) : la ville qui vit autour des masques, sans
+# faire avancer l'intrigue. Chacune une fois par carrière.
+#
+# Odette et Lhoste, nouveaux au casting, y ont leurs cartes de routine.
+cards:
+  # ---------------------------------------------------------------- Odette
+  - id: en.h1.r.odette_cahier
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: odette
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && stats.clubs < 2"
+    text: "À la papeterie, Odette Marsal te vend un cahier à spirale et ne le lâche pas tout de suite : « Vous y écrirez vos compositions ? Lui les écrivait au dos des tickets de bus. »"
+    left:
+      label: "Qui, lui ?"
+      effects: {relation: {odette: 1}}
+      answer: "« Le capitaine. Vous le savez bien. » Elle lâche le cahier. Sur la couverture, elle a écrit ton nom au crayon, en petit."
+    right:
+      label: "Au crayon, oui"
+      effects: {vestiaire: "+"}
+      answer: "« Au crayon, c'est bien. Ça s'efface. » Elle te rend la monnaie en pièces de cinq francs, toutes de la même année."
+
+  - id: en.h1.r.odette_vitrine
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: odette
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_negatif') && stats.clubs < 2"
+    text: "Odette Marsal a refait sa vitrine : au milieu, la Nord pleine, en 1974. « Je l'ai mise pour voir qui s'arrête. Vous vous êtes arrêté{pg, select, f{e} other{}}, et le président aussi. »"
+    left:
+      label: "Combien de temps ?"
+      effects: {relation: {odette: 1}}
+      answer: "« Lui ? Le temps de reconnaître sa loge. Puis il a fait demi-tour, et il a traversé pour passer sur l'autre trottoir. »"
+    right:
+      label: "Retirez-la"
+      effects: {direction: "+", relation: {odette: -1}}
+      answer: "Elle la retire le lendemain et la remplace par un calendrier des postes. Il reste un rectangle sans poussière au milieu."
+
+  # ---------------------------------------------------------------- Lhoste
+  - id: en.h1.r.lhoste_corner
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, decor]
+    speaker: lhoste
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_berline_brulee') && stats.clubs < 2"
+    text: "Au Corner, l'inspecteur Lhoste lit le compte rendu du match en remuant un café qu'il ne boit pas : « Votre ailier gauche joue comme un témoin qui ment, {toi} : il regarde toujours où il ne va pas. »"
+    left:
+      label: "Il est jeune"
+      effects: {vestiaire: "+"}
+      answer: "« Les témoins aussi, souvent. Ça leur passe. » Il plie le journal sur la page des résultats et la laisse à côté de ta tasse."
+    right:
+      label: "Je le changerai"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "« Ne le changez pas. Regardez où il ne va pas. » Il pose la monnaie exacte sur le zinc, pièce par pièce, et s'en va."
+
+  - id: en.h1.r.lhoste_plaques
+    roles: [entraineur]
+    arc: instances
+    tags: [scandale, tribunes]
+    speaker: lhoste
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_berline_brulee') && stats.clubs < 2"
+    text: "Un samedi, Lhoste note les plaques des voitures garées devant la Nord, un crayon entre les dents : « Il y a des gens qui viennent au match sans voir le match. Vous, {toi}, vous les voyez ? »"
+    left:
+      label: "Je regarde le terrain"
+      effects: {vestiaire: "+"}
+      answer: "« C'est votre métier. » Il range son carnet. « Le mien, c'est de regarder ceux qui regardent le terrain. »"
+    right:
+      label: "Je les vois"
+      effects: {tribunes: "-", relation: {lhoste: 1}}
+      answer: "Il te tend le carnet. Une page entière de plaques, et en bas, souligné deux fois, le numéro de la tienne."
+
+  # ---------------------------------------------------------------- Gégé
+  - id: en.h1.r.gege_craie
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, decor]
+    speaker: gege
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && stats.clubs < 2"
+    text: "Gégé écrit à la craie sur la porte du local le nombre de masques revenus ce samedi : 2 934. « On en perd soixante-six par match. Les gens les gardent pour les jours où ça ira mal. »"
+    left:
+      label: "Ça ira mal ?"
+      effects: {relation: {gege: 1}}
+      answer: "« Pas tout de suite. » Il efface le 4, écrit un 3 à la place, puis remet le 4. « Je me suis trompé d'un. Le petit en a pris un. »"
+    right:
+      label: "Gardez le compte"
+      effects: {tribunes: "+"}
+      answer: "« Je le garde. » Il range la craie dans la poche de sa doudoune, avec celles des autres saisons, qu'il n'a jamais jetées."
+
+  - id: en.h1.r.gege_derby
+    roles: [entraineur]
+    arc: ultras
+    tags: [ultras, tribunes]
+    speaker: gege
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && gauges.tribunes >= 60 && stats.clubs < 2"
+    text: "Gégé ouvre sur le capot de sa voiture un carton neuf des Cartonnages de la Rive : mille visages de plus, pour le derby, l'encre pas encore sèche. « On les sort, {toi}, ou tu préfères la pelouse ? »"
+    left:
+      label: "Sortez-les"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Au derby, quatre mille fois ta figure. Les adversaires s'échauffent face à la Nord, et leur gardien demande qu'on change de côté."
+    right:
+      label: "La pelouse"
+      effects: {vestiaire: "+", relation: {gege: -1}}
+      answer: "Il referme le carton du bout des doigts. « On les garde au chaud, alors. Ça finit toujours par servir, une tête. »"
+
+  # ---------------------------------------------------------------- Gigi
+  - id: en.h1.r.vecchio_fil
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vecchio
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && stats.clubs < 2"
+    text: "Gigi Vecchio recoud un gant au fil rouge, assis sur le banc du terrain annexe : « Je recouds tout. Les gants, les filets. Le reste ne se recoud pas, alors je recouds ça, {toi}. »"
+    left:
+      label: "Quoi, le reste ?"
+      effects: {relation: {vecchio: -1}}
+      answer: "Il casse le fil avec les dents. « Un jour, je te dirai. Ou je l'écrirai. Je dis mieux les choses quand j'écris. »"
+    right:
+      label: "Recousez, Gigi"
+      effects: {relation: {vecchio: 1}}
+      answer: "Il recoud jusqu'à la nuit, sans lever la tête. Le gant, au bout, a plus de fil rouge que de cuir."
+
+  # ---------------------------------------------------------------- Josiane
+  - id: en.h1.r.josiane_archives
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && stats.clubs < 2"
+    text: "Madame Josiane te rapporte la clé du local à ballons, oubliée sur la porte : « Au fond du couloir, la porte des archives est fermée depuis 1977, {toi}. Vous ne demandez jamais pourquoi. »"
+    left:
+      label: "Pourquoi ?"
+      effects: {relation: {josiane: 1}}
+      answer: "« Le président a fait changer la serrure l'année de son élection. Une seule clé. Il la porte avec celles de sa voiture. »"
+    right:
+      label: "Je ne demande pas"
+      effects: {direction: "+"}
+      answer: "« C'est ce qui me plaît, chez vous. » Elle range la clé dans son tiroir, à côté d'une autre qu'elle ne te montre pas."
+
+  # ---------------------------------------------------------------- Vaubourg
+  - id: en.h1.r.aulard_chevaliere
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && stats.clubs < 2"
+    text: "Vaubourg fait tourner sa chevalière en signant les chèques des fournisseurs sans les lire : « On me l'a offerte en 1977, l'année où tout le monde m'a dit félicitations. Signe là, {toi}. »"
+    left:
+      label: "Qu'est-ce que je signe ?"
+      effects: {direction: "-", caisse: "+"}
+      answer: "« Le chauffage du vestiaire. Le chauffage, ça se signe sans lire. » Il tourne la page avant que tu aies fini la tienne."
+    right:
+      label: "Je signe"
+      effects: {direction: "+", caisse: "-"}
+      answer: "Il souffle sur ta signature pour la sécher, comme sur une bougie. « Voilà. Maintenant, on est deux à ne pas avoir lu. »"
+
+  # ---------------------------------------------------------------- Vukić
+  - id: en.h1.r.vukic_echauffement
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vukic
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && stats.clubs < 2"
+    text: "Vukić compte les joueurs qui portent ton masque à l'échauffement, pour rire : quatre. « Le gardien ne veut pas. Il dit qu'avec tes yeux, il ne voit plus le ballon, {toi}. »"
+    left:
+      label: "Interdis-le"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Les masques finissent dans le sac à ballons. À la reprise, les quatre courent plus vite que les autres, comme des gamins punis."
+    right:
+      label: "Laisse-les rire"
+      effects: {vestiaire: "+"}
+      answer: "Ils rient. Le gardien, lui, pose le masque sur le poteau gauche, face au terrain, et ne le regarde plus de la séance."
+
+  # ---------------------------------------------------------------- Camille
+  - id: en.h1.r.camille_voitures
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: camille
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masque_sous_fenetre') && !flag('divorce') && stats.clubs < 2"
+    text: "Camille, debout à la fenêtre de la rue des Lilas, compte les voitures garées en bas : « Avant, je comptais les étoiles. Ici, je compte les gens qui ne bougent pas. Ce soir, aucun. »"
+    left:
+      label: "Viens te coucher"
+      effects: {relation: {camille: 1}}
+      answer: "Elle vient. Dans le noir, elle dit encore « aucun » une fois, tout bas, comme on dit bonne nuit à quelqu'un qui n'est pas là."
+    right:
+      label: "Recompte"
+      effects: {relation: {camille: -1}}
+      answer: "Elle recompte, le front contre la vitre. Quand tu te réveilles, à trois heures, elle est toujours debout."
+
+  # ---------------------------------------------------------------- Massenet
+  - id: en.h1.r.meneche_main
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: meneche
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && !flag('h1_article_1974') && stats.clubs < 2"
+    text: "Pierre Massenet te tend la main sur le parking du stade, puis la retire à mi-chemin : « Pardon, {toi}. Vous ressemblez à quelqu'un que j'ai mal écrit. Ça m'arrive, en vieillissant. »"
+    left:
+      label: "À qui ?"
+      effects: {relation: {meneche: 1}}
+      answer: "« À un homme qui ne m'a jamais répondu. » Il te serre la main, finalement, plus longtemps qu'il ne faut."
+    right:
+      label: "Ça arrive"
+      effects: {direction: "+"}
+      answer: "« Oui. Mais pas à tout le monde, et pas toujours au même. » Il remonte dans sa voiture sans avoir serré la main."
+
+  # ---------------------------------------------------------------- la ville
+  - id: en.h1.r.boulangere
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes, decor]
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && stats.clubs < 2"
+    text: "La boulangère te rend la monnaie et, sous les pièces, un masque plié en huit : « Un client m'a payé avec, hier. Il avait votre tête, enfin, celle-là. Je vous le rends ? »"
+    left:
+      label: "Gardez-le"
+      effects: {tribunes: "+"}
+      answer: "Elle le pique au tableau des commandes, entre deux bons. « Comme ça, si c'est vous qui revenez, je saurai lequel. »"
+    right:
+      label: "Je le prends"
+      effects: {}
+      answer: "Tu le ranges avec la baguette. Dans la rue, un passant te regarde, puis regarde le masque qui dépasse du sac, puis te regarde encore."
+
+  - id: en.h1.r.gardien_caveau
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_plaque_qui') && stats.clubs < 2"
+    text: "Le gardien du cimetière, de sa loge, te salue d'un doigt sur la casquette : « Deuxième fois ce mois-ci. Pour quelqu'un qui n'a personne ici, vous revenez souvent. »"
+    left:
+      label: "J'ai quelqu'un ici"
+      effects: {tribunes: "+"}
+      answer: "Il ne demande pas qui. Il sort de sa loge un arrosoir plein et te le tend, comme à tous ceux qui ont quelqu'un ici."
+    right:
+      label: "Je me promène"
+      effects: {direction: "+"}
+      answer: "« On se promène beaucoup, au Racing. » Il retourne à sa radio, où l'on donne les résultats de la veille, le son très bas."
+
+  - id: en.h1.r.casier_capitaine
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_tifo') && stats.clubs < 2"
+    text: "Au vestiaire, un masque à ton visage est scotché sur le casier du capitaine. Personne ne dit qui l'a mis. Le capitaine se change en lui tournant le dos, sans un mot."
+    left:
+      label: "Je l'enlève"
+      effects: {vestiaire: "+", tribunes: "-"}
+      answer: "Le scotch emporte un peu de peinture du casier. Le lendemain, un autre masque est scotché au même endroit, un peu plus haut."
+    right:
+      label: "Je le laisse"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Le capitaine finit par le retourner, face contre la tôle. C'est pire : tout le monde sait ce qu'il y a de l'autre côté."
+
+  - id: en.h1.r.square_ballon
+    roles: [entraineur]
+    arc: tribunes
+    tags: [tribunes, decor]
+    tone: leger
+    once: true
+    when: "flag('histoire_h1') && flag('h1_masques_dehors') && stats.clubs < 2"
+    text: "Au square, des gamins jouent au foot, tous ton visage en carton sur la figure. L'un d'eux tire, rate, et crie « C'est pas moi, c'est lui ! » en te montrant du doigt."
+    left:
+      label: "Je renvoie le ballon"
+      effects: {tribunes: "+"}
+      answer: "Ton pied le trouve du premier coup. Dix masques se tournent vers toi en même temps, et personne ne rit pendant une seconde."
+    right:
+      label: "Je passe mon chemin"
+      effects: {}
+      answer: "Derrière toi, ils reprennent la partie. Tu les entends se disputer pour savoir lequel est le vrai, et lequel a le droit de tirer."
