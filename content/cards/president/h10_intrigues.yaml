@@ -1,0 +1,1096 @@
+# « Les Deux Téléphones » — les cartes des quatorze intrigues du réservoir
+# (content/arcs/president/h10_intrigues.yaml). Toutes hors du sac, toutes
+# `once`. Les visages : Nino (le capo, chef des socios), Gégé (socio numéro 1,
+# quatre-vingt-quatorze ans en 2037), Madame Josiane et sa nièce Mireille, Ahmed
+# Tazi (le maçon), Clémence Tessandier (l'agence), Owen Corven (l'entraîneur),
+# Elias Brac (dix-sept ans), Nadia Rouvier (la kiné des anciens), Léa (L'Écho du
+# dimanche), Lian Mbako (la Fédération), Cheikh Ilyas (la Ligue).
+# Personnages sans id : Mireille, le graveur, le pilote, le coursier, l'homme
+# d'en face au Terminus, le président de {rival}.
+cards:
+  # ═══════════════════════════════════════════ pr.h10.socios · La carte 212
+  - id: pr.h10.so.motion_essai
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Buvette, assemblée du jeudi. Nino, au micro : « Tu as promis d'essayer. Voilà de quoi : l'abonnement de la Nord au prix de 1990, en écus. Trois cent douze signatures. » Il te tend la feuille."
+    left:
+      label: "On vote ce soir"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "Nino fait passer le micro au premier rang. Gégé le refuse : il lève sa carte, ça suffit, il l'a toujours levée."
+    right:
+      label: "Le conseil décidera"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "« Le conseil, c'est nous. » Nino replie la feuille en quatre. Le vote a lieu quand même, le jeudi suivant."
+
+  - id: pr.h10.so.motion
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Buvette, assemblée du jeudi. Nino tape sur le micro : « Motion du virage : l'abonnement de la Nord au prix de 1990, converti en écus. Trois cent douze signatures. » Il te tend la feuille, {toi}."
+    left:
+      label: "On vote ce soir"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "Nino fait passer le micro au premier rang. Gégé le refuse : il lève sa carte, ça suffit, il l'a toujours levée."
+    right:
+      label: "Le conseil décidera"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "« Le conseil, c'est nous. » Nino replie la feuille en quatre. Le vote a lieu quand même, le jeudi suivant."
+
+  - id: pr.h10.so.vote_josiane
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, retorse]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Vote à main levée. Mireille lève deux cartes : la sienne, et celle de sa tante, socio numéro 2, procuration au dos. Nino compte très vite : « Cent quarante-neuf contre cent quarante-six. Adopté. »"
+    left:
+      label: "Je recompte"
+      effects: {tribunes: "-", direction: "+", relation: {nino: -1}, set: [h10_socios_recompte], outcome: recompte, react: pr.h10.re.nino_trois_cartes}
+      answer: "Tu recomptes rangée par rangée. Il manque trois cartes au compte de Nino. La motion passe quand même, d'une seule."
+    right:
+      label: "Je valide son compte"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_socios_compte], outcome: compte}
+      answer: "Nino range le micro comme on range un fusil après la chasse. Personne ne recompte. Mireille baisse ses deux cartes."
+
+  - id: pr.h10.so.vote
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, retorse]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Vote à main levée, cartes en l'air. Nino compte à voix haute, très vite : « Cent quarante-neuf contre cent quarante-six. Adopté. » Au premier rang, Gégé tient sa carte numéro 1 levée depuis le début."
+    left:
+      label: "Je recompte"
+      effects: {tribunes: "-", direction: "+", relation: {nino: -1}, set: [h10_socios_recompte], outcome: recompte, react: pr.h10.re.nino_trois_cartes}
+      answer: "Tu recomptes rangée par rangée. Il manque trois cartes au compte de Nino. La motion passe quand même, d'une seule."
+    right:
+      label: "Je valide son compte"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_socios_compte], outcome: compte}
+      answer: "Nino range le micro comme on range un fusil après la chasse. Personne ne recompte. Gégé baisse enfin sa carte."
+
+  - id: pr.h10.so.guichet_recompte
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Guichet de la Nord, le premier samedi. Gégé paie son abonnement au prix de 1990, compte la monnaie deux fois : « Le petit dit que tu l'as recompté devant tout le monde. Il t'en veut. »"
+    left:
+      label: "Il comptait mal"
+      effects: {tribunes: "-", relation: {gege: 1}, direction: "+"}
+      answer: "« Il compte vite. Ce n'est pas pareil. » Il glisse le ticket dans sa casquette, contre le front, comme son père."
+    right:
+      label: "Je lui ferai des excuses"
+      effects: {direction: "-", relation: {nino: 1}, tribunes: "+"}
+      answer: "« Ne t'excuse jamais d'avoir compté. » Il range sa monnaie pièce par pièce, comme on range des cartouches."
+
+  - id: pr.h10.so.guichet
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Guichet de la Nord, le premier samedi. Gégé paie son abonnement au prix de 1990, en écus, et compte la monnaie deux fois : « Mon père payait ça en francs. Le petit dit que c'est une victoire. »"
+    left:
+      label: "C'en est une"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "« Alors on en a eu une. » Il glisse le ticket dans sa casquette, contre le front, comme son père."
+    right:
+      label: "C'est un début"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il regarde le guichetier, pas toi. « À mon âge, les débuts, on les compte aussi. »"
+
+  # ═══════════════════════════════════ pr.h10.maquette · La troisième tranche
+  - id: pr.h10.mq.vitrine
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, objet]
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Vitrine de l'agence Tessandier. La maquette jaunie des Terrasses a été repeinte : « troisième tranche, 2041 ». À la place du stade, un parc et une plaque : Racing Capitale, centre de formation."
+    left:
+      label: "J'entre"
+      effects: {direction: "-", set: [h10_maquette_trois]}
+      answer: "La clochette de la porte est la même qu'en 1999. Une femme rousse lève la tête d'un pot de peinture verte."
+    right:
+      label: "Je passe"
+      effects: {tribunes: "-", set: [h10_maquette_trois], next: {step: flocage, in: [3, 5]}}
+      answer: "Tu passes. Dans le reflet de la vitrine, le parc en mousse recouvre exactement ton stade, jusqu'au rond central."
+
+  - id: pr.h10.mq.entrer
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, objet]
+    speaker: clemence
+    tone: leger
+    once: true
+    text: "Clémence Tessandier repose son pinceau : « La maquette de ma grand-mère, 1999, pour un autre président. Rive Capital a payé la peinture ; j'ai tenu le pinceau. Vous voulez voir le parc de près ? »"
+    left:
+      label: "Qui a dessiné le parc ?"
+      effects: {direction: "-", relation: {clemence: 1}}
+      answer: "« Un cabinet de la capitale. Ils n'ont jamais vu la Rive. Ils ont mis les bancs là où souffle le vent. »"
+    right:
+      label: "Repeignez le stade"
+      effects: {direction: "-", tribunes: "+", relation: {clemence: -1}}
+      answer: "Elle rit, puis elle ne rit plus. « Il faudrait d'abord qu'il existe en 2041. » Elle rince le pinceau."
+
+  - id: pr.h10.mq.flocage_rive
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: clemence
+    tone: strategique
+    once: true
+    text: "Clémence déplie un maillot sur ton bureau : « Rive Capital a sa plaque au centre. Nous, on voudrait la poitrine : Les Terrasses, troisième tranche. Ma grand-mère l'a proposé à un autre président. »"
+    left:
+      label: "Je floque"
+      effects: {caisse: "++", tribunes: "--", set: [h10_maillot_terrasses], outcome: flocage}
+      answer: "Le premier dimanche, la Nord retourne ses maillots, étiquette dehors. Clémence regarde le match en loge, sans retourner le sien."
+    right:
+      label: "Le maillot reste nu"
+      effects: {caisse: "-", tribunes: "+", set: [h10_maillot_nu], outcome: maillot_nu}
+      answer: "Elle replie le maillot avec soin, manches en dedans. « La troisième tranche se fera quand même. Pas sur vous. »"
+
+  - id: pr.h10.mq.flocage
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: clemence
+    tone: strategique
+    once: true
+    text: "Clémence pose un maillot bordeaux sur ton bureau, une ligne blanche sur la poitrine : « Les Terrasses, troisième tranche. Ma grand-mère vous l'avait déjà proposé, je crois. À un autre président. »"
+    left:
+      label: "Je floque"
+      effects: {caisse: "++", tribunes: "--", set: [h10_maillot_terrasses], outcome: flocage}
+      answer: "Le premier dimanche, la Nord retourne ses maillots, étiquette dehors. Clémence regarde le match en loge, sans retourner le sien."
+    right:
+      label: "Le maillot reste nu"
+      effects: {caisse: "-", tribunes: "+", set: [h10_maillot_nu], outcome: maillot_nu}
+      answer: "Elle replie le maillot avec soin, manches en dedans. « La troisième tranche se fera quand même. Pas sur vous. »"
+
+  # ═══════════════════════════════════════════ pr.h10.centre · Les douze lits
+  - id: pr.h10.ce.plaque
+    roles: [president]
+    arc: formation
+    tags: [formation, sponsors]
+    speaker: owen
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Au centre, un graveur attend avec une plaque de laiton : « Avec le soutien de Rive Capital ». Owen, son verre d'eau à la main : « Ils paient les douze lits, les repas. Ils veulent la porte. »"
+    left:
+      label: "Posez-la"
+      effects: {vestiaire: "-", caisse: "+", set: [h10_plaque_posee]}
+      answer: "Le graveur la visse au-dessus de la porte, un peu de travers. Owen ne la redresse pas ; personne ne la redressera."
+    right:
+      label: "Rangez-la à la cave"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "La plaque dort à la cave, sous les filets. Le mois suivant, les repas du centre arrivent sans dessert."
+
+  - id: pr.h10.ce.dortoir_brac
+    roles: [president]
+    arc: formation
+    tags: [formation, mercato]
+    speaker: owen
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Owen, une liste à la main : « La capitale invite les douze du centre en stage, une semaine. Le petit Brac leur fera visiter. Un car vient mardi ; les parents ont signé. Je les laisse monter ? »"
+    left:
+      label: "Ils restent ici"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_centre_garde], outcome: garde}
+      answer: "Owen appelle les douze familles une par une. Onze disent merci. La douzième demande combien la capitale aurait payé."
+    right:
+      label: "Une semaine, pas plus"
+      effects: {vestiaire: "-", caisse: "+", set: [h10_centre_stage], outcome: stage, next: {step: retour, in: [1, 3]}}
+      answer: "Le car part mardi à huit heures. Les douze ont des sacs neufs, au même logo, que personne ne leur a donnés devant toi."
+
+  - id: pr.h10.ce.dortoir
+    roles: [president]
+    arc: formation
+    tags: [formation, mercato]
+    speaker: owen
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Owen, une liste à la main : « La capitale invite les douze du centre en stage, une semaine, tous frais payés. Un car vient les chercher mardi. Les parents ont déjà signé. Je les laisse monter ? »"
+    left:
+      label: "Ils restent ici"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_centre_garde], outcome: garde}
+      answer: "Owen appelle les douze familles une par une. Onze disent merci. La douzième demande combien la capitale aurait payé."
+    right:
+      label: "Une semaine, pas plus"
+      effects: {vestiaire: "-", caisse: "+", set: [h10_centre_stage], outcome: stage, next: {step: retour, in: [1, 3]}}
+      answer: "Le car part mardi à huit heures. Les douze ont des sacs neufs, au même logo, que personne ne leur a donnés devant toi."
+
+  - id: pr.h10.ce.retour
+    roles: [president]
+    arc: formation
+    tags: [formation, mercato]
+    speaker: owen
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Le car du stage revient un mardi soir. Dix gamins en descendent. Owen compte deux fois, à voix haute, sur le parking : « Deux ont signé là-bas. Leurs parents aussi. Personne ne m'a appelé. »"
+    left:
+      label: "J'appelle la capitale"
+      effects: {direction: "-"}
+      answer: "Une voix aimable te remercie pour la qualité de la formation à {ville}. On te propose une plaque."
+    right:
+      label: "Je préviens la Nord"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Samedi, une banderole : DEUX DE MOINS. Dessous, plus petit, d'une autre main : ET LES DIX AUTRES ?"
+
+  # ═══════════════════════════════════ pr.h10.lundi · Le lundi d'Owen Corven
+  - id: pr.h10.lu.banderole
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, ultras]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Une banderole sur la Nord, un dimanche de pluie : CORVEN, PRENDS TON VERRE ET VA-T'EN. Nino, au pied de la tribune : « Pas moi, les jeunes. Je la décroche, {toi}, ou tu la laisses sécher ? »"
+    left:
+      label: "Décrochez-la"
+      effects: {tribunes: "-", relation: {owen: 1}}
+      answer: "Nino la décroche lui-même et la plie en quatre, lettres en dedans. Il la garde sous le bras jusqu'à la fin du match."
+    right:
+      label: "Qu'elle sèche"
+      effects: {direction: "-", tribunes: "+", relation: {owen: -1}}
+      answer: "Elle sèche jusqu'au mardi. Owen passe dessous pour aller au terrain, sans lever la tête, son verre à la main."
+
+  - id: pr.h10.lu.cv
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, piege]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Sur ton bureau, un CV sans lettre : l'entraîneur de la future franchise de la capitale, « disponible pour une transition ». En marge, au crayon : « Il connaît déjà vos joueurs. »"
+    left:
+      label: "Je le range au tiroir"
+      effects: {tribunes: "-", direction: "+", set: [h10_owen_cv_garde]}
+      answer: "Le tiroir ferme mal. Le lendemain, le CV en dépasse d'un centimètre, et Owen passe deux fois devant ton bureau."
+    right:
+      label: "Je le jette"
+      effects: {direction: "-", relation: {owen: 1}}
+      answer: "La corbeille est vidée le soir même. Le lendemain matin, le même CV est revenu sur ton bureau, sans un pli."
+
+  - id: pr.h10.lu.lundi_cv
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: owen
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Owen frappe un lundi, jour de congé des joueurs, un verre d'eau à la main : « Le CV dépasse de votre tiroir, {toi}. Si vous devez me virer, c'est aujourd'hui. Les joueurs ne sont pas là. »"
+    left:
+      label: "Personne ne vous vire"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_owen_garde], outcome: garde}
+      answer: "Il pousse le CV au fond du tiroir, du bout du doigt, et le referme. Puis il boit son verre et s'en va."
+    right:
+      label: "Videz votre casier"
+      effects: {vestiaire: "--", direction: "++", force: -2, set: [h10_owen_vire], outcome: vire, char: {owen: {statut: parti}}}
+      answer: "Il vide son casier dans un carton de bananes. Il laisse le verre sur le banc ; personne ne le range de la saison."
+
+  - id: pr.h10.lu.lundi
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: owen
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Owen frappe à ton bureau un lundi, jour de congé des joueurs, un verre d'eau à la main : « Si vous devez me virer, c'est aujourd'hui. Les joueurs ne sont pas là. Je préfère. »"
+    left:
+      label: "Personne ne vous vire"
+      effects: {vestiaire: "+", direction: "-", force: 1, set: [h10_owen_garde], outcome: garde}
+      answer: "Il boit son verre, le pose, s'en va. Le lendemain, il fait courir les joueurs une heure de plus, sans dire pourquoi."
+    right:
+      label: "Videz votre casier"
+      effects: {vestiaire: "--", direction: "++", force: -2, set: [h10_owen_vire], outcome: vire, char: {owen: {statut: parti}}}
+      answer: "Il vide son casier dans un carton de bananes. Il laisse le verre sur le banc ; personne ne le range de la saison."
+
+  # ════════════════════════════════════════════════ pr.h10.rouvier · Le souffle
+  - id: pr.h10.ro.table
+    roles: [president]
+    arc: corps
+    tags: [tribunes, famille]
+    speaker: rouvier
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Chez Nadia Rouvier, Gégé torse nu sur la table de la cuisine, le sifflet de la kiné à côté du sel : « Il respire avec la moitié de ce qu'il avait en 1990. Il veut aller au match samedi, {toi}. »"
+    left:
+      label: "Je le conduis"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1, rouvier: 1}, react: pr.h10.re.rouvier_couverture}
+      answer: "Elle range le sifflet dans sa poche. « Alors une couverture, et pas l'escalier. Vous le portez, s'il le faut. »"
+    right:
+      label: "Il écoutera à la radio"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}, next: {step: radio, in: [1, 3]}}
+      answer: "Gégé se rhabille sans un mot, bouton par bouton, en commençant par le bas. Il oublie celui du col."
+
+  - id: pr.h10.ro.loge
+    roles: [president]
+    arc: corps
+    tags: [tribunes, moment]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Samedi, Gégé dans ta loge, une couverture sur les genoux, entre deux invités de Rive Capital qui ne savent pas qui il est. Au premier but, il se lève. Seul."
+    left:
+      label: "Je me lève avec lui"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}, set: [h10_gege_loge], outcome: loge}
+      answer: "Vous restez debout jusqu'à l'engagement. Les invités se lèvent à leur tour, par politesse, au moment où vous vous rasseyez."
+    right:
+      label: "Je reste à ma place"
+      effects: {tribunes: "-", direction: "+", set: [h10_gege_loge], outcome: loge}
+      answer: "Il se rassoit seul, la couverture tombée. Un invité la ramasse et la lui rend, en anglais."
+
+  - id: pr.h10.ro.radio
+    roles: [president]
+    arc: corps
+    tags: [tribunes, presse]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Au-dessus du local, Gégé écoute le match au poste. Il appelle ta loge à la mi-temps : « La voix de la radio n'est pas celle du stade. Laquelle est la vraie, des deux ? »"
+    left:
+      label: "Aucune des deux"
+      effects: {direction: "-", tribunes: "+", set: [h10_gege_radio], outcome: radio}
+      answer: "« C'est ce que je pensais. » Il raccroche. Tu l'imagines baisser le son et regarder le mur."
+    right:
+      label: "Celle du stade"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}, set: [h10_gege_radio], outcome: radio}
+      answer: "« Alors je vais éteindre. » Il éteint. Le local, en dessous, entend le silence descendre, et baisse la voix."
+
+  - id: pr.h10.ro.poche
+    roles: [president]
+    arc: corps
+    tags: [famille, retorse]
+    speaker: rouvier
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Nadia Rouvier, le sac à l'épaule, regarde ta veste : « Elle tombe mal, à gauche, {toi}. J'ai eu un joueur comme ça, en 1997 : un téléphone pour sa femme, un pour l'autre. Il s'est cassé le genou. »"
+    left:
+      label: "C'est celui du club"
+      effects: {relation: {rouvier: 1}, set: [h10_rouvier_poche]}
+      answer: "« Alors le club t'appelle à trois heures du matin. » Elle te tapote la poche, deux fois, comme un ballon qu'on vérifie."
+    right:
+      label: "Ce n'est rien"
+      effects: {relation: {rouvier: -1}, set: [h10_rouvier_poche]}
+      answer: "« Rien, ça ne pèse rien. » Elle part sans fermer la porte, ce qu'elle fait quand elle veut qu'on la rappelle."
+
+  # ═════════════════════════════════════════ pr.h10.photo · La photo de 1974
+  - id: pr.h10.ph.lettre
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Une lettre de Madame Josiane, d'une écriture tremblée : « J'ai la photo de 1974, celle de l'escalier. Je la garde depuis qu'on l'a décrochée. Venez la chercher avant mes cent ans, {toi}. »"
+    left:
+      label: "J'irai cette semaine"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Mireille sourit pour la première fois depuis septembre. « Elle mettra son collier. Elle le met pour les enterrements, et pour vous. »"
+    right:
+      label: "Qu'on me l'apporte"
+      effects: {direction: "-", next: {step: visite, in: [3, 5]}}
+      answer: "« Elle n'envoie rien par la poste depuis 1991. » Mireille repart avec la lettre. Sa tante viendra elle-même, en fauteuil."
+
+  - id: pr.h10.ph.visite_cadre
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Madame Josiane s'est fait monter au club-house en fauteuil, la photo de 1974 sur les genoux. Elle regarde ta photo de 2016, accrochée au clou de l'escalier : « Il n'y a qu'un clou. »"
+    left:
+      label: "Je décroche la mienne"
+      effects: {vestiaire: "-", tribunes: "+", direction: "+", set: [h10_photo_raccrochee], outcome: raccrochee, next: {step: gege, in: [2, 4]}, react: pr.h10.re.josiane_cadre}
+      answer: "Tu décroches la tienne, raccroches la sienne. Elle fait redresser le cadre trois fois, puis te rend ta photo, retournée."
+    right:
+      label: "Gardez la vôtre"
+      effects: {direction: "-", set: [h10_photo_tiroir], outcome: tiroir}
+      answer: "« C'est ce que je fais depuis 1991. » Elle demande à redescendre. Ta photo reste au clou, un peu de travers."
+
+  - id: pr.h10.ph.visite
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Madame Josiane s'est fait monter au club-house en fauteuil. Sur ses genoux, la photo de 1974, dans un numéro de L'Écho de 1991. Elle regarde le clou de l'escalier, pas toi."
+    left:
+      label: "Je la raccroche"
+      effects: {vestiaire: "-", tribunes: "+", direction: "+", set: [h10_photo_raccrochee], outcome: raccrochee, next: {step: gege, in: [2, 4]}, react: pr.h10.re.josiane_cadre}
+      answer: "Elle te fait redresser le cadre trois fois. « Voilà. » Elle demande à redescendre avant le café."
+    right:
+      label: "Gardez-la chez vous"
+      effects: {direction: "-", set: [h10_photo_tiroir], outcome: tiroir}
+      answer: "Elle la remballe dans le même journal, sans un mot. Mireille, elle, en a un, qu'elle garde pour l'escalier."
+
+  - id: pr.h10.ph.gege
+    roles: [president]
+    arc: direction
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Gégé a monté l'escalier du club-house, marche par marche. Devant la photo de 1974 : « Ils sont tous dessus, ceux qui ont vendu et ceux qui ne savaient pas. On ne voit pas la différence. »"
+    left:
+      label: "On ne la voit jamais"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "« Si. Au bout de soixante ans. » Il reste vingt minutes sur le palier. Mireille dit qu'il a parlé tout ce temps."
+    right:
+      label: "Je vous laisse avec eux"
+      effects: {relation: {gege: 1}}
+      answer: "Tu redescends. Il parle à la photo, à voix basse ; au secrétariat, Mireille monte le son de sa radio."
+
+  # ═══════════════════════════════════════ pr.h10.brac · Le car de huit heures
+  - id: pr.h10.br.message_vendu
+    roles: [president]
+    arc: mercato
+    tags: [mercato, formation]
+    speaker: brac
+    statut_ok: [vendu]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Un message de la capitale : Elias Brac en survêtement neuf, devant un dortoir de quarante lits. « Ils disent “le petit d'Aubérive”. On est trois petits d'Aubérive, ici. »"
+    left:
+      label: "Reviens un dimanche"
+      effects: {direction: "-", tribunes: "+", relation: {brac: 1}}
+      answer: "Il répond par une photo prise de la vitre arrière du car de huit heures : le stade de la Rive, tout petit."
+    right:
+      label: "Tiens bon, là-bas"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« D'accord. » Le message suivant arrive six semaines plus tard : une photo de ses crampons neufs, rien d'autre."
+
+  - id: pr.h10.br.message_garde
+    roles: [president]
+    arc: mercato
+    tags: [mercato, formation]
+    speaker: brac
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Elias Brac t'attend devant le club-house, son téléphone à la main : « La capitale a rappelé. Deux fois. Ils parlent à ma mère, pas à moi. Je leur réponds quoi, {toi} ? »"
+    left:
+      label: "Réponds-leur toi-même"
+      effects: {direction: "-", vestiaire: "+", set: [h10_brac_rappel], outcome: rappel}
+      answer: "Il compose le numéro devant toi, dit une phrase, raccroche. Tu n'as pas entendu laquelle ; il ne la répète pas."
+    right:
+      label: "Je leur réponds"
+      effects: {vestiaire: "-", direction: "+", outcome: rappel}
+      answer: "Tu appelles. On te répond que ce n'était qu'une prise de contact, et qu'on rappellera en juin. Sa mère."
+
+  - id: pr.h10.br.dimanche_vendu
+    roles: [president]
+    arc: mercato
+    tags: [mercato, tribunes]
+    speaker: brac
+    statut_ok: [vendu]
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Un dimanche, Elias Brac en tribune Nord, capuche relevée, parmi les socios. Sous son blouson, le maillot de la capitale. Il te fait signe : il voudrait descendre au vestiaire."
+    left:
+      label: "Fais-le descendre"
+      effects: {direction: "-", tribunes: "+", vestiaire: "+", set: [h10_brac_revenu], outcome: revenu}
+      answer: "Il descend. Le vestiaire se tait, puis quelqu'un lui lance un ballon. Il jongle en blouson, vingt fois, sans le laisser tomber."
+    right:
+      label: "Pas aujourd'hui"
+      effects: {vestiaire: "-", direction: "+", outcome: loin}
+      answer: "Il remonte sa capuche. À la mi-temps, sa place est vide ; un socio s'y assoit sans savoir."
+
+  - id: pr.h10.br.dimanche_garde
+    roles: [president]
+    arc: mercato
+    tags: [mercato, tribunes]
+    speaker: brac
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Contre {rival}, Elias Brac marque du gauche, court vers la Nord et brandit son téléphone, écran noir. Le soir, il t'attend au parking : « Je les ai bloqués. C'est bien, ou c'est bête ? »"
+    left:
+      label: "C'est bien"
+      effects: {direction: "-", vestiaire: "+", force: 1, relation: {brac: 1}}
+      answer: "Il sourit comme on sourit à dix-sept ans, avec tout le visage. Puis il rentre à pied, par la rue du Stade."
+    right:
+      label: "C'est bête"
+      effects: {vestiaire: "-", direction: "+", relation: {brac: -1}}
+      answer: "« C'est ce que dit ma mère. » Il débloque un numéro, un seul, devant toi. Tu ne vois pas lequel."
+
+  - id: pr.h10.br.article_loin
+    roles: [president]
+    arc: presse
+    tags: [presse, mercato]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Léa, au kiosque du quai : « J'écris dimanche sur le petit Brac. Le titre, c'est “Parti par le car de huit heures”. Il me manque une phrase de vous, et je préférerais qu'elle soit vraie. »"
+    left:
+      label: "« Il reviendra. »"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Elle l'écrit sans la souligner. « On a dit ça de tous ceux du car. Certains sont revenus. Pour les enterrements. »"
+    right:
+      label: "« On l'a vendu. »"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Elle relève la tête, surprise. Dimanche, ta phrase est en gras, seule sur une ligne, sous une photo du car."
+
+  - id: pr.h10.br.article
+    roles: [president]
+    arc: presse
+    tags: [presse, formation]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Léa, au kiosque du quai, un carnet ouvert : « J'écris dimanche sur le petit Brac. Le titre, c'est “Né à côté du stade”. Il me manque une phrase de vous. »"
+    left:
+      label: "« Il est d'ici. »"
+      effects: {vestiaire: "-", tribunes: "+"}
+      answer: "Elle l'écrit, la barre, la réécrit. « Ici, aujourd'hui, ça veut dire quoi ? » Elle ne te laisse pas répondre."
+    right:
+      label: "« Il est à lui. »"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Elle souligne deux fois. Dimanche, ta phrase est en gras, sous une photo de Brac à neuf ans, en pyjama du Racing."
+
+  # ═════════════════════════════════════════════════════ pr.h10.mbako · La loi
+  - id: pr.h10.mb.vote_joueur
+    roles: [president]
+    arc: instances
+    tags: [direction, telephone]
+    speaker: mbako
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "La ligne du bureau, vingt-trois heures. Mbako : « Elle passe ce soir, à quatre voix. Tu jouais au foot en 1990, toi aussi ; je voulais que tu l'apprennes de moi, pas de L'Écho. »"
+    left:
+      label: "Je l'apprends de vous"
+      effects: {tribunes: "-", direction: "+", relation: {mbako: 1}}
+      answer: "« Merci. » Il ne raccroche pas tout de suite. Derrière lui, des gens applaudissent dans une salle trop grande."
+    right:
+      label: "Je préférais L'Écho"
+      effects: {direction: "-", tribunes: "+", relation: {mbako: -1}, react: pr.h10.re.lea_quatre_voix}
+      answer: "« Léa l'écrira mieux que moi. » Il raccroche. Dimanche, L'Écho titre sur quatre voix ; Léa a eu les noms."
+
+  - id: pr.h10.mb.vote
+    roles: [president]
+    arc: instances
+    tags: [direction, telephone]
+    speaker: mbako
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "La ligne du bureau, vingt-trois heures. Lian Mbako : « Elle passe ce soir, à quatre voix. Applicable à la fin de la saison prochaine. Je voulais que tu l'apprennes de moi, pas de L'Écho. »"
+    left:
+      label: "Je l'apprends de vous"
+      effects: {tribunes: "-", direction: "+", relation: {mbako: 1}}
+      answer: "« Merci. » Il ne raccroche pas tout de suite. Derrière lui, des gens applaudissent dans une salle trop grande."
+    right:
+      label: "Je préférais L'Écho"
+      effects: {direction: "-", tribunes: "+", relation: {mbako: -1}, react: pr.h10.re.lea_quatre_voix}
+      answer: "« Léa l'écrira mieux que moi. » Il raccroche. Dimanche, L'Écho titre sur quatre voix ; Léa a eu les noms."
+
+  - id: pr.h10.mb.commission
+    roles: [president]
+    arc: instances
+    tags: [direction, presse]
+    speaker: mbako
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "La Fédération, à la capitale, salle de la Commission des franchises. Mbako en bout de table : « Huit minutes par club, {toi}. Les autres en ont eu huit. Tu plaides, ou tu m'envoies ton capo ? »"
+    left:
+      label: "Je plaide"
+      effects: {vestiaire: "-", direction: "+", tribunes: "+", set: [h10_plaidoirie], outcome: plaidoirie}
+      answer: "Huit minutes. Tu parles de l'escalier nord, des marches, du maçon. À la septième, un commissaire regarde sa montre."
+    right:
+      label: "J'envoie Nino"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_nino_federation], outcome: nino, react: pr.h10.re.nino_cravate}
+      answer: "Nino plaide en écharpe. Il revient le soir avec une cravate neuve, qu'il dit avoir achetée à la gare."
+
+  - id: pr.h10.mb.couloir
+    roles: [president]
+    arc: instances
+    tags: [direction, retorse]
+    speaker: mbako
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Couloir de la Fédération. Mbako t'arrête devant la machine à café : « En 1990, je voulais jouer tout de suite. J'ai joué tout de suite. Maintenant, je fais attendre les autres. Pour toujours. »"
+    left:
+      label: "Vous pouvez la défaire"
+      effects: {direction: "-", relation: {mbako: 1}}
+      answer: "« Une loi, ça se défait en dix ans. Une marche, en une nuit. » Il te paie le café et oublie de prendre le sien."
+    right:
+      label: "Vous avez choisi"
+      effects: {tribunes: "-", direction: "+", relation: {mbako: -1}}
+      answer: "« J'ai choisi huit clubs contre quatre-vingts. » Il boit son café d'un trait, comme un médicament."
+
+  # ═════════════════════════════════════ pr.h10.lea · La lettre du dimanche
+  - id: pr.h10.le.kiosque
+    roles: [president]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Kiosque du quai, dimanche. Léa, soixante-douze ans, attend son Écho : « La loi est votée, il reste dix-huit mois. J'écris la lettre de lecteur. Je la signe de mon nom, ou de celui du virage ? »"
+    left:
+      label: "De votre nom"
+      effects: {tribunes: "-", direction: "+", set: [h10_lettre_signee], outcome: signee}
+      answer: "Elle la signe Léa, tout court, comme en 1990. Le dimanche, la lettre fait la Une, ce qui n'était jamais arrivé."
+    right:
+      label: "Du virage"
+      effects: {direction: "-", tribunes: "+", set: [h10_lettre_virage], outcome: virage}
+      answer: "« Le virage », en bas de la page. Dans la semaine, trois mille personnes la signent au stylo, dans la marge."
+
+  - id: pr.h10.le.dictaphone_nino
+    roles: [president]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Léa sort de son sac un dictaphone de 1995 : « Nino reçoit des appels la nuit, lui aussi ; on l'entend sortir fumer. Ça enregistre tout ce qu'on approche du micro. Je vous le prête ? »"
+    left:
+      label: "Je vous l'emprunte"
+      effects: {set: [h10_dictaphone], next: {step: bande, in: [3, 6]}}
+      answer: "Il pèse le poids d'une pomme. Elle te montre la touche rouge, deux fois, comme à un enfant. « Les piles sont neuves. »"
+    right:
+      label: "Gardez-le"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle le range. « Il a enregistré un président, en 1995. Le dictaphone s'en est remis. Le président, non. »"
+
+  - id: pr.h10.le.dictaphone
+    roles: [president]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Léa sort de son sac un dictaphone de 1995, gris, la bande encore dedans : « On dit que vous recevez des appels la nuit. Ça enregistre tout ce qu'on approche du micro. Je vous le prête ? »"
+    left:
+      label: "Je vous l'emprunte"
+      effects: {set: [h10_dictaphone], next: {step: bande, in: [3, 6]}}
+      answer: "Il pèse le poids d'une pomme. Elle te montre la touche rouge, deux fois, comme à un enfant. « Les piles sont neuves. »"
+    right:
+      label: "Gardez-le"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle le range. « Il a enregistré un président, en 1995. Le dictaphone s'en est remis. Le président, non. »"
+
+  - id: pr.h10.le.bande
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. La voix du mois parle de l'assemblée, de Nino, du centre. La bande tourne ; le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  # ═══════════════════════════════════════════════════ pr.h10.siege · La place
+  - id: pr.h10.si.diner
+    roles: [president]
+    arc: contrat
+    tags: [direction, sponsors]
+    speaker: nassir
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive, salle à manger fermée. Cheikh Ilyas, quatre-vingt-un ans, coupe une poire : « Ce n'est pas un club, c'est une place. Votre chaise est prête, {toi}, au conseil de la Ligue. »"
+    left:
+      label: "Montrez-moi la chaise"
+      effects: {tribunes: "-", direction: "+", set: [h10_diner_ilyas]}
+      answer: "Il essuie la lame, plie la serviette. « Mardi. Une voiture passera. Elle sait déjà où vous habitez. »"
+    right:
+      label: "Je dîne, c'est tout"
+      effects: {direction: "-", tribunes: "+", set: [h10_diner_ilyas]}
+      answer: "« Personne ne dîne, c'est tout. » Il te sert la moitié de la poire, côté pépins. Mardi, une voiture passe quand même."
+
+  - id: pr.h10.si.chaise
+    roles: [president]
+    arc: contrat
+    tags: [direction, piege]
+    speaker: nassir
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le siège de la Ligue, quarantième étage. Vingt chaises de cuir autour d'une table ovale ; sur l'une, un carton à ton nom, déjà imprimé. Ilyas : « Asseyez-vous. Pour voir. »"
+    left:
+      label: "Je m'assois"
+      effects: {tribunes: "-", direction: "++", next: {step: contrat, in: [2, 3]}}
+      answer: "Le cuir est encore froid. Par la baie, on voit vingt stades. Le tien n'y est pas."
+    right:
+      label: "Je reste debout"
+      effects: {direction: "-", tribunes: "+", set: [h10_siege_debout], outcome: debout}
+      answer: "Il hoche la tête comme devant un cheval qui refuse l'obstacle. « Elle restera libre jusqu'en juin 2040. »"
+
+  - id: pr.h10.si.contrat
+    roles: [president]
+    arc: contrat
+    tags: [direction, piege]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un coursier dépose à la villa un contrat de neuf pages : un siège au conseil de la Ligue des franchises, au 1er juillet 2040. Page neuf, en italique : « sous réserve de l'assemblée du Racing »."
+    left:
+      label: "Je signe"
+      effects: {tribunes: "-", caisse: "+", direction: "+", set: [h10_siege_signe], outcome: signe}
+      answer: "Tu signes sur la table de la cuisine. Le coursier attendait sur le trottoir ; il repart avec, à vélo, sans un mot."
+    right:
+      label: "Je le laisse sur la table"
+      effects: {direction: "-", set: [h10_siege_debout], outcome: debout}
+      answer: "Il reste trois semaines sous la corbeille de fruits. Personne ne vient le chercher. Personne n'en a besoin."
+
+  # ═══════════════════════════ pr.h10.entrepot · Les entrepôts de la Tréfilerie
+  - id: pr.h10.en.bail
+    roles: [president]
+    arc: famille
+    tags: [caisse, famille]
+    speaker: clemence
+    tone: strategique
+    once: true
+    text: "Clémence Tessandier, un dossier sous le bras : « Rive Capital a racheté les entrepôts de la Tréfilerie, les vôtres compris. Votre bail finit en juin 2040. On m'a demandé de vous le dire gentiment. »"
+    left:
+      label: "Dites-leur merci"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Je leur dirai que vous avez souri. » Elle note quelque chose en marge, à l'encre verte : la couleur des parcs."
+    right:
+      label: "Je chercherai ailleurs"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "« Ailleurs, c'est aussi à eux. » Elle te laisse un plan de la zone, des croix rouges partout, sauf sur la Rive."
+
+  - id: pr.h10.en.proposition
+    roles: [president]
+    arc: famille
+    tags: [caisse, piege]
+    speaker: clemence
+    tone: strategique
+    once: true
+    text: "Clémence revient avec un bail de dix ans, même prix, déjà paraphé : « Une condition, que je n'ai pas le droit d'écrire. Vous la connaissez, {toi}, je crois. Elle tient en un mot : mai. »"
+    left:
+      label: "Je signe le bail"
+      effects: {tribunes: "-", caisse: "++", direction: "+", set: [h10_entrepot_signe], outcome: bail}
+      answer: "Elle range le bail dans une chemise verte. « Vos quarante salariés vous remercieront. Ils ne sauront pas pourquoi. »"
+    right:
+      label: "Je vide les entrepôts"
+      effects: {caisse: "--", tribunes: "+", set: [h10_entrepot_vide], outcome: vide}
+      answer: "Les camions sortent de la Tréfilerie pendant trois jours. Quarante emplois partent à vingt kilomètres, puis plus loin."
+
+  - id: pr.h10.en.fenetres_vide
+    roles: [president]
+    arc: famille
+    tags: [famille, objet]
+    speaker: tazi
+    lieu: friche
+    tone: leger
+    once: true
+    text: "Tazi mure les fenêtres de tes anciens entrepôts, vides depuis une semaine : « Par sécurité. On m'a dit qu'il ne restait rien. Il reste un calendrier de 2037, au mur. Je le laisse ? »"
+    left:
+      label: "Laissez-le"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il le laisse. La dernière fenêtre murée, le calendrier reste dans le noir, ouvert sur septembre."
+    right:
+      label: "Rapportez-le-moi"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Il te le rapporte le soir, roulé dans du papier journal. Septembre 2037 : une croix au feutre, sur le jour de l'élection."
+
+  - id: pr.h10.en.fenetres
+    roles: [president]
+    arc: famille
+    tags: [famille, objet]
+    speaker: tazi
+    lieu: friche
+    tone: leger
+    once: true
+    text: "Tazi, sur l'échafaudage de l'entrepôt voisin du tien, la truelle à la main : « On m'a demandé de murer les fenêtres de celui-là aussi. Par sécurité. Le vôtre, c'est pour quand, {toi} ? »"
+    left:
+      label: "Jamais"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il hoche la tête et mure la fenêtre suivante. « Jamais, c'est une date aussi. Elle arrive après mai. »"
+    right:
+      label: "Après la loi"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Comme tout le monde. » Il mure en sifflant un air de 1990 qu'il ne connaît que par la Nord."
+
+  # ═══════════════════════════════════════════════ pr.h10.truelle · La truelle
+  - id: pr.h10.tr.tarif_enveloppe
+    roles: [president]
+    arc: escalier
+    tags: [caisse, piege]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, huit marches à murer. Tazi nettoie sa truelle : « On me paie pour la dernière, la nuit d'avant le match. Si on me payait pour l'oublier, j'oublierais. Billets neufs, de préférence. »"
+    left:
+      label: "Je paie de ma poche"
+      effects: {caisse: "-", set: [h10_truelle_payee, h10_truelle], outcome: propre}
+      answer: "Tu poses une enveloppe blanche sur le seau. Il la range sans la compter, entre deux pages de L'Écho."
+    right:
+      label: "Avec des billets neufs"
+      effects: {tribunes: "-", direction: "+", set: [h10_truelle_payee, h10_truelle_sale, h10_truelle], outcome: sale}
+      answer: "L'enveloppe crème, sortie du coffre. Il compte les liasses du pouce, sans les sortir, comme un caissier. « Neufs. Ça se suit. »"
+
+  - id: pr.h10.tr.tarif
+    roles: [president]
+    arc: escalier
+    tags: [caisse, piege]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, huit marches à murer. Tazi, à mi-voix, en nettoyant sa truelle : « On me paie pour la dernière, la nuit d'avant le match. Si quelqu'un me payait pour l'oublier, je l'oublierais. »"
+    left:
+      label: "Je paie de ma poche"
+      effects: {caisse: "-", set: [h10_truelle_payee, h10_truelle], outcome: propre}
+      answer: "Tu poses une enveloppe blanche sur le seau. Il la range sans la compter, entre deux pages de L'Écho."
+    right:
+      label: "Je ne paie personne"
+      effects: {relation: {tazi: 1}, outcome: refus}
+      answer: "Il hoche la tête. « C'est mieux. Un maçon qui oublie, on le paie deux fois, et il se souvient des deux. »"
+
+  - id: pr.h10.tr.merci
+    roles: [president]
+    arc: escalier
+    tags: [caisse, famille]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Tazi devant l'escalier nord, un matin : « Ma femme demande d'où vient l'argent. Je lui ai dit : d'une marche. Elle a ri. Elle rit rarement, depuis la fermeture de la Tréfilerie. »"
+    left:
+      label: "Elle a eu raison"
+      effects: {relation: {tazi: 1}}
+      answer: "« Elle a toujours raison. C'est pour ça que je mure. » Il gâche le ciment de la marche du mois."
+    right:
+      label: "N'en dites pas plus"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Je n'en dis jamais plus. » Il touche sa poche de poitrine, là où l'enveloppe n'est plus."
+
+  - id: pr.h10.tr.double
+    roles: [president]
+    arc: escalier
+    tags: [caisse, piege]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Tazi mure la marche du mois en sifflant faux : « On m'a augmenté. Pour la dernière, c'est double tarif, de nuit. » Il ne dit pas qui. Il n'a pas besoin."
+    left:
+      label: "Qui vous paie ?"
+      effects: {direction: "-"}
+      answer: "« Celui qui paie le ciment depuis le début. » Il tapote la brouette, là où un sigle a été gratté."
+    right:
+      label: "Faites votre métier"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« C'est ce que je fais. » Il lisse la marche du plat de la truelle, longtemps, comme on caresse un chien."
+
+  - id: pr.h10.tr.dos
+    roles: [president]
+    arc: escalier
+    tags: [famille, tribunes]
+    speaker: rouvier
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Nadia Rouvier masse le dos de Tazi, au pied de l'escalier nord : « Trente ans de marches. La dernière l'empêche de dormir ; il me demande s'il doit la faire. Je réponds quoi, {toi} ? »"
+    left:
+      label: "De ne pas la faire"
+      effects: {direction: "-", tribunes: "+", relation: {tazi: 1}}
+      answer: "Elle le lui répète à l'oreille. Tazi ne répond pas ; il lève le pouce vers la dernière marche, sans se retourner."
+    right:
+      label: "De faire son métier"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« C'est ce qu'il voulait entendre, et ce qu'il ne voulait pas. » Elle reprend le massage, plus fort."
+
+  # ═══════════════════════════════════════ pr.h10.villebranle · Le dernier derby
+  - id: pr.h10.vb.bouteille
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: gege
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Le président de {rival} t'a fait porter une bouteille et une carte : « Fusionnons. Monter à deux, c'est encore monter. » Gégé, assis dans ton bureau : « Du vin de chez eux, {toi}. Je n'en bois pas. »"
+    left:
+      label: "Je l'invite en loge"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Gégé se lève et remet sa casquette. « Alors je regarderai le derby d'en bas, avec les miens. Une dernière fois. »"
+    right:
+      label: "Je renvoie la bouteille"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_fusion_refusee], outcome: refusee}
+      answer: "Gégé la rapporte lui-même au coursier, bouchon intact. « Dis-lui que chez nous, on monte seuls ou pas. »"
+
+  - id: pr.h10.vb.derby
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Derby contre {rival}. Gégé a voulu le voir debout dans la Nord, contre l'avis de la kiné. À la mi-temps, il te fait signe de descendre : il veut te dire quelque chose à l'oreille."
+    left:
+      label: "Je descends"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "Dans le vacarme, à l'oreille : « Ne fusionne avec personne. Même pas avec moi. » Puis il chante, faux, la tête renversée."
+    right:
+      label: "Je reste en loge"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Il ne fait plus signe. À la soixante-dixième, il s'assoit sur une marche. Nino le ramène chez lui avant la fin."
+
+  - id: pr.h10.vb.fusion_renvoyee
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Nino, après le derby : « Tu as renvoyé leur bouteille. Ils ont rappelé : pas toi, moi. Une franchise de la Rive, deux clubs, un nom. Je compterais les mains, si tu le proposes. »"
+    left:
+      label: "On l'étudie"
+      effects: {direction: "+", tribunes: "-", set: [h10_fusion_etudiee], outcome: etudiee}
+      answer: "Il range le projet dans sa veste, côté clapet. Le soir, le président de {rival} t'envoie une deuxième bouteille."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", direction: "-", set: [h10_fusion_refusee], outcome: refusee}
+      answer: "« Jamais, c'est long. » Il déchire le projet en deux, puis en quatre, et range les morceaux dans sa veste."
+
+  - id: pr.h10.vb.fusion
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, direction]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Nino, après le derby, le projet de fusion imprimé à la main : « Une franchise de la Rive, les deux clubs sous un seul nom. Les socios voteraient, si tu le proposes. Moi, je compterais. »"
+    left:
+      label: "On l'étudie"
+      effects: {direction: "+", tribunes: "-", set: [h10_fusion_etudiee], outcome: etudiee}
+      answer: "Il range le projet dans sa veste, côté clapet. Le soir, le président de {rival} t'envoie une deuxième bouteille."
+    right:
+      label: "Jamais"
+      effects: {tribunes: "+", direction: "-", set: [h10_fusion_refusee], outcome: refusee}
+      answer: "« Jamais, c'est long. » Il déchire le projet en deux, puis en quatre, et range les morceaux dans sa veste."
+
+  # ════════════════════════════════════════════════════ pr.h10.nino · Le neveu
+  - id: pr.h10.ni.terminus_zinc
+    roles: [president]
+    arc: famille
+    tags: [famille, retorse]
+    speaker: nino
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "L'arrière-salle du Terminus, minuit. Nino, les mains à plat sur le tapis vert : « Au zinc, on a dit : ensemble. Je dois quarante mille écus à l'homme d'en face. Elle propose de payer. Toi ? »"
+    left:
+      label: "Je paie ta dette"
+      effects: {caisse: "--", relation: {nino: 2}, set: [h10_dette_nino], outcome: paye}
+      answer: "Tu poses l'argent sur le tapis. L'homme d'en face compte et rend la monnaie en jetons. Nino regarde les jetons, pas toi."
+    right:
+      label: "Qu'elle la paie"
+      effects: {relation: {nino: -2}, set: [h10_nino_lache], clear: [h10_nino_retourne], outcome: lache}
+      answer: "« Alors je lui dois tout, et à toi rien. » Il sort par la porte des livreurs. Le zinc, c'était il y a un an."
+
+  - id: pr.h10.ni.terminus
+    roles: [president]
+    arc: famille
+    tags: [famille, retorse]
+    speaker: nino
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "L'arrière-salle du Terminus, minuit. Nino, les mains à plat sur le tapis vert : « Je dois quarante mille écus à l'homme d'en face. Mon oncle ne sait pas. Elle, au téléphone, propose de payer. »"
+    left:
+      label: "Je paie ta dette"
+      effects: {caisse: "--", relation: {nino: 2}, set: [h10_dette_nino], outcome: paye}
+      answer: "Tu poses l'argent sur le tapis. L'homme d'en face compte et rend la monnaie en jetons. Nino regarde les jetons, pas toi."
+    right:
+      label: "Qu'elle la paie"
+      effects: {relation: {nino: -1}, set: [h10_nino_lache], clear: [h10_nino_retourne], outcome: lache}
+      answer: "« Alors je lui dois tout. » Il sort par la porte de la cuisine, celle des livreurs, en laissant sa veste."
+
+  - id: pr.h10.ni.oncle
+    roles: [president]
+    arc: famille
+    tags: [famille, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Au-dessus du local, Gégé trie des écharpes sur son lit : « Le petit a des dettes. Il croit que je ne sais pas. Je sais toujours tout ; c'est pour ça qu'on me laisse vivre si vieux. »"
+    left:
+      label: "Je m'en occupe"
+      effects: {relation: {gege: 1}}
+      answer: "« Non. Tu le regardes s'en occuper. C'est plus dur. » Il te tend une écharpe de 1984, la plus usée."
+    right:
+      label: "Ce sont ses affaires"
+      effects: {relation: {gege: -1}}
+      answer: "« Tout est ses affaires, depuis que je ne descends plus. » Il range les écharpes par année, en commençant par la fin."
+
+  - id: pr.h10.ni.tambour
+    roles: [president]
+    arc: famille
+    tags: [ultras, tribunes]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Nino répare la peau d'un tambour à la buvette, avec du ruban adhésif : « Quand il ne sera plus là, {toi}, il faudra quelqu'un pour taper. Pas moi. Moi, je compte. »"
+    left:
+      label: "Tu taperas"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}}
+      answer: "Il essaie : deux coups, trois. Le son est faux. Il recommence jusqu'à ce que le barman éteigne la salle."
+    right:
+      label: "Trouve quelqu'un"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« J'ai trouvé. Un gamin de douze ans qui tape comme mon oncle à quarante. » Il ne dit pas son nom."
