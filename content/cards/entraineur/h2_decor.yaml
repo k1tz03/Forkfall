@@ -1,0 +1,389 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · le décor (cartes de routine, tirées au sac
+# quand l'histoire respire). Toutes gardées par `flag('histoire_h2')` : elles
+# n'existent que dans ce livre. Une scène chacune, `once: true` — un geste, un
+# objet, une question —, et leurs `when` lisent ce que la carrière a posé : le
+# quai, le cabas, le car neuf, la panne, le wagon.
+#
+# Les visages : Lulu, le gardien du stade (sans portrait), et son chien ; le
+# chauffeur, qui dort dans le car pendant les matchs ; la femme de l'absent,
+# qui appelle à dix heures ; l'assureur, qui compte. Le répondeur, à la fin,
+# ne clignote plus.
+cards:
+  # ═══════════════════════════════════════════════════════════════ S0
+  - id: en.h2.dec.ticket
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor, objet]
+    tone: leger
+    once: true
+    lieu: parking
+    when: "flag('histoire_h2') && season == 0 && !flag('h2_place_vide')"
+    text: "Un agent municipal glisse un ticket sous l'essuie-glace de la berline, par-dessus celui de la semaine dernière. Il te voit : « C'est à vous ? Ça fait six. Après dix, on enlève. »"
+    left:
+      label: "Le club paie"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Josiane classe les six tickets dans une chemise neuve. Elle écrit dessus MERCADIER en capitales, puis : « (en attente) »."
+    right:
+      label: "Elle n'est pas à moi"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "L'agent écrit « propriétaire introuvable ». Le lendemain, la police municipale appelle le club ; Vaubourg demande qui lui a parlé."
+
+  - id: en.h2.dec.lulu
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, moment]
+    tone: leger
+    once: true
+    lieu: parking
+    when: "flag('histoire_h2') && season == 0 && !flag('h2_trois_metres') && !flag('h2_place_vide')"
+    text: "Lulu, le gardien, fait sa ronde avec son chien. Il s'arrête devant la berline, ôte sa casquette une seconde, puis te tend sa lampe : « Si elle bouge, je vous appelle, ou j'appelle le président ? »"
+    left:
+      label: "Appelez-moi"
+      effects: {direction: "-", vestiaire: "+"}
+      answer: "Il note ton numéro au dos de sa main, au stylo bille. Le chien renifle les pneus de la berline, longtemps, puis éternue."
+    right:
+      label: "Appelez le président"
+      effects: {direction: "+"}
+      answer: "« Le président dort à dix heures. » Il remet sa casquette et repart. Le chien, lui, reste assis devant la berline jusqu'au sifflet."
+
+  - id: en.h2.dec.plaque
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    when: "flag('histoire_h2') && season == 0 && flag('h2_cartons_gardes')"
+    text: "Madame Josiane astique avec sa manche la plaque de la porte, celle à son nom à lui : « Elle reste jusqu'à la fin des six semaines. C'est ce qu'on a dit. Et après, {toi} ? »"
+    left:
+      label: "Après, la mienne"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "Elle hoche la tête et range la peau de chamois. Le lendemain, une plaque vierge attend dans le tiroir du milieu, sous le sifflet."
+    right:
+      label: "Après, on verra"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "« On verra. » Elle souffle sur le laiton et frotte encore. Le nom brille plus fort que la poignée."
+
+  - id: en.h2.dec.brehaut_genou
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    lieu: stade
+    when: "flag('histoire_h2') && season == 0 && (flag('h2_brehaut_banc') || flag('h2_brehaut_titulaire') || flag('h2_premier_efface'))"
+    text: "Bréhaut descend l'escalier du vestiaire une marche à la fois, la main sur la rampe : « Le Doc dit trois semaines. Lui, il aurait dit quatre, et il aurait eu raison. Je reprends quand ? »"
+    left:
+      label: "Dans quatre semaines"
+      effects: {vestiaire: "+", force: -1, relation: {brehaut: 1}}
+      answer: "Il compte sur ses doigts, comme pour une suspension. « Quatre. » Il remonte l'escalier sans la rampe, pour te montrer qu'il peut."
+    right:
+      label: "Dès que le Doc signe"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Le Doc signe au bout de dix-neuf jours. Bréhaut rejoue, et ne court plus jamais vers la ligne de touche du côté du banc."
+
+  - id: en.h2.dec.dit_reviendra
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: brehaut
+    tone: strategique
+    once: true
+    lieu: vestiaire
+    when: "flag('histoire_h2') && season == 0 && flag('h2_dit_reviendra')"
+    text: "Bréhaut, en laçant ses chaussures, sans lever la tête : « Vous aviez dit qu'il reviendrait peut-être. Les gars me demandent si c'était une façon de parler. Je leur dis quoi ? »"
+    left:
+      label: "C'en était une"
+      effects: {vestiaire: "-", direction: "+", relation: {brehaut: -1}}
+      answer: "Il finit son double nœud. « D'accord. » Le soir, la compo de l'autre a disparu du mur ; quelqu'un l'a décrochée, pas toi."
+    right:
+      label: "Je n'en sais rien"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Il te regarde enfin. « C'est déjà plus que le président. » Il sort sur le terrain en tapant deux fois dans ses mains."
+
+  - id: en.h2.dec.norbert_banquette
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: norbert
+    tone: leger
+    once: true
+    lieu: gare
+    when: "flag('histoire_h2') && season <= 1"
+    text: "Norbert, allongé sur la banquette du fond du car pendant l'échauffement, la casquette sur les yeux : « On repart ce soir ou demain matin, coach ? Les gars préfèrent la nuit. Moi aussi. »"
+    left:
+      label: "Ce soir"
+      effects: {vestiaire: "+", caisse: "+"}
+      answer: "Retour de nuit, l'autoroute vide. Au fond du car, rideaux tirés, ça joue aux cartes jusqu'au péage ; personne ne dort."
+    right:
+      label: "Demain, à l'hôtel"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Une nuit d'hôtel de plus. Norbert dort dans le car quand même, sur le parking, la radio allumée tout bas, porte entrouverte."
+
+  - id: en.h2.dec.monique_mange
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: monique
+    tone: leger
+    once: true
+    lieu: secretariat
+    when: "flag('histoire_h2') && season <= 1 && seen('en.h2.berl.dix_heures')"
+    text: "Dix heures. Monique Mercadier au téléphone, sans bonjour : « Vous mangez, au moins ? Lui ne mangeait pas, les semaines de match. Josiane me dit que vous non plus. »"
+    left:
+      label: "Je mange, merci"
+      effects: {relation: {monique: 1}, vestiaire: "+"}
+      answer: "« Vous mentez comme lui. » Le lendemain, une boîte de gâteaux secs attend au secrétariat, avec ton nom au crayon sur le couvercle."
+    right:
+      label: "Je n'ai pas le temps"
+      effects: {direction: "+", relation: {monique: -1}}
+      answer: "« Lui non plus, il n'avait pas le temps. » Elle raccroche la première. Josiane, qui a tout entendu, ne lève pas les yeux."
+
+  - id: en.h2.dec.monique_rasoir
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: monique
+    tone: strategique
+    once: true
+    lieu: domicile
+    when: "flag('histoire_h2') && flag('h2_quai') && season <= 1"
+    text: "Un soir, au quai, le téléphone de l'entrée sonne. Monique Mercadier : « Vous dormez chez lui, alors. Le rasoir est sur le lavabo ? Ne le jetez pas. On n'abandonne pas un rasoir. »"
+    left:
+      label: "Je ne touche à rien"
+      effects: {relation: {monique: 1}, vestiaire: "+"}
+      answer: "« Merci. » Le rasoir reste sur le lavabo, le blaireau à côté, sec. Tu te rases avec le tien, de l'autre côté du robinet."
+    right:
+      label: "Venez le chercher"
+      effects: {relation: {monique: -1}, direction: "+"}
+      answer: "« Je ne viendrai pas au quai. Il y dormait la semaine pour ne pas me réveiller. C'est ce qu'il disait. » Elle raccroche doucement."
+
+  # ═══════════════════════════════════════════════════════════════ S1
+  - id: en.h2.dec.cafetiere
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor, objet]
+    speaker: josiane
+    tone: leger
+    once: true
+    lieu: bureau
+    when: "flag('histoire_h2') && flag('h2_cabas_suivi')"
+    text: "Sept heures. Madame Josiane rebranche la cafetière de l'autre et pose une tasse à côté, une seule : « Ça fait moins vide. Ne me demandez pas pour qui. »"
+    left:
+      label: "Une tasse pour moi aussi"
+      effects: {relation: {josiane: 1}, vestiaire: "+"}
+      answer: "Elle en sort une deuxième du tiroir. Vous buvez debout, sans parler ; la première tasse reste pleine, à refroidir près du répondeur."
+    right:
+      label: "Débranchez-la"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "Elle débranche. Le lendemain à sept heures, la cafetière est chaude. Tu ne demandes plus."
+
+  - id: en.h2.dec.norbert_retro
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sponsors]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: gare
+    when: "flag('histoire_h2') && flag('h2_cars_du_quai')"
+    text: "Norbert règle le rétroviseur intérieur du car neuf, un quart de tour, puis un autre : « D'ici, je vois tout le monde. Même le fond. Vous voulez être devant, ou au fond ? »"
+    left:
+      label: "Devant, derrière toi"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu t'assois au premier rang. Pendant tout le trajet, dans le rétroviseur, tu vois ses yeux, et derrière eux le fond du car."
+    right:
+      label: "Au fond, avec eux"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Au fond, les cartes disparaissent sous un blouson quand tu t'assois. Le rétroviseur, lui, ne bouge plus de tout le voyage."
+
+  - id: en.h2.dec.achard_tribune
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: stade
+    when: "flag('histoire_h2') && season >= 1 && (flag('h2_dit_parti') || flag('h2_dit_pas_parti'))"
+    text: "Monsieur Achard regarde l'entraînement depuis la tribune vide, un thermos entre les pieds : « Je compte les gens qui regardent le parking plutôt que le terrain. Vous êtes le troisième. »"
+    left:
+      label: "Qui sont les deux autres ?"
+      effects: {direction: "-", relation: {achard: 1}}
+      answer: "« Votre adjoint. Et le chauffeur du car, qui n'a rien à faire ici un mardi. » Il revisse son thermos, et descend saluer Vukić."
+    right:
+      label: "Sortez de mon stade"
+      effects: {direction: "+", relation: {achard: -1}}
+      answer: "« Il est au président, votre stade, et le président est mon client. » Il reste jusqu'à la fin, puis il plie son plaid en quatre."
+
+  - id: en.h2.dec.gigi_siege
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vecchio
+    tone: leger
+    once: true
+    lieu: gare
+    when: "flag('histoire_h2') && season >= 1 && chars.vecchio.statut != 'staff'"
+    text: "Gigi Vecchio pose ses gants sur le siège juste derrière le chauffeur, avant tout le monde : « Roland me l'avait demandé. Devant, on entend ce qui se dit derrière. Je continue ? »"
+    left:
+      label: "Continue, Gigi"
+      effects: {vestiaire: "-", relation: {vecchio: 1}}
+      answer: "Il s'assoit, les gants sur les genoux. Au retour, il te glisse un papier plié : deux prénoms, et « le fond, après le péage »."
+    right:
+      label: "Assieds-toi où tu veux"
+      effects: {vestiaire: "+"}
+      answer: "Il reprend ses gants. Il s'assoit quand même derrière Norbert, par habitude, et dort les yeux ouverts jusqu'à Aubérive."
+
+  - id: en.h2.dec.dembo_montre
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    tone: strategique
+    once: true
+    lieu: terrain
+    when: "flag('histoire_h2') && flag('h2_fond_du_car')"
+    text: "Dembo arrive à l'entraînement avec une montre neuve, qu'il cache sous son poignet en éponge. Il évite ton regard ; il évite surtout le car du club, garé au bout du terrain."
+    left:
+      label: "Je lui parle seul"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "« Elle est à mon cousin. » Il la retire et la met dans sa poche. À la fin de la séance, il monte quand même dans le car."
+    right:
+      label: "Je ne vois rien"
+      effects: {vestiaire: "+", parole: -1}
+      answer: "Il marque deux fois à l'entraînement. Le samedi, il rate un face-à-face à la quatre-vingtième, et regarde la tribune, pas le but."
+
+  - id: en.h2.dec.norbert_premier_rang
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: norbert
+    tone: strategique
+    once: true
+    lieu: gare
+    when: "flag('histoire_h2') && flag('h2_panne_seul')"
+    text: "Depuis la panne, Norbert te garde une place au premier rang. Ta veste est déjà pliée dessus quand tu montes : « Vous êtes bien, là, devant. On voit la route. »"
+    left:
+      label: "Merci, Norbert"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Tu t'assois sur ta veste pliée. Elle sent le tabac froid. Tu ne te souviens pas de l'avoir laissée dans le car."
+    right:
+      label: "Je m'assois au fond"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Tu reprends ta veste et tu vas au fond. Norbert remet le premier rang en ordre, le dossier droit, comme une chambre d'hôtel."
+
+  - id: en.h2.dec.vukic_lundi
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vukic
+    tone: leger
+    once: true
+    lieu: terrain
+    when: "flag('histoire_h2') && flag('h2_vukic_sait')"
+    text: "Le lundi, Vukić arrive à sept heures dix, pas à sept heures. Il sent le froid du quai deux. Il pose un plot de trop au milieu, là où l'autre se tenait : « Je le laisse, ou je l'enlève ? »"
+    left:
+      label: "Laisse-le"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Les gars le contournent pendant toute la séance sans que personne leur ait rien dit. Bréhaut le contourne aussi, en boitant."
+    right:
+      label: "Enlève-le"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il l'enlève et le range dans le filet. Le lundi suivant, il arrive à sept heures pile, et ne sent plus le quai."
+
+  - id: en.h2.dec.lea_lundis
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: lea
+    tone: strategique
+    once: true
+    lieu: echo
+    when: "flag('histoire_h2') && flag('h2_lea_cabine') && (flag('h2_panne_seul') || flag('h2_panne_vukic') || flag('h2_panne_deux'))"
+    text: "Léa relit son carnet à spirale, les lundis soulignés : « Six heures quarante, chaque lundi, depuis octobre. Sauf le lundi après la panne du car. Ce lundi-là, personne n'a appelé. »"
+    left:
+      label: "Il a eu peur"
+      effects: {relation: {lea: 1}, direction: "-"}
+      answer: "« Ou il ne pouvait plus marcher jusqu'à la gare. » Elle referme le carnet. « Je n'écris rien. Je compte les lundis. »"
+    right:
+      label: "Rangez ce carnet"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "Elle le range, pas plus loin que sa poche. « Il est rangé. » Le lundi suivant, sa voiture est garée en face de la cabine."
+
+  # ═══════════════════════════════════════════════════════════════ S2
+  - id: en.h2.dec.monique_fleurs
+    roles: [entraineur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: monique
+    tone: strategique
+    once: true
+    lieu: rue
+    when: "flag('histoire_h2') && season == 2 && (flag('h2_mort_pour_moi') || flag('h2_vivant'))"
+    text: "Au marché, Monique Mercadier paie des chrysanthèmes, un bouquet serré : « Pour avril. Il faut bien les acheter quelque part. Vous viendrez, au tribunal ? »"
+    left:
+      label: "Je viendrai"
+      effects: {relation: {monique: 1}, direction: "-"}
+      answer: "Elle hoche la tête. Elle ne dit pas où elle mettra les fleurs. Il n'y a pas de tombe ; pas encore."
+    right:
+      label: "J'ai un match"
+      effects: {direction: "+", relation: {monique: -1}}
+      answer: "« Lui aussi, il avait toujours un match. » Elle prend son bouquet et le porte la tête en bas, comme on porte un sac."
+
+  - id: en.h2.dec.achard_retraite
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: achard
+    tone: leger
+    once: true
+    lieu: hotel
+    when: "flag('histoire_h2') && season == 2"
+    text: "Monsieur Achard, au bar de l'hôtel de la Rive, son pardessus plié sur les genoux : « La Prévoyance m'a donné jusqu'en avril. Après, je suis à la retraite, et lui est mort. Nous partirons ensemble. »"
+    left:
+      label: "Il n'est pas mort"
+      effects: {relation: {achard: 1}, direction: "-"}
+      answer: "« Alors prouvez-le avant moi. » Il boutonne son pardessus jusqu'au col. « Prenez une écharpe, en avril. Il fait froid, au tribunal. »"
+    right:
+      label: "Bonne retraite"
+      effects: {direction: "+", relation: {achard: -1}}
+      answer: "Il trinque avec sa tasse de café. « Vous me la souhaitez comme on souhaite bon voyage à quelqu'un qui part en train. »"
+
+  # ═══════════════════════════════════════════════════════════════ S3+
+  - id: en.h2.dec.repondeur_eteint
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, decor, objet]
+    tone: leger
+    once: true
+    lieu: bureau
+    when: "flag('histoire_h2') && season >= 3"
+    text: "Lundi, sept heures. Le répondeur ne clignote pas. Tu le regardes quand même en enlevant ton manteau, comme on regarde une horloge arrêtée."
+    left:
+      label: "Je le débranche"
+      effects: {direction: "+"}
+      answer: "Tu le ranges dans le tiroir du milieu, le fil enroulé autour. Josiane le ressort le lendemain pour y brancher la cafetière."
+    right:
+      label: "Je le laisse branché"
+      effects: {vestiaire: "+"}
+      answer: "Il reste là, sa diode éteinte, entre le téléphone et la photo de l'équipe. Le lundi, tu arrives quand même à sept heures."
+
+  - id: en.h2.dec.sapin_neuf
+    roles: [entraineur]
+    arc: moment
+    tags: [decor, objet]
+    tone: leger
+    once: true
+    lieu: parking
+    when: "flag('histoire_h2') && season >= 3"
+    text: "Un matin, au rétroviseur de ta voiture, un sapin en carton neuf, encore dans sa cellophane. Personne au parking. C'est le premier du mois."
+    left:
+      label: "Je l'enlève"
+      effects: {direction: "+"}
+      answer: "Tu le poses dans la boîte à gants, sans le déballer. Le premier du mois suivant, il y en a un autre, à la même place."
+    right:
+      label: "Je le déballe"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Il sent la pinède et le carton. Tu roules toute la journée avec. Le soir, au parking, tu reconnais l'odeur de l'autre voiture."

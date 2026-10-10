@@ -1,0 +1,224 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · ce que dit Aubérive pendant le livre
+# (format : en-tête de content/ville/paroles_personnages.yaml et
+# paroles_gens.yaml). Toutes les répliques lisent `flag(histoire_h2)`.
+#
+# La ville sait ce qui se voit — une voiture qui bouge, une place vide, un car
+# neuf, des pompiers sur le quai — et devine le reste, souvent de travers.
+# Les visages du livre : la femme de l'absent au square des Lilas l'après-midi
+# (elle appelle le club à dix heures et ne s'en cache pas), le chauffeur à la
+# gare routière le matin et au Terminus la nuit, l'assureur au bar de l'hôtel
+# le soir. Roland Mercadier n'a pas de place en ville : on ne le croise pas,
+# on le trouve (les scènes de la semaine, content/ville/scenes_h2.yaml).
+#
+# `saison` est celle de la ville : 1 pour 1990-1991, 2 pour 1991-1992, 3 pour
+# 1992-1993. Aucune réplique ne reprend une phrase d'une carte du livre.
+presences:
+  - {qui: monique, lieu: square, tranches: [aprem]}
+  - {qui: norbert, lieu: gareRoutiere, tranches: [matin]}
+  - {qui: norbert, lieu: terminus, tranches: [nuit]}
+  - {qui: achard, lieu: hotel, tranches: [soir]}
+
+rencontres:
+  monique: square
+  norbert: gareRoutiere
+  achard: hotel
+  mercadier: wagon
+
+paroles:
+  # ════════════════════════════════════════════════════════ LES GENS
+  - qui: passant
+    sujet: rumeur
+    si: "flag(histoire_h2) && saison == 1 && !flag(h2_place_vide)"
+    texte: "La voiture de l'ancien est toujours au parking ? On dit qu'il est parti en train. Qui part en train et laisse sa voiture ?"
+  - qui: ancien
+    sujet: club
+    si: "flag(histoire_h2) && saison == 1"
+    texte: "Celui-là n'a même pas dit au revoir à Paulette, au guichet 14B. Il lui disait au revoir tous les samedis soir, même après une défaite."
+  - qui: fan
+    sujet: match
+    si: "flag(histoire_h2) && saison == 1 && serie_v >= 1"
+    texte: "À la vingtième, il y a toujours quatre minutes pour l'ancien. Après, la Nord est à toi. Il faut juste attendre la vingt-quatrième."
+  - qui: passant
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_trois_metres)"
+    texte: "Lulu, le gardien du stade, a mesuré la berline au pas. Trois mètres. Il dit qu'elle a roulé, et que lui a dormi. Lulu ne dort jamais."
+  - qui: passante
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_place_vide)"
+    texte: "Une voiture ne disparaît pas d'un parking éclairé. Sauf si on éteint le réverbère, de minuit à deux heures."
+  - qui: commercant
+    sujet: toi
+    si: "flag(histoire_h2) && lieu == boulangerie_residentiel && jour == lun && tranche == matin"
+    texte: "Vous avez la tête de quelqu'un qui a écouté un répondeur. Mon mari avait cette tête-là, le lundi. Une baguette ?"
+  - qui: enfant
+    sujet: rumeur
+    si: "flag(histoire_h2) && saison == 2 && tranche == soir"
+    texte: "Il y a un monsieur qui dort dans le wagon de la friche. Ma mère dit que c'est un fantôme qui écoute la radio."
+  - qui: commercant
+    sujet: argent
+    si: "flag(histoire_h2) && flag(h2_questions_norbert) && lieu == tabac"
+    texte: "L'arrière-salle, c'est Norbert qui ferme. Le patron de la table, c'est une vitrine. Moi, je n'ai rien dit, je vends des timbres."
+  - qui: passant
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_rive)"
+    texte: "Mon beau-frère est pompier. Il dit qu'en bas, sous le quai, il n'y avait personne dans la voiture. Il l'a dit deux fois, pour se rassurer."
+  - qui: fan
+    sujet: club
+    si: "flag(histoire_h2) && flag(cdi_signe)"
+    texte: "Ta plaque est sur la porte, maintenant. Celle de l'autre est dans le tiroir de Josiane. Elle ne jette rien, Josiane."
+  - qui: ancien
+    sujet: epoque
+    si: "flag(histoire_h2) && flag(h2_vivant_papier)"
+    texte: "Mercadier au Corner, un demi devant lui, comme si de rien n'était. Il a maigri. Il a dit bonjour à tout le monde, même au chauffeur du car."
+  - qui: passante
+    sujet: quartier
+    si: "flag(histoire_h2) && flag(h2_maison)"
+    texte: "Rue des Lilas, on ferme les volets plus tôt depuis qu'on est entré chez vous sans casser la porte. Ici, tout le monde a une clé de trop."
+  - qui: passant
+    sujet: sponsor
+    si: "flag(histoire_h2) && flag(h2_maillots_prevoyance)"
+    texte: "Un assureur sur le maillot. Mon père dit qu'on n'a jamais vu ça, un club qui porte le nom de ceux qui refusent de payer."
+  - qui: passant
+    sujet: sponsor
+    si: "flag(histoire_h2) && flag(h2_cars_du_quai)"
+    texte: "Le car neuf du Racing a des rideaux. Mon voisin dit que c'est pour dormir. Mon voisin ne prend jamais le car."
+  - qui: enfant
+    sujet: rumeur
+    si: "flag(histoire_h2) && flag(h2_car_fouille)"
+    texte: "Les gendarmes ont fouillé le car du club ! Ils cherchaient des ballons volés. C'est mon cousin qui l'a dit, il sait tout."
+  - qui: fan
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_feu)"
+    texte: "Le wagon de la friche a brûlé. Au virage, on dit que c'était le fantôme à la radio. Moi je dis qu'un fantôme, ça ne tousse pas comme ça."
+
+  # ════════════════════════════════════════════════════════ MADAME JOSIANE
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h2) && saison == 1 && relation.josiane >= 1"
+    texte: "J'ai changé la bande du répondeur ce matin. L'ancienne était pleine de silences ; je l'ai rangée dans le tiroir du milieu, avec le reste."
+  - qui: josiane
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_place_vide)"
+    texte: "Le président m'a demandé de rayer son nom de l'annuaire du club. J'ai pris un crayon à papier. Ça se gomme, un crayon."
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_cabas_suivi)"
+    texte: "Le soir, je prends le chemin du lavoir. Il est plus long, mais personne ne l'éclaire. Vous devriez le prendre aussi, le jeudi."
+  - qui: josiane
+    sujet: argent
+    si: "flag(histoire_h2) && flag(h2_enveloppe_cars)"
+    texte: "Les Cars du Quai envoient leurs factures à zéro franc. Je les classe quand même. Une facture à zéro finit toujours par coûter quelque chose."
+
+  # ════════════════════════════════════════════════════════ ZORAN VUKIĆ
+  - qui: vukic
+    sujet: toi
+    si: "flag(histoire_h2) && saison == 1"
+    texte: "Roland arrivait le lundi à sept heures moins le quart, jamais avant. Je posais les plots en l'attendant. Je n'ai jamais su d'où il venait."
+  - qui: vukic
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_vukic_sait)"
+    texte: "Josiane passe par le lavoir le jeudi. Moi, le mardi. Le reste de la semaine, il se débrouille avec sa radio et ses piles."
+  - qui: vukic
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_panne_seul)"
+    texte: "La nuit de la panne, j'ai attendu le dernier taxi au rond-point, jusqu'à cinq heures. Je ne te l'ai pas dit. Je te le dis."
+
+  # ════════════════════════════════════════════════════════ LE CLUB
+  - qui: vecchio
+    sujet: club
+    si: "flag(histoire_h2) && saison == 2"
+    texte: "Roland disait : le car, c'est l'endroit où les gens parlent, parce qu'ils croient que le chauffeur n'écoute pas."
+  - qui: gege
+    sujet: match
+    si: "flag(histoire_h2) && saison == 1"
+    texte: "La bâche de Mercadier est roulée dans le local, à côté de la mienne. Je ne la sors plus. Je ne la jette pas non plus."
+  - qui: brehaut
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_brehaut_banc)"
+    texte: "Le genou va mieux. Je ne sais toujours pas comment vous saviez, pour jeudi. Je ne demande plus ; je cours."
+  - qui: aulard
+    sujet: club
+    si: "flag(histoire_h2) && saison == 3"
+    texte: "Avril. Je compte les jours comme un gamin avant Noël. Ne me regarde pas comme ça : ici, tout le monde compte quelque chose."
+  - qui: sabatier
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_doc_wagon)"
+    texte: "Je vous ai vu sortir de la friche, avant-hier. Je n'ai rien vu. Si quelqu'un tousse là-bas, c'est du sirop au thym, pas des cachets."
+
+  # ════════════════════════════════════════════════════════ LA PRESSE
+  - qui: lea
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_place_vide)"
+    texte: "J'ai demandé le registre des pannes de la mairie. Décembre : une seule ligne, au crayon, et pas d'heure de fin."
+  - qui: lea
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_lea_cabine)"
+    texte: "Je n'écris rien sur la cabine tant qu'il n'a pas de nom. Les gens qui n'ont pas de nom dans le journal vivent plus longtemps."
+  - qui: meneche
+    sujet: rumeur
+    si: "flag(histoire_h2) && flag(h2_place_vide)"
+    texte: "Le buraliste du Quai a fermé les paris sur Mercadier. Trop de monde misait sur son retour ; il a eu peur d'avoir à payer."
+
+  # ════════════════════════════════════════════════════════ MONIQUE MERCADIER
+  - qui: monique
+    sujet: toi
+    si: "flag(histoire_h2) && saison == 1"
+    texte: "J'appelle à dix heures parce que c'est l'heure où il m'appelait, lui, de son bureau. Il disait : tout va bien. Je n'en croyais pas un mot."
+  - qui: monique
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_monique_aveu)"
+    texte: "Je dors avec le téléphone sur la table de nuit. S'il rappelle de la cabine, cette fois je dirai quelque chose. Je ne sais pas quoi."
+  - qui: monique
+    sujet: argent
+    si: "flag(histoire_h2) && saison == 3"
+    texte: "L'assurance rembourse le pavillon si le juge dit oui. Je regarde les murs en me demandant ce qu'ils valent, un homme."
+
+  # ════════════════════════════════════════════════════════ NORBERT
+  - qui: norbert
+    sujet: club
+    si: "flag(histoire_h2)"
+    texte: "Douze ans que je conduis pour le club. Jamais un accident. Je ne bois pas, je ne fume que la nuit, et je dors partout, même debout."
+  - qui: norbert
+    sujet: sponsor
+    si: "flag(histoire_h2) && flag(h2_cars_du_quai)"
+    texte: "Le car neuf consomme moins. Je l'ai dit au président. Il m'a demandé si je voulais une prime ; j'ai dit que je voulais des rideaux."
+  - qui: norbert
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_rive)"
+    texte: "Vous avez vu, pour la Rive ? Moi, j'étais couché. Le car était au dépôt. Demandez au dépôt, ils ont un registre."
+  - qui: norbert
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_panne_seul)"
+    texte: "On était bien, cette nuit-là, dans le car. Vous ne trouvez pas ? Les gens se disent des choses, la nuit, dans un car arrêté."
+
+  # ════════════════════════════════════════════════════════ MONSIEUR ACHARD
+  - qui: achard
+    sujet: argent
+    si: "flag(histoire_h2) && saison == 2"
+    texte: "Mon métier, c'est de ne croire personne. Votre président, je ne le crois pas deux fois : pour ce qu'il dit, et pour ce qu'il signe."
+  - qui: achard
+    sujet: toi
+    si: "flag(histoire_h2) && flag(h2_cassette_achard)"
+    texte: "J'ai écouté votre cassette onze fois. Des pièces qui tombent, et derrière, un moteur de car au ralenti. Un car qui attend quelqu'un."
+  - qui: achard
+    sujet: sombre
+    si: "flag(histoire_h2) && flag(h2_achard_nuit)"
+    texte: "Je ne dors plus qu'à l'hôtel, l'après-midi. Vous seriez surpris de ce qu'on voit, la nuit, d'une voiture qui ne bouge pas."
+
+  # ════════════════════════════════════════════════════════ APRÈS LES MISSIONS
+  - qui: passant
+    sujet: rumeur
+    si: "flag(histoire_h2) && flag(vl_dembo_propre)"
+    texte: "Dembo a remboursé quelqu'un, il paraît. Il marche la tête haute, maintenant. Sauf quand il passe devant le Terminus."
+  - qui: norbert
+    sujet: argent
+    si: "flag(histoire_h2) && flag(vl_dette_dembo)"
+    texte: "Vous perdez bien, coach. Ça s'apprend, de perdre bien. Revenez quand vous voulez : la table vous garde votre chaise."
+  - qui: lea
+    sujet: toi
+    si: "flag(histoire_h2) && flag(vl_cabine)"
+    texte: "Vous y étiez, lundi. Je le sais parce que je n'y étais pas, et que le cafetier de la gare m'a dit qu'on avait attendu."
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h2) && flag(vl_carnet)"
+    texte: "Il y a un carnet dans votre sac, avec une écriture que je connais. Je ne l'ai pas lu. Rangez-le mieux que ça."

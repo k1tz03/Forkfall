@@ -80,6 +80,13 @@
 ///   tombe ailleurs, et dix carrières sur vingt racontent autre chose. Les
 ///   swipes ont toujours un sens (même calendrier) : mêmes codes,
 ///   `--goldens --write` sans `--recode`, et les vingt atteignent une fin.
+/// · **Histoire 2, « Le Sapin en carton »** (la branche `histoire-h2`). Le
+///   postulat de l'intérimaire devient un livre : un prologue, une épine à
+///   créneaux fixes, six intrigues en série et deux événements sombres ; son
+///   programme et ses fins changent. Les cinq carrières de l'intérimaire
+///   racontent autre chose, les quinze autres ne bougent que par l'empreinte du
+///   contenu. Même calendrier : mêmes codes, `--goldens --write` sans
+///   `--recode`, et les vingt atteignent toujours une fin.
 library;
 
 import 'dart:io';

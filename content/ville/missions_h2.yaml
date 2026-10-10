@@ -1,0 +1,121 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · trois missions de la ville (format :
+# en-tête de content/ville/missions.yaml). Rares, gardées par le livre :
+#   · La dette de Dembo — au Corner, le soir, après la palette (h2_palette),
+#     si personne n'a encore payé. Perdre vingt mille francs à la table du
+#     fond, c'est payer par le Terminus : la partie est notée, ton nom en
+#     entier (vl_dette_dembo), et la nuit du wagon, les gendarmes la
+#     retrouvent (en.h2.fin.pompiers → la garde à vue). Les billets posés
+#     sur le tapis, avec un reçu qu'on ne signe pas, ne laissent rien.
+#   · La roue de secours — au wagon, la nuit, une fois Roland trouvé : la cour
+#     du garage du Pont, la bâche, la jante. Le carnet (h2_carnet) que lit
+#     l'audience ; ou la cour vide (h2_garage_vide).
+#   · La cabine du quai deux — Léa, à L'Écho, en deuxième saison : un lundi à
+#     six heures quarante. Un sapin neuf sur la tablette.
+missions:
+  - id: h2_dette_dembo
+    titre: "La dette de Dembo"
+    roles: [entraineur]
+    donneur: {sprite: inconnu, nom: "Dembo, l'avant-centre", lieu: bar, tranches: [soir]}
+    si: "flag(histoire_h2) && flag(h2_palette) && !flag(sb_dette_joueur) && !flag(h2_feu)"
+    chance: 0.5
+    etapes:
+      - id: offre
+        texte: "Au Corner, Dembo tourne son verre sans le boire. « Vingt mille, et l'arrière-salle me lâche. Je n'ai personne d'autre à qui demander. Pas le président. »"
+        choix:
+          - id: oui
+            label: "Je paie pour toi"
+            reponse: "Il lâche son verre. « Pas en billets. Là-bas, ils ne prennent pas les billets : ils prennent les parties. Ce soir, la table du fond. »"
+            suite: table
+          - id: non
+            label: "Tes dettes sont à toi"
+            reponse: "Il hoche la tête comme on encaisse un tacle. Le samedi suivant, il rate deux occasions, et regarde vers le car à chaque fois."
+            suite: fin
+      - id: table
+        objectif: {lieu: tripot, tranches: [nuit], delai: 2}
+        texte: "L'arrière-salle du Terminus. Norbert pousse un paquet de cartes vers toi : « Vous perdez {montant} à la table, et la dette du petit n'existe plus. C'est plus propre que des billets. »"
+        choix:
+          - id: perdre
+            label: "Je perds la main"
+            francs: -20000
+            effets: {set: [vl_dette_dembo], jauges: {vestiaire: 2}}
+            reponse: "Tu perds en trois tours, sans regarder tes cartes. Norbert note la partie dans un carnet à souches : ton nom en entier, la date, l'heure."
+            suite: fin
+          - id: billets
+            label: "Je paie en billets"
+            francs: -20000
+            effets: {set: [vl_dembo_propre], jauges: {vestiaire: 1}}
+            reponse: "Tu poses les billets sur le tapis vert et tu demandes un reçu. Norbert sourit, écrit « reçu » sur une serviette, et ne signe pas."
+            suite: fin
+        echec:
+          texte: "Deux nuits ont passé. Dembo ne vient plus au Corner. À l'entraînement, il garde son survêtement fermé, même au soleil."
+
+  - id: h2_roue_secours
+    titre: "La roue de secours"
+    roles: [entraineur]
+    donneur: {sprite: inconnu, nom: "Roland Mercadier", lieu: wagon, tranches: [nuit]}
+    si: "flag(histoire_h2) && flag(h2_wagon_vu) && !flag(h2_carnet) && !flag(h2_garage_vide) && !flag(h2_rive) && !flag(h2_feu)"
+    chance: 0.6
+    etapes:
+      - id: offre
+        texte: "Le wagon, la radio à piles en sourdine. Roland, sans lever les yeux : « Garage du Pont, la cour, la bâche grise. Le chien dort côté rue. La roue est lourde. Tu iras ? »"
+        choix:
+          - id: oui
+            label: "J'irai cette nuit"
+            reponse: "Il te tend un tournevis au manche scotché. « Le coffre force à gauche. Ne lis pas le carnet dans la cour. Lis-le chez toi, assis. »"
+            suite: cour
+          - id: non
+            label: "Pas maintenant"
+            reponse: "Il remonte le son de la radio. « Elle ne restera pas sous sa bâche tout l'hiver. Rien ne reste nulle part, ici. »"
+            suite: fin
+      - id: cour
+        objectif: {lieu: garage, tranches: [nuit], delai: 2}
+        texte: "Deux heures, la cour du garage du Pont. Sous la bâche, la berline grise ; au rétroviseur, un sapin neuf. Le coffre cède au tournevis. La roue de secours pèse trop lourd."
+        choix:
+          - id: ouvrir
+            label: "J'ouvre la jante"
+            effets: {set: [h2_carnet, vl_carnet]}
+            reponse: "Dans la jante, un carnet à spirale sous plastique. Le chien aboie côté rue ; tu passes le mur avec le carnet contre le ventre."
+            suite: fin
+          - id: partir
+            label: "Le chien se réveille"
+            effets: {set: [h2_garage_vide]}
+            reponse: "Tu repasses le mur les mains vides. Le lendemain, la cour est vide, et la bâche pliée sur un établi, bien carrée."
+            suite: fin
+        echec:
+          texte: "Deux nuits ont passé. Dans la cour du garage du Pont, la bâche est pliée sur un établi. La berline est partie, et le carnet avec elle."
+          effets: {set: [h2_garage_vide]}
+
+  - id: h2_cabine
+    titre: "La cabine du quai deux"
+    roles: [entraineur]
+    donneur: {sprite: lea, nom: "Léa, de L'Écho", lieu: echo, tranches: [aprem]}
+    si: "flag(histoire_h2) && saison == 2 && !flag(h2_cabine_vue)"
+    chance: 0.4
+    etapes:
+      - id: offre
+        texte: "Léa ouvre son carnet à spirale à une page de dates : « Les lundis, six heures quarante, la cabine du quai deux. Il y a quelqu'un au bout du fil, chaque fois. Vous y serez ? »"
+        choix:
+          - id: oui
+            label: "J'y serai lundi"
+            reponse: "Elle arrache la page et te la donne. « Je ne viens pas. Si je viens, j'écris. Et si j'écris, il ne rappellera plus. »"
+            suite: cabine
+          - id: non
+            label: "Ce n'est pas mon affaire"
+            reponse: "Elle referme le carnet sur son crayon. « C'est votre banc, pourtant. » Elle ne te raccompagne pas jusqu'à la porte."
+            suite: fin
+      - id: cabine
+        objectif: {lieu: gareRoutiere, tranches: [matin], delai: 7}
+        texte: "Gare routière, avant le premier car. La cabine du quai deux est vide. Sur la tablette, des pièces empilées, et un sapin en carton neuf, dans sa cellophane."
+        choix:
+          - id: attendre
+            label: "J'attends que ça sonne"
+            effets: {set: [vl_cabine]}
+            reponse: "À six heures quarante, ça sonne. Une respiration, un car qui manœuvre au loin, puis on raccroche. Les pièces, tu les laisses."
+            suite: fin
+          - id: sapin
+            label: "Je prends le sapin"
+            effets: {set: [vl_cabine]}
+            reponse: "Tu le glisses dans ta poche. À six heures quarante, le téléphone ne sonne pas. Il ne sonnera plus jamais à cette cabine."
+            suite: fin
+        echec:
+          texte: "Le lundi est passé. Léa ne te demande rien ; elle a barré une date dans son carnet, d'un trait fin."

@@ -240,163 +240,106 @@ postulats:
   - id: interimaire
     index: 1
     role: entraineur
-    title: "L'intérimaire"
-    question: "Tu as six semaines pour devenir indispensable, et personne ne te croit."
+    # Histoire 2 — Le Sapin en carton (docs/histoires/00_les_dix_histoires.md).
+    # L'ancien titre : « L'intérimaire ». Les ids, l'index, l'année, la
+    # division, les jauges, la force, l'objectif et le drapeau `interim` ne
+    # bougent pas (le Code de Carrière en dépend) ; le livre ajoute
+    # `histoire_h2`, que lisent ses variantes, son décor, ses manchettes, ses
+    # set-pieces et ses répliques de ville.
+    title: "Le Sapin en carton"
+    question: "Tu tiens le banc d'un homme qui n'est pas parti. Tu le cherches, ou tu le gardes absent ?"
     division: 2
     year: 1990
     gauges: { vestiaire: 45, tribunes: 50, direction: 40, caisse: 50 }
     force: 44
     objective: maintien
-    flags: [interim]
+    flags: [interim, histoire_h2]
     president: aulard
     camille: true
-    cast:                             # bible ch. 11 § 3.1 (cibles d'apparition par saison)
-      aulard:   { fonction: patron,       target: 3 }
-      vukic:    { fonction: rival,        target: 2.5 }   # il était l'adjoint de l'autre
-      brehaut:  { fonction: coeur,        target: 2 }
-      josiane:  { fonction: choeur,       target: 2 }
-      meneche:  { fonction: chroniqueur,  target: 1.5 }
-      fardelli: { fonction: tentateur,    target: 1 }
-      gege:     { fonction: horloge,      target: 1 }
-      vecchio:  { fonction: ancien,       target: 1 }
+    club: Racing Aubérive
+    ville: Aubérive
+    cast:                             # cibles d'apparition par saison
+      aulard:   { fonction: patron,       target: 2.5 }
+      vukic:    { fonction: rival,        target: 1.5 }   # l'adjoint de l'autre, qui te teste
+      josiane:  { fonction: choeur,       target: 1.5 }   # la cafetière, le cabas, la clé
+      brehaut:  { fonction: coeur,        target: 0.8 }
+      monique:  { fonction: famille,      target: 1.5 }   # dix heures, chaque matin
+      norbert:  { fonction: creancier,    target: 1.5 }   # le chauffeur, que tout le monde trouve normal
+      meneche:  { fonction: chroniqueur,  target: 0.8 }
+      achard:   { fonction: argent,       target: 0.9 }   # l'assureur : n'entre qu'en S1
+      lea:      { fonction: messager,     target: 0.8 }
+      vecchio:  { fonction: ancien,       target: 0.8 }
+      gege:     { fonction: horloge,      target: 0.8 }
+      fardelli: { fonction: tentateur,    target: 0.8 }
       legruet:  { fonction: instance,     target: 0.5 }
       clow:     { fonction: mentor,       target: 0.5 }
       camille:  { fonction: jauge5,       target: 0.5 }
       nassir:   { fonction: argent,       target: 0.5 }
       mbako:    { fonction: prodige,      target: 0.5 }
-      aubert:   { fonction: mairie,       target: 0.5 }   # la D2 et la mairie (porteuse de en.mairie_d2)
-    pitch: "Six semaines pour devenir indispensable, et personne ne te croit."
+      aubert:   { fonction: mairie,       target: 0.5 }
+    pitch: "Une berline grise sur la place d'un autre. Le lundi, son répondeur parle."
     chantier: false                   # lot livré : les budgets de réservoir sont bloquants
-    opening_arc: en.interim.six_semaines
-    # Le prologue s'arrête là où l'ancre I1 commence (le bureau, les cartons,
-    # la plaque) : il prend le parking sous la pluie, le sifflet resté dans le
-    # tiroir, la compo de l'autre au mur, la phrase que le groupe attend.
-    prologue: en.interim.prologue
+    # L'épine : le script à ancres (content/arcs/entraineur/h2_script.yaml),
+    # qui ouvre lui-même les intrigues du livre (h2_intrigues.yaml).
+    opening_arc: en.h2.script
+    # Le prologue : la place peinte sous la pluie, le sifflet dans le tiroir, la
+    # compo de l'autre au mur, la phrase que le groupe attend, le communiqué,
+    # l'escalier. La première ancre (les cartons) commence là où il s'arrête.
+    prologue: en.h2.prologue
     questions:                        # fil rouge tiré à l'ouverture de saison
-      - { id: vestiaire, poids: 1.0 } # le groupe de l'ancien
-      - { id: diplome,   poids: 1.0 } # tu n'as pas le papier
-      - { id: grand_nom, poids: 1.0 } # celui qu'on attend pour janvier
-    programme:                        # le réservoir (bible ch. 11 § 3.1, « Programme »)
+      - { id: vestiaire, poids: 1.0 } # le vestiaire qui l'attend
+      - { id: diplome,   poids: 1.0 } # le papier que tu n'as pas
+      - { id: grand_nom, poids: 1.0 } # le grand nom qu'on attend pour le jour où il sera mort
+    # Le réservoir. L'épine tient presque toute la saison (S0 : treize temps
+    # d'histoire sur dix-sept créneaux ; S1 : quatorze) : le réservoir de
+    # l'intérimaire respire autour d'elle — le diplôme, le grand nom, le kop qui
+    # doute, le pari de Massenet, Gigi, Camille —, une ou deux intrigues par
+    # saison. Les quatre intrigues de l'ancien titre qui racontaient un ancien
+    # parti ailleurs (le vestiaire, le bureau, le banc d'en face, la lettre) et
+    # l'adjoint qui dîne (Vukić rival) n'y sont plus : le livre les contredit.
+    # Les intrigues du livre sont ouvertes par l'épine (100 % des carrières) ;
+    # deux d'entre elles restent au réservoir comme filet, un bucket après la
+    # saison où l'épine les ouvre — la berline (la femme de l'absent) et la
+    # Prévoyance (l'assureur), pour que leurs porteurs, au casting, aient leurs
+    # deux histoires. Elles sont `once` : jamais deux fois. Dans `--reservoir`,
+    # leurs lignes sortent à 100 % (hors de la bande [10 %, 65 %]) : c'est
+    # l'épine qu'on lit, pas le réservoir.
+    programme:
       "0":
-        # 2 → 3. Le budget « rythme » (§ 5.1) restait rouge à deux tirages : le
-        # slot de première ouverture est le minimum des tirages, et avec deux
-        # points seulement la garde d'écartement n'a presque rien à espacer —
-        # écart-type 1,52 pour un plancher de 1,8, et 9 % des S0 ouvraient deux
-        # intrigues à moins de trois créneaux. Le vrai coupable était en aval :
-        # deux intrigues ne remplissent pas la saison, la cadence forcée
-        # ouvrait la troisième elle-même, au créneau courant et sans
-        # écartement (18 % des ouvertures forcées, budget ≤ 15 %). Trois
-        # tirages rendent cette ouverture au réservoir, qui l'écarte.
-        prendre: 3
-        # [2,9] → [1,12] : le slot de première ouverture est le minimum de trois
-        # tirages ; sur huit valeurs son écart-type tombait à 1,32 (budget § 5.1 :
-        # ≥ 1,8) et 3 % des S0 ouvraient deux intrigues à moins de trois créneaux.
-        # Mesuré : [2,11] remonte l'écart-type à 1,85 mais laisse 7 % de S0 avec
-        # deux ouvertures serrées, [1,12] 2,06 et 6 %. Plus la fenêtre monte
-        # haut, plus les créneaux tirés couvrent la saison, et plus une
-        # ouverture de cadence forcée — servie au créneau courant, sans
-        # écartement — tombe à côté de l'une d'elles. [1,10] tient les deux :
-        # écart-type 1,85, paires serrées ramenées de 3 % à 2 %.
-        # [1,10] → [1,14] : la fenêtre avait été réglée pour trois tirages ;
-        # avec `prendre: 2` elle serrait les deux ouvertures sur la première
-        # moitié de saison. Le budget « rythme » du § 5.1 reste hors bande
-        # (écart-type 1,5 pour un plancher de 1,8) : c'est le prix du passage
-        # à deux ouvertures, qui rend leurs créneaux aux Nouvelles et aux
-        # visages du casting. À reprendre avec le budget des Nouvelles.
-        fenetre: [1, 14]
-        # 1 → 0 : la réserve ouvrait une intrigue de plus au premier trou de
-        # cadence de la S0. Avec deux ancres Bréhaut de plus dans la saison,
-        # la file d'étapes débordait (36 % d'étapes échues, backlog P99 3) et
-        # mangeait les créneaux réservés aux Nouvelles. `forceStory` retombe
-        # sur le tirage pondéré du réservoir.
+        # Une intrigue du réservoir en S0, ouverte tôt pour qu'elle se joue dans
+        # la saison : celles qui débordaient sur la S1 passaient devant le
+        # wagon, et la roue de secours arrivait après la Rive.
+        prendre: 1
+        fenetre: [2, 8]
         reserve: 0
         pool:
-          # 1,3 → 0,5 : `signature` multiplie déjà le poids par trois en S0 (et la
-          # prime « thème neuf » par 1,5). À 1,3 le vestiaire de l'ancien s'ouvrait
-          # dans 87 % des carrières, pour une bande de signature de [50 %, 65 %].
-          # `season <= 1` : sans cette borne, la reprise des buckets "1" et "2+"
-          # rouvrait indéfiniment les intrigues d'installation, et les six
-          # premières du pool finissaient toutes entre 67 % et 87 % de couverture
-          # (plafond 65 %). Elles racontent l'arrivée : elles se jouent la
-          # première saison, la seconde au plus tard.
-          # 0,42 → 0,62 : la signature du postulat plafonnait à 44 % de
-          # couverture là où § 5.1 demande [50 %, 65 %]. Le poids avait été
-          # baissé quand le bucket tirait trois intrigues ; il est remonté avec
-          # le retour à `prendre: 3`.
-          - { arc: en.vestiaire_ancien,    poids: 1.05, signature: true, if: "season <= 1" }
-          # 1,2 → 1,0 : le diplôme (68 %) et le grand nom (70 %) passaient le
-          # plafond de couverture (65 %).
-          - { arc: en.diplome,             poids: 0.8, if: "season <= 1" }
-          # 1,0 → 1,5 : Fardelli, le tentateur du postulat, n'apparaissait plus
-          # que dans 63 % des premières saisons (plancher 80 %) ; c'est la seule
-          # intrigue de la S0 qu'il porte.
-          - { arc: en.grand_nom,           poids: 1.9, if: "season <= 1" }
-          # 1,0 → 1,5 : même raison côté Gégé (69 % des S0, plancher 80 %) — le
-          # kop qui doute est la seule intrigue de S0 qu'il porte.
-          - { arc: en.kop_doute,           poids: 1.9, if: "gauges.tribunes <= 60 && season <= 1" }
-          - { arc: en.bureau_ancien,       poids: 0.7, if: "season <= 1" }
-          - { arc: en.cote_interim,        poids: 0.7, if: "season <= 1" }
-          # 1,0 → 0,55 : l'adjoint qui dîne est désormais ouvrable dès la S0
-          # (min_season 0, pour l'ancre « le dauphin ») et il est aussi aux
-          # buckets "1" et "2+" — à 1,0 il montait à 67 % de couverture.
-          # 0,55 → 0,95 : Vukić, le rival du postulat, doit apparaître deux fois
-          # dans 90 % des premières saisons et plafonnait à 89 % ; l'adjoint qui
-          # dîne est la seule intrigue de S0 qu'il porte.
-          - { arc: en.adjoint_dine,        poids: 0.85 }
-          # 0,5 → 1,2 : Gigi Vecchio, l'« ancien » du cast, tombait à 61 % des
-          # premières saisons (plancher 80 %) — c'est la seule intrigue de S0
-          # qu'il porte, et elle était diluée par les poids remontés au-dessus.
-          - { arc: en.vieux_gardien,       poids: 2.4 }
+          - { arc: en.diplome,             poids: 0.9, signature: true, if: "season <= 1" }
+          - { arc: en.grand_nom,           poids: 1.4, if: "season <= 1" }
+          - { arc: en.kop_doute,           poids: 1.4, if: "gauges.tribunes <= 60 && season <= 1" }
+          - { arc: en.cote_interim,        poids: 0.8, if: "season <= 1" }
+          - { arc: en.vieux_gardien,       poids: 1.6 }
           - { arc: en.salaires_retard,     poids: 0.8, if: "gauges.caisse < 45" }
-          - { arc: en.prodige,             poids: 1.0 }
-          # Bible ch. 11 § 3.1 : la variante « six semaines » de l'appel
-          # (co.cartons.appel_interim, lue sur flag('interim')) est la seconde
-          # intrigue légère de la S0 ; livrée par la salle du promu.
+          - { arc: en.prodige,             poids: 0.8 }
           - { arc: co.cartons_camille,     poids: 0.3, if: "!flag('divorce')" }
       "1":
-        # 3 → 4. `k = prendre - carry` : avec trois tirages, la S1 de l'intérimaire
-        # manquait de matière (0,69 ouverture forcée par saison, budget ≤ 0,5) et
-        # une saison sur 262 dépassait l'écart de cadence. Quatre tirages ramènent
-        # la cadence forcée à 0,33 et l'écart max à 3.
-        # Écart mesuré et assumé : `prendre: 4` a été essayé (k = prendre − carry,
-        # et depuis que le bucket "0" en tire trois, la S1 démarre souvent avec
-        # k = 0). Il divise par trois la queue de l'écart de cadence — mais il
-        # ramène les Nouvelles de la S1 de 99 % à 95 % de saisons dans la bande
-        # 3-4, c'est-à-dire qu'il échange un budget rouge contre un autre.
-        # Gardé à 3 : la queue est une saison sur quatre cents, la Nouvelle
-        # manquante est toutes les vingt.
-        prendre: 3
-        # Écart mesuré et assumé : [2,14] a été essayé pour combler la fin de
-        # saison (queue du budget § 5.2) — les ouvertures s'étalent bien, mais
-        # leurs étapes arrivent après le Grand Match et l'écart max EMPIRE
-        # (5 saisons sur 2 592 au-dessus de 4, contre 1 à [2,12]). Gardé tel quel.
-        fenetre: [2, 12]              # même remède de rythme que le bucket "0"
-        # `reserve: 1` → 0 : la réserve est servie « premier id encore éligible,
-        # dans l'ordre du fichier » et `forceStory` la prend avant le tirage
-        # pondéré. La D2 et la mairie, deuxième du pool, ramassait 40 % de ses
-        # ouvertures par forçage (plafond 15 %) et montait à 74 % de couverture.
+        # Une seule ouverture : l'arrière-salle, encore ouverte depuis la S0, la
+        # consomme le plus souvent (k = prendre − en cours). La S1 est celle du
+        # wagon : sept étapes avant la panne, et la Rive ne les attend pas.
+        prendre: 1
+        fenetre: [2, 12]
         reserve: 0
         reprise: true                 # les entrées de "0" non tirées restent candidates
         pool:
-          - { arc: en.ancien_en_face,      poids: 2.1 }
-          - { arc: en.lettre_anonyme,      poids: 1.7 }
+          # Le filet du livre (S0 → S1).
+          - { arc: en.h2.berline,          poids: 1.0 }
           - { arc: en.mentor_clow,         poids: 1.0 }
           - { arc: en.nassir_proprietaire, poids: 0.9 }
           - { arc: en.brassard_brehaut,    poids: 1.0 }
-          - { arc: en.enveloppe,           poids: 0.9 }
-          - { arc: en.espion_haie,         poids: 1.2 }
+          - { arc: en.espion_haie,         poids: 1.0 }
+          - { arc: en.enveloppe,           poids: 0.6 }
           - { arc: en.vieux_gardien,       poids: 0.35 }  # rituel
-          # La bible ne la met qu'au bucket "0" ; elle est reprise ici à poids
-          # réduit parce que Camille est le seul visage de la S1 qui nomme
-          # (son `adresse` rend « {prenom} » aux trois visages).
           - { arc: co.cartons_camille,     poids: 0.35, if: "!flag('divorce')" }
-          # La D2 et la mairie en fin de liste : c'est la place, pas seulement le
-          # poids, qui la faisait ouvrir (réserve et cadence forcée lisent
-          # l'ordre du fichier).
           - { arc: en.mairie_d2,           poids: 0.7 }
-          # Manquent encore au pool "1" de la bible : co.derby et co.pharmacie,
-          # écrites côté joueur seulement (roles: [joueur], postulats:
-          # [fin_de_contrat]) ; à remettre ici dès que leur versant banc existe.
           # Les sponsors (content/arcs/*/sponsors_louches.yaml), dès la S1 : le laboratoire
           # (Vukić), la dette de Gigi (le réseau de paris) et le Rideau Rouge. Pas les
           # biscuits ni la maquette : en.nassir_proprietaire est à 12 % de couverture ici.
@@ -404,69 +347,42 @@ postulats:
           - { arc: en.sp.gigi,             poids: 0.7 }
           - { arc: co.sp.rideau,           poids: 0.45, if: "gauges.tribunes >= 40" }
       "2+":
-        prendre: 3
+        prendre: 2
         fenetre: [1, 11]
-        # 2 → 0 : la réserve était servie « premier id encore éligible, dans
-        # l'ordre du fichier » à chaque trou de cadence, et les têtes de pool
-        # devaient au forçage 23 à 41 % de leurs ouvertures (plafond 15 %). Sans
-        # réserve, `forceStory` retombe sur le tirage pondéré du réservoir.
         reserve: 0
         reprise: true
         pool:
+          # Le filet du livre (S1 → S2).
+          - { arc: en.h2.prevoyance,         poids: 1.0, if: "season == 2" }
           - { arc: en.aulard_rappelle,       poids: 1.8, if: "flag('bilan_manque') && relation.aulard >= 0" }
           - { arc: en.fils_aulard,           poids: 1.0, if: "relation.aulard >= -1" }
           - { arc: en.dossier_meneche,       poids: 1.6 }
-          # 2,0 → 3,2 : avec `prendre: 3` au bucket "2+", Gigi au staff tombait
-          # à 7 % de couverture (plancher 10 %) — sa trace d'entrée est déjà rare.
-          # 3,2 → 5,4 : avec `prendre: 3` au bucket "0", l'intrigue est retombée
-          # à 6 % de couverture (plancher 10 %) — sa trace d'entrée est rare.
           - { arc: en.gigi_staff,            poids: 5.4, if: "flag('gigi_staff')" }
-          # 1,4 → 5,0 et l'enveloppe ajoutée aux traces d'entrée : la Commission
-          # ne s'ouvrait que dans 7 % des carrières (plancher 10 %) — elle est
-          # `min_season: 2` et son `if` demande une trace rare, il lui faut un
-          # gros poids pour tenir le plancher.
-          # Porte élargie plutôt que poids remonté : à 7,5 la Commission ne
-          # s'ouvrait encore que dans 9 % des carrières (plancher 10 %) parce
-          # que son `if` ne lisait que des traces rares et qu'elle est
-          # `min_season: 2`. `match_arrange_couvert` (la lettre anonyme rangée
-          # dans le tiroir) et `enveloppe_denoncee` (l'enveloppe portée à la
-          # Fédération) sont deux traces fréquentes, et deux raisons parfaitement
-          # lisibles d'être convoqué salle 3.
           - { arc: en.commission_discipline, poids: 7.5, if: "flag('fede_dossier') || flag('lanceur_alerte') || flag('match_arrange_couvert') || flag('enveloppe_denoncee') || flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
-          # 1,0 → 3,6 : le retour du prodige ne s'ouvrait que dans 8 % des
-          # carrières (plancher 10 %) — il lui faut `mbako_vendu` ET la S2.
-          # 5,2 → 11 : ce n'est pas le poids qui le bride mais sa chaîne —
-          # `en.prodige` doit s'ouvrir, la vente doit être choisie, et la
-          # carrière doit atteindre la saison 2. Le poids est au plafond utile ;
-          # c'est le poids de `en.prodige` au bucket "0" qui fait le reste.
           - { arc: en.retour_mbako,          poids: 11.0, if: "flag('mbako_vendu')" }
           - { arc: en.conf_presse,           poids: 1.4 }    # rituel (every_season)
-          # La vie d'après du mentor (ch. 01 § 5.4 : partagée avec l'intérimaire).
           - { arc: co.clow_lundi,            poids: 1.5, if: "relation.clow >= 0" }
           - { arc: en.vieux_gardien,         poids: 0.45 }   # rituel (replay: ritual)
-          # 0,7 → 1,2 : avec `prendre: 3` au bucket "2+", l'intrigue tombait à
-          # 18 % de couverture (plancher 20 % de `--arc`) et ses quatre dernières
-          # cartes n'étaient jamais servies.
           - { arc: en.kop_qui_aime_trop,     poids: 1.2, if: "gauges.tribunes >= 65 && arc('en.kop_doute') != 'active'" }
           - { arc: en.espion_haie,           poids: 1.0 }
           - { arc: en.salaires_retard,       poids: 0.6, if: "gauges.caisse < 45" }
-          - { arc: en.adjoint_dine,          poids: 0.8 }
-          - { arc: en.enveloppe,             poids: 0.8 }
-    objectifs:                        # 3 objectifs cachés (bible ch. 11 § 3.1)
-      # `stats.saisons >= 1` : quatre carrières sur cinq le décrochaient (bande
-      # [5 %, 60 %]) — ce n'était pas un objectif caché, c'était le déroulement
-      # normal d'une carrière qui survit à sa première saison. L'indice promet
-      # trois marches (« six semaines, puis six mois, puis on verra ») : il faut
-      # donc les trois, le papier signé compris, et n'avoir jamais été déchu.
-      - { id: interim_garder_poste,   titre: "Garder le poste", when: "!flag('dechu') && stats.saisons >= 3 && flag('cdi_signe')", indice: "Six semaines. Puis six mois. Puis on verra." }
-      - { id: interim_sans_papier,    titre: "Sans papier",     when: "flag('derogation') && stats.saisons >= 2", indice: "Le tampon manque une signature. Ça se voit à la longue." }
-      - { id: interim_adjoint_fidele, titre: "L'adjoint fidèle", when: "relation.vukic >= 2 && stats.saisons >= 2", indice: "Il était l'adjoint de l'autre. Il peut être le tien." }
+          - { arc: en.enveloppe,             poids: 0.6 }
+    objectifs:                        # 3 objectifs cachés (ids de l'ancien titre)
+      # Garder le banc : un contrat signé — confirmé en décembre, ou le
+      # mercredi qui suit un mort sur le papier — et le dernier objectif tenu.
+      - { id: interim_garder_poste,   titre: "Garder le banc", when: "!flag('dechu') && stats.saisons >= 2 && flag('cdi_signe') && flag('bilan_tenu')", indice: "Six semaines. Puis juin. Puis un mardi d'avril." }
+      - { id: interim_sans_papier,    titre: "Sans papier",    when: "flag('derogation') && stats.saisons >= 2", indice: "Trois tampons sur quatre. Ça se voit à la longue." }
+      # L'adjoint de l'autre devient le tien le soir où il te demande « s'il mange ».
+      - { id: interim_adjoint_fidele, titre: "L'adjoint fidèle", when: "flag('h2_vukic_mange') && relation.vukic >= 3", indice: "Il ne te demande pas où tu étais. Il te demande s'il mange." }
     alarm_overrides:                  # candidats prioritaires (avant alarms.yaml)
       direction.low:
+        - { card: en.h2.alarme.direction }
         - { card: en.interim.alarme_aulard_cv }
-      tribunes.low:                   # tant que la tribune chante l'ancien, c'est Gégé et sa bâche
+      tribunes.low:
+        - { card: en.h2.alarme.tribunes }
         - { card: en.kop_doute.siffle_alarme, when: "flag('kop_hostile')" }
-      vestiaire.low:                  # bible ch. 11 § 3.1 : quand la paie traîne, le rond central s'assoit
+      vestiaire.low:
+        - { card: en.h2.alarme.vestiaire }
         - { card: en.salaires.greve_entrainement, when: "flag('salaires_retard')" }
 
   - id: pepite

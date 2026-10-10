@@ -1,0 +1,134 @@
+# HISTOIRE 2 — LE SAPIN EN CARTON · les réactions (servies au tirage suivant
+# le swipe qui les pose, hors créneau ; voir l'en-tête de reactions.yaml).
+# Effets petits, jamais `end`, jamais `react`, jamais `drame`. Les déclencheurs
+# sont cités au-dessus de chaque carte. Une réaction qui suit une carte
+# nominative (le verdict, les Cars du Quai) ne porte pas le nom du joueur.
+cards:
+  # ← la berline a bougé de trois mètres (les deux sorties) : le chauffeur lave
+  # le car à côté d'elle. La boue blanche des deux roues part dans la même
+  # rigole ; le café promis revient à l'arrière-salle.
+  - id: en.h2.re.norbert_berline
+    roles: [entraineur]
+    arc: direction
+    tags: [direction]
+    speaker: norbert
+    tone: strategique
+    lieu: parking
+    text: "Le lendemain, Norbert lave le car au jet, à côté de la berline. Il coupe l'eau en te voyant : « Lulu vous a réveillé pour trois mètres ? Il boit, Lulu. Le soir surtout. »"
+    left:
+      label: "Vous l'avez déplacée ?"
+      effects: {relation: {norbert: -1}, set: [h2_cafe_norbert]}
+      answer: "« Moi ? Je conduis des cars. Une voiture, c'est trop petit. » Il rouvre l'eau. « Passez au Terminus, un soir. Le café est pour moi. »"
+    right:
+      label: "Il boit, c'est vrai"
+      effects: {direction: "+", relation: {norbert: 1}}
+      answer: "« Voilà. » Il rouvre l'eau. La boue blanche des roues de la berline et celle des roues du car partent dans la même rigole."
+
+  # ← la place vide (les deux sorties) : Léa a parlé à l'électricien.
+  - id: en.h2.re.lea_fusible
+    roles: [entraineur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: lea
+    tone: strategique
+    lieu: echo
+    text: "Léa, au téléphone de L'Écho : « Le réverbère du parking a été coupé de minuit à deux heures. La mairie dit : un fusible. L'électricien dit qu'il n'a rien changé. J'écris quoi ? »"
+    left:
+      label: "Écrivez : un fusible"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "Elle tape « un fusible », sans un mot de plus. Le lendemain, l'article fait quatre lignes et une photo du réverbère, éteint."
+    right:
+      label: "Ce que vous savez"
+      effects: {tribunes: "+", direction: "-", relation: {lea: 1}, set: [h2_lea_fusible]}
+      answer: "Page trois : le réverbère, la voiture, et l'électricien qui n'a rien changé. Vaubourg découpe l'article et le range sans le jeter."
+
+  # ← « Ne me cherche pas » (les deux variantes) : tu as gardé la cassette.
+  - id: en.h2.re.josiane_cassettes
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    tone: leger
+    lieu: secretariat
+    text: "Madame Josiane pose sur ton bureau une boîte de dix microcassettes, entamée : « Il en usait une par mois. Je les achète à la papeterie de la gare routière, à côté de la cabine. »"
+    left:
+      label: "Gardez la boîte"
+      effects: {relation: {josiane: 1}}
+      answer: "Elle la range dans le tiroir du milieu, avec le sifflet et la licence. Elle ne demande pas où est passée celle de janvier."
+    right:
+      label: "À côté de la cabine ?"
+      effects: {direction: "-", set: [h2_josiane_cabine]}
+      answer: "« La première cabine du quai deux. Celle qui marche. » Elle le dit comme elle donnerait l'heure d'un train, et ressort."
+
+  # ← les Cars du Quai, « Signez » : l'usage du cousin.
+  - id: en.h2.re.norbert_enveloppe
+    roles: [entraineur]
+    arc: sponsors
+    tags: [sponsors, scandale]
+    speaker: norbert
+    tone: strategique
+    lieu: gare
+    text: "Le car neuf sent la colle. Norbert te tend une enveloppe blanche, sans rien écrit dessus : « Les Cars du Quai remercient le staff, pour le dérangement. C'est l'usage, chez nous. »"
+    left:
+      label: "C'est l'usage"
+      effects: {parole: -1, set: [h2_enveloppe_cars], var: {ville_francs_sales: "+8000"}}
+      answer: "Elle va dans ta boîte à gants, sous la carte routière. Tu ne l'ouvres pas : à l'épaisseur, ce n'est pas un remerciement."
+    right:
+      label: "Rendez-la au cousin"
+      effects: {relation: {norbert: -1}, vestiaire: "-"}
+      answer: "Il la remet dans sa veste sans se vexer. « Je la garde pour vous. » Au fond du car, quelqu'un tire un rideau."
+
+  # ← le wagon (les trois variantes, les deux sorties), si Vukić ne t'en veut
+  # pas : l'adjoint de l'autre devient le tien (objectif interim_adjoint_fidele).
+  - id: en.h2.re.vukic_mange
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    tone: leger
+    lieu: terrain
+    text: "Vukić, au terrain, sept heures, sans lever les yeux de ses plots : « Je ne te demande pas où tu étais hier soir. Je te demande s'il mange. »"
+    left:
+      label: "Il mange"
+      effects: {relation: {vukic: 1}, set: [h2_vukic_sait, h2_vukic_mange]}
+      answer: "Il hoche la tête. Le lendemain, dans le cabas de Josiane, il y a une boîte de sardines de plus et L'Écho plié à la page des résultats."
+    right:
+      label: "Qui ça ?"
+      effects: {relation: {vukic: -1}}
+      answer: "« Personne. » Il pose le dernier plot, dix centimètres trop à gauche, et ne le remet pas droit."
+
+  # ← la panne, « Je reste avec lui » : la nuit où rien n'arrive.
+  - id: en.h2.re.norbert_panne
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: norbert
+    tone: strategique
+    lieu: gare
+    text: "Trois heures, pas de dépanneuse. Norbert parle doucement : des cabines qui avalent les pièces, de la Rive en hiver, de Roland « qui aimait trop les carnets ». Il te tend une cigarette."
+    left:
+      label: "Je la prends"
+      effects: {vestiaire: "-"}
+      answer: "Vous fumez dans le noir. À cinq heures, la dépanneuse arrive. Il ne s'est rien passé. Tu ne dors pas pendant deux nuits."
+    right:
+      label: "Je descends marcher"
+      effects: {direction: "-"}
+      answer: "Dans la neige, tu entends la portière du car s'ouvrir derrière toi, puis se refermer. À cinq heures, la dépanneuse. Rien d'autre."
+
+  # ← la panne, « Vukić reste » : ce que le chauffeur lui a demandé.
+  - id: en.h2.re.vukic_panne
+    roles: [entraineur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: vukic
+    tone: strategique
+    lieu: terrain
+    text: "Vukić, gris, les plots sous le bras : « Il a parlé toute la nuit. De la Rive en hiver. Il m'a demandé à quel étage tu dormais, au quai. Je lui ai donné un faux étage. »"
+    left:
+      label: "Merci, Zoran"
+      effects: {relation: {vukic: 1}}
+      answer: "Il pose les plots sans répondre. Ce soir-là, sous tes fenêtres du quai, une voiture fait deux fois le tour du pâté de maisons."
+    right:
+      label: "Il t'a menacé ?"
+      effects: {vestiaire: "-", set: [h2_vukic_sait]}
+      answer: "« Il ne menace pas. Il demande des étages. » Il range le dernier plot. « Roland m'a posé la même question, en octobre. »"
