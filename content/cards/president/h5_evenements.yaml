@@ -1,0 +1,122 @@
+# Les soirs du réservoir de « La Maquette » (arcs `kind: evenement` de
+# content/arcs/president/h5_evenements.yaml). Tous `sombre`, tous à un lieu :
+# la ville les fait tomber le soir. La violence reste hors champ : une
+# pastille rouge, quarante sacs de couchage, deux imperméables à six heures.
+#
+# Six heures du matin retourne l'événement commun de la perquisition : les
+# imperméables ne viennent pas pour les cartons du club, mais pour les tiens.
+# Avec l'argent de Valentienne, se taire ferme la carrière sur la garde à vue
+# (`co_garde_a_vue`, ligne d'épitaphe dans content/endings/h5.yaml).
+cards:
+  - id: pr.h5.ev.huissier_club
+    roles: [president]
+    arc: argent
+    tags: [caisse, sombre]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Secrétariat, fin d'après-midi. Un huissier colle des pastilles rouges : le photocopieur, la machine à laver des maillots. Madame Josiane se met devant l'escalier. « Pas le bureau. Il est au premier. »"
+    left:
+      label: "Laissez-le monter"
+      effects: {caisse: "+", vestiaire: "-", set: [h5_huissier_club]}
+      answer: "Il pastille le bureau du premier, et le téléphone beige. Josiane, elle, s'assoit sur la machine à laver jusqu'à ce qu'il parte."
+    right:
+      label: "Josiane a raison"
+      effects: {direction: "-", relation: {josiane: 1}, set: [h5_huissier_club]}
+      answer: "L'huissier recule d'une marche. « Je reviendrai avec un serrurier. » Il ne revient pas. Il envoie une lettre, pliée en trois."
+
+  # Le capot (S1, créneau 10) : après la seconde maquette, la ville croit que
+  # tu as vendu. Ce n'est pas la Nord qui l'écrit : les lettres sont venues
+  # toutes faites, de la résidence. La berline, elle, partira sur le plateau de
+  # l'huissier si la caution n'a pas pris la maison (B6).
+  - id: pr.h5.ev.capot
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, sombre]
+    speaker: gege
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Parking du stade, vingt-deux heures. Sur le capot de ta berline, à la bombe rouge, en lettres d'un mètre : VENDU. Gégé, les mains dans les poches : « Ce n'est pas la Nord. La Nord écrit mieux. »"
+    left:
+      label: "Qui, alors ?"
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_capot]}
+      answer: "« Deux gars en ciré, venus à pied de la résidence. » Il frotte le V avec sa manche ; rien ne part. « Pochoir. Ils avaient les lettres. »"
+    right:
+      label: "Je porte plainte"
+      effects: {direction: "+", tribunes: "-", set: [h5_capot]}
+      answer: "Le commissaire photographie le capot sous trois angles et demande si tu as vendu quelque chose. Tu dis non. Il l'écrit."
+
+  - id: pr.h5.ev.siege
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras, sombre]
+    speaker: gege
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le club-house, deux heures du matin. Le kop occupe le rez-de-chaussée : quarante sacs de couchage sous le clou de la photo de 1974. Gégé, sur la dernière marche : « On dort ici jusqu'au vote. »"
+    left:
+      label: "Je dors avec vous"
+      effects: {tribunes: "+", direction: "--", set: [h5_siege, h5_siege_dormi]}
+      answer: "Tu dors sur le comptoir de la buvette, ton manteau en oreiller. À six heures, Josiane fait le café et dit qu'elle n'a vu personne."
+    right:
+      label: "Vous partez ce soir"
+      effects: {tribunes: "--", direction: "+", set: [h5_siege]}
+      answer: "Ils partent à quatre heures, en rang, sans un chant. Ils laissent les sacs de couchage pliés au carré, sous le clou."
+
+  - id: pr.h5.ev.six_heures
+    roles: [president]
+    arc: instances
+    tags: [direction, sombre]
+    speaker: amsel
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Six heures, ton dépôt de la zone. Deux imperméables, un mandat. Judith Amsel ne vient pas pour le club. « Votre contrat des Terrasses est daté du 12 juin, {toi}. Votre présidence, du 2 juillet. »"
+    left:
+      label: "Je vous ouvre tout"
+      effects: {direction: "--", relation: {amsel: 1}, set: [h5_perquisition, h5_aveu]}
+      answer: "Douze cartons. Elle en ouvre un seul, le bon, du premier coup. Elle a l'air presque déçue que ce soit si simple."
+    right:
+      label: "J'appelle Camille"
+      effects: {direction: "-", relation: {amsel: -1}, set: [h5_perquisition, h5_camille_appelee]}
+      answer: "Camille arrive à sept heures, coiffée. Elle salue la procureure par son prénom. Elles se tutoient ; tu ne le savais pas."
+
+  - id: pr.h5.ev.six_heures_valise
+    roles: [president]
+    arc: instances
+    tags: [direction, caisse, sombre]
+    speaker: amsel
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Six heures, ton dépôt de la zone. Judith Amsel aligne sur ton bureau une liasse de billets de cinq cents, numéros qui se suivent. « Valentienne, {toi}. Vous m'expliquez, ou je vous emmène ? »"
+    left:
+      label: "Je vous explique"
+      effects: {direction: "--", tribunes: "-", var: {saisie_tout: "+1"}, set: [h5_perquisition, h5_aveu, h5_valise_avouee]}
+      answer: "Tu parles jusqu'à neuf heures. Ils saisissent tout : la berline, le costume, le coffre. Tu rentres à pied ; tu n'as plus de clés."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {set: [h5_perquisition, h5_garde_a_vue], end: co_garde_a_vue}
+      answer: "« Alors on vous emmène. » On te laisse prendre ton manteau, pas ton stylo. Dans la voiture, personne ne parle de football."
+
+  # Variante : « Je n'ai rien », avait-on répondu à la procureure (le dossier).
+  - id: pr.h5.ev.six_heures_rien
+    roles: [president]
+    arc: instances
+    tags: [direction, sombre]
+    speaker: amsel
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Six heures, ton dépôt de la zone. Judith Amsel ouvre son dossier à la page du « Je n'ai rien », au point appuyé. « Terrasses, 12 juin. Présidence, 2 juillet. Voyons ce que contient rien, {toi}. »"
+    left:
+      label: "Je vous ouvre tout"
+      effects: {direction: "--", relation: {amsel: 1}, set: [h5_perquisition, h5_aveu]}
+      answer: "Douze cartons. Au septième, le contrat du 12 juin, ta signature en bas. Elle le pose sur sa page, exactement sur le point."
+    right:
+      label: "J'appelle Camille"
+      effects: {direction: "-", relation: {amsel: -1}, set: [h5_perquisition, h5_camille_appelee]}
+      answer: "Camille arrive à sept heures, coiffée. Elle lit la page, le point. « Tu notes toujours l'heure, Judith ? » Elles se tutoient."

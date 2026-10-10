@@ -1,0 +1,398 @@
+# Les étapes de saison 2 (S1) de « La Maquette » : la suite des intrigues de
+# S0 (le buffet de Paulette, la bâche du kop, la clause du maillot, la carte de
+# Bréhaut) et les cinq intrigues qui s'ouvrent en S1 (La SCI, Le témoin du feu,
+# La valise de Valentienne, Le fonds, La coupure de 1992). Arcs :
+# content/arcs/president/h5_intrigues.yaml.
+#
+# Personnages sans id : La Plume (une signature dessinée, jamais une voix),
+# André Bastide (le gérant de la SCI), Maître Guénot, Maître Larrieu (notaire à
+# Portclair), Sandrine (la réception de l'hôtel de la Rive).
+cards:
+  # =================================================== LA 14B · le buffet
+  - id: pr.h5.14b.buffet
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    tone: leger
+    once: true
+    text: "Chez Paulette, square des Lilas. Elle sort du buffet un papier plié en huit : l'acte de 1931, la signature de son père en bas. « À perpétuité, ça dure combien, pour un juge, {toi} ? »"
+    left:
+      label: "Je le porte au notaire"
+      effects: {tribunes: "+", direction: "-", set: [h5_acte_rendu], outcome: acte}
+      answer: "Maître Guénot le déplie sur un buvard, avec des gants. « Il tient. Il tiendra plus longtemps que nous. » Il en tire trois copies."
+    right:
+      label: "Gardez-le chez vous"
+      effects: {direction: "+", relation: {paulette: 1}, set: [h5_acte_paulette], outcome: acte}
+      answer: "Elle le replie dans les mêmes plis et le range sous la nappe des dimanches. « Je l'apporterai moi-même. Le jour venu. »"
+
+  - id: pr.h5.14b.buffet_ferme
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    tone: leger
+    once: true
+    text: "Chez Paulette. Elle ouvre le buffet, montre un papier plié en huit, et referme. « L'acte de mon père. Je le sors pour quelqu'un qui reste jusqu'au coup de sifflet. Pas pour quelqu'un qui descend. »"
+    left:
+      label: "Je resterai"
+      effects: {tribunes: "+", relation: {paulette: 1}, set: [h5_acte_vu], outcome: vu}
+      answer: "« On verra samedi. » Le samedi, elle regarde la loge pendant tout le match, et pas une seule fois le terrain."
+    right:
+      label: "C'est un vieux papier"
+      effects: {direction: "+", relation: {paulette: -1}, set: [h5_acte_vu], outcome: vu}
+      answer: "« Vous aussi, vous serez un vieux papier. » Elle tourne la clé du buffet et la garde dans sa main fermée."
+
+  # ============================================= LE MOT DE JANVIER · la bâche
+  - id: pr.h5.kop.bache
+    roles: [president]
+    arc: mercato
+    tags: [tribunes, ultras, objet]
+    speaker: gege
+    lieu: buvette
+    when: "flag('h5_tribune_est_brulee')"
+    tone: leger
+    once: true
+    text: "Local du kop, un dimanche. Vingt mètres de drap blanc par terre, des pots de peinture bordeaux. Gégé trempe le pinceau. « LA RIVE AUX ENFANTS DU QUARTIER. Ça tient sur la largeur de l'Est ? »"
+    left:
+      label: "Je tiens le drap"
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_bache]}
+      answer: "Tu tiens le coin jusqu'à ce que la peinture prenne. Tes mains restent bordeaux deux jours ; à la banque, Dorian les regarde."
+    right:
+      label: "Pas en mon nom"
+      effects: {direction: "+", tribunes: "-", set: [h5_bache]}
+      answer: "« Ce n'est pas ton nom, c'est le leur. » Il peint QUARTIER tout seul, lettre par lettre. La bâche sera prête, avec ou sans toi."
+
+  # ======================================= LES TERRASSES SUR LE MAILLOT · la clause
+  - id: pr.h5.maillot.clause
+    roles: [president]
+    arc: contrat
+    tags: [sponsors, direction]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "Une lettre recommandée de Madame Tessandier, l'article 4 surligné : « le club accompagne publiquement le projet urbain ». Au conseil municipal, le Racing votera donc pour sa propre fin."
+    left:
+      label: "Je romps le contrat"
+      effects: {caisse: "---", tribunes: "+", set: [h5_clause_rompue], outcome: rompu}
+      answer: "La pénalité coûte une saison de maillots. Gégé fait une quête au virage ; elle rapporte de quoi payer les shorts."
+    right:
+      label: "J'accompagne"
+      effects: {caisse: "+", tribunes: "--", set: [h5_clause_acceptee], outcome: signe}
+      answer: "Tu signes l'accusé de réception. Le facteur te demande si c'est grave ; tu lui réponds que c'est du sponsoring."
+
+  # Variante : le Racing a joué en blanc (S0). L'agence a compté.
+  - id: pr.h5.maillot.clause_blanc
+    roles: [president]
+    arc: contrat
+    tags: [sponsors, direction]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "Recommandé de l'agence. Article 4 surligné : « le club accompagne publiquement le projet urbain ». En marge, au crayon : « un match en blanc, déduit ». Au conseil, le Racing votera pour sa fin."
+    left:
+      label: "Je romps le contrat"
+      effects: {caisse: "---", tribunes: "+", set: [h5_clause_rompue], outcome: rompu}
+      answer: "La pénalité coûte une saison de maillots, moins le match en blanc : elle l'a déduit, au centime. Gégé fait une quête pour les shorts."
+    right:
+      label: "J'accompagne"
+      effects: {caisse: "+", tribunes: "--", set: [h5_clause_acceptee], outcome: signe}
+      answer: "Tu signes l'accusé de réception. Au dos, du même crayon : « Le blanc vous allait bien. » La phrase est barrée d'un trait ; on la lit."
+
+  # ============================================== LE BUREAU D'APRÈS · la carte
+  - id: pr.h5.dapres.carte
+    roles: [president]
+    arc: vestiaire
+    tags: [direction, objet]
+    speaker: brehaut
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Titi Bréhaut te glisse une carte de visite : Maître Larrieu, notaire, Portclair. « C'est là qu'ils ont signé, un mardi. Je n'y suis pas entré. J'ai attendu dans la voiture. »"
+    left:
+      label: "Qui était à l'arrière ?"
+      effects: {direction: "-", relation: {brehaut: 1}, set: [h5_larrieu]}
+      answer: "« Trois personnes, et personne ne parlait. Une femme a demandé qu'on baisse la radio. Je ne l'ai pas vue, je l'ai entendue. »"
+    right:
+      label: "Garde ta carte"
+      effects: {direction: "+"}
+      answer: "Il la remet dans son portefeuille, derrière une photo de l'équipe de 1984. « Je la garde pour le club d'après. »"
+
+  - id: pr.h5.dapres.carton
+    roles: [president]
+    arc: vestiaire
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane apporte un carton de maillots oublié. « Monsieur Bréhaut a laissé ceci dans son tiroir. Une carte de notaire, à Portclair, et un ticket de parking. Je les jette ? »"
+    left:
+      label: "Donnez-les-moi"
+      effects: {direction: "-", set: [h5_larrieu]}
+      answer: "Maître Larrieu, notaire. Le ticket de parking est de Portclair aussi, daté d'un mardi de juin, de 9 h 12 à 11 h 40."
+    right:
+      label: "Jetez-les"
+      effects: {direction: "+"}
+      answer: "Elle les jette. Le soir, elle les ressort de la corbeille, les défroisse, et les range sous les licences de 1987."
+
+  # ================================================================ LA SCI
+  # Étape 1 — le fax de La Plume (tiré par la vase, B1).
+  - id: pr.h5.sci.fax
+    roles: [president]
+    arc: presse
+    tags: [presse, fax]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "La nuit, le fax du bureau imprime une page sans en-tête, signée d'une plume dessinée : la dette du Racing rachetée vingt centimes le franc par la SCI Rive Gauche. Gérant : André Bastide."
+    left:
+      label: "J'appelle La Plume"
+      effects: {direction: "-", set: [h5_fax_plume], react: [{card: pr.h5.re.lea_plume, if: "!seen('pr.h5.re.lea_plume')"}]}
+      answer: "La Gazette sonne dans le vide. À la quatrième fois, une voix : « Bastide a épousé la sœur de Dorian, en 1971. » Puis la tonalité."
+    right:
+      label: "Je le mets au coffre"
+      effects: {direction: "+", set: [h5_fax_plume]}
+      answer: "Le coffre du club ferme mal depuis 1984. Tu cales la porte avec le Code des sociétés et tu gardes la clé sur toi."
+
+  # Étape 2 — Léa et les deux noms.
+  - id: pr.h5.sci.lea
+    roles: [president]
+    arc: presse
+    tags: [presse, direction]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa, à L'Écho, une photocopie du registre : « SCI Rive Gauche, créée un mardi chez un notaire de Portclair, trois associés. J'ai deux noms : Bastide, Tessandier. Et le troisième, {toi} ? »"
+    left:
+      label: "Cherchez le troisième"
+      effects: {direction: "+", relation: {lea: 1}, set: [h5_sci_deux], outcome: deux}
+      answer: "« Je cherche. Vous, ne cherchez pas trop près de chez vous. » Elle souligne deux fois un mot sur la photocopie : tampon."
+    right:
+      label: "Publiez les deux"
+      effects: {tribunes: "+", direction: "-", set: [h5_sci_deux, h5_sci_publiee], outcome: deux}
+      answer: "L'Écho titre le jeudi sur deux noms et un point d'interrogation. Le vendredi, l'agence Tessandier baisse son store."
+
+  - id: pr.h5.sci.lea_larrieu
+    roles: [president]
+    arc: presse
+    tags: [presse, direction]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa, à L'Écho : « SCI Rive Gauche, créée un mardi chez Maître Larrieu, à Portclair. Vous aviez son nom avant moi, on dirait. Trois associés. J'en ai deux : Bastide, Tessandier. Et le troisième ? »"
+    left:
+      label: "Cherchez le troisième"
+      effects: {direction: "+", relation: {lea: 1}, set: [h5_sci_deux], outcome: deux}
+      answer: "« Je cherche. Larrieu ne parle pas, mais son ticket de parking, si. » Elle souligne un mot sur la photocopie : tampon."
+    right:
+      label: "Publiez les deux"
+      effects: {tribunes: "+", direction: "-", set: [h5_sci_deux, h5_sci_publiee], outcome: deux}
+      answer: "L'Écho titre le jeudi sur deux noms, un notaire et un point d'interrogation. Le vendredi, Larrieu ferme son étude pour congés."
+
+  # ============================================================ LE TÉMOIN
+  # Étape 1 — la friche (tirée par la grille de Paulette, S0).
+  - id: pr.h5.vallin.lit
+    roles: [president]
+    arc: corps
+    tags: [tribunes, objet]
+    speaker: vallin
+    lieu: friche
+    tone: strategique
+    once: true
+    text: "La friche, le feu de palettes. Didier Vallin, trente ans, tend les mains vers les flammes. « La nuit de l'Est, j'ai vu un homme avec un bidon, à la grille. Je te dis le reste contre un lit. »"
+    left:
+      label: "Une chambre à l'hôtel"
+      effects: {tribunes: "+", relation: {vallin: 1}, var: {ville_amende: "+6000"}, set: [h5_vallin_loge]}
+      answer: "Chambre 9, hôtel de la Rive, payée jusqu'en mars. Il dit son nom en entier à Sandrine, deux fois, pour qu'elle l'écrive bien."
+    right:
+      label: "Je ne paie pas un témoin"
+      effects: {direction: "+", relation: {vallin: -1}, set: [h5_vallin_dehors], outcome: sans}
+      answer: "« Alors je ne suis pas un témoin, je suis un type qui a froid. » Il remet une palette sur le feu. Elle prend tout de suite."
+
+  # Étape 2 — la chambre 9.
+  - id: pr.h5.vallin.cire
+    roles: [president]
+    arc: corps
+    tags: [tribunes, objet]
+    speaker: vallin
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Chambre 9, hôtel de la Rive. Didier Vallin, rasé, assis au bord du lit. « Un ciré jaune, {toi}, un bidon rouge. Il est reparti dans la camionnette blanche qui arrose les pelouses de la résidence. »"
+    left:
+      label: "À la procureure ?"
+      effects: {direction: "-", relation: {vallin: 1}, set: [h5_temoin], outcome: temoin}
+      answer: "« Si tu viens. Et si elle écrit mon nom en entier. » Il lisse le drap du plat de la main, longtemps, comme on repasse."
+    right:
+      label: "Garde-le pour toi"
+      effects: {direction: "+", outcome: sans}
+      answer: "Il hoche la tête. « Je garde. Je suis bon pour garder. » Il éteint la lampe de chevet en plein jour."
+
+  # Étape 2 bis — l'hiver dans le wagon (si on ne l'a pas logé).
+  - id: pr.h5.vallin.hiver
+    roles: [president]
+    arc: corps
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Gégé, à la buvette, en essuyant un verre déjà sec : « Le petit Vallin dort dans le wagon de la friche. Il a des choses à dire. Il faut juste qu'on l'écoute au chaud. »"
+    left:
+      label: "Emmène-moi au wagon"
+      effects: {tribunes: "+", relation: {vallin: 1, gege: 1}, set: [h5_temoin], outcome: temoin}
+      answer: "Dans le wagon, Vallin parle d'un ciré jaune, d'un bidon, d'une camionnette blanche. Gégé tient la lampe et ne dit rien."
+    right:
+      label: "Il a eu sa chance"
+      effects: {tribunes: "-", direction: "+", outcome: sans}
+      answer: "Gégé repose le verre, à l'envers. « Lui, il n'en a jamais eu une. » Il éteint la lumière de la buvette avec toi dedans."
+
+  # ============================================== LA VALISE DE VALENTIENNE
+  - id: pr.h5.valise.hotel
+    roles: [president]
+    arc: mercato
+    tags: [mercato, caisse, piege]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Bar de l'hôtel. Hubert Malbec pousse du pied une valise sous la table. « Trois millions pour Dembo, {toi}. Officiellement, il signe chez moi en juin pour un million. Le reste paie vos salaires. »"
+    left:
+      label: "Je prends la valise"
+      effects: {caisse: "+++", vestiaire: "+", var: {ville_francs_sales: "+200000"}, set: [h5_valise_prise], outcome: prise}
+      answer: "Elle pèse moins lourd que tu croyais. Malbec pose une enveloppe sur le dessus : « Pour votre peine. » Elle, elle est lourde."
+    right:
+      label: "Pas sous la table"
+      effects: {caisse: "--", relation: {malbec: -1}, set: [h5_valise_refusee], outcome: refusee}
+      answer: "Malbec ramène la valise vers lui, du talon. « Vous avez tort, et c'est rare de le voir faire si poliment. »"
+
+  - id: pr.h5.valise.dembo_vendu
+    roles: [president]
+    arc: mercato
+    tags: [mercato, vestiaire]
+    speaker: dembo
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire. Dembo pose la main sur ton épaule. « Malbec m'a appelé. Il dit que je signe chez lui en juin, que c'est réglé. Réglé avec qui, {toi} ? »"
+    left:
+      label: "Avec moi"
+      effects: {vestiaire: "-", relation: {dembo: -1}, set: [h5_dembo_sait]}
+      answer: "Il retire sa main. Il joue le samedi comme un homme qui a déjà signé ailleurs : bien, et sans regarder la Nord."
+    right:
+      label: "Avec personne"
+      effects: {vestiaire: "+", relation: {dembo: 1}}
+      answer: "Il te croit, ou il fait semblant, ce qui revient au même un samedi. Il marque deux fois et montre la loge du doigt."
+
+  - id: pr.h5.valise.dembo
+    roles: [president]
+    arc: mercato
+    tags: [mercato, vestiaire]
+    speaker: dembo
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire. Dembo te regarde dans le miroir, pas en face. « Malbec m'a appelé. Il dit que tu as refusé trois millions pour moi. C'est vrai, ou c'est ce qu'il veut que je croie ? »"
+    left:
+      label: "C'est vrai"
+      effects: {vestiaire: "+", relation: {dembo: 1}}
+      answer: "Il se retourne enfin. « Trois millions. » Il le répète au vestiaire, et le vestiaire le répète à la buvette, en arrondissant."
+    right:
+      label: "Ce n'était pas pour toi"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "« Pour qui, alors ? » Tu ne réponds pas. Il finit de se raser, rince le lavabo et part sans fermer le robinet."
+
+  # ============================================================== LE FONDS
+  - id: pr.h5.fonds.offre
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: nassir
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Le Cheikh Ilyas tient une tasse minuscule entre deux doigts. « Trente pour cent du Racing pour vingt millions, {toi}. Un siège au conseil pour un homme que vous ne verrez jamais. »"
+    left:
+      label: "Vingt millions"
+      effects: {caisse: "+++", direction: "--", set: [h5_fonds_ilyas], outcome: signe}
+      answer: "Il signe d'un stylo qu'il te laisse. Le virement arrive à onze heures ; à midi, le fax annonce un « club frère » à l'autre bout du monde."
+    right:
+      label: "Pas en vente"
+      effects: {caisse: "--", direction: "+", set: [h5_fonds_refuse], outcome: refuse}
+      answer: "« Tout est en vente. Ce qui change, c'est l'heure. » Il repose la tasse, l'anse tournée vers toi, et paie les deux cafés."
+
+  - id: pr.h5.fonds.naming
+    roles: [president]
+    arc: argent
+    tags: [sponsors, tribunes]
+    speaker: nassir
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le Cheikh Ilyas, au téléphone, d'une voix d'après-midi : « Le stade de la Rive s'appellera Almadis Rive la saison prochaine. C'est page onze du contrat. Vous l'avez lue, la page onze ? »"
+    left:
+      label: "Je l'ai lue"
+      effects: {direction: "+", tribunes: "--", set: [h5_naming]}
+      answer: "Tu ne l'avais pas lue. Il le sait. Il raccroche sur un merci en trois langues, sans en choisir une."
+    right:
+      label: "Pas la page onze"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Alors relisez-la. » Josiane la relit à voix haute dans le couloir. Le nom du stade n'y est qu'une fois, en petit."
+
+  - id: pr.h5.fonds.banque
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: dorian
+    lieu: banque
+    tone: strategique
+    once: true
+    text: "Banque Aubérivoise. Dorian tourne sa cuillère dans une tasse vide. « Vous avez refusé vingt millions propres. La banque aurait aimé un actionnaire solvable. Elle s'en souviendra en mars. »"
+    left:
+      label: "Qu'elle s'en souvienne"
+      effects: {caisse: "-", direction: "-", relation: {dorian: -1}}
+      answer: "Il pose la cuillère sur la soucoupe, sans bruit. « Elle se souvient de tout. C'est même son seul talent. »"
+    right:
+      label: "J'irai ailleurs"
+      effects: {direction: "--", tribunes: "+"}
+      answer: "« Ailleurs, c'est Portclair. Ils m'appellent avant de vous recevoir. » Il te raccompagne à l'ascenseur et appuie pour toi."
+
+  # ===================================================== LA COUPURE DE 1992
+  - id: pr.h5.vialat.coupure
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat sort de son sac une coupure jaunie : VAUCASTEL AU GREFFE, 1992. « Je les ai laissés passer en 1989, {toi}. Je ne laisse plus passer personne. Vous voulez savoir pourquoi je reviens ? »"
+    left:
+      label: "Dites-le"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h5_vaucastel], outcome: compte}
+      answer: "« Parce que vous avez une tribune en cendres et un banquier en acier. Ça, je l'ai déjà vu. » Elle replie la coupure sur le titre."
+    right:
+      label: "Je sais compter"
+      effects: {direction: "+", relation: {vialat: -1}, outcome: refuse}
+      answer: "« Tout le monde sait compter. C'est l'ordre des chiffres qui compte. » Elle note l'heure de l'entretien, à la minute."
+
+  - id: pr.h5.vialat.ligne
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat pose le doigt sur une ligne du bilan. « Créancier principal : la SCI Rive Gauche. Elle a votre dette, et un projet sur votre terrain. Vous l'aviez remarqué ? »"
+    left:
+      label: "Je l'avais remarqué"
+      effects: {caisse: "-", relation: {vialat: 1}, set: [h5_vialat_sci]}
+      answer: "« Alors vous comptez aussi. » Elle te regarde enfin, toi, et pas tes mains. Ça dure trois secondes."
+    right:
+      label: "Non"
+      effects: {direction: "-", set: [h5_vialat_sci]}
+      answer: "« Moi non plus, avant ce matin. » Elle ajoute un astérisque dans la marge, puis un deuxième, à côté du premier."

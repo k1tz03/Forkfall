@@ -1,0 +1,81 @@
+# Les fins de « La Maquette » (Histoire 5, postulat `geant_dechu`). Cinq fins
+# d'histoire, posées par l'acte final (content/cards/president/h5_script.yaml) :
+#   · au second solde (S2, 16), devant Madame Vialat : L'Inspecteur compte autre
+#     chose (la fin rare : l'acte lu, la cassette et la voix reconnue, le fax,
+#     le témoin du feu ; aucune valise ; Vialat de ton côté) ;
+#   · au dernier match (S2, 17), selon ce qui s'est dit au conseil municipal :
+#     Le stade est resté (l'acte de 1931 lu), Les Terrasses (le projet
+#     soutenu), Le sursis (Lambert a voté contre), À une voix (rien à lire).
+# Et les lignes que ce livre ajoute aux fins communes (`epitaph_plus_ajouts`) :
+# la garde à vue (Six heures du matin, la valise de Valentienne ; la nuit des
+# archives), et les fins de jauge du président.
+#
+# Ce que ce livre laisse au monde, vrai quelle que soit la fin : la tribune Est
+# a brûlé en novembre 1999 (on l'a reconstruite en béton, avec un siège 14B) ;
+# une berline grise est sortie de la Rive en 2000 ; la maquette de la seconde
+# tranche est restée dans la vitrine de l'agence ; un acte de 1931 donne le
+# terrain de la Rive aux enfants du quartier. Aucune épitaphe ne fait tomber le
+# stade : même votée, la révision s'arrête sur les berges gelées.
+endings:
+  - id: geant_stade_reste
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "Le stade est resté"
+    epitaph: "{prenom} {nom} a lu l'acte de 1931 devant le conseil municipal, et le terrain de la Rive est resté aux enfants du quartier. Le Racing, lui, est reparti de deux divisions plus bas, sous le même nom, sans un sou."
+    epitaph_plus:
+      - { when: "flag('h5_fax_plume') && (flag('h5_josie') || flag('h5_josie_juge')) && (flag('h5_temoin_depose') || flag('h5_tessandier_aveu') || flag('h5_phrase_connue') || flag('h5_sci_trois') || flag('h5_bastide_1976'))", text: "Dorian et Madame Tessandier ont été mis en examen à l'automne ; Camille a été radiée du barreau. La maquette est restée dans la vitrine." }
+      - { when: "flag('h5_virage')", text: "{nom} a vu le dernier match depuis la Nord, sur la marche de Gégé. Paulette avait gardé la place d'à côté." }
+
+  - id: geant_terrasses
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "Les Terrasses"
+    epitaph: "{prenom} {nom} a soutenu la révision du terrain de la Rive. La procureure a gelé le chantier la semaine suivante, pour une berline sortie de la vase ; la maquette est restée en vitrine, le stade aussi, la signature aussi."
+    epitaph_plus:
+      - { when: "flag('h5_nom_laisse')", text: "Sur la maquette, sous le nom du promoteur, le petit panneau {NOM} BÂTIMENT a été le premier à jaunir." }
+      - { when: "flag('h5_maillot_terrasses')", text: "Le Racing a porté les Terrasses sur la poitrine jusqu'au bout. Gégé a gardé un maillot, plié, sans jamais le mettre." }
+
+  - id: geant_vialat
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "L'Inspecteur compte autre chose"
+    epitaph: "Madame Vialat a compté une dernière fois, et pour la première fois elle a compté autre chose que les chiffres : le Racing a passé l'été. {prenom} {nom} a rendu les clés en juin, sans Camille, avec un stade."
+    epitaph_plus:
+      - { when: "flag('h5_maison_saisie')", text: "Sans maison non plus : la caution de 1999 avait suivi son cours, à l'en-tête du cabinet. {nom} loge à l'hôtel de la Rive, chambre 9." }
+      - { when: "flag('h5_vaucastel')", text: "Dans son sac, la coupure de 1992 a eu une voisine : une photo du dernier match, la Nord pleine. {nom} est dessus, au bord." }
+
+  - id: geant_sursis
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "Le sursis"
+    epitaph: "Rejetée à une voix, la révision du terrain de la Rive reviendra à la prochaine séance. {prenom} {nom} a gagné un an, et Lambert a gagné qu'on lui demande encore son avis."
+    epitaph_plus:
+      - { when: "flag('h5_acte_vu')", text: "L'acte de 1931 dort toujours dans le buffet de Paulette, sous la nappe des dimanches. Elle attend qu'on revienne le lui demander." }
+      - { when: "flag('h5_bache')", text: "La bâche de Gégé a gardé son POUR L'INSTANT à la craie. Personne n'ose l'effacer ; {nom} non plus." }
+
+  - id: geant_une_voix
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "À une voix"
+    epitaph: "La révision du terrain de la Rive est passée à une voix. {prenom} {nom} avait parlé dix minutes sans un papier ; on a applaudi en bas, on a voté en haut. Les pelleteuses ne sont jamais venues ; le terrain n'est plus à personne."
+    epitaph_plus:
+      - { when: "flag('h5_acte_vu')", text: "L'acte de 1931 était dans un buffet du square des Lilas, plié en huit. {nom} ne l'avait pas demandé deux fois." }
+      - { when: "flag('h5_virage')", text: "Gégé et {nom} ont tenu la bâche pliée jusqu'au coup de sifflet. Elle n'a jamais été dépliée." }
+
+epitaph_plus_ajouts:
+  - { fin: co_garde_a_vue, when: "flag('histoire_h5') && flag('h5_garde_a_vue') && flag('h5_valise_niee')", text: "« Je n'en sais rien », avait dit {nom} au téléphone. La procureure avait noté l'heure de l'appel ; elle l'a relue à voix haute, en garde à vue." }
+  - { fin: co_garde_a_vue, when: "flag('histoire_h5') && flag('h5_garde_a_vue')", text: "Quarante-huit heures pour un contrat signé trop tôt et une valise de Valentienne. La procureure a laissé la photo de la maquette sur la table." }
+  - { fin: co_garde_a_vue, when: "flag('histoire_h5') && flag('vl_archives_nuit')", text: "On a trouvé {nom} aux archives de la mairie à deux heures du matin, une lampe de poche à la main, devant la lettre M." }
+  - { fin: pr_siege, when: "flag('histoire_h5')", text: "Le kop a dormi trois semaines au club-house ; {nom} a fini par dormir ailleurs. Sous le clou de la photo de 1974, un sac de couchage est resté." }
+  - { fin: pr_commission, when: "flag('histoire_h5')", text: "Madame Vialat a compté, pas dans le même sens ; dans son sac, la coupure de 1992 a eu une voisine, au nom de {nom}." }
+  - { fin: pr_pantin, when: "flag('histoire_h5')", text: "Tout était signé de la main de {nom}, rien n'était de sa plume : le cabinet de Camille avait tout rédigé, en bas, jamais en marge." }
+  - { fin: pr_mairie, when: "flag('histoire_h5')", text: "Madame Aubert offrait la quatrième place de sa liste. La Nord a voté pour {nom} ; le quartier de la Rive, pour la maquette." }
+  - { fin: pr_greve, when: "flag('histoire_h5') && flag('h5_greve_signee')", text: "La signature de {nom} était déjà sur la première feuille de grève. On l'a recopiée sur la seconde, plus petite." }
+  - { fin: pr_ag, when: "flag('histoire_h5')", text: "Le comité des créanciers a voté à main levée. Dorian a levé la sienne le premier et l'a gardée en l'air, un peu, pour {nom}." }
+  - { fin: pr_fonds, when: "flag('histoire_h5') && flag('h5_fonds_ilyas')", text: "Le stade s'appelle Almadis Rive. Sur la maquette de l'agence, quelqu'un a collé le nouveau nom sur le petit lac, en lettres d'or." }
+  - { fin: pr_fantome, when: "flag('histoire_h5')", text: "Vukić a tout signé, même le procès-verbal de l'huissier. Il l'a noté dans son cahier, avec l'heure, et le nom de {nom} au crayon." }

@@ -1,0 +1,343 @@
+# LES SCÈNES DE LA SEMAINE de « La Maquette » (Histoire 5, président).
+# Format : en-tête de content/ville/scenes_communes.yaml. Une scène par jour sans
+# carte, souvent le soir ; une fois par carrière. Chacune lit le drapeau
+# d'histoire : ce que la ville vit pendant le livre — la vitrine allumée pour
+# personne, une cuillère au bout d'un fil le mardi, les clous noirs de l'Est,
+# l'arrosage sous la pluie, le tableau des clés de l'hôtel, la figurine du
+# trottoir, l'affiche de la séance. Les graines y reviennent sans rien
+# expliquer. Saisons de la ville : 1 = 1999-2000, 2 = 2000-2001, 3 = 2001-2002.
+# Les textes n'accordent rien au protagoniste.
+scenes:
+  # ============================================================ saison 1
+  - id: h5.sc.vitrine_soir
+    titre: "La vitrine allumée"
+    roles: [president]
+    lieu: agence
+    tranches: [soir]
+    si: "flag(histoire_h5) && saison == 1"
+    texte: "Neuf heures du soir, quai de la Rive. La vitrine de l'agence est allumée pour personne. Devant, un homme en pardessus regarde la maquette, les mains dans le dos, sans bouger."
+    choix:
+      - label: "Je m'approche"
+        reponse: "Il te voit dans le reflet de la vitre et s'en va sans se retourner. Sur le trottoir, à l'endroit où il était, une petite cuillère en argent, propre."
+        effets: {jauges: {direction: -1}}
+      - label: "Je reste dans l'ombre"
+        reponse: "Il reste dix minutes, puis il traverse le pont vers la banque. La vitrine s'éteint toute seule à dix heures, comme si quelqu'un attendait qu'il parte."
+
+  - id: h5.sc.abonnements
+    titre: "Quatre cents abonnements"
+    roles: [president]
+    lieu: buvette
+    tranches: [soir]
+    qui: fan
+    si: "flag(histoire_h5) && saison == 1"
+    texte: "À la buvette, un supporter de la Nord recompte une liasse d'abonnements sur le zinc. « Payés jusqu'en mai, d'avance, pour un club au greffe. On est fous, ou on est fidèles ? »"
+    choix:
+      - label: "Fidèles"
+        reponse: "Il trinque contre ton verre vide. « Le jour où on ne saura plus faire la différence, préviens-moi. » La buvette rit, une seconde trop tard."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Les deux"
+        reponse: "Il hoche la tête, comme si tu avais enfin dit quelque chose d'exact, et range la liasse dans une boîte à chaussures marquée 1999."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h5.sc.tricot
+    titre: "La laine bordeaux"
+    roles: [president]
+    lieu: square
+    tranches: [aprem]
+    qui: paulette
+    si: "flag(histoire_h5) && relation.paulette >= 1"
+    texte: "Paulette tricote sur un banc du square, une pelote bordeaux dans un sac en plastique. « Une écharpe. Pour quelqu'un qui reste jusqu'au coup de sifflet. Je n'ai pas encore décidé qui. »"
+    choix:
+      - label: "Je m'assois"
+        reponse: "Elle tricote sans compter les mailles. Au bout d'une heure, elle mesure l'écharpe contre ton bras, sans un mot, et défait trois rangs."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Bonne soirée, Paulette"
+        reponse: "« Bonne soirée. » Elle ne lève pas les yeux. Le cliquetis des aiguilles te suit jusqu'au coin de la rue, puis s'arrête."
+
+  - id: h5.sc.telephone_maison
+    titre: "Mardi, à la maison"
+    roles: [president]
+    lieu: domicile
+    tranches: [soir]
+    jours: [mar]
+    si: "flag(histoire_h5) && flag(h5_conseil_entendu)"
+    texte: "Mardi soir, chez toi. Le téléphone de l'entrée sonne une fois, une seule. Quand tu décroches, personne. Juste une cuillère qui tourne dans une tasse, très loin."
+    choix:
+      - label: "Je dis « allô »"
+        reponse: "La cuillère s'arrête. On raccroche doucement, comme on ferme une porte sur un enfant qui dort."
+        effets: {jauges: {direction: -1}}
+      - label: "Je raccroche"
+        reponse: "Tu raccroches avant lui. Le téléphone ne sonne plus de la soirée. Camille demande qui c'était ; tu réponds : personne."
+
+  - id: h5.sc.clous
+    titre: "Les clous de l'Est"
+    roles: [president]
+    lieu: stade
+    tranches: [matin]
+    qui: enfant
+    si: "flag(histoire_h5) && flag(h5_tribune_est_brulee) && saison == 1"
+    texte: "Derrière les barrières de chantier, deux gamins ramassent des clous noirs dans les cendres de l'Est. « C'est pour la collection. Des vrais clous de 1931. Vous en voulez un ? »"
+    choix:
+      - label: "J'en prends un"
+        reponse: "Il choisit le plus tordu et te le donne comme une médaille. Le clou laisse dans ta poche une trace noire que le pressing ne fera jamais partir."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Sortez de là"
+        reponse: "Ils sortent par le trou du grillage, sans courir. De l'autre côté, ils se retournent et te montrent leurs poches pleines."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h5.sc.assureur
+    titre: "L'agent de la Prévoyance"
+    roles: [president]
+    lieu: cafe_mairie
+    tranches: [midi]
+    qui: passant
+    si: "flag(histoire_h5) && flag(h5_tribune_est_brulee) && saison == 1"
+    texte: "Au café de la Mairie, l'agent de la Prévoyance Aubérivoise déjeune seul, un dossier sous l'assiette. « Le 3 novembre, la prime n'est pas partie. Ce n'est pas moi qui ai bloqué. Moi, j'aurais payé. »"
+    choix:
+      - label: "Qui a bloqué ?"
+        reponse: "Il s'essuie la bouche longtemps. « La banque. Le directeur signe tout lui-même. Je ne vous ai rien dit : j'ai mangé un croque-monsieur. »"
+      - label: "Bon appétit"
+        reponse: "« Merci. » Il repousse son assiette à moitié pleine et part sans payer ; le patron note le croque-monsieur sur une ardoise."
+
+  # ============================================================ saison 2
+  - id: h5.sc.plongeurs
+    titre: "Les plongeurs du quai"
+    roles: [president]
+    lieu: kiosque
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h5) && saison == 2 && !flag(h5_rive_voiture)"
+    texte: "Le kiosquier du quai regarde les plongeurs descendre dans la Rive, une tasse à la main. « Ils sortent des caddies, des vélos, une plaque minéralogique. Un jour, ils sortiront quelque chose. »"
+    choix:
+      - label: "Quoi donc ?"
+        reponse: "« Quelque chose qu'on ne cherchait pas. C'est toujours comme ça, avec l'eau. » Il te rend la monnaie en pièces mouillées."
+      - label: "Je prends L'Écho"
+        francs: -5
+        reponse: "Il te tend le journal. En page six, une photo des plongeurs en noir et blanc, prise du même endroit, à la même heure, la veille."
+
+  - id: h5.sc.cotes
+    titre: "On parie sur tout"
+    roles: [president]
+    lieu: tabac
+    tranches: [soir]
+    qui: fan
+    si: "flag(histoire_h5) && flag(h5_rive_voiture)"
+    texte: "Au tabac du Quai, on parie sur le nom de la carte grise de la berline. « Dix contre un que c'est l'entraîneur de 1990. Vous misez, ou vous savez déjà ? »"
+    choix:
+      - label: "Je ne parie pas"
+        reponse: "Le patron efface la cote à l'éponge. « On ne parie pas contre quelqu'un qui sait. » Il range l'ardoise sous le comptoir."
+      - label: "Je mise cent francs"
+        francs: -100
+        reponse: "Le patron écrit ton nom en dernier sur le carnet. Le lendemain, L'Écho donne le nom. Tu as gagné ; personne n'ose te payer."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h5.sc.arrosage
+    titre: "L'arrosage sous la pluie"
+    roles: [president]
+    lieu: rue
+    tranches: [matin]
+    si: "flag(histoire_h5) && flag(h5_tribune_est_brulee) && saison >= 2 && !flag(h5_temoin_depose)"
+    texte: "Six heures du matin. Devant la résidence des Terrasses, une camionnette blanche arrose les pelouses en pleine pluie. Le chauffeur, en ciré jaune, ne regarde que l'herbe."
+    choix:
+      - label: "Je frappe à la vitre"
+        reponse: "Il baisse la vitre de deux doigts. « C'est mon travail. Arroser. Même quand il pleut. Surtout. » Il la remonte avant ta deuxième question."
+        effets: {jauges: {direction: -1}}
+      - label: "Je passe mon chemin"
+        reponse: "Derrière toi, le jet continue sur l'herbe trempée. Tu comptes jusqu'au coin de la rue : quarante-deux pas, un seul jet, toujours le même."
+
+  - id: h5.sc.tableau_cles
+    titre: "Le tableau des clés"
+    roles: [president]
+    lieu: hotel
+    tranches: [soir]
+    qui: passante
+    si: "flag(histoire_h5) && flag(h5_vallin_loge)"
+    texte: "À la réception de l'hôtel de la Rive, Sandrine fait rouler son fauteuil le long du tableau des clés. « La 9 n'est jamais là. Monsieur Vallin la garde sur lui, même pour déjeuner. »"
+    choix:
+      - label: "Il a raison"
+        reponse: "Elle sourit. « Ici, tout le monde a raison de garder sa clé. » Elle tapote le crochet vide de la 9, deux fois, comme pour le saluer."
+      - label: "Je paie un mois de plus"
+        francs: -2000
+        reponse: "Elle note le paiement dans un cahier à elle, pas dans le registre. « Je lui dirai. Il dira son nom en entier pour vous remercier. »"
+
+  - id: h5.sc.chaussettes
+    titre: "En chaussettes"
+    roles: [president]
+    lieu: terrain
+    tranches: [matin]
+    qui: ancien
+    si: "flag(histoire_h5) && flag(h5_greve_signee)"
+    texte: "Sur le terrain annexe, un vieux supporter regarde les joueurs taper dans un ballon en chaussettes, sans entraîneur. « Ils ne s'entraînent pas, ils jouent. On jouait comme ça en 1958. »"
+    choix:
+      - label: "Je regarde avec lui"
+        reponse: "Vous regardez une heure sans parler. Dembo marque un but en chaussettes ; le vieux applaudit avec ses gants de laine."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je vais au bureau"
+        reponse: "Derrière toi, quelqu'un crie ton nom depuis le terrain, sans méchanceté. Tu ne te retournes pas ; tu le regrettes dans l'escalier."
+
+  - id: h5.sc.panneau
+    titre: "Le petit panneau"
+    roles: [president]
+    lieu: agence
+    tranches: [aprem]
+    qui: enfant
+    si: "flag(histoire_h5) && flag(h5_nom_laisse)"
+    texte: "Devant la vitrine, une fillette lit le petit panneau de la maquette, lettre par lettre, à voix haute. Elle se retourne. « C'est vous ? Vous allez construire là où on joue ? »"
+    choix:
+      - label: "Non"
+        reponse: "Elle te regarde longtemps, comme on regarde un adulte qui ment mal. Puis elle colle sa main sur la vitre, sur le parc en mousse."
+        effets: {jauges: {tribunes: -1}}
+      - label: "Je ne sais pas"
+        reponse: "« Moi non plus, je ne sais pas, des fois. » Elle repart à cloche-pied en évitant les lignes du trottoir."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h5.sc.soupe
+    titre: "La soupe de la voisine"
+    roles: [president]
+    lieu: domicile
+    tranches: [soir]
+    qui: passante
+    si: "flag(histoire_h5) && flag(h5_maison_saisie)"
+    texte: "La voisine d'en face sonne avec une casserole de soupe. « On a vu les déménageurs. Le buffet est parti en premier. Ma mère disait : on commence toujours par ce qui était à la grand-mère. »"
+    choix:
+      - label: "Merci pour la soupe"
+        reponse: "Elle repart sans la casserole. Tu la lui rends le dimanche, lavée ; elle la reprend comme on reprend une lettre."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je n'ai pas faim"
+        reponse: "Elle pose la casserole sur le paillasson quand même. Le lendemain matin, la soupe est froide, avec un mot dessus : « courage »."
+
+  # ============================================================ saison 3
+  - id: h5.sc.sacs
+    titre: "Il en manque un"
+    roles: [president]
+    lieu: clubhouse
+    tranches: [nuit]
+    qui: gege
+    si: "flag(histoire_h5) && flag(h5_siege)"
+    texte: "Le club-house, trois heures du matin. Gégé ne dort pas : il recompte les sacs de couchage alignés sous le clou de la photo de 1974. « Quarante. Il en manque un. Le tien. »"
+    choix:
+      - label: "Je reste"
+        reponse: "Il te lance un sac de couchage qui sent le chien et la naphtaline. Tu dors mal, sur le comptoir. À six heures, Josiane fait le café."
+        effets: {jauges: {tribunes: 2, direction: -1}}
+      - label: "Je rentre"
+        reponse: "« Bonne nuit. » Il éteint la lumière du couloir derrière toi. Dans le noir, quarante personnes font semblant de dormir."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h5.sc.affiche
+    titre: "Séance publique"
+    roles: [president]
+    lieu: mairie
+    tranches: [matin, aprem]
+    qui: ancien
+    si: "flag(histoire_h5) && saison == 3"
+    texte: "Devant la mairie, un vieil homme relit l'affiche de la séance : RÉVISION DU TERRAIN DE LA RIVE. Il sort un crayon et écrit en bas : ET LES ENFANTS ? « J'en ai été un. »"
+    choix:
+      - label: "Je lui prête mon stylo"
+        reponse: "Il repasse sa question à l'encre, lettre par lettre. Le lendemain, quelqu'un a ajouté dessous, au feutre : ET LES VIEUX ?"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je lis l'ordre du jour"
+        reponse: "Le terrain de la Rive est le point six, entre les trottoirs et le marché couvert. Le vieux dit : « Toujours entre les trottoirs. »"
+
+  - id: h5.sc.cave
+    titre: "La cave du club-house"
+    roles: [president]
+    lieu: clubhouse
+    tranches: [soir]
+    qui: josiane
+    si: "flag(histoire_h5) && flag(h5_pret_1998)"
+    texte: "Le soir, Madame Josiane descend à la cave avec une lampe et une boîte à chaussures vide. « Je mets les copies à l'abri. Le classeur de 1998 tient chaud aux licences de 1987. »"
+    choix:
+      - label: "Je porte la lampe"
+        reponse: "Elle range les copies sous une pile de licences, à la lettre D, sans regarder. « Ici, personne ne cherche à la bonne lettre. »"
+        effets: {jauges: {direction: 1}}
+      - label: "Faites attention"
+        reponse: "« Je fais attention depuis 1987. C'est pour ça que je descends seule. » Elle referme la trappe derrière elle, doucement."
+
+  - id: h5.sc.figurine
+    titre: "La figurine du trottoir"
+    roles: [president]
+    lieu: rue
+    tranches: [nuit]
+    si: "flag(histoire_h5) && saison == 3 && flag(h5_maquette_change)"
+    texte: "La nuit, sur le trottoir du quai, une figurine en plastique haute comme un pouce, en costume, debout contre le mur de l'agence. Elle regarde la Rive."
+    choix:
+      - label: "Je la ramasse"
+        reponse: "Elle est tiède, comme si quelqu'un venait de la tenir. Sous le socle, au feutre fin, une date : celle du conseil municipal."
+        effets: {jauges: {direction: -1}}
+      - label: "Je la laisse"
+        reponse: "Au matin, elle n'y est plus. Dans la vitrine, une figurine en costume attend au pied d'un balcon, la tête tournée vers la rue."
+
+  - id: h5.sc.chaise
+    titre: "Une chaise près de la fenêtre"
+    roles: [president]
+    lieu: square
+    tranches: [aprem]
+    qui: paulette
+    si: "flag(histoire_h5) && saison == 3 && flag(h5_acte_paulette)"
+    texte: "Au square, Paulette a sorti un carnet de rendez-vous d'un autre siècle. « Le conseil, c'est un jeudi ? Gardez-moi une chaise près de la fenêtre. Je veux voir le stade pendant qu'ils votent. »"
+    choix:
+      - label: "Je vous la garde"
+        reponse: "Elle note la date au crayon, puis l'heure, puis souligne. « À mon âge, on souligne tout. Ce qui compte, on l'entoure. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je viendrai vous chercher"
+        reponse: "« En voiture ? » Elle sourit. « Je n'ai jamais pris la voiture pour aller au stade. Ce n'est pas pour la mairie que je commencerai. »"
+
+  - id: h5.sc.ecus
+    titre: "Deux écus quatre-vingt-dix"
+    roles: [president]
+    lieu: marche
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h5) && flag(monde_ecus)"
+    texte: "Au marché, le marchand de fruits affiche ses prix en écus, à la craie, les francs barrés en dessous. « Les écus, c'est léger. Les francs, on les sentait dans la poche. »"
+    choix:
+      - label: "Je prends des pommes"
+        francs: -15
+        reponse: "Il pèse, convertit à voix haute, se trompe, recommence. Il te rend la monnaie en écus et en francs mélangés. « Vous ferez le tri. »"
+      - label: "Je regarde seulement"
+        reponse: "« Regarder, c'est gratuit, dans les deux monnaies. » Il efface un prix et le récrit plus bas, sans raison que tu comprennes."
+
+  - id: h5.sc.tombe
+    titre: "La tombe du maire Marquès"
+    roles: [president]
+    lieu: cimetiere
+    tranches: [matin]
+    qui: ancien
+    si: "flag(histoire_h5) && flag(h5_14b_ecoutee)"
+    texte: "Au cimetière, un vieux gardien désherbe une tombe à la main : HONORÉ MARQUÈS, MAIRE, 1871-1944. « Sa fille vient le dimanche, avec un thermos. Elle lui lit le classement. »"
+    choix:
+      - label: "Je l'aide"
+        reponse: "Vous arrachez le chiendent jusqu'au nom. Le gardien dit que personne n'aide jamais, ici, sauf la fille, et elle a quatre-vingts ans."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je dépose une fleur"
+        francs: -20
+        reponse: "Tu poses un chrysanthème. Le dimanche suivant, il y en a deux : le tien, et un autre, noué d'une écharpe bordeaux."
+
+  - id: h5.sc.petit_fils
+    titre: "Le petit-fils du conseiller"
+    roles: [president]
+    lieu: cafe_mairie
+    tranches: [midi]
+    qui: enfant
+    si: "flag(histoire_h5) && flag(h5_lambert_vu)"
+    texte: "Au café de la Mairie, un gamin fait ses devoirs à la table du fond. « Je suis le petit-fils de monsieur Lambert. Il dit que vous allez parler fort, jeudi. Il a mis son appareil. »"
+    choix:
+      - label: "Je parlerai fort"
+        reponse: "Le gamin écrit « fort » dans la marge de son cahier, et souligne. « Je lui dirai. Il entend mal à gauche. Parlez à droite. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Fais tes devoirs"
+        reponse: "Il replonge dans son cahier. En partant, tu vois qu'il dessine un stade dans la marge, avec quatre tribunes."
+
+# Le match du samedi en scène : quelques phrases de ce livre, lues sur ses traces.
+match_textes:
+  pour:
+    - {texte: "{Qui} marque devant l'Est en ruine. Derrière les barrières, un gamin perché sur les gravats lève les bras, seul : {score}.", si: "flag(histoire_h5) && flag(h5_tribune_est_brulee)"}
+    - {texte: "Une frappe de {qui} sous la barre. Dans la Nord, la bâche du kop se soulève d'un coup, vingt mètres de bordeaux : {score}.", si: "flag(histoire_h5) && flag(h5_bache)"}
+  contre:
+    - {texte: "Contre-attaque de {adv}, centre en retrait. Dans la loge d'en face, quelqu'un repose sa tasse sans bruit : {score}.", si: "flag(histoire_h5) && flag(h5_conseil_entendu)"}
+  fin_v:
+    - {texte: "Coup de sifflet final. La Nord se tourne vers l'Est et chante pour les gradins noirs, comme si quelqu'un y était encore assis.", si: "flag(histoire_h5) && flag(h5_tribune_est_brulee)"}
+  fin_n:
+    - {texte: "Un point. Sur son banc du square, Paulette replie sa couverture : « Ni gagné ni perdu. Comme le terrain. »", si: "flag(histoire_h5) && flag(h5_tribune_est_brulee)"}
+  fin_d:
+    - {texte: "C'est fini. Sur le quai, dans la vitrine de l'agence, le petit lac en résine est déjà allumé.", si: "flag(histoire_h5) && flag(h5_maquette_vue)"}

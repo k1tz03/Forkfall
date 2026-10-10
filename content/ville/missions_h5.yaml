@@ -1,0 +1,123 @@
+# LES MISSIONS DE « LA MAQUETTE » (Histoire 5, président) — trois, rares,
+# chacune nourrit l'intrigue principale, chacune a son prix.
+#
+#   · La lettre M (le cadastre) — Madame Josiane, au club-house, le soir, une
+#     fois le fax de La Plume reçu : la copie de l'acte de 1931 n'est pas perdue,
+#     elle est rangée à « Marquès, Honoré, donation ». Une clé, une nuit, une
+#     lampe. L'emporter pose `vl_cadastre` (le conseil municipal le lit comme
+#     l'acte de Paulette) ; la photocopier sur place réveille le gardien de nuit
+#     et finit en garde à vue (`vl_archives_nuit`, ligne d'épitaphe dans
+#     content/endings/h5.yaml).
+#   · La valise de Valentienne — Hubert Malbec, au bar de l'hôtel, le soir, en
+#     saison 2, si la carte de la valise n'est pas déjà passée : l'enveloppe
+#     « pour votre peine », de l'argent sale (`vl_valise`), que la perquisition
+#     de six heures retrouve (content/cards/president/h5_evenements.yaml).
+#   · Le témoin du feu — Didier Vallin, au feu de palettes, la nuit, après
+#     l'incendie : une chambre payée à l'hôtel de la Rive contre ce qu'il a vu.
+#     Pose `vl_temoin_feu` (la fin rare et la vue de Madame Tessandier le lisent).
+#
+# Et un bien, qui n'est pas à vendre : la maison de la rue Haute, celle du
+# père. Elle t'est donnée au prologue (la cuisine, `cadeau_maison_rue_haute`)
+# avec la berline et le costume de Brunel ; la caution signée la fait saisir à
+# la fin de la saison 2 (`saisie_logement`), devant les voisins.
+missions:
+  - id: h5_cadastre
+    titre: "La lettre M"
+    roles: [president]
+    donneur: {sprite: josiane, nom: "Madame Josiane", lieu: clubhouse, tranches: [soir]}
+    si: "flag(histoire_h5) && flag(h5_fax_plume) && !flag(h5_copie_cadastre) && !flag(vl_cadastre)"
+    chance: 0.4
+    etapes:
+      - id: offre
+        texte: "Madame Josiane ferme la porte du secrétariat et pose une clé sur le bureau. « Les archives de la mairie. Ma sœur dit : lettre M, Marquès, Honoré. Elle ne veut pas savoir quand. »"
+        choix:
+          - id: prendre
+            label: "Je prends la clé"
+            reponse: "La clé est froide, longue, d'un autre temps. Josiane te donne aussi une lampe de poche, dont elle vérifie les piles devant toi."
+            suite: archives
+          - id: refuser
+            label: "Pas comme ça"
+            reponse: "Elle reprend la clé et la range dans son sac, à côté de son chapelet. « Comme vous voudrez. Ma sœur part à la retraite en juin. »"
+            suite: fin
+      - id: archives
+        objectif: {lieu: mairie, tranches: [nuit], delai: 4}
+        texte: "Les archives de la mairie, deux heures du matin. La lampe sur les rayonnages : M. Marquès, Honoré, donation, 1931. Au bout du couloir, le photocopieur, et la ronde du gardien de nuit."
+        choix:
+          - id: emporter
+            label: "Je l'emporte"
+            effets: {set: [vl_cadastre]}
+            reponse: "La copie sous ton manteau. Dans l'escalier, le pas du gardien, puis plus rien. Dehors, il pleut ; tu ne la déplies qu'une fois chez toi."
+            suite: fin
+          - id: photocopier
+            label: "Je la photocopie ici"
+            effets: {set: [vl_archives_nuit], fin: co_garde_a_vue}
+            reponse: "Le photocopieur met deux minutes à chauffer. À la première page, une lampe dans ta nuque. « Vous m'expliquerez ça au commissariat. »"
+            suite: fin
+        echec:
+          texte: "La clé est restée dans ta poche. Une semaine plus tard, Josiane te la reprend sans un mot. Mireille part à la retraite avec ses clés."
+
+  - id: h5_valise
+    titre: "La valise de Valentienne"
+    roles: [president]
+    donneur: {sprite: malbec, nom: "Hubert Malbec", lieu: hotel, tranches: [soir]}
+    si: "flag(histoire_h5) && saison == 2 && !flag(h5_valise_prise) && !flag(h5_valise_refusee)"
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "Bar de l'hôtel. Hubert Malbec pousse du pied une valise sous la table. « Trois millions pour Dembo, en liquide. Et pour votre peine, {montant}. Personne ne compte, ici. »"
+        choix:
+          - id: prendre
+            label: "Je prends l'enveloppe"
+            francs: 200000
+            sale: true
+            effets: {jauges: {caisse: 3, vestiaire: 1}, set: [vl_valise]}
+            reponse: "L'enveloppe est lourde et tiède. Malbec garde la main dessus une seconde de trop. « Dembo signe en juin. Vous le lui dites ? »"
+            suite: fin
+          - id: refuser
+            label: "Pas sous la table"
+            effets: {jauges: {direction: 1}}
+            reponse: "Malbec ramène la valise vers lui, du talon. « Vous avez tort. C'est rare, à ce niveau, d'avoir tort si poliment. »"
+            suite: fin
+
+  - id: h5_temoin_feu
+    titre: "Le témoin du feu"
+    roles: [president]
+    donneur: {sprite: vallin, nom: "Didier Vallin", lieu: feu, tranches: [nuit]}
+    si: "flag(histoire_h5) && flag(h5_tribune_est_brulee) && !flag(h5_temoin)"
+    chance: 0.4
+    etapes:
+      - id: offre
+        texte: "Le feu de palettes. Didier Vallin ne te regarde pas. « Un lit pour l'hiver, et je te dis ce que j'ai vu la nuit de l'Est. Une chambre à l'hôtel, {montant}, jusqu'en mars. »"
+        choix:
+          - id: payer
+            label: "Je paie la chambre"
+            francs: -6000
+            reponse: "Il prend la clé de la 9 sans un mot. Sur le registre de l'hôtel, il écrit son nom en entier, en majuscules, et il le souligne."
+            suite: chambre
+          - id: refuser
+            label: "Pas maintenant"
+            reponse: "Il remet une palette sur le feu. « Maintenant, c'est la seule heure qu'on a, ici. » Les flammes montent d'un coup."
+            suite: fin
+      - id: chambre
+        objectif: {lieu: hotel, tranches: [soir], delai: 4}
+        texte: "Chambre 9, hôtel de la Rive. Vallin, assis au bord du lit fait. « Un ciré jaune, un bidon rouge, la camionnette blanche qui arrose les pelouses de la résidence. Je l'ai vue repartir. »"
+        choix:
+          - id: noter
+            label: "Je note tout"
+            effets: {set: [vl_temoin_feu]}
+            reponse: "Tu notes sur le papier à lettres de l'hôtel. Il relit par-dessus ton épaule et corrige une seule chose : l'orthographe de son nom."
+            suite: fin
+        echec:
+          texte: "La chambre 9 est restée payée et vide. Sandrine dit qu'il est venu une nuit, qu'il a dormi par terre, et qu'il est reparti avant six heures."
+
+objets:
+  - id: maison_rue_haute
+    nom: "La maison de la rue Haute"
+    categorie: logement
+    lieu: agence
+    prix: 900000
+    annees: [1990, 1990]
+    si: "flag(histoire_h5)"
+    texte: "La maison du père, rue Haute : trois étages, une glycine, et au fond de la cour le dépôt de l'entreprise. On ne la vend pas. On la met en caution."
+    logement: {nom: "La maison de la rue Haute", repos: 15}
+    revente: 0

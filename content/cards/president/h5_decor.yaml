@@ -1,0 +1,416 @@
+# Le décor de « La Maquette » : les cartes du sac (routines) du président
+# pendant l'histoire, toutes gardées par `flag('histoire_h5')`, une fois chacune.
+# Une par visage du casting au moins (le lint l'exige), et la ville elle-même :
+# la vitrine de l'agence qui change avec les saisons, la camionnette qui arrose
+# sous la pluie, la craie de la grande halle. Rien n'y avance l'intrigue ; tout
+# y prouve qu'elle avance. Pas de réaction, pas de ligne d'Almanach (routines).
+cards:
+  # ------------------------------------------------------------ la vitrine
+  - id: pr.h5.decor.vitrine_lichen
+    roles: [president]
+    arc: decor
+    tags: [tribunes, objet]
+    when: "flag('histoire_h5') && season == 0"
+    tone: leger
+    once: true
+    text: "Samedi matin, devant la vitrine Tessandier. Un enfant compte à voix haute les arbres en lichen du parc : onze. Sa mère le tire par la manche. « Allez, on va rater le coup d'envoi. »"
+    left:
+      label: "Je compte avec lui"
+      effects: {tribunes: "+"}
+      answer: "Douze, en fait. Il en manquait un derrière le lac. L'enfant te regarde comme un adulte qui sait enfin quelque chose d'utile."
+    right:
+      label: "Je file au stade"
+      effects: {direction: "+"}
+      answer: "Sur le parking, le gamin te double en courant, son écharpe dans le vent, et crie « onze ! » à personne."
+
+  - id: pr.h5.decor.vitrine_gardien
+    roles: [president]
+    arc: decor
+    tags: [tribunes, objet]
+    when: "flag('histoire_h5') && season == 1 && flag('h5_maquette_change')"
+    tone: leger
+    once: true
+    text: "La vitrine, un soir de pluie. Sur la maquette, quelqu'un a posé une figurine de gardien de but au milieu du lac en résine, les bras écartés, comme s'il attendait un tir."
+    left:
+      label: "Je la laisse"
+      effects: {tribunes: "+"}
+      answer: "Le lendemain, elle y est encore. Le surlendemain aussi. Madame Tessandier ne l'enlève pas ; elle la redresse, tous les matins."
+    right:
+      label: "Je préviens l'agence"
+      effects: {direction: "+"}
+      answer: "Madame Tessandier l'enlève avec sa pince à épiler et la pose sur son bureau, à côté du téléphone. Elle ne la jette pas."
+
+  - id: pr.h5.decor.vitrine_doigts
+    roles: [president]
+    arc: decor
+    tags: [tribunes, objet]
+    when: "flag('histoire_h5') && season >= 2"
+    tone: leger
+    once: true
+    text: "La vitrine, un mardi. La maquette a pris la poussière. Sur la vitre, des traces de doigts à hauteur d'enfant, toutes au même endroit : là où était le stade, avant le parc."
+    left:
+      label: "J'essuie la vitre"
+      effects: {tribunes: "+"}
+      answer: "Tu l'essuies avec ta manche. Il en reste une, à l'intérieur, que personne ne peut atteindre. Celle-là est d'adulte."
+    right:
+      label: "Je passe"
+      effects: {direction: "+"}
+      answer: "Dans le reflet, derrière toi, deux gamins attendent que tu partes pour coller leurs mains, exactement au même endroit."
+
+  - id: pr.h5.decor.camionnette
+    roles: [president]
+    arc: decor
+    tags: [direction, objet]
+    when: "flag('histoire_h5') && flag('h5_tribune_est_brulee') && season >= 1 && !flag('h5_temoin_depose')"
+    tone: leger
+    once: true
+    text: "Six heures du matin, devant la résidence des Terrasses. Une camionnette blanche arrose les pelouses en pleine pluie. Le chauffeur porte un ciré jaune. Il ne regarde pas le stade."
+    left:
+      label: "Je note la plaque"
+      effects: {direction: "-"}
+      answer: "Tu la notes sur un ticket de caisse. Le chauffeur te voit noter. Il finit sa pelouse quand même, jusqu'au bout, sans se presser."
+    right:
+      label: "Je rentre"
+      effects: {direction: "+"}
+      answer: "Derrière toi, l'arrosage continue. Tu entends le jet frapper l'herbe trempée, comme quelqu'un qui insiste."
+
+  # ------------------------------------------------------------ les visages
+  - id: pr.h5.decor.josiane_lettre
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    when: "flag('histoire_h5') && flag('h5_conseil_entendu')"
+    tone: leger
+    once: true
+    text: "Madame Josiane trie le courrier en trois piles : les factures, les supporters, et une pile d'une seule lettre, sans timbre, déposée à la main. « Celle-là, je ne l'ouvre pas. »"
+    left:
+      label: "Je l'ouvre"
+      effects: {direction: "-"}
+      answer: "Une feuille blanche pliée en quatre. Au milieu, tapé à la machine, un seul mot : MARDI. Josiane avait raison de ne pas l'ouvrir."
+    right:
+      label: "Brûlez-la"
+      effects: {direction: "+"}
+      answer: "Elle ne la brûle pas. Elle la range dans le tiroir du bas, avec les autres. Tu ne savais pas qu'il y en avait d'autres."
+
+  - id: pr.h5.decor.gege_piles
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, caisse]
+    speaker: gege
+    lieu: buvette
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "La buvette du kop. Gégé empile la recette en pièces de dix francs, par dix, sans regarder. « Une pile, une place en virage. Il en manque toujours une, à la fin. Tu sais où elle va, {toi} ? »"
+    left:
+      label: "Au club"
+      effects: {caisse: "+"}
+      answer: "« Au club. Tout va au club. » Il fait glisser une pile vers toi du bout des doigts. Elle s'arrête au bord du comptoir."
+    right:
+      label: "Dans ta poche"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "Il ne rit pas. Il recompte devant toi, à voix haute, jusqu'à la dernière pièce. Il n'en manque aucune."
+
+  - id: pr.h5.decor.vukic_tableau
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    lieu: vestiaire
+    when: "flag('histoire_h5') && flag('h5_tribune_est_brulee')"
+    tone: leger
+    once: true
+    text: "Vestiaire, la causerie. Vukić a dessiné le stade au feutre sur le tableau blanc : la Nord, l'Ouest, le Sud. L'Est, il l'a tracée en pointillés, comme une ligne qu'on découpe."
+    left:
+      label: "Je l'efface"
+      effects: {vestiaire: "-"}
+      answer: "Les pointillés résistent à l'éponge. Vukić te passe le produit sans un mot, et regarde ailleurs pendant que tu frottes."
+    right:
+      label: "Je la laisse"
+      effects: {vestiaire: "+"}
+      answer: "Personne ne la regarde pendant la causerie. Tout le monde la regarde en sortant."
+
+  - id: pr.h5.decor.brehaut_poche
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: brehaut
+    lieu: vestiaire
+    when: "flag('histoire_h5') && year >= 1999 && season <= 1"
+    tone: leger
+    once: true
+    text: "Titi Bréhaut a un téléphone portable dans la poche du survêtement. Il sonne pendant la causerie. Il ne décroche pas : il regarde le numéro, et il sort dans le couloir."
+    left:
+      label: "Je le suis"
+      effects: {direction: "+"}
+      answer: "Dans le couloir, il parle bas, le dos au mur, sous le clou. Quand il te voit, il dit « oui, maman » et raccroche."
+    right:
+      label: "Je continue"
+      effects: {vestiaire: "+"}
+      answer: "Il revient dix minutes plus tard, s'assoit au fond et applaudit ta fin de phrase. Il n'a pas entendu le début."
+
+  - id: pr.h5.decor.dembo_crampons
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: dembo
+    lieu: vestiaire
+    when: "flag('histoire_h5') && !flag('h5_valise_prise')"
+    tone: leger
+    once: true
+    text: "Dembo graisse ses crampons sur un journal ouvert à la page des petites annonces. « Au prochain club, je ne serai plus avant-centre. Je serai l'expérience. Ça se paie moins. »"
+    left:
+      label: "Il n'y aura pas d'autre club"
+      effects: {vestiaire: "+"}
+      answer: "Il lève les yeux du crampon. « Tu dis ça pour moi, ou pour le club ? » Il ne te laisse pas répondre ; il graisse le suivant."
+    right:
+      label: "L'expérience, ça sert"
+      effects: {direction: "+"}
+      answer: "« À quoi ? » Il replie le journal sur les crampons, les annonces dedans, et le jette dans la poubelle du vestiaire."
+
+  - id: pr.h5.decor.tessandier_pont
+    roles: [president]
+    arc: contrat
+    tags: [direction, objet]
+    speaker: tessandier
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Madame Tessandier te croise sur le pont, un parapluie à manche de bambou. « Ce qui se vend le mieux, dans une résidence ? Le premier étage. Assez haut pour voir, assez bas pour ne rien entendre. »"
+    left:
+      label: "Et le stade ?"
+      effects: {tribunes: "+"}
+      answer: "« Le stade, on l'entend du quatrième. » Elle ouvre le parapluie alors qu'il ne pleut pas. Il pleut deux minutes plus tard."
+    right:
+      label: "Bonne journée, madame"
+      effects: {direction: "+"}
+      answer: "« Vous aussi. » Elle reste sur le pont à regarder la Rive, la main sur le parapet, à l'endroit où l'eau tourne."
+
+  - id: pr.h5.decor.dorian_ascenseur
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: dorian
+    lieu: banque
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Banque Aubérivoise, l'ascenseur. Dorian monte avec toi, une boîte de chocolats sous le bras. « Pour ma secrétaire. Trente ans de maison. On n'oublie pas les gens qui comptent, {toi}. »"
+    left:
+      label: "Elle compte quoi ?"
+      effects: {direction: "-"}
+      answer: "« Les jours, surtout. » Les portes s'ouvrent au troisième. Il sort sans se retourner, la boîte bien à plat, comme un dossier."
+    right:
+      label: "Je n'oublie personne"
+      effects: {direction: "+"}
+      answer: "« Je sais. C'est ce que j'aime chez vous. » Il appuie pour toi sur le rez-de-chaussée, et sort au troisième."
+
+  - id: pr.h5.decor.vialat_marches
+    roles: [president]
+    arc: instances
+    tags: [caisse, objet]
+    speaker: vialat
+    lieu: bureau
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Madame Vialat monte l'escalier du club-house en comptant les marches à mi-voix. Arrivée en haut, elle redescend d'une. « Dix-sept. Il y en avait dix-huit sur les plans de 1931. »"
+    left:
+      label: "On en a perdu une"
+      effects: {relation: {vialat: 1}}
+      answer: "« On ne perd pas une marche. On la retire. Quelqu'un a signé pour la retirer. » Elle note la date de sa visite, au crayon."
+    right:
+      label: "Vous comptez tout ?"
+      effects: {direction: "-"}
+      answer: "« Tout ce qui se compte. Le reste, je le laisse aux autres. » Elle remonte la dernière marche et frappe à ta porte, ouverte."
+
+  - id: pr.h5.decor.paulette_thermos
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    lieu: stade
+    when: "flag('histoire_h5') && season == 0 && !flag('h5_tribune_est_brulee')"
+    tone: leger
+    once: true
+    text: "Paulette remplit son thermos à la buvette avant le match. « Le café d'ici est mauvais depuis 1951. Je le bois quand même. Ça me rappelle que je suis encore là pour le trouver mauvais. »"
+    left:
+      label: "Je vous l'offre"
+      effects: {tribunes: "+", relation: {paulette: 1}}
+      answer: "Elle te laisse payer et te rend la monnaie, exactement, pièce par pièce. « Je ne prends que le café. »"
+    right:
+      label: "Il n'est pas si mauvais"
+      effects: {direction: "+"}
+      answer: "« Il est pire. Mais il est chaud. » Elle visse le bouchon du thermos jusqu'au bout, puis d'un quart de tour de plus."
+
+  - id: pr.h5.decor.paulette_banc
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    when: "flag('histoire_h5') && flag('h5_tribune_est_brulee') && season >= 1"
+    tone: leger
+    once: true
+    text: "Paulette, square des Lilas, sur un banc en face du stade. « Ma place, c'était la 14B. Maintenant, c'est ce banc. D'ici, on voit l'Est en entier. Elle n'a jamais été aussi visible. »"
+    left:
+      label: "Je m'assois"
+      effects: {tribunes: "+", relation: {paulette: 1}}
+      answer: "Vous restez sans parler jusqu'à ce que les lampadaires s'allument. Elle compte les fenêtres éclairées de la résidence : onze."
+    right:
+      label: "On la reconstruira"
+      effects: {direction: "+"}
+      answer: "« En béton. Avec un siège 14B, pour faire plaisir. » Elle sourit. « Je m'assiérai à côté. Le 14B, c'était le bois. »"
+
+  - id: pr.h5.decor.camille_tasses
+    roles: [president]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    lieu: domicile
+    when: "flag('histoire_h5') && !flag('h5_camille_accusee')"
+    tone: leger
+    once: true
+    text: "Camille t'attend dans la cuisine, deux tasses sur la table, une pleine, une vide. « J'ai bu la mienne. Tu rentres de plus en plus tard, et le café, lui, refroidit toujours à la même heure. »"
+    left:
+      label: "Je m'assois"
+      effects: {relation: {camille: 1}}
+      answer: "Tu bois le café froid sans rien dire. Elle te regarde boire comme on regarde quelqu'un signer : jusqu'à la dernière lettre."
+    right:
+      label: "Je monte me coucher"
+      effects: {relation: {camille: -1}}
+      answer: "Elle vide ta tasse dans l'évier, la rince, et la pose à côté de la sienne, l'anse du même côté. Il est minuit."
+
+  - id: pr.h5.decor.camille_marge
+    roles: [president]
+    arc: famille
+    tags: [famille, objet]
+    speaker: camille
+    lieu: domicile
+    when: "flag('histoire_h5') && season >= 1 && !flag('h5_camille_accusee')"
+    tone: leger
+    once: true
+    text: "Camille corrige un contrat dans la cuisine, au stylo rouge, et tapote deux fois la page avant de tourner. « Les gens signent n'importe où. En marge, surtout. Ils croient que ça compte moins. »"
+    left:
+      label: "Ça compte moins ?"
+      effects: {direction: "+"}
+      answer: "« Ça compte pareil. On le lit moins, c'est tout. » Elle tourne la page. La marge est pleine de petites croix rouges."
+    right:
+      label: "Tu travailles tard"
+      effects: {relation: {camille: 1}}
+      answer: "« Toi aussi. » Elle ne lève pas les yeux. Le stylo tape encore deux fois, sur la page suivante."
+
+  - id: pr.h5.decor.malbec_fauteuil
+    roles: [president]
+    arc: mercato
+    tags: [direction]
+    speaker: malbec
+    lieu: hotel
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Hubert Malbec, au bar de l'hôtel, fait tourner un verre vide. « Combien de présidents ai-je vus s'asseoir dans ce fauteuil ? Neuf. Combien sont encore présidents ? Un. Moi. »"
+    left:
+      label: "Et Vaubourg ?"
+      effects: {direction: "+"}
+      answer: "« Vaubourg n'est plus président. Il préside. Ce n'est pas pareil. » Il commande deux verres et ne paie que le sien."
+    right:
+      label: "Je prends le fauteuil"
+      effects: {direction: "-"}
+      answer: "Tu t'assois. Il te regarde t'asseoir avec la tendresse d'un croque-mort qui connaît déjà tes mesures."
+
+  - id: pr.h5.decor.ilyas_pendule
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: nassir
+    lieu: hotel
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Le Cheikh Ilyas regarde sa montre, puis la pendule du hall de l'hôtel, puis sa montre encore. « Votre pendule retarde de quatre minutes. Dans une ville, c'est beaucoup. Dans un club, c'est tout. »"
+    left:
+      label: "Je la fais régler"
+      effects: {direction: "+"}
+      answer: "Il sourit. « Ce n'est pas la pendule qu'il faut régler. » Il avance sa montre d'un cran, pour être en avance sur vous tous."
+    right:
+      label: "Elle a toujours retardé"
+      effects: {tribunes: "+"}
+      answer: "« Alors c'est votre heure. » Il règle sa montre sur la pendule, quatre minutes en arrière, et te salue à l'heure d'Aubérive."
+
+  - id: pr.h5.decor.amsel_horloge
+    roles: [president]
+    arc: instances
+    tags: [direction]
+    speaker: amsel
+    lieu: mairie
+    when: "flag('histoire_h5') && season >= 1"
+    tone: leger
+    once: true
+    text: "Judith Amsel traverse la place de la Mairie à huit heures moins deux. Elle s'arrête sous l'horloge, attend la minute, puis entre. « Les gens disent la vérité avant l'heure. Après, ils ont un avocat. »"
+    left:
+      label: "Et à l'heure pile ?"
+      effects: {direction: "-"}
+      answer: "« À l'heure pile, ils se taisent. » La grande aiguille tombe sur le douze. Elle entre au moment exact, comme si la porte l'attendait."
+    right:
+      label: "Bonne journée"
+      effects: {direction: "+"}
+      answer: "« Elle commence à huit heures. » Elle ne te souhaite rien en retour. Elle te regarde comme on regarde une date sur un agenda."
+
+  - id: pr.h5.decor.lea_recopie
+    roles: [president]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: cafe
+    when: "flag('histoire_h5') && season >= 1"
+    tone: leger
+    once: true
+    text: "Léa, à la terrasse du café de la Mairie, recopie à la main un registre photocopié, en tirant la langue. « Le fax, ça s'efface. Les photocopies aussi, au soleil. Le stylo bille, jamais. »"
+    left:
+      label: "Vous recopiez quoi ?"
+      effects: {direction: "-"}
+      answer: "« Des noms. Des dates. Un mardi. » Elle cache la page avec sa main, comme à l'école, et sourit enfin."
+    right:
+      label: "Je vous laisse"
+      effects: {direction: "+"}
+      answer: "Elle hoche la tête sans lever les yeux. En partant, tu l'entends compter à voix basse sur ses doigts : un, deux."
+
+  - id: pr.h5.decor.vaubourg_stylo
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: aulard
+    lieu: bureau
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Jean-Marie Vaubourg passe au club-house sans prévenir, pour « deux ou trois affaires ». Il monte l'escalier, s'arrête devant ta porte et tâte la poche de sa veste. « La serrure a changé ? »"
+    left:
+      label: "Elle a changé"
+      effects: {direction: "-"}
+      answer: "« Tant mieux. Une serrure, ça se change. Un numéro de téléphone, moins. » Il redescend sans ses affaires."
+    right:
+      label: "Je vous ouvre"
+      effects: {direction: "+"}
+      answer: "Il entre, regarde le téléphone beige sans y toucher, prend un stylo dans le pot à crayons et repart avec. C'était le sien."
+
+  - id: pr.h5.decor.vallin_craie
+    roles: [president]
+    arc: corps
+    tags: [tribunes, objet]
+    speaker: vallin
+    lieu: friche
+    when: "flag('histoire_h5') && season >= 1 && relation.vallin >= 0"
+    tone: leger
+    once: true
+    text: "La grande halle de la friche. Didier Vallin repasse à la craie les lignes d'un terrain tracé sur le béton. « Il faut les refaire chaque semaine. Sinon, plus personne ne sait où est le terrain. »"
+    left:
+      label: "Je t'aide"
+      effects: {tribunes: "+", relation: {vallin: 1}}
+      answer: "Tu fais la ligne de touche, lui la surface. À la fin, il dit son propre nom à voix haute, en entier, pour vérifier qu'il tient."
+    right:
+      label: "Elles tiennent bien"
+      effects: {direction: "+"}
+      answer: "« Elles tiennent parce que je repasse. » Il souffle sur la craie de ses doigts ; le nuage reste en l'air, dans la lumière."

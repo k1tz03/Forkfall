@@ -1,0 +1,102 @@
+# Les soirs du réservoir de « La Maquette » : quatre événements sombres
+# (`kind: evenement`, tag `sombre`, un `lieu:`), que le metteur en scène arme
+# selon l'état du monde. Les autres soirs du livre sont des ancres de nuit du
+# script (content/arcs/president/h5_script.yaml). Les bornes :
+#   · L'huissier du club (S0) : au créneau 14 au plus tôt, cinq après le feu ;
+#   · Le capot (S1) : au créneau 10 seulement, après la seconde maquette (4-5),
+#     entre la grève (7) et le salon (12) — la ville a eu le temps de lire ton
+#     nom dans la vitrine ; une carte calme le sépare du salon ;
+#   · Le siège et Six heures du matin (S2) : deux au plus, cinq créneaux d'écart
+#     (quota du moteur), et jamais après le créneau 13 — l'acte final commence à 15.
+# `armEvents` ne lit pas `postulats:` : chaque `when` lit le drapeau d'histoire.
+# Les cartes sont dans content/cards/president/h5_evenements.yaml.
+arcs:
+  - id: pr.h5.ev.huissier_club
+    title: "L'huissier du club"
+    kind: evenement
+    roles: [president]
+    postulats: [geant_dechu]
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h5') && season == 0 && slot >= 14 && gauges.caisse < 45"
+    chance: 0.30
+    cast: [josiane, vialat]
+    same_club: true
+    fallback: drop
+    traces:
+      h5_huissier_club: "{annee} : pastilles rouges au secrétariat : le photocopieur, la machine à laver des maillots, le bureau."
+    steps:
+      - id: secretariat
+        card: pr.h5.ev.huissier_club
+        next: []
+
+  - id: pr.h5.ev.capot
+    title: "Le capot"
+    kind: evenement
+    roles: [president]
+    postulats: [geant_dechu]
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h5') && season == 1 && slot >= 8 && slot <= 10 && (flag('h5_nom_laisse') || gauges.tribunes < 55)"
+    chance: 0.6
+    cast: [gege]
+    same_club: true
+    fallback: drop
+    traces:
+      h5_capot: "{annee} : VENDU au pochoir sur le capot de la berline de {nom}. La Nord jure que ce n'est pas elle."
+    steps:
+      - id: parking
+        card: pr.h5.ev.capot
+        next: []
+
+  - id: pr.h5.ev.siege
+    title: "Le siège"
+    kind: evenement
+    roles: [president]
+    postulats: [geant_dechu]
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h5') && season >= 2 && slot <= 13"
+    chance: 0.22
+    cast: [gege, josiane]
+    same_club: true
+    fallback: drop
+    traces:
+      h5_siege:        "{annee} : quarante sacs de couchage au club-house, sous le clou de la photo de 1974. « Jusqu'au vote. »"
+      h5_siege_dormi:  "{annee} : {nom} a dormi sur le comptoir de la buvette, avec le kop. Josiane n'a vu personne."
+    steps:
+      - id: nuit
+        card: pr.h5.ev.siege
+        next: []
+
+  - id: pr.h5.ev.six_heures
+    title: "Six heures du matin"
+    kind: evenement
+    roles: [president]
+    postulats: [geant_dechu]
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h5') && season >= 2 && slot <= 13"
+    chance: 0.24
+    cast: [amsel, camille, malbec]
+    same_club: true
+    fallback: drop
+    traces:
+      h5_perquisition:    "{annee} : six heures, le dépôt de {NOM} Bâtiment. Le contrat des Terrasses était daté du 12 juin."
+      h5_aveu:            "{annee} : {prenom} {nom} a ouvert ses douze cartons à la procureure. Elle n'en a ouvert qu'un, le bon."
+      h5_camille_appelee: "{annee} : six heures, une perquisition. Camille est arrivée à sept, coiffée. Elle tutoie la procureure."
+    steps:
+      - id: aube
+        card:
+          - { id: pr.h5.ev.six_heures_valise, if: "(flag('h5_valise_prise') || flag('vl_valise')) && !flag('h5_valise_avouee')" }
+          - { id: pr.h5.ev.six_heures_rien, if: "flag('h5_amsel_dossier')" }
+          - { id: pr.h5.ev.six_heures }
+        next: []

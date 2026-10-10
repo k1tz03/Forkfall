@@ -1,0 +1,187 @@
+# « Le deux juillet » — le prologue de La Maquette (postulat `geant_dechu`).
+# Six scènes servies avant la carte Objectif, dans l'ordre de l'arc
+# pr.h5.prologue (content/arcs/president/h5_script.yaml). Hors créneau, sans
+# tirage : ni `react`, ni `schedule`, ni `next`, et une jauge n'y bouge que d'un
+# cran moyen au plus.
+#
+# Ce que les six scènes posent, sans jamais l'expliquer : où l'on est (le
+# couloir aux deux titres, et l'Inspecteur qui refuse la chaise), ce qui va
+# mourir (la maquette en vitrine, le stade remplacé par de la mousse), d'où
+# viennent les ordres (le téléphone beige qui n'est pas au standard), qui
+# attend quoi (le vestiaire et sa paie, le kop et sa plaque de fonte), et la
+# graine la plus longue du livre : la phrase de Camille dans la cuisine, que
+# la bande du salon rendra une saison plus tard. Trois scènes ont une variante
+# lue sur le fil rouge de la saison (la Commission, le kop, la vente).
+# La cuisine est aussi celle de la maison de la rue Haute : la ville te la
+# donne là (`cadeau_maison_rue_haute`, content/ville/missions_h5.yaml), avec la
+# berline et le costume de Brunel. C'est ce que la caution mettra en jeu.
+cards:
+  # ------------------------------------------------------------ 1. Deux titres
+  - id: pr.h5.pro1_titres
+    roles: [president]
+    arc: president
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Sous verre au club-house, 1962 et 1966 ; au greffe, le dépôt de bilan. Madame Vialat refuse la chaise. « Un solde négatif, je note. Le second, j'écris. Vous vendez, {toi}, ou vous avez un plan ? »"
+    left:
+      label: "Je vends tout de suite"
+      effects: {caisse: "++", tribunes: "--", set: [h5_vente_annoncee]}
+      answer: "Elle écrit « vend » dans la marge, au crayon. Dans la cour, un stadier a entendu ; le soir, la Nord le sait."
+    right:
+      label: "J'ai un plan"
+      effects: {direction: "-", tribunes: "+", set: [h5_plan_annonce]}
+      answer: "Elle attend. Tu n'as pas de papier. Elle écrit « plan » dans la marge, et elle le souligne deux fois."
+
+  # Variante du fil « commission » : la coupure de Vaucastel dépasse du sac.
+  - id: pr.h5.pro1_titres_commission
+    roles: [president]
+    arc: president
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Club-house, deux titres sous verre. Madame Vialat refuse la chaise ; une coupure jaunie dépasse de son sac. « J'ai déjà écrit une lettre, une fois. Vous vendez, {toi}, ou vous avez un plan ? »"
+    left:
+      label: "Je vends tout de suite"
+      effects: {caisse: "++", tribunes: "--", set: [h5_vente_annoncee]}
+      answer: "Elle écrit « vend » dans la marge. Elle repousse la coupure au fond du sac, du bout de son crayon, sans la regarder."
+    right:
+      label: "J'ai un plan"
+      effects: {direction: "-", tribunes: "+", set: [h5_plan_annonce]}
+      answer: "« Le dernier qui m'a dit ça avait un plan aussi. » Elle tapote le sac, à l'endroit de la coupure, et s'en va."
+
+  # ------------------------------------------------------------ 2. La vitrine
+  - id: pr.h5.pro2_vitrine
+    roles: [president]
+    arc: contrat
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "Quai de la Rive, l'agence Tessandier. En vitrine : LES TERRASSES DE LA RIVE, SECONDE TRANCHE. À la place du stade, un parc en mousse et un lac en résine. Madame Tessandier ouvre : « Vous entrez ? »"
+    left:
+      label: "J'entre"
+      effects: {direction: "+", set: [h5_maquette_vue, h5_maquette_entree]}
+      answer: "Elle allume la vitrine pour toi. Le petit lac s'éclaire par en dessous. « On ne vend pas encore. On montre. »"
+    right:
+      label: "Je passe mon chemin"
+      effects: {tribunes: "+", set: [h5_maquette_vue]}
+      answer: "Dans le reflet de la vitre, la tribune Est, la vraie, derrière toi. Sur la maquette, à sa place, trois arbres en lichen."
+
+  # Variante du fil « vente » : la lettre du 12 juin, dans ce fauteuil-là.
+  - id: pr.h5.pro2_vitrine_vente
+    roles: [president]
+    arc: contrat
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "La vitrine de l'agence : un parc en mousse verte là où est le stade. Madame Tessandier tient la porte. « Le 12 juin, vous avez signé dans ce fauteuil-là. Vous ne l'aviez pas dit au club ? »"
+    left:
+      label: "J'entre"
+      effects: {direction: "+", set: [h5_maquette_vue, h5_maquette_entree]}
+      answer: "Le fauteuil est tiède, comme si on venait de s'y lever. Sur la maquette, le lac en résine reflète le plafond."
+    right:
+      label: "Je n'ai rien signé"
+      effects: {tribunes: "+", direction: "-", set: [h5_maquette_vue]}
+      answer: "« Bien sûr. » Elle referme la porte doucement, pour ne pas faire tinter la clochette. Elle l'a déjà fait taire, d'ailleurs."
+
+  # ------------------------------------------------------------ 3. L'escalier
+  - id: pr.h5.pro3_escalier
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Escalier du club-house : un clou, où pendait la photo de 1974 jusqu'en 1991. Madame Josiane tend une clé. « Le téléphone beige, là-haut, n'est pas au standard. Je n'ai jamais su qui l'appelait. »"
+    left:
+      label: "Montez-moi le courrier"
+      effects: {direction: "+"}
+      answer: "Elle monte le courrier à dix heures, trié par couleur d'enveloppe. Les rouges sont au-dessus ; il y en a neuf."
+    right:
+      label: "Qui avait la clé ?"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "« Monsieur Vaubourg. Il ne l'a pas rendue ; on a fait changer la serrure. Le téléphone, lui, sonne toujours. »"
+
+  # ------------------------------------------------------------ 4. Le vestiaire
+  - id: pr.h5.pro4_vestiaire
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: vukic
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire, la reprise. Vukić tient son cahier fermé sur les genoux ; Dembo lace ses chaussures sans lever la tête. « Ils veulent savoir s'ils seront payés le 5, {toi}. Moi aussi, j'ai un loyer. »"
+    left:
+      label: "Le 5, sans faute"
+      effects: {vestiaire: "++", caisse: "-", set: [h5_paie_promise]}
+      answer: "Dembo finit son nœud, un double. Vukić ouvre le cahier et écrit une date ; il ne dit pas laquelle."
+    right:
+      label: "Je ne promets rien"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Personne ne bouge. Dembo délace ses chaussures, les range dans son sac, et reste assis là, en chaussettes."
+
+  # ------------------------------------------------------------ 5. La grille
+  - id: pr.h5.pro5_grille
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Grille de l'Est. Gégé passe un chiffon sur une plaque de fonte : TERRAIN DONNÉ AUX ENFANTS DU QUARTIER · 1931. « Personne ne la lit. Moi, je la cire. Tu sais qui l'a posée, {toi} ? »"
+    left:
+      label: "Dis-moi"
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_plaque_lue]}
+      answer: "« Le maire de l'époque. Son nom est parti avec la rouille. » Il recire le coin, celui où il n'y a plus rien."
+    right:
+      label: "J'ai rendez-vous"
+      effects: {tribunes: "-"}
+      answer: "Il replie son chiffon. Au coin du quai, tu te retournes : il cire encore, du même geste, comme on flatte un chien."
+
+  # Variante du fil « kop » : l'écharpe nouée, et le délai voté au virage.
+  - id: pr.h5.pro5_grille_kop
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras, objet]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Grille de l'Est. Gégé noue une écharpe bordeaux sous une plaque de fonte : TERRAIN DONNÉ AUX ENFANTS DU QUARTIER · 1931. « La Nord a voté : on te laisse un an. Tu sais qui a posé ça ? »"
+    left:
+      label: "Dis-moi"
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_plaque_lue]}
+      answer: "« Le maire de 1931. Le virage l'a oublié, la fonte non. » Il serre le nœud de l'écharpe d'un coup sec, deux fois."
+    right:
+      label: "Un an, c'est court"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« C'est ce qu'on a voté, pas ce qu'on pense. » Il laisse l'écharpe nouée et rentre par la grille, sans se retourner."
+
+  # ------------------------------------------------------------ 6. La cuisine
+  # La graine longue : la phrase revient au bout de la bande du salon (S1, 12).
+  - id: pr.h5.pro6_cuisine
+    roles: [president]
+    arc: famille
+    tags: [famille, direction]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Cuisine, minuit. Camille glisse sous ta main trois feuillets agrafés et tapote deux fois la page avec son stylo. « Le tribunal veut ta signature demain matin. Signe en bas, pas en marge. »"
+    left:
+      label: "Je signe"
+      effects: {direction: "+", set: [h5_signe_en_bas], var: {cadeau_maison_rue_haute: "+1", cadeau_berline: "+1", cadeau_costume_sur_mesure: "+1"}}
+      answer: "Elle reprend la liasse avant que l'encre sèche et souffle dessus, longuement. Tu n'as lu que ton nom."
+    right:
+      label: "Je lis d'abord"
+      effects: {direction: "-", relation: {camille: -1}, set: [h5_lu_d_abord], var: {cadeau_maison_rue_haute: "+1", cadeau_berline: "+1", cadeau_costume_sur_mesure: "+1"}}
+      answer: "Trois pages : ton nom, le club, une date. Elle a déjà daté. Elle attend, la main à plat sur la toile cirée."

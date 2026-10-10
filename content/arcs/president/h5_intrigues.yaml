@@ -1,0 +1,569 @@
+# Le réservoir de « La Maquette » (postulat `geant_dechu`) : quinze intrigues,
+# tirées par le `programme` du postulat (content/postulats.yaml) ou ouvertes par
+# une ancre du script (`schedule`). Les cartes sont dans
+# content/cards/president/h5_intrigues_s0.yaml, _s1.yaml et _s2.yaml.
+#
+# Saison 1 (S0) — six intrigues, dont deux que le script ouvre lui-même :
+#   · La 14B (Paulette) : ouverte par le café (A1) ; la place 14B avant le feu,
+#     la grille après, et le buffet la saison suivante (l'acte de 1931).
+#   · Le Conseil (les ordres du mardi) : ouvert par le premier mardi (A2) ; le
+#     gardien vendu ou gardé, la plaque de fonte, puis les cendres.
+#   · Le mot de janvier (Gégé, signature) ; Les Terrasses sur le maillot
+#     (Tessandier) ; Le bureau d'après (Bréhaut et le cahier de Vukić) ; Le
+#     délai de la Ligue (Vaubourg et ses comptes de 1998).
+# Saison 2 (S1) — La SCI (le fax de La Plume, Léa ; ouverte par la vase),
+#   Le témoin du feu (Didier Vallin ; ouvert par la grille), La valise de
+#   Valentienne (Malbec), Le fonds (Ilyas), La coupure de 1992 (Vialat).
+# Saison 3 (S2) — les quatre tardives : Lambert (la voix du quartier ; ouverte
+#   par Camille, C1), Le dossier (la procureure), La vue (l'aveu de Madame
+#   Tessandier), Le cadastre (la sœur de Josiane, et l'écriture de 1976).
+#
+# Les preuves que la fin lit (au conseil, au second solde, au dernier match) :
+# l'acte (h5_acte_rendu, h5_acte_paulette, h5_copie_cadastre, vl_cadastre), la
+# voix (h5_cassette + h5_josie), le fax (h5_fax_plume), le témoin (h5_temoin,
+# vl_temoin_feu) ; et ce qui les salit : la valise (h5_valise_prise, vl_valise).
+arcs:
+  # ================================================================ S0
+  - id: pr.h5.quatorze_b
+    title: "La 14B"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: tribune
+    carrier: paulette
+    cast: [paulette, gege, josiane, vallin]
+    issues: [ecoutee, pressee, acte, vu]
+    # `ecoutee` et `pressee` sont les issues de la tribune, que le feu dépasse
+    # presque toujours (la grille puis le buffet suivent) : elles ne closent
+    # l'intrigue que si la carrière s'arrête avant l'hiver. Déclarées rares.
+    issues_rares: [ecoutee, pressee]
+    traces:
+      h5_14b_ecoutee:  "{annee} : place 14B, tribune Est, Paulette a raconté 1931 jusqu'à la mi-temps, café dans le bouchon."
+      h5_fonte:        "{annee} : dans les cendres de l'Est, un bout de fonte : ENFANTS DU. Le reste de la plaque a fondu."
+      h5_acte_rendu:   "{annee} : Paulette a sorti l'acte de 1931 de son buffet. Maître Guénot en a fait trois copies."
+      h5_acte_paulette: "{annee} : l'acte de 1931 est resté chez Paulette, sous la nappe des dimanches. « Je l'apporterai. »"
+      h5_acte_vu:      "{annee} : Paulette a montré un papier plié en huit, puis l'a remis dans son buffet, et tourné la clé."
+    hint: "Une couverture écossaise, un thermos, et un terrain donné en 1931."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: tribune
+        card: pr.h5.14b.tribune
+        next: [ { step: grille, in: [3, 12] } ]
+      - id: grille
+        card:
+          - { id: pr.h5.14b.grille_plaque, if: "flag('h5_plaque_deposee')" }
+          - { id: pr.h5.14b.grille }
+        next: [ { step: buffet, at_season: 1, at: [2, 14] } ]
+      - id: buffet
+        card:
+          - { id: pr.h5.14b.buffet, if: "relation.paulette >= 1 || flag('h5_14b_ecoutee')" }
+          - { id: pr.h5.14b.buffet_ferme }
+        next: []
+
+  - id: pr.h5.ordres
+    title: "Le Conseil"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: president
+    carrier: dorian
+    cast: [dorian, brehaut, vukic, josiane, gege]
+    issues: [obei, refuse]
+    traces:
+      h5_oudart_vendu:     "{annee} : Oudart, le seul gardien sous contrat, vendu un jeudi à Valentienne. Le Conseil l'avait demandé mardi."
+      h5_oudart_garde:     "{annee} : {nom} a gardé Oudart. Bréhaut a déchiré le fax de Valentienne en quatre, lentement."
+      h5_plaque_deposee:   "{annee} : la plaque de la grille Est a été dévissée un matin d'octobre, sur ordre. Josiane l'a montée au grenier."
+      h5_plaque_restee:    "{annee} : la plaque de fonte est restée à la grille Est. Le samedi, elle était couverte d'écharpes nouées."
+      h5_plainte_retiree:  "{annee} : la plainte pour l'incendie de l'Est a été retirée. Le compte du club a été débloqué le lendemain."
+      h5_cle_laissee:      "{annee} : des piquets orange alignés au cordeau dans les cendres de l'Est. Gégé les a arrachés le mardi."
+      h5_serrure_changee:  "{annee} : serrure neuve à la grille de l'Est, deux clés. Le lendemain, une troisième était sur le bureau."
+    hint: "Mardi, dix-huit heures : une voix d'homme qui ne dit pas son nom."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: jeudi
+        card: pr.h5.ordres.jeudi
+        next: [ { step: plaque, in: [2, 4] } ]
+      - id: plaque
+        card:
+          - { id: pr.h5.ordres.plaque_obei, if: "flag('h5_oudart_vendu')" }
+          - { id: pr.h5.ordres.plaque }
+        next: [ { step: cendres, in: [3, 8] } ]
+      - id: cendres
+        card:
+          - { id: pr.h5.ordres.cendres_plainte, if: "flag('h5_plainte')" }
+          - { id: pr.h5.ordres.cendres }
+        next: []
+
+  - id: pr.h5.mot_janvier
+    title: "Le mot de janvier"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: mercato
+    carrier: gege
+    cast: [gege, malbec, vukic, dembo]
+    # La bâche n'est pas une issue : c'est l'épilogue commun des trois (le kop
+    # peint, qu'on ait tenu, rompu ou rien promis). L'issue reste celle du mot.
+    issues: [tenu, rompu, refuse]
+    traces:
+      h5_mot_donne:  "{annee} : PERSONNE NE PART, à la craie sur la porte du local du kop, quarante centimètres, date en dessous."
+      h5_mot_refuse: "{annee} : « Je ne promets rien », a dit {nom} au local. La Nord a chanté un quart d'heure de moins."
+      h5_mot_tenu:   "{annee} : Malbec voulait le petit Tavernier en janvier. {nom} a dit non ; la craie du local est restée."
+      h5_mot_rompu:  "{annee} : le petit Tavernier vendu en janvier. Gégé a effacé PERSONNE à l'éponge et laissé la date."
+      h5_bache:      "{annee} : vingt mètres de drap, peinture bordeaux : LA RIVE AUX ENFANTS DU QUARTIER. Le kop a signé dessous."
+    hint: "Une boîte à chaussures pleine d'abonnements payés, et une promesse à faire à la craie."
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: local
+        card: pr.h5.kop.local
+        next:
+          - { step: janvier, if: "flag('h5_mot_donne')", in: [3, 6] }
+          - { step: bache, at_season: 1, at: [3, 11] }
+      - id: janvier
+        card: pr.h5.kop.janvier
+        next: [ { step: bache, at_season: 1, at: [3, 11] } ]
+      - id: bache
+        card: pr.h5.kop.bache
+        next: []
+
+  - id: pr.h5.maillot
+    title: "Les Terrasses sur le maillot"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: contrat
+    carrier: tessandier
+    cast: [tessandier, dembo, gege, josiane]
+    issues: [signe, refuse, rompu]
+    traces:
+      h5_maillot_terrasses: "{annee} : LES TERRASSES DE LA RIVE sur la poitrine du Racing, six cent mille francs la saison."
+      h5_maillot_refuse:    "{annee} : {nom} a refusé le sponsor des Terrasses. Le maillot est resté plié sur le bureau, poitrine en l'air."
+      h5_maillot_blanc:     "{annee} : le Racing a joué en blanc, sans rien sur la poitrine. Josiane a dit au téléphone que tu n'étais pas joignable."
+      h5_clause_rompue:     "{annee} : {nom} a rompu le contrat des Terrasses à l'article 4. La pénalité a coûté une saison de maillots."
+      h5_clause_acceptee:   "{annee} : article 4, l'accompagnement du projet urbain. {nom} a signé l'accompagnement."
+    hint: "Un maillot bordeaux, des lettres grises, et une ligne au contrat que personne ne lit."
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: offre
+        card: pr.h5.maillot.offre
+        next: [ { step: suite, in: [2, 5] } ]
+      - id: suite
+        card:
+          - { id: pr.h5.maillot.vestiaire, if: "flag('h5_maillot_terrasses')" }
+          - { id: pr.h5.maillot.virage }
+        next: [ { step: clause, if: "flag('h5_maillot_terrasses')", at_season: 1, at: [2, 14] } ]
+      - id: clause
+        card:
+          - { id: pr.h5.maillot.clause_blanc, if: "flag('h5_maillot_blanc')" }
+          - { id: pr.h5.maillot.clause }
+        next: []
+
+  - id: pr.h5.bureau_dapres
+    title: "Le bureau d'après"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: brehaut
+    cast: [brehaut, vukic, josiane, dorian]
+    issues: [garde, renvoye]
+    traces:
+      h5_cahier_lu:       "{annee} : le cahier de Vukić, page des mardis : « 18 h 05, Titi au téléphone de la buvette ». Six fois."
+      h5_brehaut_renvoye: "{annee} : Titi Bréhaut a vidé son tiroir dans un carton de maillots. On lui avait promis le club d'après."
+      h5_brehaut_garde:   "{annee} : Titi Bréhaut est resté, et il a raconté : un homme à la banque, une femme à l'agence, une troisième voix."
+      h5_larrieu:         "{annee} : une carte de visite : Maître Larrieu, notaire à Portclair. « C'est là qu'ils ont signé, un mardi. »"
+    hint: "Six mardis, dix-huit heures cinq, le téléphone de la buvette."
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: cahier
+        card: pr.h5.dapres.cahier
+        next: [ { step: titi, in: [2, 5] } ]
+      - id: titi
+        card:
+          - { id: pr.h5.dapres.titi_cahier, if: "flag('h5_cahier_lu')" }
+          - { id: pr.h5.dapres.titi }
+        next: [ { step: carte, at_season: 1, at: [1, 14] } ]
+      - id: carte
+        card:
+          - { id: pr.h5.dapres.carte, if: "flag('h5_brehaut_garde')" }
+          - { id: pr.h5.dapres.carton }
+        next: []
+
+  - id: pr.h5.vaubourg
+    title: "Le délai de la Ligue"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: direction
+    carrier: aulard
+    cast: [aulard, josiane, vialat, dorian]
+    issues: [enterre, ouvert]
+    traces:
+      h5_comptes_enterres: "{annee} : six mois de délai de la Ligue, signés Vaubourg. Ses comptes de 1998 sont restés à la cave."
+      h5_comptes_ouverts:  "{annee} : {nom} est descendu{pg, select, f{e} other{}} à la cave du club-house chercher les comptes de 1998."
+      h5_pret_1998:        "{annee} : le prêt de 1998, refusé le 30 juin à 17 h 55, signé Dorian. Le dépôt de bilan, le 1er juillet."
+    hint: "Un cognac au bar de l'hôtel, et des comptes de 1998 qui dorment à la cave."
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: ligue
+        card: pr.h5.vaubourg.ligue
+        next:
+          - { step: cave, if: "flag('h5_comptes_ouverts')", in: [2, 5] }
+          - { step: fax, in: [3, 7] }
+      - id: cave
+        card: pr.h5.vaubourg.cave
+        next: []
+      - id: fax
+        card: pr.h5.vaubourg.fax
+        next: []
+
+  # ================================================================ S1
+  - id: pr.h5.sci
+    title: "La SCI Rive Gauche"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: lea
+    cast: [lea, dorian, tessandier, camille, brehaut]
+    issues: [deux, trois]
+    traces:
+      h5_fax_plume:   "{annee} : un fax signé d'une plume : la dette du Racing rachetée vingt centimes le franc par la SCI Rive Gauche."
+      h5_sci_deux:    "{annee} : Léa a deux noms pour la SCI Rive Gauche : Bastide, Tessandier. Il en manque un."
+      h5_sci_publiee: "{annee} : L'Écho a titré sur deux noms et un point d'interrogation. L'agence Tessandier a baissé son store."
+      h5_sci_trois:   "{annee} : troisième associé de la SCI Rive Gauche, un tampon : CABINET {NOM}, AVOCATS."
+    hint: "Un fax sans en-tête, signé d'une plume dessinée, qui sort la nuit."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: fax
+        card: pr.h5.sci.fax
+        next: [ { step: lea, in: [2, 12] } ]
+      - id: lea
+        card:
+          - { id: pr.h5.sci.lea_larrieu, if: "flag('h5_larrieu')" }
+          - { id: pr.h5.sci.lea }
+        next: [ { step: tampon, at_season: 1, at: [2, 6] } ]
+      - id: tampon
+        card: pr.h5.sci.tampon
+        next: []
+
+  - id: pr.h5.vallin
+    title: "Le témoin du feu"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: corps
+    carrier: vallin
+    cast: [vallin, paulette, amsel, gege]
+    issues: [temoin, sans]
+    traces:
+      h5_vallin_loge:   "{annee} : chambre 9, hôtel de la Rive, payée jusqu'en mars. Didier Vallin a dit son nom en entier, deux fois."
+      h5_temoin:        "{annee} : la nuit de l'Est, un ciré jaune, un bidon rouge, la camionnette de la résidence. Vallin l'a vu."
+      h5_temoin_depose: "{annee} : Judith Amsel a écrit le nom de Didier Vallin en entier, lettre par lettre, au bas de sa déposition."
+      h5_vallin_dehors: "{annee} : Didier Vallin a passé l'hiver dans le wagon de la friche. Personne ne lui a rien demandé."
+    hint: "Un feu de palettes, un garçon de trente ans, et ce qu'il a vu la nuit de l'Est."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: lit
+        card: pr.h5.vallin.lit
+        next:
+          - { step: cire, if: "flag('h5_vallin_loge')", in: [2, 11] }
+          - { step: hiver, if: "flag('h5_vallin_dehors')", in: [3, 12] }
+      - id: cire
+        card: pr.h5.vallin.cire
+        next: [ { step: deposition, if: "flag('h5_temoin')", at_season: 1, at: [2, 9] } ]
+      - id: hiver
+        card: pr.h5.vallin.hiver
+        next: [ { step: deposition, if: "flag('h5_temoin')", at_season: 1, at: [2, 9] } ]
+      - id: deposition
+        card: pr.h5.vallin.deposition
+        next: []
+
+  - id: pr.h5.valise
+    title: "La valise de Valentienne"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    # `agent` et non `mercato` : la valise est un transfert qui passe sous la
+    # table, et le thème `mercato` est tenu par Le mot de janvier, qui court
+    # souvent jusqu'à la bâche de S1 et fermait la porte à Malbec.
+    theme: agent
+    carrier: malbec
+    cast: [malbec, dembo, amsel, vukic]
+    issues: [prise, refusee]
+    traces:
+      h5_valise_prise:   "{annee} : bar de l'hôtel, trois millions sous la table pour Dembo, et une enveloppe « pour votre peine »."
+      h5_valise_refusee: "{annee} : {nom} a refusé la valise de Malbec. Malbec l'a ramenée vers lui, du talon, poliment."
+      h5_valise_avouee:  "{annee} : {prenom} {nom} a dit à la procureure d'où venaient les billets de Valentienne."
+      h5_valise_niee:    "{annee} : « Je n'en sais rien. » Le vendredi, deux imperméables ont bu un café à la buvette, longtemps."
+    hint: "Une valise poussée du pied sous une table de bar."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: hotel
+        card: pr.h5.valise.hotel
+        next: [ { step: dembo, in: [2, 11] } ]
+      - id: dembo
+        card:
+          - { id: pr.h5.valise.dembo_vendu, if: "flag('h5_valise_prise')" }
+          - { id: pr.h5.valise.dembo }
+        next: [ { step: billets, if: "flag('h5_valise_prise')", at_season: 1, at: [2, 8] } ]
+      - id: billets
+        card: pr.h5.valise.billets
+        next: []
+
+  - id: pr.h5.fonds
+    title: "Le fonds"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: argent
+    carrier: nassir
+    cast: [nassir, dorian, vialat, aulard]
+    issues: [signe, refuse]
+    traces:
+      h5_fonds_ilyas:  "{annee} : trente pour cent du Racing pour vingt millions. Un siège au conseil pour un homme qu'on ne voit pas."
+      h5_fonds_refuse: "{annee} : {nom} a refusé vingt millions propres. Le Cheikh Ilyas a payé les deux cafés."
+      h5_naming:       "{annee} : page onze du contrat du fonds : le stade de la Rive s'appellera Almadis Rive."
+    hint: "Une tasse minuscule, vingt millions, et un siège pour quelqu'un qu'on ne verra jamais."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: offre
+        card: pr.h5.fonds.offre
+        next:
+          - { step: naming, if: "flag('h5_fonds_ilyas')", in: [3, 12] }
+          - { step: banque, in: [3, 12] }
+      - id: naming
+        card: pr.h5.fonds.naming
+        next: []
+      - id: banque
+        card: pr.h5.fonds.banque
+        next: []
+
+  - id: pr.h5.vialat
+    title: "La coupure de 1992"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: vialat
+    cast: [vialat, josiane, amsel, nassir]
+    issues: [compte, refuse]
+    traces:
+      h5_vaucastel:    "{annee} : Madame Vialat a sorti de son sac une coupure jaunie : VAUCASTEL AU GREFFE, 1992."
+      h5_vialat_sci:   "{annee} : ligne du bilan soulignée par la Commission : un créancier qui possède la dette et un projet sur le terrain."
+      h5_vialat_attend: "{annee} : « Si vous avez autre chose que des chiffres, apportez-le en mai. » Madame Vialat, dans un couloir."
+    hint: "Une coupure jaunie au fond d'un sac, et une ligne du bilan que personne n'a lue."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: coupure
+        card: pr.h5.vialat.coupure
+        next: [ { step: ligne, in: [3, 12] } ]
+      - id: ligne
+        card: pr.h5.vialat.ligne
+        next: [ { step: couloir, at_season: 1, at: [3, 11] } ]
+      - id: couloir
+        card: pr.h5.vialat.couloir
+        next: []
+
+  # ================================================================ S2
+  - id: pr.h5.lambert
+    title: "La voix du quartier"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: tribune
+    carrier: gege
+    cast: [gege, paulette, lea]
+    issues: [vu, perdu]
+    traces:
+      h5_lambert_vu:    "{annee} : Lambert, conseiller du quartier de la Rive : « Si vous ne dites rien là-bas, je vote avec le maire. »"
+      h5_lambert_libre: "{annee} : « Votez comme vous voulez », a dit {nom} à Lambert. Il a resservi le café sans demander."
+    hint: "Un conseiller qui était au virage en 1974, à la gauche de Gégé."
+    start: [1, 4]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: buvette
+        card: pr.h5.lambert.buvette
+        next: [ { step: cuisine, in: [1, 6] } ]
+      - id: cuisine
+        card: pr.h5.lambert.cuisine
+        next: [ { step: permanence, in: [2, 7] } ]
+      - id: permanence
+        card: pr.h5.lambert.permanence
+        next: []
+
+  - id: pr.h5.dossier
+    title: "Le dossier de la procureure"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: instances
+    carrier: amsel
+    cast: [amsel, josiane, dorian, vallin, lea]
+    issues: [temoin, dossier]
+    traces:
+      h5_amsel_temoin:  "{annee} : {nom} a posé sur le bureau de la procureure tout ce qu'il avait. Une chemise par pièce."
+      h5_amsel_dossier: "{annee} : « Je n'ai rien », a dit {nom} à la procureure. Elle a noté la réponse, l'heure, et un point."
+      h5_josie_juge:    "{annee} : au Palais, Josiane a écouté la cassette. Elle a dit « Josie » avant la fin de la première phrase."
+    hint: "Une maquette photographiée, et un dossier mince qui n'attend que vous."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: convocation
+        card: pr.h5.dossier.convocation
+        next: [ { step: voix, if: "flag('h5_amsel_temoin')", in: [2, 7] } ]
+      - id: voix
+        card:
+          - { id: pr.h5.dossier.voix_cassette, if: "flag('h5_cassette')" }
+          - { id: pr.h5.dossier.voix }
+        next: [ { step: gardien, in: [2, 7] } ]
+      - id: gardien
+        card: pr.h5.dossier.gardien
+        next: []
+
+  - id: pr.h5.vue
+    title: "La vue"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: absurde
+    carrier: tessandier
+    cast: [tessandier, amsel, camille]
+    issues: [aveu, silence]
+    # `aveu` demande le témoin du feu déposé ET le choix de pousser Madame
+    # Tessandier vers la procureure : c'est la porte étroite du livre, pas une
+    # issue qu'on atteint une fois sur dix. Déclarée rare.
+    issues_rares: [aveu]
+    traces:
+      h5_tessandier_aveu:    "{annee} : « J'ai dit un soir, devant le gardien, que la vue serait plus belle sans. » Madame Tessandier."
+      h5_tessandier_silence: "{annee} : Madame Tessandier a éteint sa vitrine. Il est resté le reflet de {nom}, et derrière, le stade."
+    hint: "Onze appartements vendus sur quarante, et une vue que les acheteurs ne veulent pas."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: pinceau
+        card: pr.h5.vue.pinceau
+        next: [ { step: gardien, in: [3, 8] } ]
+      - id: gardien
+        card:
+          - { id: pr.h5.vue.gardien_temoin, if: "flag('h5_temoin') || flag('vl_temoin_feu')" }
+          - { id: pr.h5.vue.gardien }
+        next: [ { step: vitrine, in: [2, 7] } ]
+      - id: vitrine
+        card:
+          - { id: pr.h5.vue.vitrine_noire, if: "flag('h5_tessandier_silence')" }
+          - { id: pr.h5.vue.vitrine }
+        next: []
+
+  - id: pr.h5.cadastre
+    title: "Le cadastre"
+    kind: serie
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: famille
+    carrier: josiane
+    cast: [josiane, paulette, amsel]
+    issues: [copie, rien]
+    traces:
+      h5_mireille:       "{annee} : Mireille, sœur de Josiane, aux archives depuis 1971 : la copie de 1931 est rangée sous un autre nom."
+      h5_copie_cadastre: "{annee} : la copie de l'acte de 1931, retrouvée à la lettre M : Marquès, Honoré, donation."
+      h5_bastide_1976:   "{annee} : en marge de la copie de 1931, au crayon, 1976, « à classer ailleurs ». L'écriture d'André Bastide."
+    hint: "Une sœur aux archives de la mairie depuis 1971, et un trousseau."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: soeur
+        card: pr.h5.cadastre.soeur
+        next: [ { step: archives, if: "flag('h5_mireille')", in: [2, 6] } ]
+      - id: archives
+        card: pr.h5.cadastre.archives
+        next: [ { step: marge, in: [2, 6] } ]
+      - id: marge
+        card: pr.h5.cadastre.marge
+        next: []
