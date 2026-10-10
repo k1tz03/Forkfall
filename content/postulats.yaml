@@ -639,20 +639,127 @@ postulats:
   # pitch, prologue, opening_arc, questions, programme, objectifs,
   # alarm_overrides) et passe `chantier: false` quand l'histoire est livrée.
   # L'ordre est celui du livre (l'ordre du temps) ; ne jamais réordonner.
+  # Histoire 5 — « La Maquette » (le complot), président, 1999-2002. Le Racing
+  # au greffe, une maquette en vitrine où le stade rétrécit, une voix sans nom
+  # le mardi à dix-huit heures. Arcs : content/arcs/president/h5_*.yaml ;
+  # cartes : content/cards/president/h5_*.yaml ; fins : content/endings/h5.yaml ;
+  # set-pieces, manchettes, ville : content/{setpieces,unes,ville}/*h5*.yaml.
   - id: geant_dechu
     index: 4
     role: president
     title: "La Maquette"
+    question: "Qui décidera de la Rive : la Commission qui compte, le kop qui l'occupe, ou celui qui vend ?"
     division: 2
     year: 1999
+    age: 54
     ville: Aubérive
     club: Racing Aubérive
-    gauges: { vestiaire: 45, tribunes: 90, direction: 40, caisse: 10 }
+    # La bible donne 45 / 90 / 50 / 10 : un club que la ville adore et qui n'a
+    # plus un franc. À 90 et 10, deux alarmes tombaient dès les premières cartes
+    # et la carrière pouvait finir au prologue (pr_mairie à 100 de tribunes,
+    # pr_commission à 0 de trésorerie). Le Racing part toujours haut dans le
+    # cœur de la ville et bas dans ses comptes, mais à deux crans des bords :
+    # les alarmes viennent quand la saison les mérite, pas à la première carte.
+    gauges: { vestiaire: 45, tribunes: 62, direction: 50, caisse: 26 }
     force: 46
     objective: maintien
-    flags: [histoire_h5]
-    pitch: ""
-    chantier: true
+    # Camille est avocate dans ce livre (le métier est forcé, pas tiré) : son
+    # cabinet porte ton nom, c'est tout le livre.
+    flags: [histoire_h5, camille_avocate]
+    patron: aulard
+    cast:
+      tessandier: { fonction: tentatrice,  target: 1.2 }
+      dorian:     { fonction: voix,        target: 0.8 }
+      camille:    { fonction: jauge5,      target: 0.8 }
+      vialat:     { fonction: horloge,     target: 1.0 }
+      gege:       { fonction: creancier,   target: 1.2 }
+      paulette:   { fonction: memoire,     target: 0.8 }
+      josiane:    { fonction: choeur,      target: 1.2 }
+      vukic:      { fonction: messager,    target: 0.6 }
+      brehaut:    { fonction: traitre,     target: 0.4 }
+      dembo:      { fonction: coeur,       target: 0.6 }
+      malbec:     { fonction: tentateur,   target: 0.4 }
+      nassir:     { fonction: vautour,     target: 0.3 }
+      amsel:      { fonction: instance,    target: 0.6 }
+      lea:        { fonction: chroniqueur, target: 0.4 }
+      aulard:     { fonction: patron,      target: 0.4 }
+      vallin:     { fonction: temoin,      target: 0.4 }
+    pitch: "Deux titres au mur, un dépôt de bilan au greffe, et toi. Dans la vitrine de l'agence Tessandier, le stade rétrécit chaque mois ; chaque mardi à dix-huit heures, une voix sans nom : « Ici le Conseil. »"
+    chantier: false
+    opening_arc: pr.h5.script
+    prologue: pr.h5.prologue
+    questions:
+      - { id: commission, poids: 1.0 }
+      - { id: kop,        poids: 1.0 }
+      - { id: vente,      poids: 1.0 }
+    programme:
+      # S0 : le script ouvre lui-même La 14B (au café) et Le Conseil (au premier
+      # mardi). Le réservoir n'en tire qu'une de plus : la saison porte six
+      # ancres, quatre Nouvelles et ces trois intrigues.
+      "0":
+        prendre: 1
+        fenetre: [2, 11]
+        reserve: 0
+        pool:
+          - { arc: pr.h5.mot_janvier,   poids: 1.2, signature: true, if: "season <= 1" }
+          - { arc: pr.h5.maillot,       poids: 1.0, if: "season <= 1" }
+          - { arc: pr.h5.vaubourg,      poids: 0.9, if: "season <= 1" }
+          - { arc: pr.h5.bureau_dapres, poids: 0.9, if: "season <= 1" }
+          - { arc: pr.h5.quatorze_b,    poids: 0.2 }
+          - { arc: pr.h5.ordres,        poids: 0.2 }
+      # S1 : la vase ouvre La SCI, la grille de Paulette ouvre Le témoin ; les
+      # suites de S0 (le buffet, la bâche, la clause, la carte) arrivent par
+      # leurs fusées. `prendre` compte ce qui continue : avec deux ou trois
+      # intrigues de S0 encore ouvertes, trois laisse la place à une nouvelle
+      # (la valise, le fonds ou la coupure), deux n'en laissait aucune.
+      "1":
+        prendre: 3
+        fenetre: [2, 11]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: pr.h5.vialat,  poids: 1.4 }
+          - { arc: pr.h5.valise,  poids: 1.8 }
+          - { arc: pr.h5.fonds,   poids: 1.2 }
+          - { arc: pr.h5.vallin,  poids: 0.8, if: "flag('h5_tribune_est_brulee')" }
+          - { arc: pr.h5.sci,     poids: 0.4 }
+      # S2 : les tardives. Camille (C1) ouvre Lambert ; le réservoir tire le
+      # dossier de la procureure, la vue, le cadastre, avant le conseil (15).
+      # `prendre` compte les intrigues de S1 qui courent encore : quatre laisse
+      # la place à une ou deux tardives quand deux ou trois suites sont en cours.
+      "2+":
+        prendre: 4
+        fenetre: [2, 9]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: pr.h5.cadastre, poids: 1.5 }
+          - { arc: pr.h5.dossier,  poids: 1.4 }
+          - { arc: pr.h5.vue,      poids: 1.2 }
+          - { arc: pr.h5.lambert,  poids: 0.5 }
+    objectifs:
+      - { id: geant_sans_lettre,    titre: "Rien dans la marge",          when: "flag('h5_second_positif') && !flag('h5_solde_negatif')", indice: "Un solde négatif, elle le note dans la marge. Le second, elle l'écrit à l'encre. Deux positifs, elle ne dit rien." }
+      - { id: geant_mot_tenu,       titre: "Le mot de janvier",           when: "flag('h5_mot_tenu') || (flag('h5_mot_donne') && !flag('h5_mot_rompu') && stats.saisons >= 1)", indice: "La craie sur la porte du local tient tant qu'on ne vend personne." }
+      - { id: geant_remonte_propre, titre: "Remonter la pente, proprement", when: "stats.saisons >= 1 && world.rang <= 6 && !flag('h5_fonds_ilyas') && !flag('h5_valise_prise') && !flag('vl_valise') && !flag('h5_maillot_terrasses')", indice: "On peut remonter dans les six premiers sans rien vendre. Personne ne dit comment." }
+    alarm_overrides:
+      tribunes.high:
+        - { card: pr.h5.alarme.tribunes_haut_gege, when: "relation.gege >= 1" }
+        - { card: pr.h5.alarme.tribunes_haut_aubert }
+      tribunes.low:
+        - { card: pr.h5.alarme.tribunes_bas_gege }
+      caisse.low:
+        - { card: pr.h5.alarme.caisse_bas_dorian, when: "flag('h5_caution_signee') && !flag('h5_maison_saisie')" }
+        - { card: pr.h5.alarme.caisse_bas_josiane }
+      caisse.high:
+        - { card: pr.h5.alarme.caisse_haut_vialat }
+      vestiaire.low:
+        - { card: pr.h5.alarme.vestiaire_bas_vukic }
+      vestiaire.high:
+        - { card: pr.h5.alarme.vestiaire_haut_dembo, when: "!flag('h5_valise_prise') || season <= 1" }
+      direction.low:
+        - { card: pr.h5.alarme.direction_bas_dorian }
+      direction.high:
+        - { card: pr.h5.alarme.direction_haut_tessandier }
 
   - id: vendre_trente
     index: 5

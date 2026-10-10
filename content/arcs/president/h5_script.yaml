@@ -1,0 +1,202 @@
+# HISTOIRE 5 — « LA MAQUETTE » (postulat `geant_dechu`, index 4, président,
+# 1999-2002). Le complot : trois personnes ordinaires se sont entendues pour
+# qu'un club meure de sa belle mort et qu'un terrain se libère. Elles n'ont tué
+# personne ; elles ont refusé un prêt, racheté une dette, perdu un acte au
+# cadastre, choisi un président. Docs : docs/histoires/00_les_dix_histoires.md,
+# Histoire 5.
+#
+# Ce fichier : le prologue (six scènes avant la carte Objectif) et le script
+# (les ancres, saison par saison). Les intrigues du réservoir sont dans
+# h5_intrigues.yaml, les soirs du réservoir dans h5_evenements.yaml ; les
+# cartes dans content/cards/president/h5_*.yaml.
+#
+# Les soirs (règle commune § 1.4) : huit en tout. Ceux qui portent un numéro de
+# scène clé sont des ANCRES DE NUIT, servies ici à leur heure et à leur lieu :
+# le feu (S0, créneau 9), la vase (S1, 2), la grève (S1, 7), le salon (S1, 12),
+# l'huissier de la maison (S1, 17). Les trois autres sont des événements du
+# réservoir (h5_evenements.yaml) : l'huissier du club (S0, créneau 14 au plus
+# tôt, cinq après le feu), le siège et six heures du matin (S2). La saison 1
+# a ses quatre soirs d'ancres, espacés de cinq créneaux : le réservoir s'y tait.
+# Les intermèdes, un par saison : la vitrine la nuit (S0), la mousse verte
+# (S1), la figurine (S2).
+#
+# Les graines et ce qui les paie :
+#   · la caution (S0, 7) → l'huissier de la maison (S1, 17), à l'en-tête du
+#     cabinet de Camille → Camille, dans la cuisine (S2, 1) ;
+#   · la 14B (intrigue La 14B, S0) → le feu (S0, 9) → le buffet et l'acte de
+#     1931 (S1) → le conseil municipal (S2, 15) ;
+#   · « signe en bas, pas en marge » (prologue, la cuisine) → la fin de la bande
+#     du salon (S1, 12) ;
+#   · la voix du mardi (S0, 4) → la cassette (S1, 12) → Josiane, qui l'entend
+#     dire « Josie » (réaction) ;
+#   · la maquette (prologue, puis S1, 4 : ton nom sur le panneau) → la
+#     procureure, qui perquisitionne ton entreprise (S2, six heures).
+# L'acte final : trois cartes dans la même semaine — le conseil municipal (15),
+# le second solde (16), le dernier match (17). La fin rare se joue devant
+# Madame Vialat ; les autres au dernier match.
+arcs:
+  # =========================================================== LE PROLOGUE
+  - id: pr.h5.prologue
+    title: "Le deux juillet"
+    kind: prologue
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: false
+    theme: president
+    carrier: vialat
+    cast: [vialat, tessandier, josiane, vukic, dembo, gege, camille]
+    issues: []
+    hint: "Deux titres sous verre, un dépôt de bilan au greffe, et une chaise que l'Inspecteur refuse."
+    steps:
+      - id: titres
+        card:
+          - { id: pr.h5.pro1_titres_commission, if: "fil_rouge == 'commission'" }
+          - { id: pr.h5.pro1_titres }
+      - id: vitrine
+        card:
+          - { id: pr.h5.pro2_vitrine_vente, if: "fil_rouge == 'vente'" }
+          - { id: pr.h5.pro2_vitrine }
+      - id: escalier
+        card: pr.h5.pro3_escalier
+      - id: vestiaire
+        card: pr.h5.pro4_vestiaire
+      - id: grille
+        card:
+          - { id: pr.h5.pro5_grille_kop, if: "fil_rouge == 'kop'" }
+          - { id: pr.h5.pro5_grille }
+      - id: cuisine
+        card: pr.h5.pro6_cuisine
+
+  # =========================================================== LE SCRIPT
+  - id: pr.h5.script
+    title: "La Maquette"
+    kind: postulat
+    roles: [president]
+    postulats: [geant_dechu]
+    foreground: true
+    weight: 1.0
+    cast: [tessandier, dorian, vialat, amsel, camille, dembo, gege, paulette]
+    same_club: true
+    fallback: drop
+    traces:
+      h5_plans_vus:          "{annee} : {nom} a demandé les plans des Terrasses. Madame Tessandier a posé sa tasse sur le stade."
+      h5_stade_ne_bouge:     "{annee} : « Le stade ne bouge pas », a dit {nom} à l'agence Tessandier. On ne lui a plus offert de café."
+      h5_conseil_entendu:    "{annee} : un mardi, dix-huit heures : « Ici le Conseil. » Le téléphone beige du bureau a sonné."
+      h5_caution_signee:     "{annee} : {prenom} {nom} s'est porté{pg, select, f{e} other{}} caution du club, sur sa maison."
+      h5_caution_refusee:    "{annee} : {nom} a refusé la caution de la Banque Aubérivoise. Dorian a rangé la feuille sans la plier."
+      h5_tribune_est_brulee: "{annee} : la tribune Est a brûlé, une nuit de novembre. Du chêne de 1931. La 14B n'existe plus."
+      h5_solde_negatif:      "{annee} : premier solde négatif. Madame Vialat l'a écrit au crayon, en bas de la page."
+      h5_solde_positif:      "{annee} : premier solde positif. Madame Vialat a recompté deux fois, la seconde à voix basse."
+      h5_rive_voiture:       "{annee} : les plongeurs des berges ont sorti de la Rive une berline grise, un sapin au rétroviseur."
+      h5_nom_laisse:         "{annee} : sur la maquette de l'agence, sous le promoteur, un panneau : {NOM} BÂTIMENT."
+      h5_nom_retire:         "{annee} : {nom} a fait retirer son nom de la maquette. Madame Tessandier a gardé le panneau."
+      h5_greve_payee:        "{annee} : vingt-quatre chèques signés sur un capot. {prenom} {nom} a payé la grève de sa poche."
+      h5_greve_signee:       "{annee} : la feuille de grève du Racing compte vingt-cinq signatures. La dernière est celle de {nom}."
+      h5_cassette:           "{annee} : un salon vide à l'hôtel de la Rive, un magnétophone. {nom} est reparti{pg, select, f{e} other{}} avec la bande."
+      h5_fin_de_bande:       "{annee} : au bout de la bande du salon, une voix de femme : « …signe en bas, pas en marge. »"
+      h5_maison_saisie:      "{annee} : l'huissier a saisi la maison de {nom}. L'ordre portait l'en-tête d'un cabinet d'avocats."
+      h5_engins_saisis:      "{annee} : l'huissier a saisi les engins de {NOM} Bâtiment, et la berline. En tête : un cabinet d'avocats."
+      h5_camille_accusee:    "{annee} : « C'est toi, la troisième. » « Je t'ai acheté{pg, select, f{e} other{}}. » Une cuisine, une nuit."
+      h5_camille_raison:     "{annee} : « Tu avais raison », a dit {nom} à Camille, dans la cuisine. Elle a gardé sa main une seconde de trop."
+      h5_acte_lu:            "{annee} : au conseil municipal, {nom} a lu l'acte de 1931 : « aux enfants du quartier, à perpétuité »."
+      h5_projet_soutenu:     "{annee} : au conseil municipal, {nom} a soutenu la révision du terrain de la Rive. Le papier est resté plié."
+      h5_sursis:             "{annee} : la révision du terrain de la Rive rejetée à une voix, celle de Lambert, conseiller du quartier."
+      h5_une_voix:           "{annee} : la révision du terrain de la Rive votée à une voix. {nom} avait parlé dix minutes, sans papier."
+      h5_lettre:             "{annee} : second solde négatif. Madame Vialat a écrit la lettre sur le bureau de {nom}, avec son stylo."
+    steps:
+      # ------------------------------------------------ saison 1 (S0) : le Conseil
+      - id: cafe
+        card:
+          - { id: pr.h5.a1_cafe_vente, if: "fil_rouge == 'vente'" }
+          - { id: pr.h5.a1_cafe }
+        at: [1, 1]
+        season: 0
+      - id: mardi
+        card: pr.h5.a2_mardi
+        at: [4, 4]
+        season: 0
+      - id: caution
+        card: pr.h5.a3_caution
+        at: [7, 7]
+        season: 0
+      - id: feu
+        card:
+          - { id: pr.h5.a4_feu_plaque, if: "flag('h5_plaque_deposee')" }
+          - { id: pr.h5.a4_feu }
+        at: [9, 9]
+        season: 0
+      - id: vitrine_nuit
+        card: pr.h5.a5_vitrine_nuit
+        at: [12, 13]
+        season: 0
+      - id: premier_solde
+        card:
+          - { id: pr.h5.a6_solde_negatif, if: "gauges.caisse < 45" }
+          - { id: pr.h5.a6_solde_positif }
+        at: [17, 17]
+        season: 0
+      # ------------------------------------------------ saison 2 (S1) : la vase
+      - id: vase
+        card: pr.h5.b1_vase
+        at: [2, 2]
+        season: 1
+      - id: seconde_maquette
+        card: pr.h5.b2_maquette
+        at: [4, 5]
+        season: 1
+      - id: greve
+        card:
+          - { id: pr.h5.b3_greve_promesse, if: "flag('h5_paie_promise')" }
+          - { id: pr.h5.b3_greve }
+        at: [7, 7]
+        season: 1
+      - id: salon
+        card: pr.h5.b4_salon
+        at: [12, 12]
+        season: 1
+      - id: mousse
+        card: pr.h5.b5_mousse
+        at: [14, 15]
+        season: 1
+      - id: huissier
+        card:
+          - { id: pr.h5.b6_huissier_maison, if: "flag('h5_caution_signee')" }
+          - { id: pr.h5.b6_huissier_engins_capot, if: "flag('h5_capot')" }
+          - { id: pr.h5.b6_huissier_engins }
+        at: [17, 17]
+        season: 1
+      # ------------------------------------------------ saison 3 (S2) : le vote
+      - id: camille
+        card:
+          - { id: pr.h5.c1_camille_bande, if: "flag('h5_fin_de_bande')" }
+          - { id: pr.h5.c1_camille }
+        at: [1, 1]
+        season: 2
+      - id: figurine
+        card: pr.h5.c2_figurine
+        at: [6, 7]
+        season: 2
+      - id: conseil
+        card:
+          - { id: pr.h5.c3_conseil_acte, if: "flag('h5_acte_rendu') || flag('h5_acte_paulette') || flag('h5_copie_cadastre') || flag('vl_cadastre')" }
+          - { id: pr.h5.c3_conseil_lambert, if: "flag('h5_lambert_vu')" }
+          - { id: pr.h5.c3_conseil_libre, if: "flag('h5_lambert_libre')" }
+          - { id: pr.h5.c3_conseil }
+        at: [15, 15]
+        season: 2
+      - id: second_solde
+        card:
+          - { id: pr.h5.c4_solde_tout, if: "gauges.caisse < 55 && (relation.vialat >= 1 || flag('h5_vialat_attend')) && flag('h5_acte_lu') && flag('h5_cassette') && flag('h5_josie') && flag('h5_fax_plume') && (flag('h5_temoin') || flag('vl_temoin_feu')) && !flag('h5_valise_prise') && !flag('vl_valise')" }
+          - { id: pr.h5.c4_solde_lettre, if: "gauges.caisse < 55 && flag('h5_solde_negatif')" }
+          - { id: pr.h5.c4_solde_un, if: "gauges.caisse < 55" }
+          - { id: pr.h5.c4_solde }
+        at: [16, 16]
+        season: 2
+      - id: dernier_match
+        card:
+          - { id: pr.h5.c5_match_stade, if: "flag('h5_acte_lu')" }
+          - { id: pr.h5.c5_match_terrasses, if: "flag('h5_projet_soutenu')" }
+          - { id: pr.h5.c5_match_sursis, if: "flag('h5_sursis')" }
+          - { id: pr.h5.c5_match }
+        at: [17, 17]
+        season: 2

@@ -1,0 +1,231 @@
+# Les alarmes de « La Maquette » (`alarm_overrides` du postulat `geant_dechu`,
+# content/postulats.yaml) : quand une jauge passe sous 20 ou au-dessus de 80, le
+# visage de l'histoire qui la tient vient le dire. Elles passent avant les
+# alarmes communes du président. Comme les alarmes communes, une sortie ramène
+# la jauge vers le milieu et l'autre la pousse encore, pour une raison qui se
+# défend : la liste de Madame Aubert, la Nord qui aime trop, le chèque de ta
+# poche, le brassard de Dembo. Le Racing part haut dans le cœur de la ville et
+# bas dans ses comptes ; la fin de jauge n'est jamais loin d'une mauvaise semaine.
+#
+# Et le palier +3 de Mamie Paulette (`on_relation`, content/characters.yaml) :
+# l'écharpe, ou l'acte de 1931 quand elle l'avait gardé dans son buffet.
+cards:
+  # ---------------------------------------------------------------- tribunes
+  - id: pr.h5.alarme.tribunes_haut_aubert
+    roles: [president]
+    arc: direction
+    tags: [tribunes, direction]
+    speaker: aubert
+    lieu: cafe
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Madame Aubert, députée, au café de la Mairie : « La Nord chante votre nom, et les municipales arrivent. Ma liste a une place, en quatrième position. Vous la voulez ? »"
+    left:
+      label: "Je ne fais pas de politique"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "« Tout le monde en fait. Vous, vous en faites mal. » Elle paie les deux cafés et laisse la monnaie, pour qu'on se souvienne d'elle."
+    right:
+      label: "Quatrième, c'est loin"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Troisième, alors. » Elle note quelque chose sur une serviette en papier. Tu n'as rien demandé ; elle a négocié quand même."
+
+  - id: pr.h5.alarme.tribunes_haut_gege
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Gégé, au local, le pinceau suspendu au-dessus de sa bâche : « On t'aime trop, au virage, {toi}. Ça finit toujours mal, quand on aime trop. Fais quelque chose de travers, une fois, qu'on respire. »"
+    left:
+      label: "Je monte le prix des places"
+      effects: {tribunes: "--", caisse: "+"}
+      answer: "La Nord siffle le guichet pendant un quart d'heure. Puis elle paie. Gégé paie deux fois : sa place, et celle de Paulette."
+    right:
+      label: "Je ne change rien"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Alors on t'aimera plus fort, tant pis pour toi. » Samedi, la Nord chante ton nom quatre-vingt-dix minutes. Gégé se tait."
+
+  - id: pr.h5.alarme.tribunes_bas_gege
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Gégé, devant le local fermé, les clés à la main : « Le virage ne vient plus. Pas fâché : fatigué. Donne-leur une raison de remonter les marches, ou je rends les clés à Josiane. »"
+    left:
+      label: "Places à moitié prix"
+      effects: {tribunes: "++", caisse: "-"}
+      answer: "Samedi, la Nord est à moitié pleine, et Gégé dit que c'est la bonne moitié. Il rouvre le local à vingt heures."
+    right:
+      label: "Je viens au virage"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Tu viens au virage, sans écharpe. Personne ne te parle. À la soixantième minute, quelqu'un te tend un gobelet de café."
+
+  # ---------------------------------------------------------------- caisse
+  - id: pr.h5.alarme.caisse_bas_dorian
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: dorian
+    lieu: banque
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Dorian, au téléphone, d'une voix douce : « Votre caution nous permet une avance, {toi}. Un an de plus, au même taux. Une signature de plus, à la même place. »"
+    left:
+      label: "Je signe encore"
+      effects: {caisse: "+++", direction: "-", set: [h5_avance]}
+      answer: "Le coursier de la banque attend dans le couloir pendant que tu signes. Il repart en courant, comme si le papier allait refroidir."
+    right:
+      label: "Plus rien"
+      effects: {caisse: "-", direction: "+"}
+      answer: "« Comme vous voudrez. » Il ne raccroche pas tout de suite. Tu entends une cuillère tourner dans une tasse, deux fois."
+
+  - id: pr.h5.alarme.caisse_bas_josiane
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: josiane
+    lieu: secretariat
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Madame Josiane, la facture d'électricité à la main : « Ils coupent jeudi. En 1962, le Racing a joué la première nocturne de la région. Cette année, on jouera avant la nuit. »"
+    left:
+      label: "Vendez le car"
+      effects: {caisse: "+++", vestiaire: "-"}
+      answer: "Le car part un mardi, sur un plateau, vers un club de troisième division. Les joueurs iront à Valentienne en voitures particulières."
+    right:
+      label: "Je paie de ma poche"
+      effects: {caisse: "+", var: {ville_amende: "+30000"}}
+      answer: "Tu signes un chèque sur le comptoir du secrétariat. Josiane le tamponne PAYÉ, puis écrit en dessous, de sa main : « de sa poche »."
+
+  - id: pr.h5.alarme.caisse_haut_vialat
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Madame Vialat pose ton relevé sur le bureau et l'aplatit du plat de la main. « Votre trésorerie est belle. Je n'aime pas les clubs au greffe qui ont une belle trésorerie. D'où vient l'argent ? »"
+    left:
+      label: "Du travail"
+      effects: {caisse: "-", relation: {vialat: 1}}
+      answer: "« Le travail ne fait pas de bosses comme ça. » Elle souligne trois lignes, et en entoure une, celle de février."
+    right:
+      label: "Comptez vous-même"
+      effects: {caisse: "--", direction: "-"}
+      answer: "Elle compte. Ça lui prend une semaine. Elle trouve, et elle te le dit dans une lettre recommandée de deux pages."
+
+  # ---------------------------------------------------------------- vestiaire
+  - id: pr.h5.alarme.vestiaire_bas_vukic
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: vestiaire
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Vukić pose son cahier sur ton bureau, ouvert à une page blanche. « Je n'ai plus rien à écrire. Les gars viennent, courent, repartent. Dis-leur quelque chose, ou je pars avec eux. »"
+    left:
+      label: "Je descends au vestiaire"
+      effects: {vestiaire: "++", direction: "-"}
+      answer: "Tu parles cinq minutes. Ils écoutent, en chaussettes. Vukić écrit une ligne dans le cahier : la date, et un mot, « visite »."
+    right:
+      label: "Je double les primes"
+      effects: {vestiaire: "+", caisse: "--"}
+      answer: "Ils prennent les primes. Le samedi, ils courent un peu plus et ne regardent pas la loge. Vukić referme le cahier."
+
+  - id: pr.h5.alarme.vestiaire_haut_dembo
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: dembo
+    lieu: vestiaire
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Dembo, au vestiaire, devant les autres : « Le vestiaire fait tout ce que tu dis. C'est dangereux, un vestiaire qui obéit au président : l'entraîneur ne sert plus à rien, et il le sait. »"
+    left:
+      label: "Vukić décide"
+      effects: {vestiaire: "--", direction: "+"}
+      answer: "Tu ne descends plus au vestiaire pendant un mois. Vukić reprend la causerie. Le premier jour, il a préparé trois pages."
+    right:
+      label: "C'est mon club"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "« Alors c'est ton vestiaire aussi. » Il te tend son brassard, devant tout le monde. Au fond, Vukić range son cahier dans son sac."
+
+  # ---------------------------------------------------------------- direction
+  - id: pr.h5.alarme.direction_bas_dorian
+    roles: [president]
+    arc: argent
+    tags: [direction, caisse]
+    speaker: dorian
+    lieu: banque
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Dorian, à la banque : « Le comité des créanciers se réunit lundi. Il veut un président qui l'écoute. Vous écoutez, {toi} ? Moi, j'ai toujours écouté. C'est mon métier. »"
+    left:
+      label: "J'écoute"
+      effects: {direction: "++", tribunes: "-"}
+      answer: "Lundi, tu écoutes deux heures. On te remercie. On te tend une liste de onze économies ; la neuvième, c'est l'Est."
+    right:
+      label: "Le comité attendra"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Il attend toujours, le comité. C'est pour ça qu'il gagne. » Il raccroche avant toi, pour une fois."
+
+  - id: pr.h5.alarme.direction_haut_tessandier
+    roles: [president]
+    arc: contrat
+    tags: [direction]
+    speaker: tessandier
+    when: "flag('histoire_h5')"
+    tone: strategique
+    text: "Madame Tessandier, au bord du quai : « Vous voilà raisonnable. Les actionnaires vous adorent. Les gens raisonnables finissent dans les maquettes, en costume, à la taille d'un pouce. »"
+    left:
+      label: "Je redeviens déraisonnable"
+      effects: {direction: "--", tribunes: "+"}
+      answer: "« Ça vous va mieux. » Elle sort de sa poche une figurine en costume, la pose sur le parapet du quai, et s'en va."
+    right:
+      label: "Je reste raisonnable"
+      effects: {direction: "-", caisse: "+"}
+      answer: "« Alors je vous garde une place. » Sur la maquette, le soir même, une figurine en costume attend au pied d'un balcon."
+
+  # ------------------------------------------------- le palier de Paulette
+  - id: pr.h5.paulette.faveur_acte
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Paulette sort de son sac le papier plié en huit et le pose dans ta main, sans le lâcher tout de suite. « J'étais là en cinquante et un. Je serai là au conseil. C'est vous qui le lirez. »"
+    left:
+      label: "Je le lirai"
+      effects: {tribunes: "+", set: [h5_acte_rendu]}
+      answer: "Elle lâche le papier. Il est tiède. Elle te le fait replier dans les mêmes plis, devant elle, pour être sûre que tu saches."
+    right:
+      label: "Lisez-le vous-même"
+      effects: {relation: {paulette: 1}, set: [h5_acte_paulette]}
+      answer: "« À mon âge, on ne lit plus, on récite. » Elle le reprend. « Je viendrai. Gardez-moi une chaise près de la fenêtre. »"
+
+  - id: pr.h5.paulette.faveur_echarpe
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    when: "flag('histoire_h5')"
+    tone: leger
+    once: true
+    text: "Paulette noue autour de ton cou une écharpe bordeaux mitée, tricotée main. « J'étais là en cinquante et un. Mon père, en trente et un. Et vous, vous serez là jusqu'à quand ? »"
+    left:
+      label: "Jusqu'au bout"
+      effects: {tribunes: "+", relation: {paulette: 1}}
+      answer: "« Le bout de quoi ? » Elle serre le nœud, juste assez. L'écharpe sent la naphtaline et le café du thermos."
+    right:
+      label: "Je ne sais pas"
+      effects: {direction: "+"}
+      answer: "« Au moins, vous ne mentez pas. » Elle te laisse l'écharpe. Elle ne la reprendra pas ; elle t'en tricote déjà une autre."

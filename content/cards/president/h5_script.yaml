@@ -1,0 +1,625 @@
+# Les ancres de « La Maquette » (arc pr.h5.script, content/arcs/president/
+# h5_script.yaml) : six par saison en S0 et S1, cinq en S2, dont l'acte final.
+# Les soirs d'ancre portent le tag `sombre` et un `lieu:` : la ville les fait
+# tomber le soir, à leur lieu. Les intermèdes portent `intermede` : un seul
+# bouton, aucun locuteur, presque rien qui bouge. Les coups de téléphone du
+# Conseil portent `telephone` : une voix sans nom, une heure, un ordre.
+#
+# Personnages sans id, que le texte présente sans jamais leur donner la parole
+# en portrait : Oudart (le gardien), Sandrine (la standardiste en fauteuil de
+# l'hôtel de la Rive), l'huissier, le maire (une voix), Lambert (conseiller du
+# quartier de la Rive), Maître Guénot (notaire d'Aubérive).
+cards:
+  # ======================================================= S0 · LE CONSEIL
+  # A1 — Le café (créneau 1). Les deux sorties mènent Paulette à sa place : la
+  # 14B doit être lue avant de brûler (intrigue pr.h5.quatorze_b).
+  - id: pr.h5.a1_cafe
+    roles: [president]
+    arc: contrat
+    tags: [direction, caisse]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "Agence Tessandier, neuf heures. Elle sert le café dans une tasse à liseré d'or. « Votre entreprise aura le chantier, le club un stade neuf à la friche. Tout le monde y gagne, sauf la vue. »"
+    left:
+      label: "Je veux voir les plans"
+      effects: {caisse: "+", tribunes: "-", set: [h5_plans_vus], schedule: [{card: pr.h5.14b.tribune, in: [2, 4]}], react: [{card: pr.h5.re.tessandier_lettre, if: "!seen('pr.h5.re.tessandier_lettre')"}]}
+      answer: "Elle déroule la seconde tranche sur le bureau et pose ta tasse sur le stade, pour tenir le coin du papier."
+    right:
+      label: "Le stade ne bouge pas"
+      effects: {tribunes: "+", direction: "-", set: [h5_stade_ne_bouge], schedule: [{card: pr.h5.14b.tribune, in: [2, 4]}]}
+      answer: "Elle reprend ta tasse, pleine. « On ne propose pas deux fois le café, ici. » Elle la vide dans le pot du ficus."
+
+  # Variante du fil « vente » : la lettre du 12 juin sort du tiroir.
+  - id: pr.h5.a1_cafe_vente
+    roles: [president]
+    arc: contrat
+    tags: [direction, caisse]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "Agence Tessandier. Elle sert le café et pousse vers toi une chemise : ta lettre du 12 juin, sous un trombone doré. « Le chantier à vous, un stade neuf au club. Tout le monde y gagne, sauf la vue. »"
+    left:
+      label: "Je veux voir les plans"
+      effects: {caisse: "+", tribunes: "-", set: [h5_plans_vus], schedule: [{card: pr.h5.14b.tribune, in: [2, 4]}]}
+      answer: "Elle range la lettre avant de dérouler les plans. Ta signature disparaît sous la seconde tranche, côté rivière."
+    right:
+      label: "Le stade ne bouge pas"
+      effects: {tribunes: "+", direction: "-", set: [h5_stade_ne_bouge], schedule: [{card: pr.h5.14b.tribune, in: [2, 4]}]}
+      answer: "« Votre lettre, elle, ne bouge pas non plus. » Elle referme la chemise et la remet au tiroir, celui qui ferme à clé."
+
+  # A2 — Mardi, dix-huit heures (créneau 4). La ligne d'ordre : pas de portrait.
+  - id: pr.h5.a2_mardi
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures pile. Le téléphone beige sonne. Une voix d'homme, posée, sans nom : « Ici le Conseil. Vendez votre gardien avant jeudi. Nous rappellerons mardi. »"
+    left:
+      label: "Qui êtes-vous ?"
+      effects: {direction: "-", set: [h5_conseil_entendu], schedule: [{card: pr.h5.ordres.jeudi, in: [1, 2]}]}
+      answer: "« Le Conseil. » Un silence où l'on entend une cuillère tourner dans une tasse, puis la tonalité."
+    right:
+      label: "Je raccroche"
+      effects: {direction: "+", set: [h5_conseil_entendu], schedule: [{card: pr.h5.ordres.jeudi, in: [1, 2]}]}
+      answer: "Le combiné retombe. Le téléphone ne sonne plus de la soirée ; tu restes jusqu'à vingt heures à le regarder."
+
+  # A3 — La caution (créneau 7). La graine de la saisie (S1, 17). La cuillère
+  # du mardi est dans la tasse de Dorian ; « Josie » est pour Josiane.
+  - id: pr.h5.a3_caution
+    roles: [president]
+    arc: argent
+    tags: [caisse, direction]
+    speaker: dorian
+    lieu: banque
+    tone: strategique
+    once: true
+    text: "Banque Aubérivoise. Dorian tourne sa cuillère et fait glisser une feuille où {NOM} est déjà tapé à la machine. « Le prêt du club contre votre caution : votre maison, votre entreprise. Une formalité. »"
+    left:
+      label: "Je signe la caution"
+      effects: {caisse: "+++", direction: "+", set: [h5_caution_signee], react: [{card: pr.h5.re.josiane_josie, if: "!seen('pr.h5.re.josiane_josie')"}]}
+      answer: "Il souffle sur ta signature. « Saluez Josie pour moi. » Il dit le prénom comme on referme un tiroir."
+    right:
+      label: "Je refuse"
+      effects: {caisse: "-", direction: "--", set: [h5_caution_refusee], react: [{card: pr.h5.re.josiane_josie, if: "!seen('pr.h5.re.josiane_josie')"}]}
+      answer: "Il range la feuille sans la plier. « Saluez Josie pour moi. Elle vous dira que je suis patient. »"
+
+  # A4 — Le feu (créneau 9). Ancre de nuit : la tribune Est, du chêne de 1931.
+  # Après le choc, deux scènes de prix : l'assurance (réaction de Josiane) et
+  # Paulette à la grille (pr.h5.14b.grille, tirée tout de suite).
+  - id: pr.h5.a4_feu
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, sombre]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Nuit du 27 novembre. La tribune Est brûle sous la pluie, chêne de 1931, d'un seul bloc. Les pompiers arrosent la Nord pour qu'elle ne prenne pas. Au matin, la 14B n'existe plus."
+    left:
+      label: "Je porte plainte"
+      effects: {tribunes: "+", direction: "-", caisse: "-", set: [h5_tribune_est_brulee, h5_plainte], schedule: [{card: pr.h5.14b.grille, in: [1, 3]}], react: [{card: pr.h5.re.josiane_assurance, if: "!seen('pr.h5.re.josiane_assurance')"}]}
+      answer: "Le commissaire écrit « contre X » et souligne. Au guichet, une dame demande si la 14B sera remboursée."
+    right:
+      label: "Je fais déblayer"
+      effects: {tribunes: "--", direction: "+", caisse: "-", set: [h5_tribune_est_brulee, h5_deblaye], schedule: [{card: pr.h5.14b.grille, in: [1, 3]}], react: [{card: pr.h5.re.josiane_assurance, if: "!seen('pr.h5.re.josiane_assurance')"}]}
+      answer: "Les pelleteuses arrivent à sept heures. À huit, Gégé est assis sur les marches noires de la Nord, et il compte."
+
+  # Variante : la plaque de fonte avait été déposée en octobre, sur ordre.
+  - id: pr.h5.a4_feu_plaque
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, sombre]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Nuit du 27 novembre. L'Est brûle sous la pluie, d'un seul bloc. La grille fond ; sa plaque, déposée en octobre sur ordre du Conseil, dort au grenier du club-house. Au matin, la 14B n'existe plus."
+    left:
+      label: "Je porte plainte"
+      effects: {tribunes: "+", direction: "-", caisse: "-", set: [h5_tribune_est_brulee, h5_plainte], schedule: [{card: pr.h5.14b.grille, in: [1, 3]}], react: [{card: pr.h5.re.josiane_assurance, if: "!seen('pr.h5.re.josiane_assurance')"}]}
+      answer: "Le commissaire écrit « contre X ». Tu lui parles de la plaque ; il écrit « plaque », et rien à côté."
+    right:
+      label: "Je fais déblayer"
+      effects: {tribunes: "--", direction: "+", caisse: "-", set: [h5_tribune_est_brulee, h5_deblaye], schedule: [{card: pr.h5.14b.grille, in: [1, 3]}], react: [{card: pr.h5.re.josiane_assurance, if: "!seen('pr.h5.re.josiane_assurance')"}]}
+      answer: "Les pelleteuses arrivent à sept heures. Elles poussent les cendres de l'Est jusqu'à la grille, contre les quatre trous de vis."
+
+  # A5 — Intermède de S0 : la vitrine la nuit. L'indice vrai : le stylo qui
+  # tape deux fois, comme dans la cuisine.
+  - id: pr.h5.a5_vitrine_nuit
+    roles: [president]
+    arc: absurde
+    tags: [intermede]
+    tone: leger
+    once: true
+    text: "Trois heures du matin. Tu es dans la vitrine, à la taille d'un pouce, au bord du lac en résine. Trois visages se penchent derrière la vitre. L'un d'eux tape deux fois sur le verre, avec un stylo."
+    left:
+      label: "Je lève la main"
+      effects: {}
+      answer: "Le stylo tape encore, deux coups, la pointe en bas. Puis plus rien que ton souffle sur la vitre, de l'intérieur."
+    right:
+      label: "Je lève la main"
+      effects: {}
+      answer: "Le stylo tape encore, deux coups, la pointe en bas. Puis plus rien que ton souffle sur la vitre, de l'intérieur."
+
+  # A6 — Le premier solde (créneau 17). Négatif sous 35 de trésorerie.
+  - id: pr.h5.a6_solde_negatif
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Fin de saison. Madame Vialat, le sac à l'épaule, pose une feuille à l'envers sur ton bureau. « Premier solde négatif, {toi}. Il est écrit en bas, au crayon. Le second, je l'écrirai à l'encre. »"
+    left:
+      label: "Montrez-moi le chiffre"
+      effects: {caisse: "-", relation: {vialat: 1}, set: [h5_solde_negatif]}
+      answer: "Elle retourne la feuille. Le chiffre est rouge, et petit. Elle a laissé de la place en dessous, pour l'autre."
+    right:
+      label: "La tribune a brûlé"
+      effects: {direction: "-", set: [h5_solde_negatif]}
+      answer: "« Je sais. J'ai compté la tribune aussi : au bilan, elle valait zéro depuis 1974. » Elle referme le sac."
+
+  - id: pr.h5.a6_solde_positif
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Fin de saison. Madame Vialat recompte deux fois, la seconde à voix basse. « Premier solde positif, {toi}. Je ne comprends pas comment, et c'est mon métier de comprendre. Vous m'expliquez ? »"
+    left:
+      label: "Je vous explique"
+      effects: {direction: "+", relation: {vialat: 1}, set: [h5_solde_positif]}
+      answer: "Tu expliques pendant une heure. Elle note trois lignes et souligne la deuxième ; tu ne sauras pas laquelle."
+    right:
+      label: "Cherchez"
+      effects: {direction: "-", set: [h5_solde_positif]}
+      answer: "Elle cherche. Elle ne trouve rien, ce qui l'inquiète davantage. Elle te le dit, d'ailleurs, en partant."
+
+  # ======================================================= S1 · LA VASE
+  # B1 — La vase (créneau 2). Ancre de nuit, quai. L'épave d'une autre histoire
+  # (le Sapin en carton, 1990) gèle les berges et sauve la saison. Les deux
+  # sorties amènent le fax de La Plume (pr.h5.sci).
+  - id: pr.h5.b1_vase
+    roles: [president]
+    arc: instances
+    tags: [direction, sombre]
+    speaker: amsel
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Quai, sous la pluie. Les plongeurs sortent de la vase une berline grise, un sapin en carton au rétroviseur. Amsel : « Les travaux s'arrêtent. Vous avez l'air soulagé{pg, select, f{e} other{}}. »"
+    left:
+      label: "Je le suis"
+      effects: {tribunes: "+", relation: {amsel: 1}, set: [h5_rive_voiture, h5_soulage], schedule: [{card: pr.h5.sci.fax, in: [3, 8]}], react: [{card: pr.h5.re.amsel_carte_grise, if: "!seen('pr.h5.re.amsel_carte_grise')"}]}
+      answer: "« Moi aussi, quand ce n'est pas un nom que je connais. » Elle lit la carte grise à voix haute : MERCADIER, Roland."
+    right:
+      label: "Ce n'est pas le mot"
+      effects: {direction: "+", set: [h5_rive_voiture], schedule: [{card: pr.h5.sci.fax, in: [3, 8]}], react: [{card: pr.h5.re.amsel_carte_grise, if: "!seen('pr.h5.re.amsel_carte_grise')"}]}
+      answer: "« Trouvez-le d'ici jeudi. » La dépanneuse soulève la berline ; l'eau sort par les portières, longtemps."
+
+  # B2 — La seconde maquette (créneaux 4-5). Ton nom sur le panneau.
+  - id: pr.h5.b2_maquette
+    roles: [president]
+    arc: contrat
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "La vitrine. Le parc en mousse a mangé les tribunes. Sur un panneau de carton, sous le nom du promoteur : {NOM} BÂTIMENT, GROS ŒUVRE. Madame Tessandier essuie la vitre, de l'intérieur."
+    left:
+      label: "Qu'on retire mon nom"
+      effects: {tribunes: "+", direction: "-", set: [h5_maquette_change, h5_nom_retire]}
+      answer: "Elle retire le panneau avec une pince à épiler et le glisse dans un tiroir. « Je le garde. On ne sait jamais. »"
+    right:
+      label: "Je laisse faire"
+      effects: {caisse: "+", tribunes: "--", set: [h5_maquette_change, h5_nom_laisse], react: [{card: pr.h5.re.camille_vitrine, if: "!seen('pr.h5.re.camille_vitrine')"}]}
+      answer: "Le panneau reste, un peu de travers. Un gamin colle son nez à la vitre, lit ton nom à voix haute et part en courant."
+
+  # B3 — La grève (créneau 7). Ancre de nuit, vestiaire.
+  - id: pr.h5.b3_greve
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: dembo
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire, le soir. Dembo pose une feuille sur le banc : vingt-quatre signatures. « Trois mois sans paie. Plus d'entraînement tant qu'elle ne tombe pas. On jouera samedi, c'est tout. »"
+    left:
+      label: "Je paie de ma poche"
+      effects: {vestiaire: "++", caisse: "+", var: {ville_amende: "+150000"}, set: [h5_greve_payee]}
+      answer: "Tu signes vingt-quatre chèques sur le capot de ta voiture. Dembo les distribue un par un, en disant chaque nom."
+    right:
+      label: "Je signe avec eux"
+      effects: {tribunes: "+", direction: "--", vestiaire: "+", set: [h5_greve_signee], react: [{card: pr.h5.re.dembo_photo, if: "!seen('pr.h5.re.dembo_photo')"}]}
+      answer: "Ta signature fait la vingt-cinquième. Le lendemain, L'Écho la photographie, en bas de la feuille, plus grosse que les autres."
+
+  # Variante : la paie avait été promise le 5, au prologue.
+  - id: pr.h5.b3_greve_promesse
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: dembo
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire, le soir. Dembo pose sur le banc une feuille, vingt-quatre signatures, une date entourée. « Tu avais dit le 5, à la reprise. On est le 19 du troisième mois. On jouera samedi, c'est tout. »"
+    left:
+      label: "Je paie de ma poche"
+      effects: {vestiaire: "++", caisse: "+", var: {ville_amende: "+150000"}, set: [h5_greve_payee]}
+      answer: "Vingt-quatre chèques sur le capot de ta voiture, datés du 5. Dembo les distribue en disant chaque nom, et la date."
+    right:
+      label: "Je signe avec eux"
+      effects: {tribunes: "+", direction: "--", vestiaire: "+", set: [h5_greve_signee], react: [{card: pr.h5.re.dembo_photo, if: "!seen('pr.h5.re.dembo_photo')"}]}
+      answer: "Tu signes sous les vingt-quatre. Dembo regarde ta signature, puis la date entourée, et ne dit rien du tout."
+
+  # B4 — Le salon (créneau 12). Ancre de nuit, hôtel. La cassette ou la fin de
+  # la bande : on emporte la preuve, ou on entend la voix.
+  - id: pr.h5.b4_salon
+    roles: [president]
+    arc: president
+    tags: [direction, sombre]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive, vingt et une heures. Sandrine fait rouler son fauteuil jusqu'au tableau des clés et te donne celle du petit salon. Il est vide. Un magnétophone tourne : « Merci d'être là. »"
+    left:
+      label: "J'emporte la cassette"
+      effects: {direction: "-", set: [h5_cassette], react: [{card: pr.h5.re.josiane_cassette, if: "!seen('pr.h5.re.josiane_cassette') && relation.josiane >= 0"}]}
+      answer: "La bande s'arrête au milieu d'une phrase quand tu appuies sur STOP. Dans ta poche, la cassette est encore tiède."
+    right:
+      label: "J'écoute jusqu'au bout"
+      effects: {direction: "-", set: [h5_fin_de_bande]}
+      answer: "La voix d'homme se tait. Une chaise racle, puis une voix de femme, tout près du micro : « …signe en bas, pas en marge. »"
+
+  # B5 — Intermède de S1 : la mousse verte. L'indice vrai : au troisième
+  # balcon, quelqu'un tient ta tasse.
+  - id: pr.h5.b5_mousse
+    roles: [president]
+    arc: absurde
+    tags: [intermede]
+    tone: leger
+    once: true
+    text: "Tu marches sur la pelouse, la nuit. Le stade fond sous tes pas comme de la mousse verte. À sa place montent des balcons éclairés ; à chaque balcon, quelqu'un te salue. Au troisième, on tient ta tasse."
+    left:
+      label: "Je salue"
+      effects: {}
+      answer: "Ils saluent tous au même rythme, comme sur un plan. Au troisième balcon, on pose ta tasse et on te fait signe : en bas."
+    right:
+      label: "Je salue"
+      effects: {}
+      answer: "Ils saluent tous au même rythme, comme sur un plan. Au troisième balcon, on pose ta tasse et on te fait signe : en bas."
+
+  # B6 — L'huissier de la maison (créneau 17). Ancre de nuit, la saisie.
+  # Caution signée : la maison. Caution refusée : les engins et la berline.
+  - id: pr.h5.b6_huissier_maison
+    roles: [president]
+    arc: famille
+    tags: [famille, caisse, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Ta maison, vingt heures. Un huissier et deux déménageurs : la caution signée pour le club. En tête de l'ordre, CABINET {NOM}, AVOCATS. Camille, dans l'entrée, ne lit pas l'en-tête. Elle le connaît."
+    left:
+      label: "Je montre l'ordre"
+      effects: {direction: "-", relation: {camille: -1}, var: {saisie_logement: "+1"}, set: [h5_maison_saisie, h5_ordre_cabinet]}
+      answer: "Camille prend la feuille, la plie en deux, en quatre. « Je n'ai pas tapé celle-là. J'ai tapé les autres. »"
+    right:
+      label: "Je signe le procès-verbal"
+      effects: {direction: "+", tribunes: "+", var: {saisie_logement: "+1"}, set: [h5_maison_saisie, h5_ordre_cabinet]}
+      answer: "Tu signes sur le dos d'un déménageur. Ils emportent le buffet de ta mère en premier ; il était au nom de la maison."
+
+  - id: pr.h5.b6_huissier_engins
+    roles: [president]
+    arc: famille
+    tags: [famille, caisse, sombre]
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Ton dépôt de la zone, vingt heures. Un huissier, deux plateaux : la banque a dénoncé les découverts de l'entreprise. En tête de l'ordre, CABINET {NOM}, AVOCATS. Ils prennent les engins, et ta berline."
+    left:
+      label: "J'appelle Camille"
+      effects: {direction: "-", relation: {camille: -1}, var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet]}
+      answer: "Elle décroche à la première sonnerie, comme si elle attendait. « Je sais. Rentre à pied, il ne pleut pas. »"
+    right:
+      label: "Je signe le procès-verbal"
+      effects: {direction: "+", tribunes: "+", var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet]}
+      answer: "La pelleteuse de ton père monte la première sur le plateau. Le chauffeur te rend la clé de contact : elle, elle est à toi."
+
+  # Variante : le capot tagué au parking (l'événement de S1) part sur le plateau.
+  - id: pr.h5.b6_huissier_engins_capot
+    roles: [president]
+    arc: famille
+    tags: [famille, caisse, sombre]
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Ton dépôt de la zone, vingt heures. Un huissier, deux plateaux, et en tête de l'ordre : CABINET {NOM}, AVOCATS. Ils prennent les engins, et ta berline ; sous le lavage, on lit encore VENDU."
+    left:
+      label: "J'appelle Camille"
+      effects: {direction: "-", relation: {camille: -1}, var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet]}
+      answer: "Elle décroche à la première sonnerie, comme si elle attendait. « Je sais. Rentre à pied, il ne pleut pas. »"
+    right:
+      label: "Je signe le procès-verbal"
+      effects: {direction: "+", tribunes: "+", var: {saisie_vehicules: "+1"}, set: [h5_engins_saisis, h5_ordre_cabinet]}
+      answer: "Le plateau sort de la zone par le quai, le capot vers la rue. Devant l'agence, Madame Tessandier lit le mot, et rentre."
+
+  # ======================================================= S2 · LE VOTE
+  # C1 — Camille (créneau 1). Elle ne nie pas. Deux variantes : la fin de la
+  # bande entendue au salon, ou non. Les deux sorties ouvrent Lambert (la voix
+  # du quartier) : le conseil municipal se prépare dès la rentrée.
+  - id: pr.h5.c1_camille
+    roles: [president]
+    arc: famille
+    tags: [famille, direction]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Cuisine, la nuit. Camille range la lettre de l'huissier dans son enveloppe, l'en-tête vers le bas. « Je voulais que tu t'en sortes, et sans dettes. Le club était mort avant toi. Tu le savais. »"
+    left:
+      label: "C'est toi, la troisième"
+      effects: {tribunes: "+", relation: {camille: -2}, set: [h5_camille_accusee], schedule: [{card: pr.h5.lambert.buvette, in: [2, 5]}]}
+      answer: "« Je t'ai acheté{pg, select, f{e} other{}}. Ce n'est pas pareil : j'ai payé. » Elle lave sa tasse, et la range à l'envers."
+    right:
+      label: "Tu avais raison"
+      effects: {direction: "+", relation: {camille: 1}, set: [h5_camille_raison], schedule: [{card: pr.h5.lambert.buvette, in: [2, 5]}]}
+      answer: "Elle pose sa main sur la tienne, une seconde de trop. « Alors signe le reste. Il en reste très peu. »"
+
+  - id: pr.h5.c1_camille_bande
+    roles: [president]
+    arc: famille
+    tags: [famille, direction]
+    speaker: camille
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Cuisine, la nuit. Tu répètes à Camille, mot pour mot, la fin de la bande. Elle ne demande pas quelle bande. « Je voulais que tu t'en sortes, et sans dettes. Le club était mort avant toi. »"
+    left:
+      label: "C'est toi, la troisième"
+      effects: {tribunes: "+", relation: {camille: -2}, set: [h5_camille_accusee], schedule: [{card: pr.h5.lambert.buvette, in: [2, 5]}]}
+      answer: "« Je t'ai acheté{pg, select, f{e} other{}}. J'ai payé, moi. » Elle se lève et éteint la lumière de la hotte."
+    right:
+      label: "Tu avais raison"
+      effects: {direction: "+", relation: {camille: 1}, set: [h5_camille_raison], schedule: [{card: pr.h5.lambert.buvette, in: [2, 5]}]}
+      answer: "« Je dis toujours la phrase deux fois. La bande n'en a gardé qu'une. » Elle te sert un café que tu n'as pas demandé."
+
+  # C2 — Intermède de S2 : la figurine. L'indice vrai : des doigts qui sentent
+  # le café et le papier carbone te posent sur le panneau à ton nom.
+  - id: pr.h5.c2_figurine
+    roles: [president]
+    arc: absurde
+    tags: [intermede]
+    tone: leger
+    once: true
+    text: "Tu rêves que tu es dans la maquette, figurine en costume au pied d'un balcon. Deux doigts te soulèvent et te posent plus loin, sur le panneau à ton nom. Tu n'as pas bougé les jambes."
+    left:
+      label: "Je reste debout"
+      effects: {}
+      answer: "Les doigts sentent le café et le papier carbone. Au matin, tu as une crampe dans la nuque, comme après une longue réunion."
+    right:
+      label: "Je reste debout"
+      effects: {}
+      answer: "Les doigts sentent le café et le papier carbone. Au matin, tu as une crampe dans la nuque, comme après une longue réunion."
+
+  # C3 — Le conseil municipal (créneau 15). Ce que tu as en poche décide de ce
+  # que tu peux dire : l'acte, Lambert, ou rien.
+  - id: pr.h5.c3_conseil_acte
+    roles: [president]
+    arc: instances
+    tags: [tribunes, direction]
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Conseil municipal, la Nord en bas des marches. On vote la révision du terrain de la Rive. Dans ta poche, l'acte de 1931, plié en huit. Le maire : « Le Racing souhaite-t-il parler ? »"
+    left:
+      label: "Je lis l'acte de 1931"
+      effects: {tribunes: "++", direction: "--", set: [h5_acte_lu]}
+      answer: "« Aux enfants du quartier, à perpétuité. » Ta voix tremble sur le dernier mot. Au fond, quelqu'un le répète, puis la Nord entière."
+    right:
+      label: "Je soutiens le projet"
+      effects: {caisse: "+++", tribunes: "---", set: [h5_projet_soutenu]}
+      answer: "Tu parles de chantier, d'emploi, de vue sur l'eau. Le papier reste dans ta poche, plié en huit ; tu le sens à chaque phrase."
+
+  - id: pr.h5.c3_conseil_lambert
+    roles: [president]
+    arc: instances
+    tags: [tribunes, direction]
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Conseil municipal, la Nord en bas des marches. On vote la révision du terrain de la Rive. Au troisième rang, Lambert te regarde. Le maire : « Le Racing souhaite-t-il parler ? »"
+    left:
+      label: "Je parle pour le virage"
+      effects: {tribunes: "++", direction: "-", set: [h5_sursis]}
+      answer: "Tu parles du virage de 1974, des gamins assis sur les marches. Lambert lève la main contre. Rejeté à une voix ; le maire écrit « sursis »."
+    right:
+      label: "Je soutiens le projet"
+      effects: {caisse: "+++", tribunes: "---", set: [h5_projet_soutenu]}
+      answer: "Lambert baisse les yeux et vote avec le maire. Dans l'escalier, la Nord ne chante pas : elle te regarde descendre."
+
+  # Variante : « Votez comme vous voulez », a-t-on dit à Lambert (S2).
+  - id: pr.h5.c3_conseil_libre
+    roles: [president]
+    arc: instances
+    tags: [tribunes, direction]
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Conseil municipal, la Nord en bas des marches. On vote la révision du terrain de la Rive. Lambert regarde la place par la fenêtre, pas toi. Le maire : « Le Racing souhaite-t-il parler ? »"
+    left:
+      label: "Je parle quand même"
+      effects: {tribunes: "+", direction: "-", set: [h5_une_voix]}
+      answer: "Tu parles à la salle ; Lambert écoute la fenêtre. Adopté, à une voix. À la sortie, il te tient la porte, comme à un inconnu."
+    right:
+      label: "Je soutiens le projet"
+      effects: {caisse: "+++", tribunes: "---", set: [h5_projet_soutenu]}
+      answer: "Lambert lève la main avec le maire, sans hâte. Il vote comme il veut : tu le lui avais dit. Il ne te regarde pas en le faisant."
+
+  - id: pr.h5.c3_conseil
+    roles: [president]
+    arc: instances
+    tags: [tribunes, direction]
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Conseil municipal, salle pleine, la Nord en bas des marches. On vote la révision du terrain de la Rive. Tu n'as aucun papier. Le maire : « Le Racing souhaite-t-il parler ? »"
+    left:
+      label: "Je parle quand même"
+      effects: {tribunes: "+", direction: "-", set: [h5_une_voix]}
+      answer: "Dix minutes, sans papier. On applaudit en bas ; on vote en haut. Adopté, à une voix. Le maire salue ta passion."
+    right:
+      label: "Je soutiens le projet"
+      effects: {caisse: "+++", tribunes: "---", set: [h5_projet_soutenu]}
+      answer: "Adopté. Madame Tessandier, au premier rang, ne se retourne pas. Elle sait à quelle place tu es, sans regarder."
+
+  # C4 — Le second solde (créneau 16). La fin rare se joue ici : tout montré,
+  # aucune valise, et Madame Vialat de ton côté.
+  - id: pr.h5.c4_solde_tout
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le lendemain du conseil. Madame Vialat, debout dans ton bureau, son sac sur l'épaule. « Le second solde est négatif, {toi}. Je compte. À moins que vous ne me montriez autre chose. »"
+    left:
+      label: "Je vous montre tout"
+      effects: {relation: {vialat: 1}, set: [h5_second_solde], end: geant_vialat}
+      answer: "La cassette, le fax, l'acte, le nom du gardien. Elle s'assoit, pour la première fois. Elle pose la coupure de 1992 à côté."
+    right:
+      label: "Je n'ai rien d'autre"
+      effects: {caisse: "--", direction: "-", set: [h5_second_solde, h5_lettre]}
+      answer: "« Alors je compte. » Elle écrit la lettre sur ton bureau, avec ton stylo, et te le rend capuchonné."
+
+  - id: pr.h5.c4_solde_lettre
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le lendemain du conseil. Madame Vialat pose deux feuilles côte à côte : l'an dernier, cette année. « Second solde négatif, {toi}. Le premier était au crayon. Vous avez autre chose à me montrer ? »"
+    left:
+      label: "Ce que j'ai"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h5_second_solde, h5_lettre]}
+      answer: "Elle regarde tout, une pièce après l'autre. « Il en manque. » Elle écrit la lettre quand même, plus lentement."
+    right:
+      label: "Je n'ai rien d'autre"
+      effects: {caisse: "--", direction: "-", set: [h5_second_solde, h5_lettre]}
+      answer: "« Alors je compte. » La lettre tient en neuf lignes. Elle la signe, la plie en trois et la pose sur le sous-main."
+
+  - id: pr.h5.c4_solde_un
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le lendemain du conseil. Madame Vialat referme son classeur. « Solde négatif, {toi}. L'an dernier, vous étiez juste. Un seul négatif ne fait pas une lettre. Il fait une phrase, que j'écris. »"
+    left:
+      label: "Écrivez-la"
+      effects: {direction: "+", relation: {vialat: 1}, set: [h5_second_solde]}
+      answer: "Elle l'écrit devant toi : « Le club a vécu. » Elle souligne « vécu », puis le raye, et écrit « tenu »."
+    right:
+      label: "J'ai autre chose"
+      effects: {caisse: "-", set: [h5_second_solde]}
+      answer: "« Gardez-le pour la procureure. Moi, je n'ai qu'une colonne. » Elle range le classeur, fermoir compris."
+
+  - id: pr.h5.c4_solde
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le lendemain du conseil. Madame Vialat ne s'assoit pas. « Second solde positif, {toi}. Un club au greffe qui finit juste. Je n'aime pas ça. Mais c'est juste. » Elle tend la main, une fois."
+    left:
+      label: "Je la serre"
+      effects: {direction: "+", relation: {vialat: 1}, set: [h5_second_solde, h5_second_positif]}
+      answer: "Sa main est sèche et froide, comme un classeur. Elle la retire la première, et compte les marches en descendant."
+    right:
+      label: "Je compte aussi"
+      effects: {caisse: "+", set: [h5_second_solde, h5_second_positif]}
+      answer: "« Tant mieux. » Elle baisse la main et la garde un instant en l'air, comme pour un total qui ne tombe pas."
+
+  # C5 — Le dernier match (créneau 17). La fin de l'histoire, selon le conseil.
+  - id: pr.h5.c5_match_stade
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Dernier match. La Nord pleine, l'Est en ruine derrière les barrières. La bâche de Gégé couvre les gravats : LA RIVE AUX ENFANTS DU QUARTIER. Les caméras te cherchent dans la loge."
+    left:
+      label: "Je descends au virage"
+      effects: {tribunes: "+", set: [h5_virage], end: geant_stade_reste}
+      answer: "Tu descends les marches de la Nord une à une. Gégé te fait une place sur la sienne, sans te regarder, et il chante."
+    right:
+      label: "Je reste en loge"
+      effects: {direction: "+", end: geant_stade_reste}
+      answer: "Tu restes debout en loge. Les caméras te trouvent, puis se détournent vers la bâche. C'est elle qu'on montre."
+
+  - id: pr.h5.c5_match_terrasses
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Dernier match à la Rive avant les pelleteuses. La Nord est pleine et muette. Sur la bâche de Gégé, quelqu'un a barré QUARTIER et peint TERRASSES. Les caméras te cherchent dans la loge."
+    left:
+      label: "Je descends au virage"
+      effects: {tribunes: "-", set: [h5_virage], end: geant_terrasses}
+      answer: "On s'écarte devant toi dans l'escalier. Personne ne te bouscule ; personne ne te laisse passer non plus."
+    right:
+      label: "Je reste en loge"
+      effects: {caisse: "+", end: geant_terrasses}
+      answer: "Madame Tessandier t'a fait porter une coupe. Elle est tiède. Tu la tiens jusqu'au coup de sifflet, sans boire."
+
+  - id: pr.h5.c5_match_sursis
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Dernier match. L'Est en ruine, la Nord pleine. Le terrain tient, à une voix. Sur la bâche de Gégé, LA RIVE AUX ENFANTS DU QUARTIER, quelqu'un a ajouté à la craie : POUR L'INSTANT."
+    left:
+      label: "Je descends au virage"
+      effects: {tribunes: "+", set: [h5_virage], end: geant_sursis}
+      answer: "Lambert est là, en bas, au troisième rang. Il te serre la main sans la secouer, comme on signe un registre."
+    right:
+      label: "Je reste en loge"
+      effects: {direction: "+", end: geant_sursis}
+      answer: "En loge, le maire te salue d'un signe de tête. Il dit « à la prochaine séance ». Il connaît la date ; toi, pas encore."
+
+  - id: pr.h5.c5_match
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Dernier match à la Rive. La révision est votée, à une voix. La Nord est pleine ; Gégé a plié sa bâche sur ses genoux et ne la déplie pas. Les caméras te cherchent dans la loge."
+    left:
+      label: "Je descends au virage"
+      effects: {tribunes: "+", set: [h5_virage], end: geant_une_voix}
+      answer: "Gégé te tend un coin de la bâche. Vous la tenez à deux, pliée, jusqu'au coup de sifflet. Personne ne la lit."
+    right:
+      label: "Je reste en loge"
+      effects: {direction: "+", end: geant_une_voix}
+      answer: "La loge est vide autour de toi. Sur le parking, déjà, des géomètres en gilet orange attendent la fin du match."

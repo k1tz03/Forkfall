@@ -1,0 +1,196 @@
+# Les set-pieces de « La Maquette » (Histoire 5, président). Des variantes
+# seulement, jamais de secours : chacune porte `roles: [president]` et un `when`
+# qui lit `flag('histoire_h5')` ; le build les range avant le secours commun de
+# chaque beat. Sans `{toi}` : un set-piece ne connaît que l'adresse du locuteur,
+# et le patron de ce livre (Vaubourg, à la Ligue) n'en a pas pour le président.
+#
+# L'objectif est fixé par la Ligue (Vaubourg, `patron: aulard`) ; le contrat est
+# le mandat renouvelé par ceux qui tiennent le club — la banque, le fonds, la
+# Ligue ; le carrefour est un été, et l'été de ce livre se passe à attendre la
+# maquette suivante. Le Bilan de la troisième saison n'a pas lieu : l'histoire
+# finit au dernier match (content/cards/president/h5_script.yaml).
+setpieces:
+  objective:
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 0"
+      speaker: aulard
+      text: "Jean-Marie Vaubourg, à la Ligue, sans s'asseoir, le dossier {NOM} sous le bras : « Cette saison, {objectif_min}, et la Ligue vous laisse jouer. Un club au greffe ne descend pas deux fois. »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il note la date sur un bloc à en-tête de la Ligue, et souligne l'année."
+      answer_right: "« Personne ne promet, ici. C'est pour ça qu'on signe. » Il range le bloc."
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 1 && flag('h5_comptes_enterres')"
+      speaker: aulard
+      text: "Vaubourg, un cognac à la main, au bar de l'hôtel : « Cette saison, {objectif_min}. Mes comptes de 1998 restent où ils sont. Un accord, {nom}, ça se tient des deux côtés. »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il trinque contre ton verre vide. Le bruit fait se retourner le barman."
+      answer_right: "« Les accords, eux, ne se promettent pas. Ils se tiennent. » Il finit son verre."
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 1 && flag('h5_tribune_est_brulee')"
+      speaker: aulard
+      text: "Vaubourg, au téléphone de la Ligue : « {nom} ? Cette saison, {objectif_min}, avec trois tribunes. Dérogation pour la quatrième. Il n'y en aura pas une cinquième. »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "« Bien. » Tu entends un tampon frapper un papier, deux fois, à l'autre bout du fil."
+      answer_right: "« Alors je ne promets rien non plus. » Il raccroche avant toi, comme toujours."
+    - roles: [president]
+      when: "flag('histoire_h5') && season >= 2"
+      speaker: aulard
+      text: "Vaubourg ouvre le dossier {NOM} à la dernière page : « Cette saison, {objectif_min}. Le conseil vote en mai sur votre terrain. S'il change de main, l'objectif changera de club. »"
+      left: "Je m'engage"
+      right: "J'attends le vote"
+      answer_left: "Il écrit l'objectif, puis la date du vote juste en dessous, au même crayon."
+      answer_right: "« Tout le monde attend le vote. Même ceux qui l'ont déjà compté. »"
+
+  classement:
+    - roles: [president]
+      when: "flag('histoire_h5') && phase('bilan') && flag('h5_tribune_est_brulee')"
+      speaker: josiane
+      text: "Madame Josiane punaise le classement de juin au secrétariat, sous la photo de l'Est d'avant le feu. « On le lira d'ici. L'an prochain, on le lira peut-être en béton. »"
+      left: "Je le lis"
+    - roles: [president]
+      when: "flag('histoire_h5') && phase('bilan')"
+      speaker: vialat
+      text: "Madame Vialat a recopié le classement à la main, avec les points, et dans la marge une colonne à elle : les soldes. « Rang {rang}. Deux fois, si on lit la marge. »"
+      left: "Je lis la marge"
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_mot_donne')"
+      speaker: gege
+      text: "Gégé a recopié le classement à la craie sur la porte du local, sous PERSONNE NE PART. « Rang {rang} à la trêve. La craie tiendra jusqu'en mai, si personne ne l'efface. »"
+      left: "Personne ne l'effacera"
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_mot_refuse')"
+      speaker: gege
+      text: "Gégé a recopié le classement à la craie sur la porte du local, et rien au-dessus. « Rang {rang}. Tu n'as rien promis, on n'a rien écrit. La porte attend, elle aussi. »"
+      left: "Je regarde la porte"
+    - roles: [president]
+      when: "flag('histoire_h5')"
+      text: "CLASSEMENT · {journee}e journée. Le Racing pointe au rang {rang}. Sur la vitre de l'agence Tessandier, quelqu'un a scotché le tableau de L'Écho, le stade entouré au feutre."
+      left: "Je regarde le tableau"
+
+  match:
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 0 && flag('h5_tribune_est_brulee')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Trois tribunes pleines et une noire. Les visiteurs regardent l'Est avant le match, comme on regarde un accident."
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 1 && flag('h5_greve_signee')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Ils ne s'entraînent plus, ils jouent quand même. La feuille de grève est punaisée au vestiaire, avec ta signature en bas."
+    - roles: [president]
+      when: "flag('histoire_h5')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Le mardi à dix-huit heures tombe au milieu, comme chaque semaine."
+
+  cup:
+    - roles: [president]
+      when: "flag('histoire_h5')"
+      text: "Tour de Coupe, {tour}. Le Racing l'a gagnée en 1966 ; le trophée dort au greffe avec le reste, sous scellés, une étiquette de carton au poignet."
+      left: "On y va"
+
+  gm_annonce:
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 0"
+      text: "GRAND MATCH. Madame Vialat a pris une place en tribune Nord, au troisième rang, un carnet sur les genoux. Elle compte les spectateurs, pas les buts."
+      left: "Coup d'envoi"
+    - roles: [president]
+      when: "flag('histoire_h5') && season >= 1"
+      text: "GRAND MATCH. Dans la loge d'en face, Madame Tessandier et un homme qui tourne sa cuillère dans un café. Ils regardent l'Est, pas le terrain."
+      left: "Coup d'envoi"
+
+  gm_te:
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_tribune_est_brulee')"
+      text: "{minute}e minute · {score}. Derrière les barrières de l'Est, des gamins sont montés sur les gravats pour voir. Personne ne les fait descendre."
+      left: "On ferme le match"
+      right: "On attaque"
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_conseil_entendu')"
+      text: "{minute}e minute · {score}. Le bip de Josiane vibre dans ta poche : le téléphone beige a sonné à dix-huit heures. Le match, lui, continue."
+      left: "Je regarde le match"
+      right: "Je monte au bureau"
+    - roles: [president]
+      when: "flag('histoire_h5')"
+      text: "{minute}e minute · {score}. La Nord chante le nom du stade, pas celui du club. Ici, c'est le même depuis 1931."
+      left: "Prudence"
+      right: "Tout pour l'attaque"
+
+  aftermatch:
+    - roles: [president]
+      when: "flag('histoire_h5') && vars.gm_won == 1 && flag('h5_tribune_est_brulee')"
+      speaker: gege
+      text: "Score final {gm_score}. Gégé, au grillage, la voix partie : « Ils ont chanté pour l'Est, même ceux qui n'y étaient jamais assis. Tu as entendu ? »"
+      left: "J'ai entendu"
+      right: "J'ai entendu le score"
+      answer_left: "Il hoche la tête et repart vers la buvette, l'écharpe autour du poing."
+      answer_right: "« Le score, tout le monde l'entend. » Il ne t'attend pas pour partir."
+    - roles: [president]
+      when: "flag('histoire_h5') && vars.gm_won == 0"
+      speaker: vialat
+      text: "Score final {gm_score}. Madame Vialat, en sortant de la Nord, le carnet fermé : « Huit mille quatre cents spectateurs. Le seul chiffre de la saison que je ne discuterai pas. »"
+      left: "Merci"
+      right: "Comptez les buts aussi"
+      answer_left: "Elle ne répond pas. Elle descend les marches de la Nord en les comptant."
+      answer_right: "« Les buts, c'est le travail des autres. » Elle range le carnet."
+
+  bilan_verdict:
+    - roles: [president]
+      when: "flag('histoire_h5') && bilan.tenu && flag('h5_vialat_sci')"
+      text: "Le verdict tombe : rang {rang}. {objectif} : tenu. Madame Vialat souligne une ligne du bilan : le créancier qui détient la dette a aussi un projet sur le terrain."
+      left: "Voir le classement"
+    - roles: [president]
+      when: "flag('histoire_h5') && bilan.tenu"
+      text: "Le verdict tombe : rang {rang}. {objectif} : tenu. Madame Vialat l'écrit au crayon en haut de la page, et laisse de la place en dessous."
+      left: "Voir le classement"
+    - roles: [president]
+      when: "flag('histoire_h5') && !bilan.tenu && bilan.outcome == 'descente'"
+      text: "Le verdict tombe : rang {rang}. La descente est écrite en bas de la lettre de la Ligue, sous la signature de Vaubourg, en plus petit."
+      left: "Voir le classement"
+    - roles: [president]
+      when: "flag('histoire_h5') && !bilan.tenu && flag('h5_vialat_sci')"
+      text: "Le verdict tombe : rang {rang}. {objectif} : manqué. Dans la marge de Madame Vialat, soulignée deux fois : SCI Rive Gauche, créancière et voisine."
+      left: "Voir le classement"
+    - roles: [president]
+      when: "flag('histoire_h5') && !bilan.tenu"
+      text: "Le verdict tombe : rang {rang}. {objectif} : manqué. Dans la vitrine de l'agence, le petit lac en résine est resté allumé toute la nuit."
+      left: "Voir le classement"
+
+  bilan_contrat:
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_caution_signee') && !flag('h5_maison_saisie')"
+      speaker: dorian
+      text: "Pierre-Yves Dorian tourne sa cuillère dans son café : « Le comité des créanciers renouvelle votre mandat. Votre caution court toujours, bien entendu. On continue ensemble, ou vous demandez plus ? »"
+      left: "On continue"
+      right: "Je demande plus"
+      answer_left: "Il pose la cuillère sur la soucoupe sans un bruit. « Ensemble, donc. »"
+      answer_right: "« Plus, c'est toujours possible. Ça se signe au même endroit. »"
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_fonds_ilyas')"
+      speaker: nassir
+      text: "Le Cheikh Ilyas, au téléphone, de l'autre bout du monde : « Le conseil vous garde. L'homme que vous ne voyez jamais a voté pour vous. Vous le remerciez, ou vous lui demandez de l'argent ? »"
+      left: "Je le remercie"
+      right: "De l'argent"
+      answer_left: "« Il le saura. » La ligne grésille, comme une pluie lointaine."
+      answer_right: "« Il s'y attendait. Il trouve ça sain. » Le virement arrive le lendemain."
+    - roles: [president]
+      when: "flag('histoire_h5')"
+      speaker: aulard
+      text: "Vaubourg, à la Ligue : « La Ligue renouvelle votre licence pour un an. Un an, c'est ce qu'on donne aux clubs au greffe, et à ceux qui les président. »"
+      left: "Un an, c'est assez"
+      right: "Il me faut des moyens"
+      answer_left: "Il tamponne la licence sans la lire. Le tampon est neuf ; l'encre bave."
+      answer_right: "« Les moyens, c'est le contraire du greffe. » Il ouvre quand même le tiroir."
+
+  bilan_carrefour:
+    - roles: [president]
+      when: "flag('histoire_h5') && flag('h5_maison_saisie')"
+      text: "L'été passe à l'hôtel de la Rive. Sandrine monte le courrier ; elle glisse toujours l'enveloppe à en-tête du cabinet sous les autres, et ne dit rien."
+      left: "Continuer"
+    - roles: [president]
+      when: "flag('histoire_h5') && season == 0"
+      speaker: camille
+      text: "Camille, sur le pas de la porte, les clés de la voiture à la main : « Un été, et après tu me dis si tu continues. Moi, j'ai déjà mon idée. » Elle ne dit pas laquelle."
+      left: "On verra en août"
+    - roles: [president]
+      when: "flag('histoire_h5')"
+      text: "L'été passe. Dans la vitrine de l'agence, la maquette est sous un drap blanc ; on la découvrira en septembre. Le téléphone beige, lui, ne prend pas de vacances."
+      left: "Continuer"

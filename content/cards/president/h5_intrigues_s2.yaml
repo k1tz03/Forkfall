@@ -1,0 +1,355 @@
+# Les étapes de saison 3 (S2) de « La Maquette » : la fin des intrigues de S1
+# (le tampon de la SCI, la déposition de Vallin, les billets de Valentienne, le
+# couloir de Madame Vialat) et les quatre tardives (Lambert, Le dossier de la
+# procureure, La vue, Le cadastre). Arcs : content/arcs/president/h5_intrigues.yaml.
+#
+# Personnages sans id : Lambert (conseiller du quartier de la Rive, au virage
+# en 1974), Mireille (la sœur de Josiane, aux archives depuis 1971), André
+# Bastide (secrétaire de mairie en 1976, gérant de la SCI), le gardien de la
+# résidence des Terrasses (jamais vu, seulement raconté).
+cards:
+  # ========================================================= LA SCI · le tampon
+  - id: pr.h5.sci.tampon
+    roles: [president]
+    arc: presse
+    tags: [presse, famille]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa pose sur ton bureau la copie des statuts de la SCI. Troisième associé, un tampon : CABINET {NOM}, AVOCATS. « C'est votre nom. Ou celui de quelqu'un qui le porte, avec douze pour cent des parts. »"
+    left:
+      label: "C'est Camille"
+      effects: {direction: "-", set: [h5_sci_trois], outcome: trois}
+      answer: "Léa ne note rien. Elle repousse la copie vers toi, d'un seul doigt. « Alors c'est vous qui décidez si je l'écris. »"
+    right:
+      label: "Écrivez-le"
+      effects: {tribunes: "+", direction: "--", set: [h5_sci_trois, h5_sci_ecrite], outcome: trois}
+      answer: "Elle l'écrit le soir même, sans prénom, le tampon en photo. Le lendemain, Camille découpe l'article et le pose sur ta tasse."
+
+  # ====================================================== LE TÉMOIN · la déposition
+  - id: pr.h5.vallin.deposition
+    roles: [president]
+    arc: corps
+    tags: [direction, objet]
+    speaker: amsel
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Palais de justice. Judith Amsel écoute Didier Vallin sans l'interrompre, puis écrit son nom en entier, en le lui épelant. « Le gardien de la résidence, donc. Vous le saviez, {toi} ? »"
+    left:
+      label: "C'est lui"
+      effects: {direction: "-", relation: {amsel: 1}, set: [h5_temoin_depose], outcome: temoin}
+      answer: "Elle tourne le carnet vers Vallin pour qu'il relise. Il relit son nom, seulement son nom, et signe en dessous, appliqué."
+    right:
+      label: "Vérifiez d'abord"
+      effects: {direction: "+", set: [h5_temoin_depose], outcome: temoin}
+      answer: "« Je vérifie toujours d'abord. » Elle appelle la résidence devant vous. Le gardien a démissionné le 28 novembre 1999."
+
+  # =================================================== LA VALISE · les billets
+  - id: pr.h5.valise.billets
+    roles: [president]
+    arc: mercato
+    tags: [caisse, direction]
+    speaker: amsel
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Judith Amsel, au téléphone, sans bonjour : « Des billets de cinq cents, numéros qui se suivent, retirés à Valentienne un mardi. Il en circule à la buvette, {toi}. Je vous rappelle jeudi, à l'heure. »"
+    left:
+      label: "Je viens vous voir"
+      effects: {direction: "--", relation: {amsel: 1}, set: [h5_valise_avouee]}
+      answer: "Elle te reçoit à l'heure. Elle compte devant toi les billets qui restent, et écrit le total à côté de ton nom."
+    right:
+      label: "Je n'en sais rien"
+      effects: {direction: "+", relation: {amsel: -1}, set: [h5_valise_niee]}
+      answer: "« Bien. » Le jeudi, elle ne rappelle pas. Le vendredi, deux hommes en imperméable boivent un café à la buvette, longtemps."
+
+  # ==================================================== LA COUPURE · le couloir
+  - id: pr.h5.vialat.couloir
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat, dans le couloir, sans s'arrêter : « Le second solde tombe en mai, {toi}. Si vous avez autre chose à me montrer que des chiffres, apportez-le ce jour-là. Pas avant. »"
+    left:
+      label: "J'apporterai"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h5_vialat_attend], outcome: compte}
+      answer: "Elle hoche la tête sans se retourner, et descend l'escalier une marche à la fois, en comptant à mi-voix."
+    right:
+      label: "Je n'ai que des chiffres"
+      effects: {direction: "+", outcome: refuse}
+      answer: "« Les chiffres suffisent, d'habitude. » Elle s'arrête une seconde sous le clou de la photo, puis repart."
+
+  # ================================================== LA VOIX DU QUARTIER
+  # Ouverte par Camille (C1) : le conseil municipal se prépare dès la rentrée.
+  - id: pr.h5.lambert.buvette
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Gégé, à la buvette : « Lambert, conseiller du quartier de la Rive. Il était au virage en 74, à ma gauche. Il vote avec le maire depuis vingt ans. Tu veux que je t'emmène chez lui, {toi} ? »"
+    left:
+      label: "Emmène-moi"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Gégé sort sa vieille break qui sent le chien. Il fait trois rues pour deux cents mètres, pour que tu arrives de face."
+    right:
+      label: "J'y vais par moi-même"
+      effects: {direction: "+"}
+      answer: "Il écrit un rendez-vous au dos d'un ticket de buvette : café de la Mairie, jeudi. En dessous : « parle-lui à droite »."
+
+  - id: pr.h5.lambert.cuisine
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, direction]
+    lieu: cafe
+    tone: leger
+    once: true
+    text: "Café de la Mairie. Lambert, conseiller du quartier, sort de son portefeuille une photo du virage de 1974. « Je voterai selon ce que vous direz là-bas. Sinon, je vote avec le maire. »"
+    left:
+      label: "Je dirai quelque chose"
+      effects: {tribunes: "+", set: [h5_lambert_vu], outcome: vu}
+      answer: "« Dites-le fort. J'entends mal à gauche depuis 74. » Il range la photo et te laisse payer les cafés, sans discuter."
+    right:
+      label: "Votez comme vous voulez"
+      effects: {direction: "+", set: [h5_lambert_libre], outcome: perdu}
+      answer: "« Je ne veux rien, moi. C'est pour ça qu'on me demande. » Il ressert le café sans te demander, et regarde la place."
+
+  - id: pr.h5.lambert.permanence
+    roles: [president]
+    arc: tribune
+    tags: [direction, tribunes]
+    speaker: aubert
+    lieu: mairie
+    tone: leger
+    once: true
+    text: "Madame Aubert, députée, à la sortie de sa permanence, le manteau sur le bras : « Le maire compte ses voix, et Lambert en est une. On me dit que vous l'avez vu. On me dit tout, vous savez. »"
+    left:
+      label: "Je l'ai vu"
+      effects: {tribunes: "+", direction: "-", relation: {aubert: -1}}
+      answer: "« Moi aussi, je l'ai vu, en 1974. Il était debout sur le grillage. » Elle enfile son manteau d'un seul geste."
+    right:
+      label: "On vous ment"
+      effects: {direction: "+", relation: {aubert: 1}}
+      answer: "« On ment toujours aux députés. Moi, je note qui. » Elle sourit, une fois, et monte dans sa voiture."
+
+  # =========================================== LE DOSSIER DE LA PROCUREURE
+  - id: pr.h5.dossier.convocation
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: amsel
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Au palais. Amsel ouvre un dossier mince. « Votre nom traîne, {toi}, dans une vitrine du quai, ou dans un tiroir de l'agence. Vous m'apportez ce que vous avez, ou j'attends qu'on me l'apporte ? »"
+    left:
+      label: "Je vous apporte tout"
+      effects: {direction: "-", relation: {amsel: 1}, set: [h5_amsel_temoin], outcome: temoin}
+      answer: "Tu poses sur son bureau ce que tu as. Elle range chaque pièce dans une chemise, et les chemises par ordre alphabétique."
+    right:
+      label: "Je n'ai rien"
+      effects: {direction: "+", relation: {amsel: -1}, set: [h5_amsel_dossier], outcome: dossier}
+      answer: "« Bien. » Elle écrit ta réponse, puis l'heure, puis un point. Le point est appuyé : il traverse la page."
+
+  - id: pr.h5.dossier.voix_cassette
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: amsel
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Judith Amsel, au téléphone, à neuf heures pile : « J'ai fait écouter la cassette à votre secrétaire, {toi}. Elle a dit Josie avant la fin de la première phrase. Elle a pleuré à la deuxième. »"
+    left:
+      label: "Elle connaît la voix"
+      effects: {direction: "-", set: [h5_josie, h5_josie_juge]}
+      answer: "« Elle la connaît depuis 1966. Moi, depuis ce matin. Ça me suffit, à moi aussi. » Elle raccroche à l'heure exacte."
+    right:
+      label: "Laissez-la tranquille"
+      effects: {relation: {josiane: 1}, set: [h5_josie, h5_josie_juge]}
+      answer: "« Je la laisse. Elle est repartie avec un de mes mouchoirs. » Un silence. « Il faudra me le rendre, le mouchoir. »"
+
+  - id: pr.h5.dossier.voix
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: amsel
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Judith Amsel, au téléphone, à neuf heures pile : « Il me manque une voix, {toi}. Un homme, le mardi, à dix-huit heures. Vous n'auriez pas une voix, quelque part, sur une bande ? »"
+    left:
+      label: "Restée à l'hôtel"
+      effects: {direction: "-"}
+      answer: "« Les hôtels gardent tout, sauf les bandes. » Elle note le nom de l'hôtel, puis celui de la standardiste, Sandrine."
+    right:
+      label: "Je la reconnaîtrais"
+      effects: {direction: "+"}
+      answer: "« Reconnaître n'est pas prouver. Mais c'est commencer. » Elle te donne rendez-vous mardi, dix-huit heures, à son bureau."
+
+  - id: pr.h5.dossier.gardien
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: amsel
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Judith Amsel, entre deux audiences : « Le gardien de la résidence a été entendu ce matin. Il parle d'une phrase, dite un soir devant lui : la vue serait plus belle sans. Qui l'a dite, {toi} ? »"
+    left:
+      label: "Madame Tessandier"
+      effects: {direction: "-", relation: {amsel: 1}, set: [h5_phrase_connue]}
+      answer: "Elle ne l'écrit pas : elle l'a déjà écrite, en haut d'une page, soulignée, avec l'heure. « Merci de confirmer. »"
+    right:
+      label: "Tout le monde la dit"
+      effects: {direction: "+"}
+      answer: "« Non. Tout le monde la pense. Une seule personne l'a dite devant un homme qui avait un bidon. » Elle retourne à son audience."
+
+  # ================================================================ LA VUE
+  - id: pr.h5.vue.pinceau
+    roles: [president]
+    arc: absurde
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "L'agence, store à mi-hauteur. Elle époussette la maquette au pinceau, arbre par arbre. « La première tranche se vend mal. Onze appartements sur quarante. Vous savez pourquoi, {toi} ? La vue. »"
+    left:
+      label: "Quelle vue ?"
+      effects: {direction: "+", set: [h5_vue]}
+      answer: "« Les tribunes. Des gens qui crient le samedi sous vos fenêtres, en bordeaux. » Elle souffle sur la tribune Nord de la maquette."
+    right:
+      label: "Les gens aiment le stade"
+      effects: {tribunes: "+"}
+      answer: "« De loin. De près, ils aiment le parking. » Elle repose le pinceau, les poils en l'air, et ne te raccompagne pas."
+
+  - id: pr.h5.vue.gardien_temoin
+    roles: [president]
+    arc: absurde
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "Madame Tessandier, sans café cette fois. « Le gardien de la résidence. Un soir, devant lui, j'ai dit que la vue serait plus belle sans. Je l'ai dit comme on dit qu'il va pleuvoir. »"
+    left:
+      label: "Dites-le à la procureure"
+      effects: {tribunes: "+", set: [h5_tessandier_aveu], outcome: aveu}
+      answer: "Elle prend son manteau sans répondre. Elle laisse la vitrine allumée, la porte ouverte, et la clé dans la serrure, côté rue."
+    right:
+      label: "Gardez-le pour vous"
+      effects: {caisse: "+", set: [h5_tessandier_silence], outcome: silence}
+      answer: "« Je le garde. Je garde tout. » Elle éteint la vitrine. La maquette disparaît ; il reste ton reflet, et derrière, le vrai stade."
+
+  - id: pr.h5.vue.gardien
+    roles: [president]
+    arc: absurde
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "Madame Tessandier, le store baissé : « On dit qu'un garçon de la friche a vu quelqu'un, la nuit de l'Est. Les garçons de la friche voient beaucoup de choses, la nuit. Vous le croyez ? »"
+    left:
+      label: "Je le crois"
+      effects: {tribunes: "+", outcome: silence}
+      answer: "« Alors c'est que vous l'avez écouté. Moi, je ne descends jamais à la friche. » Elle l'a dit trop vite, et elle le sait."
+    right:
+      label: "Je ne crois personne"
+      effects: {direction: "+", set: [h5_tessandier_silence], outcome: silence}
+      answer: "« Moi non plus. C'est ce qui nous rend fréquentables. » Elle remonte le store d'un coup sec."
+
+  - id: pr.h5.vue.vitrine
+    roles: [president]
+    arc: absurde
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "La vitrine, un soir. Madame Tessandier redresse, du bout d'une pince, le petit panneau à ton nom. « Les maquettes ne se vendent pas. Elles attendent. Celle-ci attendra plus longtemps que nous. »"
+    left:
+      label: "Enlevez-le"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Elle l'enlève et le pose dans ta main. Il ne pèse rien. Tu le gardes dans ta poche jusqu'au conseil, et après."
+    right:
+      label: "Laissez-le"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "« Il est bien là. » Elle éteint tout, sauf le petit lac en résine, qu'elle laisse allumé la nuit, comme une veilleuse."
+
+  # Variante : elle a éteint sa vitrine (« Je garde tout »).
+  - id: pr.h5.vue.vitrine_noire
+    roles: [president]
+    arc: absurde
+    tags: [direction, objet]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "La vitrine est noire depuis des semaines. Madame Tessandier t'ouvre et n'allume que le petit lac en résine. Dans sa lueur, le panneau à ton nom. « On ne nous voit plus, d'ici. C'est reposant. »"
+    left:
+      label: "Enlevez-le"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Elle le prend à la pince et le couche sur le lac. Il y reste à plat, comme sur de la glace. Puis elle éteint le lac aussi."
+    right:
+      label: "Laissez-le"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "« Dans le noir, il ne gêne personne. » Elle éteint. Sur le quai, tu te retournes : la vitre ne renvoie plus rien, pas même toi."
+
+  # ============================================================ LE CADASTRE
+  - id: pr.h5.cadastre.soeur
+    roles: [president]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane ferme la porte du secrétariat. « Ma sœur Mireille est aux archives de la mairie depuis 1971. Elle dit que la copie de 1931 n'est pas perdue. Elle est rangée sous un autre nom. »"
+    left:
+      label: "Quel nom ?"
+      effects: {direction: "-", relation: {josiane: 1}, set: [h5_mireille]}
+      answer: "« Marquès, Honoré, donation. Personne ne cherche un maire à la lettre M. » Elle note la cote au dos d'une licence de 1987."
+    right:
+      label: "Pas votre sœur"
+      effects: {direction: "+", relation: {josiane: -1}, outcome: rien}
+      answer: "« Ma sœur a soixante-sept ans et un trousseau. Elle fait ce qu'elle veut. » Elle rouvre la porte, plus fort que nécessaire."
+
+  - id: pr.h5.cadastre.archives
+    roles: [president]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Madame Josiane pose une enveloppe kraft sur ton bureau, sans s'asseoir. « Mireille l'a photocopiée à sept heures, avant les autres, puis remise à sa place, sous le M. Elle dit que c'était lourd. »"
+    left:
+      label: "Remerciez Mireille"
+      effects: {tribunes: "+", set: [h5_copie_cadastre], outcome: copie}
+      answer: "Une page, un tampon de 1931, la signature d'Honoré Marquès. Et en marge, au crayon : « 1976, à classer ailleurs »."
+    right:
+      label: "Gardez-la au secret"
+      effects: {direction: "+", set: [h5_copie_cadastre], outcome: copie}
+      answer: "Elle la range sous les licences de 1987, avec le classeur de 1998. « Ici, personne ne cherche. Moi, je trouve. »"
+
+  - id: pr.h5.cadastre.marge
+    roles: [president]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Madame Josiane tient la photocopie à contre-jour, sur la marge au crayon. « 1976, à classer ailleurs. Cette écriture, je la connais : le secrétaire de mairie de l'époque. André Bastide. »"
+    left:
+      label: "Il gère la SCI"
+      effects: {direction: "-", set: [h5_bastide_1976]}
+      answer: "« Alors il range depuis longtemps. » Elle repose la feuille et se lave les mains au lavabo du couloir, longuement."
+    right:
+      label: "Bastide, encore"
+      effects: {relation: {josiane: 1}, set: [h5_bastide_1976]}
+      answer: "« Encore. Il signait les permis de construire. Il aimait les marges. » Elle te sert un café, deux sucres, sans demander."

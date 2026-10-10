@@ -109,6 +109,12 @@
 ///   des codes s'en tient aux quatre postulats de 1990 (index 0 à 3) : les
 ///   postulats des rôles de bureau, désormais dans le contenu, auraient porté
 ///   le fichier à cinquante codes.
+/// · **Histoire 5, « La Maquette »** (la branche `histoire-h5`). Le président
+///   du géant déchu devient un livre, avec huit visages nouveaux (Madame
+///   Vialat, Paulette, Dembo, Malbec, la procureure Amsel, Madame Tessandier,
+///   Dorian ; Didier Vallin était déjà venu avec le livre 3). Aucune des
+///   vingt carrières ne bouge : seule la part « personnages » de l'empreinte
+///   change (leur nombre et la somme de leurs âges). `--goldens --write`.
 library;
 
 import 'dart:io';

@@ -1,0 +1,204 @@
+# Les réactions de « La Maquette » : quelqu'un a entendu, quelqu'un a vu, la
+# carte d'après. Hors créneau, un locuteur, de petits effets, jamais de fin ;
+# chacune est gardée par `!seen()` dans le `react` qui l'appelle (le moteur en
+# sert quatre par saison au plus, jamais deux de suite).
+#
+# Qui les appelle :
+#   · le café (A1, « Je veux voir les plans ») → Tessandier et la lettre du 12 juin ;
+#   · la caution (A3) → Josiane : « Josie », le bal de la Coupe ;
+#   · le feu (A4) → Josiane : l'assurance, le compte bloqué le 3 novembre ;
+#   · le salon (B4, la cassette) → Josiane reconnaît la voix ;
+#   · la vase (B1) → la procureure et la carte grise de 1990 ;
+#   · la maquette (B2, « Je laisse faire ») → Camille au dîner ;
+#   · la grève (B3, « Je signe avec eux ») → Dembo et la photo de L'Écho ;
+#   · le jeudi du Conseil (Oudart vendu) → Vukić et son cahier ;
+#   · la plaque déposée → Gégé et les quatre trous de vis ;
+#   · le petit Tavernier vendu → Gégé et l'éponge ;
+#   · le fax de La Plume (« J'appelle La Plume ») → Léa.
+cards:
+  - id: pr.h5.re.tessandier_lettre
+    roles: [president]
+    arc: contrat
+    tags: [direction]
+    speaker: tessandier
+    tone: leger
+    once: true
+    text: "Madame Tessandier, en te raccompagnant à la porte : « Les plans, je les montre à tout le monde. La lettre du 12 juin, je ne la montre à personne. Nous sommes d'accord ? »"
+    left:
+      label: "Nous sommes d'accord"
+      effects: {direction: "+", set: [h5_lettre_cachee]}
+      answer: "Elle tient la porte pour toi. La clochette ne tinte pas : elle l'a fait taire avec un bout de feutre, il y a des années."
+    right:
+      label: "Quelle lettre ?"
+      effects: {tribunes: "+"}
+      answer: "« C'est ça. » Elle sourit, une seule fois, et retourne s'asseoir. Sur son bureau, un tiroir est fermé à clé."
+
+  - id: pr.h5.re.josiane_josie
+    roles: [president]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane lève les yeux de sa machine à écrire. « Il a dit Josie ? Personne ne m'appelle comme ça depuis le bal de la Coupe, en 1966. Il dansait mal, et il marchait sur les robes. »"
+    left:
+      label: "Il dansait avec vous ?"
+      effects: {relation: {josiane: 1}}
+      answer: "« Avec toutes. Moi, je tenais le vestiaire. » Elle se remet à taper, plus vite qu'avant, sans une faute de frappe."
+    right:
+      label: "Ça ne veut rien dire"
+      effects: {direction: "+"}
+      answer: "« Non. Rien du tout. » Elle note quelque chose dans la marge de son agenda, et le souligne d'un trait."
+
+  - id: pr.h5.re.josiane_assurance
+    roles: [president]
+    arc: argent
+    tags: [caisse]
+    speaker: josiane
+    tone: leger
+    once: true
+    text: "Madame Josiane, une lettre de la Prévoyance Aubérivoise à la main : « La prime de novembre n'est pas partie. Le compte était bloqué depuis le 3, par la banque. L'Est n'était plus assurée. »"
+    left:
+      label: "Qui a bloqué ?"
+      effects: {direction: "-", set: [h5_assurance_bloquee]}
+      answer: "« Monsieur Dorian, sur ordre du siège. Il a signé lui-même ; il signe tout lui-même. » Elle pose la lettre face contre le bureau."
+    right:
+      label: "Classez-la"
+      effects: {direction: "+"}
+      answer: "Elle la classe à la lettre P. Puis elle la ressort, la regarde, et la classe à la lettre D, sans rien dire."
+
+  - id: pr.h5.re.josiane_cassette
+    roles: [president]
+    arc: president
+    tags: [direction, objet]
+    speaker: josiane
+    tone: strategique
+    once: true
+    text: "Madame Josiane écoute la cassette au secrétariat, le volume au plus bas. À la troisième phrase, elle appuie sur STOP. « C'est le directeur de la banque. Il m'appelle Josie depuis trente ans. »"
+    left:
+      label: "Écoutez la fin"
+      effects: {direction: "-", set: [h5_josie, h5_fin_de_bande]}
+      answer: "Elle laisse tourner. Une chaise, puis une voix de femme : « …signe en bas, pas en marge. » Josiane te regarde, toi, pas la cassette."
+    right:
+      label: "Ça suffit"
+      effects: {relation: {josiane: 1}, set: [h5_josie]}
+      answer: "Elle rembobine jusqu'au début, exactement, et te rend la cassette dans un mouchoir en papier, sans y toucher."
+
+  - id: pr.h5.re.amsel_carte_grise
+    roles: [president]
+    arc: instances
+    tags: [direction]
+    speaker: amsel
+    tone: leger
+    once: true
+    text: "Judith Amsel te rattrape au bout du quai. « La carte grise est au nom d'un entraîneur de 1990. Vous étiez abonné{pg, select, f{e} other{}}, je crois. Vous avez vu sa voiture, cet automne-là ? »"
+    left:
+      label: "Tout l'automne"
+      effects: {relation: {amsel: 1}}
+      answer: "« Sur la place ENTRAÎNEUR du parking, je sais. Et une nuit de décembre, plus rien. » Elle note : abonné{pg, select, f{e} other{}}, a vu."
+    right:
+      label: "Je regardais le terrain"
+      effects: {direction: "+"}
+      answer: "« Tout le monde regardait le terrain. C'est comme ça qu'on perd une voiture. » Elle rouvre son parapluie."
+
+  - id: pr.h5.re.camille_vitrine
+    roles: [president]
+    arc: famille
+    tags: [famille]
+    speaker: camille
+    tone: leger
+    once: true
+    text: "Camille, au dîner, sans lâcher sa fourchette : « Ton nom est dans la vitrine de l'agence. Il se lit depuis le trottoir d'en face. Tu l'as regardé depuis le trottoir d'en face ? »"
+    left:
+      label: "Pas encore"
+      effects: {relation: {camille: 1}}
+      answer: "« Fais-le un soir. De là, on voit aussi le stade, au fond, derrière. Tant qu'il y est. » Elle ressert la soupe."
+    right:
+      label: "C'est un panneau"
+      effects: {relation: {camille: -1}}
+      answer: "« Tout est un panneau. » Elle débarrasse ton assiette avant que tu aies fini, et la pose sur la sienne."
+
+  - id: pr.h5.re.dembo_photo
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: dembo
+    tone: leger
+    once: true
+    text: "Dembo, L'Écho plié sous le bras, ta signature photographiée en page trois : « Tu as signé plus gros que nous. Les gars disent que c'est pour la photo. Moi, je ne dis rien. Je regarde. »"
+    left:
+      label: "Regarde samedi"
+      effects: {vestiaire: "+", relation: {dembo: 1}}
+      answer: "Samedi, il regarde la loge à chaque arrêt de jeu. Tu y es, debout, à chaque fois. Il ne le dira jamais aux autres."
+    right:
+      label: "Les gars ont raison"
+      effects: {vestiaire: "-"}
+      answer: "Il rit, un peu. « Au moins, tu signes les vérités. » Il déchire la page trois et la colle dans son casier."
+
+  - id: pr.h5.re.vukic_oudart
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    tone: leger
+    once: true
+    text: "Vukić, le soir, au bord du terrain annexe, le cahier ouvert : « Tu as vendu Oudart un jeudi. Je l'écris. Je n'écris pas pourquoi : je ne le sais pas. Toi, tu le sais ? »"
+    left:
+      label: "Écris pourquoi"
+      effects: {vestiaire: "+", relation: {vukic: 1}}
+      answer: "Tu dictes. Il écrit, puis il raye un mot, « Conseil », et le récrit au-dessus, plus petit, entre guillemets."
+    right:
+      label: "N'écris rien"
+      effects: {relation: {vukic: -1}}
+      answer: "Il referme le cahier sur le crayon, pour marquer la page. Il ne te dit pas bonsoir ; il dit « à jeudi »."
+
+  - id: pr.h5.re.gege_trous
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "Gégé, à la grille de l'Est, un doigt dans l'un des quatre trous de vis : « Ils sont venus avec une perceuse, un mardi matin. Tu étais au courant, {toi} ? »"
+    left:
+      label: "C'est moi qui l'ai demandé"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "Il retire son doigt du trou. « Au moins, tu le dis. » Le samedi, la Nord accroche une écharpe à chaque trou."
+    right:
+      label: "Je me renseigne"
+      effects: {tribunes: "-"}
+      answer: "« Renseigne-toi. Moi, je sais déjà. » Il crache par terre, pas sur la grille ; il fait toujours attention à la grille."
+
+  - id: pr.h5.re.gege_eponge
+    roles: [president]
+    arc: mercato
+    tags: [tribunes, ultras]
+    speaker: gege
+    tone: leger
+    once: true
+    text: "La porte du local du kop. Gégé a effacé PERSONNE à l'éponge ; il reste NE PART, et la date. « Je garde la date, {toi}. C'est le jour où tu as compté. »"
+    left:
+      label: "Je te devais la vérité"
+      effects: {relation: {gege: -1}}
+      answer: "« Tu me devais Tavernier. » Il rince l'éponge dans un seau, longtemps, jusqu'à ce que l'eau soit claire."
+    right:
+      label: "Efface tout"
+      effects: {tribunes: "-"}
+      answer: "Il n'efface rien. Le samedi suivant, la date est recopiée à la craie sur une banderole, en bas de la Nord."
+
+  - id: pr.h5.re.lea_plume
+    roles: [president]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    tone: leger
+    once: true
+    text: "Léa, au téléphone, de bonne heure : « On me dit que vous avez reçu un fax signé d'une plume. La Plume ne faxe jamais deux fois au même numéro. Vous me le lisez, ou je viens le lire ? »"
+    left:
+      label: "Venez le lire"
+      effects: {relation: {lea: 1}}
+      answer: "Elle arrive dans l'heure, lit le fax deux fois et recopie le nom du gérant sur le dos de sa main, au stylo bille."
+    right:
+      label: "Je le garde pour moi"
+      effects: {direction: "+"}
+      answer: "« Personne ne garde La Plume pour soi. » Elle raccroche. Une heure plus tard, elle sonne au club-house, avec des croissants."

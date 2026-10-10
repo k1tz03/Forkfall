@@ -1,0 +1,367 @@
+# Les intrigues de « La Maquette » qui s'ouvrent en saison 1 (S0) : La 14B, Le
+# Conseil, Le mot de janvier, Les Terrasses sur le maillot, Le bureau d'après,
+# Le délai de la Ligue. Arcs : content/arcs/president/h5_intrigues.yaml. Les
+# étapes de ces intrigues qui tombent la saison suivante sont dans
+# h5_intrigues_s1.yaml.
+#
+# Personnages sans id (le texte les présente) : Oudart (le gardien de vingt-deux
+# ans), le petit Tavernier (dix-neuf ans, le seul du quartier dans le onze),
+# Maître Guénot, les employés municipaux, le serrurier.
+cards:
+  # =================================================================== LA 14B
+  # Étape 1 — la place 14B, avant le feu (ouverte par le café, A1).
+  - id: pr.h5.14b.tribune
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Tribune Est, samedi, place 14B. Paulette, une couverture écossaise sur les genoux, un thermos entre les pieds. « Mon père a donné ce terrain en 1931. Aux enfants du quartier. Vous saviez, {toi} ? »"
+    left:
+      label: "Racontez-moi"
+      effects: {tribunes: "+", relation: {paulette: 1}, set: [h5_14b_ecoutee], outcome: ecoutee}
+      answer: "Elle raconte jusqu'à la mi-temps : le maire Marquès, son père, la donation, « à perpétuité ». Elle te sert du café dans le bouchon."
+    right:
+      label: "Je dois descendre"
+      effects: {tribunes: "-", direction: "+", outcome: pressee}
+      answer: "« Descendez. On descend toujours. » Elle reverse son café dans le thermos sans en perdre une goutte, et regarde le match."
+
+  # Étape 2 — la grille, le lendemain du feu (tirée par le feu, A4). Les deux
+  # sorties mènent au témoin de la friche, la saison suivante.
+  - id: pr.h5.14b.grille
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    lieu: stade
+    when: "flag('h5_tribune_est_brulee')"
+    tone: leger
+    once: true
+    text: "Le lendemain du feu. Paulette fouille les cendres de la grille du bout de sa canne et ramasse un morceau de fonte : ENFANTS DU. « Le reste a fondu. Les mots, ça fond à combien de degrés ? »"
+    left:
+      label: "Je vous raccompagne"
+      effects: {tribunes: "+", relation: {paulette: 1}, set: [h5_fonte], schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
+      answer: "En chemin, elle dit : « Le petit Vallin, à la friche, a vu quelqu'un cette nuit-là. Personne ne lui demande jamais rien. »"
+    right:
+      label: "Je ferai reconstruire"
+      effects: {caisse: "-", direction: "+", set: [h5_fonte, h5_reconstruction_promise], schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
+      answer: "« En bois ? » Elle glisse la fonte dans son sac. « Demandez au petit Vallin, à la friche. Lui était dehors, cette nuit. »"
+
+  # Variante : la plaque avait été déposée en octobre, sur ordre du Conseil.
+  - id: pr.h5.14b.grille_plaque
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: paulette
+    lieu: stade
+    when: "flag('h5_tribune_est_brulee')"
+    tone: leger
+    once: true
+    text: "Le lendemain du feu, devant la grille noire. Paulette regarde les quatre trous de vis. « Enlevée en octobre, la plaque. Pour la protéger, sans doute. Vous saviez qu'il allait pleuvoir du feu ? »"
+    left:
+      label: "Elle est au grenier"
+      effects: {tribunes: "+", relation: {paulette: 1}, schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
+      answer: "« Elle a eu plus de chance que la 14B. » En partant : « Le petit Vallin, à la friche, a vu quelqu'un. Demandez-lui. »"
+    right:
+      label: "Je ne savais pas"
+      effects: {direction: "+", relation: {paulette: -1}, schedule: [{card: pr.h5.vallin.lit, in: [8, 11]}]}
+      answer: "« Personne ne sait jamais rien, ici. Sauf le petit Vallin, à la friche. Lui, il était dehors, cette nuit-là. »"
+
+  # ============================================================== LE CONSEIL
+  # Étape 1 — le jeudi (tirée par le premier mardi, A2). Bréhaut a le fax
+  # avant toi.
+  - id: pr.h5.ordres.jeudi
+    roles: [president]
+    arc: president
+    tags: [vestiaire, mercato]
+    speaker: brehaut
+    lieu: bureau
+    when: "flag('h5_conseil_entendu')"
+    tone: strategique
+    once: true
+    text: "Jeudi matin. Titi Bréhaut a déjà le fax de Valentienne : cent mille francs pour Oudart, vingt-deux ans, le seul gardien sous contrat. « Ils ont appelé avant toi. Je signe ? »"
+    left:
+      label: "Signe"
+      effects: {caisse: "++", vestiaire: "--", set: [h5_oudart_vendu], outcome: obei, react: [{card: pr.h5.re.vukic_oudart, if: "!seen('pr.h5.re.vukic_oudart')"}]}
+      answer: "Oudart vide son casier à midi et laisse ses gants au suivant. Il n'y a pas de suivant : Vukić prend le gamin des moins de dix-neuf ans."
+    right:
+      label: "Oudart reste"
+      effects: {vestiaire: "+", caisse: "-", set: [h5_oudart_garde], outcome: refuse}
+      answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, comme si quelqu'un regardait par-dessus son épaule."
+
+  # Étape 2 — la plaque de fonte. Le Conseil la veut avant samedi.
+  - id: pr.h5.ordres.plaque_obei
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures. « Ici le Conseil. Bien, pour le gardien. Faites déposer la plaque de la grille Est avant samedi. Elle gêne les géomètres. Nous rappellerons. »"
+    left:
+      label: "Je la fais déposer"
+      effects: {tribunes: "-", relation: {gege: -1}, set: [h5_plaque_deposee], outcome: obei, react: [{card: pr.h5.re.gege_trous, if: "!seen('pr.h5.re.gege_trous')"}]}
+      answer: "Deux employés municipaux la dévissent au matin. Josiane la fait monter au grenier, roulée dans un maillot de 1966."
+    right:
+      label: "La plaque reste"
+      effects: {direction: "-", set: [h5_plaque_restee], outcome: refuse}
+      answer: "Le samedi, Gégé la trouve couverte d'écharpes nouées. Il n'a rien demandé à personne. Personne ne sait qui a commencé."
+
+  - id: pr.h5.ordres.plaque
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures. « Ici le Conseil. Vous avez gardé votre gardien ; nous gardons votre dossier de prêt. Faites déposer la plaque de la grille Est avant samedi. »"
+    left:
+      label: "Je la fais déposer"
+      effects: {tribunes: "-", caisse: "+", relation: {gege: -1}, set: [h5_plaque_deposee], outcome: obei, react: [{card: pr.h5.re.gege_trous, if: "!seen('pr.h5.re.gege_trous')"}]}
+      answer: "Les employés municipaux la dévissent au matin. Josiane la monte au grenier, roulée dans un maillot de 1966, sans rien demander."
+    right:
+      label: "La plaque reste"
+      effects: {direction: "-", caisse: "-", set: [h5_plaque_restee], outcome: refuse}
+      answer: "Le samedi, la plaque est couverte d'écharpes nouées. Le lundi, ton dossier de prêt revient de la banque, tamponné « en attente »."
+
+  # Étape 3 — les cendres, après le feu.
+  - id: pr.h5.ordres.cendres_plainte
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    when: "flag('h5_tribune_est_brulee')"
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures. « Ici le Conseil. L'Est n'était pas assurée, vous l'avez appris. Retirez votre plainte avant Noël, et la banque débloquera le compte du club. »"
+    left:
+      label: "Je retire la plainte"
+      effects: {caisse: "++", tribunes: "-", set: [h5_plainte_retiree], outcome: obei}
+      answer: "Le commissaire raye « contre X » d'un trait propre. Le lendemain, le compte du club est débloqué à neuf heures pile."
+    right:
+      label: "Elle reste"
+      effects: {caisse: "-", direction: "-", outcome: refuse}
+      answer: "« Bien. » Le Conseil ne raccroche pas. C'est toi qui raccroches, après une minute entière de souffle."
+
+  - id: pr.h5.ordres.cendres
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    when: "flag('h5_tribune_est_brulee')"
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures. « Ici le Conseil. Merci pour le déblaiement. Les géomètres passent lundi. Laissez la clé de la grille sous le paillasson du gardien. »"
+    left:
+      label: "Je laisse la clé"
+      effects: {direction: "+", tribunes: "-", set: [h5_cle_laissee], outcome: obei}
+      answer: "Le lundi, des piquets orange sont plantés dans les cendres de l'Est, alignés au cordeau. Gégé les arrache le mardi."
+    right:
+      label: "Je change la serrure"
+      effects: {direction: "-", set: [h5_serrure_changee], outcome: refuse}
+      answer: "Le serrurier vient à vingt heures et te donne deux clés. Le mercredi, il y en a une troisième sur ton bureau, sans mot."
+
+  # ========================================================= LE MOT DE JANVIER
+  - id: pr.h5.kop.local
+    roles: [president]
+    arc: mercato
+    tags: [tribunes, ultras, mercato]
+    speaker: gege
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Local du kop, sous la Nord. Gégé tient une boîte à chaussures pleine d'abonnements payés. « Ils ont payé la saison, {toi}. Dis-moi que personne ne part au mercato d'hiver, et je le dis au virage. »"
+    left:
+      label: "Personne ne part"
+      effects: {tribunes: "+", vestiaire: "+", relation: {gege: 1}, set: [h5_mot_donne]}
+      answer: "Gégé écrit PERSONNE NE PART à la craie sur la porte du local, en lettres de quarante centimètres, et date en dessous."
+    right:
+      label: "Je ne promets rien"
+      effects: {tribunes: "-", direction: "+", set: [h5_mot_refuse], outcome: refuse}
+      answer: "« Au moins, tu ne mens pas. » Il referme la boîte. Le samedi, la Nord chante un quart d'heure de moins, chronométré."
+
+  - id: pr.h5.kop.janvier
+    roles: [president]
+    arc: mercato
+    tags: [mercato, tribunes]
+    speaker: malbec
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Hubert Malbec, président de Valentienne, au téléphone : « Huit cent mille pour le petit Tavernier, dix-neuf ans, virés lundi. La Nord vous pardonnera. Elle pardonne toujours, au printemps. »"
+    left:
+      label: "Tavernier reste"
+      effects: {caisse: "--", tribunes: "+", set: [h5_mot_tenu], outcome: tenu}
+      answer: "Malbec rit, poliment. « Je rappellerai en été. Les présidents sont moins fiers en été. » Il raccroche avant la fin de sa phrase."
+    right:
+      label: "Je vends Tavernier"
+      effects: {caisse: "+++", tribunes: "--", vestiaire: "-", set: [h5_mot_rompu], outcome: rompu, react: [{card: pr.h5.re.gege_eponge, if: "!seen('pr.h5.re.gege_eponge')"}]}
+      answer: "Le virement arrive le lundi à neuf heures. À dix, Tavernier vide son casier ; il emporte la photo de sa mère scotchée à la porte."
+
+  # ============================================== LES TERRASSES SUR LE MAILLOT
+  - id: pr.h5.maillot.offre
+    roles: [president]
+    arc: contrat
+    tags: [sponsors, caisse]
+    speaker: tessandier
+    tone: strategique
+    once: true
+    text: "Madame Tessandier pose sur ton bureau un maillot bordeaux : LES TERRASSES DE LA RIVE sur la poitrine. « Six cent mille la saison, {toi}. Une ligne au contrat : accompagner le projet urbain. »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "+++", tribunes: "--", set: [h5_maillot_terrasses], outcome: signe}
+      answer: "Elle signe la première, en bas, d'un stylo-plume qui ne coule pas. Le maillot reste plié sur ton bureau, la poitrine en l'air."
+    right:
+      label: "Le maillot ne se vend pas"
+      effects: {caisse: "--", tribunes: "+", set: [h5_maillot_refuse], outcome: refuse}
+      answer: "« Tout se vend. Le maillot, c'est juste ce qui se voit. » Elle laisse le maillot sur le bureau, pour que tu le regardes."
+
+  - id: pr.h5.maillot.vestiaire
+    roles: [president]
+    arc: contrat
+    tags: [sponsors, vestiaire]
+    speaker: dembo
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vestiaire, avant le match. Dembo tient le maillot neuf à bout de bras : LES TERRASSES DE LA RIVE. « Je mets ça. Et ma mère, qui habite rue de la Rive depuis 1970, elle met quoi ? »"
+    left:
+      label: "Tu le mets"
+      effects: {vestiaire: "-", caisse: "+", outcome: signe}
+      answer: "Il le met, à l'envers d'abord, puis à l'endroit. Il marque à la soixantième minute et ne se retourne pas vers la loge."
+    right:
+      label: "Jouez en blanc"
+      effects: {vestiaire: "+", caisse: "--", set: [h5_maillot_blanc], outcome: rompu}
+      answer: "Ils sortent en blanc, rien sur la poitrine. Madame Tessandier appelle à la mi-temps ; Josiane répond que tu n'es pas joignable."
+
+  - id: pr.h5.maillot.virage
+    roles: [president]
+    arc: contrat
+    tags: [sponsors, tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Gégé a fait floquer vingt maillots blancs, sans rien sur la poitrine, et les a payés en liquide. « Pour ceux du virage qui n'ont pas la vue sur l'eau. Tu en veux un ? Il reste ta taille. »"
+    left:
+      label: "J'en prends un"
+      effects: {tribunes: "+", relation: {gege: 1}, outcome: refuse}
+      answer: "Il te tend le dernier, une taille au-dessus. « Il rétrécira. Comme le reste. » Il ne dit pas de quoi il parle ; il parle du stade."
+    right:
+      label: "Je paie les vingt"
+      effects: {vestiaire: "+", caisse: "-", outcome: refuse}
+      answer: "Il refuse ton argent, puis le prend, puis le range dans la boîte à chaussures des abonnements. « Pour le car des déplacements. »"
+
+  # ====================================================== LE BUREAU D'APRÈS
+  - id: pr.h5.dapres.cahier
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    lieu: terrain
+    when: "flag('h5_conseil_entendu') && (season >= 1 || slot >= 7)"
+    tone: leger
+    once: true
+    text: "Terrain annexe, sous les thuyas. Vukić ouvre son cahier à la page des mardis. « Dix-huit heures cinq, Titi au téléphone de la buvette. Six mardis, six fois. Je note tout ; je ne comprends rien. »"
+    left:
+      label: "Montre-moi"
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h5_cahier_lu]}
+      answer: "Six lignes, la même heure, l'écriture serrée de Vukić. Au sixième mardi, il a ajouté : « a souri en raccrochant »."
+    right:
+      label: "Ferme ce cahier"
+      effects: {vestiaire: "-", direction: "+", relation: {vukic: -1}}
+      answer: "Il le ferme. Il le range dans la poche intérieure de son blouson, contre lui, comme un portefeuille plein."
+
+  - id: pr.h5.dapres.titi
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Titi Bréhaut ferme la porte de ton bureau derrière lui et reste debout. « On m'a promis un bureau dans le club d'après. Il y aura un club d'après, {toi}. Il y en a toujours un. »"
+    left:
+      label: "Vide ton bureau"
+      effects: {vestiaire: "-", direction: "+", set: [h5_brehaut_renvoye], outcome: renvoye, char: {brehaut: {statut: parti}}}
+      answer: "Il vide son tiroir dans un carton de maillots. Sur le dessus, une carte de visite qu'il retourne, face contre le carton."
+    right:
+      label: "Reste, et raconte"
+      effects: {direction: "-", relation: {brehaut: 1}, set: [h5_brehaut_garde], outcome: garde}
+      answer: "Il raconte : un homme à la banque, une femme à l'agence, et une troisième voix, jamais entendue. C'est d'elle qu'il a peur."
+
+  # Variante : on a lu le cahier de Vukić (six mardis, dix-huit heures cinq).
+  - id: pr.h5.dapres.titi_cahier
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Titi Bréhaut ferme la porte. Sur ton bureau, la page des mardis du cahier de Vukić : « 18 h 05, Titi, buvette ». Il la lit sans y toucher. « On m'a promis un bureau dans le club d'après, {toi}. »"
+    left:
+      label: "Vide ton bureau"
+      effects: {vestiaire: "-", direction: "+", set: [h5_brehaut_renvoye], outcome: renvoye, char: {brehaut: {statut: parti}}}
+      answer: "Le carton de maillots attendait déjà derrière sa porte, à moitié plein. Il pose la page du cahier sur le dessus, bien à plat."
+    right:
+      label: "Qui appelle, le mardi ?"
+      effects: {direction: "-", relation: {brehaut: 1}, set: [h5_brehaut_garde], outcome: garde}
+      answer: "« Un homme à la banque, une femme à l'agence. Et une voix au-dessus, polie, qui sait le prénom de ma fille. » Il s'assoit enfin."
+
+  # ===================================================== LE DÉLAI DE LA LIGUE
+  - id: pr.h5.vaubourg.ligue
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: aulard
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Bar de l'hôtel. Jean-Marie Vaubourg, président de la Ligue, fait tourner son cognac. « Six mois de délai pour le Racing, {toi}, je peux. Contre une chose : mes comptes de 1998 restent à la cave. »"
+    left:
+      label: "Ils restent à la cave"
+      effects: {direction: "++", caisse: "+", set: [h5_comptes_enterres], outcome: enterre}
+      answer: "Il commande deux cognacs et n'en boit qu'un. Le délai arrive par fax le lendemain, signé de sa main, daté de la veille."
+    right:
+      label: "Je descends à la cave"
+      effects: {direction: "--", set: [h5_comptes_ouverts], outcome: ouvert}
+      answer: "« Descendez. Il fait froid, en bas. » Il paie ton verre et le sien avec un billet neuf, qu'il ne regarde pas."
+
+  - id: pr.h5.vaubourg.cave
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "La cave du club-house, une ampoule nue. Madame Josiane sort un classeur de 1998. « Le prêt de la Banque Aubérivoise, refusé le 30 juin 1998 à 17 h 55, signé Dorian. Le dépôt de bilan, un an après. »"
+    left:
+      label: "Faites-en trois copies"
+      effects: {relation: {josiane: 1}, set: [h5_pret_1998]}
+      answer: "Elle en fait trois et en garde une, « par habitude ». Elle range l'original sous les licences de 1987, où personne ne cherche."
+    right:
+      label: "Remettez-le"
+      effects: {direction: "+", set: [h5_pret_1998]}
+      answer: "Elle le remet à sa place, l'onglet tourné vers le mur. Tu sais maintenant où il dort. Elle aussi, depuis le début."
+
+  - id: pr.h5.vaubourg.fax
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat tient le fax de la Ligue du bout des doigts. « Six mois de délai, signé Vaubourg, daté de la veille. Un délai, c'est une dette qui attend. Vous savez ce qu'il attend, celui-là ? »"
+    left:
+      label: "Ses comptes de 1998"
+      effects: {direction: "-", relation: {vialat: 1}}
+      answer: "Elle ne note rien. Elle range le fax dans son sac, à côté de la coupure. « Je descendrai à la cave moi-même. »"
+    right:
+      label: "Le printemps, j'espère"
+      effects: {direction: "+", relation: {vialat: -1}}
+      answer: "« Le printemps vient après l'hiver. Les délais, après les dettes. » Elle repart, son sac contre la hanche."
