@@ -91,4 +91,14 @@ void main() {
     }
     expect(b.gauges, a.gauges);
   });
+
+  test('l\'article devant le nom du club', () {
+    expect(articlesDeClub('Le couloir de Racing Aubérive sent le liniment.', ['Racing Aubérive']), 'Le couloir du Racing Aubérive sent le liniment.');
+    expect(articlesDeClub("Le bus d'Olympique Valdorne est là.", ['Olympique Valdorne']), "Le bus de l'Olympique Valdorne est là.");
+    expect(articlesDeClub('De Stade Lyonnet à AS Portclair.', ['Stade Lyonnet', 'AS Portclair']), "Du Stade Lyonnet à l'AS Portclair.");
+    expect(articlesDeClub('Il signe à Sporting Roquemont.', ['Sporting Roquemont']), 'Il signe au Sporting Roquemont.');
+    expect(articlesDeClub('Le stade de Racing.', ['']), 'Le stade de Racing.');
+    expect(articlesDeClub("LE BILAN D'OLYMPIQUE SAINT-ÉTOILE", ['Olympique Saint-Étoile']), "LE BILAN DE L'OLYMPIQUE SAINT-ÉTOILE");
+    expect(articlesDeClub('ENTRAÎNEUR DE RACING AUBÉRIVE', ['Racing Aubérive']), 'ENTRAÎNEUR DU RACING AUBÉRIVE');
+  });
 }

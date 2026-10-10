@@ -46,9 +46,9 @@ const Map<String, String> kSampleVars = {
   'passe_titre': 'Le vieux gardien',
   'fil_rouge': 'president',
   'perso': 'Madame Josiane',
-  'perso_tic': 'J\'en ai vu passer, vous savez.',
+  'perso_tic': 'Un soir, j\'ai arrêté de mettre ton assiette.',
   'objectif_titre': 'Deux maintiens de suite',
-  'fin_titre': 'Le SMS de 23h47',
+  'fin_titre': 'Le message de 23h47',
 };
 
 /// Longueur maximale d'une ligne d'Almanach une fois rendue (spec §1.7).

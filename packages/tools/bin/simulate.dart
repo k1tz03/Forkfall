@@ -1835,7 +1835,11 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     String share(String t) => total == 0 ? '0' : _f(100 * (tones[t] ?? 0) / total, 0);
     final leger = total == 0 ? 0.0 : (tones['leger'] ?? 0) / total;
     final drame = total == 0 ? 0.0 : (tones['drame'] ?? 0) / total;
-    final tonesOk = leger >= 0.50 && leger <= 0.65 && drame <= 0.10 && (b != 'S0' || drame == 0);
+    // Plancher du léger : 0,50 → 0,45 avec la charte d'écriture
+    // (docs/bible/charte_histoire.md) : des saisons plus sombres sont voulues —
+    // jusqu'à deux événements sombres, tous `strategique`, et les gags réécrits
+    // en scènes. Mesure avant/après : docs/balance/step5_sombres.md.
+    final tonesOk = leger >= 0.45 && leger <= 0.65 && drame <= 0.10 && (b != 'S0' || drame == 0);
     stdout.writeln('  ${tonesOk ? '✔' : '✗'} ${'tons léger / stratégique / drame'.padRight(44)} ${share('leger')} / ${share('strategique')} / ${share('drame')} %');
     if (assertBudgets && !tonesOk) failures.add('[$b] tons ${share('leger')}/${share('strategique')}/${share('drame')}');
     final nouvOk = nouv.where((v) => v == 3 || v == 4).length / nc >= 0.95 && ms.every((m) => m.consecutiveNouvelles == 0);
@@ -1857,9 +1861,11 @@ void _reportNarrative(Narrative nar, Content content, int postulat, bool assertB
     if (assertBudgets && !datOk) failures.add('[$b] cartes d\'époque');
     final alarmsOk = alarms.every((v) => v <= 3);
     stdout.writeln('  ${alarmsOk ? '✔' : '✗'} ${'alarmes par saison (≤ 3)'.padRight(44)} moy ${_f(_mean(alarms))} · max ${alarms.isEmpty ? 0 : alarms.reduce(math.max)}');
-    final evMean = _mean(events);
-    final evOk = events.every((v) => v <= 1) && (b == 'S0' || evMean >= 0.2);
-    stdout.writeln('  ${evOk ? '✔' : '✗'} ${'événements par saison (≤ 1 ; ≥ 0,2 dès S1)'.padRight(44)} moy ${_f(evMean, 2)}');
+    // Le plafond est celui du metteur en scène (`events_max`, deux depuis la
+    // charte d'écriture : des rebondissements, mais gérés).
+    final evMean = _mean(events), evMax = content.director.eventsMax;
+    final evOk = events.every((v) => v <= evMax) && (b == 'S0' || evMean >= 0.2);
+    stdout.writeln('  ${evOk ? '✔' : '✗'} ${'événements par saison (≤ $evMax ; ≥ 0,2 dès S1)'.padRight(44)} moy ${_f(evMean, 2)}');
     if (assertBudgets && !evOk) failures.add('[$b] événements moy ${_f(evMean, 2)}');
     final overdueRate = steps == 0 ? 0.0 : overdue / steps;
     final backlogMax = backlog.isEmpty ? 0 : backlog.reduce(math.max);

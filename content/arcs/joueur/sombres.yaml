@@ -5,17 +5,18 @@
 # de premier plan. Ils naissent de l'état du monde et de la vie du joueur :
 # l'appartement de la rue des Lilas (deux pièces au-dessus de la boulangerie),
 # Camille, le terrain annexe, la salle de muscu, la laverie de la rue du
-# Stade, le Terminus, la buvette des anciens, la friche de la Tréfilerie.
+# Stade, le café de la Mairie, la buvette, la friche de la Tréfilerie.
 #
 #  1. L'homme au blouson gris (laverie, S1+) — le fil sur deux saisons : une
-#     enveloppe ; la saison suivante, la liste des licences (ton nom deux fois,
-#     deux salaires) ; la troisième fois, on sait qui l'envoie : Josiane (son
-#     frère tenait les comptes), ou Massenet qui l'a appris si tu lui as porté
-#     les papiers. Fusée longue (`at_season: 1`), et `same_club: false` : le
-#     fil suit le joueur vendu, sinon la pépite ne le finissait presque jamais.
+#     enveloppe (un virement du club vers Valdorne) ; la saison suivante, la
+#     liste des licences (ton nom deux fois, deux salaires) ; la troisième
+#     fois, on sait qui l'envoie : Josiane (son frère tenait les comptes), ou
+#     Massenet qui l'a appris si tu lui as porté les papiers. Fusée longue
+#     (`at_season: 1`) ; à trente-deux ans, une seule saison. `same_club:
+#     false` : le fil suit le joueur vendu, sinon la pépite le finissait rarement.
 #  2. Ils t'attendent (domicile) — cinq écharpes sous la fenêtre ; le lendemain,
 #     Gégé si tu as appelé la police, Camille sinon.
-#  3. La voiture (parking) — VENDU sur le capot ; Gégé sait qui.
+#  3. La voiture (parking) — MERCENAIRE sur le capot ; Gégé sait qui.
 #  4. La lettre (domicile → terrain annexe) — des mots découpés contre Lian
 #     Mbako ; puis Mbako, qui en reçoit depuis septembre et qui joue samedi.
 #     Le racisme des tribunes sans complaisance : le mot n'est jamais écrit,
@@ -23,9 +24,9 @@
 #     Les trois forment « la maison » (§ 5.2) : devant chez toi → voiture → lettre.
 #  5. L'envahissement (stade) — un homme saute la grille et court vers toi ;
 #     le match d'après se joue à huis clos.
-#  6. Les photos (Terminus → rue des Lilas ou maison) — le chantage.
-#  7. La rue (rue des Lilas → cabinet du Doc) — trois écharpes du rival le soir
-#     d'un derby perdu ; le certificat dit « coups » ou « escalier ».
+#  6. Les photos (café de la Mairie → rue des Lilas, la maison ou le vestiaire) — le chantage.
+#  7. La rue (rue des Lilas → cabinet du Doc) — trois écharpes du rival après
+#     un derby ; le certificat dit « coups » ou « escalier ».
 #  8. La boîte (salle de muscu) — « Pour le genou. Tout le monde en prend. »
 #  9. Le coup de fil de trois heures (domicile → stade) — avant un match qui
 #     compte ; après la laverie, la voix parle de la laverie.
@@ -35,10 +36,12 @@
 #     le photographe ou la voix de trois heures si tu les as croisés.
 # 12. La bagarre de la buvette — la police veut des noms.
 #
-# Les fils se lisent entre eux : le huis clos et les noms donnés à la buvette
-# ramènent les écharpes sous la fenêtre ; la lettre, la rue, l'envahissement et
-# les plaintes allument la buvette ; la laverie rallume le téléphone de nuit ;
-# le chantage payé et l'appel de nuit envoient à la friche.
+# Les fils se lisent entre eux (chaque drapeau posé ici est lu ici) : le huis
+# clos et les noms donnés à la buvette ramènent les écharpes sous la fenêtre ;
+# la fenêtre amène la voiture, la voiture la lettre ; la lettre, la rue,
+# l'envahissement et les plaintes allument la buvette ; la laverie et la
+# friche rallument le téléphone de nuit ; le chantage payé et l'appel de nuit
+# envoient à la friche ; les nuits sans sommeil d'après le car mènent aux photos.
 #
 # Aucune carte n'est en `tone: drame` : le metteur en scène n'en sert qu'UNE
 # par carrière (`drameAllowed`, `drames < 1`). Un événement en drame volerait
@@ -53,7 +56,10 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "season >= 1"
+    # À trente-deux ans (la fin de contrat, qui passe souvent au banc l'été
+    # suivant), le fil se joue en une saison, et il doit commencer tôt : en
+    # deux saisons, le changement de rôle le coupait une fois sur trois.
+    when: "season >= 1 && (age <= 31 || slot <= 8)"
     chance: 0.07
     cast: [josiane, meneche]
     same_club: false
@@ -66,14 +72,18 @@ arcs:
     steps:
       - id: enveloppe
         card: jp.sb.laverie
-        next: [ { step: liste, at_season: 1, at: [3, 8], in: [3, 8] } ]
+        next:
+          - { step: liste, if: "age >= 32", in: [3, 5] }
+          - { step: liste, at_season: 1, at: [3, 8], in: [3, 8] }
       - id: liste
         # « Je porte tout à Massenet » pose `next: massenet` sur la carte ;
         # tout le reste va à Josiane.
         card:
           - { id: jp.sb.laverie_retour, if: "flag('sb_laverie_rendue')" }
           - { id: jp.sb.laverie_liste }
-        next: [ { step: josiane, in: [4, 7] } ]
+        next:
+          - { step: josiane, if: "age >= 32", in: [3, 5] }
+          - { step: josiane, in: [4, 7] }
       - id: massenet
         card: jp.sb.laverie_massenet
         next: []
@@ -93,10 +103,11 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    # La tribune qui déborde après une défaite, Gégé fâché, le huis clos dont
-    # on te fait porter le poids, ou des noms donnés à la police après la
-    # bagarre de la buvette (la buvette est restée ouverte : tu as parlé).
-    when: "(gauges.tribunes < 30 && world.serie_defaites >= 1) || relation.gege <= -2 || flag('sb_huis_clos') || (flag('sb_bagarre') && !flag('sb_buvette_fermee'))"
+    # La tribune qui déborde après une défaite, Gégé fâché, la promesse non
+    # tenue au kop (la bâche « enfant du pays », puis la demande de départ),
+    # le huis clos dont on te fait porter le poids, ou des noms donnés à la
+    # police après la bagarre de la buvette (restée ouverte : tu as parlé).
+    when: "(gauges.tribunes < 30 && world.serie_defaites >= 1) || relation.gege <= -2 || (flag('enfant_du_pays') && flag('demande_vente')) || flag('sb_huis_clos') || (flag('sb_bagarre') && !flag('sb_buvette_fermee'))"
     chance: 0.10
     cast: [camille, gege]
     same_club: true
@@ -115,7 +126,7 @@ arcs:
         card:
           - { id: jp.sb.devant_chez_toi_gege, if: "flag('sb_police_appelee')" }
           - { id: jp.sb.devant_chez_toi_matin }
-          - { id: jp.sb.devant_chez_toi_terminus }
+          - { id: jp.sb.devant_chez_toi_buvette }
         next: []
 
   # ======================================================= 3 · La voiture
@@ -127,13 +138,15 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "flag('sb_devant_chez_toi') || gauges.tribunes < 25"
+    # Après les écharpes sous la fenêtre, la tribune au plus bas, ou le jour
+    # où l'on apprend que tu as demandé à partir : MERCENAIRE.
+    when: "flag('sb_devant_chez_toi') || gauges.tribunes < 30 || flag('demande_vente')"
     chance: 0.08
     cast: [gege]
     same_club: true
     fallback: drop
     traces:
-      sb_voiture: "{annee} : VENDU à la bombe rouge sur le capot de {nom}, au parking du stade."
+      sb_voiture: "{annee} : MERCENAIRE à la bombe rouge sur le capot de {nom}, au parking du stade."
       sb_plainte: "{annee} : {nom} a porté plainte pour un capot tagué. Deux gamins de la Nord ont été convoqués."
     steps:
       - id: capot
@@ -186,7 +199,8 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "season >= 1 && (gauges.tribunes < 25 || world.serie_defaites >= 3)"
+    # La tribune très basse, deux défaites de suite, ou la semaine du derby.
+    when: "season >= 1 && (gauges.tribunes < 30 || world.serie_defaites >= 2 || arc('co.derby') == 'active')"
     chance: 0.10
     cast: [vecchio]
     same_club: true
@@ -220,7 +234,7 @@ arcs:
     same_club: true
     fallback: drop
     traces:
-      sb_photos:        "{annee} : des photos de {nom} devant la Comète, trois heures du matin, la veille d'un match."
+      sb_photos:        "{annee} : des photos de {nom} devant le Corner, trois heures du matin, la veille d'un match."
       sb_chantage_paye: "{annee} : {nom} a payé pour que des photos dorment. Elles se sont réveillées."
     steps:
       - id: terminus
@@ -242,8 +256,11 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    # Après un derby perdu (co.derby, issue `perdu`), tant qu'on en parle encore.
-    when: "since_arc('co.derby') <= 12 && arc_outcome('co.derby') == 'perdu'"
+    # Après un derby (co.derby) : perdu, ils viennent te le dire ; gagné, ils
+    # viennent se venger. Le derby n'est joué que dans une carrière sur cinq,
+    # perdu dans une sur quinze : réservé au derby perdu, l'événement ne
+    # sortait que dans 1,5 % des carrières.
+    when: "season >= 1 && (flag('derby_perdu') || flag('derby_gagne'))"
     chance: 0.12
     cast: [sabatier]
     same_club: true
@@ -253,8 +270,10 @@ arcs:
       sb_plainte:   "{annee} : {nom} a porté plainte. Le certificat du Doc disait « coups »."
     steps:
       - id: lilas
-        card: jp.sb.rue
-        next: [ { step: certificat, in: [1, 3] } ]
+        card:
+          - { id: jp.sb.rue, if: "arc_outcome('co.derby') == 'perdu'" }
+          - { id: jp.sb.rue_revanche }
+        next: [ { step: certificat, in: [2, 3] } ]
       - id: certificat
         card: jp.sb.rue_certificat
         next: []
@@ -315,7 +334,7 @@ arcs:
         card:
           - { id: jp.sb.appel_nuit_laverie, if: "flag('sb_laverie_3')" }
           - { id: jp.sb.appel_nuit }
-        next: [ { step: vingtieme, in: [1, 3] } ]
+        next: [ { step: vingtieme, in: [2, 3] } ]
       - id: vingtieme
         card: jp.sb.appel_nuit_vingtieme
         next: []
@@ -393,8 +412,8 @@ arcs:
     same_club: true
     fallback: drop
     traces:
-      sb_bagarre:        "{annee} : deux bandes de la Nord se sont battues à la buvette des anciens. {nom} y était."
-      sb_buvette_fermee: "{annee} : personne n'avait rien vu. La buvette des anciens a fermé un mois."
+      sb_bagarre:        "{annee} : deux bandes de la Nord se sont battues à la buvette du kop. {nom} y était."
+      sb_buvette_fermee: "{annee} : personne n'avait rien vu. La buvette du kop a fermé un mois."
     steps:
       - id: bagarre
         card:

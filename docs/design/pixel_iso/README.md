@@ -4,8 +4,7 @@ Ce dossier contient le moteur qui a produit les images de la préproduction RPG 
 la zone jouable d'Aubérive (six quartiers autour du stade), le quartier du stade
 de la Rive, la ville entière en maquette, les intérieurs en coupe, les vignettes
 d'évolution (logement, stade), les figurines du casting et les cases du
-storyboard. Il n'est **pas branché** dans le jeu : c'est l'outil de la direction
-artistique, en attente de validation.
+storyboard — et les images de la ville de la version jouable (voir plus bas).
 
 ## Le principe
 
@@ -84,6 +83,29 @@ sont sur les planches. `crop.js` et `montage.js` servent à l'inspection.
 | `figurines.js` | les figurines du casting (1 voxel = 4 cm) |
 | `town.js` | la ville entière, ses lieux et leurs positions à l'écran |
 | `story_frames.js`, `zone_shots.js`, `phone_frames.js`, `sprite_png.js` | les images des planches |
+
+## La version jouable (la ville du jeu)
+
+La ville de `packages/tools/web/ville.js` est la zone entière, rendue trois fois
+(jour, crépuscule, nuit) à 1 pixel pour 1 pixel (4 040 × 2 260), découpée en tuiles,
+avec sa profondeur (pour que le personnage passe derrière les immeubles), la grille où
+l'on marche et la porte de chaque lieu.
+
+```bash
+node ville_assets.js day grille      # out/ville/day.png, day_prof.png, grille_day.json, lieux.json (~30 s)
+node ville_assets.js night grille    # la nuit (~2 min)
+node ville_assets.js dusk            # le crépuscule (~2 min)
+node ville_post.js                   # la grille finale (praticable de jour ET de nuit, reliée à l'appartement),
+                                     # les portes ramenées dans la partie reliée, sprites.json
+# les tuiles : 1 024 px, WebP sans perte (une perte de qualité brouille le tramage)
+cd out/ville && mkdir -p web && for p in day:jour dusk:crepuscule night:nuit day_prof:prof_jour night_prof:prof_nuit; do \
+  convert ${p%%:*}.png -crop 1024x1024 +repage +adjoin -define webp:lossless=true -define webp:method=6 web/${p##*:}_%02d.webp; done \
+  && cp lieux.json grille.json sprites.json web/
+```
+
+La profondeur est codée sur deux octets (rouge = poids fort, vert = poids faible) :
+`(x + y + z) × 8 + 1`, 0 pour le ciel. Le crépuscule a la même géométrie que la nuit ;
+le jour a ses terrasses en plus.
 
 ## Pour la production
 

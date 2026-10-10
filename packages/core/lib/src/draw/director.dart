@@ -795,6 +795,13 @@ class Director {
     final total = content.cardSlots(s.role);
     if (s.slot < 4 || s.slot > total - 3) return; // never on the opening nor the finale
     if (s.season == 0 && s.slot < 8) return;
+    // Un rebondissement ne marche pas sur l'histoire en cours : pas d'événement
+    // quand une étape d'intrigue arrive à échéance, ni sur le créneau d'une
+    // Nouvelle (ou juste avant). Sans ces gardes, deux événements par saison
+    // faisaient passer les étapes échues de 36 % à 48 % en S1.
+    if (s.scheduled.any((sc) => (sc.kind == 'etape' || sc.kind == 'script') && sc.deadlineN >= 0 && sc.deadlineN <= s.ncards + 1)) return;
+    final reservees = q.nouvelleSlotsFor(s.role);
+    if (reservees.contains(s.slot) || reservees.contains(s.slot + 1)) return;
     final el = <ArcDef>[];
     for (final a in content.arcsSorted) {
       if (a.kind != 'evenement' || !a.roles.contains(s.role)) continue;
@@ -1349,6 +1356,10 @@ class Director {
       s.storyThisSeason += 1;
     }
     if (band == 2 && sc?.kind == 'etape') s.softStepsThisSeason += 1;
+    // L'écart entre deux événements se compte à la carte SERVIE, pas à
+    // l'armement : les étapes 2-3 et les fusées longues d'un événement
+    // tombent plus tard, et le suivant ne doit pas les talonner (charte § 4).
+    if (kind == 'evenement') s.lastEventN = n;
     String? unlockedStory;
     if (sc != null && sc.arc != null && const {'script', 'etape', 'evenement'}.contains(sc.kind)) {
       final st = s.arcs[sc.arc!] ??= ArcState(status: 'active', startedSeason: s.season);

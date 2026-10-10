@@ -13,15 +13,17 @@
 #     sb_bagarre ; variante sb_buvette_fermee), le terrain brûlé (lit
 #     sb_cercueil, sb_manif, sb_local_brule ; le cercueil lit sb_terrain_brule).
 #     La minute de silence (sb_mort_tribune) fait naître une manifestation.
-#   · La maison : devant chez toi → la voiture (lit sb_devant_chez_toi ; variante
-#     sb_police_appelee) → la lettre (lit sb_voiture). La lettre et le corbeau
-#     sont de la même main : chacun lit la trace de l'autre (sb_corbeau,
+#   · La maison : devant chez toi (lit aussi sb_manif : ton nom était sur la
+#     banderole) → la voiture (lit sb_devant_chez_toi, sb_envahissement ;
+#     variante sb_police_appelee) → la lettre (lit sb_voiture). La lettre et le
+#     corbeau sont de la même main : chacun lit la trace de l'autre (sb_corbeau,
 #     sb_lettre).
 #   · L'homme au blouson gris : un seul arc, trois passages à la laverie sur
 #     deux saisons (fusée longue vers S+1, puis [5, 9]). La troisième fois, on
 #     sait qui l'envoie : Émile Sorbier, l'ancien trésorier (variante si tu l'as
-#     vu à la friche, sb_ancien), Madame Josiane, la mère de Mbako, ou Sorbier
-#     qu'on te présente. Issues : livre (au juge) | garde. La perquisition lit
+#     vu à la friche, sb_ancien), Madame Josiane (confiance entière), la mère
+#     de Mbako (le petit au club, ni lui ni elle contre toi), ou Sorbier qu'on te
+#     présente. Issues : livre (au juge) | garde. La perquisition lit
 #     l'issue et les traces de la laverie.
 #   · L'argent : la perquisition → la grève (lit sb_perquisition, et sb_car en
 #     variante) → l'huissier (lit sb_greve) → la laverie (variante sb_huissier).
@@ -56,7 +58,9 @@ arcs:
         card:
           - { id: en.sb.manif_escalier, if: "flag('sb_mort_tribune')" }
           - { id: en.sb.manif }
-        next: [ { step: stade, in: [3, 6] } ]
+        # La manifestation pour Marcel s'arrête à la mairie : sa banderole n'est
+        # pas celle que Vaubourg veut voir décrocher au stade.
+        next: [ { step: stade, if: "!flag('sb_mort_tribune')", in: [3, 6] } ]
       - id: stade
         card:
           - { id: en.sb.manif_stade_parle, if: "flag('sb_manif_parle')" }
@@ -72,8 +76,8 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "chars.vukic.statut != 'rival' && ((flag('sb_manif') && gauges.tribunes < 50) || gauges.tribunes < 25)"
-    chance: 0.08
+    when: "chars.vukic.statut != 'rival' && ((flag('sb_manif') && gauges.tribunes < 55) || gauges.tribunes < 25)"
+    chance: 0.10
     cast: [vukic, gege, legruet]
     same_club: true
     fallback: drop
@@ -99,8 +103,8 @@ arcs:
     once: true
     # Fin de saison (créneaux 10+), le bas du classement, et la colère déjà
     # passée par la pelouse ou par l'essence — ou une tribune à vide.
-    when: "season >= 1 && slot >= 10 && chars.vukic.statut != 'rival' && world.rang >= 12 && (flag('sb_envahissement') || flag('sb_terrain_brule') || gauges.tribunes < 25)"
-    chance: 0.12
+    when: "season >= 1 && slot >= 10 && chars.vukic.statut != 'rival' && world.rang >= 11 && (flag('sb_envahissement') || flag('sb_terrain_brule') || gauges.tribunes < 25)"
+    chance: 0.15
     cast: [vukic, gege]
     same_club: true
     fallback: drop
@@ -122,7 +126,7 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "flag('sb_manif') || flag('sb_envahissement') || (gauges.tribunes < 30 && world.serie_defaites >= 1)"
+    when: "!flag('sb_bagarre') && (flag('sb_manif') || flag('sb_envahissement') || (gauges.tribunes < 30 && world.serie_defaites >= 1))"
     chance: 0.07
     cast: [gege]
     same_club: true
@@ -144,8 +148,8 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "relation.gege <= -1 || flag('sb_bagarre')"
-    chance: 0.05
+    when: "flag('sb_bagarre') || (season >= 1 && relation.gege <= -1)"
+    chance: 0.04
     cast: [gege]
     same_club: true
     fallback: drop
@@ -213,10 +217,11 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    # Après une série perdue avec une tribune basse, ou une promesse faite au
-    # kop (le pacte de la craie) que Gégé ne pardonne plus.
-    when: "(gauges.tribunes < 30 && world.serie_defaites >= 1) || gauges.tribunes < 20 || (flag('pacte_gege') && relation.gege <= -1)"
-    chance: 0.08
+    # Une tribune qui se vide, une série perdue, ton nom sur la banderole de la
+    # mairie, le kop qui ne te pardonne plus — ou une promesse faite au kop (le
+    # pacte de la craie) et pas tenue.
+    when: "!flag('sb_devant_chez_toi') && (gauges.tribunes < 35 || (world.serie_defaites >= 1 && gauges.tribunes < 45) || (flag('sb_manif') && gauges.tribunes < 50) || relation.gege <= -2 || (flag('pacte_gege') && relation.gege <= -1))"
+    chance: 0.10
     cast: [camille]
     same_club: true
     fallback: drop
@@ -239,8 +244,8 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "flag('sb_devant_chez_toi') || gauges.tribunes < 25"
-    chance: 0.08
+    when: "!flag('sb_voiture') && (flag('sb_devant_chez_toi') || flag('sb_envahissement') || gauges.tribunes < 30)"
+    chance: 0.10
     cast: [gege, camille]
     same_club: true
     fallback: drop
@@ -268,7 +273,7 @@ arcs:
     once: true
     # Le petit est au club ; la peur est déjà entrée chez toi (la voiture), ou
     # le corbeau a commencé, ou le petit est mis en avant (lancé, capitaine).
-    when: "season >= 1 && chars.mbako.statut != 'vendu' && (flag('sb_voiture') || flag('sb_corbeau') || flag('mbako_lance') || flag('brassard_mbako'))"
+    when: "!flag('sb_lettre') && (season >= 1 && chars.mbako.statut != 'vendu' && (flag('sb_voiture') || flag('sb_corbeau') || flag('mbako_lance') || flag('brassard_mbako')))"
     chance: 0.06
     cast: [camille, mbako, mere_mbako]
     same_club: true
@@ -296,7 +301,7 @@ arcs:
     once: true
     # Après un succès : un bloc gagné, ou le haut du classement.
     when: "season >= 1 && (world.serie_victoires >= 1 || world.rang <= 4)"
-    chance: 0.05
+    chance: 0.04
     cast: [meneche, camille]
     same_club: true
     fallback: drop
@@ -319,7 +324,7 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "season >= 1"
+    when: "season >= 1 && !flag('sb_laverie_lue') && !flag('sb_laverie_rendue')"
     chance: 0.06
     cast: [josiane, mere_mbako, aulard]
     issues: [livre, garde]
@@ -345,8 +350,8 @@ arcs:
       - id: nom
         card:
           - { id: en.sb.laverie_nom_ancien, if: "flag('sb_ancien')" }
-          - { id: en.sb.laverie_nom_josiane, if: "relation.josiane >= 2" }
-          - { id: en.sb.laverie_nom_mere, if: "flag('mbako_lance') && relation.mere_mbako >= 1 && chars.mbako.statut != 'vendu'" }
+          - { id: en.sb.laverie_nom_josiane, if: "relation.josiane >= 3" }
+          - { id: en.sb.laverie_nom_mere, if: "chars.mbako.statut != 'vendu' && relation.mere_mbako >= 0 && relation.mbako >= 0" }
           - { id: en.sb.laverie_nom }
         next: []
 
@@ -412,7 +417,7 @@ arcs:
     foreground: false
     weight: 1.0
     once: true
-    when: "gauges.caisse < 25 || (flag('sb_greve') && gauges.caisse < 40)"
+    when: "gauges.caisse < 28 || (flag('sb_greve') && gauges.caisse < 40)"
     chance: 0.08
     cast: [josiane, aulard]
     same_club: true
@@ -434,8 +439,8 @@ arcs:
     weight: 1.0
     once: true
     # Un déplacement d'hiver (créneaux 10-12).
-    when: "season.phase == 'hiver'"
-    chance: 0.07
+    when: "!flag('sb_car') && (season.phase == 'hiver')"
+    chance: 0.06
     cast: [vecchio, aulard]
     same_club: true
     fallback: drop

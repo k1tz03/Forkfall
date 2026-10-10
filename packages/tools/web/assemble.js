@@ -113,6 +113,8 @@ function main() {
     villeCss = '<style>\n' + fs.readFileSync(path.join(HERE, 'ville.css'), 'utf8') + '\n</style>';
     villeJs = fs.readFileSync(path.join(HERE, 'ville.js'), 'utf8').split('</script').join('<\\/script');
   }
+  // la version jouable porte son nom dans l'onglet
+  if (opts.ville) tpl = tpl.replace('<title>Fusible</title>', '<title>Fusible à Aubérive</title>');
   tpl = tpl.split('__VILLE_CSS__').join(villeCss);
   tpl = tpl.split('__VILLE_JS__').join(villeJs);
 

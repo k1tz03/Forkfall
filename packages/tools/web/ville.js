@@ -457,7 +457,8 @@
         e.addEventListener("click", (function (cle) { return function (ev) { ev.stopPropagation(); allerAuLieu(cle); }; })(l.key));
         couche.appendChild(e); etiquettes[l.key] = e;
       }
-      e.style.left = Math.round(sx) + "px"; e.style.top = Math.round(sy) + "px";
+      var ew = e.offsetWidth || 90;
+      e.style.left = Math.round(clamp(sx, ew / 2 + 6, VW * k - ew / 2 - 6)) + "px"; e.style.top = Math.round(sy) + "px";
       e.classList.toggle("rdv", l.key === cible);
       e.classList.toggle("loin", dist >= 20 && l.key !== cible);
       e.hidden = false;
@@ -477,8 +478,12 @@
       var m = Math.max(Math.abs(dx) / (W / 2 - 70), Math.abs(dy) / (H / 2 - 150), 1);
       fleche.style.left = Math.round(cx + dx / m) + "px"; fleche.style.top = Math.round(cy + dy / m) + "px";
       var ang = Math.atan2(dy, dx), dir = ["→", "↘", "↓", "↙", "←", "↖", "↑", "↗"][(Math.round(ang / (Math.PI / 4)) + 8) % 8];
-      fleche.textContent = dir + " " + L2.label;
+      var txt = dir + " " + L2.label;
+      if (fleche.textContent !== txt) fleche.textContent = txt;
       fleche.hidden = false;
+      // la flèche entière dans l'écran, jamais coupée par un bord
+      var fw = fleche.offsetWidth || 120, fx = clamp(cx + dx / m, fw / 2 + 10, W - fw / 2 - 10);
+      fleche.style.left = Math.round(fx) + "px";
     } else fleche.hidden = true;
   }
 
@@ -565,6 +570,7 @@
     heros.chemin = null;
     $("gameScreen").classList.add("carte-on");
     $("villeVoile").classList.add("on");
+    document.body.classList.add("v-carte");
     if (rdv) {
       if (rdv.type === "normal" || rdv.type === "prologue") S.cartesSemaine += (rdv.type === "normal" ? 1 : 0);
       if (rdv.qui) S.vus[rdv.qui] = 1;
@@ -578,6 +584,7 @@
     carteOn = false;
     $("gameScreen").classList.remove("carte-on");
     $("villeVoile").classList.remove("on");
+    document.body.classList.remove("v-carte");
   }
   // Ce qui se passe quand l'heure du rendez-vous est passée : on vient te
   // chercher, ou la scène a lieu (le match, l'événement, le dimanche).
@@ -701,6 +708,7 @@
       S.energie = 45; S.faim = clamp(S.faim, 10, 100);
     }, function () { majHud(); sauver(); echeance(); });
   }
+  var allerApresNuit = false;
   function dormir() {
     // jusqu'au matin suivant ; la nuit peut être interrompue par un rendez-vous (ou un événement)
     var depart = S.semaine;
@@ -710,7 +718,14 @@
     do { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } while (S.tranche !== 0 && ++garde < 10);
     majHud(); sauver();
     var titre = JOUR_MOT[S.jour] + ", 7 h";
-    fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", null, function () { suiteFondus(); echeance(); });
+    fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", null, function () {
+      suiteFondus();
+      if (echeance()) { allerApresNuit = false; return; }
+      if (allerApresNuit) {
+        allerApresNuit = false;
+        if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
+      }
+    });
   }
   function suiteFondus() {
     if (!attente.length) return;
@@ -802,13 +817,18 @@
       });
       html += '</div>';
     }
+    // on t'attend ailleurs : le chemin, d'un geste
+    var ailleurs = rdvVisible() && rdv.lieu !== cle && LIEU[rdv.lieu];
+    if (ailleurs) html += '<button type="button" class="v-sortir v-y">' + esc((rdv.qui ? nomDe(rdv.qui) + " t'attend · " : "On t'attend · ") + LIEU[rdv.lieu].label) + ' →</button>';
     html += '<button type="button" class="v-sortir">Sortir</button>';
     el.innerHTML = html;
+    var y = el.querySelector(".v-y");
+    if (y) y.addEventListener("click", function () { allerAuLieu(rdv.lieu); });
     el.classList.add("on");
     el.querySelectorAll(".v-act").forEach(function (b) {
       b.addEventListener("click", function () { faire(b.getAttribute("data-act")); });
     });
-    el.querySelector(".v-sortir").addEventListener("click", fermerPorte);
+    el.querySelector(".v-sortir:not(.v-y)").addEventListener("click", fermerPorte);
   }
   function fermerPorte() {
     porteOuverte = null;
@@ -869,6 +889,7 @@
   // ─────────────────────────────────────────────────────────────── le plan
   function ouvrirPlan() {
     if (!coquille) return;
+    fermerPorte();
     var html = '<div class="v-plan">';
     if (rdvVisible() && LIEU[rdv.lieu]) {
       html += '<h3>On t\'attend</h3><button type="button" class="rdv" data-l="' + esc(rdv.lieu) + '"><span>' + esc(LIEU[rdv.lieu].label) + '</span><i>' + esc(rdv.qui ? nomDe(rdv.qui) : "") + '</i></button>';
@@ -1012,11 +1033,14 @@
     document.body.appendChild(fondu);
     var t = document.createElement("div"); t.className = "v-toast"; t.id = "villeToast"; t.setAttribute("role", "status");
     document.body.appendChild(t);
-    var z = document.createElement("div"); z.className = "v-zoom";
-    z.innerHTML = '<button type="button" aria-label="Rapprocher">+</button><button type="button" aria-label="Éloigner">−</button>';
-    gs.parentNode.appendChild(z);
-    z.children[0].addEventListener("click", function () { zoom(1); });
-    z.children[1].addEventListener("click", function () { zoom(-1); });
+    // le zoom, au bout du menu
+    var menu = gs.querySelector(".menu");
+    var sp = document.createElement("span"); sp.className = "sp"; menu.appendChild(sp);
+    var zp = document.createElement("button"); zp.type = "button"; zp.className = "v-z"; zp.setAttribute("aria-label", "Rapprocher la vue"); zp.textContent = "+";
+    var zm = document.createElement("button"); zm.type = "button"; zm.className = "v-z"; zm.setAttribute("aria-label", "Éloigner la vue"); zm.textContent = "−";
+    menu.appendChild(zm); menu.appendChild(zp);
+    zp.addEventListener("click", function () { zoom(1); });
+    zm.addEventListener("click", function () { zoom(-1); });
     $("villePlan").addEventListener("click", ouvrirPlan);
     $("villeAttendre").addEventListener("click", attendre);
     $("villeRdv").addEventListener("click", function () {
@@ -1033,8 +1057,9 @@
     var garde = 0;
     while (tNow() < t && garde++ < 80) {
       if (S.tranche === 4) {
-        // la nuit, on rentre dormir
+        // la nuit, on rentre dormir — et au réveil, on reprend le chemin du rendez-vous
         var c = centre(LIEU.appartement.door); poser(c[0], c[1]); S.lieu = "appartement";
+        allerApresNuit = true;
         dormir();
         return;
       }
@@ -1127,7 +1152,9 @@
         var c = centre(LIEU.appartement.door); poser(c[0], c[1]);
         var p = versImage(heros.x, heros.y, ZSOL + 8); cam.x = p[0]; cam.y = p[1];
         fonduTexte((v.entities && v.entities.ville ? v.entities.ville : "Aubérive"), moisCourant(),
-          "Deux pièces au troisième, rue des Lilas. Le " + ((v.entities && v.entities.club) || "club") + " t'attend. La ville aussi.", null, null);
+          "Deux pièces au troisième, rue des Lilas. Le " + ((v.entities && v.entities.club) || "club") + " t'attend. La ville aussi.", null, function () {
+            toast("Touche la ville pour marcher, un nom pour y aller. En rouge : là où l'on t'attend.");
+          });
       };
       if (pret) faire(); else enAttente = faire;
     },

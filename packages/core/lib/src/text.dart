@@ -73,7 +73,38 @@ String formatText(
   final toi = _render(tpl, vars, e.genre, speakerGenre);
   vars['toi'] = toi;
   vars['Toi'] = toi.isEmpty ? '' : toi[0].toUpperCase() + toi.substring(1);
-  return _render(template, vars, e.genre, speakerGenre);
+  return articlesDeClub(_render(template, vars, e.genre, speakerGenre),
+      [e.named['club'] ?? '', e.named['rival'] ?? '', e.named['clubOrigine'] ?? '']);
+}
+
+/// L'article devant un nom de club : « de Racing Aubérive » → « du Racing
+/// Aubérive », « d'Olympique Valdorne » → « de l'Olympique Valdorne », « à
+/// Stade Lyonnet » → « au Stade Lyonnet ». Les noms tirés (`club_prefixes` :
+/// US, AS, FC, Olympique, Racing, Stade, Sporting, Union, Étoile) se disent
+/// avec leur article ; le gabarit, lui, écrit « de {club} » sans le savoir.
+String articlesDeClub(String texte, Iterable<String> clubs) {
+  var out = texte;
+  for (final club in clubs.toSet()) {
+    if (club.trim().isEmpty) continue;
+    final sp = club.indexOf(' ');
+    final prefixe = sp < 0 ? club : club.substring(0, sp);
+    final voyelle = RegExp(r'^[AEIOUYÉÈÊaeiouyéèê]').hasMatch(prefixe);
+    final c = RegExp.escape(club);
+    const avant = r'(^|[\s(«\u00a0\u2019\x27"—–-])';
+    out = out.replaceAllMapped(RegExp(avant + r"([Dd])(?:e |')" + c), (m) {
+      final maj = m[2] == 'D';
+      return '${m[1]}${voyelle ? (maj ? "De l'" : "de l'") : (maj ? 'Du ' : 'du ')}$club';
+    });
+    out = out.replaceAllMapped(RegExp(avant + r'([Àà]) ' + c), (m) {
+      final maj = m[2] == 'À';
+      return '${m[1]}${voyelle ? (maj ? "À l'" : "à l'") : (maj ? 'Au ' : 'au ')}$club';
+    });
+    // les titres en capitales ({CLUB}) : « DE RACING… » → « DU RACING… »
+    final up = club.toUpperCase(), cu = RegExp.escape(up);
+    out = out.replaceAllMapped(RegExp(avant + r"(?:DE |D')" + cu), (m) => '${m[1]}${voyelle ? "DE L'" : 'DU '}$up');
+    out = out.replaceAllMapped(RegExp(avant + r'À ' + cu), (m) => '${m[1]}${voyelle ? "À L'" : 'AU '}$up');
+  }
+  return out;
 }
 
 /// Les noms de placeholders simples cités par un gabarit (hors `select`).

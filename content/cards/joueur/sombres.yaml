@@ -23,31 +23,32 @@ cards:
       effects: {direction: "+", relation: {josiane: -1}, set: [sb_laverie_rendue]}
       answer: "Tu le rattrapes au coin de la rue. Il reprend l'enveloppe sans un mot, comme on reprend une chose qu'on rapportera."
 
-  # Saison suivante, tu l'avais ouverte.
+  # Il revient (la saison suivante ; dans la même à trente-deux ans) : tu
+  # l'avais ouverte. Aucun repère de durée dans le texte, il sert aux deux.
   - id: jp.sb.laverie_liste
     roles: [joueur]
     arc: direction
     tags: [sombre, scandale, direction]
     lieu: laverie
     tone: strategique
-    text: "Une saison a passé. Le blouson gris pose une deuxième enveloppe sur ta machine : la liste des licences du club. Ton nom y est deux fois, avec deux salaires. Tu n'en touches qu'un."
+    text: "Un jeudi, à la même heure, le blouson gris revient avec une deuxième enveloppe : la liste des licences du club. Ton nom y est deux fois, avec deux salaires. Tu n'en touches qu'un."
     left:
       label: "Je porte tout à Massenet"
       effects: {direction: "--", relation: {meneche: 1}, set: [sb_laverie_2], next: {step: massenet, in: [3, 6]}}
-      answer: "Massenet lit au comptoir du Terminus sans ôter son manteau. Il recopie ton nom deux fois dans son carnet et paie les cafés."
+      answer: "Massenet lit au café de la Mairie sans ôter son manteau. Il recopie ton nom deux fois dans son carnet et paie les cafés."
     right:
       label: "Je range tout chez moi"
       effects: {direction: "+", force: -1, parole: -1, set: [sb_laverie_2]}
       answer: "Les deux enveloppes dorment sous le matelas. Le 5, deux salaires partent à ton nom ; un seul arrive sur ton compte."
 
-  # Saison suivante, tu l'avais rendue.
+  # Il revient : tu l'avais rendue.
   - id: jp.sb.laverie_retour
     roles: [joueur]
     arc: direction
     tags: [sombre, scandale, direction]
     lieu: laverie
     tone: strategique
-    text: "Une saison a passé. Le même blouson gris pose une enveloppe plus épaisse sur ta machine : « Vous l'avez rendue. Elle revient avec la liste des licences, et votre nom dedans. »"
+    text: "Un jeudi, à la même heure, le blouson gris revient avec une enveloppe plus épaisse : « Vous l'avez rendue. Elle revient avec la liste des licences, et votre nom dedans. »"
     left:
       label: "Cette fois, je lis"
       effects: {direction: "-", force: -1, set: [sb_laverie_lue, sb_laverie_2]}
@@ -152,9 +153,9 @@ cards:
     arc: ultras
     tags: [sombre, ultras]
     speaker: gege
-    lieu: cafe
+    lieu: buvette
     tone: strategique
-    text: "Gégé au comptoir du Terminus, une bière fermée devant lui : « Le gamin de seize ans, c'est le fils d'un gars de la Nord. Il a dormi au poste. Tu passes au local t'expliquer, {toi} ? »"
+    text: "Gégé au zinc de la buvette, une bière fermée devant lui : « Le gamin de seize ans, c'est le fils d'un gars de la Nord. Il a dormi au poste. Tu passes au local t'expliquer, {toi} ? »"
     left:
       label: "Je passe au local"
       effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
@@ -183,22 +184,22 @@ cards:
       answer: "Elle hoche la tête. Le soir, elle met la chaîne à la porte, et tu fais semblant de ne pas l'entendre."
 
   # Secours : tu es descendu, et Camille n'est plus là pour en parler.
-  - id: jp.sb.devant_chez_toi_terminus
+  - id: jp.sb.devant_chez_toi_buvette
     roles: [joueur]
     arc: ultras
     tags: [sombre, ultras]
     speaker: gege
-    lieu: cafe
+    lieu: buvette
     tone: strategique
-    text: "Gégé au Terminus, la casquette sur le comptoir : « Cinq gars sous ta fenêtre, et toi qui descends leur parler. Ça s'est su. Ce n'est pas moi qui les ai envoyés. Tu me crois ? »"
+    text: "Gégé au zinc de la buvette, la casquette posée à côté de sa bière : « Cinq gars sous ta fenêtre, et toi qui descends leur parler. Ça s'est su. Ce n'est pas moi qui les ai envoyés. Tu me crois ? »"
     left:
-      label: "Je te crois"
+      label: "Je paie sa bière"
       effects: {direction: "-", relation: {gege: 1}}
-      answer: "Il paie les deux cafés. En sortant, il serre la main de deux des cinq, sur le trottoir, sans se cacher."
+      answer: "Il te laisse payer. En sortant, il serre la main de deux des cinq, devant la buvette, sans se cacher."
     right:
-      label: "Je ne crois plus personne"
+      label: "Je sors sans un mot"
       effects: {tribunes: "-", relation: {gege: -1}}
-      answer: "Il remet sa casquette et sort sans payer. Le patron du Terminus met les deux cafés sur ta note."
+      answer: "Tu sors. Par la vitre, tu le vois remettre sa casquette ; la patronne met sa bière sur ta note."
 
   # ============================================== 3 · La voiture
   # Après les écharpes sous la fenêtre.
@@ -208,11 +209,11 @@ cards:
     tags: [sombre, ultras]
     lieu: parking
     tone: strategique
-    text: "Parking du stade, après l'entraînement. Sur ton capot, à la bombe rouge : VENDU. Le pneu avant est à plat, et une écharpe de la Nord est nouée à l'essuie-glace, comme un ruban."
+    text: "Parking du stade, après l'entraînement. Sur ton capot, à la bombe rouge : MERCENAIRE. Le pneu avant est à plat, et une écharpe de la Nord est nouée à l'essuie-glace, comme un ruban."
     left:
       label: "Je roule avec, une semaine"
       effects: {tribunes: "+", direction: "-", set: [sb_voiture]}
-      answer: "Tu traverses la ville avec VENDU sur le capot. Les gamins de l'école le lisent à voix haute, en détachant les syllabes."
+      answer: "Tu traverses la ville avec MERCENAIRE sur le capot. Les gamins de l'école le lisent à voix haute, en détachant les syllabes."
     right:
       label: "Je porte plainte"
       effects: {tribunes: "-", caisse: "-", set: [sb_voiture, sb_plainte], next: {step: plainte, in: [2, 5]}}
@@ -224,11 +225,11 @@ cards:
     tags: [sombre, ultras]
     lieu: parking
     tone: strategique
-    text: "Parking du stade, après l'entraînement. Sur ton capot, à la bombe rouge : VENDU. Le pneu avant gauche est à plat. Un stadier regarde ailleurs avec beaucoup d'application."
+    text: "Parking du stade, après l'entraînement. Sur ton capot, à la bombe rouge : MERCENAIRE. Le pneu avant gauche est à plat. Un stadier regarde ailleurs avec beaucoup d'application."
     left:
       label: "Je roule avec, une semaine"
       effects: {tribunes: "+", direction: "-", set: [sb_voiture]}
-      answer: "Tu traverses la ville avec VENDU sur le capot. Les gamins de l'école le lisent à voix haute, en détachant les syllabes."
+      answer: "Tu traverses la ville avec MERCENAIRE sur le capot. Les gamins de l'école le lisent à voix haute, en détachant les syllabes."
     right:
       label: "Je porte plainte"
       effects: {tribunes: "-", caisse: "-", set: [sb_voiture, sb_plainte], next: {step: plainte, in: [2, 5]}}
@@ -241,7 +242,7 @@ cards:
     speaker: gege
     lieu: buvette
     tone: strategique
-    text: "Gégé à la buvette des anciens, la casquette sur le comptoir : « Ton capot, c'est deux gamins de la Nord, seize ans. Je les ramène s'excuser, ou je règle ça à ma façon ? »"
+    text: "Gégé au fond de la buvette, une craie entre les doigts : « Ton capot, c'est deux gamins de la Nord, seize ans. Je les ramène s'excuser, ou je règle ça à ma façon ? »"
     left:
       label: "Ramène-les"
       effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
@@ -258,7 +259,7 @@ cards:
     speaker: gege
     lieu: buvette
     tone: strategique
-    text: "Gégé à la buvette des anciens : « Les deux gamins de ton capot ont reçu leur convocation. Seize ans. Leur mère pleure au local depuis midi. Tu retires ta plainte, {toi} ? »"
+    text: "Gégé au zinc de la buvette : « Les deux gamins de ton capot ont reçu leur convocation. Seize ans. Leur mère pleure au local depuis midi. Tu retires ta plainte, {toi} ? »"
     left:
       label: "Je la retire"
       effects: {tribunes: "+", parole: -1, relation: {gege: 1}}
@@ -266,7 +267,7 @@ cards:
     right:
       label: "Je la maintiens"
       effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
-      answer: "Le juge leur donne cent heures au stade, à laver les sièges. Le tien, ils le lavent tous les samedis, en te regardant."
+      answer: "Le juge leur donne cent heures au stade. Le samedi, ils lavent les sièges de la Nord en te regardant t'échauffer."
 
   # ============================================== 4 · La lettre
   - id: jp.sb.lettre
@@ -332,7 +333,7 @@ cards:
     left:
       label: "Je me mets entre eux"
       effects: {tribunes: "+", direction: "-", force: -1, set: [sb_envahissement]}
-      answer: "Un coude t'ouvre la lèvre. L'homme s'accroche à ton maillot et dit « merci », puis « vendu », dans le même souffle."
+      answer: "Un coude t'ouvre la lèvre. L'homme s'accroche à ton maillot et dit « merci », puis « dégage », dans le même souffle."
     right:
       label: "Je le laisse emmener"
       effects: {tribunes: "-", direction: "+", set: [sb_envahissement]}
@@ -362,7 +363,7 @@ cards:
     tags: [sombre, scandale]
     lieu: cafe
     tone: strategique
-    text: "Au Terminus, un homme que tu n'as jamais vu glisse une enveloppe sous ta soucoupe : toi, trois heures du matin, la veille du match, devant la Comète. « Dix mille, et elles dorment. »"
+    text: "Au café de la Mairie, un inconnu glisse une enveloppe sous ta soucoupe : toi, trois heures du matin, la veille du match, devant le Corner. « Dix mille, et elles dorment. »"
     left:
       label: "Je paie"
       effects: {caisse: "--", set: [sb_photos, sb_chantage_paye]}
@@ -370,7 +371,7 @@ cards:
     right:
       label: "Publiez-les"
       effects: {tribunes: "-", force: -1, set: [sb_photos]}
-      answer: "Il range les photos sans se presser. Le soir même, un photographe de la Gazette Rose attend au coin de la rue des Lilas."
+      answer: "Il range les photos dans sa poche intérieure. Le soir même, un photographe de la Gazette Rose attend au coin de la rue des Lilas."
 
   # Tu as payé : il revient.
   - id: jp.sb.photos_encore
@@ -397,11 +398,11 @@ cards:
     speaker: camille
     lieu: domicile
     tone: strategique
-    text: "Camille a posé la Gazette Rose ouverte à la page trois : toi devant la Comète, trois heures du matin. « La boulangère l'a lue avant moi. Tu lui dis quoi, à la boulangère ? »"
+    text: "Camille a posé la Gazette Rose ouverte à la page trois : toi devant le Corner, trois heures du matin. « La boulangère l'a lue avant moi. Tu lui dis quoi, à la boulangère ? »"
     left:
       label: "La vérité, à tout le monde"
       effects: {tribunes: "-", parole: 1, relation: {camille: 1}}
-      answer: "Tu dis la nuit, la Comète, l'homme du Terminus. La boulangère te rend la monnaie sans te regarder ; Camille, si."
+      answer: "Tu dis la nuit, le Corner, l'homme du café de la Mairie. La boulangère te rend la monnaie sans te regarder ; Camille, si."
     right:
       label: "Que c'est un montage"
       effects: {tribunes: "+", parole: -2, relation: {camille: -1}}
@@ -414,7 +415,7 @@ cards:
     tags: [sombre, scandale, vestiaire]
     lieu: vestiaire
     tone: strategique
-    text: "Lundi, la Gazette Rose est punaisée dans le vestiaire, page trois : toi devant la Comète, trois heures du matin, la veille du match. Quelqu'un a entouré l'heure au feutre rouge."
+    text: "Lundi, la Gazette Rose est punaisée dans le vestiaire, page trois : toi devant le Corner, trois heures du matin, la veille du match. Quelqu'un a entouré l'heure au feutre rouge."
     left:
       label: "Je l'arrache"
       effects: {vestiaire: "-", tribunes: "-"}
@@ -425,17 +426,35 @@ cards:
       answer: "Elle reste trois semaines, jusqu'à ce que le capitaine la décroche et la plie en quatre dans sa poche."
 
   # ============================================== 7 · La rue
+  # Le dernier derby est perdu : ils viennent te le dire.
   - id: jp.sb.rue
     roles: [joueur]
     arc: ultras
     tags: [sombre, ultras, moment]
     lieu: rue
     tone: strategique
-    text: "Rue des Lilas, le soir du derby perdu. Trois écharpes de {rival} sous le réverbère de la boulangerie. Le plus grand dit ton nom, lentement, comme on le lit dans le journal."
+    text: "Rue des Lilas, minuit. Trois écharpes de {rival} sous le réverbère de la boulangerie : ils ont gagné le derby, ils sont venus te le dire. Le plus grand dit ton nom, lentement."
     left:
       label: "Je cours jusqu'à la porte"
       effects: {tribunes: "-", force: -2, set: [sb_agression]}
-      answer: "Un coup dans le dos, un autre au sol, avant la porte. Momo freine en klaxonnant. En face, on racontera que tu as couru."
+      answer: "Un coup dans le dos, un autre au sol, avant la porte. Momo freine en klaxonnant. En face, on raconte déjà que tu as couru."
+    right:
+      label: "Je pose mon sac"
+      effects: {tribunes: "+", caisse: "-", force: -3, set: [sb_agression]}
+      answer: "Le premier coup vient de côté. Quand Momo arrive en courant, l'un a ton sac, l'autre ta montre, et tu as du sang plein la bouche."
+
+  # Le dernier derby est gagné : ils viennent se venger.
+  - id: jp.sb.rue_revanche
+    roles: [joueur]
+    arc: ultras
+    tags: [sombre, ultras, moment]
+    lieu: rue
+    tone: strategique
+    text: "Rue des Lilas, minuit. Trois écharpes de {rival} sous le réverbère de la boulangerie : ils n'ont pas digéré le derby. Le plus grand dit ton nom, lentement, comme on le lit dans le journal."
+    left:
+      label: "Je cours jusqu'à la porte"
+      effects: {tribunes: "-", force: -2, set: [sb_agression]}
+      answer: "Un coup dans le dos, un autre au sol, avant la porte. Momo freine en klaxonnant. En face, on raconte déjà que tu as couru."
     right:
       label: "Je pose mon sac"
       effects: {tribunes: "+", caisse: "-", force: -3, set: [sb_agression]}
@@ -576,7 +595,7 @@ cards:
     right:
       label: "Je sors par le toit"
       effects: {vestiaire: "-", relation: {vecchio: -1}, set: [sb_car]}
-      answer: "Tu sors le premier, dans la neige jusqu'aux genoux. Derrière toi, Vecchio porte Norbert seul ; il ne te demande rien."
+      answer: "Tu sors avant tout le monde, dans la neige jusqu'aux genoux. Derrière toi, Vecchio porte Norbert seul ; il ne te demande rien."
 
   - id: jp.sb.car_facture
     roles: [joueur]
@@ -607,7 +626,7 @@ cards:
     left:
       label: "Je prends le carton"
       effects: {caisse: "+", parole: -1, set: [sb_ancien, sb_service_rendu]}
-      answer: "Il pèse plus lourd qu'un carton de linge. La semaine suivante, le numéro du Terminus ne répond plus, ni ce jour-là ni après."
+      answer: "Il pèse plus lourd qu'un carton de linge. La semaine suivante, le numéro laissé au café ne répond plus."
     right:
       label: "Je repars sans rien"
       effects: {caisse: "-", set: [sb_ancien]}
@@ -636,7 +655,7 @@ cards:
     tags: [sombre, scandale, piege]
     lieu: friche
     tone: strategique
-    text: "Friche de la Tréfilerie, sous le néon mort. Un ancien du club, sorti de prison en mars, te tend un carton fermé : « Un mois, pas plus. Personne ne fouille chez un joueur. »"
+    text: "Friche de la Tréfilerie, sous le néon mort. Un ancien du club, sorti de prison en mars, te tend un carton fermé : « Un mois, pas plus. Personne ne fouille chez les joueurs. »"
     left:
       label: "Je prends le carton"
       effects: {caisse: "+", parole: -1, set: [sb_ancien, sb_service_rendu]}
@@ -644,7 +663,7 @@ cards:
     right:
       label: "Je repars sans rien"
       effects: {tribunes: "-", set: [sb_ancien]}
-      answer: "Il rit : il jouait ici avant toi, il trouvera bien un autre joueur. Dimanche, la Nord chante son nom à la mi-temps."
+      answer: "Il rit : il jouait ici avant toi, il trouvera bien quelqu'un d'autre. Dimanche, la Nord chante son nom à la mi-temps."
 
   # Tu as pris le carton.
   - id: jp.sb.ancien_police
@@ -659,7 +678,7 @@ cards:
       effects: {direction: "--", parole: 1}
       answer: "Ils ouvrent le carton sur le palier, devant la voisine du dessus. Le soir, L'Écho a ton nom en page six, sans photo."
     right:
-      label: "Quel carton ?"
+      label: "Je nie tout"
       effects: {direction: "-", tribunes: "-", parole: -2}
       answer: "Le chien s'assoit devant la porte de la cave sans aboyer. On ne te passe pas les menottes ; on te demande de suivre."
 
@@ -670,7 +689,7 @@ cards:
     tags: [sombre, scandale, formation]
     lieu: cafe
     tone: strategique
-    text: "Au Terminus, le patron te tend L'Écho plié aux faits divers : un carton saisi à six heures chez un gamin de la réserve, dix-huit ans. L'ancien de la Tréfilerie avait trouvé un autre joueur."
+    text: "Au café de la Mairie, le patron te tend L'Écho plié aux faits divers : un carton saisi à six heures chez un gamin de la réserve, dix-huit ans. L'ancien de la friche avait trouvé quelqu'un d'autre."
     left:
       label: "Je témoigne pour le gamin"
       effects: {vestiaire: "+", direction: "-", parole: 1}
@@ -706,7 +725,7 @@ cards:
     speaker: gege
     lieu: buvette
     tone: strategique
-    text: "Gégé, l'arcade ouverte, un torchon sur l'œil, la buvette des anciens retournée : « Deux bandes de la Nord, une vieille histoire. Les flics veulent des noms, {toi}. Tu as vu quelque chose ? »"
+    text: "Gégé, l'arcade ouverte, un torchon sur l'œil, la buvette retournée autour de lui : « Deux bandes de la Nord, une vieille histoire. Les flics veulent des noms, {toi}. Tu as vu quelque chose ? »"
     left:
       label: "J'ai vu, je le dirai"
       effects: {tribunes: "--", parole: 1, relation: {gege: -1}, set: [sb_bagarre]}
@@ -714,7 +733,7 @@ cards:
     right:
       label: "Je n'ai rien vu"
       effects: {tribunes: "+", parole: -1, relation: {gege: 1}, set: [sb_bagarre, sb_buvette_fermee]}
-      answer: "Personne n'a rien vu. La préfecture ferme la buvette des anciens un mois ; Vecchio garde la clé dans sa poche."
+      answer: "Personne n'a rien vu. La préfecture ferme la buvette un mois ; Gégé garde la clé, et le torchon sur l'œil."
 
   # Personne n'a rien vu : la buvette est fermée.
   - id: jp.sb.buvette_fermee
@@ -724,15 +743,15 @@ cards:
     speaker: vecchio
     lieu: buvette
     tone: strategique
-    text: "Vecchio devant la buvette des anciens, le scellé sur la porte, la clé dans la main : « Quarante ans qu'on boit là après les matchs. La mairie veut une pétition. Tu signes le premier ? »"
+    text: "Vecchio devant la buvette, le scellé sur la porte : « Quarante ans que le club boit là après les matchs. La mairie veut une pétition pour rouvrir. Tu signes en premier ? »"
     left:
-      label: "Je signe le premier"
+      label: "Je signe en premier"
       effects: {tribunes: "+", direction: "-", relation: {vecchio: 1}}
       answer: "Ta signature en haut de la page, en gros. Madame Aubert la reçoit un lundi et la glisse sous son presse-papier."
     right:
       label: "Je ne signe rien"
       effects: {tribunes: "-", direction: "+", relation: {vecchio: -1}}
-      answer: "Il remet la clé dans sa poche. Tout le mois, il boit son eau au Terminus, seul au bout du comptoir."
+      answer: "Il remet les mains dans ses poches. Tout le mois, il boit son eau au Terminus, seul au bout du comptoir."
 
   # Tu as donné des noms.
   - id: jp.sb.buvette_pere

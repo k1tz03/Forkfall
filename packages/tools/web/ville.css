@@ -10,6 +10,7 @@
    accent framboise. La ville est la seule chose en couleur.
    ═══════════════════════════════════════════════════════════════════════ */
 
+:root{color-scheme:dark}
 body.ville-on{background:#0E0906}
 body.ville-on #device{background:transparent;position:relative;z-index:2}
 body.ville-on #titleScreen,body.ville-on #endingScreen{background:var(--fond)}
@@ -22,6 +23,7 @@ body.ville-on #titleScreen,body.ville-on #endingScreen{background:var(--fond)}
 #villeCanvas[hidden]{display:none}
 #villeCouche{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 #villeCouche[hidden]{display:none}
+body.v-carte #villeCouche{visibility:hidden}
 
 /* ── la colonne de jeu, transparente quand on marche ─────────────────────── */
 body.ville-on #gameScreen{background:transparent;pointer-events:none;position:relative}
@@ -30,8 +32,8 @@ body.ville-on #gameScreen .menu,
 body.ville-on #gameScreen .jauges{position:relative;z-index:3}
 /* le haut et le bas de la colonne gardent un fond, pour qu'on lise le rail et le nom */
 body.ville-on #gameScreen::before{
-  content:"";position:fixed;left:0;right:0;top:0;height:178px;z-index:0;pointer-events:none;
-  background:linear-gradient(to bottom,rgba(20,13,8,.94) 0,rgba(20,13,8,.86) 62%,rgba(20,13,8,0) 100%);
+  content:"";position:fixed;left:0;right:0;top:0;height:236px;z-index:0;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(20,13,8,.97) 0,rgba(20,13,8,.93) 72%,rgba(20,13,8,0) 100%);
 }
 body.ville-on #gameScreen::after{
   content:"";position:fixed;left:0;right:0;bottom:0;height:196px;z-index:0;pointer-events:none;
@@ -79,7 +81,8 @@ body.ville-on #gameScreen.carte-on .v-espace{display:none}
 .v-francs.bas{color:#FF5C7F}
 .v-rdv{
   font-size:12px;font-style:italic;line-height:1.4;color:var(--creme2);
-  border-left:2px solid var(--framboise);padding:1px 0 1px 9px;
+  border-left:2px solid var(--framboise);padding:5px 8px 5px 9px;margin:0;
+  background:rgba(20,13,8,.82);border-radius:0 2px 2px 0;
 }
 .v-rdv[hidden]{display:none}
 .v-rdv b{font-style:normal;color:var(--creme);font-weight:700;letter-spacing:.04em}
@@ -160,6 +163,8 @@ body.ville-on #gameScreen.carte-on .v-espace{display:none}
   text-transform:uppercase;color:var(--creme2);border-top:1px solid var(--fond3);
 }
 .v-porte .v-sortir:hover,.v-porte .v-sortir:focus-visible{color:var(--creme);outline:0}
+.v-porte .v-sortir.v-y{color:#FF5C7F;text-transform:none;letter-spacing:.04em;font-size:12.5px}
+.v-porte .v-sortir.v-y + .v-sortir{margin-top:0}
 
 /* ── le fondu : les heures qui sautent, la semaine qui passe, la scène ───── */
 .v-fondu{
@@ -189,14 +194,10 @@ body.ville-on #gameScreen.carte-on .v-espace{display:none}
 .v-plan button.rdv i{color:#FF5C7F}
 .v-carte-mini{display:block;width:100%;height:auto;border-radius:3px;background:#0B0705;image-rendering:pixelated}
 
-/* ── le zoom ────────────────────────────────────────────────────────────── */
-.v-zoom{position:fixed;right:12px;top:50%;transform:translateY(-50%);z-index:3;display:flex;flex-direction:column;gap:6px}
-.v-zoom button{
-  width:40px;height:40px;display:grid;place-items:center;font-size:18px;font-weight:700;color:var(--creme2);
-  background:rgba(36,22,8,.9);border:1px solid var(--fond3);border-radius:3px;
-}
-.v-zoom button:hover,.v-zoom button:focus-visible{color:var(--creme);border-color:var(--creme3);outline:0}
-body.ville-on #gameScreen.carte-on ~ .v-zoom{display:none}
+/* ── le zoom, au bout du menu (deux boutons crème : ce ne sont pas des menus) ── */
+body.ville-on .menu button.v-z{color:var(--creme2);font-size:20px;font-weight:700;width:40px}
+body.ville-on .menu button.v-z:hover,body.ville-on .menu button.v-z:focus-visible{color:var(--creme)}
+body.ville-on #gameScreen.carte-on .menu button.v-z{visibility:hidden}
 
 /* reprendre la partie, sur l'écran titre */
 .v-reprendre{

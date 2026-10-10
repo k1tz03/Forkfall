@@ -73,7 +73,7 @@ La commande de reprise des ids et des renommages est au § 5.3 de la charte.
 | `**Lieu**` | — | Décor d'auteur. Il peut ressortir en `tags:` (`local`, `couloir`, `buvette`). |
 | `**Conditions**` | `when:` | Expression du jeu : `flag('x')`, `relation.gege >= 1`, `season >= 2`, `plays('arc') >= 1`, `count('mot')`, `fil_rouge == 'prix'`, `bilan.*` (au Bilan seulement). |
 | `**NOM** *(fonction — expression — didascalie)*` | `speaker:` | L'**id** du personnage (`gege`), jamais le nom affiché. L'expression et la didascalie ne s'importent pas. |
-| « Réplique » | `text:` | ≤ 200 caractères. Deux phrases, un tic, un nom une fois. `{toi}` seulement si le locuteur a une `adresse` ; `{prenom}/{nom}/{NOM}` au plus une fois par carte et jamais deux cartes de suite dans une même intrigue. |
+| « Réplique » | `text:` | ≤ 200 caractères. Une scène : un geste, un objet, une question qui engage (charte d'écriture, `charte_histoire.md` — plus de tic de langage). Un nom une fois. `{toi}` seulement si le locuteur a une `adresse` ; `{prenom}/{nom}/{NOM}` au plus une fois par carte et jamais deux cartes de suite dans une même intrigue. |
 | ton de la scène | `tone: leger \| neutre \| drame` | `drame` interdit en S0 et jamais deux d'affilée dans un réservoir. |
 | `←` libellé | `left.label` | ≤ 28 caractères. Jamais le nom du joueur. |
 | `←` effets | `left.effects` | Voir § 3.2. |
@@ -154,11 +154,11 @@ vivent dans `content/postulats.yaml`, avec `cast`, `questions` (le fil rouge), `
 | **§ 4.9 Anecdote** | `content/cards/common/*.yaml` (décor), `content/journal.yaml` (lignes d'Almanach), ou le Codex | ≤ 120 caractères si c'est une ligne d'Almanach. |
 | **Alarme** `<rôle>.alarme.<jauge>_<bas\|haut>_<qui>` | `content/alarms.yaml` | Deux par jauge et par rôle ; `alarm_overrides` par postulat dans `postulats.yaml`. |
 | **Trace / drapeau** | `content/flags.yaml` | snake_case, un nom qui se lit comme un souvenir, jamais un verbe à l'infinitif, jamais de chiffre. Le nom d'un postulat **est** un drapeau : on écrit `flag('promu')`, jamais `postulat == 'promu'`. |
-| **Personnage** | `content/characters.yaml` | `nom, fonction, genre, tic, camp, adresse, statut` (dont `mort`). Les ids techniques ne bougent jamais ; seuls les `name` changent (charte § 5.3.a). |
+| **Personnage** | `content/characters.yaml` | `nom, fonction, genre, tic, camp, adresse, statut` (dont `mort`). Le champ `tic` n'est plus un tic : c'est la phrase-signature citée UNE fois, au palier +3, au départ et en coulisses de la fin. Les ids techniques ne bougent jamais ; seuls les `name` changent (charte § 5.3.a). |
 
 ### 3.5 L'ordre d'import conseillé
 
-1. `flags.yaml` (les traces, dont les drapeaux de postulat), `characters.yaml` (les noms et les tics).
+1. `flags.yaml` (les traces, dont les drapeaux de postulat), `characters.yaml` (les noms et les phrases-signatures).
 2. Les arcs (`content/arcs/**`) — ils déclarent les traces et leurs lignes d'Almanach.
 3. Les cartes (`content/cards/**`) citées par les `steps`, puis les réactions, puis les Nouvelles.
 4. `postulats.yaml` (réservoirs, cast, fils rouges, objectifs), `alarms.yaml`, `endings.yaml`.
@@ -224,7 +224,7 @@ au total.
 
 1. Aucune personne, aucun club, aucune ville, aucun journal, aucune compétition, aucune marque réels
    — ni maquillés. Un personnage ne porte jamais plus de deux traits reconnaissables d'un vivant.
-2. Le narrateur tutoie le joueur. Les personnages parlent avec leur tic.
+2. Le narrateur tutoie le joueur. Les personnages parlent en scène, jamais avec une formule qui revient (`charte_histoire.md` § 2-3).
 3. Deux phrases par réplique. Un nom une fois. La relation se lit sur le visage, jamais en chiffre.
 4. Une carte de drame a une seule sortie, ou deux sorties graves — et jamais en saison 0.
 5. Un libellé de choix : vingt-huit caractères, pas un de plus, et jamais le nom du joueur.

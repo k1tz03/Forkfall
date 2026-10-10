@@ -462,7 +462,10 @@ void main() {
       var saisonsVues = 0;
       var changementsEnCours = 0;
       for (final postulat in [0, 1, 2, 3]) {
-        for (final seed in [909, 12345, 77, 4242, 31337, 226010632, 5150, 8080]) {
+        // 3 et 57 : deux graines du promu qui changent de club en cours de
+        // saison avec ce bot (retirées quand les événements sombres ont
+        // déplacé les tirages : aucune des huit autres n'en changeait plus).
+        for (final seed in [909, 12345, 77, 4242, 31337, 226010632, 5150, 8080, 3, 57]) {
           var s = engine.start(seed, postulat: postulat);
           var g = 0;
           var saison = s.season;

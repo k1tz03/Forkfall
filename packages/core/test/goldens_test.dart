@@ -51,6 +51,20 @@
 ///   inchangés (`--goldens --write`, sans `--recode`) : même fin, même nombre
 ///   de cartes, même empreinte d'état final pour les vingt carrières — seul le
 ///   hachage des ids servis bouge, là où le prologue sert une autre variante.
+/// · **Les événements sombres et la réécriture en feuilleton** (lot « l'histoire
+///   d'abord », docs/bible/charte_histoire.md). Trente et un arcs `evenement`
+///   s'ajoutent (la manif, l'envahissement, les supporters devant chez toi,
+///   l'homme au blouson gris de la laverie…), le metteur en scène en arme deux
+///   par saison au lieu d'un, jamais à moins de cinq cartes d'écart (compté à
+///   la carte servie), et tous les dialogues ont été réécrits. Un événement
+///   armé consomme un tirage et décale les créneaux : les swipes figés ne
+///   tombaient plus sur les mêmes cartes, et dix-neuf carrières sur vingt
+///   racontaient autre chose. Codes **retirés à neuf**
+///   (`--goldens --write --recode`), puis une seconde fois quand l'armement
+///   a appris à s'effacer devant une étape à échéance et devant le créneau
+///   d'une Nouvelle (le tirage de l'événement n'a plus lieu à ces créneaux).
+///   La ville (`Engine.activite`) ne tire rien et n'entre pas dans les Codes :
+///   elle ne déplace aucun golden.
 library;
 
 import 'dart:io';

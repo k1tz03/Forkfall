@@ -22,12 +22,12 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 1 364 cartes, 74 intrigues, 42 fins, 148 Nouvelles datées, 241 manchettes de Une, 173 variantes de set-piece |
+| Contenu | 1 451 cartes, 105 intrigues (dont 31 événements sombres), 42 fins, 148 Nouvelles datées, 241 manchettes de Une, 173 variantes de set-piece |
 | Rôles jouables | entraîneur, joueur (4 postulats de départ) |
-| Moteur | Dart pur, déterministe, 99 tests, 20 goldens |
+| Moteur | Dart pur, déterministe, 114 tests, 20 goldens |
 | Qualité | `dart analyze` propre, `lint` 0 erreur 0 avertissement |
-| Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots |
-| Design | **c'est le chantier ouvert** — voir plus bas |
+| Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
+| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
 
 ## L'arborescence
 
@@ -37,7 +37,8 @@ packages/tools/    build_content, lint, simulate, et l'aperçu web (web/)
 content/           la source YAML → content/build/content.json
 app/               l'application Flutter
 docs/brainstorm/   la bible de conception (11 sections) — le pourquoi
-docs/bible/        la bible scénaristique (13 chapitres) — la matière écrite
+docs/bible/        la bible scénaristique (13 chapitres) — la matière écrite ; charte_histoire.md fait loi pour l'écriture
+docs/design/pixel_iso/  le moteur de rendu voxel de la ville (Node) et ses rendus
 docs/design/       les directions artistiques (dont trois rejetées)
 docs/spec_variete_narrative.md   la spec du metteur en scène (mécanismes, budgets)
 docs/balance/      les rapports d'équilibrage, avant/après
@@ -97,6 +98,29 @@ node packages/tools/web/assemble.js --engine /tmp/engine.js --out /tmp/fusible.h
 
 L'application Flutter : `cd app && flutter pub get && flutter analyze && flutter test`.
 
+## La ville (la version jouable)
+
+La couche « Punch Club » de la préproduction, branchée sur le vrai moteur :
+`content/ville.yaml` (les lieux, qui on trouve où, ce qu'on y fait), `Engine.activite`
+(une activité bouge les jauges sans rien tirer), et la coquille web avec
+`packages/tools/web/ville.js` + `ville.css`. La ville décide **où et quand** une carte se
+montre : chaque carte a un lieu (son `lieu:`, sinon son locuteur, sinon son beat) et une
+fenêtre dans la semaine (deux ou trois cartes du lundi au vendredi, le match le samedi à
+15 h, le classement le dimanche) ; un événement sombre ne s'annonce pas, il tombe le soir.
+Le temps, l'énergie, la faim et les francs sont tenus par la coquille ; la partie se
+sauvegarde par l'état entier du moteur (le Code de Carrière ne rejoue pas la ville).
+
+```bash
+# les images (une fois ; ~4 min) : la zone de jour, au crépuscule, de nuit, sa profondeur, la grille
+cd docs/design/pixel_iso && for t in day night; do node ville_assets.js $t grille; done && node ville_assets.js dusk && node ville_post.js
+# puis la découpe en tuiles WebP (ImageMagick), dans out/ville/web — voir le README du dossier
+dart compile js -O2 packages/tools/web/preview.dart -o /tmp/engine.js
+node packages/tools/web/assemble.js --engine /tmp/engine.js --out /tmp/ville/index.html --ville docs/design/pixel_iso/out/ville/web
+```
+
+La page sort avec un dossier `ville/` à côté (tuiles, profondeur, grille, lieux, sprites) :
+elle se sert en HTTP (les JSON sont lus par `fetch`), pas en `file://`.
+
 ## Comment on ajoute du contenu
 
 La bible (`docs/bible/`) est la matière écrite ; son `README.md` § 3 est la table
@@ -105,6 +129,14 @@ de conversion scène → YAML, champ par champ. En résumé : une intrigue est u
 carte (`content/cards/<rôle>/*.yaml`), et le postulat déclare dans son
 `programme` (`content/postulats.yaml`) dans quel « bucket » de saison l'intrigue
 peut être tirée, avec quel poids.
+
+**On écrit des scènes, pas des répliques à tic** : la charte d'écriture
+(`docs/bible/charte_histoire.md`) passe avant le § 3.1 du README de la bible. Un geste,
+un objet, une question qui engage ; une graine plantée qui revient trois à dix cartes plus
+tard ; jamais une formule qui revient d'une carte à l'autre. Les événements sombres sont
+des arcs `kind: evenement` avec un `lieu:` et le tag `sombre` (catalogue : charte § 5) ;
+le metteur en scène en arme deux par saison au plus, jamais à moins de cinq cartes
+d'écart.
 
 Les contrats que le lint fait respecter : un libellé de bouton ≤ 28 caractères,
 un texte ≤ 200, une trace posée est lue quelque part, une fin déclarée a une
@@ -139,6 +171,11 @@ Bonne nouvelle pour qui reprend : ce style est *dessinable en code* (SVG plat,
 formes géométriques, palette courte). Il ne demande aucun générateur d'images.
 
 ## Ce qui reste connu et ouvert
+
+- La ville : un changement de club garde le même plan de ville (seuls les noms changent) ;
+  le joueur et l'entraîneur ont les mêmes lieux ; les statistiques (physique, tactique…)
+  de la préproduction ne sont pas branchées ; un match est une carte (le bloc de six
+  journées du moteur), pas encore une scène au stade.
 
 - Le « J » du bandeau n'affiche pas la vraie journée de championnat, et ne dit
   pas la même chose dans l'aperçu web et dans l'application.

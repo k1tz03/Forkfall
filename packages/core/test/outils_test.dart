@@ -317,7 +317,8 @@ void main() {
       expect(s.world.division, 2);
       expect(s.vars.containsKey('_club_pending'), isFalse);
       final ligne = s.journal.firstWhere((j) => j.kind == 'transition');
-      expect(ligne.text, contains('signe à'));
+      // « signe à FC X » se dit « signe au FC X » (text.dart, articlesDeClub)
+      expect(ligne.text, anyOf(contains('signe à'), contains('signe au')));
       expect(ligne.tags, contains('club'));
       // Retrouvailles : les deux visages **partis** à |relation| maximale, en
       // [2, 6]. Un visage resté au club (Bréhaut) n'a pas d'« après » : sa

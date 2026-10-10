@@ -17,7 +17,7 @@ export 'src/sfx.dart';
 export 'src/standings.dart';
 export 'src/state.dart';
 export 'src/naming.dart';
-export 'src/text.dart' show formatText, placeholdersOf, kKnownPlaceholders, kNamePlaceholders;
+export 'src/text.dart' show formatText, placeholdersOf, kKnownPlaceholders, kNamePlaceholders, articlesDeClub;
 export 'src/world.dart';
 
 import 'dart:convert';
