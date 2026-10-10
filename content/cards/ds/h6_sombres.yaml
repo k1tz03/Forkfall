@@ -1,0 +1,95 @@
+# Histoire 6 — « 23 h 58 » : les cartes des soirs armés (content/arcs/ds/h6_sombres.yaml).
+# La règle du livre : la violence hors champ, l'avant et l'après ; un soir
+# tombe à son lieu, sans s'annoncer. Après un choc, une scène calme qui en
+# montre le prix (le lendemain du bureau visité : un café, poli).
+cards:
+  # ------------------------------------------------- le bureau visité (S1)
+  - id: ds.h6.sb.bureau_visite
+    roles: [ds]
+    arc: direction
+    tags: [sombre, direction]
+    speaker: josiane
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Ton bureau, le soir. Ton carnet a bougé d'un centimètre ; la molette du coffre n'est plus sur le zéro. Rien ne manque. Josiane, qui partait, s'arrête sur le seuil : « Vous aussi, vous avez vu ? »"
+    left:
+      label: "Changez la combinaison"
+      effects: {relation: {josiane: 1}, set: [h6_bureau_visite, h6_coffre_change]}
+      answer: "Elle la change, te tend la nouvelle sur un papier plié en huit et détourne les yeux. « Celle-là, je ne veux pas la connaître. »"
+    right:
+      label: "N'en parlez à personne"
+      effects: {set: [h6_bureau_visite, h6_bureau_silence]}
+      answer: "« À personne. » Elle éteint le couloir. Le lendemain, pour la première fois de l'année, le stagiaire arrive avant elle."
+
+  - id: ds.h6.sb.lendemain
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: ferlac
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Le lendemain, Joachim Ferlac t'apporte un café sans qu'on le lui demande : « J'ai trouvé la porte du recrutement ouverte, ce matin. Je l'ai refermée. Il ne vous manque rien, j'espère ? »"
+    left:
+      label: "Rien. Merci, Joachim"
+      effects: {relation: {ferlac: 1}}
+      answer: "« De rien. » Il retourne à sa machine. Le café est exactement comme tu le prends ; tu ne te rappelles pas le lui avoir dit."
+    right:
+      label: "Qui d'autre a la clé ?"
+      effects: {set: [h6_indice_porte], var: {h6_indices: "+1"}}
+      answer: "« Madame Josiane, le gardien, vous. » Il réfléchit, poliment. « Et ceux qui montent le soir par l'escalier de service. »"
+
+  # -------------------------------------------------------- les Glycines
+  - id: ds.h6.sb.glycines
+    roles: [ds]
+    arc: famille
+    tags: [sombre, famille]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Chez toi, 23 h 58. Le téléphone, pas le fax : l'infirmière de nuit des Glycines, où vit ton père. « Il a reçu une enveloppe, une photo de vous plus jeune. Il demande si vous avez des ennuis. »"
+    left:
+      label: "J'y vais ce soir"
+      effects: {direction: "-", set: [h6_pere_photo, h6_glycines_nuit]}
+      answer: "Il dort quand tu arrives. La photo est sur sa table de nuit, retournée. Tu la prends ; tu lui laisses le cadre, vide."
+    right:
+      label: "Demain, à la visite"
+      effects: {set: [h6_pere_photo]}
+      answer: "Le lendemain, il a oublié l'enveloppe. Pas la photo. « Tu avais l'air d'avoir froid, ce soir-là. » Tu ne corriges pas."
+
+  # ---------------------------------------------- la voiture sous la fenêtre
+  - id: ds.h6.sb.voiture
+    roles: [ds]
+    arc: moment
+    tags: [sombre, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit, sous ta fenêtre. Un homme dans une voiture garée, un appareil sur les genoux, photographie ta porte d'entrée. Rien que la porte. Le flash éclaire la rue deux fois, puis la voiture démarre."
+    left:
+      label: "Je descends"
+      effects: {set: [h6_voiture_photo, h6_bouchon]}
+      answer: "La voiture est partie avant que tu atteignes le trottoir. Dans le caniveau, un bouchon d'objectif noir, encore tiède."
+    right:
+      label: "Je tire le rideau"
+      effects: {set: [h6_voiture_photo]}
+      answer: "Tu tires le rideau. Le lendemain, à 23 h 58, le fax imprime une photo de ta porte, rien d'autre, pas même un prix."
+
+  # ------------------------------------------------ quarante-huit heures
+  - id: ds.h6.sb.brigade
+    roles: [ds]
+    arc: direction
+    tags: [sombre, scandale]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Deux inspecteurs de la brigade financière t'attendent dans ton bureau, imperméables mouillés : « La Mutuelle des Quais vous a versé des primes en liquide. À qui versait-elle le reste ? »"
+    left:
+      label: "À un JF Conseil"
+      effects: {direction: "--", tribunes: "-", set: [h6_brigade_parle, h6_indice_jf], var: {h6_indices: "+1", ville_amende: "+40000", saisie_luxe: "+1"}}
+      answer: "Ils notent le nom sans surprise et emportent les enveloppes, et ce qu'elles ont payé. Arnaud signe le reçu, blanc comme le papier."
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {end: co_garde_a_vue}
+      answer: "« Vous le direz au commissariat, alors. » Ils t'emmènent par l'escalier de service, poliment, sans menottes."

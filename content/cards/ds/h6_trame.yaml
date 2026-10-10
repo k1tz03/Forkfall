@@ -1,0 +1,434 @@
+# Histoire 6 — « 23 h 58 » : les cartes de la trame (content/arcs/ds/h6_trame.yaml).
+# L'enquête dans son propre bureau : chaque suspect sait quelque chose que le
+# maître chanteur sait aussi, et le coupable est celui qui tape les rapports
+# des autres. Les indices vrais incrémentent vars.h6_indices.
+# Motifs qui reviennent (des objets, pas des formules) : le presse-papier au
+# fanion de 1974, le papier qui blanchit, « un garçon poli », la carte blanche
+# « J. F. », la ligne de la buanderie (1987, l'année où Josiane est arrivée).
+cards:
+  # ═══════════════════════════════════════════════════════════ LA PHOTO
+  # ----------------------------------------- le presse-papier (scène 4, S1)
+  - id: ds.h6.photo.presse_papier
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane pose une photocopie sur ton sous-main : « Il y en avait un pour vous à 23 h 58. Je l'ai mis sous le presse-papier ; il voulait partir. Le fax blanchit, pas la copie. Je continue ? »"
+    left:
+      label: "Continuez, Josiane"
+      effects: {relation: {josiane: 1}, set: [h6_photocopies], outcome: copies}
+      answer: "Elle sort un classeur neuf et écrit « 23 h 58 — {nom} » sur la tranche, au feutre. Elle ne demande pas ce qu'il y a sur la photo."
+    right:
+      label: "Jetez tout"
+      effects: {relation: {josiane: -1}, set: [h6_tout_jete], outcome: jete}
+      answer: "Elle déchire la copie en quatre devant toi et jette les morceaux. Le soir, elle repart avec un sac plus lourd que le matin."
+
+  # ---------------------------------------------- la gourmette (scène 5, S1)
+  - id: ds.h6.photo.gourmette
+    roles: [ds]
+    arc: agents
+    tags: [agents, scandale]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Café de la Mairie. Fardelli tourne sa cuillère, la gourmette contre la soucoupe : « Si je voulais te faire chanter, je chanterais moi-même, et juste. Ce n'est pas moi. Mais je connais la photo. »"
+    left:
+      label: "Qui l'a prise ?"
+      effects: {relation: {fardelli: 1}, set: [h6_indice_maison], var: {h6_indices: "+1"}}
+      answer: "« La maison. Le Rideau garde tout, ses photos comme ses ardoises. » Il glisse un billet sous la soucoupe. « Elle vend, parfois. »"
+    right:
+      label: "Je ne vous crois pas"
+      effects: {relation: {fardelli: -1}, set: [h6_fardelli_soupconne]}
+      answer: "Il hausse les épaules. « Ne crois personne. Commence par moi, tu gagneras du temps. » Il paie aussi ton café."
+
+  - id: ds.h6.photo.gourmette_malbec
+    roles: [ds]
+    arc: agents
+    tags: [agents, scandale]
+    speaker: fardelli
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Café de la Mairie. Fardelli s'assoit à ta table sans y être invité : « Tu appelles Malbec à minuit pour vendre Dembo, et moi, rien ? Je connais la photo. Ce n'est pas moi qui l'envoie. »"
+    left:
+      label: "Qui l'a prise ?"
+      effects: {relation: {fardelli: 1}, set: [h6_indice_maison], var: {h6_indices: "+1"}}
+      answer: "« La maison. Le Rideau garde tout et vend parfois. » Il pose sa gourmette sur la table et compte les maillons, comme des années."
+    right:
+      label: "Je ne vous crois pas"
+      effects: {relation: {fardelli: -1}, set: [h6_fardelli_soupconne]}
+      answer: "« Tu as appelé Malbec, pas la police. On est du même monde, toi et moi. » Il paie les deux cafés et laisse la monnaie."
+
+  # ------------------------------------------------------ le carton noir (S1)
+  - id: ds.h6.photo.carton_noir
+    roles: [ds]
+    arc: moment
+    tags: [objet, scandale]
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Au parking, sous ton essuie-glace, un carton noir, un rideau rouge en relief, ton nom à la main : {NOM}. Au dos : « Les négatifs de 1999. La maison vend. Jeudi, après onze heures. »"
+    left:
+      label: "Je garde le carton"
+      effects: {set: [h6_negatifs_offerts]}
+      answer: "Tu le ranges dans la boîte à gants, sous la carte routière. Il y reste jusqu'au jeudi, le coin corné."
+    right:
+      label: "Je le déchire"
+      effects: {set: [h6_negatifs_offerts, h6_carton_dechire]}
+      answer: "Le carton est épais ; il faut s'y reprendre à deux fois. Le jeudi suivant, un autre attend sous l'essuie-glace."
+
+  # ------------------------------------ la maison garde tout (scène 9, S2)
+  - id: ds.h6.photo.maison
+    roles: [ds]
+    arc: moment
+    tags: [sombre, scandale]
+    lieu: club_prive
+    tone: strategique
+    once: true
+    text: "Rideau Rouge, onze heures du soir. L'homme en costume derrière la porte sans poignée te reconnaît : « Les photos ? La maison garde tout. Elle vend, parfois. Un garçon poli, l'été où vous avez signé. »"
+    left:
+      label: "Quel garçon ?"
+      effects: {set: [h6_garcon_poli, h6_rideau_vu], var: {h6_indices: "+1"}, react: ds.h6.re.ferlac_poli}
+      answer: "« Poli. Il a payé en liquide et dit merci deux fois. » Il referme avant que tu demandes un nom ; ici, personne n'en a."
+    right:
+      label: "Je ressors"
+      effects: {set: [h6_rideau_vu]}
+      answer: "Tu ressors. Derrière toi, l'homme dit « Bonsoir, {nom} » à la porte, qui se referme ; elle n'a pas de poignée de ce côté non plus."
+
+  - id: ds.h6.photo.maison_negatifs
+    roles: [ds]
+    arc: moment
+    tags: [sombre, scandale]
+    lieu: club_prive
+    tone: strategique
+    once: true
+    text: "Rideau Rouge, onze heures du soir. L'homme en costume reconnaît qui a racheté les négatifs : « Il vous manque un tirage, je sais. La maison l'avait vendu l'été où vous avez signé. À un garçon poli. »"
+    left:
+      label: "Quel garçon ?"
+      effects: {set: [h6_garcon_poli, h6_rideau_vu], var: {h6_indices: "+1"}, react: ds.h6.re.ferlac_poli}
+      answer: "« En liquide, merci deux fois. Il savait ce qu'il cherchait : l'année, la table, l'enveloppe. » La porte se referme."
+    right:
+      label: "Je ressors"
+      effects: {set: [h6_rideau_vu]}
+      answer: "Tu ressors. Dans ta poche, les négatifs rachetés pèsent moins lourd que le tirage qui manque."
+
+  # ═══════════════════════════════════════════════════════════ BARBIER
+  # ----------------------------------------- le gaucher de Kerbrouck (scène 7)
+  - id: ds.h6.barbier.gaucher
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. LE GAUCHER DE KERBROUCK, SOUS LA PLUIE. 3 MILLIONS. AVANT JEUDI."
+    left:
+      label: "J'attends Barbier"
+      effects: {vestiaire: "-", set: [h6_barbier_soupconne], var: {h6_fax_refus: "+1"}}
+      answer: "Trois mots t'arrêtent : « sous la pluie ». Ils ne sont que dans un rapport, celui que Barbier a dicté en mai. Tu le fais appeler."
+    right:
+      label: "J'achète le gaucher"
+      effects: {caisse: "--", vestiaire: "+", force: 2, set: [h6_gaucher_achete, h6_barbier_soupconne]}
+      answer: "Il signe jeudi, trois millions, le double du prix de mai. « Sous la pluie » : c'est le rapport de Barbier, mot pour mot."
+
+  - id: ds.h6.barbier.gaucher_reste
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "23:58 · 1 PAGE. DEMBO RESTE ; LA PHOTO AUSSI, DANS LE TIROIR DU PRÉSIDENT. LE GAUCHER DE KERBROUCK, SOUS LA PLUIE. 3 MILLIONS. AVANT JEUDI."
+    left:
+      label: "J'attends Barbier"
+      effects: {vestiaire: "-", set: [h6_barbier_soupconne, h6_photo_tiroir], var: {h6_fax_refus: "+1"}, react: ds.h6.re.arnaud_tiroir}
+      answer: "« Sous la pluie » : trois mots d'un seul rapport, celui que Barbier a dicté en mai. Et le tiroir du président est à l'étage."
+    right:
+      label: "J'achète le gaucher"
+      effects: {caisse: "--", vestiaire: "+", force: 2, set: [h6_gaucher_achete, h6_barbier_soupconne, h6_photo_tiroir], react: ds.h6.re.arnaud_tiroir}
+      answer: "Il signe jeudi, au double du prix de mai. « Sous la pluie » : le rapport de Barbier, mot pour mot. Et l'étage attend."
+
+  - id: ds.h6.barbier.gaucher_triche
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "23:58 · 1 PAGE. NEUF MOINS SIX : TROIS. CETTE FOIS, LE BON PRIX. LE GAUCHER DE KERBROUCK, SOUS LA PLUIE. 3 MILLIONS. AVANT JEUDI."
+    left:
+      label: "J'attends Barbier"
+      effects: {vestiaire: "-", set: [h6_barbier_soupconne], var: {h6_fax_refus: "+1"}}
+      answer: "On t'a fait la soustraction. Et « sous la pluie », c'est Barbier, son rapport de mai, mot pour mot. Tu le fais appeler."
+    right:
+      label: "J'achète le gaucher"
+      effects: {caisse: "--", vestiaire: "+", force: 2, set: [h6_gaucher_achete, h6_barbier_soupconne]}
+      answer: "Trois millions, comme la différence de Dembo. Tu paies ta dette en gaucher. « Sous la pluie » : les mots de Barbier."
+
+  # ------------------------------------------------- la doudoune (scène 8)
+  - id: ds.h6.barbier.doudoune
+    roles: [ds]
+    arc: mercato
+    tags: [formation, agents]
+    speaker: barbier
+    tone: strategique
+    once: true
+    text: "Centre de formation. Barbier a posé sa doudoune sur le banc comme on pose une arme : « Mes rapports, je les dicte au petit stagiaire ; je n'ai plus les yeux pour taper. Tu me soupçonnes, c'est ça ? »"
+    left:
+      label: "Pardon, Lucien"
+      effects: {relation: {barbier: 1}, set: [h6_indice_dicte], var: {h6_indices: "+1"}, outcome: pardon, react: ds.h6.re.barbier_main}
+      answer: "Il remet sa doudoune sans la fermer. « Quarante ans que je regarde des gamins, {prenom}. Je vois quand on me regarde de travers. »"
+    right:
+      label: "Qui d'autre les lit ?"
+      effects: {relation: {barbier: -1}, set: [h6_indice_dicte, h6_barbier_liste], var: {h6_indices: "+1"}, outcome: liste}
+      answer: "« Toi. Le coach. Le président. Le petit, qui les tape. Et la photocopieuse. » Il compte sur ses doigts, surpris d'en avoir besoin de cinq."
+
+  # ------------------------------------------------------- le rapport tapé
+  - id: ds.h6.barbier.rapport
+    roles: [ds]
+    arc: mercato
+    tags: [formation, objet]
+    speaker: barbier
+    tone: strategique
+    once: true
+    when: "season <= 1"
+    text: "Barbier pose côte à côte sa dictée griffonnée et le rapport tapé au propre : « Ici, j'ai dit : le gaucher, sous la pluie. Là, c'est tapé : trois millions. Je n'ai jamais dit de prix. Jamais. »"
+    left:
+      label: "Qui l'a tapé ?"
+      effects: {relation: {barbier: 1}, set: [h6_indice_prix_ajoute], var: {h6_indices: "+1"}}
+      answer: "« Le petit, comme toujours. Il tape plus vite que je ne parle, {prenom} ; il finit mes phrases. » Il entend ce qu'il vient de dire."
+    right:
+      label: "Une faute de frappe"
+      effects: {relation: {barbier: -1}, set: [h6_prix_ignore]}
+      answer: "« Une faute qui sait compter. » Il replie les deux feuilles ensemble, la dictée dedans, et les glisse dans sa doudoune."
+
+  # ═══════════════════════════════════════════════════════ LE PETIT RANCÉ
+  # ----------------------------------------------- les chaussettes (scène 11)
+  - id: ds.h6.tibo.chaussettes
+    roles: [ds]
+    arc: vestiaire
+    tags: [formation]
+    speaker: tibo_rance
+    tone: strategique
+    once: true
+    text: "Centre de formation, après la séance. Tibo Rancé, dix-sept ans, les chaussettes sur les chevilles : « Mon père dit qu'un club de l'étranger paie ses dettes si je signe. Vous voulez que je signe ? »"
+    left:
+      label: "Ne signe rien"
+      effects: {tribunes: "+", relation: {tibo_rance: 1, bertrand_rance: -1}, set: [h6_tibo_conseil_rester], outcome: conseil_rester}
+      answer: "Il remonte une chaussette, puis l'autre, lentement, comme si c'était un ordre. « D'accord. Vous le direz à mon père ? »"
+    right:
+      label: "C'est ta chance"
+      effects: {direction: "+", relation: {tibo_rance: -1, bertrand_rance: 1}, set: [h6_tibo_conseil_partir], outcome: conseil_partir}
+      answer: "Il hoche la tête et ne remonte pas ses chaussettes. Le soir, il refait seul vingt fois le même centre, vers un but vide."
+
+  # --------------------------------------------------------------- la grille
+  - id: ds.h6.tibo.grille
+    roles: [ds]
+    arc: famille
+    tags: [famille, agents]
+    speaker: bertrand_rance
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "À la grille du centre, Bertrand Rancé attend son fils, moteur allumé : « Un garçon très poli m'a laissé sa carte, au Terminus. Il dit que mon fils vaut quatre millions. C'est vous qui l'envoyez ? »"
+    left:
+      label: "Montrez-moi la carte"
+      effects: {relation: {bertrand_rance: 1}, set: [h6_carte_jf], var: {h6_indices: "+1"}}
+      answer: "Une carte blanche, sans adresse : « J. F. — Conseil ». Il la reprend aussitôt. « Il a dit de la garder. Je la garde. »"
+    right:
+      label: "Je n'envoie personne"
+      effects: {relation: {bertrand_rance: -1}, set: [h6_pere_mefiant]}
+      answer: "« Alors c'est qui ? » Il remonte sa vitre. Son fils monte sans te regarder, le sac de sport sur les genoux."
+
+  # ----------------------------------------------------- le comptoir (S3)
+  - id: ds.h6.tibo.comptoir
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Comptoir du Terminus. Bertrand Rancé pose sur le zinc un talon de chèque : « JF Conseil, payé par la Mutuelle des Quais. Ils ont réglé mes tournées tout l'hiver. Je vais trouver qui c'est, ce JF. »"
+    left:
+      label: "Laissez la police faire"
+      effects: {relation: {bertrand_rance: -1}, set: [h6_indice_jf, h6_pere_police], var: {h6_indices: "+1"}}
+      answer: "« La police. » Il rit sans bruit et range le talon dans son portefeuille, derrière une photo de son fils en poussin."
+    right:
+      label: "Prévenez-moi d'abord"
+      effects: {relation: {bertrand_rance: 1}, set: [h6_indice_jf, h6_pere_chasse], var: {h6_indices: "+1"}}
+      answer: "Il te serre la main par-dessus le zinc, trop longtemps. « Vous saurez avant tout le monde, {nom}. » Il commande deux cafés."
+
+  # ═══════════════════════════════════════════════════════════ VIALAT
+  # ------------------------------------------------------------ le recompte
+  - id: ds.h6.vialat.recompte
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, mercato]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat a posé sa calculatrice à bande sur ton bureau et refait ta fenêtre d'été, ligne à ligne : « Vos acheteurs ont versé des commissions à des intermédiaires. Vous les connaissez ? »"
+    left:
+      label: "Je ne les connais pas"
+      effects: {relation: {vialat: 1}, set: [h6_vialat_franche]}
+      answer: "Elle souligne deux lignes au crayon, puis ton nom, {nom}, en haut de la feuille. « Ce n'est pas une bonne nouvelle pour vous. »"
+    right:
+      label: "Ce sont des agents"
+      effects: {relation: {vialat: -1}, set: [h6_vialat_mefiante]}
+      answer: "Elle écrit « agents » entre guillemets, puis gomme les guillemets. La gomme du crayon est usée jusqu'au métal."
+
+  - id: ds.h6.vialat.recompte_page_trois
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, mercato]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat a refait ta fenêtre d'été à la calculatrice à bande : « Page trois, vous contresignez les commissions des intermédiaires, à titre personnel. Ceux-là, vous les connaissez ? »"
+    left:
+      label: "Je ne les connais pas"
+      effects: {relation: {vialat: 1}, set: [h6_vialat_franche]}
+      answer: "« Vous avez lu votre page trois. C'est rare. » Elle souligne deux lignes. « Ce n'est pas une bonne nouvelle pour autant. »"
+    right:
+      label: "Ce sont des agents"
+      effects: {relation: {vialat: -1}, set: [h6_vialat_mefiante]}
+      answer: "Elle écrit « agents » entre guillemets, puis gomme les guillemets. La gomme du crayon est usée jusqu'au métal."
+
+  # ----------------------------------------------- le papier (intermède, scène 15)
+  - id: ds.h6.vialat.papier
+    roles: [ds]
+    arc: moment
+    tags: [intermede]
+    tone: leger
+    once: true
+    when: "season <= 1"
+    text: "Le papier sort du fax et ne s'arrête plus. Il descend l'escalier, traverse la rue du Stade, coule dans la Rive. Sur chaque mètre, un nom et un prix. Le tien est au bout, sans prix."
+    left:
+      label: "Je déchire"
+      effects: {set: [h6_reve_papier]}
+      answer: "Tu te réveilles à quatre heures, le poing serré sur le drap. Sur la table de nuit, ton carnet est ouvert à une page tapée à la machine."
+    right:
+      label: "Je déchire"
+      effects: {set: [h6_reve_papier]}
+      answer: "Tu te réveilles à quatre heures, le poing serré sur le drap. Sur la table de nuit, ton carnet est ouvert à une page tapée à la machine."
+
+  # ------------------------------------------- trente pour cent (scène 16)
+  - id: ds.h6.vialat.trente
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, scandale]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "season <= 1"
+    text: "Madame Vialat aligne tes ventes sur une seule feuille, à la règle : « Tous vos prix sont bas de trente pour cent. Je n'en pense rien. Mais quelqu'un, quelque part, encaisse la différence. »"
+    left:
+      label: "Je vous dis tout"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h6_vialat_sait], var: {h6_indices: "+1"}, outcome: tout_dit, react: ds.h6.re.vialat_lettre}
+      answer: "Tu parles une heure : le fax, l'heure, la photo. Elle ne note que les heures, sous le nom de {nom}. « Toujours 23 h 58 ? »"
+    right:
+      label: "Le marché est bas"
+      effects: {direction: "+", relation: {vialat: -1}, set: [h6_vialat_marche], outcome: marche_bas}
+      answer: "« Bas pour vous seulement. » Elle range la règle dans son étui. La lettre d'audit d'été part le lendemain, à ton nom."
+
+  # ═══════════════════════════════════════════════════════════ LE SOUS-SOL
+  # ------------------------------------------------------------- le tableur
+  # La graine : « Les prix sont faux. » Le stagiaire la redira au sous-sol.
+  - id: ds.h6.sous_sol.tableur
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, objet]
+    speaker: ferlac
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Joachim Ferlac pose une clé USB bien au milieu de ton bureau : « Pour l'audit, j'ai mis toutes vos ventes dans un tableau. Les prix sont faux, vous savez. Mon tableau les corrige. Je l'installe ? »"
+    left:
+      label: "Installez-le"
+      effects: {caisse: "+", relation: {ferlac: 1}, set: [h6_tableur_adopte], outcome: tableur}
+      answer: "Le tableau s'ouvre en vert et en rouge. Chaque joueur a une colonne « prix juste ». Tout en haut : {NOM}, sans colonne."
+    right:
+      label: "Je garde mes chiffres"
+      effects: {set: [h6_tableur_refuse], outcome: mains_libres}
+      answer: "Il reprend la clé sans insister. « Comme vous voudrez. » Ce soir-là, la lampe du secrétariat reste allumée jusqu'à vingt-trois heures."
+
+  # ------------------------------------------------------------ l'escalier
+  - id: ds.h6.sous_sol.escalier
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vukic
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vukić, devenu l'entraîneur, ferme ta porte derrière lui : « Le stagiaire descend au sous-sol tous les soirs vers onze heures. Sa voiture reste au parking jusqu'à minuit dix. Je l'écris, au cas où. »"
+    left:
+      label: "Montrez-moi les heures"
+      effects: {relation: {vukic: 1}, set: [h6_indice_escalier], var: {h6_indices: "+1"}}
+      answer: "Une colonne de dates, une colonne d'heures : 23 h 04, 23 h 01, 23 h 06. Le premier soir noté est celui de la photo."
+    right:
+      label: "Il fume, sûrement"
+      effects: {relation: {vukic: -1}, set: [h6_indice_escalier_ignore]}
+      answer: "« Il ne fume pas. » Vukić rouvre la porte. « Mais c'est vous qui décidez de ce qu'on voit, ici. »"
+
+  # ----------------------------------------------- la buanderie (intermède)
+  - id: ds.h6.sous_sol.buanderie
+    roles: [ds]
+    arc: moment
+    tags: [intermede]
+    tone: leger
+    once: true
+    text: "Tu rêves de la buanderie de 1987 : les maillots de l'année sèchent sur des fils, la vapeur monte, et quelque part dans le linge un téléphone sonne sans fin. Tu le cherches à tâtons."
+    left:
+      label: "Je décroche"
+      effects: {set: [h6_reve_buanderie]}
+      answer: "Au bout du fil, une voix polie te donne l'heure, à la minute : 23 h 58. Tu te réveilles avec l'odeur de la lessive."
+    right:
+      label: "Je décroche"
+      effects: {set: [h6_reve_buanderie]}
+      answer: "Au bout du fil, une voix polie te donne l'heure, à la minute : 23 h 58. Tu te réveilles avec l'odeur de la lessive."
+
+  # ------------------------------------------------------------- le classeur
+  - id: ds.h6.sous_sol.classeur
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Madame Josiane pose la facture de téléphone sur le classeur : « Une ligne de trop depuis 1987 : la buanderie. Sa clé manque à mon trousseau depuis l'été 2003. Le stagiaire m'a demandé le classeur. »"
+    left:
+      label: "Ne le donnez à personne"
+      effects: {relation: {josiane: 1}, set: [h6_indice_ligne, h6_classeur_garde], var: {h6_indices: "+1"}}
+      answer: "Le classeur part dans son cabas, sous un tricot. « Il dormira chez moi. » Sur la tranche : 23 h 58, et {nom}."
+    right:
+      label: "Donnez-le-lui"
+      effects: {set: [h6_indice_ligne, h6_classeur_donne], var: {h6_indices: "+1"}}
+      answer: "Elle le lui donne en souriant. Le soir, elle ouvre son tiroir du bas : un second classeur, identique. Elle photocopie toujours deux fois."
+
+  - id: ds.h6.sous_sol.classeur_cache
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Madame Josiane sort de son cabas un classeur que tu n'as jamais vu, « 23 h 58 » sur la tranche : « Vous m'aviez dit de tout jeter. Je n'ai rien jeté. Et la buanderie a une ligne, depuis 1987. »"
+    left:
+      label: "Merci, Josiane"
+      effects: {relation: {josiane: 2}, set: [h6_classeur_revele, h6_indice_ligne], var: {h6_indices: "+1"}}
+      answer: "« Ne me remerciez pas. Les originaux sont blancs, mes copies non. Le stagiaire me l'a demandé hier, pour l'archivage. »"
+    right:
+      label: "Je vous avais dit de jeter"
+      effects: {relation: {josiane: -1}, set: [h6_classeur_revele, h6_indice_ligne], var: {h6_indices: "+1"}}
+      answer: "« Et moi, depuis 1987, je n'ai jamais rien jeté. » Elle range le classeur dans son cabas. « Il dort chez moi. »"

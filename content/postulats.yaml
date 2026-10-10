@@ -919,20 +919,128 @@ postulats:
     pitch: ""
     chantier: true
 
+  # Histoire 6 — « 23 h 58 » (docs/histoires/00_les_dix_histoires.md) : la
+  # directrice sportive, 2003-2006. Le chantage par fax ; le coupable tape les
+  # rapports des autres. Script : content/arcs/ds/h6_script.yaml ; trame (les
+  # cinq intrigues que le script ouvre) : h6_trame.yaml ; réservoir :
+  # h6_reservoir.yaml ; soirs : h6_sombres.yaml. L'acte final est une nuit,
+  # le 31 janvier de la saison 2 (créneaux 10-12) : toutes ses branches
+  # ferment la carrière sur une fin du livre (content/endings/h6.yaml).
   - id: vendre_trente
     index: 5
     role: ds
     title: "23 h 58"
+    question: "À qui dois-tu les trente millions : au coach qui ne les a pas lus, aux scouts qui les trouvent, ou au président qui les a écrits — et qui t'écrit, la nuit, à 23 h 58 ?"
     division: 1
     year: 2003
+    age: 42
     ville: Aubérive
     club: Racing Aubérive
-    gauges: { vestiaire: 50, tribunes: 50, direction: 55, caisse: 45 }
-    force: 54
+    # Les jauges de la bible (ch. 12 § 2) : le staff, les tribunes, le
+    # président, la masse salariale (fragile, elle s'use d'un point toutes les
+    # trois cartes). Vendre au prix du fax la remplit : le chantage est aussi
+    # une bouée, et c'est tout le piège.
+    gauges: { vestiaire: 50, tribunes: 45, direction: 60, caisse: 35 }
+    force: 58
+    # Ignoré à l'index ≥ 2 : l'Objectif de Division 1 est tiré (Top 10 / Top 5).
     objective: maintien
     flags: [histoire_h6]
-    pitch: ""
-    chantier: true
+    president: arnaud_vaubourg     # le président sur le papier ; {president} le nomme
+    patron: aulard                 # le père, à la Ligue, au téléphone : l'Objectif et le contrat
+    cast:
+      josiane:         { fonction: choeur,      target: 2 }
+      arnaud_vaubourg: { fonction: president,   target: 1 }
+      aulard:          { fonction: patron,      target: 0.8 }
+      fardelli:        { fonction: vautour,     target: 1 }
+      ferlac:          { fonction: ombre,       target: 1 }     # on le voit partout, on ne le regarde jamais
+      barbier:         { fonction: oeil,        target: 0.8 }
+      vialat:          { fonction: instance,    target: 0.6 }
+      dembo:           { fonction: coeur,       target: 1 }
+      klopf:           { fonction: coach,       target: 0.6 }     # parti pour la Vestrie à l'été 2004
+      vukic:           { fonction: messager,    target: 1 }
+      meneche:         { fonction: chroniqueur, target: 0.8 }
+      lea:             { fonction: temoin,      target: 0.5 }
+      solvang:         { fonction: rivale,      target: 0.6 }
+      nassir:          { fonction: tentateur,   target: 0.5 }
+      malbec:          { fonction: acheteur,    target: 0.6 }
+      sabatier:        { fonction: medecin,     target: 0.4 }
+      legruet:         { fonction: instance,    target: 0.3 }
+    pitch: "Un fax sans en-tête, une photo de 1999, trente millions par an. Le papier blanchit en six mois."
+    chantier: false
+    opening_arc: ds.h6.script
+    # Le prologue : la page deux, le bureau et son fax, le stagiaire qui tape,
+    # le latéral gauche, la montre de Dembo, la première page de 23 h 58.
+    prologue: ds.h6.prologue
+    questions:                        # le fil rouge de la bible (ch. 12 § 2) : coach / scouts / président
+      - { id: coach,     poids: 1.0 }
+      - { id: scouts,    poids: 1.0 }
+      - { id: president, poids: 1.0 }
+    # Le réservoir ne porte que les intrigues de côté : la trame (la photo,
+    # Barbier, le petit Rancé, Vialat, le sous-sol) est ouverte par les ancres
+    # du script, à heure fixe, et remplit déjà les saisons 1 et 2. Ce qui
+    # enjambe l'été compte dans le tirage de la saison suivante (`prendre`
+    # moins ce qui continue) : en saison 1, une intrigue de côté au plus, et
+    # aucune si celle de la saison 0 n'est pas finie ; en saison 2, le petit
+    # Rancé (jusqu'au comptoir) en tient déjà une place. La saison 2 est la fin
+    # de partie (l'audit, le sous-sol, la nuit du 31 janvier) : ses intrigues
+    # s'ouvrent tôt (créneaux 1 à 3) ; celle que la nuit coupe reste en suspens.
+    programme:
+      "0":
+        prendre: 2
+        fenetre: [2, 6]
+        reserve: 0
+        pool:
+          # `season == 0` : une intrigue de la saison 0 que le tirage n'a pas
+          # prise ne revient pas en saison 1 prendre la place des siennes
+          - { arc: ds.h6.mutuelle, poids: 1.2, signature: true, if: "season == 0" }
+          - { arc: ds.h6.montres,  poids: 1.0, if: "season == 0" }
+          - { arc: ds.h6.solvang,  poids: 1.0, if: "season == 0" }
+          - { arc: ds.h6.canette,  poids: 0.9, if: "season == 0" }
+          - { arc: ds.h6.lateral,  poids: 1.0, if: "season == 0" }
+          - { arc: ds.h6.dimanche, poids: 0.9, if: "season == 0" }
+          - { arc: ds.h6.doc,      poids: 0.7, if: "season == 0" }
+          - { arc: ds.h6.gamins,   poids: 0.9, if: "season == 0" }
+      "1":
+        prendre: 1
+        fenetre: [2, 9]
+        reserve: 0
+        pool:
+          - { arc: ds.h6.fils,         poids: 1.2, if: "season == 1" }
+          - { arc: ds.h6.lea,          poids: 1.0, if: "season == 1" }
+          - { arc: ds.h6.vukic,        poids: 1.0, if: "season == 1" }
+          - { arc: ds.h6.malbec,       poids: 1.0, if: "season == 1" }
+      "2+":
+        prendre: 3
+        fenetre: [1, 2]
+        reserve: 0
+        pool:
+          - { arc: ds.h6.dembo_retour, poids: 1.0, if: "flag('h6_dembo_vendu')" }
+          - { arc: ds.h6.commission,   poids: 1.0 }
+          - { arc: ds.h6.loge,         poids: 1.0 }
+    objectifs:
+      - { id: vendre_trente_deux_ans,       titre: "Trente millions, deux fois",   when: "vars.h6_saisons_trente >= 2", indice: "Trente millions, c'est la page deux. Deux fois, c'est une carrière." }
+      - { id: vendre_trente_sans_fardelli,  titre: "Sans « mon ami »",             when: "vars.h6_saisons_trente >= 1 && !flag('h6_montres_gardees') && relation.fardelli <= -2", indice: "On peut vendre trente millions sans dire « mon ami »." }
+      - { id: vendre_trente_le_petit_reste, titre: "Le petit reste",               when: "flag('h6_tibo_garde') && (flag('h6_ardoise_payee') || flag('h6_vl_ardoise_propre'))", indice: "Un gamin de dix-sept ans vaut plus que quatre millions. Son père, lui, doit de l'argent." }
+    alarm_overrides:                  # avant celles du rôle ; chaque carte porte son seuil (25 / 75)
+      vestiaire.low:
+        - { card: ds.h6.alarme.vestiaire_bas_banc, when: "vars.h6_ventes >= 2" }
+        - { card: ds.h6.alarme.vestiaire_bas_lettre }
+      vestiaire.high:
+        - { card: ds.h6.alarme.vestiaire_haut_table }
+      tribunes.low:
+        - { card: ds.h6.alarme.tribunes_bas_bache, when: "vars.h6_ventes >= 1" }
+        - { card: ds.h6.alarme.tribunes_bas_kiosque }
+      tribunes.high:
+        - { card: ds.h6.alarme.tribunes_haut_echarpe }
+      direction.low:
+        - { card: ds.h6.alarme.direction_bas_appel, when: "vars.h6_fax_refus >= 1" }
+        - { card: ds.h6.alarme.direction_bas_bureau }
+      direction.high:
+        - { card: ds.h6.alarme.direction_haut_titre }
+      caisse.low:
+        - { card: ds.h6.alarme.caisse_bas_paie }
+      caisse.high:
+        - { card: ds.h6.alarme.caisse_haut_vialat }
 
   - id: apres_fiasco
     index: 6

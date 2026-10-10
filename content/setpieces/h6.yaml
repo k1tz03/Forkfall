@@ -1,0 +1,153 @@
+# Histoire 6 — « 23 h 58 » : les variantes des beats du moteur pendant
+# l'histoire (le format : l'en-tête de content/setpieces.yaml). Ce lot se
+# range avant content/setpieces/roles_bureau.yaml : chaque variante lit le
+# drapeau d'histoire et passe devant le socle du directeur sportif. Jamais de
+# secours ici. `{toi}` n'est pas sûr chez le directeur sportif (aucun
+# personnage n'a d'adresse pour ce rôle dans un set-piece) : on nomme par
+# `{prenom}`, ou pas du tout.
+setpieces:
+  # ══ objective ════════════════════════════════════════════════════════════
+  objective:
+    - roles: [ds]
+      when: "flag('histoire_h6') && season == 0"
+      speaker: aulard
+      text: "Le père Vaubourg, au téléphone de la Ligue : « Mon fils t'a montré la page deux. L'équipe vise {objectif_min}, et toi tes trente millions. Tu t'engages, ou tu attends de voir la page trois ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Il raccroche sans dire au revoir. Arnaud, à la porte, a tout entendu ; il regarde ses chaussures."
+      answer_right: "« Personne ne promet, la première année. » Il raccroche. Le combiné reste chaud dans ta main."
+    - roles: [ds]
+      when: "flag('histoire_h6') && season == 1"
+      speaker: arnaud_vaubourg
+      text: "Arnaud Vaubourg, seul dans son bureau, sans son père au haut-parleur pour la première fois : « L'équipe vise {objectif_min}. Et vous, toujours trente. Vous vous engagez devant moi, cette fois ? »"
+      left: "Devant vous, oui"
+      right: "Devant personne"
+      answer_left: "Il note ta promesse dans son agenda, à la date du jour, et la souligne. C'est la première qu'on lui fait à lui."
+      answer_right: "« Personne ne s'engage devant moi. » Il le dit sans amertume, comme on dit le temps qu'il fera."
+    - roles: [ds]
+      when: "flag('histoire_h6') && season >= 2"
+      speaker: aulard
+      text: "Le père Vaubourg ne passe plus par son fils : « Comptes bloqués, audit en cours, et l'équipe vise {objectif_min}. Tu t'engages, ou tu attends que la Commission ait fini de compter ? »"
+      left: "Je m'engage quand même"
+      right: "J'attends la Commission"
+      answer_left: "« Quand même. » Il aime l'expression ; il la répétera au conseil, sans dire de qui elle est."
+      answer_right: "« La Commission ne finit jamais de compter. » Il raccroche. Sur la ligne, un déclic, puis plus rien."
+
+  # ══ classement ═══════════════════════════════════════════════════════════
+  classement:
+    - roles: [ds]
+      when: "flag('histoire_h6') && phase('bilan')"
+      text: "Le classement de juin est punaisé sous le fax. {club} est {rang}e. À côté, de son écriture penchée, Josiane a noté l'heure de chaque fax de la saison : toujours la même, à la minute."
+      left: "Lire les heures"
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      text: "CLASSEMENT · {journee}e journée. Josiane a épinglé le classement à côté du relevé des ventes : {club} est {rang}e avec {pts} points, et la colonne des ventes a une ligne de plus que celle des victoires."
+      left: "Comparer les colonnes"
+
+  # ══ match ════════════════════════════════════════════════════════════════
+  match:
+    - roles: [ds]
+      when: "flag('histoire_h6') && season == 1 && flag('h6_dembo_vendu')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Pour la première fois depuis douze ans, le numéro 9 n'est pas Dembo. Le virage chante son nom quand même, à la neuvième minute."
+    - roles: [ds]
+      when: "flag('histoire_h6') && vars.h6_prix_bas >= 2"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Sur la feuille de match, trois noms manquent ; ils jouent ailleurs, vendus après minuit, à des prix tapés d'avance."
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Tu regardes les matchs depuis la tribune présidentielle. Dans ton bureau vide, le fax regarde les prix."
+
+  # ══ cup ══════════════════════════════════════════════════════════════════
+  cup:
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      text: "Tour de Coupe. Dans la petite tribune, trois recruteurs prennent des notes ; l'un d'eux tient une feuille tapée à la machine, avec des prix dans la marge, au crayon."
+      left: "Je m'assois à côté"
+
+  # ══ gm_annonce ═══════════════════════════════════════════════════════════
+  gm_annonce:
+    - roles: [ds]
+      when: "flag('histoire_h6') && flag('h6_tibo_garde')"
+      text: "GRAND MATCH. Tibo Rancé, dix-huit ans, est sur la feuille, les chaussettes remontées jusqu'aux genoux. Son père est au virage ce soir, pas au Terminus. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      text: "GRAND MATCH. Le stade est plein. Dans la loge, le père Vaubourg a fait le déplacement depuis la Ligue ; il ne regarde pas le terrain, il regarde sa montre, comme on attend un fax. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  # ══ gm_te ════════════════════════════════════════════════════════════════
+  gm_te:
+    - roles: [ds]
+      when: "flag('histoire_h6') && vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Au bord de la touche, un recruteur étranger chronomètre ton ailier ; il écrit un prix dans la marge avant même la fin de l'action."
+      left: "Je descends le voir"
+      right: "Je le laisse noter"
+    - roles: [ds]
+      when: "flag('histoire_h6') && vars.gm_te_index == 2"
+      text: "{minute}e minute · {score}. Mi-temps. Dans le couloir des loges, Joachim Ferlac t'apporte un café sans sucre, comme tu le prends, et demande poliment si tout va bien."
+      left: "Tout va bien"
+      right: "Pourquoi cette question ?"
+    - roles: [ds]
+      when: "flag('histoire_h6') && vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Ton téléphone vibre dans ta poche : numéro masqué, aucun message. Tu ne décroches pas ; il vibre encore deux fois."
+      left: "Je regarde le match"
+      right: "Je décroche"
+
+  # ══ aftermatch ═══════════════════════════════════════════════════════════
+  aftermatch:
+    - roles: [ds]
+      when: "flag('histoire_h6') && vars.gm_won == 1"
+      speaker: josiane
+      text: "Madame Josiane t'attend au bas de l'escalier, une page à la main : « Arrivée pendant le match, à la mi-temps. Il n'y a rien dessus. Je la photocopie quand même ? »"
+      left: "Photocopiez-la"
+      right: "Jetez-la"
+      answer_left: "Elle la photocopie deux fois. Trois pages blanches au classeur, datées du soir de la victoire."
+      answer_right: "Elle la plie en quatre sans la jeter et la glisse dans la poche de son gilet, avec les autres."
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      speaker: vukic
+      text: "Vukić sort du vestiaire le dernier, son sac à la main : « On a joué avec ce que vous nous avez laissé. Ce soir, ça ne suffisait pas. Demain, vous vendez qui ? »"
+      left: "Personne demain"
+      right: "Je ne sais pas encore"
+      answer_left: "« Demain. » Il hoche la tête, pas convaincu, et éteint lui-même la lumière du couloir."
+      answer_right: "« Moi non plus, je ne sais jamais. » Il part vers le parking ; tu entends sa voiture refuser deux fois de démarrer."
+
+  # ══ bilan_verdict ════════════════════════════════════════════════════════
+  bilan_verdict:
+    - roles: [ds]
+      when: "flag('histoire_h6') && vars.h6_millions >= 30"
+      text: "Le verdict tombe : {rang}e. {objectif} : {tenu}. La page deux, elle, est tenue : trente millions de ventes. Au conseil, personne ne lit la page trois."
+      left: "Voir le classement"
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      text: "Le verdict tombe : {rang}e. {objectif} : {tenu}. Au conseil, le père Vaubourg ne parle que des ventes ; il dit « pas trente » trois fois, sans jamais élever la voix."
+      left: "Voir le classement"
+
+  # ══ bilan_contrat ════════════════════════════════════════════════════════
+  bilan_contrat:
+    - roles: [ds]
+      when: "flag('histoire_h6') && flag('h6_primes_mutuelle')"
+      speaker: arnaud_vaubourg
+      text: "Arnaud Vaubourg pose ton contrat à côté d'une enveloppe vide de la Mutuelle des Quais : « On me dit que vous en recevez. On renouvelle aux mêmes conditions, ou on parle aussi de celles-là ? »"
+      left: "Mêmes conditions"
+      right: "Parlons-en"
+      answer_left: "Il signe sans relire. L'enveloppe vide reste sur la table ; il ne la jette pas, il ne la range pas."
+      answer_right: "Tu parles dix minutes. Il écoute, blanc, puis range l'enveloppe dans son tiroir, sous la cravate de son père."
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      speaker: aulard
+      text: "Le père Vaubourg prolonge ton contrat au téléphone, page deux comprise : « Trente millions, toujours. Tu veux qu'on te relise la page trois, cette fois, ou tu me fais confiance ? »"
+      left: "Je vous fais confiance"
+      right: "Relisez-la-moi"
+      answer_left: "Tu l'entends signer, à l'autre bout du fil. Josiane reçoit le contrat le lendemain, page trois cornée."
+      answer_right: "Il la relit, vite, sans respirer. Tu entends tout, sauf une ligne, qu'il tousse."
+
+  # ══ bilan_carrefour ══════════════════════════════════════════════════════
+  bilan_carrefour:
+    - roles: [ds]
+      when: "flag('histoire_h6') && season == 0"
+      text: "L'été arrive par le fax : le premier soir des vacances, à 23 h 58, il imprime une page qui ne porte qu'un mot, ENCORE. Josiane la range au classeur avant de partir en congé."
+      left: "Repartir"
+    - roles: [ds]
+      when: "flag('histoire_h6')"
+      text: "En juillet, le papier des fax de l'été dernier est devenu blanc dans les tiroirs. Josiane en vérifie un par mois, à son retour de congé : ses photocopies, elles, tiennent."
+      left: "Repartir"

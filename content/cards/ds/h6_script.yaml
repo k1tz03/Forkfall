@@ -1,0 +1,689 @@
+# Histoire 6 — « 23 h 58 » : les cartes du script (content/arcs/ds/h6_script.yaml).
+# Une carte est une scène ; les ancres de nuit portent le tag `sombre` (la
+# ville les sert le soir, à leur lieu). Les fax sont des lignes d'ordre : sans
+# locuteur, tag `fax`, une heure, un nom, un prix, un délai.
+#
+# Compteurs (vars) tenus par l'histoire :
+#   h6_millions — les ventes de la saison, en millions d'écus : vingt et un
+#     déjà faits en juin 2003 (la page deux, au prologue : Dembo à son prix fait
+#     trente tout juste, au prix du fax il en manque trois), puis vingt-quatre
+#     de ventes d'été (prêts, réserve, gamins) au ruban de la S1 et à l'audit de
+#     la S2 (le petit Rancé au prix du fax en laisse deux à trouver), qui
+#     comptent les saisons à trente (h6_saisons_trente). Le reste, ce sont les
+#     cartes : Dembo, les fax, les offres ;
+#   h6_ventes, h6_prix_bas — les ventes, et celles faites au prix du fax ;
+#   h6_fax_refus — les ordres laissés sans réponse ;
+#   h6_indices — ce qui mène au sous-sol (la nuit du sous-sol en lit trois).
+cards:
+  # ═══════════════════════════════════════════════════════════ SAISON 0
+  # ------------------------------------------------ 1 · la photo (scène 3)
+  - id: ds.h6.sc.photo
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "La nuit suivante, à 23 h 58, le fax imprime une photo granuleuse : toi au Rideau Rouge, en 1999, une enveloppe kraft à la main, Fardelli en face. Dessous, un seul mot : VENDREDI."
+    left:
+      label: "J'appelle Fardelli"
+      effects: {relation: {fardelli: -1}, set: [h6_appel_fardelli], schedule: [{card: ds.h6.photo.presse_papier, in: [1, 2]}]}
+      answer: "Il décroche à la première sonnerie, comme s'il attendait. « Pas au téléphone. Demain midi, au café de la Mairie. » Il raccroche le premier."
+    right:
+      label: "J'appelle Malbec"
+      effects: {direction: "+", vestiaire: "-", relation: {malbec: 1, dembo: -1}, set: [h6_dembo_promis], schedule: [{card: ds.h6.photo.presse_papier, in: [1, 2]}]}
+      answer: "Malbec ne s'étonne pas de l'heure. « Six millions, c'est le chiffre qu'on m'a soufflé. Vous signez vendredi, il part en juin. »"
+
+  - id: ds.h6.sc.photo_corbeille
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "La page d'hier n'a pas bougé de la corbeille. À 23 h 58, le fax en imprime une autre : une photo granuleuse, toi au Rideau Rouge en 1999, une enveloppe kraft, Fardelli. Dessous : VENDREDI."
+    left:
+      label: "J'appelle Fardelli"
+      effects: {relation: {fardelli: -1}, set: [h6_appel_fardelli], schedule: [{card: ds.h6.photo.presse_papier, in: [1, 2]}]}
+      answer: "Il décroche à la première sonnerie. « Tu as jeté la première, je parie. Pas au téléphone. Demain midi, au café de la Mairie. »"
+    right:
+      label: "J'appelle Malbec"
+      effects: {direction: "+", vestiaire: "-", relation: {malbec: 1, dembo: -1}, set: [h6_dembo_promis], schedule: [{card: ds.h6.photo.presse_papier, in: [1, 2]}]}
+      answer: "Malbec ne s'étonne pas de l'heure. « Six millions, on me l'a soufflé avant vous. Vous signez vendredi, il part en juin. »"
+
+  # ------------------------------------------- 10-11 · les lacets (scène 6)
+  - id: ds.h6.sc.lacets
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: dembo
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Terrain annexe, la pluie de janvier. Dembo lace ses chaussures, un pied sur le banc, sans lever la tête : « On dit que Valentienne me veut. Tu me vends, ou tu me le dis d'abord ? »"
+    left:
+      label: "Je te garde"
+      effects: {tribunes: "+", vestiaire: "+", direction: "-", relation: {dembo: 1}, set: [h6_dembo_garde_promis]}
+      answer: "Il serre le second lacet jusqu'à ce que le cuir grince. « D'accord. » Il te croit à moitié ; venant de lui, c'est beaucoup."
+    right:
+      label: "Je vends, je te le dis"
+      effects: {vestiaire: "-", direction: "+", relation: {dembo: -1}, set: [h6_dembo_prevenu]}
+      answer: "Il finit son nœud, double. « Merci de le dire avant le journal. » Il part courir sous la pluie sans attendre les autres."
+
+  - id: ds.h6.sc.lacets_signe
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, mercato]
+    speaker: dembo
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Terrain annexe, janvier. Dembo lace ses chaussures sans te regarder : « Le chauffeur de Malbec dit que c'est signé depuis août. Tu me le dis maintenant, ou je l'apprends en juin ? »"
+    left:
+      label: "C'est signé depuis août"
+      effects: {vestiaire: "-", relation: {dembo: -1}, set: [h6_dembo_prevenu]}
+      answer: "Il défait le lacet qu'il venait de nouer et le refait, plus serré. « Six millions. Je vaux ça, alors. Bon. »"
+    right:
+      label: "Rien n'est signé"
+      effects: {direction: "+", relation: {dembo: -2}, set: [h6_dembo_menti]}
+      answer: "Il te regarde enfin, longtemps. Il part courir sans finir son nœud ; le lacet traîne dans la boue jusqu'au poteau de corner."
+
+  # ------------------------------------------------ 16 · la dernière à la Rive
+  - id: ds.h6.sc.derniere
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Dernier match à domicile. Dembo marque de la tête, enlève son brassard et le pose sur le point de corner. Le virage ne sait rien. Le speaker attend ton signe pour annoncer son départ."
+    left:
+      label: "Annoncez son départ"
+      effects: {tribunes: "+", vestiaire: "+", set: [h6_adieu_public]}
+      answer: "Le stade se lève. Dembo ramasse le brassard sur le point de corner et le tend au plus jeune du banc, sans un mot."
+    right:
+      label: "Pas ce soir"
+      effects: {tribunes: "-", direction: "+", set: [h6_adieu_cache]}
+      answer: "Le speaker range le micro. Le brassard reste sur le point de corner ; un ramasseur le rapporte au vestiaire, plié en quatre."
+
+  - id: ds.h6.sc.derniere_reste
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Dernier match à domicile. Dembo marque de la tête et court vers ta tribune au lieu du virage, la main ouverte. Il attend que tu dises « un an de plus » devant tout le monde."
+    left:
+      label: "« Un an de plus », au micro"
+      effects: {tribunes: "++", direction: "-", relation: {dembo: 1}, set: [h6_dembo_annonce]}
+      answer: "Le speaker répète ta phrase deux fois. Dembo reste au milieu du terrain, les bras ouverts, jusqu'à ce que l'arbitre le pousse."
+    right:
+      label: "Je lève le pouce"
+      effects: {tribunes: "-", relation: {dembo: -1}}
+      answer: "Il voit le pouce. Il retourne vers le virage en marchant, comme quelqu'un qui vient de comprendre autre chose."
+
+  # --------------------------------------------------- 17 · Valentienne
+  - id: ds.h6.sc.valentienne
+    roles: [ds]
+    arc: mercato
+    tags: [mercato]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Au bar de l'hôtel de la Rive, Hubert Malbec a posé deux feuilles devant lui : « Six millions, le chiffre qu'on m'a soufflé en août. Ou neuf, le prix d'un capitaine. Laquelle je signe ? »"
+    left:
+      label: "Six, comme le fax"
+      effects: {caisse: "++", direction: "+", tribunes: "-", force: -3, set: [h6_dembo_vendu, h6_dembo_prix_fax], var: {h6_millions: "+6", h6_ventes: "+1", h6_prix_bas: "+1"}, char: {dembo: vendu}, react: [{card: ds.h6.re.dembo_montre, if: "flag('h6_montre_dembo')"}]}
+      answer: "Il signe la feuille de gauche et déchire l'autre en deux, proprement. « On m'avait dit que vous étiez raisonnable. »"
+    right:
+      label: "Neuf, son prix"
+      effects: {caisse: "+++", direction: "-", force: -3, relation: {malbec: -1}, set: [h6_dembo_vendu, h6_dembo_prix_juste, h6_fax_trahi], var: {h6_millions: "+9", h6_ventes: "+1"}, char: {dembo: vendu}, react: [{card: ds.h6.re.dembo_montre, if: "flag('h6_montre_dembo')"}]}
+      answer: "Il signe la feuille de droite en soupirant. « On m'avait dit six. » Tu demandes qui ; il a déjà rangé son stylo."
+
+  - id: ds.h6.sc.valentienne_signe
+    roles: [ds]
+    arc: mercato
+    tags: [mercato]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Au bar de l'hôtel de la Rive, Hubert Malbec déplie le contrat d'août : « Six millions, comme on vous l'a soufflé. Il ne manque que votre paraphe. » Dans le hall, Dembo attend, son sac aux pieds."
+    left:
+      label: "Je paraphe à six"
+      effects: {caisse: "++", direction: "+", tribunes: "-", force: -3, relation: {dembo: -1}, set: [h6_dembo_vendu, h6_dembo_prix_fax], var: {h6_millions: "+6", h6_ventes: "+1", h6_prix_bas: "+1"}, char: {dembo: vendu}, react: [{card: ds.h6.re.dembo_montre, if: "flag('h6_montre_dembo')"}]}
+      answer: "Tu paraphes. Malbec glisse le stylo dans ta poche de veste, « en souvenir ». Dans le hall, Dembo soulève son sac sans te regarder."
+    right:
+      label: "Je rouvre le prix"
+      effects: {caisse: "+++", direction: "-", force: -3, relation: {malbec: -1}, set: [h6_dembo_vendu, h6_dembo_prix_juste, h6_fax_trahi], var: {h6_millions: "+9", h6_ventes: "+1"}, char: {dembo: vendu}, react: [{card: ds.h6.re.dembo_montre, if: "flag('h6_montre_dembo')"}]}
+      answer: "Neuf, après quarante minutes et deux cafés froids. Malbec signe en soupirant. Au fax, cette nuit, quelqu'un fera la soustraction."
+
+  - id: ds.h6.sc.valentienne_reste
+    roles: [ds]
+    arc: mercato
+    tags: [mercato]
+    speaker: malbec
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hubert Malbec repose sa tasse au bar de l'hôtel : « Neuf millions pour un homme de trente-huit ans, c'est un cadeau, et vous me le refusez ? » Dans le hall, Dembo fait semblant de lire le journal."
+    left:
+      label: "Il reste chez nous"
+      effects: {tribunes: "+", vestiaire: "+", caisse: "-", direction: "-", relation: {dembo: 2, malbec: -1}, set: [h6_dembo_reste], var: {h6_fax_refus: "+1"}, react: ds.h6.re.dembo_garde}
+      answer: "Malbec se lève sans finir son café. Dans le hall, Dembo plie le journal en quatre et te fait un signe de tête, un seul."
+    right:
+      label: "Je vends quand même"
+      effects: {caisse: "+++", tribunes: "--", vestiaire: "-", force: -3, relation: {dembo: -3}, set: [h6_dembo_vendu, h6_dembo_trahi, h6_dembo_prix_juste, h6_fax_trahi], var: {h6_millions: "+9", h6_ventes: "+1"}, char: {dembo: vendu}, react: [{card: ds.h6.re.dembo_montre, if: "flag('h6_montre_dembo')"}]}
+      answer: "Dembo lit la nouvelle sur ton visage, par-dessus le journal. Il le laisse sur le fauteuil et sort par la porte de service."
+
+  # ═══════════════════════════════════════════════════════════ SAISON 1
+  # ------------------------------------------------- 1 · le ruban de Josiane
+  # Vogler est parti pour la Vestrie (bible ch. 01 § 11 : sélectionneur dès
+  # 2004) ; Vukić a pris le banc. Le ruban compte la saison d'avant.
+  - id: ds.h6.sc.ruban_trente
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, mercato]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Madame Josiane déroule jusqu'au sol le ruban de sa machine à calculer : trente millions et des poussières. À la patère, la casquette de Vogler, parti pour la Vestrie. « J'envoie le chiffre au père ? »"
+    left:
+      label: "Envoyez-le au père"
+      effects: {direction: "++", var: {h6_saisons_trente: "+1", h6_millions: "=24"}, char: {klopf: parti}, react: ds.h6.re.vukic_casquette, schedule: [{card: ds.h6.barbier.gaucher, in: [1, 2]}, {card: ds.h6.tibo.chaussettes, in: [4, 6]}, {card: ds.h6.vialat.recompte, in: [6, 8]}]}
+      answer: "Elle tape « {nom} : trente millions » sur une page de garde et la faxe à la Ligue. Le ruban rejoint le classeur, plié en accordéon."
+    right:
+      label: "Au fils d'abord"
+      effects: {direction: "+", relation: {arnaud_vaubourg: 1}, var: {h6_saisons_trente: "+1", h6_millions: "=24"}, char: {klopf: parti}, react: ds.h6.re.vukic_casquette, schedule: [{card: ds.h6.barbier.gaucher, in: [1, 2]}, {card: ds.h6.tibo.chaussettes, in: [4, 6]}, {card: ds.h6.vialat.recompte, in: [6, 8]}]}
+      answer: "Arnaud lit le chiffre deux fois, puis le recopie à la main dans son agenda, comme une date d'anniversaire."
+
+  - id: ds.h6.sc.ruban
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, mercato]
+    speaker: josiane
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Le ruban de la machine de Madame Josiane s'arrête avant trente. À la patère, la casquette de Vogler, parti pour la Vestrie. « Le père a appelé deux fois. Je dis que vous êtes en rendez-vous ? »"
+    left:
+      label: "Passez-le-moi"
+      effects: {direction: "-", parole: 1, var: {h6_millions: "=24"}, char: {klopf: parti}, react: ds.h6.re.vukic_casquette, schedule: [{card: ds.h6.barbier.gaucher, in: [1, 2]}, {card: ds.h6.tibo.chaussettes, in: [4, 6]}, {card: ds.h6.vialat.recompte, in: [6, 8]}]}
+      answer: "Il parle quatre minutes sans respirer. Il ne dit pas « trente » une seule fois ; il dit « l'an prochain », trois fois."
+    right:
+      label: "Dites rendez-vous"
+      effects: {direction: "-", relation: {josiane: 1}, var: {h6_millions: "=24"}, char: {klopf: parti}, react: ds.h6.re.vukic_casquette, schedule: [{card: ds.h6.barbier.gaucher, in: [1, 2]}, {card: ds.h6.tibo.chaussettes, in: [4, 6]}, {card: ds.h6.vialat.recompte, in: [6, 8]}]}
+      answer: "Elle invente un rendez-vous avec un club du Nord, le note dans ton agenda, et pousse le zèle jusqu'à t'y envoyer."
+
+  # --------------------------------------- 10-11 · la page blanche (scène 10)
+  - id: ds.h6.sc.page_blanche
+    roles: [ds]
+    arc: moment
+    tags: [sombre, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Chez toi, 23 h 58, la dernière nuit du mercato d'hiver. Le fax du salon, dont personne n'a le numéro, se réveille dans le noir et sort une page. Elle est blanche, et encore tiède."
+    left:
+      label: "Je débranche la ligne"
+      effects: {set: [h6_ligne_debranchee], react: ds.h6.re.lea_page}
+      answer: "Tu tires la prise. Le voyant vert met une minute entière à s'éteindre. Tu gardes la page blanche sous ton oreiller."
+    right:
+      label: "Je laisse branché"
+      effects: {set: [h6_ligne_branchee], react: ds.h6.re.lea_page}
+      answer: "Tu laisses branché et tu ne dors pas. À 4 h 10, rien. À 6 h, le voisin du dessus fait couler son bain."
+
+  - id: ds.h6.sc.page_blanche_carnet
+    roles: [ds]
+    arc: moment
+    tags: [sombre, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Chez toi, 23 h 58. Dans ton carnet, la page pliée en août est devenue blanche. Le fax du salon, dont personne n'a le numéro, en sort une autre, blanche aussi, encore tiède."
+    left:
+      label: "Je débranche la ligne"
+      effects: {set: [h6_ligne_debranchee], react: ds.h6.re.lea_page}
+      answer: "Tu tires la prise. Tu poses les deux pages blanches l'une sur l'autre : celle d'août est plus jaune sur les bords."
+    right:
+      label: "Je laisse branché"
+      effects: {set: [h6_ligne_branchee], react: ds.h6.re.lea_page}
+      answer: "Tu laisses branché. Tu ne dors pas ; tu relis deux pages où il n'y a rien, à la lampe de poche, jusqu'au jour."
+
+  # --------------------------------------------- 15 · le fax du petit (scène 12)
+  - id: ds.h6.sc.fax_petit
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. RANCÉ. CLUB ÉTRANGER. 4 MILLIONS. AVANT LUNDI."
+    left:
+      label: "Je vends Tibo"
+      effects: {caisse: "++", direction: "+", tribunes: "-", vestiaire: "-", force: -2, set: [h6_tibo_vendu], var: {h6_millions: "+4", h6_ventes: "+1", h6_prix_bas: "+1"}, char: {tibo_rance: vendu}}
+      answer: "Au matin, Josiane photocopie la page deux fois sans rien demander. Une copie va au classeur, l'autre sous ta tasse de café."
+    right:
+      label: "Je refuse"
+      effects: {direction: "-", caisse: "-", set: [h6_tibo_garde], var: {h6_fax_refus: "+1"}}
+      answer: "Au matin, Josiane photocopie la page deux fois. La seconde copie, elle la plie et la glisse dans la poche de son gilet."
+
+  - id: ds.h6.sc.fax_petit_sans_copie
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. RANCÉ. CLUB ÉTRANGER. 4 MILLIONS. AVANT LUNDI. (NE PAS PHOTOCOPIER.)"
+    left:
+      label: "Je vends Tibo"
+      effects: {caisse: "++", direction: "+", tribunes: "-", vestiaire: "-", force: -2, set: [h6_tibo_vendu], var: {h6_millions: "+4", h6_ventes: "+1", h6_prix_bas: "+1"}, char: {tibo_rance: vendu}}
+      answer: "Au matin, Josiane te tend la page sans la photocopier, comme tu l'as demandé en août. Elle la tient par un coin, du bout des doigts."
+    right:
+      label: "Je refuse"
+      effects: {direction: "-", caisse: "-", set: [h6_tibo_garde], var: {h6_fax_refus: "+1"}}
+      answer: "Josiane lit la dernière ligne deux fois. « Ne pas photocopier. » Elle repose la page sur ton bureau, très doucement."
+
+  # ----------------------------------------------- 16 · la vitre (scène 13)
+  - id: ds.h6.sc.vitre
+    roles: [ds]
+    arc: presse
+    tags: [presse, sombre]
+    speaker: meneche
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Parking du club-house, samedi soir. Massenet baisse sa vitre : « On m'a soufflé quatre millions pour le petit Rancé, avant lundi, et vous dites non. Quelqu'un a envoyé un prix. Qui ? »"
+    left:
+      label: "Personne"
+      effects: {direction: "+", relation: {meneche: -1}, set: [h6_vitre_silence]}
+      answer: "« Personne », répète-t-il, et il écrit le mot. Il le souligne d'une main en démarrant, l'autre sur le volant."
+    right:
+      label: "Un fax, sans en-tête"
+      effects: {tribunes: "+", direction: "-", relation: {meneche: 1}, set: [h6_verite_dimanche], react: ds.h6.re.massenet_lundi}
+      answer: "Il coupe le moteur pour écouter. Dimanche, il dit « fax » trois fois à l'antenne ; lundi, le standard du club sonne jusqu'à midi."
+
+  - id: ds.h6.sc.vitre_vendu
+    roles: [ds]
+    arc: presse
+    tags: [presse, sombre]
+    speaker: meneche
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Parking du club-house, samedi soir. Massenet baisse sa vitre : « Le petit Rancé à quatre millions ? À ce prix-là, on ne vend pas, on se débarrasse. Je dis quoi, dimanche, à l'antenne ? »"
+    left:
+      label: "Rien, pour l'instant"
+      effects: {direction: "+", relation: {meneche: -1}, set: [h6_vitre_silence]}
+      answer: "Il remonte la vitre jusqu'à la moitié. « Pour l'instant, alors. » Il note l'heure dans son carnet avant de démarrer."
+    right:
+      label: "La vérité, dimanche"
+      effects: {tribunes: "+", direction: "--", relation: {meneche: 1}, set: [h6_verite_dimanche], react: ds.h6.re.massenet_lundi}
+      answer: "Dimanche, il dit à l'antenne « fax », « sans en-tête », et ton nom, {nom}, une fois. Lundi, trois clubs appellent."
+
+  # ------------------------------------------- 17 · le tapis vert (scène 14)
+  - id: ds.h6.sc.tapis
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Arrière-salle du Terminus, deux heures du matin. Bertrand Rancé pousse une pile de jetons devant un autre joueur : « Si mon fils part lundi, l'ardoise est effacée. Vous allez m'en empêcher ? »"
+    left:
+      label: "Je paie son ardoise"
+      effects: {tribunes: "+", relation: {bertrand_rance: 1, tibo_rance: 1}, set: [h6_ardoise_payee, h6_pere_rance], var: {ville_amende: "+60000"}, react: ds.h6.re.tibo_maillot}
+      answer: "Le patron sort l'ardoise de sous le comptoir. Tu paies en billets propres ; il les compte deux fois. Bertrand ne lève pas les yeux."
+    right:
+      label: "Je le laisse jouer"
+      effects: {relation: {bertrand_rance: -1}, set: [h6_pere_joue, h6_pere_rance]}
+      answer: "Tu laisses les jetons où ils sont. En sortant, tu entends le patron dire « encore une main » comme on dit « bonne nuit »."
+
+  - id: ds.h6.sc.tapis_vendu
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Arrière-salle du Terminus. Bertrand Rancé a devant lui une pile de jetons neuve : « L'ardoise est effacée. Mon fils signe lundi pour mes dettes. Vous buvez un verre avec moi, ou vous avez honte ? »"
+    left:
+      label: "Je bois le verre"
+      effects: {relation: {bertrand_rance: 1}, set: [h6_pere_trinque, h6_pere_rance]}
+      answer: "Le verre est tiède. Il gagne trois mains de suite pendant que tu le bois, et ne sourit à aucune."
+    right:
+      label: "J'ai honte"
+      effects: {tribunes: "-", relation: {bertrand_rance: -1}, set: [h6_pere_honte, h6_pere_rance]}
+      answer: "« Moi aussi », dit-il, et il mise tout. Tu es déjà dans la rue quand le patron annonce qu'il a gagné."
+
+  # ═══════════════════════════════════════════════════════════ SAISON 2
+  # ------------------------------------------------ 1 · l'audit, la saisie
+  # La saisie de l'histoire (charte du livre § 1.4) : les montres de Fardelli,
+  # les primes de la Mutuelle et ce qu'elles ont payé (`saisie_luxe`).
+  - id: ds.h6.sc.audit_trente
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, scandale]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat a bloqué tes comptes pour l'audit d'été. Devant Arnaud Vaubourg, qui ne savait pas, elle aligne tes ventes : « Trente millions, bien. Payés trente pour cent sous leur prix. »"
+    left:
+      label: "Je vous explique tout"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h6_audit_parle], var: {h6_saisons_trente: "+1", h6_millions: "=24", saisie_luxe: "+1"}, schedule: [{card: ds.h6.sous_sol.tableur, in: [1, 2]}]}
+      answer: "Elle note sans lever la tête. Ce que les enveloppes ont payé part dans un carton scellé ; Arnaud regarde le carton, pas toi."
+    right:
+      label: "Le marché était bas"
+      effects: {direction: "+", relation: {vialat: -1}, set: [h6_audit_muet], var: {h6_saisons_trente: "+1", h6_millions: "=24", saisie_luxe: "+1"}, schedule: [{card: ds.h6.sous_sol.tableur, in: [1, 2]}]}
+      answer: "« Bas pour vous seulement. » Le carton scellé part quand même. Arnaud signe le bordereau de saisie sans le lire."
+
+  - id: ds.h6.sc.audit
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, scandale]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat a bloqué tes comptes pour l'audit d'été. Devant Arnaud Vaubourg, qui ne savait pas, elle aligne tes ventes : « Pas trente millions. Et trente pour cent sous leur prix. »"
+    left:
+      label: "Je vous explique tout"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h6_audit_parle], var: {h6_millions: "=24", saisie_luxe: "+1"}, schedule: [{card: ds.h6.sous_sol.tableur, in: [1, 2]}]}
+      answer: "Elle note sans lever la tête. Ce que les enveloppes ont payé part dans un carton scellé ; Arnaud regarde le carton, pas toi."
+    right:
+      label: "Le marché était bas"
+      effects: {direction: "+", relation: {vialat: -1}, set: [h6_audit_muet], var: {h6_millions: "=24", saisie_luxe: "+1"}, schedule: [{card: ds.h6.sous_sol.tableur, in: [1, 2]}]}
+      answer: "« Bas, et pas assez vendu : vous cumulez. » Le carton scellé part. Arnaud signe le bordereau de saisie sans le lire."
+
+  # ---------------------------------------------- 5-6 · le faux nom (scène 17)
+  - id: ds.h6.sc.faux_nom
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, objet]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Ton bureau, un soir de janvier. Dans ton carnet, tu écris un joueur qui n'existe pas : « Sá Moreira, milieu, Lusitanie, deux millions. » Une seule personne au club tape ton carnet au propre."
+    left:
+      label: "Je donne le carnet"
+      effects: {set: [h6_faux_nom]}
+      answer: "Le lendemain, le carnet revient tapé, à l'heure, sans une faute. « Sá Moreira » a même gagné son accent : quelqu'un a vérifié."
+    right:
+      label: "Je garde le carnet"
+      effects: {set: [h6_faux_nom_garde]}
+      answer: "Tu fermes le carnet sur le nom inventé. Il dort dans ta poche intérieure ; tu le sens contre tes côtes à chaque marche."
+
+  - id: ds.h6.sc.faux_nom_pile
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, objet]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Un soir de janvier, tu écris dans ton carnet un joueur qui n'existe pas : « Sá Moreira, milieu, Lusitanie, deux millions. » Personne ne tape ton carnet. Ce soir, la pile du stagiaire est juste à côté."
+    left:
+      label: "Je le pose sur sa pile"
+      effects: {set: [h6_faux_nom]}
+      answer: "Le lendemain, ton carnet est revenu sur ton bureau, tapé au propre, avec un mot poli. « Sá Moreira » a gagné son accent."
+    right:
+      label: "Je garde le carnet"
+      effects: {set: [h6_faux_nom_garde]}
+      answer: "Tu reprends le carnet. Tu passes devant la pile du stagiaire ; elle est parfaitement droite, comme toujours."
+
+  # ------------------------------------------------- 10 · 23 h 57 (scène 18)
+  - id: ds.h6.sc.sous_sol_piege
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    speaker: ferlac
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "31 janvier, 23 h 57. Sous le club-house, la vieille buanderie : une ligne de fax oubliée depuis 1987, un ordinateur ouvert, et Joachim Ferlac en pull. À l'écran : SÁ MOREIRA — 2 MILLIONS."
+    left:
+      label: "J'allume la lumière"
+      effects: {set: [h6_lumiere]}
+      answer: "Le néon claque deux fois avant de prendre. Il ne sursaute pas. Il enregistre son fichier, puis il se tourne vers toi."
+    right:
+      label: "J'attends qu'il envoie"
+      effects: {set: [h6_envoi_vu], var: {h6_indices: "+1"}}
+      answer: "Il compose le numéro de ton bureau. Au-dessus de vos têtes, dans la pièce vide, tu entends ton fax se réveiller."
+
+  - id: ds.h6.sc.sous_sol_indices
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    speaker: ferlac
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "31 janvier, 23 h 57. Tu descends l'escalier du sous-sol sans allumer. Au fond, la vieille buanderie, une ligne de fax de 1987, la lueur d'un écran, et un pull que tu reconnais : Joachim Ferlac."
+    left:
+      label: "J'allume la lumière"
+      effects: {set: [h6_lumiere]}
+      answer: "Le néon claque deux fois. Il ne sursaute pas ; il finit sa ligne, la relit, et seulement alors il se retourne."
+    right:
+      label: "J'attends qu'il envoie"
+      effects: {set: [h6_envoi_vu], var: {h6_indices: "+1"}}
+      answer: "Il compose ton numéro de bureau. Au-dessus de vos têtes, le fax se réveille et imprime le nom de ce soir."
+
+  - id: ds.h6.sc.sous_sol
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "31 janvier, 23 h 57, ton bureau sans lumière. Sous le plancher, quelque chose cliquette, comme un vieux téléphone qui compose. L'escalier du sous-sol est au bout du couloir."
+    left:
+      label: "Je descends"
+      effects: {set: [h6_descendu]}
+      answer: "En bas, la buanderie de 1987, un écran allumé, et le stagiaire en pull qui finit de taper. Il te dit bonsoir sans se retourner."
+    right:
+      label: "J'attends le fax"
+      effects: {set: [h6_attendu]}
+      answer: "À 23 h 58, le fax imprime ton nom, sans prix. Tu descends. En bas, la porte est ouverte ; le stagiaire t'attend, poli."
+
+  # --------------------------------------------------- 11 · le modèle (scène 19)
+  - id: ds.h6.sc.modele
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    speaker: ferlac
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Il ne se lève pas : « Je ne vous fais pas chanter, je vous corrige. Les prix sont faux, les gens aussi. Associez-vous : dans dix ans, on ne vendra plus personne sans moi. »"
+    left:
+      label: "Je vous dénonce"
+      effects: {relation: {ferlac: -3}, set: [h6_denonce]}
+      answer: "Il hoche la tête, comme devant une erreur de saisie. « Vous allez perdre la photo, et le reste. » Il éteint l'écran lui-même."
+    right:
+      label: "Je m'associe"
+      effects: {relation: {ferlac: 2}, set: [h6_associe], end: trente_associe}
+      answer: "Il te tend la main, sèche et froide. Le lendemain, le fax ne sonne pas. Le surlendemain, il sonne deux fois."
+
+  - id: ds.h6.sc.modele_envoi
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    speaker: ferlac
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "La page est partie. Il se retourne, sans se lever : « Je ne vous fais pas chanter, je vous corrige. Les prix sont faux, les gens aussi. Associez-vous : dans dix ans, personne ne vendra sans moi. »"
+    left:
+      label: "Je vous dénonce"
+      effects: {relation: {ferlac: -3}, set: [h6_denonce]}
+      answer: "« Avec quoi ? » Puis il voit ton regard monter vers le plafond, vers ton bureau, vers la page. Il ferme l'ordinateur doucement."
+    right:
+      label: "Je m'associe"
+      effects: {relation: {ferlac: 2}, set: [h6_associe], end: trente_associe}
+      answer: "Il te tend la main, sèche et froide. Là-haut, la page de ce soir attend dans le bac. Demain, Josiane la photocopiera."
+
+  - id: ds.h6.sc.modele_tableur
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    speaker: ferlac
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "« Vous vous servez de mon tableau depuis l'automne. » Il ne se lève pas. « Je ne vous fais pas chanter, je vous corrige. Les prix sont faux, les gens aussi. Associez-vous. »"
+    left:
+      label: "Je vous dénonce"
+      effects: {relation: {ferlac: -3}, set: [h6_denonce]}
+      answer: "« Avec mon tableau, alors. » Il sourit pour la première fois depuis 2003. Il éteint l'écran lui-même."
+    right:
+      label: "Je m'associe"
+      effects: {relation: {ferlac: 2}, set: [h6_associe], end: trente_associe}
+      answer: "Il te tend la main, sèche et froide. « Vous voyez. Les colonnes, on finit toujours par les remplir ensemble. »"
+
+  # Le gamin de Trébignac (ds.h6.gamins) : les colonnes avaient tort, et tu les
+  # as crues. Ferlac le savait ; c'était un essai.
+  - id: ds.h6.sc.modele_colonnes
+    roles: [ds]
+    arc: mercato
+    tags: [sombre, scandale]
+    speaker: ferlac
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "« Le gamin de Trébignac : mes colonnes avaient tort, et vous les avez crues. » Il ne se lève pas. « Je ne vous fais pas chanter, je vous corrige. Les prix sont faux, les gens aussi. Associez-vous. »"
+    left:
+      label: "Je vous dénonce"
+      effects: {relation: {ferlac: -3}, set: [h6_denonce]}
+      answer: "« Vous m'avez cru une fois. Le juge me croira aussi. » Il éteint l'écran lui-même, du bout de l'index, comme on referme un dossier."
+    right:
+      label: "Je m'associe"
+      effects: {relation: {ferlac: 2}, set: [h6_associe], end: trente_associe}
+      answer: "Il te serre la main sans se lever. « Le gamin jouera dix ans à {rival}. Nous, nous en vendrons cent. »"
+
+  # ---------------------------------------------------- 12 · une heure (scène 20)
+  - id: ds.h6.sc.heure_petit_reste
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Comptoir du Terminus, une heure du matin. Bertrand Rancé boit un café, rien d'autre : « Votre stagiaire est venu me voir, l'an dernier, pour que Tibo signe. J'ai rien dit. Je vous le dis. »"
+    left:
+      label: "Je le renvoie sans bruit"
+      effects: {relation: {bertrand_rance: 1}, end: trente_petit_reste}
+      answer: "Le lendemain, Joachim Ferlac rend son badge à Josiane avec un mot poli. Le soir même, le fax de 23 h 58 ne sonne pas."
+    right:
+      label: "Je donne tout au juge"
+      effects: {end: trente_classeur}
+      answer: "Tu poses sur le bureau du juge le classeur de Josiane, et dessus ta photo de 1999. Bertrand témoigne le même après-midi."
+
+  - id: ds.h6.sc.heure_classeur
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Comptoir du Terminus, une heure du matin. Bertrand Rancé fait tourner un jeton : « Le petit stagiaire a mis un prix sur mon fils. Laissez-le-moi une heure, et votre photo, personne ne la reverra. »"
+    left:
+      label: "Je préviens la police"
+      effects: {relation: {bertrand_rance: -2}, end: trente_classeur}
+      answer: "Au matin, tu portes au commissariat le classeur de Josiane, ta photo de 1999 dessus. Tu signes ta déposition {prenom} {nom}."
+    right:
+      label: "Je ne dis rien"
+      effects: {relation: {bertrand_rance: 1}, end: trente_une_heure}
+      answer: "Tu paies son café et tu sors. Derrière toi, deux hommes se lèvent du fond de la salle sans finir leur verre."
+
+  - id: ds.h6.sc.heure
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Comptoir du Terminus, une heure du matin. Bertrand Rancé empile ses jetons : « Le petit stagiaire a mis un prix sur mon fils. Laissez-le-moi une heure, et votre photo, personne ne la reverra. »"
+    left:
+      label: "Je préviens la police"
+      effects: {relation: {bertrand_rance: -2}, end: co_garde_a_vue}
+      answer: "On t'écoute toute la nuit. Sans les copies, sur la table, il n'y a qu'une photo, et c'est la tienne, de 1999."
+    right:
+      label: "Je ne dis rien"
+      effects: {relation: {bertrand_rance: 1}, end: trente_une_heure}
+      answer: "Tu paies son café et tu sors. Derrière toi, deux hommes se lèvent du fond de la salle sans finir leur verre."
+
+  # ═══════════════════════════════════════ SAISON 3 ET SUIVANTES — l'épilogue
+  - id: ds.h6.sc.ete
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    text: "Madame Josiane a rangé le classeur des fax en haut de l'armoire, derrière les licences de 1987 : « Les originaux sont blancs. Les copies tiennent. Je les laisse là-haut, ou vous les voulez ? »"
+    left:
+      label: "Laissez-les là-haut"
+      effects: {relation: {josiane: 1}, set: [h6_classeur_armoire]}
+      answer: "Elle referme l'armoire à clé et accroche la clé à son trousseau, entre celle du coffre et celle de la buanderie."
+    right:
+      label: "Donnez-les-moi"
+      effects: {set: [h6_classeur_chez_toi]}
+      answer: "Le classeur pèse plus lourd que tu ne pensais. Chez toi, tu le ranges sous le lit, comme une valise qu'on ne défait pas."
+
+  - id: ds.h6.sc.ete_encore
+    roles: [ds]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    text: "Nouvel été, nouveau mercato. Madame Josiane a acheté un fax neuf, qui imprime sur du papier ordinaire. « Celui-là ne blanchira pas. On garde l'ancien, ou je le porte à la déchetterie ? »"
+    left:
+      label: "On garde l'ancien"
+      effects: {set: [h6_vieux_fax_garde]}
+      answer: "Elle le range sous l'escalier, débranché, le couvercle fermé. Certains soirs, en passant, tu poses la main dessus."
+    right:
+      label: "À la déchetterie"
+      effects: {caisse: 1}
+      answer: "Elle le porte elle-même, dans son cabas, jusqu'à l'arrêt du car. Elle revient sans le cabas."
+
+  - id: ds.h6.sc.veille
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL."
+    left:
+      label: "Je la range"
+      effects: {set: [h6_page_blanche_rangee]}
+      answer: "La page est blanche. Tu la ranges avec les autres, dans le tiroir du bas, sous le presse-papier au fanion de 1974."
+    right:
+      label: "Je la jette"
+      effects: {set: [h6_page_blanche_jetee]}
+      answer: "La page est blanche. Elle tombe dans la corbeille sans faire de bruit ; demain matin, Josiane ne la trouvera pas."
+
+  - id: ds.h6.sc.veille_encore
+    roles: [ds]
+    arc: mercato
+    tags: [fax, mercato]
+    lieu: bureau
+    tone: strategique
+    text: "23:58 · 1 PAGE · AUCUN NUMÉRO D'APPEL. (LE PAPIER EST ORDINAIRE.)"
+    left:
+      label: "Je la lis quand même"
+      effects: {set: [h6_page_blanche_rangee]}
+      answer: "Il n'y a rien à lire. Tu la lis quand même, deux fois, à la lampe du bureau, avant d'éteindre."
+    right:
+      label: "Je débranche"
+      effects: {caisse: -1}
+      answer: "Tu débranches. Le lendemain, Josiane rebranche sans rien dire, parce qu'un agent doit envoyer un contrat avant midi."
