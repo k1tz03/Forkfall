@@ -1026,7 +1026,15 @@
   }
   // chez toi : le deux-pièces de la rue des Lilas ; le sélectionneur, lui, loge à
   // l'hôtel de la Rive (la Fédération paie la note)
-  function chezToi() { return S && S.role === "selectionneur" && LIEU.hotel ? "hotel" : "appartement"; }
+  // où l'on dort : par rôle (le sélectionneur à l'hôtel de la Rive), et une
+  // histoire peut en décider autrement (ville.yaml `domiciles`)
+  function domicileDe(role, flags) {
+    var Dm = D.domiciles || {}, dr = Dm.drapeaux || {}, f = flags || [];
+    for (var i = 0; i < f.length; i++) if (dr[f[i]] && LIEU[dr[f[i]]]) return dr[f[i]];
+    var r = (Dm.roles || {})[role];
+    return r && LIEU[r] ? r : "appartement";
+  }
+  function chezToi() { return S ? domicileDe(S.role, vue && vue.flags) : "appartement"; }
   function nomLieu(l) {
     if (l && l.key === "appartement") { var o = logement(); if (o) return o.logement.nom; }
     return l ? l.label : "";
@@ -3057,7 +3065,7 @@
           // en poche au départ : une semaine de la paie du rôle (le promu n'a pas un sou, son entraîneur si)
           semaine: 1, jour: 0, tranche: 0, energie: 80, faim: 70,
           francs: Math.max(1240, (SALAIRE[v.role] || SALAIRE.entraineur)[clamp((v.division || 1) - 1, 0, 2)]),
-          x: 0, y: 0, lieu: v.role === "selectionneur" && LIEU.hotel ? "hotel" : "appartement", cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
+          x: 0, y: 0, lieu: domicileDe(v.role, v.flags), cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
           journeeDebut: v.journee || 0, auMatch: false, zoom: 0,
           biens: {}, sale: 0, pont: {}, mission: null, missionsFaites: {}, offres: {}, derniereOffre: -99, dits: {},
           blocsVus: v.blocs || 0, panneau: null, scenesVues: {}, scenesJour: null

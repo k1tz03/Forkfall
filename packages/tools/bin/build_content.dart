@@ -2184,6 +2184,22 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     }
   }
 
+  // où l'on dort (ville.js `chezToi`) : par rôle, et par drapeau d'histoire
+  final domiciles = <String, dynamic>{};
+  final dm = m['domiciles'];
+  if (dm is Map) {
+    final roles = <String, String>{}, drapeaux = <String, String>{};
+    ((dm['roles'] as Map?) ?? const {}).forEach((k, v) {
+      if (!roleById.containsKey(k.toString())) errors.add('ville.yaml/domiciles/roles: rôle inconnu « $k »');
+      if (!cles.contains(v.toString())) errors.add('ville.yaml/domiciles/roles/$k: lieu « $v » absent de `lieux`');
+      roles[k.toString()] = v.toString();
+    });
+    ((dm['drapeaux'] as Map?) ?? const {}).forEach((k, v) {
+      if (!cles.contains(v.toString())) errors.add('ville.yaml/domiciles/drapeaux/$k: lieu « $v » absent de `lieux`');
+      drapeaux[k.toString()] = v.toString();
+    });
+    domiciles.addAll({'roles': roles, 'drapeaux': drapeaux});
+  }
   final ailleurs = <String, dynamic>{};
   ((m['ailleurs'] as Map?) ?? const {}).forEach((k, v) {
     final cle = k.toString();
@@ -2197,6 +2213,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     'lieux': lieux,
     'cartes_lieux': cartesLieux,
     if (ailleurs.isNotEmpty) 'ailleurs': ailleurs,
+    if (domiciles.isNotEmpty) 'domiciles': domiciles,
     if (lieuxVariantes.isNotEmpty) 'lieux_variantes': lieuxVariantes,
     'rencontres': rencontres,
     'beats': beats,

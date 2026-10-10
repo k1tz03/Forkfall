@@ -4,13 +4,15 @@
 # les histoires de lancement surchargeront (bible ch. 30 § 1 ; le ton : ch. 12,
 # 13, 14 ; la charte d'écriture : docs/bible/charte_histoire.md).
 #
-# Format : l'en-tête de content/setpieces.yaml. Le build range ces variantes
-# AVANT le secours commun de chaque beat, dans l'ordre des noms de fichiers :
-# un lot n'écrit jamais de secours, chaque variante porte `roles:`. Pour un
-# rôle donné, sa base (la variante sans `when`) vient APRÈS ses variantes à
-# `when` : la première vraie gagne. Un lot d'histoire qui veut passer devant
-# ce socle doit donc être lu avant lui (un nom de fichier qui se range avant
-# `roles_bureau.yaml`).
+# Format : l'en-tête de content/setpieces.yaml. Le build range les variantes
+# des lots EN TÊTE de chaque beat, dans l'ordre des noms de fichiers : un lot
+# n'écrit jamais de secours, chaque variante porte `roles:`. Pour un rôle
+# donné, sa base (la variante sans `when`) vient APRÈS ses variantes à
+# `when` : la première vraie gagne. Ce socle pose une base par rôle et par
+# beat : un lot d'histoire qui vise ces trois rôles doit être lu AVANT lui,
+# sous un nom de fichier qui se range avant `roles_bureau.yaml` (« maquette »,
+# « h6_23h58 »… mais pas « vendre_trente »), sinon ses variantes ne
+# serviront jamais.
 #
 # Ce que ces trois rôles imposent au texte :
 # · `{toi}` n'est sûr que chez le sélectionneur. Un set-piece résout `{toi}`
@@ -32,6 +34,14 @@
 #   Bréhaut et Fardelli en activité avant 2020, Madame Aubert élue avant 2013,
 #   Berthomier à la tête de la Fédération avant 2008 (Vaubourg la préside en
 #   2011, dans Chambre 12), Gigi Vecchio entraîneur des gardiens avant 2016.
+#   Chaque beat garde, à toute époque, trois variantes au moins qui ne
+#   nomment personne de daté : une carrière de 2024 ou de 2038 ne retombe
+#   pas sur la seule base.
+# · Le moteur ne retient pas les variantes déjà servies (sauf au temps fort
+#   d'un Grand Match) : une variante qui dure (un drapeau, une série, une
+#   jauge, une saison) alterne avec une autre selon la parité de la saison
+#   (`season in [1, 3, 5, 7, 9]`), et le match lit sa place dans la saison
+#   (`slot`, voir ce beat). Sans cela, la même ligne revenait chaque été.
 # · Les drapeaux lus ici sont posés par les alarmes des trois rôles
 #   (content/cards/{ds,president,selectionneur}/alarmes.yaml) — bache_ds,
 #   commission_occulte, commission_lettre, tentation_mairie, pantin,
@@ -51,7 +61,7 @@ setpieces:
       answer_left: "Il plie la page deux vers l'intérieur avant de ranger le contrat dans le tiroir."
       answer_right: "Il raccroche pour mieux te regarder. « Alors c'est toi qui la lui liras. »"
     - roles: [ds]
-      when: "season >= 1 && flag('bilan_manque') && year < 2020"
+      when: "flag('bilan_manque') && year < 2020 && season in [2, 4, 6, 8]"
       speaker: aulard
       text: "Vaubourg a gardé le classement de juin sous son sous-main, plié en quatre : « Cette année, {objectif_min}. Je ne veux plus lire mon club en bas d'une page. Tu t'engages, cette fois ? »"
       left: "Cette fois, je m'engage"
@@ -75,7 +85,7 @@ setpieces:
       answer_left: "Promesse publique : {objectif}. Il décolle l'étiquette de l'ancien avec l'ongle, et la jette dans ta corbeille."
       answer_right: "Il hausse les épaules. L'étiquette reste sur la clé jusqu'à Noël."
     - roles: [ds]
-      when: "season >= 1 && flag('bilan_manque')"
+      when: "flag('bilan_manque') && season in [1, 3, 5, 7, 9]"
       text: "{patron} a punaisé le classement de juin au mur de ton bureau, à hauteur d'yeux : « Il reste là jusqu'à ce qu'un meilleur le remplace. Cette année, {objectif_min}. Tu t'engages ? »"
       left: "Décrochez-le en juin"
       right: "Laissez-le au mur"
@@ -191,7 +201,7 @@ setpieces:
   classement:
     # ---- Directeur sportif
     - roles: [ds]
-      when: "phase('bilan') && world.rang >= 15 && year < 2008"
+      when: "phase('bilan') && world.rang >= 15 && year < 2008 && season in [0, 2, 4, 6, 8]"
       speaker: josiane
       text: "Madame Josiane a ajouté au crayon, à droite du classement de juin, une colonne que personne n'a demandée : la masse salariale de chaque club. La nôtre est la cinquième. Elle ne gomme pas."
       left: "Laisser la colonne"
@@ -201,11 +211,15 @@ setpieces:
       text: "Vaubourg appelle avant que la feuille soit punaisée : « Premiers à la trêve. D'ici mai, tu ne vends personne, même ceux qu'on te réclame. Surtout ceux-là. »"
       left: "Ne vendre personne"
     - roles: [ds]
-      when: "world.rang >= 15 && year < 2020"
+      when: "world.rang >= 15 && year < 2020 && season in [0, 2, 4, 6, 8]"
       speaker: vukic
       text: "Vukić a entouré au feutre les trois clubs juste au-dessus de nous : « Eux ont recruté en janvier, l'an dernier. Nous, on a regardé. » Il laisse le feutre débouché sur ton bureau."
       left: "Reboucher le feutre"
     # Sans époque : juin, puis la trêve vue d'en haut et d'en bas.
+    - roles: [ds]
+      when: "phase('bilan') && season in [1, 3, 5, 7, 9]"
+      text: "Le classement de juin. Tu le lis à l'envers, en partant du bas, comme chaque année : d'abord les clubs qui vont vendre, ensuite ceux qui vont acheter."
+      left: "Remonter la liste"
     - roles: [ds]
       when: "phase('bilan')"
       text: "Le classement de juin. La secrétaire en tire deux photocopies : une pour le président, l'autre pour les agents qui la demanderont avant midi. Il en viendra trois."
@@ -214,6 +228,10 @@ setpieces:
       when: "world.rang <= 3"
       text: "Le classement à la trêve : sur le podium. Trois agents ont demandé un rendez-vous dans l'heure ; tu les fais attendre dans le même couloir, sur trois chaises alignées."
       left: "Les recevoir un par un"
+    - roles: [ds]
+      when: "world.rang >= 15 && season in [1, 3, 5, 7, 9]"
+      text: "Trêve, et le club dans le rouge. Sur ton bureau, le président a laissé le numéro d'un entraîneur libre, au dos d'une carte de restaurant, sans un mot."
+      left: "Ranger la carte"
     - roles: [ds]
       when: "world.rang >= 15"
       text: "Le classement à la trêve, la zone rouge à deux points. L'entraîneur a posé sur ton bureau une feuille courte : les joueurs qu'il ne veut plus voir à l'entraînement."
@@ -235,6 +253,15 @@ setpieces:
       when: "world.rang >= 18"
       text: "Sous ta fenêtre, quelqu'un a recopié le classement à la craie sur le trottoir du siège, à l'envers : la dernière ligne en haut. La nôtre."
       left: "Fermer la fenêtre"
+    # Les saisons impaires ont leur feuille, en juin comme à la trêve.
+    - roles: [president]
+      when: "phase('bilan') && season in [1, 3, 5, 7, 9]"
+      text: "Le classement de juin. Au conseil, chacun l'a reçu dans sa chemise, plié à la hauteur du club ; personne ne le déplie devant les autres."
+      left: "Déplier le sien"
+    - roles: [president]
+      when: "season in [1, 3, 5, 7, 9]"
+      text: "Le classement à la trêve. Ton chauffeur l'a découpé dans le journal et glissé sous le pare-soleil, côté passager, à hauteur de tes yeux."
+      left: "Le laisser là"
     - roles: [president]
       text: "Le classement arrive au courrier du conseil, entre deux relevés de banque. Quelqu'un a déjà passé la ligne du club au surligneur, et noté dans la marge la recette du dernier match."
       left: "Lire la ligne"
@@ -384,7 +411,7 @@ setpieces:
       left: "On y va"
     # Sans époque : un ancien joueur, de l'autre côté.
     - roles: [ds]
-      when: "season >= 1"
+      when: "season in [1, 3, 5, 7, 9]"
       text: "Tour de Coupe. En face joue l'attaquant que tu as vendu l'été dernier. Il t'a fait réserver deux places par l'intendant, au premier rang, derrière son banc."
       left: "Prendre les places"
     - roles: [ds]
@@ -396,7 +423,7 @@ setpieces:
       text: "Tour de Coupe. Un beau parcours ferait taire la Commission un mois. Un mois, pas deux : la lettre est sur ton bureau, sous la feuille du tirage."
       left: "Viser le mois"
     - roles: [president]
-      when: "relation.aubert >= 1 && year < 2013"
+      when: "relation.aubert >= 1 && year < 2013 && season in [0, 2, 4, 6, 8]"
       speaker: aubert
       text: "Tour de Coupe. Madame Aubert veut donner le coup d'envoi, avec son écharpe d'élue et un photographe. Elle a prévenu la presse avant de te prévenir."
       left: "Lui laisser le ballon"
@@ -424,6 +451,11 @@ setpieces:
       when: "relation.aulard <= -1"
       text: "GRAND MATCH. Le président regarde depuis sa loge, son beau-frère à côté de lui. Ils ne suivent pas le terrain : ils suivent tes recrues à l'échauffement."
       left: "Coup d'envoi"
+    # Les saisons impaires ont leur annonce.
+    - roles: [ds]
+      when: "season in [1, 3, 5, 7, 9]"
+      text: "GRAND MATCH. Le programme a été imprimé avant ton dernier transfert : un joueur parti y figure encore, un arrivé n'y est pas. Tu corriges au stylo celui de ton voisin. Coup d'envoi."
+      left: "Coup d'envoi"
     - roles: [ds]
       text: "GRAND MATCH. Le stade est plein, et la moitié des noms de la feuille sont passés par ton bureau. Ce soir, on les juge ensemble. Coup d'envoi."
       left: "Coup d'envoi"
@@ -440,6 +472,11 @@ setpieces:
       when: "world.division >= 2 && season == 0"
       text: "GRAND MATCH. Un stade de deuxième division plein pour la première fois depuis des années. Le guichetier a vendu certaines places debout deux fois."
       left: "Coup d'envoi"
+    # Les saisons impaires ont leur annonce.
+    - roles: [president]
+      when: "season in [1, 3, 5, 7, 9]"
+      text: "GRAND MATCH. Ta loge est pleine d'invités que tu n'as pas invités ; ton nom est sur chaque carton, ta signature sur aucun. Coup d'envoi."
+      left: "Coup d'envoi"
     - roles: [president]
       text: "GRAND MATCH. Pas une place libre, la loge comprise. Dans le tiroir de ton bureau, deux discours attendent la fin du match. Coup d'envoi."
       left: "Coup d'envoi"
@@ -453,8 +490,13 @@ setpieces:
       text: "GRAND MATCH. Le stade a sifflé l'hymne adverse, puis le nôtre, plus fort. Le capitaine a gardé les yeux fermés pendant les deux."
       left: "Coup d'envoi"
     - roles: [selectionneur]
-      when: "season >= 1 && flag('bilan_manque')"
+      when: "flag('bilan_manque') && season in [2, 4, 6, 8]"
       text: "GRAND MATCH. Novembre, encore. Les mêmes tribunes que l'an dernier et, au premier rang de la presse, celui qui avait demandé ta tête en décembre."
+      left: "Coup d'envoi"
+    # Les années impaires ont leur annonce.
+    - roles: [selectionneur]
+      when: "season in [1, 3, 5, 7, 9]"
+      text: "GRAND MATCH. Le car de la sélection traverse la ville sous escorte. Aux fenêtres, des drapeaux ; à un balcon, un drap qui porte ton nom, mal orthographié. Coup d'envoi."
       left: "Coup d'envoi"
     - roles: [selectionneur]
       text: "GRAND MATCH. Novembre. Un pays entier devant ses postes de télévision, et vingt-six joueurs qui se connaissent depuis trois jours. Coup d'envoi."
@@ -479,6 +521,22 @@ setpieces:
       text: "{minute}e minute · {score}. Le président a quitté sa loge pour venir s'asseoir à côté de toi. Il ne dit rien. Il attend que tu fasses quelque chose."
       left: "Je ne bouge pas"
       right: "Je descends au bord"
+    # Les saisons impaires ont leur Grand Match : sans elles, les trois mêmes temps forts revenaient chaque année.
+    - roles: [ds]
+      when: "vars.gm_te_index == 1 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Ta recrue de l'été rate son premier contrôle, puis le deuxième. Dans la tribune, un voisin se retourne pour voir ta tête."
+      left: "Je ne bronche pas"
+      right: "Je fais signe au banc"
+    - roles: [ds]
+      when: "vars.gm_te_index == 2 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Mi-temps. L'agent de ton capitaine t'attend à la buvette des loges, deux cafés commandés : son offre vaut jusqu'au coup de sifflet final."
+      left: "Après le match"
+      right: "Je l'écoute ici"
+    - roles: [ds]
+      when: "vars.gm_te_index == 3 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Il reste un changement. Ton attaquant boite, celui que tu as payé le plus cher, et l'entraîneur lève les yeux vers ta loge."
+      left: "Qu'il finisse"
+      right: "Qu'il sorte"
     - roles: [ds]
       when: "vars.gm_te_index == 2"
       text: "{minute}e minute · {score}. Mi-temps. Dans le couloir des loges, un recruteur étranger te tend une carte de visite, un chiffre écrit au dos, pour ton meilleur joueur."
@@ -504,6 +562,22 @@ setpieces:
       text: "{minute}e minute · {score}. L'émissaire du fonds lève sa coupe vers toi à travers la vitre. Le score n'a pas encore décidé si c'est un toast."
       left: "Je lève la mienne"
       right: "Je descends en tribune"
+    # Les saisons impaires ont leur Grand Match (voir le directeur sportif).
+    - roles: [president]
+      when: "vars.gm_te_index == 1 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Le préfet est assis à ta droite, l'actionnaire principal à ta gauche. Chacun attend que tu applaudisses le premier."
+      left: "J'attends le but"
+      right: "J'applaudis le premier"
+    - roles: [president]
+      when: "vars.gm_te_index == 2 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Mi-temps. Le maître d'hôtel annonce le buffet ; en bas, l'entraîneur a demandé que tu passes au vestiaire. Les deux portes sont au même étage."
+      left: "Le buffet"
+      right: "Le vestiaire"
+    - roles: [president]
+      when: "vars.gm_te_index == 3 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Le speaker te fait passer un papier : on peut annoncer l'affluence record maintenant, ou attendre le résultat."
+      left: "Après le résultat"
+      right: "Maintenant"
     - roles: [president]
       when: "vars.gm_te_index == 2"
       text: "{minute}e minute · {score}. Mi-temps. Le couloir du vestiaire est vide, la porte entrouverte, et l'entraîneur parle fort. On entend ton nom, une fois."
@@ -530,6 +604,22 @@ setpieces:
       text: "{minute}e minute · {score}. Gigi Vecchio, l'entraîneur des gardiens, montre du menton le jeune qui s'échauffe : « Il est prêt. Plus que l'autre, ce soir. »"
       left: "Le titulaire reste"
       right: "Le jeune entre"
+    # Les années impaires ont leur Grand Match (voir le directeur sportif).
+    - roles: [selectionneur]
+      when: "vars.gm_te_index == 1 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Le pays chante plus fort que l'équipe ne joue. Ton capitaine te fait signe depuis le rond central : il veut monter d'un cran, tout de suite."
+      left: "On reste en place"
+      right: "Monte, capitaine"
+    - roles: [selectionneur]
+      when: "vars.gm_te_index == 2 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Mi-temps. Le gardien titulaire saigne de l'arcade ; le médecin dit « dix minutes, peut-être ». Le remplaçant n'a pas joué depuis trois mois en club."
+      left: "Le titulaire, bandé"
+      right: "Le remplaçant"
+    - roles: [selectionneur]
+      when: "vars.gm_te_index == 3 && season in [1, 3, 5, 7, 9]"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Le téléphone du banc sonne : la tribune officielle veut savoir pourquoi le capitaine est encore sur le terrain."
+      left: "Il reste"
+      right: "Je le sors"
     - roles: [selectionneur]
       when: "vars.gm_te_index == 2 && vars.gm_won == 1"
       text: "{minute}e minute · {score}. On mène. Le pays chante déjà, et le banc d'en face fait entrer deux attaquants d'un coup."
@@ -581,7 +671,7 @@ setpieces:
       answer_left: "Six noms. Le sien en dernier, d'une autre encre."
       answer_right: "Il la remet dans sa poche. Tu la reliras en juillet, sur le bureau d'un agent."
     - roles: [ds]
-      when: "vars.gm_won == 1 && season >= 1"
+      when: "vars.gm_won == 1 && season in [1, 3, 5, 7, 9]"
       text: "À la sortie des loges, l'entraîneur adverse te serre la main un peu trop longtemps : « Ton milieu, je le prends en juin, s'il est à vendre. Il l'est ? »"
       left: "Il ne l'est pas"
       right: "Tout l'est, en juin"
@@ -627,7 +717,7 @@ setpieces:
       answer_right: "Bréhaut transmet. Le champagne se boit quand même, un peu moins vite."
     # Sans époque (Gégé et Bréhaut s'arrêtent en 2020) : la victoire en loge, la défaite sur les marches.
     - roles: [president]
-      when: "vars.gm_won == 1"
+      when: "vars.gm_won == 1 && season in [0, 2, 4, 6, 8]"
       text: "Dans la loge, les actionnaires se lèvent pour toi, un par un, puis se rassoient pour parler du prix des places. Le serveur te tend un verre que tu n'as pas demandé."
       left: "Je descends au vestiaire"
       right: "Je reste avec eux"
@@ -662,6 +752,13 @@ setpieces:
       right: "On démarre"
       answer_left: "Vingt minutes sur le trottoir, sous la pluie. Les sifflets s'arrêtent avant la fin."
       answer_right: "Le car démarre. Une canette frappe la vitre arrière ; personne ne se retourne."
+    - roles: [selectionneur]
+      when: "vars.gm_won == 1 && season in [1, 3, 5, 7, 9]"
+      text: "Le président de la Fédération descend au vestiaire, son écharpe autour du cou et un photographe sur les talons. Le photographe entre le premier."
+      left: "Pas de photo ce soir"
+      right: "On fait la photo"
+      answer_left: "Le photographe ressort sans une image. Les joueurs boivent au goulot, entre eux, porte fermée."
+      answer_right: "Vingt-six sourires sur commande. Le capitaine se met au dernier rang, à moitié caché."
     - roles: [selectionneur]
       when: "vars.gm_won == 1"
       text: "Le vestiaire chante l'hymne une seconde fois, faux, debout sur les bancs. Le délégué de la Fédération te rappelle que le car part à minuit, pas après."
@@ -699,7 +796,7 @@ setpieces:
       left: "Voir le classement"
     - roles: [ds]
       when: "!bilan.tenu && flag('bilan_manque')"
-      text: "Le verdict tombe : {rang}e, et c'est la deuxième saison. Le président ne relit plus le communiqué : il le signe, et le fait porter à ton bureau, plié."
+      text: "Le verdict tombe : {rang}e, et ce n'est pas la première fois. Le président ne relit plus le communiqué : il le signe, et le fait porter à ton bureau, plié."
       left: "Voir le classement"
     - roles: [ds]
       when: "!bilan.tenu && objective.promised"
@@ -719,7 +816,7 @@ setpieces:
       left: "Voir le classement"
     - roles: [president]
       when: "!bilan.tenu && flag('bilan_manque')"
-      text: "Le verdict tombe : {rang}e, pour la deuxième année de suite. Au conseil, on ne parle plus de saison de transition. On parle de toi, et on baisse la voix quand tu entres."
+      text: "Le verdict tombe : {rang}e, encore. Au conseil, on ne parle plus de saison de transition. On parle de toi, et on baisse la voix quand tu entres."
       left: "Voir le classement"
     - roles: [president]
       when: "!bilan.tenu && objective.promised"
@@ -739,7 +836,7 @@ setpieces:
       left: "Voir le classement"
     - roles: [selectionneur]
       when: "!bilan.tenu && flag('bilan_manque')"
-      text: "Le verdict tombe : {rang}e. Deux années manquées. À la radio, les auditeurs ne proposent plus de joueurs : ils proposent des sélectionneurs."
+      text: "Le verdict tombe : {rang}e, une année de plus. À la radio, les auditeurs ne proposent plus de joueurs : ils proposent des sélectionneurs."
       left: "Voir le classement"
     - roles: [selectionneur]
       when: "!bilan.tenu && objective.promised"
@@ -771,7 +868,7 @@ setpieces:
       answer_left: "Tu l'entends signer au bout du fil. Le contrat arrive le lendemain au secrétariat, déjà paraphé."
       answer_right: "Il rit, puis il se tait. Le budget arrive en juillet, avec une liste du beau-frère agrafée dessus."
     - roles: [ds]
-      when: "flag('bilan_manque') && year < 2008"
+      when: "flag('bilan_manque') && year < 2008 && season in [1, 3, 5, 7, 9]"
       speaker: josiane
       text: "Madame Josiane pose deux contrats côte à côte, le tien et celui de l'entraîneur : « Le président n'en prolongera qu'un aux mêmes conditions. Il m'a demandé lequel coûte le moins à rompre. »"
       left: "Je reste aux mêmes"
@@ -780,7 +877,7 @@ setpieces:
       answer_right: "Elle reporte ta demande au crayon, dans la marge. Le président l'entoure au stylo rouge."
     # Sans époque : après un objectif manqué, puis les contrats de longue date.
     - roles: [ds]
-      when: "flag('bilan_manque')"
+      when: "flag('bilan_manque') && season in [0, 2, 4, 6, 8]"
       text: "{patron} a fait préparer deux feuilles : ton contrat prolongé d'un an, et une fin de mission déjà datée. « Je signe la première si tu ne me demandes rien. Tu demandes ? »"
       left: "Je ne demande rien"
       right: "Je demande un mercato"
