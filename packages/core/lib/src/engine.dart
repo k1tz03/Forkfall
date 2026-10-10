@@ -1120,7 +1120,10 @@ class Engine {
     final rel = speaker == null ? 0 : (s.relations[speaker] ?? 0);
     final expression = rel >= 1 ? 'sourire' : (rel <= -1 ? 'noir' : 'neutre');
     return formatText(tpl, s,
-        speakerGenre: ch?.genre ?? 'm', speakerId: speaker, adresse: ch?.adresseFor(s.role, expression), extra: extra);
+        speakerGenre: ch?.genre ?? 'm', speakerId: speaker,
+        // le locuteur n'a pas d'adresse pour ce rôle (ou pas de locuteur) : celle du rôle,
+        // comme pour une carte — sinon `{toi}` retombait sur « coach » chez le président
+        adresse: ch?.adresseFor(s.role, expression) ?? content.roles[s.role]?.adresse, extra: extra);
   }
 
   /// La variante de set-piece servie (spec variété §1.12, §2.7) : la première
@@ -1589,7 +1592,9 @@ class Engine {
         'breves': breves,
         if (photo != null) 'photo': photo,
         'annee': annee,
-        'date': 'juin ${annee + 1}',
+        // la saison d'un club finit en juin de l'année suivante ; l'année d'un
+        // sélectionneur (ses fenêtres internationales) se juge en décembre
+        'date': s.role == 'selectionneur' ? 'décembre $annee' : 'juin ${annee + 1}',
         'prix': prix,
         'rang': verdict.rank,
         'tenu': verdict.objectiveMet,

@@ -25,9 +25,10 @@ unes:
     react: [ { card: co.re.josiane_a_lu, if: "relation.josiane >= 0 && !seen('co.re.josiane_a_lu')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.generic.cinq_ans
+    roles: [entraineur, joueur, president, ds]
     journal: echo
     priority: 2
-    when: "season >= 4"
+    when: "season >= 4 && year <= 2025"
     titre: "{NOM}, CINQ ANS CHEZ NOUS"
     sous: "Cinq saisons, {rang}e cette fois. Josiane garde une tasse au secrétariat pour {prenom} {nom}, la bleue ; elle ne la prête à personne."
     sujet: bilan
@@ -156,6 +157,7 @@ unes:
     react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.generic.creature
+    roles: [entraineur, joueur, ds]
     journal: gazette
     priority: 2
     when: "gauges.direction >= 85"
@@ -165,9 +167,10 @@ unes:
     react: [ { card: co.re.vecchio_garde }, { card: co.re.camille_journal } ]
 
   - id: une.generic.vestiaire_muet
+    roles: [entraineur, joueur]
     journal: quotidien
     priority: 2
-    when: "gauges.vestiaire < 25"
+    when: "gauges.vestiaire < 25 && year <= 1997"
     titre: "LE VESTIAIRE DE {VILLE} NE PARLE PLUS"
     sous: "{rang}e. Bréhaut, capitaine : « Chacun a sa table à la cantine, maintenant. » Il l'a dit sans regarder personne, ce qui est nouveau."
     sujet: vestiaire
@@ -183,6 +186,7 @@ unes:
     react: [ { card: co.re.camille_journal, if: "!flag('divorce')" }, { card: co.re.vecchio_garde } ]
 
   - id: une.generic.kop_bureau
+    roles: [entraineur, joueur, ds]
     journal: gazette
     priority: 2
     when: "gauges.tribunes >= 75 && gauges.direction < 30"

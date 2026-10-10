@@ -1889,7 +1889,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     ((raw['var'] as Map?) ?? const {}).forEach((k, v) {
       final nom = k.toString();
       if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(nom)) errors.add('$where: var « $nom » : un nom en minuscules');
-      if (nom.startsWith('cadeau_') && !objetIds.contains(nom.substring(7))) errors.add('$where: var « $nom » : objet inconnu de la boutique');
+      if ((nom.startsWith('cadeau_') || nom.startsWith('rendre_')) && !objetIds.contains(nom.substring(7))) errors.add('$where: var « $nom » : objet inconnu de la boutique');
       vars[nom] = v.toString();
     });
     if (vars.isNotEmpty) out['var'] = vars;
@@ -2179,8 +2179,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   // Un cadeau de carte (`var: {cadeau_<objet>: "+1"}`) doit nommer un objet de la boutique.
   for (final c in cards) {
     final dump = json.encode(c);
-    for (final mm in RegExp(r'"cadeau_([a-z0-9_]+)"').allMatches(dump)) {
-      if (!objetIds.contains(mm[1])) errors.add('${c['id']}: cadeau_${mm[1]} : objet inconnu de la boutique (content/ville/boutique.yaml)');
+    for (final mm in RegExp(r'"(cadeau|rendre)_([a-z0-9_]+)"').allMatches(dump)) {
+      if (!objetIds.contains(mm[2])) errors.add('${c['id']}: ${mm[1]}_${mm[2]} : objet inconnu de la boutique (content/ville/boutique.yaml)');
     }
   }
 

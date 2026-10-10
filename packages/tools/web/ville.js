@@ -1144,7 +1144,7 @@
   function pont(v, prof) {
     if (!v || !v.vars || !S || (prof || 0) > 3) return;
     S.pont = S.pont || {};
-    var recu = 0, sale = 0, amende = 0, cadeaux = [], saisies = [], vole = false;
+    var recu = 0, sale = 0, amende = 0, cadeaux = [], saisies = [], rendus = [], vole = false;
     Object.keys(v.vars).sort().forEach(function (nom) {
       var val = +v.vars[nom] || 0, d = val - (S.pont[nom] || 0);
       S.pont[nom] = val;
@@ -1153,6 +1153,7 @@
       else if (nom === "ville_francs_sales") sale += d;
       else if (nom === "ville_amende") amende += d;
       else if (d > 0 && nom.indexOf("cadeau_") === 0) cadeaux.push(nom.slice(7));
+      else if (d > 0 && nom.indexOf("rendre_") === 0) rendus.push(nom.slice(7));
       else if (d > 0 && nom.indexOf("saisie_") === 0) saisies.push(nom.slice(7));
       else if (d > 0 && nom === "vol_luxe") vole = true;
     });
@@ -1166,6 +1167,11 @@
       S.biens[id] = { prix: OBJET[id].prix, depuis: tNow(), cadeau: true, sale: sale > 0 };
       vue = coquille.biens(id, true); appels = true;
       annonces.push({ titre: "Un cadeau", sous: OBJET[id].nom, texte: OBJET[id].texte });
+    });
+    // un objet rendu (la villa au notaire, la montre au commissariat) : lui seul, la carte a dit pourquoi
+    rendus.forEach(function (id) {
+      if (!OBJET[id] || !possede(id)) return;
+      delete S.biens[id]; vue = coquille.biens(id, false); appels = true;
     });
     if (saisies.length) {
       var pris = {};
