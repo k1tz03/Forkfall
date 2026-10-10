@@ -1,0 +1,328 @@
+# « L'Oreillette » (Histoire 8) — les réactions : quelqu'un a vu ce que tu
+# viens de faire, et te le dit à la carte suivante, hors créneau (au plus
+# quatre par saison). Jamais un drame, jamais une fin : la scène calme qui
+# montre le prix d'un choc, ou la graine d'une suite.
+#
+#   kerdal_tribune  ← Kerdal reposé (ds.h8.kerdal.trois_fois, à droite)
+#   josiane_lundi   ← lundi (ds.h8.kerdal.lundi*, Kerdal mort)
+#   ober_montre     ← « Je garde mes courbes » (ds.h8.cp.un_demi*)
+#   aulard_chaise   ← la chaise de 1977 (ds.h8.vb.chaise)
+#   gege_bache      ← Vollaire vendu (ds.h8.a1_vollaire, à gauche)
+#   mbako_peyrard   ← le capitaine vendu à une heure quatre (ds.h8.b2_*)
+#   lea_dementi     ← le démenti de Télé-Stade (ds.h8.vd.dementi)
+#   kara_trois_heures ← le hall de l'hôtel de la Rive (ds.h8.op.hall*)
+#   gege_nino       ← IL HABITE ICI (ds.h8.vx.nino)
+#   gege_kambara    ← « Pars » (ds.h8.kb.appel)
+#   mbako_compo     ← la composition envoyée à Pari-Rive (ds.h8.pr.compo, à gauche)
+#   josiane_serveurs ← les machines montent (ds.h8.vb.bureau, à droite)
+#   mbako_refus     ← Kerdal pas vendu (ds.h8.a2_fin_de_cycle*, à droite)
+#   ober_quotidien  ← « Publiez tout » (ds.h8.co.quatre_ecus, à gauche)
+#   josiane_velo    ← « Je rends tout » (ds.h8.c2_propriete*, à gauche)
+#   gege_friche     ← l'oreillette prise sur la palette (ds.h8.sb.friche, à gauche)
+#   josiane_vaubourg ← la Une de la mort de Vaubourg (une.h8.vaubourg)
+cards:
+  - id: ds.h8.re.kerdal_tribune
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: kerdal
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Samedi soir, Kerdal t'attend au parking, toujours en civil, la capuche baissée : « Tu m'as mis en tribune, {toi}. Je n'ai pas dormi quand même. Mais j'ai regardé le match. Ça faisait longtemps. »"
+    left:
+      label: "Tu dormiras"
+      effects: {vestiaire: "+", relation: {kerdal: 1}}
+      answer: "« C'est ce que dit Mbako. » Il remonte sa capuche. « Toi, tu ne dis jamais ce que dit ta machine. Je l'ai remarqué. »"
+    right:
+      label: "Tu rejoues mercredi"
+      effects: {direction: "+"}
+      answer: "Il hoche la tête, soulagé, et c'est ce soulagement qui te reste. Il part en courant vers l'arrêt du bus, alors qu'il a le temps."
+
+  - id: ds.h8.re.josiane_lundi
+    roles: [ds]
+    arc: famille
+    tags: [direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane a laissé la lumière du secrétariat allumée toute la nuit. Au matin, elle pose une tasse devant toi : « Sa mère appelle à neuf heures. Je vous la passe, ou je lui passe le docteur ? »"
+    left:
+      label: "Passez-la-moi"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Neuf heures. Sa mère ne pose qu'une question : s'il dormait. Tu dis la vérité. Josiane a fermé la porte du secrétariat, de l'extérieur."
+    right:
+      label: "Le docteur"
+      effects: {direction: "+"}
+      answer: "Josiane passe la communication au cabinet sans un mot. Puis elle reste debout à la fenêtre, la tasse dans les mains, jusqu'à dix heures."
+
+  - id: ds.h8.re.ober_montre
+    roles: [ds]
+    arc: corps
+    tags: [direction]
+    speaker: ober
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Le lendemain, Ober t'arrête dans le couloir, ton dossier sous le bras : « Votre montre ne transmet plus depuis hier soir. Le fonds me demande pourquoi. Je lui dis que vous l'avez perdue ? »"
+    left:
+      label: "Dites-le"
+      effects: {direction: "+", relation: {ober: 1}}
+      answer: "« Perdue. » Il l'écrit. « C'est fou ce qu'on perd, dans ce club. Des montres, des joueurs, des heures. » Il s'en va."
+    right:
+      label: "Dites la vérité"
+      effects: {direction: "-", vestiaire: "+"}
+      answer: "« La vérité, c'est que vous ne voulez pas. Ça, ils ne savent pas l'écrire dans leur tableau. » Il note quand même : refus."
+
+  - id: ds.h8.re.aulard_chaise
+    roles: [ds]
+    arc: president
+    tags: [direction]
+    speaker: aulard
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Vaubourg, sans lever les yeux de son journal : « Elle grince à gauche. C'était la chaise du trésorier, en 1977. Il ne s'y asseyait jamais : il avait peur qu'on l'entende penser. »"
+    left:
+      label: "Je m'assieds à droite"
+      effects: {relation: {aulard: 1}}
+      answer: "La chaise se tait. Vaubourg tourne la page. « Voilà. Vous apprenez vite, pour quelqu'un qui écoute une machine. »"
+    right:
+      label: "Je reste où je suis"
+      effects: {vestiaire: "+"}
+      answer: "La chaise grince à chaque respiration. Il sourit dans son journal. « Celui-là, au moins, je sais qu'il pense. »"
+
+  - id: ds.h8.re.gege_bache
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Gégé t'attend près de ta berline, la bâche de Vollaire roulée sous le bras : « Je la garde pour le jour où tu partiras, {toi}. On n'aura qu'à changer le nom. Les lettres sont grandes. »"
+    left:
+      label: "Gardez-la"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il la cale dans le coffre de sa voiture, entre la roue de secours et le thermos. « Elle a de la place. Moi aussi. »"
+    right:
+      label: "Brûlez-la"
+      effects: {tribunes: "-", relation: {gege: -1}}
+      answer: "« On ne brûle pas un nom. On le plie. » Il la plie devant toi, en huit, très lentement, et s'en va avec."
+
+  - id: ds.h8.re.mbako_peyrard
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Sept heures, Mbako entre sans frapper : « Tu as vendu mon capitaine à une heure du matin, {toi}. Il l'a appris par son agent, au petit-déjeuner, devant ses enfants. Il te salue. »"
+    left:
+      label: "Je l'appellerai"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Peyrard décroche à la troisième sonnerie et te laisse parler. À la fin, il dit seulement : « Lyonnet, c'est à côté. Je viendrai voir. »"
+    right:
+      label: "C'était l'heure"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "« L'heure de qui ? » Il ressort sans attendre. Dans le couloir, il siffle le rassemblement trois minutes avant l'heure prévue."
+
+  - id: ds.h8.re.lea_dementi
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    once: true
+    text: "Léa t'appelle après le démenti de vingt heures : « Télé-Stade dément une vidéo sans dire qui l'a faite, ni avec quoi. Moi, je vais chercher. Vous me laissez chercher ? »"
+    left:
+      label: "Cherchez"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "« Merci. Je ne vous demandais pas la permission. Je voulais savoir si vous aviez peur de ce que je trouverais. »"
+    right:
+      label: "Laissez tomber"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "« D'accord. » Un temps. « Vous savez déjà, alors. » Elle raccroche avant que tu aies le temps de dire que non."
+
+  - id: ds.h8.re.kara_trois_heures
+    roles: [ds]
+    arc: agents
+    tags: [agents, oreillette]
+    speaker: kara
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Trois heures, la nuit d'après l'hôtel. La voix, dans ton oreille, très bas : « C'est moi, {toi}. Ne réponds pas, il y a quelqu'un au plateau. Je voulais juste que tu saches que c'est moi. »"
+    left:
+      label: "Je ne réponds pas"
+      effects: {vestiaire: "+", relation: {kara: 1}, var: {h8_nuits: "+1"}}
+      answer: "Elle lit les chiffres de la nuit, comme d'habitude. Entre deux, très vite : « Bien. » Puis les chiffres, jusqu'à six heures."
+    right:
+      label: "Je réponds quand même"
+      effects: {direction: "-", relation: {kara: 1}, var: {h8_nuits: "+1"}}
+      answer: "Tu dis son prénom. Un silence, un clavier qui s'arrête, une chaise qu'on recule. Puis la voix, très calme : « Recommandation suivante. »"
+
+  - id: ds.h8.re.gege_nino
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Gégé essuie au comptoir un verre déjà sec : « Mon neveu a peint IL HABITE ICI avec mes pinceaux. Il ne les a pas lavés. C'est comme ça que je sais qu'il t'aime bien, {toi}. »"
+    left:
+      label: "Je lui en offre des neufs"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}}
+      answer: "« Il ne les lavera pas non plus. » Il range quand même le paquet sous le comptoir, à côté de la caisse de 1990."
+    right:
+      label: "Je les laverai"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il te tend le pot sans un mot. Tu les laves à l'évier de la buvette pendant qu'il te regarde faire, les bras croisés, content."
+
+  - id: ds.h8.re.gege_kambara
+    roles: [ds]
+    arc: selection
+    tags: [vestiaire]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Gégé a appris le départ de Mbako avant toi, comme toujours : « Je l'ai vu signer sa première licence, à seize ans. Tu le laisses partir. C'est bien. On ne retient pas quelqu'un qui court, {toi}. »"
+    left:
+      label: "On ne le retient pas"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il lève son verre vers la fenêtre, vers le sud, sans savoir où est le Kambara. « À sa terre rouge. » Tu lèves le tien."
+    right:
+      label: "J'aurais dû"
+      effects: {vestiaire: "+"}
+      answer: "« Avec quoi ? Avec ta machine ? » Il te ressert, sans te faire payer. « Garde ton argent pour le billet d'avion. »"
+
+  - id: ds.h8.re.mbako_compo
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, sponsors]
+    speaker: mbako
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Quatorze heures. Mbako te tend son téléphone : une alerte de Pari-Rive, ta composition, une heure avant la feuille officielle. « Tout le vestiaire l'a reçue, {toi}. Moi aussi. »"
+    left:
+      label: "C'est le sponsor"
+      effects: {vestiaire: "-", relation: {mbako: -1}}
+      answer: "« Le sponsor. » Il range le téléphone. « Alors c'est le sponsor qui leur dira pourquoi ils sont remplaçants. »"
+    right:
+      label: "Je n'explique rien"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il sort sans un mot. À la causerie, il lit la composition à voix haute, lentement, comme s'il la découvrait lui aussi."
+
+  - id: ds.h8.re.josiane_serveurs
+    roles: [ds]
+    arc: president
+    tags: [direction]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Mars. Madame Josiane te tend un plateau : le café de Vaubourg, qui le boit maintenant au milieu des machines. « Je ne monte plus. Il paraît qu'il fait trente degrés, là-haut. Il ne s'en plaint pas. »"
+    left:
+      label: "Je le monte"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Là-haut, les ventilateurs soufflent. Vaubourg boit debout, entre deux armoires qui clignotent. « Merci. Elles ne m'en offrent jamais. »"
+    right:
+      label: "Il refroidira"
+      effects: {direction: "+"}
+      answer: "« Il le boit froid depuis 1977. » Elle repose le plateau sur son comptoir, sans bruit. Le lendemain, il n'y a plus de deuxième tasse."
+
+  - id: ds.h8.re.mbako_refus
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Le lendemain, sept heures. Mbako t'attend au parking, adossé à ta berline : « Tu n'as pas vendu Kerdal. » Il ne sourit pas. « Moi, je l'aurais vendu, {toi}. Pour qu'il dorme ailleurs. »"
+    left:
+      label: "Il dormira ici"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« J'espère. » Il se décolle de la voiture. « Je l'appelle lundi à neuf heures. Pas avant. S'il dort, je le laisse dormir. »"
+    right:
+      label: "La machine voulait vendre"
+      effects: {direction: "+"}
+      answer: "« Tu ne l'as pas écoutée. Alors maintenant, c'est toi qui le portes. » Il le dit sans reproche, comme on tend un sac."
+
+  - id: ds.h8.re.ober_quotidien
+    roles: [ds]
+    arc: corps
+    tags: [direction, presse]
+    speaker: ober
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Ober a étalé Le Quotidien sur sa table d'examen, ouvert aux nuits du vestiaire : « Le numéro 6, c'est la nuit où sa femme a accouché. C'est moi qui l'avais transmise au fonds. »"
+    left:
+      label: "Vous n'étiez pas seul"
+      effects: {vestiaire: "+", relation: {ober: 1}}
+      answer: "« Non. On est toute une chaîne. Moi, je suis le maillon qui a un diplôme. » Il replie le journal en suivant les plis."
+    right:
+      label: "Je sais"
+      effects: {direction: "+", relation: {ober: -1}}
+      answer: "Il te regarde, surpris que tu le saches, puis plus surpris du tout. « Évidemment. Votre nuit à vous est juste en dessous. »"
+
+  - id: ds.h8.re.josiane_velo
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Le soir de la saisie, Madame Josiane a laissé devant le club-house un vélo de dame, rouge, avec un panier. Au guidon, une étiquette : « Il était à mon mari. Il ne demande jamais où on va. »"
+    left:
+      label: "Je le prends"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "La selle est trop basse, la sonnette rouillée. Tu rentres par le quai. Pour la première fois depuis Almadis, personne ne t'annonce l'heure."
+    right:
+      label: "Je marcherai"
+      effects: {direction: "+"}
+      answer: "Tu le laisses contre la grille. Le lendemain, il est rentré, attaché au radiateur du secrétariat. Il attendra."
+
+  - id: ds.h8.re.gege_friche
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    text: "Le lendemain, Gégé essuie un verre sans lever les yeux : « Hier soir, à la friche, quelqu'un a pris la petite lumière sur la palette. Je l'ai vu de loin. Il avait ta démarche, {toi}. »"
+    left:
+      label: "C'était moi"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il pose le verre. « Une palette avec des bougies, c'est aux morts. Ce qu'on y pose, on ne le reprend pas. Rapporte-la. »"
+    right:
+      label: "Il fait sombre, là-bas"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Sombre, oui. » Il reprend le verre, l'essuie encore. « Pas assez pour cacher ce qui grésille dans ta poche. »"
+
+  - id: ds.h8.re.josiane_vaubourg
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Juillet. Le gardien descend du premier les cartons de Vaubourg. Madame Josiane les ouvre au secrétariat, un par un, et s'arrête au dernier : une tasse fêlée, et le bracelet du club, éteint."
+    left:
+      label: "Gardez la tasse"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Elle la pose sur son comptoir, à côté de la sienne. Le matin, elle y verse un fond de café, et le laisse refroidir."
+    right:
+      label: "Rendez le bracelet"
+      effects: {direction: "+"}
+      answer: "Elle le glisse dans une enveloppe du fonds. Avant de la fermer, elle essuie l'écran avec sa manche, comme on ferme des yeux."

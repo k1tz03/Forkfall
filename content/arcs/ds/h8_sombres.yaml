@@ -1,0 +1,182 @@
+# « L'Oreillette » (Histoire 8) — les événements sombres du réservoir
+# (docs/histoires/00_les_dix_histoires.md § 1.4 ; charte d'écriture § 5).
+#
+# Les soirs qui portent un numéro de scène clé sont des ancres de nuit, servies
+# par le script ou par leur intrigue (lundi, les projecteurs, la vidéo, le
+# compte du vieux, la porte, deux heures). Ceux-ci sont le réservoir : le
+# metteur en scène les arme quand leur `when` est vrai, deux par saison au plus,
+# jamais à moins de cinq créneaux. Ancres et réservoir ensemble ne font jamais
+# plus de quatre soirs dans une saison, ni deux soirs à moins de cinq créneaux :
+# d'où les gardes `since(...)` sur les soirs des intrigues de la saison 2, et
+# `slot <= 12` avant la porte (créneau 17). En saison 1, les ancres prennent
+# tous les soirs : le réservoir se tait.
+#
+#   La laverie      — saison 2 (ou l'épilogue), après des nuits sans sommeil.
+#   La friche       — saison 3, après la saisie et après 23 h 58 : la place où
+#                     l'on a trouvé la voiture de Ferlac ; une oreillette encore
+#                     allumée sur une palette (h8_oreillette_friche → la boîte
+#                     noire, la clinique).
+#   La brigade      — l'argent de Pari-Rive (h8_sp_pari) : la porte de la garde à vue.
+#   La nuit blanche — les nuits comptées (vars.h8_nuits) : la porte du burn-out.
+#   Le carnet       — le risque de la mission « De quoi dormir » (h8_vl_sommeil).
+#   La photo        — le risque du nom acheté au Terminus (h8_nom_voix).
+#   Les machines    — après la saisie : le modèle d'Aubérive s'éteint à trois
+#                     heures ; une diode, et quelqu'un qui dit l'heure.
+# Toutes les `when` lisent le drapeau d'histoire : le metteur en scène arme les
+# événements par rôle, et le directeur sportif de « 23 h 58 » ne doit pas
+# tomber sur la friche de 2026.
+arcs:
+  - id: ds.h8.sb.laverie
+    title: "La laverie"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: corps
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && (season == 1 || season >= 3) && vars.h8_nuits >= 2 && slot <= 12 && since('ds.h8.vd.minuit') >= 5 && since('ds.h8.vd.minuit_vit') >= 5 && since('ds.h8.vx.post') >= 5"
+    chance: 0.18
+    cast: [ober]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_laverie: "{annee} : à minuit, {nom} lavait la même chemise pour la troisième fois. Le gérant a coupé la 4."
+    steps:
+      - id: chemise
+        card:
+          - { id: ds.h8.sb.laverie_dose, if: "flag('h8_double_dose')" }
+          - { id: ds.h8.sb.laverie }
+
+  - id: ds.h8.sb.friche
+    title: "La friche"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: absurde
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && season >= 2 && flag('h8_voiture_rendue') && flag('h8_pas_signe')"
+    chance: 0.6
+    cast: [kara]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_oreillette_friche: "{annee} : à la friche, une oreillette allumée sur une palette. {nom} l'a mise dans sa poche."
+      h8_friche_laissee:    "{annee} : à la friche, {nom} a laissé une oreillette allumée sous la pluie."
+    traces_retract:
+      h8_oreillette_friche: "{annee} : {nom} s'est défait{pg, select, f{e} other{}} de l'oreillette de la friche. Elle s'est tue."
+    steps:
+      - id: palette
+        card: ds.h8.sb.friche
+
+  - id: ds.h8.sb.brigade
+    title: "La brigade"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && flag('h8_sp_pari') && season >= 1 && !flag('h8_voiture_rendue') && slot <= 12 && since('ds.h8.vd.minuit') >= 5 && since('ds.h8.vd.minuit_vit') >= 5 && since('ds.h8.vx.post') >= 5"
+    chance: 0.12
+    cast: [lea]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_brigade: "{annee} : la brigade financière sur le palier de {nom}, à six heures. L'avocat a été payé en liquide."
+    steps:
+      - id: palier
+        card: ds.h8.sb.brigade
+
+  - id: ds.h8.sb.nuit_blanche
+    title: "La nuit blanche"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: corps
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && season >= 1 && vars.h8_nuits >= 5 && slot <= 12 && since('ds.h8.vd.minuit') >= 5 && since('ds.h8.vd.minuit_vit') >= 5 && since('ds.h8.vx.post') >= 5 && since('ds.h8.c3_deux_heures') >= 5 && since('ds.h8.c3_deux_heures_gardee') >= 5"
+    chance: 0.1
+    cast: [ober]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_malaise: "{annee} : {nom} a quitté une conférence de presse au milieu d'une phrase. La phrase s'est finie sans personne."
+    steps:
+      - id: conference
+        card:
+          - { id: ds.h8.sb.nuit_blanche_bracelet, if: "flag('h8_bracelet_ote')" }
+          - { id: ds.h8.sb.nuit_blanche }
+
+  - id: ds.h8.sb.carnet
+    title: "Le carnet du préparateur"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: corps
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && flag('h8_vl_sommeil') && slot <= 12"
+    chance: 0.25
+    cast: [ober]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_carnet: "{annee} : le carnet d'un préparateur sans club, saisi par la police. Le nom de {nom} à la page de mars."
+    steps:
+      - id: parking
+        card: ds.h8.sb.carnet
+
+  - id: ds.h8.sb.photo
+    title: "La photo du Terminus"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && season >= 1 && (flag('h8_nom_voix') || flag('h8_vl_nom_voix')) && !flag('h8_voiture_rendue') && slot <= 12"
+    chance: 0.15
+    cast: [kara]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_photo_terminus: "{annee} : le fonds a photographié {nom} au Terminus avec un ancien de Ferlac Analytique."
+    steps:
+      - id: photo
+        card: ds.h8.sb.photo
+
+  # La salle des machines : après la saisie, le fonds éteint le modèle
+  # d'Aubérive (il tourne désormais à la capitale). Trois heures, une diode.
+  # Les machines sont là où Vaubourg les a laissées monter (son ancien bureau,
+  # h8_bureau_cede) ou descendre (le sous-sol, près de la chaudière). Après
+  # 23 h 58 en saison 3, ou dans l'épilogue.
+  - id: ds.h8.sb.machines
+    title: "La salle des machines"
+    kind: evenement
+    roles: [ds]
+    postulats: [le_modele]
+    theme: direction
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h8') && season >= 2 && flag('h8_voiture_rendue') && slot <= 14 && since('ds.h8.c3_deux_heures') >= 5 && since('ds.h8.c3_deux_heures_gardee') >= 5 && since('ds.h8.c_int_casque') >= 3"
+    chance: 0.5
+    cast: [josiane]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_machines_debranchees: "{annee} : à trois heures, les machines du Racing se sont tues. {nom} a débranché la dernière."
+      h8_machines_veillees:    "{annee} : à trois heures, les machines du Racing se sont tues. {nom} a dormi près de la dernière diode."
+    steps:
+      - id: diode
+        card:
+          - { id: ds.h8.sb.machines_haut, if: "flag('h8_bureau_cede')" }
+          - { id: ds.h8.sb.machines }

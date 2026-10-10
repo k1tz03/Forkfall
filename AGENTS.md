@@ -39,12 +39,12 @@ Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
 - **Fusionnés** dans cette branche : 1 « Trois mille visages » (entraîneur, promu),
   2 « Le Sapin en carton » (entraîneur, intérimaire), 3 « La Sirène » (joueur,
   pépite), 5 « La Maquette » (président, géant déchu), 6 « 23 h 58 » (directrice
-  sportive, vendre trente). Le menu de l'aperçu montre les six postulats qui ne
-  sont plus `chantier`.
+  sportive, vendre trente), 8 « L'Oreillette » (directeur sportif, le modèle, 2024).
+  Le menu de l'aperçu montre les postulats qui ne sont plus `chantier`.
 - **Pas encore fusionnés**, sauvés en patchs dans `docs/histoires/chantier/` avec la
   procédure de reprise et de fusion : 4 « La Route de la Rive » (commité, sans
-  rapport de son auteur), 8 « L'Oreillette » (fini et validé), et 7, 9, 10 (en
-  cours d'écriture, instantanés partiels).
+  rapport de son auteur), et 7, 9, 10 (en cours d'écriture, instantanés partiels ;
+  leurs auteurs ont été arrêtés avec la session).
 
 ## L'arborescence
 

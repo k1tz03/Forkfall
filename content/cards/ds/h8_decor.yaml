@@ -1,0 +1,747 @@
+# « L'Oreillette » (Histoire 8) — le sac : les cartes de décor, les lignes de
+# voix et le mercato habillé par le modèle. Elles ne vivent que dans cette
+# histoire (`flag('histoire_h8')`) : le directeur sportif de « 23 h 58 » a son
+# propre sac.
+#
+# Les lignes de voix (tag `oreillette`, sans locuteur : la coquille les rend
+# « dans l'oreillette ») ne sortent que tant que la voix est là : oreillette
+# portée (`!h8_sans_oreillette`) et pas encore rendue au fonds
+# (`!h8_voiture_rendue`). Le jour, elle vouvoie ; la nuit, elle tutoie. Quand
+# l'oreillette dort au tiroir, d'autres cartes prennent le relais : on
+# l'entend quand même.
+#
+# Chaque visage du casting a au moins une scène de quartier ici (Mbako,
+# Josiane, Gégé, Léa, Ober, Kerdal vivant, Inès après le hall de l'hôtel,
+# Vaubourg vivant, et Cheikh Ilyas, dont la voix passe par d'autres).
+cards:
+  # ======================================================== LA VOIX (le jour)
+  - id: ds.h8.rt.voix_trois_heures
+    roles: [ds]
+    arc: direction
+    tags: [direction, oreillette]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "Six heures dix. « Bonjour. Vous avez dormi trois heures douze. Premier rendez-vous à sept heures, le deuxième aussi. Le fonds vous remercie de votre disponibilité. »"
+    left:
+      label: "Je me lève"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "La voix énumère ta journée pendant que tu te brosses les dents. Elle a prévu que le dentifrice manquerait. Il manque."
+    right:
+      label: "Encore dix minutes"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Dix minutes exactement, puis : « Onze. » Tu te lèves en t'excusant, sans savoir auprès de qui."
+
+  - id: ds.h8.rt.voix_mbako
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue') && !flag('h8_mbako_parti') && !flag('h8_mbako_embrasse')"
+    text: "« L'entraîneur a contredit la recommandation quatre fois ce mois-ci. Voulez-vous qu'un rapport parte au fonds ? Il partira à midi, sauf contrordre. »"
+    left:
+      label: "Le rapport part"
+      effects: {direction: "+", relation: {mbako: -1}, var: {h8_obei: "+1"}}
+      answer: "À quinze heures, Mbako passe devant ton bureau sans s'arrêter, pour la première fois depuis août."
+    right:
+      label: "Je lui parlerai"
+      effects: {vestiaire: "+", relation: {mbako: 1}, var: {h8_refus: "+1"}}
+      answer: "Tu lui parles au bord du terrain. Il t'écoute en regardant courir ses joueurs. « Quatre fois ? Je croyais cinq. »"
+
+  - id: ds.h8.rt.voix_conference
+    roles: [ds]
+    arc: presse
+    tags: [presse, oreillette]
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "Avant la conférence de presse, la voix te souffle trois réponses, dans l'ordre des questions qu'on ne t'a pas encore posées. « La deuxième viendra de Léa. Souriez avant. »"
+    left:
+      label: "Je les répète"
+      effects: {direction: "+", tribunes: "-", var: {h8_obei: "+1"}}
+      answer: "Les trois questions arrivent dans l'ordre. Tu réponds juste. Au deuxième rang, Léa arrête de prendre des notes."
+    right:
+      label: "Je réponds seul"
+      effects: {tribunes: "+", direction: "-", var: {h8_refus: "+1"}}
+      answer: "Tu bafouilles à la deuxième question. Léa sourit. C'est la première fois depuis août qu'on te voit chercher un mot."
+
+  - id: ds.h8.rt.voix_feu
+    roles: [ds]
+    arc: absurde
+    tags: [direction, oreillette]
+    lieu: parking
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "Au feu du pont, dans ta berline. La voix : « Vous êtes à l'arrêt depuis quarante secondes. Le feu est vert depuis douze. » Le feu est rouge. Derrière toi, personne ne klaxonne."
+    left:
+      label: "J'avance"
+      effects: {direction: "+", var: {h8_obei: "+1"}}
+      answer: "Tu passes au rouge, au ralenti. Personne ne freine, personne ne te voit. Le soir, la voix dit : « Trajet optimal. »"
+    right:
+      label: "J'attends le vert"
+      effects: {vestiaire: "+", var: {h8_refus: "+1"}}
+      answer: "Le feu passe au vert. La voix : « Correction : maintenant. » Tu ne sais plus lequel des deux s'est trompé."
+
+  # ======================================================== LA VOIX (la nuit)
+  - id: ds.h8.rt.voix_scores
+    roles: [ds]
+    arc: moment
+    tags: [direction, oreillette]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue') && !flag('h8_ines')"
+    text: "Trois heures. Tu ne dors pas ; la voix non plus. « Tu veux que je te lise les scores de la nuit ? Il y a un match en Ostrélie. » Un temps. « Moi non plus, je ne dors pas. »"
+    left:
+      label: "Lis-les-moi"
+      effects: {vestiaire: "+", var: {h8_nuits: "+1"}}
+      answer: "Elle lit trois scores d'Ostrélie, puis s'arrête au milieu du quatrième, comme quelqu'un qui bâille. « Pardon. »"
+    right:
+      label: "Tais-toi"
+      effects: {direction: "+", var: {h8_nuits: "+1"}}
+      answer: "« D'accord. » Pendant une heure, tu n'entends plus qu'une respiration. Tu mets longtemps à comprendre que ce n'est pas la tienne."
+
+  - id: ds.h8.rt.voix_minuit_moins
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "Minuit moins le quart, dernière nuit du mercato. La voix tutoie, cette nuit : « Une offre de Roquemont pour ton gardien. L'écran dit oui. » Un silence. « Moi, je ne sais pas. »"
+    left:
+      label: "Je vends le gardien"
+      effects: {caisse: "++", vestiaire: "-", var: {h8_obei: "+1", h8_nuits: "+1"}}
+      answer: "La signature part à 23 h 58. « Bon. » Tu attends la suite. Il n'y en a pas, seulement un clavier qu'on referme."
+    right:
+      label: "Je le garde"
+      effects: {vestiaire: "+", caisse: "-", var: {h8_refus: "+1", h8_nuits: "+1"}}
+      answer: "« Moi aussi, je l'aurais gardé. » Elle le dit très vite, puis plus rien. À six heures dix, la voix du jour ne le répète pas."
+
+  # ================================================== LE MERCATO DU MODÈLE
+  - id: ds.h8.rt.voix_numero_7
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "« Recommandation : vendre le numéro 7 avant le 31. Probabilité de blessure à six mois : trente-huit pour cent. Acheteur probable : Roquemont. Prix plancher : à l'écran. »"
+    left:
+      label: "Je vends le 7"
+      effects: {caisse: "+", vestiaire: "-", var: {h8_obei: "+1"}}
+      answer: "Il part pour Roquemont un jeudi. Il te serre la main dans le couloir, sans savoir à qui il doit son départ."
+    right:
+      label: "Le 7 reste"
+      effects: {vestiaire: "+", caisse: "-", var: {h8_refus: "+1"}}
+      answer: "« Préférence enregistrée. » Samedi, le 7 marque de la tête. La voix donne la minute du but avant le speaker du stade."
+
+  - id: ds.h8.rt.voix_defenseur
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "« Un défenseur de Montbéliac, vingt-deux ans, sous-évalué de quarante pour cent. Genoux sains. Ses nuits sont excellentes. Je vous conseille de l'acheter avant qu'il dorme moins. »"
+    left:
+      label: "Je l'achète"
+      effects: {caisse: "-", direction: "+", var: {h8_obei: "+1"}}
+      answer: "Il arrive lundi avec sa mère et un oreiller. Il dort huit heures par nuit. Tu le regardes dormir sur l'écran, et tu l'envies."
+    right:
+      label: "Ses nuits ne jouent pas"
+      effects: {direction: "-", tribunes: "+", var: {h8_refus: "+1"}}
+      answer: "La voix se tait trois secondes, longtemps pour elle. « Il signe à Lyonnet demain. » Il signe à Lyonnet le lendemain."
+
+  - id: ds.h8.rt.pere_dossier
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, formation]
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Un père attend dans le couloir, le dossier de son fils sur les genoux, en chemise cartonnée : « Seize ans. Votre machine l'a refusé. Regardez-le jouer, une fois. Une seule. »"
+    left:
+      label: "Je viendrai samedi"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Sur un terrain de Castérac, le gamin rate tout pendant une heure, puis réussit une chose que tu n'avais jamais vue. Une."
+    right:
+      label: "La machine a raison"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il remet le dossier sous son bras. « Elle a sûrement raison. Elle n'était pas là quand il est né. »"
+
+  - id: ds.h8.rt.solvang
+    roles: [ds]
+    arc: agents
+    tags: [mercato, agents]
+    lieu: bureau
+    tone: strategique
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Ingrid Solvang, l'agente qui a repris le carnet de Fardelli, tourne son téléphone vers toi : un contrat déjà rempli. « Votre modèle a fixé le prix, le mien a dit oui. Vous signez où il y a la croix. »"
+    left:
+      label: "Je signe à la croix"
+      effects: {caisse: "+", vestiaire: "-", var: {h8_obei: "+1"}}
+      answer: "Elle signe juste après toi, sans relire. « Vous auriez pu ne pas venir, vous savez. On l'aurait fait quand même. »"
+    right:
+      label: "Pas sans le voir jouer"
+      effects: {vestiaire: "+", caisse: "-", var: {h8_refus: "+1"}}
+      answer: "Elle range le téléphone, amusée. « Le voir jouer. Je l'écris. Ça fera rire au bureau. » Elle l'écrit vraiment."
+
+  # =================================================== QUAND ELLE EST AU TIROIR
+  - id: ds.h8.rt.tiroir_bonjour
+    roles: [ds]
+    arc: absurde
+    tags: [direction, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "L'oreillette dort dans le tiroir de la table de nuit. À six heures dix, tu l'entends quand même : « Bonjour. » Tu ouvres le tiroir. Elle est éteinte, froide, tournée vers le mur."
+    left:
+      label: "Je la remets"
+      effects: {direction: "+", clear: [h8_sans_oreillette], var: {h8_obei: "+1"}}
+      answer: "Elle s'allume dans ton oreille et dit « bonjour » une deuxième fois, comme si la première n'avait pas compté."
+    right:
+      label: "Je ferme à clé"
+      effects: {vestiaire: "+", var: {h8_refus: "+1"}}
+      answer: "Tu fermes à clé et tu poses la clé dans un verre d'eau. Toute la journée, ton oreille droite reste plus froide que l'autre."
+
+  - id: ds.h8.rt.tiroir_neuve
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+    text: "Le délégué pose une oreillette neuve sur ton bureau, dans sa boîte : « L'ancienne était fatiguée, d'après le modèle. Celle-ci ne s'éteint pas, même dans un tiroir. »"
+    left:
+      label: "Je la mets"
+      effects: {direction: "++", clear: [h8_sans_oreillette], var: {h8_obei: "+1"}}
+      answer: "Elle dit « bonjour » avec la même voix, exactement. Le délégué hoche la tête, satisfait, comme devant une plante qui reprend."
+    right:
+      label: "Dans le tiroir aussi"
+      effects: {direction: "--", vestiaire: "+", var: {h8_refus: "+1"}}
+      answer: "Il la pose lui-même dans le tiroir, à côté de l'autre. « Deux, maintenant. Le fonds est patient. »"
+
+  # ============================================================= LES VISAGES
+  - id: ds.h8.rt.mbako_le_11
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Mbako t'emmène au bord du terrain, sans écran : « Regarde le 11, {toi}. Pas sa courbe : lui. Il court en regardant ses pieds depuis mardi. Il se passe quoi, chez lui ? »"
+    left:
+      label: "Je vais lui parler"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Sa mère est à l'hôpital, à Valdorne. Il ne l'avait dit à personne. Samedi, il joue la tête levée."
+    right:
+      label: "Je regarde sa courbe"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "Sommeil fractionné, risque modéré. Mbako lit par-dessus ton épaule. « Elle dit pareil que ses pieds, en moins bien. »"
+
+  - id: ds.h8.rt.mbako_gobelet
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Mbako te tend un gobelet de la machine du vestiaire : « Tu as les yeux de Kerdal en septembre, {toi}. Je te le dis une fois. » Il boit le sien d'un trait, sans souffler dessus."
+    left:
+      label: "Je dors très bien"
+      effects: {direction: "+"}
+      answer: "« D'accord. » Il jette son gobelet, rate la poubelle, ne le ramasse pas. Il attend que ce soit toi qui le ramasses."
+    right:
+      label: "Je ne dors plus"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Il hoche la tête, lentement. « Moi non plus, depuis août. On fera une équipe. » Il te reprend le gobelet vide."
+
+  - id: ds.h8.rt.josiane_bouillon
+    roles: [ds]
+    arc: famille
+    tags: [direction, famille]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Madame Josiane passe au secrétariat comme si elle y travaillait encore. Elle laisse sur ton bureau une tasse, la soucoupe dessus pour garder le chaud : « Vous ne mangez plus. Ça se voit au col. »"
+    left:
+      label: "Je bois"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Du bouillon, pas du café. Elle attend que tu aies fini pour reprendre la tasse. « Demain, des pâtes. Ne discutez pas. »"
+    right:
+      label: "Pas le temps"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "Elle reprend la tasse et la vide dans le pot du ficus. Le ficus, lui, a meilleure mine que toi depuis septembre."
+
+  - id: ds.h8.rt.josiane_cahier
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Josiane recopie à la main le calendrier des soixante-douze matchs, sur un cahier d'écolier : « L'écran, je ne lui fais pas confiance. Il ne se trompe jamais. Moi, je me trompe, alors je vérifie. »"
+    left:
+      label: "Je vérifie avec vous"
+      effects: {vestiaire: "+", relation: {josiane: 1}}
+      answer: "Vous recopiez jusqu'au match quarante. Elle trouve une erreur dans le calendrier officiel. Une seule. Elle la souligne en rouge."
+    right:
+      label: "L'écran suffit"
+      effects: {direction: "+"}
+      answer: "« Il suffit, oui. C'est ce qui m'inquiète. » Elle continue seule, la langue entre les dents, jusqu'au match soixante-douze."
+
+  - id: ds.h8.rt.gege_pinceau
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Gégé repeint une vieille bâche au fond du local, au pinceau, lettre par lettre : « Pour samedi. Le mot, je ne te le dis pas. Tu le liras avec tout le monde, {toi}. »"
+    left:
+      label: "Je paie la peinture"
+      effects: {caisse: "-", tribunes: "+", relation: {gege: 1}}
+      answer: "Il met tes billets dans le pot à pinceaux. Samedi, la bâche dit : ON DORT PAS NON PLUS. Tout le stade rit, sauf toi."
+    right:
+      label: "Je lirai samedi"
+      effects: {tribunes: "+"}
+      answer: "Samedi, la bâche dit : ON VOUS ENTEND. Les lettres sont encore fraîches ; à la mi-temps, le N a coulé jusqu'au grillage."
+
+  - id: ds.h8.rt.lea_enregistre
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Léa t'attrape à la sortie de la salle de presse, son téléphone posé à plat sur la paume, en enregistrement : « Qui choisit vos joueurs ? Vous, ou quelque chose dans votre oreille ? »"
+    left:
+      label: "Moi"
+      effects: {direction: "+", relation: {lea: -1}}
+      answer: "Elle arrête l'enregistrement. « J'ai bien entendu la question. Pas la réponse. » Elle repart vers L'Écho à pied."
+    right:
+      label: "Pas de commentaire"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Elle le répète à voix haute pour l'enregistrement, en articulant chaque syllabe, puis range le téléphone."
+
+  - id: ds.h8.rt.ober_tension
+    roles: [ds]
+    arc: corps
+    tags: [vestiaire]
+    speaker: ober
+    lieu: cabinet
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_bracelet_ote') && !flag('h8_ober_temoin')"
+    text: "Ober te prend la tension entre deux portes, sans demander : « Quinze-dix. Vous dormez comment ? » Il connaît la réponse ; ta montre la lui envoie. Il veut voir si tu mens."
+    left:
+      label: "Je dors bien"
+      effects: {direction: "+"}
+      answer: "« Bien. » Il le note, et note autre chose dessous, plus petit, que tu n'arrives pas à lire à l'envers."
+    right:
+      label: "Mal"
+      effects: {vestiaire: "+", relation: {ober: 1}}
+      answer: "« Merci. » Il range le brassard. « C'est la première vraie mesure de la semaine. Les machines ne disent jamais “mal”. »"
+
+  - id: ds.h8.rt.kerdal_ecran
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: kerdal
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_kerdal_mort')"
+    text: "Kerdal attend devant ton bureau, ses crampons à la main, les lacets noués ensemble : « On dit que je suis rouge, sur l'écran, {toi}. Je peux voir ? »"
+    left:
+      label: "Je lui montre"
+      effects: {vestiaire: "-", relation: {kerdal: 1}}
+      answer: "Il regarde sa courbe longtemps, comme on regarde une radio. « C'est moi, ça ? » Il pose le doigt sur l'écran, à l'endroit du rouge."
+    right:
+      label: "Il n'y a rien à voir"
+      effects: {direction: "+", relation: {kerdal: -1}}
+      answer: "Il repart, les crampons battant contre sa cuisse. Au bout du couloir, il demande l'heure à quelqu'un qui n'a pas de montre."
+
+  - id: ds.h8.rt.kerdal_photo
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: kerdal
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_kerdal_vit')"
+    text: "Kerdal te montre une photo sur son téléphone : sa chambre, son lit défait, un réveil réglé sur neuf heures. « Ma mère l'a prise, {toi}. Elle dit que c'est la plus belle photo de ma carrière. »"
+    left:
+      label: "Je l'imprime"
+      effects: {vestiaire: "+", relation: {kerdal: 1}}
+      answer: "Tu la punaises au-dessus de ton écran, à côté de sa courbe rouge. Les deux tiennent sur le même liège, côte à côte."
+    right:
+      label: "Garde-la pour toi"
+      effects: {vestiaire: "+"}
+      answer: "Il la regarde encore, sourit, et range le téléphone dans sa chaussette. « Je la garde pour les mauvaises nuits. »"
+
+  - id: ds.h8.rt.kara_plateau
+    roles: [ds]
+    arc: agents
+    tags: [agents, portable]
+    speaker: kara
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_ines') && !flag('h8_service_coupe')"
+    text: "Quatre heures, un message d'Inès : « Plateau vide ce soir. Je lis les chiffres de ton club à personne. Tu dors, {toi} ? »"
+    left:
+      label: "Je réponds"
+      effects: {vestiaire: "+", relation: {kara: 1}, var: {h8_nuits: "+1"}}
+      answer: "Vous vous écrivez jusqu'à six heures moins dix. À six heures dix, la voix du jour dit « bonjour ». Tu sais qui ce n'est pas."
+    right:
+      label: "Je ne réponds pas"
+      effects: {direction: "+"}
+      answer: "Le message reste ouvert jusqu'au matin. À six heures, un deuxième : « Bonne nuit quand même. » L'écran ne le dit jamais."
+
+  - id: ds.h8.rt.ilyas_salut
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    speaker: nassir
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Le délégué lit un message de Cheikh Ilyas sur son téléphone, sans lever les yeux : « Le propriétaire vous salue. » C'est tout le message. Il attend une réponse."
+    left:
+      label: "Saluez-le"
+      effects: {direction: "+"}
+      answer: "Il tape « salutations », relit, efface, tape « salutations respectueuses ». « Il aime qu'on soit précis. »"
+    right:
+      label: "Je n'ai rien à dire"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il tape « reçu ». « C'est une réponse aussi. Elle sera lue. » Il range le téléphone dans sa poche intérieure."
+
+  - id: ds.h8.rt.vaubourg_ascenseur
+    roles: [ds]
+    arc: president
+    tags: [direction, moment]
+    speaker: aulard
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_vaubourg_mort')"
+    text: "Le fonds a fait poser un ascenseur au club-house. Vaubourg passe devant, la canne à la main, et prend l'escalier : « Je le prendrai quand j'aurai quatre-vingt-dix ans. »"
+    left:
+      label: "Je monte avec lui"
+      effects: {vestiaire: "+", relation: {aulard: 1}}
+      answer: "Une marche, la canne, une marche. En haut, il est moins essoufflé que toi, et il prend le temps de le faire remarquer."
+    right:
+      label: "Je prends l'ascenseur"
+      effects: {direction: "+"}
+      answer: "L'ascenseur met quarante secondes. Quand les portes s'ouvrent, Vaubourg est déjà sur le palier. « Vous voyez. »"
+
+  # ============================================================ LA VILLE, SEULE
+  - id: ds.h8.rt.quai_vendez
+    roles: [ds]
+    arc: absurde
+    tags: [direction, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h8')"
+    text: "Sur le quai, à sept heures, tu t'entends répondre à voix haute : « Vendez. » Un homme qui promène son chien s'est arrêté. Le chien aussi. Ils attendent la suite."
+    left:
+      label: "Je lui dis bonjour"
+      effects: {tribunes: "+"}
+      answer: "« Bonjour. » Il répond, rassuré, et tire sur la laisse. Le chien, lui, continue de te regarder jusqu'au pont."
+    right:
+      label: "Je presse le pas"
+      effects: {direction: "+", var: {h8_nuits: "+1"}}
+      answer: "Derrière toi, l'homme dit au chien : « C'est l'oreillette. » Le chien ne répond pas. Toi non plus : tu n'en sais rien."
+
+  - id: ds.h8.rt.ecran_veille
+    roles: [ds]
+    arc: absurde
+    tags: [direction, decor]
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_voiture_rendue')"
+    text: "Une heure du matin, le bureau. Sur l'écran en veille, les vingt-cinq joueurs de l'effectif défilent en vert, orange, rouge. Tu cherches ton nom dans la liste. Il n'y est pas."
+    left:
+      label: "Je cherche ma ligne"
+      effects: {direction: "+", var: {h8_nuits: "+1"}}
+      answer: "Elle est dans un autre dossier : PERSONNEL. Orange, tirant sur le rouge. La dernière mise à jour date de cinq minutes."
+    right:
+      label: "J'éteins"
+      effects: {vestiaire: "+"}
+      answer: "L'écran s'éteint. Dans le noir, les vingt-cinq couleurs restent une seconde sur ta rétine, puis s'en vont dans l'ordre."
+
+  - id: ds.h8.rt.montre_respirez
+    roles: [ds]
+    arc: corps
+    tags: [vestiaire, objet]
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_montre_portee') && !flag('h8_bracelet_ote')"
+    text: "Ta montre vibre en pleine réunion du staff : « Stress élevé. Respirez. » Mbako lit l'écran à l'envers, puis te regarde. Toute la table attend que tu respires."
+    left:
+      label: "Je respire"
+      effects: {vestiaire: "+"}
+      answer: "Tu respires. La montre affiche un cœur vert. Le préparateur applaudit, deux fois, sans ironie. Personne ne rit."
+    right:
+      label: "Je l'enlève"
+      effects: {vestiaire: "+", direction: "-", set: [h8_bracelet_ote]}
+      answer: "Tu la poses à l'envers sur la table. Elle vibre encore deux fois contre le bois, puis abandonne. La réunion reprend."
+
+  - id: ds.h8.rt.projecteurs_encore
+    roles: [ds]
+    arc: moment
+    tags: [vestiaire, decor]
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_projecteurs') && !flag('h8_cycle_trois_heures')"
+    text: "Le gardien du stade range sa radio : « Les projecteurs à trois heures ? Un cycle d'entretien, programmé par le fonds en 2019. Ils s'allument tout seuls. » Il te regarde. « Vous croyiez quoi ? »"
+    left:
+      label: "Rien"
+      effects: {direction: "+", set: [h8_cycle_trois_heures]}
+      answer: "Il hoche la tête. « Alors tant mieux. » Il ne demande pas pourquoi on vient lui poser la question à huit heures du matin."
+    right:
+      label: "Et la silhouette ?"
+      effects: {vestiaire: "+", set: [h8_cycle_trois_heures]}
+      answer: "« Quelle silhouette ? » Il le dit trop vite. Puis, plus bas : « Ma femme dit pareil. Elle ne sort plus la nuit, côté stade. »"
+
+  # ================================================ VAUBOURG (les deux premières saisons)
+  - id: ds.h8.rt.vaubourg_photo
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    speaker: aulard
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_vaubourg_mort')"
+    text: "Vaubourg s'arrête au clou du palier : « La photo de 1974, le fonds l'a emportée pour la numériser. Elle est partout, maintenant, paraît-il. Sauf ici. » Il touche le clou du bout de sa canne."
+    left:
+      label: "Je la fais revenir"
+      effects: {direction: "-", relation: {aulard: 1}}
+      answer: "Les archives du fonds promettent un tirage « sous quinzaine ». Il n'arrive jamais. Vaubourg ne demande plus ; il touche le clou, le matin."
+    right:
+      label: "Elle est en sécurité"
+      effects: {direction: "+"}
+      answer: "« En sécurité. » Il répète le mot comme on goûte un vin qu'on n'a pas commandé, et reprend l'escalier, une marche, la canne."
+
+  - id: ds.h8.rt.vaubourg_journal
+    roles: [ds]
+    arc: president
+    tags: [direction, presse]
+    speaker: aulard
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && !flag('h8_vaubourg_mort')"
+    text: "Sept heures. Vaubourg lit L'Écho sur papier, en mouillant son doigt pour tourner les pages : « Votre machine lit tout ça en une seconde, paraît-il. Moi, je mets une heure. Je retiens davantage. »"
+    left:
+      label: "Lisez-moi les sports"
+      effects: {vestiaire: "+", relation: {aulard: 1}}
+      answer: "Il lit tout, jusqu'aux résultats des cadets. Pendant ce temps, la voix se tait dans ton oreille. Par politesse, peut-être."
+    right:
+      label: "Je n'ai pas le temps"
+      effects: {direction: "+"}
+      answer: "« Personne ne l'a. C'est pour ça qu'on lit le journal le matin : pour le prendre. » Il tourne la page en mouillant son doigt."
+
+  # ================================================ APRÈS LA SAISIE (l'épilogue)
+  # Le fonds a tout repris ; la voix reste, ou ne reste pas. Six scènes une
+  # fois, puis trois rendez-vous de l'épilogue qui reviennent d'une saison à
+  # l'autre, datés (ce qui revient, c'est la semaine, pas la phrase).
+  - id: ds.h8.rt.berline_feu
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_voiture_rendue')"
+    text: "Rue du Stade, la berline du fonds passe sans un bruit. Au volant, un homme jeune, la main à l'oreille. Au feu orange, elle s'arrête d'elle-même, comme elle le faisait pour toi."
+    left:
+      label: "Je lui fais signe"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il ne te voit pas. Au vert, la berline repart à la seconde. Tu restes sur le trottoir jusqu'au feu suivant, sans savoir pourquoi."
+    right:
+      label: "Je regarde ailleurs"
+      effects: {vestiaire: "+"}
+      answer: "Dans la vitrine du pressing, ton reflet a encore la main levée vers l'oreille. Tu la baisses. Le reflet aussi, un peu après."
+
+  - id: ds.h8.rt.table_de_nuit
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_oreillette_rendue')"
+    text: "Deux heures. Sur la table de nuit, là où dormait l'oreillette, il reste une trace plus claire dans la poussière, de la forme d'un haricot. Tu ne dors pas. Tu la regardes."
+    left:
+      label: "J'essuie la trace"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le chiffon passe deux fois. La trace s'en va. Tu dors jusqu'à cinq heures, et au réveil tu vérifies qu'elle n'est pas revenue."
+    right:
+      label: "Je pose le réveil dessus"
+      effects: {direction: "+"}
+      answer: "Il la recouvre exactement. Il fait tic-tac. Ce n'est pas une voix. Tu t'endors en le vérifiant, plusieurs fois."
+
+  - id: ds.h8.rt.gege_ecran
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && season >= 2"
+    text: "À la buvette, Gégé a débranché l'écran qui affichait le cœur des joueurs pendant les matchs. À sa place, une feuille punaisée, écrite au feutre : ICI, ON REGARDE LE MATCH."
+    left:
+      label: "Je regarde le match"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Quatre-vingt-dix minutes sans chiffres. Au but, la buvette crie avant de savoir si le buteur avait peur. Gégé te ressert."
+    right:
+      label: "Ils veulent des chiffres"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Les gens veulent qu'on leur dise quoi sentir, {toi}. Moi, je vends de la bière. » La feuille reste punaisée."
+
+  - id: ds.h8.rt.lea_dejeuner
+    roles: [ds]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_voiture_rendue') && (flag('h8_oreillette_rendue') || flag('h8_oreillette_jetee'))"
+    text: "Léa t'invite à déjeuner, sans carnet ni magnétophone : « Pour une fois, je ne note rien, {toi}. Dites-moi seulement comment on dort, sans la voix. »"
+    left:
+      label: "Mal, mais à moi"
+      effects: {vestiaire: "+", relation: {lea: 1}}
+      answer: "Elle ne note rien, comme promis. Mais en partant, tu vois que sur la nappe en papier, elle a souligné deux mots : « à moi »."
+    right:
+      label: "Je ne dors pas"
+      effects: {direction: "+"}
+      answer: "« Personne ne dort, dans ce métier. Vous, au moins, vous savez à quelle heure vous ne dormez pas. » Elle paie, sans discuter."
+
+  - id: ds.h8.rt.kara_assurance
+    roles: [ds]
+    arc: agents
+    tags: [agents]
+    speaker: kara
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_ines') && flag('h8_voiture_rendue')"
+    text: "Un après-midi, un numéro inconnu sur ton téléphone neuf. Une voix jeune, très polie : « Bonjour, je vous appelle au sujet de votre assurance habitation. » Tu la reconnais avant la fin."
+    left:
+      label: "Je dis son prénom"
+      effects: {vestiaire: "+", relation: {kara: 1}}
+      answer: "Un silence. « Je n'ai pas le droit de... » Puis, plus bas : « Vous dormez, maintenant ? » Tu dis la vérité. Elle raccroche la première."
+    right:
+      label: "J'écoute l'offre"
+      effects: {direction: "+", caisse: "-"}
+      answer: "Elle lit l'offre jusqu'au bout, sans une faute. À la fin : « Recommandation : changez de contrat. » Tu ris. Elle aussi, presque."
+
+  - id: ds.h8.rt.josiane_fax
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    when: "flag('histoire_h8') && flag('h8_voiture_rendue')"
+    text: "Madame Josiane a ressorti du placard le vieux fax du club et l'a rebranché. « Puisqu'ils vous ont tout repris. Celui-là est à moi. Et il signe tout ce qu'il envoie. »"
+    left:
+      label: "J'envoie une offre"
+      effects: {caisse: "+", relation: {josiane: 1}}
+      answer: "La machine crache un accusé de réception, ton nom imprimé en haut de la page. Josiane le range dans un classeur neuf, à la première page."
+    right:
+      label: "Je n'ai rien à envoyer"
+      effects: {vestiaire: "+"}
+      answer: "« Alors il attendra. » Elle pose une housse sur le fax, comme sur une cage d'oiseau, et éteint en partant."
+
+  - id: ds.h8.rt.centre_mercredi
+    roles: [ds]
+    arc: formation
+    tags: [vestiaire, formation]
+    lieu: terrain
+    tone: leger
+    cooldown: 40
+    when: "flag('histoire_h8') && season >= 3"
+    text: "{annee}. Le mercredi, au centre de formation, des gamins de quatorze ans courent derrière un ballon trop gonflé. Tu n'as plus d'écran. Tu regardes qui court quand le ballon est loin."
+    left:
+      label: "J'écris un nom"
+      effects: {vestiaire: "+"}
+      answer: "Un seul nom, au crayon, sur le dos de ta main. Le soir, tu le recopies sur papier avant qu'il s'efface. Tu ne le dis à personne."
+    right:
+      label: "Je n'écris rien"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Tu les regardes jusqu'à la nuit. Le dernier à partir range les plots sans qu'on le lui demande. Tu retiens son pas, pas son nom."
+
+  - id: ds.h8.rt.buvette_vendredi
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    cooldown: 40
+    when: "flag('histoire_h8') && season >= 3"
+    text: "{annee}. Vendredi soir à la buvette, Gégé te sert sans demander, sur le sous-bock de 1990 où le nom du Racing est écrit à la main. « Alors, {toi}, qui choisit, cette année ? »"
+    left:
+      label: "Moi"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "« Bien. » Il trinque contre ton verre sans lever le sien. « Ça s'entend. Tu parles moins fort qu'avant. »"
+    right:
+      label: "Personne"
+      effects: {vestiaire: "+"}
+      answer: "« Personne, c'est bien aussi. C'est ce qu'on avait en 1990, et on a fini quatrièmes. » Il te ressert, sans compter."
+
+  - id: ds.h8.rt.quai_matin
+    roles: [ds]
+    arc: moment
+    tags: [decor]
+    lieu: rue
+    tone: leger
+    cooldown: 40
+    when: "flag('histoire_h8') && season >= 3"
+    text: "{annee}. Le matin, tu longes le quai à pied jusqu'au club : les péniches, le pont, la Tréfilerie. Personne ne te dit l'heure d'arrivée. Tu arrives quand tu arrives."
+    left:
+      label: "Je prends le pont"
+      effects: {tribunes: "+"}
+      answer: "Sur le pont, un pêcheur te salue sans te reconnaître. Ou en te reconnaissant, et en s'en moquant. Tu préfères ne pas savoir."
+    right:
+      label: "Je longe l'eau"
+      effects: {vestiaire: "+"}
+      answer: "L'eau a monté d'un cran, comme chaque printemps. Tu comptes les péniches, puis tu oublies combien. C'est très bien comme ça."

@@ -1,0 +1,735 @@
+# « L'Oreillette » (Histoire 8) — les cartes du script (arc `ds.h8.oreillette`,
+# content/arcs/ds/h8_script.yaml) : les ancres des trois saisons et de
+# l'épilogue, avec leurs variantes. Toutes hors du sac, toutes `once` sauf les
+# deux ancres rejouables de l'épilogue.
+#
+# La voix. Le jour, elle vouvoie (le modèle, avec la voix générée de Ferlac) ;
+# la nuit, elle tutoie (Inès Kara, qui lit l'écran et improvise quand il est
+# vide). Après la saisie, il n'y a plus d'oreillette : ce qui parle dans le noir
+# tutoie, et l'on ne sait plus qui.
+#
+# Les trois prédictions (et pas une de plus) : ds.h8.cp.un_demi (S0, chez
+# Ober), ds.h8.b2_cette_heure (S1, une heure du matin), ds.h8.c3_deux_heures
+# (S2, dans le noir : « Le petit, tu le signeras à cinquante-huit »).
+#
+# Compteurs : vars.h8_obei (on a fait ce que la voix disait), vars.h8_refus
+# (on a refusé), vars.h8_nuits (les nuits sans sommeil ; la laverie et la nuit
+# blanche les lisent).
+cards:
+  # ======================================================== SAISON 1 (S0)
+  # ----------------------------------------------------- 1 · Vollaire (slot 1)
+  # Le premier ordre. Les deux sorties ouvrent Kerdal (ds.h8.kerdal).
+  - id: ds.h8.a1_vollaire
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, tribunes, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Sur la grille de la Nord, une bâche de vingt mètres : VOLLAIRE, L'ENFANT DU QUAI. Dans ton oreille, le matin : « Vendez Vollaire. Valentienne paie quatre millions, à minuit moins deux. »"
+    left:
+      label: "Je vends Vollaire"
+      effects: {caisse: "++", tribunes: "--", set: [h8_vollaire_vendu], var: {h8_obei: "+1"}, schedule: [{card: ds.h8.kerdal.trois_fois, in: [1, 3]}], react: [{card: ds.h8.re.gege_bache}]}
+      answer: "Le contrat de Valentienne arrive à 23 h 58. À minuit, Gégé plie la bâche et la range dans son coffre, pas à la benne."
+    right:
+      label: "Je garde Vollaire"
+      effects: {tribunes: "+", caisse: "-", direction: "-", set: [h8_vollaire_garde], var: {h8_refus: "+1"}, schedule: [{card: ds.h8.kerdal.trois_fois, in: [1, 3]}]}
+      answer: "À minuit, la voix dit seulement l'heure. La bâche reste. Au matin, quelqu'un y a peint {nom}, plus petit, dans un coin."
+
+  # -------------------------------------------- 2 · Fin de cycle (slot 10)
+  # « Vendez Kerdal avant lundi. » Vingt-trois heures : c'est la voix de nuit,
+  # et elle n'ajoute rien. Les deux sorties mettent « lundi » en file : le
+  # seul moyen de le sauver est de l'avoir reposé ET de refuser.
+  - id: ds.h8.a2_fin_de_cycle_repos
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures, le mercato ferme lundi. « Vendez Kerdal avant lundi. » Sur l'écran, sous son nom, une courbe rouge et deux mots : fin de cycle. Le repos n'y a rien changé. La voix n'ajoute rien."
+    left:
+      label: "Je vends Kerdal"
+      effects: {caisse: "++", vestiaire: "--", set: [h8_kerdal_vendu], var: {h8_obei: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}]}
+      answer: "Portclair signe à 23 h 57. Kerdal l'apprend dans le couloir, sur son téléphone, et range ses crampons dans un sac de supermarché."
+    right:
+      label: "Je refuse"
+      effects: {vestiaire: "+", direction: "--", set: [h8_kerdal_garde], var: {h8_refus: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}], react: [{card: ds.h8.re.mbako_refus}]}
+      answer: "« Noté. » Tu éteins l'écran ; la ligne rouge reste dans tes yeux jusqu'au parking. Mbako, lui, a déjà éteint chez lui."
+
+  - id: ds.h8.a2_fin_de_cycle
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures, le mercato ferme lundi. « Vendez Kerdal avant lundi. » Sur l'écran, une courbe rouge et deux mots : fin de cycle. Ces deux mots, tu les connais. La voix n'ajoute rien."
+    left:
+      label: "Je vends Kerdal"
+      effects: {caisse: "++", vestiaire: "--", set: [h8_kerdal_vendu], var: {h8_obei: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}]}
+      answer: "Portclair signe à 23 h 57. Kerdal l'apprend dans le couloir, sur son téléphone, et range ses crampons dans un sac de supermarché."
+    right:
+      label: "Je refuse"
+      effects: {vestiaire: "+", direction: "--", set: [h8_kerdal_garde], var: {h8_refus: "+1"}, schedule: [{card: ds.h8.kerdal.lundi, in: [1, 1]}], react: [{card: ds.h8.re.mbako_refus}]}
+      answer: "« Noté. » Tu éteins l'écran ; la courbe rouge reste dans tes yeux jusqu'au parking, où ta berline t'attend sans un bruit."
+
+  # ------------------------------------------- 3 · Les projecteurs (slot 16)
+  # Cinq créneaux après « lundi ». Trois heures, la baie du duplex. Le cycle
+  # de maintenance des projecteurs est programmé à trois heures : seul Kerdal
+  # vivant le sait, et on l'apprend trop tard pour que ça rassure.
+  - id: ds.h8.a3_projecteurs_vit
+    roles: [ds]
+    arc: moment
+    tags: [vestiaire, sombre]
+    speaker: kerdal
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures. Par la baie du duplex, le stade s'allume, les quatre projecteurs d'un coup. Sur la touche, une silhouette court seule. Tu reconnais la foulée : Kerdal, qui ne dort toujours pas."
+    left:
+      label: "Je vais au stade"
+      effects: {vestiaire: "+", relation: {kerdal: 1}, set: [h8_projecteurs, h8_cycle_trois_heures], var: {h8_nuits: "+1"}}
+      answer: "Il s'arrête, essoufflé, vivant. « Ils s'allument seuls à trois heures, pour l'entretien. Moi, je viens courir dans la lumière. »"
+    right:
+      label: "Je ferme les volets"
+      effects: {direction: "+", set: [h8_projecteurs]}
+      answer: "La lumière passe entre les lattes jusqu'à quatre heures. Tu sais qui court. Tu ne sais pas pourquoi ça ne te rassure pas."
+
+  - id: ds.h8.a3_projecteurs
+    roles: [ds]
+    arc: moment
+    tags: [vestiaire, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures. Par la baie du duplex, le stade de la Rive s'allume : les quatre projecteurs d'un coup, sur une pelouse vide. Une silhouette court seule le long de la ligne de touche."
+    left:
+      label: "Je vais au stade"
+      effects: {vestiaire: "+", direction: "-", set: [h8_projecteurs, h8_stade_nuit], var: {h8_nuits: "+1"}}
+      answer: "Tout est éteint quand tu arrives. Le long de la touche, l'herbe est couchée en ligne droite. Le gardien dort, la radio allumée."
+    right:
+      label: "Je ferme les volets"
+      effects: {direction: "+", set: [h8_projecteurs]}
+      answer: "Une lumière blanche passe entre les lattes jusqu'à quatre heures. Puis le noir, d'un coup, comme on raccroche."
+
+  # --------------------------------------- 4 · La veille du match (slot 17)
+  - id: ds.h8.a4_veille_kerdal
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Veille du dernier match. Le casier 4 est resté ouvert ; le plus jeune y pose un caillou blanc avant chaque séance. Quelque part, la voix : « Casier 4, libre. On le réattribue ? »"
+    left:
+      label: "Il reste ouvert"
+      effects: {vestiaire: "++", direction: "-", set: [h8_casier_ouvert], var: {h8_refus: "+1"}}
+      answer: "Le gamin pose son caillou sur les autres. En juin, il y en a quarante et un ; personne n'a compté, sauf lui."
+    right:
+      label: "Réattribuez-le"
+      effects: {direction: "+", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "Le nouveau range ses affaires sans toucher aux cailloux. Le lendemain, ils sont dans un sac, accroché à la poignée."
+
+  - id: ds.h8.a4_veille
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    speaker: kerdal
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Minuit, la veille du dernier match. La voix hésite, cette nuit : « Kerdal titulaire. Quatre-vingt-quatre pour cent. » Un silence. « Il a dormi, tu sais. Ça se voit sur la courbe. »"
+    left:
+      label: "Kerdal joue"
+      effects: {vestiaire: "+", direction: "+", relation: {kerdal: 1}}
+      answer: "Il joue quatre-vingt-dix minutes et ne tombe pas. Au vestiaire, il te serre la main trop longtemps, comme on vérifie."
+    right:
+      label: "Il regarde des tribunes"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}}
+      answer: "Il regarde le match en civil, à côté de Mbako. À la mi-temps, il s'endort sur son siège ; personne ne le réveille."
+
+  # ======================================================== SAISON 2 (S1)
+  # ------------------------------------------------- 1 · La rentrée (slot 1)
+  - id: ds.h8.b1_rentree_tiroir
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Rentrée. L'oreillette dort dans ton tiroir depuis le lundi de Kerdal. Le délégué la pose sur ton bureau : « Le fonds paie pour qu'elle soit dans votre oreille. Pas dans un tiroir. »"
+    left:
+      label: "Je la remets"
+      effects: {direction: "++", vestiaire: "-", clear: [h8_sans_oreillette], var: {h8_obei: "+1"}}
+      answer: "« Bonjour », dit la voix, comme si de rien n'était. Elle a gardé ta place au milieu d'une phrase."
+    right:
+      label: "Elle reste au tiroir"
+      effects: {direction: "--", vestiaire: "+", set: [h8_rentree_sans], var: {h8_refus: "+1"}}
+      answer: "Il la range lui-même dans le tiroir, doucement, et le referme. « Le fonds prend note. Le modèle aussi. »"
+
+  - id: ds.h8.b1_rentree
+    roles: [ds]
+    arc: president
+    tags: [direction, oreillette]
+    speaker: aulard
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Rentrée, six heures et demie. Vaubourg s'arrête au clou pour souffler. Dans ton oreille : « Deux cent quarante-sept jours. » Il se retourne : « Vous comptez quoi, avec votre machine ? »"
+    left:
+      label: "La masse salariale"
+      effects: {direction: "+", relation: {aulard: -1}}
+      answer: "« Vous mentez mal, c'est bon signe. » Il reprend la rampe. Une marche, la canne, une marche."
+    right:
+      label: "Vos jours"
+      effects: {direction: "-", relation: {aulard: 1}, set: [h8_vaubourg_sait]}
+      answer: "Il demande combien. Tu dis le chiffre. « C'est plus que mon médecin, {toi}. » Il monte, et ne s'arrête plus au clou."
+
+  # ------------------------------------- 2 · À cette heure-ci (slots 10-11)
+  # La deuxième prédiction. La phrase est d'Inès (ds.h8.op.phrases_heure).
+  - id: ds.h8.b2_cette_heure_tiroir
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Une heure du matin. L'oreillette est dans le tiroir. À l'écran, une offre de Lyonnet pour Peyrard, ton capitaine. Une voix, calme, tout près : « Tu vas refuser. Tu refuses toujours à cette heure-ci. »"
+    left:
+      label: "J'accepte"
+      effects: {caisse: "++", vestiaire: "--", tribunes: "-", set: [h8_peyrard_vendu], var: {h8_nuits: "+1"}, react: [{card: ds.h8.re.mbako_peyrard}]}
+      answer: "Tu ouvres le tiroir : l'oreillette est éteinte, froide. La signature part à une heure quatre. Personne ne dit d'accord."
+    right:
+      label: "Je refuse"
+      effects: {vestiaire: "+", caisse: "-", set: [h8_peyrard_garde], var: {h8_nuits: "+1"}}
+      answer: "Tu ouvres le tiroir. L'oreillette est éteinte, froide. Tu le fermes à clé et tu gardes la clé dans ta main jusqu'au matin."
+
+  - id: ds.h8.b2_cette_heure
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Une heure du matin. À l'écran, une offre de Lyonnet pour Peyrard, ton capitaine. La voix, calme : « Tu vas refuser. Tu refuses toujours à cette heure-ci. »"
+    left:
+      label: "J'accepte"
+      effects: {caisse: "++", vestiaire: "--", tribunes: "-", set: [h8_peyrard_vendu], var: {h8_nuits: "+1"}, react: [{card: ds.h8.re.mbako_peyrard}]}
+      answer: "Un silence. Très loin, une touche de clavier, puis une autre. « D'accord. » La signature part à une heure quatre."
+    right:
+      label: "Je refuse"
+      effects: {vestiaire: "+", caisse: "-", set: [h8_peyrard_garde], var: {h8_nuits: "+1"}}
+      answer: "« Je sais. » Tu éteins l'écran. Tu restes dans le noir avec l'envie d'avoir dit oui, juste pour voir."
+
+  # ------------------------------------- 3 · Intermède : la pelouse (13-14)
+  # « Il te reste trois cent douze jours » : de la fin mars 2026, cela tombe
+  # sur la dernière minute du dernier mercato (ds.h8.c4_23h58).
+  - id: ds.h8.b_int_pelouse_vit
+    roles: [ds]
+    arc: moment
+    tags: [intermede, moment]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Tu cours sous les projecteurs. Quelqu'un court derrière toi ; tu ne te retournes pas. À ton oreille, la voix de Ferlac, essoufflée pour la première fois : « Il te reste trois cent douze jours. »"
+    left:
+      label: "Je m'arrête"
+      effects: {set: [h8_312], var: {h8_nuits: "+1"}}
+      answer: "Tu t'arrêtes. Les pas derrière toi s'arrêtent aussi, une seconde trop tard. Tu te réveilles en comptant."
+    right:
+      label: "Je m'arrête"
+      effects: {set: [h8_312], var: {h8_nuits: "+1"}}
+      answer: "Tu t'arrêtes. Les pas derrière toi s'arrêtent aussi, une seconde trop tard. Tu te réveilles en comptant."
+
+  - id: ds.h8.b_int_pelouse
+    roles: [ds]
+    arc: moment
+    tags: [intermede, moment]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Tu cours sous les projecteurs ; Kerdal court à côté de toi et ne transpire pas. Il parle avec la voix de Ferlac, sans tourner la tête : « Il te reste trois cent douze jours. »"
+    left:
+      label: "Je m'arrête"
+      effects: {set: [h8_312], var: {h8_nuits: "+1"}}
+      answer: "Tu t'arrêtes. Il continue, la foulée égale, jusqu'au bout de la ligne de touche, où la lumière s'éteint sur lui."
+    right:
+      label: "Je m'arrête"
+      effects: {set: [h8_312], var: {h8_nuits: "+1"}}
+      answer: "Tu t'arrêtes. Il continue, la foulée égale, jusqu'au bout de la ligne de touche, où la lumière s'éteint sur lui."
+
+  # ---------------------------------------------- 4 · La veille (slot 16)
+  # La fin rare : Vaubourg t'aime, le classeur est lu, l'oreillette rangée,
+  # Mbako avec toi. Alors tu peux rester.
+  - id: ds.h8.b3_veille_chaise
+    roles: [ds]
+    arc: president
+    tags: [direction, moment]
+    speaker: aulard
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "La veille. La chaise de 1977 t'attend devant son bureau ; ton oreillette est restée au tiroir. Vaubourg pose deux verres : « Mbako dit que vous ne dormez plus. Moi non plus. Vous restez, {toi} ? »"
+    left:
+      label: "Je rentre dormir"
+      effects: {direction: "+", relation: {aulard: 1}}
+      answer: "Il remplit son verre seul. « Six heures et demie, alors. » Sur le palier, tu entends la radio s'allumer derrière toi."
+    right:
+      label: "Je reste"
+      effects: {direction: "+", relation: {aulard: 1}, end: modele_six_heures}
+      answer: "Vous parlez du stade de 1974 jusqu'au jour. À six heures trente et une, il pose son verre. Personne ne parle dans ton oreille."
+
+  - id: ds.h8.b3_veille
+    roles: [ds]
+    arc: president
+    tags: [direction, oreillette]
+    speaker: aulard
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Dix-neuf heures. Vaubourg range son bureau, la canne contre le mur. Dans ton oreille : « Demain, six heures trente et une. » Il te voit sur le palier : « Vous montez, {toi}, ou vous redescendez ? »"
+    left:
+      label: "Je redescends"
+      effects: {direction: "+", var: {h8_obei: "+1"}}
+      answer: "Il éteint sa lampe à sept heures. Toi, tu laisses la tienne allumée jusqu'au matin, sans savoir pour qui."
+    right:
+      label: "Je monte"
+      effects: {vestiaire: "+", relation: {aulard: 1}, var: {h8_refus: "+1"}}
+      answer: "Vous parlez de la pluie de 1974. À neuf heures, il te renvoie : « Demain, six heures et demie. Comme d'habitude. »"
+
+  # ---------------------------------------------- 5 · La porte (slot 17)
+  # Le mort de ce livre est celui de tous les autres, et il meurt à l'heure
+  # qu'on avait donnée. Avant, après ; jamais le corps.
+  - id: ds.h8.b4_porte_silence
+    roles: [ds]
+    arc: president
+    tags: [direction, sombre]
+    lieu: secretariat
+    tone: drame
+    once: true
+    text: "Six heures et demie. L'escalier est vide, la porte de l'ancien bureau fermée, la lumière dessous. L'oreillette dort au tiroir ; personne ne te donne l'heure. Ta montre dit six heures trente et une."
+    left:
+      label: "J'ouvre la porte"
+      effects: {direction: "--", vestiaire: "+", set: [h8_vaubourg_mort], char: {aulard: mort}}
+      answer: "La lampe, le sous-main, la canne contre le radiateur. Tu refermes doucement, comme il le faisait, et tu t'assieds sur la marche."
+    right:
+      label: "J'appelle Josiane"
+      effects: {direction: "--", tribunes: "+", relation: {josiane: 1}, set: [h8_vaubourg_mort], char: {aulard: mort}}
+      answer: "Elle arrive en taxi, en chaussons, à sept heures moins dix. Elle monte l'escalier sans la rampe. Elle ne t'a pas demandé d'ouvrir."
+
+  - id: ds.h8.b4_porte
+    roles: [ds]
+    arc: president
+    tags: [direction, sombre, oreillette]
+    lieu: secretariat
+    tone: drame
+    once: true
+    text: "Six heures et demie. L'escalier est vide. La porte de l'ancien bureau est fermée ; dessous, la lumière, allumée depuis la veille. Dans ton oreille, à la minute : « Six heures trente et une. »"
+    left:
+      label: "J'ouvre la porte"
+      effects: {direction: "--", vestiaire: "+", set: [h8_vaubourg_mort], char: {aulard: mort}}
+      answer: "La lampe, le sous-main, la canne contre le radiateur. Tu refermes doucement, comme il le faisait, et tu t'assieds sur la marche."
+    right:
+      label: "J'appelle Josiane"
+      effects: {direction: "--", tribunes: "+", relation: {josiane: 1}, set: [h8_vaubourg_mort], char: {aulard: mort}}
+      answer: "Elle arrive en taxi, en chaussons, à sept heures moins dix. Elle monte l'escalier sans la rampe. Elle ne t'a pas demandé d'ouvrir."
+
+  # ======================================================== SAISON 3 (S2)
+  # ------------------------------------------------- 1 · La canne (slot 1)
+  # Les deux sorties ouvrent « Le petit de Nino » (ds.h8.milo).
+  - id: ds.h8.c1_canne
+    roles: [ds]
+    arc: president
+    tags: [direction, objet, oreillette]
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Août. Au clou de l'escalier, à la place de la photo de 1974, on a pendu la canne de Vaubourg. Personne ne dit qui. Quelque part, la voix : « Bonjour. Le centre de formation a des lignes rouges. »"
+    left:
+      label: "La canne reste au clou"
+      effects: {tribunes: "+", direction: "-", set: [h8_canne_clou], schedule: [{card: ds.h8.mi.grillage, in: [1, 2]}]}
+      answer: "Le soir, Josiane passe un chiffon sur le pommeau, sans un mot. Le lendemain, il brille plus que la rampe."
+    right:
+      label: "Je la décroche"
+      effects: {direction: "+", tribunes: "-", set: [h8_canne_prise], schedule: [{card: ds.h8.mi.grillage, in: [1, 2]}]}
+      answer: "Tu la ranges derrière ta porte, debout. Elle tombe deux fois dans la semaine, toujours vers six heures et demie."
+
+  # ------------------------------------ 2 · Propriété du fonds (slot 4)
+  # La saisie : le fonds reprend ses outils, et l'oreillette.
+  - id: ds.h8.c2_propriete_pari
+    roles: [ds]
+    arc: direction
+    tags: [direction, caisse, sponsors]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le délégué pose sa liste : téléphone, ordinateur, berline, oreillette. Un policier ajoute : « Le duplex de la Tréfilerie aussi, {pg, select, f{madame} other{monsieur}} {nom}. Pari-Rive l'a payé. »"
+    left:
+      label: "Je rends tout"
+      effects: {direction: "-", caisse: "-", set: [h8_oreillette_rendue, h8_voiture_rendue, h8_sans_oreillette], var: {saisie_vehicules: "+1", saisie_logement: "+1", saisie_luxe: "+1"}, react: [{card: ds.h8.re.josiane_velo}]}
+      answer: "Le duplex redevient une photo dans la vitrine de l'agence Tessandier. Le pont roulant y figure, éclairé par en dessous."
+    right:
+      label: "Je garde l'oreillette"
+      effects: {direction: "--", set: [h8_oreillette_gardee, h8_voiture_rendue], var: {saisie_vehicules: "+1", saisie_logement: "+1", saisie_luxe: "+1"}}
+      answer: "Tu la déclares perdue. Ils prennent le reste, duplex compris, et notent « oreillette : non restituée » en bas de la liste."
+
+  - id: ds.h8.c2_propriete
+    roles: [ds]
+    arc: direction
+    tags: [direction, caisse]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le délégué pose une liste : téléphone, ordinateur, berline, oreillette. « {pg, select, f{Madame} other{Monsieur}} {nom}, le fonds reprend ses outils ce soir. Votre poste, jusqu'au mercato d'hiver. »"
+    left:
+      label: "Je rends tout"
+      effects: {direction: "-", vestiaire: "+", set: [h8_oreillette_rendue, h8_voiture_rendue, h8_sans_oreillette], var: {saisie_vehicules: "+1"}, react: [{card: ds.h8.re.josiane_velo}]}
+      answer: "La berline monte toute seule sur le plateau du camion. L'oreillette part dans un sachet plastique, étiqueté à ton nom."
+    right:
+      label: "Je garde l'oreillette"
+      effects: {direction: "--", set: [h8_oreillette_gardee, h8_voiture_rendue], var: {saisie_vehicules: "+1"}}
+      answer: "Tu la déclares perdue. Le délégué écrit « non restituée » au bas de la liste, et souligne deux fois, sans appuyer."
+
+  # ------------------------------------------- 3 · Deux heures (slot 8)
+  # La troisième prédiction. Le lendemain, Inès appelle : le service de nuit
+  # a été supprimé le 3 (ds.h8.op.le_trois, l'ancre du créneau 9).
+  - id: ds.h8.c3_deux_heures_gardee
+    roles: [ds]
+    arc: moment
+    tags: [direction, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Deux heures. L'oreillette que tu as déclarée perdue est dans ton oreille ; le fonds a coupé l'écran. Dans le noir : « On commence par les ventes ? Le petit, tu le signeras à cinquante-huit. »"
+    left:
+      label: "Personne"
+      effects: {vestiaire: "+", direction: "-", set: [h8_personne, h8_oreillette_jetee], var: {h8_nuits: "+1"}}
+      answer: "Tu dis « personne » et tu la jettes dans la Rive, depuis le pont, en pyjama. Elle flotte un peu. Elle est encore allumée."
+    right:
+      label: "Moi"
+      effects: {vestiaire: "+", direction: "-", var: {h8_nuits: "+1"}, end: modele_clinique}
+      answer: "Tu dis « moi ». La voix le dit avec toi, exactement en même temps. Au matin, on te trouve sur une marche de l'escalier du club-house."
+
+  - id: ds.h8.c3_deux_heures
+    roles: [ds]
+    arc: moment
+    tags: [direction, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Deux heures. Plus d'oreillette, plus d'écran, plus de berline sous la fenêtre. Dans le noir, la voix : « On commence par les ventes ? Le petit, tu le signeras à cinquante-huit. »"
+    left:
+      label: "Personne"
+      effects: {vestiaire: "+", set: [h8_personne], var: {h8_nuits: "+1"}}
+      answer: "Tu dis « personne » à voix haute. Rien ne répond. Le réfrigérateur se met en marche, et c'est le seul bruit jusqu'au matin."
+    right:
+      label: "Moi"
+      effects: {direction: "+", set: [h8_moi], var: {h8_nuits: "+1"}}
+      answer: "Tu dis « moi ». Un silence, puis ta propre respiration, très près, comme dans un casque. Tu n'as jamais respiré si calmement."
+
+  # ---------------------------------- 4 · Intermède : le casque (slot 11)
+  - id: ds.h8.c_int_casque
+    roles: [ds]
+    arc: moment
+    tags: [intermede, moment]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un plateau de centre d'appels, la nuit, vide. Quarante casques sur quarante bureaux. Sur l'écran du poste 12, une ligne clignote : AUBÉRIVE · {NOM} · 23 H 58. Personne pour la lire."
+    left:
+      label: "Je la lis"
+      effects: {set: [h8_poste_12], var: {h8_nuits: "+1"}}
+      answer: "Tu la lis à voix haute. Ta voix revient dans les quarante casques à la fois, avec un léger retard, comme une tribune."
+    right:
+      label: "Je la lis"
+      effects: {set: [h8_poste_12], var: {h8_nuits: "+1"}}
+      answer: "Tu la lis à voix haute. Ta voix revient dans les quarante casques à la fois, avec un léger retard, comme une tribune."
+
+  # --------------------------------------------- 5 · 23 h 58 (slot 12)
+  # Le dénouement. Signer, c'est la voix jusqu'au bout. Ne pas signer, c'est
+  # retrouver Léa le lendemain (ds.h8.c4b_lea, l'ancre du créneau 13) : la
+  # vérité, ou la ligne qu'on garde.
+  - id: ds.h8.c4_23h58_regle
+    roles: [ds]
+    arc: formation
+    tags: [mercato, formation]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures cinquante-huit, ton dernier mercato. Une offre pour Milo, seize ans. Depuis que tu as réécrit la ligne de 2017, le modèle ne le classe plus. Il reste l'offre, et ta main."
+    left:
+      label: "Je signe"
+      effects: {caisse: "+", tribunes: "+", set: [h8_signe], end: modele_voix}
+      answer: "La signature part à 23 h 58 et quarante secondes. Dans le silence, tu t'entends dire « bien », avec une voix très calme."
+    right:
+      label: "Je ne signe pas"
+      effects: {tribunes: "+", vestiaire: "+", set: [h8_pas_signe]}
+      answer: "Minuit. La fenêtre des transferts se ferme toute seule. Milo reste, et ta main est restée où elle était."
+
+  - id: ds.h8.c4_23h58_moi
+    roles: [ds]
+    arc: formation
+    tags: [mercato, formation]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures cinquante-huit. Une offre pour Milo, seize ans, classé fin de cycle à seize ans. Ta main au-dessus de l'écran. Personne ne parle. Puis toi, très bas : « Signe. »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "+", tribunes: "+", set: [h8_signe], end: modele_voix}
+      answer: "La signature part à 23 h 58 et quarante secondes. Tu dis « bien ». Tu ne sais pas qui de vous deux l'a dit."
+    right:
+      label: "Je ne signe pas"
+      effects: {tribunes: "+", vestiaire: "+", set: [h8_pas_signe]}
+      answer: "Tu poses ta main à plat sur le bureau, loin de l'écran. Minuit passe dessus. Milo reste. La voix ne recommence pas."
+
+  - id: ds.h8.c4_23h58
+    roles: [ds]
+    arc: formation
+    tags: [mercato, formation]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Vingt-trois heures cinquante-huit, la dernière minute de ton dernier mercato. Une offre pour Milo, seize ans, que le modèle a classé fin de cycle. Ta main au-dessus de l'écran. Personne ne parle."
+    left:
+      label: "Je signe"
+      effects: {caisse: "+", tribunes: "+", set: [h8_signe], end: modele_voix}
+      answer: "La signature part à 23 h 58 et quarante secondes. Dans le silence, tu t'entends dire « bien », avec une voix très calme."
+    right:
+      label: "Je ne signe pas"
+      effects: {tribunes: "+", vestiaire: "+", set: [h8_pas_signe]}
+      answer: "Minuit. La fenêtre des transferts se ferme toute seule. Milo reste, et ta main est restée où elle était."
+
+  # Le lendemain de 23 h 58 (mise en file par « Je ne signe pas »).
+  - id: ds.h8.c4b_lea
+    roles: [ds]
+    arc: presse
+    tags: [presse, direction]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Le lendemain, Léa t'attend au comptoir de L'Écho : « Les courbes, la voix, le nom de Kerdal, j'ai tout. Il me manque la ligne de 2017. Celle-là, il me faut votre nom dessous. »"
+    left:
+      label: "Je signe la ligne"
+      effects: {tribunes: "+", direction: "-", relation: {lea: 1}, set: [h8_ligne_donnee], end: modele_silence}
+      answer: "Tu écris ton nom sous la ligne, en entier, puis la date. Léa ne dit rien ; elle range la feuille dans une pochette transparente."
+    right:
+      label: "Pas la ligne de 2017"
+      effects: {tribunes: "-", direction: "+", relation: {lea: -1}, set: [h8_ligne_gardee]}
+      answer: "« Alors je publie sans. Ce sera moins vrai. » Elle te rend la feuille. Ta ligne y est encore, sans personne dessous."
+
+  # ----------------------------------------- 6 · Ce qui reste (slot 16)
+  # Si tu as gardé le sifflet de Mbako (ds.h8.kb.dernier), il sert ici.
+  - id: ds.h8.c5_reste_sifflet
+    roles: [ds]
+    arc: formation
+    tags: [tribunes, formation, objet]
+    speaker: gege
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Mai. Milo joue avec les moins de dix-sept ans. L'arbitre, un bénévole, a oublié son sifflet ; celui de Mbako est dans ta poche de poitrine. Gégé, au grillage : « Alors, {toi} ? »"
+    left:
+      label: "Je le prête"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Le bénévole siffle le coup d'envoi avec. Milo marque à la dixième minute. Au sifflet final, Gégé ferme les yeux, pour mieux entendre."
+    right:
+      label: "Je le garde"
+      effects: {vestiaire: "+"}
+      answer: "Le bénévole siffle avec deux doigts. Ça marche aussi. Tu gardes la main sur ta poche tout le match, comme sur quelque chose qui bat."
+
+  - id: ds.h8.c5_reste
+    roles: [ds]
+    arc: formation
+    tags: [tribunes, formation]
+    speaker: gege
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Mai. Milo joue avec les moins de dix-sept ans ; Gégé le regarde depuis le grillage. « Le petit ne sait rien. Nino non plus. Moi, {toi}, j'ai vu ta lumière allumée à minuit moins deux. »"
+    left:
+      label: "Qu'il ne sache rien"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Gégé hoche la tête. « Alors je n'ai rien vu. » Il garde les doigts dans le grillage jusqu'au coup de sifflet."
+    right:
+      label: "Je le lui dirai"
+      effects: {vestiaire: "+", relation: {gege: 1}, set: [h8_milo_sait]}
+      answer: "« Pas aujourd'hui. Il marque. » Milo lève les bras vers le grillage, vers vous deux, sans savoir pourquoi vous ne criez pas."
+
+  # ------------------------------------- 7 · Six heures dix (slot 17)
+  - id: ds.h8.c6_six_heures_dix_mbako
+    roles: [ds]
+    arc: selection
+    tags: [vestiaire, moment]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Six heures dix. Personne ne dit bonjour. Sur la table, une carte postale du Kambara : un stade en terre rouge, et l'écriture de Mbako : « Ici, on les regarde courir. »"
+    left:
+      label: "Je la punaise au mur"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Tu la punaises au-dessus du lit. La nuit, le stade en terre est la dernière chose que tu vois, et la première à six heures dix."
+    right:
+      label: "Je lui réponds"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Tu écris trois lignes, au stylo. Tu ne parles ni de la voix ni du sommeil. Tu parles de Milo, qui court plus vite que le ballon."
+
+  - id: ds.h8.c6_six_heures_dix
+    roles: [ds]
+    arc: moment
+    tags: [vestiaire, moment]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Six heures dix. Personne ne dit bonjour. Par la fenêtre, le car de l'équipe attend devant le stade, moteur allumé. Tu as dormi cinq heures. Tu ne sais pas encore quoi en faire."
+    left:
+      label: "Je descends au car"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Mbako te garde une place devant. « Tu as une tête de quelqu'un qui a dormi, {prenom}. Ça te va mal. »"
+    right:
+      label: "Je reste à la fenêtre"
+      effects: {direction: "+"}
+      answer: "Le car part à six heures vingt. Tu le suis jusqu'au pont, puis tu regardes encore l'endroit où il était."
+
+  # ================================================= L'ÉPILOGUE (S3 et après)
+  # ----------------------------------------------- 1 · La boîte noire (slot 1)
+  - id: ds.h8.d1_boite_friche
+    roles: [ds]
+    arc: moment
+    tags: [direction, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "L'oreillette de la friche est restée allumée tout l'été sur ta table de nuit. Cette nuit, elle parle. « On commence par les ventes ? » C'est ta voix. Elle attend que tu répondes."
+    left:
+      label: "Je l'éteins"
+      effects: {vestiaire: "+", clear: [h8_oreillette_friche], set: [h8_friche_eteinte]}
+      answer: "Il n'y a pas de bouton. Tu la mets dans un verre d'eau, sur le rebord de la fenêtre. Au matin, l'eau est tiède."
+    right:
+      label: "Je réponds"
+      effects: {vestiaire: "+", end: modele_clinique}
+      answer: "Tu réponds. Vous parlez jusqu'au jour, de ventes, de lignes, de Kerdal. Elle a toujours raison ; c'est ta voix."
+
+  - id: ds.h8.d1_boite_encore
+    roles: [ds]
+    arc: direction
+    tags: [direction, moment]
+    lieu: bureau
+    tone: leger
+    once: false
+    text: "Une autre rentrée. Le fonds n'envoie plus rien. À six heures dix, tu te réveilles à l'heure de la voix, sans la voix. Sur ton bureau, le planning des soixante-douze matchs."
+    left:
+      label: "Je le lis seul"
+      effects: {direction: "+", caisse: "-"}
+      answer: "Tu barres trois matchs au crayon, ceux où Mbako aurait dit non. Personne ne te demande pourquoi. Tu le sais."
+    right:
+      label: "Je le donne au staff"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Le préparateur le lit à voix haute dans le vestiaire, ligne par ligne. Les joueurs écoutent comme on écoute la météo."
+
+  - id: ds.h8.d1_boite
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Août. Une boîte noire au secrétariat, adressée à {nom}, direction sportive. Dedans, une oreillette neuve et une carte : « Modèle 2027. Il a appris votre voix sur quatre cents nuits. »"
+    left:
+      label: "Je la renvoie"
+      effects: {direction: "-", tribunes: "+", set: [h8_boite_renvoyee]}
+      answer: "Josiane refait le paquet au ruban adhésif marron, trois tours, et barre {nom} d'un trait. Elle écrit l'adresse du fonds en capitales."
+    right:
+      label: "Je l'écoute une fois"
+      effects: {direction: "+", set: [h8_boite_ecoutee], var: {h8_nuits: "+1"}}
+      answer: "« Bonjour. On commence par les ventes ? » C'est ta voix, plus calme que toi. Tu la ranges avant la fin de la phrase."
+
+  # --------------------------------------- 2 · La veille, encore (slot 17)
+  - id: ds.h8.d2_veille_friche
+    roles: [ds]
+    arc: moment
+    tags: [direction, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Fin de saison. L'oreillette de la friche n'a pas faibli depuis la pluie. Elle chuchote des chiffres la nuit, tes chiffres, avec ta voix. Ce soir, elle te demande : « Tu signes ? »"
+    left:
+      label: "Je la rends à la pluie"
+      effects: {vestiaire: "+", clear: [h8_oreillette_friche], set: [h8_friche_eteinte]}
+      answer: "Tu la reposes sur la palette, à la friche, entre deux bougies éteintes. En partant, tu ne te retournes pas. Elle se tait."
+    right:
+      label: "Je signe"
+      effects: {vestiaire: "+", end: modele_clinique}
+      answer: "Tu signes ce qu'elle dit, sur le dos d'une enveloppe, dans le noir. Au matin, il y a quarante signatures. Toutes de ta main."
+
+  - id: ds.h8.d2_veille_milo
+    roles: [ds]
+    arc: formation
+    tags: [formation, mercato]
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Fin de saison. Milo signe son premier contrat pro dans ton bureau, en survêtement, Nino derrière lui. Il lit tout, même la page quatorze. « C'est quoi, fin de cycle ? »"
+    left:
+      label: "Une vieille ligne"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "« Elle sert encore ? » Tu dis non. Il signe en appuyant fort ; le stylo traverse la feuille jusqu'au sous-main."
+    right:
+      label: "Rien qui te concerne"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Nino te regarde par-dessus la tête du petit, longtemps. Milo signe. En sortant, il dit merci deux fois, à toi et à la porte."
+
+  - id: ds.h8.d2_veille_canne
+    roles: [ds]
+    arc: president
+    tags: [direction, moment]
+    lieu: secretariat
+    tone: leger
+    once: false
+    text: "Six heures et demie, le dernier jour de la saison. Tu montes l'escalier du club-house, une marche, une marche. Au clou, la canne de Vaubourg. Personne ne te donne l'heure."
+    left:
+      label: "Je touche le pommeau"
+      effects: {tribunes: "+"}
+      answer: "Le cuivre est tiède, comme si quelqu'un venait de le lâcher. Josiane le frotte chaque matin ; elle ne dit pas à quelle heure."
+    right:
+      label: "Je monte sans m'arrêter"
+      effects: {direction: "+"}
+      answer: "Là-haut, le bureau est vide, la fenêtre ouverte. Tu t'assieds sur la chaise de 1977, le temps qu'il faut, et tu redescends."
+
+  # La canne décrochée (ds.h8.c1_canne, à droite) : derrière ta porte, elle
+  # tombe toujours vers six heures et demie.
+  - id: ds.h8.d2_veille_prise
+    roles: [ds]
+    arc: president
+    tags: [direction, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Six heures et demie, le dernier jour de la saison. Derrière ta porte, la canne de Vaubourg vient de tomber, comme chaque fois à cette heure-là. Tu la ramasses. Le pommeau est tiède."
+    left:
+      label: "Je la rapporte au clou"
+      effects: {tribunes: "+", clear: [h8_canne_prise], set: [h8_canne_clou]}
+      answer: "Tu montes l'escalier du club-house avec. Au clou de 1974, elle tient droite. En bas, Josiane lève les yeux, et les baisse."
+    right:
+      label: "Je la recale"
+      effects: {direction: "+"}
+      answer: "Tu la recales derrière la porte, plus loin du bord. La nuit suivante, elle ne tombe pas. Tu ne sais pas si ça te rassure."
+
+  - id: ds.h8.d2_veille
+    roles: [ds]
+    arc: president
+    tags: [direction, moment]
+    lieu: secretariat
+    tone: leger
+    once: false
+    text: "Six heures et demie, le dernier jour de la saison. Tu montes l'escalier du club-house. Au clou de 1974, il n'y a rien. Tu t'arrêtes quand même, le temps de souffler."
+    left:
+      label: "J'y accroche quelque chose"
+      effects: {tribunes: "+", set: [h8_canne_clou]}
+      answer: "Le maillot du petit Milo, plié en quatre dans une pochette. Josiane trouve que ça penche ; elle le redresse chaque matin."
+    right:
+      label: "Je laisse le clou"
+      effects: {direction: "+"}
+      answer: "Le clou reste nu. Les nouveaux, à l'accueil, demandent ce qui pendait là. Personne ne leur répond la même chose."

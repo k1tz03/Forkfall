@@ -1,0 +1,125 @@
+# « L'Oreillette » (Histoire 8) — les missions de la ville. Format : l'en-tête
+# de content/ville/missions.yaml. Trois missions, rares, pour le seul
+# directeur sportif de cette histoire ; leurs risques sont des événements
+# sombres du moteur (content/arcs/ds/h8_sombres.yaml).
+#
+#   · h8_nom_voix   — Le nom de la voix : un ancien développeur de Ferlac
+#     Analytique vend, au Terminus, le nom et l'horaire de l'opératrice de
+#     nuit (h8_vl_nom_voix). L'hôtel de la Rive, le dernier samedi du mois.
+#     La rencontre elle-même est la carte du hall (ds.h8.op.hall) ; le risque,
+#     la photo du Terminus (ds.h8.sb.photo).
+#   · h8_cartons    — Les cartons de l'escalier : Josiane ne monte plus ; trois
+#     cartons de 2003 au grenier ; dans le troisième, les fax originaux,
+#     devenus blancs (h8_vl_classeur → ds.h8.cl.pages_blanches). Propre.
+#   · h8_dormir     — De quoi dormir : la cure du préparateur, réhabillée pour
+#     le directeur sportif qui ne dort plus (h8_vl_sommeil). Le sommeil vient ;
+#     le carnet du préparateur aussi, peut-être (ds.h8.sb.carnet).
+#
+# Une seule somme par mission, en francs de 1990 (la ville affiche des écus).
+missions:
+  - id: h8_nom_voix
+    titre: "Le nom de la voix"
+    roles: [ds]
+    donneur: {sprite: inconnu, nom: "Un ancien de Ferlac Analytique", lieu: terminus, tranches: [soir]}
+    si: "flag(histoire_h8) && flag(h8_voix_ferlac) && saison >= 2 && !flag(h8_ines) && !flag(h8_nom_voix)"
+    chance: 0.3
+    etapes:
+      - id: offre
+        texte: "Au comptoir du Terminus, un homme en veste de pluie fait tourner sa bière : « J'ai codé la voix de nuit, chez Ferlac. Elle a un nom, un horaire. {montant}, et je vous écris tout. »"
+        choix:
+          - id: payer
+            label: "Je paie"
+            francs: -1300
+            effets: {set: [h8_vl_nom_voix]}
+            reponse: "Il écrit sur un dessous de verre, en capitales : INÈS K., 22 H - 6 H. « Le dernier samedi du mois, elle descend à l'hôtel de la Rive. »"
+            suite: hall
+          - id: refuser
+            label: "Gardez votre nom"
+            reponse: "Il hausse les épaules et paie sa bière avec un billet neuf. « Personne ne veut savoir qui parle. C'est pour ça que ça marche. »"
+            suite: fin
+      - id: hall
+        objectif: {lieu: hotel, tranches: [soir], delai: 7}
+        texte: "L'hôtel de la Rive, le dernier samedi du mois. Dans le hall, une parka verte près du distributeur de café. Elle lit quelque chose à voix basse, en remuant les lèvres."
+        choix:
+          - id: approcher
+            label: "Je m'approche"
+            effets: {jauges: {vestiaire: 1}}
+            reponse: "Elle lève les yeux et te reconnaît avant que tu parles. « Pas ce soir. » Elle remonte. Tu sais maintenant à quoi ressemble la nuit."
+            suite: fin
+          - id: regarder
+            label: "Je la regarde lire"
+            reponse: "Elle lit vingt minutes, puis éteint son téléphone et regarde la rue, longtemps, comme on regarde une ville qu'on connaît par cœur."
+            suite: fin
+        echec:
+          texte: "Le dernier samedi est passé. Le dessous de verre est resté dans ta poche de manteau, les initiales à l'intérieur, contre ta poitrine."
+
+  - id: h8_cartons
+    titre: "Les cartons de l'escalier"
+    roles: [ds]
+    donneur: {sprite: josiane, nom: "Madame Josiane", lieu: clubhouse, tranches: [aprem]}
+    si: "flag(histoire_h8) && saison >= 2 && !flag(h8_vl_classeur)"
+    chance: 0.35
+    etapes:
+      - id: demande
+        texte: "Madame Josiane, au pied de l'escalier, une main sur la rampe : « Je ne monte plus. Trois cartons au grenier, marqués 2003. Le fonds les jette vendredi. Vous me les descendez ? »"
+        choix:
+          - id: monter
+            label: "Je monte ce soir"
+            reponse: "Elle te donne la clé du grenier, attachée à un bouchon de liège. « Il flotte, si jamais. » Elle ne dit pas où elle l'a perdue."
+            suite: grenier
+          - id: plus_tard
+            label: "Plus tard, Josiane"
+            reponse: "« Vendredi, c'est plus tard aussi. » Elle remonte son col et va s'asseoir sur la première marche, en attendant que tu changes d'avis."
+            suite: fin
+      - id: grenier
+        objectif: {lieu: clubhouse, tranches: [soir], delai: 4}
+        texte: "Le grenier du club-house, sous les tuiles. Trois cartons marqués 2003 au feutre. Dans le troisième, un classeur : les fax originaux, tous devenus des pages blanches."
+        choix:
+          - id: descendre
+            label: "Je descends les trois"
+            effets: {jauges: {vestiaire: 1, direction: -1}, set: [h8_vl_classeur]}
+            reponse: "Josiane tourne les pages blanches sur la première marche. « Je n'ai jamais pu les jeter. Maintenant, il n'y a plus rien à jeter. »"
+            suite: fin
+          - id: laisser
+            label: "Je les laisse au fonds"
+            reponse: "Tu redescends les mains vides. Vendredi, la benne part avec trois cartons. Josiane la regarde passer depuis la fenêtre du secrétariat."
+            suite: fin
+        echec:
+          texte: "Vendredi, la benne est passée avant toi. Josiane a gardé un carton vide, plié, sous son comptoir. Elle ne dit rien ; elle le montre."
+
+  - id: h8_dormir
+    titre: "De quoi dormir"
+    roles: [ds]
+    donneur: {sprite: inconnu, nom: "Un préparateur sans club", lieu: muscu, tranches: [soir]}
+    si: "flag(histoire_h8) && energie < 50 && !flag(h8_vl_sommeil)"
+    chance: 0.25
+    etapes:
+      - id: offre
+        texte: "Salle de muscu, après la fermeture. Un homme en survêtement neuf pose une boîte sans étiquette sur le banc : « Pas pour les jambes. Pour dormir, vraiment. Huit heures. {montant}. »"
+        choix:
+          - id: acheter
+            label: "J'achète la boîte"
+            francs: -900
+            effets: {set: [h8_vl_sommeil]}
+            reponse: "Il range tes billets sans les compter. « Un seul, le soir. Pas la veille d'un mercato. » Il le dit comme s'il connaissait ton calendrier."
+            suite: nuit
+          - id: refuser
+            label: "Je ne prends rien"
+            reponse: "Il range sa boîte et va s'asseoir au rameur. Il y est encore quand tu sors, immobile, les mains sur la poignée, les yeux ouverts."
+            suite: fin
+      - id: nuit
+        objectif: {lieu: appartement, tranches: [nuit], delai: 3}
+        texte: "Ta table de nuit, la boîte ouverte. Un comprimé blanc, sans marque. L'oreillette est à côté, éteinte, ou qui fait semblant."
+        choix:
+          - id: prendre
+            label: "Je le prends"
+            effets: {jauges: {vestiaire: 2, direction: -1}}
+            reponse: "Tu dors neuf heures. Tu te réveilles à dix heures dix ; personne ne t'a dit bonjour. Deux réunions manquées. Tu te sens neuf, et coupable."
+            suite: fin
+          - id: jeter
+            label: "Je jette la boîte"
+            effets: {clear: [h8_vl_sommeil]}
+            reponse: "La boîte part dans le vide-ordures. Tu l'entends tomber jusqu'en bas, longtemps. Puis tu comptes les rivets du plafond."
+            suite: fin
+        echec:
+          texte: "La boîte est restée dans la poche de ton manteau, fermée. Tu la sens à chaque pas, comme un deuxième téléphone."

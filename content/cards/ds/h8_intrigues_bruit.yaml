@@ -1,0 +1,607 @@
+# « L'Oreillette » (Histoire 8) — les intrigues de la saison 2, « Le bruit »
+# (content/arcs/ds/h8_intrigues.yaml) : La vidéo, Le compte du vieux, Le
+# classeur de 2003, Le cœur à quatre écus, Le service de nuit, Soixante-douze
+# matchs. `arc:` est le THÈME de la carte, pas l'id de l'arc.
+#
+# Ce que la saison 2 paie de la saison 1, et ce qu'elle plante :
+#   · la montre et le bracelet de la nuit (Ober) → la vidéo : quatre cents
+#     heures de nuits enregistrées ; les courbes vendues quatre écus ;
+#   · le tutoiement de la nuit (le prologue) → Inès Kara, l'opératrice, et
+#     les phrases qui étaient d'elle (« C'était lundi », « Tu refuses
+#     toujours à cette heure-ci ») ;
+#   · les cartons de Josiane (le prologue) → le classeur de photocopies, chez
+#     elle ; les fax originaux, devenus blancs, sont dans le grenier
+#     (la mission des cartons, content/ville/missions_h8.yaml) ;
+#   · Cadence, le frigo de Gégé, le compte du vieux → l'adresse de Nino
+#     (S2, ds.h8.mi.nino_adresse).
+# Les voix sans portrait : Nathalie Vence (Télé-Stade), Nino (le capo), Karim
+# Fauvel (le syndicat), l'ancien développeur de Ferlac Analytique.
+cards:
+  # ============================================================ LA VIDÉO
+  # --------------------------------------------- 1 · Minuit (un soir)
+  - id: ds.h8.vd.minuit_vit
+    roles: [ds]
+    arc: presse
+    tags: [presse, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit, sur le Flux. Toi, dans ton bureau, avec ta voix : « Kerdal est fini. Il fallait le vendre avant lundi. » Tu n'as jamais dit ça. Kerdal l'a vue. Trois cent mille vues."
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", vestiaire: "+", set: [h8_video, h8_plainte], outcome: plainte}
+      answer: "Le brigadier regarde la vidéo deux fois, puis toi, longtemps. « C'est bien imité. Contre X, alors. X, ça vous va ? »"
+    right:
+      label: "J'appelle Kerdal"
+      effects: {vestiaire: "+", tribunes: "-", relation: {kerdal: 1}, set: [h8_video], outcome: silence}
+      answer: "Il décroche à la première sonnerie. « Je sais que ce n'est pas toi. Tu ne dis jamais “fini”. Tu dis “fin de cycle”. »"
+
+  - id: ds.h8.vd.minuit
+    roles: [ds]
+    arc: presse
+    tags: [presse, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit, sur le Flux, une vidéo : ton nom en capitales, puis SANS FILTRE. Toi, dans ton bureau, qui dis avec ta voix des choses jamais dites sur des joueurs que tu as vendus. Trois cent mille vues."
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", tribunes: "+", set: [h8_video, h8_plainte], outcome: plainte}
+      answer: "Le brigadier regarde la vidéo deux fois, puis toi, longtemps. « C'est bien imité. Contre X, alors. X, ça vous va ? »"
+    right:
+      label: "Je ne regarde pas"
+      effects: {tribunes: "--", vestiaire: "+", set: [h8_video], outcome: silence}
+      answer: "À six heures, cinq cent mille vues. Ta mère l'a vue, Mbako aussi. Personne n'appelle avant midi, et à midi, tout le monde."
+
+  # ------------------------------------------------- 2 · Le démenti
+  - id: ds.h8.vd.dementi
+    roles: [ds]
+    arc: presse
+    tags: [presse, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Nathalie Vence, directrice de l'information de Télé-Stade, a diffusé la vidéo à vingt heures. Le lendemain, elle t'appelle : « On dément ce soir. Vous venez dire un mot, ou on le dit pour vous ? »"
+    left:
+      label: "Je viens dire un mot"
+      effects: {tribunes: "+", direction: "-", set: [h8_dementi_dit], react: [{card: ds.h8.re.lea_dementi}]}
+      answer: "Sur le plateau, tu parles quarante secondes. Le lendemain, une deuxième vidéo circule : toi, sur le plateau, qui dis autre chose."
+    right:
+      label: "Dites-le pour moi"
+      effects: {direction: "+", tribunes: "-", react: [{card: ds.h8.re.lea_dementi}]}
+      answer: "« Une vidéo truquée », dit le présentateur, sur le ton de la météo. Personne ne demande qui l'a truquée, ni avec quoi."
+
+  # -------------------------------------------------- 3 · La source
+  - id: ds.h8.vd.source
+    roles: [ds]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    once: true
+    text: "Léa pose une clé de données sur le comptoir de L'Écho : « La voix de la vidéo est faite avec quatre cents heures de vous, la nuit. Votre oreillette ne fait pas que parler. Elle écoute. »"
+    left:
+      label: "Je veux les entendre"
+      effects: {direction: "-", relation: {lea: 1}, set: [h8_oreillette_enregistre, h8_nuits_ecoutees], var: {h8_nuits: "+1"}}
+      answer: "Dans son casque, ta voix, à trois heures du matin, qui parle à quelqu'un. Tu ne te rappelles pas ces nuits. Elle les a datées."
+    right:
+      label: "Gardez-les"
+      effects: {direction: "+", relation: {lea: -1}, set: [h8_oreillette_enregistre]}
+      answer: "Elle range la clé dans une enveloppe, l'enveloppe dans un tiroir. « Le jour où vous voudrez savoir à qui vous parliez. »"
+
+  # ================================================= LE COMPTE DU VIEUX
+  # --------------------------------------------- 1 · Trois heures (un soir)
+  - id: ds.h8.vx.post
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, tribunes, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures. Le compte que le virage appelle « le vieux » publie : « Le DS du Racing entend des voix. On a l'adresse. » En bas, une voiture ralentit devant la Tréfilerie."
+    left:
+      label: "J'appelle Gégé"
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h8_compte_vieux], outcome: gege}
+      answer: "Gégé décroche à la première sonnerie, réveillé ou pas. « Ce n'est pas moi. Ne bouge pas. » En bas, la voiture repart, sans phares."
+    right:
+      label: "J'éteins tout"
+      effects: {tribunes: "-", direction: "+", set: [h8_compte_vieux], var: {h8_nuits: "+1"}, outcome: seul}
+      answer: "Les lampes, l'écran, la montre. La voiture reste vingt minutes, moteur tournant ; ses phares éclairent le pont roulant."
+
+  # ----------------------------------------------- 2 · Le frigo de Gégé
+  - id: ds.h8.vx.frigo_cadence
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, objet]
+    speaker: gege
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Chez lui, Gégé ouvre le frigo : sur la porte, sous un aimant de 1990, son mot de passe au feutre. « Le seul entré ici ce mois-ci, {toi}, c'est le type de Cadence. Pour régler mon bracelet. »"
+    left:
+      label: "Changez le mot de passe"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il le change devant toi, au stylo, sur le même papier, et remet l'aimant. « Voilà. Maintenant, ils sauront le nouveau. »"
+    right:
+      label: "Laissez-le, on verra"
+      effects: {direction: "-", relation: {gege: 1}, set: [h8_piege_vieux]}
+      answer: "Huit jours plus tard, le compte publie à trois heures une photo de ton parking. Gégé était à la buvette, avec vingt témoins."
+
+  - id: ds.h8.vx.frigo
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, objet]
+    speaker: gege
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Chez lui, Gégé ouvre le frigo pour te servir une bière : sur la porte, sous un aimant de 1990, son mot de passe au feutre. « Mon neveu dit qu'on l'a lu là, {toi}. Qui vient chez moi, à part toi ? »"
+    left:
+      label: "Changez le mot de passe"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il le change devant toi, au stylo, sur le même papier, et remet l'aimant. « Voilà. Maintenant, ils sauront le nouveau. »"
+    right:
+      label: "Laissez-le, on verra"
+      effects: {direction: "-", relation: {gege: 1}, set: [h8_piege_vieux]}
+      answer: "Huit jours plus tard, le compte publie à trois heures une photo de ton parking. Gégé était à la buvette, avec vingt témoins."
+
+  # ------------------------------------------------------ 3 · Nino
+  - id: ds.h8.vx.nino_kerdal
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, tribunes]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Nino, le capo, t'attend sous la Nord : « Le compte dit que ta machine a tué Kerdal. Samedi, le virage chantera son nom à la quatrième minute. Tu viens chanter, ou tu restes en haut ? »"
+    left:
+      label: "Je viens chanter"
+      effects: {tribunes: "++", direction: "-", set: [h8_virage_parle]}
+      answer: "À la quatrième minute, tu es dans la Nord, sans oreillette, entre Gégé et un gamin. Tu ne connais pas les paroles. Ça ne compte pas."
+    right:
+      label: "Je reste en haut"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "À la quatrième minute, le virage se tait d'un coup, puis chante. De la loge, tu entends ton nom au milieu, une fois."
+
+  - id: ds.h8.vx.nino
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, tribunes]
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Nino, le neveu de Gégé, capo de la Nord, t'attend sous la tribune : « Le virage ne publie pas d'adresses. Ce compte écrit comme nous, pas pour nous. Tu veux qu'on dise quoi, samedi ? »"
+    left:
+      label: "Que je ne déménage pas"
+      effects: {tribunes: "++", direction: "-", set: [h8_virage_parle], react: [{card: ds.h8.re.gege_nino}]}
+      answer: "Samedi, une bâche à la Nord : IL HABITE ICI. Sans adresse. Sans ton nom. Tout le monde comprend quand même."
+    right:
+      label: "Rien du tout"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Nino hoche la tête. « Alors on ne dira rien. Le compte, lui, parlera. » Il remonte les marches deux par deux."
+
+  # ================================================= LE CLASSEUR DE 2003
+  # Le classeur de photocopies est chez Josiane ; les fax originaux, devenus
+  # blancs, dorment au grenier du club-house (la mission des cartons).
+  # ---------------------------------------------------- 1 · L'invitation
+  - id: ds.h8.cl.invitation_promise
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Josiane t'arrête au pied de l'escalier : « Vous aviez promis de monter au grenier. Laissez le grenier. Ce qui compte, je l'ai chez moi : les copies de 2003. Le petit Ferlac, au début. Jeudi ? »"
+    left:
+      label: "Jeudi, j'y serai"
+      effects: {direction: "-", relation: {josiane: 1}}
+      answer: "Elle écrit « jeudi » sur la paume de sa main, au stylo, comme les joueurs écrivaient leurs consignes. « Je ferai du café. »"
+    right:
+      label: "Plus tard, Josiane"
+      effects: {direction: "+", next: {step: classeur, in: [4, 7]}}
+      answer: "« Plus tard, c'est ce que disait Vaubourg en 2003. » Elle remonte son col. « Je ne bouge pas. Le classeur non plus. »"
+
+  - id: ds.h8.cl.invitation
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane pose une tasse en plus sur le comptoir, comme avant, quand quelqu'un devait rester tard : « J'ai chez moi des copies de 2003. Vous voulez voir d'où vient votre voix ? »"
+    left:
+      label: "Je viens ce soir"
+      effects: {direction: "-", relation: {josiane: 1}}
+      answer: "Elle vide la tasse dans l'évier, la rince, la range. « Alors celle-là, on la boira chez moi. Sonnez deux fois. »"
+    right:
+      label: "Une autre fois"
+      effects: {direction: "+", next: {step: classeur, in: [4, 7]}}
+      answer: "Elle boit la deuxième tasse elle-même, lentement, en te regardant monter l'escalier. « Une autre fois, c'est long. »"
+
+  # ------------------------------------------- 2 · Le classeur (chez Josiane)
+  - id: ds.h8.cl.classeur
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Chez elle, Madame Josiane sort un classeur de 2003 : des photocopies de fax, des pages sans en-tête. « Il a commencé comme ça, le petit Ferlac. Votre voix, elle signe ? »"
+    left:
+      label: "Je lis tout"
+      effects: {direction: "-", relation: {josiane: 1}, set: [h8_classeur_lu], outcome: lu}
+      answer: "VENDEZ LE 9. FAITES JOUER LE 4 TROIS FOIS. Pas un nom, pas une signature, et la syntaxe de ton oreille, vingt ans avant ton oreille."
+    right:
+      label: "Rangez-le"
+      effects: {direction: "+", set: [h8_classeur_range], outcome: range}
+      answer: "Elle le range entre les recettes et les impôts. « Vous avez raison. Ces choses-là, ça ne se lit pas. Ça s'entend. »"
+
+  # ------------------------------------------------------ 3 · Les pages
+  - id: ds.h8.cl.pages_blanches
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "Sur ton bureau, côte à côte : les photocopies de Josiane, noires de mots, et les fax originaux du grenier, devenus blancs. Les copies ont tenu. Les ordres se sont effacés d'eux-mêmes."
+    left:
+      label: "Je garde les deux"
+      effects: {direction: "-", tribunes: "+", set: [h8_ordres_effaces]}
+      answer: "Tu les ranges ensemble, la page blanche sur la page noire, comme un carbone à l'envers. Le soir, tu les comptes : il en manque une."
+    right:
+      label: "Je rends tout à Josiane"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "Elle prend les pages blanches avec plus de soin que les autres. « Celles-là, je ne pouvais pas les jeter. On ne jette pas un ordre. »"
+
+  - id: ds.h8.cl.pages_range
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Josiane t'apporte le classeur au bureau, enveloppé dans un torchon à carreaux : « Gardez-le, finalement. Chez moi, il fait du bruit la nuit. Je ne dis pas que c'est vrai. Je dis que je l'entends. »"
+    left:
+      label: "Je le garde"
+      effects: {direction: "-", relation: {josiane: 1}, set: [h8_classeur_lu]}
+      answer: "Le torchon sent la lavande. Le classeur sent le papier de 2003. Tu le lis la nuit même, jusqu'à la dernière page."
+    right:
+      label: "Jetez-le"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "Elle le remet sous son bras. « Je ne jette pas. Je range. » Le torchon dépasse du sac jusqu'à la porte."
+
+  - id: ds.h8.cl.pages
+    roles: [ds]
+    arc: famille
+    tags: [direction, oreillette]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Une nuit, tu recopies à la main une page du classeur de Josiane : VENDEZ LE 9 AVANT VENDREDI. Dans ton oreille, la voix finit la phrase une seconde avant ton stylo."
+    left:
+      label: "Je continue d'écrire"
+      effects: {direction: "+", var: {h8_nuits: "+1", h8_obei: "+1"}}
+      answer: "Vous recopiez trois pages ensemble, elle et toi, sans une faute. À la dernière, tu ne sais plus lequel dicte."
+    right:
+      label: "J'écris autre chose"
+      effects: {vestiaire: "+", set: [h8_ecrit_autre], var: {h8_refus: "+1"}}
+      answer: "Tu écris : GARDEZ LE 9. La voix se tait. Au matin, la page est sur ton bureau, et c'est ton écriture."
+
+  # ================================================ LE CŒUR À QUATRE ÉCUS
+  # -------------------------------------------- 1 · Quatre écus (L'Écho)
+  - id: ds.h8.co.quatre_ecus
+    roles: [ds]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "De passage à L'Écho, Léa étale des feuilles sur un bureau : les battements de cœur de tes joueurs, la nuit, revendus par le sponsor des bracelets. « La vôtre est dedans. Vous dormez deux heures. »"
+    left:
+      label: "Publiez tout"
+      effects: {tribunes: "+", direction: "--", relation: {lea: 1}, set: [h8_courbes_publiees], outcome: publie, react: [{card: ds.h8.re.ober_quotidien}]}
+      answer: "Le Quotidien publie quarante nuits sur deux pages, sans noms, avec les numéros de maillot. Tout le vestiaire se reconnaît."
+    right:
+      label: "Pas la mienne"
+      effects: {tribunes: "+", direction: "-", set: [h8_pas_la_mienne], outcome: pas_la_mienne}
+      answer: "Elle retire ta feuille du paquet et la pose devant toi, face cachée. « Gardez-la. Je n'en ai pas besoin pour avoir raison. »"
+
+  # ------------------------------------------------- 2 · La vôtre
+  - id: ds.h8.co.la_votre
+    roles: [ds]
+    arc: corps
+    tags: [direction, objet]
+    speaker: ober
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Ober pose ta courbe sur ton bureau : trois mois de nuits, deux heures en moyenne. « Le fonds la lit aussi. Il me demande si vous tiendrez jusqu'au mercato d'hiver. Je lui réponds quoi ? »"
+    left:
+      label: "Que je tiendrai"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "« Je l'écrirai. » Il range la feuille dans une chemise verte, avec d'autres, toutes à des noms du club. La tienne au-dessus."
+    right:
+      label: "Que je ne tiens pas"
+      effects: {direction: "--", vestiaire: "+", relation: {ober: 1}, set: [h8_ober_sait]}
+      answer: "Il te regarde longtemps. « Moi non plus. Ça fait deux. » Il déchire ta feuille en quatre, proprement, et garde les morceaux."
+
+  # -------------------------------------------------- 3 · Le docteur
+  - id: ds.h8.co.ober_kerdal
+    roles: [ds]
+    arc: corps
+    tags: [vestiaire, objet]
+    speaker: ober
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Ober te tend une courbe imprimée, datée du dimanche soir d'avant le lundi : Kerdal, cent dix au repos jusqu'à trois heures. « Je l'avais. Le fonds aussi. Personne ne m'a demandé de la lire. »"
+    left:
+      label: "Vous deviez la lire"
+      effects: {vestiaire: "+", relation: {ober: -1}, set: [h8_ober_coupable]}
+      answer: "« Je sais. » Il plie la feuille en deux, puis en quatre, puis il ne sait plus quoi en faire, et la remet dans ta main."
+    right:
+      label: "Moi non plus"
+      effects: {direction: "-", relation: {ober: 1}}
+      answer: "Il hoche la tête. Vous restez de part et d'autre du bureau, sans rien dire, jusqu'à ce que la lumière du couloir s'éteigne."
+
+  - id: ds.h8.co.ober
+    roles: [ds]
+    arc: corps
+    tags: [direction, objet]
+    speaker: ober
+    lieu: cabinet
+    tone: strategique
+    once: true
+    text: "Ober ferme la porte du cabinet à clé, puis la fenêtre. « Almadis me paie pour les courbes de tout le monde. La vôtre comprise. Vous voulez que j'arrête de les envoyer ? Dites-le, et je le note. »"
+    left:
+      label: "Arrêtez tout"
+      effects: {vestiaire: "+", direction: "--", relation: {ober: 1}, set: [h8_ober_arrete]}
+      answer: "Il débranche un boîtier gris derrière son bureau et le pose sur la table, entre vous. Une diode reste allumée. Il ne sait pas pourquoi."
+    right:
+      label: "Continuez"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Il rouvre la fenêtre. « Je note que vous l'avez dit. » Il le note, en effet, sur la fiche du jour, sous ta tension."
+
+  # ================================================== LE SERVICE DE NUIT
+  # ----------------------------------- 1 · Le développeur (le Terminus)
+  - id: ds.h8.op.developpeur
+    roles: [ds]
+    arc: agents
+    tags: [agents, objet]
+    lieu: tripot
+    tone: leger
+    once: true
+    text: "Dans l'arrière-salle du Terminus, un ancien développeur de Ferlac Analytique fait tourner sa bière : « La voix de nuit a un nom et un horaire. Deux cents écus. Elle lit un écran, à la capitale. »"
+    left:
+      label: "Je paie"
+      effects: {caisse: "-", set: [h8_nom_voix], var: {ville_amende: "+1300"}}
+      answer: "Sur un dessous de verre : INÈS K., 22 H - 6 H. « Le dernier samedi du mois, elle descend à l'hôtel de la Rive. Pour voir la ville. »"
+    right:
+      label: "Je ne veux pas savoir"
+      effects: {direction: "+"}
+      answer: "Il hausse les épaules. « Personne ne veut. C'est pour ça que ça marche. » Il paie sa bière avec un billet neuf."
+
+  # ----------------------------------- 2 · Le hall de l'hôtel de la Rive
+  - id: ds.h8.op.hall_lea
+    roles: [ds]
+    arc: agents
+    tags: [agents, moment]
+    speaker: kara
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Léa t'a donné un nom et une heure. Dans le hall de l'hôtel de la Rive, une jeune femme en parka se lève : « Je suis la voix. Enfin, je la lis. La nuit. L'après-midi, je fais les assurances. »"
+    left:
+      label: "Pourquoi Kerdal ?"
+      effects: {vestiaire: "+", relation: {kara: 1}, set: [h8_ines], outcome: kerdal, react: [{card: ds.h8.re.kara_trois_heures}]}
+      answer: "« L'écran disait fin de cycle. Je lis ce qui est écrit. » Elle tient son gobelet à deux mains, comme dehors. « Pas toujours. »"
+    right:
+      label: "Pourquoi moi ?"
+      effects: {direction: "-", relation: {kara: 1}, set: [h8_ines], outcome: moi, react: [{card: ds.h8.re.kara_trois_heures}]}
+      answer: "« Parce que tu réponds, {toi}. Les autres obéissent. Toi, la nuit, tu réponds. » Elle rit, très court."
+
+  - id: ds.h8.op.hall
+    roles: [ds]
+    arc: agents
+    tags: [agents, moment]
+    speaker: kara
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Dans le hall de l'hôtel de la Rive, une jeune femme en parka, un gobelet à la main : « Je suis la voix. Enfin, je la lis. De vingt-deux heures à six heures. L'après-midi, je fais les assurances. »"
+    left:
+      label: "Pourquoi Kerdal ?"
+      effects: {vestiaire: "+", relation: {kara: 1}, set: [h8_ines], outcome: kerdal, react: [{card: ds.h8.re.kara_trois_heures}]}
+      answer: "« L'écran disait fin de cycle. Je lis ce qui est écrit. » Elle tient son gobelet à deux mains, comme dehors. « Pas toujours. »"
+    right:
+      label: "Pourquoi moi ?"
+      effects: {direction: "-", relation: {kara: 1}, set: [h8_ines], outcome: moi, react: [{card: ds.h8.re.kara_trois_heures}]}
+      answer: "« Parce que tu réponds, {toi}. Les autres obéissent. Toi, la nuit, tu réponds. » Elle rit, très court."
+
+  # ------------------------------------------- 3 · Les phrases (d'elle)
+  - id: ds.h8.op.phrases_heure
+    roles: [ds]
+    arc: agents
+    tags: [agents, portable]
+    speaker: kara
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures. Inès appelle de son poste, à voix basse : « “Tu refuses toujours à cette heure-ci”, c'est moi. L'écran ne disait rien. Je voulais que tu refuses. Je voulais voir si tu m'écoutais. »"
+    left:
+      label: "Je t'écoutais"
+      effects: {vestiaire: "+", relation: {kara: 1}, set: [h8_ines_aveu], var: {h8_nuits: "+1"}}
+      answer: "Un silence, puis le clavier, très loin. « Alors c'est pire que ce que je croyais. » Elle raccroche la première."
+    right:
+      label: "Qu'as-tu dit d'autre ?"
+      effects: {direction: "-", set: [h8_ines_aveu], var: {h8_nuits: "+1"}}
+      answer: "« Les pires. Les chiffres, c'est l'écran. Le reste, quand il est vide, c'est moi. » Elle donne trois exemples. Tu les reconnais tous."
+
+  - id: ds.h8.op.phrases_lundi
+    roles: [ds]
+    arc: agents
+    tags: [agents, portable]
+    speaker: kara
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures. Inès appelle de son poste, à voix basse : « “C’était lundi”, c'est moi. L'écran était vide, tu ne disais rien, il fallait quelqu'un. Je ne savais pas que c'était vrai. »"
+    left:
+      label: "Tu ne pouvais pas savoir"
+      effects: {vestiaire: "+", relation: {kara: 1}, set: [h8_ines_aveu], var: {h8_nuits: "+1"}}
+      answer: "« L'écran savait. Moi, j'ai juste dit l'heure. » Elle pleure sans bruit. On l'entend parce qu'elle ne tape plus."
+    right:
+      label: "Tu aurais pu te taire"
+      effects: {direction: "+", relation: {kara: -1}, set: [h8_ines_aveu], var: {h8_nuits: "+1"}}
+      answer: "« Oui. » Elle le dit tout de suite, sans défense. « La prochaine fois, je me tairai. Tu verras si c'est mieux. »"
+
+  - id: ds.h8.op.phrases
+    roles: [ds]
+    arc: agents
+    tags: [agents, portable]
+    speaker: kara
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Trois heures. Inès appelle de son poste, à voix basse : « Les phrases que tu retiens, ce sont les miennes. L'écran dit des chiffres ; moi, je mets le reste. Tu veux que j'arrête ? »"
+    left:
+      label: "Arrête"
+      effects: {vestiaire: "+", relation: {kara: 1}, set: [h8_ines_aveu], var: {h8_refus: "+1"}}
+      answer: "Les nuits suivantes, la voix ne dit que des chiffres, sans un mot autour. Tu dors moins bien. Tu ne le lui dis pas."
+    right:
+      label: "Continue"
+      effects: {direction: "+", set: [h8_ines_aveu], var: {h8_nuits: "+1"}}
+      answer: "« D'accord. » Un temps. « Alors je te dis bonne nuit. L'écran ne le dit jamais. » Elle le dit, et raccroche."
+
+  # --------------------- 4 · Le 3 (saison 3 ; mis en file par « Deux heures »)
+  - id: ds.h8.op.le_trois_connue
+    roles: [ds]
+    arc: agents
+    tags: [agents, portable]
+    speaker: kara
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Le lendemain, Inès appelle d'un quai de gare : « Le service de nuit a été supprimé le 3. Il n'y a plus personne au bout. Depuis le 3, personne ne t'a parlé, {toi}. Personne. »"
+    left:
+      label: "Je t'entends"
+      effects: {vestiaire: "+", relation: {kara: 1}, set: [h8_service_coupe]}
+      answer: "« Bien. » Un train passe derrière elle. « Je fais les assurances à plein temps, maintenant. Personne ne m'y entend. »"
+    right:
+      label: "Quelqu'un m'a parlé"
+      effects: {direction: "+", set: [h8_service_coupe, h8_quelqu_un]}
+      answer: "Un long silence. « Alors ne réponds pas. » Elle raccroche. Tu gardes le téléphone contre ton oreille, au cas où."
+
+  - id: ds.h8.op.le_trois
+    roles: [ds]
+    arc: agents
+    tags: [agents, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le lendemain, une jeune femme appelle le club et demande la direction sportive : « Je travaillais au service de nuit d'Almadis. Il a été supprimé le 3. Il n'y a plus personne au bout. Voilà. »"
+    left:
+      label: "Qui êtes-vous ?"
+      effects: {vestiaire: "+", set: [h8_service_coupe]}
+      answer: "« Personne, maintenant. » Elle raccroche. Le numéro est celui d'une cabine d'assurances, à la capitale, qui ne répond plus."
+    right:
+      label: "Pourquoi me le dire ?"
+      effects: {direction: "+", set: [h8_service_coupe, h8_quelqu_un]}
+      answer: "« Parce que tu répondais. » Puis la tonalité. Le mot « tu » te reste dans l'oreille jusqu'au soir."
+
+  # ================================================= SOIXANTE-DOUZE MATCHS
+  # ------------------------------------------------ 1 · L'affiche
+  - id: ds.h8.gr.affiche_vit
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Karim Fauvel, du syndicat des joueurs, scotche une affiche sur la porte du vestiaire : « Soixante-douze matchs, deux morts ailleurs. Tout le monde s'arrête vendredi. Votre modèle l'avait prévu ? »"
+    left:
+      label: "Je soutiens la grève"
+      effects: {vestiaire: "++", direction: "--", set: [h8_greve_soutenue], outcome: soutenue}
+      answer: "Fauvel appuie sur le scotch avec le pouce, coin par coin. « Le premier club du championnat. On le notera. » L'affiche tient jusqu'en juin."
+    right:
+      label: "Le club jouera"
+      effects: {direction: "+", vestiaire: "--", set: [h8_club_joue], outcome: jouee}
+      answer: "Fauvel laisse l'affiche où elle est. « Vous jouerez sans arbitre, alors. Eux aussi s'arrêtent. » Il sort sans refermer."
+
+  - id: ds.h8.gr.affiche
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Karim Fauvel, du syndicat des joueurs, scotche une affiche sur la porte du vestiaire : « Soixante-douze matchs, un mort. Les joueurs du monde entier s'arrêtent vendredi. Votre modèle l'avait prévu ? »"
+    left:
+      label: "Je soutiens la grève"
+      effects: {vestiaire: "++", direction: "--", set: [h8_greve_soutenue], outcome: soutenue}
+      answer: "Fauvel appuie sur le scotch avec le pouce, coin par coin. « Le premier club du championnat. On le notera. » Le casier 4 a la même affiche."
+    right:
+      label: "Le club jouera"
+      effects: {direction: "+", vestiaire: "--", set: [h8_club_joue], outcome: jouee}
+      answer: "Fauvel laisse l'affiche où elle est. « Vous jouerez sans arbitre, alors. Eux aussi s'arrêtent. » Il sort sans refermer."
+
+  # ----------------------------------------------- 2 · Vendredi
+  - id: ds.h8.gr.vendredi_vide
+    roles: [ds]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Vendredi, vingt heures. Le stade de la Rive est ouvert, éclairé, vide. Gégé est venu quand même, seul dans la Nord, avec un thermos et deux gobelets. Il te fait signe de monter."
+    left:
+      label: "Je monte"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Café au rhum, quatre-vingt-dix minutes de pelouse vide. À la mi-temps, Gégé se lève et applaudit le rond central. Toi aussi."
+    right:
+      label: "Je regarde d'en bas"
+      effects: {direction: "+"}
+      answer: "Tu restes au bord de la pelouse. Là-haut, Gégé verse deux gobelets et en boit un. L'autre fume jusqu'à la fin."
+
+  - id: ds.h8.gr.vendredi
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Vendredi, vingt heures. Tes joueurs en tenue dans le couloir, personne en face, pas d'arbitre. Mbako : « On attend qui ? » Dans ton oreille : « Victoire sur tapis vert : soixante et un pour cent. »"
+    left:
+      label: "On rentre"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Ils remontent le couloir en crampons, en silence. Le bruit des crampons sur le béton dure plus longtemps que prévu."
+    right:
+      label: "On attend"
+      effects: {direction: "+", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "À vingt heures quarante, les projecteurs s'éteignent pour l'entretien. Personne n'est venu. Le procès-verbal dit « forfait »."
+
+  # ------------------------------------------------ 3 · Onze jours
+  - id: ds.h8.gr.onze
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    lieu: bureau
+    tone: leger
+    once: true
+    text: "La grève s'arrête au onzième jour : soixante-douze heures de repos obligatoires entre deux matchs. La voix : « Durée prévue : onze jours. Remplissez les soixante-douze heures : deux amicaux. »"
+    left:
+      label: "Je remplis"
+      effects: {caisse: "+", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "Deux amicaux à Montbéliac, payés comptant. Fauvel t'envoie la photo d'un vestiaire qui dort, assis, en tenue."
+    right:
+      label: "Ils se reposent"
+      effects: {vestiaire: "++", caisse: "-", var: {h8_refus: "+1"}}
+      answer: "Soixante-douze heures sans ballon. Le lundi, Mbako trouve trois joueurs endormis sur la pelouse au soleil. Il ne les réveille pas."

@@ -1,0 +1,167 @@
+# « L'Oreillette » (Histoire 8) — le prologue : le premier jour, d'août 2024,
+# de six heures dix à deux heures dix (arc `ds.h8.prologue`,
+# content/arcs/ds/h8_script.yaml). Servi hors créneau, avant la carte Objectif.
+#
+# Ce que le premier jour plante, et où ça revient :
+#   · l'oreillette et la voix de Ferlac (« On commence par les ventes ? ») →
+#     Deux heures (ds.h8.c3_deux_heures), puis l'épitaphe de « La voix » ;
+#   · le jour, la voix vouvoie ; à deux heures dix, elle tutoie (pro6) → Inès
+#     Kara, le service de nuit (ds.h8.operatrice) ;
+#   · les six cent douze jours de Vaubourg → la veille et la porte (S1) ;
+#   · le clou de la photo de 1974 → la porte, la ville (lieux_variantes) ;
+#   · les cartons de Josiane → la mission des cartons, le classeur (S1) ;
+#   · la berline électrique et la montre de Cadence → la saisie (S2), le
+#     bracelet du docteur Ober (ds.h8.comprimes), les courbes de Léa ;
+#   · le duplex de la Tréfilerie et son pont roulant → les nuits blanches.
+#
+# Effets faibles (au plus un cran moyen), aucun tirage. Les cadeaux de la ville
+# (`cadeau_*`) passent par `var:` : la ville donne la berline, la montre et le
+# duplex ; la saisie les reprendra.
+cards:
+  # ------------------------------------------------- 1/6 · la voix (6 h 10)
+  - id: ds.h8.pro1_oreillette
+    roles: [ds]
+    arc: direction
+    tags: [direction, oreillette]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Six heures dix, ton premier jour. Le délégué du fonds pose dans ta main une oreillette couleur peau. Tu la mets. « Bonjour. On commence par les ventes ? » C'est la voix de Joachim Ferlac."
+    left:
+      label: "Qui parle ?"
+      effects: {direction: "-", set: [h8_voix_ferlac]}
+      answer: "« Le modèle. Il a gardé la voix de son père, c'est plus doux pour tout le monde. » Le délégué ne dit pas qui était le père."
+    right:
+      label: "On commence"
+      effects: {direction: "+", vestiaire: "-", set: [h8_voix_ferlac]}
+      answer: "Onze noms, onze prix, sans une respiration. Au septième, tu notes. Au onzième, tu as cessé de noter : elle, elle s'en souviendra."
+
+  # ------------------------------------------- 2/6 · six heures et demie
+  - id: ds.h8.pro2_escalier
+    roles: [ds]
+    arc: president
+    tags: [direction, moment]
+    speaker: aulard
+    lieu: secretariat
+    tone: strategique
+    once: true
+    text: "Six heures et demie. Vaubourg monte l'escalier : une marche, la canne, une marche. Il passe devant le clou où pendait la photo de 1974. Dans ton oreille : « Il lui reste six cent douze jours. »"
+    left:
+      label: "Taisez-vous"
+      effects: {direction: "-", relation: {aulard: 1}, set: [h8_jours_vaubourg]}
+      answer: "La voix se tait. Là-haut, la porte de l'ancien bureau se referme doucement, comme on referme sur quelqu'un qui dort."
+    right:
+      label: "Comment le savez-vous ?"
+      effects: {direction: "+", set: [h8_jours_vaubourg]}
+      answer: "« Son bracelet. Son pas dans cet escalier, depuis deux ans. » Un temps. « Il monte moins vite le jeudi. »"
+
+  # ---------------------------------------- 3/6 · la rampe du terrain annexe
+  - id: ds.h8.pro3_rampe_modele
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, oreillette]
+    speaker: mbako
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Au terrain annexe, Lian Mbako regarde Kerdal courir, pas ton écran. Dans ton oreille : « Kerdal, disponible, trois matchs par semaine. » Mbako, sans tourner la tête : « Elle dit quoi, ta machine ? »"
+    left:
+      label: "Ce qu'elle dit"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "Il écoute jusqu'au bout. « Trois. » Il siffle ; Kerdal s'arrête net, puis repart aussitôt, comme si s'arrêter lui faisait peur."
+    right:
+      label: "Rien d'important"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« Tant mieux. » Kerdal boucle un tour de plus que les autres. Mbako le note sur sa main, au stylo, à côté de la date."
+
+  - id: ds.h8.pro3_rampe
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: mbako
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "Lian Mbako s'appuie à la rampe du terrain annexe, les yeux sur Erwan Kerdal qui court seul : « Soixante-dix matchs l'an dernier. Ton modèle, {toi}, il le compte en matchs ou en nuits ? »"
+    left:
+      label: "En matchs"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "« Moi, en tours de terrain. Il en fait un de trop, tous les jours, pour ne pas rentrer chez lui. »"
+    right:
+      label: "En nuits"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« Alors on compte pareil. » Il siffle ; Kerdal s'arrête, puis repart aussitôt, comme si l'arrêt lui faisait peur."
+
+  # ------------------------------------------------ 4/6 · les cartons de 2003
+  - id: ds.h8.pro4_cartons
+    roles: [ds]
+    arc: famille
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane est assise sur la première marche, un carton sur les genoux : « Le fonds veut le grenier pour ses machines. Moi, je ne monte plus. Vous monterez chercher ce qui reste de 2003 ? »"
+    left:
+      label: "Je monterai"
+      effects: {vestiaire: "+", direction: "-", relation: {josiane: 1}, set: [h8_cartons_promis]}
+      answer: "Elle écrit la date sur le carton, au feutre, et {nom} dessous. « Je ne vous demande pas quand. Je l'ai écrit, c'est tout. »"
+    right:
+      label: "Le fonds sait ce qu'il fait"
+      effects: {direction: "+", relation: {josiane: -1}}
+      answer: "« Il l'a toujours su. » Elle se relève en deux fois, une main sur la rampe, et emporte son carton. Il ne pèse presque rien."
+
+  # ----------------------------------------- 5/6 · le délégué et sa berline
+  - id: ds.h8.pro5_delegue_toi
+    roles: [ds]
+    arc: direction
+    tags: [direction, sponsors]
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Le délégué du fonds te tend les clés d'une berline électrique, puis une montre de Cadence, le sponsor : « La voiture est au fonds. La montre compte vos nuits. Le modèle doit savoir qui vous êtes. »"
+    left:
+      label: "Je mets la montre"
+      effects: {direction: "+", set: [h8_montre_portee], var: {cadeau_electrique: "+1", cadeau_montre_connectee: "+1"}}
+      answer: "Elle vibre une fois, pour te saluer. La berline démarre sans bruit ; sur le parking, personne ne se retourne."
+    right:
+      label: "Dans la boîte à gants"
+      effects: {direction: "-", var: {cadeau_electrique: "+1", cadeau_montre_connectee: "+1"}}
+      answer: "La montre vibre dans la boîte à gants jusqu'au pont. Le délégué a vu ; il note quelque chose sur son téléphone, sans hâte."
+
+  - id: ds.h8.pro5_delegue
+    roles: [ds]
+    arc: direction
+    tags: [direction, sponsors]
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Au parking, le délégué du fonds te tend les clés d'une berline électrique et une montre de Cadence, le sponsor. « La voiture est au fonds. La montre aussi, en un sens. Elle compte vos nuits. »"
+    left:
+      label: "Je mets la montre"
+      effects: {direction: "+", set: [h8_montre_portee], var: {cadeau_electrique: "+1", cadeau_montre_connectee: "+1"}}
+      answer: "Elle vibre une fois, pour te saluer. La berline démarre sans un bruit ; sur le parking, personne ne se retourne."
+    right:
+      label: "Dans la boîte à gants"
+      effects: {direction: "-", var: {cadeau_electrique: "+1", cadeau_montre_connectee: "+1"}}
+      answer: "La montre vibre dans la boîte à gants jusqu'au pont. Le délégué a vu ; il note quelque chose, sans hâte, sans lever les yeux."
+
+  # ------------------------------------------- 6/6 · le pont roulant (2 h 10)
+  # La première nuit. La voix tutoie : ce n'est plus la même. Et l'oreillette
+  # est sur la table de nuit — le secret du personnage, posé dès le premier soir.
+  - id: ds.h8.pro6_pont_roulant
+    roles: [ds]
+    arc: corps
+    tags: [direction, decor]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Deux heures dix, le duplex de la Tréfilerie que le fonds te loue. Au-dessus du lit, le pont roulant de l'usine. L'oreillette est sur la table de nuit. Tu l'entends quand même : « Tu ne dors pas. »"
+    left:
+      label: "Je la remets"
+      effects: {direction: "+", vestiaire: "-", var: {cadeau_duplex_trefilerie: "+1", h8_nuits: "+1"}}
+      answer: "Plus rien. Un souffle, peut-être, ou le chauffage. Tu t'endors à quatre heures, l'oreillette chaude contre la joue."
+    right:
+      label: "Je la mets au tiroir"
+      effects: {vestiaire: "+", direction: "-", var: {cadeau_duplex_trefilerie: "+1"}}
+      answer: "Le tiroir se ferme. Tu comptes les rivets du pont roulant jusqu'à quatre-vingts. Tu as cru entendre une touche de clavier."

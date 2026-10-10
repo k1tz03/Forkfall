@@ -1,0 +1,181 @@
+# « L'Oreillette » (Histoire 8) — les alarmes de l'histoire, déclarées dans le
+# bloc `le_modele` de content/postulats.yaml (`alarm_overrides`) : elles
+# passent devant les alarmes communes du directeur sportif. Quand une jauge
+# franchit 20 ou 80, une de ces cartes entre dans les trois cartes suivantes ;
+# chacune porte son propre seuil (25 / 75) et expire en silence si la jauge est
+# revenue. Une sortie soulage, l'autre creuse ; aucune n'est la bonne.
+#
+# Jauges du rôle : le staff (vestiaire), les tribunes, le président (direction
+# — ici le fonds, qui parle par son délégué), la masse salariale (caisse).
+# Les alarmes où parle la voix ne sortent que tant qu'elle est là ; chacune a
+# une sœur sans voix, pour l'oreillette au tiroir ou rendue.
+cards:
+  # ═══════════════════════════════════════════ le staff (vestiaire) bas
+  - id: ds.h8.alarme.vestiaire_bas_mbako
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: bureau
+    when: "gauges.vestiaire < 25"
+    text: "Mbako pose sa lettre de démission pliée sur ton clavier, sans la lâcher : « Le staff ne veut plus de consignes qui sortent d'une oreille. Dis-moi que c'est toi qui décides, {toi}, et je la reprends. »"
+    left:
+      label: "C'est moi qui décide"
+      effects: {vestiaire: "+++", direction: "-", relation: {mbako: 1}, var: {h8_refus: "+1"}}
+      answer: "Il reprend la lettre et la déchire en deux, pas en quatre. « Je garde l'autre moitié. Au cas où tu mentirais. »"
+    right:
+      label: "Le modèle décide"
+      effects: {vestiaire: "-", direction: "+", relation: {mbako: -1}, var: {h8_obei: "+1"}}
+      answer: "Il lâche la lettre. « Alors elle est pour lui. » Le soir, il est encore au terrain annexe, seul, à ramasser les plots."
+
+  - id: ds.h8.alarme.vestiaire_bas_staff
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: bureau
+    when: "gauges.vestiaire < 25"
+    text: "Le préparateur physique dépose sur ton bureau les plannings du staff. Sur chacun, la même phrase, au feutre, de cinq écritures différentes : PAS SANS L'AVIS D'UN HUMAIN."
+    left:
+      label: "Je signe en bas"
+      effects: {vestiaire: "+++", direction: "-"}
+      answer: "Tu signes les cinq, en dessous des cinq phrases. Le préparateur les affiche au vestiaire, à hauteur d'yeux, en rang."
+    right:
+      label: "Je les fais refaire"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Les plannings reviennent propres le lendemain. Au dos de chacun, en tout petit, la même phrase, au crayon cette fois."
+
+  # ═══════════════════════════════════════════ le staff (vestiaire) haut
+  - id: ds.h8.alarme.vestiaire_haut
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: vestiaire
+    when: "gauges.vestiaire > 75"
+    text: "Le staff t'invite à son repas de fin de mois ; on t'a gardé la chaise du bout. Le délégué du fonds, lui, n'est pas invité. Il l'a remarqué. Il le note."
+    left:
+      label: "Je m'assieds"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "Le préparateur porte un toast « à celui qui n'écoute pas tout ». Le lendemain, le délégué te demande le nom du restaurant."
+    right:
+      label: "Je décline"
+      effects: {vestiaire: "--", direction: "+"}
+      answer: "Ils dînent sans toi. La chaise du bout reste vide toute la soirée ; quelqu'un y a posé une assiette quand même."
+
+  # ═══════════════════════════════════════════════════ les tribunes basses
+  - id: ds.h8.alarme.tribunes_bas
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    when: "gauges.tribunes < 25"
+    text: "Une bâche est apparue à la Nord : LE MODÈLE DEHORS. En dessous, plus petit, ton nom. Gégé : « Ce n'est pas moi qui l'ai peinte. Je l'ai juste tenue pendant qu'elle séchait. »"
+    left:
+      label: "Je monte leur parler"
+      effects: {tribunes: "+++", direction: "-", relation: {gege: 1}}
+      answer: "Tu parles dix minutes sous la bâche, sans oreillette. Ils ne t'applaudissent pas. Ils replient seulement la partie où il y a ton nom."
+    right:
+      label: "Qu'on la décroche"
+      effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
+      answer: "Les stadiers la décrochent à la mi-temps. Elle revient au match suivant, recousue, avec ton nom un peu plus grand."
+
+  # ═══════════════════════════════════════════════════ les tribunes hautes
+  - id: ds.h8.alarme.tribunes_haut
+    roles: [ds]
+    arc: ultras
+    tags: [tribunes]
+    lieu: stade
+    when: "gauges.tribunes > 75"
+    text: "Le virage chante ton nom dix minutes, sur l'air de la chanson de Vollaire. En loge, le délégué se tait : « Le fonds n'aime pas les directeurs qu'on chante. Ils coûtent cher à remplacer. »"
+    left:
+      label: "Je salue le virage"
+      effects: {tribunes: "+", direction: "--"}
+      answer: "Tu lèves la main. La Nord rugit. Le délégué photographie la tribune, puis toi, puis la tribune encore, pour comparer."
+    right:
+      label: "Je reste assis"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "Le chant s'épuise au bout d'un moment, sans réponse. Gégé, en bas, te cherche des yeux dans la loge, puis renonce."
+
+  # ═══════════════════════════════════════════════ le fonds (direction) bas
+  - id: ds.h8.alarme.direction_bas
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    lieu: bureau
+    when: "gauges.direction < 25"
+    text: "Le délégué ne s'assied plus dans ton bureau ; il reste dans l'encadrement de la porte : « Le fonds a fait un graphique de vos refus. La courbe monte. Vous voulez la voir ? »"
+    left:
+      label: "Je vous obéirai"
+      effects: {direction: "+++", vestiaire: "-", var: {h8_obei: "+1"}}
+      answer: "« Le modèle en prend note. » Il entre enfin, s'assied, croise les jambes. Il reste une heure à ne rien dire, pour voir."
+    right:
+      label: "Montrez-moi la courbe"
+      effects: {direction: "-", vestiaire: "+", var: {h8_refus: "+1"}}
+      answer: "Elle monte en effet, en escalier, avec une marche par mois. La dernière marche est datée de demain. Il range la feuille."
+
+  # ═══════════════════════════════════════════════ le fonds (direction) haut
+  - id: ds.h8.alarme.direction_haut
+    roles: [ds]
+    arc: direction
+    tags: [direction]
+    lieu: bureau
+    when: "gauges.direction > 75"
+    text: "Le délégué te montre un classement des clubs d'Almadis : ton nom en tête, en vert. « Vous êtes le profil le plus conforme du portefeuille. Le fonds aimerait vous dupliquer. »"
+    left:
+      label: "Dupliquez-moi"
+      effects: {direction: "+", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "Il sourit pour la première fois. « C'est déjà fait. On vous demandait votre accord par politesse. »"
+    right:
+      label: "Je descends au vestiaire"
+      effects: {direction: "--", vestiaire: "+", var: {h8_refus: "+1"}}
+      answer: "Tu passes l'après-midi sur le banc du vestiaire, sans écran. Le soir, ton nom est passé en orange dans le classement."
+
+  # ═══════════════════════════════════════ la masse salariale (caisse) basse
+  - id: ds.h8.alarme.caisse_bas_voix
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, oreillette]
+    lieu: domicile
+    when: "gauges.caisse < 25"
+    text: "Six heures dix. « Masse salariale sous le seuil. Trois contrats à résilier avant vendredi. Les noms sont à l'écran. Le troisième va vous déplaire. »"
+    left:
+      label: "Je résilie les trois"
+      effects: {caisse: "+++", vestiaire: "--", var: {h8_obei: "+1"}}
+      answer: "Le troisième est le magasinier, trente ans de maison. Il range les maillots une dernière fois, par numéro, sans en oublier un."
+    right:
+      label: "Je n'en résilie aucun"
+      effects: {caisse: "-", vestiaire: "+", var: {h8_refus: "+1"}}
+      answer: "« Écart enregistré. » Vendredi, la banque du fonds bloque les primes de match. Les joueurs l'apprennent au distributeur."
+
+  - id: ds.h8.alarme.caisse_bas
+    roles: [ds]
+    arc: caisse
+    tags: [caisse]
+    lieu: bureau
+    when: "gauges.caisse < 25"
+    text: "La banque du fonds a gelé les primes de match. Le capitaine pose le relevé sur ton bureau, à l'envers : « Les gars veulent savoir si c'est la machine, ou toi. »"
+    left:
+      label: "C'est moi"
+      effects: {caisse: "+++", vestiaire: "--"}
+      answer: "Il retourne le relevé, lit le chiffre, hoche la tête. « Au moins, c'est quelqu'un. » Il le dit au vestiaire mot pour mot."
+    right:
+      label: "C'est la machine"
+      effects: {caisse: "-", vestiaire: "+"}
+      answer: "« Alors on parle à qui ? » Il reprend le relevé. Le soir, le vestiaire vote une motion adressée à un écran."
+
+  # ═══════════════════════════════════════ la masse salariale (caisse) haute
+  - id: ds.h8.alarme.caisse_haut
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, agents]
+    lieu: bureau
+    when: "gauges.caisse > 75"
+    text: "La masse salariale dépasse le plafond du fonds. Ingrid Solvang, l'agente, appelle : « Ma machine propose de vous racheter trois contrats. La vôtre est d'accord. Il ne manque que vous. »"
+    left:
+      label: "Je vends les trois"
+      effects: {caisse: "--", vestiaire: "-", var: {h8_obei: "+1"}}
+      answer: "Trois joueurs partent le même jour, dans la même voiture, pour trois clubs. Ils se disent au revoir sur le parking, en riant presque."
+    right:
+      label: "Je ne vends personne"
+      effects: {caisse: "+", direction: "-", var: {h8_refus: "+1"}}
+      answer: "« Votre machine sera déçue. » Elle raccroche. Une heure plus tard, l'écran repropose l'offre, avec un bouton de plus : RECONSIDÉRER."

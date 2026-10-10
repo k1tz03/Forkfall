@@ -1,0 +1,224 @@
+# « L'Oreillette » (Histoire 8, postulat `le_modele`, index 7) — le prologue et
+# le script. docs/histoires/00_les_dix_histoires.md, « Histoire 8 ».
+#
+# La voix. Le jour (six heures, vingt-deux heures), c'est le modèle qui parle
+# avec la voix générée de Joachim Ferlac : il vouvoie, il chiffre, il ordonne.
+# La nuit (vingt-deux heures, six heures), c'est Inès Kara qui lit l'écran dans
+# un centre d'appels de la capitale, et qui improvise quand l'écran est vide :
+# la voix tutoie. Le joueur attentif l'entend avant qu'on le lui dise. Après le
+# 3 novembre 2026, il n'y a plus personne au bout : la voix qui parle dans le
+# noir tutoie toujours. C'est la tienne, ou pas.
+#
+# La voix prédit le choix du joueur trois fois, pas une de plus : chez Ober
+# (ds.h8.cp.un_demi, saison 1), à une heure du matin (ds.h8.b2_cette_heure,
+# saison 2), dans le noir (ds.h8.c3_deux_heures, saison 3).
+#
+# Le script, et les soirs (docs/histoires § 1.4 : quatre au plus par saison,
+# jamais deux à moins de cinq créneaux) :
+#   S0 (2024-2025, la voix)    : Vollaire [1] · Fin de cycle [10] → « lundi »
+#                                [11, soir] · les projecteurs [16, soir] ·
+#                                la veille du dernier match [17]
+#   S1 (2025-2026, le bruit)   : la rentrée [1] · À cette heure-ci [10-11] ·
+#                                l'intermède de la pelouse [13-14] · la veille
+#                                [16] · la porte [17, soir, le drame]
+#   S2 (2026-2027, le silence) : la canne [1] · propriété du fonds [4, la
+#                                saisie] · deux heures [8, soir] · l'intermède
+#                                du casque [11] · 23 h 58 [12, le dénouement]
+#                                · ce qui reste [16] · six heures dix [17]
+#   S3+ (l'épilogue)           : la boîte noire [1] · la veille, encore [17]
+# Les ancres ouvrent les intrigues qui portent le livre (Kerdal, le petit de
+# Nino) par `schedule:` : elles s'ouvrent à coup sûr, au bon moment. Les soirs
+# du réservoir (la vidéo, le compte du vieux, la laverie, la friche) sont dans
+# h8_intrigues.yaml et h8_sombres.yaml.
+arcs:
+  # ====================================================================
+  # LE PROLOGUE — le premier jour, de six heures dix à deux heures dix.
+  # L'oreillette, Vaubourg dans l'escalier, Mbako et Kerdal, Josiane et ses
+  # cartons, le délégué du fonds et sa berline, le duplex de la Tréfilerie.
+  # ====================================================================
+  - id: ds.h8.prologue
+    title: "Le premier jour"
+    kind: prologue
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: false
+    theme: direction
+    carrier: aulard
+    cast: [aulard, mbako, josiane]
+    issues: []
+    hint: "Une oreillette couleur peau, et la voix d'un homme qu'on a enterré en décembre."
+    steps:
+      - id: oreillette
+        card: ds.h8.pro1_oreillette
+      - id: escalier
+        card: ds.h8.pro2_escalier
+      - id: rampe
+        card:
+          - { id: ds.h8.pro3_rampe_modele, if: "fil_rouge == 'modele'" }
+          - { id: ds.h8.pro3_rampe }
+      - id: cartons
+        card: ds.h8.pro4_cartons
+      - id: delegue
+        card:
+          - { id: ds.h8.pro5_delegue_toi, if: "fil_rouge == 'toi'" }
+          - { id: ds.h8.pro5_delegue }
+      - id: pont_roulant
+        card: ds.h8.pro6_pont_roulant
+
+  # ====================================================================
+  # LE SCRIPT — `opening_arc: ds.h8.oreillette`.
+  # ====================================================================
+  - id: ds.h8.oreillette
+    title: "L'Oreillette"
+    kind: postulat
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    cast: [aulard, mbako, josiane, kara]
+    same_club: true
+    fallback: drop
+    traces:
+      h8_vollaire_vendu:    "{annee} : Vollaire vendu à Valentienne à minuit moins deux. Le modèle l'avait dit."
+      h8_vollaire_garde:    "{annee} : {nom} a gardé Vollaire contre l'avis du modèle. Le virage a gardé sa bâche."
+      h8_casier_ouvert:     "{annee} : le casier 4 est resté ouvert jusqu'en juin. Le plus jeune y posait un caillou."
+      h8_peyrard_vendu:     "{annee} : le capitaine Peyrard vendu à Lyonnet à une heure quatre du matin."
+      h8_vaubourg_mort:     "{annee} : Jean-Marie Vaubourg est mort à son bureau du club-house, à six heures et demie."
+      h8_oreillette_rendue: "{annee} : {nom} a rendu au fonds la berline, le téléphone et l'oreillette."
+      h8_oreillette_gardee: "{annee} : {nom} a déclaré perdue l'oreillette du fonds. On ne l'a pas cherchée."
+      h8_pas_signe:         "{annee} : à 23 h 58, {nom} n'a pas signé la vente du petit Milo. Minuit est passé dessus."
+    steps:
+      # ---------------------------------------------------- saison 1 (S0)
+      - id: vollaire
+        card: ds.h8.a1_vollaire
+        at: [1, 1]
+        season: 0
+      # Le dernier jour du mercato d'hiver. « Lundi » tombe au créneau suivant
+      # (schedule [1, 1]) : cinq créneaux avant les projecteurs.
+      - id: fin_de_cycle
+        card:
+          - { id: ds.h8.a2_fin_de_cycle_repos, if: "flag('h8_kerdal_repose')" }
+          - { id: ds.h8.a2_fin_de_cycle }
+        at: [10, 10]
+        season: 0
+      - id: projecteurs
+        card:
+          - { id: ds.h8.a3_projecteurs_vit, if: "flag('h8_kerdal_vit')" }
+          - { id: ds.h8.a3_projecteurs }
+        at: [16, 16]
+        season: 0
+      - id: veille_match
+        card:
+          - { id: ds.h8.a4_veille_kerdal, if: "flag('h8_kerdal_mort')" }
+          - { id: ds.h8.a4_veille }
+        at: [17, 17]
+        season: 0
+      # ---------------------------------------------------- saison 2 (S1)
+      - id: rentree
+        card:
+          - { id: ds.h8.b1_rentree_tiroir, if: "flag('h8_sans_oreillette')" }
+          - { id: ds.h8.b1_rentree }
+        at: [1, 1]
+        season: 1
+      - id: cette_heure
+        card:
+          - { id: ds.h8.b2_cette_heure_tiroir, if: "flag('h8_sans_oreillette')" }
+          - { id: ds.h8.b2_cette_heure }
+        at: [10, 11]
+        season: 1
+      # L'intermède de la saison : la pelouse sous les projecteurs. « Il te
+      # reste trois cent douze jours » : de la fin mars 2026, cela tombe sur la
+      # dernière minute du dernier mercato.
+      - id: pelouse
+        card:
+          - { id: ds.h8.b_int_pelouse_vit, if: "flag('h8_kerdal_vit')" }
+          - { id: ds.h8.b_int_pelouse }
+        at: [13, 14]
+        season: 1
+      - id: veille
+        # La fin rare se joue ici : Vaubourg t'aime, le classeur est lu,
+        # l'oreillette est rangée, Mbako est avec toi. Alors tu peux rester.
+        card:
+          - { id: ds.h8.b3_veille_chaise, if: "relation.aulard >= 1 && flag('h8_classeur_lu') && flag('h8_sans_oreillette') && relation.mbako >= 1" }
+          - { id: ds.h8.b3_veille }
+        at: [16, 16]
+        season: 1
+      - id: porte
+        card:
+          - { id: ds.h8.b4_porte_silence, if: "flag('h8_sans_oreillette')" }
+          - { id: ds.h8.b4_porte }
+        at: [17, 17]
+        season: 1
+      # ---------------------------------------------------- saison 3 (S2)
+      - id: canne
+        card: ds.h8.c1_canne
+        at: [1, 1]
+        season: 2
+      - id: propriete
+        card:
+          - { id: ds.h8.c2_propriete_pari, if: "flag('h8_sp_pari')" }
+          - { id: ds.h8.c2_propriete }
+        at: [4, 4]
+        season: 2
+      # Deux heures du matin, puis, le lendemain, Inès au téléphone. Deux
+      # ancres collées : la saison de l'acte final est trop pleine pour qu'une
+      # file tienne « le lendemain ».
+      - id: deux_heures
+        card:
+          - { id: ds.h8.c3_deux_heures_gardee, if: "flag('h8_oreillette_gardee')" }
+          - { id: ds.h8.c3_deux_heures }
+        at: [8, 8]
+        season: 2
+      - id: le_trois
+        card:
+          - { id: ds.h8.op.le_trois_connue, if: "flag('h8_ines')" }
+          - { id: ds.h8.op.le_trois }
+        at: [9, 9]
+        season: 2
+      # L'intermède de la saison : le centre d'appels, la veille de 23 h 58.
+      - id: centre_appels
+        card: ds.h8.c_int_casque
+        at: [11, 11]
+        season: 2
+      - id: dernier_mercato
+        card:
+          - { id: ds.h8.c4_23h58_regle, if: "flag('h8_regle_changee')" }
+          - { id: ds.h8.c4_23h58_moi, if: "flag('h8_moi')" }
+          - { id: ds.h8.c4_23h58 }
+        at: [12, 12]
+        season: 2
+      # Le lendemain de 23 h 58 : on n'y arrive qu'en n'ayant pas signé (signer
+      # finit le livre). Une ancre, pas une file : rien ne doit passer devant.
+      - id: lendemain
+        card: ds.h8.c4b_lea
+        at: [13, 13]
+        season: 2
+      - id: ce_qui_reste
+        card:
+          - { id: ds.h8.c5_reste_sifflet, if: "flag('h8_sifflet')" }
+          - { id: ds.h8.c5_reste }
+        at: [16, 16]
+        season: 2
+      - id: six_heures_dix
+        card:
+          - { id: ds.h8.c6_six_heures_dix_mbako, if: "flag('h8_mbako_embrasse') || flag('h8_mbako_parti')" }
+          - { id: ds.h8.c6_six_heures_dix }
+        at: [17, 17]
+        season: 2
+      # ------------------------------------------ l'épilogue (S3 et après)
+      - id: boite_noire
+        card:
+          - { id: ds.h8.d1_boite_friche, if: "flag('h8_oreillette_friche')" }
+          - { id: ds.h8.d1_boite_encore, if: "stats.saisons >= 4" }
+          - { id: ds.h8.d1_boite }
+        at: [1, 1]
+        season: "3+"
+      - id: veille_encore
+        card:
+          - { id: ds.h8.d2_veille_friche, if: "flag('h8_oreillette_friche')" }
+          - { id: ds.h8.d2_veille_milo, if: "flag('h8_pas_signe') && !seen('ds.h8.d2_veille_milo')" }
+          - { id: ds.h8.d2_veille_canne, if: "flag('h8_canne_clou')" }
+          - { id: ds.h8.d2_veille_prise, if: "flag('h8_canne_prise') && !seen('ds.h8.d2_veille_prise')" }
+          - { id: ds.h8.d2_veille }
+        at: [17, 17]
+        season: "3+"

@@ -1,0 +1,207 @@
+# « L'Oreillette » (Histoire 8) — les variantes de set-piece de l'histoire.
+# Format : l'en-tête de content/setpieces.yaml. Jamais de secours : chaque
+# variante vise le directeur sportif et lit le drapeau d'histoire. Le build
+# range les variantes de lot en tête de chaque beat (ou avant le secours) :
+# celles-ci ne prennent la place de personne d'autre.
+#
+# Ce que le texte doit au rôle et à l'histoire :
+# · `{toi}` n'a pas d'adresse sûre ici (le moteur retomberait sur « coach ») :
+#   le directeur sportif est nommé par `{prenom}`, ou pas du tout.
+# · La voix est là tant que l'oreillette est portée et pas rendue
+#   (`!h8_sans_oreillette && !h8_voiture_rendue`) ; après la saisie
+#   (ds.h8.c2_propriete), plus de voix, plus de berline.
+# · Cheikh Ilyas, le patron du postulat, ne parle pas : sans locuteur, son
+#   portrait accompagne la feuille du fonds ou la parole du délégué.
+setpieces:
+  # ══ objective ═══════════════════════════════════════════════════════════
+  objective:
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 0"
+      speaker: aulard
+      text: "Vaubourg lit à voix haute la feuille du fonds, lentement, comme un menu dans une langue étrangère : « Pour l'équipe, {objectif_min}. Ils l'ont calculé. Moi, je l'aurais demandé. Vous signez ? »"
+      left: "Je signe la feuille"
+      right: "Je ne promets rien"
+      answer_left: "Il plie la feuille en quatre et la glisse dans sa poche de veste. « Je la garde. Eux en ont une copie. »"
+      answer_right: "Il repose la feuille sur le bureau, à l'envers. « Moi non plus, en 1974, je ne promettais rien. On a fini troisièmes. »"
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 1 && !flag('h8_sans_oreillette')"
+      text: "Six heures dix, le jour de l'objectif. La voix parle avant le délégué : « {objectif_min}. Probabilité : soixante-quatre pour cent. Engagez-vous : le fonds aime les engagements tenus. »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "« Engagement enregistré. » Le délégué, en entrant, sait déjà. Il te serre la main pour la forme, et pour la photo."
+      answer_right: "« Écart enregistré. » Le délégué entre une minute plus tard, la mine de quelqu'un qu'on a réveillé."
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 1"
+      speaker: josiane
+      text: "Madame Josiane recopie l'objectif du fonds à la main, sur une fiche bristol : « {objectif_min}. Je l'épingle au-dessus de votre bureau, ou je le range au tiroir avec l'autre chose ? »"
+      left: "Épinglez-le"
+      right: "Au tiroir"
+      answer_left: "Elle l'épingle de travers, exprès. « Comme ça, vous le regarderez. » Tu le regardes chaque matin."
+      answer_right: "La fiche rejoint l'oreillette au fond du tiroir. Josiane referme sans faire de bruit, comme sur des gens qui dorment."
+    - roles: [ds]
+      when: "flag('histoire_h8') && season >= 3"
+      speaker: josiane
+      text: "Plus de délégué : l'objectif arrive au secrétariat, sous enveloppe. {objectif_min}. Madame Josiane pose la feuille sur ton bureau, et pose sa tasse dessus. « Il ne fallait pas la mouiller ? »"
+      left: "Je la lis"
+      right: "Laissez la tasse"
+      answer_left: "Elle reprend sa tasse. Un rond de café reste sur la feuille, pile sur le mot « révisable ». Elle trouve que c'est mieux comme ça."
+      answer_right: "La tasse refroidit sur la feuille jusqu'au soir. Personne ne lit l'objectif ; l'équipe le joue quand même, sans le savoir."
+    - roles: [ds]
+      when: "flag('histoire_h8') && season >= 2"
+      text: "Le délégué pose la feuille de l'objectif sans s'asseoir : {objectif_min}. En bas de page, une ligne en petits caractères : « Révisable par le modèle à tout moment. »"
+      left: "Je signe"
+      right: "Je raye la ligne"
+      answer_left: "Il reprend la feuille avant que l'encre sèche. « Le modèle vous remercie. » Il ne dit plus « le fonds »."
+      answer_right: "Tu rayes la ligne et tu paraphes la rature. Il la regarde longtemps. « Ça ne change rien. Mais c'est noté. »"
+
+  # ══ classement ══════════════════════════════════════════════════════════
+  classement:
+    - roles: [ds]
+      when: "flag('histoire_h8') && phase('bilan') && season == 0 && flag('h8_kerdal_mort')"
+      speaker: josiane
+      text: "Le classement final, punaisé au secrétariat : {rang}e, {pts} points. Madame Josiane a écrit en marge, au crayon, à hauteur de la ligne de {club} : « Kerdal, quarante et un matchs. »"
+      left: "Laisser le crayon"
+    - roles: [ds]
+      when: "flag('histoire_h8') && phase('bilan') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "{rang}e, {pts} points. Le classement final est arrivé par la voix avant d'arriver par le journal : elle l'avait donné en mars, au point près."
+      left: "Voir le classement"
+    - roles: [ds]
+      when: "flag('histoire_h8') && !phase('bilan') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "À la trêve, {club} est {rang}e avec {pts} points. La voix ne commente pas les classements de décembre. Elle donne celui de mai, déjà, et se tait."
+      left: "Voir la trêve"
+    - roles: [ds]
+      when: "flag('histoire_h8') && flag('h8_voiture_rendue')"
+      text: "{rang}e, {pts} points, après la {journee}e journée. Pour la première fois depuis trois ans, tu découvres le classement en même temps que tout le monde."
+      left: "Regarder"
+
+  # ══ match ═══════════════════════════════════════════════════════════════
+  match:
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 0 && flag('h8_kerdal_mort')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Avant chaque coup d'envoi, le virage tient une minute de bruit, pas de silence, pour Kerdal. Personne ne la chronomètre."
+    - roles: [ds]
+      when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Dans ton oreille, les six résultats probables, dans l'ordre, avant le premier coup d'envoi. Tu essaies de ne pas les retenir."
+    - roles: [ds]
+      when: "flag('histoire_h8') && flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. L'oreillette est au tiroir. Pendant six matchs, tu entends le stade : les chants, le ballon, Mbako qui crie un prénom."
+    - roles: [ds]
+      when: "flag('histoire_h8') && flag('h8_voiture_rendue')"
+      text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Sans berline, tu vas au stade à pied, par le quai. Les gens te saluent, maintenant ; avant, ils saluaient la voiture."
+
+  # ══ cup ═════════════════════════════════════════════════════════════════
+  cup:
+    - roles: [ds]
+      when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "Tour de Coupe : {tour}. La voix a déjà joué le match : « Élimination probable, deux à un, à la soixante-dix-huitième minute. » Mbako, lui, ne veut pas savoir la minute."
+      left: "Je la garde pour moi"
+    - roles: [ds]
+      when: "flag('histoire_h8')"
+      speaker: gege
+      text: "Tour de Coupe : {tour}. Personne ne sait comment ça finira, et c'est la première fois depuis longtemps. Gégé a apporté un thermos pour les prolongations, au cas où."
+      left: "Y croire"
+
+  # ══ gm_annonce ══════════════════════════════════════════════════════════
+  gm_annonce:
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 1 && flag('h8_vaubourg_mort')"
+      text: "GRAND MATCH. Dans la loge, la place de Vaubourg est vide ; quelqu'un y a posé sa canne, en travers du siège. Personne ne s'assied à côté. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 0 && flag('h8_kerdal_mort')"
+      text: "GRAND MATCH. Le numéro 4 n'est pas sur la feuille ; le club l'a retiré jusqu'à la fin de la saison. Au virage, une bâche : QUATRE. Rien d'autre. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [ds]
+      when: "flag('histoire_h8') && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "GRAND MATCH. Au coup d'envoi, la voix se tait d'elle-même, pour la première fois depuis août. Elle reprendra à la quatre-vingt-dixième, avec le score. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  # ══ gm_te ═══════════════════════════════════════════════════════════════
+  gm_te:
+    - roles: [ds]
+      when: "flag('histoire_h8') && vars.gm_te_index == 1 && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "{minute}e minute · {score}. La voix : « Remplacez le 8. Fatigue cardiaque : quatre-vingt-onze pour cent. » Sur le banc, Mbako ne te regarde pas. Il regarde le 8."
+      left: "Le 8 sort"
+      right: "Le 8 reste"
+    - roles: [ds]
+      when: "flag('histoire_h8') && vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Dans la Nord, quelqu'un a allumé un fumigène ; la fumée monte jusqu'à la loge. Tu respires en quatre temps, sans t'en rendre compte."
+      left: "Je descends au bord"
+      right: "Je reste en loge"
+
+  # ══ aftermatch ══════════════════════════════════════════════════════════
+  aftermatch:
+    - roles: [ds]
+      when: "flag('histoire_h8') && vars.gm_won == 1 && !flag('h8_sans_oreillette') && !flag('h8_voiture_rendue')"
+      text: "Coup de sifflet final, {gm_score}. Dans ton oreille : « Conforme. » C'est tout. En bas, ils chantent ton nom, et le mot « conforme » reste plus longtemps que le chant."
+      left: "Je descends chanter"
+      right: "Je reste en loge"
+      answer_left: "Tu descends sans l'oreillette. Le vestiaire est trempé, bruyant, tout près. Personne ne te donne de chiffre."
+      answer_right: "Tu restes avec la voix. Elle te lit les notes des joueurs, une par une, pendant que le stade se vide."
+    - roles: [ds]
+      when: "flag('histoire_h8') && vars.gm_won == 1"
+      speaker: gege
+      text: "Coup de sifflet final, {gm_score}. Gégé enjambe trois rangs pour te serrer la main, puis il la garde : « Tu as dormi, cette nuit, {prenom} ? Ça se voit. »"
+      left: "Un peu"
+      right: "Pas du tout"
+      answer_left: "« Continue. » Il te lâche la main et retourne chanter, une marche à la fois, en se tenant à la rampe."
+      answer_right: "« Alors c'est encore mieux. » Il rit, et ce rire te tient compagnie jusqu'au parking."
+    - roles: [ds]
+      when: "flag('histoire_h8') && vars.gm_won == 0"
+      speaker: mbako
+      text: "Coup de sifflet final, {gm_score}. Dans le couloir, Mbako éteint lui-même la lumière du vestiaire, pour que personne ne voie personne. Il te laisse la porte ouverte."
+      left: "J'entre dans le noir"
+      right: "Je remonte"
+      answer_left: "Tu t'assieds sur le banc, entre deux respirations que tu ne reconnais pas. Personne ne dit rien. C'est mieux que tout."
+      answer_right: "Tu remontes l'escalier. Derrière toi, la lumière reste éteinte une heure. Mbako sort le dernier."
+
+  # ══ bilan_verdict ═══════════════════════════════════════════════════════
+  bilan_verdict:
+    - roles: [ds]
+      when: "flag('histoire_h8') && bilan.tenu && season == 0 && !flag('h8_sans_oreillette')"
+      text: "Le verdict tombe : {rang}e. {objectif} : {tenu}. La voix l'avait annoncé en février, au rang près. Tu as tenu, et tu ne sais pas qui."
+      left: "Voir le classement"
+    - roles: [ds]
+      when: "flag('histoire_h8') && !bilan.tenu"
+      text: "Le verdict tombe : {rang}e. {objectif} : {tenu}. Sur l'écran du fonds, une ligne de plus passe au rouge. C'est la tienne. Elle est rangée dans PERSONNEL."
+      left: "Voir le classement"
+
+  # ══ bilan_contrat ═══════════════════════════════════════════════════════
+  bilan_contrat:
+    - roles: [ds]
+      when: "flag('histoire_h8') && flag('h8_vaubourg_mort') && season == 1"
+      text: "Le contrat arrive par courrier, signé d'une machine. À la place du paraphe de Vaubourg, qui signait les contrats du club depuis 1974, un tampon bleu : « Pour le fonds »."
+      left: "Je signe"
+      right: "Je demande un nom"
+      answer_left: "Tu signes sous le tampon. L'encre bave un peu, comme si la feuille avait froid."
+      answer_right: "On te répond par courrier, une semaine plus tard : un nom de service, une adresse à la capitale, un numéro de poste."
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 0"
+      speaker: josiane
+      text: "Madame Josiane te tend le contrat de la saison prochaine, la page quatorze cornée : « Le fonds vous prolonge. Il a souligné les enregistrements. Moi, j'ai seulement corné la page. »"
+      left: "Je signe"
+      right: "Je lis la page"
+      answer_left: "Elle décorne la page avant de ranger le contrat. « Comme ça, personne ne saura que je l'avais vue. »"
+      answer_right: "Tu lis : l'équipement, la voix, les nuits. Josiane attend, les mains jointes. « Vous voyez ce que je vois ? »"
+    - roles: [ds]
+      when: "flag('histoire_h8') && season >= 2"
+      text: "Le délégué pose le contrat sans s'asseoir : un an de plus, au même poste, sans oreillette. « Le modèle n'a plus besoin de vous. Le fonds, si : le virage vous aime bien. »"
+      left: "Je signe"
+      right: "Je relis tout"
+      answer_left: "Il range le contrat dans un dossier marqué EXCEPTIONS. Il n'y a qu'une feuille dedans."
+      answer_right: "Tu relis tout, jusqu'à la page quatorze. Elle a disparu. La numérotation saute de treize à quinze."
+
+  # ══ bilan_carrefour ═════════════════════════════════════════════════════
+  bilan_carrefour:
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 0"
+      text: "L'été, le duplex. Le pont roulant, la baie sur le stade éteint, l'oreillette sur la table de nuit qui dit l'heure quand on la regarde. Juillet passe en une seule nuit."
+      left: "Dormir en juillet"
+    - roles: [ds]
+      when: "flag('histoire_h8') && season == 1 && flag('h8_vaubourg_mort')"
+      text: "En juillet, Josiane vide l'ancien bureau, carton par carton, sans aide. Elle laisse la chaise de 1977 face au bureau vide. Personne ne la déplace de l'été."
+      left: "Laisser la chaise"
+    - roles: [ds]
+      when: "flag('histoire_h8') && season >= 2"
+      text: "L'été sans voix. Tu te réveilles à six heures dix tous les jours, sans réveil, et tu attends qu'on te dise bonjour. Le soixantième jour, tu le dis toi-même."
+      left: "Dire bonjour"

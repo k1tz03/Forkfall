@@ -1,0 +1,660 @@
+# « L'Oreillette » (Histoire 8, postulat `le_modele`) — les intrigues. Quinze,
+# dont trois s'ouvrent à coup sûr par une carte (Kerdal par Vollaire, De quoi
+# dormir par le casier de Kerdal, Le petit de Nino par la canne) : ce sont la
+# colonne du livre. Les douze autres forment le réservoir, tiré par saison
+# (content/postulats.yaml, `programme`).
+#
+#   Saison 1 (« 0 »)  : Kerdal · De quoi dormir (sûres) ; Cadence · Pari-Rive ·
+#                       Six cent douze jours (tirées)
+#   Saison 2 (« 1 »)  : La vidéo · Le compte du vieux · Le classeur de 2003 ·
+#                       Le cœur à quatre écus · Le service de nuit ·
+#                       Soixante-douze matchs
+#   Saison 3 (« 2+ ») : Le petit de Nino (sûre) ; Le Kambara · Les courbes de
+#                       tout le monde · La ligne qui coûte (tirées ; ce qui
+#                       n'a pas le temps de s'ouvrir avant 23 h 58 s'ouvre dans
+#                       l'épilogue)
+#
+# Les intrigues sûres figurent au programme avec une condition qui ne peut
+# pas être vraie au moment du tirage (la carte qui les ouvre déjà vue) : elles
+# appartiennent au postulat, mais seul le livre les ouvre, au créneau voulu.
+# Les cartes : content/cards/ds/h8_intrigues_{voix,bruit,silence}.yaml.
+arcs:
+  # ====================================================================== KERDAL
+  # Mbako veut le reposer, le modèle le veut trois fois ; le modèle veut le
+  # vendre avant lundi. Le seul moyen de le sauver : le reposer, puis refuser de
+  # le vendre (l'ancre ds.h8.a2_fin_de_cycle met « lundi » en file).
+  - id: ds.h8.kerdal
+    title: "Kerdal"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.5
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: mbako
+    cast: [mbako, kerdal, ober]
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    hint: "Soixante-dix matchs l'an dernier, des boîtes sans étiquette dans son casier, et une ligne rouge sur ton écran."
+    issues: [vit, mort]
+    issues_rares: [vit]
+    traces:
+      h8_kerdal_trois:  "{annee} : Kerdal a joué trois matchs en sept jours. Le modèle l'avait demandé, {nom} l'a signé."
+      h8_kerdal_repose: "{annee} : Mbako a laissé Kerdal en tribune, en civil, contre l'avis du modèle."
+      h8_kerdal_mort:   "{annee} : Erwan Kerdal, défenseur de {club}, retrouvé un lundi soir à la salle de muscu."
+      h8_kerdal_vit:    "{annee} : Kerdal a dormi la nuit où le modèle l'attendait. La ligne est restée rouge."
+    epilogue:
+      journal: "{annee} : Erwan Kerdal, soixante-dix matchs en une saison, une ligne rouge sur un écran."
+    steps:
+      - id: trois_fois
+        card: ds.h8.kerdal.trois_fois
+        next: [ { step: casier, in: [2, 4] } ]
+      - id: casier
+        card:
+          - { id: ds.h8.kerdal.casier_repos, if: "flag('h8_kerdal_repose')" }
+          - { id: ds.h8.kerdal.casier }
+        next: []
+      # Mis en file par l'ancre de l'hiver (ds.h8.a2_fin_de_cycle), quoi qu'on
+      # réponde. La première variante vraie gagne au moment où la carte sort.
+      - id: lundi
+        card:
+          - { id: ds.h8.kerdal.lundi_vit, if: "flag('h8_kerdal_repose') && flag('h8_kerdal_garde')" }
+          - { id: ds.h8.kerdal.lundi_vendu, if: "flag('h8_kerdal_vendu')" }
+          - { id: ds.h8.kerdal.lundi }
+        next: [ { step: apres, in: [1, 2] } ]
+      - id: apres
+        card:
+          - { id: ds.h8.kerdal.apres_vit, if: "flag('h8_kerdal_vit')" }
+          - { id: ds.h8.kerdal.apres }
+        next: []
+
+  # ============================================================ DE QUOI DORMIR
+  # La boîte du docteur Ober (la première prédiction de la voix), la deuxième
+  # boîte, et Nadia Rouvier, de passage, qui t'enlève ta montre (saison 2).
+  # Mise en file par le casier de Kerdal.
+  - id: ds.h8.comprimes
+    title: "De quoi dormir"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: corps
+    carrier: ober
+    cast: [ober, kerdal]
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    hint: "Un demi, pas plus. Et gardez votre montre la nuit."
+    issues: [boite, courbes]
+    traces:
+      h8_comprimes:     "{annee} : la boîte du docteur Ober sur la table de nuit de {nom}. Un demi, pas plus."
+      h8_bracelet_ote:  "{annee} : {nom} a ôté sa montre. Le modèle a perdu une courbe, sans le dire."
+      h8_double_dose:   "{annee} : un entier au lieu d'un demi. {nom} s'est réveillé{pg, select, f{e} other{}} au bureau."
+    steps:
+      - id: un_demi
+        card:
+          - { id: ds.h8.cp.un_demi_docile, if: "vars.h8_obei >= vars.h8_refus" }
+          - { id: ds.h8.cp.un_demi }
+        next: [ { step: deuxieme, in: [2, 4] } ]
+      - id: deuxieme
+        card:
+          - { id: ds.h8.cp.deuxieme_boite, if: "flag('h8_comprimes')" }
+          - { id: ds.h8.cp.deuxieme_poutres }
+        next: [ { step: poignet, at_season: "+1", at: [2, 6] } ]
+      - id: poignet
+        card: ds.h8.cp.poignet
+        next: []
+
+  # ================================================================= CADENCE
+  # Le sponsor gris : un bracelet pour chaque poignet du club, du vestiaire aux
+  # anciens du virage. Il revend les nuits de tout le monde.
+  - id: ds.h8.cadence
+    title: "Cadence"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: argent
+    carrier: gege
+    cast: [gege, ober, aulard, nassir]
+    start: [2, 7]
+    same_club: true
+    fallback: drop
+    hint: "Un bracelet offert à chaque poignet du virage. En échange, les nuits."
+    issues: [signe, refuse]
+    traces:
+      h8_sp_cadence:     "{annee} : {club} a signé avec Cadence. Un bracelet par poignet, du vestiaire au virage."
+      h8_cadence_refuse: "{annee} : {nom} a refusé les bracelets de Cadence au virage. Ils les ont donnés à la buvette."
+    steps:
+      - id: offre
+        card: ds.h8.cd.offre
+        next: [ { step: buvette, in: [2, 4] } ]
+      - id: buvette
+        card:
+          - { id: ds.h8.cd.buvette_signe, if: "flag('h8_sp_cadence')" }
+          - { id: ds.h8.cd.buvette }
+        next: [ { step: nuits, in: [2, 5] } ]
+      - id: nuits
+        card: ds.h8.cd.nuits
+        next: []
+
+  # =============================================================== PARI-RIVE
+  # Le sponsor louche : l'application de paris floquée sur le maillot veut la
+  # composition une heure avant tout le monde. L'argent est sale.
+  - id: ds.h8.pari_rive
+    title: "Pari-Rive"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 0.8
+    once: true
+    min_season: 0
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: instances
+    carrier: lea
+    cast: [lea, gege]
+    start: [3, 8]
+    same_club: true
+    fallback: drop
+    hint: "Le nom sur le maillot veut la composition à treize heures cinquante-huit."
+    issues: [envoie, refuse]
+    traces:
+      h8_sp_pari:     "{annee} : chaque samedi à 13 h 58, la composition de {club} partait chez Pari-Rive."
+      h8_pari_refuse: "{annee} : {nom} n'a jamais donné la composition à Pari-Rive. Le sponsor a baissé son chèque."
+      h8_cote_vue:    "{annee} : au Corner, la cote du milieu de {club} tombait une heure avant la composition."
+    steps:
+      - id: compo
+        card: ds.h8.pr.compo
+        next: [ { step: virement, in: [3, 5] } ]
+      - id: virement
+        card:
+          - { id: ds.h8.pr.virement_sale, if: "flag('h8_sp_pari')" }
+          - { id: ds.h8.pr.virement_cheque }
+        next: [ { step: cote, in: [2, 5] } ]
+      - id: cote
+        card: ds.h8.pr.cote
+        next: []
+
+  # ================================================== SIX CENT DOUZE JOURS
+  # Vaubourg, quatre-vingt-douze ans, l'ancien bureau que le fonds veut pour ses
+  # machines, le bracelet, la chaise de 1977. La date, le modèle l'a ; la veille
+  # et la porte sont les ancres de fin de saison 2 (ds.h8.b3_veille, b4_porte).
+  - id: ds.h8.vaubourg
+    title: "Six cent douze jours"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 0
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: president
+    carrier: aulard
+    cast: [aulard, josiane]
+    start: [3, 9]
+    same_club: true
+    fallback: drop
+    hint: "Le fonds veut l'ancien bureau de Vaubourg pour ses machines. Le modèle, lui, a sa date."
+    issues: [garde, cede]
+    traces:
+      h8_bureau_garde: "{annee} : {nom} a laissé son bureau à Vaubourg. Les machines du fonds sont au sous-sol."
+      h8_bureau_cede:  "{annee} : l'ancien bureau de Vaubourg devient une salle de serveurs. Il garde la clé."
+      h8_chaise:       "{annee} : une chaise du conseil de 1977 devant le bureau de Vaubourg, pour {nom}."
+    steps:
+      - id: bureau
+        card: ds.h8.vb.bureau
+        next: [ { step: bracelet, at_season: "+1", at: [3, 8] } ]
+      - id: bracelet
+        card:
+          - { id: ds.h8.vb.bracelet_salle, if: "flag('h8_bureau_cede')" }
+          - { id: ds.h8.vb.bracelet }
+        next: [ { step: chaise, in: [2, 5] } ]
+      - id: chaise
+        card: ds.h8.vb.chaise
+        next: []
+
+  # =============================================================== LA VIDÉO
+  # Minuit, sur le Flux : toi, avec ta voix, des choses que tu n'as jamais
+  # dites. Le démenti de Télé-Stade, et la source, que Léa trouve.
+  - id: ds.h8.video
+    title: "La vidéo"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 1
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: presse
+    carrier: lea
+    cast: [lea, kara]
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    hint: "Ta voix, ton bureau, des mots que tu n'as jamais dits. Trois cent mille vues."
+    issues: [plainte, silence]
+    traces:
+      h8_video:                 "{annee} : une vidéo de {nom}, avec sa voix et des mots jamais dits. Trois cent mille vues."
+      h8_plainte:               "{annee} : {nom} a porté plainte contre une vidéo. Contre X, faute de visage."
+      h8_oreillette_enregistre: "{annee} : la voix de la vidéo venait de quatre cents heures de nuits enregistrées."
+    steps:
+      - id: minuit
+        card:
+          - { id: ds.h8.vd.minuit_vit, if: "flag('h8_kerdal_vit')" }
+          - { id: ds.h8.vd.minuit }
+        next: [ { step: dementi, in: [2, 3] } ]
+      - id: dementi
+        card: ds.h8.vd.dementi
+        next: [ { step: source, in: [2, 4] } ]
+      - id: source
+        card: ds.h8.vd.source
+        next: []
+
+  # ====================================================== LE COMPTE DU VIEUX
+  # Le compte anonyme du virage poste ton adresse à trois heures. Gégé : ce
+  # n'était pas lui ; le mot de passe était sur son frigo. Qui a vu le frigo ?
+  - id: ds.h8.vieux
+    title: "Le compte du vieux"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: tribune
+    carrier: gege
+    cast: [gege, mbako]
+    start: [3, 8]
+    same_club: true
+    fallback: drop
+    hint: "Trois heures du matin : « Le DS du Racing entend des voix. On a l'adresse. »"
+    issues: [gege, seul]
+    traces:
+      h8_compte_vieux: "{annee} : à trois heures, le compte du vieux a publié l'adresse de {nom}. Ce n'était pas le vieux."
+      h8_virage_parle: "{annee} : {nom} est allé{pg, select, f{e} other{}} parler au virage, sous la Nord, sans oreillette."
+    steps:
+      - id: post
+        card: ds.h8.vx.post
+        next: [ { step: frigo, in: [2, 4] } ]
+      - id: frigo
+        card:
+          - { id: ds.h8.vx.frigo_cadence, if: "flag('h8_sp_cadence')" }
+          - { id: ds.h8.vx.frigo }
+        next: [ { step: nino, in: [2, 5] } ]
+      - id: nino
+        card:
+          - { id: ds.h8.vx.nino_kerdal, if: "flag('h8_kerdal_mort')" }
+          - { id: ds.h8.vx.nino }
+        next: []
+
+  # ===================================================== LE CLASSEUR DE 2003
+  # Le classeur de photocopies est chez Josiane : des fax de 2003, sans en-tête,
+  # sans signature. Les fax originaux, devenus des pages blanches, dorment au
+  # grenier du club-house : la mission des cartons les redescend
+  # (content/ville/missions_h8.yaml, drapeau h8_vl_classeur).
+  - id: ds.h8.classeur
+    title: "Le classeur de 2003"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: famille
+    carrier: josiane
+    cast: [josiane, aulard]
+    start: [2, 7]
+    same_club: true
+    fallback: drop
+    hint: "Madame Josiane a gardé chez elle des copies de 2003. Le petit Ferlac, à ses débuts."
+    issues: [lu, range]
+    traces:
+      h8_classeur_lu:    "{annee} : {nom} a lu le classeur de Josiane : des fax de 2003, sans en-tête, sans signature."
+      h8_classeur_range: "{annee} : Josiane a rangé le classeur de 2003 entre les recettes et les impôts."
+    steps:
+      - id: invitation
+        card:
+          - { id: ds.h8.cl.invitation_promise, if: "flag('h8_cartons_promis')" }
+          - { id: ds.h8.cl.invitation }
+        next: [ { step: classeur, in: [1, 3] } ]
+      - id: classeur
+        card: ds.h8.cl.classeur
+        next: [ { step: pages, in: [2, 4] } ]
+      - id: pages
+        card:
+          - { id: ds.h8.cl.pages_blanches, if: "flag('h8_vl_classeur')" }
+          - { id: ds.h8.cl.pages_range, if: "flag('h8_classeur_range')" }
+          - { id: ds.h8.cl.pages }
+        next: []
+
+  # ===================================================== LE CŒUR À QUATRE ÉCUS
+  # Léa achète à un revendeur les battements de cœur de tes joueurs, la nuit,
+  # pour le prouver. Le vendeur d'origine : Cadence. La tienne est dedans.
+  - id: ds.h8.courbes
+    title: "Le cœur à quatre écus"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 1
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: direction
+    carrier: lea
+    cast: [ober, lea]
+    start: [3, 8]
+    same_club: true
+    fallback: drop
+    hint: "Les nuits de tes joueurs se vendent quatre écus pièce. La tienne, six."
+    issues: [publie, pas_la_mienne]
+    traces:
+      h8_courbes_publiees: "{annee} : Le Quotidien publie les nuits des joueurs de {club}, achetées quatre écus pièce."
+      h8_pas_la_mienne:    "{annee} : Léa a publié les nuits du vestiaire. Pas celle de {nom}, qui l'avait demandé."
+    steps:
+      - id: quatre_ecus
+        card: ds.h8.co.quatre_ecus
+        next: [ { step: la_votre, in: [1, 3] } ]
+      - id: la_votre
+        card: ds.h8.co.la_votre
+        next: [ { step: ober, in: [2, 4] } ]
+      - id: ober
+        card:
+          - { id: ds.h8.co.ober_kerdal, if: "flag('h8_kerdal_mort')" }
+          - { id: ds.h8.co.ober }
+        next: []
+
+  # ===================================================== LE SERVICE DE NUIT
+  # Le nom de la voix de nuit, acheté au Terminus (ou donné par Léa) ; Inès
+  # Kara dans le hall de l'hôtel de la Rive ; les phrases qui étaient d'elle.
+  # En saison 3, le service supprimé le 3 est une ancre du script
+  # (ds.h8.op.le_trois, le lendemain de « Deux heures »), que l'intrigue ait
+  # été jouée ou non.
+  - id: ds.h8.operatrice
+    title: "Le service de nuit"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.1
+    once: true
+    min_season: 1
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: agent
+    carrier: kara
+    cast: [kara, lea]
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    hint: "La voix de nuit a un nom, un horaire, et un train le dernier samedi du mois."
+    issues: [kerdal, moi]
+    traces:
+      h8_nom_voix:      "{annee} : deux cents écus, au Terminus, pour un nom et un horaire. La voix de nuit."
+      h8_ines:          "{annee} : {nom} a rencontré la voix de nuit dans le hall de l'hôtel de la Rive."
+      h8_ines_aveu:     "{annee} : Inès Kara a dit quelles phrases étaient d'elle. Les pires."
+      h8_service_coupe: "{annee} : le service de nuit d'Almadis a été supprimé le 3 novembre. Personne au bout."
+    steps:
+      - id: developpeur
+        card: ds.h8.op.developpeur
+        next: [ { step: hall, in: [2, 5] } ]
+      - id: hall
+        card:
+          - { id: ds.h8.op.hall_lea, if: "!flag('h8_nom_voix') && !flag('h8_vl_nom_voix')" }
+          - { id: ds.h8.op.hall }
+        next: [ { step: phrases, in: [3, 6] } ]
+      - id: phrases
+        card:
+          - { id: ds.h8.op.phrases_heure, if: "seen('ds.h8.b2_cette_heure') || seen('ds.h8.b2_cette_heure_tiroir')" }
+          - { id: ds.h8.op.phrases_lundi, if: "flag('h8_kerdal_mort')" }
+          - { id: ds.h8.op.phrases }
+        next: []
+
+  # ================================================== SOIXANTE-DOUZE MATCHS
+  # La grève mondiale des joueurs. Karim Fauvel scotche une affiche sur la
+  # porte du vestiaire ; le modèle, lui, avait prévu onze jours.
+  - id: ds.h8.greve
+    title: "Soixante-douze matchs"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: instances
+    carrier: mbako
+    cast: [mbako, gege]
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    hint: "Soixante-douze matchs, et les joueurs du monde entier s'arrêtent vendredi."
+    issues: [soutenue, jouee]
+    traces:
+      h8_greve_soutenue: "{annee} : pendant la grève mondiale, {nom} a laissé le stade de la Rive ouvert et vide."
+      h8_club_joue:      "{annee} : {club} voulait jouer pendant la grève. L'arbitre n'est pas venu."
+    steps:
+      - id: affiche
+        card:
+          - { id: ds.h8.gr.affiche_vit, if: "flag('h8_kerdal_vit')" }
+          - { id: ds.h8.gr.affiche }
+        next: [ { step: vendredi, in: [1, 3] } ]
+      - id: vendredi
+        card:
+          - { id: ds.h8.gr.vendredi_vide, if: "flag('h8_greve_soutenue')" }
+          - { id: ds.h8.gr.vendredi }
+        next: [ { step: onze, in: [2, 4] } ]
+      - id: onze
+        card: ds.h8.gr.onze
+        next: []
+
+  # ===================================================== LA LIGNE QUI COÛTE
+  # Cheikh Ilyas ne parle qu'une fois, en visite. Puis le siège du fonds te
+  # veut ; puis la page quatorze : tes enregistrements sont au fonds.
+  - id: ds.h8.fonds
+    title: "La ligne qui coûte"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 0.9
+    once: true
+    min_season: 0
+    when: "season != 2 && (season != 1 || slot <= 11)"
+    theme: contrat
+    carrier: nassir
+    cast: [nassir, josiane]
+    start: [3, 8]
+    same_club: true
+    fallback: drop
+    hint: "Le propriétaire vient une heure. Il ne parle qu'une fois."
+    issues: [siege, refus]
+    traces:
+      h8_ilyas_vu:   "{annee} : Cheikh Ilyas est venu à Aubérive. Une heure, une phrase."
+      h8_siege:      "{annee} : {nom} a dit oui au siège d'Almadis : un bureau sans fenêtre, un titre."
+      h8_page_rayee: "{annee} : {nom} a rayé la page quatorze de son contrat. Le fonds n'a pas rendu la copie."
+    steps:
+      - id: visite
+        card: ds.h8.fd.visite
+        next: [ { step: siege, in: [3, 6] } ]
+      - id: siege
+        card: ds.h8.fd.siege
+        next: [ { step: page, in: [2, 4] } ]
+      - id: page
+        card:
+          - { id: ds.h8.fd.page_enregistre, if: "flag('h8_oreillette_enregistre')" }
+          - { id: ds.h8.fd.page }
+        next: []
+
+  # ======================================================= LE PETIT DE NINO
+  # Milo, seize ans, le fils de Nino, au centre de formation. Classé « fin de
+  # cycle » à seize ans par une règle écrite en 2017. Le dénouement est l'ancre
+  # ds.h8.c4_23h58 ; l'intrigue est mise en file par ds.h8.c1_canne.
+  - id: ds.h8.milo
+    title: "Le petit de Nino"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.4
+    once: true
+    min_season: 2
+    theme: formation
+    carrier: gege
+    cast: [gege, mbako]
+    start: [2, 4]
+    same_club: true
+    fallback: drop
+    hint: "Un gamin de seize ans court plus vite que le ballon. Sur ton écran, il est déjà rouge."
+    issues: [regle, rouge]
+    traces:
+      h8_regle_changee: "{annee} : {nom} a réécrit une règle de 2017. Le modèle a recalculé tout le centre en une nuit."
+      h8_milo_rouge:    "{annee} : Milo, seize ans, fin de cycle. La règle datait de 2017 ; personne n'y a touché."
+    steps:
+      - id: grillage
+        card:
+          - { id: ds.h8.mi.grillage_sifflet, if: "flag('h8_sifflet_donne')" }
+          - { id: ds.h8.mi.grillage }
+        next: [ { step: ligne, in: [2, 4] } ]
+      - id: ligne
+        card: ds.h8.mi.ligne
+        next: [ { step: nino, in: [2, 4] } ]
+      - id: nino
+        card:
+          - { id: ds.h8.mi.nino_adresse, if: "flag('h8_compte_vieux')" }
+          - { id: ds.h8.mi.nino }
+        next: []
+
+  # ============================================================= LE KAMBARA
+  # Lian Mbako part sélectionner le Kambara, le pays de ses parents, en
+  # 2026 (au printemps, ou à la rentrée de la dernière saison). Il regarde
+  # courir les joueurs ; il voudrait qu'on le regarde courir. Le sifflet
+  # qu'il laisse revient : au cou du petit de Nino (ds.h8.mi.grillage_sifflet)
+  # ou dans ta poche, le jour où il manque à l'arbitre (ds.h8.c5_reste_sifflet).
+  - id: ds.h8.kambara
+    title: "Le Kambara"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.2
+    once: true
+    min_season: 1
+    when: "season != 1 || slot <= 11"
+    theme: selection
+    carrier: mbako
+    cast: [mbako, gege]
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    hint: "Le Kambara appelle Lian Mbako. Il demande si tu le retiens."
+    issues: [embrasse, poignee]
+    traces:
+      h8_mbako_embrasse: "{annee} : Lian Mbako part pour le Kambara. Au car de six heures, il a serré {nom} dans ses bras."
+      h8_mbako_parti:    "{annee} : Lian Mbako part pour le Kambara. Une poignée de main au car de six heures."
+    steps:
+      - id: appel
+        card: ds.h8.kb.appel
+        next: [ { step: dernier, in: [1, 3] } ]
+      - id: dernier
+        card: ds.h8.kb.dernier
+        next: [ { step: car, in: [1, 3] } ]
+      - id: car
+        card:
+          - { id: ds.h8.kb.car_bras, if: "relation.mbako >= 1" }
+          - { id: ds.h8.kb.car }
+        next: []
+
+  # ============================================ LES COURBES DE TOUT LE MONDE
+  # Saison 3 : la dernière boîte d'Ober, ses cartons, et la juge qui veut ses
+  # courbes. Ce que tu diras de lui.
+  - id: ds.h8.ober
+    title: "Les courbes de tout le monde"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: corps
+    carrier: ober
+    cast: [ober, lea]
+    start: [2, 7]
+    same_club: true
+    fallback: drop
+    hint: "Le docteur Ober met son cabinet en cartons. La juge veut ses courbes."
+    issues: [temoin, silence]
+    traces:
+      h8_ober_temoin:  "{annee} : {nom} a dit à la juge tout ce que cachaient les courbes du docteur Ober."
+      h8_ober_couvert: "{annee} : devant la juge, {nom} a dit ne rien savoir des courbes. Ober a gardé son cabinet."
+    steps:
+      - id: derniere_boite
+        card:
+          - { id: ds.h8.ob.derniere_boite_prise, if: "flag('h8_comprimes')" }
+          - { id: ds.h8.ob.derniere_boite }
+        next: [ { step: cartons, in: [1, 3] } ]
+      - id: cartons
+        card: ds.h8.ob.cartons
+        next: [ { step: juge, in: [1, 3] } ]
+      - id: juge
+        card:
+          - { id: ds.h8.ob.juge_carton, if: "flag('h8_carton_ober')" }
+          - { id: ds.h8.ob.juge }
+        next: []
+
+  # ===================================================== LA VOIX DES AUTRES
+  # L'épilogue (après 23 h 58, puis la saison 4 et après) : le modèle 2027
+  # a appris ta voix (ds.h8.d1_boite). Elle parle maintenant dans l'oreille
+  # d'un directeur sportif de Castérac, vingt-neuf ans. Ce que la fin « La
+  # voix » promettait, le livre le fait arriver même à qui a dit non : il
+  # reste à décider si on la laisse parler. Seules les carrières qui
+  # survivent à 23 h 58 la vivent.
+  - id: ds.h8.suivant
+    title: "La voix des autres"
+    kind: serie
+    roles: [ds]
+    postulats: [le_modele]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    when: "season >= 3 || (season == 2 && slot >= 13)"
+    theme: mercato
+    carrier: lea
+    cast: [lea, josiane]
+    start: [2, 6]
+    same_club: true
+    fallback: drop
+    hint: "Dans l'oreille d'un directeur sportif de Castérac, la voix a changé. Elle a la tienne."
+    issues: [retiree, laissee]
+    traces:
+      h8_voix_retiree: "{annee} : {nom} a fait retirer sa voix du modèle. Une voix « équivalente » l'a remplacée."
+      h8_voix_laissee: "{annee} : la voix de {nom} parle dans l'oreille d'un directeur sportif de Castérac."
+    steps:
+      - id: appel
+        card: ds.h8.sv.appel
+        next: [ { step: quai, in: [2, 4] } ]
+      - id: quai
+        card: ds.h8.sv.quai
+        next: [ { step: formulaire, in: [2, 4] } ]
+      - id: formulaire
+        card: ds.h8.sv.formulaire
+        next: []

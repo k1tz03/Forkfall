@@ -121,6 +121,11 @@
 ///   Rancé père et fils, Arnaud Vaubourg). Comme pour le livre 5, aucune des
 ///   vingt carrières ne bouge : seule la part « personnages » de l'empreinte
 ///   change. `--goldens --write`.
+/// · **Histoire 8, « L'Oreillette »** (la branche `histoire-h8`). Le directeur
+///   sportif de 2024 et la voix dans l'oreille deviennent un livre, avec trois
+///   visages de plus (Kerdal, Ober, Inès Kara). Aucune des vingt carrières ne
+///   bouge, seule la part « personnages » de l'empreinte change.
+///   `--goldens --write`.
 library;
 
 import 'dart:io';

@@ -8,11 +8,11 @@ session, alors ce qui n'était pas encore fusionné est sauvé ici, en patchs.
 | Patch | Livre | État | Base (commit de cette branche) |
 |---|---|---|---|
 | `h4_la_route_de_la_rive.patch` | 4, « La Route de la Rive » (joueur, `fin_de_contrat`) | commité par son auteur, rapport non reçu | `6e5b132` |
-| `h8_l_oreillette.patch` | 8, « L'Oreillette » (DS, `le_modele`, 2024) | **fini** : build, lint 0 erreur, 131 tests, `--assert` | `f681cac` |
 | `h7_en_cours.patch` | 7 (sélectionneur) | **en cours d'écriture**, instantané partiel | `f681cac` |
 | `h9_en_cours.patch` | 9 (sélectionneur) | **en cours d'écriture**, instantané partiel | `f681cac` |
 | `h10_en_cours.patch` | 10 (président) | **en cours d'écriture**, instantané partiel | `f681cac` |
 
+Le livre 8, « L'Oreillette », a été fusionné depuis (son patch est retiré).
 Le bundle généré (`app/assets/content.json`) n'est dans aucun patch. Les
 instantanés en cours peuvent contenir des scripts jetables de leur auteur
 (`packages/tools/bin/h7_lire_tmp.dart`, `_h10_lire.dart`, `_h10_stats.dart`) et,
