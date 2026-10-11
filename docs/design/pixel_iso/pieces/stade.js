@@ -15,19 +15,20 @@ module.exports = {
     for (const [x, n] of [[6, 1], [12, 2], [18, 3], [24, 4]]) K.place('banc_' + n, x, 5, { pose: 'assis', regarde: 'droite' });
     for (const [y, n] of [[10, 5], [18, 6], [26, 7]]) K.place('banc_' + n, 5, y, { pose: 'assis', regarde: 'droite' });
     K.objet('casier', 'Ton casier', 3, 20, 6);
-    // le tableau noir des consignes
-    K.boite(32, 0, 7, 44, 1, 14, M.BOARD); K.boite(32, 0, 6, 44, 1, 7, M.WOOD_DARK);
-    K.objet('tableau', 'Le tableau noir', 38, 1, 10);
-    K.place('tableau', 38, 6, { regarde: 'gauche', pour: 'visiteur' });
+    // le tableau noir des consignes (devant, la place de celui qui parle au groupe : visible,
+    // pas derrière la cloison des douches)
+    K.boite(32, 0, 7, 40, 1, 14, M.BOARD); K.boite(32, 0, 6, 40, 1, 7, M.WOOD_DARK);
+    K.objet('tableau', 'Le tableau noir', 36, 1, 10);
+    K.place('tableau', 35, 7, { regarde: 'gauche', pour: 'visiteur' });
     // la table de massage, le Doc
     K.boite(20, 16, 0, 21, 17, 4, M.METAL); K.boite(29, 16, 0, 30, 17, 4, M.METAL);
     K.boite(19, 14, 4, 31, 18, 5, M.WHITE); K.boite(20, 14, 5, 24, 18, 6, M.TOWEL);
     K.objet('massage', 'La table du Doc', 25, 16, 5);
     K.place('doc', 25, 21, { regarde: 'gauche', pour: 'sabatier' });
-    // les douches, carrelées, dans le coin du fond à droite
-    K.boite(36, 8, 0, 46, 9, 12, M.FAIENCE);
-    for (const x of [38, 42]) { K.boite(x, 0, 13, x + 1, 3, 14, M.METAL); K.voxel(x, 2, 12, M.CHROME); }
-    K.objet('douches', 'Les douches', 40, 4, 6);
+    // les douches, carrelées, dans le coin du fond à droite (une cloison basse, qui ne cache rien)
+    K.boite(41, 8, 0, 46, 9, 10, M.FAIENCE);
+    for (const x of [42, 44]) { K.boite(x, 0, 13, x + 1, 3, 14, M.METAL); K.voxel(x, 2, 12, M.CHROME); }
+    K.objet('douches', 'Les douches', 43, 4, 6);
     // le sac de ballons, les plots, la valise du Doc
     K.boite(36, 26, 0, 40, 30, 3, M.BALLS);
     K.objet('ballons', 'Le sac de ballons', 38, 28, 3);
