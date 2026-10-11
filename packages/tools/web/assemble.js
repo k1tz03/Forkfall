@@ -35,6 +35,9 @@ const ROOT = path.resolve(HERE, '..', '..', '..');
 // FUSIBLE_BUILD_DIR s'il est posé. Les options --engine / --out restent
 // prioritaires. Aucun chemin absolu propre à une machine n'est écrit ici.
 const BUILD_DIR = process.env.FUSIBLE_BUILD_DIR || path.join(ROOT, 'build', 'web');
+// Les modules de la ville, insérés dans la fermeture de ville.js (au repère
+// /*__VILLE_MODULES__*/), dans cet ordre : ils voient tout ce qu'elle voit.
+const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js'];
 
 function parseArgs(argv) {
   const opts = { engine: path.join(BUILD_DIR, 'engine.js'), out: path.join(BUILD_DIR, 'fusible_preview.html'), ville: null };
@@ -144,7 +147,40 @@ function main() {
   let villeCss = '', villeJs = '';
   if (opts.ville) {
     villeCss = '<style>\n' + fs.readFileSync(path.join(HERE, 'ville.css'), 'utf8') + '\n</style>';
-    villeJs = fs.readFileSync(path.join(HERE, 'ville.js'), 'utf8').split('</script').join('<\\/script');
+    // les modules de la ville (intérieurs, scènes, jeux) entrent dans sa fermeture, au repère
+    let villeSrc = fs.readFileSync(path.join(HERE, 'ville.js'), 'utf8');
+    // un module partage la fermeture : il ne redéclare jamais un nom de la ville ou d'un autre
+    // module (une `function lancer` y remplacerait celle qui démarre la ville, en silence)
+    const declares = (src) => {
+      const out = new Set();
+      for (const m of src.matchAll(/^  function\s+([A-Za-z_$][\w$]*)\s*\(/gm)) out.add(m[1]);
+      // `var a = …, b = …` : les noms en tête de chaque segment de profondeur nulle
+      for (const m of src.matchAll(/^  var\s/gm)) {
+        let i = m.index + m[0].length, prof = 0, debut = true, chaine = null;
+        for (; i < src.length; i++) {
+          const c = src[i];
+          if (chaine) { if (c === '\\') i++; else if (c === chaine) chaine = null; continue; }
+          if (debut) { const n = /^\s*([A-Za-z_$][\w$]*)/.exec(src.slice(i, i + 80)); if (n) out.add(n[1]); debut = false; }
+          if (c === '"' || c === "'" || c === '`') chaine = c;
+          else if ('([{'.includes(c)) prof++;
+          else if (')]}'.includes(c)) prof--;
+          else if (c === ',' && prof === 0) debut = true;
+          else if (c === ';' && prof === 0) break;
+        }
+      }
+      return out;
+    };
+    const vus = new Map([...declares(villeSrc)].map((n) => [n, 'ville.js']));
+    for (const f of VILLE_MODULES) {
+      for (const n of declares(fs.readFileSync(path.join(HERE, f), 'utf8'))) {
+        if (vus.has(n)) throw new Error(`${f} redéclare « ${n} », déjà déclaré par ${vus.get(n)}`);
+        vus.set(n, f);
+      }
+    }
+    const modules = VILLE_MODULES.map((f) => fs.readFileSync(path.join(HERE, f), 'utf8')).join('\n');
+    if (villeSrc.indexOf('/*__VILLE_MODULES__*/') < 0) throw new Error('ville.js : repère /*__VILLE_MODULES__*/ absent');
+    villeSrc = villeSrc.split('/*__VILLE_MODULES__*/').join(modules);
+    villeJs = villeSrc.split('</script').join('<\\/script');
   }
   // la version jouable porte son nom dans l'onglet
   if (opts.ville) tpl = tpl.replace('<title>Fusible</title>', '<title>Fusible à Aubérive</title>');
@@ -168,6 +204,15 @@ function main() {
       n++; octets += fs.statSync(path.join(dest, f)).size;
     }
     if (!n) throw new Error('--ville : aucune image dans ' + opts.ville);
+    // les intérieurs (docs/design/pixel_iso/interieurs_jeu.js), commités à côté de ce script
+    const intDir = path.join(HERE, 'interieurs');
+    if (fs.existsSync(intDir)) {
+      for (const f of fs.readdirSync(intDir).sort()) {
+        if (!/\.(webp|json)$/.test(f)) continue;
+        fs.copyFileSync(path.join(intDir, f), path.join(dest, f));
+        n++; octets += fs.statSync(path.join(dest, f)).size;
+      }
+    }
     console.log('la ville : ' + n + ' fichiers (' + Math.round(octets / 1024) + ' Ko) → ' + dest);
   }
 }

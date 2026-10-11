@@ -1149,6 +1149,7 @@ __VILLE_CSS__
     var V = window.FusibleVille;
     if (V && V.moment && document.body.classList.contains("ville-on")) {
       var m = V.moment();
+      if (m.musique) return m.musique;
       if (m.match) return "match";
       if (m.carte && sombre) return "sombre";
       return m.nuit ? "ville_nuit" : "ville_jour";
@@ -2437,6 +2438,16 @@ __VILLE_CSS__
         return view;
       },
       graine: function () { return { seed: currentSeed, postulat: currentPostulat }; },
+      // la couleur de l'histoire en cours (sa cartouche à l'accueil) : le néon des scènes jouées
+      couleur: function () { var p = (content.postulats || []).filter(function (x) { return x.index === currentPostulat; })[0], h = p && HISTOIRES[p.id]; return h ? h.c : "#E0164B"; },
+      // un bruit de la vie (une scène jouée le demande)
+      son: function (nom) { if (audio && audio.play && sonMode !== "muet") audio.play(nom); },
+      // dedans, l'ambiance de la pièce (null : la ville reprend la sienne)
+      ambiance: function (nom) {
+        if (!audio || !audio.setAmbiance) return;
+        var A = { bar: "ville", maison: "maison", bureau: "bureau", vestiaire: "vestiaire", presse: "presse", boutique: "ville", salle: "couloir", soin: "couloir", nuit: "nuit" };
+        audio.setAmbiance(nom ? (A[nom] || "maison") : ((view && view.card && view.card.ambiance) || "ville"));
+      },
       frise: function () { openFrise(null); },
       classement: function () { openStandings(null); },
       panneau: function (titre, html) { openPanel("ville", titre, html, null); },

@@ -432,3 +432,101 @@ body.v-au-stade #gameScreen > .v-actions{display:none}
   background:var(--framboise);border:0;border-radius:3px;
 }
 @media (prefers-reduced-motion: reduce){ .v-match-legende.on{animation:none} }
+
+/* ── dedans : on est entré dans un lieu ─────────────────────────────────── */
+.v-fondu.vite{transition-duration:180ms}
+#villeSortir{display:none}
+body.v-dedans #villeSortir{display:inline-flex}
+body.v-dedans #villeBiens{display:none}
+.v-cartouche{
+  position:fixed;left:50%;top:calc(var(--v-haut, 96px) + 10px);z-index:4;transform:translate(-50%,-6px);
+  max-width:min(92vw,420px);padding:8px 14px 9px;border-left:3px solid var(--framboise);background:rgba(14,9,6,.86);
+  display:flex;flex-direction:column;gap:3px;opacity:0;pointer-events:none;transition:opacity .35s, transform .35s;
+}
+.v-cartouche.on{opacity:1;transform:translate(-50%,0)}
+.v-cartouche b{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--creme)}
+.v-cartouche span{font-size:12.5px;line-height:1.45;color:var(--creme2);font-style:italic}
+.v-cartouche span:empty{display:none}
+.v-lieu.v-obj{background:rgba(14,9,6,.72);border-color:rgba(242,232,206,.22);font-size:9.5px;letter-spacing:.06em;padding:2px 6px;min-height:0}
+.v-lieu.v-obj.v-sortie{border-color:var(--framboise);color:var(--creme)}
+
+/* ── les scènes jouées : des bandes noires, une boîte au néon de l'histoire ── */
+body.v-cine-on #gameScreen{visibility:hidden}
+body.v-cine-on #villeCouche .v-lieu,body.v-cine-on .v-cartouche{visibility:hidden}
+.v-cine{position:fixed;inset:0;z-index:7;pointer-events:auto;cursor:pointer;--cine:#E0164B}
+.v-cine[hidden]{display:none}
+.v-cine-bande{position:absolute;left:0;right:0;height:9vh;background:#000;transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.v-cine-bande.haut{top:0;transform:translateY(-100%)}
+.v-cine-bande.bas{bottom:0;transform:translateY(100%)}
+.v-cine.on .v-cine-bande{transform:none}
+.v-cine-passer{
+  position:absolute;top:calc(env(safe-area-inset-top, 0px) + 10px);right:12px;z-index:2;min-height:36px;padding:0 12px;
+  font:700 11px/1 inherit;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,232,206,.62);
+  background:transparent;border:1px solid rgba(242,232,206,.24);border-radius:2px;cursor:pointer;
+}
+.v-cine-passer:hover,.v-cine-passer:focus-visible{color:var(--creme);border-color:var(--creme3);outline:0}
+.v-cine-boite{
+  position:absolute;left:50%;bottom:calc(9vh + 12px);transform:translateX(-50%);width:min(94vw,560px);
+  display:flex;gap:12px;align-items:flex-start;padding:12px 14px 14px;background:rgba(9,5,4,.95);
+  border-top:2px solid var(--cine);box-shadow:0 0 0 1px rgba(0,0,0,.6),0 -10px 34px -12px var(--cine);
+}
+.v-cine-boite[hidden]{display:none}
+.v-cine-visage{flex:0 0 78px;width:78px;height:78px;overflow:hidden;border:1px solid var(--cine);background:#140c08;display:flex;align-items:center;justify-content:center}
+.v-cine-visage[hidden]{display:none}
+.v-cine-visage svg{width:100%;height:100%;display:block}
+.v-cine-visage .v-cine-figurine{image-rendering:pixelated;width:72%;height:auto}
+.v-cine-mots{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.v-cine-nom{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--cine);text-shadow:0 0 10px var(--cine)}
+.v-cine-mots p{margin:0;min-height:3.9em;font-size:15.5px;line-height:1.42;color:var(--creme);text-wrap:pretty}
+.v-cine-suite{align-self:flex-end;font-style:normal;font-size:11px;color:var(--cine);opacity:0}
+.v-cine-boite.fini .v-cine-suite{animation:v-cine-clin 1s steps(2) infinite}
+@keyframes v-cine-clin{50%{opacity:1}}
+.v-cine-boite.narration{background:rgba(9,5,4,.82);border-top-color:rgba(242,232,206,.25);box-shadow:none}
+.v-cine-boite.narration p{font-style:italic;color:var(--creme2);text-align:center;min-height:0}
+.v-cine-boite.pense p{font-style:italic;color:var(--creme2)}
+.v-cine-titre{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  padding:0 24px;text-align:center;background:#050302;opacity:0;transition:opacity .4s}
+.v-cine-titre[hidden]{display:none}
+.v-cine-titre.on{opacity:1}
+.v-cine-titre b{font-family:"Pixelify Sans","Space Mono",monospace;font-size:clamp(30px,10vw,56px);font-weight:700;line-height:1.05;
+  letter-spacing:.04em;text-transform:uppercase;color:var(--cine);text-wrap:balance;
+  text-shadow:3px 0 rgba(255,0,90,.55),-3px 0 rgba(0,220,255,.45),0 0 26px var(--cine);transform:skewX(-6deg)}
+.v-cine-titre.on b{animation:v-cine-neon 1.6s steps(1) 1}
+@keyframes v-cine-neon{0%{opacity:0}8%{opacity:1}12%{opacity:.25}18%{opacity:1}64%{opacity:1}68%{opacity:.4}72%{opacity:1}}
+.v-cine-titre span{font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--creme2)}
+.v-cine-flash{position:absolute;inset:0;opacity:0;pointer-events:none;mix-blend-mode:screen}
+.v-cine-flash.on{animation:v-cine-flash .32s ease-out 1}
+@keyframes v-cine-flash{0%{opacity:.75}100%{opacity:0}}
+#villeCanvas.v-secousse{animation:v-secousse .38s linear 1}
+@keyframes v-secousse{0%,100%{transform:none}20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-3px,-1px)}80%{transform:translate(2px,2px)}}
+@media (prefers-reduced-motion:reduce){
+  .v-cine-bande,.v-cine-titre{transition:none}
+  .v-cine-titre.on b,#villeCanvas.v-secousse,.v-cine-flash.on{animation:none}
+}
+
+/* ── les petits jeux : la cible, le 421, les jongles, le baby-foot, les cartes ── */
+.v-jeu{position:fixed;inset:0;z-index:7;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,3,2,.72)}
+.v-jeu[hidden]{display:none}
+.v-jeu-boite{width:min(92vw,340px);display:flex;flex-direction:column;gap:10px;padding:14px 14px 12px;background:var(--fond, #160E0A);
+  border-top:2px solid var(--framboise);box-shadow:0 18px 40px -18px #000}
+.v-jeu-boite h2{margin:0;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--creme)}
+.v-jeu-regle{margin:0;font-size:12.5px;line-height:1.45;color:var(--creme2)}
+.v-jeu-boite canvas{width:100%;height:auto;image-rendering:pixelated;background:#140C08;touch-action:none;cursor:crosshair}
+.v-jeu-boite canvas[hidden]{display:none}
+.v-jeu-score{margin:0;min-height:1.4em;font-size:13px;color:var(--creme)}
+.v-jeu-btns{display:flex;gap:8px;justify-content:flex-end}
+.v-jeu-btns button{min-height:42px;padding:0 14px;font:700 11px/1 inherit;letter-spacing:.14em;text-transform:uppercase;color:var(--creme);
+  background:transparent;border:1px solid var(--creme3);border-radius:2px;cursor:pointer}
+.v-jeu-btns button[hidden]{display:none}
+.v-jeu-action{border-color:var(--framboise)!important;background:rgba(224,22,75,.16)!important}
+.v-jeu-des{display:flex;gap:12px;justify-content:center;padding:6px 0}
+.v-jeu-des[hidden]{display:none}
+.v-de{width:64px;height:64px;font-size:46px;line-height:60px;color:var(--creme);background:#1E1511;border:1px solid var(--creme3);border-radius:4px;cursor:pointer}
+.v-de.garde{border-color:var(--framboise);box-shadow:0 0 0 2px rgba(224,22,75,.35)}
+.v-de.roule{animation:v-de .26s linear 1}
+@keyframes v-de{50%{transform:rotate(14deg) scale(.92)}}
+.v-cartes{display:flex;gap:18px}
+.v-cartes span{width:72px;height:100px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#1A1210;
+  background:#EDE6D2;border-radius:5px;box-shadow:0 2px 0 #9C8F74}
+.v-cartes span.lui{background:#D7CDB4;color:#6E1420}
+@media (prefers-reduced-motion:reduce){.v-de.roule{animation:none}}

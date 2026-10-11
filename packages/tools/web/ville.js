@@ -89,7 +89,7 @@
   function jourDe(t) { return Math.floor(t / 5) % 7; }
   function trancheDe(t) { return t % 5; }
   function semaineDe(t) { return Math.floor(t / 35); }
-  function ambiance() { return AMBIANCE[TRANCHES[S.tranche]]; }
+  function ambiance() { if (CINE && CINE.amb) return CINE.amb; return AMBIANCE[TRANCHES[S.tranche]]; }
   function quand(t) {
     var j = jourDe(t), tr = TRANCHES[trancheDe(t)];
     var rel = semaineDe(t) > S.semaine ? " prochain" : "";
@@ -235,7 +235,7 @@
     }
     return im;
   }
-  function nomTuile(amb, i) { return amb + "_" + (i < 10 ? "0" : "") + i; }
+  function nomTuile(amb, i) { if (dedans) return nomImageDedans(amb); return amb + "_" + (i < 10 ? "0" : "") + i; }
   function profTuile(nom) {
     if (profs[nom] !== undefined) return profs[nom];
     var im = img(nom);
@@ -256,7 +256,7 @@
   function profondeur(u, v) {
     if (u < 0 || v < 0 || u >= P.w || v >= P.h) return 0;
     var c = Math.floor(u / TUILE), r = Math.floor(v / TUILE), i = r * COLS + c;
-    var t = profTuile(nomTuile(PROFONDEUR[ambiance()], i));
+    var t = profTuile(dedans ? "int_" + dedans.cle + "_prof" : nomTuile(PROFONDEUR[ambiance()], i));
     if (!t) return 0;
     var q = t[(v - r * TUILE) * t.w + (u - c * TUILE)];
     return q ? (q - 1) / 8 : 0;
@@ -305,7 +305,7 @@
     st.setProperty("--v-haut", UI.haut + "px"); st.setProperty("--v-bas", UI.bas + "px");
   }
   // où regarde la caméra : le héros, au milieu de la bande de ville
-  function visee() { var p = versImage(heros.x, heros.y, ZSOL + 8); return [p[0], p[1] - UI.decal / k]; }
+  function visee() { if (dedans) return viseeDedans(); var p = versImage(heros.x, heros.y, ZSOL + 8); return [p[0], p[1] - UI.decal / k]; }
 
   // ─────────────────────────────────────────────────────────────── les gens
   // Un sprite : rangées de caractères + palette (sprites.json, tirés du moteur voxel).
@@ -325,22 +325,35 @@
     // l'ombre au sol
     ctx.fillStyle = "rgba(0,0,0," + (0.34 * alpha).toFixed(3) + ")";
     ctx.fillRect(ox - 4, oy - 1, 9, 2); ctx.fillRect(ox - 3, oy - 2, 7, 4);
-    var teinte = TEINTE[ambiance()], tint = opt.teinte || teinte, pal = opt.pal;
+    var teinte = (dedans ? TEINTE_DEDANS : TEINTE)[ambiance()], tint = opt.teinte || teinte, pal = opt.pal;
     var im = ctx.createImageData(w, h), d = im.data, jambes = Math.floor(h * 0.72);
+    // assis : le corps descend sur le siège, les jambes repliées ne gardent que les pieds ;
+    // à genoux : pareil, sans siège
+    var ge = opt.geste, t = opt.t || 0;
+    var assis = opt.pose === "assis" || ge === "genou", coupe = assis ? Math.max(0, h - jambes - 2) : 0;
+    // la tête qui parle hoche ; baissée, elle descend d'un pixel ; le rire saute, la peur tremble
+    var tete = Math.min(6, Math.floor(h * 0.3)), dyTete = (opt.parle && Math.floor(t / 170) % 2) || ge === "tete_basse" || ge === "pleure" ? 1 : 0;
+    var dyCorps = ge === "rit" || ge === "danse" ? (Math.floor(t / 130) % 2 ? -1 : 0) : 0;
+    var dxCorps = ge === "tremble" ? (Math.floor(t / 70) % 2 ? 1 : -1) : ge === "frappe" ? (t % 900 < 160 ? (miroir ? -2 : 2) : 0) : 0;
+    if (ge === "danse" && Math.floor(t / 420) % 2) miroir = !miroir, ax = miroir ? w - 1 - def.ax : def.ax;
+    var dos = ge === "dos", couche = ge === "couche";
     var silhouette = !!opt.silhouette, a8 = Math.round(255 * alpha), vu = false;
     for (var i = 0; i < h; i++) {
-      var row = rows[i];
+      if (coupe && i >= jambes && i < jambes + coupe) continue;
+      var row = rows[i], ii = (coupe && i < jambes ? i + coupe : i) + (i < tete ? dyTete : 0);
+      if (ii >= h) continue;
       for (var j = 0; j < w; j++) {
         var src = miroir ? w - 1 - j : j;
         if (pas && i >= jambes) src += (src < w / 2 ? 1 : -1) * pas;
         var ch = src >= 0 && src < w ? row[src] : ".";
         if (ch === "." || ch === " ") continue;
+        if (dos && i < tete + 1) { if (ch === "s") ch = "h"; else if (ch === "S") ch = "H"; }
         var col = (pal && pal[ch]) || def.pal[ch];
         if (!col) continue;
-        var px = u0 - ax + j, py = v0 - (h - 1) + i;
-        var ds = x + y + z + (h - 1 - i) / 2, sc = profondeur(px, py);
-        var cache = sc && ds < sc - TOLERANCE;
-        var o = (i * w + j) * 4;
+        var px = u0 - ax + j + dxCorps, py = v0 - (h - 1) + ii + dyCorps;
+        var ds = x + y + z + (h - 1 - ii) / 2 + (assis ? 1.5 : 0), sc = profondeur(px, py);
+        var cache = !couche && sc && ds < sc - TOLERANCE;
+        var o = (ii * w + j) * 4;
         if (cache) {
           if (!silhouette) continue;
           d[o] = 242; d[o + 1] = 232; d[o + 2] = 206; d[o + 3] = 110;
@@ -357,8 +370,14 @@
     var tmp = dessinerSprite._c || (dessinerSprite._c = document.createElement("canvas"));
     tmp.width = w; tmp.height = h;
     tmp.getContext("2d").putImageData(im, 0, 0);
-    ctx.drawImage(tmp, ox - ax, oy - (h - 1));
-    return vu ? { x: ox - ax, y: oy - (h - 1), w: w, h: h, tete: [ox, oy - h] } : null;
+    if (couche) {
+      // couché : le corps tourné d'un quart, les pieds vers où il regardait
+      ctx.save(); ctx.translate(ox, oy - 2); ctx.rotate(miroir ? Math.PI / 2 : -Math.PI / 2);
+      ctx.drawImage(tmp, -ax, -(h - 1) + 3); ctx.restore();
+      return vu ? { x: ox - h / 2, y: oy - 6, w: h, h: 6, tete: [ox + (miroir ? -h / 2 : h / 2), oy - 6] } : null;
+    }
+    ctx.drawImage(tmp, ox - ax + dxCorps, oy - (h - 1) + dyCorps);
+    return vu ? { x: ox - ax + dxCorps, y: oy - (h - 1) + dyCorps, w: w, h: h, tete: [ox + dxCorps, oy - h + dyCorps] } : null;
   }
   // le point d'exclamation d'un rendez-vous, au-dessus de la tête
   function dessinerMarque(x, y, t) {
@@ -382,6 +401,7 @@
     return true;
   }
   function allerAuLieu(cle) {
+    if (dedans) { if (cle === dedans.cle) { arriveeDedans(); return; } sortir(function () { allerAuLieu(cle); }); return; }
     var l = LIEU[cle];
     if (!l || !l.door) return;
     if (porteOuverte === cle) return;
@@ -392,7 +412,7 @@
   function majMarche(dt) {
     var c = heros.chemin;
     if (!c) { heros.pas = 0; return; }
-    var reste = VITESSE * dt * (S.vite ? 3 : 1) * vitesseBiens();
+    var reste = dedans ? VITESSE_DEDANS * dt : VITESSE * dt * (S.vite ? 3 : 1) * vitesseBiens();
     while (reste > 0 && c) {
       var cible = c[heros.i + 1];
       if (!cible) { heros.chemin = null; var f = heros.arrivee; heros.arrivee = null; S.x = heros.x; S.y = heros.y; if (f) f(); return; }
@@ -402,8 +422,8 @@
       // à l'écran, x monte vers la droite-bas et y vers la gauche-bas
       if (Math.abs(dx - dy) > 0.01) heros.miroir = (dx - dy) < 0;
     }
-    heros.dist += VITESSE * dt;
-    var ph = Math.floor(heros.dist / 5) % 4;
+    heros.dist += (dedans ? VITESSE_DEDANS : VITESSE) * dt;
+    var ph = Math.floor(heros.dist / (dedans ? 3 : 5)) % 4;
     heros.pas = ph === 1 ? 1 : ph === 3 ? -1 : 0;
   }
 
@@ -498,7 +518,7 @@
 
   function aPorte(cle) { return !!(LIEU[cle] && LIEU[cle].door && !SANS_PORTE[cle]); }
   // un peu derrière la façade : de là, le corps sort de l'ombre de la porte
-  function dedans(cle) {
+  function seuilPorte(cle) {
     var l = LIEU[cle], c = centre(l.door), dx = l.x - c[0], dy = l.y - c[1], d = Math.hypot(dx, dy);
     if (d < 0.5) { dx = -1; dy = -1; d = Math.SQRT2; }
     return [c[0] + dx / d * (d + 4), c[1] + dy / d * (d + 4)];
@@ -620,8 +640,8 @@
       miroir: false, pas: 0, dist: Math.random() * 16, alpha: 1, arret: 0, gens: true, uid: ++UID };
     var portes = portesProches(), dep = null, depDedans = null, cleDep = null;
     if (enScene) dep = aLEcranAuHasard();
-    else if (S.sortieStade === tNow() && aPorte("stade") && Math.random() < 0.6) { cleDep = "stade"; dep = LIEU.stade.door.slice(); depDedans = dedans("stade"); }
-    else if (portes.length && Math.random() < 0.5) { cleDep = auHasard(portes); dep = LIEU[cleDep].door.slice(); depDedans = dedans(cleDep); }
+    else if (S.sortieStade === tNow() && aPorte("stade") && Math.random() < 0.6) { cleDep = "stade"; dep = LIEU.stade.door.slice(); depDedans = seuilPorte("stade"); }
+    else if (portes.length && Math.random() < 0.5) { cleDep = auHasard(portes); dep = LIEU[cleDep].door.slice(); depDedans = seuilPorte(cleDep); }
     else dep = horsChamp(null);
     if (!dep) return null;
     if (!destination(q, dep, depDedans, portes, cleDep)) return null;
@@ -631,8 +651,8 @@
     portes = portes || portesProches();
     var autres = portes.filter(function (c) { return c !== eviter && Math.abs(LIEU[c].door[0] - dep[0]) + Math.abs(LIEU[c].door[1] - dep[1]) > 8; });
     var arr, arrDedans = null;
-    if (jourDeMatch() && aPorte("stade") && eviter !== "stade" && Math.random() < (q.sp === "fan" ? 0.8 : 0.4)) { arr = LIEU.stade.door.slice(); arrDedans = dedans("stade"); }
-    else if (autres.length && Math.random() < (q.trop ? 1 : 0.45)) { var c2 = auHasard(autres); arr = LIEU[c2].door.slice(); arrDedans = dedans(c2); }
+    if (jourDeMatch() && aPorte("stade") && eviter !== "stade" && Math.random() < (q.sp === "fan" ? 0.8 : 0.4)) { arr = LIEU.stade.door.slice(); arrDedans = seuilPorte("stade"); }
+    else if (autres.length && Math.random() < (q.trop ? 1 : 0.45)) { var c2 = auHasard(autres); arr = LIEU[c2].door.slice(); arrDedans = seuilPorte(c2); }
     else arr = horsChamp(dep);
     if (!arr) return false;
     var ch = chemin(dep, arr, true);
@@ -740,7 +760,7 @@
     var cible = caseDe(A.x, A.y), ch = null;
     if (aPorte(w.lieu)) {
       ch = chemin(LIEU[w.lieu].door, cible, true);
-      var pts = [dedans(w.lieu)].concat(ch ? ch.map(centre) : [centre(LIEU[w.lieu].door), w.place]);
+      var pts = [seuilPorte(w.lieu)].concat(ch ? ch.map(centre) : [centre(LIEU[w.lieu].door), w.place]);
       poserChemin(A, pts, true, false);
     } else {
       var h = horsChampPres(cible);
@@ -758,7 +778,7 @@
     var ici = caseDe(A.x, A.y);
     if (aPorte(A.lieu)) {
       var ch = chemin(ici, LIEU[A.lieu].door, true);
-      poserChemin(A, [[A.x, A.y]].concat(ch ? ch.map(centre) : []).concat([dedans(A.lieu)]), false, true);
+      poserChemin(A, [[A.x, A.y]].concat(ch ? ch.map(centre) : []).concat([seuilPorte(A.lieu)]), false, true);
       return;
     }
     var h = horsChampPres(ici), ch2 = h ? chemin(ici, h, true) : null;
@@ -800,6 +820,7 @@
   }
   // L'écran est au noir : chacun est déjà à sa place, et la rue est peuplée.
   function recaler() {
+    if (dedans) { occuper(); bulle = null; return; }
     var v = voulus(), parId = {};
     v.forEach(function (w) { parId[w.id] = w; });
     Object.keys(acteurs).forEach(function (id) { if (!parId[id] || parId[id].lieu !== acteurs[id].lieu) delete acteurs[id]; });
@@ -854,6 +875,7 @@
     return null;
   }
   function lieuProche() {
+    if (dedans) return dedans.cle;
     var hc = caseDe(heros.x, heros.y), best = null, bd = 11;
     L.places.forEach(function (l) {
       if (!l.door) return;
@@ -943,6 +965,8 @@
   }
   var bulle = null;
   function parler(g) {
+    // une conversation surprise en cours : ceux qui parlent ne s'interrompent pas pour toi
+    if (CONV) { for (var kv in CONV.voix) if (CONV.voix[kv] === g) return; }
     var maintenant = performance.now(), qui, nom;
     if (g.gens || g.role === "commercant" || !CHARS[g.qui]) { qui = BOUCHE[g.sp] || g.qui; nom = NOM_GENS[g.sp] || "Quelqu'un"; }
     else { qui = g.qui; nom = nomDe(g.qui); }
@@ -963,6 +987,7 @@
   // toucher quelqu'un : s'il est loin, on va le voir (et il t'attend)
   function toucherQuelquun(g) {
     if (bulle && bulle.g !== g) { bulle.g.parle = false; bulle = null; }
+    if (dedans) { toucherQuelquunDedans(g); return; }
     if (g.role === "rdv" && rdv && LIEU[rdv.lieu]) { allerAuLieu(rdv.lieu); return; }
     if (g.role === "mission" && S.mission && LIEU[g.lieu]) {
       var l = LIEU[g.lieu], c0 = caseDe(heros.x, heros.y);
@@ -1334,7 +1359,10 @@
     requestAnimationFrame(image);
     var dt = dernier ? Math.min(0.05, (ts - dernier) / 1000) : 0;
     dernier = ts;
-    if (!occupe && !carteOn) { majMarche(dt); majPassants(dt, ts); majActeurs(dt, ts); }
+    if (!occupe && !carteOn) { majMarche(dt); if (!dedans) { majPassants(dt, ts); majActeurs(dt, ts); } }
+    if (dedans) majDedans(dt, ts);
+    majCine(dt, ts);
+    if (!occupe && !carteOn && !MATCH && !CINE) guetterConv(ts);
     if (MATCH) majMatch(dt, ts);
     // la caméra suit le héros, sauf si on l'a déplacée à la main (ou si le match la tient)
     var p = visee();
@@ -1363,8 +1391,7 @@
       dessinerTuiles(amb, fondu);
     } else { amb0 = amb; fondu = 1; dessinerTuiles(amb, 1); }
     // le panneau du mur est (le dernier score), la foule les jours de match
-    dessinerPanneau();
-    dessinerFoule(ts);
+    if (!dedans) { dessinerPanneau(); dessinerFoule(ts); }
     // les gens, du fond vers l'avant (x + y croissant) ; on garde la boîte de
     // chacun, pour qu'un doigt puisse le toucher
     var gens = [];
@@ -1375,14 +1402,18 @@
       gensDuMatch(gens);
       // au match : l'entraîneur et le sélectionneur sur le banc ; le joueur est sur la pelouse ; les autres en loge
       if (S.role === "entraineur" || S.role === "selectionneur") gens.push({ sp: "coach", x: STADE.banc[0], y: STADE.banc[1], miroir: true, pas: 0, heros: true });
-    } else gens.push({ sp: S.role === "joueur" ? "joueur" : "coach", x: heros.x, y: heros.y, miroir: heros.miroir, pas: heros.pas, heros: true });
+    } else gens.push({ sp: S.role === "joueur" ? "joueur" : "coach", x: heros.x, y: heros.y, miroir: heros.miroir, pas: heros.pas, heros: true,
+      geste: heros.geste, emote: heros.emote, pose: heros.pose, parle: heros.parle });
     gens.sort(function (a, b) { return (a.x + a.y) - (b.x + b.y); });
     dessines = [];
     for (var j = 0; j < gens.length; j++) {
       var g = gens[j];
       if (g.ballon) { dessinerBallon(g); continue; }
-      var bx = dessinerSprite(g.sp, g.x, g.y, { miroir: g.miroir, pas: g.pas, silhouette: !!g.heros || !!g.silhouette, pal: g.pal, alpha: g.alpha, z: g.z });
+      var bx = dessinerSprite(g.sp, g.x, g.y, { miroir: g.miroir, pas: g.pas, silhouette: !!g.heros || !!g.silhouette, pal: g.pal, alpha: g.alpha, z: g.z, pose: g.pose, geste: g.geste, t: ts, parle: g.parle });
       g.tete = bx ? bx.tete : null;
+      if (g.heros) { heros.tete = g.tete; if (heros.emote) g.emote = heros.emote; }
+      if (bx && g.geste) dessinerGeste(g, bx, ts);
+      if (g.emote) dessinerEmote(g, ts);
       if (bx && !g.heros && !g.match) { bx.g = g; dessines.push(bx); }
     }
     // la marque du rendez-vous (jamais pour un événement sombre)
@@ -1406,6 +1437,7 @@
   function placerEtiquettes() {
     var couche = $("villeCouche");
     if (!couche) return;
+    if (dedans) { placerEtiquettesDedans(); return; }
     if (MATCH) {
       for (var cle0 in etiquettes) etiquettes[cle0].hidden = true;
       if (fleche) fleche.hidden = true;
@@ -1422,9 +1454,9 @@
       var sx = (l.u - x0) * k, sy = (l.v - y0) * k;
       // dans la bande de ville seulement : un nom sous le rail ou sous les actions
       // serait invisible, et on le toucherait quand même
-      var dedans = sx > -40 && sy > UI.haut + 26 && sx < VW * k + 40 && sy < VH * k - UI.bas + 4;
+      var dansBande = sx > -40 && sy > UI.haut + 26 && sx < VW * k + 40 && sy < VH * k - UI.bas + 4;
       var dist = Math.abs(l.door[0] - hc[0]) + Math.abs(l.door[1] - hc[1]);
-      var montrer = dedans && (l.key === cible || dist < 34 || (k <= 1 && TEXTE_LIEU[l.key]));
+      var montrer = dansBande && (l.key === cible || dist < 34 || (k <= 1 && TEXTE_LIEU[l.key]));
       if (montrer) cands.push({ l: l, sx: sx, sy: sy, dist: dist, rdv: l.key === cible });
     }
     // Deux noms ne se chevauchent jamais : le rendez-vous d'abord, puis du plus
@@ -1597,6 +1629,7 @@
   function rdvVisible() { return rdv && !rdv.sombre && rdv.lieu !== "ici" && rdv.lieu !== "rue" && tNow() >= rdv.debut; }
   // au-dessus de celui qui t'attend, s'il est là ; sinon sur la porte
   function marqueRdv() {
+    if (dedans) { var gr = rdv && !carteOn ? occupantRdv() : null; return gr ? [gr.x, gr.y] : null; }
     if (!rdvVisible() || !LIEU[rdv.lieu]) return null;
     var A = rdv.qui && acteurs[rdv.qui];
     if (A && A.etat !== "part" && A.lieu === rdv.lieu && A.alpha > 0.5) return [A.x, A.y];
@@ -1627,6 +1660,8 @@
     b.querySelector("span").textContent = d ? d.sous : "";
   }
   function montrerCarte() {
+    var cav = vue && vue.card && !CINE ? cineDeCarte(vue.card.id, "avant") : null;
+    if (cav) { carteOn = false; jouerCine(cav, montrerCarte); return; }
     fermerPorte();
     carteOn = true;
     heros.chemin = null;
@@ -1671,8 +1706,8 @@
     return false;
   }
   function verifierRue() {
-    // l'événement de la rue te tombe dessus pendant que tu marches
-    if (!rdv || rdv.force !== "rue" || carteOn || occupe) return;
+    // l'événement de la rue te tombe dessus pendant que tu marches (dehors)
+    if (!rdv || rdv.force !== "rue" || carteOn || occupe || dedans) return;
     if (tNow() < rdv.debut + 1) return;
     setTimeout(function () {
       if (!rdv || rdv.force !== "rue" || carteOn) return;
@@ -1683,6 +1718,16 @@
   function arriver(cle) {
     S.lieu = cle;
     sauver();
+    // un lieu qui a sa pièce : on y entre, et tout s'y passe (sauf le match, sur la pelouse)
+    if (dedans && dedans.cle === cle) { arriveeDedans(); return; }
+    var clieu = !aInterieur(cle) && !carteOn ? cineDeLieu(cle) : null;
+    if (clieu) { jouerCine(clieu, function () { arriver(cle); }); return; }
+    // fermé à cette heure : la porte reste close (sauf chez soi, ou si l'on t'y attend)
+    var attenduIci = (rdv && rdv.lieu === cle && tNow() >= rdv.debut) || (S.mission && S.mission.lieu === cle) || cle === chezToi();
+    if (aInterieur(cle) && !carteOn && (ouvert(TEXTE_LIEU[cle] || {}) || attenduIci) && !(rdv && rdv.lieu === cle && rdv.type === "match" && tNow() >= rdv.debut)) {
+      entrerAvecFondu(cle, arriveeDedans);
+      return;
+    }
     // le rendez-vous est ici, et c'est l'heure (ou l'événement t'y attendait)
     if (rdv && !carteOn && rdv.lieu === cle && tNow() >= rdv.debut) {
       if (rdv.force === "scene" || rdv.sombre) { scene(rdv); return; }
@@ -1731,7 +1776,9 @@
     var sous = nomLieu(l);
     if (r.type === "match" && vue && vue.card && vue.card.beatKind === "cup") sous = "La Coupe · " + nomLieu(l);
     fonduTexte(titre, sous, r.sombre ? "" : "", function () {
-      poser(c[0], c[1]); S.lieu = l.key;
+      // dans la pièce du lieu, s'il en a une (le match, lui, se joue sur la pelouse)
+      if (r.type !== "match" && aInterieur(l.key)) { entrer(l.key); return; }
+      poserEnVille(c[0], c[1]); S.lieu = l.key;
       var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
       recaler();
       figurants = [];
@@ -2030,6 +2077,7 @@
   function aPied(a, b) { return [STADE.x0 + a * (STADE.x1 - STADE.x0), STADE.y0 + b * (STADE.y1 - STADE.y0)]; }
   function jouerMatch(v, ensuite) {
     if (MATCH) return;
+    if (dedans) aDehors();
     var M = preparerMatch(v);
     var g = (coquille && coquille.graine && coquille.graine()) || {};
     M.graineFoule = hache(g.seed || 0, v.season, v.journee, "foule");
@@ -2339,6 +2387,7 @@
   var SCENE = {};
   function lieuScene(sc) { return sc.lieu === "domicile" ? chezToi() : sc.lieu === "rue" ? "rue" : (LIEU[sc.lieu] ? sc.lieu : null); }
   function sceneOk(sc, jour) {
+    if (sc.cine && !cineOk(sc.cine)) return false;
     if (sc.roles && sc.roles.indexOf(S.role) < 0) return false;
     if (!sc.rejouable && S.scenesVues && S.scenesVues[sc.id] != null) return false;
     if (sc.jours && sc.jours.indexOf(JOURS[jour]) < 0) return false;
@@ -2395,12 +2444,15 @@
     return false;
   }
   function jouerScene(sc) {
+    if (sc.cine) { S.scenesVues = S.scenesVues || {}; S.scenesVues[sc.id] = 1; jouerCine(sc.cine); return; }
     occupe = true;
     fermerPorte();
     var cle = lieuScene(sc), titre = JOUR_MOT[S.jour] + ", " + HEURE[TRANCHES[S.tranche]];
     titre = titre.charAt(0).toUpperCase() + titre.slice(1);
     fonduTexte(titre, cle === "rue" ? "Dans la rue" : nomLieu(LIEU[cle]), "", function () {
-      if (cle !== "rue" && LIEU[cle]) { var c = centre(LIEU[cle].door); poser(c[0], c[1]); S.lieu = cle; }
+      if (cle !== "rue" && aInterieur(cle)) { entrer(cle); return; }
+      if (cle !== "rue" && LIEU[cle]) { var c = centre(LIEU[cle].door); poserEnVille(c[0], c[1]); S.lieu = cle; }
+      else if (dedans) aDehors();
       var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
       recaler();
     }, function () {
@@ -2551,7 +2603,11 @@
     do { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } while (S.tranche !== 0 && ++garde < 10);
     majHud(); sauver();
     var titre = JOUR_MOT[S.jour] + ", 7 h";
-    fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", recaler, function () {
+    // on se réveille chez soi : dans sa pièce, si elle en a une
+    fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", function () {
+      var chez = chezToi();
+      if (aInterieur(chez) && S.lieu === chez) entrer(chez); else recaler();
+    }, function () {
       var suite = attenteSuite, fondus = attente.length > 0;
       attenteSuite = null;
       suiteFondus();
@@ -2604,7 +2660,7 @@
     return true;
   }
   function activitesIci(cle) {
-    return (D.activites || []).filter(function (a) { return a.lieu === cle && (!a.roles || a.roles.indexOf(S.role) >= 0); });
+    return (D.activites || []).filter(function (a) { return a.lieu === cle && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.si || siVrai(a.si, cle)); });
   }
   function pourquoiPas(a, lieuOuvert) {
     if (!lieuOuvert) return "Fermé à cette heure.";
@@ -2627,22 +2683,30 @@
     });
     return out.join("");
   }
-  function ouvrirPorte(cle, fait) {
+  var porteObjet = null;       // l'objet touché dont le panneau est ouvert (dedans)
+  function ouvrirPorte(cle, fait, objet) {
     var l = LIEU[cle];
     if (!l) return;
     porteOuverte = cle;
+    if (objet !== undefined) porteObjet = objet || null;
+    objet = porteObjet && dedans && dedans.cle === cle ? porteObjet : null;
     var def = TEXTE_LIEU[cle] || {};
     var lieuOuvert = ouvert(def) || (rdv && rdv.lieu === cle);
     var el = $("villePorte");
     el.classList.remove("v-mission");
     var acts = activitesIci(cle);
+    // dedans, un objet touché : ce qu'on y fait ; s'il ne porte rien, ce qui se fait dans la pièce
+    if (objet) {
+      var aObj = acts.filter(function (a) { return a.objet === objet.id; });
+      acts = aObj.length ? aObj : acts.filter(function (a) { return !a.objet; });
+    }
     // ce qu'on voit en entrant : la première variante vraie (la vitrine qui
     // change, la plaque gravée…), sinon le texte du lieu
     var vu = (D.lieux_variantes || []).filter(function (v) { return v.lieu === cle && siVrai(v.si, cle); })[0];
     var texteLieu = vu ? remplir(vu.texte) : def.texte;
-    var html = '<h2>' + esc(nomLieu(l)) + '</h2>' +
-      '<p class="v-sous">' + esc(JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]].toLowerCase()) + (lieuOuvert ? "" : " · fermé") + '</p>' +
-      (texteLieu ? '<p class="v-texte">' + esc(texteLieu) + '</p>' : "") +
+    var html = '<h2>' + esc(objet ? objet.label : nomLieu(l)) + '</h2>' +
+      '<p class="v-sous">' + esc((objet ? nomLieu(l) + " · " : "") + JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]].toLowerCase()) + (lieuOuvert ? "" : " · fermé") + '</p>' +
+      (texteLieu && !objet ? '<p class="v-texte">' + esc(texteLieu) + '</p>' : "") +
       '<p class="v-fait"' + (fait ? "" : " hidden") + '>' + esc(fait || "") + '</p>';
     // le rendez-vous de plus tard, s'il est ici
     if (rdv && rdv.lieu === cle && !rdv.sombre && tNow() < rdv.debut) {
@@ -2667,7 +2731,7 @@
       html += '</div>';
     }
     // ce qui se vend ici (deux gestes pour acheter : on ne vide pas un compte d'un doigt)
-    var objets = aVendreIci(cle);
+    var objets = objet && acts.some(function (a) { return a.objet === objet.id; }) ? [] : aVendreIci(cle);
     if (objets.length) {
       html += '<h3 class="v-h">À vendre</h3><div class="v-acts v-objets">';
       objets.forEach(function (o) {
@@ -2682,7 +2746,7 @@
     // on t'attend ailleurs : le chemin, d'un geste
     var ailleurs = rdvVisible() && rdv.lieu !== cle && LIEU[rdv.lieu];
     if (ailleurs) html += '<button type="button" class="v-sortir v-y">' + esc((rdv.qui ? nomDe(rdv.qui) + " t'attend · " : "On t'attend · ") + nomLieu(LIEU[rdv.lieu])) + ' →</button>';
-    html += '<div class="v-pied"><button type="button" class="v-sortir v-att">Attendre ici</button><button type="button" class="v-sortir">Sortir</button></div>';
+    html += '<div class="v-pied"><button type="button" class="v-sortir v-att">Attendre ici</button><button type="button" class="v-sortir">' + (dedans ? "Fermer" : "Sortir") + '</button></div>';
     el.innerHTML = html;
     el.querySelector(".v-att").addEventListener("click", function () { attendre(); });
     var y = el.querySelector(".v-y");
@@ -2707,7 +2771,7 @@
     el.querySelector(".v-sortir:not(.v-y):not(.v-att)").addEventListener("click", fermerPorte);
   }
   function fermerPorte() {
-    porteOuverte = null;
+    porteOuverte = null; porteObjet = null;
     var el = $("villePorte");
     if (el) el.classList.remove("on");
   }
@@ -2717,15 +2781,41 @@
     if (!a || carteOn || occupe) return;
     var cle = porteOuverte;
     if (pourquoiPas(a, true)) return;
-    S.francs += a.francs || 0;
+    // un petit jeu : la mise d'abord, la partie, puis la suite
+    if (a.jeu) {
+      var objet0 = porteObjet;
+      fermerPorte();
+      jouerJeu(a.jeu, a, function (res) {
+        if (!res) { if (cle) ouvrirPorte(cle, null, objet0); return; }
+        porteObjet = objet0; porteOuverte = cle;
+        finirActivite(a, cle, res);
+      });
+      return;
+    }
+    finirActivite(a, cle, null);
+  }
+  function finirActivite(a, cle, res) {
+    var mise = a.francs || 0, gain = 0;
+    // les jeux d'argent paient la mise : le 421 selon la combinaison, les cartes au double
+    if (res && res.gagne && mise < 0 && (a.jeu === "des" || a.jeu === "cartes")) gain = Math.round(-mise * (a.jeu === "des" ? res.score : 2));
+    S.francs += mise + gain;
     S.jourFaits[a.id] = (S.jourFaits[a.id] || 0) + 1;
-    var texte = remplir(a.texte);
-    if (a.jauges && S.faits[a.id] !== S.semaine) {
+    // une variante du texte, tour à tour
+    var texte;
+    if (a.textes && a.textes.length) { S.variantes = S.variantes || {}; var iv = S.variantes[a.id] = ((S.variantes[a.id] || 0) + 1) % a.textes.length; texte = remplir(a.textes[iv]); }
+    else texte = remplir(a.texte);
+    if (res) texte = res.phrase + (gain ? " (+" + argent(gain) + ")" : "");
+    if (a.special) {
+      var sp = faireSpecial(a, cle, texte);
+      if (sp === true) { majHud(); sauver(); return; }
+      if (typeof sp === "string") texte = texte + " " + sp;
+    }
+    if (a.jauges && (!res || res.gagne) && S.faits[a.id] !== S.semaine) {
       S.faits[a.id] = S.semaine;
       vue = coquille.activite(a.id);
       pont(vue);
       if (vue.over) return;
-    } else if (a.jauges) texte += " Cette semaine, ça ne change plus rien.";
+    } else if (a.jauges && !(res && !res.gagne)) texte += " Cette semaine, ça ne change plus rien.";
     if (a.nuit) { fermerPorte(); dormir(); return; }
     var ok = avancer(a.tranches || 0);
     majHud(); sauver();
@@ -2774,9 +2864,13 @@
     ["sante", "Le quartier de la santé", "La santé"], ["vieilleville", "La vieille ville, de l'autre côté de la Rive", "Vieille ville"],
     ["cimetiere", "Le cimetière", "Le cimetière"], ["friche", "La friche", "La friche"]];
   var PLAN_ECHELLE = 1 / 3;
-  function surPlan(x, y) { var p = versImage(x, y, ZSOL); return [Math.round(p[0] * PLAN_ECHELLE), Math.round(p[1] * PLAN_ECHELLE)]; }
+  function surPlan(x, y) {
+    var PP = dedans ? dedans.ville.P : P, z = dedans ? dedans.ville.ZSOL : ZSOL;
+    return [Math.round((2 * (x - y) - PP.cu) * PLAN_ECHELLE), Math.round((x + y - 2 * z - PP.cv) * PLAN_ECHELLE)];
+  }
   function cartePlan() {
-    var W0 = Math.round(P.w * PLAN_ECHELLE), H0 = Math.round(P.h * PLAN_ECHELLE);
+    var PP = dedans ? dedans.ville.P : P;
+    var W0 = Math.round(PP.w * PLAN_ECHELLE), H0 = Math.round(PP.h * PLAN_ECHELLE);
     var html = '<div class="v-carte" id="villeCarte"><div class="v-carte-in' + (S.tranche >= 3 ? " nuit" : "") + '" style="width:' + W0 + 'px;height:' + H0 + 'px">' +
       '<img src="' + BASE + 'plan.webp" alt="Le plan d\'Aubérive" width="' + W0 + '" height="' + H0 + '" draggable="false">';
     QUARTIERS.forEach(function (q) {
@@ -2791,7 +2885,7 @@
       html += '<button type="button" class="v-pt' + (r ? " rdv" : "") + (ouvert(TEXTE_LIEU[l.key]) ? "" : " ferme") + '" data-l="' + esc(l.key) + '" style="left:' + p[0] + 'px;top:' + p[1] + 'px" aria-label="' + esc(nomLieu(l)) + '"><i></i>' +
         (r ? '<span>' + esc(nomLieu(l)) + '</span>' : "") + '</button>';
     });
-    var h = surPlan(heros.x, heros.y);
+    var h = surPlan.apply(null, posVille());
     html += '<span class="v-moi" style="left:' + h[0] + 'px;top:' + h[1] + 'px"><i></i><span>Toi</span></span>';
     html += '</div></div><div class="v-carte-note" id="villeCarteNote"><span>Touche un point : son nom, et le chemin.</span></div>';
     return html;
@@ -2799,7 +2893,7 @@
   function brancherPlan() {
     var boite = $("villeCarte");
     if (!boite) return;
-    var h = surPlan(heros.x, heros.y);
+    var h = surPlan.apply(null, posVille());
     boite.scrollLeft = Math.max(0, h[0] - boite.clientWidth / 2);
     boite.scrollTop = Math.max(0, h[1] - boite.clientHeight / 2);
     // glisser pour se promener sur le plan (la souris ; le doigt fait défiler tout seul)
@@ -2813,7 +2907,8 @@
         boite.querySelectorAll(".v-pt.choisi").forEach(function (x) { x.classList.remove("choisi"); });
         b.classList.add("choisi");
         var note = $("villeCarteNote");
-        var loin = Math.abs(l.door[0] - caseDe(heros.x, heros.y)[0]) + Math.abs(l.door[1] - caseDe(heros.x, heros.y)[1]) > 40;
+        var pv = posVille(), cz = dedans ? dedans.ville.CELL : CELL, hc0 = [Math.floor(pv[0] / cz), Math.floor(pv[1] / cz)];
+        var loin = Math.abs(l.door[0] - hc0[0]) + Math.abs(l.door[1] - hc0[1]) > 40;
         note.innerHTML = '<span><b>' + esc(nomLieu(l)) + '</b>' + (ouvert(def) ? "" : " · fermé à cette heure") + '</span><span class="v-carte-btns">' +
           (aUnHelico() && loin ? '<button type="button" class="v-carte-go v-helico">En hélico</button>' : "") + '<button type="button" class="v-carte-go v-pied">Y aller →</button></span>';
         note.querySelector(".v-pied").addEventListener("click", function () { coquille.fermer(); allerAuLieu(cle); });
@@ -2828,7 +2923,7 @@
     if (!l || carteOn || occupe) return;
     occupe = true;
     fonduTexte("L'hélicoptère", nomLieu(l), "Le pilote ne pose pas de questions. Aubérive tient dans le hublot.", function () {
-      var c = centre(l.door); poser(c[0], c[1]);
+      var c = centre(l.door); poserEnVille(c[0], c[1]);
       var p = visee(); cam.x = p[0]; cam.y = p[1]; cam.libre = false;
       recaler();
     }, function () { occupe = false; arriver(cle); });
@@ -2871,6 +2966,7 @@
   // onze parfois. Et le panneau du lieu ne se rouvre plus tout seul après
   // l'attente : il couvrait le bouton, on ne pouvait plus passer.
   function aLaPorte(cle) {
+    if (dedans) return dedans.cle === cle;
     var l = LIEU[cle];
     if (!l || !l.door) return false;
     var c = caseDe(heros.x, heros.y);
@@ -2882,7 +2978,7 @@
   }
   function rentrerDormir() {
     var chez = chezToi();
-    if (LIEU[chez] && LIEU[chez].door) { var c = centre(LIEU[chez].door); poser(c[0], c[1]); S.lieu = chez; }
+    if (!(dedans && dedans.cle === chez) && LIEU[chez] && LIEU[chez].door) { var c = centre(LIEU[chez].door); poserEnVille(c[0], c[1]); S.lieu = chez; }
     dormir();
   }
   // `suite` : l'attente reprend au réveil (rien n'est arrivé de la nuit) ; deux
@@ -2956,6 +3052,7 @@
         if (px >= b.x - m && px <= b.x + b.w + m && py >= b.y - m && py <= b.y + b.h + m) { toucherQuelquun(b.g); return; }
       }
       if (bulle) { bulle.g.parle = false; bulle = null; }
+      if (dedans) { toucherDedans(u, v); return; }
       // un lieu sous le doigt (sa porte, ou son nom) ?
       var best = null, bd = 30 * 30;
       L.places.forEach(function (l) {
@@ -3020,7 +3117,8 @@
     actions.innerHTML = '<button type="button" id="villePlan">' + icone("carte", 15) + 'Plan</button>' +
       '<button type="button" id="villeAttendre">' + icone("horloge", 15) + 'Attendre</button>' +
       '<button type="button" id="villeBiens">' + icone("caisse", 15) + 'Biens</button>' +
-      '<button type="button" id="villeRdv">' + icone("fleche", 15) + 'Y aller</button>';
+      '<button type="button" id="villeRdv">' + icone("fleche", 15) + 'Y aller</button>' +
+      '<button type="button" id="villeSortir">' + icone("fleche", 15) + 'Sortir</button>';
     var bandeau = $("bandeau");
     gs.insertBefore(espace, bandeau);
     gs.insertBefore(basHud, bandeau);
@@ -3036,6 +3134,10 @@
     document.body.appendChild(fondu);
     var t = document.createElement("div"); t.className = "v-toast"; t.id = "villeToast"; t.setAttribute("role", "status");
     document.body.appendChild(t);
+    // dedans : le nom du lieu et ce qu'on y voit, le temps d'entrer
+    var vl = document.createElement("div"); vl.className = "v-cartouche"; vl.id = "villeLieu"; vl.setAttribute("aria-live", "polite");
+    vl.innerHTML = "<b></b><span></span>";
+    document.body.appendChild(vl);
     // le match : le tableau, la phrase de l'action, le résultat
     var vm = document.createElement("div"); vm.className = "v-match"; vm.id = "villeMatch"; vm.hidden = true;
     vm.innerHTML = '<div class="v-match-tableau" aria-live="polite"><b class="dom"></b><span class="sc">0 – 0</span><b class="ext"></b><i class="mn"></i></div>' +
@@ -3060,6 +3162,7 @@
     zm.addEventListener("click", function () { zoom(-1); });
     $("villePlan").addEventListener("click", ouvrirPlan);
     $("villeAttendre").addEventListener("click", function () { attendre(); });
+    $("villeSortir").addEventListener("click", function () { if (dedans && !carteOn && !occupe) allerSortir(); });
     $("villeBiens").addEventListener("click", function () { if (!carteOn && !occupe) ouvrirInventaire(); });
     $("villeRdv").addEventListener("click", function () {
       if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
@@ -3076,7 +3179,7 @@
     while (tNow() < t && garde++ < 80) {
       if (S.tranche === 4) {
         // la nuit, on rentre dormir — et au réveil, on reprend le chemin du rendez-vous
-        var chez = chezToi(), c = centre(LIEU[chez].door); poser(c[0], c[1]); S.lieu = chez;
+        var chez = chezToi(), c = centre(LIEU[chez].door); poserEnVille(c[0], c[1]); S.lieu = chez;
         allerApresNuit = true;
         dormir();
         return;
@@ -3093,7 +3196,9 @@
   }
   var pret = false, enAttente = null;
   function charger() {
-    return Promise.all([chargerJson("lieux.json"), chargerJson("grille.json"), chargerJson("sprites.json")]).then(function (r) {
+    return Promise.all([chargerJson("lieux.json"), chargerJson("grille.json"), chargerJson("sprites.json"),
+      chargerJson("interieurs.json").catch(function () { return { pieces: {} }; })]).then(function (r) {
+      INT = (r[3] && r[3].pieces) || {};
       L = r[0]; P = L.projection || P; ZSOL = 2 + (P.zl || 10);
       L.places.forEach(function (l) { LIEU[l.key] = l; });
       var gr = r[1]; G = gr.size; CELL = gr.cell;
@@ -3139,6 +3244,9 @@
       if (S.blocsVus == null) S.blocsVus = (vue && vue.blocs) || 0;
       acteurs = {};
       recaler();
+      // on était dans une pièce : on y est encore
+      var piece = S.dedans; S.dedans = null;
+      if (piece && aInterieur(piece) && !(vue && vue.over)) entrer(piece);
       // la carte qui se joue là où l'on est (loin d'Aubérive, une alarme) : tout de suite
       if (vue && !vue.over && rdv && rdv.force === "ici" && !carteOn) montrerCarte();
     };
@@ -3151,6 +3259,8 @@
     taille();
     requestAnimationFrame(image);
   }
+
+  /*__VILLE_MODULES__*/
 
   // ─────────────────────────────────────────────────────────────── l'API (la coquille appelle)
   window.FusibleVille = {
@@ -3168,6 +3278,11 @@
       (D.objets || []).forEach(function (o) { OBJET[o.id] = o; });
       (D.missions || []).forEach(function (m) { MISSION[m.id] = m; });
       (D.scenes || []).forEach(function (sc) { SCENE[sc.id] = sc; });
+      // une scène jouée de la semaine se programme comme une scène (le plan du jour la tire)
+      (D.cinematiques || []).forEach(function (c) {
+        if (c.quand !== "semaine") return;
+        SCENE["ci:" + c.id] = { id: "ci:" + c.id, titre: c.titre || "", lieu: c.lieu === "ici" ? "rue" : c.lieu, tranches: c.tranches || ["matin", "midi", "aprem"], roles: c.roles, si: c.si, poids: c.poids || 1, cine: c };
+      });
       // la carte du retour d'un voyage : elle lève le drapeau de `loin` sur ses deux choix
       var Lo = D.loin || {};
       ((content && content.cards) || []).forEach(function (c) {
@@ -3192,11 +3307,16 @@
           blocsVus: v.blocs || 0, panneau: null, scenesVues: {}, scenesJour: null
         };
         annonces = [];
+        if (dedans) aDehors(true);
         rdv = null; dernierVu = ""; figurants = []; passants = []; acteurs = {};
         lancer();
         var c = centre(LIEU[S.lieu].door); poser(c[0], c[1]);
         var p = visee(); cam.x = p[0]; cam.y = p[1];
         recaler();
+        // l'introduction de l'histoire (une scène jouée, `quand: debut`) remplace l'arrivée en ville
+        vue = v;
+        var intro = cineIntro();
+        if (intro) { jouerCine(intro, function () { toast("Touche la ville pour marcher, un nom pour y aller. En rouge : là où l'on t'attend."); }); return; }
         var club = (v.entities && v.entities.club) || "club", leClub = (/^[AEIOUYÉÈÊaeiouyéèê]/.test(club) ? "L'" : "Le ") + club;
         var accueil = S.lieu === "hotel" ? "L'hôtel de la Rive, une chambre sur le quai. La Fédération paie la note ; elle la relira." :
           "Deux pièces au troisième, rue des Lilas. " + leClub + " t'attend. La ville aussi.";
@@ -3210,6 +3330,7 @@
     vue: function (v) {
       var go = function () {
         if (!S) return;
+        var precedente = vue && vue.card ? vue.card.id : null;
         vue = v;
         S.role = v.role;
         pont(v);
@@ -3245,7 +3366,8 @@
           } else {
             fonduTexte("De retour à " + ((v.entities && v.entities.ville) || "Aubérive"), moisCourant(), retour, function () {
               cacherCarte();
-              var c0 = centre(LIEU[S.lieu].door); poser(c0[0], c0[1]);
+              if (aInterieur(S.lieu)) entrer(S.lieu);
+              else { var c0 = centre(LIEU[S.lieu].door); poserEnVille(c0[0], c0[1]); }
               var p0 = visee(); cam.x = p0[0]; cam.y = p0[1]; cam.libre = false;
               recaler(); majHud();
             }, function () { occupe = false; suite(false); });
@@ -3265,12 +3387,20 @@
         if (v.lastAnswer && avant) setTimeout(function () { toast(v.lastAnswer); }, 380);
         // le match prend l'après-midi ; on rentre au vestiaire, puis le soir tombe
         if (etait && etait.type === "match" && rdv.type !== "match") { S.auMatch = false; if (S.tranche < 3) S.tranche = 3; }
+        // une scène jouée suit la carte qu'on vient de jouer, ou le drapeau qu'elle a posé
+        var capres = !v.over ? (cineDeCarte(precedente, "apres") || cineDeDrapeau()) : null;
+        if (capres) {
+          if (carteOn) { cacherCarte(); }
+          jouerCine(capres, function () { suite(false); });
+          return;
+        }
         suite(avant);
       };
       // la suite d'une vue : la carte d'après est-elle pour tout de suite ?
       var suite = function (avant) {
         var t = tNow();
         if (rdv.force === "ici" || (rdv.lieu === S.lieu && t >= rdv.debut && rdv.force !== "rue" && !rdv.sombre) || (rdv.force === "scene" && t >= rdv.fin && rdv.type !== "sombre" && rdv.lieu === S.lieu)) {
+          if (avant && vue && vue.card && cineDeCarte(vue.card.id, "avant")) { cacherCarte(); montrerCarte(); return; }
           if (avant) { decorAilleurs(v); if (coquille) coquille.carte(); carteOn = true; if (rdv.qui) S.vus[rdv.qui] = 1; rdv.montree = true; majHud(); sauver(); return; }
           montrerCarte();
           return;
@@ -3294,7 +3424,9 @@
       }
       passants.forEach(function (q) { add(q, "p"); });
       Object.keys(acteurs).forEach(function (id) { add(acteurs[id], "a:" + id); });
-      return { gens: out, heros: [heros.x, heros.y], tranche: S && S.tranche, bulle: bulle ? { nom: bulle.nom, texte: bulle.texte } : null, carte: carteOn, occupe: occupe };
+      figurants.forEach(function (q) { add(q, "f:" + (q.qui || q.sp)); });
+      return { gens: out, heros: [heros.x, heros.y], tranche: S && S.tranche, bulle: bulle ? { nom: bulle.nom, texte: bulle.texte } : null, carte: carteOn, occupe: occupe,
+        dedans: dedans ? { cle: dedans.cle, objets: dedans.m.objets.map(function (o) { return o.id; }), porte: dedans.m.porte } : null, ui: [UI.haut, UI.bas, VW, VH, k] };
     },
     // pour les essais : de l'argent, une mission offerte ici et maintenant
     _essai: function (quoi, val) {
@@ -3304,7 +3436,7 @@
         var m = MISSION[val];
         S.mission = { id: m.id, etape: m.etapes[0].id, offre: true, lieu: m.donneur.lieu, jusqua: tNow() + 10 };
       }
-      if (quoi === "aller" && LIEU[val]) { var c = centre(LIEU[val].door); poser(c[0], c[1]); var p = visee(); cam.x = p[0]; cam.y = p[1]; recaler(); arriver(val); }
+      if (quoi === "aller" && LIEU[val]) { var c = centre(LIEU[val].door); poserEnVille(c[0], c[1]); var p = visee(); cam.x = p[0]; cam.y = p[1]; recaler(); arriver(val); }
       if (quoi === "match" && vue && !MATCH) {
         var v2 = {}, kk;
         for (kk in vue) v2[kk] = vue[kk];
@@ -3320,7 +3452,7 @@
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
     // ce que la musique doit savoir : le soir et la nuit, le stade, une carte à l'écran
-    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif }; },
+    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE, musique: CINE ? CINE.musique || null : null }; },
     _toucher: function (uid) {
       var g = passants.filter(function (q) { return q.uid === uid; })[0];
       if (!g) Object.keys(acteurs).forEach(function (id) { if (acteurs[id].uid === uid) g = acteurs[id]; });
@@ -3328,6 +3460,7 @@
       return !!g;
     },
     fin: function () {
+      if (dedans) aDehors(true);
       actif = false; carteOn = false;
       effacerSauve();
       if (cv) cv.hidden = true;

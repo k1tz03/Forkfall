@@ -1685,7 +1685,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes']) {
+      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -1714,6 +1714,27 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   }
   const tranches = {'matin', 'midi', 'aprem', 'soir', 'nuit'};
   const jours = {'lun', 'mar', 'mer', 'jeu', 'ven', 'sam', 'dim'};
+  // Les pièces où l'on entre (packages/tools/web/interieurs/interieurs.json, rendu par
+  // docs/design/pixel_iso/interieurs_jeu.js) : leurs objets et leurs places, que nomment les
+  // activités (`objet`), les scènes jouées et les conversations (`place`).
+  final pieces = <String, ({Set<String> objets, Set<String> places})>{};
+  // À côté du contenu d'abord (le dépôt), sinon à côté de l'outil (un contenu copié ailleurs,
+  // comme le font les tests) : les pièces sont un rendu de l'outillage, pas du contenu.
+  final interieursRel = 'packages/tools/web/interieurs/interieurs.json';
+  var fInt = File('${Directory(contentDir).parent.path}/$interieursRel');
+  if (!fInt.existsSync()) {
+    fInt = File.fromUri(Platform.script.resolve('../../../$interieursRel'));
+  }
+  if (fInt.existsSync()) {
+    final pj = (json.decode(fInt.readAsStringSync()) as Map)['pieces'] as Map? ?? const {};
+    pj.forEach((k, v) {
+      final pv = v as Map;
+      pieces[k.toString()] = (
+        objets: {for (final o in (pv['objets'] as List? ?? const [])) (o as Map)['id'].toString()},
+        places: {for (final q in ((pv['places'] as Map?) ?? const {}).keys) q.toString()},
+      );
+    });
+  }
   final lieux = <Map<String, dynamic>>[];
   final cles = <String>{};
   void heures(Map<String, dynamic> e, Map<String, dynamic> out, String where) {
@@ -1772,6 +1793,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   }
   final activites = <Map<String, dynamic>>[];
   final ids = <String>{};
+  final siApres = <MapEntry<Object?, String>>[];   // les `si` des activités, validés plus bas
   for (final e in (m['activites'] as List? ?? const [])) {
     final a = (e as Map).cast<String, dynamic>();
     final id = a['id']?.toString() ?? '';
@@ -1810,12 +1832,41 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       }
       return v;
     }
+    // dedans : l'objet de la pièce qui porte l'activité ; des variantes du texte ; un jeu ;
+    // un geste à part (dormir, la télé, le téléphone, le journal)
+    final objet = a['objet']?.toString();
+    if (objet != null) {
+      final pc = pieces[lieu];
+      if (pc == null) {
+        errors.add('$where: `objet` « $objet » : le lieu $lieu n\'a pas de pièce (interieurs_jeu.js)');
+      } else if (!pc.objets.contains(objet)) {
+        errors.add('$where: objet « $objet » absent de la pièce $lieu (${pc.objets.join(' ')})');
+      }
+    }
+    final textes = <String>[];
+    for (final t in (a['textes'] as List? ?? const [])) {
+      final v = t.toString();
+      if (v.isEmpty || v.length > 200) errors.add('$where: une variante de `textes` vide ou de plus de 200 caractères');
+      textes.add(v);
+    }
+    const jeux = {'flechettes', 'des', 'jongles', 'babyfoot', 'flipper', 'cartes', 'penalty'};
+    final jeu = a['jeu']?.toString();
+    if (jeu != null && !jeux.contains(jeu)) errors.add('$where: jeu « $jeu » inconnu (${jeux.join(' ')})');
+    const speciaux = {'dormir', 'tele', 'telephone', 'journal'};
+    final special = a['special']?.toString();
+    if (special != null && !speciaux.contains(special)) errors.add('$where: geste « $special » inconnu (${speciaux.join(' ')})');
+    if (a['si'] != null) siApres.add(MapEntry(a['si'], where));
     final out = <String, dynamic>{
       'id': id,
       'lieu': lieu,
       if (roles.isNotEmpty) 'roles': roles,
       'label': label,
       'texte': texte,
+      if (objet != null) 'objet': objet,
+      if (textes.isNotEmpty) 'textes': textes,
+      if (jeu != null) 'jeu': jeu,
+      if (special != null) 'special': special,
+      if (a['si'] != null) 'si': a['si'].toString(),
       if (a['nuit'] == true) 'nuit': true,
       'tranches': entier('tranches', 1),
       'francs': entier('francs', 0),
@@ -2085,6 +2136,206 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     });
   }
 
+  for (final e in siApres) {
+    si(e.key, e.value);
+  }
+
+  // --- LES SCÈNES JOUÉES (ville_cinema.js) : non jouables, mises en scène dans une pièce ou
+  // dehors, devant un lieu. Les personnages s'y parlent de l'intrigue : une introduction par
+  // histoire (`quand: debut`), et des scènes qui suivent un drapeau, une carte, une entrée.
+  const quiGens = {'passant', 'passante', 'enfant', 'fan', 'ancien', 'commercant', 'commercant2', 'inconnu', 'garagiste', 'portier'};
+  const gestes = {'assis', 'debout', 'telephone', 'boit', 'fume', 'bras_leves', 'pointe', 'poing', 'tete_basse', 'pleure', 'rit',
+    'tremble', 'couche', 'genou', 'danse', 'frappe', 'dos', 'lit', 'ecrit', 'ballon'};
+  const emotes = {'!', '?', '...', 'colere', 'sueur', 'coeur', 'note', 'zzz', 'choc', 'aucun'};
+  const sons = {'carte_arrivee', 'reaction', 'nouvelle', 'une', 'match_but', 'match_encaisse', 'sifflet_final', 'tampon_fin',
+    'palier_haut', 'palier_bas', 'promesse', 'argent', 'alarme'};
+  const musiques = {'accueil', 'ville_jour', 'ville_nuit', 'match', 'sombre', 'fin', 'depart'};
+  const quands = {'debut', 'drapeau', 'carte', 'lieu', 'semaine'};
+  final cardIdsDeLaVille = <String>{};
+  for (final c in cards) {
+    cardIdsDeLaVille.add(c['id'].toString());
+  }
+  bool placeOk(String lieu, Object? place) {
+    if (place == null) return true;
+    if (place is List) return place.length == 2 && place.every((v) => v is num);
+    final p = place.toString();
+    if (p == 'porte' || p == 'centre') return true;
+    final pc = pieces[lieu];
+    return pc != null && pc.places.contains(p);
+  }
+  // une réplique : le texte d'une bulle ou d'une boîte de dialogue
+  void replique(Map<dynamic, dynamic> e, String k, String where, int max) {
+    final v = e[k]?.toString() ?? '';
+    if (v.trim().isEmpty) errors.add('$where: `$k` vide');
+    if (v.length > max) errors.add('$where: `$k` de ${v.length} caractères (> $max)');
+  }
+  final cinematiques = <Map<String, dynamic>>[];
+  final vusCi = <String>{};
+  for (final e in (m['cinematiques'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/cinematiques/$id';
+    if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(id) || !vusCi.add(id)) errors.add('$where: id vide, en double, ou hors de [a-z0-9_.]');
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    si(e['si'], where);
+    final quand = e['quand']?.toString() ?? '';
+    if (!quands.contains(quand)) errors.add('$where: `quand` : ${quands.join(' | ')}');
+    final out = <String, dynamic>{'id': id, 'quand': quand, if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString()};
+    if (quand == 'drapeau') {
+      final d = e['drapeau']?.toString() ?? '';
+      if (d.isEmpty) errors.add('$where: `quand: drapeau` demande `drapeau`');
+      out['drapeau'] = d;
+    }
+    if (quand == 'carte') {
+      final cs = [..._strList(e['cartes']), if (e['carte'] != null) e['carte'].toString()];
+      final pre = e['prefixe']?.toString();
+      if (cs.isEmpty && pre == null) errors.add('$where: `quand: carte` demande `carte`, `cartes` ou `prefixe`');
+      for (final c in cs) {
+        if (!cardIdsDeLaVille.contains(c)) errors.add('$where: carte « $c » inconnue');
+      }
+      if (pre != null && !cardIdsDeLaVille.any((c) => c.startsWith(pre))) errors.add('$where: aucune carte ne commence par « $pre »');
+      final moment = e['moment']?.toString() ?? 'avant';
+      if (moment != 'avant' && moment != 'apres') errors.add('$where: `moment` : avant | apres');
+      out.addAll({if (cs.isNotEmpty) 'cartes': cs, if (pre != null) 'prefixe': pre, 'moment': moment});
+    }
+    final lieu = e['lieu']?.toString() ?? 'ici';
+    if (lieu != 'ici' && !cles.contains(lieu)) errors.add('$where: lieu « $lieu » : `ici` ou une clé de `lieux`');
+    out['lieu'] = lieu;
+    if (quand == 'lieu' && lieu == 'ici') errors.add('$where: `quand: lieu` demande un lieu');
+    if (quand == 'semaine') {
+      final tr = _strList(e['tranches']);
+      for (final t in tr) {
+        if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue');
+      }
+      out['tranches'] = tr.isEmpty ? ['matin', 'midi', 'aprem', 'soir'] : tr;
+      final poids = e['poids'];
+      if (poids != null && (poids is! num || poids <= 0)) errors.add('$where: `poids` positif');
+      out['poids'] = poids ?? 1;
+    }
+    final tranche = e['tranche']?.toString();
+    if (tranche != null && !tranches.contains(tranche)) errors.add('$where: tranche « $tranche » inconnue');
+    if (tranche != null) out['tranche'] = tranche;
+    if (e['titre'] != null) out['titre'] = txt(e, 'titre', where, 40);
+    if (e['sous'] != null) out['sous'] = txt(e, 'sous', where, 60);
+    // la distribution : qui est en scène, et où
+    final acteurs = <Map<String, dynamic>>[];
+    final ids0 = <String>{'toi'};
+    for (final a in (e['acteurs'] as List? ?? const [])) {
+      if (a is! Map) continue;
+      final qui = a['qui']?.toString() ?? '';
+      final aid = a['id']?.toString() ?? qui;
+      final w2 = '$where/acteurs/$aid';
+      if (qui != 'toi' && !characterIds.contains(qui) && !quiGens.contains(qui)) errors.add('$w2: qui « $qui » : `toi`, un personnage ou ${quiGens.join(' ')}');
+      if (!ids0.add(aid) && aid != 'toi') errors.add('$w2: deux acteurs portent cet id (donne un `id`)');
+      if (!placeOk(lieu, a['place'])) errors.add('$w2: place « ${a['place']} » inconnue de la pièce $lieu (${pieces[lieu]?.places.join(' ') ?? 'pas de pièce : porte, centre ou [x, y]'})');
+      final pose = a['pose']?.toString();
+      if (pose != null && !gestes.contains(pose)) errors.add('$w2: pose « $pose » inconnue');
+      if (a['nom'] != null) txt(a, 'nom', w2, 30);
+      acteurs.add({'id': aid, 'qui': qui, if (a['place'] != null) 'place': a['place'], if (pose != null) 'pose': pose,
+        if (a['nom'] != null) 'nom': a['nom'].toString(), if (a['cache'] == true) 'cache': true,
+        if (a['regarde'] != null) 'regarde': a['regarde'].toString()});
+    }
+    out['acteurs'] = acteurs;
+    // les étapes : une seule chose par étape
+    final etapes = <Map<String, dynamic>>[];
+    const sortes = ['titre', 'narration', 'dit', 'pense', 'va', 'entre', 'sort', 'geste', 'emote', 'regarde', 'pause', 'fondu',
+      'secousse', 'flash', 'son', 'musique', 'camera'];
+    var ie = 0;
+    for (final st in (e['etapes'] as List? ?? const [])) {
+      ie++;
+      final w3 = '$where/etapes/$ie';
+      if (st is! Map) {
+        errors.add('$w3: une étape est une table');
+        continue;
+      }
+      final sorte = sortes.where((k) => st.containsKey(k)).toList();
+      if (sorte.length != 1 && !(sorte.length == 2 && sorte.contains('titre') && st.containsKey('sous'))) {
+        if (!(sorte.contains('dit') && sorte.contains('geste')) && !(sorte.contains('dit') && sorte.contains('emote'))) {
+          errors.add('$w3: une étape fait une chose (${sortes.join(' ')}) : $sorte');
+        }
+      }
+      final qui = st['qui']?.toString();
+      if (qui != null && !ids0.contains(qui)) errors.add('$w3: qui « $qui » n\'est pas dans les acteurs');
+      if ((st.containsKey('dit') || st.containsKey('va') || st.containsKey('sort') || st.containsKey('entre') || st.containsKey('geste') || st.containsKey('regarde')) && qui == null) {
+        errors.add('$w3: cette étape demande `qui`');
+      }
+      if (st.containsKey('dit')) replique(st, 'dit', w3, 170);
+      if (st.containsKey('pense')) replique(st, 'pense', w3, 170);
+      if (st.containsKey('narration')) replique(st, 'narration', w3, 220);
+      if (st.containsKey('titre')) replique(st, 'titre', w3, 40);
+      if (st.containsKey('sous')) replique(st, 'sous', w3, 60);
+      if (st.containsKey('fondu')) replique(st, 'fondu', w3, 120);
+      for (final k in ['va', 'entre']) {
+        if (st.containsKey(k) && !placeOk(lieu, st[k])) errors.add('$w3: place « ${st[k]} » inconnue de la pièce $lieu');
+      }
+      if (st.containsKey('geste') && !gestes.contains(st['geste'].toString())) errors.add('$w3: geste « ${st['geste']} » inconnu (${gestes.join(' ')})');
+      if (st.containsKey('emote') && !emotes.contains(st['emote'].toString())) errors.add('$w3: emote « ${st['emote']} » inconnue (${emotes.join(' ')})');
+      if (st.containsKey('son') && !sons.contains(st['son'].toString())) errors.add('$w3: son « ${st['son']} » inconnu');
+      if (st.containsKey('musique') && !musiques.contains(st['musique'].toString())) errors.add('$w3: musique « ${st['musique']} » inconnue (${musiques.join(' ')})');
+      final ton = st['ton']?.toString();
+      if (ton != null && !{'sourire', 'neutre', 'noir'}.contains(ton)) errors.add('$w3: ton « $ton » : sourire | neutre | noir');
+      if (st.containsKey('pause') && (st['pause'] is! int || (st['pause'] as int) < 0 || (st['pause'] as int) > 6000)) errors.add('$w3: `pause` en millisecondes (0 … 6000)');
+      etapes.add(Map<String, dynamic>.from(st.map((k, v) => MapEntry(k.toString(), v))));
+    }
+    if (etapes.isEmpty) errors.add('$where: aucune étape');
+    if (etapes.where((x) => x.containsKey('dit') || x.containsKey('narration') || x.containsKey('pense')).isEmpty) errors.add('$where: personne ne parle');
+    out['etapes'] = etapes;
+    cinematiques.add(out);
+  }
+
+  // --- LES CONVERSATIONS SURPRISES : deux ou trois personnages qui parlent entre eux, dans une
+  // pièce ou devant un lieu ; on les entend en passant près d'eux, sans s'arrêter (une fois).
+  final conversations = <Map<String, dynamic>>[];
+  final vusCv = <String>{};
+  for (final e in (m['conversations'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/conversations/$id';
+    if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(id) || !vusCv.add(id)) errors.add('$where: id vide, en double, ou hors de [a-z0-9_.]');
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    si(e['si'], where);
+    final lieu = e['lieu']?.toString() ?? '';
+    if (!cles.contains(lieu)) errors.add('$where: lieu « $lieu » absent de `lieux`');
+    final tr = _strList(e['tranches']);
+    for (final t in tr) {
+      if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue');
+    }
+    final qui = <Map<String, dynamic>>[];
+    final ids1 = <String>{};
+    for (final a in (e['qui'] as List? ?? const [])) {
+      final am = a is Map ? a : {'qui': a};
+      final q = am['qui']?.toString() ?? '';
+      final aid = am['id']?.toString() ?? q;
+      if (!characterIds.contains(q) && !quiGens.contains(q)) errors.add('$where: qui « $q » : un personnage ou ${quiGens.join(' ')}');
+      if (!ids1.add(aid)) errors.add('$where: deux voix portent l\'id « $aid »');
+      if (!placeOk(lieu, am['place'])) errors.add('$where/$aid: place « ${am['place']} » inconnue de la pièce $lieu');
+      if (am['nom'] != null) txt(am, 'nom', '$where/$aid', 30);
+      if (am['pose'] != null && !gestes.contains(am['pose'].toString())) errors.add('$where/$aid: pose « ${am['pose']} » inconnue');
+      qui.add({'id': aid, 'qui': q, if (am['place'] != null) 'place': am['place'], if (am['nom'] != null) 'nom': am['nom'].toString(),
+        if (am['pose'] != null) 'pose': am['pose'].toString()});
+    }
+    if (qui.length < 2 || qui.length > 3) errors.add('$where: deux ou trois voix');
+    final reps = <Map<String, dynamic>>[];
+    var ir = 0;
+    for (final r in (e['repliques'] as List? ?? const [])) {
+      ir++;
+      if (r is! Map) continue;
+      final rq = r['qui']?.toString() ?? '';
+      if (!ids1.contains(rq)) errors.add('$where/repliques/$ir: qui « $rq » ne fait pas partie des voix');
+      replique(r, 'dit', '$where/repliques/$ir', 140);
+      reps.add({'qui': rq, 'dit': r['dit'].toString(), if (r['emote'] != null) 'emote': r['emote'].toString()});
+    }
+    if (reps.length < 2) errors.add('$where: au moins deux répliques');
+    conversations.add({'id': id, 'lieu': lieu, if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString(),
+      if (tr.isNotEmpty) 'tranches': tr, 'qui': qui, 'repliques': reps});
+  }
+
   // --- les missions
   final missions = <Map<String, dynamic>>[];
   final vusM = <String>{};
@@ -2274,6 +2525,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (matchOut.isNotEmpty) 'match': matchOut,
     if (missions.isNotEmpty) 'missions': missions,
     if (scenes.isNotEmpty) 'scenes': scenes,
+    if (cinematiques.isNotEmpty) 'cinematiques': cinematiques,
+    if (conversations.isNotEmpty) 'conversations': conversations,
     if (objets.isNotEmpty) 'objets': objets,
   };
 }

@@ -206,6 +206,25 @@ Ce que la ville porte en plus des cartes :
   voitures, logements, hélicoptère ; achat en deux gestes, revente, effets par
   `Engine.biens` (drapeaux `bn_*`), usage en ville (la vitesse, l'hélicoptère),
   saisies.
+- **Les intérieurs** (`docs/design/pixel_iso/interieurs_jeu.js`, `pieces/`, `pieces/_plan.js` ;
+  `packages/tools/web/ville_dedans.js`) : on entre dans tous les lieux qui ont une porte (39 pièces,
+  dont celles du plan rendues en ébauche tant qu'elles ne sont pas modelées). Une pièce est une
+  petite carte (son image de jour et de nuit, sa profondeur, sa grille, sa porte) que la ville
+  substitue à la sienne : on y marche, on touche ses **objets** (les activités qui les nomment,
+  `objet:`), on y croise ses **occupants** (le patron, les habitués à leurs **places**, les clients
+  selon l'heure, celui qui t'attend). Le plan est le contrat : ses ids d'objets et ses noms de places
+  ne changent plus.
+- **Les scènes jouées et les conversations** (`content/ville/cinematiques_*.yaml`,
+  `ville_cinema.js` ; le format : `docs/histoires/scenes_jouees.md`) : des scènes qu'on regarde
+  (l'introduction de chaque histoire, `quand: debut` ; avant ou après une carte ; après un drapeau ;
+  en entrant ; un jour de la semaine), mises en scène dans une pièce ou devant un lieu — les
+  figurines marchent, font un geste, une émotion au-dessus de la tête, la boîte de dialogue porte le
+  portrait des cartes et le néon de l'histoire ; et des **conversations surprises**, en bulles, qu'on
+  entend en passant près de ceux qui parlent.
+- **Les petits jeux et les gestes à part** (`ville_jeux.js`) : une activité peut porter un jeu
+  (`jeu:` la cible, le 421, les jongles, le baby-foot, le flipper, les cartes, les tirs au but) ou un
+  geste (`special:` dormir, la télé, le téléphone, le journal). Les modules de la ville partagent sa
+  fermeture : `assemble.js` les insère au repère `/*__VILLE_MODULES__*/` et refuse un nom redéclaré.
 - **Le pont** : une carte agit sur la ville par des compteurs `var:` en francs de 1990 —
   `ville_francs`, `ville_francs_sales` (l'argent sale salit ce qu'il paie : saisi en premier),
   `ville_amende`, `cadeau_<objet>`, `rendre_<objet>` (un seul objet rendu),

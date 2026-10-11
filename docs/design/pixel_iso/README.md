@@ -122,3 +122,61 @@ Le moteur pré-calcule les décors en tuiles que l'application affiche ; les
 personnages sont des sprites animés à la main ; un graphiste peut modeler un
 bâtiment dans un éditeur voxel et le moteur l'éclaire dans la palette du jeu.
 Le portage en Dart reprend la même logique (aucune dépendance).
+
+## Les intérieurs où l'on entre (la version jouable)
+
+On entre dans tous les lieux qui ont une porte : `interieurs_jeu.js` rend chaque pièce en coupe
+(le sol, les deux murs du fond, un muret de 40 cm devant, la porte), de jour et de nuit, avec sa
+profondeur (on passe derrière le comptoir), la grille où l'on marche (cases de 40 cm), ses objets
+et ses places. La ville (`packages/tools/web/ville_dedans.js`) y entre d'un fondu.
+
+```bash
+node interieurs_jeu.js            # toutes les pièces (une quarantaine, ~10 s)
+node interieurs_jeu.js hotel bar  # quelques-unes
+# sorties : out/ville/interieurs/ (PNG de contrôle, dont apercu_<lieu>.png : la grille en vert,
+# la porte en rouge, les objets en jaune et leur point d'accès en orange, les places en bleu)
+# et packages/tools/web/interieurs/ (WebP sans perte + interieurs.json, commités, copiés par assemble.js)
+```
+
+**Le plan** (`pieces/_plan.js`) est le contrat : pour chaque lieu, sa taille, sa porte, ses objets
+(`[id, nom]`) et ses places (`[nom, pour, pose]`). Les scènes jouées et les activités les nomment ;
+ils ne changent plus. Un lieu du plan sans fichier est rendu en **ébauche** (des meubles génériques
+choisis d'après les ids). **Modeler une pièce**, c'est écrire `pieces/<lieu>.js` :
+
+```js
+module.exports = {
+  cle: 'bar', nom: 'Le Corner', ambiance: 'bar', personnel: 'commercant2',
+  sx: 40, sy: 32, sol: 'I_TOMETTE',                         // l'emprise en voxels de 20 cm, la matière du sol
+  murs: { bas: 'PANEL', haut: 'I_MUR_BLEU', coupe: 7 },      // les deux murs du fond (soubassement, haut, hauteur)
+  porte: { cote: 'y', de: 24, a: 31 },                       // le passage dans le muret de devant
+  build(K) {
+    const { M } = K;
+    K.comptoir(4, 6, 24, 9);                                  // x0, y0, x1, y1 (coordonnées de la pièce)
+    K.objet('comptoir', 'Le comptoir', 14, 8, 5, { acces: [14, 12] });   // id du plan, nom, centre, où l'on se tient
+    K.place('patron', 14, 3, { pour: 'personnel', regarde: 'droite' });  // nom du plan, position, à qui, sens
+    K.place('table_1', 30, 18, { pose: 'assis', pour: 'client' });
+    K.plafonnier(14, 13, { c: [1.3, 0.95, 0.5] });
+  },
+};
+```
+
+Le rendu **refuse** une pièce modelée qui oublie un objet ou une place du plan. Les coordonnées :
+x vers le bas-droite de l'écran, y vers le bas-gauche, z vers le haut ; le sol est à z = 0, le mur
+`murY` est le long de y = 0 (en haut à droite), `murX` le long de x = 0 (en haut à gauche), le
+devant (x = sx, y = sy) est ouvert. Un personnage fait 10 voxels de haut, une chaise 2 × 2, une
+table de café 4 × 4, un comptoir 5 de haut, une porte 10. Le kit (`kit()` dans
+`interieurs_jeu.js`) : `boite`, `voxel`, `table`, `chaise`, `tabouret`, `banc`, `comptoir`,
+`etagere`, `bouteilles`, `lit`, `canape`, `fauteuil`, `bureau`, `lampeBureau`, `telephone`,
+`tele`, `frigo`, `plante`, `radiateur`, `horlogeY|X`, `tapis`, `casiers`, `caisse`, `presentoir`,
+`flipper`, `babyfoot`, `billard`, `jukebox`, `cibleY|X`, `machineALaver`, `miroirY`, `cartons`,
+`coffre`, `porteManteau` ; les murs : `fenetreY|X`, `afficheY|X`, `enseigneY|X`, `surMurY|X`, et
+les façades `murY`, `murX` de `build.js` ; la lumière : `lampe`, `plafonnier`, `neon` ; `K.jour`
+dit la passe en cours (la nuit, une lampe compte double). Les matières : celles de `mats.js`,
+`interiors.js` et le haut de `interieurs_jeu.js` (`I_PARQUET`, `I_LINO`, `I_TOMETTE`, `I_BETON`,
+`I_MUR_*`, `I_ZINC`, `I_VELOURS`, `I_SKAI`, `I_DRAP`, `I_LIVRES`, `I_BOUTEILLES`…).
+
+Ce qu'une pièce doit donner : qu'on la reconnaisse d'un coup d'œil, de jour comme de nuit ; un
+chemin libre de la porte à chaque objet et à chaque place ; ses places là où l'on s'assoit et se
+tient vraiment (le patron derrière son comptoir, les clients au zinc) ; une lumière qui raconte le
+lieu (le néon de la laverie, la lampe de bureau du Doc, le rouge du Rideau Rouge). Les personnages
+ne sont pas peints dans l'image : la page les pose à leurs places, les anime et les fait parler.
