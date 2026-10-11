@@ -112,7 +112,7 @@ void main() {
   });
 
   group('S · les scènes jouées et les conversations', () {
-    test('S1 · une scène compile dans l\'ordre ; ses fautes cassent le build en se nommant', () async {
+    test('S1 · une scène, une conversation, un tableau compilent ; leurs fautes cassent le build en se nommant', () async {
       final tmp = Directory('${Directory.systemTemp.path}/fusible_scenes_${DateTime.now().microsecondsSinceEpoch}')
         ..createSync(recursive: true);
       try {
@@ -146,6 +146,14 @@ cinematiques:
     lieu: appartement
     etapes:
       - narration: "Chez toi, le frigo ronronne."
+tableaux:
+  - id: t.tb.fumeurs
+    lieu: bar
+    tranches: [soir]
+    parlent: true
+    gens:
+      - {sp: passant, geste: fume, emotes: ["..."]}
+      - {sp: passante, pose: assis, place: [2, 1], nom: "Une habituée"}
 conversations:
   - id: t.cv.deux
     lieu: buvette
@@ -170,6 +178,9 @@ conversations:
         expect(se['tranches'], ['matin', 'midi', 'aprem', 'soir'], reason: 'une scène de semaine se joue le jour, par défaut');
         expect(se['poids'], 1);
         expect(se['suite'], 't.ci.semaine_2', reason: 'la suite, ailleurs');
+        final tb = (v['tableaux'] as List).cast<Map<String, dynamic>>().firstWhere((c) => c['id'] == 't.tb.fumeurs');
+        expect(tb['parlent'], isTrue);
+        expect(((tb['gens'] as List)[1] as Map)['place'], [2, 1]);
         final cv = (v['conversations'] as List).cast<Map<String, dynamic>>().firstWhere((c) => c['id'] == 't.cv.deux');
         expect((cv['repliques'] as List).length, 2);
 
@@ -206,6 +217,11 @@ conversations:
     repliques:
       - { qui: gege, dit: "Je parle seul." }
       - { qui: gege, dit: "Toujours seul." }
+tableaux:
+  - id: t.tb.faux
+    lieu: bar
+    gens:
+      - {sp: astronaute, geste: moonwalk, place: [1]}
 activites:
   - id: t_objet_fantome
     lieu: buvette
@@ -231,6 +247,9 @@ activites:
           't.ci.orpheline: `quand: suite` sans scène qui la précède',
           't.cv.seul: deux ou trois voix',
           't_objet_fantome: objet « piano_a_queue » absent de la pièce buvette',
+          't.tb.faux/gens/1: sp « astronaute »',
+          't.tb.faux/gens/1: geste « moonwalk » inconnu',
+          't.tb.faux/gens/1: `place` : [dx, dy]',
         ]) {
           expect(err, contains(attendu));
         }
