@@ -1,58 +1,459 @@
 # Histoire 1 — « Trois mille visages » : les scènes jouées et les conversations surprises
-# (format : docs/histoires/scenes_jouees.md). Une scène jouée ne se joue pas, on la regarde ;
-# une conversation s'entend en passant près de ceux qui parlent.
+# (format : docs/histoires/scenes_jouees.md ; la charte : docs/bible/charte_histoire.md).
+# Une scène jouée ne se joue pas, on la regarde ; une conversation s'entend en passant près
+# de ceux qui parlent. Rien ici ne décide : les choix restent aux cartes.
+#
+# Ce que le joueur sait et que la ville ignore : tu es l'enfant d'Henri Ravenel, le 5 et
+# capitaine de la finale de 1974, sorti de la Rive en mars 1975 ; ta mère est partie avec toi
+# par le car de six heures, et tu portes son nom à elle. Gégé le sait depuis juin. Le livre est écrit au
+# neutre : aucune ligne n'accorde le héros sans `{pg, select, …}`.
+#
+# L'introduction (trois lieux, la nuit d'avant le premier jour) : la gare routière, où le car
+# de six heures est toujours à six heures ; la buvette, où le carton des Cartonnages de la Rive
+# attend le premier match ; la rue des Lilas, où un homme en écharpe a déjà trouvé ta fenêtre.
+# Elle s'arrête au mot de Madame Josiane : huit heures, au club-house (la première carte).
+#
+# Les scènes, dans l'ordre du livre :
+#   S1  le vestiaire avant la présentation (les cartons retournés) · la papeterie d'Odette (la
+#       première fois qu'on y entre) · la bâche, après le local (Gigi a peur) · les cendres,
+#       le lendemain du feu (quatre cent douze).
+#   S2  le taxi du président, le matin de la berline (Lhoste arrive) · le Corner, un soir sans
+#       carte (Massenet et Lhoste, deux enquêtes sur 1974) · l'attente au cabinet, avant
+#       l'ardoise (avec ou sans la police) · le registre de la loge.
+#   S3  le sucre de Josiane, avant le coffre · la fiche horaire de Camille (le car de six
+#       heures passe encore) · les palettes, avant la veille · la salle pleine, avant la presse.
 cinematiques:
+  # ═══════════════════════════════════════════════════════════ L'INTRODUCTION
   - id: h1.ci.intro
     quand: debut
     roles: [entraineur]
     si: "flag(histoire_h1)"
     titre: "Trois mille visages"
     sous: "Aubérive, juillet 1990"
-    lieu: buvette
-    tranche: soir
+    lieu: gareRoutiere
+    tranche: nuit
     suite: h1.ci.intro_2
     acteurs:
       - {qui: toi, place: porte}
+      - {id: guichetier, qui: commercant2, nom: "Le guichetier", place: guichetier}
+      - {qui: gege, place: banc_3}
+    etapes:
+      - {musique: ville_nuit}
+      - {narration: "Le dernier car de Portclair, vingt-trois heures. Une ampoule au-dessus du quai, et l'odeur de gasoil et de vase qui monte de la Rive. Quinze ans : elle n'a pas changé."}
+      - {qui: toi, va: quai}
+      - {qui: guichetier, dit: "On ferme. Le premier car, c'est six heures, pour Portclair. Si vous repartez déjà, le banc est à vous."}
+      - {qui: toi, pense: "Six heures. En 1975, ma mère tenait les deux billets dans son gant. J'ai pris son nom en montant dans ce car-là."}
+      - {qui: gege, geste: lit}
+      - {qui: toi, pense: "En mars, on avait sorti mon père de la Rive, sous la passerelle. Henri Ravenel, le capitaine qui avait vendu la finale."}
+      - {qui: gege, regarde: toi}
+      - {pause: 900}
+      - {qui: gege, dit: "Bonne nuit, Raymond. Il est arrivé.", geste: debout}
+      - {qui: guichetier, dit: "Qui ça ?"}
+      - {qui: gege, dit: "Le car.", ton: sourire}
+      - {qui: gege, sort: true}
+      - {qui: toi, pense: "Le président a signé mon contrat au téléphone, sans voir ma figure. Dans cette ville, personne ne sait qui je suis."}
+      - {narration: "Le guichetier baisse le rideau de fer. Sur le banc, l'homme a laissé L'Écho, ouvert aux pages des sports."}
+
+  - id: h1.ci.intro_2
+    quand: suite
+    lieu: buvette
+    tranche: nuit
+    suite: h1.ci.intro_3
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vecchio, place: zinc_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+      - {qui: gege, place: fond}
+    etapes:
+      - {narration: "La buvette du kop, minuit passé. Le néon du zinc grésille. Sous la table du fond, un carton fermé au scotch large : CARTONNAGES DE LA RIVE."}
+      - {qui: toi, va: zinc_3}
+      - {qui: patron, dit: "On sert jusqu'à une heure. Après aussi, mais on ne le dit pas."}
+      - {qui: vecchio, dit: "Lundi, on a un banc neuf. Vaubourg a signé au téléphone, sans voir la tête qui va s'asseoir dessus."}
+      - {qui: patron, dit: "Au téléphone, il ne voit jamais ce qu'il achète. Ça l'arrange."}
+      - {qui: gege, dit: "Moi, je l'ai vue."}
+      - {qui: vecchio, regarde: gege}
+      - {qui: gege, regarde: toi}
+      - {pause: 800}
+      - {qui: gege, dit: "Tu es moins pâle que sur la photo, coach.", ton: sourire}
+      - {qui: vecchio, regarde: toi}
+      - {qui: vecchio, emote: choc}
+      - {qui: vecchio, sort: true}
+      - {qui: patron, dit: "Gigi qui laisse un fond de verre. Ça, je ne l'avais jamais vu."}
+      - {qui: toi, pense: "Gigi Vecchio. Il avait vingt-cinq ans, en 1974. C'est lui qui était dans les buts, ce jour-là."}
+      - {qui: gege, dit: "Le carton, c'est pour le premier match. On ne l'ouvre pas avant. Ça porte malheur."}
+      - {narration: "Gégé pose le pied sur le carton, doucement, comme sur un chien qui dort."}
+
+  - id: h1.ci.intro_3
+    quand: suite
+    lieu: appartement
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: camille, place: fenetre}
+    etapes:
+      - {narration: "Rue des Lilas, au troisième. Des cartons partout, le lit monté de travers. Camille n'a pas allumé."}
+      - {qui: camille, dit: "Un homme en écharpe est passé deux fois sous la fenêtre. Il a levé la tête vers le troisième, et il est reparti."}
+      - {qui: toi, va: milieu}
+      - {qui: camille, dit: "Le club a glissé un mot sous la porte. « Huit heures, au club-house. Madame Josiane. » Elle écrit comme une institutrice."}
+      - {qui: toi, pense: "Une soirée. Il a suffi d'une soirée pour qu'on sache où je dors."}
+      - {qui: camille, va: fauteuil}
+      - {narration: "Camille tire le rideau. Par la fente, en bas, le réverbère éclaire une rue vide et, sur le trottoir d'en face, un mégot qui fume encore."}
+
+  # ═══════════════════════════════════════════════ SAISON 1 — LE VISAGE
+  # Avant la présentation (S0, créneau 1) : la Nord se tait, et retourne ses cartons. La
+  # carte montre ce qu'il y avait dessous.
+  - id: h1.ci.vestiaire
+    quand: carte
+    prefixe: "en.h1.a1_presentation"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h1)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: milieu}
+      - {qui: vukic, place: coach}
+      - {qui: brehaut, place: banc_2}
+      - {qui: vecchio, place: banc_5}
+      - {id: ramasseur, qui: enfant, nom: "Un ramasseur de balles", place: porte, cache: true}
+    etapes:
+      - {narration: "Le vestiaire, quatorze heures cinquante. L'odeur du camphre, les crampons sur le carrelage. Au-dessus, la Nord est pleine depuis midi."}
+      - {qui: vukic, dit: "Trois mille dans la Nord, et pas un chant depuis midi. J'ai fait le tour : ils ne se parlent même pas entre eux."}
+      - {qui: brehaut, dit: "Les gars veulent savoir si c'est contre nous. Un promu qui joue son premier match, d'habitude, ça chante."}
+      - {qui: vecchio, geste: tete_basse}
+      - {qui: ramasseur, entre: tableau}
+      - {qui: ramasseur, dit: "Coach ! Ils ont tous un carton sur les genoux. Retourné. Personne ne veut me dire ce qu'il y a dessous."}
+      - {qui: vecchio, dit: "Quand une tribune se tait avant le coup d'envoi, c'est qu'elle a préparé quelque chose. Ou quelqu'un."}
+      - {qui: vecchio, regarde: toi}
+      - {qui: vukic, geste: pointe}
+      - {qui: vukic, dit: "C'est l'heure, {toi}."}
+      - {qui: toi, va: porte}
+      - {narration: "Dans le couloir, un bruit descend de la Nord : trois mille cartons qu'on retourne en même temps, comme un vent sec dans des feuilles."}
+
+  # La première fois qu'on pousse la porte de la papeterie, tant que la pellicule dort : une
+  # gomme qui n'existe pas, et un tiroir qu'on ferme à clé.
+  - id: h1.ci.papeterie
+    quand: lieu
+    lieu: librairie
+    roles: [entraineur]
+    si: "flag(histoire_h1) && !flag(h1_negatif_tire) && !flag(h1_negatif)"
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: odette, place: odette}
+      - {id: ecolier, qui: enfant, nom: "Un écolier", place: client_1}
+    etapes:
+      - {narration: "La librairie-papeterie. Des cahiers à spirale, des cartes postales du pont et, derrière le comptoir, une femme de soixante-dix ans passés, un gilet sur les épaules, qui ne lève pas les yeux tout de suite."}
+      - {qui: ecolier, dit: "Une gomme pour l'encre, madame Marsal. Celle qui efface tout."}
+      - {qui: odette, dit: "Ça n'existe pas, mon grand. L'encre, on la gratte. Et ça se voit toujours, que ça a été gratté."}
+      - {qui: ecolier, sort: true}
+      - {qui: toi, va: visiteur}
+      - {qui: odette, regarde: toi}
+      - {pause: 1400}
+      - {qui: odette, dit: "Pardon. J'ai été photographe, avant. On garde l'habitude de regarder les gens trop longtemps.", ton: sourire}
+      - {qui: toi, pense: "Elle regarde mon front, puis ma bouche, comme on vérifie une épreuve contre l'original."}
+      - {narration: "Sa main va au tiroir du bas, celui des pellicules. Elle tourne la petite clé, une fois, et la glisse dans son gilet."}
+
+  # Après le local (S0, créneaux 10-11) : Gégé a montré la bâche de 1971. Gigi Vecchio l'a
+  # vue se déplier, et il a compris ce que Gégé sait.
+  - id: h1.ci.bache
+    quand: carte
+    prefixe: "en.h1.a2_local"
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h1)"
+    lieu: buvette
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: table_1}
       - {qui: gege, place: fond}
       - {qui: vecchio, place: zinc_1}
       - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
     etapes:
-      - {narration: "Quinze ans sans prendre le car pour Aubérive. La Rive sent toujours le gasoil et la vase."}
-      - {qui: toi, va: table_1}
-      - {qui: vecchio, dit: "Le nouveau coach arrive lundi. Personne ne l'a vu. Même pas Vaubourg, qui l'a signé au téléphone."}
-      - {qui: patron, geste: boit}
-      - {qui: gege, emote: "..."}
-      - {qui: gege, regarde: toi}
-      - {qui: gege, dit: "Moi, je l'ai vu."}
-      - {pause: 700}
-      - {qui: gege, va: table_2}
-      - {qui: gege, dit: "Une bière, monsieur ? Elle est tiède, mais elle est à nous.", ton: sourire}
-      - {qui: toi, pense: "Il me regarde comme on regarde une photo qu'on connaît par cœur."}
-      - {narration: "Au mur, entre deux écharpes, un rectangle plus clair : un cadre qu'on a décroché."}
+      - {narration: "La buvette, le même soir. La bâche est roulée sur la table du fond, ficelée. Au zinc, Gigi Vecchio n'a pas touché à son verre depuis que Gégé l'a dépliée."}
+      - {qui: vecchio, dit: "Tu lui as montré la bâche."}
+      - {qui: gege, dit: "Je lui ai montré l'autre bout."}
       - {qui: vecchio, geste: tete_basse}
-      - {qui: gege, dit: "Madame Josiane vous attend demain au club-house. Elle a deux clés. Prenez les deux."}
-      - {fondu: "Le lendemain matin."}
+      - {qui: vecchio, dit: "Et après ? Tu lui montres quoi, après ?"}
+      - {qui: gege, va: zinc_2}
+      - {qui: gege, dit: "Moi, rien. Je ne montre jamais rien, Gigi. Les gens trouvent tout seuls, à force."}
+      - {qui: vecchio, emote: sueur}
+      - {narration: "Gigi porte la main à son cou, là où pend la clé du placard, et la serre dans son poing."}
+      - {qui: patron, dit: "Je baisse le rideau. Gigi, ton verre, je te le garde pour demain ?"}
+      - {qui: vecchio, sort: true}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "Il a peur de toi, maintenant. Seize ans qu'il attendait d'avoir peur de quelqu'un.", ton: noir}
+      - {narration: "Gégé pose la main à plat sur la bâche roulée, comme sur l'épaule de quelqu'un."}
 
-  - id: h1.ci.intro_2
-    quand: suite
+  # Le lendemain du feu au local (S0, créneau 12) : les cartons sauvés, le compte, et quatre
+  # cent douze visages qui se promènent quelque part. La question de la saison 2 commence ici.
+  - id: h1.ci.cendres
+    quand: drapeau
+    drapeau: h1_incendie
+    roles: [entraineur]
+    si: "flag(histoire_h1)"
+    lieu: buvette
+    tranche: midi
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: gege, place: fond}
+      - {id: fan, qui: fan, nom: "Un gars de la Nord", place: table_2}
+      - {id: nino, qui: enfant, nom: "Nino", place: table_3}
+    etapes:
+      - {fondu: "Le lendemain, à midi."}
+      - {narration: "La buvette sent la fumée froide. Sur les tables, les cartons sortis du local, noircis aux coins. Gégé les a numérotés à la craie, un par un."}
+      - {qui: fan, dit: "Les pompiers ont écrit « radiateur ». Ça sentait l'essence jusqu'ici, et ils ont écrit « radiateur »."}
+      - {qui: gege, dit: "Ils écrivent ce qu'ils veulent. Moi, je compte."}
+      - {narration: "Nino, le neveu de Gégé, a sorti un masque d'un carton. Il le tient devant sa figure et se tourne vers la porte, vers toi."}
+      - {qui: nino, regarde: toi}
+      - {qui: gege, dit: "Nino. Repose ça. Ceux-là sont comptés."}
+      - {qui: nino, emote: "?"}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "Il en manque quatre cent douze, {toi}. Personne ne me les a rendus, et je ne les ai donnés à personne."}
+      - {qui: fan, dit: "Quatre cents têtes dans la nature. On les reconnaîtra comment, ceux qui les portent ?"}
+      - {qui: gege, dit: "On ne les reconnaîtra pas. C'est à ça que ça sert, un masque."}
+      - {narration: "Nino remet le masque dans le carton, face contre les autres. Gégé écrit 412 à la craie au-dessus du zinc, et souligne deux fois."}
+
+  # ═══════════════════════════════════════════════ SAISON 2 — LES NUITS
+  # Le matin de la berline (S1, créneau 1) : le président arrive en taxi, et l'inspecteur de
+  # Portclair attend dans le couloir avec ce qui reste d'un visage. Sa carte vient après.
+  - id: h1.ci.taxi
+    quand: carte
+    prefixe: "en.h1.b1_berline"
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h1)"
     lieu: clubhouse
     tranche: matin
     acteurs:
+      - {qui: toi, place: guichet}
+      - {qui: josiane, place: secretaire}
+      - {qui: lhoste, place: visiteur_1}
+      - {qui: aulard, place: porte, cache: true}
+    etapes:
+      - {fondu: "Huit heures, le club-house."}
+      - {narration: "Sur la chaise du couloir, un homme en imperméable attend, un sac plastique sur les genoux. Dans le sac, quelque chose de noir qui a été un visage."}
+      - {qui: josiane, dit: "Il est là depuis sept heures, {toi}. Il n'a pas voulu de café. Il a demandé le président, et ensuite vous."}
+      - {qui: aulard, entre: president}
+      - {narration: "Vaubourg monte sans enlever son manteau. Dehors, un taxi l'attend, moteur allumé. Il ne regarde personne."}
+      - {qui: lhoste, va: visiteur_2}
+      - {qui: lhoste, dit: "Lhoste, police judiciaire de Portclair. Votre voiture a brûlé jusqu'aux jantes, monsieur le président. Le masque n'a pas une cloque."}
+      - {qui: aulard, dit: "Jetez-le. C'est du carton à quinze sous."}
+      - {qui: lhoste, dit: "C'est une pièce, monsieur le président. Elle a un visage. Je cherche à qui il appartient."}
+      - {qui: aulard, dit: "À mon club, inspecteur. Comme le reste. Le visage aussi.", ton: noir}
+      - {qui: lhoste, regarde: toi}
+      - {qui: lhoste, dit: "Je repasserai. Ne bougez pas trop, {toi}. Votre tête circule assez comme ça."}
+      - {qui: lhoste, sort: true}
+      - {narration: "Josiane ouvre le registre des visites et écrit, sous la date : « Police ». Puis, après un temps, en plus petit : « Pour le président. »"}
+
+  # Un soir sans carte, au Corner : le journaliste qui a écrit 1974 et le policier qui cherche
+  # 1990. Ils se mesurent, et tu entres au mauvais moment.
+  - id: h1.ci.corner
+    quand: semaine
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_berline_brulee) && flag(h1_article_1974) && !flag(h1_lhoste_1974)"
+    lieu: bar
+    tranches: [soir]
+    poids: 2
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: lhoste, place: lhoste}
+      - {qui: meneche, place: table_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
+    etapes:
+      - {narration: "Le Corner, un soir de semaine. La télé donne les résultats sans le son. Au comptoir, l'inspecteur Lhoste a posé son carnet, fermé, à côté de sa tasse."}
+      - {qui: meneche, dit: "Vous cherchez qui porte les masques, inspecteur. En 1974, moi, j'ai cherché qui avait pris l'enveloppe. J'ai trouvé très vite."}
+      - {qui: lhoste, dit: "Vous aviez un casier et quarante mille francs dedans. Moi, j'ai trois mille fois la même figure, et pas un nom."}
+      - {qui: meneche, geste: lit}
+      - {qui: meneche, dit: "Vous étiez où, en 1974 ?"}
+      - {qui: lhoste, dit: "Dans la Nord. Comme tout le monde."}
+      - {qui: meneche, dit: "Tout le monde ne revient pas avec un carnet et des sacs en plastique."}
+      - {qui: toi, va: table_3}
+      - {qui: patron, regarde: toi}
+      - {qui: meneche, dit: "Tiens. On parlait de visages, {toi}. Vous en avez un qui intéresse tout le monde, ce mois-ci."}
+      - {qui: lhoste, regarde: toi}
+      - {qui: lhoste, sort: true}
+      - {narration: "Sur le zinc, Lhoste a laissé le prix de son café, au centime près. Son carnet, il ne l'a ouvert qu'une fois de la soirée : quand tu es {pg, select, f{entrée} other{entré}}."}
+
+  # Avant l'ardoise (S1, après la passerelle) : la salle d'attente du Doc. On ne voit pas le
+  # coup ; on voit la radio, les fils, et une craie qu'on a demandée exprès.
+  - id: h1.ci.attente
+    quand: carte
+    prefixe: "en.h1.gigi.ardoise"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h1) && !flag(h1_police_gigi)"
+    lieu: cabinet
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: sabatier, place: doc}
+      - {qui: vukic, place: attente_1}
+    etapes:
+      - {narration: "Le cabinet du Doc. Sur le négatoscope, la radio d'une mâchoire, deux traits blancs là où elle a cédé. Derrière la porte vitrée, quelqu'un respire fort par le nez."}
+      - {qui: sabatier, dit: "Deux fractures. J'ai posé des fils : il ne parlera pas avant six semaines. Il a demandé une ardoise et une craie. Pas un crayon : une craie."}
+      - {qui: vukic, dit: "On l'a trouvé avec le masque dans la main. Il a fallu lui ouvrir les doigts un par un."}
+      - {qui: vukic, geste: tete_basse}
+      - {qui: sabatier, dit: "Il ne veut voir que vous, {toi}. Il a écrit votre nom sur l'ardoise, il l'a effacé, il l'a réécrit."}
+      - {qui: toi, va: kine}
+      - {qui: vukic, dit: "Je reste ici. Ce qu'il a à te dire, je ne veux pas l'avoir lu."}
+      - {narration: "Le Doc éteint le négatoscope. Sur son bureau, à côté de la boîte de craies, une ardoise d'écolier, encore humide d'avoir été essuyée."}
+
+  # La même attente, quand tu as appelé la police d'abord : l'inspecteur est sur la seule chaise.
+  - id: h1.ci.attente_lhoste
+    quand: carte
+    prefixe: "en.h1.gigi.ardoise"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_police_gigi)"
+    lieu: cabinet
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: sabatier, place: doc}
+      - {qui: lhoste, place: attente_2}
+    etapes:
+      - {narration: "Le cabinet du Doc. Sur la seule chaise de l'attente, l'inspecteur Lhoste, son imperméable plié sur les genoux. Il n'a pas l'air d'avoir dormi."}
+      - {qui: sabatier, dit: "Des fils pour six semaines. Il a demandé une ardoise et une craie. Pour l'inspecteur, il n'a rien écrit. Pas une lettre."}
+      - {qui: lhoste, dit: "Je ne lui ai rien demandé. J'attends qu'il ait quelque chose à effacer."}
+      - {qui: lhoste, regarde: toi}
+      - {qui: lhoste, dit: "Allez-y, {toi}. C'est vous qu'il attend. Moi, je regarderai la craie qui reste."}
+      - {qui: toi, va: kine}
+      - {qui: lhoste, va: porte, attendre: false}
+      - {narration: "Derrière la vitre, Gigi Vecchio a retourné l'ardoise contre le drap, face cachée, et il te regarde entrer."}
+
+  # La loge du gardien, la première fois qu'on y entre quand l'inspecteur cherche déjà : le
+  # registre des visites ne note pas les visages.
+  - id: h1.ci.registre
+    quand: lieu
+    lieu: loge
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_berline_brulee) && flag(h1_plaque_qui) && !flag(h1_nom_grave)"
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: abel, place: gardien}
+      - {qui: lhoste, place: chaise}
+    etapes:
+      - {narration: "La loge du gardien du cimetière. Le poêle ronfle. Sur la table, le registre des visites, ouvert, et penché dessus, l'inspecteur Lhoste."}
+      - {qui: lhoste, dit: "Votre registre est plus précis que mes témoins, monsieur Abel. Les Rameaux, chaque année : « écharpe, buis, caveau du Racing ». Jamais de nom."}
+      - {qui: abel, dit: "Je note qui vient, et quand. Les noms, ils me les donnent, ou ils ne me les donnent pas."}
+      - {qui: lhoste, geste: lit}
+      - {qui: lhoste, dit: "Et les visages ?"}
+      - {qui: abel, dit: "Je ne note pas les visages. Ils changent trop. Surtout cette année."}
+      - {qui: lhoste, regarde: toi}
+      - {qui: lhoste, dit: "Vous êtes dedans aussi, {toi}. Au crayon. Caveau du Racing, toujours la même plaque."}
+      - {qui: abel, geste: ecrit}
+      - {narration: "Monsieur Abel mouille la mine de son crayon et ajoute une ligne au registre, à la date du jour. Il ne te demande pas ton nom."}
+
+  # ═══════════════════════════════════════════════ SAISON 3 — LE DERNIER SOIR
+  # Avant le coffre : le président a vidé l'étage, et Josiane avertit comme elle avertit
+  # toujours, par un geste. Un sucre, pour quelqu'un qui n'en prend pas.
+  - id: h1.ci.sucre
+    quand: carte
+    prefixe: "en.h1.coffre.coffre"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h1)"
+    lieu: clubhouse
+    tranche: aprem
+    acteurs:
       - {qui: toi, place: porte}
       - {qui: josiane, place: secretaire}
+      - {qui: aulard, place: president}
     etapes:
-      - {narration: "Le club-house sent la cire et le café réchauffé. Une machine à écrire, un calendrier de 1989 qu'on n'a pas changé."}
+      - {narration: "Le club-house, quatre heures. Au premier, la voix du président, au téléphone. Il dit « non » trois fois, sans jamais finir la phrase."}
       - {qui: toi, va: guichet}
-      - {qui: josiane, regarde: toi}
-      - {qui: josiane, dit: "Vous êtes {pg, select, f{arrivée} other{arrivé}} en avance. Les autres arrivaient en retard, au début.", ton: sourire}
-      - {qui: josiane, geste: ecrit}
-      - {qui: josiane, dit: "Monsieur Aulard est en rendez-vous. Montez, je vous apporte les clés.", geste: pointe}
-      - {qui: toi, pense: "Dans l'escalier, des photos. Une seule n'a plus tous ses visages."}
+      - {qui: josiane, dit: "Le président a fait sortir tout le monde de l'étage. Même la femme de ménage, avec son seau."}
+      - {qui: josiane, regarde: aulard}
+      - {qui: josiane, dit: "Ce matin, il m'a demandé un dossier de 1975, aux archives. Je lui ai rappelé qu'on n'y montait plus."}
+      - {qui: aulard, dit: "Monte. Et ferme la porte du bas.", ton: noir}
+      - {narration: "Josiane pose une tasse sur le guichet, et un sucre à côté. Elle ne t'a jamais mis de sucre."}
+      - {qui: josiane, dit: "Votre café, {toi}. Je l'ai sucré."}
+      - {qui: toi, va: visiteur_1}
+      - {narration: "Tu montes. À la neuvième marche, le bois craque sous ton pied, et la voix se tait là-haut. Le président est de dos, devant le coffre ouvert. Il ne se retourne pas tout de suite."}
+
+  # Un soir sans carte, la dernière saison : la fiche horaire de la gare routière sur la
+  # toile cirée. L'approche du « car de six heures », sans rien demander.
+  - id: h1.ci.horaires
+    quand: semaine
+    roles: [entraineur]
+    si: "flag(histoire_h1) && saison == 3 && flag(h1_lettre_lue) && !flag(divorce)"
+    lieu: appartement
+    tranches: [soir]
+    poids: 2
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: camille, place: table_1}
+    etapes:
+      - {narration: "Rue des Lilas, le soir. Sur la toile cirée, à côté du pain, la fiche horaire de la gare routière, pliée en accordéon."}
+      - {qui: camille, dit: "Je l'ai prise sur le comptoir de la gare, en passant. Je ne sais pas pourquoi. Je l'ai prise."}
+      - {qui: toi, va: table_2}
+      - {qui: camille, dit: "Le premier pour Portclair part toujours à six heures. Ils n'ont pas changé l'heure depuis 1975. J'ai vérifié deux fois."}
+      - {qui: toi, pense: "Ma mère avait les billets dans son gant. Je me souviens du gant. Je ne me souviens plus de son visage, ce matin-là."}
+      - {qui: camille, dit: "Je ne te demande rien. Je voulais que tu saches qu'il passe encore."}
+      - {qui: toi, dit: "Il passe encore."}
+      - {narration: "Camille glisse la fiche sous la corbeille de fruits et éteint la lampe. Dans le noir, il ne reste que le réveil, qui marque onze heures."}
+
+  # Avant la veille (S2, créneau 16), à la friche : le feu de palettes, les cartons du local, et
+  # le virage qui attend de savoir ce qu'on en fait. Le brasero ou le masque neuf, après.
+  - id: h1.ci.palettes
+    quand: carte
+    cartes: [en.h1.c4_brasero, en.h1.c4_masque_neuf]
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h1)"
+    lieu: friche
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: [0, -3]}
+      - {qui: gege, place: [-4, -6]}
+      - {id: fan, qui: fan, nom: "Un gars de la Nord", place: [-6, -7]}
+      - {id: nino, qui: enfant, nom: "Nino", place: [-2, -5]}
+    etapes:
+      - {musique: sombre}
+      - {narration: "La friche, à la nuit tombée. Demain, c'est le dernier match. Le feu de palettes monte plus haut qu'un homme ; autour, des cartons empilés comme pour un déménagement."}
+      - {qui: fan, dit: "Gégé, ceux du local, on les met où ? Au feu, ou dans les sacs ?"}
+      - {qui: gege, dit: "Par terre. On attend."}
+      - {qui: fan, dit: "On attend quoi ?"}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "{pg, select, f{Elle} other{Lui}}."}
+      - {qui: nino, va: [-1, -5]}
+      - {qui: nino, dit: "Tonton ! C'est la tête des cartons !"}
+      - {qui: fan, emote: "..."}
+      - {narration: "Gégé sort un masque d'un carton, le regarde longtemps à la lueur du feu, puis te fait signe d'approcher."}
+      - {qui: toi, va: [-2, -4]}
+
+  # Avant la salle de presse (S2, créneau 17) : le vestiaire vide après le dernier match, et
+  # quarante personnes de l'autre côté du couloir. Toutes les fins du livre sont derrière.
+  - id: h1.ci.salle_pleine
+    quand: carte
+    prefixe: "en.h1.c5_presse"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_negatif)"
+    lieu: stade
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: milieu}
+      - {qui: vukic, place: tableau}
+      - {qui: brehaut, place: banc_3}
+    etapes:
+      - {narration: "Le vestiaire, après le dernier match. Des maillots en tas, l'eau des douches qui coule encore. Dans le couloir, le bruit d'une salle pleine qui attend."}
+      - {qui: vukic, dit: "Ils sont quarante, dans la salle de presse. Il y en a qui ne sont jamais venus voir un match."}
+      - {qui: brehaut, dit: "Massenet est au premier rang. Il tient un papier plié en quatre. Il ne l'a pas lâché de la soirée."}
+      - {qui: toi, pense: "Le négatif d'Odette est dans ma poche intérieure. Il pèse moins qu'un ticket de car."}
+      - {narration: "Vukić efface le tableau, la tactique de l'après-midi, d'un seul geste du bras."}
+      - {qui: vukic, dit: "Personne ne t'oblige à y aller. Se taire, sur un banc, ça s'est déjà vu."}
+      - {qui: brehaut, dit: "Les gars restent, {toi}. Ils veulent entendre. Ils ne savent pas quoi, mais ils restent."}
+      - {qui: toi, va: porte}
+      - {narration: "Au bout du couloir, la porte de la salle de presse est ouverte. Quarante têtes se retournent en même temps. Aucune n'est en carton."}
 
 conversations:
+  # ═══════════════════════════════════════════════ SAISON 1
   - id: h1.cv.le_filet
     roles: [entraineur]
-    si: "flag(histoire_h1) && annee == 1990"
+    si: "flag(histoire_h1) && saison == 1 && !flag(h1_ardoise_lue)"
     lieu: buvette
     tranches: [soir, nuit]
     qui:
@@ -60,6 +461,163 @@ conversations:
       - {qui: vecchio, place: zinc_1}
     repliques:
       - {qui: vecchio, dit: "Tu lui as dit, pour le placard ?"}
-      - {qui: gege, dit: "Le filet ? Il le verra bien assez tôt."}
-      - {qui: vecchio, dit: "Seize ans que je le plie. Je ne sais plus pourquoi je le garde."}
-      - {qui: gege, dit: "Moi je sais. Remets-nous deux demis."}
+      - {qui: gege, dit: "Le filet ? Ça se verra bien assez tôt."}
+      - {qui: vecchio, dit: "Seize ans que je le plie et que je le déplie. Je ne sais plus pourquoi je le garde."}
+      - {qui: gege, dit: "Moi, je sais. Finis ton verre."}
+      - {qui: vecchio, dit: "Tu dis ça depuis seize ans, toi aussi."}
+
+  - id: h1.cv.le_salut
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_salut_virage) && saison == 1"
+    lieu: buvette
+    tranches: [soir]
+    qui:
+      - {id: fan1, qui: fan, nom: "Un gars de la Nord", place: table_2}
+      - {id: fan2, qui: fan, nom: "Un autre gars", place: table_3}
+    repliques:
+      - {qui: fan1, dit: "Tu as vu, samedi ? Une main levée sur le banc, et trois mille avec. Même ma mère, qui ne lève jamais rien."}
+      - {qui: fan2, dit: "Gégé dit que ça devait se faire comme ça. Qu'on n'avait pas le droit de se tromper de main."}
+      - {qui: fan1, dit: "Pourquoi ce visage-là, d'abord ? Il y en avait d'autres, dans le journal."}
+      - {qui: fan2, dit: "Demande à Gégé. Moi, je l'ai demandé. Il m'a payé une bière, et c'était tout."}
+      - {qui: fan1, dit: "Alors c'est que c'était une bonne question."}
+
+  - id: h1.cv.la_pelouse
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_masques_tifo) && !flag(h1_salut_virage) && saison == 1"
+    lieu: tabac_stade
+    tranches: [matin, midi]
+    qui:
+      - {id: ancien1, qui: ancien, nom: "Un ancien", place: comptoir_1}
+      - {id: ancien2, qui: ancien, nom: "Un autre ancien", place: comptoir_2}
+    repliques:
+      - {qui: ancien1, dit: "Trois mille fois sa figure dans la Nord, et le banc regarde la pelouse. Pas un regard pour le virage."}
+      - {qui: ancien2, dit: "En 1974, il y en avait un qui faisait pareil. Il ne regardait jamais les tribunes, celui-là non plus."}
+      - {qui: ancien1, dit: "Lequel ?"}
+      - {qui: ancien2, dit: "Le 5. Le capitaine. Tu as oublié, toi aussi ?"}
+      - {qui: ancien1, dit: "J'ai oublié exprès. Comme tout le monde."}
+
+  - id: h1.cv.le_verrou
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_masque_sous_fenetre)"
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    qui:
+      - {id: boulangere, qui: passante, nom: "La boulangère", place: boulangere}
+      - {id: cliente, qui: passante, nom: "Une cliente", place: client_1}
+    repliques:
+      - {qui: cliente, dit: "Une heure, il est resté sous la fenêtre du troisième. Sans bouger. Avec cette figure-là."}
+      - {qui: boulangere, dit: "Les gens du troisième, ou l'autre ?"}
+      - {qui: cliente, dit: "Allez savoir. Ils ont la même, maintenant. C'est tout le problème."}
+      - {qui: boulangere, dit: "J'ai fermé à clé, cette nuit. Trente ans que je ne fermais pas."}
+      - {qui: cliente, dit: "Mon fils a rendu son masque à la grille. Je lui ai dit : on ne dort pas avec la tête de quelqu'un."}
+
+  # ═══════════════════════════════════════════════ SAISON 2
+  - id: h1.cv.portclair
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_berline_brulee)"
+    lieu: bar
+    tranches: [midi, aprem]
+    qui:
+      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
+      - {id: habitue, qui: ancien, nom: "Un habitué", place: comptoir_1}
+    repliques:
+      - {qui: habitue, dit: "Ton policier de Portclair, il a encore demandé où habite {pg, select, f{la coach} other{le coach}} ?"}
+      - {qui: patron, dit: "Deux fois. Je lui ai donné la mauvaise rue, deux fois."}
+      - {qui: habitue, dit: "Pourquoi ?"}
+      - {qui: patron, dit: "Par habitude. Ici, on ne donne pas les adresses aux gens de Portclair. On n'en est pas morts, jusqu'ici."}
+      - {qui: habitue, dit: "Il la trouvera tout seul, la bonne rue. Il a trois mille photos."}
+
+  - id: h1.cv.les_archives
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_archives)"
+    lieu: echo
+    tranches: [aprem, soir]
+    qui:
+      - {qui: meneche, place: redacteur}
+      - {id: pigiste, qui: passant, nom: "Le pigiste", place: pigiste}
+    repliques:
+      - {qui: pigiste, dit: "Les planches de la photographe aussi. Odette Marsal. Ils ont su où chercher."}
+      - {qui: meneche, dit: "Ils ont su lire une étiquette. C'est déjà plus que la Fédération, en 1974."}
+      - {qui: pigiste, dit: "Vous allez porter plainte ?"}
+      - {qui: meneche, dit: "Contre qui ? Contre un visage ? J'ai déjà fait ça une fois."}
+
+  - id: h1.cv.le_jet
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_passerelle)"
+    lieu: kiosque
+    tranches: [matin, midi]
+    qui:
+      - {id: ancien1, qui: ancien, nom: "Un ancien"}
+      - {id: kiosquier, qui: commercant, nom: "Le kiosquier"}
+    repliques:
+      - {qui: kiosquier, dit: "Trois, il paraît. Avec la même tête. Celle du banc."}
+      - {qui: ancien1, dit: "Et Gigi ? Il a dit quelque chose ?"}
+      - {qui: kiosquier, dit: "Gigi ne peut plus rien dire, avec ses fils. Et avant, il ne disait déjà rien."}
+      - {qui: ancien1, dit: "Depuis 1974, il ne dit rien. Moi, je trouvais que c'était de la pudeur."}
+      - {qui: kiosquier, dit: "Et maintenant ?"}
+      - {qui: ancien1, dit: "Maintenant, je passe par le pont."}
+
+  - id: h1.cv.la_depanneuse
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_voiture_saisie)"
+    lieu: presse
+    tranches: [matin, midi]
+    qui:
+      - {id: marchand, qui: commercant2, nom: "Le marchand de journaux", place: marchand}
+      - {id: client, qui: passant, nom: "Un client", place: client_1}
+    repliques:
+      - {qui: client, dit: "Six heures du matin, rue des Lilas. Une dépanneuse, deux voitures de police, et toute la rue aux fenêtres."}
+      - {qui: marchand, dit: "Pour une voiture ?"}
+      - {qui: client, dit: "Pour ce qu'il y avait dans le coffre. Un masque, sous scellés. Comme dans les films."}
+      - {qui: marchand, dit: "Un masque de plus. J'en ai trois sous le comptoir, que des clients ont oubliés."}
+      - {qui: client, dit: "Il paraît que celui du coffre, quelqu'un l'avait mis là exprès."}
+      - {qui: marchand, dit: "Un masque n'est jamais à personne. C'est même à ça qu'on le reconnaît."}
+
+  # ═══════════════════════════════════════════════ SAISON 3
+  - id: h1.cv.la_vitrine
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_vitrine)"
+    lieu: banque
+    tranches: [matin]
+    qui:
+      - {id: guichetier, qui: commercant2, nom: "Le guichetier", place: guichetier}
+      - {id: cliente, qui: passante, nom: "Une cliente", place: client_1}
+    repliques:
+      - {qui: cliente, dit: "Ils ont lavé la vitrine trois fois. On voit encore le chiffre, à contre-jour."}
+      - {qui: guichetier, dit: "Le directeur ne veut pas qu'on la repeigne. Il dit que ça se verrait davantage."}
+      - {qui: cliente, dit: "1974. Qu'est-ce qu'elle a à voir avec la banque, cette année-là ?"}
+      - {qui: guichetier, dit: "Rien. On a prêté de l'argent à quelqu'un, en 1977. C'est tout ce que je sais, et je ne le sais pas."}
+      - {qui: cliente, dit: "Vous ne savez rien, mais vous baissez la voix."}
+
+  - id: h1.cv.ravenel
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_cercueil)"
+    lieu: cafe_mairie
+    tranches: [midi, aprem]
+    qui:
+      - {id: conseiller, qui: ancien, nom: "Un conseiller municipal", place: comptoir_1}
+      - {id: retraite, qui: passant, nom: "Un retraité", place: table_1}
+    repliques:
+      - {qui: conseiller, dit: "RAVENEL, en blanc, sur un cercueil. Devant la grille du stade, à six heures du matin."}
+      - {qui: retraite, dit: "Ravenel. Le 5 de 1974 ?"}
+      - {qui: conseiller, dit: "Son enfant, il paraît. Le nom de la mère sur la boîte aux lettres, celui du père dans la Nord."}
+      - {qui: retraite, dit: "Et Vaubourg le savait, quand il a signé ?"}
+      - {qui: conseiller, dit: "Vaubourg signe au téléphone. Il ne sait jamais rien avant le lendemain."}
+      - {qui: retraite, dit: "Moi, j'avais mis un franc sur la défaite, en 1974. Tout le monde avait mis un franc."}
+
+  - id: h1.cv.les_paris
+    roles: [entraineur]
+    si: "flag(histoire_h1) && flag(h1_appel) && saison == 3"
+    lieu: tabac
+    tranches: [aprem, soir]
+    qui:
+      - {id: buraliste, qui: commercant2, nom: "Le buraliste", place: patron}
+      - {id: marinier1, qui: passant, nom: "Un marinier", place: marinier_1}
+      - {id: marinier2, qui: ancien, nom: "Un vieux marinier", place: marinier_2}
+    repliques:
+      - {qui: marinier1, dit: "On prend les paris sur le dernier samedi ?"}
+      - {qui: buraliste, dit: "Sur le match, oui. Pas sur ce qui se passera après."}
+      - {qui: marinier2, dit: "Qu'est-ce qui se passera, après ?"}
+      - {qui: marinier1, dit: "Aux Hauts-de-Rive. On dit que le virage montera chez le président, tout le virage, avec la même figure."}
+      - {qui: buraliste, dit: "En 1974, mon père prenait les paris sur tout. Il a fini par prendre ceux-là. Moi, je ne prends plus ce genre-là."}
+      - {qui: marinier2, dit: "Ton père, il les aurait pris."}
