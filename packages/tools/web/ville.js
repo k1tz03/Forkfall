@@ -966,6 +966,9 @@
     // le groupe d'une sélection, selon l'époque (le moteur dit pareil : text.dart)
     var an = (vue && vue.year) || 1990;
     M.groupe = an < 2011 ? "vingt-trois" : "vingt-six"; M.Groupe = an < 2011 ? "Vingt-trois" : "Vingt-six";
+    // comme les cartes (text.dart) : le nom en capitales, les initiales
+    M.NOM = (e.nom || "").toLocaleUpperCase("fr-FR");
+    M.initiales = ((e.prenom || "").charAt(0) + (e.nom || "").charAt(0)).toLocaleUpperCase("fr-FR");
     for (var k in extra || {}) M[k] = extra[k];
     return articles(String(t).replace(/\{(\w+)\}/g, function (m, cle) { return M[cle] != null ? M[cle] : m; }));
   }
@@ -1443,7 +1446,7 @@
       if (bx && !g.heros && !g.match) { bx.g = g; dessines.push(bx); }
     }
     // la marque du rendez-vous (jamais pour un événement sombre)
-    var m = marqueRdv();
+    var m = CINE ? null : marqueRdv();
     if (m) dessinerMarque(m[0], m[1], ts);
     // le temps qu'il fait pendant une scène, dehors
     if (CINE && CINE.meteo && !dedans) dessinerMeteo(CINE.meteo, ts);

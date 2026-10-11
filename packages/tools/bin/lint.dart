@@ -811,6 +811,28 @@ void main() {
   for (final pr in (villeB['presences'] as List? ?? const [])) {
     villeLit((pr as Map)['si'], 'ville/presences/${pr['qui']}');
   }
+  // Aucun nom réel dans la ville non plus : tous ses textes (lieux, répliques, missions, scènes,
+  // activités, scènes jouées, conversations, tableaux…), au mot près (« messieurs » n'est pas un
+  // joueur).
+  final reelsMot = [
+    for (final bad in kBlacklist) (bad, RegExp('(?<![a-zà-ÿ])${RegExp.escape(bad)}(?![a-zà-ÿ])')),
+  ];
+  void scanVille(Object? v, String where) {
+    if (v is String) {
+      final lower = v.toLowerCase();
+      for (final (bad, re) in reelsMot) {
+        if (re.hasMatch(lower)) errors.add('$where: nom/marque réel(le) interdit(e) "$bad"');
+      }
+    } else if (v is Map) {
+      v.forEach((k, x) => scanVille(x, '$where/$k'));
+    } else if (v is List) {
+      for (var i = 0; i < v.length; i++) {
+        final x = v[i];
+        scanVille(x, x is Map && x['id'] != null ? '$where/${x['id']}' : '$where[$i]');
+      }
+    }
+  }
+  scanVille(villeB, 'ville');
   (((villeB['match'] as Map?)?['textes'] as Map?) ?? const {}).forEach((type, l) {
     for (final t in (l as List? ?? const [])) {
       if (t is Map) villeLit(t['si'], 'ville/match_textes/$type');
