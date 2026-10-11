@@ -216,6 +216,13 @@ void main() {
     }
     final text = card['text'].toString();
     if (text.length > 200) warnings.add('$id: texte de ${text.length} caractères (> 200)');
+    // La longueur une fois rendue (retour de l'autrice du livre 10) : `{toi}`
+    // par la plus longue adresse du locuteur, le genre par sa plus longue
+    // branche, des noms de dix lettres, un club de dix-huit. Jusque-là la
+    // carte tient (l'illustration rétrécit, jamais sous 180 px) ; au-delà de
+    // 220, le texte pousse les choix et le bandeau hors d'un petit écran.
+    final rendu = longueurRendue(text, toiLePlusLong(speaker?.toString(), (card['roles'] as List).map((r) => r.toString()), chars, bundle['roles'] as List));
+    if (rendu > 220) warnings.add('$id: texte de $rendu caractères une fois rendu (> 220)');
     final lower = text.toLowerCase();
     for (final bad in kBlacklist) {
       if (lower.contains(bad)) errors.add('$id: nom/marque réel(le) interdit(e) "$bad"');
@@ -873,4 +880,74 @@ String _findContentDir() {
     dir = p;
   }
   return '${Directory.current.path}/content';
+}
+
+// ── La longueur rendue d'un texte (au pire raisonnable) ────────────────────
+const Map<String, int> _longueurFixe = {
+  'prenom': 10, 'nom': 10, 'NOM': 10, 'joueur': 21, 'protagoniste': 21, 'initiales': 2,
+  'club': 18, 'CLUB': 18, 'rival': 18, 'clubShort': 9, 'ville': 10, 'VILLE': 10,
+  'annee': 4, 'age': 2, 'numero': 2, 'rang': 2, 'pts': 3, 'journee': 2, 'saison': 1,
+  'division': 10, 'objectif': 18, 'president': 21, 'capitaine': 21, 'coach': 21, 'patron': 21,
+};
+int _accolade(String t, int i) {
+  var d = 0;
+  for (var j = i; j < t.length; j++) {
+    if (t[j] == '{') d++;
+    if (t[j] == '}' && --d == 0) return j;
+  }
+  return -1;
+}
+/// La longueur de [t] rendu : chaque `select` par sa plus longue branche,
+/// `{toi}` par [toi], les placeholders connus par une longueur haute.
+int longueurRendue(String t, int toi) {
+  var n = 0, i = 0;
+  while (i < t.length) {
+    if (t[i] != '{') {
+      n++;
+      i++;
+      continue;
+    }
+    final e = _accolade(t, i);
+    if (e < 0) return n + t.length - i;
+    final inner = t.substring(i + 1, e);
+    final virgule = inner.indexOf(',');
+    if (virgule >= 0 && inner.substring(virgule + 1).trimLeft().startsWith('select')) {
+      final reste = inner.substring(virgule + 1).trimLeft().substring('select'.length);
+      var best = 0, k = 0;
+      while (k < reste.length) {
+        final o = reste.indexOf('{', k);
+        if (o < 0) break;
+        final f = _accolade(reste, o);
+        if (f < 0) break;
+        final l = longueurRendue(reste.substring(o + 1, f), toi);
+        if (l > best) best = l;
+        k = f + 1;
+      }
+      n += best;
+    } else {
+      final cle = inner.trim();
+      n += (cle == 'toi' || cle == 'Toi') ? toi : (_longueurFixe[cle] ?? (cle.startsWith('age_') ? 2 : inner.length + 2));
+    }
+    i = e + 1;
+  }
+  return n;
+}
+/// La plus longue adresse du locuteur pour les rôles de la carte (sinon
+/// l'adresse par défaut du rôle).
+int toiLePlusLong(String? speaker, Iterable<String> roles, List<Map<String, dynamic>> chars, List<dynamic> roleDefs) {
+  final ch = speaker == null ? null : chars.firstWhere((c) => c['id'] == speaker, orElse: () => const {});
+  final ad = (ch?['adresse'] as Map?) ?? const {};
+  var best = 5;
+  for (final r in roles) {
+    final par = ad[r] as Map?;
+    final formes = par != null ? par.values.map((v) => v.toString()) : [
+      for (final d in roleDefs)
+        if ((d as Map)['id'] == r) (d['adresse'] ?? (r == 'joueur' ? '{prenom}' : 'coach')).toString()
+    ];
+    for (final f in formes) {
+      final l = longueurRendue(f, 10);
+      if (l > best) best = l;
+    }
+  }
+  return best;
 }
