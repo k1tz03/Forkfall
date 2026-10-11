@@ -2239,10 +2239,30 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     }
     ailleurs[cle] = {'titre': v['titre'].toString(), 'sous': v['sous']?.toString() ?? ''};
   });
+  // loin d'Aubérive pour un temps (ville.js `loinDe`) : un drapeau qu'une carte
+  // pose, le décor qu'il nomme dans `ailleurs`, et le texte du retour
+  final loin = <String, dynamic>{};
+  final poses = <String>{};
+  for (final c in cards) {
+    for (final mm in RegExp(r'"set":\[([^\]]*)\]').allMatches(json.encode(c))) {
+      poses.addAll(RegExp(r'"([^"]+)"').allMatches(mm[1]!).map((x) => x[1]!));
+    }
+  }
+  ((m['loin'] as Map?) ?? const {}).forEach((k, v) {
+    final drapeau = k.toString();
+    final decor = v is Map ? v['decor']?.toString() : null;
+    if (decor == null || !ailleurs.containsKey(decor)) {
+      errors.add('ville.yaml/loin/$drapeau: `decor` doit nommer une entrée de `ailleurs`');
+      return;
+    }
+    if (!poses.contains(drapeau)) errors.add('ville.yaml/loin/$drapeau: aucune carte ne pose ce drapeau');
+    loin[drapeau] = {'decor': decor, if (v['retour'] != null) 'retour': v['retour'].toString()};
+  });
   return {
     'lieux': lieux,
     'cartes_lieux': cartesLieux,
     if (ailleurs.isNotEmpty) 'ailleurs': ailleurs,
+    if (loin.isNotEmpty) 'loin': loin,
     if (domiciles.isNotEmpty) 'domiciles': domiciles,
     if (lieuxVariantes.isNotEmpty) 'lieux_variantes': lieuxVariantes,
     'rencontres': rencontres,

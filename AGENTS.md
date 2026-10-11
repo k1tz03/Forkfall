@@ -28,7 +28,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 3 551 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 69 personnages ; la ville : 469 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 134 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 135 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
@@ -126,7 +126,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 134 tests
+cd packages/core && dart test                    # 135 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -183,10 +183,17 @@ Ce que la ville porte en plus des cartes :
   tire de la lettre (V, N, D) pour l'écran seulement.
 - **Le domicile** (`ville.yaml` `domiciles`) : par rôle (le sélectionneur à l'hôtel de la Rive),
   et une histoire peut en décider autrement par un drapeau.
+- **Loin d'Aubérive** (`ville.yaml` `loin`) : un drapeau d'histoire dit qu'on est parti (le
+  Mondial du livre 9, `h9_loin`). Tant qu'il est posé, la ville attend : chaque carte se joue
+  tout de suite devant le décor qu'il nomme (`ailleurs`), le match ne se joue plus à la Rive,
+  ni scène, ni mission. La carte qui lève le drapeau sur ses deux choix est celle du retour : un
+  fondu (« De retour à Aubérive », le texte du retour et la paie des semaines passées), le lundi
+  matin chez toi, puis cette carte à son lieu ; en ville, le drapeau se lit déjà levé.
 
 - **Les gens** : personne n'apparaît au milieu de la rue ; un passant sort d'une porte ou
   arrive du hors-champ, et marche au large des murs (une grille érodée, des chemins qui ne
-  rasent aucun angle). Les personnages connus (`presences`), celui qui t'attend et les
+  rasent aucun angle). Les personnages connus (`presences` : le casting de l'histoire, et ceux
+  qu'une carte ou une scène de la semaine t'a fait rencontrer), celui qui t'attend et les
   commerçants sortent de chez eux et y rentrent. On les **touche** : ils s'arrêtent et disent
   une réplique du moment, tirée de `content/ville/paroles_*.yaml` selon son `si` (une petite
   grammaire, ET seulement, que `build_content` valide et que `ville.js` évalue — les deux
@@ -269,9 +276,11 @@ le metteur en scène en arme deux par saison au plus, jamais à moins de cinq ca
 d'écart.
 
 Les contrats que le lint fait respecter : un libellé de bouton ≤ 28 caractères,
-un texte ≤ 200, une trace posée est lue quelque part, une fin déclarée a une
-porte, `{toi}` exige que le locuteur ait une `adresse`, une réaction ne se pose
-pas sur une carte de routine.
+un texte ≤ 200 (et ≤ 220 une fois `{toi}` rendu par l'adresse la plus longue), une trace
+posée est lue quelque part (les effets des missions et des scènes de la ville comptent), un
+drapeau lu par la ville (`si` des répliques, des portes, des scènes, des phrases du match) est
+déclaré, une fin déclarée a une porte, `{toi}` exige que le locuteur ait une `adresse`, une
+réaction ne se pose pas sur une carte de routine.
 
 **Écrire à plusieurs sans se marcher dessus** : les fins, les manchettes, les set-pieces
 et la ville se lisent aussi par lots — `content/endings/<lot>.yaml` (et
@@ -335,12 +344,10 @@ sont les prochains à rejoindre la ville.
   plus la carrière tout seul, il arme **« Les douze pages »** (`content/arcs/common/
   deballage.yaml`, `Director.armerDeballage`) — quelqu'un pose devant toi le dossier de tes
   promesses, selon le livre (Massenet, Léa, Fardelli et l'épreuve de la Gazette Rose, Madame
-  Vialat, le fax de 23 h 58 ; une chemise sous la porte sans livre) ; tu réponds à tout (la
-  parole revient à zéro, la carrière continue) ou tu démens (la fin). Une fois : la seconde
-  chute n'a plus de scène. Les livres 7, 9 et 10 ajouteront leur variante en tête de la liste
-  de l'étape. Mesuré (300 carrières par livre) : 2 à 17 % des carrières finissent ainsi selon
-  le livre ; le tiers du joueur simulé, tous postulats confondus, vient des trois postulats
-  encore en chantier, sans fins de livre.
+  Vialat, le fax de 23 h 58, Dauzat, Sauvan, Nino ; une chemise sous la porte sans livre) ;
+  tu réponds à tout (la parole revient à zéro, la carrière continue) ou tu démens (la fin).
+  Une fois : la seconde chute n'a plus de scène. Mesuré (300 carrières par livre) : 2 à 17 %
+  des carrières finissent ainsi selon le livre.
 - Le « J » du bandeau n'affiche pas la vraie journée de championnat, et ne dit
   pas la même chose dans l'aperçu web et dans l'application.
 - Après un changement de club en cours de saison, le classement de fin de saison

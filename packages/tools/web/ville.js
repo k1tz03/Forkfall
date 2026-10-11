@@ -72,6 +72,7 @@
   var porteOuverte = null;     // le lieu dont la porte est ouverte (le panneau)
   var occupe = false;          // un fondu ou une scène est en cours
   var dernierVu = "";          // la clé de la dernière vue planifiée
+  var RETOUR = {};             // les cartes du retour : elles lèvent un drapeau de `loin` sur leurs deux choix
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : "&quot;"; }); }
@@ -98,6 +99,17 @@
     // Le mois se déduit de la phase et de la journée de championnat (le moteur
     // ne date pas les jours) : une approximation qui ne ment pas sur la saison.
     var ph = vue && vue.phase, j = (vue && vue.journee) || 0, an = (vue && vue.year) || 1990;
+    // le sélectionneur vit l'année civile des fenêtres internationales : l'objectif
+    // en janvier, les fenêtres du printemps et de l'automne, le tournoi et le
+    // bilan en décembre (le moteur date sa Une de décembre, engine.dart)
+    if (S && S.role === "selectionneur") {
+      var ms = 0;
+      if (ph === "aller") ms = clamp(2 + Math.floor(j / 6), 2, 5);
+      else if (ph === "hiver") ms = 7;
+      else if (ph === "retour") ms = clamp(8 + Math.floor(Math.max(0, j - 18) / 6), 8, 10);
+      else if (ph === "sprint" || ph === "bilan") ms = 11;
+      return MOIS[ms] + " " + an;
+    }
     var m = 7;
     if (ph === "presaison") m = S.semaine <= 1 ? 6 : 7;
     else if (ph === "aller") m = clamp(7 + Math.floor(j / 4), 7, 11);
@@ -864,7 +876,7 @@
     var m = RE_APPEL.exec(t);
     if (m) {
       var oui;
-      if (m[2] === "flag") oui = ((vue && vue.flags) || []).indexOf(m[3]) >= 0;
+      if (m[2] === "flag") oui = ((vue && vue.flags) || []).indexOf(m[3]) >= 0 && !(D.loin && D.loin[m[3]] && !(S && S.loin));
       else if (m[2] === "arc") oui = ((vue && vue.arcsActifs) || []).indexOf(m[3]) >= 0;
       else if (m[2] === "possede") oui = !!(S.biens && S.biens[m[3]]);
       else oui = !!(S.missionsFaites && S.missionsFaites[m[3]]);
@@ -1500,6 +1512,12 @@
   function planifier(v) {
     var c = v.card, maintenant = tNow(), bk = c.beatKind, lieu = lieuDe(c);
     var r = { cle: cleVue(v), lieu: lieu, qui: c.speaker || null, type: "normal", debut: maintenant, fin: maintenant, force: "vient", sombre: false, beat: bk };
+    // loin d'Aubérive (ville.yaml `loin`) : toute carte se joue là où l'on est,
+    // le match aussi, sauf la carte du retour
+    if (loinDe(v) && !RETOUR[c.id]) {
+      r.type = "ailleurs"; r.lieu = "ici"; r.debut = r.fin = maintenant; r.force = "ici";
+      return r;
+    }
     function prochain(jour, tr, apresMaintenant) {
       var t = tDe(S.semaine, jour, tr);
       if (t < maintenant || (apresMaintenant && t === maintenant)) t += 35;
@@ -1587,14 +1605,20 @@
   }
 
   // ─────────────────────────────────────────────────────────────── l'arrivée de la carte
+  // loin d'Aubérive pour un temps : le premier drapeau de `loin` que porte la vue
+  function loinDe(v) {
+    var Lo = (D && D.loin) || {}, f = (v && v.flags) || [], cles = Object.keys(Lo).sort();
+    for (var i = 0; i < cles.length; i++) if (f.indexOf(cles[i]) >= 0) return { flag: cles[i], decor: Lo[cles[i]].decor, retour: Lo[cles[i]].retour || "" };
+    return null;
+  }
   // le décor d'ailleurs, derrière la carte (ville.yaml → `ailleurs`)
   function decorAilleurs(v) {
     var voile = $("villeVoile");
     if (!voile) return;
-    var c = v && v.card, A = D.ailleurs || {}, d = null;
-    if (c && c.lieu === "ailleurs") {
+    var c = v && v.card, A = D.ailleurs || {}, d = null, lo = loinDe(v), loin = !!(lo && c && !RETOUR[c.id]);
+    if (c && (c.lieu === "ailleurs" || loin)) {
       (c.tags || []).forEach(function (t) { if (!d && A[t]) d = A[t]; });
-      d = d || A.defaut || { titre: "Loin d'Aubérive", sous: "" };
+      d = d || (loin && A[lo.decor]) || A.defaut || { titre: "Loin d'Aubérive", sous: "" };
     }
     voile.classList.toggle("ailleurs", !!d);
     var b = voile.querySelector(".v-ailleurs");
@@ -2386,6 +2410,8 @@
   }
   function ouvrirScene(sc) {
     var cle = lieuScene(sc), e = sc.etapes[0], el = $("villePorte");
+    // une scène est une rencontre : son visage se montre ensuite en ville (`presences`)
+    if (sc.qui && CHARS[sc.qui]) S.vus[sc.qui] = 1;
     porteOuverte = cle === "rue" ? null : cle;
     var qui = sc.qui ? (CHARS[sc.qui] ? nomDe(sc.qui) : (NOM_GENS[sc.qui] || "")) : "";
     var ou = cle === "rue" ? "dans la rue" : nomLieu(LIEU[cle]);
@@ -2456,7 +2482,7 @@
     S.scenesJour = null;
     if (S.jour > 6) { S.jour = 0; nouvelleSemaine(); }
   }
-  function nouvelleSemaine() {
+  function nouvelleSemaine(sansFondu) {
     S.semaine++;
     S.cartesSemaine = 0;
     S.auMatch = false;
@@ -2466,8 +2492,18 @@
     var paie = salaire() * Math.max(1, dj);
     S.francs += paie;
     var phrase = dj >= 3 ? dj + " semaines plus tard" : dj >= 1 ? "Quelques semaines plus tard" : "La semaine suivante";
-    attente.push({ titre: phrase, sous: moisCourant(), texte: "La paie est tombée : " + argent(paie) + "." + (S.francs - paie < 0 && S.francs >= 0 ? " Le découvert est comblé." : "") });
+    var texte = "La paie est tombée : " + argent(paie) + "." + (S.francs - paie < 0 && S.francs >= 0 ? " Le découvert est comblé." : "");
+    if (!sansFondu) attente.push({ titre: phrase, sous: moisCourant(), texte: texte });
     ruine();
+    return texte;
+  }
+  // le retour d'un voyage : le lundi matin, chez toi ; la paie des semaines passées
+  // là-bas tombe (son texte rejoint celui du fondu du retour)
+  function rentrerDeVoyage() {
+    S.jour = 0; S.tranche = 0; S.eveil = 0; S.jourFaits = {}; S.scenesJour = null;
+    var paie = nouvelleSemaine(true);
+    S.lieu = chezToi();
+    return paie;
   }
   // LA RUINE (le mode histoire : la carrière s'arrête par l'histoire, et la
   // banqueroute en est une). Le découvert qui survit à la paie : la banque
@@ -3103,6 +3139,8 @@
       if (S.blocsVus == null) S.blocsVus = (vue && vue.blocs) || 0;
       acteurs = {};
       recaler();
+      // la carte qui se joue là où l'on est (loin d'Aubérive, une alarme) : tout de suite
+      if (vue && !vue.over && rdv && rdv.force === "ici" && !carteOn) montrerCarte();
     };
     if (pret) faire(); else enAttente = faire;
   }
@@ -3130,6 +3168,12 @@
       (D.objets || []).forEach(function (o) { OBJET[o.id] = o; });
       (D.missions || []).forEach(function (m) { MISSION[m.id] = m; });
       (D.scenes || []).forEach(function (sc) { SCENE[sc.id] = sc; });
+      // la carte du retour d'un voyage : elle lève le drapeau de `loin` sur ses deux choix
+      var Lo = D.loin || {};
+      ((content && content.cards) || []).forEach(function (c) {
+        var g = (c.left && c.left.effects && c.left.effects.clear) || [], d = (c.right && c.right.effects && c.right.effects.clear) || [];
+        for (var f in Lo) if (g.indexOf(f) >= 0 && d.indexOf(f) >= 0) RETOUR[c.id] = f;
+      });
       construire();
       charger();
       boutonReprendre();
@@ -3179,7 +3223,36 @@
         dernierVu = cle;
         figurants = figurants.filter(function () { return false; });
         var etait = rdv;
+        // le départ (un drapeau de `loin` vient d'être posé) et le retour (il est
+        // levé, ou la carte du retour arrive)
+        var lo = loinDe(v), estRetour = !!(v.card && RETOUR[v.card.id]), depart = null, retour = null;
+        if (S.loin && (!lo || estRetour)) {
+          retour = ((D.loin || {})[S.loin] || {}).retour || "";
+          S.loin = null;
+          retour = [retour, rentrerDeVoyage()].filter(Boolean).join(" ");
+        } else if (!S.loin && lo && !estRetour) {
+          S.loin = lo.flag;
+          depart = (D.ailleurs || {})[lo.decor] || (D.ailleurs || {}).defaut || { titre: "Loin d'Aubérive", sous: "" };
+        }
         rdv = planifier(v);
+        if (depart || retour !== null) {
+          // un fondu : la carte d'avant reste sous le noir, aucune touche ne répond
+          carteOn = false; occupe = true; S.auMatch = false;
+          if (v.blocs != null) S.blocsVus = Math.max(S.blocsVus || 0, v.blocs);
+          if (v.lastAnswer && avant) setTimeout(function () { toast(v.lastAnswer); }, 380);
+          if (depart) {
+            fonduTexte(depart.titre, depart.sous, "", function () { decorAilleurs(v); }, function () { occupe = false; montrerCarte(); });
+          } else {
+            fonduTexte("De retour à " + ((v.entities && v.entities.ville) || "Aubérive"), moisCourant(), retour, function () {
+              cacherCarte();
+              var c0 = centre(LIEU[S.lieu].door); poser(c0[0], c0[1]);
+              var p0 = visee(); cam.x = p0[0]; cam.y = p0[1]; cam.libre = false;
+              recaler(); majHud();
+            }, function () { occupe = false; suite(false); });
+          }
+          sauver();
+          return;
+        }
         // le bloc vient d'être joué : la ville met le match en scène, puis le soir tombe
         if (etait && etait.type === "match" && etait.beat === "match" && v.resultats && (v.blocs || 0) > (S.blocsVus || 0) && (D.match && D.match.textes)) {
           S.blocsVus = v.blocs || 0;
