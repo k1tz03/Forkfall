@@ -41,7 +41,45 @@ cards:
     right:
       label: "Enlève-le, pour l'instant"
       effects: {tribunes: "-", direction: "+", vestiaire: "-", set: [h9_brassard_cache], outcome: cache}
-      answer: "Il le range sous son protège-tibia gauche. « Pour l'instant », répète-t-il, comme on note une date dans un agenda."
+      answer: "Il le range sous son protège-tibia gauche. « Pour l'instant », répète-t-il, comme une date notée dans un agenda."
+
+  - id: sl.h9.brassard.entrainement_loin
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse, al_dorado]
+    speaker: vandel
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Al-Dorado, séance ouverte sur le terrain climatisé. Noa s'échauffe brassard noir au bras, sans te l'avoir redemandé. La caméra de Télé-Stade, et toutes les autres, ne filment plus que lui."
+    left:
+      label: "Laisse-les filmer"
+      effects: {tribunes: "+", direction: "-", set: [h9_brassard_photo], outcome: porte}
+      answer: "Le soir, le bras noir passe sur quarante chaînes. À vingt heures et une, un homme de l'émirat appelle Sauvan, qui t'appelle."
+    right:
+      label: "Range-le, Noa"
+      effects: {tribunes: "-", direction: "+", vestiaire: "-", relation: {vandel: -1}, set: [h9_brassard_cache], outcome: cache}
+      answer: "Il le défait sans te regarder et le glisse sous son protège-tibia. Sous la clim, il touche sa jambe à chaque arrêt de jeu."
+
+  - id: sl.h9.brassard.entrainement_permis_loin
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse, al_dorado]
+    speaker: vandel
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    when: "flag('histoire_h9') && season <= 1"
+    text: "Al-Dorado, séance ouverte. Noa porte le brassard noir, comme tu l'as permis. Il s'arrête devant toi : « Les caméras de l'émirat sont là, Sauvan aussi. Je l'enlève pour les photos, {toi} ? »"
+    left:
+      label: "Garde-le"
+      effects: {tribunes: "+", direction: "-", set: [h9_brassard_photo], outcome: porte}
+      answer: "Il serre le nœud d'un cran. Au bord du terrain, un homme en costume clair photographie le brassard, pas le joueur."
+    right:
+      label: "Enlève-le, pour l'instant"
+      effects: {tribunes: "-", direction: "+", vestiaire: "-", set: [h9_brassard_cache], outcome: cache}
+      answer: "Il le range sous son protège-tibia gauche. « Pour l'instant », répète-t-il, comme une date notée dans un agenda."
 
   - id: sl.h9.brassard.frere
     roles: [selectionneur]
@@ -131,11 +169,11 @@ cards:
     text: "Aéroport d'Al-Dorado, la file des délégations. Un douanier fait asseoir Noa, lui ôte sa chaussette gauche et en sort le brassard noir, du bout des doigts : « Objet à caractère politique. »"
     left:
       label: "Je proteste"
-      effects: {tribunes: "+", direction: "-", set: [h9_brassard_confisque]}
+      effects: {tribunes: "+", direction: "-", set: [h9_brassard_confisque], schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
       answer: "Le douanier t'écoute avec intérêt, note ton nom dans un registre et garde le brassard. Noa se rechausse lentement, sans un mot."
     right:
       label: "Je laisse faire"
-      effects: {tribunes: "-", direction: "+", vestiaire: "-", relation: {vandel: -1}, set: [h9_brassard_confisque]}
+      effects: {tribunes: "-", direction: "+", vestiaire: "-", relation: {vandel: -1}, set: [h9_brassard_confisque], schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
       answer: "Le brassard part dans un sachet scellé. À l'hôtel, Noa achète un lacet noir à la boutique du hall, et le garde dans sa poche."
 
   - id: sl.h9.brassard.douane
@@ -149,11 +187,11 @@ cards:
     text: "Aéroport d'Al-Dorado. Un douanier ouvre ta valise sur l'inox, déplie tes survêtements un à un et sort le brassard noir du bout des doigts : « À qui est-ce ? »"
     left:
       label: "Il est à moi"
-      effects: {tribunes: "+", set: [h9_brassard_reclame], end: co_garde_a_vue}
+      effects: {tribunes: "+", set: [h9_brassard_reclame], end: co_garde_a_vue, schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
       answer: "Il sourit, comme à une réponse attendue. On te conduit dans un bureau climatisé, sans fenêtre et sans horloge."
     right:
       label: "Je ne sais pas"
-      effects: {tribunes: "-", direction: "+", vestiaire: "--", set: [h9_brassard_confisque]}
+      effects: {tribunes: "-", direction: "+", vestiaire: "--", set: [h9_brassard_confisque], schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
       answer: "Il le glisse dans un sachet qu'il scelle, et écrit dessus en caractères que tu ne lis pas. Noa, derrière toi, a tout vu."
 
   - id: sl.h9.brassard.douane_doublure
@@ -167,11 +205,11 @@ cards:
     text: "Aéroport d'Al-Dorado. Le douanier passe la main dans la doublure de ta valise, là où Marie-Jo a cousu. Il sent le relief, défait trois points avec l'ongle : « À qui est-ce ? »"
     left:
       label: "Il est à moi"
-      effects: {tribunes: "+", set: [h9_brassard_reclame], end: co_garde_a_vue}
+      effects: {tribunes: "+", set: [h9_brassard_reclame], end: co_garde_a_vue, schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
       answer: "Il sourit, comme à une réponse attendue. Il garde le fil de Marie-Jo entre ses doigts pendant tout le trajet jusqu'au bureau."
     right:
       label: "Je ne sais pas"
-      effects: {tribunes: "-", direction: "+", vestiaire: "--", set: [h9_brassard_confisque]}
+      effects: {tribunes: "-", direction: "+", vestiaire: "--", set: [h9_brassard_confisque], schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
       answer: "Il scelle le brassard dans un sachet. Les trois points défaits pendent de la doublure ; là-bas, tu ne les recouds pas."
 
   # ═══════════════════════════════════════════════════════════ LE FOUR
@@ -190,7 +228,7 @@ cards:
     right:
       label: "Je prends ma baguette"
       effects: {vestiaire: "+"}
-      answer: "Elle hoche la tête. La lettre reste sous la caisse, près des pièces jaunes, là où elle la voit à chaque client."
+      answer: "Elle n'insiste pas. La lettre reste sous la caisse, près des pièces jaunes, là où elle la voit à chaque client."
 
   - id: sl.h9.four.fournil
     roles: [selectionneur]
@@ -209,6 +247,24 @@ cards:
       effects: {vestiaire: "+", set: [h9_four_secret]}
       answer: "Tu restes jusqu'à la première fournée. Elle te donne la baguette du bout, brûlée d'un côté. Tu la manges dans la rue."
 
+  - id: sl.h9.four.fournil_loin
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, al_dorado]
+    speaker: mariejo
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Le téléphone de la chambre, à l'aube d'Al-Dorado. Marie-Jo, de son fournil, sans bonjour : « C'est moi qui lui ai dit d'y aller. Le chantier payait trois fois plus. Le four, c'était pour lui. »"
+    left:
+      label: "Ce n'est pas votre faute"
+      effects: {relation: {mariejo: 1}, set: [h9_four_secret]}
+      answer: "« Si. » Derrière elle, la porte du vieux four claque ; tu l'entends la retenir de l'épaule. Elle raccroche sur ce bruit-là."
+    right:
+      label: "Je ne dis rien"
+      effects: {vestiaire: "+", set: [h9_four_secret]}
+      answer: "Tu tiens le combiné sans parler jusqu'à la première fournée. Elle raccroche la première. Par la fenêtre, le Dôme brille déjà."
+
   - id: sl.h9.four.banque
     roles: [selectionneur]
     arc: famille
@@ -220,7 +276,7 @@ cards:
     left:
       label: "Je signe la caution"
       effects: {tribunes: "+", caisse: "-", relation: {mariejo: 1}, set: [h9_four_caution], outcome: caution, react: {card: sl.h9.re.mariejo_four}}
-      answer: "Sur le contrat, la ligne « emprunteur initial » porte encore le nom de Kévin. Personne ne l'a rayé. Tu signes juste en dessous."
+      answer: "Sur le contrat, la ligne « emprunteur initial » porte encore le nom de Kévin. On ne l'a pas rayé. Tu signes juste en dessous."
     right:
       label: "Je ne signe rien"
       effects: {caisse: "+", set: [h9_four_refus], outcome: refus}
@@ -260,6 +316,24 @@ cards:
       effects: {tribunes: "+", set: [h9_velo]}
       answer: "Le petit qui livre le club-house le prend le lendemain. Il ne sait pas à qui il était. Marie-Jo préfère."
 
+  - id: sl.h9.four.velo_cave_loin
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet, al_dorado]
+    speaker: mariejo
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Dans le courrier de la délégation, une enveloppe de Marie-Jo : une photo du vélo de Kévin, remonté de la cave, pneus à plat, le panier encore blanc de farine. Au dos, trois mots : « Je le vends ? »"
+    left:
+      label: "Gardez-le"
+      effects: {relation: {mariejo: 1}, set: [h9_velo]}
+      answer: "Tu réponds sur une carte de l'hôtel. À ton retour, le vélo est dans l'entrée du fournil, guidon tourné vers la rue."
+    right:
+      label: "Donnez-le au club"
+      effects: {tribunes: "+", set: [h9_velo]}
+      answer: "Tu l'écris sur une carte de l'hôtel. Le petit qui livre le club-house le prendra sans savoir à qui il était. Marie-Jo préfère."
+
   # ═════════════════════════════════════════════════════ LE VIRAGE DE DOS
   - id: sl.h9.virage.buvette
     roles: [selectionneur]
@@ -295,7 +369,24 @@ cards:
     right:
       label: "J'y vais"
       effects: {direction: "+", tribunes: "-", relation: {gege: -1}, set: [h9_banderole_decrochee]}
-      answer: "Gégé la roule lui-même, sans un mot, et te la tend. Tu la portes jusqu'au vestiaire. Elle pèse plus qu'une banderole."
+      answer: "Gégé la roule lui-même, sans un mot, et te la tend. Tu la portes jusqu'au vestiaire. Le tissu est encore humide de la nuit."
+
+  - id: sl.h9.virage.banderole_loin
+    roles: [selectionneur]
+    arc: ultras
+    tags: [ultras, tribunes, al_dorado]
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le délégué de la Fédération t'appelle d'Aubérive : au stade de la Rive, avant le coup d'envoi, le virage Nord a déroulé KÉVIN MARÇAIS 2004-2028. Il lui faut ton accord pour la décrocher."
+    left:
+      label: "Qu'elle reste"
+      effects: {tribunes: "++", direction: "-", set: [h9_banderole]}
+      answer: "Elle reste tout le match. Le soir, une photo arrive : Marie-Jo, au premier rang, la touche de la main, comme on vérifie un drap."
+    right:
+      label: "Faites-la décrocher"
+      effects: {direction: "+", tribunes: "-", relation: {gege: -1}, set: [h9_banderole_decrochee]}
+      answer: "Gégé l'a roulée lui-même, dit le délégué, sans un mot. Elle t'attendra au vestiaire, pliée, encore humide de la nuit."
 
   - id: sl.h9.virage.ecran
     roles: [selectionneur]
@@ -314,7 +405,7 @@ cards:
     right:
       label: "Regardez-nous en face"
       effects: {tribunes: "+", set: [h9_virage_face], outcome: face}
-      answer: "« En face, alors. Mais si le capitaine entre bras nus, on se retourne. » Il te serre la main longtemps, comme on signe."
+      answer: "« En face, alors. Mais si le capitaine entre bras nus, on se retourne. » Il te serre la main : une poignée de contrat."
 
   - id: sl.h9.virage.ecran_loin
     roles: [selectionneur]
@@ -366,7 +457,7 @@ cards:
     left:
       label: "Elle ne me lie pas"
       effects: {direction: "-", relation: {nassir: -1}}
-      answer: "Il referme le contrat et le pose à plat sur ses genoux. « Les lignes ne lient personne, {toi}. Les pays, si. »"
+      answer: "Il referme le contrat sur ses genoux. « Les lignes ne lient personne, {pg, select, f{chère madame} other{cher monsieur}}. Les pays, si. »"
     right:
       label: "Je la lis comme vous"
       effects: {direction: "+", caisse: "+", relation: {nassir: 1}}
@@ -388,7 +479,7 @@ cards:
     right:
       label: "Pas de photo"
       effects: {caisse: "-", direction: "-", vestiaire: "+", set: [h9_photo_refusee], outcome: refuse}
-      answer: "Les joueurs remettent leurs vestes. La flamme reste allumée sur la pelouse vide ; personne ne sait l'éteindre."
+      answer: "Les joueurs remettent leurs vestes. La flamme reste allumée sur la pelouse vide ; aucun technicien ne sait l'éteindre."
 
   - id: sl.h9.gazeo.photo_brassard
     roles: [selectionneur]
@@ -435,7 +526,7 @@ cards:
     lieu: domicile
     tone: leger
     once: true
-    text: "Dimanche soir, chez toi. Sacha recompte à voix haute, un crayon entre les dents : « Quatre cent trente. Dix-huit de plus depuis janvier. Tu veux savoir de quoi, {toi} ? »"
+    text: "Dimanche soir, chez toi. Sacha recompte à voix haute, un crayon entre les dents : « Quatre cent trente. Dix-huit de plus depuis janvier. Tu veux savoir de quoi, {pg, select, f{maman} other{papa}} ? »"
     left:
       label: "Dis-moi"
       effects: {vestiaire: "-", relation: {sacha: 1}, set: [h9_recompte]}
@@ -453,7 +544,7 @@ cards:
     lieu: echo
     tone: strategique
     once: true
-    text: "Rédaction du Quotidien. Léa a étalé les listes de Sacha sur trois bureaux : « Je publie samedi. Il me faut une phrase de vous, {toi}, ou une phrase qui dit que vous n'en avez pas. »"
+    text: "À L'Écho, dans le bureau qu'on prête à Léa, les listes de Sacha couvrent trois tables : « Je publie samedi. Il me faut une phrase de vous, ou une phrase qui dit que vous n'en avez pas. »"
     left:
       label: "Publiez, sans moi"
       effects: {tribunes: "+", direction: "-", relation: {sacha: 1}, set: [h9_listes_publiees], outcome: publiees}
@@ -498,6 +589,42 @@ cards:
       label: "Je ramasse les feuilles"
       effects: {relation: {sacha: 1}, set: [h9_local_force]}
       answer: "Vous ramassez jusqu'à deux heures, page par page. Il en manque une : la six. Sacha la connaît par cœur."
+
+  - id: sl.h9.listes.local_page
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: sacha
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Nuit, au-dessus du kiosque du quai. Le local est forcé, les ordinateurs partis, les listes intactes. Sacha, sur une marche : « Ils cherchaient ta photo de la cave. Ils ont cru que je l'avais. »"
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", set: [h9_local_force], react: {card: sl.h9.re.sacha_local}}
+      answer: "« Dégradation », note le commissariat. Le policier demande ce qu'il y avait dans les ordinateurs. Sacha répond : « Des noms. »"
+    right:
+      label: "Je ramasse les feuilles"
+      effects: {relation: {sacha: 1}, set: [h9_local_force]}
+      answer: "Vous ramassez jusqu'à deux heures. Au dos de la page six, elle a recopié deux heures à la main : 23 h 40, 23 h 52. Elle te la montre."
+
+  - id: sl.h9.listes.local_publiees
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: sacha
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Nuit, au-dessus du kiosque du quai. Le local est forcé, les ordinateurs partis. Sacha, dans l'escalier, rit presque : « Les listes sont dans Le Quotidien depuis des semaines. Ils arrivent trop tard. »"
+    left:
+      label: "Je porte plainte"
+      effects: {direction: "-", set: [h9_local_force], react: {card: sl.h9.re.sacha_local}}
+      answer: "Le policier de garde a lu Le Quotidien, lui aussi. Il tape la plainte sans lever les yeux, la page six ouverte près du clavier."
+    right:
+      label: "Je ramasse les feuilles"
+      effects: {relation: {sacha: 1}, set: [h9_local_force]}
+      answer: "Les feuilles ne servent plus à rien, elles sont imprimées partout. Vous les ramassez quand même, jusqu'à deux heures, dans l'ordre."
 
   - id: sl.h9.listes.local_loin
     roles: [selectionneur]
@@ -550,7 +677,7 @@ cards:
     left:
       label: "Il viendra au Mondial"
       effects: {vestiaire: "+", relation: {vecchio: 1}, set: [h9_troisieme_gigi]}
-      answer: "Le gamin se relève couvert de rosée et de terre. Gigi lui tape deux fois sur la nuque, comme on frappe à une porte."
+      answer: "Le gamin se relève couvert de rosée et de terre. Gigi lui tape sur la nuque, comme à une porte."
     right:
       label: "On verra la liste"
       effects: {direction: "+"}
@@ -621,6 +748,7 @@ cards:
     lieu: buvette
     tone: leger
     once: true
+    when: "flag('histoire_h9') && (seen('sl.h9.fraicheur.promesse') || seen('sl.h9.fraicheur.promesse_loin')) && chars.vecchio.statut != 'mort'"
     text: "Retour d'Al-Dorado. Tu poses devant Gigi une bouteille d'eau gravée DÔME 2030, prise au minibar de l'avion. Il la tient à deux mains : « C'est ça, leur fraîcheur ? »"
     left:
       label: "C'est tout ce qu'il y a"
@@ -639,6 +767,7 @@ cards:
     lieu: buvette
     tone: leger
     once: true
+    when: "flag('histoire_h9') && (seen('sl.h9.fraicheur.promesse') || seen('sl.h9.fraicheur.promesse_loin')) && chars.vecchio.statut != 'mort'"
     text: "Retour d'Al-Dorado. Gigi Vecchio ne te demande rien. Il montre la pluie qui coule sur la vitre de la buvette : « Tiens. Voilà la nôtre. Elle est gratuite. »"
     left:
       label: "Elle est belle"

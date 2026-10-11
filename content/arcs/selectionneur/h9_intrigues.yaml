@@ -1,34 +1,51 @@
-# Histoire 9 — « Vingt degrés dedans » : le réservoir (postulat `mondial_hiver`,
-# `programme` dans content/postulats.yaml). Quatorze intrigues, trois buckets.
-# Cartes : content/cards/selectionneur/h9_intrigues_*.yaml.
+# Histoire 9 — « Vingt degrés dedans » : les intrigues (postulat `mondial_hiver`,
+# `programme` dans content/postulats.yaml). Seize intrigues : six au réservoir
+# de 2029, les autres ouvertes par le script. Cartes :
+# content/cards/selectionneur/h9_intrigues_*.yaml et h9_epilogue.yaml.
 #
-#   2029 (bucket "0") — Le brassard (signature : Noa, son frère sur le toit du
-#     Dôme, Bréhaut qui soupèse le brassard), Le four (la dette de la
+#   2029 (bucket "0", tirées) — Le brassard (signature : Noa, son frère sur le
+#     toit du Dôme, Bréhaut qui soupèse le brassard), Le four (la dette de la
 #     boulangerie, le secret de Marie-Jo, l'intermède du vélo), Le virage de dos
 #     (Gégé, la banderole, l'écran de la place), Le contrat du gaz (Gazéo,
-#     Ilyas, la photo bras nus), Les listes (Sacha, Léa, le local forcé), Un peu
-#     de leur fraîcheur (Gigi Vecchio, les gants jaunes, la bouteille du Dôme).
-#   2030 (bucket "1") — Les deux listes (ouverte par la voiture blanche, B1 :
-#     « Le capitaine est fatigué »), Le Kambara (Mbako au téléphone, Vence en
-#     direct), Les cadeaux (les clés de la terrasse, le coursier, le fisc), La
-#     rue Haute (ouverte par la cave, B2 : Madame Aubert, Léa, Josiane témoin).
-#   2031 (bucket "2+", tardives) — La tente blanche (ouverte par le retour,
-#     C1 : la contre-autopsie, la plaque, la page six), Le palais (la mise en
-#     examen d'Aubert), L'autre boulangerie (le prix du silence).
+#     Ilyas, la photo bras nus), Un peu de leur fraîcheur (Gigi Vecchio, les
+#     gants jaunes, la bouteille du Dôme) ; Les listes (Sacha, Léa, le local
+#     forcé), ouverte par le café de Sauvan (A1).
+#   2030 (ouvertes par le script) — Les deux listes (la voiture blanche, B1 :
+#     « Le capitaine est fatigué », puis Noa ou le certificat du médecin, et ce
+#     qui en reste en 2031), Le Kambara (B1 : Mbako au téléphone, Vence en
+#     direct, la lettre), Les cadeaux (B1 : les clés de la terrasse, le
+#     coursier, la saisie), La rue Haute (la cave, B2 : Madame Aubert, Léa,
+#     Josiane témoin).
+#   2031 (ouvertes par le retour, C1) — La dernière pluie (Gigi Vecchio), et
+#     selon le tunnel : La tente blanche (la contre-autopsie, la plaque, la page
+#     six) ou L'autre boulangerie (le prix du silence) ; Le palais (la mise en
+#     examen d'Aubert), ouvert par le témoignage de Josiane.
+#   2032 et après (bucket "2+", l'épilogue) — Après (le capitaine raccroche),
+#     Le carton de 2010 (la page qui n'est pas partie).
 #
-# Le Mondial ne se passe pas à Aubérive : du départ (S1, créneau 13) au tunnel
+# Le Mondial ne se passe pas à Aubérive : du départ (S1, créneau 12) au tunnel
 # (17), la sélection est à Al-Dorado. Une étape qui tombe dans ces créneaux-là
 # a une variante `_loin` (`season == 1 && flag('h9_depart')`), relue à chaque
 # tirage par le metteur en scène : le coup de fil à l'hôtel, la salle de presse
-# du Dôme, l'enveloppe glissée sous la porte.
+# du Dôme, l'enveloppe glissée sous la porte ; une étape sans variante y est
+# sautée (`this_season`, `on_expire: skip`).
 #
 # Les sauts d'intrigue (une carte d'étape planifiée par `schedule:`) :
-#   · B1 la voiture blanche → sl.h9.deux_listes.listes ;
+#   · A1 le café → sl.h9.listes.recompte ;
+#   · B1 la voiture blanche → sl.h9.cadeaux.cles, qui programme la première
+#     liste (sl.h9.deux_listes.listes) et l'appel de Mbako ;
 #   · B2 la cave → sl.h9.rue_haute.visite, qui déclenche le soir même le fisc
 #     (la réaction sl.h9.re.fisc : l'État reprend ce que l'émirat a donné) ;
-#   · B3 le départ → sl.h9.brassard.fouille (Noa garde le brassard sur lui) ou
-#     sl.h9.brassard.douane (dans ta valise), chacun tiré par `rand:` ;
-#   · C1 le retour → sl.h9.exhumation.resultat (le cercueil ouvert).
+#   · le témoignage de Josiane, si la page a paru → sl.h9.proces.une ;
+#   · C1 le retour → sl.h9.pluie.main_courante, et sl.h9.exhumation.resultat
+#     (le brassard entré au Dôme) ou sl.h9.boulangerie.place (l'autre
+#     boulangerie, quand on n'y retourne pas) ; et les suites des intrigues de
+#     2030, qui ne dorment pas dans la file pendant l'année du Mondial : le
+#     témoignage de Josiane, la bouteille de Gigi (si elle a été promise) ;
+#   · C2 le bureau → le coursier aux gants blancs (puis la terrasse), la
+#     lettre du Kambara, la trace des deux listes.
+# La fouille du capitaine et la douane de ta valise ne sont pas des sauts : le
+# départ (B3) les tire par `rand:`, l'aéroport (B35, créneau 13) les sert.
 arcs:
   # ══════════════════════════════════════════════════════════════ 2029 (S0)
   - id: sl.h9.brassard
@@ -55,6 +72,8 @@ arcs:
     steps:
       - id: entrainement
         card:
+          - { id: sl.h9.brassard.entrainement_permis_loin, if: "season == 1 && flag('h9_depart') && flag('h9_brassard_permis')" }
+          - { id: sl.h9.brassard.entrainement_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.brassard.entrainement_permis, if: "flag('h9_brassard_permis')" }
           - { id: sl.h9.brassard.entrainement }
         next: [ { step: frere, in: [2, 3] } ]
@@ -83,7 +102,7 @@ arcs:
     theme: famille
     carrier: mariejo
     cast: [mariejo]
-    when: "flag('histoire_h9') && season <= 1"
+    when: "flag('histoire_h9') && season == 0"
     issues: [caution, refus]
     traces:
       h9_four_secret: "{annee} : Marie-Jo Marçais a dit à {nom} pourquoi Kévin était parti travailler au Dôme."
@@ -97,7 +116,9 @@ arcs:
         card: sl.h9.four.lettre
         next: [ { step: fournil, in: [2, 4] } ]
       - id: fournil
-        card: sl.h9.four.fournil
+        card:
+          - { id: sl.h9.four.fournil_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.four.fournil }
         next: [ { step: banque, in: [2, 4] } ]
       - id: banque
         card: sl.h9.four.banque
@@ -107,6 +128,7 @@ arcs:
       - id: velo
         card:
           - { id: sl.h9.four.velo, if: "season == 0" }
+          - { id: sl.h9.four.velo_cave_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.four.velo_cave }
         next: []
 
@@ -121,7 +143,7 @@ arcs:
     theme: tribune
     carrier: gege
     cast: [gege, mariejo, vecchio]
-    when: "flag('histoire_h9') && season <= 1"
+    when: "flag('histoire_h9') && season == 0"
     issues: [dos, face]
     traces:
       h9_banderole: "{annee} : le virage Nord a déroulé KÉVIN MARÇAIS 2004-2028 avant le coup d'envoi. Personne n'y a touché."
@@ -136,7 +158,9 @@ arcs:
         card: sl.h9.virage.buvette
         next: [ { step: banderole, in: [2, 4] } ]
       - id: banderole
-        card: sl.h9.virage.banderole
+        card:
+          - { id: sl.h9.virage.banderole_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.virage.banderole }
         next: [ { step: ecran, in: [2, 4] } ]
       - id: ecran
         card:
@@ -155,7 +179,7 @@ arcs:
     theme: contrat
     carrier: brehaut
     cast: [brehaut, nassir, vandel]
-    when: "flag('histoire_h9') && season <= 1"
+    when: "flag('histoire_h9') && season == 0"
     issues: [pose, refuse]
     traces:
       h9_prime_gazeo: "{annee} : la prime de Gazéo est tombée la veille d'un grand match. Elle tombe toujours la veille."
@@ -209,11 +233,17 @@ arcs:
           - { id: sl.h9.listes.quotidien_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.listes.quotidien }
         next:
-          - { step: local, if: "season == 0", at_season: 1, at: [3, 10] }
+          - { step: local, if: "season == 0 && slot >= 13", at_season: 1, at: [2, 5] }
           - { step: local, in: [2, 5] }
+      # 2030, la nuit où l'État répond. Après la cave, ce qu'on cherche dans
+      # les ordinateurs de Sacha, ce n'est plus seulement les listes.
       - id: local
+        this_season: true
+        on_expire: skip
         card:
           - { id: sl.h9.listes.local_loin, if: "season == 1 && flag('h9_depart')" }
+          - { id: sl.h9.listes.local_page, if: "flag('h9_page_photo')" }
+          - { id: sl.h9.listes.local_publiees, if: "flag('h9_listes_publiees')" }
           - { id: sl.h9.listes.local }
         next: []
 
@@ -228,7 +258,7 @@ arcs:
     theme: formation
     carrier: vecchio
     cast: [vecchio, gege, vandel]
-    when: "flag('histoire_h9') && season <= 1 && chars.vecchio.statut != 'mort'"
+    when: "flag('histoire_h9') && season == 0 && chars.vecchio.statut != 'mort'"
     issues: [promis, oublie]
     traces:
       h9_gants_gigi: "{annee} : le troisième gardien des Cobalts plonge avec les gants jaunes de Gigi Vecchio."
@@ -250,9 +280,9 @@ arcs:
         card:
           - { id: sl.h9.fraicheur.promesse_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.fraicheur.promesse }
-        next:
-          - { step: retour, if: "season == 0", at_season: 2, at: [2, 7] }
-          - { step: retour, if: "season == 1", at_season: 1, at: [2, 7] }
+        # La bouteille du Dôme se rapporte en 2031 : le retour (C1) programme
+        # l'étape suivante, que la carte ne sert qu'après la promesse.
+        next: []
       - id: retour
         card:
           - { id: sl.h9.fraicheur.retour_bouteille, if: "flag('h9_fraicheur_promise')" }
@@ -277,7 +307,7 @@ arcs:
     traces:
       h9_liste_a_moi: "{annee} : sur la liste des vingt-six de {nom}, le nom de Noa Vandel. Sans une rature."
       h9_liste_ministere: "{annee} : sur la liste des vingt-six, Noa Vandel est barré au crayon. « Fatigué. »"
-      h9_syndicat_brassard: "{annee} : le syndicat des joueurs soutient le brassard. Le ministre a demandé son âge à Karim Fauvel."
+      h9_noa_rappele: "{annee} : Noa Vandel est revenu sur la liste des Cobalts, à la quatrième ligne, celle du tiret."
     hint: "Deux listes de vingt-six noms, identiques à un trait de crayon près."
     same_club: true
     fallback: drop
@@ -286,23 +316,30 @@ arcs:
         this_season: true
         on_expire: skip
         card: sl.h9.deux_listes.listes
-        next: [ { step: suite, in: [3, 4] } ]
+        next: [ { step: suite, in: [2, 3] } ]
+      # Le contrecoup : Noa sur le parking, la liste pliée dans sa poche (leur
+      # liste) ; ou le médecin de la Fédération et son certificat déjà signé,
+      # au bureau ou, si la sélection est partie, à l'infirmerie de l'hôtel
+      # d'Al-Dorado (ta liste : l'État essaie une seconde fois). Le syndicat
+      # de Karim Fauvel est passé en ville (content/ville/scenes_h9.yaml).
       - id: suite
         this_season: true
         on_expire: skip
         card:
           - { id: sl.h9.deux_listes.noa, if: "flag('h9_liste_ministere')" }
-          - { id: sl.h9.deux_listes.syndicat }
-        next: [ { step: medecin, in: [2, 4] } ]
-      # Les capteurs des protège-tibias (la Nouvelle de 2029) contre le mot du
-      # ministère : la fatigue, il faut quelqu'un pour la signer.
-      - id: medecin
-        this_season: true
-        on_expire: skip
-        card:
           - { id: sl.h9.deux_listes.medecin_loin, if: "season == 1 && flag('h9_depart')" }
-          - { id: sl.h9.deux_listes.medecin_capteurs, if: "flag('h9_liste_ministere')" }
           - { id: sl.h9.deux_listes.medecin }
+        # La trace de 2031 est programmée par le bureau (C2), que l'étape ait
+        # été jouée ou sautée (la saison était pleine).
+        next: []
+      # 2031 : ce que la liste a laissé. Le tiret de la quatrième ligne (leur
+      # liste), le certificat recollé, oublié au tiroir, ou jamais rempli.
+      - id: trace
+        card:
+          - { id: sl.h9.deux_listes.rappel_noa, if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.deux_listes.recolle, if: "flag('h9_certificat_dechire')" }
+          - { id: sl.h9.deux_listes.tiroir, if: "flag('h9_certificat_range')" }
+          - { id: sl.h9.deux_listes.vierge }
         next: []
 
   - id: sl.h9.kambara
@@ -333,14 +370,18 @@ arcs:
         card:
           - { id: sl.h9.kambara.appel_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.kambara.appel }
-        next: [ { step: direct, in: [2, 3] } ]
+        # La question de Vence, au plateau de l'hôtel ou, le plus souvent, en
+        # salle de presse du Dôme, la veille du tunnel.
+        next: [ { step: direct, in: [3, 5] } ]
       - id: direct
         this_season: true
         on_expire: skip
         card:
           - { id: sl.h9.kambara.direct_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.kambara.direct }
-        next: [ { step: lettre, at_season: 1, at: [2, 9] } ]
+        # La lettre de 2031 est programmée par le bureau (C2), que le direct ait
+        # été joué ou sauté (la salle de presse était prise).
+        next: []
       - id: lettre
         card:
           - { id: sl.h9.kambara.lettre_porte, if: "flag('h9_brassard_porte')" }
@@ -370,19 +411,26 @@ arcs:
     same_club: true
     fallback: drop
     steps:
+      # Les clés sont programmées par la voiture blanche (B1), avant la cave :
+      # le fisc de la rue Haute peut ainsi reprendre la terrasse avec le reste.
       - id: cles
         card:
           - { id: sl.h9.cadeaux.cles_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.cadeaux.cles }
-        next: [ { step: coursier, in: [2, 4] } ]
+        # Le coursier vient en 2031, après le retour : le bureau (C2) le
+        # programme. L'émirat fait savoir qu'il attend.
+        next: []
+      # 2031 : le coursier aux gants blancs, sans écrin. « Nous savons
+      # attendre. » (La variante d'Al-Dorado reste un secours.)
       - id: coursier
         card:
           - { id: sl.h9.cadeaux.coursier_loin, if: "season == 1 && flag('h9_depart')" }
           - { id: sl.h9.cadeaux.coursier_cles, if: "flag('h9_cles_rendues')" }
           - { id: sl.h9.cadeaux.coursier }
-        next: [ { step: terrasse, at_season: 1, at: [2, 9] } ]
-      # Un an après : la terrasse gardée, saisie (le fisc de la rue Haute,
-      # une réaction : sl.h9.re.fisc), ou toujours en vitrine.
+        # La terrasse suit le coursier, dans l'année.
+        next: [ { step: terrasse, in: [2, 4] } ]
+      # 2031 : la terrasse gardée, saisie (le fisc de la rue Haute, une
+      # réaction : sl.h9.re.fisc), ou toujours en vitrine.
       - id: terrasse
         card:
           - { id: sl.h9.cadeaux.terrasse_saisie, if: "flag('h9_cles_gardees') && flag('h9_fisc') && !flag('h9_fisc_suspendu')" }
@@ -413,9 +461,11 @@ arcs:
     same_club: true
     fallback: drop
     steps:
+      # La visite déclenche le soir même le fisc (une réaction) : l'État
+      # reprend ce que l'émirat a donné quand on commence à poser des questions.
       - id: visite
         card: sl.h9.rue_haute.visite
-        next: [ { step: lea, in: [2, 3] } ]
+        next: [ { step: lea, in: [1, 2] } ]
       - id: lea
         this_season: true
         on_expire: skip
@@ -424,16 +474,23 @@ arcs:
           - { id: sl.h9.rue_haute.lea_sans_photo, if: "flag('h9_page_laissee')" }
           - { id: sl.h9.rue_haute.lea_gardees, if: "flag('h9_listes_gardees')" }
           - { id: sl.h9.rue_haute.lea }
-        next:
-          - { step: temoin, if: "season <= 1", at_season: 1, at: [2, 8] }
-          - { step: temoin, in: [2, 4] }
+        # 2031 : le témoignage de Josiane est programmé par le retour (C1).
+        next: []
+      # 2031 : Josiane témoigne. Si la page a paru, le juge convoque aussi la
+      # sélectionneuse : la variante programme le palais (sl.h9.proces).
       - id: temoin
         card:
           - { id: sl.h9.rue_haute.temoin_seule, if: "flag('h9_page_gardee')" }
+          - { id: sl.h9.rue_haute.temoin_lea, if: "flag('h9_page_lea')" }
           - { id: sl.h9.rue_haute.temoin }
         next: []
 
   # ═════════════════════════════════════════════════════ 2031 (S2, tardives)
+  # 2031 n'a que treize créneaux libres avant les casques (16) et la minute
+  # (17). L'ordre des échéances fait la hiérarchie : la dernière pluie, la
+  # tente blanche, le palais et l'autre boulangerie ont des fenêtres serrées ;
+  # le coursier, la lettre du Kambara et la trace des deux listes, larges,
+  # passent quand il reste de la place.
   - id: sl.h9.exhumation
     title: "La tente blanche"
     kind: serie
@@ -459,10 +516,10 @@ arcs:
     steps:
       - id: resultat
         card: sl.h9.exhumation.resultat
-        next: [ { step: plaque, in: [2, 4] } ]
+        next: [ { step: plaque, in: [1, 3] } ]
       - id: plaque
         card: sl.h9.exhumation.plaque
-        next: [ { step: page_six, in: [2, 4] } ]
+        next: [ { step: page_six, in: [1, 3] } ]
       - id: page_six
         card: sl.h9.exhumation.page_six
         next: []
@@ -491,10 +548,10 @@ arcs:
     steps:
       - id: une
         card: sl.h9.proces.une
-        next: [ { step: couloir, in: [2, 4] } ]
+        next: [ { step: couloir, in: [1, 3] } ]
       - id: couloir
         card: sl.h9.proces.couloir
-        next: [ { step: sortie, in: [2, 4] } ]
+        next: [ { step: sortie, in: [1, 3] } ]
       - id: sortie
         card: sl.h9.proces.sortie
         next: []
@@ -522,10 +579,10 @@ arcs:
     steps:
       - id: place
         card: sl.h9.boulangerie.place
-        next: [ { step: sacha, in: [2, 4] } ]
+        next: [ { step: sacha, in: [1, 3] } ]
       - id: sacha
         card: sl.h9.boulangerie.sacha
-        next: [ { step: lilas, in: [2, 4] } ]
+        next: [ { step: lilas, in: [1, 3] } ]
       - id: lilas
         card: sl.h9.boulangerie.lilas
         next: []
@@ -554,10 +611,10 @@ arcs:
     steps:
       - id: main_courante
         card: sl.h9.pluie.main_courante
-        next: [ { step: appel, in: [2, 3] } ]
+        next: [ { step: appel, in: [1, 3] } ]
       - id: appel
         card: sl.h9.pluie.appel
-        next: [ { step: sac, in: [2, 3] } ]
+        next: [ { step: sac, in: [1, 3] } ]
       - id: sac
         card:
           - { id: sl.h9.pluie.sac_nuit, if: "flag('h9_gigi_nuit')" }
@@ -594,10 +651,10 @@ arcs:
     steps:
       - id: raccroche
         card: sl.h9.apres.raccroche
-        next: [ { step: depart_sacha, in: [3, 5] } ]
+        next: [ { step: depart_sacha, in: [2, 3] } ]
       - id: depart_sacha
         card: sl.h9.apres.depart_sacha
-        next: [ { step: four_paye, in: [3, 5] } ]
+        next: [ { step: four_paye, in: [2, 3] } ]
       - id: four_paye
         card: sl.h9.apres.four_paye
         next: []
@@ -617,7 +674,7 @@ arcs:
     when: "flag('histoire_h9') && !flag('h9_page_lea') && flag('h9_cave_vue') && flag('h9_four_paye')"
     issues: [publiee, dormante]
     traces:
-      h9_carton_josiane: "{annee} : Madame Josiane est morte en dormant. Elle a laissé à {nom} un carton marqué 2010."
+      h9_carton_josiane: "{annee} : Madame Josiane est entrée aux Hauts-de-Rive. Elle a fait monter chez {nom} un carton marqué 2010."
       h9_page_tardive: "{annee} : la page de décembre 2010 paraît enfin dans Le Quotidien, avec trois ans de retard."
       h9_page_dormante: "{annee} : la page de décembre 2010 dort dans le buffet de {nom}, sous les factures."
     hint: "Une vieille secrétaire meurt, et laisse un carton. Dedans, une heure."
@@ -626,10 +683,10 @@ arcs:
     steps:
       - id: legs
         card: sl.h9.carton.legs
-        next: [ { step: lea, in: [3, 5] } ]
+        next: [ { step: lea, in: [1, 3] } ]
       - id: lea
         card: sl.h9.carton.lea
-        next: [ { step: fenetre, in: [3, 5] } ]
+        next: [ { step: fenetre, in: [1, 2] } ]
       - id: fenetre
         card:
           - { id: sl.h9.carton.fenetre_publiee, if: "flag('h9_page_tardive')" }

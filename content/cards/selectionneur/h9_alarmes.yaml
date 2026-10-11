@@ -1,20 +1,24 @@
 # Histoire 9 — « Vingt degrés dedans » : les alarmes du postulat
 # (`alarm_overrides` de `mondial_hiver`, servies avant celles du rôle). Une
 # jauge au bord du vide ou du trop-plein, et un visage du livre qui vient le
-# dire. Chaque carte porte son seuil : redressée avant, elle se tait.
+# dire. Chaque carte porte son seuil : redressée avant, elle se tait. Celles
+# d'Aubérive se taisent aussi au créneau 14 de 2030, le seul que le voyage
+# laisse libre entre l'aéroport (13) et le couloir du Dôme (15) : Bréhaut ne
+# monte pas l'escalier de la Fédération au milieu d'Al-Dorado. Ailleurs dans
+# le voyage, les ancres passent devant, et l'alarme attend janvier.
 cards:
   - id: sl.h9.alarme.vestiaire_bas_noa
     roles: [selectionneur]
     arc: vestiaire
     tags: [vestiaire]
     speaker: vandel
-    when: "gauges.vestiaire < 25"
+    when: "gauges.vestiaire < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
     text: "Le groupe s'est coupé en deux : ceux qui veulent le brassard, ceux qui veulent leur prime. Noa, debout au milieu du vestiaire : « Dites-leur quelque chose, {toi}. N'importe quoi, mais à tous. »"
     left:
       label: "Je parle à tous"
       effects: {vestiaire: "+++", direction: "-"}
-      answer: "Tu parles de Kévin, puis de la prime, puis de Kévin encore. Personne n'applaudit. Mais tout le monde sort par la même porte."
+      answer: "Tu parles de Kévin, puis de la prime, puis de Kévin encore. Pas un applaudissement. Mais tout le monde sort par la même porte."
     right:
       label: "Parle, toi"
       effects: {vestiaire: "+", tribunes: "-", relation: {vandel: 1}}
@@ -25,9 +29,9 @@ cards:
     arc: vestiaire
     tags: [vestiaire, direction]
     speaker: brehaut
-    when: "gauges.vestiaire > 75"
+    when: "gauges.vestiaire > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
-    text: "Bréhaut, dans le couloir de la Fédération : « Vos joueurs vous aiment. Le ministère n'aime pas qu'on aime quelqu'un d'autre que lui, {toi}. Il appelle ça un clan. »"
+    text: "Bréhaut, dans le couloir de la Fédération : « Vos joueurs vous aiment, {pg, select, f{madame} other{monsieur}} {nom}. Le ministère n'aime pas qu'on aime un autre que lui. Il appelle ça un clan. »"
     left:
       label: "Je reprends mes distances"
       effects: {vestiaire: "--", direction: "+"}
@@ -42,7 +46,7 @@ cards:
     arc: famille
     tags: [tribunes, famille]
     speaker: mariejo
-    when: "gauges.tribunes < 25"
+    when: "gauges.tribunes < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
     text: "À la boulangerie, la file se tait quand tu entres. Une dame te laisse passer devant, pour ne pas rester derrière toi. Marie-Jo te sert sans un mot, sans même le prix."
     left:
@@ -59,7 +63,7 @@ cards:
     arc: presse
     tags: [tribunes, presse]
     speaker: vence
-    when: "gauges.tribunes > 75"
+    when: "gauges.tribunes > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
     text: "Nathalie Vence, hors antenne, le micro coupé : « Le chef d'État veut une photo avec vous. Le pays vous aime trop, {toi}. Là-haut, ça se remarque, et ça se mesure. »"
     left:
@@ -76,7 +80,7 @@ cards:
     arc: direction
     tags: [direction]
     speaker: sauvan
-    when: "gauges.direction < 25"
+    when: "gauges.direction < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
     text: "Sauvan pose ton contrat ouvert à l'article neuf : « Minuit, sans motif. Le ministère n'y pense pas, {toi}. Il voulait seulement que vous sachiez qu'il sait lire. »"
     left:
@@ -93,9 +97,9 @@ cards:
     arc: direction
     tags: [direction]
     speaker: brehaut
-    when: "gauges.direction > 75"
+    when: "gauges.direction > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
-    text: "Bréhaut, à voix basse, dans l'ascenseur de la Fédération : « Le ministère ne dit plus rien de mal de vous. Méfiez-vous, {toi}. C'est comme ça qu'on finit dans un bureau. »"
+    text: "Bréhaut, arrêté entre deux étages de l'escalier, la main sur le genou : « Le ministère ne dit plus de mal de vous. Méfiez-vous : c'est comme ça qu'on finit dans un bureau. »"
     left:
       label: "Je me méfie"
       effects: {direction: "--", vestiaire: "+"}
@@ -103,20 +107,20 @@ cards:
     right:
       label: "Les bureaux sont chauds"
       effects: {direction: "+", tribunes: "-"}
-      answer: "« Les bureaux sont chauffés, oui. » Les portes s'ouvrent. Il sort sans te serrer la main, pour la première fois depuis janvier."
+      answer: "« Les bureaux sont chauffés, oui. » Il reprend l'escalier sans te serrer la main, pour la première fois depuis que tu le connais."
 
   - id: sl.h9.alarme.caisse_bas_josiane
     roles: [selectionneur]
     arc: caisse
     tags: [caisse, sponsors]
     speaker: josiane
-    when: "gauges.caisse < 25"
+    when: "gauges.caisse < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
-    text: "Madame Josiane pose la facture des charters sur ton bureau : « La Fédération ne peut plus payer l'avion du stage. Gazéo propose le sien, {toi}. Avec la flamme sur la carlingue. »"
+    text: "Madame Josiane pose la facture des charters sur ton bureau, du bout de l'ongle : « La Fédération ne peut plus payer l'avion du stage. Gazéo propose le sien. Avec la flamme sur la carlingue. »"
     left:
       label: "L'avion de Gazéo"
       effects: {caisse: "+++", direction: "+", tribunes: "-"}
-      answer: "Sur la photo de l'aéroport, vingt-six joueurs sous une flamme bleue de dix mètres. Josiane la découpe et la range dans le dossier 2030."
+      answer: "Sur la photo de l'aéroport, vingt-six joueurs sous une flamme bleue de dix mètres. Josiane la découpe et la range dans le dossier {annee}."
     right:
       label: "On prendra le car"
       effects: {caisse: "+", vestiaire: "-", tribunes: "+"}
@@ -127,9 +131,9 @@ cards:
     arc: caisse
     tags: [caisse, sponsors]
     speaker: nassir
-    when: "gauges.caisse > 75"
+    when: "gauges.caisse > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
     tone: strategique
-    text: "Cheikh Ilyas te félicite, au salon de l'hôtel de la Rive : « Vos comptes sont les plus sains de la Ligue. C'est rare, {toi}. Ça attire les curieux. Et les contrôleurs. »"
+    text: "Cheikh Ilyas, au salon de l'hôtel de la Rive : « Vos comptes sont les plus sains de la Ligue, {pg, select, f{chère madame} other{cher monsieur}}. C'est rare. Ça attire les contrôleurs. »"
     left:
       label: "Je redistribue"
       effects: {caisse: "--", vestiaire: "+"}
@@ -138,3 +142,233 @@ cards:
       label: "Je garde la réserve"
       effects: {caisse: "+", direction: "-"}
       answer: "« Gardez, gardez. » Il note quelque chose dans un carnet relié de cuir. Ce n'est pas un chiffre ; c'est ton nom."
+
+  # ── La deuxième fois. Une jauge qui retombe au même bord ne ramène pas la
+  # même scène mot pour mot : la seconde alarme se souvient de la première
+  # (postulats.yaml, `alarm_overrides` : chaque carte une fois, puis celles du
+  # rôle).
+  - id: sl.h9.alarme.vestiaire_bas_noa_encore
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    when: "gauges.vestiaire < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
+    tone: strategique
+    text: "Le vestiaire s'est recoupé en deux, à la même ligne de carrelage que la dernière fois. Noa ne demande plus rien : il s'assied au milieu du banc et attend de voir de quel côté tu viendras."
+    left:
+      label: "Je reste debout"
+      effects: {vestiaire: "+++", direction: "-"}
+      answer: "Debout entre les deux bancs, tu attends que quelqu'un parle de Kévin. C'est le troisième gardien qui commence. Personne ne le coupe."
+    right:
+      label: "Je m'assieds à côté de lui"
+      effects: {vestiaire: "+", tribunes: "-", relation: {vandel: 1}}
+      answer: "Tu t'assieds près de Noa. La moitié du vestiaire vient s'asseoir en face ; l'autre reste debout. Au moins, maintenant, tu sais qui."
+
+  - id: sl.h9.alarme.vestiaire_haut_brehaut_encore
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    when: "gauges.vestiaire > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
+    tone: strategique
+    text: "Bréhaut te tend une coupure de journal : ta photo après le match, un joueur sur chaque épaule. Dans la marge, quelqu'un du ministère a écrit « clan » au crayon, et l'a souligné deux fois."
+    left:
+      label: "Plus de photographes"
+      effects: {vestiaire: "--", direction: "+"}
+      answer: "Tu fermes les entraînements aux photographes. Les joueurs comprennent avant toi pourquoi. Ils s'appliquent, et ne rient plus."
+    right:
+      label: "Je garde la coupure"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "Tu la plies en quatre, le mot à l'intérieur, et tu la ranges dans ton portefeuille. Bréhaut regarde ailleurs : il n'a rien vu, il le dira."
+
+  - id: sl.h9.alarme.tribunes_bas_file_encore
+    roles: [selectionneur]
+    arc: famille
+    tags: [tribunes, famille]
+    speaker: mariejo
+    when: "gauges.tribunes < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
+    tone: strategique
+    text: "Ta baguette t'attend sur le rebord de la vitrine, déjà emballée, pour que tu n'aies pas à faire la queue. Marie-Jo dit que c'est pour te rendre service. La file regarde le papier, pas toi."
+    left:
+      label: "Je prends ma place"
+      effects: {tribunes: "+++", direction: "-"}
+      answer: "Tu laisses le paquet et tu vas au bout de la file. À ton tour, Marie-Jo le reprend, le défait, et t'en sert une autre, plus cuite."
+    right:
+      label: "Je prends le paquet"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Le papier est tiède : elle l'a emballé avant l'ouverture, avant la file, pour t'épargner. Dehors, personne ne t'épargne."
+
+  - id: sl.h9.alarme.tribunes_haut_vence_encore
+    roles: [selectionneur]
+    arc: presse
+    tags: [tribunes, presse]
+    speaker: vence
+    when: "gauges.tribunes > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
+    tone: strategique
+    text: "Vence, au maquillage, te montre une courbe imprimée : ta cote, semaine après semaine, et des initiales au stylo sur chaque sommet. « Ils la suivent comme une fièvre, {toi}. Moi aussi. »"
+    left:
+      label: "Plus de plateaux"
+      effects: {tribunes: "--", vestiaire: "+"}
+      answer: "Tu annules les plateaux jusqu'au prochain rassemblement. La courbe redescend d'un cran. Vence la range sans commentaire, mais la garde."
+    right:
+      label: "Je peux la garder ?"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle te la donne. Au dos, d'une autre écriture : « À surveiller ». Tu la mets dans ta poche intérieure et tu la sens toute l'émission."
+
+  - id: sl.h9.alarme.direction_bas_sauvan_encore
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    when: "gauges.direction < 25 && (season != 1 || slot != 14 || !flag('h9_loin'))"
+    tone: strategique
+    text: "Sauvan rouvre ton contrat à l'article neuf. Quelqu'un l'a surligné depuis, en jaune, d'un trait très droit. « Ce n'est pas moi, {toi}. Je ne surligne pas. Je transmets. »"
+    left:
+      label: "Je demande un rendez-vous"
+      effects: {direction: "+++", tribunes: "-"}
+      answer: "Rendez-vous un samedi, à sept heures quinze. Le directeur de cabinet arrive à huit heures moins le quart et te remercie d'être là si tôt."
+    right:
+      label: "Je surligne l'article dix"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "L'article dix : ton droit à l'image. Tu le surlignes devant lui, sans te presser. Sauvan rit, une seule fois, puis regarde vers la porte."
+
+  - id: sl.h9.alarme.direction_haut_brehaut_encore
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: brehaut
+    when: "gauges.direction > 75 && (season != 1 || slot != 14 || !flag('h9_loin'))"
+    tone: strategique
+    text: "Bréhaut t'attend en haut de l'escalier, essoufflé, deux cartons d'invitation à la main : « Le dîner du ministre. Ils nous ont mis à la même table. Ça ne m'était pas arrivé depuis 1998. »"
+    left:
+      label: "Je n'irai pas"
+      effects: {direction: "--", vestiaire: "+"}
+      answer: "Tu envoies Josiane. Elle rapporte une serviette brodée au chiffre de l'émirat, qu'elle n'a pas osé laisser. Elle la met au coffre."
+    right:
+      label: "J'y vais"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Au dessert, le ministre te tape sur l'épaule devant les photographes. Bréhaut, en face, plie et déplie sa serviette sans la regarder."
+
+  # ── Au retour. Une jauge qui franchit le bord pendant le voyage (h9_loin) ne
+  # sonne pas à Al-Dorado : les ancres du Dôme passent devant elle, et
+  # l'alarme levée là-bas est servie en janvier, après le retour (mesuré :
+  # aucune servie pendant le voyage sur 800 carrières). Elle rapporte donc le
+  # voyage à la maison.
+  - id: sl.h9.alarme.vestiaire_bas_noa_retour
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: vandel
+    when: "gauges.vestiaire < 25"
+    tone: strategique
+    text: "Premier rassemblement depuis Al-Dorado. Les joueurs se sont assis par club, comme des inconnus, les sacs encore étiquetés au nom du Dôme. Noa : « Là-bas, on dormait dans le même couloir, {toi}. »"
+    left:
+      label: "Je mélange les chambres"
+      effects: {vestiaire: "+++", direction: "-"}
+      answer: "Tu tires les chambres au sort, dans un bonnet. Personne ne râle à voix haute. Le soir, on entend rire derrière deux portes sur trois."
+    right:
+      label: "Je laisse faire le temps"
+      effects: {vestiaire: "+", tribunes: "-", relation: {vandel: 1}}
+      answer: "Noa décolle les étiquettes du Dôme, une par une, sur tous les sacs, sans rien demander à personne. Ça lui prend la soirée."
+
+  - id: sl.h9.alarme.vestiaire_haut_brehaut_retour
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: brehaut
+    when: "gauges.vestiaire > 75"
+    tone: strategique
+    text: "Bréhaut, au retour : « Le ministère veut la liste de ceux qui chantaient avec vous dans le car du Dôme, le dernier soir. » Il tient une feuille à la main. Elle est restée blanche."
+    left:
+      label: "Je donne des noms"
+      effects: {vestiaire: "--", direction: "+"}
+      answer: "Tu écris onze noms, ceux qui chantaient le moins fort. Bréhaut porte la feuille lui-même. Dans le car suivant, personne ne chante."
+    right:
+      label: "Feuille blanche"
+      effects: {vestiaire: "+", direction: "--"}
+      answer: "Bréhaut la plie, la glisse dans l'enveloppe du ministère et la cachette devant toi. « Ils sauront lire une feuille blanche. »"
+
+  - id: sl.h9.alarme.tribunes_bas_file_retour
+    roles: [selectionneur]
+    arc: famille
+    tags: [tribunes, famille]
+    speaker: mariejo
+    when: "gauges.tribunes < 25"
+    tone: strategique
+    text: "Depuis ton retour, ton affiche est toujours dans la vitrine de la boulangerie, mais Marie-Jo l'a tournée face au mur. « Le temps que ça se calme. Je ne l'ai pas jetée. »"
+    left:
+      label: "Je la retourne moi-même"
+      effects: {tribunes: "+++", direction: "-"}
+      answer: "Tu la remets à l'endroit, devant la file. Une dame applaudit, seule, deux fois. Trois jours après, quelqu'un a écrit « merci » dessous."
+    right:
+      label: "Laissez-la au mur"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "« Comme vous voudrez. » Ton visage reste face au mur tout l'hiver. Les enfants du quartier croient qu'on t'a puni{pg, select, f{e} other{}}."
+
+  - id: sl.h9.alarme.tribunes_haut_vence_retour
+    roles: [selectionneur]
+    arc: presse
+    tags: [tribunes, presse]
+    speaker: vence
+    when: "gauges.tribunes > 75"
+    tone: strategique
+    text: "Vence t'appelle pour l'émission des vœux, le premier dimanche de janvier : « Vous et le ministre, côte à côte, {toi}. Il a demandé lequel des deux parlerait le premier. »"
+    left:
+      label: "Je parlerai après lui"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "Tu le laisses parler le premier, et longtemps. À ton tour, il reste quarante secondes. Tu dis bonne année, et merci."
+    right:
+      label: "Qu'il parle seul"
+      effects: {tribunes: "+", direction: "--"}
+      answer: "Le ministre présente ses vœux seul, à côté d'un fauteuil vide qu'on a oublié d'enlever. Le pays ne regarde que le fauteuil."
+
+  - id: sl.h9.alarme.direction_bas_sauvan_retour
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    when: "gauges.direction < 25"
+    tone: strategique
+    text: "Le ministère gardait ton passeport depuis le retour, « pour les formalités ». Sauvan te le rend avec un tampon de plus, que personne ici ne sait lire. « Une erreur de guichet, {toi}. »"
+    left:
+      label: "Je remercie le ministère"
+      effects: {direction: "+++", tribunes: "-"}
+      answer: "Tu écris au ministre une lettre de remerciement pour l'accueil d'Al-Dorado. Sauvan la relit, corrige une virgule, et la poste lui-même."
+    right:
+      label: "Je fais traduire le tampon"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Une étudiante de la faculté le lit d'un coup d'œil : « Interdit de séjour, révocable. » Elle refuse ton argent et te souhaite bon courage."
+
+  - id: sl.h9.alarme.direction_haut_brehaut_retour
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: brehaut
+    when: "gauges.direction > 75"
+    tone: strategique
+    text: "Bréhaut pose sur ton bureau un écrin : l'ordre du mérite sportif, « pour Al-Dorado ». « La remise est jeudi. On ne décore jamais quelqu'un qui a dit non. Vous voyez ce que ça veut dire. »"
+    left:
+      label: "Je la refuse"
+      effects: {direction: "--", vestiaire: "+"}
+      answer: "Tu renvoies l'écrin en recommandé, sans lettre. Josiane note le numéro dans un cahier qu'elle n'ouvre que pour ça."
+    right:
+      label: "J'irai jeudi"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Le ministre l'épingle de travers. Sur la photo, on voit ta main qui retient la médaille, comme si elle allait tomber."
+
+  - id: sl.h9.alarme.caisse_haut_ilyas_retour
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, sponsors]
+    speaker: nassir
+    when: "gauges.caisse > 75"
+    tone: strategique
+    text: "Au retour, un virement d'Al-Dorado attend la Fédération, « prime de participation », trois fois le budget du stage. Cheikh Ilyas appelle pour savoir s'il est bien arrivé. Il n'appelle jamais."
+    left:
+      label: "Aux familles des ouvriers"
+      effects: {caisse: "--", tribunes: "+", direction: "-"}
+      answer: "Tu fais reverser la prime au fonds des familles des ouvriers du Dôme. Ilyas rappelle le soir, la voix douce : « Vous savez compter. »"
+    right:
+      label: "Je le remercie"
+      effects: {caisse: "+", direction: "-"}
+      answer: "Il raccroche, satisfait. Deux jours plus tard, un second virement arrive, plus petit, sans libellé. Josiane le laisse en attente."
