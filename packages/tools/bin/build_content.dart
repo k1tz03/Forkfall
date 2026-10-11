@@ -1789,11 +1789,15 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     for (final x in t) {
       if (!tranches.contains(x)) errors.add('ville.yaml/presences/$qui: tranche « $x » inconnue');
     }
-    presences.add({'qui': qui, 'lieu': lieu, 'tranches': t});
+    presences.add({'qui': qui, 'lieu': lieu, 'tranches': t, if (p['si'] != null) 'si': p['si'].toString()});
   }
   final activites = <Map<String, dynamic>>[];
   final ids = <String>{};
   final siApres = <MapEntry<Object?, String>>[];   // les `si` des activités, validés plus bas
+  // une présence peut dépendre de l'époque ou d'un drapeau (l'inspecteur après la nuit du 14)
+  for (final pr in presences) {
+    if (pr['si'] != null) siApres.add(MapEntry(pr['si'], 'ville.yaml/presences/${pr['qui']}'));
+  }
   for (final e in (m['activites'] as List? ?? const [])) {
     final a = (e as Map).cast<String, dynamic>();
     final id = a['id']?.toString() ?? '';

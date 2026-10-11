@@ -193,6 +193,6 @@
   }
   // ceux qu'on dessine : les tableaux à l'écran, sauf pendant une scène jouée
   function gensDesTableaux() {
-    if (dedans || MATCH || CINE) return [];
+    if (dedans || MATCH || CINE || carteOn) return [];
     return TABLEAUX.filter(function (g) { return aLEcran(g.x, g.y, 30); });
   }

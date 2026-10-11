@@ -177,6 +177,7 @@
       if (st === "mort" || st === "parti" || st === "vendu" || st === "rival") return;
       if (!(cast[p.qui] || S.vus[p.qui])) return;
       if (p.tranches && p.tranches.length && p.tranches.indexOf(tr) < 0) return;
+      if (p.si && !siVrai(p.si, p.lieu)) return;
       poserQui({ id: p.qui, sp: spriteDe(p.qui), qui: p.qui, role: "presence" });
     });
     var sm = S.mission, mm = sm && sm.offre && sm.lieu === cle && MISSION[sm.id];

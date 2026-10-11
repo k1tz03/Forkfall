@@ -740,6 +740,7 @@
       if (st === "mort" || st === "parti" || st === "vendu" || st === "rival") return;
       if (!(cast[p.qui] || S.vus[p.qui])) return;
       if (p.tranches && p.tranches.length && p.tranches.indexOf(tr) < 0) return;
+      if (p.si && !siVrai(p.si, p.lieu)) return;
       out.push({ id: p.qui, sp: spriteDe(p.qui), qui: p.qui, role: "presence", lieu: p.lieu });
       deja[p.qui] = 1;
     });
@@ -1381,6 +1382,7 @@
     var dt = dernier ? Math.min(0.05, (ts - dernier) / 1000) : 0;
     dernier = ts;
     if (!occupe && !carteOn) { majMarche(dt); if (!dedans) { majPassants(dt, ts); majActeurs(dt, ts); } }
+    else if (CINE && !dedans && !CINE.c.vide) majPassants(dt, ts);
     if (dedans) majDedans(dt, ts);
     majCine(dt, ts);
     majVie(dt, ts);
@@ -1416,9 +1418,10 @@
     if (!dedans) { dessinerPanneau(); dessinerFoule(ts); }
     // les gens, du fond vers l'avant (x + y croissant) ; on garde la boîte de
     // chacun, pour qu'un doigt puisse le toucher
-    var gens = [];
-    for (var i = 0; i < passants.length; i++) gens.push(passants[i]);
-    for (var id in acteurs) gens.push(acteurs[id]);
+    var gens = [], rue = !(CINE && CINE.c.vide && !dedans), joue = {};
+    if (CINE && CINE.acteurs) for (var ja in CINE.acteurs) joue[CINE.acteurs[ja].qui] = 1;
+    if (rue) for (var i = 0; i < passants.length; i++) gens.push(passants[i]);
+    for (var id in acteurs) if (rue && !joue[acteurs[id].qui]) gens.push(acteurs[id]);
     figurants.forEach(function (g) { gens.push(g); });
     gensDesTableaux().forEach(function (g) { gens.push(g); });
     if (MATCH) {
@@ -3507,7 +3510,8 @@
         if (!ci) return { erreur: "scène inconnue : " + val };
         S.cinesVues = S.cinesVues || {};
         for (var su = ci, n0 = 0; su && n0 < 9; su = su.suite ? cineParId(su.suite) : null, n0++) delete S.cinesVues[su.id];
-        if (carteOn || CINE || MATCH) return { erreur: "une carte, une scène ou un match occupe l'écran" };
+        if (CINE || MATCH) return { erreur: "une scène ou un match occupe l'écran" };
+        if (carteOn) cacherCarte();
         occupe = false; fermerPorte();
         jouerCine(ci);
         return { cine: ci.id };

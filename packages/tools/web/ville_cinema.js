@@ -189,7 +189,16 @@
   function executer(st) {
     var a = st.qui ? acteur(st.qui) : null, el = uiCine();
     // ce qui accompagne une réplique : un geste, une émotion
-    if (a && st.geste && st.dit == null) { a.geste = st.geste === "debout" ? null : st.geste; if (st.geste === "assis") { a.pose = "assis"; a.geste = null; } if (st.geste === "debout") a.pose = null; apres(350); return; }
+    if (a && st.geste && st.dit == null) {
+      a.geste = st.geste === "debout" ? null : st.geste;
+      if (st.geste === "assis") { a.pose = "assis"; a.geste = null; }
+      if (st.geste === "debout") {
+        // se lever, c'est sortir de sa chaise : un pas vers la case libre la plus proche
+        if (a.pose === "assis") { var cs = caseDe(a.x, a.y), lb = plusProche(cs[0], cs[1], 4); if (lb) { var cl = centre(lb); a.x = cl[0]; a.y = cl[1]; } }
+        a.pose = null;
+      }
+      apres(350); return;
+    }
     if (a && st.emote && st.dit == null) { a.emote = st.emote === "aucun" ? null : { k: st.emote, t0: performance.now() }; apres(650); return; }
     if (st.titre != null) { carteTitre(st.titre, st.sous || "", null, etapeSuivante); return; }
     if (st.narration != null) { boite(null, remplirCine(st.narration, null), { narration: true }); return; }
@@ -479,6 +488,18 @@
     var l = (D.conversations || []).filter(function (cv) { return cv.lieu === cle && convOk(cv); });
     return l[0] || null;
   }
+  // dehors, devant un lieu : `porte`, `centre`, un décalage [dx, dy] depuis sa porte, sinon une des
+  // places de la rue autour de la porte
+  function placeDehors(lieu, place, libres, i) {
+    var l = LIEU[lieu], d = l && l.door;
+    if (d && (Array.isArray(place) || place === "porte" || place === "centre")) {
+      var off = Array.isArray(place) ? place : place === "centre" ? [2, 2] : [0, 0];
+      var n = plusProche(d[0] + off[0], d[1] + off[1], 6) || d, c = centre(n);
+      return { x: c[0], y: c[1] };
+    }
+    if (libres && libres.length) { var q = libres.shift(); return { x: q[0], y: q[1] }; }
+    return positionScene(null, i, null);
+  }
   // les voix prennent corps (si elles n'y sont pas déjà) : dedans à leurs places, dehors près de la porte
   function convInstaller(cv) {
     var voix = {}, libres = dedans ? null : placesDe(cv.lieu).slice();
@@ -491,7 +512,7 @@
       if (!g) {
         // la place d'une voix est à elle : le client qui l'occupe s'en va
         if (dedans && typeof v.place === "string") figurants = figurants.filter(function (x) { return x.cine || x.conv || x.place !== v.place || x.role === "rdv" || x.role === "mission"; });
-        var pos = dedans ? positionScene(v.place, i, null) : (libres && libres.length ? (function (q) { return { x: q[0], y: q[1] }; })(libres.shift()) : positionScene(null, i, null));
+        var pos = dedans ? positionScene(v.place, i, null) : placeDehors(cv.lieu, v.place, libres, i);
         var sp = GENS_SP[v.qui] ? (SPRITES[v.qui] ? v.qui : "passant") : spriteDe(v.qui) || "passant";
         g = { conv: true, convId: cv.id + ":" + v.id, sp: sp, qui: v.qui, nom: v.nom || null, x: pos.x, y: pos.y, miroir: i % 2 === 1, pose: v.pose || (pos.place && pos.place.pose) || null, pas: 0, alpha: 1, uid: ++UID, lieu: cv.lieu,
           place: typeof v.place === "string" ? v.place : null };

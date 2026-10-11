@@ -808,6 +808,9 @@ void main() {
   for (final t in (villeB['tableaux'] as List? ?? const [])) {
     villeLit((t as Map)['si'], 'ville/tableaux/${t['id']}');
   }
+  for (final pr in (villeB['presences'] as List? ?? const [])) {
+    villeLit((pr as Map)['si'], 'ville/presences/${pr['qui']}');
+  }
   (((villeB['match'] as Map?)?['textes'] as Map?) ?? const {}).forEach((type, l) {
     for (final t in (l as List? ?? const [])) {
       if (t is Map) villeLit(t['si'], 'ville/match_textes/$type');
