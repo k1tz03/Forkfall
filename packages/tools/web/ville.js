@@ -1051,9 +1051,11 @@
   function enEcus() { return ((vue && vue.flags) || []).indexOf("monde_ecus") >= 0 || ((vue && vue.year) || 1990) >= 2003; }
   function courant(f) { var an = (vue && vue.year) || 1990, v = f * Math.pow(1.02, Math.max(0, an - 1990)); return enEcus() ? v / ECU : v; }
   function argent(f) {
-    var v = courant(f), a = Math.abs(v);
+    var v = courant(f), a = Math.abs(v), ecus = enEcus();
     var r = a >= 100000 ? Math.round(a / 1000) * 1000 : a >= 10000 ? Math.round(a / 100) * 100 : a >= 1000 ? Math.round(a / 10) * 10 : Math.round(a);
-    return (v < 0 && r ? "−" : "") + r.toLocaleString("fr-FR") + (enEcus() ? (r > 1 ? " écus" : " écu") : " F");
+    // les petites sommes en écus gardent leurs décimales (un café ne coûte pas « 0 écu »)
+    if (ecus && a > 0 && a < 10) r = Math.round(a * (a < 1 ? 100 : 10)) / (a < 1 ? 100 : 10);
+    return (v < 0 && r ? "−" : "") + r.toLocaleString("fr-FR") + (ecus ? (r >= 2 ? " écus" : " écu") : " F");
   }
   function salaire() { var t = SALAIRE[S.role] || SALAIRE.entraineur; return t[clamp(((vue && vue.division) || 1) - 1, 0, t.length - 1)]; }
   // ce qui vient d'entrer ou de sortir, à côté du portefeuille, le temps d'un regard
