@@ -519,8 +519,12 @@ void main() {
   // Une histoire ajoute ses lignes à une fin commune (la garde à vue…) sans
   // toucher au fichier de cette fin : `epitaph_plus_ajouts:` dans son lot de
   // fins, une liste de `{fin, when, text}`. Le `when` est obligatoire (il lit
-  // le drapeau de l'histoire) ; les ajouts passent après les variantes de la
-  // fin, et la règle des deux variantes ne compte que celles de la fin.
+  // le drapeau de l'histoire) ; les ajouts passent AVANT les variantes de la
+  // fin (la première vraie l'emporte : la ligne du livre, plus précise, sort
+  // quand son drapeau est posé — après, elle ne sortait presque jamais), dans
+  // l'ordre où les lots les écrivent ; la règle des deux variantes ne compte
+  // que celles de la fin.
+  final ajouts = <String, List<Map<String, dynamic>>>{};
   for (final entry in _docsOf('endings.yaml', 'endings', 'epitaph_plus_ajouts')) {
     for (final v in entry.value) {
       final vm = (v as Map).cast<String, dynamic>();
@@ -534,9 +538,13 @@ void main() {
       if (vm['when'] == null) errors.add('$where: un ajout porte un `when` (le drapeau de son histoire)');
       final w = _parseWhen(vm['when'], errors, where);
       if (vm['text'] == null) errors.add('$where: ajout sans `text`');
-      (cible.first['epitaph_plus'] as List).add({if (w != null) 'when': w, 'text': vm['text']?.toString() ?? ''});
+      ajouts.putIfAbsent(fin, () => []).add({if (w != null) 'when': w, 'text': vm['text']?.toString() ?? ''});
     }
   }
+  ajouts.forEach((fin, lignes) {
+    final cible = endings.firstWhere((e) => e['id'] == fin);
+    cible['epitaph_plus'] = [...lignes, ...(cible['epitaph_plus'] as List)];
+  });
   final feats = <Map<String, dynamic>>[];
   final featsFile = _loadYaml('feats.yaml');
   if (featsFile != null) {
