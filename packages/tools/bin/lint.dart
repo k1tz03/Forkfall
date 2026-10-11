@@ -728,16 +728,21 @@ void main() {
     budget(named >= 25, '$named carte(s) du rôle $role portant le nom du joueur (attendu ≥ 25)');
   }
 
-  // LA VILLE (content/ville/*.yaml, compilé sous `ville`) : les missions et la
-  // boutique posent des drapeaux (Engine.mission, Engine.biens) ; les `si` des
-  // paroles, des missions et des objets en lisent. Un drapeau de la ville doit
-  // être déclaré comme les autres.
+  // LA VILLE (content/ville/*.yaml, compilé sous `ville`) : les missions, les
+  // scènes de la semaine et la boutique posent des drapeaux (Engine.mission,
+  // Engine.biens) ; les `si` des paroles, des portes, des phrases du match, des
+  // missions, des scènes et des objets en lisent, comme `domiciles` et `loin`.
+  // Un drapeau de la ville doit être déclaré comme les autres : une coquille
+  // dans un `si` ne se verrait nulle part ailleurs (la ville le lit faux, en silence).
   final villeB = (bundle['ville'] as Map?) ?? const {};
   final reFlag = RegExp(r"flag\(\s*'?([A-Za-z0-9_]+)'?\s*\)");
-  void villeLit(Object? si) {
+  void villeLit(Object? si, String where) {
     if (si == null) return;
     for (final mm in reFlag.allMatches(si.toString())) {
       flagsRead.add(mm[1]!);
+      if (!flags.contains(mm[1]) && !kEngineFlagPrefixes.any((p) => mm[1]!.startsWith(p))) {
+        errors.add('$where: drapeau « ${mm[1]} » non déclaré dans flags.yaml');
+      }
     }
   }
   void villeEffet(Object? e, String where) {
@@ -754,14 +759,14 @@ void main() {
     }
   }
   for (final pr in (villeB['paroles'] as List? ?? const [])) {
-    villeLit((pr as Map)['si']);
+    villeLit((pr as Map)['si'], 'ville/paroles/${pr['qui'] ?? pr['lieu'] ?? ''}');
   }
   for (final mi in (villeB['missions'] as List? ?? const [])) {
     final m = mi as Map;
-    villeLit(m['si']);
+    villeLit(m['si'], 'ville/missions/${m['id']}');
     for (final et in (m['etapes'] as List? ?? const [])) {
       for (final c in ((et as Map)['choix'] as List? ?? const [])) {
-        villeLit((c as Map)['si']);
+        villeLit((c as Map)['si'], 'ville/missions/${m['id']}/${et['id']}/${c['id']}');
         villeEffet(c['effets'], 'ville/missions/${m['id']}/${et['id']}/${c['id']}');
       }
       final ec = et['echec'];
@@ -770,8 +775,32 @@ void main() {
   }
   for (final ob in (villeB['objets'] as List? ?? const [])) {
     final o = ob as Map;
-    villeLit(o['si']);
+    villeLit(o['si'], 'ville/objets/${o['id']}');
     villeEffet(o['effets'], 'ville/objets/${o['id']}');
+  }
+  for (final sc in (villeB['scenes'] as List? ?? const [])) {
+    final m = sc as Map;
+    villeLit(m['si'], 'ville/scenes/${m['id']}');
+    for (final et in (m['etapes'] as List? ?? const [])) {
+      for (final c in ((et as Map)['choix'] as List? ?? const [])) {
+        villeLit((c as Map)['si'], 'ville/scenes/${m['id']}/${c['id']}');
+        villeEffet(c['effets'], 'ville/scenes/${m['id']}/${c['id']}');
+      }
+    }
+  }
+  for (final lv in (villeB['lieux_variantes'] as List? ?? const [])) {
+    villeLit((lv as Map)['si'], 'ville/lieux_variantes/${lv['lieu']}');
+  }
+  (((villeB['match'] as Map?)?['textes'] as Map?) ?? const {}).forEach((type, l) {
+    for (final t in (l as List? ?? const [])) {
+      if (t is Map) villeLit(t['si'], 'ville/match_textes/$type');
+    }
+  });
+  for (final f in [
+    ...((((villeB['domiciles'] as Map?)?['drapeaux'] as Map?) ?? const {}).keys),
+    ...(((villeB['loin'] as Map?) ?? const {}).keys),
+  ]) {
+    villeLit("flag('$f')", 'ville.yaml/domiciles·loin');
   }
 
   // Flags declared but never referenced, and read-but-never-written.
