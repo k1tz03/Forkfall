@@ -31,7 +31,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 | Moteur | Dart pur, déterministe, 139 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
-| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; 39 pièces où l'on entre, modelées à la main ; 151 scènes jouées (dont les dix introductions) ; 270 conversations surprises ; 363 activités sur les objets des pièces (22 petits jeux) ; 45 tableaux de rue — voir plus bas |
+| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 414 activités (dans les pièces, objet par objet, et dehors ; 25 petits jeux) ; 45 tableaux de rue — voir plus bas |
 
 ## Les dix histoires (où on en est)
 
