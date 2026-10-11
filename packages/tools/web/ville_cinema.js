@@ -327,12 +327,15 @@
   // les mots : {prenom}, {club}… et {toi}, l'adresse de celui qui parle (son ton neutre)
   function remplirCine(t, qui) {
     if (t == null) return "";
-    var s = String(t);
+    var s = String(t), a = qui ? acteur(qui) : null, q = a ? a.qui : qui;
     if (s.indexOf("{toi}") >= 0 || s.indexOf("{Toi}") >= 0) {
-      var a = qui ? acteur(qui) : null, q = a ? a.qui : qui, ad = adresseDe(q);
+      var ad = adresseDe(q);
       s = s.split("{toi}").join(ad).split("{Toi}").join(ad.charAt(0).toUpperCase() + ad.slice(1));
     }
-    return remplir(s);
+    // celui qui parle : le héros a le genre de la carrière ; un visage, le sien ; un anonyme, sa figurine
+    var sg = q === "toi" ? null : (CHARS[q] && CHARS[q].genre) || (a && a.sp && /passante/.test(a.sp) ? "f" : "m");
+    if (q === "toi") sg = (vue && (vue.genre || (vue.entities && vue.entities.genre))) || "m";
+    return remplir(s, null, sg);
   }
   function adresseDe(q) {
     var ch = CHARS[q], role = S.role, t = null;
@@ -441,7 +444,7 @@
     if (!r) { finConv(); return; }
     var g = c.voix[r.qui];
     if (!g) { c.jusqua = ts; return; }
-    var texte = remplir(r.dit), duree = Math.max(2600, texte.length * 58);
+    var texte = remplir(r.dit, null, (CHARS[g.qui] && CHARS[g.qui].genre) || (/passante/.test(g.sp) ? "f" : "m")), duree = Math.max(2600, texte.length * 58);
     if (r.emote) g.emote = { k: r.emote, t0: ts };
     if (bulle && bulle.g !== g) bulle.g.parle = false;
     g.parle = true;

@@ -939,7 +939,20 @@
     });
     return t;
   }
-  function remplir(t, extra) {
+  // le genre, comme les cartes (text.dart) : {pg, select, f{…} other{…}} pour le héros, {sg, …}
+  // pour celui qui parle ; une option peut porter un mot ({prenom}), pas un autre choix
+  var SELECT = /\{(pg|sg),\s*select,\s*((?:[a-z]+\s*\{(?:[^{}]|\{\w+\})*\}\s*)+)\}/g;
+  function choisirGenre(s, sg) {
+    if (s.indexOf("select") < 0) return s;
+    var pg = (vue && (vue.genre || (vue.entities && vue.entities.genre))) || "m";
+    return s.replace(SELECT, function (m, nom, corps) {
+      var g = nom === "pg" ? pg : (sg || "m"), opts = {};
+      corps.replace(/([a-z]+)\s*\{((?:[^{}]|\{\w+\})*)\}/g, function (m2, k, v) { opts[k] = v; return ""; });
+      return opts[g] != null ? opts[g] : (opts.other != null ? opts.other : "");
+    });
+  }
+  function remplir(t, extra, sg) {
+    t = choisirGenre(String(t), sg);
     var e = (vue && vue.entities) || {}, r = valeur("rang");
     var M = { prenom: e.prenom || "", nom: e.nom || "", club: e.club || "le club", ville: e.ville || "Aubérive", rival: e.rival || "",
       rang: r == null ? "" : r === 1 ? "1er" : r + "e", annee: String((vue && vue.year) || ""), division: "Division " + ((vue && vue.division) || 1) };

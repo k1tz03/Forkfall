@@ -110,7 +110,11 @@ scène quitte sa place d'occupant pour son rôle.
 
 **Les mots** : `{prenom}`, `{nom}`, `{club}`, `{ville}`, `{rival}`, `{annee}`, `{division}`,
 `{rang}`, `{groupe}`, et `{toi}` (l'adresse du personnage qui parle, au ton neutre — elle exige
-qu'il ait une `adresse` pour le rôle).
+qu'il ait une `adresse` pour le rôle). **Le genre**, comme dans les cartes : le héros est un homme
+ou une femme selon la carrière (le joueur choisit, certains livres imposent) — `{pg, select,
+f{arrivée} other{arrivé}}` accorde au héros, `{sg, select, f{…} other{…}}` à celui qui parle.
+Une option peut contenir un mot (`{prenom}`), pas un autre choix. Partout où le héros est nommé,
+décrit ou accordé, on accorde, ou on tourne la phrase pour qu'elle n'ait pas à l'être.
 
 ---
 
