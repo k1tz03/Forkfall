@@ -104,7 +104,7 @@ heure : son `si` peut demander `tranche == soir`.
 | `{fondu: "Trois semaines plus tard."}` | le noir, une ligne (≤ 120), la scène reprend |
 | `{secousse: true}` | l'écran tremble (un coup, une porte, une chute) |
 | `{flash: rouge\|blanc\|bleu\|noir}` | un éclair de couleur |
-| `{son: …}` | un bruit : `carte_arrivee`, `reaction`, `nouvelle`, `une`, `match_but`, `match_encaisse`, `sifflet_final`, `tampon_fin`, `palier_haut`, `palier_bas`, `promesse`, `argent`, `alarme` |
+| `{son: …}` | un bruit : `carte_arrivee`, `reaction`, `nouvelle`, `une`, `match_but`, `match_encaisse`, `sifflet_final`, `tampon_fin`, `palier_haut`, `palier_bas`, `promesse`, `argent`, `alarme`, et ceux des scènes : `sonnerie` (le téléphone), `sirene` (l'usine, ou au loin), `porte` (qu'on claque), `klaxon`, `verre` |
 | `{musique: …}` | le thème, jusqu'à la fin de la scène : `sombre`, `ville_nuit`, `ville_jour`, `match`, `fin`, `depart`, `accueil` |
 | `{camera: X}` | la caméra va sur X |
 | `{meteo: pluie\|neige\|brume\|aucune}` | le temps change (dehors seulement : dedans, il ne pleut pas) |

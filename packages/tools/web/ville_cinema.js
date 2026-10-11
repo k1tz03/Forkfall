@@ -134,7 +134,15 @@
   // jamais montrer le noir au-delà des murs quand la pièce est plus large que l'écran
   function viseeCine() {
     var a = CINE.cible, pts = [];
-    if (a) pts.push(a);
+    // celui qui parle, et celui à qui il répond s'il tient dans le même cadre
+    if (a) {
+      pts.push(a);
+      var b = CINE.avant;
+      if (b && b !== a && (b.alpha == null || b.alpha > 0.3)) {
+        var pa = versImage(a.x, a.y, ZSOL), pb = versImage(b.x, b.y, ZSOL);
+        if (Math.abs(pa[0] - pb[0]) < VW * 0.7 && Math.abs(pa[1] - pb[1]) < VH * 0.45) pts.push(b);
+      }
+    }
     else { pts.push(heros); for (var id in CINE.acteurs || {}) if (CINE.acteurs[id].alpha > 0.3) pts.push(CINE.acteurs[id]); }
     if (!pts.length) return null;
     var sx = 0, sy = 0;
@@ -305,6 +313,7 @@
     var a = qui ? acteur(qui) : null;
     Object.keys(CINE.acteurs || {}).forEach(function (k) { CINE.acteurs[k].parle = false; });
     if (a && a !== heros) a.parle = true;
+    if (!o.narration && a && CINE.cible && CINE.cible !== a) CINE.avant = CINE.cible;
     CINE.cible = o.narration ? null : a;
     nom.textContent = o.narration ? "" : nomCine(qui);
     vis.innerHTML = ""; vis.hidden = !!o.narration;

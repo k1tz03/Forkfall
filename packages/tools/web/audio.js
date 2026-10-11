@@ -706,6 +706,47 @@
         tone(ctx, out, tt, { type: 'triangle', f: between(rnd, 2100, 3600), dur: between(rnd, 0.05, 0.12), peak: between(rnd, 0.03, 0.05) });
         burst(ctx, out, tt, { type: 'highpass', f: 4200, dur: 0.02, q: 1, peak: 0.02 });
       }
+    },
+    // ---- les bruits des scènes jouées (ville_cinema.js, l'étape `son:`) : hors du
+    // vocabulaire du moteur, la ville seule les joue ----
+    // le téléphone à cadran : deux sonneries, la cloche frappée vingt fois par seconde.
+    sonnerie: function (ctx, out, t, rnd) {
+      var f = between(rnd, 860, 940);
+      for (var r = 0; r < 2; r++) {
+        for (var i = 0; i < 8; i++) {
+          var tt = t + r * 0.62 + i * 0.05;
+          tone(ctx, out, tt, { type: 'triangle', f: f, dur: 0.045, peak: 0.045, pan: i % 2 ? 0.12 : -0.12 });
+          tone(ctx, out, tt, { type: 'sine', f: f * 2.76, dur: 0.035, peak: 0.016 });
+        }
+      }
+    },
+    // la sirène de l'usine (ou celle qui passe au loin) : elle monte, elle tient, elle retombe.
+    sirene: function (ctx, out, t, rnd) {
+      var lo = between(rnd, 260, 300), hi = lo * 2.35;
+      [0, 7].forEach(function (d) {
+        tone(ctx, out, t, { type: 'sawtooth', f: lo, f2: hi, dur: 1.15, attack: 0.25, peak: 0.022, detune: d });
+        tone(ctx, out, t + 1.15, { type: 'sawtooth', f: hi, f2: lo * 1.1, dur: 1.5, attack: 0.02, peak: 0.022, detune: d });
+      });
+      burst(ctx, out, t, { type: 'bandpass', f: 900, dur: 2.4, q: 0.6, peak: 0.012 });
+    },
+    // une porte qu'on claque : le bois, la serrure, le chambranle qui vibre.
+    porte: function (ctx, out, t, rnd) {
+      tone(ctx, out, t, { type: 'sine', f: between(rnd, 62, 78), f2: 38, dur: 0.3, peak: 0.13 });
+      burst(ctx, out, t, { type: 'lowpass', f: between(rnd, 500, 750), dur: 0.14, q: 0.8, peak: 0.1 });
+      burst(ctx, out, t + 0.03, { type: 'bandpass', f: between(rnd, 1800, 2600), dur: 0.06, q: 2, peak: 0.035 });
+    },
+    // un klaxon dans la rue : deux notes en même temps, dans le nez.
+    klaxon: function (ctx, out, t, rnd) {
+      var f = between(rnd, 400, 440);
+      tone(ctx, out, t, { type: 'square', f: f, dur: 0.42, attack: 0.01, peak: 0.045 });
+      tone(ctx, out, t, { type: 'square', f: f * 1.26, dur: 0.42, attack: 0.01, peak: 0.036 });
+    },
+    // deux verres qui se touchent.
+    verre: function (ctx, out, t, rnd) {
+      var f = between(rnd, 2500, 3100);
+      tone(ctx, out, t, { type: 'sine', f: f, dur: 0.32, attack: 0.002, peak: 0.04 });
+      tone(ctx, out, t, { type: 'sine', f: f * 1.47, dur: 0.22, attack: 0.002, peak: 0.018 });
+      tone(ctx, out, t + 0.09, { type: 'sine', f: f * 1.06, dur: 0.24, attack: 0.002, peak: 0.025 });
     }
   };
 

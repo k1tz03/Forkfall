@@ -2153,7 +2153,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   const emotes = {'!', '?', '...', 'colere', 'sueur', 'coeur', 'note', 'zzz', 'choc', 'aucun'};
   const meteos = {'pluie', 'neige', 'brume'};
   const sons = {'carte_arrivee', 'reaction', 'nouvelle', 'une', 'match_but', 'match_encaisse', 'sifflet_final', 'tampon_fin',
-    'palier_haut', 'palier_bas', 'promesse', 'argent', 'alarme'};
+    'palier_haut', 'palier_bas', 'promesse', 'argent', 'alarme', 'sonnerie', 'sirene', 'porte', 'klaxon', 'verre'};
   const musiques = {'accueil', 'ville_jour', 'ville_nuit', 'match', 'sombre', 'fin', 'depart'};
   const quands = {'debut', 'drapeau', 'carte', 'lieu', 'semaine', 'suite'};
   final cardIdsDeLaVille = <String>{};

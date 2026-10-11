@@ -8,6 +8,7 @@
 //     --url http://127.0.0.1:8765/index.html --postulat 3 --scene h4.ci.intro --out /tmp/voir
 //   … --conv h4.cv.le_quai          # une conversation (on se rend à son lieu)
 //   … --scene h4.ci.x --heure soir  # l'heure de la ville avant la scène (matin|midi|aprem|soir|nuit)
+//   … --genre f                     # une héroïne (ou m) : les {pg, select, …} au féminin
 //
 // Sortie : chaque réplique (« Nom : texte »), une capture par réplique (au plus --captures, 12
 // par défaut), et ce qui cloche : une erreur de la page, une figurine debout posée hors de la
@@ -38,7 +39,11 @@ try { ({ chromium } = require('playwright')); } catch (e) { ({ chromium } = requ
   const erreurs = [];
   page.on('pageerror', e => erreurs.push(e.message + ' | ' + (e.stack || '').split('\n').slice(1, 3).join(' ')));
   await page.goto(args.url, { waitUntil: 'load' });
-  await page.evaluate(() => localStorage.clear());
+  await page.evaluate(g => {
+    localStorage.clear();
+    // le genre du héros, comme choisi sur l'écran de titre (le prénom reste tiré)
+    if (g) localStorage.setItem('fusible.preview.v3', JSON.stringify({ name: { prenom: '', nom: '', genre: g, genreChoisi: true } }));
+  }, args.genre === 'f' || args.genre === 'm' ? args.genre : null);
   await page.goto(args.url, { waitUntil: 'load' });
   await page.waitForTimeout(700);
   await page.evaluate(i => document.querySelector('#postulats .postulat[data-index="' + i + '"]').click(), +(args.postulat || 0));
