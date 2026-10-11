@@ -28,10 +28,10 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 3 551 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 69 personnages ; la ville : 469 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 135 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 139 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
-| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
+| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; 39 pièces où l'on entre, modelées à la main ; 151 scènes jouées (dont les dix introductions) ; 270 conversations surprises ; 363 activités sur les objets des pièces (22 petits jeux) ; 45 tableaux de rue — voir plus bas |
 
 ## Les dix histoires (où on en est)
 
@@ -208,19 +208,24 @@ Ce que la ville porte en plus des cartes :
   saisies.
 - **Les intérieurs** (`docs/design/pixel_iso/interieurs_jeu.js`, `pieces/`, `pieces/_plan.js` ;
   `packages/tools/web/ville_dedans.js`) : on entre dans tous les lieux qui ont une porte (39 pièces,
-  dont celles du plan rendues en ébauche tant qu'elles ne sont pas modelées). Une pièce est une
-  petite carte (son image de jour et de nuit, sa profondeur, sa grille, sa porte) que la ville
+  toutes modelées à la main ; une pièce ajoutée au plan sans son fichier sort en ébauche). Une pièce
+  est une petite carte (son image de jour et de nuit, sa profondeur, sa grille, sa porte) que la ville
   substitue à la sienne : on y marche, on touche ses **objets** (les activités qui les nomment,
-  `objet:`), on y croise ses **occupants** (le patron, les habitués à leurs **places**, les clients
-  selon l'heure, celui qui t'attend). Le plan est le contrat : ses ids d'objets et ses noms de places
-  ne changent plus.
+  `objet:` ; chaque objet en a au moins une), on y croise ses **occupants** (le patron, les habitués
+  à leurs **places**, les clients selon l'heure, celui qui t'attend) ; le bouton **« Ici »** ouvre la
+  pièce entière (ce qui ne tient à aucun objet, ses objets, ce qui s'y vend). Le plan est le contrat :
+  ses ids d'objets et ses noms de places ne changent plus. Le moteur de rendu tient 255 matières : une
+  pièce n'en crée pas, elle peint ses surfaces d'un pinceau (`<clé>_pinceau`, voir les pièces).
 - **Les scènes jouées et les conversations** (`content/ville/cinematiques_*.yaml`,
   `ville_cinema.js` ; le format : `docs/histoires/scenes_jouees.md`) : des scènes qu'on regarde
   (l'introduction de chaque histoire, `quand: debut` ; avant ou après une carte ; après un drapeau ;
   en entrant ; un jour de la semaine), mises en scène dans une pièce ou devant un lieu — les
   figurines marchent, font un geste, une émotion au-dessus de la tête, la boîte de dialogue porte le
-  portrait des cartes et le néon de l'histoire ; et des **conversations surprises**, en bulles, qu'on
-  entend en passant près de ceux qui parlent.
+  portrait des cartes et le néon de l'histoire, la caméra se rapproche de ceux qui parlent ; une scène
+  s'enchaîne dans un autre lieu (`suite`), se joue sous la pluie, la neige ou la brume (`meteo`), avec
+  ses bruits (la sonnerie, la sirène, une porte…), parmi les gens de son heure (ou seule, `vide`) ; et
+  des **conversations surprises**, en bulles, qu'on entend en passant près de ceux qui parlent. Pour
+  regarder une scène sans jouer la carrière : `packages/tools/web/voir_scene.js` (le guide le dit).
 - **La vie des pièces et des rues** (`ville_vie.js`, `content/ville/tableaux.yaml`) : dedans, chacun a
   ses habitudes selon l'ambiance de la pièce (boire, rire, lire, téléphoner à partir des portables,
   fumer avant l'interdiction, changer de table) ; dehors, des tableaux vivants devant les lieux, à
@@ -356,6 +361,11 @@ sont les prochains à rejoindre la ville.
 
 ## Ce qui reste connu et ouvert
 
+- Les scènes jouées : le vestiaire tient lieu de stade (pas de pièce pour les tribunes ni le local
+  du kop) ; une scène `drapeau` se joue juste après sa carte, elle ne saute pas dans le temps ; une
+  scène `lieu` se joue à la première entrée, à toute heure (son `si` peut demander l'heure) ; le livre
+  2 commence « avant la neuvième journée », mais la ville affiche juillet (le moteur ne fait pas
+  commencer une carrière en cours de saison). L'application Flutter ne joue pas la ville.
 - La ville : un changement de club garde le même plan de ville (seuls les noms changent) ;
   tous les rôles ont les mêmes lieux ; un logement acheté change le nom de « chez toi », pas
   sa porte ; les statistiques (physique, tactique…) de la préproduction ne sont pas

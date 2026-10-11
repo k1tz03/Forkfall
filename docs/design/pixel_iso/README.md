@@ -160,6 +160,16 @@ module.exports = {
 };
 ```
 
+Les trente-neuf pièces sont modelées (octobre 2026) ; une pièce ajoutée au plan sans son fichier
+sort en ébauche le temps qu'on la modèle. **Les matières** : le moteur en tient 255, et toutes les
+pièces sont chargées à chaque rendu (132 sont prises) ; une pièce n'en crée pas, elle peint ses
+surfaces d'un seul pinceau, `K.W.box(x0, y0, z0, x1, y1, z1, m, K.W.obj({ type: '<clé>_pinceau', f }))`
+(voir `bar.js`, `eglise.js`). Ce qu'on a appris en les modelant : commencer les meubles sur des
+coordonnées impaires (la grille de marche est décalée de MARGE = 3) ; une place assise va sur une
+chaise ou une banquette (~40 cm), pas un tabouret de bar ; `enseigneY/X` avec `plate: null` ne dessine
+rien (`depth: 0` peint le texte sur le mur) ; ce qui est sur la diagonale x = y, ou en verre, ou
+accroché haut au mur du fond, cache ce qui est derrière.
+
 Le rendu **refuse** une pièce modelée qui oublie un objet ou une place du plan. Les coordonnées :
 x vers le bas-droite de l'écran, y vers le bas-gauche, z vers le haut ; le sol est à z = 0, le mur
 `murY` est le long de y = 0 (en haut à droite), `murX` le long de x = 0 (en haut à gauche), le
