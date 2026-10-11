@@ -1,0 +1,443 @@
+# Histoire 9 — « Vingt degrés dedans » : les manchettes du Bilan (schéma :
+# en-tête de content/unes.yaml). Le Bilan du sélectionneur tombe en décembre :
+# 2029, le barrage ; 2030, le Mondial ; 2031, la minute. Les manchettes d'une
+# trace lisent `journal_has` (fraîche, cette saison) et `flag` (le lint compte
+# les manchettes posées sur les traces du réservoir par leur `flag`).
+unes:
+  # ═══════════════════════════════════════════════════════ 2029 — le barrage
+  - id: une.h9.qualifies
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    poids: 1.5
+    when: "season == 0 && vars.gm_won == 1"
+    titre: "LES {CLUB} IRONT AU DÔME"
+    sous: "Barrage retour gagné à la Rive. {prenom} {nom} n'a parlé que de football. Rue des Lilas, une boulangère a éteint la radio avant la fin."
+
+  - id: une.h9.elimines
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    poids: 1.5
+    when: "season == 0 && vars.gm_won == 0"
+    titre: "LE DÔME SANS LES {CLUB}"
+    sous: "Barrage perdu. Au ministère, on parle déjà de « solutions ». Contactée, la sélection n'a pas souhaité réagir. Le ministère non plus, mais il sourit."
+
+  - id: une.h9.brassard_entrainement
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_brassard_photo') && journal_has('h9_brassard_photo')"
+    titre: "{NOM} LAISSE FILMER LE BRASSARD"
+    sous: "Dix secondes au journal de Télé-Stade, et le ministère qui appelle la Fédération à vingt heures et une. Le capitaine n'a rien dit. {prenom} {nom} non plus."
+    sujet: sl.h9.brassard
+
+  - id: une.h9.montre
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_montre_gardee') && journal_has('h9_montre_gardee')"
+    titre: "{NOM} À L'HEURE DU DÔME"
+    sous: "Une montre en or gravée DÔME 2030, livrée à vingt-deux heures. La Gazette a retrouvé le coursier : il n'avait pas voulu de pourboire."
+
+  - id: une.h9.banderole
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_banderole') && journal_has('h9_banderole')"
+    titre: "KÉVIN MARÇAIS, 2004-2028"
+    sous: "Au virage Nord de {VILLE}, une banderole que personne n'a décrochée. Sa mère était au premier rang. Elle n'a rien dit ; elle a touché le tissu."
+    sujet: sl.h9.virage
+
+  - id: une.h9.listes
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_listes_publiees') && journal_has('h9_listes_publiees')"
+    titre: "QUATRE CENT TRENTE"
+    sous: "Les listes d'une association de {VILLE}, sur six pages : des noms, des âges, des chantiers. Page six, un électricien de vingt-quatre ans."
+    sujet: sl.h9.listes
+
+  - id: une.h9.flamme
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_photo_gazeo') && journal_has('h9_photo_gazeo')"
+    titre: "LA FLAMME BLEUE ET LES BRAS NUS"
+    sous: "Les {CLUB} ont posé pour Gazéo, souriants, en survêtement. Sur la photo retenue, le capitaine se tient le bras gauche. La Gazette a cherché pourquoi."
+    sujet: sl.h9.gazeo
+
+  - id: une.h9.question
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 2
+    when: "season == 0 && flag('mondial_hiver')"
+    titre: "{VILLE}, LA QUESTION DU MATIN"
+    sous: "Chaque matin, une boulangère de {VILLE} pose la même question à {prenom} {nom}. L'Écho ne dira pas laquelle : tout le quartier la connaît."
+
+  # ════════════════════════════════════════════════════════ 2030 — le Mondial
+  - id: une.h9.brassard
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 2.0
+    when: "season == 1 && flag('h9_brassard_porte')"
+    titre: "LE BRASSARD"
+    sous: "Au match d'ouverture du Mondial, un brassard noir taillé dans une chemise de chantier est entré sur la pelouse du Dôme. La délégation a été rappelée."
+
+  - id: une.h9.heure
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 2.5
+    when: "season == 1 && flag('h9_page_lea') && journal_has('h9_page_lea')"
+    titre: "23 H 40"
+    sous: "Décembre 2010 : à 23 h 40, un appel du cabinet de la ministre ; à 23 h 52, un vote change. En bas du procès-verbal, des initiales. Elles sont vivantes."
+    sujet: sl.h9.rue_haute
+
+  - id: une.h9.vingt_degres
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 2.0
+    when: "season == 1 && flag('h9_brassard_rendu') && vars.gm_won == 0"
+    titre: "VINGT DEGRÉS DEDANS"
+    sous: "Les {CLUB} ont joué leur Mondial jusqu'au dernier soir, sous le Dôme. {prenom} {nom} : « On est venus jouer au football. » Dehors, il faisait trente-six."
+
+  - id: une.h9.trophee_dos
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 2.5
+    when: "season == 1 && flag('h9_brassard_rendu') && vars.gm_won == 1 && flag('h9_liste_a_moi') && flag('h9_page_lea')"
+    titre: "LE TROPHÉE, ET LE DOS DE {NOM}"
+    sous: "Sur la photo officielle du Mondial d'hiver, à côté du chef d'État, {prenom} {nom} regarde la tribune. On ne voit que son dos. Le brassard, si."
+
+  - id: une.h9.trophee
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 4
+    poids: 2.0
+    when: "season == 1 && flag('h9_brassard_rendu') && vars.gm_won == 1"
+    titre: "{VILLE} FÊTE LE MONDIAL D'HIVER"
+    sous: "Finale gagnée sous le Dôme, à vingt degrés. Sur la photo officielle, {prenom} {nom} sourit à côté du chef d'État. À {VILLE}, il neigeait."
+
+  - id: une.h9.fatigue
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_liste_ministere') && journal_has('h9_liste_ministere')"
+    titre: "LE CAPITAINE EST FATIGUÉ"
+    sous: "Noa Vandel, rayé de la liste des vingt-six. Selon nos informations, il a couru douze kilomètres dimanche. Fatigué, donc."
+    sujet: sl.h9.deux_listes
+
+  - id: une.h9.terrasse
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_cles_gardees') && journal_has('h9_cles_gardees')"
+    titre: "{NOM} ET LA TERRASSE DU QUAI"
+    sous: "Un dernier étage offert par un pays ami, d'où l'on voit le stade, la mairie et une ancienne fenêtre. La Gazette a pris l'ascenseur."
+    sujet: sl.h9.cadeaux
+
+  - id: une.h9.fisc
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_fisc') && journal_has('h9_fisc')"
+    titre: "LE FISC CHEZ {NOM}"
+    sous: "Contrôle sur trois ans : une montre, une berline, des clés. Le même État qui avait fait livrer les cadeaux envoie l'huissier les chercher."
+    sujet: sl.h9.cadeaux
+
+  - id: une.h9.local
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_local_force') && journal_has('h9_local_force')"
+    titre: "{VILLE} : LE LOCAL DU QUAI FORCÉ"
+    sous: "Au-dessus du kiosque, l'association qui compte les morts du Dôme a perdu ses ordinateurs. Pas sa caisse. « Pas de mobile apparent », dit la police."
+    sujet: sl.h9.listes
+
+  - id: une.h9.de_dos
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_virage_dos') && journal_has('h9_virage_dos')"
+    titre: "{VILLE} REGARDE DE DOS"
+    sous: "Trois cents supporters assis dos à l'écran géant de la place du marché pendant tout le match d'ouverture. Gégé a recompté : trois cent deux."
+    sujet: sl.h9.virage
+
+  - id: une.h9.voiture
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_voiture_brulee') && journal_has('h9_voiture_brulee')"
+    titre: "{VILLE} : LA VOITURE DU CAPITAINE"
+    sous: "Incendiée sur le parking du centre de formation, un mot à la bombe sur le mur. La police n'exclut rien. Le capitaine non plus."
+
+  # ═══════════════════════════════════════════════════════ 2031 — la minute
+  - id: une.h9.minute
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    poids: 2.0
+    when: "season >= 2 && flag('h9_vecchio_mort')"
+    titre: "UNE MINUTE, ET UNE DE PLUS"
+    sous: "Pour Gigi Vecchio, l'arbitre a ajouté une minute à la minute de silence. Gégé a compté les secondes. Il dit qu'il en manquait."
+
+  - id: une.h9.coup_de_chaleur
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_coup_de_chaleur') && journal_has('h9_coup_de_chaleur')"
+    titre: "« COUP DE CHALEUR »"
+    sous: "La contre-autopsie de Kévin Marçais, électricien de {VILLE}, mort au Dôme. Un mot change dans le dossier. Sa mère l'a souligné au crayon."
+    sujet: sl.h9.exhumation
+
+  - id: une.h9.aubert
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_aubert_examen') && journal_has('h9_aubert_examen')"
+    titre: "MADAME AUBERT MISE EN EXAMEN"
+    sous: "L'ancienne ministre des Sports entendue sur un appel de décembre 2010. Elle est arrivée au palais avec un plaid écossais. Elle n'a rien nié."
+    sujet: sl.h9.proces
+
+  - id: une.h9.temoin
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_temoignage') && journal_has('h9_temoignage')"
+    titre: "{NOM} DEVANT LE JUGE"
+    sous: "Venu{pg, select, f{e} other{}} sans avocat, avec une page photographiée dans une cave. L'Écho n'en sait pas plus ; le juge, si."
+    sujet: sl.h9.proces
+
+  - id: une.h9.avocat
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_avocat') && journal_has('h9_avocat')"
+    titre: "{NOM} VIENT AVEC SON AVOCAT"
+    sous: "Convocation chez le juge sur l'affaire de 2010. La sélection « n'a pas souhaité s'exprimer ». Son avocat non plus, mais plus longuement."
+    sujet: sl.h9.proces
+
+  - id: une.h9.secretaire
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_josiane_temoin') && journal_has('h9_josiane_temoin')"
+    titre: "LA SECRÉTAIRE DE 2010 A PARLÉ"
+    sous: "Elle a tapé le procès-verbal du vote, et une copie de trop. Elle a témoigné assise, son sac sur les genoux. Elle n'a rien demandé."
+    sujet: sl.h9.rue_haute
+
+  - id: une.h9.plaque_dome
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_plaque') && journal_has('h9_plaque')"
+    titre: "MORT AU DÔME D'AL-DORADO"
+    sous: "Une plaque neuve au cimetière de {VILLE}. Quelqu'un l'a rayée dans la nuit ; un marbrier l'a regravée dans la journée. Il ne fait plus payer."
+    sujet: sl.h9.exhumation
+
+  - id: une.h9.electricien
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_plaque_metier') && journal_has('h9_plaque_metier')"
+    titre: "ÉLECTRICIEN"
+    sous: "Un seul mot sur la plaque neuve de Kévin Marçais, au cimetière de {VILLE}. Sa mère voulait les lettres plus grosses. Elles le sont."
+    sujet: sl.h9.exhumation
+
+  - id: une.h9.page_six
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_page_six') && journal_has('h9_page_six')"
+    titre: "LA PAGE SIX"
+    sous: "L'association qui compte les morts du Dôme corrige sa liste : Kévin Marçais n'est plus un « malaise ». Il en reste quatre cent soixante à corriger."
+    sujet: sl.h9.exhumation
+
+  - id: une.h9.four
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 2
+    when: "flag('h9_four_refus') && journal_has('h9_four_refus')"
+    titre: "{VILLE} : LE FOUR DES LILAS"
+    sous: "La boulangerie Marçais doit toujours son four neuf à la banque. La file d'attente, elle, s'allonge. On n'y parle pas du four."
+    sujet: sl.h9.four
+
+  - id: une.h9.banderole_roulee
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_banderole_decrochee') && journal_has('h9_banderole_decrochee')"
+    titre: "{NOM} FAIT DÉCROCHER LA BANDEROLE"
+    sous: "Au virage Nord, la banderole pour Kévin Marçais a été décrochée à la demande de la sélection. Gégé l'a roulée lui-même. Il ne l'a pas jetée."
+    sujet: sl.h9.virage
+
+  - id: une.h9.gazeo_decue
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 2
+    when: "flag('h9_photo_refusee') && journal_has('h9_photo_refusee')"
+    titre: "{NOM} DÉÇOIT GAZÉO"
+    sous: "Pas de photo devant la flamme bleue pour les {CLUB}. Le sponsor parle de « regret partagé ». Personne n'a dit avec qui."
+    sujet: sl.h9.gazeo
+
+  - id: une.h9.syndicat
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 2
+    when: "flag('h9_liste_a_moi') && journal_has('h9_liste_a_moi')"
+    titre: "VANDEL N'EST PAS FATIGUÉ"
+    sous: "Vingt-six noms, sans une rature. Le syndicat des joueurs soutient le brassard ; le ministre a demandé son âge à Karim Fauvel. Il est plus vieux que le ministre."
+    sujet: sl.h9.deux_listes
+
+  - id: une.h9.protege_tibia
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 2
+    when: "flag('h9_brassard_cache') && journal_has('h9_brassard_cache')"
+    titre: "SOUS LE PROTÈGE-TIBIA"
+    sous: "Aux photos officielles, le capitaine des {CLUB} a les bras nus. Les photographes ont remarqué qu'il touchait sa jambe gauche entre chaque cliché."
+    sujet: sl.h9.brassard
+
+  # ═══════════════════════════════════════════ encore 2029 et 2030 (la variété)
+  - id: une.h9.cercueil
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    poids: 0.8
+    when: "season == 0"
+    titre: "LE CERCUEIL QU'ON N'A PAS OUVERT"
+    sous: "Un électricien de {VILLE}, mort sur le chantier du Dôme, rentré à quatre degrés dans un cercueil plombé. Sa mère demande toujours qu'on l'ouvre."
+
+  - id: une.h9.ministre
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 3
+    when: "flag('h9_ministre_vestiaire') && journal_has('h9_ministre_vestiaire')"
+    titre: "LE MINISTRE CHEZ LES {CLUB}"
+    sous: "Onze minutes prévues, neuf de discours, deux de football. Le capitaine a gardé le poing fermé tout du long. La Gazette sait ce qu'il tenait."
+
+  - id: une.h9.porte_fermee
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_vestiaire_ferme') && journal_has('h9_vestiaire_ferme')"
+    titre: "{NOM} FERME LA PORTE AU MINISTRE"
+    sous: "À la mi-temps du barrage, la porte du vestiaire est restée close. Officiellement, c'était le vent. À {VILLE}, on a ri pendant une semaine."
+
+  - id: une.h9.douane
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_brassard_confisque') && journal_has('h9_brassard_confisque')"
+    titre: "UN BRASSARD SAISI À LA DOUANE"
+    sous: "À l'aéroport d'Al-Dorado, un « objet à caractère politique » a été retenu dans les bagages des {CLUB}. Un morceau de chemise noire."
+
+
+  # ═══════════════════════════════════════════ 2032 et après — l'épilogue
+  - id: une.h9.raccroche_garde
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_apres_garde') && journal_has('h9_apres_garde')"
+    titre: "LES {CLUB} SANS NOA VANDEL"
+    sous: "Le capitaine raccroche, un genou de trop. Le musée de la Fédération réclamait le brassard noir du Dôme. On lui a répondu qu'il était « rangé »."
+    sujet: sl.h9.apres
+
+  - id: une.h9.raccroche_rendu
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_apres_rendu') && journal_has('h9_apres_rendu')"
+    titre: "{VILLE} : UN BRASSARD SUR UN COMPTOIR"
+    sous: "Noa Vandel a raccroché. Son brassard noir est punaisé rue des Lilas, sous la photo d'un électricien de vingt-quatre ans. On le regarde en attendant son tour."
+    sujet: sl.h9.apres
+
+  - id: une.h9.listes_cave
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 2
+    when: "flag('h9_listes_josiane') && journal_has('h9_listes_josiane')"
+    titre: "{VILLE} : 461 DOSSIERS EN LIEU SÛR"
+    sous: "L'association qui comptait les morts des chantiers du Dôme ferme son bureau. Ses archives sont confiées à une particulière, qui ne souhaite pas qu'on dise laquelle."
+
+  - id: une.h9.four_paye
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 2
+    when: "flag('h9_four_paye') && journal_has('h9_four_paye')"
+    titre: "UNE BAGUETTE D'UN MÈTRE À {VILLE}"
+    sous: "La boulangerie Marçais a fini de payer son four. La patronne a fêté ça avec une baguette d'un mètre, coupée au comptoir et partagée avec toute la file."
+
+  - id: une.h9.doyenne
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: echo
+    priority: 3
+    when: "flag('h9_carton_josiane') && journal_has('h9_carton_josiane')"
+    titre: "LA DOYENNE QUITTE SA CAVE"
+    sous: "Madame Josiane, trente ans de procès-verbaux tapés à deux doigts, entre aux Hauts-de-Rive avec une valise et sa machine. Ses cartons, elle les a donnés. Elle n'en a jamais perdu un."
+    sujet: sl.h9.carton
+
+  - id: une.h9.page_tardive
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 3
+    when: "flag('h9_page_tardive') && journal_has('h9_page_tardive')"
+    titre: "DÉCEMBRE 2010, 23 H 52"
+    sous: "Un procès-verbal tapé à la machine : à 23 h 40, un appel du cabinet de la ministre ; à 23 h 52, un vote qui change. Lire nos pages 2 à 7."
+    sujet: sl.h9.carton
+
+  - id: une.h9.page_dormante
+    postulats: [mondial_hiver]
+    roles: [selectionneur]
+    journal: gazette
+    priority: 2
+    when: "flag('h9_page_dormante') && journal_has('h9_page_dormante')"
+    titre: "{NOM} : « QUELLE ENQUÊTE ? »"
+    sous: "À une question sur le vote de 2010, {prenom} {nom} a souri, puis parlé du match de samedi. Dans la salle, quelqu'un a ri. Pas tout le monde."

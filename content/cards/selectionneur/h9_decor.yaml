@@ -1,0 +1,570 @@
+# Histoire 9 — « Vingt degrés dedans » : le sac (cartes de routine du
+# sélectionneur, tirées entre les temps d'histoire). Chacune lit
+# `flag('histoire_h9')` : elles n'existent que dans ce livre. Une carte
+# d'Aubérive ne sort pas pendant le Mondial (`season == 1 && flag('h9_depart')`) ;
+# trois cartes d'Al-Dorado prennent la relève, dans la chambre à dix-huit
+# degrés. Les cartes Liste (la feuille des vingt-six) sont ici aussi.
+cards:
+  # ═══════════════════════════════════════════════════ LA RUE DES LILAS
+  - id: sl.h9.rt.boite_fer
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 0"
+    text: "Marie-Jo compte ta monnaie deux fois, et se trompe deux fois. À côté de la caisse, une boîte en fer, un mot au feutre : « Pour Kévin. » Elle ne dit pas pour quoi faire."
+    left:
+      label: "Je mets une pièce"
+      effects: {tribunes: "+", relation: {mariejo: 1}}
+      answer: "La pièce tombe sur d'autres pièces. La boîte est presque pleine. Marie-Jo ne regarde pas ; elle a appris à ne pas regarder."
+    right:
+      label: "Je ne demande pas"
+      effects: {vestiaire: "+"}
+      answer: "Tu prends ta baguette. Derrière toi, un vieux monsieur glisse un billet dans la boîte, plié en huit, et s'en va sans pain."
+
+  - id: sl.h9.rt.photo_porte
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 1 && !flag('h9_depart')"
+    text: "Marie-Jo a déplacé la photo de Kévin : elle n'est plus au-dessus de la caisse, mais face à la porte d'entrée. « Il était curieux. Il veut voir qui entre, {toi}. »"
+    left:
+      label: "Il me voit entrer"
+      effects: {tribunes: "+"}
+      answer: "« Tous les matins. » Elle te tend ta baguette, emballée dans une page du Quotidien où l'on parle du Dôme. Tu ne la déplies pas."
+    right:
+      label: "Et il voit qui sort ?"
+      effects: {relation: {mariejo: 1}}
+      answer: "Elle réfléchit, sérieusement. « Ceux-là, je les regarde moi-même. » Elle te rend la monnaie, et te regarde sortir."
+
+  - id: sl.h9.rt.brehaut_escalier
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: brehaut
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 0"
+    text: "Bréhaut monte l'escalier de la Fédération une marche à la fois, la main sur le genou. Il refuse l'ascenseur : « En panne depuis 2010. On me l'a dit en 2010. »"
+    left:
+      label: "Je monte avec vous"
+      effects: {direction: "+", relation: {brehaut: 1}}
+      answer: "Trois étages, une marche à la fois. Au deuxième, il s'arrête et souffle : « Douze ans de brassard. Le genou s'en souvient. »"
+    right:
+      label: "Je prends l'ascenseur"
+      effects: {vestiaire: "+"}
+      answer: "Il marche très bien, l'ascenseur. En haut, Bréhaut arrive essoufflé, et ne te demande pas comment tu es monté{pg, select, f{e} other{}}."
+
+  - id: sl.h9.rt.sacha_gamelle
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha_fille
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 0"
+    text: "Sacha a gardé les clés de ton appartement depuis le lycée. Elle est passée sans prévenir et t'a laissé sur la table une gamelle encore tiède, et un mot : « Mange. Après, tu compteras. »"
+    left:
+      label: "Je mange"
+      effects: {vestiaire: "+", relation: {sacha_fille: 1}}
+      answer: "Des lentilles, comme quand elle avait dix ans et que c'était toi qui cuisinais. Tu laves la gamelle et la poses près de la porte."
+    right:
+      label: "Je mange au club"
+      effects: {direction: "+"}
+      answer: "Le plat du jour du club-house, trois fois par semaine. Chez toi, la gamelle attend sur la table, couvercle fermé, comme un reproche."
+
+  - id: sl.h9.rt.sacha_canape
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha_fille
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart')) && season <= 1"
+    text: "Sacha s'est endormie sur ton canapé, l'ordinateur ouvert sur les genoux. À l'écran, une colonne de noms descend toute seule. Elle a mis une alarme : « recompter, lundi »."
+    left:
+      label: "Je ferme l'ordinateur"
+      effects: {vestiaire: "+"}
+      answer: "Le ventilateur s'arrête. Dans le silence, Sacha dit un nom en dormant, un prénom étranger. Tu ne le connais pas. Elle, si."
+    right:
+      label: "Je lis la colonne"
+      effects: {relation: {sacha_fille: 1}, vestiaire: "-"}
+      answer: "Tu lis jusqu'au matin. Quand elle se réveille, tu es à la ligne trois cent six. Elle ne dit rien ; elle fait du café pour deux."
+
+  - id: sl.h9.rt.sacha_mur
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha_fille
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 1 && !flag('h9_depart')"
+    text: "Sacha a punaisé au mur de ta cuisine une carte d'Al-Dorado, et dessus, au feutre rouge, une croix par chantier. Le Dôme a la plus grosse. « Tu sauras où tu es, {pg, select, f{maman} other{papa}}. »"
+    left:
+      label: "Laisse-la au mur"
+      effects: {relation: {sacha_fille: 1}, direction: "-"}
+      answer: "Elle reste au mur. Le soir, tu manges face aux croix. Tu finis par savoir les compter sans les regarder."
+    right:
+      label: "Pas dans ma cuisine"
+      effects: {direction: "+", relation: {sacha_fille: -1}}
+      answer: "Elle la décroche, la roule, et la glisse dans ta valise, déjà ouverte sur le lit. « Alors tu l'emporteras. »"
+
+  # ════════════════════════════════════════════════ LE MINISTÈRE, LA LIGUE
+  - id: sl.h9.rt.sauvan_cafe
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: sauvan
+    lieu: cafe
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart')) && season <= 1"
+    text: "Café de la Mairie. Sauvan t'attend à la même table, deux cafés déjà servis. Il a apporté des biscuits de la Capitale dans une boîte en carton : « Pour la Fédération. Et pour vous, {toi}. »"
+    left:
+      label: "Je prends un biscuit"
+      effects: {direction: "+", relation: {sauvan: 1}}
+      answer: "Il te regarde mâcher comme on regarde signer un contrat. « Ils viennent de chez ma mère. Elle les fait pour les gens qu'on rappelle. »"
+    right:
+      label: "Je reste debout"
+      effects: {direction: "-"}
+      answer: "Il referme la boîte et la pousse vers le serveur. « Pour vous. » Le serveur, lui, s'assoit pour les manger."
+
+  - id: sl.h9.rt.dattes
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    speaker: nassir
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1 && !(season == 1 && flag('h9_depart'))"
+    text: "Cheikh Ilyas fait livrer à la Fédération une caisse de dattes d'Al-Dorado : vingt-six, chacune dans un papier doré, avec un prénom. Un mot : « Un fruit, ça ne se renvoie pas. »"
+    left:
+      label: "Je les distribue"
+      effects: {tribunes: "-", vestiaire: "+", direction: "+", relation: {nassir: 1}}
+      answer: "Les joueurs les mangent à la pause. Noa garde la sienne dans le papier, sans l'ouvrir, au fond de son casier."
+    right:
+      label: "Je les rends"
+      effects: {tribunes: "+", relation: {nassir: -1}}
+      answer: "La caisse repart le lendemain. Il en manque une : quelqu'un, au secrétariat, n'a pas pu résister. Josiane ne dit pas qui."
+
+  - id: sl.h9.rt.brehaut_photo
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: brehaut
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart'))"
+    text: "Au mur du bureau de Bréhaut, une photo de vestiaire de 1991 : lui, trente-quatre ans, brassard au bras, un genou bandé. « Regardez mes yeux. Je croyais qu'on gagnerait tout. »"
+    left:
+      label: "Vous avez gagné quoi ?"
+      effects: {relation: {brehaut: 1}}
+      answer: "« Un maintien, une demi-finale de Coupe, et ce genou, qui me réveille à quatre heures. » Il redresse le cadre, qui n'était pas penché."
+    right:
+      label: "On gagnera quoi, nous ?"
+      effects: {direction: "+"}
+      answer: "« Vous ? » Il regarde la photo, puis toi. « Le droit de dormir, si vous faites attention. C'est déjà beaucoup. »"
+
+  # ════════════════════════════════════════════════════ LE VESTIAIRE
+  - id: sl.h9.rt.footing
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vandel
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1 && !(season == 1 && flag('h9_depart'))"
+    text: "Six heures, les quais de la Rive. Noa court à côté de toi sans rien dire, puis s'arrête net devant la boulangerie éclairée : « Elle est déjà levée. Elle ne dort plus, je crois. »"
+    left:
+      label: "Entrons lui dire bonjour"
+      effects: {vestiaire: "+", relation: {vandel: 1, mariejo: 1}}
+      answer: "Marie-Jo vous donne deux croissants ratés, brûlés d'un côté, et vous regarde les manger sur le trottoir, en survêtement."
+    right:
+      label: "On continue"
+      effects: {vestiaire: "+"}
+      answer: "Vous repartez. Au bout du quai, Noa se retourne encore. La vitrine s'éteint, puis se rallume : elle a vu."
+
+  - id: sl.h9.rt.liste_mars
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 0"
+    text: "La liste de mars. Vingt-six noms sur une feuille, à la machine. En bas, effacé à la gomme, on lit encore un vingt-septième nom : celui d'un électricien de vingt-quatre ans."
+    left:
+      label: "Je gomme mieux"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu gommes jusqu'à trouer le papier. Josiane retape la liste sans commentaire, et garde l'ancienne dans un tiroir."
+    right:
+      label: "Je laisse la trace"
+      effects: {tribunes: "+"}
+      answer: "La liste part comme ça, avec son fantôme. Un seul journaliste le remarque, à L'Écho, et il ne l'écrit pas."
+
+  - id: sl.h9.rt.liste_septembre
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 1 && !(season == 1 && flag('h9_depart'))"
+    text: "La liste de septembre. Josiane la tape, puis s'arrête : « Le ministère veut la recevoir “pour information”, une heure avant les journaux. Je l'envoie, {pg, select, f{madame} other{monsieur}} {nom} ? »"
+    left:
+      label: "Avec les journaux"
+      effects: {tribunes: "+", direction: "-", relation: {josiane: 1}}
+      answer: "Elle l'envoie aux journaux et au ministère à la même minute. « Une heure, c'est assez pour rayer quelqu'un. Une minute, non. »"
+    right:
+      label: "Envoyez-la avant"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Elle l'envoie au ministère. Une heure plus tard, elle revient sans une rature. Josiane la regarde longtemps, sans y croire."
+
+  - id: sl.h9.rt.troisieme_gardien
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [formation, decor]
+    speaker: vecchio
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 0 && chars.vecchio.statut != 'mort'"
+    text: "Gigi Vecchio, à la main courante, regarde tes gardiens plonger sous la pluie : « Le grand plonge trop tôt. Le petit, trop beau. Moi, je plongeais quand le ballon était parti. »"
+    left:
+      label: "Montrez-leur"
+      effects: {vestiaire: "+", relation: {vecchio: 1}}
+      answer: "Il enlève sa veste et plonge, une fois, à quatre-vingts ans, dans la boue. Il se relève seul. Les joueurs n'osent pas l'aider."
+    right:
+      label: "Ils apprendront"
+      effects: {direction: "+"}
+      answer: "« Ils apprendront, oui. Sous un toit, on n'apprend rien. » Il remonte son col et rentre à la buvette, sans se presser."
+
+  # ═══════════════════════════════════════════════ LA VILLE, LE VIRAGE
+  - id: sl.h9.rt.gege_marches
+    roles: [selectionneur]
+    arc: ultras
+    tags: [ultras, decor]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart'))"
+    text: "Gégé compte les marches de la tribune Nord en les montant, une main sur la rampe : « Cinquante-deux. En 1990, j'en comptais cinquante. Ils en ont ajouté, {toi}, ou c'est moi ? »"
+    left:
+      label: "Ils en ont ajouté"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "« Je le savais. » Il s'assoit sur la cinquante-deuxième, essoufflé et content. « Tout le monde ment sur les marches. »"
+    right:
+      label: "C'est vous, Gégé"
+      effects: {tribunes: "-"}
+      answer: "Il rit, puis tousse, puis rit encore. « Au moins, toi, tu comptes juste. Ce n'est pas le cas de tout le monde, en ce moment. »"
+
+  - id: sl.h9.rt.gerbe
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: aubert
+    lieu: cimetiere
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1 && !(season == 1 && flag('h9_depart'))"
+    text: "Au cimetière, Madame Aubert, {age_aubert} ans, dépose une gerbe sur la tombe de Kévin Marçais, en gants noirs, sans photographe. Elle se redresse lentement et te voit."
+    left:
+      label: "Je la salue"
+      effects: {tribunes: "-", direction: "+", relation: {aubert: 1}}
+      answer: "Elle te rend ton salut d'un signe de tête, très droit. Sur le ruban de la gerbe, aucun nom. Seulement : « Respectueusement. »"
+    right:
+      label: "Je reste à distance"
+      effects: {tribunes: "+"}
+      answer: "Elle repart au bras d'une aide-soignante. Le lendemain, Marie-Jo trouve la gerbe et la porte à la tombe d'à côté, qui n'en a pas."
+
+  - id: sl.h9.rt.une_kiosque
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season <= 1 && !(season == 1 && flag('h9_depart'))"
+    text: "Au kiosque du quai, la une du Quotidien : la maquette du Dôme, blanche, posée sur le sable comme un œuf. Le vendeur te tend le journal sans que tu le demandes."
+    left:
+      label: "Je l'achète"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "En page trois, une photo du chantier, de nuit, tous projecteurs allumés. On ne voit personne. On voit les projecteurs."
+    right:
+      label: "Je ne le lis pas"
+      effects: {tribunes: "+"}
+      answer: "Le vendeur le replie et le remet sur la pile. « Personne ne le lit, celui-là. Ils regardent la photo et ils reposent. »"
+
+  - id: sl.h9.rt.thermometre
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart'))"
+    text: "La croix verte de la pharmacie affiche l'heure, puis la température : 4 °C. Tu restes sur le trottoir à attendre que le chiffre change. Il ne change pas."
+    left:
+      label: "J'attends encore"
+      effects: {vestiaire: "-"}
+      answer: "Cinq degrés, enfin. Tu repars. Pendant tout le reste de la journée, tu ne retrouves plus le mot « fret »."
+    right:
+      label: "Je traverse"
+      effects: {direction: "+"}
+      answer: "Tu traverses sans regarder. Un cycliste freine, jure, repart. Il porte un casque de chantier, jaune, trop grand pour lui."
+
+  - id: sl.h9.rt.maquette
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 1 && !flag('h9_depart')"
+    text: "Dans la vitrine de l'agence Tessandier, une maquette du Dôme offerte par l'ambassade d'Al-Dorado, sous une cloche de verre. Un enfant souffle sur la vitre pour y faire de la buée."
+    left:
+      label: "Je regarde la maquette"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Sur le toit, des figurines minuscules, en casque, posées au bord. Quelqu'un, à l'atelier, a trouvé utile de les mettre."
+    right:
+      label: "Je regarde l'enfant"
+      effects: {tribunes: "+"}
+      answer: "Il écrit son prénom dans la buée, puis l'efface avec sa manche, et recommence, jusqu'à ce que sa mère le tire par le bras."
+
+  # ═══════════════════════════════════════════════════ LA PRESSE, LA TÉLÉ
+  - id: sl.h9.rt.lea_epreuve
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart'))"
+    text: "De passage à L'Écho, Léa te montre une épreuve du Quotidien : une photo de toi, de profil, le regard vers une tribune vide. « On garde celle-là, ou vous préférez sourire ? »"
+    left:
+      label: "Gardez celle-là"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "« Bon choix. » Elle entoure la photo au crayon gras. Le lendemain, la légende ne dit que : « Le regard ailleurs. »"
+    right:
+      label: "Je souris"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu souris. Elle prend la photo elle-même, avec son appareil de reportage. Sur l'épreuve, le sourire a l'air d'une excuse."
+
+  - id: sl.h9.rt.vence_maquillage
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, decor]
+    speaker: vence
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && !(season == 1 && flag('h9_depart'))"
+    text: "Loge de maquillage de Télé-Stade, dans l'hôtel de la Rive. Nathalie Vence te tend un mouchoir : « Vous transpirez, {toi}. Le pays va croire que vous avez déjà chaud. »"
+    left:
+      label: "J'ai chaud, oui"
+      effects: {tribunes: "+", relation: {vence: 1}}
+      answer: "« Gardez-le pour l'antenne. » Elle reprend son mouchoir. Pendant l'émission, la caméra s'attarde sur ton front, deux secondes."
+    right:
+      label: "C'est la lumière"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« C'est toujours la lumière. » La maquilleuse te poudre trois fois. À l'antenne, tu as l'air de quelqu'un qui ne transpire pas."
+
+  # ═══════════════════════════════════════════ AL-DORADO (la chambre à 18 °C)
+  - id: sl.h9.rt.ad_chambre
+    roles: [selectionneur]
+    arc: moment
+    tags: [al_dorado, decor]
+    lieu: ailleurs
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 1 && flag('h9_depart')"
+    text: "Chambre 1407 de l'hôtel des délégations. Le thermostat est bloqué à dix-huit. La fenêtre ne s'ouvre pas. Tu poses la main sur la vitre : de l'autre côté, elle est brûlante."
+    left:
+      label: "Je garde la main"
+      effects: {vestiaire: "-"}
+      answer: "Tu comptes jusqu'à soixante, comme un enfant. À soixante, tu enlèves ta main. La marque reste sur la vitre jusqu'au soir."
+    right:
+      label: "Je tire le rideau"
+      effects: {direction: "+"}
+      answer: "Le rideau est double, épais, prévu pour ça. Dans le noir climatisé, tu pourrais être n'importe où. C'est le but."
+
+  - id: sl.h9.rt.ad_souk
+    roles: [selectionneur]
+    arc: moment
+    tags: [al_dorado, decor]
+    lieu: ailleurs
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 1 && flag('h9_depart')"
+    text: "Le marché couvert d'Al-Dorado, climatisé jusqu'au plafond. Un marchand vend des écharpes de laine aux supporters venus du Nord, à prix d'or. Il porte un pull, lui aussi."
+    left:
+      label: "J'en achète une"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "Il l'emballe dans du papier de soie, comme un cadeau. Tu la portes en sortant ; dehors, elle dure quatre secondes."
+    right:
+      label: "Je ressors"
+      effects: {vestiaire: "+"}
+      answer: "La porte automatique s'ouvre sur la chaleur. Un ouvrier, assis à l'ombre d'un camion, boit à une bouteille vide."
+
+  - id: sl.h9.rt.ad_piscine
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [al_dorado, vestiaire]
+    speaker: vandel
+    lieu: ailleurs
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season == 1 && flag('h9_depart') && !flag('h9_liste_ministere')"
+    text: "La piscine de l'hôtel, minuit. Noa fait des longueurs, seul, sans bruit. Au bord, une serviette pliée, et dessus, le brassard noir, bien à plat, comme un vêtement de rechange."
+    left:
+      label: "Je l'attends au bord"
+      effects: {vestiaire: "+", relation: {vandel: 1}}
+      answer: "Il sort au bout de quarante longueurs. Il ne se sèche pas ; il noue le brassard sur son bras mouillé, pour voir. Puis il l'enlève."
+    right:
+      label: "Je remonte dormir"
+      effects: {direction: "+"}
+      answer: "Dans l'ascenseur, tu entends encore l'eau, régulière, comme une horloge. Tu ne dors pas. Lui non plus, sûrement."
+
+  # ═══════════════════════════════════════════ APRÈS (2031 et au-delà)
+  - id: sl.h9.rt.licence
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha_fille
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 2 && !seen('sl.h9.apres.depart_sacha')"
+    text: "Sacha te rend ta veste de banc, nettoyée. Elle a vidé les poches sur la table : ta licence, un ticket de café du ministère, et un fil noir, long comme un doigt."
+    left:
+      label: "Remets tout"
+      effects: {relation: {sacha_fille: 1}}
+      answer: "Elle remet tout, dans le même ordre, le fil noir en dernier. « Je savais que tu dirais ça. » Elle sourit, pour une fois."
+    right:
+      label: "Jette le ticket"
+      effects: {vestiaire: "+"}
+      answer: "Elle jette le ticket, garde la licence, et enroule le fil noir autour de son propre poignet, sans demander."
+
+  - id: sl.h9.rt.vandel_lettre
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vandel
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 2"
+    text: "Noa passe au stade de la Rive, en civil, un sac de courses à la main. Son frère est rentré du Dôme ; il travaille sur un toit d'Aubérive, à huit mètres. « Ça lui paraît bas, {toi}. »"
+    left:
+      label: "Dis-lui bonjour"
+      effects: {vestiaire: "+", relation: {vandel: 1}}
+      answer: "« Il vous a vu{pg, select, f{e} other{}}, au Dôme, par la baie vitrée. Il vous a fait signe. Vous n'avez pas vu. » Il repart vers les toits."
+    right:
+      label: "Et toi, ça va ?"
+      effects: {relation: {vandel: 1}}
+      answer: "« Moi, je joue. » Il hausse les épaules. « Au Kambara, ils ont gardé le brassard sur leur maillot. Une bande noire, cousue. »"
+
+  - id: sl.h9.rt.josiane_neige
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: josiane
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 2"
+    text: "Il neige sur le club-house. Madame Josiane, {age_josiane} ans, balaie les marches elle-même, en manteau : « En 1990, on jouait sous la neige. Personne n'appelait ça un exploit. »"
+    left:
+      label: "Je prends le balai"
+      effects: {tribunes: "+", relation: {josiane: 1}}
+      answer: "Elle te le cède sans discuter. Elle te regarde balayer, les mains dans les poches, et corrige ta technique à voix basse."
+    right:
+      label: "Rentrez, Josiane"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Je rentrerai quand ce sera propre. » Elle finit la dernière marche, puis rentre, et ferme la porte sur la neige."
+
+  # ═══════════════════════════════════════ CE QUI REVIENT (les traces relues)
+  - id: sl.h9.rt.fournil_aube
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_four_secret') && !(season == 1 && flag('h9_depart'))"
+    text: "Cinq heures. Le fournil est éclairé ; Marie-Jo te voit passer et t'ouvre la porte de service, la baguette du bout à la main. Depuis qu'elle t'a parlé du four, elle ne dit plus rien. Elle donne."
+    left:
+      label: "Je la prends"
+      effects: {relation: {mariejo: 1}}
+      answer: "Brûlée d'un côté, comme la première fois. Tu la manges en marchant. Derrière toi, la porte de service reste ouverte un moment."
+    right:
+      label: "Je n'ai pas faim"
+      effects: {vestiaire: "+"}
+      answer: "Elle la garde sans discuter. Le lendemain, elle te la donne quand même, rassise, emballée dans du papier journal."
+
+  - id: sl.h9.rt.prime_bloquee
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sponsors]
+    speaker: vandel
+    lieu: vestiaire
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_prime_bloquee') && !(season == 1 && flag('h9_depart'))"
+    text: "Noa, au vestiaire, à voix basse : « Les gars demandent pour la prime de Gazéo. Je leur ai dit que vous aviez vos raisons. Vous les avez, {toi} ? »"
+    left:
+      label: "Je les ai"
+      effects: {vestiaire: "-", relation: {vandel: 1}}
+      answer: "« Alors je les défendrai sans les connaître. » Il retourne vers les autres. Le mot « raisons » circule dans le vestiaire jusqu'au soir."
+    right:
+      label: "Je la débloque"
+      effects: {vestiaire: "++", direction: "-"}
+      answer: "La prime tombe le lendemain matin. Les joueurs sourient à l'entraînement. Noa, non : il compte les sourires."
+
+  - id: sl.h9.rt.recompte_frigo
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha_fille
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_recompte') && season <= 1 && !(season == 1 && flag('h9_depart'))"
+    text: "Sacha a punaisé une feuille sur ton frigo : 412, 418, 423, 430, au feutre, une ligne par semaine. « Pour que tu les voies chaque fois que tu l'ouvres, {pg, select, f{maman} other{papa}}. »"
+    left:
+      label: "Je la laisse"
+      effects: {relation: {sacha_fille: 1}, vestiaire: "-"}
+      answer: "Tu ouvres le frigo moins souvent. Le dimanche suivant, une ligne de plus est apparue, d'une autre écriture : la tienne."
+    right:
+      label: "Je la décroche"
+      effects: {direction: "+", relation: {sacha_fille: -1}}
+      answer: "Tu la ranges dans un tiroir. Le lendemain, elle est de retour sur le frigo, avec un aimant de plus. Sacha a gardé une clé."
+
+  - id: sl.h9.rt.bouteille_zinc
+    roles: [selectionneur]
+    arc: ultras
+    tags: [ultras, decor]
+    speaker: gege
+    lieu: buvette
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_fraicheur_rapportee') && chars.vecchio.statut != 'mort'"
+    text: "Gégé, en essuyant un verre : « La bouteille du Dôme, Gigi la garde sur sa table de nuit. Il m'a dit : le jour où je ne viens plus, va la chercher et bois-la. Je ne suis pas pressé. »"
+    left:
+      label: "Moi non plus"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Il range le verre sur l'étagère du haut, entre la coupe de 1966 et la photo du virage. Là où l'on ne touche à rien."
+    right:
+      label: "Il viendra demain"
+      effects: {vestiaire: "+"}
+      answer: "« Il vient tous les jours. » Gégé repose le verre, le reprend, l'essuie encore. Il était propre."

@@ -1,0 +1,1330 @@
+# Histoire 9 — « Vingt degrés dedans » : les ancres du script (arc
+# sl.h9.script, content/arcs/selectionneur/h9_script.yaml). Toutes hors du
+# sac, servies à leur créneau. Les variantes lisent le fil rouge
+# (pays / ministere / ouvriers) et les traces des actes précédents.
+#
+# 2029 (S0) : le café, la montre, le rapport, la seconde manche, le vestiaire.
+# 2030 (S1) : la voiture blanche, la cave, le départ ; Al-Dorado : le couloir
+#             vitré (le seul drame du livre), la porte de service (intermède),
+#             le tunnel (l'acte final, sept variantes selon où est le brassard).
+# 2031 (S2) : le retour, le bureau de Madame Aubert (la fin du ministère), la
+#             minute (les autres fins), décembre.
+# 2032+     : janvier à la boulangerie, le Dôme à la télévision.
+#
+# Les fins tombent sur deux cartes : le bureau (`mondial_ministre`) et la
+# minute (`mondial_dos`, `mondial_brassard`, `mondial_vingt_degres`,
+# `sl_minuit`). Sur la minute, le geste — mettre un brassard ou rester
+# immobile — choisit la seconde ligne de l'épitaphe (content/endings/h9.yaml).
+cards:
+  # ═══════════════════════════════════════════════════════════ 2029 (S0)
+  # A1 · Les retours anticipés — créneau 1
+  - id: sl.h9.a1_cafe
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Café de la Mairie. Aymeric Sauvan, du ministère, commande deux cafés sans demander : « Il n'y a pas eu de morts sur leurs chantiers, {toi}. Il y a eu des retours anticipés. »"
+    left:
+      label: "Et au match ?"
+      effects: {tribunes: "+", direction: "-", set: [h9_cafe_match], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Il remue son sucre longtemps. « Votre capitaine porte ce qu'il veut, à l'entraînement. Au match, il porte un maillot. »"
+    right:
+      label: "Je m'en vais"
+      effects: {vestiaire: "+", direction: "--", relation: {sauvan: -1}, set: [h9_cafe_parti], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Ton café reste plein. Il paie les deux, plie le ticket en quatre et le range dans sa veste : le ministère rembourse."
+
+  - id: sl.h9.a1_cafe_brassard
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: sauvan
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Café de la Mairie. Sauvan sait déjà, pour le brassard de Noa : « Un geste, pour un électricien ? Il n'y a pas eu de morts sur leurs chantiers, {toi}. Il y a eu des retours anticipés. »"
+    left:
+      label: "Et au match ?"
+      effects: {tribunes: "+", direction: "-", set: [h9_cafe_match], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Il remue son sucre longtemps. « Votre capitaine porte ce qu'il veut, à l'entraînement. Au match, il porte un maillot. »"
+    right:
+      label: "Je m'en vais"
+      effects: {vestiaire: "+", direction: "--", relation: {sauvan: -1}, set: [h9_cafe_parti], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Ton café reste plein. Il paie les deux et note quelque chose au dos du ticket, avant de le plier. Un nom, peut-être."
+
+  - id: sl.h9.a1_cafe_listes
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, famille]
+    speaker: sauvan
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Café de la Mairie. Sauvan a lu les listes de ta fille ; il le dit en sucrant son café. « Quatre cent douze ? Il n'y a pas eu de morts, {toi}. Il y a eu des retours anticipés. »"
+    left:
+      label: "Et au match ?"
+      effects: {tribunes: "+", direction: "-", set: [h9_cafe_match], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "« Au match, vous ferez du sport. » Il essuie la cuillère avec sa serviette. « Votre fille, elle, fait des additions. »"
+    right:
+      label: "Je m'en vais"
+      effects: {vestiaire: "+", direction: "--", relation: {sauvan: -1}, set: [h9_cafe_parti], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Ton café reste plein. Par la vitre, tu le vois appeler quelqu'un avant même que tu aies traversé la place."
+
+  - id: sl.h9.a1_cafe_contrat
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Café de la Mairie. Sauvan a posé ton contrat près des sucres, ouvert à l'article neuf : « Rien de non sportif. Il n'y a pas eu de morts, {toi}. Il y a eu des retours anticipés. »"
+    left:
+      label: "Et au match ?"
+      effects: {tribunes: "+", direction: "-", set: [h9_cafe_match], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Il tapote l'article neuf du bout de sa cuillère. « À l'entraînement, ce qu'il veut. Au match, l'article neuf. »"
+    right:
+      label: "Je m'en vais"
+      effects: {vestiaire: "+", direction: "--", relation: {sauvan: -1}, set: [h9_cafe_parti], schedule: [{card: sl.h9.listes.recompte, in: [3, 6]}]}
+      answer: "Tu laisses le contrat sur la table. Il le referme, le glisse dans sa serviette en cuir et paie tes deux cafés."
+
+  # A2 · La montre — créneaux 6-7, vingt-deux heures
+  - id: sl.h9.a2_montre
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Vingt-deux heures, un coursier en gants blancs. Une montre en or gravée DÔME 2030, et une carte : « À {NOM}, {pg, select, f{première sélectionneuse} other{sélectionneur}} des Cobalts ». Il attend."
+    left:
+      label: "Je la renvoie"
+      effects: {tribunes: "+", direction: "-", set: [h9_montre_renvoyee]}
+      answer: "Le coursier reprend l'écrin sans un mot et note l'heure sur son bordereau : vingt-deux heures quatre. Quelqu'un voudra savoir."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_montre_gardee], var: {cadeau_montre_or: "+1"}, react: {card: sl.h9.re.sacha_montre, if: "relation.sacha_fille >= 0"}}
+      answer: "Elle pèse plus lourd qu'une montre. Le coursier repart sans attendre de pourboire : on l'a payé pour ne pas en vouloir."
+
+  - id: sl.h9.a2_montre_page
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Vingt-deux heures. Près de l'ordinateur de Sacha, ouvert à la page six, le coursier pose un écrin : une montre en or gravée DÔME 2030. La carte : « À {pg, select, f{Madame} other{Monsieur}} {nom}. »"
+    left:
+      label: "Je la renvoie"
+      effects: {tribunes: "+", direction: "-", set: [h9_montre_renvoyee]}
+      answer: "Il referme l'écrin d'un coup sec. En partant, il jette un œil à l'écran de l'ordinateur ; il ne lit pas, il retient."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_montre_gardee], var: {cadeau_montre_or: "+1"}, react: {card: sl.h9.re.sacha_montre, if: "relation.sacha_fille >= 0"}}
+      answer: "Tu poses la montre sur l'écran, à la page six, sans y penser. Puis tu y penses, et tu la déplaces sur le buffet."
+
+  - id: sl.h9.a2_montre_pays
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Vingt-deux heures, un coursier en gants blancs. Une montre en or gravée DÔME 2030, un écrin marqué {NOM}, une carte : « D'un pays ami, à {pg, select, f{celle} other{celui}} qui en conduit un autre. »"
+    left:
+      label: "Je la renvoie"
+      effects: {tribunes: "+", direction: "-", set: [h9_montre_renvoyee]}
+      answer: "Le coursier reprend l'écrin et note l'heure : vingt-deux heures quatre. « Un pays ami ne se vexe pas, dit-il. Il attend. »"
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_montre_gardee], var: {cadeau_montre_or: "+1"}, react: {card: sl.h9.re.sacha_montre, if: "relation.sacha_fille >= 0"}}
+      answer: "Elle pèse plus lourd qu'une montre. Le coursier repart sans pourboire. La carte dit « ami » ; tu la ranges dans un tiroir."
+
+  # A3 · Le rapport de 14 h 10 — créneaux 10-11 (le retournement de 2029)
+  - id: sl.h9.a3_rapport
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, scandale]
+    speaker: mariejo
+    tone: strategique
+    once: true
+    text: "Par-dessus les baguettes, Marie-Jo te tend une enveloppe au tampon doré : le rapport de l'émirat, traduit par le ministère. « Malaise, à l'intérieur du Dôme, 14 h 10. » « Lisez-le-moi. »"
+    left:
+      label: "Je le lui lis"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_rapport_lu], react: {card: sl.h9.re.mariejo_rapport}}
+      answer: "Tu lis « malaise » deux fois, parce qu'elle te le demande. Elle répète « à l'intérieur ». C'est tout, pour la matinée."
+    right:
+      label: "Je le montre à Sacha"
+      effects: {vestiaire: "+", relation: {sacha_fille: 1}, set: [h9_rapport_sacha]}
+      answer: "Sacha pose le doigt sur l'heure. « 14 h 10, en juillet. À cette heure-là, ils ne sont pas dedans. Ils sont sur le toit. »"
+
+  - id: sl.h9.a3_rapport_irai
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, scandale]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Marie-Jo te tend une enveloppe au tampon doré : « Vous irez, vous me l'avez dit. Alors lisez-moi ça avant. » Le rapport de l'émirat : « Malaise, à l'intérieur du Dôme, 14 h 10. »"
+    left:
+      label: "Je le lui lis"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_rapport_lu], react: {card: sl.h9.re.mariejo_rapport}}
+      answer: "Tu lis jusqu'au tampon. Elle répète « à l'intérieur », et regarde dehors, la rue, la chaleur qu'il ne fait pas en septembre."
+    right:
+      label: "Je le montre à Sacha"
+      effects: {vestiaire: "+", relation: {sacha_fille: 1}, set: [h9_rapport_sacha]}
+      answer: "Sacha pose le doigt sur l'heure. « 14 h 10, en juillet. À cette heure-là, ils ne sont pas dedans. Ils sont sur le toit. »"
+
+  # A4 · La seconde manche — créneau 16, la veille du barrage aller
+  - id: sl.h9.a4_manche
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain. « La chemise avait deux manches. Une pour le capitaine. L'autre, je ne sais pas à qui elle est. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
+      answer: "Tu la plies dans la poche intérieure de ta veste, contre ton contrat. Elle sent le fournil, et autre chose, de plus loin."
+    right:
+      label: "Gardez-la"
+      effects: {vestiaire: "+", set: [h9_manche_gardee]}
+      answer: "Elle la noue à son propre poignet, deux tours, serrés avec les dents. « Alors elle est à moi. » Elle te rend la monnaie."
+
+  - id: sl.h9.a4_manche_attente
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du barrage aller, Marie-Jo glisse un second brassard noir dans ton sac de pain : « Le capitaine attend toujours votre réponse. L'autre manche, elle, n'attend personne. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_seconde_manche]}
+      answer: "Tu la plies contre ton contrat, dans la poche intérieure. Marie-Jo regarde ta poche, comme si tu venais enfin de répondre à Noa."
+    right:
+      label: "Gardez-la"
+      effects: {vestiaire: "+", set: [h9_manche_gardee]}
+      answer: "Elle la noue à son poignet, deux tours. « Alors elle est à moi. Le capitaine, lui, attendra que vous parliez. »"
+
+  # A5 · Le vestiaire — créneau 17, la semaine du barrage (le retour se joue
+  # à la Rive, au Grand Match ; l'aller est la Carte Match d'avant)
+  - id: sl.h9.a5_vestiaire
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: sauvan
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "La semaine du barrage, couloir des vestiaires. Sauvan te tend un papier plié en quatre : « Au retour, à la Rive, le ministre sera en tribune. À la mi-temps, il souhaite descendre. »"
+    left:
+      label: "Le vestiaire est fermé"
+      effects: {vestiaire: "++", direction: "--", relation: {sauvan: -1}, set: [h9_vestiaire_ferme], react: {card: sl.h9.re.sauvan_vestiaire}}
+      answer: "Il replie le papier en huit. « Je dirai que le vestiaire est fermé. Pas que c'est vous qui l'avez fermé. »"
+    right:
+      label: "Qu'il descende"
+      effects: {direction: "++", vestiaire: "-", set: [h9_ministre_vestiaire], react: {card: sl.h9.re.vandel_ministre, if: "relation.vandel >= 0"}}
+      answer: "Il sourit, soulagé, et le cache mal. « Il a prévu onze minutes. Il en parlera neuf, il en regardera deux. »"
+
+  - id: sl.h9.a5_vestiaire_cafe
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: sauvan
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "La semaine du barrage. Sauvan, à qui tu avais laissé un café plein en janvier, te tend un papier plié : « Au retour, le ministre souhaite descendre à la mi-temps. Cette fois, restez. »"
+    left:
+      label: "Le vestiaire est fermé"
+      effects: {vestiaire: "++", direction: "--", relation: {sauvan: -1}, set: [h9_vestiaire_ferme], react: {card: sl.h9.re.sauvan_vestiaire}}
+      answer: "« Deux fois », dit-il, et il sourit vraiment, pour la première fois. Il replie le papier en huit et remonte en tribune."
+    right:
+      label: "Qu'il descende"
+      effects: {direction: "++", vestiaire: "-", set: [h9_ministre_vestiaire], react: {card: sl.h9.re.vandel_ministre, if: "relation.vandel >= 0"}}
+      answer: "Il souffle, comme quelqu'un qui retrouve ses clés. « Onze minutes. Il en parlera neuf. Je vous paierai un café, un vrai. »"
+
+  - id: sl.h9.a5_vestiaire_brassard
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, vestiaire]
+    speaker: sauvan
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "La semaine du barrage. Sauvan te tend un papier plié : « Au retour, le ministre souhaite descendre au vestiaire à la mi-temps. » Au crayon, en bas : aucun brassard sur la photo."
+    left:
+      label: "Le vestiaire est fermé"
+      effects: {vestiaire: "++", direction: "--", relation: {sauvan: -1}, set: [h9_vestiaire_ferme], react: {card: sl.h9.re.sauvan_vestiaire}}
+      answer: "Il gomme la ligne au crayon avec son pouce, longtemps, jusqu'à ce que le papier se déchire. « Alors pas de photo du tout. »"
+    right:
+      label: "Qu'il descende"
+      effects: {direction: "++", vestiaire: "-", set: [h9_ministre_vestiaire], react: {card: sl.h9.re.vandel_ministre, if: "relation.vandel >= 0"}}
+      answer: "À la mi-temps, Noa range le brassard dans son casier avant que le ministre entre. Il ferme le cadenas en te regardant."
+
+  # ═══════════════════════════════════════════════════════════ 2030 (S1)
+  # B1 · La voiture blanche — créneaux 1-2
+  - id: sl.h9.b1_voiture
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors]
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Parking du stade, en janvier. Une berline électrique blanche, un nœud sur le capot, les clés au contact. Sur le siège, une carte à ton nom : « Avec les compliments de Dorada. »"
+    left:
+      label: "Je la rends"
+      effects: {tribunes: "+", direction: "-", set: [h9_voiture_rendue], schedule: [{card: sl.h9.cadeaux.cles, in: [1, 2]}]}
+      answer: "Une dépanneuse vient la chercher à dix-sept heures. Le chauffeur te fait signer un reçu, dénoue le nœud et le garde."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_voiture_gardee], var: {cadeau_electrique: "+1"}, schedule: [{card: sl.h9.cadeaux.cles, in: [1, 2]}], react: {card: sl.h9.re.gege_voiture, if: "relation.gege >= -1"}}
+      answer: "Elle démarre sans un bruit. Dans le rétroviseur, Gégé, appuyé à la grille, te regarde partir. Il ne lève pas la main."
+
+  - id: sl.h9.b1_voiture_montre
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors]
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Parking du stade, en janvier. Une berline électrique blanche, un nœud sur le capot, les clés au contact. La carte a l'écriture de celle de la montre : « Avec les compliments de Dorada. »"
+    left:
+      label: "Je la rends"
+      effects: {tribunes: "+", direction: "-", set: [h9_voiture_rendue], schedule: [{card: sl.h9.cadeaux.cles, in: [1, 2]}]}
+      answer: "La dépanneuse vient à dix-sept heures. En signant le reçu, tu regardes ton poignet : la montre, tu l'as gardée, elle."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_voiture_gardee], var: {cadeau_electrique: "+1"}, schedule: [{card: sl.h9.cadeaux.cles, in: [1, 2]}], react: {card: sl.h9.re.gege_voiture, if: "relation.gege >= -1"}}
+      answer: "Elle démarre sans un bruit. La montre et la voiture ont la même heure, à la minute. Quelqu'un a pris soin de les régler."
+
+  - id: sl.h9.b1_voiture_renvoi
+    roles: [selectionneur]
+    arc: sponsors
+    tags: [sponsors]
+    lieu: parking
+    tone: leger
+    once: true
+    text: "Parking du stade. Une berline blanche, un nœud sur le capot. La carte : « Avec les compliments de Dorada. » Au dos, au crayon : « Celle-ci ne se renvoie pas par coursier. »"
+    left:
+      label: "Je la rends"
+      effects: {tribunes: "+", direction: "-", set: [h9_voiture_rendue], schedule: [{card: sl.h9.cadeaux.cles, in: [1, 2]}]}
+      answer: "Tu appelles toi-même la dépanneuse. Elle met deux jours à venir ; la berline attend, et le nœud pâlit sous la pluie."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", caisse: "+", direction: "+", vestiaire: "-", set: [h9_voiture_gardee], var: {cadeau_electrique: "+1"}, schedule: [{card: sl.h9.cadeaux.cles, in: [1, 2]}], react: {card: sl.h9.re.gege_voiture, if: "relation.gege >= -1"}}
+      answer: "Tu la gardes. La montre, tu l'avais renvoyée ; la voiture, tu la conduis. Gégé, à la grille, tient le compte à voix haute."
+
+  # B2 · La cave — créneaux 6-7 (le grand retournement de 2030)
+  - id: sl.h9.b2_cave
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: josiane
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Chez Madame Josiane, à la cave, sous une lampe de poche. Un procès-verbal de décembre 2010 : « 23 h 40, appel du cabinet de la ministre. 23 h 52, le délégué modifie son vote. »"
+    left:
+      label: "Je photographie la page"
+      effects: {tribunes: "+", direction: "--", relation: {josiane: 1}, set: [h9_page_photo, h9_cave_vue], schedule: [{card: sl.h9.b25_baguette, in: [4, 5]}, {card: sl.h9.rue_haute.visite, in: [1, 1]}], react: {card: sl.h9.re.josiane_page, if: "relation.josiane >= 0"}}
+      answer: "Trois photos, ta main tremble. Josiane tient la lampe sans bouger. « Les initiales, en bas, ce sont les miennes. Rien à perdre. »"
+    right:
+      label: "Je la lui laisse"
+      effects: {tribunes: "-", direction: "+", vestiaire: "+", set: [h9_page_laissee, h9_cave_vue], schedule: [{card: sl.h9.b25_baguette, in: [4, 5]}, {card: sl.h9.rue_haute.visite, in: [1, 1]}]}
+      answer: "Elle remet la page dans le carton marqué 2010, entre deux annuaires. « Elle sera là. Moi, je ne sais pas jusqu'à quand. »"
+
+  - id: sl.h9.b2_cave_cartons
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: josiane
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Le carton de 2010, celui que tu as remonté de sa cave, est ouvert sur la table de Josiane. Un procès-verbal : « 23 h 40, appel du cabinet de la ministre. 23 h 52, le délégué change son vote. »"
+    left:
+      label: "Je photographie la page"
+      effects: {tribunes: "+", direction: "--", relation: {josiane: 1}, set: [h9_page_photo, h9_cave_vue], schedule: [{card: sl.h9.b25_baguette, in: [4, 5]}, {card: sl.h9.rue_haute.visite, in: [1, 1]}], react: {card: sl.h9.re.josiane_page, if: "relation.josiane >= 0"}}
+      answer: "Josiane pose une tasse sur la page pour qu'elle reste à plat. « Vous avez porté les cartons. Vous pouvez porter ça. »"
+    right:
+      label: "Je la lui laisse"
+      effects: {tribunes: "-", direction: "+", vestiaire: "+", set: [h9_page_laissee, h9_cave_vue], schedule: [{card: sl.h9.b25_baguette, in: [4, 5]}, {card: sl.h9.rue_haute.visite, in: [1, 1]}]}
+      answer: "Elle range la page dans le carton, et le carton sous la table. « Vous savez où il est, maintenant. C'est déjà lourd. »"
+
+  - id: sl.h9.b2_cave_sacha
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: josiane
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "À la cave, Josiane tient la lampe : « Votre fille compte les morts. Moi, je compte les heures. » Décembre 2010 : « 23 h 40, appel du cabinet de la ministre. 23 h 52, le vote change. »"
+    left:
+      label: "Je photographie la page"
+      effects: {tribunes: "+", direction: "--", relation: {josiane: 1}, set: [h9_page_photo, h9_cave_vue], schedule: [{card: sl.h9.b25_baguette, in: [4, 5]}, {card: sl.h9.rue_haute.visite, in: [1, 1]}], react: {card: sl.h9.re.josiane_page, if: "relation.josiane >= 0"}}
+      answer: "Tu envoies la photo à Sacha avant de remonter l'escalier. La réponse arrive avant la dernière marche : « 12 minutes. »"
+    right:
+      label: "Je la lui laisse"
+      effects: {tribunes: "-", direction: "+", vestiaire: "+", set: [h9_page_laissee, h9_cave_vue], schedule: [{card: sl.h9.b25_baguette, in: [4, 5]}, {card: sl.h9.rue_haute.visite, in: [1, 1]}]}
+      answer: "Elle range la page. « Douze minutes, dit-elle. Votre fille aurait vu ça tout de suite. Vous, vous l'avez vu aussi. »"
+
+  # B25 · La dernière baguette — créneau 11, le matin du départ. La question du
+  # premier jour n'a plus besoin d'être posée : on part ce soir. Marie-Jo donne
+  # une baguette « pour lui » ; l'intermède du Dôme (B5) la rend.
+  - id: sl.h9.b25_baguette
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du départ, six heures et demie. Marie-Jo te tend ta baguette, et une autre, plus petite, roulée dans du papier de soie : « Pour lui. Vous la poserez où vous pourrez. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_baguette_kevin]}
+      answer: "Tu la glisses dans ton sac de cabine, entre le passeport et la liste. Elle ne demande plus si tu iras : tu pars demain."
+    right:
+      label: "Je ne pourrai pas"
+      effects: {vestiaire: "+"}
+      answer: "Elle la pose sous la photo de Kévin, contre la caisse. « Alors elle l'attendra ici. Il était toujours en retard, de toute façon. »"
+
+  - id: sl.h9.b25_baguette_four
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du départ. Le four neuf ronfle derrière Marie-Jo. Elle te tend une baguette roulée dans du papier de soie, encore chaude : « Du four neuf. Il l'aurait aimée, celle-là. Pour lui. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_baguette_kevin]}
+      answer: "Elle te brûle les doigts à travers le papier. Tu la glisses dans ton sac de cabine. Derrière, le four ne s'arrête pas pour te voir partir."
+    right:
+      label: "Je ne pourrai pas"
+      effects: {vestiaire: "+"}
+      answer: "Elle la pose sur la porte du four, pour qu'elle reste tiède. « Il aimait le pain chaud. Elle l'attendra au chaud, alors. »"
+
+  - id: sl.h9.b25_baguette_sans_noa
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "La veille du départ. Noa est au comptoir en survêtement de son club : il vient tous les matins, depuis la liste. Marie-Jo te tend une baguette roulée dans du papier de soie : « Pour lui. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_baguette_kevin]}
+      answer: "Noa te tient la porte en sortant. « Demain, au car, j'aurai autre chose à vous donner. » Il ne dit pas quoi ; tu le sais."
+    right:
+      label: "Je ne pourrai pas"
+      effects: {vestiaire: "+"}
+      answer: "Marie-Jo la pose sous la photo de Kévin. Noa paie la sienne, puis une deuxième, qu'il emporte sans l'ouvrir, pour personne."
+
+  # B3 · Le départ — créneau 13 : où est le brassard ? (la douane et la fouille
+  # sont tirées ici, par `rand:` : le créneau 14 est à Al-Dorado)
+  - id: sl.h9.b3_valise
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Parking du stade, le car pour l'aéroport. Noa ouvre la main sur le brassard noir : « Ils fouilleront la valise du capitaine, c'est sûr. La vôtre, je ne sais pas. On le met où, {toi} ? »"
+    left:
+      label: "Dans ma valise"
+      effects: {tribunes: "+", direction: "-", set: [h9_depart, h9_loin, h9_brassard_valise_moi], rand: [{p: 0.45, var: {h9_fouille: "=1"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Tu le glisses entre deux survêtements cobalt. Ta valise ferme mal ; tu t'assois dessus pour qu'elle ferme."
+    right:
+      label: "Garde-le sur toi"
+      effects: {vestiaire: "+", set: [h9_depart, h9_loin, h9_brassard_sur_noa], rand: [{p: 0.6, var: {h9_fouille: "=2"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Il le roule dans sa chaussette gauche, sous le protège-tibia. « Ils ne déshabillent pas un capitaine. » Le car démarre."
+
+  - id: sl.h9.b3_valise_attente
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Le car pour l'aéroport. Noa ouvre la main sur le brassard noir : « Vous ne m'avez jamais dit oui, ni non. Ils fouilleront ma valise. La vôtre, peut-être pas. On le met où ? »"
+    left:
+      label: "Dans ma valise"
+      effects: {tribunes: "+", direction: "-", set: [h9_depart, h9_loin, h9_brassard_valise_moi], rand: [{p: 0.45, var: {h9_fouille: "=1"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Tu le prends. C'est ta façon de répondre, enfin ; Noa le comprend avant toi. Ta valise ferme mal, tu t'assois dessus."
+    right:
+      label: "Garde-le sur toi"
+      effects: {vestiaire: "+", set: [h9_depart, h9_loin, h9_brassard_sur_noa], rand: [{p: 0.6, var: {h9_fouille: "=2"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Il le roule dans sa chaussette, sous le protège-tibia. « Toujours pas de oui, alors. » Le car démarre."
+
+  - id: sl.h9.b3_valise_sans_noa
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Le car pour l'aéroport partira sans lui. Noa est venu quand même, en survêtement de son club, le brassard noir dans la main : « Puisque je reste. Vous le prenez ? »"
+    left:
+      label: "Je le prends"
+      effects: {tribunes: "+", relation: {vandel: 1}, set: [h9_depart, h9_loin, h9_brassard_valise_moi], rand: [{p: 0.45, var: {h9_fouille: "=1"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Tu le ranges dans ta valise, sous les chemises. Noa regarde le car partir sans faire un geste, les mains dans les poches."
+    right:
+      label: "Rends-le à Marie-Jo"
+      effects: {tribunes: "-", direction: "+", vestiaire: "-", set: [h9_depart, h9_loin, h9_brassard_laisse], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Il remonte la rue des Lilas à pied, le brassard serré dans le poing. La boulangerie est encore éclairée, au bout."
+
+  - id: sl.h9.b3_valise_mission
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vandel
+    lieu: parking
+    tone: strategique
+    once: true
+    text: "Le car pour l'aéroport. Le brassard voyage depuis mardi dans la doublure de ta valise : Marie-Jo l'y a cousu elle-même. Noa : « Ils fouilleront la mienne. La vôtre, peut-être pas. On le laisse ? »"
+    left:
+      label: "Il reste dans ma valise"
+      effects: {tribunes: "+", direction: "-", set: [h9_depart, h9_loin, h9_brassard_valise_moi], rand: [{p: 0.35, var: {h9_fouille: "=1"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Tu t'assois sur la valise pour la fermer, et tu sens le relief du brassard sous la doublure. Le car démarre."
+    right:
+      label: "Reprends-le, Noa"
+      effects: {vestiaire: "+", set: [h9_depart, h9_loin, h9_brassard_sur_noa], rand: [{p: 0.6, var: {h9_fouille: "=2"}}, {p: 0}], schedule: [{card: sl.h9.b35_arrivee, in: [1, 1]}]}
+      answer: "Tu découds la doublure sur le parking, avec les dents. Noa roule le brassard dans sa chaussette : « Ils ne déshabillent pas un capitaine. »"
+
+  # B4 · Le couloir vitré — créneau 15, Al-Dorado (le seul drame du livre)
+  - id: sl.h9.b4_couloir
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado, sombre]
+    lieu: ailleurs
+    tone: drame
+    once: true
+    text: "Le Dôme, couloir vitré. Vingt degrés, la pelouse parfaite, la climatisation jusque sur le banc. Par la baie, au loin, un échafaudage, et un homme qui tombe. Personne d'autre n'a vu."
+    left:
+      label: "Je le dis aux joueurs"
+      effects: {tribunes: "+", vestiaire: "-", set: [h9_chute_dite], schedule: [{card: sl.h9.b5_porte, in: [1, 1]}]}
+      answer: "Tu le dis au vestiaire avec les mots qu'il faut. Le vestiaire se tait. Noa demande l'heure exacte et l'écrit sur sa main."
+    right:
+      label: "Je ne dis rien"
+      effects: {tribunes: "-", vestiaire: "+", direction: "+", set: [h9_chute_tue], schedule: [{card: sl.h9.b5_porte, in: [1, 1]}]}
+      answer: "Le lendemain, la baie est lavée. On a déplacé l'échafaudage de trois mètres. Il est vide. Tu ne regardes plus par là."
+
+  - id: sl.h9.b35_arrivee
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    lieu: ailleurs
+    tone: leger
+    text: "Aéroport d'Al-Dorado, minuit. Les douaniers font signe aux Cobalts de passer sans ouvrir une valise. Dehors, trente et un degrés, en décembre, à minuit. Le car climatisé attend, moteur tournant."
+    left:
+      label: "Je monte dans le car"
+      effects: {vestiaire: "+", schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
+      answer: "Dans le car, il fait dix-neuf degrés. Le troisième gardien colle son front à la vitre, côté désert, et compte les grues dans le noir. Onze."
+    right:
+      label: "Je reste un moment dehors"
+      effects: {tribunes: "+", schedule: [{card: sl.h9.b4_couloir, in: [2, 2]}]}
+      answer: "Une minute dehors, le temps de sentir la chaleur te tomber dessus comme un manteau. Le chauffeur klaxonne, poliment, une seule fois."
+
+  - id: sl.h9.b4_couloir_frere
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado, sombre]
+    lieu: ailleurs
+    tone: drame
+    once: true
+    text: "Le Dôme, couloir vitré. Vingt degrés dedans. Par la baie, au loin, un échafaudage, et un homme qui tombe. Personne n'a vu. Noa, à dix mètres, essaie d'appeler son frère."
+    left:
+      label: "Je le dis aux joueurs"
+      effects: {tribunes: "+", vestiaire: "-", set: [h9_chute_dite], schedule: [{card: sl.h9.b5_porte, in: [1, 1]}]}
+      answer: "Noa n'écoute pas ; il rappelle. Au cinquième essai, son frère décroche. Ce n'était pas lui. C'était quelqu'un."
+    right:
+      label: "Je ne dis rien"
+      effects: {tribunes: "-", vestiaire: "+", direction: "+", set: [h9_chute_tue], schedule: [{card: sl.h9.b5_porte, in: [1, 1]}]}
+      answer: "Son frère décroche au cinquième essai. Noa rit, soulagé, sans savoir pourquoi il avait eu peur. Tu ne lui dis pas."
+
+  # B5 · Intermède : la porte de service — créneau 16
+  - id: sl.h9.b5_porte
+    roles: [selectionneur]
+    arc: moment
+    tags: [intermede, al_dorado]
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Tu ouvres la porte de service du Dôme. La chaleur est un mur. Sur le toit, un garçon en casque marche le long du bord sans tomber, et te fait signe avec une baguette de pain."
+    left:
+      label: "Je lui fais signe"
+      effects: {set: [h9_porte_service]}
+      answer: "Il agite la baguette une dernière fois, comme on dit au revoir sur un quai. Tu te réveilles à 14 h 10, la clim au plus fort."
+    right:
+      label: "Je lui fais signe"
+      effects: {set: [h9_porte_service]}
+      answer: "Il agite la baguette une dernière fois, comme on dit au revoir sur un quai. Tu te réveilles à 14 h 10, la clim au plus fort."
+
+  - id: sl.h9.b5_porte_baguette
+    roles: [selectionneur]
+    arc: moment
+    tags: [intermede, al_dorado]
+    lieu: ailleurs
+    tone: leger
+    once: true
+    text: "Tu ouvres la porte de service du Dôme. La chaleur est un mur. Sur le toit, un garçon en casque marche le long du bord, la baguette de Marie-Jo sous le bras, et te fait signe avec."
+    left:
+      label: "Je lui fais signe"
+      effects: {set: [h9_porte_service]}
+      answer: "Il casse la baguette en deux et t'en lance la moitié, de trop loin. Tu te réveilles à 14 h 10, les mains vides, la clim au plus fort."
+    right:
+      label: "Je lui fais signe"
+      effects: {set: [h9_porte_service]}
+      answer: "Il casse la baguette en deux et t'en lance la moitié, de trop loin. Tu te réveilles à 14 h 10, les mains vides, la clim au plus fort."
+
+  # B6 · Le tunnel — créneau 17 (l'acte final)
+  - id: sl.h9.b6_tunnel
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel du Dôme, l'hymne dans dix secondes. Noa a le brassard noir dans la main. Sauvan, derrière toi, très bas : « S'il entre avec, la délégation repart demain. Vous aussi. »"
+    left:
+      label: "Noa, mets-le"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte]}
+      answer: "Noa le noue avec les dents, sans quitter la pelouse des yeux. Derrière toi, Sauvan compose un numéro, et ne le finit pas."
+    right:
+      label: "Noa, donne-le-moi"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Il te le tend sans te regarder. Tu le mets dans ta poche, contre ta hanche. L'hymne commence ; Noa le chante faux, exprès."
+
+  - id: sl.h9.b6_tunnel_kambara
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel, l'hymne dans dix secondes. Hier, le Kambara a joué avec le brassard noir, et il joue encore. Noa a le vôtre dans la main. Sauvan : « Eux n'ont pas de contrat de gaz. Nous, si. »"
+    left:
+      label: "Noa, mets-le"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte]}
+      answer: "Noa le noue avec les dents. Dans la tribune d'en face, un homme en survêtement du Kambara se lève tout seul : Mbako."
+    right:
+      label: "Noa, donne-le-moi"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Il te le tend. Tu le mets dans ta poche. Mbako, dans la tribune d'en face, se rassoit avant la fin de l'hymne."
+
+  - id: sl.h9.b6_tunnel_direct
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel du Dôme, l'hymne dans dix secondes. Tu as donné rendez-vous au pays ici, en direct : la caméra de Vence est là, à hauteur d'épaule. Noa a le brassard dans la main. Sauvan : « Non. »"
+    left:
+      label: "Noa, mets-le"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte]}
+      answer: "Noa le noue face à la caméra, sans la regarder. Dans tout le pays, en direct, on voit le nœud se serrer. Sauvan raccroche avant d'appeler."
+    right:
+      label: "Noa, donne-le-moi"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Il te le tend devant la caméra. Le pays voit ta main le prendre, et ta poche se fermer dessus. Vence ne coupe pas."
+
+  - id: sl.h9.b6_tunnel_lacet
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel, l'hymne dans dix secondes. La douane a gardé le brassard ; Noa a noué un lacet noir autour de son bras. Sauvan, derrière toi : « Même ça. S'il entre avec, vous repartez. »"
+    left:
+      label: "Noa, garde-le"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte]}
+      answer: "Noa serre le nœud avec les dents. Un lacet de chaussure, acheté à l'aéroport. Sauvan regarde ce lacet comme une arme."
+    right:
+      label: "Noa, enlève-le"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Il défait le nœud et te tend le lacet. Tu le gardes dans ta poche, tu le roules entre tes doigts pendant tout l'hymne."
+
+  - id: sl.h9.b6_tunnel_manche
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel, l'hymne dans dix secondes. La douane a gardé le brassard de Noa. Dans ta poche, l'autre manche, celle du matin du barrage. Sauvan, derrière toi : « Ne faites pas ça. »"
+    left:
+      label: "Noa, mets-la"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte]}
+      answer: "Tu la sors de ta poche. Noa la noue sans un mot. Elle sent encore le fournil, sous la clim du Dôme. Sauvan recule d'un pas."
+    right:
+      label: "Je la garde"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Ta main reste dans ta poche, sur la manche. L'hymne commence. Noa chante, et regarde ta poche, pas le drapeau."
+
+  - id: sl.h9.b6_tunnel_vide
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel, l'hymne dans dix secondes. Noa est resté à Aubérive, le brassard aussi. Le nouveau capitaine te regarde, un rouleau de strap noir à la main. Sauvan, derrière toi : « Non. »"
+    left:
+      label: "Fais-le"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte]}
+      answer: "Il déchire une bande de strap avec les dents et la serre autour de son bras. Sauvan sort du tunnel avant l'hymne."
+    right:
+      label: "On joue"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Le capitaine range le rouleau dans sa chaussette. Pendant l'hymne, il ne te regarde plus ; il regarde le drapeau, longtemps."
+
+  - id: sl.h9.b6_tunnel_seul_manche
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel, l'hymne dans dix secondes. Noa est resté à Aubérive. Dans ta poche, l'autre manche de la chemise de Kévin. Sauvan, derrière toi : « Vous êtes sur le banc. Restez-y. »"
+    left:
+      label: "Je la mets moi-même"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte, h9_brassard_sur_moi]}
+      answer: "Tu la noues à ton bras au bord du tunnel, devant les caméras de Vence. Sauvan dit quelque chose. L'hymne le couvre."
+    right:
+      label: "Je la garde en poche"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Ta main serre la manche dans ta poche pendant tout l'hymne. Sur le banc, tu ne la lâches pas avant la mi-temps."
+
+  - id: sl.h9.b6_tunnel_seul
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, al_dorado]
+    speaker: sauvan
+    lieu: ailleurs
+    tone: strategique
+    once: true
+    text: "Le tunnel, l'hymne dans dix secondes. Noa est resté à Aubérive ; son brassard est dans ta poche. Le nouveau capitaine le voit. Sauvan, derrière toi : « Vous n'allez pas faire ça. »"
+    left:
+      label: "Je le mets moi-même"
+      effects: {tribunes: "++", direction: "--", vestiaire: "+", set: [h9_brassard_porte, h9_brassard_sur_moi]}
+      answer: "Tu le noues à ton bras au bord du tunnel. Le capitaine recule pour te laisser passer devant. Vence a une caméra là."
+    right:
+      label: "Je le garde en poche"
+      effects: {tribunes: "-", direction: "++", vestiaire: "--", set: [h9_brassard_rendu]}
+      answer: "Tu le gardes. Le capitaine chante l'hymne à côté de toi ; à la dernière note, il te touche l'épaule, sans rien dire."
+
+  # ═══════════════════════════════════════════════════════════ 2031 (S2)
+  # C1 · Le retour — créneau 1
+  - id: sl.h9.c1_retour_tente
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: mariejo
+    lieu: cimetiere
+    tone: leger
+    once: true
+    text: "Janvier, au cimetière. Le juge a signé : on ouvre le cercueil mardi. Marie-Jo est venue avec deux baguettes, une pour toi. « Vous restez avec moi, {toi}, ou vous attendez à la grille ? »"
+    left:
+      label: "Je reste avec vous"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_exhumation, h9_pain_repris], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}, {card: sl.h9.exhumation.resultat, in: [2, 4]}]}
+      answer: "Elle te tend ta baguette, encore tiède. Tu la tiens à la main tout le temps de la tente blanche, comme un cierge."
+    right:
+      label: "J'attends à la grille"
+      effects: {tribunes: "-", direction: "+", set: [h9_exhumation], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}, {card: sl.h9.exhumation.resultat, in: [2, 4]}]}
+      answer: "De la grille, on ne voit que la tente blanche et un gendarme. Marie-Jo ressort une heure après, ta baguette sous le bras."
+
+  - id: sl.h9.c1_retour_scelle
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Janvier. L'avion du retour a un mois. Le cercueil reste fermé : la préfecture a redit « scellé sanitaire ». Marie-Jo te tend ta baguette : « Vous l'avez laissé faire, {toi}. C'est déjà ça. »"
+    left:
+      label: "C'est peu"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_pain_repris], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "« C'est ce qu'il y avait. » Elle te rend la monnaie, puis la reprend, et te pousse la baguette sur le comptoir. Gratuite."
+    right:
+      label: "Je n'ai rien fait"
+      effects: {vestiaire: "+", clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "« Si. Vous n'avez rien empêché. » Elle compte ta monnaie sans se tromper, cette fois."
+
+  - id: sl.h9.c1_retour_trophee
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Janvier. Le trophée du Mondial fait le tour du pays ; à Aubérive, Noa l'a posé sur le comptoir, le brassard noir noué à l'anse. Marie-Jo ne le touche pas : « Il est froid ? »"
+    left:
+      label: "Il est froid"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_trophee, h9_pain_repris], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "Elle pose la main dessus, à plat, une seconde. « Comme lui. » Puis elle te sert ta baguette, et la fait payer."
+    right:
+      label: "Touchez-le"
+      effects: {tribunes: "+", vestiaire: "+", set: [h9_trophee, h9_pain_repris], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "Elle détache le brassard de l'anse et le garde. Le trophée repart sans lui dans le car de la Fédération, plus léger."
+
+  - id: sl.h9.c1_retour_champions
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, moment]
+    speaker: mariejo
+    tone: strategique
+    once: true
+    text: "Janvier. Les Cobalts ont gagné le Mondial ; le trophée fait le tour du pays en car découvert. Il n'est pas passé rue des Lilas. Marie-Jo te tend ta baguette : « Il était beau, à la télévision. »"
+    left:
+      label: "Je paie ma baguette"
+      effects: {tribunes: "+", set: [h9_pain_repris, h9_champions], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "Elle compte ta monnaie, puis la recompte. « Vingt degrés, ils disaient au journal. Ici, il fait moins quatre. » Elle te la rend juste."
+    right:
+      label: "Je ne reviendrai pas"
+      effects: {tribunes: "-", relation: {mariejo: -1}, set: [h9_autre_boulangerie, h9_champions], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}, {card: sl.h9.boulangerie.place, in: [3, 5]}]}
+      answer: "« Comme vous voudrez. » Elle range ta baguette sous le comptoir. Dans la vitrine, quelqu'un a collé une affiche du trophée ; elle la laisse."
+
+  - id: sl.h9.c1_retour_silence
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Janvier, six heures et demie. Marie-Jo te sert ta baguette et ne demande plus rien. Au-dessus de la caisse, il ne reste que la punaise. « On l'a mis au salon. Ici, il prenait le froid. »"
+    left:
+      label: "Je prends ma baguette"
+      effects: {vestiaire: "+", set: [h9_pain_repris], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "Elle te rend la monnaie juste. La clochette de la porte colle toujours ; cette fois, elle ne sonne qu'une fois."
+    right:
+      label: "Je ne reviendrai pas"
+      effects: {tribunes: "-", relation: {mariejo: -1}, set: [h9_autre_boulangerie], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}, {card: sl.h9.boulangerie.place, in: [3, 5]}]}
+      answer: "« Comme vous voulez. » Elle range ta baguette sous le comptoir, pour quelqu'un d'autre. Il y a toujours quelqu'un d'autre."
+
+  - id: sl.h9.c1_retour
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Janvier, six heures et demie. Marie-Jo te tend ta baguette sous la photo de Kévin. « Le Mondial est passé. Il aurait eu vingt-six ans en mars. Vous lui avez dit bonjour, là-bas ? »"
+    left:
+      label: "Je lui ai dit bonjour"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_pain_repris], clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "Elle te rend la monnaie en comptant tout haut, comme pour un enfant. Tu ne l'arrêtes pas."
+    right:
+      label: "Je n'ai pas pu"
+      effects: {vestiaire: "+", clear: [h9_loin], schedule: [{card: sl.h9.pluie.main_courante, in: [2, 4]}, {card: sl.h9.rue_haute.temoin, in: [2, 5]}, {card: sl.h9.fraicheur.retour, in: [3, 7]}]}
+      answer: "« Moi non plus. » Elle te rend ta baguette. Derrière elle, le four neuf siffle ; il a toujours sifflé, tu ne l'entendais pas."
+
+  # C2 · Le bureau de Madame Aubert — créneaux 8-9. On signe pour le printemps
+  # suivant ; d'ici là, le banc. La fin (le ministère, l'ambassade) se lit à la
+  # minute de novembre (C3).
+  - id: sl.h9.c2_bureau_ambassade
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Sauvan pose une enveloppe des Affaires étrangères : « Une ambassade aux îles Basses, au printemps. Le pays vous aime trop, et le chef de l'État vous aime de loin. Vous acceptez ? »"
+    left:
+      label: "J'accepte l'ambassade"
+      effects: {direction: "+", tribunes: "-", set: [h9_ambassade_acceptee], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "Il déplie une carte des îles Basses, grande comme une main. « Il y a une boulangerie, près de l'ambassade. Elle ouvre avant le jour. »"
+    right:
+      label: "Je reste sur le banc"
+      effects: {direction: "--", tribunes: "+", set: [h9_bureau_refuse], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "Il replie la carte en quatre, puis en huit. « Le banc, alors. Un banc se reprend plus vite qu'une ambassade, vous savez. »"
+
+  - id: sl.h9.c2_bureau
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Sauvan pose une enveloppe du gouvernement au nom de {nom} : « Le ministère des Sports, au printemps. Le bureau qu'avait Madame Aubert, la fenêtre avec. Vous acceptez ? »"
+    left:
+      label: "J'accepte le bureau"
+      effects: {direction: "++", set: [h9_ministere_accepte], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "Il te tend un stylo de l'État. « Au printemps. D'ici là, le banc, et pas de vagues. Le premier tiroir ferme à clé. » Il garde le stylo."
+    right:
+      label: "Je refuse"
+      effects: {direction: "--", tribunes: "+", set: [h9_bureau_refuse], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "Il range l'enveloppe sans la plier. « On vous la redemandera. On redemande toujours. » Il paie les cafés, et le tien."
+
+  - id: sl.h9.c2_bureau_porte
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Sauvan a maigri depuis le Dôme. Une enveloppe au nom de {nom} : « Le ministère des Sports. On préfère vous avoir dedans que devant la porte. Vous acceptez ? »"
+    left:
+      label: "J'accepte le bureau"
+      effects: {direction: "++", set: [h9_ministere_accepte], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "« Dedans, alors. Au printemps. » Il te tend un stylo de l'État. Le premier tiroir ferme à clé ; il dit que c'est l'usage."
+    right:
+      label: "Je refuse"
+      effects: {direction: "--", tribunes: "+", set: [h9_bureau_refuse], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "Il reprend l'enveloppe. « Devant la porte, alors. » Il ne paie pas les cafés, cette fois ; il oublie, ou il n'oublie pas."
+
+  - id: sl.h9.c2_bureau_sans
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Sauvan commande deux cafés, serviette fermée : « On m'avait demandé de vous proposer quelque chose, {pg, select, f{madame} other{monsieur}} {nom}. On ne me le demande plus. »"
+    left:
+      label: "Tant mieux"
+      effects: {tribunes: "+", direction: "-", schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "« Pour vous, oui. » Il paie les deux cafés, par habitude, et oublie sa serviette sur la banquette. Elle est vide."
+    right:
+      label: "Qui, alors ?"
+      effects: {direction: "+", tribunes: "-", schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "« Quelqu'un qui dit oui avant qu'on demande. » Il sourit pour lui seul. Tu comprends trois semaines plus tard, en lisant le journal."
+
+  - id: sl.h9.c2_bureau_aubert
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Sauvan pose une enveloppe du gouvernement au nom de {nom} : « Le ministère des Sports, au printemps. Madame Aubert vous recommande, figurez-vous. Vous acceptez ? »"
+    left:
+      label: "J'accepte le bureau"
+      effects: {direction: "++", set: [h9_ministere_accepte], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "« Elle sera contente. » Il te tend un stylo de l'État. « Le premier tiroir ferme à clé. C'est elle qui a fait poser la serrure. »"
+    right:
+      label: "Je refuse"
+      effects: {direction: "--", tribunes: "+", set: [h9_bureau_refuse], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "« Elle l'avait prévu. » Il range l'enveloppe. « Elle ne s'est jamais trompée sur ceux qui refusent. Seulement sur le reste. »"
+
+  - id: sl.h9.c2_bureau_trophee
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: sauvan
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Hôtel de la Rive. Sauvan a la tête d'un homme qui a perdu un pari. Une enveloppe au nom de {nom} : « Le ministère des Sports. Le chef de l'État veut une photo de face, cette fois. Vous acceptez ? »"
+    left:
+      label: "J'accepte le bureau"
+      effects: {direction: "++", set: [h9_ministere_accepte], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "La photo est prise le lendemain, de face, pour le printemps. Tu souris. Sauvan la fait encadrer pour le couloir du ministère."
+    right:
+      label: "Je refuse"
+      effects: {direction: "--", tribunes: "+", set: [h9_bureau_refuse], schedule: [{card: sl.h9.cadeaux.coursier, in: [1, 3]}, {card: sl.h9.kambara.lettre, in: [2, 6]}, {card: sl.h9.deux_listes.vierge, in: [2, 6]}]}
+      answer: "« De dos, encore. » Il range l'enveloppe et rit, un rire bref, sincère, qui l'étonne lui-même."
+
+  # C35 · Intermède : les casques — créneau 16, la nuit d'avant la minute
+  - id: sl.h9.c35_casques
+    roles: [selectionneur]
+    arc: moment
+    tags: [intermede]
+    tone: strategique
+    once: true
+    text: "Une nuit, le stade de la Rive, toutes lumières allumées. Dans chaque siège, un homme en casque de chantier, immobile. Quatre cent soixante et un. Ils attendent que tu leur dises le score."
+    left:
+      label: "Je leur dis le score"
+      effects: {}
+      answer: "Tu le dis. Les casques ne bougent pas. À 14 h 10 au tableau, ils se lèvent tous ensemble, et la tribune est vide. Tu te réveilles en sueur."
+    right:
+      label: "Je leur dis le score"
+      effects: {}
+      answer: "Tu le dis. Les casques ne bougent pas. À 14 h 10 au tableau, ils se lèvent tous ensemble, et la tribune est vide. Tu te réveilles en sueur."
+
+  # C3 · La minute — créneau 17 (les fins). Le bureau accepté au printemps
+  # se lit ici d'abord : on tient le banc un dernier automne, déjà parti.
+  - id: sl.h9.c3_minute_ministre
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Ton dernier automne sur le banc : au printemps, le bureau de Madame Aubert. En tribune, Marie-Jo, un brassard noir au bras."
+    left:
+      label: "Je mets un brassard"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_ministre}
+      answer: "Tu noues un ruban noir. Le soir, Sauvan appelle : le ministère « salue le geste ». Il a déjà acheté toutes les photos."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_ministre}
+      answer: "Deux minutes, les mains dans le dos, déjà comme un ministre. À la fin, c'est Marie-Jo qui détourne les yeux la première."
+
+  - id: sl.h9.c3_minute_ambassade
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Au printemps, les îles Basses. Marie-Jo, en tribune, un brassard noir au bras. Les caméras te cherchent, une dernière fois."
+    left:
+      label: "Je mets un brassard"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: sl_ambassadeur}
+      answer: "Tu noues un ruban noir, et la tribune se lève, rang par rang, comme la place devant l'écran. Là-haut, on comprend pourquoi t'éloigner."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: sl_ambassadeur}
+      answer: "Tu ne bouges pas ; c'est le stade qui bouge. Un brassard, puis dix, puis la tribune entière. Tu n'as plus rien à faire, ici."
+
+  - id: sl.h9.c3_minute
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute de silence pour Gigi Vecchio ; l'arbitre en ajoute une. Dans la tribune, Marie-Jo, un brassard noir au bras. Les caméras te cherchent."
+    left:
+      label: "Je mets un brassard"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_vingt_degres}
+      answer: "Tu noues un ruban noir pris à la boutique du club. Marie-Jo te voit faire ; elle regarde la pelouse, pas toi."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_vingt_degres}
+      answer: "Deux minutes, les mains dans le dos. Les caméras trouvent ton visage et n'y trouvent rien. Elles passent à la tribune."
+
+  - id: sl.h9.c3_minute_prix_manche
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Marie-Jo, en tribune, porte un brassard noir. Dans ta veste, depuis deux ans, l'autre manche. Les caméras te cherchent."
+    left:
+      label: "Je mets l'autre manche"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_vingt_degres}
+      answer: "Tu la noues à ton bras, enfin, au milieu de la seconde minute. Marie-Jo te regarde faire. Elle ne dit pas : trop tard."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_vingt_degres}
+      answer: "La manche reste dans ta veste, pliée en quatre contre ta poitrine. Les caméras passent sur toi sans s'arrêter."
+
+  - id: sl.h9.c3_minute_geste
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Marie-Jo, un brassard noir au bras, te regarde, pas les caméras. Les caméras, elles, te cherchent."
+    left:
+      label: "Je mets un brassard"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: sl_minuit}
+      answer: "Tu noues un ruban noir à ton bras. La Fédération ne t'appelle pas ce soir-là. Elle attend minuit, et une minute."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", tribunes: "-", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}}
+      answer: "Tu restes immobile deux minutes. Marie-Jo hoche la tête une fois, à la fin, comme pour dire : le Dôme suffisait."
+
+  - id: sl.h9.c3_minute_geste_manche
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Marie-Jo, un brassard au bras, te regarde. Dans ta veste, l'autre manche. Les caméras te cherchent."
+    left:
+      label: "Je mets l'autre manche"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: sl_minuit}
+      answer: "Tu la noues à ton bras. Marie-Jo fait le même geste, en tribune, sur le sien. Le téléphone sonnera à minuit et une."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", tribunes: "-", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}}
+      answer: "La manche reste pliée contre ta poitrine. Au Dôme, elle a déjà servi. Marie-Jo le sait ; elle ne t'en demande pas plus."
+
+  - id: sl.h9.c3_minute_verite
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Marie-Jo, un brassard noir au bras, a le journal du matin sous le bras. Les caméras te cherchent."
+    left:
+      label: "Je mets un brassard"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_brassard}
+      answer: "Tu noues un ruban noir à ton bras. Dans la tribune, d'autres font pareil, sans se concerter, rang par rang."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_brassard}
+      answer: "Tu restes immobile. Il n'y a plus rien à montrer : le journal est sous le bras de Marie-Jo, et le pays l'a lu."
+
+  - id: sl.h9.c3_minute_verite_manche
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Marie-Jo, un brassard au bras, le journal sous l'autre. Dans ta veste, l'autre manche. Les caméras te cherchent."
+    left:
+      label: "Je mets l'autre manche"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_brassard}
+      answer: "Tu la noues à ton bras. Les deux manches de la chemise sont dans le même stade, pour la première fois depuis le Dôme."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_brassard}
+      answer: "La manche reste dans ta veste. Marie-Jo te regarde à la fin de la seconde minute, et tapote le journal sous son bras."
+
+  - id: sl.h9.c3_minute_dos
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, sombre]
+    speaker: mariejo
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Stade de la Rive, la minute pour Gigi Vecchio ; l'arbitre en ajoute une. Marie-Jo, le brassard noir de l'anse du trophée noué au bras. Les caméras te cherchent, de face, cette fois."
+    left:
+      label: "Je mets un brassard"
+      effects: {tribunes: "+", set: [h9_minute_brassard, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_dos}
+      answer: "Tu noues un ruban noir. Les caméras te cadrent de face. Tu te retournes vers la tribune ; elles n'ont que ton dos."
+    right:
+      label: "Je reste immobile"
+      effects: {direction: "+", set: [h9_minute_immobile, h9_vecchio_mort], char: {vecchio: mort}, end: mondial_dos}
+      answer: "Tu restes immobile, de dos, face à la tribune où est Marie-Jo. On ne fera pas de photo de face. Pas aujourd'hui."
+
+  # ═══════════════════════════════════════════════════ 2032 et après (S3+)
+  - id: sl.h9.d1_four
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Janvier. Le four neuf tourne depuis l'été, la banque a rendu la caution. Avec un clou, Marie-Jo a gravé une date dans la porte en fonte : celle de Kévin. « Pour qu'il ait chaud. »"
+    left:
+      label: "Je prends ma baguette"
+      effects: {tribunes: "+", set: [h9_pain_repris]}
+      answer: "Elle est brûlante. Marie-Jo l'enveloppe dans un papier de soie, comme un cadeau. « Il n'y a pas de caution, sur le pain. »"
+    right:
+      label: "Je touche la porte"
+      effects: {vestiaire: "+", relation: {mariejo: 1}, set: [h9_pain_repris]}
+      answer: "La fonte est chaude, la date gravée un peu de travers. « Deux cent cinquante degrés, dit-elle. Plus jamais quatre. »"
+
+  - id: sl.h9.d1_janvier
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    text: "Janvier {annee}. Rue des Lilas, la vitrine a changé : des galettes, une fève en porcelaine, et Kévin sur la photo, qui ne vieillit pas. Marie-Jo te demande si tu veux la couronne."
+    left:
+      label: "Je prends la couronne"
+      effects: {tribunes: "+", set: [h9_pain_repris]}
+      answer: "Tu la mets, pour lui faire plaisir. Elle rit, pour la première fois depuis longtemps, puis s'arrête net, comme gênée."
+    right:
+      label: "Une baguette suffira"
+      effects: {vestiaire: "+", set: [h9_pain_repris]}
+      answer: "« Comme d'habitude, alors. » Elle dit « d'habitude » comme on dit un nom propre. La clochette colle encore."
+
+  - id: sl.h9.d2_dome
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, decor]
+    lieu: domicile
+    tone: leger
+    text: "L'automne {annee}, à la télévision : le Dôme d'Al-Dorado accueille un salon de l'automobile. Vingt degrés dedans, dit le présentateur. Il ne dit pas combien il fait dehors."
+    left:
+      label: "Je change de chaîne"
+      effects: {vestiaire: "+"}
+      answer: "Sur l'autre chaîne, un match de deuxième division, sous la neige. Tu le regardes jusqu'au bout, sans connaître personne."
+    right:
+      label: "Je monte le son"
+      effects: {tribunes: "+"}
+      answer: "On parle de climatisation, de « prouesse ». Sur un plateau tournant, une berline électrique blanche. Tu baisses le son."
+
+  # Décembre 2032 : le dernier rendez-vous du livre. Le Dôme est vendu pour
+  # faire de la neige ; la carrière s'arrête là, sur ce qu'on a gardé (la fin
+  # « Le tiroir », content/endings/h9.yaml).
+  - id: sl.h9.d2_dome_encore
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, decor]
+    lieu: domicile
+    tone: strategique
+    text: "Décembre {annee}. Le Dôme est fermé, trop cher à refroidir. Il sera démonté pièce par pièce et vendu à un parc d'attractions, pour y faire de la neige. Vingt degrés de moins, dit l'annonce."
+    left:
+      label: "Je découpe l'article"
+      effects: {tribunes: "+", end: mondial_tiroir}
+      answer: "Tu le portes rue des Lilas. Marie-Jo le punaise sous la photo de Kévin, de travers, comme tout le reste. Puis elle te rend ta monnaie."
+    right:
+      label: "Je tourne la page"
+      effects: {vestiaire: "+", end: mondial_tiroir}
+      answer: "Page suivante : les résultats des Cobalts, une ligne. Tu les lis deux fois, comme une commande qu'on te confirme. Puis tu éteins."
+
+  # L'épilogue (S3) : des scènes de décor, une fois chacune.
+  - id: sl.h9.rt.apprenti
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3"
+    text: "Un apprenti pétrit derrière Marie-Jo ; il a l'âge qu'avait Kévin. Elle lui prend ta baguette des mains et te la tend elle-même : « Celle-là, c'est moi. »"
+    left:
+      label: "Merci, Marie-Jo"
+      effects: {tribunes: "+"}
+      answer: "Elle ne commente pas. L'apprenti la regarde faire : un geste qu'il faudra apprendre aussi, un jour."
+    right:
+      label: "Il apprendra"
+      effects: {vestiaire: "+", relation: {mariejo: 1}}
+      answer: "« Il apprend vite. Trop vite. » Elle lui montre comment on plie le papier autour du pain, sans regarder."
+
+  - id: sl.h9.rt.thermometre_grille
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, decor]
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3"
+    text: "Un match amical à la Rive, sous la neige. À la grille du virage Nord, quelqu'un a accroché un thermomètre de cuisine. Il indique moins deux. On le laisse là tout l'hiver."
+    left:
+      label: "Je le laisse"
+      effects: {tribunes: "+"}
+      answer: "À la mi-temps, des gamins le tapotent du doigt, comme un baromètre. Moins deux. Ils ont l'air contents qu'il fasse froid."
+    right:
+      label: "Je le décroche"
+      effects: {vestiaire: "+"}
+      answer: "Tu le ranges dans la poche de ton manteau. Le lendemain, à la grille, il y en a un autre, plus grand."
+
+  # 2032 : la première sélection du petit gardien (le script, S3, créneau 9).
+  - id: sl.h9.d15_gants
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    lieu: stade
+    tone: strategique
+    text: "Première sélection du petit gardien, à la Rive. Il a enfilé les gants jaunes de Gigi Vecchio, le cuir fendu, trop grands : du strap autour des poignets pour qu'ils tiennent."
+    left:
+      label: "Joue avec"
+      effects: {vestiaire: "+", tribunes: "+"}
+      answer: "Il arrête un penalty à la soixantième, du bout des doigts. Au virage Nord, Gégé ne crie pas. Il enlève sa casquette."
+    right:
+      label: "Prends des gants neufs"
+      effects: {direction: "+"}
+      answer: "Il obéit. Les gants jaunes attendent sur le banc, à côté de toi, posés l'un sur l'autre. La place reste vide."
+
+  - id: sl.h9.d15_gardien
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    lieu: stade
+    tone: strategique
+    text: "Première sélection du petit gardien, à la Rive. Avant l'échauffement, il veut passer à la buvette toucher la photo de Gigi Vecchio, au-dessus du zinc. Il ne l'a jamais vu jouer."
+    left:
+      label: "Je l'attends"
+      effects: {vestiaire: "+"}
+      answer: "Il revient en courant, les doigts encore froids de la vitre. Il ne dit rien. Il garde sa cage à zéro jusqu'à la pause."
+    right:
+      label: "On n'a pas le temps"
+      effects: {direction: "+"}
+      answer: "Il fait demi-tour sans discuter. À la mi-temps, tu le vois quand même filer vers la buvette, en chaussettes."
+
+  # 2032 : trois scènes de décor, une fois chacune, avant le Dôme vendu.
+  - id: sl.h9.rt.vandel_gamins
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    speaker: vandel
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3 && seen('sl.h9.apres.raccroche')"
+    text: "Noa Vandel entraîne les poussins de la Rive, le mercredi. Un gamin lui demande pourquoi il n'a pas de brassard. « Le capitaine, c'est celui qui ramasse les plots. »"
+    left:
+      label: "Je ramasse les plots"
+      effects: {vestiaire: "+", relation: {vandel: 1}}
+      answer: "Vingt plots orange, dans le filet. Les gamins te regardent faire, puis t'aident sans qu'on le leur demande. Noa ne dit rien."
+    right:
+      label: "Je les regarde jouer"
+      effects: {tribunes: "+"}
+      answer: "Ils courent tous après le ballon, en grappe, comme on court à six ans. Personne ne garde les buts. Noa s'en fiche. Toi aussi."
+
+  - id: sl.h9.rt.sauvan_neige
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: sauvan
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3"
+    text: "Une carte postale d'Aymeric Sauvan, nommé « conseiller aux grands événements ». Au recto, la maquette d'un toit blanc et des skieurs miniatures. Au verso : « Un projet. On recycle. »"
+    left:
+      label: "Je la jette"
+      effects: {direction: "-"}
+      answer: "Elle tombe dans la poubelle de la cuisine, côté photo. Le toit blanc te regarde jusqu'à ce que tu refermes le couvercle."
+    right:
+      label: "Je la range"
+      effects: {direction: "+"}
+      answer: "Tu la ranges dans le tiroir du buffet, avec le reste. Le tiroir ferme de plus en plus mal."
+
+  - id: sl.h9.rt.brehaut_stylo
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: brehaut
+    lieu: bureau
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3"
+    text: "Titi Bréhaut quitte la présidence de la Fédération. Il vide son bureau dans un carton de bananes et te tend son stylo, celui qui repassait au propre ce qu'il signait au crayon."
+    left:
+      label: "Je le prends"
+      effects: {direction: "+", relation: {brehaut: 1}}
+      answer: "« Il fuit un peu. Signez au crayon d'abord, c'est plus sûr. » Il emporte le crayon, lui. Il le garde."
+    right:
+      label: "Gardez-le"
+      effects: {vestiaire: "+"}
+      answer: "Il le remet dans sa poche de veste, contre le cœur, comme une décoration. « Alors je signerai encore quelque chose. Un jour. »"

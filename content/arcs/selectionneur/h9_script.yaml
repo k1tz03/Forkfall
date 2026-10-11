@@ -1,0 +1,298 @@
+# Histoire 9 — « Vingt degrés dedans » (postulat `mondial_hiver`, index 8,
+# sélectionneur, 2029). Docs : docs/histoires/00_les_dix_histoires.md,
+# Histoire 9 ; bible ch. 14 (le sélectionneur).
+#
+# Deux arcs ici :
+#   · sl.h9.prologue — « Le cercueil » : six scènes de janvier 2029, servies
+#     dans l'ordre du fichier avant la carte Objectif (la veillée, le cimetière,
+#     le pain, les listes de Sacha, le brassard de Noa, le premier appel).
+#   · sl.h9.script — le script du livre, dix-huit ancres sur trois années
+#     civiles, et l'épilogue :
+#       2029 (S0) le café de Sauvan (1), la montre de vingt-deux heures (6-7),
+#            le rapport de 14 h 10 (10-11), la seconde manche (16), le vestiaire
+#            du barrage (17) ;
+#       2030 (S1) la voiture blanche (1-2), la cave de Josiane (5-6), la
+#            dernière baguette, la veille du départ (9-11, programmée par la
+#            cave), le départ et la valise (12), puis Al-Dorado sans
+#            respiration, chaque scène programmant la suivante : l'aéroport
+#            (13), le couloir vitré (15), l'intermède de la porte de service
+#            (16), et le tunnel (17) ;
+#       2031 (S2) le retour (1), le bureau de Madame Aubert (8-9 : le ministère
+#            ou l'ambassade, pour le printemps suivant), l'intermède des
+#            casques, la nuit d'avant (16), la minute (17 : toutes les fins) ;
+#       2032 (S3, l'épilogue) janvier à la boulangerie (1 : le four gravé, ou
+#            les galettes), le petit gardien (9-10), le Dôme à la télévision
+#            (13), le Dôme vendu pour faire de la neige (17 : « Le tiroir »).
+#
+# Les intrigues qui portent le livre ne sont pas laissées au tirage : la
+# voiture blanche (B1) programme la première liste des vingt-six, les clés de
+# la terrasse et l'appel de Mbako ; la cave (B2) programme la rue Haute, qui
+# programme le reste ; le retour (C1) programme la dernière pluie de Gigi
+# Vecchio, et selon le chemin, la tente blanche ou l'autre boulangerie.
+#
+# Le calendrier du sélectionneur met une Carte Match après le créneau 17 et
+# avant le Grand Match : en 2029, c'est le barrage aller (à l'extérieur) et le
+# Grand Match le barrage retour, à la Rive ; en 2030, la phase de poules au
+# Dôme, puis le Grand Match (content/setpieces/h9.yaml). Entre le départ (13)
+# et le couloir (15), le créneau 14 est à Al-Dorado : la douane ou la fouille
+# (tirées au départ), sinon une Nouvelle d'Al-Dorado.
+#
+# Le brassard est la question de chaque acte (« où est-il ? ») : chez Noa
+# (prologue), dans la valise ou sur Noa (le départ), confisqué ou passé (la
+# douane, l'événement sl.h9.sb.douane et l'étape sl.h9.brassard.fouille), au
+# bras ou dans la poche (le tunnel). La seconde manche de la chemise de Kévin
+# (S0, 16) est la graine qui paie au tunnel et à la minute.
+#
+# Les ancres de nuit (§ 1.4 du livre) sont ici, à leur heure et à leur lieu :
+# la montre (22 h, chez toi), le couloir vitré (l'échafaudage), la minute.
+# Le fisc et le local forcé sont servis par leur intrigue ; la voiture du
+# capitaine, les rappels du ministère et la douane sont des événements du
+# moteur (h9_sombres.yaml).
+arcs:
+  # ════════════════════════════════════════════════════════ LE PROLOGUE (S0)
+  - id: sl.h9.prologue
+    title: "Le cercueil"
+    kind: prologue
+    roles: [selectionneur]
+    postulats: [mondial_hiver]
+    foreground: false
+    theme: famille
+    carrier: mariejo
+    cast: [mariejo, sacha_fille, vandel]
+    issues: []
+    hint: "Un cercueil plombé dans une nef froide, et une boulangère qui demande."
+    steps:
+      - id: veillee
+        card:
+          - { id: sl.h9.pro1_veillee_ministere, if: "fil_rouge == 'ministere'" }
+          - { id: sl.h9.pro1_veillee }
+      - id: cercueil
+        card: sl.h9.pro2_cercueil
+      - id: pain
+        card:
+          - { id: sl.h9.pro3_pain_ouvriers, if: "fil_rouge == 'ouvriers'" }
+          - { id: sl.h9.pro3_pain }
+      - id: listes
+        card:
+          - { id: sl.h9.pro4_listes_pays, if: "fil_rouge == 'pays'" }
+          - { id: sl.h9.pro4_listes }
+      - id: brassard
+        card: sl.h9.pro5_brassard
+      - id: appel
+        card: sl.h9.pro6_appel
+
+  # ═══════════════════════════════════════════════════════════ LE SCRIPT
+  - id: sl.h9.script
+    title: "Vingt degrés dedans"
+    kind: postulat
+    roles: [selectionneur]
+    foreground: true
+    weight: 1.0
+    cast: [sauvan, mariejo, josiane, vandel]
+    same_club: true
+    fallback: drop
+    traces:
+      h9_montre_gardee:     "{annee} : une montre en or gravée DÔME 2030 est restée chez {nom}. Le coursier n'a pas voulu de pourboire."
+      h9_montre_renvoyee:   "{annee} : {nom} a renvoyé une montre gravée DÔME 2030. Le coursier a noté l'heure : vingt-deux heures quatre."
+      h9_rapport_lu:        "{annee} : {nom} a lu à Marie-Jo Marçais le rapport de l'émirat. « Malaise, à l'intérieur. »"
+      h9_rapport_sacha:     "{annee} : Sacha a lu l'heure du rapport de l'émirat. À 14 h 10, on travaille sur le toit."
+      h9_seconde_manche:    "{annee} : la seconde manche de la chemise de Kévin Marçais est dans la veste de {nom}."
+      h9_ministre_vestiaire: "{annee} : le ministre est descendu au vestiaire des Cobalts à la mi-temps du barrage."
+      h9_vestiaire_ferme:   "{annee} : {nom} a fermé le vestiaire du barrage au ministre. Sauvan a replié son papier en huit."
+      h9_voiture_gardee:    "{annee} : une berline blanche de Dorada dort au parking du stade. {nom} a gardé les clés."
+      h9_voiture_rendue:    "{annee} : {nom} a rendu la berline de Dorada. Le chauffeur de la dépanneuse a gardé le nœud."
+      h9_page_photo:        "{annee} : dans la cave de Josiane, {nom} a photographié une page de 2010. 23 h 40, 23 h 52."
+      h9_page_laissee:      "{annee} : la page de décembre 2010 est restée dans la cave de Josiane, entre deux annuaires."
+      h9_chute_dite:        "{annee} : au Dôme, {nom} a dit aux Cobalts ce qu'on voyait par la baie vitrée."
+      h9_brassard_confisque: "{annee} : à l'aéroport d'Al-Dorado, la douane a gardé un brassard noir. Objet à caractère politique."
+      h9_brassard_porte:    "{annee} : au match d'ouverture, le brassard noir est entré sur la pelouse du Dôme."
+      h9_exhumation:        "{annee} : au cimetière d'Aubérive, sous une tente blanche, on a ouvert le cercueil de Kévin Marçais."
+      h9_brassard_rendu:    "{annee} : dans le tunnel du Dôme, le brassard noir est passé dans la poche de {nom}."
+      h9_trophee:           "{annee} : les Cobalts ont gagné le Mondial d'hiver. Le trophée est passé de main en main."
+      h9_bureau_refuse:     "{annee} : {nom} a refusé le bureau qu'avait occupé Madame Aubert. Sauvan a payé les cafés."
+      h9_ministere_accepte: "{annee} : {nom} a accepté le ministère des Sports, pour le printemps. Sauvan a gardé le stylo."
+      h9_ambassade_acceptee: "{annee} : {nom} a accepté l'ambassade des îles Basses, pour le printemps. Le chef de l'État a fait dire merci."
+      h9_baguette_kevin:    "{annee} : le matin du départ, Marie-Jo a glissé dans le sac de {nom} une baguette « pour lui »."
+      h9_champions:         "{annee} : les Cobalts sont champions du monde. Le trophée a fait le tour du pays en car découvert."
+      h9_pain_repris:       "{annee} : {nom} est revenu{pg, select, f{e} other{}} rue des Lilas et repart avec une baguette."
+    steps:
+      # ---------------------------------------------------------- 2029 (S0)
+      - id: cafe
+        card:
+          - { id: sl.h9.a1_cafe_brassard, if: "flag('h9_brassard_permis')" }
+          - { id: sl.h9.a1_cafe_listes,   if: "fil_rouge == 'ouvriers'" }
+          - { id: sl.h9.a1_cafe_contrat,  if: "fil_rouge == 'ministere'" }
+          - { id: sl.h9.a1_cafe }
+        at: [1, 1]
+        season: 0
+      - id: montre
+        card:
+          - { id: sl.h9.a2_montre_page, if: "flag('h9_listes_lues')" }
+          - { id: sl.h9.a2_montre_pays, if: "fil_rouge == 'pays'" }
+          - { id: sl.h9.a2_montre }
+        at: [6, 7]
+        season: 0
+      - id: rapport
+        card:
+          - { id: sl.h9.a3_rapport_irai, if: "flag('h9_reponse_irai')" }
+          - { id: sl.h9.a3_rapport }
+        at: [10, 11]
+        season: 0
+      - id: manche
+        card:
+          - { id: sl.h9.a4_manche_attente, if: "flag('h9_brassard_attente')" }
+          - { id: sl.h9.a4_manche }
+        at: [16, 16]
+        season: 0
+      - id: vestiaire
+        card:
+          - { id: sl.h9.a5_vestiaire_cafe,     if: "flag('h9_cafe_parti')" }
+          - { id: sl.h9.a5_vestiaire_brassard, if: "flag('h9_brassard_permis') || flag('h9_brassard_photo')" }
+          - { id: sl.h9.a5_vestiaire }
+        at: [17, 17]
+        season: 0
+      # ---------------------------------------------------------- 2030 (S1)
+      - id: voiture
+        card:
+          - { id: sl.h9.b1_voiture_montre, if: "flag('h9_montre_gardee')" }
+          - { id: sl.h9.b1_voiture_renvoi, if: "flag('h9_montre_renvoyee')" }
+          - { id: sl.h9.b1_voiture }
+        at: [1, 2]
+        season: 1
+      - id: cave
+        card:
+          - { id: sl.h9.b2_cave_cartons, if: "flag('vl_h9_cave')" }
+          - { id: sl.h9.b2_cave_sacha,   if: "flag('h9_listes_lues') || flag('h9_rapport_sacha')" }
+          - { id: sl.h9.b2_cave }
+        at: [5, 6]
+        season: 1
+      # La veille du départ : la dernière baguette avant Al-Dorado. Marie-Jo n'a
+      # plus besoin de demander si tu iras ; elle donne une baguette « pour
+      # lui », que l'intermède du Dôme relit. Ancre en chaîne : la cave (B2) la
+      # programme quatre ou cinq cartes plus tard (créneaux 9-11).
+      - id: baguette
+        card:
+          - { id: sl.h9.b25_baguette_sans_noa, if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.b25_baguette_four,     if: "flag('h9_four_caution') || flag('vl_h9_four')" }
+          - { id: sl.h9.b25_baguette }
+        at: [9, 11]
+        season: chaine
+      - id: depart
+        card:
+          - { id: sl.h9.b3_valise_sans_noa, if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.b3_valise_mission,  if: "flag('vl_h9_valise')" }
+          - { id: sl.h9.b3_valise_attente,  if: "flag('h9_brassard_attente')" }
+          - { id: sl.h9.b3_valise }
+        at: [12, 12]
+        season: 1
+      # Al-Dorado, sans respiration, en chaîne : le départ programme
+      # l'aéroport (13), l'aéroport le couloir (15), le couloir la porte (16).
+      # `season: chaine` : ces ancres ne sont pas mises en file à l'ouverture
+      # de la saison (aucune saison ne s'appelle ainsi) ; la scène d'avant les
+      # programme, et une étape de script programmée reste une ancre (bande 5 à
+      # l'échéance, 7 en retard). `at` dit le créneau qu'elles tiennent.
+      # L'aéroport : la douane ouvre ta valise (vars.h9_fouille = 1, « Il est à
+      # moi » mène à la garde à vue), la fouille du capitaine (= 2), ou rien, et
+      # la nuit chaude.
+      - id: aeroport
+        card:
+          - { id: sl.h9.brassard.douane_doublure, if: "vars.h9_fouille == 1 && flag('vl_h9_valise')" }
+          - { id: sl.h9.brassard.douane,          if: "vars.h9_fouille == 1" }
+          - { id: sl.h9.brassard.fouille,         if: "vars.h9_fouille == 2" }
+          - { id: sl.h9.b35_arrivee }
+        at: [13, 13]
+        season: chaine
+      - id: couloir
+        card:
+          - { id: sl.h9.b4_couloir_frere, if: "flag('h9_frere_appel')" }
+          - { id: sl.h9.b4_couloir }
+        at: [15, 15]
+        season: chaine
+      - id: porte
+        card:
+          - { id: sl.h9.b5_porte_baguette, if: "flag('h9_baguette_kevin')" }
+          - { id: sl.h9.b5_porte }
+        at: [16, 16]
+        season: chaine
+      - id: tunnel
+        card:
+          - { id: sl.h9.b6_tunnel_seul,        if: "flag('h9_liste_ministere') && !flag('h9_brassard_confisque') && !flag('h9_brassard_laisse')" }
+          - { id: sl.h9.b6_tunnel_seul_manche, if: "flag('h9_liste_ministere') && flag('h9_seconde_manche')" }
+          - { id: sl.h9.b6_tunnel_vide,        if: "flag('h9_liste_ministere')" }
+          - { id: sl.h9.b6_tunnel_manche,      if: "flag('h9_brassard_confisque') && flag('h9_seconde_manche')" }
+          - { id: sl.h9.b6_tunnel_lacet,       if: "flag('h9_brassard_confisque')" }
+          - { id: sl.h9.b6_tunnel_kambara,     if: "flag('h9_mbako_oui')" }
+          - { id: sl.h9.b6_tunnel_direct,      if: "flag('h9_direct_tunnel')" }
+          - { id: sl.h9.b6_tunnel }
+        at: [17, 17]
+        season: 1
+      # ---------------------------------------------------------- 2031 (S2)
+      - id: retour
+        card:
+          - { id: sl.h9.c1_retour_tente,   if: "flag('h9_brassard_porte') && flag('h9_page_lea')" }
+          - { id: sl.h9.c1_retour_scelle,  if: "flag('h9_brassard_porte')" }
+          - { id: sl.h9.c1_retour_trophee, if: "flag('h9_brassard_rendu') && flag('h9_liste_a_moi') && flag('h9_page_lea') && relation.sacha_fille >= 1 && vars.gm_won == 1" }
+          - { id: sl.h9.c1_retour_champions, if: "flag('h9_brassard_rendu') && vars.gm_won == 1" }
+          - { id: sl.h9.c1_retour_silence, if: "flag('h9_brassard_rendu')" }
+          - { id: sl.h9.c1_retour }
+        at: [1, 1]
+        season: 2
+      # Le bureau ne termine rien : il engage pour le printemps suivant. Le
+      # pays qui aime trop celle qui a laissé entrer le brassard, on l'éloigne
+      # (l'ambassade) ; les autres, on les fait entrer (le ministère).
+      - id: bureau
+        card:
+          - { id: sl.h9.c2_bureau_ambassade, if: "flag('h9_brassard_porte') && gauges.tribunes >= 75" }
+          - { id: sl.h9.c2_bureau_sans,    if: "gauges.direction < 40 && !flag('h9_trophee')" }
+          - { id: sl.h9.c2_bureau_trophee, if: "flag('h9_trophee')" }
+          - { id: sl.h9.c2_bureau_porte,   if: "flag('h9_brassard_porte')" }
+          - { id: sl.h9.c2_bureau_aubert,  if: "flag('h9_aubert_vue')" }
+          - { id: sl.h9.c2_bureau }
+        at: [8, 9]
+        season: 2
+      # L'intermède de 2031 : le stade plein de casques, la nuit d'avant.
+      - id: casques
+        card: sl.h9.c35_casques
+        at: [16, 16]
+        season: 2
+      - id: minute
+        card:
+          - { id: sl.h9.c3_minute_ambassade,     if: "flag('h9_ambassade_acceptee')" }
+          - { id: sl.h9.c3_minute_ministre,      if: "flag('h9_ministere_accepte')" }
+          - { id: sl.h9.c3_minute_dos,           if: "flag('h9_trophee')" }
+          - { id: sl.h9.c3_minute_verite_manche, if: "flag('h9_brassard_porte') && flag('h9_page_lea') && flag('h9_seconde_manche')" }
+          - { id: sl.h9.c3_minute_verite,        if: "flag('h9_brassard_porte') && flag('h9_page_lea')" }
+          - { id: sl.h9.c3_minute_geste_manche,  if: "flag('h9_brassard_porte') && flag('h9_seconde_manche')" }
+          - { id: sl.h9.c3_minute_geste,         if: "flag('h9_brassard_porte')" }
+          - { id: sl.h9.c3_minute_prix_manche,   if: "flag('h9_seconde_manche')" }
+          - { id: sl.h9.c3_minute }
+        at: [17, 17]
+        season: 2
+      # -------------------------------------------- 2032, l'épilogue (S3)
+      # Janvier, rue des Lilas : le four neuf, une date gravée dans la porte
+      # (la caution ou l'échéance payées), sinon les galettes.
+      - id: janvier
+        card:
+          - { id: sl.h9.d1_four, if: "flag('h9_four_caution') || flag('vl_h9_four')" }
+          - { id: sl.h9.d1_janvier }
+        at: [1, 1]
+        season: "3"
+      # 2032 : la première sélection du petit gardien, avec ou sans les gants
+      # jaunes de Gigi (donnés en 2029, ou rendus par Gégé en 2031).
+      - id: gardien
+        card:
+          - { id: sl.h9.d15_gants, if: "flag('h9_gants_gigi') || seen('sl.h9.pluie.sac')" }
+          - { id: sl.h9.d15_gardien }
+        at: [9, 10]
+        season: "3"
+      # Le Dôme à la télévision, un salon de l'automobile (l'automne), puis
+      # vendu pour faire de la neige (décembre) : c'est la dernière carte du
+      # livre, elle mène à « Le tiroir ».
+      - id: salon
+        card: sl.h9.d2_dome
+        at: [13, 13]
+        season: "3"
+      - id: dome
+        card: sl.h9.d2_dome_encore
+        at: [17, 17]
+        season: "3"

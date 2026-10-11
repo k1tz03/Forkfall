@@ -1,0 +1,313 @@
+# Histoire 9 — « Vingt degrés dedans » : l'épilogue (2032 et après). Deux
+# intrigues tardives (content/arcs/selectionneur/h9_intrigues.yaml) — Après,
+# puis Le carton de 2010, qui attend que le four soit payé — et le décor des
+# années qui suivent. La carrière n'arrive ici que si le brassard est entré au
+# Dôme sans que la page de 2010 parte, et que tu es resté immobile à la
+# minute : ce qui reste, c'est ce qu'on a gardé.
+cards:
+  # ═══════════════════════════════════════════════════════════════ APRÈS
+  - id: sl.h9.apres.raccroche
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vandel
+    lieu: vestiaire
+    tone: leger
+    once: true
+    text: "Noa Vandel raccroche, un genou de trop. Dans le vestiaire vide, il te tend le brassard noir, lavé, repassé, plié en quatre : « Il est à vous, maintenant. Ou à personne, {toi}. »"
+    left:
+      label: "Je le garde"
+      effects: {vestiaire: "+", relation: {vandel: 1}, set: [h9_apres_garde], outcome: garde}
+      answer: "Tu le ranges dans le tiroir du buffet, avec ce que tu n'as pas jeté. Noa ferme son casier une dernière fois, sans le cadenas."
+    right:
+      label: "Rends-le à Marie-Jo"
+      effects: {tribunes: "+", set: [h9_apres_rendu], outcome: rendu}
+      answer: "Il le porte lui-même rue des Lilas, en survêtement. Marie-Jo le punaise sous la photo de Kévin, bien droit, pour une fois."
+
+  - id: sl.h9.apres.depart_sacha
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sacha_fille
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Sacha part travailler loin, pour une union de syndicats du bâtiment. Elle te laisse ses listes, toutes, dans trois cartons scotchés : « Tu sauras où les mettre, {pg, select, f{maman} other{papa}}. »"
+    left:
+      label: "Chez Josiane, à la cave"
+      effects: {direction: "-", relation: {sacha_fille: 1}, set: [h9_listes_josiane]}
+      answer: "Josiane les fait ranger entre 2010 et 2011, sans les ouvrir. « Elles seront bien là. Il fait frais, et personne ne descend. »"
+    right:
+      label: "Ici, sous mon lit"
+      effects: {vestiaire: "-", relation: {sacha_fille: 1}}
+      answer: "Trois cartons sous le lit. Tu dors au-dessus de quatre cent soixante et un noms. Tu dors mal, les premiers mois. Puis tu dors."
+
+  - id: sl.h9.apres.four_paye
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: mariejo
+    tone: leger
+    once: true
+    text: "Marie-Jo a fini de payer le four. Elle a fait une baguette d'un mètre, posée en travers du comptoir comme une épée : « Pour Kévin. Vous la coupez, {toi} ? »"
+    left:
+      label: "Je la coupe"
+      effects: {tribunes: "+", relation: {mariejo: 1}, set: [h9_four_paye]}
+      answer: "Le couteau crisse sur la croûte. Elle distribue les morceaux aux clients de la file, un par un. Ce matin-là, la caisse reste fermée."
+    right:
+      label: "Coupez-la, vous"
+      effects: {vestiaire: "+", set: [h9_four_paye]}
+      answer: "Elle la coupe d'un geste, sans hésiter, comme on coupe un ruban. Elle te tend le croûton du bout. Il est brûlé d'un côté."
+
+  # ══════════════════════════════════════════════════════ LE CARTON DE 2010
+  - id: sl.h9.carton.legs
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Madame Josiane entre aux Hauts-de-Rive, avec une valise et sa machine à écrire. Le déménageur te monte un carton à ton nom, scotché, marqué « 2010 ». « Elle a dit : la cave, c'est fini. »"
+    left:
+      label: "Je l'ouvre"
+      effects: {direction: "-", set: [h9_carton_josiane]}
+      answer: "Dessus, l'original du procès-verbal, plié dans un mouchoir. Dessous, trente ans de fiches de licence, par année. Pas une ne manque."
+    right:
+      label: "Je le range"
+      effects: {vestiaire: "-", set: [h9_carton_josiane]}
+      answer: "Tu le poses sur le buffet, au-dessus du tiroir qui ferme mal. Il y reste une semaine. Puis tu l'ouvres quand même, à une heure du matin."
+
+  - id: sl.h9.carton.lea
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, scandale]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa a su, pour le carton. Elle ne demande rien : elle pose sur ta table une maquette de une du Quotidien, vierge, sans titre. « Je garde la place. Le temps qu'il faudra. »"
+    left:
+      label: "Publiez"
+      effects: {tribunes: "+", direction: "--", set: [h9_page_tardive], outcome: publiee}
+      answer: "Elle met l'heure en titre, seule : 23 H 52. Le pays lit une page de 2010 avec trois ans de retard. Il la lit quand même."
+    right:
+      label: "Pas encore"
+      effects: {direction: "+", set: [h9_page_dormante], outcome: dormante}
+      answer: "Elle reprend sa maquette vierge et la glisse dans un tiroir, à sa rédaction, avec ton nom au crayon. « Elle sera là. Moi aussi. »"
+
+  - id: sl.h9.carton.fenetre
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aubert
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Rue Haute, la fenêtre ouverte en plein hiver. Madame Aubert, {age_aubert} ans, te fait signe de monter : « Josiane me l'avait dit, pour le carton. Vous l'avez gardé. C'est bien. Ou c'est lâche. »"
+    left:
+      label: "C'est lâche"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Alors nous sommes deux. » Elle remonte son plaid. Dehors, l'arrosage du stade se met en route, à l'heure, comme toujours."
+    right:
+      label: "C'est bien"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "« On dit toujours ça, au début. » Elle te tend une tasse de thé froid, qu'elle a dû préparer pour quelqu'un d'autre, il y a longtemps."
+
+  - id: sl.h9.carton.fenetre_publiee
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aubert
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Rue Haute. La fenêtre de Madame Aubert est fermée, pour la première fois. Elle t'ouvre la porte elle-même, le journal de la veille sous le bras : « 23 h 52. Elle tapait bien, Josiane. »"
+    left:
+      label: "Elle tapait juste"
+      effects: {tribunes: "+"}
+      answer: "« Juste, oui. C'est plus rare. » Elle referme la porte doucement. Le lendemain, la fenêtre est rouverte, sur le stade."
+    right:
+      label: "Je ne dis rien"
+      effects: {direction: "-"}
+      answer: "Elle te laisse sur le seuil. Tu entends ses pas dans l'escalier, lents, puis la radio, un vieux match."
+
+  # ════════════════════════════════════════ LE DÉCOR DES ANNÉES SUIVANTES
+  - id: sl.h9.rt.casque_grille
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, decor]
+    lieu: stade
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3"
+    text: "Chaque année, le même jour de janvier, quelqu'un accroche un casque de chantier jaune à la grille du stade de la Rive. On ne l'a jamais vu faire."
+    left:
+      label: "Je le laisse"
+      effects: {tribunes: "+"}
+      answer: "Le soir, le casque est toujours là. Le lendemain, il a disparu. L'année suivante, il revient, un peu plus pâle."
+    right:
+      label: "Je l'apporte à Marie-Jo"
+      effects: {vestiaire: "+"}
+      answer: "Elle le prend, le retourne, regarde l'intérieur. « Ce n'est pas le sien. » Elle le garde quand même, sous le comptoir."
+
+  - id: sl.h9.rt.liste_neuve
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, decor]
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3 && seen('sl.h9.apres.raccroche')"
+    text: "La liste de mars, la première sans Noa Vandel. Vingt-six noms tapés à la machine. Au vingt-septième rang, au crayon, quelqu'un a dessiné un petit brassard."
+    left:
+      label: "Je l'efface"
+      effects: {direction: "+"}
+      answer: "La gomme laisse une trace grise, en forme de brassard. Tu envoies la liste comme ça. Aucune question ne revient."
+    right:
+      label: "Je le laisse"
+      effects: {vestiaire: "+"}
+      answer: "La liste part au ministère avec son dessin. Elle revient sans un trait, et sans un mot. Le dessin, lui, est toujours là."
+
+  - id: sl.h9.rt.sacha_carte
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: sacha_fille
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && season >= 3 && seen('sl.h9.apres.depart_sacha')"
+    text: "Une carte postale de Sacha, d'un pays froid : un chantier sous la neige. Au dos, un seul chiffre, et en dessous : « Zéro, ici. Je recompte quand même, {pg, select, f{maman} other{papa}}. »"
+    left:
+      label: "Je la punaise"
+      effects: {relation: {sacha_fille: 1}}
+      answer: "Tu la punaises sur le frigo, à hauteur d'yeux. Le zéro tient toute la carte. Il est écrit gros, exprès."
+    right:
+      label: "Je lui réponds"
+      effects: {vestiaire: "+", relation: {sacha_fille: 1}}
+      answer: "Tu écris trois lignes sur le temps qu'il fait à Aubérive. Elle comprendra le reste. Elle a toujours compris le reste."
+
+  # Ce qu'on a gardé, et où : chaque trace de l'épilogue revient une fois.
+  - id: sl.h9.rt.tiroir_buffet
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_apres_garde')"
+    text: "Le tiroir du buffet ne ferme plus bien. Dedans, le brassard noir de Noa, plié en quatre, sur des factures. Tu cherchais des piles pour la télécommande."
+    left:
+      label: "Je referme"
+      effects: {direction: "+"}
+      answer: "Tu pousses du genou. Il résiste, puis cède. Tu regardes le match sans télécommande, sur la chaîne qui était là."
+    right:
+      label: "Je le déplie"
+      effects: {vestiaire: "+"}
+      answer: "La chemise sent encore un peu la farine, ou tu crois qu'elle la sent. Tu le replies en quatre, dans le même sens."
+
+  - id: sl.h9.rt.comptoir_brassard
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: mariejo
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_apres_rendu')"
+    text: "Un gamin, devant toi dans la file, montre du doigt le brassard punaisé sous la photo : « C'est à qui ? » Marie-Jo te regarde, pour que ce soit toi qui répondes."
+    left:
+      label: "À son fils"
+      effects: {tribunes: "+", relation: {mariejo: 1}}
+      answer: "Le gamin regarde la photo, le casque, le brassard, puis toi. Il ne demande plus rien. Il prend un pain au chocolat."
+    right:
+      label: "Au capitaine"
+      effects: {vestiaire: "+"}
+      answer: "« Le capitaine de quoi ? » Marie-Jo sourit, pour la première fois de la matinée. « De tout le monde. »"
+
+  - id: sl.h9.rt.cave_frais
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_listes_josiane') && !flag('h9_carton_josiane')"
+    text: "Madame Josiane téléphone un dimanche, à huit heures précises : « Je suis descendue voir les cartons de votre fille. Ils vont bien. Il fait douze degrés, en bas. C'est bien, douze. »"
+    left:
+      label: "Merci d'être descendue"
+      effects: {relation: {josiane: 1}}
+      answer: "« À mon âge, on descend tout doucement, et on remonte encore plus doucement. Mais on remonte. » Elle raccroche."
+    right:
+      label: "N'y descendez plus"
+      effects: {vestiaire: "+"}
+      answer: "« Alors qui ? » Tu n'as pas de réponse ; elle n'en attendait pas. Elle raccroche la première, sans brusquer."
+
+  - id: sl.h9.rt.four_nuit
+    roles: [selectionneur]
+    arc: moment
+    tags: [moment, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_four_paye')"
+    text: "Quatre heures du matin, rue des Lilas. Le four ronronne derrière la vitrine éteinte ; ça sent le pain chaud jusqu'au carrefour. Il est payé. Il travaille quand même."
+    left:
+      label: "Je frappe à la vitre"
+      effects: {tribunes: "+"}
+      answer: "Marie-Jo lève la tête, farinée jusqu'aux coudes, et te fait signe de passer ton chemin. Tu passes. Elle a souri, tu crois."
+    right:
+      label: "Je passe mon chemin"
+      effects: {direction: "+"}
+      answer: "Tu marches jusqu'au stade dans l'odeur du pain. À la grille, elle s'arrête d'un coup, comme une radio qu'on coupe."
+
+  - id: sl.h9.rt.fiches_licence
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_carton_josiane')"
+    text: "Le soir, tu feuillettes les fiches de licence du carton de Josiane. 2014 : « Marçais, Kévin, dix ans, poussin, gardien. » La photo d'identité est agrafée de travers."
+    left:
+      label: "Je la garde pour moi"
+      effects: {direction: "+"}
+      answer: "Tu la ranges dans ton portefeuille, derrière ta licence à toi. Les deux photos se regardent dans le noir."
+    right:
+      label: "Je la porte rue des Lilas"
+      effects: {tribunes: "+", relation: {mariejo: 1}}
+      answer: "Marie-Jo la regarde longtemps. « Il voulait être gardien, oui. Il a arrêté à douze ans : il avait peur du ballon. »"
+
+  - id: sl.h9.rt.page_blanche
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    lieu: domicile
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_page_dormante')"
+    text: "Chaque année, en décembre, Léa t'envoie par la poste une page de journal vierge, pliée en quatre. Pas un mot, pas une date. Le cachet de la poste fait la date."
+    left:
+      label: "Je la range"
+      effects: {direction: "+"}
+      answer: "Tu la ranges avec les autres, dans le buffet. La pile monte. Elle a maintenant l'épaisseur d'un vrai journal."
+    right:
+      label: "Je la lui renvoie"
+      effects: {tribunes: "+", relation: {lea: 1}}
+      answer: "Tu écris l'heure dessus au crayon, 23 h 52, et tu la renvoies. Elle ne répond pas. L'année d'après, elle en envoie deux."
+
+  - id: sl.h9.rt.page_file
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, decor]
+    lieu: rue
+    tone: leger
+    once: true
+    when: "flag('histoire_h9') && flag('h9_page_tardive')"
+    text: "Dans la file de la boulangerie, deux dames parlent de la page de 2010 parue dans Le Quotidien. « 23 h 52, vous vous rendez compte. » « Moi, à cette heure-là, je dors. »"
+    left:
+      label: "Je ne dis rien"
+      effects: {direction: "+"}
+      answer: "La file avance. Marie-Jo t'a vu ne rien dire ; elle te tend ta baguette sans un mot, elle non plus."
+    right:
+      label: "Quelqu'un était réveillé"
+      effects: {tribunes: "+"}
+      answer: "Les deux dames se retournent. Tu n'en dis pas plus. Derrière son comptoir, Marie-Jo s'est arrêtée de rendre la monnaie."
