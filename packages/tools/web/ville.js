@@ -1695,6 +1695,8 @@
     if (cav) { carteOn = false; jouerCine(cav, montrerCarte); return; }
     fermerPorte();
     cacherCartouche();
+    var to = $("villeToast");
+    if (to && vue && vue.lastAnswer && to.textContent === vue.lastAnswer) { clearTimeout(toastT); to.classList.remove("on"); }
     carteOn = true;
     heros.chemin = null;
     decorAilleurs(vue);
@@ -3231,6 +3233,9 @@
     $("villeBiens").addEventListener("click", function () { if (!carteOn && !occupe) ouvrirInventaire(); });
     $("villeRdv").addEventListener("click", function () {
       if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
+      // on viendra te trouver là où tu es (le prologue du livre 9, dans la rue) : il n'y a nulle
+      // part où marcher, y aller c'est attendre — « personne ne t'attend » était faux
+      else if (rdv && !rdv.sombre && (rdv.lieu === "rue" || rdv.lieu === "ici") && (rdv.force === "vient" || rdv.force === "rue")) attendre();
       else toast("Personne ne t'attend. La ville est à toi.");
     });
     taille();
@@ -3406,6 +3411,9 @@
           return;
         }
         var avant = carteOn;
+        // ce que le choix a produit se lit en haut de la carte suivante quand elle s'enchaîne ;
+        // en bas de la ville seulement quand on y revient (les deux à la fois : le doublon signalé)
+        var reponse = v.lastAnswer && avant ? v.lastAnswer : null;
         dernierVu = cle;
         figurants = figurants.filter(function () { return false; });
         var etait = rdv;
@@ -3425,7 +3433,6 @@
           // un fondu : la carte d'avant reste sous le noir, aucune touche ne répond
           carteOn = false; occupe = true; S.auMatch = false;
           if (v.blocs != null) S.blocsVus = Math.max(S.blocsVus || 0, v.blocs);
-          if (v.lastAnswer && avant) setTimeout(function () { toast(v.lastAnswer); }, 380);
           if (depart) {
             fonduTexte(depart.titre, depart.sous, "", function () { decorAilleurs(v); }, function () { occupe = false; montrerCarte(); });
           } else {
@@ -3435,7 +3442,7 @@
               else { var c0 = centre(LIEU[S.lieu].door); poserEnVille(c0[0], c0[1]); }
               var p0 = visee(); cam.x = p0[0]; cam.y = p0[1]; cam.libre = false;
               recaler(); majHud();
-            }, function () { occupe = false; suite(false); });
+            }, function () { occupe = false; suite(false, reponse); });
           }
           sauver();
           return;
@@ -3449,20 +3456,19 @@
           return;
         }
         if (v.blocs != null) S.blocsVus = Math.max(S.blocsVus || 0, v.blocs);
-        if (v.lastAnswer && avant) setTimeout(function () { toast(v.lastAnswer); }, 380);
         // le match prend l'après-midi ; on rentre au vestiaire, puis le soir tombe
         if (etait && etait.type === "match" && rdv.type !== "match") { S.auMatch = false; if (S.tranche < 3) S.tranche = 3; }
         // une scène jouée suit la carte qu'on vient de jouer, ou le drapeau qu'elle a posé
         var capres = !v.over ? (cineDeCarte(precedente, "apres") || cineDeDrapeau()) : null;
         if (capres) {
           if (carteOn) { cacherCarte(); }
-          jouerCine(capres, function () { suite(false); });
+          jouerCine(capres, function () { suite(false, reponse); });
           return;
         }
-        suite(avant);
+        suite(avant, reponse);
       };
       // la suite d'une vue : la carte d'après est-elle pour tout de suite ?
-      var suite = function (avant) {
+      var suite = function (avant, reponse) {
         var t = tNow();
         if (rdv.force === "ici" || (rdv.lieu === S.lieu && t >= rdv.debut && rdv.force !== "rue" && !rdv.sombre) || (rdv.force === "scene" && t >= rdv.fin && rdv.type !== "sombre" && rdv.lieu === S.lieu)) {
           if (avant && vue && vue.card && cineDeCarte(vue.card.id, "avant")) { cacherCarte(); montrerCarte(); return; }
@@ -3473,6 +3479,7 @@
         cacherCarte();
         majHud();
         sauver();
+        if (reponse) setTimeout(function () { if (!carteOn && !CINE) toast(reponse); }, 380);
         // l'échéance a peut-être déjà sonné (un événement du soir, quand il fait déjà nuit)
         setTimeout(function () { suiteFondus(); annoncer(); if (!echeance() && rdv.force === "rue") verifierRue(); }, 600);
       };
