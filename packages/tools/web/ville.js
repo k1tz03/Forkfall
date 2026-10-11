@@ -3420,12 +3420,13 @@
       function add(q, t) {
         var c = caseDe(q.x, q.y), porte = (q.dedansDep && q.i === 0) || (q.dedansArr && q.chemin && q.i >= q.chemin.length - 2);
         out.push({ uid: q.uid, t: t, sp: q.sp, x: +q.x.toFixed(1), y: +q.y.toFixed(1), a: q.alpha == null ? 1 : +q.alpha.toFixed(2),
-          ecran: aLEcran(q.x, q.y, -8), loin: !aLEcran(q.x, q.y, -40), mur: !porte && !marchable(c[0], c[1]), porte: !!porte, etat: q.etat || "" });
+          ecran: aLEcran(q.x, q.y, -8), loin: !aLEcran(q.x, q.y, -40), mur: !porte && !marchable(c[0], c[1]), porte: !!porte, etat: q.etat || "", pose: q.pose || null });
       }
       passants.forEach(function (q) { add(q, "p"); });
       Object.keys(acteurs).forEach(function (id) { add(acteurs[id], "a:" + id); });
       figurants.forEach(function (q) { add(q, "f:" + (q.qui || q.sp)); });
       return { gens: out, heros: [heros.x, heros.y], tranche: S && S.tranche, bulle: bulle ? { nom: bulle.nom, texte: bulle.texte } : null, carte: carteOn, occupe: occupe,
+        cine: CINE ? { id: CINE.c.id, etape: CINE.i, lieu: CINE.c.lieu } : null, conv: CONV ? { id: CONV.cv.id, i: CONV.i } : null,
         dedans: dedans ? { cle: dedans.cle, objets: dedans.m.objets.map(function (o) { return o.id; }), porte: dedans.m.porte } : null, ui: [UI.haut, UI.bas, VW, VH, k] };
     },
     // pour les essais : de l'argent, une mission offerte ici et maintenant
@@ -3445,6 +3446,34 @@
         jouerMatch(v2, function () { if (S.tranche < 3) S.tranche = 3; majHud(); });
       }
       if (quoi === "scene" && SCENE[val] && !carteOn && !occupe) jouerScene(SCENE[val]);
+      // une scène jouée ou une conversation, à la demande (packages/tools/web/voir_scene.js)
+      if (quoi === "cine") {
+        var ci = cineParId(val);
+        if (!ci) return { erreur: "scène inconnue : " + val };
+        S.cinesVues = S.cinesVues || {};
+        for (var su = ci, n0 = 0; su && n0 < 9; su = su.suite ? cineParId(su.suite) : null, n0++) delete S.cinesVues[su.id];
+        if (carteOn || CINE || MATCH) return { erreur: "une carte, une scène ou un match occupe l'écran" };
+        occupe = false; fermerPorte();
+        jouerCine(ci);
+        return { cine: ci.id };
+      }
+      if (quoi === "conv") {
+        var cv = (D.conversations || []).filter(function (x) { return x.id === val; })[0];
+        if (!cv) return { erreur: "conversation inconnue : " + val };
+        if (carteOn || CINE || MATCH) return { erreur: "une carte, une scène ou un match occupe l'écran" };
+        if (CONV) finConv();
+        if (aInterieur(cv.lieu)) { if (!dedans || dedans.cle !== cv.lieu) entrer(cv.lieu); }
+        else if (LIEU[cv.lieu] && LIEU[cv.lieu].door) {
+          if (dedans) aDehors(true);
+          var c3 = centre(LIEU[cv.lieu].door); poserEnVille(c3[0], c3[1]); var p3 = visee(); cam.x = p3[0]; cam.y = p3[1]; recaler();
+        }
+        S.convsVues = S.convsVues || {}; S.convsVues[cv.id] = 1;
+        CONV = { cv: cv, voix: convInstaller(cv), i: -1, jusqua: 0, loin: performance.now() };
+        // le héros à portée de voix : à côté de la première
+        var v0 = CONV.voix[Object.keys(CONV.voix)[0]];
+        if (v0) { var c0 = caseDe(v0.x, v0.y), pr = plusProche(c0[0] + 2, c0[1] + 1, 6) || plusProche(c0[0], c0[1], 6); if (pr) { var cp = centre(pr); heros.x = cp[0]; heros.y = cp[1]; heros.chemin = null; } }
+        return { conv: cv.id };
+      }
       if (quoi === "plan") { planifierScenes(); return S.scenesJour; }
       if (quoi === "tranche") { while (TRANCHES[S.tranche] !== val) { S.tranche++; if (S.tranche > 4) { S.tranche = 0; nouveauJour(); } } majHud(); }
       // la ruine : une paie qui tombe sur un découvert (la banque, l'huissier, le tribunal)

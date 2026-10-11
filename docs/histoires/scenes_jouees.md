@@ -210,5 +210,23 @@ dart run packages/tools/bin/build_content.dart   # 0 erreur : ids, places, objet
 dart run packages/tools/bin/lint.dart            # 0 erreur
 ```
 
-Pour voir une scène : assembler la ville (`AGENTS.md`, « La ville ») et la servir en HTTP ; un
-`localStorage.clear()` puis une nouvelle carrière du livre joue l'introduction.
+**Voir une scène** sans jouer la carrière jusqu'à sa carte : assembler la ville (`AGENTS.md`,
+« La ville »), la servir en HTTP, puis `voir_scene.js` la joue (une nouvelle carrière du livre,
+l'introduction passée sauf si c'est elle qu'on regarde), écrit chaque réplique, prend une capture
+par réplique et signale ce qui cloche : une figurine debout dans un meuble ou un mur, une figurine
+hors de l'écran, une erreur de la page.
+
+```bash
+dart compile js -O2 packages/tools/web/preview.dart -o /tmp/moi/engine.js
+node packages/tools/web/assemble.js --engine /tmp/moi/engine.js --out /tmp/moi/site/index.html --ville <les tuiles de la ville>
+(cd /tmp/moi/site && python3 -m http.server 8771 --bind 127.0.0.1 &)
+NODE_PATH=/opt/node22/lib/node_modules node packages/tools/web/voir_scene.js \
+  --url http://127.0.0.1:8771/index.html --postulat 3 --scene h4.ci.intro --out /tmp/moi/voir
+#   --conv h4.cv.le_quai   une conversation (on se rend à son lieu, à portée de voix)
+#   --heure soir           l'heure de la ville avant la scène
+```
+
+Les postulats : 0 h1 (promu), 1 h2 (intérimaire), 2 h3 (pépite), 3 h4 (fin de contrat), 4 h5 (géant
+déchu), 5 h6 (vendre trente), 6 h7 (après le fiasco), 7 h8 (le modèle), 8 h9 (le Mondial d'hiver),
+9 h10 (l'escalier fermé). Dans la page, `FusibleVille._essai('cine', id)` et
+`FusibleVille._essai('conv', id)` font la même chose à la main.
