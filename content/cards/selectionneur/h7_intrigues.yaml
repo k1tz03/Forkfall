@@ -80,6 +80,7 @@ cards:
     roles: [selectionneur]
     arc: corps
     tags: [vestiaire]
+    speaker: tibo_rance
     lieu: hotel
     tone: strategique
     once: true
@@ -255,22 +256,27 @@ cards:
       effects: {direction: "+", relation: {sandrine: -1}}
       answer: "Le lendemain, le trou est bouché, peint en blanc. Sandrine écrit quand même « 12 » au crayon sur la peinture fraîche."
 
-  - id: sl.h7.t2_vingt_septieme
+  # 2011 : le réveil de six heures. Le petit a écrit lui-même la ligne dans le
+  # cahier de nuit ; le petit salon de quatre heures s'en servira (a4, variante
+  # « réveil ») : la découverte fixée à l'heure où la réception l'appelle.
+  - id: sl.h7.t2_reveil
     roles: [selectionneur]
     arc: selection
-    tags: [intermede]
+    tags: [vestiaire]
+    speaker: sandrine
     lieu: hotel
     tone: leger
     once: true
-    text: "Tu rêves du tableau. Vingt-six crochets, vingt-sept doubles. Le vingt-septième porte le numéro de ta chambre, et il est tiède, comme si quelqu'un venait de le rendre."
+    when: "!flag('h7_rance_mort')"
+    text: "Minuit et demi. Dans le cahier de Sandrine, une ligne d'une autre écriture : « 12, réveil 6 h. Pas le réveil : Sandrine. » « C'est le petit Rancé. Je l'appelle à six heures, ou je le laisse dormir ? »"
     left:
-      label: "Je le prends"
-      effects: {}
-      answer: "Au réveil, ta clé est sur la table de nuit, là où tu l'as posée. Tu la touches quand même. Elle est froide."
+      label: "Appelez-le à six heures"
+      effects: {vestiaire: "+", relation: {sandrine: 1}, set: [h7_reveil_six]}
+      answer: "Elle recopie la ligne de sa main, au propre. Le lendemain, à six heures pile, la 12 décroche à la première sonnerie."
     right:
-      label: "Je le prends"
-      effects: {}
-      answer: "Au réveil, ta clé est sur la table de nuit, là où tu l'as posée. Tu la touches quand même. Elle est froide."
+      label: "Laissez-le dormir"
+      effects: {direction: "+"}
+      answer: "Elle barre la ligne d'un trait fin, sans l'effacer. « Il me l'a demandé deux fois. Il a peur de ne pas se réveiller, je crois. »"
 
   - id: sl.h7.t2_heures_2012
     roles: [selectionneur]
@@ -290,22 +296,25 @@ cards:
       effects: {direction: "+", vestiaire: "-"}
       answer: "Rouvier distribue des bouchons d'oreilles. Le lendemain, Sandrine en trouve un, posé tout seul, sur le paillasson de la 12."
 
-  - id: sl.h7.t2_standard_reve
+  # 2013 : le rêve déborde. Ton double revenu tout seul au crochet : la seule
+  # ligne du cahier que Sandrine ne sait pas expliquer.
+  - id: sl.h7.t2_double_2013
     roles: [selectionneur]
     arc: selection
-    tags: [intermede]
+    tags: [vestiaire]
+    speaker: sandrine
     lieu: hotel
     tone: leger
     once: true
-    text: "Tu rêves du standard. Tous les téléphones de l'hôtel sonnent ensemble, et dans chaque combiné une voix demande la 12. Tu décroches le dernier. C'est ta voix qui demande."
+    text: "Minuit. Sandrine tient ton double entre deux doigts : « Il était au crochet ce soir. Vous ne l'avez pas rendu, je l'aurais écrit. Vous le reprenez, ou j'écris qu'il est revenu seul ? »"
     left:
-      label: "Je raccroche"
-      effects: {}
-      answer: "À trois heures, le téléphone de ta chambre sonne pour de vrai. Personne au bout. Sandrine jure qu'elle n'a rien passé."
+      label: "Je le reprends"
+      effects: {vestiaire: "+"}
+      answer: "Il est froid. Tu le gardes dans le poing jusqu'à ta porte. Dans le cahier, Sandrine écrit l'heure, et rien d'autre."
     right:
-      label: "Je raccroche"
-      effects: {}
-      answer: "À trois heures, le téléphone de ta chambre sonne pour de vrai. Personne au bout. Sandrine jure qu'elle n'a rien passé."
+      label: "Écrivez-le"
+      effects: {direction: "+", relation: {sandrine: 1}}
+      answer: "Elle écrit : « double rendu, minuit, pas vu passer ». La première ligne du cahier qu'elle ne sait pas expliquer. Elle ne la barre pas."
 
   - id: sl.h7.t3_ronde
     roles: [selectionneur]
@@ -647,7 +656,7 @@ cards:
     tone: leger
     once: true
     when: "!flag('h7_rance_mort')"
-    text: "Le hall, un dimanche soir. Une femme en imperméable pose un sac de sport sur le comptoir : le linge de Tibo, lavé, plié. Sandrine : « Les familles ne montent pas. Je la laisse monter, {toi} ? »"
+    text: "Le hall, un dimanche soir. Une femme en imperméable pose un sac de sport sur le comptoir : le linge de Tibo, lavé, plié. Sandrine : « Les familles ne montent pas. Je la laisse monter ? »"
     left:
       label: "Qu'elle monte"
       effects: {vestiaire: "+", direction: "-", relation: {rance_mere: 1}}
@@ -777,7 +786,7 @@ cards:
     tone: strategique
     once: true
     when: "year >= 2008"
-    text: "L'Écho. Léa agrandit la photo de 1 h 47 jusqu'au grain : une main, un sachet blanc sans étiquette, un trait au feutre. « Vous l'avez déjà vu, ce sachet-là. Je le vois à votre bouche. »"
+    text: "L'Écho. Léa agrandit un coin de la dernière photo du petit, postée à 1 h 47 : une main, un sachet sans étiquette, un trait au feutre. « Vous l'avez déjà vu, ce sachet. Je le vois à votre bouche. »"
     left:
       label: "Non"
       effects: {direction: "+", set: [h7_main_vue]}
@@ -815,7 +824,7 @@ cards:
     lieu: terrain
     tone: strategique
     once: true
-    text: "Terrain annexe. Ferrol regarde ses crampons, le bracelet au poignet : « Il voulait se sentir comme avant. Je lui ai donné ce que je prends avant les matchs. Personne ne savait, pour son cœur ? »"
+    text: "Terrain annexe. Ferrol garde les yeux sur son bracelet rouge et noir : « Il voulait se sentir comme avant. Je lui ai donné ce que je prends avant les matchs. Personne ne savait, pour son cœur ? »"
     left:
       label: "Tu vas le dire"
       effects: {vestiaire: "-", tribunes: "+", relation: {ferrol: 1}, set: [h7_ferrol_dira], outcome: dira}
@@ -898,6 +907,26 @@ cards:
       effects: {direction: "+", set: [h7_rossard_plateau]}
       answer: "Tu coupes le son. Le téléphone, lui, se met à sonner, et ne s'arrête plus jusqu'à une heure du matin."
 
+  # Le brassard est à Ferrol : Rossard dit « ancien capitaine », de sa
+  # formule de consultant (« Moi, à votre place »).
+  - id: sl.h7.p2_dimanche_ancien
+    roles: [selectionneur]
+    arc: tribune
+    tags: [presse, tribunes]
+    speaker: rossard
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Dimanche soir, le plateau de Vence. Rossard, les mains à plat : « Moi, à votre place, je ne garderais pas un ancien capitaine sorti de la 12 à deux heures vingt-cinq. » Puis le nom de Mbako."
+    left:
+      label: "J'appelle la chaîne"
+      effects: {direction: "-", set: [h7_rossard_plateau, h7_chaine_appelee, h7_questions]}
+      answer: "La standardiste prend ton nom et te met en attente. À l'antenne, Vence passe déjà à la météo des stades."
+    right:
+      label: "Je coupe le son"
+      effects: {direction: "+", set: [h7_rossard_plateau]}
+      answer: "Tu coupes le son. Le téléphone, lui, se met à sonner, et ne s'arrête plus jusqu'à une heure du matin."
+
   - id: sl.h7.p3_quatorze
     roles: [selectionneur]
     arc: vestiaire
@@ -953,22 +982,26 @@ cards:
       effects: {direction: "+", set: [h7_dormi_dit]}
       answer: "« Vous avez appelé, et vous avez dormi. » Elle écrit les deux l'un sous l'autre, et ne commente pas."
 
-  - id: sl.h7.n2_couloir
+  # 2 h 24 : la seule ligne de la nuit où quelqu'un a demandé de l'aide. Le
+  # standard garde les heures ; Mbako a appelé la docteure, pas la police (le
+  # bus de 2012 s'en souvient, variante « la 3 »).
+  - id: sl.h7.n2_deux_heures_vingt_quatre
     roles: [selectionneur]
     arc: instances
-    tags: [intermede]
+    tags: [direction]
+    speaker: benali
     lieu: hotel
-    tone: leger
+    tone: strategique
     once: true
-    text: "Le couloir du deuxième n'a pas de fin. Toutes les portes portent le numéro 12 ; derrière chacune, une télévision allumée sur le barrage. Tu frappes, et c'est toi qui réponds."
+    text: "Benali pose le relevé du standard sur la nappe, une ligne surlignée : 2 h 24, la 12 appelle la 3, quarante secondes. « La 3, c'est la docteure. Qui a composé le numéro, d'après vous ? »"
     left:
-      label: "J'ouvre"
-      effects: {}
-      answer: "Derrière la porte, ta chambre, ton lit défait, et sur la table de nuit un double que tu n'as jamais demandé. Au réveil, il n'y est pas."
+      label: "Celui qui avait le double"
+      effects: {direction: "-", tribunes: "+", set: [h7_appel_trois]}
+      answer: "« Il n'a pas appelé la police. Il a appelé le staff, comme on fait dans un bus. » Elle entoure 2 h 24, deux fois."
     right:
-      label: "J'ouvre"
-      effects: {}
-      answer: "Derrière la porte, ta chambre, ton lit défait, et sur la table de nuit un double que tu n'as jamais demandé. Au réveil, il n'y est pas."
+      label: "Je n'en sais rien"
+      effects: {direction: "+"}
+      answer: "« Moi si. Je voulais savoir si vous, vous saviez. » Elle range le relevé ; le surligneur a bavé sur la ligne de 2 h 25."
 
   - id: sl.h7.n3_procureure
     roles: [selectionneur]
@@ -1446,24 +1479,6 @@ cards:
       effects: {relation: {rance_mere: -1}, set: [h7_mere_standard]}
       answer: "« Je sais l'heure. Lui aussi la savait. » Elle raccroche la première, comme il le faisait."
 
-  - id: sl.h7.x2_telephone
-    roles: [selectionneur]
-    arc: famille
-    tags: [famille, direction]
-    speaker: benali
-    lieu: hotel
-    tone: leger
-    once: true
-    text: "La commandante Benali, un carton sous le bras : « La mère réclame le téléphone de son fils. La procureure le garde, pour la photo de 1 h 47. Vous le lui dites, {toi}, ou je le lui dis ? »"
-    left:
-      label: "Je le lui dirai"
-      effects: {relation: {rance_mere: 1, benali: 1}}
-      answer: "Tu le lui dis au téléphone. Elle demande seulement si on lui rendra la coque, celle aux couleurs du Racing. Tu ne sais pas."
-    right:
-      label: "Dites-le-lui vous-même"
-      effects: {direction: "+", relation: {benali: -1}}
-      answer: "Benali le lui dit le lendemain, debout dans le hall. Elle note l'heure de la réponse de la mère : il n'y en a pas eu."
-
   - id: sl.h7.x3_double
     roles: [selectionneur]
     arc: famille
@@ -1479,7 +1494,7 @@ cards:
       effects: {relation: {rance_mere: 1, sandrine: 1}, set: [h7_double_mere], outcome: ouverte}
       answer: "Sandrine écrit dans son cahier : « double du 12 à Mme Rancé », l'heure, et sa propre signature, pour la première fois."
     right:
-      label: "Gardez-le au crochet"
+      label: "Rangez-le au tiroir"
       effects: {direction: "+", set: [h7_double_refuse], outcome: fermee}
       answer: "Le double retourne au tiroir. La mère attend dans le hall jusqu'au matin, sur la banquette, son sac sur les genoux."
 

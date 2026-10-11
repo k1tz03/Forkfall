@@ -963,34 +963,38 @@ postulats:
         fenetre: [2, 4]
         reserve: 0
         pool:
-          - { arc: sl.h7.vingt_sixieme, poids: 0.55, signature: true, if: "season == 0 && !flag('h7_rance_mort')" }
+          - { arc: sl.h7.vingt_sixieme, poids: 0.6, signature: true, if: "season == 0 && !flag('h7_rance_mort')" }
           - { arc: sl.h7.capitaine,     poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
           - { arc: sl.h7.tableau,       poids: 0.8 }
           - { arc: sl.h7.hymne,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
           - { arc: sl.h7.agent,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
           - { arc: sl.h7.ecrit,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
           - { arc: sl.h7.linge,         poids: 0.9, if: "season == 0 && !flag('h7_rance_mort')" }
-      # 2012 : les portes. Deux sur six (plus celles que le metteur en scène
-      # ouvre quand une se ferme), plus le rituel du tableau. À trois, elles
-      # débordaient sur 2013 et lui mangeaient ses Nouvelles.
+      # 2012 : les portes. La main de 1 h 47 n'est plus au réservoir : l'ancre
+      # de mars (la plante devant la 12) ouvre sa trame (la photo, le sachet,
+      # le jeudi de Léa), parce que le livre ne se lit pas sans savoir à qui
+      # était la main. Le rêve du couloir est une ancre (9-10), le cahier aussi
+      # (12-13) : il reste la place d'une intrigue tirée sur six, rituel
+      # compris (plus celles que le metteur en scène rouvre quand une se ferme).
       "1":
-        prendre: 2
+        prendre: 1
         fenetre: [2, 6]
         reserve: 0
         reprise: false
         pool:
           - { arc: sl.h7.tableau,      poids: 0.5 }
-          - { arc: sl.h7.main,         poids: 1.0, if: "season <= 1" }
           - { arc: sl.h7.plateau,      poids: 1.0, if: "season <= 1" }
           - { arc: sl.h7.nuit_du_14,   poids: 1.0, if: "season <= 1" }
           - { arc: sl.h7.fulgor,       poids: 0.9, if: "season <= 1" }
           - { arc: sl.h7.hotel,        poids: 0.9, if: "season <= 1" }
           - { arc: sl.h7.trombone,     poids: 0.9, if: "season <= 1" }
-      # 2013 : les signatures. Deux des quatre tardives, ouvertes tôt : la mère
-      # doit avoir parlé avant la porte de la 12 (créneau 15), la docteure avant
-      # sa valise (13).
+      # 2013 : les signatures. La mère n'est plus tirée : la 11 (créneau 1) ouvre
+      # sa trame (le standard de trois heures, le rêve du standard, le double),
+      # qui doit avoir parlé avant la porte de la 12 (créneau 15). Une des trois
+      # tardives restantes, rituel compris, ouverte tôt : la docteure avant sa
+      # valise (13), le vote avant la dernière nuit (16).
       "2+":
-        prendre: 2
+        prendre: 1
         fenetre: [2, 4]
         reserve: 0
         reprise: false
@@ -998,12 +1002,11 @@ postulats:
           - { arc: sl.h7.tableau,       poids: 0.5 }
           - { arc: sl.h7.arzel,         poids: 1.0 }
           - { arc: sl.h7.proces_verbal, poids: 1.0 }
-          - { arc: sl.h7.mere,          poids: 1.0 }
           - { arc: sl.h7.fauvel,        poids: 1.0 }
     objectifs:
       - { id: fiasco_pays_reconquis, titre: "Le pays reconquis", when: "gauges.tribunes >= 60 && stats.saisons >= 1", indice: "Le pays est à vingt. Il revient par le trottoir de l'hôtel, pas par la télévision." }
-      - { id: fiasco_un_brassard, titre: "Le capitaine debout", when: "(flag('h7_capitaine_mbako') && flag('h7_mbako_temoignera')) || (flag('h7_capitaine_ferrol') && flag('h7_ferrol_dira'))", indice: "Celui à qui tu as donné le brassard finira-t-il debout ?" }
-      - { id: fiasco_le_bus_descend, titre: "Le bus descend", when: "flag('h7_mbako_temoignera') && (flag('h7_ferrol_dira') || flag('h7_arzel_ensemble') || flag('h7_vote_verite'))", indice: "En 2010, personne n'est descendu du bus. Ici, il s'agit que personne ne reste dans sa chambre." }
+      - { id: fiasco_un_brassard, titre: "Le capitaine debout", when: "(flag('h7_capitaine_mbako') && flag('h7_mbako_temoignera') && !flag('h7_mbako_lache')) || (flag('h7_capitaine_ferrol') && flag('h7_ferrol_dira') && flag('h7_nom_confirme'))", indice: "Celui à qui tu as donné le brassard finira-t-il debout ?" }
+      - { id: fiasco_le_bus_descend, titre: "Le bus descend", when: "flag('h7_mbako_temoignera') && flag('h7_ferrol_dira') && (flag('h7_arzel_ensemble') || flag('h7_vote_verite'))", indice: "En 2010, personne n'est descendu du bus. Ici, il s'agit que personne ne reste dans sa chambre." }
     alarm_overrides:
       vestiaire.low:
         - { card: sl.h7.alarme.vestiaire_bas_couloir, when: "flag('h7_rance_mort') && !seen('sl.h7.alarme.vestiaire_bas_couloir')" }

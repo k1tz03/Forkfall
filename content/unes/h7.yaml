@@ -16,16 +16,45 @@ unes:
   # ══════════════════════════════════════════════ la descente, chaque année
   # Les manchettes génériques de descente (priorité 4) parlent d'un club qui
   # refait ses cartons ; celles-ci, au poids fort dans la même bande, disent ce
-  # que le pays lit cette année-là. Elles lisent l'issue (lint).
+  # que le pays lit cette année-là. Elles lisent l'issue (lint). Poids 27 contre
+  # 9 au générique du sélectionneur (« la Fédération réunit son bureau mardi »,
+  # faux sous tutelle) : l'histoire titre trois fois sur quatre.
+  # Le barrage perdu, et la descente au classement des nations : « dehors ».
   - id: une.h7.descente_deuil
     postulats: [apres_fiasco]
     roles: [selectionneur]
     journal: quotidien
     priority: 4
-    poids: 12
-    when: "season == 0 && bilan.outcome == 'descente'"
+    poids: 27
+    when: "season == 0 && bilan.outcome == 'descente' && vars.gm_won == 0"
     titre: "{VILLE} EN DEUIL, LES COBALTS DEHORS"
-    sous: "{rang}e : la sélection quitte le premier groupe des nations. À Aubérive, on ne parle que de la chambre 12 ; le classement tient en deux lignes."
+    sous: "{rang}e : la sélection quitte le premier groupe des nations, et le barrage est perdu. À Aubérive, on ne parle que de la chambre 12."
+    sujet: sl.h7.chambre_douze
+    photo: sl.h7.a3_deux_heures_dix
+
+  # Le barrage gagné, mais la descente au classement : le pays ne lit qu'une
+  # moitié de la phrase.
+  - id: une.h7.descente_qualifies
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: quotidien
+    priority: 4
+    poids: 27
+    when: "season == 0 && bilan.outcome == 'descente' && vars.gm_won == 1"
+    titre: "QUALIFIÉS, EN DEUIL, RELÉGUÉS"
+    sous: "Le barrage gagné avec un 26 sur la manche ; au classement des nations, {rang}e, la sélection quitte le premier groupe. Personne ne lit la fin."
+    sujet: sl.h7.chambre_douze
+    photo: sl.h7.a3_deux_heures_dix
+
+  - id: une.h7.descente_deuil_hors
+    postulats: [apres_fiasco]
+    roles: [selectionneur]
+    journal: echo
+    priority: 4
+    poids: 1
+    when: "season == 0 && bilan.outcome == 'descente'"
+    titre: "LES COBALTS DESCENDENT, AUBÉRIVE SE TAIT"
+    sous: "{rang}e nation : la sélection quitte le premier groupe. L'Écho n'a pas noté les joueurs ; la page du sport tient sous une photo de l'hôtel."
     sujet: sl.h7.chambre_douze
     photo: sl.h7.a3_deux_heures_dix
 
@@ -34,7 +63,7 @@ unes:
     roles: [selectionneur]
     journal: gazette
     priority: 4
-    poids: 12
+    poids: 27
     when: "season == 1 && bilan.outcome == 'descente'"
     titre: "LES COBALTS QUITTENT LE PREMIER GROUPE"
     sous: "{rang}e nation, objectif {tenu}. Un an après la nuit de la Rive, la sélection descend ; le bus de 2010, lui, n'a toujours pas quitté le parking."
@@ -44,7 +73,7 @@ unes:
     roles: [selectionneur]
     journal: echo
     priority: 4
-    poids: 12
+    poids: 27
     when: "season >= 2 && bilan.outcome == 'descente'"
     titre: "LES COBALTS, SOUS TUTELLE ET DEHORS"
     sous: "{rang}e nation : la sélection quitte le premier groupe. Le comité provisoire « prend acte ». À la Rive, la 12 n'a toujours pas été relouée."
@@ -54,7 +83,7 @@ unes:
     roles: [selectionneur]
     journal: echo
     priority: 4
-    poids: 12
+    poids: 27
     when: "season >= 1 && bilan.outcome == 'montee'"
     titre: "LES COBALTS REMONTENT"
     sous: "{rang}e nation : la sélection retrouve le premier groupe. À la Rive, Escande a fait servir le mousseux de 2009, que personne n'avait ouvert."
@@ -144,7 +173,7 @@ unes:
     priority: 3
     when: "flag('h7_rossard_plateau') && journal_has('h7_rossard_plateau')"
     titre: "ROSSARD DIT UN NOM"
-    sous: "Deux heures vingt-cinq, et un capitaine. La Fédération « regrette des propos ». {prenom} {nom} n'a rien regretté en public."
+    sous: "Deux heures vingt-cinq, et le capitaine de 2010. La Fédération « regrette des propos ». {prenom} {nom} n'a rien regretté en public."
     sujet: sl.h7.plateau
     photo: sl.h7.p2_dimanche
     react: [ { card: sl.h7.re.lea_une } ]

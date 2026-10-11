@@ -422,3 +422,24 @@ cards:
       label: "Appelez-la"
       effects: {vestiaire: "+"}
       answer: "Sandrine décroche à la première sonnerie. Elle dicte au stagiaire la colonne où écrire l'heure, et l'encre à utiliser."
+
+  # 2013 · le téléphone du petit (après le standard de trois heures) : la
+  # procureure le garde pour la photo de 1 h 47 ; la mère voudrait la coque.
+  - id: sl.h7.dc.telephone_mere
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, decor]
+    speaker: benali
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "flag('histoire_h7') && flag('h7_mere_standard') && season >= 2"
+    text: "La commandante Benali, un carton sous le bras : « La mère réclame le téléphone de son fils. La procureure le garde, pour la photo de 1 h 47. Vous le lui dites, {toi}, ou je le lui dis ? »"
+    left:
+      label: "Je le lui dirai"
+      effects: {relation: {rance_mere: 1, benali: 1}}
+      answer: "Tu le lui dis au téléphone. Elle demande seulement si on lui rendra la coque, celle aux couleurs du Racing. Tu ne sais pas."
+    right:
+      label: "Dites-le-lui vous-même"
+      effects: {direction: "+", relation: {benali: -1}}
+      answer: "Benali le lui dit le lendemain, debout dans le hall. Elle note l'heure de la réponse de la mère : il n'y en a pas eu."

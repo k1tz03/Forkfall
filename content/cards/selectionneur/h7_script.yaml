@@ -24,7 +24,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "Le salon de l'hôtel, avant le premier entraînement. Lian Mbako garde le brassard de 2010 au fond de sa poche ; Yanis Ferrol attend à l'autre bout, près de la fenêtre. Tous deux regardent {nom}."
+    text: "Le salon de l'hôtel, avant le premier entraînement. Lian Mbako garde le brassard de 2010 au fond de sa poche ; Yanis Ferrol attend à l'autre bout, près de la fenêtre. Tous deux te regardent."
     left:
       label: "Mbako, une dernière fois"
       effects: {vestiaire: "+", direction: "-", relation: {mbako: 1, ferrol: -1}, set: [h7_capitaine_mbako, h7_capitaine_choisi], react: {card: sl.h7.re.ferrol_bracelet, chance: 0.5}}
@@ -137,11 +137,11 @@ cards:
     text: "Novembre, la troisième nuit. Au-dessus de ta chambre, des pas, une porte, puis plus rien. À 2 h 30, le téléphone. Sandrine Lavergne : « Montez au 12. La docteure est déjà là. »"
     left:
       label: "J'y monte"
-      effects: {vestiaire: "-", set: [h7_rance_mort, h7_monte_au_douze]}
+      effects: {vestiaire: "-", set: [h7_rance_mort, h7_monte_au_douze], char: {tibo_rance: {statut: mort}}}
       answer: "La porte de la 12 est ouverte. Arzel est assise au bord du lit, les mains qui ne font plus rien. Au fond du couloir, la 14 est entrouverte."
     right:
       label: "J'appelle la police"
-      effects: {direction: "-", set: [h7_rance_mort, h7_police_appelee]}
+      effects: {direction: "-", set: [h7_rance_mort, h7_police_appelee], char: {tibo_rance: {statut: mort}}}
       answer: "Le standard de l'hôtel sonne dans le vide. À 2 h 41, tu appelles de ta chambre ; une voix d'homme prend ton nom et l'adresse."
 
   - id: sl.h7.a3_deux_heures_dix_quinze
@@ -155,11 +155,11 @@ cards:
     text: "Novembre, la troisième nuit. Dans la 15, au bout du couloir, tu n'entends rien. À 2 h 30, le téléphone te réveille. Sandrine : « Allez à la 12, trois portes avant la vôtre. La docteure y est. »"
     left:
       label: "J'y vais"
-      effects: {vestiaire: "-", set: [h7_rance_mort, h7_monte_au_douze]}
+      effects: {vestiaire: "-", set: [h7_rance_mort, h7_monte_au_douze], char: {tibo_rance: {statut: mort}}}
       answer: "Trois portes. La 12 est ouverte ; Arzel est assise au bord du lit, les mains qui ne font plus rien. En face, la 14 est entrouverte."
     right:
       label: "J'appelle la police"
-      effects: {direction: "-", set: [h7_rance_mort, h7_police_appelee]}
+      effects: {direction: "-", set: [h7_rance_mort, h7_police_appelee], char: {tibo_rance: {statut: mort}}}
       answer: "Le standard de l'hôtel ne répond pas. À 2 h 41, tu appelles de ta chambre ; une voix d'homme prend ton nom, l'adresse, et l'heure."
 
   # ═══════════════════════════════════════ 2011 · A4 · quatre heures (16)
@@ -198,6 +198,26 @@ cards:
       label: "J'ai appelé, je maintiens"
       effects: {direction: "--", vestiaire: "+", set: [h7_quatre_heures_refus]}
       answer: "« Alors elle viendra. À six heures. » Dauzat écrit 2 h 41 dans la marge, puis le barre d'un trait propre, à la règle."
+
+  # Le réveil de six heures (le rituel de 2011) : l'heure de la découverte est
+  # celle où la réception appelle la 12 tous les matins. Ils le savent.
+  - id: sl.h7.a4_quatre_heures_reveil
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Quatre heures, le petit salon. Vaubourg en robe de chambre, Arzel les mains vides : « La réception l'appelle à six heures, tous les matins. Elle appellera, la kiné montera. On joue. D'accord ? »"
+    left:
+      label: "Je suis d'accord"
+      effects: {direction: "++", vestiaire: "-", set: [h7_quatre_heures_accord], react: {card: sl.h7.re.rouvier_six_heures}}
+      answer: "Dauzat écrit 4 h 12 en haut de la page, puis « 6 h, appel de la réception ». Sandrine ne le saura qu'en lisant le procès-verbal."
+    right:
+      label: "Je veux la police"
+      effects: {direction: "--", vestiaire: "+", set: [h7_quatre_heures_refus]}
+      answer: "« La police viendra après l'appel de six heures. » Dauzat écrit ta phrase en bas de la page, plus petit, sous le mot réveil."
 
   # ═══════════════════════════════════════════ 2011 · A5 · les scellés (17)
   - id: sl.h7.a5_scelles
@@ -248,11 +268,11 @@ cards:
     text: "Mars 2012. Les Cobalts qualifiés reviennent au deuxième. Une grande plante cache la porte de la 12. Escande : « Nous ne louons plus la 12. À vrai dire, nous ne la louions pas beaucoup avant. »"
     left:
       label: "Enlevez cette plante"
-      effects: {vestiaire: "+", set: [h7_barrage_gagne, h7_plante_enlevee]}
+      effects: {vestiaire: "+", set: [h7_barrage_gagne, h7_plante_enlevee], schedule: [{card: sl.h7.m1_photo, in: [2, 4]}]}
       answer: "Il la fait porter dans le hall. Toute la fenêtre, les joueurs passent devant le numéro en accélérant, comme devant un chien."
     right:
       label: "Laissez-la"
-      effects: {direction: "+", set: [h7_barrage_gagne, h7_plante], react: {card: sl.h7.re.sandrine_plante, chance: 0.5}}
+      effects: {direction: "+", set: [h7_barrage_gagne, h7_plante], react: {card: sl.h7.re.sandrine_plante, chance: 0.5}, schedule: [{card: sl.h7.m1_photo, in: [2, 4]}]}
       answer: "La plante reste devant la porte. Les joueurs la contournent sans la toucher, comme on contourne quelqu'un qui dort."
 
   - id: sl.h7.r1_portes_perdu
@@ -266,11 +286,11 @@ cards:
     text: "Mars 2012. Éliminés, les Cobalts reviennent quand même au deuxième. Une plante cache la porte de la 12. Escande : « Nous ne louons plus la 12. À vrai dire, nous ne la louions pas beaucoup avant. »"
     left:
       label: "Enlevez cette plante"
-      effects: {vestiaire: "+", set: [h7_barrage_perdu, h7_plante_enlevee]}
+      effects: {vestiaire: "+", set: [h7_barrage_perdu, h7_plante_enlevee], schedule: [{card: sl.h7.m1_photo, in: [2, 4]}]}
       answer: "On la porte dans le hall. Le numéro reparaît, en laiton terni. Le premier soir, quelqu'un a collé un 26 au feutre en dessous."
     right:
       label: "Laissez-la"
-      effects: {direction: "+", set: [h7_barrage_perdu, h7_plante], react: {card: sl.h7.re.sandrine_plante, chance: 0.5}}
+      effects: {direction: "+", set: [h7_barrage_perdu, h7_plante], react: {card: sl.h7.re.sandrine_plante, chance: 0.5}, schedule: [{card: sl.h7.m1_photo, in: [2, 4]}]}
       answer: "La plante reste. Le soir même, Lascombe, le gardien remplaçant, demande à changer de chambre : la 11 touche la 12."
 
   # ═══════════════════════════════════ 2012 · R2 · le cahier de nuit (12-13)
@@ -319,7 +339,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « En 2010, je suis resté dans le bus. Cette nuit-là, je suis entré. J'ai compté jusqu'à trente, et j'ai eu peur de rester. »"
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « En 2010, je suis resté dans le bus. Cette nuit-là, je suis entré. J'ai compté jusqu'à trente, et j'ai eu peur de rester. »"
     left:
       label: "Tu vas témoigner"
       effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
@@ -337,7 +357,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « Sandrine dit que tu as la page. Alors écoute la suite. Je suis entré. J'ai compté jusqu'à trente. Il ne revenait pas. »"
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « Tu as la page de Sandrine. Écoute ce qui n'y est pas. Je suis entré. J'ai compté jusqu'à trente. Il ne revenait pas. »"
     left:
       label: "Tu vas témoigner"
       effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
@@ -347,6 +367,25 @@ cards:
       effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
       answer: "« Sauf Sandrine. Et toi. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
 
+  # Le relevé du standard (« La nuit du 14 ») : 2 h 24, la 12 appelle la 3.
+  - id: sl.h7.r3_bus_trois
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « Benali a l'heure, 2 h 24. Oui, j'ai appelé la 3. Avant, j'ai compté jusqu'à trente. Trois fois. Il ne revenait pas. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Je dirai les trois fois trente, et la 3. » Il pose la bouteille sur le siège du chauffeur et descend le premier, cette fois."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Benali sait déjà l'heure. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
   - id: sl.h7.r3_bus_plateau
     roles: [selectionneur]
     arc: vestiaire
@@ -355,7 +394,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « Rossard a donné l'heure à la télé. Pas ce que j'ai fait entre 2 h 10 et 2 h 25. J'ai compté jusqu'à trente. »"
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « Rossard a donné l'heure à la télé. Pas ce que j'ai fait entre 2 h 10 et 2 h 25. J'ai compté jusqu'à trente. »"
     left:
       label: "Tu vas témoigner"
       effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
@@ -374,11 +413,11 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « Au Corner, je l'ai regardé dormir, tu te souviens. Cette nuit-là, je suis entré, et je l'ai regardé encore. »"
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « Au Corner, je l'ai regardé dormir, tu te souviens. Cette nuit-là, je suis entré, et je l'ai regardé encore. »"
     left:
       label: "Tu vas témoigner"
       effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
-      answer: "« Je dirai qu'il ne respirait plus, et que j'ai compté jusqu'à trente. » Il pose la bouteille sur le siège du chauffeur et descend le premier."
+      answer: "« Je dirai qu'il ne respirait plus, et que j'ai compté. » Il pose la bouteille sur le siège du chauffeur et descend le premier."
     right:
       label: "Personne ne saura"
       effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
@@ -393,7 +432,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "Derrière l'hôtel, une heure du matin. Mbako, seul dans le bus de 2010 : « À la radio, tu as dit que la justice dirait. Alors elle dira ça : je suis entré. J'ai compté jusqu'à trente. »"
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « À la radio, tu as dit que la justice dirait. Alors elle dira ça : je suis entré. J'ai compté jusqu'à trente. »"
     left:
       label: "Tu vas témoigner"
       effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
@@ -417,11 +456,11 @@ cards:
     text: "Mars 2013, la Fédération sous tutelle. Le comité provisoire a repris l'appartement du quai. Monsieur Escande pose sur le comptoir la seule clé libre : la 11. « Le mur est mitoyen avec la 12. »"
     left:
       label: "Je prends la 11"
-      effects: {caisse: "-", set: [h7_appartement_repris], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}}
+      effects: {caisse: "-", set: [h7_appartement_repris], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}, schedule: [{card: sl.h7.x1_standard, in: [2, 3]}]}
       answer: "La 11 sent le tabac froid de Lascombe, le gardien remplaçant, qui n'a plus voulu y dormir. Le mur ne fait aucun bruit. C'est pire."
     right:
       label: "Donnez-moi la 12"
-      effects: {direction: "-", set: [h7_appartement_repris, h7_douze_demandee], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}}
+      effects: {direction: "-", set: [h7_appartement_repris, h7_douze_demandee], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}, schedule: [{card: sl.h7.x1_standard, in: [2, 3]}]}
       answer: "« La 12 n'existe pas. » Escande pousse la clé de la 11 vers toi et retire sa main lentement, comme d'une plaque chaude."
 
   - id: sl.h7.s1_onze_raisonnable
@@ -435,11 +474,11 @@ cards:
     text: "Mars 2013, la Fédération sous tutelle. Le comité provisoire a fait l'inventaire des appartements de fonction. Dauzat, le registre sous le bras : « Vous n'avez rien demandé, {toi}. Gardez le quai. »"
     left:
       label: "Je le rends quand même"
-      effects: {direction: "-", set: [h7_appartement_rendu], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}}
+      effects: {direction: "-", set: [h7_appartement_rendu], var: {saisie_logement: "+1"}, char: {aulard: {statut: parti}}, schedule: [{card: sl.h7.x1_standard, in: [2, 3]}]}
       answer: "Dauzat note la remise des clés, avec l'heure. Le soir, Escande te donne la seule chambre libre, la 11 : le mur est mitoyen avec la 12."
     right:
       label: "Je le garde"
-      effects: {direction: "+", set: [h7_appartement_garde], char: {aulard: {statut: parti}}}
+      effects: {direction: "+", set: [h7_appartement_garde], char: {aulard: {statut: parti}}, schedule: [{card: sl.h7.x1_standard, in: [2, 3]}]}
       answer: "Dauzat referme le registre. « Personne ne vous reprochera d'avoir dormi. » Il le dit comme on remercie quelqu'un."
 
   # ═════════════════════════════════════════════ 2013 · S2 · la copie (10)
@@ -750,7 +789,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "La dernière nuit de la fenêtre. Minuit : le 14 manque au tableau. Deux heures : le 9, le 15. Sandrine écrit chaque heure : « Ils ne dorment pas. Vous non plus. Demain, vous direz quoi, {toi} ? »"
+    text: "La dernière nuit de la fenêtre. Minuit : le 14 manque au tableau. Deux heures : le 9, le 15. Sandrine écrit chaque heure : « Ils ne dorment pas. Vous non plus. Demain, vous direz quoi ? »"
     left:
       label: "Ce que je sais"
       effects: {vestiaire: "+", set: [h7_veille_verite]}
@@ -769,7 +808,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "La dernière nuit de la fenêtre. Ton tabouret t'attend au bout du comptoir. Minuit : le 14 manque. Deux heures : le 9, le 15. Sandrine écrit chaque heure : « Demain, vous direz quoi, {toi} ? »"
+    text: "La dernière nuit de la fenêtre. Ton tabouret t'attend au bout du comptoir. Minuit : le 14 manque. Deux heures : le 9, le 15. Sandrine écrit chaque heure : « Demain, vous direz quoi ? »"
     left:
       label: "Ce que je sais"
       effects: {vestiaire: "+", set: [h7_veille_verite]}
@@ -788,7 +827,7 @@ cards:
     lieu: hotel
     tone: strategique
     once: true
-    text: "La dernière nuit de la fenêtre. Tu redescends au tableau pour la première fois depuis longtemps. Sandrine compte seule, comme tu l'as voulu : « Le 14 manque. Demain, vous direz quoi, {toi} ? »"
+    text: "La dernière nuit de la fenêtre. Tu redescends au tableau pour la première fois depuis longtemps. Sandrine compte seule, comme tu l'as voulu : « Le 14 manque. Demain, vous direz quoi ? »"
     left:
       label: "Ce que je sais"
       effects: {vestiaire: "+", set: [h7_veille_verite]}
@@ -834,6 +873,8 @@ cards:
       effects: {direction: "++", tribunes: "+", set: [h7_parle_groupe]}
       answer: "« Le groupe a été digne. » La page reste pliée dans ta poche. Benali regarde ta poche pendant toute la phrase."
 
+  # La docteure a parlé seule : la phrase sur le groupe ne tient plus. La fiche
+  # de Dauzat porte une heure et un nom. La vérité reste ouverte ; le groupe, non.
   - id: sl.h7.s6_conference_seule
     roles: [selectionneur]
     arc: presse
@@ -841,15 +882,51 @@ cards:
     lieu: stade
     tone: strategique
     once: true
-    text: "Salle de presse, la veille du match. La docteure a parlé seule, hier, à la police. Vence au micro : on te demande une heure, et un nom. Au fond, Léa attend la même chose que lui."
+    text: "Salle de presse, la veille du match. La docteure a parlé seule, hier, à la police. Dauzat t'a glissé une fiche bristol : une heure et un nom. Vence au micro ; Léa au fond ; Benali près de la porte."
     left:
-      label: "Je donne l'heure, 2 h 10"
+      label: "Je raconte la nuit"
+      effects: {end: fiasco_laisse}
+      answer: "« Elle n'était pas seule. » {prenom} {nom} raconte quatre heures, la pile du premier jour, sa signature. La fiche reste à l'envers."
+    right:
+      label: "Je lis la fiche"
       effects: {end: fiasco_bouc}
-      answer: "« 2 h 10. Lian Mbako. » {prenom} {nom} a donné l'heure ; la salle se vide vers les téléphones. Benali reste assise et te regarde finir."
+      answer: "« 2 h 10. Lian Mbako. » La salle se vide vers les téléphones. Benali reste assise, et te regarde finir une fiche que tu n'as pas écrite."
+
+  # Mbako témoigne lundi (le bus de 2012) : il est au premier rang.
+  - id: sl.h7.s6_conference_mbako
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse, vestiaire]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Salle de presse, la veille du match. Mbako est au premier rang, en costume : il témoigne lundi. Dauzat t'a écrit une phrase sur le groupe. Vence au micro ; Léa au fond ; Benali près de la porte."
+    left:
+      label: "Je raconte la nuit"
+      effects: {end: fiasco_laisse}
+      answer: "Tu commences à 2 h 10, par lui. Il ne baisse pas les yeux. « On l'a laissé », dit {prenom} {nom}, et Mbako hoche la tête, une fois."
     right:
       label: "Je parle du groupe"
-      effects: {direction: "++", set: [h7_parle_groupe]}
-      answer: "« Le groupe a été digne. » Personne n'écrit la phrase. Ils ont déjà celle de la docteure."
+      effects: {direction: "++", tribunes: "+", set: [h7_parle_groupe]}
+      answer: "« Le groupe a été digne. » Mbako se lève avant la fin et sort par la porte du fond. Lundi, il parlera seul."
+
+  # Tu es descendu avec la docteure à six heures (la valise) : la police sait.
+  - id: sl.h7.s6_conference_ensemble
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Salle de presse, la veille du match. Cette semaine, à six heures, la docteure n'a pas descendu l'escalier seule. Dauzat t'a écrit une phrase sur le groupe. Vence au micro ; Benali près de la porte."
+    left:
+      label: "Je raconte la nuit"
+      effects: {end: fiasco_laisse}
+      answer: "« On l'a laissé. » {prenom} {nom} dit au pays ce que la police sait depuis six heures du matin, et le reste. Benali sort la première."
+    right:
+      label: "Je parle du groupe"
+      effects: {direction: "++", tribunes: "+", set: [h7_parle_groupe, h7_deux_versions]}
+      answer: "« Le groupe a été digne. » La police a ta déposition, le pays a ta phrase. Dauzat parie qu'elles ne se croiseront jamais."
 
   # Le cahier de nuit sauvé du pilon (« Le tarif de la chambre », 2012).
   - id: sl.h7.s6_conference_coffre
@@ -870,6 +947,27 @@ cards:
       answer: "« Le groupe a été digne. » Benali sort avant la fin. Au coffre de la Rive, le cahier attend le pilon de janvier."
 
   # ════════════════════════════════════════════ 2014 · E1 · la gerbe (1)
+  # L'homme du président : d'accord à quatre heures, et rien dit depuis, à
+  # personne. Quand la procureure atteint la page de quatre heures, Vaubourg
+  # tombe, et la chambre 12 tombe sur toi (fin du rôle, posée par l'histoire).
+  - id: sl.h7.e1_vaubourg
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: escande
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Mars 2014, la première fenêtre. Escande pose ta clé sur une enveloppe du comité : Vaubourg est mis en examen pour la nuit du 14. « Elle est arrivée ce matin, {toi}. Vous montez la lire ? »"
+    left:
+      label: "Je monte la lire"
+      effects: {end: sl_homme_president}
+      answer: "Trois lignes. Au procès-verbal de quatre heures, sous « d'accord », il y avait ton nom ; le comité ne garde pas l'homme du président."
+    right:
+      label: "Je la lis ici"
+      effects: {end: sl_homme_president}
+      answer: "Tu la lis debout, au comptoir. Sandrine finit sa nuit sans te regarder ; elle écrit l'heure dans le cahier, et ton nom en entier."
+
   - id: sl.h7.e1_gerbe
     roles: [selectionneur]
     arc: famille

@@ -65,8 +65,12 @@ arcs:
     carrier: rouvier
     cast: [rouvier, mbako, arzel]
     issues: [accorde, repousse, appel]
+    # « appel » n'existe que si la troisième étape tombe après la nuit du 14
+    # (le cabinet de cardiologie réclame la consultation manquée) : rare par
+    # construction, une carrière sur dix environ.
+    issues_rares: [appel]
     traces:
-      h7_footing_coupe:        "{annee} : Rancé sorti du footing au troisième tour, sur ordre de {nom}. Il a ri, une main sur la poitrine."
+      h7_footing_coupe:       "{annee} : Rancé sorti du footing au troisième tour, sur ordre de {nom}. Il a ri, une main sur la poitrine."
       h7_footing_force:        "{annee} : Rancé a fini les dix tours avec les autres. Rouvier a écrit un chiffre dans la marge et l'a entouré."
       h7_rendez_vous_accorde:  "{annee} : Tibo Rancé avait demandé le 16 novembre pour un rendez-vous à Valdorne. {nom} avait dit oui."
       h7_rendez_vous_repousse: "{annee} : Tibo Rancé voulait le 16 novembre pour un rendez-vous à Valdorne. « Après le barrage », a dit {nom}."
@@ -149,6 +153,7 @@ arcs:
     traces:
       h7_ronde:     "{annee} : chaque nuit de fenêtre, {nom} a fait la ronde du tableau des clés à minuit."
       h7_confiance: "{annee} : {nom} ne descend plus voir le tableau des clés. Sandrine Lavergne compte seule."
+      h7_reveil_six: "{annee} : le petit Rancé avait demandé qu'on l'appelle à six heures. Pas le réveil : Sandrine."
     hint: "Vingt-six crochets derrière un comptoir, et une femme qui ne dort pas."
     start: [2, 5]
     same_club: true
@@ -162,9 +167,9 @@ arcs:
         next: [ { step: songe, in: [2, 4] } ]
       - id: songe
         card:
-          - { id: sl.h7.t2_standard_reve, if: "season >= 2" }
+          - { id: sl.h7.t2_double_2013, if: "season >= 2" }
           - { id: sl.h7.t2_heures_2012, if: "season == 1" }
-          - { id: sl.h7.t2_vingt_septieme }
+          - { id: sl.h7.t2_reveil }
         next: [ { step: ronde, in: [2, 4] } ]
       - id: ronde
         card:
@@ -389,7 +394,9 @@ arcs:
         card: sl.h7.p1_appel
         next: [ { step: dimanche, in: [1, 3] } ]
       - id: dimanche
-        card: sl.h7.p2_dimanche
+        card:
+          - { id: sl.h7.p2_dimanche_ancien, if: "flag('h7_capitaine_ferrol')" }
+          - { id: sl.h7.p2_dimanche }
         next: [ { step: quatorze, in: [1, 3] } ]
       - id: quatorze
         card: sl.h7.p3_quatorze
@@ -412,6 +419,7 @@ arcs:
       h7_quatre_heures_dite: "{annee} : {nom} a raconté à la commandante Benali la réunion de quatre heures. Elle a noté l'heure de la phrase."
       h7_dormi_dit:          "{annee} : à la commandante Benali, {nom} a dit avoir dormi jusqu'à six heures. Elle a noté l'heure de la phrase."
       h7_pv_signale:         "{annee} : {nom} a dit à la police qu'un procès-verbal de quatre heures existait, dans un registre noir."
+      h7_appel_trois:        "{annee} : 2 h 24, la 12 a appelé la chambre de la docteure, quarante secondes. Benali a entouré l'heure."
     hint: "Une feuille où trois heures sont écrites, et toutes celles qui manquent entre elles."
     start: [1, 3]
     same_club: true
@@ -421,9 +429,9 @@ arcs:
         card:
           - { id: sl.h7.n1_heures_appel, if: "flag('h7_police_appelee')" }
           - { id: sl.h7.n1_heures }
-        next: [ { step: couloir, in: [1, 3] } ]
-      - id: couloir
-        card: sl.h7.n2_couloir
+        next: [ { step: standard, in: [1, 3] } ]
+      - id: standard
+        card: sl.h7.n2_deux_heures_vingt_quatre
         next: [ { step: procureure, in: [1, 3] } ]
       - id: procureure
         card: sl.h7.n3_procureure
@@ -597,11 +605,11 @@ arcs:
           - { id: sl.h7.v_registre_police, if: "flag('h7_pv_signale')" }
           - { id: sl.h7.v_registre_brouillon, if: "flag('h7_brouillon_jete')" }
           - { id: sl.h7.v_registre }
-        next: [ { step: berline, in: [1, 2] } ]
+        next: [ { step: berline, in: [1, 3] } ]
       - id: berline
         card: sl.h7.v_berline
         statut_ok: [parti]
-        next: [ { step: envoi, in: [1, 2] } ]
+        next: [ { step: envoi, in: [1, 3] } ]
       - id: envoi
         card:
           - { id: sl.h7.v_source, if: "flag('h7_rossard_plateau')" }
@@ -636,10 +644,10 @@ arcs:
           - { id: sl.h7.x1_standard_appels, if: "flag('h7_appels_parle')" }
           - { id: sl.h7.x1_standard_tus, if: "flag('h7_appels_tus')" }
           - { id: sl.h7.x1_standard }
-        next: [ { step: telephone, in: [1, 2] } ]
-      - id: telephone
-        card: sl.h7.x2_telephone
-        next: [ { step: double, in: [1, 2] } ]
+        next: [ { step: reve, in: [1, 3] } ]
+      - id: reve
+        card: sl.h7.i3_standard
+        next: [ { step: double, in: [2, 4] } ]
       - id: double
         card: sl.h7.x3_double
         next: []

@@ -113,6 +113,11 @@ arcs:
           - { id: sl.h7.a1_brassard }
         at: [1, 1]
         season: 0
+      # Le rêve de 2011, avant la liste et la nuit : le vingt-septième double.
+      - id: vingt_septieme
+        card: sl.h7.i1_vingt_septieme
+        at: [10, 11]
+        season: 0
       - id: liste
         card:
           - { id: sl.h7.a2_liste_soixante, if: "flag('h7_soixante_question')" }
@@ -129,6 +134,7 @@ arcs:
       - id: quatre_heures
         card:
           - { id: sl.h7.a4_quatre_heures_police, if: "flag('h7_police_appelee')" }
+          - { id: sl.h7.a4_quatre_heures_reveil, if: "flag('h7_reveil_six')" }
           - { id: sl.h7.a4_quatre_heures }
         at: [16, 16]
         season: 0
@@ -145,6 +151,11 @@ arcs:
           - { id: sl.h7.r1_portes_perdu }
         at: [1, 2]
         season: 1
+      # Le rêve de 2012, entre la main de 1 h 47 et le cahier : le couloir.
+      - id: couloir
+        card: sl.h7.i2_couloir
+        at: [9, 10]
+        season: 1
       - id: cahier
         card:
           - { id: sl.h7.r2_cahier_premier_soir, if: "flag('h7_tableau_demande')" }
@@ -154,6 +165,7 @@ arcs:
       - id: bus_nuit
         card:
           - { id: sl.h7.r3_bus_cahier, if: "flag('h7_cahier_lu')" }
+          - { id: sl.h7.r3_bus_trois, if: "flag('h7_appel_trois')" }
           - { id: sl.h7.r3_bus_corner, if: "flag('h7_corner_verre')" }
           - { id: sl.h7.r3_bus_justice, if: "flag('h7_mbako_lache')" }
           - { id: sl.h7.r3_bus_plateau, if: "flag('h7_rossard_plateau')" }
@@ -208,8 +220,13 @@ arcs:
         season: 2
       - id: conference
         card:
-          - { id: sl.h7.s6_conference_seule, if: "flag('h7_arzel_seule')" }
+          # La docteure a parlé seule, et le nom de Mbako court déjà (Rossard l'a
+          # dit à l'antenne) ou tu lui as promis le silence dans le bus : la
+          # fiche de Dauzat porte une heure et un nom. Sinon, la phrase du groupe.
+          - { id: sl.h7.s6_conference_seule, if: "flag('h7_arzel_seule') && (flag('h7_rossard_plateau') || flag('h7_mbako_silence'))" }
           - { id: sl.h7.s6_conference_page, if: "flag('h7_page_poche') || flag('h7_vl_cahier_nuit')" }
+          - { id: sl.h7.s6_conference_mbako, if: "flag('h7_mbako_temoignera')" }
+          - { id: sl.h7.s6_conference_ensemble, if: "flag('h7_arzel_ensemble')" }
           - { id: sl.h7.s6_conference_coffre, if: "flag('h7_cahier_sauve')" }
           - { id: sl.h7.s6_conference }
         at: [17, 17]
@@ -218,6 +235,8 @@ arcs:
       # Qui a parlé du groupe arrive ici, et seulement lui : la conférence, la
       # fin rare et le capitaine donné ont fermé la carrière avant.
       - id: gerbe
-        card: sl.h7.e1_gerbe
+        card:
+          - { id: sl.h7.e1_vaubourg, if: "flag('h7_quatre_heures_accord') && !flag('h7_quatre_heures_dite') && !flag('h7_pv_signale') && !flag('h7_arzel_ensemble')" }
+          - { id: sl.h7.e1_gerbe }
         at: [1, 1]
         season: "3+"
