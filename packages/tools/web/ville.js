@@ -2616,7 +2616,7 @@
   }
   var attente = [];
   var allerApresNuit = false;
-  function dormir() {
+  function dormir(texteNuit) {
     // jusqu'au matin suivant ; la nuit peut être interrompue par un rendez-vous (ou un événement)
     var depart = S.semaine;
     S.eveil = 0;
@@ -2625,7 +2625,7 @@
     majHud(); sauver();
     var titre = JOUR_MOT[S.jour] + ", 7 h";
     // on se réveille chez soi : dans sa pièce, si elle en a une
-    fonduTexte(titre, moisCourant(), S.semaine !== depart ? "" : "", function () {
+    fonduTexte(titre, moisCourant(), texteNuit || "", function () {
       var chez = chezToi();
       if (aInterieur(chez) && S.lieu === chez) entrer(chez); else recaler();
     }, function () {
@@ -2715,12 +2715,15 @@
     var lieuOuvert = ouvert(def) || (rdv && rdv.lieu === cle);
     var el = $("villePorte");
     el.classList.remove("v-mission");
-    var acts = activitesIci(cle);
-    // dedans, un objet touché : ce qu'on y fait ; s'il ne porte rien, ce qui se fait dans la pièce
+    var vlc = $("villeLieu"); if (vlc) vlc.classList.remove("on");
+    var acts = activitesIci(cle), toutes = acts, piece = !!(dedans && dedans.cle === cle), objPropre = false;
+    // dedans, un objet touché : ce qu'on y fait ; s'il ne porte rien, ce qui se fait dans la pièce.
+    // La pièce entière (le bouton « Ici ») : ce qui ne tient à aucun objet, ses objets, ce qui s'y vend.
     if (objet) {
       var aObj = acts.filter(function (a) { return a.objet === objet.id; });
-      acts = aObj.length ? aObj : acts.filter(function (a) { return !a.objet; });
-    }
+      objPropre = aObj.length > 0;
+      acts = objPropre ? aObj : acts.filter(function (a) { return !a.objet; });
+    } else if (piece) acts = acts.filter(function (a) { return !a.objet || !dedans.m.objets.some(function (o) { return o.id === a.objet; }); });
     // ce qu'on voit en entrant : la première variante vraie (la vitrine qui
     // change, la plaque gravée…), sinon le texte du lieu
     var vu = (D.lieux_variantes || []).filter(function (v) { return v.lieu === cle && siVrai(v.si, cle); })[0];
@@ -2751,8 +2754,20 @@
       });
       html += '</div>';
     }
+    // dans la pièce entière : ses objets, chacun d'un geste (on y va, on voit ce qu'on y fait)
+    var objetsPiece = piece && !objet ? dedans.m.objets.filter(function (o) { return toutes.some(function (a) { return a.objet === o.id; }); }) : [];
+    if (objetsPiece.length) {
+      html += '<h3 class="v-h">Dans la pièce</h3><div class="v-acts v-dans">';
+      objetsPiece.forEach(function (o) { html += '<button type="button" class="v-act v-va" data-obj="' + esc(o.id) + '"><b>' + esc(o.label) + '</b><span class="cout">›</span></button>'; });
+      html += '</div>';
+    }
     // ce qui se vend ici (deux gestes pour acheter : on ne vide pas un compte d'un doigt)
-    var objets = objet && acts.some(function (a) { return a.objet === objet.id; }) ? [] : aVendreIci(cle);
+    var objets = objet && objPropre ? [] : aVendreIci(cle);
+    // un objet qui a ses propres gestes : le reste de la pièce est à un geste
+    if (objet && objPropre) {
+      var reste = toutes.filter(function (a) { return !a.objet; }).length + aVendreIci(cle).length + (dedans.m.objets.length > 1 ? 1 : 0);
+      if (reste) html += '<button type="button" class="v-sortir v-reste">Le reste de la pièce ›</button>';
+    }
     if (objets.length) {
       html += '<h3 class="v-h">À vendre</h3><div class="v-acts v-objets">';
       objets.forEach(function (o) {
@@ -2789,7 +2804,15 @@
     });
     var bm = el.querySelector(".v-mi");
     if (bm) bm.addEventListener("click", function () { ouvrirMission(cle); });
-    el.querySelector(".v-sortir:not(.v-y):not(.v-att)").addEventListener("click", fermerPorte);
+    var br = el.querySelector(".v-reste");
+    if (br) br.addEventListener("click", function () { ouvrirPorte(cle, null, null); });
+    el.querySelectorAll(".v-va").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var o = dedans && dedans.m.objets.filter(function (x) { return x.id === b.getAttribute("data-obj"); })[0];
+        if (o) { fermerPorte(); allerObjet(o); }
+      });
+    });
+    el.querySelector(".v-pied .v-sortir:not(.v-att)").addEventListener("click", fermerPorte);
   }
   function fermerPorte() {
     porteOuverte = null; porteObjet = null;
@@ -2806,14 +2829,20 @@
     if (a.jeu) {
       var objet0 = porteObjet;
       fermerPorte();
+      // la scène d'avant la partie : une variante du texte (la partie dira la suite)
       jouerJeu(a.jeu, a, function (res) {
         if (!res) { if (cle) ouvrirPorte(cle, null, objet0); return; }
         porteObjet = objet0; porteOuverte = cle;
         finirActivite(a, cle, res);
-      });
+      }, varianteDe(a));
       return;
     }
     finirActivite(a, cle, null);
+  }
+  // une variante du texte d'une activité, tour à tour (la première fois, la première)
+  function varianteDe(a) {
+    if (a.textes && a.textes.length) { S.variantes = S.variantes || {}; var iv = S.variantes[a.id] = ((S.variantes[a.id] == null ? -1 : S.variantes[a.id]) + 1) % a.textes.length; return remplir(a.textes[iv]); }
+    return remplir(a.texte || "");
   }
   function finirActivite(a, cle, res) {
     var mise = a.francs || 0, gain = 0;
@@ -2821,11 +2850,8 @@
     if (res && res.gagne && mise < 0 && (a.jeu === "des" || a.jeu === "cartes")) gain = Math.round(-mise * (a.jeu === "des" ? res.score : 2));
     S.francs += mise + gain;
     S.jourFaits[a.id] = (S.jourFaits[a.id] || 0) + 1;
-    // une variante du texte, tour à tour
-    var texte;
-    if (a.textes && a.textes.length) { S.variantes = S.variantes || {}; var iv = S.variantes[a.id] = ((S.variantes[a.id] || 0) + 1) % a.textes.length; texte = remplir(a.textes[iv]); }
-    else texte = remplir(a.texte);
-    if (res) texte = res.phrase + (gain ? " (+" + argent(gain) + ")" : "");
+    // une variante du texte, tour à tour ; après un jeu, ce que la partie a donné
+    var texte = res ? res.phrase + (gain ? " (+" + argent(gain) + ")" : "") : varianteDe(a);
     if (a.special) {
       var sp = faireSpecial(a, cle, texte);
       if (sp === true) { majHud(); sauver(); return; }
@@ -3139,6 +3165,7 @@
       '<button type="button" id="villeAttendre">' + icone("horloge", 15) + 'Attendre</button>' +
       '<button type="button" id="villeBiens">' + icone("caisse", 15) + 'Biens</button>' +
       '<button type="button" id="villeRdv">' + icone("fleche", 15) + 'Y aller</button>' +
+      '<button type="button" id="villeIci">' + icone("caisse", 15) + 'Ici</button>' +
       '<button type="button" id="villeSortir">' + icone("fleche", 15) + 'Sortir</button>';
     var bandeau = $("bandeau");
     gs.insertBefore(espace, bandeau);
@@ -3184,6 +3211,7 @@
     $("villePlan").addEventListener("click", ouvrirPlan);
     $("villeAttendre").addEventListener("click", function () { attendre(); });
     $("villeSortir").addEventListener("click", function () { if (dedans && !carteOn && !occupe) allerSortir(); });
+    $("villeIci").addEventListener("click", function () { if (dedans && !carteOn && !occupe) ouvrirPorte(dedans.cle, null, null); });
     $("villeBiens").addEventListener("click", function () { if (!carteOn && !occupe) ouvrirInventaire(); });
     $("villeRdv").addEventListener("click", function () {
       if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }

@@ -16,7 +16,7 @@
     if (el) return el;
     el = document.createElement("div"); el.className = "v-jeu"; el.id = "villeJeu"; el.hidden = true;
     el.setAttribute("role", "dialog"); el.setAttribute("aria-label", "Un petit jeu");
-    el.innerHTML = '<div class="v-jeu-boite"><h2></h2><p class="v-jeu-regle"></p><canvas width="240" height="200"></canvas>' +
+    el.innerHTML = '<div class="v-jeu-boite"><h2></h2><p class="v-jeu-scene"></p><p class="v-jeu-regle"></p><canvas width="240" height="200"></canvas>' +
       '<div class="v-jeu-des" hidden></div><p class="v-jeu-score" aria-live="polite"></p>' +
       '<div class="v-jeu-btns"><button type="button" class="v-jeu-action"></button><button type="button" class="v-jeu-fermer">Laisser</button></div></div>';
     document.body.appendChild(el);
@@ -30,13 +30,15 @@
     return el;
   }
   // un jeu : ouvre, tourne, rend un résultat (`gagne`, `score`, une phrase) à `fin`
-  function jouerJeu(nom, a, fin) {
+  function jouerJeu(nom, a, fin, scene) {
     var el = uiJeu(), J = JEUX[nom];
     if (!J) { fin({ gagne: false, score: 0, phrase: "" }); return; }
     occupe = true;
     var cv0 = el.querySelector("canvas"), x = cv0.getContext("2d");
     x.imageSmoothingEnabled = false;
     el.querySelector("h2").textContent = a.label;
+    var sc = el.querySelector(".v-jeu-scene");
+    sc.textContent = scene || ""; sc.hidden = !scene;
     el.querySelector(".v-jeu-regle").textContent = J.regle;
     el.querySelector(".v-jeu-score").textContent = "";
     el.querySelector(".v-jeu-des").hidden = true;
@@ -194,9 +196,10 @@
     return out.join(" ");
   }
   // le téléphone : quelqu'un que tu connais décroche, et dit une chose du moment
-  function ouvrirTelephone(cle) {
+  function ouvrirTelephone(cle, texte) {
     var el = $("villePorte"), connus = Object.keys(S.vus || {}).filter(function (q) { return CHARS[q]; }).sort().slice(0, 12);
-    var html = '<h2>Le téléphone</h2><p class="v-sous">' + esc(nomLieu(LIEU[cle]) + " · " + JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]].toLowerCase()) + '</p>';
+    var html = '<h2>Le téléphone</h2><p class="v-sous">' + esc(nomLieu(LIEU[cle]) + " · " + JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]].toLowerCase()) + '</p>' +
+      (texte ? '<p class="v-texte">' + esc(texte) + '</p>' : "");
     if (!connus.length) html += '<p class="v-texte">Tu ne connais encore personne à qui téléphoner.</p>';
     else {
       html += '<div class="v-acts">';
@@ -232,9 +235,9 @@
     objet: function (o, cle) { return false; },
   };
   function faireSpecial(a, cle, texte) {
-    if (a.special === "dormir") { fermerPorte(); dormir(); return true; }
+    if (a.special === "dormir") { fermerPorte(); dormir(texte); return true; }
     if (a.special === "tele") return regarderTele(cle);
     if (a.special === "journal") return lireJournal();
-    if (a.special === "telephone") { ouvrirTelephone(cle); return true; }
+    if (a.special === "telephone") { ouvrirTelephone(cle, texte); return true; }
     return false;
   }
