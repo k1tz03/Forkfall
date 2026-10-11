@@ -1,0 +1,116 @@
+# « Les Deux Téléphones » (histoire 10, 2037-2040) — trois missions de la ville
+# (format : en-tête de content/ville/missions.yaml). Chacune nourrit l'acte
+# final, et chacune a son double dans le moteur, pour qui joue sans la ville :
+#   · h10_dictaphone — Léa, au kiosque du quai, le matin, quand la sonnerie de
+#     la veste de Nino a été entendue : la bande (h10_enregistrement), la preuve
+#     de la fin « Les deux clapets » (moteur : pr.h10.lea, l'étape de la bande) ;
+#   · h10_photo_1974 — Madame Josiane, à la maison de retraite derrière
+#     Saint-Aubin, le matin : la photo de 1974 raccrochée au clou
+#     (h10_photo_raccrochee), une condition de la fin rare (moteur :
+#     pr.h10.photo) ;
+#   · h10_truelle — Ahmed Tazi, au pied de l'escalier nord, le soir, la
+#     dernière saison : payer le maçon pour qu'il « oublie » la dernière marche
+#     (h10_truelle_payee). Payé avec l'enveloppe crème de Rive Capital
+#     (h10_truelle_sale), c'est la brigade sous l'escalier, la veille du
+#     dernier match, et la porte de la garde à vue (pr.h10.c6_marche_brigade ;
+#     moteur : pr.h10.truelle).
+# Les textes n'accordent rien au personnage joué.
+missions:
+  - id: h10_dictaphone
+    titre: "Le dictaphone de Léa"
+    roles: [president]
+    donneur: {sprite: passante, nom: "Léa", lieu: kiosque, tranches: [matin]}
+    si: "flag(histoire_h10) && flag(h10_clapet_nino) && !flag(h10_enregistrement) && !flag(h10_dictaphone)"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Kiosque du quai. Léa sort de son sac un dictaphone de 1995, gris, une cassette dedans : « Un clapet n'enregistre rien. Ça, si. Il faut le tenir contre l'écouteur, la nuit, pendant qu'elle parle. »"
+        choix:
+          - id: prendre
+            label: "Je le prends"
+            effets: {set: [h10_dictaphone]}
+            reponse: "Il pèse le poids d'une pomme. Elle montre la touche rouge, deux fois. « Les piles tiennent neuf heures. Elle parle moins longtemps. »"
+            suite: nuit
+          - id: laisser
+            label: "Gardez-le"
+            reponse: "Elle le range sans insister. « Il a déjà enregistré un président, en 1995. Il sait attendre. »"
+            suite: fin
+      - id: nuit
+        objectif: {lieu: appartement, tranches: [nuit], delai: 7}
+        texte: "Trois heures du matin, la cuisine. Le clapet vibre sur la table. Le dictaphone est à côté, la touche rouge sous ton pouce. La voix du mois commence par le temps qu'il fait."
+        choix:
+          - id: enregistrer
+            label: "J'enregistre"
+            effets: {set: [h10_enregistrement]}
+            reponse: "La bande tourne quatre minutes. Elle parle de l'assemblée, de Nino, du centre. Le voyant rouge ne s'éteint qu'après la tonalité."
+            suite: fin
+          - id: raccrocher
+            label: "Je raccroche"
+            reponse: "Tu raccroches avant la fin de sa phrase sur le temps. Le dictaphone a enregistré la pluie, et ta respiration."
+            suite: fin
+        echec:
+          texte: "Le dictaphone est resté dans ta veste, contre le clapet. Ils ont passé la semaine ensemble ; aucun des deux n'a rien dit."
+
+  - id: h10_photo_1974
+    titre: "La photo de 1974"
+    roles: [president]
+    donneur: {sprite: passante, nom: "Madame Josiane", lieu: eglise, tranches: [matin]}
+    si: "flag(histoire_h10) && !flag(h10_photo_raccrochee) && !flag(h10_photo_tiroir) && !arc(pr.h10.photo)"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Derrière Saint-Aubin, la maison de retraite. Madame Josiane, près de la fenêtre, te tend un cadre emballé dans L'Écho de 1991 : « Le clou est toujours au mur de l'escalier. Raccrochez-la. »"
+        choix:
+          - id: prendre
+            label: "Je la prends"
+            effets: {set: [h10_photo_confiee]}
+            reponse: "Le cadre est plus lourd qu'il n'en a l'air. « C'est le verre. En 1974, on mettait du vrai verre. Attention à l'escalier. »"
+            suite: clou
+          - id: refuser
+            label: "Gardez-la ici"
+            effets: {set: [h10_photo_tiroir]}
+            reponse: "« Ici, elle ne voit personne. » Elle la repose contre le mur, face au mur, comme on punit."
+            suite: fin
+      - id: clou
+        objectif: {lieu: clubhouse, tranches: [matin, aprem], delai: 7}
+        texte: "L'escalier du club-house, le clou au-dessus de la troisième marche. Le cadre dans tes mains, L'Écho de 1991 encore autour. Mireille regarde depuis le secrétariat, sans bouger."
+        choix:
+          - id: accrocher
+            label: "Je la raccroche"
+            effets: {set: [h10_photo_raccrochee], jauges: {tribunes: 2}}
+            reponse: "Le cadre trouve le clou du premier coup, comme s'il ne l'avait jamais quitté. Mireille appelle sa tante avant que tu sois en bas."
+            suite: fin
+          - id: tiroir
+            label: "Je la range au bureau"
+            effets: {set: [h10_photo_tiroir]}
+            reponse: "Elle dort dans le tiroir du bas, sous le relevé de la banque. Mireille ne pose pas de question : elle sait déjà."
+            suite: fin
+        echec:
+          texte: "Le cadre est resté emballé sur la banquette arrière. Il y a un clou, quelque part, qui attend. Madame Josiane le sait."
+
+  - id: h10_truelle
+    titre: "La truelle"
+    roles: [president]
+    donneur: {sprite: passant, nom: "Ahmed Tazi", lieu: stade, tranches: [soir]}
+    si: "flag(histoire_h10) && flag(h10_escalier) && saison == 3 && !flag(h10_truelle_payee)"
+    chance: 0.35
+    etapes:
+      - id: offre
+        texte: "Au pied de l'escalier nord, Tazi range ses outils à la lampe frontale : « On me paiera pour murer la dernière, la nuit d'avant. Pour l'oublier, ce serait {montant}. Le prix d'une marche. »"
+        choix:
+          - id: payer
+            label: "Je paie"
+            francs: -8000
+            effets: {set: [h10_truelle_payee, h10_truelle]}
+            reponse: "Il prend l'argent sans le compter et le glisse sous le niveau, dans sa caisse à outils. « Pour un pourboire, c'est beaucoup. »"
+            suite: fin
+          - id: enveloppe
+            label: "Avec l'enveloppe crème"
+            si: "flag(h10_enveloppe_gardee)"
+            effets: {set: [h10_truelle_payee, h10_truelle_sale, h10_truelle]}
+            reponse: "Il compte les liasses du pouce, sans les sortir, comme un caissier. « Des billets neufs. Ça se suit. » Il ne dit pas si c'est un problème."
+            suite: fin
+          - id: refuser
+            label: "Je ne paie personne"
+            reponse: "« C'est mieux. » Il éteint sa lampe. « Un maçon qui oublie, on finit toujours par le payer deux fois. »"
+            suite: fin

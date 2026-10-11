@@ -1,0 +1,85 @@
+# « Les Deux Téléphones » — les fins du livre (schéma : en-tête de
+# content/endings.yaml). Toutes posées par l'assemblée des socios
+# (pr.h10.d1_assemblee*, saison 3, créneau 1), sauf la garde à vue, que pose la
+# brigade sous l'escalier nord (pr.h10.c6_marche_brigade).
+#
+#   escalier_clapets  — la vérité : les deux clapets sur la table, la preuve à
+#                       côté ; l'accord n'est pas voté.
+#   escalier_franchise — le prix : on laisse voter ; le nom vendu, le siège.
+#   escalier_montee   — la fin rare : monté, la dernière marche ouverte, Nino
+#                       retourné, la photo de 1974 raccrochée, Gégé à +2.
+#   escalier_mur      — la pire : la marche murée, la défaite promise, la
+#                       lettre de Gégé lue par Nino pour se sauver.
+#   escalier_aveu     — sans preuve contre Nino : on te croit pour ton clapet.
+#
+# « Monté » se lit comme dans l'arc : première division, ou barrage gagné au
+# dernier match (`world.rang_final == 4 && vars.gm_won == 1`).
+# Les lignes ajoutées aux fins communes (`epitaph_plus_ajouts`) lisent le
+# drapeau d'histoire et ne redisent pas l'épitaphe qu'elles complètent.
+endings:
+  - id: escalier_clapets
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "Les deux clapets"
+    epitaph: "À l'assemblée des socios, {prenom} {nom} a sorti de sa veste deux téléphones à clapet, le sien et celui du capo, et l'accord de franchise n'a pas été voté. L'escalier a fermé quand même ; le Racing, lui, est resté au bord de la Rive, sous son nom."
+    epitaph_plus:
+      - { when: "world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)", text: "Le Racing avait monté la dernière marche la veille. Il est resté en haut, sous son nom ; la capitale a dû se trouver un autre club." }
+      - { when: "flag('h10_enregistrement')", text: "Le juge a écouté trois fois la bande du dictaphone de Léa. La troisième fois, il a demandé qui était Madame Mai." }
+
+  - id: escalier_franchise
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "La franchise"
+    epitaph: "Le lendemain du dernier match, l'assemblée des socios a vendu le nom du Racing à la capitale ; {prenom} {nom} siège depuis au conseil de la Ligue des franchises. Dans la vitrine de l'agence, la troisième tranche n'a jamais été aussi verte."
+    epitaph_plus:
+      - { when: "world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)", text: "Le Racing était monté la veille : c'est sa place en première division que la capitale a achetée, et le nom avec." }
+      - { when: "vars.gm_won == 0", text: "Le dernier match n'avait pas été gagné. Au coup de sifflet, Nino comptait déjà les cartes de l'assemblée sur un coin de nappe." }
+
+  - id: escalier_montee
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "La dernière montée"
+    epitaph: "Le Racing est monté en première division le dernier soir où l'on pouvait encore monter, et trois mille visages de Gégé ont envahi la pelouse. Le consortium a pris à {prenom} {nom} tout ce qui était à son nom ; l'escalier nord a gardé sa dernière marche."
+    epitaph_plus:
+      - { when: "flag('h10_dette_nino')", text: "Nino a lu à voix haute, à l'assemblée, le nom de Madame Mai et son numéro. Il a gardé sa dette envers {nom}, et sa carte de socio." }
+      - { when: "flag('h10_photo_raccrochee')", text: "Le soir même, une seconde photo a rejoint celle de 1974 dans l'escalier du club-house : la pelouse envahie, floue de joie. {nom} n'y est pas ; c'était voulu." }
+
+  - id: escalier_mur
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "Le mur"
+    epitaph: "La nuit d'avant le dernier match, l'escalier nord a été muré jusqu'en haut ; le surlendemain, les socios ont lu une lettre de Gégé qui parlait de deux téléphones. On a vu brûler la villa des hauteurs depuis toute la ville ; {prenom} {nom} n'était déjà plus à Aubérive."
+    epitaph_plus:
+      - { when: "flag('h10_siege_signe')", text: "Le 1er juillet, la chaise de la Ligue des franchises est restée vide. Le carton au nom de {nom} y était encore, posé à l'envers." }
+      - { when: "flag('h10_entrepot_signe')", text: "En juillet, on a muré les fenêtres des entrepôts de la Tréfilerie, par sécurité. Les quarante salariés de {nom} l'ont appris par L'Écho." }
+
+  - id: escalier_aveu
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "L'aveu"
+    epitaph: "À l'assemblée, {prenom} {nom} a posé son clapet sur la table et raconté le pacte de la Rive ; on l'a cru{pg, select, f{e} other{}} pour le sien. Une heure plus tard, l'accord était voté à main levée, et Nino comptait les mains."
+    epitaph_plus:
+      - { when: "flag('h10_lettre_brulee')", text: "Gégé avait noté au crayon les soirs où deux sonneries montaient du local. Les dates ont brûlé en mai, dans un évier ; on n'a cru que ce que {nom} disait de soi." }
+      - { when: "relation.gege >= 2", text: "Sur la tombe de Gégé, quelqu'un a posé un clapet ouvert, la batterie retirée. Personne ne sait qui ; tout le monde sait de qui." }
+
+# Les fins communes, habillées pour 2037-2040 (le livre, § 8). Une ligne chacune,
+# qui ne commence pas par les mots de l'épitaphe qu'elle suit.
+epitaph_plus_ajouts:
+  - { fin: co_garde_a_vue, when: "flag('histoire_h10') && flag('h10_truelle')", text: "Le maçon de l'escalier nord a été relâché le premier, sa truelle sous le bras. Il n'a donné aucun nom ; on ne lui en a pas demandé." }
+  - { fin: co_garde_a_vue, when: "flag('histoire_h10')", text: "L'escalier a fermé pendant ces deux jours ; dans la cellule, on t'a laissé un seul téléphone, celui du mur." }
+  - { fin: pr_pantin, when: "flag('histoire_h10')", text: "Le jour de la vente, les deux téléphones ont sonné en même temps ; tu as décroché celui qui payait." }
+  - { fin: pr_siege, when: "flag('histoire_h10') && flag('h10_photo_hotel')", text: "La nuit de la photo, les cartes de socio ont été déposées une à une sur ton bureau ; au matin, il n'en manquait aucune." }
+  - { fin: pr_siege, when: "flag('histoire_h10')", text: "Nino a compté les cartes de socio rendues au guichet de la Nord, deux fois. La seconde, il en manquait une : la sienne." }
+  - { fin: pr_ag, when: "flag('histoire_h10') && flag('h10_nino_lache')", text: "Nino comptait les mains pour quelqu'un d'autre depuis la nuit du Terminus. Il a compté celles-là sans lever les yeux." }
+  - { fin: pr_ag, when: "flag('histoire_h10')", text: "Nino a compté les mains levées contre {nom}, deux fois, très vite. Il y en avait trois de trop ; personne n'a recompté." }
+  - { fin: pr_commission, when: "flag('histoire_h10') && flag('h10_ligne_archivee')", text: "Dans les archives de la banque, la Commission a trouvé une ligne du 2 septembre 2037 : « Rive Capital, solde de tout compte »." }
+  - { fin: pr_commission, when: "flag('histoire_h10')", text: "Le jour du contrôle, le clapet a sonné dans la veste de {nom}, au milieu des comptes. Personne n'a demandé qui appelait." }
+  - { fin: pr_fonds, when: "flag('histoire_h10')", text: "Rive Capital a racheté le Racing un an avant la loi, avec l'escalier nord et son maçon." }
+  - { fin: pr_fantome, when: "flag('histoire_h10')", text: "Owen Corven a pris ta chaise au conseil des socios. Le clapet, lui, a continué de sonner chez {nom}, pour rien." }
+  - { fin: pr_greve, when: "flag('histoire_h10')", text: "Le jour de la grève, même le maçon de l'escalier nord a posé sa truelle. La marche du mois est restée vide, pour la première fois." }
+  - { fin: pr_mairie, when: "flag('histoire_h10')", text: "Le maire élu à ta place a fait rouvrir l'escalier nord, le premier jour. Il ne menait plus nulle part ; on l'a rouvert quand même." }

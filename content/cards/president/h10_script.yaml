@@ -1,0 +1,1033 @@
+# « Les Deux Téléphones » — les cartes du script (arcs/president/h10_script.yaml,
+# pr.h10.script) et sa chaîne (l'enveloppe crème). Toutes hors du sac, toutes
+# `once`.
+#
+# Les supports : le clapet (`portable`, l'écran vert « Numéro masqué ») porte la
+# voix du mois, sans locuteur ; les soirs portent `sombre` et un `lieu:` ; les
+# intermèdes (`intermede`) n'ont ni locuteur ni effet, un seul bouton.
+#
+# Les graines et ce qui les paie, d'une saison à l'autre :
+#   · la promesse de la buvette (prologue) → la lettre de Gégé (S2, 11) ;
+#   · la première marche (S0, 1) → la dernière (S2, 17), et le ciment frais ;
+#   · « à l'hôtel, cette fois » (Madame Mai, S0, 17) → la photo de l'hôtel (S1) ;
+#   · « par la voie des airs » (l'appel d'après la photo) → l'hélicoptère (S1, 4-5) ;
+#   · le manteau sur une autre photo (S1, 1-2) → la sonnerie dans la veste de
+#     Nino (S1, 10) ;
+#   · « Bonsoir à tous les deux » (l'intermède de S0) → la même sonnerie ;
+#   · l'enveloppe crème (S1, 5) → la truelle (S2) → la brigade sous l'escalier ;
+#   · « On a déjà la photo » (l'imprimeur, S2, 12) → l'intermède des masques →
+#     « nous les avions commandés en janvier » (Madame Mai, S2, 16).
+cards:
+  # ================================================================ saison 0
+  # A1 · La première marche — escalier nord (créneau 1, septembre).
+  - id: pr.h10.a1_marche_ville
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord. Des écoliers regardent un maçon murer la première marche. Il parle sans lever les yeux : « Par sécurité, {toi}. Une par mois, jusqu'à la loi. Je mure, je ne décide pas. »"
+    left:
+      label: "Arrêtez ce chantier"
+      effects: {tribunes: "+", direction: "-", set: [h10_escalier, h10_chantier_conteste], react: pr.h10.re.tazi_ordre}
+      answer: "Il pose la truelle en travers du seau. Les écoliers applaudissent. Lui attend que tu aies tourné le coin pour la reprendre."
+    right:
+      label: "Combien de marches ?"
+      effects: {tribunes: "-", direction: "+", set: [h10_escalier]}
+      answer: "« Trente-trois. » Un des enfants les compte à voix haute, en montant, jusqu'à ce que sa mère le rappelle."
+
+  - id: pr.h10.a1_marche_consortium
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, sponsors]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord. Un maçon mure la première marche ; sur sa brouette, le sigle de Rive Capital, gratté à moitié. « Par sécurité, {toi}. Une par mois, jusqu'à la loi. Je mure, je ne décide pas. »"
+    left:
+      label: "Arrêtez ce chantier"
+      effects: {tribunes: "+", direction: "-", set: [h10_escalier, h10_chantier_conteste], react: pr.h10.re.tazi_ordre}
+      answer: "Il pose la truelle en travers du seau et regarde la brouette, pas toi. « Ce n'est pas moi qui paie le ciment. »"
+    right:
+      label: "Combien de marches ?"
+      effects: {tribunes: "-", direction: "+", set: [h10_escalier]}
+      answer: "« Trente-trois. La dernière, ce sera en mai 2040. » Il gratte le sigle de l'ongle, sans conviction."
+
+  - id: pr.h10.a1_marche
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord de la tribune. Un maçon en bleu de travail mure la première marche, sans se presser : « Par sécurité, {toi}. Une par mois, jusqu'à la loi. Je mure, je ne décide pas. »"
+    left:
+      label: "Arrêtez ce chantier"
+      effects: {tribunes: "+", direction: "-", set: [h10_escalier, h10_chantier_conteste], react: pr.h10.re.tazi_ordre}
+      answer: "Il pose la truelle en travers du seau. « L'ordre vient de la Ligue. Je peux appeler, si vous voulez. Ils ne répondent pas. »"
+    right:
+      label: "Combien de marches ?"
+      effects: {tribunes: "-", direction: "+", set: [h10_escalier]}
+      answer: "« Trente-trois. » Il compte sur ses doigts, les rouvre trois fois. « La dernière, ce sera en mai 2040. Je serai encore là. »"
+
+  # A2 · La voix de Gigi — loge, jour de match (créneau 5, octobre).
+  - id: pr.h10.a2_voix
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, presse]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Loge, jour de match. Au micro, la voix de Gigi Vecchio, mort en 2031, salue « {prenom}, en loge ». Gégé : « Il ne t'a jamais vu{pg, select, f{e} other{}}. Et il ne disait pas “magnifique”. »"
+    left:
+      label: "Coupez cette voix"
+      effects: {tribunes: "+", caisse: "-", relation: {gege: 1}, set: [h10_voix_coupee], react: pr.h10.re.nino_chant}
+      answer: "À la reprise, les haut-parleurs se taisent. La chaîne retient une pénalité sur les droits. La Nord commente elle-même, plus fort."
+    right:
+      label: "Laissez-le parler"
+      # Le clapet change de nom pour la première fois : en octobre, la femme
+      # du mois appelle pendant la mi-temps, Gégé assis à côté (au créneau 6,
+      # on est en novembre : rien).
+      effects: {caisse: "+", tribunes: "-", set: [h10_voix_gardee], react: [{card: pr.h10.re.gege_sonnerie, if: "slot <= 5"}]}
+      answer: "Au premier but, la voix dit « magnifique ». Gégé remet sa casquette et ne l'enlève plus de tout le match."
+
+  # Intermède · Les deux sonneries (créneau 8, décembre). Le fait déformé : il
+  # y a un second clapet au bout du couloir du local (S1, 10).
+  - id: pr.h10.a_intermede
+    roles: [president]
+    arc: clapet
+    tags: [intermede, portable]
+    tone: strategique
+    once: true
+    text: "Tu dors. Le clapet sonne dans ta veste, puis un second, plus loin, au bout d'un couloir qui sent la bière froide. Tu décroches le tien. « Ici Madame Décembre. Bonsoir à tous les deux. »"
+    left:
+      label: "Je raccroche"
+      effects: {}
+      answer: "Au réveil, le clapet est dans ta veste, éteint. Tu ne te rappelles pas l'avoir rangé."
+    right:
+      label: "Je raccroche"
+      effects: {}
+      answer: "Au réveil, le clapet est dans ta veste, éteint. Tu ne te rappelles pas l'avoir rangé."
+
+  # A3 · La première commande — le clapet, la nuit (créneaux 10-11, janvier).
+  - id: pr.h10.a3_commande_titulaire
+    roles: [president]
+    arc: clapet
+    tags: [mercato, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Une heure du matin. « Ici Madame Janvier. Bonsoir, {prenom}. Le petit Brac a marqué trois fois ; la capitale l'attend en février. Ce sera bien pour tout le monde. »"
+    left:
+      label: "Il reste"
+      effects: {vestiaire: "+", caisse: "-", force: 3, relation: {brac: 1}, set: [h10_brac_garde]}
+      answer: "Tu rappelles le numéro. Une voix d'homme dit qu'il n'est pas attribué. Samedi, Brac marque une quatrième fois et cherche ta loge."
+    right:
+      label: "Il partira"
+      effects: {caisse: "++", vestiaire: "-", force: -2, set: [h10_brac_vendu, h10_obei_s0], char: {brac: {statut: vendu}}, react: pr.h10.re.owen_crampons}
+      answer: "La capitale appelle à neuf heures, comme si l'on avait déjà parlé. L'offre tient sur une ligne. Elle est bonne."
+
+  - id: pr.h10.a3_commande_froid
+    roles: [president]
+    arc: clapet
+    tags: [mercato, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Une heure du matin. « Ici Madame Janvier. Vous n'aviez pas d'objectifs, {prenom} ; en voici un. Le petit Brac ira à la capitale cet hiver. Ce sera bien pour lui. »"
+    left:
+      label: "Il reste"
+      effects: {vestiaire: "+", caisse: "-", force: 3, relation: {brac: 1}, set: [h10_brac_garde]}
+      answer: "Tu rappelles le numéro. Une voix d'homme dit qu'il n'est pas attribué. Le lendemain, Brac s'entraîne avec les pros, et ne sait rien."
+    right:
+      label: "Il partira"
+      effects: {caisse: "++", vestiaire: "-", force: -2, set: [h10_brac_vendu, h10_obei_s0], char: {brac: {statut: vendu}}, react: pr.h10.re.owen_crampons}
+      answer: "La capitale appelle à neuf heures, comme si l'on avait déjà parlé. L'offre tient sur une ligne. Elle est bonne."
+
+  - id: pr.h10.a3_commande
+    roles: [president]
+    arc: clapet
+    tags: [mercato, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Une heure du matin, le clapet. « Ici Madame Janvier. Bonsoir, {prenom}. Le petit Brac ira à la capitale cet hiver. Ce sera bien pour lui, et pour vous. »"
+    left:
+      label: "Il reste"
+      effects: {vestiaire: "+", caisse: "-", force: 3, relation: {brac: 1}, set: [h10_brac_garde]}
+      answer: "Tu rappelles le numéro. Une voix d'homme dit qu'il n'est pas attribué. Le lendemain, Brac s'entraîne avec les pros, et ne sait rien."
+    right:
+      label: "Il partira"
+      effects: {caisse: "++", vestiaire: "-", force: -2, set: [h10_brac_vendu, h10_obei_s0], char: {brac: {statut: vendu}}, react: pr.h10.re.owen_crampons}
+      answer: "La capitale appelle à neuf heures, comme si l'on avait déjà parlé. L'offre tient sur une ligne. Elle est bonne."
+
+  # A3b · La feuille aux trente-trois cases — l'escalier nord (créneau 14,
+  # avril, la huitième marche). L'horloge de l'escalier au printemps ; le nom
+  # dans la dernière case attend la dernière marche (S2, 17).
+  - id: pr.h10.a_avril
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Escalier nord, en avril. Tazi mure la huitième marche. Au mur, une feuille punaisée : trente-trois cases, huit cochées au feutre rouge. « Ce n'est pas moi, {toi}. Mais le compte est bon. »"
+    left:
+      label: "Je décroche la feuille"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tazi la plie en quatre et la glisse sous sa casquette. « Je la garde. Le jour de la dernière, on comptera. »"
+    right:
+      label: "Je laisse le compte"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Le lendemain, des noms remplissent les cases, au feutre noir : des socios morts depuis 1974. La trente-troisième porte le tien."
+
+  # A4 · Le président de la Fédération — le palier du club-house, sous le clou
+  # de la photo de 1974 (créneau 16, mai). Trois variantes : la photo
+  # raccrochée, ta photo à la place, le clou nu.
+  - id: pr.h10.a4_mbako_photo
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: mbako
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Sur le palier, Mbako s'arrête sous la photo de 1974, raccrochée au clou, et se tait longtemps : « Sans la loi, huit clubs déposent le bilan. Je sauve ce qu'on peut. Et toi, {prenom}, en 1990 ? »"
+    left:
+      label: "Je jouais au foot"
+      effects: {direction: "-", vestiaire: "+", relation: {mbako: 1}, set: [h10_mbako_visite, h10_mbako_joueur]}
+      answer: "« Moi aussi. » Il touche le cadre du bout des doigts, comme un poteau. Il redescend sans être entré dans ton bureau."
+    right:
+      label: "Je vous écoutais"
+      effects: {vestiaire: "-", direction: "+", set: [h10_mbako_visite]}
+      answer: "« À la radio ? » Il regarde la photo, pas toi. « Ils sont tous morts, sauf un. » Il redescend sans entrer."
+
+  - id: pr.h10.a4_mbako_cadre
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: mbako
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le palier du club-house. Lian Mbako s'arrête sous ta photo de 2016, accrochée au clou : « Sans la loi, huit clubs déposent le bilan. Je sauve ce qu'on peut sauver. Tu étais où, {prenom}, en 1990 ? »"
+    left:
+      label: "Je jouais au foot"
+      effects: {direction: "-", vestiaire: "+", relation: {mbako: 1}, set: [h10_mbako_visite, h10_mbako_joueur]}
+      answer: "« Ça se voit sur la photo. » Il redresse le cadre d'un millimètre. Il redescend sans être entré dans ton bureau."
+    right:
+      label: "Je vous écoutais"
+      effects: {vestiaire: "-", direction: "+", set: [h10_mbako_visite]}
+      answer: "« À la radio ? » Il sourit, pas longtemps. « Avant ta photo, il y en avait une autre, à ce clou. » Il redescend sans entrer."
+
+  - id: pr.h10.a4_mbako
+    roles: [president]
+    arc: instances
+    tags: [direction, objet]
+    speaker: mbako
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Le palier du club-house. Lian Mbako s'arrête sous le clou, qui n'a plus rien à porter : « Sans la loi, huit clubs déposent le bilan. Je sauve ce qu'on peut sauver. Tu étais où, {prenom}, en 1990 ? »"
+    left:
+      label: "Je jouais au foot"
+      effects: {direction: "-", vestiaire: "+", relation: {mbako: 1}, set: [h10_mbako_visite, h10_mbako_joueur]}
+      answer: "« Moi aussi. Tout de suite, sans attendre personne. » Il regarde le clou. Il redescend sans être entré dans ton bureau."
+    right:
+      label: "Je vous écoutais"
+      effects: {vestiaire: "-", direction: "+", set: [h10_mbako_visite]}
+      answer: "« À la radio ? » Il sourit, pas longtemps. « Alors tu sais ce que c'est, attendre. » Il redescend sans entrer."
+
+  # A5 · Madame Mai — le clapet, au retour du stade (créneau 17, mai). Elle
+  # plante l'hôtel de la Rive : la photo de septembre.
+  - id: pr.h10.a5_mai_brac
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit, au retour du stade. « Ici Madame Mai. Le petit Brac a coûté cher, cette année. Pas à vous. Ne recommencez pas. Nous nous verrons en septembre, à l'hôtel. »"
+    left:
+      label: "Je recommencerai"
+      effects: {tribunes: "+", direction: "-", set: [h10_mai_tenue]}
+      answer: "« Vous avez une jolie voix quand vous mentez. » La tonalité. Dans la rue, la voiture sans volant allume ses phares toute seule."
+    right:
+      label: "Bien, madame"
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_obei_s0]}
+      answer: "« Merci. » C'est la première fois qu'elle le dit. Le lendemain, la banque propose un crédit que tu n'as pas demandé."
+
+  - id: pr.h10.a5_mai_haut
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit, au retour du stade. « Ici Madame Mai. Vous êtes trop haut pour un mois de mai. Ralentissez, la saison prochaine. Nous en parlerons en septembre, à l'hôtel. »"
+    left:
+      label: "Je ne ralentirai pas"
+      effects: {tribunes: "+", direction: "-", set: [h10_mai_tenue]}
+      answer: "« Vous avez une jolie voix quand vous mentez. » La tonalité. Dans la rue, la voiture sans volant allume ses phares toute seule."
+    right:
+      label: "Bien, madame"
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_obei_s0]}
+      answer: "« Merci. » C'est la première fois qu'elle le dit. Le lendemain, la banque propose un crédit que tu n'as pas demandé."
+
+  - id: pr.h10.a5_mai
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit, au retour du stade. « Ici Madame Mai. Belle saison. Ne la recommencez pas. Nous vous rappellerons en septembre ; à l'hôtel, cette fois. »"
+    left:
+      label: "Je la recommencerai"
+      effects: {tribunes: "+", direction: "-", set: [h10_mai_tenue]}
+      answer: "« Vous avez une jolie voix quand vous mentez. » La tonalité. Dans la rue, la voiture sans volant allume ses phares toute seule."
+    right:
+      label: "Bien, madame"
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_obei_s0]}
+      answer: "« Merci. » C'est la première fois qu'elle le dit. Le lendemain, la banque propose un crédit que tu n'as pas demandé."
+
+  # ================================================================ saison 1
+  # B1 · La photo — chez toi, trois heures (créneau 1, septembre, soir).
+  - id: pr.h10.b1_photo
+    roles: [president]
+    arc: presse
+    tags: [presse, scandale, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Une photo circule : toi, au bar de l'hôtel de la Rive, face à une femme en manteau d'automne. Dessous, en capitales : « {NOM} BOIT AVEC QUI ? »"
+    left:
+      label: "Je dis la vérité"
+      effects: {tribunes: "--", direction: "+", set: [h10_photo_hotel, h10_verite_hotel]}
+      answer: "Trois lignes : un rendez-vous d'affaires, Rive Capital, le centre de formation. À six heures, les trois lignes ont deux mille réponses."
+    right:
+      label: "Je dis : une amie"
+      effects: {tribunes: "+", direction: "-", set: [h10_photo_hotel], react: pr.h10.re.lea_patere}
+      answer: "« Une amie de trente ans. » À midi, quelqu'un retrouve le même manteau sur une photo de 2036, au fond d'une fête de socios."
+
+  # L'appel d'après la photo — le clapet, à l'heure du café (créneaux 2-3,
+  # septembre encore : la voix dit son mois). Une ancre, et non une chaîne :
+  # posée par la photo, la chaîne cédait son créneau aux dernières étapes de la
+  # saison 0 et sortait échue trois fois sur quatre.
+  - id: pr.h10.b1_appel
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Le clapet, à l'heure du café. « Ici Madame Septembre. Vous êtes très bien, sur cette photo. Moi, un peu moins. Je n'aime pas les manteaux d'automne. »"
+    left:
+      label: "C'était vous ?"
+      effects: {direction: "-", set: [h10_madame_vue]}
+      answer: "« Vous m'avez offert un verre. Vous ne vous souvenez pas ? » Tu te souviens d'un verre, d'un manteau, pas d'un visage."
+    right:
+      label: "Que voulez-vous ?"
+      effects: {tribunes: "-", direction: "+", set: [h10_madame_vue, h10_obei_s1]}
+      answer: "« Que vous gardiez votre calme. Le reste viendra en octobre, par la voie des airs. » Elle raccroche sur le mot « airs »."
+
+  # B2 · L'hélicoptère — la pelouse, un mardi matin (créneau 5, octobre).
+  - id: pr.h10.b2_helico_d1
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, objet]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Mardi matin, la pelouse d'un club de première division depuis juin. Un hélicoptère blanc se pose au rond central. Le pilote te tend une enveloppe crème : « De la part de Rive Capital. Pour fêter ça. »"
+    left:
+      label: "Renvoyez-le"
+      effects: {tribunes: "+", direction: "-", set: [h10_helico_renvoye], schedule: [{card: pr.h10.ch_novembre, in: [2, 3]}], react: pr.h10.re.tazi_pelouse}
+      answer: "Le pilote remonte sans discuter, l'enveloppe avec lui. Les pales arrachent trois mètres carrés de pelouse en repartant."
+    right:
+      label: "Je le garde"
+      effects: {direction: "+", tribunes: "-", var: {cadeau_helico: "+1"}, set: [h10_helico, h10_obei_s1], schedule: [{card: pr.h10.ch_enveloppe, in: [2, 4]}], react: pr.h10.re.gege_helico}
+      answer: "Le pilote te laisse les clés, un carnet d'entretien, l'enveloppe. Le jardinier regarde les patins enfoncés dans sa pelouse."
+
+  - id: pr.h10.b2_helico
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, objet]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Mardi matin, pelouse de la Rive. Un hélicoptère blanc se pose au rond central. Le pilote te tend une enveloppe crème : « De la part de Rive Capital. Il se pose sur un terrain de football. Le vôtre. »"
+    left:
+      label: "Renvoyez-le"
+      effects: {tribunes: "+", direction: "-", set: [h10_helico_renvoye], schedule: [{card: pr.h10.ch_novembre, in: [2, 3]}], react: pr.h10.re.tazi_pelouse}
+      answer: "Le pilote remonte sans discuter, l'enveloppe avec lui. Les pales arrachent trois mètres carrés de pelouse en repartant."
+    right:
+      label: "Je le garde"
+      effects: {direction: "+", tribunes: "-", var: {cadeau_helico: "+1"}, set: [h10_helico, h10_obei_s1], schedule: [{card: pr.h10.ch_enveloppe, in: [2, 4]}], react: pr.h10.re.gege_helico}
+      answer: "Le pilote te laisse les clés, un carnet d'entretien, l'enveloppe. Le jardinier regarde les patins enfoncés dans sa pelouse."
+
+  # La chaîne de l'enveloppe crème — l'argent qu'on ne peut pas expliquer (le
+  # pont `ville_francs_sales`) ; la truelle s'en souviendra.
+  - id: pr.h10.ch_enveloppe
+    roles: [president]
+    arc: sponsors
+    tags: [chaine, sponsors, piege]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Chez toi, l'enveloppe crème ouverte sur la table de la cuisine : quatre liasses de billets neufs et un carton, « Pour le kérosène ». Pas de signature. Il n'en faut pas."
+    left:
+      label: "Je la range au coffre"
+      effects: {tribunes: "-", caisse: "+", var: {ville_francs_sales: "+250000"}, set: [h10_enveloppe_gardee]}
+      answer: "Le coffre de la villa, sous l'acte de propriété. L'enveloppe tient exactement dans la largeur, comme si on avait mesuré."
+    right:
+      label: "Je la rapporte"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "L'accueil de Rive Capital, quai de la Rive, prend l'enveloppe sans la compter. « On nous l'avait dit. » Un reçu sans en-tête."
+
+  # La chaîne de Madame Novembre — l'hélicoptère renvoyé a un prix : le
+  # mercato d'hiver. Elle tombe deux à trois cartes après l'hélicoptère (fin
+  # novembre). Le refus lui ouvre une porte quand même : l'annexe du contrat,
+  # que la ville fait lire en janvier (scenes_h10.yaml, h10.sc.annexe).
+  - id: pr.h10.ch_novembre
+    roles: [president]
+    arc: clapet
+    tags: [chaine, mercato, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Le dernier dimanche de novembre, le clapet. « Ici Madame Novembre. Vous avez renvoyé l'hélicoptère ; nous gardons le mercato. En janvier, personne n'arrive, personne ne part. »"
+    left:
+      label: "Personne n'arrivera"
+      effects: {caisse: "+", direction: "+", tribunes: "-", set: [h10_obei_s1, h10_mercato_gele]}
+      answer: "« Merci. La Ligue aime les présidences raisonnables ; elle le dira. » La tonalité tombe avant que tu demandes à qui."
+    right:
+      label: "Je recruterai"
+      effects: {caisse: "-", vestiaire: "+", force: 2, set: [h10_recrue_janvier]}
+      answer: "« Recrutez. Nous paierons une partie du salaire, si vous voulez. » Elle raccroche sur le mot « partie »."
+
+  # B3 · La seconde sonnerie — le local du kop, un soir (créneau 10, janvier).
+  # Variante : le vote recompté (pr.h10.socios) a déjà montré comment Nino compte.
+  - id: pr.h10.b3_sonnerie_recompte
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Local du kop, un soir de janvier. Nino compte les mains pour l'accord, vite, comme le soir des trois cartes. À la patère, sa veste sonne : ta sonnerie de 1995. Près du poêle, Gégé te regarde."
+    left:
+      label: "Je décroche"
+      effects: {tribunes: "-", relation: {nino: -1}, set: [h10_clapet_nino, h10_voix_entendue], react: pr.h10.re.nino_veste}
+      answer: "Dans la poche de Nino : « Ici Madame Janvier. Bonsoir, Nino. » Un temps. « Vous n'êtes pas Nino. Bonsoir, {prenom}. » La tonalité."
+    right:
+      label: "Je laisse sonner"
+      effects: {relation: {gege: 1}, set: [h10_clapet_nino], react: pr.h10.re.tazi_neuf}
+      answer: "Neuf sonneries. Nino finit son compte, décroche sa veste et sort fumer. Gégé n'a pas cessé de te regarder."
+
+  - id: pr.h10.b3_sonnerie
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Local du kop, un soir de janvier. Nino parle aux socios de l'accord de franchise. Dans sa veste, pendue à la patère, une sonnerie de 1995 : la même que la tienne. Près du poêle, Gégé te regarde."
+    left:
+      label: "Je décroche"
+      effects: {tribunes: "-", relation: {nino: -1}, set: [h10_clapet_nino, h10_voix_entendue], react: pr.h10.re.nino_veste}
+      answer: "Dans la poche de Nino : « Ici Madame Janvier. Bonsoir, Nino. » Un temps. « Vous n'êtes pas Nino. Bonsoir, {prenom}. » La tonalité."
+    right:
+      label: "Je laisse sonner"
+      effects: {relation: {gege: 1}, set: [h10_clapet_nino], react: pr.h10.re.tazi_neuf}
+      answer: "Neuf sonneries. Nino finit sa phrase, décroche sa veste et sort fumer. Gégé n'a pas cessé de te regarder."
+
+  # Intermède · L'escalier (créneau 12, février). Le fait déformé : Gégé est
+  # déjà de l'autre côté, et il sait.
+  - id: pr.h10.b4_intermede
+    roles: [president]
+    arc: escalier
+    tags: [intermede]
+    tone: strategique
+    once: true
+    text: "Tu montes l'escalier nord dans le noir. À chaque marche, derrière toi, un bruit de truelle. En haut, tu te retournes : il n'y a plus que le mur. De l'autre côté, Gégé frappe, trois coups, puis trois."
+    left:
+      label: "Je frappe aussi"
+      effects: {}
+      answer: "Le mur est tiède sous ta main. Au réveil, tu as les phalanges rouges, et le clapet un appel manqué, à trois heures."
+    right:
+      label: "Je frappe aussi"
+      effects: {}
+      answer: "Le mur est tiède sous ta main. Au réveil, tu as les phalanges rouges, et le clapet un appel manqué, à trois heures."
+
+  # B4b · Madame Avril — le clapet, la veille de l'entraînement ouvert
+  # (créneau 14). La prime du dernier bloc ; obéir ou non, les pales tombent
+  # le lendemain : un prêt se reprend, la désobéissance ne fait que fixer
+  # l'heure.
+  - id: pr.h10.b_avril
+    roles: [president]
+    arc: clapet
+    tags: [vestiaire, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Mardi soir, le clapet. « Ici Madame Avril. La prime de victoire du dernier bloc, vous la supprimez demain. Dites que c'est la trésorerie : ce sera presque vrai. »"
+    left:
+      label: "Je la supprime"
+      effects: {vestiaire: "--", caisse: "+", force: -2, set: [h10_obei_s1, h10_prime_supprimee]}
+      answer: "Le lendemain, la note est punaisée au vestiaire, signée de ta main. Personne ne demande qui l'a dictée. Tout le monde a une idée."
+    right:
+      label: "La prime reste"
+      effects: {caisse: "-", vestiaire: "+", set: [h10_prime_gardee]}
+      answer: "« Gardez-la. Nous reprendrons autre chose. » Jeudi, à l'heure de l'entraînement ouvert, il pleut sur la Rive."
+
+  # B5 · Les pales — la saisie, l'entraînement ouvert du soir (créneau 15,
+  # avril). Le consortium fait payer la première désobéissance devant la Nord.
+  - id: pr.h10.b5_pales_renvoye
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, scandale, sombre]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Entraînement ouvert du soir. Sur le parking, devant la Nord, un huissier lit : « Saisie du véhicule, détenteur : {NOM}. » Plus bas : « Vous avez refusé l'hélicoptère. Elle, c'était un prêt. »"
+    left:
+      label: "Je parle au virage"
+      effects: {tribunes: "+", direction: "-", var: {saisie_vehicules: "+1"}, set: [h10_voiture_saisie, h10_parle_virage], react: pr.h10.re.nino_megaphone}
+      answer: "Tu montes sur le banc des remplaçants. Tu dis « prêt », « Rive Capital ». Le virage écoute jusqu'au bout, puis siffle les huissiers."
+    right:
+      label: "Je rentre à pied"
+      effects: {tribunes: "-", var: {saisie_vehicules: "+1"}, set: [h10_voiture_saisie]}
+      answer: "La voiture monte seule sur la dépanneuse, en marche arrière, prudemment. La Nord applaudit la manœuvre."
+
+  - id: pr.h10.b5_pales
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, scandale, sombre]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Entraînement ouvert du soir. Devant la Nord qui arrive, un huissier lit : « Saisie de l'aéronef, détenteur : {NOM}. » La « donation » était un prêt. On replie les pales sur un camion."
+    left:
+      label: "Je parle au virage"
+      effects: {tribunes: "+", direction: "-", var: {saisie_vehicules: "+1"}, set: [h10_helico_saisi, h10_parle_virage], react: pr.h10.re.nino_megaphone}
+      answer: "Tu montes sur le banc des remplaçants. Tu dis « prêt », « erreur », « Rive Capital ». Le virage écoute jusqu'au mot « Rive »."
+    right:
+      label: "Je rentre au club-house"
+      effects: {tribunes: "--", var: {saisie_vehicules: "+1"}, set: [h10_helico_saisi]}
+      answer: "De la fenêtre du bureau, tu vois le camion passer la grille, les pales repliées. Quelqu'un a noué une écharpe dessus."
+
+  # B6 · Le neveu — la buvette, après la fermeture (créneau 17, mai).
+  - id: pr.h10.b6_neveu_decroche
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, retorse]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette, après la fermeture. Nino au zinc, les deux clapets côte à côte : « Tu as décroché le mien en janvier. Elle me l'a dit le soir même. Deux téléphones, une seule défaite, {toi}. »"
+    left:
+      label: "On les trahit ensemble"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 2}, set: [h10_nino_retourne]}
+      answer: "Il remplit deux verres de la bouteille sans étiquette. « Pour mon oncle. Il ne doit jamais savoir que j'en ai eu un. »"
+    right:
+      label: "Chacun pour soi"
+      effects: {tribunes: "-", direction: "+", relation: {nino: -1}, set: [h10_chacun]}
+      answer: "Il remet son clapet dans sa poche. « Alors je compterai les mains pour eux. » Il éteint la buvette en sortant, toi dedans."
+
+  - id: pr.h10.b6_neveu
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, retorse]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette, après la fermeture. Nino seul au zinc, la veste sur l'épaule, son clapet posé à côté du tien : « Deux téléphones, une seule défaite. Ils nous paient pour la même chose, {toi}. »"
+    left:
+      label: "On les trahit ensemble"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 2}, set: [h10_nino_retourne]}
+      answer: "Il remplit deux verres de la bouteille sans étiquette. « Pour mon oncle. Il ne doit jamais savoir que j'en ai eu un. »"
+    right:
+      label: "Chacun pour soi"
+      effects: {tribunes: "-", direction: "+", relation: {nino: -1}, set: [h10_chacun]}
+      answer: "Il remet son clapet dans sa poche. « Alors je compterai les mains pour eux. » Il éteint la buvette en sortant, toi dedans."
+
+  # ================================================================ saison 2
+  # C1 · Madame Septembre, la dernière (créneaux 1-2). Neuf mois, neuf marches :
+  # la vingt-cinquième est murée ce mois-ci, la trente-troisième le sera en mai.
+  - id: pr.h10.c1_septembre_deux
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un matin de septembre. « Ici Madame Septembre, la dernière. Bonjour, {prenom}. Neuf mois, neuf marches. Je compte avec vous, et avec Nino. C'est plus gai, à trois. »"
+    left:
+      label: "Je ne compte plus"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Alors je compterai pour deux. » Elle raccroche. À neuf heures, Tazi mure la vingt-cinquième, en sifflotant."
+    right:
+      label: "Comptons"
+      effects: {tribunes: "-", direction: "+", set: [h10_obei_s2]}
+      answer: "« Vingt-cinq. » Tu l'entends sourire. De l'autre côté de la Rive, Tazi lève sa truelle comme on salue."
+
+  - id: pr.h10.c1_septembre
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Un matin de septembre. « Ici Madame Septembre, la dernière. Bonjour, {prenom}. Neuf mois, neuf marches. Nous comptons ensemble, n'est-ce pas ? »"
+    left:
+      label: "Je ne compte plus"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Alors je compterai pour deux. » Elle raccroche. À neuf heures, Tazi mure la vingt-cinquième, en sifflotant."
+    right:
+      label: "Comptons"
+      effects: {tribunes: "-", direction: "+", set: [h10_obei_s2]}
+      answer: "« Vingt-cinq. » Tu l'entends sourire. De l'autre côté de la Rive, Tazi lève sa truelle comme on salue."
+
+  # C1b · Le café de novembre — le local du kop (créneau 7). Gégé ne
+  # descend plus ; la bâche de 1971 est montée avec lui (la lettre, au 11),
+  # et la radio compte les marches (la vingt-septième).
+  - id: pr.h10.c_novembre
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Novembre. Gégé ne descend plus au local : il a fait monter la radio et la bâche de 1971. Nino, au pied de l'escalier, un thermos à la main : « Il veut que ce soit toi qui montes le café. »"
+    left:
+      label: "Je monte le café"
+      effects: {tribunes: "+", direction: "-", relation: {gege: 1}}
+      answer: "Il boit, grimace, reboit. « Le petit le fait trop fort. Toi, trop clair. » À la radio, on annonce la vingt-septième marche."
+    right:
+      label: "Monte-le, toi"
+      effects: {direction: "+", tribunes: "-", relation: {nino: 1}}
+      answer: "Nino monte sans un mot. Par la fenêtre du local, tu le vois poser le thermos, s'asseoir, et ne plus bouger jusqu'au soir."
+
+  # C2 · La lettre de Gégé — sa chambre au-dessus du local (créneau 11). La
+  # promesse de la buvette revient, s'il y en a eu une.
+  - id: pr.h10.c2_lettre_promesse
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Au-dessus du local, Gégé dans son lit, la bâche de 1971 sur les pieds : « Tu m'avais promis, {prenom}. Je sais pour les deux téléphones, le tien et celui du petit. Monte quand même. »"
+    left:
+      label: "Je monterai"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_lettre_gardee], react: pr.h10.re.nino_escalier}
+      answer: "Il pousse une enveloppe vers toi. « Tu la liras s'ils te demandent de perdre. Pas avant. » Elle est cachetée à la cire de bougie."
+    right:
+      label: "Je ne sais plus"
+      effects: {relation: {gege: -1}, set: [h10_lettre_nino]}
+      answer: "Il glisse l'enveloppe sous l'oreiller. « Alors je la donne au petit. Il saura, lui, quoi en faire. » Il ferme les yeux."
+
+  - id: pr.h10.c2_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: gege
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Au-dessus du local, Gégé dans son lit, la bâche de 1971 sur les pieds, une enveloppe sur la couverture : « Je sais pour les deux téléphones, {prenom}. Le tien, et celui du petit. Monte quand même. »"
+    left:
+      label: "Je monterai"
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_lettre_gardee], react: pr.h10.re.nino_escalier}
+      answer: "Il pousse l'enveloppe vers toi. « Tu la liras s'ils te demandent de perdre. Pas avant. » Elle est cachetée à la cire de bougie."
+    right:
+      label: "Je ne sais plus"
+      effects: {relation: {gege: -1}, set: [h10_lettre_nino]}
+      answer: "Il reprend l'enveloppe et la glisse sous l'oreiller. « Alors je la donne au petit. Il saura, lui, quoi en faire. »"
+
+  # C3 · La nuit de Gégé — deux heures (créneau 12, février, soir). Le seul drame
+  # du livre. Variante : Nino appelle sur le clapet, s'il est retourné au zinc.
+  - id: pr.h10.c3_nuit_clapet
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre, portable]
+    speaker: nino
+    lieu: domicile
+    tone: drame
+    once: true
+    text: "Deux heures du matin. Ce n'est pas le fixe qui sonne, c'est le clapet, et ce n'est pas une femme. Nino, d'une voix que tu ne lui connais pas : « Il est deux heures. Il faut imprimer. »"
+    left:
+      label: "J'appelle l'imprimeur"
+      effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "L'imprimeur de la zone décroche à la deuxième sonnerie, comme s'il attendait. « Trois mille, c'est ça ? On a déjà la photo. »"
+    right:
+      label: "Je monte au local"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_gege_mort], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "Nino est assis au bord du lit, la bâche pliée sur les genoux. Il ne pleure pas. Il compte les plis, à voix basse."
+
+  - id: pr.h10.c3_nuit
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, sombre, telephone]
+    speaker: nino
+    lieu: domicile
+    tone: drame
+    once: true
+    text: "Deux heures. La ligne du bureau, renvoyée sur la villa. Nino, d'une voix que tu ne lui connais pas : « Il est deux heures. Il faut imprimer. » En bas, au-dessus du local, une fenêtre reste allumée."
+    left:
+      label: "J'appelle l'imprimeur"
+      effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "L'imprimeur de la zone décroche à la deuxième sonnerie, comme s'il attendait. « Trois mille, c'est ça ? On a déjà la photo. »"
+    right:
+      label: "Je monte au local"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}, set: [h10_gege_mort], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
+      answer: "Nino est assis au bord du lit, la bâche pliée sur les genoux. Il ne pleure pas. Il compte les plis, à voix basse."
+
+  # C4 · Trois mille visages — le stade, le match d'après (créneau 14, avril).
+  # Ils répondent aux trois mille masques de 1990, que les vieux ne nomment plus.
+  - id: pr.h10.c4_masques_coupee
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le match d'après. La Nord se lève : trois mille visages de Gégé en carton, imprimés dans la nuit. Les haut-parleurs que tu as fait couper restent muets ; la Nord dit son nom, une minute entière."
+    left:
+      label: "Je me lève avec eux"
+      effects: {direction: "-", tribunes: "++", set: [h10_debout_masques], react: pr.h10.re.tazi_minute}
+      answer: "Tu te lèves. Derrière la vitre de la loge, tu n'entends rien ; tu vois trois mille cartons qui ne clignent pas."
+    right:
+      label: "Je reste à ma place"
+      effects: {direction: "+", tribunes: "-", set: [h10_reste_assis]}
+      answer: "Les invités de la loge restent assis aussi. Au premier rang de la Nord, un seul masque est tourné vers toi."
+
+  - id: pr.h10.c4_masques
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le match d'après. La Nord se lève : trois mille visages de Gégé en carton, imprimés dans la nuit. Dans les haut-parleurs, la voix de Gigi dit son nom, puis se tait une minute entière."
+    left:
+      label: "Je me lève avec eux"
+      effects: {direction: "-", tribunes: "++", set: [h10_debout_masques], react: pr.h10.re.tazi_minute}
+      answer: "Tu te lèves. Derrière la vitre de la loge, tu n'entends rien ; tu vois trois mille cartons qui ne clignent pas."
+    right:
+      label: "Je reste à ma place"
+      effects: {direction: "+", tribunes: "-", set: [h10_reste_assis]}
+      answer: "Les invités de la loge restent assis aussi. Au premier rang de la Nord, un seul masque est tourné vers toi."
+
+  # Intermède · Les masques (créneau 15, avril). Le fait déformé : les masques
+  # étaient payés d'avance, et pas par le virage (Madame Mai le dira).
+  - id: pr.h10.c_intermede
+    roles: [president]
+    arc: tribunes
+    tags: [intermede]
+    tone: strategique
+    once: true
+    text: "Tu marches dans la Nord vide. Trois mille visages de Gégé posés sur les sièges, face au terrain. Tu en retournes un : au dos, en petits caractères, l'adresse d'un imprimeur, et « Rive Capital »."
+    left:
+      label: "Je les retourne tous"
+      effects: {}
+      answer: "Au réveil, tu as de l'encre sur les doigts, et dans ta veste une facture d'imprimeur pliée en quatre, datée de janvier."
+    right:
+      label: "Je les retourne tous"
+      effects: {}
+      answer: "Au réveil, tu as de l'encre sur les doigts, et dans ta veste une facture d'imprimeur pliée en quatre, datée de janvier."
+
+  # C5 · Madame Mai — la dernière consigne (créneau 16, mai).
+  - id: pr.h10.c5_mai_d1
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "« Ici Madame Mai. Montés trop tôt, {prenom} : c'est fâcheux. Le dernier match ne compte plus ; l'assemblée, si. Le lendemain, elle vend la place. Nino s'en occupe. »"
+    left:
+      label: "Vous aurez la place"
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2], react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}]}
+      answer: "« Je n'en doutais pas. Les masques étaient réussis ; nous les avions commandés en janvier. » La tonalité, longue."
+    right:
+      label: "Je raccroche"
+      effects: {direction: "-", tribunes: "+", react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}, {card: pr.h10.re.nino_quatre}]}
+      answer: "Tu raccroches au milieu d'un mot. Le clapet sonne encore trois fois cette nuit-là. Tu comptes les sonneries, pas les heures."
+
+  - id: pr.h10.c5_mai_deux
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Le clapet. « Ici Madame Mai. Le dernier match, {prenom}, vous le perdez. Le lendemain, Nino lit l'accord à l'assemblée. Nous comptons sur vous deux ; vous savez qui. »"
+    left:
+      label: "Vous aurez votre défaite"
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2], react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}]}
+      answer: "« Je n'en doutais pas. Les masques étaient réussis ; nous les avions commandés en janvier. » La tonalité, longue."
+    right:
+      label: "Je raccroche"
+      effects: {direction: "-", tribunes: "+", react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}, {card: pr.h10.re.nino_quatre}]}
+      answer: "Tu raccroches au milieu de son « deux ». Le clapet sonne encore trois fois cette nuit-là. Tu comptes les sonneries, pas les heures."
+
+  - id: pr.h10.c5_mai
+    roles: [president]
+    arc: clapet
+    tags: [direction, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Le clapet. « Ici Madame Mai. Le dernier match, {prenom}, vous le perdez. Le lendemain, l'assemblée vote l'accord ; Nino s'en occupe. Nous comptons sur vous deux. »"
+    left:
+      label: "Vous aurez votre défaite"
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2], react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}]}
+      answer: "« Je n'en doutais pas. Les masques étaient réussis ; nous les avions commandés en janvier. » La tonalité, longue."
+    right:
+      label: "Je raccroche"
+      effects: {direction: "-", tribunes: "+", react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}, {card: pr.h10.re.nino_quatre}]}
+      answer: "Tu raccroches au milieu de son « deux ». Le clapet sonne encore trois fois cette nuit-là. Tu comptes les sonneries, pas les heures."
+
+  # C6 · La dernière marche — l'escalier nord, un soir de mai (créneau 17).
+  # La décision se prend ici ; le mur se monte (ou non) la nuit d'avant le
+  # dernier match, après le dernier bloc de journées : c'est l'annonce du
+  # Grand Match qui dit ce qui s'est passé (content/setpieces/h10.yaml).
+  # Trois variantes : la brigade (la truelle payée avec l'enveloppe crème), la
+  # truelle payée de ta poche, et la base.
+  - id: pr.h10.c6_marche_brigade
+    roles: [president]
+    arc: escalier
+    tags: [scandale, sombre]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, un soir de mai. Tazi n'est pas seul : deux hommes de la brigade financière tiennent l'enveloppe crème dans un sachet. « Les billets se suivent. Ils viennent d'où ? »"
+    left:
+      label: "De Rive Capital"
+      effects: {direction: "--", tribunes: "+", set: [h10_enquete, h10_marche_ouverte]}
+      answer: "L'inspecteur écrit « Rive Capital » en capitales, souligne deux fois. Ils partent avec l'enveloppe ; la dernière marche reste ouverte."
+    right:
+      label: "D'un pourboire"
+      effects: {end: co_garde_a_vue}
+      answer: "« Un pourboire de cette taille, ça s'explique au commissariat. » Ils t'emmènent par l'escalier sud. Le nord reste ouvert."
+
+  - id: pr.h10.c6_marche_payee
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, sombre]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, un soir de mai. Tazi fume, assis sur la dernière marche : « Vous m'avez payé pour l'oublier. La nuit d'avant le match, on me paie le double pour m'en souvenir. Je la mure ? »"
+    left:
+      label: "Laissez-la ouverte"
+      effects: {tribunes: "+", direction: "-", relation: {tazi: 1}, set: [h10_marche_ouverte]}
+      answer: "Il écrase sa cigarette dans le seau de ciment sec. « Alors j'oublierai deux fois. Cette nuit-là, je dors ici. »"
+    right:
+      label: "Murez-la"
+      effects: {tribunes: "-", direction: "+", set: [h10_marche_muree]}
+      answer: "Il te rend ton enveloppe. « Je ne prends pas deux fois pour la même marche. » Il range sa lampe frontale dans le seau, pour la nuit dite."
+
+  - id: pr.h10.c6_marche
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, sombre]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Escalier nord, un soir de mai, la dernière marche. Tazi pose sa truelle : « On m'a demandé de la murer la nuit d'avant le dernier match, quand tout le monde dort. Je la mure, {toi} ? »"
+    left:
+      label: "Laissez-la ouverte"
+      effects: {tribunes: "+", direction: "-", relation: {tazi: 1}, set: [h10_marche_ouverte]}
+      answer: "Il retourne le seau et s'assoit dessus, pour essayer. « Cette nuit-là, je dors ici. Comme ça, personne ne la mure. »"
+    right:
+      label: "Murez-la"
+      effects: {tribunes: "-", direction: "+", set: [h10_marche_muree]}
+      answer: "Il règle sa lampe frontale, pour la nuit dite. « Je viendrai tard. Il n'y aura personne pour compter. »"
+
+  # ================================================================ saison 3
+  # D1 · L'assemblée — la buvette du kop, le lendemain du dernier match. Toutes
+  # les sorties ferment le livre. Les variantes (ordre de l'arc) : la fin rare,
+  # le mur, la montée avec la preuve, la montée, la preuve, la base.
+  - id: pr.h10.d1_assemblee_rare
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain de la montée. Nino au micro ne lit pas l'accord : il pose son clapet sur la table, à côté du tien, et attend. Au mur, quelqu'un a descendu la photo de 1974 du club-house."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_montee}
+      answer: "Tu lèves les deux clapets au-dessus de ta tête, comme une carte de socio. Trois mille cartes se lèvent avec."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Nino te regarde longtemps, puis reprend l'accord à l'article un. Il lit lentement, pour te laisser le temps."
+
+  - id: pr.h10.d1_assemblee_mur
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, scandale]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Nino au micro ne lit pas l'accord : il lit une lettre de Gégé, cachetée à la cire, qui parle de deux téléphones. Toute la buvette se tourne vers ta table."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_mur}
+      answer: "Tu poses ton clapet. Nino a déjà rangé le sien. On ne regarde que le tien ; on ne croit que la lettre."
+    right:
+      label: "Je sors par la cuisine"
+      effects: {end: escalier_mur}
+      answer: "La cuisine donne sur le parking. Ta voiture n'y est plus. Tu marches jusqu'à la gare routière sans te retourner."
+
+  # La lettre de Gégé, lue le soir de Madame Mai et gardée : elle est la
+  # preuve qu'on voit (deux variantes, montés ou non).
+  - id: pr.h10.d1_assemblee_monte_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain de la montée. Nino au micro lit l'accord : la place en première division, vendue à la capitale. Dans ta poche, contre ton clapet, la lettre de son oncle."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_clapets}
+      answer: "Tu poses les deux clapets, puis la lettre, dépliée. Nino reconnaît l'écriture avant la première date. Il pose le micro."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour la vente, une à une. La lettre reste pliée contre le clapet, qui vibre deux fois, puis plus."
+
+  - id: pr.h10.d1_assemblee_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Nino au micro lit l'accord de franchise, article par article. Les deux clapets sont sur la table ; dans ta poche, deux pages de son oncle, au crayon."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_clapets}
+      answer: "Tu poses les deux clapets, puis la lettre, dépliée. Nino reconnaît l'écriture avant la première date. Il pose le micro."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour l'accord, une à une. La lettre reste pliée contre le clapet, qui vibre deux fois, puis plus."
+
+  - id: pr.h10.d1_assemblee_monte_preuve
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain de la montée. Nino au micro lit l'accord : la place en première division, vendue à la capitale. Ton clapet et le sien sont sur la table, et dans ta veste, de quoi prouver."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_clapets}
+      answer: "Tu poses les deux clapets et ce que tu as gardé à côté. Nino s'arrête au milieu de l'article trois. Personne ne lève sa carte."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour la vente, une à une, puis toutes. Nino compte vite. Tu ne recomptes pas."
+
+  - id: pr.h10.d1_assemblee_monte
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain de la montée, les masques de Gégé noués aux écharpes. Nino au micro lit l'accord : la place en première division, vendue à la capitale. Les deux clapets sont sur la table."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_aveu}
+      answer: "Tu lèves ton clapet. Nino lève le sien, plus lentement, et jure qu'il ne l'a jamais vu. On te croit pour le tien."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour la vente, une à une, puis toutes. Nino compte vite. Tu ne recomptes pas."
+
+  - id: pr.h10.d1_assemblee_preuve
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Nino au micro lit l'accord de franchise, article par article. Ton clapet et le sien sont sur la table, devant toi, et dans ta veste, de quoi prouver que vous êtes deux."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_clapets}
+      answer: "Tu poses les deux clapets et ce que tu as gardé à côté. Nino s'arrête au milieu de l'article trois. Personne ne lève sa carte."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour l'accord, une à une, puis toutes. Nino compte vite. Tu ne recomptes pas."
+
+  # La lettre laissée au neveu (« Il saura, lui, quoi en faire ») : il n'en fait
+  # rien. Elle est dans sa poche de poitrine, contre le clapet, cachetée. Mêmes
+  # issues que l'assemblée nue : seule la preuve change la fin.
+  - id: pr.h10.d1_assemblee_nino_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Nino au micro lit l'accord, article par article. De sa poche de poitrine dépasse une enveloppe cachetée à la cire de bougie, contre la bosse carrée du clapet."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_aveu}
+      answer: "Tu lèves ton clapet. Nino pose la main à plat sur sa poche, sur la lettre de son oncle, et ne lève rien. On te croit pour le tien."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour l'accord, une à une, puis toutes. Nino compte de la main droite. La gauche ne quitte pas sa poche."
+
+  - id: pr.h10.d1_assemblee
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Les masques de Gégé encore noués aux écharpes. Nino au micro lit l'accord de franchise, article par article. Les deux clapets sont sur la table, devant toi."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_aveu}
+      answer: "Tu lèves ton clapet. Nino lève le sien, plus lentement, et jure qu'il ne l'a jamais vu. On te croit pour le tien."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour l'accord, une à une, puis toutes. Nino compte vite. Tu ne recomptes pas."

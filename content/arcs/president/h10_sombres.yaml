@@ -1,0 +1,90 @@
+# « Les Deux Téléphones » — les soirs du réservoir (docs/bible/charte_histoire.md
+# § 5 ; le livre, § 1.4). Des arcs `kind: evenement` : le metteur en scène les
+# arme quand leur `when` est vrai, une fois par carrière, jamais rattrapés.
+# Cartes : content/cards/president/h10_sombres.yaml.
+#
+# Les soirs ancrés par le script (la photo, la seconde sonnerie, les pales, la
+# nuit de Gégé, la dernière marche) ne sont pas ici : ils tombent à leur heure.
+# Le réservoir respecte leur calendrier (le livre, § 1.4 : quatre soirs par
+# saison au plus, jamais deux à moins de cinq créneaux) :
+#   · saison 0 — le ciment frais, entre les créneaux 8 et 10 (le moteur n'arme
+#     rien avant le 8 en saison 0) : la saison n'a pas d'ancre de nuit ; son
+#     retour tombe deux à quatre créneaux plus tard, avant Madame Mai (plus
+#     tard, il débordait sur la photo de l'hôtel et la poussait d'un créneau) ;
+#   · saison 1 — rien : ses trois ancres de nuit (1, 10, 15) la remplissent, et
+#     le livre (§ 1.4) veut qu'alors le réservoir se taise. C'est un écart voulu
+#     au budget du moteur (« ≥ 0,2 événement par saison dès S1 ») ;
+#   · saison 2 — un soir au plus, entre les créneaux 4 et 7 (cinq créneaux
+#     avant la nuit de Gégé, au 12) : les socios sous la fenêtre, la vitrine
+#     étoilée, ou le ciment s'il n'est pas tombé en saison 0.
+arcs:
+  - id: pr.h10.sb.ciment
+    title: "Le ciment frais"
+    kind: evenement
+    roles: [president]
+    postulats: [escalier_ferme]
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('h10_escalier') && ((season == 0 && slot <= 11) || (season == 2 && slot >= 4 && slot <= 7))"
+    chance: 0.45
+    cast: [tazi, nino]
+    same_club: true
+    fallback: drop
+    traces:
+      h10_sb_ciment: "{annee} : « 2040 » écrit au doigt dans le ciment frais de l'escalier nord. Le maçon a refait la marche."
+    steps:
+      - id: nuit
+        card: pr.h10.sb.ciment_nuit
+        next: [ { step: retour, in: [3, 4] } ]
+      - id: retour
+        card: pr.h10.sb.ciment_retour
+        next: []
+
+  - id: pr.h10.sb.vitrine
+    title: "La vitrine"
+    kind: evenement
+    roles: [president]
+    postulats: [escalier_ferme]
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('h10_maquette_trois') && season == 2 && slot >= 4 && slot <= 7"
+    chance: 0.5
+    cast: [clemence, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      h10_sb_vitrine: "{annee} : la vitrine de l'agence Tessandier étoilée d'un pavé. Un masque de 1990 dans le parc de la maquette."
+    steps:
+      - id: vitrine
+        card: pr.h10.sb.vitrine
+        next: []
+
+  - id: pr.h10.sb.devant
+    title: "Sous la fenêtre"
+    kind: evenement
+    roles: [president]
+    postulats: [escalier_ferme]
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    # La vitrine passe d'abord : le moteur tire les soirs dans l'ordre des ids,
+    # et « devant » (presque toujours éligible, 0,6) ne lui laissait jamais
+    # son tour.
+    when: "flag('h10_photo_hotel') && !flag('h10_maquette_trois') && season == 2 && slot >= 4 && slot <= 7"
+    chance: 0.6
+    cast: [nino, gege]
+    same_club: true
+    fallback: drop
+    traces:
+      h10_sb_devant: "{annee} : onze cartes de socio levées sous la fenêtre de {nom}, à minuit, sans un cri."
+    steps:
+      - id: fenetre
+        card:
+          - { id: pr.h10.sb.devant_verite, if: "flag('h10_verite_hotel')" }
+          - { id: pr.h10.sb.devant }
+        next: []

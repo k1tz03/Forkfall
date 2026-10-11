@@ -1,0 +1,94 @@
+# « Les Deux Téléphones » — les cartes des soirs du réservoir
+# (content/arcs/president/h10_sombres.yaml). Toutes hors du sac, toutes `once`,
+# toutes `sombre` sauf la suite du ciment, qui se joue un matin. `lieu:` dit où
+# la ville met la scène ; personne ne crie, rien ne se casse sous nos yeux : on
+# arrive après le pavé, on regarde les cartes levées.
+cards:
+  # ============================================================ Le ciment frais
+  - id: pr.h10.sb.ciment_nuit
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, sombre]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Minuit, escalier nord. Sous la lampe de chantier, dans le ciment frais de la marche du mois, quelqu'un a écrit au doigt : « 2040 ». Les chiffres sont encore mous."
+    left:
+      label: "Je l'efface"
+      effects: {tribunes: "-", set: [h10_sb_ciment]}
+      answer: "Ton doigt laisse une trace plus large que le chiffre. Au matin, le maçon regarde la marche, puis tes chaussures."
+    right:
+      label: "Je laisse sécher"
+      effects: {direction: "-", set: [h10_sb_ciment]}
+      answer: "Au matin, le chiffre est dur comme la marche. Le maçon le regarde longtemps, puis il sort sa truelle."
+
+  - id: pr.h10.sb.ciment_retour
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Tazi, un matin, devant la marche du mois. Au doigt, dans le ciment frais, encore : « 2040 ». « J'ai refait. C'est revenu. Ce n'est pas un gamin : un gamin écrit son nom. »"
+    left:
+      label: "Laissez-le, cette fois"
+      effects: {direction: "-", tribunes: "+", set: [h10_sb_ciment_refait]}
+      answer: "« Alors il restera sous la peinture. » Il ne lisse pas. On le lira encore en mai 2040, sous trois couches."
+    right:
+      label: "Mettez une caméra"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "La caméra filme quatre nuits de chats et de vent. La cinquième, quelqu'un a mis du ciment sur l'objectif."
+
+  # ================================================================= La vitrine
+  - id: pr.h10.sb.vitrine
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, sombre]
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Nuit, rue de l'agence Tessandier. La vitrine est étoilée d'un coup de pavé. Dans le parc en mousse de la maquette, posé à plat, un masque de 1990, jauni, l'élastique cassé."
+    left:
+      label: "J'appelle Clémence"
+      effects: {tribunes: "-", direction: "+", relation: {clemence: 1}, set: [h10_sb_vitrine]}
+      answer: "Elle arrive en manteau sur son pyjama, regarde le masque sans le toucher. « Ma grand-mère en avait un. Elle n'a jamais dit de qui. »"
+    right:
+      label: "Je prends le masque"
+      effects: {direction: "-", tribunes: "+", set: [h10_sb_vitrine]}
+      answer: "Le carton est mou d'humidité. Le visage, on ne sait plus de qui. Au dos, au crayon : « 1990, rangée H »."
+
+  # ========================================================== Sous la fenêtre
+  - id: pr.h10.sb.devant_verite
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, tribunes, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit. Sous ta fenêtre, une dizaine de cartes de socio levées sous le réverbère. Sur ta boîte aux lettres, la photo de l'hôtel, et au feutre le mot que tu as dit : « Rive Capital »."
+    left:
+      label: "Je descends voter"
+      effects: {tribunes: "+", direction: "-", set: [h10_sb_devant, h10_sb_descendu]}
+      answer: "Tu lèves ta carte numéro 212 sous le réverbère. Ils comptent jusqu'à onze, puis s'en vont. Personne n'a dit pour quoi on votait."
+    right:
+      label: "J'éteins la lumière"
+      effects: {tribunes: "--", set: [h10_sb_devant]}
+      answer: "Ils restent jusqu'à deux heures, cartes levées, sans un mot. Au matin, la photo a été décollée de ta boîte, proprement."
+
+  - id: pr.h10.sb.devant
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, tribunes, sombre]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Minuit. Sous ta fenêtre, une dizaine de cartes de socio levées sous le réverbère. La photo de l'hôtel est scotchée sur ta boîte aux lettres. Ils ne crient pas : ils attendent que tu descendes."
+    left:
+      label: "Je descends voter"
+      effects: {tribunes: "+", direction: "-", set: [h10_sb_devant, h10_sb_descendu]}
+      answer: "Tu lèves ta carte numéro 212 sous le réverbère. Ils comptent jusqu'à onze, puis s'en vont. Personne n'a dit pour quoi on votait."
+    right:
+      label: "J'éteins la lumière"
+      effects: {tribunes: "--", set: [h10_sb_devant]}
+      answer: "Ils restent jusqu'à deux heures, cartes levées, sans un mot. Au matin, la photo a été décollée de ta boîte, proprement."

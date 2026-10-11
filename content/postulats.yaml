@@ -1171,17 +1171,149 @@ postulats:
     pitch: ""
     chantier: true
 
+  # Histoire 10 — « Les Deux Téléphones » (docs/histoires/00_les_dix_histoires.md).
+  # La présidente du Racing, socio numéro 212, élue en 2037 sur une promesse :
+  # monter avant que la loi des franchises ne ferme la première division, à la
+  # fin de la saison 2039-2040. Le club appartient à ses socios depuis 2034 ;
+  # la jauge `direction` (« Actionnaires ») est leur assemblée. Le patron du
+  # moteur est Gégé, socio numéro 1. Trois saisons jouées, puis l'assemblée :
+  # le script (content/arcs/president/h10_script.yaml) sert l'acte final au
+  # créneau 1 de la saison 3, et toutes ses sorties ferment le livre.
+  # L'année est 2037 (le livre), pas 2038 (le squelette) : la loi s'applique
+  # à la fin de la troisième saison jouée.
   - id: escalier_ferme
     index: 9
     role: president
     title: "Les Deux Téléphones"
+    question: "Pour qui montes-tu : pour la ville, pour les socios, ou pour ceux qui ont payé ta campagne ?"
     division: 2
-    year: 2038
+    year: 2037
     ville: Aubérive
     club: Racing Aubérive
-    gauges: { vestiaire: 50, tribunes: 55, direction: 50, caisse: 40 }
-    force: 50
+    rival: "US Villebranle"
+    gauges: { vestiaire: 50, tribunes: 65, direction: 45, caisse: 35 }
+    age: 58
+    # La force fait la montée : 72 points (premier, la montée) ou 64-71 (le
+    # barrage, que le livre fait jouer au dernier match). Réglée pour que la
+    # dernière montée reste possible sans être due (mesures : simulate). Elle
+    # bouge avec l'histoire : le petit Brac gardé (+3), vendu (−2) ; Owen
+    # Corven gardé (+1), viré pour l'homme de la capitale (−2) ; les douze du
+    # centre gardés (+1) ; le recrutement de janvier (+3). Obéir au clapet
+    # affaiblit l'équipe : la dernière montée se mérite contre lui.
+    force: 60
     objective: montee
     flags: [histoire_h10]
-    pitch: ""
-    chantier: true
+    president: gege
+    cast:
+      gege:     { fonction: creancier,   target: 1.6 }   # le patron du moteur ; mort en février 2040
+      nino:     { fonction: rival,       target: 1.6 }   # le capo, le second clapet
+      tazi:     { fonction: horloge,     target: 1.2 }   # l'escalier nord, une marche par mois
+      owen:     { fonction: capitaine,   target: 0.8 }   # l'entraîneur, viré ou gardé
+      clemence: { fonction: tentateur,   target: 0.6 }   # la maquette, le maillot, les entrepôts
+      rouvier:  { fonction: choeur,      target: 0.5 }   # la kiné des anciens, qui voit la poche
+      lea:      { fonction: chroniqueur, target: 0.5 }   # L'Écho du dimanche, le dictaphone
+      mbako:    { fonction: instance,    target: 0.5 }   # la loi, la Fédération
+      nassir:   { fonction: vautour,     target: 0.4 }   # Cheikh Ilyas, la Ligue, la chaise
+      brac:     { fonction: messager,    target: 0.4 }   # le petit Brac, la première commande
+      josiane:  { fonction: mentor,      target: 0.3 }   # la photo de 1974, cent ans en 2038
+    pitch: "Le téléphone du bureau est pour la ville ; le clapet dans ta veste, pour ceux qui ont payé ta campagne. En 2040, une loi ferme l'escalier : monte, ou fais semblant."
+    chantier: false
+    prologue: pr.h10.prologue
+    opening_arc: pr.h10.script
+    questions:                        # le fil rouge : pour qui montes-tu ?
+      - { id: ville,      poids: 1.0 }
+      - { id: socios,     poids: 1.0 }
+      - { id: consortium, poids: 1.0 }
+    programme:
+      # Mesures (simulate --reservoir et --narrative, 2000 carrières). Chaque
+      # saison garde son réservoir : `reprise: false`, et chaque entrée porte
+      # sa saison et son dernier créneau d'ouverture (`slot <= …`). Le metteur
+      # en scène rouvre une intrigue dès que moins de deux tiennent la scène
+      # (calendar.yaml, `min_active`) et puise alors dans toutes les saisons
+      # déjà ouvertes : sans ces gardes, une intrigue de S0 ouverte au créneau
+      # 13 débordait en S1, une de S1 en S2, et le tirage de S2 (prendre moins
+      # ce qui continue) ne tirait plus rien — la truelle, le neveu et
+      # Villebranle s'ouvraient dans 1 à 6 % des carrières.
+      # Saison 0 (2037-2038) : le club, la maquette, le centre, le souffle de
+      # Gégé, la photo de 1974. Le script y tient six ancres (1, 5-6, 8-9,
+      # 10-11, 16, 17) et quatre Nouvelles : trois intrigues, ouvertes avant
+      # le créneau 8, finies avant Madame Mai (ouvertes plus tard, leurs
+      # dernières étapes tombaient échues au début de S1, devant la photo de
+      # l'hôtel). La signature (×3 en S0) à 0,35 : à 0,9, elle s'ouvrait dans
+      # 91 % des carrières (bande 50-65 %).
+      "0":
+        prendre: 2
+        fenetre: [2, 7]
+        reserve: 0
+        pool:
+          - { arc: pr.h10.socios,    poids: 0.7, signature: true, if: "season == 0 && slot <= 7" }
+          - { arc: pr.h10.maquette,  poids: 0.8, if: "season == 0 && slot <= 7" }
+          - { arc: pr.h10.centre,    poids: 1.0, if: "season == 0 && slot <= 7" }
+          - { arc: pr.h10.lundi,     poids: 0.9, if: "season == 0 && slot <= 7" }
+          - { arc: pr.h10.rouvier,   poids: 0.8, if: "season == 0 && slot <= 7" }
+          - { arc: pr.h10.photo,     poids: 1.4, if: "season == 0 && slot <= 7 && !flag('h10_photo_raccrochee') && !flag('h10_photo_confiee')" }
+      # Saison 1 (2038-2039) : la loi votée, la lettre du dimanche, la chaise de
+      # la Ligue, les entrepôts, et le petit Brac après la commande de janvier.
+      # Six ancres, deux chaînes (l'appel d'après la photo, l'enveloppe) : deux
+      # intrigues, ouvertes avant la seconde sonnerie.
+      "1":
+        prendre: 1
+        fenetre: [2, 7]
+        reserve: 0
+        reprise: false
+        pool:
+          - { arc: pr.h10.mbako,     poids: 1.2, if: "season == 1 && slot <= 9" }
+          - { arc: pr.h10.lea,       poids: 1.2, if: "season == 1 && slot <= 9" }
+          - { arc: pr.h10.siege,     poids: 1.0, if: "season == 1 && slot <= 9" }
+          - { arc: pr.h10.entrepot,  poids: 1.0, if: "season == 1 && slot <= 9" }
+          - { arc: pr.h10.brac,      poids: 1.2, if: "season == 1 && slot <= 9 && (flag('h10_brac_vendu') || flag('h10_brac_garde'))" }
+          - { arc: pr.h10.photo,     poids: 1.2, if: "season == 1 && slot <= 9 && !flag('h10_photo_raccrochee') && !flag('h10_photo_tiroir') && !flag('h10_photo_confiee')" }
+          - { arc: pr.h10.lundi,     poids: 0.5, if: "season == 1 && slot <= 9" }
+      # Saison 2 (2039-2040) : la dernière. Sept ancres de script, dont six
+      # entre les créneaux 11 et 17 ; une intrigue tardive, tirée tôt, finie
+      # avant la lettre de Gégé (créneau 11). À deux, les tardives prenaient
+      # les créneaux des Nouvelles (3,2 par saison pour une bande de 3-4).
+      "2+":
+        prendre: 1
+        fenetre: [2, 2]
+        reserve: 0
+        reprise: false
+        pool:
+          - { arc: pr.h10.truelle,     poids: 1.2, if: "season == 2 && slot <= 5 && flag('h10_escalier')" }
+          - { arc: pr.h10.nino,        poids: 1.2, if: "season == 2 && slot <= 5" }
+          - { arc: pr.h10.villebranle, poids: 1.0, if: "season == 2 && slot <= 5" }
+    objectifs:                        # trois objectifs cachés ; l'indice relance
+      # « Une marche » : laissée ouverte parce qu'on l'a demandé au maçon, pas
+      # parce qu'on l'a payé (la truelle) ni parce que la brigade l'a mise
+      # sous scellés. À « ouverte » tout court, les trois objectifs ensemble
+      # sortaient de la bande (63 % pour 30-60 %).
+      - { id: escalier_une_marche, titre: "Une marche",          when: "flag('h10_marche_ouverte') && !flag('h10_truelle')", indice: "« Je mure, je ne décide pas. »" }
+      - { id: escalier_photo,      titre: "La photo de 1974",    when: "flag('h10_photo_raccrochee')", indice: "« Le clou est toujours là. »" }
+      # « Laisser sonner » : la veste de Nino laissée à sa sonnerie en janvier,
+      # et pas une obéissance au clapet de toute la dernière saison (à « une
+      # saison sans obéir », 39 % des carrières l'atteignaient, et les trois
+      # objectifs ensemble 74 %, pour une bande de 30-60 % ; à « trois saisons
+      # sans », personne).
+      - { id: escalier_sans_clapet, titre: "Laisser sonner",     when: "phase('bilan') && season == 2 && !flag('h10_voix_entendue') && !flag('h10_obei_s2')", indice: "Une sonnerie de 1995, ça se laisse sonner." }
+    alarm_overrides:                  # les visages du livre portent les alarmes
+      vestiaire.low:
+        - { card: pr.h10.alarme.vestiaire_bas_owen, when: "chars.owen.statut != 'parti'" }
+        - { card: pr.h10.alarme.vestiaire_bas_nino }
+      vestiaire.high:
+        - { card: pr.h10.alarme.vestiaire_haut_owen, when: "chars.owen.statut != 'parti'" }
+        - { card: pr.h10.alarme.vestiaire_haut_maillots }
+      tribunes.low:
+        - { card: pr.h10.alarme.tribunes_bas_gege, when: "!flag('h10_gege_mort')" }
+        - { card: pr.h10.alarme.tribunes_bas_nino }
+      tribunes.high:
+        - { card: pr.h10.alarme.tribunes_haut_gege, when: "!flag('h10_gege_mort')" }
+        - { card: pr.h10.alarme.tribunes_haut_nino }
+      direction.low:
+        - { card: pr.h10.alarme.direction_bas_lea }
+      direction.high:
+        - { card: pr.h10.alarme.direction_haut_ilyas }
+      caisse.low:
+        - { card: pr.h10.alarme.caisse_bas_tazi }
+        - { card: pr.h10.alarme.caisse_bas_clemence }
+      caisse.high:
+        - { card: pr.h10.alarme.caisse_haut_clemence }

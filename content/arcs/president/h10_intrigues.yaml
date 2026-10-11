@@ -1,0 +1,524 @@
+# « Les Deux Téléphones » — le réservoir du postulat `escalier_ferme` (index 9) :
+# quatorze intrigues tirées à l'ouverture des saisons (content/postulats.yaml,
+# `programme`). Cartes : content/cards/president/h10_intrigues.yaml.
+#
+#   Saison 0           · socios (signature) · maquette · centre · lundi ·
+#                        rouvier · photo
+#   Saison 1           · brac (après la première commande) · mbako (la loi) ·
+#                        lea (la lettre du dimanche) · siege · entrepot ·
+#                        photo et lundi, si la saison 0 ne les a pas ouvertes
+#   Saison 2 (tardives) · truelle · villebranle · nino
+#
+# Chaque intrigue s'ouvre dans sa saison seulement (le programme garde ses
+# entrées par `season == n && slot <= …`), et `start: [1, 3]` : quand le
+# metteur en scène en rouvre une de lui-même, sa première carte tombe dans les
+# trois créneaux, jamais sur la saison suivante. Avec des fenêtres de dix
+# créneaux, les intrigues ouvertes tard débordaient d'une saison sur l'autre,
+# et le tirage de la saison suivante, qui retranche ce qui continue, ne tirait
+# plus les tardives.
+#
+# Ce que le réservoir fournit à l'acte final, en plus du script :
+#   · la photo de 1974 raccrochée (pr.h10.photo) — la fin rare ;
+#   · la bande du dictaphone (pr.h10.lea) — la preuve ;
+#   · la truelle payée, propre ou sale (pr.h10.truelle) — la dernière marche et
+#     la brigade ;
+#   · la dette de Nino (pr.h10.nino) — un neveu retourné au zinc peut se
+#     retourner encore, si on le laisse seul au Terminus ;
+#   · Gégé à +2 (pr.h10.rouvier, pr.h10.photo, pr.h10.villebranle).
+# Les secrets (le contrat de siège, la bande) n'ont pas de ligne d'Almanach.
+arcs:
+  # ============================================================== SAISON 0
+  - id: pr.h10.socios
+    title: "La carte 212"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: tribune
+    carrier: nino
+    cast: [nino, gege, josiane]
+    issues: [recompte, compte]
+    traces:
+      h10_socios_recompte: "{annee} : le vote de la buvette recompté carte par carte. Il manquait trois cartes au compte de Nino."
+      h10_socios_compte: "{annee} : la motion du virage adoptée à trois cartes près. Nino a compté ; personne n'a recompté."
+    hint: "Trois cent douze signatures pour payer la Nord au prix de 1990."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: motion
+        card:
+          - { id: pr.h10.so.motion_essai, if: "flag('h10_promesse_essai')" }
+          - { id: pr.h10.so.motion }
+        next: [ { step: vote, in: [1, 3] } ]
+      - id: vote
+        card:
+          - { id: pr.h10.so.vote_josiane, if: "fil_rouge == 'socios'" }
+          - { id: pr.h10.so.vote }
+        next: [ { step: guichet, in: [2, 4] } ]
+      - id: guichet
+        card:
+          - { id: pr.h10.so.guichet_recompte, if: "flag('h10_socios_recompte')" }
+          - { id: pr.h10.so.guichet }
+        next: []
+
+  - id: pr.h10.maquette
+    title: "La troisième tranche"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: argent
+    carrier: clemence
+    cast: [clemence, gege, nassir]
+    issues: [flocage, maillot_nu]
+    traces:
+      h10_maillot_terrasses: "{annee} : « Les Terrasses, troisième tranche » sur le maillot du Racing. La Nord a retourné ses maillots."
+      h10_maillot_nu: "{annee} : le maillot du Racing est resté sans nom. Clémence Tessandier l'a rendu plié."
+    hint: "Une maquette jaunie qu'on a repeinte : troisième tranche, 2041."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: vitrine
+        card: pr.h10.mq.vitrine
+        next: [ { step: entrer, in: [1, 3] } ]
+      - id: entrer
+        card: pr.h10.mq.entrer
+        next: [ { step: flocage, in: [2, 4] } ]
+      - id: flocage
+        card:
+          - { id: pr.h10.mq.flocage_rive, if: "flag('h10_plaque_posee')" }
+          - { id: pr.h10.mq.flocage }
+        next: []
+
+  - id: pr.h10.centre
+    title: "Les douze lits"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: formation
+    carrier: owen
+    cast: [owen, brac, nassir]
+    issues: [garde, stage]
+    traces:
+      h10_centre_garde: "{annee} : les douze du centre de formation sont restés à {ville}. La capitale avait envoyé un car."
+      h10_centre_stage: "{annee} : les douze du centre partis une semaine à la capitale. Dix sont revenus."
+    hint: "Une plaque de laiton qui attend qu'on la visse au-dessus d'une porte."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: plaque
+        card: pr.h10.ce.plaque
+        next: [ { step: dortoir, in: [2, 4] } ]
+      - id: dortoir
+        card:
+          - { id: pr.h10.ce.dortoir_brac, if: "flag('h10_brac_vendu')" }
+          - { id: pr.h10.ce.dortoir }
+        next: []
+      - id: retour
+        card: pr.h10.ce.retour
+        next: []
+
+  - id: pr.h10.lundi
+    title: "Le lundi d'Owen Corven"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: owen
+    cast: [owen, nino, brac]
+    issues: [vire, garde]
+    traces:
+      h10_owen_vire: "{annee} : Owen Corven viré un lundi, jour de congé. Son verre est resté sur le banc."
+      h10_owen_garde: "{annee} : Owen Corven gardé contre un CV venu de la capitale."
+    hint: "Une banderole sur la Nord, et un CV sans lettre sur ton bureau."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: banderole
+        card: pr.h10.lu.banderole
+        next: [ { step: cv, in: [1, 3] } ]
+      - id: cv
+        card: pr.h10.lu.cv
+        next: [ { step: lundi, in: [1, 3] } ]
+      - id: lundi
+        card:
+          - { id: pr.h10.lu.lundi_cv, if: "flag('h10_owen_cv_garde')" }
+          - { id: pr.h10.lu.lundi }
+        next: []
+
+  - id: pr.h10.rouvier
+    title: "Le souffle"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: corps
+    carrier: rouvier
+    cast: [rouvier, gege, nino]
+    issues: [loge, radio]
+    traces:
+      h10_gege_loge: "{annee} : Gégé dans la loge présidentielle, une couverture sur les genoux. Il s'est levé seul au premier but."
+      h10_gege_radio: "{annee} : Gégé a écouté le match à la radio, au-dessus du local. Il a appelé la loge à la mi-temps."
+    hint: "Un vieil homme torse nu sur une table de cuisine, et un sifflet à côté du sel."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: table
+        card: pr.h10.ro.table
+        next: [ { step: loge, in: [1, 3] } ]
+      - id: loge
+        card: pr.h10.ro.loge
+        next: [ { step: poche, in: [2, 4] } ]
+      - id: radio
+        card: pr.h10.ro.radio
+        next: [ { step: poche, in: [2, 4] } ]
+      - id: poche
+        card: pr.h10.ro.poche
+        next: []
+
+  - id: pr.h10.photo
+    title: "La photo de 1974"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: direction
+    carrier: josiane
+    cast: [josiane, gege, mbako]
+    issues: [raccrochee, tiroir]
+    traces:
+      h10_photo_raccrochee: "{annee} : la photo de 1974 raccrochée au clou de l'escalier du club-house. Madame Josiane a fait redresser le cadre."
+      h10_photo_tiroir: "{annee} : la photo de 1974 est restée chez Madame Josiane, emballée dans L'Écho de 1991."
+    hint: "Une vieille dame qui a gardé une photo trente ans pour la rendre à un clou."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: lettre
+        card: pr.h10.ph.lettre
+        next: [ { step: visite, in: [1, 3] } ]
+      - id: visite
+        card:
+          - { id: pr.h10.ph.visite_cadre, if: "flag('h10_clou_occupe')" }
+          - { id: pr.h10.ph.visite }
+        next: []
+      - id: gege
+        card: pr.h10.ph.gege
+        next: []
+      # La photo laissée chez Josiane : Gégé relance (une seconde chance pour
+      # le clou ; sans elle, l'intrigue finissait au créneau 9 et l'hiver de la
+      # saison 0 pouvait rester muet).
+      - id: relance
+        card:
+          - { id: pr.h10.ph.relance_cadre, if: "flag('h10_clou_occupe')" }
+          - { id: pr.h10.ph.relance }
+        next: []
+
+  # ============================================================== SAISON 1
+  - id: pr.h10.brac
+    title: "Le car de huit heures"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: mercato
+    carrier: brac
+    cast: [brac, owen, lea]
+    issues: [revenu, loin, rappel]
+    traces:
+      h10_brac_revenu: "{annee} : Elias Brac revenu un dimanche en tribune Nord, le maillot de la capitale sous le blouson."
+      h10_brac_rappel: "{annee} : la capitale a rappelé Elias Brac. Il a répondu lui-même, en une phrase."
+    hint: "Un gamin de dix-sept ans, né à côté du stade, que la capitale voulait."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: message
+        card:
+          - { id: pr.h10.br.message_vendu, if: "flag('h10_brac_vendu')" }
+          - { id: pr.h10.br.message_garde }
+        next: [ { step: dimanche, in: [2, 4] } ]
+      - id: dimanche
+        card:
+          - { id: pr.h10.br.dimanche_vendu, if: "flag('h10_brac_vendu')" }
+          - { id: pr.h10.br.dimanche_garde }
+        next: [ { step: article, in: [2, 4] } ]
+      - id: article
+        card:
+          - { id: pr.h10.br.article_loin, if: "flag('h10_brac_vendu')" }
+          - { id: pr.h10.br.article }
+        next: []
+
+  - id: pr.h10.mbako
+    title: "La loi"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: mbako
+    cast: [mbako, nassir, lea, nino]
+    issues: [plaidoirie, nino]
+    traces:
+      h10_plaidoirie: "{annee} : huit minutes devant la Commission des franchises. {nom} a parlé de l'escalier nord."
+      h10_nino_federation: "{annee} : Nino a plaidé pour le Racing devant la Commission. Il est revenu avec une cravate neuve."
+    hint: "Une loi votée à quatre voix, et l'homme qui l'a écrite au bout du fil."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: vote
+        card:
+          - { id: pr.h10.mb.vote_joueur, if: "flag('h10_mbako_joueur')" }
+          - { id: pr.h10.mb.vote }
+        next: [ { step: commission, in: [2, 4] } ]
+      - id: commission
+        card: pr.h10.mb.commission
+        next: [ { step: couloir, in: [1, 3] } ]
+      - id: couloir
+        card: pr.h10.mb.couloir
+        next: []
+
+  - id: pr.h10.lea
+    title: "La lettre du dimanche"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: lea
+    cast: [lea, josiane, rouvier]
+    issues: [signee, virage]
+    traces:
+      h10_lettre_signee: "{annee} : la lettre de lecteur de Léa en Une de L'Écho du dimanche, signée de son nom."
+      h10_lettre_virage: "{annee} : une lettre de lecteur signée « le virage ». Trois mille signatures dans la marge."
+    hint: "Une vieille journaliste au kiosque du quai, et un dictaphone de 1995 dans son sac."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: kiosque
+        card: pr.h10.le.kiosque
+        next: [ { step: dictaphone, in: [2, 4] } ]
+      - id: dictaphone
+        card:
+          - { id: pr.h10.le.dictaphone_bande, if: "flag('h10_enregistrement')" }
+          - { id: pr.h10.le.dictaphone_prete, if: "flag('h10_dictaphone')" }
+          - { id: pr.h10.le.dictaphone_nino, if: "flag('h10_clapet_nino')" }
+          - { id: pr.h10.le.dictaphone }
+        next: []
+      # La voix dit son nom de mois : le créneau le sait (1-3 septembre, 4-5
+      # octobre, 6-7 novembre, 8-9 décembre, 10-11 janvier, 12 février,
+      # 13 mars, 14-15 avril, 16-17 mai).
+      - id: bande
+        card:
+          - { id: pr.h10.le.bande_septembre, if: "slot <= 3" }
+          - { id: pr.h10.le.bande_octobre, if: "slot <= 5" }
+          - { id: pr.h10.le.bande_novembre, if: "slot <= 7" }
+          - { id: pr.h10.le.bande_decembre, if: "slot <= 9" }
+          - { id: pr.h10.le.bande_janvier, if: "slot <= 11" }
+          - { id: pr.h10.le.bande_fevrier, if: "slot == 12" }
+          - { id: pr.h10.le.bande_mars, if: "slot == 13" }
+          - { id: pr.h10.le.bande_avril, if: "slot <= 15" }
+          - { id: pr.h10.le.bande }
+        next: []
+
+  - id: pr.h10.siege
+    title: "La place"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: contrat
+    carrier: nassir
+    cast: [nassir, mbako, clemence]
+    issues: [signe, debout]
+    traces:
+      h10_diner_ilyas: "{annee} : un dîner à huis clos avec Cheikh Ilyas, à l'hôtel de la Rive. Une poire, un couteau."
+      h10_siege_debout: "{annee} : {nom} a refusé une chaise au conseil de la Ligue. Le carton était déjà imprimé."
+    hint: "Une chaise en cuir au quarantième étage, avec ton nom sur un carton."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: diner
+        card: pr.h10.si.diner
+        next: [ { step: chaise, in: [2, 4] } ]
+      - id: chaise
+        card: pr.h10.si.chaise
+        next: []
+      - id: contrat
+        card: pr.h10.si.contrat
+        next: []
+
+  - id: pr.h10.entrepot
+    title: "Les entrepôts de la Tréfilerie"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: president
+    carrier: clemence
+    cast: [clemence, nassir, tazi]
+    issues: [bail, vide]
+    traces:
+      h10_entrepot_signe: "{annee} : l'entreprise de {nom} garde ses entrepôts de la Tréfilerie. Bail de dix ans, signé avec Rive Capital."
+      h10_entrepot_vide: "{annee} : les camions de {nom} ont quitté les entrepôts de la Tréfilerie. Quarante emplois sont partis avec."
+    hint: "Ton entreprise loue ses murs à quelqu'un qui vient de les racheter."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: bail
+        card: pr.h10.en.bail
+        next: [ { step: proposition, in: [2, 4] } ]
+      - id: proposition
+        card: pr.h10.en.proposition
+        next: [ { step: fenetres, in: [2, 4] } ]
+      - id: fenetres
+        card:
+          - { id: pr.h10.en.fenetres_vide, if: "flag('h10_entrepot_vide')" }
+          - { id: pr.h10.en.fenetres }
+        next: []
+
+  # ============================================================== SAISON 2
+  - id: pr.h10.truelle
+    title: "La truelle"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: argent
+    carrier: tazi
+    cast: [tazi, nino, rouvier]
+    issues: [propre, sale, refus]
+    traces:
+      h10_truelle: "{annee} : le maçon de l'escalier nord a reçu une enveloppe. Il a dit merci deux fois."
+    hint: "Un maçon qu'on paie pour murer, et qu'on pourrait payer pour oublier."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: tarif
+        card:
+          - { id: pr.h10.tr.tarif_enveloppe, if: "flag('h10_enveloppe_gardee')" }
+          - { id: pr.h10.tr.tarif }
+        next: [ { step: merci, in: [3, 4] } ]
+      - id: merci
+        card:
+          - { id: pr.h10.tr.merci, if: "flag('h10_truelle_payee')" }
+          - { id: pr.h10.tr.double }
+        next: [ { step: dos, in: [2, 3] } ]
+      - id: dos
+        card: pr.h10.tr.dos
+        next: []
+
+  - id: pr.h10.villebranle
+    title: "Le dernier derby"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: tribune
+    carrier: gege
+    cast: [gege, nino, owen]
+    issues: [refusee, etudiee]
+    traces:
+      h10_bouteille_renvoyee: "{annee} : la bouteille de {rival} renvoyée, bouchon intact. Gégé l'a portée lui-même au coursier."
+      h10_fusion_refusee: "{annee} : la fusion avec {rival} refusée. Nino a déchiré le projet en quatre."
+      h10_fusion_etudiee: "{annee} : une fusion avec {rival} « à l'étude ». Gégé a craché dans la neige, devant le siège."
+    hint: "Une bouteille de vin d'en face, et un vieil homme qui veut voir un derby debout."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: bouteille
+        card: pr.h10.vb.bouteille
+        next: [ { step: derby, in: [3, 4] } ]
+      - id: derby
+        card: pr.h10.vb.derby
+        next: [ { step: fusion, in: [2, 3] } ]
+      - id: fusion
+        card:
+          - { id: pr.h10.vb.fusion_renvoyee, if: "flag('h10_bouteille_renvoyee')" }
+          - { id: pr.h10.vb.fusion }
+        next: []
+
+  - id: pr.h10.nino
+    title: "Le neveu"
+    kind: serie
+    roles: [president]
+    postulats: [escalier_ferme]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: famille
+    carrier: nino
+    cast: [nino, gege, rouvier]
+    issues: [paye, lache]
+    traces:
+      h10_dette_nino: "{annee} : la dette de Nino au Terminus réglée en une nuit. Personne ne sait par qui."
+      h10_nino_lache: "{annee} : Nino a quitté le Terminus par la porte des livreurs. Sa dette est restée sur le tapis."
+    hint: "Un capo qui doit de l'argent au Terminus, et une voix qui propose de payer."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: terminus
+        card:
+          - { id: pr.h10.ni.terminus_zinc, if: "flag('h10_nino_retourne')" }
+          - { id: pr.h10.ni.terminus }
+        next: [ { step: oncle, in: [3, 4] } ]
+      - id: oncle
+        card: pr.h10.ni.oncle
+        next: [ { step: tambour, in: [2, 3] } ]
+      - id: tambour
+        card: pr.h10.ni.tambour
+        next: []

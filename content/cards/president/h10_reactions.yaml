@@ -1,0 +1,374 @@
+# « Les Deux Téléphones » — les cartes-réactions (spec variété §1.4) : servies
+# au tirage suivant le swipe qui les pose (`react:`), hors créneau. Le build
+# dérive `kind: reaction` ; effets petits, jamais `end`, jamais `react`, jamais
+# `drame`. Les déclencheurs :
+#   · tazi_ordre          ← la première marche, « Arrêtez ce chantier »
+#   · nino_chant          ← la voix de Gigi, « Coupez cette voix »
+#   · owen_crampons       ← la première commande, « Il partira »
+#   · gege_helico         ← l'hélicoptère, « Je le garde »
+#   · tazi_minute         ← trois mille visages, « Je me lève avec eux »
+#   · nino_trois_cartes   ← le vote de la buvette, « Je recompte »
+#   · josiane_cadre       ← la photo de 1974 raccrochée
+#   · lea_quatre_voix     ← la loi, « Je préférais L'Écho »
+#   · rouvier_couverture  ← le souffle, « Je le conduis »
+#   · nino_cravate        ← la Commission, « J'envoie Nino » (la dame en
+#                           manteau, avant ou après la sonnerie de janvier)
+#   · lea_patere          ← la photo de l'hôtel, « Je dis : une amie »
+#   · tazi_pelouse        ← l'hélicoptère, « Renvoyez-le »
+#   · nino_veste          ← la seconde sonnerie, « Je décroche »
+#   · tazi_neuf           ← la seconde sonnerie, « Je laisse sonner »
+#   · nino_megaphone      ← les pales, « Je parle au virage »
+#   · nino_escalier       ← la lettre de Gégé, « Je monterai »
+#   · josiane_clou        ← la nuit de Gégé, les deux sorties (la scène calme
+#                           d'après le choc : le clou du prologue revient)
+#   · nino_quatre         ← Madame Mai, « Je raccroche »
+cards:
+  - id: pr.h10.re.tazi_ordre
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    text: "Le lendemain, Tazi glisse sous ta porte une photocopie : l'ordre des travaux, signé de la Ligue, contresigné « Rive Capital, maître d'ouvrage ». Il a entouré la seconde signature."
+    left:
+      label: "Je la garde"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu la ranges dans ton tiroir, sous le clapet. Elle y reste trois ans, pliée en deux, le cercle tourné vers le haut."
+    right:
+      label: "Je la lui rends"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il la plie en quatre et la range dans sa caisse à outils, sous le niveau. « Pour plus tard. »"
+
+  - id: pr.h10.re.nino_chant
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    text: "Nino, après le match, au pied de la loge : « Sans la voix, le virage a chanté Gigi tout seul, la chanson de 1984. Mon oncle a pleuré. Il dit que c'est le froid. »"
+    left:
+      label: "Il fait froid"
+      effects: {caisse: "-", tribunes: "+"}
+      answer: "« Il fait toujours froid, au virage. » Nino sourit, ce qu'il fait rarement quand on parle de son oncle."
+    right:
+      label: "J'écris à la chaîne"
+      effects: {caisse: "+", tribunes: "-"}
+      answer: "La chaîne répond en neuf jours, sur papier à en-tête : la voix est « en maintenance ». Le mot fait rire tout le local."
+
+  - id: pr.h10.re.owen_crampons
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, formation]
+    speaker: owen
+    lieu: vestiaire
+    tone: leger
+    text: "Owen, au vestiaire vide, devant le casier de Brac : le gamin a laissé ses crampons pour le suivant, les lacets noués ensemble. « Je les donne à qui, {toi} ? »"
+    left:
+      label: "Au plus jeune"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "Le plus jeune a quinze ans et deux pointures de moins. Il les met quand même, avec trois paires de chaussettes."
+    right:
+      label: "Gardez-les là"
+      effects: {tribunes: "+", vestiaire: "-"}
+      answer: "Owen les accroche au-dessus du casier, par les lacets. Personne ne les décroche de la saison."
+
+  - id: pr.h10.re.gege_helico
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, sponsors]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    text: "Gégé regarde l'hélicoptère depuis la grille de la Nord : « Mon père en a vu atterrir un en 1958, pour un ministre. Le ministre est reparti avec la recette. »"
+    left:
+      label: "Celui-là restera"
+      effects: {tribunes: "-"}
+      answer: "« Ils restent tous. C'est la recette qui part. » Il crache par terre, loin des patins, par respect pour la pelouse."
+    right:
+      label: "Il servira au club"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Au club ? » Il rit si fort qu'il tousse. Nino doit lui taper dans le dos jusqu'à ce que ça passe."
+
+  - id: pr.h10.re.tazi_minute
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, moment]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    text: "Tazi, le lundi, au pied de l'escalier nord : « Pendant la minute, {toi}, j'ai arrêté la bétonnière. C'est la première fois depuis 1998. Elle a eu du mal à repartir. »"
+    left:
+      label: "Elle repartira"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Elle repart toujours. C'est ce qu'on lui reproche. » Il tape deux fois sur la cuve, et elle repart."
+    right:
+      label: "Laissez-la reposer"
+      effects: {direction: "-", relation: {tazi: 1}}
+      answer: "Il la laisse reposer jusqu'au mardi. La marche d'avril est murée un jour en retard ; personne ne le remarque, sauf toi."
+
+  - id: pr.h10.re.nino_trois_cartes
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, retorse]
+    speaker: nino
+    lieu: bureau
+    tone: leger
+    text: "Nino entre dans ton bureau sans frapper, la liste des socios roulée dans le poing : « Trois cartes. Des vieux qui lèvent la main trop tard. La prochaine fois, tu recomptes les morts ? »"
+    left:
+      label: "Si les morts votent"
+      effects: {tribunes: "-", direction: "+", relation: {nino: -1}}
+      answer: "Il déroule la liste sur ton bureau. Trois noms y sont entourés au crayon. Deux sont morts en 2036."
+    right:
+      label: "C'était une erreur"
+      effects: {relation: {nino: 1}}
+      answer: "« Une erreur, voilà. » Il reprend sa liste. Sur le pas de la porte, il te dit merci, et ça sonne comme une menace."
+
+  - id: pr.h10.re.josiane_cadre
+    roles: [president]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    text: "Madame Josiane téléphone au secrétariat le soir même : « Le cadre penche encore de deux millimètres vers la gauche. Je l'ai vu en partant. Je ne dormirai pas. »"
+    left:
+      label: "Je le redresse"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu montes avec un niveau de maçon emprunté à Tazi. La bulle hésite, puis se pose. Mireille appelle sa tante pour le lui dire."
+    right:
+      label: "Il penche depuis 1974"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Un silence au bout du fil, puis un rire très ancien. « C'est vrai. Il a toujours penché vers la Nord. »"
+
+  - id: pr.h10.re.lea_quatre_voix
+    roles: [president]
+    arc: presse
+    tags: [presse, direction]
+    speaker: lea
+    lieu: echo
+    tone: leger
+    text: "Léa t'appelle le samedi matin : « J'ai les quatre noms. L'un d'eux a joué au Racing, quatre matchs, en 1990. Je l'écris, ou vous voulez le lui dire d'abord ? »"
+    left:
+      label: "Écrivez-le"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Dimanche, le nom est en Une, avec la photo de ses quatre matchs. Le lundi, il quitte la Commission. Pas le vote."
+    right:
+      label: "Je le lui dirai"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu l'appelles. Il dit se souvenir très bien de toi, ce qui est impossible. Il raccroche le premier."
+
+  - id: pr.h10.re.rouvier_couverture
+    roles: [president]
+    arc: corps
+    tags: [famille, tribunes]
+    speaker: rouvier
+    lieu: cabinet
+    tone: leger
+    text: "Nadia Rouvier te rappelle le soir même : « Une couverture en laine, pas en synthétique, il gratte. Et s'il se lève au but, tu le tiens par la ceinture. Il se lèvera. »"
+    left:
+      label: "Je le tiendrai"
+      effects: {relation: {rouvier: 1}}
+      answer: "« Pas trop fort. Il a la fierté fragile, et les côtes aussi. » Elle raccroche sur un coup de sifflet, par habitude."
+    right:
+      label: "Il est grand"
+      effects: {tribunes: "-", direction: "+", relation: {rouvier: -1}}
+      answer: "« Il est vieux. Ce n'est pas pareil, mais ça s'en approche. » Elle raccroche sans dire au revoir."
+
+  - id: pr.h10.re.nino_cravate
+    roles: [president]
+    arc: instances
+    tags: [ultras, retorse]
+    speaker: nino
+    lieu: buvette
+    tone: leger
+    text: "Nino au local, la cravate neuve desserrée : « Ils m'ont donné huit minutes, j'en ai pris six. Les deux autres, je les ai passées dans le couloir, avec une dame en manteau. »"
+    left:
+      label: "Quelle dame ?"
+      effects: {direction: "-"}
+      answer: "« Une dame de la Ligue, je crois. Elle connaissait mon oncle. » Il resserre sa cravate, comme pour s'en souvenir."
+    right:
+      label: "Six minutes suffisaient"
+      effects: {direction: "-", tribunes: "+", relation: {nino: 1}}
+      answer: "« C'est ce qu'elle m'a dit aussi. » Il rit, puis il s'arrête de rire, et il enlève la cravate."
+
+  # ------------------------------------------------- saison 1 : la seconde sonnerie
+  - id: pr.h10.re.lea_patere
+    roles: [president]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: rue
+    tone: leger
+    text: "Léa t'attend au kiosque avec une photo de 2036 : la buvette du kop, une fête de socios, et au fond, le manteau d'automne. « Je ne l'ai pas publiée. Regardez la patère, derrière elle. »"
+    left:
+      label: "Je la garde"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Elle te la donne, pliée en deux. Le soir, sous la lampe, tu ne vois qu'une veste pendue à une patère, et l'horloge du local : minuit."
+    right:
+      label: "Publiez-la"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "« Pas encore. » Elle la range dans sa valise, entre deux vieux numéros de L'Écho. « Je publie quand je comprends. »"
+
+  - id: pr.h10.re.tazi_pelouse
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, objet]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    text: "L'après-midi, Tazi est à genoux sur les trois mètres carrés arrachés par les pales. Il replace les mottes une à une, du plat de sa truelle : « Je fais aussi les pelouses. On ne me le demande jamais. »"
+    left:
+      label: "Je lui passe les mottes"
+      effects: {tribunes: "+", caisse: "-"}
+      answer: "Vous finissez à deux avant la nuit, sans parler. Le samedi, personne ne voit la cicatrice ; toi, tu sais où ne pas marcher."
+    right:
+      label: "Je le laisse finir"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il finit seul, à la lampe frontale. Le jardinier du club le regarde faire depuis sa cabane, sans sortir l'aider."
+
+  - id: pr.h10.re.nino_veste
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, portable]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    text: "Nino revient chercher sa veste à la patère. Il sort le clapet, regarde l'écran vert, le referme d'un coup sec et te sourit, comme on sourit à un arbitre qui n'a pas sifflé."
+    left:
+      label: "Je lui souris aussi"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Il boutonne sa veste jusqu'en haut, ce qu'il ne fait jamais. Le clapet fait une bosse carrée sur sa poitrine, à gauche."
+    right:
+      label: "Je regarde ailleurs"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Quand tu relèves les yeux, il est parti. La patère se balance encore au-dessus du poêle, vide."
+
+  - id: pr.h10.re.tazi_neuf
+    roles: [president]
+    arc: escalier
+    tags: [tribunes, portable]
+    speaker: tazi
+    lieu: stade
+    tone: leger
+    text: "Sur le parking du local, Tazi range ses outils dans une camionnette à un seul phare. Il a compté, lui aussi : « Neuf. Chez moi, au bout de neuf, c'est qu'il n'y a personne. Ou quelqu'un qui écoute. »"
+    left:
+      label: "Vous avez entendu ?"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Une sonnerie de 1995. Ma femme a la même, dans un tiroir de la cuisine. » Il ferme le coffre. « Elle dit qu'il sonne la nuit. »"
+    right:
+      label: "Bonne nuit, Tazi"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "« Bonne nuit, {toi}. » La camionnette démarre au troisième essai. Il connaît la route ; le phare, c'est pour les autres."
+
+  - id: pr.h10.re.nino_megaphone
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, tribunes]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    text: "Nino ramasse au pied du banc le mégaphone que tu as laissé et le soupèse : « Tu as dit “Rive Capital” devant trois cents personnes. Moi, je ne l'ai jamais dit à voix haute. »"
+    left:
+      label: "Dis-le, maintenant"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Il porte le mégaphone à sa bouche, l'allume, et ne dit rien. Le grésillement fait aboyer un chien, quelque part derrière la Nord."
+    right:
+      label: "Rends-moi ça"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il te le rend par la poignée, comme un couteau. « Il est à toi. Tout ce qui est dit dedans aussi. »"
+
+  # --------------------------------------------------- saison 2 : la dernière marche
+  - id: pr.h10.re.nino_escalier
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, famille]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    text: "Dans l'escalier du local, Nino monte quand tu descends, un thermos à la main. Il voit l'enveloppe cachetée dans ta poche et s'efface contre le mur pour te laisser passer."
+    left:
+      label: "Bonsoir, Nino"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Bonsoir. » Il attend que tu sois en bas pour reprendre sa montée. Tu l'entends compter les marches, à mi-voix, jusqu'à onze."
+    right:
+      label: "Je passe sans un mot"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Le thermos tinte contre la rampe. En haut, la porte de la chambre se ferme doucement ; puis le verrou, qu'on ne tirait jamais."
+
+  - id: pr.h10.re.josiane_clou
+    roles: [president]
+    arc: direction
+    tags: [famille, telephone]
+    speaker: josiane
+    lieu: domicile
+    tone: leger
+    text: "Sept heures. Madame Josiane appelle elle-même, pour la première fois sans sa nièce : « Gégé est parti cette nuit. Je l'ai entendu à la radio. Le clou, il est toujours là ? »"
+    left:
+      label: "Il est toujours là"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Bien. » Un temps. « Il disait qu'on y accrocherait la prochaine. Je ne lui ai jamais demandé la prochaine quoi. »"
+    right:
+      label: "Je vais vérifier"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Tu montes au club-house avant le jour. Au-dessus de la troisième marche, le clou tient. Tu le touches, pour pouvoir le lui dire."
+
+  - id: pr.h10.re.nino_quatre
+    roles: [president]
+    arc: tribunes
+    tags: [ultras, portable]
+    speaker: nino
+    lieu: stade
+    tone: leger
+    text: "Au matin, Nino t'attend sur les marches du club-house, dans la veste de la veille, les yeux rouges : « Elle t'a appelé{pg, select, f{e} other{}} trois fois cette nuit ? Moi, quatre. »"
+    left:
+      label: "Tu as décroché ?"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Au quatrième. Elle m'a demandé si tu avais décroché, toi. J'ai dit non. » Il se lève. « C'est vrai, au moins ? »"
+    right:
+      label: "Rentre dormir"
+      effects: {direction: "+", tribunes: "-"}
+      answer: "Il hoche la tête et ne bouge pas. Au bout d'une minute, il dit « quatre », pour lui seul, et part vers la Nord sans se retourner."
+
+  # --------------------------------------------- le calendrier de Madame (S0)
+  # La première fois que le clapet change de nom, Gégé est assis à côté : il
+  # entend la sonnerie, et il s'en souviendra (sa lettre, en saison 2).
+  - id: pr.h10.re.gege_sonnerie
+    roles: [president]
+    arc: clapet
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    text: "Mi-temps, dans la loge. Ta veste sonne : une sonnerie de 1995. Gégé, sans tourner la tête : « J'avais la même. Elle ne sonnait jamais pour moi. Tu ne décroches pas ? »"
+    left:
+      label: "Je décroche"
+      effects: {direction: "-"}
+      answer: "« Ici Madame Octobre. Elle vous plaît, cette voix ? » Tu raccroches sans un mot. Gégé regarde le terrain, très fort."
+    right:
+      label: "Je laisse sonner"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Neuf sonneries. Gégé les compte du bout des doigts sur la rambarde, comme des marches. « Ils rappelleront. Ils rappellent toujours. »"
+
+  # ------------------------------------------- la lettre de Gégé, lue (S2, 16)
+  # Gégé est mort en février : c'est Nadia Rouvier qui appelle, le soir de
+  # Madame Mai. Il lui avait dit quand la lettre serait ouverte. Il habitait
+  # au-dessus du local ; il a noté chaque soir où deux sonneries ont traversé
+  # son plancher. La bâche de son père (1971) finit la lettre.
+  - id: pr.h10.re.lettre
+    roles: [president]
+    arc: tribunes
+    tags: [famille, telephone]
+    speaker: rouvier
+    lieu: domicile
+    tone: strategique
+    text: "Minuit, l'autre téléphone, celui de la ville. Nadia Rouvier : « Il m'avait dit : en mai, quand ils lui demanderont de perdre, {pg, select, f{elle} other{il}} ouvrira ma lettre. On est en mai. »"
+    left:
+      label: "Je l'ouvre"
+      effects: {tribunes: "+", set: [h10_lettre_lue]}
+      answer: "Des dates, des heures : les soirs où deux sonneries montaient du local. En bas : « La loge vend, le virage reste. Tu es les deux. »"
+    right:
+      label: "Je la brûle"
+      effects: {direction: "+", set: [h10_lettre_brulee], clear: [h10_lettre_gardee]}
+      answer: "Dans l'évier, le combiné coincé contre l'épaule. La cire fond avant le papier. Au bout du fil, Rouvier écoute brûler, et raccroche."
