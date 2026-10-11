@@ -2883,8 +2883,13 @@
   // ─────────────────────────────────────────────────────────────── le HUD
   var CHARS = {};
   function nomDe(id) { var c = CHARS[id]; return c ? c.name : id; }
-  // la musique suit la ville : le jour, le soir, le stade (la coquille choisit le thème)
-  function sonVille() { if (coquille && coquille.sonTheme) coquille.sonTheme(); }
+  // la musique suit la ville : le jour, le soir, le stade (la coquille choisit le thème) ;
+  // le lieu aussi, hors carte : la pièce où l'on est, sinon la rue (une carte a le sien)
+  function sonVille() {
+    if (!coquille) return;
+    if (coquille.sonTheme) coquille.sonTheme();
+    if (!carteOn && coquille.ambiance) coquille.ambiance(dedans ? dedans.m.ambiance : null);
+  }
   function majHud() {
     var h = $("villeHud");
     if (!h || !S) return;

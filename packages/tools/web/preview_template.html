@@ -2445,11 +2445,13 @@ __VILLE_CSS__
       couleur: function () { var p = (content.postulats || []).filter(function (x) { return x.index === currentPostulat; })[0], h = p && HISTOIRES[p.id]; return h ? h.c : "#E0164B"; },
       // un bruit de la vie (une scène jouée le demande)
       son: function (nom) { if (audio && audio.play && sonMode !== "muet") audio.play(nom); },
-      // dedans, l'ambiance de la pièce (null : la ville reprend la sienne)
+      // dedans, l'ambiance de la pièce ; null : la rue, de jour ou de nuit (plus le lieu de
+      // la carte qui attend : on l'entendait dans la rue, et jusqu'au bout de la semaine)
       ambiance: function (nom) {
         if (!audio || !audio.setAmbiance) return;
         var A = { bar: "ville", maison: "maison", bureau: "bureau", vestiaire: "vestiaire", presse: "presse", boutique: "ville", salle: "couloir", soin: "couloir", nuit: "nuit" };
-        audio.setAmbiance(nom ? (A[nom] || "maison") : ((view && view.card && view.card.ambiance) || "ville"));
+        var V = window.FusibleVille, nuit = !!(V && V.moment && V.moment().nuit);
+        audio.setAmbiance(nom ? (A[nom] || "maison") : (nuit ? "nuit" : "ville"));
       },
       frise: function () { openFrise(null); },
       classement: function () { openStandings(null); },

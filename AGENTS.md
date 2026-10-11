@@ -252,6 +252,11 @@ Ce que la ville porte en plus des cartes :
   la tribune qui chante, les claps du virage), Le Fusible sur une carte sombre (une boîte à
   musique désaccordée, cinq notes contre quatre temps, un cœur qui bat), Le Dernier Tour à la
   fin (le motif de La Mèche, lent) — en fondu enchaîné, et un jingle au départ d'une histoire.
+  Sous un thème, les couches d'origine se taisent : la nappe, et le lit continu des lieux (la
+  pluie, le néon, la rumeur — « un schlash continu » au retour du porteur, mesuré plus fort dans
+  les aigus que les thèmes) ; il ne reste du lieu que de rares bruits d'objets, bas (une goutte,
+  une porte, des pas, un ballon). En ville, le lieu sonore est la pièce où l'on est, sinon la
+  rue ; une carte ouverte a le sien.
   Le moteur a ses effets : la grosse caisse fait pomper les voix `pompe`, un écho ping-pong
   (`echo`), la saturation (`drive`), un filtre par voix que la section balaie (`ouvre`), la
   caisse claire « gated » (`S`), la montée (`z`). La grille : seize cases par mesure, une note

@@ -10,9 +10,15 @@
  * La Mèche à l'accueil, La Filature en ville le jour, Néons le soir, La Rive
  * au stade, Le Fusible sur les événements sombres, Le Dernier Tour à la fin —
  * et un jingle de départ. Quand un thème joue, la nappe se tait ; elle ne
- * revient que sans thème. Le banc d'essai (packages/tools/web/banc_son.js) les
- * rend hors ligne, avec leurs niveaux et un spectrogramme. Les couches
- * d'origine :
+ * revient que sans thème. Le lieu aussi : retour client, « j'ai l'impression
+ * qu'il y a encore l'ancienne musique, ça fait un schlash continu ultra
+ * désagréable » — c'était le lit continu des ambiances (la pluie, le néon, la
+ * rumeur), mesuré plus fort dans les aigus que les thèmes eux-mêmes. Sous un
+ * thème, le lit s'éteint ; il ne reste du lieu que quelques bruits d'objets,
+ * rares et bas (une goutte, une porte, des pas, un ballon), marqués `true` en
+ * quatrième case de leur événement. Le banc d'essai
+ * (packages/tools/web/banc_son.js) rend les thèmes hors ligne, avec leurs
+ * niveaux et un spectrogramme. Les couches d'origine :
  *
  *   1. LES AMBIANCES — le lieu où se joue la carte (`card.ambiance`, une des
  *      neuf valeurs de packages/core/lib/src/sfx.dart). Boucles génératives,
@@ -199,6 +205,10 @@
 
   // Un mouvement lent posé sur un paramètre : c'est ce qui empêche une boucle
   // d'être une boucle. Les fréquences sont volontairement incommensurables.
+  // Pendant qu'on fabrique un lit ou une nappe, `RECOLTE` ramasse ces
+  // oscillateurs pour qu'ils s'arrêtent avec lui : sans ça, chaque lieu quitté
+  // en laissait tourner deux ou trois jusqu'à la fin de la partie.
+  var RECOLTE = null;
   function drift(ctx, param, t, center, depth, rate) {
     var o = ctx.createOscillator();
     o.type = 'sine';
@@ -207,13 +217,18 @@
     param.value = center;
     o.connect(g).connect(param);
     o.start(t);
+    if (RECOLTE) RECOLTE.push(o);
     return o;
   }
 
   // ------------------------------------------------------------ les lieux --
   // Chaque lieu : une salle (réverbération), un lit continu, et des événements
   // tirés dans un intervalle. `evs` est lu par le séquenceur à fenêtre
-  // glissante — le même code sert au direct et au rendu hors ligne.
+  // glissante — le même code sert au direct et au rendu hors ligne. Un
+  // événement est [écart min, écart max, bruit, sous la musique ?] : sous un
+  // thème, le lit se tait et seuls les événements marqués `true` jouent, plus
+  // bas et deux fois plus espacés (jamais un souffle, jamais un tic régulier,
+  // jamais une hauteur fixe qui sonnerait faux contre le thème).
   var PLACES = {
 
     vestiaire: {
@@ -234,14 +249,14 @@
         [1.7, 4.6, function (ctx, out, t, rnd) {
           tone(ctx, out, t, { type: 'sine', f: between(rnd, 1150, 1500), f2: between(rnd, 520, 700), dur: 0.09, peak: 0.05 });
           burst(ctx, out, t, { f: between(rnd, 2600, 3400), dur: 0.035, q: 2, peak: 0.03 });
-        }],
+        }, true],
         // une porte de casier, un banc, un pas sur le carrelage
         [5.5, 13, function (ctx, out, t, rnd) {
           var pan = between(rnd, -0.6, 0.6);
           burst(ctx, out, t, { type: 'lowpass', f: between(rnd, 400, 700), dur: 0.16, q: 0.7, peak: 0.13, pan: pan });
           tone(ctx, out, t, { type: 'triangle', f: between(rnd, 78, 104), f2: 52, dur: 0.13, peak: 0.06 });
           if (rnd() < 0.45) burst(ctx, out, t + between(rnd, 0.11, 0.2), { f: between(rnd, 1800, 2600), dur: 0.05, q: 3, peak: 0.05, pan: pan });
-        }]
+        }, true]
       ]
     },
 
@@ -355,11 +370,11 @@
             });
             tone(ctx, out, t + i * step, { type: 'sine', f: between(rnd, 96, 128), f2: 60, dur: 0.07, peak: 0.03 * k });
           }
-        }],
+        }, true],
         // une porte, quelque part au fond
         [11, 26, function (ctx, out, t, rnd) {
           burst(ctx, out, t, { type: 'lowpass', f: between(rnd, 320, 520), dur: 0.2, q: 0.6, peak: 0.07, pan: between(rnd, -0.7, 0.7) });
-        }]
+        }, true]
       ]
     },
 
@@ -391,7 +406,7 @@
         [5, 14, function (ctx, out, t, rnd) {
           burst(ctx, out, t, { type: 'bandpass', f: between(rnd, 260, 420), dur: 0.09, q: 1.1, peak: 0.08, pan: between(rnd, -0.5, 0.5) });
           tone(ctx, out, t, { type: 'triangle', f: between(rnd, 120, 170), f2: 70, dur: 0.1, peak: 0.045 });
-        }]
+        }, true]
       ]
     },
 
@@ -438,11 +453,11 @@
             var d = between(rnd, 0.5, 1.0);
             var s = src(ctx, t, true, 0.9);
             var fb = ctx.createBiquadFilter(); fb.type = 'bandpass'; fb.Q.value = 4;
-            drift(ctx, fb.frequency, t, between(rnd, 700, 1100), 300, between(rnd, 3, 6));
+            var dv = drift(ctx, fb.frequency, t, between(rnd, 700, 1100), 300, between(rnd, 3, 6));
             var g = gain(ctx, 0.0001);
             shape(g.gain, t, d * 0.3, d * 0.8, 0.04);
             s.connect(fb).connect(g).connect(out);
-            s.stop(t + d * 1.3);
+            s.stop(t + d * 1.3); dv.stop(t + d * 1.3);
           }
         }]
       ]
@@ -534,7 +549,7 @@
         // une goutte sur une gouttière
         [2.5, 7, function (ctx, out, t, rnd) {
           tone(ctx, out, t, { type: 'sine', f: between(rnd, 900, 1700), f2: between(rnd, 380, 600), dur: 0.07, peak: 0.045, pan: between(rnd, -0.6, 0.6) });
-        }],
+        }, true],
         // une voiture sur l'asphalte trempé
         [10, 24, function (ctx, out, t, rnd) {
           var dur = between(rnd, 1.2, 2.0);
@@ -1655,6 +1670,14 @@
     var themes = [];      // les thèmes vivants (deux au plus pendant un fondu)
     var themeVoulu = null;
     var scheduled = 0;    // jusqu'où le séquenceur a déjà écrit
+    // Sous un thème, le lieu n'a plus de lit et ses bruits jouent à ce niveau.
+    var SOUS_MUSIQUE = 0.4;
+    function sousMusique() { return themeVoulu != null; }
+    function glisser(param, t, v, d) {
+      param.cancelScheduledValues(t);
+      param.setValueAtTime(param.value, t);
+      param.linearRampToValueAtTime(v, t + d);
+    }
 
     // ---- un lieu ----
     function makeSlot(name, at, fade) {
@@ -1670,7 +1693,22 @@
       input.connect(dry).connect(out);
       input.connect(wet).connect(conv).connect(out);
       out.connect(ambBus);
-      var srcs = def.bed(ctx, input, at, rnd) || [];
+      // le lit et les bruits ont chacun leur niveau ; sous un thème, le lit ne
+      // tourne pas du tout et les bruits baissent (voir `musique`)
+      var sous = sousMusique();
+      var lit = gain(ctx, 1), bruits = gain(ctx, sous ? SOUS_MUSIQUE : 1);
+      lit.connect(input); bruits.connect(input);
+      var srcs = [];
+      function allumer(t) {
+        RECOLTE = [];
+        srcs = (def.bed(ctx, lit, t, rnd) || []).concat(RECOLTE);
+        RECOLTE = null;
+      }
+      function eteindre(t) {
+        for (var i = 0; i < srcs.length; i++) { try { srcs[i].stop(t); } catch (e) {} }
+        srcs = [];
+      }
+      if (!sous) allumer(at);
       if (fade > 0) {
         out.gain.setValueAtTime(0.0001, at);
         out.gain.linearRampToValueAtTime(1, at + fade);
@@ -1678,24 +1716,34 @@
       var next = [];
       for (var i = 0; i < def.evs.length; i++) next.push(at + rnd() * def.evs[i][1] * 0.6);
       return {
-        name: name, out: out, input: input, srcs: srcs, def: def, next: next, dead: 0,
+        name: name, out: out, input: input, def: def, next: next, dead: 0,
         pump: function (t0, t1) {
           for (var i = 0; i < def.evs.length; i++) {
             var e = def.evs[i], guard = 0;
             while (next[i] < t1 && guard++ < 64) {
-              if (next[i] >= t0) e[2](ctx, input, next[i], rnd);
-              next[i] += between(rnd, e[0], e[1]);
+              if (next[i] >= t0 && (!sous || e[3])) e[2](ctx, bruits, next[i], rnd);
+              next[i] += between(rnd, e[0], e[1]) * (sous ? 2 : 1);
             }
           }
+        },
+        // un thème commence ou s'arrête : le lit s'éteint ou revient
+        musique: function (t, on) {
+          if (on === sous) return;
+          sous = on;
+          glisser(bruits.gain, t, on ? SOUS_MUSIQUE : 1, 1.2);
+          if (on) { glisser(lit.gain, t, 0.0001, 1.2); eteindre(t + 1.3); return; }
+          eteindre(t);
+          lit.gain.cancelScheduledValues(t);
+          lit.gain.setValueAtTime(0.0001, t);
+          lit.gain.linearRampToValueAtTime(1, t + 1.2);
+          allumer(t);
         },
         stop: function (t, fade) {
           this.dead = t + fade + 0.2;
           out.gain.cancelScheduledValues(t);
           out.gain.setValueAtTime(out.gain.value, t);
           out.gain.linearRampToValueAtTime(0.0001, t + fade);
-          for (var i = 0; i < srcs.length; i++) {
-            try { srcs[i].stop(t + fade + 0.1); } catch (e) {}
-          }
+          eteindre(t + fade + 0.1);
         }
       };
     }
@@ -1707,12 +1755,13 @@
       var filt = ctx.createBiquadFilter();
       filt.type = 'lowpass'; filt.Q.value = d.q;
       filt.frequency.value = d.cut;
-      var lfo = drift(ctx, filt.frequency, at, d.cut, d.cut * 0.4, d.rate);
+      RECOLTE = [];
+      drift(ctx, filt.frequency, at, d.cut, d.cut * 0.4, d.rate);
       // Le LFO du filtre est posé UNE fois ; la tension déplace son centre, on
       // n'en empile jamais un second (sinon la profondeur double à chaque fois).
       filt.connect(out).connect(padBus);
       var root = 55 * Math.pow(2, ((seed % 5) - 2) / 12); // la tonalité d'une carrière
-      var oscs = [lfo];
+      var oscs = [];
       for (var i = 0; i < d.voices.length; i++) {
         var f = root * Math.pow(2, d.voices[i] / 12);
         for (var k = 0; k < 2; k++) {
@@ -1735,6 +1784,7 @@
       sub.connect(sg).connect(out);
       sub.start(at);
       oscs.push(sub);
+      oscs = oscs.concat(RECOLTE); RECOLTE = null;
       var p = {
         out: out, oscs: oscs, base: 0.055,
         level: function (t, ramp) {
@@ -1958,8 +2008,9 @@
         themeVoulu = nom;
         if (mode !== 'tout') return;
         var cur = themes.filter(function (s) { return !s.dead; }).pop();
-        if (cur && cur.name === nom) return;
         var t = o.at == null ? now() : o.at;
+        for (var i = 0; i < slots.length; i++) if (!slots[i].dead) slots[i].musique(t, nom != null);
+        if (cur && cur.name === nom) return;
         var fade = o.fade == null ? 1.2 : o.fade;
         if (cur) cur.stop(t, fade);
         if (nom) {
@@ -2048,8 +2099,9 @@
     try { liveCtx = new AC(); } catch (e) { return null; }
     live = createEngine(liveCtx, liveCtx.destination, { mode: mode });
     live.setYear(pending.year);
-    if (pending.ambiance) live.setAmbiance(pending.ambiance, { fade: 0.8 });
+    // le thème avant le lieu : le lit d'un lieu né sous un thème naît éteint
     if (pending.theme) live.setTheme(pending.theme, { fade: 0.6 });
+    if (pending.ambiance) live.setAmbiance(pending.ambiance, { fade: 0.8 });
     live.setTension(pending.tension);
     live.startClock();
     return live;
