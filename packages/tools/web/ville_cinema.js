@@ -73,7 +73,7 @@
     if (!c || CINE || !S) { if (ensuite) ensuite(); return; }
     S.cinesVues = S.cinesVues || {};
     S.cinesVues[c.id] = 1;
-    CINE = { c: c, i: -1, ensuite: ensuite || null, attend: null, frappe: null, amb: c.tranche ? AMBIANCE[c.tranche] : null, musique: null };
+    CINE = { c: c, i: -1, ensuite: ensuite || null, attend: null, frappe: null, amb: c.tranche ? AMBIANCE[c.tranche] : null, musique: null, meteo: c.meteo || null };
     if (CONV) finConv();
     occupe = true; fermerPorte(); bulle = null; heros.chemin = null;
     var el = uiCine();
@@ -221,6 +221,7 @@
     }
     if (st.son != null) { if (coquille && coquille.son) coquille.son(st.son); apres(120); return; }
     if (st.musique != null) { CINE.musique = st.musique; sonVille(); apres(60); return; }
+    if (st.meteo != null) { CINE.meteo = st.meteo === "aucune" ? null : st.meteo; apres(60); return; }
     if (st.camera != null) {
       var ca = acteur(st.camera);
       if (ca) { var pc = versImage(ca.x, ca.y, ZSOL + 8); CINE.camera = [pc[0], pc[1] - UI.decal / k]; }
@@ -380,7 +381,7 @@
       figurants = figurants.filter(function (g) { return !g.cine; });
       heros.chemin = null; heros.arrivee = null; heros.geste = null; heros.emote = null; heros.pose = null; heros.parle = false;
       CINE = { c: suite, i: -1, ensuite: c.ensuite, origine: c.origine || c.c.quand, attend: null, frappe: null,
-        amb: suite.tranche ? AMBIANCE[suite.tranche] : null, musique: c.musique, camera: null };
+        amb: suite.tranche ? AMBIANCE[suite.tranche] : null, musique: c.musique, camera: null, meteo: suite.meteo || null };
       el.querySelector(".v-cine-boite").hidden = true;
       if (suite.titre) carteTitre(suite.titre, suite.sous || "", function () { installerScene(suite); }, etapeSuivante);
       else fonduVite(function () { installerScene(suite); }, etapeSuivante);
@@ -410,6 +411,43 @@
     occupe = false;
     sonVille(); majHud(); sauver();
     if (c.ensuite) c.ensuite();
+  }
+
+  // ─── le temps qu'il fait, dehors (une scène sous la pluie, sous la neige, dans la brume) :
+  // des gouttes, des flocons, des bancs de brume, dessinés au pixel par-dessus la ville
+  function hach(i, s) { var x = Math.sin(i * 127.1 + s * 311.7) * 43758.5453; return x - Math.floor(x); }
+  function dessinerMeteo(sorte, ts) {
+    var t = ts / 1000, n, i, x, y;
+    ctx.save();
+    if (sorte === "pluie") {
+      ctx.fillStyle = "rgba(10,18,34,0.24)"; ctx.fillRect(0, 0, VW, VH);
+      ctx.fillStyle = "rgba(175,195,225,0.55)";
+      n = Math.round(VW * VH / 420);
+      for (i = 0; i < n; i++) {
+        var v = 150 + hach(i, 3) * 90;
+        y = (hach(i, 1) * (VH + 20) + t * v) % (VH + 20) - 10;
+        x = ((hach(i, 2) * (VW + 40) - t * v * 0.3) % (VW + 40) + VW + 40) % (VW + 40) - 20;
+        for (var k2 = 0; k2 < 5; k2++) ctx.fillRect(Math.round(x - k2 * 0.3), Math.round(y + k2), 1, 1);
+      }
+    } else if (sorte === "neige") {
+      ctx.fillStyle = "rgba(235,238,245,0.85)";
+      n = Math.round(VW * VH / 1100);
+      for (i = 0; i < n; i++) {
+        var vn = 9 + hach(i, 5) * 14;
+        y = (hach(i, 1) * (VH + 10) + t * vn) % (VH + 10) - 5;
+        x = (hach(i, 2) * VW + Math.sin(t * 0.9 + i) * 3 + VW) % VW;
+        var sz = hach(i, 4) < 0.25 ? 2 : 1;
+        ctx.fillRect(Math.round(x), Math.round(y), sz, sz);
+      }
+    } else if (sorte === "brume") {
+      for (i = 0; i < 6; i++) {
+        var by = (hach(i, 7) * VH + Math.sin(t * 0.15 + i) * 8), bx = ((hach(i, 8) * VW + t * (4 + i)) % (VW * 1.6)) - VW * 0.3;
+        var g = ctx.createRadialGradient(bx, by, 0, bx, by, VW * 0.45);
+        g.addColorStop(0, "rgba(190,196,205,0.16)"); g.addColorStop(1, "rgba(190,196,205,0)");
+        ctx.fillStyle = g; ctx.fillRect(0, 0, VW, VH);
+      }
+    }
+    ctx.restore();
   }
 
   // ─── les conversations surprises

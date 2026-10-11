@@ -1442,6 +1442,8 @@
     // la marque du rendez-vous (jamais pour un événement sombre)
     var m = marqueRdv();
     if (m) dessinerMarque(m[0], m[1], ts);
+    // le temps qu'il fait pendant une scène, dehors
+    if (CINE && CINE.meteo && !dedans) dessinerMeteo(CINE.meteo, ts);
   }
   var dessines = [];
 

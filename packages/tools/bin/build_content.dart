@@ -2147,6 +2147,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   const gestes = {'assis', 'debout', 'telephone', 'boit', 'fume', 'bras_leves', 'pointe', 'poing', 'tete_basse', 'pleure', 'rit',
     'tremble', 'couche', 'genou', 'danse', 'frappe', 'dos', 'lit', 'ecrit', 'ballon'};
   const emotes = {'!', '?', '...', 'colere', 'sueur', 'coeur', 'note', 'zzz', 'choc', 'aucun'};
+  const meteos = {'pluie', 'neige', 'brume'};
   const sons = {'carte_arrivee', 'reaction', 'nouvelle', 'une', 'match_but', 'match_encaisse', 'sifflet_final', 'tampon_fin',
     'palier_haut', 'palier_bas', 'promesse', 'argent', 'alarme'};
   const musiques = {'accueil', 'ville_jour', 'ville_nuit', 'match', 'sombre', 'fin', 'depart'};
@@ -2222,6 +2223,12 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (e['sous'] != null) out['sous'] = txt(e, 'sous', where, 60);
     // la suite, ailleurs : la scène qui s'enchaîne (son `quand` est `suite`)
     if (e['suite'] != null) out['suite'] = e['suite'].toString();
+    // le temps qu'il fait (dehors seulement) : la pluie, la neige, la brume
+    if (e['meteo'] != null) {
+      final me = e['meteo'].toString();
+      if (!meteos.contains(me)) errors.add('$where: meteo « $me » : ${meteos.join(' | ')}');
+      out['meteo'] = me;
+    }
     // la distribution : qui est en scène, et où
     final acteurs = <Map<String, dynamic>>[];
     final ids0 = <String>{'toi'};
@@ -2244,7 +2251,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     // les étapes : une seule chose par étape
     final etapes = <Map<String, dynamic>>[];
     const sortes = ['titre', 'narration', 'dit', 'pense', 'va', 'entre', 'sort', 'geste', 'emote', 'regarde', 'pause', 'fondu',
-      'secousse', 'flash', 'son', 'musique', 'camera'];
+      'secousse', 'flash', 'son', 'musique', 'camera', 'meteo'];
     var ie = 0;
     for (final st in (e['etapes'] as List? ?? const [])) {
       ie++;
@@ -2277,6 +2284,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       if (st.containsKey('emote') && !emotes.contains(st['emote'].toString())) errors.add('$w3: emote « ${st['emote']} » inconnue (${emotes.join(' ')})');
       if (st.containsKey('son') && !sons.contains(st['son'].toString())) errors.add('$w3: son « ${st['son']} » inconnu');
       if (st.containsKey('musique') && !musiques.contains(st['musique'].toString())) errors.add('$w3: musique « ${st['musique']} » inconnue (${musiques.join(' ')})');
+      if (st.containsKey('meteo') && !{...meteos, 'aucune'}.contains(st['meteo'].toString())) errors.add('$w3: meteo « ${st['meteo']} » : ${meteos.join(' | ')} | aucune');
       final ton = st['ton']?.toString();
       if (ton != null && !{'sourire', 'neutre', 'noir'}.contains(ton)) errors.add('$w3: ton « $ton » : sourire | neutre | noir');
       if (st.containsKey('pause') && (st['pause'] is! int || (st['pause'] as int) < 0 || (st['pause'] as int) > 6000)) errors.add('$w3: `pause` en millisecondes (0 … 6000)');

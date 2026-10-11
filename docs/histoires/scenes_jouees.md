@@ -62,6 +62,7 @@ cinematiques:
     lieu: terminus                  # où : une pièce (on est dedans) ou un lieu sans pièce (dehors), ou `ici`
     suite: h4.ci.intro_2            # facultatif : la scène qui s'enchaîne, ailleurs (elle a `quand: suite`)
     tranche: soir                   # facultatif : la lumière de la scène (matin|midi|aprem|soir|nuit)
+    meteo: pluie                    # facultatif, dehors : pluie | neige | brume
     acteurs:                        # qui est en scène, et où (une place de la pièce)
       - {qui: toi, place: porte}
       - {qui: bertrand_rance, place: bertrand}
@@ -102,6 +103,7 @@ scène quitte sa place d'occupant pour son rôle.
 | `{son: …}` | un bruit : `carte_arrivee`, `reaction`, `nouvelle`, `une`, `match_but`, `match_encaisse`, `sifflet_final`, `tampon_fin`, `palier_haut`, `palier_bas`, `promesse`, `argent`, `alarme` |
 | `{musique: …}` | le thème, jusqu'à la fin de la scène : `sombre`, `ville_nuit`, `ville_jour`, `match`, `fin`, `depart`, `accueil` |
 | `{camera: X}` | la caméra va sur X |
+| `{meteo: pluie\|neige\|brume\|aucune}` | le temps change (dehors seulement : dedans, il ne pleut pas) |
 
 **Les gestes** : `assis`, `debout`, `telephone`, `boit`, `fume`, `bras_leves`, `pointe`, `poing`,
 `tete_basse`, `pleure`, `rit`, `tremble`, `couche`, `genou`, `danse`, `frappe`, `dos`, `lit`,
