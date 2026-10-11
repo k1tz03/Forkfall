@@ -182,8 +182,10 @@
     var sm = S.mission, mm = sm && sm.offre && sm.lieu === cle && MISSION[sm.id];
     if (mm) { var spd = (mm.donneur && mm.donneur.sprite) || "inconnu"; poserQui({ id: "mission", sp: SPRITES[spd] ? spd : "inconnu", qui: "mission", role: "mission" }); }
     var def = TEXTE_LIEU[cle] || {}, ouvertIci = ouvert(def);
-    COMMERCES.forEach(function (c) { if (c.lieu === cle && SPRITES[c.sp] && ouvertIci) poserQui({ id: "com_" + cle, sp: c.sp, qui: BOUCHE[c.sp] || "commercant", role: "commercant", gens: true }); });
-    if (!deja.commercant && ouvertIci && m.personnel) poserQui({ id: "com_" + cle, sp: m.personnel, qui: BOUCHE[m.personnel] || "commercant", role: "commercant", gens: true });
+    // celui qui tient la pièce : son personnel à elle (la barmaid du Rideau Rouge, pas le portier
+    // de la rue), sinon le commerçant qu'on voit devant la porte
+    if (ouvertIci && m.personnel && SPRITES[m.personnel]) poserQui({ id: "com_" + cle, sp: m.personnel, qui: BOUCHE[m.personnel] || "commercant", role: "commercant", gens: true });
+    else COMMERCES.forEach(function (c) { if (c.lieu === cle && SPRITES[c.sp] && ouvertIci) poserQui({ id: "com_" + cle, sp: c.sp, qui: BOUCHE[c.sp] || "commercant", role: "commercant", gens: true }); });
     if (ouvertIci) {
       var r = de(hache(S.semaine, S.jour, S.tranche, cle, "clients")), n = (CLIENTS[m.ambiance] || CLIENTS.salle)[S.tranche] || 0;
       n = Math.round(n * (0.6 + r() * 0.8));

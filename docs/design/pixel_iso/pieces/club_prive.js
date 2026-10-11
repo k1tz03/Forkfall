@@ -104,7 +104,7 @@ function fauteuil(K, x, y, dos) {
 }
 
 module.exports = {
-  cle: 'club_prive', nom: 'Le Rideau Rouge', ambiance: 'nuit', personnel: 'portier',
+  cle: 'club_prive', nom: 'Le Rideau Rouge', ambiance: 'nuit', personnel: 'commercant',
   sx: 44, sy: 34, sol: 'I_TAPIS',
   murs: { bas: 'I_VELOURS', haut: 'I_MUR_BORDEAUX', coupe: 8, frise: 'GOLD' },
   porte: { cote: 'x', de: 22, a: 29 },

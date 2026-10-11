@@ -70,7 +70,7 @@ module.exports = [
   { cle: 'tripot', nom: 'L\'arrière-salle du Terminus', ambiance: 'nuit', sx: 32, sy: 28, sol: 'I_BETON', murs: { bas: 'BRICK_OLD', haut: 'I_MUR_GRIS', coupe: 8 }, porte: { cote: 'y', de: 20, a: 27 },
     objets: [['table_jeu', 'La table ronde'], ['cendrier', 'Le cendrier aux billets'], ['bar', 'Le bar de fortune'], ['caisse', 'La caisse du donneur']],
     places: [['donneur', 'personnel', 'assis'], ['joueur_1', 'client', 'assis'], ['joueur_2', 'client', 'assis'], ['joueur_3', 'visiteur', 'assis'], ['mur', 'client', 'debout']] },
-  { cle: 'club_prive', nom: 'Le Rideau Rouge', ambiance: 'nuit', personnel: 'portier', sx: 44, sy: 34, sol: 'I_TAPIS', murs: { bas: 'I_VELOURS', haut: 'I_MUR_BORDEAUX', coupe: 8 }, porte: { cote: 'x', de: 22, a: 29 },
+  { cle: 'club_prive', nom: 'Le Rideau Rouge', ambiance: 'nuit', personnel: 'commercant', sx: 44, sy: 34, sol: 'I_TAPIS', murs: { bas: 'I_VELOURS', haut: 'I_MUR_BORDEAUX', coupe: 8 }, porte: { cote: 'x', de: 22, a: 29 },
     objets: [['bar', 'Le bar'], ['piste', 'La piste'], ['alcove', 'L\'alcôve'], ['rideau', 'Le rideau rouge'], ['vestiaire', 'Le vestiaire']],
     places: [['irene', 'irene', 'debout'], ['barmaid', 'personnel', 'debout'], ['alcove_1', 'visiteur', 'assis'], ['alcove_2', 'client', 'assis'], ['piste_1', 'client', 'debout'], ['piste_2', 'client', 'debout']] },
   { cle: 'gareRoutiere', nom: 'La gare routière', ambiance: 'salle', personnel: 'commercant2', sx: 46, sy: 32, sol: 'I_BETON', murs: { bas: 'I_MUR_GRIS', haut: 'PAINT_CREAM', coupe: 7 }, porte: { cote: 'y', de: 24, a: 31 },
