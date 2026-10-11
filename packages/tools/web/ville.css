@@ -459,6 +459,12 @@ body.v-cine-on #villeCouche .v-lieu,body.v-cine-on .v-cartouche{visibility:hidde
 .v-cine-bande.haut{top:0;transform:translateY(-100%)}
 .v-cine-bande.bas{bottom:0;transform:translateY(100%)}
 .v-cine.on .v-cine-bande{transform:none}
+/* la pellicule : une trame de lignes et un vignetage, le néon de l'histoire au bord des bandes */
+.v-cine::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s;
+  background:radial-gradient(ellipse at 50% 46%,transparent 52%,rgba(0,0,0,.5) 100%),repeating-linear-gradient(0deg,rgba(0,0,0,.16) 0 1px,transparent 1px 3px)}
+.v-cine.on::before{opacity:1}
+.v-cine-bande.haut{box-shadow:0 1px 0 color-mix(in srgb,var(--cine) 55%,transparent),0 6px 18px -8px var(--cine)}
+.v-cine-bande.bas{box-shadow:0 -1px 0 color-mix(in srgb,var(--cine) 55%,transparent),0 -6px 18px -8px var(--cine)}
 .v-cine-passer{
   position:absolute;top:calc(env(safe-area-inset-top, 0px) + 10px);right:12px;z-index:2;min-height:36px;padding:0 12px;
   font:700 11px/1 inherit;letter-spacing:.16em;text-transform:uppercase;color:rgba(242,232,206,.62);

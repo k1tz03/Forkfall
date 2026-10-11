@@ -277,6 +277,8 @@
     if (!cv) return;
     var W = window.innerWidth, H = window.innerHeight;
     if (!S || !S.zoom) k = (W >= 1100 && H >= 760) ? 3 : 2; else k = S.zoom;
+    // une scène jouée se regarde d'un cran plus près (si l'écran le permet)
+    if (CINE && CINE.pres && Math.ceil(W / (k + 1)) >= 120 && k < 4) k += 1;
     VW = Math.ceil(W / k); VH = Math.ceil(H / k);
     cv.width = VW; cv.height = VH;
     ctx.imageSmoothingEnabled = false;
@@ -305,7 +307,11 @@
     st.setProperty("--v-haut", UI.haut + "px"); st.setProperty("--v-bas", UI.bas + "px");
   }
   // où regarde la caméra : le héros, au milieu de la bande de ville
-  function visee() { if (dedans) return viseeDedans(); var p = versImage(heros.x, heros.y, ZSOL + 8); return [p[0], p[1] - UI.decal / k]; }
+  function visee() {
+    if (CINE && CINE.pres) { var vc = viseeCine(); if (vc) return vc; }
+    if (dedans) return viseeDedans();
+    var p = versImage(heros.x, heros.y, ZSOL + 8); return [p[0], p[1] - UI.decal / k];
+  }
 
   // ─────────────────────────────────────────────────────────────── les gens
   // Un sprite : rangées de caractères + palette (sprites.json, tirés du moteur voxel).

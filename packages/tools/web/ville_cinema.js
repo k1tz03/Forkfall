@@ -106,8 +106,9 @@
         return;
       }
       var sp = GENS_SP[a.qui] ? (SPRITES[a.qui] ? a.qui : "passant") : spriteDe(a.qui) || "passant";
-      // un occupant qui joue dans la scène laisse sa place à son rôle
-      autres = autres.filter(function (g) { return g.qui !== a.qui; });
+      // un occupant qui joue dans la scène laisse sa place à son rôle ; un client assis à la
+      // place d'un acteur la lui cède (il s'en va)
+      autres = autres.filter(function (g) { return g.qui !== a.qui && !(typeof a.place === "string" && g.place === a.place && g.role !== "rdv"); });
       var g = { cine: true, id: a.id, sp: sp, qui: a.qui, nom: a.nom || null, x: pos.x, y: pos.y, miroir: m ? !!m.miroir : (i % 2 === 0),
         pose: a.pose || (m && m.pose) || null, pas: 0, alpha: a.cache ? 0 : 1, cache: !!a.cache, uid: ++UID, place: typeof a.place === "string" ? a.place : null, lieu: lieu };
       if (a.regarde) g.miroir = a.regarde === "gauche";
@@ -115,9 +116,27 @@
     });
     figurants = autres.concat(Object.keys(ids).map(function (k) { return ids[k]; }));
     CINE.acteurs = ids;
-    // la caméra : sur le groupe
+    // la caméra : un cran plus près, sur le groupe ; elle glissera vers celui qui parle
     cam.libre = false;
+    CINE.pres = true; CINE.cible = null; taille();
     var p = visee(); cam.x = p[0]; cam.y = p[1];
+  }
+  // où regarde la caméra d'une scène : celui qui parle, sinon le groupe ; dans une pièce, sans
+  // jamais montrer le noir au-delà des murs quand la pièce est plus large que l'écran
+  function viseeCine() {
+    var a = CINE.cible, pts = [];
+    if (a) pts.push(a);
+    else { pts.push(heros); for (var id in CINE.acteurs || {}) if (CINE.acteurs[id].alpha > 0.3) pts.push(CINE.acteurs[id]); }
+    if (!pts.length) return null;
+    var sx = 0, sy = 0;
+    pts.forEach(function (q) { var pi = versImage(q.x, q.y, ZSOL + 8); sx += pi[0]; sy += pi[1]; });
+    var cx = sx / pts.length, cy = sy / pts.length;
+    if (dedans) {
+      var m = dedans.m, bande = VH - (UI.haut + UI.bas) / k;
+      cx = m.w <= VW ? m.w / 2 : clamp(cx, VW / 2, m.w - VW / 2);
+      cy = m.h <= bande ? m.h / 2 : clamp(cy, bande / 2, m.h - bande / 2);
+    }
+    return [cx, cy - UI.decal / k];
   }
   // une place nommée de la pièce, la porte, le centre, ou un décalage en cases ([dx, dy]) ;
   // dehors : autour de la porte du lieu
@@ -235,6 +254,7 @@
       if (g.emote && ts - g.emote.t0 > 2200) g.emote = null;
     }
     if (CINE && CINE.camera) { cam.libre = true; cam.x += (CINE.camera[0] - cam.x) * Math.min(1, dt * 4); cam.y += (CINE.camera[1] - cam.y) * Math.min(1, dt * 4); }
+    else if (CINE && CINE.pres) { var vc = viseeCine(); if (vc) { cam.libre = true; cam.x += (vc[0] - cam.x) * Math.min(1, dt * 2.2); cam.y += (vc[1] - cam.y) * Math.min(1, dt * 2.2); } }
     if (CONV) majConv(ts);
   }
   // la carte de titre : le noir, le titre au néon de l'histoire (au doigt, ou après un temps)
@@ -266,6 +286,7 @@
     var a = qui ? acteur(qui) : null;
     Object.keys(CINE.acteurs || {}).forEach(function (k) { CINE.acteurs[k].parle = false; });
     if (a && a !== heros) a.parle = true;
+    CINE.cible = o.narration ? null : a;
     nom.textContent = o.narration ? "" : nomCine(qui);
     vis.innerHTML = ""; vis.hidden = !!o.narration;
     if (!o.narration) portraitCine(vis, qui, o.ton);
@@ -376,6 +397,7 @@
     document.body.classList.remove("v-cine-on");
     figurants = figurants.filter(function (g) { return !g.cine; });
     heros.chemin = null; heros.arrivee = null; cam.libre = false;
+    taille();
     heros.geste = null; heros.emote = null; heros.pose = null; heros.parle = false;
     // l'introduction est un prélude : la carrière commence chez toi, à l'heure du départ ;
     // ailleurs, une pièce fermée à cette heure-ci te rend à la rue
@@ -417,9 +439,12 @@
       var g = null;
       figurants.forEach(function (x) { if (!g && x.qui === v.qui && !x.cine) g = x; });
       if (!g) {
+        // la place d'une voix est à elle : le client qui l'occupe s'en va
+        if (dedans && typeof v.place === "string") figurants = figurants.filter(function (x) { return x.cine || x.conv || x.place !== v.place || x.role === "rdv" || x.role === "mission"; });
         var pos = dedans ? positionScene(v.place, i, null) : (libres && libres.length ? (function (q) { return { x: q[0], y: q[1] }; })(libres.shift()) : positionScene(null, i, null));
         var sp = GENS_SP[v.qui] ? (SPRITES[v.qui] ? v.qui : "passant") : spriteDe(v.qui) || "passant";
-        g = { conv: true, sp: sp, qui: v.qui, nom: v.nom || null, x: pos.x, y: pos.y, miroir: i % 2 === 1, pose: v.pose || (pos.place && pos.place.pose) || null, pas: 0, alpha: 1, uid: ++UID, lieu: cv.lieu };
+        g = { conv: true, sp: sp, qui: v.qui, nom: v.nom || null, x: pos.x, y: pos.y, miroir: i % 2 === 1, pose: v.pose || (pos.place && pos.place.pose) || null, pas: 0, alpha: 1, uid: ++UID, lieu: cv.lieu,
+          place: typeof v.place === "string" ? v.place : null };
         figurants.push(g);
       }
       voix[v.id] = g;
