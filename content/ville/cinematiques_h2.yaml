@@ -1,0 +1,605 @@
+# Histoire 2 — « Le Sapin en carton » : les scènes jouées et les conversations surprises
+# (format : docs/histoires/scenes_jouees.md ; la charte : docs/bible/charte_histoire.md).
+# Une scène jouée ne se joue pas, on la regarde ; une conversation s'entend en passant près
+# de ceux qui parlent. Rien ici ne décide : les choix restent aux cartes.
+#
+# Le livre ne cherche pas un corps : il cherche pourquoi tout le monde a besoin qu'il n'y en
+# ait pas, ou qu'il y en ait un. Le club a besoin d'un disparu, l'assureur d'un vivant, le
+# réseau d'un mort, et toi d'un absent. Roland Mercadier ne se montre qu'au wagon, après la
+# carte qui l'y trouve. Norbert est poli, précis, serviable : la menace est sous la politesse.
+# Écrit au neutre : aucune ligne n'accorde le héros sans `{pg, select, …}`.
+#
+# L'introduction (trois lieux, un soir de pluie, avant la neuvième journée) : le terrain
+# annexe, où tu entraînes les moins de dix-sept ans et où Vukić vient te chercher ; le
+# club-house, où le président dicte « remercié » au téléphone ; le Terminus, où Norbert sait
+# déjà. Elle s'arrête sur le parking, sans le montrer : la première carte y attend.
+#
+# Les scènes, dans l'ordre du livre :
+#   S1  dix heures au secrétariat (avant Monique) · le jeudi de Bréhaut (après le premier
+#       message) · la laverie (la première fois, avant les enveloppes) · le lendemain de la
+#       place vide (Norbert lave la flaque) · l'arrière-salle (avant le café de Norbert).
+#   S2  l'assureur au guichet (avant sa carte) · le wagon, la première fois qu'on y entre
+#       (la radio) · l'aube après la panne (rien ne s'est passé) · le quai, après la Rive.
+#   S3  le car garé derrière la friche, un soir sans carte · le car de Portclair, avant
+#       l'audience · la feuille vierge, avant le dernier match.
+cinematiques:
+  # ═══════════════════════════════════════════════════════════ L'INTRODUCTION
+  - id: h2.ci.intro
+    quand: debut
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    titre: "Le Sapin en carton"
+    sous: "Aubérive, 1990 · avant la neuvième journée"
+    lieu: terrain
+    tranche: soir
+    suite: h2.ci.intro_2
+    acteurs:
+      - {qui: toi, place: [0, 3]}
+      - {id: gamin, qui: enfant, nom: "Un gamin des moins de dix-sept", place: [2, 4]}
+      - {id: gamin2, qui: enfant, nom: "Un autre gamin", place: [-2, 4]}
+      - {qui: vukic, place: porte, cache: true}
+    etapes:
+      - {musique: ville_nuit}
+      - {narration: "Le terrain annexe, sous la pluie. Un projecteur sur quatre. Les moins de dix-sept ans du Racing ramassent les plots dans la boue ; trois ans que tu les entraînes sous ce projecteur-là."}
+      - {qui: gamin, dit: "Coach, c'est vrai qu'ils ont viré Mercadier ? Au collège, il y en a qui disent qu'il est mort."}
+      - {qui: gamin2, dit: "N'importe quoi. Il est parti en train. C'est mon père qui l'a dit."}
+      - {qui: vukic, entre: [1, 2]}
+      - {narration: "Zoran Vukić, l'adjoint de l'équipe première, s'arrête à la ligne de touche, sans parapluie. L'eau lui coule dans le col ; il ne la sent pas."}
+      - {qui: vukic, dit: "Le président te demande. Ce soir. Laisse les plots, ils les ramasseront."}
+      - {qui: gamin2, dit: "C'est pour le banc ? Coach, c'est pour son banc ?"}
+      - {qui: vukic, regarde: gamin2}
+      - {qui: vukic, dit: "Ramasse les plots."}
+      - {qui: toi, pense: "Trois tampons sur quatre, au stage fédéral. Pour un banc de deuxième division, il en faut quatre. Le président le sait."}
+      - {qui: vukic, dit: "Je pose ses plots à sa place, tous les matins. Je continue tant qu'on ne me dit pas d'arrêter. C'est toi qui me le diras ?"}
+      - {qui: vukic, sort: true}
+      - {narration: "Les gamins se taisent. L'un d'eux a laissé un plot au milieu du terrain, sous le projecteur, et personne ne va le chercher."}
+
+  - id: h2.ci.intro_2
+    quand: suite
+    lieu: clubhouse
+    tranche: nuit
+    suite: h2.ci.intro_3
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: aulard, place: president}
+      - {qui: josiane, place: secretaire}
+    etapes:
+      - {narration: "Le club-house, dix heures du soir. Tout est éteint, sauf la lampe du secrétariat et celle du premier. Ça sent le café réchauffé."}
+      - {qui: josiane, geste: ecrit}
+      - {qui: aulard, dit: "Une ligne. « Le Racing remercie Roland Mercadier. » Pas de date, pas de raison. L'Écho l'aura demain matin.", geste: telephone}
+      - {qui: josiane, emote: "..."}
+      - {qui: toi, va: visiteur_1}
+      - {qui: aulard, dit: "Six semaines, jusqu'à nouvel ordre. Son bureau, son sifflet, son adjoint. Tu coûtes peu, et tu es là."}
+      - {qui: toi, pense: "Il ne parle pas du quatrième tampon. Il ne veut pas le savoir."}
+      - {qui: aulard, dit: "Les gars vont te demander où il est. Tu diras ce que dit le communiqué : remercié. C'est un mot qui se suffit."}
+      - {narration: "Josiane monte la feuille. Vaubourg la signe sans la relire, et la tamponne."}
+      - {son: tampon_fin}
+      - {qui: aulard, dit: "Et ne t'occupe pas du parking. Le parking, c'est moi.", ton: noir}
+      - {narration: "Vaubourg éteint sa lampe. En bas, Madame Josiane sort deux tasses du placard, en regarde une longtemps, et la range."}
+
+  - id: h2.ci.intro_3
+    quand: suite
+    lieu: terminus
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: norbert, place: norbert}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
+      - {id: chauffeur, qui: passant, nom: "Un chauffeur de car", place: comptoir_1}
+    etapes:
+      - {narration: "Le Terminus, onze heures du soir. Le bar des chauffeurs de car : on y boit debout, sous les horaires punaisés. La pluie coule sur la vitre."}
+      - {qui: toi, va: comptoir_2}
+      - {qui: chauffeur, dit: "L'intérimaire, il paraît : quelqu'un des moins de dix-sept. Pour six semaines."}
+      - {qui: patron, dit: "Six semaines. Après, on verra bien qui revient."}
+      - {qui: norbert, regarde: toi}
+      - {qui: norbert, dit: "Félicitations, coach. Ça s'est su avant la fin de la réunion. Ici, les nouvelles prennent le car.", ton: sourire}
+      - {qui: toi, pense: "Norbert. Le chauffeur du club. Il dort dans le car pendant les matchs, et tout le monde le trouve normal."}
+      - {qui: norbert, dit: "Trois jours de pluie. Les parkings n'ont jamais été aussi propres."}
+      - {narration: "Il accroche les clés du car au clou, derrière le comptoir. Le trousseau se balance longtemps, puis s'arrête."}
+
+  # ═══════════════════════════════════════════════ SAISON 1 — L'ABSENT
+  # Avant le premier appel de Monique : dix heures, le cahier de Josiane, et le téléphone
+  # qu'on laisse sonner trois fois parce qu'il décrochait à la troisième.
+  - id: h2.ci.dix_heures
+    quand: carte
+    carte: en.h2.berl.dix_heures
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: clubhouse
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: secretaire}
+      - {qui: vecchio, place: cafe}
+    etapes:
+      - {narration: "Le secrétariat, dix heures moins deux. Madame Josiane a ouvert un cahier d'écolier à la page du jour. Colonne de gauche, l'heure ; colonne de droite, toujours le même nom."}
+      - {qui: vecchio, dit: "Elle va appeler. La femme de Roland. Tous les matins, depuis qu'il est parti."}
+      - {qui: josiane, dit: "Elle ne laisse jamais de message. Elle rappelle le lendemain, à la même heure."}
+      - {qui: toi, va: guichet}
+      - {pause: 1200}
+      - {son: alarme}
+      - {narration: "Le téléphone sonne. Une fois. Deux fois. Josiane ne décroche pas."}
+      - {qui: josiane, dit: "À la troisième. Il décrochait toujours à la troisième."}
+      - {son: alarme}
+      - {narration: "Troisième sonnerie. Josiane décroche, écoute, et te tend le combiné par-dessus le guichet."}
+      - {qui: josiane, dit: "Pour vous, {toi}. Elle connaît déjà votre nom."}
+
+  # Après le premier message (« Ne mets pas Bréhaut samedi ») : tu l'as mis sur le banc. Le Doc
+  # n'a rien vu, Vukić ne comprend pas, et le capitaine se tient le genou quand on ne le voit pas.
+  - id: h2.ci.jeudi
+    quand: drapeau
+    drapeau: h2_brehaut_banc
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vukic, place: coach}
+      - {qui: sabatier, place: doc}
+      - {qui: brehaut, place: banc_6}
+    etapes:
+      - {fondu: "Jeudi."}
+      - {narration: "Le vestiaire. La feuille de samedi est punaisée près du tableau. Le nom du capitaine est en bas, avec les remplaçants."}
+      - {qui: vukic, dit: "Doc. Le genou de Bréhaut. Tu l'as regardé ?"}
+      - {qui: sabatier, dit: "Mardi. Il plie, il tourne, il ne bronche pas. Il n'a jamais bronché de sa vie, ce garçon."}
+      - {qui: vukic, regarde: toi}
+      - {qui: vukic, dit: "Alors on le met sur le banc pour rien. Ou pour quelque chose que le Doc ne voit pas."}
+      - {qui: brehaut, geste: tete_basse}
+      - {narration: "Bréhaut refait ses lacets, deux fois chacun. Quand il croit que personne ne regarde, il pose la main sur son genou droit, et la laisse là, longtemps."}
+
+  # La laverie de la rue du Stade, la première fois qu'on y entre, avant la première enveloppe :
+  # les maillots du club dans la 4, et un homme sans linge que Josiane ne connaît pas.
+  - id: h2.ci.laverie
+    quand: lieu
+    lieu: laverie
+    roles: [entraineur]
+    si: "flag(histoire_h2) && saison <= 2 && !flag(h2_laverie_page)"
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: pliage}
+      - {id: blouson, qui: inconnu, nom: "Un homme en blouson gris", place: attente_3}
+      - {id: cliente, qui: passante, nom: "Une cliente", place: attente_1}
+    etapes:
+      - {narration: "La laverie de la rue du Stade. Le néon clignote au-dessus des séchoirs. Dans la 4, les maillots du Racing tournent, bordeaux et gris."}
+      - {qui: josiane, dit: "Le jeudi, je les lave ici. Depuis que l'huissier a pris la machine du club. Il a pris la machine, il nous a laissé la lessive."}
+      - {qui: cliente, dit: "Vous en avez pour longtemps, avec la 4 ? J'ai mes draps."}
+      - {qui: josiane, dit: "Quarante minutes. Le bordeaux dégorge, il lui faut l'eau froide."}
+      - {qui: josiane, regarde: blouson}
+      - {qui: josiane, dit: "Et monsieur ? Il attend une machine ?"}
+      - {qui: blouson, dit: "J'attends."}
+      - {qui: toi, pense: "Pas de sac, pas de linge, pas une chaussette. Il regarde tourner les maillots comme on regarde un match."}
+      - {narration: "Josiane plie un maillot numéro 9 en quatre, sans regarder l'homme. Lui ne la regarde pas non plus, avec le même soin."}
+
+  # Le lendemain de la place vide (S0, créneau 12) : Lulu a fait ses rondes, et Norbert lave
+  # la flaque d'huile au jet, poliment, pour que personne ne glisse.
+  - id: h2.ci.reverbere
+    quand: carte
+    prefixe: "en.h2.s0.place_vide"
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: voiture
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: [0, 3]}
+      - {id: lulu, qui: ancien, nom: "Lulu, le gardien", place: [-2, 2]}
+      - {qui: norbert, place: [5, 3], cache: true}
+    etapes:
+      - {fondu: "Le lendemain, sept heures."}
+      - {narration: "Le parking, au matin. Il a plu toute la nuit. La place ENTRAÎNEUR n'a plus que sa flaque d'huile, irisée, et deux traces de pneus que la pluie a presque bues."}
+      - {qui: lulu, dit: "À dix heures, elle y était. À ma ronde de minuit, plus de voiture, plus de lumière. Le réverbère s'est rallumé tout seul, à deux heures."}
+      - {qui: norbert, entre: [3, 2]}
+      - {narration: "Norbert gare le car du club à côté, déroule le tuyau d'arrosage et ouvre l'eau."}
+      - {qui: norbert, dit: "Bonjour, coach. Bonjour, Lulu. Vous avez vu cette flaque ? Quelqu'un va glisser."}
+      - {qui: lulu, dit: "Laisse ça, Norbert. C'est pour la police, cette flaque."}
+      - {qui: norbert, dit: "La police ? Pour une voiture que personne n'a vue partir ?", ton: sourire}
+      - {narration: "Il dirige le jet sur la tache. L'huile file vers la grille d'égout, en arc-en-ciel."}
+      - {qui: lulu, regarde: toi}
+      - {qui: lulu, dit: "J'avais mis de la craie devant les roues. La pluie l'a mangée aussi."}
+      - {narration: "Au-dessus de la place vide, le réverbère s'allume en plein jour, grésille, et s'éteint."}
+
+  # Avant le café de Norbert (l'arrière-salle du Terminus, minuit) : la table ronde, le patron
+  # de la table qui n'est qu'une vitrine, et Dembo qui retourne ses cartes en te voyant.
+  - id: h2.ci.arriere_salle
+    quand: carte
+    prefixe: "en.h2.nor.cafe"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: tripot
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: donneur, qui: commercant2, nom: "Le patron de la table", place: donneur}
+      - {qui: dembo, place: joueur_1}
+      - {id: joueur, qui: passant, nom: "Un joueur", place: joueur_2}
+      - {qui: norbert, place: mur}
+    etapes:
+      - {narration: "L'arrière-salle du Terminus, minuit. Une table ronde, un tapis vert taché, la fumée au plafond. Personne ne lève la tête quand la porte s'ouvre."}
+      - {qui: donneur, dit: "Carte."}
+      - {qui: joueur, dit: "Je passe."}
+      - {qui: dembo, emote: sueur}
+      - {qui: donneur, dit: "Monsieur Dembo suit ? Monsieur Dembo suit toujours."}
+      - {narration: "Dembo glisse deux billets sous le cendrier. Puis il te voit, et il retourne ses cartes contre le tapis, d'un coup."}
+      - {qui: donneur, regarde: toi}
+      - {qui: donneur, dit: "{pg, select, f{La coach} other{Le coach}} ne joue pas. {pg, select, f{La coach} other{Le coach}} regarde. C'est ce qu'on dit, ici."}
+      - {narration: "Au bar de fortune, Norbert pose deux tasses et attend que le café monte, le dos tourné, comme s'il t'avait entendu{pg, select, f{e} other{}} venir depuis la rue."}
+
+  # ═══════════════════════════════════════════════ SAISON 2 — LE WAGON
+  # Avant l'assureur (S1, créneau 1) : un homme qui ne boit rien chez les assurés, et un mètre
+  # ruban qui dépasse de sa poche.
+  - id: h2.ci.serviette
+    quand: carte
+    prefixe: "en.h2.s1.assureur"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: clubhouse
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: secretaire}
+      - {qui: achard, place: visiteur_1}
+      - {qui: aulard, place: president}
+    etapes:
+      - {narration: "Le club-house, un lundi de rentrée. Un homme en pardessus gris attend, une serviette de cuir sur les genoux, un mètre ruban qui dépasse de la poche."}
+      - {qui: josiane, dit: "Un café, monsieur ?"}
+      - {qui: achard, dit: "Non, merci. Je ne bois jamais rien chez les assurés. Ça fausse les comptes."}
+      - {qui: toi, va: guichet}
+      - {qui: josiane, dit: "Monsieur Achard, de la Prévoyance Aubérivoise. Pour le président. Et pour vous, {toi}, il a dit."}
+      - {qui: achard, regarde: toi}
+      - {qui: achard, dit: "D'habitude, on me montre un homme, et je dis ce qu'il vaut. Ici, on me montre une place de parking."}
+      - {qui: aulard, dit: "Montez, tous les deux. Josiane, je n'y suis pour personne.", ton: noir}
+      - {narration: "Achard se lève, rentre son mètre ruban dans sa poche, et passe devant toi dans l'escalier, en comptant les marches à mi-voix."}
+
+  # Le wagon, la première fois qu'on y entre après l'avoir trouvé : la radio à piles, le cabas
+  # de Josiane, et un homme qui ne parle jamais de lui, seulement du match de samedi.
+  - id: h2.ci.radio
+    quand: lieu
+    lieu: wagon
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_wagon_vu) && !flag(h2_feu)"
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: mercadier, place: mercadier}
+      - {qui: josiane, place: visiteur}
+    etapes:
+      - {narration: "Le wagon, au bout de la voie morte. Une bougie dans un pot de yaourt, la radio à piles contre l'oreiller. Ça sent la fumée froide et le café en poudre."}
+      - {son: nouvelle}
+      - {qui: mercadier, dit: "Chut. Les résultats. Valdorne a perdu chez eux. Si on gagne samedi, on revient à trois points."}
+      - {narration: "Madame Josiane vide son cabas sur une caisse retournée : deux piles neuves, du pain, une boîte de sardines, L'Écho de la veille."}
+      - {qui: josiane, dit: "Les piles d'abord. La dernière fois, vous avez écouté la fin du match sans le son, à deviner."}
+      - {qui: mercadier, dit: "On devine bien, à la longue. Une tribune qui se tait à la quatre-vingtième, c'est un but contre."}
+      - {qui: mercadier, regarde: toi}
+      - {qui: mercadier, dit: "Ton arrière gauche monte trop, {toi}. Je l'entends à la radio : ils disent son nom dans le mauvais camp."}
+      - {qui: toi, pense: "Il ne demande jamais rien pour lui. Ni le froid, ni la toux, ni sa femme. Le score, l'arrière gauche."}
+      - {qui: josiane, dit: "Il faut que je rentre. Le chemin du lavoir, sans lampe, ça prend vingt minutes."}
+      - {qui: josiane, sort: true}
+      - {narration: "Roland monte le son. Dehors, sur le ballast, les pas de Josiane s'éloignent ; puis il n'y a plus que la radio."}
+
+  # L'aube après la panne (S1, créneau 11), la nuit passée dans le car avec Norbert : il ne
+  # s'est rien passé, et c'est ce rien qui ne passe pas.
+  - id: h2.ci.aube
+    quand: carte
+    carte: en.h2.re.norbert_panne
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: gareRoutiere
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vukic, place: banc_1}
+      - {qui: norbert, place: norbert, cache: true}
+    etapes:
+      - {fondu: "Six heures. La gare routière."}
+      - {narration: "La dépanneuse a déposé le car du club au bout du quai, de la neige jusqu'aux essieux. Sur un banc, Vukić, en anorak, les mains enfoncées dans les manches."}
+      - {qui: vukic, va: quai}
+      - {qui: vukic, dit: "Ça va ?"}
+      - {qui: toi, pense: "Il ne s'est rien passé. Il a parlé des cabines et de la Rive en hiver. Rien. C'est ce rien qui ne passe pas."}
+      - {qui: norbert, entre: norbert}
+      - {narration: "Norbert entre, la casquette sous le bras, rasé de frais comme un dimanche. Il sent l'eau de Cologne."}
+      - {qui: norbert, dit: "La prochaine fois, coach, je vous garde la place de devant. Vous y dormirez mieux."}
+      - {qui: vukic, regarde: norbert}
+      - {qui: norbert, dit: "Zoran, il ne fallait pas attendre. Il ne se passe jamais rien, dans un car en panne."}
+      - {qui: norbert, sort: true}
+      - {narration: "Vukić te tend un café du distributeur, trop sucré. Vous le buvez debout, en regardant le car qui fume encore dans le froid."}
+
+  # Le lendemain de la Rive (S1, créneau 16), au tabac du Quai : par la vitre, les plongeurs ;
+  # au comptoir, les trois qui ont besoin de trois choses différentes au fond de l'eau.
+  - id: h2.ci.quai
+    quand: carte
+    carte: en.h2.s1.rive
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: tabac
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
+      - {qui: monique, place: table_1}
+      - {qui: achard, place: marinier_2}
+      - {id: pompier, qui: passant, nom: "Un pompier", place: porte, cache: true}
+      - {qui: aulard, place: porte, cache: true}
+    etapes:
+      - {fondu: "Le lendemain matin. Le tabac du Quai."}
+      - {musique: sombre}
+      - {narration: "Par la vitre du tabac du Quai : la grue de la ville, deux plongeurs, une corde qui descend dans l'eau brune. Au comptoir, personne ne boit son café."}
+      - {qui: toi, va: visiteur}
+      - {qui: pompier, entre: marinier_1}
+      - {qui: pompier, dit: "La voiture est au fond, couchée sur le flanc. Personne dedans. On a remonté ce qui flottait."}
+      - {qui: monique, dit: "Personne ? Vous êtes sûr ?"}
+      - {qui: pompier, dit: "Sûr, madame. Rien qu'un sapin en carton. Il tournait encore quand on est arrivés."}
+      - {qui: achard, dit: "Une voiture sans personne dedans, au fond d'une rivière : chez nous, ça s'appelle un stationnement."}
+      - {qui: aulard, entre: porte}
+      - {qui: aulard, dit: "Elle est à qui, cette voiture ? Sur le papier, je veux dire. Elle est à qui ?"}
+      - {qui: achard, dit: "À un homme disparu, monsieur le président. Disparu, pas mort. Pour mort, il faut un juge."}
+      - {qui: monique, regarde: toi}
+      - {qui: monique, dit: "Il avait horreur de l'eau. Entraîneur, il disait, c'est un métier où l'on reste au bord."}
+      - {narration: "Vaubourg regarde la vitre. Achard regarde Vaubourg. Personne ne regarde Monique."}
+
+  # ═══════════════════════════════════════════════ SAISON 3 — UN AN ET UN JOUR
+  # Un soir sans carte, la dernière saison, avant que le wagon brûle : le car du club garé
+  # derrière la friche, moteur coupé, et un gamin qui répond à toutes les questions.
+  - id: h2.ci.moteur_coupe
+    quand: semaine
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_wagon_vu) && saison == 3 && !flag(h2_feu)"
+    lieu: friche
+    tranches: [soir]
+    poids: 2
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: [-1, -6]}
+      - {qui: norbert, place: [-4, -4], pose: assis}
+      - {id: gamin, qui: enfant, nom: "Un gamin", place: [-7, -6]}
+    etapes:
+      - {narration: "La friche, à la tombée du jour. Derrière la grande halle, le car du club stationne dans les orties, moteur coupé. Norbert est assis sur la marche, L'Écho sur les genoux."}
+      - {qui: gamin, va: [-5, -5]}
+      - {qui: norbert, dit: "Il écoute toujours la radio, le monsieur du wagon ?"}
+      - {qui: gamin, dit: "Tous les soirs. Il connaît tous les joueurs. Même ceux de Valdorne."}
+      - {qui: norbert, dit: "Et il sort, des fois ?"}
+      - {qui: gamin, dit: "Le jeudi, pour la dame au cabas. Elle passe par le lavoir."}
+      - {narration: "Norbert sort une pièce de dix francs de sa poche et la pose dans la main du gamin, sans la regarder."}
+      - {qui: gamin, sort: true}
+      - {qui: norbert, regarde: toi}
+      - {qui: norbert, dit: "Coach. Je fais ma pause. Les chauffeurs ont droit à leur pause, c'est dans la convention.", ton: sourire}
+      - {qui: toi, pense: "Le wagon est à deux cents mètres. D'ici, on voit la bougie, quand elle est allumée."}
+      - {qui: norbert, sort: true}
+      - {narration: "Il plie son journal, monte, et démarre sans allumer les phares. Le car passe à côté de toi, au pas, et Norbert te salue de deux doigts."}
+
+  # Avant l'audience de Portclair, quand Roland n'est pas à l'hôpital sous son nom : le car de
+  # six heures quarante, Monique en noir, et Norbert qui souhaite bonne route.
+  - id: h2.ci.premier_car
+    quand: carte
+    prefixe: "en.h2.s2.audience"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h2) && !flag(h2_hopital) && !flag(h2_carnet_police)"
+    lieu: gareRoutiere
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: monique, place: banc_1}
+      - {qui: norbert, place: norbert}
+    etapes:
+      - {narration: "Gare routière, six heures trente, un mardi d'avril. Le car de Portclair attend, moteur allumé. Monique Mercadier est sur le banc, en manteau noir, un sac sur les genoux."}
+      - {qui: toi, va: banc_2}
+      - {qui: monique, dit: "J'ai mis le noir. Je ne savais pas quoi mettre, pour un mort qui n'est pas mort."}
+      - {qui: norbert, dit: "Bonne route, madame Mercadier. Quarante minutes jusqu'à Portclair. On a le temps de penser à ce qu'on va dire."}
+      - {qui: monique, regarde: norbert}
+      - {qui: monique, geste: tete_basse}
+      - {qui: norbert, regarde: toi}
+      - {qui: norbert, dit: "Le juge de Portclair déjeune à midi pile, coach. Ceux qui parlent trop longtemps, il les fait revenir."}
+      - {narration: "Le chauffeur du car de Portclair donne deux coups de klaxon."}
+      - {qui: monique, dit: "Vous direz quoi, vous ?"}
+      - {qui: toi, pense: "Quarante minutes pour décider si un homme est mort."}
+      - {qui: monique, va: quai}
+      - {narration: "Monique monte la première. Elle s'assoit au dernier rang, côté fenêtre, du côté de la Rive."}
+
+  # Avant la feuille de match (S2, créneau 17) : la dernière feuille, vierge, et une place que
+  # le virage a laissée libre au premier rang. Toutes les fins du livre sont derrière.
+  - id: h2.ci.feuille_blanche
+    quand: carte
+    prefixe: "en.h2.s2.feuille"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h2)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: milieu}
+      - {qui: vukic, place: tableau}
+      - {qui: brehaut, place: banc_2}
+      - {qui: gege, place: porte, cache: true}
+    etapes:
+      - {narration: "Le vestiaire, quatorze heures. Le dernier match de la saison. Sur la table, la feuille de match, vierge, le stylo de Vukić posé en travers."}
+      - {qui: brehaut, dit: "Les gars demandent qui signe la feuille, aujourd'hui. Ils ne demandent pas pour eux, {toi}."}
+      - {qui: vukic, dit: "Je la remplis toujours la veille. Cette fois, j'ai attendu."}
+      - {qui: vukic, regarde: toi}
+      - {qui: gege, entre: doc}
+      - {qui: gege, dit: "Le virage a laissé une place libre au premier rang. Personne ne l'a demandé. On l'a laissée quand même."}
+      - {qui: gege, sort: true}
+      - {narration: "Bréhaut serre son genou droit, deux fois, comme on vérifie une serrure."}
+      - {narration: "Vukić prend la feuille et le stylo, et sort vers le banc avant toi. Dans le tunnel, la Nord chante déjà un nom. D'ici, on ne distingue pas lequel."}
+
+conversations:
+  # ═══════════════════════════════════════════════ SAISON 1
+  - id: h2.cv.la_vingtieme
+    roles: [entraineur]
+    si: "flag(histoire_h2) && saison == 1"
+    lieu: buvette
+    tranches: [soir]
+    qui:
+      - {qui: gege, place: fond}
+      - {id: fan, qui: fan, nom: "Un gars de la Nord", place: zinc_2}
+    repliques:
+      - {qui: fan, dit: "À la vingtième, on chante encore l'ancien ? Les nouveaux ne connaissent pas les paroles."}
+      - {qui: gege, dit: "On le chante tant qu'on ne sait pas où il est. Après, on verra."}
+      - {qui: fan, dit: "Et si on ne le sait jamais ?"}
+      - {qui: gege, dit: "Alors on le chantera longtemps. Il y a des noms qu'on chante depuis 1974."}
+      - {qui: fan, dit: "Et l'intérimaire, on lui chante quoi ?"}
+      - {qui: gege, dit: "Rien. On attend de savoir si on aura besoin d'apprendre son nom."}
+
+  - id: h2.cv.le_genou
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_brehaut_banc) && saison == 1"
+    lieu: stade
+    tranches: [matin, aprem]
+    qui:
+      - {id: joueur1, qui: passant, nom: "Un joueur", place: banc_1}
+      - {id: joueur2, qui: passant, nom: "Un autre joueur", place: banc_2}
+    repliques:
+      - {qui: joueur1, dit: "Le capitaine sur le banc, pour un genou que même le Doc n'avait pas vu."}
+      - {qui: joueur2, dit: "Qui lui a dit ? Bréhaut ne dit jamais rien, à personne."}
+      - {qui: joueur1, dit: "Mercadier savait toujours, pour les genoux. Il les entendait, il disait."}
+      - {qui: joueur2, dit: "Alors c'est peut-être Mercadier qui lui a dit."}
+      - {qui: joueur1, dit: "Mercadier est parti."}
+      - {qui: joueur2, dit: "Il est parti, et sa cafetière est chaude tous les matins. Va comprendre."}
+
+  - id: h2.cv.la_craie
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_trois_metres) && !flag(h2_place_vide)"
+    lieu: voiture
+    tranches: [matin, aprem]
+    qui:
+      - {id: lulu, qui: ancien, nom: "Lulu, le gardien"}
+      - {qui: norbert}
+    repliques:
+      - {qui: lulu, dit: "Trois mètres. J'avais tracé à la craie devant chaque roue. Les traits sont restés ; la voiture, elle, a avancé."}
+      - {qui: norbert, dit: "Tu l'as vue quand, Lulu ? Avant la bouteille, ou après ?"}
+      - {qui: lulu, dit: "Je bois le soir. La voiture a roulé la nuit. Ce n'est pas la même heure."}
+      - {qui: norbert, dit: "Une voiture qui roule toute seule. Dis-le au président, il va rire."}
+      - {qui: lulu, dit: "Je l'ai dit à la femme de l'ancien. Elle, elle n'a pas ri."}
+
+  - id: h2.cv.les_chauffeurs
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_place_vide) && saison == 1"
+    lieu: terminus
+    tranches: [aprem, soir]
+    qui:
+      - {id: chauffeur1, qui: passant, nom: "Un chauffeur de car", place: comptoir_1}
+      - {id: chauffeur2, qui: ancien, nom: "Un vieux chauffeur", place: comptoir_2}
+      - {qui: norbert, place: norbert}
+    repliques:
+      - {qui: chauffeur1, dit: "La berline de l'ancien a disparu du parking. Un parking éclairé, avec un gardien."}
+      - {qui: chauffeur2, dit: "Le réverbère était éteint. Et le gardien boit."}
+      - {qui: chauffeur1, dit: "Norbert, tu étais au dépôt, cette nuit-là ?"}
+      - {qui: norbert, dit: "Au dépôt, comme toutes les nuits. Demande au registre : ils notent les heures."}
+      - {qui: chauffeur2, dit: "Le registre, c'est toi qui le tiens, le soir."}
+      - {qui: norbert, dit: "Justement. Il est très bien tenu."}
+
+  - id: h2.cv.le_blouson
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_laverie_page) && !flag(h2_feu)"
+    lieu: laverie
+    tranches: [aprem, soir]
+    qui:
+      - {id: cliente1, qui: passante, nom: "Une cliente", place: attente_1}
+      - {id: cliente2, qui: passante, nom: "Une autre cliente", place: attente_2}
+    repliques:
+      - {qui: cliente1, dit: "Vous l'avez vu, celui au blouson gris ? Il vient le jeudi, et il ne lave jamais rien."}
+      - {qui: cliente2, dit: "Il s'assoit devant la 4, celle des maillots du club. Une heure, sans bouger."}
+      - {qui: cliente1, dit: "C'est le frère de quelqu'un, il paraît. De quelqu'un du club."}
+      - {qui: cliente2, dit: "Ici, tout le monde est le frère de quelqu'un du club."}
+      - {qui: cliente1, dit: "Lui, il apporte des enveloppes. Pas de linge : des enveloppes."}
+
+  # ═══════════════════════════════════════════════ SAISON 2
+  - id: h2.cv.le_pavillon
+    roles: [entraineur]
+    si: "flag(histoire_h2) && saison >= 2 && !flag(h2_feu)"
+    lieu: square
+    tranches: [aprem]
+    qui:
+      - {qui: monique}
+      - {qui: josiane}
+    repliques:
+      - {qui: monique, dit: "Vous avez de ses nouvelles, Josiane ? Au club, vous entendez des choses."}
+      - {qui: josiane, dit: "J'ai le courrier du club, madame Mercadier. Il n'y a jamais rien à son nom."}
+      - {qui: monique, dit: "Le pavillon est à nos deux noms. L'assurance, à un seul. Je fais des comptes, la nuit."}
+      - {qui: josiane, dit: "Ne faites pas de comptes la nuit. On se trompe toujours dans le même sens."}
+      - {qui: monique, dit: "Si jamais vous le voyez, dites-lui que son écharpe d'hiver est toujours au portemanteau."}
+      - {qui: josiane, dit: "Je ne le vois pas."}
+
+  - id: h2.cv.l_absence
+    roles: [entraineur]
+    si: "flag(histoire_h2) && saison >= 2 && !flag(h2_mort_papier) && !flag(h2_vivant_papier)"
+    lieu: hotel
+    tranches: [soir, nuit]
+    qui:
+      - {qui: achard, place: salon_1}
+      - {id: veilleur, qui: commercant2, nom: "Le veilleur de nuit", place: reception}
+    repliques:
+      - {qui: veilleur, dit: "Vous restez combien de temps, cette fois, monsieur Achard ?"}
+      - {qui: achard, dit: "Jusqu'à ce qu'il revienne, ou jusqu'au jugement. Le premier des deux."}
+      - {qui: veilleur, dit: "Deux millions, pour un homme. C'est le prix, un homme ?"}
+      - {qui: achard, dit: "Pour un homme, non. Pour une absence, oui. Les absences coûtent plus cher que les gens."}
+      - {qui: veilleur, dit: "Et s'il ne revient jamais ?"}
+      - {qui: achard, dit: "Alors je paie, et je rentre à Portclair. Les morts ne m'ont jamais fait perdre un dossier. Les vivants, si."}
+
+  - id: h2.cv.les_rideaux
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_cars_du_quai) && !flag(h2_feu)"
+    lieu: gareRoutiere
+    tranches: [matin]
+    qui:
+      - {id: joueur1, qui: passant, nom: "Un joueur", place: banc_1}
+      - {id: joueur2, qui: passant, nom: "Un jeune joueur", place: banc_2}
+    repliques:
+      - {qui: joueur2, dit: "Pourquoi il y a des rideaux au fond du car neuf ? Et pas devant ?"}
+      - {qui: joueur1, dit: "Pour dormir. Tais-toi et dors, toi aussi."}
+      - {qui: joueur2, dit: "Dembo ne dort jamais, au fond. Il revient à sa place sans un mot, les poches plus légères."}
+      - {qui: joueur1, dit: "Alors assieds-toi devant, et regarde la route. De devant, on ne voit rien du fond."}
+      - {qui: joueur2, dit: "Et {pg, select, f{la coach} other{le coach}}, ça s'assoit où ?"}
+      - {qui: joueur1, dit: "Devant. Norbert lui garde la place."}
+
+  - id: h2.cv.les_bulles
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_rive)"
+    lieu: kiosque
+    tranches: [matin, midi]
+    qui:
+      - {id: passant1, qui: passant, nom: "Un passant"}
+      - {id: passante1, qui: passante, nom: "Une passante"}
+    repliques:
+      - {qui: passante1, dit: "Une heure du matin. Un bruit d'eau, comme si le pont tombait. Je me suis levée, j'ai vu des bulles."}
+      - {qui: passant1, dit: "Et le car du club, garé sur le quai, tous feux éteints. Mon frère l'a vu en rentrant."}
+      - {qui: passante1, dit: "Le car ? Qu'est-ce qu'il faisait là, à une heure ?"}
+      - {qui: passant1, dit: "Le chauffeur dit qu'il était au dépôt. Le dépôt dit pareil."}
+      - {qui: passante1, dit: "Alors votre frère a rêvé."}
+      - {qui: passant1, dit: "Mon frère ne rêve jamais. Il conduit des camions."}
+
+  # ═══════════════════════════════════════════════ SAISON 3
+  - id: h2.cv.avril
+    roles: [entraineur]
+    si: "flag(histoire_h2) && saison == 3 && !flag(h2_mort_papier) && !flag(h2_vivant_papier)"
+    lieu: cafe_mairie
+    tranches: [midi, aprem]
+    qui:
+      - {id: retraite1, qui: ancien, nom: "Un retraité", place: comptoir_1}
+      - {id: retraite2, qui: passant, nom: "Un autre retraité", place: table_1}
+    repliques:
+      - {qui: retraite1, dit: "Un an et un jour sans nouvelles, et le tribunal vous déclare mort. C'est la loi."}
+      - {qui: retraite2, dit: "Mort sur le papier. Le reste, il en fait ce qu'il veut."}
+      - {qui: retraite1, dit: "Vaubourg compte les jours sur le calendrier des pompiers. Je l'ai vu, au tabac."}
+      - {qui: retraite2, dit: "Et la femme ?"}
+      - {qui: retraite1, dit: "La femme appelle le club à dix heures. Même maintenant. Chacun son calendrier."}
+
+  - id: h2.cv.la_veste
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_feu)"
+    lieu: feu
+    tranches: [aprem, soir]
+    qui:
+      - {id: gars1, qui: fan, nom: "Un gars de la friche"}
+      - {id: gars2, qui: passant, nom: "Un autre gars"}
+    repliques:
+      - {qui: gars1, dit: "Le wagon a brûlé jusqu'aux roues. Il y avait quelqu'un dedans, il paraît. Il toussait."}
+      - {qui: gars2, dit: "Et une veste de chauffeur qui courait vers la halle. Les pompiers l'ont vue aussi."}
+      - {qui: gars1, dit: "Des chauffeurs, il y en a vingt, à Aubérive."}
+      - {qui: gars2, dit: "Il n'y en a qu'un qui conduit la nuit."}
+      - {qui: gars1, dit: "Tais-toi. Ici, le feu entend tout."}
