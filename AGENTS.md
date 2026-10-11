@@ -54,9 +54,11 @@ Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
 - **Un même prénom, deux personnes** : la Sacha du livre 4 (six ans en 1990) et celle du
   livre 9 (la fille de la sélectionneuse, vingt-sept ans en 2029) ont deux fiches (`sacha`,
   `sacha_fille`). Quand un livre réutilise un visage commun, l'étiquette de la fiche est
-  celle de son premier livre : Vecchio « GARDIEN », Bréhaut « CAPITAINE » ou Ilyas « FONDS
-  ALMADIS » se lisent mal en 2029 (signalé par l'autrice du livre 9 ; une étiquette par
-  époque reste à faire).
+  celle de son premier livre, sauf quand la fiche a des **`etiquettes`** par époque
+  (`[{des: année, label}]`, validées par `build_content`, lues par l'aperçu selon l'année de
+  la carrière) : Vaubourg président de la Ligue en 1998, Bréhaut directeur sportif puis
+  président de la Fédération, Vecchio ancien gardien, Gégé « socio numéro 1 » en 2037… Les
+  autres visages communs en manquent encore là où un livre les fait vieillir.
 - **À la fusion d'un livre** : `git merge --no-ff --no-commit histoire-hN`, puis, si les
   ajouts en fin de `characters.yaml`, `portraits.yaml` ou `flags.yaml` se sont mêlés à
   ceux d'un autre livre (le cas des livres 7 et 10 dans `portraits.yaml`),

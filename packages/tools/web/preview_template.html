@@ -1754,11 +1754,18 @@ __VILLE_CSS__
   var badgeL = $("badgeLeft"), badgeR = $("badgeRight");
   var portraitEl = $("portrait");
 
+  // L'étiquette d'un visage suit l'époque (characters.yaml `etiquettes`) : la
+  // dernière dont l'année est passée, sinon `label`.
+  function etiquette(ch) {
+    var l = ch.label, an = (view && view.year) || 1990;
+    (ch.etiquettes || []).forEach(function (e) { if (e.des != null && an >= e.des) l = e.label; });
+    return l;
+  }
   function speakerInfo(c) {
     var ch = c.speaker ? CHARS[c.speaker] : null;
     var self = !c.speaker;
     var name = c.speakerName || (ch && ch.name) || (self ? (view.name || "Toi") : c.speaker);
-    var label = c.speakerLabel || (ch && ch.label) || (self ? (view.roleName || view.role || "") : "");
+    var label = (ch && etiquette(ch)) || c.speakerLabel || (self ? (view.roleName || view.role || "") : "");
     var camp = (ch && ch.camp && CAMPS[ch.camp]) ? ch.camp : "terrain";
     var genre = self ? (view.genre || "m") : ((ch && ch.genre) || "m");
     var id = self ? selfId() : c.speaker;

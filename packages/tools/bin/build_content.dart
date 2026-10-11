@@ -612,6 +612,27 @@ void main() {
     final statut = cm['statut']?.toString() ?? 'present';
     if (!kStatuts.contains(statut)) errors.add('characters/$id: statut « $statut » inconnu (${kStatuts.join(' | ')})');
     cm['statut'] = statut;
+    // `etiquettes` : l'étiquette qui suit l'époque, [{des: année, label}] dans
+    // l'ordre ; avant le premier `des`, c'est `label`. L'aperçu la lit selon
+    // l'année de la carrière (Vecchio n'est plus « GARDIEN, 41 ANS » en 2029).
+    if (cm['etiquettes'] != null) {
+      final l = <Map<String, dynamic>>[];
+      var prec = 0;
+      for (final e in (cm['etiquettes'] as List)) {
+        final em = (e as Map).cast<String, dynamic>();
+        final des = (em['des'] as num?)?.toInt();
+        final lab = em['label']?.toString() ?? '';
+        if (des == null || des < 1990 || des > 2050) {
+          errors.add('characters/$id/etiquettes: `des` $des hors 1990..2050');
+        } else if (des <= prec) {
+          errors.add('characters/$id/etiquettes: les années vont croissant');
+        }
+        if (lab.isEmpty) errors.add('characters/$id/etiquettes: étiquette vide');
+        if (des != null) prec = des;
+        l.add({'des': des, 'label': lab});
+      }
+      cm['etiquettes'] = l;
+    }
     if (cm['age'] == null && cm['statut'] != 'present') {
       errors.add('characters/$id: un statut sans `age` : le personnage n\'a pas d\'état de partie');
     }
