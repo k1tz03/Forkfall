@@ -80,8 +80,17 @@ class Engine {
     }
     // Dossard du joueur : un nouvel appel, après tous les tirages existants (spec §2.5).
     if (post.role == 'joueur') entities.named['numero'] = '${rng.nextInt(30) + 1}';
-    if (genre == 'f' || genre == 'm') entities.genre = genre!;
     final p = normalizeName(prenom ?? '', max: 14);
+    if (genre == 'f' || genre == 'm') {
+      // Un genre choisi sans prénom saisi : le prénom tiré prend la liste de ce genre (« Chantal »
+      // accordée au masculin, c'était le défaut). Un tirage à part, qui ne touche pas le Rng de la
+      // carrière : même code, même carrière.
+      if (genre != entities.genre && p.isEmpty) {
+        final firsts = _pools[genre == 'f' ? 'prenoms_f' : 'prenoms_m']!;
+        entities.prenom = firsts[Rng(seed ^ 0x2F6E6F6D).nextInt(firsts.length)];
+      }
+      entities.genre = genre!;
+    }
     final n = normalizeName(nom ?? '', max: 16);
     if (p.isNotEmpty && !isBlacklisted(p, content.blacklist)) entities.prenom = p;
     if (n.isNotEmpty && !isBlacklisted(n, content.blacklist)) entities.nom = n;

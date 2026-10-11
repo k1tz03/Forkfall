@@ -3481,6 +3481,7 @@
       TABLEAUX.forEach(function (q) { add(q, "t:" + q.tableau); });
       return { gens: out, heros: [heros.x, heros.y], tranche: S && S.tranche, bulle: bulle ? { nom: bulle.nom, texte: bulle.texte } : null, carte: carteOn, occupe: occupe,
         cine: CINE ? { id: CINE.c.id, etape: CINE.i, lieu: CINE.c.lieu } : null, conv: CONV ? { id: CONV.cv.id, i: CONV.i } : null,
+        genre: vue ? [vue.genre, vue.entities && vue.entities.genre, vue.entities && vue.entities.prenom] : null,
         dedans: dedans ? { cle: dedans.cle, objets: dedans.m.objets.map(function (o) { return o.id; }), porte: dedans.m.porte } : null, ui: [UI.haut, UI.bas, VW, VH, k] };
     },
     // pour les essais : de l'argent, une mission offerte ici et maintenant

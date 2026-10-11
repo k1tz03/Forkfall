@@ -1201,8 +1201,11 @@ __VILLE_CSS__
   function cleanName(v, max) {
     return String(v || "").replace(/[^\p{L} '’-]/gu, "").replace(/\s+/g, " ").slice(0, max);
   }
+  // le genre n'est imposé que si on l'a choisi (un prénom saisi, ou le bouton touché) : sinon le
+  // moteur tire le héros, son prénom et son genre ensemble
+  var genreChoisi = !!profile.name.genreChoisi;
   function nameValues() {
-    return { prenom: cleanName(inPrenom.value, 14).trim(), nom: cleanName(inNom.value, 16).trim(), genre: nameGenre };
+    return { prenom: cleanName(inPrenom.value, 14).trim(), nom: cleanName(inNom.value, 16).trim(), genre: nameGenre, genreChoisi: genreChoisi };
   }
   function renderGenre() {
     btnGenre.textContent = nameGenre === "f" ? "♀" : "♂";
@@ -1220,7 +1223,7 @@ __VILLE_CSS__
   inNom.value = cleanName(profile.name.nom, 16);
   inPrenom.addEventListener("input", function () { var c = cleanName(inPrenom.value, 14); if (c !== inPrenom.value) inPrenom.value = c; saveName(); });
   inNom.addEventListener("input", function () { var c = cleanName(inNom.value, 16); if (c !== inNom.value) inNom.value = c; saveName(); });
-  btnGenre.addEventListener("click", function () { nameGenre = nameGenre === "f" ? "m" : "f"; renderGenre(); saveName(); });
+  btnGenre.addEventListener("click", function () { nameGenre = nameGenre === "f" ? "m" : "f"; genreChoisi = true; renderGenre(); saveName(); });
   $("btnHasard").addEventListener("click", randomName);
   $("nameForm").addEventListener("submit", function (e) { e.preventDefault(); inPrenom.blur(); inNom.blur(); });
   $("nameForm").addEventListener("keydown", function (e) { e.stopPropagation(); });
@@ -1251,7 +1254,7 @@ __VILLE_CSS__
     currentSeed = (typeof seed === "number") ? seed : randomSeed();
     var nm = nameValues();
     var vn = (VILLE && VILLE.noms) || {};
-    view = JSON.parse(window.fusibleStart(currentSeed, postulat, nm.prenom, nm.nom, nm.genre, vn.ville || "", vn.club || ""));
+    view = JSON.parse(window.fusibleStart(currentSeed, postulat, nm.prenom, nm.nom, nm.prenom || nm.genreChoisi ? nm.genre : "", vn.ville || "", vn.club || ""));
     closeAll();
     lastCard = null;
     answerLog = [];

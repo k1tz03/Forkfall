@@ -754,6 +754,19 @@ void main() {
       expect(v.rngState, s.rngState);
     });
 
+    test('N4b · un genre choisi sans prénom : le prénom tiré change de liste, la carrière ne change pas', () {
+      final e = Engine(_synth());
+      final tire = e.start(3);
+      expect(tire.entities.genre, 'm', reason: 'la graine 3 tire un homme dans ce contenu');
+      final f = e.start(3, genre: 'f');
+      expect(f.entities.genre, 'f');
+      expect(f.entities.prenom, 'Anne', reason: 'un prénom de femme, plus « Jean » accordé au féminin');
+      expect(f.entities.nom, tire.entities.nom);
+      expect(f.rngState, tire.rngState, reason: 'un tirage à part : même code, même carrière');
+      final m = e.start(3, genre: 'm');
+      expect(m.entities.prenom, tire.entities.prenom, reason: 'le même genre ne change rien');
+    });
+
     test('N5 · {toi} par locuteur et relation, {Toi} capitalisé, défauts coach / {prenom}', () {
       final content = _synth();
       final e = Engine(content);
