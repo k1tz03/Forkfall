@@ -519,6 +519,38 @@ void main() {
   });
 
   group('U · la Une', () {
+    test('U0 · la photo garde sa légende même quand sa carte n\'est pas la dernière d\'histoire', () {
+      // Une première carrière dit quelles cartes d'histoire la saison sert ; la
+      // même graine les sert encore quand une manchette en prend une en photo.
+      final reponses = <String, String>{};
+      String? derniere;
+      var s = _atScript(Engine(_synth()), 3, 'sc.a1');
+      final e0 = Engine(_synth());
+      while (!s.over && s.pending!.kind != 'aftermatch') {
+        final p = s.pending!;
+        s = e0.choose(s, true);
+        if (p.kind == 'narrative' && kStoryKinds.contains(p.payload['kind']) && s.lastAnswer != null) {
+          reponses[p.id] = s.lastAnswer!;
+          derniere = p.id;
+        }
+      }
+      final photo = reponses.keys.firstWhere((id) => id != derniere);
+      final e = Engine(_synth(unes: [
+        {'id': 'une.photo', 'journal': 'quotidien', 'priority': 1, 'poids': 1.0, 'titre': 'LA PHOTO', 'sous': '', 'photo': photo},
+      ]));
+      var t = _atScript(e, 3, 'sc.a1');
+      while (!t.over && t.pending!.kind != 'bilan_une') {
+        t = e.choose(t, true);
+      }
+      expect(t.lastStoryCard!.id, isNot(photo), reason: 'la photo n\'est pas la carte fatale');
+      final ph = t.pending!.payload['photo'] as Map;
+      expect(ph['card'], photo);
+      expect(ph['answer'], reponses[photo], reason: 'la légende est la réponse donnée à la carte');
+      // La sauvegarde la garde (clés triées).
+      final copie = GameState.fromJson(t.toJson());
+      expect(copie.photoAnswers[photo], reponses[photo]);
+    });
+
     test('U1 · bande de priorité puis pondération, {NOM} rendu, brèves hors sujet, réaction de la manchette', () {
       final e = Engine(_synth());
       // Bilan tenu, rang 1 : la bande 4 (une.top) gagne, sa réaction est posée.

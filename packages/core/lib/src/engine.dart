@@ -23,6 +23,9 @@ class Engine {
   late final Director director = Director(content, _cardToPending, _filler);
   Engine(this.content);
 
+  /// Les cartes qu'une manchette prend en photo : leur réponse est gardée.
+  late final Set<String> _unePhotos = {for (final u in content.unes) if (u.photo != null) u.photo!};
+
   /// Default chronology start; each postulat carries its own `year`.
   static const int startYear = 1990;
 
@@ -268,6 +271,8 @@ class Engine {
         s.lastAnswer = right ? (p.payload['answerRight'] as String?) : (p.payload['answerLeft'] as String?);
         // La carte fatale de la saison : dernier temps d'histoire non-Nouvelle (spec variété §1.6).
         if (kStoryKinds.contains(kind)) s.lastStoryCard = LastStoryCard(p.id, s.lastAnswer);
+        // La légende d'une photo de Une : la carte n'est pas toujours la dernière.
+        if (s.lastAnswer != null && _unePhotos.contains(p.id)) s.photoAnswers[p.id] = s.lastAnswer!;
         if (p.kind == 'objective') {
           s.objectivePromised = !right; // « Je m'engage » est le swipe gauche.
         } else if (!isReaction) {
@@ -1579,7 +1584,8 @@ class Engine {
     Map<String, dynamic>? photo;
     final preferred = une?.photo;
     if (preferred != null && (s.cooldowns[preferred] ?? -1) >= s.seasonStartN && content.cards.containsKey(preferred)) {
-      photo = {'card': preferred, if (s.lastStoryCard?.id == preferred && s.lastStoryCard?.answer != null) 'answer': s.lastStoryCard!.answer};
+      final legende = s.photoAnswers[preferred] ?? (s.lastStoryCard?.id == preferred ? s.lastStoryCard?.answer : null);
+      photo = {'card': preferred, if (legende != null) 'answer': legende};
     } else if (s.lastStoryCard != null) {
       photo = {'card': s.lastStoryCard!.id, if (s.lastStoryCard!.answer != null) 'answer': s.lastStoryCard!.answer};
     }

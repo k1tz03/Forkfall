@@ -521,6 +521,10 @@ class GameState {
   bool lastWasReaction;
   String? lastUne; // id de la manchette servie au dernier Bilan
   LastStoryCard? lastStoryCard;
+  /// La réponse donnée à chaque carte qu'une manchette prend en photo
+  /// (`unes.yaml` `photo:`) : la légende de la Une, même quand la carte n'est
+  /// pas la dernière d'histoire de la saison. Clés triées à la sérialisation.
+  Map<String, String> photoAnswers;
   /// Âge et statut des personnages (spec variété §1.10) : clés triées à la
   /// sérialisation ; reconstruit au premier `openSeason` si une sauvegarde
   /// ancienne ne le porte pas.
@@ -614,6 +618,7 @@ class GameState {
     this.lastWasReaction = false,
     this.lastUne,
     this.lastStoryCard,
+    Map<String, String>? photoAnswers,
     Map<String, CharState>? chars,
     List<String>? annonces,
     required this.pending,
@@ -635,6 +640,7 @@ class GameState {
         openingSlots = openingSlots ?? [],
         carriersLastSeason = carriersLastSeason ?? {},
         journal = journal ?? [],
+        photoAnswers = photoAnswers ?? {},
         chars = chars ?? {},
         annonces = annonces ?? [];
 
@@ -708,6 +714,7 @@ class GameState {
         lastWasReaction: lastWasReaction,
         lastUne: lastUne,
         lastStoryCard: lastStoryCard,
+        photoAnswers: Map.of(photoAnswers),
         chars: chars.map((k, v) => MapEntry(k, v.clone())),
         annonces: List.of(annonces),
         pending: pending,
@@ -787,6 +794,7 @@ class GameState {
         'lastWasReaction': lastWasReaction,
         'lastUne': lastUne,
         'lastStoryCard': lastStoryCard?.toJson(),
+        if (photoAnswers.isNotEmpty) 'photoAnswers': {for (final k in photoAnswers.keys.toList()..sort()) k: photoAnswers[k]},
         'chars': {for (final k in chars.keys.toList()..sort()) k: chars[k]!.toJson()},
         'annonces': annonces,
         'pending': pending?.toJson(),
@@ -868,6 +876,7 @@ class GameState {
         lastWasReaction: j['lastWasReaction'] == true,
         lastUne: j['lastUne'] as String?,
         lastStoryCard: j['lastStoryCard'] == null ? null : LastStoryCard.fromJson((j['lastStoryCard'] as Map).cast<String, dynamic>()),
+        photoAnswers: (j['photoAnswers'] as Map?)?.map((k, v) => MapEntry(k.toString(), v.toString())),
         chars: ((j['chars'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), CharState.fromJson((v as Map).cast<String, dynamic>()))),
         annonces: (j['annonces'] as List?)?.cast<String>(),
         pending: j['pending'] == null ? null : Pending.fromJson((j['pending'] as Map).cast<String, dynamic>()),
