@@ -1,0 +1,586 @@
+# Histoire 4 — « La Route de la Rive » : les scènes jouées et les conversations surprises
+# (format : docs/histoires/scenes_jouees.md). Une scène jouée ne se joue pas, on la regarde ;
+# une conversation s'entend en passant près de ceux qui parlent.
+#
+# Le livre : trente et un ans, la dernière année d'un contrat, et le 14 mai 1984 tel qu'on te
+# l'a raconté. Les scènes vivent entre les cartes et ne disent jamais plus tôt qu'elles ce que
+# le livre révèle (qui conduisait, qu'elle a vécu, qui a choisi la pierre) : elles posent des
+# détails vrais, une poire refusée, une vitre froide, un chiffre qui ne bouge pas, et la ville
+# qui regarde. Personne n'accorde rien au héros sans {pg, select, …} ; Bréhaut et le Doc ne
+# disent jamais {toi} (leur adresse neutre, « petit », est fausse à trente et un ans).
+#
+#   l'introduction    le Corner, le tabac du Quai, la cuisine — la veille de la reprise, 1990
+#   saison 1 (1990)   la quinzième (les radios du Doc) · le 14 mai (la grille du cimetière)
+#   saison 2 (1991)   la brasserie du Pont · le standard · le capot gravé · le corbeau ·
+#                     la chevalière · le tabac, le lendemain du square
+#   saison 3 (1992)   la poire du Corner · le coffre · la nuit du 14 · le tunnel du jubilé ·
+#                     merci (l'épilogue de qui s'est tu)
+#
+# Saisons de la ville (1, 2, 3, 4) = saisons du moteur (0, 1, 2, 3).
+cinematiques:
+  # ═════════════════════════════════════════════ L'INTRODUCTION : la veille de la reprise
+  # Qui : un vétéran de trente et un ans, le capitaine qui le ramène depuis 1984, le buraliste
+  # qui lui vend le journal, sa famille. Le crochet : la montée, le pont, une mobylette sans
+  # lumière. La scène mène à l'escalier du club-house, demain à sept heures, sans le dire.
+  - id: h4.ci.intro
+    quand: debut
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    titre: "La Route de la Rive"
+    sous: "Aubérive, juillet 1990"
+    lieu: bar
+    tranche: soir
+    suite: h4.ci.intro_2
+    acteurs:
+      - {qui: toi, place: comptoir_1}
+      - {qui: brehaut, place: comptoir_2}
+      - {id: patron, qui: commercant, nom: "Le patron du Corner", place: patron}
+    etapes:
+      - {narration: "Le Corner, la veille de la reprise. Un flipper qui clignote pour personne, la télé sur les résultats d'hier. Trente et un ans, et la dernière année d'un contrat."}
+      - {qui: patron, dit: "Une poire, pour les anciens de 84 ? La maison offre, comme à chaque reprise."}
+      - {qui: brehaut, dit: "Deux bières. Pas de poire."}
+      - {narration: "Le patron remonte la bouteille sur l'étagère du haut, l'étiquette tournée contre le mur. Il ne discute pas. Il a l'habitude."}
+      - {qui: brehaut, geste: boit}
+      - {narration: "Titi Bréhaut, trente-trois ans, capitaine. À son annulaire, une chevalière accroche le néon de la vitrine chaque fois qu'il lève son verre."}
+      - {qui: brehaut, dit: "Ta dernière année, alors. Fardelli me l'a dit avant toi. Il me dit souvent les choses avant toi."}
+      - {qui: brehaut, regarde: toi}
+      - {qui: brehaut, dit: "Et le genou ? Et tu dors, en ce moment ?"}
+      - {qui: toi, pense: "Je dors bien. J'ai toujours bien dormi. C'est le matin, le problème."}
+      - {qui: brehaut, dit: "Je te ramène ? J'ai la voiture devant."}
+      - {qui: toi, dit: "Je rentre à pied."}
+      - {qui: brehaut, dit: "Comme tu veux.", ton: sourire}
+      - {qui: brehaut, sort: true}
+      - {narration: "Sur le zinc, sous son verre vide, un billet plié en quatre. La chevalière a laissé un rond dans la buée."}
+
+  - id: h4.ci.intro_2
+    quand: suite
+    lieu: tabac
+    tranche: soir
+    suite: h4.ci.intro_3
+    acteurs:
+      - {qui: toi, place: visiteur}
+      - {qui: lavergne, place: patron}
+      - {id: marinier, qui: ancien, nom: "Un marinier", place: marinier_1}
+      - {id: autre, qui: passant, nom: "Un autre marinier", place: marinier_2}
+    etapes:
+      - {narration: "Le tabac du Quai, à l'heure où l'on baisse le rideau. Deux mariniers finissent une partie de dés sur le comptoir. Ici, on parie sur tout."}
+      - {qui: marinier, dit: "Quinze matchs, c'est la clause, à ce qu'on dit. {pg, select, f{Elle} other{Il}} les fait, cette année ?"}
+      - {qui: autre, dit: "Avec ce genou ? Cinquante francs qu'{pg, select, f{elle} other{il}} s'arrête avant Noël.", geste: pointe}
+      - {narration: "Il glisse un billet sous le gobelet des dés. Personne ne baisse la voix."}
+      - {son: argent}
+      - {qui: lavergne, regarde: toi}
+      - {qui: lavergne, dit: "Bonsoir, {toi}. Vous pariez sur vous, ce soir ?"}
+      - {qui: toi, pense: "Jean Lavergne. Il me vend L'Écho tous les matins depuis 1985. Il ne m'a jamais rien demandé d'autre que le prix."}
+      - {narration: "Par la porte de la cour, un moteur de mobylette tourne au ralenti. Personne ne va voir."}
+      - {qui: lavergne, dit: "L'Écho de demain parlera de votre dernière année. Je vous le garde sous le comptoir ?"}
+      - {narration: "Lavergne tire le rideau de fer à mi-hauteur, et attend que tu te baisses pour passer dessous."}
+
+  - id: h4.ci.intro_3
+    quand: suite
+    lieu: appartement
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: camille, place: fauteuil, pose: assis}
+      - {qui: sacha, place: fenetre}
+    etapes:
+      - {narration: "Chez toi, rue des Lilas, minuit passé. Sur la table, la montre de la montée, gravée au dos : « Montée — merci ». Elle retarde de deux minutes. Tu ne l'as jamais fait régler."}
+      - {qui: camille, dit: "Tu sens le Corner. Et le quai, aussi. Tu es {pg, select, f{rentrée} other{rentré}} par le pont ?"}
+      - {qui: toi, va: table_1}
+      - {qui: camille, dit: "Fardelli a appelé deux fois. Il t'emmène au restaurant la semaine prochaine. Il dit : une dernière année, ça se soigne comme une première."}
+      - {qui: toi, pense: "Camille ne sait rien de 1984. Elle sait seulement qu'un jour par an, je pars avec des fleurs, et que je rentre sans rien dire."}
+      - {qui: sacha, dit: "Il y a une mobylette, en bas. Elle n'a pas de lumière. Elle attend."}
+      - {qui: toi, va: fenetre}
+      - {narration: "La rue des Lilas est vide. Le réverbère grésille au-dessus d'un trottoir où il n'y a personne. Plus loin, un moteur s'éloigne vers le quai."}
+      - {qui: camille, dit: "Au lit, Sacha. Demain, c'est le centre aéré. Et toi, sept heures au club-house."}
+      - {qui: sacha, dit: "Demain, tu m'emmènes en voiture ? C'est moi qui dis où on tourne."}
+      - {qui: sacha, va: milieu}
+      - {qui: toi, pense: "Sept heures. L'escalier du club-house, le genou d'abord. Le reste suivra, comme à chaque reprise."}
+
+  # ═════════════════════════════════════════════ SAISON 1 (1990-1991) — LA FAUTE
+  # Avant la quinzième : les radios alignées, un chiffre qui ne bouge pas d'une année sur l'autre.
+  - id: h4.ci.quinzieme
+    quand: carte
+    cartes: [jp.h4.a3_quinzieme, jp.h4.a3_quinzieme_chiffre]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: cabinet
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: attente_1, pose: assis}
+      - {qui: sabatier, place: doc, pose: assis}
+      - {qui: rouvier, place: kine}
+    etapes:
+      - {narration: "Le cabinet du Doc. Sur le négatoscope, des radios de genou alignées comme des fenêtres : une par saison, depuis 1984."}
+      - {qui: rouvier, dit: "Je les range par année, docteur ? Elles se ressemblent toutes, à part le coin."}
+      - {qui: sabatier, dit: "Par année. Et vous ne touchez pas aux coins.", geste: ecrit}
+      - {qui: rouvier, dit: "Le même chiffre au crayon, dans le coin de chacune. Quatorze, barre, cinq. Depuis 1984, il n'a pas bougé d'un trait."}
+      - {qui: sabatier, regarde: rouvier}
+      - {qui: sabatier, dit: "Nadia. Le café, en bas. Il est prêt depuis dix minutes."}
+      - {qui: rouvier, sort: true}
+      - {qui: toi, pense: "Toutes les radios, le même chiffre. Ça ne compte rien, un chiffre qui ne bouge pas."}
+      - {narration: "Sur le mur, le calendrier des matchs : quatorze croix au feutre noir. La quinzième case est vide."}
+
+  # Le 14 mai 1991 : la grille du cimetière, avant le carré ancien. Camille arrive derrière.
+  - id: h4.ci.grille
+    quand: carte
+    carte: jp.h4.a4_quatorze_mai
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4) && !flag(divorce)"
+    lieu: cimetiere
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: [3, 4]}
+      - {qui: abel, place: [1, -1]}
+    etapes:
+      - {narration: "Le 14 mai, dix-huit heures moins le quart. Le cimetière ferme à dix-neuf heures ; Monsieur Abel attend à la grille, son registre ouvert sur l'avant-bras."}
+      - {qui: abel, dit: "{Toi}. Comme chaque année. Je vous inscris à la même ligne ?", geste: ecrit}
+      - {qui: abel, dit: "Le livreur des Immortelles est monté à huit heures. Le pot de l'abonnement est déjà posé. Avec le vôtre, ça en fera deux."}
+      - {qui: toi, pense: "Six ans que je monte au carré ancien. Six ans que je regarde les fleurs, et pas la pierre."}
+      - {qui: abel, dit: "Deuxième allée à gauche. Vous connaissez le chemin mieux que ceux qui y sont."}
+      - {qui: toi, va: porte}
+      - {narration: "Derrière toi, de l'autre côté de la rue, une voiture se gare sans bruit. Une portière qu'on referme doucement, pour ne pas être entendue."}
+      - {qui: abel, geste: ecrit}
+      - {narration: "Monsieur Abel note une deuxième heure sur la même ligne, et ne dit rien."}
+
+  # ═════════════════════════════════════════════ SAISON 2 (1991-1992) — LA TOMBE VIDE
+  # Un jour sans carte, quand on cherche : la banquette de la montée, une vitre froide, des clés.
+  - id: h4.ci.banquette
+    quand: semaine
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_registre) && !flag(h4_capot)"
+    lieu: brasserie
+    tranches: [midi, soir]
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: table_4, pose: assis}
+      - {id: serveur, qui: commercant, nom: "Le serveur", place: serveur}
+      - {id: habitue, qui: ancien, nom: "Un habitué", place: table_1, pose: assis}
+    etapes:
+      - {narration: "La brasserie du Pont. Les banquettes en moleskine, le plat du jour à l'ardoise, et au-dessus de la caisse, l'équipe de 1962 en noir et blanc."}
+      - {qui: serveur, dit: "La banquette du fond, c'était la vôtre, la nuit de la montée. Le patron a gardé la note : quarante-trois couverts, et la casse."}
+      - {qui: habitue, dit: "J'y étais. À une heure, vous dormiez déjà, au fond, la tête contre la vitre. Le capitaine vous tenait par l'épaule."}
+      - {qui: serveur, va: table_3}
+      - {qui: serveur, dit: "Vers deux heures moins le quart, quelqu'un a demandé les clés de la voiture du club, au comptoir. Il les a fait tomber deux fois. J'avais les mains dans l'évier."}
+      - {qui: toi, pense: "On m'a dit, le lendemain, que c'était moi. Je ne me rappelle pas les clés. Je me rappelle la vitre froide contre ma tempe."}
+      - {qui: habitue, dit: "Cette nuit-là, tout le monde voulait conduire. On venait de monter en première division.", geste: boit}
+      - {qui: serveur, dit: "Le patron dit qu'on ne parle pas des nuits de fête. Je vous sers une poire quand même ?"}
+      - {narration: "Il pose le petit verre devant toi, et attend. Dehors, sur le pont, un camion passe et fait trembler l'eau dans la carafe."}
+
+  # Avant « Pas vous. Le passager. » : le hall de l'hôtel de la Rive, le standard derrière sa vitre.
+  - id: h4.ci.standard
+    quand: carte
+    cartes: [jp.h4.standard.standard, jp.h4.standard.standard_prise]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: hotel
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: sandrine, place: standard, pose: assis}
+      - {id: veilleur, qui: passant, nom: "Le veilleur de nuit", place: reception}
+    etapes:
+      - {narration: "L'hôtel de la Rive, vingt heures. Le hall sent la cire. Derrière une vitre, le standard : un tableau de fiches, des voyants qui s'allument, une voix qui dit des numéros de chambre."}
+      - {qui: sandrine, dit: "Hôtel de la Rive, bonsoir. Je vous passe la six.", geste: telephone}
+      - {qui: veilleur, dit: "Vous cherchez quelqu'un ?"}
+      - {qui: toi, pense: "Lavergne. Le nom peint au-dessus de la caisse du tabac du Quai. Quinze ans en 1984. Vingt et un, maintenant."}
+      - {qui: toi, va: bagages}
+      - {qui: veilleur, dit: "La standardiste ne reçoit personne. Elle passe les appels, c'est tout."}
+      - {qui: sandrine, dit: "Hôtel de la Rive. Non, monsieur, la chambre ne répond pas. Je note."}
+      - {qui: sandrine, geste: ecrit}
+      - {narration: "Elle ôte une fiche du tableau. Le fauteuil recule d'un demi-tour ; elle te fait face."}
+
+  # Après le capot gravé : le garage du Pont, la date sous la lumière rasante.
+  - id: h4.ci.capot_grave
+    quand: drapeau
+    drapeau: h4_capot_grave
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: garage
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: visiteur}
+      - {qui: garagiste, place: garagiste}
+      - {id: vendeur, qui: commercant, nom: "Le vendeur", place: vendeur}
+    etapes:
+      - {narration: "Le garage du Pont, au fond de la cour. Ta voiture sur le pont élévateur, le capot à hauteur d'homme, sous les néons."}
+      - {qui: garagiste, dit: "Gravé à la clé, en appuyant fort. Quelqu'un qui a pris son temps. Quatorze, cinq, quatre-vingt-quatre.", geste: pointe}
+      - {qui: vendeur, dit: "Une date, ça. Une naissance, un mariage."}
+      - {qui: garagiste, dit: "Ou l'inverse."}
+      - {qui: vendeur, emote: "..."}
+      - {qui: garagiste, dit: "Je ponce, je repeins. Mais à la lumière rasante, ça se lira encore. La tôle garde tout."}
+      - {qui: toi, pense: "Quelqu'un, dans cette ville, a la même date que moi. Et une clé, et tout son temps."}
+      - {qui: vendeur, dit: "On vous prête une voiture, le temps des travaux. Une petite, sans histoire."}
+      - {narration: "Le garagiste allume la baladeuse et la tient de biais. Les quatre chiffres sortent du gris, nets comme une signature."}
+
+  # Après le corbeau : L'Écho, la lettre sous l'agrafeuse, et le tiroir de Massenet.
+  - id: h4.ci.agrafeuse
+    quand: drapeau
+    drapeau: h4_corbeau
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: echo
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: visiteur, pose: assis}
+      - {qui: lea, place: journaliste, pose: assis}
+      - {qui: meneche, place: redacteur, pose: assis}
+    etapes:
+      - {narration: "La rédaction de L'Écho. La lettre du corbeau est retournée sur le bureau de Léa, sous une agrafeuse, comme si elle pouvait s'envoler."}
+      - {qui: meneche, dit: "Pas de timbre, pas de cachet. Glissée sous la porte. Quelqu'un qui connaît le chemin de la rédaction, et l'heure où personne n'y est."}
+      - {qui: lea, dit: "Six heures du matin. Le gardien de l'imprimerie a entendu une mobylette. Il n'a pas vu de visage."}
+      - {qui: meneche, geste: ecrit}
+      - {qui: meneche, dit: "Le 14 mai 1984, j'étais de permanence. Je me souviens d'une nuit où j'ai beaucoup tapé, et d'un matin où j'ai beaucoup barré."}
+      - {qui: lea, regarde: meneche}
+      - {qui: lea, dit: "Vous avez gardé quelque chose, de ce matin-là ?"}
+      - {narration: "Massenet ne répond pas. Il tourne une petite clé dans le tiroir de son bureau, et la range dans la poche de son gilet."}
+      - {qui: toi, pense: "Ils parlent de cette nuit comme d'une édition qu'on n'aurait jamais imprimée. J'étais dedans, et je ne l'ai jamais lue."}
+
+  # Après le capot : le dernier décrassage, une chevalière qu'on n'ôte plus.
+  - id: h4.ci.chevaliere
+    quand: drapeau
+    drapeau: h4_capot
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: stade
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: banc_1, pose: assis}
+      - {qui: brehaut, place: banc_5, pose: assis}
+      - {qui: vecchio, place: banc_3, pose: assis}
+      - {qui: vukic, place: coach}
+    etapes:
+      - {narration: "Le lendemain, le dernier décrassage de la saison. Bréhaut est arrivé le premier, ce qu'il ne fait jamais. Il lace ses chaussures sans ôter sa chevalière."}
+      - {qui: vecchio, dit: "Il garde sa bague, aujourd'hui. Depuis 1984, il la pose sur le banc avant chaque séance."}
+      - {qui: vukic, dit: "J'ai vu.", geste: ecrit}
+      - {qui: brehaut, geste: debout}
+      - {qui: brehaut, dit: "Quarante minutes, petites foulées. Je suis devant. Que personne ne me double."}
+      - {qui: brehaut, sort: true}
+      - {qui: vecchio, regarde: toi}
+      - {qui: vecchio, dit: "Tu as une tête de lendemain de montée."}
+      - {qui: toi, pense: "Le lendemain de la montée, à l'hôpital, il m'a dit une phrase. Cette nuit, sur son capot, il l'a reprise et retournée."}
+      - {narration: "Vukić range son cahier dans son sac, sous un survêtement de la réserve plié au carré, et tire la fermeture jusqu'au bout."}
+
+  # Après le square (Sandrine écoutée jusqu'au bout) : le père, le lendemain matin.
+  - id: h4.ci.monnaie
+    quand: drapeau
+    drapeau: h4_sandrine_entendue
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: tabac
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: visiteur}
+      - {qui: lavergne, place: patron}
+      - {id: fils, qui: passant, nom: "Le fils Lavergne", cache: true}
+    etapes:
+      - {narration: "Le tabac du Quai, sept heures, le lendemain. L'Écho en pile sur le comptoir, encore ficelé. Lavergne coupe la ficelle au canif, sans se presser."}
+      - {qui: lavergne, dit: "Ma fille est rentrée tard, hier. Elle a dit qu'elle avait parlé, au square. Qu'on l'avait écoutée jusqu'au bout."}
+      - {qui: fils, entre: marinier_2}
+      - {qui: fils, dit: "C'est {pg, select, f{elle} other{lui}} ?", geste: poing}
+      - {qui: lavergne, dit: "Va rentrer la mobylette. Et coupe le moteur, pour une fois."}
+      - {qui: fils, sort: true}
+      - {qui: lavergne, dit: "Depuis 1985, je vous rends la monnaie. Elle, en une heure, vous en a dit plus que moi."}
+      - {qui: lavergne, geste: debout}
+      - {narration: "Il te rend la monnaie sans la recompter. Dans la cour, le moteur s'arrête. Pour la première fois, on entend le quai : l'eau contre les péniches."}
+
+  # ═════════════════════════════════════════════ SAISON 3 (1992-1993) — LE MICRO
+  # Avant la poire du Corner : la bouteille refusée à la reprise de 1990 redescend de l'étagère.
+  - id: h4.ci.etagere
+    quand: carte
+    cartes: [jp.h4.capot.propose, jp.h4.capot.propose_menace]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: bar
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: comptoir_1}
+      - {id: patron, qui: commercant, nom: "Le patron du Corner", place: patron}
+      - {qui: brehaut, cache: true}
+    etapes:
+      - {narration: "Le Corner, tard. Le flipper est éteint. Le patron monte sur un tabouret pour atteindre l'étagère du haut."}
+      - {qui: patron, dit: "Il me l'a demandée au téléphone, la poire. Celle de la montée. Neuf ans que personne n'y touche."}
+      - {narration: "Il souffle sur le goulot. La poussière fait un petit nuage dans la lumière du néon, puis retombe sur le zinc."}
+      - {qui: brehaut, entre: comptoir_2}
+      - {qui: brehaut, dit: "Deux verres. Les petits."}
+      - {qui: patron, dit: "Je vous laisse la bouteille. La porte se ferme toute seule, il suffit de la tirer."}
+      - {qui: patron, sort: true}
+      - {qui: brehaut, regarde: toi}
+      - {qui: toi, pense: "À la reprise de 1990, il avait refusé cette bouteille. L'étiquette est restée tournée contre le mur pendant trois ans."}
+
+  # Avant le coffre du président : la molette, Josiane qui sort et ferme derrière elle.
+  - id: h4.ci.molette
+    quand: carte
+    cartes: [jp.h4.a9_declaration, jp.h4.a9_declaration_cahier]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: clubhouse
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: cafe}
+      - {qui: josiane, place: visiteur_1, pose: assis}
+      - {qui: aulard, place: president, pose: assis}
+    etapes:
+      - {narration: "Le club-house, un mardi matin. Derrière son bureau, le président tourne la molette d'un coffre, cran par cran, le dos à la pièce. Josiane attend, un bloc sur les genoux."}
+      - {qui: aulard, geste: dos}
+      - {qui: josiane, dit: "Il ouvre son coffre deux fois par an, {toi}. Pour le contrôleur des impôts, et ce matin.", geste: ecrit}
+      - {qui: toi, pense: "Une feuille de 1984, dans un coffre. Je ne me souviens d'aucune feuille. Je me souviens d'un plâtre, et d'un plafond blanc."}
+      - {qui: aulard, dit: "Josiane, la porte du couloir. Et qu'on ne nous dérange pas."}
+      - {qui: josiane, va: [7, 0]}
+      - {qui: josiane, regarde: toi}
+      - {qui: josiane, dit: "Ne vous asseyez pas avant lui. Il n'aime pas ça."}
+      - {qui: josiane, sort: true}
+      - {narration: "Sur le sous-main, une feuille jaunie, posée à l'envers. Vaubourg se retourne et pose la main à plat dessus, comme sur un chien qui dort."}
+
+  # La nuit du 14 au 15 mai, une heure et demie : avant la route, pour de vrai.
+  - id: h4.ci.une_heure_et_demie
+    quand: carte
+    cartes: [jp.h4.a10_route, jp.h4.a10_route_bouteille]
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4) && !flag(divorce)"
+    lieu: appartement
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: table_1, pose: assis}
+      - {qui: camille, place: fauteuil, pose: assis}
+    etapes:
+      - {narration: "La nuit du 14 au 15 mai. Une heure et demie. Sur la table, l'affiche du jubilé roulée dans un élastique, et les clés de la voiture."}
+      - {qui: camille, dit: "Tu ne dors pas. Moi non plus. On fait comme si, ou on parle ?"}
+      - {qui: toi, pense: "Le jubilé tombe un 15 mai. La nuit d'avant est un 14. Vaubourg n'y a pas pensé. Moi, je n'ai pensé qu'à ça."}
+      - {qui: camille, dit: "Sacha a sorti sa robe rouge, pour le rond central. Elle veut que tu dises son nom au micro."}
+      - {qui: toi, geste: debout}
+      - {narration: "Tu prends les clés sur la table. Elles tintent contre la montre de la montée, au fond de ta poche."}
+      - {qui: camille, regarde: toi}
+      - {qui: camille, dit: "Où tu vas, à cette heure-ci ?"}
+      - {qui: toi, dit: "Faire le tour. Je reviens."}
+      - {qui: camille, dit: "Le gilet de Sacha est resté sur la banquette. Rapporte-le en rentrant, elle le cherchera demain matin."}
+      - {qui: toi, va: porte}
+      - {narration: "La porte se referme. Dans le fauteuil, Camille attend le bruit du moteur. Il tarde à venir."}
+
+  # Le jubilé, avant le rond central : le micro branché « jusqu'au pont », le col redressé.
+  - id: h4.ci.tunnel
+    quand: carte
+    prefixe: "jp.h4.a11_"
+    moment: avant
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: milieu}
+      - {qui: brehaut, place: coach}
+      - {qui: lea, place: porte}
+      - {qui: vukic, place: [2, 3]}
+    etapes:
+      - {narration: "Le 15 mai, quatorze heures cinquante. Au-dessus des têtes, la tribune gronde, comme un orage qui passe et ne passe pas. Les autres sont déjà sur la pelouse : c'est toi qu'on attend."}
+      - {qui: lea, dit: "Le micro est branché sur la sono du stade. Ce que vous direz, on l'entendra jusqu'au pont."}
+      - {qui: brehaut, va: doc}
+      - {narration: "Bréhaut, en costume, redresse ton col du bout des doigts, comme on remet droit un cadre au mur. La chevalière t'effleure la nuque."}
+      - {qui: brehaut, dit: "Trois minutes au micro, après le tour. Vaubourg veut les buvettes ouvertes avant seize heures."}
+      - {qui: vukic, dit: "Ton sac reste sous mon banc. Il y a un survêtement de la réserve dedans, si tu en as besoin ce soir."}
+      - {qui: toi, pense: "Cette nuit, au bout du pont, il y avait un fauteuil vide sous le réverbère. Personne ne m'a dit qui l'avait laissé là."}
+      - {qui: lea, dit: "On y va. Ne tapotez pas le micro pour voir s'il marche : il marche.", geste: pointe}
+      - {qui: toi, va: porte}
+      - {narration: "Le couloir monte vers la lumière. Au bout, le bruit devient un mur, et le mur s'ouvre."}
+
+  # L'épilogue de qui s'est tu : le vestiaire, après le tour d'honneur.
+  - id: h4.ci.merci
+    quand: drapeau
+    drapeau: h4_silence
+    roles: [joueur]
+    si: "flag(histoire_h4)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: banc_2, pose: assis}
+      - {qui: brehaut, cache: true}
+    etapes:
+      - {narration: "Après le tour d'honneur, le vestiaire. On entend encore la tribune, plus loin, comme une mer qu'on vient de quitter."}
+      - {qui: brehaut, entre: milieu}
+      - {qui: brehaut, dit: "Merci."}
+      - {pause: 1500}
+      - {qui: toi, pense: "Au premier rang de l'Est, le fauteuil est parti pendant les applaudissements. Je l'ai vu reculer, tourner, disparaître sous la tribune."}
+      - {narration: "Bréhaut sort de sa poche le brassard de capitaine, le pose sur le banc à côté de toi, et le lisse du plat de la main."}
+      - {qui: brehaut, dit: "Je serai au Corner, ce soir. Ou demain. Ou quand tu voudras."}
+      - {qui: brehaut, sort: true}
+      - {narration: "Le brassard reste sur le banc. Personne ne vient le reprendre, jusqu'au soir."}
+
+# ═════════════════════════════════════════════ LES CONVERSATIONS SURPRISES
+# La ville parle de la dernière année, de la clause, de la mobylette de trois heures, de la
+# standardiste qui découpe le journal, d'un tiroir fermé à clé et d'une bouteille sur l'étagère.
+conversations:
+  - id: h4.cv.la_cassette
+    roles: [joueur]
+    si: "flag(histoire_h4) && saison == 1"
+    lieu: buvette
+    tranches: [midi, soir]
+    qui:
+      - {qui: gege, place: fond}
+      - {id: fan, qui: fan, place: zinc_1}
+    repliques:
+      - {qui: fan, dit: "Sa lucarne de 84, je l'ai sur une cassette. Je la repasse quand on perd."}
+      - {qui: gege, dit: "Repasse-la moins. Elle s'use, à force."}
+      - {qui: fan, dit: "Fardelli a dit au café que c'était sa dernière année."}
+      - {qui: gege, dit: "On fera une banderole. Pas trop grande. Les grandes, ça pèse sur les genoux."}
+      - {qui: fan, dit: "Et le capitaine ? Il a le même genou."}
+      - {qui: gege, dit: "Le capitaine a deux filles et un brassard. Ça tient debout plus longtemps qu'un genou."}
+
+  - id: h4.cv.le_carburateur
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_moteur) && !flag(h4_fiche_hopital)"
+    lieu: kiosque
+    tranches: [matin, midi]
+    qui:
+      - {id: marinier, qui: ancien, nom: "Un marinier"}
+      - {id: autre, qui: passant, nom: "Un autre marinier"}
+    repliques:
+      - {qui: marinier, dit: "Le fils Lavergne a encore fait tourner sa mobylette dans la cour, cette nuit. Vers trois heures."}
+      - {qui: autre, dit: "Son père dit que c'est le carburateur."}
+      - {qui: marinier, dit: "Un carburateur qui ne s'enrhume qu'à trois heures du matin."}
+      - {qui: autre, dit: "Après, la lumière de la boutique s'allume. Cinq minutes. Puis plus rien. Ma péniche est juste en face."}
+      - {qui: marinier, dit: "Ça ne nous regarde pas."}
+      - {qui: autre, dit: "Non. Mais depuis, moi non plus, je ne dors plus."}
+
+  - id: h4.cv.dix_pour_cent
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(prolonge_rabais) && saison <= 2"
+    lieu: cafe_mairie
+    tranches: [midi]
+    qui:
+      - {qui: fardelli, place: fardelli}
+      - {id: patron, qui: commercant, nom: "Le patron", place: patron}
+    repliques:
+      - {qui: patron, dit: "{pg, select, f{Elle} other{Il}} a resigné, votre {pg, select, f{vétérane} other{vétéran}} ? Pour moins cher, on dit."}
+      - {qui: fardelli, dit: "Un an. Moins cher, c'est le prix d'un an de plus, à trente et un ans."}
+      - {qui: patron, dit: "Et {pg, select, f{elle} other{il}} est d'accord ?"}
+      - {qui: fardelli, dit: "Signer et être d'accord, chez {pg, select, f{elle} other{lui}}, ça n'a jamais été la même chose."}
+      - {qui: patron, dit: "Et vous, vous touchez quoi, là-dessus ?"}
+      - {qui: fardelli, dit: "Dix pour cent de moins que l'an dernier. Je suis solidaire."}
+
+  - id: h4.cv.onze_appels
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_standard_vu) && !flag(h4_promesse_micro)"
+    lieu: hotel
+    tranches: [soir]
+    qui:
+      - {id: veilleur, qui: passant, nom: "Le veilleur de nuit", place: reception}
+      - {id: femme, qui: passante, nom: "La femme de chambre", place: bagages}
+    repliques:
+      - {qui: femme, dit: "La vedette du Racing est revenue. Une heure devant la vitre du standard, sans rien demander."}
+      - {qui: veilleur, dit: "Elle ne lui a pas adressé un regard. Elle a passé onze appels de suite."}
+      - {qui: femme, dit: "Tu as compté ?"}
+      - {qui: veilleur, dit: "Elle s'est trompée de fiche deux fois. Ça ne lui arrive jamais."}
+      - {qui: femme, dit: "Son père vient la chercher à dix heures. S'il tombe dessus, ici…"}
+      - {qui: veilleur, dit: "Il ne tombera sur personne. Je ferme la porte de service à moins cinq."}
+
+  - id: h4.cv.six_fois
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_registre)"
+    lieu: cimetiere
+    tranches: [matin, aprem]
+    qui:
+      - {qui: abel}
+      - {id: fossoyeur, qui: ancien, nom: "Le fossoyeur"}
+    repliques:
+      - {qui: fossoyeur, dit: "Les chrysanthèmes du carré ancien, je les arrose aussi ? Ils sont à quelqu'un, maintenant."}
+      - {qui: abel, dit: "Ils sont à Monsieur Bertin. Pour le reste, je note."}
+      - {qui: fossoyeur, dit: "Vous notez quoi ?"}
+      - {qui: abel, dit: "Qui vient, quand, et pour qui. Et qui se trompe de tombe."}
+      - {qui: fossoyeur, dit: "Ça arrive souvent ?"}
+      - {qui: abel, dit: "Une fois en trente ans. Mais six fois de suite, et toujours le même jour."}
+
+  - id: h4.cv.le_tiroir
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_deux_lignes) && !flag(h4_nom_imprime)"
+    lieu: echo
+    tranches: [aprem, soir]
+    qui:
+      - {qui: meneche, place: redacteur}
+      - {qui: lea, place: journaliste}
+    repliques:
+      - {qui: lea, dit: "Votre tiroir est encore fermé à clé. Vous l'ouvrez pour {pg, select, f{elle} other{lui}}, jamais pour moi."}
+      - {qui: meneche, dit: "Je l'ai ouvert une fois. Le reste du temps, il me sert à ne pas dormir."}
+      - {qui: lea, dit: "Les deux lignes, elles disent quoi ?"}
+      - {qui: meneche, dit: "Ce que tout le monde aurait su en 1984, en appelant l'hôpital de Portclair. Personne n'a appelé."}
+      - {qui: lea, dit: "Et la onzième ?"}
+      - {qui: meneche, dit: "Un nom. Il faut quelqu'un pour le dicter. Moi, je ne fais que taper."}
+
+  - id: h4.cv.les_ciseaux
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_standard_vu) && !flag(h4_capot)"
+    lieu: square
+    tranches: [midi, aprem]
+    qui:
+      - {id: mere, qui: passante, nom: "Une mère du square"}
+      - {id: vieux, qui: ancien, nom: "Un vieux du banc"}
+    repliques:
+      - {qui: mere, dit: "La jeune femme en fauteuil, au banc du fond. Elle découpe L'Écho tous les midis."}
+      - {qui: vieux, dit: "Toujours la page des sports. Elle garde les visages, elle jette le reste."}
+      - {qui: mere, dit: "Ma petite lui a demandé pour qui c'était. Elle a dit : pour un puzzle."}
+      - {qui: vieux, dit: "Moi, je l'ai vue découper trois fois la même photo. La montée de 84. Elle n'en garde jamais qu'un morceau."}
+
+  - id: h4.cv.une_heure_cinquante
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_reve_freine) && !flag(h4_capot)"
+    lieu: stade
+    tranches: [matin, aprem]
+    qui:
+      - {qui: vecchio, place: banc_1}
+      - {qui: vukic, place: coach}
+    repliques:
+      - {qui: vecchio, dit: "Dans le car, {pg, select, f{elle} other{il}} a encore dit le mot. Freine. Deux fois, entre Valdorne et le péage."}
+      - {qui: vukic, dit: "Je l'ai entendu."}
+      - {qui: vecchio, dit: "Tu l'as noté ?"}
+      - {qui: vukic, dit: "J'ai noté l'heure. Une heure cinquante, à la montre du car."}
+      - {qui: vecchio, dit: "Moi, en 84, je suis rentré avant le pont. J'ai toujours regretté de ne pas être resté. Je ne sais plus pourquoi."}
+
+  - id: h4.cv.la_chaudiere
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_jubile_annonce)"
+    lieu: clubhouse
+    tranches: [matin, aprem]
+    qui:
+      - {qui: aulard, place: president}
+      - {qui: josiane, place: secretaire}
+    repliques:
+      - {qui: aulard, dit: "Josiane, l'affiche du jubilé : trois mille exemplaires. Et le carton de 1984, à la cave. Tout au fond."}
+      - {qui: josiane, dit: "Il est à la cave depuis 1990, président."}
+      - {qui: aulard, dit: "Alors plus bas. Il y a toujours plus bas, dans une cave."}
+      - {qui: josiane, dit: "Il y a la chaudière."}
+      - {qui: aulard, dit: "Voilà. À côté de la chaudière."}
+
+  - id: h4.cv.l_etagere
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_capot) && !flag(h4_bouteille) && !flag(h4_brehaut_convaincu)"
+    lieu: bar
+    tranches: [soir]
+    qui:
+      - {id: patron, qui: commercant, nom: "Le patron du Corner", place: patron}
+      - {id: client, qui: passant, nom: "Un habitué", place: comptoir_2}
+    repliques:
+      - {qui: client, dit: "Le capitaine ne vient plus le jeudi."}
+      - {qui: patron, dit: "Il vient le mardi, à l'heure où il n'y a personne. Un café. Il regarde l'étagère du haut."}
+      - {qui: client, dit: "Qu'est-ce qu'il y a, sur l'étagère du haut ?"}
+      - {qui: patron, dit: "Une bouteille que je ne sers qu'une fois tous les neuf ans."}
+
+  - id: h4.cv.page_sept
+    roles: [joueur]
+    si: "flag(histoire_h4) && flag(h4_nom_imprime)"
+    lieu: kiosque
+    tranches: [matin, midi]
+    qui:
+      - {id: kiosquier, qui: commercant, nom: "Le kiosquier"}
+      - {id: ancien, qui: ancien, nom: "Un retraité du quai"}
+    repliques:
+      - {qui: ancien, dit: "Page sept, onze lignes, et un nom tout en bas. Vous en avez vendu combien ?"}
+      - {qui: kiosquier, dit: "Douze. D'habitude, la page sept, personne ne la lit."}
+      - {qui: ancien, dit: "Le capitaine est passé ?"}
+      - {qui: kiosquier, dit: "À six heures. Il a pris les douze, en pièces de dix."}
+      - {qui: ancien, dit: "Pour les lire ?"}
+      - {qui: kiosquier, dit: "Il les a jetés dans la Rive, du parapet, un par un. Il en a gardé un."}
