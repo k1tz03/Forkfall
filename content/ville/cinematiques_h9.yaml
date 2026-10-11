@@ -1,0 +1,600 @@
+# Histoire 9 — « Vingt degrés dedans » : les scènes jouées et les conversations surprises
+# (format : docs/histoires/scenes_jouees.md ; la fiche : docs/histoires/00_les_dix_histoires.md,
+# « Histoire 9 » ; le livre : content/cards/selectionneur/h9_*.yaml). Une scène jouée ne se
+# joue pas, on la regarde ; une conversation s'entend en passant près de ceux qui parlent.
+#
+# La sélectionneuse vit rue des Lilas, en face de la boulangerie Marçais. Le livre lui donne
+# une héroïne, le moteur laisse le choix : tout ce qui la nomme ou l'accorde passe par
+# {pg, select}. On ne montre ni le chantier ni l'homme qui tombe : on voit le zinc, les vis,
+# la chemise pliée, la tente blanche qu'on replie.
+#
+# Le Mondial (décembre 2030) se joue loin : du départ (drapeau `h9_loin`) au retour de janvier,
+# la ville attend et chaque carte se joue devant le décor d'Al-Dorado. Une scène qui tombe
+# pendant le voyage se joue pourtant sur le plan d'Aubérive ; on la met donc dans un hall
+# d'hôtel, celui de la Rive, qui fait l'hôtel des délégations (la narration le dit), et elle
+# lit `flag(h9_loin)`, que la ville ne tient pour vrai que pendant le voyage.
+#
+# La mise en scène. Une pièce garde ses occupants du moment (le patron, les habitués, les
+# clients) : un acteur `cache: true` qui n'entre jamais les en retire le temps de la scène.
+# Dehors, les personnages de la ville qui passent ne se retirent pas : on se tient à l'écart
+# de la porte, et une conversation dehors, qui prend les places de la ville devant la porte,
+# se tient à une heure où personne d'autre n'y est. Les décalages `[dx, dy]` d'une pièce
+# visent l'accès de ses objets (l'autel de Saint-Aubin à [-2, -9] du centre, l'escalier du
+# hall de la Rive à [-9, -8], sa cabine à [-9, -3]) ; une voix nouvelle se tient sur le
+# plancher, jamais sur une place qu'un client ou un habitué peut occuper.
+cinematiques:
+  # ════════════════════════════════════════ l'introduction (janvier 2029)
+  # Le matin, la boulangerie avant l'ouverture ; le soir, Saint-Aubin et le zinc. Elle mène
+  # à la veillée (la première carte) sans la jouer.
+  - id: h9.ci.intro
+    quand: debut
+    roles: [selectionneur]
+    si: "flag(histoire_h9)"
+    titre: "Vingt degrés dedans"
+    sous: "Aubérive, janvier 2029"
+    lieu: boulangerie_residentiel
+    tranche: matin
+    suite: h9.ci.intro_2
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: mariejo, place: boulangere}
+      - {qui: sauvan, nom: "Un jeune homme en gris", place: porte, cache: true}
+      # avant l'ouverture : ni vendeuse ni clients
+      - {qui: commercant, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {musique: ville_nuit}
+      - {narration: "Rue des Lilas, six heures moins dix. Moins quatre degrés. Chez Marçais, le fournil tourne depuis trois heures ; le rideau de fer est levé à mi-hauteur, pour toi {pg, select, f{seule} other{seul}}."}
+      - {qui: toi, va: client_1}
+      - {qui: mariejo, dit: "Votre baguette. La première de la fournée ; les autres ne sont pas encore sorties."}
+      - {narration: "Sur le comptoir, Le Quotidien du jour, plié en deux. En une, ta photo ; dessous, en plus petit : « Al-Dorado : le Dôme sera prêt en mars. »"}
+      - {narration: "Marie-Jo pose la baguette en travers du journal, sur ton visage. Sans y faire attention, ou en y faisant attention."}
+      - {qui: mariejo, dit: "Mon fils rentre ce soir. Par la route, depuis l'aéroport. Sept heures, à Saint-Aubin."}
+      - {qui: toi, pense: "Je pars là-bas dans vingt-trois mois. Lui en revient ce soir."}
+      - {qui: sauvan, entre: client_2}
+      - {narration: "Six heures pile. Un jeune homme en manteau gris retient la clochette de la main en entrant, pour qu'elle ne sonne pas. Il a l'air de ne pas avoir dormi, et de ne pas en avoir besoin."}
+      - {qui: sauvan, dit: "Un croissant, s'il vous plaît. La veillée, c'est bien ce soir à sept heures, à Saint-Aubin ?"}
+      - {qui: mariejo, dit: "Vous le connaissiez ?"}
+      - {qui: sauvan, dit: "Je représente des gens qui sont tristes, madame Marçais. Très tristes."}
+      - {qui: sauvan, regarde: toi}
+      - {qui: sauvan, dit: "Bonne journée, {toi}."}
+      - {qui: sauvan, sort: true}
+      - {qui: mariejo, dit: "Il a payé avec un billet neuf. Ici, personne n'a de billets neufs."}
+      - {fondu: "Le soir. Église Saint-Aubin."}
+
+  - id: h9.ci.intro_2
+    quand: suite
+    lieu: eglise
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: gendarme, qui: portier, nom: "Le gendarme", place: [-1, -7]}
+      - {qui: sauvan, nom: "Un jeune homme en gris", place: banc_1}
+      - {qui: mariejo, place: porte, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {musique: sombre}
+      - {narration: "Église Saint-Aubin. Devant l'autel, sur deux tréteaux, une caisse de zinc aux vis neuves, toutes tournées dans le même sens. Un seul cierge. La nef est plus froide que la rue."}
+      - {qui: toi, va: banc_3}
+      - {qui: gendarme, regarde: toi}
+      - {qui: gendarme, dit: "La famille n'est pas encore arrivée, {pg, select, f{madame} other{monsieur}}. On m'a prévenu qu'il y aurait du monde de la Fédération."}
+      - {qui: toi, pense: "Je suis {pg, select, f{celle} other{celui}} qui doit emmener {groupe} garçons là où il est mort."}
+      - {qui: sauvan, geste: ecrit}
+      - {narration: "Sur un autre banc, le jeune homme de ce matin. Il ne prie pas. Il compte les présents, et il les écrit."}
+      - {qui: gendarme, dit: "J'ai ordre de rester jusqu'à l'enterrement. Personne ne touche aux vis."}
+      - {pause: 900}
+      - {qui: mariejo, entre: [-3, -7]}
+      - {narration: "Marie-Jo Marçais entre en manteau sur son tablier. Elle tient contre elle un sac de l'aéroport, scellé lui aussi ; sous le plastique, une chemise de travail, pliée."}
+      - {qui: mariejo, geste: tete_basse}
+      - {narration: "Elle s'arrête à un pas du zinc, sans le toucher. Puis elle se retourne vers le gendarme."}
+
+  # ═══════════════════════════════════════════════════════════════ 2029
+  # Le brassard (le prologue, au vestiaire) : après, le téléphone. Le frère de Noa est sur
+  # le toit du Dôme.
+  - id: h9.ci.chemise
+    quand: carte
+    carte: sl.h9.pro5_brassard
+    moment: apres
+    roles: [selectionneur]
+    si: "flag(histoire_h9)"
+    lieu: stade
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: tableau}
+      - {qui: vandel, place: banc_3}
+      - {id: frere, qui: inconnu, nom: "Le frère de Noa", cache: true}
+      - {qui: brehaut, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "Le vestiaire de la Rive s'est vidé. Noa Vandel est resté sur le banc, le brassard noir posé sur le genou. Son téléphone vibre : un numéro d'Al-Dorado."}
+      - {qui: vandel, geste: telephone}
+      - {qui: vandel, dit: "Tu es où ? On entend le vent."}
+      - {qui: frere, dit: "Sur le toit. Trente et un degrés, en janvier. On coule la dalle de la tribune ouest."}
+      - {qui: vandel, dit: "Marie-Jo a taillé un brassard dans la chemise de Kévin. Je vais le porter."}
+      - {qui: frere, dit: "Ne fais pas le héros, Noa. Ici, les héros, on les renvoie par avion. Dans du zinc."}
+      - {qui: vandel, geste: tete_basse}
+      - {qui: frere, dit: "Le chef arrive, je raccroche. Embrasse maman."}
+      - {qui: vandel, geste: debout}
+      - {qui: vandel, regarde: toi}
+      - {qui: vandel, dit: "Mon frère travaille sur le toit du Dôme. Il dit que de là-haut on voit la mer, et qu'on n'a pas le droit de la regarder."}
+      - {narration: "Il range le téléphone. Il garde le brassard dans sa main fermée jusqu'à ce que la minuterie du couloir s'éteigne."}
+
+  # Le vestiaire du barrage (créneau 17), quand le ministre descendra : la veille, on
+  # mesure la pièce comme une salle des fêtes.
+  - id: h9.ci.ministre
+    quand: drapeau
+    drapeau: h9_ministre_vestiaire
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_loin)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: coach}
+      - {qui: sauvan, place: milieu}
+      - {id: garde, qui: inconnu, nom: "L'officier de sécurité", place: doc}
+      - {qui: vandel, place: banc_2}
+      - {qui: brehaut, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "La veille du barrage retour. Dans le vestiaire de la Rive, un homme en costume sombre mesure la pièce à grands pas, comme un géomètre."}
+      - {qui: garde, va: tableau}
+      - {qui: sauvan, dit: "Le ministre entrera par ici. Il fera le tour des bancs dans ce sens-là, et la photo sera prise devant le tableau."}
+      - {qui: garde, dit: "Personne ne se lève avant lui. Personne ne se rassoit avant lui non plus."}
+      - {qui: vandel, regarde: sauvan}
+      - {qui: sauvan, dit: "Les casiers seront fermés. Les affaires personnelles aussi, cela va sans dire."}
+      - {narration: "Noa ferme son casier, met le cadenas, et tire dessus deux fois, pour qu'on l'entende."}
+      - {qui: sauvan, regarde: toi}
+      - {qui: sauvan, dit: "Merci de votre compréhension, {toi}. Le ministre a été très touché que vous disiez oui."}
+      - {qui: garde, geste: genou}
+      - {narration: "L'officier trace une croix à la craie sur le carrelage, devant le tableau. L'endroit exact où le ministre s'arrêtera."}
+
+  # ═══════════════════════════════════════════════════════════════ 2030
+  # Les deux listes (« Ma liste, avec Noa ») : la cabine du hall de la Rive, et la porte
+  # qu'on ne ferme jamais.
+  - id: h9.ci.cabine
+    quand: drapeau
+    drapeau: h9_liste_a_moi
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_loin)"
+    lieu: hotel
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: bagages}
+      - {qui: sauvan, place: [-9, -3]}
+      - {qui: vence, place: salon_1}
+      - {id: cadreur, qui: passant, nom: "Le cadreur", place: [5, -6]}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "Le hall de l'hôtel de la Rive. Au salon, Télé-Stade déroule des câbles pour un plateau. Au fond, la porte de la cabine téléphonique est restée entrouverte."}
+      - {qui: sauvan, geste: telephone}
+      - {qui: sauvan, dit: "Non. {pg, select, f{Elle} other{Il}} a gardé le capitaine. Je sais ce qu'on avait dit."}
+      - {qui: sauvan, dit: "Oui. Je dirai qu'il n'est plus fatigué. On se repose vite, à cet âge-là."}
+      - {qui: vence, regarde: sauvan}
+      - {qui: cadreur, dit: "On tourne ?"}
+      - {qui: vence, dit: "Pas encore. Je sais qui il appelle. Je veux savoir combien de temps il tient."}
+      - {qui: sauvan, geste: debout}
+      - {qui: sauvan, va: [1, 1]}
+      - {qui: sauvan, dit: "Votre liste est très belle, {toi}. Je l'ai fait encadrer, au ministère."}
+      - {qui: sauvan, sort: true}
+      - {narration: "La porte de la cabine bat encore un moment. Vence fait signe à son cadreur de filmer la porte. Rien que la porte."}
+
+  # La cave de Josiane (créneaux 5-6), quand on ne l'a pas déjà portée : au club-house, le
+  # mardi, la machine à écrire et la lampe de poche.
+  - id: h9.ci.cave
+    quand: carte
+    prefixe: "sl.h9.b2_cave"
+    moment: avant
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(vl_h9_cave)"
+    lieu: clubhouse
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: secretaire}
+      - {id: secretaire, qui: passante, nom: "La secrétaire du club", place: guichet}
+      - {qui: passant, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "Le club-house, un mardi. Madame Josiane est revenue s'asseoir à son ancien bureau, devant une machine à écrire que personne n'a eu le cœur de descendre à la cave."}
+      - {qui: secretaire, dit: "Elle vient tous les mardis. Elle tape une lettre, et puis elle la déchire. On la laisse faire."}
+      - {qui: josiane, geste: ecrit}
+      - {qui: toi, va: [-4, 3]}
+      - {qui: josiane, regarde: toi}
+      - {qui: josiane, dit: "Vous me raccompagnez, {toi} ? J'habite à deux rues. Mes jambes n'en font plus qu'une."}
+      - {qui: josiane, dit: "Et j'ai une cave. À mon âge, on ne descend plus un escalier sans quelqu'un pour le remonter."}
+      - {narration: "Elle retire la feuille de la machine, la plie en quatre sans la relire, et la glisse dans son sac à main, contre une lampe de poche."}
+      - {qui: secretaire, dit: "Vous ne la déchirez pas, aujourd'hui, madame Josiane ?"}
+      - {qui: josiane, dit: "Aujourd'hui, non."}
+      - {qui: josiane, va: [-3, 4]}
+      - {narration: "Elle prend ton bras pour la première marche, et ne le lâche plus. Elle pèse moins que son sac."}
+
+  # Le fisc, quand on a appelé une avocate : jeudi, huit heures, l'huissier lit sa liste devant
+  # la boulangerie, puis vient y chercher son témoin. La saisie, devant la rue des Lilas.
+  - id: h9.ci.huissier
+    quand: carte
+    carte: sl.h9.re.fisc
+    moment: apres
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_fisc) && !flag(h9_fisc_suspendu)"
+    lieu: boulangerie_residentiel
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: client_1}
+      - {qui: mariejo, place: boulangere}
+      - {qui: sacha_fille, place: client_2}
+      - {id: huissier, qui: inconnu, nom: "L'huissier", place: porte, cache: true}
+      - {qui: commercant, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "Jeudi, huit heures. Devant la boulangerie, un huissier en pardessus lit une liste à voix haute, comme un menu. Derrière lui, la porte de ton immeuble est grande ouverte."}
+      - {qui: huissier, entre: visiteur}
+      - {qui: huissier, dit: "Avantages en nature non déclarés, reçus d'une compagnie étrangère. Je saisis ce qui figure à l'inventaire, en présence de témoins."}
+      - {qui: huissier, regarde: mariejo}
+      - {qui: huissier, dit: "Il me faut un témoin majeur. Madame, vous servez ?"}
+      - {qui: mariejo, dit: "Plus maintenant."}
+      - {qui: mariejo, va: [2, 2]}
+      - {narration: "Par la vitrine, un déménageur sort de ton immeuble avec un carton fermé au ruban adhésif. Il le porte comme on porte quelque chose de fragile, qui ne l'est pas."}
+      - {qui: sacha_fille, dit: "Ils n'ont pas sonné. Le serrurier a mis quatre minutes. Je les ai comptées."}
+      - {qui: huissier, dit: "Signez ici, madame Marçais. En capitales, pour le nom."}
+      - {qui: mariejo, geste: ecrit}
+      - {narration: "Marie-Jo signe en capitales, en appuyant, et rend le stylo sans le regarder. Le camion démarre. Sacha compte les cartons à voix basse, le front contre la vitre."}
+
+  # Al-Dorado, la première nuit (le départ a posé `h9_depart`) : l'hôtel des délégations.
+  # Le hall de la Rive tient ce rôle ; la narration le dit.
+  - id: h9.ci.delegations
+    quand: drapeau
+    drapeau: h9_depart
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_loin)"
+    titre: "Al-Dorado"
+    sous: "Décembre 2030"
+    lieu: hotel
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: brehaut, place: legruet}
+      - {qui: sauvan, place: [-9, -3]}
+      - {qui: mbako, place: porte, cache: true}
+      - {qui: vence, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "L'hôtel des délégations, deux heures du matin. Un hall comme tous les halls : un comptoir, des clés, une moquette qui mange les pas. Dix-huit degrés. Dehors, trente et un."}
+      - {qui: toi, va: bagages}
+      - {qui: brehaut, dit: "Ils ont réglé la climatisation des chambres au plus froid. Pour qu'on dorme, a dit le directeur. Je n'ai jamais eu aussi froid en décembre."}
+      - {qui: sauvan, geste: telephone}
+      - {qui: sauvan, dit: "Oui. Arrivés. Tous. Personne n'a parlé à la presse."}
+      - {qui: mbako, entre: [2, -2]}
+      - {narration: "Un homme en survêtement vert traverse le hall, une bouteille d'eau à la main, et s'arrête net devant Bréhaut."}
+      - {qui: mbako, dit: "Titi."}
+      - {qui: brehaut, dit: "Lian."}
+      - {qui: mbako, regarde: toi}
+      - {qui: mbako, dit: "Le Kambara dort au cinquième, vous au huitième. Trois étages entre nous, au cas où on se parlerait. Bonne nuit, coach."}
+      - {qui: mbako, va: [-9, -8]}
+      - {narration: "Bréhaut garde son manteau sur les genoux. Sauvan raccroche, compose un autre numéro, et attend que tu sois dans l'escalier pour parler."}
+
+  # Le tunnel (créneau 17), quand le capitaine est du voyage : quatre heures avant le match
+  # d'ouverture, le hall des délégations. Le doute, avant les dix secondes.
+  - id: h9.ci.avant_tunnel
+    quand: carte
+    prefixe: "sl.h9.b6_tunnel"
+    moment: avant
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_loin) && !flag(h9_liste_ministere)"
+    lieu: hotel
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vandel, place: salon_2}
+      - {qui: brehaut, place: legruet}
+      - {qui: sauvan, place: [3, 3]}
+      - {qui: vence, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "Al-Dorado, quatre heures avant le match d'ouverture. Devant l'hôtel, le car de la délégation tourne, moteur et climatisation à fond. Dans le hall, personne ne parle."}
+      - {qui: vandel, geste: tete_basse}
+      - {narration: "Noa Vandel refait ses lacets pour la troisième fois, un pied sur le fauteuil. Sa main droite revient sans cesse à son bras gauche, au-dessus du coude."}
+      - {qui: toi, va: bagages}
+      - {qui: brehaut, dit: "Dans le tunnel, on a dix secondes, et on n'entend rien. Si vous avez quelque chose à décider, décidez-le ici."}
+      - {qui: sauvan, regarde: toi}
+      - {qui: sauvan, dit: "Le ministre sera dans la loge, à côté du chef de l'émirat. Il a fait dire qu'il était fier. Il le fera redire après le match, selon le match."}
+      - {qui: vandel, geste: debout}
+      - {qui: vandel, regarde: toi}
+      - {qui: vandel, dit: "Coach. Quoi qu'il arrive dans le tunnel, je chante l'hymne. Faux, mais je le chante."}
+      - {qui: vandel, va: porte}
+      - {narration: "La porte vitrée s'ouvre sur le perron. La chaleur entre d'un coup, comme une main posée à plat sur le visage. Noa sort le premier."}
+
+  # ═══════════════════════════════════════════════════════════════ 2031
+  # La tente blanche (le retour : le juge a signé) : mardi soir, on la replie. Le gendarme
+  # de 2029 a défait les vis.
+  - id: h9.ci.tente
+    quand: drapeau
+    drapeau: h9_exhumation
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_loin)"
+    lieu: cimetiere
+    tranche: aprem
+    meteo: neige
+    acteurs:
+      - {qui: toi, place: [1, 3]}
+      - {id: gendarme, qui: portier, nom: "Le gendarme", place: porte, cache: true}
+      - {qui: mariejo, place: porte, cache: true}
+    etapes:
+      - {narration: "Mardi, en fin d'après-midi, devant la grille du cimetière. Une neige fine. Au fond, près du caveau du Racing, deux employés replient une tente blanche."}
+      - {qui: gendarme, entre: [2, 2]}
+      - {qui: gendarme, regarde: toi}
+      - {qui: gendarme, dit: "Vous ne me reconnaissez pas. En 2029, c'est moi qui gardais les vis, à Saint-Aubin."}
+      - {qui: gendarme, dit: "Ce matin, j'ai regardé le marbrier les dévisser, une par une. Elles étaient toutes tournées dans le même sens."}
+      - {qui: mariejo, entre: [3, 1]}
+      - {narration: "Marie-Jo sort la dernière, les mains vides. Sa baguette est restée là-bas, posée en travers du marbre."}
+      - {qui: mariejo, dit: "Il avait les mains de son père. Je l'ai reconnu aux mains."}
+      - {qui: gendarme, geste: tete_basse}
+      - {qui: mariejo, regarde: toi}
+      - {qui: mariejo, dit: "Vous viendrez demain, {toi} ? Pour le pain. Pas pour ici."}
+      - {qui: gendarme, va: [6, 4]}
+      - {narration: "Le gendarme salue Marie-Jo d'un doigt à la visière et s'éloigne sur le trottoir, sans attendre qu'elle le voie."}
+
+  # Le bureau (créneaux 8-9) : le conseiller attend au salon de la Rive, deux tasses, la
+  # serviette fermée. La directrice de l'information regarde.
+  - id: h9.ci.bureau
+    quand: carte
+    prefixe: "sl.h9.c2_bureau"
+    moment: avant
+    roles: [selectionneur]
+    si: "flag(histoire_h9)"
+    lieu: hotel
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vence, place: salon_1}
+      - {qui: sauvan, place: salon_2}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "L'hôtel de la Rive, un après-midi de 2031. Au salon, Aymeric Sauvan attend, deux tasses devant lui, sa serviette de cuir fermée sur les genoux."}
+      - {qui: vence, dit: "Il est là depuis midi. Il n'a pas touché à son café. Au ministère, on apprend à attendre en pleine lumière."}
+      - {qui: toi, va: bagages}
+      - {qui: vence, dit: "Méfiez-vous des gens qui vous attendent sans impatience, {toi}."}
+      - {qui: vence, sort: true}
+      - {qui: sauvan, regarde: toi}
+      - {qui: sauvan, dit: "Vous voilà. Asseyez-vous. Ce que j'ai à vous dire ne se dit pas debout."}
+      - {narration: "Il pousse une des deux tasses vers la chaise vide. Le café est froid depuis longtemps ; il le sait, et il la pousse quand même."}
+
+  # La minute (créneau 17, toutes les fins) : l'arbitre au vestiaire, avant le coup d'envoi.
+  - id: h9.ci.minute
+    quand: carte
+    prefixe: "sl.h9.c3_minute"
+    moment: avant
+    roles: [selectionneur]
+    si: "flag(histoire_h9)"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: coach}
+      - {qui: brehaut, place: tableau}
+      - {id: arbitre, qui: inconnu, nom: "L'arbitre", place: porte, cache: true}
+      - {qui: vandel, cache: true}
+      - {qui: passant, cache: true}
+      - {qui: passante, cache: true}
+      - {qui: ancien, cache: true}
+      - {qui: fan, cache: true}
+    etapes:
+      - {narration: "Stade de la Rive, une heure avant le coup d'envoi. Sur le banc du milieu, un carton de brassards noirs réglementaires, envoyés par la Fédération. Personne n'y a touché."}
+      - {qui: arbitre, entre: milieu}
+      - {qui: arbitre, dit: "La Fédération demande une minute pour monsieur Vecchio. Une seule."}
+      - {qui: brehaut, dit: "Gigi n'en voulait pas, de minute. Il disait qu'on perd déjà assez de temps dans un match."}
+      - {qui: arbitre, dit: "On m'a dit une minute. Je la compte avec ma montre, ou avec le stade ?"}
+      - {qui: brehaut, regarde: toi}
+      - {qui: toi, pense: "Dix secondes dans le tunnel du Dôme. Ici, on m'en donne soixante, devant tout le monde."}
+      - {narration: "L'arbitre prend un brassard dans le carton, le soupèse, et le remet à sa place."}
+      - {qui: arbitre, dit: "Je m'arrêterai quand le stade s'arrêtera. Pas avant."}
+      - {qui: arbitre, sort: true}
+      - {narration: "Bréhaut pousse le carton du bout du pied jusqu'au milieu du vestiaire, là où chacun devra passer devant."}
+
+  # ═════════════════════════════════════════════════ 2032, l'épilogue
+  # Le Dôme démonté (la dernière carte du livre) : un dimanche, rue des Lilas, Sacha et son
+  # classeur, la télévision sans le son.
+  - id: h9.ci.demontage
+    quand: carte
+    carte: sl.h9.d2_dome_encore
+    moment: avant
+    roles: [selectionneur]
+    si: "flag(histoire_h9)"
+    lieu: appartement
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: table_1}
+      - {qui: sacha_fille, place: table_2}
+      - {qui: camille, cache: true}
+    etapes:
+      - {narration: "Un dimanche de décembre, rue des Lilas. Sacha a apporté deux plats et son classeur. La télévision est allumée sans le son, sur une image toute blanche : un toit."}
+      - {qui: sacha_fille, geste: ecrit}
+      - {qui: sacha_fille, dit: "Quatre cent soixante-deux. Je croyais avoir fini."}
+      - {qui: sacha_fille, dit: "Le dernier n'a pas construit le Dôme. Il le démontait. Ils le démontent en décembre, pour avoir moins chaud."}
+      - {qui: toi, pense: "Le classeur ne grossit plus que d'une page à la fois. Elle la glisse quand même, chaque dimanche, devant mon assiette."}
+      - {qui: sacha_fille, regarde: toi}
+      - {qui: sacha_fille, dit: "Tu montes le son, {toi} ? C'est eux, à la télé."}
+      - {qui: toi, dit: "Laisse. Je sais ce qu'ils disent."}
+      - {narration: "Sur l'écran, des grues démontent un toit blanc, pièce par pièce, au-dessus d'une pelouse parfaite. Personne ne monte le son."}
+
+conversations:
+  # 2029 : la file de la boulangerie, les premières semaines.
+  - id: h9.cv.file
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && annee == 2029"
+    lieu: boulangerie_residentiel
+    tranches: [matin, midi]
+    qui:
+      - {qui: passante, place: client_1}
+      - {qui: ancien, place: client_2}
+    repliques:
+      - {qui: passante, dit: "{pg, select, f{La sélectionneuse} other{Le sélectionneur}} prend sa baguette ici. Tous les matins, à six heures et demie."}
+      - {qui: ancien, dit: "Et Marie-Jo la lui sert ? Moi, je lui ferais payer double."}
+      - {qui: passante, dit: "Elle la lui sert. Et elle demande si {pg, select, f{elle} other{il}} ira. Tous les matins, la même question."}
+      - {qui: ancien, dit: "Le petit, ils l'ont rendu fermé. Comme une lettre qu'on n'a pas le droit d'ouvrir."}
+      - {qui: passante, dit: "Ma sœur fait le ménage à l'aéroport. Elle dit que les caisses de là-bas arrivent toujours la nuit."}
+
+  # 2029-2030 : la buvette du kop, avant le départ.
+  - id: h9.cv.buvette_toit
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_depart)"
+    lieu: buvette
+    tranches: [soir, nuit]
+    qui:
+      - {qui: gege, place: fond}
+      - {qui: vecchio, place: zinc_1}
+      - {qui: fan, place: zinc_2}
+    repliques:
+      - {qui: fan, dit: "Gégé, on fait quoi, pour décembre ? On loue un car pour aller voir l'écran de la place ?"}
+      - {qui: gege, dit: "Le virage ne bouge pas. Soixante ans de pluie : on ne va pas applaudir un toit."}
+      - {qui: vecchio, dit: "Moi, je regarderai. Je veux voir s'ils transpirent."}
+      - {qui: fan, dit: "Et {pg, select, f{la sélectionneuse, vous croyez qu'elle} other{le sélectionneur, vous croyez qu'il}} y va ?"}
+      - {qui: gege, dit: "{pg, select, f{Elle} other{Il}} y va. La question, c'est avec quoi dans la poche."}
+
+  # 2029-2030 : le café de la Mairie, la table du ministère.
+  - id: h9.cv.deux_tasses
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_depart)"
+    lieu: cafe_mairie
+    tranches: [aprem, soir]
+    qui:
+      - {id: patron, qui: commercant, nom: "Le patron", place: patron}
+      - {qui: ancien, place: [1, 2]}
+    repliques:
+      - {qui: ancien, dit: "Le jeune homme des deux tasses n'est pas venu, cet après-midi ?"}
+      - {qui: patron, dit: "Il ne vient que le matin. Il commande pour deux, il paie pour deux. Le deuxième ne reste jamais."}
+      - {qui: ancien, dit: "Et ça ne le gêne pas ?"}
+      - {qui: patron, dit: "Il garde les tickets. Le ministère rembourse aussi les cafés qu'on ne boit pas."}
+
+  # La berline blanche gardée, rue des Lilas, avant le fisc.
+  - id: h9.cv.berline
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_voiture_gardee) && !flag(h9_fisc) && !flag(h9_depart)"
+    lieu: voiture
+    tranches: [matin, aprem]
+    qui:
+      - {id: gamin, qui: enfant, nom: "Un gamin"}
+      - {id: voisin, qui: ancien, nom: "Un voisin"}
+    repliques:
+      - {qui: gamin, dit: "Elle ne fait pas de bruit. Même en marche arrière."}
+      - {qui: voisin, dit: "C'est fait pour. Les cadeaux qui font du bruit, on les rend."}
+      - {qui: gamin, dit: "Elle est à qui ?"}
+      - {qui: voisin, dit: "D'après la plaque, {pg, select, f{à la sélectionneuse} other{au sélectionneur}}. D'après la carte sur le siège, à un pays."}
+
+  # Le local de l'association, au-dessus du kiosque du quai, tant qu'il n'est pas forcé.
+  - id: h9.cv.vitre
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && !flag(h9_local_force) && !flag(h9_depart)"
+    lieu: kiosque
+    tranches: [soir]
+    qui:
+      - {qui: sacha_fille}
+      - {id: benevole, qui: passante, nom: "Une bénévole"}
+    repliques:
+      - {qui: benevole, dit: "Un de plus depuis vendredi. Un couvreur, vingt-neuf ans. Une chute."}
+      - {qui: sacha_fille, dit: "En noir. Le rouge, c'est pour ceux dont on n'a pas encore le nom."}
+      - {qui: benevole, dit: "{pg, select, f{Ta mère} other{Ton père}} est en bas, devant le kiosque. {pg, select, f{Elle} other{Il}} lit les feuilles sur la vitre."}
+      - {qui: sacha_fille, dit: "{pg, select, f{Elle} other{Il}} les lit toutes, maintenant. Avant, {pg, select, f{elle} other{il}} les comptait."}
+      - {qui: benevole, dit: "C'est mieux ?"}
+      - {qui: sacha_fille, dit: "C'est plus long."}
+
+  # Les clés de la terrasse, gardées : l'agence Tessandier.
+  - id: h9.cv.terrasse
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_cles_gardees) && !flag(h9_fisc) && !flag(h9_depart)"
+    lieu: agence
+    tranches: [matin, aprem]
+    qui:
+      - {qui: clemence, place: clemence}
+      - {id: client, qui: passant, nom: "Un client", place: [1, 2]}
+    repliques:
+      - {qui: client, dit: "Le dernier étage du quai, avec la terrasse, il est encore libre ?"}
+      - {qui: clemence, dit: "Il est occupé. Enfin, ses clés dorment chez quelqu'un."}
+      - {qui: client, dit: "Chez qui ?"}
+      - {qui: clemence, dit: "Chez quelqu'un qui ne monte jamais. Les gens qu'on loge gratuitement ne montent jamais voir la vue."}
+
+  # Avant le départ : les joueurs, au vestiaire, quand le brassard a été filmé.
+  - id: h9.cv.vestiaire
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_brassard_photo) && !flag(h9_depart)"
+    lieu: stade
+    tranches: [matin, aprem]
+    qui:
+      - {id: defenseur, qui: passant, nom: "Un défenseur", place: [-2, 1]}
+      - {id: gardien, qui: fan, nom: "Le troisième gardien", place: [-1, 3]}
+    repliques:
+      - {qui: defenseur, dit: "Le capitaine le porte même à l'entraînement, maintenant. À la télé, ils le filment de dos."}
+      - {qui: gardien, dit: "Et nous, au Dôme, on le porte ?"}
+      - {qui: defenseur, dit: "Toi, tu ne joueras pas une minute là-bas. Tu peux porter ce que tu veux sur le banc."}
+      - {qui: gardien, dit: "Justement. Sur le banc, la caméra n'a que ça à faire."}
+
+  # 2031 : L'Écho, après la page de 2010 publiée.
+  - id: h9.cv.heure
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_page_lea) && !flag(h9_loin)"
+    lieu: echo
+    tranches: [matin, aprem]
+    qui:
+      - {qui: lea, place: journaliste}
+      - {id: stagiaire, qui: passant, nom: "Le stagiaire", place: archives}
+    repliques:
+      - {qui: stagiaire, dit: "Le ministère a rappelé. Trois fois. Ils veulent savoir d'où vient la page."}
+      - {qui: lea, dit: "De décembre 2010. Dis-leur ça : c'est vrai, et ça ne les aide pas."}
+      - {qui: stagiaire, dit: "Ils demandent aussi si {pg, select, f{la sélectionneuse l'avait vue} other{le sélectionneur l'avait vue}} avant."}
+      - {qui: lea, dit: "Personne ne l'avait vue. Elle dormait dans une cave, entre deux annuaires."}
+
+  # 2031 : la mairie, la plaque de Madame Aubert, mise en examen.
+  - id: h9.cv.plaque
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_aubert_examen)"
+    lieu: mairie
+    tranches: [aprem]
+    qui:
+      - {id: huissier, qui: commercant, nom: "L'huissier de la mairie", place: huissier}
+      - {id: conseillere, qui: passante, nom: "Une conseillère", place: [1, 2]}
+    repliques:
+      - {qui: conseillere, dit: "Encore la une du Quotidien, sur la plaque de madame Aubert ?"}
+      - {qui: huissier, dit: "Tous les matins. Je l'enlève à huit heures ; à neuf, elle est revenue."}
+      - {qui: conseillere, dit: "Vous savez qui fait ça ?"}
+      - {qui: huissier, dit: "Je sais l'heure. Le nom, je ne tiens pas à le savoir."}
+
+  # Après la minute (la branche qui mène à l'épilogue) : la buvette, et le but vide du kop.
+  - id: h9.cv.deux_minutes
+    roles: [selectionneur]
+    si: "flag(histoire_h9) && flag(h9_vecchio_mort)"
+    lieu: buvette
+    tranches: [soir]
+    qui:
+      - {qui: gege, place: fond}
+      - {qui: fan, place: zinc_1}
+    repliques:
+      - {qui: fan, dit: "Deux minutes, Gégé. L'arbitre en a rajouté une. Gigi n'en voulait aucune."}
+      - {qui: gege, dit: "L'arbitre ne l'a pas connu. Il a compté avec le stade, c'est tout."}
+      - {qui: fan, dit: "Et toi, tu as compté ?"}
+      - {qui: gege, dit: "Moi, je regardais le but du kop. Personne dedans. Pendant deux minutes, c'était encore le sien."}
