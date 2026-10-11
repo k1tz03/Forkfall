@@ -256,6 +256,6 @@ activites:
       } finally {
         tmp.deleteSync(recursive: true);
       }
-    });
+    }, timeout: const Timeout(Duration(minutes: 3)));
   });
 }
