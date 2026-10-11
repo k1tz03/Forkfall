@@ -293,6 +293,13 @@
     clearTimeout(cartoucheT);
     cartoucheT = setTimeout(function () { el.classList.remove("on"); }, 5200);
   }
+  // une carte s'ouvre : le nom du lieu s'efface (il se lisait par-dessus son texte quand la
+  // carte attendait dans la pièce où l'on vient d'entrer), et ne revient pas après elle
+  function cacherCartouche() {
+    clearTimeout(cartoucheT);
+    var el = $("villeLieu");
+    if (el) el.classList.remove("on");
+  }
   // à chaque image : les gens de la pièce suivent l'heure
   function majDedans(dt, ts) {
     if (!dedans) return;

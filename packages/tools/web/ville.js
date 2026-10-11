@@ -1694,6 +1694,7 @@
     var cav = vue && vue.card && !CINE ? cineDeCarte(vue.card.id, "avant") : null;
     if (cav) { carteOn = false; jouerCine(cav, montrerCarte); return; }
     fermerPorte();
+    cacherCartouche();
     carteOn = true;
     heros.chemin = null;
     decorAilleurs(vue);
