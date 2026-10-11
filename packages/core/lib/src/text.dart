@@ -23,6 +23,7 @@ import 'world.dart';
 const Set<String> kKnownPlaceholders = {
   'joueur', 'protagoniste', 'prenom', 'nom', 'NOM', 'initiales', 'toi', 'Toi', 'numero',
   'rang', 'pts', 'journee', 'annee', 'saison', 'objectif', 'division', 'CLUB', 'VILLE', 'age',
+  'groupe', 'Groupe',
   'club', 'clubShort', 'rival', 'president', 'capitaine', 'ville', 'coach', 'camille_metier', 'passe_titre', 'fil_rouge',
   // Fournis par le moteur au moment de l'écriture (Une, journal, fin).
   'tenu', 'TENU', 'perso', 'perso_tic', 'objectif_titre', 'fin_titre',
@@ -60,6 +61,10 @@ String formatText(
     'objectif': objectiveLabelFr(s.objectiveTarget),
     'division': 'Division ${s.world.division}',
     'age': '${s.age}',
+    // Le groupe d'une sélection : vingt-trois noms, vingt-six à partir de 2011
+    // (Chambre 12 compte vingt-six doubles au tableau des clés).
+    'groupe': s.year < 2011 ? 'vingt-trois' : 'vingt-six',
+    'Groupe': s.year < 2011 ? 'Vingt-trois' : 'Vingt-six',
     ...e.named,
     // `{age_<id>}` : l'âge d'un personnage (spec variété §1.10) — « J'ai
     // {age_vecchio} ans » se met à jour tout seul d'une saison à l'autre.

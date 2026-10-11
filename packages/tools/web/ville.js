@@ -909,6 +909,9 @@
     var e = (vue && vue.entities) || {}, r = valeur("rang");
     var M = { prenom: e.prenom || "", nom: e.nom || "", club: e.club || "le club", ville: e.ville || "Aubérive", rival: e.rival || "",
       rang: r == null ? "" : r === 1 ? "1er" : r + "e", annee: String((vue && vue.year) || ""), division: "Division " + ((vue && vue.division) || 1) };
+    // le groupe d'une sélection, selon l'époque (le moteur dit pareil : text.dart)
+    var an = (vue && vue.year) || 1990;
+    M.groupe = an < 2011 ? "vingt-trois" : "vingt-six"; M.Groupe = an < 2011 ? "Vingt-trois" : "Vingt-six";
     for (var k in extra || {}) M[k] = extra[k];
     return articles(String(t).replace(/\{(\w+)\}/g, function (m, cle) { return M[cle] != null ? M[cle] : m; }));
   }
@@ -2680,7 +2683,7 @@
     if (pourquoiPas(a, true)) return;
     S.francs += a.francs || 0;
     S.jourFaits[a.id] = (S.jourFaits[a.id] || 0) + 1;
-    var texte = a.texte;
+    var texte = remplir(a.texte);
     if (a.jauges && S.faits[a.id] !== S.semaine) {
       S.faits[a.id] = S.semaine;
       vue = coquille.activite(a.id);
