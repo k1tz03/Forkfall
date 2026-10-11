@@ -2150,7 +2150,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   const sons = {'carte_arrivee', 'reaction', 'nouvelle', 'une', 'match_but', 'match_encaisse', 'sifflet_final', 'tampon_fin',
     'palier_haut', 'palier_bas', 'promesse', 'argent', 'alarme'};
   const musiques = {'accueil', 'ville_jour', 'ville_nuit', 'match', 'sombre', 'fin', 'depart'};
-  const quands = {'debut', 'drapeau', 'carte', 'lieu', 'semaine'};
+  const quands = {'debut', 'drapeau', 'carte', 'lieu', 'semaine', 'suite'};
   final cardIdsDeLaVille = <String>{};
   for (final c in cards) {
     cardIdsDeLaVille.add(c['id'].toString());
@@ -2220,6 +2220,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (tranche != null) out['tranche'] = tranche;
     if (e['titre'] != null) out['titre'] = txt(e, 'titre', where, 40);
     if (e['sous'] != null) out['sous'] = txt(e, 'sous', where, 60);
+    // la suite, ailleurs : la scène qui s'enchaîne (son `quand` est `suite`)
+    if (e['suite'] != null) out['suite'] = e['suite'].toString();
     // la distribution : qui est en scène, et où
     final acteurs = <Map<String, dynamic>>[];
     final ids0 = <String>{'toi'};
@@ -2284,6 +2286,38 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (etapes.where((x) => x.containsKey('dit') || x.containsKey('narration') || x.containsKey('pense')).isEmpty) errors.add('$where: personne ne parle');
     out['etapes'] = etapes;
     cinematiques.add(out);
+  }
+  // les suites : chacune vise une scène `quand: suite`, et chaque `quand: suite` a qui la précède
+  {
+    final parId = {for (final c in cinematiques) c['id'] as String: c};
+    final visees = <String>{};
+    for (final c in cinematiques) {
+      final su = c['suite'] as String?;
+      if (su == null) continue;
+      final cible = parId[su];
+      if (cible == null) {
+        errors.add('ville/cinematiques/${c['id']}: suite « $su » inconnue');
+      } else if (cible['quand'] != 'suite') {
+        errors.add('ville/cinematiques/${c['id']}: suite « $su » : la scène suivante a `quand: suite`');
+      } else if (!visees.add(su)) {
+        errors.add('ville/cinematiques/$su: deux scènes la précèdent');
+      }
+    }
+    for (final c in cinematiques) {
+      if (c['quand'] == 'suite' && !visees.contains(c['id'])) errors.add('ville/cinematiques/${c['id']}: `quand: suite` sans scène qui la précède');
+    }
+    // pas de boucle : une suite finit
+    for (final c in cinematiques) {
+      final vus = <String>{c['id'] as String};
+      var su = c['suite'] as String?;
+      while (su != null && parId[su] != null) {
+        if (!vus.add(su)) {
+          errors.add('ville/cinematiques/${c['id']}: les suites tournent en rond');
+          break;
+        }
+        su = parId[su]!['suite'] as String?;
+      }
+    }
   }
 
   // --- LES CONVERSATIONS SURPRISES : deux ou trois personnages qui parlent entre eux, dans une

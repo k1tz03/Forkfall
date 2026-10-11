@@ -60,6 +60,7 @@ cinematiques:
     titre: "La Route de la Rive"    # facultatif : une carte de titre au néon, avant la scène (≤ 40)
     sous: "Aubérive, août 1990"     # sous le titre (≤ 60)
     lieu: terminus                  # où : une pièce (on est dedans) ou un lieu sans pièce (dehors), ou `ici`
+    suite: h4.ci.intro_2            # facultatif : la scène qui s'enchaîne, ailleurs (elle a `quand: suite`)
     tranche: soir                   # facultatif : la lumière de la scène (matin|midi|aprem|soir|nuit)
     acteurs:                        # qui est en scène, et où (une place de la pièce)
       - {qui: toi, place: porte}
@@ -122,6 +123,7 @@ qu'il ait une `adresse` pour le rôle).
 | `carte` | `carte: id` (ou `cartes: [ids]`, ou `prefixe: "sl.h9.c1_retour"` pour les variantes), `moment: avant\|apres` | juste avant que la carte s'affiche, ou juste après qu'on y a répondu |
 | `lieu` | `lieu: …` | la première fois qu'on entre dans ce lieu et que `si` est vrai |
 | `semaine` | `tranches: […]`, `poids` | un jour sans carte, comme une scène de la semaine (le plan du jour la tire) |
+| `suite` | une scène qui la nomme dans son `suite:` | **à la fin de la scène qui la précède**, ailleurs : le noir (ou son titre), puis elle. Une introduction peut passer ainsi de la gare routière au club-house, puis à la buvette. « Passer » saute toute la suite |
 
 Une scène ne se joue qu'une fois par carrière. Elle ne se joue jamais pendant une carte ou un match.
 

@@ -138,8 +138,14 @@ cinematiques:
   - id: t.ci.semaine
     quand: semaine
     lieu: buvette
+    suite: t.ci.semaine_2
     etapes:
       - narration: "Personne ne vient."
+  - id: t.ci.semaine_2
+    quand: suite
+    lieu: appartement
+    etapes:
+      - narration: "Chez toi, le frigo ronronne."
 conversations:
   - id: t.cv.deux
     lieu: buvette
@@ -163,6 +169,7 @@ conversations:
         final se = (v['cinematiques'] as List).cast<Map<String, dynamic>>().firstWhere((c) => c['id'] == 't.ci.semaine');
         expect(se['tranches'], ['matin', 'midi', 'aprem', 'soir'], reason: 'une scène de semaine se joue le jour, par défaut');
         expect(se['poids'], 1);
+        expect(se['suite'], 't.ci.semaine_2', reason: 'la suite, ailleurs');
         final cv = (v['conversations'] as List).cast<Map<String, dynamic>>().firstWhere((c) => c['id'] == 't.cv.deux');
         expect((cv['repliques'] as List).length, 2);
 
@@ -184,8 +191,14 @@ cinematiques:
   - id: t.ci.muette
     quand: lieu
     lieu: buvette
+    suite: t.ci.nulle_part
     etapes:
       - { pause: 500 }
+  - id: t.ci.orpheline
+    quand: suite
+    lieu: buvette
+    etapes:
+      - narration: "Personne ne m'appelle."
 conversations:
   - id: t.cv.seul
     lieu: buvette
@@ -214,6 +227,8 @@ activites:
           't.ci.fautes/etapes/4: place « au_plafond » inconnue de la pièce buvette',
           't.ci.fautes/etapes/5: `dit` de 200 caractères (> 170)',
           't.ci.muette: personne ne parle',
+          't.ci.muette: suite « t.ci.nulle_part » inconnue',
+          't.ci.orpheline: `quand: suite` sans scène qui la précède',
           't.cv.seul: deux ou trois voix',
           't_objet_fantome: objet « piano_a_queue » absent de la pièce buvette',
         ]) {

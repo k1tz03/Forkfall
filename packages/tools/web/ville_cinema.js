@@ -43,6 +43,7 @@
   }
   function cineDeLieu(cle) { return cinesDe("lieu", function (c) { return c.lieu === cle; })[0] || null; }
   function cineIntro() { return cinesDe("debut")[0] || null; }
+  function cineParId(id) { return (D.cinematiques || []).filter(function (c) { return c.id === id; })[0] || null; }
 
   // ─── l'interface : les bandes noires, le titre, la boîte de dialogue
   function uiCine() {
@@ -346,8 +347,23 @@
     if (!CINE) return;
     var c = CINE;
     clearInterval(c.frappe);
-    CINE = null;
     var el = $("villeCine");
+    // la suite, ailleurs (`suite:`) : le noir, puis la scène suivante, sans rendre la main ;
+    // « Passer » saute toute la suite
+    var suite = !passe && c.c.suite ? cineParId(c.c.suite) : null;
+    if (suite && el && !(S.cinesVues && S.cinesVues[suite.id])) {
+      S.cinesVues[suite.id] = 1;
+      figurants = figurants.filter(function (g) { return !g.cine; });
+      heros.chemin = null; heros.arrivee = null; heros.geste = null; heros.emote = null; heros.pose = null; heros.parle = false;
+      CINE = { c: suite, i: -1, ensuite: c.ensuite, origine: c.origine || c.c.quand, attend: null, frappe: null,
+        amb: suite.tranche ? AMBIANCE[suite.tranche] : null, musique: c.musique, camera: null };
+      el.querySelector(".v-cine-boite").hidden = true;
+      if (suite.titre) carteTitre(suite.titre, suite.sous || "", function () { installerScene(suite); }, etapeSuivante);
+      else fonduVite(function () { installerScene(suite); }, etapeSuivante);
+      sonVille(); sauver();
+      return;
+    }
+    CINE = null;
     if (el) {
       el.classList.remove("on");
       el.querySelector(".v-cine-boite").hidden = true;
@@ -361,7 +377,7 @@
     // l'introduction est un prélude : la carrière commence chez toi, à l'heure du départ ;
     // ailleurs, une pièce fermée à cette heure-ci te rend à la rue
     var chez = chezToi();
-    if (c.c.quand === "debut") {
+    if ((c.origine || c.c.quand) === "debut") {
       if (aInterieur(chez)) entrer(chez);
       else if (LIEU[chez] && LIEU[chez].door) { var cz = centre(LIEU[chez].door); poserEnVille(cz[0], cz[1]); S.lieu = chez; }
     } else if (dedans && dedans.cle !== chez && !ouvert(TEXTE_LIEU[dedans.cle] || {}) && !(rdv && rdv.lieu === dedans.cle)) aDehors();
