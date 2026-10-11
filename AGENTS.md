@@ -26,10 +26,10 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 3 271 cartes, 319 arcs, 109 fins, 230 Nouvelles datées, 504 manchettes de Une, 619 variantes de set-piece, 64 personnages ; la ville : 430 scènes de la semaine |
-| Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — neuf histoires livrées sur dix (voir « Les dix histoires ») |
+| Contenu | 3 551 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 69 personnages ; la ville : 469 scènes de la semaine |
+| Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
 | Moteur | Dart pur, déterministe, 134 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
-| Qualité | `dart analyze` propre, `lint` 0 erreur (2 avertissements connus : le postulat sans prologue du livre 9, la part des Unes qui nomment le héros) |
+| Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
 
@@ -45,14 +45,18 @@ Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
   pépite), 5 « La Maquette » (président, géant déchu), 6 « 23 h 58 » (directrice
   sportive, vendre trente), 8 « L'Oreillette » (directeur sportif, le modèle, 2024),
   4 « La Route de la Rive » (joueur, fin de contrat), 7 « Chambre 12 » (sélectionneur,
-  après le fiasco, 2011) et 10 « Les Deux Téléphones » (présidente, l'escalier fermé,
-  2037-2040) — ces deux derniers repris et finis par un second auteur, sur la branche de
-  leur prédécesseur arrêté.
-  Le menu de l'aperçu montre les postulats qui ne sont plus `chantier`.
-- **Pas encore fusionné** : 9 « Vingt degrés dedans » (la sélectionneuse, le Mondial
-  d'hiver de 2030), repris par un second auteur sur la branche `histoire-h9`. Le document
-  de reprise des auteurs dit ce qui a changé dans le jeu depuis le premier jet
-  (mode histoire, ville sans énergie, scènes de la semaine, visages déjà créés).
+  après le fiasco, 2011), 9 « Vingt degrés dedans » (la sélectionneuse, le Mondial d'hiver
+  de 2030) et 10 « Les Deux Téléphones » (présidente, l'escalier fermé, 2037-2040) — ces
+  trois derniers repris et finis par un second auteur, sur la branche de leur prédécesseur
+  arrêté. **Les dix sont livrés** ; aucun postulat n'est plus `chantier`, et chaque livre
+  finit ses carrières sur ses propres fins (80 à 97 % selon le livre, le reste à la police,
+  au grand déballage ou à la blessure).
+- **Un même prénom, deux personnes** : la Sacha du livre 4 (six ans en 1990) et celle du
+  livre 9 (la fille de la sélectionneuse, vingt-sept ans en 2029) ont deux fiches (`sacha`,
+  `sacha_fille`). Quand un livre réutilise un visage commun, l'étiquette de la fiche est
+  celle de son premier livre : Vecchio « GARDIEN », Bréhaut « CAPITAINE » ou Ilyas « FONDS
+  ALMADIS » se lisent mal en 2029 (signalé par l'autrice du livre 9 ; une étiquette par
+  époque reste à faire).
 - **À la fusion d'un livre** : `git merge --no-ff --no-commit histoire-hN`, puis, si les
   ajouts en fin de `characters.yaml`, `portraits.yaml` ou `flags.yaml` se sont mêlés à
   ceux d'un autre livre (le cas des livres 7 et 10 dans `portraits.yaml`),
