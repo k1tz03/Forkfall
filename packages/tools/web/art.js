@@ -366,7 +366,10 @@
   var AGES = ['jeune', 'adulte', 'mur', 'age'];
 
   /// L'âge à l'écran : la fiche donne l'âge en 1990, l'année fait le reste.
+  /// Une fiche tirée de content/portraits.yaml sans âge de 1990 dans
+  /// characters.yaml garde la tranche que son livre lui a donnée (`tr`).
   function trancheAge(fiche, annee) {
+    if (fiche.tr && fiche.an == null) return fiche.tr;
     var a = (fiche.an == null ? 35 : fiche.an) + ((annee || 1990) - 1990);
     if (a < 22) return 'jeune';
     if (a < 45) return 'adulte';
@@ -1796,14 +1799,39 @@
 
   var CONTENU = null;
 
-  /// Le bundle compilé enrichit les fiches : genre et camp font foi.
+  /// Le bundle compilé enrichit les fiches : genre et camp font foi. Les
+  /// visages que les livres ont créés n'ont pas de fiche ici : on la tire de
+  /// leur portrait (content/portraits.yaml, le même vocabulaire), au lieu d'un
+  /// visage au hasard. Leur âge vieillit avec l'année quand characters.yaml
+  /// donne l'âge de 1990 ; sinon, la tranche du portrait tient.
+  var COULEUR_PORTRAIT = { bleu: 'cobalt' };
+  var LIEU_DU_ROLE = { presse: 'presse', journaliste: 'presse', ultra: 'virage', supporter: 'virage' };
+  var LIEU_DU_CAMP = { terrain: 'vestiaire', tribunes: 'virage', direction: 'bureau', instances: 'bureau', famille: 'maison', presse: 'presse' };
+  function teinte(v, defaut) { return v ? (COULEUR_PORTRAIT[v] || v) : defaut; }
+  function ficheDuPortrait(c, p) {
+    var f = {
+      nom: c.name || c.id, g: p.genre || c.genre || 'm', camp: c.camp || 'terrain',
+      lieu: LIEU_DU_ROLE[c.role] || LIEU_DU_CAMP[c.camp] || 'couloir',
+      te: p.teint || 'clair', co: p.corpulence || 'moyen', ch: p.coiffure || 'court', cv: p.cheveux || 'brun',
+      po: p.pilosite || 'rase', lu: p.lunettes || 'aucune', tn: p.tenue || 'veste',
+      c1: teinte(p.couleur, 'anthracite'), c2: teinte(p.couleur2, 'creme'), ac: p.accessoire || 'aucun',
+      yx: (B.hash32('yeux|' + c.id) & 1) ? 'hex' : 'fente', portrait: true
+    };
+    if (p.couleur_accessoire) f.cc = teinte(p.couleur_accessoire);
+    if (p.coiffe) f.ck = p.coiffe;
+    if (typeof c.age === 'number') f.an = c.age; else f.tr = p.age || 'mur';
+    return f;
+  }
   function init(content) {
     CONTENU = content || null;
     if (!content) return;
-    var list = content.characters || [];
+    var list = content.characters || [], portraits = content.portraits || {};
     for (var i = 0; i < list.length; i++) {
       var c = list[i], f = F.FICHES[c.id];
-      if (!f) continue;
+      if (!f) {
+        if (portraits[c.id]) F.FICHES[c.id] = ficheDuPortrait(c, portraits[c.id]);
+        continue;
+      }
       if (c.genre) f.g = c.genre;
       if (c.camp) f.camp = c.camp;
       if (typeof c.age === 'number') f.an = c.age;
