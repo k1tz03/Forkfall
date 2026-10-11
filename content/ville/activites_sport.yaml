@@ -1,0 +1,1463 @@
+# CE QU'ON FAIT DANS LES PIÈCES DU SPORT — la buvette, l'appartement, le club-house,
+# le vestiaire, le centre, la salle de muscu, la boutique, Brunel, le garage du Pont,
+# la loge du gardien, la grande halle, le wagon, le caveau, le local du matériel, la
+# gare routière. Le porteur du projet : « les phases sans histoires sont trop vides ;
+# dans Punch Club, il y a plein de choses à faire partout ».
+#
+# Le format : docs/histoires/scenes_jouees.md § 5 ; les limites : build_content
+# (`_compileVille`). La charte d'écriture (docs/bible/charte_histoire.md) fait loi :
+# un lieu, un geste, quelqu'un, une phrase entendue ; aucun nom réel.
+#
+# Ce qu'il faut savoir avant d'ajouter une ligne :
+# - `objet` : un id de la pièce (packages/tools/web/interieurs/interieurs.json).
+# - `texte` reprend la première variante ; la ville tire les `textes` tour à tour.
+#   Pour un jeu (`jeu:`) et pour les gestes `telephone` et `dormir`, la ville montre
+#   la phrase du jeu ou son propre écran : la variante sert d'entrée en scène.
+# - Sans `si`, une variante tient de 1990 à 2050, pour tous les rôles, à toute heure
+#   de ses `heures`. Le héros peut être une femme : aucun accord sur lui ou elle.
+#   Pas de somme dans les textes (la ville convertit : francs, inflation, écus).
+# - Les petits boulots (`francs` positif, une tranche, une fois par jour) : pour le
+#   joueur des divisions du bas (`division >= 2`), et pour tout le monde quand le
+#   compte est vide (`francs < 0`, ou bas : `francs < 2000`). Une vedette ne passe
+#   pas la serpillière ; quelqu'un qui doit de l'argent à la banque, si.
+# - `jauges` : ±1 (le plombier du président : +2), une fois par semaine ; pour un
+#   jeu, seulement s'il est gagné.
+activites:
+
+  # ═══════════════════════════════════════════════════════════ la buvette du kop
+  # (le zinc porte aussi `tournee`, `verre_kop` et `buvette_president` : ville.yaml)
+  - id: buvette_421
+    lieu: buvette
+    objet: comptoir
+    label: "Un 421 sur le zinc"
+    jeu: des
+    tranches: 0
+    francs: -10
+    max_jour: 3
+    texte: "Le patron sort la piste de feutre de sous la caisse. Trois dés, une mise sous le cendrier, et la moitié du comptoir qui se penche pour voir."
+    textes:
+      - "Le patron sort la piste de feutre de sous la caisse. Trois dés, une mise sous le cendrier, et la moitié du comptoir qui se penche pour voir."
+      - "Le capo pose sa mise à côté de la tienne et souffle dans ses mains. « Un 421, pour savoir si la chance tourne avant samedi. »"
+      - "La piste de feutre est usée au milieu, là où les dés retombent depuis trente ans. Le patron note les mises à la craie, au dos de l'ardoise."
+
+  - id: buvette_coup_de_main
+    lieu: buvette
+    objet: comptoir
+    label: "Un coup de main au zinc"
+    roles: [joueur]
+    si: "division >= 2"
+    heures: [soir]
+    jours: [lun, mar, mer, jeu, ven, dim]
+    tranches: 1
+    francs: 120
+    max_jour: 1
+    jauges: {tribunes: 1, direction: -1}
+    texte: "Le patron te jette un torchon : les verres du loto, quatre caisses. Tu essuies jusqu'à la fermeture ; il te paie en liquide, plié en quatre, sans compter devant toi."
+    textes:
+      - "Le patron te jette un torchon : les verres du loto, quatre caisses. Tu essuies jusqu'à la fermeture ; il te paie en liquide, plié en quatre, sans compter devant toi."
+      - "Tu tiens la tireuse pendant que le patron monte au local. Un supporter te reconnaît, hésite, et commande sans dire ton nom."
+      - "Réunion de la Nord dans la salle du fond. Tu remplis les pichets ; au troisième, on te fait signe de les poser et de sortir."
+      - "Tu ranges les fûts vides dans la cour. Le patron compte ta paie sur le zinc, ajoute un billet : « Pour les mollets. Pas pour le comptoir. »"
+
+  - id: buvette_plonge
+    lieu: buvette
+    objet: comptoir
+    label: "Faire la plonge"
+    si: "francs < 0"
+    heures: [soir]
+    tranches: 1
+    francs: 100
+    max_jour: 1
+    texte: "Le patron ne demande rien. Il pousse vers toi un tablier et un bac d'eau grise. À la fermeture, les billets sont sous le tablier, pliés."
+    textes:
+      - "Le patron ne demande rien. Il pousse vers toi un tablier et un bac d'eau grise. À la fermeture, les billets sont sous le tablier, pliés."
+      - "Des verres, des chopes, les assiettes des merguez. Derrière la porte de la plonge, personne ne te voit ; c'est le seul service qu'on te rend."
+      - "Un habitué passe la tête par la porte de la plonge, te reconnaît et ressort sans commander. Le patron hausse les épaules et te paie, sans rien retenir."
+      - "Tu laves jusqu'à la fermeture. Le patron compte sa caisse, puis ta paie, à part, dans une enveloppe de la banque : « On ne mélange pas. »"
+
+  - id: buvette_tele
+    lieu: buvette
+    objet: tele
+    label: "Les résultats à la télé"
+    special: tele
+    tranches: 0
+    texte: "La télé est accrochée au-dessus des écharpes, le son coupé. Le patron monte le volume pour les résultats ; tout le comptoir se tourne en même temps."
+    textes:
+      - "La télé est accrochée au-dessus des écharpes, le son coupé. Le patron monte le volume pour les résultats ; tout le comptoir se tourne en même temps."
+      - "Quelqu'un réclame le silence en tapant sur un verre avec une cuillère. Sous la télé, les conversations meurent une à une."
+      - "Le patron change de chaîne du bout d'un manche à balai. Au comptoir, on siffle chaque fois qu'il passe sur un autre sport."
+
+  - id: buvette_tele_match
+    lieu: buvette
+    objet: tele
+    label: "Un match à la télé"
+    heures: [soir]
+    tranches: 1
+    francs: -12
+    texte: "Une demi-pression, le match du soir sur la télé du coin. On commente les tribunes plus que le jeu, et les coiffures des joueurs plus que les tribunes."
+    textes:
+      - "Une demi-pression, le match du soir sur la télé du coin. On commente les tribunes plus que le jeu, et les coiffures des joueurs plus que les tribunes."
+      - "Tu regardes un match qui ne te concerne pas, pour une fois. Au bout du zinc, un ancien explique le hors-jeu à son petit-fils avec deux allumettes."
+      - "Le patron a tiré les rideaux contre le reflet. Dans la pénombre, vingt visages bleuis par l'écran, et pas un mot avant la mi-temps."
+      - "À la mi-temps, le patron coupe le son et passe le disque des chants de la Nord. Personne ne regarde plus l'écran jusqu'à la reprise."
+      - "Le match de la capitale. Quand leur avant-centre rate le cadre, la buvette applaudit plus fort que pour un but de chez nous."
+
+  - id: buvette_ardoise
+    lieu: buvette
+    objet: ardoise
+    label: "Effacer une ardoise"
+    tranches: 0
+    francs: -60
+    max_jour: 1
+    jauges: {tribunes: 1}
+    texte: "Tu montres une ligne au patron : un prénom, une somme, trois semaines. Il l'efface du pouce. L'ancien, au bout du zinc, ne saura pas qui."
+    textes:
+      - "Tu montres une ligne au patron : un prénom, une somme, trois semaines. Il l'efface du pouce. L'ancien, au bout du zinc, ne saura pas qui."
+      - "Le patron hésite, la craie en l'air : « Il va le prendre mal, s'il sait. » Il efface quand même, et trace à la place un petit trait."
+      - "À droite des matchs, l'ardoise des comptes : des prénoms et des sommes. Tu paies celle d'un chômeur ; le patron range les billets à part, dans la boîte à cigares."
+      - "Tu paies la ligne d'un gamin de la Nord. Le lendemain, il t'attend à la sortie, furieux : « Mes verres, je les paie moi-même. »"
+
+  - id: buvette_cible
+    lieu: buvette
+    objet: flechettes
+    label: "Une partie de cible"
+    jeu: flechettes
+    tranches: 0
+    francs: -5
+    max_jour: 3
+    texte: "La cible est au fond, sous l'écharpe de soixante et onze. Trois fléchettes aux plumes rognées ; on tire derrière une ligne de ruban adhésif."
+    textes:
+      - "La cible est au fond, sous l'écharpe de soixante et onze. Trois fléchettes aux plumes rognées ; on tire derrière une ligne de ruban adhésif."
+      - "Le meilleur tireur de la Nord te tend ses fléchettes, celles qu'il ne prête jamais. « Fais pas le malin. Vise le milieu. »"
+      - "L'enjeu va dans la boîte à cigares : la caisse de la banderole. Le capo tient le compte à la craie, sur le bord de l'ardoise."
+
+  - id: buvette_babyfoot
+    lieu: buvette
+    objet: babyfoot
+    label: "Un baby-foot"
+    jeu: babyfoot
+    tranches: 0
+    francs: -2
+    max_jour: 3
+    texte: "Deux supporters te font signe : il leur manque un goal. Le baby-foot penche vers la porte ; tout le monde le sait, et on joue avec."
+    textes:
+      - "Deux supporters te font signe : il leur manque un goal. Le baby-foot penche vers la porte ; tout le monde le sait, et on joue avec."
+      - "Les poignées collent, la balle de liège est fendue. Le gamin d'en face fait des pissettes, ce qui est interdit, et rit quand tu le dis."
+      - "La revanche. Le perdant de la dernière fois a collé un sous-bock sous la barre de son gardien, avec son propre nom dessus, pour ne pas oublier."
+
+  - id: buvette_flipper
+    lieu: buvette
+    objet: flipper
+    label: "Une partie de flipper"
+    jeu: flipper
+    tranches: 0
+    francs: -5
+    max_jour: 3
+    texte: "Le flipper du fond clignote pour lui-même. Une bande du plateau est réparée au sparadrap ; le patron jure qu'elle rebondit mieux comme ça."
+    textes:
+      - "Le flipper du fond clignote pour lui-même. Une bande du plateau est réparée au sparadrap ; le patron jure qu'elle rebondit mieux comme ça."
+      - "Sur le fronton, les meilleurs scores écrits au feutre : des initiales de la Nord, et tout en haut celles d'un gardien des années soixante-dix."
+      - "Tu poses ta monnaie sur la vitre, comme les autres, pour dire que c'est ton tour. Le gamin qui joue ne lève pas les yeux de la bille."
+
+  # ═══════════════════════════════════════════════════════════════ l'appartement
+  # (le lit porte `dormir`, la télé `cassettes` : ville.yaml)
+  - id: appartement_manger
+    lieu: appartement
+    objet: cuisine
+    label: "Faire à manger"
+    heures: [midi, soir]
+    tranches: 1
+    francs: -15
+    max_jour: 2
+    texte: "Des pâtes, du beurre, le reste du fromage râpé. Tu manges devant la plaque, la casserole à la main, pendant que la chaudière cogne."
+    textes:
+      - "Des pâtes, du beurre, le reste du fromage râpé. Tu manges devant la plaque, la casserole à la main, pendant que la chaudière cogne."
+      - "Une omelette à quatre œufs, ratée au milieu. La voisine du dessous frappe au plafond avec un manche : la poêle t'a échappé."
+      - "Le frigo est à moitié vide, comme toujours. Tu fais avec : une boîte de raviolis, un yaourt, une pomme coupée en quartiers sur la planche."
+      - "Tu cuisines pour deux par habitude, et tu manges pour un. Le reste part au frigo sous une assiette retournée, pour le lendemain soir."
+      - "Un poulet du marché, au four. L'appartement sent le thym jusqu'au palier ; quelqu'un, dans l'escalier, dit tout haut que ça sent bon."
+
+  - id: appartement_fenetre
+    lieu: appartement
+    objet: fenetre
+    label: "Regarder la rue"
+    heures: [matin, midi, aprem]
+    tranches: 0
+    texte: "La rue des Lilas à l'heure du pain : la boulangère, deux poussettes, un camion de livraison en double file, moteur en marche."
+    textes:
+      - "La rue des Lilas à l'heure du pain : la boulangère, deux poussettes, un camion de livraison en double file, moteur en marche."
+      - "En bas, un gamin tape un ballon contre le mur de l'école, toujours au même endroit. Le crépi a pris la forme du ballon."
+      - "Le facteur s'arrête devant l'immeuble, fouille sa sacoche, repart. Rien pour toi, ou rien qu'il ait envie de monter."
+      - "Une voiture du club passe au ralenti, l'écusson sur la portière. Elle ne s'arrête pas. Tu la suis des yeux jusqu'au carrefour."
+
+  - id: appartement_fenetre_nuit
+    lieu: appartement
+    objet: fenetre
+    label: "La rue, la nuit"
+    heures: [soir, nuit]
+    tranches: 0
+    texte: "La rue est vide. Sous le lampadaire, un chat traverse, s'arrête au milieu, repart. En face, une fenêtre s'éteint, puis une autre."
+    textes:
+      - "La rue est vide. Sous le lampadaire, un chat traverse, s'arrête au milieu, repart. En face, une fenêtre s'éteint, puis une autre."
+      - "Au bout de la rue, une seule lumière au premier étage du club-house. Quelqu'un travaille tard, ou a oublié d'éteindre ; les deux arrivent."
+      - "Une voiture ralentit sous ta fenêtre, phares coupés. Elle repart au bout d'une minute. Tu notes la couleur, pas la plaque."
+      - "Des chants montent du bas de la rue, cinq ou six voix et des écharpes. Ils passent sans lever la tête. Cette fois."
+
+  - id: appartement_causerie
+    lieu: appartement
+    objet: table
+    label: "Préparer la causerie"
+    roles: [entraineur]
+    heures: [soir]
+    tranches: 1
+    jauges: {vestiaire: 1}
+    texte: "Trois pages pour la causerie de samedi. Tu barres la deuxième : ils n'écoutent plus après une minute. Tu gardes une phrase, et le nom du 9 d'en face."
+    textes:
+      - "Trois pages pour la causerie de samedi. Tu barres la deuxième : ils n'écoutent plus après une minute. Tu gardes une phrase, et le nom du 9 d'en face."
+      - "Tu écris les onze noms sur une feuille, puis les remplaçants, puis tu recommences dans l'autre sens, en partant de ceux qui resteront sur le banc."
+      - "La causerie tient sur un ticket de caisse : trois mots, un chiffre. Tu le glisses dans la poche du survêtement pour ne pas l'oublier."
+      - "Tu répètes à voix basse devant la table vide. À la troisième phrase, la voisine tape au mur : il est onze heures."
+
+  - id: appartement_contrat
+    lieu: appartement
+    objet: table
+    label: "Relire ton contrat"
+    roles: [joueur]
+    tranches: 0
+    texte: "Le contrat dort dans la pochette du club, avec les photos de la signature. Article 7, la prime de maintien : tu relis le chiffre comme s'il pouvait changer."
+    textes:
+      - "Le contrat dort dans la pochette du club, avec les photos de la signature. Article 7, la prime de maintien : tu relis le chiffre comme s'il pouvait changer."
+      - "Une clause en petits caractères sur le droit à l'image. Tu ne l'avais pas lue : le club vend ton visage au calendrier de la boulangerie."
+      - "Tu comptes au crayon, dans la marge, les mois qui restent. Le crayon s'arrête en juin ; après, la page est blanche."
+      - "Le contrat sent encore le bureau du président : tabac froid et encre. Tu le ranges sous les autres papiers, à l'envers."
+
+  - id: appartement_parapheur
+    lieu: appartement
+    objet: table
+    label: "Le parapheur du soir"
+    roles: [president]
+    heures: [soir]
+    tranches: 1
+    jauges: {direction: 1}
+    texte: "Le parapheur rapporté du club : des virements à valider, un contrat de buvette, la facture des projecteurs. Tu signes tout, sauf la facture."
+    textes:
+      - "Le parapheur rapporté du club : des virements à valider, un contrat de buvette, la facture des projecteurs. Tu signes tout, sauf la facture."
+      - "Le bilan de l'exercice, deux colonnes. Tu refais l'addition à la main sur la nappe ; le comptable ne s'est pas trompé, malheureusement."
+      - "Une lettre de la mairie sur le loyer du stade. Tu la relis en cherchant le mot qui fâche ; il est à la troisième ligne : « réévaluation »."
+      - "Trois devis pour la toiture de la tribune nord. Le moins cher porte le nom d'un conseiller municipal. Tu le poses au-dessus de la pile, puis en dessous."
+
+  - id: appartement_fiches
+    lieu: appartement
+    objet: table
+    label: "Trier les fiches"
+    roles: [ds]
+    heures: [soir]
+    tranches: 1
+    jauges: {direction: 1}
+    texte: "L'ordinateur ouvert sur la table, trois cents fiches de joueurs. Tu tries par âge, puis par salaire, puis par instinct, ce qui ne se trie pas."
+    textes:
+      - "L'ordinateur ouvert sur la table, trois cents fiches de joueurs. Tu tries par âge, puis par salaire, puis par instinct, ce qui ne se trie pas."
+      - "Un latéral gauche de Valdorne, vingt-deux ans, un genou opéré. Tu regardes ses vidéos jusqu'à minuit, sans regarder autre chose que le genou."
+      - "Tu écris trois noms sur un carnet pour le président, et un quatrième que tu ne lui montreras pas : celui que tu prendrais, toi."
+      - "Les chiffres d'un milieu de Nerville : kilomètres, duels, passes. Tu fermes l'écran et tu repenses à sa façon de marcher, à l'échauffement."
+
+  - id: appartement_liste
+    lieu: appartement
+    objet: table
+    label: "Préparer la liste"
+    roles: [selectionneur]
+    heures: [soir]
+    tranches: 1
+    jauges: {vestiaire: 1}
+    texte: "{Groupe} noms à trouver. Tu en écris trente sur des bouts de papier étalés sur la table ; à minuit, il en reste vingt-neuf, et un dans ta poche."
+    textes:
+      - "{Groupe} noms à trouver. Tu en écris trente sur des bouts de papier étalés sur la table ; à minuit, il en reste vingt-neuf, et un dans ta poche."
+      - "La liste tient sur une feuille. Le troisième gardien est le plus dur à choisir : celui qui ne jouera pas, et qu'il faut quand même vouloir."
+      - "Tu barres un nom, tu le réécris, tu le barres encore. Le stylo a traversé la feuille ; le nom est maintenant gravé dans la toile cirée."
+      - "Le téléphone posé à côté de la liste. Chaque nom que tu enlèves, c'est un appel avant la conférence. Tu commences par le plus facile."
+
+  - id: appartement_journal
+    lieu: appartement
+    objet: table
+    label: "Lire le journal"
+    special: journal
+    heures: [matin, midi]
+    tranches: 0
+    texte: "Le journal sur la toile cirée, à côté du bol. Tu commences par la dernière page, comme tout le monde ici."
+    textes:
+      - "Le journal sur la toile cirée, à côté du bol. Tu commences par la dernière page, comme tout le monde ici."
+      - "Tu étales le journal sur la table, les pages sportives d'abord. Une tache de café s'élargit lentement sur la photo du stade."
+      - "Le journal est arrivé plié en quatre dans la boîte aux lettres, humide de pluie. Tu le défroisses du plat de la main."
+
+  - id: appartement_tele
+    lieu: appartement
+    objet: tele
+    label: "Allumer la télé"
+    special: tele
+    tranches: 0
+    texte: "Tu allumes la télé pour avoir du bruit. Une publicité pour une lessive, puis le générique des sports, que tu connais par cœur."
+    textes:
+      - "Tu allumes la télé pour avoir du bruit. Une publicité pour une lessive, puis le générique des sports, que tu connais par cœur."
+      - "Le journal régional, après la météo. Le présentateur prononce mal le nom du stade, comme chaque semaine."
+      - "Tu passes les chaînes jusqu'aux résultats. Chez le voisin, la même émission arrive avec une seconde d'avance, à travers le mur."
+      - "Le salon dans le noir, la télé pour seule lumière. Tu regardes sans le son, en lisant les chiffres qui défilent en bas de l'écran."
+
+  - id: appartement_telephone
+    lieu: appartement
+    objet: telephone
+    label: "Appeler quelqu'un"
+    special: telephone
+    tranches: 0
+    texte: "Le téléphone, dans l'entrée. Tu cherches le numéro dans le carnet, puis tu le composes de mémoire."
+    textes:
+      - "Le téléphone, dans l'entrée. Tu cherches le numéro dans le carnet, puis tu le composes de mémoire."
+      - "Tu décroches et tu écoutes la tonalité un moment avant de composer, comme pour vérifier que la ville est encore là."
+      - "Le carnet ouvert à la bonne lettre. À la deuxième sonnerie, tu voudrais déjà raccrocher."
+
+  - id: appartement_messages
+    lieu: appartement
+    objet: telephone
+    label: "Écouter les messages"
+    tranches: 0
+    texte: "Trois messages. Ta mère, qui demande si tu manges. Vingt secondes de silence. Le pressing, pour une veste oubliée depuis mars."
+    textes:
+      - "Trois messages. Ta mère, qui demande si tu manges. Vingt secondes de silence. Le pressing, pour une veste oubliée depuis mars."
+      - "Un supporter a trouvé ton numéro. Il ne dit pas son nom, seulement le score de samedi, deux fois, plus fort la deuxième. Tu effaces."
+      - "Un journaliste de L'Écho, poli, qui rappellera. Puis le même, moins poli, qui ne rappellera pas."
+      - "Une voix d'enfant qui a eu ton numéro par un cousin : « C'est vrai que c'est vous ? » Des rires derrière, puis la tonalité."
+      - "Aucun message. Tu réécoutes l'annonce d'accueil, ta propre voix, qui a l'air de quelqu'un de plus sûr."
+
+  - id: appartement_armoire
+    lieu: appartement
+    objet: armoire
+    label: "Ranger l'armoire"
+    heures: [matin, midi, aprem, soir]
+    tranches: 1
+    texte: "Au fond de l'armoire, une boîte à chaussures : des coupures de journaux, une vieille licence, une photo d'équipe où tu as un genou à terre."
+    textes:
+      - "Au fond de l'armoire, une boîte à chaussures : des coupures de journaux, une vieille licence, une photo d'équipe où tu as un genou à terre."
+      - "Tu plies les survêtements par couleur, puis par saison. Le costume du mariage d'un ami pend au milieu, dans sa housse, depuis trois ans."
+      - "Une écharpe que tu ne mets plus, offerte un soir de victoire par quelqu'un dont tu as oublié le visage. Tu la remets sur le dessus de la pile."
+      - "Un maillot de tes débuts, trop petit, l'écusson décousu d'un côté. Tu le tiens à bout de bras, comme pour le présenter à quelqu'un."
+      - "La porte de l'armoire ne ferme plus depuis l'hiver. Tu la cales avec un fanion plié en quatre, comme on cale une table de bistrot."
+
+  # ══════════════════════════════════════════════════════════════ le club-house
+  # (le secrétariat porte `papiers`, `fax_de_nuit`, `federation_appel` ; le bureau
+  # du président `rapport_president` ; la table du conseil `conseil_administration`)
+  - id: clubhouse_courrier
+    lieu: clubhouse
+    objet: bureau_president
+    label: "Le courrier du matin"
+    roles: [president]
+    heures: [matin]
+    tranches: 1
+    texte: "La secrétaire a trié le courrier en trois piles : les factures, les supporters, les avocats. Tu commences par les supporters ; c'est la plus haute."
+    textes:
+      - "La secrétaire a trié le courrier en trois piles : les factures, les supporters, les avocats. Tu commences par les supporters ; c'est la plus haute."
+      - "Une lettre d'un abonné depuis quarante ans, à la plume : il ne renouvellera pas. Il joint son ancienne carte, coupée en deux, proprement."
+      - "Le courrier d'un sponsor, deux pages de remerciements et une ligne qui compte : « sous réserve du maintien ». Tu la soulignes au crayon."
+      - "Un dessin d'enfant : le stade, des tribunes trop hautes, un soleil sur la pelouse. Tu le punaises au mur, à côté des bilans."
+
+  - id: clubhouse_frapper
+    lieu: clubhouse
+    objet: bureau_president
+    label: "Frapper chez le président"
+    roles: [entraineur, joueur]
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+    tranches: 1
+    max_jour: 1
+    jauges: {direction: 1}
+    texte: "Le président te fait attendre dix minutes, porte entrouverte, au téléphone. Quand tu entres, il raccroche : « J'allais vous appeler. »"
+    textes:
+      - "Le président te fait attendre dix minutes, porte entrouverte, au téléphone. Quand tu entres, il raccroche : « J'allais vous appeler. »"
+      - "Il t'écoute en signant des papiers, sans lever la tête. À la fin, il te demande de répéter la dernière phrase. Tu la répètes, plus courte."
+      - "Sur son bureau, un cendrier en forme de ballon et ton dossier, ouvert. Il le referme en te voyant entrer, sans se presser."
+      - "Il te sert un fond de whisky que tu ne bois pas. « Vous voulez quoi, exactement ? » Tu le savais en montant l'escalier. Plus maintenant."
+
+  - id: clubhouse_vitrine
+    lieu: clubhouse
+    objet: trophees
+    label: "Regarder la vitrine"
+    tranches: 0
+    texte: "Au milieu de la vitrine, le fanion de la finale de 1974, brodé d'or, sans le score. À côté, celui d'un club qui n'existe plus, offert un soir d'amical."
+    textes:
+      - "Au milieu de la vitrine, le fanion de la finale de 1974, brodé d'or, sans le score. À côté, celui d'un club qui n'existe plus, offert un soir d'amical."
+      - "Une étiquette jaunie sous chaque trophée, tapée à la machine. Celle du tournoi des cadets de 1968 est à l'envers depuis toujours."
+      - "Dans la vitre, ton reflet se pose sur les médailles. Sur l'étagère du bas, une place vide ; la poussière en garde la forme."
+      - "Un ballon signé par l'équipe de 1962, dégonflé, les signatures pâlies. On n'en lit plus que trois ; la secrétaire connaît les autres par cœur."
+
+  - id: clubhouse_telephone
+    lieu: clubhouse
+    objet: secretariat
+    label: "Téléphoner du secrétariat"
+    special: telephone
+    tranches: 0
+    texte: "Le téléphone du secrétariat, à côté de la pile de licences. La secrétaire pousse l'appareil vers toi sans lever les yeux de son registre."
+    textes:
+      - "Le téléphone du secrétariat, à côté de la pile de licences. La secrétaire pousse l'appareil vers toi sans lever les yeux de son registre."
+      - "Tu composes le numéro debout, le combiné coincé contre l'épaule. Sur le bureau, une pile de licences attend son tampon."
+      - "Le club a deux lignes ; la deuxième grésille. Tu prends la première, en surveillant le voyant de l'autre."
+
+  - id: clubhouse_lettres
+    lieu: clubhouse
+    objet: secretariat
+    label: "Répondre au courrier"
+    roles: [joueur]
+    heures: [aprem]
+    tranches: 1
+    jauges: {tribunes: 1}
+    texte: "La secrétaire te tend une boîte à chaussures pleine de lettres. Des écoliers, des grands-mères, un détenu de Valdorne qui écrit très bien."
+    textes:
+      - "La secrétaire te tend une boîte à chaussures pleine de lettres. Des écoliers, des grands-mères, un détenu de Valdorne qui écrit très bien."
+      - "Tu signes des photos à la chaîne, au feutre du club. À la vingtième, ta signature ressemble à celle de quelqu'un d'autre."
+      - "Un gamin qui a perdu son père demande ton maillot de samedi, rien d'autre. Tu le mets de côté, sans savoir encore comment l'envoyer."
+      - "Une lettre d'insultes, soignée, sans une faute. La secrétaire la retire de la boîte avant toi ; tu n'en vois que la marge, très propre."
+
+  - id: clubhouse_affichage
+    lieu: clubhouse
+    objet: affichage
+    label: "Le tableau d'affichage"
+    tranches: 0
+    texte: "Les convocations de samedi, la liste des amendes, une petite annonce : « Vends chiots, parents bergers, la mère a vu tous les matchs. »"
+    textes:
+      - "Les convocations de samedi, la liste des amendes, une petite annonce : « Vends chiots, parents bergers, la mère a vu tous les matchs. »"
+      - "Le planning du terrain annexe, raturé trois fois. Les vétérans ont gardé leur dimanche matin ; la réserve, non."
+      - "Une note de la direction, en majuscules : LES CRAMPONS SE RETIRENT AVANT L'ESCALIER. Dessous, au stylo : « Et les présidents ? »"
+      - "L'affiche du loto du vendredi. Lots : un jambon, un téléviseur, un week-end à Portclair. Quelqu'un a entouré le jambon."
+      - "La feuille des anniversaires du club, tenue par la secrétaire. Ton prénom y est, avec la date, et un petit cœur que personne ne revendique."
+
+  - id: clubhouse_amende
+    lieu: clubhouse
+    objet: affichage
+    label: "Payer ton amende"
+    roles: [joueur]
+    tranches: 0
+    francs: -50
+    max_jour: 1
+    jauges: {vestiaire: 1}
+    texte: "Ton nom est sur la liste des amendes : retard, mardi, quatre minutes. Les billets vont dans la boîte en fer ; le capitaine raie la ligne."
+    textes:
+      - "Ton nom est sur la liste des amendes : retard, mardi, quatre minutes. Les billets vont dans la boîte en fer ; le capitaine raie la ligne."
+      - "Amende pour un fou rire pendant la causerie. Tu paies sans discuter ; la boîte servira au repas de fin de saison."
+      - "La boîte des amendes est presque pleine. Le capitaine compte devant toi : de quoi payer le car du repas, et la moitié du vin."
+      - "Tu paies aussi l'amende d'un jeune qui n'a pas de quoi, sans le dire. Le capitaine fait semblant de ne rien voir, et raie les deux lignes."
+
+  - id: clubhouse_machine
+    lieu: clubhouse
+    objet: cafe
+    label: "Un café à la machine"
+    tranches: 0
+    francs: -2
+    max_jour: 3
+    texte: "La machine rend le gobelet avant le café. Le temps qu'il coule, l'intendant et le jardinier parlent de toi, puis de la pluie, sur le même ton."
+    textes:
+      - "La machine rend le gobelet avant le café. Le temps qu'il coule, l'intendant et le jardinier parlent de toi, puis de la pluie, sur le même ton."
+      - "Gobelet brûlant, touillette en plastique. Deux administrateurs arrivent, se taisent, prennent un chocolat chacun et repartent ensemble."
+      - "La machine avale ta monnaie et ne rend rien. La secrétaire, sans se retourner : « Un coup sur le côté, à gauche. » Le café tombe."
+      - "Tu bois ton café à la fenêtre de l'escalier, celle qui donne sur le parking. La voiture du président n'est pas à sa place."
+
+  - id: clubhouse_loto
+    lieu: clubhouse
+    objet: conseil
+    label: "Le loto du vendredi"
+    jours: [ven]
+    heures: [soir]
+    tranches: 1
+    francs: -20
+    jauges: {tribunes: 1}
+    texte: "Le loto dans la salle du conseil. Tu achètes trois cartons ; à côté de toi, une retraitée en coche six à la fois, sans regarder les numéros."
+    textes:
+      - "Le loto dans la salle du conseil. Tu achètes trois cartons ; à côté de toi, une retraitée en coche six à la fois, sans regarder les numéros."
+      - "« Le 22, les deux cocottes ! » Le crieur est un ancien arrière gauche ; il annonce les numéros comme il réclamait les touches, la main en porte-voix."
+      - "Tu gagnes au troisième tour : un panier garni. Tu le donnes au gamin d'à côté, qui le donne à sa mère, qui te remercie à peine."
+      - "Personne n'a gagné le gros lot depuis trois vendredis. On commence à dire que les boules sont truquées. C'est faux, presque."
+
+  # ═══════════════════════════════════════════════════ le vestiaire de la Rive
+  # (`loge_president`, `vestiaire_president`, `tournee_clubs` et `seance_selection`
+  # restent sans objet : la loge et la tribune ne sont pas dans le vestiaire)
+  - id: stade_casier
+    lieu: stade
+    objet: casier
+    label: "Ranger ton casier"
+    roles: [joueur]
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    texte: "Dans ton casier : des crampons de rechange, un gel pour le dos, et la photo d'un gamin du square, punaisée de travers."
+    textes:
+      - "Dans ton casier : des crampons de rechange, un gel pour le dos, et la photo d'un gamin du square, punaisée de travers."
+      - "Le casier du voisin déborde sur le tien. Tu repousses une serviette, un magazine plié, une boîte de pastilles : la vie d'un autre."
+      - "Tu raccroches la médaille de ta mère au crochet, où elle t'attend pendant les matchs. Elle ne l'a jamais portée ; toi, tous les autres jours."
+      - "Le nom sur ton casier est écrit sur du sparadrap. Celui d'avant est encore dessous, à moitié arraché : un ailier, parti l'été dernier."
+
+  - id: stade_tableau_coach
+    lieu: stade
+    objet: tableau
+    label: "Dessiner au tableau"
+    roles: [entraineur]
+    heures: [matin, aprem]
+    tranches: 1
+    jauges: {vestiaire: 1}
+    texte: "Onze croix, onze ronds, des flèches qui se croisent. Au fond, le gardien lève la main : « Et moi, je vais où ? » Tu lui dessines une flèche à lui aussi."
+    textes:
+      - "Onze croix, onze ronds, des flèches qui se croisent. Au fond, le gardien lève la main : « Et moi, je vais où ? » Tu lui dessines une flèche à lui aussi."
+      - "Tu effaces la séance de la veille avec la manche. Il reste le fantôme d'une flèche vers le second poteau ; tu la gardes, elle était juste."
+      - "Le coup franc de samedi, en trois temps. Au troisième, la craie casse ; le vestiaire rit, et c'est ce qu'ils retiendront le mieux."
+      - "Tu écris un seul mot au tableau, en capitales, et tu sors sans l'expliquer. À ton retour, quelqu'un l'a souligné."
+
+  - id: stade_tableau_compo
+    lieu: stade
+    objet: tableau
+    label: "Lire la compo"
+    roles: [joueur]
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    texte: "La compo est au tableau, à la craie. Ton nom est à sa place, au milieu à droite. Tu le lis quand même deux fois."
+    textes:
+      - "La compo est au tableau, à la craie. Ton nom est à sa place, au milieu à droite. Tu le lis quand même deux fois."
+      - "Ton nom est en bas, avec les remplaçants, écrit plus petit. Ou c'est toi qui le lis plus petit. Le coach ne s'est pas retourné."
+      - "Le nom de l'attaquant adverse, entouré trois fois, et ton numéro relié à lui par une flèche. Tu sais ce que tu fais samedi."
+      - "Dans un coin du tableau, quelqu'un a dessiné le coach avec son sifflet, d'un trait sûr. Le coach l'a vu ; il a ajouté le chronomètre."
+
+  - id: stade_tableau_causerie
+    lieu: stade
+    objet: tableau
+    label: "La causerie au tableau"
+    roles: [selectionneur]
+    heures: [matin, aprem]
+    tranches: 1
+    jauges: {vestiaire: 1}
+    texte: "{Groupe} visages venus de {groupe} vestiaires. Au tableau, tu écris le nom du pays d'en face, et rien d'autre. Ils comprennent."
+    textes:
+      - "{Groupe} visages venus de {groupe} vestiaires. Au tableau, tu écris le nom du pays d'en face, et rien d'autre. Ils comprennent."
+      - "Tu dessines le bloc adverse au feutre, sur le tableau du club. Le capitaine prend des notes dans un carnet ; personne ne le lui a demandé."
+      - "Le tableau de la Rive garde les flèches de l'entraîneur du club. Tu ne les effaces pas tout de suite : tu les lis d'abord."
+      - "Tu fais les binômes au tableau, un ancien et un nouveau. Deux joueurs du même club se retrouvent ensemble ; tu les sépares d'un trait de craie."
+
+  - id: stade_tableau_lire
+    lieu: stade
+    objet: tableau
+    label: "Lire le tableau noir"
+    roles: [ds, president]
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    texte: "Au tableau, un schéma du coach, et un trou à gauche, entouré. Tu comprends ce qu'il ne t'a pas demandé au téléphone."
+    textes:
+      - "Au tableau, un schéma du coach, et un trou à gauche, entouré. Tu comprends ce qu'il ne t'a pas demandé au téléphone."
+      - "Le coach a écrit un nom au tableau, puis l'a barré : celui de la recrue de l'été. Il n'a pas effacé ; il a barré."
+      - "Des flèches, des chiffres, et en bas, plus petit : « Et le budget ? », avec un point d'interrogation appuyé à en casser la craie."
+      - "Tu lis le tableau comme on lit un bilan. Tu ne comprends pas les flèches ; tu comprends très bien les noms rayés."
+
+  - id: stade_massage
+    lieu: stade
+    objet: massage
+    label: "Passer sur la table"
+    roles: [joueur]
+    heures: [matin, aprem]
+    tranches: 1
+    texte: "La table du Doc sent le camphre. Il pétrit ta cuisse sans parler, puis s'arrête sur un point : « Là. Depuis quand ? » Tu dis : depuis rien."
+    textes:
+      - "La table du Doc sent le camphre. Il pétrit ta cuisse sans parler, puis s'arrête sur un point : « Là. Depuis quand ? » Tu dis : depuis rien."
+      - "Le Doc masse en écoutant la météo marine à la radio. Tu t'endors à la deuxième zone ; c'est la troisième qui te réveille."
+      - "Il travaille ton mollet avec les pouces. « Tu cours avec les épaules. Le mollet paie pour le reste. » Il ne dit pas qui paie pour le mollet."
+      - "Huile tiède, serviette rêche. Sur l'étagère, au-dessus de la table, des boîtes sans étiquette. Tu regardes le plafond."
+
+  - id: stade_soigneur
+    lieu: stade
+    objet: massage
+    label: "Le point avec le soigneur"
+    roles: [entraineur, ds, selectionneur, president]
+    heures: [matin, aprem]
+    tranches: 1
+    texte: "Le soigneur strappe une cheville sur la table, la bande entre les dents. « Celui-là jouera. Celui-là aussi, s'il ne court pas. »"
+    textes:
+      - "Le soigneur strappe une cheville sur la table, la bande entre les dents. « Celui-là jouera. Celui-là aussi, s'il ne court pas. »"
+      - "Un défenseur à plat ventre, un sac de glace sur la cuisse. Il te regarde arriver dans le miroir de l'armoire à pharmacie, et ferme les yeux."
+      - "Le soigneur te montre une liste au crayon : trois noms, trois flèches. « Lundi, mardi, peut-être. » Tu demandes pour samedi ; il hausse les épaules."
+      - "La table est vide, la serviette pliée en carré. Dans le cahier des soins, la même cheville revient quatre fois ce mois-ci."
+
+  - id: stade_douche
+    lieu: stade
+    objet: douches
+    label: "Une douche longue"
+    roles: [joueur]
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    texte: "L'eau chaude tient trois minutes, puis les tuyaux cognent. Ceux qui traînent se lavent à l'eau froide ; aujourd'hui, c'est toi."
+    textes:
+      - "L'eau chaude tient trois minutes, puis les tuyaux cognent. Ceux qui traînent se lavent à l'eau froide ; aujourd'hui, c'est toi."
+      - "Sous la douche d'à côté, l'avant-centre chante faux un chant de la Nord. Les autres reprennent le refrain ; toi aussi, sans y penser."
+      - "Tu restes sous l'eau jusqu'à ce que le vestiaire se vide. La vapeur efface les carreaux, le banc, les maillots jetés en tas."
+      - "Une flaque grise sous la grille, depuis des mois. Tu y vois ton reflet en te séchant, et un carreau fendu juste au-dessus de ta tête."
+
+  - id: stade_nettoyer
+    lieu: stade
+    objet: douches
+    label: "Nettoyer le vestiaire"
+    roles: [joueur]
+    si: "division >= 2 && age <= 24"
+    heures: [aprem, soir]
+    tranches: 1
+    francs: 60
+    max_jour: 1
+    jauges: {vestiaire: 1}
+    texte: "La raclette, le seau, le produit qui pique. Tu pousses l'eau vers la grille des douches pendant que les autres se rhabillent ; l'intendant te paie à la porte."
+    textes:
+      - "La raclette, le seau, le produit qui pique. Tu pousses l'eau vers la grille des douches pendant que les autres se rhabillent ; l'intendant te paie à la porte."
+      - "Tu ramasses les bandes de strap, les chaussettes orphelines, une bague. La bague, tu la poses sur le banc du capitaine ; le lendemain, elle n'y est plus."
+      - "Les anciens te regardent passer la serpillière. L'un d'eux soulève ses pieds sans lever les yeux de son journal, comme chez lui."
+      - "Le vestiaire vide sent l'embrocation et le chlore. Tu finis par les douches, en chantant, puisque personne n'écoute."
+
+  - id: stade_plombier
+    lieu: stade
+    objet: douches
+    label: "Payer le plombier"
+    roles: [president]
+    heures: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+    tranches: 1
+    francs: -800
+    max_jour: 1
+    jauges: {vestiaire: 2}
+    texte: "Le plombier ouvre le mur et montre, à la lampe, des tuyaux d'avant-guerre. « Je peux réparer. Ou je peux vous dire la vérité. » Tu paies pour réparer."
+    textes:
+      - "Le plombier ouvre le mur et montre, à la lampe, des tuyaux d'avant-guerre. « Je peux réparer. Ou je peux vous dire la vérité. » Tu paies pour réparer."
+      - "Encore la vanne du fond. Tu règles la facture de ta poche ; le capitaine l'apprend par le plombier, pas par toi, et c'est mieux comme ça."
+      - "Deux jours de travaux, l'eau coupée. Les joueurs se douchent au centre de formation ; le troisième jour, l'eau chaude tient tout l'entraînement."
+      - "Le plombier facture au club, puis se ravise : « À vous, en personne. Le club, je connais ses délais. » Tu le règles sur le capot de sa camionnette."
+
+  - id: stade_frappes
+    lieu: stade
+    objet: ballons
+    label: "Des frappes en plus"
+    roles: [joueur]
+    heures: [matin, aprem]
+    tranches: 1
+    jauges: {direction: 1}
+    texte: "Tu restes après la séance avec le sac de ballons. Trente frappes du pied faible. À la vingtième, il commence à obéir."
+    textes:
+      - "Tu restes après la séance avec le sac de ballons. Trente frappes du pied faible. À la vingtième, il commence à obéir."
+      - "Le gardien remplaçant reste avec toi, pour rien, parce que personne ne reste jamais avec lui. Il arrête une frappe sur trois et te remercie."
+      - "Des coups francs contre un mur de mannequins en bois. Celui du milieu a pris tant de ballons qu'il penche vers la droite."
+      - "Tu frappes jusqu'à ce que le jardinier lance l'arrosage. Le dernier ballon roule dans l'eau ; tu le laisses là, et tu rentres."
+
+  # ══════════════════════════════════════════════════ le centre de formation
+  # (`jeunes`, `gamins`, `centre_formation_ds` restent sans objet : on regarde
+  # les gamins jouer dehors, sur le synthétique)
+  - id: centre_lits
+    lieu: centre
+    objet: lits
+    label: "Le tour des chambres"
+    tranches: 0
+    texte: "Douze lits au carré, sauf un, défait, avec un ballon sous l'oreiller. L'éducateur le refait sans un mot ; le ballon reste dessous."
+    textes:
+      - "Douze lits au carré, sauf un, défait, avec un ballon sous l'oreiller. L'éducateur le refait sans un mot ; le ballon reste dessous."
+      - "Au-dessus d'un lit, une carte du pays et une punaise sur un village que tu ne connais pas. Le gamin a écrit à côté : « 340 km »."
+      - "Une photo coincée dans le cadre d'un lit : une mère, trois sœurs, un chien. Le gamin te la montre, et dit le nom du chien en premier."
+      - "Les deux lits du fond sont vides depuis la Toussaint : deux gamins renvoyés chez eux. Les draps sont pliés dessus, prêts pour les suivants."
+
+  - id: centre_penalty
+    lieu: centre
+    objet: crampons
+    label: "Des tirs au but"
+    jeu: penalty
+    tranches: 0
+    max_jour: 2
+    texte: "Tu empruntes une paire de crampons dans le couloir, une pointure de moins. Le gardien des moins de quinze ans t'attend déjà dans le but."
+    textes:
+      - "Tu empruntes une paire de crampons dans le couloir, une pointure de moins. Le gardien des moins de quinze ans t'attend déjà dans le but."
+      - "Les gamins se mettent en rang derrière toi pour voir. Le petit gardien crache dans ses gants, comme il l'a vu faire à la télé."
+      - "Cinq tirs, et le gamin dans le but qui annonce ton côté avant chaque course. Il se trompe une fois sur deux ; il continue d'annoncer."
+
+  - id: centre_crampons
+    lieu: centre
+    objet: crampons
+    label: "Brosser les crampons"
+    tranches: 1
+    texte: "Une brosse, un seau d'eau, douze paires couvertes de boue. Les gamins frottent avec toi, en silence, puis en concours."
+    textes:
+      - "Une brosse, un seau d'eau, douze paires couvertes de boue. Les gamins frottent avec toi, en silence, puis en concours."
+      - "Une paire a les crampons usés jusqu'aux vis. Tu les changes avec la clé du couloir ; le gamin te suit des yeux comme un mécanicien."
+      - "Tu alignes les paires par pointure, de la plus petite à la plus grande. Les gamins disent que c'est l'ordre dans lequel ils partiront."
+      - "Une paire neuve, la boîte encore dessous, le prix sur l'étiquette. Le gamin la porte à la main, en chaussettes, pour ne pas l'abîmer."
+
+  - id: centre_resultats
+    lieu: centre
+    objet: resultats
+    label: "Lire les résultats"
+    tranches: 0
+    texte: "Le tableau des jeunes, au feutre : les moins de quinze ans ont perdu 7-0 à Nerville. Quelqu'un a ajouté, d'une écriture d'enfant : « Et alors ? »"
+    textes:
+      - "Le tableau des jeunes, au feutre : les moins de quinze ans ont perdu 7-0 à Nerville. Quelqu'un a ajouté, d'une écriture d'enfant : « Et alors ? »"
+      - "Les buteurs de la saison, en colonne. Le même prénom revient neuf fois chez les moins de treize ans ; à côté, un dessin de couronne."
+      - "Une ligne barrée en rouge : un match perdu sur tapis vert, un gamin sans licence. L'éducateur a écrit la date du rappel en dessous."
+      - "En haut du tableau, les anciens du centre passés pros, cinq noms en vingt ans. Le dernier est encore à l'encre fraîche."
+
+  - id: centre_video
+    lieu: centre
+    objet: video
+    label: "Une cassette aux gamins"
+    tranches: 1
+    texte: "Le magnétoscope avale la cassette avec un bruit de dents. Un vieux match du club, sans le son. Les gamins rient des shorts, puis se taisent."
+    textes:
+      - "Le magnétoscope avale la cassette avec un bruit de dents. Un vieux match du club, sans le son. Les gamins rient des shorts, puis se taisent."
+      - "Tu passes au ralenti l'action de samedi des moins de dix-sept ans. Le défenseur fautif regarde ses pieds ; tu arrêtes l'image sur son bon geste d'avant."
+      - "La bande saute à chaque but, usée d'être rembobinée. Le plus beau but du club a été vu tant de fois qu'il ne passe plus que dans la neige."
+      - "Les gamins réclament la cassette des buts de la saison, encore. Tu la mets ; ils annoncent chaque but avant qu'il arrive, en chœur."
+
+  - id: centre_devoirs
+    lieu: centre
+    objet: devoirs
+    label: "Aider aux devoirs"
+    tranches: 1
+    texte: "Des fractions, et un gamin de quatorze ans qui compte sur ses doigts sous la table. Tu expliques avec un terrain : un quart, c'est la moitié d'une moitié."
+    textes:
+      - "Des fractions, et un gamin de quatorze ans qui compte sur ses doigts sous la table. Tu expliques avec un terrain : un quart, c'est la moitié d'une moitié."
+      - "Une rédaction à rendre : « Mon héros ». Le gamin a écrit trois lignes sur toi, puis les a barrées pour écrire sur son grand-père. C'est mieux."
+      - "La table des devoirs, une lampe qui clignote, des cartables ouverts. Un gamin récite sa leçon de géographie en jonglant avec une gomme."
+      - "Une dictée sur les saisons. Tu dictes lentement ; au mot « automne », le gamin lève la tête : « C'est quand on redescend ? »"
+
+  # ════════════════════════════════════════ la salle de muscu (le garage Mazurier)
+  # (le banc porte aussi `fonte` : ville.yaml)
+  - id: muscu_parer
+    lieu: muscu
+    objet: banc
+    label: "Parer quelqu'un"
+    tranches: 0
+    texte: "Un gars du quartier te fait signe de venir derrière la barre. Tu poses les mains dessous sans la toucher. À la huitième, tu la touches."
+    textes:
+      - "Un gars du quartier te fait signe de venir derrière la barre. Tu poses les mains dessous sans la toucher. À la huitième, tu la touches."
+      - "Le préparateur charge la barre pour un défenseur et te demande de parer. Le défenseur grimace, pousse, ne dit rien ; toi non plus."
+      - "Tu pares un vieux du quartier qui soulève plus que toi, en silence, depuis trente ans. Il se relève, tapote la barre : « Elle est fidèle. »"
+      - "Le banc colle de sueur. Tu passes la serviette avant de te placer derrière ; le gars allongé rit : « Toi, t'as des manières. »"
+
+  - id: muscu_halteres
+    lieu: muscu
+    objet: halteres
+    label: "Une série d'haltères"
+    tranches: 1
+    francs: -10
+    texte: "Les haltères sont rangés du plus léger au plus lourd, sauf la paire de douze, toujours ailleurs. Tu fais tes séries avec la paire de dix."
+    textes:
+      - "Les haltères sont rangés du plus léger au plus lourd, sauf la paire de douze, toujours ailleurs. Tu fais tes séries avec la paire de dix."
+      - "Curl, rowing, épaules. Dans le miroir, un gamin te copie geste pour geste, en plus léger, sans savoir que tu le vois."
+      - "Les haltères de rééducation, peints en jaune. Tu fais tes rotations d'épaule à côté d'une dame de soixante-dix ans qui en fait plus que toi."
+      - "Le patron de la salle a soudé lui-même les haltères de vingt-cinq, avec des disques de camion. Ils ne sont pas droits ; ils sont lourds."
+
+  - id: muscu_sac
+    lieu: muscu
+    objet: sac
+    label: "Taper dans le sac"
+    tranches: 1
+    francs: -10
+    texte: "Le sac de frappe pend à une chaîne de garage, rapiécé au ruban isolant. Tu frappes jusqu'à ne plus penser à samedi. Ça prend vingt minutes."
+    textes:
+      - "Le sac de frappe pend à une chaîne de garage, rapiécé au ruban isolant. Tu frappes jusqu'à ne plus penser à samedi. Ça prend vingt minutes."
+      - "Tu frappes sans gants ; la peau des jointures s'ouvre à la troisième série. Le patron te lance des bandes sans un mot, de l'autre bout de la salle."
+      - "Un ancien boxeur te corrige la garde, deux doigts sur ton coude. « Tu frappes avec la colère. La colère, ça fatigue. Frappe avec les pieds. »"
+      - "Le sac revient sur toi à chaque coup, comme une marée. Tu t'arrêtes quand il ne bouge plus, et toi non plus."
+
+  - id: muscu_tapis
+    lieu: muscu
+    objet: tapis
+    label: "Courir sur le tapis"
+    tranches: 1
+    francs: -10
+    texte: "Le tapis de course vient d'une clinique de Montbéliac ; il a gardé son étiquette d'inventaire. Tu cours quarante minutes face au mur de parpaings."
+    textes:
+      - "Le tapis de course vient d'une clinique de Montbéliac ; il a gardé son étiquette d'inventaire. Tu cours quarante minutes face au mur de parpaings."
+      - "Tu cours en regardant la rue par la vitre sale de l'ancien garage. Un bus passe deux fois ; entre les deux, cinq kilomètres."
+      - "Le tapis grince à chaque foulée gauche. Le patron dit que c'est le tapis ; le Doc, l'autre jour, a dit que c'était ton genou."
+      - "Le compteur s'arrête à neuf kilomètres et revient à zéro. Tu continues sans savoir combien, ce qui est la seule façon de courir longtemps."
+
+  - id: muscu_radio
+    lieu: muscu
+    objet: radio
+    label: "Changer de station"
+    tranches: 0
+    texte: "La radio crache les infos régionales entre deux grésillements. Tu tournes le bouton ; toute la salle proteste, alors tu le remets."
+    textes:
+      - "La radio crache les infos régionales entre deux grésillements. Tu tournes le bouton ; toute la salle proteste, alors tu le remets."
+      - "Une chanson de ta jeunesse. Tu ne la chantes pas. Le gars du banc d'à côté la chante, faux, et soulève mieux."
+      - "La radio locale parle du club. Le patron monte le son et te regarde dans le miroir, pour voir ta tête."
+      - "Le bouton du volume est cassé ; on règle le son à la pince. Aujourd'hui, la pince a disparu, et la salle s'entraîne au son des publicités."
+
+  - id: muscu_miroir
+    lieu: muscu
+    objet: miroir
+    label: "Se regarder dans le miroir"
+    tranches: 0
+    texte: "Le miroir de la salle est taché de chaux. Tu y vois un corps qui a ton âge, ce qui n'arrive pas tous les jours."
+    textes:
+      - "Le miroir de la salle est taché de chaux. Tu y vois un corps qui a ton âge, ce qui n'arrive pas tous les jours."
+      - "Tu regardes la vieille cicatrice au-dessus du sourcil, de profil, comme celle d'un autre. Elle a blanchi. Le reste, pas encore."
+      - "Un gamin s'admire dans le miroir entre deux séries, de face, de dos. Il te voit le voir, rougit, et refait une série pour se donner une contenance."
+      - "Dans le miroir, derrière toi, la porte s'ouvre : un photographe de L'Écho prend la salle en photo, puis toi, sans le dire."
+
+  # ═══════════════════════════════════════════════════════ la boutique du club
+  # (la caisse porte aussi `dedicaces` : ville.yaml)
+  - id: boutique_echarpe
+    lieu: boutique
+    objet: echarpes
+    label: "Acheter une écharpe"
+    tranches: 0
+    francs: -80
+    max_jour: 1
+    jauges: {tribunes: 1}
+    texte: "Tu choisis une écharpe au mur, la plus simple, tricotée serré. La vendeuse l'enroule dans du papier de soie : « C'est pour vous ? Vraiment ? »"
+    textes:
+      - "Tu choisis une écharpe au mur, la plus simple, tricotée serré. La vendeuse l'enroule dans du papier de soie : « C'est pour vous ? Vraiment ? »"
+      - "Le mur des écharpes, du sol au plafond, toutes les saisons. Tu prends celle de l'année de la montée ; la vendeuse hoche la tête, comme à un examen réussi."
+      - "La vendeuse te tend une écharpe neuve et en décroche une vieille, délavée, qu'elle garde contre elle : « Celle-là, non. C'était celle de mon frère. »"
+      - "Tu noues l'écharpe devant la glace. Deux gamins collés à la vitrine te regardent faire, puis refont le nœud sur leurs propres cous."
+
+  - id: boutique_soldes
+    lieu: boutique
+    objet: maillots
+    label: "Fouiller les soldes"
+    tranches: 0
+    texte: "Les maillots de la saison dernière, à moitié prix, sur un portant qui grince. Un numéro revient souvent : celui d'un joueur parti fâché."
+    textes:
+      - "Les maillots de la saison dernière, à moitié prix, sur un portant qui grince. Un numéro revient souvent : celui d'un joueur parti fâché."
+      - "Un maillot taille enfant au numéro d'un ancien capitaine, oublié au fond du bac. La vendeuse dit qu'il est réservé depuis trois ans."
+      - "Une mère cherche un maillot pour son fils, « celui qui a marqué samedi ». La vendeuse sort trois numéros ; aucun n'a marqué."
+      - "Les soldes sentent le carton et le plastique neuf. Une étiquette a été recollée trois fois, chaque fois plus bas."
+
+  - id: boutique_vitrine
+    lieu: boutique
+    objet: vitrine_1974
+    label: "Le maillot de 1974"
+    si: "!possede(maillot_1974)"
+    tranches: 0
+    texte: "Le maillot de la finale de 1974 sous verre, la boue encore sur le numéro. Un ancien te dit qu'il était à la buvette, ce jour-là, et qu'il a tout entendu."
+    textes:
+      - "Le maillot de la finale de 1974 sous verre, la boue encore sur le numéro. Un ancien te dit qu'il était à la buvette, ce jour-là, et qu'il a tout entendu."
+      - "Le col est déchiré à gauche, là où l'arrière adverse l'a tenu sur le dernier corner. On l'a encadré déchiré : c'est ce qui le rend vrai."
+      - "Un père soulève son fils devant la vitrine. « C'est le maillot. » Le gamin demande s'ils ont gagné. Le père met du temps à répondre."
+      - "Ton visage se pose dans le reflet, sur le numéro 5. La vendeuse dépoussière le cadre tous les mercredis, avec un plumeau plus vieux qu'elle."
+
+  - id: boutique_vitrine_vide
+    lieu: boutique
+    objet: vitrine_1974
+    label: "La vitrine vide"
+    si: "possede(maillot_1974)"
+    tranches: 0
+    texte: "La vitrine du maillot de 1974 est vide. À la place, un carton : « Acquis par un particulier ». Les anciens disent ton nom en passant devant."
+    textes:
+      - "La vitrine du maillot de 1974 est vide. À la place, un carton : « Acquis par un particulier ». Les anciens disent ton nom en passant devant."
+      - "Le crochet est resté, et la trace plus claire du cadre sur le velours. La vendeuse n'a pas eu le cœur de mettre autre chose."
+      - "Un enfant demande où est le maillot. La vendeuse te regarde avant de répondre : « Chez quelqu'un qui en prend soin. »"
+
+  - id: boutique_caisse
+    lieu: boutique
+    objet: caisse
+    label: "Tenir la caisse"
+    roles: [joueur]
+    si: "division >= 2"
+    jours: [mer]
+    tranches: 1
+    francs: 120
+    max_jour: 1
+    texte: "La vendeuse te laisse la caisse le temps d'aller chez le dentiste. Tu vends deux fanions et une écharpe, et tu offres un porte-clés sans le dire."
+    textes:
+      - "La vendeuse te laisse la caisse le temps d'aller chez le dentiste. Tu vends deux fanions et une écharpe, et tu offres un porte-clés sans le dire."
+      - "Un client te reconnaît en payant et compte sa monnaie lentement, pour faire durer. Il repart avec le ticket, plié dans son portefeuille."
+      - "Le tiroir-caisse coince. Au troisième client, tu as compris le coup de genou qu'il faut donner au meuble, et la vendeuse t'appelle « collègue »."
+      - "Mercredi après-midi, les gamins du centre aéré. Ils touchent tout, n'achètent rien, et te demandent de signer leurs avant-bras."
+
+  - id: boutique_fanions
+    lieu: boutique
+    objet: fanions
+    label: "Choisir un fanion"
+    tranches: 0
+    francs: -30
+    max_jour: 1
+    texte: "Des fanions triangulaires, au bout d'une ficelle, comme une guirlande. Tu en prends un pour le pare-brise ; la vendeuse fournit la ventouse."
+    textes:
+      - "Des fanions triangulaires, au bout d'une ficelle, comme une guirlande. Tu en prends un pour le pare-brise ; la vendeuse fournit la ventouse."
+      - "Le vieux fanion brodé, celui des années soixante, n'est pas à vendre. La vendeuse le décroche pour te le montrer, et le raccroche aussitôt."
+      - "Un fanion pour l'échange des capitaines, samedi. La vendeuse le roule dans du papier kraft pour qu'il ne se froisse pas dans le sac."
+      - "Une guirlande de fanions pour l'anniversaire d'un gamin du quartier. La vendeuse en ajoute un, gratuit : celui de la saison ratée."
+
+  # ═══════════════════════════════════════════ Brunel, tailleur et chausseur
+  - id: tailleur_retouche
+    lieu: tailleur
+    objet: comptoir
+    label: "Une retouche"
+    tranches: 0
+    francs: -40
+    max_jour: 1
+    texte: "Un bouton de veste à recoudre. Brunel le recoud devant toi, sans lunettes, le fil entre les dents, et te le compte comme une retouche entière."
+    textes:
+      - "Un bouton de veste à recoudre. Brunel le recoud devant toi, sans lunettes, le fil entre les dents, et te le compte comme une retouche entière."
+      - "Un ourlet défait. Brunel le mesure à l'épingle sur ta jambe, debout sur une marche, et note un chiffre dans un carnet à spirale."
+      - "Tu poses ta veste sur le comptoir. Brunel trouve le trou de la poche avant toi, puis une tache que tu n'avais pas vue, puis une autre."
+      - "Brunel prend ta veste du bout des doigts, la retourne, renifle la doublure : « Une nuit de match. Je vous la rends jeudi, propre. »"
+
+  - id: tailleur_parler
+    lieu: tailleur
+    objet: comptoir
+    label: "Écouter Brunel"
+    tranches: 1
+    texte: "Brunel parle en épinglant une manche : le président de 1981 avait un bras plus long que l'autre, celui qui signait. Il le dit sans sourire."
+    textes:
+      - "Brunel parle en épinglant une manche : le président de 1981 avait un bras plus long que l'autre, celui qui signait. Il le dit sans sourire."
+      - "Il te montre l'armoire aux patrons : les mesures de tous les présidents du club, en papier kraft. Les morts sont rangés à droite."
+      - "« Quelqu'un du club est venu hier. Un costume pour un mariage, a-t-il dit. Il n'avait pas une tête de mariage. » Brunel coupe un fil."
+      - "Brunel ne parle pas de football. Il parle des laines de 1960, qui grattaient, et des épaules qu'on mettait aux hommes pour qu'ils aient l'air de quelque chose."
+
+  - id: tailleur_costumes
+    lieu: tailleur
+    objet: costumes
+    label: "Essayer un costume"
+    tranches: 1
+    texte: "Brunel te fait passer une veste du portant, gris anthracite. Les épaules tombent juste ; les manches, non. Il le savait avant que tu l'enfiles."
+    textes:
+      - "Brunel te fait passer une veste du portant, gris anthracite. Les épaules tombent juste ; les manches, non. Il le savait avant que tu l'enfiles."
+      - "Un costume croisé bleu nuit, « pour les enterrements et les finales ». Tu le gardes un moment, puis tu le rends : ni l'un ni l'autre cette semaine."
+      - "Le costume d'un client qui n'est jamais venu le chercher. Il te va. « Il est mort, ou parti. Prenez-le à moitié prix. » Tu ne le prends pas."
+      - "Un smoking pour le gala de la Ligue, pris à la taille au crayon. Brunel tourne trois fois autour de toi et reprend tout."
+
+  - id: tailleur_miroir
+    lieu: tailleur
+    objet: miroir
+    label: "Le miroir à trois faces"
+    tranches: 0
+    texte: "Le miroir à trois faces te montre ton dos, que tu n'avais pas vu depuis longtemps. Il est plus voûté que dans ton souvenir."
+    textes:
+      - "Le miroir à trois faces te montre ton dos, que tu n'avais pas vu depuis longtemps. Il est plus voûté que dans ton souvenir."
+      - "Trois reflets dans le miroir, et aucun ne se tient droit. Brunel pose deux doigts entre tes omoplates : « Là. Pensez à là. »"
+      - "Dans le miroir de gauche, la vitrine, et dans la vitrine, deux supporters qui te regardent essayer une veste. Ils s'éloignent quand tu te retournes."
+      - "Ton profil, pour la première fois depuis des mois. Tu as le nez de ton père ; ça arrive maintenant, à cet âge-là."
+
+  - id: tailleur_cirer
+    lieu: tailleur
+    objet: chaussures
+    label: "Faire cirer tes chaussures"
+    tranches: 0
+    francs: -20
+    max_jour: 1
+    texte: "Brunel cire tes souliers sur un pied de fonte, à la brosse, au chiffon, puis du plat de la main. Ils brillent comme une voiture de mariage."
+    textes:
+      - "Brunel cire tes souliers sur un pied de fonte, à la brosse, au chiffon, puis du plat de la main. Ils brillent comme une voiture de mariage."
+      - "Il retourne ta chaussure et lit la semelle comme un dossier : « Vous marchez sur l'extérieur. Et vite. Vous êtes en retard partout. »"
+      - "Tu attends sur la chaise basse, en chaussettes, pendant qu'il cire. Une cliente entre, te voit en chaussettes, et ressort."
+      - "La cire noire, la brune, et une boîte sans couleur, « pour les souliers des enterrements ». Il ne précise pas lesquels."
+
+  - id: tailleur_cabine
+    lieu: tailleur
+    objet: cabine
+    label: "Un essayage"
+    tranches: 1
+    texte: "Derrière le rideau de la cabine, Brunel sert un conseiller municipal. Ils parlent du stade, puis de toi, à voix basse, puis du prix d'un gilet."
+    textes:
+      - "Derrière le rideau de la cabine, Brunel sert un conseiller municipal. Ils parlent du stade, puis de toi, à voix basse, puis du prix d'un gilet."
+      - "La cabine sent la naphtaline et la craie de tailleur. Une épingle oubliée te pique au deuxième bouton ; tu la plantes dans le rideau."
+      - "Tu ressors de la cabine. Brunel est à genoux, les épingles aux lèvres, et marque l'ourlet sans dire bonjour à la cliente qui attend."
+      - "Le rideau ne ferme jamais tout à fait. Par la fente, un gamin colle son nez à la vitrine pour regarder la montre en acier."
+
+  # ═════════════════════════════════════════════════════════ le garage du Pont
+  - id: garage_revision
+    lieu: garage
+    objet: pont
+    label: "Faire réviser la voiture"
+    tranches: 1
+    francs: -180
+    max_jour: 1
+    texte: "Ta voiture monte sur le pont, les roues dans le vide. Le garagiste passe dessous avec sa baladeuse et sifflote ; il s'arrête de siffler une fois."
+    textes:
+      - "Ta voiture monte sur le pont, les roues dans le vide. Le garagiste passe dessous avec sa baladeuse et sifflote ; il s'arrête de siffler une fois."
+      - "« Vous roulez beaucoup la nuit, vous. » Le garagiste le dit en lisant le compteur, pas en te regardant. Tu ne réponds pas."
+      - "Il te montre le dessous de la voiture : un coup sous la caisse, récent. « Un trottoir, ou un supporter ? » Il rit, toi non."
+      - "Pendant la révision, la radio du garage donne le classement. Le garagiste baisse le son quand on arrive au club, par délicatesse, ou l'inverse."
+
+  - id: garage_graisser
+    lieu: garage
+    objet: pont
+    label: "Graisser le pont"
+    si: "francs < 2000"
+    tranches: 1
+    francs: 150
+    max_jour: 1
+    texte: "Le garagiste te tend une combinaison trop grande et la pompe à graisse. Tu fais les vérins un par un ; il paie à l'heure, en liquide, sans facture."
+    textes:
+      - "Le garagiste te tend une combinaison trop grande et la pompe à graisse. Tu fais les vérins un par un ; il paie à l'heure, en liquide, sans facture."
+      - "Tu laves les occasions de la cour au jet. Les passants te reconnaissent derrière la mousse ; le garagiste dit que c'est bon pour la vente."
+      - "Il ne pose pas de question sur tes comptes. Il te montre le pont, la burette, la pile de chiffons. Le soir, il te paie et te dit : « Mardi. »"
+      - "Tu passes l'après-midi sous une citadine, à genoux sur un carton. Le garagiste te tend une bière et ta paie : « Les genoux, c'est en plus. »"
+
+  - id: garage_bache
+    lieu: garage
+    objet: bache
+    label: "Soulever la bâche"
+    tranches: 0
+    texte: "Sous la bâche, une voiture neuve qui sent la colle et le plastique. Le garagiste rabat le tissu avant que tu voies le prix : « Pas encore. »"
+    textes:
+      - "Sous la bâche, une voiture neuve qui sent la colle et le plastique. Le garagiste rabat le tissu avant que tu voies le prix : « Pas encore. »"
+      - "Tu soulèves un coin de la bâche : une calandre chromée, de la boue séchée sur le pare-chocs, une plaque qui n'est pas d'ici. Derrière toi, le garagiste tousse."
+      - "Le garagiste relève la bâche jusqu'aux phares, pas plus. « Celle-là, on la regarde par morceaux. Le prix aussi. »"
+      - "Sous la bâche, rien : des cartons et un vélo d'enfant. La voiture qui était là est partie dans la nuit. « Vendue », dit le garagiste, et il retourne sous son capot."
+
+  - id: garage_velo
+    lieu: garage
+    objet: etabli
+    label: "Réparer un vélo"
+    tranches: 1
+    jauges: {tribunes: 1}
+    texte: "Un gamin du square pousse son vélo dans la cour, la chaîne sautée. Le garagiste te tend la clé ; tu remets la chaîne, les doigts noirs jusqu'au poignet."
+    textes:
+      - "Un gamin du square pousse son vélo dans la cour, la chaîne sautée. Le garagiste te tend la clé ; tu remets la chaîne, les doigts noirs jusqu'au poignet."
+      - "Une roue voilée sur l'établi. Tu la redresses à la clé à rayons, un quart de tour à la fois ; le gamin compte les tours avec toi."
+      - "L'apprenti du garage te regarde réparer un vélo avec l'air de celui qui ferait mieux. Il a raison ; il te prend l'outil à la fin."
+      - "Une pièce de caoutchouc, de la colle, une bassine d'eau pour trouver la fuite. Les bulles montent ; le gamin applaudit comme pour un but."
+
+  - id: garage_vendeur
+    lieu: garage
+    objet: bureau
+    label: "Le café du vendeur"
+    tranches: 1
+    texte: "Le vendeur te sert un café dans un gobelet du club et pose sa calculette entre vous. Il ne la touche pas. Elle reste là, comme un chien qui attend."
+    textes:
+      - "Le vendeur te sert un café dans un gobelet du club et pose sa calculette entre vous. Il ne la touche pas. Elle reste là, comme un chien qui attend."
+      - "Il connaît ton salaire à la centaine près, et le dit en souriant, comme une politesse. Puis il te parle du crédit, pour les gens comme toi."
+      - "Sur son bureau, la photo d'un ancien du club au volant d'un coupé, dédicacée. « Il me doit encore deux traites. Mais quel joueur. »"
+      - "Il feuillette le catalogue de l'année devant toi, page par page, en mouillant son doigt. Tu repars avec la brochure et une migraine."
+
+  - id: garage_pneus_car
+    lieu: garage
+    objet: pneus
+    label: "Payer les pneus du car"
+    roles: [president, entraineur]
+    tranches: 0
+    francs: -1200
+    max_jour: 1
+    jauges: {vestiaire: 1}
+    texte: "Quatre pneus neufs pour le car du club, payés de ta poche. Le garagiste écrit « don » sur la facture, puis le barre : « Avec le fisc, on ne sait jamais. »"
+    textes:
+      - "Quatre pneus neufs pour le car du club, payés de ta poche. Le garagiste écrit « don » sur la facture, puis le barre : « Avec le fisc, on ne sait jamais. »"
+      - "Le chauffeur du car vient voir monter les pneus, les mains dans les poches, et tape du pied sur chacun, comme sur un cheval."
+      - "Le garagiste montre le vieux pneu au chauffeur, du pouce : on voit la toile. Le chauffeur hoche la tête, une fois."
+      - "Les pneus du car empilés dans la cour, ton nom à la craie sur le premier. Le garagiste l'efface avant qu'un journaliste passe."
+
+  # ═══════════════════════════════════════════ la loge du gardien du cimetière
+  - id: loge_registre
+    lieu: loge
+    objet: registre
+    label: "Signer le registre"
+    heures: [matin, aprem]
+    tranches: 0
+    texte: "Le gardien tourne le registre vers toi. Tu écris ton nom, l'heure, « caveau du Racing » ; il corrige l'heure de cinq minutes, à sa montre."
+    textes:
+      - "Le gardien tourne le registre vers toi. Tu écris ton nom, l'heure, « caveau du Racing » ; il corrige l'heure de cinq minutes, à sa montre."
+      - "Au-dessus de ta ligne, une écriture que tu connais, de la veille au soir. Le gardien referme le registre avant que tu lises le nom en entier."
+      - "Le registre a une colonne « motif ». Les gens écrivent « visite ». Toi aussi. Le gardien lit, hoche la tête, comme si c'était une réponse."
+      - "Un registre neuf cette année ; les anciens sont empilés sous la fenêtre, ficelés par décennie. Il dit qu'il les relit l'hiver, quand il n'y a personne."
+
+  - id: loge_poele
+    lieu: loge
+    objet: poele
+    label: "Se réchauffer au poêle"
+    heures: [matin, aprem]
+    tranches: 1
+    texte: "Le gardien t'ouvre la loge sans rien demander et pousse une chaise vers le poêle. Le café de la cafetière émaillée a le goût du fer."
+    textes:
+      - "Le gardien t'ouvre la loge sans rien demander et pousse une chaise vers le poêle. Le café de la cafetière émaillée a le goût du fer."
+      - "Le poêle ronfle, la vitre est jaune de suie. Le gardien parle des tombes comme d'un quartier : les calmes, les bruyantes, celles qu'on ne visite plus."
+      - "Tu tends les mains vers la fonte chaude. Sur le poêle, une casserole d'eau contre l'air sec, et une paire de gants qui sèche, raide comme du carton."
+      - "Il te raconte l'enterrement d'un ancien président du club : trois cents personnes, et la fanfare qui s'est trompée de morceau. Il en rit encore."
+
+  - id: loge_cles
+    lieu: loge
+    objet: cles
+    label: "La clé du caveau"
+    heures: [matin, aprem]
+    tranches: 0
+    texte: "Le trousseau pend à un clou, une clé par allée, étiquetées au sparadrap. Le gardien décroche celle du Racing sans chercher ; elle est plus usée que les autres."
+    textes:
+      - "Le trousseau pend à un clou, une clé par allée, étiquetées au sparadrap. Le gardien décroche celle du Racing sans chercher ; elle est plus usée que les autres."
+      - "« Le caveau du Racing ? » Il te tend la clé, puis la retient une seconde : « Vous la rapportez. Les gens du club la gardent, des fois. »"
+      - "Le gardien compte ses clés tous les soirs, à voix haute. Il en manque une depuis des années ; il la compte quand même, après un silence."
+
+  - id: loge_fenetre
+    lieu: loge
+    objet: fenetre
+    label: "Regarder les allées"
+    heures: [matin, aprem, soir]
+    tranches: 0
+    texte: "Par la fenêtre de la loge, l'allée principale, les cyprès, et une femme qui change l'eau d'un vase avec la lenteur de quelqu'un qui a le temps."
+    textes:
+      - "Par la fenêtre de la loge, l'allée principale, les cyprès, et une femme qui change l'eau d'un vase avec la lenteur de quelqu'un qui a le temps."
+      - "Le gardien te montre du menton un homme en blouson, au fond de l'allée des anciens. « Tous les jeudis. Il ne s'arrête jamais à la même tombe. »"
+      - "Des gamins escaladent le mur du fond pour récupérer un ballon. Le gardien les regarde faire sans bouger : « Ils le rendront. Ils le rendent toujours. »"
+      - "La pluie sur les allées, les tombes qui brillent. Le gardien aime ce temps-là : personne ne vient, et ceux qui viennent ont une raison."
+
+  # ═══════════════════════════════════════════════════════════ la grande halle
+  - id: halle_jongles
+    lieu: halle
+    objet: craie
+    label: "Jongler sous le toit"
+    jeu: jongles
+    tranches: 0
+    max_jour: 3
+    texte: "Un ballon dégonflé traîne au milieu du terrain à la craie. Tu le relèves du pied ; trois gamins sortent de derrière un pilier pour compter."
+    textes:
+      - "Un ballon dégonflé traîne au milieu du terrain à la craie. Tu le relèves du pied ; trois gamins sortent de derrière un pilier pour compter."
+      - "Sous le toit troué, le béton est sec au milieu, mouillé sur les bords. Tu jongles au sec, en visant le rond central tracé à la craie."
+      - "Deux boîtes de conserve font les buts ; un pilier, le poteau de corner. Ici, avant le match, on jongle : c'est comme ça qu'on choisit les équipes."
+
+  - id: halle_palettes
+    lieu: halle
+    objet: palettes
+    label: "S'asseoir sur les palettes"
+    tranches: 0
+    texte: "Tu t'assois sur une pile de palettes, à l'abri de la pluie. Au fond de la halle, des voix se taisent quand tu tousses, et reprennent plus bas."
+    textes:
+      - "Tu t'assois sur une pile de palettes, à l'abri de la pluie. Au fond de la halle, des voix se taisent quand tu tousses, et reprennent plus bas."
+      - "Quelqu'un a fait un canapé de palettes et de sièges de voiture. Sur l'accoudoir, un cendrier en boîte de thon, plein, et une écharpe du club."
+      - "Les palettes portent encore le tampon de la Tréfilerie. Un vieux du quartier passe et pose la main sur une, longtemps : il les clouait, à l'époque."
+      - "Tu regardes les pigeons entrer par le toit et ressortir par les fenêtres sans vitres, comme si la halle respirait."
+
+  - id: halle_decharger
+    lieu: halle
+    objet: palettes
+    label: "Décharger un camion"
+    si: "francs < 0"
+    heures: [soir]
+    tranches: 1
+    francs: 250
+    max_jour: 1
+    texte: "Un camion sans nom sur la bâche entre dans la halle à la tombée du jour. Un homme te paie d'avance pour décharger, et ne dit pas quoi. Tu ne demandes pas."
+    textes:
+      - "Un camion sans nom sur la bâche entre dans la halle à la tombée du jour. Un homme te paie d'avance pour décharger, et ne dit pas quoi. Tu ne demandes pas."
+      - "Des cartons collés au ruban, lourds, qui tintent. Tu les empiles sur les palettes avec deux types qui ne parlent pas ta langue, ni aucune autre ce soir."
+      - "Le chauffeur te paie en billets neufs, qui se suivent. « On ne s'est pas vus. » Tu dis non. C'est la seule chose vraie de la soirée."
+      - "Une heure de cartons sous le toit troué. Quand le camion repart, quelqu'un balaie les traces de pneus dans la poussière, soigneusement."
+
+  - id: halle_toit
+    lieu: halle
+    objet: toit
+    label: "Regarder le toit"
+    tranches: 0
+    texte: "Par le trou du toit, un carré de ciel de la taille d'une surface de réparation. La pluie tombe dedans, et seulement dedans."
+    textes:
+      - "Par le trou du toit, un carré de ciel de la taille d'une surface de réparation. La pluie tombe dedans, et seulement dedans."
+      - "Les pigeons se battent sur une poutre. Une plume descend en tournant pendant longtemps ; un gamin essaie de la reprendre de volée."
+      - "Par le toit, la nuit, on voit les projecteurs du stade quand ils s'allument. Ici, on sait qu'il y a match avant d'entendre le kop."
+      - "Une tôle bat au vent, à intervalles réguliers. Les gens de la halle n'y font plus attention ; toi, tu comptes."
+
+  - id: halle_tags
+    lieu: halle
+    objet: tags
+    label: "Lire les tags"
+    tranches: 0
+    texte: "Sur le mur nord, les chants du kop écrits à la bombe, avec les fautes d'origine. Personne ne les corrige : ce serait les trahir."
+    textes:
+      - "Sur le mur nord, les chants du kop écrits à la bombe, avec les fautes d'origine. Personne ne les corrige : ce serait les trahir."
+      - "Un tag frais, au-dessus des autres, à hauteur d'échelle : un numéro de maillot barré d'une croix. La peinture a coulé jusqu'au sol."
+      - "Des prénoms, des dates, des cœurs, le nom du club rival barré, et tout petit, à hauteur d'enfant, ton nom, sans faute."
+      - "Le plus vieux tag date de 1974 : la date de la finale, et un mot que la pluie a mangé. Les anciens ne sont pas d'accord sur ce qu'il disait."
+
+  - id: halle_couvrir
+    lieu: halle
+    objet: tags
+    label: "Recouvrir une insulte"
+    si: "tribunes < 35"
+    heures: [matin, midi, aprem, soir]
+    tranches: 1
+    francs: -40
+    max_jour: 1
+    texte: "Ton nom en lettres d'un mètre, et un mot à côté. Un pot de blanc, un rouleau : le soir, le mot a disparu, et ton nom est resté, plus propre."
+    textes:
+      - "Ton nom en lettres d'un mètre, et un mot à côté. Un pot de blanc, un rouleau : le soir, le mot a disparu, et ton nom est resté, plus propre."
+      - "Tu repeins le mur au rouleau. Un gamin te regarde faire, puis te montre un endroit que tu as oublié, plus bas, écrit plus petit."
+      - "Le blanc ne couvre pas le noir : il faut trois couches. À la deuxième, quelqu'un te prend en photo depuis l'entrée de la halle."
+      - "Tu recouvres l'insulte. Le lendemain, elle est réécrite à côté, plus haut, avec ta peinture, qu'on t'a empruntée dans la nuit."
+
+  # ═══════════════════════════════════════════════════════ le wagon abandonné
+  - id: wagon_matelas
+    lieu: wagon
+    objet: matelas
+    label: "S'asseoir sur le matelas"
+    tranches: 0
+    texte: "Le matelas sent la pluie et le tabac froid. Tu t'assois au bord, les coudes sur les genoux ; d'ici, les soirs de match, on entend le kop, très loin."
+    textes:
+      - "Le matelas sent la pluie et le tabac froid. Tu t'assois au bord, les coudes sur les genoux ; d'ici, les soirs de match, on entend le kop, très loin."
+      - "Une couverture militaire pliée en quatre, un oreiller fait d'un blouson roulé. Quelqu'un dort ici, et range avant de partir."
+      - "Sous le matelas dépasse un vieux programme de match, plié. L'occupant du wagon revient, te voit le regarder, et le remet en place du pied."
+      - "L'occupant te tend une boîte de biscuits sans rien dire. Tu en prends un, il en prend un, et c'est toute la conversation."
+
+  - id: wagon_dormir
+    lieu: wagon
+    objet: matelas
+    label: "Ne pas rentrer"
+    special: dormir
+    heures: [soir, nuit]
+    tranches: 0
+    texte: "Le matelas, la couverture militaire, le vent par la vitre cassée. Tu dors en manteau, les mains sous les bras."
+    textes:
+      - "Le matelas, la couverture militaire, le vent par la vitre cassée. Tu dors en manteau, les mains sous les bras."
+      - "Tu t'allonges dans le wagon pour ne pas rentrer. Les rails grincent toute la nuit, comme si un train allait venir."
+      - "L'occupant du wagon te laisse le matelas et prend le plancher. Au matin, il est parti, la couverture pliée sur toi."
+
+  - id: wagon_vitre
+    lieu: wagon
+    objet: vitre
+    label: "Regarder par la vitre"
+    tranches: 0
+    texte: "Par la vitre cassée, la voie qui s'en va dans les ronces, et au bout, les toits de la ville. Le vent passe par le trou en sifflant toujours la même note."
+    textes:
+      - "Par la vitre cassée, la voie qui s'en va dans les ronces, et au bout, les toits de la ville. Le vent passe par le trou en sifflant toujours la même note."
+      - "Le soir, par la vitre, les projecteurs du stade font une lueur jaune au-dessus de la friche, comme une ville plus loin."
+      - "Une étoile de verre autour d'un trou de la taille d'un caillou. Le caillou est encore là, dans le wagon, posé sur le rebord avec les allumettes."
+      - "Dehors, sur le ballast, un renard s'arrête, te regarde par la vitre et repart. Ici, c'est lui qui a l'air d'être chez lui."
+
+  - id: wagon_sac
+    lieu: wagon
+    objet: sac
+    label: "Glisser quelque chose"
+    tranches: 0
+    francs: -50
+    max_jour: 1
+    texte: "Tu glisses des billets dans la poche extérieure du sac, sous le rabat. La semaine suivante, ils y sont toujours, pliés autrement."
+    textes:
+      - "Tu glisses des billets dans la poche extérieure du sac, sous le rabat. La semaine suivante, ils y sont toujours, pliés autrement."
+      - "Un sandwich, une bouteille d'eau, l'argent dans le papier. Tu poses le tout sur le sac, en évidence ; le soir, il n'y a plus rien."
+      - "Tu laisses l'argent sous la bougie, pas dans le sac. Le sac, c'est chez lui. Il n'y a pas de porte au wagon ; il y a le sac."
+      - "Sur le sac, un mot au crayon de menuisier : « Pas besoin. Merci. » L'argent de la dernière fois est dessous, au complet. Tu le laisses où il est."
+
+  - id: wagon_bougie
+    lieu: wagon
+    objet: bougie
+    label: "Allumer la bougie"
+    heures: [soir, nuit]
+    tranches: 0
+    texte: "Tu rallumes la bougie avec une allumette de la boîte posée à côté. La flamme se couche, se relève ; le wagon devient une pièce, avec des murs."
+    textes:
+      - "Tu rallumes la bougie avec une allumette de la boîte posée à côté. La flamme se couche, se relève ; le wagon devient une pièce, avec des murs."
+      - "La bougie est plantée dans une bouteille, la cire en coulées jusqu'au fond. Quelqu'un la change tous les soirs ; toujours la même, la moins chère."
+      - "À la lueur de la bougie, des mots gravés au couteau dans la paroi : un prénom, un score, et « ici c'est chez moi »."
+      - "Tu regardes la flamme jusqu'à ce qu'elle te brûle les yeux. Au loin, un train de marchandises passe sur la grande ligne, sans s'arrêter."
+
+  # ═══════════════════════════════════════════════════════ le caveau du Racing
+  # (les noms gravés portent aussi `recueillement` : ville.yaml)
+  - id: caveau_plaque
+    lieu: caveau
+    objet: plaque
+    label: "Toucher la plaque neuve"
+    tranches: 0
+    texte: "La plaque neuve brille plus que les autres, le marbre sans une rayure. Les escargots du caveau la contournent ; ils ne l'ont pas encore apprise."
+    textes:
+      - "La plaque neuve brille plus que les autres, le marbre sans une rayure. Les escargots du caveau la contournent ; ils ne l'ont pas encore apprise."
+      - "Tu poses la main à plat sur la plaque neuve. Elle est froide au milieu, tiède sur les bords, là où le soleil de l'après-midi l'a prise."
+      - "Le marbrier a laissé un trait de crayon sous la plaque neuve, pour l'alignement. Personne ne l'a effacé ; il fait partie du caveau, maintenant."
+      - "Une vieille dame te demande pour qui est la plaque neuve. Tu dis que tu ne sais pas. Elle dit : « Moi non plus. Mais je la salue. »"
+
+  - id: caveau_noms
+    lieu: caveau
+    objet: noms
+    label: "Chercher un nom"
+    tranches: 0
+    texte: "Les présidents en lettres d'or, les capitaines en noir. Tu cherches le soigneur ; il est en bas, à gauche, en lettres plus petites, sans titre."
+    textes:
+      - "Les présidents en lettres d'or, les capitaines en noir. Tu cherches le soigneur ; il est en bas, à gauche, en lettres plus petites, sans titre."
+      - "Un capitaine de 1962, mort en 1963. Tu fais le calcul deux fois. Quelqu'un a gratté la pierre autour de l'année, comme pour l'effacer."
+      - "Tu lis les noms à voix basse, comme une composition d'équipe. Il en manque un pour faire onze ; il en manque toujours un."
+      - "Un nom du quartier : le grand-père d'un gamin du centre. Il était dans les buts en 1948, et plus personne ne le savait."
+
+  - id: caveau_echarpes
+    lieu: caveau
+    objet: echarpes
+    label: "Changer les écharpes"
+    heures: [matin, midi, aprem, soir]
+    tranches: 1
+    francs: -120
+    max_jour: 1
+    jauges: {tribunes: 1}
+    texte: "Tu dénoues les écharpes délavées, grises de pluie, et tu en noues trois neuves à la grille du caveau. Les vieilles, tu ne sais pas où les mettre."
+    textes:
+      - "Tu dénoues les écharpes délavées, grises de pluie, et tu en noues trois neuves à la grille du caveau. Les vieilles, tu ne sais pas où les mettre."
+      - "Une écharpe délavée tombe en morceaux quand tu la dénoues. Tu ramasses les bouts de laine un par un ; le vent en emporte un vers l'allée."
+      - "Tu noues une écharpe neuve. Le lendemain, une vieille dame en a noué une autre à côté, plus ancienne encore, qu'elle gardait chez elle."
+      - "Le gardien te voit de loin. Il vient t'aider à démêler les nœuds de l'hiver, et garde pour lui une écharpe de soixante et onze, « pour la loge »."
+
+  - id: caveau_cierge
+    lieu: caveau
+    objet: cierge
+    label: "Allumer un cierge"
+    tranches: 0
+    francs: -5
+    max_jour: 1
+    texte: "Le cierge du caveau est presque fini. Tu en allumes un neuf à sa flamme avant qu'elle s'éteigne, pour que ce soit la même."
+    textes:
+      - "Le cierge du caveau est presque fini. Tu en allumes un neuf à sa flamme avant qu'elle s'éteigne, pour que ce soit la même."
+      - "Le vent souffle le cierge deux fois. À la troisième, tu fais un abri de tes mains ; la flamme tient, et tes doigts sentent la cire jusqu'au soir."
+      - "Les cierges attendent dans une boîte en fer, sous la grille. On paie dans une tirelire en forme de ballon, cabossée, que personne n'a jamais volée."
+      - "Tu allumes le cierge sans savoir pour qui. Pour tous : ceux qui ont joué ici, et celui qui n'a pas encore de nom."
+
+  # ═══════════════════════════════════════════════════════ le local du matériel
+  - id: materiel_filets
+    lieu: materiel
+    objet: filets
+    label: "Réparer un filet"
+    heures: [matin, aprem]
+    tranches: 1
+    jauges: {vestiaire: 1}
+    texte: "Un trou dans le filet, à la lucarne gauche, là où le 9 frappe tout. Tu le recouds à la ficelle de jardin pendant que l'intendant tient l'autre bout."
+    textes:
+      - "Un trou dans le filet, à la lucarne gauche, là où le 9 frappe tout. Tu le recouds à la ficelle de jardin pendant que l'intendant tient l'autre bout."
+      - "Les filets sentent la terre et l'herbe coupée. Tu cherches les trous à la lampe, en les tendant sur le dossier d'une chaise ; il y en a plus que de mailles."
+      - "L'intendant te montre son nœud, celui des marins : trois tours et une boucle. Le tien tient aussi, dit-il, mais pas pour les mêmes raisons."
+      - "Un filet neuf coûte ce que le club n'a pas. Alors on recoud l'ancien chaque année, et chaque année il ressemble un peu plus à une carte routière."
+
+  - id: materiel_chasubles
+    lieu: materiel
+    objet: chasubles
+    label: "Trier les chasubles"
+    roles: [joueur]
+    si: "division >= 2"
+    heures: [matin, aprem]
+    tranches: 1
+    francs: 50
+    max_jour: 1
+    texte: "Quarante chasubles, quatre couleurs, une pile. Tu les tries par couleur puis par taille ; l'intendant ajoute une pièce « pour les jaunes », qui sentent."
+    textes:
+      - "Quarante chasubles, quatre couleurs, une pile. Tu les tries par couleur puis par taille ; l'intendant ajoute une pièce « pour les jaunes », qui sentent."
+      - "Les rouges ont déteint sur les jaunes au dernier lavage. L'intendant les appelle maintenant « les orange », et tu les ranges à part."
+      - "Tu comptes les chasubles. Il en manque trois, comme chaque mois. L'intendant les inscrit au registre, à ton nom, puis barre ton nom."
+      - "Tu plies les chasubles en carré, « comme à l'armée », dit l'intendant, qui n'a pas fait l'armée. Il te paie en monnaie, sortie d'une boîte à sucre."
+
+  - id: materiel_equipes
+    lieu: materiel
+    objet: chasubles
+    label: "Faire les équipes"
+    roles: [entraineur, selectionneur]
+    heures: [matin, aprem]
+    tranches: 0
+    texte: "Tu fais les équipes de la séance avec les chasubles, sur le banc du local. Les jaunes, les titulaires ; tu glisses un jaune chez les rouges, pour voir."
+    textes:
+      - "Tu fais les équipes de la séance avec les chasubles, sur le banc du local. Les jaunes, les titulaires ; tu glisses un jaune chez les rouges, pour voir."
+      - "Une chasuble par nom, posée en tas. L'intendant regarde par-dessus ton épaule et dit seulement : « Ils vont comprendre, avec les couleurs. »"
+      - "Tu inverses deux chasubles au dernier moment. C'est la seule décision de la journée qui fera parler le vestiaire, et tu le sais en la prenant."
+
+  - id: materiel_tondeuse
+    lieu: materiel
+    objet: tondeuse
+    label: "Réparer la tondeuse"
+    heures: [matin, aprem]
+    tranches: 1
+    texte: "Tu tires sur le lanceur. La tondeuse tousse, crache une fumée bleue et se tait. L'intendant : « Elle fait ça depuis le printemps. Elle boude. »"
+    textes:
+      - "Tu tires sur le lanceur. La tondeuse tousse, crache une fumée bleue et se tait. L'intendant : « Elle fait ça depuis le printemps. Elle boude. »"
+      - "Bougie, filtre, essence fraîche. Tu démontes la tondeuse sur un carton, pièce par pièce. Au remontage, il te reste une vis ; elle démarre mieux qu'avant."
+      - "La tondeuse démarre, avance de trois mètres et cale dans la touffe d'herbe qu'elle devait couper. L'intendant applaudit, doucement."
+      - "Le devis d'une tondeuse neuve est punaisé au mur depuis deux saisons. Le prix a été corrigé au stylo, deux fois, à la hausse."
+
+  - id: materiel_cadenas
+    lieu: materiel
+    objet: cadenas
+    label: "Ouvrir le cadenas"
+    tranches: 0
+    texte: "Le code du cadenas, tout le monde le connaît : l'année de la finale. Tu fais tourner 1-9-7-4, et il s'ouvre avec un bruit de vieille porte."
+    textes:
+      - "Le code du cadenas, tout le monde le connaît : l'année de la finale. Tu fais tourner 1-9-7-4, et il s'ouvre avec un bruit de vieille porte."
+      - "Le cadenas est gelé. Tu souffles dessus, tu le frottes entre tes mains ; l'intendant arrive avec une bouilloire et règle ça en deux secondes."
+      - "Quelqu'un a changé le code. Personne ne le connaît, pas même l'intendant, qui tourne les molettes au hasard en jurant entre ses dents."
+      - "Le cadenas pend, ouvert, la porte entrebâillée. Rien ne manque ; l'intendant recompte tout, et ne dit plus rien de la journée."
+
+  - id: materiel_ballons
+    lieu: materiel
+    objet: ballons
+    label: "Essayer un ballon"
+    jeu: jongles
+    tranches: 0
+    max_jour: 3
+    texte: "L'intendant regonfle un ballon à la pompe à pied et te le lance : « Dis-moi s'il est rond. » Le seul moyen de savoir, c'est de jongler."
+    textes:
+      - "L'intendant regonfle un ballon à la pompe à pied et te le lance : « Dis-moi s'il est rond. » Le seul moyen de savoir, c'est de jongler."
+      - "Un ballon neuf, encore lisse. Tu le fais monter sur le cou-de-pied, devant la porte du local, au-dessus du gravier du parking."
+      - "Le ballon de la réserve, recousu à la main, a un côté plus lourd. Il faut apprendre son défaut avant de le jongler."
+
+  # ══════════════════════════════════════════════════════════ la gare routière
+  - id: gare_guichet
+    lieu: gareRoutiere
+    objet: guichet
+    label: "Payer le car d'un gamin"
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    francs: -60
+    max_jour: 1
+    texte: "Au guichet, un gamin du centre compte ses pièces pour le car de Montbéliac, et il en manque. Tu complètes. Il te rend la monnaie, au centime près."
+    textes:
+      - "Au guichet, un gamin du centre compte ses pièces pour le car de Montbéliac, et il en manque. Tu complètes. Il te rend la monnaie, au centime près."
+      - "Le guichetier imprime le billet d'un gamin qui rentre chez sa mère pour le week-end. Tu paies ; le gamin dit merci au guichetier, pas à toi."
+      - "Un aller simple pour Portclair, pour un gamin qu'on a renvoyé du centre. Tu le paies sans poser de question. Il a son sac, et pas de manteau."
+      - "Le gamin veut payer lui-même, avec un billet froissé de sa grand-mère. Tu le laisses faire, et tu lui paies un sandwich à la place."
+
+  - id: gare_horaires
+    lieu: gareRoutiere
+    objet: horaires
+    label: "Lire les horaires"
+    tranches: 0
+    texte: "Portclair, Montbéliac, Valdorne, trois fois par jour. Le car de cinq heures dix est barré au feutre : supprimé, sans explication."
+    textes:
+      - "Portclair, Montbéliac, Valdorne, trois fois par jour. Le car de cinq heures dix est barré au feutre : supprimé, sans explication."
+      - "Sous les horaires, l'affiche du car des supporters pour le déplacement à Nerville. Départ sept heures, retour « après la buvette »."
+      - "Les horaires du dimanche tiennent sur une ligne. Quelqu'un a écrit dessous, au stylo : « Le dimanche, ici, on reste. »"
+      - "Un car de nuit pour la capitale, collé par-dessus l'ancien horaire. Il part à vingt-trois heures dix. Il y a toujours quelqu'un pour le prendre."
+
+  - id: gare_bancs
+    lieu: gareRoutiere
+    objet: bancs
+    label: "Attendre sur un banc"
+    heures: [matin, midi, aprem, soir]
+    tranches: 1
+    texte: "Sur le banc du quai 2, une femme tricote une écharpe aux couleurs du club pour un petit-fils qui joue ailleurs. Elle ne lève pas les yeux du rang."
+    textes:
+      - "Sur le banc du quai 2, une femme tricote une écharpe aux couleurs du club pour un petit-fils qui joue ailleurs. Elle ne lève pas les yeux du rang."
+      - "Un car arrive de Portclair. Descendent : un militaire, deux étudiantes, un homme avec un sac de sport qui regarde autour de lui comme un recruteur."
+      - "Tu attends sans attendre personne. Le chauffeur du car du club passe, fait mine de te demander si tu montes, et rit tout seul."
+      - "Sur le banc d'en face, un gamin fait ses devoirs sur ses genoux, un ballon entre les pieds. Il te reconnaît, hésite, et retourne à ses fractions."
+
+  - id: gare_cartes
+    lieu: gareRoutiere
+    objet: bancs
+    label: "Les cartes des chauffeurs"
+    jeu: cartes
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    francs: -20
+    max_jour: 2
+    texte: "Deux chauffeurs jouent sur le banc du quai 3, entre deux départs, les cartes posées sur une sacoche. Il manque quelqu'un ; ils te regardent."
+    textes:
+      - "Deux chauffeurs jouent sur le banc du quai 3, entre deux départs, les cartes posées sur une sacoche. Il manque quelqu'un ; ils te regardent."
+      - "« Plus haut que moi, et c'est à toi. » Le chauffeur du car de Valdorne donne vite, comme il conduit. La mise est sous un cendrier en fer."
+      - "La partie des chauffeurs dure le temps d'un plein. Le perdant paie les cafés ; le gagnant ne dit rien, c'est la règle."
+
+  - id: gare_distributeur
+    lieu: gareRoutiere
+    objet: distributeur
+    label: "Un café au distributeur"
+    tranches: 0
+    francs: -3
+    max_jour: 3
+    texte: "Le distributeur rend un café brûlant dans un gobelet trop mince. Tu le tiens par le bord, du bout des doigts, comme une chose fragile."
+    textes:
+      - "Le distributeur rend un café brûlant dans un gobelet trop mince. Tu le tiens par le bord, du bout des doigts, comme une chose fragile."
+      - "Le distributeur avale ta monnaie et réfléchit. Le guichetier frappe deux fois sur la tôle, sans se lever ; le gobelet tombe."
+      - "Un chocolat, par erreur, à la place du café. Tu le bois en regardant partir le car de Montbéliac."
+      - "Sur le distributeur, un autocollant du club à moitié arraché, et au feutre : « RENDEZ LA MONNAIE ». On ne sait pas à qui ça s'adresse."
+
+  - id: gare_consigne
+    lieu: gareRoutiere
+    objet: consigne
+    label: "Déposer un sac"
+    heures: [matin, midi, aprem, soir]
+    tranches: 0
+    francs: -10
+    max_jour: 1
+    texte: "Ton sac de sport dans le casier 14, la clé dans ta poche. Le casier d'à côté est fermé depuis si longtemps que la serrure a rouillé."
+    textes:
+      - "Ton sac de sport dans le casier 14, la clé dans ta poche. Le casier d'à côté est fermé depuis si longtemps que la serrure a rouillé."
+      - "Le préposé prend ton sac, le soupèse, te regarde : « Pas de nourriture, pas d'arme, pas de chien. » Tu dis non trois fois."
+      - "Tu reprends ton sac à la consigne. Il est plus léger, ou c'est toi. Tu vérifies ; tout y est, même la chaussette trouée."
+      - "Devant toi, un homme dépose une valise et un trophée enveloppé dans un journal. Il paie pour un mois. Le préposé ne pose pas de question."
