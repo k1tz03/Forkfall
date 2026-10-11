@@ -20,7 +20,7 @@ missions:
     titre: "Le dictaphone de Léa"
     roles: [president]
     donneur: {sprite: passante, nom: "Léa", lieu: kiosque, tranches: [matin]}
-    si: "flag(histoire_h10) && flag(h10_clapet_nino) && !flag(h10_enregistrement)"
+    si: "flag(histoire_h10) && flag(h10_clapet_nino) && !flag(h10_enregistrement) && !flag(h10_dictaphone)"
     chance: 0.35
     etapes:
       - id: offre
@@ -55,7 +55,7 @@ missions:
     titre: "La photo de 1974"
     roles: [president]
     donneur: {sprite: passante, nom: "Madame Josiane", lieu: eglise, tranches: [matin]}
-    si: "flag(histoire_h10) && !flag(h10_photo_raccrochee) && !flag(h10_photo_tiroir)"
+    si: "flag(histoire_h10) && !flag(h10_photo_raccrochee) && !flag(h10_photo_tiroir) && !arc(pr.h10.photo)"
     chance: 0.35
     etapes:
       - id: offre
@@ -63,6 +63,7 @@ missions:
         choix:
           - id: prendre
             label: "Je la prends"
+            effets: {set: [h10_photo_confiee]}
             reponse: "Le cadre est plus lourd qu'il n'en a l'air. « C'est le verre. En 1974, on mettait du vrai verre. Attention à l'escalier. »"
             suite: clou
           - id: refuser

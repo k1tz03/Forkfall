@@ -195,7 +195,7 @@ cards:
     lieu: terrain
     tone: leger
     once: true
-    text: "Au centre, un graveur attend avec une plaque de laiton : « Avec le soutien de Rive Capital ». Owen, son verre d'eau à la main : « Ils paient les douze lits, les repas. Ils veulent la porte. »"
+    text: "Au centre, un graveur attend avec une plaque de laiton : « Avec le soutien de Rive Capital ». Owen, adossé au chambranle : « Ils paient les douze lits, les repas. Ils veulent la porte. »"
     left:
       label: "Posez-la"
       effects: {vestiaire: "-", caisse: "+", set: [h10_plaque_posee]}
@@ -394,7 +394,7 @@ cards:
     lieu: cabinet
     tone: leger
     once: true
-    text: "Nadia Rouvier, le sac à l'épaule, regarde ta veste : « Elle tombe mal, à gauche, {toi}. J'ai eu un joueur comme ça, en 1997 : un téléphone pour sa femme, un pour l'autre. Il s'est cassé le genou. »"
+    text: "Nadia Rouvier regarde ta veste : « Elle tombe mal, à gauche, {toi}. J'ai eu un joueur comme ça, en 1997 : un téléphone pour sa femme, un pour l'autre. Il s'est cassé le genou. »"
     left:
       label: "C'est celui du club"
       effects: {relation: {rouvier: 1}, set: [h10_rouvier_poche]}
@@ -438,7 +438,7 @@ cards:
       answer: "Tu décroches la tienne, raccroches la sienne. Elle fait redresser le cadre trois fois, puis te rend ta photo, retournée."
     right:
       label: "Gardez la vôtre"
-      effects: {direction: "-", set: [h10_photo_tiroir], outcome: tiroir}
+      effects: {direction: "-", set: [h10_photo_tiroir], outcome: tiroir, next: {step: relance, in: [2, 4]}}
       answer: "« C'est ce que je fais depuis 1991. » Elle demande à redescendre. Ta photo reste au clou, un peu de travers."
 
   - id: pr.h10.ph.visite
@@ -456,7 +456,7 @@ cards:
       answer: "Elle te fait redresser le cadre trois fois. « Voilà. » Elle demande à redescendre avant le café."
     right:
       label: "Gardez-la chez vous"
-      effects: {direction: "-", set: [h10_photo_tiroir], outcome: tiroir}
+      effects: {direction: "-", set: [h10_photo_tiroir], outcome: tiroir, next: {step: relance, in: [2, 4]}}
       answer: "Elle la remballe dans le même journal, sans un mot. Mireille, elle, en a un, qu'elle garde pour l'escalier."
 
   - id: pr.h10.ph.gege
@@ -476,6 +476,44 @@ cards:
       label: "Je vous laisse avec eux"
       effects: {relation: {gege: 1}}
       answer: "Tu redescends. Il parle à la photo, à voix basse ; au secrétariat, Mireille monte le son de sa radio."
+
+  # La photo restée sous le lit : Gégé relance, à sa façon. « J'irai la
+  # chercher » rouvre la porte (la mission de ville peut la rendre au clou).
+  - id: pr.h10.ph.relance_cadre
+    roles: [president]
+    arc: direction
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Gégé, au guichet de la Nord, compte sa monnaie : « Ta photo de 2016 au clou, celle de 1974 sous le lit de Josiane. Tu as choisi qui tu voulais voir en montant. Je comprends. »"
+    left:
+      label: "J'irai chercher la sienne"
+      effects: {tribunes: "+", relation: {gege: 1}, clear: [h10_photo_tiroir]}
+      answer: "« Prends un chiffon. Le verre de 1974 prend la poussière autrement. » Il glisse son ticket dans sa casquette, contre le front."
+    right:
+      label: "La mienne suffit"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Elle suffit à qui ? » Il ne demande pas de réponse. Il monte dans la Nord par l'escalier, en comptant les marches qui restent."
+
+  - id: pr.h10.ph.relance
+    roles: [president]
+    arc: direction
+    tags: [tribunes, objet]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Gégé, au guichet de la Nord, compte sa monnaie : « Josiane garde la photo sous son lit, face au sommier. Elle a cent ans de patience. Moi, moins. Le clou attend quoi ? »"
+    left:
+      label: "J'irai la chercher"
+      effects: {tribunes: "+", relation: {gege: 1}, clear: [h10_photo_tiroir]}
+      answer: "« Prends un chiffon. Le verre de 1974 prend la poussière autrement. » Il glisse son ticket dans sa casquette, contre le front."
+    right:
+      label: "Il attendra"
+      effects: {direction: "+", relation: {gege: -1}}
+      answer: "« Tout attend, ici. C'est notre spécialité. » Il monte dans la Nord par l'escalier, en comptant les marches qui restent."
 
   # ═══════════════════════════════════════ pr.h10.brac · Le car de huit heures
   - id: pr.h10.br.message_vendu
@@ -698,6 +736,44 @@ cards:
       effects: {tribunes: "-", direction: "+"}
       answer: "Elle le range. « Il a enregistré un président, en 1995. Le dictaphone s'en est remis. Le président, non. »"
 
+  # Le dictaphone a pu être prêté en ville (mission h10_dictaphone) : Léa ne
+  # le prête pas deux fois.
+  - id: pr.h10.le.dictaphone_bande
+    roles: [president]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Léa, au kiosque du quai, ne te regarde pas : « Vous avez la bande. Ne me dites pas ce qu'il y a dessus. Le jour où il faudra, faites-en trois copies. »"
+    left:
+      label: "Trois copies"
+      effects: {direction: "-"}
+      answer: "« Une pour vous, une pour le juge, une pour quelqu'un que vous n'aimez pas. C'est toujours celle-là qui sert. »"
+    right:
+      label: "Une seule suffira"
+      effects: {tribunes: "-"}
+      answer: "« Une seule, ça se perd dans un tiroir. J'en ai perdu une en 1995. » Elle paie son journal avec la monnaie exacte."
+
+  - id: pr.h10.le.dictaphone_prete
+    roles: [president]
+    arc: presse
+    tags: [presse, objet]
+    speaker: lea
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Léa, au kiosque du quai : « Mon dictaphone dort dans votre veste depuis une semaine. Il attend qu'elle appelle, ou que vous ayez le courage d'appuyer ? »"
+    left:
+      label: "J'appuierai"
+      effects: {direction: "-", next: {step: bande, in: [2, 4]}}
+      answer: "« Le bouton rouge. On appuie avant la sonnerie, pas après. Après, on a déjà peur. »"
+    right:
+      label: "Je vous le rends"
+      effects: {tribunes: "-", direction: "+", clear: [h10_dictaphone]}
+      answer: "Elle le range dans son sac, entre deux Écho pliés. « Il a l'habitude. On me le rend toujours avant la fin. »"
+
   - id: pr.h10.le.dictaphone
     roles: [president]
     arc: presse
@@ -716,6 +792,8 @@ cards:
       effects: {tribunes: "-", direction: "+"}
       answer: "Elle le range. « Il a enregistré un président, en 1995. Le dictaphone s'en est remis. Le président, non. »"
 
+  # La bande — la voix dit le nom du mois où on l'enregistre (variantes par
+  # créneau, arcs/president/h10_intrigues.yaml) ; la base est celle de mai.
   - id: pr.h10.le.bande
     roles: [president]
     arc: presse
@@ -723,7 +801,143 @@ cards:
     lieu: domicile
     tone: strategique
     once: true
-    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. La voix du mois parle de l'assemblée, de Nino, du centre. La bande tourne ; le voyant ne s'éteint pas."
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Mai. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_septembre
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Septembre. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_octobre
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Octobre. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_novembre
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Novembre. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_decembre
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Décembre. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_janvier
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Janvier. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_fevrier
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Février. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_mars
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Mars. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
+    left:
+      label: "Je garde la bande"
+      effects: {direction: "-", set: [h10_enregistrement]}
+      answer: "La cassette dans une boîte à chaussures, au fond du placard, sous les crampons de 2016. Tu vérifies deux fois qu'elle y est."
+    right:
+      label: "J'efface la bande"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Tu rembobines et enregistres par-dessus le silence de ta cuisine, trente minutes, montre en main."
+
+  - id: pr.h10.le.bande_avril
+    roles: [president]
+    arc: presse
+    tags: [portable, objet]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le dictaphone de Léa contre le clapet, la touche rouge enfoncée. « Ici Madame Avril. » Elle parle de l'assemblée, de Nino, du centre. Le voyant ne s'éteint pas."
     left:
       label: "Je garde la bande"
       effects: {direction: "-", set: [h10_enregistrement]}
@@ -958,14 +1172,14 @@ cards:
     lieu: bureau
     tone: leger
     once: true
-    text: "Le président de {rival} t'a fait porter une bouteille et une carte : « Fusionnons. Monter à deux, c'est encore monter. » Gégé, assis dans ton bureau : « Du vin de chez eux, {toi}. Je n'en bois pas. »"
+    text: "Le président de {rival} t'envoie une bouteille, une carte : « Fusionnons. Monter à deux, c'est encore monter. » Gégé, dans ton bureau : « Du vin de chez eux, {toi}. Je n'en bois pas. »"
     left:
       label: "Je l'invite en loge"
       effects: {tribunes: "-", direction: "+", relation: {gege: -1}}
       answer: "Gégé se lève et remet sa casquette. « Alors je regarderai le derby d'en bas, avec les miens. Une dernière fois. »"
     right:
       label: "Je renvoie la bouteille"
-      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_fusion_refusee], outcome: refusee}
+      effects: {direction: "-", tribunes: "+", relation: {gege: 1}, set: [h10_bouteille_renvoyee], outcome: refusee}
       answer: "Gégé la rapporte lui-même au coursier, bouchon intact. « Dis-lui que chez nous, on monte seuls ou pas. »"
 
   - id: pr.h10.vb.derby

@@ -75,10 +75,10 @@ scenes:
   - id: h10.sc.vitrine_minuit
     titre: "La vitrine, à minuit"
     roles: [president]
-    lieu: agence
+    lieu: rue
     tranches: [nuit]
     si: "flag('histoire_h10') && flag('h10_maquette_trois')"
-    texte: "Minuit. La vitrine de l'agence Tessandier est éclairée pour personne. Dans la maquette, une figurine minuscule promène un chien dans le parc, là où était le rond central."
+    texte: "Minuit. En rentrant, tu passes devant l'agence Tessandier, sa vitrine éclairée pour personne. Dans la maquette, une figurine promène un chien dans le parc, là où était le rond central."
     choix:
       - label: "Je regarde la figurine"
         reponse: "Elle est peinte à la main. Le chien est bordeaux et gris, aux couleurs du club. Quelqu'un, à l'agence, a de l'humour, ou du chagrin."
@@ -125,7 +125,7 @@ scenes:
     texte: "Mardi, dans la pièce du fond. Trois anciens du virage attendent en chaussettes sur des chaises de cuisine. Nadia Rouvier te montre une quatrième chaise : « Toi aussi. Après eux. »"
     choix:
       - label: "Je m'assieds"
-        reponse: "Elle te masse la nuque cinq minutes, sans un mot, puis te renvoie. Les anciens disent que tu as une nuque de président. Ce n'est pas un compliment."
+        reponse: "Elle te masse la nuque cinq minutes, sans un mot, puis te renvoie. Les anciens disent que tu as une nuque de bureau. Ce n'est pas un compliment."
         effets: {jauges: {vestiaire: 1}}
       - label: "Pas le temps"
         reponse: "« Personne ne l'a, ici. C'est pour ça qu'ils viennent. » Elle siffle la fin de ta visite, très court."
@@ -180,10 +180,10 @@ scenes:
     titre: "La terrasse de la deuxième tranche"
     roles: [president]
     lieu: agence
-    tranches: [soir]
+    tranches: [aprem]
     qui: clemence
     si: "flag('histoire_h10') && saison >= 2"
-    texte: "Terrasse de la deuxième tranche, vue sur la Rive. Clémence Tessandier te présente aux résidents : « Ils adorent qu'on leur montre le stade. D'en haut, il a l'air petit. »"
+    texte: "Fin d'après-midi, sur la terrasse de la deuxième tranche. Clémence Tessandier te présente aux résidents : « Ils adorent qu'on leur montre le stade. D'en haut, il a l'air petit. »"
     choix:
       - label: "Je trinque"
         reponse: "On te demande trois fois si le stade restera. Tu dis oui trois fois. Clémence note les trois oui sur un carnet vert."
@@ -296,7 +296,7 @@ scenes:
   - id: h10.sc.local_minuit
     titre: "Le local, après minuit"
     roles: [president]
-    lieu: buvette
+    lieu: stade
     tranches: [nuit]
     qui: nino
     si: "flag('histoire_h10') && flag('h10_clapet_nino')"
@@ -336,15 +336,421 @@ scenes:
       - label: "Moi non plus"
         reponse: "« Ça me rassure. » Elle jette le reste du pain d'un coup. Les pigeons s'envolent ensemble, vers la Nord."
 
+  # ═══════════════════════════════════════════════════ LA REPRISE DU LIVRE
+  # Vingt-quatre scènes de plus : trois saisons en ville épuisaient le
+  # réservoir (une ou deux scènes par jour sans carte). Elles suivent le livre
+  # saison par saison (`saison` est celle de la ville : 1 = 2037-2038) et
+  # lisent ses drapeaux ; un visage mort, vendu ou viré ne revient pas.
+
+  # ── Saison 1 (2037-2038) : le clapet
+  - id: h10.sc.lendemain
+    titre: "Le lendemain de l'élection"
+    roles: [president]
+    lieu: marche
+    tranches: [matin]
+    qui: passante
+    si: "flag(histoire_h10) && saison == 1 && phase == presaison"
+    texte: "Le marché, le lendemain de l'élection. Une maraîchère te tend une pomme sans la peser : « Socio 1187. En 2012, un coup de coude à la vingtième, et vous avez fini le match. »"
+    choix:
+      - label: "Je prends la pomme"
+        reponse: "« On vote pour ça, ici. Pas pour les programmes. » Elle te rend la monnaie d'une pomme que tu n'as pas payée."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je la paie"
+        francs: -2
+        reponse: "Elle prend la pièce, la regarde, la met à part dans une boîte en fer. « Celle-là, je la garde. On verra en 2040 ce qu'elle vaut. »"
+
+  - id: h10.sc.madame_octobre
+    titre: "Madame Octobre"
+    roles: [president]
+    lieu: domicile
+    tranches: [soir, nuit]
+    si: "flag(histoire_h10) && flag(h10_voix_coupee) && saison == 1 && phase == aller && journee == 0"
+    texte: "Minuit, la cuisine. Le clapet vibre sur la toile cirée, écran vert. « Ici Madame Octobre. Vous avez fait taire un mort, samedi. C'est une première, au Racing. »"
+    choix:
+      - label: "Qui êtes-vous ?"
+        reponse: "« Je vous l'ai dit. Octobre. » Un temps. « Septembre est partie avec l'été. » Elle raccroche la première, comme toujours."
+        effets: {jauges: {direction: -1}}
+      - label: "Je raccroche"
+        reponse: "Tu refermes le clapet d'un coup sec. Il reste tiède dans ta main longtemps, comme quelque chose de vivant qu'on aurait étouffé."
+
+  - id: h10.sc.thermos_midi
+    titre: "Le café du thermos"
+    roles: [president]
+    lieu: buvette
+    tranches: [midi]
+    qui: gege
+    si: "flag(histoire_h10) && saison == 1 && !flag(h10_gege_mort)"
+    texte: "Midi, buvette. Gégé verse le café du thermos dans deux gobelets et compte les sucres à voix haute sans en mettre un seul : « Tu montes au bureau, ou tu restes une minute avec les vivants ? »"
+    choix:
+      - label: "Je reste une minute"
+        reponse: "Tu restes vingt. Il te raconte la bâche de son père, les seize plis, la pluie de 1971. Il ne parle pas de 2040. Toi non plus."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Le bureau m'attend"
+        reponse: "« Le bureau attend toujours. C'est ce qu'il fait de mieux. » Il boit ton gobelet après le sien, pour ne pas gâcher."
+
+  - id: h10.sc.sous_le_lit
+    titre: "Le cadre sous le lit"
+    roles: [president]
+    lieu: eglise
+    tranches: [matin]
+    qui: josiane
+    si: "flag(histoire_h10) && saison == 1 && !flag(h10_photo_raccrochee) && !flag(h10_photo_tiroir)"
+    texte: "La maison de retraite, derrière Saint-Aubin. Madame Josiane te fait asseoir sur le seul fauteuil : « Il y a un cadre sous mon lit. Je ne vous demande rien. Je vous dis où il est. »"
+    choix:
+      - label: "Je le regarde"
+        reponse: "Tu tires un cadre emballé dans L'Écho de 1991. Elle t'arrête avant que tu défasses le journal : « Pas ici. Là-bas. Au clou. »"
+      - label: "Une autre fois"
+        reponse: "« Une autre fois, à mon âge, c'est un pari. » Elle sourit pour la première fois de la matinée, et ferme les yeux."
+
+  - id: h10.sc.doudoune
+    titre: "La doudoune du père"
+    roles: [president]
+    lieu: terrain
+    tranches: [matin]
+    qui: owen
+    si: "flag(histoire_h10) && saison == 1 && !flag(h10_owen_vire)"
+    texte: "Terrain annexe, sept heures. Owen Corven porte une doudoune verte trop grande, les coudes usés. « Celle de mon père. Je la mets les jours où il faut gagner. Aujourd'hui, il fait froid, c'est tout. »"
+    choix:
+      - label: "Elle vous va"
+        reponse: "« Elle ne va à personne. C'est pour ça qu'on la garde. » Il siffle la reprise avec le sifflet du père, un ton trop bas."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Gagnez quand même"
+        reponse: "« Le froid ne fait pas gagner. Il fait courir. » Il renvoie les joueurs autour du terrain, deux tours, en doudoune derrière eux."
+
+  - id: h10.sc.fenetres_jaunes
+    titre: "Les fenêtres de la maquette"
+    roles: [president]
+    lieu: agence
+    tranches: [aprem]
+    qui: clemence
+    si: "flag(histoire_h10) && saison == 1"
+    texte: "Agence Tessandier. Clémence repeint au pinceau fin les fenêtres de la maquette, une à une, en jaune : « Chaque fenêtre allumée vend un appartement. Vous voulez en allumer une ? »"
+    choix:
+      - label: "J'en allume une"
+        reponse: "Tu peins un carré jaune au troisième étage, juste en face du rond central. « Celle-là est vendue. À vous, peut-être, un jour. »"
+        effets: {jauges: {direction: 1}}
+      - label: "Je n'allume rien"
+        reponse: "« Les gens qui n'allument rien finissent par habiter dans le noir. » Elle rince le pinceau dans un pot de confiture vide."
+
+  # ── Saison 2 (2038-2039) : la seconde sonnerie
+  - id: h10.sc.photo_envers
+    titre: "La photo à l'envers"
+    roles: [president]
+    lieu: kiosque
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h10) && flag(h10_photo_hotel) && saison == 2"
+    texte: "Le kiosquier du quai a découpé dans le journal ta photo de l'hôtel et l'a punaisée face à la vitre, à l'envers : « Pour qu'on ne la regarde pas. Ça marche à moitié. »"
+    choix:
+      - label: "Retournez-la"
+        reponse: "Il la retourne. Une dame s'arrête, regarde la photo, te regarde, et achète L'Écho sans attendre sa monnaie."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Laissez-la ainsi"
+        reponse: "Elle reste à l'envers tout l'hiver. Au dos, on lit un horoscope : « Méfiez-vous des appels tardifs. » Le kiosquier jure qu'il n'a rien choisi."
+
+  - id: h10.sc.prete
+    titre: "Écrit dans la poussière"
+    roles: [president]
+    lieu: stade
+    tranches: [aprem]
+    qui: enfant
+    si: "flag(histoire_h10) && flag(h10_helico) && !flag(h10_helico_saisi)"
+    texte: "Trois gamins de la Nord tournent autour de l'hélicoptère blanc, au bord de la pelouse. L'un d'eux a écrit au doigt, dans la poussière du cockpit : PRÊTÉ."
+    choix:
+      - label: "J'efface le mot"
+        reponse: "Tu passes la manche sur la vitre. Le gamin hausse les épaules : « Mon père dit que tout ce qui brille est prêté. Il est huissier. »"
+      - label: "Je le laisse"
+        reponse: "Le mot reste trois jours. Le pilote le voit, le photographie, et ne l'efface pas non plus."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h10.sc.quatre_mains
+    titre: "Quatre mains levées"
+    roles: [president]
+    lieu: bar
+    tranches: [soir]
+    qui: commercant
+    si: "flag(histoire_h10) && saison == 2 && journee >= 6"
+    texte: "Le Corner, le soir du vote de la loi. La télévision repasse en boucle les quatre mains levées. Le patron coupe le son : « Quatre. Ils savaient compter, à l'école, ceux-là ? »"
+    choix:
+      - label: "Je paie une tournée"
+        francs: -60
+        reponse: "Personne ne trinque. On boit en regardant les quatre mains se lever et se baisser, encore et encore, sans le son."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je rentre"
+        reponse: "Dans ton dos, quelqu'un remet le son. Une voix de journaliste dit « historique ». Le patron le recoupe aussitôt."
+
+  - id: h10.sc.poele
+    titre: "La veste derrière le poêle"
+    roles: [president]
+    lieu: buvette
+    tranches: [soir]
+    qui: nino
+    si: "flag(histoire_h10) && flag(h10_clapet_nino) && saison == 2"
+    texte: "Au local, Nino a changé sa veste de patère : elle pend maintenant derrière le poêle, là où on n'entend rien. « Il fait trop chaud pour une veste, ici. »"
+    choix:
+      - label: "Je m'assois au poêle"
+        reponse: "Tu t'assois à côté de la veste. Rien ne sonne de la soirée. En partant, Nino la reprend sans te regarder, et la porte sur le bras."
+      - label: "Bonsoir, Nino"
+        reponse: "« Bonsoir. » Il ne se retourne pas. Dans le reflet de la fenêtre, tu le vois poser la main sur le poêle, sur la veste, et la garder là."
+
+  - id: h10.sc.video_pales
+    titre: "Quatre cent mille vues"
+    roles: [president]
+    lieu: rue
+    tranches: [aprem, soir]
+    qui: enfant
+    si: "flag(histoire_h10) && flag(h10_helico_saisi)"
+    texte: "Un gamin te barre le trottoir, son téléphone tendu : la vidéo des pales repliées sur le camion, quatre cent mille vues. « Vous êtes dessus, à gauche. Vous voulez voir votre tête ? »"
+    choix:
+      - label: "Montre-moi"
+        reponse: "Sur l'écran, une silhouette debout sur le banc des remplaçants, minuscule, qui parle à trois cents personnes. Le son est mauvais. On entend « Rive »."
+      - label: "Non merci"
+        reponse: "« Tout le monde l'a vue, sauf vous. » Il range le téléphone et part en courant montrer la vidéo à quelqu'un d'autre."
+
+  - id: h10.sc.voiture_scellee
+    titre: "La voiture sous scellés"
+    roles: [president]
+    lieu: garage
+    tranches: [aprem]
+    qui: commercant
+    si: "flag(histoire_h10) && flag(h10_voiture_saisie)"
+    texte: "Au garage du Pont, ta voiture sans volant, sous scellés, répète à voix douce la dernière adresse qu'on lui a dictée : « Hôtel de la Rive. Hôtel de la Rive. »"
+    choix:
+      - label: "Débranchez-la"
+        reponse: "Le garagiste cherche le câble une demi-heure. Il n'y en a pas. « Elle se taira quand sa batterie mourra. Comme nous. »"
+      - label: "Laissez-la parler"
+        reponse: "Elle parle jusqu'au soir. Le lendemain, elle dit l'adresse de ta villa, une fois, puis plus rien."
+
+  - id: h10.sc.note_vestiaire
+    titre: "La note au tableau"
+    roles: [president]
+    lieu: terrain
+    tranches: [matin]
+    qui: passant
+    si: "flag(histoire_h10) && flag(h10_prime_supprimee)"
+    texte: "Le capitaine t'attend à la sortie de l'entraînement, le maillot trempé : « La prime du dernier bloc, ce n'est pas l'argent. C'est qu'on l'a apprise par une note. »"
+    choix:
+      - label: "Je leur dois une phrase"
+        reponse: "Tu descends au vestiaire. Tu dis « trésorerie ». Personne ne te croit, et ils te remercient d'avoir fait le chemin, ce qui est pire."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "La note suffit"
+        reponse: "« La note suffit », répète-t-il, et il la décroche du tableau pour la plier dans son protège-tibia, côté peau."
+        effets: {jauges: {vestiaire: -1}}
+
+  # L'annexe — la recrue de janvier, quand on a dit à Madame Novembre « Je
+  # recruterai » (pr.h10.ch_novembre) : Rive Capital co-finance le refus.
+  - id: h10.sc.annexe
+    titre: "L'annexe"
+    roles: [president]
+    lieu: clubhouse
+    tranches: [aprem]
+    qui: passant
+    si: "flag(histoire_h10) && flag(h10_recrue_janvier) && phase == hiver"
+    texte: "Le milieu recruté en janvier s'entraîne depuis une semaine. Son agent repasse au club-house, une chemise verte sous le bras : « L'annexe du contrat. Vous ne l'aviez pas lue ? »"
+    choix:
+      - label: "Je la lis"
+        reponse: "Page quatre, en petits caractères : Rive Capital paie la moitié du salaire, et le joueur part « à la convenance du co-financeur »."
+        effets: {jauges: {direction: 1}}
+      - label: "Je la déchire"
+        reponse: "Tu la déchires devant lui. Il sourit : « C'était une copie. » Le salaire tombe le 30, en deux virements, de deux banques."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h10.sc.fax_muet
+    titre: "Le fax du secrétariat"
+    roles: [president]
+    lieu: clubhouse
+    tranches: [aprem]
+    qui: passante
+    si: "flag(histoire_h10) && flag(h10_mercato_gele) && phase == hiver"
+    texte: "Fin janvier. Mireille a gardé le vieux fax du secrétariat, pour la forme ; il n'a rien imprimé depuis un mois. « Le mercato le plus calme de ma vie. Ma tante dit que c'est mauvais signe. »"
+    choix:
+      - label: "Votre tante a raison"
+        reponse: "« Elle a toujours raison. Elle a cent ans, ça aide. » Mireille passe un chiffon sur le fax, comme on soigne une bête qui ne mange plus."
+      - label: "C'est voulu"
+        reponse: "Mireille hoche la tête et note « voulu » dans son cahier à spirale. Tu ne sais pas pour qui elle tient ce cahier."
+        effets: {jauges: {direction: 1}}
+
+  - id: h10.sc.valise_echo
+    titre: "La valise de Léa"
+    roles: [president]
+    lieu: kiosque
+    tranches: [matin]
+    qui: lea
+    si: "flag(histoire_h10) && saison == 2"
+    texte: "Léa attend au kiosque, une valise à roulettes à côté d'elle : tous les Écho du dimanche depuis qu'il est hebdomadaire. « Je les porte chez le relieur. On relie ce qui va finir. »"
+    choix:
+      - label: "Je porte la valise"
+        reponse: "Elle pèse comme un enfant endormi. Chez le relieur, Léa choisit une toile bordeaux et grise, sans demander le prix."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Bon courage, Léa"
+        reponse: "« Le courage, c'est pour ceux qui ne savent pas. Moi, je sais déjà comment ça finit. » Elle part en tirant la valise sur les pavés."
+
+  - id: h10.sc.manteau_marche
+    titre: "Sur la marche du mois"
+    roles: [president]
+    lieu: stade
+    tranches: [nuit]
+    si: "flag(histoire_h10) && flag(h10_escalier) && flag(h10_madame_vue) && saison == 2"
+    texte: "Minuit. Une seule lampe de chantier éclaire l'escalier nord. Quelqu'un est assis sur la marche du mois, de dos, en manteau d'automne. Tu approches. Il n'y a plus personne."
+    choix:
+      - label: "Je m'assois à sa place"
+        reponse: "Le ciment est tiède, comme si quelqu'un venait de s'y lever. Sur la marche fraîche, l'empreinte d'un talon, petite, nette, déjà sèche."
+      - label: "Je rentre"
+        reponse: "Tu rentres. Au moment où tu passes la grille, le clapet vibre dans ta poche, une fois, une seule."
+
+  # ── Saison 3 (2039-2040) : la dernière marche
+  - id: h10.sc.fenetre_local
+    titre: "La fenêtre au-dessus du local"
+    roles: [president]
+    lieu: buvette
+    tranches: [soir]
+    qui: gege
+    si: "flag(histoire_h10) && saison == 3 && !flag(h10_gege_mort)"
+    texte: "Le soir, Gégé à sa fenêtre au-dessus du local, une couverture sur les épaules. Il te fait signe de monter, puis se ravise, et te fait signe de rester en bas."
+    choix:
+      - label: "Je monte quand même"
+        reponse: "Il t'ouvre en robe de chambre et ne dit rien de ta désobéissance. Vous écoutez ensemble la radio annoncer la vingt-huitième marche."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je reste en bas"
+        reponse: "Vous vous regardez une minute, lui en haut, toi en bas, comme deux tribunes. Puis il tire le rideau, lentement, sans le fermer tout à fait."
+
+  - id: h10.sc.allee
+    titre: "L'allée des écharpes"
+    roles: [president]
+    lieu: cimetiere
+    tranches: [matin]
+    qui: nino
+    si: "flag(histoire_h10) && flag(h10_gege_mort)"
+    texte: "Le cimetière, le lendemain de l'enterrement. Les écharpes ne tenaient pas toutes sur la tombe : on les a nouées aux grilles de l'allée. Nino est là, seul, en costume."
+    choix:
+      - label: "Je reste avec lui"
+        reponse: "Une heure sans parler. En partant, il dit : « Il t'aimait bien. Ça ne l'empêchait pas de savoir. » Il ne dit pas quoi."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je le laisse seul"
+        reponse: "De la grille, tu le vois sortir un clapet de sa poche, l'ouvrir, le regarder, le refermer, et le poser sur la tombe. Il le reprend."
+
+  - id: h10.sc.grilles
+    titre: "Ce qui restera"
+    roles: [president]
+    lieu: stade
+    tranches: [aprem]
+    qui: ancien
+    si: "flag(histoire_h10) && saison == 3 && journee >= 30"
+    texte: "Un vieux de la rangée H fait le tour du stade à pied, en touchant chaque grille. « Je compte ce qui restera. Les grilles, ça reste. Les marches, on a vu. »"
+    choix:
+      - label: "Je compte avec lui"
+        reponse: "Cent quatorze grilles. Il note le chiffre sur son billet de 1990, au dos, à côté d'un autre chiffre, plus petit, que tu ne lis pas."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je le laisse compter"
+        reponse: "Il compte seul, à voix basse. Au coin de la Nord, il s'arrête devant le mur de l'escalier et ne compte plus."
+
+  - id: h10.sc.truelle_tazi
+    titre: "La truelle de rechange"
+    roles: [president]
+    lieu: stade
+    tranches: [midi]
+    qui: tazi
+    si: "flag(histoire_h10) && flag(h10_escalier) && saison == 3 && phase == retour"
+    texte: "Tazi enveloppe sa truelle de rechange dans un chiffon, comme un couteau. « Après la dernière, je la donne. À qui, je ne sais pas. Il n'y aura plus rien à murer. »"
+    choix:
+      - label: "Donnez-la-moi"
+        reponse: "Il te la tend par le manche. Elle est plus lourde qu'elle n'en a l'air ; sur la lame, il a gravé une date à la pointe : 2037."
+      - label: "Gardez-la"
+        reponse: "« Garder une truelle, c'est garder un chantier. » Il la remet dans sa caisse, sous le niveau, à côté d'une enveloppe."
+
+  - id: h10.sc.classement_lu
+    titre: "Lisez-moi le classement"
+    roles: [president]
+    lieu: eglise
+    tranches: [aprem]
+    qui: josiane
+    si: "flag(histoire_h10) && saison >= 2 && journee >= 12"
+    texte: "Madame Josiane, cent ans, te tend L'Écho du dimanche : « Lisez-moi le classement. Lentement. Je veux entendre où on est, pas le voir. »"
+    choix:
+      - label: "Je lis lentement"
+        reponse: "Tu lis les dix-huit noms. Au nôtre, elle ferme les yeux. À la fin : « Encore une fois, depuis le début. » Tu recommences."
+      - label: "Je lis le nôtre"
+        reponse: "Tu ne lis que le Racing, et son rang. Elle hoche la tête. « C'est bien. Le reste, ce sont des voisins. »"
+
+  - id: h10.sc.chaise_vide
+    titre: "Trois cent une chaises"
+    roles: [president]
+    lieu: buvette
+    tranches: [aprem]
+    qui: nino
+    si: "flag(histoire_h10) && flag(h10_gege_mort) && saison == 3 && journee >= 30"
+    texte: "Nino aligne déjà les chaises de l'assemblée de juin, trois semaines avant. Il en compte trois cents, puis en ajoute une au premier rang : « Celle-là, c'est la sienne. »"
+    choix:
+      - label: "Je l'aide"
+        reponse: "Vous alignez trois cents chaises sans parler. La trois cent unième, il la dépoussière avec sa manche, deux fois."
+      - label: "Je regarde"
+        reponse: "Il les aligne seul, au cordeau, comme des marches. Quand il a fini, il s'assoit sur la sienne, pas sur celle de son oncle."
+
+  - id: h10.sc.deux_doigts
+    titre: "Deux doigts sur la veste"
+    roles: [president]
+    lieu: cabinet
+    tranches: [aprem]
+    qui: rouvier
+    si: "flag(histoire_h10) && saison == 3 && flag(h10_rouvier_poche)"
+    texte: "Nadia Rouvier te fait asseoir sur la table de la pièce du fond. Elle pose deux doigts sur ta veste, côté gauche, là où le clapet fait une bosse : « Il bat plus vite que toi. »"
+    choix:
+      - label: "Je l'éteins"
+        reponse: "Tu l'éteins devant elle. Elle garde les deux doigts posés une minute encore, puis les retire. « Voilà. On entend le tien. »"
+      - label: "Je le laisse"
+        reponse: "« Alors il battra pour deux. » Elle te masse la nuque, fort, comme on chasse une crampe qui n'est pas encore venue."
+
+  - id: h10.sc.cote_craie
+    titre: "La cote à la craie"
+    roles: [president]
+    lieu: tabac
+    tranches: [matin]
+    qui: commercant
+    si: "flag(histoire_h10) && saison == 3"
+    texte: "Au tabac du Quai, l'ardoise des paris : LA DERNIÈRE MONTÉE, RACING À NEUF CONTRE UN. Le buraliste te tend la craie : « Vous voulez écrire votre cote vous-même ? »"
+    choix:
+      - label: "J'écris un contre un"
+        reponse: "Tu barres neuf, tu écris un. Le buraliste ne l'efface pas. Dans l'après-midi, trois socios viennent miser sur ta craie."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je ne parie pas"
+        reponse: "« Les présidents ne parient pas. Ils font parier les autres. » Il range la craie dans la poche de son gilet, avec la monnaie."
+
 # Les phrases d'action du match du samedi, propres au livre (placeholders de
 # ville.yaml `match` : {Qui} {qui} {score} {adv} {Adv} {gardien} {Gardien}).
 match_textes:
+  # La voix de Gigi Vecchio (morte en 2031, générée par la chaîne de la
+  # deuxième division) commente tant qu'on ne l'a pas coupée : elle dit
+  # « magnifique », ne dit jamais l'autre mot pour un penalty (la condition de
+  # sa sœur), et invente parfois un souvenir. Coupée, c'est la Nord qui
+  # annonce. Après février 2040, trois mille masques de Gégé.
   pour:
     - {texte: "{Qui} marque, et la voix des haut-parleurs dit « magnifique ». Au premier rang de la Nord, un vieux se bouche une oreille : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
     - {texte: "{Qui} marque devant la Nord. Trois mille masques de carton se lèvent d'un seul geste, sans un cri : {score}.", si: "flag(histoire_h10) && flag(h10_gege_mort)"}
     - {texte: "But de {qui}. Les tambours de Nino repartent à contretemps, puis le stade les rattrape : {score}.", si: "flag(histoire_h10)"}
     - {texte: "{Qui} trompe le gardien de {adv}. Au pied de l'escalier nord, le maçon lève sa truelle comme un drapeau : {score}.", si: "flag(histoire_h10) && flag(h10_escalier)"}
+    - {texte: "{Qui} croise sous la barre. « Le gardien ne pouvait rien », dit la voix de Gigi. « Moi non plus, je n'aurais rien pu. » Personne ne lui a appris ça : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "Tir de réparation pour nous ; la voix ne dit jamais l'autre mot. {Qui} prend son élan, et « magnifique » tombe avant le filet : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "Volée de {qui}. Une seconde de silence dans les haut-parleurs, comme si la voix cherchait un mot qu'on ne lui a pas appris. « Magnifique. » {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "{Qui} marque, et les haut-parleurs se taisent une seconde de trop. Puis la voix : « But. » Seulement but. Trois mille masques se lèvent : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee) && flag(h10_gege_mort)"}
+    - {texte: "{Qui} marque. Sans haut-parleurs, c'est la Nord qui annonce le but, le nom du buteur scandé syllabe par syllabe, une de trop : {score}.", si: "flag(histoire_h10) && flag(h10_voix_coupee)"}
   contre:
     - {texte: "{Adv} marque. Dans ta poche, le clapet vibre une fois, une seule, comme un applaudissement : {score}.", si: "flag(histoire_h10)"}
     - {texte: "But de {adv}. La voix des haut-parleurs dit « magnifique » quand même ; la Nord la siffle plus fort que le buteur : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
     - {texte: "Leur avant-centre marque au pied de la Nord. Les masques de Gégé ne bougent pas ; on ne sait pas s'ils ont vu : {score}.", si: "flag(histoire_h10) && flag(h10_gege_mort)"}
+    - {texte: "Leur avant-centre trompe {gardien}. « Il est parti trop tôt », dit la voix, avec l'accent d'ici. Gigi, lui, partait toujours trop tard : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "{Adv} marque sur un tir de réparation. La voix récite le nom du tireur, sa taille, son âge, son poids, comme une fiche de police : {score}.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+  poteau:
+    - {texte: "{Qui} trouve le poteau. « Magnifique », dit la voix, qui ne fait pas la différence. Personne ne la reprend.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "Une tête de {qui} sur la barre. La voix de Gigi compte jusqu'à trois, comme un gardien qui attend le rebond, puis se tait.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+  arret:
+    - {texte: "{Gardien} plonge et sort la balle du bout des doigts. « Gardien », dit la voix, et rien d'autre. Au premier rang, un vieux pleure sans bruit.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "Tir de réparation pour {adv}. {Gardien} part du bon côté. La voix a dit « magnifique » une seconde avant l'arrêt, comme si elle savait.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+  fin_v:
+    - {texte: "Coup de sifflet final. « Victoire du Racing. Magnifique », dit la voix. Dans la Nord, quelqu'un répond « ta gueule, Gigi », avec tendresse.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "C'est fini. La voix remercie le public « au nom de toute l'équipe », ce que Gigi n'a jamais fait de sa vie. On rentre content quand même.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+  fin_n:
+    - {texte: "Fin du match. « Un point. Magnifique », dit la voix. Les vieux de la rangée H se regardent : de leur temps, un nul à domicile était une défaite.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+  fin_d:
+    - {texte: "Coup de sifflet final. « Score final. Magnifique. » Cette fois, personne ne siffle la voix. On la laisse dire, et on rentre.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "C'est fini. Les haut-parleurs passent la voix de Gigi qui annonce le prochain match à domicile. On l'écoute debout, sans bouger, comme une messe.", si: "flag(histoire_h10) && flag(h10_voix_gardee)"}
+    - {texte: "Défaite. Au premier rang de la Nord, une chaise vide, et dessus un masque de Gégé qui regarde le terrain jusqu'à ce qu'on éteigne.", si: "flag(histoire_h10) && flag(h10_gege_mort)"}

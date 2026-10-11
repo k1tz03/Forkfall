@@ -13,14 +13,15 @@
 #   · aucun `{toi}` (un set-piece n'a pas l'adresse du rôle de président) : la
 #     présidente est nommée, ou on lui parle sans titre.
 #
-# Le build range ce lot juste avant le secours de chaque beat, donc APRÈS les
-# variantes communes conditionnelles sans `roles:` de content/setpieces.yaml.
-# Tant que celles-ci restent ouvertes à tous les rôles, elles passent devant
-# ces variantes-ci pour gm_te (`vars.gm_te_index == n`), aftermatch
-# (`vars.gm_won == 1`), bilan_verdict (`bilan.tenu` / `!bilan.tenu`),
-# bilan_carrefour dès la saison 1 (`season >= 1`) et le classement de juin
-# (`phase('bilan')`) : la mi-temps du dernier match, l'après-match gagné et la
-# nuit d'avant l'assemblée ne sont alors pas servies.
+# Les set-pieces de lot sont servis EN TÊTE de leur beat : ces variantes-ci
+# passent devant les communes (toutes lisent le drapeau d'histoire, et la
+# première vraie l'emporte, dans l'ordre du fichier).
+#
+# Le calendrier de la dernière saison : la dernière marche se décide au
+# créneau 17 (un soir de mai) ; puis le moteur joue le dernier bloc de six
+# journées (le `match` au créneau 17), puis le Grand Match, qui est le dernier
+# match. Le mur se monte, ou non, la nuit d'avant : c'est `gm_annonce` qui le
+# dit.
 setpieces:
   # ══ objective — l'objectif de saison (le patron : Gégé) ═════════════════════
   objective:
@@ -93,6 +94,9 @@ setpieces:
   # ══ match — le bloc de journées, vu de la loge ═════════════════════════════
   match:
     - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && slot >= 17"
+      text: "Les six dernières journées de la dernière saison ouverte. Adversité : {adversite} · {vestiaire_mot}. À l'escalier nord, il ne reste qu'une marche, et un seau retourné."
+    - roles: [president]
       when: "flag('histoire_h10') && flag('h10_gege_mort')"
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Au premier rang de la Nord, une chaise vide, un masque de carton posé dessus, face au terrain."
     - roles: [president]
@@ -125,12 +129,32 @@ setpieces:
   # ══ gm_annonce — le Grand Match (en saison 2 : le dernier match) ════════════
   gm_annonce:
     - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && world.division == 2 && world.rang == 4 && flag('h10_marche_muree')"
+      text: "LE DERNIER MATCH. Le barrage, le dernier de l'histoire. Cette nuit, Tazi a muré la dernière marche ; la Nord monte par la tribune Est, sans un chant. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && world.division == 2 && world.rang == 4 && flag('h10_marche_ouverte') && !flag('h10_enquete')"
+      text: "LE DERNIER MATCH. Le barrage, le dernier de l'histoire. Tazi a dormi assis sur la dernière marche ; la Nord monte par là, un par un, en le saluant. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [president]
       when: "flag('histoire_h10') && season == 2 && world.division == 2 && world.rang == 4"
       text: "LE DERNIER MATCH. Le barrage, le dernier de l'histoire : gagner, et l'escalier ferme avec le Racing en haut. Dans ta poche, le clapet vibre une fois. Coup d'envoi."
       left: "Coup d'envoi"
     - roles: [president]
       when: "flag('histoire_h10') && season == 2 && world.division == 2 && world.rang == 1"
       text: "LE DERNIER MATCH. La montée est faite depuis samedi ; celui-ci ne compte que pour la Nord, qui le sait, et qui chante quand même. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && flag('h10_enquete')"
+      text: "LE DERNIER MATCH. Personne n'a muré la dernière marche cette nuit : l'escalier nord est sous scellés, un ruban jaune en travers. La Nord le regarde comme un drapeau. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && flag('h10_marche_muree')"
+      text: "LE DERNIER MATCH. Cette nuit, à la lampe frontale, l'escalier nord a été muré jusqu'en haut. La Nord entre par l'Est, les masques de Gégé à la main. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && flag('h10_marche_ouverte')"
+      text: "LE DERNIER MATCH. Tazi a passé la nuit sur la dernière marche, assis sur un seau ; il y est encore quand la Nord monte. Personne ne marche dessus. Coup d'envoi."
       left: "Coup d'envoi"
     - roles: [president]
       when: "flag('histoire_h10') && season == 2"
@@ -198,13 +222,23 @@ setpieces:
       right: "Je prépare demain"
       answer_left: "Vous pliez trois mille masques jusqu'à une heure du matin. Il ne te parle pas de demain ; toi non plus."
       answer_right: "Le clapet sonne pendant tout le trajet. Tu le laisses sonner jusqu'à ta porte. Il sonne encore quand tu la fermes."
+    # La deuxième saison, Gégé n'a plus les jambes de la première : il ne
+    # descend plus sous la loge, il demande qu'on le lève (il meurt en février).
+    - roles: [president]
+      when: "flag('histoire_h10') && season == 1 && vars.gm_won == 1 && !flag('h10_gege_mort')"
+      speaker: gege
+      text: "Après le match, Gégé reste assis, la couverture glissée à ses pieds. On chante son nom à lui, pas le tien. « Ils veulent me voir debout. Tu m'aides, ou je leur fais signe assis ? »"
+      left: "Je vous aide"
+      right: "Faites signe assis"
+      answer_left: "Tu le soulèves par le coude. Il tient debout le temps d'un refrain, puis se rassoit sans te lâcher le bras."
+      answer_right: "Il lève la main, une fois. Le chant s'arrête pour la voir, puis repart plus fort. Il garde la main levée jusqu'à ce qu'elle tremble."
     - roles: [president]
       when: "flag('histoire_h10') && vars.gm_won == 1 && !flag('h10_gege_mort')"
       speaker: gege
       text: "Gégé, sous la loge, la bâche de 1971 roulée sous le bras : « Ils ont chanté le nom du club avant le tien. C'est l'ordre. Tu descends le leur dire, ou tu remontes chez tes invités ? »"
       left: "Je descends"
       right: "Je remonte"
-      answer_left: "Tu descends. Gégé te présente au premier rang comme on présente une nièce, avec ton nom en entier."
+      answer_left: "Tu descends. Gégé te présente au premier rang comme on présente {pg, select, f{une nièce} other{un neveu}}, avec ton nom en entier."
       answer_right: "Il remonte la bâche sur son épaule. « Les invités, c'est bien aussi. Ils paient. » Il ne dit pas au revoir."
     - roles: [president]
       when: "flag('histoire_h10') && season == 0"
@@ -223,17 +257,24 @@ setpieces:
 
   # ══ bilan_verdict — le verdict ══════════════════════════════════════════════
   bilan_verdict:
+    # « {rang}e » ne s'écrit pas au premier : la première place a ses
+    # variantes. L'objectif se dit au masculin (« l'objectif du conseil »),
+    # pour que « tenu » et « manqué » s'accordent avec la montée.
     - roles: [president]
       when: "flag('histoire_h10') && season == 2 && bilan.outcome == 'montee'"
-      text: "Le verdict tombe : {rang}e, et la montée, la dernière de l'histoire. La Ligue enregistre le résultat à minuit moins le quart. À minuit, l'escalier ferme."
+      text: "Le verdict tombe : premier, et la montée, la dernière de l'histoire. La Ligue enregistre le résultat à minuit moins le quart. À minuit, l'escalier ferme."
       left: "Voir le classement"
     - roles: [president]
       when: "flag('histoire_h10') && season == 2 && bilan.outcome == 'barrage' && vars.gm_won == 1"
       text: "Le verdict tombe : {rang}e, et le barrage gagné samedi. La Ligue enregistre la montée à minuit moins le quart, le dernier soir où elle enregistre quelque chose."
       left: "Voir le classement"
     - roles: [president]
+      when: "flag('histoire_h10') && bilan.rang == 1"
+      text: "Le verdict tombe : premier. Au local, on punaise la feuille à l'endroit, pour une fois. Dans ta veste, le clapet ne sonne pas. Il attend."
+      left: "Voir le classement"
+    - roles: [president]
       when: "flag('histoire_h10') && season == 2"
-      text: "Le verdict tombe : {rang}e. {objectif} : {tenu}. Demain, l'assemblée. Ce soir, l'escalier ferme, quoi que dise la feuille."
+      text: "Le verdict tombe : {rang}e. L'objectif du conseil : {tenu}. Demain, l'assemblée. Ce soir, l'escalier ferme, quoi que dise la feuille."
       left: "Voir le classement"
     - roles: [president]
       when: "flag('histoire_h10') && bilan.rang <= 4"
@@ -241,7 +282,7 @@ setpieces:
       left: "Voir le classement"
     - roles: [president]
       when: "flag('histoire_h10')"
-      text: "Le verdict tombe : {rang}e. {objectif} : {tenu}. Pour l'été, le maçon a tendu une bâche sur l'escalier nord ; on devine dessous les marches murées, comme des dents."
+      text: "Le verdict tombe : {rang}e. L'objectif du conseil : {tenu}. Pour l'été, le maçon a tendu une bâche sur l'escalier nord ; on devine dessous les marches murées, comme des dents."
       left: "Voir le classement"
 
   # ══ bilan_contrat — le mandat (gauche : tel quel ; droite : les moyens) ═════
@@ -284,6 +325,10 @@ setpieces:
     - roles: [president]
       when: "flag('histoire_h10') && season == 2 && flag('h10_fusion_etudiee')"
       text: "La nuit avant l'assemblée. Ton clapet sur la table de la cuisine, à côté du projet de fusion avec {rival}, jamais rendu. Dehors, la Nord chante encore, de plus en plus loin."
+      left: "Attendre le matin"
+    - roles: [president]
+      when: "flag('histoire_h10') && season == 2 && (flag('h10_mbako_joueur') || relation.mbako >= 1)"
+      text: "La nuit avant l'assemblée. Le clapet sur la table, à côté du sel ; il ne sonne pas. À minuit, la ligne du bureau : Mbako, qui respire longtemps, puis : « C'est fermé. »"
       left: "Attendre le matin"
     - roles: [president]
       when: "flag('histoire_h10') && season == 2"

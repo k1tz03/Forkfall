@@ -304,7 +304,7 @@ cards:
     speaker: josiane
     lieu: domicile
     tone: leger
-    text: "Sept heures, le fixe. Madame Josiane, sans passer par sa nièce, d'une voix nette : « Gégé est parti cette nuit. Je l'ai entendu à la radio. Le clou, il est toujours là ? »"
+    text: "Sept heures. Madame Josiane appelle elle-même, pour la première fois sans sa nièce : « Gégé est parti cette nuit. Je l'ai entendu à la radio. Le clou, il est toujours là ? »"
     left:
       label: "Il est toujours là"
       effects: {tribunes: "+", direction: "-"}
@@ -330,3 +330,45 @@ cards:
       label: "Rentre dormir"
       effects: {direction: "+", tribunes: "-"}
       answer: "Il hoche la tête et ne bouge pas. Au bout d'une minute, il dit « quatre », pour lui seul, et part vers la Nord sans se retourner."
+
+  # --------------------------------------------- le calendrier de Madame (S0)
+  # La première fois que le clapet change de nom, Gégé est assis à côté : il
+  # entend la sonnerie, et il s'en souviendra (sa lettre, en saison 2).
+  - id: pr.h10.re.gege_sonnerie
+    roles: [president]
+    arc: clapet
+    tags: [tribunes, ultras]
+    speaker: gege
+    lieu: stade
+    tone: leger
+    text: "Mi-temps, dans la loge. Ta veste sonne : une sonnerie de 1995. Gégé, sans tourner la tête : « J'avais la même. Elle ne sonnait jamais pour moi. Tu ne décroches pas ? »"
+    left:
+      label: "Je décroche"
+      effects: {direction: "-"}
+      answer: "« Ici Madame Octobre. Elle vous plaît, cette voix ? » Tu raccroches sans un mot. Gégé regarde le terrain, très fort."
+    right:
+      label: "Je laisse sonner"
+      effects: {tribunes: "+", relation: {gege: 1}}
+      answer: "Neuf sonneries. Gégé les compte du bout des doigts sur la rambarde, comme des marches. « Ils rappelleront. Ils rappellent toujours. »"
+
+  # ------------------------------------------- la lettre de Gégé, lue (S2, 16)
+  # Gégé est mort en février : c'est Nadia Rouvier qui appelle, le soir de
+  # Madame Mai. Il lui avait dit quand la lettre serait ouverte. Il habitait
+  # au-dessus du local ; il a noté chaque soir où deux sonneries ont traversé
+  # son plancher. La bâche de son père (1971) finit la lettre.
+  - id: pr.h10.re.lettre
+    roles: [president]
+    arc: tribunes
+    tags: [famille, telephone]
+    speaker: rouvier
+    lieu: domicile
+    tone: strategique
+    text: "Minuit, l'autre téléphone, celui de la ville. Nadia Rouvier : « Il m'avait dit : en mai, quand ils lui demanderont de perdre, {pg, select, f{elle} other{il}} ouvrira ma lettre. On est en mai. »"
+    left:
+      label: "Je l'ouvre"
+      effects: {tribunes: "+", set: [h10_lettre_lue]}
+      answer: "Des dates, des heures : les soirs où deux sonneries montaient du local. En bas : « La loge vend, le virage reste. Tu es les deux. »"
+    right:
+      label: "Je la brûle"
+      effects: {direction: "+", set: [h10_lettre_brulee], clear: [h10_lettre_gardee]}
+      answer: "Dans l'évier, le combiné coincé contre l'épaule. La cire fond avant le papier. Au bout du fil, Rouvier écoute brûler, et raccroche."

@@ -10,9 +10,16 @@
 #     Mbako sur le palier (16), Madame Mai (17).
 #   Saison 1 (2038-2039) — La seconde sonnerie. La photo de l'hôtel (1, soir),
 #     l'appel de Madame Septembre (2-3), l'hélicoptère (4-5), la sonnerie dans
-#     la veste de Nino (10, soir),
-#     l'intermède de l'escalier (12), les pales (15, soir, la saisie), le neveu
-#     au zinc (17).
+#     la veste de Nino (10, soir :
+#     c'est Madame Janvier qui appelle Nino), l'intermède de l'escalier (12),
+#     Madame Avril et la prime du dernier bloc (14), les pales (15, soir, la
+#     saisie), le neveu au zinc (17).
+#   Le calendrier de Madame (« le joueur compte les mois avec elle ») :
+#     Septembre (prologue), Octobre (réaction à la voix de Gigi), Décembre
+#     (l'intermède), Janvier, Mai ; Septembre, Novembre (si l'hélicoptère est
+#     renvoyé : la chaîne du mercato), Janvier (dans la veste de Nino), Avril ;
+#     Septembre, Mai. La bande du dictaphone dit le mois où
+#     on l'enregistre ; la lettre de Gégé se lit le soir de Madame Mai.
 #   Saison 2 (2039-2040) — La dernière marche. Madame Septembre, la dernière
 #     (1-2), le café de novembre (7), la lettre de Gégé (11), la nuit de
 #     Gégé (12, soir), trois mille
@@ -104,6 +111,8 @@ arcs:
       h10_photo_hotel: "{annee} : une photo de {nom} au bar de l'hôtel de la Rive, en face d'une femme en manteau."
       h10_helico: "{annee} : un hélicoptère blanc posé au rond central, de la part de Rive Capital."
       h10_helico_saisi: "{annee} : l'hélicoptère saisi sur la pelouse, devant la Nord. Tout le monde a filmé."
+      h10_recrue_janvier: "{annee} : un milieu de vingt-six ans recruté en janvier. Le club n'a pas dit le montant."
+      h10_prime_supprimee: "{annee} : la prime de victoire du dernier bloc supprimée, par une note au vestiaire."
       h10_helico_renvoye: "{annee} : un hélicoptère blanc renvoyé du rond central de la Rive. Les pales ont emporté trois mètres carrés de pelouse."
       h10_voiture_saisie: "{annee} : la voiture sans volant de {nom} saisie devant la Nord. Elle est montée seule sur la dépanneuse."
       h10_parle_virage: "{annee} : {nom} a parlé au virage, debout sur le banc des remplaçants, le soir de la saisie."
@@ -172,6 +181,12 @@ arcs:
           - { id: pr.h10.b2_helico }
         at: [4, 5]
         season: 1
+      # Le calendrier de Madame au milieu de la saison : la prime supprimée en
+      # avril, la veille des pales (au créneau 14 : c'est avril). Madame
+      # Novembre n'est pas une ancre (la saison 1 n'avait plus la place de ses
+      # intrigues ni de ses Nouvelles) ni une carte du sac (novembre n'a
+      # jamais de créneau libre) : c'est la chaîne de l'hélicoptère renvoyé,
+      # comme l'enveloppe est celle de l'hélicoptère gardé.
       - id: s1_sonnerie
         card:
           - { id: pr.h10.b3_sonnerie_recompte, if: "flag('h10_socios_recompte')" }
@@ -181,6 +196,10 @@ arcs:
       - id: s1_intermede
         card: pr.h10.b4_intermede
         at: [12, 12]
+        season: 1
+      - id: s1_avril
+        card: pr.h10.b_avril
+        at: [14, 14]
         season: 1
       - id: s1_pales
         card:
@@ -247,14 +266,19 @@ arcs:
         season: 2
       # ================================================= saison 3 · L'assemblée
       # Les variantes se lisent dans l'ordre : la fin rare, le mur, puis la
-      # montée et la preuve. « Monté » = première division, ou barrage gagné.
+      # montée et la preuve (la lettre de Gégé lue d'abord : c'est la preuve
+      # qu'on voit), puis la lettre laissée au neveu, qui ne l'ouvre pas.
+      # « Monté » = première division, ou barrage gagné.
       - id: s3_assemblee
         card:
           - { id: pr.h10.d1_assemblee_rare, if: "(world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)) && flag('h10_marche_ouverte') && flag('h10_nino_retourne') && flag('h10_photo_raccrochee') && relation.gege >= 2" }
           - { id: pr.h10.d1_assemblee_mur, if: "world.division == 2 && !(world.rang_final == 4 && vars.gm_won == 1) && flag('h10_marche_muree') && flag('h10_defaite_promise') && flag('h10_lettre_nino') && !flag('h10_nino_retourne')" }
+          - { id: pr.h10.d1_assemblee_monte_lettre, if: "(world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)) && flag('h10_clapet_nino') && flag('h10_lettre_lue') && flag('h10_lettre_gardee')" }
           - { id: pr.h10.d1_assemblee_monte_preuve, if: "(world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)) && flag('h10_clapet_nino') && (flag('h10_lettre_gardee') || flag('h10_enregistrement') || flag('h10_nino_retourne') || flag('h10_enquete'))" }
           - { id: pr.h10.d1_assemblee_monte, if: "world.division == 1 || (world.rang_final == 4 && vars.gm_won == 1)" }
+          - { id: pr.h10.d1_assemblee_lettre, if: "flag('h10_clapet_nino') && flag('h10_lettre_lue') && flag('h10_lettre_gardee')" }
           - { id: pr.h10.d1_assemblee_preuve, if: "flag('h10_clapet_nino') && (flag('h10_lettre_gardee') || flag('h10_enregistrement') || flag('h10_nino_retourne') || flag('h10_enquete'))" }
+          - { id: pr.h10.d1_assemblee_nino_lettre, if: "flag('h10_lettre_nino') && !flag('h10_nino_retourne')" }
           - { id: pr.h10.d1_assemblee }
         at: [1, 1]
         season: 3

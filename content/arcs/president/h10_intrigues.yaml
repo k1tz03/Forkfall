@@ -230,6 +230,14 @@ arcs:
       - id: gege
         card: pr.h10.ph.gege
         next: []
+      # La photo laissée chez Josiane : Gégé relance (une seconde chance pour
+      # le clou ; sans elle, l'intrigue finissait au créneau 9 et l'hiver de la
+      # saison 0 pouvait rester muet).
+      - id: relance
+        card:
+          - { id: pr.h10.ph.relance_cadre, if: "flag('h10_clou_occupe')" }
+          - { id: pr.h10.ph.relance }
+        next: []
 
   # ============================================================== SAISON 1
   - id: pr.h10.brac
@@ -328,11 +336,25 @@ arcs:
         next: [ { step: dictaphone, in: [2, 4] } ]
       - id: dictaphone
         card:
+          - { id: pr.h10.le.dictaphone_bande, if: "flag('h10_enregistrement')" }
+          - { id: pr.h10.le.dictaphone_prete, if: "flag('h10_dictaphone')" }
           - { id: pr.h10.le.dictaphone_nino, if: "flag('h10_clapet_nino')" }
           - { id: pr.h10.le.dictaphone }
         next: []
+      # La voix dit son nom de mois : le créneau le sait (1-3 septembre, 4-5
+      # octobre, 6-7 novembre, 8-9 décembre, 10-11 janvier, 12 février,
+      # 13 mars, 14-15 avril, 16-17 mai).
       - id: bande
-        card: pr.h10.le.bande
+        card:
+          - { id: pr.h10.le.bande_septembre, if: "slot <= 3" }
+          - { id: pr.h10.le.bande_octobre, if: "slot <= 5" }
+          - { id: pr.h10.le.bande_novembre, if: "slot <= 7" }
+          - { id: pr.h10.le.bande_decembre, if: "slot <= 9" }
+          - { id: pr.h10.le.bande_janvier, if: "slot <= 11" }
+          - { id: pr.h10.le.bande_fevrier, if: "slot == 12" }
+          - { id: pr.h10.le.bande_mars, if: "slot == 13" }
+          - { id: pr.h10.le.bande_avril, if: "slot <= 15" }
+          - { id: pr.h10.le.bande }
         next: []
 
   - id: pr.h10.siege
@@ -448,7 +470,8 @@ arcs:
     cast: [gege, nino, owen]
     issues: [refusee, etudiee]
     traces:
-      h10_fusion_refusee: "{annee} : la fusion avec {rival} refusée. La bouteille de leur président est repartie fermée."
+      h10_bouteille_renvoyee: "{annee} : la bouteille de {rival} renvoyée, bouchon intact. Gégé l'a portée lui-même au coursier."
+      h10_fusion_refusee: "{annee} : la fusion avec {rival} refusée. Nino a déchiré le projet en quatre."
       h10_fusion_etudiee: "{annee} : une fusion avec {rival} « à l'étude ». Gégé a craché dans la neige, devant le siège."
     hint: "Une bouteille de vin d'en face, et un vieil homme qui veut voir un derby debout."
     start: [1, 3]
@@ -463,7 +486,7 @@ arcs:
         next: [ { step: fusion, in: [2, 3] } ]
       - id: fusion
         card:
-          - { id: pr.h10.vb.fusion_renvoyee, if: "flag('h10_fusion_refusee')" }
+          - { id: pr.h10.vb.fusion_renvoyee, if: "flag('h10_bouteille_renvoyee')" }
           - { id: pr.h10.vb.fusion }
         next: []
 

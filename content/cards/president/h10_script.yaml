@@ -90,7 +90,10 @@ cards:
       answer: "À la reprise, les haut-parleurs se taisent. La chaîne retient une pénalité sur les droits. La Nord commente elle-même, plus fort."
     right:
       label: "Laissez-le parler"
-      effects: {caisse: "+", tribunes: "-", set: [h10_voix_gardee]}
+      # Le clapet change de nom pour la première fois : en octobre, la femme
+      # du mois appelle pendant la mi-temps, Gégé assis à côté (au créneau 6,
+      # on est en novembre : rien).
+      effects: {caisse: "+", tribunes: "-", set: [h10_voix_gardee], react: [{card: pr.h10.re.gege_sonnerie, if: "slot <= 5"}]}
       answer: "Au premier but, la voix dit « magnifique ». Gégé remet sa casquette et ne l'enlève plus de tout le match."
 
   # Intermède · Les deux sonneries (créneau 8, décembre). Le fait déformé : il
@@ -174,7 +177,7 @@ cards:
     lieu: stade
     tone: leger
     once: true
-    text: "Escalier nord, en avril. Tazi mure la huitième marche. Au mur, quelqu'un a punaisé une feuille : trente-trois cases, huit cochées au feutre rouge. « Ce n'est pas moi, {toi}. Mais le compte est bon. »"
+    text: "Escalier nord, en avril. Tazi mure la huitième marche. Au mur, une feuille punaisée : trente-trois cases, huit cochées au feutre rouge. « Ce n'est pas moi, {toi}. Mais le compte est bon. »"
     left:
       label: "Je décroche la feuille"
       effects: {tribunes: "-", direction: "+"}
@@ -345,7 +348,7 @@ cards:
     text: "Mardi matin, la pelouse d'un club de première division depuis juin. Un hélicoptère blanc se pose au rond central. Le pilote te tend une enveloppe crème : « De la part de Rive Capital. Pour fêter ça. »"
     left:
       label: "Renvoyez-le"
-      effects: {tribunes: "+", direction: "-", set: [h10_helico_renvoye], react: pr.h10.re.tazi_pelouse}
+      effects: {tribunes: "+", direction: "-", set: [h10_helico_renvoye], schedule: [{card: pr.h10.ch_novembre, in: [2, 3]}], react: pr.h10.re.tazi_pelouse}
       answer: "Le pilote remonte sans discuter, l'enveloppe avec lui. Les pales arrachent trois mètres carrés de pelouse en repartant."
     right:
       label: "Je le garde"
@@ -362,7 +365,7 @@ cards:
     text: "Mardi matin, pelouse de la Rive. Un hélicoptère blanc se pose au rond central. Le pilote te tend une enveloppe crème : « De la part de Rive Capital. Il se pose sur un terrain de football. Le vôtre. »"
     left:
       label: "Renvoyez-le"
-      effects: {tribunes: "+", direction: "-", set: [h10_helico_renvoye], react: pr.h10.re.tazi_pelouse}
+      effects: {tribunes: "+", direction: "-", set: [h10_helico_renvoye], schedule: [{card: pr.h10.ch_novembre, in: [2, 3]}], react: pr.h10.re.tazi_pelouse}
       answer: "Le pilote remonte sans discuter, l'enveloppe avec lui. Les pales arrachent trois mètres carrés de pelouse en repartant."
     right:
       label: "Je le garde"
@@ -388,6 +391,27 @@ cards:
       effects: {direction: "-", tribunes: "+"}
       answer: "L'accueil de Rive Capital, quai de la Rive, prend l'enveloppe sans la compter. « On nous l'avait dit. » Un reçu sans en-tête."
 
+  # La chaîne de Madame Novembre — l'hélicoptère renvoyé a un prix : le
+  # mercato d'hiver. Elle tombe deux à trois cartes après l'hélicoptère (fin
+  # novembre). Le refus lui ouvre une porte quand même : l'annexe du contrat,
+  # que la ville fait lire en janvier (scenes_h10.yaml, h10.sc.annexe).
+  - id: pr.h10.ch_novembre
+    roles: [president]
+    arc: clapet
+    tags: [chaine, mercato, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Le dernier dimanche de novembre, le clapet. « Ici Madame Novembre. Vous avez renvoyé l'hélicoptère ; nous gardons le mercato. En janvier, personne n'arrive, personne ne part. »"
+    left:
+      label: "Personne n'arrivera"
+      effects: {caisse: "+", direction: "+", tribunes: "-", set: [h10_obei_s1, h10_mercato_gele]}
+      answer: "« Merci. La Ligue aime les présidences raisonnables ; elle le dira. » La tonalité tombe avant que tu demandes à qui."
+    right:
+      label: "Je recruterai"
+      effects: {caisse: "-", vestiaire: "+", force: 2, set: [h10_recrue_janvier]}
+      answer: "« Recrutez. Nous paierons une partie du salaire, si vous voulez. » Elle raccroche sur le mot « partie »."
+
   # B3 · La seconde sonnerie — le local du kop, un soir (créneau 10, janvier).
   # Variante : le vote recompté (pr.h10.socios) a déjà montré comment Nino compte.
   - id: pr.h10.b3_sonnerie_recompte
@@ -402,7 +426,7 @@ cards:
     left:
       label: "Je décroche"
       effects: {tribunes: "-", relation: {nino: -1}, set: [h10_clapet_nino, h10_voix_entendue], react: pr.h10.re.nino_veste}
-      answer: "Tu ouvres le clapet dans la poche de Nino. « Bonsoir, Nino. » Un temps. « Vous n'êtes pas Nino. Bonsoir, {prenom}. » La tonalité."
+      answer: "Dans la poche de Nino : « Ici Madame Janvier. Bonsoir, Nino. » Un temps. « Vous n'êtes pas Nino. Bonsoir, {prenom}. » La tonalité."
     right:
       label: "Je laisse sonner"
       effects: {relation: {gege: 1}, set: [h10_clapet_nino], react: pr.h10.re.tazi_neuf}
@@ -420,7 +444,7 @@ cards:
     left:
       label: "Je décroche"
       effects: {tribunes: "-", relation: {nino: -1}, set: [h10_clapet_nino, h10_voix_entendue], react: pr.h10.re.nino_veste}
-      answer: "Tu ouvres le clapet dans la poche de Nino. « Bonsoir, Nino. » Un temps. « Vous n'êtes pas Nino. Bonsoir, {prenom}. » La tonalité."
+      answer: "Dans la poche de Nino : « Ici Madame Janvier. Bonsoir, Nino. » Un temps. « Vous n'êtes pas Nino. Bonsoir, {prenom}. » La tonalité."
     right:
       label: "Je laisse sonner"
       effects: {relation: {gege: 1}, set: [h10_clapet_nino], react: pr.h10.re.tazi_neuf}
@@ -443,6 +467,27 @@ cards:
       label: "Je frappe aussi"
       effects: {}
       answer: "Le mur est tiède sous ta main. Au réveil, tu as les phalanges rouges, et le clapet un appel manqué, à trois heures."
+
+  # B4b · Madame Avril — le clapet, la veille de l'entraînement ouvert
+  # (créneau 14). La prime du dernier bloc ; obéir ou non, les pales tombent
+  # le lendemain : un prêt se reprend, la désobéissance ne fait que fixer
+  # l'heure.
+  - id: pr.h10.b_avril
+    roles: [president]
+    arc: clapet
+    tags: [vestiaire, portable]
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Mardi soir, le clapet. « Ici Madame Avril. La prime de victoire du dernier bloc, vous la supprimez demain. Dites que c'est la trésorerie : ce sera presque vrai. »"
+    left:
+      label: "Je la supprime"
+      effects: {vestiaire: "--", caisse: "+", force: -2, set: [h10_obei_s1, h10_prime_supprimee]}
+      answer: "Le lendemain, la note est punaisée au vestiaire, signée de ta main. Personne ne demande qui l'a dictée. Tout le monde a une idée."
+    right:
+      label: "La prime reste"
+      effects: {caisse: "-", vestiaire: "+", set: [h10_prime_gardee]}
+      answer: "« Gardez-la. Nous reprendrons autre chose. » Jeudi, à l'heure de l'entraînement ouvert, il pleut sur la Rive."
 
   # B5 · Les pales — la saisie, l'entraînement ouvert du soir (créneau 15,
   # avril). Le consortium fait payer la première désobéissance devant la Nord.
@@ -641,7 +686,7 @@ cards:
     lieu: domicile
     tone: drame
     once: true
-    text: "Deux heures du matin, le fixe de la villa. Nino, d'une voix que tu ne lui connais pas : « Il est deux heures. Il faut imprimer. » Il raccroche. Au-dessus du local, la lumière est restée allumée."
+    text: "Deux heures. La ligne du bureau, renvoyée sur la villa. Nino, d'une voix que tu ne lui connais pas : « Il est deux heures. Il faut imprimer. » En bas, au-dessus du local, une fenêtre reste allumée."
     left:
       label: "J'appelle l'imprimeur"
       effects: {caisse: "-", tribunes: "+", set: [h10_gege_mort, h10_masques_payes], char: {gege: {statut: mort}}, react: pr.h10.re.josiane_clou}
@@ -716,11 +761,11 @@ cards:
     text: "« Ici Madame Mai. Montés trop tôt, {prenom} : c'est fâcheux. Le dernier match ne compte plus ; l'assemblée, si. Le lendemain, elle vend la place. Nino s'en occupe. »"
     left:
       label: "Vous aurez la place"
-      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2]}
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2], react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}]}
       answer: "« Je n'en doutais pas. Les masques étaient réussis ; nous les avions commandés en janvier. » La tonalité, longue."
     right:
       label: "Je raccroche"
-      effects: {direction: "-", tribunes: "+", react: pr.h10.re.nino_quatre}
+      effects: {direction: "-", tribunes: "+", react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}, {card: pr.h10.re.nino_quatre}]}
       answer: "Tu raccroches au milieu d'un mot. Le clapet sonne encore trois fois cette nuit-là. Tu comptes les sonneries, pas les heures."
 
   - id: pr.h10.c5_mai_deux
@@ -733,11 +778,11 @@ cards:
     text: "Le clapet. « Ici Madame Mai. Le dernier match, {prenom}, vous le perdez. Le lendemain, Nino lit l'accord à l'assemblée. Nous comptons sur vous deux ; vous savez qui. »"
     left:
       label: "Vous aurez votre défaite"
-      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2]}
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2], react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}]}
       answer: "« Je n'en doutais pas. Les masques étaient réussis ; nous les avions commandés en janvier. » La tonalité, longue."
     right:
       label: "Je raccroche"
-      effects: {direction: "-", tribunes: "+", react: pr.h10.re.nino_quatre}
+      effects: {direction: "-", tribunes: "+", react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}, {card: pr.h10.re.nino_quatre}]}
       answer: "Tu raccroches au milieu de son « deux ». Le clapet sonne encore trois fois cette nuit-là. Tu comptes les sonneries, pas les heures."
 
   - id: pr.h10.c5_mai
@@ -750,14 +795,17 @@ cards:
     text: "Le clapet. « Ici Madame Mai. Le dernier match, {prenom}, vous le perdez. Le lendemain, l'assemblée vote l'accord ; Nino s'en occupe. Nous comptons sur vous deux. »"
     left:
       label: "Vous aurez votre défaite"
-      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2]}
+      effects: {tribunes: "-", direction: "+", caisse: "+", set: [h10_defaite_promise, h10_obei_s2], react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}]}
       answer: "« Je n'en doutais pas. Les masques étaient réussis ; nous les avions commandés en janvier. » La tonalité, longue."
     right:
       label: "Je raccroche"
-      effects: {direction: "-", tribunes: "+", react: pr.h10.re.nino_quatre}
+      effects: {direction: "-", tribunes: "+", react: [{card: pr.h10.re.lettre, if: "flag('h10_lettre_gardee')"}, {card: pr.h10.re.nino_quatre}]}
       answer: "Tu raccroches au milieu de son « deux ». Le clapet sonne encore trois fois cette nuit-là. Tu comptes les sonneries, pas les heures."
 
-  # C6 · La dernière marche — l'escalier nord, la veille (créneau 17, soir).
+  # C6 · La dernière marche — l'escalier nord, un soir de mai (créneau 17).
+  # La décision se prend ici ; le mur se monte (ou non) la nuit d'avant le
+  # dernier match, après le dernier bloc de journées : c'est l'annonce du
+  # Grand Match qui dit ce qui s'est passé (content/setpieces/h10.yaml).
   # Trois variantes : la brigade (la truelle payée avec l'enveloppe crème), la
   # truelle payée de ta poche, et la base.
   - id: pr.h10.c6_marche_brigade
@@ -767,7 +815,7 @@ cards:
     lieu: stade
     tone: strategique
     once: true
-    text: "Escalier nord, la veille. Tazi n'est pas seul : deux hommes de la brigade financière tiennent l'enveloppe crème dans un sachet. « Les billets se suivent. Ils viennent d'où ? »"
+    text: "Escalier nord, un soir de mai. Tazi n'est pas seul : deux hommes de la brigade financière tiennent l'enveloppe crème dans un sachet. « Les billets se suivent. Ils viennent d'où ? »"
     left:
       label: "De Rive Capital"
       effects: {direction: "--", tribunes: "+", set: [h10_enquete, h10_marche_ouverte]}
@@ -785,15 +833,15 @@ cards:
     lieu: stade
     tone: strategique
     once: true
-    text: "Escalier nord, la veille. Tazi fume, assis sur la dernière marche : « Vous m'avez payé pour l'oublier. Cette nuit, on me paie le double pour m'en souvenir. Je la mure, {toi} ? »"
+    text: "Escalier nord, un soir de mai. Tazi fume, assis sur la dernière marche : « Vous m'avez payé pour l'oublier. La nuit d'avant le match, on me paie le double pour m'en souvenir. Je la mure ? »"
     left:
       label: "Laissez-la ouverte"
       effects: {tribunes: "+", direction: "-", relation: {tazi: 1}, set: [h10_marche_ouverte]}
-      answer: "Il écrase sa cigarette dans le seau de ciment sec. « Alors j'ai oublié deux fois. » Il dort sur la marche, sa veste roulée sous la tête."
+      answer: "Il écrase sa cigarette dans le seau de ciment sec. « Alors j'oublierai deux fois. Cette nuit-là, je dors ici. »"
     right:
       label: "Murez-la"
       effects: {tribunes: "-", direction: "+", set: [h10_marche_muree]}
-      answer: "Il te rend ton enveloppe avant de gâcher le ciment. « Je ne prends pas deux fois pour la même marche. » À l'aube, le mur monte."
+      answer: "Il te rend ton enveloppe. « Je ne prends pas deux fois pour la même marche. » Il range sa lampe frontale dans le seau, pour la nuit dite."
 
   - id: pr.h10.c6_marche
     roles: [president]
@@ -803,15 +851,15 @@ cards:
     lieu: stade
     tone: strategique
     once: true
-    text: "Escalier nord, la veille du dernier match. Il ne reste qu'une marche. Tazi pose sa truelle : « On m'a demandé de la murer cette nuit, pendant que tout le monde dort. Je la mure, {toi} ? »"
+    text: "Escalier nord, un soir de mai, la dernière marche. Tazi pose sa truelle : « On m'a demandé de la murer la nuit d'avant le dernier match, quand tout le monde dort. Je la mure, {toi} ? »"
     left:
       label: "Laissez-la ouverte"
       effects: {tribunes: "+", direction: "-", relation: {tazi: 1}, set: [h10_marche_ouverte]}
-      answer: "Il retourne le seau et s'assoit dessus. « Alors je dors ici. Comme ça, personne ne la mure. » Il sort un thermos."
+      answer: "Il retourne le seau et s'assoit dessus, pour essayer. « Cette nuit-là, je dors ici. Comme ça, personne ne la mure. »"
     right:
       label: "Murez-la"
       effects: {tribunes: "-", direction: "+", set: [h10_marche_muree]}
-      answer: "Il mure à la lampe frontale, sans parler. À l'aube, l'escalier nord n'a plus de marches, seulement un mur qui monte."
+      answer: "Il règle sa lampe frontale, pour la nuit dite. « Je viendrai tard. Il n'y aura personne pour compter. »"
 
   # ================================================================ saison 3
   # D1 · L'assemblée — la buvette du kop, le lendemain du dernier match. Toutes
@@ -852,6 +900,44 @@ cards:
       label: "Je sors par la cuisine"
       effects: {end: escalier_mur}
       answer: "La cuisine donne sur le parking. Ta voiture n'y est plus. Tu marches jusqu'à la gare routière sans te retourner."
+
+  # La lettre de Gégé, lue le soir de Madame Mai et gardée : elle est la
+  # preuve qu'on voit (deux variantes, montés ou non).
+  - id: pr.h10.d1_assemblee_monte_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain de la montée. Nino au micro lit l'accord : la place en première division, vendue à la capitale. Dans ta poche, contre ton clapet, la lettre de son oncle."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_clapets}
+      answer: "Tu poses les deux clapets, puis la lettre, dépliée. Nino reconnaît l'écriture avant la première date. Il pose le micro."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour la vente, une à une. La lettre reste pliée contre le clapet, qui vibre deux fois, puis plus."
+
+  - id: pr.h10.d1_assemblee_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Nino au micro lit l'accord de franchise, article par article. Les deux clapets sont sur la table ; dans ta poche, deux pages de son oncle, au crayon."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_clapets}
+      answer: "Tu poses les deux clapets, puis la lettre, dépliée. Nino reconnaît l'écriture avant la première date. Il pose le micro."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour l'accord, une à une. La lettre reste pliée contre le clapet, qui vibre deux fois, puis plus."
 
   - id: pr.h10.d1_assemblee_monte_preuve
     roles: [president]
@@ -906,6 +992,27 @@ cards:
       label: "Je laisse voter"
       effects: {end: escalier_franchise}
       answer: "Les cartes se lèvent pour l'accord, une à une, puis toutes. Nino compte vite. Tu ne recomptes pas."
+
+  # La lettre laissée au neveu (« Il saura, lui, quoi en faire ») : il n'en fait
+  # rien. Elle est dans sa poche de poitrine, contre le clapet, cachetée. Mêmes
+  # issues que l'assemblée nue : seule la preuve change la fin.
+  - id: pr.h10.d1_assemblee_nino_lettre
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, ultras, moment]
+    speaker: nino
+    lieu: buvette
+    tone: strategique
+    once: true
+    text: "Buvette du kop, le lendemain. Nino au micro lit l'accord, article par article. De sa poche de poitrine dépasse une enveloppe cachetée à la cire de bougie, contre la bosse carrée du clapet."
+    left:
+      label: "Je montre les clapets"
+      effects: {end: escalier_aveu}
+      answer: "Tu lèves ton clapet. Nino pose la main à plat sur sa poche, sur la lettre de son oncle, et ne lève rien. On te croit pour le tien."
+    right:
+      label: "Je laisse voter"
+      effects: {end: escalier_franchise}
+      answer: "Les cartes se lèvent pour l'accord, une à une, puis toutes. Nino compte de la main droite. La gauche ne quitte pas sa poche."
 
   - id: pr.h10.d1_assemblee
     roles: [president]

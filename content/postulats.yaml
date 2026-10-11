@@ -1099,7 +1099,7 @@ postulats:
       nassir:   { fonction: vautour,     target: 0.4 }   # Cheikh Ilyas, la Ligue, la chaise
       brac:     { fonction: messager,    target: 0.4 }   # le petit Brac, la première commande
       josiane:  { fonction: mentor,      target: 0.3 }   # la photo de 1974, cent ans en 2038
-    pitch: "Deux téléphones, trois saisons, une loi qui ferme l'escalier. Monte, ou fais semblant."
+    pitch: "Le téléphone du bureau est pour la ville ; le clapet dans ta veste, pour ceux qui ont payé ta campagne. En 2040, une loi ferme l'escalier : monte, ou fais semblant."
     chantier: false
     prologue: pr.h10.prologue
     opening_arc: pr.h10.script
@@ -1134,7 +1134,7 @@ postulats:
           - { arc: pr.h10.centre,    poids: 1.0, if: "season == 0 && slot <= 7" }
           - { arc: pr.h10.lundi,     poids: 0.9, if: "season == 0 && slot <= 7" }
           - { arc: pr.h10.rouvier,   poids: 0.8, if: "season == 0 && slot <= 7" }
-          - { arc: pr.h10.photo,     poids: 0.8, if: "season == 0 && slot <= 7 && !flag('h10_photo_raccrochee')" }
+          - { arc: pr.h10.photo,     poids: 1.4, if: "season == 0 && slot <= 7 && !flag('h10_photo_raccrochee') && !flag('h10_photo_confiee')" }
       # Saison 1 (2038-2039) : la loi votée, la lettre du dimanche, la chaise de
       # la Ligue, les entrepôts, et le petit Brac après la commande de janvier.
       # Six ancres, deux chaînes (l'appel d'après la photo, l'enveloppe) : deux
@@ -1150,7 +1150,7 @@ postulats:
           - { arc: pr.h10.siege,     poids: 1.0, if: "season == 1 && slot <= 9" }
           - { arc: pr.h10.entrepot,  poids: 1.0, if: "season == 1 && slot <= 9" }
           - { arc: pr.h10.brac,      poids: 1.2, if: "season == 1 && slot <= 9 && (flag('h10_brac_vendu') || flag('h10_brac_garde'))" }
-          - { arc: pr.h10.photo,     poids: 0.6, if: "season == 1 && slot <= 9 && !flag('h10_photo_raccrochee') && !flag('h10_photo_tiroir')" }
+          - { arc: pr.h10.photo,     poids: 1.2, if: "season == 1 && slot <= 9 && !flag('h10_photo_raccrochee') && !flag('h10_photo_tiroir') && !flag('h10_photo_confiee')" }
           - { arc: pr.h10.lundi,     poids: 0.5, if: "season == 1 && slot <= 9" }
       # Saison 2 (2039-2040) : la dernière. Sept ancres de script, dont six
       # entre les créneaux 11 et 17 ; une intrigue tardive, tirée tôt, finie
@@ -1166,7 +1166,11 @@ postulats:
           - { arc: pr.h10.nino,        poids: 1.2, if: "season == 2 && slot <= 5" }
           - { arc: pr.h10.villebranle, poids: 1.0, if: "season == 2 && slot <= 5" }
     objectifs:                        # trois objectifs cachés ; l'indice relance
-      - { id: escalier_une_marche, titre: "Une marche",          when: "flag('h10_marche_ouverte')", indice: "« Je mure, je ne décide pas. »" }
+      # « Une marche » : laissée ouverte parce qu'on l'a demandé au maçon, pas
+      # parce qu'on l'a payé (la truelle) ni parce que la brigade l'a mise
+      # sous scellés. À « ouverte » tout court, les trois objectifs ensemble
+      # sortaient de la bande (63 % pour 30-60 %).
+      - { id: escalier_une_marche, titre: "Une marche",          when: "flag('h10_marche_ouverte') && !flag('h10_truelle')", indice: "« Je mure, je ne décide pas. »" }
       - { id: escalier_photo,      titre: "La photo de 1974",    when: "flag('h10_photo_raccrochee')", indice: "« Le clou est toujours là. »" }
       # « Laisser sonner » : la veste de Nino laissée à sa sonnerie en janvier,
       # et pas une obéissance au clapet de toute la dernière saison (à « une
