@@ -1023,7 +1023,7 @@ class Engine {
         s.pending = _objectiveCard(s, rng);
         break;
       case 'match':
-        s.pending = _matchCard(s, beat.phase);
+        s.pending = _matchCard(s, beat.phase, seconde: s.beat > 0 && beats[s.beat - 1].kind == 'match');
         break;
       case 'cup':
         s.pending = _cupCard(s);
@@ -1388,7 +1388,13 @@ class Engine {
     );
   }
 
-  Pending _matchCard(GameState s, String phase) {
+  /// Le sélectionneur joue ses fenêtres internationales en DEUX rencontres de
+  /// suite (`calendar.yaml`) : sans mémoire, `_setpiece` reprenait la première
+  /// variante vraie et les deux écrans disaient la même chose (rapport du livre
+  /// 7). Comme au Grand Match, sans aléa : la seconde rencontre écarte la
+  /// variante servie à la première, et `vars.match_index` (1, 2) la dit aux
+  /// variantes qui veulent écrire la seconde à part.
+  Pending _matchCard(GameState s, String phase, {bool seconde = false}) {
     final role = content.roles[s.role]!;
     final oppForce = divisionBaseForce(s.world.division);
     final stars = (oppForce / 20).round().clamp(1, 5);
@@ -1396,7 +1402,12 @@ class Engine {
       'adversite': '${'★' * stars}${'☆' * (5 - stars)}',
       'vestiaire_mot': s.gauges['vestiaire']! >= 60 ? 'vestiaire serein' : (s.gauges['vestiaire']! <= 35 ? 'vestiaire tendu' : 'vestiaire neutre'),
     };
-    final sp = _setpiece(s, 'match', phase);
+    s.vars['match_index'] = seconde ? 2 : 1;
+    final vu = s.vars['match_vu'] ?? -1;
+    // la seconde rencontre écarte la première ; s'il ne reste rien, mieux vaut
+    // la répéter que servir le secours des clubs (« Bloc de six journées »)
+    final sp = _setpiece(s, 'match', phase, skip: {if (seconde && vu >= 0) vu}) ?? _setpiece(s, 'match', phase);
+    s.vars['match_vu'] = sp?.index ?? -1;
     String f(String t) => _fmtFor(s, t, speaker: sp?.v.speaker, extra: extra);
     return Pending(
       id: 'match:$phase:${s.world.blocks}',

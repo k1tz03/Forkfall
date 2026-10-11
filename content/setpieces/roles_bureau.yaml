@@ -361,6 +361,17 @@ setpieces:
     - roles: [president]
       text: "Bloc de six journées. Adversité : {adversite} · {vestiaire_mot}. Six matchs vus de la loge, derrière une vitre qui garde le bruit dehors. La mi-temps, elle, se joue dans le couloir."
     # ---- Sélectionneur (« Les cadres » / « Les jeunes ») : une rencontre de la fenêtre
+    # La seconde rencontre d'une fenêtre (mars et septembre en jouent deux de suite :
+    # `vars.match_index` vaut 2, et le moteur écarte la variante de la première).
+    - roles: [selectionneur]
+      when: "vars.match_index == 2 && phase('aller')"
+      text: "Rencontre de la fenêtre, la seconde. Adversité : {adversite} · {vestiaire_mot}. Trois jours plus tard, à l'extérieur : le car, l'avion, une chambre pareille à la première."
+    - roles: [selectionneur]
+      when: "vars.match_index == 2 && phase('retour')"
+      text: "Rencontre de la fenêtre, la seconde. Adversité : {adversite} · {vestiaire_mot}. Quatre jours après la première, les mêmes onze moins deux : un genou, et un retour au club « par précaution »."
+    - roles: [selectionneur]
+      when: "vars.match_index == 2"
+      text: "Rencontre de la fenêtre, la seconde. Adversité : {adversite} · {vestiaire_mot}. On joue avec ce qui reste de la première : des jambes lourdes, et des questions qui commencent par elle."
     # Mars (slot 5, deux rencontres) : la base, en fin de rôle ; le fax, le dîner à deux tables d'abord.
     - roles: [selectionneur]
       when: "phase('aller') && slot <= 5 && year < 2010 && season == 0"
