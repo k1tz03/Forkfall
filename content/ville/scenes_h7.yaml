@@ -1,0 +1,760 @@
+# Histoire 7 · Chambre 12 — les scènes de la semaine (format : l'en-tête de
+# content/ville/scenes_communes.yaml sur la branche principale). Entre deux
+# cartes du moteur, la ville programme une scène par jour sans carte, souvent
+# le soir. Pour le sélectionneur, `domicile` est l'hôtel de la Rive : le huis
+# clos, le couloir du deuxième, le tableau des clés, la réceptionniste de nuit,
+# le cahier, et les graines qui reviennent (le Corner et les deux doubles, le
+# standard de onze heures, le bus derrière l'hôtel, la vingt-deuxième marche).
+#
+# Toutes lisent `flag('histoire_h7')`. Aucune ne pose de drapeau (elles
+# enchaînent par `mission(h7.sc.…)`) ; des effets légers, une fois par carrière.
+# Les textes n'accordent rien au protagoniste et ne sortent pas de 2011-2014.
+#
+# La reprise en ajoute vingt-neuf (quarante-neuf en tout) : le sélectionneur ne
+# trouve dans les scènes communes qu'une trentaine de scènes pour soixante ans,
+# et la ville en joue presque une par jour sans carte. Elles suivent le livre
+# par ses drapeaux : le petit vivant dans Aubérive (la boulangère, le kiosque,
+# les poussins, le dernier numéro, la lettre de janvier, son père devant la
+# petite télé du Terminus) ; les semaines d'après le 14 ; la main de 1 h 47 et
+# la plante qui fleurit seule en 2012 ; la 11, le caveau, la procureure et la
+# levée des scellés en 2013 ; le tableau descendu à la cave en 2014.
+scenes:
+  # ═════════════════════════════════════════ 2011, avant la nuit du 14
+  - id: h7.sc.tartines
+    titre: "Six tartines"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [matin]
+    qui: tibo_rance
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Sept heures, la salle du petit-déjeuner. Le petit Rancé beurre six tartines et en distribue cinq : « Ma mère dit qu'il faut manger pour deux quand on est loin. Je mange pour les autres. »"
+    choix:
+      - label: "Je prends une tartine"
+        reponse: "Elle est beaucoup trop beurrée. Il te regarde la manger jusqu'au bout, content, comme un cuisinier qui attend un verdict."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Je bois mon café"
+        reponse: "Il garde la sixième pour Mbako, qui descend à huit heures et la mange sans savoir d'où elle vient."
+
+  - id: h7.sc.corner
+    titre: "Deux doubles sur une table"
+    roles: [selectionneur]
+    lieu: bar
+    tranches: [nuit]
+    qui: mbako
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Le Corner, une heure du matin. Mbako et le petit Rancé à la table du fond, deux doubles de l'hôtel posés à côté des verres. Le petit lève le sien vers toi, comme pour trinquer."
+    choix:
+      - label: "Je les ramène"
+        reponse: "Vous rentrez à pied, tous les trois. Devant l'hôtel, le petit te tend son double : « Raccrochez-le, vous. Elle ne vous notera pas. »"
+        effets: {jauges: {vestiaire: -1, direction: 1}}
+      - label: "Je les laisse"
+        reponse: "Tu repars par le quai, sans eux. D'après le cahier, les deux doubles sont revenus au tableau à une heure cinquante."
+        effets: {jauges: {vestiaire: 2}}
+
+  - id: h7.sc.standard_onze
+    titre: "Le standard de onze heures"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [soir]
+    qui: sandrine
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Onze heures du soir. Le standard sonne dans le hall, une fois, deux fois. Sandrine laisse toujours passer trois sonneries : « Ça laisse le temps de changer d'avis, à celui qui appelle. »"
+    choix:
+      - label: "J'attends la troisième"
+        reponse: "À la troisième, elle décroche : « Hôtel de la Rive, bonsoir. » C'est Fardelli, pour le petit. Elle passe l'appel sans rien noter, pour une fois."
+
+  - id: h7.sc.crampons
+    titre: "Les crampons de Ferrol"
+    roles: [selectionneur]
+    lieu: terrain
+    tranches: [matin, aprem]
+    qui: ferrol
+    si: "flag('histoire_h7') && !flag('h7_rance_mort') && saison == 1"
+    texte: "Au bord du terrain annexe, le petit Rancé lace les crampons de Ferrol, deux pointures trop grands. Ferrol rit : « Il dit qu'avec les miens, il court comme avant. »"
+    choix:
+      - label: "Comme avant quoi ?"
+        reponse: "Le petit hausse les épaules et part courir, les lacets mal serrés. Ferrol ne rit plus : il le regarde jusqu'au virage."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Rendez-lui ses crampons"
+        reponse: "Le petit les rend en faisant la grimace. Ferrol les enfile sans les délacer, et court plus vite que lui."
+
+  # ══════════════════════════════════════════ 2011, la nuit et ses lendemains
+  - id: h7.sc.cire
+    titre: "Celui qui garde la cire"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee == 2011"
+    texte: "Une heure du matin, le couloir du deuxième. Devant la 12, un joueur est assis par terre, dos au mur, en survêtement. Il ne dort pas. Il garde la cire rouge."
+    choix:
+      - label: "Je m'assois à côté"
+        reponse: "Vous restez là jusqu'à deux heures. Il se lève le premier, à deux heures dix exactement, et rentre dans sa chambre sans un mot."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Va te coucher"
+        reponse: "Il se lève sans discuter. Le lendemain, Sandrine te dit qu'un autre a pris sa place à deux heures, et un autre à quatre."
+        effets: {jauges: {direction: 1}}
+
+  - id: h7.sc.trousse
+    titre: "Le vingt-sixième 26"
+    roles: [selectionneur]
+    lieu: cabinet
+    tranches: [aprem]
+    qui: rouvier
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee == 2011"
+    texte: "Nadia Rouvier vide sa trousse sur la table de massage : des petits 26 en feutre, découpés la nuit du barrage. « Il m'en reste un. Je ne sais pas quoi en faire. »"
+    choix:
+      - label: "Gardez-le"
+        reponse: "Elle le range dans son portefeuille, derrière une photo de son fils. « C'est là qu'il sera bien. »"
+      - label: "Donnez-le-moi"
+        reponse: "Elle te le tend. Le feutre est doux, les bords mal coupés : elle tremblait, cette nuit-là, et elle ne le cache pas."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h7.sc.terrain_craie
+    titre: "Un 26 dans le rond central"
+    roles: [selectionneur]
+    lieu: terrain
+    tranches: [matin]
+    si: "flag('histoire_h7') && flag('h7_rance_mort')"
+    texte: "Le terrain annexe, avant l'entraînement. Quelqu'un a tracé un 26 à la craie dans le rond central. Le jardinier attend qu'on lui dise s'il peut passer la tondeuse."
+    choix:
+      - label: "Passez la tondeuse"
+        reponse: "La tondeuse passe. Le 26 reste, plus pâle, jusqu'à la pluie du jeudi."
+        effets: {jauges: {direction: 1}}
+      - label: "Laissez le 26"
+        reponse: "On s'entraîne autour toute la semaine. Personne ne marche dans le rond central, même en courant."
+        effets: {jauges: {vestiaire: 2}}
+
+  - id: h7.sc.escalier
+    titre: "La vingt-deuxième marche"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag('histoire_h7') && flag('h7_rance_mort')"
+    texte: "L'escalier de service, deux heures du matin. La vingt-deuxième marche craque. Au-dessus de toi, quelqu'un descend, puis s'arrête quand tu t'arrêtes."
+    choix:
+      - label: "Je remonte voir"
+        reponse: "Personne sur le palier. La porte coupe-feu bat encore. En bas, au tableau, il ne manque aucun double."
+      - label: "Je continue de descendre"
+        reponse: "En bas, Sandrine lève les yeux de son cahier : « Vous étiez deux, dans l'escalier. » Elle l'écrit, avec l'heure."
+
+  - id: h7.sc.caveau
+    titre: "La gerbe sans carte"
+    roles: [selectionneur]
+    lieu: caveau
+    tranches: [aprem]
+    qui: rance_mere
+    si: "flag('histoire_h7') && flag('h7_rance_mort')"
+    texte: "Le caveau du Racing. Une femme en manteau noir change l'eau d'une gerbe bordeaux et grise. Sans se retourner : « Vous êtes du deuxième étage, vous. Ça se voit à la façon de marcher. »"
+    choix:
+      - label: "Je l'aide"
+        reponse: "Vous changez l'eau ensemble. Elle ne dit rien d'autre. En partant, elle te met dans la main la carte de la gerbe : elle est vierge."
+      - label: "Je la laisse seule"
+        reponse: "Tu repars par l'allée centrale. Derrière toi, elle parle à voix basse, comme on parle au téléphone à trois heures du matin."
+
+  # ═══════════════════════════════════════════════════════════ 2012
+  - id: h7.sc.bus_pluie
+    titre: "Une lumière dans le bus"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [soir]
+    si: "flag('histoire_h7') && annee <= 2012"
+    texte: "Derrière l'hôtel, le bus de 2010 sous la pluie. Une lumière bouge au dernier rang : une lampe de poche, ou un téléphone."
+    choix:
+      - label: "Je vais voir"
+        reponse: "Un gamin du quartier, venu prendre une photo pour son frère. Il s'enfuit par la porte avant. Sur le dernier siège, il a oublié son bonnet."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je tire le rideau"
+        reponse: "Le lendemain, sur la vitre arrière du bus, quelqu'un a dessiné un 26 dans la buée. De l'intérieur."
+
+  - id: h7.sc.vitrier
+    titre: "Le vitrier du 14"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    si: "flag('histoire_h7') && flag('h7_bougies')"
+    texte: "Un vitrier remplace la fenêtre du 14, perché sur une échelle. Il siffle. En bas, il a posé la pierre sur le rebord, comme un presse-papier."
+    choix:
+      - label: "Je garde la pierre"
+        reponse: "Il te la tend sans cesser de siffler. Elle est plus lourde que tu ne croyais, et encore froide."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Laissez-la là"
+        reponse: "Le soir, la pierre a disparu du rebord. Au dîner, Mbako garde une main dans la poche de son survêtement."
+
+  - id: h7.sc.classeur
+    titre: "Classées par heures"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [aprem]
+    qui: josiane
+    si: "flag('histoire_h7') && annee >= 2012"
+    texte: "Madame Josiane classe des coupures de presse dans le salon : « Les articles sur la 12, je les range dans l'ordre des heures, pas des dates. C'est plus clair, vous verrez. »"
+    choix:
+      - label: "Montrez-moi"
+        reponse: "Elle ouvre le classeur à 2 h 10. Trois articles, tous faux, tous différents. Elle les a soulignés au même endroit."
+      - label: "Rangez tout ça"
+        reponse: "« C'est ce que je fais. » Elle referme le classeur. Sur la tranche, une étiquette tapée à la machine : HEURES."
+
+  - id: h7.sc.fenetres
+    titre: "Onze fenêtres allumées"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [soir]
+    qui: lea
+    si: "flag('histoire_h7') && annee >= 2012"
+    texte: "Léa, dans le hall, compte les fenêtres éclairées du deuxième depuis la porte vitrée : « Onze. Il y en a toujours onze, à cette heure-ci. Vous savez pourquoi onze ? »"
+    choix:
+      - label: "Non"
+        reponse: "« Moi non plus. Je compte quand même. » Elle note le chiffre et l'heure, et repart sous la pluie sans parapluie."
+      - label: "Je compte avec vous"
+        reponse: "Onze. Puis douze : quelqu'un vient d'allumer dans la 14. Léa barre le onze dans son carnet, et sourit pour la première fois."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h7.sc.mur
+    titre: "Contre le mur"
+    roles: [selectionneur]
+    lieu: terrain
+    tranches: [soir]
+    qui: ferrol
+    si: "flag('histoire_h7') && flag('h7_ferrol_tait')"
+    texte: "Ferrol frappe contre le mur du terrain annexe, à la nuit tombée. Il ne compte plus à voix haute. Il frappe, et le mur lui renvoie le bruit."
+    choix:
+      - label: "Je compte pour lui"
+        reponse: "À cent, il s'arrête et te regarde : « Vous m'avez dit de ne rien dire. Pas de ne pas compter. » Il reprend."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Je le laisse"
+        reponse: "Du parking, tu l'entends encore. Les frappes deviennent plus fortes, puis s'arrêtent d'un coup."
+
+  - id: h7.sc.registre_quai
+    titre: "Ce qu'on dit à la police"
+    roles: [selectionneur]
+    lieu: rue
+    tranches: [aprem]
+    qui: benali
+    si: "flag('histoire_h7') && flag('h7_pv_signale')"
+    texte: "La commandante Benali te rattrape sur le trottoir du quai : « Je voulais vous dire que le registre existe. Je l'ai vu. Je ne vous dis pas où. »"
+    choix:
+      - label: "Merci, commandante"
+        reponse: "« Ne me remerciez pas. » Elle repart vers sa voiture, dont le moteur tourne : elle n'était venue que pour ça."
+        effets: {jauges: {tribunes: 1}}
+
+  # ═══════════════════════════════════════════════════════════ 2013
+  - id: h7.sc.livre_or
+    titre: "La page de novembre"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    qui: escande
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee >= 2012"
+    texte: "Monsieur Escande te tend le livre d'or : « Une page par fenêtre, pour la sélection. Personne n'a rien écrit à celle de novembre 2011. Vous voulez commencer ? »"
+    choix:
+      - label: "J'écris une ligne"
+        reponse: "Tu écris une date et un prénom. Escande referme le livre sans lire. Il le range au coffre, à côté du cahier de nuit."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Laissez la page blanche"
+        reponse: "« Comme vous voudrez. » La page restera blanche. Une page blanche aussi, c'est une ligne, dit-il en refermant."
+
+  - id: h7.sc.priere
+    titre: "Le registre lu à voix basse"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [aprem]
+    qui: dauzat
+    si: "flag('histoire_h7') && annee >= 2013"
+    texte: "Dauzat lit le registre au guéridon du hall, en remuant les lèvres. Il s'arrête à une page, la relit, puis tourne : « Ça se lit comme des prières, les procès-verbaux. Personne n'écoute. »"
+    choix:
+      - label: "Lisez-moi cette page"
+        reponse: "Il la lit, d'une voix plate. Quatre heures, six heures, un malaise. Il referme le registre avant la dernière ligne."
+        effets: {jauges: {direction: -1, tribunes: 1}}
+      - label: "Je n'écoute pas"
+        reponse: "« Voilà. Comme tout le monde. » Il reprend sa lecture, à voix basse, et tu n'entends plus que les lèvres."
+        effets: {jauges: {direction: 1}}
+
+  - id: h7.sc.banquette
+    titre: "La banquette du hall"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    qui: rance_mere
+    si: "flag('histoire_h7') && flag('h7_double_refuse')"
+    texte: "Trois heures du matin. La mère de Tibo est assise sur la banquette du hall, son sac sur les genoux. Elle ne dort pas. Elle regarde le tableau des clés."
+    choix:
+      - label: "Je m'assois avec elle"
+        reponse: "Vous regardez le tableau ensemble jusqu'au matin. À six heures, elle se lève : « C'est l'heure qu'ils ont choisie. Je m'en vais. »"
+      - label: "Je remonte"
+        reponse: "De l'escalier, tu la vois encore, immobile. Sandrine lui a apporté un café. Elle n'y a pas touché."
+
+  - id: h7.sc.berline
+    titre: "Une berline sur le quai"
+    roles: [selectionneur]
+    lieu: rue
+    tranches: [soir]
+    si: "flag('histoire_h7') && annee >= 2013"
+    texte: "Une berline noire ralentit à ta hauteur sur le quai. Vitre baissée, un vieil homme en manteau te regarde passer, sans un mot. Puis elle repart vers le pont."
+    choix:
+      - label: "Je lève la main"
+        reponse: "La berline s'arrête au bout du quai. Personne n'en descend. Au bout d'une minute, elle repart."
+      - label: "Je continue"
+        reponse: "Tu ne te retournes pas. Le lendemain, Escande te dit qu'un ancien client a demandé si tu dormais bien."
+
+  - id: h7.sc.plafond
+    titre: "Ton plafond"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag('histoire_h7') && flag('h7_plafonds_vus') && mission(h7.sc.escalier)"
+    texte: "Minuit. Le compte du petit ne publie plus rien depuis longtemps. Allongé sur ton lit, tu regardes ton propre plafond. Il a une fissure, lui aussi."
+    choix:
+      - label: "Je la photographie"
+        reponse: "Tu ne la publies pas. Elle reste dans ton téléphone, entre deux photos de stade, datée de cette nuit."
+      - label: "J'éteins"
+        reponse: "Tu éteins la lampe. La fissure se voit encore, au reflet des lampadaires de la Rive."
+
+  # ═══════════════════════════════════════ 2011, le petit vivant (la reprise)
+  # Il marche dans Aubérive, la ville l'a vu grandir : la boulangère, le
+  # kiosque, les poussins, le maillot du dernier appelé, la lettre de janvier.
+  - id: h7.sc.chouquettes
+    titre: "Des chouquettes à douze ans"
+    roles: [selectionneur]
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "La boulangère te rend la monnaie et montre la rue : « Le petit Rancé passait ici en sortant du terrain annexe, à douze ans. Dix chouquettes. Il en mangeait deux ; le reste, pour sa mère. »"
+    choix:
+      - label: "Il en prend toujours dix ?"
+        reponse: "« Il est passé hier. Dix, comme avant. Il a demandé si j'avais encore les sachets à fleurs. Je les avais gardés. »"
+        effets: {jauges: {tribunes: 1}}
+      - label: "Une baguette, merci"
+        reponse: "Elle l'emballe sans rien ajouter. Sous la vitre du comptoir, une photo découpée dans L'Écho : un poussin en bordeaux, un ballon trop grand pour lui."
+
+  - id: h7.sc.kiosque_sport
+    titre: "La page des sports"
+    roles: [selectionneur]
+    lieu: kiosque
+    tranches: [matin]
+    qui: tibo_rance
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Au kiosque du quai, Tibo Rancé achète L'Écho et en détache la page des sports avant de payer : « C'est pour ma mère. Elle colle tout dans un cahier. Le reste, je le laisse au monsieur. »"
+    choix:
+      - label: "Elle colle tout ?"
+        reponse: "« Tout ce qui a mon nom. Ça fait un cahier très mince. » Il rit, paie, et glisse la page pliée dans la poche intérieure de son blouson."
+      - label: "Garde le reste aussi"
+        reponse: "Il laisse le journal au kiosquier en haussant les épaules. « Le reste, c'est des gens que je ne connais pas. » Puis il te tient la porte, sans raison."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h7.sc.poussins
+    titre: "Le protège-tibia"
+    roles: [selectionneur]
+    lieu: terrain
+    tranches: [aprem]
+    qui: tibo_rance
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Au terrain annexe, les poussins du Racing ont reconnu Tibo Rancé derrière le grillage. Un gamin lui tend un protège-tibia et un feutre : « Signe dessus. Comme ça, je cours comme toi. »"
+    choix:
+      - label: "Vas-y, signe"
+        reponse: "Il écrit son nom en entier, et 26 dessous, en appuyant. Le gamin repart en boitant exprès, pour qu'on voie bien le protège-tibia."
+        effets: {jauges: {tribunes: 2}}
+      - label: "On a entraînement"
+        reponse: "Tibo rend le feutre, désolé. Le gamin reste au grillage jusqu'à la fin de la séance, le protège-tibia à la main, au cas où."
+
+  - id: h7.sc.chronometre_arzel
+    titre: "Le chronomètre de la fenêtre"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    qui: arzel
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "La docteure Arzel regarde le footing depuis la fenêtre du salon, un chronomètre dans la main. Elle ne l'arrête pas. Elle le tient, comme on tient la main de quelqu'un."
+    choix:
+      - label: "Je regarde avec elle"
+        reponse: "Au troisième tour, elle arrête le chronomètre sans le regarder et le range dans sa poche. « Ça va. » Tu ne lui avais rien demandé."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je descends au terrain"
+        reponse: "Du terrain, tu la vois encore à la fenêtre. Elle ne regarde pas le groupe : elle regarde un seul garçon, toujours le même, celui qui rit."
+
+  - id: h7.sc.vingt_six
+    titre: "Le dernier numéro"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [aprem]
+    qui: josiane
+    si: "flag('histoire_h7') && !flag('h7_rance_mort') && saison == 1"
+    texte: "Madame Josiane distribue les maillots dans le salon, dans l'ordre de la liste. Il en reste un au fond du carton, le 26. « Le dernier appelé prend le dernier numéro. C'est l'usage. »"
+    choix:
+      - label: "Donnez-le-lui"
+        reponse: "Tibo Rancé le déplie, le regarde longtemps. « Personne n'a jamais porté le 26, à Aubérive. » Il l'enfile par-dessus son pull bleu."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Qu'il choisisse"
+        reponse: "Il prend le 26 quand même, parce qu'il reste. « Comme ça, personne ne me l'a donné. » Josiane note le numéro au crayon, et ne l'efface pas."
+
+  - id: h7.sc.terminus_tele
+    titre: "Le 26, à la petite télé"
+    roles: [selectionneur]
+    lieu: terminus
+    tranches: [soir]
+    qui: bertrand_rance
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Au comptoir du Terminus, un homme en veste de travail regarde les Cobalts, le son coupé : « Le 26, c'est mon fils. Vous lui direz que je regarde ? Pas que je suis ici. Que je regarde. »"
+    choix:
+      - label: "Je lui dirai"
+        reponse: "Il hoche la tête et remonte le son d'un cran, pour les autres. Chaque fois que le 26 touche le ballon, il repose son verre."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Dites-le-lui vous-même"
+        reponse: "« Il ne décroche pas quand c'est moi. » Il le dit sans colère, comme un résultat. Puis il recommande un verre et regarde la fin debout."
+
+  - id: h7.sc.lettre_janvier
+    titre: "La lettre de janvier"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [aprem]
+    qui: escande
+    si: "flag('histoire_h7') && !flag('h7_rance_mort')"
+    texte: "Monsieur Escande sort une lettre d'un tiroir de la réception : « Le petit Rancé a écrit en janvier pour avoir la 12, à cause de la fenêtre sur le terrain annexe. Je garde les lettres des clients. »"
+    choix:
+      - label: "Montrez-la-moi"
+        reponse: "Une écriture appliquée, sur du papier à carreaux : « La 12, s'il vous plaît, si elle est libre. J'ai appris à jouer en bas. » Escande la replie selon ses plis."
+      - label: "Rangez-la"
+        reponse: "Il la range sous le registre des tarifs. « On ne jette pas une lettre qui dit s'il vous plaît. Ça n'arrive presque plus. »"
+
+  # ═══════════════════════════════════ 2011, les semaines d'après (la reprise)
+  - id: h7.sc.camion_tele
+    titre: "Une fenêtre à louer"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [soir]
+    qui: passant
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee == 2011"
+    texte: "Sous l'enseigne de l'hôtel, un cameraman t'arrête : « Votre chambre donne sur le couloir de la 12, il paraît. Dix minutes à votre fenêtre, et je vous laisse ça. » Une enveloppe, épaisse."
+    choix:
+      - label: "Rangez votre enveloppe"
+        reponse: "Il la range sans se vexer, comme on range un parapluie. Le lendemain, il filme depuis le toit du Terminus. De là-haut, l'hôtel a l'air petit."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Dix minutes, pas plus"
+        francs: 2000
+        sale: true
+        reponse: "Il filme le genou sur ton lit. Le soir, aux informations, ta fenêtre, et derrière, floue, la porte du couloir. Tu avais compté les billets avant."
+        effets: {jauges: {vestiaire: -2}}
+
+  - id: h7.sc.deux_gerbes
+    titre: "Deux gerbes, un ruban"
+    roles: [selectionneur]
+    lieu: fleuriste
+    tranches: [matin, aprem]
+    qui: commercant
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee == 2011"
+    texte: "Aux Immortelles, deux gerbes attendent : celle du Racing, bordeaux et grise, et celle de la Fédération, deux fois plus grande. La fleuriste tient un ruban vierge : « Votre nom, sur laquelle ? »"
+    choix:
+      - label: "Sur celle du Racing"
+        reponse: "Elle écrit ton nom en lettres dorées, sous celui du club. « Il était d'ici, vous avez raison. La grande, personne ne la regardera. »"
+        effets: {jauges: {tribunes: 2}}
+      - label: "Sur aucune"
+        reponse: "« Alors une petite, à part ? » Tu ne réponds pas. Elle range le ruban dans le tiroir, avec ceux qu'on ne lui a jamais réclamés."
+
+  - id: h7.sc.verre_tabouret
+    titre: "Deux verres au comptoir"
+    roles: [selectionneur]
+    lieu: terminus
+    tranches: [soir, nuit]
+    qui: bertrand_rance
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee == 2011"
+    texte: "Au Terminus, Bertrand Rancé a commandé deux verres. Il en pousse un devant le tabouret vide d'à côté : « Vous étiez à l'hôtel, cette nuit-là. Vous l'avez vu, après ? »"
+    choix:
+      - label: "Je l'ai vu"
+        reponse: "« Il dormait sur le ventre, petit. Comme moi. » Il boit le second verre, celui du tabouret, d'une traite, et paie les deux."
+      - label: "Je n'étais pas monté"
+        reponse: "Il hoche la tête. « Moi non plus, je ne monte jamais. » Il laisse le second verre plein ; le patron le vide dans l'évier sans rien dire."
+
+  - id: h7.sc.lettre_gardee
+    titre: "Une enveloppe sans nom d'hôtel"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [aprem]
+    qui: escande
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && mission(h7.sc.lettre_janvier)"
+    texte: "Escande ressort la lettre de janvier du tiroir et la tient au-dessus de la corbeille, sans la lâcher. « La police ne l'a pas demandée. La mère, peut-être. Je la lui envoie, ou je la garde ? »"
+    choix:
+      - label: "Envoyez-la à sa mère"
+        reponse: "Il la glisse dans une enveloppe à en-tête de l'hôtel, puis il en change : une blanche, sans nom. « C'est mieux. » Il colle le timbre droit."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Gardez-la"
+        reponse: "Il la remet sous le registre des tarifs. « Un hôtel garde ce qu'on lui confie. Même quand il ne sait plus pour qui. »"
+
+  # ═════════════════════════════════════════════════════ 2012 (la reprise)
+  - id: h7.sc.poignet_nu
+    titre: "Un bracelet dans une poche"
+    roles: [selectionneur]
+    lieu: cabinet
+    tranches: [aprem]
+    qui: rouvier
+    si: "flag('histoire_h7') && flag('h7_ferrol_dira')"
+    texte: "Rouvier vide les poches d'un survêtement avant de le mettre au sale : un bracelet tressé rouge et noir, coupé net. « Celui de Ferrol. Je le remets dans sa poche, ou je le jette ? »"
+    choix:
+      - label: "Remettez-le dans sa poche"
+        reponse: "Elle le remet là où elle l'a trouvé et referme la fermeture éclair. « Il le cherchera. On cherche toujours ce qu'on a coupé. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Donnez-le-moi"
+        reponse: "Elle te le tend du bout des doigts. Le soir, Ferrol fouille ses poches trois fois dans le couloir, puis ne demande rien à personne."
+
+  - id: h7.sc.vitrine_echo
+    titre: "La main dans la vitrine"
+    roles: [selectionneur]
+    lieu: echo
+    tranches: [matin, aprem]
+    qui: passante
+    si: "flag('histoire_h7') && flag('h7_nom_tu')"
+    texte: "Dans la vitrine de L'Écho, la page du jeudi : un lit, un garçon assis, une main dans le coin, entourée. Une femme pose sa main contre la vitre, à côté. « Ça pourrait être n'importe qui. »"
+    choix:
+      - label: "Ça pourrait"
+        reponse: "« C'est ce qui fait peur. » Elle remet son gant, celui de la main qu'elle comparait, et s'en va vers le marché sans se retourner."
+      - label: "Pas n'importe qui"
+        reponse: "Elle te regarde plus longtemps que la photo. « Alors vous savez qui. » Elle note quelque chose au dos d'un ticket de caisse, et file."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: h7.sc.continental_cafe
+    titre: "Le Continental au café"
+    roles: [selectionneur]
+    lieu: cafe_mairie
+    tranches: [aprem, soir]
+    qui: ancien
+    si: "flag('histoire_h7') && flag('h7_barrage_gagne') && annee == 2012"
+    texte: "Au café de la Mairie, le Continental passe sur l'écran du fond. Un ancien a posé un 26 en feutre entre les tasses. « Ma petite-fille l'a découpé. Ça porte bonheur, ou ça porte autre chose ? »"
+    choix:
+      - label: "Ça porte quelque chose"
+        reponse: "Il garde le 26 sous sa main jusqu'au coup de sifflet. Après, il le rend à la gamine, qui le recolle sur son manteau, à l'envers."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Regardez le match"
+        reponse: "Il regarde le match. Le 26 reste entre les tasses ; le garçon de café passe l'éponge tout autour, sans y toucher."
+
+  - id: h7.sc.plante_fleur
+    titre: "Une fleur devant la 12"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    qui: escande
+    si: "flag('histoire_h7') && flag('h7_plante') && annee == 2012"
+    texte: "Monsieur Escande descend du deuxième, une fleur blanche dans la paume : « La plante de la 12 a fleuri. Personne ne l'arrose, je vous assure. Vous voulez que je la fasse tailler ? »"
+    choix:
+      - label: "Laissez-la fleurir"
+        reponse: "Il pose la fleur sur le comptoir, dans un verre d'eau. À minuit, Sandrine l'écrit dans son cahier, entre deux doubles : « une fleur, la 12 »."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Faites-la tailler"
+        reponse: "Le lendemain, la plante est taillée à ras. Le surlendemain, il y a une fleur. Escande ne te le dit pas : c'est Sandrine qui te le dit."
+
+  - id: h7.sc.carton_quatorze
+    titre: "Le carton de la 14"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    qui: mbako
+    si: "flag('histoire_h7') && flag('h7_bougies') && !mission(h7.sc.vitrier)"
+    texte: "Une heure du matin, au deuxième. La porte de la 14 est entrouverte, la fenêtre bouchée par un carton. Mbako, assis par terre, dos au lit : « Le vitrier vient lundi. D'ici là, j'entends tout. »"
+    choix:
+      - label: "Je m'assois avec toi"
+        reponse: "Vous écoutez la rue ensemble. À deux heures dix, il se lève, regarde sa montre, et se rassoit. Il ne dit pas pourquoi cette heure-là."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Dors, Lian"
+        reponse: "« J'essaie depuis un an. » Il ne bouge pas. Quand tu refermes la porte, il la rouvre derrière toi, exactement à moitié."
+
+  - id: h7.sc.radio_tabac
+    titre: "La phrase de dimanche"
+    roles: [selectionneur]
+    lieu: tabac
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h7') && flag('h7_rossard_plateau')"
+    texte: "Au tabac du Quai, la radio repasse la phrase de Rossard, celle de dimanche : deux heures vingt-cinq, un capitaine. Le buraliste pose la main sur le bouton. « Depuis six heures. Je coupe ? »"
+    choix:
+      - label: "Coupez"
+        reponse: "Il coupe. Dans le silence, un client finit de gratter un ticket, ne dit rien, et le pose sur le comptoir, perdant."
+      - label: "Laissez, j'écoute"
+        reponse: "Tu écoutes jusqu'au bout. Rossard dit le nom deux fois, lentement. Le buraliste te rend la monnaie sans te regarder, une pièce de trop."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: h7.sc.demi_tarif
+    titre: "La 12, à demi-tarif"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [aprem]
+    qui: escande
+    si: "flag('histoire_h7') && flag('h7_hotel_paye')"
+    texte: "Escande te tend la note de la fenêtre, une ligne soulignée au crayon : « Chambre 12, inoccupée, demi-tarif. » « La Fédération paie. Vous voulez que j'enlève cette ligne ? »"
+    choix:
+      - label: "Laissez la ligne"
+        reponse: "Il la repasse au stylo, par-dessus le crayon. « Une chambre qu'on paie, c'est une chambre qui existe encore. »"
+        effets: {jauges: {caisse: -1, vestiaire: 1}}
+      - label: "Enlevez-la"
+        reponse: "Il la raye d'un trait, à la règle. La note baisse de quarante écus. Ce qui reste est plus propre, et plus faux."
+        effets: {jauges: {caisse: 1}}
+
+  - id: h7.sc.camionnette_pilon
+    titre: "Un carton de moins"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    qui: sandrine
+    si: "flag('histoire_h7') && flag('h7_cahiers_pilon')"
+    texte: "Six heures, devant l'hôtel. La camionnette du pilon charge les cartons de cahiers de nuit. À la porte vitrée, Sandrine en garde un sur ses genoux, un seul. « Celui-là ne part pas. »"
+    choix:
+      - label: "C'est lequel ?"
+        reponse: "« Novembre 2011. » Elle pose les deux mains dessus, à plat. « Escande l'a compté avec les autres. Il compte mal, le matin. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je ne l'ai pas vu"
+        reponse: "« Voilà. » Elle fait pivoter son fauteuil et rentre dans le hall, le cahier sur les genoux. La camionnette part avec un carton de moins."
+
+  - id: h7.sc.bache_vingt_six
+    titre: "La bâche du 26"
+    roles: [selectionneur]
+    lieu: buvette
+    tranches: [soir]
+    qui: gege
+    si: "flag('histoire_h7') && flag('h7_rance_mort') && annee >= 2012"
+    texte: "À la buvette, Gégé peint une bâche à même le sol, à genoux : un 26 bordeaux sur fond gris, trois mètres de haut. « Pas de nom. Le nom, tout le monde le sait. Vous tenez le coin ? »"
+    choix:
+      - label: "Je tiens le coin"
+        reponse: "Tu tiens le coin pendant qu'il repasse le 6. Il a de la peinture jusqu'aux coudes. « Mon père peignait comme ça, en 1971. Pour une autre colère. »"
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je ne touche pas"
+        reponse: "« Comme vous voudrez. » Il tient le coin avec son genou et continue. Le samedi, la bâche est dans la Nord ; tu la vois depuis le banc."
+
+  # ═════════════════════════════════════════════════════ 2013 (la reprise)
+  - id: h7.sc.mur_onze
+    titre: "Le mur de la 11"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    si: "flag('histoire_h7') && flag('h7_appartement_repris')"
+    texte: "Deux heures du matin, dans la 11. Le mur de la tête de lit est mitoyen avec la 12. Tu y poses la main. Il est froid, plus froid que les trois autres. De l'autre côté, rien."
+    choix:
+      - label: "Je frappe une fois"
+        reponse: "Le bruit reste dans le mur. Au matin, Sandrine te demande pourquoi la 11 a appelé la réception à deux heures dix. Tu n'as appelé personne."
+      - label: "Je retire la main"
+        reponse: "Tu dors mal, la main sous l'oreiller. Le mur ne fait aucun bruit de la nuit. C'est ce silence-là qui te réveille, à six heures."
+
+  - id: h7.sc.une_valise
+    titre: "Une seule valise"
+    roles: [selectionneur]
+    lieu: rue
+    tranches: [matin]
+    qui: passant
+    si: "flag('histoire_h7') && flag('h7_appartement_repris') && annee == 2013"
+    texte: "Sur le quai, un déménageur du comité provisoire sort du trois-pièces avec une seule valise, la tienne. « C'est tout ? On avait réservé le camion pour la matinée. »"
+    choix:
+      - label: "C'est tout"
+        reponse: "Il pose la valise sur le trottoir et regarde le camion vide. « Les autres en avaient pour la journée. » Tu signes le bordereau sur le capot."
+      - label: "Il y a un carton"
+        reponse: "Il redescend avec un carton de la Fédération : des listes de 2011, une photo de footing. « Au comité, ou à l'hôtel ? » À l'hôtel."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: h7.sc.arzel_caveau
+    titre: "La docteure au caveau"
+    roles: [selectionneur]
+    lieu: caveau
+    tranches: [matin]
+    qui: arzel
+    si: "flag('histoire_h7') && annee >= 2013 && !flag('h7_arzel_six_heures')"
+    texte: "Sept heures, le caveau du Racing. La docteure Arzel est debout devant la plaque neuve, la mallette à la main. Elle ne pose rien. Elle lit la date deux fois et se retourne : « Vous aussi ? »"
+    choix:
+      - label: "Moi aussi"
+        reponse: "Vous restez côte à côte sans parler. En partant, elle dit au gravier, pas à toi : « Mars 2010. C'est là que j'aurais dû écrire non. »"
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Je passais"
+        reponse: "« Moi aussi, je passais. » Elle repart par l'allée centrale, la mallette serrée contre elle. Elle s'arrête une fois, sans se retourner."
+
+  - id: h7.sc.the_procureure
+    titre: "Un thé, un dossier fermé"
+    roles: [selectionneur]
+    lieu: cafe_mairie
+    tranches: [matin, midi]
+    qui: amsel
+    si: "flag('histoire_h7') && annee >= 2013"
+    texte: "Au café de la Mairie, la procureure Amsel boit un thé, la main sur un dossier fermé par un élastique rouge. « Je ne vous parle pas, je bois un thé. Asseyez-vous, si vous voulez boire aussi. »"
+    choix:
+      - label: "Je m'assois"
+        reponse: "Vous buvez sans parler. En partant, elle laisse le dossier une seconde de trop sur la table, le temps que tu lises l'étiquette : RIVE, 12."
+        effets: {jauges: {direction: -1, tribunes: 1}}
+      - label: "Je ne bois pas de thé"
+        reponse: "« Moi non plus, avant. » Elle tourne sa cuillère deux fois. Tu sors ; elle n'a pas levé les yeux de l'élastique rouge."
+
+  - id: h7.sc.nappe_vote
+    titre: "La nappe en papier"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    qui: commercant
+    si: "flag('histoire_h7') && flag('h7_vote_verite')"
+    texte: "Salle du petit-déjeuner. La serveuse tient la nappe en papier du vote, pliée en quatre, le chiffre de Fauvel au milieu. « Je la jette avec les autres, ou quelqu'un la veut ? »"
+    choix:
+      - label: "Je la garde"
+        reponse: "Tu la plies dans ta poche. En la dépliant, plus tard, tu trouves des ronds de café, et vingt-sept bâtons au crayon : quelqu'un a compté ta main."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Donnez-la à Fauvel"
+        reponse: "Fauvel la range dans sa serviette sans la déplier, comme un procès-verbal. « Le syndicat n'avait jamais eu de nappe dans ses archives. »"
+
+  - id: h7.sc.portes_ouvertes
+    titre: "Vingt-cinq respirations"
+    roles: [selectionneur]
+    lieu: domicile
+    tranches: [nuit]
+    qui: ferrol
+    si: "flag('histoire_h7') && flag('h7_portes_ouvertes')"
+    texte: "Une heure du matin, au deuxième. Toutes les portes sont ouvertes, toutes les lumières éteintes. Ferrol, sur le seuil de la sienne, à voix basse : « Écoutez. On entend tout le monde respirer. »"
+    choix:
+      - label: "J'écoute"
+        reponse: "Vingt-cinq respirations, dont une qui ronfle. Au bout du couloir, la plante. Ferrol compte à voix basse et s'arrête avant la fin, exprès."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Fermez, il fait froid"
+        reponse: "« Justement. Personne ne dort, derrière une porte fermée. » Ferrol reste sur son seuil, et tu remontes le couloir sans regarder dedans."
+
+  - id: h7.sc.enveloppe_mere
+    titre: "Une enveloppe au comptoir"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [soir]
+    qui: sandrine
+    si: "flag('histoire_h7') && flag('h7_mere_standard')"
+    texte: "Sandrine te tend une enveloppe déposée à la réception, ton nom écrit au stylo à bille, très appuyé. « La mère du petit. Elle n'a pas voulu monter. Elle a demandé l'heure, et elle est repartie. »"
+    choix:
+      - label: "Je l'ouvre ici"
+        reponse: "Dedans, une photo de lui à douze ans, en poussin du Racing. Au dos, au stylo : « 2 h 10 ? » Rien d'autre, pas de signature."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je la lirai là-haut"
+        reponse: "Tu la lis assis sur le lit. Une seule ligne : « Il vous aimait bien. Il me l'avait dit, une nuit, à trois heures. »"
+
+  - id: h7.sc.levee_scelles
+    titre: "La cire qu'on gratte"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin]
+    qui: benali
+    si: "flag('histoire_h7') && annee >= 2013"
+    texte: "La commandante Benali gratte la cire rouge de la 12 avec l'ongle du pouce. « La procureure lève les scellés. Il me faut un témoin pour le procès-verbal. Vous signez, ou je demande à Escande ? »"
+    choix:
+      - label: "Je signe"
+        reponse: "Tu signes à côté d'elle. Elle relit ta signature : « Vous appuyez fort. Les gens appuient toujours fort, sur un procès-verbal. »"
+        effets: {jauges: {direction: -1}}
+      - label: "Demandez à Escande"
+        reponse: "Escande signe d'un stylo de l'hôtel et rend le stylo en rentrant la tête. La porte reste fermée ; la clé retourne au crochet."
+
+  # ═════════════════════════════════════════════ 2014, ce qui reste (la reprise)
+  - id: h7.sc.cartes_magnetiques
+    titre: "Des cartes à la place des clés"
+    roles: [selectionneur]
+    lieu: hotel
+    tranches: [matin, aprem]
+    qui: escande
+    si: "flag('histoire_h7') && annee >= 2014"
+    texte: "Escande a fait poser des serrures à carte. Le tableau des clés est descendu à la cave, avec ses crochets. « Mme Lavergne n'a plus rien à compter. Elle compte quand même. »"
+    choix:
+      - label: "Montrez-moi la cave"
+        reponse: "Le tableau est appuyé contre les bouteilles, crochets vers le mur. Escande le retourne pour toi. Il y manque toujours un crochet."
+      - label: "C'est mieux comme ça"
+        reponse: "« C'est plus moderne. » Il le dit sans y croire. À minuit, Sandrine recopie les numéros des cartes dans son cahier, à la main."
+
+# Les phrases du match du samedi (ville.js, « le match ») propres à ce livre.
+match_textes:
+  pour:
+    - {texte: "{Qui} marque, et montre sa manche au virage : le 26 cousu par Rouvier. Personne ne crie, puis tout le monde : {score}.", si: "flag(histoire_h7) && flag(h7_rance_mort)"}
+    - {texte: "Une frappe de {qui} sous la barre. Sur le banc, Mbako ne se lève pas ; il serre le brassard dans sa poche : {score}.", si: "flag(histoire_h7) && flag(h7_capitaine_ferrol)"}
+  contre:
+    - {texte: "{Adv} marque. Sur le banc, quelqu'un pose la main sur le 26 de sa manche, et ne l'enlève plus : {score}.", si: "flag(histoire_h7) && flag(h7_rance_mort)"}
+    - {texte: "But de {adv}. Dans la tribune, une écharpe bordeaux et grise reste levée, immobile, comme si de rien n'était : {score}.", si: "flag(histoire_h7) && flag(h7_rance_mort)"}

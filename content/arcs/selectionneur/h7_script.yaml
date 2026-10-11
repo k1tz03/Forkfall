@@ -1,0 +1,242 @@
+# Histoire 7 · Chambre 12 — le prologue et le script (postulat `apres_fiasco`,
+# index 6, sélectionneur, 2011). La fiche : docs/histoires/00_les_dix_histoires.md,
+# « Histoire 7 — Chambre 12 ». Les cartes sont dans
+# content/cards/selectionneur/h7_prologue.yaml et h7_script.yaml.
+#
+# Le huis clos tient en trois années civiles, trois fenêtres de la même
+# mécanique : l'hôtel de la Rive, le deuxième étage, le tableau des clés.
+#
+#   2011 · La nuit — le prologue : le bus du fiasco au parking (on peut le
+#     rendre : le loueur ne le reprend pas, il reste près de deux ans derrière
+#     l'hôtel), la chambre sous la 12, les visites signées sans lire, la
+#     docteure et ses soixante minutes, la fenêtre de la 12, le premier tableau
+#     des clés à minuit. Puis le brassard (créneau 1) ; la liste de novembre
+#     que la docteure voudrait sans Rancé (12-13) ; novembre : 2 h 10 (15), la
+#     réunion de quatre heures (16), les scellés et « Passez-moi la 12 » (17,
+#     et sa réaction). Le barrage se joue en deuil (set-pieces,
+#     content/setpieces/h7.yaml) ; l'enterrement est le Carrefour de décembre.
+#   2012 · Les portes — la 12 derrière sa plante (1-2), le cahier de nuit
+#     (12-13), le bus, la nuit, avec Mbako (17). La dépanneuse emporte le bus
+#     au Carrefour de décembre.
+#   2013 · Les signatures — le ministre dissout le comité fédéral (la tutelle
+#     de `sous_tutelle`) : Vaubourg n'est plus là pour choisir les heures,
+#     Dauzat garde le registre, et le comité provisoire reprend l'appartement
+#     du quai à qui pose des questions ; la 11 (1), la copie de 2010 (10), la
+#     valise de la docteure et six heures du matin (13, et sa réaction), la
+#     porte de la 12 sur la mère (15), le dernier tableau (16, la fin rare), la
+#     conférence (17 : la vérité, le capitaine donné, ou le groupe). Celui qui
+#     parle du groupe joue le match, passe le Bilan, et l'hiver le rattrape au
+#     premier créneau de 2014 (fin « Malaise cardiaque »).
+#
+# Écart assumé avec la fiche : la conférence se tient la VEILLE du match de
+# qualification, pas le soir même — le moteur ne sert aucune carte d'histoire
+# entre le Grand Match et le Bilan, et une fin ne se pose pas depuis un
+# set-piece. Le soir du match reste aux set-pieces (le vestiaire, le car).
+#
+# Le prologue est rangé pour que deux scènes de suite n'aient jamais la même
+# voix : le bus (Josiane), la chambre (Escande), les visites (Josiane), la
+# docteure, la fenêtre (le récit), le tableau (Sandrine) — puis Vaubourg et
+# l'Objectif.
+arcs:
+  # ════════════════════════════════════════════════════════════ le prologue
+  - id: sl.h7.prologue
+    title: "Dix jours avant les autres"
+    kind: prologue
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: false
+    theme: selection
+    carrier: josiane
+    cast: [josiane, escande, arzel, sandrine]
+    issues: []
+    hint: "Un bus garé de travers, vingt-six dossiers sous un trombone rouge, et un tableau de clés derrière un comptoir."
+    steps:
+      - id: bus
+        card:
+          - { id: sl.h7.pro1_bus_presse, if: "fil_rouge == 'presse'" }
+          - { id: sl.h7.pro1_bus }
+      - id: chambre
+        card: sl.h7.pro2_chambre
+      - id: visites
+        card: sl.h7.pro3_visites
+      - id: docteure
+        card: sl.h7.pro4_docteure
+      - id: fenetre
+        card:
+          - { id: sl.h7.pro5_fenetre_nouveaux, if: "fil_rouge == 'nouveaux'" }
+          - { id: sl.h7.pro5_fenetre }
+      - id: tableau
+        card:
+          - { id: sl.h7.pro6_tableau_mutins, if: "fil_rouge == 'mutins'" }
+          - { id: sl.h7.pro6_tableau }
+
+  # ═══════════════════════════════════════════════════════════════ le script
+  - id: sl.h7.chambre_douze
+    title: "Chambre 12"
+    kind: postulat
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    cast: [mbako, arzel, aulard, sandrine, benali, rouvier, escande, rance_mere]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_capitaine_mbako:     "{annee} : le brassard des Cobalts à Lian Mbako, le mutin de 2010. Une dernière fois, a dit {nom}."
+      h7_capitaine_ferrol:    "{annee} : le brassard des Cobalts à Yanis Ferrol, vingt-deux ans. Mbako s'est assis sous la fenêtre."
+      h7_rance_ecarte:        "{annee} : la docteure voulait Rancé chez lui en novembre. Vaubourg a remis le nom à la main."
+      h7_rance_garde:         "{annee} : Tibo Rancé gardé dans la liste de novembre, malgré le cercle au crayon de la docteure."
+      h7_rance_mort:          "{annee} : Tibo Rancé, vingt-cinq ans, mort chambre 12 à l'hôtel de la Rive, la troisième nuit."
+      h7_quatre_heures_accord: "{annee} : quatre heures, le petit salon. Malaise cardiaque à six heures ; {nom} a dit d'accord."
+      h7_quatre_heures_refus: "{annee} : quatre heures, le petit salon. {nom} voulait la police ; la police est venue à six heures."
+      h7_benali_ici:          "{annee} : vingt-cinq Cobalts entendus un par un dans la salle du petit-déjeuner, avant le car."
+      h7_report_demande:      "{annee} : {nom} a demandé de reporter le barrage. Vaubourg a rappelé à neuf heures : on jouerait."
+      h7_barrage_gagne:       "{annee} : les Cobalts qualifiés pour le Continental, avec un 26 cousu sur la manche."
+      h7_barrage_perdu:       "{annee} : le barrage perdu, en deuil. Le Continental se jouera sans les Cobalts."
+      h7_cahier_lu:           "{annee} : le cahier de nuit de l'hôtel, page du 14 novembre : « 2 h 10, double du 12 à M. Mbako »."
+      h7_mbako_temoignera:    "{annee} : Mbako dans le bus de 2010, une nuit de novembre. Il a dit qu'il témoignerait."
+      h7_mbako_silence:       "{annee} : Mbako dans le bus de 2010, une nuit de novembre. Personne ne saura, a dit {nom}."
+      h7_appartement_repris:  "{annee} : la Fédération a repris l'appartement du quai. {nom} dort à l'hôtel, à la 11."
+      h7_copie_vue:           "{annee} : une photocopie de 2010, « cardiomyopathie », signée Arzel. Et la signature de {nom}."
+      h7_arzel_ensemble:      "{annee} : la docteure Arzel a défait sa valise. Elle parlera la première, et pas seule."
+      h7_arzel_seule:         "{annee} : la docteure Arzel a bouclé sa valise. « Seule, comme en 2010. »"
+      h7_arzel_six_heures:    "{annee} : six heures du matin, la commandante Benali chez la docteure Arzel. Valise faite."
+      h7_mere_sait:           "{annee} : la mère de Tibo dans la 12, sur la chaise. {nom} lui a tout dit, jusqu'à la signature."
+      h7_tableau_complet:     "{annee} : la dernière nuit, les vingt-six doubles sont restés au tableau jusqu'au matin."
+      h7_parle_groupe:        "{annee} : la veille du match, {nom} a parlé du groupe. Pas de la nuit du 14 novembre."
+    steps:
+      # ──────────────────────────────────────────── 2011 · la nuit (saison 0)
+      - id: brassard
+        card:
+          - { id: sl.h7.a1_brassard_presse, if: "fil_rouge == 'presse'" }
+          - { id: sl.h7.a1_brassard_mutins, if: "fil_rouge == 'mutins'" }
+          - { id: sl.h7.a1_brassard }
+        at: [1, 1]
+        season: 0
+      # Le rêve de 2011, avant la liste et la nuit : le vingt-septième double.
+      - id: vingt_septieme
+        card: sl.h7.i1_vingt_septieme
+        at: [10, 11]
+        season: 0
+      - id: liste
+        card:
+          - { id: sl.h7.a2_liste_soixante, if: "flag('h7_soixante_question')" }
+          - { id: sl.h7.a2_liste_cote, if: "flag('h7_corner_ramenes')" }
+          - { id: sl.h7.a2_liste }
+        at: [12, 13]
+        season: 0
+      - id: deux_heures_dix
+        card:
+          - { id: sl.h7.a3_deux_heures_dix_quinze, if: "flag('h7_chambre_deuxieme')" }
+          - { id: sl.h7.a3_deux_heures_dix }
+        at: [15, 15]
+        season: 0
+      - id: quatre_heures
+        card:
+          - { id: sl.h7.a4_quatre_heures_police, if: "flag('h7_police_appelee')" }
+          - { id: sl.h7.a4_quatre_heures_reveil, if: "flag('h7_reveil_six')" }
+          - { id: sl.h7.a4_quatre_heures }
+        at: [16, 16]
+        season: 0
+      - id: scelles
+        card:
+          - { id: sl.h7.a5_scelles_refus, if: "flag('h7_quatre_heures_refus')" }
+          - { id: sl.h7.a5_scelles }
+        at: [17, 17]
+        season: 0
+      # ──────────────────────────────────────────── 2012 · les portes (saison 1)
+      - id: portes
+        card:
+          - { id: sl.h7.r1_portes_gagne, if: "vars.gm_won == 1" }
+          - { id: sl.h7.r1_portes_perdu }
+        at: [1, 2]
+        season: 1
+      # Le rêve de 2012, entre la main de 1 h 47 et le cahier : le couloir.
+      - id: couloir
+        card: sl.h7.i2_couloir
+        at: [9, 10]
+        season: 1
+      - id: cahier
+        card:
+          - { id: sl.h7.r2_cahier_premier_soir, if: "flag('h7_tableau_demande')" }
+          - { id: sl.h7.r2_cahier }
+        at: [12, 13]
+        season: 1
+      - id: bus_nuit
+        card:
+          - { id: sl.h7.r3_bus_cahier, if: "flag('h7_cahier_lu')" }
+          - { id: sl.h7.r3_bus_trois, if: "flag('h7_appel_trois')" }
+          - { id: sl.h7.r3_bus_corner, if: "flag('h7_corner_verre')" }
+          - { id: sl.h7.r3_bus_justice, if: "flag('h7_mbako_lache')" }
+          - { id: sl.h7.r3_bus_plateau, if: "flag('h7_rossard_plateau')" }
+          - { id: sl.h7.r3_bus }
+        at: [17, 17]
+        season: 1
+      # ──────────────────────────────────────── 2013 · les signatures (saison 2)
+      - id: onze
+        card:
+          - { id: sl.h7.s1_onze, if: "flag('h7_questions')" }
+          - { id: sl.h7.s1_onze_raisonnable }
+        at: [1, 1]
+        season: 2
+      - id: copie
+        card:
+          - { id: sl.h7.s2_copie_lue, if: "flag('h7_visites_lues')" }
+          - { id: sl.h7.s2_copie_trombone, if: "flag('h7_page_trois')" }
+          - { id: sl.h7.s2_copie_pile, if: "flag('h7_lit_tout')" }
+          - { id: sl.h7.s2_copie }
+        at: [10, 10]
+        season: 2
+      - id: valise
+        card:
+          - { id: sl.h7.s3_valise_brulee, if: "flag('h7_copie_brulee')" }
+          - { id: sl.h7.s3_valise_demission, if: "flag('h7_demission_signee')" }
+          - { id: sl.h7.s3_valise_tournoi, if: "flag('h7_phrase_laissee')" }
+          - { id: sl.h7.s3_valise_cardiologue, if: "flag('h7_cardiologue')" }
+          - { id: sl.h7.s3_valise }
+        at: [13, 13]
+        season: 2
+      - id: douze
+        card:
+          - { id: sl.h7.s4_douze_mbako, if: "flag('h7_mbako_temoignera')" }
+          - { id: sl.h7.s4_douze_pull, if: "flag('h7_pull_perdu')" }
+          - { id: sl.h7.s4_douze_double, if: "flag('h7_double_mere')" }
+          - { id: sl.h7.s4_douze_hall, if: "flag('h7_double_refuse')" }
+          - { id: sl.h7.s4_douze_standard, if: "flag('h7_mere_standard')" }
+          - { id: sl.h7.s4_douze }
+        at: [15, 15]
+        season: 2
+      - id: dernier_tableau
+        # La fin rare : le groupe a décidé de parler avant toi. Mbako a promis de
+        # témoigner, la docteure ne parlera pas seule, la page du cahier a été
+        # lue — et l'un des nouveaux (Ferrol, le vote de Fauvel, les portes
+        # laissées ouvertes) a rompu le silence de son côté.
+        card:
+          - { id: sl.h7.s5_tableau_complet, if: "flag('h7_mbako_temoignera') && flag('h7_arzel_ensemble') && flag('h7_cahier_lu') && (flag('h7_ferrol_dira') || flag('h7_vote_verite') || flag('h7_portes_ouvertes'))" }
+          - { id: sl.h7.s5_tableau_ronde, if: "flag('h7_ronde')" }
+          - { id: sl.h7.s5_tableau_seule, if: "flag('h7_confiance')" }
+          - { id: sl.h7.s5_tableau }
+        at: [16, 16]
+        season: 2
+      - id: conference
+        card:
+          # La docteure a parlé seule, et le nom de Mbako court déjà (Rossard l'a
+          # dit à l'antenne) ou tu lui as promis le silence dans le bus : la
+          # fiche de Dauzat porte une heure et un nom. Sinon, la phrase du groupe.
+          - { id: sl.h7.s6_conference_seule, if: "flag('h7_arzel_seule') && (flag('h7_rossard_plateau') || flag('h7_mbako_silence'))" }
+          - { id: sl.h7.s6_conference_page, if: "flag('h7_page_poche') || flag('h7_vl_cahier_nuit')" }
+          - { id: sl.h7.s6_conference_mbako, if: "flag('h7_mbako_temoignera')" }
+          - { id: sl.h7.s6_conference_ensemble, if: "flag('h7_arzel_ensemble')" }
+          - { id: sl.h7.s6_conference_coffre, if: "flag('h7_cahier_sauve')" }
+          - { id: sl.h7.s6_conference }
+        at: [17, 17]
+        season: 2
+      # ───────────────────────────────── 2014 · l'hiver d'après (saison 3+)
+      # Qui a parlé du groupe arrive ici, et seulement lui : la conférence, la
+      # fin rare et le capitaine donné ont fermé la carrière avant.
+      - id: gerbe
+        card:
+          - { id: sl.h7.e1_vaubourg, if: "flag('h7_quatre_heures_accord') && !flag('h7_quatre_heures_dite') && !flag('h7_pv_signale') && !flag('h7_arzel_ensemble')" }
+          - { id: sl.h7.e1_gerbe }
+        at: [1, 1]
+        season: "3+"

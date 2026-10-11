@@ -1,0 +1,690 @@
+# Histoire 7 · Chambre 12 — le réservoir (postulat `apres_fiasco`, programme
+# dans content/postulats.yaml). Les cartes sont dans
+# content/cards/selectionneur/h7_intrigues.yaml.
+#
+# Le huis clos se raconte en trois réservoirs, un par année civile ; le tirage
+# d'une saison ne prend jamais deux intrigues du même porteur ni du même thème
+# (director `_poolWeight`), d'où un porteur et un thème par intrigue.
+#
+#   2011 (bucket "0", avant la nuit du 14) — deux intrigues sur sept :
+#     · Le vingt-sixième (signature, Rouvier, le corps) : le footing du petit,
+#       ses plafonds sur le Flux, un rendez-vous « personnel » à Valdorne. Après
+#       la mort, la même étape devient l'appel du cabinet de cardiologie.
+#     · Le brassard (Ferrol, le vestiaire) : la prime gelée des mutins, le
+#       sachet sans étiquette, la rangée vide du car.
+#     · Le tableau des clés (Sandrine, la sélection) : le rituel de minuit, une
+#       saison sur l'autre (variantes lues sur `season`), et un intermède par
+#       an : le vingt-septième double, puis le standard qui sonne partout.
+#     · L'hymne (Madame Aubert, la tribune) : vingt-six bouches en novembre ;
+#       après la mort, il manque celui qui chantait faux, très fort.
+#     · L'agent du petit (Fardelli, l'agent) : des minutes pour Portclair, le
+#       standard de onze heures, un contrat de deux ans « pas plus ».
+#     · La page des sports (Léa, la formation) : le gamin du centre dans
+#       L'Écho, « un tournoi, un seul », la photo du terrain annexe.
+#     · Le pull bleu (Madame Rancé, la maison) : le linge du dimanche, les
+#       appels de trois heures, la chambre promise « au calme ».
+#   2012 (bucket "1", les portes) — trois sur six, plus le tableau :
+#     · La main (Léa, la presse) : la photo de 1 h 47 et le sachet de Ferrol.
+#     · Le plateau (Rossard, la tribune) : deux heures vingt-cinq à l'antenne.
+#     · La nuit du 14 (Benali, les instances) : les heures exactes, l'intermède
+#       du couloir où toutes les portes portent le 12, la procureure Amsel.
+#     · Fulgor (Desforges, l'argent) : le sponsor louche, la canette, les
+#       vingt-sept montres d'acier (saisies en 2013 : sl.h7.ev.montres).
+#     · Le tarif de la chambre (Escande, le contrat) : le sponsor gris, trois
+#       ans gratuits contre le nom de l'hôtel, le pilon des cahiers de nuit.
+#     · Le trombone rouge (Josiane, la direction) : la page trois, le brouillon
+#       du procès-verbal tapé à huit heures.
+#   2013 (bucket "2+", les signatures) — deux sur quatre, plus le tableau ;
+#   les quatre sont tardives (min_season 2) :
+#     · La docteure (Arzel, le corps) : le trombone vert, la mallette, la
+#       démission « pour raisons personnelles ».
+#     · Le procès-verbal (Dauzat, les instances) : le registre, Vaubourg déposé
+#       dans sa berline, l'heure donnée à Rossard.
+#     · La mère (Madame Rancé, la maison) : le standard de trois heures, le
+#       téléphone sous scellés, le double de la 12.
+#     · Dans cet ordre (Fauvel, le vestiaire) : la lettre anonyme, le vote à main
+#       levée dans la salle du petit-déjeuner.
+#
+# Les étapes qui montrent le petit vivant portent une variante « après » ou un
+# `when` qui les retient avant la nuit du 14 ; aucune intrigue d'une année ne
+# déborde sur la suivante par une fusée longue (elle priverait le tirage de
+# l'année d'après de ses ouvertures) : ce qui revient l'année suivante revient
+# par un événement, une ancre ou une variante.
+arcs:
+  # ═════════════════════════════════════════════════════════ 2011 · bucket "0"
+  - id: sl.h7.vingt_sixieme
+    title: "Le vingt-sixième"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: corps
+    carrier: rouvier
+    cast: [rouvier, mbako, arzel]
+    issues: [accorde, repousse, appel]
+    # « appel » n'existe que si la troisième étape tombe après la nuit du 14
+    # (le cabinet de cardiologie réclame la consultation manquée) : rare par
+    # construction, une carrière sur dix environ.
+    issues_rares: [appel]
+    traces:
+      h7_footing_coupe:       "{annee} : Rancé sorti du footing au troisième tour, sur ordre de {nom}. Il a ri, une main sur la poitrine."
+      h7_footing_force:        "{annee} : Rancé a fini les dix tours avec les autres. Rouvier a écrit un chiffre dans la marge et l'a entouré."
+      h7_rendez_vous_accorde:  "{annee} : Tibo Rancé avait demandé le 16 novembre pour un rendez-vous à Valdorne. {nom} avait dit oui."
+      h7_rendez_vous_repousse: "{annee} : Tibo Rancé voulait le 16 novembre pour un rendez-vous à Valdorne. « Après le barrage », a dit {nom}."
+      h7_cardiologue:          "{annee} : un cabinet de cardiologie de Valdorne a réclamé la consultation manquée de Tibo Rancé."
+    hint: "Un garçon qui rit au troisième tour, une main sur la poitrine."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: tours
+        card: sl.h7.v1_tours
+        next: [ { step: plafond, in: [1, 4] } ]
+      - id: plafond
+        card:
+          - { id: sl.h7.v2_plafond_apres, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.v2_plafond }
+        next: [ { step: rendez_vous, in: [1, 4] } ]
+      - id: rendez_vous
+        card:
+          - { id: sl.h7.v3_cabinet, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.v3_rendez_vous }
+        next: []
+
+  - id: sl.h7.capitaine
+    title: "Le brassard"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: vestiaire
+    carrier: ferrol
+    cast: [ferrol, fauvel, mbako, aubert]
+    issues: [milieu, devant]
+    traces:
+      h7_prime_debloquee: "{annee} : la prime des mutins de 2010 débloquée par {nom}. Fauvel a répondu par une lettre d'une ligne."
+      h7_prime_gelee:     "{annee} : la prime de 2010 est restée gelée. Fauvel a écrit « noté » au bas de la lettre."
+      h7_rangee_milieu:   "{annee} : dans le car du retour, {nom} a pris la rangée vide, entre les mutins et les nouveaux."
+      h7_rangee_vide:     "{annee} : dans le car du retour, une rangée vide entre les mutins et les nouveaux, jusqu'à Aubérive."
+    hint: "Un brassard plié depuis 2010, un bracelet tressé rouge et noir, et une rangée vide au milieu du car."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: prime
+        # Le brassard à un mutin : c'est la ministre qui appelle, pas le syndicat.
+        card:
+          - { id: sl.h7.c1_prime_ministre, if: "flag('h7_capitaine_mbako') && year <= 2012" }
+          - { id: sl.h7.c1_prime }
+        next: [ { step: sachet, in: [1, 4] } ]
+      - id: sachet
+        card: sl.h7.c2_sachet
+        next: [ { step: car, in: [1, 4] } ]
+      - id: car
+        card:
+          - { id: sl.h7.c3_car_deuil, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.c3_car }
+        next: []
+
+  # Le rituel : réarmé chaque saison (every_season), de fond (il ne compte pas
+  # dans les intrigues de premier plan). Les variantes de chaque étape lisent la
+  # saison ; l'étape 2 est l'intermède de l'année en 2011 et en 2013 (en 2012,
+  # l'intermède est celui du couloir, dans « La nuit du 14 »).
+  - id: sl.h7.tableau
+    title: "Le tableau des clés"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: false
+    weight: 0.6
+    once: false
+    every_season: true
+    min_season: 0
+    theme: selection
+    carrier: sandrine
+    cast: [sandrine, mbako, escande]
+    issues: [ronde, confiance]
+    traces:
+      h7_ronde:     "{annee} : chaque nuit de fenêtre, {nom} a fait la ronde du tableau des clés à minuit."
+      h7_confiance: "{annee} : {nom} ne descend plus voir le tableau des clés. Sandrine Lavergne compte seule."
+      h7_reveil_six: "{annee} : le petit Rancé avait demandé qu'on l'appelle à six heures. Pas le réveil : Sandrine."
+    hint: "Vingt-six crochets derrière un comptoir, et une femme qui ne dort pas."
+    start: [2, 5]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: minuit
+        card:
+          - { id: sl.h7.t1_minuit_2013, if: "season >= 2" }
+          - { id: sl.h7.t1_minuit_2012, if: "season == 1" }
+          - { id: sl.h7.t1_minuit }
+        next: [ { step: songe, in: [2, 4] } ]
+      - id: songe
+        card:
+          - { id: sl.h7.t2_double_2013, if: "season >= 2" }
+          - { id: sl.h7.t2_heures_2012, if: "season == 1" }
+          - { id: sl.h7.t2_reveil }
+        next: [ { step: ronde, in: [2, 4] } ]
+      - id: ronde
+        card:
+          - { id: sl.h7.t3_portes_2013, if: "season >= 2" }
+          - { id: sl.h7.t3_ronde_2012, if: "season == 1" }
+          - { id: sl.h7.t3_ronde }
+        next: []
+
+  - id: sl.h7.hymne
+    title: "L'hymne"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: tribune
+    carrier: aubert
+    cast: [aubert, josiane, mbako]
+    issues: [chante, muet]
+    traces:
+      h7_hymne_chante: "{annee} : les Cobalts ont répété l'hymne dans la salle du petit-déjeuner de la Rive, à voix haute."
+      h7_hymne_muet:   "{annee} : à la répétition de l'hymne, à la Rive, {nom} a laissé les Cobalts se taire."
+    hint: "Une ministre qui veut voir des bouches s'ouvrir, et des fiches bristol tapées à la machine."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: ministre
+        card: sl.h7.h1_ministre
+        next: [ { step: fiches, in: [1, 4] } ]
+      - id: fiches
+        card: sl.h7.h2_fiches
+        next: [ { step: repetition, in: [1, 4] } ]
+      - id: repetition
+        card:
+          - { id: sl.h7.h3_repetition_deuil, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.h3_repetition }
+        next: []
+
+  - id: sl.h7.agent
+    title: "L'agent du petit"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: agent
+    carrier: fardelli
+    cast: [fardelli, sandrine, rouvier]
+    issues: [ecoute, ignore]
+    traces:
+      h7_minutes_promises: "{annee} : « Soixante minutes, pas plus », a dit {nom} à Fardelli, l'agent du petit Rancé."
+      h7_fardelli_econduit: "{annee} : {nom} a renvoyé Fardelli à ses affaires. L'agent du petit a appelé l'hôtel chaque soir."
+      h7_deux_ans:          "{annee} : Rancé avait demandé à Fardelli un contrat de deux ans, pas plus. {nom} l'a entendu, et n'a pas compris."
+    hint: "Un agent qui remue un café qu'il ne boira pas, et un téléphone qui sonne à onze heures."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: cafe
+        card: sl.h7.g1_cafe
+        next: [ { step: standard, in: [1, 4] } ]
+      - id: standard
+        card:
+          - { id: sl.h7.g2_standard_muet, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.g2_standard }
+        next: [ { step: deux_ans, in: [1, 4] } ]
+      - id: deux_ans
+        card:
+          - { id: sl.h7.g3_deux_ans_apres, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.g3_deux_ans }
+        next: []
+
+  # Le gamin du centre vu par L'Écho : la phrase qu'Arzel répétera en 2013
+  # (« un tournoi, un seul »), et la photo du terrain annexe, la main sur la
+  # poitrine, que la tombe ou la Une reprendront.
+  - id: sl.h7.ecrit
+    title: "La page des sports"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: formation
+    carrier: lea
+    cast: [lea, arzel, sandrine]
+    issues: [montre, garde]
+    traces:
+      h7_phrase_laissee: "{annee} : « Un tournoi, un seul » : la phrase de Tibo Rancé, en gras dans L'Écho."
+      h7_phrase_coupee:  "{annee} : à la demande de {nom}, Léa a coupé une phrase de Tibo Rancé. Elle l'a gardée."
+      h7_photo_ensemble: "{annee} : sur la photo de L'Écho, {nom} à côté de Tibo Rancé, dans les filets du terrain annexe."
+      h7_photo_main:     "{annee} : L'Écho a publié le tirage du terrain annexe, la main sur la poitrine. Sandrine l'a punaisé."
+    hint: "Une journaliste qui veut vingt minutes avec le gamin du centre, et une phrase qu'il a dite en riant."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: portrait
+        card: sl.h7.l1_portrait
+        next: [ { step: phrase, in: [1, 4] } ]
+      - id: phrase
+        card:
+          - { id: sl.h7.l2_phrase_apres, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.l2_phrase_appel, if: "flag('h7_portrait_refuse')" }
+          - { id: sl.h7.l2_phrase }
+        next: [ { step: photo, in: [1, 4] } ]
+      - id: photo
+        card:
+          - { id: sl.h7.l3_photo_apres, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.l3_photo }
+        next: []
+
+  # La mère avant la nuit : le linge du dimanche, les appels de trois heures
+  # (le standard de 2013 s'en souviendra), la chambre « au calme » — et, si la
+  # dernière étape tombe après le 14, le sac rendu par la police, sans le pull
+  # bleu, que la porte de la 12 rendra en 2013.
+  - id: sl.h7.linge
+    title: "Le pull bleu"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 0
+    theme: famille
+    carrier: rance_mere
+    cast: [rance_mere, sandrine, escande]
+    issues: [tendu, ferme]
+    traces:
+      h7_appels_parle:    "{annee} : à trois heures, chaque nuit, sept minutes entre la 12 et un numéro en ville : sa mère. {nom} le savait."
+      h7_appels_tus:      "{annee} : les appels de trois heures, entre la 12 et un numéro en ville. {nom} n'a pas voulu savoir."
+      h7_chambre_promise: "{annee} : à la mère de Tibo Rancé, sur le parking de la Rive, {nom} avait promis la 12, « au calme »."
+      h7_pull_perdu:      "{annee} : le pull bleu de Tibo Rancé n'était pas dans le sac rendu par la police."
+    hint: "Un sac de linge lavé et plié sur un comptoir, et un numéro en ville que la 12 appelle à trois heures."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: linge
+        card: sl.h7.y1_linge
+        next: [ { step: appels, in: [1, 4] } ]
+      - id: appels
+        card:
+          - { id: sl.h7.y2_appels_apres, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.y2_appels }
+        next: [ { step: chambre, in: [1, 4] } ]
+      - id: chambre
+        card:
+          - { id: sl.h7.y3_sac, if: "flag('h7_rance_mort')" }
+          - { id: sl.h7.y3_calme }
+        next: []
+
+  # ═════════════════════════════════════════════════════════ 2012 · bucket "1"
+  - id: sl.h7.main
+    title: "La main"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: presse
+    carrier: lea
+    cast: [lea, ferrol, rouvier]
+    issues: [dira, tait]
+    traces:
+      h7_main_vue:     "{annee} : Léa a montré à {nom} la photo de 1 h 47 : Rancé vivant, et dans le coin une main qui tient un sachet."
+      h7_ferrol_dira:  "{annee} : Yanis Ferrol a dit qu'il parlerait du sachet. Il avait vingt-trois ans."
+      h7_ferrol_tait:  "{annee} : « Tu ne dis rien », a dit {nom} à Ferrol. Il a coupé son bracelet de Valdorne le soir même."
+    hint: "Une photo postée à 1 h 47, effacée avant le jour, et une main dans le coin."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: photo
+        card:
+          - { id: sl.h7.m1_photo_sachet, if: "flag('h7_sachet_vu')" }
+          - { id: sl.h7.m1_photo_couvre_feu, if: "flag('h7_couvre_feu')" }
+          - { id: sl.h7.m1_photo_phrase, if: "flag('h7_phrase_coupee')" }
+          - { id: sl.h7.m1_photo }
+        next: [ { step: sachet, in: [1, 3] } ]
+      - id: sachet
+        card: sl.h7.m2_sachet
+        next: [ { step: jeudi, in: [1, 3] } ]
+      - id: jeudi
+        card:
+          - { id: sl.h7.m3_ferrol_parle, if: "flag('h7_ferrol_dira')" }
+          - { id: sl.h7.m3_jeudi }
+        next: []
+
+  - id: sl.h7.plateau
+    title: "Le plateau"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: tribune
+    carrier: rossard
+    cast: [rossard, mbako, fauvel]
+    issues: [defendu, lache]
+    traces:
+      h7_rossard_plateau: "{annee} : sur le plateau de Vence, Aimé Rossard a dit le nom de Mbako et une heure : deux heures vingt-cinq."
+      h7_mbako_defendu:   "{annee} : à la radio, {nom} a défendu Mbako sans dire de quoi. Le standard de la Fédération a sauté."
+      h7_mbako_lache:     "{annee} : interrogé sur Mbako, {nom} a dit : « La justice dira. » La phrase a tourné toute la semaine."
+    hint: "Un ancien sélectionneur, un plateau du dimanche soir, et un nom dit deux fois, lentement."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: appel
+        card: sl.h7.p1_appel
+        next: [ { step: dimanche, in: [1, 3] } ]
+      - id: dimanche
+        card:
+          - { id: sl.h7.p2_dimanche_ancien, if: "flag('h7_capitaine_ferrol')" }
+          - { id: sl.h7.p2_dimanche }
+        next: [ { step: quatorze, in: [1, 3] } ]
+      - id: quatorze
+        card: sl.h7.p3_quatorze
+        next: []
+
+  - id: sl.h7.nuit_du_14
+    title: "La nuit du 14"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: instances
+    carrier: benali
+    cast: [benali, escande, sandrine]
+    issues: [aide, mur]
+    traces:
+      h7_quatre_heures_dite: "{annee} : {nom} a raconté à la commandante Benali la réunion de quatre heures. Elle a noté l'heure de la phrase."
+      h7_dormi_dit:          "{annee} : à la commandante Benali, {nom} a dit avoir dormi jusqu'à six heures. Elle a noté l'heure de la phrase."
+      h7_pv_signale:         "{annee} : {nom} a dit à la police qu'un procès-verbal de quatre heures existait, dans un registre noir."
+      h7_appel_trois:        "{annee} : 2 h 24, la 12 a appelé la chambre de la docteure, quarante secondes. Benali a entouré l'heure."
+    hint: "Une feuille où trois heures sont écrites, et toutes celles qui manquent entre elles."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: heures
+        card:
+          - { id: sl.h7.n1_heures_appel, if: "flag('h7_police_appelee')" }
+          - { id: sl.h7.n1_heures }
+        next: [ { step: standard, in: [1, 3] } ]
+      - id: standard
+        card: sl.h7.n2_deux_heures_vingt_quatre
+        next: [ { step: procureure, in: [1, 3] } ]
+      - id: procureure
+        card: sl.h7.n3_procureure
+        next: []
+
+  - id: sl.h7.fulgor
+    title: "Fulgor"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: argent
+    carrier: desforges
+    cast: [desforges, aulard, ferrol]
+    issues: [dit, pousse]
+    traces:
+      h7_fulgor_signe:   "{annee} : Fulgor, « partenaire nutrition » des Cobalts. {nom} a signé, la canette orange posée sur le contrat."
+      h7_fulgor_refuse:  "{annee} : {nom} a repoussé la canette de Fulgor. Vaubourg a signé le partenariat dans son bureau."
+      h7_montres:        "{annee} : vingt-sept montres d'acier gravées COBALTS, offertes par Fulgor. {nom} a gardé la sienne au poignet."
+      h7_fulgor_dit:     "{annee} : au journal de vingt heures, {nom} a dit « malaise cardiaque », une canette orange près de la main."
+      h7_canette_poussee: "{annee} : en direct, {nom} a poussé la canette de Fulgor hors du champ, du dos de la main."
+    hint: "Une canette orange sur une nappe blanche, et vingt-sept montres dans un coffret de velours."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: canette
+        card: sl.h7.f1_canette
+        next: [ { step: coffret, in: [1, 3] } ]
+      - id: coffret
+        card:
+          - { id: sl.h7.f2_montres, if: "flag('h7_fulgor_signe')" }
+          - { id: sl.h7.f2_vaubourg }
+        next: [ { step: vingt_heures, in: [1, 3] } ]
+      - id: vingt_heures
+        card:
+          - { id: sl.h7.f3_plateau_canette, if: "flag('h7_fulgor_signe')" }
+          - { id: sl.h7.f3_table_de_presse }
+        next: []
+
+  - id: sl.h7.hotel
+    title: "Le tarif de la chambre"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: contrat
+    carrier: escande
+    cast: [escande, aulard, sandrine]
+    issues: [plan, effacee]
+    traces:
+      h7_hotel_gratuit:  "{annee} : la Rive loge les Cobalts gratis trois ans, si son nom ne sort jamais avec « l'incident »."
+      h7_hotel_paye:     "{annee} : la Fédération paie l'hôtel de la Rive au tarif. {nom} a refusé la gratuité de Monsieur Escande."
+      h7_cahier_sauve:   "{annee} : à la demande de {nom}, le cahier de nuit de novembre 2011 a échappé au pilon de janvier."
+      h7_douze_effacee:  "{annee} : la chambre 12 a disparu du plan d'évacuation de l'hôtel de la Rive. Le pompier a demandé pourquoi."
+    hint: "Trois ans de chambres offertes, et un nom d'hôtel qu'on ne doit jamais lire à côté d'un autre mot."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: offre
+        card: sl.h7.o1_offre
+        next: [ { step: pilon, in: [1, 3] } ]
+      - id: pilon
+        card: sl.h7.o2_pilon
+        next: [ { step: plan, in: [1, 3] } ]
+      - id: plan
+        card: sl.h7.o3_plan
+        next: []
+
+  - id: sl.h7.trombone
+    title: "Le trombone rouge"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 1
+    theme: direction
+    carrier: josiane
+    cast: [josiane, dauzat, aulard]
+    issues: [brouillon, oubli]
+    traces:
+      h7_page_trois:    "{annee} : Madame Josiane a cherché la page trois du dossier Rancé. Elle n'a trouvé que l'agrafe."
+      h7_brouillon:     "{annee} : Madame Josiane a gardé le brouillon du procès-verbal de la nuit, « six heures » tapé deux fois."
+      h7_brouillon_jete: "{annee} : le brouillon du procès-verbal de la nuit est parti à la corbeille, à la demande de {nom}."
+    hint: "Un trombone rouge qu'on n'a pas lu, et une page trois qui manque depuis mars 2011."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: trombone
+        card:
+          - { id: sl.h7.j1_trombone_signees, if: "flag('h7_visites_signees')" }
+          - { id: sl.h7.j1_trombone }
+        next: [ { step: brouillon, in: [1, 3] } ]
+      - id: brouillon
+        card: sl.h7.j2_brouillon
+        next: [ { step: dauzat, in: [1, 3] } ]
+      - id: dauzat
+        card:
+          - { id: sl.h7.j3_dauzat_brouillon, if: "flag('h7_brouillon')" }
+          - { id: sl.h7.j3_dauzat }
+        next: []
+
+  # ═════════════════════════════════════════════════════════ 2013 · bucket "2+"
+  - id: sl.h7.arzel
+    title: "La docteure"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: corps
+    carrier: arzel
+    cast: [arzel, rouvier, josiane]
+    issues: [lettre, reste]
+    traces:
+      h7_lit_tout:          "{annee} : aux visites de mars, {nom} a lu chaque dossier, page par page. Il a fallu deux jours."
+      h7_signe_encore:      "{annee} : aux visites de mars, {nom} a signé la pile, comme en 2011. Le trombone était vert."
+      h7_demission_signee:  "{annee} : la docteure Arzel a démissionné « pour raisons personnelles ». {nom} a contresigné, en dessous."
+      h7_demission_refusee: "{annee} : {nom} a refusé la démission de la docteure Arzel avant le match de novembre."
+    hint: "Un trombone vert, une mallette fermée à deux tours, et une lettre qu'il faut signer en dessous."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: visites
+        card: sl.h7.d1_trombone_vert
+        next: [ { step: mallette, in: [1, 2] } ]
+      - id: mallette
+        card: sl.h7.d2_mallette
+        next: [ { step: lettre, in: [1, 2] } ]
+      - id: lettre
+        card: sl.h7.d3_lettre
+        next: []
+
+  - id: sl.h7.proces_verbal
+    title: "Le procès-verbal"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: instances
+    carrier: dauzat
+    cast: [dauzat, aulard, josiane, rossard]
+    issues: [copie, registre]
+    traces:
+      h7_copie_pv:        "{annee} : {nom} a obtenu une copie du registre : « Quatre heures : malaise cardiaque, constaté à six heures. »"
+      h7_registre_ferme:  "{annee} : {nom} a laissé le registre de quatre heures à Dauzat. Les procès-verbaux ne mentent pas."
+      h7_rossard_source:  "{annee} : Dauzat l'a reconnu : c'est lui qui avait donné l'heure, deux heures vingt-cinq, à Aimé Rossard."
+    hint: "Un registre noir ouvert sur un guéridon, et une berline garée sur le quai, vitre baissée."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: registre
+        card:
+          - { id: sl.h7.v_registre_police, if: "flag('h7_pv_signale')" }
+          - { id: sl.h7.v_registre_brouillon, if: "flag('h7_brouillon_jete')" }
+          - { id: sl.h7.v_registre }
+        next: [ { step: berline, in: [1, 3] } ]
+      - id: berline
+        card: sl.h7.v_berline
+        statut_ok: [parti]
+        next: [ { step: envoi, in: [1, 3] } ]
+      - id: envoi
+        card:
+          - { id: sl.h7.v_source, if: "flag('h7_rossard_plateau')" }
+          - { id: sl.h7.v_envoi }
+        next: []
+
+  - id: sl.h7.mere
+    title: "La mère"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: famille
+    carrier: rance_mere
+    cast: [rance_mere, sandrine, benali]
+    issues: [ouverte, fermee]
+    traces:
+      h7_mere_standard: "{annee} : trois heures du matin, le standard de la Rive : « Passez-moi la 12. C'est sa mère. »"
+      h7_double_mere:   "{annee} : Sandrine Lavergne a donné le double de la 12 à la mère de Tibo, avec l'accord de {nom}."
+      h7_double_refuse: "{annee} : le double de la 12 est resté au crochet. La mère de Tibo a attendu dans le hall jusqu'au matin."
+    hint: "Le standard qui sonne encore une fois à trois heures, et une voix de femme très réveillée."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: standard
+        # Les appels de trois heures (« Le pull bleu », 2011) : elle savait l'heure.
+        card:
+          - { id: sl.h7.x1_standard_appels, if: "flag('h7_appels_parle')" }
+          - { id: sl.h7.x1_standard_tus, if: "flag('h7_appels_tus')" }
+          - { id: sl.h7.x1_standard }
+        next: [ { step: reve, in: [1, 3] } ]
+      - id: reve
+        card: sl.h7.i3_standard
+        next: [ { step: double, in: [2, 4] } ]
+      - id: double
+        card: sl.h7.x3_double
+        next: []
+
+  - id: sl.h7.fauvel
+    title: "Dans cet ordre"
+    kind: serie
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    foreground: true
+    weight: 1.0
+    once: true
+    min_season: 2
+    theme: vestiaire
+    carrier: fauvel
+    cast: [fauvel, mbako, ferrol]
+    issues: [vote, liste]
+    traces:
+      h7_vote_verite: "{annee} : dans la salle du petit-déjeuner, les Cobalts ont voté à main levée de dire la nuit du 14."
+      h7_vote_refuse: "{annee} : {nom} a arrêté le vote du syndicat avant la dernière main. « Une sélection, pas une assemblée. »"
+    hint: "Une lettre anonyme glissée sous vingt-six portes, et un syndicaliste qui défend ses joueurs avant la vérité."
+    start: [1, 3]
+    same_club: true
+    fallback: drop
+    steps:
+      - id: lettre
+        # La prime des mutins (« Le brassard », 2011) : Fauvel avait noté.
+        card:
+          - { id: sl.h7.k1_lettre_note, if: "flag('h7_prime_gelee')" }
+          - { id: sl.h7.k1_lettre_prime, if: "flag('h7_prime_debloquee')" }
+          - { id: sl.h7.k1_lettre }
+        next: [ { step: main_levee, in: [1, 2] } ]
+      - id: main_levee
+        card: sl.h7.k2_main
+        next: [ { step: vote, in: [1, 2] } ]
+      - id: vote
+        card:
+          - { id: sl.h7.k3_vote_poignet, if: "flag('h7_ferrol_tait')" }
+          - { id: sl.h7.k3_vote }
+        next: []

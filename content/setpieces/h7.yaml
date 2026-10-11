@@ -1,0 +1,320 @@
+# Histoire 7 · Chambre 12 — les set-pieces du huis clos (format : l'en-tête de
+# content/setpieces.yaml). Ce lot est lu avant `roles_bureau.yaml` (ordre des
+# noms de fichiers) : ses variantes passent devant le socle du sélectionneur.
+# Aucune n'est un secours : chacune porte `roles: [selectionneur]` et un `when`
+# qui lit `flag('histoire_h7')`.
+#
+# Ce que l'année du sélectionneur devient à l'hôtel de la Rive :
+#   · l'Objectif : Vaubourg sur le parking, la main sur le capot du bus (2011) ;
+#     le petit salon (2012) ; Dauzat et le registre, la Fédération sous tutelle
+#     (2013 : « le ministre » a dissous le comité fédéral) ;
+#   · la rencontre de la fenêtre : le petit qui filme le stade pour sa mère (ou
+#     qui compte ses soixante minutes, selon le footing), puis le brassard noir,
+#     la porte qu'on ne regarde pas, le 26 au canif ;
+#   · le Grand Match : le barrage en deuil (la minute de silence, le 26 cousu
+#     par Rouvier, l'hymne chanté ou tu, la scène « Je parle de lui / Je les
+#     laisse se taire », l'agent qui regarde sa montre) ;
+#   · le Bilan : un communiqué qui parle du classement, puis d'un malaise ; le
+#     contrat signé sur le capot d'une berline ; le Carrefour de décembre —
+#     l'enterrement au caveau du Racing (2011, lu sur ce que le petit et son
+#     agent avaient demandé), la dépanneuse qui emporte enfin le bus de 2010
+#     (2012), la photo officielle ou le plan d'évacuation (2013).
+# Les traces du réservoir reviennent ici : le footing, l'hymne, l'agent, la
+# rangée du milieu, le sommeil déclaré à la commandante, le registre, le plan.
+setpieces:
+  objective:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0"
+      speaker: aulard
+      text: "Vaubourg, sur le parking de la Rive, la main sur le capot du bus de 2010 : « Le barrage de novembre, et {objectif_min} au classement des nations. Vous le dites aux micros, ou je le dis pour vous ? »"
+      left: "Je le dis aux micros"
+      right: "Dites-le pour moi"
+      answer_left: "Tu le dis devant trois caméras, le bus dans le dos. Le soir, aux informations, c'est le bus qu'on regarde."
+      answer_right: "« Je le dirai mieux que vous. » Il le dit au micro, et ajoute « pour le pays », que tu n'avais pas prévu."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && vars.gm_won == 1"
+      speaker: aulard
+      text: "Vaubourg, dans le petit salon dont on a ouvert les rideaux, pour une fois : « Le Continental en juin, {objectif_min} en novembre, et pas un mot sur l'hôtel. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Pas sur l'hôtel"
+      answer_left: "Promesse publique : {objectif}. Il referme les rideaux lui-même avant de partir."
+      answer_right: "« L'hôtel n'est pas un objectif. » Il le dit en souriant, et laisse les rideaux ouverts derrière lui."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1"
+      speaker: aulard
+      text: "Vaubourg, dans le petit salon : « Pas de Continental cette année. Il reste {objectif_min}, et le silence. Le silence, je m'en occupe ; le reste, c'est vous. Vous vous engagez ? »"
+      left: "Je m'engage"
+      right: "Je ne promets rien"
+      answer_left: "Promesse publique : {objectif}. Il te serre la main dans les deux siennes, comme à quatre heures du matin."
+      answer_right: "Il hoche la tête. « Le silence, lui, je vous le promets. » Il tire les rideaux en sortant."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 3"
+      speaker: dauzat
+      text: "Mars 2014. Le comité provisoire est devenu le comité ; Dauzat en est le secrétaire, et le registre a une couverture neuve, ouverte à ton nom : « Le comité attend {objectif_min}. Je l'écris ? »"
+      left: "Écrivez-le"
+      right: "Pas de promesse"
+      answer_left: "Promesse publique : {objectif}. Il l'écrit à l'encre neuve, sous la date. L'ancienne couverture est dans son tiroir."
+      answer_right: "Il écrit « pas de promesse » sous la date, à l'encre neuve. « La couverture change. Le reste, non. »"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2"
+      speaker: dauzat
+      text: "Le ministre a dissous le comité. Dauzat a gardé son bureau, et le registre, ouvert à une page où il a écrit ton nom : « Le comité provisoire attend {objectif_min}, et pas de vague. Je l'écris ? »"
+      left: "Écrivez-le"
+      right: "Pas de promesse"
+      answer_left: "Promesse publique : {objectif}. Il l'écrit dans le registre noir, à la page d'après celle de quatre heures."
+      answer_right: "Il écrit « pas de promesse », la date, et l'heure. « C'est aussi une ligne. »"
+
+  match:
+    # Six rencontres par an, dont deux paires servies au même créneau (5 et
+    # 14) : une phrase d'histoire y reviendrait mot pour mot. Elle ne sort
+    # donc qu'aux rencontres seules, aux créneaux 9 et 17 ; les paires
+    # gardent le socle du sélectionneur.
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && slot == 9 && flag('h7_footing_coupe')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Le petit Rancé entre à l'heure de jeu. Depuis le footing, il compte ses minutes sur les doigts, au bord de la touche."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && slot == 9 && flag('h7_footing_force')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Le petit Rancé court plus que tout le monde. Au bord du terrain, Rouvier ne regarde que lui, le chronomètre contre la poitrine."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && slot == 9 && world.serie_defaites >= 1"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Dans le car, le petit Rancé s'est endormi contre la vitre, la bouche ouverte. Mbako lui a posé sa veste sur les épaules."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && slot == 9 && world.serie_victoires >= 2"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Rouvier strappe vingt-six chevilles avant le car. Le petit Rancé demande deux bandes de plus : « J'ai froid aux chevilles. »"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && slot == 9"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Au dernier rang du car, le petit Rancé filme le stade qui approche, pour sa mère."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && slot == 17 && flag('h7_rance_mort')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Un brassard noir à vingt-cinq bras. Le vingt-sixième est plié dans la trousse de Rouvier."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && slot == 9 && flag('h7_plante')"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. La plante de la 12 est sur le siège du dernier rang : quelqu'un l'a descendue du couloir. Personne ne l'enlève."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && slot == 9"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Avant le car, chacun passe devant la porte de la 12 sans la regarder, sauf un, toujours le même."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && slot == 17 && world.serie_victoires >= 1"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Dans le car, on chante de nouveau, plus bas qu'avant. Au dernier rang, la place du petit reste vide ; personne ne s'y assoit."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && slot == 17"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Rouvier a recousu les numéros des maillots d'entraînement. Elle s'arrête au 25, et reprend au 27."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2 && slot == 9 && world.serie_defaites >= 2"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Le stade siffle avant le coup d'envoi. Dans la Nord, Gégé a déroulé une banderole : 26, et rien d'autre."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2 && slot == 9"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Dans le car, quelqu'un a gravé 26 au canif sur l'accoudoir du dernier rang. Personne n'a vu qui."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2 && slot == 17"
+      text: "Rencontre de la fenêtre. Adversité : {adversite} · {vestiaire_mot}. Le comité provisoire a fait imprimer les maillots sans le 26. Rouvier a recousu le chiffre sur les manches, à la main, une nuit."
+
+  gm_annonce:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_hymne_chante')"
+      text: "GRAND MATCH. Le barrage. Minute de silence, puis l'hymne : vingt-cinq voix, et un trou dans la ligne. Sur chaque manche, un 26 cousu cette nuit par Nadia Rouvier. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_hymne_muet')"
+      text: "GRAND MATCH. Le barrage. L'hymne passe sur vingt-cinq bouches fermées ; la ministre, en tribune, ne chante pas non plus. Sur chaque manche, un 26 cousu par Rouvier. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0"
+      text: "GRAND MATCH. Le barrage, en deuil. Minute de silence ; sur chaque manche, un 26 cousu pendant la nuit par Nadia Rouvier. Le stade se tait plus longtemps qu'on ne le lui a demandé. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && flag('h7_hotel_paye')"
+      text: "GRAND MATCH. Novembre 2012. Le speaker dit {prenom} {nom} ; le stade applaudit poliment. Escande, la note réglée au tarif, est assis près d'une chaise vide, une écharpe dessus. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1"
+      text: "GRAND MATCH. Novembre 2012. Le speaker dit {prenom} {nom} ; le stade applaudit poliment. En tribune officielle, au premier rang, une chaise vide, une écharpe bordeaux et grise. Coup d'envoi."
+      left: "Coup d'envoi"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2"
+      text: "GRAND MATCH. La qualification. Hier, la phrase sur le groupe ; ce soir, l'hymne, chanté plus fort que d'habitude, et faux. La mère de Tibo n'est pas venue. Coup d'envoi."
+      left: "Coup d'envoi"
+
+  gm_te:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 1"
+      text: "{minute}e minute · {score}. Arrêt de jeu, un joueur à terre. Au bout du banc, Rouvier a posé le maillot 26, plié. Le groupe te regarde : tu parles de lui, ou tu laisses le silence ?"
+      left: "Je parle de lui"
+      right: "Je les laisse se taire"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 2 && flag('h7_minutes_promises')"
+      text: "{minute}e minute · {score}. La soixantième minute passe. Dans la tribune, Fardelli regarde sa montre, puis le banc, puis le maillot 26 plié au bout. Il ne regarde plus le match."
+      left: "Je garde mon onze"
+      right: "Je change tout"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 2 && flag('h7_fardelli_econduit')"
+      text: "{minute}e minute · {score}. Mi-temps. Fardelli est descendu au bord du terrain, sans accréditation, et demande à te parler. Les stadiers attendent que tu dises s'il reste."
+      left: "Qu'on le raccompagne"
+      right: "Qu'il reste au bord"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 2 && flag('h7_footing_coupe')"
+      text: "{minute}e minute · {score}. Mi-temps. Rouvier, le chronomètre contre la poitrine : « Au footing, vous l'aviez fait sortir au troisième tour. Ce soir, je n'ai personne à faire sortir. »"
+      left: "Je garde mon onze"
+      right: "Je change tout"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 2 && flag('h7_footing_force')"
+      text: "{minute}e minute · {score}. Mi-temps. Rouvier, le chronomètre contre la poitrine : « Au footing, vous l'aviez laissé finir les dix tours. Ce soir, ils courent tous pour lui. »"
+      left: "Je garde mon onze"
+      right: "Je change tout"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 3 && flag('h7_capitaine_ferrol')"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Mbako demande à sortir : il n'a plus de jambes, dit-il. Depuis le rond central, Ferrol fait non de la tête, le brassard serré au bras."
+      left: "Mbako reste"
+      right: "Mbako sort"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_te_index == 3"
+      text: "{minute}e minute · {score}. Dernier quart d'heure. Mbako demande à sortir : il n'a plus de jambes, dit-il. Ferrol s'échauffe déjà, son bracelet rouge et noir scotché au poignet."
+      left: "Mbako reste"
+      right: "Ferrol entre"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 1 && vars.gm_te_index == 2"
+      text: "{minute}e minute · {score}. Mi-temps. Sur le tableau du vestiaire prêté, quelqu'un a écrit 26 au feutre, dans le coin. Personne ne l'efface, pas même toi."
+      left: "Je parle tactique"
+      right: "Je parle du 26"
+
+  aftermatch:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && vars.gm_won == 1"
+      text: "Qualifiés. Le vestiaire ne chante pas. Rouvier découd un 26 de la manche de Mbako, qui la lui tend sans un mot ; les autres font la queue derrière lui."
+      left: "Ils les gardent cousus"
+      right: "Rouvier les découd"
+      answer_left: "Ils rentrent à l'hôtel en maillot, le 26 sur la manche. Sandrine les regarde passer et, cette fois, ne note pas l'heure."
+      answer_right: "Vingt-cinq numéros dans une boîte à chaussures. Rouvier la garde sur ses genoux pendant tout le trajet du car."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0"
+      text: "Éliminés, en deuil. Personne n'enlève son maillot dans le vestiaire. Le délégué de la Fédération rappelle que le car part à minuit, et que l'hôtel attend la note."
+      left: "On attend qu'ils se lèvent"
+      right: "Le car part à minuit"
+      answer_left: "Ils se lèvent à une heure, ensemble, sans qu'on le leur dise. Le délégué inscrit l'heure dans son rapport, et la souligne."
+      answer_right: "À minuit, le car est plein. Au dernier rang, une place vide que personne ne regarde. Personne ne parle jusqu'à la Rive."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 1 && vars.gm_won == 1 && flag('h7_rangee_milieu')"
+      text: "Victoire. Dans le car du retour, la rangée du milieu t'attend, vide, comme chaque fois depuis 2011. Mbako, au dernier rang, a gardé la place du petit pour personne."
+      left: "Je prends le milieu"
+      right: "Je reste devant"
+      answer_left: "Tu t'assois au milieu. Au bout d'une heure, Ferrol et Mbako sont assis de part et d'autre de toi, sans s'être concertés."
+      answer_right: "La rangée du milieu reste vide jusqu'à la Rive. Le chauffeur, cette fois, ne raconte rien au Terminus."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 1 && vars.gm_won == 1"
+      text: "Victoire. Dans le car du retour, Mbako s'assoit au dernier rang, à la place qui était celle du petit, et ne la cède à personne jusqu'à l'hôtel."
+      left: "Je m'assois à côté"
+      right: "Je reste devant"
+      answer_left: "Vous ne parlez pas de tout le trajet. Devant l'hôtel, il s'écarte pour te laisser descendre."
+      answer_right: "Du premier rang, tu le vois dans le rétroviseur du chauffeur, les yeux ouverts, jusqu'à la Rive."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 1 && flag('h7_rangee_vide')"
+      text: "Défaite. Dans le car du retour, la rangée du milieu est vide, comme la première année : les mutins au fond, les nouveaux devant, et personne ne traverse."
+      left: "Je m'assois au milieu"
+      right: "Je reste devant"
+      answer_left: "Tu t'assois au milieu, deux ans trop tard. Personne ne vient. À la Rive, Mbako te tient la porte, quand même."
+      answer_right: "Le car roule deux heures dans le silence. À l'hôtel, chacun reprend son double sans regarder celui des autres."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 1"
+      text: "Défaite. À l'hôtel, Escande a fait servir une soupe dans la salle du petit-déjeuner, vingt-six bols. Les joueurs mangent debout, sans parler."
+      left: "Je mange avec eux"
+      right: "Je monte me coucher"
+      answer_left: "Tu manges debout avec eux. Un bol reste plein, au bout de la table ; la serveuse n'ose pas le retirer."
+      answer_right: "De ta chambre, tu entends les cuillères, puis plus rien. À minuit, Sandrine compte les doubles. Ils sont tous là."
+
+  bilan_verdict:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && bilan.tenu"
+      text: "Le verdict de l'année tombe : {rang}e nation. {objectif} : {tenu}. La Fédération a préparé un communiqué signé {prenom} {nom} : il parle du classement, puis d'un malaise, dans cet ordre."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0"
+      text: "Le verdict tombe : {rang}e nation. {objectif} : {tenu}. Dans les cafés du pays, on ne parle ni du classement ni de {prenom} {nom}. On parle d'un hôtel, à Aubérive."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2 && flag('h7_signe_encore')"
+      text: "Le verdict tombe : {rang}e nation. {objectif} : {tenu}. Au bas de la feuille, une ligne tapée à la machine, {prenom} {nom}, pour ta signature. Tu signes sans lire, comme en mars."
+      left: "Voir le classement"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 1"
+      text: "Le verdict tombe : {rang}e nation. {objectif} : {tenu}. Dauzat range le classement dans le registre, sous {prenom} {nom}, à la même encre que le reste."
+      left: "Voir le classement"
+
+  bilan_contrat:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0"
+      speaker: aulard
+      text: "Vaubourg signe ta prolongation avant toi, sur le capot de sa berline : « Un an de plus. Tout le monde a été très digne. Vous restez aux mêmes conditions, ou vous voulez des moyens ? »"
+      left: "Je reste ainsi"
+      right: "Il me faut des moyens"
+      answer_left: "Tu signes sur le capot encore tiède. Il souffle sur ta signature, comme Dauzat sur un procès-verbal."
+      answer_right: "« Des moyens. » Il rit, sans méchanceté. Le lendemain, la Fédération t'accorde un charter, et te reprend ta voiture de fonction."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1 && flag('h7_dormi_dit')"
+      speaker: aulard
+      text: "Vaubourg a fait monter ton contrat dans le petit salon : « On me dit que vous avez dit à la police que vous dormiez, à quatre heures. Moi aussi, je dormais. On continue ? »"
+      left: "Je signe tel quel"
+      right: "Je veux des moyens"
+      answer_left: "Il te tend son stylo. « Dormez bien, alors. » Il le dit comme une clause, et Dauzat l'écrit."
+      answer_right: "Il ajoute une ligne sur les déplacements, à la main, et la paraphe. « Les gens qui dorment bien ne demandent rien. »"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1"
+      speaker: aulard
+      text: "Vaubourg a fait monter ton contrat dans le petit salon aux rideaux tirés : « On continue. Je vous ai gardé, vous savez. D'autres auraient trouvé un nom. Vous signez tel quel ? »"
+      left: "Je signe tel quel"
+      right: "Je veux des moyens"
+      answer_left: "Il te tend son propre stylo et le reprend aussitôt après. « Un nom, ça se trouve toujours. Gardez ça en tête. »"
+      answer_right: "Il ajoute une ligne à la main, sur les déplacements. Elle porte ses initiales, et la date du 14 novembre, par erreur."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2 && flag('h7_registre_ferme')"
+      speaker: dauzat
+      text: "Dauzat te garde, à l'essai, pour le comité provisoire : « Vous m'avez laissé le registre. Je vous laisse le poste. Vous continuez ainsi, ou on parle d'argent, {toi} ? »"
+      left: "Je continue ainsi"
+      right: "Parlons d'argent"
+      answer_left: "Il glisse ton contrat dans le registre, contre la page de quatre heures, et referme. « Ils se tiendront compagnie. »"
+      answer_right: "« L'argent, c'est le ministère. » Il te donne un numéro, celui de l'homme qui a dissous le comité."
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2"
+      speaker: dauzat
+      text: "Le comité provisoire te garde, à l'essai. Dauzat a corrigé l'article des moyens au stylo rouge : « Vous continuez avec ça, ou on en parle au ministère, {toi} ? »"
+      left: "Je continue ainsi"
+      right: "Parlons-en au ministère"
+      answer_left: "Il referme le contrat et le range dans le registre, entre deux procès-verbaux. Tu ne le reverras pas."
+      answer_right: "Le ministère t'écoute une heure, te donne la moitié, et le pays l'apprend le lundi suivant, page deux."
+
+  bilan_carrefour:
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_rance_mort') && flag('h7_chambre_promise')"
+      text: "Décembre, le caveau du Racing, sous la pluie. La mère te serre la main sans te regarder : « Vous m'aviez promis le calme. » Le père est au comptoir du Terminus. Fardelli se tient derrière un pilier."
+      left: "Rester jusqu'à la fin"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_rance_mort') && flag('h7_photo_ensemble')"
+      text: "Décembre, le caveau du Racing. Sur la tombe, sous plastique, la photo de L'Écho : lui dans les filets, et toi à côté, un peu flou. La mère te regarde la regarder. Le père est au Terminus."
+      left: "Rester jusqu'à la fin"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_rance_mort') && flag('h7_deux_ans')"
+      text: "Décembre, le caveau du Racing, sous la pluie. La mère, le virage en silence ; le père est au comptoir du Terminus. Derrière un pilier, Fardelli tient un contrat de deux ans, roulé."
+      left: "Rester jusqu'à la fin"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_rance_mort') && flag('h7_rendez_vous_accorde')"
+      text: "Décembre, le caveau du Racing, sous la pluie. La mère te serre la main : « Il m'avait dit que vous lui aviez donné le 16. Il était content. » Le père n'est pas venu ; il est au Terminus."
+      left: "Rester jusqu'à la fin"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_rance_mort') && flag('h7_rendez_vous_repousse')"
+      text: "Décembre, le caveau du Racing, sous la pluie. La mère ne te serre pas la main : « Après le barrage, vous lui aviez dit. Il me l'avait répété. » Le père est resté au Terminus."
+      left: "Rester jusqu'à la fin"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 0 && flag('h7_rance_mort')"
+      text: "Décembre, le caveau du Racing, en fin d'après-midi. La mère, la pluie, le virage en silence. Le père n'est pas venu : il est au comptoir du Terminus. Fardelli se tient derrière un pilier."
+      left: "Rester jusqu'à la fin"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season == 1"
+      text: "Décembre 2012. Une dépanneuse emporte enfin le bus de 2010 : la Fédération a payé le loueur. Sur le parking, sa place reste sèche toute la nuit, un rectangle sous la pluie."
+      left: "Regarder le rectangle"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2 && flag('h7_douze_effacee')"
+      text: "Décembre 2013. Le nouveau plan d'évacuation de l'hôtel de la Rive arrive par la poste, encadré, pour la chambre des sélectionneurs. Au deuxième étage, il manque toujours une porte."
+      left: "Accrocher le plan"
+    - roles: [selectionneur]
+      when: "flag('histoire_h7') && season >= 2"
+      text: "Décembre 2013. La Fédération sous tutelle envoie ses vœux. Dans l'enveloppe, la photo officielle de l'année : vingt-six joueurs, et toi au milieu, qui souris."
+      left: "Ranger la photo"

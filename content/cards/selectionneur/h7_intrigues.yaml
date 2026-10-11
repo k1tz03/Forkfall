@@ -1,0 +1,1608 @@
+# Histoire 7 · Chambre 12 — les cartes du réservoir (content/arcs/selectionneur/h7_intrigues.yaml).
+# Cartes d'étape : hors du sac, servies par leur intrigue. `arc:` est le thème.
+#
+# Les graines et ce qui les paie, d'une intrigue à l'autre :
+#   · le chiffre au crayon de Rouvier (le footing) et le rendez-vous du 16
+#     novembre reviennent avec l'appel du cabinet de cardiologie, puis dans la
+#     valise de la docteure (« son cardiologue de Valdorne m'écrivait ») ;
+#   · le couvre-feu de minuit et les plafonds du petit reviennent à 1 h 47 ;
+#   · le sachet sans étiquette du vestiaire de juin revient dans la main de la
+#     photo ; Léa le voit « à votre bouche » ;
+#   · « soixante » (la docteure, au prologue) revient chez Fardelli, qui
+#     appelle chaque soir à onze heures — d'où « Passez-moi la 12 » ;
+#   · le trombone rouge revient avec la page trois, qui revient dans la copie de
+#     Rouvier (ancre de 2013) ;
+#   · le brouillon de Josiane revient devant Dauzat ; l'heure donnée à Rossard
+#     revient dans le registre ;
+#   · la main levée dans le bus de 2010 revient au vote de Fauvel.
+#
+# Les étapes de 2011 qui montrent le petit vivant ont une variante pour après
+# la nuit du 14, ou un `when` qui les retient avant.
+cards:
+  # ═════════════════════════════════════════ 2011 · Le vingt-sixième (Rouvier)
+  - id: sl.h7.v1_tours
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, formation]
+    speaker: rouvier
+    lieu: terrain
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Terrain annexe, le footing du matin. Nadia Rouvier tient le chronomètre contre sa poitrine : « Le petit Rancé s'arrête au troisième tour, une main là, et il rit. Je n'aime pas quand ils rient là. »"
+    left:
+      label: "Il sort du footing"
+      effects: {vestiaire: "-", relation: {rouvier: 1}, set: [h7_footing_coupe]}
+      answer: "Rouvier siffle deux coups. Rancé sort en marchant, vexé, et s'assoit sur le banc des remplaçants comme on s'assoit en tribune."
+    right:
+      label: "Il court avec les autres"
+      effects: {vestiaire: "+", set: [h7_footing_force]}
+      answer: "Il finit les dix tours, dernier, en souriant. Rouvier écrit un chiffre dans la marge de son carnet, et l'entoure."
+
+  - id: sl.h7.v2_plafond
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: mbako
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "year >= 2008 && !flag('h7_rance_mort')"
+    text: "Mbako te montre son téléphone dans le couloir : la photo d'un plafond, « nuit 2 », sur le Flux du petit. « Tous les soirs, il poste son plafond. Il dit que c'est pour sa mère. Tu lui dis d'arrêter ? »"
+    left:
+      label: "Laisse-le poster"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "« Il sera content. » Le soir même, « nuit 3 » : le même plafond, avec une fissure que personne n'avait remarquée."
+    right:
+      label: "Plus de téléphone à minuit"
+      effects: {direction: "+", vestiaire: "-", set: [h7_couvre_feu]}
+      answer: "Mbako range son téléphone. « Je lui dirai. » À minuit dix, « nuit 3 » est en ligne quand même, avec un cœur en dessous."
+
+  - id: sl.h7.v2_plafond_apres
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    lieu: hotel
+    tone: strategique
+    once: true
+    when: "year >= 2008"
+    text: "Le Flux du petit Rancé publie encore, chaque nuit à minuit : « nuit 5 », « nuit 6 ». Le même plafond. Il avait tout programmé pour la fenêtre, jusqu'au soir du barrage."
+    left:
+      label: "Je fais fermer le compte"
+      effects: {direction: "+", set: [h7_compte_ferme]}
+      answer: "Le Flux demande un certificat de décès. Dauzat en envoie une copie tamponnée. « nuit 7 » ne sort jamais."
+    right:
+      label: "Je les regarde tous"
+      effects: {vestiaire: "+", set: [h7_plafonds_vus]}
+      answer: "Tu attends minuit, chaque nuit. Le dernier plafond est daté du soir du barrage. Il n'y a rien dessus, à part la fissure."
+
+  - id: sl.h7.v3_rendez_vous
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: tibo_rance
+    lieu: hotel
+    tone: strategique
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Tibo Rancé frappe à ta porte, le carnet à élastique rouge à la main : « Le 16 novembre, j'ai un rendez-vous à Valdorne. Une heure, c'est personnel. Je peux y aller ? »"
+    left:
+      label: "Vas-y, le 16"
+      effects: {vestiaire: "+", set: [h7_rendez_vous_accorde], outcome: accorde}
+      answer: "Il écrit une ligne dans le carnet et referme l'élastique. Il ne te dit pas quel genre de rendez-vous ; tu ne demandes pas."
+    right:
+      label: "Après le barrage"
+      effects: {direction: "+", set: [h7_rendez_vous_repousse], outcome: repousse}
+      answer: "« Après le barrage », répète-t-il en hochant la tête, comme quelqu'un qui recompte un calcul déjà fait."
+
+  - id: sl.h7.v3_cabinet
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire, direction]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La réception te passe un appel : un cabinet de cardiologie de Valdorne. « M. Rancé ne s'est pas présenté le 16 novembre. Il avait insisté pour ce créneau. On envoie la note à qui ? »"
+    left:
+      label: "À la Fédération"
+      effects: {direction: "-", set: [h7_cardiologue], outcome: appel}
+      answer: "La secrétaire épelle « Fédération » lettre par lettre. Puis, sans qu'on lui demande : « Il venait depuis 2010, vous savez. »"
+    right:
+      label: "Envoyez-la-moi"
+      effects: {caisse: "-", set: [h7_cardiologue], outcome: appel}
+      answer: "La note arrive au quai trois jours plus tard : une consultation, quarante écus. Au dos, au stylo : suivi depuis 2010."
+
+  # ═══════════════════════════════════════════════ 2011 · Le brassard (Ferrol)
+  - id: sl.h7.c1_prime
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    speaker: fauvel
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Karim Fauvel, du syndicat des joueurs, pose une lettre à côté de ta tasse : « La prime de 2010 est gelée depuis le bus. Les mutins ne réclament rien. Moi, je réclame pour eux, {toi}. »"
+    left:
+      label: "Je la débloque"
+      effects: {vestiaire: "++", caisse: "-", direction: "-", relation: {fauvel: 1}, set: [h7_prime_debloquee]}
+      answer: "Fauvel replie la lettre en quatre. Le soir, au dîner, Mbako lève son verre d'eau vers toi, une seconde, et le repose."
+    right:
+      label: "Elle reste gelée"
+      effects: {direction: "+", vestiaire: "-", caisse: "+", relation: {fauvel: -1}, set: [h7_prime_gelee]}
+      answer: "Il écrit « noté » au bas de la lettre, la date à côté, et te la laisse. Elle reste sur la table jusqu'au soir."
+
+  - id: sl.h7.c1_prime_ministre
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, direction]
+    speaker: aubert
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Aubert, au téléphone, la voix de quelqu'un qui lit une note : « Un mutin avec le brassard, et le syndicat réclame la prime de 2010. Le pays ne paie pas un bus qui n'est pas descendu. »"
+    left:
+      label: "Je la débloque quand même"
+      effects: {vestiaire: "++", direction: "-", relation: {aubert: -1, fauvel: 1}, set: [h7_prime_debloquee]}
+      answer: "« Avec quel argent ? » Elle raccroche avant ta réponse. La prime arrive en juin, prise sur les primes de match ; personne ne s'en plaint."
+    right:
+      label: "Elle reste gelée"
+      effects: {direction: "+", vestiaire: "-", caisse: "+", relation: {aubert: 1, fauvel: -1}, set: [h7_prime_gelee]}
+      answer: "« Voilà une phrase que je pourrai répéter. » Elle la répète le soir même, à la radio. Fauvel l'entend dans sa voiture."
+
+  - id: sl.h7.c2_sachet
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: ferrol
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Le vestiaire, avant le match de juin. Ferrol vide un sachet blanc dans sa gourde, dos aux autres : « C'est pour les jambes, {toi}. À Valdorne, tout le monde en prend. Vous voulez voir ? »"
+    left:
+      label: "Montre-moi"
+      effects: {direction: "+", set: [h7_sachet_vu]}
+      answer: "Il te tend le sachet. Pas d'étiquette, juste un trait au feutre. « Mon préparateur les fait lui-même. » Il le reprend, et boit."
+    right:
+      label: "Ce sont tes jambes"
+      effects: {vestiaire: "+", relation: {ferrol: 1}}
+      answer: "Il secoue la gourde et boit d'un trait. Le soir, il court plus que tout le monde, et il le sait."
+
+  - id: sl.h7.c3_car
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: stade
+    tone: leger
+    once: true
+    text: "Le car du retour, après le match. Les mutins au fond, les nouveaux devant ; au milieu, une rangée vide que personne ne prend. Ta place est au premier rang, derrière le chauffeur."
+    left:
+      label: "Je m'assois au milieu"
+      effects: {vestiaire: "++", direction: "-", set: [h7_rangee_milieu], outcome: milieu}
+      answer: "Au bout d'une heure, Mbako vient s'asseoir à côté de toi sans rien dire. Ferrol se retourne une fois, puis deux."
+    right:
+      label: "Je reste devant"
+      effects: {direction: "+", vestiaire: "-", set: [h7_rangee_vide], outcome: devant}
+      answer: "La rangée reste vide jusqu'à Aubérive. Le chauffeur l'a vue dans son rétroviseur ; il le racontera au comptoir du Terminus."
+
+  - id: sl.h7.c3_car_deuil
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le car du retour, après le dernier match de la fenêtre. Les mutins au fond, les nouveaux devant. Au dernier rang, la place du petit est restée vide, et la rangée du milieu aussi."
+    left:
+      label: "Je m'assois au milieu"
+      effects: {vestiaire: "++", direction: "-", set: [h7_rangee_milieu], outcome: milieu}
+      answer: "Mbako vient s'asseoir à côté de toi au bout d'une heure. Personne ne prend la place du dernier rang. Personne ne la prendra."
+    right:
+      label: "Je reste devant"
+      effects: {direction: "+", vestiaire: "-", set: [h7_rangee_vide], outcome: devant}
+      answer: "Deux rangées vides jusqu'à Aubérive. Devant l'hôtel, le chauffeur ralentit sans qu'on le lui demande."
+
+  # ══════════════════════════════════════ Le tableau des clés (Sandrine, rituel)
+  - id: sl.h7.t1_minuit
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Minuit, une nuit de fenêtre. Un seul crochet vide au tableau : le 14. Sandrine ne lève pas les yeux du cahier : « M. Mbako rentre toujours avant deux heures. Toujours. Vous attendez avec moi ? »"
+    left:
+      label: "J'attends avec vous"
+      effects: {vestiaire: "-", relation: {sandrine: 1, mbako: -1}}
+      answer: "Il rentre à une heure cinquante, sent le Corner, et te salue comme on salue un gardien de nuit. Sandrine écrit l'heure."
+    right:
+      label: "Bonne nuit, Sandrine"
+      effects: {vestiaire: "+"}
+      answer: "« Bonne nuit », dit-elle, sans y croire. Au matin, le double du 14 est revenu au crochet ; l'heure est dans le cahier."
+
+  - id: sl.h7.t1_minuit_2012
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Minuit. Vingt-cinq doubles au tableau, et un crochet vide que personne n'a enlevé : le 12. La police garde le double. Sandrine a collé un sparadrap sur le crochet : « Je le compte, ou pas ? »"
+    left:
+      label: "Comptez-le"
+      effects: {vestiaire: "+", set: [h7_crochet_compte]}
+      answer: "« Vingt-six. » Elle écrit le chiffre en haut de la page, comme chaque nuit depuis 2011, et ne le corrigera jamais."
+    right:
+      label: "Ne le comptez plus"
+      effects: {direction: "+"}
+      answer: "« Vingt-cinq. » Elle l'écrit, le regarde, puis ajoute à côté un petit trait au crayon, qu'elle seule sait lire."
+
+  - id: sl.h7.t1_minuit_2013
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Minuit, 2013. Le crochet du 12 a disparu ; à sa place, un trou de cheville que personne n'a rebouché. Sandrine pose le doigt dessus : « Escande voulait du plâtre. J'ai dit non. Et vous ? »"
+    left:
+      label: "Pas de plâtre"
+      effects: {vestiaire: "+", relation: {sandrine: 1}}
+      answer: "Le trou reste. Les joueurs y passent le doigt en rendant leur double, sans que personne ne le leur ait appris."
+    right:
+      label: "Du plâtre, oui"
+      effects: {direction: "+", relation: {sandrine: -1}}
+      answer: "Le lendemain, le trou est bouché, peint en blanc. Sandrine écrit quand même « 12 » au crayon sur la peinture fraîche."
+
+  # 2011 : le réveil de six heures. Le petit a écrit lui-même la ligne dans le
+  # cahier de nuit ; le petit salon de quatre heures s'en servira (a4, variante
+  # « réveil ») : la découverte fixée à l'heure où la réception l'appelle.
+  - id: sl.h7.t2_reveil
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Minuit et demi. Dans le cahier de Sandrine, une ligne d'une autre écriture : « 12, réveil 6 h. Pas le réveil : Sandrine. » « C'est le petit Rancé. Je l'appelle à six heures, ou je le laisse dormir ? »"
+    left:
+      label: "Appelez-le à six heures"
+      effects: {vestiaire: "+", relation: {sandrine: 1}, set: [h7_reveil_six]}
+      answer: "Elle recopie la ligne de sa main, au propre. Le lendemain, à six heures pile, la 12 décroche à la première sonnerie."
+    right:
+      label: "Laissez-le dormir"
+      effects: {direction: "+"}
+      answer: "Elle barre la ligne d'un trait fin, sans l'effacer. « Il me l'a demandé deux fois. Il a peur de ne pas se réveiller, je crois. »"
+
+  - id: sl.h7.t2_heures_2012
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Sandrine te montre la marge de son cahier : l'heure où chaque double revient depuis mars, en colonne. « Ils ne sortent plus le soir. Ils ne dorment pas non plus. Ils restent dans le couloir. »"
+    left:
+      label: "Qu'ils sortent un soir"
+      effects: {vestiaire: "+", caisse: "-"}
+      answer: "Le samedi suivant, vingt-cinq joueurs au Corner, en silence. Ils rentrent tous avant minuit, ensemble, comme en déplacement."
+    right:
+      label: "Qu'ils dorment"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Rouvier distribue des bouchons d'oreilles. Le lendemain, Sandrine en trouve un, posé tout seul, sur le paillasson de la 12."
+
+  # 2013 : le rêve déborde. Ton double revenu tout seul au crochet : la seule
+  # ligne du cahier que Sandrine ne sait pas expliquer.
+  - id: sl.h7.t2_double_2013
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Minuit. Sandrine tient ton double entre deux doigts : « Il était au crochet ce soir. Vous ne l'avez pas rendu, je l'aurais écrit. Vous le reprenez, ou j'écris qu'il est revenu seul ? »"
+    left:
+      label: "Je le reprends"
+      effects: {vestiaire: "+"}
+      answer: "Il est froid. Tu le gardes dans le poing jusqu'à ta porte. Dans le cahier, Sandrine écrit l'heure, et rien d'autre."
+    right:
+      label: "Écrivez-le"
+      effects: {direction: "+", relation: {sandrine: 1}}
+      answer: "Elle écrit : « double rendu, minuit, pas vu passer ». La première ligne du cahier qu'elle ne sait pas expliquer. Elle ne la barre pas."
+
+  - id: sl.h7.t3_ronde
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Une nuit de fenêtre, minuit. Les vingt-six doubles sont au tableau. Sandrine les compte deux fois du bout de son crayon : « Ça n'arrive jamais. Vous allez descendre tous les soirs, maintenant ? »"
+    left:
+      label: "Tous les soirs"
+      effects: {vestiaire: "-", direction: "+", set: [h7_ronde], outcome: ronde}
+      answer: "Elle te fait une place au bout du comptoir, sur un tabouret haut. À minuit, chaque soir, tu comptes ; elle écrit."
+    right:
+      label: "Plus jamais"
+      effects: {vestiaire: "+", set: [h7_confiance], outcome: confiance}
+      answer: "« Alors je compterai seule. » Elle le dit sans reproche, comme on note une adresse."
+
+  - id: sl.h7.t3_ronde_2012
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Minuit, une fenêtre de 2012. Il manque trois doubles : le 7, le 14, le 16. Sandrine ne lève pas la tête : « Ils montent chez M. Mbako. Ils parlent de la nuit. Vous montez aussi ? »"
+    left:
+      label: "Je monte"
+      effects: {vestiaire: "++", direction: "-", set: [h7_ronde], outcome: ronde}
+      answer: "Dans la 14, cinq joueurs assis par terre, la lumière éteinte. Ils se taisent quand tu entres, puis reprennent, plus bas."
+    right:
+      label: "Je les laisse parler"
+      effects: {vestiaire: "+", set: [h7_confiance], outcome: confiance}
+      answer: "« Ils rendront les doubles avant deux heures », dit Sandrine. À une heure cinquante-huit, les trois sont au crochet."
+
+  - id: sl.h7.t3_portes_2013
+    roles: [selectionneur]
+    arc: selection
+    tags: [vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Minuit. Ferrol a laissé son double au tableau et dort la porte ouverte, au deuxième. Sandrine : « Il dit que ce sera comme ça jusqu'au match. Que la porte, c'est pour qu'on entende. »"
+    left:
+      label: "Que tous fassent pareil"
+      effects: {vestiaire: "++", direction: "-", set: [h7_portes_ouvertes], outcome: ronde}
+      answer: "Le lendemain, vingt-six portes ouvertes au deuxième, et vingt-six doubles au tableau. Le couloir sent le linge et la pommade."
+    right:
+      label: "Chacun sa porte"
+      effects: {direction: "+", set: [h7_confiance], outcome: confiance}
+      answer: "Ferrol referme la sienne le lendemain, sans discuter. Sandrine efface son nom de la colonne des portes, et garde la colonne."
+
+  # ══════════════════════════════════════════════ 2011 · L'hymne (Madame Aubert)
+  - id: sl.h7.h1_ministre
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, direction]
+    speaker: aubert
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Aubert, ministre des Sports, garde son manteau dans le salon de l'hôtel : « En 2010, ils ont regardé leurs chaussures pendant l'hymne. En novembre, le pays veut leur voir la bouche. »"
+    left:
+      label: "Ils chanteront"
+      effects: {tribunes: "+", vestiaire: "-", relation: {aubert: 1}, set: [h7_hymne_promis]}
+      answer: "Elle enfile un gant, puis l'autre. « Je viendrai écouter. » Elle le dit comme on fixe un rendez-vous chez le notaire."
+    right:
+      label: "Ils feront ce qu'ils veulent"
+      effects: {vestiaire: "+", direction: "-", relation: {aubert: -1}}
+      answer: "« Alors je ferai ce que je veux aussi. » Le lendemain, la subvention des déplacements est « à l'étude »."
+
+  - id: sl.h7.h2_fiches
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, vestiaire]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Josiane distribue des fiches bristol, les paroles de l'hymne tapées à la machine : « La ministre veut une répétition. M. Mbako m'a rendu la sienne sans la lire. Je la lui redonne ? »"
+    left:
+      label: "Redonnez-la-lui"
+      effects: {tribunes: "+", relation: {mbako: -1}}
+      answer: "Mbako prend la fiche, la plie en deux et la glisse dans la poche où il garde le brassard. Il ne dit ni oui ni non."
+    right:
+      label: "Laissez-le"
+      effects: {vestiaire: "+", relation: {mbako: 1}}
+      answer: "Josiane range la fiche dans son classeur, à la lettre M. « Il saura où la trouver. » Elle classe aussi les refus."
+
+  - id: sl.h7.h3_repetition
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, vestiaire]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "La salle du petit-déjeuner, une répétition à huis clos. Vingt-six joueurs debout entre les tables. Le petit Rancé chante le premier, faux, très fort ; les autres rient, puis chantent."
+    left:
+      label: "On recommence"
+      effects: {tribunes: "+", vestiaire: "+", set: [h7_hymne_chante], outcome: chante}
+      answer: "Trois fois, jusqu'à ce que ce soit juste. À la troisième, Mbako chante aussi, sans la fiche : il connaissait les paroles."
+    right:
+      label: "Ça suffira"
+      effects: {vestiaire: "+", set: [h7_hymne_muet], outcome: muet}
+      answer: "Ils se rassoient. Le petit fredonne encore en beurrant sa tartine ; personne ne lui dit de se taire."
+
+  - id: sl.h7.h3_repetition_deuil
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, vestiaire]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La salle du petit-déjeuner, une répétition à huis clos. Vingt-cinq joueurs debout entre les tables. Personne ne chante le premier : il manque celui qui chantait faux, très fort."
+    left:
+      label: "J'entonne l'hymne"
+      effects: {tribunes: "+", vestiaire: "++", set: [h7_hymne_chante], outcome: chante}
+      answer: "Tu chantes faux, toi aussi. Au deuxième vers, Mbako te rejoint, puis Ferrol, puis tous. Rouvier sort de la salle avant la fin."
+    right:
+      label: "On ne chantera pas"
+      effects: {vestiaire: "+", tribunes: "-", set: [h7_hymne_muet], outcome: muet}
+      answer: "Ils restent debout en silence jusqu'à la dernière mesure de la radio. Le silence aussi, ça se répète."
+
+  # ══════════════════════════════════════════ 2011 · L'agent du petit (Fardelli)
+  - id: sl.h7.g1_cafe
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: fardelli
+    lieu: cafe
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Café de la Mairie. Rocco Fardelli remue un café qu'il ne boira pas : « Le petit Rancé a besoin de minutes en novembre. Trois clubs de Portclair viendront le voir. Vous lui en donnez combien ? »"
+    left:
+      label: "Soixante, pas plus"
+      effects: {direction: "+", relation: {fardelli: 1}, set: [h7_minutes_promises]}
+      answer: "« Soixante. » Il répète le chiffre comme un prix. « C'est la docteure qui compte, alors. » Il paie les deux cafés."
+    right:
+      label: "Vous ne comptez pas ici"
+      effects: {direction: "-", relation: {fardelli: -1}, set: [h7_fardelli_econduit]}
+      answer: "Il pose une pièce sur la soucoupe sans se lever. « Alors j'appellerai l'hôtel, le soir. Lui, il décroche toujours. »"
+
+  - id: sl.h7.g2_standard
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Réception, onze heures du soir. Sandrine pose la main sur le téléphone qui sonne : « M. Fardelli, pour le petit Rancé. Tous les soirs à onze heures, depuis lundi. Je passe, ou il dort ? »"
+    left:
+      label: "Passez-le-lui"
+      effects: {relation: {fardelli: 1}}
+      answer: "Elle passe l'appel au 12. Le voyant reste allumé quarante minutes. Elle note : 23 h 00, 23 h 40, M. Fardelli, la 12."
+    right:
+      label: "Il dort"
+      effects: {relation: {fardelli: -1}, set: [h7_standard_filtre]}
+      answer: "« Il dort, monsieur Fardelli. » Elle raccroche et regarde le voyant du 12, allumé : le petit téléphone à quelqu'un d'autre."
+
+  - id: sl.h7.g2_standard_muet
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Réception, onze heures du soir. Le téléphone ne sonne pas. Sandrine Lavergne pose quand même la main dessus, à l'heure dite, et la laisse là jusqu'à onze heures cinq."
+    left:
+      label: "Il ne rappellera pas"
+      effects: {direction: "+"}
+      answer: "« Je sais. » Elle retire la main. Dans le cahier, elle écrit 23 h 00, et rien à côté."
+    right:
+      label: "Je reste avec vous"
+      effects: {relation: {sandrine: 1}}
+      answer: "Vous attendez cinq minutes sans parler. À onze heures cinq, elle retire la main et écrit : 23 h 05, personne."
+
+  - id: sl.h7.g3_deux_ans
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: fardelli
+    lieu: terrain
+    tone: strategique
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Fardelli t'attend sur le parking du terrain annexe : « Il m'a demandé un contrat de deux ans. Pas plus. Un garçon de vingt-cinq ans qui veut deux ans, ça vous dit quelque chose ? »"
+    left:
+      label: "Pourquoi deux ans ?"
+      effects: {direction: "-", set: [h7_deux_ans], outcome: ecoute}
+      answer: "« Je lui ai demandé. Il m'a dit : deux ans, c'est un Mondial. » Fardelli remonte dans sa voiture sans attendre ta réponse."
+    right:
+      label: "Ça ne me regarde pas"
+      effects: {direction: "+", set: [h7_deux_ans], outcome: ignore}
+      answer: "« Non. Moi non plus, ça ne me regardait pas. » Il remonte en voiture et laisse la vitre baissée jusqu'au carrefour."
+
+  - id: sl.h7.g3_deux_ans_apres
+    roles: [selectionneur]
+    arc: agent
+    tags: [agents]
+    speaker: fardelli
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Fardelli, sur le parking de l'hôtel, sans descendre de voiture : « Il m'avait demandé un contrat de deux ans. Pas plus. Je trouvais ça bizarre, à vingt-cinq ans. Maintenant, je trouve ça précis. »"
+    left:
+      label: "Pourquoi deux ans ?"
+      effects: {direction: "-", set: [h7_deux_ans], outcome: ecoute}
+      answer: "« Deux ans, c'était un Mondial, il disait. » Fardelli remonte sa vitre. Il reste garé là une heure, moteur coupé."
+    right:
+      label: "Rentrez chez vous"
+      effects: {direction: "+", set: [h7_deux_ans], outcome: ignore}
+      answer: "Il démarre. Au coin de la rue, il s'arrête au fleuriste des Immortelles ; il en ressort les mains vides."
+
+  # ═══════════════════════════════════════════ 2011 · La page des sports (Léa)
+  - id: sl.h7.l1_portrait
+    roles: [selectionneur]
+    arc: formation
+    tags: [presse, formation]
+    speaker: lea
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Léa, de L'Écho, t'attend au comptoir de la Rive, un carnet à spirale ouvert : « Le gamin du Racing revient en bleu. Vingt minutes avec lui pour la page des sports. Vous me le prêtez ? »"
+    left:
+      label: "Vingt minutes, pas plus"
+      effects: {tribunes: "+"}
+      answer: "Elle l'interroge à la fenêtre de la 12, dos au terrain annexe. Vingt minutes. Elle repart avec une phrase soulignée deux fois."
+    right:
+      label: "Pas avant novembre"
+      effects: {direction: "+", tribunes: "-", set: [h7_portrait_refuse]}
+      answer: "« En novembre, il sera titulaire ou il ne sera rien. » Le lendemain, L'Écho publie une photo de lui prise de loin, au téléobjectif."
+
+  - id: sl.h7.l2_phrase
+    roles: [selectionneur]
+    arc: formation
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa, au téléphone, avant le bouclage. Elle te lit sa note : un tournoi, un seul, après on verra. « Il a dit ça en riant, la main sur la poitrine. Je laisse la phrase, ou je la coupe ? »"
+    left:
+      label: "Laissez-la"
+      effects: {tribunes: "+", set: [h7_phrase_laissee]}
+      answer: "Elle paraît le jeudi, en gras. Le soir, la docteure Arzel découpe l'article et le range dans sa mallette, sous le couvercle."
+    right:
+      label: "Coupez-la"
+      effects: {direction: "+", set: [h7_phrase_coupee]}
+      answer: "Elle la barre d'un trait ; tu l'entends au bout du fil. « Je la garde quand même. Les phrases qu'on coupe, on finit par les ressortir. »"
+
+  - id: sl.h7.l2_phrase_appel
+    roles: [selectionneur]
+    arc: formation
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa, au téléphone : « Il m'a appelée lui-même, du terrain annexe. » Elle te lit sa note : un tournoi, un seul, après on verra. « Il riait. Je laisse la phrase, ou je la coupe ? »"
+    left:
+      label: "Laissez-la"
+      effects: {tribunes: "+", set: [h7_phrase_laissee]}
+      answer: "Elle paraît le jeudi, en gras, sous la photo prise au téléobjectif. Le soir, Arzel découpe l'article et le range dans sa mallette."
+    right:
+      label: "Coupez-la"
+      effects: {direction: "+", set: [h7_phrase_coupee]}
+      answer: "« Comme vous voudrez. Il me rappellera. » Elle la barre quand même au crayon, pas à l'encre, pour pouvoir la gommer."
+
+  - id: sl.h7.l2_phrase_apres
+    roles: [selectionneur]
+    arc: formation
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa, au téléphone, la voix basse : « J'avais gardé sa phrase pour jeudi. Un tournoi, un seul, après on verra. » Un silence. « Je la mets dans la nécrologie, ou dans mon carnet ? »"
+    left:
+      label: "Mettez-la"
+      effects: {tribunes: "+", set: [h7_phrase_laissee]}
+      answer: "Elle paraît sous la photo, en gras. Le lendemain, Arzel ne descend pas au petit-déjeuner ; Rouvier lui monte un café qu'elle ne boit pas."
+    right:
+      label: "Gardez-la"
+      effects: {direction: "+", set: [h7_phrase_coupee]}
+      answer: "« Dans mon carnet, alors. » Elle ne raccroche pas tout de suite. Tu l'entends taper la phrase quand même, puis l'effacer."
+
+  - id: sl.h7.l3_photo
+    roles: [selectionneur]
+    arc: formation
+    tags: [presse, formation]
+    speaker: lea
+    lieu: terrain
+    tone: leger
+    once: true
+    text: "L'aube, au terrain annexe du Racing. Le photographe de L'Écho a posé Tibo dans les filets, en survêtement bleu. Léa : « Il veut que vous soyez sur la photo. Vous venez ? »"
+    left:
+      label: "Je viens"
+      effects: {vestiaire: "+", set: [h7_photo_ensemble], outcome: montre}
+      answer: "Sur la photo du jeudi, tu es à côté de lui, un peu flou. Il a une main sur la poitrine ; le photographe a cru qu'il chantait l'hymne."
+    right:
+      label: "La photo, c'est lui"
+      effects: {direction: "+", outcome: garde}
+      answer: "Il pose seul. Trente-six vues. Sur la dernière, il ne sourit plus et se tient la poitrine ; Léa garde ce tirage pour elle."
+
+  - id: sl.h7.l3_photo_apres
+    roles: [selectionneur]
+    arc: formation
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "L'Écho, le soir. Léa pose un tirage qu'elle n'a jamais publié : Tibo dans les filets du terrain annexe, la main sur la poitrine, sans sourire. « Pour demain. Celle-là, ou une autre ? »"
+    left:
+      label: "Celle-là"
+      effects: {tribunes: "+", set: [h7_photo_main], outcome: montre}
+      answer: "Elle paraît le lendemain. À la réception, Sandrine la découpe et la punaise au-dessus du tableau des clés, à côté du crochet vide."
+    right:
+      label: "Une autre"
+      effects: {direction: "+", outcome: garde}
+      answer: "Elle range le tirage dans une enveloppe kraft. « Vous avez raison. Celle-là, ce sera pour le tribunal. »"
+
+  # ════════════════════════════════════════ 2011 · Le pull bleu (Madame Rancé)
+  - id: sl.h7.y1_linge
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sandrine
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Le hall, un dimanche soir. Une femme en imperméable pose un sac de sport sur le comptoir : le linge de Tibo, lavé, plié. Sandrine : « Les familles ne montent pas. Je la laisse monter ? »"
+    left:
+      label: "Qu'elle monte"
+      effects: {vestiaire: "+", direction: "-", relation: {rance_mere: 1}}
+      answer: "Elle redescend dix minutes après, le sac vide. « Il a toujours froid. Je lui ai mis le pull bleu. » Elle te serre la main, fort."
+    right:
+      label: "Le règlement est le même"
+      effects: {direction: "+", relation: {rance_mere: -1}}
+      answer: "Elle laisse le sac au comptoir et ne s'assoit pas. « Dites-lui que c'est le pull bleu. Il a toujours froid. »"
+
+  - id: sl.h7.y2_appels
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille, vestiaire]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Sandrine tourne son cahier vers toi : chaque nuit, à trois heures, la 12 appelle le même numéro en ville, sept minutes. « Le règlement veut que je vous le signale. Je vous le signale. »"
+    left:
+      label: "Ça ne regarde que lui"
+      effects: {vestiaire: "+", set: [h7_appels_tus]}
+      answer: "« Bien. » La nuit suivante, elle écrit quand même l'heure et la durée. Trois heures, sept minutes. Elle souligne le sept."
+    right:
+      label: "Je lui en parlerai"
+      effects: {direction: "+", set: [h7_appels_parle]}
+      answer: "Au petit-déjeuner, il rougit : « C'est ma mère. Elle ne dort pas si je n'appelle pas. » Le soir même, à trois heures, il appelle."
+
+  - id: sl.h7.y2_appels_apres
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Sandrine, sans lever les yeux : « Cette nuit encore, à trois heures, le standard a sonné. Un numéro en ville. Personne ne parle : on écoute sept minutes, et on raccroche. Je décroche encore ? »"
+    left:
+      label: "Laissez sonner"
+      effects: {vestiaire: "+", set: [h7_appels_tus]}
+      answer: "Le standard sonne sept minutes, à trois heures, chaque nuit de la fenêtre. Sandrine ne décroche plus. Elle note."
+    right:
+      label: "Décrochez, je descends"
+      effects: {direction: "+", set: [h7_appels_parle]}
+      answer: "À trois heures, elle te tend le combiné. Une respiration de femme, très réveillée, sept minutes. Puis plus rien."
+
+  - id: sl.h7.y3_calme
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Sur le parking de la Rive, la mère de Tibo t'arrête avant le car de novembre : « Il dort mal, l'hiver, dans les hôtels. Vous le mettrez dans une chambre au calme, {toi} ? »"
+    left:
+      label: "Il aura la 12, au calme"
+      effects: {relation: {rance_mere: 1}, set: [h7_chambre_promise], outcome: tendu}
+      answer: "« La 12. » Elle répète le numéro comme on retient un code. « Il m'appellera à trois heures. Dites-lui de dormir, après. »"
+    right:
+      label: "Les chambres, c'est l'hôtel"
+      effects: {direction: "+", outcome: ferme}
+      answer: "Elle hoche la tête et repart vers l'arrêt du bus. Tu la vois attendre longtemps ; le dimanche, le 4 ne passe plus."
+
+  - id: sl.h7.y3_sac
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le sac de sport de Tibo, rendu par la police, attend au comptoir. Sa mère le soupèse sans l'ouvrir : « Le pull bleu n'y est pas. Vous savez où il est, {toi} ? »"
+    left:
+      label: "Je vais le chercher"
+      effects: {relation: {rance_mere: 1}, set: [h7_pull_perdu], outcome: tendu}
+      answer: "Tu demandes à Benali, à Escande, à Sandrine. Personne ne l'a vu. Elle repart avec le sac, et sans le pull."
+    right:
+      label: "La police l'a gardé"
+      effects: {direction: "+", set: [h7_pull_perdu], outcome: ferme}
+      answer: "« La police. » Elle l'écrit dans un petit carnet, avec l'heure. Elle aussi, maintenant, note les heures."
+
+  # ═════════════════════════════════════════════════════ 2012 · La main (Léa)
+  - id: sl.h7.m1_photo
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "year >= 2008"
+    text: "L'Écho, le bureau du fond. Léa tourne son écran : sur le Flux, à 1 h 47, Rancé vivant, assis sur son lit. Dans le coin, une main qui tient un sachet. « Vous savez à qui est cette main ? »"
+    left:
+      label: "Non"
+      effects: {direction: "+", set: [h7_main_vue]}
+      answer: "Elle fait défiler : la photo a été effacée à 2 h 01. Elle note ton « non » dans la marge, avec un point d'interrogation."
+    right:
+      label: "Laissez-moi lui parler"
+      effects: {vestiaire: "+", set: [h7_main_vue, h7_questions]}
+      answer: "« Vous savez, donc. » Elle n'insiste pas. Elle imprime la photo, la plie en deux et te la tend."
+
+  - id: sl.h7.m1_photo_couvre_feu
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "year >= 2008"
+    text: "L'Écho. Léa tourne son écran : sur le Flux, à 1 h 47, Rancé assis sur son lit, une heure et demie après votre couvre-feu. Dans le coin, une main qui tient un sachet. « À qui, cette main ? »"
+    left:
+      label: "Non, je ne sais pas"
+      effects: {direction: "+", set: [h7_main_vue]}
+      answer: "« Il postait après minuit, malgré vous. Il vous désobéissait pour sa mère. » Elle écrit ton « non » dans la marge."
+    right:
+      label: "Laissez-moi lui parler"
+      effects: {vestiaire: "+", set: [h7_main_vue, h7_questions]}
+      answer: "« Vous savez, donc. » Elle imprime la photo, la plie en deux, et souligne l'heure au stylo avant de te la tendre."
+
+  - id: sl.h7.m1_photo_sachet
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "year >= 2008"
+    text: "L'Écho. Léa agrandit un coin de la dernière photo du petit, postée à 1 h 47 : une main, un sachet sans étiquette, un trait au feutre. « Vous l'avez déjà vu, ce sachet. Je le vois à votre bouche. »"
+    left:
+      label: "Non"
+      effects: {direction: "+", set: [h7_main_vue]}
+      answer: "« D'accord. » Elle écrit « non » et, juste à côté, « juin ». Elle ne t'explique pas pourquoi juin."
+    right:
+      label: "Laissez-moi lui parler"
+      effects: {vestiaire: "+", set: [h7_main_vue, h7_questions]}
+      answer: "« Valdorne, alors. » Elle n'a pas besoin de ta réponse. Elle imprime la photo et te la tend, pliée en deux."
+
+  # La phrase coupée en 2011 (« La page des sports ») : Léa ne coupe plus.
+  - id: sl.h7.m1_photo_phrase
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    when: "year >= 2008"
+    text: "L'Écho. Sur l'écran de Léa, la photo de 1 h 47 : Rancé vivant, et dans le coin une main, un sachet. « L'an dernier, j'ai coupé sa phrase pour vous. Pas cette main. À qui est-elle ? »"
+    left:
+      label: "Je ne sais pas"
+      effects: {direction: "+", set: [h7_main_vue]}
+      answer: "« Alors je chercherai seule. » Elle colle au bas de l'écran, avec un bout de scotch, la phrase qu'elle avait coupée : un tournoi, un seul."
+    right:
+      label: "Laissez-moi lui parler"
+      effects: {vestiaire: "+", set: [h7_main_vue, h7_questions]}
+      answer: "« Vous savez, donc. » Elle imprime la photo, la plie en deux, et glisse dedans la phrase qu'elle avait coupée."
+
+  - id: sl.h7.m2_sachet
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: ferrol
+    lieu: terrain
+    tone: strategique
+    once: true
+    text: "Terrain annexe. Ferrol garde les yeux sur son bracelet rouge et noir : « Il voulait se sentir comme avant. Je lui ai donné ce que je prends avant les matchs. Personne ne savait, pour son cœur ? »"
+    left:
+      label: "Tu vas le dire"
+      effects: {vestiaire: "-", tribunes: "+", relation: {ferrol: 1}, set: [h7_ferrol_dira], outcome: dira}
+      answer: "Il hoche la tête sans lever les yeux. Le soir, il coupe le bracelet de Valdorne aux ciseaux de Rouvier, et le garde en poche."
+    right:
+      label: "Tu ne dis rien"
+      effects: {vestiaire: "+", direction: "+", set: [h7_ferrol_tait], outcome: tait}
+      answer: "« D'accord. » Il dit « d'accord » comme on avale. Le soir même, il coupe son bracelet de Valdorne, et le jette."
+
+  - id: sl.h7.m3_jeudi
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa, au téléphone : « Jeudi, la photo sort avec la main. Sans le nom : je n'ai qu'une source. Vous voulez être la deuxième ? »"
+    left:
+      label: "Je serai la deuxième"
+      effects: {tribunes: "+", direction: "-", set: [h7_nom_confirme, h7_questions]}
+      answer: "Le jeudi, la photo sort en page trois, la main et le nom. Le vendredi, Ferrol arrive à l'entraînement avant tout le monde."
+    right:
+      label: "Cherchez ailleurs"
+      effects: {direction: "+", set: [h7_nom_tu]}
+      answer: "Le jeudi, la photo sort sans le nom. En dessous, une ligne : « La sélection n'a pas souhaité répondre. »"
+
+  - id: sl.h7.m3_ferrol_parle
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: lea
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Léa repose le téléphone : « Ferrol est venu ce matin, seul. Jeudi, la photo sort avec la main, son nom, et ce qu'il a dit. Vous ajoutez une phrase ? »"
+    left:
+      label: "Il a eu du courage"
+      effects: {tribunes: "+", vestiaire: "+", set: [h7_nom_confirme]}
+      answer: "Ta phrase sort en gras sous la photo. Ferrol la découpe, la plie, et la glisse dans la poche où il gardait son bracelet."
+    right:
+      label: "Pas de commentaire"
+      effects: {direction: "+"}
+      answer: "La photo sort avec sa phrase à lui et ton silence en dessous. Ferrol lit les deux au petit-déjeuner, sans lever les yeux."
+
+  # ═══════════════════════════════════════════════ 2012 · Le plateau (Rossard)
+  - id: sl.h7.p1_appel
+    roles: [selectionneur]
+    arc: presse
+    tags: [presse]
+    speaker: rossard
+    lieu: domicile
+    tone: leger
+    once: true
+    text: "Aimé Rossard au téléphone, la voix de quelqu'un qui a déjà dîné : « Dimanche, Vence me demande la chambre 12. J'étais sélectionneur avant vous, {toi}. Je dis quoi ? »"
+    left:
+      label: "Dites « malaise »"
+      effects: {direction: "+", set: [h7_rossard_briefe]}
+      answer: "« Malaise. » Il répète le mot pour l'essayer, comme une cravate. « Ça ne tiendra pas un dimanche entier, mais je le dirai. »"
+    right:
+      label: "Dites ce que vous savez"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "« Ce que je sais. » Un rire bref au bout du fil. « Ce qu'on sait, à mon âge, vous étonnerait. »"
+
+  - id: sl.h7.p2_dimanche
+    roles: [selectionneur]
+    arc: tribune
+    tags: [presse, tribunes]
+    speaker: rossard
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Dimanche soir, le plateau de Vence. Rossard, les mains à plat : « Un capitaine qui sort de la 12 à deux heures vingt-cinq, je ne le garde pas une minute. » Il dit le nom de Mbako, deux fois."
+    left:
+      label: "J'appelle la chaîne"
+      effects: {direction: "-", set: [h7_rossard_plateau, h7_chaine_appelee, h7_questions]}
+      answer: "La standardiste prend ton nom et te met en attente. À l'antenne, Vence passe déjà à la météo des stades."
+    right:
+      label: "Je coupe le son"
+      effects: {direction: "+", set: [h7_rossard_plateau]}
+      answer: "Tu coupes le son. Le téléphone, lui, se met à sonner, et ne s'arrête plus jusqu'à une heure du matin."
+
+  # Le brassard est à Ferrol : Rossard dit « ancien capitaine », de sa
+  # formule de consultant (« Moi, à votre place »).
+  - id: sl.h7.p2_dimanche_ancien
+    roles: [selectionneur]
+    arc: tribune
+    tags: [presse, tribunes]
+    speaker: rossard
+    lieu: domicile
+    tone: strategique
+    once: true
+    text: "Dimanche soir, le plateau de Vence. Rossard, les mains à plat : « Moi, à votre place, je ne garderais pas un ancien capitaine sorti de la 12 à deux heures vingt-cinq. » Puis le nom de Mbako."
+    left:
+      label: "J'appelle la chaîne"
+      effects: {direction: "-", set: [h7_rossard_plateau, h7_chaine_appelee, h7_questions]}
+      answer: "La standardiste prend ton nom et te met en attente. À l'antenne, Vence passe déjà à la météo des stades."
+    right:
+      label: "Je coupe le son"
+      effects: {direction: "+", set: [h7_rossard_plateau]}
+      answer: "Tu coupes le son. Le téléphone, lui, se met à sonner, et ne s'arrête plus jusqu'à une heure du matin."
+
+  - id: sl.h7.p3_quatorze
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La 14, en plein après-midi, rideaux tirés. Mbako n'a pas allumé : « Rossard a dit mon nom, et une heure. Pas ce que j'ai fait entre les deux. Toi, à la radio demain, tu dis quoi ? »"
+    left:
+      label: "Je te défends"
+      effects: {vestiaire: "++", tribunes: "-", relation: {mbako: 1}, set: [h7_mbako_defendu], outcome: defendu}
+      answer: "À la radio, tu dis : « Lian Mbako est un homme droit. » Tu ne dis pas de quoi. Le standard de la Fédération saute à dix heures."
+    right:
+      label: "La justice dira"
+      effects: {vestiaire: "--", tribunes: "+", direction: "+", relation: {mbako: -1}, set: [h7_mbako_lache], outcome: lache}
+      answer: "« La justice dira. » La phrase tourne toute la semaine. Mbako ne descend plus déjeuner ; Rouvier lui monte un plateau."
+
+  # ═════════════════════════════════════════════ 2012 · La nuit du 14 (Benali)
+  - id: sl.h7.n1_heures
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La commandante Benali a posé une feuille sur la nappe : 2 h 10, des pas ; 2 h 30, votre téléphone ; 6 h, le constat. « Entre 2 h 30 et 6 h, il s'est passé quoi, {toi} ? »"
+    left:
+      label: "Une réunion, à quatre heures"
+      effects: {direction: "--", tribunes: "+", set: [h7_quatre_heures_dite, h7_questions]}
+      answer: "Elle écrit « 4 h » entre deux traits et entoure le chiffre. « Qui était assis où ? » Tu le lui dis, chaise par chaise."
+    right:
+      label: "J'ai dormi"
+      effects: {direction: "+", set: [h7_dormi_dit]}
+      answer: "« Jusqu'à six heures, alors. » Elle écrit « dormi » à côté, et l'heure de ta réponse. Elle note toujours l'heure des réponses."
+
+  - id: sl.h7.n1_heures_appel
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Benali pose une feuille sur la nappe : 2 h 10, des pas ; 2 h 41, votre appel, que l'hôtel dit n'avoir jamais passé ; 6 h, le constat. « Entre votre appel et six heures, quoi, {toi} ? »"
+    left:
+      label: "Une réunion, à quatre heures"
+      effects: {direction: "--", tribunes: "+", set: [h7_quatre_heures_dite, h7_questions]}
+      answer: "Elle entoure « 4 h » et, au-dessus, ton 2 h 41. « Vous avez appelé, puis vous avez signé. Dans cet ordre-là. »"
+    right:
+      label: "J'ai dormi"
+      effects: {direction: "+", set: [h7_dormi_dit]}
+      answer: "« Vous avez appelé, et vous avez dormi. » Elle écrit les deux l'un sous l'autre, et ne commente pas."
+
+  # 2 h 24 : la seule ligne de la nuit où quelqu'un a demandé de l'aide. Le
+  # standard garde les heures ; Mbako a appelé la docteure, pas la police (le
+  # bus de 2012 s'en souvient, variante « la 3 »).
+  - id: sl.h7.n2_deux_heures_vingt_quatre
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Benali pose le relevé du standard sur la nappe, une ligne surlignée : 2 h 24, la 12 appelle la 3, quarante secondes. « La 3, c'est la docteure. Qui a composé le numéro, d'après vous ? »"
+    left:
+      label: "Celui qui avait le double"
+      effects: {direction: "-", tribunes: "+", set: [h7_appel_trois]}
+      answer: "« Il n'a pas appelé la police. Il a appelé le staff, comme on fait dans un bus. » Elle entoure 2 h 24, deux fois."
+    right:
+      label: "Je n'en sais rien"
+      effects: {direction: "+"}
+      answer: "« Moi si. Je voulais savoir si vous, vous saviez. » Elle range le relevé ; le surligneur a bavé sur la ligne de 2 h 25."
+
+  - id: sl.h7.n3_procureure
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: benali
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Benali revient avec une ordonnance de la procureure Amsel : « Elle veut tout, maintenant. On me dit qu'aucun procès-verbal n'a été tenu cette nuit-là, à la Fédération. C'est exact ? »"
+    left:
+      label: "Il y en a un"
+      effects: {direction: "-", tribunes: "+", set: [h7_pv_signale, h7_questions], outcome: aide}
+      answer: "« Un registre noir, à la page de quatre heures. » Elle écrit « registre » et souligne. « Merci. Ça va vous coûter quelque chose. »"
+    right:
+      label: "Je n'en sais rien"
+      effects: {direction: "+", outcome: mur}
+      answer: "Elle range l'ordonnance dans sa sacoche. « Alors je le trouverai sans vous. Ce sera plus long, et vous serez dedans. »"
+
+  # ══════════════════════════════════════════════ 2012 · Fulgor (Desforges)
+  - id: sl.h7.f1_canette
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, caisse]
+    speaker: desforges
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Carole Desforges pose une canette orange sur la nappe : « Nos coffrets étaient dans toutes les chambres, la 12 comprise. Le sachet n'était pas à nous. Fulgor double vos primes. Vous signez, {toi} ? »"
+    left:
+      label: "Je signe"
+      effects: {caisse: "++", tribunes: "-", set: [h7_fulgor_signe], var: {ville_francs_sales: "+60000"}}
+      answer: "Elle fait glisser le contrat sous la canette, comme sous un presse-papier. « À vingt heures, un mot suffira. Le bon. »"
+    right:
+      label: "Pas devant une canette"
+      effects: {caisse: "-", tribunes: "+", set: [h7_fulgor_refuse]}
+      answer: "Elle reprend la canette sans s'offusquer. « Le président, lui, signe devant n'importe quoi. » Elle sort son téléphone."
+
+  - id: sl.h7.f2_montres
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, caisse]
+    speaker: desforges
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Un coffret de velours ouvert sur la table : vingt-sept montres d'acier gravées COBALTS {annee}. Desforges : « Une par joueur, et la vingt-septième pour vous. Personne ne refuse une montre. »"
+    left:
+      label: "Je la porte"
+      effects: {caisse: "+", set: [h7_montres], var: {cadeau_montre_acier: "+1"}}
+      answer: "Elle te la passe au poignet elle-même ; le fermoir claque. Au dîner, les joueurs comparent les gravures. Mbako ne met pas la sienne."
+    right:
+      label: "Rendez les vingt-sept"
+      effects: {caisse: "-", vestiaire: "-", set: [h7_montres_rendues]}
+      answer: "Elle referme le coffret. Le lendemain, trois joueurs viennent te demander, poliment, où sont passées les montres."
+
+  - id: sl.h7.f2_vaubourg
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, direction]
+    speaker: aulard
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Vaubourg, au téléphone : « Fulgor a signé avec moi, puisque vous faites des manières. Leurs canettes seront sur la table de presse. Vous direz ce que vous voudrez, à côté. »"
+    left:
+      label: "Je les ferai enlever"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "« Essayez. » Il raccroche. Le lendemain, les canettes sont sur la table, scotchées par le fond."
+    right:
+      label: "Elles resteront"
+      effects: {direction: "+", caisse: "+"}
+      answer: "« Voilà. » Le chèque de Fulgor arrive à la Fédération le lundi ; les primes des joueurs, elles, arriveront en mars."
+
+  - id: sl.h7.f3_plateau_canette
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, presse]
+    lieu: stade
+    tone: strategique
+    once: true
+    text: "Le plateau du journal de vingt heures. Une canette orange à côté de ta main, l'étiquette vers la caméra. Le présentateur : « Sur la mort de Tibo Rancé, que dit la sélection ? »"
+    left:
+      label: "« Malaise cardiaque »"
+      effects: {caisse: "+", direction: "+", set: [h7_fulgor_dit], outcome: dit}
+      answer: "Deux mots, la canette dans le champ. Le lendemain, Desforges envoie une corbeille de fruits à l'hôtel, avec ta photo dedans."
+    right:
+      label: "Je pousse la canette"
+      effects: {tribunes: "+", caisse: "-", set: [h7_canette_poussee], outcome: pousse}
+      answer: "Du dos de la main, hors du champ. Tu ne dis rien d'autre. Le contrat de Fulgor a une clause pour ça ; Dauzat la lit."
+
+  - id: sl.h7.f3_table_de_presse
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, presse]
+    lieu: stade
+    tone: leger
+    once: true
+    text: "La table de presse de la Fédération, avant la conférence du mois : douze canettes orange alignées. Le photographe attend que tu t'assoies derrière, pour la photo."
+    left:
+      label: "Je m'assois"
+      effects: {caisse: "+", direction: "+", outcome: dit}
+      answer: "Tu t'assois. Sur la photo du lendemain, on ne voit de toi que les mains, entre deux canettes orange."
+    right:
+      label: "Je les fais enlever"
+      effects: {direction: "-", tribunes: "+", outcome: pousse}
+      answer: "Le photographe les range dans une caisse, une par une. Il reste un rond orange sur la nappe, que personne n'essuie."
+
+  # ═════════════════════════════════════ 2012 · Le tarif de la chambre (Escande)
+  - id: sl.h7.o1_offre
+    roles: [selectionneur]
+    arc: contrat
+    tags: [direction, caisse]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Monsieur Escande a fait monter du café dans le petit salon, celui des rideaux tirés : « Trois ans gratuits pour les Cobalts. Une condition : que le nom de l'hôtel ne sorte jamais avec l'incident. »"
+    left:
+      label: "La Fédération accepte"
+      effects: {caisse: "++", tribunes: "-", set: [h7_hotel_gratuit]}
+      answer: "Il signe le premier, d'un stylo de l'hôtel, et te le laisse. Dans le registre des tarifs, la 12 n'a plus de prix."
+    right:
+      label: "Nous paierons la note"
+      effects: {caisse: "-", direction: "-", set: [h7_hotel_paye]}
+      answer: "« Comme vous voudrez. » Il remporte le café. La note arrive le soir même : la 12 facturée vide, à demi-tarif."
+
+  - id: sl.h7.o2_pilon
+    roles: [selectionneur]
+    arc: contrat
+    tags: [direction]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Monsieur Escande, au pied de l'escalier de service : « Les cahiers de nuit partent au pilon en janvier. Les archives, ça prend de la place, et Mme Lavergne écrit petit, mais beaucoup. »"
+    left:
+      label: "Gardez celui de 2011"
+      effects: {direction: "-", relation: {sandrine: 1}, set: [h7_cahier_sauve]}
+      answer: "Il tire un cahier de la pile sans chercher : il savait lequel. « Je le mets au coffre, avec les bijoux des clientes. »"
+    right:
+      label: "C'est votre hôtel"
+      effects: {direction: "+", set: [h7_cahiers_pilon]}
+      answer: "En janvier, la camionnette du pilon passe à six heures. Sandrine regarde partir les cartons depuis son fauteuil, sans rien dire."
+
+  - id: sl.h7.o3_plan
+    roles: [selectionneur]
+    arc: contrat
+    tags: [direction]
+    speaker: escande
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Escande te tend la note de la fenêtre, pliée en deux : « Le pompier est passé. La 12 n'est plus sur le plan d'évacuation, il a demandé pourquoi. Je lui ai dit qu'elle n'existait pas. »"
+    left:
+      label: "Remettez-la sur le plan"
+      effects: {direction: "-", tribunes: "+", outcome: plan}
+      answer: "« Comme vous voudrez. » Le lendemain, le plan est corrigé au feutre : un petit carré, sans numéro."
+    right:
+      label: "Elle n'existe pas"
+      effects: {direction: "+", set: [h7_douze_effacee], outcome: effacee}
+      answer: "Escande sourit, pour la première fois. « Voilà. » Il replie la note et la range dans la poche de son gilet."
+
+  # ═════════════════════════════════════════ 2012 · Le trombone rouge (Josiane)
+  - id: sl.h7.j1_trombone
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Josiane, dans le salon de l'hôtel : « En mars 2011, vous aviez lu le premier dossier. La page trois manquait. Je l'ai cherchée tout l'été. Je n'ai trouvé que l'agrafe. »"
+    left:
+      label: "Qui l'avait enlevée ?"
+      effects: {direction: "-", set: [h7_page_trois, h7_questions]}
+      answer: "« Quelqu'un qui savait où était l'agrafeuse de la docteure. » Elle n'en dit pas plus, et range l'agrafe dans une enveloppe."
+    right:
+      label: "N'en parlons plus"
+      effects: {direction: "+"}
+      answer: "« Bien. » Elle referme son classeur. Sur la tranche, une étiquette neuve : RANCÉ, et rien d'autre."
+
+  - id: sl.h7.j1_trombone_signees
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Madame Josiane ouvre la main : le trombone rouge de mars 2011, qu'elle a gardé. « Je l'avais mis sur le premier dossier. Personne n'a soulevé la page. Vous voulez savoir ce qu'il y avait dessous ? »"
+    left:
+      label: "Qu'y avait-il dessous ?"
+      effects: {direction: "-", set: [h7_page_trois, h7_questions]}
+      answer: "« Rien. La page trois manquait déjà. Il tenait une page qui n'était plus là. » Elle repose le trombone dans ta main."
+    right:
+      label: "Rangez-le"
+      effects: {direction: "+"}
+      answer: "Elle le range dans sa poche, comme en mars 2011. Le même geste, à un an d'écart ; elle le sait, toi aussi."
+
+  - id: sl.h7.j2_brouillon
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: josiane
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Madame Josiane baisse la voix, ce qu'elle ne fait jamais : « M. Dauzat m'a dicté le procès-verbal de la nuit à huit heures du matin. J'ai tapé « six heures » deux fois. J'ai gardé le brouillon. »"
+    left:
+      label: "Gardez-le"
+      effects: {direction: "-", relation: {josiane: 1}, set: [h7_brouillon], outcome: brouillon}
+      answer: "Elle le glisse dans son classeur, entre deux circulaires sur les frais de déplacement. « Là, personne ne lit. »"
+    right:
+      label: "Jetez-le"
+      effects: {direction: "+", relation: {josiane: -1}, set: [h7_brouillon_jete], outcome: oubli}
+      answer: "Elle le déchire en quatre, devant toi, et le jette dans la corbeille du salon. Puis elle reste là, à regarder la corbeille."
+
+  - id: sl.h7.j3_dauzat
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Aurélien Dauzat, de passage, s'arrête devant toi dans le hall : « On ne garde rien de cette nuit-là, {toi}. Les brouillons, c'est comme les rumeurs : ça ne signe rien. »"
+    left:
+      label: "Rien ne traîne"
+      effects: {direction: "+"}
+      answer: "« Bien. » Il repart vers sa voiture. Derrière la vitre du salon, Josiane n'a pas levé les yeux de sa machine."
+    right:
+      label: "Tout se garde"
+      effects: {direction: "-", set: [h7_questions]}
+      answer: "Il revient sur ses pas, très lentement. « Alors gardez-vous aussi. » Il le dit sans menace ; c'est le pire."
+
+  - id: sl.h7.j3_dauzat_brouillon
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat s'arrête devant Josiane et toi, dans le hall : « On me dit qu'un brouillon traîne, {toi}. Les brouillons, c'est comme les rumeurs : ça ne signe rien. Il traîne ? »"
+    left:
+      label: "Rien ne traîne"
+      effects: {direction: "+", relation: {josiane: 1}}
+      answer: "« Bien. » Josiane ne lève pas les yeux. Le brouillon est à vingt centimètres de lui, dans le classeur, entre deux circulaires."
+    right:
+      label: "Il est en lieu sûr"
+      effects: {direction: "--", relation: {josiane: -1}, set: [h7_questions]}
+      answer: "Dauzat regarde Josiane, puis toi, puis le classeur. Le lendemain, Josiane est mutée au service des licences, à la capitale."
+
+  # ══════════════════════════════════════════════ 2013 · La docteure (Arzel)
+  - id: sl.h7.d1_trombone_vert
+    roles: [selectionneur]
+    arc: corps
+    tags: [direction]
+    speaker: arzel
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mars 2013. La docteure Arzel pose la pile des visites sur la table basse, un trombone vert sur celle du dessus : « Cette fois, vous lisez ? Je l'ai mis pour vous. »"
+    left:
+      label: "Je lis chaque page"
+      effects: {direction: "-", set: [h7_lit_tout]}
+      answer: "Vingt-six dossiers en deux jours. Il ne manque aucune page. Arzel te regarde lire comme on regarde quelqu'un creuser."
+    right:
+      label: "Je signe la pile"
+      effects: {direction: "+", set: [h7_signe_encore]}
+      answer: "Tu signes. Elle retire le trombone vert et le pose sur la table, à côté de ta main, comme une pièce de monnaie."
+
+  - id: sl.h7.d2_mallette
+    roles: [selectionneur]
+    arc: corps
+    tags: [vestiaire]
+    speaker: rouvier
+    lieu: cabinet
+    tone: leger
+    once: true
+    text: "Nadia Rouvier, en refaisant un strapping : « La docteure ne lâche plus sa mallette, même au petit-déjeuner. Deux tours de clé. Elle a peur de quelqu'un, ou de ce qu'il y a dedans. »"
+    left:
+      label: "Demande-lui de quoi"
+      effects: {vestiaire: "-", set: [h7_mallette_demandee]}
+      answer: "Le soir, Rouvier revient : « Elle dit : de vous. » Elle serre le strapping un peu trop fort, et s'excuse."
+    right:
+      label: "Laisse-la tranquille"
+      effects: {vestiaire: "+"}
+      answer: "« Elle l'est. C'est ça, le problème. » Rouvier coupe le sparadrap avec les dents, comme toujours."
+
+  - id: sl.h7.d3_lettre
+    roles: [selectionneur]
+    arc: corps
+    tags: [direction]
+    speaker: arzel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La docteure Arzel te tend une lettre ouverte : « Démission, pour raisons personnelles, à compter de décembre. Il me faut votre signature en dessous. Vous savez signer en dessous, {toi}. »"
+    left:
+      label: "Je signe"
+      effects: {direction: "+", set: [h7_demission_signee], outcome: lettre}
+      answer: "Tu signes sous la sienne. Elle souffle sur ton encre, longtemps, comme on souffle sur une soupe trop chaude."
+    right:
+      label: "Pas avant le match"
+      effects: {direction: "-", set: [h7_demission_refusee], outcome: reste}
+      answer: "Elle replie la lettre et la remet dans la mallette, deux tours. « Après le match, alors. Vous dites ça souvent. »"
+
+  # ══════════════════════════════════════════ 2013 · Le procès-verbal (Dauzat)
+  - id: sl.h7.v_registre
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Aurélien Dauzat ouvre un registre noir sur le guéridon du hall : « Quatre heures : malaise cardiaque, constaté à six heures. Les procès-verbaux ne mentent pas. On leur fait dire ce qu'on a décidé. »"
+    left:
+      label: "Je veux une copie"
+      effects: {direction: "-", set: [h7_copie_pv], outcome: copie}
+      answer: "Il photocopie la page lui-même au bureau de la réception, et te la tend encore tiède. « Elle ne dit rien de plus que l'original. »"
+    right:
+      label: "Gardez votre registre"
+      effects: {direction: "+", set: [h7_registre_ferme], outcome: registre}
+      answer: "Il referme le registre d'un coup sec. La poussière de la reliure reste un moment en l'air, dans la lumière du hall."
+
+  # Le registre lu sur ce qu'on a dit à la police (« La nuit du 14 », 2012), ou
+  # sur le brouillon jeté (« Le trombone rouge », 2012).
+  - id: sl.h7.v_registre_police
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat ouvre le registre noir sur le guéridon. En marge, un tampon de la police : « Quatre heures : malaise, constaté à six heures. Vous leur avez dit qu'il existait. Il ment quand même, {toi}. »"
+    left:
+      label: "Je veux une copie"
+      effects: {direction: "-", set: [h7_copie_pv], outcome: copie}
+      answer: "« La police en a une. » Il photocopie la page quand même, tampon compris, et te la tend encore tiède."
+    right:
+      label: "Gardez votre registre"
+      effects: {direction: "+", set: [h7_registre_ferme], outcome: registre}
+      answer: "« Ils l'ont lu. Maintenant, il est à moi. » Il le referme d'un coup sec ; la poussière de la reliure reste en l'air."
+
+  - id: sl.h7.v_registre_brouillon
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat ouvre un registre noir sur le guéridon : « Le brouillon est parti à la corbeille, à votre demande. Pas ceci. Quatre heures : malaise, constaté à six heures. Ça ne ment pas : ça obéit. »"
+    left:
+      label: "Je veux une copie"
+      effects: {direction: "-", set: [h7_copie_pv], outcome: copie}
+      answer: "Il photocopie la page lui-même, à la réception, et te la tend encore tiède. « Gardez-la mieux que le brouillon. »"
+    right:
+      label: "Gardez votre registre"
+      effects: {direction: "+", set: [h7_registre_ferme], outcome: registre}
+      answer: "Il referme le registre d'un coup sec. « Vous jetez, je garde. On s'entend bien, {toi}. »"
+
+  - id: sl.h7.v_berline
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    statut_ok: [parti]
+    lieu: rue
+    tone: leger
+    once: true
+    text: "Le quai, devant l'hôtel. Vaubourg, déposé par la tutelle, baisse la vitre de sa berline : « Ils m'ont dissous, comme un comité. Le registre est resté à Dauzat. Moi, je suis resté dans la voiture. »"
+    left:
+      label: "Vous avez choisi l'heure"
+      effects: {tribunes: "+", relation: {aulard: -1}}
+      answer: "« J'ai choisi six heures parce qu'en novembre, à six heures, il fait encore nuit. » Il remonte la vitre."
+    right:
+      label: "Rentrez chez vous"
+      effects: {direction: "+"}
+      answer: "« Je n'ai plus que ça à faire. » La berline démarre. Au bout du quai, elle s'arrête longtemps devant le fleuriste."
+
+  - id: sl.h7.v_envoi
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat range le registre dans une serviette neuve : « Le ministre veut les procès-verbaux de 2011. Tous. Je les envoie tous, ou tous sauf un ? C'est vous qui signez le bordereau. »"
+    left:
+      label: "Envoyez-les tous"
+      effects: {direction: "-", tribunes: "+", set: [h7_registre_envoye]}
+      answer: "Il compte les procès-verbaux à voix haute, quarante et un, et te tend le bordereau. Ta signature est la dernière de la page."
+    right:
+      label: "Tous sauf un"
+      effects: {direction: "+", set: [h7_registre_garde]}
+      answer: "Il en retire un sans chercher et le glisse dans sa poche intérieure. « Quarante. » Tu signes le bordereau de quarante."
+
+  - id: sl.h7.v_source
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction, presse]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat, en refermant le registre : « Deux heures vingt-cinq, c'est moi qui l'ai donné à Rossard. Il fallait un nom pour qu'on cesse de chercher une heure. Ça a marché, non ? »"
+    left:
+      label: "Vous l'avez sacrifié"
+      effects: {direction: "-", relation: {mbako: 1}, set: [h7_rossard_source]}
+      answer: "« Je l'ai prêté. » Il boucle la serviette. « À la Fédération, on rend toujours ce qu'on prête. Avec les intérêts. »"
+    right:
+      label: "Ça a marché"
+      effects: {direction: "+", relation: {mbako: -1}, set: [h7_rossard_source]}
+      answer: "« Voilà. » Il te serre la main ; tu sens l'encre du registre sur ses doigts. Elle ne part pas au lavage."
+
+  # ════════════════════════════════════════════ 2013 · La mère (Madame Rancé)
+  - id: sl.h7.x1_standard
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le standard te passe une voix de femme, calme, très réveillée : « Passez-moi la 12. C'est sa mère. Je sais l'heure qu'il est. »"
+    left:
+      label: "Je vous écoute"
+      effects: {relation: {rance_mere: 1}, set: [h7_mere_standard]}
+      answer: "Elle ne pleure pas. Elle demande s'il faisait froid dans la 12, la nuit du 14. Tu dis non. Elle dit : « Il avait toujours froid. »"
+    right:
+      label: "Il est trois heures"
+      effects: {relation: {rance_mere: -1}, set: [h7_mere_standard]}
+      answer: "« Je sais. C'est l'heure où il m'appelait, de toutes les chambres d'hôtel. » Elle raccroche la première."
+
+  # Les appels de trois heures de 2011 (« Le pull bleu »).
+  - id: sl.h7.x1_standard_appels
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le standard te passe une voix de femme, très réveillée : « Passez-moi la 12. C'est sa mère. Vous saviez qu'il m'appelait à cette heure-là. Vous le saviez. »"
+    left:
+      label: "Je vous écoute"
+      effects: {relation: {rance_mere: 1}, set: [h7_mere_standard]}
+      answer: "Elle ne pleure pas. Elle te demande ce qu'il disait au petit-déjeuner, les lendemains d'appel. Tu lui dis qu'il rougissait."
+    right:
+      label: "Il est trois heures"
+      effects: {relation: {rance_mere: -1}, set: [h7_mere_standard]}
+      answer: "« Je sais. Sept minutes, c'était notre durée. » Elle reste en ligne sept minutes sans parler, puis raccroche."
+
+  - id: sl.h7.x1_standard_tus
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: rance_mere
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Trois heures du matin. Le standard te passe une voix de femme : « Passez-moi la 12. C'est sa mère. À l'hôtel, quelqu'un trouvait que ses appels ne regardaient que lui. C'était vous ? »"
+    left:
+      label: "Je vous écoute"
+      effects: {relation: {rance_mere: 1}, set: [h7_mere_standard]}
+      answer: "« Alors écoutez. » Elle raconte trois heures du matin, de toutes les chambres d'hôtel, depuis ses quinze ans. Ça dure sept minutes."
+    right:
+      label: "Il est trois heures"
+      effects: {relation: {rance_mere: -1}, set: [h7_mere_standard]}
+      answer: "« Je sais l'heure. Lui aussi la savait. » Elle raccroche la première, comme il le faisait."
+
+  - id: sl.h7.x3_double
+    roles: [selectionneur]
+    arc: famille
+    tags: [famille]
+    speaker: sandrine
+    lieu: hotel
+    tone: strategique
+    once: true
+    when: "slot <= 14"
+    text: "Sandrine Lavergne sort de son tiroir le double de la 12 et le pose à plat sur le comptoir : « Sa mère me l'a demandé pour la dernière nuit. Je ne donne jamais les doubles. Vous me dites oui ? »"
+    left:
+      label: "Donnez-le-lui"
+      effects: {relation: {rance_mere: 1, sandrine: 1}, set: [h7_double_mere], outcome: ouverte}
+      answer: "Sandrine écrit dans son cahier : « double du 12 à Mme Rancé », l'heure, et sa propre signature, pour la première fois."
+    right:
+      label: "Rangez-le au tiroir"
+      effects: {direction: "+", set: [h7_double_refuse], outcome: fermee}
+      answer: "Le double retourne au tiroir. La mère attend dans le hall jusqu'au matin, sur la banquette, son sac sur les genoux."
+
+  # ═══════════════════════════════════════════ 2013 · Dans cet ordre (Fauvel)
+  - id: sl.h7.k1_lettre
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: fauvel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Karim Fauvel, dans le hall, une lettre anonyme à la main : « 2 h 10, le double, Mbako. On l'a glissée sous vingt-six portes. Je défends mes joueurs, {toi}, et la vérité. Dans cet ordre. »"
+    left:
+      label: "Défendez Mbako"
+      effects: {vestiaire: "+", relation: {fauvel: 1, mbako: 1}}
+      answer: "« C'est déjà fait. » Il plie la lettre en quatre. « Je venais savoir si vous, vous le défendiez. »"
+    right:
+      label: "La vérité d'abord"
+      effects: {direction: "-", tribunes: "+", relation: {fauvel: -1}}
+      answer: "Il te regarde longtemps. « Alors on n'est pas dans le même ordre. Mais on va au même endroit. »"
+
+  # La prime de 2010 revient deux ans plus tard (le brassard, 2011).
+  - id: sl.h7.k1_lettre_note
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: fauvel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Fauvel pose deux lettres sur le comptoir : la sienne de 2011, « noté » au bas, et une anonyme, « 2 h 10, le double, Mbako ». « Je défends mes joueurs, {toi}, et la vérité. Dans cet ordre. »"
+    left:
+      label: "Défendez Mbako"
+      effects: {vestiaire: "+", relation: {fauvel: 1, mbako: 1}}
+      answer: "« C'est déjà fait. » Il reprend l'anonyme. La sienne, il la laisse sur le comptoir : « Ça, c'est ce que j'avais noté. »"
+    right:
+      label: "La vérité d'abord"
+      effects: {direction: "-", tribunes: "+", relation: {fauvel: -1}}
+      answer: "« Vous, la vérité d'abord ? » Il souligne « noté » une deuxième fois, devant toi, et repart avec les deux lettres."
+
+  - id: sl.h7.k1_lettre_prime
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, presse]
+    speaker: fauvel
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Fauvel, une lettre anonyme à la main : « 2 h 10, le double, Mbako », glissée sous vingt-six portes. « Vous avez payé la prime de 2010, {toi}. Ça ne change pas l'ordre : mes joueurs, puis la vérité. »"
+    left:
+      label: "Défendez Mbako"
+      effects: {vestiaire: "+", relation: {fauvel: 1, mbako: 1}}
+      answer: "« C'est déjà fait. Avec votre prime, il s'est payé un avocat. » Il plie la lettre en quatre et la glisse dans sa poche."
+    right:
+      label: "La vérité d'abord"
+      effects: {direction: "-", tribunes: "+", relation: {fauvel: -1}}
+      answer: "Il te regarde longtemps. « Alors on n'est pas dans le même ordre. Mais vous, au moins, vous payez vos dettes. »"
+
+  - id: sl.h7.k2_main
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    lieu: hotel
+    tone: leger
+    once: true
+    text: "Mbako, dans le couloir du deuxième, devant la porte de la 12 : « Fauvel veut un vote. Vingt-six mains levées pour dire la nuit. Il dit que si je lève la mienne, les autres suivront. »"
+    left:
+      label: "Lève-la"
+      effects: {vestiaire: "+", relation: {mbako: 1}, set: [h7_mbako_main]}
+      answer: "Il regarde sa main, la retourne, comme pour vérifier qu'elle est à lui. « La dernière fois que je l'ai levée, c'était dans le bus. »"
+    right:
+      label: "Garde-la baissée"
+      effects: {direction: "+", relation: {mbako: -1}}
+      answer: "« C'est ce que je fais depuis deux ans. » Il remet les mains dans ses poches et rentre dans la 14."
+
+  - id: sl.h7.k3_vote
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La salle du petit-déjeuner, tables poussées contre les murs. Fauvel compte à voix haute : « Qui veut qu'on dise la nuit du 14 ? » Les mains montent, une par une. Tu es debout près de la porte."
+    left:
+      label: "Je lève la mienne"
+      effects: {vestiaire: "++", direction: "--", set: [h7_vote_verite], outcome: vote}
+      answer: "Vingt-six mains, et la tienne. Fauvel écrit le chiffre sur la nappe en papier ; à la réception, Sandrine note l'heure."
+    right:
+      label: "On arrête ce vote"
+      effects: {vestiaire: "--", direction: "+", set: [h7_vote_refuse], outcome: liste}
+      answer: "Les mains redescendent, plus lentement qu'elles ne sont montées. Mbako garde la sienne en l'air jusqu'au bout."
+
+  # Le bracelet de Valdorne, coupé en 2012 (« La main ») : le poignet nu revient.
+  - id: sl.h7.k3_vote_poignet
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La salle du petit-déjeuner, tables contre les murs. Fauvel compte : « Qui veut qu'on dise la nuit du 14 ? » Les mains montent, une par une. Ferrol garde les siennes sous la table, le poignet nu."
+    left:
+      label: "Je lève la mienne"
+      effects: {vestiaire: "++", direction: "--", set: [h7_vote_verite], outcome: vote}
+      answer: "Ferrol lève la sienne après toi, le dernier. Fauvel écrit le chiffre sur la nappe en papier ; à la réception, Sandrine note l'heure."
+    right:
+      label: "On arrête ce vote"
+      effects: {vestiaire: "--", direction: "+", set: [h7_vote_refuse], outcome: liste}
+      answer: "Les mains redescendent. Ferrol, qui n'avait rien levé, se frotte le poignet, à l'endroit où il y avait un bracelet."

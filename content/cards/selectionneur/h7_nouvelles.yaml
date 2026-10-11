@@ -1,0 +1,273 @@
+# Histoire 7 · Chambre 12 — les Nouvelles datées (spec variété §1.5) : le monde
+# de 2011 à 2013 tel qu'il arrive à l'hôtel de la Rive, par la radio du matin,
+# L'Écho, Télé-Stade et les circulaires. Une Nouvelle, un bouton (deux sorties
+# identiques), un effet au plus d'un cran.
+#
+# Le moteur sert une Nouvelle datée pendant deux saisons ([year, year + 1]) ; le
+# sélectionneur vit l'année civile, d'où le `year == Y` de chaque `when` : une
+# Nouvelle de 2012 ne passe pas en 2011. Chacune lit aussi `flag('histoire_h7')`
+# (les Nouvelles du rôle sont communes aux deux histoires du sélectionneur).
+#
+# Ce que le sport a de réel y reste, sans un nom : le tout-assis, les droits
+# télévisés, la ceinture qui mesure le cœur, les buts filmés depuis les tribunes.
+cards:
+  # ══════════════════════════════════════════════════════════════════ 2011
+  - id: sl.h7.nv.2011_bus_photo
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    year: 2011
+    once: true
+    when: "flag('histoire_h7') && year == 2011"
+    text: "L'Écho, page sport : le bus de 2010 « est toujours derrière l'hôtel de la Rive ». La photo, prise depuis la rue, montre la banderole MONDIAL qui se décolle par un coin."
+    left:
+      label: "Tourner la page"
+      effects: {}
+      answer: "Page suivante, les résultats régionaux. Le Racing a gagné à l'extérieur, et personne n'en parle."
+    right:
+      label: "Tourner la page"
+      effects: {}
+      answer: "Page suivante, les résultats régionaux. Le Racing a gagné à l'extérieur, et personne n'en parle."
+
+  - id: sl.h7.nv.2011_sondage
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    year: 2011
+    once: true
+    when: "flag('histoire_h7') && year == 2011"
+    text: "À la radio du matin, un sondage : sept auditeurs sur dix ne veulent « plus jamais voir ces joueurs-là ». Le présentateur relit la liste de 2010, nom par nom, lentement."
+    left:
+      label: "Éteindre la radio"
+      effects: {vestiaire: "+"}
+      answer: "Tu éteins à « Mbako ». Dans la voiture d'à côté, au feu rouge, un homme écoute encore, et secoue la tête."
+    right:
+      label: "Éteindre la radio"
+      effects: {vestiaire: "+"}
+      answer: "Tu éteins à « Mbako ». Dans la voiture d'à côté, au feu rouge, un homme écoute encore, et secoue la tête."
+
+  - id: sl.h7.nv.2011_tout_assis
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    year: 2011
+    once: true
+    when: "flag('histoire_h7') && year == 2011"
+    text: "Les grands stades de la capitale passent au tout-assis. On dévisse les dernières barrières des virages ; des anciens repartent avec un barreau sous le bras, enveloppé dans une écharpe."
+    left:
+      label: "Les laisser partir"
+      effects: {tribunes: "+"}
+      answer: "À la Rive, on garde les barrières une saison de plus, faute de budget. Personne ne s'en plaint."
+    right:
+      label: "Les laisser partir"
+      effects: {tribunes: "+"}
+      answer: "À la Rive, on garde les barrières une saison de plus, faute de budget. Personne ne s'en plaint."
+
+  - id: sl.h7.nv.2011_ceinture
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, vestiaire]
+    year: 2011
+    once: true
+    when: "flag('histoire_h7') && year == 2011"
+    text: "Dans les clubs riches, les joueurs s'entraînent une ceinture autour de la poitrine : le cœur de chacun s'affiche sur un écran, au bord du terrain. La Fédération trouve ça cher."
+    left:
+      label: "Lire le prix"
+      effects: {}
+      answer: "Vingt-six ceintures, le prix d'un stage. Josiane range le devis dans le classeur « plus tard »."
+    right:
+      label: "Lire le prix"
+      effects: {}
+      answer: "Vingt-six ceintures, le prix d'un stage. Josiane range le devis dans le classeur « plus tard »."
+
+  - id: sl.h7.nv.2011_special
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: rossard
+    year: 2011
+    once: true
+    when: "flag('histoire_h7') && year == 2011"
+    text: "Télé-Stade annonce une soirée « Un an après le bus ». Aimé Rossard, l'ancien sélectionneur, promet en bande-annonce de « tout dire ». On ne sait pas encore sur quoi."
+    left:
+      label: "Noter la date"
+      effects: {}
+      answer: "Un dimanche, vingt et une heures. Rossard porte la même cravate qu'en 1990 ; le pays aime ce genre de détail."
+    right:
+      label: "Noter la date"
+      effects: {}
+      answer: "Un dimanche, vingt et une heures. Rossard porte la même cravate qu'en 1990 ; le pays aime ce genre de détail."
+
+  # ══════════════════════════════════════════════════════════════════ 2012
+  - id: sl.h7.nv.2012_aubert
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    year: 2012
+    once: true
+    when: "flag('histoire_h7') && year == 2012"
+    text: "Madame Aubert quitte le ministère des Sports. Dans son dernier discours, elle cite les Cobalts deux fois, l'hymne une fois, et la chambre 12 pas du tout."
+    left:
+      label: "Écouter jusqu'au bout"
+      effects: {direction: "+"}
+      answer: "À la fin, une salve d'applaudissements polie. La caméra s'arrête une seconde sur une chaise vide, au premier rang."
+    right:
+      label: "Écouter jusqu'au bout"
+      effects: {direction: "+"}
+      answer: "À la fin, une salve d'applaudissements polie. La caméra s'arrête une seconde sur une chaise vide, au premier rang."
+
+  - id: sl.h7.nv.2012_information
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, presse]
+    speaker: lea
+    year: 2012
+    once: true
+    when: "flag('histoire_h7') && year == 2012"
+    text: "Léa lit le communiqué au téléphone : la procureure Amsel ouvre une information judiciaire « sur les circonstances d'un décès à l'hôtel de la Rive ». « Page deux, sous la météo. Pas mon choix. »"
+    left:
+      label: "Merci, Léa"
+      effects: {}
+      answer: "« Ne me remerciez pas. Le jour où ce sera en Une, vous ne me remercierez pas non plus. »"
+    right:
+      label: "Merci, Léa"
+      effects: {}
+      answer: "« Ne me remerciez pas. Le jour où ce sera en Une, vous ne me remercierez pas non plus. »"
+
+  - id: sl.h7.nv.2012_continental
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    year: 2012
+    once: true
+    when: "flag('histoire_h7') && year == 2012 && flag('h7_barrage_gagne')"
+    text: "Le Continental, en été. Les Cobalts jouent leur premier match devant un stade étranger à moitié vide. Au vestiaire, Rouvier a recousu un 26 sur chaque manche, plus petit qu'en novembre."
+    left:
+      label: "Entrer sur le terrain"
+      effects: {tribunes: "+"}
+      answer: "Le pays regarde le premier match en plein après-midi. Dans les cafés d'Aubérive, on monte le son pendant l'hymne."
+    right:
+      label: "Entrer sur le terrain"
+      effects: {tribunes: "+"}
+      answer: "Le pays regarde le premier match en plein après-midi. Dans les cafés d'Aubérive, on monte le son pendant l'hymne."
+
+  - id: sl.h7.nv.2012_sans_nous
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    year: 2012
+    once: true
+    when: "flag('histoire_h7') && year == 2012 && flag('h7_barrage_perdu')"
+    text: "Le Continental se joue sans les Cobalts, cet été. À la télévision, les autres hymnes, les autres maillots. À la Rive, quelqu'un a éteint l'écran du bar de l'hôtel à la vingtième minute."
+    left:
+      label: "Rallumer l'écran"
+      effects: {}
+      answer: "Tu rallumes. Sandrine, de la réception, regarde le match dans le reflet de la porte vitrée, sans le son."
+    right:
+      label: "Rallumer l'écran"
+      effects: {}
+      answer: "Tu rallumes. Sandrine, de la réception, regarde le match dans le reflet de la porte vitrée, sans le son."
+
+  - id: sl.h7.nv.2012_droits
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, caisse]
+    year: 2012
+    once: true
+    when: "flag('histoire_h7') && year == 2012"
+    text: "Les droits télévisés du championnat sont revendus pour quatre ans, deux fois le contrat d'avant. À la Fédération, on dit « la manne » dans les couloirs, et plus rien d'autre pendant un mois."
+    left:
+      label: "Demander la part"
+      effects: {caisse: "+"}
+      answer: "La part de la sélection tient sur une ligne du budget, entre les charters et les croissants."
+    right:
+      label: "Demander la part"
+      effects: {caisse: "+"}
+      answer: "La part de la sélection tient sur une ligne du budget, entre les charters et les croissants."
+
+  # ══════════════════════════════════════════════════════════════════ 2013
+  - id: sl.h7.nv.2013_tutelle
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    year: 2013
+    once: true
+    when: "flag('histoire_h7') && year == 2013"
+    text: "Le communiqué du ministre tient en six lignes : la tutelle est prolongée d'un an, le comité provisoire reste en place, les affaires courantes continuent. Le mot « novembre » n'y figure pas."
+    left:
+      label: "Relire les six lignes"
+      effects: {}
+      answer: "À la cinquième ligne, « les affaires courantes ». Dans le registre de Dauzat, il y a une colonne pour ça."
+    right:
+      label: "Relire les six lignes"
+      effects: {}
+      answer: "À la cinquième ligne, « les affaires courantes ». Dans le registre de Dauzat, il y a une colonne pour ça."
+
+  - id: sl.h7.nv.2013_circulaire
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, vestiaire]
+    year: 2013
+    once: true
+    when: "flag('histoire_h7') && year == 2013"
+    text: "Une circulaire du ministère impose un électrocardiogramme annuel à tout joueur sélectionnable, avant la liste de mars. Elle ne cite personne. Elle n'en a pas besoin."
+    left:
+      label: "Signer l'accusé"
+      effects: {vestiaire: "+"}
+      answer: "Tu signes l'accusé de réception. Sous ta signature, Josiane a tracé une ligne pour celle du médecin, et l'a laissée vide."
+    right:
+      label: "Signer l'accusé"
+      effects: {vestiaire: "+"}
+      answer: "Tu signes l'accusé de réception. Sous ta signature, Josiane a tracé une ligne pour celle du médecin, et l'a laissée vide."
+
+  - id: sl.h7.nv.2013_complet
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, direction]
+    speaker: escande
+    year: 2013
+    once: true
+    when: "flag('histoire_h7') && year == 2013"
+    text: "Monsieur Escande affiche « complet » à l'entrée de l'hôtel pour la fenêtre de novembre : « Toutes les chambres, sauf une, qui n'est pas à louer. Les journalistes ont réservé au Terminus. »"
+    left:
+      label: "Remercier Escande"
+      effects: {}
+      answer: "« Ne me remerciez pas. Le Terminus non plus n'a pas de 12. » Il retourne la pancarte, côté complet."
+    right:
+      label: "Remercier Escande"
+      effects: {}
+      answer: "« Ne me remerciez pas. Le Terminus non plus n'a pas de 12. » Il retourne la pancarte, côté complet."
+
+  - id: sl.h7.nv.2013_tribunes_filment
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, tribunes]
+    year: 2013
+    once: true
+    when: "flag('histoire_h7') && year == 2013"
+    text: "Dans les tribunes, on filme désormais chaque but avec son téléphone, et les clubs réclament les droits sur ces images. Personne ne sait encore à qui appartient un but filmé depuis la Nord."
+    left:
+      label: "Regarder les tribunes"
+      effects: {tribunes: "+"}
+      answer: "Au match de la fenêtre, mille petites lumières se lèvent au premier but. Le tien, dans le lot, filme la porte du vestiaire."
+    right:
+      label: "Regarder les tribunes"
+      effects: {tribunes: "+"}
+      answer: "Au match de la fenêtre, mille petites lumières se lèvent au premier but. Le tien, dans le lot, filme la porte du vestiaire."
+
+  - id: sl.h7.nv.2013_courrier
+    roles: [selectionneur]
+    arc: nouvelle
+    tags: [nouvelle, famille]
+    year: 2013
+    once: true
+    when: "flag('histoire_h7') && year == 2013"
+    text: "L'Écho publie un courrier des lecteurs signé « une mère » : elle demande qu'on rende aux familles les téléphones des morts. Le courrier ne cite aucun nom. Il cite une heure : trois heures."
+    left:
+      label: "Découper le courrier"
+      effects: {}
+      answer: "Tu le découpes et le glisses dans ton portefeuille, derrière ta carte de la Fédération. Il y est encore en décembre."
+    right:
+      label: "Découper le courrier"
+      effects: {}
+      answer: "Tu le découpes et le glisses dans ton portefeuille, derrière ta carte de la Fédération. Il y est encore en décembre."

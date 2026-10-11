@@ -1,0 +1,202 @@
+# Histoire 7 · Chambre 12 — les alarmes du postulat `apres_fiasco`, montées en
+# tête des candidats par `alarm_overrides` (content/postulats.yaml). Quand une
+# jauge franchit 20 ou 80, c'est l'hôtel qui sonne : le couloir du deuxième, la
+# trousse de couture de Rouvier, le trottoir de Gégé, minuit et une au
+# téléphone, la note d'Escande, les rires du deuxième étage.
+#
+# Une alarme basse propose de quoi remonter (gauche) ; une alarme haute, de quoi
+# redescendre avant le débordement (gauche). Les porteurs nommés ne parlent
+# qu'une fois (`!seen` dans les overrides) ; le dernier de chaque jauge tient
+# jusqu'au bout.
+cards:
+  # ═══════════════════════════════════════════ Le groupe (VESTIAIRE) bas
+  - id: sl.h7.alarme.vestiaire_bas_couloir
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: mbako
+    tone: strategique
+    when: "gauges.vestiaire < 25"
+    text: "Deux heures du matin, le couloir du deuxième. Les mutins assis d'un côté de la porte de la 12, les nouveaux de l'autre. Mbako se lève : « Ils attendent de voir de quel côté tu t'assois, {toi}. »"
+    left:
+      label: "Je m'assois devant la 12"
+      effects: {vestiaire: "+++", direction: "-"}
+      answer: "Tu t'assois dos à la porte, au milieu. Au bout d'une heure, ils sont tous assis en rond, et personne ne dit rien."
+    right:
+      label: "Tout le monde au lit"
+      effects: {vestiaire: "-", direction: "+"}
+      answer: "Les portes se ferment une à une. La dernière est celle de la 14 ; Mbako la laisse entrouverte jusqu'au matin."
+
+  - id: sl.h7.alarme.vestiaire_bas_numeros
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: rouvier
+    tone: strategique
+    when: "gauges.vestiaire < 25"
+    text: "Nadia Rouvier pose sa trousse de couture sur ta table : « Le soir, ils arrachent les numéros de leurs manches, un par un. Tous, sauf le 26. Je recouds, ou je les laisse faire, {toi} ? »"
+    left:
+      label: "Recousez, je les réunis"
+      effects: {vestiaire: "+++", caisse: "-"}
+      answer: "Tu les réunis dans la salle du petit-déjeuner pendant qu'elle recoud. Personne ne parle ; tout le monde regarde l'aiguille."
+    right:
+      label: "Laissez-les faire"
+      effects: {vestiaire: "-", tribunes: "+"}
+      answer: "Le lendemain, à l'entraînement, vingt-cinq manches sans numéro, et un 26 sur chacune. Les photographes adorent."
+
+  # ═══════════════════════════════════════════ Le pays (TRIBUNES) bas
+  - id: sl.h7.alarme.tribunes_bas_trottoir
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, ultras]
+    speaker: gege
+    tone: strategique
+    when: "gauges.tribunes < 25"
+    text: "Gégé, sur le trottoir de l'hôtel : « Le pays veut votre tête, on l'a lu. Ici, on ne la veut pas. On veut savoir ce qui s'est passé au deuxième. Vous descendez nous le dire, ou on monte ? »"
+    left:
+      label: "Je descends"
+      effects: {tribunes: "+++", direction: "--"}
+      answer: "Tu parles un quart d'heure sur le trottoir, sans micro. Tu ne dis pas tout. Gégé hoche la tête à la fin, comme on paie une ardoise."
+    right:
+      label: "Personne ne monte"
+      effects: {tribunes: "-", direction: "+"}
+      answer: "Escande ferme la porte vitrée à clé. Ils restent sur le trottoir jusqu'à minuit, sans un chant, à regarder les fenêtres du deuxième."
+
+  - id: sl.h7.alarme.tribunes_bas_page
+    roles: [selectionneur]
+    arc: presse
+    tags: [tribunes, presse]
+    speaker: lea
+    tone: strategique
+    when: "gauges.tribunes < 25"
+    text: "Léa pose sur ta table le classement des personnalités les moins aimées du pays : « Vous êtes troisième, derrière un ministre et un chanteur. Je vous offre une page entière pour remonter. »"
+    left:
+      label: "J'accepte la page"
+      effects: {tribunes: "+++", direction: "-"}
+      answer: "Une page, une photo dans le couloir de l'hôtel, aucune question sur 2010. Léa l'a voulu ainsi ; c'est ce qui la rend lisible."
+    right:
+      label: "Restons troisième"
+      effects: {tribunes: "-", vestiaire: "+"}
+      answer: "« Troisième, c'est une place qu'on garde longtemps », dit Léa. Elle le note, avec l'heure."
+
+  # ═══════════════════════════════════════ La Fédération (DIRECTION) basse
+  - id: sl.h7.alarme.direction_bas_minuit
+    roles: [selectionneur]
+    arc: direction
+    tags: [direction]
+    speaker: aulard
+    tone: strategique
+    when: "gauges.direction < 25"
+    text: "Vaubourg t'appelle à minuit et une, d'une voix très calme : « Je ne vous renvoie pas ce soir. Je voulais seulement que vous sachiez que je regarde l'heure, moi aussi. »"
+    left:
+      label: "Je viens vous voir demain"
+      effects: {direction: "+++", vestiaire: "-"}
+      answer: "Le lendemain, il te reçoit en robe de chambre, à neuf heures. Il ne parle que de novembre. Tu repars avec un an de plus."
+    right:
+      label: "Bonne nuit, président"
+      effects: {direction: "-", tribunes: "+"}
+      answer: "Il raccroche à minuit deux. Tu restes près du téléphone, au cas où ; il ne rappelle pas."
+
+  - id: sl.h7.alarme.direction_bas_registre
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    tone: strategique
+    when: "gauges.direction < 25"
+    text: "Dauzat ouvre le registre devant toi, à une page blanche : « Le comité veut une ligne sur vous, avant vendredi. Je l'écris maintenant, ou vous me la dictez, {toi} ? »"
+    left:
+      label: "Je vous la dicte"
+      effects: {direction: "+++", tribunes: "-"}
+      answer: "Tu dictes une ligne sur le groupe, le travail, la dignité. Il l'écrit mot pour mot, et souligne « dignité » d'un trait de règle."
+    right:
+      label: "Écrivez ce que vous voulez"
+      effects: {direction: "-", vestiaire: "+"}
+      answer: "Il écrit sans relever la tête. Tu ne liras la ligne que plus tard, dans un autre registre."
+
+  # ═══════════════════════════════════════════ Les moyens (CAISSE) bas
+  - id: sl.h7.alarme.caisse_bas_note
+    roles: [selectionneur]
+    arc: caisse
+    tags: [caisse, direction]
+    speaker: josiane
+    tone: strategique
+    when: "gauges.caisse < 25"
+    text: "Madame Josiane pose la note de l'hôtel sur ta table, une agrafe rouge dans le coin : « Monsieur Escande ne sera pas payé ce mois-ci. Il demande s'il peut se payer en silence, comme d'habitude. »"
+    left:
+      label: "On raccourcit la fenêtre"
+      effects: {caisse: "+++", vestiaire: "-"}
+      answer: "Sept nuits au lieu de dix. Les joueurs arrivent le lundi, en car, et dorment chez eux le dimanche. Escande est payé."
+    right:
+      label: "Escande attendra"
+      effects: {caisse: "-", direction: "+"}
+      answer: "Josiane agrafe la note dans le classeur des choses qui attendent. Escande, lui, n'attend jamais : il sourit davantage."
+
+  # ═══════════════════════════════════════════ Les hautes
+  - id: sl.h7.alarme.vestiaire_haut_rires
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    speaker: sandrine
+    tone: strategique
+    when: "gauges.vestiaire > 75"
+    text: "Minuit, le tableau. Vingt-six doubles aux crochets, et des rires au deuxième, très tard. Sandrine : « Ça ne s'était pas entendu depuis la nuit du 14. Je note, ou vous montez les calmer ? »"
+    left:
+      label: "Je monte les calmer"
+      effects: {vestiaire: "--", direction: "+"}
+      answer: "Les rires s'arrêtent quand tu frappes. Personne ne t'en veut. Sandrine note l'heure du silence."
+    right:
+      label: "Notez, c'est tout"
+      effects: {vestiaire: "+", direction: "-"}
+      answer: "Elle écrit « rires » dans la marge, l'heure à côté. Le mot n'avait jamais été écrit dans ce cahier."
+
+  - id: sl.h7.alarme.tribunes_haut_plateau
+    roles: [selectionneur]
+    arc: presse
+    tags: [tribunes, presse]
+    speaker: rossard
+    tone: strategique
+    when: "gauges.tribunes > 75"
+    text: "Rossard, à l'antenne : « Le pays aime la sélection, en ce moment. On m'a aimé aussi. Ça se paie au premier match perdu. » Le lendemain, Télé-Stade veut te recevoir dimanche, sur son plateau."
+    left:
+      label: "Je refuse le plateau"
+      effects: {tribunes: "--", direction: "+"}
+      answer: "Vence annonce ton refus en ouverture d'émission, et laisse ta chaise vide toute la soirée. Rossard parle à la chaise."
+    right:
+      label: "J'irai dimanche"
+      effects: {tribunes: "+", direction: "-"}
+      answer: "Tu as pris la chaise de Rossard. Il est à côté, il te regarde parler, et il prend des notes. Il n'en avait jamais pris."
+
+  - id: sl.h7.alarme.direction_haut_stylo
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    tone: strategique
+    when: "gauges.direction > 75"
+    text: "Dauzat te tend un stylo de la Fédération, en argent : « On vous fait confiance, totalement. On aimerait que vous signiez le procès-verbal de la saison sans le relire, comme les autres. »"
+    left:
+      label: "Je le relis quand même"
+      effects: {direction: "--", tribunes: "+"}
+      answer: "Tu le relis en entier, dans le hall, debout. Il manque une page. Dauzat te la tend, sans surprise, et reprend son stylo."
+    right:
+      label: "Je signe"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Le stylo est lourd, la signature glisse. Dauzat la regarde sécher, puis te laisse le stylo. « Gardez-le. On en a d'autres. »"
+
+  - id: sl.h7.alarme.caisse_haut_prime
+    roles: [selectionneur]
+    arc: argent
+    tags: [caisse, sponsors]
+    speaker: desforges
+    tone: strategique
+    when: "gauges.caisse > 75"
+    text: "Carole Desforges pose un chèque de prime sur la table du petit-déjeuner : « Fulgor double encore. Personne ne refuse une prime, sauf ceux qui veulent qu'on parle d'eux. »"
+    left:
+      label: "Versez-la aux joueurs"
+      effects: {caisse: "--", vestiaire: "+"}
+      answer: "Vingt-six enveloppes au dîner. Mbako ouvre la sienne, la referme, et la glisse sous la porte de la 12 en remontant."
+    right:
+      label: "Je l'encaisse"
+      effects: {caisse: "+", direction: "-"}
+      answer: "Elle range le stylo avec lequel tu as signé le reçu. « Celui-là, je le garde. Pour la photo, un jour. »"

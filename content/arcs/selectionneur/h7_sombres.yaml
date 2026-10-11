@@ -1,0 +1,221 @@
+# Histoire 7 · Chambre 12 — les soirs (docs/histoires § 6 de la fiche ; charte
+# d'écriture § 5). Des arcs `kind: evenement` : le metteur en scène les arme
+# quand leur `when` est vrai, avec une `chance` par créneau, deux par saison au
+# plus, jamais à moins de cinq créneaux d'écart (calendar.yaml), une fois par
+# carrière, jamais rattrapés. Les cartes : content/cards/selectionneur/h7_sombres.yaml.
+#
+# Chaque `when` lit `flag('histoire_h7')` : le metteur en scène arme les
+# événements du rôle sans regarder le postulat, et l'autre histoire du
+# sélectionneur ne doit jamais croiser ces soirs-là.
+#
+# La règle des soirs (docs/histoires § 1.4, relecture de l'éditeur) : les ancres
+# de nuit du script (2 h 10 en 2011, le bus en 2012) et ce réservoir ne font
+# jamais plus de quatre soirs par saison, ni deux à moins de cinq créneaux.
+# D'où `slot <= 10` partout : le bus de 2012 est au créneau 17, et la dernière
+# fenêtre de 2013 (la valise, la 12, le tableau) se passe de soirs ajoutés.
+#
+#   2011 · Le Corner (le bar, une heure du matin) — Mbako, son verre, et le
+#          petit essoufflé d'avoir monté la rue ; avant la nuit du 14.
+#   2012 · Les bougies et la pierre (devant l'hôtel) — le virage d'Aubérive
+#          pour le gamin du centre, et une pierre dans la fenêtre du 14.
+#        · Les scellés (couloir du deuxième, la nuit) — la cire de la 12 ; le
+#          carnet du petit et sa date entourée ; la commandante le saura.
+#   2013 · L'arrière-salle du Terminus — le père, ses cartes à l'envers, la
+#          signature de 1998 ; Fardelli règle l'ardoise.
+#        · La page (le hall) — la page du cahier de nuit ou le carnet gardés
+#          pendant l'enquête : la garde à vue (`co_garde_a_vue`).
+#        · Les montres (le hall) — les montres de Fulgor parties sous scellés
+#          (`saisie_luxe`).
+#   La ville seulement (drapeaux `h7_vl_*` posés par content/ville/missions_h7.yaml) :
+#        · L'original — le dossier de 2010 photocopié à la pharmacie.
+#        · La capture — la photo de 1 h 47, vendue deux fois.
+arcs:
+  # ═══════════════════════════════════════════════════════════════ 2011
+  # Le Corner, un soir de septembre : les deux doubles qui manquaient au
+  # tableau du premier soir (le prologue), vus de l'autre côté du comptoir. La
+  # côte que le petit monte en se tenant la poitrine revient à la liste de
+  # novembre ; Mbako qui le regarde dormir revient dans le bus de 2012.
+  - id: sl.h7.ev.corner
+    title: "Le Corner"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: vestiaire
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && season == 0 && !flag('h7_rance_mort') && slot <= 10"
+    chance: 0.20
+    cast: [mbako, sandrine]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_corner_ramenes: "{annee} : à une heure du matin, {nom} a ramené du Corner Mbako et le petit Rancé, qui s'arrêtait dans la côte."
+      h7_corner_verre:   "{annee} : au Corner, {nom} a bu un verre avec Mbako. Le petit Rancé s'est endormi sur la banquette."
+    steps:
+      - id: comptoir
+        card: sl.h7.e0_corner
+        next: []
+
+  # ═══════════════════════════════════════════════════════════════ 2012
+  - id: sl.h7.ev.bougies
+    title: "Les bougies et la pierre"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: tribune
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && season == 1 && flag('h7_rance_mort') && slot <= 10"
+    chance: 0.30
+    cast: [gege, mbako, rance_mere]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_bougies: "{annee} : des bougies devant l'hôtel de la Rive pour le petit Rancé, et une pierre dans la fenêtre du 14."
+    steps:
+      - id: trottoir
+        card: sl.h7.b1_bougies
+        next: [ { step: chambre_14, in: [1, 3] } ]
+      - id: chambre_14
+        card: sl.h7.b2_pierre
+        next: []
+
+  - id: sl.h7.ev.scelles
+    title: "Les scellés"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && season == 1 && flag('h7_rance_mort') && slot <= 10"
+    chance: 0.25
+    cast: [benali, sandrine]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_scelles_brises:    "{annee} : une nuit, {nom} a cassé la cire de la 12. Dans le tiroir, un carnet d'écolier, une date entourée."
+      h7_scelles_respectes: "{annee} : devant la cire rouge de la 12, une nuit de fenêtre, {nom} a fait demi-tour."
+    steps:
+      - id: cire
+        card: sl.h7.e1_cire
+        next: [ { step: empreintes, if: "flag('h7_scelles_brises')", in: [2, 4] } ]
+      - id: empreintes
+        card: sl.h7.e2_empreintes
+        next: []
+
+  # ═══════════════════════════════════════════════════════════════ 2013
+  - id: sl.h7.ev.terminus
+    title: "L'arrière-salle du Terminus"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: famille
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && season >= 2 && slot <= 10"
+    chance: 0.20
+    cast: [fardelli, rance_mere]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_pere_vu: "{annee} : dans l'arrière-salle du Terminus, le père de Tibo Rancé a parlé à {nom} de la signature de 1998."
+    steps:
+      - id: cartes
+        card: sl.h7.e3_pere
+        next: [ { step: ardoise, in: [1, 3] } ]
+      - id: ardoise
+        card: sl.h7.e4_ardoise
+        next: []
+
+  - id: sl.h7.ev.page
+    title: "La page"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: instances
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && season >= 2 && slot <= 10 && (flag('h7_page_poche') || flag('h7_carnet_garde') || flag('h7_vl_cahier_nuit'))"
+    chance: 0.40
+    cast: [benali, sandrine]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_page_donnee:  "{annee} : {nom} a rendu à la commandante Benali la page du 14 novembre, pliée en quatre."
+      h7_carnet_rendu: "{annee} : le carnet d'écolier de Tibo Rancé remis à la police, sa date entourée : mars 2010."
+    steps:
+      - id: seuil
+        card:
+          - { id: sl.h7.e5_carnet, if: "flag('h7_carnet_garde')" }
+          - { id: sl.h7.e5_page }
+        next: []
+
+  - id: sl.h7.ev.montres
+    title: "Les montres"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: argent
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && season >= 2 && slot <= 10 && flag('h7_montres')"
+    chance: 0.50
+    cast: [benali, desforges]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_montres_saisies: "{annee} : les vingt-sept montres de Fulgor parties sous scellés avec l'information judiciaire."
+    steps:
+      - id: sac
+        card: sl.h7.e6_montres
+        next: []
+
+  # ═══════════════════════════════════════════════ la ville (missions_h7.yaml)
+  - id: sl.h7.vl.original
+    title: "L'original"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: corps
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && flag('h7_vl_dossier_arzel') && slot <= 10"
+    chance: 0.30
+    cast: [benali, rouvier]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_vol_avoue: "{annee} : « C'était moi », a dit {nom} à Benali, pour le dossier de 2010 photocopié à la pharmacie."
+    steps:
+      - id: mallette
+        card: sl.h7.e7_original
+        next: []
+
+  - id: sl.h7.vl.capture
+    title: "La capture"
+    kind: evenement
+    roles: [selectionneur]
+    postulats: [apres_fiasco]
+    theme: presse
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "flag('histoire_h7') && flag('h7_vl_capture') && slot <= 10"
+    chance: 0.30
+    cast: [lea, ferrol]
+    same_club: true
+    fallback: drop
+    traces:
+      h7_capture_publiee: "{annee} : L'Écho a publié la capture de 1 h 47, la main dans le coin. Le gamin du square l'avait vendue deux fois."
+    steps:
+      - id: echo
+        card: sl.h7.e8_capture
+        next: []

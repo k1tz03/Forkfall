@@ -1,0 +1,96 @@
+# Histoire 7 · Chambre 12 — les fins (docs/histoires/00_les_dix_histoires.md,
+# fiche § 8). Quatre fins propres, posées par des cartes du script (`end:`) :
+#
+#   · On l'a laissé (`fiasco_laisse`, la vérité) — à la conférence de la veille
+#     du match de 2013 (sl.h7.s6_conference, s6_conference_page) ;
+#   · Malaise cardiaque (`fiasco_malaise`, le prix) — qui a parlé du groupe joue
+#     le match, passe le Bilan, et l'hiver le rattrape en mars 2014 (sl.h7.e1_gerbe) ;
+#   · L'homme du président (`sl_homme_president`, la fin du rôle posée par
+#     l'histoire) — qui a dit « d'accord » à quatre heures et rien depuis, à
+#     personne : en mars 2014, Vaubourg est mis en examen, et la page de quatre
+#     heures emporte son homme (sl.h7.e1_vaubourg) ;
+#   · Le tableau complet (`fiasco_tableau`, rare) — la dernière nuit de 2013,
+#     les vingt-six doubles restent aux crochets jusqu'au matin (sl.h7.s5_tableau_complet) ;
+#   · Le capitaine donné (`fiasco_bouc`, la pire) — la docteure a parlé seule, la
+#     phrase sur le groupe ne tient plus : Dauzat a écrit une heure et un nom sur
+#     la fiche, et on la lit (sl.h7.s6_conference_seule ; la vérité y reste
+#     ouverte).
+#
+# Et les lignes ajoutées aux fins communes, qui lisent `flag('histoire_h7')` :
+# la garde à vue (la page du cahier ou le carnet gardés pendant l'enquête), les
+# deux clans, minuit et une, l'homme du président, l'ennemi public. Aucune ne
+# redit l'épitaphe qu'elle complète.
+endings:
+  - id: fiasco_laisse
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "On l'a laissé"
+    epitaph: "« On l'a laissé », a dit {prenom} {nom} devant les caméras, et le pays a appris la différence entre mourir et être laissé. La lettre de la Fédération est arrivée à minuit et une ; la chambre 12 n'a jamais été relouée."
+    epitaph_plus:
+      - { when: "flag('h7_mere_sait')", text: "La mère de Tibo était au premier rang, à côté de Léa. Elle n'a rien noté ; elle a hoché la tête, deux fois." }
+      - { when: "flag('h7_mbako_temoignera')", text: "Mbako a témoigné le lundi suivant, debout. Il n'a pas regardé {nom} une seule fois, et c'était une politesse." }
+
+  - id: fiasco_malaise
+    cause: choix
+    rarity: commune
+    golden: false
+    title: "Malaise cardiaque"
+    epitaph: "Devant les caméras, {prenom} {nom} n'a jamais dit autre chose que « malaise cardiaque ». Chaque novembre, une gerbe bordeaux et grise arrive au caveau du Racing, sans carte."
+    epitaph_plus:
+      - { when: "flag('h7_deux_versions')", text: "À la police, avec la docteure, {nom} avait tout dit ; au pays, rien. Les deux versions dorment dans deux tiroirs de la même Fédération." }
+      - { when: "vars.gm_won == 1", text: "Les Cobalts ont joué le Mondial avec un 26 cousu sur la manche ; personne n'a demandé à {nom} pourquoi vingt-six." }
+
+  - id: fiasco_tableau
+    cause: choix
+    rarity: rare
+    golden: true
+    title: "Le tableau complet"
+    epitaph: "La dernière nuit de la fenêtre de 2013, les vingt-six doubles sont restés au tableau jusqu'au matin, et Sandrine Lavergne l'a écrit dans son cahier. Mbako a parlé avant {prenom} {nom}, et c'était mieux ainsi."
+    epitaph_plus:
+      - { when: "flag('h7_vote_verite')", text: "Le vote de Fauvel avait eu lieu la veille, à main levée. Sandrine avait noté l'heure de chaque main, et celle de {nom} en dernier." }
+      - { when: "flag('h7_mere_sait')", text: "La mère de Tibo est venue au tribunal tous les jours. Elle s'asseyait derrière Mbako, jamais derrière {nom}." }
+
+  - id: fiasco_bouc
+    cause: choix
+    rarity: rare
+    golden: false
+    title: "Le capitaine donné"
+    epitaph: "{prenom} {nom} a lu la fiche : 2 h 10, et le nom qui allait avec. Lian Mbako a rendu le brassard de 2010 sur le parking ; la docteure, qui avait parlé seule, n'a plus été écoutée, et la signature du premier jour est restée dans le noir."
+    epitaph_plus:
+      - { when: "flag('h7_mbako_temoignera')", text: "Mbako avait promis de témoigner. Il l'a fait quand même, seul, un an plus tard ; on n'a retenu que la date de {nom}." }
+      - { when: "flag('h7_signature_avouee')", text: "Au Terminus, le père de Tibo a découpé l'article et l'a punaisé au-dessus du comptoir, à côté de la signature de 1998." }
+
+# Les lignes de Chambre 12 sous les fins communes (build : ajoutées après les
+# variantes propres de chaque fin, la première vraie s'affiche).
+epitaph_plus_ajouts:
+  - fin: co_garde_a_vue
+    when: "flag('histoire_h7') && (flag('h7_page_poche') || flag('h7_vl_cahier_nuit'))"
+    text: "Une page de cahier gardée dans une poche ; la commandante a demandé l'heure exacte de chaque chose, et {prenom} {nom} les savait toutes."
+  - fin: co_garde_a_vue
+    when: "flag('histoire_h7') && (flag('h7_carnet_garde') || flag('h7_scelles_brises'))"
+    text: "Les scellés de la 12 portaient ses empreintes, et le carnet du petit était dans la poche de son manteau. Benali n'a pas eu besoin de chercher."
+  - fin: sl_fete
+    when: "flag('histoire_h7') && flag('h7_rance_mort')"
+    text: "On a ri au deuxième étage de la Rive jusqu'à quatre heures. Sandrine a écrit « rires » dans la marge du cahier, pour la deuxième fois depuis 2011."
+  - fin: sl_primes_cachees
+    when: "flag('histoire_h7') && flag('h7_fulgor_signe')"
+    text: "Le sponsor s'appelait Fulgor. Les primes arrivaient dans des coffrets orange, sous vingt-sept montres d'acier."
+  - fin: sl_charters
+    when: "flag('histoire_h7') && flag('h7_hotel_paye')"
+    text: "Après les charters, l'hôtel : Escande a présenté la note de la 12, facturée vide depuis 2011, à demi-tarif."
+  - fin: sl_clans
+    when: "flag('histoire_h7')"
+    text: "Au deuxième étage de l'hôtel de la Rive, on dort encore en se tournant le dos, et personne ne passe devant la 12."
+  - fin: sl_minuit
+    when: "flag('histoire_h7')"
+    text: "La lettre est arrivée le lendemain, un trombone rouge dans le coin ; Josiane n'avait rien écrit d'autre."
+  - fin: sl_homme_president
+    when: "flag('histoire_h7')"
+    text: "Le même mois, la Rive a décroché le tableau des clés. Au mur, derrière le comptoir, il reste un rectangle plus clair et vingt-six petits trous."
+  - fin: sl_ennemi_public
+    when: "flag('histoire_h7') && flag('h7_rance_mort')"
+    text: "Avec le sien, ils criaient un autre nom, celui d'un garçon de vingt-cinq ans. {prenom} {nom} ne les a jamais corrigés."
+# Le grand déballage devient une scène commune (le chef l'écrit) : pas de ligne
+# ici. Chez nous, le dossier des promesses, c'est le registre noir de Dauzat,
+# où chaque Objectif de 2013 et de 2014 est écrit à la main.

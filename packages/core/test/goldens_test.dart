@@ -146,6 +146,11 @@
 ///   le dossier est armé ou servi (leurs swipes s'épuisent là) : elles n'ont plus
 ///   de fin, les quinze autres sont inchangées. `--goldens --write`, sans
 ///   `--recode` (quinze codes sur vingt vont encore à une fin).
+/// · **Histoire 7, « Chambre 12 »** (la branche `histoire-h7`, reprise et
+///   finie). Le sélectionneur de 2011 a son postulat à lui ; les vingt
+///   carrières figées racontent la même chose (même fin, mêmes cartes, même
+///   hachage des ids servis). Seule bouge l'empreinte du casting : sept visages
+///   nouveaux entrent dans l'état de chaque carrière. `--goldens --write`.
 library;
 
 import 'dart:io';
