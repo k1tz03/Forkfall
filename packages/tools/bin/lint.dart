@@ -731,7 +731,8 @@ void main() {
   // LA VILLE (content/ville/*.yaml, compilé sous `ville`) : les missions, les
   // scènes de la semaine et la boutique posent des drapeaux (Engine.mission,
   // Engine.biens) ; les `si` des paroles, des portes, des phrases du match, des
-  // missions, des scènes et des objets en lisent, comme `domiciles` et `loin`.
+  // missions, des scènes, des objets, des activités, des scènes jouées, des
+  // conversations et des tableaux en lisent, comme `domiciles` et `loin`.
   // Un drapeau de la ville doit être déclaré comme les autres : une coquille
   // dans un `si` ne se verrait nulle part ailleurs (la ville le lit faux, en silence).
   final villeB = (bundle['ville'] as Map?) ?? const {};
@@ -790,6 +791,22 @@ void main() {
   }
   for (final lv in (villeB['lieux_variantes'] as List? ?? const [])) {
     villeLit((lv as Map)['si'], 'ville/lieux_variantes/${lv['lieu']}');
+  }
+  // les activités des pièces, les scènes jouées (`si`, et le drapeau qui en ouvre une), les
+  // conversations surprises, les tableaux de la rue : des lectures comme les autres
+  for (final a in (villeB['activites'] as List? ?? const [])) {
+    villeLit((a as Map)['si'], 'ville/activites/${a['id']}');
+  }
+  for (final c in (villeB['cinematiques'] as List? ?? const [])) {
+    final m = c as Map;
+    villeLit(m['si'], 'ville/cinematiques/${m['id']}');
+    if (m['drapeau'] != null) villeLit("flag('${m['drapeau']}')", 'ville/cinematiques/${m['id']}');
+  }
+  for (final c in (villeB['conversations'] as List? ?? const [])) {
+    villeLit((c as Map)['si'], 'ville/conversations/${c['id']}');
+  }
+  for (final t in (villeB['tableaux'] as List? ?? const [])) {
+    villeLit((t as Map)['si'], 'ville/tableaux/${t['id']}');
   }
   (((villeB['match'] as Map?)?['textes'] as Map?) ?? const {}).forEach((type, l) {
     for (final t in (l as List? ?? const [])) {
