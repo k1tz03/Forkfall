@@ -26,10 +26,10 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 2 480 cartes, 235 arcs, 90 fins, 175 Nouvelles datées, 389 manchettes de Une, 459 variantes de set-piece, 41 personnages ; la ville : 292 scènes de la semaine |
-| Rôles jouables | entraîneur, joueur, président, directeur sportif — six histoires livrées sur dix (voir « Les dix histoires ») |
+| Contenu | 3 271 cartes, 319 arcs, 109 fins, 230 Nouvelles datées, 504 manchettes de Une, 619 variantes de set-piece, 64 personnages ; la ville : 430 scènes de la semaine |
+| Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — neuf histoires livrées sur dix (voir « Les dix histoires ») |
 | Moteur | Dart pur, déterministe, 134 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
-| Qualité | `dart analyze` propre, `lint` 0 erreur (6 avertissements connus : les postulats sans prologue des livres à venir, la part des Unes qui nomment le héros, `histoire_h4`) |
+| Qualité | `dart analyze` propre, `lint` 0 erreur (2 avertissements connus : le postulat sans prologue du livre 9, la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
 
@@ -44,11 +44,22 @@ Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
   2 « Le Sapin en carton » (entraîneur, intérimaire), 3 « La Sirène » (joueur,
   pépite), 5 « La Maquette » (président, géant déchu), 6 « 23 h 58 » (directrice
   sportive, vendre trente), 8 « L'Oreillette » (directeur sportif, le modèle, 2024),
-  4 « La Route de la Rive » (joueur, fin de contrat).
+  4 « La Route de la Rive » (joueur, fin de contrat), 7 « Chambre 12 » (sélectionneur,
+  après le fiasco, 2011) et 10 « Les Deux Téléphones » (présidente, l'escalier fermé,
+  2037-2040) — ces deux derniers repris et finis par un second auteur, sur la branche de
+  leur prédécesseur arrêté.
   Le menu de l'aperçu montre les postulats qui ne sont plus `chantier`.
-- **Pas encore fusionnés**, sauvés en patchs dans `docs/histoires/chantier/` avec la
-  procédure de reprise et de fusion : 7, 9, 10 (en cours d'écriture, instantanés
-  partiels ; leurs auteurs ont été arrêtés avec la session).
+- **Pas encore fusionné** : 9 « Vingt degrés dedans » (la sélectionneuse, le Mondial
+  d'hiver de 2030), repris par un second auteur sur la branche `histoire-h9`. Le document
+  de reprise des auteurs dit ce qui a changé dans le jeu depuis le premier jet
+  (mode histoire, ville sans énergie, scènes de la semaine, visages déjà créés).
+- **À la fusion d'un livre** : `git merge --no-ff --no-commit histoire-hN`, puis, si les
+  ajouts en fin de `characters.yaml`, `portraits.yaml` ou `flags.yaml` se sont mêlés à
+  ceux d'un autre livre (le cas des livres 7 et 10 dans `portraits.yaml`),
+  `docs/histoires/chantier/outils/union_ajouts.py histoire-hN <fichiers>` les reconstruit ;
+  l'heure et la couleur de la cartouche dans `HISTOIRES` (preview_template.html) ; la
+  variante du livre dans « Les douze pages » (le grand déballage) ; build, lint, tests,
+  goldens (avec leur raison), `simulate --assert`.
 
 ## L'arborescence
 
