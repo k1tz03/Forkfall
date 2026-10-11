@@ -1,0 +1,348 @@
+# LA VIE DES RUES — des tableaux vivants devant les lieux, à leur heure (packages/tools/web/ville_vie.js).
+# Ni carte, ni scène : des gens qui font quelque chose. Un lieu montre au plus un tableau à la fois,
+# tiré de la graine du jour parmi ceux dont les conditions tiennent (un lieu sur cinq reste calme).
+# On peut toucher ces gens : ils disent une parole des gens (content/ville/paroles_gens.yaml).
+#
+#   lieu      la clé du lieu (les gens se tiennent devant sa porte, côté rue)
+#   tranches  matin | midi | aprem | soir | nuit ;  jours : lun … dim ;  roles ;  si (la grammaire de la ville)
+#   gens      un à cinq : sp (passant, passante, enfant, fan, ancien, commercant, commercant2, inconnu,
+#             garagiste, portier), geste (le geste de fond), pose (assis…), emotes (de temps en temps),
+#             place [dx, dy] (en cases depuis la porte ; sinon un petit cercle côté rue), nom (si on le touche)
+#   parlent   ils se parlent entre eux (on ne les entend pas) ;  poids : sa chance face aux autres du lieu
+tableaux:
+  # — les bars, le soir et la nuit
+  - id: bar.fumeurs
+    lieu: bar
+    tranches: [soir, nuit]
+    parlent: true
+    gens:
+      - {sp: passant, geste: fume, emotes: ["...", "!"]}
+      - {sp: passante, geste: fume}
+  - id: bar.apres_match
+    lieu: bar
+    tranches: [soir]
+    jours: [sam]
+    parlent: true
+    gens:
+      - {sp: fan, geste: boit, emotes: ["note", "!"]}
+      - {sp: fan, geste: bras_leves}
+      - {sp: passant, geste: rit}
+  - id: brasserie.terrasse
+    lieu: brasserie
+    tranches: [midi]
+    parlent: true
+    gens:
+      - {sp: ancien, pose: assis, geste: boit}
+      - {sp: ancien, pose: assis, emotes: ["...", "?"]}
+  - id: terminus.chauffeurs
+    lieu: terminus
+    tranches: [matin]
+    parlent: true
+    gens:
+      - {sp: commercant2, nom: "Un chauffeur de car", geste: boit}
+      - {sp: passant, nom: "Un chauffeur de car", geste: fume}
+  - id: terminus.nuit
+    lieu: terminus
+    tranches: [nuit]
+    gens:
+      - {sp: inconnu, geste: fume, emotes: ["..."]}
+  - id: tripot.guetteur
+    lieu: tripot
+    tranches: [soir, nuit]
+    gens:
+      - {sp: inconnu, nom: "Un homme qui attend", geste: fume, emotes: ["...", "?"]}
+  - id: club_prive.file
+    lieu: club_prive
+    tranches: [nuit]
+    parlent: true
+    gens:
+      - {sp: passante, geste: fume, emotes: ["coeur", "note"]}
+      - {sp: passant, geste: telephone}
+      - {sp: passant}
+    si: "annee >= 1998"
+  - id: club_prive.file_ancienne
+    lieu: club_prive
+    tranches: [nuit]
+    parlent: true
+    gens:
+      - {sp: passante, geste: fume, emotes: ["coeur", "note"]}
+      - {sp: passant, geste: fume}
+    si: "annee < 1998"
+
+  # — le matin : le pain, le journal, le café
+  - id: boulangerie.file
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    gens:
+      - {sp: ancien, nom: "Un ancien du quartier"}
+      - {sp: passante, geste: lit}
+      - {sp: enfant}
+  - id: presse.titres
+    lieu: presse
+    tranches: [matin]
+    parlent: true
+    gens:
+      - {sp: passant, geste: lit, emotes: ["!", "?"]}
+      - {sp: ancien, geste: pointe}
+  - id: kiosque.lecteurs
+    lieu: kiosque
+    tranches: [matin, midi]
+    gens:
+      - {sp: ancien, geste: lit, emotes: ["...", "colere"]}
+  - id: tabac.parieurs
+    lieu: tabac
+    tranches: [matin, midi]
+    parlent: true
+    gens:
+      - {sp: passant, nom: "Un marinier", geste: ecrit}
+      - {sp: ancien, geste: pointe, emotes: ["?", "!"]}
+  - id: tabac_stade.loto
+    lieu: tabac_stade
+    tranches: [matin, midi]
+    gens:
+      - {sp: passante, geste: ecrit, emotes: ["coeur", "..."]}
+  - id: cafe_mairie.conseillers
+    lieu: cafe_mairie
+    tranches: [matin, midi]
+    parlent: true
+    gens:
+      - {sp: commercant2, nom: "Un conseiller municipal", geste: boit}
+      - {sp: passant, nom: "Un conseiller municipal", geste: pointe, emotes: ["colere", "?"]}
+
+  # — la place, le square, la fontaine
+  - id: square.ballon
+    lieu: square
+    tranches: [aprem, soir]
+    gens:
+      - {sp: enfant, geste: ballon, emotes: ["!"]}
+      - {sp: enfant, geste: bras_leves}
+      - {sp: enfant, geste: ballon}
+  - id: square.banc
+    lieu: square
+    tranches: [matin, aprem]
+    parlent: true
+    gens:
+      - {sp: ancien, pose: assis, emotes: ["...", "zzz"]}
+      - {sp: ancien, pose: assis, geste: lit}
+  - id: square.mamans
+    lieu: square
+    tranches: [aprem]
+    jours: [mer, sam]
+    parlent: true
+    gens:
+      - {sp: passante, pose: assis}
+      - {sp: passante, pose: assis, geste: rit}
+      - {sp: enfant, geste: ballon}
+  - id: fontaine.rendez_vous
+    lieu: fontaine
+    tranches: [soir]
+    parlent: true
+    gens:
+      - {sp: passante, emotes: ["coeur", "note"]}
+      - {sp: passant, geste: rit, emotes: ["coeur"]}
+  - id: fontaine.marche
+    lieu: fontaine
+    tranches: [matin, midi]
+    jours: [dim]
+    gens:
+      - {sp: enfant, geste: bras_leves, emotes: ["!", "note"]}
+      - {sp: passante, geste: pointe}
+  - id: marche.chalands
+    lieu: marche
+    tranches: [matin, midi]
+    jours: [dim]
+    parlent: true
+    gens:
+      - {sp: passante, geste: pointe, emotes: ["?", "!"]}
+      - {sp: ancien}
+      - {sp: passant, geste: lit}
+  - id: monument.gerbe
+    lieu: monument
+    tranches: [matin]
+    jours: [dim]
+    gens:
+      - {sp: ancien, geste: tete_basse, emotes: ["..."]}
+
+  # — le stade, le terrain, les supporters
+  - id: stade.grilles
+    lieu: stade
+    tranches: [matin, midi]
+    jours: [sam]
+    parlent: true
+    gens:
+      - {sp: fan, geste: bras_leves, emotes: ["note", "!"]}
+      - {sp: fan, geste: poing, emotes: ["note"]}
+      - {sp: fan, geste: fume}
+      - {sp: enfant, geste: bras_leves}
+  - id: stade.lendemain
+    lieu: stade
+    tranches: [matin]
+    jours: [dim]
+    gens:
+      - {sp: ancien, nom: "Le gardien du stade", geste: tete_basse, emotes: ["..."]}
+  - id: terrain.haie
+    lieu: terrain
+    tranches: [matin, aprem]
+    jours: [lun, mar, mer, jeu, ven]
+    parlent: true
+    gens:
+      - {sp: ancien, nom: "Un habitué de la haie", geste: pointe, emotes: ["?", "!"]}
+      - {sp: fan, geste: ecrit}
+  - id: terrain.gamins
+    lieu: terrain
+    tranches: [soir]
+    gens:
+      - {sp: enfant, geste: ballon, emotes: ["!"]}
+      - {sp: enfant, geste: bras_leves}
+  - id: boutique.vitrine
+    lieu: boutique
+    tranches: [aprem]
+    gens:
+      - {sp: enfant, geste: pointe, emotes: ["coeur", "!"]}
+      - {sp: passante}
+
+  # — l'école, l'église, la mairie
+  - id: ecole.sortie
+    lieu: ecole
+    tranches: [midi, aprem]
+    jours: [lun, mar, jeu, ven]
+    parlent: true
+    gens:
+      - {sp: passante, nom: "Une mère d'élève"}
+      - {sp: passant, nom: "Un père d'élève", geste: telephone}
+      - {sp: enfant, geste: ballon}
+    si: "annee >= 1999"
+  - id: ecole.sortie_ancienne
+    lieu: ecole
+    tranches: [midi, aprem]
+    jours: [lun, mar, jeu, ven]
+    parlent: true
+    gens:
+      - {sp: passante, nom: "Une mère d'élève"}
+      - {sp: ancien, nom: "Un grand-père"}
+      - {sp: enfant, geste: ballon}
+    si: "annee < 1999"
+  - id: eglise.messe
+    lieu: eglise
+    tranches: [matin]
+    jours: [dim]
+    parlent: true
+    gens:
+      - {sp: ancien, geste: tete_basse}
+      - {sp: passante}
+      - {sp: ancien}
+  - id: eglise.mariage
+    lieu: eglise
+    tranches: [aprem]
+    jours: [sam]
+    poids: 0.6
+    gens:
+      - {sp: passante, nom: "La mariée", geste: bras_leves, emotes: ["coeur"]}
+      - {sp: passant, nom: "Le marié", geste: rit, emotes: ["coeur", "note"]}
+      - {sp: enfant, geste: bras_leves}
+      - {sp: ancien, geste: pleure}
+  - id: mairie.pancarte
+    lieu: mairie
+    tranches: [matin]
+    jours: [lun, mar, mer, jeu, ven]
+    poids: 0.5
+    gens:
+      - {sp: passant, nom: "Un manifestant", geste: bras_leves, emotes: ["colere", "!"]}
+      - {sp: passante, nom: "Une manifestante", geste: poing, emotes: ["colere"]}
+
+  # — le car, la laverie, le cinéma, l'hôtel
+  - id: gare.attente
+    lieu: gareRoutiere
+    tranches: [matin, aprem]
+    gens:
+      - {sp: passante, geste: lit, emotes: ["...", "zzz"]}
+      - {sp: ancien, pose: assis}
+      - {sp: passant, geste: fume}
+  - id: gare.nuit
+    lieu: gareRoutiere
+    tranches: [nuit]
+    gens:
+      - {sp: inconnu, nom: "Un voyageur sans car", pose: assis, emotes: ["zzz", "..."]}
+  - id: laverie.soir
+    lieu: laverie
+    tranches: [soir]
+    gens:
+      - {sp: passant, geste: lit, emotes: ["zzz", "..."]}
+  - id: cinema.queue
+    lieu: cinema
+    tranches: [soir]
+    parlent: true
+    gens:
+      - {sp: passante, emotes: ["coeur", "?"]}
+      - {sp: passant, geste: rit}
+      - {sp: passante}
+  - id: hotel.journalistes
+    lieu: hotel
+    tranches: [matin, aprem]
+    roles: [selectionneur]
+    parlent: true
+    gens:
+      - {sp: inconnu, nom: "Un journaliste de la Capitale", geste: ecrit, emotes: ["?", "!"]}
+      - {sp: passant, nom: "Un photographe", geste: pointe}
+  - id: hotel.portier
+    lieu: hotel
+    tranches: [soir, nuit]
+    gens:
+      - {sp: portier, nom: "Le veilleur de l'hôtel", geste: fume}
+
+  # — le quartier, la cour, les ateliers
+  - id: garage.cour
+    lieu: garage
+    tranches: [matin, aprem]
+    parlent: true
+    gens:
+      - {sp: garagiste, geste: ecrit, emotes: ["sueur", "..."]}
+      - {sp: passant, geste: pointe, emotes: ["?"]}
+  - id: pharmacie.ordonnance
+    lieu: pharmacie
+    tranches: [matin, aprem]
+    gens:
+      - {sp: ancien, geste: lit, emotes: ["?"]}
+  - id: fleuriste.gerbe
+    lieu: fleuriste
+    tranches: [matin]
+    gens:
+      - {sp: commercant, nom: "La fleuriste", geste: ecrit}
+      - {sp: passante, geste: tete_basse}
+  - id: epicerie.soir
+    lieu: epicerie
+    tranches: [soir]
+    parlent: true
+    gens:
+      - {sp: passant, geste: boit, emotes: ["note"]}
+      - {sp: passant, geste: fume}
+
+  # — la friche, le feu, le cimetière : la nuit et ce qui s'y dit à voix basse
+  - id: friche.jeunes
+    lieu: friche
+    tranches: [soir, nuit]
+    parlent: true
+    gens:
+      - {sp: passant, geste: fume, emotes: ["...", "note"]}
+      - {sp: passante, geste: rit}
+      - {sp: fan, geste: boit}
+  - id: feu.silhouettes
+    lieu: feu
+    tranches: [nuit]
+    parlent: true
+    gens:
+      - {sp: inconnu, geste: fume}
+      - {sp: inconnu, geste: dos}
+      - {sp: passant, geste: tete_basse}
+  - id: cimetiere.veuve
+    lieu: cimetiere
+    tranches: [matin, aprem]
+    gens:
+      - {sp: passante, nom: "Une veuve", geste: tete_basse, emotes: ["..."]}
+  - id: lavoir.commeres
+    lieu: lavoir
+    tranches: [matin, aprem]
+    parlent: true
+    gens:
+      - {sp: passante, emotes: ["!", "?"]}
+      - {sp: ancien, geste: pointe}

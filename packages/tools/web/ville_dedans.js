@@ -195,6 +195,7 @@
       }
     }
     figurants = out;
+    habituer(out, m.ambiance);
   }
 
   // ─── les objets et la porte : des noms qui flottent, qu'on touche

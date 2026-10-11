@@ -221,6 +221,12 @@ Ce que la ville porte en plus des cartes :
   figurines marchent, font un geste, une émotion au-dessus de la tête, la boîte de dialogue porte le
   portrait des cartes et le néon de l'histoire ; et des **conversations surprises**, en bulles, qu'on
   entend en passant près de ceux qui parlent.
+- **La vie des pièces et des rues** (`ville_vie.js`, `content/ville/tableaux.yaml`) : dedans, chacun a
+  ses habitudes selon l'ambiance de la pièce (boire, rire, lire, téléphoner à partir des portables,
+  fumer avant l'interdiction, changer de table) ; dehors, des tableaux vivants devant les lieux, à
+  leur heure (les fumeurs devant le bar, les gamins au ballon, les anciens sur leur banc, la messe,
+  un mariage le samedi), un par lieu au plus, tirés de la graine du jour ; on les touche, ils disent
+  une parole des gens. Des gestes à l'écran : le moteur n'en sait rien.
 - **Les petits jeux et les gestes à part** (`ville_jeux.js`) : une activité peut porter un jeu
   (`jeu:` la cible, le 421, les jongles, le baby-foot, le flipper, les cartes, les tirs au but) ou un
   geste (`special:` dormir, la télé, le téléphone, le journal). Les modules de la ville partagent sa

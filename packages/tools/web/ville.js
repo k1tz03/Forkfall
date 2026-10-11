@@ -981,7 +981,7 @@
     // une conversation surprise en cours : ceux qui parlent ne s'interrompent pas pour toi
     if (CONV) { for (var kv in CONV.voix) if (CONV.voix[kv] === g) return; }
     var maintenant = performance.now(), qui, nom;
-    if (g.gens || g.role === "commercant" || !CHARS[g.qui]) { qui = BOUCHE[g.sp] || g.qui; nom = NOM_GENS[g.sp] || "Quelqu'un"; }
+    if (g.gens || g.role === "commercant" || !CHARS[g.qui]) { qui = BOUCHE[g.sp] || g.qui; nom = g.nom || NOM_GENS[g.sp] || "Quelqu'un"; }
     else { qui = g.qui; nom = nomDe(g.qui); }
     var p = qui ? parole(qui, g.lieu || null) : null, texte, muet = false;
     if (p) texte = remplir(p.texte);
@@ -1375,6 +1375,7 @@
     if (!occupe && !carteOn) { majMarche(dt); if (!dedans) { majPassants(dt, ts); majActeurs(dt, ts); } }
     if (dedans) majDedans(dt, ts);
     majCine(dt, ts);
+    majVie(dt, ts);
     if (!occupe && !carteOn && !MATCH && !CINE) guetterConv(ts);
     if (MATCH) majMatch(dt, ts);
     // la caméra suit le héros, sauf si on l'a déplacée à la main (ou si le match la tient)
@@ -1411,6 +1412,7 @@
     for (var i = 0; i < passants.length; i++) gens.push(passants[i]);
     for (var id in acteurs) gens.push(acteurs[id]);
     figurants.forEach(function (g) { gens.push(g); });
+    gensDesTableaux().forEach(function (g) { gens.push(g); });
     if (MATCH) {
       gensDuMatch(gens);
       // au match : l'entraîneur et le sélectionneur sur le banc ; le joueur est sur la pelouse ; les autres en loge
@@ -3433,11 +3435,12 @@
       function add(q, t) {
         var c = caseDe(q.x, q.y), porte = (q.dedansDep && q.i === 0) || (q.dedansArr && q.chemin && q.i >= q.chemin.length - 2);
         out.push({ uid: q.uid, t: t, sp: q.sp, x: +q.x.toFixed(1), y: +q.y.toFixed(1), a: q.alpha == null ? 1 : +q.alpha.toFixed(2),
-          ecran: aLEcran(q.x, q.y, -8), loin: !aLEcran(q.x, q.y, -40), mur: !porte && !marchable(c[0], c[1]), porte: !!porte, etat: q.etat || "", pose: q.pose || null });
+          ecran: aLEcran(q.x, q.y, -8), loin: !aLEcran(q.x, q.y, -40), mur: !porte && !marchable(c[0], c[1]), porte: !!porte, etat: q.etat || "", pose: q.pose || null, geste: q.geste || null, parle: !!q.parle, emote: q.emote ? q.emote.k : null });
       }
       passants.forEach(function (q) { add(q, "p"); });
       Object.keys(acteurs).forEach(function (id) { add(acteurs[id], "a:" + id); });
       figurants.forEach(function (q) { add(q, "f:" + (q.qui || q.sp)); });
+      TABLEAUX.forEach(function (q) { add(q, "t:" + q.tableau); });
       return { gens: out, heros: [heros.x, heros.y], tranche: S && S.tranche, bulle: bulle ? { nom: bulle.nom, texte: bulle.texte } : null, carte: carteOn, occupe: occupe,
         cine: CINE ? { id: CINE.c.id, etape: CINE.i, lieu: CINE.c.lieu } : null, conv: CONV ? { id: CONV.cv.id, i: CONV.i } : null,
         dedans: dedans ? { cle: dedans.cle, objets: dedans.m.objets.map(function (o) { return o.id; }), porte: dedans.m.porte } : null, ui: [UI.haut, UI.bas, VW, VH, k] };

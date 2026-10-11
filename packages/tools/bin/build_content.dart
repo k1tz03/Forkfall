@@ -1685,7 +1685,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations']) {
+      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -2370,6 +2370,70 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       if (tr.isNotEmpty) 'tranches': tr, 'qui': qui, 'repliques': reps});
   }
 
+  // --- LA VIE DES RUES : des tableaux vivants devant un lieu (deux fumeurs devant le bar le soir,
+  // les gamins au ballon sur la place, les anciens sur leur banc). Ni carte ni scène : des gens
+  // qui font quelque chose, à leur heure ; on peut les toucher (ils disent une parole des gens).
+  final tableaux = <Map<String, dynamic>>[];
+  final vusT = <String>{};
+  for (final e in (m['tableaux'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/tableaux/$id';
+    if (!RegExp(r'^[a-z0-9_.]+$').hasMatch(id) || !vusT.add(id)) errors.add('$where: id vide, en double, ou hors de [a-z0-9_.]');
+    final lieu = e['lieu']?.toString() ?? '';
+    if (!cles.contains(lieu)) errors.add('$where: lieu « $lieu » absent de `lieux`');
+    final tr = _strList(e['tranches']);
+    for (final t in tr) {
+      if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue');
+    }
+    final js = _strList(e['jours']);
+    for (final d in js) {
+      if (!jours.contains(d)) errors.add('$where: jour « $d » inconnu');
+    }
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    si(e['si'], where);
+    final gens = <Map<String, dynamic>>[];
+    var ig = 0;
+    for (final g in (e['gens'] as List? ?? const [])) {
+      ig++;
+      if (g is! Map) continue;
+      final w2 = '$where/gens/$ig';
+      final sp = g['sp']?.toString() ?? '';
+      if (!quiGens.contains(sp)) errors.add('$w2: sp « $sp » : ${quiGens.join(' ')}');
+      final out = <String, dynamic>{'sp': sp};
+      for (final k in ['geste', 'pose']) {
+        if (g[k] == null) continue;
+        final v = g[k].toString();
+        if (!gestes.contains(v)) errors.add('$w2: $k « $v » inconnu (${gestes.join(' ')})');
+        out[k] = v;
+      }
+      final em = _strList(g['emotes']);
+      for (final x in em) {
+        if (!emotes.contains(x)) errors.add('$w2: emote « $x » inconnue');
+      }
+      if (em.isNotEmpty) out['emotes'] = em;
+      final pl = g['place'];
+      if (pl != null) {
+        if (pl is! List || pl.length != 2 || !pl.every((v) => v is int)) {
+          errors.add('$w2: `place` : [dx, dy], en cases depuis la porte');
+        } else {
+          out['place'] = pl;
+        }
+      }
+      if (g['nom'] != null) out['nom'] = txt(g, 'nom', w2, 30);
+      gens.add(out);
+    }
+    if (gens.isEmpty || gens.length > 5) errors.add('$where: un à cinq `gens`');
+    final poids = e['poids'];
+    if (poids != null && (poids is! num || poids <= 0)) errors.add('$where: `poids` positif');
+    tableaux.add({'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (js.isNotEmpty) 'jours': js,
+      if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString(), 'gens': gens,
+      if (e['parlent'] == true) 'parlent': true, 'poids': poids ?? 1});
+  }
+
   // --- les missions
   final missions = <Map<String, dynamic>>[];
   final vusM = <String>{};
@@ -2561,6 +2625,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (scenes.isNotEmpty) 'scenes': scenes,
     if (cinematiques.isNotEmpty) 'cinematiques': cinematiques,
     if (conversations.isNotEmpty) 'conversations': conversations,
+    if (tableaux.isNotEmpty) 'tableaux': tableaux,
     if (objets.isNotEmpty) 'objets': objets,
   };
 }
