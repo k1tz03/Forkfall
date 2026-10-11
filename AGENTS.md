@@ -28,7 +28,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 2 480 cartes, 235 arcs, 90 fins, 175 Nouvelles datées, 389 manchettes de Une, 459 variantes de set-piece, 41 personnages ; la ville : 292 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif — six histoires livrées sur dix (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 132 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 134 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (6 avertissements connus : les postulats sans prologue des livres à venir, la part des Unes qui nomment le héros, `histoire_h4`) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu — voir plus bas |
@@ -109,7 +109,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 132 tests
+cd packages/core && dart test                    # 134 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -314,9 +314,16 @@ sont les prochains à rejoindre la ville.
 
 - Le mode histoire : l'application Flutter montre encore les quatre jauges (le moteur ne les
   rend plus mortelles, mais l'écran de l'app n'a pas suivi). Le grand déballage (la parole
-  à −5, les promesses non tenues) reste une fin mécanique ; c'est désormais la cause de fin
-  la plus fréquente du joueur simulé (un tiers des carrières, les postulats en chantier
-  compris), à rattacher aux histoires si on le juge trop présent.
+  à −5, les promesses non tenues) est rattaché aux histoires : en mode histoire, il ne finit
+  plus la carrière tout seul, il arme **« Les douze pages »** (`content/arcs/common/
+  deballage.yaml`, `Director.armerDeballage`) — quelqu'un pose devant toi le dossier de tes
+  promesses, selon le livre (Massenet, Léa, Fardelli et l'épreuve de la Gazette Rose, Madame
+  Vialat, le fax de 23 h 58 ; une chemise sous la porte sans livre) ; tu réponds à tout (la
+  parole revient à zéro, la carrière continue) ou tu démens (la fin). Une fois : la seconde
+  chute n'a plus de scène. Les livres 7, 9 et 10 ajouteront leur variante en tête de la liste
+  de l'étape. Mesuré (300 carrières par livre) : 2 à 17 % des carrières finissent ainsi selon
+  le livre ; le tiers du joueur simulé, tous postulats confondus, vient des trois postulats
+  encore en chantier, sans fins de livre.
 - Le « J » du bandeau n'affiche pas la vraie journée de championnat, et ne dit
   pas la même chose dans l'aperçu web et dans l'application.
 - Après un changement de club en cours de saison, le classement de fin de saison

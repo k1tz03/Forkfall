@@ -811,8 +811,14 @@ class Engine {
   void _checkEndings(GameState s) {
     if (s.over) return;
     if (s.parole <= -5) {
-      s.endingId = 'grand_deballage';
-      s.over = true;
+      // Le grand déballage. En mode histoire, la parole à −5 n'arrête plus la
+      // carrière toute seule : elle arme la scène du dossier (co.deballage,
+      // servie à la carte suivante), et la fin ne tombe que si l'on dément —
+      // ou si la parole retombe à −5 après qu'on a répondu une fois.
+      if (content.director.jaugesFatales || !director.armerDeballage(s)) {
+        s.endingId = 'grand_deballage';
+        s.over = true;
+      }
       return;
     }
     // Le mode histoire : une jauge au bord n'arrête rien (DirectorConfig.jaugesFatales).

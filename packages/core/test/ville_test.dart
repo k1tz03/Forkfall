@@ -64,15 +64,62 @@ void main() {
   });
 
   test('une carrière finie ne bouge plus', () {
-    // le grand déballage (la parole à -5) finit toujours la carrière
+    // la banqueroute (la ville la déclare) finit la carrière ; la ville n'y touche plus
     var s = engine.start(99, postulat: 0);
-    s.parole = -5;
-    s = engine.activite(s, 'tournee');
+    s = engine.banqueroute(s);
     expect(s.over, isTrue);
-    expect(s.endingId, 'grand_deballage');
+    expect(s.endingId, 'co_banqueroute');
     expect(s.pending, isNotNull, reason: 'l\'écran de fin a sa carte');
     final apres = engine.activite(s, 'seance');
     expect(jsonEncode(apres.toJson()), jsonEncode(s.toJson()));
+  });
+
+  // Le grand déballage, rattaché aux histoires (content/arcs/common/deballage.yaml) :
+  // en mode histoire, la parole à -5 ne finit plus rien toute seule ; elle pose
+  // le dossier des promesses à la carte suivante (la variante du livre), et seul
+  // le démenti finit la carrière. Une fois : la seconde chute n'a plus de scène.
+  GameState jusquAuDossier(GameState s) {
+    for (var i = 0; i < 12 && !s.over && !(s.pending?.id ?? '').startsWith('co.deballage.'); i++) {
+      s = engine.choose(s, false);
+    }
+    return s;
+  }
+
+  test('le grand déballage : la parole à -5 pose le dossier, le démenti finit la carrière', () {
+    var s = engine.start(99, postulat: 0);
+    for (var i = 0; i < 6; i++) { s = engine.choose(s, i.isEven); }
+    s.parole = -5;
+    s = engine.activite(s, 'tournee');
+    expect(s.over, isFalse, reason: 'la parole à -5 ne finit plus la carrière toute seule');
+    s = jusquAuDossier(s);
+    expect(s.over, isFalse);
+    expect(s.pending!.id, 'co.deballage.h1', reason: 'Trois mille visages : Massenet tient le dossier');
+    s = engine.choose(s, true); // « Publiez. Je démentirai »
+    expect(s.over, isTrue);
+    expect(s.endingId, 'grand_deballage');
+  });
+
+  test('le grand déballage : répondre à tout sauve la carrière, une fois', () {
+    var s = engine.start(99, postulat: 0);
+    for (var i = 0; i < 6; i++) { s = engine.choose(s, i.isEven); }
+    s.parole = -5;
+    s = engine.activite(s, 'tournee');
+    s = jusquAuDossier(s);
+    expect(s.pending!.id, 'co.deballage.h1');
+    s = engine.choose(s, false); // « Je réponds à chaque page »
+    expect(s.over, isFalse);
+    expect(s.parole, greaterThanOrEqualTo(0));
+    expect(s.flags, contains('deballage_avoue'));
+    // la seconde chute : plus de scène, la fin tombe
+    s = jusquAuDossier(s);
+    s.parole = -5;
+    s = engine.activite(s, 'tournee');
+    if (!s.over) {
+      // le dimanche d'après était encore à venir : il passe, puis la fin tombe
+      for (var i = 0; i < 12 && !s.over; i++) { s = engine.choose(s, false); s.parole = -5; s = engine.activite(s, 'tournee'); }
+    }
+    expect(s.over, isTrue);
+    expect(s.endingId, 'grand_deballage');
   });
 
   test('une carrière sauvegardée en ville se reprend à l\'identique', () {

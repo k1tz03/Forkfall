@@ -138,6 +138,14 @@
 ///   blessure, le grand déballage). Les carrières sont plus longues et
 ///   finissent ailleurs : les swipes figés ne racontaient plus des carrières
 ///   entières. Codes **retirés à neuf** (`--goldens --write --recode`).
+/// · **Le grand déballage rattaché aux histoires** (content/arcs/common/
+///   deballage.yaml). En mode histoire, la parole à −5 ne finit plus la
+///   carrière toute seule : elle arme « Les douze pages » (le dossier des
+///   promesses, la variante du livre), et seul le démenti pose la fin. Les cinq
+///   carrières figées qui finissaient au grand déballage s'arrêtent au moment où
+///   le dossier est armé ou servi (leurs swipes s'épuisent là) : elles n'ont plus
+///   de fin, les quinze autres sont inchangées. `--goldens --write`, sans
+///   `--recode` (quinze codes sur vingt vont encore à une fin).
 library;
 
 import 'dart:io';

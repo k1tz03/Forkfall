@@ -823,6 +823,21 @@ class Director {
     }
   }
 
+  /// Le grand déballage en mode histoire (content/arcs/common/deballage.yaml) :
+  /// la parole tombée à −5 n'arrête plus la carrière, elle arme le dossier des
+  /// promesses, servi à la carte suivante (son échéance tombe tout de suite :
+  /// bande 6, sans tirage). Vrai tant que la scène est à venir ou en cours ;
+  /// faux quand elle n'existe pas pour ce rôle ou qu'elle a déjà été jouée (ou
+  /// perdue) : la seconde chute de la parole n'a plus de scène, la fin tombe.
+  bool armerDeballage(GameState s) {
+    final a = content.arcs['co.deballage'];
+    if (a == null || !a.roles.contains(s.role)) return false;
+    final st = s.arcs[a.id];
+    if (st != null) return st.status == 'armed' || st.status == 'active';
+    armArc(s, a, ctx(s, ''), dueN: s.ncards + 1, deadlineN: s.ncards + 1);
+    return true;
+  }
+
   /// Le programme du postulat courant, s'il en a un (sinon : comportement
   /// historique, séries ouvertes spontanément).
   ProgrammeDef? programmeOf(GameState s) {

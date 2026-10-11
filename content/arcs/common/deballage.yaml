@@ -1,0 +1,54 @@
+# « Les douze pages » — le grand déballage, rattaché aux histoires.
+#
+# La parole (les promesses faites, tenues ou rompues : de −5 à +5) arrêtait la
+# carrière toute seule à −5 : la fin `grand_deballage`, sans une scène. En mode
+# histoire (calendar.yaml, `director.jauges_fatales: false`), elle n'arrête plus
+# rien : le moteur arme cette intrigue (Engine._checkEndings →
+# Director.armerDeballage), servie à la carte suivante. Quelqu'un pose devant
+# toi le dossier de tes promesses — douze pages, une par promesse, la date, le
+# témoin, ce qui est arrivé — et te demande si tu réponds. Tu réponds à tout :
+# la carrière continue, la parole revient à zéro, et la ville l'a lu. Tu
+# démens : c'est la fin. Une seule fois par carrière : la deuxième chute de la
+# parole n'a plus de scène, la fin tombe.
+#
+# Qui tient le dossier dépend du livre (le premier `if` vrai) : Massenet, qui
+# avait signé « LE CAPITAINE A VENDU » en 1974 (Trois mille visages) ; Léa, qui
+# vérifie et cite (Le Sapin en carton) ; Fardelli, l'épreuve de la Gazette Rose
+# à la vitre (La Sirène) ; Massenet encore, la main sur une treizième feuille
+# (La Route de la Rive) ; Madame Vialat, qui pour une fois a compté autre chose
+# que l'argent (La Maquette) ; le fax de 23 h 58, douze pages au lieu d'une
+# (23 h 58) ; Léa et les battements de ton cœur achetés à un revendeur
+# (L'Oreillette). Sans livre : une chemise sous ta porte.
+# Les livres 7, 9 et 10 ajouteront leur variante en tête de la liste.
+arcs:
+  - id: co.deballage
+    title: "Les douze pages"
+    kind: evenement
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    postulats: []
+    theme: presse
+    foreground: false
+    weight: 1.0
+    once: true
+    when: "parole <= -5"
+    chance: 1.0
+    cast: [meneche, lea, fardelli, vialat]
+    same_club: false
+    fallback: drop
+    traces:
+      deballage_avoue: "{annee} : douze pages, douze promesses rompues ; {prenom} {nom} a répondu à chacune."
+    steps:
+      - id: dossier
+        card:
+          - { id: co.deballage.h1, if: "flag('histoire_h1')" }
+          - { id: co.deballage.h2, if: "flag('histoire_h2')" }
+          - { id: co.deballage.h3, if: "flag('histoire_h3')" }
+          - { id: co.deballage.h4, if: "flag('histoire_h4')" }
+          - { id: co.deballage.h5, if: "flag('histoire_h5')" }
+          - { id: co.deballage.h6, if: "flag('histoire_h6')" }
+          - { id: co.deballage.h8, if: "flag('histoire_h8')" }
+          - { id: co.deballage.dossier }
+        next: [ { step: dimanche, in: [1, 3] } ]
+      - id: dimanche
+        card: co.deballage.dimanche
+        next: []
