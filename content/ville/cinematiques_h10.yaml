@@ -1,0 +1,539 @@
+# Histoire 10 — « Les Deux Téléphones » : les scènes jouées et les conversations surprises
+# (format : docs/histoires/scenes_jouees.md). La présidente, 2037-2040 ; elle peut être un
+# président : rien n'accorde le héros sans `{pg, select, …}`. Les visages ont vieilli (Gégé,
+# socio numéro 1, quatre-vingt-quatorze ans ; Madame Josiane, cent ans en 2038 ; Léa,
+# retraitée, qui écrit la lettre du dimanche) ; Mireille, la nièce de Josiane, tient le
+# secrétariat ; l'argent est en écus.
+#
+# L'introduction : la veille de l'élection. Les entrepôts de la Tréfilerie, où une femme en
+# manteau d'automne apporte le clapet (il ne sonnera qu'après le résultat : la carte de
+# Madame Septembre, pr.h10.pro6_septembre, le fait sonner) ; puis la buvette du kop, où l'on
+# prépare les seaux du vote, où Gégé voit que la veste penche, et où Nino pend la sienne à
+# la patère du poêle. Elle mène à l'élection (pr.h10.pro1_election) sans la raconter.
+#
+# Onze scènes ensuite, de 2037 à l'assemblée :
+#   · avant une carte : Mbako sur le palier (S0, 16), la seconde sonnerie (S1, 10), le neveu
+#     au zinc (S1, 17), la lettre de Gégé (S2, 11), l'assemblée (S3, 1) ;
+#   · après, sur un drapeau : la dernière nuit du petit Brac au centre (vendu), cinq heures
+#     du matin à la buvette après la mort de Gégé (les masques déjà payés), le soir où la
+#     dernière marche reste ouverte (Tazi essaie sa place) ;
+#   · l'entrée dans un lieu : la chapelle de la maison de retraite (Josiane), le terrain
+#     annexe sous le drone de Rive Capital ;
+#   · un jour sans carte : le bar de l'hôtel, la saison de la photo.
+# Dix conversations, de la voix de Gigi au cierge des cent ans. Les graines y reviennent
+# (la patère, la veste qui penche, les billets neufs qui se suivent, la date du bon de
+# l'imprimeur) ; aucune ne devance ce que les cartes révèlent.
+cinematiques:
+  # ===================================================================== L'INTRODUCTION
+  - id: h10.ci.intro
+    quand: debut
+    roles: [president]
+    si: "flag(histoire_h10)"
+    titre: "Les Deux Téléphones"
+    sous: "Aubérive, septembre 2037"
+    lieu: friche
+    tranche: nuit
+    meteo: pluie
+    suite: h10.ci.intro_2
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: gardien, qui: portier, nom: "Le gardien de nuit", place: [-1, 2]}
+      - {id: manteau, qui: passante, nom: "Une femme en manteau", place: [3, 1], cache: true}
+    etapes:
+      - {musique: sombre}
+      - {narration: "La veille de l'élection, vingt-trois heures. Les camions de ton entreprise dorment à quai, dans les entrepôts de l'ancienne Tréfilerie. Au bout de la cour, un feu de palettes tient sous la bruine."}
+      - {qui: toi, va: [1, 1]}
+      - {qui: gardien, dit: "Une dame vous attend au quai quatre. Elle n'a pas voulu de parapluie. Elle a dit que vous saviez."}
+      - {qui: gardien, geste: fume}
+      - {qui: toi, pense: "Deux pages signées en juin, sur une table de jardin. Rien n'y parlait d'un quai, ni d'une dame."}
+      - {qui: manteau, entre: [3, 1]}
+      - {narration: "Elle sort de l'ombre du quai de chargement. Un manteau d'automne, en septembre, boutonné jusqu'au col. Le visage reste sous la lampe éteinte."}
+      - {qui: manteau, dit: "Vingt-trois heures. Vous êtes à l'heure ; on nous l'avait dit."}
+      - {narration: "Elle tend un téléphone à clapet, gris, sans marque, un modèle de 1995. Elle le pose dans ta main et referme tes doigts dessus, un à un."}
+      - {qui: manteau, dit: "Il ne sonnera pas avant le résultat. Ensuite, une fois par mois. Ne le prêtez pas : il ne connaît que vous."}
+      - {qui: gardien, emote: "?"}
+      - {qui: manteau, dit: "Demain soir, levez la main droite pour remercier. Ça se voit mieux sur les photos."}
+      - {qui: manteau, sort: true}
+      - {narration: "Tu glisses le clapet dans la poche intérieure, à gauche. La veste ne tombe déjà plus pareil."}
+      - {qui: gardien, dit: "Elle est repartie à pied. Il n'y a plus de car, à cette heure-ci, sur la friche."}
+
+  - id: h10.ci.intro_2
+    quand: suite
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: gege, place: fond, pose: assis}
+      - {qui: nino, place: table_2}
+      - {id: socio, qui: fan, nom: "Un socio", place: zinc_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+    etapes:
+      - {narration: "Minuit passé, la buvette du kop, sous la Nord. Demain soir, on y vote. Des seaux à glace attendent les bulletins ; Nino les compte, vides, un par un."}
+      - {qui: toi, va: table_1}
+      - {narration: "Au-dessus du comptoir, l'écran, le son coupé : Lian Mbako, président de la Fédération, en costume clair, devant la Commission des franchises."}
+      - {qui: socio, dit: "Le petit Mbako. Mon père l'a vu jouer ici, à seize ans. Aujourd'hui, il vient fermer la porte derrière lui."}
+      - {qui: gege, dit: "Éteins-moi ça. Je ne regarde pas les gens d'ici parler à la capitale.", ton: noir}
+      - {narration: "Le patron coupe l'écran. Dans le noir de la vitre, la buvette se reflète, et Gégé au fond, qui ne bouge pas."}
+      - {qui: nino, dit: "Deux mille quatre cents cartes à jour de cotisation. Demain, je compte à voix haute, et seul. C'est plus rapide."}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "Ta veste penche, 212. On dirait que tu as une pierre dans la poche."}
+      - {qui: toi, pense: "Elle ne pèse rien. Il le voit quand même."}
+      - {qui: nino, dit: "Laisse, mon oncle. La veille d'un vote, les candidats ont toujours les poches pleines."}
+      - {narration: "Nino retire sa veste et la pend à la patère, au-dessus du poêle. Il la lisse du plat de la main avant de la lâcher."}
+      - {qui: gege, dit: "Juin 2040. Après, monter sera un mot de vieux. Je voudrais l'avoir dit une fois, avant."}
+      - {qui: gege, geste: tete_basse}
+      - {narration: "Il ferme les yeux. Nino reprend son compte à voix basse, depuis un, comme s'il avait perdu le fil."}
+
+  # ===================================================================== SAISON 1 (2037-2038)
+  # Le petit Brac vendu (la première commande, Madame Janvier) : sa dernière nuit au centre de
+  # formation, la veille du car de huit heures. Les crampons noués attendront Owen au vestiaire
+  # vide (pr.h10.re.owen_crampons, la réaction qui suit).
+  - id: h10.ci.dernier_soir
+    quand: drapeau
+    drapeau: h10_brac_vendu
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: centre
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: brac, place: brac}
+      - {qui: owen, place: educateur}
+      - {id: gamin, qui: enfant, nom: "Un gamin du centre", place: gamin_1}
+    etapes:
+      - {narration: "Onze heures du soir. Elias Brac a voulu dormir une dernière fois au centre de formation, avec les douze. Il fait son sac sur un lit du bas. Demain, le car de huit heures."}
+      - {qui: toi, va: visiteur}
+      - {qui: owen, dit: "La capitale lui a envoyé un survêtement neuf. Il ne l'a pas sorti du carton. Il part en bordeaux, il dit."}
+      - {qui: brac, dit: "Mon petit frère m'a demandé si, là-bas, on entend la Nord depuis les lits. J'ai dit oui. Il sait que j'ai menti."}
+      - {qui: gamin, dit: "Tu nous laisses tes crampons ?"}
+      - {qui: brac, regarde: gamin}
+      - {qui: brac, dit: "Au suivant. Je les laisserai demain dans mon casier, au vestiaire. Les lacets noués, pour qu'on ne les sépare pas."}
+      - {narration: "Il noue les deux lacets l'un à l'autre, deux fois, serré, et pose les crampons sur son sac, comme on pose des fleurs."}
+      - {qui: owen, dit: "Je ne viendrai pas au car. Mon père n'allait jamais aux départs. Il disait qu'on y apprend à ne plus regarder les joueurs."}
+      - {qui: owen, sort: true}
+      - {narration: "Brac éteint la lampe. Dans le noir, on l'entend défaire le nœud, et le refaire, une troisième fois."}
+
+  # Le président de la Fédération sur le palier (S0, 16, mai) : dix minutes avant, au
+  # secrétariat. Rien ne dit sous quoi il s'arrêtera : la photo de 1974, la tienne, ou le clou.
+  - id: h10.ci.voiture_noire
+    quand: carte
+    cartes: [pr.h10.a4_mbako_photo, pr.h10.a4_mbako_cadre, pr.h10.a4_mbako]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: clubhouse
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: mireille, qui: passante, nom: "Mireille", place: secretaire}
+      - {id: chauffeur, qui: portier, nom: "Le chauffeur", place: cafe, cache: true}
+    etapes:
+      - {narration: "Mai. Une voiture noire sans volant s'est arrêtée devant le club-house, les feux allumés en plein jour. Personne n'en est descendu depuis dix minutes."}
+      - {qui: toi, va: guichet}
+      - {qui: mireille, dit: "Le président de la Fédération. Il a téléphoné pour savoir si l'escalier était le même. Je lui ai dit qu'on n'en avait qu'un."}
+      - {qui: mireille, geste: ecrit}
+      - {qui: mireille, dit: "Ma tante l'a connu à seize ans. Il montait cet escalier en courant ; elle le faisait redescendre, et remonter au pas."}
+      - {qui: chauffeur, entre: cafe}
+      - {qui: chauffeur, dit: "Le président demande s'il peut monter seul. Il connaît le chemin, il dit."}
+      - {qui: toi, pense: "L'homme qui a fermé l'escalier de tout le pays demande la permission pour le mien."}
+      - {qui: chauffeur, sort: true}
+      - {narration: "Des pas dans l'escalier, lents, réguliers. Ils s'arrêtent à la troisième marche. Ils ne repartent pas."}
+
+  # La première saison, la première fois au terrain annexe : un drone de Rive Capital filme
+  # les séances. Owen Corven lui montre ce qu'il veut voir.
+  - id: h10.ci.drone
+    quand: lieu
+    roles: [president]
+    si: "flag(histoire_h10) && saison == 1 && !flag(h10_owen_vire) && !flag(h10_brac_vendu)"
+    lieu: terrain
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: owen, place: [2, 1]}
+      - {id: capitaine, qui: passant, nom: "Le capitaine", place: [1, 3]}
+      - {qui: brac, place: [4, 3]}
+    etapes:
+      - {narration: "Le terrain annexe, sept heures et demie. Au-dessus de la haie de thuyas, un drone blanc tient l'air sans bouger, le ventre tourné vers le rond central."}
+      - {qui: toi, va: [1, 1]}
+      - {qui: owen, dit: "Ils filment depuis la rentrée. Pour le centre de formation, ils disent. Ils s'intéressent beaucoup à nos touches."}
+      - {qui: capitaine, geste: ballon}
+      - {qui: capitaine, dit: "Trois semaines qu'on travaille les touches, coach. On n'a pas tiré un seul coup franc."}
+      - {qui: owen, dit: "Les coups francs, on les travaille le lundi, au gymnase. Le gymnase n'a pas de ciel."}
+      - {qui: brac, geste: rit}
+      - {qui: owen, regarde: toi}
+      - {qui: owen, dit: "Ne levez pas la tête, {toi}. Il compte les têtes qui se lèvent."}
+      - {narration: "Le drone pivote d'un quart de tour vers toi, sans un bruit, puis revient au rond central. Brac fait une touche, à la main, parfaitement."}
+
+  # La maison de retraite derrière Saint-Aubin : la première fois qu'on y entre, Madame
+  # Josiane sort de la messe. Elle se souvient de tout, et d'une encre violette (pas verte :
+  # le vert est la couleur des parcs de Rive Capital).
+  - id: h10.ci.encre_violette
+    quand: lieu
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: eglise
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: banc_1}
+      - {id: mireille, qui: passante, nom: "Mireille", place: cierges}
+      - {id: soeur, qui: passante, nom: "La sœur de garde", place: pretre}
+    etapes:
+      - {narration: "La chapelle de la maison de retraite, derrière Saint-Aubin. La messe est finie. Il reste un fauteuil roulant au bout d'un banc, et dedans, une dame qui ne dort pas."}
+      - {qui: toi, va: banc_3}
+      - {qui: mireille, dit: "Ma tante. Elle vient à la messe pour le classement, pas pour le Bon Dieu. Elle dit qu'il comprendra."}
+      - {qui: josiane, regarde: toi}
+      - {qui: josiane, dit: "Socio 212. Vous signiez vos licences à l'encre violette, en 2008. Personne ne signait en violet. Je l'avais noté.", ton: sourire}
+      - {qui: soeur, dit: "Le samedi, elle ne reçoit plus après le déjeuner. Elle écoute le match à la radio, et il ne faut pas parler pendant."}
+      - {qui: josiane, dit: "Le speaker écorche les noms : la moitié des joueurs ne sont pas d'ici. Je le corrige à voix haute. Les voisines de chambre aiment bien."}
+      - {narration: "Mireille remonte la couverture sur les genoux de sa tante. Josiane ferme les yeux ; ses lèvres comptent quelque chose, sans bruit : des marches, ou des années."}
+
+  # ===================================================================== SAISON 2 (2038-2039)
+  # Un soir sans carte, la saison de la photo (pr.h10.b1_photo) : le bar de l'hôtel de la Rive
+  # se souvient mieux que toi de la dame en manteau.
+  - id: h10.ci.tabouret
+    quand: semaine
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_photo_hotel) && saison == 2"
+    titre: "Le tabouret du milieu"
+    sous: "L'hôtel de la Rive, le soir"
+    lieu: hotel
+    tranches: [soir]
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: barman, qui: commercant2, nom: "Le barman", place: bagages}
+      - {id: veilleur, qui: portier, nom: "Le veilleur de nuit", place: reception}
+    etapes:
+      - {narration: "L'hôtel de la Rive. Le bar où la photo a été prise : six tabourets, un miroir, une plante en plastique. Le barman essuie le même verre depuis que tu es là."}
+      - {qui: toi, va: salon_1}
+      - {qui: barman, dit: "Le tabouret du milieu. Elle avait commandé deux verres avant que vous arriviez. C'est vous qui avez payé ; elle y tenait."}
+      - {qui: toi, pense: "Un verre. Un manteau. Le visage, ma mémoire le garde sous une lampe éteinte."}
+      - {qui: veilleur, dit: "Le photographe attendait sur la terrasse, de l'autre côté de la vitre. Une heure pour une photo. Il avait l'air payé à l'heure."}
+      - {qui: barman, geste: dos}
+      - {qui: veilleur, dit: "La dame a laissé un pourboire en billets neufs. Ils se suivaient. Le patron les a mis au coffre, à part, avec un élastique."}
+      - {narration: "Dans le miroir du bar, derrière les bouteilles, la terrasse est vide. Une seule chaise y est tournée vers l'intérieur."}
+
+  # La seconde sonnerie (S1, 10, janvier) : le local, juste avant. Gégé fait asseoir le héros
+  # près de lui, d'où l'on entend la patère.
+  - id: h10.ci.poele
+    quand: carte
+    cartes: [pr.h10.b3_sonnerie, pr.h10.b3_sonnerie_recompte]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: stade
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: gege, place: [-1, 1], pose: assis}
+      - {qui: nino, place: centre}
+      - {id: socio, qui: fan, nom: "Un socio", place: [2, 0]}
+    etapes:
+      - {narration: "Janvier, le local du kop. Le poêle ronfle. On a poussé les tambours contre le mur pour faire de la place aux chaises : ce soir, on parle de l'accord."}
+      - {qui: nino, va: [1, -2]}
+      - {narration: "Comme à chaque réunion, Nino pend sa veste à la patère, au-dessus du poêle, par le col, avec soin."}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "Viens t'asseoir près de moi, 212. D'ici, on entend tout ce qui se dit. Et le reste."}
+      - {qui: toi, va: [-1, 2]}
+      - {qui: socio, dit: "L'accord de franchise, c'est un mot de la capitale. Ici, on dit vendre."}
+      - {qui: nino, dit: "Ici, on dit survivre, quand on sait compter. Asseyez-vous. Je lis l'article un."}
+      - {qui: gege, geste: tete_basse}
+      - {narration: "Gégé ferme les yeux. Il n'écoute pas Nino. Il écoute la patère."}
+
+  # Le neveu (S1, 17, mai) : la buvette après la fermeture. Le patron s'en va ; un clapet
+  # attend sur le zinc.
+  - id: h10.ci.fermeture
+    quand: carte
+    cartes: [pr.h10.b6_neveu, pr.h10.b6_neveu_decroche]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: nino, place: zinc_2}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+    etapes:
+      - {narration: "Mai, une heure du matin. La buvette a fermé à minuit. Les chaises sont retournées sur les tables, sauf un tabouret, au zinc."}
+      - {qui: patron, dit: "Il vous attend depuis la fermeture. Il n'a rien commandé. Il a posé quelque chose sur le zinc, et il le regarde."}
+      - {qui: toi, va: zinc_3}
+      - {qui: patron, geste: dos}
+      - {qui: patron, dit: "Je vous laisse la bouteille sans étiquette. Celle-là, je ne la compte jamais."}
+      - {qui: patron, sort: true}
+      - {qui: nino, regarde: toi}
+      - {qui: nino, dit: "Assieds-toi. Ça ne prendra pas longtemps. Il n'y a qu'une chose à dire, et on la sait tous les deux."}
+      - {narration: "Sur le zinc, sous la seule lampe allumée, un téléphone à clapet, gris. Le même que le tien. Fermé."}
+
+  # ===================================================================== SAISON 3 (2039-2040)
+  # La lettre de Gégé (S2, 11, janvier) : l'escalier qui monte du local à sa chambre.
+  # Rouvier en bas, Nino assis sur la marche ; l'enveloppe attend sur la couverture.
+  - id: h10.ci.escalier_du_local
+    quand: carte
+    cartes: [pr.h10.c2_lettre, pr.h10.c2_lettre_promesse]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: stade
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: rouvier, place: [1, 1]}
+      - {qui: nino, place: [3, 2]}
+    etapes:
+      - {narration: "Janvier 2040. L'escalier étroit qui monte du local à la chambre de Gégé. Ça sent la laine mouillée, le café trop fort, l'embrocation."}
+      - {qui: toi, va: [1, 2]}
+      - {qui: rouvier, dit: "Il respire avec un quart de poumon. Ne le faites pas parler longtemps. Il parlera longtemps quand même."}
+      - {qui: nino, dit: "Il m'a fait sortir de sa chambre. Moi. Il veut la 212, et personne d'autre."}
+      - {qui: nino, geste: dos}
+      - {qui: rouvier, regarde: nino}
+      - {qui: rouvier, dit: "Assieds-toi sur la marche, Nino. Tu monteras après. Les vieux règlent leurs comptes dans l'ordre."}
+      - {qui: nino, geste: assis}
+      - {qui: rouvier, dit: "Il a une enveloppe sur la couverture depuis trois jours. Il la garde sous sa main, comme un chat qui voudrait sortir."}
+      - {narration: "Tu montes. En haut, la porte est entrouverte. Une radio parle bas, d'une autre division, d'un autre match."}
+
+  # La nuit de Gégé (S2, 12, février) : cinq heures du matin, la buvette. Trois mille masques
+  # livrés avant le jour, déjà réglés. Madame Mai dira quand on les avait commandés.
+  - id: h10.ci.cartons
+    quand: drapeau
+    drapeau: h10_gege_mort
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: nino, place: fond}
+      - {id: livreur, qui: passant, nom: "Le livreur de l'imprimerie", place: zinc_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+    etapes:
+      - {narration: "Cinq heures du matin. La buvette n'a pas fermé de la nuit ; on est venu en manteau sur le pyjama. Au fond, la chaise de Gégé, et dessus, la bâche de 1971, pliée en carré."}
+      - {qui: toi, va: table_1}
+      - {narration: "Nino décroche de la patère la casquette de son oncle, et la pose sur la bâche, la visière tournée vers la porte."}
+      - {qui: livreur, dit: "Trois mille, en six cartons. On m'a dit de les déposer ici avant le jour. C'est réglé ; il n'y a rien à signer."}
+      - {qui: patron, dit: "Réglé par qui ? Le virage n'a pas encore fait la quête. On ne sait même pas l'heure de l'enterrement."}
+      - {qui: livreur, dit: "Je livre, je ne lis pas les bons. Il y a une photo dessus, c'est tout ce que je sais."}
+      - {qui: livreur, sort: true}
+      - {narration: "Le patron ouvre un carton au cutter. Trois mille fois le même visage, la casquette, le menton levé vers la Nord. Le carton sent l'encre fraîche."}
+      - {qui: nino, regarde: toi}
+      - {qui: nino, dit: "Il est parti à deux heures. Avant cinq heures, quelqu'un avait imprimé, découpé, livré. Tu y penses aussi, ou c'est moi ?"}
+      - {qui: nino, geste: tete_basse}
+      - {narration: "Personne ne répond. Au fond, sur la bâche, la casquette regarde la porte."}
+
+  # La dernière marche laissée ouverte (S2, 17, un soir de mai) : plus tard, le même soir.
+  # Tazi essaie la place où il passera la nuit dite, celle d'avant le dernier match ; c'est
+  # l'annonce du Grand Match qui racontera cette nuit-là, pas la scène (le dernier bloc de
+  # journées se joue entre les deux). Si la brigade est passée, ses rubans tiennent la place :
+  # pas de scène.
+  - id: h10.ci.veille
+    quand: drapeau
+    drapeau: h10_marche_ouverte
+    roles: [president]
+    si: "flag(histoire_h10) && !flag(h10_enquete)"
+    lieu: stade
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: tazi, place: centre, pose: assis}
+      - {id: ancien, qui: ancien, nom: "Un vieux de la rangée H", place: [2, 0]}
+      - {id: gamine, qui: enfant, nom: "Une gamine de la Nord", place: [-1, 2]}
+    etapes:
+      - {narration: "Plus tard, le même soir. L'escalier nord n'est plus qu'un mur, sauf tout en haut : une marche. Tazi n'est pas rentré. Il est assis à côté, un thermos entre les pieds, sa lampe éteinte."}
+      - {qui: ancien, va: [1, 0]}
+      - {qui: ancien, dit: "Je vous ai apporté une couverture, pour la nuit dite. À votre âge, une nuit dehors en mai, ça se paie en juin."}
+      - {qui: tazi, dit: "Merci. Ce soir, j'essaie seulement la place. On dort mal sur une marche qu'on n'a pas essayée."}
+      - {qui: gamine, dit: "Il en reste combien, des marches ?", geste: pointe}
+      - {qui: tazi, dit: "Une. C'est assez pour monter, si on ne court pas."}
+      - {qui: toi, va: [1, 1]}
+      - {qui: tazi, regarde: toi}
+      - {qui: tazi, dit: "Rentrez, {toi}. Le jour du dernier match, il faudra quelqu'un de réveillé en loge. La nuit d'avant, c'est moi."}
+      - {narration: "Il allume sa lampe frontale et la tourne vers le haut de l'escalier, vers la dernière marche, comme on éclaire une porte pour quelqu'un qui doit rentrer."}
+
+  # L'assemblée (S3, 1, l'acte final) : la buvette, avant que Nino prenne le micro. Rien n'y
+  # dit ce qu'il lira, ni ce qu'on posera sur la table.
+  - id: h10.ci.assemblee
+    quand: carte
+    cartes: [pr.h10.d1_assemblee_rare, pr.h10.d1_assemblee_mur, pr.h10.d1_assemblee_monte_lettre, pr.h10.d1_assemblee_lettre, pr.h10.d1_assemblee_monte_preuve, pr.h10.d1_assemblee_monte, pr.h10.d1_assemblee_preuve, pr.h10.d1_assemblee_nino_lettre, pr.h10.d1_assemblee]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h10)"
+    titre: "L'assemblée"
+    sous: "La buvette du kop, le lendemain du dernier match"
+    lieu: buvette
+    tranche: soir
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: nino, place: table_3}
+      - {qui: lea, place: table_2}
+      - {id: mireille, qui: passante, nom: "Mireille", place: zinc_3}
+    etapes:
+      - {narration: "La buvette est pleine jusqu'à la porte. Les masques de Gégé pendent aux écharpes, le carton ramolli par la bière et la nuit d'avant."}
+      - {qui: toi, va: table_1}
+      - {qui: nino, dit: "Un, deux. Un, deux. On m'entend, au fond ?"}
+      - {qui: mireille, dit: "Ma tante écoute à la radio, derrière Saint-Aubin. Elle demande qu'on parle lentement ; elle a cent deux ans."}
+      - {narration: "Au premier rang, une chaise vide, un coussin dessus. Personne ne s'y assoit. On l'enjambe."}
+      - {qui: lea, geste: ecrit}
+      - {qui: lea, dit: "J'écrirai dimanche ce qui se passe ce soir. Il n'y aura pas d'autre dimanche pour ça."}
+      - {qui: toi, pense: "Ma veste n'a jamais aussi mal tombé. Trois ans que je la porte comme ça."}
+      - {qui: nino, dit: "Les cartes en l'air quand je le dis. Pas avant. Ce soir, je compte lentement."}
+      - {narration: "Il pose sa veste sur le dossier de sa chaise. Dans la salle, deux mille cartes de socio attendent, à plat sur les genoux."}
+
+# ===================================================================== LES CONVERSATIONS
+# Ce qu'on surprend en passant : la ville parle de la loi, de la voix de Gigi, de l'escalier,
+# des billets neufs, sans jamais s'adresser au héros.
+conversations:
+  # La voix de Gigi gardée dans les haut-parleurs (pr.h10.a2_voix).
+  - id: h10.cv.magnifique
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_voix_gardee)"
+    lieu: buvette
+    tranches: [soir]
+    qui:
+      - {id: ancien, qui: ancien, nom: "Un ancien", place: zinc_1}
+      - {id: socio, qui: fan, nom: "Un socio", place: zinc_2}
+    repliques:
+      - {qui: ancien, dit: "« Magnifique. » Gigi a gardé nos cages jusqu'en 1995 sans jamais dire un mot de plus de deux syllabes."}
+      - {qui: socio, dit: "La chaîne dit qu'ils l'ont fait parler avec ses interviews. Il en a donné combien, d'interviews ?"}
+      - {qui: ancien, dit: "Trois. Dans les trois, il disait « on verra ». Ils lui ont appris le reste."}
+      - {qui: socio, dit: "Ma fille croit que c'est lui. Elle a douze ans. Elle lui écrit, à la chaîne."}
+
+  # La première année de l'escalier nord (pr.h10.a1_marche) : la marche du mois qui sèche.
+  # L'après-midi seulement : le matin, Tazi est au stade comme présence, et la pièce le pose
+  # à la place `tableau`, que le mur des douches cache (sa bulle ne s'afficherait pas).
+  - id: h10.cv.sechage
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_escalier) && saison == 1"
+    lieu: stade
+    tranches: [aprem]
+    qui:
+      - {qui: tazi, place: milieu}
+      - {id: ancien, qui: ancien, nom: "Un ancien de la Nord", place: [2, 1]}
+    repliques:
+      - {qui: ancien, dit: "La marche du mois, ce matin. Je suis venu la voir sécher. À mon âge, on regarde sécher ce qu'on peut."}
+      - {qui: tazi, dit: "Elle sèche en deux heures. L'escalier, en trente-trois mois. Vous aurez le temps de tout voir."}
+      - {qui: ancien, dit: "Vous savez pour qui vous murez, au moins ?"}
+      - {qui: tazi, dit: "Je sais qui paie le ciment. Pour qui, ce n'est pas écrit sur le sac."}
+
+  # La photo de l'hôtel (pr.h10.b1_photo) : le kiosque du quai, le lendemain.
+  - id: h10.cv.photo
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_photo_hotel) && saison == 2"
+    lieu: kiosque
+    tranches: [matin]
+    qui:
+      - {id: kiosquier, qui: commercant, nom: "Le kiosquier", place: porte}
+      - {qui: lea, place: [2, 1]}
+    repliques:
+      - {qui: kiosquier, dit: "Elle n'est pas dans L'Écho, la photo. Elle est partout ailleurs, même sur l'écran du distributeur de billets."}
+      - {qui: lea, dit: "L'Écho ne publie pas une photo dont l'auteur ne signe pas. Je l'ai appris en 1995, à mes dépens."}
+      - {qui: kiosquier, dit: "La dame en manteau, vous l'avez reconnue ? Vous connaissez tout le monde, depuis le temps."}
+      - {qui: lea, dit: "Je ne reconnais pas les manteaux. Je reconnais les gens qui paient un photographe pour attendre une heure."}
+
+  # Le vote recompté (pr.h10.socios) : trois cartes de trop dans le compte de Nino.
+  - id: h10.cv.trois_cartes
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_socios_recompte)"
+    lieu: buvette
+    tranches: [soir]
+    qui:
+      - {id: socio, qui: fan, nom: "Un socio", place: zinc_1}
+      - {id: ancien, qui: ancien, nom: "Un ancien", place: table_3}
+    repliques:
+      - {qui: socio, dit: "Il manquait trois cartes au compte de Nino. Trois vieux du fond, qui lèvent la main lentement."}
+      - {qui: ancien, dit: "Nino compte vite depuis qu'il est petit. Son oncle compte lentement. Ça ne donne pas les mêmes résultats."}
+      - {qui: socio, dit: "La 212 a recompté devant tout le monde, rangée par rangée. Nino souriait, après. Avec la bouche seulement."}
+      - {qui: ancien, dit: "Les mains, ça se recompte. Les sourires, jamais. Retiens ça pour l'assemblée."}
+
+  # L'hélicoptère blanc (pr.h10.b2_helico) : le tabac du Quai, avant les pales.
+  - id: h10.cv.pilote
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_helico) && !flag(h10_helico_saisi)"
+    lieu: tabac
+    tranches: [matin, aprem]
+    qui:
+      - {id: buraliste, qui: commercant, nom: "Le buraliste", place: patron}
+      - {id: marinier, qui: ancien, nom: "Un marinier", place: marinier_1}
+    repliques:
+      - {qui: buraliste, dit: "Il s'est posé un mardi. Le mardi, rien ne se pose ici sans raison, pas même les mouettes."}
+      - {qui: marinier, dit: "Le pilote est venu acheter des cigarettes. Il a payé avec un billet neuf, et il a demandé où était la Nord."}
+      - {qui: buraliste, dit: "Il ne savait pas où était la Nord, et il s'est posé juste devant. Ils sont forts, à la capitale."}
+      - {qui: marinier, dit: "Ils ne savent pas où elle est. Ils savent ce qu'elle vaudra en 2040."}
+
+  # La seconde sonnerie entendue (pr.h10.b3_sonnerie) : Gégé, chez Rouvier, a commencé un
+  # carnet. Sa lettre (pr.h10.c2_lettre) en sortira.
+  - id: h10.cv.carnet
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_clapet_nino) && !flag(h10_gege_mort)"
+    lieu: cabinet
+    tranches: [aprem]
+    qui:
+      - {qui: rouvier, place: kine}
+      - {qui: gege, place: patient}
+    repliques:
+      - {qui: rouvier, dit: "Tu as noté quoi, dans ton carnet, hier soir ? Tu as cassé deux mines de crayon."}
+      - {qui: gege, dit: "Des heures. Les soirs où ça sonne deux fois, en bas. Je note les heures ; l'âge note le reste."}
+      - {qui: rouvier, dit: "Tu le dis à qui, tout ça ?"}
+      - {qui: gege, dit: "À personne, tant que je respire. Après, à une enveloppe."}
+
+  # La loi votée : au comptoir du café de la Mairie, l'acte de 1931 (venu de La Maquette).
+  - id: h10.cv.perpetuite
+    roles: [president]
+    si: "flag(histoire_h10) && saison >= 2"
+    lieu: cafe_mairie
+    tranches: [midi]
+    qui:
+      - {id: employe, qui: passant, nom: "Un employé du cadastre", place: comptoir_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
+    repliques:
+      - {qui: employe, dit: "Le consortium a demandé une copie de l'acte de 1931. La troisième demande en dix ans. Toujours un mardi."}
+      - {qui: patron, dit: "« Aux enfants du quartier, à perpétuité. » Mon grand-père le récitait au comptoir, les soirs de derby."}
+      - {qui: employe, dit: "Ils ne veulent pas le terrain. Ils veulent le nom, la place en première, et les gamins du centre."}
+      - {qui: patron, dit: "Et le terrain, ils le laissent aux enfants. Sans club dessus. C'est ça, à perpétuité, maintenant."}
+
+  # Après la mort de Gégé (pr.h10.c3_nuit) : les stadiers, et le bon de l'imprimeur.
+  - id: h10.cv.bon
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_gege_mort) && saison == 3"
+    lieu: stade
+    tranches: [matin, aprem]
+    qui:
+      - {id: stadier, qui: passant, nom: "Un stadier", place: [2, 1]}
+      - {id: stadiere, qui: passante, nom: "Une stadière", place: milieu}
+    repliques:
+      - {qui: stadier, dit: "Trois mille masques à la buvette avant le jour. Le virage n'avait pas encore fait la quête."}
+      - {qui: stadiere, dit: "Nino dit que l'imprimeur a avancé l'argent. Les imprimeurs n'avancent rien ; mon père en était un."}
+      - {qui: stadier, dit: "Il y a une date sur le bon, au dos d'un carton. Je l'ai lue deux fois. Elle n'allait pas."}
+      - {qui: stadiere, dit: "Alors tu ne l'as pas lue. Et moi, je n'ai rien entendu."}
+
+  # La vitrine étoilée (pr.h10.sb.vitrine) : le vitrier et Clémence Tessandier. Le masque de
+  # 1990 n'y est qu'un « on dit » : la carte laisse le héros le prendre, ou non.
+  - id: h10.cv.pave
+    roles: [president]
+    si: "flag(histoire_h10) && flag(h10_sb_vitrine)"
+    lieu: agence
+    tranches: [matin, aprem]
+    qui:
+      - {qui: clemence, place: clemence}
+      - {id: vitrier, qui: passant, nom: "Le vitrier", place: [1, 1]}
+    repliques:
+      - {qui: vitrier, dit: "On dit qu'il y avait un vieux masque en carton dans votre parc, la nuit du pavé. Un jeu de gamins ?"}
+      - {qui: clemence, dit: "Les gamins de 1990, alors. Ils ont grandi, et ils visent mieux."}
+      - {qui: vitrier, dit: "Un pavé, ça ne tombe pas tout seul sur un parc en mousse."}
+      - {qui: clemence, dit: "Ici, rien ne tombe tout seul. Posez la vitre, et envoyez la facture à Rive Capital."}
+
+  # Les cent ans de Madame Josiane (2038) : à la chapelle, le cierge de la centième bougie.
+  - id: h10.cv.bougies
+    roles: [president]
+    si: "flag(histoire_h10) && saison == 2"
+    lieu: eglise
+    tranches: [matin]
+    qui:
+      - {id: mireille, qui: passante, nom: "Mireille", place: cierges}
+      - {id: soeur, qui: passante, nom: "La sœur de garde", place: pretre}
+    repliques:
+      - {qui: mireille, dit: "Elle a voulu cent bougies, pas une de moins. On en a trouvé quatre-vingt-dix-neuf ; la centième, c'est un cierge de la chapelle."}
+      - {qui: soeur, dit: "Elle l'a soufflé ?"}
+      - {qui: mireille, dit: "On ne souffle pas un cierge, elle a dit. Elle a fait un vœu, et elle l'a laissé brûler jusqu'au bout."}
+      - {qui: soeur, dit: "Quel vœu ?"}
+      - {qui: mireille, dit: "Elle ne dit jamais ses vœux. Elle a juste demandé si l'escalier nord était encore ouvert."}
