@@ -2223,6 +2223,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (e['sous'] != null) out['sous'] = txt(e, 'sous', where, 60);
     // la suite, ailleurs : la scène qui s'enchaîne (son `quand` est `suite`)
     if (e['suite'] != null) out['suite'] = e['suite'].toString();
+    // une pièce vidée de ses habitués et de ses clients le temps de la scène
+    if (e['vide'] == true) out['vide'] = true;
     // le temps qu'il fait (dehors seulement) : la pluie, la neige, la brume
     if (e['meteo'] != null) {
       final me = e['meteo'].toString();

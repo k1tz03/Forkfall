@@ -63,6 +63,7 @@ cinematiques:
     suite: h4.ci.intro_2            # facultatif : la scène qui s'enchaîne, ailleurs (elle a `quand: suite`)
     tranche: soir                   # facultatif : la lumière de la scène (matin|midi|aprem|soir|nuit)
     meteo: pluie                    # facultatif, dehors : pluie | neige | brume
+    vide: true                      # facultatif, dedans : personne d'autre que la distribution
     acteurs:                        # qui est en scène, et où (une place de la pièce)
       - {qui: toi, place: porte}
       - {qui: bertrand_rance, place: bertrand}
@@ -80,7 +81,10 @@ des gens sans nom : `passant`, `passante`, `enfant`, `fan`, `ancien`, `commercan
 qu'utilisent les étapes) et un `nom` affiché (« Le patron », « Un chauffeur »). `place` : une place
 de la pièce, `porte`, `centre`, `[dx, dy]`. Facultatifs : `pose: assis`, `regarde: gauche|droite`,
 `cache: true` (il n'est pas là au début : il `entre`). Un habitué de la pièce qui joue dans la
-scène quitte sa place d'occupant pour son rôle.
+scène quitte sa place d'occupant pour son rôle. **Les autres gens de la pièce** sont ceux de
+l'heure de la scène (`tranche`) : la nuit, le club-house est vide et le bar plein ; `vide: true`
+n'y laisse que la distribution. Une scène `quand: lieu` se joue à la première entrée, à toute
+heure : son `si` peut demander `tranche == soir`.
 
 **Les étapes** (une seule clé d'action par étape ; `dit` peut porter `ton`, `geste` et `emote`) :
 

@@ -96,6 +96,15 @@
       if (aInterieur(lieu)) { entrer(lieu); var vl = $("villeLieu"); if (vl) vl.classList.remove("on"); }
       else if (LIEU[lieu] && LIEU[lieu].door) { var c0 = centre(LIEU[lieu].door); poserEnVille(c0[0], c0[1]); S.lieu = lieu; recaler(); }
     }
+    // dedans : les gens de la pièce sont ceux de l'heure de la scène (la nuit, le club-house est
+    // vide ; le soir, le bar est plein), ou personne (`vide: true`) ; le temps de la ville ne bouge pas
+    if (dedans) {
+      var t0 = S.tranche, tc = c.tranche ? TRANCHES.indexOf(c.tranche) : -1;
+      if (tc >= 0) S.tranche = tc;
+      occuper();
+      S.tranche = t0;
+      if (c.vide) figurants = figurants.filter(function (g) { return g.cine; });
+    }
     var ids = {}, autres = figurants.filter(function (g) { return !g.cine; }), libres = dedans ? null : placesDe(lieu || lieuProche() || "appartement").slice();
     (c.acteurs || []).forEach(function (a, i) {
       var pos = positionScene(a.place, i, libres), m = pos.place;
@@ -473,19 +482,22 @@
   // les voix prennent corps (si elles n'y sont pas déjà) : dedans à leurs places, dehors près de la porte
   function convInstaller(cv) {
     var voix = {}, libres = dedans ? null : placesDe(cv.lieu).slice();
+    var pris = [];
     cv.qui.forEach(function (v, i) {
       var g = null;
-      figurants.forEach(function (x) { if (!g && x.qui === v.qui && !x.cine) g = x; });
+      // un visage connu déjà dans la pièce parle d'où il est ; deux anonymes du même genre restent deux
+      if (CHARS[v.qui]) figurants.forEach(function (x) { if (!g && x.qui === v.qui && !x.cine && pris.indexOf(x) < 0) g = x; });
+      else figurants.forEach(function (x) { if (!g && x.conv && x.convId === cv.id + ":" + v.id) g = x; });
       if (!g) {
         // la place d'une voix est à elle : le client qui l'occupe s'en va
         if (dedans && typeof v.place === "string") figurants = figurants.filter(function (x) { return x.cine || x.conv || x.place !== v.place || x.role === "rdv" || x.role === "mission"; });
         var pos = dedans ? positionScene(v.place, i, null) : (libres && libres.length ? (function (q) { return { x: q[0], y: q[1] }; })(libres.shift()) : positionScene(null, i, null));
         var sp = GENS_SP[v.qui] ? (SPRITES[v.qui] ? v.qui : "passant") : spriteDe(v.qui) || "passant";
-        g = { conv: true, sp: sp, qui: v.qui, nom: v.nom || null, x: pos.x, y: pos.y, miroir: i % 2 === 1, pose: v.pose || (pos.place && pos.place.pose) || null, pas: 0, alpha: 1, uid: ++UID, lieu: cv.lieu,
+        g = { conv: true, convId: cv.id + ":" + v.id, sp: sp, qui: v.qui, nom: v.nom || null, x: pos.x, y: pos.y, miroir: i % 2 === 1, pose: v.pose || (pos.place && pos.place.pose) || null, pas: 0, alpha: 1, uid: ++UID, lieu: cv.lieu,
           place: typeof v.place === "string" ? v.place : null };
         figurants.push(g);
       }
-      voix[v.id] = g;
+      voix[v.id] = g; pris.push(g);
     });
     // ils se regardent
     var ids = Object.keys(voix);
