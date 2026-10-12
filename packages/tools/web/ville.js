@@ -736,7 +736,7 @@
     ((vue && vue.cast) || []).forEach(function (q) { cast[q] = 1; });
     var statuts = (vue && vue.statuts) || {};
     (D.presences || []).forEach(function (p) {
-      if (deja[p.qui] || !spriteDe(p.qui) || !LIEU[p.lieu] || horsEpoque(p.qui)) return;
+      if (deja[p.qui] || !spriteDe(p.qui) || !LIEU[p.lieu]) return;
       // parti, vendu, passé chez le rival, mort : on ne le croise plus
       var st = statuts[p.qui];
       if (st === "mort" || st === "parti" || st === "vendu" || st === "rival") return;

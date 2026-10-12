@@ -818,6 +818,7 @@ void main() {
       villeLit((t as Map)['si'], 'ville/gens/${gm['id']}/tuyaux/${t['id']}');
     }
     if (gm['service'] is Map) villeLit((gm['service'] as Map)['si'], 'ville/gens/${gm['id']}/service');
+    villeLit(gm['si'], 'ville/gens/${gm['id']}');
     ((gm['climat'] as Map?) ?? const {}).forEach((k, l) {
       for (final x in (l as List)) {
         if (x is Map) villeLit(x['si'], 'ville/gens/${gm['id']}/climat/$k');

@@ -2608,6 +2608,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     }
     final reseau = e['reseau']?.toString() ?? '';
     if (!kReseaux.containsKey(reseau)) errors.add('$where: réseau « $reseau » inconnu (${kReseaux.keys.join(' ')})');
+    // `si` : quand la personne est à son lieu (la salle cadenassée, une mort dans un livre)
+    si(e['si'], where);
     final trace = e['trace'] == null ? null : txt(e, 'trace', where, 120);
     List<String> trois(String k) {
       final l = _strList(e[k]);
@@ -2703,7 +2705,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       }
     }
     gensVille.add({
-      'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (roles.isNotEmpty) 'roles': roles,
+      'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString(),
       if (annees != null) 'annees': annees, 'reseau': reseau, if (trace != null) 'trace': trace,
       'paliers': paliers, 'froid': froid, if (climat.isNotEmpty) 'climat': climat,
       'repliques': repliques, if (tuyaux.isNotEmpty) 'tuyaux': tuyaux, if (service != null) 'service': service,
