@@ -208,8 +208,11 @@ gens:
     trace: "Lulu s'en souviendra." # la ligne après un geste partagé (facultatif ; sinon générique)
     paliers: ["te reconnaît", "te tutoie", "ferait beaucoup pour toi"]
     froid: ["te boude", "t'en veut", "ne te sert plus"]
+    activites: [garage_vidange]     # les activités de son lieu (déjà écrites) qu'on fait avec lui : un point de lien chacune
     climat:                         # ce qu'il dit de son réseau, par tranche de la jauge (pas pour `rue`, `milieu`…)
-      bas: ["…", "…"]
+      bas:
+        - "…"
+        - { si: "role == president", texte: "…" }   # la jauge n'a pas le même visage pour tous les rôles
       moyen: ["…"]
       haut: ["…"]
     repliques:                      # quand on le touche (la grammaire des `si` de la ville)
@@ -229,6 +232,12 @@ gens:
       effets: { set: [service_lulu_voiture], jauges: { direction: 2 } }
       dette: true                                # pose dette_lulu ; une scène viendra la réclamer
 ```
+
+Une phrase du climat est dite si son `si` est vrai ; la ville dit la première vraie de la tranche,
+et se tait s'il n'y en a aucune. La jauge `direction` est « le président » pour l'entraîneur et le
+directeur sportif, « le club » pour le joueur, « les actionnaires » pour le président, « la
+Fédération » pour le sélectionneur ; `vestiaire` est « le staff », « le club » ou « le groupe »
+selon le rôle ; `caisse` est le budget, le compte, la masse salariale, la trésorerie ou les moyens.
 
 **Une scène de la vie de quelqu'un** : le format des scènes de la semaine, avec `qui: lulu` et
 un `si` sur le lien (`"relation.lulu >= 2"`), une dette (`"flag(dette_lulu)"`) ou une réputation

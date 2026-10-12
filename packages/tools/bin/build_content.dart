@@ -2596,16 +2596,28 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       return l;
     }
     final paliers = trois('paliers'), froid = trois('froid');
-    final climat = <String, List<String>>{};
+    final climat = <String, List<Object>>{};
     final cl = e['climat'];
     if (cl is Map) {
       if (kReseaux[reseau] == null) errors.add('$where: `climat` : le réseau « $reseau » n\'a pas de jauge à dire');
+      // une phrase, ou {texte, si} : les jauges n'ont pas le même nom pour tous les rôles (le
+      // président de l'entraîneur, ses actionnaires quand on est président) ; la ville dit la
+      // première phrase vraie, et se tait si aucune ne l'est
       for (final k in const ['bas', 'moyen', 'haut']) {
-        final l = _strList(cl[k]);
-        if (l.isEmpty) errors.add('$where: climat.$k : au moins une phrase');
-        for (final x in l) {
-          if (x.length > 200) errors.add('$where: climat.$k : une phrase de plus de 200 caractères');
+        final l = <Object>[];
+        var i = 0;
+        for (final x in (cl[k] as List? ?? const [])) {
+          final w2 = '$where/climat/$k/${i++}';
+          if (x is Map) {
+            si(x['si'], w2);
+            l.add({'texte': txt(x, 'texte', w2, 200), if (x['si'] != null) 'si': x['si'].toString()});
+          } else {
+            final t = x.toString();
+            if (t.trim().isEmpty || t.length > 200) errors.add('$w2: une phrase vide ou de plus de 200 caractères');
+            l.add(t);
+          }
         }
+        if (l.isEmpty) errors.add('$where: climat.$k : au moins une phrase');
         climat[k] = l;
       }
     } else if (kReseaux[reseau] != null) {
@@ -2652,6 +2664,21 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
         'lien': lienDe(sv['lien'], w2, defaut: 3, min: 1), 'label': txt(sv, 'label', w2, 28), 'texte': txt(sv, 'texte', w2, 200),
         if (sv['dette'] == true) 'dette': true, if (sv['si'] != null) 'si': sv['si'].toString(),
       };
+    }
+    // les activités de son lieu qu'on fait avec elle (le demi que Marcel sert, le café de Lulu) :
+    // un point de lien chacune, au plus un entre deux cartes
+    for (final aid in _strList(e['activites'])) {
+      Map<String, dynamic>? a;
+      for (final x in activites) {
+        if (x['id'] == aid) a = x;
+      }
+      if (a == null) {
+        errors.add('$where/activites: activité « $aid » inconnue');
+      } else if (a['avec'] != null && a['avec'] != id) {
+        errors.add('$where/activites: « $aid » se fait déjà avec ${a['avec']}');
+      } else {
+        a['avec'] = id;
+      }
     }
     gensVille.add({
       'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (roles.isNotEmpty) 'roles': roles,
