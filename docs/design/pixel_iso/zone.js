@@ -242,6 +242,37 @@ function buildZone(o = {}) {
   return W;
 }
 
+// ------------------------------------------------ le couloir de la Rive, hors de la ville
+// La Rive continue au-delà de la vieille ville, à travers les quartiers de l'ouest et de l'est
+// (le Grand Aubérive) : son lit, ses quais, ses promenades et les deux routes des quais, entre
+// x0 et x1, l'eau à partir de y0 (y0 = 290 dans la ville : la même coupe, au voxel près).
+//   y0 − 56 … y0 − 28   la route du quai nord        y0 − 20 … y0 − 4   la promenade nord
+//   y0 − 4 … y0         le mur du quai               y0 … y0 + 66        l'eau
+//   y0 + 66 … y0 + 70   le mur du quai               y0 + 70 … y0 + 86   la promenade sud
+//   y0 + 94 … y0 + 122  la route du quai sud
+// Un quartier qui la reçoit (district_*.js, `riviere: y0` en coordonnées locales) bâtit autour :
+// il peut y poser un pont, des pontons, un bassin, mais l'eau reste continue d'un bord à l'autre et
+// l'une des deux routes des quais au moins reste praticable.
+function couloirRive(W, x0, x1, y0, night) {
+  const road = (a, b) => { W.box(x0, a, 0, x1, b, 2, 0); W.box(x0, a, 0, x1, b, 1, M.ASPHALT); };
+  road(y0 - 56, y0 - 28); road(y0 + 94, y0 + 122);
+  W.box(x0, y0, -7, x1, y0 + 66, 2, 0);
+  W.box(x0, y0, -8, x1, y0 + 66, -7, M.RIVER2);
+  W.box(x0, y0 - 4, -8, x1, y0, 2, M.QUAY_STONE);
+  W.box(x0, y0 + 66, -8, x1, y0 + 70, 2, M.QUAY_STONE);
+  W.box(x0, y0 - 20, 1, x1, y0 - 4, 2, M.GRAVEL); W.box(x0, y0 + 70, 1, x1, y0 + 86, 2, M.GRAVEL);
+  B.railing(W, x0, y0 - 2, x1 - 1, y0 - 2, 2, 4, M.METAL_DARK, 6);
+  B.railing(W, x0, y0 + 67, x1 - 1, y0 + 67, 2, 4, M.METAL_DARK, 6);
+  for (let x = x0 + 20; x < x1 - 10; x += 46) {
+    B.planeTree(W, x, y0 - 14, 2, { seed: 100 + x, trunk: 15, r: 8.5, leafR: 16 });
+    B.planeTree(W, x + 23, y0 + 76, 2, { seed: 200 + x, trunk: 15, r: 8.5, leafR: 16 });
+  }
+  for (let x = x0 + 6; x < x1; x += 60) {
+    B.streetLamp(W, x, y0 - 6, 2, 0, -1, { on: night, I: 1.8, r: 56, h: 18 });
+    B.streetLamp(W, x + 30, y0 + 81, 2, 0, -1, { on: night, I: 1.8, r: 56, h: 18 });
+  }
+}
+
 // ------------------------------------------------ les vues
 function view(W, o) {
   const FW = o.width || 656, FH = o.height || 370;
@@ -268,7 +299,7 @@ function screen(W, x, y, o = {}) {
   return view(W, Object.assign({}, o, { width: FW, height: FH, cu, cv, cutS, cutF }));
 }
 
-module.exports = { buildZone, view, screen, N, QX, QY };
+module.exports = { buildZone, view, screen, couloirRive, N, QX, QY };
 
 if (require.main === module) {
   const time = process.argv[2] || 'night', mood = process.argv[3] || 'good';

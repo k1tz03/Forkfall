@@ -12,13 +12,17 @@ const { lighting } = require('./presets');
 const [, , file, time = 'night', mood = 'good', zx, zy] = process.argv;
 const D = require(path.resolve(file));
 const pad = 34;
-const W = new E.World(D.w + 2 * pad, D.h + 2 * pad, 110, 10);
+// `zmax` : la hauteur du monde d'essai (les tours du quartier d'affaires montent plus haut que les 110 voxels de la ville)
+const W = new E.World(D.w + 2 * pad, D.h + 2 * pad, D.zmax || 110, 10);
 W.baseWet = time === 'day' ? 0.06 : 0.16;
 // socle : terre, trottoir partout, une rue tout autour (le contexte que le maître dessine)
 W.box(0, 0, -10, W.X, W.Y, 0, M.SOIL);
 W.box(0, 0, 0, W.X, W.Y, 2, M.SIDEWALK);
 const road = (x0, y0, x1, y1) => W.box(x0, y0, 0, x1, y1, 2, 0) || W.box(x0, y0, 0, x1, y1, 1, M.ASPHALT);
 road(0, 0, W.X, pad - 8); road(0, W.Y - pad + 8, W.X, W.Y); road(0, 0, pad - 8, W.Y); road(W.X - pad + 8, 0, W.X, W.Y);
+// un quartier que la Rive traverse (`riviere: y0`, l'eau à partir de y0 en coordonnées locales) :
+// le couloir de la Rive est posé d'abord, comme le maître le fera (zone.js, couloirRive)
+if (D.riviere != null) require('./zone').couloirRive(W, 0, W.X, pad + D.riviere, time !== 'day');
 W.at(pad, pad);
 const t0 = Date.now();
 const out = D.build(W, { w: D.w, h: D.h, night: time !== 'day', time, mood, R: E.rng(D.seed || 7), G: 2 }) || {};
@@ -30,7 +34,7 @@ for (let z = 0; z < W.Z; z++) for (let y = pad - 6; y < pad + D.h + 6; y++) for 
   const u = 2 * (x - y), v = x + y - 2 * (z + 1);
   if (u < u0) u0 = u; if (u + 2 > u1) u1 = u + 2; if (v < v0) v0 = v; if (v + 4 > v1) v1 = v + 4;
 }
-const FW = Math.min(3000, u1 - u0 + 16), FH = Math.min(2000, v1 - v0 + 16);
+const FW = Math.min(8000, u1 - u0 + 16), FH = Math.min(4000, v1 - v0 + 16);
 const cu = u0 - 8, cv = v0 - 8;
 const day = time === 'day';
 const bg = day ? [0.66, 0.66, 0.66] : [0.06, 0.045, 0.04];
