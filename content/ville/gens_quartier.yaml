@@ -1,0 +1,2388 @@
+# La ville vivante (docs/histoires/ville_vivante.md) — LE QUARTIER : l'épicerie,
+# la boulangerie de la rue des Lilas, le garage du Pont, la laverie de la rue du Stade,
+# le marché, les Immortelles, Brunel, la librairie-papeterie, L'Aurore et l'école des
+# Lilas. Un visage par lieu et par époque, de 1990 à 2050, sans trou ni chevauchement
+# (le premier de la liste est celui de 1990) ; ce qu'on fait avec eux, ce qu'ils savent,
+# ce qu'ils peuvent, ce qui leur arrive ; et ce que la ville fait des réputations
+# « quartier », « famille » et « culture ».
+# Deux visages viennent des livres : Marie-Jo Marçais (9) et Madame Huguette (4, 7) ;
+# on n'écrit ici que leur vie en ville. Les cartes de palier des nouveaux :
+# content/cards/common/paliers_ville_quartier.yaml.
+#
+# Les livres que la ville nourrit (un tuyau pose leur drapeau, dont la trace d'Almanach
+# reste vraie) : 1 (la photo de 1977, par la papetière), 5 (Maître Larrieu, par le
+# mécano), 6 (un indice du sous-sol, par la papetière), 7 (le cardiologue, par
+# Huguette), 10 (le clapet de Nino, par la caissière de L'Aurore) ; les scènes, le 3
+# (Odile, le jeudi) et le 8 (Vaubourg chez le tailleur). Marie-Jo, au livre 7, dit la
+# côte du petit Rancé sans poser de drapeau : la trace de la côte raconte le Corner.
+gens:
+  # ═══════════════════════════════════════════════════════════════ L'ÉPICERIE
+  # 1990-2003 : Ginette Coulomb et le cahier des ardoises (le bleu pour la cité,
+  # le rouge pour la Tréfilerie, que la vie de la ville raconte déjà) ; son mari,
+  # « l'épicier » des activités, porte les cartons. 2004-2050 : Yacine Kessar,
+  # son petit-fils, le point relais, et le même cahier sous le comptoir.
+  - id: coulomb
+    name: "Ginette Coulomb"
+    label: "L'ÉPICIÈRE DE LA CITÉ"
+    genre: f
+    tic: "Au crayon, ça s'efface."
+    on_relation: {3: vi.coulomb.page_du_club, -3: vi.coulomb.rideau}
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: chignon, cheveux: gris, pilosite: rase, lunettes: rondes, tenue: blouse, couleur: bleu, accessoire: stylo, couleur_accessoire: violet}
+    lieu: epicerie
+    tranches: [matin, aprem, soir]
+    annees: [1990, 2003]
+    reseau: familles
+    trace: "Ginette Coulomb s'en souviendra. Elle n'oublie que ce qui est payé."
+    paliers: ["te reconnaît au comptoir", "te met ton lait de côté", "t'ouvrirait une page de son cahier"]
+    froid: ["te rend la monnaie sans un mot", "te sert après tout le monde", "ne te sert plus"]
+    repliques:
+      - {lien: 0, texte: "Vous êtes du club, vous. Ça se voit aux chaussures. Ici, les gens du club paient comptant ; le cahier, c'est pour la cité."}
+      - {lien: 0, si: "tranche == soir", texte: "Je ferme à huit heures, mais je ne baisse le rideau qu'à moitié. Il y a toujours quelqu'un qui a oublié le lait d'un gamin."}
+      - {lien: 1, texte: "Mon mari dit que je fais la banque. La banque ne connaît pas le prénom des gamins. Moi, je les connais tous, avec leur pointure."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Les bières se vendent à l'unité depuis trois samedis, et le cahier se remplit plus vite. Je vous dis ça, moi. Je ne vous dis rien."}
+      - {lien: 1, si: "flag(rep_quartier)", texte: "On dit que vous êtes d'ici, maintenant. Ici, ça se gagne en vingt ans. Vous avez triché. Ça ne me déplaît pas."}
+      - {lien: 2, texte: "J'ai une page au nom du club, vous savez. Les packs du car, l'année de la montée. Je ne la réclame pas. Je la garde, au cas où."}
+      - {lien: 2, si: "flag(histoire_h3)", texte: "Ta mère attend que la boutique soit vide pour ouvrir son porte-monnaie. Je range les conserves, le dos tourné, le temps qu'elle compte."}
+      - {lien: 3, texte: "Votre page est prête, vous savez. Une page blanche, tout en bas du cahier, au crayon. Elle attend que vous en ayez besoin."}
+      - {lien: -1, texte: "Le lait est au fond. Vous connaissez le chemin."}
+      - {lien: -2, texte: "Il y a des gens qui me doivent depuis 1979 et qui me regardent en face. Vous, vous regardez les conserves."}
+    tuyaux:
+      - id: coulomb_page
+        lien: 2
+        si: "role != selectionneur && annee <= 2003"
+        texte: "« La femme d'un joueur du club a une page chez moi depuis septembre. Du lait, des couches, rien pour elle. Je ne dis pas laquelle. Elle vient tard, après la fermeture. »"
+      - id: coulomb_oeufs
+        lien: 2
+        si: "role != selectionneur && tribunes < 40 && annee <= 2003"
+        texte: "« Les gars de la Nord ont pris leurs bières ici avant le match, comme toujours. Et quatre boîtes d'œufs. Des œufs, un samedi, des garçons qui ne font jamais la cuisine. »"
+    service:
+      lien: 3
+      label: "Une page à votre nom"
+      texte: "Elle ouvre le cahier à une page neuve et écrit ton nom au crayon, en haut à droite, avec une somme. « La paie tombera bien. Si elle ne tombe pas, je viendrai la chercher. »"
+      effets: {var: {ville_francs: "+1500"}}
+      dette: true
+
+  - id: kessar
+    name: "Yacine Kessar"
+    label: "L'ÉPICIER DU POINT RELAIS"
+    genre: m
+    tic: "Tout le monde reçoit un carton, un jour."
+    on_relation: {3: vi.kessar.sans_signature}
+    portrait: {teint: olive, corpulence: moyen, age: mur, coiffure: court, cheveux: noir, pilosite: barbe, lunettes: aucune, tenue: pull, couleur: bordeaux, accessoire: telephone, couleur_accessoire: noir}
+    lieu: epicerie
+    tranches: [matin, aprem, soir]
+    annees: [2004, 2050]
+    reseau: rue
+    trace: "Yacine s'en souviendra. Il retient les gens comme les colis : par leur nom."
+    paliers: ["te reconnaît", "te garde tes colis derrière le comptoir", "ferait beaucoup pour toi"]
+    froid: ["te fait signer deux fois", "égare tes colis", "ne te sert plus"]
+    activites: [epi_point_relais]
+    repliques:
+      - {lien: 0, texte: "Un colis ? Une pièce d'identité. Même vous. Ma grand-mère connaissait tout le monde sans papiers ; moi, j'ai un lecteur de codes."}
+      - {lien: 1, texte: "Je sais qui déménage, qui part en vacances, qui commande des crampons pointure trente-huit pour un gamin qui n'en a pas les moyens. Les cartons parlent."}
+      - {lien: 1, si: "serie_v >= 3", texte: "Quand on gagne, on me commande des écharpes. Quand on perd, des valises. Ça ne rate jamais. Ce mois-ci, ce sont des écharpes."}
+      - {lien: 2, texte: "Ma grand-mère m'a laissé le cahier en me disant : ne relis jamais les vieilles pages. Je ne les relis pas. Je les connais par cœur."}
+      - {lien: 2, si: "annee >= 2030", texte: "Les gens paient avec leur montre, maintenant. Certains me demandent quand même d'écrire au crayon, dans le cahier de ma grand-mère. Pour que ça existe."}
+      - {lien: 3, texte: "Un carton peut se perdre, chez moi. Une fois. Je l'ai fait pour ma grand-mère, l'année où j'ai repris. Je le referai pour vous, une fois."}
+      - {lien: -1, texte: "Votre colis. Signez là. Et là."}
+      - {lien: -2, texte: "Votre colis est reparti. Délai dépassé. Je n'y peux rien. Enfin, si. Mais je n'y peux rien."}
+      - {lien: 2, si: "flag(tuyau_kessar_huissier) && francs >= 0", texte: "L'huissier est repassé. Je lui ai dit que vous aviez payé. Il avait l'air déçu. Les huissiers aiment revenir."}
+    tuyaux:
+      - id: kessar_cartons
+        lien: 2
+        si: "role != selectionneur"
+        texte: "« Un joueur du club reçoit des cartons d'une agence de Valdorne, toutes les semaines. Des maillots d'un autre club, à sa taille. Il ne vient jamais les chercher lui-même. »"
+      - id: kessar_huissier
+        lien: 1
+        si: "francs < 0"
+        texte: "« Un huissier m'a demandé votre adresse, ce matin, en achetant des chewing-gums. Je lui ai dit que je ne vous connaissais pas. Il a payé en pièces. Il reviendra. »"
+    service:
+      lien: 3
+      label: "Un colis sans signature"
+      texte: "Le carton qui ne devait pas porter ton nom n'en porte aucun. Sur le registre du point relais, à la date du jour, une ligne vide. Yacine ne te regarde pas en te le tendant."
+      effets: {jauges: {direction: 2}}
+
+  # ════════════════════════════════════════════════════════════ LA BOULANGERIE
+  # Rue des Lilas. 1990-2007 : Lucette Pichon (son mari, le boulanger, est au four
+  # et à la buvette du stade le samedi). Marie-Jo Marçais y est vendeuse depuis le
+  # milieu des années quatre-vingt-dix ; elle reprend en 2008 (son livre, le 9,
+  # est en 2029-2031). 2035-2050 : Malo Guérand, l'apprenti qu'elle a formé.
+  # Le réseau est celui des tribunes : le dimanche, on vend le samedi.
+  - id: pichon_lucette
+    name: "Lucette Pichon"
+    label: "BOULANGERIE PICHON, RUE DES LILAS"
+    genre: f
+    tic: "Le samedi se lit dans les tartes."
+    on_relation: {3: vi.pichon_lucette.gateau, -3: vi.pichon_lucette.file}
+    portrait: {teint: clair, corpulence: moyen, age: age, coiffure: boucle, cheveux: blanc, pilosite: rase, lunettes: carrees, tenue: blouse, couleur: rose, accessoire: aucun}
+    lieu: boulangerie_residentiel
+    tranches: [matin, midi]
+    annees: [1990, 2007]
+    reseau: tribunes
+    trace: "Lucette Pichon s'en souviendra, entre deux fournées."
+    paliers: ["te reconnaît dans la file", "te passe avant les autres", "te ferait un gâteau de fête"]
+    froid: ["te rend la monnaie en pièces jaunes", "te sert le pain de la veille", "ne te sert plus"]
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Dans la file, on n'écoute plus les matchs de la sélection. On les met à la radio, pour pouvoir éteindre."}
+        - "Le dimanche matin, personne ne prend de tarte. Quand le stade perd, Aubérive mange du pain sec, et elle le dit en payant."
+      moyen:
+        - {si: "role == selectionneur", texte: "On parle de la sélection entre deux baguettes, sans s'échauffer. Pas de tarte, pas de pain sec. On attend de voir."}
+        - "La file est partagée. Les anciens défendent, les jeunes sifflent. Mon mari dit que c'est bon signe : tant que ça parle, ça vient."
+      haut:
+        - {si: "role == selectionneur", texte: "Les fenêtres de la rue des Lilas ont sorti les drapeaux de la sélection. J'en ai mis un en vitrine, entre les éclairs."}
+        - "Dimanche, trois fournées de tartes. Les gens de la Nord en ont pris pour leurs voisins. Ça ne m'était pas arrivé depuis longtemps."
+    repliques:
+      - {lien: 0, texte: "C'est la première fois que vous venez ? Ici, on dit bonjour à toute la file, même à ceux de devant."}
+      - {lien: 1, texte: "Mon mari tient la buvette du stade le samedi. Il rentre avec le score et la tête de chacun. Moi, le dimanche, je cuis en fonction."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Ce matin, un monsieur m'a demandé du pain d'hier, exprès. Il a dit que depuis trois samedis, c'était le pain qui allait avec."}
+      - {lien: 1, si: "flag(vl_boulangere)", texte: "Pour le four, je ne vous ai jamais dit merci comme il faut. Si : tous les matins. C'est la plus cuite, là, celle du dessus."}
+      - {lien: 2, si: "annee >= 1996", texte: "Ma vendeuse, Marie-Jo, compte la monnaie deux fois. Je la garde quand même. Elle connaît le prénom de tous les gamins de la rue."}
+      - {lien: 2, si: "serie_v >= 3", texte: "On m'a commandé une pièce montée pour dimanche, sans mariage, pour fêter la série. Je l'ai faite. Personne ne l'a coupée avant le coup de sifflet."}
+      - {lien: 3, texte: "Le jour où vous partirez, je ferai un pain à votre nom. Un pain, ça ne se garde pas. C'est fait pour ça."}
+      - {lien: -1, texte: "Une baguette. Pas cuite : il n'y a plus que ça."}
+      - {lien: -2, texte: "Mon mari dit qu'on ne refuse pas le pain. Alors je vous le vends. Je ne vous le donne plus."}
+    tuyaux:
+      - id: pichon_mardi
+        lien: 2
+        si: "role == entraineur && direction < 50 && annee <= 2007"
+        texte: "« Mon mari a entendu les anciens, à la buvette : le président a déjeuné avec un autre entraîneur, au café de la Mairie. Un mardi. Il y retourne mardi prochain. »"
+      - id: pichon_quatre_heures
+        lien: 2
+        si: "role != selectionneur && annee <= 2007"
+        texte: "« À quatre heures du matin, je vois qui rentre. Deux joueurs du club, jeudi, en chantant. Je leur ai dit que vous passiez par là, vous aussi. Le jeudi d'après, ils dormaient. »"
+        effets: {jauges: {vestiaire: 1}}
+    service:
+      lien: 3
+      si: "role != selectionneur"
+      label: "Une fournée pour le club"
+      texte: "Le lundi, à six heures, Lucette fait porter au vestiaire deux paniers de croissants encore chauds, et un mot au crayon : « Ça console. » Personne ne sait qui les envoie. Tout le monde le sait."
+      effets: {jauges: {vestiaire: 3}}
+      dette: true
+
+  # Marie-Jo Marçais (characters.yaml ; son livre : le 9, 2029-2031). La ville
+  # ne lui écrit que sa vie de boulangère ; tant que Kévin est vivant (avant
+  # 2028), elle parle de lui comme on parle d'un fils qui reprendra la boutique.
+  - id: mariejo
+    lieu: boulangerie_residentiel
+    tranches: [matin, midi]
+    annees: [2008, 2034]
+    reseau: tribunes
+    trace: "Marie-Jo te gardera la plus cuite."
+    paliers: ["te garde une baguette", "te fait entrer par le fournil", "ferait une fournée pour toi"]
+    froid: ["compte ta monnaie trois fois", "te sert la moins cuite", "ne te garde plus rien"]
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Dans la file, on dit « leur » sélection, plus « la nôtre ». Ça commence toujours par un mot. Vous l'avez remarqué ?"}
+        - "Dimanche, j'ai vendu du pain sec et pas une tarte. Dans la file, on ne disait pas votre nom. On disait « l'autre ». Vous saviez ?"
+      moyen:
+        - {si: "role == selectionneur", texte: "On parle de la sélection comme de la météo. Ni pour, ni contre. On regarde le ciel. Il va faire quoi, d'après vous ?"}
+        - "Une tarte sur deux, dimanche. La moitié de la file veut votre tête, l'autre moitié veut du pain. Laquelle vous préférez ?"
+      haut:
+        - {si: "role == selectionneur", texte: "Les gamins de la file font votre liste sur les sachets de pain, au crayon. Ils mettent toujours un gardien de trop. Ça vous dérange ?"}
+        - "Dimanche, la file chantait. Dans une boulangerie, à sept heures du matin. Vous imaginez ? J'ai vendu les tartes avant qu'elles refroidissent."
+    repliques:
+      - {lien: 0, texte: "Une baguette ? Je vous la mets bien cuite, ou comme tout le monde ?"}
+      - {lien: 0, si: "annee >= 2016 && annee <= 2021", texte: "Kévin livre l'après-midi, à vélo, quand il n'a pas école. Il dit qu'il s'entraîne. Vous le prendriez, vous, un garçon qui pédale comme ça ?"}
+      - {lien: 1, texte: "Le samedi soir, je sais le score avant la radio : à la tête des gens qui rentrent du stade par la rue des Lilas. Vous, vous rentrez par où ?"}
+      - {lien: 1, si: "serie_v >= 3", texte: "Ce matin, un monsieur a payé les croissants de toute la file. Il ne connaissait personne. Ça gagne, en ce moment. Vous croyez qu'il recommencera ?"}
+      - {lien: 2, si: "annee >= 2022 && annee <= 2027", texte: "Kévin veut partir sur un chantier, là-bas, au soleil. Ils paient trois fois plus. Je lui ai dit d'y aller. Vous lui auriez dit quoi, vous ?"}
+      - {lien: 2, si: "annee <= 2027", texte: "Madame Pichon trouvait que je comptais la monnaie trop lentement. Je la compte toujours deux fois. Le reste, je ne le compte jamais."}
+      - {lien: 3, texte: "La file vous siffle ? Je ferme la boutique dix minutes. On ne siffle pas quelqu'un qui a sa baguette de côté. Ça vous va ?"}
+      - {lien: -1, texte: "Votre baguette. La monnaie, comptez-la : je l'ai comptée."}
+      - {lien: -2, texte: "Je ne vous garde plus rien. La plus cuite part à sept heures, comme pour tout le monde. Ce n'est pas juste, ça ?"}
+      - {lien: 2, si: "flag(histoire_h7) && flag(tuyau_mariejo_rance) && flag(h7_rance_mort)", texte: "Je vous l'avais dit, pour la côte. Je ne vous le reproche pas. Je me le reproche, à cinq heures, sous le fournil. Et vous ?"}
+    tuyaux:
+      - id: mariejo_rance
+        lien: 2
+        si: "flag(histoire_h7) && !flag(h7_rance_mort) && !flag(h7_corner_ramenes)"
+        texte: "« À cinq heures, je vois passer le petit Rancé sous le fournil : il rentre à l'hôtel. Dans la côte, il s'arrête, la main à plat sur la poitrine. Deux fois. C'est normal, à son âge ? »"
+      - id: mariejo_sifflets
+        lien: 2
+        si: "role != selectionneur && tribunes < 50 && annee <= 2034"
+        texte: "« Ce matin, trois garçons de la Nord ont payé leurs croissants avec la cagnotte des sifflets. Samedi, à la vingtième minute, ils siffleront. Pourquoi la vingtième, vous savez ? »"
+    service:
+      lien: 3
+      label: "Le mot dans la file"
+      texte: "Pendant une semaine, Marie-Jo rend la monnaie avec une phrase : « Il faut laisser du temps, vous ne croyez pas ? » La file finit par la répéter, au tabac, au marché, au stade."
+      effets: {jauges: {tribunes: 3}}
+
+  - id: guerand
+    name: "Malo Guérand"
+    label: "BOULANGER, RUE DES LILAS"
+    genre: m
+    tic: "Le levain, ça se transmet."
+    on_relation: {3: vi.guerand.levain}
+    portrait: {teint: dore, corpulence: fin, age: jeune, coiffure: queue, cheveux: chatain, pilosite: bouc, lunettes: aucune, tenue: blouse, couleur: blanc, accessoire: montre, couleur_accessoire: noir}
+    lieu: boulangerie_residentiel
+    tranches: [matin, midi]
+    annees: [2035, 2050]
+    reseau: tribunes
+    trace: "Malo s'en souviendra. Il retient les gens à leur façon de choisir le pain."
+    paliers: ["te reconnaît", "te met de côté le pain du four à bois", "ferait une fournée pour toi"]
+    froid: ["te sert sans lever les yeux", "te dit qu'il n'y en a plus", "ne te sert plus"]
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Les clients regardent la sélection sur leur montre, pendant que je pèse. Ils ne lèvent même plus la tête au but."}
+        - "Dimanche, pas une tarte. Les gens prennent du pain complet, le pain des jours où l'on fait attention. Ça ne trompe pas."
+      moyen:
+        - {si: "role == selectionneur", texte: "La sélection, ici, c'est comme le temps qu'il fera. On en parle pour ne rien dire, et on paie."}
+        - "Une tarte sur deux. La file hésite. Madame Marçais dit que c'est comme ça qu'on sait que tout est encore possible."
+      haut:
+        - {si: "role == selectionneur", texte: "J'ai fait des fougasses aux couleurs de la sélection. Elles partent avant huit heures. Je n'en fais pas assez exprès."}
+        - "Dimanche, on m'a vidé la vitrine avant neuf heures. Les gens de la Nord ont même acheté le pain de seigle. Ils détestent le seigle."
+    repliques:
+      - {lien: 0, texte: "Bonjour. Du four à bois ou du four électrique ? Le four à bois, c'est le mardi et le vendredi. Les autres jours, je mens un peu."}
+      - {lien: 1, texte: "Madame Marçais passe le mardi. Elle goûte une baguette, elle ne dit rien, et elle repart. La veille, je ne dors pas."}
+      - {lien: 1, si: "flag(histoire_h9) && flag(h9_four_paye)", texte: "Madame Marçais m'a laissé le four payé, et une punaise au-dessus de la caisse. Je n'ai rien accroché à la punaise. Elle a dit merci."}
+      - {lien: 2, texte: "Le levain vient de chez elle, et le sien de chez Madame Pichon. Ça fait cinquante ans que le même pain lève dans cette rue. Moi, je le nourris."}
+      - {lien: 3, texte: "Le four à bois ne pose pas de questions. Le jour où plus personne ne voudra donner de pain au club, frappez au fournil, la nuit."}
+      - {lien: -1, texte: "Il n'y a plus de tradition. Il y a du pain de mie."}
+      - {lien: 2, si: "flag(tuyau_guerand_jeunes) && !flag(service_guerand)", texte: "Les gamins du centre viennent toujours à six heures, avec leurs pièces comptées. Je leur donne la plus grosse baguette. Ça ne suffit pas."}
+    tuyaux:
+      - id: guerand_jeunes
+        lien: 2
+        si: "role != selectionneur"
+        texte: "« Les gamins de votre centre viennent à six heures, avant l'école. Ils n'ont pas mangé depuis la veille : la cantine du club ferme le mercredi soir. Ils paient en pièces. »"
+    service:
+      lien: 3
+      si: "role != selectionneur"
+      label: "Le pain du centre"
+      texte: "Chaque matin de la semaine, à six heures, un sac de pain et de croissants attend les gamins du centre derrière la porte du fournil, sans facture et sans mot."
+      effets: {jauges: {vestiaire: 2}}
+
+  # ═════════════════════════════════════════════════════════════════ LE GARAGE
+  # Le garage du Pont, au fond de la cour. 1990-2018 : Albert Quintane, le mécano
+  # et le patron (le vendeur des activités est son employé ; la voiture neuve sous
+  # la bâche est la sienne, achetée pour le jour où l'on serait champions). Le
+  # café se fait sur le réchaud de l'établi. 2019-2050 : Jérémy Saulnier, son
+  # ancien apprenti, quand les voitures se mettent à se souvenir de tout.
+  - id: quintane
+    name: "Albert Quintane"
+    label: "LE MÉCANO DU PONT"
+    genre: m
+    tic: "La tôle garde tout."
+    on_relation: {3: vi.quintane.cafe_noir, -3: vi.quintane.carnet}
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: degarni, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: veste, couleur: marine, accessoire: carnet, couleur_accessoire: noir}
+    lieu: garage
+    tranches: [matin, aprem]
+    annees: [1990, 2018]
+    reseau: rue
+    trace: "Quintane s'en souviendra. Il reconnaît les gens au bruit de leur moteur."
+    paliers: ["te reconnaît à ton moteur", "te sert le café de l'établi", "ferait disparaître une voiture pour toi"]
+    froid: ["te fait attendre dans la cour", "te facture chaque minute", "ne touche plus à ta voiture"]
+    repliques:
+      - {lien: 0, texte: "Laissez tourner. Non, ne dites rien. Le moteur parle d'abord, vous parlerez après."}
+      - {lien: 0, texte: "Le café est sur le réchaud de l'établi depuis six heures. Il a le goût de l'établi. On s'y fait, ou on boit celui du vendeur."}
+      - {lien: 1, texte: "Le vendeur connaît votre salaire. Moi, je connais votre voiture. Des deux, c'est lui qui se trompe le plus souvent."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Le car du club est revenu de Valdorne avec un rétroviseur en moins. Trois samedis qu'il rentre de mauvaise humeur. Je ne pose pas de questions : je commande la pièce."}
+      - {lien: 1, si: "flag(histoire_h2) && flag(h2_wagon_vu)", texte: "La berline grise sous la bâche ? Gardiennage, payé d'avance, en liquide. Je ne demande pas les noms. Je demande l'avance."}
+      - {lien: 2, texte: "La voiture sous la bâche est à moi. Achetée neuve pour le jour où l'on serait champions. Elle a le temps. Moi, un peu moins."}
+      - {lien: 2, si: "flag(histoire_h1) && flag(h1_berline_brulee)", texte: "La berline du président, je la garde pour l'expert. L'expert ne vient pas. Les experts ne viennent jamais quand ça a bien brûlé."}
+      - {lien: 3, texte: "Une voiture qui ne doit plus exister, ça se démonte. Amenez-la de nuit, par la cour. Je ne demande rien. Je démonte."}
+      - {lien: -1, texte: "Garez-la dans la cour. Je verrai."}
+      - {lien: -2, texte: "Votre moteur fait un bruit. Je ne sais pas lequel. Allez à Valdorne : ils ont des valises qui savent tout."}
+    tuyaux:
+      - id: quintane_larrieu
+        lien: 2
+        si: "flag(histoire_h5) && !flag(h5_larrieu)"
+        texte: "« Madame Tessandier téléphonait en me laissant ses clés : “C'est là qu'on a signé, un mardi.” Dans le vide-poche, la carte d'un notaire de Portclair, Maître Larrieu. Je ne fouille pas : je vide. »"
+        effets: {set: [h5_larrieu]}
+      - id: quintane_parechoc
+        lien: 2
+        si: "role != selectionneur && annee <= 2018"
+        texte: "« Un joueur du club m'a amené sa voiture dimanche à sept heures, le pare-chocs enfoncé. Payé comptant pour que ce soit fini lundi. Ce n'est pas un poteau qu'il a pris. Un poteau, ça ne saigne pas. »"
+    service:
+      lien: 3
+      label: "Faire disparaître la voiture"
+      texte: "La voiture entre de nuit par la cour. Au matin, il reste un châssis sans numéro, quatre roues dépareillées, et Quintane qui boit son café sans te regarder."
+      effets: {jauges: {direction: 2}}
+      dette: true
+
+  - id: saulnier
+    name: "Jérémy Saulnier"
+    label: "GARAGISTE DU PONT"
+    genre: m
+    tic: "Les voitures parlent, maintenant."
+    on_relation: {3: vi.saulnier.boitier, -3: vi.saulnier.trajets}
+    portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: brosse, cheveux: brun, pilosite: rase, lunettes: aucune, tenue: veste, couleur: marine, accessoire: montre, couleur_accessoire: noir}
+    lieu: garage
+    tranches: [matin, aprem]
+    annees: [2019, 2050]
+    reseau: rue
+    trace: "Jérémy s'en souviendra. Quintane le lui a appris : on n'oublie pas un moteur."
+    paliers: ["te reconnaît", "te passe avant les autres au diagnostic", "effacerait une route pour toi"]
+    froid: ["te donne un rendez-vous dans trois semaines", "te facture la valise", "ne touche plus à ta voiture"]
+    repliques:
+      - {lien: 0, texte: "La valise dit que tout va bien. Je vais l'écouter quand même, trente secondes, sans rien dire. C'est Quintane qui m'a appris."}
+      - {lien: 1, texte: "Les voitures d'aujourd'hui retiennent tout : où, quand, combien de temps à l'arrêt. Je les répare. Elles, elles se souviennent."}
+      - {lien: 1, si: "serie_v >= 3", texte: "Depuis qu'on gagne, on m'apporte des voitures à laver avant le match. Pas à réparer : à laver. Les gens veulent briller sur le parking."}
+      - {lien: 2, texte: "Quintane passe le samedi vers cinq heures. Il ne dit rien. Il écoute les moteurs. Le samedi où il ne viendra pas, je fermerai."}
+      - {lien: 3, texte: "Une route, ça s'efface d'un boîtier. Je sais faire. Une fois. Après, la voiture ne me fait plus confiance."}
+      - {lien: -1, texte: "Laissez les clés dans la boîte. Je verrai."}
+    tuyaux:
+      - id: saulnier_boitier
+        lien: 2
+        si: "role != selectionneur"
+        texte: "« Une voiture du staff est allée trois nuits de suite à Valdorne, ce mois-ci. Le boîtier garde tout. Elle s'est garée devant le siège de {rival}, chaque fois une heure et quart. »"
+    service:
+      lien: 3
+      label: "Effacer les trajets"
+      texte: "Jérémy branche ta voiture sur sa valise, le dos tourné, et tape longtemps. Quand il débranche, tes trajets du mois n'ont jamais eu lieu. « La prochaine fois, prenez le car. »"
+      effets: {jauges: {direction: 2}}
+      dette: true
+
+  # ════════════════════════════════════════════════════════════════ LA LAVERIE
+  # Rue du Stade. La 4 est la machine du club. 1990-2012 : Gisèle Delmotte,
+  # repasseuse à façon, qui tient la laverie depuis la table de pliage.
+  # 2013-2050 : Gabriel Montel, « le gérant » (le livre 8 : le papier PAS APRÈS
+  # MINUIT scotché sur la 4, c'est lui).
+  - id: delmotte
+    name: "Gisèle Delmotte"
+    label: "LA LAVERIE DE LA RUE DU STADE"
+    genre: f
+    tic: "Le linge, ça se lit."
+    on_relation:
+      3:
+        - {id: vi.delmotte.maillots_1974, if: "flag('tuyau_delmotte_1974')"}
+        - {id: vi.delmotte.chemise}
+      -3: vi.delmotte.col
+    portrait: {teint: dore, corpulence: moyen, age: mur, coiffure: carre, cheveux: roux, pilosite: rase, lunettes: aucune, tenue: blouse, couleur: ciel, accessoire: aucun}
+    lieu: laverie
+    tranches: [matin, midi, aprem]
+    annees: [1990, 2012]
+    reseau: familles
+    trace: "Gisèle s'en souviendra. Elle se souvient de chaque chemise qu'elle a pliée."
+    paliers: ["te reconnaît", "plie ton linge avec le sien", "ferait n'importe quelle lessive pour toi"]
+    froid: ["te laisse la machine qui fuit", "plie ton linge de travers", "ne te parle plus"]
+    repliques:
+      - {lien: 0, texte: "La 4, c'est celle du club. Les autres, prenez celle que vous voulez. Sauf la 2 : elle mange les chaussettes, et elle ne les rend pas."}
+      - {lien: 0, si: "tranche == matin", texte: "Le matin, ce sont les mères. À midi, les infirmières de nuit. Le soir, les hommes seuls. Vous êtes en avance, ou vous êtes en retard ?"}
+      - {lien: 1, texte: "Je repasse à façon. Le président m'apporte six chemises par semaine. Il ne sait pas qu'un col, ça se lit comme une page."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Les maillots reviennent moins sales, ces temps-ci. Ils ne se roulent plus par terre. Je le vois à l'eau avant de le lire dans le journal."}
+      - {lien: 2, texte: "Mon fils est à la maison d'arrêt de Valdorne. Je lave son linge le jeudi, je le porte le vendredi. Ils le fouillent ; ils le replient mal."}
+      - {lien: 3, texte: "Une chemise à laver sans que personne la voie, apportez-la-moi le matin. Avant les mères."}
+      - {lien: -1, texte: "Les machines sont libres. Toutes."}
+      - {lien: -2, texte: "Je ne plie plus que pour les gens qui disent bonjour. Vous dites bonjour à la machine."}
+    tuyaux:
+      - id: delmotte_rose
+        lien: 2
+        si: "role != selectionneur && annee <= 2012"
+        texte: "« Depuis trois semaines, les maillots du club rendent l'eau rose. Pas toujours le même : le 6, le 8, le 2. On se bat dans votre vestiaire, et ce n'est pas sur le terrain. »"
+      - id: delmotte_1974
+        lien: 2
+        si: "annee <= 2012"
+        texte: "« La lingère du club voulait jeter les maillots de 1974, les vrais, en laine. Je les ai repris et lavés à la main, un par un. Ils sont dans mon placard. Le jour où il le faudra. »"
+    service:
+      lien: 3
+      label: "Une lessive sans questions"
+      texte: "Gisèle prend le sac sans l'ouvrir, le vide dans la 4 à quatre-vingt-dix degrés et s'assoit devant le hublot jusqu'au bout. Ce qui était sur le tissu n'y est plus."
+      effets: {jauges: {direction: 2}}
+      dette: true
+
+  - id: montel
+    name: "Gabriel Montel"
+    label: "LE GÉRANT DE LA LAVERIE"
+    genre: m
+    tic: "Pas après minuit."
+    on_relation: {3: vi.montel.lit_de_camp}
+    portrait: {teint: ebene, corpulence: large, age: mur, coiffure: chauve, cheveux: noir, pilosite: barbe, lunettes: carrees, tenue: pull, couleur: gris, accessoire: montre, couleur_accessoire: bordeaux}
+    lieu: laverie
+    tranches: [midi, aprem, soir]
+    annees: [2013, 2050]
+    reseau: familles
+    trace: "Gabriel s'en souviendra. Il compte les gens comme les tours de tambour."
+    paliers: ["te reconnaît", "te garde une machine", "te laisserait dormir dans l'arrière-boutique"]
+    froid: ["te rend la monnaie en jetons", "te dit que tout est pris", "ferme quand tu arrives"]
+    repliques:
+      - {lien: 0, texte: "Les machines démarrent avec la carte, ou avec le téléphone. Les pièces, je les prends encore, pour les anciens. Ils aiment le bruit."}
+      - {lien: 0, si: "tranche == soir", texte: "Je ferme à une heure. Après une heure, ce n'est plus du linge qu'on vient laver. C'est autre chose."}
+      - {lien: 1, texte: "Madame Delmotte m'a laissé la 4 avec une consigne : celle-là, on ne la loue pas, on la prête. Je ne sais toujours pas à qui."}
+      - {lien: 1, si: "serie_d >= 3", texte: "La mère de votre gardien est venue laver ses rideaux à vingt-trois heures. Depuis la série, elle ne veut plus croiser personne."}
+      - {lien: 2, texte: "Il y a des gens qui viennent la nuit sans rien à laver. Ils regardent tourner la machine des autres. Je ne les mets pas dehors avant une heure."}
+      - {lien: 2, si: "flag(histoire_h8) && flag(h8_laverie)", texte: "Le papier sur la 4, c'est moi qui l'ai écrit. Pas après minuit. Pour quelqu'un qui ne dort pas. Ce quelqu'un le sait."}
+      - {lien: 3, texte: "La clé est sous le monnayeur, et le lit de camp derrière, pour les soirs où vous ne dormez pas. Personne ne le saura. Moi, si."}
+      - {lien: -1, texte: "Tout est pris. Revenez demain."}
+    tuyaux:
+      - id: montel_nuit
+        lien: 2
+        si: "role != selectionneur && annee >= 2013"
+        texte: "« Un joueur du club vient laver son linge à minuit, trois fois par semaine. Il ne dort plus. Il dit que c'est le genou. Le genou, ça ne vous fait pas surveiller la porte. »"
+    service:
+      lien: 3
+      label: "Le lit de camp"
+      texte: "Gabriel te laisse l'arrière-boutique : un lit de camp, une couverture de l'armée, la 2 qui tourne en berceuse. Tu dors six heures d'affilée. Au matin, ton linge est plié sur la chaise."
+      effets: {jauges: {vestiaire: 2}, var: {h8_nuits: "-1"}}
+
+  # ═════════════════════════════════════════════════════════════════ LE MARCHÉ
+  # La place, le dimanche. 1990-2011 : Achille Ducros, maraîcher, la monnaie
+  # dans une boîte à chaussures. 2012-2037 : Laure, sa fille (socio, ancienne
+  # arrière gauche de la section féminine). 2038-2050 : Côme Dartigue, le
+  # maraîcher de vingt ans des trois étals.
+  - id: ducros_achille
+    name: "Achille Ducros"
+    label: "MARAÎCHER, PLACE DU MARCHÉ"
+    genre: m
+    tic: "Une pomme de plus, ça ne se pèse pas."
+    on_relation: {3: vi.ducros_achille.cageots, -3: vi.ducros_achille.place}
+    portrait: {teint: olive, corpulence: large, age: age, coiffure: casquette, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: pull, couleur: bouteille, coiffe: bleu, accessoire: aucun}
+    lieu: marche
+    tranches: [matin, midi]
+    annees: [1990, 2011]
+    reseau: rue
+    trace: "Achille Ducros s'en souviendra. Il a la mémoire des visages et des prix."
+    paliers: ["te reconnaît", "te met une pomme de plus", "remuerait le marché pour toi"]
+    froid: ["pèse au gramme près", "te sert les fruits du fond du cageot", "ne te sert plus"]
+    repliques:
+      - {lien: 0, texte: "Goûtez. Non : goûtez d'abord, vous paierez après. Ceux qui paient avant de goûter, je ne leur fais pas confiance."}
+      - {lien: 1, texte: "Ma boîte à chaussures a vu passer trois gouvernements et quatre présidents du club. Elle est plus solide qu'eux tous, et elle rend mieux la monnaie."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Les tomates restent dans les cageots, ces dimanches-ci. Les gens n'ont pas faim : ils ont soif. C'est le Corner qui gagne."}
+      - {lien: 1, si: "serie_v >= 3", texte: "Quand on gagne, les gens achètent des fraises en mars. Je leur dis qu'elles n'ont pas de goût. Ils s'en moquent : elles sont rouges."}
+      - {lien: 2, texte: "On veut mon champ, derrière la Tréfilerie, pour un parking. Un parking pour le stade, qu'ils disent. Le stade en a déjà un. Il est vide la semaine."}
+      - {lien: 2, si: "annee >= 2005", texte: "Ma fille tient l'étal avec moi, maintenant. Elle rend la monnaie plus vite, et elle se trompe moins. Ça me vexe tous les dimanches."}
+      - {lien: 3, texte: "Dites-moi le samedi ce que le marché doit penser. Le dimanche à midi, toute la ville le pensera."}
+      - {lien: -1, texte: "Un kilo, c'est un kilo. Pas un gramme de plus."}
+      - {lien: -2, texte: "Allez à l'hypermarché. Là-bas, on ne vous connaît pas, et on ne vous regarde pas."}
+      - {lien: 2, si: "flag(tuyau_ducros_maison)", texte: "La maison du président s'est vendue, à un monsieur de Portclair qui n'y vient jamais. Le président, lui, vient moins souvent au marché."}
+    tuyaux:
+      - id: ducros_parking
+        lien: 2
+        si: "annee <= 2011"
+        texte: "« Un monsieur de l'agence est venu mesurer mon champ, derrière la Tréfilerie, avec un pied à coulisse. Il a parlé du stade. Personne du club ne m'a rien demandé. Vous savez quelque chose ? »"
+      - id: ducros_maison
+        lien: 2
+        si: "role != president && annee <= 2011"
+        texte: "« Le président vend sa maison de campagne, au bord de la Rive. Un président qui vend sa maison paie quelque chose qu'on ne voit pas encore. Regardez les comptes avant qu'il vous les montre. »"
+    service:
+      lien: 3
+      si: "role != selectionneur"
+      label: "Des cageots pour le centre"
+      texte: "Chaque lundi, deux cageots attendent au centre de formation : des pommes, des carottes avec leur terre, et un mot au crayon, « Pour les jambes ». La cantine économise ; les gamins mangent."
+      effets: {jauges: {vestiaire: 2, caisse: 1}}
+
+  - id: ducros_laure
+    name: "Laure Ducros"
+    label: "MARAÎCHÈRE, PLACE DU MARCHÉ"
+    genre: f
+    tic: "Mon père pesait large."
+    on_relation: {3: vi.ducros_laure.section}
+    portrait: {teint: olive, corpulence: fin, age: mur, coiffure: queue, cheveux: brun, pilosite: rase, lunettes: aucune, tenue: doudoune, couleur: orange, accessoire: aucun}
+    lieu: marche
+    tranches: [matin, midi]
+    annees: [2012, 2037]
+    reseau: rue
+    trace: "Laure s'en souviendra. Au marché, on se souvient de qui revient."
+    paliers: ["te reconnaît", "te met une pomme de plus, comme son père", "remuerait la place pour toi"]
+    froid: ["pèse au gramme près", "te sert en dernier", "ne te sert plus"]
+    repliques:
+      - {lien: 0, texte: "Mon père tenait cet étal. Il pesait large. Moi aussi, mais je ne le dis pas : ça finirait par se savoir."}
+      - {lien: 1, texte: "Le dimanche, je vends ce que la ville a pensé du samedi. Une défaite, des poireaux pour la soupe. Une victoire, des fraises, même en mars."}
+      - {lien: 2, texte: "J'ai joué arrière gauche dans la section féminine, avant qu'on la ferme. Les crampons sont restés dans la camionnette. On ne sait jamais."}
+      - {lien: 3, texte: "Je suis la seule à crier les prix, sur la place. Quand je crie autre chose, ils me suivent. Un dimanche, ça peut vous servir."}
+      - {lien: -1, texte: "Un kilo. Ce sera tout ?"}
+    tuyaux:
+      - id: ducros_laure_jeudi
+        lien: 2
+        si: "annee <= 2037"
+        texte: "« Les filles de l'ancienne section s'entraînent encore, le jeudi soir, sur le terrain annexe, sans lumière. Elles ont gardé une clé du portail. Personne au club ne le sait. »"
+    service:
+      lien: 3
+      label: "La cagnotte du marché"
+      texte: "Un dimanche, de stand en stand, Laure fait passer une boîte à chaussures, celle de son père. À midi, elle est pleine, pour le déplacement des jeunes. Elle la pose sur ton bureau, sans un mot."
+      effets: {jauges: {vestiaire: 1, tribunes: 1}}
+
+  - id: dartigue
+    name: "Côme Dartigue"
+    label: "MARAÎCHER, LES TROIS ÉTALS"
+    genre: m
+    tic: "Des carottes avec leur terre."
+    on_relation: {3: vi.dartigue.semences}
+    portrait: {teint: clair, corpulence: fin, age: jeune, coiffure: meche, cheveux: blond, pilosite: rase, lunettes: aucune, tenue: doudoune, couleur: pelouse, accessoire: aucun}
+    lieu: marche
+    tranches: [matin, midi]
+    annees: [2038, 2050]
+    reseau: rue
+    trace: "Côme s'en souviendra. Il connaît ses clients par leur prénom ; il n'en a pas beaucoup."
+    paliers: ["te reconnaît", "te garde les légumes biscornus", "ferait revenir le marché pour toi"]
+    froid: ["te fait payer avec la montre", "te sert sans un mot", "ne te sert plus"]
+    repliques:
+      - {lien: 0, texte: "Des carottes avec leur terre. Les gens les veulent sales, maintenant. Ça prouve qu'elles sortent de quelque part."}
+      - {lien: 1, texte: "Madame Ducros m'a laissé son coin de place et une consigne : peser large. Je pèse large. Je suis bien le seul à peser, d'ailleurs."}
+      - {lien: 2, texte: "Le mercredi, on n'est plus que trois. La poissonnière compte les têtes qu'elle connaît ; moi, je compte les nouvelles. Vous en êtes une."}
+      - {lien: 3, texte: "Les fermiers de la vallée me doivent des semences. Un mot de moi, et la place se remplit pour vous, un dimanche."}
+      - {lien: -1, texte: "Ce sera tout ?"}
+      - {lien: 2, si: "flag(tuyau_dartigue_paves)", texte: "La mairie a reporté la vente de la place. Ou elle a oublié. À la mairie, c'est souvent la même chose. On garde nos pavés un an de plus."}
+    tuyaux:
+      - id: dartigue_paves
+        lien: 2
+        si: "annee >= 2038"
+        texte: "« La mairie veut vendre la place, le mercredi, pour les livraisons des drones, et le samedi pour un parking du stade. Tout le monde veut nos pavés. Personne ne veut nos légumes. »"
+    service:
+      lien: 3
+      label: "Les fermiers de la vallée"
+      texte: "Un dimanche, Côme fait descendre douze fermiers de la vallée. La place est pleine comme dans les photos d'avant. Entre deux cageots, ils parlent de toi, et de la Rive."
+      effets: {jauges: {tribunes: 2}}
+
+  # ════════════════════════════════════════════════════════════════ LE FLEURISTE
+  # Aux Immortelles. 1990-2016 : Madame Huguette (characters.yaml ; les livres 4
+  # et 7). Son livreur depuis 1990, Corentin Mévellec, reprend la boutique en 2017,
+  # et la tournée du 14 mai au carré ancien que plus personne ne paie.
+  - id: huguette
+    lieu: fleuriste
+    tranches: [matin, aprem]
+    annees: [1990, 2016]
+    reseau: familles
+    trace: "Madame Huguette s'en souviendra. Elle écrit tout dans son cahier de commandes."
+    paliers: ["te reconnaît", "fait tes bouquets elle-même", "ferait une gerbe pour toi"]
+    froid: ["te fait attendre derrière les gerbes", "te vend les fleurs de la veille", "ne te sert plus"]
+    repliques:
+      - {lien: 0, texte: "Pour qui, les fleurs ? Je ne demande pas par curiosité. Les fleurs, ça dépend toujours de pour qui."}
+      - {lien: 1, texte: "J'ai un cahier pour les mariages et un pour les deuils. Le second est plus épais. Dans une ville de football, on meurt le dimanche soir."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Depuis que vous perdez, les hommes ne m'achètent plus de bouquets pour leur femme. Des plantes vertes. Ça dure plus longtemps qu'une excuse."}
+      - {lien: 2, si: "!flag(histoire_h4) && annee <= 1995", texte: "Au carré ancien, il y a une tombe que je fleuris chaque printemps pour quelqu'un qui a payé d'avance. Je ne dis pas qui. Les fleurs non plus."}
+      - {lien: 2, si: "annee >= 2005", texte: "Mon livreur, Corentin, monte au carré ancien chaque 14 mai. Plus personne ne paie depuis longtemps. Il y va quand même. Il dit que c'est sur sa tournée."}
+      - {lien: 3, texte: "Une gerbe à un nom que personne ne doit lire, ça se fait : j'écris le ruban à l'envers. Les morts lisent dans tous les sens."}
+      - {lien: -1, texte: "Ce sera un bouquet, ou vous regardez ?"}
+      - {lien: -2, texte: "Je ne fais plus vos fleurs. Allez au marché : la marchande ne demande jamais pour qui."}
+    tuyaux:
+      - id: huguette_cardiologue
+        lien: 2
+        si: "flag(histoire_h7) && flag(h7_rance_mort) && !flag(h7_cardiologue)"
+        texte: "« Une couronne pour le petit Rancé, d'un cabinet de cardiologie de Valdorne. Au dos, au crayon, la note de sa consultation manquée du 16, à faire suivre. Ils n'ont pas peur. Ils comptent. »"
+        effets: {set: [h7_cardiologue]}
+      - id: huguette_pere
+        lien: 2
+        si: "role != selectionneur && annee <= 2016"
+        texte: "« Le père de votre capitaine est passé commander ses propres fleurs. Il a choisi les couleurs du club. Il ne veut pas déranger son fils avant les matchs. Son fils ne sait rien. »"
+    service:
+      lien: 3
+      label: "Une gerbe à votre nom"
+      texte: "Aux obsèques d'un ancien du kop, la plus belle gerbe porte ton nom sur le ruban, aux couleurs du club. Madame Huguette l'a posée elle-même, au premier rang, et elle est restée."
+      effets: {jauges: {tribunes: 3}}
+
+  - id: mevellec
+    name: "Corentin Mévellec"
+    label: "FLEURISTE, AUX IMMORTELLES"
+    genre: m
+    tic: "Le 14 mai, c'est sur ma tournée."
+    on_relation: {3: vi.mevellec.tournee}
+    portrait: {teint: clair, corpulence: fin, age: mur, coiffure: court, cheveux: gris, pilosite: barbe, lunettes: rondes, tenue: veste, couleur: bouteille, accessoire: carnet, couleur_accessoire: creme}
+    lieu: fleuriste
+    tranches: [matin, aprem]
+    annees: [2017, 2050]
+    reseau: familles
+    trace: "Corentin s'en souviendra. Il retient les gens aux fleurs qu'ils n'achètent pas."
+    paliers: ["te reconnaît", "te dit pour qui sont les gerbes", "ferait une tournée pour toi"]
+    froid: ["te fait payer la livraison", "oublie ta commande", "ne te sert plus"]
+    repliques:
+      - {lien: 0, texte: "Madame Huguette m'a laissé la boutique et ses cahiers. Les mariages au crayon, les deuils à l'encre. Elle disait : un deuil, ça ne s'annule pas."}
+      - {lien: 1, texte: "Je livrais pour elle depuis 1990, dans la camionnette verte. Je connais l'adresse de tout le monde, et la tombe de la moitié."}
+      - {lien: 2, texte: "Chaque 14 mai, je monte au carré ancien, sur la tombe d'un Monsieur Bertin. Plus personne ne paie depuis trente ans. C'est sur ma tournée, c'est tout."}
+      - {lien: 3, texte: "Qui pleure qui, dans cette ville, je le sais avant le curé. On n'achète jamais des fleurs pour rien. Demandez-moi."}
+      - {lien: -1, texte: "Une gerbe ou un bouquet ? Décidez-vous, j'ai une livraison."}
+      - {lien: 2, si: "flag(tuyau_mevellec_funerarium)", texte: "La gerbe sans couleurs est partie samedi. La famille m'a demandé qui avait prévenu le club. J'ai dit : personne. C'était presque vrai."}
+    tuyaux:
+      - id: mevellec_funerarium
+        lien: 2
+        si: "role != selectionneur && annee >= 2017"
+        texte: "« Samedi, au funérarium de la route de Valdorne : un ancien gardien du club. La famille ne veut personne du club. Ils ont commandé une gerbe sans couleurs. Je livre à dix heures. »"
+    service:
+      lien: 3
+      label: "Les tombes des anciens"
+      texte: "À la Toussaint, sur chaque tombe d'un ancien du club, un pot de chrysanthèmes porte une carte à ton nom. Les familles le remarquent. Les anciens encore vivants aussi."
+      effets: {jauges: {tribunes: 2}}
+
+  # ════════════════════════════════════════════════════════════════ LE TAILLEUR
+  # Brunel, tailleur et chausseur. 1990-2004 : Auguste, qui a posé à vingt ans la
+  # doublure bordeaux du président de 1962 (son père avait coupé le costume).
+  # 2005-2034 : Clément, son fils, revenu de la capitale quand les mains du père
+  # ont lâché. 2035-2050 : Gaspard, le petit-fils des baskets de collection, qui
+  # a fini par prendre le ruban. Le réseau : la direction, qui parle les bras levés.
+  - id: brunel_auguste
+    name: "Auguste Brunel"
+    label: "BRUNEL, TAILLEUR ET CHAUSSEUR"
+    genre: m
+    tic: "Trois essayages. Jamais moins."
+    on_relation: {3: vi.brunel_auguste.doublure, -3: vi.brunel_auguste.patron}
+    portrait: {teint: clair, corpulence: fin, age: age, coiffure: degarni, cheveux: blanc, pilosite: moustache, lunettes: rondes, tenue: costume, couleur: anthracite, accessoire: echarpe, couleur_accessoire: jaune}
+    lieu: tailleur
+    tranches: [matin, aprem]
+    annees: [1990, 2004]
+    reseau: direction
+    trace: "Auguste Brunel s'en souviendra. Il garde les mesures de tout le monde, et le reste."
+    paliers: ["te reconnaît à ta carrure", "prend tes mesures sans rien noter", "glisserait un mot pour toi au président"]
+    froid: ["te fait attendre sur la chaise", "te pique en épinglant", "ne prend plus tes mesures"]
+    climat:
+      bas:
+        - {si: "role == president", texte: "Vos actionnaires se font faire des costumes de voyage. Ils parlent d'un autre club dans la cabine. La doublure n'est pas à vos couleurs."}
+        - {si: "role == selectionneur", texte: "Les gens de la Fédération sont venus pour des retouches. Ils parlaient de vous au passé, comme d'un pli qu'on défait."}
+        - {si: "role == joueur", texte: "Les dirigeants ont parlé de votre contrat dans la cabine. Pas en bien. Un costume, ça entend tout. Moi aussi."}
+        - "Le président a fait reprendre sa veste : il a maigri. Un président maigrit quand il pense à remplacer quelqu'un. Vous voyez qui."
+      moyen:
+        - {si: "role == president", texte: "Vos actionnaires ont pris des costumes gris. Ni sombres, ni clairs. Ils attendent de voir avant de choisir une couleur."}
+        - {si: "role == selectionneur", texte: "La Fédération a commandé les costumes du prochain tournoi. Le vôtre n'est pas dans la commande. Il n'est pas annulé non plus."}
+        - {si: "role == joueur", texte: "Au club, on parle de vous sans élever la voix. Ni augmentation, ni départ. Un costume d'attente, si vous voulez."}
+        - "Le président n'a rien fait retoucher depuis un mois. Il ne grossit pas, il ne maigrit pas. Il vous regarde, c'est tout."
+      haut:
+        - {si: "role == president", texte: "Vos actionnaires m'ont demandé une doublure à vos couleurs. Ils ne l'avaient jamais fait. Ils veulent qu'on les voie avec vous."}
+        - {si: "role == selectionneur", texte: "À la Fédération, ils veulent tous la même coupe que vous. Je leur dis que ça ne se commande pas, une allure."}
+        - {si: "role == joueur", texte: "Les dirigeants parlent de vous dans la cabine comme d'un costume réussi. Ils veulent vous faire durer."}
+        - "Le président a commandé un costume neuf pour la fin de saison. Pour une photo, a-t-il dit. Avec vous à côté, je suppose."
+    repliques:
+      - {lien: 0, texte: "Levez les bras. Plus haut. Voilà. On ne coupe pas un costume pour quelqu'un qui garde les bras le long du corps."}
+      - {lien: 1, texte: "Mon père a coupé le costume du président de 1962. La doublure bordeaux, c'est moi qui l'ai posée. J'avais vingt ans et les mains qui tremblaient."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Le président m'a apporté un pantalon à élargir. Il mange la nuit, depuis la série. On le voit aux coutures avant de le voir dans ses yeux."}
+      - {lien: 2, texte: "Mon fils travaille dans la capitale, chez un grand couturier. Il revient à Noël et il regarde mes ciseaux comme des outils de musée. Il a raison."}
+      - {lien: 2, si: "annee >= 2000", texte: "Mes mains me lâchent. Le matin, je ne ferme plus le poing avant dix heures. Je coupe l'après-midi. Ne le dites pas au président."}
+      - {lien: 3, texte: "Le président écoute mieux les bras levés. Un mot de vous dans son oreille, pendant l'essayage : je sais où le placer."}
+      - {lien: -1, texte: "Asseyez-vous. J'ai un client."}
+      - {lien: -2, texte: "Je ne prends plus vos mesures. Elles changent trop. Allez chez le confectionneur de Valdorne."}
+      - {lien: 2, si: "flag(tuyau_brunel_auguste_permis)", texte: "Le permis du stade est signé. Le derby est perdu. Le président m'a quand même commandé un gilet neuf, pour la photo à la mairie."}
+      - {lien: 2, si: "flag(tuyau_brunel_auguste_deuil) && direction < 35", texte: "Toujours pas de costume sombre commandé à votre nom. Je regarde le carnet tous les matins. Vous devriez en faire autant."}
+    tuyaux:
+      - id: brunel_auguste_permis
+        lien: 2
+        si: "role != president && annee <= 2004"
+        texte: "« Dans la cabine, hier, le président disait au conseiller municipal qu'il préférait perdre le derby que le permis du stade. Je recousais une boutonnière. Il croit que les tailleurs sont sourds. »"
+      - id: brunel_auguste_deuil
+        lien: 2
+        si: "annee <= 2004"
+        texte: "« Votre prédécesseur m'a commandé un costume sombre la veille de son départ. Il savait. Ils savent toujours une semaine avant. Le jour où l'on vous en commande un, venez me voir. »"
+    service:
+      lien: 3
+      label: "Un mot pendant l'essayage"
+      texte: "Toute la semaine, ceux qui décident de ton sort passent chez Brunel. Les bras levés, entre deux épingles, ils entendent Auguste dire du bien de toi, à voix basse."
+      effets: {jauges: {direction: 3}}
+
+  - id: brunel_clement
+    name: "Clément Brunel"
+    label: "BRUNEL FILS, TAILLEUR"
+    genre: m
+    tic: "Une couture se défait. Un mot, non."
+    on_relation: {3: vi.brunel_clement.carnet, -3: vi.brunel_clement.carnet_ouvert}
+    portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: court, cheveux: chatain, pilosite: rase, lunettes: carrees, tenue: chemise, couleur: ciel, accessoire: echarpe, couleur_accessoire: jaune}
+    lieu: tailleur
+    tranches: [matin, aprem]
+    annees: [2005, 2034]
+    reseau: direction
+    trace: "Clément Brunel s'en souviendra. Il a la mémoire de son père, en plus poli."
+    paliers: ["te reconnaît", "te fait passer avant les mariés", "dirait un mot pour toi à qui décide"]
+    froid: ["te confie à l'apprenti", "te fait payer chaque essayage", "ne te reçoit plus"]
+    climat:
+      bas:
+        - {si: "role == president", texte: "Vos actionnaires ont annulé leurs essayages de la semaine. Tous les trois, le même jour. Chez un tailleur, ça veut dire qu'ils se sont parlé avant."}
+        - {si: "role == selectionneur", texte: "À la Fédération, on m'a demandé de ne pas finir votre costume de tournoi. De le laisser bâti, au cas où."}
+        - {si: "role == joueur", texte: "Au club, ils parlent de vous comme d'un costume qui tombe mal. Ce n'est jamais le costume, je leur dis. Ils ne m'écoutent pas."}
+        - "Le président m'a demandé si j'avais gardé les mesures de votre prédécesseur. Au cas où, a-t-il dit. Je préfère vous le dire."
+      moyen:
+        - {si: "role == president", texte: "Vos actionnaires arrivent en retard aux essayages et repartent en avance. Ils ne sont pas pressés de décider."}
+        - {si: "role == selectionneur", texte: "La Fédération a commandé les costumes de la saison, le vôtre compris. Sans la broderie. On verra, ont-ils dit."}
+        - {si: "role == joueur", texte: "On parle de vous au club entre deux sujets, ni en bien, ni en mal. C'est la saison des costumes gris."}
+        - "Le président ne fait reprendre que ses ourlets. Un homme qui ne change que ses ourlets attend quelque chose."
+      haut:
+        - {si: "role == president", texte: "Vos actionnaires ont commandé des boutons de manchette à vos initiales. Pour vous les offrir. Faites semblant de ne pas le savoir."}
+        - {si: "role == selectionneur", texte: "À la Fédération, ils veulent tous savoir où vous faites faire vos costumes. Je dis : à Aubérive. Ils ne me croient pas."}
+        - {si: "role == joueur", texte: "Au club, ils m'ont commandé une veste à votre taille, pour la photo de la prolongation. Je ne devrais pas vous le dire."}
+        - "Le président a fait faire une veste pour le banquet de fin de saison. Il a dit : pour être à la hauteur, cette année."
+    repliques:
+      - {lien: 0, texte: "Mon père disait trois essayages. Je dis trois aussi, mais je vous laisse croire que deux suffiront."}
+      - {lien: 1, texte: "Je suis revenu de la capitale quand les mains de mon père ont lâché. Là-bas, je cousais pour des gens que je ne voyais jamais. Ici, je les vois trop."}
+      - {lien: 1, si: "serie_v >= 3", texte: "Les mariés du mois veulent tous des boutonnières aux couleurs du club, tant que ça gagne. Je leur dis que ça porte malheur. Ils insistent."}
+      - {lien: 2, si: "annee >= 2010", texte: "Mon fils Gaspard vend des baskets de collection sous la vitrine. Mon père en aurait fait une maladie. Moi, je lui ai donné le tiroir du bas."}
+      - {lien: 2, si: "flag(histoire_h9) && mission(h9.sc.poche_usee)", texte: "J'ai renforcé votre poche intérieure, sans vous demander. Ce que vous y mettez ne pèse rien, je sais. Ça use quand même."}
+      - {lien: 3, texte: "Mon père appelait l'essayage la meilleure heure : on écoute mieux les bras levés. Dites-moi ce qu'il faut qu'on entende."}
+      - {lien: -1, texte: "L'apprenti va prendre vos mesures."}
+      - {lien: 2, si: "flag(tuyau_brunel_clement_deuil)", texte: "Le costume de deuil du président est prêt depuis un mois. Il ne vient pas le chercher. Un homme qui ne vient pas chercher son deuil n'a pas encore vendu."}
+    tuyaux:
+      - id: brunel_clement_deuil
+        lien: 2
+        si: "role != president && annee >= 2005 && annee <= 2034"
+        texte: "« Le président s'est fait prendre les mesures d'un costume de deuil. Il n'y a pas d'enterrement prévu. Chez lui, le deuil, c'est quand il vend. Comptez les visiteurs du club ce mois-ci. »"
+    service:
+      lien: 3
+      label: "Le carnet des essayages"
+      texte: "Pendant une semaine, Clément te laisse lire le carnet des essayages : qui vient, avec qui, et ce qu'on y dit les bras levés. Tu entres en réunion en sachant déjà."
+      effets: {jauges: {direction: 2}}
+      dette: true
+
+  - id: brunel_gaspard
+    name: "Gaspard Brunel"
+    label: "LE PETIT-FILS BRUNEL"
+    genre: m
+    tic: "Quatorze mesures, une heure."
+    on_relation: {3: vi.brunel_gaspard.ruban}
+    portrait: {teint: clair, corpulence: fin, age: mur, coiffure: meche, cheveux: chatain, pilosite: bouc, lunettes: aucune, tenue: chemise, couleur: noir, accessoire: echarpe, couleur_accessoire: jaune}
+    lieu: tailleur
+    tranches: [matin, aprem]
+    annees: [2035, 2050]
+    reseau: direction
+    trace: "Gaspard Brunel s'en souviendra. Il prend les mesures au ruban, comme son grand-père."
+    paliers: ["te reconnaît", "te mesure au ruban, pas à la cabine", "dirait un mot pour toi à qui décide"]
+    froid: ["t'envoie à la cabine à scanner", "te fait payer l'heure", "ne te reçoit plus"]
+    climat:
+      bas:
+        - {si: "role == president", texte: "Vos actionnaires ont fait scanner leurs mesures à la cabine de Valdorne. Ils ne viennent plus ici. On ne quitte pas un tailleur sans quitter autre chose."}
+        - {si: "role == selectionneur", texte: "La Fédération a commandé ses costumes de tournoi ailleurs. Le vôtre aussi, à vos mesures de l'an dernier. Elles ont changé, non ?"}
+        - {si: "role == joueur", texte: "Au club, ils parlent de vous à l'imparfait. C'est le temps des départs, l'imparfait. Je l'entends à chaque deuil, dans la cabine."}
+        - "Le président a commandé un costume pour une conférence de presse, dans quinze jours. Il n'a pas dit sur quoi. Il a dit : quelque chose de sombre."
+      moyen:
+        - {si: "role == president", texte: "Vos actionnaires viennent pour des retouches, pas pour des costumes. Ils ne s'engagent pas. Ils raccourcissent."}
+        - {si: "role == selectionneur", texte: "La Fédération attend la fin du tournoi pour décider de ses costumes. Comme pour vous, je crois."}
+        - {si: "role == joueur", texte: "Au club, on parle de vous entre deux ourlets. Ni bien, ni mal. Ils attendent la fin de la saison."}
+        - "Le président fait reprendre ses manches. Il veut avoir l'air de travailler. Ça veut dire qu'il n'a encore rien décidé."
+      haut:
+        - {si: "role == president", texte: "Vos actionnaires m'ont commandé une écharpe aux couleurs du club, en cachemire. Pour le virage. Ils veulent qu'on les voie avec vous."}
+        - {si: "role == selectionneur", texte: "À la Fédération, on veut votre coupe pour la photo officielle. Toute la délégation habillée comme vous. C'est flatteur, ou c'est inquiétant."}
+        - {si: "role == joueur", texte: "Au club, ils m'ont demandé vos mesures pour une veste de cérémonie. On ne fait pas ça pour quelqu'un qu'on va vendre."}
+        - "Le président a fait broder votre nom à l'intérieur d'une veste du club. Pour un cadeau. Ne me trahissez pas."
+    repliques:
+      - {lien: 0, texte: "J'ai vendu des baskets sous cette vitrine pendant vingt ans. Un jour, j'ai pris le ruban de mon grand-père pour voir. Je ne l'ai plus lâché."}
+      - {lien: 1, texte: "Les baskets de collection sont toujours sous la vitrine, six cents paires. Les jeunes de la réserve viennent les regarder comme on va voir des reliques."}
+      - {lien: 2, texte: "Mon grand-père a posé la doublure bordeaux de 1962. Mon père s'est battu pour la poche du cœur. Moi, je ne me suis encore battu pour rien. J'attends."}
+      - {lien: 3, texte: "On ne ment pas avec un ruban autour du cou. Ce que je dis en mesurant un tour de cou, on le croit. Je peux parler de vous."}
+      - {lien: -1, texte: "Prenez rendez-vous sur la montre. Je ne reçois plus personne à l'improviste."}
+      - {lien: 2, si: "flag(tuyau_brunel_gaspard_puce)", texte: "La puce est cousue. Si un jour vous voulez savoir où est le président, demandez à son assistant. Ou à moi : je sais dans quelle poche."}
+    tuyaux:
+      - id: brunel_gaspard_puce
+        lien: 2
+        si: "role != president && annee >= 2035"
+        texte: "« Le président m'a demandé de coudre une puce dans la doublure de son costume, pour que son assistant sache toujours où il est. Il veut savoir si ça se voit. Ça se sent. »"
+    service:
+      lien: 3
+      label: "Le tour de cou"
+      texte: "Gaspard prend les mesures de ceux qui décident, au ruban, une heure chacun. Pendant l'heure, il parle de toi. Personne n'ose l'interrompre, avec un ruban autour du cou."
+      effets: {jauges: {direction: 2}}
+
+  # ════════════════════════════════════════════════════════════════ LA LIBRAIRIE
+  # La librairie-papeterie d'Odette Marsal (le livre 1 ; c'est elle qui l'a payée,
+  # en 1977). Agathe Arlaud y tient le comptoir depuis 1977, la papetière du
+  # livre 6, jusqu'en 2007. Céline Vautrin la rachète en 2008, avec le tiroir des
+  # pellicules jamais réclamées. Odette, qui s'y assoit, n'en est pas la gardienne.
+  - id: arlaud
+    name: "Agathe Arlaud"
+    label: "LA PAPETIÈRE DE CHEZ MARSAL"
+    genre: f
+    tic: "Les journaux, je les lis avant vous."
+    on_relation: {3: vi.arlaud.cigarettes, -3: vi.arlaud.chronique}
+    portrait: {teint: clair, corpulence: fin, age: mur, coiffure: carre, cheveux: brun, pilosite: rase, lunettes: carrees, tenue: pull, couleur: prune, accessoire: journal}
+    lieu: librairie
+    tranches: [matin, aprem]
+    annees: [1990, 2007]
+    reseau: presse
+    trace: "Agathe Arlaud s'en souviendra. Elle classe les gens comme les journaux : par date."
+    paliers: ["te reconnaît", "te garde L'Écho sous le comptoir", "ferait passer un mot au journal pour toi"]
+    froid: ["te vend le journal de la veille", "oublie ta commande", "ne te garde plus rien"]
+    activites: [librairie_pellicule]
+    repliques:
+      - {lien: 0, texte: "L'Écho arrive à six heures et demie. Je le lis avant de le vendre. Quand quelque chose ne va pas, je le vends quand même, mais je le sais."}
+      - {lien: 1, texte: "Madame Marsal est arrivée en 1977 avec un bail et une boîte à chaussures. Moi, la même année, avec un certificat de vendeuse. On a tenu."}
+      - {lien: 1, si: "serie_d >= 3", texte: "On achète L'Écho pour le déchirer devant moi, page des sports. Depuis la série, j'en vends plus qu'après une victoire. C'est triste, le commerce."}
+      - {lien: 2, texte: "Le chroniqueur de L'Écho vient ici le lundi, pour ses cigarettes et le courrier des lecteurs. Il dit qu'il y trouve ses idées. C'est vrai."}
+      - {lien: 2, si: "flag(histoire_h1)", texte: "Madame Marsal garde une boîte sous le comptoir. Je ne l'ai jamais ouverte. Treize ans à côté d'elle, et je ne l'ai jamais ouverte."}
+      - {lien: 3, texte: "Le chroniqueur ouvre toujours son paquet de cigarettes devant moi. Un mot glissé dedans arrive au journal avant le bouclage."}
+      - {lien: -1, texte: "L'Écho ? Il n'y en a plus. Il y en a un, mais il est réservé."}
+      - {lien: -2, texte: "Je ne vous garde plus le journal. Lisez-le au café, comme tout le monde : avec des taches."}
+    tuyaux:
+      - id: arlaud_photo
+        lien: 2
+        si: "flag(histoire_h1) && arc(en.h1.pellicule) && !flag(h1_photo_1977)"
+        texte: "« Le bail de 1977, Madame Marsal l'a payé avec une photo, une seule, vendue au président de l'époque. Vaubourg. Le chèque, c'est moi qui l'ai porté à la banque. »"
+        effets: {set: [h1_photo_1977]}
+      - id: arlaud_fax
+        lien: 2
+        si: "flag(histoire_h6) && saison >= 2"
+        texte: "« Des rouleaux pour un fax de 1987, je n'en commande plus que pour une machine en ville : celle du club-house, au sous-sol. Quelqu'un m'en prend un par mois, depuis l'automne. En pièces. »"
+        effets: {var: {h6_indices: "+1"}}
+      - id: arlaud_chroniqueur
+        lien: 2
+        si: "annee <= 2007"
+        texte: "« Le chroniqueur de L'Écho m'a acheté trois carnets et un dictionnaire des synonymes. Quand il prend le dictionnaire, c'est qu'il prépare une série. Sur vous, je pense. »"
+    service:
+      lien: 3
+      label: "Un mot au journal"
+      texte: "Le mot d'Agathe arrive au chroniqueur avec son paquet de cigarettes. Le lundi, pour la première fois, sa chronique parle de toi sans méchanceté. Elle parle même du match."
+      effets: {jauges: {tribunes: 2, direction: 1}}
+
+  - id: vautrin
+    name: "Céline Vautrin"
+    label: "LIBRAIRE-PAPETIÈRE"
+    genre: f
+    tic: "Ceux qui comptent lisent encore."
+    on_relation: {3: vi.vautrin.livre}
+    portrait: {teint: brun, corpulence: moyen, age: mur, coiffure: boucle, cheveux: noir, pilosite: rase, lunettes: aviateur, tenue: veste, couleur: camel, accessoire: carnet, couleur_accessoire: rouge}
+    lieu: librairie
+    tranches: [matin, aprem]
+    annees: [2008, 2050]
+    reseau: presse
+    trace: "Céline Vautrin s'en souviendra. Elle note les titres que les gens n'osent pas acheter."
+    paliers: ["te reconnaît", "te commande des livres sans qu'on lui demande", "ferait patienter un journaliste pour toi"]
+    froid: ["te fait attendre la borne", "perd ta commande", "ne te vend plus rien"]
+    activites: [librairie_tirages]
+    repliques:
+      - {lien: 0, texte: "Vous cherchez un livre, ou vous voulez qu'on vous voie chercher un livre ? Les deux se vendent très bien."}
+      - {lien: 1, texte: "J'ai racheté la boutique à Madame Arlaud avec le tiroir des pellicules jamais réclamées. Je n'en ai ouvert aucune. Elle m'a fait promettre."}
+      - {lien: 1, si: "serie_d >= 3", texte: "On m'a commandé deux biographies de vos prédécesseurs, cette semaine. Les gens préparent des comparaisons."}
+      - {lien: 2, si: "annee >= 2020", texte: "Le Flux dit tout avant L'Écho. Les gens de L'Écho viennent m'acheter des carnets pour écrire ce que le Flux a déjà dit. Moi, je vends les carnets."}
+      - {lien: 2, texte: "La borne imprime en trente secondes. On fait tirer les photos qu'on a peur de perdre. J'ai vu tirer des joueurs morts, et des joueurs vendus. Les mêmes visages."}
+      - {lien: 3, texte: "Je sais quel livre offrir à un journaliste pour qu'il regarde ailleurs. Ça a déjà marché deux fois. Un bon livre, ça occupe."}
+      - {lien: -1, texte: "Je n'ai pas ce titre. Ni celui-là."}
+      - {lien: 2, si: "flag(tuyau_vautrin_comptes)", texte: "La journaliste m'a commandé un troisième livre sur les comptes des clubs. Celui sur le vôtre n'existe pas encore. Elle est en train de l'écrire."}
+    tuyaux:
+      - id: vautrin_comptes
+        lien: 2
+        si: "annee >= 2008"
+        texte: "« La journaliste de L'Écho a commandé tous les livres sur les comptes des clubs. Livrés chez elle, pas au journal. Elle prépare quelque chose qu'elle ne veut pas qu'on voie arriver. »"
+    service:
+      lien: 3
+      label: "Un livre pour la journaliste"
+      texte: "Céline offre à la journaliste de L'Écho un livre qu'elle cherchait depuis dix ans, avec ta carte glissée dedans. Le papier sur toi paraît une semaine plus tard, et moins dur."
+      effets: {jauges: {tribunes: 2}}
+
+  # ══════════════════════════════════════════════════════════════════ LE CINÉMA
+  # L'Aurore. 1990-2011 : Ernest Vigouroux, le projectionniste (la dernière bobine
+  # de la vie de la ville, c'est sa signature). 2012-2050 : Ghislaine Viard, la
+  # caissière, qui lance le film depuis l'ordinateur et note les avis dans un cahier.
+  - id: vigouroux
+    name: "Ernest Vigouroux"
+    label: "PROJECTIONNISTE DE L'AURORE"
+    genre: m
+    tic: "Une bobine, ça se réchauffe."
+    on_relation: {3: vi.vigouroux.seance}
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: degarni, cheveux: gris, pilosite: barbe, lunettes: carrees, tenue: pull, couleur: noir, accessoire: aucun}
+    lieu: cinema
+    tranches: [soir]
+    annees: [1990, 2011]
+    reseau: rue
+    trace: "Ernest s'en souviendra. Il retient les gens à leur place dans la salle."
+    paliers: ["te reconnaît dans le noir", "te laisse monter en cabine", "passerait n'importe quel film pour toi"]
+    froid: ["te place au premier rang", "lance le film avant que tu sois à ta place", "ne te laisse plus entrer"]
+    activites: [cinema_seance]
+    repliques:
+      - {lien: 0, texte: "Le film commence quand je le décide. Le panneau dit vingt et une heures ; la bobine dit quand elle est prête."}
+      - {lien: 1, texte: "D'en haut, je vois toute la salle : les couples du fond, les gamins du centre, votre capitaine seul le mardi. Je ne dis rien. C'est la cabine qui voit."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Quand le stade perd, les gens viennent voir des comédies. Ils ne rient pas, mais ils viennent. C'est pour le noir, je crois."}
+      - {lien: 2, texte: "J'ai à la cave les actualités de toutes les finales depuis 1951. Le club n'en veut pas, la mairie non plus. Elles fondent, doucement, comme du sucre."}
+      - {lien: 2, si: "annee >= 2008", texte: "Ils vont mettre une machine : un disque dur, un bouton. J'ai demandé qui réchaufferait la bobine. Ils m'ont regardé comme on regarde une bobine."}
+      - {lien: 3, texte: "La salle, un dimanche matin, avec un film à vous : je vous la donne quand vous voulez. Personne ne vient le dimanche matin."}
+      - {lien: -1, texte: "Il reste des places au premier rang."}
+      - {lien: -2, texte: "La séance est complète. Elle est vide, mais elle est complète."}
+      - {lien: 2, si: "flag(tuyau_vigouroux_cle)", texte: "Vous avez essayé la clé ? Elle marche toujours. J'ai vérifié, une nuit de derby. Je n'ai rien pris. J'ai écouté le local chanter."}
+    tuyaux:
+      - id: vigouroux_dernier_rang
+        lien: 2
+        si: "role != president && role != selectionneur && annee <= 2011"
+        texte: "« Le vendredi, au dernier rang, côté mur : le président, et la femme d'un joueur du club. Ils arrivent après la lumière et partent avant. La cabine voit tout. Moi, je n'ai rien vu. »"
+      - id: vigouroux_cle
+        lien: 2
+        si: "annee <= 2011"
+        texte: "« La clé de la sortie de secours de L'Aurore ouvre aussi la porte de derrière du local du kop. Même serrurier, même année. Personne ne s'en est jamais aperçu. Maintenant, vous. »"
+    service:
+      lien: 3
+      label: "La salle rien qu'à vous"
+      texte: "Un dimanche matin, L'Aurore est à toi : la salle, le film de ton choix, la confiserie ouverte. Tu y emmènes ton groupe. Pendant deux heures, personne ne sait où vous êtes."
+      effets: {jauges: {vestiaire: 3}}
+
+  - id: viard
+    name: "Ghislaine Viard"
+    label: "CAISSIÈRE DE L'AURORE"
+    genre: f
+    tic: "Trois bonbons de plus, pour tous."
+    on_relation: {3: vi.viard.cahier, -3: vi.viard.lumiere}
+    portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: chignon, cheveux: roux, pilosite: rase, lunettes: aucune, tenue: veste, couleur: rouge, accessoire: badge, couleur_accessoire: creme}
+    lieu: cinema
+    tranches: [soir]
+    annees: [2012, 2050]
+    reseau: rue
+    trace: "Ghislaine s'en souviendra. Elle note dans un cahier ce que les gens disent des films."
+    paliers: ["te reconnaît", "te garde ta place au fond", "t'ouvrirait la salle après minuit"]
+    froid: ["te fait payer plein tarif", "ne te rajoute plus de bonbons", "ne te vend plus de place"]
+    activites: [cinema_numerique]
+    repliques:
+      - {lien: 0, texte: "Une place, un cornet ? Le film démarre tout seul à vingt et une heures. Je monte quand même appuyer sur le bouton à moins une. Par principe."}
+      - {lien: 1, texte: "Ernest m'a laissé la clé de la cabine et une boîte de bouts de pellicule. Je ne sais pas quoi en faire. Je les regarde contre la lumière, le soir."}
+      - {lien: 1, si: "serie_v >= 3", texte: "Ces semaines-ci, les gens choisissent les films longs. Quand on gagne, on n'est pas pressé de rentrer chez soi."}
+      - {lien: 2, texte: "J'écris dans un cahier ce que les gens pensent des films. Le vôtre, je le relis. Vous ne dites jamais ce que vous avez pensé. Vous dites ce que vous avez vu."}
+      - {lien: 2, si: "flag(histoire_h10) && mission(h10.sc.aurore_sonnerie)", texte: "Je vous ai dit que la sonnerie était dans le film. Je dis beaucoup de choses aux gens qui sortent. Ça les aide à rentrer."}
+      - {lien: 3, texte: "La porte du fond reste ouverte après minuit, les soirs où il vous faut une salle que personne ne surveille. Rendez la clé avant six heures."}
+      - {lien: -1, texte: "Plein tarif. Et pas de bonbons."}
+      - {lien: 2, si: "flag(tuyau_viard_vente)", texte: "Le dossier de L'Aurore est toujours sur le bureau du président. Sa secrétaire vient voir les films du mardi. Elle pleure aux fins heureuses."}
+    tuyaux:
+      - id: viard_sonnerie
+        lien: 2
+        si: "flag(histoire_h10) && mission(h10.sc.aurore_sonnerie) && !flag(h10_clapet_nino)"
+        texte: "« La sonnerie n'était pas dans le film. C'était le petit Nino, du kop. Il a répondu dans le hall, tout bas : “Oui, madame.” Puis il m'a demandé de dire le contraire, si on me demandait. »"
+        effets: {set: [h10_clapet_nino]}
+      - id: viard_vente
+        lien: 2
+        si: "role != president && annee >= 2012"
+        texte: "« La mairie veut vendre L'Aurore. Le dossier est sur le bureau de votre président : il en ferait une salle de réception pour les partenaires du club. Il ne vous l'a pas dit ? »"
+    service:
+      lien: 3
+      label: "La salle après minuit"
+      texte: "Ghislaine te laisse L'Aurore après minuit : la porte du fond, la salle éteinte, une rencontre que personne ne verra. Tu rends la clé à cinq heures cinquante, sous le paillasson."
+      effets: {jauges: {direction: 2}}
+      dette: true
+
+  # ═══════════════════════════════════════════════════════════════════ L'ÉCOLE
+  # L'école des Lilas. 1990-2012 : Armand Bellocq, directeur et maître des CM2.
+  # 2013-2050 : Mathilde Chabanel, la maîtresse des CM2 (le livre 9 : les brassards
+  # en feutrine, « le directeur a dit non » ; elle a eu Kévin en classe).
+  - id: bellocq
+    name: "Armand Bellocq"
+    label: "DIRECTEUR DE L'ÉCOLE DES LILAS"
+    genre: m
+    tic: "Un enfant, ça se compte à la grille."
+    on_relation: {3: vi.bellocq.reunion, -3: vi.bellocq.dictee}
+    portrait: {teint: clair, corpulence: fin, age: age, coiffure: degarni, cheveux: blanc, pilosite: moustache, lunettes: rondes, tenue: blouse, couleur: gris, accessoire: stylo, couleur_accessoire: rouge}
+    lieu: ecole
+    tranches: [matin, aprem]
+    annees: [1990, 2012]
+    reseau: familles
+    trace: "Monsieur Bellocq s'en souviendra. Il n'a jamais oublié un élève, même ceux qu'il aurait voulu."
+    paliers: ["te reconnaît à la grille", "te fait entrer dans la cour", "ferait parler les parents pour toi"]
+    froid: ["te laisse derrière la grille", "parle de toi en classe", "ne t'ouvre plus la grille"]
+    repliques:
+      - {lien: 0, texte: "Vous attendez quelqu'un ? À la grille, on attend un enfant. Si c'est un enfant, je vous laisse. Sinon, je vous regarde."}
+      - {lien: 1, texte: "J'ai eu la moitié de votre tribune Nord en CM2. Je sais qui recopiait, qui pleurait à la dictée, qui se battait à la récréation. Ça n'a pas changé."}
+      - {lien: 1, si: "serie_d >= 3", texte: "À la récréation, plus personne ne veut être le gardien du club. Ils veulent tous être celui d'en face. Ça me dit le classement mieux que L'Écho."}
+      - {lien: 2, texte: "On veut fermer une classe à la rentrée. Vingt-deux élèves ; il en faudrait vingt-cinq. Trois enfants, c'est trois familles. Vous en avez, des familles, au club ?"}
+      - {lien: 2, si: "flag(histoire_h4) && annee <= 1993", texte: "La petite Sacha dessine des voitures rouges sur des ponts. La maîtresse s'inquiète. Moi, je trouve que c'est bon signe, une voiture qui arrive au bout."}
+      - {lien: 3, texte: "À la réunion du jeudi, les parents croient tout ce que dit le directeur. C'est terrible. Je peux dire du bien de vous."}
+      - {lien: -1, texte: "La grille reste fermée pendant les heures de classe."}
+      - {lien: -2, texte: "J'ai parlé de vous en instruction civique. Comme exemple. Pas comme bon exemple."}
+      - {lien: 2, si: "flag(tuyau_bellocq_parents) && tribunes >= 50", texte: "Les parents sont revenus au match avec les enfants. Ils n'ont pas sifflé. Ils leur ont appris autre chose, finalement."}
+    tuyaux:
+      - id: bellocq_classe
+        lien: 2
+        si: "role != selectionneur && annee <= 2012"
+        texte: "« L'inspecteur ferme une classe s'il manque trois inscrits. Les familles de vos jeunes joueurs logent à Valdorne. S'ils habitaient ici, la classe resterait ouverte. »"
+      - id: bellocq_parents
+        lien: 2
+        si: "tribunes < 40 && annee <= 2012"
+        texte: "« À la réunion de jeudi, les parents ont parlé de vous plus que des devoirs. Samedi, ils viendront au match avec les enfants. Pour leur apprendre à siffler, ont-ils dit. »"
+    service:
+      lien: 3
+      label: "La réunion du jeudi"
+      texte: "À la réunion des parents d'élèves, Monsieur Bellocq parle de toi entre la cantine et la kermesse. Le samedi suivant, cent familles regardent le club autrement."
+      effets: {jauges: {tribunes: 2}}
+
+  - id: chabanel
+    name: "Mathilde Chabanel"
+    label: "INSTITUTRICE, CLASSE DE CM2"
+    genre: f
+    tic: "Un cahier, ça ne ment pas."
+    on_relation: {3: vi.chabanel.redaction}
+    portrait: {teint: dore, corpulence: moyen, age: mur, coiffure: queue, cheveux: chatain, pilosite: rase, lunettes: rondes, tenue: pull, couleur: jaune, accessoire: stylo, couleur_accessoire: pelouse}
+    lieu: ecole
+    tranches: [matin, aprem]
+    annees: [2013, 2050]
+    reseau: familles
+    trace: "Madame Chabanel s'en souviendra. Elle se souvient de tous les parents, surtout des absents."
+    paliers: ["te reconnaît à la sortie", "te fait entrer dans la classe", "ferait parler l'école pour toi"]
+    froid: ["te rappelle l'heure de la sortie", "te fait attendre derrière la grille", "ne te parle plus"]
+    repliques:
+      - {lien: 0, texte: "Vous êtes parent ? Non ? Alors vous êtes du club. Les enfants vont vous demander votre salaire. Ne répondez pas : ils le répéteraient à table."}
+      - {lien: 1, si: "annee >= 2016", texte: "J'ai eu Kévin en CM2, le fils de la boulangère. Il dessinait des grues. Toujours des grues, avec un petit bonhomme tout en haut."}
+      - {lien: 1, si: "serie_d >= 3", texte: "Les écharpes du club sont au fond des cartables, ces temps-ci. Elles ressortiront. Les enfants sont fidèles plus longtemps que les adultes."}
+      - {lien: 2, texte: "Le directeur dit non à tout ce qui ressemble au football en classe. Alors je fais des mathématiques avec les classements. Il n'a pas encore compris."}
+      - {lien: 2, si: "flag(histoire_h9) && flag(h9_brassard_photo)", texte: "Les brassards en feutrine, c'était en arts plastiques. Le directeur les a confisqués. Le lendemain, ils étaient sur les cartables. Je n'ai rien fait. Rien du tout."}
+      - {lien: 3, texte: "Je peux donner une rédaction : « Un adulte que j'admire. » Les enfants écrivent ce qu'ils entendent à table. Et l'inverse."}
+      - {lien: -1, texte: "La sortie, c'est seize heures trente. Pas avant."}
+    tuyaux:
+      - id: chabanel_redactions
+        lien: 2
+        si: "role != selectionneur && annee >= 2013"
+        texte: "« Rédaction de la semaine, « Ma famille » : trois élèves ont écrit que leurs parents allaient perdre leur travail au club. Le jardinier, le chauffeur, la lingère. Vous le saviez ? »"
+    service:
+      lien: 3
+      label: "Une rédaction"
+      texte: "Madame Chabanel donne à ses CM2 une rédaction : « Un adulte que j'admire ». Le soir, dans cent cuisines, les parents entendent ton nom entre la soupe et le dessert."
+      effets: {jauges: {tribunes: 2}}
+
+# ═════════════════════════════════════════════════════════════════════ LES GESTES
+# Les activités qu'on fait avec quelqu'un (`avec`, un point de lien au plus entre
+# deux cartes) et ce que la ville en dit (`habitude`). Chacune tient l'époque de sa
+# personne par son `si` : le moteur crédite le lien sans regarder l'année.
+activites:
+  # ── l'épicerie
+  - id: qr_epi_tenir
+    lieu: epicerie
+    objet: comptoir
+    label: "Tenir la boutique"
+    texte: "Ginette te passe son tablier : « Cinq minutes, le temps de la banque. » Une dame demande du crédit. Tu ne sais pas où est le cahier. Elle, si : elle te le montre du menton."
+    textes:
+      - "Ginette te passe son tablier : « Cinq minutes, le temps de la banque. » Une dame demande du crédit. Tu ne sais pas où est le cahier. Elle, si : elle te le montre du menton."
+      - "Un gamin pose trois pièces sur le comptoir pour un paquet de biscuits qui en coûte cinq. Tu regardes Ginette, au fond. Elle hoche la tête. Le gamin repart avec les biscuits et un regard."
+      - "Tu tiens la caisse un quart d'heure. Personne n'achète rien : on vient voir qui tient la caisse. Ginette revient de la banque et compte tes visiteurs, pas tes ventes."
+    avec: coulomb
+    habitude: quartier
+    si: "annee <= 2003"
+    heures: [matin, aprem]
+    tranches: 1
+  - id: qr_epi_liste
+    lieu: epicerie
+    objet: rayons
+    label: "Tes courses, à sa façon"
+    texte: "Tu dictes ta liste à Ginette. Elle la refait à sa manière : moins de bière, une soupe, du savon. « Vous mangez comme quelqu'un qui rentre trop tard. Ça se voit au teint. »"
+    textes:
+      - "Tu dictes ta liste à Ginette. Elle la refait à sa manière : moins de bière, une soupe, du savon. « Vous mangez comme quelqu'un qui rentre trop tard. Ça se voit au teint. »"
+      - "Ginette remplit ton cabas en parlant de la cité : un mariage samedi, un licenciement lundi, un bébé qui ne dort pas. Elle ajoute des bouchons d'oreilles, pour la voisine du bébé."
+    avec: coulomb
+    habitude: quartier
+    si: "annee <= 2003"
+    francs: -35
+    tranches: 1
+  - id: qr_epi_colis
+    lieu: epicerie
+    objet: comptoir
+    label: "Trier les colis du soir"
+    texte: "Yacine te tend une pile de cartons et un feutre : par rue, puis par étage. Tu apprends qui commande quoi. Lui ne lève pas les yeux de son écran : il le savait déjà."
+    textes:
+      - "Yacine te tend une pile de cartons et un feutre : par rue, puis par étage. Tu apprends qui commande quoi. Lui ne lève pas les yeux de son écran : il le savait déjà."
+      - "Un carton très lourd pour une vieille dame du quatrième. Yacine te le fait monter. Ce sont des livres de poche, cent vingt. Elle te dit qu'elle relit tout depuis le début."
+    avec: kessar
+    habitude: quartier
+    si: "annee >= 2004"
+    heures: [aprem, soir]
+    tranches: 1
+  # ── la boulangerie
+  - id: qr_boul_fournee
+    lieu: boulangerie_residentiel
+    objet: pains
+    label: "Attendre la fournée"
+    texte: "À onze heures, la file attend la deuxième fournée. Lucette distribue les nouvelles du quartier avec la monnaie : un mariage, une naissance, un abonné de la Nord qui ne viendra plus."
+    textes:
+      - "À onze heures, la file attend la deuxième fournée. Lucette distribue les nouvelles du quartier avec la monnaie : un mariage, une naissance, un abonné de la Nord qui ne viendra plus."
+      - "La fournée a dix minutes de retard. Personne ne s'en va. Lucette fait goûter des chouquettes de la veille et demande à chacun le score de samedi, pour comparer."
+    avec: pichon_lucette
+    habitude: quartier
+    si: "annee <= 2007"
+    heures: [matin, midi]
+    tranches: 1
+  - id: qr_boul_fournil
+    lieu: boulangerie_residentiel
+    objet: four
+    label: "Le fournil à cinq heures"
+    texte: "Cinq heures, la porte du fournil entrouverte. Marie-Jo te met les mains dans la pâte : « Pas comme ça. Comme on borde quelqu'un. » Tu repars avec une baguette de travers, la tienne."
+    textes:
+      - "Cinq heures, la porte du fournil entrouverte. Marie-Jo te met les mains dans la pâte : « Pas comme ça. Comme on borde quelqu'un. » Tu repars avec une baguette de travers, la tienne."
+      - "Marie-Jo enfourne sans un mot. La radio donne les résultats de la veille. Au tien, elle monte le son, puis le baisse, selon. Ce matin, elle le monte."
+    avec: mariejo
+    habitude: quartier
+    si: "annee >= 2008 && annee <= 2034"
+    heures: [matin]
+    tranches: 1
+  - id: qr_boul_invendus
+    lieu: boulangerie_residentiel
+    objet: comptoir
+    label: "Porter les invendus"
+    texte: "À midi, Malo remplit deux cabas d'invendus pour le foyer de la rue Haute. Tu les portes. Au foyer, on te demande le score avant de te demander ton nom."
+    avec: guerand
+    habitude: largesse
+    si: "annee >= 2035"
+    heures: [midi]
+    tranches: 1
+  # ── le garage
+  - id: qr_garage_cafe
+    lieu: garage
+    objet: etabli
+    label: "Un café avec Quintane"
+    texte: "Quintane fait le café dans une casserole cabossée, sur le réchaud de l'établi, et le sert dans deux tasses de 1962, ébréchées au même endroit. Il ne dit rien. Le café non plus."
+    textes:
+      - "Quintane fait le café dans une casserole cabossée, sur le réchaud de l'établi, et le sert dans deux tasses de 1962, ébréchées au même endroit. Il ne dit rien. Le café non plus."
+      - "Le café a le goût de l'huile et de la chicorée. Quintane boit le sien en écoutant un moteur au ralenti, les yeux fermés. « Une bougie. Elle tousse. Comme mon père, le matin. »"
+      - "Il pose sa tasse sur l'aile d'une voiture et te raconte 1966 : le car de la Coupe, la caution signée par son père, la maison vendue. Sans colère, comme on lit une facture."
+      - "Le réchaud s'éteint. Il le rallume avec une allumette, du premier coup. « Quarante ans que je le rallume. Le jour où je rate, j'arrête. » Il ne rate pas."
+      - "« Du sucre ? » Il n'en a pas. Il te tend la boîte de vis à la place, et rit, pour la première fois depuis que tu le connais. Le café est meilleur, après."
+    avec: quintane
+    habitude: quartier
+    si: "annee <= 2018"
+    heures: [matin, aprem]
+    tranches: 1
+  - id: qr_garage_moteur
+    lieu: garage
+    objet: pont
+    label: "Écouter un moteur"
+    texte: "Quintane te met devant un moteur qui tourne : « Qu'est-ce qui cloche ? » Tu ne sais pas. Au bout de trente secondes, tu entends : un petit claquement, à gauche. Il hoche la tête."
+    textes:
+      - "Quintane te met devant un moteur qui tourne : « Qu'est-ce qui cloche ? » Tu ne sais pas. Au bout de trente secondes, tu entends : un petit claquement, à gauche. Il hoche la tête."
+      - "Une voiture du club, sur le pont. Quintane écoute, la main à plat sur le capot. « Elle a fait Valdorne à fond, cette nuit, et elle a freiné tard. » Il ne dit pas qui conduisait."
+    avec: quintane
+    habitude: quartier
+    si: "annee <= 2018"
+    heures: [matin, aprem]
+    tranches: 1
+  - id: qr_garage_valise
+    lieu: garage
+    objet: bureau
+    label: "La valise de diagnostic"
+    texte: "Jérémy branche la valise sur ta voiture et tourne l'écran vers toi : tes trajets du mois, heure par heure. « Elle sait où vous dormez. Moi, je n'ai rien vu. » Il débranche."
+    textes:
+      - "Jérémy branche la valise sur ta voiture et tourne l'écran vers toi : tes trajets du mois, heure par heure. « Elle sait où vous dormez. Moi, je n'ai rien vu. » Il débranche."
+      - "La valise dit que tout va bien. Jérémy coupe le moteur, attend, le relance, et écoute trente secondes, les yeux fermés, comme on le lui a appris. « Le roulement. À gauche. »"
+    avec: saulnier
+    habitude: quartier
+    si: "annee >= 2019"
+    heures: [matin, aprem]
+    tranches: 1
+  # ── la laverie
+  - id: qr_laverie_repasser
+    lieu: laverie
+    objet: pliage
+    label: "Donner ton linge à repasser"
+    texte: "Gisèle prend tes chemises une à une et regarde les cols, les poignets, rien d'autre. « Vous travaillez trop de la main droite. » Elle te les rend le lendemain, pliées, encore tièdes."
+    textes:
+      - "Gisèle prend tes chemises une à une et regarde les cols, les poignets, rien d'autre. « Vous travaillez trop de la main droite. » Elle te les rend le lendemain, pliées, encore tièdes."
+      - "Elle trouve dans ta poche un ticket de parking de Valdorne et le pose sur la pile, sans commentaire. Elle ne commente jamais. Elle pose."
+    avec: delmotte
+    habitude: quartier
+    si: "annee <= 2012"
+    heures: [matin, midi, aprem]
+    francs: -30
+    tranches: 0
+    max_jour: 1
+  - id: qr_laverie_attendre
+    lieu: laverie
+    objet: machines
+    label: "Attendre avec Gisèle"
+    texte: "Ta machine tourne. Gisèle te raconte le linge des autres sans dire un nom : la chemise du marié, la nappe d'une communion, un maillot qu'on lave à part. Le tambour s'arrête trop tôt."
+    textes:
+      - "Ta machine tourne. Gisèle te raconte le linge des autres sans dire un nom : la chemise du marié, la nappe d'une communion, un maillot qu'on lave à part. Le tambour s'arrête trop tôt."
+      - "Gisèle te montre comment plier un drap sans aide, contre le mur, avec le menton. « Mon mari est parti en 1979. Le drap, je l'ai gardé. » Elle rit. Tu ne sais pas si c'est une blague."
+    avec: delmotte
+    habitude: quartier
+    si: "annee <= 2012"
+    heures: [matin, midi, aprem]
+    tranches: 1
+  - id: qr_laverie_quatre
+    lieu: laverie
+    objet: machines
+    label: "Regarder tourner la 4"
+    texte: "Le soir, Gabriel éteint la moitié des néons. Vous regardez tourner la 4 sans rien dire. Il te tend un gobelet du distributeur. « Elle tourne mieux quand on la regarde. »"
+    textes:
+      - "Le soir, Gabriel éteint la moitié des néons. Vous regardez tourner la 4 sans rien dire. Il te tend un gobelet du distributeur. « Elle tourne mieux quand on la regarde. »"
+      - "Gabriel compte les tours du tambour à voix basse, comme on compte des moutons. Il s'arrête à deux cents. « Au-delà, je m'endors. Et je ferme à une heure. »"
+    avec: montel
+    habitude: quartier
+    si: "annee >= 2013"
+    heures: [soir]
+    tranches: 1
+  # ── le marché
+  - id: qr_marche_etal
+    lieu: marche
+    label: "Tenir l'étal une heure"
+    texte: "Achille te met son tablier et sa boîte à chaussures dans les mains : « Je reviens. » Il ne revient pas avant une heure. Tu pèses large ; il le voit de loin, et ne dit rien."
+    textes:
+      - "Achille te met son tablier et sa boîte à chaussures dans les mains : « Je reviens. » Il ne revient pas avant une heure. Tu pèses large ; il le voit de loin, et ne dit rien."
+      - "Une cliente te demande si les tomates sont d'ici. Tu ne sais pas. Achille, du café d'en face, lève trois doigts : trois kilomètres. Tu répètes. Elle en prend deux kilos."
+    avec: ducros_achille
+    habitude: quartier
+    si: "annee <= 2011"
+    heures: [matin]
+    tranches: 1
+  - id: qr_marche_camionnette
+    lieu: marche
+    label: "Décharger la camionnette"
+    texte: "Six heures, la camionnette de Laure. Tu portes les cageots pendant qu'elle monte les tréteaux. Elle te paie en légumes et en nouvelles : qui s'est marié, qui a vendu, qui est revenu."
+    avec: ducros_laure
+    habitude: quartier
+    si: "annee >= 2012 && annee <= 2037"
+    heures: [matin]
+    tranches: 1
+  - id: qr_marche_etals_vides
+    lieu: marche
+    label: "Monter les étals vides"
+    texte: "La mairie monte les étals même vides. Côme et toi y posez des cageots retournés, pour que la place ait l'air de quelque chose. Une vieille dame vient acheter à un étal où il n'y a rien."
+    avec: dartigue
+    habitude: quartier
+    si: "annee >= 2038"
+    heures: [matin]
+    tranches: 1
+  # ── le fleuriste
+  - id: qr_fleur_rubans
+    lieu: fleuriste
+    objet: gerbes
+    label: "Nouer les rubans"
+    texte: "Madame Huguette te fait nouer les rubans des gerbes du samedi. Tu écris les noms à l'encre dorée, lettre par lettre. Elle relit derrière toi, et corrige un accent."
+    textes:
+      - "Madame Huguette te fait nouer les rubans des gerbes du samedi. Tu écris les noms à l'encre dorée, lettre par lettre. Elle relit derrière toi, et corrige un accent."
+      - "Une couronne pour un mariage, une gerbe pour un deuil, le même jour, sur la même table. Huguette change de ruban sans changer de visage. « Les fleurs ne font pas la différence. »"
+    avec: huguette
+    habitude: famille
+    si: "annee <= 2016"
+    heures: [matin, aprem]
+    tranches: 1
+  - id: qr_fleur_tournee
+    lieu: fleuriste
+    objet: fleurs
+    label: "La tournée de Corentin"
+    texte: "Dans la camionnette verte, Corentin livre la ville : un mariage, une maternité, deux funérariums. Entre deux arrêts, il te dit qui pleure qui. Il ne se trompe jamais."
+    avec: mevellec
+    habitude: famille
+    si: "annee >= 2017"
+    heures: [matin, aprem]
+    tranches: 1
+  # ── le tailleur
+  - id: qr_tailleur_ruban
+    lieu: tailleur
+    objet: miroir
+    label: "Tenir le ruban"
+    texte: "Auguste te fait tenir le bout du ruban pendant qu'il mesure un client. « Ne tirez pas. Un ruban qui tire ment. » Le client parle du club ; Auguste ne note rien. Il retient."
+    avec: brunel_auguste
+    habitude: quartier
+    si: "annee <= 2004"
+    heures: [matin, aprem]
+    tranches: 1
+  - id: qr_tailleur_ourlet
+    lieu: tailleur
+    objet: comptoir
+    label: "Un ourlet, en chaussettes"
+    texte: "Clément fait l'ourlet de ton pantalon pendant que tu attends en chaussettes, sur la chaise. Il raconte la capitale : les défilés, les épingles dans la bouche, les clients qu'on ne voit jamais."
+    avec: brunel_clement
+    habitude: quartier
+    si: "annee >= 2005 && annee <= 2034"
+    heures: [matin, aprem]
+    francs: -25
+    tranches: 1
+  - id: qr_tailleur_vitrine
+    lieu: tailleur
+    objet: chaussures
+    label: "La vitrine du bas"
+    texte: "Gaspard ouvre la vitrine du bas avec des gants blancs. Il te raconte chaque paire : qui l'a portée, en quelle année, contre qui. Il ne vend jamais les plus belles."
+    avec: brunel_gaspard
+    habitude: quartier
+    si: "annee >= 2035"
+    heures: [matin, aprem]
+    tranches: 1
+  # ── la librairie
+  - id: qr_librairie_echo
+    lieu: librairie
+    objet: comptoir
+    label: "L'Écho à six heures et demie"
+    texte: "Agathe t'ouvre avant l'heure. Vous lisez L'Écho à deux, debout derrière le comptoir, avant que la ville le lise. Elle souligne au crayon ce qui va faire parler."
+    textes:
+      - "Agathe t'ouvre avant l'heure. Vous lisez L'Écho à deux, debout derrière le comptoir, avant que la ville le lise. Elle souligne au crayon ce qui va faire parler."
+      - "Page des sports, une photo de toi, de profil. Agathe la regarde longtemps. « Ils ont pris le mauvais côté. Odette disait qu'une photo choisit toujours un côté. »"
+    avec: arlaud
+    habitude: culture
+    si: "annee <= 2007"
+    heures: [matin]
+    tranches: 1
+  - id: qr_librairie_introuvable
+    lieu: librairie
+    objet: rayons
+    label: "Un livre introuvable"
+    texte: "Tu demandes un livre épuisé depuis vingt ans. Céline le note dans son carnet rouge, sans rien promettre. Trois semaines plus tard, il est là, avec une dédicace à quelqu'un d'autre."
+    avec: vautrin
+    habitude: culture
+    si: "annee >= 2008"
+    francs: -60
+    tranches: 1
+  # ── le cinéma
+  - id: qr_cinema_cabine
+    lieu: cinema
+    objet: salle
+    label: "Monter en cabine"
+    texte: "Ernest te fait monter en cabine pendant la séance : la chaleur, le cliquetis du projecteur, la salle en bas comme une mer. Il change la bobine sans regarder, à la seconde près."
+    textes:
+      - "Ernest te fait monter en cabine pendant la séance : la chaleur, le cliquetis du projecteur, la salle en bas comme une mer. Il change la bobine sans regarder, à la seconde près."
+      - "Par la lucarne de la cabine, Ernest te montre les têtes : les amoureux du fond, un abonné de la Nord qui pleure à chaque film, ton capitaine, seul, au troisième rang."
+    avec: vigouroux
+    habitude: culture
+    si: "annee <= 2011"
+    heures: [soir]
+    tranches: 1
+  - id: qr_cinema_avis
+    lieu: cinema
+    objet: caisse
+    label: "Dire ce que tu as pensé"
+    texte: "À la sortie, Ghislaine ouvre son cahier : « Alors ? » Tu dis ce que tu as pensé du film. Elle l'écrit mot pour mot, avec la date, sous l'avis d'un autre, de la veille."
+    avec: viard
+    habitude: culture
+    si: "annee >= 2012"
+    heures: [soir]
+    tranches: 0
+    max_jour: 1
+  # ── l'école
+  - id: qr_ecole_etude
+    lieu: ecole
+    objet: pupitres
+    label: "L'étude du soir"
+    texte: "Monsieur Bellocq te confie l'étude du soir : douze enfants, des devoirs, un problème de trains qui se croisent. Tu ne sais pas le résoudre. Une gamine du premier rang, si. Elle t'explique."
+    avec: bellocq
+    habitude: famille
+    si: "annee <= 2012"
+    heures: [aprem]
+    jours: [lun, mar, jeu, ven]
+    tranches: 1
+  - id: qr_ecole_lecture
+    lieu: ecole
+    objet: pupitres
+    label: "Lire une histoire aux CM2"
+    texte: "Madame Chabanel te laisse la classe un quart d'heure. Tu lis une histoire à voix haute. Au fond, un garçon fait semblant de dormir ; à la fin, c'est lui qui demande la suite."
+    avec: chabanel
+    habitude: famille
+    si: "annee >= 2013"
+    heures: [aprem]
+    jours: [lun, mar, jeu, ven]
+    tranches: 1
+
+# ═════════════════════════════════════════════════════════════════════ LES SCÈNES
+# La vie des gens (gardée par le lien et par leur époque), ce que leurs tuyaux
+# rendent (`flag(tuyau_…)`), leurs dettes (`flag(dette_…)`, réclamées une fois :
+# refuser coûte le lien, et la dette s'efface dans les deux cas), et ce que la
+# ville fait de tes réputations de quartier, de famille et de liseur.
+scenes:
+  # ──────────────────────────────────────────────────────────────── l'épicerie
+  - id: vi.qr.coulomb_page
+    titre: "La page du soir"
+    lieu: epicerie
+    tranches: [soir]
+    qui: coulomb
+    si: "flag(tuyau_coulomb_page) && role != selectionneur && annee <= 2003"
+    texte: "Vingt heures passées. Une jeune femme attend que la boutique se vide, un gamin endormi sur l'épaule. Ginette ouvre le cahier à sa page, puis te regarde, toi."
+    choix:
+      - label: "Je paie la page"
+        francs: -400
+        reponse: "Ginette barre la page d'un trait très droit. La jeune femme ne saura pas qui. Le lundi, son mari court comme un garçon qui n'a plus de dette."
+        effets: {jauges: {vestiaire: 2}, relation: {coulomb: 1}}
+      - label: "Ce n'est pas mon affaire"
+        reponse: "Ginette écrit la ligne du jour : du lait, des couches. La jeune femme repart sous la pluie. Au club, son mari ne demande jamais rien. Il le paie autrement."
+        effets: {jauges: {vestiaire: -1}}
+
+  - id: vi.qr.coulomb_oeufs
+    titre: "Quatre boîtes d'œufs"
+    lieu: stade
+    tranches: [midi]
+    jours: [sam]
+    qui: fan
+    si: "flag(tuyau_coulomb_oeufs) && role != selectionneur && annee <= 2003"
+    texte: "Samedi, une heure avant le match, derrière la tribune Nord : six garçons et un sac de l'épicerie Coulomb. Ils se taisent en te voyant. Le plus jeune cache le sac dans son dos."
+    choix:
+      - label: "Je leur parle"
+        reponse: "Tu restes dix minutes. Tu parles du match, de leur virage, de rien. Ils te laissent repartir avec le sac. Ce jour-là, ils chantent jusqu'au coup de sifflet final."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je préviens les stewards"
+        reponse: "Les stewards confisquent le sac à l'entrée. Les œufs finissent au poste de sécurité. Les garçons, eux, sifflent toute la seconde mi-temps."
+        effets: {jauges: {tribunes: -2, direction: 1}}
+
+  - id: vi.qr.coulomb_dette
+    titre: "La page au crayon"
+    lieu: epicerie
+    qui: coulomb
+    si: "flag(dette_coulomb)"
+    texte: "Ginette pose le cahier ouvert devant toi, à ta page au crayon. « Le mois est passé. Mon mari fait les comptes le dimanche soir. Je ne veux pas qu'il compte votre page. »"
+    choix:
+      - label: "Je solde la page"
+        francs: -1800
+        reponse: "Elle range les billets dans la boîte à biscuits, gomme ton nom et souffle sur la page. « Voilà. Vous n'existez plus. Chez moi, c'est un compliment. »"
+        effets: {clear: [dette_coulomb], relation: {coulomb: 1}}
+      - label: "Encore un mois"
+        reponse: "Elle referme le cahier sans un mot. Le lendemain, ta page a changé de cahier : elle est dans le rouge, celui qu'elle ne relit jamais."
+        effets: {clear: [dette_coulomb], relation: {coulomb: -2}}
+
+  - id: vi.qr.coulomb_cahier
+    titre: "Le cahier bleu"
+    lieu: epicerie
+    tranches: [matin]
+    qui: coulomb
+    si: "relation.coulomb >= 2 && annee <= 2001"
+    texte: "Ginette, blanche comme la farine, devant le comptoir ouvert : on a volé le cahier bleu dans la nuit. Rien d'autre. Ni la caisse, ni les bières. Le cahier de la cité."
+    choix:
+      - label: "Refaites-le de mémoire"
+        reponse: "Elle le recopie toute la nuit sur un cahier neuf. Au matin, il manque onze pages : celles des familles qui n'auraient jamais pu payer. Elle dit qu'elle a oublié."
+        effets: {jauges: {tribunes: 1}, relation: {coulomb: 1}}
+      - label: "Portez plainte"
+        reponse: "Le gendarme écrit « cahier d'écolier, bleu » et lève les yeux. Ginette reprend son sac sans rien dire. Il rit encore quand vous sortez."
+        effets: {jauges: {direction: 1}, relation: {coulomb: -1}}
+
+  - id: vi.qr.coulomb_odile
+    titre: "Le jeudi d'Odile"
+    roles: [joueur]
+    lieu: epicerie
+    tranches: [matin]
+    jours: [jeu]
+    qui: coulomb
+    si: "flag(histoire_h3) && relation.coulomb >= 2"
+    texte: "Jeudi, onze heures. Ginette te retient au comptoir : « Ta mère va entrer pour sa page. Reste. Ou va-t'en. Je ne sais pas ce qui lui ferait le plus de bien. »"
+    choix:
+      - label: "Je reste"
+        reponse: "Odile entre, te voit, s'arrête. Puis elle pose ses pièces une à une sur le comptoir, sans se presser, devant toi. En sortant, elle te prend le bras."
+        effets: {relation: {odile: 1}}
+      - label: "Je sors par la réserve"
+        reponse: "Tu sors entre les cartons de lait. Par la vitrine, tu vois Odile payer, puis regarder la porte longtemps, comme si quelqu'un venait d'en sortir."
+        effets: {relation: {coulomb: 1}}
+
+  - id: vi.qr.coulomb_vieilles_pages
+    titre: "Les vieilles pages"
+    lieu: epicerie
+    qui: coulomb
+    si: "relation.coulomb >= 1 && annee >= 2002 && annee <= 2003"
+    texte: "Ginette vend à son petit-fils. Sur le comptoir, le cahier bleu et le rouge. « Yacine veut tout garder. Moi, je brûlerais les vieilles pages. Vous, vous feriez quoi ? »"
+    choix:
+      - label: "Brûlez-les"
+        reponse: "Elle les brûle dans la cour, une à une, en lisant les noms à voix basse. Le lendemain, la cité respire. Yacine, lui, la regarde faire sans comprendre."
+        effets: {jauges: {tribunes: 2}, relation: {coulomb: 1, kessar: -1}}
+      - label: "Laissez-lui tout"
+        reponse: "Elle lui tend les deux cahiers sans un mot. Yacine les range sous le comptoir, à la même place. « Je ne les relirai pas. » Il les connaît déjà par cœur."
+        effets: {relation: {kessar: 1}}
+
+  - id: vi.qr.kessar_carton
+    titre: "Le carton pas réclamé"
+    lieu: epicerie
+    qui: kessar
+    si: "flag(tuyau_kessar_cartons) && role != selectionneur"
+    texte: "Yacine pose un carton sur le comptoir : le joueur n'est jamais venu le chercher. Délai dépassé. « Je le renvoie à l'agence, ou vous le lui portez ? »"
+    choix:
+      - label: "Je le lui porte"
+        reponse: "Il ouvre le carton devant toi : un maillot d'un autre club, son nom floqué dans le dos. « Je n'ai rien signé. » Il le dit trop vite. Le club, prévenu, ferme la porte à temps."
+        effets: {jauges: {vestiaire: -1, direction: 2}}
+      - label: "Renvoyez-le"
+        reponse: "Le carton repart à Valdorne. Le joueur ne demande jamais où est son colis. Au match suivant, il court comme quelqu'un qui n'a pas reçu de nouvelles."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: vi.qr.kessar_vitrine
+    titre: "La vitrine du lundi"
+    lieu: epicerie
+    tranches: [matin]
+    jours: [lun]
+    qui: kessar
+    si: "relation.kessar >= 2 && annee >= 2010"
+    texte: "Lundi, la vitrine de l'épicerie est étoilée d'un coup de pied. Sur le rideau, à la bombe, le nom du club, barré. Yacine balaie les éclats. « C'est vous qu'ils visaient. »"
+    choix:
+      - label: "Je paie la vitrine"
+        francs: -900
+        reponse: "Yacine refuse deux fois, puis accepte. La vitre neuve arrive mercredi. L'inscription, il la laisse une semaine sur le rideau, « pour qu'ils voient qu'on s'en moque »."
+        effets: {jauges: {tribunes: 1}, relation: {kessar: 1}}
+      - label: "Je porte plainte avec lui"
+        reponse: "Au commissariat, on prend sa plainte, puis la tienne, puis on vous offre un café. Les auteurs ne seront jamais trouvés. Le quartier, lui, sait leurs prénoms."
+        effets: {jauges: {direction: 1, tribunes: -1}}
+
+  # ───────────────────────────────────────────────────────────── la boulangerie
+  - id: vi.qr.pichon_mardi
+    titre: "Le mardi du président"
+    roles: [entraineur]
+    lieu: cafe_mairie
+    tranches: [midi]
+    jours: [mar]
+    si: "flag(tuyau_pichon_mardi) && annee <= 2007"
+    texte: "Café de la Mairie, mardi, midi. Au fond, le président déjeune avec un homme en blazer qui prend des notes sur la nappe. Il te voit dans la vitrine. Il pose sa fourchette."
+    choix:
+      - label: "J'entre et je m'assois"
+        reponse: "Tu t'assois à leur table sans qu'on t'invite. L'homme en blazer range son stylo, paie son café et s'en va. Le président finit son assiette en parlant de la pluie."
+        effets: {jauges: {direction: 2}}
+      - label: "Je passe mon chemin"
+        reponse: "Le lendemain, L'Écho parle d'un « entraîneur expérimenté vu à Aubérive ». Le président ne dément pas. Il ne confirme pas non plus."
+        effets: {jauges: {direction: -2}}
+
+  - id: vi.qr.pichon_dette
+    titre: "Le petit-fils de Lucette"
+    lieu: boulangerie_residentiel
+    qui: pichon_lucette
+    si: "flag(dette_pichon_lucette)"
+    texte: "Lucette te tend ta baguette et une photo : un gamin de douze ans, un ballon sous le bras. « Mon petit-fils. Les essais du centre, c'est samedi. Un mot de vous, et il les passe. »"
+    choix:
+      - label: "Je dirai un mot"
+        reponse: "Le gamin passe les essais. Il n'est pas le meilleur. Il est pris. Dans le vestiaire des jeunes, tout le monde sait pourquoi, et lui aussi."
+        effets: {clear: [dette_pichon_lucette], jauges: {vestiaire: -1}, relation: {pichon_lucette: 1}}
+      - label: "Il passera comme les autres"
+        reponse: "Il passe comme les autres, et il n'est pas pris. Lucette te sert le lundi suivant sans te regarder. La monnaie, elle la pose sur le comptoir."
+        effets: {clear: [dette_pichon_lucette], relation: {pichon_lucette: -2}}
+
+  - id: vi.qr.pichon_four
+    titre: "Quatre heures au fournil"
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    qui: pichon_lucette
+    si: "relation.pichon_lucette >= 2 && annee <= 2007"
+    texte: "Pichon s'est brûlé le bras au four ; il est à l'hôpital de Valdorne. Quatre heures du matin : Lucette est seule au fournil, la pelle trop lourde. « Vous savez tenir une porte ? »"
+    choix:
+      - label: "Je tiens la porte"
+        reponse: "Tu tiens la porte du four pendant qu'elle enfourne, jusqu'à six heures. Les mains te brûlent à travers les gants. À sept heures, la file a son pain, et ne sait rien."
+        effets: {jauges: {tribunes: 1}, relation: {pichon_lucette: 1}}
+      - label: "Je paie un remplaçant"
+        francs: -300
+        reponse: "Un étudiant tient la porte toute la semaine, se brûle aussi, et ne revient pas le vendredi. Lucette te remercie poliment, comme on remercie une cliente."
+
+  - id: vi.qr.pichon_vendeuse
+    titre: "La vendeuse"
+    lieu: boulangerie_residentiel
+    qui: pichon_lucette
+    si: "relation.pichon_lucette >= 1 && annee >= 1995 && annee <= 1997"
+    texte: "Lucette cherche une vendeuse. Deux candidates : une jeune qui rend la monnaie à toute vitesse, et Marie-Jo, qui la compte deux fois et connaît le prénom de chaque gamin. « Laquelle ? »"
+    choix:
+      - label: "Marie-Jo"
+        reponse: "Lucette embauche Marie-Jo le lundi. Elle compte la monnaie deux fois, la file râle, puis s'y fait. Le samedi, les gamins lui racontent leurs matchs."
+        effets: {relation: {mariejo: 1}}
+      - label: "Celle qui va vite"
+        reponse: "La jeune tient trois mois et part à l'hypermarché. Lucette prend Marie-Jo en septembre. Marie-Jo sait qu'elle n'était pas le premier choix, et par qui."
+        effets: {relation: {mariejo: -1}}
+
+  - id: vi.qr.pichon_premier_client
+    titre: "Le premier client"
+    lieu: boulangerie_residentiel
+    qui: pichon_lucette
+    si: "relation.pichon_lucette >= 2 && annee >= 2006 && annee <= 2007"
+    texte: "Lucette range sa blouse : Marie-Jo reprend la boutique lundi. « Il faut un premier client, le premier jour, à six heures. Quelqu'un qui porte chance. Vous ? »"
+    choix:
+      - label: "Je serai là à six heures"
+        reponse: "Lundi, six heures, il n'y a que toi devant le rideau. Marie-Jo te sert la première baguette de sa vie de patronne, et se trompe dans la monnaie, dans le bon sens."
+        effets: {relation: {mariejo: 1, pichon_lucette: 1}}
+      - label: "Je dormirai"
+        reponse: "Le premier client, ce lundi-là, est le facteur. Lucette dit que ça porte chance aussi, les facteurs. Elle ne le pense pas."
+        effets: {relation: {pichon_lucette: -1}}
+
+  - id: vi.qr.mariejo_vingtieme
+    titre: "La vingtième minute"
+    lieu: stade
+    tranches: [midi]
+    jours: [sam]
+    qui: fan
+    si: "flag(tuyau_mariejo_sifflets) && role != selectionneur && annee <= 2034"
+    texte: "Samedi, devant la buvette, les trois garçons de la boulangerie comptent leurs sifflets. Le plus grand te voit : « Vingt minutes, c'est ce qu'a duré notre dernière réunion avec le club. »"
+    choix:
+      - label: "Je vous donne une heure"
+        reponse: "Tu leur donnes rendez-vous lundi, une heure entière, au club-house. À la vingtième minute, ils sifflent quand même. Une fois, pour la forme, et ils rangent les sifflets."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Sifflez, c'est votre droit"
+        reponse: "À la vingtième minute, la Nord siffle jusqu'à la mi-temps. Les joueurs regardent le banc. L'Écho titre sur la vingtième minute, pas sur le score."
+        effets: {jauges: {tribunes: -1, vestiaire: -1}}
+
+  - id: vi.qr.mariejo_four_neuf
+    titre: "Le four neuf"
+    lieu: boulangerie_residentiel
+    qui: mariejo
+    si: "relation.mariejo >= 2 && annee >= 2024 && annee <= 2027 && !flag(histoire_h9)"
+    texte: "Marie-Jo a un dossier de la Banque Aubérivoise sous le bras. « Le four neuf. Kévin signe avec moi : il reprendra la boutique. Il faut un témoin qui ne soit pas de la famille. Vous ? »"
+    choix:
+      - label: "Je signe comme témoin"
+        reponse: "À la banque, tu signes en dessous de Kévin, qui signe en dessous de sa mère. Il a des mains d'électricien et un rire d'enfant. « Dans deux ans, je l'ai payé. »"
+        effets: {relation: {mariejo: 1}}
+      - label: "Je ne signe jamais rien"
+        reponse: "Elle prend le facteur pour témoin. Le four arrive en mars. Marie-Jo te sert la première fournée comme à tout le monde, ni plus cuite, ni moins."
+        effets: {relation: {mariejo: -1}}
+
+  - id: vi.qr.mariejo_car
+    titre: "Le car de Kévin"
+    lieu: rue
+    tranches: [soir]
+    qui: mariejo
+    si: "relation.mariejo >= 2 && annee >= 2026 && annee <= 2027 && !flag(histoire_h9)"
+    texte: "Marie-Jo t'arrête dans la rue, un sac de voyage à la main. « Kévin part ce soir pour le chantier, là-bas. Ma camionnette ne démarre plus. Vous l'emmèneriez à la gare routière ? »"
+    choix:
+      - label: "Je l'emmène"
+        reponse: "Dans la voiture, Kévin parle du salaire, du soleil, du four. Sur le quai, il te serre la main comme un homme. Marie-Jo ne pleure pas. Elle attend que le car ait tourné."
+        effets: {relation: {mariejo: 1}}
+      - label: "Je ne peux pas ce soir"
+        reponse: "Il part en taxi. Marie-Jo paie le taxi en pièces, sur le trottoir. Le lendemain, elle te sert sans te demander le score."
+        effets: {relation: {mariejo: -1}}
+
+  - id: vi.qr.guerand_mardi
+    titre: "Le mardi de Madame Marçais"
+    lieu: boulangerie_residentiel
+    tranches: [matin]
+    jours: [mar]
+    qui: guerand
+    si: "relation.guerand >= 2 && annee >= 2035"
+    texte: "Mardi. Madame Marçais goûte une baguette au comptoir, sans rien dire, comme chaque semaine. Malo te glisse à l'oreille : « Dites-lui quelque chose. Moi, je n'ose pas. »"
+    choix:
+      - label: "Je dis qu'elle est bonne"
+        reponse: "Marie-Jo te regarde, puis regarde Malo. « Elle est bonne. Trop cuite, mais bonne. » Malo ne dort pas de la nuit, de bonheur, et la fournée du lendemain est trop cuite."
+        effets: {relation: {guerand: 1, mariejo: 1}}
+      - label: "Je me tais"
+        reponse: "Elle repart sans un mot, comme chaque mardi. Malo reste debout derrière la caisse jusqu'à midi, à regarder la porte."
+        effets: {relation: {guerand: -1}}
+
+  # ───────────────────────────────────────────────────────────────── le garage
+  - id: vi.qr.quintane_parechoc
+    titre: "Ce n'était pas un poteau"
+    lieu: rue
+    tranches: [soir]
+    qui: passant
+    si: "flag(tuyau_quintane_parechoc) && role != selectionneur && annee <= 2018"
+    texte: "Le soir, un joueur du club t'attend devant chez toi, les mains dans les poches. « Quintane vous a parlé, je le vois à votre tête. C'était un chien. Je vous jure que c'était un chien. »"
+    choix:
+      - label: "Je te crois"
+        reponse: "Il respire. Le samedi, il joue comme quelqu'un qui doit quelque chose à quelqu'un. Tu ne cherches pas à savoir quel chien, ni sur quelle route."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Va le dire aux gendarmes"
+        reponse: "Il y va le lendemain, avec un avocat du club. On parle d'un chien, d'une route mouillée. Il ne te parle plus. Le club te remercie, sans dire de quoi."
+        effets: {jauges: {vestiaire: -2, direction: 2}}
+
+  - id: vi.qr.quintane_dette
+    titre: "Le fils de Quintane"
+    lieu: garage
+    qui: quintane
+    si: "flag(dette_quintane)"
+    texte: "Quintane ferme la porte du bureau. « Mon fils s'est fait prendre avec des pièces volées dans sa camionnette. Le juge veut des témoins de moralité. Des gens qu'on connaît. »"
+    choix:
+      - label: "Je témoignerai"
+        reponse: "Au tribunal de Valdorne, tu dis ce que tu sais du père, et rien du fils. Le juge écoute. L'Écho met ta photo en page trois, à côté de celle du garage."
+        effets: {clear: [dette_quintane], jauges: {direction: -2}, relation: {quintane: 1}}
+      - label: "Je ne peux pas"
+        reponse: "Il hoche la tête et rouvre la porte. Le fils prend six mois avec sursis. Ta voiture attend désormais dans la cour, et le café ne t'est plus proposé."
+        effets: {clear: [dette_quintane], relation: {quintane: -2}}
+
+  - id: vi.qr.quintane_bache
+    titre: "La voiture sous la bâche"
+    lieu: garage
+    qui: quintane
+    si: "relation.quintane >= 2 && annee <= 2018"
+    texte: "Quintane soulève la bâche jusqu'au pare-brise : la voiture neuve, achetée pour le jour où l'on serait champions. « Je la démarre une fois par mois, pour la batterie. Ce mois-ci, c'est vous. »"
+    choix:
+      - label: "Je la démarre"
+        reponse: "Elle démarre au premier tour. Quintane écoute, les yeux fermés, puis coupe le contact. « Elle attendra. Elle a l'habitude. » Il rabat la bâche, coin par coin."
+        effets: {relation: {quintane: 1}}
+      - label: "Gardez-la pour le titre"
+        reponse: "Il remet la bâche sans l'avoir démarrée. « Vous avez raison. » Le soir, au Corner, il raconte que tu crois au titre. Le Corner rit, puis le répète."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: vi.qr.quintane_1966
+    titre: "La facture de 1966"
+    lieu: garage
+    qui: quintane
+    si: "relation.quintane >= 2 && annee <= 2018"
+    texte: "Quintane sort de son bureau une facture jaunie : le car de la Coupe, 1966, signé par son père, jamais remboursé par le club. « On a vendu la maison. Je voudrais qu'elle soit accrochée quelque part. »"
+    choix:
+      - label: "Au club-house, au mur"
+        reponse: "Tu l'accroches au club-house, sous verre, entre deux fanions. Les anciens viennent la lire. Le club, gêné, envoie une lettre d'excuses, avec des décennies de retard."
+        effets: {jauges: {tribunes: 2, direction: -1}, relation: {quintane: 1}}
+      - label: "C'est votre histoire"
+        reponse: "Il la replie en quatre et la range dans le tiroir de l'établi, sous les clés de douze. « Vous avez raison. Personne ne la lira. » Il ne t'en reparle jamais."
+        effets: {relation: {quintane: -1}}
+
+  - id: vi.qr.quintane_carnet
+    titre: "Le carnet des voitures"
+    lieu: garage
+    qui: quintane
+    si: "relation.quintane >= 2 && annee >= 2017 && annee <= 2018"
+    texte: "Quintane prend sa retraite. Il te tend un carnet noir : toutes les voitures de la ville depuis 1961, leurs pannes, leurs propriétaires, leurs secrets. « Pour vous, ou pour Jérémy ? »"
+    choix:
+      - label: "Pour moi"
+        reponse: "Tu l'emportes. Le soir, tu lis la voiture de chaque président depuis 1961. Jérémy, lui, ne te dit plus bonjour pendant un mois."
+        effets: {jauges: {direction: 1}, relation: {quintane: 1, saulnier: -1}}
+      - label: "Pour Jérémy"
+        reponse: "Jérémy le prend à deux mains, comme un missel, et le range dans le tiroir de l'établi. « Je ne l'ouvrirai qu'en cas de panne. » Il l'ouvre le soir même."
+        effets: {relation: {saulnier: 1}}
+
+  - id: vi.qr.saulnier_boitier
+    titre: "Trois nuits à Valdorne"
+    lieu: garage
+    qui: saulnier
+    si: "flag(tuyau_saulnier_boitier) && role != selectionneur"
+    texte: "Jérémy pose sur le comptoir une feuille imprimée : trois nuits, la même adresse, la même heure et quart. La voiture du staff. « Je l'imprime une fois. Après, je l'efface. »"
+    choix:
+      - label: "Je la garde"
+        reponse: "Tu la poses lundi sur le bureau de celui qui conduisait. Il pâlit, puis parle, beaucoup. Le club a fermé une fuite ; le vestiaire a perdu un ami."
+        effets: {jauges: {direction: 2, vestiaire: -1}}
+      - label: "Effacez-la"
+        reponse: "Jérémy l'efface devant toi. Tu ne sauras jamais qui. Ton staff ne saura jamais que tu as failli savoir. C'est peut-être mieux comme ça."
+        effets: {jauges: {vestiaire: 1}}
+
+  - id: vi.qr.saulnier_dette
+    titre: "Les voitures du club"
+    lieu: garage
+    qui: saulnier
+    si: "flag(dette_saulnier)"
+    texte: "Jérémy a un dossier sous le bras. « Les voitures du club vont chez le concessionnaire de Valdorne. Je voudrais l'entretien, juste l'entretien. Un mot de vous suffirait. »"
+    choix:
+      - label: "Je dirai le mot"
+        reponse: "Le club change de garage. Le concessionnaire de Valdorne appelle pour se plaindre. Les voitures du club reviennent propres, avec un café dans le porte-gobelet."
+        effets: {clear: [dette_saulnier], jauges: {direction: -1}, relation: {saulnier: 1}}
+      - label: "Ce n'est pas mon rôle"
+        reponse: "Il range le dossier. « Je comprends. » Il comprend. La fois suivante, ta voiture attend trois semaines, et la valise te facture tout."
+        effets: {clear: [dette_saulnier], relation: {saulnier: -2}}
+
+  - id: vi.qr.saulnier_samedi
+    titre: "Samedi, cinq heures"
+    lieu: garage
+    tranches: [aprem]
+    jours: [sam]
+    qui: saulnier
+    si: "relation.saulnier >= 2 && annee >= 2019 && annee <= 2030"
+    texte: "Samedi, cinq heures : Quintane n'est pas venu écouter les moteurs. Jérémy tourne dans la cour, les clés de la camionnette à la main. « Vous venez avec moi chez lui ? »"
+    choix:
+      - label: "Je viens"
+        reponse: "Quintane est dans son jardin, penché sur une tondeuse qui cale. « Elle cale à droite. » Il n'était pas venu, c'est tout. Jérémy rit pour la première fois de la journée."
+        effets: {relation: {saulnier: 1, quintane: 1}}
+      - label: "Allez-y sans moi"
+        reponse: "Jérémy y va seul. Le lundi, il ne raconte rien. Le samedi suivant, Quintane est là, à cinq heures, et ne te dit pas bonjour."
+        effets: {relation: {saulnier: -1}}
+
+  # ──────────────────────────────────────────────────────────────── la laverie
+  - id: vi.qr.delmotte_rose
+    titre: "Le maillot du 6"
+    lieu: laverie
+    qui: delmotte
+    si: "flag(tuyau_delmotte_rose) && role != selectionneur && annee <= 2012"
+    texte: "Gisèle ouvre la 4 devant toi et tend un maillot au bout des doigts : le 6, l'encolure déchirée, une tache brune dans le dos. « Il n'est pas tombé. On l'a tenu. »"
+    choix:
+      - label: "Je parle au 6 en privé"
+        reponse: "Le 6 parle longtemps, les yeux sur ses chaussures : deux noms, une dette de cartes, un vestiaire coupé en deux. Tu n'en dis rien à personne ; les deux noms le savent."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Je ne veux pas savoir"
+        reponse: "Gisèle replie le maillot et le remet dans la machine. Trois semaines plus tard, l'eau de la 4 est encore rose. Le 6 joue moins bien, et seul."
+        effets: {jauges: {vestiaire: -2}, relation: {delmotte: -1}}
+
+  - id: vi.qr.delmotte_dette
+    titre: "Le fils de Gisèle"
+    lieu: laverie
+    qui: delmotte
+    si: "flag(dette_delmotte)"
+    texte: "Gisèle plie tes chemises plus lentement que d'habitude. « Mon fils sort de Valdorne le mois prochain. Il lui faut un travail pour la conditionnelle. Vous connaissez du monde. »"
+    choix:
+      - label: "Je lui trouve un travail"
+        reponse: "Il entre au stade de la Rive comme aide-jardinier. Il tond en lignes parfaites et ne parle à personne. On te demande qui c'est ; tu dis : le fils de quelqu'un."
+        effets: {clear: [dette_delmotte], jauges: {direction: -1}, relation: {delmotte: 1}}
+      - label: "Je ne peux rien pour lui"
+        reponse: "Elle hoche la tête et termine le pliage. Le lendemain, tes chemises sont pliées comme celles de n'importe qui. Elle ne repasse plus les tiennes."
+        effets: {clear: [dette_delmotte], relation: {delmotte: -2}}
+
+  - id: vi.qr.delmotte_parloir
+    titre: "Le linge du vendredi"
+    lieu: laverie
+    tranches: [matin]
+    jours: [ven]
+    qui: delmotte
+    si: "relation.delmotte >= 2 && annee <= 2012"
+    texte: "Vendredi. Gisèle a la jambe dans le plâtre et un sac de linge propre sur les genoux. « La maison d'arrêt, à Valdorne. Le parloir est à onze heures. Je ne peux pas y aller. »"
+    choix:
+      - label: "J'y vais"
+        reponse: "Au parloir, son fils prend le sac sans te regarder, puis te regarde. « C'est elle qui vous envoie ? » Tu dis oui. « Dites-lui que c'est plié comme il faut. »"
+        effets: {relation: {delmotte: 1}}
+      - label: "Je ne peux pas"
+        reponse: "Elle y va en taxi, la jambe tendue sur la banquette. Le lundi, elle plie tes chemises sans un mot, et sans te demander le score."
+        effets: {relation: {delmotte: -1}}
+
+  - id: vi.qr.montel_minuit
+    titre: "Le joueur de minuit"
+    lieu: laverie
+    tranches: [soir]
+    qui: montel
+    si: "flag(tuyau_montel_nuit) && role != selectionneur && annee >= 2013"
+    texte: "Minuit moins le quart. Sur la chaise en plastique, un joueur du club regarde tourner son linge sans le voir. Gabriel te fait un signe de tête : c'est lui. Il ne t'a pas entendu entrer."
+    choix:
+      - label: "Je m'assois à côté"
+        reponse: "Vous regardez tourner la machine jusqu'au bout. Au moment de plier, il parle : sa mère, l'hôpital, l'argent. Tu écoutes. Gabriel éteint un néon, puis un autre."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Va dormir"
+        reponse: "Il se lève d'un coup, ramasse son linge humide et sort sans un mot. Le samedi, il joue les yeux rouges. Gabriel te rend la monnaie en jetons, toute la semaine."
+        effets: {jauges: {vestiaire: -1}, relation: {montel: -1}}
+
+  - id: vi.qr.montel_rachat
+    titre: "La laverie à vendre"
+    lieu: laverie
+    tranches: [aprem]
+    qui: montel
+    si: "relation.montel >= 2 && annee >= 2020"
+    texte: "Gabriel n'est que le gérant. Le propriétaire vend à une chaîne qui veut des machines sans personne autour. « Il me manque de quoi racheter. Pas tout. Une part. »"
+    choix:
+      - label: "Je prends une part"
+        francs: -6000
+        reponse: "Chez le notaire, tu signes pour un quart de laverie. Gabriel garde la clé, la 4 et la chaise en plastique. Chaque année, une lettre : « Rien à signaler. Merci. »"
+        effets: {relation: {montel: 2}}
+      - label: "Je n'ai pas les moyens"
+        reponse: "La chaîne rachète. Gabriel reste, gérant salarié, avec un écran à la place du monnayeur. Il le débranche la nuit. En haut lieu, personne ne le sait."
+        effets: {relation: {montel: -1}}
+
+  # ───────────────────────────────────────────────────────────────── le marché
+  - id: vi.qr.ducros_champ
+    titre: "Le champ derrière la Tréfilerie"
+    lieu: marche
+    tranches: [matin]
+    qui: ducros_achille
+    si: "flag(tuyau_ducros_parking) && annee <= 2011"
+    texte: "Achille te tend une lettre de l'agence : une offre pour son champ, « en vue d'un aménagement lié au stade ». « Si c'est le club, je veux le savoir par vous. Pas par le notaire. »"
+    choix:
+      - label: "Je me renseigne"
+        reponse: "Tu poses la question au club. On te répond trop vite que non. Tu le dis à Achille, qui refuse l'offre. Au club, quelqu'un a noté que tu posais des questions."
+        effets: {jauges: {direction: -1}, relation: {ducros_achille: 1}}
+      - label: "Vendez, c'est un bon prix"
+        reponse: "Il vend en mars. Un parking pousse en octobre, vide toute la semaine. Le dimanche, Achille pèse au gramme près et ne te regarde plus en rendant la monnaie."
+        effets: {jauges: {direction: 1}, relation: {ducros_achille: -2}}
+
+  - id: vi.qr.ducros_hypermarche
+    titre: "Le dimanche de l'hypermarché"
+    roles: [entraineur, joueur, president, ds]
+    lieu: marche
+    tranches: [matin]
+    qui: ducros_achille
+    si: "relation.ducros_achille >= 2 && annee >= 1996 && annee <= 1999"
+    texte: "L'hypermarché ouvre dimanche, ballons et maillot du club en promotion : il est sponsor. Achille : « Ce jour-là, venez au marché, avec des gens du club. Qu'on vous voie ici. »"
+    choix:
+      - label: "Je viens avec du monde"
+        reponse: "Dimanche, tu remplis des cabas au marché avec trois joueurs. Le photographe de L'Écho est là. Le sponsor appelle le club le lundi, pas content du tout."
+        effets: {jauges: {tribunes: 2, direction: -1}}
+      - label: "Je ne peux pas"
+        reponse: "Dimanche, le parking de l'hypermarché déborde. Au marché, Achille vend la moitié de ses tomates. La semaine suivante, pas de pomme en plus."
+        effets: {relation: {ducros_achille: -1}}
+
+  - id: vi.qr.ducros_laure_jeudi
+    titre: "Le jeudi sans lumière"
+    lieu: terrain
+    tranches: [soir]
+    jours: [jeu]
+    qui: ducros_laure
+    si: "flag(tuyau_ducros_laure_jeudi) && annee <= 2037"
+    texte: "Jeudi soir, le terrain annexe sans lumière. Une dizaine de femmes jouent à la lampe frontale, Laure en arrière gauche. Elle te voit au portail. « Vous allez le dire ? »"
+    choix:
+      - label: "J'allume les projecteurs"
+        reponse: "Tu trouves l'interrupteur dans le local. Les projecteurs s'allument d'un coup ; le match s'arrête, puis reprend, plus fort. Le club veut savoir qui paie l'électricité."
+        effets: {jauges: {tribunes: 2, direction: -1}, relation: {ducros_laure: 1}}
+      - label: "Je dois le signaler"
+        reponse: "Le portail a un cadenas neuf le jeudi suivant. Le dimanche, Laure te pèse tes poireaux au gramme près, et te rend la monnaie sans un mot."
+        effets: {jauges: {direction: 1}, relation: {ducros_laure: -2}}
+
+  - id: vi.qr.dartigue_maire
+    titre: "Le maire au marché"
+    lieu: marche
+    tranches: [matin]
+    qui: dartigue
+    si: "relation.dartigue >= 2 && annee >= 2038"
+    texte: "Le maire vient au marché mercredi, avec un photographe. Côme te demande de tenir un étal vide une heure, derrière des cageots retournés, « pour qu'on ait l'air d'être quatre »."
+    choix:
+      - label: "Je tiens l'étal"
+        reponse: "Sur la photo, la place a l'air vivante. Le maire te serre la main devant ton étal vide. Le lendemain, deux maraîchers de la vallée demandent à Côme s'il reste de la place."
+        effets: {jauges: {tribunes: 1}, relation: {dartigue: 1}}
+      - label: "Je ne joue pas la comédie"
+        reponse: "La photo montre trois étals et des pavés. Le maire parle de « recomposition ». Côme replie ses tréteaux à onze heures, sans te dire au revoir."
+        effets: {relation: {dartigue: -1}}
+
+  # ─────────────────────────────────────────────────────────────── le fleuriste
+  - id: vi.qr.huguette_pere
+    titre: "Les fleurs du père"
+    lieu: fleuriste
+    qui: huguette
+    si: "flag(tuyau_huguette_pere) && role != selectionneur && annee <= 2016"
+    texte: "Madame Huguette te montre le cahier des commandes : une gerbe aux couleurs du club, payée d'avance par le père de ton capitaine, pour lui-même. « Il a dit : pas avant la fin de la saison. »"
+    choix:
+      - label: "Je préviens le capitaine"
+        reponse: "Le capitaine part le soir même pour l'hôpital. Il manque le match du samedi. Il revient le lundi, et te serre la main plus longtemps que d'habitude."
+        effets: {jauges: {vestiaire: 2}, relation: {huguette: 1}}
+      - label: "Ce n'est pas à moi"
+        reponse: "La gerbe est livrée en avril. Au funérarium, le capitaine apprend que tu savais. Il ne dit rien. Il ne dit plus grand-chose, après."
+        effets: {jauges: {vestiaire: -2}}
+
+  - id: vi.qr.huguette_cahiers
+    titre: "Les cahiers d'Huguette"
+    lieu: fleuriste
+    qui: huguette
+    si: "relation.huguette >= 2 && annee >= 2015 && annee <= 2016"
+    texte: "Madame Huguette vend les Immortelles à Corentin, son livreur. Elle hésite pour les cahiers de commandes : des décennies de mariages et de deuils. « Je les lui laisse, ou je les brûle ? »"
+    choix:
+      - label: "Laissez-les à Corentin"
+        reponse: "Corentin les range sous le comptoir. Le premier 14 mai, il ouvre le cahier de 1985 à la bonne page, sans chercher. Il te fait un signe de tête."
+        effets: {relation: {mevellec: 1}}
+      - label: "Gardez-les pour vous"
+        reponse: "Elle les emporte dans un carton à chaussures. Corentin recommence sur un cahier neuf. Il dit que c'est mieux. Il cherche quand même des adresses que plus personne ne sait."
+        effets: {relation: {huguette: 1}}
+
+  - id: vi.qr.mevellec_quatorze_mai
+    titre: "Le 14 mai"
+    lieu: cimetiere
+    tranches: [matin]
+    qui: mevellec
+    si: "relation.mevellec >= 2 && annee >= 2017 && phase == sprint"
+    texte: "Le 14 mai, Corentin t'attend à la grille du cimetière avec un pot de chrysanthèmes. « Le carré ancien, Monsieur Bertin. Plus personne ne paie depuis trente ans. Vous portez ? »"
+    choix:
+      - label: "Je porte le pot"
+        reponse: "Vous montez au carré ancien. Il pose le pot, l'arrose avec une bouteille d'eau, retire une feuille morte. Il ne dit pas qui c'était. Tu ne demandes pas."
+        effets: {relation: {mevellec: 1}}
+      - label: "Pas cette année"
+        reponse: "Il monte seul, sans se retourner. La semaine suivante, ta commande arrive en retard, sans le petit mot habituel."
+        effets: {relation: {mevellec: -1}}
+
+  # ──────────────────────────────────────────────────────────────── le tailleur
+  - id: vi.qr.brunel_auguste_mains
+    titre: "Les mains d'Auguste"
+    lieu: tailleur
+    qui: brunel_auguste
+    si: "relation.brunel_auguste >= 2 && annee >= 2000 && annee <= 2004"
+    texte: "Auguste n'arrive plus à fermer les ciseaux. Il te tend un numéro de téléphone, dans la capitale. « Mon fils. Dites-lui de revenir. Moi, je ne saurai pas le lui demander. »"
+    choix:
+      - label: "J'appelle son fils"
+        reponse: "Clément ne dit rien pendant longtemps, au téléphone. Puis : « Je viens samedi. » Il vient samedi, avec une valise, et ne repart pas."
+        effets: {relation: {brunel_auguste: 1, brunel_clement: 1}}
+      - label: "C'est à vous de le faire"
+        reponse: "Auguste range le numéro dans le tiroir des boutons. Il appellera lui-même, trois mois plus tard, quand il ne pourra plus tenir l'aiguille."
+        effets: {relation: {brunel_auguste: -1}}
+
+  - id: vi.qr.brunel_auguste_rideau
+    titre: "Derrière le rideau"
+    roles: [entraineur, joueur, ds]
+    lieu: tailleur
+    qui: brunel_auguste
+    si: "relation.brunel_auguste >= 2 && annee <= 2004"
+    texte: "Auguste te fait signe d'attendre dans l'arrière-boutique : le président est en cabine. À travers le rideau, tu l'entends parler de toi, les bras levés. Auguste te voit dans le miroir."
+    choix:
+      - label: "J'écoute jusqu'au bout"
+        reponse: "Tu entends tout : ce qu'il pense de toi, de ton salaire, de ta fin. Auguste continue d'épingler sans te regarder. Il ne te refera jamais ce cadeau."
+        effets: {jauges: {direction: 2}, relation: {brunel_auguste: -1}}
+      - label: "Je sors par la cour"
+        reponse: "Tu sors par la cour, entre les poubelles et les cartons de patrons. Le lendemain, Auguste prend tes mesures en silence, puis dit : « Merci. »"
+        effets: {relation: {brunel_auguste: 1}}
+
+  - id: vi.qr.brunel_clement_dette
+    titre: "Le logo sur le cœur"
+    lieu: tailleur
+    qui: brunel_clement
+    si: "flag(dette_brunel_clement)"
+    texte: "Clément te montre deux vestes du club : l'une de chez lui, l'autre du sponsor, le logo brodé sur la poche du cœur. « Ils changent de tailleur l'an prochain. Sauf si quelqu'un dit non. »"
+    choix:
+      - label: "Je dirai non"
+        reponse: "Tu dis non en réunion, trois fois. Les costumes restent chez Brunel, sans logo sur le cœur. Le sponsor met son nom ailleurs, plus gros, et te le fait payer."
+        effets: {clear: [dette_brunel_clement], jauges: {direction: -2}, relation: {brunel_clement: 1}}
+      - label: "Ce n'est pas mon combat"
+        reponse: "Le club change de tailleur. Les costumes arrivent sous plastique, le logo sur le cœur. Clément ne prend plus tes mesures : l'apprenti s'en charge."
+        effets: {clear: [dette_brunel_clement], relation: {brunel_clement: -2}}
+
+  - id: vi.qr.brunel_clement_miroir
+    titre: "Le dernier costume"
+    roles: [ds]
+    lieu: tailleur
+    qui: brunel_clement
+    si: "flag(histoire_h8) && !flag(h8_vaubourg_mort) && relation.brunel_clement >= 2"
+    texte: "Monsieur Vaubourg, sur sa canne, commande un costume sombre, prêt pour une date qu'il a écrite sur un papier plié. Clément te tend le miroir : « Tenez-le. Il ne veut pas que ce soit moi. »"
+    choix:
+      - label: "Je tiens le miroir"
+        reponse: "Vaubourg se regarde longtemps dans le miroir que tu tiens. « Vous me trouvez comment ? » Tu dis : droit. Il sourit, pour la première fois depuis longtemps."
+        effets: {relation: {aulard: 1, brunel_clement: 1}}
+      - label: "Je le pose et je sors"
+        reponse: "Tu poses le miroir contre le mur et tu sors. Par la vitrine, tu vois Vaubourg se regarder seul, de très près, comme on relit une date."
+        effets: {relation: {brunel_clement: -1}}
+
+  - id: vi.qr.brunel_gaspard_vitrine
+    titre: "Le ruban en vitrine"
+    lieu: tailleur
+    qui: brunel_gaspard
+    si: "relation.brunel_gaspard >= 2 && annee >= 2035"
+    texte: "Gaspard veut prendre tes mesures au ruban, dans la vitrine, face à la rue. « Les gens ne croient plus qu'on peut mesurer quelqu'un sans machine. Montrez-leur. Une heure. »"
+    choix:
+      - label: "Une heure en vitrine"
+        reponse: "Une heure debout dans la vitrine, les bras levés. Des gamins s'arrêtent, puis des parents. Le lendemain, Gaspard a six rendez-vous, et le club une photo."
+        effets: {jauges: {tribunes: 1}, relation: {brunel_gaspard: 1}}
+      - label: "Prenez la cabine"
+        reponse: "Dix secondes dans la cabine à scanner de Valdorne. Le costume tombe juste. Gaspard le livre sans un mot, et sans la doublure qu'il t'avait promise."
+        effets: {relation: {brunel_gaspard: -1}}
+
+  # ─────────────────────────────────────────────────────────────── la librairie
+  - id: vi.qr.arlaud_synonymes
+    titre: "Le dictionnaire des synonymes"
+    lieu: librairie
+    qui: arlaud
+    si: "flag(tuyau_arlaud_chroniqueur) && annee <= 2007"
+    texte: "Le chroniqueur de L'Écho est au comptoir, ses cigarettes à la main. Agathe te fait un signe : c'est lui. Il ne t'a pas encore vu. Il feuillette un dictionnaire des synonymes."
+    choix:
+      - label: "Je l'invite à déjeuner"
+        francs: -150
+        reponse: "Il accepte, par curiosité. Il mange beaucoup et ne prend aucune note. La série paraît quand même, en trois épisodes. Le troisième est presque gentil."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je le laisse chercher"
+        reponse: "Il trouve. Trois chroniques, trois synonymes de « médiocre » par chronique. Le Corner les découpe et les punaise derrière le comptoir."
+        effets: {jauges: {tribunes: -2}}
+
+  - id: vi.qr.arlaud_enveloppe
+    titre: "L'enveloppe jamais réclamée"
+    roles: [entraineur, president, ds, selectionneur]
+    lieu: librairie
+    qui: arlaud
+    si: "relation.arlaud >= 2 && annee <= 2007"
+    texte: "Dans le tiroir des pellicules jamais réclamées, Agathe sort une enveloppe au nom de ton prédécesseur, déposée la veille de son départ. « Elle attend depuis. Je la développe ? »"
+    choix:
+      - label: "Développez-la"
+        francs: -60
+        reponse: "Douze photos de la nuit avant son départ : des visages fermés, une chaise vide, quelqu'un dans l'encadrement d'une porte. Tu sais maintenant qui était là."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Rendez-la à sa famille"
+        reponse: "Agathe l'envoie à la famille, sans un mot. Une carte revient trois semaines plus tard : « Merci. Nous ne l'ouvrirons pas non plus. »"
+        effets: {relation: {arlaud: 1}}
+
+  - id: vi.qr.arlaud_photos
+    titre: "Les photos de Madame Marsal"
+    lieu: librairie
+    qui: arlaud
+    si: "relation.arlaud >= 2 && annee >= 2000 && annee <= 2007 && !flag(histoire_h1)"
+    texte: "Madame Marsal est partie en maison de retraite. Agathe a trouvé sous le comptoir quatre cents photos du stade, de 1951 à 1990. « Le club, ou L'Écho ? Elle a dit : celui qui les regardera. »"
+    choix:
+      - label: "Au club"
+        reponse: "Les photos partent au club-house dans des cartons. Le président en choisit trois pour son bureau. Les autres descendent à la cave, dans le noir qu'elles connaissent."
+        effets: {jauges: {direction: 1}}
+      - label: "À L'Écho"
+        reponse: "L'Écho en publie une par semaine pendant des années. Le samedi, les anciens découpent la page et s'y reconnaissent, ou reconnaissent un mort."
+        effets: {jauges: {tribunes: 2}, relation: {arlaud: 1}}
+
+  - id: vi.qr.vautrin_enveloppe
+    titre: "Une enveloppe de 1984"
+    lieu: librairie
+    qui: vautrin
+    si: "relation.vautrin >= 2 && annee >= 2008"
+    texte: "Une femme demande l'enveloppe de son père, déposée en 1984. Céline la retrouve au fond du tiroir : le nom d'un ancien gardien du club. La femme n'a pas de quoi payer le tirage."
+    choix:
+      - label: "Je paie le tirage"
+        francs: -60
+        reponse: "Les photos sortent de la borne : un vestiaire de 1984, un gardien qui rit, une coupe en carton. La femme les serre contre elle. Le samedi, elle est en tribune."
+        effets: {jauges: {tribunes: 1}, relation: {vautrin: 1}}
+      - label: "Je m'en vais"
+        reponse: "Céline lui fait crédit et note la dette dans son carnet rouge, à ton nom, en souriant. Tu ne sauras jamais si c'était une blague."
+        effets: {relation: {vautrin: -1}}
+
+  # ───────────────────────────────────────────────────────────────── le cinéma
+  - id: vi.qr.vigouroux_dernier_rang
+    titre: "Le dernier rang"
+    lieu: cinema
+    tranches: [soir]
+    jours: [ven]
+    qui: vigouroux
+    si: "flag(tuyau_vigouroux_dernier_rang) && role != president && role != selectionneur && annee <= 2011"
+    texte: "Vendredi, de la cabine, Ernest te montre le dernier rang côté mur : deux silhouettes arrivées après la lumière. « Je vous l'ai dit pour que vous le sachiez. Pas pour vous en servir. »"
+    choix:
+      - label: "Je m'en servirai"
+        reponse: "Lundi, dans le bureau du président, tu parles du dernier rang de L'Aurore, sans un nom. Il pâlit, puis devient très aimable. Ernest ne te fait plus monter en cabine."
+        effets: {jauges: {direction: 2}, relation: {vigouroux: -1}}
+      - label: "Je n'ai rien vu"
+        reponse: "Tu redescends dans la salle avant la fin. La semaine suivante, Ernest te garde la meilleure place du fond, celle qu'on ne voit pas de l'écran."
+        effets: {relation: {vigouroux: 1}}
+
+  - id: vi.qr.vigouroux_derniere_bobine
+    titre: "La dernière séance en bobine"
+    lieu: cinema
+    tranches: [soir]
+    qui: vigouroux
+    si: "relation.vigouroux >= 2 && annee >= 2010 && annee <= 2011"
+    texte: "Dernière semaine du projecteur. Ernest te laisse choisir le film de la dernière séance en bobine, dimanche. « Il y aura vous, ou vous et moi. Ça dépend du film. »"
+    choix:
+      - label: "Un vieux film du club"
+        reponse: "Il passe les actualités de la finale de 1974, puis un western. Vous êtes deux dans la salle. À la fin, il te donne trois images de la tribune Nord, découpées aux ciseaux."
+        effets: {jauges: {tribunes: 1}, relation: {vigouroux: 1}}
+      - label: "Choisissez, vous"
+        reponse: "Il choisit un film d'amour en noir et blanc et ne descend pas de la cabine. Tu le regardes dans la salle vide. Tu ne sauras jamais pourquoi celui-là."
+        effets: {relation: {vigouroux: 1}}
+
+  - id: vi.qr.viard_dette
+    titre: "Dernières séances"
+    lieu: cinema
+    tranches: [soir]
+    qui: viard
+    si: "flag(dette_viard)"
+    texte: "Ghislaine a collé « Dernières séances » sur la vitrine de L'Aurore. « Si la salle est pleine dimanche, la mairie attend un an avant de vendre. Amenez votre monde. »"
+    choix:
+      - label: "J'amène tout le monde"
+        reponse: "Dimanche, trois cents places, trois cents personnes : ton groupe, leurs familles, le kop. La mairie attend un an. Au club, on te demande de quel droit."
+        effets: {clear: [dette_viard], jauges: {tribunes: 1, direction: -1}, relation: {viard: 1}}
+      - label: "Je ne peux pas"
+        reponse: "Dimanche, cent douze spectateurs. La mairie signe en juin. Ghislaine reste caissière pour le nouveau propriétaire, et ne te met plus de bonbons en plus."
+        effets: {clear: [dette_viard], relation: {viard: -2}}
+
+  - id: vi.qr.viard_ecran
+    titre: "Le match sur l'écran"
+    lieu: cinema
+    tranches: [soir]
+    qui: viard
+    si: "relation.viard >= 2 && annee >= 2024"
+    texte: "Ce soir, pas de film : le match à l'extérieur, en grand sur l'écran de L'Aurore. Ghislaine te tend le micro de la caisse : « Trois mots avant le coup d'envoi ? Ils sont venus pour ça aussi. »"
+    choix:
+      - label: "Trois mots"
+        reponse: "Tu dis trois mots, puis un quatrième. La salle chante comme à la Rive ; le plafond tient. Ghislaine note dans son cahier : « Quatre mots. »"
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je regarde du fond"
+        reponse: "Tu restes au fond, debout, près de la porte. La salle chante sans toi. Ghislaine note dans son cahier : « Pas un mot. »"
+        effets: {relation: {viard: -1}}
+
+  # ─────────────────────────────────────────────────────────────────── l'école
+  - id: vi.qr.bellocq_inscrits
+    titre: "Trois inscrits"
+    lieu: ecole
+    qui: bellocq
+    si: "flag(tuyau_bellocq_classe) && role != selectionneur && annee <= 2012"
+    texte: "Monsieur Bellocq te montre la liste de la rentrée, trois lignes vides en bas. « Trois familles de vos jeunes logées ici plutôt qu'à Valdorne, et la classe reste. Le club paierait ? »"
+    choix:
+      - label: "Le club les logera ici"
+        reponse: "Trois familles emménagent rue des Lilas en août. La classe reste ouverte. Le club paie trois loyers de plus, et le trésorier te le rappelle à chaque réunion."
+        effets: {jauges: {tribunes: 2, caisse: -1}, relation: {bellocq: 1}}
+      - label: "Le club n'y peut rien"
+        reponse: "La classe ferme en septembre. Vingt-deux enfants se partagent deux salles. Monsieur Bellocq ne t'ouvre plus la grille avant la sortie."
+        effets: {relation: {bellocq: -1}}
+
+  - id: vi.qr.bellocq_depart
+    titre: "Le pot de départ"
+    lieu: ecole
+    qui: bellocq
+    si: "relation.bellocq >= 2 && annee >= 2011 && annee <= 2012"
+    texte: "Monsieur Bellocq part en retraite après quarante ans à l'école des Lilas. Les CM2 ont préparé une chanson. Il te demande un mot, « pour qu'il y ait un adulte qui ne pleure pas »."
+    choix:
+      - label: "Je dis un mot"
+        reponse: "Tu dis trois phrases. La dernière fait rire. Il te serre la main et ne la lâche pas pendant toute la chanson. En sortant, les parents te regardent autrement."
+        effets: {jauges: {tribunes: 1}, relation: {bellocq: 1}}
+      - label: "Je n'ai rien à dire"
+        reponse: "C'est la cantinière qui parle. Elle pleure dès la première phrase, et Monsieur Bellocq aussi. Il te salue de loin, à la fin, sans traverser la cour."
+        effets: {relation: {bellocq: -1}}
+
+  - id: vi.qr.chabanel_copies
+    titre: "Trois rédactions"
+    lieu: ecole
+    qui: chabanel
+    si: "flag(tuyau_chabanel_redactions) && role != selectionneur && annee >= 2013"
+    texte: "Madame Chabanel te tend trois copies. Une écriture ronde : « Mon papa fait la pelouse du stade. Il dit qu'on va le remplacer par une machine. » Elle te regarde. « Vous y pouvez quelque chose ? »"
+    choix:
+      - label: "Je me battrai pour eux"
+        reponse: "Tu t'y opposes en réunion, deux fois. Le jardinier, le chauffeur et la lingère restent jusqu'à la fin de la saison. Le club t'en veut ; les trois familles, non."
+        effets: {jauges: {direction: -2, vestiaire: 1}, relation: {chabanel: 1}}
+      - label: "Ce n'est pas de mon ressort"
+        reponse: "Elle range les copies dans sa sacoche et les note, dix-huit, quinze, douze. Elle ne te les montre plus."
+        effets: {relation: {chabanel: -1}}
+
+  - id: vi.qr.chabanel_preau
+    titre: "Seize heures quarante"
+    lieu: ecole
+    tranches: [aprem]
+    jours: [lun, mar, jeu, ven]
+    qui: chabanel
+    si: "relation.chabanel >= 2 && annee >= 2013"
+    texte: "Seize heures quarante. Un garçon attend seul sous le préau, son cartable sur les genoux : personne n'est venu. Madame Chabanel a une réunion. « Vous pouvez rester avec lui un quart d'heure ? »"
+    choix:
+      - label: "Je reste avec lui"
+        reponse: "Vous jonglez avec le ballon dégonflé du préau. Sa mère arrive à dix-sept heures dix, en courant, en blouse d'aide-soignante. Elle ne sait pas qui tu es. Lui, si."
+        effets: {jauges: {tribunes: 1}, relation: {chabanel: 1}}
+      - label: "J'ai un rendez-vous"
+        reponse: "Madame Chabanel annule sa réunion. Elle s'assoit à côté du garçon et sort une copie à corriger. Elle ne te dit pas au revoir."
+        effets: {relation: {chabanel: -1}}
+
+  # ─────────────────────────────────────────── d'autres jours, et quand le lien a tourné
+  - id: vi.qr.quintane_froid
+    titre: "Pas avant jeudi"
+    lieu: garage
+    qui: quintane
+    si: "relation.quintane <= -2 && annee <= 2018"
+    texte: "Ta voiture refuse de démarrer, la veille d'un déplacement. Au garage du Pont, Quintane ne lève pas la tête de son moteur. « Pas avant jeudi. » On est lundi."
+    choix:
+      - label: "Je paie le double"
+        francs: -400
+        reponse: "Il la répare dans l'après-midi, sans un mot, et te fait payer le double. Il ne te propose pas de café. Mais il a écouté ton moteur trente secondes, les yeux fermés."
+        effets: {relation: {quintane: 1}}
+      - label: "J'irai à Valdorne"
+        francs: -600
+        reponse: "Le garage de Valdorne te la rend en trois jours, avec une facture de concessionnaire et une valise qui dit que tout va bien. Quintane le sait le soir même."
+        effets: {relation: {quintane: -1}}
+
+  - id: vi.qr.delmotte_col_rouge
+    titre: "Le col du mardi"
+    roles: [entraineur, joueur, ds]
+    lieu: laverie
+    qui: delmotte
+    si: "relation.delmotte >= 2 && annee <= 2012"
+    texte: "Gisèle te tend une chemise du président, le col tourné vers toi : du rouge, un mardi, et ce n'est pas celui de sa femme. « Je la lave, ou je la plie telle quelle ? »"
+    choix:
+      - label: "Lavez-la"
+        reponse: "Elle la lave à part, à la main, et la plie avec les autres. Le président ne saura jamais qu'une laverie a eu son mariage entre les doigts. Toi, si."
+        effets: {relation: {delmotte: 1}}
+      - label: "Pliez-la telle quelle"
+        reponse: "Elle la plie le col en dessus, sans un mot. Le jeudi, le président arrive au club avec une valise. Il dort au club-house un mois, et signe tout ce qu'on lui tend."
+        effets: {jauges: {direction: 1}, relation: {delmotte: -1}}
+
+  - id: vi.qr.delmotte_froid
+    titre: "Le linge sur la chaise"
+    lieu: laverie
+    qui: delmotte
+    si: "relation.delmotte <= -2 && annee <= 2012"
+    texte: "Ton linge t'attend dehors, sur une chaise devant la laverie, mouillé, avec un mot épinglé dessus : « Les machines sont libres. » Gisèle plie, derrière la vitre."
+    choix:
+      - label: "Je vais lui parler"
+        reponse: "Elle t'écoute en pliant. À la fin, elle prend ton linge et le met dans la 2. « Pas la 4. La 4, ça se mérite. » C'est mieux que rien."
+        effets: {relation: {delmotte: 1}}
+      - label: "Je reprends mon linge"
+        reponse: "Tu remontes la rue du Stade, le linge mouillé dans les bras. Au Corner, devant la vitre, on te regarde passer. Le soir, tout le comptoir le raconte."
+        effets: {jauges: {tribunes: -1}, relation: {delmotte: -1}}
+
+  - id: vi.qr.ducros_boite
+    titre: "La boîte à chaussures"
+    lieu: marche
+    tranches: [midi]
+    qui: ducros_achille
+    si: "relation.ducros_achille >= 2 && annee <= 2011"
+    texte: "Achille te confie sa boîte à chaussures pour la nuit : un examen à l'hôpital, demain matin. « Si je ne reviens pas, donnez-la à ma fille. Si je reviens, ne l'ouvrez pas. »"
+    choix:
+      - label: "Je la garde fermée"
+        reponse: "Elle passe la nuit sur ta table, fermée par un élastique. Achille revient le surlendemain, plus maigre. Il reprend la boîte et te met trois pommes de plus. Sans les peser."
+        effets: {relation: {ducros_achille: 1}}
+      - label: "Je l'ouvre"
+        reponse: "Dedans, de la monnaie, et dessous un carnet : trente ans de crédits faits à des supporters, jamais réclamés. Tu refermes. Il revient, regarde l'élastique, et sait."
+        effets: {jauges: {tribunes: 1}, relation: {ducros_achille: -1}}
+
+  - id: vi.qr.huguette_derby
+    titre: "Les fleurs du derby"
+    lieu: fleuriste
+    qui: huguette
+    si: "relation.huguette >= 2 && annee <= 2016"
+    texte: "Madame Huguette te tend un petit bouquet bordeaux. « Mon mari jouait arrière, en 1962. Il est au carré du fond. Le jour du derby, je n'ai plus les jambes. Vous les poserez ? »"
+    choix:
+      - label: "Je les poserai"
+        reponse: "Le matin du derby, tu poses le bouquet sur une tombe au nom effacé, à côté d'un ballon en céramique. Un ancien, deux tombes plus loin, te fait un signe de casquette."
+        effets: {jauges: {tribunes: 1}, relation: {huguette: 1}}
+      - label: "Je n'aurai pas le temps"
+        reponse: "Elle range le bouquet dans la chambre froide. « Il attendra le match d'après. Il a l'habitude d'attendre. » Elle ne te le redemande pas."
+        effets: {relation: {huguette: -1}}
+
+  - id: vi.qr.vigouroux_bobines
+    titre: "Les bobines qui fondent"
+    lieu: cinema
+    tranches: [soir]
+    qui: vigouroux
+    si: "relation.vigouroux >= 2 && annee <= 2011"
+    texte: "À la cave de L'Aurore, Ernest soulève un couvercle : la finale de 1974 colle à sa boîte, comme du sucre. « À Valdorne, un laboratoire sauve les bobines. C'est cher. Le club refuse. »"
+    choix:
+      - label: "Je paie le laboratoire"
+        francs: -2000
+        reponse: "Trois mois plus tard, la finale revient sur une cassette et une bobine neuve. Ernest la projette un dimanche matin. La salle est pleine d'anciens qui se reconnaissent."
+        effets: {jauges: {tribunes: 2}, relation: {vigouroux: 1}}
+      - label: "Le club a raison"
+        reponse: "Il referme le couvercle doucement, comme sur un cercueil. L'hiver suivant, la finale de 1974 n'est plus qu'une galette brune. Il la garde quand même."
+        effets: {relation: {vigouroux: -1}}
+
+  - id: vi.qr.bellocq_cahier
+    titre: "Le cahier de 1979"
+    lieu: ecole
+    tranches: [aprem]
+    qui: bellocq
+    si: "relation.bellocq >= 2 && role != selectionneur && annee <= 2004"
+    texte: "Monsieur Bellocq sort d'une armoire un cahier de CM2, 1979 : celui de ton capitaine. Rédaction, « Plus tard, je serai » : « gardien du stade, pour dormir dans les tribunes »."
+    choix:
+      - label: "Je le lui montre"
+        reponse: "Le capitaine lit sa rédaction dans le vestiaire, à voix haute, sans qu'on lui demande. Tout le monde rit. Lui aussi, mais un peu après les autres."
+        effets: {jauges: {vestiaire: 1}}
+      - label: "Rangez-le"
+        reponse: "Il le range avec les autres, par année. « Un jour, il viendra le chercher lui-même. Ils viennent tous, quand ils ont des enfants. »"
+        effets: {relation: {bellocq: 1}}
+
+  # ───────────────────────────────────────────────────────────── les réputations
+  # « Un enfant du pays » (rep_quartier), « présent pour les siens » (rep_famille),
+  # « un liseur » (rep_culture) : une scène douce, une scène amère chacune.
+  - id: vi.qr.rep_quartier_cours
+    titre: "Par la cour de la laverie"
+    lieu: rue
+    tranches: [soir]
+    qui: commercant
+    si: "flag(rep_quartier)"
+    texte: "Un photographe t'attend devant chez toi, l'objectif levé. Au coin de la rue, l'épicier te fait signe : par la cour de la laverie, puis la porte du fournil, tu rentres sans qu'il te voie."
+    choix:
+      - label: "Je passe par les cours"
+        reponse: "La laverie, une cour, un portail, le fournil encore chaud. On t'ouvre sans un mot. Le photographe attend jusqu'à minuit, puis s'en va. Le lendemain, pas de photo."
+        effets: {jauges: {direction: 1}}
+      - label: "Je vais lui parler"
+        reponse: "Tu lui parles cinq minutes, sous la pluie. Il range son appareil. Le lendemain, la seule photo est celle de quelqu'un qui tient un parapluie au-dessus d'un photographe."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: vi.qr.rep_quartier_lettre
+    titre: "Puisque vous êtes d'ici"
+    lieu: rue
+    tranches: [matin, midi]
+    qui: commercant
+    si: "flag(rep_quartier)"
+    texte: "Les commerçants t'attendent à la sortie du marché avec une lettre : le club veut ouvrir sa propre buvette dans la rue, les jours de match. « Vous êtes d'ici. Vous signez en premier. »"
+    choix:
+      - label: "Je signe en premier"
+        reponse: "Ton nom est en haut de la lettre, au-dessus de celui de l'épicier. Le club recule. Au bureau, on te demande pour qui tu travailles, au juste."
+        effets: {jauges: {tribunes: 2, direction: -2}}
+      - label: "Je ne peux pas signer"
+        reponse: "Ils plient la lettre sans un mot. La buvette du club ouvre en septembre. Dans la rue, on te sert encore ; on ne t'appelle plus par ton prénom."
+        effets: {jauges: {tribunes: -2, direction: 1}}
+
+  - id: vi.qr.rep_famille_car
+    titre: "Un adulte par car"
+    lieu: ecole
+    tranches: [aprem]
+    jours: [lun, mar, jeu, ven]
+    qui: passante
+    si: "flag(rep_famille)"
+    texte: "À la grille de l'école, des parents t'attendent avec une liste : pour la sortie de fin d'année, il manque un adulte par car. « Vous êtes toujours là le mercredi. Alors on a pensé à vous. »"
+    choix:
+      - label: "Je monte dans le car"
+        reponse: "Une journée au bord du lac de Valdorne, trente enfants et une glacière. Le soir, ils chantent l'hymne du club dans le car, faux, et en entier."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Pas ce jour-là"
+        reponse: "Un autre parent monte à ta place. Les enfants demandent où tu es. On leur dit : au travail. Ils trouvent que c'est une drôle de réponse, un mercredi."
+        effets: {jauges: {direction: 1}}
+
+  - id: vi.qr.rep_famille_bureau
+    titre: "Le mercredi après-midi"
+    lieu: domicile
+    tranches: [soir]
+    si: "flag(rep_famille)"
+    texte: "Un appel du bureau, le soir, sans bonjour : « Mercredi, pendant la réunion, on vous a vu à la sortie de l'école. Quelqu'un l'a noté. Ce n'est pas un reproche. C'est une information. »"
+    choix:
+      - label: "Je garde mes mercredis"
+        reponse: "Tu dis que le mercredi est à toi. Un silence, puis : « Très bien. » Les réunions sont déplacées au mercredi, seize heures, désormais."
+        effets: {jauges: {direction: -2}}
+      - label: "Je serai là mercredi"
+        reponse: "Mercredi, tu es à la réunion. À seize heures trente, quelqu'un attend à la grille et ne te voit pas venir. Le soir, on ne te dit rien. On te le dira plus tard."
+        effets: {jauges: {direction: 1}, relation: {camille: -1}}
+
+  - id: vi.qr.rep_culture_archives
+    titre: "Les archives de L'Écho"
+    lieu: echo
+    tranches: [aprem]
+    qui: ancien
+    si: "flag(rep_culture)"
+    texte: "À L'Écho, l'archiviste te reconnaît : « Vous êtes {pg, select, f{celle} other{celui}} qui lit. » Il descend avec toi au sous-sol : les comptes rendus des conseils du club, de 1962 à hier."
+    choix:
+      - label: "Je lis toute la nuit"
+        reponse: "Au matin, tu connais les statuts du club mieux que le conseil : une clause de 1971 que tout le monde a oubliée. Sauf toi, désormais."
+        effets: {jauges: {direction: 2}}
+      - label: "Une photocopie suffira"
+        francs: -20
+        reponse: "Il te photocopie dix pages au hasard, en souriant. Sur la dixième, un nom que tu connais, en 1974, au bas d'un vote. Tu ne sais pas encore quoi en faire."
+        effets: {jauges: {direction: 1}}
+
+  - id: vi.qr.rep_culture_professeur
+    titre: "Le professeur"
+    lieu: rue
+    tranches: [matin, midi]
+    qui: passant
+    si: "flag(rep_culture)"
+    texte: "Dans L'Écho de lundi, le chroniqueur te surnomme « le Professeur » : « Moins de romans, plus de victoires. » Au tabac, on te salue d'un « Bonjour, professeur ». Pas gentiment."
+    choix:
+      - label: "Je réponds par une lettre"
+        reponse: "Ta lettre paraît jeudi, en page courrier : courte, précise, sans un mot de trop. Le Corner la trouve bien écrite, ce qui est pire. Le club aurait préféré le silence."
+        effets: {jauges: {tribunes: 1, direction: -1}}
+      - label: "Je laisse dire"
+        reponse: "Le surnom reste. Au virage, on te salue d'un « Professeur ! » à chaque apparition, et on rit. Ça finira par passer. Pas cette saison."
+        effets: {jauges: {tribunes: -2}}
+
+# ═══════════════════════════════════════════════════════════════════ LES PAROLES
+# Ce que la rue dit de toi quand une réputation est née.
+paroles:
+  # « un enfant du pays »
+  - {qui: commercant, sujet: toi, si: "flag(rep_quartier)", texte: "Vous, on vous sert sans demander ce que vous voulez. Ici, ça veut dire qu'on a arrêté de vous regarder comme quelqu'un de passage."}
+  - {qui: ancien, sujet: toi, si: "flag(rep_quartier)", texte: "Ma femme dit que vous faites vos courses ici, comme nous. Elle le dit comme on dit de quelqu'un qu'il a été baptisé à Saint-Aubin."}
+  - {qui: enfant, sujet: toi, si: "flag(rep_quartier)", texte: "Tu habites la cité ? Ma mère dit que presque. Elle dit que tu prends ton pain chez nous, et que tu dis bonjour à tout le monde."}
+  # « présent pour les siens »
+  - {qui: passante, sujet: toi, si: "flag(rep_famille)", texte: "Mon petit dit qu'il vous a vu au spectacle de l'école, au troisième rang, avec un appareil photo. Il ne vous croyait pas capable de ça."}
+  - {qui: enfant, sujet: toi, si: "flag(rep_famille)", texte: "T'étais à la kermesse ! T'as perdu au chamboule-tout. La maîtresse dit que c'est bien, de perdre devant les enfants."}
+  - {qui: commercant, sujet: toi, si: "flag(rep_famille)", texte: "On dit que vous rentrez dîner chez vous tous les soirs. Dans votre métier ? Ma femme ne me croit pas. Moi non plus, remarquez."}
+  # « un liseur »
+  - {qui: ancien, sujet: toi, si: "flag(rep_culture)", texte: "Vous lisez au café, maintenant. Avant, les gens du club lisaient L'Écho, page des sports. Vous, des livres sans images."}
+  - {qui: commercant, sujet: toi, si: "flag(rep_culture)", texte: "La libraire dit que vous lui avez commandé un livre qu'elle a dû chercher dans trois catalogues. Elle en parle comme d'un exploit."}
+  - {qui: fan, sujet: toi, si: "flag(rep_culture)", texte: "Au virage, on t'appelle le professeur. C'est gentil, chez nous. Enfin, ça dépend du score."}
+
+# Où une carte de l'un d'eux se joue (son palier) : à son lieu.
+rencontres:
+  coulomb: epicerie
+  kessar: epicerie
+  pichon_lucette: boulangerie_residentiel
+  guerand: boulangerie_residentiel
+  quintane: garage
+  saulnier: garage
+  delmotte: laverie
+  montel: laverie
+  ducros_achille: marche
+  ducros_laure: marche
+  dartigue: marche
+  mevellec: fleuriste
+  brunel_auguste: tailleur
+  brunel_clement: tailleur
+  brunel_gaspard: tailleur
+  arlaud: librairie
+  vautrin: librairie
+  vigouroux: cinema
+  viard: cinema
+  bellocq: ecole
+  chabanel: ecole
