@@ -1,0 +1,1732 @@
+# LA VILLE VIVANTE — lot « campagne » : les gens du Grand Aubérive, au sud
+# (docs/histoires/ville_vivante.md, le format : § 8 ; docs/histoires/grand_auberive.md).
+#
+# La ville s'arrête d'un coup : des champs, des haies, la départementale, le calvaire.
+# Six lieux, deux visages chacun, l'un après l'autre, sans trou ni chevauchement :
+#
+#   ferme          La ferme               Prosper Soulié      1990-2008   familles
+#                                         Margaux Soulié      2009-2050   familles  (sa petite-fille)
+#   centre_vert    Le centre du Bois-Joli Gustave Rigal       1990-2014   vestiaire (l'intendant, la Coupe de 1966)
+#                                         Sabine Malaterre    2015-2050   vestiaire (la directrice du centre modernisé)
+#   manoir         Le manoir de la Motte  Charles Dalmayrac   1990-2019   direction (président du Racing, 1958-1977)
+#                                         Régis Vaillandet    2020-2050   direction (président, 2008-2019 : la vente au fonds)
+#   auberge        L'auberge du Relais    Thérèse Coustal     1990-2016   familles
+#                                         Bastien Coustal     2017-2050   familles  (son petit-fils)
+#   etang          L'étang                Isidore Puech       1990-2012   rue       (le pêcheur, gendarme retraité)
+#                                         Manon Puech         2013-2050   rue       (sa petite-fille, garde-pêche)
+#   stade_village  Le stade du village    Jacques Gassiat     1990-2010   tribunes  (président de l'U.S. La Motte)
+#                                         Coralie Gassiat     2011-2050   tribunes  (sa fille)
+#
+# Ce que le canton sait des livres, et que la ville tient :
+#   1 — Charles Dalmayrac est le président que la bâche de 1971 visait (« LE PRÉSIDENT VEND ») et
+#       celui que son trésorier a remplacé en 1977 ; la boîte à chaussures de 1977 ; les masques
+#       jusque sur le terrain du village.
+#   2 — la boue blanche des roues : la marne du chemin de l'étang ; le car du club et la berline,
+#       la nuit, au ponton (`h2_cherche_voiture`) ; les plots de Vukić au Bois-Joli (son lien).
+#   3 — la mère trie les pommes de la ferme depuis la fermeture (le lien d'Odile, que la fin rare
+#       demande) ; Didier Vallin, sa nuit au Bois-Joli et sa licence au district.
+#   4 — la petite Lavergne faisait la plonge au Relais ; Bréhaut ne conduit plus la nuit.
+#   5 — Bastide et la copie de 1931 en 1976 (`h5_bastide_1976`) ; le téléphone de la petite salle,
+#       le mardi à six heures ; le bidon rincé dans l'étang la nuit de l'Est.
+#   6 — le jeune homme poli qui paie au nom de JF Conseil (`h6_indices`).
+#   7 — le cabinet de cardiologie de Valdorne qui appelle la guérite (`h7_cardiologue`) ; le petit
+#       Rancé, la main sur la poitrine, au calvaire.
+#   8 — le bracelet de Kerdal ; la chambre six sans capteur et la chambre du Relais (`h8_nuits`) ;
+#       la voiture de Ferlac à l'étang ; le garçon poli au dîner de la vente.
+#   9 — le frère de Noa Vandel, du toit du Dôme (`h9_frere_appel`) ; la fouille des chambres ; le
+#       dîner de la Ligue de décembre 2010.
+#  10 — Rive Capital et ses lasers ; le second clapet du capo (`h10_clapet_nino`) ; Gégé au dernier
+#       gradin de la tribune de bois (son lien, que la fin rare demande).
+#
+# Les fermiers s'appellent Soulié. Le nom que grand_auberive.yaml, grand_auberive.md et
+# district_campagne.js donnent encore à la ferme est celui de deux hommes du football réel (un
+# attaquant international, un entraîneur) : aucun texte d'ici ne le reprend, et il est à changer
+# là-bas pour « La ferme Soulié ».
+#
+# Le quartier est loin : les activités d'ici prennent une ou deux tranches. Les activités qu'on fait
+# avec quelqu'un portent la borne de son époque (`si`). Le verrou du quartier, c'est la coquille qui
+# le tient (une scène ne se programme pas dans un quartier fermé) : aucune garde de semaine ici.
+# Aucun texte n'accorde le personnage joué ; les objets d'une seule époque ont leur année.
+gens:
+
+  # ═══════════════════════════════════════════════════════ LA FERME LACOMBE (ferme)
+
+  - id: prosper_soulie
+    name: "Prosper Soulié"
+    label: "LE FERMIER DE LA MOTTE"
+    genre: m
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: casquette, coiffe: bouteille, cheveux: blanc, pilosite: moustache, lunettes: aucune, tenue: veste, couleur: bleu, accessoire: aucun}
+    lieu: ferme
+    tranches: [matin, aprem, soir]
+    annees: [1990, 2008]
+    reseau: familles
+    trace: "Prosper a noté ta visite au crayon sur le calendrier de l'étable, sous le vêlage de la Rousse."
+    paliers: ["te laisse entrer dans la cour", "te garde les œufs du matin", "cacherait n'importe qui dans sa grange"]
+    froid: ["laisse aboyer le chien", "ferme le portail quand tu passes", "ne t'ouvre plus le portail"]
+    activites: [cmp_soulie_traite, cmp_soulie_transistor]
+    on_relation: {3: vi.prosper_soulie.trappe, -3: vi.prosper_soulie.chaine}
+    repliques:
+      - {lien: 0, si: "tranche == matin", texte: "Les œufs sont dans la caisse, au portail, et la monnaie dans la boîte à sucre. Je ne compte jamais devant les gens. Je compte le soir, et je sais qui triche."}
+      - {lien: 0, texte: "Le transistor est au clou de l'étable, à côté du licol de la Rousse. Je trais pendant la première mi-temps. La seconde, je l'écoute assis sur le seau."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Trois samedis que les vaches ne tiennent pas en place à la mi-temps. Elles n'aiment pas quand le speaker baisse la voix. Moi non plus."}
+      - {lien: 1, texte: "La finale de la Coupe, en 1966, j'y étais. En rentrant, j'ai trouvé un veau mort dans la paille. Depuis, j'écoute à la radio. Je n'ai plus jamais rien perdu pendant un match."}
+      - {lien: 1, si: "flag(histoire_h2) && flag(h2_trois_metres)", texte: "De la boue blanche ? C'est la marne du chemin de l'étang. Il n'y en a nulle part ailleurs dans le canton. Elle colle aux roues jusqu'en ville, et elle sèche comme du plâtre."}
+      - {lien: 1, si: "flag(histoire_h5)", texte: "La dame de l'agence est revenue pour mes prés du bas. Elle a laissé sa carte sous la boîte à sucre. Elle me sert à caler la porte du poulailler."}
+      - {lien: 2, texte: "Mon fils vend des tracteurs à Valdorne. Il dit que la ferme vaut plus vendue que tenue. Il a raison. C'est pour ça que je garde les clés dans ma poche."}
+      - {lien: 2, si: "tranche == soir", texte: "Le soir, j'entends les voitures du Bois-Joli sur la départementale. Quand l'une d'elles redescend après minuit, phares éteints, c'est un gamin qui a fait le mur."}
+      - {lien: 3, texte: "Ma grange a des bottes plus vieilles que toi. Si un jour il faut que quelque chose ne se trouve pas, il y a de la place derrière les plus vieilles."}
+      - {lien: -1, texte: "Les œufs sont au portail. Pas besoin d'entrer dans la cour pour ça."}
+      - {lien: -2, texte: "Le chien ne vous connaît pas. Moi non plus, aujourd'hui."}
+      - {lien: -3, texte: "Le portail est fermé. La départementale passe devant ; elle mène partout ailleurs."}
+    tuyaux:
+      - id: cmp_soulie_odile
+        lien: 1
+        si: "flag(histoire_h3) && flag(h3_usine_fermee)"
+        texte: "« Depuis que l'usine a fermé, ta mère vient trier mes pommes le mardi et le jeudi, à six heures, avec trois femmes du bâtiment C. Elle m'a dit de ne pas te le dire. Je te le dis. »"
+      - id: cmp_soulie_josiane
+        si: "flag(histoire_h2) && !flag(h2_wagon_vu)"
+        texte: "« La secrétaire de ton club vient le jeudi : deux douzaines d'œufs et un poulet. Elle vit seule, elle mange comme un oiseau. Elle paie en pièces comptées d'avance, et ne dit rien. »"
+      - id: cmp_soulie_route
+        si: "flag(histoire_h5) && flag(h5_maquette_vue)"
+        texte: "« La dame de l'agence veut mes prés du bas pour une route jusqu'à la friche, pour le stade neuf. Sur son plan, la route finit dans un parking. Il n'y a pas de stade au bout. »"
+      - id: cmp_soulie_mur
+        si: "annee <= 2008 && vestiaire < 50 && role != president && role != ds"
+        texte: "« Un des tiens passe par ma cour à minuit, les veilles de match au Bois-Joli, et rentre à cinq heures, les chaussures pleines de marne. Il croit que mes chiens dorment. Ils ne dorment jamais. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "La pièce sous la grange"
+      texte: "Prosper fait descendre celui des tiens que la ville cherche par la trappe, derrière les vieilles bottes. Une semaine de traite à cinq heures, de soupe à sept. Il revient en ville sans qu'on l'ait vu."
+      effets: {jauges: {vestiaire: 3}}
+      dette: true
+
+  - id: margaux_soulie
+    name: "Margaux Soulié"
+    label: "LA FERMIÈRE DE LA MOTTE"
+    genre: f
+    portrait: {teint: clair, corpulence: fin, age: mur, coiffure: queue, cheveux: roux, pilosite: rase, lunettes: aucune, tenue: veste, couleur: bouteille, accessoire: aucun}
+    lieu: ferme
+    tranches: [matin, midi, aprem, soir]
+    annees: [2009, 2050]
+    reseau: familles
+    trace: "Margaux a glissé ton panier sous le banc, ton nom écrit au marqueur sur le couvercle."
+    paliers: ["te garde un panier sous le banc", "te montre où sont les clés du tracteur", "ferait passer n'importe qui par ses chemins"]
+    froid: ["te vend au prix du marché", "ne te garde plus rien", "ne t'ouvre plus la cour"]
+    activites: [cmp_margaux_panier]
+    on_relation: {3: vi.margaux_soulie.transistor, -3: vi.margaux_soulie.panneau}
+    repliques:
+      - {lien: 0, texte: "Les paniers sont prêts le jeudi : légumes, œufs, un pot de miel quand les ruches veulent bien. Je ne livre pas en ville. La ville vient ici, ou elle mange ce qu'elle trouve."}
+      - {lien: 0, si: "annee >= 2018", texte: "Trois étés sans pluie. L'étang a baissé d'un mètre, et les pelouses du Bois-Joli sont toujours vertes. Dans le canton, on sait chez qui va l'eau."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Le transistor de mon grand-père est toujours au clou de l'étable. Les vaches l'écoutent encore le samedi. Ces temps-ci, je le baisse à la mi-temps."}
+      - {lien: 1, texte: "Je suis revenue l'hiver où mon grand-père est tombé dans la cour. J'avais un bureau à la capitale et un loyer. J'ai gardé ses bottes. Le loyer, non."}
+      - {lien: 1, si: "annee >= 2030", texte: "Les panneaux sur la grange rapportent plus que le lait. Je garde les vaches quand même. Les panneaux ne vêlent pas, et je ne suis pas revenue pour regarder un toit."}
+      - {lien: 1, si: "role == selectionneur && tranche == soir", texte: "Quand tes Cobalts sont au Bois-Joli, ils passent le soir sur mes chemins, en file, sans lampe, en comptant à voix haute. Le dernier compte toujours tout seul."}
+      - {lien: 2, texte: "Mon grand-père cachait la récolte aux huissiers derrière les vieilles bottes. Ma mère y a caché mon père, une fois. Moi, je n'y cache rien. Pour l'instant."}
+      - {lien: 3, texte: "Si un jour tu dois sortir de la Motte sans passer par la départementale, il y a les chemins de moisson. Le tracteur a la clé sur le contact. Personne ne vole un tracteur."}
+      - {lien: -1, texte: "Les paniers sont au prix affiché. Le prix des amis, c'est pour les amis."}
+      - {lien: -2, texte: "Il n'y a plus de panier pour vous cette semaine. Ni la suivante."}
+      - {lien: -3, texte: "La cour est fermée. Vous connaissez le chemin du retour : c'est le seul qui soit goudronné."}
+    tuyaux:
+      - id: cmp_margaux_rance
+        lien: 1
+        si: "flag(histoire_h7) && !flag(h7_rance_mort)"
+        texte: "« Tes Cobalts courent dans mes chemins le matin. Le petit Rancé s'arrête toujours au calvaire, une main à plat sur la poitrine. Il repart quand les autres arrivent, pour qu'ils ne voient rien. »"
+      - id: cmp_margaux_frere
+        si: "flag(histoire_h9) && !flag(h9_frere_appel)"
+        texte: "« Le frère de Noa Vandel a fait trois moissons ici avant de partir sur le chantier du Dôme. Il a appelé dimanche, du toit, pour savoir s'il pleuvait chez nous. Là-bas, il fait cinquante et un. »"
+        effets: {set: [h9_frere_appel]}
+      - id: cmp_margaux_rive
+        si: "flag(histoire_h10)"
+        texte: "« Rive Capital m'offre trois fois le prix de mes prés autour du Bois-Joli. L'offre tient jusqu'au lendemain du dernier match de 2040. Ils savent déjà ce qu'ils feront du centre, ce jour-là. »"
+    service:
+      lien: 3
+      label: "Les chemins de moisson"
+      texte: "Margaux te fait sortir de la Motte par les chemins de moisson, dans la cabine du tracteur, pendant que les photographes guettent la départementale. En ville, personne ne sait d'où tu reviens."
+      effets: {jauges: {direction: 2}}
+
+  # ═══════════════════════════════════════════════ LE CENTRE DU BOIS-JOLI (centre_vert)
+
+  - id: gustave_rigal
+    name: "Gustave Rigal"
+    label: "L'INTENDANT DU BOIS-JOLI"
+    genre: m
+    portrait: {teint: clair, corpulence: moyen, age: age, coiffure: brosse, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: survetement, couleur: bordeaux, couleur2: gris, accessoire: sifflet}
+    lieu: centre_vert
+    tranches: [matin, midi, aprem, soir]
+    annees: [1990, 2014]
+    reseau: vestiaire
+    trace: "Gustave a écrit l'heure de ta venue dans le cahier de la guérite, entre deux livraisons de gazon."
+    paliers: ["te lève la barrière sans demander", "te confie le double des clés", "te laisserait le Bois-Joli pour la nuit"]
+    froid: ["te fait signer le registre", "te laisse attendre à la barrière", "ne te lève plus la barrière"]
+    activites: [cmp_rigal_ronde, cmp_rigal_guerite]
+    on_relation: {3: vi.gustave_rigal.cahier, -3: vi.gustave_rigal.barriere}
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Tes Cobalts mangent ici à deux tables, le dos tourné. Hier soir, quatre plateaux sont revenus pleins à la cuisine. Ils dorment au même étage, pas dans la même équipe."}
+        - {si: "role == president", texte: "La cuisinière et les deux jardiniers n'ont pas eu leur paie de mars. Ils travaillent quand même ; à la pause, ils parlent de toi au passé, assis sur la tondeuse."}
+        - {si: "role == ds", texte: "Tes préparateurs viennent déjeuner ici pour ne pas te croiser au club. Ils mangent dans leur voiture, sur le parking, la radio allumée. Ils parlent d'ailleurs, pas de toi."}
+        - "À la mise au vert, trois chambres avaient encore la lumière à deux heures. Au petit-déjeuner, personne ne s'est assis à côté de personne. J'ai débarrassé onze tasses pleines."
+      moyen:
+        - {si: "role == selectionneur", texte: "Les Cobalts jouent aux cartes le soir, au salon, par petits groupes qui commencent à se mélanger. On rit à une table, pas encore aux autres. Un groupe, ça se fait, ou pas."}
+        - {si: "role == president", texte: "Les jardiniers tondent, la cuisinière cuisine, personne ne se plaint ni ne remercie. Les gens du club font leurs heures. Ils attendent de voir ce que tu vaux."}
+        - {si: "role == ds", texte: "Ton staff mange ici le mardi, à une seule table, et parle boutique. Ils te citent sans te critiquer. Ils ne t'attendent pas non plus pour commencer."}
+        - "Les gars se couchent à l'heure, sans chanter dans les douches, sans se plaindre. Au petit-déjeuner, on parle du match, pas de toi. Ce n'est ni bon ni mauvais : c'est calme."
+      haut:
+        - {si: "role == selectionneur", texte: "Hier soir, tes Cobalts ont poussé les tables du salon pour regarder un vieux match ensemble. Le plus jeune a fait le café pour tout le monde. Je n'avais pas vu ça depuis longtemps."}
+        - {si: "role == president", texte: "La cuisinière a fait un gâteau aux couleurs du club pour l'anniversaire d'un jardinier. Ils ont mis une part de côté pour toi, dans du papier d'argent, au frigo de la guérite."}
+        - {si: "role == ds", texte: "Tes préparateurs restent ici après la séance pour finir leurs tableaux, et ils t'appellent pour avoir ton avis. Ils ne le faisaient jamais. Ils te suivent, maintenant."}
+        - "Mise au vert, minuit : ils chantent dans le couloir, ils ont caché les chaussures du capitaine dans le congélateur. Je les ai laissés faire. Un groupe qui rit la veille joue le lendemain."
+    repliques:
+      - {lien: 0, texte: "La barrière ferme à vingt-deux heures. Ceux qui rentrent après passent par le fond du bois, et ils croient que je ne le sais pas. C'est moi qui ai planté ce bois."}
+      - {lien: 0, si: "tranche == matin", texte: "Je tonds à six heures, avant la rosée. Une pelouse tondue mouillée, ça se voit au ballon : il freine. Les joueurs ne savent pas pourquoi. Moi, si."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Les mauvaises semaines, ils laissent la moitié du plateau. La cuisinière garde les restes pour mes chiens. Mes chiens n'ont jamais été aussi gros."}
+      - {lien: 1, texte: "J'ai joué la finale de la Coupe de 1966 avec trois points de suture au genou. Le président de l'époque m'a donné ce poste en 1975, quand le genou a dit non pour de bon."}
+      - {lien: 1, si: "tranche == soir", texte: "Le soir, je fais la ronde avec le trousseau : vingt-deux chambres, vingt-deux clés. Je frappe deux coups. Celui qui ne répond pas, je ne rouvre pas : je note."}
+      - {lien: 2, texte: "Le Bois-Joli, c'était le bois du manoir. Le vieux président l'a cédé au club en 1970, pour un franc. On se souvient de ce qu'il a vendu en 1971. Du franc, personne."}
+      - {lien: 2, si: "flag(histoire_h5) && caisse < 40", texte: "Quatre mois sans paie. Je dors ici, dans la guérite, pour que les voleurs de cuivre sachent qu'il reste quelqu'un. Les huissiers, eux, le savent déjà."}
+      - {lien: 3, texte: "J'ai le double de toutes les clés, même de celles qu'on croit perdues. Si un soir tu dois être ici sans que le club le sache, la guérite a un téléphone, et je décroche toujours."}
+      - {lien: -1, texte: "Signez le registre, avec l'heure. C'est la règle, pour tout le monde. Même pour ceux qui l'ont écrite."}
+      - {lien: -2, texte: "Garez-vous dehors. Le parking est pour le car, et pour ceux qui saluent la guérite."}
+      - {lien: -3, texte: "La barrière reste baissée. Si vous voulez entrer, faites comme les gamins : par le fond du bois. Je vous verrai quand même."}
+    tuyaux:
+      - id: cmp_rigal_plots
+        lien: 1
+        si: "flag(histoire_h2) && flag(h2_place_vide)"
+        texte: "« Ton adjoint vient seul le dimanche à sept heures. Il pose les plots de l'autre sur le terrain du fond, aux mêmes places, au mètre près. Puis il les ramasse sans avoir sifflé une seule fois. »"
+      - id: cmp_rigal_did
+        si: "flag(histoire_h3) && saison >= 2"
+        texte: "« En juin 1989, Didier Vallin a dormi ici la veille de son transfert, chambre neuf. Personne n'est venu le chercher. À six heures, il est reparti à pied, vers la ville. Pas vers la gare. »"
+      - id: cmp_rigal_titi
+        si: "flag(histoire_h4) && flag(h4_quatorze_mai)"
+        texte: "« Ton capitaine ne conduit plus la nuit depuis 1984 : à chaque mise au vert, il fait ramener sa voiture par un autre. Et chaque 14 mai, il demande une chambre seul, et n'en sort qu'à midi. »"
+      - id: cmp_rigal_cardio
+        si: "flag(histoire_h7) && flag(h7_rance_mort) && !flag(h7_cardiologue)"
+        texte: "« Un cabinet de cardiologie de Valdorne a appelé ma guérite : le petit Rancé avait laissé ce numéro, pas celui de l'hôtel. Il ne s'est pas présenté le 16. Ils demandent à qui envoyer la note. »"
+        effets: {set: [h7_cardiologue]}
+      - id: cmp_rigal_agent
+        si: "annee <= 2014 && vestiaire < 45 && role != president && role != ds"
+        texte: "« La dernière nuit au vert, deux des tiens ont échangé leurs chambres pour veiller ensemble. Un agent les attendait au portail à minuit, moteur allumé. Ils ont signé quelque chose sur son capot. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "Ouvrir le Bois-Joli la nuit"
+      texte: "Gustave allume deux projecteurs sur quatre et ferme la barrière derrière le car. Une séance à huis clos, sans un photographe dans les arbres. À minuit, il recompte les ballons, un par un."
+      effets: {jauges: {vestiaire: 3, direction: -1}}
+
+  - id: sabine_malaterre
+    name: "Sabine Malaterre"
+    label: "LA DIRECTRICE DU BOIS-JOLI"
+    genre: f
+    portrait: {teint: dore, corpulence: fin, age: mur, coiffure: carre, cheveux: brun, pilosite: rase, lunettes: carrees, tenue: doudoune, couleur: anthracite, accessoire: badge}
+    lieu: centre_vert
+    tranches: [matin, midi, aprem, soir]
+    annees: [2015, 2050]
+    reseau: vestiaire
+    trace: "Sabine a ajouté ton passage au tableau blanc de la salle des soins, à la ligne des visites, sans l'heure."
+    paliers: ["te prête une blouse et un badge", "te montre les vraies courbes", "te donnerait la clé de la six"]
+    froid: ["te fait badger à l'entrée", "ne te montre plus les écrans", "ne te laisse plus passer le sas"]
+    activites: [cmp_malaterre_froid]
+    on_relation: {3: vi.sabine_malaterre.six, -3: vi.sabine_malaterre.copie}
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Les capteurs du groupe disent quatre heures de sommeil la veille du match. Ils ne dorment pas mal : ils dorment en deux clans, sur deux couloirs. La nuit, les portes claquent."}
+        - {si: "role == president", texte: "Les salariés du centre ont demandé une réunion, mais pas avec toi. Ils l'ont tenue dans la salle de cryo, porte fermée. Ils disent qu'il y fait moins froid qu'à ton étage."}
+        - {si: "role == ds", texte: "Ton staff remplit ses rapports à la dernière minute : les cases cochées, les remarques vides. Quand le staff se tait sur le papier, c'est qu'il parle ailleurs."}
+        - "Les courbes de récupération sont au plus bas depuis trois semaines. Ce n'est pas le corps : ils dorment bien seuls et mal ensemble. En salle de soins, personne ne parle à personne."
+      moyen:
+        - {si: "role == selectionneur", texte: "Le groupe mange aux mêmes tables, pas encore à la même heure. Les courbes sont moyennes, les rires aussi. Il manque un soir où quelqu'un les ferait veiller ensemble."}
+        - {si: "role == president", texte: "Les salariés du centre badgent, font leurs heures et repartent. Pas de plainte, pas de gâteau. Ils attendent de savoir si le centre sera encore au club l'an prochain."}
+        - {si: "role == ds", texte: "Ton staff t'envoie ses rapports à l'heure, propres, sans un mot de trop. Ils travaillent pour le club, pas encore pour toi. C'est déjà ça."}
+        - "Les gars dorment sept heures, récupèrent dans la norme, et ne restent pas un quart d'heure de plus après la séance. Personne ne se plaint ; personne ne reste non plus."
+      haut:
+        - {si: "role == selectionneur", texte: "Hier soir, tes Cobalts ont débranché leurs capteurs pour jouer aux cartes jusqu'à minuit. Les courbes sont fausses ; le groupe, lui, est vrai. Je n'ai rien corrigé."}
+        - {si: "role == president", texte: "La cuisinière a fait un gâteau aux couleurs du club pour l'anniversaire d'un kiné. Ils t'ont gardé une part dans le frigo des échantillons. Ne dis pas où tu l'as trouvée."}
+        - {si: "role == ds", texte: "Ton staff reste après la séance pour refaire le mercato au tableau blanc, et ils t'appellent pour ton avis. Ils ne le faisaient jamais. Je les entends rire de mon bureau."}
+        - "Les capteurs sont formels : ils dorment mieux la veille des matchs qu'en vacances. Ils restent au centre après la séance sans qu'on le leur demande. Je n'avais jamais vu ça."
+    repliques:
+      - {lien: 0, texte: "Ici, tout le monde porte un capteur, même la cuisinière. Le centre sait qui dort, qui ment et qui a mal. Il ne sait pas encore pourquoi. Ça, c'est mon travail."}
+      - {lien: 0, si: "annee >= 2019 && annee <= 2033", texte: "Les données partent au fonds tous les soirs à minuit. Je n'ai jamais vu personne les lire. Je sais seulement qu'un jour, quelqu'un les lira contre quelqu'un."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Après une défaite, les bains froids se vident. Ils préfèrent avoir mal. J'ai arrêté d'expliquer : je leur montre leurs courbes, et ils y vont."}
+      - {lien: 1, texte: "J'étais kiné quand le centre n'avait encore qu'un projecteur sur deux. L'intendant d'avant me prêtait ses clés le dimanche. Il disait qu'une pelouse, ça s'écoute."}
+      - {lien: 1, si: "annee >= 2024", texte: "On m'a livré des capsules de sommeil : huit coques blanches qui ronronnent. Les joueurs les appellent la morgue. Ils y dorment quand même, et mieux que chez eux."}
+      - {lien: 2, texte: "La chambre six n'a pas de capteur. Je l'ai fait débrancher le jour de l'installation. Elle n'existe sur aucun plan. C'est la seule pièce du centre qui ne sait rien."}
+      - {lien: 2, si: "annee >= 2037", texte: "Des géomètres sont venus la nuit, avec des lasers sur pied. Ils ont mesuré mes terrains au centimètre. On ne mesure jamais ce qu'on compte garder."}
+      - {lien: 3, texte: "Si un jour quelqu'un doit dormir sans que personne le sache, la six est à toi. Tu laisseras ton bracelet sur la table de nuit, chez toi. Il dormira à ta place."}
+      - {lien: -1, texte: "Badgez à l'entrée, s'il vous plaît. Ici, tout le monde badge."}
+      - {lien: -2, texte: "Les écrans sont réservés au staff. Vous recevrez vos rapports comme les autres, par courriel."}
+      - {lien: -3, texte: "Le sas ne s'ouvre plus pour votre badge. Ce n'est pas moi, c'est le système. Le système, ici, c'est moi."}
+    tuyaux:
+      - id: cmp_malaterre_kerdal
+        si: "flag(histoire_h8) && !flag(h8_kerdal_mort)"
+        texte: "« Le bracelet de Kerdal dit sept heures de sommeil, ici. La veilleuse l'a vu courir seul sur le terrain du fond à trois heures, sans lampe. Le bracelet ment, ou Kerdal a appris à lui mentir. »"
+      - id: cmp_malaterre_fouille
+        si: "flag(histoire_h9) && flag(h9_brassard_permis)"
+        texte: "« Mardi, pendant la séance, deux hommes du ministère ont fouillé les chambres des Cobalts : les sacs, les chaussettes, les protège-tibias. Ils cherchaient quelque chose de noir. Ils n'ont rien pris. »"
+      - id: cmp_malaterre_minuit
+        si: "annee >= 2019 && annee <= 2033 && vestiaire < 45 && role != selectionneur"
+        texte: "« Les courbes de tes joueurs partent au fonds chaque nuit à minuit. Hier, trois avaient dormi moins de quatre heures, la veille d'un match. Le fonds l'a su avant toi. Moi, je te le dis avant lui. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "La six, sans capteur"
+      texte: "Sabine te donne la clé de la six : ni capteur, ni caméra, un lit trop court. Tu y dors neuf heures d'affilée, au milieu des tiens. Ton bracelet est resté chez toi ; il a dormi pour toi."
+      effets: {jauges: {vestiaire: 2}, var: {h8_nuits: "-1"}}
+
+  # ═══════════════════════════════════════════════ LE MANOIR DE LA MOTTE (manoir)
+
+  - id: charles_dalmayrac
+    name: "Charles Dalmayrac"
+    label: "PRÉSIDENT DU RACING, 1958-1977"
+    genre: m
+    portrait: {teint: porcelaine, corpulence: fin, age: age, coiffure: degarni, cheveux: blanc, pilosite: moustache, lunettes: rondes, tenue: costume, couleur: gris, couleur2: bordeaux, accessoire: montre}
+    lieu: manoir
+    tranches: [aprem, soir, nuit]
+    annees: [1990, 2019]
+    reseau: direction
+    trace: "Charles a reporté ta visite dans l'agenda de 1977 qu'il tient toujours, à la page du jour, d'une plume fine."
+    paliers: ["te reçoit au petit salon", "t'ouvre les registres du club", "décrocherait le téléphone pour toi"]
+    froid: ["te fait attendre au vestibule", "ne te reçoit plus qu'à la grille", "fait fermer la grille quand tu sonnes"]
+    activites: [cmp_dalmayrac_the, cmp_dalmayrac_registres]
+    on_relation: {3: vi.charles_dalmayrac.registre, -3: vi.charles_dalmayrac.lettre}
+    climat:
+      bas:
+        - {si: "role == president", texte: "Deux de vos actionnaires ont déjeuné ici dimanche, sans vous. Ils m'ont demandé combien de temps j'avais tenu après ma première mauvaise saison. Ils ne demandaient pas pour moi."}
+        - {si: "role == selectionneur", texte: "Un ancien de la Fédération m'a téléphoné pour la première fois en dix ans. Il voulait savoir si vous dîniez parfois ici. On cherche déjà ce qu'on dira de vous."}
+        - {si: "role == joueur", texte: "Mon ancien chauffeur conduit encore pour le club. À l'arrière de la voiture, on parle de votre contrat au passé, et de votre prix au présent."}
+        - "Votre président a appelé ici jeudi, à onze heures du soir. Les présidents ne m'appellent jamais. Il voulait savoir comment on remercie quelqu'un sans que la ville le prenne mal."
+      moyen:
+        - {si: "role == president", texte: "Vos actionnaires viennent chasser dans mes bois le dimanche, et ils parlent de tout, sauf du club. Ils ne vous aiment pas, ils ne vous détestent pas : ils attendent les comptes."}
+        - {si: "role == selectionneur", texte: "À la Fédération, on prononce votre nom sans adjectif. Un vieux camarade du bureau dit que c'est la meilleure façon de durer. Et la plus courte."}
+        - {si: "role == joueur", texte: "Au club, on vous trouve cher pour ce que vous rapportez, et bon marché pour ce que vous coûteriez à remplacer. Un joueur vit longtemps entre les deux."}
+        - "Votre président ne parle pas de vous au téléphone. Ni en bien, ni en mal. En 1969, j'ai gardé un entraîneur trois ans comme ça, sans un mot. Le silence, c'est un contrat."
+      haut:
+        - {si: "role == president", texte: "Vos actionnaires ont levé leur verre à votre santé, ici, sans que vous le sachiez. C'est rare. D'habitude, on boit à la santé des présidents qu'on enterre."}
+        - {si: "role == selectionneur", texte: "Le président de la Fédération vous a cité dans un discours, à Portclair. Il ne cite que ceux dont il espère tirer quelque chose. Profitez-en avant qu'il le tire."}
+        - {si: "role == joueur", texte: "Le club a refusé une offre pour vous, la semaine dernière. Personne ne vous l'a dit : on ne dit jamais ces choses-là aux joueurs, ça les rend chers."}
+        - "Votre président a dit à un banquier, devant moi : « Celui-là, je le garde. » On l'a dit de moi en 1966. Profitez de la phrase. Elle a une durée."
+    repliques:
+      - {lien: 0, texte: "Je ne chauffe plus que trois pièces. Les autres dorment sous des draps depuis 1977. On s'y fait. Les meubles aussi : ils attendent un président."}
+      - {lien: 0, si: "tranche == nuit", texte: "Je ne dors plus depuis longtemps. La nuit, je relis les comptes rendus du conseil de 1966. J'y trouve encore des fautes d'orthographe. Jamais une erreur de chiffre."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Trois défaites. Le club m'envoie encore son rapport annuel, par politesse. Je le lis par la fin, comme les testaments."}
+      - {lien: 1, texte: "La Coupe de 1966 a dormi une nuit ici, sur ce piano. Toute la Motte a défilé dans le vestibule. Mon père aurait détesté. Moi, j'ai servi le vin jusqu'au matin."}
+      - {lien: 1, si: "annee >= 1998", texte: "Mon ancien trésorier préside maintenant ceux qui jugent les présidents. Il m'envoie une carte chaque nouvel an. Je les range dans la boîte à chaussures qu'il m'a laissée en 1977."}
+      - {lien: 2, texte: "En 1971, j'ai vendu notre meilleur joueur pour payer les dettes de l'usine de mon père. Le virage a peint une bâche contre moi. Elle avait raison, et je l'ai fait quand même."}
+      - {lien: 2, si: "flag(histoire_h1)", texte: "Mars 1975 : c'est moi qui ai refusé le caveau du club à Henri Ravenel. Le conseil a voté avec moi. Mon trésorier a levé la main le premier, et il a payé la gerbe."}
+      - {lien: 3, texte: "Je connais encore par cœur les numéros de quatre hommes qui comptent. Ils me prennent pour un fantôme. Un fantôme qui appelle, on lui répond toujours."}
+      - {lien: -1, texte: "Attendez au vestibule. La gouvernante vous fera signe quand je serai visible."}
+      - {lien: -2, texte: "Je vous reçois à la grille. La maison n'est pas en état. Elle ne l'est plus pour vous."}
+      - {lien: -3, texte: "La gouvernante a ordre de ne plus ouvrir. Vous pouvez sonner : la cloche est d'origine, elle porte loin, et personne ne viendra."}
+    tuyaux:
+      - id: cmp_dalmayrac_bastide
+        si: "flag(histoire_h5) && flag(h5_fax_plume) && !flag(h5_bastide_1976)"
+        texte: "« En 1976, un jeune secrétaire de mairie, André Bastide, est venu chercher la copie de l'acte de 1931 que le club gardait, pour la classer. Je la lui ai remise moi-même. Je n'ai jamais redemandé. »"
+        effets: {set: [h5_bastide_1976]}
+      - id: cmp_dalmayrac_boite
+        si: "flag(histoire_h1) && flag(h1_negatif)"
+        texte: "« Juin 1977 : mon trésorier m'a racheté mes parts en liquide, dans une boîte à chaussures. Le lendemain, la banque lui prêtait la même somme, pour faire propre. La boîte, je n'ai pas demandé d'où. »"
+      - id: cmp_dalmayrac_heure
+        si: "flag(histoire_h7) && flag(h7_rance_mort)"
+        texte: "« Votre président de la Fédération choisit l'heure avant de choisir les faits. En 1977, il a daté ma démission de la veille. Toute la ville s'en souvient à la date qu'il a écrite. »"
+      - id: cmp_dalmayrac_notaire
+        si: "annee <= 2019 && direction < 40 && role != president && role != selectionneur"
+        texte: "« Jeudi, votre président a réuni trois membres de son conseil chez un notaire de Portclair. L'un d'eux m'a appelé ensuite pour savoir comment on remercie quelqu'un sans que la ville le sache. »"
+        effets: {jauges: {direction: 2}}
+      - id: cmp_dalmayrac_parts
+        si: "role == president && annee <= 2019 && direction < 40"
+        texte: "« Deux de vos actionnaires ont dîné ici dimanche. Ils m'ont demandé ce que coûte, en liquide, le fauteuil d'un président. Je leur ai donné le prix de 1977. Ils ont pris des notes. »"
+        effets: {jauges: {direction: 2}}
+    service:
+      lien: 3
+      label: "Un coup de fil au conseil"
+      texte: "Charles décroche le téléphone du vestibule et compose deux numéros de mémoire. Il ne dit pas ton nom ; il parle de 1966, de chasse, d'une tombe à fleurir. Le soir même, là-haut, on te rappelle."
+      effets: {jauges: {direction: 3}}
+      dette: true
+
+  - id: regis_vaillandet
+    name: "Régis Vaillandet"
+    label: "PRÉSIDENT DU RACING, 2008-2019"
+    genre: m
+    portrait: {teint: clair, corpulence: large, age: mur, coiffure: degarni, cheveux: gris, pilosite: rase, lunettes: aviateur, tenue: pull, couleur: marine, accessoire: montre}
+    lieu: manoir
+    tranches: [aprem, soir]
+    annees: [2020, 2050]
+    reseau: direction
+    trace: "Régis a débouché une bouteille de plus qu'il ne fallait, et l'a notée à ton nom dans le livre de cave."
+    paliers: ["te sert le vin de la cave", "te montre les papiers de 2019", "ouvrirait son carnet d'adresses pour toi"]
+    froid: ["te sert le vin ordinaire", "ne te parle plus que de la pluie", "ne t'ouvre plus la grille"]
+    activites: [cmp_vaillandet_cave, cmp_vaillandet_echecs]
+    on_relation: {3: vi.regis_vaillandet.clause, -3: vi.regis_vaillandet.table}
+    climat:
+      bas:
+        - {si: "role == president && annee >= 2034", texte: "Douze socios sont venus boire mon vin pour me demander comment on renverse un président. J'ai vendu le club, alors ils croient que je sais. Ils reviendront plus nombreux."}
+        - {si: "role == president", texte: "Tes actionnaires ont déjeuné ici sans toi. Ils parlaient de ta ligne dans le tableau, pas de toi. Chez eux, une ligne rouge ne passe pas le trimestre."}
+        - {si: "role == selectionneur", texte: "On m'a appelé de la Fédération pour savoir si tu dînais chez moi. J'ai dit non. Ils ont paru déçus : ils cherchent quoi te reprocher, et ils n'ont pas encore trouvé."}
+        - {si: "role == joueur", texte: "Le club t'a rangé dans la colonne des actifs à céder. Je connais ce tableau : je l'ai signé en 2019. Il y a une date en face de ton nom, et elle n'est pas loin."}
+        - {si: "annee >= 2034", texte: "À l'assemblée des socios, ton nom revient à la fin, dans les questions diverses. Les questions diverses, c'est là qu'on règle les comptes. J'en sais quelque chose."}
+        - "Les gens du fonds parlent de ton remplaçant comme d'un fichier déjà ouvert. Je dîne avec eux le jeudi ; ils ne baissent même plus la voix devant moi. Ils me croient de leur côté."
+      moyen:
+        - {si: "role == president && annee >= 2034", texte: "Les socios boivent mon vin et comptent sur leurs doigts. Pas encore contre toi. Ils comptent ce qui reste avant 2040, comme tout le monde."}
+        - {si: "role == president", texte: "Tes actionnaires ne disent ni bien ni mal de toi. Ils attendent les comptes du trimestre. Chez eux, le silence est une ligne neutre."}
+        - {si: "role == selectionneur", texte: "À la Fédération, on parle de toi sans adjectif. J'ai présidé assez longtemps pour savoir ce que ça veut dire : on attend le prochain match pour choisir le mot."}
+        - {si: "role == joueur", texte: "Au club, ton nom est dans la colonne du milieu : ni vendu, ni gardé, observé. C'est la colonne où l'on reste le plus longtemps, et où l'on dort le moins."}
+        - {si: "annee >= 2034", texte: "Les socios parlent de toi sans lever la main. À l'assemblée, ils lèvent la main pour ce qu'ils aiment, ou pour ce qu'ils veulent enterrer. Pour toi, pas encore."}
+        - "Les gens du fonds disent ton nom sans s'arrêter dessus. Pour eux, c'est un compliment. Ils ne s'arrêtent que sur les noms qu'ils vont rayer."
+      haut:
+        - {si: "role == president && annee >= 2034", texte: "Les socios ont levé leur verre à ta santé, ici, sans que tu le saches. Ils m'ont demandé de garder le bouchon. Je l'ai gardé. J'ai aussi gardé celui de 2019."}
+        - {si: "role == president", texte: "Tes actionnaires ont parlé de toi comme d'un bon placement. Chez eux, c'est une déclaration d'amour. Profites-en : leurs sentiments durent un exercice."}
+        - {si: "role == selectionneur", texte: "Le président de la Fédération a dit ton nom deux fois dans le même discours. D'habitude, il n'en dit qu'un : le sien. Profite de la phrase, elle a une durée."}
+        - {si: "role == joueur", texte: "Le club a refusé une offre pour toi, le mois dernier. Personne ne te l'a dit. On ne dit jamais ça aux joueurs : ça les rend chers."}
+        - {si: "annee >= 2034", texte: "Les socios ont applaudi ton nom à l'assemblée, debout, avant même le rapport. Je n'ai jamais eu ça. J'avais des actionnaires : ils n'applaudissent pas, ils prennent des notes."}
+        - "Les gens du fonds ont cité ton nom à table comme on cite un rendement. Ils ont demandé ton âge et la durée de ton contrat. Chez eux, c'est bon signe."
+    repliques:
+      - {lien: 0, texte: "J'ai présidé le Racing onze ans. J'ai signé la vente au fonds un mardi, à onze heures onze. On m'a offert le stylo. Il est dans le tiroir ; il n'a plus d'encre."}
+      - {lien: 0, si: "flag(h8_vaubourg_mort)", texte: "Le vieux Vaubourg est mort à son bureau. Je ne suis pas allé à l'enterrement. C'est lui qui m'avait conseillé de vendre. Je n'avais pas envie de pleurer devant lui."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Trois défaites. Je regarde les matchs seul, dans le grand salon, le son coupé. Quand je présidais, je les regardais avec le son, et je n'entendais rien."}
+      - {lien: 1, texte: "J'ai acheté le manoir aux héritiers du vieux président, en 2020. Il avait laissé un mot dans le tiroir du bureau : « Pour le suivant. » Il ne savait pas que ce serait moi."}
+      - {lien: 1, si: "annee >= 2034", texte: "Les socios m'ont proposé d'adhérer. J'ai dit non. On ne rachète pas une maison qu'on a vendue ; on passe devant le dimanche, en ralentissant."}
+      - {lien: 2, texte: "Ma fille ne me parle plus depuis la vente. Elle allait au virage avec son grand-père, à douze ans. Elle dit que j'ai vendu son grand-père avec le reste."}
+      - {lien: 3, texte: "Tous ceux qui comptent décrochent encore quand j'appelle : un homme qui a vendu, on se demande toujours ce qu'il a gardé. Si tu as besoin d'une table, je mets le couvert."}
+      - {lien: -1, texte: "Je n'ai que du vin ordinaire, ce soir. Vous ne verrez pas la différence."}
+      - {lien: -2, texte: "Parlons de la pluie. C'est un sujet qui ne fâche que les agriculteurs."}
+      - {lien: -3, texte: "La grille est fermée. Je l'ai fait motoriser en 2020, pour d'autres que vous. Elle sert aussi pour vous."}
+    tuyaux:
+      - id: cmp_vaillandet_ferlac
+        si: "flag(histoire_h8)"
+        texte: "« Le soir de la vente, en 2019, le fonds avait amené à ma table un garçon poli avec un ordinateur. Il a prédit l'heure où je signerais. Il s'est trompé de onze minutes. Ça l'a contrarié. »"
+      - id: cmp_vaillandet_aubert
+        si: "flag(histoire_h9) && flag(h9_cave_vue)"
+        texte: "« Décembre 2010, le dîner de la Ligue. À vingt-trois heures trente-cinq, Madame Aubert a quitté la table pour téléphoner. Elle est revenue en souriant. Je l'ai noté sur mon menu. J'ai le menu. »"
+      - id: cmp_vaillandet_lundi
+        si: "annee >= 2020 && annee <= 2033 && direction < 40 && role != selectionneur"
+        texte: "« Les gens du fonds ont déjeuné ici mardi. Ils parlent de toi comme d'une ligne à revoir, et ils revoient les lignes le premier lundi du mois. Tu as jusqu'à lundi. »"
+        effets: {jauges: {direction: 2}}
+    service:
+      lien: 3
+      label: "Un dîner au manoir"
+      texte: "Régis dresse six couverts, sort deux bouteilles d'avant la vente et invite ceux qui comptent là-haut. Il parle de vin, jamais de toi. En partant, ils te serrent la main plus longtemps."
+      effets: {jauges: {direction: 2, caisse: 1}}
+
+  # ═══════════════════════════════════════════════ L'AUBERGE DU RELAIS (auberge)
+
+  - id: therese_coustal
+    name: "Thérèse Coustal"
+    label: "LA PATRONNE DU RELAIS"
+    genre: f
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: chignon, cheveux: gris, pilosite: rase, lunettes: rondes, tenue: blouse, couleur: bordeaux, couleur2: creme, accessoire: aucun}
+    lieu: auberge
+    tranches: [midi, aprem, soir]
+    annees: [1990, 2016]
+    reseau: familles
+    trace: "Thérèse a regardé tes chaussures en entrant, puis t'a servi sans regarder l'ardoise."
+    paliers: ["te garde la table près du feu", "écrit ton plat sur l'ardoise", "fermerait le Relais pour toi"]
+    froid: ["te place près de la porte", "te sert le plat de la veille", "n'a plus de table pour toi"]
+    activites: [cmp_therese_plat]
+    on_relation: {3: vi.therese_coustal.ardoise, -3: vi.therese_coustal.complet}
+    repliques:
+      - {lien: 0, texte: "Je reconnais les gens de la ville à leurs chaussures. Les vôtres ont de la marne sur le bord : vous venez par l'étang. Asseyez-vous, je ne le dirai à personne."}
+      - {lien: 0, si: "tranche == midi", texte: "Le plat du jour, c'est ce qui reste de la noce de samedi, réchauffé dans le bon ordre. Personne ne se plaint : à la Motte, on mange les noces deux fois."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Le dimanche midi, les anciens de la Nord mangent ici sans parler du samedi. Ils parlent du gibier. Quand ils parlent du gibier, c'est que le samedi était mauvais."}
+      - {lien: 1, texte: "On a repris le Relais en 1962, mon mari et moi, l'année du titre. On a servi le banquet du titre dans cette salle. Il en reste une chaise, au fond ; elle boite, et personne n'ose la changer."}
+      - {lien: 1, si: "tranche == soir", texte: "Le soir, des joueurs du Bois-Joli font le mur jusqu'ici pour une bière. Je les sers en cuisine, pour qu'on ne les voie pas de la route. À onze heures, je les renvoie."}
+      - {lien: 2, texte: "Ici, on a fait les noces, les communions et les enterrements de tout le canton depuis soixante ans. Je sais qui a épousé qui, et qui aurait dû. Je ne l'écris nulle part."}
+      - {lien: 2, si: "annee >= 2005", texte: "Mon petit-fils fait la cuisine à la capitale, dans un restaurant où l'on mange avec des pinces. Il dit que le Relais est un musée. Les musées ferment. Pas les auberges."}
+      - {lien: 3, texte: "La petite salle a ses volets et son téléphone à part. Si un jour tu dois manger avec quelqu'un sans que le canton le sache, je la dresse. Je dirai : un repas de famille."}
+      - {lien: -1, texte: "Il reste la table près de la porte. Elle a l'avantage d'être près de la porte."}
+      - {lien: -2, texte: "Le plat du jour est fini. Il reste celui d'hier. Il est encore bon, d'après la cuisine."}
+      - {lien: -3, texte: "Je n'ai plus de table. Ni aujourd'hui, ni pour la noce de samedi. Les gens de la ville mangent en ville."}
+    tuyaux:
+      - id: cmp_therese_sandrine
+        si: "flag(histoire_h4) && flag(h4_fiche_hopital)"
+        texte: "« En 1984, la petite Lavergne faisait la plonge ici le samedi. Le soir de la montée, elle est partie sur sa mobylette bleue à deux heures moins le quart. Son père avait dit deux heures. »"
+      - id: cmp_therese_mardi
+        si: "flag(histoire_h5) && flag(h5_conseil_entendu)"
+        texte: "« Le mardi, à six heures pile, le directeur de la banque demande le téléphone de la petite salle et ferme la porte. Il ne parle jamais plus de deux minutes, et il laisse une pièce sur l'appareil. »"
+      - id: cmp_therese_jf
+        si: "flag(histoire_h6)"
+        texte: "« Un jeune homme poli dîne seul ici le jeudi, dos au mur, un ordinateur ouvert à côté de l'assiette. Il paie par chèque, au nom de JF Conseil, et laisse un pourboire exact, au centime. »"
+        effets: {var: {h6_indices: "+1"}}
+      - id: cmp_therese_addition
+        si: "annee <= 2016 && vestiaire < 50 && role != selectionneur"
+        texte: "« Dimanche, les parents d'un des tiens ont déjeuné ici avec un agent de Portclair. Le père a payé pour tout le monde, en liquide. Un père qui paie l'addition, c'est un fils qui s'en va. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "La petite salle"
+      texte: "Thérèse dresse la petite salle, ferme les volets et débranche le téléphone de l'entrée. Tu y reçois qui tu veux, le temps d'un repas. Aux curieux, elle dit : un repas de famille."
+      effets: {jauges: {direction: 2, vestiaire: 1}}
+      dette: true
+
+  - id: bastien_coustal
+    name: "Bastien Coustal"
+    label: "LE PATRON DU RELAIS"
+    genre: m
+    portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: court, cheveux: brun, pilosite: barbe, lunettes: aucune, tenue: chemise, couleur: blanc, accessoire: aucun}
+    lieu: auberge
+    tranches: [midi, aprem, soir]
+    annees: [2017, 2050]
+    reseau: familles
+    trace: "Bastien a ajouté à ton assiette ce qu'il goûtait en cuisine, sans le compter."
+    paliers: ["te fait goûter avant la carte", "te garde la petite salle", "fermerait le Relais pour les tiens"]
+    froid: ["te sert au prix des touristes", "oublie ta commande", "n'a plus de table pour toi"]
+    activites: [cmp_bastien_plat]
+    on_relation: {3: vi.bastien_coustal.carnet}
+    repliques:
+      - {lien: 0, texte: "J'ai gardé l'ardoise de ma grand-mère, et sa craie. J'ai changé les plats, pas l'écriture. Les anciens croient qu'elle est encore en cuisine ; je les laisse croire."}
+      - {lien: 0, si: "annee >= 2030", texte: "Les voitures sans chauffeur s'arrêtent devant le Relais à midi, et les gens n'en descendent pas. Ils commandent par la vitre. Je leur apporte quand même une carafe d'eau."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Le dimanche, les vieux de la Nord mangent ici sans parler du samedi. Ma grand-mère disait : quand ils parlent du gibier, le samedi était mauvais. Ils parlent du gibier."}
+      - {lien: 1, texte: "J'ai fait la cuisine à la capitale pendant dix ans, avec des pinces et des chronomètres. Je suis revenu quand ma grand-mère a commencé à saler deux fois. Ici, je goûte."}
+      - {lien: 2, texte: "Ma grand-mère savait qui avait épousé qui dans tout le canton, et qui aurait dû. Elle me l'a dit en une soirée, avant de partir. Je n'ai rien noté. Je n'oublie rien."}
+      - {lien: 3, texte: "Si un jour les tiens ont besoin d'un dimanche loin de tout, je ferme le Relais et je cuisine. Les familles d'abord. La presse, elle, mange en ville."}
+      - {lien: -1, texte: "La carte est affichée dehors. Les prix aussi."}
+      - {lien: -2, texte: "On a perdu votre commande. Ça arrive, quand on est seul en cuisine."}
+      - {lien: -3, texte: "Le Relais est complet. Pour vous, il le restera."}
+    tuyaux:
+      - id: cmp_bastien_ober
+        si: "flag(histoire_h8)"
+        texte: "« Le docteur de ton club dîne ici le mercredi avec un homme du fonds. Ils font défiler des courbes sur une tablette, une par joueur. Ils s'arrêtent toujours sur la même, avec un K en haut. »"
+      - id: cmp_bastien_sauvan
+        si: "flag(histoire_h9)"
+        texte: "« Le conseiller du ministère réserve la petite salle le jeudi. Il commande pour deux et mange seul. Au dessert, son téléphone sonne ; il répond « oui » trois fois, et il paie. »"
+      - id: cmp_bastien_nino
+        si: "flag(histoire_h10) && saison >= 2 && !flag(h10_clapet_nino)"
+        texte: "« Ton capo dîne ici seul le premier lundi du mois. À neuf heures, un portable à clapet sonne dans sa veste, une sonnerie de quand j'étais gamin. Il sort dans la cour pour répondre. »"
+        effets: {set: [h10_clapet_nino]}
+    service:
+      lien: 3
+      label: "Le dimanche des familles"
+      texte: "Bastien ferme le Relais un dimanche et cuisine pour les familles des tiens : les maris, les femmes, les gamins, les grands-parents qui ne viennent jamais au stade. Il ne fait rien payer."
+      effets: {jauges: {vestiaire: 2, tribunes: 1}}
+
+  # ═══════════════════════════════════════════════ L'ÉTANG (etang, sans porte)
+
+  - id: isidore_puech
+    name: "Isidore Puech"
+    label: "LE PÊCHEUR DE L'ÉTANG"
+    genre: m
+    portrait: {teint: clair, corpulence: fin, age: age, coiffure: casquette, coiffe: marine, cheveux: blanc, pilosite: barbe, lunettes: aucune, tenue: veste, couleur: bouteille, accessoire: carnet}
+    lieu: etang
+    tranches: [matin, soir, nuit]
+    annees: [1990, 2012]
+    reseau: rue
+    trace: "Puech a noté l'heure de ta venue dans son carnet, comme une plaque, sans quitter le bouchon des yeux."
+    paliers: ["te fait de la place sur le ponton", "te dit une plaque, de temps en temps", "arracherait une page pour toi"]
+    froid: ["tourne le dos quand tu arrives", "note ton nom devant toi", "a donné tes nuits aux gendarmes"]
+    activites: [cmp_puech_peche]
+    on_relation: {3: vi.isidore_puech.carnet, -3: vi.isidore_puech.gendarmes}
+    repliques:
+      - {lien: 0, texte: "Les planches parlent. Les carpes écoutent. Asseyez-vous au bout, sans bouger."}
+      - {lien: 0, si: "tranche == nuit", texte: "La lanterne, c'est moi. S'il y a une voiture au bout du chemin et pas de lanterne, ce n'est pas moi."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Samedi, j'ai écouté le match ici. À la soixantième, j'ai coupé. Le poisson mordait mieux."}
+      - {lien: 1, texte: "Trente ans gendarme, à Valdorne. On m'a appris à noter les plaques. On ne m'a jamais appris à arrêter."}
+      - {lien: 1, si: "tranche == matin", texte: "Six heures. Deux voitures cette nuit. Une est repartie. L'autre est encore au bout du chemin, et personne n'en est sorti."}
+      - {lien: 2, texte: "Les gendarmes de Valdorne viennent lire mon carnet le premier lundi du mois. Ils recopient. Ils ne m'ont jamais demandé ce que je n'écris pas."}
+      - {lien: 3, texte: "Ton nom est dans le carnet, onze fois, à côté de l'heure. Si un jour il faut qu'il n'y soit plus, une page, ça se déchire sans bruit."}
+      - {lien: -1, texte: "Le ponton est petit. Il est plein."}
+      - {lien: -2, texte: "Je note votre nom. Devant vous. C'est plus honnête."}
+      - {lien: -3, texte: "Les gendarmes ont lu votre page lundi. Je ne l'ai pas arrachée. Vous ne me l'avez pas demandé à temps."}
+    tuyaux:
+      - id: cmp_puech_car
+        si: "flag(histoire_h2) && flag(h2_trois_metres) && !flag(h2_carnet) && !flag(h2_rive)"
+        texte: "« Le car de ton club. Deux nuits, à quatre heures moins dix. Derrière, une voiture grise, sans phares. Le chauffeur a sondé l'eau avec une perche. Pas assez profond. Ils sont repartis vers le Pont. »"
+        effets: {set: [h2_cherche_voiture]}
+      - id: cmp_puech_bidon
+        si: "flag(histoire_h5) && flag(h5_tribune_est_brulee)"
+        texte: "« La nuit de l'Est, à une heure vingt, une camionnette blanche au bout du chemin, plaque de Portclair. Un homme en ciré a rincé un bidon rouge dans l'étang, longtemps. Personne ne me l'a demandé. »"
+      - id: cmp_puech_passagere
+        si: "annee <= 2012 && direction < 40 && role != president && role != selectionneur"
+        texte: "« La voiture du président de ton club. Mardi, minuit, au bout du chemin. Une passagère. Pas sa femme. » Puech referme le carnet sur son doigt, et regarde le bouchon."
+        effets: {jauges: {direction: 2}}
+    service:
+      lien: 3
+      label: "Arracher une page"
+      texte: "Puech ouvre son carnet à tes nuits et arrache les pages proprement, une à une. Il les plie en quatre et les glisse sous une pierre du ponton. Lundi, les gendarmes recopieront le reste."
+      effets: {jauges: {direction: 2}}
+
+  - id: manon_puech
+    name: "Manon Puech"
+    label: "LA GARDE-PÊCHE"
+    genre: f
+    portrait: {teint: clair, corpulence: fin, age: jeune, coiffure: queue, cheveux: roux, pilosite: rase, lunettes: aucune, tenue: doudoune, couleur: bouteille, accessoire: telephone}
+    lieu: etang
+    tranches: [soir, nuit]
+    annees: [2013, 2050]
+    reseau: rue
+    trace: "Manon a noté ton passage dans son téléphone, comme son grand-père dans son carnet, en plus rapide."
+    paliers: ["te laisse passer la barrière du chemin", "te dit qui vient la nuit", "déchirerait un procès-verbal pour toi"]
+    froid: ["te demande ta carte de pêche", "te verbalise pour un rien", "te photographie à chaque passage"]
+    activites: [cmp_manon_ronde]
+    on_relation: {3: vi.manon_puech.jumelles}
+    repliques:
+      - {lien: 0, texte: "Garde-pêche, la nuit. Mon grand-père notait les plaques dans un carnet ; moi, j'ai des jumelles qui voient dans le noir. Les gens font les mêmes bêtises, mieux éclairées."}
+      - {lien: 0, si: "annee >= 2030", texte: "L'étang a perdu un mètre en trois étés. On voit le fond près des roseaux : des pneus, un vélo, une portière. Chaque mètre qui s'en va rend quelque chose."}
+      - {lien: 1, texte: "Le carnet de mon grand-père est dans ma boîte à gants. Quarante ans de plaques. Les gendarmes me l'ont demandé deux fois. J'ai dit qu'il était tombé à l'eau."}
+      - {lien: 2, texte: "La nuit, ici, il y a trois sortes de voitures : celles qui viennent pêcher, celles qui viennent s'aimer, et celles qui viennent attendre. Les dernières, je les photographie."}
+      - {lien: 3, texte: "Si un jour quelqu'un doit venir ici sans que personne le sache, je coupe la caméra du chemin. Elle tombe souvent en panne. Les gendarmes ont l'habitude."}
+      - {lien: -1, texte: "Votre carte de pêche, s'il vous plaît. Même pour regarder l'eau."}
+      - {lien: -2, texte: "Stationnement interdit au bout du chemin. Cette fois, je vous l'écris."}
+      - {lien: -3, texte: "Je vous photographie à chaque passage. Ce n'est pas personnel. Enfin, si."}
+    tuyaux:
+      - id: cmp_manon_ferlac
+        si: "flag(histoire_h8)"
+        texte: "« L'hiver où il est mort, la voiture de Ferlac venait ici le jeudi à minuit, moteur allumé. Il parlait tout seul, à voix haute, longtemps, comme on répète. J'ai cru qu'il apprenait un rôle. »"
+      - id: cmp_manon_voiture
+        si: "flag(histoire_h10)"
+        texte: "« Ta voiture sans volant est venue seule ici cette nuit, à deux heures. Personne dedans. Elle a attendu vingt minutes au bout du chemin, puis elle est repartie. Quelqu'un lui apprend des routes. »"
+    service:
+      lien: 3
+      label: "Le procès-verbal déchiré"
+      texte: "Manon sort de sa poche le procès-verbal de pêche de nuit d'un des tiens, filet et lampe frontale compris, et le déchire en huit au-dessus de l'eau. « Je n'ai jamais su écrire la nuit. »"
+      effets: {jauges: {vestiaire: 2}}
+
+  # ═══════════════════════════════════════════════ LE STADE DU VILLAGE (stade_village, sans porte)
+
+  - id: jacques_gassiat
+    name: "Jacques Gassiat"
+    label: "PRÉSIDENT DE L'U.S. LA MOTTE"
+    genre: m
+    portrait: {teint: clair, corpulence: large, age: mur, coiffure: degarni, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: survetement, couleur: bouteille, couleur2: blanc, accessoire: sifflet}
+    lieu: stade_village
+    tranches: [matin, aprem]
+    annees: [1990, 2010]
+    reseau: tribunes
+    trace: "Jacques a écrit ton nom à la craie sur le tableau du vestiaire, dans la case des remplaçants de dimanche."
+    paliers: ["te tend la craie du tableau", "te garde une place sur la tribune de bois", "remplirait un car pour toi"]
+    froid: ["te fait payer l'entrée", "ne te serre plus la main", "a laissé ton nom barré sur la main courante"]
+    activites: [cmp_gassiat_chaux]
+    on_relation: {3: vi.jacques_gassiat.tableau, -3: vi.jacques_gassiat.main_courante}
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Les gamins de la Motte ne mettent plus le maillot des Cobalts pour jouer le dimanche. Le pays a rangé ses couleurs ; ici, on garde les nôtres, en vert."}
+        - "Dimanche, à la main courante, les anciens de la Nord qui vivent à la Motte n'ont pas voulu parler de samedi. Ils ont parlé de la pluie et des patates. Ils ne parlent jamais de la pluie."
+      moyen:
+        - {si: "role == selectionneur", texte: "Les gens du village regardent les Cobalts au Relais, sans crier. Ils commentent les remplacements comme ceux de l'U.S. Le pays observe ; il n'a pas encore choisi."}
+        - "Les anciens de la Nord refont le match de samedi à la main courante, sans crier. Ils disent « on verra » à chaque phrase. À la Motte, « on verra », ça veut dire qu'on attend."
+      haut:
+        - {si: "role == selectionneur", texte: "Les gamins du village ont peint des drapeaux des Cobalts sur la tribune de bois. Je les ai laissés faire. Le pays y croit ; ici, on y croit avec de la peinture."}
+        - "Dimanche, les anciens de la Nord ont chanté ton nom à la main courante pendant notre match. L'arbitre a sifflé pour qu'ils se taisent. Ils ont chanté plus fort."
+    repliques:
+      - {lien: 0, texte: "La tribune de bois, c'est mon père qui l'a montée en 1952, avec les planches d'une grange. Quatre gradins. Il manque une planche à la troisième ; on s'assoit à côté."}
+      - {lien: 0, si: "jour == dim", texte: "Coup d'envoi à quinze heures. L'entrée, c'est ce que vous voulez dans la boîte. La buvette, c'est ma femme. Le tableau, c'est moi, à la craie, à chaque but."}
+      - {lien: 0, si: "serie_d >= 2", texte: "Quand la Rive perd le samedi, j'ai plus de monde le dimanche. Les gens viennent voir un match qu'on peut perdre sans que ce soit grave."}
+      - {lien: 1, texte: "Je suis maçon la semaine. Le samedi, je trace les lignes à la chaux ; le dimanche, j'arbitre ou j'entraîne, selon qui est malade. Le lundi, j'ai mal partout."}
+      - {lien: 1, si: "tranche == matin", texte: "La chaux, il faut la passer le matin, avant le vent. Une ligne qui bouge, c'est un penalty qu'on discute jusqu'à Noël."}
+      - {lien: 2, texte: "Trois de mes gamins sont partis à la Rive. Un a joué en première division, un est mécanicien, un est mort sur la départementale. Je garde leurs licences dans la même boîte."}
+      - {lien: 3, texte: "Si un samedi il te faut du monde, je loue le car du ramassage scolaire et je fais les fermes. Quarante personnes en vert. Elles crient avec l'accent, mais elles crient."}
+      - {lien: -1, texte: "L'entrée, c'est dans la boîte. Comme tout le monde."}
+      - {lien: -2, texte: "Je ne serre plus de mains pendant les matchs. J'ai la craie."}
+      - {lien: -3, texte: "Votre nom est sur la main courante, barré, à la peinture. On repeint au printemps. Pas avant."}
+    tuyaux:
+      - id: cmp_gassiat_didier
+        si: "flag(histoire_h3) && flag(h3_halle_vue)"
+        texte: "« Didier Vallin a joué ici de dix à quatorze ans, avant la Rive. Sa licence de juin 1989, je l'ai vue au district : la photo n'est pas la sienne. Un grand blond. Didier était brun comme un corbeau. »"
+      - id: cmp_gassiat_banderole
+        si: "annee <= 2010 && tribunes < 40 && role != selectionneur"
+        texte: "« Les anciens de la Nord qui vivent ici peignent une banderole contre toi dans le hangar de la coopérative. Le drap sèche encore. Dimanche, ils seront à la main courante ; ils écoutent mieux dehors. »"
+        effets: {jauges: {tribunes: 2}}
+    service:
+      lien: 3
+      label: "Le car de la Motte"
+      texte: "Jacques loue le car du ramassage scolaire et fait la tournée des fermes le samedi midi. Quarante personnes de la Motte en tribune, en vert, qui crient ton nom avec l'accent du canton."
+      effets: {jauges: {tribunes: 3}}
+
+  - id: coralie_gassiat
+    name: "Coralie Gassiat"
+    label: "PRÉSIDENTE DE L'U.S. LA MOTTE"
+    genre: f
+    portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: queue, cheveux: chatain, pilosite: rase, lunettes: aucune, tenue: survetement, couleur: bouteille, couleur2: blanc, accessoire: sifflet}
+    lieu: stade_village
+    tranches: [aprem, soir]
+    annees: [2011, 2050]
+    reseau: tribunes
+    trace: "Coralie a inscrit ton nom sur la feuille de la buvette, colonne des bénévoles, sans te demander."
+    paliers: ["te prête un sifflet du club", "te confie les poussins le mercredi", "remplirait la tribune de bois pour toi"]
+    froid: ["te fait payer l'entrée", "ne t'appelle plus par ton nom", "t'interdit la main courante"]
+    activites: [cmp_coralie_poussins]
+    on_relation: {3: vi.coralie_gassiat.maillot}
+    climat:
+      bas:
+        - {si: "role == selectionneur", texte: "Les gamins de la Motte ne viennent plus en maillot des Cobalts. Ils mettent le vert du village. Le pays a rangé ses couleurs ; ici, on a les nôtres, et elles déteignent."}
+        - "Dimanche, ceux de la Nord qui vivent à la Motte ont dit qu'ils regarderaient samedi sur leur téléphone, au chaud. Ils n'ont pas dit « on y va ». Chez eux, c'est grave."
+      moyen:
+        - {si: "role == selectionneur", texte: "Au Relais, le soir des Cobalts, on regarde la première mi-temps et on parle d'autre chose à la seconde. Le pays attend un match qui lui donne une raison."}
+        - "Les anciens de la Nord parlent du samedi à voix basse, à la main courante, comme d'un malade. Pas de bonne nouvelle, pas de mauvaise. Ils attendent un signe."
+      haut:
+        - {si: "role == selectionneur", texte: "Les gamins ont peint les couleurs des Cobalts sur la tribune de bois, par-dessus le vert. Mon père aurait hurlé. Je les ai aidés. Le pays y croit, et ça se voit d'ici."}
+        - "Dimanche, les vieux de la Nord ont réservé un car pour samedi, pour tout le village. Même ceux qui n'ont jamais mis les pieds à la Rive ont donné leur nom."
+    repliques:
+      - {lien: 0, texte: "J'ai repris le club quand mon père a lâché la craie. J'ai gardé le tableau peint à la main et la boîte de l'entrée. J'ai ajouté une équipe de filles. Mon père a dit : enfin."}
+      - {lien: 0, si: "annee >= 2030", texte: "Il nous reste quatorze seniors, dont trois de plus de quarante ans. Valbrume veut fusionner. Mon père aurait dit non. Moi, je compte les jambes avant les souvenirs."}
+      - {lien: 1, texte: "J'ai joué à la Rive quelques saisons, dans la section féminine, devant trois cents personnes. Ici, on est quarante. Ici, je connais les quarante."}
+      - {lien: 2, texte: "Les recruteurs de la capitale viennent voir nos gamins de neuf ans avec des tablettes. Ils mesurent leurs pieds. Mon père mesurait leur cœur, à l'œil. Il se trompait moins."}
+      - {lien: 3, texte: "Si un samedi il te faut la tribune pleine, je fais sonner les téléphones du canton. Mon père louait un car ; moi, j'en loue deux, et je conduis le second."}
+      - {lien: -1, texte: "L'entrée, c'est dans la boîte, comme pour tout le monde."}
+      - {lien: -2, texte: "On n'a pas besoin de bénévoles cette semaine. Ni la prochaine."}
+      - {lien: -3, texte: "La main courante est réservée aux licenciés. Vous n'en êtes pas."}
+    tuyaux:
+      - id: cmp_coralie_brac
+        si: "flag(histoire_h10)"
+        texte: "« Le petit Brac a commencé ici, à six ans, dans nos buts. Rive Capital nous a offert un minibus neuf l'an dernier. Le chauffeur emmène nos gamins de douze ans en stage à la capitale, le mercredi. »"
+      - id: cmp_coralie_abonnements
+        si: "annee >= 2011 && tribunes < 40 && role != selectionneur"
+        texte: "« Dimanche, à la main courante, ceux de la Nord parlaient de rendre leurs abonnements samedi, au stade, devant les caméras, pas au guichet. Ils ont déjà répété la scène deux fois. »"
+        effets: {jauges: {tribunes: 2}}
+    service:
+      lien: 3
+      label: "La haie d'honneur"
+      texte: "Samedi, les gamins de l'U.S. La Motte forment la haie d'honneur à l'entrée des joueurs, en vert, les maillots trop grands. La Nord se tait une minute en les voyant, puis elle chante plus fort."
+      effets: {jauges: {tribunes: 2, vestiaire: 1}}
+
+# ═══════════════════════════════════════════════════════════════ LES ACTIVITÉS
+# Le quartier est loin : on y vient pour une ou deux tranches. Pas d'`objet` (pas de pièce) :
+# elles s'affichent dans le panneau du lieu. Ce qu'on fait avec quelqu'un porte la borne de
+# son époque ; les francs sont ceux de 1990. La moisson est un petit boulot (`max_jour`), pour
+# ceux qu'une journée de paille ne fait pas déchoir.
+activites:
+
+  # — La ferme
+  - id: cmp_soulie_traite
+    lieu: ferme
+    label: "La traite avec Prosper"
+    texte: "Prosper trait à la main la Rousse, la seule qui refuse la machine. Le transistor grésille au clou de l'étable. Il te tend un seau sans un mot, et te montre une fois, pas deux."
+    textes:
+      - "Prosper trait à la main la Rousse, la seule qui refuse la machine. Le transistor grésille au clou de l'étable. Il te tend un seau sans un mot, et te montre une fois, pas deux."
+      - "Six heures, la vapeur des bêtes dans le froid. Prosper compte les vaches en entrant, par leur nom, et s'arrête sur une : « Elle boite. Le vétérinaire viendra lundi, s'il veut. »"
+      - "Au transistor, les résultats de la veille. Prosper ne commente pas ; il change de vache à chaque score, comme on tourne une page. À la fin : « Elles l'ont mieux pris que moi. »"
+    si: "annee <= 2008"
+    avec: prosper_soulie
+    habitude: quartier
+    tranches: 1
+    francs: 0
+    heures: [matin, soir]
+  - id: cmp_soulie_transistor
+    lieu: ferme
+    label: "Le transistor du soir"
+    texte: "Sur le banc contre le mur du logis, Prosper pose le transistor entre vous deux et monte le son pour les résultats. Il écoute les yeux fermés, comme une messe qu'il connaît par cœur."
+    textes:
+      - "Sur le banc contre le mur du logis, Prosper pose le transistor entre vous deux et monte le son pour les résultats. Il écoute les yeux fermés, comme une messe qu'il connaît par cœur."
+      - "Prosper ouvre une bouteille de cidre sans étiquette et t'en sert un verre trouble. « La pomme de l'année du titre. Elle tient. » Le transistor donne les scores, l'un après l'autre."
+      - "La nuit tombe sur la cour. Le speaker dit ton nom ; Prosper baisse le son, par politesse, et le remonte après. Les poules se couchent avant la fin des résultats."
+    si: "annee <= 2008"
+    avec: prosper_soulie
+    habitude: culture
+    tranches: 1
+    francs: 0
+    heures: [soir]
+  - id: cmp_margaux_panier
+    lieu: ferme
+    label: "Le panier de Margaux"
+    texte: "Margaux te tend le panier de la semaine : des légumes avec leur terre, une douzaine d'œufs, un pot de miel du verger. « Rapporte le panier. Les paniers, c'est ce qui se perd le plus. »"
+    textes:
+      - "Margaux te tend le panier de la semaine : des légumes avec leur terre, une douzaine d'œufs, un pot de miel du verger. « Rapporte le panier. Les paniers, c'est ce qui se perd le plus. »"
+      - "Elle pèse les pommes de terre sur la vieille balance à poids de fonte de son grand-père. « L'électronique est dans le tiroir. Elle triche moins, mais elle ne parle à personne. »"
+      - "Au fond du panier, un bocal sans étiquette : de la gelée de coings. « Pour chez toi. En ville, plus personne ne sait ce que c'est qu'un coing. Vous allez apprendre. »"
+    si: "annee >= 2009"
+    avec: margaux_soulie
+    habitude: famille
+    tranches: 0
+    francs: -25
+    heures: [matin, midi, aprem]
+  - id: cmp_ferme_oeufs
+    lieu: ferme
+    label: "Des œufs au portail"
+    texte: "Au portail de la ferme, une caisse d'œufs sous un torchon et une boîte à sucre pour la monnaie. Personne ne surveille. Tu comptes tes pièces deux fois, sans savoir pourquoi."
+    textes:
+      - "Au portail de la ferme, une caisse d'œufs sous un torchon et une boîte à sucre pour la monnaie. Personne ne surveille. Tu comptes tes pièces deux fois, sans savoir pourquoi."
+      - "Sur la caisse, une ardoise : OEUFS FRAIS, et le prix à la craie, corrigé trois fois. Dans la boîte à sucre, un billet plié avec un mot : « Pour la semaine dernière. »"
+      - "Un chien sort de la cour, renifle tes chaussures et repart sans aboyer. C'est sa façon de dire que tu peux prendre les œufs."
+    habitude: famille
+    tranches: 0
+    francs: -6
+  - id: cmp_ferme_moisson
+    lieu: ferme
+    label: "Une journée de moisson"
+    texte: "Une journée à charger des bottes sur la remorque, derrière le tracteur rouge. À midi, la soupe sur la table de la cour ; le soir, des mains en sang et un billet plié dans ta poche."
+    textes:
+      - "Une journée à charger des bottes sur la remorque, derrière le tracteur rouge. À midi, la soupe sur la table de la cour ; le soir, des mains en sang et un billet plié dans ta poche."
+      - "On te met sur la remorque à empiler les bottes, parce que tu as des jambes. Les anciens te regardent faire et disent que de leur temps, les gens du football travaillaient l'été."
+      - "La poussière du blé dans la gorge jusqu'au soir. Personne ne te reconnaît à la Motte : ici, tu es la paire de bras de l'après-midi, et on te paie comme les autres."
+    roles: [joueur, entraineur]
+    si: "division >= 2 && journee <= 4"
+    habitude: travail
+    tranches: 2
+    francs: 120
+    max_jour: 1
+    heures: [matin]
+
+  # — Le centre du Bois-Joli
+  - id: cmp_rigal_ronde
+    lieu: centre_vert
+    label: "La ronde des clés"
+    texte: "Gustave fait la ronde du soir, le trousseau à la ceinture. Il frappe deux coups à chaque porte et note la réponse dans le cahier. Tu portes la lampe ; il ne te demande pas ton avis."
+    textes:
+      - "Gustave fait la ronde du soir, le trousseau à la ceinture. Il frappe deux coups à chaque porte et note la réponse dans le cahier. Tu portes la lampe ; il ne te demande pas ton avis."
+      - "Couloir des chambres, vingt-deux heures. Derrière une porte, une radio ; derrière une autre, quelqu'un qui parle bas. Gustave note les deux, d'une écriture d'instituteur."
+      - "La ronde finit au fond du bois, devant le mur. Gustave éclaire le haut, où la mousse est arrachée en deux endroits. « Deux, cette semaine. Je sais lesquels. Eux ne savent pas que je sais. »"
+    si: "annee <= 2014"
+    avec: gustave_rigal
+    habitude: travail
+    tranches: 1
+    francs: 0
+    heures: [soir]
+  - id: cmp_rigal_guerite
+    lieu: centre_vert
+    label: "Un café à la guérite"
+    texte: "Gustave sert le café de son thermos dans le capuchon et te donne la tasse. Par la vitre de la guérite, il regarde arriver le car et compte les têtes avant qu'elles descendent."
+    textes:
+      - "Gustave sert le café de son thermos dans le capuchon et te donne la tasse. Par la vitre de la guérite, il regarde arriver le car et compte les têtes avant qu'elles descendent."
+      - "Au mur de la guérite, la photo de l'équipe de 1966, un genou bandé au premier rang. Gustave tapote le genou du doigt. « Trois points. J'ai joué quand même. On jouait quand même. »"
+    si: "annee <= 2014"
+    avec: gustave_rigal
+    habitude: quartier
+    tranches: 0
+    francs: 0
+    heures: [matin, midi]
+  - id: cmp_malaterre_froid
+    lieu: centre_vert
+    label: "Le bain froid avec Sabine"
+    texte: "Sabine te fait entrer dans le bain à quatre degrés et déclenche le chronomètre. « Trois minutes. Ne parle pas, ça réchauffe. » Elle te regarde respirer comme on lit une courbe."
+    textes:
+      - "Sabine te fait entrer dans le bain à quatre degrés et déclenche le chronomètre. « Trois minutes. Ne parle pas, ça réchauffe. » Elle te regarde respirer comme on lit une courbe."
+      - "Dans la salle de soins, des capteurs clignotent sur des corps allongés. Sabine en éteint deux pour toi, sans un mot. « Une heure sans capteur. Ici, c'est le vrai luxe. »"
+      - "Sabine note ta respiration sur une tablette, puis la range. « Tu dors mal. Pas besoin de capteur pour le voir. Les joueurs non plus : ils te regardent les yeux. »"
+    si: "annee >= 2015"
+    avec: sabine_malaterre
+    habitude: soin
+    tranches: 1
+    francs: 0
+    heures: [matin, aprem]
+  - id: cmp_boisjoli_footing
+    lieu: centre_vert
+    label: "Le tour du bois"
+    texte: "Le sentier fait le tour du Bois-Joli entre les chênes et les terrains : quatre kilomètres de racines. Les peupliers comptent les tours à ta place. Au dernier, tu ne penses plus à rien."
+    textes:
+      - "Le sentier fait le tour du Bois-Joli entre les chênes et les terrains : quatre kilomètres de racines. Les peupliers comptent les tours à ta place. Au dernier, tu ne penses plus à rien."
+      - "Tu cours derrière le mur du fond, là où les gamins le franchissent. La mousse est arrachée en deux endroits, à hauteur de main. Tu ralentis, puis tu repars."
+      - "Au troisième tour, le car du club passe dans l'allée. Quelqu'un te fait signe derrière la vitre. Tu ne vois pas qui ; tu fais signe quand même."
+    habitude: sport
+    tranches: 1
+    francs: 0
+    heures: [matin, aprem, soir]
+  - id: cmp_boisjoli_vert
+    lieu: centre_vert
+    label: "Mettre le groupe au vert"
+    texte: "Deux jours au Bois-Joli avant le match : les chambres simples, les téléphones au panier, la soupe à dix-neuf heures. Le groupe râle le premier soir, et dort le second."
+    textes:
+      - "Deux jours au Bois-Joli avant le match : les chambres simples, les téléphones au panier, la soupe à dix-neuf heures. Le groupe râle le premier soir, et dort le second."
+      - "Le car dépose le groupe devant la marquise. Tu distribues les clés toi-même, chambre par chambre, en séparant ceux qui ne se parlent plus. Ils comprennent tout de suite."
+      - "Le soir, au salon, une partie de cartes s'organise sans toi. Tu restes une minute à la porte, puis tu vas te coucher. C'est ce que tu peux faire de mieux pour elle."
+    roles: [entraineur, selectionneur]
+    habitude: travail
+    tranches: 2
+    francs: 0
+    jauges: {vestiaire: 1, caisse: -1}
+    heures: [matin, midi, aprem]
+
+  # — Le manoir de la Motte
+  - id: cmp_dalmayrac_the
+    lieu: manoir
+    label: "Le thé du vieux président"
+    texte: "Charles sert le thé lui-même dans le petit salon, le seul qu'il chauffe, sous un portrait de son père. Il parle de 1962 sans nostalgie, comme d'un bilan comptable gagné."
+    textes:
+      - "Charles sert le thé lui-même dans le petit salon, le seul qu'il chauffe, sous un portrait de son père. Il parle de 1962 sans nostalgie, comme d'un bilan comptable gagné."
+      - "Le petit salon sent la cire et le bois humide. Charles te montre les draps sur les meubles de la pièce voisine. « On les enlève pour les visites importantes. Il n'y en a plus. »"
+      - "Charles parle de son trésorier de 1974 sans jamais dire son nom ; il dit « il ». À la fin, il sonne pour qu'on desserve, et personne ne vient. Il dessert lui-même."
+    si: "annee <= 2019"
+    avec: charles_dalmayrac
+    habitude: culture
+    tranches: 1
+    francs: 0
+    heures: [aprem]
+  - id: cmp_dalmayrac_registres
+    lieu: manoir
+    label: "Les registres du conseil"
+    texte: "Dans la bibliothèque, Charles sort les registres du conseil, de 1958 à 1977, reliés de toile bordeaux. Il te laisse lire, et corrige à voix basse les fautes qu'il faisait à l'époque."
+    textes:
+      - "Dans la bibliothèque, Charles sort les registres du conseil, de 1958 à 1977, reliés de toile bordeaux. Il te laisse lire, et corrige à voix basse les fautes qu'il faisait à l'époque."
+      - "Le registre de 1971 s'ouvre tout seul à la page de la vente. Charles le referme d'une main, sans colère. « On ne relit pas cette page. On la connaît. »"
+      - "Dernière page du registre de 1977 : la démission, datée à l'encre plus noire que le reste. Charles pose le doigt sur la date et ne dit rien. Le doigt suffit."
+    si: "annee <= 2019"
+    avec: charles_dalmayrac
+    habitude: culture
+    tranches: 1
+    francs: 0
+    heures: [aprem, soir]
+  - id: cmp_vaillandet_cave
+    lieu: manoir
+    label: "La cave de Régis"
+    texte: "Régis descend à la cave avec une lampe et remonte une bouteille d'avant la vente. Il la sert sans la commenter. « Je ne bois plus que ce que j'avais en 2019. Après, je ferme. »"
+    textes:
+      - "Régis descend à la cave avec une lampe et remonte une bouteille d'avant la vente. Il la sert sans la commenter. « Je ne bois plus que ce que j'avais en 2019. Après, je ferme. »"
+      - "La cave garde encore les étiquettes de l'ancien président, écrites à la plume. Régis n'a pas touché à ses rangées. « Je bois les miennes. Les siennes, je les époussette. »"
+      - "Il verse, regarde le vin contre la lampe, et parle de la nuit de la signature : les stylos, le fonds, les sourires. Il s'arrête au milieu d'une phrase, et la finit en buvant."
+    si: "annee >= 2020"
+    avec: regis_vaillandet
+    habitude: luxe
+    tranches: 1
+    francs: 0
+    heures: [soir]
+  - id: cmp_vaillandet_echecs
+    lieu: manoir
+    label: "Une partie d'échecs"
+    texte: "Régis installe l'échiquier près de la fenêtre qui donne sur la grille. Il joue vite et sacrifie ses tours sans hésiter. « J'ai vendu un club. Une tour, ce n'est rien. »"
+    textes:
+      - "Régis installe l'échiquier près de la fenêtre qui donne sur la grille. Il joue vite et sacrifie ses tours sans hésiter. « J'ai vendu un club. Une tour, ce n'est rien. »"
+      - "Il perd la première exprès, et le dit. « C'est comme ça que j'ai vendu au bon prix : on perd la première. » La seconde, il la gagne en douze coups."
+    si: "annee >= 2020"
+    avec: regis_vaillandet
+    habitude: jeu
+    tranches: 1
+    francs: 0
+    heures: [aprem, soir]
+  - id: cmp_manoir_parc
+    lieu: manoir
+    label: "Le parc à l'abandon"
+    texte: "Le parc du manoir est retourné aux ronces. Une allée de tilleuls mène à un bassin vide où dort une feuille de journal. Au bout, la grille, et derrière, les champs dorés jusqu'au bois."
+    textes:
+      - "Le parc du manoir est retourné aux ronces. Une allée de tilleuls mène à un bassin vide où dort une feuille de journal. Au bout, la grille, et derrière, les champs dorés jusqu'au bois."
+      - "Sous un cèdre, un banc de pierre gravé d'initiales et d'une date effacée. De là, on voit le Bois-Joli et ses projecteurs éteints. Le vent porte les coups de sifflet jusqu'ici."
+      - "Une volée de corneilles décolle du toit à ton passage. Une fenêtre s'éclaire au premier, puis s'éteint. Dans le manoir, quelqu'un sait que tu marches dans son parc."
+    habitude: soin
+    tranches: 1
+    francs: 0
+    heures: [matin, midi, aprem]
+
+  # — L'auberge du Relais
+  - id: cmp_therese_plat
+    lieu: auberge
+    label: "Le plat du jour de Thérèse"
+    texte: "Thérèse pose la soupière sur la nappe à carreaux et te sert sans demander. Le plat du jour est écrit à la craie : il en reste deux parts, et l'une est déjà pour toi."
+    textes:
+      - "Thérèse pose la soupière sur la nappe à carreaux et te sert sans demander. Le plat du jour est écrit à la craie : il en reste deux parts, et l'une est déjà pour toi."
+      - "Salle basse, cheminée allumée, trois chasseurs au fond. Thérèse sert le civet et te dit qui s'est marié samedi, qui est mort mardi, et qui a pleuré aux deux."
+      - "Thérèse regarde tes chaussures, puis ton assiette, puis tes chaussures. « De la marne. Tu viens de l'étang. Mange : ça creuse, l'étang. »"
+    si: "annee <= 2016"
+    avec: therese_coustal
+    habitude: quartier
+    tranches: 1
+    francs: -60
+    heures: [midi]
+  - id: cmp_bastien_plat
+    lieu: auberge
+    label: "Le plat du jour de Bastien"
+    texte: "Bastien écrit le plat du jour avec la craie de sa grand-mère, la même écriture penchée. Il te sert, reste une minute pour voir ta première bouchée, et retourne en cuisine."
+    textes:
+      - "Bastien écrit le plat du jour avec la craie de sa grand-mère, la même écriture penchée. Il te sert, reste une minute pour voir ta première bouchée, et retourne en cuisine."
+      - "Il pose une assiette qui n'est pas à la carte. « Un essai. Ma grand-mère le faisait les jours de noce. Dis-moi s'il manque quelque chose. Il manque toujours quelque chose. »"
+    si: "annee >= 2017"
+    avec: bastien_coustal
+    habitude: quartier
+    tranches: 1
+    francs: -60
+    heures: [midi]
+  - id: cmp_relais_feu
+    lieu: auberge
+    label: "Un verre au coin du feu"
+    texte: "Un verre de vin du canton au coin de la cheminée. Les bûches sifflent. À la table voisine, deux hommes en bottes refont le match du village de dimanche, but par but."
+    textes:
+      - "Un verre de vin du canton au coin de la cheminée. Les bûches sifflent. À la table voisine, deux hommes en bottes refont le match du village de dimanche, but par but."
+      - "Le feu tire mal ce soir ; la fumée pique les yeux de tout le monde, et personne ne bouge. À la Motte, on ne change pas de place pour si peu."
+      - "Un vieux en veste de chasse te reconnaît, lève son verre et dit tout haut le score de ton dernier match. Il se trompe d'un but. Personne ne le corrige, toi non plus."
+    habitude: comptoir
+    tranches: 1
+    francs: -12
+    heures: [soir]
+  - id: cmp_relais_belote
+    lieu: auberge
+    label: "La belote des chasseurs"
+    texte: "À la table du fond, les chasseurs jouent à la belote sur un tapis râpé. Il leur manque un quatrième. Ils te font asseoir sans demander si tu connais les règles."
+    textes:
+      - "À la table du fond, les chasseurs jouent à la belote sur un tapis râpé. Il leur manque un quatrième. Ils te font asseoir sans demander si tu connais les règles."
+      - "Ton partenaire a soixante-quinze ans et compte les points de tête, plus vite que le carnet. Il annonce sa belote comme on annonce une naissance."
+    jeu: cartes
+    habitude: jeu
+    tranches: 0
+    francs: -20
+    heures: [aprem, soir]
+  - id: cmp_relais_noce
+    lieu: auberge
+    label: "La tournée de la noce"
+    texte: "Une noce remplit la salle basse. Tu paies la tournée des mariés. L'oncle du marié porte un toast à ton club, se trompe de nom, se reprend. Tout le monde lève son verre deux fois."
+    textes:
+      - "Une noce remplit la salle basse. Tu paies la tournée des mariés. L'oncle du marié porte un toast à ton club, se trompe de nom, se reprend. Tout le monde lève son verre deux fois."
+      - "La mariée t'invite pour une valse, une seule, pour la photo. Son père t'offre une part de pièce montée dans une serviette en papier, pour la route."
+    habitude: largesse
+    tranches: 0
+    francs: -80
+    jauges: {tribunes: 1}
+    jours: [sam]
+    heures: [soir]
+
+  # — L'étang
+  - id: cmp_puech_peche
+    lieu: etang
+    label: "Pêcher à côté de Puech"
+    texte: "Puech te fait signe de t'asseoir à deux planches de lui, pas une de moins. Il te prête une canne et ne dit rien pendant une heure. Puis : « Ferre. » Tu ferres trop tard."
+    textes:
+      - "Puech te fait signe de t'asseoir à deux planches de lui, pas une de moins. Il te prête une canne et ne dit rien pendant une heure. Puis : « Ferre. » Tu ferres trop tard."
+      - "Le bouchon dort sur l'eau noire. Puech écrit dans son carnet : une plaque, une heure. Une voiture vient de passer au bout du chemin, et tu ne l'avais pas entendue."
+      - "Une carpe, enfin. Puech la décroche, la regarde, la remet à l'eau. « Elle reviendra. Elles reviennent toutes. Les gens aussi. »"
+    si: "annee <= 2012"
+    avec: isidore_puech
+    habitude: soin
+    tranches: 1
+    francs: 0
+    heures: [matin, soir]
+  - id: cmp_manon_ronde
+    lieu: etang
+    label: "La ronde de nuit de Manon"
+    texte: "Manon fait le tour de l'étang en quad, phares éteints, les jumelles de nuit au cou. Tu montes derrière. Au bout du chemin, une voiture, moteur allumé, vitres pleines de buée. Manon note."
+    textes:
+      - "Manon fait le tour de l'étang en quad, phares éteints, les jumelles de nuit au cou. Tu montes derrière. Au bout du chemin, une voiture, moteur allumé, vitres pleines de buée. Manon note."
+      - "Deux heures : un pêcheur sans carte, une lampe frontale, un filet. Manon le laisse finir sa cigarette avant de s'approcher. « On verbalise mieux les gens calmes. »"
+      - "Manon coupe le moteur et écoute. Rien, puis une portière, très loin. Elle sourit dans le noir. « Les portières, c'est ce qui trahit le plus. Les gens oublient qu'elles claquent. »"
+    si: "annee >= 2013"
+    avec: manon_puech
+    habitude: nuit
+    tranches: 1
+    nuit: true
+    francs: 0
+    heures: [soir, nuit]
+  - id: cmp_etang_ponton
+    lieu: etang
+    label: "Au bout du ponton"
+    texte: "Au bout du ponton de planches grises, les pieds au-dessus de l'eau. Rien ne bouge sur l'étang. C'est la seule chose du canton qui ne te demande rien."
+    textes:
+      - "Au bout du ponton de planches grises, les pieds au-dessus de l'eau. Rien ne bouge sur l'étang. C'est la seule chose du canton qui ne te demande rien."
+      - "La barque amarrée tire doucement sur sa corde. Un héron se pose dans les roseaux, te regarde, et décide que tu ne comptes pas."
+      - "L'eau est si calme qu'on y voit le clocher de la Motte à l'envers. Tu restes jusqu'à ce qu'une feuille le traverse."
+    habitude: soin
+    tranches: 0
+    francs: 0
+
+  # — Le stade du village
+  - id: cmp_village_penalty
+    lieu: stade_village
+    label: "Les tirs au but du village"
+    texte: "Le gardien de l'U.S. La Motte, un boucher de quarante ans, t'attend dans le but aux filets reprisés. Derrière la main courante, trois gamins parient leurs bonbons sur lui."
+    textes:
+      - "Le gardien de l'U.S. La Motte, un boucher de quarante ans, t'attend dans le but aux filets reprisés. Derrière la main courante, trois gamins parient leurs bonbons sur lui."
+      - "Le point de penalty est marqué d'un caillou blanc. Le gardien crache dans ses gants de laine et annonce qu'il plongera à droite. Il plonge toujours à droite."
+      - "Cinq tirs contre le gardien du village, un dimanche de soleil. La tribune de bois compte les buts à voix haute, et applaudit les arrêts plus fort."
+    jeu: penalty
+    habitude: sport
+    tranches: 0
+    max_jour: 2
+    heures: [aprem, soir]
+  - id: cmp_gassiat_chaux
+    lieu: stade_village
+    label: "Les lignes à la chaux"
+    texte: "Jacques pousse le traceur à roulette le long du cordeau ; tu tiens le cordeau. La chaux vole et blanchit vos chaussures. « Droit, c'est ce qui compte. Le reste, l'arbitre le discute. »"
+    textes:
+      - "Jacques pousse le traceur à roulette le long du cordeau ; tu tiens le cordeau. La chaux vole et blanchit vos chaussures. « Droit, c'est ce qui compte. Le reste, l'arbitre le discute. »"
+      - "Le rond central, Jacques le trace avec une corde et un piquet, comme son père. Le cercle n'est jamais rond. « Personne ne l'a jamais mesuré. Il tient depuis 1952. »"
+    si: "annee <= 2010"
+    avec: jacques_gassiat
+    habitude: quartier
+    tranches: 1
+    francs: 0
+    heures: [matin, aprem]
+  - id: cmp_coralie_poussins
+    lieu: stade_village
+    label: "Les poussins du mercredi"
+    texte: "Coralie te confie six poussins et un sac de ballons. Ils courent tous après le même, en grappe, et un seul regarde les buts. « Celui-là. Retiens son nom. Moi, je l'ai noté. »"
+    textes:
+      - "Coralie te confie six poussins et un sac de ballons. Ils courent tous après le même, en grappe, et un seul regarde les buts. « Celui-là. Retiens son nom. Moi, je l'ai noté. »"
+      - "Un gamin pleure parce qu'il a marqué contre son camp. Coralie s'accroupit, lui dit quelque chose à l'oreille, et il repart en riant. Elle ne te dit pas quoi."
+    si: "annee >= 2011"
+    avec: coralie_gassiat
+    habitude: sport
+    tranches: 1
+    francs: 0
+    jours: [mer]
+    heures: [aprem]
+  - id: cmp_village_buvette
+    lieu: stade_village
+    label: "La buvette du dimanche"
+    texte: "Dimanche, quinze heures, quarante personnes à la main courante. À la buvette, un café dans un gobelet et une part de gâteau. On commente chaque passe comme un transfert."
+    textes:
+      - "Dimanche, quinze heures, quarante personnes à la main courante. À la buvette, un café dans un gobelet et une part de gâteau. On commente chaque passe comme un transfert."
+      - "Le tableau d'affichage est peint à la main : LOCAUX, VISITEURS, et un chiffre à la craie qu'on change en montant sur une chaise. À chaque but, la chaise grince."
+      - "À la mi-temps, les anciens de la Nord qui vivent ici te parlent du match de samedi. Ils ont un avis sur tout, et ils te le donnent dans l'ordre chronologique."
+    habitude: quartier
+    tranches: 1
+    francs: -5
+    jours: [dim]
+    heures: [aprem]
+
+# ═══════════════════════════════════════════════════════════════ LES SCÈNES
+# La vie des gens (gardée par le lien et bornée par leur époque), les dettes qu'on vient
+# réclamer (une première fois, puis la suivante, rejouable), les fils des livres qui passent
+# par la campagne (une confidence ouvre la scène : `flag(tuyau_…)`), et la vie du canton sans
+# visage.
+scenes:
+
+  # ─────────────────────────────────────────────── Prosper, la ferme
+  - id: cmp.sc.soulie_fermage
+    titre: "Les prés du bas"
+    lieu: ferme
+    tranches: [matin, aprem]
+    qui: prosper_soulie
+    si: "relation.prosper_soulie >= 2 && annee <= 2008"
+    texte: "Prosper tient une lettre recommandée du manoir : le vieux président reprend les prés du bas à la fin du bail, pour les vendre. « On les lui loue depuis 1936. Toi, il t'écoute. »"
+    choix:
+      - label: "Je vais parler au manoir"
+        reponse: "Charles Dalmayrac t'écoute jusqu'au bout, puis déchire la lettre en deux. « Faites savoir à Soulié que je l'ai déchirée moi-même. » Il ne te raccompagne pas."
+        effets: {relation: {prosper_soulie: 1, charles_dalmayrac: -1}}
+      - label: "Ce n'est pas mon affaire"
+        reponse: "Prosper replie la lettre dans sa veste. À l'automne, les prés du bas ont une clôture neuve et un panneau d'agence. Il trait par l'autre porte, pour ne pas les voir."
+        effets: {relation: {prosper_soulie: -1}}
+
+  - id: cmp.sc.soulie_odile
+    titre: "Les pommes du bâtiment C"
+    lieu: ferme
+    tranches: [matin]
+    qui: prosper_soulie
+    si: "flag(histoire_h3) && flag(tuyau_cmp_soulie_odile) && annee <= 2008"
+    texte: "Six heures, le verger des Soulié. Ta mère trie les pommes avec trois femmes du bâtiment C, les mains rouges de froid. Elle te voit au portail et baisse la tête vers la caisse."
+    choix:
+      - label: "Je trie avec elle"
+        reponse: "Vous triez jusqu'à huit heures sans qu'elle te parle. À la fin, elle te donne la plus belle pomme de la caisse. À l'entraînement, tu arrives en retard, les mains collantes."
+        effets: {relation: {odile: 1}, jauges: {direction: -1}}
+      - label: "Je repars sans entrer"
+        reponse: "Tu fais demi-tour avant qu'elle relève la tête. Le soir, elle pose sur la table un sac de pommes abîmées, sans un mot. Elle ne saura jamais que tu sais."
+
+  - id: cmp.sc.soulie_dette
+    titre: "La Rousse"
+    lieu: ferme
+    tranches: [soir, nuit]
+    qui: prosper_soulie
+    si: "flag(dette_prosper_soulie) && annee <= 2008"
+    texte: "Onze heures du soir. Prosper t'attend dans la cour, une lampe à la main : « La Rousse vêle de travers, et le vétérinaire est coincé à Valdorne. Tu me dois une semaine de grange. C'est cette nuit. »"
+    choix:
+      - label: "Je tiens la lampe"
+        reponse: "Deux heures dans la paille, les bras jusqu'au coude, la lampe entre les dents. Le veau respire à trois heures. Le matin, tu dors debout, et là-haut, on le remarque."
+        effets: {relation: {prosper_soulie: 1}, jauges: {direction: -1}, clear: [dette_prosper_soulie]}
+      - label: "Je paie un vétérinaire"
+        francs: -150
+        reponse: "Tu paies le vétérinaire de garde et le taxi qui le monte jusqu'ici. Le veau vit. Prosper te rend la monnaie du taxi par la poste, en timbres, sans un mot dans l'enveloppe."
+        effets: {relation: {prosper_soulie: -1}, clear: [dette_prosper_soulie]}
+
+  - id: cmp.sc.soulie_dette_bis
+    titre: "La procuration"
+    lieu: ferme
+    tranches: [aprem]
+    qui: prosper_soulie
+    si: "flag(dette_prosper_soulie) && mission(cmp.sc.soulie_dette) && annee <= 2008"
+    rejouable: true
+    texte: "Le fils de Prosper est venu de Valdorne avec un notaire et une procuration. Prosper te fait asseoir à la table : « Dis-leur que j'ai toute ma tête. Toi, ils te croiront. On sera quittes. »"
+    choix:
+      - label: "Je témoigne pour lui"
+        francs: -100
+        reponse: "Tu racontes au notaire le match de dimanche, que Prosper t'a commenté minute par minute. Il range la procuration, et fait payer sa visite. Le fils repart sans dire au revoir."
+        effets: {relation: {prosper_soulie: 1}, clear: [dette_prosper_soulie]}
+      - label: "C'est une affaire de famille"
+        reponse: "« C'est toi qui me devais. » Prosper signe la procuration de la main gauche, exprès, mal. Le fils l'emporte quand même. À la ferme, on parle maintenant de vendre."
+        effets: {relation: {prosper_soulie: -2}, clear: [dette_prosper_soulie]}
+
+  # ─────────────────────────────────────────────── Margaux, la ferme
+  - id: cmp.sc.margaux_secheresse
+    titre: "L'eau du Bois-Joli"
+    roles: [entraineur, ds, president]
+    lieu: ferme
+    tranches: [aprem, soir]
+    qui: margaux_soulie
+    si: "relation.margaux_soulie >= 2 && annee >= 2018 && journee <= 6"
+    texte: "Troisième été sans pluie. Margaux te montre l'abreuvoir à sec : « On m'interdit d'arroser. Le Bois-Joli arrose toutes les nuits, avec une dérogation. Tu le fais couper une semaine ? »"
+    choix:
+      - label: "Je fais couper l'arrosage"
+        reponse: "Les terrains du Bois-Joli jaunissent en quatre jours ; les joueurs se plaignent des rebonds. Margaux remplit ses abreuvoirs. Au marché de la Motte, on dit ton nom, et pas pour se plaindre."
+        effets: {relation: {margaux_soulie: 1}, jauges: {vestiaire: -1, tribunes: 1}}
+      - label: "Les terrains d'abord"
+        reponse: "« Les terrains d'abord. » Elle le répète au marché, mot pour mot. Une semaine plus tard, deux bêtes partent à l'abattoir avant l'heure. Elle te rend ton panier, vide."
+        effets: {relation: {margaux_soulie: -1}}
+
+  - id: cmp.sc.margaux_terres
+    titre: "Les terres du manoir"
+    lieu: ferme
+    tranches: [aprem]
+    qui: margaux_soulie
+    si: "relation.margaux_soulie >= 1 && annee >= 2019 && annee <= 2022"
+    texte: "Les héritiers du vieux président vendent les terres du manoir, la ferme comprise. Margaux a un dossier à la banque : « Il me faut un garant que la banque connaît. Je n'en connais qu'un. »"
+    choix:
+      - label: "Je me porte garant"
+        francs: -300
+        reponse: "Tu signes en bas de onze pages, et la banque garde un dépôt. Margaux achète les terres que sa famille travaille depuis 1936. Elle fait repeindre l'enseigne du portail, à l'identique."
+        effets: {relation: {margaux_soulie: 1}}
+      - label: "Je ne signe pour personne"
+        reponse: "Elle range le dossier sans insister. Un fonds de Valdorne achète les terres et lui loue la ferme au mois. Sur le portail, sous l'enseigne, elle cloue une planche : LOCATAIRE."
+        effets: {relation: {margaux_soulie: -1}}
+
+  # ─────────────────────────────────────────────── Gustave, le Bois-Joli
+  - id: cmp.sc.rigal_mur
+    titre: "Le mur du fond"
+    roles: [entraineur, joueur]
+    lieu: centre_vert
+    tranches: [soir]
+    qui: gustave_rigal
+    si: "relation.gustave_rigal >= 1 && annee <= 2014"
+    texte: "Mise au vert, une heure du matin. Gustave tient un gamin par le col, les chaussures pleines de marne, une bouteille dans la poche. « Le mur du fond. Je l'écris dans le cahier, ou je n'ai rien vu ? »"
+    choix:
+      - label: "Écrivez-le"
+        reponse: "Gustave écrit le nom, l'heure, la bouteille, d'une écriture d'instituteur. Au petit-déjeuner, le gamin mange seul. Les autres ont compris que le cahier sert à quelque chose."
+        effets: {relation: {gustave_rigal: 1}, jauges: {vestiaire: -2, direction: 1}}
+      - label: "Vous n'avez rien vu"
+        reponse: "Gustave lâche le col et regarde ailleurs. « Rien vu. La prochaine fois non plus, alors. » Le gamin te doit quelque chose, et tout le vestiaire le sait avant midi."
+        effets: {relation: {gustave_rigal: -1}, jauges: {vestiaire: 2}}
+
+  - id: cmp.sc.rigal_piquets
+    titre: "Les piquets orange"
+    roles: [president]
+    lieu: centre_vert
+    tranches: [matin]
+    qui: gustave_rigal
+    si: "relation.gustave_rigal >= 2 && annee >= 1999 && annee <= 2002"
+    texte: "Sur le terrain du fond, des piquets orange tous les dix mètres. Gustave, une pioche à la main : « Les géomètres de la banque. Ils vendent mon terrain pour payer l'huissier. Je l'ai tondu trente ans. »"
+    choix:
+      - label: "Arrachez les piquets"
+        reponse: "Gustave les arrache un à un et les range dans la guérite, en fagot. La banque envoie une lettre ; tu la gardes dans un tiroir. Le terrain du fond reste au club, pour l'instant."
+        effets: {relation: {gustave_rigal: 1}, jauges: {caisse: -2, vestiaire: 1}}
+      - label: "Qu'ils vendent le fond"
+        reponse: "Le terrain du fond part à un promoteur, pour des pavillons. Gustave le tond une dernière fois, en diagonale, comme pour un match. Le lendemain, pour la première fois, il ne vient pas."
+        effets: {relation: {gustave_rigal: -1}, jauges: {caisse: 2}}
+
+  - id: cmp.sc.rigal_plots
+    titre: "Les plots de l'autre"
+    lieu: centre_vert
+    tranches: [matin]
+    jours: [dim]
+    qui: gustave_rigal
+    si: "flag(histoire_h2) && flag(tuyau_cmp_rigal_plots) && annee <= 2014"
+    texte: "Dimanche, sept heures, le terrain du fond dans la brume. Vukić pose des plots, seul, aux places exactes où Roland les posait. Gustave t'a levé la barrière sans un mot."
+    choix:
+      - label: "Je pose les plots avec lui"
+        reponse: "Il ne dit rien pendant vingt plots. Au vingt et unième, il corrige ta place d'un mètre. « Là. Il les voulait là. » Il ramasse tout sans avoir sifflé, et te serre la main."
+        effets: {relation: {vukic: 1}}
+      - label: "Je le laisse seul"
+        reponse: "Tu repars avant qu'il te voie. Gustave baisse la barrière derrière toi, lentement, pour qu'elle ne grince pas. Lundi, à l'entraînement, les plots sont aux mêmes places."
+
+  # ─────────────────────────────────────────────── Sabine, le Bois-Joli
+  - id: cmp.sc.malaterre_cameras
+    titre: "Les caméras des chambres"
+    roles: [entraineur, ds, president]
+    lieu: centre_vert
+    tranches: [aprem]
+    qui: sabine_malaterre
+    si: "relation.sabine_malaterre >= 2 && annee >= 2019"
+    texte: "Sabine pose un contrat sur la table de soins : des caméras dans les chambres du centre, pour le sommeil. Les propriétaires veulent sa signature avant vendredi. « Je signe, ou tu me couvres ? »"
+    choix:
+      - label: "Ne signe pas, je te couvre"
+        reponse: "Elle déchire la dernière page, celle des signatures, et te la tend. Là-haut, on t'appelle le lendemain ; tu dis que c'est toi. Le soir, les joueurs ferment leur porte sans clé."
+        effets: {relation: {sabine_malaterre: 1}, jauges: {direction: -2, vestiaire: 2}}
+      - label: "Le contrat, c'est le contrat"
+        reponse: "Elle signe sans relire. Les caméras arrivent le lundi, petites, blanches, au-dessus des portes. Le premier soir, un joueur couvre la sienne de son maillot. Le deuxième, tous."
+        effets: {relation: {sabine_malaterre: -1}, jauges: {direction: 1, vestiaire: -2}}
+
+  - id: cmp.sc.malaterre_cryo
+    titre: "Trois minutes à moins cent dix"
+    roles: [entraineur, ds, president]
+    lieu: centre_vert
+    tranches: [matin]
+    qui: sabine_malaterre
+    si: "relation.sabine_malaterre >= 1 && annee >= 2015"
+    texte: "Un gamin de dix-sept ans est sorti bleu de la chambre de cryothérapie et s'est assis par terre. Le préparateur veut poursuivre le protocole ; Sabine veut l'arrêter. Ils te regardent."
+    choix:
+      - label: "On arrête la cryo"
+        reponse: "Sabine cadenasse la chambre froide et accroche la clé à son cou. Le préparateur parle de retard sur la concurrence. Le gamin, lui, revient à l'entraînement le lendemain."
+        effets: {relation: {sabine_malaterre: 1}, jauges: {vestiaire: -1}}
+      - label: "On continue, avec un médecin"
+        reponse: "Le protocole reprend, un médecin à la porte, une montre à la main. Sabine signe le registre sous ta signature, sans un mot. Elle ne t'offre plus le café de sa machine."
+        effets: {relation: {sabine_malaterre: -1}, jauges: {vestiaire: 1}}
+
+  - id: cmp.sc.malaterre_lasers
+    titre: "Les lasers de la nuit"
+    lieu: centre_vert
+    tranches: [soir]
+    qui: sabine_malaterre
+    si: "flag(histoire_h10) && relation.sabine_malaterre >= 1 && annee >= 2015"
+    texte: "Dix heures du soir. Sur le terrain du fond, trois hommes de Rive Capital ont planté des lasers sur pied. Sabine, la main sur la barrière : « Ils ont une autorisation. Je les laisse ? »"
+    choix:
+      - label: "Fermez la barrière"
+        reponse: "Sabine baisse la barrière et éteint les projecteurs. Les géomètres finissent à la lampe frontale, puis renoncent. Le lendemain, le clapet sonne deux fois dans ta poche."
+        effets: {relation: {sabine_malaterre: 1}, jauges: {direction: -1, vestiaire: 1}}
+      - label: "Qu'ils mesurent"
+        reponse: "Ils mesurent jusqu'à deux heures, au centimètre, en parlant d'autre chose. Sabine les regarde faire depuis la guérite, les bras croisés. Elle ne te rappelle pas."
+        effets: {relation: {sabine_malaterre: -1}, jauges: {direction: 1}}
+
+  # ─────────────────────────────────────────────── Charles, le manoir
+  - id: cmp.sc.dalmayrac_draps
+    titre: "Les meubles sous les draps"
+    lieu: manoir
+    tranches: [aprem]
+    qui: charles_dalmayrac
+    si: "relation.charles_dalmayrac >= 2 && annee <= 2015"
+    texte: "Un huissier inventorie le manoir pièce par pièce, en soulevant les draps. Charles le suit, les mains dans le dos. « Le bureau de mon père part demain aux enchères. Je ne vous demande rien. »"
+    choix:
+      - label: "J'achète le bureau"
+        francs: -600
+        reponse: "Tu l'achètes sous un autre nom, à la salle des ventes de Valdorne, et tu le fais remonter au manoir. Charles ne te remercie pas. Le soir même, il y écrit une lettre de quatre pages."
+        effets: {relation: {charles_dalmayrac: 1}}
+      - label: "Ce ne sont que des meubles"
+        reponse: "« Ce ne sont que des meubles », répète Charles, et il remet un drap sur le piano. Le bureau part chez un antiquaire de la capitale. La pièce reste vide, chauffée pour rien."
+        effets: {relation: {charles_dalmayrac: -1}}
+
+  - id: cmp.sc.dalmayrac_lettre
+    titre: "Une lettre pour le virage"
+    lieu: manoir
+    tranches: [aprem, soir]
+    qui: charles_dalmayrac
+    si: "relation.charles_dalmayrac >= 1 && annee <= 2019"
+    texte: "Charles te tend une enveloppe cachetée, adressée au local du virage. « 1971. Je n'ai jamais dit pourquoi j'ai vendu. Je l'ai écrit. Je ne peux pas la porter : là-bas, on me connaît. »"
+    choix:
+      - label: "Je la porte au local"
+        reponse: "Gégé lit l'adresse, retourne l'enveloppe et la cloue sans l'ouvrir au mur du local, sous la bâche de 1971. « Elle restera là. » Il te regarde autrement, et pas mieux."
+        effets: {relation: {charles_dalmayrac: 1, gege: -1}}
+      - label: "Portez-la vous-même"
+        reponse: "Charles range l'enveloppe dans le tiroir de son bureau, avec d'autres, toutes cachetées, toutes adressées au virage. « Il y en a une par décennie. Celle-ci ira avec les autres. »"
+        effets: {relation: {charles_dalmayrac: -1}}
+
+  - id: cmp.sc.dalmayrac_dette
+    titre: "La messe de la Motte"
+    lieu: manoir
+    tranches: [matin]
+    jours: [dim]
+    qui: charles_dalmayrac
+    si: "flag(dette_charles_dalmayrac) && annee <= 2019"
+    texte: "Charles t'attend sur le perron, en costume, un missel à la main. « Asseyez-vous à côté de moi à la messe, au premier rang, devant le village. Je n'ai plus eu de voisin depuis 1977. »"
+    choix:
+      - label: "Je l'accompagne"
+        reponse: "Toute l'église voit le président de 1971 et toi sur le même banc. Le lundi, un ancien de la Nord demande pourquoi, et là-haut aussi. Charles, lui, chante faux et fort."
+        effets: {relation: {charles_dalmayrac: 1}, jauges: {tribunes: -1, direction: -1}, clear: [dette_charles_dalmayrac]}
+      - label: "Pas devant le village"
+        reponse: "Il hoche la tête et descend seul les deux marches du perron. À l'église, le premier rang reste à moitié vide. Il ne t'en parle jamais ; il ne te parle plus beaucoup."
+        effets: {relation: {charles_dalmayrac: -2}, clear: [dette_charles_dalmayrac]}
+
+  - id: cmp.sc.dalmayrac_dette_bis
+    titre: "La place en loge"
+    roles: [entraineur, joueur, ds, president]
+    lieu: manoir
+    tranches: [aprem]
+    qui: charles_dalmayrac
+    si: "flag(dette_charles_dalmayrac) && mission(cmp.sc.dalmayrac_dette) && annee <= 2019"
+    rejouable: true
+    texte: "Charles a sorti de l'armoire son écharpe de 1966. « Samedi, je voudrais voir le match d'en haut, de la loge. On m'en a fait descendre en 1977. J'aimerais y remonter, à mon pas. »"
+    choix:
+      - label: "Je lui obtiens une place"
+        reponse: "Il monte l'escalier de la loge à son pas, sans aide. Dans la Nord, quelqu'un le reconnaît, et le virage siffle tout le premier quart d'heure. Il applaudit chaque sifflet."
+        effets: {relation: {charles_dalmayrac: 1}, jauges: {tribunes: -2}, clear: [dette_charles_dalmayrac]}
+      - label: "La loge est complète"
+        reponse: "« Elle l'était déjà en 1977. » Il replie l'écharpe dans son papier de soie. Samedi, il écoute le match sur un vieux poste, dans le petit salon, le son au plus bas."
+        effets: {relation: {charles_dalmayrac: -2}, clear: [dette_charles_dalmayrac]}
+
+  - id: cmp.sc.dalmayrac_dette_fede
+    titre: "Le dîner de la Fédération"
+    roles: [selectionneur]
+    lieu: manoir
+    tranches: [aprem]
+    qui: charles_dalmayrac
+    si: "flag(dette_charles_dalmayrac) && mission(cmp.sc.dalmayrac_dette) && annee <= 2019"
+    rejouable: true
+    texte: "Charles a sorti son écharpe de 1966. « La Fédération donne son dîner de fin d'année, à Portclair. Je n'y suis plus invité. Vous, si. Emmenez-moi, et présentez-moi comme votre invité. »"
+    choix:
+      - label: "Je l'emmène"
+        reponse: "À Portclair, Charles serre des mains qui ne se souvenaient plus de lui, et qui s'en souviennent en le voyant. À la Fédération, on te demande pourquoi lui. Tu ne réponds pas."
+        effets: {relation: {charles_dalmayrac: 1}, jauges: {direction: -2}, clear: [dette_charles_dalmayrac]}
+      - label: "Ce n'est pas le lieu"
+        reponse: "« Ce n'est jamais le lieu. » Il replie l'écharpe dans son papier de soie. Le soir du dîner, il mange seul au petit salon, en costume, à l'heure du discours."
+        effets: {relation: {charles_dalmayrac: -2}, clear: [dette_charles_dalmayrac]}
+
+  # ─────────────────────────────────────────────── Régis, le manoir
+  - id: cmp.sc.vaillandet_noce
+    titre: "La noce sans le père"
+    lieu: manoir
+    tranches: [aprem, soir]
+    qui: regis_vaillandet
+    si: "relation.regis_vaillandet >= 2 && annee >= 2020"
+    texte: "Régis tient une enveloppe épaisse. « Ma fille se marie samedi au Relais. Je ne suis pas invité. Là-dedans, l'acte du manoir, à son nom. Tu la lui portes ? Elle t'ouvrira, à toi. »"
+    choix:
+      - label: "Je porte l'enveloppe"
+        reponse: "Elle l'ouvre sur le seuil, lit, referme. « Dites-lui que je viendrai le voir. Pas samedi. » La semaine même, Régis fait repeindre la grille en vert, la couleur de sa fille."
+        effets: {relation: {regis_vaillandet: 1}}
+      - label: "Allez-y vous-même"
+        reponse: "« Je n'y arrive pas. » Il range l'enveloppe dans le coffre. Samedi soir, de la grille, il regarde les lumières du Relais jusqu'à la fin de la noce, puis il rentre à pied."
+        effets: {relation: {regis_vaillandet: -1}}
+
+  - id: cmp.sc.vaillandet_livre
+    titre: "Le livre de la vente"
+    lieu: manoir
+    tranches: [soir]
+    qui: regis_vaillandet
+    si: "relation.regis_vaillandet >= 1 && annee >= 2022"
+    texte: "Un éditeur de la capitale veut les mémoires de Régis : comment il a vendu le Racing. Trois cents pages. « Il y a des noms de là-haut dedans, et le tien, deux fois. Je publie, ou je raye ? »"
+    choix:
+      - label: "Rayez les noms"
+        reponse: "Il passe la nuit à rayer des noms au feutre, page après page. Le livre sort au printemps, plein de traits noirs. Là-haut, on le lit en cherchant sous les traits, et on te remercie."
+        effets: {relation: {regis_vaillandet: -1}, jauges: {direction: 2}}
+      - label: "Publiez tout"
+        reponse: "Le livre sort avec tous les noms. Pendant un mois, là-haut, on ne parle que de lui, et un peu de toi. Régis t'envoie le premier exemplaire, avec une dédicace d'une ligne."
+        effets: {relation: {regis_vaillandet: 1}, jauges: {direction: -2}}
+
+  # ─────────────────────────────────────────────── Thérèse, le Relais
+  - id: cmp.sc.therese_enterrement
+    titre: "Le repas d'enterrement"
+    lieu: auberge
+    tranches: [midi, aprem]
+    qui: therese_coustal
+    si: "relation.therese_coustal >= 1 && annee <= 2016"
+    texte: "Le Relais sert le repas d'enterrement d'un ancien de la Coupe de 1966. Thérèse te prend à part : « La famille voudrait quelqu'un du club, au café. Quelques mots. Personne n'est venu. »"
+    choix:
+      - label: "Je dis quelques mots"
+        reponse: "Tu parles trois minutes, sans papier, de ce que tu sais de 1966. La veuve se lève pour t'embrasser. Dimanche, à la main courante du village, on répète tes mots, en mieux."
+        effets: {relation: {therese_coustal: 1}, jauges: {tribunes: 2}}
+      - label: "Je fais livrer une couronne"
+        francs: -120
+        reponse: "La couronne arrive au café, avec une carte écrite par le fleuriste. Thérèse la pose près de la porte. La famille la regarde comme on regarde un cadeau d'entreprise."
+        effets: {relation: {therese_coustal: -1}}
+
+  - id: cmp.sc.therese_relais
+    titre: "Le Relais à vendre"
+    lieu: auberge
+    tranches: [aprem]
+    qui: therese_coustal
+    si: "relation.therese_coustal >= 2 && annee >= 2010 && annee <= 2016"
+    texte: "Une chaîne de restaurants de bord de route veut racheter le Relais. Thérèse te tend le téléphone de l'entrée : « Mon petit-fils, à la capitale. Il ne m'écoute plus. Toi, il te regarde à la télé. »"
+    choix:
+      - label: "Je parle à Bastien"
+        reponse: "Tu lui parles vingt minutes de la cheminée, de la craie, de la chaise qui boite depuis 1962. Il ne promet rien. Deux ans plus tard, c'est lui qui écrit le plat du jour."
+        effets: {relation: {therese_coustal: 1, bastien_coustal: 1}}
+      - label: "Vendez, Thérèse"
+        reponse: "« Vendre, à mon âge, c'est mourir avec un chèque. » Elle raccroche sans avoir parlé à son petit-fils. La chaîne revient trois fois. Elle sert ses représentants en dernier."
+        effets: {relation: {therese_coustal: -1}}
+
+  - id: cmp.sc.therese_dette
+    titre: "La communion de la petite"
+    lieu: auberge
+    tranches: [midi, aprem]
+    jours: [dim]
+    qui: therese_coustal
+    si: "flag(dette_therese_coustal) && annee <= 2016"
+    texte: "Dimanche, la petite-nièce de Thérèse fait sa communion au Relais. Thérèse t'a gardé une chaise au bout de la grande table. « La petite salle, ça vaut bien un après-midi. Reste jusqu'au gâteau. »"
+    choix:
+      - label: "Je reste jusqu'au gâteau"
+        reponse: "Tu signes quarante menus, tu poses avec la communiante, tu manges trois desserts. À dix-huit heures, ton rendez-vous en ville a attendu une heure, puis il est parti."
+        effets: {relation: {therese_coustal: 1}, jauges: {direction: -1}, clear: [dette_therese_coustal]}
+      - label: "Je fais livrer un ballon"
+        francs: -50
+        reponse: "Un ballon signé arrive au Relais par coursier, dans un papier de magasin. La petite le serre contre sa robe blanche. Thérèse range ta chaise vide contre le mur, sans un mot."
+        effets: {relation: {therese_coustal: -2}, clear: [dette_therese_coustal]}
+
+  - id: cmp.sc.therese_dette_bis
+    titre: "L'inspecteur du jeudi"
+    lieu: auberge
+    tranches: [aprem]
+    qui: therese_coustal
+    si: "flag(dette_therese_coustal) && mission(cmp.sc.therese_dette) && annee <= 2016"
+    rejouable: true
+    texte: "Un inspecteur a trouvé à redire à la chambre froide : fermeture d'une semaine, en pleine saison des noces. Thérèse pose le courrier devant toi. « Un coup de fil de toi, et il repasse plus tard. »"
+    choix:
+      - label: "J'appelle la préfecture"
+        reponse: "Tu appelles, tu insistes, tu promets une visite d'école. L'inspecteur repasse un mois plus tard et trouve une chambre froide neuve. Là-haut, on apprend que tu protèges les auberges."
+        effets: {relation: {therese_coustal: 1}, jauges: {direction: -1, tribunes: 1}, clear: [dette_therese_coustal]}
+      - label: "Je n'ai pas ce pouvoir"
+        reponse: "« Tu l'avais. » Le Relais ferme une semaine ; deux noces partent à Valdorne. Thérèse écrit FERMÉ à la craie sur la porte, et ne t'en parle plus jamais."
+        effets: {relation: {therese_coustal: -2}, clear: [dette_therese_coustal]}
+
+  # ─────────────────────────────────────────────── Bastien, le Relais
+  - id: cmp.sc.bastien_craie
+    titre: "Les mots de Thérèse"
+    lieu: auberge
+    tranches: [midi]
+    qui: bastien_coustal
+    si: "relation.bastien_coustal >= 1 && annee >= 2022 && annee <= 2032"
+    texte: "Bastien sert lui-même le repas d'enterrement de sa grand-mère, en tablier. Au café, il pose la craie sur ta soucoupe : « Elle disait toujours quelques mots, à la fin. Quelqu'un doit les dire. »"
+    choix:
+      - label: "Je dis quelques mots"
+        reponse: "Tu répètes ce qu'il t'a raconté d'elle : qui s'était marié ici, qui y avait pleuré. La salle rit, puis se tait. Sur l'ardoise, sous le plat du jour, Bastien écrit : THÉRÈSE, 1962."
+        effets: {relation: {bastien_coustal: 1}, jauges: {tribunes: 1}}
+      - label: "Je lui rends la craie"
+        reponse: "Il garde la craie dans sa main jusqu'à la fin du service. Personne ne dit les mots. Le lendemain, l'ardoise est effacée, et le plat du jour est écrit plus droit."
+        effets: {relation: {bastien_coustal: -1}}
+
+  - id: cmp.sc.bastien_chambre
+    titre: "La chambre sans réseau"
+    lieu: auberge
+    tranches: [soir]
+    qui: bastien_coustal
+    si: "flag(histoire_h8) && relation.bastien_coustal >= 1 && annee >= 2017"
+    texte: "Bastien frappe à la vitre de ta voiture, sur son parking, à onze heures du soir. « Troisième fois cette semaine que tu dors là, moteur coupé. J'ai une chambre au-dessus. Elle n'a pas de réseau. »"
+    choix:
+      - label: "Je prends la chambre"
+        francs: -70
+        reponse: "Une chambre mansardée, un lit qui grince, aucun écran. Tu dors sept heures pour la première fois depuis des mois. Au matin, un café attend devant la porte ; Bastien n'a pas frappé."
+        effets: {relation: {bastien_coustal: 1}, var: {h8_nuits: "-1"}}
+      - label: "Je rentre en ville"
+        reponse: "Tu rentres par la départementale, les fenêtres ouvertes pour rester éveillé. Chez toi, l'oreillette t'attend sur la table de nuit. Tu ne la mets pas. Tu ne dors pas non plus."
+        effets: {var: {h8_nuits: "+1"}}
+
+  # ─────────────────────────────────────────────── Puech, l'étang
+  - id: cmp.sc.puech_yeux
+    titre: "Les yeux de Puech"
+    lieu: etang
+    tranches: [soir]
+    qui: isidore_puech
+    si: "relation.isidore_puech >= 2 && annee <= 2012"
+    texte: "Puech te tend son carnet et un crayon. « Mes yeux ne lisent plus les plaques après le coucher du soleil. Les gendarmes viennent lundi. Note pour moi, ce soir. Tout ce qui vient. »"
+    choix:
+      - label: "Je note pour lui"
+        reponse: "Tu notes trois plaques jusqu'à minuit. La troisième est celle d'un homme de ton club, qui n'a rien à faire ici. Puech relit, hoche la tête, et ne te demande pas si tu le connais."
+        effets: {relation: {isidore_puech: 1}, jauges: {direction: 1}}
+      - label: "Je ne note pas les gens"
+        reponse: "Il reprend le carnet sans un mot. Lundi, les gendarmes trouvent une page blanche, la première en trente ans. Ils lui demandent s'il est malade. Il dit oui."
+        effets: {relation: {isidore_puech: -1}}
+
+  - id: cmp.sc.puech_page
+    titre: "La page à vendre"
+    roles: [entraineur, joueur, ds, president]
+    lieu: etang
+    tranches: [soir]
+    qui: isidore_puech
+    si: "relation.isidore_puech >= 1 && annee <= 2012"
+    texte: "Un homme en costume attend Puech au bout du ponton, une enveloppe à la main. Il veut une page du carnet : un mardi de mars, la nuit d'une voiture de ton club. « Je vends, ou tu achètes ? »"
+    choix:
+      - label: "J'achète la page"
+        francs: -200
+        reponse: "Tu paies le double de l'enveloppe. Puech arrache la page et te la tend, pliée en quatre. L'homme en costume repart sans un mot. Sur la page, une plaque que tu connais trop bien."
+        effets: {relation: {isidore_puech: 1}, jauges: {direction: 1}}
+      - label: "Qu'il la vende"
+        reponse: "Puech prend l'enveloppe et arrache la page sans la relire. Deux semaines plus tard, elle sort dans L'Écho, en photocopie, au milieu d'un article sur ton club."
+        effets: {jauges: {direction: -2}}
+
+  # ─────────────────────────────────────────────── Manon, l'étang
+  - id: cmp.sc.manon_filet
+    titre: "Le filet de nuit"
+    roles: [entraineur, joueur, ds, president]
+    lieu: etang
+    tranches: [nuit]
+    qui: manon_puech
+    si: "relation.manon_puech >= 2 && annee >= 2013"
+    texte: "Deux heures du matin. Manon a coincé un braconnier au bout du ponton : un des tiens, vingt ans, un filet plein de carpes qu'il revend au marché de Valdorne. « Je verbalise, ou tu le ramènes ? »"
+    choix:
+      - label: "Je paie, je le ramène"
+        francs: -150
+        reponse: "Tu paies l'amende en liquide et tu le ramènes en ville sans un mot. Au rond-point, il dit qu'il envoie l'argent à sa mère. Lundi, il court plus vite que les autres."
+        effets: {relation: {manon_puech: 1}, jauges: {vestiaire: 1}}
+      - label: "Verbalisez"
+        reponse: "Manon écrit le procès-verbal à la lampe frontale, lentement, en lui laissant le temps de se reprendre. Le lendemain, tout le vestiaire sait qui l'a laissé verbaliser."
+        effets: {jauges: {vestiaire: -2}}
+
+  - id: cmp.sc.manon_intendant
+    titre: "Le pêcheur sans carte"
+    lieu: etang
+    tranches: [nuit]
+    qui: manon_puech
+    si: "relation.manon_puech >= 1 && relation.gustave_rigal >= 1 && annee >= 2015"
+    texte: "Manon a surpris un vieux qui pêche sans carte, à minuit, un trousseau à la ceinture : l'ancien intendant du Bois-Joli. « Il dit qu'il ne dort plus depuis qu'il n'a plus de ronde. Je verbalise ? »"
+    choix:
+      - label: "Je lui paie sa carte"
+        francs: -40
+        reponse: "Tu paies sa carte de pêche de l'année. Gustave la range avec ses clés, sans un mot. Désormais, la nuit, il y a deux lanternes au bout du ponton, et Manon y monte du café."
+        effets: {relation: {manon_puech: 1}}
+      - label: "La règle, c'est la règle"
+        reponse: "Manon écrit le procès-verbal. Gustave le signe d'une écriture d'instituteur et rentre à pied par la départementale. On ne le revoit plus à l'étang."
+        effets: {relation: {gustave_rigal: -1}}
+
+  # ─────────────────────────────────────────────── Jacques, le stade du village
+  - id: cmp.sc.gassiat_tribune
+    titre: "La tribune condamnée"
+    lieu: stade_village
+    tranches: [aprem]
+    qui: jacques_gassiat
+    si: "relation.jacques_gassiat >= 2 && annee <= 2010"
+    texte: "Un ruban rouge et blanc barre la tribune de bois : la commission de sécurité l'a fermée. Jacques tient l'arrêté : « Il faut refaire les quatre gradins avant dimanche, ou on joue sans public. »"
+    choix:
+      - label: "Je paie les planches"
+        francs: -400
+        reponse: "Les planches arrivent le vendredi ; tu cloues avec Jacques jusqu'à la nuit, à la lampe. Dimanche, quarante personnes s'assoient sur du bois neuf qui sent la résine, et applaudissent les clous."
+        effets: {relation: {jacques_gassiat: 1}, jauges: {tribunes: 1}}
+      - label: "Le bois, c'est fini"
+        reponse: "« Fini », répète Jacques. Dimanche, le village regarde le match debout, derrière la main courante. Le ruban reste tout l'hiver. Jacques ne le décroche pas : il le contourne."
+        effets: {relation: {jacques_gassiat: -1}}
+
+  - id: cmp.sc.gassiat_masques
+    titre: "Onze visages de carton"
+    lieu: stade_village
+    tranches: [aprem]
+    jours: [dim]
+    qui: jacques_gassiat
+    si: "flag(histoire_h1) && flag(h1_masques_tifo) && relation.jacques_gassiat >= 1 && annee <= 2010"
+    texte: "Dimanche, l'équipe de la Motte s'aligne au coup d'envoi avec onze masques de carton : ton visage. L'arbitre refuse de siffler. Jacques, livide : « Le district va nous rayer. Dis-leur quelque chose. »"
+    choix:
+      - label: "Enlevez ces masques"
+        reponse: "Tu passes la main courante et tu parles aux onze, un par un. Les masques finissent dans le seau de la buvette. Le match commence avec vingt minutes de retard. Personne ne rit."
+        effets: {relation: {jacques_gassiat: 1}, jauges: {tribunes: -1}}
+      - label: "Je repars sans rien dire"
+        reponse: "L'arbitre rentre au vestiaire. Le district raye la Motte pour un mois. Le lundi, Jacques dépose les onze masques devant ta porte, dans un sac de chaux."
+        effets: {relation: {jacques_gassiat: -2}, jauges: {tribunes: 1}}
+
+  # ─────────────────────────────────────────────── Coralie, le stade du village
+  - id: cmp.sc.coralie_fusion
+    titre: "La fusion avec Valbrume"
+    lieu: auberge
+    tranches: [soir]
+    qui: coralie_gassiat
+    si: "relation.coralie_gassiat >= 2 && annee >= 2028"
+    texte: "Assemblée de l'U.S. La Motte, dans la salle basse du Relais. Sans fusion avec Valbrume, plus d'équipe senior. Coralie te passe la parole sans prévenir : « Ils t'écouteront. Dis-leur. »"
+    choix:
+      - label: "Je parle pour la fusion"
+        reponse: "Tu parles des gamins qui n'auront plus d'équipe à dix-huit ans. La fusion passe à trois voix. Coralie repeint le tableau d'affichage ; il manque de place pour les deux noms."
+        effets: {relation: {coralie_gassiat: 1}}
+      - label: "Je parle pour la Motte"
+        reponse: "Tu parles du tableau peint à la main et de la tribune de 1952. La salle applaudit, et vote contre. Au printemps, l'équipe senior déclare forfait trois dimanches de suite."
+        effets: {relation: {coralie_gassiat: -1}, jauges: {tribunes: 1}}
+
+  - id: cmp.sc.coralie_gege
+    titre: "Gégé au dernier gradin"
+    lieu: stade_village
+    tranches: [aprem]
+    jours: [dim]
+    qui: coralie_gassiat
+    si: "flag(histoire_h10) && !flag(h10_gege_mort) && relation.coralie_gassiat >= 1 && annee >= 2011"
+    texte: "Gégé est descendu du car, une couverture sur le bras. Il veut monter au dernier gradin de la tribune de bois. « Mon père a joué ici, l'année où on a monté cette tribune. Je veux voir d'en haut. »"
+    choix:
+      - label: "Je le porte jusqu'en haut"
+        reponse: "Il pèse moins que sa couverture. Au dernier gradin, il regarde le match sans un mot, puis te nomme chaque joueur de la photo de son père, qu'il garde dans son portefeuille."
+        effets: {relation: {gege: 1, coralie_gassiat: 1}}
+      - label: "Il verra mieux d'en bas"
+        reponse: "Coralie lui installe une chaise à la main courante. Il regarde la tribune plus que le match. En partant, il dit qu'il reviendra avec quelqu'un de plus costaud."
+        effets: {relation: {coralie_gassiat: -1}}
+
+  # ─────────────────────────────────────────────── La vie du canton, sans visage
+  - id: cmp.sc.campagne_vache
+    titre: "Une vache sur la départementale"
+    lieu: ferme
+    tranches: [soir, nuit]
+    qui: ancien
+    texte: "Une vache est couchée au milieu de la départementale, près du calvaire. Un vieux en bottes arrive avec une lampe : « La clôture a cédé. Tu m'aides, ou tu passes ton chemin ? »"
+    choix:
+      - label: "Je l'aide à la ramener"
+        reponse: "Une heure à pousser une bête qui ne veut pas, dans la boue, à la lampe. Le vieux te serre la main sans l'essuyer. Le lendemain, toute la Motte sait qui a ramené la Blanchette."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Je la chasse de la route"
+        francs: -100
+        reponse: "Tu cries, tu frappes dans tes mains. La vache se lève d'un coup et part droit dans le maïs. Le vieux ne dit rien. La semaine suivante, au marché, on te fait payer le maïs couché."
+
+  - id: cmp.sc.campagne_orage
+    titre: "L'orage sur les bottes"
+    lieu: ferme
+    tranches: [aprem]
+    qui: ancien
+    si: "journee <= 6"
+    texte: "Le ciel tourne au violet au-dessus du Bois-Joli. Dans le champ, cent bottes de paille à rentrer avant la pluie, et trois vieux pour le faire. L'un d'eux te tend une fourche sans demander."
+    choix:
+      - label: "Je prends la fourche"
+        reponse: "La pluie vous rattrape sur la dernière botte. Le soir, tu as les bras griffés jusqu'au coude, et ton rendez-vous en ville a attendu pour rien. Ils te servent la goutte, debout, comme à ceux d'ici."
+        effets: {jauges: {tribunes: 1, direction: -1}}
+      - label: "Je rentre avant la pluie"
+        reponse: "En partant, tu vois les trois vieux continuer sous l'orage. Le lendemain, la moitié des bottes a pris l'eau. Au Relais, on ne parle pas de toi ; on parle de la paille."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: cmp.sc.campagne_derby
+    titre: "Le derby du canton"
+    lieu: stade_village
+    tranches: [aprem]
+    jours: [dim]
+    qui: fan
+    texte: "La Motte contre Valbrume, le derby du canton. À la soixantième, un penalty douteux ; deux pères se battent à la main courante. Le fils de l'un, sept ans, les regarde, la bouche ouverte."
+    choix:
+      - label: "Je les sépare"
+        reponse: "Tu prends un coup de coude dans les côtes et tu ramasses une casquette. Les deux pères se serrent la main devant leurs fils. Mardi, ta photo est dans L'Écho, et là-haut, on la découpe."
+        effets: {jauges: {tribunes: 2, direction: -1}}
+      - label: "J'emmène le gamin"
+        reponse: "Tu lui offres un chocolat chaud à la buvette pendant que les grands se calment. Il te raconte le match comme s'il l'arbitrait. Les deux pères finissent au poste de Valdorne, ensemble."
+        effets: {jauges: {tribunes: 1}}
+
+  - id: cmp.sc.campagne_sac
+    titre: "Le sac de l'étang"
+    roles: [entraineur, joueur, ds, president]
+    lieu: etang
+    tranches: [matin]
+    qui: ancien
+    texte: "À l'aube, un vieux pêcheur remonte un sac de toile lesté d'une pierre. Dedans, des centaines de tickets de paris détrempés, tous sur des matchs de ton équipe. « On les jette, ou tu les veux ? »"
+    choix:
+      - label: "Je prends le sac"
+        reponse: "Tu les fais sécher sur la banquette arrière. Sur la moitié, la même écriture, le même pari : une défaite d'un but. Quelqu'un, chez toi, vend des samedis. Tu sais où chercher."
+        effets: {jauges: {vestiaire: 2}}
+      - label: "Rejetez-le à l'eau"
+        reponse: "Le vieux relance le sac au milieu de l'étang. Il coule d'un coup. « C'est ce que je pensais. Ici, on remet à l'eau ce qui ne se mange pas. »"
+
+  - id: cmp.sc.campagne_encheres
+    titre: "Les enchères du manoir"
+    lieu: manoir
+    tranches: [aprem]
+    qui: passant
+    si: "annee >= 2019 && annee <= 2021"
+    texte: "Dans la cour du manoir, on vend au marteau les meubles du vieux président. Lot quarante-deux : un fanion bordeaux de la Coupe de 1966, brodé à la main. Un collectionneur de la capitale lève la main."
+    choix:
+      - label: "Je surenchéris"
+        francs: -300
+        reponse: "Le fanion t'est adjugé au troisième coup de marteau. Le collectionneur te salue, beau joueur. Tu l'accroches où tu travailles ; les anciens viennent le regarder sans le toucher."
+        effets: {jauges: {tribunes: 2}}
+      - label: "Je le laisse partir"
+        reponse: "Le fanion part pour la capitale dans une housse en plastique. Une semaine plus tard, il est en photo dans une vitrine, entre deux maillots d'autres clubs, avec une étiquette et un prix."
+        effets: {jauges: {tribunes: -1}}
+
+# ═══════════════════════════════════════════════════════════════ LES PAROLES
+# Ce qu'on dit de la campagne, à ses lieux, et de toi quand la ville a décidé qui tu es.
+paroles:
+  - qui: ancien
+    sujet: quartier
+    si: "lieu == ferme && annee <= 2008"
+    texte: "Le père Soulié n'est pas retourné à la Rive depuis 1966. Il dit qu'il entend mieux le stade de son étable qu'en tribune. Les vaches aussi."
+  - qui: ancien
+    sujet: quartier
+    si: "lieu == ferme && annee >= 2030"
+    texte: "Les panneaux sur la grange de la petite Soulié rapportent plus que ses vaches. Elle garde les vaches. Elle dit que les panneaux, ça ne vous regarde pas entrer."
+  - qui: passant
+    sujet: rumeur
+    si: "lieu == manoir && annee <= 2019"
+    texte: "La moitié des volets du manoir sont fermés depuis 1977. On dit qu'il ne chauffe que trois pièces, et qu'il téléphone la nuit à des gens qui sont morts."
+  - qui: passant
+    sujet: rumeur
+    si: "lieu == manoir && annee >= 2020"
+    texte: "Le nouveau du manoir a vendu le Racing, paraît-il. Il a fait motoriser la grille. Le vieux, lui, la laissait ouverte : il n'avait plus rien à vendre."
+  - qui: enfant
+    sujet: club
+    si: "lieu == centre_vert"
+    texte: "Les joueurs font le mur par le fond du bois. On les voit passer dans le maïs avec leurs claquettes. On ne dit rien : ils nous donnent des maillots."
+  - qui: fan
+    sujet: club
+    si: "lieu == stade_village"
+    texte: "Ici, le dimanche, on refait le match de la veille à la main courante. Le samedi, à la Rive, on a payé. Le dimanche, à la Motte, on a raison."
+  - qui: commercant
+    sujet: quartier
+    si: "lieu == auberge"
+    texte: "Les gens de la ville, on les reconnaît à leurs chaussures. Ici, on regarde les pieds avant la tête. La tête, ça trompe plus."
+  - qui: passant
+    sujet: rumeur
+    si: "lieu == etang && tranche == nuit"
+    texte: "La lanterne au bout du ponton, c'est le pêcheur. S'il n'y a pas de lanterne et qu'il y a une voiture, c'est quelqu'un d'autre. Faites demi-tour."
+  - qui: passante
+    sujet: toi
+    si: "flag(rep_quartier) && lieu == auberge"
+    texte: "Paraît qu'on vous voit plus souvent à la Motte qu'au stade. Ici, ça vous fait des amis. En ville, ça fait des questions."
+  - qui: ancien
+    sujet: toi
+    si: "flag(rep_soin) && lieu == etang"
+    texte: "Vous venez regarder l'eau, comme les vieux. Moi, j'ai attendu soixante-dix ans pour avoir le temps. Vous êtes en avance. Ou c'est la fatigue."
+
+# ═══════════════════════════════════════════════════════════════ OÙ ILS T'ATTENDENT
+# Une carte dont ils sont le locuteur (leurs paliers : cards/common/paliers_ville_campagne.yaml)
+# se joue chez eux.
+rencontres:
+  prosper_soulie: ferme
+  margaux_soulie: ferme
+  gustave_rigal: centre_vert
+  sabine_malaterre: centre_vert
+  charles_dalmayrac: manoir
+  regis_vaillandet: manoir
+  therese_coustal: auberge
+  bastien_coustal: auberge
+  isidore_puech: etang
+  manon_puech: etang
+  jacques_gassiat: stade_village
+  coralie_gassiat: stade_village
