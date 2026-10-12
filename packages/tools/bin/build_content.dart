@@ -75,6 +75,19 @@ late Set<String> roleIdsGlobal;
 /// spec variété §1.10) — la même énumération que `kStatuts` du moteur.
 const Set<String> kStatuts = {'present', 'club', 'vendu', 'staff', 'parti', 'retraite', 'rival', 'mort'};
 
+/// LA VILLE VIVANTE (docs/histoires/ville_vivante.md) : ce que la ville compte de
+/// tes gestes (une activité nourrit une habitude ; au seuil, une réputation) …
+const Set<String> kHabitudes = {
+  'comptoir', 'nuit', 'jeu', 'sport', 'soin', 'culture', 'foi', 'famille', 'largesse', 'luxe', 'quartier', 'travail'
+};
+
+/// … et ce que les gens savent : le réseau d'une personne, et la jauge cachée
+/// dont elle te dit le climat (null : un réseau sans jauge).
+const Map<String, String?> kReseaux = {
+  'tribunes': 'tribunes', 'vestiaire': 'vestiaire', 'direction': 'direction', 'argent': 'caisse',
+  'presse': null, 'rue': null, 'milieu': null, 'mairie': null, 'sante': null, 'familles': null, 'police': null,
+};
+
 /// Les beats moteur dont le texte est auteurisable (content/setpieces.yaml).
 const List<String> kSetpieceBeats = [
   'objective', 'classement', 'match', 'cup', 'gm_annonce', 'gm_te', 'aftermatch',
@@ -566,10 +579,14 @@ void main() {
     journalTemplates[k.toString()] = t;
   });
 
-  // Characters.
+  // Characters. LA VILLE VIVANTE (docs/histoires/ville_vivante.md) : les gens
+  // d'Aubérive (content/ville/*.yaml, `gens:`) qui ne sont pas déjà des
+  // personnages en deviennent, au camp `ville` ; les autres n'apportent que leur
+  // vie en ville (compilée avec la ville).
+  final gensBruts = _gensBruts();
   final characters = <Map<String, dynamic>>[];
   final characterIds = <String>{};
-  for (final c in ((_loadYaml('characters.yaml') as Map?)?['characters'] as List?) ?? const []) {
+  for (final c in _personnagesAvecGens(gensBruts, errors)) {
     final cm = Map<String, dynamic>.of((c as Map).cast<String, dynamic>());
     final id = cm['id'].toString();
     characterIds.add(id);
@@ -655,7 +672,7 @@ void main() {
   }
 
   // Portraits (paper dolls) : une fiche par personnage + coach / joueur.
-  final portraits = _loadPortraits(characters, characterIds, errors);
+  final portraits = _loadPortraits(characters, characterIds, errors, gens: gensBruts);
 
   // Alarms.
   final alarms = <String, dynamic>{};
@@ -1616,19 +1633,75 @@ const List<String> _portraitColours = [
 const List<String> _portraitColourKeys = ['couleur', 'couleur2', 'coiffe', 'couleur_accessoire'];
 const List<String> _portraitRequired = ['teint', 'corpulence', 'age', 'coiffure', 'cheveux', 'pilosite', 'lunettes', 'tenue', 'couleur', 'accessoire'];
 
+/// LA VILLE VIVANTE — les gens de la ville (content/ville/*.yaml, `gens:`), dans
+/// l'ordre des noms de fichiers.
+List<Map<String, dynamic>> _gensBruts() {
+  final out = <Map<String, dynamic>>[];
+  final dossier = Directory('$contentDir/ville');
+  if (!dossier.existsSync()) return out;
+  final fichiers = dossier.listSync().whereType<File>().where((f) => f.path.endsWith('.yaml')).toList()
+    ..sort((a, b) => a.path.compareTo(b.path));
+  for (final f in fichiers) {
+    final doc = _loadYaml('ville/${f.uri.pathSegments.last}');
+    if (doc is! Map) continue;
+    for (final g in (doc['gens'] as List? ?? const [])) {
+      if (g is Map) out.add(g.cast<String, dynamic>());
+    }
+  }
+  return out;
+}
+
+/// characters.yaml, plus les gens de la ville qui n'en sont pas (`name` écrit) :
+/// ils deviennent des personnages, au camp `ville`, pour que les cartes les
+/// fassent parler et que leur lien soit une relation du moteur.
+List<dynamic> _personnagesAvecGens(List<Map<String, dynamic>> gens, List<String> errors) {
+  final liste = List<dynamic>.of(((_loadYaml('characters.yaml') as Map?)?['characters'] as List?) ?? const []);
+  final ids = {for (final c in liste) if (c is Map) c['id'].toString()};
+  for (final g in gens) {
+    final id = g['id']?.toString() ?? '';
+    if (g['name'] == null) continue;
+    if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(id)) {
+      errors.add('ville/gens/$id: un id en minuscules');
+      continue;
+    }
+    if (ids.contains(id)) {
+      errors.add('ville/gens/$id: déjà un personnage (characters.yaml) — n\'écris que sa vie en ville, sans `name`');
+      continue;
+    }
+    ids.add(id);
+    liste.add({
+      'id': id, 'name': g['name'], 'label': g['label'] ?? '', 'genre': g['genre'] ?? 'm', 'camp': 'ville',
+      for (final k in const ['adresse', 'tic', 'on_relation', 'age', 'statut', 'etiquettes']) if (g[k] != null) k: g[k],
+    });
+  }
+  return liste;
+}
+
 /// Charge content/portraits.yaml → table { id: fiche } pour le bundle. Chaque
 /// personnage de characters.yaml doit avoir une fiche ; chaque fiche doit viser
 /// un personnage connu ou « coach » / « joueur » ; les valeurs d'énumération
 /// sont contrôlées. Le genre de characters.yaml est recopié dans la fiche.
-Map<String, dynamic> _loadPortraits(List<Map<String, dynamic>> characters, Set<String> characterIds, List<String> errors) {
+Map<String, dynamic> _loadPortraits(List<Map<String, dynamic>> characters, Set<String> characterIds, List<String> errors,
+    {List<Map<String, dynamic>> gens = const []}) {
   final out = <String, dynamic>{};
-  final raw = (_loadYaml('portraits.yaml') as Map?)?['portraits'];
-  if (raw == null) {
+  final raw0 = (_loadYaml('portraits.yaml') as Map?)?['portraits'];
+  if (raw0 == null) {
     if (characterIds.isNotEmpty) errors.add('portraits: content/portraits.yaml manquant ou vide');
     return out;
   }
+  // les gens de la ville portent leur fiche avec eux (`portrait:`)
+  final raw = <dynamic, dynamic>{...(raw0 as Map)};
+  for (final g in gens) {
+    if (g['name'] == null || g['portrait'] == null) continue;
+    final id = g['id'].toString();
+    if (raw.containsKey(id)) {
+      errors.add('portraits: $id : une fiche dans portraits.yaml et une autre dans ses `gens`');
+    } else {
+      raw[id] = g['portrait'];
+    }
+  }
   final genres = {for (final c in characters) c['id'].toString(): c['genre']?.toString()};
-  (raw as Map).forEach((idRaw, fiche) {
+  raw.forEach((idRaw, fiche) {
     final id = idRaw.toString();
     if (!characterIds.contains(id) && id != 'coach' && id != 'joueur') {
       errors.add('portraits: $id: ni personnage de characters.yaml ni coach / joueur');
@@ -1685,7 +1758,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux']) {
+      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux', 'gens']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -1792,6 +1865,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     presences.add({'qui': qui, 'lieu': lieu, 'tranches': t, if (p['si'] != null) 'si': p['si'].toString()});
   }
   final activites = <Map<String, dynamic>>[];
+  final effetsActivites = <MapEntry<String, Object?>>[];   // validés plus bas, avec ceux des missions
   final ids = <String>{};
   final siApres = <MapEntry<Object?, String>>[];   // les `si` des activités, validés plus bas
   // une présence peut dépendre de l'époque ou d'un drapeau (l'inspecteur après la nuit du 14)
@@ -1860,9 +1934,17 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     final special = a['special']?.toString();
     if (special != null && !speciaux.contains(special)) errors.add('$where: geste « $special » inconnu (${speciaux.join(' ')})');
     if (a['si'] != null) siApres.add(MapEntry(a['si'], where));
+    // la ville vivante : avec qui (un personnage, un point de lien), l'habitude, un effet propre
+    final avec = a['avec']?.toString();
+    if (avec != null && !characterIds.contains(avec)) errors.add('$where: avec « $avec » : personnage inconnu (characters.yaml ou ville/gens)');
+    final habitude = a['habitude']?.toString();
+    if (habitude != null && !kHabitudes.contains(habitude)) errors.add('$where: habitude « $habitude » inconnue (${kHabitudes.join(' ')})');
+    if (a['effets'] != null) effetsActivites.add(MapEntry(id, a['effets']));
     final out = <String, dynamic>{
       'id': id,
       'lieu': lieu,
+      if (avec != null) 'avec': avec,
+      if (habitude != null) 'habitude': habitude,
       if (roles.isNotEmpty) 'roles': roles,
       'label': label,
       'texte': texte,
@@ -1920,8 +2002,10 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
         final nom = n[1]!;
         if (nom.startsWith('relation.')) {
           if (!characterIds.contains(nom.substring(9))) errors.add('$where: si « $t » : personnage inconnu');
+        } else if (nom.startsWith('habitude.')) {
+          if (!kHabitudes.contains(nom.substring(9))) errors.add('$where: si « $t » : habitude inconnue (${kHabitudes.join(' ')})');
         } else if (!numeriques.contains(nom)) {
-          errors.add('$where: si « $t » : « $nom » n\'est pas une valeur de la ville (${numeriques.join(' ')} relation.<id>)');
+          errors.add('$where: si « $t » : « $nom » n\'est pas une valeur de la ville (${numeriques.join(' ')} relation.<id> habitude.<nom>)');
         }
         continue;
       }
@@ -1978,6 +2062,18 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       vars[nom] = v.toString();
     });
     if (vars.isNotEmpty) out['var'] = vars;
+    // la ville vivante : un service refusé, une dette honorée font bouger le lien
+    final rel = <String, int>{};
+    ((raw['relation'] as Map?) ?? const {}).forEach((k, v) {
+      final qui = k.toString();
+      if (!characterIds.contains(qui)) errors.add('$where: relation « $qui » : personnage inconnu');
+      if (v is! int || v == 0 || v.abs() > 3) {
+        errors.add('$where: relation $qui : un entier non nul entre -3 et 3');
+      } else {
+        rel[qui] = v;
+      }
+    });
+    if (rel.isNotEmpty) out['relation'] = rel;
     final fin = raw['fin']?.toString();
     if (fin != null) {
       if (!endingIds.contains(fin)) errors.add('$where: fin « $fin » inconnue');
@@ -2448,6 +2544,150 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       if (e['parlent'] == true) 'parlent': true, 'poids': poids ?? 1});
   }
 
+  // --- la ville vivante : les gens d'Aubérive (content/ville/*.yaml, `gens:`) — leur lieu, leurs
+  // heures, leur époque, leur réseau, ce qu'ils deviennent pour toi, ce qu'ils disent, leurs tuyaux
+  // et leur service. Les tuyaux et les services s'appliquent comme des missions d'une étape
+  // (`gens_effets` : `tuyau.<id>`, `service.<id>`), par le moteur, sans tirage.
+  final gensVille = <Map<String, dynamic>>[];
+  final gensEffets = <Map<String, dynamic>>[];
+  final vusG = <String>{}, vusTuyaux = <String>{};
+  for (final e in (m['gens'] as List? ?? const [])) {
+    if (e is! Map) continue;
+    final id = e['id']?.toString() ?? '';
+    final where = 'ville/gens/$id';
+    if (id.isEmpty || !vusG.add(id)) {
+      errors.add('$where: id vide ou en double');
+      continue;
+    }
+    if (!characterIds.contains(id)) errors.add('$where: ni personnage de characters.yaml, ni `name` pour en faire un');
+    if (e['name'] != null) {
+      txt(e, 'name', where, 40);
+      txt(e, 'label', where, 40);
+      if (e['portrait'] == null) errors.add('$where: un nouveau visage a son `portrait` (les traits de portraits.yaml)');
+    }
+    final lieu = e['lieu']?.toString() ?? '';
+    if (!cles.contains(lieu)) errors.add('$where: lieu « $lieu » absent de `lieux`');
+    final tr = _strList(e['tranches']);
+    for (final t in tr) {
+      if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue');
+    }
+    final roles = _strList(e['roles']);
+    for (final r in roles) {
+      if (!roleById.containsKey(r)) errors.add('$where: rôle inconnu « $r »');
+    }
+    List<int>? annees;
+    if (e['annees'] != null) {
+      final l = (e['annees'] as List?)?.map((x) => x is int ? x : -1).toList() ?? const [];
+      if (l.length != 2 || l[0] < 1990 || l[1] > 2050 || l[0] >= l[1]) {
+        errors.add('$where: `annees` : [début, fin], de 1990 à 2050');
+      } else {
+        annees = l;
+      }
+    }
+    final reseau = e['reseau']?.toString() ?? '';
+    if (!kReseaux.containsKey(reseau)) errors.add('$where: réseau « $reseau » inconnu (${kReseaux.keys.join(' ')})');
+    final trace = e['trace'] == null ? null : txt(e, 'trace', where, 120);
+    List<String> trois(String k) {
+      final l = _strList(e[k]);
+      if (l.length != 3) errors.add('$where: `$k` : trois paliers (1, 2, 3)');
+      for (final x in l) {
+        if (x.isEmpty || x.length > 60) errors.add('$where: `$k` : un palier vide ou de plus de 60 caractères');
+      }
+      return l;
+    }
+    final paliers = trois('paliers'), froid = trois('froid');
+    final climat = <String, List<String>>{};
+    final cl = e['climat'];
+    if (cl is Map) {
+      if (kReseaux[reseau] == null) errors.add('$where: `climat` : le réseau « $reseau » n\'a pas de jauge à dire');
+      for (final k in const ['bas', 'moyen', 'haut']) {
+        final l = _strList(cl[k]);
+        if (l.isEmpty) errors.add('$where: climat.$k : au moins une phrase');
+        for (final x in l) {
+          if (x.length > 200) errors.add('$where: climat.$k : une phrase de plus de 200 caractères');
+        }
+        climat[k] = l;
+      }
+    } else if (kReseaux[reseau] != null) {
+      errors.add('$where: le réseau « $reseau » dit sa jauge : écris son `climat` (bas, moyen, haut)');
+    }
+    int lienDe(Object? v, String w, {required int defaut, int min = -3}) {
+      if (v == null) return defaut;
+      if (v is! int || v < min || v > 3) {
+        errors.add('$w: `lien` entre $min et 3');
+        return defaut;
+      }
+      return v;
+    }
+    final repliques = <Map<String, dynamic>>[];
+    var k0 = 0;
+    for (final r in (e['repliques'] as List? ?? const [])) {
+      if (r is! Map) continue;
+      final w2 = '$where/repliques/${k0++}';
+      si(r['si'], w2);
+      repliques.add({'lien': lienDe(r['lien'], w2, defaut: 0), 'texte': txt(r, 'texte', w2, 200), if (r['si'] != null) 'si': r['si'].toString()});
+    }
+    if (repliques.isEmpty) errors.add('$where: au moins une réplique');
+    final tuyaux = <Map<String, dynamic>>[];
+    for (final t in (e['tuyaux'] as List? ?? const [])) {
+      if (t is! Map) continue;
+      final tid = t['id']?.toString() ?? '';
+      final w2 = '$where/tuyaux/$tid';
+      if (!RegExp(r'^[a-z][a-z0-9_]*$').hasMatch(tid) || !vusTuyaux.add(tid)) errors.add('$w2: id en minuscules, unique');
+      si(t['si'], w2);
+      final ef = Map<String, dynamic>.of(effet(t['effets'], w2));
+      ef['set'] = ['tuyau_$tid', ...((ef['set'] as List?) ?? const [])];
+      gensEffets.add({'id': 'tuyau.$tid', 'etapes': [{'id': 'dit', 'choix': [{'id': 'ok', 'effets': ef}]}]});
+      tuyaux.add({'id': tid, 'lien': lienDe(t['lien'], w2, defaut: 2, min: 0), 'texte': txt(t, 'texte', w2, 200), if (t['si'] != null) 'si': t['si'].toString()});
+    }
+    Map<String, dynamic>? service;
+    final sv = e['service'];
+    if (sv is Map) {
+      final w2 = '$where/service';
+      si(sv['si'], w2);
+      final ef = Map<String, dynamic>.of(effet(sv['effets'], w2));
+      ef['set'] = ['service_$id', if (sv['dette'] == true) 'dette_$id', ...((ef['set'] as List?) ?? const [])];
+      gensEffets.add({'id': 'service.$id', 'etapes': [{'id': 'rendu', 'choix': [{'id': 'oui', 'effets': ef}]}]});
+      service = {
+        'lien': lienDe(sv['lien'], w2, defaut: 3, min: 1), 'label': txt(sv, 'label', w2, 28), 'texte': txt(sv, 'texte', w2, 200),
+        if (sv['dette'] == true) 'dette': true, if (sv['si'] != null) 'si': sv['si'].toString(),
+      };
+    }
+    gensVille.add({
+      'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (roles.isNotEmpty) 'roles': roles,
+      if (annees != null) 'annees': annees, 'reseau': reseau, if (trace != null) 'trace': trace,
+      'paliers': paliers, 'froid': froid, if (climat.isNotEmpty) 'climat': climat,
+      'repliques': repliques, if (tuyaux.isNotEmpty) 'tuyaux': tuyaux, if (service != null) 'service': service,
+    });
+  }
+  // les effets propres des activités (le même format que ceux des missions)
+  final effetsParId = {for (final en in effetsActivites) en.key: effet(en.value, 'ville.yaml/activites/${en.key}')};
+  for (final a in activites) {
+    final ef = effetsParId[a['id']];
+    if (ef != null && ef.isNotEmpty) a['effets'] = ef;
+  }
+  // les seuils de la ville vivante
+  final vivante = <String, dynamic>{};
+  final vv = m['vivante'];
+  if (vv is Map) {
+    final l = (vv['liens'] as List?)?.map((x) => x is int ? x : -1).toList();
+    if (l != null) {
+      if (l.length != 3 || l.any((x) => x < 1) || !(l[0] < l[1] && l[1] < l[2])) {
+        errors.add('ville.yaml/vivante/liens : trois seuils croissants (les points de lien des crans +1, +2, +3)');
+      } else {
+        vivante['liens'] = l;
+      }
+    }
+    final r = vv['reputation'];
+    if (r != null) {
+      if (r is! int || r < 2) {
+        errors.add('ville.yaml/vivante/reputation : un nombre de gestes (2 au moins)');
+      } else {
+        vivante['reputation'] = r;
+      }
+    }
+  }
+
   // --- les missions
   final missions = <Map<String, dynamic>>[];
   final vusM = <String>{};
@@ -2641,6 +2881,9 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (conversations.isNotEmpty) 'conversations': conversations,
     if (tableaux.isNotEmpty) 'tableaux': tableaux,
     if (objets.isNotEmpty) 'objets': objets,
+    if (gensVille.isNotEmpty) 'gens': gensVille,
+    if (gensEffets.isNotEmpty) 'gens_effets': gensEffets,
+    if (vivante.isNotEmpty) 'vivante': vivante,
   };
 }
 

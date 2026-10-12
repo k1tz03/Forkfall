@@ -1107,13 +1107,40 @@ class ActiviteDef {
   final List<String> roles;
   /// Jauge → delta (petit : la carte tranche, la ville répare à la marge).
   final Map<String, int> jauges;
-  const ActiviteDef({required this.id, this.roles = const [], this.jauges = const {}});
+  /// LA VILLE VIVANTE (docs/histoires/ville_vivante.md) : avec qui l'on fait le
+  /// geste (un personnage : un point de lien, au plus un par personne entre deux
+  /// cartes), ce que la ville en compte (l'habitude), et un effet propre
+  /// (drapeaux, compteurs, relations), comme une mission.
+  final String? avec;
+  final String? habitude;
+  final EffetVille effets;
+  const ActiviteDef({required this.id, this.roles = const [], this.jauges = const {}, this.avec, this.habitude, this.effets = const EffetVille()});
 
   factory ActiviteDef.fromJson(Map<String, dynamic> j) => ActiviteDef(
         id: j['id'] as String,
         roles: (j['roles'] as List? ?? const []).map((e) => e.toString()).toList(),
         jauges: ((j['jauges'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), (v as num).toInt())),
+        avec: j['avec'] as String?,
+        habitude: j['habitude'] as String?,
+        effets: EffetVille.fromJson(j['effets']),
       );
+}
+
+/// LA VILLE VIVANTE — les seuils (content/ville.yaml `vivante`) : les points de
+/// lien où la relation monte d'un cran, et le nombre de gestes d'une même
+/// habitude qui en font une réputation.
+class VivanteConfig {
+  final List<int> liens;
+  final int reputation;
+  const VivanteConfig({this.liens = const [2, 5, 9], this.reputation = 10});
+
+  factory VivanteConfig.fromJson(Object? raw) {
+    final j = (raw as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
+    return VivanteConfig(
+      liens: (j['liens'] as List?)?.map((e) => (e as num).toInt()).toList() ?? const [2, 5, 9],
+      reputation: (j['reputation'] as num?)?.toInt() ?? 10,
+    );
+  }
 }
 
 /// LA VILLE — ce qu'une mission de la ville, un achat ou un cadeau fait à la
@@ -1125,10 +1152,13 @@ class EffetVille {
   final List<String> set;
   final List<String> clear;
   final Map<String, String> vars;
+  /// LA VILLE VIVANTE : un service refusé, une dette honorée, une trahison font
+  /// bouger le lien (la relation du personnage, de −3 à +3).
+  final Map<String, int> relations;
   final String? fin;
-  const EffetVille({this.jauges = const {}, this.set = const [], this.clear = const [], this.vars = const {}, this.fin});
+  const EffetVille({this.jauges = const {}, this.set = const [], this.clear = const [], this.vars = const {}, this.relations = const {}, this.fin});
 
-  bool get vide => jauges.isEmpty && set.isEmpty && clear.isEmpty && vars.isEmpty && fin == null;
+  bool get vide => jauges.isEmpty && set.isEmpty && clear.isEmpty && vars.isEmpty && relations.isEmpty && fin == null;
 
   factory EffetVille.fromJson(Object? raw) {
     final j = (raw as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
@@ -1137,6 +1167,7 @@ class EffetVille {
       set: (j['set'] as List? ?? const []).map((e) => e.toString()).toList(),
       clear: (j['clear'] as List? ?? const []).map((e) => e.toString()).toList(),
       vars: ((j['var'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())),
+      relations: ((j['relation'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), (v as num).toInt())),
       fin: j['fin'] as String?,
     );
   }
@@ -1149,6 +1180,7 @@ class EffetVille {
       setFlags: set,
       clearFlags: clear,
       vars: vars,
+      relations: relations,
       end: fin);
 }
 
@@ -1225,6 +1257,8 @@ class Content {
   /// moteur en applique (`Engine.mission`, `Engine.biens`).
   final Map<String, MissionDef> missions;
   final Map<String, ObjetDef> objets;
+  /// La ville vivante : ses seuils (liens, réputations).
+  final VivanteConfig vivante;
 
   // Derived indexes.
   final Map<String, List<Card>> _cardsByRole = {};
@@ -1265,6 +1299,7 @@ class Content {
     this.ville = const {},
     this.missions = const {},
     this.objets = const {},
+    this.vivante = const VivanteConfig(),
   }) {
     final ids = cards.keys.toList()..sort();
     for (final id in ids) {
@@ -1395,11 +1430,15 @@ class Content {
           (m as Map)['id'].toString(): MissionDef.fromJson(m.cast<String, dynamic>()),
         for (final m in (((j['ville'] as Map?)?['scenes'] as List?) ?? const []))
           (m as Map)['id'].toString(): MissionDef.fromJson(m.cast<String, dynamic>()),
+        // la ville vivante : les tuyaux (`tuyau.<id>`) et les services (`service.<personne>`)
+        for (final m in (((j['ville'] as Map?)?['gens_effets'] as List?) ?? const []))
+          (m as Map)['id'].toString(): MissionDef.fromJson(m.cast<String, dynamic>()),
       },
       objets: {
         for (final o in (((j['ville'] as Map?)?['objets'] as List?) ?? const []))
           (o as Map)['id'].toString(): ObjetDef.fromJson(o.cast<String, dynamic>()),
       },
+      vivante: VivanteConfig.fromJson((j['ville'] as Map?)?['vivante']),
     );
   }
 }

@@ -107,7 +107,10 @@ final RegExp kUneTitreRe = RegExp(r"\bchampion(s|ne|nes)?\b");
 
 /// Flags the engine itself writes (Bilan, Camille's job, role history).
 const List<String> kEngineFlags = ['bilan_tenu', 'bilan_manque', 'descente'];
-const List<String> kEngineFlagPrefixes = ['camille_', 'role_was_'];
+const List<String> kEngineFlagPrefixes = ['camille_', 'role_was_',
+  // la ville vivante (docs/histoires/ville_vivante.md) : le moteur pose la réputation
+  // (`rep_<habitude>`), les tuyaux (`tuyau_<id>`), les services et les dettes des gens
+  'rep_', 'tuyau_', 'service_', 'dette_'];
 
 /// Les kinds narratifs : une de leurs sorties sans `answer:` est une erreur
 /// (voir la boucle de cartes). `routine`, `nouvelle` et `passe` en sont hors :
@@ -133,6 +136,10 @@ void main() {
     exit(1);
   }
   final bundle = json.decode(bundleFile.readAsStringSync()) as Map<String, dynamic>;
+  // les gens de la ville (content/ville/*.yaml, `gens:`) sont des personnages du bundle
+  for (final c in (bundle['characters'] as List? ?? const [])) {
+    characters.add((c as Map)['id'].toString());
+  }
   final roleIds = (bundle['roles'] as List).map((r) => (r as Map)['id'].toString()).toSet();
   final endingIds = (bundle['endings'] as List).map((e) => (e as Map)['id'].toString()).toSet();
   final cards = (bundle['cards'] as List).cast<Map<String, dynamic>>();
@@ -750,7 +757,9 @@ void main() {
     if (e is! Map) return;
     for (final k in ['set', 'clear']) {
       for (final f in (e[k] as List? ?? const [])) {
-        if (!flags.contains(f.toString())) errors.add('$where: drapeau « $f » non déclaré dans flags.yaml');
+        if (!flags.contains(f.toString()) && !kEngineFlagPrefixes.any((p) => f.toString().startsWith(p))) {
+          errors.add('$where: drapeau « $f » non déclaré dans flags.yaml');
+        }
         if (k == 'set') {
           flagsWritten.add(f.toString());
         } else {
@@ -796,6 +805,26 @@ void main() {
   // conversations surprises, les tableaux de la rue : des lectures comme les autres
   for (final a in (villeB['activites'] as List? ?? const [])) {
     villeLit((a as Map)['si'], 'ville/activites/${a['id']}');
+    villeEffet(a['effets'], 'ville/activites/${a['id']}');
+  }
+  // la ville vivante : ce que les gens disent (`si` des répliques, des tuyaux, du service) et ce
+  // que leurs tuyaux et leurs services posent
+  for (final g in (villeB['gens'] as List? ?? const [])) {
+    final gm = g as Map;
+    for (final r in (gm['repliques'] as List? ?? const [])) {
+      villeLit((r as Map)['si'], 'ville/gens/${gm['id']}/repliques');
+    }
+    for (final t in (gm['tuyaux'] as List? ?? const [])) {
+      villeLit((t as Map)['si'], 'ville/gens/${gm['id']}/tuyaux/${t['id']}');
+    }
+    if (gm['service'] is Map) villeLit((gm['service'] as Map)['si'], 'ville/gens/${gm['id']}/service');
+  }
+  for (final m in (villeB['gens_effets'] as List? ?? const [])) {
+    for (final et in ((m as Map)['etapes'] as List? ?? const [])) {
+      for (final c in ((et as Map)['choix'] as List? ?? const [])) {
+        villeEffet((c as Map)['effets'], 'ville/${m['id']}');
+      }
+    }
   }
   for (final c in (villeB['cinematiques'] as List? ?? const [])) {
     final m = c as Map;

@@ -206,7 +206,10 @@ String _view() {
     'blocs': s.world.blocks,
     'vars': {
       for (final k in (s.vars.keys.toList()..sort()))
-        if (k.startsWith('ville_') || k.startsWith('saisie_') || k.startsWith('cadeau_') || k.startsWith('rendre_') || k.startsWith('vol_')) k: s.vars[k],
+        if (k.startsWith('ville_') || k.startsWith('saisie_') || k.startsWith('cadeau_') || k.startsWith('rendre_') || k.startsWith('vol_') ||
+            // la ville vivante : les points de lien et les habitudes (le carnet, les `si`)
+            (k.startsWith('lien_') && !k.endsWith('_t')) || k.startsWith('hab_'))
+          k: s.vars[k],
     },
     'relations': {for (final k in (s.relations.keys.toList()..sort())) k: s.relations[k]},
     // le statut des visages (present, vendu, parti, retraite, rival, mort) : la

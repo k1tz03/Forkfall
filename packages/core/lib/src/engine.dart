@@ -172,10 +172,16 @@ class Engine {
   /// LA VILLE (la version jouable) : une activité faite entre deux cartes.
   ///
   /// Pure comme `choose` (clone puis applique), mais elle ne tire RIEN : ni
-  /// carte, ni aléa — `rngState`, la file et la carte en attente ne bougent
-  /// pas. Elle ne touche que les jauges déclarées par `content/ville.yaml`,
-  /// bornées à [0, 100], et elle peut finir une carrière comme n'importe quel
-  /// choix : la tournée de trop à la buvette remplit les tribunes jusqu'au bout.
+  /// carte, ni aléa — `rngState` et la carte en attente ne bougent pas. Elle
+  /// touche les jauges déclarées par `content/ville.yaml`, bornées à [0, 100],
+  /// et elle peut finir une carrière comme n'importe quel choix : la tournée de
+  /// trop à la buvette remplit les tribunes jusqu'au bout.
+  ///
+  /// LA VILLE VIVANTE (docs/histoires/ville_vivante.md) : son effet propre
+  /// (drapeaux, compteurs, relations), le point de lien avec celui qu'on voit
+  /// (`avec`) et l'habitude qu'elle nourrit. Un lien qui franchit un palier
+  /// programme sa carte (`on_relation`) : c'est par là que la ville entre dans
+  /// l'histoire, et la seule chose qu'une activité ajoute à la file.
   /// Une activité inconnue, d'un autre rôle, ou une carrière finie : l'état
   /// revient tel quel.
   ///
@@ -185,15 +191,54 @@ class Engine {
     final s = prev.clone();
     final a = content.activites[id];
     if (s.over || a == null || (a.roles.isNotEmpty && !a.roles.contains(s.role))) return s;
+    final relAvant = Map<String, int>.of(s.relations);
     final role = content.roles[s.role]!;
     for (final g in role.gauges) {
       final d = a.jauges[g.id] ?? 0;
       if (d == 0) continue;
       s.gauges[g.id] = ((s.gauges[g.id] ?? 50) + d).clamp(0, 100);
     }
+    if (!a.effets.vide) {
+      _applyEffects(s, a.effets.toEffectSet(jaugesDuRole: s.gauges.keys.toSet()), Rng.fromState(s.rngState));
+    }
+    _lienEtHabitude(s, a.avec, a.habitude);
+    _apresVille(s, relAvant);
+    return s;
+  }
+
+  /// LA VILLE VIVANTE — un geste partagé donne un point de lien à celui avec qui
+  /// on le fait, au plus un par personne entre deux cartes (le café de trop ne
+  /// force pas une amitié) ; aux seuils (`vivante.liens`, 2, 5 et 9 points), la
+  /// relation monte d'un cran. Le geste compte dans son habitude ; au seuil
+  /// (`vivante.reputation`), elle devient une réputation : le drapeau
+  /// `rep_<habitude>`, et sa ligne d'Almanach. Aucun tirage.
+  void _lienEtHabitude(GameState s, String? avec, String? habitude) {
+    final cfg = content.vivante;
+    if (avec != null && content.characters.containsKey(avec)) {
+      final quand = 'lien_${avec}_t';
+      if (s.vars[quand] != s.turn) {
+        s.vars[quand] = s.turn;
+        final avant = s.vars['lien_$avec'] ?? 0, apres = avant + 1;
+        s.vars['lien_$avec'] = apres;
+        final crans = cfg.liens.where((t) => avant < t && apres >= t).length;
+        if (crans > 0) s.relations[avec] = ((s.relations[avec] ?? 0) + crans).clamp(-3, 3);
+      }
+    }
+    if (habitude != null && habitude.isNotEmpty) {
+      final k = 'hab_$habitude', n = (s.vars[k] ?? 0) + 1;
+      s.vars[k] = n;
+      if (n >= cfg.reputation && s.flags.add('rep_$habitude')) {
+        director.addJournalAuto(s, 'rep_$habitude', kind: 'trace', poids: 2);
+      }
+    }
+  }
+
+  /// Ce qui suit tout geste de la ville : les paliers franchis programment leur
+  /// carte (comme après un choix), puis les fins.
+  void _apresVille(GameState s, Map<String, int> relAvant) {
+    director.relationCrossings(s, relAvant, s.pending?.payload['phase'] as String? ?? '');
     _checkEndings(s);
     if (s.over) _buildEndingPending(s);
-    return s;
   }
 
   /// LA VILLE — le choix fait dans une mission de la ville (content/ville/
@@ -243,11 +288,15 @@ class Engine {
   }
 
   void _appliquerVille(GameState s, EffetVille e) {
+    final relAvant = Map<String, int>.of(s.relations);
     // Le Rng n'est là que pour la signature : un effet de la ville n'a ni `rand`
     // ni `react`, et l'état du générateur n'est pas réécrit.
     _applyEffects(s, e.toEffectSet(jaugesDuRole: s.gauges.keys.toSet()), Rng.fromState(s.rngState));
-    if (!s.over) _checkEndings(s);
-    if (s.over) _buildEndingPending(s);
+    if (s.over) {
+      _buildEndingPending(s);
+      return;
+    }
+    _apresVille(s, relAvant);
   }
 
   // ---------------------------------------------------------------------------
