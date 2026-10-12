@@ -9,7 +9,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fusible_core/fusible_core.dart' show fnv1a32, kLieux;
+import 'package:fusible_core/fusible_core.dart' show fnv1a32, foldAccents, kLieux;
 import 'package:yaml/yaml.dart';
 
 import 'src/condition_parser.dart';
@@ -1657,6 +1657,22 @@ List<Map<String, dynamic>> _gensBruts() {
 List<dynamic> _personnagesAvecGens(List<Map<String, dynamic>> gens, List<String> errors) {
   final liste = List<dynamic>.of(((_loadYaml('characters.yaml') as Map?)?['characters'] as List?) ?? const []);
   final ids = {for (final c in liste) if (c is Map) c['id'].toString()};
+  // Le moteur retire des réservoirs de noms (content/names/fr.yaml) tout mot porté par un
+  // personnage (Engine._motsDuCasting) : un nouveau visage qui s'appellerait Lucien ou Ferrand
+  // changerait les noms tirés, donc la suite des tirages, donc toutes les carrières figées.
+  Set<String> mots(Object? nom) => {
+        for (final w in foldAccents(nom?.toString() ?? '').split(RegExp(r"[ \-']+"))) if (RegExp(r'[a-z]').hasMatch(w)) w,
+      };
+  final casting = {for (final c in liste) if (c is Map) ...mots(c['name'])};
+  final reservoirs = <String>{};
+  final noms = _loadYaml('names/fr.yaml');
+  if (noms is Map) {
+    for (final cle in const ['prenoms_m', 'prenoms_f', 'noms']) {
+      for (final n in (noms[cle] as List? ?? const [])) {
+        reservoirs.addAll(mots(n));
+      }
+    }
+  }
   for (final g in gens) {
     final id = g['id']?.toString() ?? '';
     if (g['name'] == null) continue;
@@ -1668,6 +1684,12 @@ List<dynamic> _personnagesAvecGens(List<Map<String, dynamic>> gens, List<String>
       errors.add('ville/gens/$id: déjà un personnage (characters.yaml) — n\'écris que sa vie en ville, sans `name`');
       continue;
     }
+    for (final w in mots(g['name'])) {
+      if (reservoirs.contains(w) && !casting.contains(w)) {
+        errors.add('ville/gens/$id: « $w » est dans les réservoirs de noms (content/names/fr.yaml) : un autre nom, ou toutes les carrières figées changent');
+      }
+    }
+    if (g['age'] != null) errors.add('ville/gens/$id: pas d\'`age` : un visage de la ville ne vieillit pas dans l\'état du moteur');
     ids.add(id);
     liste.add({
       'id': id, 'name': g['name'], 'label': g['label'] ?? '', 'genre': g['genre'] ?? 'm', 'camp': 'ville',

@@ -191,7 +191,10 @@ c'est là que la ville entre dans l'histoire.
     effets: {set: [garage_habitue]}   # facultatif : un effet propre (drapeaux, var, jauges), comme une mission
 ```
 
-**Une personne** (`content/ville/gens*.yaml`), par lots :
+**Une personne** (`content/ville/gens*.yaml`), par lots. Un nouveau visage n'a pas d'`age`, et aucun
+mot de son nom n'est dans les réservoirs de noms (`content/names/fr.yaml`) : le moteur retire des
+réservoirs tout mot porté par un personnage, et un Lucien ou un Ferrand de plus changerait les noms
+tirés, donc toutes les carrières figées (`build_content` le refuse).
 
 ```yaml
 gens:
