@@ -1,0 +1,519 @@
+# LA VILLE VIVANTE — les paliers des gens des Hauts, le quartier d'affaires
+# (content/ville/quartier_hauts.yaml → on_relation ; kind palier dérivé par le
+# build). Programmées quand le lien franchit +3 ou −3, une fois par carrière,
+# hors du sac. Les Hauts n'ont pas de lieu moteur : le locuteur est à son lieu
+# par la table `rencontres` du lot (la tour Écran, la tour Dalmène, l'Impérial,
+# la galerie, le cabinet Verdier, la Table des Hauts, le parvis).
+#   ghislaine  +3 vi.ghislaine.teinte          −3 vi.ghislaine.lampe
+#   malo       +3 vi.malo.carnet               −3 vi.malo.duree
+#   hugues     +3 vi.hugues.chronometre        −3 vi.hugues.logo
+#   apolline   +3 vi.apolline.crayon           −3 vi.apolline.colonne
+#   anselme    +3 vi.anselme.trois_cent_sept   −3 vi.anselme.tambour
+#   nadir      +3 vi.nadir.lustre              −3 vi.nadir.camera
+#   hortense   +3 vi.hortense.loupe            −3 vi.hortense.livre
+#   aurele     +3 vi.aurele.echarpe            −3 vi.aurele.decote
+#   aristide   +3 vi.aristide.sablier          −3 vi.aristide.huissier
+#   constance  +3 vi.constance.sablier         −3 vi.constance.dossier
+#   lazare     +3 vi.lazare.table_sept         −3 vi.lazare.cuisines
+#   romane     +3 vi.romane.registre           −3 vi.romane.vitre
+#   raoul      +3 vi.raoul.raclette            −3 vi.raoul.seau
+#   karine     +3 vi.karine.harnais            −3 vi.karine.facade
+# Chaque carte reprend une graine du lot (la boîte de poudre au ruban adhésif, la
+# caméra quatre, le chronomètre, le carnet au crayon, le 307, le bouquet du lustre,
+# la pendule qui avance de sept minutes, le livre de police, le sablier, la table
+# sept, le plan de table au crayon, le banc du bassin, le point d'ancrage au-dessus
+# de la lame rouge). Tous les rôles : le texte ne suppose ni un banc, ni un bureau,
+# ni un club à soi ; aucun accord sur le héros ; pas de {toi}. Les anciens (Hugues,
+# Anselme, Aristide, Lazare) vouvoient toujours ; les autres tutoient à +3 et
+# vouvoient à −3, sauf Malo, Raoul et Karine, qui tutoient toujours.
+cards:
+
+  # ══════════════════════════════════════════════════════ Ghislaine, la tour Écran
+  - id: vi.ghislaine.teinte
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: ghislaine
+    tone: strategique
+    once: true
+    text: "Ghislaine te glisse dans la main une boîte de poudre, ton nom sur un ruban adhésif. « Ta teinte. Je l'ai mélangée moi-même. Le jour où je ne serai plus là, montre-la à la suivante ; elle saura. »"
+    left:
+      label: "Je la garde sur moi"
+      effects: {tribunes: "+", journal: {text: "{annee} : la maquilleuse de l'Écran a mélangé une teinte au nom de {nom}, et la lui a donnée.", poids: 2, tags: [presse]}}
+      answer: "La boîte tient dans une poche de veste. Dimanche, sous les lampes, le consultant d'en face a l'air d'avoir dormi moins que toi."
+    right:
+      label: "Rangez-la dans votre tiroir"
+      effects: {tribunes: "+"}
+      answer: "Elle la range dans le tiroir du haut, avec celles des présentateurs. « Elle t'attendra. Les teintes ne tournent pas. Les visages, si. »"
+
+  - id: vi.ghislaine.lampe
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: ghislaine
+    tone: strategique
+    once: true
+    text: "Ghislaine te fait asseoir sous la lampe froide, celle des invités qu'elle n'aime pas, et poudre en silence. Dans la glace, un teint de cire. « C'est votre teinte, maintenant. Elle vous va. »"
+    left:
+      label: "Je l'essuie"
+      effects: {tribunes: "--", journal: {text: "{annee} : à l'antenne de l'Écran, {nom} a un teint de cire. La maquilleuse du plateau l'a voulu ainsi.", poids: 2, tags: [presse]}}
+      answer: "Il reste de la poudre dans les sourcils. À l'antenne, on ne voit que ça. Le lundi, quelqu'un en fait une légende de photo."
+    right:
+      label: "J'y vais comme ça"
+      effects: {tribunes: "-", journal: {text: "{annee} : à l'antenne de l'Écran, {nom} a un teint de cire. La maquilleuse du plateau l'a voulu ainsi.", poids: 2, tags: [presse]}}
+      answer: "Sous les projecteurs, ta peau a la couleur des murs. Le consultant te demande si tu dors bien. Il le demande deux fois, en souriant."
+
+  # ══════════════════════════════════════════════════════ Malo, la tour Écran
+  - id: vi.malo.carnet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: malo
+    tone: strategique
+    once: true
+    text: "Malo détache une page de son carnet des plans coupés : une minute, un numéro de caméra, une ligne soulignée. « Le seul plan de toi qu'on n'a jamais diffusé. Il est à toi ; il n'existe plus. »"
+    left:
+      label: "Qu'est-ce qu'il montre ?"
+      effects: {tribunes: "+", journal: {text: "{annee} : Malo, de la régie de l'Écran, a donné à {nom} la page d'un plan jamais diffusé.", poids: 2, tags: [presse]}}
+      answer: "« Toi, après le coup de sifflet, qui rends sa casquette à un gamin du premier rang. Vingt secondes. Personne ne les a vues, sauf moi. »"
+    right:
+      label: "Déchire-la"
+      effects: {direction: "+"}
+      answer: "Il la déchire en quatre au-dessus de la corbeille. « Un plan coupé, on le garde ou on le perd. Jamais les deux. »"
+
+  - id: vi.malo.duree
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: malo
+    tone: strategique
+    once: true
+    text: "En régie, Malo repasse sans le son le plan de samedi : toi, quarante secondes, la caméra quatre qui ne te lâche pas. « Le réalisateur en voulait dix. J'ai gardé les quarante. »"
+    left:
+      label: "Coupe ça"
+      effects: {tribunes: "--", journal: {text: "{annee} : quarante secondes de {nom} à l'antenne, caméra quatre. La régie de l'Écran n'a pas coupé.", poids: 2, tags: [presse]}}
+      answer: "« C'est parti au pays samedi. » Lundi, le plan passe dans trois émissions, au ralenti, avec une flèche."
+    right:
+      label: "Je sors de la régie"
+      effects: {tribunes: "-", journal: {text: "{annee} : quarante secondes de {nom} à l'antenne, caméra quatre. La régie de l'Écran n'a pas coupé.", poids: 2, tags: [presse]}}
+      answer: "La porte se referme sur un bip. Ton badge ne l'ouvre plus. Dimanche soir, le plan ouvre l'émission, au ralenti."
+
+  # ══════════════════════════════════════════════════════ Hugues, la tour Dalmène
+  - id: vi.hugues.chronometre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: hugues
+    tone: strategique
+    once: true
+    text: "Hugues arrête son chronomètre et tourne le cadran vers toi. « Quarante et une secondes à l'antenne, samedi, votre visage à côté de notre nom. Je l'ai dit au comité. Il a renouvelé pour trois ans. »"
+    left:
+      label: "Qu'avez-vous dit, au juste ?"
+      effects: {caisse: "+", journal: {text: "{annee} : chez Dalmène, Hugues Castagnède a plaidé pour {nom}, chronomètre en main. Le comité a suivi.", poids: 2, tags: [sponsors]}}
+      answer: "« Que quarante et une secondes de vous valent une page de publicité. Le comité aime les phrases qu'il peut répéter. »"
+    right:
+      label: "Je ne demandais rien"
+      effects: {direction: "+"}
+      answer: "« Justement. Ceux qui ne demandent rien, je les défends mieux : ils ne me font pas mentir. » Il remet le chronomètre dans son gilet."
+
+  - id: vi.hugues.logo
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: sponsors
+    tags: [sponsors, risk:caisse]
+    speaker: hugues
+    tone: strategique
+    once: true
+    text: "Hugues pose devant toi la copie d'une note au comité : « Ne plus associer le nom de Dalmène à cette personne. » Suit ton nom, en capitales. Il remet son chronomètre en marche. « Le temps de lire. »"
+    left:
+      label: "C'est de la rancune"
+      effects: {caisse: "--", journal: {text: "{annee} : note interne chez Dalmène : ne plus associer le nom de l'assureur à {nom}.", poids: 2, tags: [sponsors]}}
+      answer: "« C'est une ligne de budget. La rancune ne se facture pas. » Il te raccompagne à l'ascenseur, le chronomètre toujours en marche."
+    right:
+      label: "Je prends l'escalier"
+      effects: {caisse: "-", direction: "-", journal: {text: "{annee} : note interne chez Dalmène : ne plus associer le nom de l'assureur à {nom}.", poids: 2, tags: [sponsors]}}
+      answer: "Trente-deux étages. En bas, l'hôtesse a déjà rayé ton nom de la liste des visiteurs. Elle te demande ton badge quand même."
+
+  # ══════════════════════════════════════════════════════ Apolline, la tour Dalmène
+  - id: vi.apolline.crayon
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: sponsors
+    tags: [sponsors, caisse]
+    speaker: apolline
+    tone: strategique
+    once: true
+    text: "Apolline tourne vers toi son carnet, ouvert à une page au crayon : tes vrais chiffres, sans arrondi, et une probabilité entourée deux fois. « Lis-la. Ensuite je la gomme. Elle n'aura jamais existé. »"
+    left:
+      label: "Je la lis"
+      effects: {caisse: "+", journal: {text: "{annee} : chez Dalmène, une actuaire a montré à {nom} une page de chiffres au crayon, puis l'a gommée.", poids: 2, tags: [sponsors]}}
+      answer: "Le chiffre entouré est meilleur que ce que tu craignais, et pire que ce qu'on te dit. Elle gomme jusqu'à trouer le papier."
+    right:
+      label: "Gomme-la sans me la lire"
+      effects: {direction: "+"}
+      answer: "Elle gomme, souffle sur la page. « Première personne à ne pas vouloir savoir. Ça aussi, ça se calcule. Plutôt bien, d'ailleurs. »"
+
+  - id: vi.apolline.colonne
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: sponsors
+    tags: [sponsors, risk:caisse]
+    speaker: apolline
+    tone: strategique
+    once: true
+    text: "Apolline arrache de son carnet la page à ton nom et la passe au broyeur. Puis elle te tend une lettre imprimée : « Résiliation. Le modèle l'a écrite ; je l'ai signée. Ce n'était pas difficile. »"
+    left:
+      label: "Je conteste"
+      effects: {caisse: "--", journal: {text: "{annee} : Dalmène résilie tout ce qui couvre {nom}. Une actuaire a signé la lettre.", poids: 2, tags: [sponsors]}}
+      answer: "« Par écrit, alors. » Ta lettre part un jeudi. La réponse arrive le jeudi suivant ; elle tient en une ligne, et elle est polie."
+    right:
+      label: "Je signe l'accusé"
+      effects: {caisse: "-", direction: "-", journal: {text: "{annee} : Dalmène résilie tout ce qui couvre {nom}. Une actuaire a signé la lettre.", poids: 2, tags: [sponsors]}}
+      answer: "Elle range l'accusé dans une chemise rouge. Dans l'ascenseur, ton téléphone vibre : un autre assureur, qui a lu la même colonne."
+
+  # ══════════════════════════════════════════════════════ Anselme, l'Impérial
+  - id: vi.anselme.trois_cent_sept
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: anselme
+    tone: strategique
+    once: true
+    text: "Anselme pose sur le comptoir une clé de laiton sans numéro, au pompon rouge. « Le 307. Vous ne le trouverez sur aucun plan de l'hôtel. Je n'en ai fait faire qu'une. Elle est à vous. »"
+    left:
+      label: "Je la mets au trousseau"
+      effects: {direction: "+", journal: {text: "{annee} : à l'Impérial, le chef concierge a confié à {nom} la clé d'une chambre qui n'existe pas.", poids: 2, tags: [direction]}}
+      answer: "Le premier soir où tu t'en sers, le lit est fait, et la fenêtre donne sur la cour. Au comptoir, personne ne lève les yeux."
+    right:
+      label: "Accrochez-la au tableau"
+      effects: {direction: "+"}
+      answer: "Il l'accroche entre le 306 et le 308, à un crochet qui n'y était pas hier. « Elle sera à sa place. Elle ne l'a jamais été. »"
+
+  - id: vi.anselme.tambour
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: anselme
+    tone: strategique
+    once: true
+    text: "Sous la pluie, devant l'Impérial, le tambour s'arrête quand tu t'approches : Anselme l'a bloqué de l'intérieur. À travers la vitre, il te fait signe d'attendre, et il retourne à son registre."
+    left:
+      label: "Je frappe à la vitre"
+      effects: {direction: "--", journal: {text: "{annee} : sous la pluie, devant l'Impérial, {nom} attend au tambour. Le concierge n'ouvre pas.", poids: 2, tags: [direction]}}
+      answer: "Il lève les yeux, ne bouge pas. Un client sort par la porte de service, te reconnaît, et le raconte au bar avant d'avoir posé son manteau."
+    right:
+      label: "Je fais le tour"
+      effects: {direction: "-", journal: {text: "{annee} : sous la pluie, devant l'Impérial, {nom} attend au tambour. Le concierge n'ouvre pas.", poids: 2, tags: [direction]}}
+      answer: "La porte de service est ouverte. Un groom te fait traverser les cuisines, très poliment, et te raccompagne jusqu'au trottoir."
+
+  # ══════════════════════════════════════════════════════ Nadir, l'Impérial
+  - id: vi.nadir.lustre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: nadir
+    tone: strategique
+    once: true
+    text: "Nadir t'arrête sous le lustre du hall, sur une dalle à la veine noire. « Ici, aucune caméra ne te voit. Le bouquet, c'est moi, tous les matins. Un rendez-vous pris sur cette dalle n'a pas eu lieu. »"
+    left:
+      label: "Je retiens la dalle"
+      effects: {direction: "+", journal: {text: "{annee} : à l'Impérial, Nadir Meziane a montré à {nom} le seul endroit du hall sans caméra.", poids: 2, tags: [direction]}}
+      answer: "Tu y donnes trois rendez-vous dans l'année. Aucun n'a eu lieu. Les trois ont servi."
+    right:
+      label: "Et le registre de cuir ?"
+      effects: {direction: "+"}
+      answer: "Il ouvre le second tiroir, trouve tes lignes et les noircit à l'encre, une par une. « Maintenant, il n'y a plus que moi qui me souviens. »"
+
+  - id: vi.nadir.camera
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: nadir
+    tone: strategique
+    once: true
+    text: "Le bouquet n'est plus devant la caméra du lustre ; Nadir l'a posé sur le comptoir. « Elle voit de nouveau. Vous avez traversé le hall quatre fois ce mois-ci. La direction a demandé les bandes. »"
+    left:
+      label: "Vous allez les donner ?"
+      effects: {direction: "--", journal: {text: "{annee} : à l'Impérial, la caméra du lustre voit de nouveau. Les bandes de {nom} sont à la direction.", poids: 2, tags: [direction]}}
+      answer: "« C'est fait. » Il remet le bouquet dans l'eau, mais dans un autre vase, sur une autre table, loin du lustre."
+    right:
+      label: "Je ne reviendrai plus"
+      effects: {direction: "-", journal: {text: "{annee} : à l'Impérial, la caméra du lustre voit de nouveau. Les bandes de {nom} sont à la direction.", poids: 2, tags: [direction]}}
+      answer: "« C'est ce qu'elle préfère. » Le lendemain, le bouquet est de retour devant la caméra. Les bandes, elles, sont déjà parties."
+
+  # ══════════════════════════════════════════════════════ Hortense, la galerie des Hauts
+  - id: vi.hortense.loupe
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: argent
+    tags: [objet, caisse]
+    speaker: hortense
+    tone: strategique
+    once: true
+    text: "Hortense visse sa loupe à l'œil et ouvre un écrin qui n'a jamais été en vitrine : une montre de plongée en acier, rayée au dos. « Celle de mon mari. Elle avance de sept minutes. Prends-la. »"
+    left:
+      label: "Je la porte"
+      effects: {tribunes: "+", var: {cadeau_montre_acier: "+1"}, journal: {text: "{annee} : à la galerie des Hauts, l'horlogère a donné à {nom} la montre de son mari.", poids: 2, tags: [caisse]}}
+      answer: "Elle te la passe au poignet et resserre le bracelet d'un cran. Tu gardes les sept minutes : tu arrives partout un peu avant les autres."
+    right:
+      label: "Elle est à vous, Hortense"
+      effects: {direction: "+"}
+      answer: "« Elle est à qui la remonte. » L'écrin retourne sous le comptoir. Chaque fois que tu passes, elle te la montre, remontée."
+
+  - id: vi.hortense.livre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: argent
+    tags: [scandale, risk:direction]
+    speaker: hortense
+    tone: strategique
+    once: true
+    text: "Hortense ouvre le livre de police sur le comptoir, tourné vers toi. Ton nom y est déjà, en capitales bien droites, sur une ligne qui n'attend plus que l'objet. « La police aime les gens lisibles. »"
+    left:
+      label: "Rayez ça"
+      effects: {direction: "--", journal: {text: "{annee} : le nom de {nom} est écrit en capitales dans le livre de police d'une horlogère des Hauts.", poids: 2, tags: [scandale]}}
+      answer: "« Un livre de police ne se rature pas ; c'est à ça qu'on le reconnaît. » Elle le referme sur ton nom, doucement, comme une boîte."
+    right:
+      label: "Je n'ai rien à vendre"
+      effects: {direction: "-", caisse: "-", journal: {text: "{annee} : le nom de {nom} est écrit en capitales dans le livre de police d'une horlogère des Hauts.", poids: 2, tags: [scandale]}}
+      answer: "« Pas encore. » Le soir même, un inspecteur feuillette le livre au comptoir. Il s'arrête à ta ligne, qui est vide, et la recopie."
+
+  # ══════════════════════════════════════════════════════ Aurèle, la galerie des Hauts
+  - id: vi.aurele.echarpe
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: aurele
+    tone: strategique
+    once: true
+    text: "Aurèle sort d'un tiroir une écharpe de laine de 1984, aux couleurs du Racing, rachetée à un vieux socio qui quittait la ville. « Il a dit : pour quelqu'un qui reste. Je ne la mets pas en vitrine. »"
+    left:
+      label: "Je la porte samedi"
+      effects: {tribunes: "+", journal: {text: "{annee} : {nom} porte une écharpe du Racing de 1984, rachetée à la galerie des Hauts.", poids: 2, tags: [tribunes]}}
+      answer: "Au virage, un vieux la reconnaît au premier coup d'œil : c'était celle de son frère. Il ne dit rien. Il chante plus fort."
+    right:
+      label: "Rends-la à son socio"
+      effects: {tribunes: "+"}
+      answer: "« Il est parti chez sa fille, à Portclair. » Tu la lui envoies par la poste. Elle revient la semaine suivante, avec un mot : « Reste. »"
+
+  - id: vi.aurele.decote
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: aurele
+    tone: strategique
+    once: true
+    text: "En vitrine, sur une carte à ton nom, Aurèle a écrit la cote de tout ce que tu portais la semaine dernière : montre, manteau, chaussures. Le total est entouré. « Les passants adorent. »"
+    left:
+      label: "Enlevez ça"
+      effects: {tribunes: "--", journal: {text: "{annee} : à la galerie des Hauts, une vitrine affiche la cote de tout ce que porte {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "« C'est ma vitrine. » La carte reste une semaine. Le samedi, au virage, quelqu'un brandit une pancarte avec le total."
+    right:
+      label: "C'est sous-coté"
+      effects: {tribunes: "-", journal: {text: "{annee} : à la galerie des Hauts, une vitrine affiche la cote de tout ce que porte {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "« Tout ce qui vient de vous l'est. » Il ajoute à la main, sous le total : moins trente pour cent. La carte reste une semaine."
+
+  # ══════════════════════════════════════════════════════ Aristide, le cabinet Verdier
+  - id: vi.aristide.sablier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: aristide
+    tone: strategique
+    once: true
+    text: "Maître Verdier écrit à la plume, au dos de sa carte : « Quinze minutes par an, à vie. Gratuites. » Il la glisse vers toi. « Personne n'a jamais eu besoin de plus. Ceux qui l'ont cru m'ont payé. »"
+    left:
+      label: "Je la range avec mes papiers"
+      effects: {direction: "+", journal: {text: "{annee} : Maître Verdier a offert à {nom} quinze minutes par an, à vie, au dos d'une carte.", poids: 2, tags: [direction]}}
+      answer: "Elle tient dans ton portefeuille, derrière les autres. Le jour où tu la sortiras, sa secrétaire ne posera aucune question."
+    right:
+      label: "Je les prends tout de suite"
+      effects: {caisse: "+"}
+      answer: "Il ne touche pas au sablier. Il lit ton dernier contrat, souligne deux lignes au crayon rouge : « Celles-là, ne les signez plus jamais. »"
+
+  - id: vi.aristide.huissier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: aristide
+    tone: strategique
+    once: true
+    text: "Un huissier te remet en main propre une lettre à l'en-tête du cabinet Verdier : Maître Verdier conseille désormais ceux qui veulent ton départ. En bas, à la plume : « Sans délai, cette fois. »"
+    left:
+      label: "Je prends un autre avocat"
+      effects: {direction: "--", journal: {text: "{annee} : le cabinet Verdier conseille désormais ceux qui veulent le départ de {nom}.", poids: 2, tags: [direction]}}
+      answer: "Les trois premiers que tu appelles ont déjeuné avec lui cette semaine. Le quatrième exerce à la Capitale ; il demande une avance."
+    right:
+      label: "Je monte le voir"
+      effects: {direction: "-", journal: {text: "{annee} : le cabinet Verdier conseille désormais ceux qui veulent le départ de {nom}.", poids: 2, tags: [direction]}}
+      answer: "La secrétaire te fait asseoir entre les deux lauriers de la salle d'attente. À midi, elle éteint la lampe et te souhaite une bonne journée."
+
+  # ══════════════════════════════════════════════════════ Constance, le cabinet Verdier
+  - id: vi.constance.sablier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: constance
+    tone: strategique
+    once: true
+    text: "Pour la première fois, Constance retourne le sablier de son père. « Quinze minutes. Ce qui se dit pendant le sable ne se facture pas, ne s'écrit pas. Il le faisait pour trois clients. Moi, pour un. »"
+    left:
+      label: "Je commence par le pire"
+      effects: {direction: "+", journal: {text: "{annee} : au cabinet Verdier, Constance a retourné pour {nom} le sablier de son père.", poids: 2, tags: [direction]}}
+      answer: "Tu parles douze minutes. Elle ne note rien. À la treizième, elle dit un seul mot, le numéro d'un article. Il te sauve l'hiver."
+    right:
+      label: "Laisse couler sans moi"
+      effects: {direction: "+"}
+      answer: "Elle regarde le sable couler jusqu'au bout, sans un mot. « Tu m'offres quinze minutes. Ici, personne ne fait ça. Je te les rendrai. »"
+
+  - id: vi.constance.dossier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: constance
+    tone: strategique
+    once: true
+    text: "Sur le bureau de Constance, un carton à ton nom, étiquette rouge : partie adverse. Elle ne le cache pas. « On m'a proposé l'autre côté. J'ai dit oui en dix minutes : j'avais déjà lu vos pages. »"
+    left:
+      label: "Vous n'avez pas le droit"
+      effects: {direction: "--", journal: {text: "{annee} : au cabinet Verdier, un carton au nom de {nom}, et une étiquette rouge : partie adverse.", poids: 2, tags: [direction]}}
+      answer: "« J'ai vérifié avant de dire oui. Le conflit d'intérêts, mon père l'a plaidé le premier, en 1974. Il avait gagné. »"
+    right:
+      label: "Je reprends mes papiers"
+      effects: {direction: "-", caisse: "-", journal: {text: "{annee} : au cabinet Verdier, un carton au nom de {nom}, et une étiquette rouge : partie adverse.", poids: 2, tags: [direction]}}
+      answer: "Elle te rend une chemise mince. « Le reste, ce sont mes notes ; elles sont à moi. » Ses notes remplissent quatre cartons."
+
+  # ══════════════════════════════════════════════════════ Lazare, la Table des Hauts
+  - id: vi.lazare.table_sept
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: lazare
+    tone: strategique
+    once: true
+    text: "Lazare dévisse le petit chevalet de laiton de la table sept et le pose devant toi. « Le soir où vous le poserez sur une table, n'importe laquelle, ce sera la sept. Même la mairie se lèvera. »"
+    left:
+      label: "Je le pose ce soir"
+      effects: {direction: "+", journal: {text: "{annee} : à la Table des Hauts, Lazare a donné à {nom} le chevalet de laiton de la table sept.", poids: 2, tags: [direction]}}
+      answer: "Tu le poses sur une table près des cuisines. En dix minutes, la salle change de sens : on te sert en premier, un adjoint vient te saluer."
+    right:
+      label: "Revissez-le à sa place"
+      effects: {direction: "+"}
+      answer: "Il le revisse d'un quart de tour de plus. « Elle vous attendra. Les tables ont de la mémoire ; les adjoints, beaucoup moins. »"
+
+  - id: vi.lazare.cuisines
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: lazare
+    tone: strategique
+    once: true
+    text: "Lazare te conduit à la table près des cuisines, celle d'où l'on voit toute la salle et d'où toute la salle te voit. La porte bat à chaque plat. « On vous servira le premier. Tout le monde verra où. »"
+    left:
+      label: "Je m'assois"
+      effects: {direction: "--", journal: {text: "{annee} : à la Table des Hauts, Lazare n'a plus que la table des cuisines pour {nom}.", poids: 2, tags: [direction]}}
+      answer: "La porte des cuisines te frôle l'épaule à chaque plat. À la table sept, un adjoint lève son verre dans ta direction, sans sourire."
+    right:
+      label: "Je redescends"
+      effects: {direction: "-", journal: {text: "{annee} : à la Table des Hauts, Lazare n'a plus que la table des cuisines pour {nom}.", poids: 2, tags: [direction]}}
+      answer: "L'ascenseur met trente et une secondes à descendre. Tu les comptes. En bas, le voiturier sait déjà ; il ne court pas."
+
+  # ══════════════════════════════════════════════════════ Romane, la Table des Hauts
+  - id: vi.romane.registre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: romane
+    tone: strategique
+    once: true
+    text: "Romane pose devant toi un vieux plan de table de Lazare. « Penche la feuille. » Sous un nom écrit au crayon, un autre, effacé : celui qui avait ta place avant toi, le soir où on l'a remplacé."
+    left:
+      label: "Qui l'a effacé ?"
+      effects: {direction: "+", journal: {text: "{annee} : à la Table des Hauts, Romane a montré à {nom} un plan de table que Lazare avait gardé.", poids: 2, tags: [direction]}}
+      answer: "« Celui qui a payé l'addition. » Elle te dit le nom. Tu le connais : il t'a serré la main la semaine dernière, très longtemps."
+    right:
+      label: "Garde-la pour toi"
+      effects: {direction: "+"}
+      answer: "Elle la range dans le registre, entre deux pages de 1998. « Le jour où on écrira par-dessus ton nom, je te le dirai avant le dessert. »"
+
+  - id: vi.romane.vitre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: romane
+    tone: strategique
+    once: true
+    text: "Romane te place dos à la vitre, face au mur des cuisines. Dans ton verre à eau, le reflet du stade et, à la table sept, ceux qui parlent de toi. Elle te verse le vin en regardant la sept."
+    left:
+      label: "Changez-moi de table"
+      effects: {direction: "--", journal: {text: "{annee} : à la Table des Hauts, on a placé {nom} dos au stade. La table sept a regardé.", poids: 2, tags: [direction]}}
+      answer: "« Il n'y en a pas d'autre. » Il y en a six de libres. Elle les regarde avec toi, une par une, et repart vers la sept."
+    right:
+      label: "Je regarde le reflet"
+      effects: {direction: "-", journal: {text: "{annee} : à la Table des Hauts, on a placé {nom} dos au stade. La table sept a regardé.", poids: 2, tags: [direction]}}
+      answer: "Dans le verre, à la sept, une main referme un dossier quand tu lèves les yeux. Tu ne sais pas à qui elle est. Tu sais pourquoi."
+
+  # ══════════════════════════════════════════════════════ Raoul, le parvis
+  - id: vi.raoul.raclette
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: raoul
+    tone: strategique
+    once: true
+    text: "Raoul te tend une vieille raclette au manche de laiton, poli par les mains. « Ma première. Pose-la sur le banc, le manche tourné vers une tour : j'y monte le lendemain. Tu n'auras rien à dire. »"
+    left:
+      label: "Vers Dalmène, alors"
+      effects: {caisse: "+", journal: {text: "{annee} : sur le parvis des Hauts, Raoul, le laveur de vitres, a donné sa première raclette à {nom}.", poids: 2, tags: [direction]}}
+      answer: "Le lendemain, la nacelle monte au trente-deuxième. Le soir, sur le banc : « Ils parlent de toi, là-haut. Pas en mal : en chiffres. »"
+    right:
+      label: "Je préfère te le dire"
+      effects: {direction: "+"}
+      answer: "« Comme tu veux. » Il remet la raclette dans le seau. « Mais un étage dit à voix haute, le vent l'emporte toujours chez quelqu'un. »"
+
+  - id: vi.raoul.seau
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:direction]
+    speaker: raoul
+    tone: strategique
+    once: true
+    text: "Sur le banc du bassin, à ta place, un journaliste mange avec Raoul, carnet ouvert. Raoul pose son seau, te voit, et continue, le doigt vers le vingt-huitième : « Là, c'était toi. Tu signais. »"
+    left:
+      label: "Qu'est-ce que tu as vu ?"
+      effects: {direction: "--", journal: {text: "{annee} : un laveur de vitres des Hauts raconte à la presse ce qu'il a vu de {nom}, au vingt-huitième.", poids: 2, tags: [presse]}}
+      answer: "« Ce que tout le monde lira jeudi. » Le journaliste note aussi ta question. Le jeudi, c'est elle qui fait le titre."
+    right:
+      label: "Je passe mon chemin"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : un laveur de vitres des Hauts raconte à la presse ce qu'il a vu de {nom}, au vingt-huitième.", poids: 2, tags: [presse]}}
+      answer: "Derrière toi, Raoul rit. Le jeudi, l'article parle d'une vitre du vingt-huitième et d'un stylo. Pas de photo. Il n'en faut pas."
+
+  # ══════════════════════════════════════════════════════ Karine, le parvis
+  - id: vi.karine.harnais
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, moment]
+    speaker: karine
+    tone: strategique
+    once: true
+    text: "Karine te boucle dans le harnais de son père, trop large pour elle, et te fait monter sur le toit de l'Écran, au point d'ancrage. En bas, la Rive, le stade, les fenêtres. « Personne ne monte ici. »"
+    left:
+      label: "Je regarde en bas"
+      effects: {tribunes: "+", journal: {text: "{annee} : sur le toit de l'Écran, une laveuse de vitres a fait monter {nom} au-dessus de la lame rouge.", poids: 2, tags: [tribunes]}}
+      answer: "Tu vois le virage vide, et quelqu'un qui le balaie. Karine te tient par la sangle, sans le dire. Vous redescendez sans un mot."
+    right:
+      label: "Je regarde au loin"
+      effects: {direction: "+"}
+      answer: "Les Tilleuls, la Tréfilerie, l'écluse. « Mon père disait que d'ici, on voit qui tient la ville. Il ne m'a jamais dit qui. »"
+
+  - id: vi.karine.facade
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: karine
+    tone: strategique
+    once: true
+    text: "Vendredi à l'aube, une banderole descend de la lame rouge de l'Écran, face au stade : ton nom, et trois mots qui ne sont pas des compliments. Sur sa corde, Karine en tend le dernier coin."
+    left:
+      label: "Qui t'a payée ?"
+      effects: {tribunes: "--", journal: {text: "{annee} : sur la façade de l'Écran, face au stade, une banderole de quarante mètres contre {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "« Ceux qui paient d'avance. » Elle remonte d'un étage. La banderole reste deux jours : la chaîne attend que ses avocats se réveillent."
+    right:
+      label: "Je la fais décrocher"
+      effects: {tribunes: "-", direction: "-", journal: {text: "{annee} : sur la façade de l'Écran, face au stade, une banderole de quarante mètres contre {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "Il faut une semaine aux avocats. Toute la semaine, la banderole claque au vent, et les passants la photographient en levant le bras."
