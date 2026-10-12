@@ -26,12 +26,12 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 3 551 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 69 personnages ; la ville : 469 scènes de la semaine |
+| Contenu | 3 749 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 139 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 145 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
-| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 414 activités (dans les pièces, objet par objet, et dehors ; 25 petits jeux) ; 45 tableaux de rue — voir plus bas |
+| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
 | Durée | une partie ≈ **2 h** par livre pour un lecteur moyen (1 h 35 à 3 h selon le lecteur et le livre ; 4 h et plus quand une carrière des livres 3 ou 4 déborde), dont près des trois quarts en ville — `docs/balance/duree_partie.md`, `packages/tools/bin/duree.dart`, `packages/tools/web/joueur_presse.js` |
 
 ## Les dix histoires (où on en est)
@@ -127,7 +127,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 135 tests
+cd packages/core && dart test                    # 145 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -272,7 +272,14 @@ Ce que la ville porte en plus des cartes :
   `climat: bas|moyen|haut`, par rôle), dès +2 leurs **tuyaux** (une fois, un drapeau `tuyau_<id>`
   que les livres lisent, parfois un drapeau du livre posé directement), dès +3 leur **service** (une
   fois par saison, parfois une **dette** `dette_<id>` qu'une scène viendra réclamer), leurs scènes
-  de la semaine et leurs cartes de palier (`content/cards/common/paliers_ville_*.yaml`). La ville
+  de la semaine et leurs cartes de palier (`content/cards/common/paliers_ville_*.yaml`). Huit lots,
+  134 personnes de 1990 à 2050 : les comptoirs, les notables, le club, le quartier (`gens_*.yaml`) et
+  les quatre quartiers du Grand Aubérive (`quartier_*.yaml`, avec leurs activités, leurs scènes et
+  leurs paroles) ; 384 tuyaux, dont une trentaine posent un drapeau ou une variable d'un livre. Celui
+  qui tient un lieu sans pièce se tient devant, comme les commerçants ; `jours:` dit les jours où
+  l'on est là (le marché : mercredi, samedi, dimanche). Deux lots écrits en même temps se donnent
+  les mêmes prénoms : à la fusion, aucun prénom de la ville ne doit appartenir à deux personnes
+  (hors d'une même famille), et aucun patronyme ne doit faire écho à un footballeur. La ville
   montre la trace sous l'activité, un bandeau quand un lien change de cran ou qu'une réputation
   naît, et le **Carnet** (les gens, ce qu'on t'a confié, ce que pense la ville, ce qu'on dit de
   toi ; les affaires en second onglet). Un nouveau visage ne prend pas un mot des réservoirs de
