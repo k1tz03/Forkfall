@@ -428,7 +428,7 @@ gens:
     portrait: {teint: olive, corpulence: large, age: age, coiffure: casquette, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: pull, couleur: bouteille, coiffe: bleu, accessoire: aucun}
     lieu: marche
     tranches: [matin, midi]
-    si: "jour == dim"
+    jours: [mer, sam, dim]
     annees: [1990, 2011]
     reseau: rue
     trace: "Achille Ducros s'en souviendra. Il a la mémoire des visages et des prix."
@@ -470,7 +470,7 @@ gens:
     portrait: {teint: olive, corpulence: fin, age: mur, coiffure: queue, cheveux: brun, pilosite: rase, lunettes: aucune, tenue: doudoune, couleur: orange, accessoire: aucun}
     lieu: marche
     tranches: [matin, midi]
-    si: "jour == dim"
+    jours: [mer, sam, dim]
     annees: [2012, 2037]
     reseau: rue
     trace: "Laure s'en souviendra. Au marché, on se souvient de qui revient."
@@ -502,7 +502,7 @@ gens:
     portrait: {teint: clair, corpulence: fin, age: jeune, coiffure: meche, cheveux: blond, pilosite: rase, lunettes: aucune, tenue: doudoune, couleur: pelouse, accessoire: aucun}
     lieu: marche
     tranches: [matin, midi]
-    si: "jour == dim"
+    jours: [mer, sam, dim]
     annees: [2038, 2050]
     reseau: rue
     trace: "Côme s'en souviendra. Il connaît ses clients par leur prénom ; il n'en a pas beaucoup."
@@ -1180,7 +1180,8 @@ activites:
       - "Une cliente te demande si les tomates sont d'ici. Tu ne sais pas. Achille, du café d'en face, lève trois doigts : trois kilomètres. Tu répètes. Elle en prend deux kilos."
     avec: ducros_achille
     habitude: quartier
-    si: "annee <= 2011 && jour == dim"
+    si: "annee <= 2011"
+    jours: [mer, sam, dim]
     heures: [matin]
     tranches: 1
   - id: qr_marche_camionnette
@@ -1189,7 +1190,8 @@ activites:
     texte: "Six heures, la camionnette de Laure. Tu portes les cageots pendant qu'elle monte les tréteaux. Elle te paie en légumes et en nouvelles : qui s'est marié, qui a vendu, qui est revenu."
     avec: ducros_laure
     habitude: quartier
-    si: "annee >= 2012 && annee <= 2037 && jour == dim"
+    si: "annee >= 2012 && annee <= 2037"
+    jours: [mer, sam, dim]
     heures: [matin]
     tranches: 1
   - id: qr_marche_etals_vides
@@ -1198,7 +1200,8 @@ activites:
     texte: "La mairie monte les étals même vides. Côme et toi y posez des cageots retournés, pour que la place ait l'air de quelque chose. Une vieille dame vient acheter à un étal où il n'y a rien."
     avec: dartigue
     habitude: quartier
-    si: "annee >= 2038 && jour == dim"
+    si: "annee >= 2038"
+    jours: [mer, sam, dim]
     heures: [matin]
     tranches: 1
   # ── le fleuriste
@@ -1793,7 +1796,7 @@ scenes:
     titre: "Le champ derrière la Tréfilerie"
     lieu: marche
     tranches: [matin]
-    jours: [dim]
+    jours: [mer, sam, dim]
     qui: ducros_achille
     si: "flag(tuyau_ducros_parking) && annee <= 2011"
     texte: "Achille te tend une lettre de l'agence : une offre pour son champ, « en vue d'un aménagement lié au stade ». « Si c'est le club, je veux le savoir par vous. Pas par le notaire. »"
@@ -1810,7 +1813,7 @@ scenes:
     roles: [entraineur, joueur, president, ds]
     lieu: marche
     tranches: [matin]
-    jours: [dim]
+    jours: [mer, sam, dim]
     qui: ducros_achille
     si: "relation.ducros_achille >= 2 && annee >= 1996 && annee <= 1999"
     texte: "L'hypermarché ouvre dimanche, ballons et maillot du club en promotion : il est sponsor. Achille : « Ce jour-là, venez au marché, avec des gens du club. Qu'on vous voie ici. »"
@@ -1842,10 +1845,10 @@ scenes:
     titre: "Le maire au marché"
     lieu: marche
     tranches: [matin]
-    jours: [dim]
+    jours: [mer, sam, dim]
     qui: dartigue
     si: "relation.dartigue >= 2 && annee >= 2038"
-    texte: "Le maire vient au marché dimanche prochain, avec un photographe. Côme te demande de tenir un étal vide une heure, derrière des cageots retournés, « pour qu'on ait l'air d'être quatre »."
+    texte: "Le maire vient au marché mercredi, avec un photographe. Côme te demande de tenir un étal vide une heure, derrière des cageots retournés, « pour qu'on ait l'air d'être quatre »."
     choix:
       - label: "Je tiens l'étal"
         reponse: "Sur la photo, la place a l'air vivante. Le maire te serre la main devant ton étal vide. Le lendemain, deux maraîchers de la vallée demandent à Côme s'il reste de la place."
@@ -2203,7 +2206,7 @@ scenes:
     titre: "La boîte à chaussures"
     lieu: marche
     tranches: [midi]
-    jours: [dim]
+    jours: [mer, sam, dim]
     qui: ducros_achille
     si: "relation.ducros_achille >= 2 && annee <= 2011"
     texte: "Achille te confie sa boîte à chaussures pour la nuit : un examen à l'hôpital, demain matin. « Si je ne reviens pas, donnez-la à ma fille. Si je reviens, ne l'ouvrez pas. »"

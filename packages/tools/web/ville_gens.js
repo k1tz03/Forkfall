@@ -61,6 +61,7 @@
   function gensLa(g) {
     if (!gensVivant(g)) return false;
     if (g.tranches && g.tranches.length && g.tranches.indexOf(TRANCHES[S.tranche]) < 0) return false;
+    if (g.jours && g.jours.length && g.jours.indexOf(JOURS[S.jour]) < 0) return false;
     if (g.si && !siVrai(g.si, g.lieu)) return false;
     var def = TEXTE_LIEU[g.lieu];
     return !def || ouvert(def);

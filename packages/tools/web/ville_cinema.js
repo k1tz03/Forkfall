@@ -483,6 +483,7 @@
     if (lieuFerme(cv.lieu)) return false;
     if (cv.roles && cv.roles.length && cv.roles.indexOf(S.role) < 0) return false;
     if (cv.tranches && cv.tranches.length && cv.tranches.indexOf(TRANCHES[S.tranche]) < 0) return false;
+    if (cv.jours && cv.jours.length && cv.jours.indexOf(JOURS[S.jour]) < 0) return false;
     if (cv.si && !siVrai(cv.si, cv.lieu)) return false;
     return true;
   }

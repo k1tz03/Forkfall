@@ -1832,6 +1832,14 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   }
   final lieux = <Map<String, dynamic>>[];
   final cles = <String>{};
+  // les jours de la semaine où une chose de la ville a lieu (`jours: [mer, sam, dim]`)
+  List<String> joursDe(Map e, String where) {
+    final j = _strList(e['jours']);
+    for (final d in j) {
+      if (!jours.contains(d)) errors.add('$where: jour « $d » inconnu (${jours.join(' | ')})');
+    }
+    return j;
+  }
   void heures(Map<String, dynamic> e, Map<String, dynamic> out, String where) {
     final h = _strList(e['heures']);
     for (final t in h) {
@@ -1962,9 +1970,11 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     final habitude = a['habitude']?.toString();
     if (habitude != null && !kHabitudes.contains(habitude)) errors.add('$where: habitude « $habitude » inconnue (${kHabitudes.join(' ')})');
     if (a['effets'] != null) effetsActivites.add(MapEntry(id, a['effets']));
+    final joursA = joursDe(a, where);
     final out = <String, dynamic>{
       'id': id,
       'lieu': lieu,
+      if (joursA.isNotEmpty) 'jours': joursA,
       if (avec != null) 'avec': avec,
       if (habitude != null) 'habitude': habitude,
       if (roles.isNotEmpty) 'roles': roles,
@@ -2334,6 +2344,8 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
         if (!tranches.contains(t)) errors.add('$where: tranche « $t » inconnue');
       }
       out['tranches'] = tr.isEmpty ? ['matin', 'midi', 'aprem', 'soir'] : tr;
+      final js = joursDe(e, where);
+      if (js.isNotEmpty) out['jours'] = js;
       final poids = e['poids'];
       if (poids != null && (poids is! num || poids <= 0)) errors.add('$where: `poids` positif');
       out['poids'] = poids ?? 1;
@@ -2498,8 +2510,9 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       reps.add({'qui': rq, 'dit': r['dit'].toString(), if (r['emote'] != null) 'emote': r['emote'].toString()});
     }
     if (reps.length < 2) errors.add('$where: au moins deux répliques');
+    final joursC = joursDe(e, where);
     conversations.add({'id': id, 'lieu': lieu, if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString(),
-      if (tr.isNotEmpty) 'tranches': tr, 'qui': qui, 'repliques': reps});
+      if (tr.isNotEmpty) 'tranches': tr, if (joursC.isNotEmpty) 'jours': joursC, 'qui': qui, 'repliques': reps});
   }
 
   // --- LA VIE DES RUES : des tableaux vivants devant un lieu (deux fumeurs devant le bar le soir,
@@ -2704,8 +2717,9 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
         a['avec'] = id;
       }
     }
+    final joursG = joursDe(e, where);
     gensVille.add({
-      'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString(),
+      'id': id, 'lieu': lieu, if (tr.isNotEmpty) 'tranches': tr, if (joursG.isNotEmpty) 'jours': joursG, if (roles.isNotEmpty) 'roles': roles, if (e['si'] != null) 'si': e['si'].toString(),
       if (annees != null) 'annees': annees, 'reseau': reseau, if (trace != null) 'trace': trace,
       'paliers': paliers, 'froid': froid, if (climat.isNotEmpty) 'climat': climat,
       'repliques': repliques, if (tuyaux.isNotEmpty) 'tuyaux': tuyaux, if (service != null) 'service': service,

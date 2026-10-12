@@ -449,7 +449,7 @@
     friche: 1, feu: 1, wagon: 1, halle: 1, square: 1, voiture: 1, buvette: 1, kiosque: 1 };
   // Les commerçants qu'on trouve dehors, à leur heure (et qui ont un mot pour toi).
   var COMMERCES = [
-    { lieu: "marche", sp: "commercant", tranches: ["matin", "midi"] },
+    { lieu: "marche", sp: "commercant", tranches: ["matin", "midi"], jours: ["mer", "sam", "dim"] },
     { lieu: "kiosque", sp: "commercant2", tranches: ["matin", "midi", "aprem"] },
     { lieu: "fleuriste", sp: "commercant", tranches: ["matin", "aprem"] },
     { lieu: "epicerie", sp: "commercant2", tranches: ["aprem"] },
@@ -753,6 +753,7 @@
     }
     COMMERCES.forEach(function (c) {
       if (!LIEU[c.lieu] || !SPRITES[c.sp] || c.tranches.indexOf(tr) < 0) return;
+      if (c.jours && c.jours.indexOf(JOURS[S.jour]) < 0) return;
       var def = TEXTE_LIEU[c.lieu];
       if (def && !ouvert(def)) return;
       var t = tenancier(c.lieu), spt = t && spriteDe(t.id);
@@ -807,7 +808,7 @@
     v.forEach(function (w) { parId[w.id] = w; });
     Object.keys(acteurs).forEach(function (id) {
       var A = acteurs[id], w = parId[id];
-      if (!w || w.lieu !== A.lieu) { if (A.etat !== "part") partir(A); }
+      if (!w || w.lieu !== A.lieu || w.qui !== A.qui) { if (A.etat !== "part") partir(A); }
       else {
         A.role = w.role;
         if (A.etat === "part") { A.fini = false; A.fondu = null; rejoindre(A, w.place); }
@@ -834,7 +835,7 @@
     if (dedans) { occuper(); bulle = null; return; }
     var v = voulus(), parId = {};
     v.forEach(function (w) { parId[w.id] = w; });
-    Object.keys(acteurs).forEach(function (id) { if (!parId[id] || parId[id].lieu !== acteurs[id].lieu) delete acteurs[id]; });
+    Object.keys(acteurs).forEach(function (id) { if (!parId[id] || parId[id].lieu !== acteurs[id].lieu || parId[id].qui !== acteurs[id].qui) delete acteurs[id]; });
     v.forEach(function (w) {
       var A = acteurs[w.id] || (acteurs[w.id] = { id: w.id, sp: w.sp, qui: w.qui, v: VITESSE_GENS * 0.95, miroir: false, pas: 0, dist: 0, alpha: 1, uid: ++UID });
       A.role = w.role; A.lieu = w.lieu; A.place = w.place; A.x = w.place[0]; A.y = w.place[1];
@@ -2708,7 +2709,9 @@
     return true;
   }
   function activitesIci(cle) {
-    return (D.activites || []).filter(function (a) { return a.lieu === cle && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.si || siVrai(a.si, cle)); });
+    return (D.activites || []).filter(function (a) {
+      return a.lieu === cle && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.jours || a.jours.indexOf(JOURS[S.jour]) >= 0) && (!a.si || siVrai(a.si, cle));
+    });
   }
   function pourquoiPas(a, lieuOuvert) {
     if (!lieuOuvert) return "Fermé à cette heure.";
@@ -3381,7 +3384,7 @@
       // une scène jouée de la semaine se programme comme une scène (le plan du jour la tire)
       (D.cinematiques || []).forEach(function (c) {
         if (c.quand !== "semaine") return;
-        SCENE["ci:" + c.id] = { id: "ci:" + c.id, titre: c.titre || "", lieu: c.lieu === "ici" ? "rue" : c.lieu, tranches: c.tranches || ["matin", "midi", "aprem"], roles: c.roles, si: c.si, poids: c.poids || 1, cine: c };
+        SCENE["ci:" + c.id] = { id: "ci:" + c.id, titre: c.titre || "", lieu: c.lieu === "ici" ? "rue" : c.lieu, tranches: c.tranches || ["matin", "midi", "aprem"], jours: c.jours, roles: c.roles, si: c.si, poids: c.poids || 1, cine: c };
       });
       // la carte du retour d'un voyage : elle lève le drapeau de `loin` sur ses deux choix
       var Lo = D.loin || {};
@@ -3560,6 +3563,9 @@
       }
       if (quoi === "scene" && SCENE[val] && !carteOn && !occupe) jouerScene(SCENE[val]);
       if (quoi === "tranche" && TRANCHES.indexOf(val) >= 0) { S.tranche = TRANCHES.indexOf(val); majHud(); if (dedans) occuper(); }
+      if (quoi === "jour" && JOURS.indexOf(val) >= 0) { S.jour = JOURS.indexOf(val); majHud(); if (dedans) occuper(); }
+      // la ville vivante : qui tient ce lieu en ce moment, et qui y est
+      if (quoi === "tenancier") { var tq = tenancier(val); return { tient: tq && tq.id, la: gensDuLieu(val).map(function (g) { return g.id; }), tous: GENS_LISTE.filter(function (g) { return g.lieu === val; }).map(function (g) { return g.id + (gensLa(g) ? "" : " (absent)"); }) }; }
       // le Grand Aubérive : la semaine (les quartiers s'ouvrent), un lieu demandé comme le joueur, le zoom
       if (quoi === "semaine") { S.semaine = val; majHud(); return { fermes: FERMES }; }
       if (quoi === "allerLieu") { allerAuLieu(val); return { toast: $("villeToast").classList.contains("on") ? $("villeToast").textContent : null }; }

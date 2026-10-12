@@ -206,6 +206,7 @@ gens:
     portrait: { … }                # comme portraits.yaml
     lieu: garage
     tranches: [matin, midi, aprem]
+    jours: [lun, mar, mer, jeu, ven, sam]   # facultatif : les jours où il est là (le marché : mer, sam, dim)
     annees: [1990, 2016]           # son époque ; un successeur a son entrée (son fils, sa fille)
     reseau: rue
     trace: "Lulu s'en souviendra." # la ligne après un geste partagé (facultatif ; sinon générique)
@@ -241,6 +242,10 @@ et se tait s'il n'y en a aucune. La jauge `direction` est « le président » po
 directeur sportif, « le club » pour le joueur, « les actionnaires » pour le président, « la
 Fédération » pour le sélectionneur ; `vestiaire` est « le staff », « le club » ou « le groupe »
 selon le rôle ; `caisse` est le budget, le compte, la masse salariale, la trésorerie ou les moyens.
+
+`jours` vaut aussi pour les activités, les conversations surprises et les scènes jouées de la
+semaine (les scènes de la semaine et les tableaux l'avaient déjà) : le marché se tient le mercredi,
+le samedi et le dimanche, et ses maraîchers, ses gestes et ses conversations avec lui.
 
 **Une scène de la vie de quelqu'un** : le format des scènes de la semaine, avec `qui: lulu` et
 un `si` sur le lien (`"relation.lulu >= 2"`), une dette (`"flag(dette_lulu)"`) ou une réputation
