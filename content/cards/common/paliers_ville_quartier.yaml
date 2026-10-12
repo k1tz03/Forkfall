@@ -1,0 +1,599 @@
+# La ville vivante, le quartier (content/ville/gens_quartier.yaml) : les cartes de
+# palier des nouveaux visages (`on_relation` de leurs `gens`, kind palier dérivé par
+# le build). Programmées quand le lien franchit +3 (« ferait beaucoup pour toi ») ou
+# −3 (« ne te sert plus »), une fois par carrière, hors du sac ; elles se jouent à
+# leur lieu (`rencontres`). Aucune ne tutoie par `{toi}` : les gens de la ville n'ont
+# pas d'adresse.
+#   coulomb        +3 vi.coulomb.page_du_club        −3 vi.coulomb.rideau
+#   kessar        +3 vi.kessar.sans_signature
+#   pichon_lucette +3 vi.pichon_lucette.gateau       −3 vi.pichon_lucette.file
+#   guerand        +3 vi.guerand.levain
+#   quintane       +3 vi.quintane.cafe_noir          −3 vi.quintane.carnet
+#   saulnier       +3 vi.saulnier.boitier            −3 vi.saulnier.trajets
+#   delmotte       +3 vi.delmotte.maillots_1974 (après son tuyau), sinon vi.delmotte.chemise
+#                  −3 vi.delmotte.col
+#   montel         +3 vi.montel.lit_de_camp
+#   ducros_achille +3 vi.ducros_achille.cageots      −3 vi.ducros_achille.place
+#   ducros_laure   +3 vi.ducros_laure.section
+#   dartigue       +3 vi.dartigue.semences
+#   mevellec       +3 vi.mevellec.tournee
+#   brunel_auguste +3 vi.brunel_auguste.doublure     −3 vi.brunel_auguste.patron
+#   brunel_clement +3 vi.brunel_clement.carnet       −3 vi.brunel_clement.carnet_ouvert
+#   brunel_gaspard +3 vi.brunel_gaspard.ruban
+#   arlaud         +3 vi.arlaud.cigarettes           −3 vi.arlaud.chronique
+#   vautrin        +3 vi.vautrin.livre
+#   vigouroux      +3 vi.vigouroux.seance
+#   viard          +3 vi.viard.cahier                −3 vi.viard.lumiere
+#   bellocq        +3 vi.bellocq.reunion             −3 vi.bellocq.dictee
+#   chabanel         +3 vi.chabanel.redaction
+cards:
+  # ═══════════════════════════════════════════════════════════════ L'ÉPICERIE
+  - id: vi.coulomb.page_du_club
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: famille
+    tags: [famille, tribunes, objet]
+    speaker: coulomb
+    tone: strategique
+    once: true
+    text: "Ginette Coulomb ouvre le cahier bleu à la page du club : les packs du car, l'année de la montée, jamais payés. Elle la détache d'un geste. « Pour qu'on soit quittes, vous et moi. »"
+    left:
+      label: "Je la garde"
+      effects: {tribunes: "+", journal: {text: "{annee} : Ginette Coulomb a détaché la page du club de son cahier. {nom} l'a gardée.", poids: 2, tags: [famille, tribunes]}}
+      answer: "Tu la plies dans ton portefeuille. Le soir, la cité raconte que le club ne doit plus rien à l'épicerie. C'est faux, et c'est vrai."
+    right:
+      label: "Je paie la page"
+      effects: {tribunes: "++", relation: {coulomb: -1}, var: {ville_francs: "-300"}}
+      answer: "Elle prend les billets du bout des doigts. « Vous ne savez pas recevoir. » La cité, elle, apprend que le club paie ses dettes."
+
+  - id: vi.coulomb.rideau
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: famille
+    tags: [famille, tribunes, risk:tribunes]
+    speaker: coulomb
+    tone: strategique
+    once: true
+    text: "Ginette Coulomb baisse le rideau de l'épicerie à moitié quand tu arrives, et reste derrière, les bras croisés. Sur le trottoir, la file regarde qui elle ne sert plus."
+    left:
+      label: "Je reviendrai demain"
+      effects: {tribunes: "-", relation: {coulomb: 1}, journal: {text: "{annee} : l'épicière de la cité a baissé son rideau devant {nom}. La file a regardé.", poids: 2, tags: [tribunes]}}
+      answer: "Le lendemain, le rideau est levé, et ton lait n'est pas de côté. Elle te sert quand même, en dernier."
+    right:
+      label: "J'irai à l'hypermarché"
+      effects: {tribunes: "--"}
+      answer: "Le parking de l'hypermarché est plein de gens de la cité. Ils te voient avec ton chariot. Ils ne le pardonnent pas, eux non plus."
+
+  - id: vi.kessar.sans_signature
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: kessar
+    tone: strategique
+    once: true
+    text: "Yacine Kessar pose sur le comptoir un carton sans étiquette. « Arrivé pour vous ce matin. Pas d'expéditeur, pas de signature. Je ne l'ai pas scanné : il n'existe pas. Vous l'ouvrez ici ? »"
+    left:
+      label: "Je l'ouvre ici"
+      effects: {direction: "+", caisse: "+", journal: {text: "{annee} : un carton sans expéditeur au point relais de l'épicerie, pour {nom}. Il n'a jamais existé.", poids: 2, tags: [direction]}}
+      answer: "Dedans, des photocopies : les comptes du club, annotés par quelqu'un de l'intérieur. Yacine regarde ailleurs, très exactement."
+    right:
+      label: "Brûlez-le"
+      effects: {vestiaire: "+"}
+      answer: "Il le brûle dans la cour, derrière les poubelles. Tu ne sauras jamais ce qu'il contenait. Quelqu'un, au club, dort mieux."
+
+  # ════════════════════════════════════════════════════════════ LA BOULANGERIE
+  - id: vi.pichon_lucette.gateau
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, vestiaire, moment]
+    speaker: pichon_lucette
+    tone: strategique
+    once: true
+    text: "Lucette Pichon pose sur le comptoir un gâteau de fête, ton nom écrit au chocolat. « Pour samedi. Si on gagne, vous le partagez. Si on perd, vous le mangez sans personne, et vous revenez lundi. »"
+    left:
+      label: "Pour le vestiaire"
+      effects: {vestiaire: "+", tribunes: "+", journal: {text: "{annee} : un gâteau de la boulangerie Pichon au vestiaire, le nom de {nom} au chocolat.", poids: 2, tags: [vestiaire]}}
+      answer: "Samedi soir, le gâteau fait le tour du vestiaire. Le capitaine garde l'initiale de ton nom pour la fin, et la mange devant tout le monde."
+    right:
+      label: "Je le garde pour moi"
+      effects: {tribunes: "+"}
+      answer: "Tu le manges le dimanche, par petits morceaux, sans personne. Lundi, tu reviens. Lucette ne demande rien : elle sait déjà le score."
+
+  - id: vi.pichon_lucette.file
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, risk:tribunes]
+    speaker: pichon_lucette
+    tone: strategique
+    once: true
+    text: "Dans la file de la boulangerie, Lucette Pichon parle de toi, assez fort pour que tout le monde entende. Elle n'invente rien. Elle choisit seulement ce qu'elle raconte."
+    left:
+      label: "J'attends mon tour"
+      effects: {tribunes: "-", relation: {pichon_lucette: 1}, journal: {text: "{annee} : dans la file de la boulangerie Pichon, on a parlé de {nom}. Pas en bien.", poids: 2, tags: [tribunes]}}
+      answer: "Tu attends ton tour sans un mot. Elle te sert, la monnaie posée sur le comptoir. La file a déjà tout répété au marché."
+    right:
+      label: "Je sors de la file"
+      effects: {tribunes: "--"}
+      answer: "Tu sors. Derrière toi, quelqu'un rit. Le dimanche, la boulangerie vend du pain sec, et ce n'est pas à cause du match."
+
+  - id: vi.guerand.levain
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: guerand
+    tone: strategique
+    once: true
+    text: "Malo Guérand te tend un bocal fermé d'un torchon : un peu de levain. « Celui de Madame Pichon, passé par Madame Marçais. Si un jour je ferme, il faudra quelqu'un pour le nourrir. »"
+    left:
+      label: "Je le nourrirai"
+      effects: {tribunes: "+", journal: {text: "{annee} : le levain de la rue des Lilas, cinquante ans d'âge, nourri chez {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "Le bocal rejoint ta cuisine. Tous les deux jours, de la farine et de l'eau. Au marché, on raconte que tu fais ton pain. C'est presque vrai."
+    right:
+      label: "Donnez-en au centre"
+      effects: {vestiaire: "+"}
+      answer: "Malo en porte un pot à la cantine du centre. Les gamins font du pain le mercredi. Il est raté. Ils le mangent quand même, fiers."
+
+  # ═════════════════════════════════════════════════════════════════ LE GARAGE
+  - id: vi.quintane.cafe_noir
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: quintane
+    tone: strategique
+    once: true
+    text: "Quintane te sert le café de l'établi, puis pose près de la tasse une clé sur un anneau de fil de fer. « La cour. Si un soir il vous faut un endroit où personne ne cherche. »"
+    left:
+      label: "Je prends la clé"
+      effects: {direction: "+", journal: {text: "{annee} : Quintane a donné à {nom} la clé de la cour du garage du Pont. On ne sait pas pourquoi.", poids: 2, tags: [direction]}}
+      answer: "Tu glisses la clé sur ton trousseau, entre celle du bureau et celle de chez toi. Elle ne sert jamais. Elle pèse quand même."
+    right:
+      label: "Je sais où la trouver"
+      effects: {tribunes: "+"}
+      answer: "Il remet la clé sous la boîte de vis. « Elle sera là. » Au Corner, il dit de toi que tu es quelqu'un de bien. Il le dit rarement."
+
+  - id: vi.quintane.carnet
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, direction, risk:direction]
+    speaker: quintane
+    tone: strategique
+    once: true
+    text: "Quintane a ouvert son carnet noir devant le journaliste de L'Écho : les voitures du club, la tienne, les heures de nuit. Il te voit dans la cour. Il ne referme pas le carnet."
+    left:
+      label: "Je viens lui parler"
+      effects: {direction: "-", relation: {quintane: 1}, journal: {text: "{annee} : le carnet noir du garage du Pont, ouvert devant L'Écho. Trop tard pour {nom}.", poids: 2, tags: [presse]}}
+      answer: "Il t'écoute, le carnet ouvert. Puis il tourne une page, une seule. Le journaliste repart avec moins qu'il ne voulait."
+    right:
+      label: "Je m'en vais"
+      effects: {direction: "--", tribunes: "-"}
+      answer: "L'Écho publie la semaine suivante : « Les nuits des voitures du club ». Ton nom n'y est pas. Tout le monde le reconnaît quand même."
+
+  - id: vi.saulnier.boitier
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: saulnier
+    tone: strategique
+    once: true
+    text: "Jérémy Saulnier te fait entrer dans le bureau du garage. Sur l'écran, une voiture qui n'est pas la tienne : celle de quelqu'un qui te veut du mal. « Je ne vous montre rien. Regardez. »"
+    left:
+      label: "Je regarde"
+      effects: {direction: "+", journal: {text: "{annee} : sur l'écran du garage du Pont, trois nuits et un cabinet d'avocats. {nom} a regardé.", poids: 2, tags: [direction]}}
+      answer: "Trois adresses, trois nuits, la plaque d'un cabinet d'avocats. Tu sais d'où viendra le coup. Jérémy éteint l'écran."
+    right:
+      label: "Éteignez l'écran"
+      effects: {vestiaire: "+"}
+      answer: "Il éteint. « Vous êtes comme Quintane. » Il ne dit pas si c'est un compliment. C'en est un."
+
+  - id: vi.saulnier.trajets
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, scandale, risk:direction]
+    speaker: saulnier
+    tone: strategique
+    once: true
+    text: "Jérémy Saulnier a branché ta voiture sur sa valise, devant un homme en costume qui prend des notes. « Il a un papier du tribunal. Je n'efface plus rien, pour personne. »"
+    left:
+      label: "Je reste là"
+      effects: {direction: "-", journal: {text: "{annee} : les trajets de {nom}, imprimés au garage du Pont pour un huissier.", poids: 2, tags: [direction]}}
+      answer: "L'homme imprime tes trajets du mois et les range dans une chemise. Jérémy te rend les clés sans te regarder."
+    right:
+      label: "Je reprends mes clés"
+      effects: {direction: "--"}
+      answer: "Tu repars avec ta voiture. Le lendemain, le papier du tribunal arrive chez toi, ton nom en entier dessus."
+
+  # ════════════════════════════════════════════════════════════════ LA LAVERIE
+  - id: vi.delmotte.maillots_1974
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes, objet]
+    speaker: delmotte
+    tone: strategique
+    once: true
+    text: "Gisèle Delmotte pose sur la table de pliage un carton : les maillots de 1974, en laine, lavés à la main. « Le jour où il le faudra, je vous avais dit. C'est maintenant, je crois. »"
+    left:
+      label: "Au vestiaire, samedi"
+      effects: {vestiaire: "++", journal: {text: "{annee} : les maillots de 1974 sont sortis du placard de la laverie, pour {nom}.", poids: 3, tags: [vestiaire, tribunes]}}
+      answer: "Samedi, les maillots de 1974 sont accrochés au vestiaire, à la place de chacun. Personne ne parle avant d'entrer sur le terrain."
+    right:
+      label: "En tribune Nord"
+      effects: {tribunes: "++"}
+      answer: "Le kop les tend au-dessus du virage, à bout de bras, tout le match. Au premier rang, une vieille dame en reconnaît un, et pleure."
+
+  - id: vi.delmotte.chemise
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: delmotte
+    tone: strategique
+    once: true
+    text: "Gisèle Delmotte te rend une chemise que tu ne lui avais pas donnée : la tienne, celle du soir de la défaite, oubliée au vestiaire. Lavée, repassée, le col retourné. « Personne ne l'a vue. »"
+    left:
+      label: "Merci, Gisèle"
+      effects: {vestiaire: "+", journal: {text: "{annee} : une chemise de {nom}, lavée sans un mot à la laverie de la rue du Stade.", poids: 2, tags: [vestiaire]}}
+      answer: "Elle hoche la tête et retourne à son pliage. Tu ne sauras jamais qui la lui a apportée. Quelqu'un du vestiaire, qui tient à toi."
+    right:
+      label: "Qui vous l'a donnée ?"
+      effects: {direction: "+"}
+      answer: "« Quelqu'un qui vous veut du bien. » Elle n'en dira pas plus. Tu passes la semaine à regarder ton monde autrement."
+
+  - id: vi.delmotte.col
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: famille
+    tags: [famille, tribunes, risk:tribunes]
+    speaker: delmotte
+    tone: strategique
+    once: true
+    text: "Gisèle Delmotte a parlé. Le col de tes chemises, ce qu'il y avait dessus, et quand : toute la laverie le sait, et la laverie le dit au marché. Elle plie sans lever les yeux."
+    left:
+      label: "Je lui demande pardon"
+      effects: {tribunes: "-", relation: {delmotte: 1}, journal: {text: "{annee} : à la laverie de la rue du Stade, on lit les cols de {nom}. Le marché aussi.", poids: 2, tags: [tribunes]}}
+      answer: "Elle s'arrête de plier, une seconde. « Pas à moi. » Elle reprend. Le marché, lui, continue sans elle."
+    right:
+      label: "Je change de laverie"
+      effects: {tribunes: "--", direction: "-"}
+      answer: "La laverie de Valdorne est à vingt minutes. On t'y reconnaît quand même. Le linge, ça se lit partout."
+
+  - id: vi.montel.lit_de_camp
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: corps
+    tags: [vestiaire, objet]
+    speaker: montel
+    tone: strategique
+    once: true
+    text: "Gabriel Montel te tend une clé attachée à un jeton de machine. « L'arrière-boutique. Si un soir vous ne dormez pas. Je ne demande rien. Je compte seulement les jetons. »"
+    left:
+      label: "Je la prends"
+      effects: {direction: "+", journal: {text: "{annee} : la clé de l'arrière-boutique de la laverie, dans la poche de {nom}. Pour les nuits blanches.", poids: 2, tags: [direction]}}
+      answer: "Tu ne t'en sers pas. Tu la sais dans ta poche, et tu dors mieux. Aux réunions, on te trouve l'air reposé ; personne ne sait pourquoi."
+    right:
+      label: "Donnez-la au gamin"
+      effects: {vestiaire: "+"}
+      answer: "Gabriel la donne au joueur qui ne dort plus. Le samedi suivant, il ne surveille plus la porte du vestiaire."
+
+  # ═════════════════════════════════════════════════════════════════ LE MARCHÉ
+  - id: vi.ducros_achille.cageots
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    speaker: ducros_achille
+    tone: strategique
+    once: true
+    text: "Achille Ducros a posé sur le capot de ta voiture un cageot de pommes, avec une carte : « Pour vos jambes, et pour celles des autres. Il en viendra un chaque semaine. »"
+    left:
+      label: "Pour le vestiaire"
+      effects: {vestiaire: "+", journal: {text: "{annee} : un cageot de pommes du marché chaque semaine pour le groupe de {nom}, signé Ducros.", poids: 2, tags: [vestiaire]}}
+      answer: "Le cageot arrive chaque lundi. Les joueurs en emportent pour leurs enfants. Achille le sait, et rajoute des pommes."
+    right:
+      label: "Pour la cantine du centre"
+      effects: {tribunes: "+"}
+      answer: "Le cageot va à la cantine du centre. Au marché, Achille le raconte à tout le monde, pour que tout le monde achète une pomme de plus."
+
+  - id: vi.ducros_achille.place
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, risk:tribunes]
+    speaker: ducros_achille
+    tone: strategique
+    once: true
+    text: "Dimanche, quand tu traverses le marché, Achille Ducros se met à crier ses prix plus fort, ton nom au milieu. Toute la place rit. Puis toute la place répète."
+    left:
+      label: "Je traverse quand même"
+      effects: {tribunes: "-", relation: {ducros_achille: 1}, journal: {text: "{annee} : au marché du dimanche, le nom de {nom} crié entre deux prix.", poids: 2, tags: [tribunes]}}
+      answer: "Tu vas jusqu'à son étal et tu achètes un kilo de pommes. Il pèse au gramme près. Il ne crie plus ton nom."
+    right:
+      label: "Je fais le tour"
+      effects: {tribunes: "--"}
+      answer: "Tu fais le tour par la rue Haute. Le dimanche suivant aussi. Au Corner, on dit que tu as peur des maraîchers."
+
+  - id: vi.ducros_laure.section
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, direction, objet]
+    speaker: ducros_laure
+    tone: strategique
+    once: true
+    text: "Laure Ducros te tend une photo : l'ancienne section féminine, l'équipe au complet, elle en arrière gauche. « Elles veulent rejouer. Avec un maillot. Vous pouvez le demander ? »"
+    left:
+      label: "Je le demanderai"
+      effects: {tribunes: "++", direction: "-", journal: {text: "{annee} : {nom} a demandé qu'on rouvre la section féminine. Laure Ducros a gardé la photo.", poids: 2, tags: [tribunes]}}
+      answer: "En réunion, on te regarde comme on regarde une lubie. Six mois plus tard, la section rouvre. Laure porte le 3, et crie les prix le dimanche."
+    right:
+      label: "Ce n'est pas le moment"
+      effects: {direction: "+"}
+      answer: "Elle range la photo dans la boîte à chaussures de son père. « Ce ne l'est jamais. » Le jeudi, les lampes frontales reprennent."
+
+  - id: vi.dartigue.semences
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, objet]
+    speaker: dartigue
+    tone: strategique
+    once: true
+    text: "Côme Dartigue te tend un sachet de graines, une étiquette à la main : « Tomates de la vallée, 1962 ». « Elles poussent partout, même au bord d'un stade. Vous en plantez une rangée ? »"
+    left:
+      label: "Au bord du terrain"
+      effects: {vestiaire: "+", journal: {text: "{annee} : une rangée de tomates de 1962 au bord du terrain annexe, plantée par {nom}.", poids: 2, tags: [vestiaire]}}
+      answer: "En août, les joueurs en mangent entre deux séances. Le jardinier fait semblant de ne rien voir, puis arrose."
+    right:
+      label: "Plantez-les vous-même"
+      effects: {tribunes: "+"}
+      answer: "Au printemps, Côme a un étal de plus, avec une ardoise : « Tomates du stade ». Elles partent avant neuf heures."
+
+  # ════════════════════════════════════════════════════════════════ LE FLEURISTE
+  - id: vi.mevellec.tournee
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, famille]
+    speaker: mevellec
+    tone: strategique
+    once: true
+    text: "Corentin Mévellec t'emmène dans la camionnette verte, pour une tournée qui ne livre rien. Il s'arrête devant six maisons. « Là, on pleure quelqu'un du club. Là aussi. Personne n'est venu. »"
+    left:
+      label: "On s'arrête à chacune"
+      effects: {tribunes: "++", journal: {text: "{annee} : six maisons en deuil d'un supporter. {nom} a frappé à chacune, avec Corentin.", poids: 2, tags: [tribunes]}}
+      answer: "Six portes, six cafés, six photos d'un homme en écharpe. Le samedi, la Nord est pleine de gens chez qui tu as frappé."
+    right:
+      label: "Je n'ai pas le temps"
+      effects: {direction: "+"}
+      answer: "Corentin te ramène au club sans un mot, et continue seul. Dans chaque maison, il laisse un pot de bruyère, sans carte."
+
+  # ════════════════════════════════════════════════════════════════ LE TAILLEUR
+  - id: vi.brunel_auguste.doublure
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: brunel_auguste
+    tone: strategique
+    once: true
+    text: "Auguste Brunel déplie un coupon de soie bordeaux, le même qu'en 1962. « Il m'en reste un mètre. Assez pour une doublure. La vôtre, si vous voulez. Personne ne le saura. »"
+    left:
+      label: "Ma doublure"
+      effects: {direction: "+", tribunes: "+", journal: {text: "{annee} : Auguste Brunel a doublé la veste de {nom} avec la soie bordeaux de 1962.", poids: 2, tags: [direction]}}
+      answer: "Trois essayages. La veste est grise, sobre, ordinaire. À l'intérieur, le bordeaux de 1962. Tu le sens contre toi, les jours de match."
+    right:
+      label: "Gardez-la pour un autre"
+      effects: {direction: "+"}
+      answer: "Il replie le coupon. « Pour celui d'après, alors. » Il le range dans l'armoire des patrons, ton nom épinglé dessus."
+
+  - id: vi.brunel_auguste.patron
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: brunel_auguste
+    tone: strategique
+    once: true
+    text: "Auguste Brunel a sorti ton patron en papier de l'armoire et l'a posé devant ceux qui décident, comme une feuille de résultats. « Il a maigri, celui-là. Ça veut tout dire. »"
+    left:
+      label: "Je ne dis rien"
+      effects: {direction: "-", journal: {text: "{annee} : chez Brunel, le patron en papier de {nom} posé sur la table, devant le bureau.", poids: 2, tags: [direction]}}
+      answer: "Ils replient le patron et le gardent. Dans la semaine, on te parle de « transition ». Auguste épingle sans te regarder."
+    right:
+      label: "Je le déchire"
+      effects: {direction: "--"}
+      answer: "Tu le déchires, là, sur le comptoir. Quelqu'un rit. Auguste balaie les morceaux, et les garde dans une enveloppe."
+
+  - id: vi.brunel_clement.carnet
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: brunel_clement
+    tone: strategique
+    once: true
+    text: "Clément Brunel te tend le carnet des essayages de la saison, fermé par un ruban. « Mon père en a quarante comme ça : ce qui se dit les bras levés. Celui-ci est pour vous. »"
+    left:
+      label: "Je le lis ce soir"
+      effects: {direction: "+", journal: {text: "{annee} : le carnet des essayages de chez Brunel, lu une nuit entière par {nom}.", poids: 2, tags: [direction]}}
+      answer: "Toute la nuit, des tours de taille et des phrases. À l'aube, tu sais qui hésite, qui a peur, et qui a déjà choisi."
+    right:
+      label: "Je n'en ai pas besoin"
+      effects: {tribunes: "+"}
+      answer: "Il le range avec les quarante autres. « Mon père disait : les meilleurs clients ne lisent pas les carnets. » Il le répète en ville."
+
+  - id: vi.brunel_clement.carnet_ouvert
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, direction, risk:direction]
+    speaker: brunel_clement
+    tone: strategique
+    once: true
+    text: "Clément Brunel a ouvert le carnet des essayages à la journaliste de L'Écho. Ce qui s'est dit de toi, les bras levés, paraîtra demain, sans nom de tailleur."
+    left:
+      label: "J'appelle le journal"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : ce qu'on disait de {nom} chez le tailleur, imprimé dans L'Écho.", poids: 2, tags: [presse]}}
+      answer: "Le journal publie quand même, avec une ligne de plus : « Contacté, l'intéressé dément. » C'est la ligne que tout le monde retient."
+    right:
+      label: "Je laisse paraître"
+      effects: {direction: "--"}
+      answer: "Ça paraît en page trois. Ce que pensaient de toi ceux qui décident, entre deux épingles. Imprimé, ils le pensent davantage."
+
+  - id: vi.brunel_gaspard.ruban
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: brunel_gaspard
+    tone: strategique
+    once: true
+    text: "Gaspard Brunel te passe autour du cou le ruban de son grand-père, sans mesurer. « Il disait qu'on reconnaît quelqu'un de bien à sa façon de tenir la tête, avec un ruban. Vous la tenez. »"
+    left:
+      label: "Je garde la tête haute"
+      effects: {direction: "+", journal: {text: "{annee} : chez Brunel, le ruban de 1962 autour du cou de {nom}. Une seule mesure notée.", poids: 2, tags: [direction]}}
+      answer: "Il note un chiffre, un seul, dans le carnet de son grand-père. Ce n'est pas une mesure. C'est une date."
+    right:
+      label: "Mesurez, c'est tout"
+      effects: {tribunes: "+"}
+      answer: "Quatorze mesures, une heure. Pendant l'heure, il te raconte les présidents depuis 1931, et lequel il aurait habillé gratis."
+
+  # ═══════════════════════════════════════════════════════════════ LA LIBRAIRIE
+  - id: vi.arlaud.cigarettes
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, tribunes]
+    speaker: arlaud
+    tone: strategique
+    once: true
+    text: "Agathe Arlaud glisse un mot plié dans le paquet de cigarettes du chroniqueur de L'Écho, devant toi. « Il le lira dans sa voiture. Lundi, vous verrez. Ne me demandez pas ce que j'ai écrit. »"
+    left:
+      label: "Je ne demande pas"
+      effects: {tribunes: "+", direction: "+", journal: {text: "{annee} : un mot plié dans des cigarettes, et L'Écho parle de {nom} comme d'un voisin.", poids: 2, tags: [presse]}}
+      answer: "Lundi, la chronique parle de toi comme d'un voisin. Agathe la découpe et la punaise derrière la caisse."
+    right:
+      label: "Qu'avez-vous écrit ?"
+      effects: {tribunes: "+"}
+      answer: "« Trois mots. » Rien de plus. Lundi, la chronique est bonne. Tu passes la semaine à y chercher les trois mots."
+
+  - id: vi.arlaud.chronique
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, tribunes, risk:tribunes]
+    speaker: arlaud
+    tone: strategique
+    once: true
+    text: "Agathe Arlaud a glissé un mot dans les cigarettes du chroniqueur. Pas pour toi. Lundi, L'Écho raconte ce que tu achètes à la papeterie, et ce que tu n'as jamais réclamé."
+    left:
+      label: "Je vais la voir"
+      effects: {tribunes: "-", relation: {arlaud: 1}, journal: {text: "{annee} : dans L'Écho, les carnets et les pellicules de {nom}. La papetière lisait avant tout le monde.", poids: 2, tags: [presse]}}
+      answer: "Elle range les journaux. « Je lis tout avant vous. Je vends tout aussi. » La semaine d'après, la chronique parle d'autre chose."
+    right:
+      label: "J'irai au kiosque"
+      effects: {tribunes: "--"}
+      answer: "Le kiosque de la gare a la même chronique, et le chroniqueur au comptoir, qui te salue. Il a une suite à écrire."
+
+  - id: vi.vautrin.livre
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: vautrin
+    tone: strategique
+    once: true
+    text: "Céline Vautrin pose sur le comptoir un livre emballé, ton nom au crayon. « La journaliste de L'Écho le cherche depuis dix ans. Offrez-le-lui, et elle lira autre chose que vos comptes. »"
+    left:
+      label: "Je l'offre"
+      effects: {tribunes: "+", direction: "+", journal: {text: "{annee} : un livre introuvable offert à L'Écho de la part de {nom}. Le papier suivant était juste.", poids: 2, tags: [presse]}}
+      answer: "La journaliste lit la première page debout, et repart sans poser de question. Son papier sort trois semaines plus tard. Il est juste."
+    right:
+      label: "Je le lis d'abord"
+      effects: {direction: "+"}
+      answer: "Tu le lis en deux nuits : l'histoire d'un club qui ment. Céline sourit en le remballant. « Vous avez compris pourquoi elle le cherche. »"
+
+  # ═════════════════════════════════════════════════════════════════ LE CINÉMA
+  - id: vi.vigouroux.seance
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vigouroux
+    tone: strategique
+    once: true
+    text: "Ernest Vigouroux t'attend devant L'Aurore un dimanche matin, la clé à la main. « La salle est à vous jusqu'à midi. J'ai la finale de 1974 en entier. Personne ne l'a jamais vue comme ça. »"
+    left:
+      label: "J'amène le groupe"
+      effects: {vestiaire: "++", journal: {text: "{annee} : un dimanche matin à L'Aurore, la finale de 1974 en entier, pour le groupe de {nom}.", poids: 2, tags: [vestiaire]}}
+      answer: "Ton groupe dans le noir, la finale de 1974 en entier, sans le son. À la fin, personne ne se lève tout de suite."
+    right:
+      label: "Je viens sans eux"
+      effects: {direction: "+"}
+      answer: "Tu la regardes dans la salle vide, sans le son. Ernest commente depuis la cabine : les noms, les numéros, les morts. Tu sors avec une idée."
+
+  - id: vi.viard.cahier
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: viard
+    tone: strategique
+    once: true
+    text: "Ghislaine Viard te tend son cahier d'avis, ouvert à une page à ton nom : tout ce que tu as dit des films depuis des années. « Relisez. On apprend des choses sur les gens qui regardent. »"
+    left:
+      label: "Je relis tout"
+      effects: {direction: "+", journal: {text: "{annee} : à L'Aurore, une page de cahier au nom de {nom}, relue debout dans le hall.", poids: 2, tags: [presse]}}
+      answer: "Tu relis dans le hall, debout. Tu n'as jamais dit ce que tu pensais, seulement ce que tu avais vu. Le lendemain, tu changes une chose."
+    right:
+      label: "Gardez-le pour vous"
+      effects: {tribunes: "+"}
+      answer: "Elle referme le cahier. « Alors je l'écrirai, ce que vous pensez. » Le samedi, elle est en tribune, pour la première fois."
+
+  - id: vi.viard.lumiere
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [scandale, direction, risk:direction]
+    speaker: viard
+    tone: strategique
+    once: true
+    text: "Au milieu de la séance, Ghislaine Viard rallume la salle d'un coup. Tu es au dernier rang, avec quelqu'un qu'on n'aurait pas dû voir avec toi. Trois cents têtes se retournent."
+    left:
+      label: "Je ne bouge pas"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : la lumière rallumée au milieu d'une séance de L'Aurore. Au dernier rang, {nom}.", poids: 2, tags: [scandale]}}
+      answer: "Tu ne bouges pas jusqu'au noir. La personne à côté de toi, non. Le lendemain, L'Écho a une photo floue et un point d'interrogation."
+    right:
+      label: "Je sors par le fond"
+      effects: {direction: "--"}
+      answer: "La porte du fond, celle qu'elle laissait ouverte pour toi, est fermée à clé. Tu sors par la grande porte, devant la file."
+
+  # ═══════════════════════════════════════════════════════════════════ L'ÉCOLE
+  - id: vi.bellocq.reunion
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribune
+    tags: [tribunes, famille]
+    speaker: bellocq
+    tone: strategique
+    once: true
+    text: "Armand Bellocq t'a gardé une chaise d'écolier au premier rang de la réunion des parents. « Ils vous attendent. Dites-leur une chose vraie. Une seule. Ils la répéteront à table. »"
+    left:
+      label: "Une chose vraie"
+      effects: {tribunes: "++", journal: {text: "{annee} : une chose vraie dite par {nom} aux parents de l'école des Lilas. Répétée à table.", poids: 2, tags: [tribunes]}}
+      answer: "Tu dis une chose vraie, sur le club et sur toi. Silence. Puis une mère applaudit. Le samedi suivant, cent familles sont en tribune."
+    right:
+      label: "Je les écoute"
+      effects: {tribunes: "+"}
+      answer: "Une heure de cantine, d'horaires et de terrain. Tu ne dis rien. Les parents trouvent ça rare, et le répètent aussi."
+
+  - id: vi.bellocq.dictee
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: famille
+    tags: [famille, tribunes, risk:tribunes]
+    speaker: bellocq
+    tone: strategique
+    once: true
+    text: "Armand Bellocq a donné une dictée à ses CM2 : un article de L'Écho sur toi. Le soir, dans cent cartables, ton nom revient à la maison, souligné en rouge, avec les fautes."
+    left:
+      label: "Je vais le voir"
+      effects: {tribunes: "-", relation: {bellocq: 1}, journal: {text: "{annee} : un article sur {nom} en dictée, à l'école des Lilas. Souligné en rouge.", poids: 2, tags: [famille]}}
+      answer: "Il t'ouvre la grille, pour la première fois depuis longtemps. « La dictée portait sur les accords. Pas sur vous. » Il ment mal."
+    right:
+      label: "Je laisse faire"
+      effects: {tribunes: "--"}
+      answer: "Les parents relisent la dictée à table. À la grille, les enfants te regardent passer comme on regarde une faute d'accord."
+
+  - id: vi.chabanel.redaction
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: famille
+    tags: [famille, tribunes]
+    speaker: chabanel
+    tone: strategique
+    once: true
+    text: "Mathilde Chabanel te tend une copie d'une écriture ronde : « Un adulte que j'admire ». C'est toi. « Je ne devrais pas vous la montrer. Elle a eu dix-sept. Elle aurait mérité plus. »"
+    left:
+      label: "Je la lis jusqu'au bout"
+      effects: {tribunes: "+", journal: {text: "{annee} : « Un adulte que j'admire », une rédaction de CM2 sur {nom}. Dix-sept sur vingt.", poids: 2, tags: [famille]}}
+      answer: "Une enfant a vu des choses que tu croyais cachées, et les a trouvées bien. Tu rends la copie sans pouvoir parler."
+    right:
+      label: "Rendez-la-lui"
+      effects: {vestiaire: "+"}
+      answer: "La copie revient à l'élève avec un mot dans la marge : « Lu. Merci. » Tu ne sauras jamais laquelle. Tu les regardes toutes, à la sortie."
