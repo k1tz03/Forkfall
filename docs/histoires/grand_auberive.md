@@ -212,3 +212,27 @@ quartier lent rend la ville lente : le monde entier se rend en une passe.
 - trois rendus de contrôle (jour, nuit, un écran de jeu) ;
 - la liste des lieux avec leurs portes ;
 - les matières créées.
+
+## Où on en est (octobre 2026)
+
+Les quatre quartiers sont modelés (`district_hauts.js`, `district_tilleuls.js`, `district_port.js`,
+`district_campagne.js`, un fichier par auteur) et assemblés par `zone.js` (`buildZone({grand: true})`) :
+la ville en (400, 400), le boulevard de ceinture et ses deux ponts, le couloir de la Rive dans les
+Tilleuls et le port. Le monde entier se construit en six secondes et tient 2,4 Go ; chaque lieu des
+quartiers s'atteint à pied depuis la ville (vérifié sur la grille de marche).
+
+- **Le fond** (`fond.js`) remplace le sol beige et le ciel : le sol continue à la hauteur du trottoir
+  (des champs en lanières dans les matières du monde, des haies, des bois, quelques fermes), ce qui
+  touche un bord du monde continue tout droit (`W.bords` : la voie rapide des Hauts, la Rive et ses
+  routes de quai, la voie ferrée des Tilleuls, la départementale et le ruisseau de la campagne), et
+  au fond la brume, les collines, la Capitale. Le moteur efface la tranche du monde (`bordMonde`).
+- **Les images** : 7 240 × 3 940 pixels par heure, 32 tuiles ; les lumières du moteur sont rangées
+  par cases (même image au bit près, un rendu de nuit trois fois plus rapide). La brume de chaque
+  quartier est rendue avec la ville (`brume_<clé>.png`, au quart : ce qu'on voit du quartier, tours
+  comprises).
+- **La page** (`ville_quartiers.js`) : la brume d'un quartier fermé, son nom et ce qui l'ouvrira dans
+  la brume qu'on regarde ; on n'y marche pas ; ses lieux, ses scènes et ses conversations se taisent,
+  sur le plan aussi ; à l'ouverture, la brume se lève en fondu et la phrase du quartier s'écrit. Une
+  partie sauvée avant le Grand Aubérive glisse de (400, 400).
+- **Le contenu** : les 26 lieux (`content/ville/grand_auberive.yaml`) ; la vie de chaque quartier (ses
+  activités, ses gens, ses scènes, ses paroles) dans `content/ville/quartier_<clé>.yaml`.

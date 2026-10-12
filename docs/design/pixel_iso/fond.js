@@ -230,7 +230,7 @@ function fond(o) {
       out[0] = c[0] * k; out[1] = c[1] * k; out[2] = c[2] * k;
     } else { const k = 0.88 + 0.22 * hash(ix, iy, 75, 9); out[0] = c[0] * k; out[1] = c[1] * k; out[2] = c[2] * k; }
     // des marbrures (l'herbe plus drue, la terre plus sèche) et le grain du voxel
-    const mb = 0.9 + 0.14 * vnoise(x / 23, y / 17, 81) + 0.08 * vnoise(x / 6, y / 5, 82) + 0.07 * (hash(ix, iy, 83, 9) - 0.5);
+    const mb = 0.9 + 0.14 * vnoise(x / 23, y / 17, 81) + 0.06 * vnoise(x / 7, y / 6, 82);
     out[0] *= mb; out[1] *= mb; out[2] *= mb;
     // des bottes de paille sur le chaume
     if (cu0 === CULTURES[1] && (ix % 23) < 3 && (iy % 19) < 3) { out[0] = 0.78; out[1] = 0.66; out[2] = 0.36; }

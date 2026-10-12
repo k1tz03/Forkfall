@@ -16,6 +16,8 @@
   var FERMES = {};           // clé → vrai : les quartiers sous la brume en ce moment
   var BLOQUE = null;         // la grille de marche des quartiers fermés (1 : on n'y va pas)
   var QUARTIER_DE = {};      // clé d'un lieu → son quartier (pour les lieux des quartiers)
+  var LEVEE = {};            // clé → l'instant où sa brume a commencé de se lever (le fondu de l'ouverture)
+  var DUREE_LEVEE = 2600;
 
   function initMonde(l) {
     MONDE = (l && l.monde && l.monde.quartiers && l.monde.quartiers.length) ? l.monde : null;
@@ -63,6 +65,7 @@
         S.quartiers[q.cle] = S.semaine || 1;
         // au début d'une carrière déjà avancée (une reprise), pas de fanfare
         if (annoncer !== false && GRAND_Q[q.cle]) {
+          LEVEE[q.cle] = performance.now();
           setTimeout(function () { if (coquille && coquille.son) coquille.son("nouvelle"); toast(GRAND_Q[q.cle].ligne); }, 600);
         }
       }
@@ -87,11 +90,18 @@
     var q4 = MONDE.brume || 4, a = ambiance(), nuit = a === "nuit" || a === "crepuscule";
     ctx.save();
     ctx.imageSmoothingEnabled = true;
+    var t = performance.now();
     MONDE.quartiers.forEach(function (q) {
-      if (!FERMES[q.cle]) return;
+      // fermé : la brume entière ; ouvert à l'instant : elle se lève, en fondu
+      var leve = 1;
+      if (!FERMES[q.cle]) {
+        if (!LEVEE[q.cle]) return;
+        leve = 1 - (t - LEVEE[q.cle]) / DUREE_LEVEE;
+        if (leve <= 0) { delete LEVEE[q.cle]; return; }
+      }
       var im = img("brume_" + q.cle);
       if (!im._ok) return;
-      ctx.globalAlpha = nuit ? 0.55 : 0.82;
+      ctx.globalAlpha = (nuit ? 0.55 : 0.82) * leve * leve;
       ctx.drawImage(im, x0 / q4, y0 / q4, VW / q4, VH / q4, 0, 0, VW, VH);
     });
     ctx.restore();
