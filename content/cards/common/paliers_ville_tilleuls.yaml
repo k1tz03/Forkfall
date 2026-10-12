@@ -1,0 +1,461 @@
+# LA VILLE VIVANTE — les paliers des gens des Tilleuls, la cité de l'ouest
+# (content/ville/quartier_tilleuls.yaml → on_relation ; kind palier dérivé par le build).
+# Programmées quand le lien franchit +3 ou −3, une fois par carrière, hors du sac. Les lieux
+# des Tilleuls ne sont pas des lieux du moteur : aucune carte ne porte de `lieu`, chacune suit
+# son locuteur (`rencontres` du lot).
+#   haddouche  +3 vi.haddouche.marge       −3 vi.haddouche.cadenas
+#   cazal      +3 vi.cazal.liste           −3 vi.cazal.grillage
+#   kobiela    +3 vi.kobiela.fiche         −3 vi.kobiela.dechiree
+#   nawel      +3 vi.nawel.ordre_du_jour   −3 vi.nawel.motion
+#   hagop      +3 vi.hagop.cassette        −3 vi.hagop.boucle
+#   aram       +3 vi.aram.numero           −3 vi.aram.cornet
+#   zohra      +3 vi.zohra.premiere_page   −3 vi.zohra.monnaie
+#   nordine    +3 vi.nordine.page_du_stade
+#   kowal      +3 vi.kowal.gants           −3 vi.kowal.anciens
+#   melissa    +3 vi.melissa.pouls
+#   scarpelli  +3 vi.scarpelli.cadre       −3 vi.scarpelli.miroir
+#   bilal      +3 vi.bilal.brouillons      −3 vi.bilal.legende
+#   marthe     +3 vi.marthe.cle_verte      −3 vi.marthe.volets
+#   issa       +3 vi.issa.carnet
+# Tous les rôles : le texte ne suppose ni un bureau, ni un vestiaire à soi ; aucun accord sur
+# le héros ; pas de {toi} (les gens de la ville n'ont pas d'`adresse`).
+cards:
+
+  # ══════════════════════════════════════════════════ Rachid Haddouche, le city-stade
+  - id: vi.haddouche.marge
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: haddouche
+    tone: strategique
+    once: true
+    text: "Rachid ouvre le cahier à la dernière page : la marge est pleine, des noms de recruteurs depuis 1981. Il te tend son stylo : « Écris le tien de l'autre côté. Du côté des gamins. »"
+    left:
+      label: "J'écris mon nom"
+      effects: {vestiaire: "+", journal: {text: "{annee} : aux Tilleuls, le nom de {nom} dans le cahier de Rachid Haddouche, du côté des gamins.", poids: 2, tags: [vestiaire]}}
+      answer: "Tu écris, il souffle sur l'encre. Le lendemain, les gamins se passent le cahier pour voir ton nom au milieu des leurs, mal écrit."
+    right:
+      label: "Ma place est dans la marge"
+      effects: {tribunes: "+"}
+      answer: "« Alors tu es comme les autres. » Il referme le cahier, le rouvre, et écrit ton nom lui-même dans la marge, tout petit, au crayon."
+
+  - id: vi.haddouche.cadenas
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: haddouche
+    tone: strategique
+    once: true
+    text: "Rachid a changé le cadenas du grillage. Les gamins te regardent à travers les mailles, le ballon sous le bras. « Ceux qui viennent regarder, je les note dans la marge. Toi, je t'ai rayé. »"
+    left:
+      label: "Je lui parle, à travers"
+      effects: {vestiaire: "-"}
+      answer: "Il écoute sans ouvrir. Le soir, les jeunes des Tilleuls que tu croises au stade ne te disent plus bonjour. Rachid leur a parlé."
+    right:
+      label: "Je m'en vais"
+      effects: {vestiaire: "--", journal: {text: "{annee} : Rachid Haddouche a rayé {nom} de la marge de son cahier. Le grillage des Tilleuls est fermé.", poids: 2, tags: [vestiaire]}}
+      answer: "Le lendemain, deux jeunes d'ici arrivent en retard au stade, ensemble, sans excuse. Ils étaient au grillage, avec Rachid."
+
+  # ══════════════════════════════════════════════════ Telma Cazal, le city-stade
+  - id: vi.cazal.liste
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: cazal
+    tone: strategique
+    once: true
+    text: "Cazal te tend la feuille du mercredi : quarante prénoms, et au dos, au feutre, les numéros des mères et ceux des grands-mères. « Les recruteurs paieraient cher cette feuille. Je te la confie. »"
+    left:
+      label: "Je la garde"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Telma Cazal a confié à {nom} la feuille du mercredi du city-stade, et les numéros des mères.", poids: 2, tags: [formation]}}
+      answer: "Tu la plies en quatre dans ton portefeuille. Le mercredi suivant, les mères te disent bonjour par ton prénom, sans savoir pourquoi."
+    right:
+      label: "Garde-la, toi"
+      effects: {tribunes: "+"}
+      answer: "Elle la remet dans son sac, avec le sifflet, et te donne à la place le planning du tournoi : ton nom est à l'arbitrage."
+
+  - id: vi.cazal.grillage
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: cazal
+    tone: strategique
+    once: true
+    text: "Tu t'arrêtes au grillage. Cazal siffle une fois : les gamins rentrent, et les mères sortent des halls, une par une, et se mettent en ligne devant le grillage, les bras croisés. Personne ne parle."
+    left:
+      label: "Je leur parle"
+      effects: {tribunes: "-"}
+      answer: "Elles écoutent sans décroiser les bras. La plus vieille dit : « On a compris. » Elles restent jusqu'à ce que tu partes."
+    right:
+      label: "Je m'en vais"
+      effects: {tribunes: "--", journal: {text: "{annee} : aux Tilleuls, les mères du city-stade en ligne devant le grillage, face à {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "Le soir, la photo des mères en ligne fait le tour des téléphones de la cité, puis du virage."
+
+  # ══════════════════════════════════════════════════ Germaine Kobiela, la maison de quartier
+  - id: vi.kobiela.fiche
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [famille, objet]
+    speaker: kobiela
+    tone: strategique
+    once: true
+    text: "Germaine sort de la boîte ta fiche bristol, pleine des deux côtés : tes passages, tes dons, ce que tu as dit à qui. « Je n'en ai jamais montré une. Lis-la, et dis-moi si je me suis trompée. »"
+    left:
+      label: "Je la lis"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Germaine Kobiela a montré à {nom} sa fiche de la maison de quartier. Elle n'en avait jamais montré une.", poids: 2, tags: [famille]}}
+      answer: "Tout est vrai, même ce que tu avais oublié. En bas, au crayon, une ligne de sa main : « À aider sans le dire. »"
+    right:
+      label: "Je vous crois"
+      effects: {tribunes: "+"}
+      answer: "Elle range la fiche sans la relire. « Tant mieux. Il y a des choses dessus que je préfère garder pour moi. »"
+
+  - id: vi.kobiela.dechiree
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [famille, risk:vestiaire]
+    speaker: kobiela
+    tone: strategique
+    once: true
+    text: "Germaine te tend une enveloppe : ta fiche bristol, déchirée en deux, proprement. « La première depuis 1968. Je l'ai dit aux femmes de la permanence. Elles le diront chez elles. »"
+    left:
+      label: "Recollez-la"
+      effects: {vestiaire: "-"}
+      answer: "« Une fiche, ça ne se recolle pas. » Le samedi, deux femmes de joueurs ne te saluent plus à la sortie du stade."
+    right:
+      label: "Je la garde"
+      effects: {vestiaire: "--", journal: {text: "{annee} : Germaine Kobiela a déchiré la fiche de {nom}, la première depuis 1968.", poids: 2, tags: [famille]}}
+      answer: "Tu ranges les deux morceaux dans ta poche. Avant la nuit, toute la cité sait laquelle. Les familles d'ici te regardent en dessous."
+
+  # ══════════════════════════════════════════════════ Nawel Assous, la maison de quartier
+  - id: vi.nawel.ordre_du_jour
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: nawel
+    tone: strategique
+    once: true
+    text: "Nawel pose sur la table l'ordre du jour du conseil de jeudi, avec une ligne ajoutée au stylo : ton nom, et « audition ». « Tu as dix minutes, après les trottoirs et avant le budget. »"
+    left:
+      label: "J'y vais"
+      effects: {direction: "+", journal: {text: "{annee} : au conseil municipal, dix minutes de {nom} pour les Tilleuls, entre les trottoirs et le budget.", poids: 2, tags: [direction]}}
+      answer: "Dix minutes devant des conseillers qui regardent l'heure. Le maire, lui, prend des notes. La subvention de la maison passe à l'unanimité."
+    right:
+      label: "Parlez à ma place"
+      effects: {tribunes: "+"}
+      answer: "Nawel parle à ta place, mieux. Elle te cite deux fois, et une fois un mot que tu n'as pas dit. Il est meilleur que les tiens."
+
+  - id: vi.nawel.motion
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: nawel
+    tone: strategique
+    once: true
+    text: "Nawel t'envoie la motion qu'elle présente jeudi au conseil : « Ce que le football doit aux Tilleuls ». Ton nom y est cité trois fois, page deux. Elle a souligné les trois."
+    left:
+      label: "Je viens au conseil"
+      effects: {direction: "-"}
+      answer: "Tu t'assois au fond. Elle lit sa motion sans te regarder, page deux comprise. Elle passe à deux voix près. Le maire te serre la main, vite."
+    right:
+      label: "Je laisse passer"
+      effects: {direction: "--", journal: {text: "{annee} : la motion des Tilleuls au conseil municipal cite trois fois {nom}, page deux.", poids: 2, tags: [direction]}}
+      answer: "La motion passe sans débat. L'Écho la publie en entier, avec tes trois passages soulignés en gras."
+
+  # ══════════════════════════════════════════════════ Hagop Kassabian, le snack
+  - id: vi.hagop.cassette
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: hagop
+    tone: strategique
+    once: true
+    text: "Hagop descend du tabouret avec une cassette de l'étagère des défaites. Sur l'étiquette, à la main, ton nom et une date. « Celle-là, je l'ai enregistrée pour toi. Je ne la repasse jamais. »"
+    left:
+      label: "Je la prends"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Hagop Kassabian a donné à {nom} la seule cassette de son étagère qu'il ne repassait jamais.", poids: 2, tags: [tribunes]}}
+      answer: "Tu la regardes chez toi, seul. La bande s'arrête à la soixantième minute, juste avant le but qui vous a coûté le match. Après, la neige."
+    right:
+      label: "Gardez-la en haut"
+      effects: {tribunes: "+"}
+      answer: "Il la remonte entre deux défaites de 1983. « Ici, elle est avec les autres. » Le soir, les gamins du banc demandent laquelle est la tienne."
+
+  - id: vi.hagop.boucle
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: hagop
+    tone: strategique
+    once: true
+    text: "Sur le petit poste du snack, ce n'est plus le match de samedi qui passe en boucle : c'est ton interview d'après-match, celle où tu bafouilles. Hagop a coupé le son. Les gamins font les sous-titres."
+    left:
+      label: "J'entre quand même"
+      effects: {tribunes: "-"}
+      answer: "Les gamins se taisent quand tu entres, puis reprennent plus fort. Hagop te sert, sans sauce, et remet la cassette au début."
+    right:
+      label: "Je passe mon chemin"
+      effects: {tribunes: "--", journal: {text: "{annee} : au Snack des Tilleuls, l'interview de {nom} passe en boucle, sans le son.", poids: 2, tags: [tribunes]}}
+      answer: "La cassette tourne jusqu'au jeudi. Le jeudi, Hagop enregistre la météo par-dessus, mais la cité sait déjà tes phrases par cœur."
+
+  # ══════════════════════════════════════════════════ Aram Kassabian, le snack
+  - id: vi.aram.numero
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: aram
+    tone: strategique
+    once: true
+    text: "Aram écrit un numéro au feutre sur un papier de cornet : « Les gamins en trottinette. Un message, ils le portent. Un nom, ils le trouvent. Une voiture qui tourne, ils la suivent. Pas pour rien. »"
+    left:
+      label: "Je le garde"
+      effects: {direction: "+", journal: {text: "{annee} : aux Tilleuls, Aram Kassabian a donné à {nom} le numéro des gamins du banc.", poids: 2, tags: [direction]}}
+      answer: "Tu le ranges derrière tes papiers. Le soir même, un gamin en trottinette te double, te fait un signe et disparaît dans la tour B."
+    right:
+      label: "Je n'en aurai pas besoin"
+      effects: {tribunes: "+"}
+      answer: "« Tout le monde en a besoin, un jour. » Il glisse le papier sous la lampe chauffante, avec les cornets du soir. Il y est encore."
+
+  - id: vi.aram.cornet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: aram
+    tone: drame
+    once: true
+    text: "Devant ta porte, un cornet de frites encore chaud, plié comme Aram les plie. Personne n'a sonné. Dans le cornet, un papier : l'heure exacte de ton retour, hier soir."
+    left:
+      label: "Je vais voir Aram"
+      effects: {direction: "-"}
+      answer: "Le volet du snack est baissé. Derrière, la friteuse chante. Un gamin en trottinette passe deux fois devant toi, sans te regarder."
+    right:
+      label: "Je jette le cornet"
+      effects: {direction: "--", journal: {text: "{annee} : un cornet de frites devant la porte de {nom}, et l'heure de son retour notée dedans.", poids: 1, tags: [direction]}}
+      answer: "Le lendemain, il y en a un autre. Puis plus rien. C'est pire : tu regardes devant ta porte tous les soirs."
+
+  # ══════════════════════════════════════════════════ Zohra Mezrag, la supérette
+  - id: vi.zohra.premiere_page
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: zohra
+    tone: strategique
+    once: true
+    text: "Zohra ouvre le cahier à la première page, celle de 1971, de la main de son mari : des prénoms, des étages, et trois lignes jamais rayées. « Trois familles parties. Je n'ai jamais su les retrouver. »"
+    left:
+      label: "Je les retrouverai"
+      effects: {tribunes: "+", journal: {text: "{annee} : {nom} a retrouvé deux familles de la première page du cahier de Zohra Mezrag, ouvert en 1971.", poids: 2, tags: [tribunes]}}
+      answer: "Il te faut trois semaines. Deux familles paient, en pleurant. La troisième est au cimetière de Montbéliac ; Zohra raye la ligne quand même."
+    right:
+      label: "Rayez-les vous-même"
+      effects: {tribunes: "+"}
+      answer: "Elle les raye d'un seul trait, la main qui tremble. « Mon mari aurait attendu. Moi, j'ai attendu assez. »"
+
+  - id: vi.zohra.monnaie
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: zohra
+    tone: strategique
+    once: true
+    text: "Zohra te rend la monnaie en petites pièces jaunes, toute la monnaie, en comptant tout haut, lentement, devant la file. Ça dure quatre minutes. Personne dans la file ne soupire."
+    left:
+      label: "J'attends ma monnaie"
+      effects: {tribunes: "-"}
+      answer: "Jusqu'à la dernière pièce. Dehors, une vieille dame de la file te glisse : « Elle ne fait ça qu'aux gens qui comptent. »"
+    right:
+      label: "Gardez la monnaie"
+      effects: {tribunes: "--", journal: {text: "{annee} : à la supérette des Tilleuls, la monnaie de {nom} rendue en pièces jaunes, devant la file.", poids: 1, tags: [tribunes]}}
+      answer: "Elle la verse dans la boîte des gamins du banc, devant toi. Le soir, les gamins savent d'où vient l'argent, et ils le disent partout."
+
+  # ══════════════════════════════════════════════════ Nordine Mezrag, la supérette
+  - id: vi.nordine.page_du_stade
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: nordine
+    tone: strategique
+    once: true
+    text: "Nordine ouvre le vieux cahier de sa mère à une page de 1990 : « Stade ». Les employés du club, mois par mois, et les retards de paie. « Ma mère te l'aurait montrée. Je ne sais pas pourquoi. »"
+    left:
+      label: "Je la lis"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Nordine Mezrag a montré à {nom} la page « Stade » du vieux cahier de la supérette des Tilleuls.", poids: 2, tags: [vestiaire]}}
+      answer: "Les mêmes noms reviennent, de père en fils : lingère, jardinier, gardien. Le club a toujours payé en retard les mêmes familles."
+    right:
+      label: "Gardez-la pour vous"
+      effects: {tribunes: "+"}
+      answer: "Il la referme. « Ma mère disait : ceux qui ne lisent pas les pages des autres, on peut leur ouvrir la leur. » Il t'en ouvre une, au crayon."
+
+  # ══════════════════════════════════════════════════ Stan Kowal, le club de boxe
+  - id: vi.kowal.gants
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: kowal
+    tone: strategique
+    once: true
+    text: "Stan décroche du clou ses gants de 1958, raides comme du carton, et te les pose sur les genoux. « Trente-deux combats. Les treize que j'ai perdus sont dedans. Ils t'apprendront plus que les autres. »"
+    left:
+      label: "Je les prends"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Stan Kowal a donné à {nom} ses gants de 1958, ceux de ses trente-deux combats.", poids: 2, tags: [vestiaire]}}
+      answer: "Ils sentent le vinaigre et la cave. Tu les accroches chez toi. Le lendemain, deux de ses anciens te saluent dans la rue, sans te connaître."
+    right:
+      label: "Ils sont à leur clou"
+      effects: {tribunes: "+"}
+      answer: "Il les raccroche, content. « Un gant se prête, il ne se donne pas. » Il te prête ceux du fond, à vie."
+
+  - id: vi.kowal.anciens
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: kowal
+    tone: drame
+    once: true
+    text: "Deux anciens de Stan, ceux qui ramassent pour le Terminus, attendent sous l'auvent quand tu passes. Ils ne disent rien. L'un d'eux fait craquer ses doigts, un par un, en te regardant."
+    left:
+      label: "Je vais voir Stan"
+      effects: {vestiaire: "-"}
+      answer: "Stan est sur le ring avec les gamins. Il ne descend pas. « Ils attendent quelqu'un. Pas toi. Pas encore. »"
+    right:
+      label: "Je change de trottoir"
+      effects: {vestiaire: "--", journal: {text: "{annee} : un des hommes de {nom} arrive au stade l'arcade ouverte. Les anciens de Stan Kowal étaient passés.", poids: 1, tags: [vestiaire]}}
+      answer: "Le jeudi, un des tiens arrive avec l'arcade ouverte. Il dit qu'il est tombé dans l'escalier. Il habite au rez-de-chaussée."
+
+  # ══════════════════════════════════════════════════ Mélissa Kowal, le club de boxe
+  - id: vi.melissa.pouls
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: melissa
+    tone: strategique
+    once: true
+    text: "Mélissa te prend le pouls et, cette fois, dit le chiffre. Puis elle sort un carnet : le pouls de chacun des tiens qui vient taper ici, depuis un an. « Lis la troisième ligne. »"
+    left:
+      label: "Je lis"
+      effects: {vestiaire: "+", journal: {text: "{annee} : au club de boxe des Tilleuls, Mélissa Kowal a montré à {nom} un carnet de pouls.", poids: 2, tags: [vestiaire]}}
+      answer: "La troisième ligne monte depuis mars : cent quatre au repos, le samedi. « Il ne dort plus. Le médecin ne le sait pas. Toi, maintenant, si. »"
+    right:
+      label: "C'est votre carnet"
+      effects: {vestiaire: "+"}
+      answer: "Elle le referme. « Alors je m'en occupe, sans toi. » Deux semaines plus tard, un des tiens dort de nouveau. Il ne sait pas qui remercier."
+
+  # ══════════════════════════════════════════════════ Aldo Scarpelli, le salon
+  - id: vi.scarpelli.cadre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: scarpelli
+    tone: strategique
+    once: true
+    text: "Scarpelli décroche le cadre vide, en bas à droite du mur des signatures, et le pose devant toi. « Je le gardais pour un gamin qui ne viendrait pas. Assieds-toi dans le fauteuil du milieu. »"
+    left:
+      label: "Je m'assois"
+      effects: {tribunes: "+", journal: {text: "{annee} : au salon des Tilleuls, le cadre vide du mur des signatures porte la photo de {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "Il te coupe en silence, puis te photographie. Le lendemain, tu es en bas à droite : la seule tête du mur qui ne vient pas d'ici."
+    right:
+      label: "Gardez-le pour un gamin"
+      effects: {vestiaire: "+"}
+      answer: "Il raccroche le cadre vide. « Tu as raison. » Trois mois plus tard, un petit de la tour D signe son premier contrat, et le cadre se remplit."
+
+  - id: vi.scarpelli.miroir
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [agents, risk:direction]
+    speaker: scarpelli
+    tone: strategique
+    once: true
+    text: "Un agent se fait raser dans le fauteuil du milieu. Scarpelli lui raconte, à voix haute, ce que tu as dit dans ce fauteuil, l'an dernier, et sur qui. La porte du salon est ouverte. La rue entend."
+    left:
+      label: "J'entre"
+      effects: {direction: "-"}
+      answer: "Scarpelli ne s'arrête pas : il finit la phrase, la nuque de l'agent sous le rasoir. L'agent te salue dans le miroir, très poliment."
+    right:
+      label: "Je m'éloigne"
+      effects: {direction: "--", journal: {text: "{annee} : au salon des Tilleuls, Aldo Scarpelli a répété à un agent ce que {nom} disait dans son fauteuil.", poids: 2, tags: [agents]}}
+      answer: "Le lendemain, ta phrase de l'an dernier est dans L'Écho, entre guillemets, sans le nom du coiffeur."
+
+  # ══════════════════════════════════════════════════ Bilal Chergui, le salon
+  - id: vi.bilal.brouillons
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: bilal
+    tone: strategique
+    once: true
+    text: "Bilal te tend son téléphone, ouvert sur un dossier : « Brouillons ». Douze vidéos sur toi, jamais postées, des rumeurs payées. « Je les efface devant toi, ou tu veux savoir qui a payé ? »"
+    left:
+      label: "Efface-les"
+      effects: {direction: "+"}
+      answer: "Il les efface une à une, le pouce sûr. À la douzième, il hésite, puis il l'efface aussi. Tu ne sauras jamais ce qu'il y avait dedans."
+    right:
+      label: "Qui a payé ?"
+      effects: {direction: "+", journal: {text: "{annee} : au salon des Tilleuls, Bilal Chergui a montré à {nom} qui payait pour des rumeurs.", poids: 2, tags: [presse]}}
+      answer: "Il fait défiler les numéros, sans un mot. Deux appartiennent à des gens qui t'ont serré la main la semaine dernière."
+
+  - id: vi.bilal.legende
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: bilal
+    tone: strategique
+    once: true
+    text: "Bilal a posté ta nuque au ralenti, avec une légende : « Trois cheveux blancs de plus depuis samedi. On compte ? » Les commentaires comptent. Ils en sont à quatre-vingt-dix."
+    left:
+      label: "Je l'appelle"
+      effects: {tribunes: "-"}
+      answer: "« Ce n'est pas méchant, c'est de l'engagement. » Il ne retire rien. Le soir, la vidéo a une suite : un cheveu entouré en rouge."
+    right:
+      label: "Je laisse courir"
+      effects: {tribunes: "--", journal: {text: "{annee} : sur le Flux, la nuque de {nom}, et les cheveux blancs que la ville compte depuis samedi.", poids: 1, tags: [presse]}}
+      answer: "Au stade, des gamins te montrent leur nuque en riant. Une banderole demande combien il en reste."
+
+  # ══════════════════════════════════════════════════ Marthe Degroote, la tour C
+  - id: vi.marthe.cle_verte
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: marthe
+    tone: strategique
+    once: true
+    text: "Marthe détache la clé verte de son anneau et la pose dans ta main. « Le neuvième. Personne n'y monte. Si un soir tu dois disparaître, monte à pied : l'ascenseur fait trop de bruit. »"
+    left:
+      label: "Je la prends"
+      effects: {direction: "+", journal: {text: "{annee} : Marthe Degroote a confié à {nom} la clé verte de son anneau, celle du neuvième de la tour C.", poids: 2, tags: [tribunes]}}
+      answer: "Elle est tiède de sa poche. Le soir, les grands de l'escalier te font une place, un étage sous le neuvième."
+    right:
+      label: "Elle est à vous"
+      effects: {tribunes: "+"}
+      answer: "Elle la remet sur l'anneau, entre la cave et le local à vélos. « Elle sera là. » Le samedi, elle pend le drapeau d'André un peu plus haut."
+
+  - id: vi.marthe.volets
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: marthe
+    tone: strategique
+    once: true
+    text: "Samedi, Marthe a fait les paliers avec sa liste, comme pour les drapeaux. À l'heure du match, quarante fenêtres de la tour C ont fermé leurs volets ensemble. On l'a vu du boulevard."
+    left:
+      label: "Je vais lui parler"
+      effects: {tribunes: "-"}
+      answer: "La loge est fermée. Sur le rebord de la fenêtre, le cahier des pannes : ta visite du jour est déjà notée, avec l'heure exacte."
+    right:
+      label: "Je laisse faire"
+      effects: {tribunes: "--", journal: {text: "{annee} : à l'heure du match, quarante volets fermés à la tour C. Marthe Degroote avait fait les paliers.", poids: 2, tags: [tribunes]}}
+      answer: "Le samedi suivant, les volets ferment encore, et ceux de la tour B suivent. L'Écho fait sa photo depuis le pont."
+
+  # ══════════════════════════════════════════════════ Issa Tchibozo, la tour C
+  - id: vi.issa.carnet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [famille, objet]
+    speaker: issa
+    tone: strategique
+    once: true
+    text: "Issa ouvre son carnet de la tour à une page vide et te tend le stylo : « Ici, on écrit les gens de la tour : naissances, départs, morts. Tu n'habites pas ici. Écris quand même quelque chose. »"
+    left:
+      label: "J'écris mon nom"
+      effects: {tribunes: "+", journal: {text: "{annee} : dans le carnet de la tour C, entre une naissance et un départ, une ligne de la main de {nom}.", poids: 2, tags: [famille]}}
+      answer: "Tu écris ton nom et la date. Issa souffle dessus et range le carnet. « Maintenant, la tour te compte. Elle comptera aussi tes absences. »"
+    right:
+      label: "Écrivez pour moi"
+      effects: {vestiaire: "+"}
+      answer: "Il écrit, de son écriture penchée, une phrase qu'il ne te montre pas, et referme le carnet sur son pouce. « Tu la liras quand tu partiras. »"
