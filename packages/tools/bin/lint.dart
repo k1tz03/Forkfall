@@ -110,7 +110,10 @@ const List<String> kEngineFlags = ['bilan_tenu', 'bilan_manque', 'descente'];
 const List<String> kEngineFlagPrefixes = ['camille_', 'role_was_',
   // la ville vivante (docs/histoires/ville_vivante.md) : le moteur pose la réputation
   // (`rep_<habitude>`), les tuyaux (`tuyau_<id>`), les services et les dettes des gens
-  'rep_', 'tuyau_', 'service_', 'dette_'];
+  'rep_', 'tuyau_', 'service_', 'dette_',
+  // le Grand Aubérive : la ville lit `quartier_<clé>` (ville_quartiers.js) ; une histoire peut le
+  // poser pour ouvrir un quartier avant son heure, aucune n'y est tenue
+  'quartier_'];
 
 /// Les kinds narratifs : une de leurs sorties sans `answer:` est une erreur
 /// (voir la boucle de cartes). `routine`, `nouvelle` et `passe` en sont hors :
