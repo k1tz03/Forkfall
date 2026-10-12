@@ -57,6 +57,13 @@
     var st = ((vue && vue.statuts) || {})[g.id];
     return !(st === "mort" || st === "parti" || st === "vendu" || st === "rival");
   }
+  // hors de ses années (un visage des livres qui a aussi sa vie en ville) : on ne le croise plus à son lieu
+  function horsEpoque(id) {
+    var g = gensDe(id);
+    if (!g || !g.annees) return false;
+    var an = (vue && vue.year) || 1990;
+    return an < g.annees[0] || an > g.annees[1];
+  }
   // à son lieu, à cette heure (le lieu ouvert)
   function gensLa(g) {
     if (!gensVivant(g)) return false;

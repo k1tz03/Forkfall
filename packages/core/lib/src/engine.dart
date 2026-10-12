@@ -213,12 +213,13 @@ class Engine {
   /// LA VILLE VIVANTE — un geste partagé donne un point de lien à celui avec qui
   /// on le fait, au plus un par personne entre deux cartes (le café de trop ne
   /// force pas une amitié) ; aux seuils (`vivante.liens`, 2, 5 et 9 points), la
-  /// relation monte d'un cran. Le geste compte dans son habitude ; au seuil
+  /// relation monte d'un cran ; hors de son époque (`ville.gens[].annees`), la
+  /// personne n'est pas là, et le geste ne lui donne rien. Le geste compte dans son habitude ; au seuil
   /// (`vivante.reputation`), elle devient une réputation : le drapeau
   /// `rep_<habitude>`, et sa ligne d'Almanach. Aucun tirage.
   void _lienEtHabitude(GameState s, String? avec, String? habitude) {
     final cfg = content.vivante;
-    if (avec != null && content.characters.containsKey(avec)) {
+    if (avec != null && content.characters.containsKey(avec) && cfg.deSonEpoque(avec, s.year)) {
       final quand = 'lien_${avec}_t';
       if (s.vars[quand] != s.turn) {
         s.vars[quand] = s.turn;

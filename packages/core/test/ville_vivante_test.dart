@@ -105,6 +105,24 @@ void main() {
     expect(avec.gauges['tribunes'], (g0['tribunes']! + 3).clamp(0, 100), reason: 'le premier geste de la semaine bouge les jauges');
   });
 
+  test('V6 · hors de son époque, la personne n\'est pas derrière son comptoir : le geste ne donne pas de lien', () {
+    final j = _bundle();
+    final ville = (j['ville'] as Map).cast<String, dynamic>();
+    ville['activites'] = [
+      ...(ville['activites'] as List),
+      {'id': 't_cafe', 'lieu': 'buvette', 'label': 'Un café avec Gégé', 'texte': '…', 'avec': 'gege', 'habitude': 'comptoir'},
+    ];
+    ville['gens'] = [
+      ...((ville['gens'] as List?) ?? const []),
+      {'id': 'gege', 'lieu': 'buvette', 'annees': [2030, 2050], 'reseau': 'tribunes', 'paliers': ['a', 'b', 'c'], 'froid': ['d', 'e', 'f'], 'repliques': []},
+    ];
+    final eng = Engine(loadContentFromJson(json.encode(j)));
+    final s = eng.activite(eng.start(5, postulat: 0), 't_cafe');
+    expect(s.year < 2030, isTrue);
+    expect(s.vars['lien_gege'], isNull, reason: 'Gégé n\'est pas encore là en ${s.year}');
+    expect(s.vars['hab_comptoir'], 1, reason: 'le geste compte quand même dans son habitude');
+  });
+
   test('V4 · un tuyau pose son drapeau ; un service pose sa dette et peut refroidir le lien', () {
     var s = engine.start(9, postulat: 0);
     final r0 = s.relations['gege'] ?? 0;

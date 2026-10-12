@@ -1132,14 +1132,28 @@ class ActiviteDef {
 class VivanteConfig {
   final List<int> liens;
   final int reputation;
-  const VivanteConfig({this.liens = const [2, 5, 9], this.reputation = 10});
+  /// L'époque des gens de la ville (`ville.gens[].annees`) : hors de ses années, une personne
+  /// n'est pas derrière son comptoir, et un geste n'y donne pas de point de lien.
+  final Map<String, List<int>> epoques;
+  const VivanteConfig({this.liens = const [2, 5, 9], this.reputation = 10, this.epoques = const {}});
 
-  factory VivanteConfig.fromJson(Object? raw) {
+  factory VivanteConfig.fromJson(Object? raw, {Object? gens}) {
     final j = (raw as Map?)?.cast<String, dynamic>() ?? const <String, dynamic>{};
+    final epoques = <String, List<int>>{};
+    for (final g in (gens as List?) ?? const []) {
+      final a = (g as Map)['annees'] as List?;
+      if (a != null && a.length == 2) epoques[g['id'].toString()] = [(a[0] as num).toInt(), (a[1] as num).toInt()];
+    }
     return VivanteConfig(
       liens: (j['liens'] as List?)?.map((e) => (e as num).toInt()).toList() ?? const [2, 5, 9],
       reputation: (j['reputation'] as num?)?.toInt() ?? 10,
+      epoques: epoques,
     );
+  }
+
+  bool deSonEpoque(String id, int annee) {
+    final e = epoques[id];
+    return e == null || (annee >= e[0] && annee <= e[1]);
   }
 }
 
@@ -1438,7 +1452,7 @@ class Content {
         for (final o in (((j['ville'] as Map?)?['objets'] as List?) ?? const []))
           (o as Map)['id'].toString(): ObjetDef.fromJson(o.cast<String, dynamic>()),
       },
-      vivante: VivanteConfig.fromJson((j['ville'] as Map?)?['vivante']),
+      vivante: VivanteConfig.fromJson((j['ville'] as Map?)?['vivante'], gens: (j['ville'] as Map?)?['gens']),
     );
   }
 }

@@ -175,7 +175,7 @@
     ((vue && vue.cast) || []).forEach(function (q) { cast[q] = 1; });
     var statuts = (vue && vue.statuts) || {};
     (D.presences || []).forEach(function (p) {
-      if (p.lieu !== cle || deja[p.qui] || !spriteDe(p.qui)) return;
+      if (p.lieu !== cle || deja[p.qui] || !spriteDe(p.qui) || horsEpoque(p.qui)) return;
       var st = statuts[p.qui];
       if (st === "mort" || st === "parti" || st === "vendu" || st === "rival") return;
       if (!(cast[p.qui] || S.vus[p.qui])) return;
