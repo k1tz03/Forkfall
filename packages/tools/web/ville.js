@@ -127,8 +127,9 @@
   // praticables aussi. Les passants marchent au large : un corps de dix pixels
   // qui longe une façade à moins d'une case finit par mordre dedans.
   var LARGE = null;
-  function marchable(cx, cy) { return cx >= 0 && cy >= 0 && cx < G && cy < G && grille[cy * G + cx] === 1; }
-  function auLarge(cx, cy) { return cx >= 0 && cy >= 0 && cx < G && cy < G && LARGE[cy * G + cx] === 1; }
+  // (un quartier fermé du Grand Aubérive ne se marche pas : ville_quartiers.js)
+  function marchable(cx, cy) { return cx >= 0 && cy >= 0 && cx < G && cy < G && grille[cy * G + cx] === 1 && !caseBloquee(cx, cy); }
+  function auLarge(cx, cy) { return cx >= 0 && cy >= 0 && cx < G && cy < G && LARGE[cy * G + cx] === 1 && !caseBloquee(cx, cy); }
   function calculerLarge() {
     LARGE = new Uint8Array(G * G);
     for (var y = 1; y < G - 1; y++) for (var x = 1; x < G - 1; x++) {
@@ -408,6 +409,7 @@
   }
   function allerAuLieu(cle) {
     if (dedans) { if (cle === dedans.cle) { arriveeDedans(); return; } sortir(function () { allerAuLieu(cle); }); return; }
+    if (lieuFerme(cle)) { var q0 = GRAND_Q[QUARTIER_DE[cle]]; toast(q0.nom + " : le quartier " + q0.indice + "."); return; }
     var l = LIEU[cle];
     if (!l || !l.door) return;
     if (porteOuverte === cle) return;
@@ -1424,6 +1426,8 @@
       fondu = Math.min(1, fondu + 0.03);
       dessinerTuiles(amb, fondu);
     } else { amb0 = amb; fondu = 1; dessinerTuiles(amb, 1); }
+    // la brume des quartiers fermés (le Grand Aubérive)
+    dessinerBrumes(Math.round(cam.x - VW / 2), Math.round(cam.y - VH / 2));
     // le panneau du mur est (le dernier score), la foule les jours de match
     if (!dedans) { dessinerPanneau(); dessinerFoule(ts); }
     // les gens, du fond vers l'avant (x + y croissant) ; on garde la boîte de
@@ -1484,11 +1488,12 @@
     }
     majBulle();
     var x0 = cam.x - VW / 2, y0 = cam.y - VH / 2;
+    placerNomsBrume(x0, y0);
     var hc = caseDe(heros.x, heros.y), cible = rdvVisible() ? rdv.lieu : null;
     var vus = {}, cands = [];
     for (var i = 0; i < L.places.length; i++) {
       var l = L.places[i];
-      if (!l.door) continue;
+      if (!l.door || lieuFerme(l.key)) continue;
       var sx = (l.u - x0) * k, sy = (l.v - y0) * k;
       // dans la bande de ville seulement : un nom sous le rail ou sous les actions
       // serait invisible, et on le toucherait quand même
@@ -2916,6 +2921,7 @@
     var h = $("villeHud");
     if (!h || !S) return;
     sonVille();
+    majQuartiers();
     h.querySelector(".v-temps b").textContent = JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]];
     h.querySelector(".v-temps span").textContent = "Sem. " + S.semaine + " · " + moisCourant();
     var fr = h.querySelector(".v-francs");
@@ -2956,7 +2962,7 @@
     var PP = dedans ? dedans.ville.P : P;
     var W0 = Math.round(PP.w * PLAN_ECHELLE), H0 = Math.round(PP.h * PLAN_ECHELLE);
     var html = '<div class="v-carte" id="villeCarte"><div class="v-carte-in' + (S.tranche >= 3 ? " nuit" : "") + '" style="width:' + W0 + 'px;height:' + H0 + 'px">' +
-      '<img src="' + BASE + 'plan.webp" alt="Le plan d\'Aubérive" width="' + W0 + '" height="' + H0 + '" draggable="false">';
+      '<img src="' + BASE + 'plan.webp" alt="Le plan d\'Aubérive" width="' + W0 + '" height="' + H0 + '" draggable="false">' + planBrumes(W0, H0);
     QUARTIERS.forEach(function (q) {
       var n = 0, sx = 0, sy = 0;
       L.places.forEach(function (l) { if (l.door && l.district === q[0]) { var p = surPlan.apply(null, centre(l.door)); sx += p[0]; sy += p[1]; n++; } });
@@ -2964,7 +2970,7 @@
     });
     var ici = rdvVisible() && LIEU[rdv.lieu] ? rdv.lieu : null;
     L.places.forEach(function (l) {
-      if (!l.door || !TEXTE_LIEU[l.key]) return;
+      if (!l.door || !TEXTE_LIEU[l.key] || lieuFerme(l.key)) return;
       var p = surPlan.apply(null, centre(l.door)), r = l.key === ici;
       html += '<button type="button" class="v-pt' + (r ? " rdv" : "") + (ouvert(TEXTE_LIEU[l.key]) ? "" : " ferme") + '" data-l="' + esc(l.key) + '" style="left:' + p[0] + 'px;top:' + p[1] + 'px" aria-label="' + esc(nomLieu(l)) + '"><i></i>' +
         (r ? '<span>' + esc(nomLieu(l)) + '</span>' : "") + '</button>';
@@ -3289,7 +3295,9 @@
       chargerJson("interieurs.json").catch(function () { return { pieces: {} }; })]).then(function (r) {
       INT = (r[3] && r[3].pieces) || {};
       L = r[0]; P = L.projection || P; ZSOL = 2 + (P.zl || 10);
+      COLS = Math.ceil(P.w / TUILE); RANGS = Math.ceil(P.h / TUILE);
       L.places.forEach(function (l) { LIEU[l.key] = l; });
+      initMonde(L);
       var gr = r[1]; G = gr.size; CELL = gr.cell;
       var bits = atob(gr.bits); grille = new Uint8Array(G * G);
       for (var i = 0; i < G * G; i++) grille[i] = (bits.charCodeAt(i >> 3) >> (i & 7)) & 1;
@@ -3324,8 +3332,11 @@
       S.biens = S.biens || {}; S.sale = S.sale || 0; S.pont = S.pont || {}; S.missionsFaites = S.missionsFaites || {};
       S.offres = S.offres || {}; S.dits = S.dits || {}; if (S.derniereOffre == null) S.derniereOffre = -99;
       S.scenesVues = S.scenesVues || {};
+      // une partie sauvée avant le Grand Aubérive : la ville a glissé de (O, O) dans le monde
+      if (MONDE && MONDE.O && !S.grand) { S.x += MONDE.O; S.y += MONDE.O; S.grand = 1; }
       annonces = [];
       dernierVu = rdv ? rdv.cle : "";
+      FERMES = {}; BLOQUE = null; majQuartiers(false);
       lancer();
       poser(S.x, S.y);
       var p = visee(); cam.x = p[0]; cam.y = p[1];
@@ -3393,9 +3404,10 @@
           x: 0, y: 0, lieu: domicileDe(v.role, v.flags), cartesSemaine: 0, faits: {}, jourFaits: {}, vus: {},
           journeeDebut: v.journee || 0, auMatch: false, zoom: 0,
           biens: {}, sale: 0, pont: {}, mission: null, missionsFaites: {}, offres: {}, derniereOffre: -99, dits: {},
-          blocsVus: v.blocs || 0, panneau: null, scenesVues: {}, scenesJour: null
+          blocsVus: v.blocs || 0, panneau: null, scenesVues: {}, scenesJour: null, grand: MONDE ? 1 : 0, quartiers: {}
         };
         annonces = [];
+        FERMES = {}; BLOQUE = null; vue = v; majQuartiers(false);
         if (dedans) aDehors(true);
         rdv = null; dernierVu = ""; figurants = []; passants = []; acteurs = {};
         lancer();

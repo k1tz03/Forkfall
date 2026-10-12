@@ -17,6 +17,16 @@ const { Facade } = B;
 const N = 1000, ZL = 10, ZMAX = 110;
 const QX = 330, QY = 420; // le quartier du stade de la Rive
 const RIVER = [290, 356]; // le lit de la Rive
+// LE GRAND AUBÉRIVE (docs/histoires/grand_auberive.md) : la ville au centre d'un monde de 1 800
+// voxels de côté, posée en (400, 400) ; le boulevard de ceinture autour ; quatre quartiers.
+const NG = 1800, OG = 400, ZMAXG = 240;
+const CEINTURE = [364, 400, 1400, 1436]; // les deux bandes du boulevard, de chaque côté de la ville
+const GRAND = [
+  { file: 'district_hauts.js', x: 0, y: 0, cle: 'hauts' },
+  { file: 'district_tilleuls.js', x: 0, y: 364, cle: 'tilleuls' },
+  { file: 'district_port.js', x: 1436, y: 364, cle: 'port' },
+  { file: 'district_campagne.js', x: 0, y: 1436, cle: 'campagne' },
+];
 
 const rgb = (c, r, g, b) => { c.cr = r; c.cg = g; c.cb = b; };
 const mul = (c, k) => { c.cr *= k; c.cg *= k; c.cb *= k; };
@@ -83,10 +93,50 @@ const ROADS = [
 ];
 
 function buildZone(o = {}) {
+  const night = o.time !== 'day';
+  if (!o.grand) {
+    const W = new World(N, N, ZMAX, ZL);
+    W.baseWet = night ? 0.16 : 0.06;
+    W.places = batirVille(W, o, 0, 0);
+    reflets(W, RIVER[0], RIVER[1], 0, N, null);
+    W.flood = { x: QX + 148, y: QY + 142 };
+    return W;
+  }
+  const W = new World(NG, NG, ZMAXG, ZL);
+  W.baseWet = night ? 0.16 : 0.06;
+  W.box(0, 0, -10, NG, NG, 0, M.SOIL);
+  W.box(0, 0, 0, NG, NG, 2, M.SIDEWALK);
+  ceinture(W);
+  // le couloir de la Rive, dans les Tilleuls et le port (la ceinture a ses ponts)
+  const yr = OG + RIVER[0];
+  couloirRive(W, 0, CEINTURE[0], yr, night);
+  couloirRive(W, CEINTURE[3], NG, yr, night);
+  const places = batirVille(W, o, OG, OG);
+  for (const d of GRAND) {
+    const f = path.join(__dirname, d.file);
+    if (!fs.existsSync(f)) { console.log('  (quartier absent :', d.file, ')'); continue; }
+    const D = require(f);
+    W.at(d.x, d.y);
+    const out = D.build(W, { w: D.w, h: D.h, night, time: o.time || 'night', mood: o.mood || 'good', R: rng(D.seed || 7), G: 2 }) || {};
+    W.at(0, 0);
+    for (const p of out.places || []) places.push(Object.assign({}, p, { x: p.x + d.x, y: p.y + d.y, district: d.file, quartier: d.cle }));
+  }
+  raccords(W, night, rng(4405));
+  // le port pose ses propres reflets sur son bassin
+  reflets(W, yr, yr + RIVER[1] - RIVER[0], 0, NG, { x0: CEINTURE[3] });
+  W.places = places;
+  W.bords = bordsDuMonde(W);
+  W.flood = { x: OG + QX + 148, y: OG + QY + 142 };
+  W.grand = { N: NG, O: OG, quartiers: GRAND.map(d => { const D = fs.existsSync(path.join(__dirname, d.file)) ? require(path.join(__dirname, d.file)) : { w: 0, h: 0 }; return { cle: d.cle, x: d.x, y: d.y, w: D.w, h: D.h }; }) };
+  return W;
+}
+
+// LA VILLE, posée en (OX, OY) : le sol, les rues, la Rive, les quais, les ponts, le quartier du
+// stade et les six quartiers de 2026 (la zone de 1 000 × 1 000 d'avant le Grand Aubérive)
+function batirVille(W, o, OX, OY) {
   const night = o.time !== 'day', bad = o.mood === 'bad';
   const R = rng(4404);
-  const W = new World(N, N, ZMAX, ZL);
-  W.baseWet = night ? 0.16 : 0.06;
+  W.at(OX, OY);
   W.box(0, 0, -10, N, N, 0, M.SOIL);
   W.box(0, 0, 0, N, N, 2, M.SIDEWALK);
   // la chaussée
@@ -188,7 +238,7 @@ function buildZone(o = {}) {
 
   // ------------------------------------------------ le quartier du stade, posé au centre
   W.box(QX, QY, 0, QX + 340, QY + 340, 2, 0);
-  W.at(QX, QY); buildQuartier(o, W); W.at(0, 0);
+  W.at(OX + QX, OY + QY); buildQuartier(o, W); W.at(OX, OY);
 
   // ------------------------------------------------ les autres quartiers
   const places = [];
@@ -196,10 +246,10 @@ function buildZone(o = {}) {
     const f = path.join(__dirname, d.file);
     if (!fs.existsSync(f)) { console.log('  (quartier absent :', d.file, ')'); continue; }
     const D = require(f);
-    W.at(d.x, d.y);
+    W.at(OX + d.x, OY + d.y);
     const out = D.build(W, { w: D.w, h: D.h, night, time: o.time || 'night', mood: o.mood || 'good', R: rng(D.seed || 7), G: 2 }) || {};
-    W.at(0, 0);
-    for (const p of out.places || []) places.push(Object.assign({}, p, { x: p.x + d.x, y: p.y + d.y, district: d.file }));
+    W.at(OX, OY);
+    for (const p of out.places || []) places.push(Object.assign({}, p, { x: OX + p.x + d.x, y: OY + p.y + d.y, district: d.file }));
   }
 
   // ------------------------------------------------ réverbères et voitures le long des rues du maître
@@ -228,18 +278,132 @@ function buildZone(o = {}) {
     W.sprite(Object.assign({ x: 380, y: 368, z: 2 }, SP.WALKER)); W.sprite(Object.assign({ x: 640, y: 279, z: 2 }, SP.WALKER2));
     W.sprite(Object.assign({ x: 512, y: 320, z: 2 }, SP.KID)); W.sprite(Object.assign({ x: 700, y: 366, z: 2 }, SP.COAT));
   }
-  // les reflets sur la Rive : chaque lumière dont le reflet tombe sur l'eau y laisse sa traînée
+  W.at(0, 0);
+  return places;
+}
+
+// les reflets sur la Rive (y0 … y1, x0 … x1 dans le monde) : chaque lumière dont le reflet tombe sur
+// l'eau y laisse sa traînée ; `sauf.x0` : à partir de là, le quartier pose les siens (le port)
+function reflets(W, y0, y1, x0, x1, sauf) {
   GLINTS.length = 0;
   const zw = -7 + ZL;
   W.lights.forEach((L, i) => {
     if (L.z <= zw + 1 || L.axis) return;
     const t = (L.z - zw) / 1.15, mx = L.x + t, my = L.y + t;
-    if (my < RIVER[0] + 1 || my > RIVER[1] - 1 || mx < 0 || mx >= N) return;
+    if (my < y0 + 1 || my > y1 - 1 || mx < x0 || mx >= x1) return;
+    if (sauf && sauf.x0 != null && mx >= sauf.x0) return;
     const m = Math.max(L.cr, L.cg, L.cb); if (m < 0.2) return;
     GLINTS.push({ id: i, d: L.x - L.y, s: mx + my, len: 7 + Math.min(14, t * 0.55), k: 0.85, c: [L.cr / m, L.cg / m, L.cb / m] });
   });
-  W.places = places;
-  return W;
+}
+
+// ------------------------------------------------ le boulevard de ceinture (le Grand Aubérive)
+// 36 voxels de large autour de la ville : un trottoir de 6, une chaussée de 24, un trottoir de 6.
+// Il passe la Rive sur deux ponts de pierre, à l'ouest et à l'est ; toutes les sorties de la ville
+// y débouchent, et les quartiers y arrivent par leurs rues.
+function ceinture(W) {
+  const [a0, a1, b0, b1] = CEINTURE;
+  const yr = OG + RIVER[0], yr1 = OG + RIVER[1];
+  const chaussee = (x0, y0, x1, y1) => { W.box(x0, y0, 0, x1, y1, 2, 0); W.box(x0, y0, 0, x1, y1, 1, M.ASPHALT); };
+  // les quatre bandes (la chaussée au milieu, les coins en carrefour)
+  chaussee(a0 + 6, a0 + 6, b1 - 6, a1 - 6);          // nord
+  chaussee(a0 + 6, b0 + 6, b1 - 6, b1 - 6);          // sud
+  chaussee(a0 + 6, a0 + 6, a1 - 6, b1 - 6);          // ouest
+  chaussee(b0 + 6, a0 + 6, b1 - 6, b1 - 6);          // est
+  // les tirets de l'axe, hors des carrefours et des ponts
+  const m = (a0 + a1) / 2, n = (b0 + b1) / 2;
+  for (let t = a1 + 8; t < b0 - 8; t += 16) {
+    for (let k = 0; k < 10 && t + k < b0 - 8; k++) {
+      W.set(t + k, m - 1, 0, M.ROADLINE); W.set(t + k, m, 0, M.ROADLINE);
+      W.set(t + k, n - 1, 0, M.ROADLINE); W.set(t + k, n, 0, M.ROADLINE);
+      if (t + k < yr - 8 || t + k > yr1 + 8) { W.set(m - 1, t + k, 0, M.ROADLINE); W.set(m, t + k, 0, M.ROADLINE); W.set(n - 1, t + k, 0, M.ROADLINE); W.set(n, t + k, 0, M.ROADLINE); }
+    }
+  }
+  // les deux ponts sur la Rive : l'eau passe dessous, d'un quartier à la ville
+  for (const [x0, x1] of [[a0, a1], [b0, b1]]) {
+    W.box(x0, yr - 4, -8, x1, yr, -2, M.QUAY_STONE); W.box(x0, yr1, -8, x1, yr1 + 4, -2, M.QUAY_STONE);
+    W.box(x0, yr, -7, x1, yr1, 2, 0);
+    W.box(x0, yr, -8, x1, yr1, -7, M.RIVER2);
+    W.box(x0, yr - 4, -2, x1, yr1 + 4, 2, M.BRIDGE_STONE);
+    W.box(x0 + 6, yr - 4, 0, x1 - 6, yr1 + 4, 2, 0); W.box(x0 + 6, yr - 4, 0, x1 - 6, yr1 + 4, 1, M.ASPHALT);
+    W.box(x0, yr - 4, 2, x0 + 2, yr1 + 4, 5, M.BRIDGE_STONE); W.box(x1 - 2, yr - 4, 2, x1, yr1 + 4, 5, M.BRIDGE_STONE);
+    for (const y of [yr + 18, yr1 - 21]) W.box(x0 + 8, y, -8, x1 - 8, y + 3, -2, M.BRIDGE_STONE);
+  }
+}
+// après la ville et les quartiers : là où une rue arrive au boulevard, le trottoir s'ouvre en carrefour ;
+// puis les bordures, les réverbères des ponts et du boulevard, quelques voitures
+function raccords(W, night, R) {
+  const [a0, a1, b0, b1] = CEINTURE;
+  const yr = OG + RIVER[0], yr1 = OG + RIVER[1];
+  const rue = (x, y) => W.get(x, y, 0) === M.ASPHALT && !W.get(x, y, 1);
+  const ouvrir = (x0, y0, x1, y1) => { W.box(x0, y0, 0, x1, y1, 2, 0); W.box(x0, y0, 0, x1, y1, 1, M.ASPHALT); };
+  // une rue arrive quand la rangée juste au-delà du trottoir est de la chaussée, sur au moins 12 voxels
+  function suivre(long, fixe, axe, x0s, x1s) {
+    let d = -1;
+    for (let t = long[0]; t <= long[1]; t++) {
+      const ok = t < long[1] && (axe === 'x' ? rue(t, fixe) : rue(fixe, t));
+      if (ok && d < 0) d = t;
+      if (!ok && d >= 0) { if (t - d >= 12) { if (axe === 'x') ouvrir(d, x0s, t, x1s); else ouvrir(x0s, d, x1s, t); } d = -1; }
+    }
+  }
+  // côté ville (le trottoir intérieur) et côté quartiers (le trottoir extérieur)
+  suivre([a1, b0], a1, 'x', a1 - 6, a1); suivre([a1, b0], b0 - 1, 'x', b0, b0 + 6);
+  suivre([a1, b0], a1, 'y', a1 - 6, a1); suivre([a1, b0], b0 - 1, 'y', b0, b0 + 6);
+  suivre([0, NG], a0 - 1, 'x', a0, a0 + 6); suivre([0, NG], b1, 'x', b1 - 6, b1);
+  suivre([0, NG], a0 - 1, 'y', a0, a0 + 6); suivre([0, NG], b1, 'y', b1 - 6, b1);
+  // les bordures, là où le trottoir touche la chaussée
+  const bord = (x0, y0, x1, y1) => {
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) {
+      if (W.get(x, y, 1) !== M.SIDEWALK) continue;
+      if (rue(x + 1, y) || rue(x - 1, y) || rue(x, y + 1) || rue(x, y - 1)) { W.set(x, y, 1, M.CURB); W.set(x, y, 0, M.CURB); }
+    }
+  };
+  bord(a0, a0, b1, a1); bord(a0, b0, b1, b1); bord(a0, a1, a1, b0); bord(b0, a1, b1, b0);
+  for (const [x0, x1] of [[a0, a1], [b0, b1]]) {
+    B.streetLamp(W, x0 + 1, yr + 4, 5, 1, 0, { on: night, I: 1.6, r: 50, h: 16 }); B.streetLamp(W, x1 - 2, yr1 - 6, 5, -1, 0, { on: night, I: 1.6, r: 50, h: 16 });
+  }
+  // les réverbères le long du boulevard, sur un trottoir (jamais au milieu d'un carrefour ni sur un pont)
+  const trottoir = (x, y) => { const v = W.get(x, y, 1); return v === M.SIDEWALK || v === M.CURB; };
+  const surPont = (y) => y > yr - 10 && y < yr1 + 10;
+  for (let t = a0 + 40; t < b1 - 30; t += 70) {
+    if (trottoir(t, a0 + 2)) B.streetLamp(W, t, a0 + 2, 2, 0, 1, { on: night });
+    if (trottoir(t, b1 - 3)) B.streetLamp(W, t, b1 - 3, 2, 0, -1, { on: night });
+    if (!surPont(t) && trottoir(a0 + 2, t)) B.streetLamp(W, a0 + 2, t, 2, 1, 0, { on: night });
+    if (!surPont(t) && trottoir(b1 - 3, t)) B.streetLamp(W, b1 - 3, t, 2, -1, 0, { on: night });
+  }
+  const voitures = [M.CAR_BORD, M.CAR_WHITE, M.CAR_BLUE, M.CAR_BEIGE];
+  for (let t = a1 + 30; t < b0 - 40; t += 86) {
+    if (R() < 0.5) B.car(W, t, a0 + 9, 1, 'x', voitures[Math.floor(R() * 4)]);
+    if (R() < 0.5) B.car(W, t, b1 - 17, 1, 'x', voitures[Math.floor(R() * 4)]);
+    if (R() < 0.45 && !surPont(t) && !surPont(t + 20)) B.car(W, a0 + 9, t, 1, 'y', voitures[Math.floor(R() * 4)]);
+    if (R() < 0.45 && !surPont(t) && !surPont(t + 20)) B.car(W, b1 - 17, t, 1, 'y', voitures[Math.floor(R() * 4)]);
+  }
+}
+
+// ce qui touche les bords du monde (les routes, la Rive, la voie ferrée, les chemins), en segments le
+// long de chaque bord : le fond (fond.js) les prolonge au-delà
+function bordsDuMonde(W) {
+  const N = W.X, nom = {};
+  for (const k in M) nom[M[k]] = k;
+  const sorte = m => {
+    const n = nom[m] || '';
+    if (n === 'ASPHALT' || n === 'ROADLINE' || n === 'GUTTER') return 'route';
+    if (n === 'RIVER2' || n === 'CMP_EAU') return 'eau';
+    if (/BALLAST|RAIL/.test(n)) return 'rail';
+    if (n === 'CMP_CHEMIN' || n === 'GRAVEL') return 'chemin';
+    return null;
+  };
+  const haut = (x, y) => { for (let z = 6; z >= -10; z--) { const m = W.get(x, y, z); if (m) return m; } return 0; };
+  const profil = get => {
+    const segs = [];
+    let cur = null, d = 0;
+    for (let t = 0; t <= N; t++) {
+      const s = t < N ? sorte(get(t)) : null;
+      if (s !== cur) { if (cur && t - d >= 3) segs.push({ type: cur, a: d, b: t }); cur = s; d = t; }
+    }
+    return segs;
+  };
+  return { ouest: profil(t => haut(0, t)), est: profil(t => haut(N - 1, t)), nord: profil(t => haut(t, 0)), sud: profil(t => haut(t, N - 1)) };
 }
 
 // ------------------------------------------------ le couloir de la Rive, hors de la ville
@@ -278,13 +442,15 @@ function view(W, o) {
   const FW = o.width || 656, FH = o.height || 370;
   const L = lighting(o.time || 'night');
   // la lueur des projecteurs du stade, là où ils sont vraiment
-  const fx = QX + 148, fy = QY + 142, fz = 72 + ZL;
+  const fl = W.flood || { x: QX + 148, y: QY + 142 }, fx = fl.x, fy = fl.y, fz = 72 + ZL;
   const flood = o.floodOn === false || o.mood === 'bad' ? null : o.flood || [2 * (fx - fy) - o.cu, fx + fy - 2 * fz - o.cv];
   const skyOpt = { horizon: o.horizon != null ? o.horizon : 48, flood };
   if (o.time === 'dawn') Object.assign(skyOpt, { top: [0.16, 0.17, 0.26], hor: [0.42, 0.32, 0.34], stars: 0 });
   if (o.time === 'dusk') Object.assign(skyOpt, { top: [0.12, 0.10, 0.16], hor: [0.48, 0.28, 0.20], stars: 4 });
-  const sky = (o.time === 'day' ? daySky : nightSky)(FW, FH, skyOpt);
+  const sky = o.fond ? { backdrop: null, fog: null } : (o.time === 'day' ? daySky : nightSky)(FW, FH, skyOpt);
   const opt = Object.assign({ width: FW, height: FH, cu: o.cu, cv: o.cv, backdrop: sky.backdrop, fogColor: sky.fog, wetSky: [0.1, 0.085, 0.085] }, L);
+  // le Grand Aubérive : le paysage continue au-delà du monde (fond.js), la tranche s'efface
+  if (o.fond) { opt.backdrop = o.fond.backdrop; opt.fogColor = o.fond.fog; opt.bordMonde = true; }
   if (o.cutS != null) { opt.cutS = o.cutS; opt.fogS0 = o.cutS + 4; opt.fogS1 = o.cutS + (o.fogLen || 86); } else { opt.fogS0 = -2000; opt.fogS1 = -1000; }
   if (o.cutF != null) { opt.cutF = o.cutF; opt.cutZ = ZL + 3; }
   return E.render(W, opt);
@@ -299,7 +465,7 @@ function screen(W, x, y, o = {}) {
   return view(W, Object.assign({}, o, { width: FW, height: FH, cu, cv, cutS, cutF }));
 }
 
-module.exports = { buildZone, view, screen, couloirRive, N, QX, QY };
+module.exports = { buildZone, view, screen, couloirRive, N, QX, QY, NG, OG, ZMAXG, CEINTURE, GRAND };
 
 if (require.main === module) {
   const time = process.argv[2] || 'night', mood = process.argv[3] || 'good';

@@ -1780,7 +1780,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux', 'gens']) {
+      for (final cle in ['lieux', 'paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux', 'gens']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }

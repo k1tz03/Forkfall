@@ -235,6 +235,16 @@ function render(W, opt) {
   const dv = new Float32Array(N).fill(-1e9), sB = new Float32Array(N), face = new Int8Array(N).fill(-1);
   const R = {}, c = { reflAmb: opt.reflAmb || [0.18, 0.15, 0.15] }, rc = { reflAmb: opt.reflAmb || [0.18, 0.15, 0.15] };
   const lights = W.lights;
+  // les lumières rangées par cases de 64 voxels : un point ne parcourt que celles dont la portée
+  // couvre sa case, dans le même ordre (le résultat est le même, au bit près)
+  const LB = 64, lbx = Math.max(1, Math.ceil(W.X / LB)), lby = Math.max(1, Math.ceil(W.Y / LB)), VIDE = [];
+  const cases = new Array(lbx * lby);
+  for (let i = 0; i < lights.length; i++) {
+    const L = lights[i];
+    const x0 = clamp(Math.floor((L.x - L.r) / LB), 0, lbx - 1), x1 = clamp(Math.floor((L.x + L.r) / LB), 0, lbx - 1);
+    const y0 = clamp(Math.floor((L.y - L.r) / LB), 0, lby - 1), y1 = clamp(Math.floor((L.y + L.r) / LB), 0, lby - 1);
+    for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) (cases[cy * lbx + cx] || (cases[cy * lbx + cx] = [])).push(i);
+  }
   const amb = opt.ambient, sun = opt.sun, Ls = opt.sunDir;
   const faceAmb = opt.faceAmb || [1.0, 0.8, 0.62];
   const Q = opt.lightQuant || 6;
@@ -243,7 +253,10 @@ function render(W, opt) {
   for (let py = 0; py < FH; py++) {
     for (let px = 0; px < FW; px++) {
       const k = py * FW + px, k3 = k * 3;
-      if (!castRay(W, px + opt.cu, py + opt.cv, R, opt.cutS, opt.cutF, opt.cutZ)) {
+      // `bordMonde` : la tranche du monde (le sol vu de côté, au bord avant) laisse voir le fond, qui
+      // continue le paysage (fond.js) ; ce qui se dresse au bord reste
+      if (!castRay(W, px + opt.cu, py + opt.cv, R, opt.cutS, opt.cutF, opt.cutZ) ||
+        (opt.bordMonde && R.iz < W.zl + 2 && ((R.face === RIGHT && R.ix === W.X - 1) || (R.face === LEFT && R.iy === W.Y - 1)))) {
         const bg = opt.backdrop(px, py);
         col[k3] = bg[0]; col[k3 + 1] = bg[1]; col[k3 + 2] = bg[2];
         emi[k3] = bg[3] || 0; emi[k3 + 1] = bg[4] || 0; emi[k3 + 2] = bg[5] || 0;
@@ -272,8 +285,9 @@ function render(W, opt) {
       }
       // lumières ponctuelles, quantifiées et tramées
       let qr = 0, qg = 0, qb = 0;
-      for (let i = 0; i < lights.length; i++) {
-        const L = lights[i];
+      const lc = cases[clamp(Math.floor(P1 / LB), 0, lby - 1) * lbx + clamp(Math.floor(P0 / LB), 0, lbx - 1)] || VIDE;
+      for (let j = 0; j < lc.length; j++) {
+        const L = lights[lc[j]];
         const dx = L.x - P0, dy = L.y - P1, dz = L.z - P2;
         const d2 = dx * dx + dy * dy + dz * dz;
         if (d2 >= L.r * L.r) continue;
@@ -360,7 +374,7 @@ function render(W, opt) {
     }
   }
   if (opt.log !== false) console.log(`  rayons ${t1 - t0} ms, total ${Date.now() - t0} ms`);
-  return { img, FW, FH, dv, face };
+  return { img, FW, FH, dv, face, sB };
 }
 
 function blur(src, W, H, r) {
