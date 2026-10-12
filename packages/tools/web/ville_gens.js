@@ -26,10 +26,13 @@
   var HABITUDE_MOT = { comptoir: "Le comptoir", nuit: "La nuit", jeu: "Le jeu", sport: "Le sport", soin: "Le repos, les soins", culture: "Lire, regarder",
     foi: "L'église, les tombes", famille: "Les tiens", largesse: "Donner", luxe: "Le luxe", quartier: "Le quartier", travail: "Le travail" };
 
+  var GENS_PAR_LIEU = {}, LIEUX_GENS = [];
   function chargerGens() {
     if (GENS) return;
-    GENS = {}; GENS_LISTE = [];
-    (D.gens || []).forEach(function (g) { GENS[g.id] = g; GENS_LISTE.push(g); });
+    GENS = {}; GENS_LISTE = []; GENS_PAR_LIEU = {};
+    // dans l'ordre du contenu : le premier d'un lieu le tient
+    (D.gens || []).forEach(function (g) { GENS[g.id] = g; GENS_LISTE.push(g); (GENS_PAR_LIEU[g.lieu] = GENS_PAR_LIEU[g.lieu] || []).push(g); });
+    LIEUX_GENS = Object.keys(GENS_PAR_LIEU).sort();
   }
   function gensDe(id) { chargerGens(); return (id && GENS[id]) || null; }
   function aFlag(f) { return ((vue && vue.flags) || []).indexOf(f) >= 0; }
@@ -66,7 +69,21 @@
     var def = TEXTE_LIEU[g.lieu];
     return !def || ouvert(def);
   }
-  function gensDuLieu(cle) { chargerGens(); return GENS_LISTE.filter(function (g) { return g.lieu === cle && gensLa(g); }); }
+  function gensDuLieu(cle) { chargerGens(); return (GENS_PAR_LIEU[cle] || []).filter(gensLa); }
+  // devant un lieu sans pièce (un quartier, le parvis, les docks), celui qui le tient se tient dehors,
+  // comme les commerçants : la ville le montre, on le touche (voulus, ville.js)
+  function gensDehors(deja, comme) {
+    chargerGens();
+    var out = [];
+    LIEUX_GENS.forEach(function (cle) {
+      if (!LIEU[cle] || comme[cle] || aInterieur(cle) || lieuFerme(cle)) return;
+      var def = TEXTE_LIEU[cle];
+      if (def && !ouvert(def)) return;
+      var t = tenancier(cle), spt = t && spriteDe(t.id);
+      if (spt && !deja[t.id]) { out.push({ id: "gens_" + cle, sp: spt, qui: t.id, role: "gensville", lieu: cle }); deja[t.id] = 1; }
+    });
+    return out;
+  }
   // celui qui tient le lieu en ce moment : le premier de son lieu dans le contenu
   function tenancier(cle) { return gensDuLieu(cle)[0] || null; }
 

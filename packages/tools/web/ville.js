@@ -760,6 +760,9 @@
       if (spt && !deja[t.id]) { out.push({ id: "com_" + c.lieu, sp: spt, qui: t.id, role: "gensville", lieu: c.lieu }); deja[t.id] = 1; return; }
       out.push({ id: "com_" + c.lieu, sp: c.sp, qui: BOUCHE[c.sp] || "commercant", role: "commercant", lieu: c.lieu });
     });
+    var comme = {};
+    COMMERCES.forEach(function (c) { comme[c.lieu] = 1; });
+    out = out.concat(gensDehors(deja, comme));
     // chacun sa place devant le lieu (celui qui t'attend prend la première)
     var parLieu = {};
     out.forEach(function (a) { var l = parLieu[a.lieu] = parLieu[a.lieu] || []; a.place = placesDe(a.lieu)[l.length % placesDe(a.lieu).length]; l.push(a); });
