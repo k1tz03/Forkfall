@@ -1,0 +1,401 @@
+# Cartes de palier des gens du club (la ville vivante, lot « club » :
+# content/ville/gens_club.yaml → `on_relation`). Comme celles de paliers.yaml :
+# programmées quand le lien franchit le seuil, une fois par carrière, hors du sac.
+#
+# +3 : la faveur. Deux sorties : on la prend (la jauge du réseau de la personne, une
+# ligne d'Almanach), ou l'on demande pourquoi, et ça coûte un cran.
+# −3 : ce qu'elle fait quand elle se retourne. Une seule sortie, les deux côtés
+# identiques ; elle devient une Ennemie (`enemy`).
+#
+#   mireille       +3 → vi.mireille.faveur        (le cahier bleu)
+#   pujade         +3 → vi.pujade.faveur          (le carnet noir des ardoises)
+#                  −3 → vi.pujade.rideau          (le rideau de la buvette)
+#   pujade_fils    +3 → vi.pujade_fils.faveur     (les clés de la buvette)
+#   plassard       +3 → vi.plassard.faveur        (la colonne « divers »)
+#   rouquette      +3 → vi.rouquette.faveur       (la poignée du tunnel)
+#   lulu_gardien   +3 → vi.lulu_gardien.faveur    (une ligne au registre)
+#                  −3 → vi.lulu_gardien.registre  (le registre dans L'Écho)
+#   remi_gendreau  +3 → vi.remi_gendreau.faveur   (la radio des rondes)
+#   thevenot       +3 → vi.thevenot.faveur        (les fiches du centre)
+#                  −3 → vi.thevenot.porte         (la porte du centre)
+#   fournel        +3 → vi.fournel.faveur         (le gamin caché)
+#   vidalie        +3 → vi.vidalie.faveur         (la source sous le rond central)
+#   vidalie_fils   +3 → vi.vidalie_fils.faveur    (les plans de 1938)
+#   rivoire        +3 → vi.rivoire.faveur         (la clé de la salle)
+#   duclou         +3 → vi.duclou.faveur          (la carte de service)
+#   combaz         +3 → vi.combaz.faveur          (l'écharpe grise de 1962)
+#   arnal          +3 → vi.arnal.faveur           (la liste des acheteurs)
+#   bretaud        +3 → vi.bretaud.faveur         (une page du cahier)
+#                  −3 → vi.bretaud.cahier         (les déjeuners dans L'Écho)
+#   pelissou       +3 → vi.pelissou.faveur        (la chambre froide)
+#
+# Aucune ne dit `{toi}` ; leurs rôles sont ceux de la personne ; aucune ne pose de
+# drapeau (la ligne d'Almanach suffit à s'en souvenir). Le lieu est celui de la
+# personne (`rencontres` du lot).
+cards:
+  # ═════════════════════════════════════════════════════════════════ le club-house
+  - id: vi.mireille.faveur
+    roles: [president, ds]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: mireille
+    tone: strategique
+    once: true
+    text: "Mireille ouvre son cahier à la page bleue. « Un homme raccroche avant moi chaque mardi, à six heures deux. Onze fois. J'ai fini par reconnaître sa toux : il siège au conseil du club. »"
+    left:
+      label: "Dites-moi son nom"
+      effects: {direction: "+++", journal: {text: "{annee} : Mireille a donné à {nom} un nom tiré de la page bleue de son cahier. Le téléphone s'est tu.", poids: 3, tags: [direction]}}
+      answer: "Elle l'écrit sur un papier vert, le glisse sous ton sous-main, et reprend son crayon. Le mardi suivant, à six heures deux, le téléphone ne sonne pas."
+    right:
+      label: "Je préfère ne pas savoir"
+      effects: {direction: "+", relation: {mireille: -1}}
+      answer: "« Comme vous voudrez. » Elle referme le cahier. « Moi, je préfère toujours savoir. C'est pour ça que je dors si mal. »"
+
+  # ════════════════════════════════════════════════════════════════════ la buvette
+  - id: vi.pujade.faveur
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [caisse, objet, rescue:direction]
+    speaker: pujade
+    tone: strategique
+    once: true
+    text: "Firmin sort de la boîte à cigares un carnet noir, et le pose sur le zinc. « Les ardoises du club depuis 1970. Qui a payé quoi, et avec l'argent de qui. Le jour où tu en as besoin, il est à toi. »"
+    left:
+      label: "Je le garde"
+      effects: {direction: "++", caisse: "+", journal: {text: "{annee} : Firmin, le patron de la buvette, a confié à {nom} le carnet noir des ardoises du club, depuis 1970.", poids: 3, tags: [caisse]}}
+      answer: "Tu le glisses dans ta veste. Il pèse le poids d'un carnet, et celui de vingt ans de présidents. Firmin retourne à sa tireuse comme si de rien n'était."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {direction: "+", relation: {pujade: -1}}
+      answer: "« Parce que tu paies tes demis. » Il le remet dans la boîte. « Et tu demandes trop pourquoi. Ça te passera, ou ça ne te passera pas. »"
+
+  - id: vi.pujade.rideau
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: ultras
+    tags: [tribunes, objet, risk:tribunes]
+    speaker: pujade
+    tone: strategique
+    once: true
+    text: "Midi, jour de match. Le rideau de fer de la buvette est baissé. Dessus, à la craie, de la main de Firmin : FERMÉ POUR CAUSE DE {NOM}. La Nord lit, et elle rit."
+    left:
+      label: "Je passe mon chemin"
+      effects: {tribunes: "---", direction: "-", enemy: [pujade], journal: {text: "{annee} : la buvette du kop fermée un jour de match, « pour cause de {nom} ». La Nord a bu ailleurs.", poids: 3, tags: [tribunes]}}
+      answer: "La Nord boit debout au tabac du carrefour et répète la craie à qui veut l'entendre. Le soir, le rideau se relève. Pour les autres."
+    right:
+      label: "Je passe mon chemin"
+      effects: {tribunes: "---", direction: "-", enemy: [pujade], journal: {text: "{annee} : la buvette du kop fermée un jour de match, « pour cause de {nom} ». La Nord a bu ailleurs.", poids: 3, tags: [tribunes]}}
+      answer: "La Nord boit debout au tabac du carrefour et répète la craie à qui veut l'entendre. Le soir, le rideau se relève. Pour les autres."
+
+  - id: vi.pujade_fils.faveur
+    roles: [president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: pujade_fils
+    tone: strategique
+    once: true
+    text: "Jo pose sur le zinc un trousseau à l'anneau usé. « La salle du fond, la cour, la cave, le portail de la ruelle. Mon père ne les donnait à personne. Il m'a dit que tu serais l'exception. »"
+    left:
+      label: "Je les prends"
+      effects: {direction: "++", tribunes: "+", journal: {text: "{annee} : Jo Pujade a confié à {nom} les clés de la buvette du kop, celles que son père ne donnait à personne.", poids: 3, tags: [tribunes]}}
+      answer: "L'anneau est encore tiède de sa poche. Désormais, tu entres à la buvette par la ruelle, à toute heure, et tu ressors par la cour sans croiser personne."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {tribunes: "+", relation: {pujade_fils: -1}}
+      answer: "« Parce que tu ne demandes jamais rien. » Il reprend le trousseau et le remet sous la caisse. « Enfin, jusqu'à maintenant. »"
+
+  # ═══════════════════════════════════════════════════════════════════ le matériel
+  - id: vi.plassard.faveur
+    roles: [entraineur, joueur, president, ds]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:vestiaire]
+    speaker: plassard
+    tone: strategique
+    once: true
+    text: "Hector ouvre le registre du matériel à la colonne « divers ». « Ce qui entre ici n'existe plus. Un sac, un carton, une caisse : dis-moi ce qui doit disparaître du club, et ça devient divers. »"
+    left:
+      label: "Je m'en souviendrai"
+      effects: {vestiaire: "+++", journal: {text: "{annee} : Hector Plassard, l'intendant, a ouvert à {nom} la colonne « divers » de son registre.", poids: 3, tags: [vestiaire]}}
+      answer: "Il referme le registre et pose la main dessus, à plat. « Je n'ai jamais rien inscrit en divers pour moi. Pour toi, je le ferai. Une fois. »"
+    right:
+      label: "Pourquoi me dire ça ?"
+      effects: {vestiaire: "+", relation: {plassard: -1}}
+      answer: "« Parce que personne d'autre ne plie ses chasubles. » Il range le registre sur l'étagère. « Et parce que tu poses des questions. Il ne faudrait pas. »"
+
+  - id: vi.rouquette.faveur
+    roles: [ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:vestiaire]
+    speaker: rouquette
+    tone: strategique
+    once: true
+    text: "Gaëtan ouvre la porte du fond du local, celle du tunnel, et te tend la poignée amovible. « Personne n'en a de double. Le jour où il faudra sortir quelqu'un du stade sans qu'on le voie, c'est par là. »"
+    left:
+      label: "Je la garde"
+      effects: {vestiaire: "+++", journal: {text: "{annee} : Gaëtan Rouquette, l'intendant, a remis à {nom} la poignée de la porte du tunnel.", poids: 3, tags: [vestiaire]}}
+      answer: "Une poignée de laiton, froide, qui tient dans la paume. Tu la portes désormais dans ta poche, comme une clé. Elle n'ouvre qu'une porte, la bonne."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {vestiaire: "+", relation: {rouquette: -1}}
+      answer: "« Hector m'a dit : une personne par génération. » Il garde la poignée. « Il ne m'a pas dit de répondre aux questions. »"
+
+  # ═════════════════════════════════════════════════════════════════════ le stade
+  - id: vi.lulu_gardien.faveur
+    roles: [entraineur, joueur, president, ds]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: lulu_gardien
+    tone: strategique
+    once: true
+    text: "Lulu ouvre le registre de la loge à la page de samedi dernier. Entre deux lignes, il a ajouté une heure, à l'encre de l'époque. « Si on te demande où tu étais ce soir-là, tu étais ici. »"
+    left:
+      label: "Merci, Lulu"
+      effects: {direction: "++", tribunes: "+", journal: {text: "{annee} : au registre du gardien du stade, une ligne de plus, à l'encre d'époque : {nom}, ici, ce soir-là.", poids: 3, tags: [tribunes]}}
+      answer: "Il souffle sur l'encre et remet le registre sur l'étagère. « Je ne l'ai jamais fait pour personne. On me l'a déjà demandé, deux fois. Deux fois, j'ai dit non. »"
+    right:
+      label: "Je n'ai rien à cacher"
+      effects: {tribunes: "+", relation: {lulu_gardien: -1}}
+      answer: "« Personne n'a rien à cacher, jusqu'au jour où. » Il gomme la ligne. Il ne la réécrira pas, même si tu le lui demandes un jour."
+
+  - id: vi.lulu_gardien.registre
+    roles: [entraineur, joueur, president, ds]
+    arc: presse
+    tags: [presse, tribunes, risk:tribunes]
+    speaker: lulu_gardien
+    tone: strategique
+    once: true
+    text: "L'Écho publie en page trois une page du registre de la loge : tes heures d'arrivée et de départ, toute la saison, de l'écriture de Lulu. Dessous : « Le gardien n'a pas voulu commenter. »"
+    left:
+      label: "Je lis"
+      effects: {tribunes: "--", direction: "--", enemy: [lulu_gardien], journal: {text: "{annee} : L'Écho a publié une page du registre du gardien du stade : les heures de {nom}, toute une saison.", poids: 3, tags: [presse]}}
+      answer: "Les heures sont justes. C'est ce qui fait le plus mal : il n'a rien inventé. Dans toute la ville, on compte tes soirs à voix haute."
+    right:
+      label: "Je lis"
+      effects: {tribunes: "--", direction: "--", enemy: [lulu_gardien], journal: {text: "{annee} : L'Écho a publié une page du registre du gardien du stade : les heures de {nom}, toute une saison.", poids: 3, tags: [presse]}}
+      answer: "Les heures sont justes. C'est ce qui fait le plus mal : il n'a rien inventé. Dans toute la ville, on compte tes soirs à voix haute."
+
+  - id: vi.remi_gendreau.faveur
+    roles: [ds, president, selectionneur]
+    arc: ultras
+    tags: [tribunes, objet, rescue:tribunes]
+    speaker: remi_gendreau
+    tone: strategique
+    once: true
+    text: "Rémi te tend la radio de son père, réglée sur la fréquence des stadiers. « Avec ça, vous entendez le stade avant moi. Mon père ne l'a jamais prêtée. Moi non plus, jusqu'à aujourd'hui. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "++", direction: "+", journal: {text: "{annee} : Rémi Gendreau a prêté à {nom} la radio de son père, celle des rondes, réglée sur les stadiers.", poids: 3, tags: [tribunes]}}
+      answer: "La radio grésille dans ta poche tout le samedi. Tu entends la Nord gronder avant qu'elle gronde, et les stadiers courir avant qu'ils courent."
+    right:
+      label: "Gardez-la, Rémi"
+      effects: {tribunes: "+", relation: {remi_gendreau: -1}}
+      answer: "« Comme vous voudrez. » Il la raccroche à sa ceinture. « Mon père aurait insisté. Moi, je n'insiste jamais. »"
+
+  # ════════════════════════════════════════════════════════════════════ le centre
+  - id: vi.thevenot.faveur
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [formation, vestiaire, rescue:vestiaire]
+    speaker: thevenot
+    tone: strategique
+    once: true
+    text: "Maurice te tend une enveloppe épaisse : les fiches du centre depuis 1977, avec la ligne que personne ne lit. « Le jour où on te demandera ce que vaut un gamin, lis d'abord ma ligne. »"
+    left:
+      label: "Je les lirai"
+      effects: {vestiaire: "++", direction: "+", journal: {text: "{annee} : Maurice Thévenot a confié à {nom} ses fiches du centre depuis 1977, et la ligne que nul ne lisait.", poids: 3, tags: [formation]}}
+      answer: "Tu lis la première le soir même. Un gamin de 1977 : « pleure quand il gagne, à garder ». Tu lis jusqu'à deux heures. Tu ne liras plus jamais une fiche pareil."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {vestiaire: "+", relation: {thevenot: -1}}
+      answer: "« Parce qu'un jour je ne serai plus là pour la dire. » Il reprend l'enveloppe. « Ce jour-là, tu viendras la chercher. »"
+
+  - id: vi.thevenot.porte
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [formation, vestiaire, risk:vestiaire]
+    speaker: thevenot
+    tone: strategique
+    once: true
+    text: "Les gamins du centre attendent devant la porte, en survêtement. Quand tu arrives, Maurice siffle une fois, et ils rentrent tous sans te regarder. La porte se ferme."
+    left:
+      label: "Je reste dehors"
+      effects: {vestiaire: "--", tribunes: "-", enemy: [thevenot], journal: {text: "{annee} : les gamins du centre sont rentrés au coup de sifflet à l'arrivée de {nom}. La porte s'est refermée.", poids: 3, tags: [formation]}}
+      answer: "Par la vitre, tu vois Maurice parler aux gamins. Il ne te montre pas du doigt : il n'en a pas besoin. Les parents le sauront ce soir, la ville demain."
+    right:
+      label: "Je reste dehors"
+      effects: {vestiaire: "--", tribunes: "-", enemy: [thevenot], journal: {text: "{annee} : les gamins du centre sont rentrés au coup de sifflet à l'arrivée de {nom}. La porte s'est refermée.", poids: 3, tags: [formation]}}
+      answer: "Par la vitre, tu vois Maurice parler aux gamins. Il ne te montre pas du doigt : il n'en a pas besoin. Les parents le sauront ce soir, la ville demain."
+
+  - id: vi.fournel.faveur
+    roles: [ds, president, selectionneur]
+    arc: vestiaire
+    tags: [formation, vestiaire, rescue:vestiaire]
+    speaker: fournel
+    tone: strategique
+    once: true
+    text: "Nadège pose devant toi la fiche d'un gamin de quinze ans, une seule. « Ni les agents ni les grands clubs ne l'ont vu. Je l'ai caché un an. Il est à vous, si vous le protégez. »"
+    left:
+      label: "Je le protégerai"
+      effects: {vestiaire: "++", direction: "+", journal: {text: "{annee} : Nadège Fournel a montré à {nom} la fiche d'un gamin qu'elle cachait aux agents depuis un an.", poids: 3, tags: [formation]}}
+      answer: "Tu ranges la fiche dans le tiroir qui ferme à clé. Le samedi suivant, le gamin joue avec les moins de dix-sept ans, sous un autre numéro, et personne ne filme."
+    right:
+      label: "Pourquoi me le montrer ?"
+      effects: {vestiaire: "+", relation: {fournel: -1}}
+      answer: "« Parce que je n'en peux plus de le cacher seule. » Elle reprend la fiche. « Je continuerai seule, alors. Comme d'habitude. »"
+
+  # ═══════════════════════════════════════════════════════════════════ le terrain
+  - id: vi.vidalie.faveur
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:vestiaire]
+    speaker: vidalie
+    tone: strategique
+    once: true
+    text: "Germain t'emmène au milieu de la Rive, à six heures, et s'accroupit. « Là, sous le rond central, une source. Je la bouche depuis 1961. S'il te faut un match qui ne se joue pas, je la débouche. »"
+    left:
+      label: "Je m'en souviendrai"
+      effects: {vestiaire: "++", tribunes: "+", journal: {text: "{annee} : Germain Vidalie a montré à {nom} la source sous le rond central de la Rive.", poids: 3, tags: [vestiaire]}}
+      answer: "Il tape le sol du plat de la main, deux fois, comme on flatte un chien. « Elle dort. Elle se réveille quand je veux. On est deux à le savoir. »"
+    right:
+      label: "Pourquoi me le dire ?"
+      effects: {vestiaire: "+", relation: {vidalie: -1}}
+      answer: "« Parce que mon fils ne veut pas l'entendre. » Il se relève en s'appuyant sur ton épaule. « Oublie. Ça vaut mieux. »"
+
+  - id: vi.vidalie_fils.faveur
+    roles: [ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: vidalie_fils
+    tone: strategique
+    once: true
+    text: "Thomas soulève une planche du local de la tondeuse : les plans de 1938 du drainage de la Rive. « Sans eux, personne ne creuse ici sans tout inonder. Mon père me les a laissés. Je vous les confie. »"
+    left:
+      label: "Je les garde"
+      effects: {direction: "++", vestiaire: "+", journal: {text: "{annee} : Thomas Vidalie a confié à {nom} les plans de 1938 du drainage de la Rive.", poids: 3, tags: [direction]}}
+      answer: "Un rouleau jauni qui sent la terre. Tu le ranges chez toi, au-dessus de l'armoire. Le jour où quelqu'un voudra creuser la Rive, il devra d'abord te parler."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {vestiaire: "+", relation: {vidalie_fils: -1}}
+      answer: "« Mon père disait : à celui qui marche sur la piste. » Il remet la planche en place. « Vous ne marchez pas toujours sur la piste. »"
+
+  # ══════════════════════════════════════════════════════════════════════ la muscu
+  - id: vi.rivoire.faveur
+    roles: [ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:vestiaire]
+    speaker: rivoire
+    tone: strategique
+    once: true
+    text: "Teddy te tend un double de la clé de la salle, au bout d'un lacet. « La nuit, la salle est à toi. Un joueur qui ne dort plus, un gamin qui fugue, toi qui ne sais plus où aller : c'est ouvert. »"
+    left:
+      label: "Je la prends"
+      effects: {vestiaire: "+++", journal: {text: "{annee} : Teddy Rivoire a donné à {nom} une clé de la salle de muscu, pour les nuits.", poids: 3, tags: [vestiaire]}}
+      answer: "Tu passes le lacet à ton cou. La première nuit où tu t'en sers, c'est pour toi. Teddy le sait au café du matin, et il ne dit rien."
+    right:
+      label: "Je n'en aurai pas besoin"
+      effects: {vestiaire: "+", relation: {rivoire: -1}}
+      answer: "« Tout le monde dit ça. » Il garde la clé. « Elle sera au clou, derrière le comptoir. Le clou, tout le monde le connaît. »"
+
+  # ══════════════════════════════════════════════════════════════ la gare routière
+  - id: vi.duclou.faveur
+    roles: [ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: duclou
+    tone: strategique
+    once: true
+    text: "Karine te tend une carte de service du dépôt, plastifiée, au nom d'un autre. « Avec ça, vous montez dans n'importe quel car, à n'importe quelle heure, et le registre ne vous connaît pas. »"
+    left:
+      label: "Je la prends"
+      effects: {direction: "++", tribunes: "+", journal: {text: "{annee} : Karine Duclou, chauffeuse de car, a donné à {nom} une carte de service au nom d'un autre.", poids: 3, tags: [direction]}}
+      answer: "Tu la glisses derrière ton permis. Un soir, elle te fera sortir de la ville sans que personne sache que tu as quitté la ville. Ce soir-là, tu penseras à Karine."
+    right:
+      label: "À qui est ce nom ?"
+      effects: {direction: "+", relation: {duclou: -1}}
+      answer: "« À mon oncle. Il ne prend plus le car depuis longtemps. » Elle range la carte. « Vous posez les mauvaises questions aux bonnes personnes. »"
+
+  # ═════════════════════════════════════════════════════════════════ la boutique
+  - id: vi.combaz.faveur
+    roles: [entraineur, joueur, president, ds]
+    arc: ultras
+    tags: [tribunes, objet, rescue:tribunes]
+    speaker: combaz
+    tone: strategique
+    once: true
+    text: "Arlette déplie sur le comptoir l'écharpe grise de son frère, la première de la boutique, 1962. « Il la portait les jours de défaite. Elle n'a jamais perdu un match qui comptait. Elle est à vous. »"
+    left:
+      label: "Je la porterai"
+      effects: {tribunes: "+++", journal: {text: "{annee} : Arlette Combaz a donné à {nom} l'écharpe grise de son frère, la première de la boutique, 1962.", poids: 3, tags: [tribunes]}}
+      answer: "Tu la portes au match suivant. Dans la Nord, trois anciens la reconnaissent avant de te reconnaître, toi, et ils se lèvent."
+    right:
+      label: "Pourquoi moi ?"
+      effects: {tribunes: "+", relation: {combaz: -1}}
+      answer: "« Parce que vous lui auriez plu. » Elle replie l'écharpe dans son papier de soie. « Et parce que vous ne l'auriez jamais demandée. »"
+
+  - id: vi.arnal.faveur
+    roles: [ds, president]
+    arc: direction
+    tags: [tribunes, objet, rescue:direction]
+    speaker: arnal
+    tone: strategique
+    once: true
+    text: "Lou te tend une clé USB. « Tous les acheteurs de la boutique depuis 2015 : adresse, taille, joueur préféré. Un site de paris la paierait cher. Je ne l'ai jamais donnée. Elle est à toi. »"
+    left:
+      label: "Je la garde"
+      effects: {direction: "++", tribunes: "+", journal: {text: "{annee} : Lou Arnal a remis à {nom} la liste des acheteurs de la boutique, celle que les paris voulaient.", poids: 3, tags: [tribunes]}}
+      answer: "Tu la ranges dans le coffre du bureau. Le jour où quelqu'un voudra vendre tes supporters, tu sauras avant lui qui ils sont, et où ils habitent."
+    right:
+      label: "Pourquoi me la donner ?"
+      effects: {tribunes: "+", relation: {arnal: -1}}
+      answer: "« Parce qu'un jour on me forcera à la donner. Autant que ce soit à toi. » Elle la garde quand même. « Reviens quand tu sauras quoi en faire. »"
+
+  # ═════════════════════════════════════════════════════════════════ la brasserie
+  - id: vi.bretaud.faveur
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: bretaud
+    tone: strategique
+    once: true
+    text: "Léon pose sur la nappe une page arrachée à son cahier, pliée en deux. Une date, une table, deux noms, et ce qu'ils ont mangé. « Celle-là, vous en aurez besoin. Je n'en arrache jamais. »"
+    left:
+      label: "Je la garde"
+      effects: {direction: "+++", journal: {text: "{annee} : Léon Brétaud a arraché pour {nom} une page de son cahier de la brasserie. Il n'en arrachait jamais.", poids: 3, tags: [direction]}}
+      answer: "Tu la lis dans la voiture. Deux noms qui ne devraient pas déjeuner ensemble, et qui ont pris trois plats. Tu sais maintenant qui convaincre, et qui craindre."
+    right:
+      label: "Qui sont-ils ?"
+      effects: {direction: "+", relation: {bretaud: -1}}
+      answer: "« Lisez. » Il reprend la page, la replie, la remet dans sa poche. « Si vous demandez, c'est que ce n'est pas encore le moment. »"
+
+  - id: vi.bretaud.cahier
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, direction, risk:direction]
+    speaker: bretaud
+    tone: strategique
+    once: true
+    text: "L'Écho publie en page deux tes déjeuners de la saison à la brasserie du Pont : avec qui, quel jour, ce qui a été commandé. La source n'est pas citée. Elle n'a pas besoin de l'être."
+    left:
+      label: "Je lis"
+      effects: {direction: "---", tribunes: "-", enemy: [bretaud], journal: {text: "{annee} : L'Écho a publié les déjeuners de {nom} à la brasserie du Pont : avec qui, et le menu.", poids: 3, tags: [presse]}}
+      answer: "Rien de faux. Un plat du jour avec un agent, un dessert avec un adjoint au maire. À la brasserie, la table du fond n'est plus jamais libre pour toi."
+    right:
+      label: "Je lis"
+      effects: {direction: "---", tribunes: "-", enemy: [bretaud], journal: {text: "{annee} : L'Écho a publié les déjeuners de {nom} à la brasserie du Pont : avec qui, et le menu.", poids: 3, tags: [presse]}}
+      answer: "Rien de faux. Un plat du jour avec un agent, un dessert avec un adjoint au maire. À la brasserie, la table du fond n'est plus jamais libre pour toi."
+
+  - id: vi.pelissou.faveur
+    roles: [ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: pelissou
+    tone: strategique
+    once: true
+    text: "Raoul t'emmène dans la chambre froide et referme la porte. « Ici, pas de téléphone qui passe, pas de micro qui tienne. Le jour où vous devrez parler sans que personne entende, c'est ici. »"
+    left:
+      label: "Merci, Raoul"
+      effects: {direction: "++", vestiaire: "+", journal: {text: "{annee} : Raoul Pélissou a ouvert à {nom} sa chambre froide, le seul endroit de la ville où rien ne s'entend.", poids: 3, tags: [direction]}}
+      answer: "Il fait moins quatre ; ta respiration fume. Raoul rit pour la première fois depuis que tu le connais : « Faites court. Les secrets, ici, ça gèle vite. »"
+    right:
+      label: "Pourquoi moi ?"
+      effects: {direction: "+", relation: {pelissou: -1}}
+      answer: "« Léon me l'a demandé, avant de partir. » Il rouvre la porte. « Il ne m'a pas dit pourquoi non plus. »"
