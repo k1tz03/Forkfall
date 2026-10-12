@@ -1,0 +1,488 @@
+# LA VILLE VIVANTE — les paliers des gens des comptoirs et des journaux
+# (content/ville/gens_comptoirs.yaml → on_relation ; kind palier dérivé par le
+# build). Programmées quand le lien franchit +3 ou −3, une fois par carrière,
+# hors du sac. Le locuteur est à son comptoir (`rencontres` du lot) ; au Corner,
+# à l'arrière-salle et à L'Écho, la carte le dit elle-même (`lieu`).
+#   marcel     +3 vi.marcel.cle          −3 vi.marcel.porte
+#   kader      +3 vi.kader.record        −3 vi.kader.ecran
+#   emile      +3 vi.emile.car           −3 vi.emile.horaires
+#   johnny     +3 vi.johnny.carte        −3 vi.johnny.depot
+#   ange       +3 vi.ange.page           −3 vi.ange.cote
+#   toussaint  +3 vi.toussaint.boite     −3 vi.toussaint.mise
+#   fabrice    +3 vi.fabrice.ticket      −3 vi.fabrice.affichette
+#   firmin     +3 vi.firmin.fenetre      −3 vi.firmin.rideau
+#   nadege     +3 vi.nadege.cahier
+#   leon       +3 vi.leon.cahier         −3 vi.leon.vitre
+#   samir      +3 vi.samir.toit          −3 vi.samir.journaliste
+#   simone     +3 vi.simone.plomb        −3 vi.simone.annonces
+#   delphine   +3 vi.delphine.reserve
+#   etienne    +3 vi.etienne.une         −3 vi.etienne.feuilleton
+# Tous les rôles : le texte ne suppose ni un bureau, ni un vestiaire à soi ; aucun
+# accord sur le héros ; pas de {toi} (les gens de la ville n'ont pas d'`adresse`).
+cards:
+
+  # ══════════════════════════════════════════════════════ Marcel, le Corner
+  - id: vi.marcel.cle
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: marcel
+    lieu: bar
+    tone: strategique
+    once: true
+    text: "Marcel pose sur ta table une clé attachée à un bouchon de liège : « La porte de la cour. Le Corner ferme à deux heures ; pour toi, il ne ferme plus. Personne ne te cherchera derrière les caisses. »"
+    left:
+      label: "Je la prends"
+      effects: {tribunes: "+", journal: {text: "{annee} : Marcel a confié à {nom} la clé de la cour du Corner. La Nord l'a su le soir même.", poids: 2, tags: [tribunes]}}
+      answer: "La clé pèse plus lourd que le bouchon. Samedi, les anciens de la Nord te saluent d'un signe de tête, comme un voisin."
+    right:
+      label: "Gardez-la, Marcel"
+      effects: {direction: "+"}
+      answer: "Il la remet dans la poche de son tablier. « Elle sera là. » Elle y est encore des années plus tard, avec son bouchon."
+
+  - id: vi.marcel.porte
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: marcel
+    lieu: bar
+    tone: strategique
+    once: true
+    text: "Sur la porte du Corner, à côté des horaires, une feuille écrite au feutre par Marcel : ton nom, et dessous, « Pas servi ici ». Les anciens de la Nord l'ont lue avant toi."
+    left:
+      label: "J'entre quand même"
+      effects: {tribunes: "--", journal: {text: "{annee} : sur la porte du Corner, le nom de {nom} et trois mots de Marcel : « Pas servi ici ».", poids: 2, tags: [tribunes]}}
+      answer: "Personne ne te regarde, personne ne te sert. Samedi, la Nord siffle ton nom avant le coup d'envoi."
+    right:
+      label: "Je fais demi-tour"
+      effects: {tribunes: "-", journal: {text: "{annee} : sur la porte du Corner, le nom de {nom} et trois mots de Marcel : « Pas servi ici ».", poids: 2, tags: [tribunes]}}
+      answer: "La feuille reste un mois sur la porte. Quelqu'un l'a recopiée en lettres d'un mètre, pour le virage."
+
+  # ══════════════════════════════════════════════════════ Kader, le Corner
+  - id: vi.kader.record
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: kader
+    lieu: bar
+    tone: strategique
+    once: true
+    text: "Kader décroche le papier jauni du record, au-dessus du flipper, et te tend un feutre : « Mon père dit qu'il manque un nom sous le sien. Pas un score : un nom. Il a choisi le tien. »"
+    left:
+      label: "J'écris mon nom"
+      effects: {tribunes: "+", journal: {text: "{annee} : au Corner, sous le record de 1979, un second nom : {nom}. Le père Benhamou l'a choisi.", poids: 2, tags: [tribunes]}}
+      answer: "Kader repunaise le papier. Le soir, les gars de la Nord viennent le lire un par un, comme un faire-part."
+    right:
+      label: "C'est la place de ton père"
+      effects: {tribunes: "+"}
+      answer: "« Il savait que tu dirais ça. » Kader écrit ton nom lui-même, tout petit, dans le coin du papier."
+
+  - id: vi.kader.ecran
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: kader
+    lieu: bar
+    tone: strategique
+    once: true
+    text: "Sur l'écran du fond, Kader a mis en boucle, sans le son, ta pire interview de la saison. Les gars de la Nord la regardent en buvant et lisent sur tes lèvres. « C'est le programme. »"
+    left:
+      label: "Éteins ça"
+      effects: {tribunes: "--", journal: {text: "{annee} : au Corner, une interview de {nom} passe en boucle, sans le son. La Nord lit sur les lèvres.", poids: 2, tags: [tribunes]}}
+      answer: "« L'écran est à moi. » Il monte le son. La Nord connaît la fin par cœur ; elle la récite avec toi."
+    right:
+      label: "Je regarde avec eux"
+      effects: {tribunes: "-", journal: {text: "{annee} : au Corner, une interview de {nom} passe en boucle, sans le son. La Nord lit sur les lèvres.", poids: 2, tags: [tribunes]}}
+      answer: "Tu regardes jusqu'au bout. Personne ne rit, c'est pire. Kader éteint quand tu sors, pas avant."
+
+  # ══════════════════════════════════════════════════════ Émile, le Terminus
+  - id: vi.emile.car
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: emile
+    tone: strategique
+    once: true
+    text: "Émile décroche la plaque émaillée du vieux car, « AUBÉRIVE – LA RIVE » : « Trente ans de déplacements avec la Nord. Accroche-la où tu travailles. Ceux qui la reconnaissent te parleront. »"
+    left:
+      label: "Je l'accroche"
+      effects: {tribunes: "+", journal: {text: "{annee} : la plaque du vieux car de la Nord est accrochée chez {nom}. Un cadeau d'Émile, du Terminus.", poids: 2, tags: [tribunes]}}
+      answer: "Le premier qui la reconnaît est un vieux chauffeur. Il te raconte un déplacement de 1971 en entier, virage par virage."
+    right:
+      label: "Elle est à vous, Émile"
+      effects: {tribunes: "+"}
+      answer: "Il la raccroche au-dessus du zinc, mais tournée vers ta place. « Comme ça, elle est un peu à toi. »"
+
+  - id: vi.emile.horaires
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: emile
+    tone: strategique
+    once: true
+    text: "Sur le papier des horaires, près de la porte du Terminus, Émile a écrit ton nom au stylo, sous le dernier car pour Portclair. Les chauffeurs le lisent en buvant. Personne ne rit."
+    left:
+      label: "C'est une menace ?"
+      effects: {tribunes: "--", journal: {text: "{annee} : au Terminus, Émile a écrit le nom de {nom} sous l'horaire du dernier car pour Portclair.", poids: 2, tags: [tribunes]}}
+      answer: "« C'est un horaire. » Toute la semaine, les cars de la Nord passent devant toi sans ralentir, les chauffeurs regardent ailleurs."
+    right:
+      label: "Je prends un café"
+      effects: {tribunes: "-", journal: {text: "{annee} : au Terminus, Émile a écrit le nom de {nom} sous l'horaire du dernier car pour Portclair.", poids: 2, tags: [tribunes]}}
+      answer: "Il te le sert dans une tasse, sans soucoupe, tiède. Ton nom reste sous le dernier car tout l'hiver."
+
+  # ══════════════════════════════════════════════════════ Johnny, le Terminus
+  - id: vi.johnny.carte
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: johnny
+    tone: strategique
+    once: true
+    text: "Johnny glisse sur le zinc sa vieille carte de chauffeur, sa photo à vingt ans dessus : « Mes chauffeurs la connaissent. Montre-la à n'importe quel car, à n'importe quelle heure : il s'arrête. »"
+    left:
+      label: "Je la garde sur moi"
+      effects: {direction: "+", journal: {text: "{annee} : au Terminus, Johnny Mazet a donné à {nom} sa vieille carte de chauffeur. Les cars s'arrêtent.", poids: 2, tags: [direction]}}
+      answer: "Elle sent le gasoil et la poche de blouson. Le premier chauffeur à qui tu la montres te salue comme un collègue."
+    right:
+      label: "Garde ta photo"
+      effects: {tribunes: "+"}
+      answer: "Il la remet dans le tiroir-caisse, la photo dessous. « Elle reste là. Tu sais où elle est. »"
+
+  - id: vi.johnny.depot
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: johnny
+    tone: strategique
+    once: true
+    text: "Johnny pose un carnet à spirale sur le zinc : tes trajets de nuit, notés par ses chauffeurs, avec les heures et les arrêts. « Ils ne notent jamais rien. Pour toi, ils ont fait une exception. »"
+    left:
+      label: "Combien pour le carnet ?"
+      effects: {direction: "--", journal: {text: "{annee} : les trajets de nuit de {nom}, notés par les chauffeurs du Terminus, sont arrivés là-haut.", poids: 2, tags: [direction]}}
+      answer: "« Il n'est pas à vendre. Il est à lire. » La semaine suivante, là-haut, quelqu'un connaît l'heure de ton dernier car."
+    right:
+      label: "Fais-en ce que tu veux"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : les trajets de nuit de {nom}, notés par les chauffeurs du Terminus, sont arrivés là-haut.", poids: 2, tags: [direction]}}
+      answer: "Il le fait : une page là-haut, une page au Corner. Là-haut, on lit les heures ; au Corner, on lit les arrêts."
+
+  # ══════════════════════════════════════════════════════ Ange, l'arrière-salle
+  - id: vi.ange.page
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: ange
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Ange détache une page de son carnet d'écolier et la glisse sous ton verre : un nom des tiens, une date, une somme. « Il est venu me vendre un samedi. Je n'achète pas les samedis. D'autres, si. »"
+    left:
+      label: "Je lui parlerai"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Ange, à l'arrière-salle du Terminus, a refusé d'acheter un samedi. Il a donné la page à {nom}.", poids: 2, tags: [vestiaire]}}
+      answer: "Le gars blanchit en voyant la page. Il ne dit rien. Le samedi suivant, il court plus que tout le monde, sans un regard aux tribunes."
+    right:
+      label: "Brûlez-la"
+      effects: {vestiaire: "-"}
+      answer: "Ange la brûle dans le cendrier, sans hâte. « Comme tu veux. Le prochain acheteur, lui, ne brûlera rien. »"
+
+  - id: vi.ange.cote
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: ange
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Ange, à la porte de l'arrière-salle, sans te laisser entrer : « J'ai ouvert une cote sur toi. Ton départ avant l'hiver, deux contre un. Tout le Quai a misé. Moi, je n'en ai pas eu besoin. »"
+    left:
+      label: "Et si je reste ?"
+      effects: {tribunes: "-", direction: "-", journal: {text: "{annee} : une cote court au Quai sur le départ de {nom}, à deux contre un. Ange l'a ouverte.", poids: 2, tags: [tribunes]}}
+      answer: "« Alors le Quai perdra, et il saura à cause de qui. » Chaque semaine où tu restes, la ville compte ce qu'elle a perdu."
+    right:
+      label: "Je mise sur moi"
+      effects: {caisse: "-", direction: "-", journal: {text: "{annee} : une cote court au Quai sur le départ de {nom}, à deux contre un. Ange l'a ouverte.", poids: 2, tags: [tribunes]}}
+      answer: "Il prend ta mise sans un mot et l'écrit au crayon. Le lendemain, tout le Quai sait que tu as parié sur toi, et combien."
+
+  # ══════════════════════════════════════════════════════ Toussaint, l'arrière-salle
+  - id: vi.toussaint.boite
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: toussaint
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Toussaint ouvre la boîte en fer de son oncle : des reconnaissances de dettes, des noms de la ville, deux des tiens. « Il ne s'en servait jamais. Si un jour on te menace, tu sais où elle est. »"
+    left:
+      label: "Referme-la"
+      effects: {direction: "+", journal: {text: "{annee} : Toussaint Santucci a ouvert pour {nom} la boîte en fer de son oncle. Il ne l'ouvre pour personne.", poids: 2, tags: [direction]}}
+      answer: "Il la referme et te donne le double de la petite clé. Elle tient sur ton trousseau, entre deux autres dont tu ne te sers plus."
+    right:
+      label: "Montre-moi les deux"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Toussaint Santucci a ouvert pour {nom} la boîte en fer de son oncle. Il ne l'ouvre pour personne.", poids: 2, tags: [direction]}}
+      answer: "Deux noms, deux sommes, deux dates. Tu ne les oublieras pas. Eux ne sauront jamais que tu sais ; c'est ce qui les rend polis."
+
+  - id: vi.toussaint.mise
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: toussaint
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "À la porte de l'arrière-salle, Toussaint te barre le passage. Derrière lui, sur le tableau, toute la table mise sur ta défaite samedi. « Je ne prends plus tes jetons. Je prends les leurs. »"
+    left:
+      label: "Ils vont perdre"
+      effects: {vestiaire: "-", journal: {text: "{annee} : à l'arrière-salle du Terminus, toute la table a misé contre {nom}. Toussaint a tenu les mises.", poids: 2, tags: [vestiaire]}}
+      answer: "« Peut-être. » Samedi, les tiens ont entendu parler de la table avant le coup d'envoi. Ils jouent en regardant les tribunes."
+    right:
+      label: "Je rentre quand même"
+      effects: {vestiaire: "-", direction: "-", journal: {text: "{annee} : à l'arrière-salle du Terminus, toute la table a misé contre {nom}. Toussaint a tenu les mises.", poids: 2, tags: [vestiaire]}}
+      answer: "Deux hommes se lèvent sans un mot. Tu ressors. Le lendemain, là-haut, on sait que tu as voulu entrer au tripot."
+
+  # ══════════════════════════════════════════════════════ Fabrice, le tabac du Quai
+  - id: vi.fabrice.ticket
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, scandale]
+    speaker: fabrice
+    tone: strategique
+    once: true
+    text: "Fabrice sort de sa caisse un ticket plié en quatre : une grosse somme contre les tiens, samedi, jouée ce matin au Quai. Il pose le doigt sur le nom au dos. « Je ne l'ai montré à personne. »"
+    left:
+      label: "Je garde le ticket"
+      effects: {vestiaire: "+", journal: {text: "{annee} : au tabac du Quai, Fabrice Lavergne a montré à {nom} un ticket joué contre les siens.", poids: 2, tags: [vestiaire]}}
+      answer: "Le nom au dos est celui de quelqu'un qui t'a serré la main lundi. Tu lui rends le ticket en le croisant, sans un mot. Il comprend."
+    right:
+      label: "Porte-le à la police"
+      effects: {direction: "+", vestiaire: "-"}
+      answer: "Fabrice hésite, puis le porte au commissariat. L'affaire fait trois lignes dans L'Écho, et le vestiaire cherche qui a parlé."
+
+  - id: vi.fabrice.affichette
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: fabrice
+    tone: strategique
+    once: true
+    text: "Sur la vitrine du tabac du Quai, une affichette au feutre, de la main de Fabrice : ton nom en capitales, et dessous, « Plus de paris jusqu'à nouvel ordre ». Les mariniers se demandent ce qu'il sait."
+    left:
+      label: "Enlève ça"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : au tabac du Quai, Fabrice Lavergne ne prend plus de paris sur {nom}. Il ne dit pas pourquoi.", poids: 2, tags: [direction]}}
+      answer: "« C'est mon commerce. » L'affichette reste. Le lendemain, un inspecteur des jeux de Portclair achète des cigarettes et la photographie."
+    right:
+      label: "Je n'ai rien à cacher"
+      effects: {direction: "-", journal: {text: "{annee} : au tabac du Quai, Fabrice Lavergne ne prend plus de paris sur {nom}. Il ne dit pas pourquoi.", poids: 2, tags: [direction]}}
+      answer: "« Alors elle ne vous gêne pas. » Elle reste tout le mois, jaunie au soleil. Plus personne ne parie sur toi au Quai, ni pour ni contre."
+
+  # ══════════════════════════════════════════════════════ Firmin, le tabac du carrefour
+  - id: vi.firmin.fenetre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: firmin
+    tone: strategique
+    once: true
+    text: "Firmin te fait asseoir à la fenêtre du fond de l'arrière-boutique, sa radio contre le montant : « Depuis 1960, j'écoute la Rive d'ici. Ferme les yeux. Tu vas entendre ce qu'elle pense de toi. »"
+    left:
+      label: "Je ferme les yeux"
+      effects: {tribunes: "+", journal: {text: "{annee} : au carrefour, Firmin Coudray a prêté à {nom} sa fenêtre du fond, celle qui écoute la Rive.", poids: 2, tags: [tribunes]}}
+      answer: "Des cris, un silence, des cris. Firmin traduit à voix basse : « Ça, c'est pour toi. Ça aussi. Ça, non. » Il ne se trompe jamais."
+    right:
+      label: "Dites-le-moi, vous"
+      effects: {tribunes: "+"}
+      answer: "« Ils t'attendent. Ils ne t'aiment pas encore. Dans ce sens-là, c'est mieux. »"
+
+  - id: vi.firmin.rideau
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: firmin
+    tone: strategique
+    once: true
+    text: "Au carrefour, Firmin baisse son rideau de fer quand tu arrives, à onze heures du matin. Par la fente, il dit seulement : « Le jardinier ne fume que mes brunes. Il saura avant samedi. »"
+    left:
+      label: "Ouvrez, Firmin"
+      effects: {vestiaire: "-", journal: {text: "{annee} : au carrefour de la Rive, Firmin Coudray a baissé son rideau devant {nom}, en plein jour.", poids: 2, tags: [vestiaire]}}
+      answer: "Le rideau reste baissé. Samedi, la pelouse de la Rive est tondue trop long et arrosée trop tard. Personne ne sait pourquoi, sauf toi."
+    right:
+      label: "Je passe mon chemin"
+      effects: {tribunes: "-", journal: {text: "{annee} : au carrefour de la Rive, Firmin Coudray a baissé son rideau devant {nom}, en plein jour.", poids: 2, tags: [vestiaire]}}
+      answer: "Les gars de la Nord, devant le tabac, ont vu le rideau descendre à ton arrivée. Samedi, ils le racontent au virage."
+
+  # ══════════════════════════════════════════════════════ Nadège, le tabac du carrefour
+  - id: vi.nadege.cahier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: nadege
+    tone: strategique
+    once: true
+    text: "Nadège ouvre le cahier des habitués de son père et y colle une photo de toi, découpée dans L'Écho : « Il ne collait de photo que pour ceux qui revenaient après une défaite. Tu reviens. »"
+    left:
+      label: "Je signe en dessous"
+      effects: {tribunes: "+", journal: {text: "{annee} : au tabac du carrefour, une photo de {nom} collée dans le cahier des habitués des Coudray.", poids: 2, tags: [tribunes]}}
+      answer: "Elle souffle sur l'encre comme son père soufflait sur les grilles du loto. Samedi, les habitués du carrefour te saluent par ton prénom."
+    right:
+      label: "Pas de photo, Nadège"
+      effects: {tribunes: "+"}
+      answer: "Elle glisse la photo entre deux pages, sans la coller. « Elle attendra. Mon père attendait toujours. »"
+
+  # ══════════════════════════════════════════════════════ Léon, le kiosque
+  - id: vi.leon.cahier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: leon
+    tone: strategique
+    once: true
+    text: "Léon ouvre son cahier de pronostics à 1966, la page presque sans rouge, et écrit ton nom en bas, à l'encre noire : « La dernière fois que j'ai eu confiance comme ça, c'était cette année-là. »"
+    left:
+      label: "Ne me portez pas malheur"
+      effects: {tribunes: "+", journal: {text: "{annee} : au kiosque du quai, Léon Mauduit a écrit le nom de {nom} sur la page de 1966 de son cahier.", poids: 2, tags: [presse]}}
+      answer: "« Le malheur, c'est le rouge. Ton nom est en noir. » Le lendemain, tout le quai sait que Léon a écrit dans la page de 1966."
+    right:
+      label: "Je ferai tout pour"
+      effects: {direction: "+"}
+      answer: "Il hoche la tête. Les anciens du banc l'ont vu écrire ; ils te regardent passer, désormais, comme on regarde une équipe qui monte."
+
+  - id: vi.leon.vitre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: leon
+    tone: strategique
+    once: true
+    text: "Sur la vitre du kiosque, au milieu des Unes, Léon a scotché bien droite la page de la Gazette Rose qui parle de toi. Les anciens du banc la lisent en tenant leurs cartes."
+    left:
+      label: "Retirez-la"
+      effects: {tribunes: "-", journal: {text: "{annee} : au kiosque du quai, la page de la Gazette Rose sur {nom}, scotchée par Léon parmi les Unes.", poids: 2, tags: [presse]}}
+      answer: "« Elle est payée. » Il en scotche une deuxième à côté, au cas où le vent emporterait la première."
+    right:
+      label: "Je l'achète"
+      effects: {direction: "-", journal: {text: "{annee} : au kiosque du quai, la page de la Gazette Rose sur {nom}, scotchée par Léon parmi les Unes.", poids: 2, tags: [presse]}}
+      answer: "Il te la vend au prix normal et en scotche une autre à la place. « J'en ai trente. Vous les voulez toutes ? »"
+
+  # ══════════════════════════════════════════════════════ Samir, le kiosque
+  - id: vi.samir.toit
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, scandale]
+    speaker: samir
+    tone: strategique
+    once: true
+    text: "Samir, à voix basse, en te rendant la monnaie : « Mon cousin a trouvé un appareil photo scotché à un projecteur, en haut de la tribune. Tourné vers ta fenêtre. Il l'a décroché. Il te le garde. »"
+    left:
+      label: "Je veux voir les photos"
+      effects: {direction: "+", journal: {text: "{annee} : en haut de la tribune, un appareil photo tourné vers {nom}. Le cousin de Samir l'a décroché.", poids: 2, tags: [direction]}}
+      answer: "Trois cents photos de ta fenêtre, le soir, des ombres derrière les rideaux. Dans l'étui, la carte d'une agence de la capitale."
+    right:
+      label: "Qu'il le jette à la Rive"
+      effects: {direction: "+"}
+      answer: "Le cousin le jette du haut du pont, un dimanche. Samir te dit seulement : « Il a fait plouf. Il en viendra un autre. »"
+
+  - id: vi.samir.journaliste
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:direction]
+    speaker: samir
+    tone: strategique
+    once: true
+    text: "Samir ne te met plus rien de côté. Il rend la monnaie sans lever les yeux : « Le journaliste de la capitale m'a demandé où vous preniez votre café, et avec qui. Je lui ai dit. Gratuitement. »"
+    left:
+      label: "Pourquoi, Samir ?"
+      effects: {direction: "-", journal: {text: "{annee} : un journaliste de la capitale sait où {nom} prend son café. Le kiosque du quai le lui a dit.", poids: 2, tags: [presse]}}
+      answer: "« Parce que vous ne me demandez plus rien. » Le livre sort au printemps, avec un chapitre sur ton café du matin."
+    right:
+      label: "Il ne trouvera rien"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : un journaliste de la capitale sait où {nom} prend son café. Le kiosque du quai le lui a dit.", poids: 2, tags: [presse]}}
+      answer: "« Il trouvera ce qu'on lui donne. » Le journaliste prend son café à ta table le lendemain, puis le surlendemain."
+
+  # ══════════════════════════════════════════════════════ Simone, la maison de la presse
+  - id: vi.simone.plomb
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: simone
+    tone: strategique
+    once: true
+    text: "Simone sort de sous le comptoir un bloc de plomb dans un torchon : la Une de la Coupe de 1966, composée à la main par son mari. « Il voulait qu'elle aille à quelqu'un qui ferait la suivante. »"
+    left:
+      label: "Je ne la mérite pas"
+      effects: {tribunes: "+", journal: {text: "{annee} : Simone Arnoux a donné à {nom} la Une de 1966 en plomb, composée par son mari.", poids: 2, tags: [presse]}}
+      answer: "« Personne ne la méritait en 1966 non plus. » C'est lourd, et c'est à l'envers, comme toutes les Unes avant qu'on les imprime."
+    right:
+      label: "Je l'exposerai"
+      effects: {tribunes: "+", direction: "+", journal: {text: "{annee} : Simone Arnoux a donné à {nom} la Une de 1966 en plomb, composée par son mari.", poids: 2, tags: [presse]}}
+      answer: "Tu l'installes sous verre, là où tu travailles. Les anciens viennent la lire à l'envers, avec un miroir de poche."
+
+  - id: vi.simone.annonces
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:direction]
+    speaker: simone
+    tone: strategique
+    once: true
+    text: "Simone ne lève pas les yeux de sa caisse : « Vous lisez le journal de Valentienne le lundi, à la page des offres d'emploi. Je l'ai dit à L'Écho. Mes clients me disent tout ; moi aussi, maintenant. »"
+    left:
+      label: "Je n'ai jamais lu ça"
+      effects: {direction: "-", journal: {text: "{annee} : selon la maison de la presse, {nom} lit les offres d'emploi d'un journal de Valentienne.", poids: 2, tags: [presse]}}
+      answer: "« Alors L'Écho écrira que vous démentez. » Il l'écrit, en page trois. Là-haut, on lit le démenti avant l'article."
+    right:
+      label: "Ce n'est pas un crime"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : selon la maison de la presse, {nom} lit les offres d'emploi d'un journal de Valentienne.", poids: 2, tags: [presse]}}
+      answer: "« Non. C'est une nouvelle. » Dimanche, L'Écho parle de ton avenir au conditionnel. La Nord, elle, ne lit pas le conditionnel."
+
+  # ══════════════════════════════════════════════════════ Delphine, la maison de la presse
+  - id: vi.delphine.reserve
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, objet]
+    speaker: delphine
+    tone: strategique
+    once: true
+    text: "Delphine t'emmène dans la réserve : L'Écho en piles, une par saison, triées par sa mère. Un signet à chaque article sur toi. « Le jour où on te demandera des comptes, tu auras les tiens. »"
+    left:
+      label: "Je les lirai tous"
+      effects: {direction: "+", journal: {text: "{annee} : à la maison de la presse, Delphine Arnoux garde pour {nom} chaque article, marqué d'un signet.", poids: 2, tags: [presse]}}
+      answer: "Tu lis jusqu'à la fermeture. Tu retrouves une phrase de ta première saison, une promesse oubliée. Tu la recopies."
+    right:
+      label: "Brûle les mauvais"
+      effects: {direction: "+"}
+      answer: "« Ma mère n'a jamais brûlé un journal. Moi non plus. » Elle retire seulement les signets des pires. Ils restent ; il faut les chercher."
+
+  # ══════════════════════════════════════════════════════ Étienne, L'Écho
+  - id: vi.etienne.une
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, direction]
+    speaker: etienne
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Onze heures du soir. Étienne t'attend près de la machine, l'épreuve de demain à la main : « La Une est sur toi, et pas tendre. Tu as dix minutes pour une phrase, une seule. Je la mets en gras. »"
+    left:
+      label: "Je te donne ma phrase"
+      effects: {direction: "+", tribunes: "+", journal: {text: "{annee} : sous une Une sévère, L'Écho laisse à {nom} une phrase en gras. On ne cite qu'elle.", poids: 2, tags: [presse]}}
+      answer: "Il la relit à voix haute et corrige une virgule. Le lendemain, ta phrase en gras est la seule qu'on cite au Corner."
+    right:
+      label: "Publie sans moi"
+      effects: {direction: "+"}
+      answer: "« Comme tu voudras. » La Une paraît, sévère et juste. En bas, une ligne : « Pas de réponse avant le bouclage. »"
+
+  - id: vi.etienne.feuilleton
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: etienne
+    lieu: echo
+    tone: strategique
+    once: true
+    text: "Étienne te tend l'épreuve de la page trois, encore humide : « Un feuilleton en huit épisodes. Le premier sort dimanche. Vous pouvez répondre à chacun ; je publierai vos réponses à côté. »"
+    left:
+      label: "Je répondrai à chacun"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : L'Écho publie un feuilleton en huit épisodes sur {nom}, un par dimanche.", poids: 2, tags: [presse]}}
+      answer: "Huit dimanches. Tes réponses sont lues, découpées, comparées. On finit par trouver qu'elles se contredisent. Elles se contredisent."
+    right:
+      label: "Je ne lirai pas"
+      effects: {tribunes: "--", journal: {text: "{annee} : L'Écho publie un feuilleton en huit épisodes sur {nom}, un par dimanche.", poids: 2, tags: [presse]}}
+      answer: "Tu ne le lis pas. La ville le lit pour toi, le dimanche au Corner, et te raconte la suite le lundi."
