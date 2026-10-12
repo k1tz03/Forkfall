@@ -262,6 +262,13 @@ Les cartes lisent la même chose dans leur `when` : `relation.lulu >= 2`, `flags
 ## 9. Les nouveaux quartiers
 
 Les quatre quartiers du Grand Aubérive (`docs/histoires/grand_auberive.md`) arrivent avec leurs
-gens. Le patron du Relais des routiers, l'éducateur de la maison de quartier, la fermière, le
-concierge de l'Impérial : chacun a ses tuyaux, son service et ses scènes. Débloquer un quartier,
-c'est rencontrer de nouvelles personnes, avec ce qu'elles savent et ce qu'elles peuvent pour toi.
+gens. La patronne du Relais des routiers, l'éducateur du city-stade, le fermier, le concierge de
+l'Impérial : chacun a ses tuyaux, son service et ses scènes. Débloquer un quartier, c'est
+rencontrer de nouvelles personnes, avec ce qu'elles savent et ce qu'elles peuvent pour toi.
+
+Livré (octobre 2026) : huit lots, 134 personnes. Les comptoirs, les notables, le club et le
+quartier (`content/ville/gens_*.yaml`) ; les Hauts, les Tilleuls, le port et la campagne
+(`content/ville/quartier_*.yaml`, qui portent aussi les activités, les scènes et les paroles du
+quartier). À la fusion de lots écrits en même temps : un même id, un même prénom pour deux
+personnes qui ne sont pas de la même famille, ou un patronyme qui fait écho à un footballeur se
+renomment (`build_content` refuse l'id en double, pas le prénom).

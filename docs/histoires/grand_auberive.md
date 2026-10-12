@@ -235,4 +235,10 @@ quartiers s'atteint à pied depuis la ville (vérifié sur la grille de marche).
   sur le plan aussi ; à l'ouverture, la brume se lève en fondu et la phrase du quartier s'écrit. Une
   partie sauvée avant le Grand Aubérive glisse de (400, 400).
 - **Le contenu** : les 26 lieux (`content/ville/grand_auberive.yaml`) ; la vie de chaque quartier (ses
-  activités, ses gens, ses scènes, ses paroles) dans `content/ville/quartier_<clé>.yaml`.
+  activités, ses gens, ses scènes, ses paroles) dans `content/ville/quartier_<clé>.yaml`, et leurs
+  cartes de palier dans `content/cards/common/paliers_ville_<clé>.yaml` : 14 personnes aux Hauts, 14
+  aux Tilleuls, 12 au port, 12 à la campagne, deux par lieu (celle de 1990, puis celle qui reprend),
+  110 activités, 167 scènes. Celui qui tient un lieu sans pièce se tient devant, et on le touche.
+  Une scène ou une conversation n'est jamais programmée dans un quartier fermé : les lots ne
+  portent pas de garde `semaine >=` ou `saison >=` pour le verrou, et un drapeau `quartier_<clé>`
+  posé par une histoire ouvre le quartier avec tout ce qui s'y passe.
