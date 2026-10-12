@@ -1,0 +1,404 @@
+# Cartes de palier de la ville vivante, lot « notables » : les nouveaux visages
+# de content/ville/gens_notables.yaml (leur `on_relation` ; kind palier dérivé par
+# le build). Programmées quand le lien franchit +3 ou −3, une fois par carrière,
+# hors du sac. Tous les rôles : ces gens-là reçoivent tout le monde.
+#   vernhes        +3 vi.vernhes.procuration      −3 vi.vernhes.recommande
+#   cassagne       +3 vi.cassagne.pastilles       −3 vi.cassagne.vitrine
+#   cassagne_fils  +3 vi.cassagne_fils.garde
+#   escande_fils   +3 vi.escande_fils.etage       −3 vi.escande_fils.escalier
+#   lise           +3 vi.lise.negatif             −3 vi.lise.page_trois
+#   marsillac      +3 vi.marsillac.chaussures     −3 vi.marsillac.banc
+#   sarrazy        +3 vi.sarrazy.pile             −3 vi.sarrazy.formulaire
+#   lacanal        +3 vi.lacanal.soucoupe         −3 vi.lacanal.ardoise
+#   ouardi         +3 vi.ouardi.exemplaires       −3 vi.ouardi.trait_rouge
+#   brousse        +3 vi.brousse.parabole
+#   rakoto         +3 vi.rakoto.cars
+#   taillandier    +3 vi.taillandier.berline      −3 vi.taillandier.grille
+# Une seule sortie = les deux côtés identiques. Aucun drapeau posé : ces cartes
+# bougent les jauges, le lien, l'Almanach.
+cards:
+  # ═══════════════════════════════════════════════════════════════ la banque
+  - id: vi.vernhes.procuration
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: caisse
+    tags: [caisse, objet, rescue:caisse]
+    speaker: vernhes
+    lieu: banque
+    tone: strategique
+    once: true
+    text: "Gaëtan Vernhes t'attend sur le trottoir de la banque, son cartable contre la poitrine. « Ce matin, on a demandé vos relevés avec une procuration. La signature était presque la vôtre. »"
+    left:
+      label: "Montrez-moi la signature"
+      effects: {caisse: "+", journal: {text: "{annee} : à la Banque Aubérivoise, une fausse procuration au nom de {nom}, refusée au guichet.", poids: 2, tags: [caisse]}}
+      answer: "Une photocopie pliée en trois. Ton nom, et une boucle au « r » que tu n'as jamais faite. « Je la garde. Chez nous, on n'efface rien. »"
+    right:
+      label: "N'en parlez à personne"
+      effects: {caisse: "+", direction: "+"}
+      answer: "Il range la photocopie dans son cartable. « À personne. Mais je la garde, pour le jour où vous changerez d'avis. »"
+
+  - id: vi.vernhes.recommande
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: caisse
+    tags: [caisse, risk:caisse]
+    speaker: vernhes
+    lieu: banque
+    tone: strategique
+    once: true
+    text: "Une lettre recommandée de la Banque Aubérivoise, signée Gaëtan Vernhes : la banque « réexamine l'ensemble de vos engagements ». Au dos, au crayon, un seul mot : « Archivé. »"
+    left:
+      label: "Je lis jusqu'au bout"
+      effects: {caisse: "--", direction: "-", enemy: [vernhes], journal: {text: "{annee} : la Banque Aubérivoise réexamine les engagements de {nom}. Le conseiller a signé de son nom entier.", poids: 2, tags: [caisse]}}
+      answer: "Quatre pages, trois dates, une signature entière, sans paraphe. Avant ce jour, il n'avait jamais signé de son nom entier."
+    right:
+      label: "Je lis jusqu'au bout"
+      effects: {caisse: "--", direction: "-", enemy: [vernhes], journal: {text: "{annee} : la Banque Aubérivoise réexamine les engagements de {nom}. Le conseiller a signé de son nom entier.", poids: 2, tags: [caisse]}}
+      answer: "Quatre pages, trois dates, une signature entière, sans paraphe. Avant ce jour, il n'avait jamais signé de son nom entier."
+
+  # ═══════════════════════════════════════════════════════════════ la pharmacie
+  - id: vi.cassagne.pastilles
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, objet, rescue:tribunes]
+    speaker: cassagne
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Cassagne te rattrape sur la place, la blouse sous le manteau. « Un homme avec une carte de presse m'a demandé ce que vous preniez pour dormir. Je lui ai vendu des pastilles pour la gorge. »"
+    left:
+      label: "Il ressemblait à quoi ?"
+      effects: {tribunes: "+", journal: {text: "{annee} : un journaliste a voulu les ordonnances de {nom}. Le pharmacien lui a vendu des pastilles.", poids: 2, tags: [presse]}}
+      answer: "« À quelqu'un qui tousse. » Il remonte sa montre. « Il toussera longtemps : je lui ai vendu les plus fortes. »"
+    right:
+      label: "Merci, monsieur Cassagne"
+      effects: {tribunes: "+", direction: "+"}
+      answer: "« Remerciez ma femme : c'est elle qui l'a vu venir. Moi, je n'ai fait que mentir. »"
+
+  - id: vi.cassagne.vitrine
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, scandale, risk:tribunes]
+    speaker: cassagne
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Sur la vitrine de la pharmacie, une page de L'Écho : tes ordonnances de l'hiver, en liste, datées. Cassagne ne lève pas les yeux. « Ma femme. Pas moi. Moi, je n'ai rien empêché. »"
+    left:
+      label: "Je lis la liste"
+      effects: {tribunes: "--", direction: "-", enemy: [cassagne], journal: {text: "{annee} : les ordonnances de {nom}, collées sur la vitrine de la pharmacie de la place.", poids: 2, tags: [presse, scandale]}}
+      answer: "Somnifères en janvier, anti-inflammatoires en mars. Quelqu'un a entouré au feutre rouge les dates des matchs."
+    right:
+      label: "Je lis la liste"
+      effects: {tribunes: "--", direction: "-", enemy: [cassagne], journal: {text: "{annee} : les ordonnances de {nom}, collées sur la vitrine de la pharmacie de la place.", poids: 2, tags: [presse, scandale]}}
+      answer: "Somnifères en janvier, anti-inflammatoires en mars. Quelqu'un a entouré au feutre rouge les dates des matchs."
+
+  - id: vi.cassagne_fils.garde
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet, rescue:vestiaire]
+    speaker: cassagne_fils
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Deux heures du matin, la croix verte rallumée : Thibault Cassagne a rouvert pour toi, un pull sur son pyjama. « Votre fièvre, je l'ai entendue au téléphone. Voilà ce qu'il faut. »"
+    left:
+      label: "Je paie demain"
+      effects: {vestiaire: "+", journal: {text: "{annee} : la pharmacie de la place a rouvert à deux heures du matin pour {nom}, sans rien noter.", poids: 2, tags: [vestiaire]}}
+      answer: "« Demain, vous aurez oublié. Moi aussi. » Il éteint la croix verte avant que tu aies traversé la place."
+    right:
+      label: "Notez-le, au cas où"
+      effects: {vestiaire: "+", direction: "+"}
+      answer: "Il l'écrit au crayon dans le carnet de son père. « Au cas où. Mon père notait tout ce qu'on lui demandait de ne pas noter. »"
+
+  # ═══════════════════════════════════════════════════════ l'hôtel de la Rive
+  - id: vi.escande_fils.etage
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, direction, rescue:direction]
+    speaker: escande_fils
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Valère Escande a désactivé toutes les cartes du deuxième étage, sauf la tienne. « Trois journalistes ont réservé au premier. Ils ne monteront pas. Ce soir, l'hôtel a un étage de moins. »"
+    left:
+      label: "Je dors au deuxième"
+      effects: {direction: "+", tribunes: "+", journal: {text: "{annee} : à l'hôtel de la Rive, un étage entier fermé à la presse pour {nom}.", poids: 2, tags: [presse]}}
+      answer: "Le couloir est noir, la moquette avale tes pas. Au matin, sous ta porte, une note : « Nuit offerte. Étage inexistant. »"
+    right:
+      label: "Laissez-les monter"
+      effects: {tribunes: "++", direction: "-"}
+      answer: "Il réactive les cartes à minuit. Les journalistes montent, ne trouvent qu'une porte fermée, et écrivent que tu dormais. C'est vrai."
+
+  - id: vi.escande_fils.escalier
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: escande_fils
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Le hall de l'hôtel de la Rive, à sept heures. Un photographe attend au pied de l'escalier, l'appareil déjà levé. Derrière la réception, Valère Escande regarde son écran, pas toi."
+    left:
+      label: "Je descends quand même"
+      effects: {tribunes: "--", direction: "-", enemy: [escande_fils], journal: {text: "{annee} : un photographe attendait {nom} au pied de l'escalier de l'hôtel de la Rive. Il savait l'heure.", poids: 2, tags: [presse]}}
+      answer: "Le flash part deux fois. Valère ne lève pas les yeux. Sur son écran, la ligne de ta chambre clignote : « Informations transmises. »"
+    right:
+      label: "Je descends quand même"
+      effects: {tribunes: "--", direction: "-", enemy: [escande_fils], journal: {text: "{annee} : un photographe attendait {nom} au pied de l'escalier de l'hôtel de la Rive. Il savait l'heure.", poids: 2, tags: [presse]}}
+      answer: "Le flash part deux fois. Valère ne lève pas les yeux. Sur son écran, la ligne de ta chambre clignote : « Informations transmises. »"
+
+  # ═══════════════════════════════════════════════════════════ le Rideau Rouge
+  - id: vi.lise.negatif
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: scandale
+    tags: [scandale, objet, rescue:direction]
+    speaker: lise
+    lieu: club_prive
+    tone: strategique
+    once: true
+    text: "Madame Lise pose sur le bar une boîte à chaussures et en sort une bande de négatifs. « Vous, sur la banquette du fond, une nuit que vous avez oubliée. Il n'en existe pas d'autre. »"
+    left:
+      label: "Brûlez-la devant moi"
+      effects: {direction: "+", tribunes: "+", journal: {text: "{annee} : au Rideau Rouge, une bande de négatifs brûlée dans un cendrier, sans témoin.", poids: 2, tags: [scandale]}}
+      answer: "Le film se tord, fume, sent la chimie. Elle souffle sur les cendres. « Ma tante gardait tout. Moi, je garde les gens. »"
+    right:
+      label: "Je la garde"
+      effects: {direction: "++"}
+      answer: "Elle te la tend dans une enveloppe kraft. « Ce qu'on garde, on finit par le montrer. Attention à qui. » Elle ne fait pas payer. C'est pire."
+
+  - id: vi.lise.page_trois
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: scandale
+    tags: [scandale, presse, risk:direction]
+    speaker: lise
+    lieu: club_prive
+    tone: strategique
+    once: true
+    text: "L'Écho, page trois : toi sur la banquette du fond du Rideau Rouge, un verre à la main, l'heure en légende. Le grain des négatifs de la maison. Madame Lise ne signe jamais ses ventes."
+    left:
+      label: "Je regarde la photo"
+      effects: {tribunes: "--", direction: "--", enemy: [lise], journal: {text: "{annee} : L'Écho publie une photo de {nom} au Rideau Rouge, banquette du fond.", poids: 3, tags: [presse, scandale]}}
+      answer: "Au fond du cliché, flou, une main gomme quelque chose dans un carnet."
+    right:
+      label: "Je regarde la photo"
+      effects: {tribunes: "--", direction: "--", enemy: [lise], journal: {text: "{annee} : L'Écho publie une photo de {nom} au Rideau Rouge, banquette du fond.", poids: 3, tags: [presse, scandale]}}
+      answer: "Au fond du cliché, flou, une main gomme quelque chose dans un carnet."
+
+  # ═══════════════════════════════════════════════════════════════ la mairie
+  - id: vi.marsillac.chaussures
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: marsillac
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Marsillac te retient au pied de l'escalier, la chaîne sur la poitrine. « Mardi, ils votent votre affaire. Six pour, cinq contre, et un qui hésite. Celui qui hésite a des chaussures neuves. »"
+    left:
+      label: "Qui est-ce ?"
+      effects: {caisse: "+", direction: "+", journal: {text: "{annee} : l'huissier de la mairie a compté les voix avant le conseil. Il ne s'est pas trompé d'une.", poids: 2, tags: [direction]}}
+      answer: "« Je ne donne pas de nom. Je donne une pointure : quarante-trois, cuir verni. » Mardi, tu reconnais les chaussures avant l'homme."
+    right:
+      label: "Laissez-le hésiter"
+      effects: {direction: "+"}
+      answer: "« Sage. » Mardi, l'homme aux chaussures neuves vote pour toi, sans que personne lui ait rien demandé. Marsillac ne commente pas."
+
+  - id: vi.marsillac.banc
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: marsillac
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Ton rendez-vous à la mairie n'a jamais été noté. Marsillac te fait asseoir sur le banc de bois, sous le portrait d'un maire mort. À midi, il ferme le couloir à clé."
+    left:
+      label: "J'attends"
+      effects: {caisse: "-", direction: "--", enemy: [marsillac], journal: {text: "{annee} : à la mairie, un rendez-vous de {nom} que personne n'avait noté.", poids: 2, tags: [direction]}}
+      answer: "Une heure sur le banc. Quand il rouvre, il te demande ton nom, comme la première fois, et l'écrit enfin : de travers."
+    right:
+      label: "J'attends"
+      effects: {caisse: "-", direction: "--", enemy: [marsillac], journal: {text: "{annee} : à la mairie, un rendez-vous de {nom} que personne n'avait noté.", poids: 2, tags: [direction]}}
+      answer: "Une heure sur le banc. Quand il rouvre, il te demande ton nom, comme la première fois, et l'écrit enfin : de travers."
+
+  - id: vi.sarrazy.pile
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:caisse]
+    speaker: sarrazy
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "Bénédicte Sarrazy pose un dossier sur le dessus de sa pile, puis la pile entière sur le bureau du secrétaire général. « Le vôtre. Il est passé devant quarante-deux autres. Personne ne le saura. »"
+    left:
+      label: "Pourquoi le mien ?"
+      effects: {caisse: "+", direction: "+", journal: {text: "{annee} : à la mairie, un dossier de {nom} est passé en tête de pile. L'accueil ne trie pas par date.", poids: 2, tags: [direction]}}
+      answer: "« Parce que vous m'avez rendu mon stylo, la première fois. Personne ne le rend. »"
+    right:
+      label: "Remettez-le à sa place"
+      effects: {tribunes: "+"}
+      answer: "Elle le remet à sa place, quarante-troisième, sans discuter. Trois semaines plus tard, il revient signé. Elle ne t'en reparle jamais."
+
+  - id: vi.sarrazy.formulaire
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, risk:caisse]
+    speaker: sarrazy
+    lieu: mairie
+    tone: strategique
+    once: true
+    text: "« Votre dossier ? » Bénédicte Sarrazy cherche dans trois piles, puis dans une quatrième, la plus basse. « Il a dû glisser. Il faudra tout refaire. Le formulaire a changé, entre-temps. »"
+    left:
+      label: "Je refais tout"
+      effects: {caisse: "--", direction: "-", enemy: [sarrazy], journal: {text: "{annee} : le dossier de {nom} a glissé derrière une pile, à la mairie. Le formulaire avait changé.", poids: 2, tags: [direction]}}
+      answer: "Six semaines, quatre pièces justificatives, un timbre fiscal. Le jour où tu le déposes, elle le glisse au bas de la pile, sous les autres."
+    right:
+      label: "Je refais tout"
+      effects: {caisse: "--", direction: "-", enemy: [sarrazy], journal: {text: "{annee} : le dossier de {nom} a glissé derrière une pile, à la mairie. Le formulaire avait changé.", poids: 2, tags: [direction]}}
+      answer: "Six semaines, quatre pièces justificatives, un timbre fiscal. Le jour où tu le déposes, elle le glisse au bas de la pile, sous les autres."
+
+  # ═══════════════════════════════════════════════════════ le café de la Mairie
+  - id: vi.lacanal.soucoupe
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: lacanal
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Lacanal pose un café devant toi et, sous la soucoupe, un papier plié : trois noms, trois heures. « Ceux qui ont parlé de vous ce matin, au comptoir. Je n'ai pas écrit ce qu'ils ont dit. »"
+    left:
+      label: "Qu'est-ce qu'ils ont dit ?"
+      effects: {direction: "+", tribunes: "+", journal: {text: "{annee} : au café de la Mairie, trois conseillers ont parlé de {nom}. Le patron a noté les heures.", poids: 2, tags: [direction]}}
+      answer: "« Rien de grave. Ils ont dit votre nom en baissant la voix. Ici, on baisse la voix pour les gens qui comptent. »"
+    right:
+      label: "Brûlez le papier"
+      effects: {direction: "+"}
+      answer: "Il le brûle dans le cendrier du comptoir. « Les noms, je les ai encore. Le papier, c'était pour vous. »"
+
+  - id: vi.lacanal.ardoise
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: lacanal
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Au mur du café de la Mairie, à côté des ardoises des mauvais payeurs, une ardoise neuve : ton nom à la craie, et rien en dessous. Lacanal essuie le comptoir sans te voir."
+    left:
+      label: "Je paie quoi ?"
+      effects: {tribunes: "--", direction: "-", enemy: [lacanal], journal: {text: "{annee} : au mur du café de la Mairie, le nom de {nom} sur une ardoise, sans montant.", poids: 2, tags: [tribunes]}}
+      answer: "« Rien. Il n'y a rien à payer. » L'ardoise reste au mur. Les conseillers la regardent en commandant, chaque matin."
+    right:
+      label: "Je paie quoi ?"
+      effects: {tribunes: "--", direction: "-", enemy: [lacanal], journal: {text: "{annee} : au mur du café de la Mairie, le nom de {nom} sur une ardoise, sans montant.", poids: 2, tags: [tribunes]}}
+      answer: "« Rien. Il n'y a rien à payer. » L'ardoise reste au mur. Les conseillers la regardent en commandant, chaque matin."
+
+  - id: vi.ouardi.exemplaires
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, objet, rescue:tribunes]
+    speaker: ouardi
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Kamel Ouardi a empilé sous son comptoir quarante exemplaires de L'Écho, ficelés. « Le kiosque d'en face n'en a plus. Page cinq, il y avait votre nom à côté d'un mot que je n'aimais pas. »"
+    left:
+      label: "Montrez-moi la page"
+      effects: {tribunes: "+", journal: {text: "{annee} : quarante exemplaires de L'Écho achetés à l'aube par le café de la Mairie. Page cinq, {nom}.", poids: 2, tags: [presse]}}
+      answer: "Le mot est « inquiétant ». Kamel l'a souligné au crayon, dans chacun des quarante exemplaires. « Pour qu'ils se sentent moins seuls. »"
+    right:
+      label: "Brûlez-les"
+      effects: {tribunes: "+", direction: "+"}
+      answer: "Il les brûle dans le poêle, un par un, en lisant les autres titres. « Dommage. Il y avait un beau mariage, page neuf. »"
+
+  - id: vi.ouardi.trait_rouge
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: ouardi
+    lieu: cafe
+    tone: strategique
+    once: true
+    text: "Au café de la Mairie, sur chaque table, L'Écho du jour, ouvert à la même page. Ton nom, souligné au crayon rouge. Kamel Ouardi n'a jamais souligné en rouge."
+    left:
+      label: "Je lis la phrase"
+      effects: {tribunes: "--", direction: "-", enemy: [ouardi], journal: {text: "{annee} : au café de la Mairie, le nom de {nom} souligné en rouge dans tous les journaux du matin.", poids: 2, tags: [presse]}}
+      answer: "La phrase n'est pas méchante. C'est le trait qui l'est. Les habitués lisent ta ligne, te regardent entrer, puis relisent."
+    right:
+      label: "Je lis la phrase"
+      effects: {tribunes: "--", direction: "-", enemy: [ouardi], journal: {text: "{annee} : au café de la Mairie, le nom de {nom} souligné en rouge dans tous les journaux du matin.", poids: 2, tags: [presse]}}
+      answer: "La phrase n'est pas méchante. C'est le trait qui l'est. Les habitués lisent ta ligne, te regardent entrer, puis relisent."
+
+  # ═══════════════════════════════════════════════════════ l'église Saint-Aubin
+  - id: vi.brousse.parabole
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribunes
+    tags: [tribunes, famille, rescue:tribunes]
+    speaker: brousse
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Sur le parvis, après la messe, le père Brousse te prend le bras. « J'ai parlé de vous en chaire. Pas par votre nom : par la parabole des talents. Ils ont tous compris. »"
+    left:
+      label: "Vous avez dit quoi ?"
+      effects: {tribunes: "++", journal: {text: "{annee} : en chaire, le curé de Saint-Aubin a défendu {nom} par une parabole. Tout le monde a compris.", poids: 2, tags: [tribunes]}}
+      answer: "« Qu'enterrer son talent par peur, ce n'est pas de la prudence : c'est de l'avarice. » Il lâche ton bras. « Le talent, c'était vous. »"
+    right:
+      label: "Ne recommencez pas"
+      effects: {tribunes: "+", direction: "+"}
+      answer: "« Je ne recommence jamais. Je continue. » Il redescend les marches en saluant les familles une à une, par leur prénom."
+
+  - id: vi.rakoto.cars
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: tribunes
+    tags: [tribunes, famille, rescue:tribunes]
+    speaker: rakoto
+    lieu: rue
+    tone: strategique
+    once: true
+    text: "Dimanche midi, le père Rakoto descend de son scooter devant toi, essoufflé. « Six messes, six fois votre intention. Les six villages viendront au stade samedi. En car. »"
+    left:
+      label: "Je leur paie le car"
+      effects: {tribunes: "++", caisse: "-", journal: {text: "{annee} : six villages au stade, en car, à l'appel du curé des six paroisses.", poids: 2, tags: [tribunes]}}
+      answer: "Deux cars, un tambour, une banderole en patois que personne ne sait traduire. Le père Rakoto chante en tête, faux et fort."
+    right:
+      label: "Qu'ils viennent"
+      effects: {tribunes: "+"}
+      answer: "Ils viennent à leurs frais, dans un seul car bondé. Une grand-mère te fait signe derrière la vitre, et ne s'arrête plus de faire signe."
+
+  # ═══════════════════════════════════════════════════ la loge du cimetière
+  - id: vi.taillandier.berline
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: direction
+    tags: [direction, objet, rescue:direction]
+    speaker: taillandier
+    lieu: cimetiere
+    tone: strategique
+    once: true
+    text: "Taillandier t'attend à la grille, la lampe sous le menton. « Un homme suit votre voiture depuis trois jours. Il se gare derrière le cimetière, pour qu'on ne le voie pas. Moi, je le vois. »"
+    left:
+      label: "Montrez-moi la voiture"
+      effects: {direction: "+", journal: {text: "{annee} : le gardien du cimetière a relevé la plaque de l'homme qui suivait {nom}.", poids: 2, tags: [direction]}}
+      answer: "Une berline grise, garée sous les ifs. Il a noté la plaque dans le registre, à la page des visites, entre deux veuves."
+    right:
+      label: "Qu'il me suive"
+      effects: {direction: "+", tribunes: "+"}
+      answer: "« Comme vous voudrez. » Le lendemain, la berline grise a un pneu crevé, sous les ifs. Taillandier ne sait pas comment."
+
+  - id: vi.taillandier.grille
+    roles: [entraineur, joueur, president, ds, selectionneur]
+    arc: presse
+    tags: [presse, risk:tribunes]
+    speaker: taillandier
+    lieu: cimetiere
+    tone: strategique
+    once: true
+    text: "La grille du cimetière, fermée une demi-heure avant l'heure. Derrière, Taillandier range ses outils sans se retourner. Le lendemain, tu apprends qu'il a raconté à L'Écho où tu vas, et quand."
+    left:
+      label: "Je fais demi-tour"
+      effects: {tribunes: "-", direction: "-", enemy: [taillandier], journal: {text: "{annee} : le gardien du cimetière a raconté à L'Écho les visites de {nom}, à l'heure près.", poids: 2, tags: [presse]}}
+      answer: "Le samedi suivant, L'Écho publie la liste de tes visites, à l'heure près. Le registre de la loge ne ment pas ; il ne choisit pas non plus."
+    right:
+      label: "Je fais demi-tour"
+      effects: {tribunes: "-", direction: "-", enemy: [taillandier], journal: {text: "{annee} : le gardien du cimetière a raconté à L'Écho les visites de {nom}, à l'heure près.", poids: 2, tags: [presse]}}
+      answer: "Le samedi suivant, L'Écho publie la liste de tes visites, à l'heure près. Le registre de la loge ne ment pas ; il ne choisit pas non plus."
