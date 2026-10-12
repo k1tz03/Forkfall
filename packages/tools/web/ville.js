@@ -860,7 +860,7 @@
   // (`_compileVille` → `si`) — les deux doivent rester d'accord.
   var RE_APPEL = /^(!?)(flag|arc|possede|mission)\(\s*([A-Za-z0-9_.]+)\s*\)$/;
   var RE_NUM = /^([a-z_]+(?:\.[a-z_]+)?)\s*(<=|>=|==|!=|<|>)\s*(-?\d+)$/;
-  var RE_MOT = /^([a-z_]+)\s*(==|!=)\s*([A-Za-z_]+)$/;
+  var RE_MOT = /^([a-z_]+)\s*(==|!=)\s*([A-Za-z0-9_]+)$/;
   function jauge(id) {
     var g = ((vue && vue.gauges) || []).filter(function (x) { return x.id === id; })[0];
     return g ? g.value : 50;

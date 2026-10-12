@@ -2013,7 +2013,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     'tranche': tranches,
   };
   final reNum = RegExp(r'^([a-z_]+(?:\.[a-z_]+)?)\s*(<=|>=|==|!=|<|>)\s*(-?\d+)$');
-  final reMot = RegExp(r'^([a-z_]+)\s*(==|!=)\s*([A-Za-z_]+)$');
+  final reMot = RegExp(r'^([a-z_]+)\s*(==|!=)\s*([A-Za-z0-9_]+)$');
   final reAppel = RegExp(r'^(!?)(flag|arc|possede|mission)\(\s*([A-Za-z0-9_.]+)\s*\)$');
   void si(Object? raw, String where) {
     if (raw == null) return;

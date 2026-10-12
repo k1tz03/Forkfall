@@ -1,0 +1,426 @@
+# LA VILLE VIVANTE — les paliers des gens du port de la Rive
+# (content/ville/quartier_port.yaml → on_relation ; kind palier dérivé par le
+# build). Programmées quand le lien franchit +3 ou −3, une fois par carrière,
+# hors du sac. Les cartes ne connaissent pas les lieux du port : le locuteur est
+# à son lieu par les `rencontres` du lot (l'entrepôt 7, le Relais, la casse, la
+# capitainerie, la guinguette, les docks).
+#   lazare     +3 vi.lazare.fond         −3 vi.lazare.colonne
+#   maiwenn    +3 vi.maiwenn.plomb       −3 vi.maiwenn.signalement
+#   arlette    +3 vi.arlette.neon        −3 vi.arlette.ardoise
+#   yannick    +3 vi.yannick.halage      −3 vi.yannick.images
+#   baptistin  +3 vi.baptistin.cahier    −3 vi.baptistin.epave
+#   romane     +3 vi.romane.memoire      −3 vi.romane.trajets
+#   aristide   +3 vi.aristide.page       −3 vi.aristide.brigade
+#   solene     +3 vi.solene.angle        −3 vi.solene.cameras
+#   mado       +3 vi.mado.cadenas        −3 vi.mado.passerelle
+#   matthias   +3 vi.matthias.salle
+#   anselme    +3 vi.anselme.sifflet     −3 vi.anselme.feuille
+#   mehdi      +3 vi.mehdi.gyrophare     −3 vi.mehdi.pointeur
+# Tous les rôles : le texte ne suppose ni un bureau, ni un vestiaire à soi ; aucun
+# accord sur le héros ; pas de {toi} (les gens de la ville n'ont pas d'`adresse`).
+# Un +3 donne un objet ou un geste qu'on ne rend pas ; un −3 est ce que la personne
+# fait de ce qu'elle sait de toi.
+cards:
+
+  # ══════════════════════════════════════════════════════ Lazare, l'entrepôt 7
+  - id: vi.lazare.fond
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: lazare
+    tone: strategique
+    once: true
+    text: "Lazare détache de son trousseau une clé limée, celle de la porte du personnel : « La nuit, le fond de l'entrepôt est à toi. Dans mon carnet, en face de ton nom, il n'y aura jamais rien. »"
+    left:
+      label: "Je prends la clé"
+      effects: {direction: "+", journal: {text: "{annee} : le gardien de l'entrepôt 7 a confié à {nom} la clé de la porte du personnel.", poids: 2, tags: [direction]}}
+      answer: "Tu la glisses sur ton trousseau. Elle est plus lourde que les autres, et n'ouvre rien qu'on puisse dire à voix haute."
+    right:
+      label: "Pas cette clé, Lazare"
+      effects: {direction: "+"}
+      answer: "Il hausse les épaules. La nuit suivante, la porte du personnel est entrouverte quand tu passes, et la lampe éteinte."
+
+  - id: vi.lazare.colonne
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: lazare
+    tone: strategique
+    once: true
+    text: "Lazare a montré son carnet à la brigade : ton nom, dans la colonne « pour qui », en face de trois livraisons de nuit. Un inspecteur te les lit au téléphone, sans hâte, avec les poids."
+    left:
+      label: "Ce n'est pas mon écriture"
+      effects: {direction: "--", journal: {text: "{annee} : le nom de {nom} figure dans le carnet du gardien de l'entrepôt 7. La brigade l'a photocopié.", poids: 2, tags: [direction]}}
+      answer: "« Non. C'est la sienne. C'est pour ça qu'on le croit. » La brigade te convoque un mardi, à neuf heures. On te reçoit à onze."
+    right:
+      label: "Je viendrai m'expliquer"
+      effects: {direction: "-", journal: {text: "{annee} : le nom de {nom} figure dans le carnet du gardien de l'entrepôt 7. La brigade l'a photocopié.", poids: 2, tags: [direction]}}
+      answer: "Trois heures dans un bureau sans fenêtre, à répéter que tu ne sais pas ce qu'il y avait dans les fûts. C'est vrai. Ça ne sert à rien."
+
+  # ══════════════════════════════════════════════════════ Maïwenn, l'entrepôt 7
+  - id: vi.maiwenn.plomb
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: maiwenn
+    tone: strategique
+    once: true
+    text: "Maïwenn pose dans ta main un plomb de douane vierge, sans numéro : « Le jour où tu me le rends, un conteneur part sans que personne sache pour qui. Mon père appelait ça une politesse. »"
+    left:
+      label: "Je le garde"
+      effects: {direction: "+", journal: {text: "{annee} : la cheffe de l'entrepôt 7 a remis à {nom} un plomb de douane sans numéro.", poids: 2, tags: [direction]}}
+      answer: "Le plomb est petit, tiède de sa main. Tu le ranges dans ta poche de poitrine, où il pèse plus lourd qu'il ne devrait."
+    right:
+      label: "Je n'en aurai pas besoin"
+      effects: {direction: "+"}
+      answer: "Elle referme la main dessus. « Il en restera un pour toi. Ça ne se périme pas, ces choses-là. »"
+
+  - id: vi.maiwenn.signalement
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: maiwenn
+    tone: strategique
+    once: true
+    text: "Au quai de nuit, à côté des consignes d'incendie, Maïwenn a punaisé ta photo, découpée dans L'Écho, sous trois mots au feutre : « Accès interdit. Prévenir. » Les caristes la lisent en badgeant."
+    left:
+      label: "Je la décroche"
+      effects: {direction: "-", journal: {text: "{annee} : au quai de nuit de l'entrepôt 7, la photo de {nom}, sous « Accès interdit ».", poids: 2, tags: [direction]}}
+      answer: "Le lendemain, il y en a une autre, plus grande, agrafée. Le vigile te salue de loin, sans quitter sa guérite."
+    right:
+      label: "Qu'elle reste"
+      effects: {direction: "--", journal: {text: "{annee} : au quai de nuit de l'entrepôt 7, la photo de {nom}, sous « Accès interdit ».", poids: 2, tags: [direction]}}
+      answer: "Elle reste tout l'hiver et jaunit au soleil du quai. Un matin, quelqu'un a dessiné dessus une cible, au crayon de cariste."
+
+  # ══════════════════════════════════════════════════════ Arlette, le Relais
+  - id: vi.arlette.neon
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: arlette
+    tone: strategique
+    once: true
+    text: "Arlette sort d'un tiroir le L du néon, celui que son mari a cassé en reculant, en 1979 : « Je ne le donne pas à n'importe qui. Les chauffeurs sauront que tu es d'ici. »"
+    left:
+      label: "Je l'accroche chez moi"
+      effects: {tribunes: "+", journal: {text: "{annee} : Arlette, du Relais des routiers, a offert à {nom} le L de son néon, cassé en 1979.", poids: 2, tags: [tribunes]}}
+      answer: "Le L de verre tient sur le rebord de ta fenêtre. Le soir, les camions qui passent dans ta rue klaxonnent deux coups."
+    right:
+      label: "Il est à votre mari"
+      effects: {tribunes: "+"}
+      answer: "Le L retourne au tiroir, sous les factures. « Tu as raison. » Le soir, elle te sert la soupe dans son bol à lui."
+
+  - id: vi.arlette.ardoise
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: arlette
+    tone: strategique
+    once: true
+    text: "Sur l'ardoise des routiers, entre la neige annoncée sur la côte et le contrôle du pont de la Halte, Arlette a écrit ton nom à la craie, avec la route que tu prends le soir pour rentrer."
+    left:
+      label: "Effacez ça"
+      effects: {tribunes: "-", journal: {text: "{annee} : sur l'ardoise du Relais des routiers, le nom de {nom}, entre la neige et les contrôles.", poids: 2, tags: [tribunes]}}
+      answer: "« L'ardoise est à tout le monde. » Elle n'efface rien. Le soir, un camion te suit jusqu'à ta porte, pleins phares, puis repart."
+    right:
+      label: "Je change de route"
+      effects: {tribunes: "-", direction: "-", journal: {text: "{annee} : sur l'ardoise du Relais des routiers, le nom de {nom}, entre la neige et les contrôles.", poids: 2, tags: [tribunes]}}
+      answer: "Tu rentres par le Halage. Deux jours après, la nouvelle route est sur l'ardoise, à la craie, comme si on te suivait de comptoir en comptoir."
+
+  # ══════════════════════════════════════════════════════ Yannick, le Relais
+  - id: vi.yannick.halage
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: yannick
+    tone: strategique
+    once: true
+    text: "Yannick déplie sur le comptoir une carte routière de 1987, crayonnée par Arlette : le Halage, les entrées des champs, les chemins sans caméra. « Elle te ramène chez toi sans que la ville le sache. »"
+    left:
+      label: "Je la plie dans ma poche"
+      effects: {direction: "+", journal: {text: "{annee} : Yannick, du Relais, a donné à {nom} la carte des chemins du Halage, crayonnée par Arlette.", poids: 2, tags: [direction]}}
+      answer: "Pliée en huit, elle tient dans une poche. Les nuits où tu rentres par là, aucune caméra de la ville ne sait d'où tu viens."
+    right:
+      label: "Laissez-la au comptoir"
+      effects: {direction: "+"}
+      answer: "Il la punaise derrière la caisse, côté cuisine, là où les clients ne la voient pas. « Tu sais où elle est. Souvent, ça suffit. »"
+
+  - id: vi.yannick.images
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: yannick
+    tone: strategique
+    once: true
+    text: "Yannick a gardé les images du parking : toi, trois nuits, à des heures où l'on dort. Un homme d'une agence de la capitale les lui a demandées ce matin. Il te prévient. C'est tout ce qu'il fera."
+    left:
+      label: "Combien pour les effacer ?"
+      effects: {direction: "-", journal: {text: "{annee} : les images du parking du Relais montrent {nom} trois nuits de suite. Une agence les a demandées.", poids: 2, tags: [direction]}}
+      answer: "« Rien. Elles ne sont pas à vendre, elles sont à garder. » L'homme de l'agence repart le soir même avec une copie."
+    right:
+      label: "Qu'il les prenne"
+      effects: {direction: "--", journal: {text: "{annee} : les images du parking du Relais montrent {nom} trois nuits de suite. Une agence les a demandées.", poids: 2, tags: [direction]}}
+      answer: "Les images circulent une semaine, de bureau en bureau. On les regarde jusqu'au bout, puis on te serre la main un peu moins longtemps."
+
+  # ══════════════════════════════════════════════════════ Baptistin, la casse
+  - id: vi.baptistin.cahier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: baptistin
+    tone: strategique
+    once: true
+    text: "Baptistin ouvre son cahier des entrées et découpe au rasoir la ligne de ton passage, entre une berline et un utilitaire. Il te tend la bande de papier : « Ici, tu n'as jamais mis les pieds. »"
+    left:
+      label: "Je la brûle"
+      effects: {direction: "+", journal: {text: "{annee} : dans le cahier des entrées de la casse du port, une ligne manque. C'était celle de {nom}.", poids: 2, tags: [direction]}}
+      answer: "La bande brûle en deux secondes dans le cendrier de la dépanneuse. Baptistin regarde la flamme, puis vide le cendrier par la vitre."
+    right:
+      label: "Je la garde"
+      effects: {direction: "+"}
+      answer: "Tu la plies dans ton portefeuille : une date, « état : bon », ton nom en capitales. La seule trace, et c'est toi qui l'as."
+
+  - id: vi.baptistin.epave
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: baptistin
+    tone: strategique
+    once: true
+    text: "L'épave où Baptistin avait écrit ton nom à la craie est passée sous la presse ce matin. Le cube attend sur le trottoir de la casse, ton nom encore lisible sur une face. Personne n'y touche."
+    left:
+      label: "Je fais enlever le cube"
+      effects: {direction: "-", journal: {text: "{annee} : devant la casse du port, un cube de tôle au nom de {nom}. Personne n'y touche.", poids: 2, tags: [direction]}}
+      answer: "La dépanneuse que tu paies refuse de le charger. La deuxième aussi. Le cube reste là jusqu'à l'été, et des gens passent le voir."
+    right:
+      label: "Je passe devant"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : devant la casse du port, un cube de tôle au nom de {nom}. Personne n'y touche.", poids: 2, tags: [direction]}}
+      answer: "Tu passes devant chaque jour. Le troisième, quelqu'un a ajouté une date à la craie, sous ton nom. Elle n'est pas encore passée."
+
+  # ══════════════════════════════════════════════════════ Romane, la casse
+  - id: vi.romane.memoire
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: romane
+    tone: strategique
+    once: true
+    text: "Romane pose dans ta main un boîtier noir, pas plus gros qu'un briquet : « Branché sous le tableau de bord, il fait oublier sa semaine à une voiture. J'en ai fait deux. L'autre est sous la presse. »"
+    left:
+      label: "Donne-le-moi"
+      effects: {direction: "+", journal: {text: "{annee} : la patronne de la casse du port a remis à {nom} un boîtier qui fait oublier les voitures.", poids: 2, tags: [direction]}}
+      answer: "Il ne pèse rien, dans la boîte à gants. Les semaines qu'il efface, elles, pèsent ce qu'elles pèsent."
+    right:
+      label: "Je préfère me souvenir"
+      effects: {direction: "+"}
+      answer: "« Moi aussi, au début. » Elle glisse le boîtier dans sa blouse. « Il sera là. Les voitures, elles, se souviennent de tout. »"
+
+  - id: vi.romane.trajets
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: romane
+    tone: strategique
+    once: true
+    text: "Romane a vendu la mémoire d'une voiture saisie : six mois de trajets, dont quatre avec toi sur la banquette arrière. Un journaliste de la capitale a les arrêts et les heures. Il appelle pour vérifier."
+    left:
+      label: "Je ne réponds pas"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : un journaliste publie les trajets d'une voiture saisie. {nom} est sur la banquette arrière.", poids: 2, tags: [presse]}}
+      answer: "L'article paraît le dimanche, avec une carte des arrêts dessinée comme un plan de métro. Tes initiales sont à quatre stations."
+    right:
+      label: "Je donne ma version"
+      effects: {direction: "--", journal: {text: "{annee} : un journaliste publie les trajets d'une voiture saisie. {nom} est sur la banquette arrière.", poids: 2, tags: [presse]}}
+      answer: "Tu parles une heure. L'article cite deux phrases, les plus courtes. La carte des arrêts, elle, tient une double page."
+
+  # ══════════════════════════════════════════════════════ Aristide, la capitainerie
+  - id: vi.aristide.page
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: aristide
+    tone: strategique
+    once: true
+    text: "Aristide écrit en dernière page du registre une consigne pour qui lui succédera : ton nom, et dessous, « Ne pas transmettre à la brigade ». Il souffle sur l'encre. « On lit d'abord la fin. »"
+    left:
+      label: "Merci, Aristide"
+      effects: {direction: "+", journal: {text: "{annee} : en dernière page du registre du port, une consigne du capitaine : « {nom} : ne pas transmettre ».", poids: 2, tags: [direction]}}
+      answer: "Il referme le registre et le range sous le comptoir, la tranche contre le mur. « Ce sera vrai tant que quelqu'un lira. »"
+    right:
+      label: "Ne vous mouillez pas"
+      effects: {direction: "+"}
+      answer: "« À mon âge, on ne se mouille plus : on est déjà dans l'eau. » Il laisse la page comme elle est, et l'encre sèche."
+
+  - id: vi.aristide.brigade
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: aristide
+    tone: strategique
+    once: true
+    text: "La brigade fluviale t'attend sur le quai, à minuit, le registre d'Aristide sous le bras : cinq visites de nuit, l'heure, la météo. « Le capitaine nous a dit que vous viendriez ce soir. »"
+    left:
+      label: "Je viens voir l'eau"
+      effects: {direction: "-", journal: {text: "{annee} : la brigade fluviale interroge {nom} sur le quai du port, à minuit, registre en main.", poids: 2, tags: [direction]}}
+      answer: "« Cinq fois, pour voir l'eau. » Le brigadier note la phrase telle quelle. Sur le procès-verbal, elle sonne moins bien."
+    right:
+      label: "Appelez mon avocat"
+      effects: {direction: "--", journal: {text: "{annee} : la brigade fluviale interroge {nom} sur le quai du port, à minuit, registre en main.", poids: 2, tags: [direction]}}
+      answer: "Ton avocat arrive à deux heures, un pyjama sous le manteau. Au matin, l'histoire du quai est dans les bureaux où l'on décide de toi."
+
+  # ══════════════════════════════════════════════════════ Solène, la capitainerie
+  - id: vi.solene.angle
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, decor]
+    speaker: solene
+    tone: strategique
+    once: true
+    text: "Sur l'écran des caméras du quai, Solène te montre une bande qu'aucune ne filme : trois mètres d'ombre, entre la guinguette et la capitainerie. « Je les ai réglées comme ça. Ce trou-là est à toi. »"
+    left:
+      label: "Je m'en souviendrai"
+      effects: {direction: "+", journal: {text: "{annee} : sur le quai du port, trois mètres qu'aucune caméra ne filme. La capitaine les garde pour {nom}.", poids: 2, tags: [direction]}}
+      answer: "Le soir même, tu passes dans les trois mètres, exprès, une fois. Sur l'écran, la nuit reste vide. Solène ne lève pas les yeux."
+    right:
+      label: "Filme tout, Solène"
+      effects: {direction: "+"}
+      answer: "« Tout, c'est beaucoup d'eau. » Elle ne touche pas au réglage. Le trou reste là, au cas où, entre la guinguette et elle."
+
+  - id: vi.solene.cameras
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: solene
+    tone: strategique
+    once: true
+    text: "Solène a envoyé à la préfecture un montage des caméras du quai : toi, onze nuits, d'un bout à l'autre, à des heures différentes. Il n'y a rien d'illégal dessus. Il y a seulement toi, onze fois."
+    left:
+      label: "Je demande à le voir"
+      effects: {direction: "-", journal: {text: "{annee} : à la préfecture, onze nuits de {nom} sur le quai du port, filmées d'en haut.", poids: 2, tags: [direction]}}
+      answer: "On te le passe dans un bureau, sans le son. D'en haut, ta silhouette va et vient, s'arrête, repart. Le fonctionnaire note les heures."
+    right:
+      label: "Je ne viens plus au port"
+      effects: {direction: "-", tribunes: "-", journal: {text: "{annee} : à la préfecture, onze nuits de {nom} sur le quai du port, filmées d'en haut.", poids: 2, tags: [direction]}}
+      answer: "Le montage, lui, circule sans toi : la préfecture, un journaliste, puis un dîner où l'on parle de toi sans te nommer."
+
+  # ══════════════════════════════════════════════════════ Mado, la guinguette
+  - id: vi.mado.cadenas
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: mado
+    tone: strategique
+    once: true
+    text: "Mado détache de son trousseau la clé du cadenas de la passerelle : « La nuit, quand elle est relevée, personne ne monte. Toi, tu la baisseras toi-même. Mon mari était le seul à avoir cette clé. »"
+    left:
+      label: "Je baisserai la passerelle"
+      effects: {tribunes: "+", journal: {text: "{annee} : Mado Pellissier a confié à {nom} la clé de la passerelle de L'Espérance.", poids: 2, tags: [tribunes]}}
+      answer: "La clé est minuscule, rouillée, au bout d'un fil de pêche. Sur le quai, on sait déjà que tu montes à bord quand tu veux."
+    right:
+      label: "Elle est à votre mari"
+      effects: {tribunes: "+"}
+      answer: "« Il est mort en 1981. Il ne montera plus. » Elle accroche quand même la clé à part, sur un anneau rien qu'à elle."
+
+  - id: vi.mado.passerelle
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: mado
+    tone: strategique
+    once: true
+    text: "Mado fait relever la passerelle en te voyant arriver sur le quai. Sur le pont, le bal s'arrête ; les dockers se tournent vers toi, leur verre à la main. On n'entend plus que l'eau contre la coque."
+    left:
+      label: "J'attends sur le quai"
+      effects: {tribunes: "--", journal: {text: "{annee} : à la guinguette du port, la passerelle relevée devant {nom}. Le bal s'est arrêté pour regarder.", poids: 2, tags: [tribunes]}}
+      answer: "Tu attends dix minutes. La musique reprend sans toi. Samedi, au stade, les dockers te tournent le dos pendant l'échauffement."
+    right:
+      label: "Je m'en vais"
+      effects: {tribunes: "-", journal: {text: "{annee} : à la guinguette du port, la passerelle relevée devant {nom}. Le bal s'est arrêté pour regarder.", poids: 2, tags: [tribunes]}}
+      answer: "Derrière toi, la passerelle reste en l'air. Avant midi, tout le quai sait à quelle heure tu as tourné le dos."
+
+  # ══════════════════════════════════════════════════════ Matthias, la guinguette
+  - id: vi.matthias.salle
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: matthias
+    tone: strategique
+    once: true
+    text: "Matthias te donne la clé de la salle du bas et le cahier de comptes de Mado, trouvé sous la table : « Elle y notait qui lui devait quoi. Ton nom n'y est pas. Je voulais que tu le saches. »"
+    left:
+      label: "Je descends voir"
+      effects: {direction: "+", journal: {text: "{annee} : Matthias Pellissier a confié à {nom} la clé de la salle du bas de L'Espérance.", poids: 2, tags: [direction]}}
+      answer: "La clé est en laiton, usée au pouce. En bas, l'eau cogne contre la coque à hauteur de tête, comme quelqu'un qui frappe pour entrer."
+    right:
+      label: "C'est la clé de Mado"
+      effects: {tribunes: "+"}
+      answer: "« Mado n'a plus besoin de rien. » Il raccroche la clé au clou, derrière le bar. « Elle est là. Tu n'auras pas à demander. »"
+
+  # ══════════════════════════════════════════════════════ Anselme Ferragut, les docks
+  - id: vi.anselme.sifflet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: anselme
+    tone: strategique
+    once: true
+    text: "Ferragut te donne son sifflet de chef d'équipe, la chaînette usée : « Au poteau, un coup de celui-là, et tous les dockers se retournent. Tu ne t'en serviras jamais. C'est pour qu'ils le sachent. »"
+    left:
+      label: "Je le porte"
+      effects: {tribunes: "+", journal: {text: "{annee} : le chef d'équipe des docks a donné son sifflet à {nom}. Au poteau, on l'a su avant six heures.", poids: 2, tags: [tribunes]}}
+      answer: "Tu le portes sous ta chemise. Samedi, au virage, la banderole DOCKS se déroule alors que tout va bien. C'est la première fois."
+    right:
+      label: "Il est à votre cou"
+      effects: {tribunes: "+"}
+      answer: "Il rentre le sifflet sous son pull. Le vendredi suivant, dans la boîte à biscuits de la paie, il y a un billet plié à ton nom, pour un café."
+
+  - id: vi.anselme.feuille
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: caisse
+    tags: [caisse, risk:caisse]
+    speaker: anselme
+    tone: strategique
+    once: true
+    text: "Au poteau de six heures, Ferragut lit la feuille du jour à voix haute : les barges, les noms, puis le tien, rayé, avec trois mots en marge, « paie en retard ». Les dockers regardent leurs pieds."
+    left:
+      label: "Je paie tout le monde"
+      effects: {caisse: "--", journal: {text: "{annee} : au poteau des docks, le nom de {nom} est rayé, avec trois mots : « paie en retard ».", poids: 2, tags: [caisse]}}
+      answer: "Tu paies des dettes que tu ne savais pas avoir : une livraison, un café, une tournée promise. Le nom reste rayé. Ferragut ne réécrit pas."
+    right:
+      label: "Je ne dois rien"
+      effects: {caisse: "-", tribunes: "-", journal: {text: "{annee} : au poteau des docks, le nom de {nom} est rayé, avec trois mots : « paie en retard ».", poids: 2, tags: [caisse]}}
+      answer: "« Alors c'est encore pire. » Samedi, les dockers regardent le match les bras croisés, sans chanter. Ils chantaient, avant toi."
+
+  # ══════════════════════════════════════════════════════ Mehdi, les docks
+  - id: vi.mehdi.gyrophare
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, decor]
+    speaker: mehdi
+    tone: strategique
+    once: true
+    text: "Samedi soir, le gyrophare du portique tourne quatre fois au-dessus du bassin, pas trois. Lundi, Mehdi descend de sa cabine pour te le dire : « La quatrième, c'est pour toi. Le quai sait compter. »"
+    left:
+      label: "Merci pour la lumière"
+      effects: {tribunes: "+", journal: {text: "{annee} : au-dessus du port, le gyrophare du portique tourne une quatrième fois, pour {nom}.", poids: 2, tags: [tribunes]}}
+      answer: "Les gars du quai lèvent maintenant quatre doigts quand tu passes. Les gamins de la cité ont appris le geste sans savoir d'où il vient."
+    right:
+      label: "Le quai ne me doit rien"
+      effects: {tribunes: "+"}
+      answer: "« Justement. » Le samedi suivant, le gyrophare tourne encore quatre fois. On ne t'a pas demandé ton avis ; c'est pour ça que ça compte."
+
+  - id: vi.mehdi.pointeur
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: caisse
+    tags: [caisse, risk:caisse]
+    speaker: mehdi
+    tone: strategique
+    once: true
+    text: "Mehdi a donné ton nom au pointeur. Devant tout le quai, on ouvre une caisse livrée pour toi : des montres, un manteau, une enveloppe, de la part d'un homme de Portclair. Mehdi regarde d'en haut."
+    left:
+      label: "Je ne connais pas cet homme"
+      effects: {direction: "-", var: {ville_amende: "+800"}, journal: {text: "{annee} : sur le quai du port, la douane ouvre une caisse de cadeaux livrée pour {nom}.", poids: 2, tags: [caisse]}}
+      answer: "La douane garde tout et t'envoie la facture des droits. L'homme de Portclair, lui, sait maintenant que tu ne le connais pas."
+    right:
+      label: "Je paie les droits"
+      effects: {caisse: "--", journal: {text: "{annee} : sur le quai du port, la douane ouvre une caisse de cadeaux livrée pour {nom}.", poids: 2, tags: [caisse]}}
+      answer: "Tu paies au guichet, devant la file des transitaires, et tu repars avec les montres. On te les verra au poignet. C'était le but."
