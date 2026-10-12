@@ -119,7 +119,7 @@ matchs), un manoir derrière ses grilles, un stade de village avec sa tribune de
 auberge. Le jour est doré, la nuit noire, avec quelques lumières isolées.
 
 **Lieux :**
-- `ferme`, « La ferme Lacombe ».
+- `ferme`, « La ferme Soulié ».
 - `centre_vert`, « Le centre du Bois-Joli » : le centre d'entraînement.
 - `manoir`, « Le manoir de la Motte ».
 - `etang`, « L'étang » : sans porte ; le ponton.

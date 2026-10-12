@@ -1,0 +1,390 @@
+# LA VILLE VIVANTE — les paliers des gens de la campagne
+# (content/ville/quartier_campagne.yaml → on_relation ; kind palier dérivé par le
+# build). Programmées quand le lien franchit +3 ou −3, une fois par carrière,
+# hors du sac. Le locuteur est chez lui (`rencontres` du lot) : la ferme, le
+# Bois-Joli, le manoir, le Relais, l'étang, le stade du village.
+#   prosper_soulie     +3 vi.prosper_soulie.trappe       −3 vi.prosper_soulie.chaine
+#   margaux_soulie     +3 vi.margaux_soulie.transistor   −3 vi.margaux_soulie.panneau
+#   gustave_rigal      +3 vi.gustave_rigal.cahier        −3 vi.gustave_rigal.barriere
+#   sabine_malaterre   +3 vi.sabine_malaterre.six        −3 vi.sabine_malaterre.copie
+#   charles_dalmayrac  +3 vi.charles_dalmayrac.registre  −3 vi.charles_dalmayrac.lettre
+#   regis_vaillandet   +3 vi.regis_vaillandet.clause     −3 vi.regis_vaillandet.table
+#   therese_coustal    +3 vi.therese_coustal.ardoise     −3 vi.therese_coustal.complet
+#   bastien_coustal    +3 vi.bastien_coustal.carnet
+#   isidore_puech      +3 vi.isidore_puech.carnet        −3 vi.isidore_puech.gendarmes
+#   manon_puech        +3 vi.manon_puech.jumelles
+#   jacques_gassiat    +3 vi.jacques_gassiat.tableau     −3 vi.jacques_gassiat.main_courante
+#   coralie_gassiat    +3 vi.coralie_gassiat.maillot
+# Tous les rôles : le texte ne suppose ni un bureau, ni un vestiaire à soi ; aucun
+# accord sur le héros ; pas de {toi} (les gens de la ville n'ont pas d'`adresse`).
+# Chaque carte reste dans l'époque de son locuteur : aucune année qui la date ailleurs.
+cards:
+
+  # ══════════════════════════════════════════════════════ Prosper, la ferme
+  - id: vi.prosper_soulie.trappe
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: prosper_soulie
+    tone: strategique
+    once: true
+    text: "Prosper soulève trois vieilles bottes au fond de la grange : une trappe, un escalier de pierre, une pièce sèche, un lit de camp. « Mon père y a caché la récolte en 1943. Je te la montre. Une fois. »"
+    left:
+      label: "Je descends voir"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Prosper Soulié a montré à {nom} la trappe de sa grange. À la Motte, personne d'autre ne la connaît.", poids: 2, tags: [famille]}}
+      answer: "Un lit de camp, une lampe à pétrole, un calendrier de 1943 au mur. Prosper remet les bottes en place, une par une, dans le même ordre."
+    right:
+      label: "Je n'ai rien à cacher"
+      effects: {direction: "+"}
+      answer: "« Pas encore. » Prosper remet les bottes en place. La trappe reste sous la paille ; tu sais maintenant où elle est."
+
+  - id: vi.prosper_soulie.chaine
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, risk:tribunes]
+    speaker: prosper_soulie
+    tone: strategique
+    once: true
+    text: "Une chaîne neuve et un cadenas ferment le portail de la ferme des Soulié. Sur la caisse à œufs, une ardoise à la craie : PAS POUR VOUS. Au marché de la Motte, le canton sait déjà pour qui."
+    left:
+      label: "Je sonne quand même"
+      effects: {tribunes: "-", journal: {text: "{annee} : les Soulié ont mis une chaîne à leur portail pour {nom}. La Motte en parle encore.", poids: 2, tags: [famille]}}
+      answer: "Le chien aboie jusqu'à ce que tu remontes en voiture. Dimanche, au stade du village, on te tourne le dos à la buvette."
+    right:
+      label: "Je repars"
+      effects: {tribunes: "-", journal: {text: "{annee} : les Soulié ont mis une chaîne à leur portail pour {nom}. La Motte en parle encore.", poids: 2, tags: [famille]}}
+      answer: "Dans le rétroviseur, Prosper traverse la cour avec un seau, sans tourner la tête vers la départementale."
+
+  # ══════════════════════════════════════════════════════ Margaux, la ferme
+  - id: vi.margaux_soulie.transistor
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: margaux_soulie
+    tone: strategique
+    once: true
+    text: "Margaux décroche du clou de l'étable le transistor de son grand-père, recollé au ruban adhésif. « Soixante ans de matchs là-dessus. Il disait qu'un poste, ça se donne à quelqu'un qui écoute. »"
+    left:
+      label: "Je le prends"
+      effects: {tribunes: "+", journal: {text: "{annee} : Margaux Soulié a donné à {nom} le transistor de la ferme, recollé au ruban adhésif.", poids: 2, tags: [famille]}}
+      answer: "Il grésille sur toutes les ondes sauf une : celle des résultats du samedi. Personne ne sait comment il fait."
+    right:
+      label: "Il est à sa place ici"
+      effects: {vestiaire: "+"}
+      answer: "Margaux le raccroche au clou. « Alors tu viendras l'écouter ici, le samedi, à la mi-temps. » Tu viens."
+
+  - id: vi.margaux_soulie.panneau
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, risk:tribunes]
+    speaker: margaux_soulie
+    tone: strategique
+    once: true
+    text: "Sur le portail de la ferme des Soulié, un panneau peint à la main : ICI, ON NE VEND PAS AU FOOTBALL. Le photographe de L'Écho l'a pris en photo avant que tu le voies."
+    left:
+      label: "Je vais lui parler"
+      effects: {tribunes: "-", journal: {text: "{annee} : à la Motte, un panneau sur le portail des Soulié a fermé la ferme à {nom}. L'Écho l'a publié.", poids: 2, tags: [famille]}}
+      answer: "Margaux t'écoute sans ouvrir le portail, puis retourne à ses bêtes. Le panneau reste ; la photo fait le tour du canton."
+    right:
+      label: "Je passe mon chemin"
+      effects: {tribunes: "-", journal: {text: "{annee} : à la Motte, un panneau sur le portail des Soulié a fermé la ferme à {nom}. L'Écho l'a publié.", poids: 2, tags: [famille]}}
+      answer: "Le panneau reste tout l'hiver. Au printemps, quelqu'un ajoute ton nom dessous, à la peinture verte."
+
+  # ══════════════════════════════════════════════════════ Gustave, le Bois-Joli
+  - id: vi.gustave_rigal.cahier
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: gustave_rigal
+    tone: strategique
+    once: true
+    text: "Gustave te tend le cahier de la guérite, des années de rondes d'une écriture d'instituteur, et la clé du fond du bois. « Mon remplaçant ne saura rien. Toi, tu sauras qui fait le mur, et pourquoi. »"
+    left:
+      label: "Je prends le cahier"
+      effects: {vestiaire: "+", journal: {text: "{annee} : l'intendant du Bois-Joli a confié à {nom} son cahier de rondes et la clé du fond du bois.", poids: 2, tags: [vestiaire]}}
+      answer: "Tu le lis la nuit même. Des noms, des heures, des bouteilles, et parfois, en marge : « Brave gamin. Malheureux. »"
+    right:
+      label: "Gardez-le, Gustave"
+      effects: {direction: "+"}
+      answer: "Il le remet dans le tiroir de la guérite. « Alors il partira avec moi. » Il ne plaisante qu'à moitié."
+
+  - id: vi.gustave_rigal.barriere
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, risk:vestiaire]
+    speaker: gustave_rigal
+    tone: strategique
+    once: true
+    text: "La barrière du Bois-Joli reste baissée, et le portillon est fermé à clé. Dans la guérite, Gustave lit son journal. Les joueurs, déjà dedans, te regardent attendre derrière la grille."
+    left:
+      label: "Je frappe à la vitre"
+      effects: {vestiaire: "-", journal: {text: "{annee} : au Bois-Joli, la barrière est restée baissée devant {nom}, sous les yeux des joueurs.", poids: 2, tags: [vestiaire]}}
+      answer: "Il tourne une page, et ouvre au bout de dix minutes. À la séance, personne ne t'écoute vraiment."
+    right:
+      label: "Je passe par le bois"
+      effects: {vestiaire: "-", journal: {text: "{annee} : au Bois-Joli, la barrière est restée baissée devant {nom}, sous les yeux des joueurs.", poids: 2, tags: [vestiaire]}}
+      answer: "Tu passes par le fond du bois, comme les gamins, la mousse aux genoux. Gustave note l'heure dans son cahier, sans lever la tête."
+
+  # ══════════════════════════════════════════════════════ Sabine, le Bois-Joli
+  - id: vi.sabine_malaterre.six
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: sabine_malaterre
+    tone: strategique
+    once: true
+    text: "Sabine pose une clé sur la table de soins, sans badge ni puce. « La six. Elle n'existe sur aucun plan, et aucun capteur ne la voit. Si quelqu'un doit dormir sans être compté, c'est là. »"
+    left:
+      label: "Je la prends"
+      effects: {vestiaire: "+", journal: {text: "{annee} : Sabine Malaterre a confié à {nom} la clé de la chambre six du Bois-Joli, la seule sans capteur.", poids: 2, tags: [vestiaire]}}
+      answer: "La clé est froide et lourde, à l'ancienne. Tu la ranges avec les tiennes ; personne ne remarque qu'il y en a une de plus."
+    right:
+      label: "Gardez-la pour eux"
+      effects: {vestiaire: "+"}
+      answer: "Sabine la remet dans sa blouse. « Je la donnerai au premier qui en aura besoin, sans te le dire. » Tu préfères ça."
+
+  - id: vi.sabine_malaterre.copie
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: sabine_malaterre
+    tone: strategique
+    once: true
+    text: "Sabine a fait suivre là-haut le relevé de tes badges au Bois-Joli : tes heures, les portes, les sorties après minuit. « Le système le fait pour tout le monde. Cette fois, c'est moi. »"
+    left:
+      label: "Je m'explique là-haut"
+      effects: {direction: "-", journal: {text: "{annee} : le relevé des badges de {nom} au Bois-Joli est parti là-haut, envoyé par Sabine Malaterre elle-même.", poids: 2, tags: [direction]}}
+      answer: "Tu expliques chaque porte, chaque heure. On t'écoute poliment, en cochant une liste que tu ne vois pas."
+    right:
+      label: "Je ne justifie rien"
+      effects: {direction: "-", journal: {text: "{annee} : le relevé des badges de {nom} au Bois-Joli est parti là-haut, envoyé par Sabine Malaterre elle-même.", poids: 2, tags: [direction]}}
+      answer: "On ne te demande rien. C'est pire : le relevé circule, et chacun y lit ce qu'il veut."
+
+  # ══════════════════════════════════════════════════════ Charles, le manoir
+  - id: vi.charles_dalmayrac.registre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: charles_dalmayrac
+    tone: strategique
+    once: true
+    text: "Charles pose devant toi le registre de 1971, ouvert à la page de la vente. Dans la reliure, une lettre de la banque de l'usine de son père. « Personne ne l'a lue. Vous la lirez. Gardez-la. »"
+    left:
+      label: "Je garde la lettre"
+      effects: {direction: "+", journal: {text: "{annee} : Charles Dalmayrac a remis à {nom} la lettre de la banque cachée dans le registre de 1971.", poids: 2, tags: [direction]}}
+      answer: "La banque exigeait la vente avant la fin du mois. La lettre est signée d'un nom que tu connais. Il siège encore quelque part."
+    right:
+      label: "Brûlez-la"
+      effects: {direction: "+"}
+      answer: "Charles la regarde brûler dans la cheminée du petit salon, jusqu'au dernier coin. « J'attendais que quelqu'un me le dise. »"
+
+  - id: vi.charles_dalmayrac.lettre
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: charles_dalmayrac
+    tone: strategique
+    once: true
+    text: "Charles a écrit à ceux qui décident là-haut, sur son papier à en-tête de 1966, d'une plume fine. Une page sur toi. Ils l'ont lue jusqu'au bout : on lit toujours un fantôme jusqu'au bout."
+    left:
+      label: "Je vais au manoir"
+      effects: {direction: "-", journal: {text: "{annee} : le vieux président du Racing a écrit une lettre sur {nom}. Là-haut, on l'a lue jusqu'au bout.", poids: 2, tags: [direction]}}
+      answer: "Personne ne t'ouvre la grille. La cloche sonne longtemps dans le parc. Le lendemain, la lettre circule en photocopie."
+    right:
+      label: "Je laisse dire"
+      effects: {direction: "-", journal: {text: "{annee} : le vieux président du Racing a écrit une lettre sur {nom}. Là-haut, on l'a lue jusqu'au bout.", poids: 2, tags: [direction]}}
+      answer: "La lettre fait son chemin sans toi. Trois semaines plus tard, on t'en cite une phrase, mot pour mot."
+
+  # ══════════════════════════════════════════════════════ Régis, le manoir
+  - id: vi.regis_vaillandet.clause
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: regis_vaillandet
+    tone: strategique
+    once: true
+    text: "Régis sort de son coffre le contrat de la vente, et l'ouvre à la page quarante. « La clause que personne n'a lue, pas même moi, ce soir-là. Lis-la. Un jour, elle vaudra plus que le club. »"
+    left:
+      label: "Je la recopie"
+      effects: {direction: "+", journal: {text: "{annee} : Régis Vaillandet a montré à {nom} la page quarante du contrat de la vente du Racing.", poids: 2, tags: [direction]}}
+      answer: "Trois lignes en petits caractères, sur ce qui arrive si le fonds manque une échéance. Tu les recopies au dos d'un menu."
+    right:
+      label: "Ce n'est plus votre club"
+      effects: {tribunes: "+"}
+      answer: "« Non. Mais c'était ma signature. » Il remet le contrat au coffre, avec le stylo sans encre."
+
+  - id: vi.regis_vaillandet.table
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: regis_vaillandet
+    tone: strategique
+    once: true
+    text: "Régis a donné un dîner au manoir pour ceux qui comptent là-haut. Ton nom n'était pas sur les cartons. Il était dans toutes les conversations, entre le fromage et le dessert."
+    left:
+      label: "Je demande ce qui s'est dit"
+      effects: {direction: "-", journal: {text: "{annee} : un dîner au manoir de la Motte, sans carton pour {nom}. On en a parlé à chaque plat.", poids: 2, tags: [direction]}}
+      answer: "Personne ne te répond franchement. On te parle de vin, de chasse, de la pluie. Tu comprends ce qu'on ne te dit pas."
+    right:
+      label: "Je ne demande rien"
+      effects: {direction: "-", journal: {text: "{annee} : un dîner au manoir de la Motte, sans carton pour {nom}. On en a parlé à chaque plat.", poids: 2, tags: [direction]}}
+      answer: "Une semaine plus tard, une décision tombe, et tu reconnais une phrase du dîner dans la bouche d'un autre."
+
+  # ══════════════════════════════════════════════════════ Thérèse, le Relais
+  - id: vi.therese_coustal.ardoise
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: therese_coustal
+    tone: strategique
+    once: true
+    text: "Sur l'ardoise du Relais, sous le plat du jour, Thérèse a écrit un plat qui n'existait pas hier, et lui a donné ton nom. « Les chasseurs le commanderont. Ici, on mange ce qui a un nom. »"
+    left:
+      label: "Je goûte le plat"
+      effects: {tribunes: "+", journal: {text: "{annee} : à l'auberge du Relais, un plat porte le nom de {nom}, écrit à la craie par Thérèse Coustal.", poids: 2, tags: [famille]}}
+      answer: "Un civet, avec un goût sucré que Thérèse refuse de nommer. Les chasseurs en redemandent, pour toi ou pour le civet."
+    right:
+      label: "Effacez mon nom"
+      effects: {tribunes: "+"}
+      answer: "Thérèse efface ton nom du coin du torchon et écrit à la place : PLAT DE LA RIVE. Le canton sait quand même de qui."
+
+  - id: vi.therese_coustal.complet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, risk:tribunes]
+    speaker: therese_coustal
+    tone: strategique
+    once: true
+    text: "Sur la porte du Relais, sous les horaires, un carton à la craie : COMPLET. Dedans, trois tables vides, et Thérèse qui essuie les verres sans lever la tête. Le carton est pour toi."
+    left:
+      label: "J'entre quand même"
+      effects: {tribunes: "-", journal: {text: "{annee} : à l'auberge du Relais, le carton COMPLET était pour {nom}. Toute la Motte l'a compris.", poids: 2, tags: [famille]}}
+      answer: "Thérèse pose devant toi un verre d'eau, et rien d'autre. Les chasseurs du fond regardent leurs cartes plus fort."
+    right:
+      label: "Je fais demi-tour"
+      effects: {tribunes: "-", journal: {text: "{annee} : à l'auberge du Relais, le carton COMPLET était pour {nom}. Toute la Motte l'a compris.", poids: 2, tags: [famille]}}
+      answer: "Le carton reste sur la porte des semaines. Les habitués finissent par l'appeler par ton nom."
+
+  # ══════════════════════════════════════════════════════ Bastien, le Relais
+  - id: vi.bastien_coustal.carnet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: famille
+    tags: [famille, objet]
+    speaker: bastien_coustal
+    tone: strategique
+    once: true
+    text: "Bastien pose sur ta table un carnet d'écolier couvert de l'écriture penchée de sa grand-mère : des années de noces, de communions, d'enterrements. « Elle l'avait écrit, finalement. Il est à toi. »"
+    left:
+      label: "Je le lirai"
+      effects: {direction: "+", journal: {text: "{annee} : Bastien Coustal a donné à {nom} le carnet de sa grand-mère : les noces et les enterrements du canton.", poids: 2, tags: [famille]}}
+      answer: "Qui a épousé qui, et qui aurait dû. En marge, des croix au crayon. Tu reconnais des noms : certains siègent là-haut."
+    right:
+      label: "Il doit rester ici"
+      effects: {tribunes: "+"}
+      answer: "Bastien le range derrière l'ardoise, au clou de la craie. « Alors on le lira ensemble, le jour où il servira. »"
+
+  # ══════════════════════════════════════════════════════ Puech, l'étang
+  - id: vi.isidore_puech.carnet
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, objet]
+    speaker: isidore_puech
+    tone: strategique
+    once: true
+    text: "Puech ouvre son carnet à une page cornée et la détache d'un coup sec : ton nom, tes heures, onze nuits au bout du chemin. Il te la tend sans quitter le bouchon des yeux."
+    left:
+      label: "Je la brûle"
+      effects: {direction: "+", journal: {text: "{annee} : le pêcheur de l'étang a arraché de son carnet la page de {nom}. Les gendarmes n'en sauront rien.", poids: 2, tags: [direction]}}
+      answer: "La page brûle sur le ponton, dans la boîte à appâts. Puech note quelque chose sur la suivante : l'heure, sans le nom."
+    right:
+      label: "Laissez-la dans le carnet"
+      effects: {tribunes: "+"}
+      answer: "« Comme tu veux. » Il la remet à sa place, de travers. Lundi, les gendarmes recopient tout sans remarquer le pli."
+
+  - id: vi.isidore_puech.gendarmes
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: direction
+    tags: [direction, risk:direction]
+    speaker: isidore_puech
+    tone: strategique
+    once: true
+    text: "Les gendarmes de Valdorne ont recopié le carnet de Puech, lundi, page à page. Ton nom y est, avec les heures, et une note en marge : « Une voiture attendait. Jamais la même. »"
+    left:
+      label: "J'appelle un avocat"
+      effects: {direction: "-", journal: {text: "{annee} : le nom de {nom} figure onze fois dans le carnet du pêcheur de l'étang. Les gendarmes ont recopié.", poids: 2, tags: [direction]}}
+      answer: "L'avocat dit qu'un carnet de pêcheur ne prouve rien. Il le redit au journaliste qui l'appelle le lendemain."
+    right:
+      label: "Je n'ai rien à cacher"
+      effects: {direction: "-", journal: {text: "{annee} : le nom de {nom} figure onze fois dans le carnet du pêcheur de l'étang. Les gendarmes ont recopié.", poids: 2, tags: [direction]}}
+      answer: "Les gendarmes n'ont rien demandé. Ils ont recopié. Le carnet, lui, tient la date, l'heure, et ta plaque."
+
+  # ══════════════════════════════════════════════════════ Manon, l'étang
+  - id: vi.manon_puech.jumelles
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: manon_puech
+    tone: strategique
+    once: true
+    text: "Manon te tend ses jumelles de nuit. Au bout du chemin, une berline phares éteints : au volant, quelqu'un de chez toi ; à côté, un agent de Portclair. « Je ne les ai pas vus. Toi, comme tu veux. »"
+    left:
+      label: "Je descends leur parler"
+      effects: {vestiaire: "+", journal: {text: "{annee} : une nuit à l'étang, {nom} a surpris un des siens avec un agent de Portclair. Manon n'a rien vu.", poids: 2, tags: [vestiaire]}}
+      answer: "Tu frappes à la vitre. L'agent repart à pied par le chemin. L'autre te ramène en ville sans un mot, et ne parle plus de partir."
+    right:
+      label: "Je n'ai rien vu non plus"
+      effects: {direction: "+"}
+      answer: "Manon range les jumelles. « Alors on est deux. » Au matin, la berline a laissé deux traces de marne jusqu'à la départementale."
+
+  # ══════════════════════════════════════════════════════ Jacques, le stade du village
+  - id: vi.jacques_gassiat.tableau
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: jacques_gassiat
+    tone: strategique
+    once: true
+    text: "Jacques a repeint le tableau du stade du village. Sous LOCAUX et VISITEURS, une troisième ligne en vert : ton nom, et une case pour la craie. « Pour les dimanches où tu viens. »"
+    left:
+      label: "Je viendrai"
+      effects: {tribunes: "+", journal: {text: "{annee} : au stade du village de la Motte, le nom de {nom} est peint sur le tableau d'affichage, en vert.", poids: 2, tags: [tribunes]}}
+      answer: "Le dimanche suivant, la case porte un trait de craie : ta présence. Les gamins la comptent comme un but."
+    right:
+      label: "C'est trop, Jacques"
+      effects: {tribunes: "+"}
+      answer: "« Trop tard, c'est sec. » Les anciens de la Nord viennent le voir le dimanche suivant, et le photographient pour leur local."
+
+  - id: vi.jacques_gassiat.main_courante
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, risk:tribunes]
+    speaker: jacques_gassiat
+    tone: strategique
+    once: true
+    text: "Sur la main courante du stade du village, peint en blanc sur le vert : ton nom, barré d'un trait. Dimanche, quarante personnes sont venues voir le match, et le nom."
+    left:
+      label: "Je viens au match"
+      effects: {tribunes: "-", journal: {text: "{annee} : au stade du village de la Motte, le nom de {nom} est peint sur la main courante, barré.", poids: 2, tags: [tribunes]}}
+      answer: "Tu restes à côté de ton nom barré tout le match. Personne ne te parle ; quelqu'un prend une photo pour L'Écho."
+    right:
+      label: "Je fais repeindre"
+      effects: {tribunes: "-", journal: {text: "{annee} : au stade du village de la Motte, le nom de {nom} est peint sur la main courante, barré.", poids: 2, tags: [tribunes]}}
+      answer: "Le peintre que tu envoies trouve la main courante déjà repeinte, et ton nom réécrit dessus, barré deux fois."
+
+  # ══════════════════════════════════════════════════════ Coralie, le stade du village
+  - id: vi.coralie_gassiat.maillot
+    roles: [entraineur, joueur, ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, objet]
+    speaker: coralie_gassiat
+    tone: strategique
+    once: true
+    text: "Coralie te tend un maillot vert de l'U.S. La Motte, trop grand, un numéro cousu main au dos : le douze. « Le douzième, c'est le public. Mon père le donnait une fois tous les dix ans. »"
+    left:
+      label: "Je le mettrai"
+      effects: {tribunes: "+", journal: {text: "{annee} : l'U.S. La Motte a donné à {nom} son maillot numéro douze, celui du public.", poids: 2, tags: [tribunes]}}
+      answer: "Tu le portes sous ta veste le samedi suivant. Un photographe le repère au col ; le dimanche, toute la Motte achète L'Écho."
+    right:
+      label: "Pour un gamin du club"
+      effects: {tribunes: "+"}
+      answer: "Coralie le donne au plus petit des poussins, qui le porte comme une robe. Il ne l'enlève plus, même pour dormir, paraît-il."

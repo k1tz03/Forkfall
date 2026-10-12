@@ -1,7 +1,7 @@
 'use strict';
 // FUSIBLE · La campagne (le Grand Aubérive) : au sud de la ville, devant à gauche dans l'image.
 // La ville s'arrête d'un coup au boulevard de ceinture : des champs, des haies, des chemins de terre,
-// la ferme Lacombe et sa cour, l'étang et son ponton, un verger, le calvaire du carrefour, le village
+// la ferme Soulié et sa cour, l'étang et son ponton, un verger, le calvaire du carrefour, le village
 // de la Motte (l'église et son clocher, l'auberge du Relais, quelques maisons), son stade et sa
 // tribune de bois, le manoir de la Motte derrière ses grilles, et le centre d'entraînement du
 // Bois-Joli, où le club se met « au vert ». La saison est celle de la reprise : la fin de l'été,
@@ -879,7 +879,7 @@ function maison(W, o) {
   if (o.chem) B.chimney(W, x + o.chem[0], y + o.chem[1], G + hz, hToit(o.axe === 'y' ? w : d) + 3, M.BRICK_OLD);
   return { f, g };
 }
-// Le logis de la ferme Lacombe : deux niveaux, cinq travées, la porte et son auvent, le banc, la lampe de la cour.
+// Le logis de la ferme Soulié : deux niveaux, cinq travées, la porte et son auvent, le banc, la lampe de la cour.
 function logis(W, o) {
   const { x, y } = o, w = 80, d = 34, hz = 26;
   const r = maison(W, {
@@ -1522,10 +1522,10 @@ function build(W, ctx) {
     for (let k = 7; k < RUISSEAU.length - 1; k += 4) { const [px, py] = RUISSEAU[k]; if (Math.abs(py - 275) < 9) continue; tree(Math.round(px - 11), Math.round(py), 'peuplier', { h: 40 + Math.round(hash(k, 3, 871, 0) * 8) }); }
   }
 
-  // ============================================================ la ferme Lacombe : le logis, la grange, le hangar, le pigeonnier, la cour
+  // ============================================================ la ferme Soulié : le logis, la grange, le hangar, le pigeonnier, la cour
   {
     logis(W, { x: 598, y: 86, night, bad, porte: paint([0.28, 0.36, 0.30], 'planches') });
-    places.push({ key: 'ferme', label: 'La ferme Lacombe', x: 638.5, y: 124, z: G + 12 });
+    places.push({ key: 'ferme', label: 'La ferme Soulié', x: 638.5, y: 124, z: G + 12 });
     pigeonnier(W, 690, 100);
     grange(W, { x: 572, y: 122, w: 36, d: 74, ouverte: !bad, bois: GRIS_BOIS });
     if (night && !bad) { W.set(607, 158, G + 18, M.BULB); W.light({ x: 610, y: 158.5, z: G + 17, r: 34, cr: 0.9, cg: 0.6, cb: 0.28, skip: 1.5, spot: 0.4 }); }
