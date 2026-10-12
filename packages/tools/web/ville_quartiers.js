@@ -110,7 +110,11 @@
       }
       var G0 = GRAND_Q[q.cle];
       if (!FERMES[q.cle] || dedans || MATCH || !G0) { e.hidden = true; return; }
-      var p = versImage(q.x + q.w / 2, q.y + q.h / 2, ZSOL), sx = (p[0] - x0) * k, sy = (p[1] - y0) * k;
+      // le point du quartier le plus proche de ce qu'on regarde (le sol sous le milieu de l'écran,
+      // ramené dans le quartier, un peu en dedans) : le nom se lit dans la brume qu'on voit
+      var u = x0 + VW / 2, v = y0 + VH / 2, d = (u + P.cu) / 2, s2 = v + P.cv + 2 * ZSOL;
+      var gx = clamp((s2 + d) / 2, q.x + 50, q.x + q.w - 50), gy = clamp((s2 - d) / 2, q.y + 50, q.y + q.h - 50);
+      var p = versImage(gx, gy, ZSOL), sx = (p[0] - x0) * k, sy = (p[1] - y0) * k;
       var dansBande = sx > 40 && sy > UI.haut + 30 && sx < VW * k - 40 && sy < VH * k - UI.bas - 20;
       if (!dansBande) { e.hidden = true; return; }
       if (e.querySelector("b").textContent !== G0.nom) { e.querySelector("b").textContent = G0.nom; e.querySelector("span").textContent = G0.indice; }

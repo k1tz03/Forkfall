@@ -31,7 +31,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 | Moteur | Dart pur, déterministe, 139 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
-| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 414 activités (dans les pièces, objet par objet, et dehors ; 25 petits jeux) ; 45 tableaux de rue — voir plus bas |
+| La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 414 activités (dans les pièces, objet par objet, et dehors ; 25 petits jeux) ; 45 tableaux de rue — voir plus bas |
 | Durée | une partie ≈ **2 h** par livre pour un lecteur moyen (1 h 35 à 3 h selon le lecteur et le livre ; 4 h et plus quand une carrière des livres 3 ou 4 déborde), dont près des trois quarts en ville — `docs/balance/duree_partie.md`, `packages/tools/bin/duree.dart`, `packages/tools/web/joueur_presse.js` |
 
 ## Les dix histoires (où on en est)
@@ -243,7 +243,41 @@ Ce que la ville porte en plus des cartes :
   `saisie_vehicules|logement|luxe|tout`, `vol_luxe` ; la
   ville retient ce qu'elle en a appliqué. L'argent s'affiche selon l'époque (inflation, puis
   l'écu après `monde_ecus`).
-- **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous.
+- **Le plan** : la ville vue de loin (`plan.webp`), un point par lieu, toi, le rendez-vous ; les
+  quartiers fermés sous leur brume, avec ce qui les ouvrira.
+- **Le Grand Aubérive** (`docs/histoires/grand_auberive.md`) : « dommage que l'on ait un carré avec
+  la carte et qu'autour il n'y ait rien » (le porteur). La ville est posée telle quelle en (400, 400)
+  d'un monde de 1 800 voxels (`zone.js`, `buildZone({grand: true})`), dans un boulevard de ceinture
+  qui passe la Rive sur deux ponts ; autour, quatre quartiers modelés chacun dans son fichier
+  (`district_hauts.js` les tours et l'argent de la télévision, `district_tilleuls.js` la cité,
+  `district_port.js` les docks et ce qu'on y décharge, `district_campagne.js` les champs, le centre
+  du Bois-Joli, le manoir) ; leurs lieux dans `content/ville/grand_auberive.yaml`. Au-delà du monde,
+  plus de maquette sur fond beige : `fond.js` peint un paysage qui continue (des champs dans les
+  matières du monde, des haies, des bois, la Rive, les routes et la voie ferrée qui s'en vont, la
+  brume, la Capitale à l'horizon) et le moteur efface la tranche du monde (`bordMonde`). Un quartier
+  s'ouvre à la 4ᵉ semaine (les Tilleuls), à la 8ᵉ (le port), à la 2ᵉ saison (les Hauts), avec un
+  véhicule ou à la 12ᵉ semaine (la campagne), ou par un drapeau d'histoire `quartier_<clé>`
+  (`ville_quartiers.js`) ; fermé, il reste visible sous sa brume (`brume_<clé>.webp`, rendue avec la
+  ville), on n'y marche pas, ses lieux, ses scènes et ses conversations se taisent.
+- **La ville vivante** (`docs/histoires/ville_vivante.md`, `ville_gens.js`) : « toutes ces actions
+  anodines n'ont aucun effet sur le jeu » (le porteur). Aubérive se souvient : chaque activité compte
+  dans une **habitude** (`habitude:`, douze : comptoir, nuit, jeu, sport, soin, culture, foi,
+  famille, largesse, luxe, quartier, travail ; dix gestes font une réputation `rep_<habitude>` et sa
+  ligne d'Almanach) ; un geste fait **avec** quelqu'un (`avec:`, ou les `activites:` d'une personne)
+  lui donne un point de **lien**, un au plus entre deux cartes, et aux seuils (2, 5, 9) la relation
+  du moteur monte d'un cran — un palier programme sa carte (`on_relation`). **Les gens d'Aubérive**
+  (`content/ville/gens_*.yaml`, `gens:`) tiennent les lieux selon l'époque (`annees` ; hors de ses
+  années, une personne n'est pas là et un geste ne lui donne rien) : leur voix selon le lien
+  (`repliques`), dès +1 le **climat** de leur réseau (la jauge cachée dite avec leurs mots,
+  `climat: bas|moyen|haut`, par rôle), dès +2 leurs **tuyaux** (une fois, un drapeau `tuyau_<id>`
+  que les livres lisent, parfois un drapeau du livre posé directement), dès +3 leur **service** (une
+  fois par saison, parfois une **dette** `dette_<id>` qu'une scène viendra réclamer), leurs scènes
+  de la semaine et leurs cartes de palier (`content/cards/common/paliers_ville_*.yaml`). La ville
+  montre la trace sous l'activité, un bandeau quand un lien change de cran ou qu'une réputation
+  naît, et le **Carnet** (les gens, ce qu'on t'a confié, ce que pense la ville, ce qu'on dit de
+  toi ; les affaires en second onglet). Un nouveau visage ne prend pas un mot des réservoirs de
+  noms (`content/names/fr.yaml`) : `build_content` le refuse, sinon toutes les carrières figées
+  changeraient.
 - **La musique** (`packages/tools/web/audio.js`, `MUSIQUE`) : six thèmes NOIRS écrits note à
   note et synthétisés (aucun fichier son) — du synthé de polar, parce que la première
   partition, en majeur, était « beaucoup trop joyeuse » pour des histoires sombres. La Mèche à
@@ -284,7 +318,8 @@ Ce que la ville porte en plus des cartes :
   (l'assemblage prévient d'une histoire livrée sans vignette).
 
 ```bash
-# les images (une fois ; ~4 min) : la zone de jour, au crépuscule, de nuit, sa profondeur, la grille
+# les images (une fois ; ~12 min, 5 Go de mémoire) : le Grand Aubérive de jour, au crépuscule, de nuit,
+# sa profondeur, la grille, les brumes des quartiers (`petit` refait l'ancienne zone de 1 000 voxels)
 cd docs/design/pixel_iso && for t in day night; do node ville_assets.js $t grille; done && node ville_assets.js dusk && node ville_post.js
 # puis la découpe en tuiles WebP (ImageMagick), dans out/ville/web — voir le README du dossier
 dart compile js -O2 packages/tools/web/preview.dart -o /tmp/engine.js

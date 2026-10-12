@@ -2438,7 +2438,7 @@
     if (!sc.rejouable && S.scenesVues && S.scenesVues[sc.id] != null) return false;
     if (sc.jours && sc.jours.indexOf(JOURS[jour]) < 0) return false;
     var cle = lieuScene(sc);
-    if (!cle) return false;
+    if (!cle || lieuFerme(cle)) return false;     // un quartier encore fermé (le Grand Aubérive)
     return siVrai(sc.si, cle === "rue" ? null : cle);
   }
   // les tranches où la scène peut se jouer ce jour-là, à partir de `depuis` (un lieu a ses heures)
@@ -3560,6 +3560,11 @@
       }
       if (quoi === "scene" && SCENE[val] && !carteOn && !occupe) jouerScene(SCENE[val]);
       if (quoi === "tranche" && TRANCHES.indexOf(val) >= 0) { S.tranche = TRANCHES.indexOf(val); majHud(); if (dedans) occuper(); }
+      // le Grand Aubérive : la semaine (les quartiers s'ouvrent), un lieu demandé comme le joueur, le zoom
+      if (quoi === "semaine") { S.semaine = val; majHud(); return { fermes: FERMES }; }
+      if (quoi === "allerLieu") { allerAuLieu(val); return { toast: $("villeToast").classList.contains("on") ? $("villeToast").textContent : null }; }
+      if (quoi === "zoom") { zoom(val); return { k: k }; }
+      if (quoi === "quartiers") return { fermes: FERMES, monde: !!MONDE, heros: [Math.round(heros.x), Math.round(heros.y)] };
       // toucher quelqu'un qu'on voit (la ville vivante : sa bulle)
       if (quoi === "parler") {
         var qg = figurants.concat(Object.keys(acteurs).map(function (k2) { return acteurs[k2]; })).filter(function (q) { return q.qui === val; })[0];

@@ -86,20 +86,27 @@ sont sur les planches. `crop.js` et `montage.js` servent à l'inspection.
 
 ## La version jouable (la ville du jeu)
 
-La ville de `packages/tools/web/ville.js` est la zone entière, rendue trois fois
-(jour, crépuscule, nuit) à 1 pixel pour 1 pixel (4 040 × 2 260), découpée en tuiles,
-avec sa profondeur (pour que le personnage passe derrière les immeubles), la grille où
-l'on marche et la porte de chaque lieu.
+La ville de `packages/tools/web/ville.js` est le Grand Aubérive entier (la zone de la ville au
+centre d'un monde de 1 800 voxels, le boulevard de ceinture, les quatre quartiers des Hauts, des
+Tilleuls, du port et de la campagne, et le paysage peint au-delà par `fond.js`), rendu trois fois
+(jour, crépuscule, nuit) à 1 pixel pour 1 pixel (7 240 × 3 940), découpé en tuiles (8 × 4), avec
+sa profondeur (pour que le personnage passe derrière les immeubles), la grille où l'on marche, la
+porte de chaque lieu, et la brume de chaque quartier (`brume_<clé>.png`, au quart, ce qui en est
+visible, tour comprise) que la page pose sur un quartier encore fermé. Le monde tient 2,4 Go
+(1 800 × 1 800 × 240 voxels) ; un rendu de nuit, quatre minutes (les lumières sont rangées par
+cases : un point ne parcourt que celles qui l'atteignent). `ville_assets.js … petit` refait
+l'ancienne zone de 1 000 voxels sous son ciel.
 
 ```bash
-node ville_assets.js day grille      # out/ville/day.png, day_prof.png, grille_day.json, lieux.json (~30 s)
-node ville_assets.js night grille    # la nuit (~2 min)
-node ville_assets.js dusk            # le crépuscule (~2 min)
+node ville_assets.js day grille      # out/ville/day.png, day_prof.png, grille_day.json, lieux.json, brume_*.png (~3 min)
+node ville_assets.js night grille    # la nuit (~4 min)
+node ville_assets.js dusk            # le crépuscule (~4 min)
 node ville_post.js                   # la grille finale (praticable de jour ET de nuit, reliée à l'appartement),
                                      # les portes ramenées dans la partie reliée, sprites.json
 # les tuiles : 1 024 px, WebP sans perte (une perte de qualité brouille le tramage)
 cd out/ville && mkdir -p web && for p in day:jour dusk:crepuscule night:nuit day_prof:prof_jour night_prof:prof_nuit; do \
   convert ${p%%:*}.png -crop 1024x1024 +repage +adjoin -define webp:lossless=true -define webp:method=6 web/${p##*:}_%02d.webp; done \
+  && for q in hauts tilleuls port campagne; do convert brume_$q.png -quality 82 -define webp:alpha-quality=70 web/brume_$q.webp; done \
   && cp lieux.json grille.json sprites.json web/
 # le plan (la ville vue de loin, au tiers) : ici la perte ne gêne pas, le plan est un repère
 convert day.png -filter Box -resize 33.3333% -quality 82 -define webp:method=6 web/plan.webp

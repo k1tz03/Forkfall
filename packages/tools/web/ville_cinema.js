@@ -480,6 +480,7 @@
   // ─── les conversations surprises
   function convOk(cv) {
     if (S.convsVues && S.convsVues[cv.id]) return false;
+    if (lieuFerme(cv.lieu)) return false;
     if (cv.roles && cv.roles.length && cv.roles.indexOf(S.role) < 0) return false;
     if (cv.tranches && cv.tranches.length && cv.tranches.indexOf(TRANCHES[S.tranche]) < 0) return false;
     if (cv.si && !siVrai(cv.si, cv.lieu)) return false;
