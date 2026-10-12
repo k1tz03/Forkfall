@@ -518,6 +518,11 @@
       // un visage connu déjà dans la pièce parle d'où il est ; deux anonymes du même genre restent deux
       if (CHARS[v.qui]) figurants.forEach(function (x) { if (!g && x.qui === v.qui && !x.cine && pris.indexOf(x) < 0) g = x; });
       else figurants.forEach(function (x) { if (!g && x.conv && x.convId === cv.id + ":" + v.id) g = x; });
+      // la ville vivante (ville_gens.js) : le commerçant d'une conversation, c'est celui qui tient le lieu
+      if (!g && QUI_TENANCIER[v.qui]) {
+        if (dedans) figurants.forEach(function (x) { if (!g && x.role === "tenancier" && pris.indexOf(x) < 0) g = x; });
+        else Object.keys(acteurs).forEach(function (k) { var x = acteurs[k]; if (!g && x.role === "gensville" && x.lieu === cv.lieu && pris.indexOf(x) < 0) g = x; });
+      }
       if (!g) {
         // la place d'une voix est à elle : le client qui l'occupe s'en va
         if (dedans && typeof v.place === "string") figurants = figurants.filter(function (x) { return x.cine || x.conv || x.place !== v.place || x.role === "rdv" || x.role === "mission"; });
@@ -555,7 +560,8 @@
     g.parle = true;
     Object.keys(c.voix).forEach(function (k) { if (c.voix[k] !== g) c.voix[k].parle = false; });
     var v = null; c.cv.qui.forEach(function (x) { if (x.id === r.qui) v = x; });
-    bulle = { g: g, nom: (v && v.nom) || (CHARS[g.qui] ? nomDe(g.qui) : NOM_GENS[g.sp] || "Quelqu'un"), texte: texte, muet: false, jusqua: performance.now() + duree, conv: true };
+    var gensIci = (g.role === "tenancier" || g.role === "gensville") && CHARS[g.qui];
+    bulle = { g: g, nom: gensIci ? nomDe(g.qui) : (v && v.nom) || (CHARS[g.qui] ? nomDe(g.qui) : NOM_GENS[g.sp] || "Quelqu'un"), texte: texte, muet: false, jusqua: performance.now() + duree, conv: true };
     c.jusqua = ts + duree + 250;
   }
   function finConv() {

@@ -93,6 +93,18 @@ void main() {
     expect(s.journal.any((e) => e.kind == 'palier'), isTrue, reason: 'la ligne du palier +3');
   });
 
+  test('V5 · un geste déjà compté cette semaine (`jauges: false`) nourrit le lien et l\'habitude, pas les jauges ni l\'effet propre', () {
+    var s = engine.start(31, postulat: 0);
+    s = engine.activite(s, 't_seul', jauges: false);
+    expect(s.flags.contains('t_trace'), isFalse, reason: 'l\'effet propre attend le premier geste de la semaine');
+    expect(s.vars['hab_comptoir'], 1, reason: 'le geste compte dans son habitude');
+    final g0 = Map<String, int>.of(s.gauges);
+    final sans = engine.activite(s, 'tournee', jauges: false), avec = engine.activite(s, 'tournee');
+    expect(sans.gauges, g0, reason: 'les jauges ne bougent pas');
+    expect(sans.vars['hab_largesse'], 1, reason: 'la tournée compte dans la largesse');
+    expect(avec.gauges['tribunes'], (g0['tribunes']! + 3).clamp(0, 100), reason: 'le premier geste de la semaine bouge les jauges');
+  });
+
   test('V4 · un tuyau pose son drapeau ; un service pose sa dette et peut refroidir le lien', () {
     var s = engine.start(9, postulat: 0);
     final r0 = s.relations['gege'] ?? 0;

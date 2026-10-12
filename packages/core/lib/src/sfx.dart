@@ -98,6 +98,8 @@ const Map<String, String> _ambianceByCamp = {
   'direction': 'bureau',
   'instances': 'couloir',
   'selection': 'couloir',
+  // les gens d'Aubérive (la ville vivante) : leur carte se joue dans la rumeur de la ville
+  'ville': 'ville',
 };
 
 /// Les tags qui font sonner l'argent.

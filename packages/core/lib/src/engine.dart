@@ -185,20 +185,24 @@ class Engine {
   /// Une activité inconnue, d'un autre rôle, ou une carrière finie : l'état
   /// revient tel quel.
   ///
+  /// `jauges: false` : la ville a déjà compté ce geste cette semaine (ses jauges
+  /// et son effet propre ne s'appliquent qu'une fois par semaine) ; il nourrit
+  /// encore le lien et l'habitude.
+  ///
   /// Le Code de Carrière (graine + swipes) ne la rejoue pas : une carrière
   /// jouée en ville se sauvegarde par son `GameState` (toJson / fromJson).
-  GameState activite(GameState prev, String id) {
+  GameState activite(GameState prev, String id, {bool jauges = true}) {
     final s = prev.clone();
     final a = content.activites[id];
     if (s.over || a == null || (a.roles.isNotEmpty && !a.roles.contains(s.role))) return s;
     final relAvant = Map<String, int>.of(s.relations);
     final role = content.roles[s.role]!;
     for (final g in role.gauges) {
-      final d = a.jauges[g.id] ?? 0;
+      final d = jauges ? (a.jauges[g.id] ?? 0) : 0;
       if (d == 0) continue;
       s.gauges[g.id] = ((s.gauges[g.id] ?? 50) + d).clamp(0, 100);
     }
-    if (!a.effets.vide) {
+    if (jauges && !a.effets.vide) {
       _applyEffects(s, a.effets.toEffectSet(jaugesDuRole: s.gauges.keys.toSet()), Rng.fromState(s.rngState));
     }
     _lienEtHabitude(s, a.avec, a.habitude);

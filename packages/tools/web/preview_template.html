@@ -977,7 +977,7 @@ __VILLE_CSS__
   var GAUGE_ART = { vestiaire: "vestiaire", tribunes: "tribunes", direction: "president", caisse: "caisse" };
   var KIND_LABELS = { alarme: "Alarme", nouvelle: "Nouvelle", evenement: "Événement", palier: "Face à face", passe: "Passé", reaction: "Réplique" };
   var DEVISES = { quotidien: "Le journal qui siffle avant l'arbitre", gazette: "Tout ce qu'on n'ose pas dire, en rose", echo: "Le journal de ta rue, depuis toujours" };
-  var CAMPS = { terrain: 1, direction: 1, instances: 1, selection: 1, famille: 1 };
+  var CAMPS = { terrain: 1, direction: 1, instances: 1, selection: 1, famille: 1, ville: 1 };
   var GUILTY_PHRASES = {
     vestiaire: { vide: "Le groupe ne te suivait plus : la confiance du vestiaire est tombée à zéro.", plein: "Le groupe t'aimait trop pour t'obéir : le vestiaire a fini par commander à ta place." },
     tribunes: { vide: "Les sifflets ont commencé à l'échauffement : l'adhésion des tribunes est tombée à zéro.", plein: "Le kop composait l'équipe et la feuille de match : les tribunes ont crevé le plafond." },
@@ -2401,8 +2401,8 @@ __VILLE_CSS__
       // montrer la carte en attente (la couche ville a déjà levé son voile)
       carte: function () { if (view && !view.over) renderGame(); },
       // une activité : les jauges bougent (ou la carrière finit)
-      activite: function (id) {
-        view = JSON.parse(window.fusibleActivite(id));
+      activite: function (id, sansJauges) {
+        view = JSON.parse(window.fusibleActivite(id, !!sansJauges));
         if (view.over) { advanceEnd(); return view; }
         majJauges();
         return view;

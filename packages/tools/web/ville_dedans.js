@@ -159,6 +159,9 @@
       var n = null;
       if (w.role === "client") n = libre(function (q) { return q.pour === "client"; });
       else if (w.role === "commercant") n = libre(function (q) { return q.pour === "personnel"; });
+      // celui qui tient le lieu (la ville vivante) : sa place à lui, sinon celle du personnel
+      else if (w.role === "tenancier") n = libre(function (q) { return q.pour === w.qui; }) || libre(function (q) { return q.pour === "personnel"; }) ||
+        libre(function (q) { return q.pour === "visiteur"; }) || libre(function (q) { return q.pour === "client"; });
       else n = libre(function (q) { return q.pour === w.qui; }) || libre(function (q) { return q.pour === "visiteur"; }) || libre(function (q) { return q.pour === "client"; });
       if (!n) return null;
       pris[n] = 1; deja[w.qui] = 1;
@@ -182,10 +185,17 @@
     });
     var sm = S.mission, mm = sm && sm.offre && sm.lieu === cle && MISSION[sm.id];
     if (mm) { var spd = (mm.donneur && mm.donneur.sprite) || "inconnu"; poserQui({ id: "mission", sp: SPRITES[spd] ? spd : "inconnu", qui: "mission", role: "mission" }); }
-    var def = TEXTE_LIEU[cle] || {}, ouvertIci = ouvert(def);
+    var def = TEXTE_LIEU[cle] || {}, ouvertIci = ouvert(def), tient = false;
+    // les gens d'Aubérive (ville_gens.js) : celui qui tient le lieu à cette époque, puis ses habitués
+    gensDuLieu(cle).forEach(function (g, i) {
+      if (deja[g.id] && i === 0) tient = true;      // déjà là (il t'attend, ou c'est un visage du livre)
+      if (deja[g.id] || !spriteDe(g.id)) return;
+      if (poserQui({ id: "gens_" + g.id, sp: spriteDe(g.id), qui: g.id, role: i === 0 ? "tenancier" : "gensville" }) && i === 0) tient = true;
+    });
     // celui qui tient la pièce : son personnel à elle (la barmaid du Rideau Rouge, pas le portier
     // de la rue), sinon le commerçant qu'on voit devant la porte
-    if (ouvertIci && m.personnel && SPRITES[m.personnel]) poserQui({ id: "com_" + cle, sp: m.personnel, qui: BOUCHE[m.personnel] || "commercant", role: "commercant", gens: true });
+    if (tient) { /* le lieu a son visage */ }
+    else if (ouvertIci && m.personnel && SPRITES[m.personnel]) poserQui({ id: "com_" + cle, sp: m.personnel, qui: BOUCHE[m.personnel] || "commercant", role: "commercant", gens: true });
     else COMMERCES.forEach(function (c) { if (c.lieu === cle && SPRITES[c.sp] && ouvertIci) poserQui({ id: "com_" + cle, sp: c.sp, qui: BOUCHE[c.sp] || "commercant", role: "commercant", gens: true }); });
     if (ouvertIci) {
       var r = de(hache(S.semaine, S.jour, S.tranche, cle, "clients")), n = (CLIENTS[m.ambiance] || CLIENTS.salle)[S.tranche] || 0;

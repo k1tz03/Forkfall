@@ -753,6 +753,8 @@
       if (!LIEU[c.lieu] || !SPRITES[c.sp] || c.tranches.indexOf(tr) < 0) return;
       var def = TEXTE_LIEU[c.lieu];
       if (def && !ouvert(def)) return;
+      var t = tenancier(c.lieu), spt = t && spriteDe(t.id);
+      if (spt && !deja[t.id]) { out.push({ id: "com_" + c.lieu, sp: spt, qui: t.id, role: "gensville", lieu: c.lieu }); deja[t.id] = 1; return; }
       out.push({ id: "com_" + c.lieu, sp: c.sp, qui: BOUCHE[c.sp] || "commercant", role: "commercant", lieu: c.lieu });
     });
     // chacun sa place devant le lieu (celui qui t'attend prend la première)
@@ -863,6 +865,8 @@
   function valeur(nom) {
     var v = vue || {}, mo = v.monde || {};
     if (nom.indexOf("relation.") === 0) return ((v.relations || {})[nom.slice(9)]) || 0;
+    // la ville vivante : les gestes comptés d'une habitude (docs/histoires/ville_vivante.md)
+    if (nom.indexOf("habitude.") === 0) return +((v.vars || {})["hab_" + nom.slice(9)] || 0);
     switch (nom) {
       case "rang": return (v.journee || 0) > 0 && v.rank ? v.rank : null;
       case "division": return v.division || 1;
@@ -990,6 +994,8 @@
   function parler(g) {
     // une conversation surprise en cours : ceux qui parlent ne s'interrompent pas pour toi
     if (CONV) { for (var kv in CONV.voix) if (CONV.voix[kv] === g) return; }
+    // les gens d'Aubérive (ville_gens.js) : un tuyau, le climat, une réplique selon le lien
+    if (!g.cine && gensDe(g.qui)) { parlerGens(g); return; }
     var maintenant = performance.now(), qui, nom;
     if (g.gens || g.role === "commercant" || !CHARS[g.qui]) { qui = BOUCHE[g.sp] || g.qui; nom = g.nom || NOM_GENS[g.sp] || "Quelqu'un"; }
     else { qui = g.qui; nom = nomDe(g.qui); }
@@ -1174,7 +1180,7 @@
   function ouvrirInventaire(fait) {
     if (!coquille) return;
     fermerPorte();
-    var html = '<div class="v-inv">' +
+    var html = '<div class="v-inv">' + ongletsCarnet("biens") +
       '<div class="v-inv-solde"><b' + (S.francs < 0 ? ' class="dn"' : "") + '>' + esc(argent(S.francs)) + '</b><span>' +
       (S.francs < 0 ? "à découvert · " : "en poche · ") + "la paie : " + esc(argent(salaire())) + " la semaine</span></div>";
     if ((S.sale || 0) > 0) html += '<p class="v-inv-sale">Dont ' + esc(argent(S.sale)) + " que tu ne saurais pas expliquer.</p>";
@@ -1195,7 +1201,8 @@
       html += "<h3>En cours</h3><p class=\"v-inv-chez\"><b>" + esc(m.titre) + "</b> · " + esc(l ? nomLieu(l) : S.mission.lieu) + " · avant " + esc(quand(S.mission.jusqua)) + "</p>";
     }
     html += "</div>";
-    coquille.panneau("Tes affaires", html);
+    coquille.panneau("Le carnet", html);
+    brancherOnglets();
     document.querySelectorAll(".v-inv [data-vendre]").forEach(function (b) {
       b.addEventListener("click", function () {
         if (!b.classList.contains("confirme")) { b.classList.add("confirme"); b.textContent = "Sûr ? " + b.textContent.replace(/^Revendre · /, ""); return; }
@@ -2526,9 +2533,11 @@
       gain(c.francs);
     }
     if (c.effets) {
+      var avantScene = vue;
       vue = coquille.mission(sc.id, "scene", c.id);
       pont(vue);
       if (vue.over) return;
+      annoncerVivant(avantScene, vue);
     }
     S.scenesVues = S.scenesVues || {};
     S.scenesVues[sc.id] = S.semaine;
@@ -2718,7 +2727,7 @@
     return out.join("");
   }
   var porteObjet = null;       // l'objet touché dont le panneau est ouvert (dedans)
-  function ouvrirPorte(cle, fait, objet) {
+  function ouvrirPorte(cle, fait, objet, trace) {
     var l = LIEU[cle];
     if (!l) return;
     porteOuverte = cle;
@@ -2744,7 +2753,8 @@
     var html = '<h2>' + esc(objet ? objet.label : nomLieu(l)) + '</h2>' +
       '<p class="v-sous">' + esc((objet ? nomLieu(l) + " · " : "") + JOUR_MOT[S.jour] + " · " + TRANCHE_MOT[TRANCHES[S.tranche]].toLowerCase()) + (lieuOuvert ? "" : " · fermé") + '</p>' +
       (texteLieu && !objet ? '<p class="v-texte">' + esc(texteLieu) + '</p>' : "") +
-      '<p class="v-fait"' + (fait ? "" : " hidden") + '>' + esc(fait || "") + '</p>';
+      '<p class="v-fait"' + (fait ? "" : " hidden") + '>' + esc(fait || "") + '</p>' +
+      (trace ? '<p class="v-trace">' + esc(trace) + '</p>' : "");
     // le rendez-vous de plus tard, s'il est ici
     if (rdv && rdv.lieu === cle && !rdv.sombre && tNow() < rdv.debut) {
       html += '<p class="v-texte">' + esc((rdv.qui ? nomDe(rdv.qui) : "On") + " t'attend ici " + quand(rdv.debut) + ".") + '</p>';
@@ -2755,6 +2765,8 @@
       var dn = (mi.donneur && mi.donneur.nom) || "Quelqu'un";
       html += '<button type="button" class="v-mi">' + (S.mission.offre ? "<b>" + esc(dn) + "</b> voudrait te parler" : "<b>" + esc(mi.titre) + "</b> · c'est ici, c'est maintenant") + " →</button>";
     }
+    // ceux qui tiennent le lieu (la ville vivante) : leur parler, leur demander un service
+    if (!objet || !objPropre) html += blocGens(cle);
     if (acts.length) {
       html += '<div class="v-acts">';
       acts.forEach(function (a) {
@@ -2817,6 +2829,7 @@
     });
     var bm = el.querySelector(".v-mi");
     if (bm) bm.addEventListener("click", function () { ouvrirMission(cle); });
+    brancherGens(el, cle);
     var br = el.querySelector(".v-reste");
     if (br) br.addEventListener("click", function () { ouvrirPorte(cle, null, null); });
     el.querySelectorAll(".v-va").forEach(function (b) {
@@ -2870,17 +2883,23 @@
       if (sp === true) { majHud(); sauver(); return; }
       if (typeof sp === "string") texte = texte + " " + sp;
     }
-    if (a.jauges && (!res || res.gagne) && S.faits[a.id] !== S.semaine) {
-      S.faits[a.id] = S.semaine;
-      vue = coquille.activite(a.id);
+    // les jauges et l'effet propre, une fois par semaine (une partie perdue ne compte pas) ; le lien
+    // et l'habitude, à chaque geste : la ville vivante (docs/histoires/ville_vivante.md)
+    var compte = (a.jauges || a.effets) && (!res || res.gagne) && S.faits[a.id] !== S.semaine, trace = null;
+    if (compte || a.avec || a.habitude) {
+      if (compte) S.faits[a.id] = S.semaine;
+      var avantGeste = vue;
+      vue = coquille.activite(a.id, !compte);
       pont(vue);
       if (vue.over) return;
-    } else if (a.jauges && !(res && !res.gagne)) texte += " Cette semaine, ça ne change plus rien.";
+      trace = traceGeste(a, avantGeste);
+      annoncerVivant(avantGeste, vue);
+    }
     if (a.nuit) { fermerPorte(); dormir(); return; }
     var ok = avancer(a.tranches || 0);
     majHud(); sauver();
-    if (ok && !carteOn && !occupe && cle) ouvrirPorte(cle, texte);
-    else toast(texte);
+    if (ok && !carteOn && !occupe && cle) ouvrirPorte(cle, texte, undefined, trace);
+    else toast(trace ? texte + " " + trace : texte);
   }
 
   // ─────────────────────────────────────────────────────────────── le HUD
@@ -3181,7 +3200,7 @@
     var actions = document.createElement("div"); actions.className = "v-actions";
     actions.innerHTML = '<button type="button" id="villePlan">' + icone("carte", 15) + 'Plan</button>' +
       '<button type="button" id="villeAttendre">' + icone("horloge", 15) + 'Attendre</button>' +
-      '<button type="button" id="villeBiens">' + icone("caisse", 15) + 'Biens</button>' +
+      '<button type="button" id="villeBiens">' + icone("carnet", 15) + 'Carnet</button>' +
       '<button type="button" id="villeRdv">' + icone("fleche", 15) + 'Y aller</button>' +
       '<button type="button" id="villeIci">' + icone("caisse", 15) + 'Ici</button>' +
       '<button type="button" id="villeSortir">' + icone("fleche", 15) + 'Sortir</button>';
@@ -3230,7 +3249,7 @@
     $("villeAttendre").addEventListener("click", function () { attendre(); });
     $("villeSortir").addEventListener("click", function () { if (dedans && !carteOn && !occupe) allerSortir(); });
     $("villeIci").addEventListener("click", function () { if (dedans && !carteOn && !occupe) ouvrirPorte(dedans.cle, null, null); });
-    $("villeBiens").addEventListener("click", function () { if (!carteOn && !occupe) ouvrirInventaire(); });
+    $("villeBiens").addEventListener("click", function () { if (!carteOn && !occupe) ouvrirCarnet(); });
     $("villeRdv").addEventListener("click", function () {
       if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
       // on viendra te trouver là où tu es (le prologue du livre 9, dans la rue) : il n'y a nulle
@@ -3486,6 +3505,14 @@
       if (pret) go(); else enAttente = go;
     },
     carteVisible: function () { return carteOn; },
+    // pour les essais : ce que le moteur retient de la ville vivante
+    _vivant: function () {
+      var v = vue || {}, out = { rel: {}, vars: {}, flags: (v.flags || []).filter(function (f) { return /^(rep|tuyau|service|dette)_/.test(f); }) };
+      Object.keys(v.vars || {}).forEach(function (k2) { if (/^(lien|hab)_/.test(k2)) out.vars[k2] = v.vars[k2]; });
+      Object.keys(v.relations || {}).forEach(function (k2) { if (v.relations[k2]) out.rel[k2] = v.relations[k2]; });
+      out.ici = gensDuLieu(dedans ? dedans.cle : S.lieu).map(function (g) { return g.id; });
+      return out;
+    },
     // pour les essais automatiques : qui est où (et marche-t-il dans un mur ?)
     _debug: function () {
       var out = [];
@@ -3520,6 +3547,14 @@
         jouerMatch(v2, function () { if (S.tranche < 3) S.tranche = 3; majHud(); });
       }
       if (quoi === "scene" && SCENE[val] && !carteOn && !occupe) jouerScene(SCENE[val]);
+      if (quoi === "tranche" && TRANCHES.indexOf(val) >= 0) { S.tranche = TRANCHES.indexOf(val); majHud(); if (dedans) occuper(); }
+      // toucher quelqu'un qu'on voit (la ville vivante : sa bulle)
+      if (quoi === "parler") {
+        var qg = figurants.concat(Object.keys(acteurs).map(function (k2) { return acteurs[k2]; })).filter(function (q) { return q.qui === val; })[0];
+        if (!qg) return { erreur: "personne ici : " + val };
+        parler(qg);
+        return bulle ? { nom: bulle.nom, texte: bulle.texte } : null;
+      }
       // une scène jouée ou une conversation, à la demande (packages/tools/web/voir_scene.js)
       if (quoi === "cine") {
         var ci = cineParId(val);

@@ -441,7 +441,7 @@
   };
   var LIEU_DE_CAMP = {
     terrain: 'vestiaire', direction: 'bureau', instances: 'couloir',
-    selection: 'car', famille: 'maison'
+    selection: 'car', famille: 'maison', ville: 'buvette'
   };
   var LIEUX = ['vestiaire', 'couloir', 'virage', 'bureau', 'terrain', 'car', 'buvette', 'presse', 'maison'];
 
@@ -1784,7 +1784,9 @@
     sifflet: 'M2.4 8.4h9.4a6 6 0 1 1 0 7.2H2.4Zm12.9 1.2a2.4 2.4 0 1 0 0 4.8 2.4 2.4 0 0 0 0-4.8ZM3.6 5.2l1.2-2.6 3.4 1.6-1 2.2Z',
     carte: 'M4.4 2.6h15.2c.9 0 1.6.7 1.6 1.6v15.6c0 .9-.7 1.6-1.6 1.6H4.4c-.9 0-1.6-.7-1.6-1.6V4.2c0-.9.7-1.6 1.6-1.6Zm2 3.2v12.4h11.2V5.8Z',
     horloge: 'M12 1.9a10.1 10.1 0 1 0 0 20.2 10.1 10.1 0 0 0 0-20.2Zm0 3.1c.8 0 1.4.6 1.4 1.4v5.1l3.4 2a1.4 1.4 0 0 1-1.4 2.4l-4.1-2.4c-.4-.3-.7-.7-.7-1.2V6.4c0-.8.6-1.4 1.4-1.4Z',
-    tampon_ok: 'M9.6 16.2 4.8 11.4l-2.6 2.6 7.4 7.4L21.8 8 19.2 5.4Z'
+    tampon_ok: 'M9.6 16.2 4.8 11.4l-2.6 2.6 7.4 7.4L21.8 8 19.2 5.4Z',
+    // le carnet de la ville (les gens, ce qu'on t'a confié) : un cahier à spirale
+    carnet: 'M6.4 2.2h12.4c.9 0 1.6.7 1.6 1.6v16.4c0 .9-.7 1.6-1.6 1.6H6.4c-.9 0-1.6-.7-1.6-1.6V3.8c0-.9.7-1.6 1.6-1.6Zm2.4 3.6v2.2h8.6V5.8Zm0 4.4v1.8h8.6v-1.8Zm0 4v1.8h5.8v-1.8ZM2.4 5.4h2.4v2H2.4Zm0 5.6h2.4v2H2.4Zm0 5.6h2.4v2H2.4Z'
   };
   var ALIAS = { direction: 'president', president: 'president', argent: 'caisse', mort: 'crane', up: 'hausse', down: 'baisse' };
 
@@ -1894,7 +1896,9 @@
     direction: ['enveloppe', 'valise', 'cahier', 'tampon'],
     instances: ['enveloppe', 'cahier', 'sifflet'],
     selection: ['ballon', 'brassard', 'valise'],
-    famille: ['echarpe', 'cahier', 'ballon', 'crampon']
+    famille: ['echarpe', 'cahier', 'ballon', 'crampon'],
+    // les gens d'Aubérive (la ville vivante) : le comptoir, l'ardoise, la lettre
+    ville: ['echarpe', 'cahier', 'enveloppe']
   };
   function premierPlan(lieu, camp, d, r) {
     var pal = LX.paletteLieu(lieu, d) || LX.paletteLieu('vestiaire', d);

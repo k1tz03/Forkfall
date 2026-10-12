@@ -382,12 +382,13 @@ void main() {
         _state = _engine.choose(_state!, right.toDart);
         return _view().toJS;
       }).toJS);
-  // LA VILLE — une activité entre deux cartes (`Engine.activite` : les jauges
-  // seules, aucun tirage). Rend la vue, qui peut être une fin.
+  // LA VILLE — une activité entre deux cartes (`Engine.activite` : les jauges,
+  // le lien, l'habitude, aucun tirage ; `sansJauges` : la ville l'a déjà comptée
+  // cette semaine). Rend la vue, qui peut être une fin.
   globalContext.setProperty(
       'fusibleActivite'.toJS,
-      ((JSString id) {
-        _state = _engine.activite(_state!, id.toDart);
+      ((JSString id, JSBoolean sansJauges) {
+        _state = _engine.activite(_state!, id.toDart, jauges: !sansJauges.toDart);
         return _view().toJS;
       }).toJS);
   // LA VILLE — le choix fait dans une mission (`choix` vide : l'échec d'une
