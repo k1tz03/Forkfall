@@ -1,0 +1,1588 @@
+# LA VILLE VIVANTE — lot « port » : le port de la Rive, le quartier de l'est du Grand Aubérive
+# (docs/histoires/grand_auberive.md ; le format : docs/histoires/ville_vivante.md § 8).
+# Le quartier s'ouvre à la 8ᵉ semaine de la carrière, ou plus tôt par le drapeau `quartier_port`.
+# Ses lieux (content/ville/grand_auberive.yaml) prennent ici leurs gens, ce qu'on y fait, la vie
+# qui s'y passe sans toi, et ce que la ville en dit.
+#
+# Six lieux, deux visages chacun, l'un après l'autre, sans trou ni chevauchement :
+#
+#   entrepot_7       L'entrepôt 7            Lazare Quéméner      1990-2009   milieu
+#                                            Maïwenn Quéméner     2010-2050   milieu   (sa fille)
+#   relais_routiers  Le Relais des routiers  Arlette Sarrazin     1990-2014   rue
+#                                            Yannick Bouvreuil    2015-2050   rue      (un ancien routier)
+#   casse            La casse                Baptistin Rouquette  1990-2011   milieu
+#                                            Romane Rouquette     2012-2050   milieu   (sa petite-fille)
+#   capitainerie     La capitainerie         Aristide Delmas      1990-2016   police
+#                                            Solène Arrighi       2017-2050   police
+#   guinguette       La guinguette           Mado Pellissier      1990-2006   milieu
+#                                            Matthias Pellissier  2007-2050   milieu   (son neveu)
+#   docks            Les docks (sans porte)  Anselme Ferragut     1990-2012   argent   (le chef d'équipe)
+#                                            Mehdi Haddouche      2013-2050   argent   (le grutier)
+#
+# Le port change avec les années : les péniches de sable et de grain, puis les conteneurs (vers
+# 1998) ; le silo ferme en 2009 ; le portique se pilote de la capitale à partir de 2036 ; les
+# camions roulent sans chauffeur à la fin des années 2030 ; les Magasins généraux deviennent des
+# lofts en 2041. Les bateaux portent des mots : L'Espérance (la péniche de la guinguette),
+# L'Obstinée (la péniche noire qui ne signe jamais le registre), Le Patient, Le Colosse, la
+# Montbéliac (la dernière péniche du silo).
+#
+# Ce que les livres trouvent ici (les tuyaux, au bon moment du bon livre) : la berline grise
+# qu'on n'a pas voulu écraser (2, `h2_cherche_voiture`), le fond du car (2, `h2_fond_du_car`), la
+# boue blanche et le car sur le quai (2), la voiture du club de 1984 et son pare-brise (4), le
+# ciré et la camionnette de la nuit de l'Est (5), la cabine du mardi (5), la Mutuelle des Quais
+# (6, `h6_indices`), les montres de Fulgor et le bus de 2010 (7), Kerdal la nuit et la troisième
+# nuit blanche (8, une scène : `h8_nuits`), la berline de Dorada et le cercueil du petit Marçais
+# (9), le second clapet de Nino (10, `h10_clapet_nino`), le bail de Rive Capital et la dame au nom
+# de mois (10).
+#
+# Les services sont ceux d'un quartier noir : cacher un carton (`vl_produits`, `vl_cure`,
+# `h1_vl_carton` effacés), une voiture sans passé (`sp_tripot_coupe`), une couchette jusqu'à
+# Valdorne (`vl_colis`), une page du registre (`sp_controle`), parler aux créanciers
+# (`vl_dette_tripot`), un prêt sur la marchandise (de l'argent sale). Six d'entre eux laissent
+# une dette, qu'une scène vient réclamer.
+#
+# Les scènes du quartier portent `semaine >= 8` : la coquille ne vérifie pas encore qu'un quartier
+# est ouvert avant d'y programmer une scène. Les activités qu'on fait avec quelqu'un sont bornées
+# à son époque (`si`). Aucun accord sur le héros ; les objets datés ont leur année.
+gens:
+
+  # ═══════════════════════════════════════════════════════════════ L'ENTREPÔT 7 (entrepot_7)
+
+  - id: lazare
+    name: "Lazare Quéméner"
+    label: "LE GARDIEN DE L'ENTREPÔT 7"
+    genre: m
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: casquette, coiffe: marine, cheveux: gris, pilosite: barbe, lunettes: aucune, tenue: veste, couleur: bleu, couleur2: gris, accessoire: carnet}
+    lieu: entrepot_7
+    tranches: [aprem, soir, nuit]
+    annees: [1990, 2009]
+    reseau: milieu
+    trace: "Lazare a écrit ton nom dans son carnet, dans la colonne « pour qui », et rien en face."
+    paliers: ["te laisse passer par la porte du personnel", "te sert le café dans le bouchon du thermos", "ouvrirait le fond de l'entrepôt pour toi"]
+    froid: ["te fait attendre sous la lampe", "te demande pour qui tu viens", "a mis ton nom dans l'autre colonne"]
+    activites: [port_e7_thermos, port_e7_ronde]
+    on_relation: {3: vi.lazare.fond, -3: vi.lazare.colonne}
+    repliques:
+      - {lien: 0, texte: "Ici, on ne me demande pas ce qu'il y a dans les caisses. On me demande l'heure, et pour qui. L'heure, je la donne à tout le monde."}
+      - {lien: 0, si: "tranche == nuit", texte: "La camionnette recule jusqu'à la grande porte, sans phares. Elle connaît le chemin mieux que moi. Restez sous la lampe : ceux qui déchargent aiment savoir où sont les gens."}
+      - {lien: 0, si: "annee < 1998", texte: "Les péniches de Portclair déchargent le mardi, le sable le jeudi. Le reste arrive quand il veut. Le reste n'a pas de jour, seulement un poids."}
+      - {lien: 0, si: "annee >= 1998", texte: "Les conteneurs, on ne les ouvre plus : on les pèse. Trois cents kilos de trop, on écrit « palettes » et on remet le plomb. C'est devenu un métier de balance."}
+      - {lien: 1, texte: "Mars 1971, une élingue a lâché. Deux doigts au fond de la cale. On m'a donné la nuit de l'entrepôt pour que je ne parle pas de l'élingue. Je n'en parle toujours pas."}
+      - {lien: 1, si: "serie_d >= 2 && role != selectionneur", texte: "Quand ton club perd, les livraisons arrivent en retard. Les gens du Quai attendent de savoir ce que le samedi leur a rapporté avant de payer le transport."}
+      - {lien: 1, si: "jour == sam", texte: "Le samedi, j'écoute le match au transistor, entre deux fûts. Quand ça marque pour nous, je cogne la tôle avec la clé, une fois. Sur les péniches, on compte les coups."}
+      - {lien: 2, texte: "La voiture sous la bâche, au fond, c'est la mienne. Achetée en 1965, jamais sortie. Ma femme voulait voir la mer. Elle est partie avant la première vidange."}
+      - {lien: 2, si: "annee >= 1999", texte: "Ma fille conduit le chariot de nuit. Elle tape tout dans un ordinateur, le quoi et le combien. Le « pour qui », je le garde dans mon carnet. Elle ne me le demande pas."}
+      - {lien: 3, texte: "Derrière les fûts de 1987, au fond, il y a une place où rien n'a jamais été. Si un jour il te faut cette place, viens à la nuit. Je ne noterai rien."}
+      - {lien: -1, texte: "L'entrepôt est fermé au public. Le public, aujourd'hui, c'est vous."}
+      - {lien: -2, texte: "Votre nom est dans mon carnet. Pas dans la colonne des patrons : dans l'autre, celle que je montre quand on me pose des questions."}
+      - {lien: -3, texte: "Ne venez plus la nuit. La nuit, je ne reconnais plus personne, et ceux qui déchargent le savent."}
+    tuyaux:
+      - id: lazare_bidons
+        si: "flag(histoire_h1) && flag(h1_masques_tifo) && !flag(h1_berline_brulee)"
+        texte: "« Les cartons de masques passent chez moi avant l'imprimerie. Lundi, un carton pour la Nord pesait douze kilos de trop : des bidons, sous le carton. Pour qui, je l'ai noté : pour le local. »"
+      - id: lazare_chevaux
+        si: "flag(histoire_h3) && flag(h3_steph_vu)"
+        texte: "« Le survêtement neuf de la salle de muscu vient ici le mardi soir chercher des caisses marquées COMPLÉMENT POUR CHEVAUX. Il n'a pas de cheval. Les caisses arrivent de Portclair, avec le sable. »"
+      - id: lazare_camionnette
+        si: "flag(histoire_h5) && flag(h5_tribune_est_brulee) && !flag(h5_temoin)"
+        texte: "« La nuit de l'Est, la camionnette blanche des Terrasses a dormi ici jusqu'à minuit. Elle est repartie avec un bidon rouge sur le siège. On avait repeint le nom de la portière, mal. »"
+      - id: lazare_cartouches
+        si: "vestiaire < 45 && annee <= 2009 && role != selectionneur"
+        texte: "« Deux des tiens viennent la nuit chercher des cartouches sans timbre, qu'ils revendent au vestiaire. L'un d'eux doit déjà trois livraisons. Ceux qui doivent jouent mal. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "Le fond de l'entrepôt"
+      texte: "Lazare ouvre la porte du personnel et pousse ton carton derrière les fûts de 1987, sous une bâche. Il ne regarde pas dedans. « Ce qui dort ici n'a jamais été chez toi. »"
+      effets: {clear: [vl_produits, vl_cure, h1_vl_carton], jauges: {direction: 1}}
+      dette: true
+
+  - id: maiwenn
+    name: "Maïwenn Quéméner"
+    label: "LA CHEFFE DE L'ENTREPÔT 7"
+    genre: f
+    portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: queue, cheveux: roux, pilosite: rase, lunettes: aucune, tenue: doudoune, couleur: orange, accessoire: badge}
+    lieu: entrepot_7
+    tranches: [matin, aprem, soir]
+    annees: [2010, 2050]
+    reseau: milieu
+    trace: "Maïwenn a scanné ton badge de visiteur, puis l'a déchiré devant toi. Sur son quai, il n'y aura pas eu de visite."
+    paliers: ["te donne un badge sans te faire signer", "te laisse entrer par le quai de nuit", "fermerait l'entrepôt pour toi"]
+    froid: ["te fait signer le registre des visites", "te fait raccompagner par le vigile", "a punaisé ton signalement au quai de nuit"]
+    activites: [port_e7_pointage, port_e7_cigarette]
+    on_relation: {3: vi.maiwenn.plomb, -3: vi.maiwenn.signalement}
+    repliques:
+      - {lien: 0, texte: "Mon père écrivait « pour qui » dans un carnet. Moi, le scanner écrit le quoi et le combien. Le pour qui, je le garde de tête. C'est plus sûr qu'un ordinateur."}
+      - {lien: 0, si: "tranche == soir", texte: "À dix-neuf heures, l'équipe de jour badge et s'en va. À vingt heures, il en arrive une autre, qui ne badge pas. Je ne suis là ni pour l'une ni pour l'autre."}
+      - {lien: 0, si: "annee >= 2035", texte: "Les chariots roulent seuls depuis le printemps. Ils s'arrêtent devant les gens, poliment, et repartent. Ils ne demandent jamais pour qui."}
+      - {lien: 1, texte: "J'ai commencé au chariot en 1995, la nuit, sous les ordres de mon père. Il me faisait recompter les fûts. Je n'ai jamais su ce qu'il y avait dedans. Lui non plus, je crois."}
+      - {lien: 1, si: "serie_d >= 2 && role != selectionneur", texte: "Les écharpes de ton club arrivent par conteneur, de très loin. Quand ça perd, la boutique ne vient plus les chercher. J'en ai trois palettes qui attendent depuis août."}
+      - {lien: 2, si: "!mission(vi.sc.lazare_mer)", texte: "La voiture de mon père dort au fond, sous sa bâche. Je paie l'assurance d'une voiture qui n'a jamais roulé. Ma fille dit que c'est de la poésie. C'est une facture."}
+      - {lien: 2, si: "mission(vi.sc.lazare_mer)", texte: "La voiture de mon père est au fond, sous sa bâche. Il m'a dit qu'un jour, quelqu'un lui avait proposé la mer. Il ne m'a jamais dit s'il avait dit oui."}
+      - {lien: 2, si: "annee >= 2041", texte: "Les Magasins généraux sont devenus des lofts, avec la potence gardée sur la façade. On m'a proposé deux fois de vendre le 7. Le jour où je vends, le port n'a plus de nuit."}
+      - {lien: 3, texte: "Si un jour il te faut un conteneur qui part sans qu'on sache où, dis-le-moi avant minuit. Après minuit, ce n'est plus moi qui pose les plombs."}
+      - {lien: -1, texte: "Badge visiteur, registre, signature. C'est la procédure. Pour vous, c'est la procédure."}
+      - {lien: -2, texte: "Le vigile vous raccompagne. Il ne vous touchera pas. Il marchera seulement très près."}
+      - {lien: -3, texte: "Votre signalement est punaisé au quai de nuit, à côté des consignes d'incendie. Les gars le lisent en badgeant."}
+    tuyaux:
+      - id: maiwenn_montres
+        si: "flag(histoire_h7) && flag(h7_rance_mort) && !flag(h7_montres)"
+        texte: "« Les coffrets Fulgor des Cobalts sont passés sur mon quai en octobre : quatre palettes. Une cinquième est arrivée après la nuit de la 12, sans bordereau. Des montres. Elle est partie pour l'hôtel. »"
+      - id: maiwenn_dorada
+        si: "flag(histoire_h9) && annee >= 2030 && !flag(h9_voiture_gardee) && !flag(h9_voiture_rendue)"
+        texte: "« Une berline blanche est arrivée chez moi par conteneur, déclarée matériel promotionnel, zéro de douane. Elle est pour toi, de la part de Dorada. Le fisc lira un jour la même ligne que moi. »"
+      - id: maiwenn_bail
+        si: "flag(histoire_h10) && !flag(h10_entrepot_signe) && !flag(h10_entrepot_vide)"
+        texte: "« Rive Capital a proposé le même bail que le tien à trois entreprises du port. Article six : si le club change de mains, les entrepôts reviennent au bailleur. Les trois ont signé. Deux ont déménagé. »"
+      - id: maiwenn_conteneur
+        si: "annee >= 2010 && direction < 40"
+        texte: "« Un conteneur au nom d'un de tes dirigeants dort sur mon quai depuis un mois. Personne ne le réclame, personne ne veut qu'on l'ouvre. Ça s'appelle avoir peur de quelqu'un. »"
+        effets: {jauges: {direction: 2}}
+    service:
+      lien: 3
+      label: "Un prêt sur la marchandise"
+      texte: "Maïwenn sort d'un conteneur plombé une enveloppe de billets encore sous bande. « Un prêt sur une marchandise qui n'existe pas. Tu me rembourseras en marchandise, toi aussi. »"
+      effets: {var: {ville_francs_sales: "+3000"}}
+      dette: true
+
+  # ═══════════════════════════════════════════════════ LE RELAIS DES ROUTIERS (relais_routiers)
+
+  - id: arlette
+    name: "Arlette Sarrazin"
+    label: "LA PATRONNE DU RELAIS"
+    genre: f
+    portrait: {teint: clair, corpulence: large, age: age, coiffure: chignon, cheveux: roux, pilosite: rase, lunettes: carrees, tenue: blouse, couleur: bordeaux, couleur2: creme, accessoire: stylo}
+    lieu: relais_routiers
+    tranches: [midi, soir, nuit]
+    annees: [1990, 2014]
+    reseau: rue
+    trace: "Arlette t'a servi la soupe dans un bol de chauffeur, celui qui garde la chaleur jusqu'à Valdorne."
+    paliers: ["te sert sans demander d'où tu arrives", "te garde le bout du comptoir", "te ferait sortir de la ville en camion"]
+    froid: ["te fait payer d'avance", "te sert au fond, loin des chauffeurs", "a mis ton nom sur l'ardoise des routiers"]
+    activites: [port_relais_soupe]
+    on_relation: {3: vi.arlette.neon, -3: vi.arlette.ardoise}
+    repliques:
+      - {lien: 0, texte: "Ici, on mange à l'heure des moteurs, pas à celle des horloges. La soupe est chaude à quatre heures du matin comme à midi. Côté fenêtre, on voit les camions."}
+      - {lien: 0, si: "tranche == nuit", texte: "À trois heures, ceux du frigo de Valdorne s'arrêtent vingt minutes. Ils parlent football comme de la pluie : ce qui est tombé, ce qui tombera, et rien entre les deux."}
+      - {lien: 0, texte: "Le néon a perdu le L et le I. Les routiers savent lire ce qui manque. Les autres ne s'arrêtent pas, et c'est très bien comme ça."}
+      - {lien: 0, si: "serie_d >= 2 && role != selectionneur", texte: "Les chauffeurs me demandent si ton club descend. Ils ne savent pas où est le stade, mais ils lisent un classement à la radio entre deux péages."}
+      - {lien: 1, texte: "Mon mari roulait pour Valdorne. Février 1979, le verglas de la côte. Son patron m'a offert ce relais pour ne pas aller devant le juge. J'ai pris le relais."}
+      - {lien: 1, si: "jour == sam && tranche == soir", texte: "Le samedi soir, ceux qui ont écouté ton match dans la cabine viennent me dire le score comme s'ils l'avaient joué. Ils en rajoutent toujours un, de but."}
+      - {lien: 2, texte: "Le L, c'est mon mari qui l'a cassé en reculant, la semaine d'avant la côte. Le I s'est éteint tout seul, l'hiver 1986. Je ne fais pas réparer les choses qui se souviennent."}
+      - {lien: 2, texte: "Je connais chaque plaque qui s'arrête ici. Une plaque, c'est une ville, un patron, une femme qui attend. Les voitures sans plaque, je les connais aussi : elles ne s'arrêtent jamais."}
+      - {lien: 2, si: "annee >= 2000", texte: "Les chauffeurs appellent leur femme du parking, avant d'entrer, pour qu'elle n'entende pas le relais derrière eux. Comme si le bruit d'ici disait quelque chose."}
+      - {lien: 3, texte: "Si un jour tu dois partir sans que la ville te voie, il y a le frigo de cinq heures. Le chauffeur prend qui je lui dis, et il oublie la route en descendant."}
+      - {lien: -1, texte: "On paie d'avance, au comptoir. C'est pour les gens de passage."}
+      - {lien: -2, texte: "Il reste une table au fond, près des lavabos. Les chauffeurs ne s'assoient pas à côté de quelqu'un qu'ils ne connaissent pas."}
+      - {lien: -3, texte: "Votre nom est sur l'ardoise des routiers. Sur toutes les routes du coin, quelqu'un sait où vous allez avant vous."}
+    tuyaux:
+      - id: arlette_fond_du_car
+        si: "flag(histoire_h2) && flag(h2_cars_du_quai) && !flag(h2_fond_du_car)"
+        texte: "« Le car neuf des Cars du Quai dort sur mon parking, la nuit, et le chauffeur du club dort dedans. Des joueurs viennent frapper à la vitre, une enveloppe à la main. Ils repartent sans. »"
+        effets: {set: [h2_fond_du_car]}
+      - id: arlette_halte
+        si: "flag(histoire_h3) && flag(h3_ardoise) && !flag(h3_enveloppe_portee) && !flag(h3_enveloppe_refusee)"
+        texte: "« Dimanche, les gendarmes tiennent la départementale de Portclair au pont de la Halte, de dix heures à midi. Les routiers le savent depuis samedi soir. Eux, ils passent par le Halage. »"
+      - id: arlette_1984
+        si: "flag(histoire_h4) && flag(h4_photo_entiere) && !flag(h4_capot)"
+        texte: "« Le 14 mai 1984, à deux heures moins dix, un de mes chauffeurs a croisé la voiture du club sur la route de la Rive. Au volant, celui du brassard. À côté, quelqu'un dormait contre la vitre. »"
+      - id: arlette_car_adverse
+        si: "tribunes < 40 && annee <= 2014 && role != selectionneur"
+        texte: "« Samedi midi, un car de supporters d'en face fera le plein chez moi. Quarante gars. Ils ont demandé le chemin de la Nord, pas celui du parking des visiteurs. Préviens les tiens. »"
+        effets: {jauges: {tribunes: 2}}
+    service:
+      lien: 3
+      label: "Une couchette pour Valdorne"
+      texte: "À cinq heures, un frigorifique s'arrête au coin de ta rue, feux éteints. Tu fais la route couché derrière le chauffeur, jusqu'à Valdorne. Le sac que tu ne voulais plus voir reste à bord."
+      effets: {clear: [vl_colis], jauges: {direction: 1, tribunes: 1}}
+
+  - id: yannick
+    name: "Yannick Bouvreuil"
+    label: "LE PATRON DU RELAIS"
+    genre: m
+    portrait: {teint: clair, corpulence: large, age: mur, coiffure: degarni, cheveux: chatain, pilosite: bouc, lunettes: aucune, tenue: chemise, couleur: rouge, couleur2: noir, accessoire: aucun}
+    lieu: relais_routiers
+    tranches: [midi, soir, nuit]
+    annees: [2015, 2050]
+    reseau: rue
+    trace: "Yannick a posé ton café sur la carte routière du comptoir, pile sur le point d'Aubérive."
+    paliers: ["te fait une place au comptoir des chauffeurs", "te dit qui roule où cette nuit", "te ramènerait sans qu'une caméra le sache"]
+    froid: ["te sert à la table des touristes", "ne te dit plus rien des routes", "garde les images du parking"]
+    activites: [port_relais_421]
+    on_relation: {3: vi.yannick.halage, -3: vi.yannick.images}
+    repliques:
+      - {lien: 0, texte: "J'ai roulé vingt-cinq ans, et je me suis arrêté ici quatre mille fois. Arlette m'a vendu le relais en douze traites, à une condition : ne jamais réparer le néon."}
+      - {lien: 0, si: "annee >= 2038", texte: "Les camions sans chauffeur s'arrêtent sur le parking pour recharger. Personne ne descend. Je laisse la soupe sur le feu quand même : un jour, il y aura quelqu'un dedans."}
+      - {lien: 0, si: "tranche == nuit", texte: "La nuit, il me reste les derniers chauffeurs, les infirmières de Portclair et ceux qui ne veulent pas rentrer. Je les sers pareil. Je ne demande pas lequel on est."}
+      - {lien: 1, si: "annee <= 2024", texte: "Arlette vient le dimanche matin, avec sa canne. Elle s'assoit au bout du comptoir et compte les plaques sur le parking. Elle dit que j'en ai moins qu'elle. Elle a raison."}
+      - {lien: 1, si: "serie_v >= 2 && role != selectionneur", texte: "Quand ton club gagne, ceux de Valdorne klaxonnent trois coups longs en passant devant le stade. Une coutume de chez eux, je crois. Personne ne sait plus d'où elle vient."}
+      - {lien: 2, si: "annee >= 2016", texte: "Il y a des caméras sur le parking depuis 2016 : l'assurance les a voulues. Je sais exactement ce qu'elles voient, et l'endroit où elles ne voient rien."}
+      - {lien: 2, si: "annee >= 2026", texte: "Arlette est morte en mars, dans sa chambre au-dessus de la cuisine. On a laissé le néon éteint une nuit entière. Les chauffeurs se sont arrêtés quand même, dans le noir."}
+      - {lien: 3, texte: "Si un soir tu dois rentrer sans qu'aucune caméra de la ville n'ait ton visage, passe par moi. Il y a un chemin de camions qui n'est sur aucune carte : le Halage, après minuit."}
+      - {lien: -1, texte: "La table des touristes, près de la porte. Le comptoir, c'est pour ceux qui ont roulé."}
+      - {lien: -2, texte: "Les routes ? Je n'en sais rien. Je sers des cafés."}
+      - {lien: -3, texte: "Les caméras du parking ont vos trois dernières visites. Je les garde. On ne sait jamais qui viendra les demander."}
+    tuyaux:
+      - id: yannick_kerdal
+        si: "flag(histoire_h8) && !flag(h8_kerdal_mort) && !flag(h8_kerdal_repose)"
+        texte: "« Ton défenseur, Kerdal, vient ici à trois heures, trois nuits par semaine. Il ne mange pas, il regarde partir les camions. Il dit que c'est le seul endroit où son bracelet ne compte rien. »"
+      - id: yannick_cercueil
+        si: "flag(histoire_h9) && annee <= 2030"
+        texte: "« Le cercueil du petit Marçais, un collègue l'a ramené de l'aéroport dans son frigo, entre deux palettes de poisson. Le transport, ce n'est pas l'émirat qui l'a payé. C'est la Fédération. »"
+      - id: yannick_autonome
+        si: "flag(histoire_h10)"
+        texte: "« Ta voiture sans volant s'est arrêtée trois nuits sur mon parking, vide. Elle recharge, et elle repart vers les Hauts, sans toi. Elle ne vient pas pour moi. Elle va raconter ta journée. »"
+    service:
+      lien: 3
+      label: "Le Halage après minuit"
+      texte: "Yannick te ramène lui-même, phares éteints, par le chemin du Halage, entre les champs et les rails. Aucune caméra de la ville ne te voit rentrer. Il repart sans prendre d'argent."
+      effets: {jauges: {direction: 2, tribunes: 1}}
+
+  # ═══════════════════════════════════════════════════════════════════════ LA CASSE (casse)
+
+  - id: baptistin
+    name: "Baptistin Rouquette"
+    label: "LE CASSEUR"
+    genre: m
+    portrait: {teint: olive, corpulence: large, age: age, coiffure: degarni, cheveux: blanc, pilosite: moustache, lunettes: aucune, tenue: blouse, couleur: bleu, couleur2: anthracite, accessoire: aucun}
+    lieu: casse
+    tranches: [matin, midi, aprem]
+    annees: [1990, 2011]
+    reseau: milieu
+    trace: "Baptistin a noté ton passage dans son cahier des entrées, entre une berline et un utilitaire, à la ligne « état : bon »."
+    paliers: ["te laisse entrer sans tenir le chien", "te montre son cahier des entrées", "ferait disparaître une voiture pour toi"]
+    froid: ["lâche la chaîne du chien quand tu entres", "te vend les pièces au prix du neuf", "a écrit ton nom sur une épave"]
+    activites: [port_casse_piece]
+    on_relation: {3: vi.baptistin.cahier, -3: vi.baptistin.epave}
+    repliques:
+      - {lien: 0, texte: "Ce qui entre ici en voiture ressort en pièces détachées. Les numéros, je les relève ; je ne les lis pas. Lire, c'est le travail des gendarmes."}
+      - {lien: 0, si: "tranche == matin", texte: "Le chien a eu sa gamelle à six heures, avant moi. Ne le regardez pas dans les yeux, passez le long des pneus. Il n'a jamais mordu un client. Il n'aime pas les autres."}
+      - {lien: 0, si: "annee >= 2000", texte: "Les voitures d'aujourd'hui ont des ordinateurs dans le ventre. Quand je les écrase, la presse fait un bruit de vaisselle. Avant, ça faisait un bruit de cloche."}
+      - {lien: 1, texte: "J'ai ouvert en 1955 avec une dépanneuse et un chien. Le chien a changé six fois, la dépanneuse jamais. Elle tire mieux que les neuves : elle sait ce qu'elle tire."}
+      - {lien: 1, si: "serie_d >= 2 && role != selectionneur", texte: "Quand ton club perd, on m'amène des voitures cabossées le lundi. Des supporters qui ont tapé dans la tôle en rentrant. Le garagiste répare ; moi, j'ai les morceaux."}
+      - {lien: 2, texte: "Mon cahier des entrées commence en 1955. Une ligne par voiture : le jour, l'état, qui l'a amenée. La police en voudrait des pages. Je les lui loue, quelquefois."}
+      - {lien: 2, si: "annee >= 2004", texte: "Ma petite-fille veut reprendre. Elle parle de normes, de dépollution, d'agréments. Je lui ai appris la pelle à douze ans. Le reste, elle le lit dans des classeurs."}
+      - {lien: 3, texte: "Une voiture qui t'encombre, tu me l'amènes un soir. Au matin, c'est un cube de soixante centimètres, et son numéro de châssis dort au fond de la Rive. Elle n'aura jamais existé."}
+      - {lien: -1, texte: "Les pièces sont au fond. Le chien aussi. Débrouillez-vous avec les deux."}
+      - {lien: -2, texte: "Pour vous, c'est le prix du neuf. Le prix d'ami, c'est pour les amis."}
+      - {lien: -3, texte: "J'ai écrit votre nom à la craie sur une épave, au bout de l'allée. Les gens du milieu passent devant tous les jours. Ils savent lire, eux."}
+    tuyaux:
+      - id: baptistin_berline
+        si: "flag(histoire_h2) && flag(h2_wagon_vu) && !flag(h2_cherche_voiture) && !flag(h2_carnet) && !flag(h2_rive) && !flag(h2_garage_vide) && !flag(h2_feu)"
+        texte: "« Le chauffeur du club m'a proposé une berline grise à écraser, sans papiers, un sapin au rétroviseur. J'ai dit non : on la connaît trop. Elle dort chez le garagiste du Pont, sous une bâche. »"
+        effets: {set: [h2_cherche_voiture]}
+      - id: baptistin_pare_brise
+        si: "flag(histoire_h4) && flag(h4_tombe_inconnue) && !flag(h4_capot)"
+        texte: "« La voiture du club, déclarée volée en 1984, je l'ai eue le 15 mai au matin. Le pare-brise était étoilé côté passager, à hauteur d'une tête. Côté volant, rien. C'est dans mon cahier. »"
+      - id: baptistin_reservoir
+        si: "flag(histoire_h1) && flag(h1_berline_brulee)"
+        texte: "« La berline du président, je l'ai eue au matin, encore tiède. Le bouchon du réservoir avait été dévissé proprement, pas forcé. Les gamins du virage cassent. Ceux-là connaissaient la voiture. »"
+      - id: baptistin_carte_grise
+        si: "direction < 40 && annee <= 2011 && role != selectionneur"
+        texte: "« Une voiture de ton club m'a été vendue au poids mardi, par quelqu'un de chez toi qui n'avait pas la carte grise. J'ai payé, et j'ai gardé son nom. Il te servira plus qu'à moi. »"
+        effets: {jauges: {direction: 2}}
+    service:
+      lien: 3
+      label: "Une voiture sans passé"
+      texte: "Baptistin garde ta voiture une nuit. Au matin, elle a d'autres plaques, une carte grise de Valdorne et un numéro de châssis limé. « Elle n'a jamais été à toi. Ni à personne. »"
+      effets: {clear: [sp_tripot_coupe], jauges: {direction: 1}}
+      dette: true
+
+  - id: romane
+    name: "Romane Rouquette"
+    label: "LA PATRONNE DE LA CASSE"
+    genre: f
+    portrait: {teint: olive, corpulence: fin, age: jeune, coiffure: court, cheveux: noir, pilosite: rase, lunettes: aucune, tenue: blouse, couleur: bouteille, accessoire: telephone}
+    lieu: casse
+    tranches: [matin, midi, aprem]
+    annees: [2012, 2050]
+    reseau: milieu
+    trace: "Romane a noté ton passage au stylo, dans le cahier de son grand-père : la seule ligne qui n'entre pas dans l'ordinateur."
+    paliers: ["te laisse approcher le chien", "te montre la mémoire des voitures", "effacerait une voiture pour toi"]
+    froid: ["te fait attendre derrière la grille", "te parle au tarif de la préfecture", "n'efface plus rien pour toi"]
+    activites: [port_casse_grappin]
+    on_relation: {3: vi.romane.memoire, -3: vi.romane.trajets}
+    repliques:
+      - {lien: 0, texte: "Mon grand-père écrasait des voitures. Moi, je les démonte : le cuivre, les batteries, l'huile, le verre. Une voiture, c'est neuf dixièmes de seconde vie. Le reste va à la presse."}
+      - {lien: 0, si: "annee >= 2028", texte: "Les voitures d'aujourd'hui se souviennent de tout : chaque trajet, chaque arrêt, chaque portière ouverte. Avant de les écraser, il faut les faire oublier. C'est la moitié du métier."}
+      - {lien: 0, si: "tranche == matin", texte: "Le chien porte le nom de celui de mon grand-père, et de celui d'avant. On garde le nom, on change le chien. Ici, c'est comme ça pour tout."}
+      - {lien: 1, texte: "Mon grand-père m'a appris la pelle à douze ans. Il disait qu'on ne prend pas une voiture par le toit, mais par la taille, comme pour danser. Je n'ai jamais dansé. Je prends par la taille."}
+      - {lien: 1, si: "serie_d >= 2", texte: "Le dimanche, après une défaite, on m'amène des rétroviseurs arrachés devant le stade. Toujours du même côté, celui des visiteurs. Je les revends au garage du Pont."}
+      - {lien: 2, texte: "Le cahier de mon grand-père dort dans le coffre, avec son briquet. Toutes les voitures de la ville depuis 1955. On m'a proposé de l'acheter. Pas pour le lire : pour le brûler."}
+      - {lien: 3, texte: "Si une voiture se souvient de choses qu'elle ne devrait pas, amène-la-moi. Je la branche, je lui parle, et elle oublie. C'est la seule chose que je fais mieux que mon grand-père."}
+      - {lien: -1, texte: "La grille ouvre aux particuliers à quatorze heures. D'ici là, le trottoir est à tout le monde."}
+      - {lien: -2, texte: "Je vous applique le tarif de la préfecture. Il est affiché. Il est très cher."}
+      - {lien: -3, texte: "Les voitures qui passent ici se souviennent de vous. Je ne les efface plus. On me les demande, quelquefois."}
+    tuyaux:
+      - id: romane_bus
+        si: "flag(histoire_h7) && annee >= 2013"
+        texte: "« Le bus de la Fédération, celui de 2010, on me l'a amené en janvier. Dans le casier du chauffeur, il y avait une bouteille vide et un brassard de capitaine roulé en boule. Je les ai gardés. »"
+      - id: romane_ferlac
+        si: "flag(histoire_h8)"
+        texte: "« La voiture de Ferlac est ici depuis janvier, sous une bâche. Le fonds a payé pour qu'on la presse ; le chèque est arrivé avant la voiture. Personne n'a réclamé ce qu'elle a dans la mémoire. »"
+      - id: romane_feu
+        si: "flag(histoire_h9) && flag(h9_voiture_brulee)"
+        texte: "« La voiture de ton capitaine, je l'ai eue au matin. Le feu est parti de l'intérieur, par la vitre arrière restée ouverte. Ceux qui ont écrit TRAÎTRE sur le mur ne l'ont pas allumée. »"
+    service:
+      lien: 3
+      label: "Faire oublier la voiture"
+      texte: "Romane branche un câble sous le tableau de bord et tape longtemps, la langue entre les dents. Six mois de trajets s'effacent, arrêt par arrêt. « Elle croit qu'elle sort de l'usine. Fais comme elle. »"
+      effets: {jauges: {direction: 2}}
+
+  # ════════════════════════════════════════════════════════════ LA CAPITAINERIE (capitainerie)
+
+  - id: aristide
+    name: "Aristide Delmas"
+    label: "LE CAPITAINE DE PORT"
+    genre: m
+    portrait: {teint: clair, corpulence: fin, age: mur, coiffure: casquette, coiffe: marine, cheveux: blanc, pilosite: barbe, lunettes: rondes, tenue: veste, couleur: marine, couleur2: blanc, accessoire: carnet}
+    lieu: capitainerie
+    tranches: [matin, aprem, soir]
+    annees: [1990, 2016]
+    reseau: police
+    trace: "Aristide a noté l'heure de ta visite dans la marge du registre, là où il note la météo."
+    paliers: ["te laisse lire le registre", "te monte à la vigie le soir", "arracherait une page du registre pour toi"]
+    froid: ["te demande tes papiers", "signale tes visites à la brigade", "a montré tes visites de nuit à la brigade"]
+    activites: [port_capi_registre]
+    on_relation: {3: vi.aristide.page, -3: vi.aristide.brigade}
+    repliques:
+      - {lien: 0, texte: "Chaque péniche qui entre dans le bassin signe le registre : le nom du bateau, le patron, la charge, l'heure. Presque chaque péniche. Le presque, c'est mon métier."}
+      - {lien: 0, si: "tranche == soir", texte: "À la nuit, j'allume la vigie. Pas pour les bateaux : ils connaissent le bassin. Pour ceux qui viennent sur le quai sans bateau. Ils aiment savoir qu'on les voit."}
+      - {lien: 0, si: "annee >= 2001", texte: "Les conteneurs ont des numéros à onze chiffres. Je les recopie à la main, au stylo, dans le registre. La brigade dit que c'est inutile. Elle vient quand même relire mes pages."}
+      - {lien: 1, texte: "J'ai inspecté la batellerie vingt ans avant ce bureau. Je reconnais une coque chargée de ce qu'elle déclare et une coque chargée d'autre chose. La seconde enfonce de travers."}
+      - {lien: 1, si: "jour == sam", texte: "Le samedi, les mariniers écoutent ton match sur la fréquence de la batellerie. Quand ça marque, ils font sonner les cornes. Le règlement l'interdit. Je ne le note pas."}
+      - {lien: 2, texte: "Une péniche noire, L'Obstinée, ne signe jamais. Trois fois en vingt ans, elle a déchargé de nuit, feux éteints. Je ne sais pas pour qui. Je sais pour qui elle ne travaille pas."}
+      - {lien: 2, si: "annee >= 2008", texte: "Ma vue baisse. Le soir, je lis les feux des péniches à leur couleur, plus à leur nom. Le jour où je confondrai le rouge et le vert, je rendrai la casquette."}
+      - {lien: 3, texte: "Si un jour la brigade te cherche du côté de l'eau, c'est moi qu'elle appelle d'abord. Je décroche toujours à la deuxième sonnerie. Pour toi, je laisserai sonner longtemps."}
+      - {lien: -1, texte: "Vos papiers, s'il vous plaît. Le quai est une zone portuaire. Je demande les papiers à tout le monde ; à vous, avec plaisir."}
+      - {lien: -2, texte: "La brigade fluviale me demande qui vient au port. Je lui réponds. Ce mois-ci, j'ai dû écrire votre nom deux fois."}
+      - {lien: -3, texte: "Votre nom est au registre, à la page des visiteurs de nuit. La brigade l'a photocopiée lundi. Je n'ai pas eu besoin de la lui montrer."}
+    tuyaux:
+      - id: aristide_rive
+        si: "flag(histoire_h2) && flag(h2_rive) && !flag(h2_feu)"
+        texte: "« La nuit du car sur le quai, ma vigie était allumée. Deux heures dix : le car du club, feux éteints. Un homme a regardé l'eau à la flamme d'un briquet. Mon registre est au juge, s'il le demande. »"
+      - id: aristide_plongeurs
+        si: "flag(histoire_h5) && saison >= 2 && !flag(h5_rive_voiture)"
+        texte: "« Les plongeurs des berges ont touché une carrosserie sous la vase, au pied du quai sud. Jeudi, ils l'élinguent. Si on sort une voiture de la Rive, le juge gèle les berges, et tout le chantier avec. »"
+      - id: aristide_controle
+        si: "annee <= 2016 && vestiaire < 50 && role != selectionneur"
+        texte: "« La brigade prépare un contrôle sur le quai sud, samedi soir, à la sortie du stade : alcool, papiers, coffres. Ceux de chez toi qui rentrent par là feraient mieux de prendre le pont. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "Une page du registre"
+      texte: "Aristide ouvre le registre à la page de ta dernière visite de nuit, la découpe au canif, au ras de la reliure, et la brûle dans le poêle. « Le registre en a perdu d'autres. »"
+      effets: {clear: [sp_controle], jauges: {direction: 1}}
+      dette: true
+
+  - id: solene
+    name: "Solène Arrighi"
+    label: "LA CAPITAINE DE PORT"
+    genre: f
+    portrait: {teint: dore, corpulence: moyen, age: mur, coiffure: carre, cheveux: brun, pilosite: rase, lunettes: aviateur, tenue: veste, couleur: marine, couleur2: blanc, accessoire: telephone}
+    lieu: capitainerie
+    tranches: [matin, midi, aprem, soir]
+    annees: [2017, 2050]
+    reseau: police
+    trace: "Solène a écrit ton passage à la main, dans le registre de papier, celui que la préfecture ne lit pas."
+    paliers: ["te laisse monter à la vigie", "te montre ses deux registres", "te prêterait la vedette de la brigade"]
+    froid: ["te demande l'objet de ta visite", "transmet tes passages à la préfecture", "a donné ton visage aux caméras du quai"]
+    activites: [port_capi_radio]
+    on_relation: {3: vi.solene.angle, -3: vi.solene.cameras}
+    repliques:
+      - {lien: 0, texte: "J'ai deux registres : l'ordinateur, que lit la préfecture, et celui d'Aristide, à la main, que je suis seule à lire. Ils ne disent pas toujours la même chose. C'est voulu."}
+      - {lien: 0, si: "annee >= 2030", texte: "La préfecture m'a donné un drone pour la nuit. Il filme le quai, l'eau, les péniches et ceux qui les regardent. Je l'appelle la mouette. Il ne crie pas ; c'est pire."}
+      - {lien: 0, si: "tranche == soir", texte: "Le soir, j'allume la vigie comme Aristide : pas pour les bateaux, pour ceux qui viennent à pied sur le quai. Il disait que la lumière fait marcher les gens moins vite."}
+      - {lien: 1, texte: "J'ai fait dix ans à la brigade fluviale avant ce bureau. J'ai repêché des voitures, des vélos, un piano. Le piano, personne ne l'a réclamé. Il est à la cave."}
+      - {lien: 1, si: "annee >= 2041", texte: "Depuis les lofts, le bassin a des yachts. Leurs patrons signent le registre d'un nom de société, à l'encre verte. Mes mariniers signaient de leur nom, au crayon, avec les doigts noirs."}
+      - {lien: 2, si: "annee <= 2030", texte: "Aristide vient encore le jeudi relire mes pages. Il ne voit plus les lignes, alors je les lui lis. Quand une péniche n'a pas signé, il le sait avant que je le dise."}
+      - {lien: 3, texte: "Si un soir tu dois disparaître une nuit, la vedette de la brigade est amarrée au ponton, et j'en ai la clé. Un bateau de police, c'est le dernier endroit où l'on fouille."}
+      - {lien: -1, texte: "Objet de votre visite ? Le quai est une zone réglementée. Je le demande à tout le monde."}
+      - {lien: -2, texte: "Vos passages au port sont transmis à la préfecture, comme ceux de tout le monde. Les vôtres, je les transmets en premier."}
+      - {lien: -3, texte: "Les caméras du quai ont votre visage en mémoire depuis la semaine dernière. Elles vous suivent d'un bout à l'autre. Dans ce port, elles ne vous lâcheront plus."}
+    tuyaux:
+      - id: solene_gazeo
+        si: "flag(histoire_h9)"
+        texte: "« Les barges de Gazéo déchargent au quai nord depuis le contrat de 2010. Le jour où ton capitaine portera le brassard, c'est Gazéo qui appellera la Fédération, avant le ministère. »"
+      - id: solene_madame
+        si: "flag(histoire_h10)"
+        texte: "« Une vedette de Rive Capital mouille au quai nord le premier mardi du mois. Une dame en manteau descend, téléphone une heure sur le ponton et repart. Au registre, elle signe d'un nom de mois. »"
+      - id: solene_livraison
+        si: "annee >= 2017 && direction < 40 && role != selectionneur"
+        texte: "« La brigade financière a demandé mon registre des six derniers mois, les livraisons de ton club comprises. Elle cherche une livraison payée deux fois. Quelqu'un, chez toi, l'a signée. »"
+        effets: {jauges: {direction: 2}}
+    service:
+      lien: 3
+      label: "Une nuit sur la vedette"
+      texte: "Solène te donne la clé de la vedette de la brigade, amarrée au ponton. Tu dors dans la cabine, au bruit de l'eau contre la coque. Ceux qui te cherchent ne cherchent pas sur un bateau de police."
+      effets: {jauges: {direction: 1, tribunes: 1}}
+
+  # ═══════════════════════════════════════════════════════════════ LA GUINGUETTE (guinguette)
+
+  - id: mado
+    name: "Madeleine « Mado » Pellissier"
+    label: "LA PATRONNE DE LA GUINGUETTE"
+    genre: f
+    portrait: {teint: clair, corpulence: moyen, age: age, coiffure: boucle, cheveux: blond, pilosite: rase, lunettes: aucune, tenue: pull, couleur: rouge, couleur2: creme, accessoire: aucun}
+    lieu: guinguette
+    tranches: [aprem, soir, nuit]
+    annees: [1990, 2006]
+    reseau: milieu
+    trace: "Mado t'a fait asseoir à la table de la proue, celle d'où l'on voit arriver les gens par la passerelle."
+    paliers: ["te garde une table sur le pont", "te fait asseoir à la proue", "parlerait à tes créanciers pour toi"]
+    froid: ["ne s'assoit plus à ta table", "te fait asseoir près de la friture", "relève la passerelle quand tu arrives"]
+    activites: [port_guinguette_friture]
+    on_relation: {3: vi.mado.cadenas, -3: vi.mado.passerelle}
+    repliques:
+      - {lien: 0, texte: "Sur L'Espérance, on ne se bat pas. On boit, on danse, on fait ses affaires ; on ne se bat pas. Ceux qui l'ont oublié ont appris à nager."}
+      - {lien: 0, si: "jour == sam && tranche == soir", texte: "Le samedi, c'est le bal. Les mariniers dansent avec les femmes des dockers, et les dockers avec personne. Ils regardent. C'est leur façon de danser."}
+      - {lien: 0, si: "tranche == nuit", texte: "Après minuit, ceux qui viennent ne commandent pas : ils s'assoient à la proue et attendent quelqu'un. Je leur sers de l'eau. Ils ne la boivent jamais."}
+      - {lien: 1, texte: "L'Espérance était la péniche de mon père : quarante ans de sable et de charbon. En 1958, il a ôté la cale et mis des tables. Il disait que le vin pèse moins lourd que le charbon."}
+      - {lien: 1, si: "serie_v >= 2 && role != selectionneur", texte: "Quand ton club gagne, les dockers paient leur tournée en tapant sur le bastingage. La coque résonne comme un tambour. Les poissons, eux, s'en vont."}
+      - {lien: 2, texte: "J'ai joué de l'accordéon au bal jusqu'en 1988. Les doigts ont dit non. L'accordéon est sur le piano du salon. Personne n'y touche ; il prend la poussière comme une médaille."}
+      - {lien: 2, si: "annee >= 2000", texte: "Mon neveu veut reprendre. Il parle de concerts, de lumières, de cartes de paiement. Je lui ai dit : un bateau, c'est d'abord une coque. Il m'a demandé combien coûte une coque."}
+      - {lien: 3, texte: "Si un jour quelqu'un te réclame de l'argent, amène-le sur mon pont. Personne ne réclame rien sur L'Espérance. On y discute, on s'arrange, on repart à pied."}
+      - {lien: -1, texte: "Il y a des tables sur le quai. Le pont, c'est pour les habitués."}
+      - {lien: -2, texte: "Vous êtes près de la friture. Il y a de la place, et de la fumée. On n'a rien de mieux ce soir."}
+      - {lien: -3, texte: "La passerelle est relevée. Pour vous, elle le restera. L'eau, entre le quai et la coque, est plus froide qu'elle n'en a l'air."}
+    tuyaux:
+      - id: mado_sauvat
+        si: "flag(histoire_h1) && !flag(h1_quai_paye) && !flag(h1_quai_refuse)"
+        texte: "« Le fils Sauvat dîne ici le vendredi avec deux hommes de Portclair. Ils parlent de ton club comme d'un cheval : le poids, la forme, le terrain. Jamais du nom. Le nom, c'est pour samedi. »"
+      - id: mado_cabine
+        si: "flag(histoire_h5) && flag(h5_conseil_entendu)"
+        texte: "« Le mardi, à six heures moins cinq du soir, un monsieur de la banque téléphone de ma cabine, sur le pont, un mouchoir sur le combiné. Il paie son cognac d'avance et ne le boit pas. »"
+      - id: mado_touche
+        si: "vestiaire < 45 && annee <= 2006 && role != selectionneur"
+        texte: "« Samedi, à la proue, un homme a parié avec un de tes joueurs sur une touche à la première minute. Ton joueur a perdu, et il a payé en riant. Ceux qui paient en riant reviennent. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "Parler à tes créanciers"
+      texte: "Mado fait monter ton créancier sur L'Espérance, lui sert un verre à la proue et lui parle une heure de son père. Il repart à pied, une enveloppe plus mince que prévu, ta dette rayée."
+      effets: {clear: [vl_dette_tripot], var: {ville_amende: "+500"}}
+      dette: true
+
+  - id: matthias
+    name: "Matthias Pellissier"
+    label: "LE PATRON DE LA GUINGUETTE"
+    genre: m
+    portrait: {teint: clair, corpulence: fin, age: jeune, coiffure: meche, cheveux: blond, pilosite: barbe, lunettes: aucune, tenue: chemise, couleur: ciel, accessoire: montre}
+    lieu: guinguette
+    tranches: [aprem, soir, nuit]
+    annees: [2007, 2050]
+    reseau: milieu
+    trace: "Matthias t'a servi le blanc dans un verre de Mado, gravé à la pointe : L'ESPÉRANCE, 1958."
+    paliers: ["te garde un tabouret au bar du pont", "te raconte les nuits de la proue", "te prêterait la salle du bas"]
+    froid: ["te fait attendre sur la passerelle", "te sert au prix des touristes", "ne te laisse plus monter à bord"]
+    activites: [port_guinguette_belote]
+    on_relation: {3: vi.matthias.salle}
+    repliques:
+      - {lien: 0, texte: "Ma tante tenait L'Espérance comme une église : on n'y criait pas, on n'y payait pas en retard, on n'y sortait pas de couteau. Je garde les trois règles. J'ai ajouté la carte bancaire."}
+      - {lien: 0, si: "annee >= 2020", texte: "Le samedi, j'ai un disque, un accordéoniste de soixante-dix ans et des étudiants qui filment tout. Le bal n'a jamais eu autant de monde. Il n'a jamais été aussi silencieux."}
+      - {lien: 0, si: "tranche == nuit", texte: "Après minuit, la proue est à ceux qui attendent un coup de téléphone. Ils posent l'appareil à l'envers sur la table et commandent de l'eau. Ma tante faisait pareil pour eux."}
+      - {lien: 1, si: "annee <= 2016", texte: "Mado vient le dimanche, s'assoit près de l'accordéon et compte mes clients. Elle dit que j'en ai plus qu'elle, et des moins bien. Elle a raison pour les deux."}
+      - {lien: 1, si: "serie_d >= 2 && role != selectionneur", texte: "Quand ton club perd, les dockers boivent sans taper sur le bastingage. Ma tante disait qu'une coque qui ne résonne pas, c'est une coque malade."}
+      - {lien: 2, si: "annee >= 2017", texte: "Les cendres de Mado sont dans la Rive, devant la proue. Depuis, je ne regarde plus l'eau pareil. Les mariniers qui passent ralentissent un peu, sans savoir pourquoi."}
+      - {lien: 3, texte: "La salle du bas, sous la ligne de flottaison, n'a ni fenêtre ni réseau. Si un jour tu dois parler à quelqu'un sans témoin, elle est à toi. Mado y faisait ses comptes."}
+      - {lien: -1, texte: "Il faut attendre sur la passerelle qu'une table se libère. Les habitués d'abord."}
+      - {lien: -2, texte: "C'est le prix affiché. Les habitués ont un autre prix. Vous n'en êtes plus."}
+      - {lien: -3, texte: "Ma tante avait une règle pour les gens comme vous : la passerelle relevée. Je l'ai relevée."}
+    tuyaux:
+      - id: matthias_clapet
+        si: "flag(histoire_h10) && saison >= 2 && !flag(h10_clapet_nino)"
+        texte: "« Nino vient seul le jeudi à minuit, à la proue. Il pose deux téléphones sur la table. Le petit, un vieux clapet, sonne d'une sonnerie qu'on n'entend plus nulle part. Il écoute, il ne répond rien. »"
+        effets: {set: [h10_clapet_nino]}
+      - id: matthias_ardoise
+        si: "annee >= 2007 && vestiaire < 45 && role != selectionneur"
+        texte: "« Deux de tes joueurs ont une ardoise ici, à la proue, au nom d'un homme qui ne boit jamais. Il paie leurs verres et ne leur demande rien. Pour l'instant. »"
+        effets: {jauges: {vestiaire: 2}}
+    service:
+      lien: 3
+      label: "La salle du bas"
+      texte: "Matthias descend devant toi, allume l'ampoule et remonte. Une table, deux chaises, la coque qui suinte. Ceux que tu y fais descendre t'écoutent une heure. L'eau couvre tout."
+      effets: {jauges: {vestiaire: 2, direction: 1}}
+
+  # ═══════════════════════════════════════════════════════════ LES DOCKS (docks, sans porte)
+
+  - id: anselme
+    name: "Anselme Ferragut"
+    label: "LE CHEF D'ÉQUIPE DES DOCKS"
+    genre: m
+    portrait: {teint: dore, corpulence: large, age: mur, coiffure: brosse, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: veste, couleur: jaune, couleur2: marine, accessoire: sifflet}
+    lieu: docks
+    tranches: [matin, midi, aprem]
+    annees: [1990, 2012]
+    reseau: argent
+    trace: "Ferragut a coché ton nom sur la feuille du poteau, à la place de quelqu'un qui n'est pas venu."
+    paliers: ["te salue d'un coup de sifflet", "te paie le vendredi avec les dockers", "embaucherait quelqu'un pour toi"]
+    froid: ["ne te voit plus au poteau", "te paie en dernier, et moins", "a rayé ton nom sur la feuille du poteau"]
+    activites: [port_docks_poteau]
+    on_relation: {3: vi.anselme.sifflet, -3: vi.anselme.feuille}
+    climat:
+      bas:
+        - {si: "role == joueur", texte: "Au Relais, on dit que tu manges au plat du jour, maintenant, et plus à la carte. Au port, on sait ce que ça veut dire : nous, on mange comme ça depuis toujours."}
+        - {si: "role == selectionneur", texte: "La Fédération a annulé la péniche de matériel pour le stage des Cobalts : trop chère, ils prendront le car. Quand une Fédération renonce à une péniche, c'est qu'elle compte ses sous."}
+        - {si: "role == president", texte: "Ton club doit trois mois au transporteur des sièges de la Nord. Il est venu me demander si les dockers seraient payés avant de décharger le reste. Eux, oui."}
+        - "Trois gars de ton stade sont venus décharger du sable samedi matin, avant le match : deux jardiniers et un magasinier. Quand ceux d'un stade viennent porter des sacs, la paie a du retard."
+      moyen:
+        - {si: "role == joueur", texte: "Personne au port ne parle de ton argent : ni dette, ni voiture neuve. C'est le meilleur compte qu'on puisse avoir, ici. Celui dont on ne parle pas."}
+        - {si: "role == selectionneur", texte: "Le matériel des Cobalts arrive par la péniche de Portclair, payé à la livraison, sans un sou d'avance. La Fédération ne se ruine pas. Elle ne se fait pas plaisir non plus."}
+        - "Ton club paie ses livraisons à trente jours, pile. Ni avance, ni retard. Au port, on appelle ça un client qu'on ne regarde pas."
+      haut:
+        - {si: "role == joueur", texte: "On dit au Relais que tu paies tes cafés en billets, sans attendre la monnaie. Au port, c'est comme ça qu'on reconnaît ceux qui ont de l'argent : ils n'attendent plus."}
+        - {si: "role == selectionneur", texte: "La Fédération a fait livrer trois péniches de matériel neuf pour les Cobalts, payées d'avance, avec une prime aux dockers pour aller vite. Ça faisait des années."}
+        - "Ton club a fait livrer des sièges neufs pour la Nord, payés comptant, à la commande. Le transporteur n'en revenait pas. Il a payé la tournée aux dockers, au Relais."
+    repliques:
+      - {lien: 0, si: "tranche == matin", texte: "Six heures, au poteau : vingt hommes, huit places. Je siffle, je montre du doigt, et ceux que je n'ai pas montrés rentrent chez eux. C'est le pire moment de ma journée, et le plus court."}
+      - {lien: 0, texte: "Le sable se décharge à la pelle, le grain au tuyau, la ferraille au grappin. Le reste se décharge à la main, la nuit, et ce n'est pas mon équipe."}
+      - {lien: 0, si: "annee >= 2004", texte: "Les conteneurs arrivent fermés et repartent fermés. On ne touche plus la marchandise. Mes gars deviennent des gens qui regardent passer des boîtes."}
+      - {lien: 1, texte: "Le samedi, les dockers vont à la Nord ensemble, avec la banderole DOCKS que mon père a peinte en 1962. On la sort quand ça va mal. Elle a beaucoup servi."}
+      - {lien: 1, si: "serie_v >= 2 && role != selectionneur", texte: "Quand ton club gagne, les gars déchargent plus vite le lundi. Ce n'est pas la joie : ils veulent finir à temps pour lire le journal au Relais."}
+      - {lien: 2, texte: "Je paie le vendredi, en liquide, dans une boîte à biscuits. Chaque billet a une histoire ; je ne demande jamais laquelle. Une boîte à biscuits, ça ne pose pas de questions."}
+      - {lien: 2, si: "annee <= 2002", texte: "La Mutuelle des Quais, c'est nous, les dockers : les veuves, les jambes cassées. J'en ai été le trésorier vingt ans. On cotisait en pièces. Personne n'a jamais rien volé."}
+      - {lien: 3, texte: "Si un jour un homme de chez toi a besoin d'un travail sans questions, envoie-le au poteau à six heures. Je le montrerai du doigt. Ce qu'il en fera, c'est son affaire."}
+      - {lien: -1, texte: "Le poteau, c'est à six heures. À cette heure-ci, il n'y a plus rien pour personne."}
+      - {lien: -2, texte: "Je paie ceux que je connais d'abord. Vous, vous attendrez le fond de la boîte."}
+      - {lien: -3, texte: "Votre nom est rayé sur la feuille du poteau. Sur le quai, ça se lit comme une plainte."}
+    tuyaux:
+      - id: anselme_mutuelle
+        si: "flag(histoire_h6) && saison >= 2"
+        texte: "« La Mutuelle des Quais, c'était la caisse des dockers. Elle n'a plus un docker, et elle encaisse des virements de clubs étrangers. Le nouveau gérant signe de deux initiales. Un jeune, poli. »"
+        effets: {var: {h6_indices: "+1"}}
+      - id: anselme_boue
+        si: "flag(histoire_h2) && flag(h2_trois_metres) && !flag(h2_place_vide)"
+        texte: "« La boue blanche sur les roues de la berline, c'est notre sable, celui de la halle. Il n'y en a que sur le quai de la halle. Quelqu'un l'amène ici la nuit et la ramène avant six heures. »"
+      - id: anselme_cire
+        si: "flag(histoire_h5) && flag(h5_tribune_est_brulee)"
+        texte: "« Un de mes dockers a prêté son ciré, contre de l'argent, la veille du feu de l'Est. Il l'a rendu sentant l'essence. Le lundi, il a payé une voiture comptant. Il ne vient plus au poteau. »"
+    service:
+      lien: 3
+      label: "Une place au poteau"
+      texte: "Six heures, au poteau. Ferragut montre du doigt l'homme que tu lui as envoyé, le père d'un gamin du club, mis dehors par son usine. Il décharge avec les autres. Il paiera son loyer."
+      effets: {jauges: {vestiaire: 2, tribunes: 1}}
+      dette: true
+
+  - id: mehdi
+    name: "Mehdi Haddouche"
+    label: "LE GRUTIER DU PORTIQUE"
+    genre: m
+    portrait: {teint: brun, corpulence: moyen, age: jeune, coiffure: court, cheveux: noir, pilosite: barbe, lunettes: aucune, tenue: doudoune, couleur: orange, accessoire: aucun}
+    lieu: docks
+    tranches: [matin, aprem, soir]
+    annees: [2013, 2050]
+    reseau: argent
+    trace: "Mehdi a fait deux appels de phares depuis la cabine du portique. D'en haut, il te reconnaît, maintenant."
+    paliers: ["te fait signe de la cabine", "te fait monter dans le portique", "laisserait un conteneur au bout du quai pour toi"]
+    froid: ["ne te voit plus d'en haut", "fait passer les charges au-dessus de toi", "a donné ton nom au pointeur"]
+    activites: [port_docks_cabine]
+    on_relation: {3: vi.mehdi.gyrophare, -3: vi.mehdi.pointeur}
+    climat:
+      bas:
+        - {si: "role == joueur", texte: "Au port, on dit que ton compte prend l'eau. Ça se voit à des riens : un pourboire qui ne vient plus, un café payé en pièces. Les dockers ont l'œil pour les riens."}
+        - {si: "role == selectionneur", texte: "La Fédération a renvoyé deux conteneurs de matériel pour les Cobalts : impayés. Ils sont repartis sur la même barge, sans être ouverts. C'est la première fois que je vois ça."}
+        - {si: "role == president", texte: "Le fournisseur des maillots de ton club ne lâche plus ses conteneurs sans paiement d'avance. Trois semaines qu'ils prennent la pluie sous ma cabine. Ta trésorerie se voit d'en haut."}
+        - "Les conteneurs de ton club restent sur le quai : le fournisseur ne les libère pas avant d'être payé. Trois semaines qu'ils prennent la pluie sous ma cabine."
+      moyen:
+        - {si: "role == joueur", texte: "Au port, on ne parle pas de ton argent. Ni trop, ni pas assez. Les dockers disent que c'est rare, chez quelqu'un du stade."}
+        - {si: "role == selectionneur", texte: "Le matériel des Cobalts arrive à l'heure, payé à réception. Ni cadeau, ni retard. La Fédération fait ses comptes comme un docker : le vendredi, et sans parler."}
+        - "Les conteneurs de ton club arrivent, se paient et repartent, sans histoire. Au port, ça veut dire une seule chose : personne ne regarde de trop près."
+      haut:
+        - {si: "role == joueur", texte: "Au port, on dit que tu as payé la tournée du Relais à des chauffeurs que tu ne connaissais pas. Les dockers appellent ça avoir de l'argent : le donner à des inconnus."}
+        - {si: "role == selectionneur", texte: "Trois conteneurs de matériel neuf pour les Cobalts, payés d'avance, avec une prime à l'équipe de quai pour aller vite. La Fédération a de l'argent, et elle veut que ça se voie."}
+        - "Ton club fait venir des sièges, des projecteurs, du gazon en rouleaux, payés d'avance. Le chef de quai a demandé qui était mort. Personne : c'est l'argent qui est arrivé."
+    repliques:
+      - {lien: 0, texte: "De la cabine, à trente mètres, on voit le bassin, le stade, la cité et les toits des Hauts. On voit surtout ce qui entre dans chaque conteneur avant qu'on le ferme."}
+      - {lien: 0, si: "annee >= 2036", texte: "Le portique se pilote de la capitale, depuis un écran, à quatre cents kilomètres. Moi, je compte les conteneurs en bas, à la main. On m'appelle encore le grutier. Par politesse."}
+      - {lien: 0, si: "tranche == soir", texte: "Le soir, on travaille sous les projecteurs, et le bassin devient noir comme du goudron. Un conteneur qui tombe, la nuit, ne fait pas de bruit. Il disparaît."}
+      - {lien: 1, texte: "Mon père déchargeait à la main, sous Ferragut, au poteau de six heures. Moi, je décharge assis, avec deux manettes. Il dit que j'ai les mains propres. Il ne dit pas que c'est bien."}
+      - {lien: 1, si: "serie_v >= 2 && role != selectionneur", texte: "Quand ton club gagne, je fais tourner le gyrophare du portique trois fois à la fin du match. Les gars du quai lèvent le pouce. Le chef fait semblant de ne pas comprendre."}
+      - {lien: 2, texte: "Un conteneur, je le sens à la manette avant de le lire sur l'écran : trop léger, trop lourd, la charge qui bouge. Ceux qui bougent, je ne les pose jamais près des autres."}
+      - {lien: 3, texte: "Si un jour tu as besoin qu'une boîte dorme au bout du quai, derrière les vides, dis-le-moi. Elle n'aura pas de numéro le temps qu'il faudra."}
+      - {lien: -1, texte: "Zone de levage. On ne reste pas sous la charge. Même vous."}
+      - {lien: -2, texte: "Les charges passent au-dessus de vous depuis tout à l'heure. Je ne les lâcherai pas. Mais vous sentez le vent qu'elles font."}
+      - {lien: -3, texte: "Le pointeur a votre nom. Les conteneurs qui vous concernent, il les ouvre, maintenant. Tous, devant tout le monde."}
+    tuyaux:
+      - id: mehdi_frere
+        si: "flag(histoire_h9) && annee <= 2030"
+        texte: "« Le frère de ton capitaine travaille encore au Dôme. Ses messages arrivent la nuit, par le téléphone d'un marin de Gazéo qui fait escale ici. Le marin dit que là-bas, on lit tout avant lui. »"
+      - id: mehdi_helico
+        si: "flag(histoire_h10) && !flag(h10_helico) && !flag(h10_helico_renvoye)"
+        texte: "« Un hélicoptère blanc est arrivé par barge, en pièces, au nom de Rive Capital. Sur le bordereau, il y a écrit prêt, pas don. Celui qui signera pour le recevoir signera pour le rendre. »"
+      - id: mehdi_conteneurs
+        si: "annee >= 2013 && caisse < 35 && role != joueur && role != selectionneur"
+        texte: "« Trois conteneurs de ton club sont bloqués sur mon quai : le fournisseur ne les lâchera pas sans paiement. Un homme de Portclair propose de les payer, contre un nom sur le maillot. »"
+        effets: {jauges: {caisse: 2}}
+    service:
+      lien: 3
+      label: "Un conteneur au bout du quai"
+      texte: "Mehdi pose un conteneur vide au bout du quai, derrière les autres, et l'efface des écrans du port. Tu y ranges ce qui t'encombre. « Une boîte sans numéro, ça n'existe pas. J'en sais quelque chose. »"
+      effets: {clear: [vl_produits, vl_cure], jauges: {direction: 1}}
+
+# ═══════════════════════════════════════════════════════════════════════════ LES ACTIVITÉS
+# Pas de pièces au port : aucune activité ne nomme d'objet. Celles qu'on fait avec quelqu'un
+# portent son époque (`si`) et ses heures. Les petits boulots (`francs` positif, `max_jour: 1`)
+# sont pour le joueur et l'entraîneur ; ce qui se décharge la nuit paie en argent sale, une fois
+# par semaine (l'effet propre d'une activité ne compte qu'une fois par semaine), et se voit
+# là-haut (`direction`). La nuit, une activité ne prend pas de tranche.
+activites:
+
+  # — Les docks (sans porte, à toute heure)
+  - id: port_docks_poteau
+    lieu: docks
+    label: "Un café au poteau"
+    texte: "Six heures, au poteau d'embauche. Ferragut verse le café de son thermos dans des gobelets de fer, siffle, montre huit hommes du doigt. Les autres finissent leur café et rentrent."
+    textes:
+      - "Six heures, au poteau d'embauche. Ferragut verse le café de son thermos dans des gobelets de fer, siffle, montre huit hommes du doigt. Les autres finissent leur café et rentrent."
+      - "Ferragut lit à voix haute la feuille du jour : une barge de sable, deux de ferraille, la Montbéliac au silo. Il te tend un gobelet sans demander si tu en veux. Ici, on ne demande pas."
+      - "Au poteau, un jeune n'a pas été choisi. Il reste à côté de Ferragut, le café à la main, jusqu'à ce que la dernière barge accoste. Ferragut ne le regarde pas ; il ne le chasse pas."
+    si: "annee <= 2012"
+    avec: anselme
+    habitude: quartier
+    tranches: 1
+    francs: 0
+    heures: [matin]
+
+  - id: port_docks_cabine
+    lieu: docks
+    label: "Monter dans le portique"
+    texte: "Mehdi te fait monter les cent douze marches du portique. De la cabine, le bassin est une flaque, le stade une boîte d'allumettes. Il pose un conteneur sans un bruit, comme on pose un verre."
+    textes:
+      - "Mehdi te fait monter les cent douze marches du portique. De la cabine, le bassin est une flaque, le stade une boîte d'allumettes. Il pose un conteneur sans un bruit, comme on pose un verre."
+      - "Dans la cabine, Mehdi mange un sandwich d'une main et manœuvre de l'autre. Il te montre le toit de la tribune Nord, au loin : « D'ici, on voit les places vides avant les journalistes. »"
+      - "Le vent fait tanguer la cabine. Mehdi attend, les mains à plat sur les manettes, qu'il tombe. « Le vent, on ne le commande pas. On le laisse passer, et on pose derrière lui. »"
+    si: "annee >= 2013"
+    avec: mehdi
+    habitude: quartier
+    tranches: 1
+    francs: 0
+    heures: [matin, aprem]
+
+  - id: port_docks_barge
+    lieu: docks
+    roles: [joueur, entraineur]
+    label: "Vider une barge"
+    texte: "Une barge de sable à vider à la pelle, avec les journaliers. À midi, on te paie en billets froissés, sans te demander ton nom. Le dos parle jusqu'au soir. Personne ne te reconnaît."
+    textes:
+      - "Une barge de sable à vider à la pelle, avec les journaliers. À midi, on te paie en billets froissés, sans te demander ton nom. Le dos parle jusqu'au soir. Personne ne te reconnaît."
+      - "Tu passes la matinée à guider des sacs de grain au crochet, sous le silo. Un vieux docker te corrige la prise d'une tape sur la main, deux fois. La troisième, il hoche la tête."
+      - "Une barge de ferraille, à trier à la main. Un journalier te reconnaît, regarde tes gants, et ne dit rien à personne. Le soir, au Relais, tout le monde le sait quand même."
+    habitude: quartier
+    tranches: 1
+    francs: 120
+    max_jour: 1
+    heures: [matin, midi, aprem]
+
+  # — L'entrepôt 7 (matin, après-midi, soir, nuit)
+  - id: port_e7_thermos
+    lieu: entrepot_7
+    label: "Le café du thermos"
+    texte: "Lazare dévisse le bouchon de son thermos et te le tend : c'est la seule tasse de l'entrepôt. Il boit au goulot. Derrière vous, les fûts attendent leur bordereau, et lui, l'heure."
+    textes:
+      - "Lazare dévisse le bouchon de son thermos et te le tend : c'est la seule tasse de l'entrepôt. Il boit au goulot. Derrière vous, les fûts attendent leur bordereau, et lui, l'heure."
+      - "Lazare tient le thermos de ses trois doigts, très fermement, le pouce sur le bouchon. Il parle des crues, du silo, du prix du sable. Jamais de ce qui est arrivé la nuit dernière."
+    si: "annee <= 2009"
+    avec: lazare
+    habitude: quartier
+    tranches: 1
+    francs: 0
+    heures: [aprem, soir]
+
+  - id: port_e7_ronde
+    lieu: entrepot_7
+    label: "La ronde de minuit"
+    texte: "Tu fais la ronde de minuit avec Lazare, sa lampe à la main. Il compte les fûts à voix basse, frappe sur la tôle au fond, et ne s'arrête jamais devant la voiture sous la bâche."
+    textes:
+      - "Tu fais la ronde de minuit avec Lazare, sa lampe à la main. Il compte les fûts à voix basse, frappe sur la tôle au fond, et ne s'arrête jamais devant la voiture sous la bâche."
+      - "À la ronde, Lazare éteint sa lampe devant la grande porte et attend dans le noir que la camionnette ait fini de reculer. « La lumière, ça fait des témoins. » Puis il la rallume."
+    si: "annee <= 2009"
+    avec: lazare
+    habitude: nuit
+    tranches: 0
+    francs: 0
+    heures: [nuit]
+
+  - id: port_e7_pointage
+    lieu: entrepot_7
+    label: "Le pointage du matin"
+    texte: "Maïwenn te tend un scanner et un gilet orange. Tu bipes des palettes pendant une heure ; elle relit tout derrière toi, sans rien dire, et corrige deux lignes."
+    textes:
+      - "Maïwenn te tend un scanner et un gilet orange. Tu bipes des palettes pendant une heure ; elle relit tout derrière toi, sans rien dire, et corrige deux lignes."
+      - "Au pointage, une palette n'a pas de code. Maïwenn la regarde un moment, puis écrit quelque chose au feutre sur le film plastique. « Celle-là, je la connais. » Elle ne dit pas d'où."
+    si: "annee >= 2010"
+    avec: maiwenn
+    habitude: travail
+    tranches: 1
+    francs: 0
+    heures: [matin]
+
+  - id: port_e7_cigarette
+    lieu: entrepot_7
+    label: "Une cigarette sous la lampe"
+    texte: "Sous la lampe de la porte du personnel, Maïwenn fume la seule cigarette de sa journée. Elle te parle de son père, des chariots, du quai de nuit. Pas de ce qui arrive après vingt heures."
+    textes:
+      - "Sous la lampe de la porte du personnel, Maïwenn fume la seule cigarette de sa journée. Elle te parle de son père, des chariots, du quai de nuit. Pas de ce qui arrive après vingt heures."
+      - "Maïwenn écrase sa cigarette sur le seuil, à l'endroit où son père écrasait les siennes. Il y a une marque noire dans le béton, de la taille d'une main. Elle ne la nettoie pas."
+    si: "annee >= 2010"
+    avec: maiwenn
+    habitude: nuit
+    tranches: 1
+    francs: 0
+    heures: [soir]
+
+  - id: port_e7_camionnette
+    lieu: entrepot_7
+    roles: [joueur, entraineur]
+    label: "Décharger la camionnette"
+    texte: "Minuit. La camionnette blanche recule jusqu'à la grande porte, sans phares. Tu portes des caisses sans étiquette, sans poser de question. On te paie en billets roulés, qui sentent le gasoil."
+    textes:
+      - "Minuit. La camionnette blanche recule jusqu'à la grande porte, sans phares. Tu portes des caisses sans étiquette, sans poser de question. On te paie en billets roulés, qui sentent le gasoil."
+      - "Une chaîne d'hommes, de la camionnette au fond de l'entrepôt. On ne parle pas ; on se passe les caisses comme des seaux un soir d'incendie. L'une d'elles tinte. Personne ne la regarde."
+      - "Le chauffeur te paie à la fin, à la lueur de son briquet, et dit ton prénom. Tu ne le lui avais pas donné. Il remonte dans la cabine, et la camionnette s'en va sans phares."
+    habitude: nuit
+    tranches: 0
+    francs: 0
+    max_jour: 1
+    heures: [nuit]
+    jauges: {direction: -1}
+    effets: {var: {ville_francs_sales: "+300"}}
+
+  # — Le Relais des routiers (ouvert toute la nuit)
+  - id: port_relais_soupe
+    lieu: relais_routiers
+    label: "La soupe des chauffeurs"
+    texte: "Arlette pose la soupe dans un bol épais, celui des chauffeurs, et la louche à côté pour se resservir. Au comptoir, on parle des routes, de la neige sur la côte, et de football, un peu."
+    textes:
+      - "Arlette pose la soupe dans un bol épais, celui des chauffeurs, et la louche à côté pour se resservir. Au comptoir, on parle des routes, de la neige sur la côte, et de football, un peu."
+      - "Sur le mur derrière Arlette, des cartes postales de tous les pays, envoyées par des chauffeurs qui ne sont pas revenus. Elle les époussette le lundi, une par une, en disant leur prénom."
+      - "Un chauffeur de Valdorne raconte un match de 1971 écouté à la radio d'une cabine, sous la neige. Arlette le corrige sur le score. Il ne discute pas : ici, elle a toujours raison sur les scores."
+    si: "annee <= 2014"
+    avec: arlette
+    habitude: comptoir
+    tranches: 1
+    francs: -20
+    heures: [midi, soir]
+
+  - id: port_relais_trois_heures
+    lieu: relais_routiers
+    label: "Un café à trois heures"
+    texte: "Trois heures du matin. Les chauffeurs de nuit boivent debout, la carte routière dépliée sur le comptoir. L'un d'eux te reconnaît, lève sa tasse, et retourne à sa route."
+    textes:
+      - "Trois heures du matin. Les chauffeurs de nuit boivent debout, la carte routière dépliée sur le comptoir. L'un d'eux te reconnaît, lève sa tasse, et retourne à sa route."
+      - "Le néon grésille au-dessus de la porte, avec ses deux lettres mortes. Dans la salle, un chauffeur dort assis, les bras croisés, sa tasse pleine devant lui. On ne le réveille pas."
+      - "Une infirmière de nuit boit un café avant la route de Portclair. Elle te regarde, hésite, puis dit seulement : « Vous aussi, vous rentrez trop tard. » Elle paie le tien."
+    habitude: nuit
+    tranches: 0
+    francs: -5
+    heures: [nuit]
+
+  - id: port_relais_421
+    lieu: relais_routiers
+    jeu: des
+    label: "Le 421 des routiers"
+    texte: "Yannick sort une piste de feutre usée sur le comptoir. Les chauffeurs jouent leur café au 421, en annonçant les dés avant qu'ils tombent, avec des noms de sorties d'autoroute."
+    textes:
+      - "Yannick sort une piste de feutre usée sur le comptoir. Les chauffeurs jouent leur café au 421, en annonçant les dés avant qu'ils tombent, avec des noms de sorties d'autoroute."
+      - "Yannick lance le premier, sans regarder, en essuyant une tasse. Il a joué au 421 dans tous les relais du pays. Il dit que celui-ci est le seul où les dés roulent droit."
+    si: "annee >= 2015"
+    avec: yannick
+    habitude: jeu
+    tranches: 0
+    francs: -10
+    heures: [soir, nuit]
+
+  - id: port_relais_tournee
+    lieu: relais_routiers
+    label: "La tournée des chauffeurs"
+    texte: "Tu paies la tournée des chauffeurs. Ils lèvent leur tasse vers toi, sans se lever. Dans la nuit, sur trois routes différentes, des camions klaxonnent en passant devant le stade."
+    textes:
+      - "Tu paies la tournée des chauffeurs. Ils lèvent leur tasse vers toi, sans se lever. Dans la nuit, sur trois routes différentes, des camions klaxonnent en passant devant le stade."
+      - "Les chauffeurs trinquent à la Rive, puis à la côte de Valdorne, puis à ceux qui n'en sont pas revenus. Dans cet ordre-là, toujours. Tu trinques aux trois."
+    habitude: largesse
+    tranches: 0
+    francs: -50
+    heures: [soir, nuit]
+    jauges: {tribunes: 1}
+
+  # — La casse (matin, midi, après-midi)
+  - id: port_casse_piece
+    lieu: casse
+    label: "Chercher une pièce"
+    texte: "Baptistin te fait chercher un rétroviseur dans l'allée des berlines. Il te suit à trois pas, le chien au pied, et nomme chaque épave par son dernier propriétaire, jamais par sa marque."
+    textes:
+      - "Baptistin te fait chercher un rétroviseur dans l'allée des berlines. Il te suit à trois pas, le chien au pied, et nomme chaque épave par son dernier propriétaire, jamais par sa marque."
+      - "Au bout de l'allée, Baptistin soulève le capot d'une épave avec deux doigts. « Celle-là a fait trois fois le tour du compteur. Le dernier, c'était un curé. Il roulait trop vite. »"
+    si: "annee <= 2011"
+    avec: baptistin
+    habitude: quartier
+    tranches: 1
+    francs: -30
+
+  - id: port_casse_chien
+    lieu: casse
+    label: "Le chien de la casse"
+    texte: "Le chien attaché à sa niche grogne, puis se tait quand tu poses l'os du boucher à la limite de sa chaîne. Il ne le prend pas devant toi. Il attend que tu repartes."
+    textes:
+      - "Le chien attaché à sa niche grogne, puis se tait quand tu poses l'os du boucher à la limite de sa chaîne. Il ne le prend pas devant toi. Il attend que tu repartes."
+      - "Le chien te regarde arriver, la tête sur les pattes. Il ne grogne plus. Il se lève seulement quand tu repars, et fait trois pas, jusqu'au bout de la chaîne."
+    habitude: quartier
+    tranches: 0
+    francs: -5
+
+  - id: port_casse_grappin
+    lieu: casse
+    label: "La pelle à grappin"
+    texte: "Romane te laisse la pelle à grappin cinq minutes. Tu prends une épave par le toit ; elle te reprend les commandes : « Par la taille. Comme pour danser. » La voiture monte sans une plainte."
+    textes:
+      - "Romane te laisse la pelle à grappin cinq minutes. Tu prends une épave par le toit ; elle te reprend les commandes : « Par la taille. Comme pour danser. » La voiture monte sans une plainte."
+      - "Romane pose une voiture sur la presse, d'un seul geste. Avant de lancer le cycle, elle ouvre la boîte à gants et la vide sur le capot : des papiers, un chapelet, un ticket de stade."
+    si: "annee >= 2012"
+    avec: romane
+    habitude: travail
+    tranches: 1
+    francs: 0
+
+  - id: port_casse_cuivre
+    lieu: casse
+    roles: [joueur]
+    si: "division >= 2"
+    label: "Démonter le cuivre"
+    texte: "Tu démontes les faisceaux de cuivre de trois épaves, à la pince, à genoux dans l'huile. On te paie au poids, à la balance de l'entrée, sans te demander ton nom."
+    textes:
+      - "Tu démontes les faisceaux de cuivre de trois épaves, à la pince, à genoux dans l'huile. On te paie au poids, à la balance de l'entrée, sans te demander ton nom."
+      - "Le cuivre sort des portières comme des nerfs. Le gamin qui travaille à côté de toi porte le maillot de ton club, troué aux coudes. Il ne fait pas le rapprochement. Tant mieux."
+    habitude: quartier
+    tranches: 1
+    francs: 60
+    max_jour: 1
+
+  # — La capitainerie (matin, midi, après-midi, soir)
+  - id: port_capi_registre
+    lieu: capitainerie
+    label: "Le registre des péniches"
+    texte: "Aristide ouvre le registre du jour sur le comptoir de bois : le nom du bateau, le patron, la charge, l'heure. Il te laisse lire, et il regarde où tes yeux s'arrêtent."
+    textes:
+      - "Aristide ouvre le registre du jour sur le comptoir de bois : le nom du bateau, le patron, la charge, l'heure. Il te laisse lire, et il regarde où tes yeux s'arrêtent."
+      - "Aristide te montre une page de 1962 : une péniche, une charge de pavés, la signature d'un patron au pouce encré. « Il ne savait pas écrire. Il n'a jamais menti sur sa charge. »"
+    si: "annee <= 2016"
+    avec: aristide
+    habitude: culture
+    tranches: 1
+    francs: 0
+
+  - id: port_capi_vigie
+    lieu: capitainerie
+    label: "Monter à la vigie"
+    texte: "De la vigie vitrée, tout le bassin tient dans une seule fenêtre : les péniches, le portique, le silo, les grilles du parc à conteneurs. Au loin, les projecteurs du stade."
+    textes:
+      - "De la vigie vitrée, tout le bassin tient dans une seule fenêtre : les péniches, le portique, le silo, les grilles du parc à conteneurs. Au loin, les projecteurs du stade."
+      - "Le soir, de la vigie, on voit les feux des péniches se croiser sur l'eau noire. Un bateau sans feux passe au milieu, très lentement. Personne, en bas, ne lève la tête."
+    habitude: quartier
+    tranches: 1
+    francs: 0
+    heures: [aprem, soir]
+
+  - id: port_capi_radio
+    lieu: capitainerie
+    label: "La radio de la batellerie"
+    texte: "Solène laisse la radio de la batellerie allumée, le son bas. Les mariniers s'annoncent à l'écluse, l'un après l'autre. Elle reconnaît chacun à sa voix, et te dit qui ment sur sa charge."
+    textes:
+      - "Solène laisse la radio de la batellerie allumée, le son bas. Les mariniers s'annoncent à l'écluse, l'un après l'autre. Elle reconnaît chacun à sa voix, et te dit qui ment sur sa charge."
+      - "Sur la fréquence, un marinier raconte ton dernier match en entier à un collègue qui remonte la Rive. Solène monte le son. « Écoute. Il a mieux vu que la télé. »"
+    si: "annee >= 2017"
+    avec: solene
+    habitude: culture
+    tranches: 1
+    francs: 0
+
+  # — La guinguette (après-midi, soir, nuit)
+  - id: port_guinguette_friture
+    lieu: guinguette
+    label: "Une friture sur le pont"
+    texte: "Mado sert la friture dans un cornet de L'Écho de la veille, ton nom parfois dans les plis. Elle s'assoit cinq minutes à ta table, les mains sur les genoux, et regarde la passerelle."
+    textes:
+      - "Mado sert la friture dans un cornet de L'Écho de la veille, ton nom parfois dans les plis. Elle s'assoit cinq minutes à ta table, les mains sur les genoux, et regarde la passerelle."
+      - "Sur le pont, Mado raconte la crue de 1955 : L'Espérance avait cassé ses amarres et descendu la Rive jusqu'au pont, avec ses clients. « Personne n'a payé. Personne n'est descendu. »"
+    si: "annee <= 2006"
+    avec: mado
+    habitude: comptoir
+    tranches: 1
+    francs: -30
+    heures: [aprem, soir]
+
+  - id: port_guinguette_belote
+    lieu: guinguette
+    jeu: cartes
+    label: "Une belote à la proue"
+    texte: "Matthias distribue à la proue, avec deux mariniers à la retraite. Ils jouent en silence, en tapant les cartes sur la table comme on enfonce un clou. Le perdant paie la friture."
+    textes:
+      - "Matthias distribue à la proue, avec deux mariniers à la retraite. Ils jouent en silence, en tapant les cartes sur la table comme on enfonce un clou. Le perdant paie la friture."
+      - "Les mariniers trichent un peu, à la façon des anciens : un coup d'œil, un raclement de gorge. Matthias fait semblant de ne rien voir. Il dit que c'est la belote de sa tante."
+    si: "annee >= 2007"
+    avec: matthias
+    habitude: jeu
+    tranches: 0
+    francs: -50
+
+  - id: port_guinguette_bal
+    lieu: guinguette
+    label: "Le bal du samedi"
+    texte: "Le bal du samedi : les guirlandes, l'accordéon, les mariniers qui dansent avec les femmes des dockers. Les dockers regardent. Tu danses une fois, mal, et la péniche tangue de rire."
+    textes:
+      - "Le bal du samedi : les guirlandes, l'accordéon, les mariniers qui dansent avec les femmes des dockers. Les dockers regardent. Tu danses une fois, mal, et la péniche tangue de rire."
+      - "Au bal, on s'écarte pour te laisser passer, puis on se resserre derrière toi. Une marinière t'invite pour une valse, compte les temps à voix haute, et te ramène à ta table comme un colis."
+    habitude: nuit
+    tranches: 1
+    francs: -20
+    jours: [sam]
+    heures: [soir]
+
+  - id: port_guinguette_tournee
+    lieu: guinguette
+    label: "La tournée du pont"
+    texte: "Tu paies la tournée du pont. Les dockers lèvent leur verre vers la Nord, de l'autre côté du bassin, avant de le lever vers toi. C'est l'ordre, ici. Tu lèves le tien en dernier."
+    textes:
+      - "Tu paies la tournée du pont. Les dockers lèvent leur verre vers la Nord, de l'autre côté du bassin, avant de le lever vers toi. C'est l'ordre, ici. Tu lèves le tien en dernier."
+      - "La tournée fait le tour du pont et redescend jusqu'à la friture. Un marinier qui n'a rien demandé te salue en soulevant sa casquette, puis la remet et retourne à son verre."
+    habitude: largesse
+    tranches: 0
+    francs: -80
+    heures: [soir, nuit]
+    jauges: {tribunes: 1}
+
+# ═══════════════════════════════════════════════════════════════════════════════ LES SCÈNES
+# La vie des gens du port (gardée par le lien, bornée à leur époque), les dettes qu'on vient
+# réclamer après un service, et la vie du quartier sans toi : le quai qu'on ne doit pas voir, la
+# descente de l'entrepôt 7, la grève, la fermeture du silo, les lofts. Une scène du quartier porte
+# `semaine >= 8` (le quartier n'est pas ouvert avant). Les scènes s'enchaînent par `mission(...)` :
+# les scellés de Lazare suivent la descente ; la voiture de Lazare revient chez sa fille.
+scenes:
+
+  # ─────────────────────────────────────────────── Lazare, l'entrepôt 7
+  - id: vi.sc.lazare_mer
+    titre: "La voiture sous la bâche"
+    lieu: entrepot_7
+    tranches: [aprem]
+    qui: lazare
+    si: "relation.lazare >= 2 && annee <= 2009"
+    texte: "Lazare a enlevé la bâche de sa voiture de 1965. Les pneus sont neufs : il les change tous les cinq ans. « Avec trois doigts, je ne passe pas les vitesses. Dimanche, tu me conduis à la mer ? »"
+    choix:
+      - label: "Dimanche, on y va"
+        francs: -40
+        reponse: "Quatre heures de route, pas un mot. Sur la digue, il enlève ses chaussures, regarde l'eau dix minutes et demande à rentrer avant la nuit. Il dort tout le retour, la main sur le tableau de bord."
+        effets: {relation: {lazare: 1}}
+      - label: "Je n'ai pas de dimanche"
+        reponse: "Il remet la bâche lui-même, en tirant sur les coins pour qu'elle tombe droit. « Elle a l'habitude d'attendre. » Il ne dit pas ce qu'elle attendra, maintenant."
+        effets: {relation: {lazare: -1}}
+
+  - id: vi.sc.lazare_scelles
+    titre: "Les scellés jaunes"
+    lieu: entrepot_7
+    tranches: [aprem]
+    qui: lazare
+    si: "relation.lazare >= 1 && annee <= 2009 && mission(vi.sc.port_descente)"
+    texte: "Les scellés jaunes barrent encore la grande porte. Lazare, assis sur un fût : « Ils veulent savoir où j'étais jeudi soir. Au bal de la guinguette. Mado le dira, si quelqu'un le dit avant elle. »"
+    choix:
+      - label: "Je dirai que je l'ai vu"
+        reponse: "Le commissaire écrit ton nom sous celui de Mado. Les scellés tombent le lundi. Le rapport, lui, circule, avec ton nom et la date du bal des mariniers."
+        effets: {relation: {lazare: 1}, jauges: {direction: -2}}
+      - label: "Je ne mens pas à la police"
+        reponse: "Lazare ne discute pas. Il passe deux nuits au commissariat et revient avec une barbe grise de trois jours. Il ne t'en parle pas. Le café du thermos, il le boit seul."
+        effets: {relation: {lazare: -2}}
+
+  - id: vi.sc.lazare_dette
+    titre: "Pour qui"
+    lieu: entrepot_7
+    tranches: [nuit]
+    qui: lazare
+    si: "flag(dette_lazare)"
+    texte: "Lazare t'attend sous la lampe : « Vendredi, onze heures, une camionnette viendra à la grande porte. Le chauffeur demandera pour qui. Tu diras ton nom, rien d'autre. Et on sera quittes. »"
+    choix:
+      - label: "Je dirai mon nom"
+        reponse: "Vendredi, le chauffeur baisse sa vitre ; tu dis ton nom. Il le répète deux fois, pour le retenir, et recule sous la porte. Ton nom est quelque part, maintenant, dans un autre carnet."
+        effets: {jauges: {direction: -2}, clear: [dette_lazare]}
+      - label: "Pas mon nom, Lazare"
+        reponse: "« Alors ce sera le mien, comme d'habitude. » Il range son carnet dans sa poche. La nuit, il ne te raccompagne plus jusqu'à la grille."
+        effets: {relation: {lazare: -2}, clear: [dette_lazare]}
+
+  # ─────────────────────────────────────────────── Maïwenn, l'entrepôt 7
+  - id: vi.sc.maiwenn_carnet
+    titre: "Le carnet de Lazare"
+    roles: [entraineur, joueur, ds, president]
+    lieu: entrepot_7
+    tranches: [aprem]
+    qui: maiwenn
+    si: "relation.maiwenn >= 2 && annee >= 2014 && annee <= 2016"
+    texte: "Maïwenn pose sur un fût le carnet de son père, mort cet hiver : quarante ans de « pour qui », d'une écriture qui penche. « Ton club y est, à toutes les pages. Je le brûle, ou tu le veux ? »"
+    choix:
+      - label: "Brûle-le"
+        reponse: "Elle le jette dans le brasero du quai, page par page, sans en lire une. À la dernière, elle reste un moment les mains tendues au-dessus du feu, comme on se réchauffe."
+        effets: {relation: {maiwenn: 1}}
+      - label: "Je le prends"
+        reponse: "Tu lis la page de 1990 sous un réverbère du quai : trois noms de ton club, des dates, des poids. Trois nuits de suite, ton téléphone sonne à minuit, numéro masqué. Au bout du fil, on respire."
+        effets: {jauges: {direction: -2}}
+
+  - id: vi.sc.maiwenn_chariots
+    titre: "Six caristes de trop"
+    roles: [entraineur, ds, president]
+    lieu: entrepot_7
+    tranches: [matin]
+    qui: maiwenn
+    si: "relation.maiwenn >= 1 && annee >= 2035"
+    texte: "Les chariots automatiques sont arrivés. On demande à Maïwenn de licencier six caristes ; elle tient la liste. « Toi, tu as un stade. Tu m'en prendrais deux, pour les pelouses et les tribunes ? »"
+    choix:
+      - label: "J'en prends deux"
+        reponse: "Lundi, deux caristes en gilet orange tondent la pelouse de la Rive en lignes parfaitement droites. Ils disent que la tondeuse, au moins, a besoin de quelqu'un."
+        effets: {relation: {maiwenn: 1}, jauges: {tribunes: 1, caisse: -1}}
+      - label: "Je n'ai pas de place"
+        reponse: "Elle plie la liste en quatre et la range dans la poche intérieure, celle où son père gardait le carnet. Les six partent un vendredi, sans pot de départ."
+        effets: {relation: {maiwenn: -1}}
+
+  - id: vi.sc.maiwenn_dette
+    titre: "Le destinataire"
+    lieu: entrepot_7
+    tranches: [soir]
+    qui: maiwenn
+    si: "flag(dette_maiwenn)"
+    texte: "Maïwenn te tend un bordereau et un stylo : « Signe comme destinataire de ce conteneur. Tu ne le verras jamais, tu ne sauras pas ce qu'il y a dedans. Ici, c'est comme ça qu'on rembourse. »"
+    choix:
+      - label: "Je signe"
+        reponse: "Ta signature part avec le conteneur, vers Portclair. Trois semaines plus tard, un douanier t'appelle pour une question de routine. Il rappelle deux fois."
+        effets: {jauges: {direction: -2}, clear: [dette_maiwenn]}
+      - label: "Je rembourse en billets"
+        francs: -3500
+        reponse: "Elle compte les billets deux fois, en retire un et te le rend. « Les intérêts, c'est mon père qui les aurait pris. » Elle ne te donne plus de badge sans le registre."
+        effets: {relation: {maiwenn: -1}, clear: [dette_maiwenn]}
+
+  # ─────────────────────────────────────────────── Arlette, le Relais
+  - id: vi.sc.arlette_neon
+    titre: "Le L et le I"
+    lieu: relais_routiers
+    tranches: [soir]
+    qui: arlette
+    si: "relation.arlette >= 2 && annee <= 2014"
+    texte: "Un représentant en enseignes propose de réparer le néon : le L, le I, pour presque rien. Arlette te regarde par-dessus ses lunettes : « Le L, c'est mon mari qui l'a cassé. Je répare ? »"
+    choix:
+      - label: "Laissez les lettres"
+        reponse: "Elle raccompagne le représentant jusqu'à sa voiture et lui offre la soupe pour la route. Le soir, le néon dit toujours RE AIS ROUT ERS, et les chauffeurs s'arrêtent."
+        effets: {relation: {arlette: 1}}
+      - label: "Je paie la réparation"
+        francs: -100
+        reponse: "Le néon brille entier une semaine ; Arlette ne sort plus fumer devant. Le huitième soir, elle coupe le L à la pince et te rend ton argent dans une enveloppe."
+        effets: {relation: {arlette: -1}}
+
+  - id: vi.sc.arlette_gamin
+    titre: "Le gamin de la couchette"
+    lieu: relais_routiers
+    tranches: [nuit]
+    qui: arlette
+    si: "relation.arlette >= 1 && annee <= 2014"
+    texte: "Trois heures. Arlette a trouvé un gamin endormi dans la couchette d'un routier qui part pour la côte. « Quinze ans, un sac de sport. Il dit qu'il a un essai dans un grand club. Tu le ramènes ? »"
+    choix:
+      - label: "Je le ramène chez lui"
+        reponse: "Il ne dit rien jusqu'à la cité, puis il demande si l'essai, c'était du vent. Sa mère ouvre en robe de chambre et ne te remercie pas : elle le serre contre elle."
+        effets: {relation: {arlette: 1}, jauges: {tribunes: 1}}
+      - label: "Qu'il tente sa chance"
+        reponse: "Le frigo part à quatre heures avec le gamin dans la couchette. Arlette ne te dit plus rien de la nuit. Elle essuie le comptoir là où tu avais posé ta tasse."
+        effets: {relation: {arlette: -1}}
+
+  # ─────────────────────────────────────────────── Yannick, le Relais
+  - id: vi.sc.yannick_images
+    titre: "Les images du parking"
+    lieu: relais_routiers
+    tranches: [midi]
+    qui: yannick
+    si: "relation.yannick >= 2 && annee >= 2016"
+    texte: "Un homme d'une assurance réclame les images du parking de samedi soir. On t'y voit parler à quelqu'un qui n'aurait pas dû être là. Yannick : « Je les donne, ou la caméra était en panne ? »"
+    choix:
+      - label: "La caméra était en panne"
+        francs: -100
+        reponse: "Yannick efface la soirée devant toi, d'un geste lent, puis débranche la caméra. « Elle est fragile, cette caméra. Il faudra la changer. » Tu paies la neuve."
+        effets: {relation: {yannick: 1}}
+      - label: "Donne-les-lui"
+        reponse: "L'homme repart avec une clé mémoire. Trois jours plus tard, le nom de celui à qui tu parlais circule dans les bureaux, avec le tien. Yannick ne met plus de sucre à côté de ta tasse."
+        effets: {relation: {yannick: -1}, jauges: {direction: -1}}
+
+  - id: vi.sc.yannick_dernier
+    titre: "Le dernier chauffeur"
+    lieu: relais_routiers
+    tranches: [nuit]
+    qui: yannick
+    si: "relation.yannick >= 1 && annee >= 2038"
+    texte: "Le dernier chauffeur de nuit de Yannick rend son permis : la ligne de Valdorne roule sans lui. « Il ne reste que toi, la nuit. Je garde le relais ouvert pour une seule personne, ou je dors ? »"
+    choix:
+      - label: "Garde la nuit ouverte"
+        francs: -100
+        reponse: "Tu laisses de quoi payer le mois de nuit. Le néon reste allumé, avec ses deux lettres mortes. Les camions vides s'arrêtent dessous ; la soupe chauffe pour personne, puis pour toi."
+        effets: {relation: {yannick: 1}}
+      - label: "Dors, Yannick"
+        reponse: "« Tu as raison. » Il éteint à minuit, pour la première fois depuis Arlette. Le lendemain soir, il rallume, par habitude ; il ne garde plus de bol pour toi."
+        effets: {relation: {yannick: -1}}
+
+  # L'Oreillette (livre 8) : la nuit sans sommeil compte (`h8_nuits`, que lisent la laverie et la
+  # nuit blanche) ; au Relais, personne ne parle à l'oreille.
+  - id: vi.sc.yannick_nuit
+    titre: "La troisième nuit"
+    lieu: relais_routiers
+    tranches: [nuit]
+    qui: yannick
+    si: "flag(histoire_h8) && semaine >= 8"
+    texte: "Trois heures. Tu es au comptoir du Relais, et tu ne te rappelles pas la route. Yannick pose un café devant toi : « La troisième nuit cette semaine. Je te ramène, ou tu attends le jour ici ? »"
+    choix:
+      - label: "J'attends le jour"
+        reponse: "Tu écoutes les chauffeurs parler de routes jusqu'à six heures. Personne ne te parle à l'oreille. Au jour, tu comprends que la voix s'est tue toute la nuit."
+        effets: {var: {h8_nuits: "+1"}, relation: {yannick: 1}}
+      - label: "Ramène-moi"
+        reponse: "Il te dépose devant chez toi à trois heures vingt et attend que la lumière s'allume. Tu dors quatre heures, d'un bloc. Au réveil, l'oreillette est restée sur la table de nuit."
+        effets: {relation: {yannick: 1}}
+
+  # ─────────────────────────────────────────────── Baptistin, la casse
+  - id: vi.sc.baptistin_chien
+    titre: "La chaîne cassée"
+    lieu: casse
+    tranches: [matin]
+    qui: baptistin
+    si: "relation.baptistin >= 1 && annee <= 2011"
+    texte: "Cette nuit, le chien a cassé sa chaîne et mordu un homme qui fouillait les épaves. L'homme a porté plainte ; on veut abattre le chien. Baptistin : « Tu leur dis qu'il était attaché ? »"
+    choix:
+      - label: "Il était attaché"
+        reponse: "Le gendarme écrit « attaché » et referme son carnet. Le chien retourne à sa niche avec une chaîne neuve. Ton nom reste au procès-verbal : témoin, pour un chien de casse."
+        effets: {relation: {baptistin: 1}, jauges: {direction: -1}}
+      - label: "Je n'en sais rien"
+        reponse: "Le chien part un mardi dans une camionnette grillagée. Baptistin met la vieille chaîne dans le coffre de sa dépanneuse, et ne l'en sort plus."
+        effets: {relation: {baptistin: -1}}
+
+  - id: vi.sc.baptistin_cahiers
+    titre: "Les cahiers des entrées"
+    lieu: casse
+    tranches: [aprem]
+    qui: baptistin
+    si: "relation.baptistin >= 2 && annee <= 2011"
+    texte: "La police réclame à Baptistin ses cahiers des entrées d'avant 1995. Il les a posés sur le capot d'une épave, ficelés. « Je les donne, ou je les mets dans la presse avant qu'ils arrivent ? »"
+    choix:
+      - label: "Donnez-les"
+        reponse: "Deux policiers emportent les cahiers dans un carton de lessive. Trois semaines plus tard, une vieille affaire de voitures volées est rouverte à Portclair. Ton nom n'y est pas. Pas encore."
+        effets: {relation: {baptistin: -1}, jauges: {direction: 1}}
+      - label: "La presse"
+        reponse: "La presse fait un bruit de papier, plus doux que la tôle. Baptistin a gardé un seul cahier, celui de 1984, sous sa blouse. « Celui-là, on me le demandera un jour. »"
+        effets: {relation: {baptistin: 1}, jauges: {direction: -1}}
+
+  - id: vi.sc.baptistin_dette
+    titre: "La voiture qu'il ne fallait pas"
+    lieu: casse
+    tranches: [matin]
+    qui: baptistin
+    si: "flag(dette_baptistin)"
+    texte: "La presse a écrasé une voiture qu'il ne fallait pas, et son propriétaire la réclame. Baptistin : « Dis que c'était la tienne, une vieille, que tu m'as fait détruire. Une amende, rien de plus. »"
+    choix:
+      - label: "C'était la mienne"
+        reponse: "Tu signes la déclaration de destruction d'une voiture que tu n'as jamais vue. L'amende arrive en recommandé, ton nom tapé deux fois, dont une avec une faute."
+        effets: {var: {ville_amende: "+600"}, clear: [dette_baptistin]}
+      - label: "Je ne signe pas ça"
+        reponse: "Baptistin hoche la tête, lentement. Le propriétaire revient le lendemain avec deux amis. On ne sait pas ce qui s'est dit ; la dépanneuse a un phare cassé."
+        effets: {relation: {baptistin: -2}, clear: [dette_baptistin]}
+
+  # ─────────────────────────────────────────────── Romane, la casse
+  - id: vi.sc.romane_arrete
+    titre: "L'arrêté de la préfecture"
+    roles: [entraineur, ds, president]
+    lieu: casse
+    tranches: [midi]
+    qui: romane
+    si: "relation.romane >= 1 && annee >= 2018"
+    texte: "Un arrêté : la casse se met aux normes avant l'été, ou elle ferme. Romane fait ses comptes sur un capot. « Il me manque un an de chiffre. Ton club a de la ferraille. Tu me la fais démonter ici ? »"
+    choix:
+      - label: "Je t'envoie notre ferraille"
+        reponse: "Deux camions de vieux sièges, de tondeuses et de grillages arrivent le mardi. Romane démonte tout, pièce par pièce, et la casse passe l'été. Au virage, on cherche ses vieux sièges."
+        effets: {relation: {romane: 1}, jauges: {caisse: 1, tribunes: -1}}
+      - label: "Le club a ses ferrailleurs"
+        reponse: "Elle range sa calculatrice dans la poche de sa blouse. « Mon grand-père avait des amis. Moi, j'ai des clients. » La casse tient, de justesse, sans toi."
+        effets: {relation: {romane: -1}}
+
+  - id: vi.sc.romane_memoire
+    titre: "La mémoire d'une berline"
+    lieu: casse
+    tranches: [aprem]
+    qui: romane
+    si: "relation.romane >= 2 && annee >= 2030"
+    texte: "Romane branche un câble sur une berline saisie ; l'écran déroule six mois de trajets, arrêt par arrêt. « Elle appartenait à un élu. On me paie pour l'effacer. J'efface, ou on regarde ? »"
+    choix:
+      - label: "Efface sans regarder"
+        reponse: "Les trajets disparaissent un à un, comme des lumières qu'on éteint dans un couloir. Romane débranche le câble. « Il y a des choses qu'on n'a pas besoin de savoir pour dormir. »"
+        effets: {relation: {romane: 1}}
+      - label: "Regardons"
+        reponse: "Tous les mardis, la berline s'arrête devant le même immeuble des Hauts, à dix-huit heures. Romane efface quand même, à la fin. « Maintenant, on est deux à savoir. C'est un de trop. »"
+        effets: {relation: {romane: -1}, jauges: {direction: 1}}
+
+  # ─────────────────────────────────────────────── Aristide, la capitainerie
+  - id: vi.sc.aristide_obstinee
+    titre: "L'Obstinée"
+    lieu: capitainerie
+    tranches: [matin]
+    qui: aristide
+    si: "relation.aristide >= 2 && annee <= 2016"
+    texte: "L'Obstinée, la péniche noire, est au quai sud depuis l'aube ; son patron refuse de signer le registre. Aristide te tend son stylo : « Signe comme témoin. Seul, je ne suis qu'un vieux qui note. »"
+    choix:
+      - label: "Je signe comme témoin"
+        reponse: "Ton nom va sous la ligne vide de L'Obstinée. À midi, elle a quitté le bassin sans décharger. Un homme en ciré a photographié la capitainerie avant de monter à bord."
+        effets: {relation: {aristide: 1}, jauges: {direction: -1}}
+      - label: "Ce n'est pas mon port"
+        reponse: "Aristide range le stylo dans sa poche de poitrine. L'Obstinée décharge à la nuit, comme toujours. Au registre, la ligne reste vide ; il la regarde longtemps, puis tourne la page."
+        effets: {relation: {aristide: -1}}
+
+  - id: vi.sc.aristide_amarre
+    titre: "L'amarre"
+    lieu: docks
+    tranches: [soir]
+    qui: aristide
+    si: "relation.aristide >= 1 && annee <= 2016"
+    texte: "La Rive a monté d'un mètre dans la journée ; une barge de sable a cassé une amarre et tourne dans le bassin. Aristide, en ciré, te lance un bout : « Tiens ça. Ne lâche pas, quoi qu'elle fasse. »"
+    choix:
+      - label: "Je tiens"
+        reponse: "Vingt minutes, les mains brûlées par la corde, jusqu'à ce que le pousseur arrive. Depuis, les mariniers te saluent d'un coup de corne en passant devant le stade."
+        effets: {relation: {aristide: 1}, jauges: {tribunes: 1}}
+      - label: "Je n'ai pas la force"
+        reponse: "Aristide reprend le bout et le passe autour d'une bitte, à genoux sur la pierre mouillée. La barge s'arrête contre le quai. Il ne te demande plus jamais rien."
+        effets: {relation: {aristide: -1}}
+
+  - id: vi.sc.aristide_dette
+    titre: "Un nom pour la page"
+    lieu: capitainerie
+    tranches: [soir]
+    qui: aristide
+    si: "flag(dette_aristide)"
+    texte: "Aristide pose le registre ouvert sur une page neuve : « La brigade veut savoir qui était sur le quai cette nuit-là. J'ai arraché ta page. Il me faut un nom pour la remplir. Le tien, ou un des tiens. »"
+    choix:
+      - label: "Écrivez le mien"
+        reponse: "Il écrit ton nom de son écriture de batelier, lentement, et souffle sur l'encre. La brigade te convoque un jeudi, pour la forme. La forme dure trois heures."
+        effets: {jauges: {direction: -2}, clear: [dette_aristide]}
+      - label: "Prenez un des miens"
+        reponse: "Tu donnes un nom. Aristide l'écrit sans lever les yeux. Lundi, l'un des tiens passe la matinée à la brigade fluviale, et il revient sans te regarder."
+        effets: {jauges: {vestiaire: -2}, relation: {aristide: -1}, clear: [dette_aristide]}
+
+  # ─────────────────────────────────────────────── Solène, la capitainerie
+  - id: vi.sc.solene_drone
+    titre: "La mouette"
+    lieu: capitainerie
+    tranches: [soir]
+    qui: solene
+    si: "relation.solene >= 1 && annee >= 2030"
+    texte: "La préfecture exige que le drone filme le quai chaque nuit, et ceux qui y passent. Solène : « Le quai, c'est aussi la guinguette, et ceux qui y boivent. Toi, par exemple. Je filme tout, ou l'eau ? »"
+    choix:
+      - label: "Filme l'eau"
+        reponse: "Le drone passe ses nuits au-dessus du bassin, à filmer des reflets. La préfecture reçoit huit heures d'eau noire par nuit. Elle n'a jamais rien demandé de plus."
+        effets: {relation: {solene: 1}, jauges: {direction: -1}}
+      - label: "Fais ton travail"
+        reponse: "Le drone filme tout : le quai, la passerelle, la proue. Solène regarde les images seule, au matin, et ne te parle plus de ce qu'elle y voit."
+        effets: {relation: {solene: -1}, jauges: {direction: 1}}
+
+  - id: vi.sc.solene_registres
+    titre: "Les deux registres"
+    lieu: capitainerie
+    tranches: [aprem]
+    qui: solene
+    si: "relation.solene >= 2 && annee >= 2017"
+    texte: "Solène pose l'écran de la préfecture à côté du registre d'Aristide. Une péniche, la nuit dernière, n'est que dans le second. « Le jour où on me demandera lequel est vrai, tu seras mon témoin ? »"
+    choix:
+      - label: "Je serai ton témoin"
+        reponse: "Elle écrit ton nom au crayon en bas de la page, dans la marge où Aristide notait la météo. « Au crayon, ça s'efface. Mais ça se voit, quand on l'a effacé. »"
+        effets: {relation: {solene: 1}, jauges: {direction: -1}}
+      - label: "Je ne veux pas savoir"
+        reponse: "Elle referme le registre de papier et le range sous le comptoir. Au matin, les deux registres disent la même chose : elle a effacé la péniche de la nuit."
+        effets: {relation: {solene: -1}}
+
+  # ─────────────────────────────────────────────── Mado, la guinguette
+  - id: vi.sc.mado_coque
+    titre: "La coque de L'Espérance"
+    lieu: guinguette
+    tranches: [aprem]
+    qui: mado
+    si: "relation.mado >= 2 && annee <= 2006"
+    texte: "L'Espérance prend l'eau par l'arrière. L'expert de la batellerie veut trois mois de cale sèche, ou l'interdire au public. Mado compte la caisse du bal : « Il manque la moitié. Un soir de gala, ici ? »"
+    choix:
+      - label: "Un gala, samedi"
+        francs: -300
+        reponse: "Samedi, la moitié du club danse sur le pont, et la Nord sur le quai. À minuit, la caisse est pleine. L'Espérance part en cale sèche le lundi, remorquée par Le Colosse."
+        effets: {relation: {mado: 1}, jauges: {tribunes: 1}}
+      - label: "Je ne peux rien"
+        reponse: "« Personne ne peut rien, pour une coque. » Elle emprunte la moitié à un homme du Quai. Pendant un an, une part de la caisse du bal part à Portclair, le dimanche matin."
+        effets: {relation: {mado: -1}}
+
+  - id: vi.sc.mado_dernier_bal
+    titre: "Le dernier bal de Mado"
+    lieu: guinguette
+    tranches: [soir]
+    jours: [sam]
+    qui: mado
+    si: "relation.mado >= 1 && annee >= 2005 && annee <= 2006"
+    texte: "Mado laisse L'Espérance à son neveu ; ce samedi, c'est son dernier bal. Elle a mis la robe de 1958. Elle te tend la main devant tout le pont : « Personne n'ouvre le bal avec moi depuis mon mari. »"
+    choix:
+      - label: "J'ouvre le bal"
+        reponse: "Une valse, mal dansée, sous les guirlandes. Les dockers tapent le bastingage en mesure. Mado rit une fois, la tête en arrière, comme sur la photo du salon."
+        effets: {relation: {mado: 1}, jauges: {tribunes: 1}}
+      - label: "Je ne danse pas"
+        reponse: "Elle laisse retomber sa main, sourit, et ouvre le bal avec son neveu. Plus tard, elle te sert un verre à la proue et ne te regarde pas le boire."
+        effets: {relation: {mado: -1}}
+
+  - id: vi.sc.mado_dette
+    titre: "Ce que veut le créancier"
+    lieu: guinguette
+    tranches: [soir]
+    qui: mado
+    si: "flag(dette_mado)"
+    texte: "Mado : « L'homme que j'ai calmé pour toi veut un service à son tour : deux places d'honneur samedi, à ton nom, pour lui et un monsieur de Portclair. J'ai dit oui pour toi. »"
+    choix:
+      - label: "Ils auront leurs places"
+        reponse: "Samedi, deux hommes en manteau de cuir s'assoient en tribune d'honneur, à ton nom, et ne regardent pas le match. Lundi, la photo est dans la Gazette. Là-haut, on la découpe."
+        effets: {jauges: {direction: -2}, clear: [dette_mado]}
+      - label: "Pas à mon nom"
+        reponse: "Mado soupire, longuement. Le créancier remet ta vieille dette dans son carnet, avec les intérêts de l'attente. Elle ne te garde plus de table sur le pont."
+        effets: {relation: {mado: -2}, var: {ville_amende: "+400"}, clear: [dette_mado]}
+
+  # ─────────────────────────────────────────────── Matthias, la guinguette
+  - id: vi.sc.matthias_cendres
+    titre: "Les cendres de Mado"
+    lieu: guinguette
+    tranches: [soir]
+    jours: [sam]
+    qui: matthias
+    si: "relation.matthias >= 2 && annee >= 2017 && annee <= 2019"
+    texte: "Matthias tient l'urne de Mado sous son bras. Il veut la disperser depuis la proue, pendant le bal ; la capitaine de port l'interdit dans le bassin. « Tu l'occupes dix minutes, à la capitainerie ? »"
+    choix:
+      - label: "Je l'occupe"
+        reponse: "Tu poses à Solène dix minutes de questions inutiles sur les crues. Par la fenêtre, elle voit la poussière grise sur l'eau. Elle te laisse finir ta phrase, puis note l'heure."
+        effets: {relation: {matthias: 1, solene: -1}}
+      - label: "Demande-lui, simplement"
+        reponse: "« Ma tante n'a jamais rien demandé à une casquette. » Il disperse seul, pendant le bal. Le lundi, la capitaine le verbalise, poliment, et range le procès-verbal dans un tiroir."
+        effets: {relation: {matthias: -1}}
+
+  - id: vi.sc.matthias_lofts
+    titre: "La pétition des lofts"
+    lieu: guinguette
+    tranches: [aprem]
+    qui: matthias
+    si: "relation.matthias >= 1 && annee >= 2041"
+    texte: "Les habitants des Magasins généraux ont signé une pétition contre le bruit du bal. Matthias a la liste : deux avocats, un ancien joueur, le promoteur. « Tu signes la nôtre ? Il faut un nom connu. »"
+    choix:
+      - label: "Je signe en haut"
+        reponse: "Ton nom ouvre la contre-pétition, au-dessus de deux cents mariniers et dockers. La mairie garde le bal jusqu'à minuit. Les avocats des lofts t'envoient leurs vœux, très polis."
+        effets: {relation: {matthias: 1}, jauges: {tribunes: 1, direction: -1}}
+      - label: "Je reste en dehors"
+        reponse: "Le bal s'arrête à vingt-deux heures, sur arrêté. À vingt-deux heures pile, Matthias range l'accordéon de Mado devant tout le pont, et ne le ressort plus."
+        effets: {relation: {matthias: -1}}
+
+  # ─────────────────────────────────────────────── Anselme Ferragut, les docks
+  - id: vi.sc.anselme_elingue
+    titre: "L'élingue"
+    lieu: docks
+    tranches: [aprem]
+    qui: anselme
+    si: "relation.anselme >= 2 && annee <= 2012"
+    texte: "Une élingue a lâché ce matin : le fils de Ferragut a la jambe prise sous une palette. L'armateur parle d'imprudence. Ferragut : « Tu étais au quai, hier. L'élingue était usée, oui ou non ? »"
+    choix:
+      - label: "Elle était usée"
+        reponse: "Tu le dis devant l'inspecteur du travail et devant l'armateur, qui finance le tournoi des jeunes du club. Le fils de Ferragut est indemnisé. Le tournoi change de sponsor."
+        effets: {relation: {anselme: 1}, jauges: {caisse: -1}}
+      - label: "Je n'ai pas regardé"
+        reponse: "Ferragut regarde ses mains. L'armateur gagne : imprudence. Le fils marche avec une canne à vingt-six ans, et le poteau d'embauche a un homme de moins."
+        effets: {relation: {anselme: -2}}
+
+  - id: vi.sc.anselme_poteau
+    titre: "Trois places pour dix"
+    lieu: docks
+    tranches: [matin]
+    qui: anselme
+    si: "relation.anselme >= 1 && annee <= 2012"
+    texte: "Six heures au poteau. Trois places pour dix hommes : parmi eux, le père d'un gamin du club, et un ancien de la Nord qui tient mal debout. Ferragut : « Choisis le troisième. Moi, je n'y arrive pas. »"
+    choix:
+      - label: "Le père du gamin"
+        reponse: "Le père décharge jusqu'à midi sans lever la tête. L'ancien rentre à pied, la casquette à la main. Samedi, il n'est pas à sa place, au virage."
+        effets: {relation: {anselme: 1}, jauges: {vestiaire: 1, tribunes: -1}}
+      - label: "L'ancien de la Nord"
+        reponse: "L'ancien décharge trois heures, puis s'assoit sur une bitte, et Ferragut le paie la journée entière. Le père du gamin passe la matinée au Relais, devant un café froid."
+        effets: {relation: {anselme: 1}, jauges: {tribunes: 1, vestiaire: -1}}
+
+  - id: vi.sc.anselme_dette
+    titre: "La barge du dimanche"
+    lieu: docks
+    tranches: [matin]
+    qui: anselme
+    si: "flag(dette_anselme)"
+    texte: "Ferragut t'attend au poteau, la feuille du jour à la main : « Dimanche, six heures, une barge de ferraille à vider avant l'écluse. Il me manque un homme. Ce sera toi, pour l'homme que j'ai pris. »"
+    choix:
+      - label: "Je viendrai dimanche"
+        reponse: "Dimanche, tu vides la barge avec les journaliers jusqu'à midi. Le lundi, tu as les mains en sang et le dos raide ; ceux qui te voient marcher ne demandent pas pourquoi."
+        effets: {jauges: {vestiaire: -1}, relation: {anselme: 1}, clear: [dette_anselme]}
+      - label: "Envoie quelqu'un d'autre"
+        reponse: "« Quelqu'un d'autre, c'est toujours quelqu'un de moins. » Dès le lundi, l'homme que tu lui avais envoyé n'est plus montré du doigt au poteau."
+        effets: {relation: {anselme: -2}, jauges: {vestiaire: -1}, clear: [dette_anselme]}
+
+  # ─────────────────────────────────────────────── Mehdi, les docks
+  - id: vi.sc.mehdi_ecran
+    titre: "Le grutier de l'écran"
+    lieu: docks
+    tranches: [matin]
+    qui: mehdi
+    si: "relation.mehdi >= 1 && annee >= 2034 && annee <= 2036"
+    texte: "En juin, le portique se pilotera de la capitale. Mehdi forme celui qui le remplacera, devant un écran, à quatre cents kilomètres. « Il me demande ce que je fais quand le vent tourne. Je lui dis ? »"
+    choix:
+      - label: "Dis-lui tout"
+        reponse: "Il explique le vent, la houle du bassin, la charge qui balance. En juin, le portique tourne sans lui et ne fait jamais tomber un conteneur. Mehdi est fier, et il ne dort plus."
+        effets: {relation: {mehdi: 1}}
+      - label: "Laisse-le apprendre"
+        reponse: "Le premier jour de vent, un conteneur tombe dans le bassin : les maillots de {club} pour la saison. On rappelle Mehdi trois semaines. Il ne te remercie pas."
+        effets: {relation: {mehdi: -1}, jauges: {caisse: -1}}
+
+  - id: vi.sc.mehdi_maillots
+    titre: "Le conteneur ouvert"
+    lieu: docks
+    tranches: [soir]
+    qui: mehdi
+    si: "relation.mehdi >= 2 && annee >= 2013"
+    texte: "Un conteneur s'est ouvert en tombant : des milliers de faux maillots de {club}, pour les marchés de Portclair. Mehdi, dans le vent : « Je referme et je n'ai rien vu, ou j'appelle la douane ? »"
+    choix:
+      - label: "Appelle la douane"
+        reponse: "La douane saisit tout le lendemain, et le club touche une indemnité. Une semaine plus tard, la vitre de la cabine de Mehdi est étoilée, à hauteur de tête. Il ne porte pas plainte."
+        effets: {relation: {mehdi: -1}, jauges: {caisse: 1, tribunes: 1}}
+      - label: "Referme"
+        reponse: "Mehdi referme les portes, remet un plomb neuf et repose la boîte au milieu des autres. Samedi, au marché de Portclair, {club} se vend à moitié prix, sur des maillots qui déteignent."
+        effets: {relation: {mehdi: 1}, jauges: {caisse: -1}}
+
+  # ─────────────────────────────────────────────── Le quartier, sans toi
+  - id: vi.sc.port_nuit
+    titre: "Le quai qu'on ne voit pas"
+    lieu: docks
+    tranches: [nuit]
+    qui: passant
+    si: "semaine >= 8"
+    texte: "Minuit, sur le quai. Une péniche sans feux décharge à la main, en silence : une chaîne d'hommes jusqu'à une camionnette. Un homme en ciré pose son carton et te regarde. « Ce n'est pas ton quai. »"
+    choix:
+      - label: "Je n'ai rien vu"
+        francs: 200
+        sale: true
+        reponse: "Il sort un billet plié en quatre et le glisse dans ta poche, sans te toucher. La chaîne reprend. Quand tu te retournes, la camionnette est déjà partie, sans phares."
+      - label: "Je reste"
+        reponse: "Personne ne bouge, personne ne parle, jusqu'à ce que tu partes. Le lendemain, quelqu'un, là-haut, te demande ce que tu faisais sur les quais à minuit. Il ne dit pas qui l'a appelé."
+        effets: {jauges: {direction: -1}}
+
+  - id: vi.sc.port_descente
+    titre: "Six heures, entrepôt 7"
+    lieu: entrepot_7
+    tranches: [matin]
+    qui: passant
+    si: "semaine >= 8 && annee <= 2009"
+    texte: "Des fourgons bleus devant l'entrepôt 7, des chiens, des scellés jaunes sur la grande porte. Un inspecteur te reconnaît derrière le ruban : « Vous venez souvent ici, au port ? »"
+    choix:
+      - label: "Je passais"
+        reponse: "Il note ton nom quand même, au bas d'une page déjà pleine. Derrière lui, on sort des fûts au chariot. Lazare, assis sur le marchepied d'un fourgon, regarde ailleurs."
+        effets: {jauges: {direction: -1}}
+      - label: "Je connais le gardien"
+        reponse: "« Tout le monde connaît le gardien. » L'inspecteur sourit. Lazare lève les yeux vers toi une seconde, et les baisse. Au port, on saura avant midi que tu ne l'as pas renié."
+        effets: {jauges: {direction: -2}, relation: {lazare: 1}}
+
+  - id: vi.sc.port_greve
+    titre: "La grève des dockers"
+    lieu: docks
+    tranches: [matin]
+    qui: ancien
+    si: "semaine >= 8 && annee <= 2004"
+    texte: "Les dockers bloquent le quai : l'armateur veut payer à la tonne, plus à la journée. Un ancien te tend le mégaphone : « Dis un mot, toi. Ici, les gens écoutent les gens du stade. »"
+    choix:
+      - label: "Je dis un mot"
+        reponse: "Tu parles de la Nord, des samedis, des pères qui portaient des sacs. Les dockers applaudissent. Ta photo au mégaphone fait la page deux de L'Écho, sous un titre en forme de question."
+        effets: {jauges: {tribunes: 2, direction: -2}}
+      - label: "Ce n'est pas ma grève"
+        reponse: "L'ancien reprend le mégaphone. Samedi, la banderole DOCKS reste roulée au virage. Personne ne t'en parle ; tout le monde le remarque."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: vi.sc.port_silo
+    titre: "La dernière péniche de grain"
+    lieu: docks
+    tranches: [aprem]
+    qui: ancien
+    si: "semaine >= 8 && annee >= 2008 && annee <= 2009"
+    texte: "Le silo ferme : la Montbéliac charge le dernier grain de la Rive, devant les anciens en bleu de travail. L'un d'eux te tend une poignée de blé : « Pour le stade. Il en poussait derrière, avant. »"
+    choix:
+      - label: "Je le sème au stade"
+        reponse: "Tu jettes le blé derrière le but de la Nord, un soir. Au printemps, trois épis poussent entre le grillage et la piste. Le jardinier les laisse. Les anciens viennent les voir."
+        effets: {jauges: {tribunes: 1}}
+      - label: "Gardez-le"
+        reponse: "L'ancien laisse tomber le blé dans la Rive, grain par grain. « Alors c'est pour les poissons. » Les autres ne te regardent plus ; ils regardent partir la péniche."
+        effets: {jauges: {tribunes: -1}}
+
+  - id: vi.sc.port_lofts
+    titre: "Les Docks de la Rive"
+    lieu: docks
+    tranches: [soir]
+    qui: passant
+    si: "semaine >= 8 && annee >= 2041"
+    texte: "On inaugure les lofts des Magasins généraux : champagne sous la potence repeinte, un promoteur, des invités qui filment le bassin. On te tend une coupe, et un dépliant « avec vue sur le stade »."
+    choix:
+      - label: "Je trinque avec eux"
+        reponse: "Une photo de toi, coupe levée sous la potence, paraît dans le supplément immobilier de L'Écho du dimanche. Au Relais, les chauffeurs la découpent et la punaisent à côté de la caisse."
+        effets: {jauges: {direction: 1, tribunes: -2}}
+      - label: "Je vais boire au pont"
+        reponse: "Tu traverses le quai jusqu'à L'Espérance. Matthias te sert sans un mot, et le bal couvre les discours. Sur le pont, on lève son verre vers toi."
+        effets: {jauges: {tribunes: 1, direction: -1}}
+
+# ═══════════════════════════════════════════════════════════════════════════════ LES PAROLES
+# Ce que disent les anonymes près des lieux du port (`lieu == …` : le lieu le plus proche). La
+# nuit, seuls passants et passantes parlent. Aucun accord sur le héros.
+paroles:
+  - qui: passant
+    sujet: quartier
+    si: "lieu == docks"
+    texte: "Ici, on décharge le jour ce qui se déclare. La nuit, on décharge le reste, et c'est plus lourd. Je le sais : j'ai les deux paies."
+  - qui: ancien
+    sujet: quartier
+    si: "lieu == docks && annee <= 2008"
+    texte: "Quand le silo ouvre ses trappes, toute la Rive sent le pain. Mes petits-enfants croient que c'est la boulangerie. Je les laisse croire."
+  - qui: passant
+    sujet: rumeur
+    si: "lieu == docks && annee >= 2036"
+    texte: "Le portique se pilote de la capitale, maintenant. Quand un conteneur tombe, personne ici ne sait sur qui crier. C'est ça, le progrès."
+  - qui: passante
+    sujet: quartier
+    si: "lieu == docks && annee >= 2041"
+    texte: "Les lofts des Magasins généraux ont gardé la potence et les rails dans le pavé. Ceux qui y vivent ont des chiens qui n'aiment pas les mariniers."
+  - qui: passante
+    sujet: sombre
+    si: "lieu == docks && tranche == nuit"
+    texte: "Ne restez pas devant l'entrepôt 7 à cette heure-ci. Les camionnettes reculent sans phares. Elles ne vous verront pas ; elles ne veulent pas vous voir."
+  - qui: passant
+    sujet: sombre
+    si: "lieu == casse"
+    texte: "À la casse, une voiture peut entrer avec un nom et ressortir sans. Le chien, lui, se souvient de toutes. Il n'aboie pas pareil."
+  - qui: passant
+    sujet: argent
+    si: "lieu == relais_routiers"
+    texte: "Au Relais, on paie en liquide et on ne demande pas de ticket. Les chauffeurs disent que le ticket, c'est pour ceux qui ont un patron à qui mentir."
+  - qui: ancien
+    sujet: quartier
+    si: "lieu == capitainerie"
+    texte: "Ma femme a signé le registre de la capitainerie en 1961, le jour de nos noces, comme passagère. Le capitaine avait fait une exception. Elle en parle encore."
+  - qui: fan
+    sujet: quartier
+    si: "lieu == guinguette && jour == sam"
+    texte: "Le bal de la guinguette, c'est après le match. On danse avec le résultat : on gagne, ça tourne ; on perd, ça tangue."
+  - qui: passant
+    sujet: rumeur
+    si: "lieu == relais_routiers && flag(rep_nuit)"
+    texte: "Les chauffeurs de nuit vous connaissent : vous êtes au comptoir plus souvent qu'eux. Ils ont parié sur l'heure où vous partirez. Personne n'a gagné."
+
+# ═══════════════════════════════════════════════════════════════════════ OÙ ILS T'ATTENDENT
+# Une carte dont ils sont le locuteur (leurs paliers : cards/common/paliers_ville_port.yaml) se
+# joue à leur lieu : les cartes ne connaissent pas les lieux du port.
+rencontres:
+  lazare: entrepot_7
+  maiwenn: entrepot_7
+  arlette: relais_routiers
+  yannick: relais_routiers
+  baptistin: casse
+  romane: casse
+  aristide: capitainerie
+  solene: capitainerie
+  mado: guinguette
+  matthias: guinguette
+  anselme: docks
+  mehdi: docks
