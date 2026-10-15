@@ -429,7 +429,18 @@ Ce que la ville porte en plus des cartes :
   accroche de quatre notes, une boucle de trois minutes) ; La Filature (ville le jour), Néons (le
   soir), La Rive (le stade), Garde à vue (une carte sombre) et Le Dernier Tour (la fin, sur le
   motif de l'ancien thème de l'accueil) attendent leurs compositeurs. En fondu enchaîné, et un
-  jingle au départ d'une histoire. Un thème s'inscrit par `FusibleAudio.theme(clé, définition)` ;
+  jingle au départ d'une histoire. **Où chacun joue** (bible § 4, `themeDuMoment` du gabarit) : en
+  ville le jour, le thème du livre en cours (`livre_hN`) un jour sur deux, le premier compris (son
+  introduction jouée a le même : une scène jouée demande `musique: livre`), la promenade l'autre ; les
+  quartiers (`decouverte`) le jour d'une découverte (l'événement `fusible:decouverte` : un quartier
+  qui s'ouvre, une pièce du dossier ; une page d'album finie) ; la montée (`joie`) jusqu'au lendemain
+  d'un bilan tenu ; le soir et la nuit, les néons ; le stade, la Rive ; une carte sombre, la garde à
+  vue ; le grand déballage et les décisions du samedi en direct, `suspense` ; le mode éclair,
+  `enerve` ; la fin, le dernier tour. Un thème absent de `musique/` cède sa place au plus proche
+  (`themeOu`). **La reprise** : en ville on quitte un thème et on y revient sans cesse ; un thème
+  retrouvé dans les dix minutes reprend à la section qui suit celle qu'on a quittée (`audio.js`,
+  `reprise`), pas à son introduction — chaque section d'un thème doit pouvoir ouvrir le morceau.
+  Un thème s'inscrit par `FusibleAudio.theme(clé, définition)` ;
   `musique_sources.js` pose les fichiers après audio.js (l'aperçu, le banc, le juke-box), chacun
   dans son filet : une erreur n'emporte que son thème (`FusibleAudio.erreurs()`).
   Sous un thème, les couches d'origine se taisent : la nappe, et le lit continu des lieux (la

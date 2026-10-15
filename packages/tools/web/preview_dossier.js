@@ -73,6 +73,8 @@
     if (!p) return;
     var t = "Une pièce du dossier 1974 : " + p.titre + ".", v = window.FusibleDossierVille;
     if (v && v.actif && v.actif() && $("gameScreen") && !$("gameScreen").hidden) v.toast(t); else dossierToast(t);
+    // une découverte : la musique de la ville passe aux quartiers jusqu'au soir
+    try { document.dispatchEvent(new CustomEvent("fusible:decouverte", { detail: { type: "dossier", id: id } })); } catch (e) {}
   }
   function dossierToast(t) {
     var el = $("dossierToast");

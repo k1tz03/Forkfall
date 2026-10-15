@@ -17,8 +17,9 @@
   function directLent() { return directReduit || !!directProfil().directLent; }
   function directDuree() { return directLent() ? DIRECT_SEC_LENT : DIRECT_SEC; }
   function directSon(nom) { try { if (coquille && coquille.son) coquille.son(nom); } catch (e) {} }
-  // la musique : pendant une décision, le stade se tait et le cœur bat (le thème `sombre`)
-  function directMusique() { return DIRECT && DIRECT.carte && !DIRECT.carte.fait ? "sombre" : null; }
+  // la musique : pendant une décision, le stade se tait et l'on retient son souffle (le thème
+  // `suspense`, « Les Douze Pages » ; la coquille rend `sombre` s'il manque)
+  function directMusique() { return DIRECT && DIRECT.carte && !DIRECT.carte.fait ? "suspense" : null; }
 
   // la carte du match est-elle un samedi qu'on peut jouer en direct ?
   function directPossible() {

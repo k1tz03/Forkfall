@@ -57,7 +57,10 @@
  *   FusibleAudio.setTension(0..1)              la nappe monte
  *   FusibleAudio.setYear(annee)                la décennie de la nappe
  *   FusibleAudio.play(evt) / .playAll([evt])   les gestes
- *   FusibleAudio.THEMES / .setTheme(nom|null)  la musique (fondu enchaîné)
+ *   FusibleAudio.THEMES / .setTheme(nom|null)  la musique (fondu enchaîné ; un thème
+ *                                              retrouvé dans les dix minutes reprend
+ *                                              à la section qui suit celle quittée)
+ *   FusibleAudio.position()                    la section et la mesure qui jouent
  *   FusibleAudio.jingle(nom)                   une phrase jouée une fois
  *
  * La musique, côté partition (les fichiers musique/*.js, le banc, le juke-box) :
@@ -2222,6 +2225,24 @@
   var live = null, liveCtx = null;
   var mode = 'tout';
   var pending = { ambiance: null, tension: 0, year: 1990, theme: null };
+  // LA REPRISE — en ville, on quitte un thème et on y revient sans cesse (une carte
+  // sombre, la nuit, le match, une scène jouée) : repartir chaque fois de son
+  // introduction ferait entendre vingt fois les mêmes mesures. Le thème qu'on quitte
+  // laisse sa section ; si on y revient dans les dix minutes (le temps du son, qui
+  // s'arrête quand la page est cachée), il reprend à la section suivante.
+  var REPRISE_MAX = 600, souvenirs = {};
+  function reprise(nom) {
+    var t = liveCtx ? liveCtx.currentTime : 0, pos = null;
+    try { pos = live.position(); } catch (x) { pos = null; }
+    if (pos && pos.theme && pos.theme !== nom) souvenirs[pos.theme] = { index: pos.index, t: t };
+    var s = nom != null && souvenirs[nom];
+    if (!s || t - s.t > REPRISE_MAX) return {};
+    var C;
+    try { C = compilerTheme(nom); } catch (x) { return {}; }
+    var i = s.index + 1;
+    if (i >= C.ordre.length) i = C.boucle;
+    return { depuis: i };
+  }
   // LA PAGE CACHÉE — le téléphone verrouillé, un autre onglet, l'application en
   // fond : la musique se tait (le contexte est suspendu, le séquenceur arrêté, plus
   // rien ne se programme) et reprend où elle en était quand la page revient, si le
@@ -2318,9 +2339,17 @@
     },
     setTheme: function (nom) {
       if (nom != null && !MUSIQUE[nom]) return;
+      if (live && nom !== pending.theme) {
+        var o = reprise(nom);
+        pending.theme = nom;
+        live.setTheme(nom, o);
+        return;
+      }
       pending.theme = nom;
       if (live) live.setTheme(nom);
     },
+    // le thème qui joue en ce moment : sa section, sa mesure, son passage (ou null)
+    position: function () { return live ? live.position() : null; },
     // deux usages : `theme()` rend le thème demandé (le jeu) ; `theme(clé,
     // définition)` inscrit un thème (son fichier, musique/<clé>.js)
     theme: function (cle, def) {
