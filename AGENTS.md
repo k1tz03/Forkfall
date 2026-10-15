@@ -487,7 +487,12 @@ par l'assemblage : la page, le réseau d'abord (le cache après trois secondes) 
 `contenu/`, `accueil/`, `icones/`, le cache d'abord ; une mise à jour garde ce qui est nommé par
 son empreinte (le commun, le moteur, les livres déjà joués) ; on rejoue hors ligne ce qu'on a vu.
 La ville garde ses images décodées dans une réserve bornée (`ville.js`, `RESERVE_IMAGES`), et la
-musique se tait quand la page est cachée (`audio.js`).
+musique se tait quand la page est cachée (`audio.js`). **Pour l'artefact publié** (qui ne sert pas
+le `.gz` comme fichier), on assemble avec `--contenu-json` : les bundles de `contenu/` sortent en JSON
+non compressé (l'hôte compresse au transfert, `demarrage.js` lit tel quel un bundle sans en-tête
+gzip), on ajoute `<meta name="fusible-lien" content="<l'URL de l'artefact>">` (les liens de défi), et
+l'on publie avec `capabilities: {db: {rules: [jour, jour/{self}, eclair, eclair/{self}]}, user: {},
+downloads: true}` ; les fichiers de `ville/` ne changent pas d'une version à l'autre et restent en place.
 
 ## Comment on ajoute du contenu
 
