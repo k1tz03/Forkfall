@@ -242,31 +242,95 @@
   var TUILE = 1024, COLS = 4, RANGS = 3;
   var images = {};             // nom → Image
   var profs = {};              // nom → Uint16Array (décodée à la demande)
+  // LA MÉMOIRE DES IMAGES. Une tuile décodée pèse 4 Mo (1024 × 1024 × 4 octets), sa
+  // profondeur 2 Mo de plus ; le tour du Grand Aubérive en gardait une centaine, plus de
+  // 900 Mo pour l'onglet — un téléphone le ferme. On garde ce que l'écran a montré aux
+  // deux dernières images et ce qui l'entoure déjà chargé, plus une réserve des plus
+  // récentes ; le reste est rendu et revient de lui-même s'il resert. Les tuiles sont des
+  // ImageBitmap (décodées hors du fil de la page) : `close()` rend leur mémoire tout de
+  // suite, quand une <img> vidée la garde au cache du navigateur. Sans elles, des <img>.
+  var RESERVE_IMAGES = 6, RESERVE_PROFS = 3, tic = 0;
+  var BITMAPS = typeof window.createImageBitmap === "function" && typeof window.fetch === "function";
   function img(nom) {
     var im = images[nom];
     if (!im) {
-      im = new Image();
-      im.decoding = "async";
-      im.onload = function () { im._ok = true; };
-      im.src = BASE + nom + ".webp";
-      images[nom] = im;
+      if (BITMAPS) {
+        // en attendant : une place vide, qu'on ne dessine pas
+        im = images[nom] = { _ok: false, _t: tic, naturalWidth: 0, naturalHeight: 0 };
+        var place = im;
+        fetch(BASE + nom + ".webp").then(function (r) { if (!r.ok) throw new Error(nom + " : " + r.status); return r.blob(); })
+          .then(function (b) {
+            return createImageBitmap(b).catch(function (e) {
+              // un navigateur qui ne décode pas ce format en ImageBitmap : des <img>, désormais
+              if (images[nom] === place) { BITMAPS = false; delete images[nom]; img(nom); }
+              throw e;
+            });
+          })
+          .then(function (bm) {
+            if (images[nom] !== place) { bm.close(); return; }   // rendue entre-temps
+            bm._ok = true; bm._t = place._t; bm.naturalWidth = bm.width; bm.naturalHeight = bm.height;
+            images[nom] = bm;
+          }).catch(function () { /* absente : le noir, comme avant */ });
+      } else {
+        im = new Image();
+        im.decoding = "async";
+        im.onload = function () { im._ok = true; };
+        im.src = BASE + nom + ".webp";
+        images[nom] = im;
+      }
     }
+    im._t = tic;
     return im;
   }
+  // garder sans demander : le voisinage de l'écran, s'il est déjà là
+  function garderImage(nom) { var im = images[nom]; if (im) im._t = tic; }
+  function rendreImage(nom) {
+    var im = images[nom];
+    if (!im) return;
+    delete images[nom];
+    im._ok = false;
+    if (typeof im.close === "function") im.close();
+    else if (im.removeAttribute) { im.onload = null; im.removeAttribute("src"); }
+  }
+  // une fois par image dessinée : ce qui n'a pas servi depuis deux images et dépasse la réserve s'en va
+  function menageImages() {
+    tic++;
+    function vieux(table, reserve, rendre) {
+      var noms = Object.keys(table).filter(function (n) { return !table[n] || table[n]._t < tic - 2; });
+      if (noms.length <= reserve) return;
+      noms.sort(function (a, b) { return (table[a] ? table[a]._t : -1) - (table[b] ? table[b]._t : -1); });
+      for (var i = 0; i < noms.length - reserve; i++) rendre(noms[i]);
+    }
+    vieux(images, RESERVE_IMAGES, rendreImage);
+    vieux(profs, RESERVE_PROFS, function (n) { delete profs[n]; });
+  }
   function nomTuile(amb, i) { if (dedans) return nomImageDedans(amb); return amb + "_" + (i < 10 ? "0" : "") + i; }
+  // une tuile pas encore là : la même, à une autre heure, si on l'a (plutôt que le noir)
+  function repliTuile(amb, i) {
+    for (var k in PROFONDEUR) {
+      var im = k !== amb && images[nomTuile(k, i)];
+      if (im && im._ok) { im._t = tic; return im; }
+    }
+    return null;
+  }
+  var toileProf = null;        // une seule toile pour lire les profondeurs (pas une par tuile)
   function profTuile(nom) {
-    if (profs[nom] !== undefined) return profs[nom];
+    if (profs[nom] !== undefined) { if (profs[nom]) profs[nom]._t = tic; return profs[nom]; }
     var im = img(nom);
     if (!im._ok) return null;
     try {
-      var c = document.createElement("canvas");
+      var c = toileProf || (toileProf = document.createElement("canvas"));
       c.width = im.naturalWidth; c.height = im.naturalHeight;
       var x = c.getContext("2d", { willReadFrequently: true });
       x.drawImage(im, 0, 0);
       var d = x.getImageData(0, 0, c.width, c.height).data, n = c.width * c.height, out = new Uint16Array(n);
       for (var k = 0; k < n; k++) out[k] = (d[k * 4] << 8) | d[k * 4 + 1];
       out.w = c.width;
+      out._t = tic;
       profs[nom] = out;
+      // la profondeur est lue : l'image elle-même ne sert plus
+      rendreImage(nom);
+      c.width = c.height = 0;
       return out;
     } catch (e) { profs[nom] = null; return null; }
   }
@@ -1419,6 +1483,7 @@
   function image(ts) {
     if (!actif) { dernier = 0; return; }
     requestAnimationFrame(image);
+    menageImages();
     var dt = dernier ? Math.min(0.05, (ts - dernier) / 1000) : 0;
     dernier = ts;
     if (!occupe && !carteOn) { majMarche(dt); if (!dedans) { majPassants(dt, ts); majActeurs(dt, ts); } }
@@ -1437,10 +1502,14 @@
   function dessinerTuiles(amb, alpha) {
     var x0 = Math.round(cam.x - VW / 2), y0 = Math.round(cam.y - VH / 2);
     ctx.globalAlpha = alpha;
+    var m = TUILE / 2;           // le voisinage : ce qui entre dans l'écran au bout de quelques pas
     for (var r = 0; r < RANGS; r++) for (var c = 0; c < COLS; c++) {
       var tx = c * TUILE, ty = r * TUILE;
-      if (tx > x0 + VW || ty > y0 + VH || tx + TUILE < x0 || ty + TUILE < y0) continue;
+      // le voisinage de l'écran reste en mémoire s'il est déjà chargé (on ne le demande pas)
+      if (tx > x0 + VW + m || ty > y0 + VH + m || tx + TUILE + m < x0 || ty + TUILE + m < y0) continue;
+      if (tx > x0 + VW || ty > y0 + VH || tx + TUILE < x0 || ty + TUILE < y0) { garderImage(nomTuile(amb, r * COLS + c)); continue; }
       var im = img(nomTuile(amb, r * COLS + c));
+      if (!im._ok) im = repliTuile(amb, r * COLS + c) || im;
       if (im._ok) ctx.drawImage(im, tx - x0, ty - y0);
     }
     ctx.globalAlpha = 1;
@@ -3421,8 +3490,23 @@
     b.addEventListener("click", function () { reprendre(s); });
     var ident = $("nameForm");
     ident.parentNode.insertBefore(b, ident);
+    // le livre de la partie se décompresse d'avance, une fois l'accueil posé (demarrage.js)
+    if (window.FusibleContenu) window.FusibleContenu.prechauffer(s.graine && s.graine.postulat, 1200);
   }
+  var repriseEnCours = false;
   function reprendre(s) {
+    // le livre de la partie d'abord : il rejoint le commun et le moteur le relit (demarrage.js)
+    var FC = window.FusibleContenu, livre = s.graine && s.graine.postulat;
+    if (FC && !FC.charge(livre)) {
+      if (repriseEnCours) return;
+      repriseEnCours = true;
+      FC.livre(livre).then(function () { repriseEnCours = false; reprendre(s); },
+        function () {
+          repriseEnCours = false;
+          if (coquille && coquille.panneau) coquille.panneau("Pas de réseau", '<p class="note">Le livre de cette partie n\'est pas arrivé jusqu\'ici. Vérifie la connexion, puis touche « Reprendre » de nouveau.</p>');
+        });
+      return;
+    }
     var faire = function () {
       sauveFinie = false;
       S = s.ville; rdv = s.rdv || null;
@@ -3461,33 +3545,43 @@
 
   /*__VILLE_MODULES__*/
 
+  // ─── le contenu : le commun au démarrage, puis commun + le livre de la carrière
+  // (demarrage.js, window.FusibleContenu, le même objet) ; les index se refont à
+  // chaque fusion — les scènes, les missions, la carte du retour viennent du livre
+  function indexerContenu() {
+    var content = null;
+    try {
+      content = window.FusibleContenu ? window.FusibleContenu.contenu() : JSON.parse(document.getElementById("fusible-content").textContent);
+      D = content.ville || {};
+      (content.characters || []).forEach(function (c) { CHARS[c.id] = c; });
+      PORTRAITS = content.portraits || {};
+    } catch (e) { D = {}; }
+    [TEXTE_LIEU, OBJET, MISSION, SCENE, RETOUR].forEach(function (t) { for (var k in t) delete t[k]; });
+    (D.lieux || []).forEach(function (l) { TEXTE_LIEU[l.key] = l; });
+    (D.objets || []).forEach(function (o) { OBJET[o.id] = o; });
+    (D.missions || []).forEach(function (m) { MISSION[m.id] = m; });
+    (D.scenes || []).forEach(function (sc) { SCENE[sc.id] = sc; });
+    // une scène jouée de la semaine se programme comme une scène (le plan du jour la tire)
+    (D.cinematiques || []).forEach(function (c) {
+      if (c.quand !== "semaine") return;
+      SCENE["ci:" + c.id] = { id: "ci:" + c.id, titre: c.titre || "", lieu: c.lieu === "ici" ? "rue" : c.lieu, tranches: c.tranches || ["matin", "midi", "aprem"], jours: c.jours, roles: c.roles, si: c.si, poids: c.poids || 1, cine: c };
+    });
+    // la carte du retour d'un voyage : elle lève le drapeau de `loin` sur ses deux choix
+    var Lo = D.loin || {};
+    ((content && content.cards) || []).forEach(function (c) {
+      var g = (c.left && c.left.effects && c.left.effects.clear) || [], d = (c.right && c.right.effects && c.right.effects.clear) || [];
+      for (var f in Lo) if (g.indexOf(f) >= 0 && d.indexOf(f) >= 0) RETOUR[c.id] = f;
+    });
+  }
+
   // ─────────────────────────────────────────────────────────────── l'API (la coquille appelle)
   window.FusibleVille = {
     noms: { ville: "Aubérive", club: "Racing Aubérive" },
     // la coquille est prête : on construit la couche et on charge les images
     pret: function () {
       coquille = window.FusibleCoquille;
-      try {
-        var content = JSON.parse(document.getElementById("fusible-content").textContent);
-        D = content.ville || {};
-        (content.characters || []).forEach(function (c) { CHARS[c.id] = c; });
-        PORTRAITS = content.portraits || {};
-      } catch (e) { D = {}; }
-      (D.lieux || []).forEach(function (l) { TEXTE_LIEU[l.key] = l; });
-      (D.objets || []).forEach(function (o) { OBJET[o.id] = o; });
-      (D.missions || []).forEach(function (m) { MISSION[m.id] = m; });
-      (D.scenes || []).forEach(function (sc) { SCENE[sc.id] = sc; });
-      // une scène jouée de la semaine se programme comme une scène (le plan du jour la tire)
-      (D.cinematiques || []).forEach(function (c) {
-        if (c.quand !== "semaine") return;
-        SCENE["ci:" + c.id] = { id: "ci:" + c.id, titre: c.titre || "", lieu: c.lieu === "ici" ? "rue" : c.lieu, tranches: c.tranches || ["matin", "midi", "aprem"], jours: c.jours, roles: c.roles, si: c.si, poids: c.poids || 1, cine: c };
-      });
-      // la carte du retour d'un voyage : elle lève le drapeau de `loin` sur ses deux choix
-      var Lo = D.loin || {};
-      ((content && content.cards) || []).forEach(function (c) {
-        var g = (c.left && c.left.effects && c.left.effects.clear) || [], d = (c.right && c.right.effects && c.right.effects.clear) || [];
-        for (var f in Lo) if (g.indexOf(f) >= 0 && d.indexOf(f) >= 0) RETOUR[c.id] = f;
-      });
+      indexerContenu();
+      if (window.FusibleContenu) window.FusibleContenu.apresFusion(indexerContenu);
       construire();
       charger();
       boutonReprendre();

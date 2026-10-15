@@ -363,6 +363,15 @@ void main() {
         _engine = Engine(_content);
         return _postulatsJson().toJS;
       }).toJS);
+  // Le contenu d'une carrière : le commun et le livre qu'elle joue, fusionnés
+  // par la page (demarrage.js). Le moteur le relit sans rien rendre — l'accueil
+  // a déjà sa liste des histoires, et la ville son contenu.
+  globalContext.setProperty(
+      'fusibleCharger'.toJS,
+      ((JSString j) {
+        _content = loadContentFromJson(j.toDart);
+        _engine = Engine(_content);
+      }).toJS);
   // fusibleStart(seed, postulat, prenom?, nom?, genre?, ville?, club?) : les
   // cinq derniers sont facultatifs ; une chaîne vide (ou absente) laisse le
   // moteur tirer. La ville et le club : la version jouable (la ville dessinée).

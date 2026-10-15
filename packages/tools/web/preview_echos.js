@@ -85,6 +85,11 @@
 
   var echos = null;                 // la mémoire de la carrière en cours (null : aucune)
   var echosIdx = null;              // l'index du contenu, bâti à la première utilisation
+  // un livre qui arrive (demarrage.js) remplace les cartes et les intrigues du contenu : l'index se
+  // refait à la première utilisation qui suit (sinon il garderait celles du livre d'avant)
+  if (typeof window !== "undefined" && window && window.FusibleContenu && window.FusibleContenu.apresFusion) {
+    window.FusibleContenu.apresFusion(function () { echosIdx = null; });
+  }
   var echosJournal = [];            // ce qui s'est montré cette session (les essais le lisent)
   var echosTimer = 0, echosAttenteT = 0, echosAttente = null;
   var echosRejets = {};             // pourquoi une réponse n'a pas eu sa ligne (les essais comptent)

@@ -6,6 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#1B1109">
 <title>Fusible</title>
+<!-- L'APPLICATION ET LE PARTAGE : la demande du contenu commun (qu'il arrive
+     pendant que la page se lit), le manifeste, les icônes, le service worker,
+     l'aperçu d'un lien partagé (Open Graph) — posés par assemble.js quand la
+     page est servie avec la ville (--ville) ; rien dans le fichier seul. -->
+__TETE__
 
 <!-- LA POLICE — Space Mono (Colophon Foundry, Google Fonts), 400/700, romain
      et italique. Trois familles ont été essayées côte à côte sur le fond brun
@@ -878,6 +883,20 @@ table.tbl tr.toi td.r{color:var(--framboise)}
   .annonce.anim{animation:none}
 }
 
+/* ═══ LE LIVRE QUI ARRIVE (demarrage.js) ════════════════════════════════════
+   Le temps que le livre d'une histoire se décompresse et que le moteur le lise :
+   une mèche court en haut de l'écran (une transformation, que le compositeur
+   anime même quand la page calcule), et les cartouches ne répondent plus. */
+body.charge-livre{cursor:progress}
+body.charge-livre #postulats,body.charge-livre #villeReprendre{pointer-events:none}
+body.charge-livre::after{
+  content:"";position:fixed;left:0;top:0;width:45%;height:3px;z-index:2147483000;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,201,77,0),#FFC94D 45%,#E0164B);
+  animation:livreMeche .9s linear infinite;will-change:transform;
+}
+@keyframes livreMeche{from{transform:translateX(-100%)}to{transform:translateX(225%)}}
+@media (prefers-reduced-motion: reduce){body.charge-livre::after{width:100%;animation:none}}
+
 /* ═══ LES ÉCHOS ═════════════════════════════════════════════════════════
    preview_echos.js : la ligne qui suit un choix (« Gégé s'en souviendra. ») et le
    ruban qui le rappelle plus tard (« ↩ Parce que tu as dit … »). Rares exprès, sans
@@ -1134,7 +1153,12 @@ __VILLE_CSS__
   </div>
 </div>
 
-<script id="fusible-content" type="application/json">__CONTENT_JSON__</script>
+<!-- LE CONTENU : le bundle commun compressé (en base64 dans le fichier seul ; dans
+     la version jouable, un fichier demandé dès la tête de la page), et de quoi
+     trouver chaque livre ; demarrage.js (window.FusibleContenu) le décompresse
+     tout de suite, pendant que les scripts qui suivent se lisent. La coquille
+     démarre quand il est là (FusibleContenu.pret, plus bas). Posé par assemble.js. -->
+__CONTENU__
 <script>__ENGINE_JS__</script>
 <script>__ART_JS__</script>
 <script>__AUDIO_JS__</script>
@@ -1143,7 +1167,7 @@ __VILLE_CSS__
      trouve dans window.FusibleVille. Vide dans l'aperçu simple. -->
 <script>__VILLE_JS__</script>
 <script>
-(function () {
+window.FusibleContenu.pret((function () {
   "use strict";
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   // LES DEUX SEUILS. La tête de mort est le signal le plus fort de
@@ -1228,17 +1252,44 @@ __VILLE_CSS__
     try { return ART.nombre(String(txt), { height: h || 34 }) || ""; } catch (e) { return escapeHtml(txt); }
   }
 
-  // --- boot : le bundle réel est confié au moteur Dart compilé ---
-  var contentJson = $("fusible-content").textContent;
+  // --- boot : le contenu COMMUN, que demarrage.js vient de décompresser
+  // (window.FusibleContenu). Le moteur Dart ne le lit qu'au départ d'une
+  // carrière, avec le livre qu'elle joue (chargerLivre) : l'accueil n'a besoin
+  // que de la liste des histoires, que FusibleContenu rend comme le moteur. Dans
+  // la version jouable, le moteur lui-même arrive après l'accueil.
+  var CONTENU = window.FusibleContenu;
   var meta, content;
   try {
-    meta = JSON.parse(window.fusibleLoad(contentJson));
-    content = JSON.parse(contentJson);
+    content = CONTENU.contenu();
+    meta = { postulats: CONTENU.postulats(), startYear: 1990 };
   } catch (e) {
     $("titleScreen").innerHTML = '<p class="boot-error">Le moteur n\'a pas pu démarrer : ' + escapeHtml(String(e)) + '</p>';
     return;
   }
   try { if (ART) ART.init(content); } catch (e) {}
+  // Le livre d'une carrière : il se décompresse, rejoint le commun (le même
+  // objet `content`, ses listes remplacées) et le moteur relit le tout. Une
+  // cartouche touchée le décompresse d'avance.
+  var livreEnCours = false;
+  function chargerLivre(postulat, suite) {
+    if (livreEnCours) return;
+    livreEnCours = true;
+    CONTENU.livre(postulat).then(function () {
+      livreEnCours = false;
+      suite();
+    }, function (e) {
+      livreEnCours = false;
+      if (window.console) console.error("chargerLivre", e);
+      openPanel("livre", "Pas de réseau", '<p class="note">Le livre de cette histoire n\'est pas arrivé jusqu\'ici. Le car est peut-être en retard : vérifie la connexion, puis touche l\'histoire de nouveau.</p>');
+    });
+  }
+  // (le doigt posé, ou la touche Entrée : le livre arrive pendant qu'on écrit son nom)
+  ["pointerdown", "click"].forEach(function (type) {
+    $("postulats").addEventListener(type, function (e) {
+      var b = e.target && e.target.closest ? e.target.closest(".postulat") : null;
+      if (b) CONTENU.prechauffer(+b.getAttribute("data-index"));
+    });
+  });
 
   // LE SIÈCLE : les deux bornes de la chronologie du jeu. La frise s'y
   // appuie — et l'accroche du titre les affiche.
@@ -1261,7 +1312,13 @@ __VILLE_CSS__
   toutesFins.forEach(function (e) { if (e && e.id) ENDINGS[e.id] = e; });
   var JOURNAUX = {}, UNES = {};
   (Array.isArray(content.journaux) ? content.journaux : []).forEach(function (j) { if (j && j.id) JOURNAUX[j.id] = j; });
-  (Array.isArray(content.unes) ? content.unes : []).forEach(function (u) { if (u && u.id) UNES[u.id] = u; });
+  // les manchettes d'un livre arrivent avec lui : l'index se refait à chaque fusion
+  function indexerUnes() {
+    UNES = {};
+    (Array.isArray(content.unes) ? content.unes : []).forEach(function (u) { if (u && u.id) UNES[u.id] = u; });
+  }
+  indexerUnes();
+  CONTENU.apresFusion(indexerUnes);
   var NAMES = (content.names && typeof content.names === "object") ? content.names : {};
   function journalName(id, ville) {
     var j = JOURNAUX[id];
@@ -1488,6 +1545,8 @@ __VILLE_CSS__
   function randomSeed() { return (Math.floor(Math.random() * 0x7fffffff)) & 0x7fffffff; }
 
   function startRun(postulat, seed) {
+    // le livre d'abord : le moteur ne connaît que le commun avant qu'il arrive
+    if (!CONTENU.charge(postulat)) { chargerLivre(postulat, function () { startRun(postulat, seed); }); return; }
     currentPostulat = postulat;
     currentSeed = (typeof seed === "number") ? seed : randomSeed();
     var nm = nameValues();
@@ -2123,12 +2182,15 @@ __VILLE_CSS__
     if (VILLE && VILLE.effacerLivre) VILLE.effacerLivre(p.id);
     if (go) go();
   });
-  $("dlgRetour").addEventListener("click", dlgFermer);
+  // refermé sans rien choisir (Retour, le fond, Échap) : la promesse de `FusibleApercu.demarrer` se tient
+  // quand même, à `false` (aucune carrière n'a commencé)
+  function dlgAnnuler() { dlgFermer(); departAnnule(); }
+  $("dlgRetour").addEventListener("click", dlgAnnuler);
   // toucher le fond referme (au `click`, pas au `pointerdown` : le dialogue disparu, la même touche
   // retomberait sur la cartouche dessous et le rouvrirait)
-  $("dlgLivre").addEventListener("click", function (e) { if (e.target === $("dlgLivre")) dlgFermer(); });
+  $("dlgLivre").addEventListener("click", function (e) { if (e.target === $("dlgLivre")) dlgAnnuler(); });
   $("dlgLivre").addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); dlgFermer(); return; }
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); dlgAnnuler(); return; }
     if (e.key !== "Tab") return;
     var bs = [$("dlgReprendre"), $("dlgRecommencer"), $("dlgRetour")], i = bs.indexOf(document.activeElement);
     if (e.shiftKey && i <= 0) { e.preventDefault(); bs[bs.length - 1].focus(); }
@@ -2895,6 +2957,16 @@ __VILLE_CSS__
     if (view.frise_auto) openFrise(null);
   }
 
+  // Les départs demandés par `FusibleApercu.demarrer` : sa promesse se tient quand la carrière
+  // commence (le livre a pu devoir arriver d'abord, demarrage.js) — ou reprend, quand le dialogue
+  // d'un livre en cours l'a choisi. Elle se tient sans valeur : `FusibleApercu.vue()` dit la carrière ;
+  // à `false` quand ce dialogue se referme sans choix (aucune carrière n'a commencé).
+  var departsAttendus = [];
+  function departFait() { var l = departsAttendus; departsAttendus = []; l.forEach(function (f) { f(); }); }
+  function departAnnule() { var l = departsAttendus; departsAttendus = []; l.forEach(function (f) { f(false); }); }
+  crochet("debut", departFait);
+  crochet("reprise", departFait);
+
   // L'aperçu, pour les modules de la ville (ils ne partagent pas cette fermeture).
   window.FusibleApercu = {
     crochet: crochet,
@@ -2906,8 +2978,12 @@ __VILLE_CSS__
     histoires: HISTOIRES,
     graine: function () { return { seed: currentSeed, postulat: currentPostulat }; },
     // commencer un livre (avec la graine, si on la donne) ; une carrière déjà en cours dans ce livre
-    // se demande d'abord (dialogue : Reprendre / Recommencer), elle ne s'efface jamais sans un mot
-    demarrer: function (postulat, seed) { demarrerLivre(postulat, seed); },
+    // se demande d'abord (dialogue : Reprendre / Recommencer), elle ne s'efface jamais sans un mot.
+    // Le livre arrive d'abord s'il n'est pas là (startRun, demarrage.js) : la carrière peut commencer
+    // un peu après l'appel — la promesse rendue se tient alors (et `crochet("debut", fn)` le dit).
+    demarrer: function (postulat, seed) {
+      return new Promise(function (ok) { departsAttendus.push(ok); demarrerLivre(postulat, seed); });
+    },
     panneau: function (kind, titre, html, opener) { openPanel(kind, titre, html, opener || null); },
     fermer: closeAll,
     // redessiner l'accueil (au démarrage, `VILLE.pret()` pose déjà le « Reprendre » du haut : ici, il suit les cases)
@@ -2922,5 +2998,5 @@ __VILLE_CSS__
   // --- c'est parti ---
   renderTitle();
   if (VILLE) VILLE.pret();
-})();
+}));
 </script>
