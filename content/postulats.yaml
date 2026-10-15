@@ -8,6 +8,17 @@
 # `seeds` (semis à créneaux fixes) est déprécié : gardé pour les postulats en
 # chantier et les tests. `chantier: true` = les lints de couture sont des
 # avertissements.
+# `objective` : l'objectif de la PREMIÈRE saison, sans tirage (`Engine._objectiveCard`) ;
+# un postulat qui n'en déclare pas le tire, comme toutes les saisons suivantes.
+# `saisons` et `fin_de_livre` : la longueur du livre et sa fin (`Engine._finDeLivre`).
+# Au verdict de la saison d'index `saisons - 1`, une carrière encore en vie prend la
+# fin `fin_de_livre` : le livre est fini, la carrière aussi (sans cela elle courait
+# dans le contenu générique, jusqu'à vingt-deux saisons mesurées). `saisons` va de 1
+# à 10 ; les deux champs vont ensemble ; un postulat qui n'en déclare aucun se joue
+# jusqu'à une fin commune (les contenus de test). Compter les saisons jusqu'à la
+# DERNIÈRE PORTE d'une fin d'histoire : un livre dont la coda s'ouvre à la saison
+# suivante (les livres 7 et 9, le livre 10) la compte dedans, sinon la fermeture
+# emporterait des fins écrites.
 postulats:
   - id: promu
     index: 0
@@ -64,6 +75,11 @@ postulats:
     # ton nom, le café de Vukić, la lettre de 1975, les quatre qui décident (dits
     # par Gigi), l'escalier condamné depuis 1977.
     prologue: en.h1.prologue
+    # Trois saisons (1990-1993) : toutes les portes du livre sont à la saison
+    # d'index 2 (c4_*, c5_*) ; aucune carrière n'en sort sans fin (mesuré : 0 %).
+    # Filet : le car de six heures, la fin de qui ne publie rien.
+    saisons: 3
+    fin_de_livre: promu_car
     questions:                        # fil rouge tiré à l'ouverture de saison (chemin `fil_rouge` dans `when`)
       - { id: tribune,   poids: 1.0 } # la tribune qui porte ton visage (la présentation de Gégé)
       - { id: president, poids: 1.0 } # le président qui a payé sa place (la berline et son 1977)
@@ -202,6 +218,13 @@ postulats:
     # compo de l'autre au mur, la phrase que le groupe attend, le communiqué,
     # l'escalier. La première ancre (les cartons) commence là où il s'arrête.
     prologue: en.h2.prologue
+    # Trois saisons (1990-1993), la fiche du livre : l'acte final est la feuille
+    # de match du créneau 17 de la saison d'index 2. Qui écrit « le mien » sans
+    # que Mercadier soit mort sur le papier la passait pour une quatrième
+    # saison d'épilogue générique (21 % des carrières, jusqu'à onze saisons) :
+    # le livre se ferme maintenant sur la carte postale de la côte.
+    saisons: 3
+    fin_de_livre: interim_carte_postale
     questions:                        # fil rouge tiré à l'ouverture de saison
       - { id: vestiaire, poids: 1.0 } # le vestiaire qui l'attend
       - { id: diplome,   poids: 1.0 } # le papier que tu n'as pas
@@ -357,6 +380,12 @@ postulats:
     # Six scènes avant la carte Objectif : le crochet, les bouteilles, la place
     # de la porte, le grillage, la licence, la cuisine.
     prologue: jp.h3.prologue
+    # Trois saisons (1990-1993) : « Seize heures » est au créneau 17 de la saison
+    # d'index 2. Qui sort sous la sirène, ou finit debout sans que rien l'ait
+    # porté à une fin (26 % des carrières), continuait dans le générique jusqu'à
+    # vingt-deux saisons : le livre se ferme sur la fin de poste.
+    saisons: 3
+    fin_de_livre: pepite_fin_de_poste
     questions:                        # le fil rouge, tiré à chaque ouverture de saison
       - { id: prix,    poids: 1.0 }
       - { id: terrain, poids: 1.0 }
@@ -517,6 +546,13 @@ postulats:
     # Le prologue amène jusqu'à la portière ; l'ancre F1 du script
     # (`jp.fin.f1_derniere_annee`, le restaurant) l'ouvre juste après.
     prologue: jp.fin.prologue
+    # Trois saisons (1990-1993) : le rond central du jubilé est au créneau 17 de
+    # la saison d'index 2. Près de neuf survivants du verdict sur dix (76 sur 87,
+    # mesuré sur 300 carrières) sont déjà passés au banc de la réserve par le
+    # Carrefour des deux premières saisons (la porte que le livre laisse
+    # ouverte) : le livre les ferme, eux aussi, sur le 14 mai suivant.
+    saisons: 3
+    fin_de_livre: fdc_quatorze_mai
     questions:                        # fil rouge tiré à l'ouverture de saison
       - { id: genou,     poids: 1.0 }
       - { id: agent,     poids: 1.0 }
@@ -700,6 +736,12 @@ postulats:
     chantier: false
     opening_arc: pr.h5.script
     prologue: pr.h5.prologue
+    # Trois saisons (1999-2002) : le second solde et le dernier match sont aux
+    # créneaux 16 et 17 de la saison d'index 2, et toutes leurs variantes
+    # ferment le livre (mesuré : 0 % de survivants). Filet : le sursis, la
+    # révision rejetée qui reviendra à la prochaine séance.
+    saisons: 3
+    fin_de_livre: geant_sursis
     questions:
       - { id: commission, poids: 1.0 }
       - { id: kop,        poids: 1.0 }
@@ -825,6 +867,12 @@ postulats:
     # Le prologue : la page deux, le bureau et son fax, le stagiaire qui tape,
     # le latéral gauche, la montre de Dembo, la première page de 23 h 58.
     prologue: ds.h6.prologue
+    # Trois saisons (2003-2006) : la nuit du sous-sol (créneaux 10 à 12 de la
+    # saison d'index 2) ferme la carrière dans toutes ses branches (mesuré : 0 %
+    # de survivants). Filet : l'association, la voie que le fax impose à qui
+    # obéit.
+    saisons: 3
+    fin_de_livre: trente_associe
     questions:                        # le fil rouge de la bible (ch. 12 § 2) : coach / scouts / président
       - { id: coach,     poids: 1.0 }
       - { id: scouts,    poids: 1.0 }
@@ -926,6 +974,13 @@ postulats:
     chantier: false
     prologue: sl.h7.prologue
     opening_arc: sl.h7.chambre_douze
+    # Quatre saisons : trois années civiles (2011, 2012, 2013), puis la coda du
+    # script — « l'hiver d'après », sl.h7.e1_gerbe au premier créneau de 2014 —
+    # où se posent « Malaise cardiaque » et « L'homme du président » (18 % des
+    # carrières, mesuré). La fermer à trois saisons emporterait ces deux fins
+    # écrites : le livre est fini à la dernière marche de la saison d'index 3.
+    saisons: 4
+    fin_de_livre: fiasco_malaise
     cast:
       aulard:     { fonction: patron,     target: 1 }     # quatre heures du matin (A4), l'Objectif ; déposé par la tutelle en 2013
       sandrine:   { fonction: temoin,     target: 1.5 }   # le tableau du prologue, 2 h 10 (A3), le cahier (R2), le dernier tableau
@@ -1044,7 +1099,7 @@ postulats:
     age: 46
     ville: Aubérive
     club: Racing Aubérive
-    rival: Olympique Lyonnet
+    rival: Olympique Tissemont
     # Jauges de la fiche : le fonds tient (65), la tribune boude un directeur
     # sportif qui parle à son oreille (40), le staff attend de voir (45), la
     # masse salariale est saine (55) — c'est elle que le modèle surveille.
@@ -1071,6 +1126,14 @@ postulats:
     # Le premier jour, de six heures dix à deux heures dix (6 scènes) :
     # content/arcs/ds/h8_script.yaml, content/cards/ds/h8_prologue.yaml.
     prologue: ds.h8.prologue
+    # Trois saisons (2024-2027) : 23 h 58 (créneau 12), le lendemain chez Léa
+    # (13), « ce qui reste » (16) et six heures dix (17) sont ceux de la saison
+    # d'index 2. Qui n'a signé ni la voix ni la ligne de 2017 (7 % des
+    # carrières) n'a aucune fin du livre sous la main : il finissait au burn-out
+    # ou au grand déballage, des saisons plus tard. Le livre se ferme sur ses
+    # cinq heures de sommeil.
+    saisons: 3
+    fin_de_livre: modele_cinq_heures
     questions:
       - { id: modele,    poids: 1.0 }
       - { id: vestiaire, poids: 1.0 }
@@ -1201,6 +1264,14 @@ postulats:
     # veillée, le cimetière, le pain, les listes de Sacha, le brassard de Noa,
     # le premier appel du ministère.
     prologue: sl.h9.prologue
+    # Quatre saisons : 2029, 2030 (le Mondial), 2031 (la minute de silence, où
+    # se lisent toutes les fins), puis l'épilogue de 2032 — quatre scènes
+    # écrites, dont la dernière carte du livre, « Le Dôme vendu pour faire de la
+    # neige », qui mène à « Le tiroir » (10 % des carrières, mesuré). La fermer
+    # à trois saisons emporterait cette année. Le livre est fini à la saison
+    # d'index 3.
+    saisons: 4
+    fin_de_livre: mondial_tiroir
     questions:
       - { id: pays,      poids: 1.0 }
       - { id: ministere, poids: 1.0 }
@@ -1343,6 +1414,13 @@ postulats:
     chantier: false
     prologue: pr.h10.prologue
     opening_arc: pr.h10.script
+    # Quatre saisons : la fiche écrit 2037-2040 en trois exercices, mais l'acte
+    # final — l'assemblée des socios, toutes ses sorties ferment le livre — est
+    # le créneau 1 de la saison d'index 3 (2040, h10_script.yaml). Aucune
+    # carrière n'y survit (mesuré : 0 %). Filet : la franchise, ce que l'assemblée
+    # vote quand personne ne s'y oppose.
+    saisons: 4
+    fin_de_livre: escalier_franchise
     questions:                        # le fil rouge : pour qui montes-tu ?
       - { id: ville,      poids: 1.0 }
       - { id: socios,     poids: 1.0 }

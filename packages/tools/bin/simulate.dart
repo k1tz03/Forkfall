@@ -1092,6 +1092,10 @@ Set<String> reachableEndings(Content content, PostulatDef post, Set<String> arcs
   // moins une fois ») impossible à passer pour tous les postulats, et masquait
   // les fins réellement pauvres.
   final out = <String>{'grand_deballage'};
+  // La fin du livre (`fin_de_livre:`) : le moteur la pose au verdict de la
+  // dernière saison (`Engine._finDeLivre`), sans `end:` en contenu.
+  final finDeLivre = post.finDeLivre;
+  if (finDeLivre != null) out.add(finDeLivre);
   final role = content.roles[post.role];
   if (role != null) {
     out.add(post.role == 'joueur' ? 'jubile' : (post.role == 'entraineur' ? 'en_retraite' : (role.retraiteFin ?? 'ta_loge')));

@@ -26,9 +26,9 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 3 749 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
+| Contenu | 3 749 cartes, 341 arcs, 118 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 157 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 172 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
@@ -50,8 +50,14 @@ Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
   de 2030) et 10 « Les Deux Téléphones » (présidente, l'escalier fermé, 2037-2040) — ces
   trois derniers repris et finis par un second auteur, sur la branche de leur prédécesseur
   arrêté. **Les dix sont livrés** ; aucun postulat n'est plus `chantier`, et chaque livre
-  finit ses carrières sur ses propres fins (80 à 97 % selon le livre, le reste à la police,
-  au grand déballage ou à la blessure).
+  finit ses carrières sur ses propres fins (63 à 99 % selon le livre, le reste à la police,
+  au grand déballage ou à la blessure). **Un livre se ferme** : son postulat déclare `saisons`
+  (3, ou 4 pour les livres 7, 9 et 10) et `fin_de_livre` ; au Bilan de la dernière saison, une
+  carrière que rien n'a arrêtée finit sur cette fin (`Engine._finDeLivre`, sans tirage), au lieu
+  de courir dans le contenu générique (21 à 29 % des carrières des livres 2, 3 et 4 le faisaient).
+  Quatre fins de clôture ont été écrites pour cela (`interim_carte_postale`, `pepite_fin_de_poste`,
+  `fdc_quatorze_mai`, `modele_cinq_heures`). Les fins des longues carrières (la retraite, la
+  statue…) ne s'atteignent plus dans les livres.
 - **Un même prénom, deux personnes** : la Sacha du livre 4 (six ans en 1990) et celle du
   livre 9 (la fille de la sélectionneuse, vingt-sept ans en 2029) ont deux fiches (`sacha`,
   `sacha_fille`). Quand un livre réutilise un visage commun, l'étiquette de la fiche est
@@ -127,7 +133,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 157 tests
+cd packages/core && dart test                    # 172 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -389,7 +395,9 @@ et la ville se lisent aussi par lots — `content/endings/<lot>.yaml` (et
 à vue, sans toucher à son fichier), `content/unes/<lot>.yaml`, `content/setpieces/<lot>.yaml`
 (des variantes rangées avant le secours, jamais un secours), `content/ville/<lot>.yaml`
 (`paroles`, `missions`, `objets`, `presences`, `rencontres`). Un postulat peut imposer son
-`club`, sa `ville` et son `rival` (cosmétiques, posés après les tirages). Les dix histoires
+`club`, sa `ville` et son `rival` (cosmétiques, posés après les tirages), son `objective:` de
+première saison (sans lui, l'objectif se tire), et sa longueur : `saisons` et `fin_de_livre`
+vont ensemble (`build_content` refuse l'un sans l'autre ; la fin compte comme une porte). Les dix histoires
 de lancement (`docs/histoires/00_les_dix_histoires.md`) ont leurs outils : le tag
 `intermede` (une carte à part, plus sombre, sans locuteur), la ligne d'ordre selon son
 support (`fax`, `repondeur`, `portable`, `oreillette`, `telephone`), et `lieu: ailleurs`

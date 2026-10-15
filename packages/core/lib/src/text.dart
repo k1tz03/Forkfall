@@ -84,7 +84,7 @@ String formatText(
 
 /// L'article devant un nom de club : « de Racing Aubérive » → « du Racing
 /// Aubérive », « d'Olympique Valdorne » → « de l'Olympique Valdorne », « à
-/// Stade Lyonnet » → « au Stade Lyonnet ». Les noms tirés (`club_prefixes` :
+/// Stade Tissemont » → « au Stade Tissemont ». Les noms tirés (`club_prefixes` :
 /// US, AS, FC, Olympique, Racing, Stade, Sporting, Union, Étoile) se disent
 /// avec leur article ; le gabarit, lui, écrit « de {club} » sans le savoir.
 String articlesDeClub(String texte, Iterable<String> clubs) {

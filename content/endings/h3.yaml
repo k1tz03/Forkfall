@@ -12,6 +12,15 @@
 # Et des lignes ajoutées à trois fins communes : la garde à vue (l'enveloppe ouverte
 # au contrôle de la départementale, ou la boîte posée sur la table par la brigade),
 # les croisés (la boîte de Steph gardée jusqu'au bout), sans club.
+#
+# Et la fin du livre (`fin_de_livre:` de postulats.yaml, `Engine._finDeLivre`) :
+#   pepite_fin_de_poste la sirène sans fin — la porte est le verdict de la dernière
+#                       saison. Qui est sorti sous la sirène (« Je sors » aux cartes de
+#                       Seize heures qui ne ferment rien), ou a fini debout sans que
+#                       rien l'ait porté à une fin, n'a aucune des quatre ci-dessus ;
+#                       il passait à la saison d'épilogue (le gamin d'après, la mère de
+#                       Lian) puis au générique, jusqu'à vingt-deux saisons. Le livre se
+#                       ferme sur l'heure du dernier match.
 endings:
   - id: pepite_sirene
     cause: choix
@@ -52,6 +61,17 @@ endings:
     epitaph_plus:
       - { when: "flag('h3_studio_fardelli')", text: "La mère de {nom} dort toujours au-dessus du Terminus. Le loyer est payé ; elle ne sait pas par qui, et ne demande plus." }
       - { when: "flag('h3_match_vendu')", text: "À la trente-huitième minute, seul devant le but vide, {nom} avait tiré à côté. La Gazette avait revu l'action six fois." }
+
+  # La fin du livre : la porte est le verdict de la dernière saison, pas une carte.
+  - id: pepite_fin_de_poste
+    cause: livre
+    rarity: commune
+    golden: false
+    title: "Fin de poste"
+    epitaph: "À la soixante-dixième minute du dernier match, le genou de {prenom} {nom} ne répondait plus, et la sirène de la Tréfilerie a sonné à seize heures pile, longue, comme pour la fin d'un poste. L'usine n'avait plus d'ouvriers depuis deux hivers. Fardelli n'a pas appelé ce soir-là ; il appelle toujours le lendemain."
+    epitaph_plus:
+      - { when: "flag('h3_sorti')",        text: "{nom} est sorti{pg, select, f{e} other{}} sous la sirène. Le banc lui a ouvert une couverture, et la sirène s'est arrêtée quand {nom} s'est assis{pg, select, f{e} other{}}, comme si elle l'avait attendu." }
+      - { when: "flag('h3_fini_debout')",  text: "{nom} a fini sur une jambe, vingt minutes, la sirène tout du long. Au coup de sifflet la tribune était debout, et ceux de l'usine regardaient leur montre, par habitude." }
 
 # Les lignes du livre sous des fins communes (le `when` lit le drapeau d'histoire).
 epitaph_plus_ajouts:

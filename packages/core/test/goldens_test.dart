@@ -151,6 +151,28 @@
 ///   carrières figées racontent la même chose (même fin, mêmes cartes, même
 ///   hachage des ids servis). Seule bouge l'empreinte du casting : sept visages
 ///   nouveaux entrent dans l'état de chaque carrière. `--goldens --write`.
+/// · **Les correctifs du moteur** (lot « moteur-correctifs », 15 octobre 2026).
+///   Deux causes, voulues. (a) **La fin du livre** : chaque postulat déclare
+///   sa longueur et sa fin (`saisons:`, `fin_de_livre:`), et au verdict de la
+///   dernière saison une carrière encore en vie prend la fin du livre
+///   (`Engine._finDeLivre`). Les carrières des livres 2, 3 et 4 qui couraient
+///   au-delà de leurs trois saisons — dans le générique, jusqu'à vingt-deux
+///   saisons, ou passées au banc de la réserve par le Carrefour — finissent
+///   désormais à leur verdict de la saison d'index 2, sur une fin neuve
+///   (`interim_carte_postale`, `pepite_fin_de_poste`, `fdc_quatorze_mai`) :
+///   leurs swipes figés ne racontaient plus ces carrières. (b) **Le pool de
+///   noms** : six entrées du pool de villes — cinq trop proches d'un club
+///   réel (ou de la forme française d'un club étranger) une fois préfixées,
+///   une qui n'était pas une ville — deviennent Tissemont, Chauderne,
+///   Halvenne, Montelvane, Brévillac et Crevelaine, aux mêmes rangs : le
+///   tirage ne bouge pas, mais les noms de club, de ville et de rival de
+///   l'état changent, donc l'empreinte des vingt carrières. Ne déplacent
+///   aucun golden : l'objectif de la première saison (les livres 1 à 4, les
+///   seuls figés ici, déclaraient déjà ce qu'ils tiraient, ou ne déclaraient
+///   rien) et l'échelle de la rentrée générique (`season >= 3` pour la marche
+///   « quatrième », pas 4 : aucune des vingt carrières n'atteint plus la
+///   quatrième saison). Codes **retirés à neuf** (`--goldens --write
+///   --recode`), et les vingt atteignent une fin.
 library;
 
 import 'dart:io';

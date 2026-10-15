@@ -142,7 +142,7 @@ Content _synth({bool withPrologue = true, int scenes = 5}) {
       'prenoms_m': ['Jean'],
       'noms': ['Durand'],
       'club_prefixes': ['US', 'AS', 'FC', 'Olympique', 'Racing', 'Stade', 'Sporting', 'Union', 'Étoile'],
-      'villes': ['Valmont', 'Bellac', 'Nerville', 'Portclair', 'Roquemont', 'Castérac', 'Aubérive', 'Valdorne'],
+      'villes': ['Valmont', 'Bellac', 'Crevelaine', 'Portclair', 'Roquemont', 'Castérac', 'Aubérive', 'Valdorne'],
     },
     'divisions': const {},
     'characters': [
@@ -396,7 +396,7 @@ void main() {
       List<StandingRow> table(int rank) => buildStandings(
             seed: 5, postulatId: 'test', season: 0, division: 1, blocks: 6, rank: rank, pts: 60,
             monClub: 'FC Valmont', rivalClub: 'AS Bellac',
-            prefixes: const ['US', 'AS', 'FC'], villes: const ['Valmont', 'Bellac', 'Nerville', 'Portclair', 'Roquemont', 'Castérac'],
+            prefixes: const ['US', 'AS', 'FC'], villes: const ['Valmont', 'Bellac', 'Crevelaine', 'Portclair', 'Roquemont', 'Castérac'],
           );
       expect(standingsWindow(table(1)).map((r) => r.rang), [1, 2, 3, 4, 5, 6]);
       expect(standingsWindow(table(18)).map((r) => r.rang), [13, 14, 15, 16, 17, 18]);

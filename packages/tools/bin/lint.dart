@@ -13,7 +13,9 @@ import 'package:fusible_core/fusible_core.dart' show kKnownCalls, kKnownPathPref
 import 'package:yaml/yaml.dart';
 
 /// Valeurs de rendu du lint pour la longueur des manchettes (spec variété
-/// §2.4) : un nom de 16 lettres, une ville de 12, le club le plus long.
+/// §2.4) : un nom de 16 lettres, la plus longue ville du pool (`villes` de
+/// content/names/fr.yaml : Villebranle, 11 lettres), le club le plus long
+/// (le plus long préfixe devant elle).
 const Map<String, String> kSampleVars = {
   'NOM': 'BRÉHAUT-LEMOINE',
   'nom': 'Bréhaut-Lemoine',
@@ -24,12 +26,12 @@ const Map<String, String> kSampleVars = {
   'toi': 'monsieur Bréhaut-Lemoine',
   'Toi': 'Monsieur Bréhaut-Lemoine',
   'numero': '10',
-  'VILLE': 'SAINT-ÉTOILE',
-  'ville': 'Saint-Étoile',
-  'CLUB': 'OLYMPIQUE SAINT-ÉTOILE',
-  'club': 'Olympique Saint-Étoile',
-  'clubShort': 'Saint-Étoile',
-  'rival': 'Sporting Valentienne',
+  'VILLE': 'VILLEBRANLE',
+  'ville': 'Villebranle',
+  'CLUB': 'OLYMPIQUE VILLEBRANLE',
+  'club': 'Olympique Villebranle',
+  'clubShort': 'Villebranle',
+  'rival': 'Sporting Villebranle',
   'president': 'Aulard',
   'capitaine': 'Bréhaut',
   'coach': 'Jean-Pierre Vasseur',
@@ -915,6 +917,9 @@ void main() {
   //   * la jauge à 0 / 100, déclarée dans roles.yaml (`cause: jauge`) ;
   //   * l'effet `end:` d'un choix, d'une variante de set-piece ou d'une étape
   //     d'arc (toute autre `cause:` — choix, chaîne, objectif, destin, âge…) ;
+  //     la fin d'un livre (`fin_de_livre:` d'un postulat, que
+  //     `Engine._finDeLivre` pose au verdict de sa dernière saison,
+  //     `cause: livre`) compte comme un `end:` : c'est la porte de son livre ;
   //   * le moteur lui-même, en Dart : `grand_deballage` (parole ≤ −5),
   //     `jubile` (joueur de 38 ans), `en_retraite` (entraîneur de 65 ans),
   //     `co_banqueroute` (la ruine, que la ville déclare : `Engine.banqueroute`)
@@ -928,6 +933,9 @@ void main() {
     if (node is Map) {
       final e = node['end'];
       if (e is String) endsTargeted.add(e);
+      // la fin du livre d'un postulat : sa porte est le verdict de sa dernière saison
+      final f = node['fin_de_livre'];
+      if (f is String) endsTargeted.add(f);
       for (final v in node.values) {
         collectEnds(v);
       }
