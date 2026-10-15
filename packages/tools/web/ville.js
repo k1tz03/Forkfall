@@ -2262,6 +2262,10 @@
   function majMatch(dt, ts) {
     var M = MATCH;
     if (!M) return;
+    // le samedi en direct (ville_direct.js) : l'anneau, les buts ; une décision ouverte ralentit tout
+    if (M.direct) directTic();
+    var dtCam = dt;
+    if (M.gel) dt *= 0.25;
     M.t += dt;
     if (M.liesse > 0) M.liesse -= dt;
     var leg = $("villeMatch").querySelector(".v-match-legende");
@@ -2282,12 +2286,12 @@
         var avant = M.minute;
         M.minute += vit * dt;
         if (avant < 45 && M.minute >= 45 && (!e || e.m > 45)) { M.minute = 45; M.phase = "mi"; M.pause = 1.8; legende("Mi-temps · " + M.score[0] + "-" + M.score[1] + ".", 1800); }
-        else if (e && M.minute >= e.m) { M.minute = e.m; M.prochain++; lancerAction(e); }
+        else if (e && M.minute >= e.m) { M.minute = e.m; M.prochain++; if (e.t === "decision") directMoment(e); else lancerAction(e); }
         else if (M.minute >= 90) { finirMatch(); return; }
         majTableau();
       }
     }
-    if (M.phase === "fin") { cameraMatch(dt); return; }
+    if (M.phase === "fin") { cameraMatch(dtCam); return; }
     // le ballon
     var B = M.ballon;
     if (B.vol) {
@@ -2361,11 +2365,13 @@
         j.pas = ph === 1 ? 1 : ph === 3 ? -1 : 0;
       } else j.pas = 0;
     });
-    cameraMatch(dt);
+    cameraMatch(dtCam);
   }
   function cameraMatch(dt) {
-    var M = MATCH, B = M.ballon, c = aPied(clamp(B.a, 0.15, 0.85), clamp(B.b, 0.1, 0.9)), p = versImage(c[0], c[1], ZSOL);
-    var ty = p[1] - UI.decal / k;
+    // `M.cible` : une décision du direct regarde le banc, la Nord, la loge ou le joueur
+    var M = MATCH, B = M.ballon, c = aPied(clamp(B.a, 0.15, 0.85), clamp(B.b, 0.1, 0.9)), p = M.cible ? versImage(M.cible[0], M.cible[1], M.cible[2]) : versImage(c[0], c[1], ZSOL);
+    // (au-dessus de la carte de décision, à mi-hauteur entre elle et le tableau : `cibleSy`)
+    var ty = M.cible && M.cibleSy ? p[1] + (window.innerHeight / 2 - M.cibleSy) / k : p[1] - UI.decal / k;
     cam.x += (p[0] - cam.x) * Math.min(1, dt * 1.8); cam.y += (ty - cam.y) * Math.min(1, dt * 1.8);
   }
   // les vingt-deux, l'arbitre, le ballon : ajoutés aux gens que la ville dessine
@@ -2374,7 +2380,7 @@
     if (!M) return;
     M.joueurs.concat([M.arbitre]).forEach(function (j) {
       var w = aPied(j.a, j.b);
-      gens.push({ sp: j.sp, x: w[0], y: w[1], miroir: j.miroir, pas: j.pas, pal: j.pal, silhouette: !!j.heros, match: true });
+      gens.push({ sp: j.sp, x: w[0], y: w[1], miroir: j.miroir, pas: j.pas, pal: j.pal, silhouette: !!j.heros, match: true, emote: j.emote });
     });
     var B = M.ballon, wb = aPied(B.a, B.b);
     gens.push({ ballon: true, x: wb[0], y: wb[1], z: B.z });
@@ -3262,7 +3268,8 @@
       '<div class="fin" role="dialog" aria-label="Le résultat" hidden><span class="v-match-sur">Fin du match</span><div class="v-match-score"><b class="d"></b><span class="s"></span><b class="e"></b></div><p class="v-match-sifflet"></p><ul></ul>' +
       '<div class="v-match-bloc"></div><p class="v-match-pts"></p><button type="button" class="v-match-quitter">Quitter le stade</button></div>';
     document.body.appendChild(vm);
-    vm.querySelector(".v-match-passer").addEventListener("click", function () { if (MATCH && MATCH.phase !== "fin") finirMatch(); });
+    // (le samedi en direct : « Passer » mène d'abord à la prochaine décision)
+    vm.querySelector(".v-match-passer").addEventListener("click", function () { if (MATCH && MATCH.phase !== "fin" && !(MATCH.direct && directPasser())) finirMatch(); });
     vm.querySelector(".v-match-quitter").addEventListener("click", quitterStade);
     // la bulle de celui qui te parle (au-dessus de sa tête ; un geste la ferme)
     var bu = document.createElement("div"); bu.className = "v-bulle"; bu.id = "villeBulle"; bu.hidden = true; bu.setAttribute("role", "status");
@@ -3545,6 +3552,9 @@
       if (pret) go(); else enAttente = go;
     },
     carteVisible: function () { return carteOn; },
+    // le samedi en direct (ville_direct.js) : la coquille propose le choix de posture du
+    // samedi ; true, la ville le garde et joue le match (le moteur l'aura avec les décisions)
+    retenir: function (droite) { return typeof directRetenir === "function" && directRetenir(droite); },
     // pour les essais : ce que le moteur retient de la ville vivante
     _vivant: function () {
       var v = vue || {}, out = { rel: {}, vars: {}, flags: (v.flags || []).filter(function (f) { return /^(rep|tuyau|service|dette)_/.test(f); }) };
@@ -3639,7 +3649,7 @@
       return { francs: S.francs, mission: S.mission, biens: S.biens, lieu: S.lieu, rdv: rdv, match: MATCH ? { phase: MATCH.phase, minute: Math.round(MATCH.minute), score: MATCH.score.slice(), lignes: MATCH.lignes.slice(), adv: MATCH.adv, ev: MATCH.ev.map(function (e) { return e.m + e.t + (e.dit ? "*" : ""); }) } : null, panneau: S.panneau };
     },
     // ce que la musique doit savoir : le soir et la nuit, le stade, une carte à l'écran
-    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE, musique: CINE ? CINE.musique || null : null }; },
+    moment: function () { return { nuit: !!S && S.tranche >= 3, match: !!MATCH, carte: carteOn, actif: actif, cine: !!CINE, musique: CINE ? CINE.musique || null : (typeof directMusique === "function" ? directMusique() : null) }; },
     _toucher: function (uid) {
       var g = passants.filter(function (q) { return q.uid === uid; })[0];
       if (!g) Object.keys(acteurs).forEach(function (id) { if (acteurs[id].uid === uid) g = acteurs[id]; });

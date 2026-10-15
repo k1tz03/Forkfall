@@ -13,6 +13,7 @@ import 'package:fusible_core/fusible_core.dart' show fnv1a32, foldAccents, kLieu
 import 'package:yaml/yaml.dart';
 
 import 'src/condition_parser.dart';
+import 'src/match_direct_build.dart';
 
 // L'album d'Aubérive (content/ville/album.yaml) : sa validation vit dans son fichier.
 part 'src/album.dart';
@@ -1793,7 +1794,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       // les listes s'ajoutent (`presences` : qui l'on croise où, et quand) ;
       // les tables se complètent (`rencontres` : où un personnage attend), sans
       // écraser ce qui est déjà écrit
-      for (final cle in ['lieux', 'paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux', 'gens']) {
+      for (final cle in ['lieux', 'paroles', 'missions', 'objets', 'presences', 'lieux_variantes', 'scenes', 'activites', 'cinematiques', 'conversations', 'tableaux', 'gens', 'match_direct']) {
         final l = doc[cle];
         if (l is List) (m[cle] = [...((m[cle] as List?) ?? const []), ...l]);
       }
@@ -1846,7 +1847,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
   final lieux = <Map<String, dynamic>>[];
   final cles = <String>{};
   // les jours de la semaine où une chose de la ville a lieu (`jours: [mer, sam, dim]`)
-  List<String> joursDe(Map e, String where) {
+  List<String> joursDe(Map<dynamic, dynamic> e, String where) {
     final j = _strList(e['jours']);
     for (final d in j) {
       if (!jours.contains(d)) errors.add('$where: jour « $d » inconnu (${jours.join(' | ')})');
@@ -2941,6 +2942,14 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (!poses.contains(drapeau)) errors.add('ville.yaml/loin/$drapeau: aucune carte ne pose ce drapeau');
     loin[drapeau] = {'decor': decor, if (v['retour'] != null) 'retour': v['retour'].toString()};
   });
+  // le samedi en direct : les décisions du bord du terrain (src/match_direct_build.dart)
+  final matchDirect = compileMatchDirect(errors, m['match_direct'],
+      roles: roleById.keys.toSet(),
+      jaugesParRole: {
+        for (final e in roleById.entries) e.key: {for (final g in (e.value['gauges'] as List? ?? const [])) (g as Map)['id'].toString()},
+      },
+      personnages: characterIds,
+      drapeaux: {for (final f in ((_loadYaml('flags.yaml') as Map?)?['flags'] as List? ?? const [])) f.toString()});
   return {
     'lieux': lieux,
     'cartes_lieux': cartesLieux,
@@ -2964,6 +2973,7 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (gensVille.isNotEmpty) 'gens': gensVille,
     if (gensEffets.isNotEmpty) 'gens_effets': gensEffets,
     if (vivante.isNotEmpty) 'vivante': vivante,
+    if (matchDirect.isNotEmpty) 'match_direct': matchDirect,
   };
 }
 

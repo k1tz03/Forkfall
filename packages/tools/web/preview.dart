@@ -376,11 +376,29 @@ void main() {
             postulat: postulat.toDartInt, prenom: opt(prenom), nom: opt(nom), genre: opt(genre), ville: opt(ville), club: opt(club));
         return _view().toJS;
       }).toJS);
+  // `direct` (facultatif) : le samedi en direct (docs/histoires/samedi_direct.md) —
+  // les décisions prises au bord du terrain, `{"d": [{"id", "c": "g"|"d", "t"}]}`,
+  // rendues avec le choix de posture. Sans lui, le choix part comme avant.
   globalContext.setProperty(
       'fusibleChoose'.toJS,
-      ((JSBoolean right) {
-        _state = _engine.choose(_state!, right.toDart);
+      ((JSBoolean right, [JSString? direct]) {
+        _state = _engine.choose(_state!, right.toDart, direct: MatchDirect.lire(direct?.toDart));
         return _view().toJS;
+      }).toJS);
+  // LE SAMEDI EN DIRECT : le script du match que la ville met en scène pour la
+  // carte de match en attente, si la posture est `droite` (pur : l'état ne bouge
+  // pas), et la trace du dernier samedi joué en direct (sans la lettre « sans
+  // décision », que la ville n'a pas à connaître).
+  globalContext.setProperty(
+      'fusibleDirect'.toJS,
+      ((JSBoolean droite) {
+        final s = _state;
+        if (s == null) return 'null'.toJS;
+        final sc = _engine.samediDirect(s, droite.toDart);
+        return jsonEncode({
+          'scenario': sc?.toJsonVille(),
+          'dernier': s.direct.isEmpty ? null : (s.direct.last.toJson()..remove('base')),
+        }).toJS;
       }).toJS);
   // LA VILLE — une activité entre deux cartes (`Engine.activite` : les jauges,
   // le lien, l'habitude, aucun tirage ; `sansJauges` : la ville l'a déjà comptée

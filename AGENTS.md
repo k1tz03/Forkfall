@@ -28,7 +28,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 3 749 cartes, 341 arcs, 114 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 145 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 157 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
@@ -127,7 +127,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 145 tests
+cd packages/core && dart test                    # 157 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -182,6 +182,18 @@ Ce que la ville porte en plus des cartes :
   la mi-temps, le résultat, et le score peint sur le mur est jusqu'au samedi suivant. Le moteur
   joue un bloc de six journées d'un tirage ; la ville met en scène la dernière, et son score se
   tire de la lettre (V, N, D) pour l'écran seulement.
+- **Le samedi en direct** (`docs/histoires/samedi_direct.md`, `content/ville/match_direct.yaml`,
+  `ville_direct.js`, `match_direct.dart`) : à la Rive, la ville garde le choix de posture et joue le
+  match ; une à trois fois (une au premier samedi, deux ou trois au derby, trois à la dernière
+  journée), le jeu s'arrête : la minute, le score, une scène, deux gestes, cinq secondes (dix au
+  toucher ou en mouvement réduit ; sans geste, le passif). Un seul appel au moteur
+  (`fusibleChoose(droite, direct)`) : le script (`Engine.samediDirect`, pur) se refait à l'identique,
+  les mêmes tirages résolvent le bloc, seules les bornes de la dernière journée bougent (±6 points par
+  geste, ±10 sur la victoire et ±8 sur le nul par match) ; la trace va dans `GameState.direct` (trente
+  au plus). Sans décision, rien ne change (goldens, `simulate`) ; le Code de Carrière ne rejoue pas les
+  décisions. Soixante décisions par rôle, situation, moment et époque ; la semaine en ouvre (le
+  vestiaire, un lien de deux crans) ; `build_content` vérifie qu'aucun samedi ne reste muet. Ni la
+  Coupe, ni le Grand Match, ni le Mondial du livre 9 n'ont de direct.
 - **Le domicile** (`ville.yaml` `domiciles`) : par rôle (le sélectionneur à l'hôtel de la Rive),
   et une histoire peut en décider autrement par un drapeau.
 - **Loin d'Aubérive** (`ville.yaml` `loin`) : un drapeau d'histoire dit qu'on est parti (le
