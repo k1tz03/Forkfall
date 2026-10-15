@@ -204,6 +204,15 @@ Ce que la ville porte en plus des cartes :
   décisions. Soixante décisions par rôle, situation, moment et époque ; la semaine en ouvre (le
   vestiaire, un lien de deux crans) ; `build_content` vérifie qu'aucun samedi ne reste muet. Ni la
   Coupe, ni le Grand Match, ni le Mondial du livre 9 n'ont de direct.
+- **Les échos** (`preview_echos.js`, banc `mesure_echos.js`) : en mode histoire les jauges se taisent ;
+  deux choses rares montrent ce que les choix ont fait. *La ligne* : après une réponse d'enjeu, une
+  phrase sans chiffre (« Gégé s'en souviendra. », « Ça reviendra. », « Ça se saura en ville. »), posée
+  dans la rangée du menu sur une carte, au-dessus du message du récit sur le plan. *Le ruban* : plus
+  tard, sur la carte qui lit ce que la réponse a posé (sablier `schedule`/`next`, variante d'étape,
+  `when`, ouverture d'intrigue), « ↩ Parce que tu as dit « … » ». Calculé sur les vues du moteur et
+  le contenu (condition évaluée à trois valeurs : rien n'est attribué à tort), mémoire par carrière
+  (`fusible.echos.v1:<livre>:<graine>`, bornée, effacée à la fin). Rythme : ≈ 3 lignes et ≈ 1 ruban
+  par quart d'heure (`node packages/tools/web/mesure_echos.js --engine <engine.js> --assert`).
 - **Le domicile** (`ville.yaml` `domiciles`) : par rôle (le sélectionneur à l'hôtel de la Rive),
   et une histoire peut en décider autrement par un drapeau.
 - **Loin d'Aubérive** (`ville.yaml` `loin`) : un drapeau d'histoire dit qu'on est parti (le

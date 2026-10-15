@@ -41,7 +41,7 @@ const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'v
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js'];
+const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js'];
 
 // Les noms qu'un fichier déclare au premier niveau d'une fermeture (deux espaces) :
 // un module partage la fermeture, il ne redéclare jamais un nom de son hôte ni d'un
@@ -148,6 +148,8 @@ function main() {
   {
     const repere = '/*__PREVIEW_MODULES__*/';
     if (tpl.indexOf(repere) < 0) throw new Error('gabarit : repère /*__PREVIEW_MODULES__*/ absent');
+    // il est remplacé partout : cité dans un commentaire, il y collerait les modules (SyntaxError au chargement)
+    if (tpl.split(repere).length !== 2) throw new Error('gabarit : le repère /*__PREVIEW_MODULES__*/ ne doit apparaître qu\'une fois');
     const corps = tpl.slice(tpl.lastIndexOf('(function () {'));
     const vus = new Map([...declares(corps)].map((n) => [n, 'preview_template.html']));
     const srcs = PREVIEW_MODULES.map((f) => {
