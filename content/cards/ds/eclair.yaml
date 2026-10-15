@@ -1,0 +1,392 @@
+# LE FUSIBLE — le mode éclair, la directrice sportive / le directeur sportif (docs/histoires/mode_eclair.md).
+#
+# Le rôle `ds` n'avait que des livres (6 et 8) et ses alarmes : une carrière éclair y mourait de
+# famine. Ces cartes de routine s'ouvrent au seul drapeau `eclair` : aucune carrière de livre ne
+# les voit.
+#
+# Jauges du rôle (roles.yaml) : vestiaire = LE STAFF (le coach, l'adjoint, le médecin, le
+# capitaine), tribunes = LES TRIBUNES, direction = LE PRÉSIDENT, caisse = LA MASSE SALARIALE (la jauge
+# fragile : la marge pour signer). Le mercato, ses agents, ses clauses, ses genoux.
+# Époque : 1999 à 2044 ; les faces d'une époque (Fardelli avant 2020, Solvang après) portent leur
+# borne dans le `when`.
+# Drapeaux posés (déclarés dans flags.yaml) et leurs lecteurs : ec_neveu (ec.ds.neveu_titulaire),
+# ec_option (ec.ds.option_tombe).
+cards:
+  - id: ec.ds.agent_attaquant
+    roles: [ds]
+    arc: agents
+    tags: [agents, mercato, vestiaire]
+    speaker: fardelli
+    when: "flag('eclair') && (year < 2020)"
+    cooldown: 26
+    text: "Fardelli t'attend à la réception avec un attaquant de vingt-trois ans, onze buts en vidéo, une commission écrite au crayon dans la marge. « Ce soir, ou c'est Valdorne qui l'a. »"
+    left: {label: "Je le prends à l'essai", effects: {vestiaire: "+", caisse: "--"}, answer: "Il signe un essai de trois semaines, la commission cette fois au stylo. Fardelli ne regarde pas le papier, il regarde la porte."}
+    right: {label: "Qu'il aille à Valdorne", effects: {caisse: "+", tribunes: "-"}, answer: "Fardelli range la vidéo sans se vexer. Trois semaines plus tard, l'attaquant marque un doublé contre vous."}
+
+  - id: ec.ds.agente_ailier
+    roles: [ds]
+    arc: agents
+    tags: [agents, mercato, tribunes]
+    speaker: solvang
+    when: "flag('eclair') && (year >= 2020)"
+    cooldown: 26
+    text: "Solvang pose sa tablette face à toi : un ailier de dix-neuf ans, huit passes décisives, une clause à trois millions. « Deux autres clubs sont au téléphone. Vous avez jusqu'à demain midi. »"
+    left: {label: "Je lance la procédure", effects: {tribunes: "+", caisse: "--"}, answer: "Tu appelles le coach avant midi. Solvang attend au salon, un thé froid devant elle, avec la patience de celles qui comptent."}
+    right: {label: "Qu'il aille ailleurs", effects: {caisse: "+", vestiaire: "-"}, answer: "Elle remballe sa tablette sans un mot de trop. À midi, l'ailier est chez Valdorne, maillot à la main."}
+
+  - id: ec.ds.defenseur_genou
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, risk:caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le coach réclame un défenseur central avant vendredi. Le recruteur n'a qu'un nom sur sa liste, un joueur de trente-deux ans au genou fragile. « Les autres sont trop chers, ou trop verts. »"
+    left: {label: "Je signe le genou", effects: {vestiaire: "+", caisse: "-"}, answer: "Le joueur arrive avec un sac de glace et un sourire modeste. Le coach appelle ça de l'expérience, et ne dit rien du genou."}
+    right: {label: "On attend l'hiver", effects: {vestiaire: "-", caisse: "+"}, answer: "Le coach hoche la tête. À l'entraînement, il met un gamin de dix-huit ans dans l'axe, et ne le regarde pas jouer."}
+
+  - id: ec.ds.gamin_seize_ans
+    roles: [ds]
+    arc: formation
+    tags: [formation, mercato, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le recruteur ramène un gamin de seize ans, le fils du boulanger de Crevelaine : pas un match officiel, un geste que tu as rembobiné vingt fois. Le centre de Valdorne l'a déjà invité."
+    left: {label: "Je le prends au centre", effects: {vestiaire: "+", caisse: "-"}, answer: "Le boulanger signe d'une main farinée. Le gamin garde sa casquette dans le bureau, par politesse, jusqu'à ce qu'on le lui dise."}
+    right: {label: "On ne signe pas d'inconnus", effects: {caisse: "+", tribunes: "-"}, answer: "Le recruteur plie sa fiche. Deux ans plus tard, le gamin dribble trois joueurs devant ta tribune, pour Valdorne."}
+
+  - id: ec.ds.neveu_president
+    roles: [ds]
+    arc: direction
+    tags: [direction, mercato, vestiaire, rescue:direction]
+    when: "flag('eclair') && (!flag('ec_neveu'))"
+    cooldown: 50
+    once: true
+    text: "Le président glisse le nom de son neveu entre deux sujets : milieu de terrain, vingt-quatre ans, « un vrai potentiel ». Il ne demande rien. Il dit qu'il a déjà prévenu la famille."
+    left: {label: "Je le signe", effects: {direction: "++", vestiaire: "--", set: [ec_neveu]}, answer: "Le neveu arrive avec un sac de marque et le sourire de celui qui n'a jamais attendu. Le coach compte les places sur le banc."}
+    right: {label: "Essai comme les autres", effects: {vestiaire: "+", direction: "--"}, answer: "Le président sourit en refermant la porte, le sourire de ceux qui prennent des notes. Le neveu passera l'essai ; la facture, plus tard."}
+
+  - id: ec.ds.neveu_titulaire
+    roles: [ds]
+    arc: direction
+    tags: [direction, vestiaire, tribunes]
+    when: "flag('eclair') && (flag('ec_neveu'))"
+    cooldown: 40
+    once: true
+    text: "Le coach te trouve dans le couloir, la feuille de match en main : « Le neveu ne joue pas. Je ne le mettrai pas. Dis au président ce que tu veux, mais pas à moi. »"
+    left: {label: "Je parle au président", effects: {direction: "-", vestiaire: "+"}, answer: "Tu montes l'escalier. Le président t'écoute avec patience, puis te ressert du café, ce qui n'arrive jamais quand il est content."}
+    right: {label: "Dix minutes pour le neveu", effects: {vestiaire: "-", direction: "+"}, answer: "Le neveu entre à la soixantième, perd deux ballons, et reçoit une accolade de la tribune d'honneur. Le coach ne te parle plus de la semaine."}
+
+  - id: ec.ds.pret_option
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, caisse, vestiaire, rescue:caisse]
+    when: "flag('eclair') && (!flag('ec_option') && gauges.caisse < 60)"
+    cooldown: 26
+    text: "Portclair propose un prêt avec option d'achat obligatoire : six mois de salaire à sa charge, puis dix millions dès le douzième match du joueur. Le texte est clair ; la clause est en page quatre."
+    left: {label: "J'accepte le prêt", effects: {caisse: "++", vestiaire: "-", set: [ec_option]}, answer: "Le joueur arrive avec un sac et une photo de sa fille sur le téléphone. Le douzième match n'est que dans trois mois."}
+    right: {label: "Je refuse l'option", effects: {vestiaire: "+", caisse: "-"}, answer: "Le club de Portclair renvoie un second texte, sans clause, avec un loyer plus élevé. Le coach te regarde lire."}
+
+  - id: ec.ds.option_tombe
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, vestiaire, tribunes]
+    when: "flag('eclair') && (flag('ec_option'))"
+    cooldown: 60
+    once: true
+    text: "Le douzième match est joué : l'option d'achat obligatoire se déclenche. Le directeur financier t'apporte la facture, dix millions, avec la mine de quelqu'un qui n'a rien signé."
+    left: {label: "Je paie, il est utile", effects: {caisse: "--", tribunes: "+"}, answer: "Le virement part avant la fermeture de la banque. Dans le tunnel, le joueur marche comme quelqu'un qu'on a acheté."}
+    right: {label: "Je le revends en janvier", effects: {caisse: "+", vestiaire: "--"}, answer: "Tu cherches un acheteur dès lundi. Le joueur l'apprend avant la fin de la semaine, et le dit à tout le monde."}
+
+  - id: ec.ds.capitaine_prolonge
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le capitaine a trente-quatre ans, un contrat qui s'arrête en juin et le respect de tout le monde. Son agent propose deux ans de plus, au même prix. Le coach préfère un jeune."
+    left: {label: "Je prolonge de deux ans", effects: {vestiaire: "++", caisse: "-"}, answer: "Le capitaine signe dans le couloir, debout, comme on signe un registre d'hôtel. Le coach hoche la tête, un cran trop lentement."}
+    right: {label: "Je le libère en juin", effects: {caisse: "+", vestiaire: "--"}, answer: "Il remercie le club, par écrit. Dans le vestiaire, quelqu'un enlève son nom du casier avant la fin de la saison."}
+
+  - id: ec.ds.conflit_coach
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, tribunes, mercato]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le coach et son meilleur milieu ne s'adressent plus la parole depuis dimanche. Le joueur demande à partir, le coach demande sa tête, le vestiaire attend que tu parles le premier."
+    left: {label: "Je vends le joueur", effects: {caisse: "+", tribunes: "--"}, answer: "Le joueur signe à Valdorne en quarante-huit heures. Dans le virage, une banderole le remercie, et te rappelle."}
+    right: {label: "Je les enferme à deux", effects: {vestiaire: "+", direction: "-"}, answer: "Ils sortent de ton bureau après deux heures, sans un regard. Le président demande pourquoi on n'a pas tranché."}
+
+  - id: ec.ds.dernier_jour
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, tribunes, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Dernier jour du mercato, vingt-trois heures quarante : un agent offre son ailier à condition que tu prennes aussi son milieu de vingt ans. Le dépôt des contrats ferme à minuit."
+    left: {label: "Je prends les deux", effects: {tribunes: "+", caisse: "--"}, answer: "Les deux signent à minuit moins une. Le coach apprend le nom du milieu en lisant le communiqué."}
+    right: {label: "Je laisse passer minuit", effects: {caisse: "+", tribunes: "--"}, answer: "À minuit, le portail du dépôt se ferme. Dans la rue, un klaxon passe, et c'est tout."}
+
+  - id: ec.ds.visite_medicale
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, caisse, risk:caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le médecin du club sort de la visite avec une radio sous le bras : le genou du joueur que tu convoites est « un genou qui dit non ». Le joueur attend dans le couloir, son sac au pied."
+    left: {label: "Je signe quand même", effects: {tribunes: "+", vestiaire: "-", caisse: "-"}, answer: "Le joueur sourit de soulagement. Le médecin, lui, range la radio dans un dossier qu'il ferme à clé."}
+    right: {label: "On s'arrête là", effects: {caisse: "+", tribunes: "-"}, answer: "Le joueur ramasse son sac. Le soir, son agent appelle la presse locale, sans nommer personne."}
+
+  - id: ec.ds.plafond_masse
+    roles: [ds]
+    arc: caisse
+    tags: [caisse, vestiaire, direction, rescue:caisse]
+    when: "flag('eclair') && (gauges.caisse < 50)"
+    cooldown: 26
+    text: "Le directeur financier a reçu le courrier de la Ligue : la masse salariale dépasse l'enveloppe de deux millions. Soit tu vends avant le trente et un, soit le club paie une taxe."
+    left: {label: "Je vends un titulaire", effects: {caisse: "++", vestiaire: "--"}, answer: "Le nom part avant le trente et un, par téléphone. Le coach ne dit rien, et sort fumer dans la cour."}
+    right: {label: "On paie la taxe", effects: {caisse: "--", direction: "+"}, answer: "Le président règle la taxe d'un virement, et te remercie de n'avoir rien vendu, d'un ton qui n'est pas un remerciement."}
+
+  - id: ec.ds.augmentation_menace
+    roles: [ds]
+    arc: agents
+    tags: [agents, vestiaire, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un défenseur demande une augmentation de moitié et l'annonce devant le staff : sinon, il part libre l'été prochain. Son agent a déjà laissé fuiter le chiffre à la presse locale."
+    left: {label: "Je cède", effects: {vestiaire: "+", caisse: "--"}, answer: "Il signe sans sourire. Dans la semaine, trois autres joueurs demandent un rendez-vous, chacun avec un chiffre."}
+    right: {label: "Il partira libre", effects: {caisse: "+", tribunes: "--"}, answer: "Il joue encore six mois, correctement, avec une distance qui se voit. Le virage ne lui a rien pardonné d'avance."}
+
+  - id: ec.ds.info_agent
+    roles: [ds]
+    arc: agents
+    tags: [agents, direction, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un agent te propose une information : le prix de départ d'un joueur de Valdorne, avant les autres clubs. Il ne demande rien aujourd'hui. Il note simplement ton prénom sur son carnet."
+    left: {label: "J'écoute l'information", effects: {caisse: "+", direction: "-"}, answer: "Tu économises un million, ou tu crois. L'agent, lui, a gagné un nom, et il sait désormais où tu travailles."}
+    right: {label: "Je ne fais pas de faveurs", effects: {direction: "+", caisse: "-"}, answer: "Il referme son carnet. Le joueur coûte un million de plus, mais personne ne te doit rien."}
+
+  - id: ec.ds.coach_courtise
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, direction, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le club rival a contacté ton coach sans passer par toi. Il le sait, tu le sais, et il attend de voir qui bouge la tête le premier. Sa clause libératoire est floue."
+    left: {label: "Je prolonge le coach", effects: {vestiaire: "++", caisse: "-"}, answer: "Il signe la prolongation avec une poignée de main plus longue que d'habitude. Au rival, quelqu'un enlève sa photo du tableau."}
+    right: {label: "Qu'il parte, s'il veut", effects: {caisse: "+", vestiaire: "--"}, answer: "Il te regarde un instant sans comprendre. Dans le staff, personne ne sait plus pour qui travailler."}
+
+  - id: ec.ds.kine_budget
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le kiné en chef te remet une liste : un second kiné, un bassin de récupération, une machine à glace. Quatre joueurs reviennent trop tôt de blessure, et on ne sait plus lequel est cassé."
+    left: {label: "J'accorde le matériel", effects: {vestiaire: "++", caisse: "-"}, answer: "Le bassin arrive en trois semaines. Le kiné en chef, devant, appelle les joueurs par leur prénom, tous, en les comptant."}
+    right: {label: "Pas de budget cette année", effects: {caisse: "+", vestiaire: "-"}, answer: "Il rend la liste, sans la déchirer. Un joueur boite un peu plus que la semaine précédente, et personne n'en parle."}
+
+  - id: ec.ds.jeune_offre
+    roles: [ds]
+    arc: formation
+    tags: [formation, mercato, caisse, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un club de la capitale offre un million pour un gamin du centre, dix-sept ans, trois matches pros. Il est content, sa mère aussi. Le coach veut le garder, les ultras ne le connaissent pas encore."
+    left: {label: "Je vends le gamin", effects: {caisse: "++", vestiaire: "-"}, answer: "Il signe en short, entre deux cours. Sa mère pleure un peu, dans le couloir, et prend le chèque de la prime."}
+    right: {label: "Il reste, il jouera", effects: {vestiaire: "+", caisse: "-"}, answer: "Le coach le fait entrer dès samedi, dans un match qui ne sert à rien. Le gamin touche le ballon, et c'est tout ce qu'il voulait."}
+
+  - id: ec.ds.age_douteux
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, tribunes, direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le dossier du recruteur contient une date de naissance qui ne colle pas : le joueur a dix-neuf ans sur le papier et un visage de vingt-cinq. Son agent sourit trop, et regarde sa montre."
+    left: {label: "Je signe quand même", effects: {tribunes: "+", direction: "-"}, answer: "Le joueur signe, soulagé, et prend un mois de salaire d'avance. Quelqu'un, à la Ligue, note le numéro de son passeport."}
+    right: {label: "Je fais vérifier l'âge", effects: {direction: "+", tribunes: "-"}, answer: "La vérification dure deux semaines. Le joueur signe ailleurs, et l'agent te salue, la prochaine fois, avec beaucoup de politesse."}
+
+  - id: ec.ds.enfant_du_pays
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, tribunes, caisse, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Une pétition de douze cents noms demande le retour de l'enfant du pays, formé au centre, parti à l'étranger, trente et un ans, en fin de contrat. Le coach dit qu'il n'est plus le même."
+    left: {label: "Je le fais revenir", effects: {tribunes: "++", caisse: "-"}, answer: "Il rentre un mardi, à la gare, avec un seul sac. Une trentaine de supporters l'attendent sur le quai, sans banderole."}
+    right: {label: "On ne signe pas de nostalgie", effects: {caisse: "+", tribunes: "--"}, answer: "Le coach hoche la tête. La pétition passe à quinze cents noms, que le capo dépose sur ton bureau, un lundi."}
+
+  - id: ec.ds.coach_pas_consulte
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, direction, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le coach n'a pas été consulté sur la dernière recrue, un ailier qu'il n'a jamais vu jouer. Il te le dit sans lever la voix, en rangeant ses plots : « Je pensais qu'on décidait à deux. »"
+    left: {label: "Je lui demande pardon", effects: {vestiaire: "++", direction: "-"}, answer: "Il hoche la tête, range le dernier plot, et propose qu'on voie l'ailier ensemble, jeudi. C'est la première fois depuis longtemps."}
+    right: {label: "Le recrutement, c'est moi", effects: {direction: "+", vestiaire: "--"}, answer: "Il pose les plots sans bruit. Le lendemain, il ne vient pas à ton bureau, et ne s'en excuse pas."}
+
+  - id: ec.ds.article_demain
+    roles: [ds]
+    arc: presse
+    tags: [presse, tribunes, vestiaire]
+    speaker: lea
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Léa pose son carnet sur le comptoir : tu discutes avec un milieu de Portclair, l'article sort ce soir, chiffre compris. Ton milieu actuel l'a lu avant toi. « Je change quelque chose ? »"
+    left: {label: "Je lis l'article avant", effects: {tribunes: "+", vestiaire: "-"}, answer: "Elle te tend l'épreuve. Tu corriges un chiffre, et rien d'autre. Le milieu actuel, lui, ne répond plus au téléphone."}
+    right: {label: "Qu'elle publie", effects: {vestiaire: "+", tribunes: "-"}, answer: "L'article sort, avec le bon chiffre et le mauvais ton. Le milieu actuel vient te voir : il reste, dit-il, par fierté."}
+
+  - id: ec.ds.recruteur_cles
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, caisse, formation]
+    when: "flag('eclair') && (gauges.caisse < 50)"
+    cooldown: 26
+    text: "Le recruteur en chef, quarante ans de bords de terrain, pose ses clés de voiture sur ton bureau : on a supprimé son poste d'adjoint, « pour rationaliser ». Il ne dit pas qui. Il attend ta réponse."
+    left: {label: "Je lui rends son poste", effects: {vestiaire: "++", caisse: "-"}, answer: "Il reprend les clés sans un mot. Il t'apportera, jeudi, une liste de douze noms qu'aucun autre club n'a vus."}
+    right: {label: "Je maintiens la décision", effects: {caisse: "+", vestiaire: "--"}, answer: "Il pose ses clés dans le bol, près des stylos. Le lendemain, quatre de ses anciens contacts ne répondent plus à ton numéro."}
+
+  - id: ec.ds.joueur_gele
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, caisse, agents]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un titulaire sans minute depuis trois mois frappe à ta porte. Il demande à partir, ou à jouer, dans l'ordre qui t'arrange. Son salaire pèse lourd sur la masse. Le coach ne le regarde plus."
+    left: {label: "Je le place à Valdorne", effects: {caisse: "+", vestiaire: "-"}, answer: "Il part avec la moitié de son salaire en moins. Dans le couloir, il te serre la main trop fort, comme un adversaire."}
+    right: {label: "Il reste, et il jouera", effects: {vestiaire: "+", caisse: "-"}, answer: "Le coach le fait entrer pour vingt minutes, à contrecœur. Il en profite pour marquer, et ne fête rien."}
+
+  - id: ec.ds.echange_indesirables
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, direction, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le directeur sportif de Valdorne te propose un échange : ses deux indésirables contre tes deux, sans argent. Il a déjà le papier. « On se rend service, entre gens sérieux. »"
+    left: {label: "J'accepte l'échange", effects: {caisse: "+", vestiaire: "--"}, answer: "Les quatre signent dans la semaine. Les deux nouveaux ne parlent à personne, sauf entre eux, à voix basse."}
+    right: {label: "Je garde mes indésirables", effects: {vestiaire: "+", caisse: "-"}, answer: "Valdorne cherche un autre échangeur. Tes deux indésirables restent, et s'entraînent seuls, à l'écart, avec dignité."}
+
+  - id: ec.ds.etranger_adaptation
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le milieu arrivé en été ne s'adapte pas : une langue, un loyer, un enfant malade resté au pays. L'adjoint propose un interprète et un appartement ; le comptable, un billet de retour."
+    left: {label: "Je paie l'interprète", effects: {vestiaire: "++", caisse: "-"}, answer: "L'interprète s'assoit au bord du terrain avec un carnet. Au bout de trois semaines, le milieu rit à une blague sur le banc."}
+    right: {label: "Un billet de retour", effects: {caisse: "+", vestiaire: "--"}, answer: "Le milieu monte dans la voiture du club, sans un mot, avec une valise neuve. Au vestiaire, personne ne lève les yeux."}
+
+  - id: ec.ds.gardien_veteran
+    roles: [ds]
+    arc: mercato
+    tags: [mercato, vestiaire, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le gardien titulaire a trente-huit ans, deux fautes de suite, un public fidèle. Son remplaçant a dix-neuf ans et un regard de chien. Le premier ne dit rien. Le second demande à te voir."
+    left: {label: "Je garde le vétéran", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le vieux gardien te remercie d'un hochement de tête, les gants déjà aux mains. Le jeune ne demande pas de rendez-vous, cette fois-là."}
+    right: {label: "Titulaire, le jeune", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le jeune joue samedi, tremble au premier ballon, et le tient au deuxième. Le vieux gardien reste debout contre le poteau, à l'échauffement."}
+
+  - id: ec.ds.liste_mecontents
+    roles: [ds]
+    arc: direction
+    tags: [direction, vestiaire, caisse, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le président te demande une liste : les joueurs qui « tirent le groupe vers le bas ». Il ne dit pas pourquoi. Il dit seulement que l'été sera long, et que le trésorier compte déjà les départs."
+    left: {label: "Je lui donne cinq noms", effects: {direction: "++", vestiaire: "--"}, answer: "Il lit la liste debout, sans la poser. À la fin de la semaine, trois noms ont changé de sourire."}
+    right: {label: "Je lui donne la liste vide", effects: {vestiaire: "+", direction: "--"}, answer: "Il dit que la page est trop propre pour être honnête. Il appelle le coach, sans rien te dire."}
+
+  - id: ec.ds.salaire_injuste
+    roles: [ds]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un défenseur découvre le salaire du nouveau venu, à son poste, plus jeune de six ans. Il tient la feuille dans la main, sans colère, et demande un rendez-vous pour un entretien qui ne sera pas bref."
+    left: {label: "Je le réajuste", effects: {vestiaire: "++", caisse: "-"}, answer: "Tu signes l'avenant le soir même. Le défenseur remercie, une fois, et prend une demi-heure pour t'expliquer ce qu'il vaut."}
+    right: {label: "Contrats confidentiels", effects: {caisse: "+", vestiaire: "--"}, answer: "Il pose la feuille sur ton bureau, à l'endroit. Dans le vestiaire, on ne parle plus que de salaires, à voix basse."}
+
+  - id: ec.ds.ultras_liste
+    roles: [ds]
+    arc: ultras
+    tags: [ultras, tribunes, vestiaire, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le capo du virage te remet une liste de noms à renvoyer avant la fin du mois, tapée à la machine, dix lignes : « Ceux qui ne se donnent pas. On les voit courir, nous. »"
+    left: {label: "Je garde la liste, j'écoute", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le capo repart avec un sourire contenu. Dans le vestiaire, dix joueurs se demandent qui a lu les dix noms."}
+    right: {label: "Je déchire la liste", effects: {vestiaire: "+", tribunes: "--"}, answer: "Tu déchires devant lui, en deux, puis en quatre. Il ne dit rien, et le virage chante moins fort, dimanche."}
+
+  - id: ec.ds.prime_depart
+    roles: [ds]
+    arc: direction
+    tags: [direction, caisse, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le président propose une prime de dix pour cent sur toute vente avant juin. Il le dit comme un cadeau. Le coach, qui écoute dans l'embrasure, a reçu la même promesse sur les victoires."
+    left: {label: "J'accepte la prime", effects: {caisse: "++", vestiaire: "--"}, answer: "Tu vends deux joueurs en mai. Le coach n'a pas le droit de se plaindre, ce qui est pire."}
+    right: {label: "Je la refuse", effects: {vestiaire: "+", direction: "-"}, answer: "Le président hausse les épaules, un sourire poli. Dans la semaine, il confie le mercato d'été à quelqu'un d'autre, à titre « consultatif »."}
+
+  - id: ec.ds.fonds_plus_values
+    roles: [ds]
+    arc: direction
+    tags: [direction, caisse, vestiaire, piege]
+    speaker: nassir
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Ilyas propose de payer tous les transferts de l'été, sans plafond, en échange de quarante pour cent des plus-values futures et d'un droit de veto sur chaque vente. « Vous signerez qui vous voudrez. »"
+    left: {label: "J'accepte, sans plafond", effects: {caisse: "+++", vestiaire: "---"}, answer: "Les signatures tombent comme des pluies d'été. Au centre de formation, les gamins comptent combien de places il reste."}
+    right: {label: "Je garde la main sur le club", effects: {caisse: "--", direction: "+"}, answer: "Il rassemble ses papiers, poliment. Le président te regarde un instant plus longtemps que d'habitude, puis sourit."}
+
+  - id: ec.ds.ami_du_president
+    roles: [ds]
+    arc: direction
+    tags: [direction, tribunes, mercato, piege]
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Le président exige que tu vendes le meilleur joueur à son ami, président du club voisin, pour un prix « amical ». Il le dit un mercredi, en se lavant les mains, avec un grand sourire."
+    left: {label: "Je vends à l'ami", effects: {direction: "++", tribunes: "---"}, answer: "Le joueur signe de l'autre côté du périphérique. Dans le virage, un chant nouveau, qui contient ton prénom, ne s'arrête pas."}
+    right: {label: "Je refuse, au nom du club", effects: {tribunes: "++", direction: "--"}, answer: "Tu sors du bureau sans claquer la porte. Le président te sert un café le lendemain, ce qui n'est pas bon signe."}
+
+  - id: ec.ds.president_telephone
+    roles: [ds]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair') && (gauges.direction < 60)"
+    cooldown: 26
+    text: "Le président t'appelle de sa voiture, le moteur au ralenti : il veut un nom avant ce soir, un attaquant dont il a entendu parler à un déjeuner. Il ne dit pas d'où. Il dit « fais-moi plaisir »."
+    left: {label: "Je lui trouve son nom", effects: {direction: "++", vestiaire: "-"}, answer: "Tu passes l'après-midi au téléphone. Le soir, tu lui envoies une fiche de trois lignes, qu'il lit à voix haute devant sa femme."}
+    right: {label: "Je lui envoie un dossier", effects: {vestiaire: "+", direction: "-"}, answer: "Le dossier de quarante pages arrive à neuf heures. Le président le feuillette en conduisant, d'une main."}
+
+  - id: ec.ds.bilan_mercato
+    roles: [ds]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le président te convoque pour le bilan du mercato, sa feuille devant lui : onze recrues, quatre qui jouent, trois qui se blessent, quatre qu'on ne voit plus. Il veut savoir qui a choisi."
+    left: {label: "C'est moi qui ai choisi", effects: {direction: "++", vestiaire: "-"}, answer: "Il hoche la tête, il note quelque chose. Le soir, le coach apprend que c'était toi, et ne le prend pas mal."}
+    right: {label: "Chaque choix a été discuté", effects: {vestiaire: "+", direction: "-"}, answer: "Il laisse un silence, long, puis demande les procès-verbaux. Tu n'en as pas, et il le sait."}
+
+  - id: ec.ds.cahier_scouting
+    roles: [ds]
+    arc: formation
+    tags: [formation, vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Ton recruteur t'apporte un cahier de neuf cents fiches, rangées à la main : trois ans de deuxième division vus en tribune. Il demande qu'on le lise avant de le jeter."
+    left: {label: "Je lis le cahier", effects: {vestiaire: "++", caisse: "-"}, answer: "Tu lis tout, sur trois soirs. À la page six cent douze, une fiche te fait relever la tête : un ailier de dix-neuf ans, un genou propre."}
+    right: {label: "On le résume, puis on range", effects: {caisse: "+", vestiaire: "--"}, answer: "Une stagiaire résume neuf cents fiches en six pages. Le recruteur reprend son cahier, sans commentaire, et le range dans sa voiture."}
+
+  - id: ec.ds.supporters_gare
+    roles: [ds]
+    arc: moment
+    tags: [moment, tribunes, vestiaire, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "À la gare, un groupe de supporters attend l'arrivée de la recrue vedette, un maillot à la main. L'agent veut passer par l'arrière. Le joueur hésite entre les deux sorties, le sac sur l'épaule."
+    left: {label: "Il passe devant eux", effects: {tribunes: "++", vestiaire: "-"}, answer: "Le joueur signe trois maillots, serre quatre mains. L'agent attend dans la voiture, le moteur allumé, en regardant sa montre."}
+    right: {label: "Il sort par l'arrière", effects: {vestiaire: "+", tribunes: "--"}, answer: "Le groupe de supporters regarde le quai vide. Le soir, le capo écrit trois lignes à la presse, sans prénom, sans conclusion."}

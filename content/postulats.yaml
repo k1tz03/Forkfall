@@ -1518,3 +1518,196 @@ postulats:
         - { card: pr.h10.alarme.caisse_bas_clemence }
       caisse.high:
         - { card: pr.h10.alarme.caisse_haut_clemence }
+
+  # ═══ LE MODE ÉCLAIR — « Le Fusible » (docs/histoires/mode_eclair.md) ══════════
+  # Cinq postulats cachés, un par rôle, AJOUTÉS à la fin : l'index est celui du
+  # Code de Carrière (ne jamais réordonner). Ce ne sont pas des livres : `mode:
+  # eclair` rend les quatre jauges visibles et mortelles (Engine, eclair.dart), et
+  # le build les range en `chantier` — aucune liste d'histoires, aucun « successeur »,
+  # aucun tirage de postulat ne les voit. L'époque (`annees`) est tirée de la graine
+  # au départ, pour eux seuls : « une entraîneuse en 1993, un président en 2041 ».
+  # Ils ne jouent QUE du contenu commun : pas de prologue, pas de script, aucun arc
+  # ni aucune ancre de livre ; le drapeau `eclair` ouvre les cartes écrites pour eux
+  # (content/cards/<rôle>/eclair_*.yaml). Les réservoirs ci-dessous sont ceux des
+  # postulats d'avant les livres, sans ce qui tenait à leur histoire.
+  - id: eclair_entraineur
+    index: 10
+    role: entraineur
+    mode: eclair
+    title: "Le Fusible · le banc"
+    question: "Combien de semaines tiens-tu sur un banc où chaque jauge peut te faire sauter ?"
+    division: 1
+    year: 1990
+    annees: [1990, 2044]
+    gauges: { vestiaire: 50, tribunes: 50, direction: 50, caisse: 50 }
+    force: 60
+    objective: maintien
+    saisons: 10
+    fin_de_livre: ec_tenu_banc
+    flags: [eclair]
+    camille: true
+    pitch: "Dix minutes, quatre jauges, un seul fusible."
+    programme:
+      "0":
+        prendre: 3
+        fenetre: [1, 13]
+        reserve: 1
+        pool:
+          - { arc: en.kop_qui_aime_trop,   poids: 0.30, signature: true, if: "gauges.tribunes >= 65 && season <= 1" }
+          - { arc: en.prodige,             poids: 0.15, if: "season <= 1" }
+          - { arc: en.vieux_gardien,       poids: 0.55 }
+          - { arc: en.nassir_proprietaire, poids: 0.95, if: "gauges.caisse < 45" }
+          - { arc: en.salaires_retard,     poids: 1.2, if: "gauges.caisse < 45" }
+          - { arc: en.espion_haie,         poids: 1.0 }
+          - { arc: co.cartons_camille,     poids: 0.55, if: "!flag('divorce')" }
+      "1":
+        prendre: 3
+        fenetre: [2, 12]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: en.mentor_clow,         poids: 2.0 }
+          - { arc: en.conf_presse,         poids: 2.8 }
+          - { arc: co.cartons_camille,     poids: 0.5, if: "!flag('divorce')" }
+          - { arc: en.salaires_retard,     poids: 1.2, if: "gauges.caisse < 45" }
+          - { arc: en.espion_haie,         poids: 1.0 }
+          - { arc: en.brassard_brehaut,    poids: 1.6 }
+          - { arc: en.adjoint_dine,        poids: 1.0, if: "relation.vukic <= 0 || relation.aulard >= 2" }
+          - { arc: en.enveloppe,           poids: 1.0, if: "world.rang <= 6 || objective == 'maintien'" }
+          - { arc: en.gigi_staff,          poids: 6.0, if: "flag('gigi_staff') || flag('vecchio_promis') || flag('gardien_jeune')" }
+      "2+":
+        prendre: 3
+        fenetre: [1, 11]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: en.vieux_gardien,       poids: 0.35 }
+          - { arc: en.conf_presse,         poids: 2.0 }
+          - { arc: en.kop_qui_aime_trop,   poids: 0.2 }
+          - { arc: en.nassir_proprietaire, poids: 0.6 }
+          - { arc: co.cartons_camille,     poids: 0.35, if: "!flag('divorce')" }
+          - { arc: co.clow_lundi,          poids: 2.0, if: "relation.clow >= 0" }
+          - { arc: en.fils_aulard,         poids: 1.0, if: "relation.aulard >= -1" }
+          - { arc: en.retour_mbako,        poids: 1.1, if: "flag('mbako_vendu')" }
+          - { arc: en.gigi_staff,          poids: 12.0, if: "flag('gigi_staff') || flag('vecchio_promis') || flag('gardien_jeune')" }
+          - { arc: en.dossier_meneche,     poids: 2.2 }
+          - { arc: en.commission_discipline, poids: 2.6, if: "flag('fede_dossier') || flag('enveloppe_promise') || flag('enveloppe_rival') || flag('enveloppe_niee')" }
+          - { arc: en.salaires_retard,     poids: 0.6, if: "gauges.caisse < 45" }
+          - { arc: en.espion_haie,         poids: 0.6 }
+          - { arc: en.brassard_brehaut,    poids: 1.2 }
+          - { arc: en.adjoint_dine,        poids: 1.2, if: "relation.vukic <= 0 || relation.aulard >= 2" }
+          - { arc: en.enveloppe,           poids: 1.3, if: "world.rang <= 6 || objective == 'maintien'" }
+
+  - id: eclair_joueur
+    index: 11
+    role: joueur
+    mode: eclair
+    title: "Le Fusible · le terrain"
+    question: "Combien de semaines tiens-tu sur un terrain où chaque jauge peut te faire sauter ?"
+    division: 1
+    year: 1990
+    annees: [1990, 2044]
+    gauges: { vestiaire: 50, tribunes: 50, direction: 50, caisse: 50 }
+    force: 58
+    objective: maintien
+    saisons: 10
+    fin_de_livre: ec_tenu_terrain
+    flags: [eclair]
+    camille: true
+    pitch: "Dix minutes, quatre jauges, un seul fusible."
+    programme:
+      "0":
+        prendre: 3
+        fenetre: [1, 13]
+        reserve: 1
+        pool:
+          - { arc: jp.premiere_une,    poids: 0.5 }
+          - { arc: jp.brassard_test,   poids: 0.5 }
+          - { arc: co.mbako_rival,     poids: 0.4 }
+          - { arc: jp.vestiaire_porte, poids: 0.4 }
+          - { arc: jp.camille_bac,     poids: 0.3, if: "age <= 24" }
+          - { arc: jp.conseils_gigi,   poids: 0.3 }
+          - { arc: jp.memoires,        poids: 0.6 }
+          - { arc: jp.contrat_image,   poids: 0.6 }
+          - { arc: jp.tifo,            poids: 0.4, signature: true, if: "gauges.tribunes >= 65" }
+      "1":
+        prendre: 3
+        fenetre: [2, 12]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: co.derby,            poids: 0.8, if: "gauges.tribunes >= 50" }
+          - { arc: jp.derniere_selection, poids: 0.9, if: "flag('international') || gauges.tribunes >= 45" }
+          - { arc: jp.genou_parle,      poids: 0.9 }
+          - { arc: jp.consultant,       poids: 0.8 }
+          - { arc: jp.pari,             poids: 0.9, if: "gauges.caisse < 55" }
+          - { arc: co.pharmacie,        poids: 0.8 }
+          - { arc: jp.clause,           poids: 0.8 }
+          - { arc: jp.selection,        poids: 0.6 }
+      "2+":
+        prendre: 3
+        fenetre: [1, 11]
+        reserve: 0
+        reprise: true
+        pool:
+          - { arc: jp.brassard_20,      poids: 1.0, if: "relation.brehaut >= 2 || !flag('capitaine')" }
+          - { arc: jp.pari,             poids: 0.8, if: "gauges.caisse < 55 || relation.fardelli <= 0" }
+          - { arc: jp.diplome_joueur,   poids: 0.6, if: "age >= 26 || flag('genou') || flag('banc_bosse') || flag('diplome_reporte')" }
+          - { arc: co.derby,            poids: 0.6, if: "gauges.tribunes >= 50" }
+          - { arc: jp.conseils_gigi,    poids: 0.4 }
+          - { arc: jp.sp.garage,        poids: 0.35 }
+          - { arc: jp.sp.bourrel,       poids: 0.35 }
+          - { arc: jp.jubile,           poids: 1.0, if: "gauges.tribunes >= 50 && age >= 30" }
+          - { arc: jp.retour_usine,     poids: 0.8 }
+          - { arc: jp.sp.tripot,        poids: 0.8 }
+
+  - id: eclair_president
+    index: 12
+    role: president
+    mode: eclair
+    title: "Le Fusible · la loge"
+    question: "Combien de semaines tiens-tu dans une loge où chaque jauge peut te faire sauter ?"
+    division: 1
+    year: 1990
+    annees: [1999, 2044]
+    gauges: { vestiaire: 50, tribunes: 50, direction: 50, caisse: 50 }
+    force: 58
+    objective: maintien
+    saisons: 10
+    fin_de_livre: ec_tenu_loge
+    flags: [eclair]
+    pitch: "Dix minutes, quatre jauges, un seul fusible."
+
+  - id: eclair_ds
+    index: 13
+    role: ds
+    mode: eclair
+    title: "Le Fusible · le bureau"
+    question: "Combien de semaines tiens-tu dans un bureau où chaque jauge peut te faire sauter ?"
+    division: 1
+    year: 1990
+    annees: [1999, 2044]
+    gauges: { vestiaire: 50, tribunes: 50, direction: 50, caisse: 50 }
+    force: 58
+    objective: maintien
+    saisons: 10
+    fin_de_livre: ec_tenu_bureau
+    flags: [eclair]
+    pitch: "Dix minutes, quatre jauges, un seul fusible."
+
+  - id: eclair_selectionneur
+    index: 14
+    role: selectionneur
+    mode: eclair
+    title: "Le Fusible · le banc national"
+    question: "Combien de semaines tiens-tu sur un banc national où chaque jauge peut te faire sauter ?"
+    division: 1
+    year: 1990
+    annees: [1999, 2044]
+    gauges: { vestiaire: 50, tribunes: 50, direction: 50, caisse: 50 }
+    force: 58
+    objective: maintien
+    saisons: 10
+    fin_de_livre: ec_tenu_national
+    flags: [eclair]
+    pitch: "Dix minutes, quatre jauges, un seul fusible."

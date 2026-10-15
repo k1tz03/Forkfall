@@ -2489,7 +2489,8 @@ __VILLE_CSS__
   }
   function advanceEnd() {
     var eid = view.ending && view.ending.id;
-    if (eid && !profile.endings[eid]) { profile.endings[eid] = 1; saveProfile(profile); }
+    // (le Fusible, preview_eclair.js : une partie éclair ne compte pas au Cimetière des livres)
+    if (eid && view.mode !== "eclair" && !profile.endings[eid]) { profile.endings[eid] = 1; saveProfile(profile); }
     if (VILLE) VILLE.fin(view);
     renderEnding();
     show("ending");

@@ -1,0 +1,425 @@
+# LE FUSIBLE — le mode éclair, la présidente / le président (docs/histoires/mode_eclair.md).
+#
+# Le rôle `president` n'avait aucun sac commun : ses scènes étaient toutes des livres (5 et 10), et
+# une carrière éclair, qui ne joue QUE du contenu commun, y mourait de famine (un bouche-trou à
+# chaque carte). Ces cartes de routine s'ouvrent au seul drapeau `eclair` (posé par les postulats
+# éclair, jamais par un livre) : aucune carrière de livre ne les voit.
+#
+# Jauges du rôle (roles.yaml) : vestiaire = LE CLUB (ceux qui y travaillent), tribunes = LES
+# TRIBUNES, direction = LES ACTIONNAIRES, caisse = LA TRÉSORERIE (la jauge fragile : elle baisse
+# d'elle-même). Chaque scène est une décision à deux sorties qui paie une jauge et en coûte une autre ;
+# les cartes `rescue:` offrent une sortie à la jauge en danger (et une pente inverse quand elle est
+# trop haute), les `piege` n'arrivent qu'à qui joue trop au centre (director.pickPool).
+# Époque : le rôle se joue de 1999 à 2044 (postulats.yaml `annees`) ; aucune carte ne cite un objet
+# daté d'avant 1999. Les visages qui parlent sont ceux de toutes les époques (Léa, Ilyas, Madame
+# Vialat, la mère de Mbako, le banquier, Malbec) ; les autres personnes sont des fonctions.
+# Drapeaux posés (déclarés dans flags.yaml) et leurs lecteurs : ec_stade_vendu (ec.pr.stade_loyer),
+# ec_fonds_tiers (ec.pr.fonds_mercato).
+cards:
+  - id: ec.pr.avant_centre
+    roles: [president]
+    arc: mercato
+    tags: [mercato, vestiaire, risk:caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le coach pose sur ton bureau le dossier d'un avant-centre de Portclair : onze buts, une minute surlignée. « Celui-là, ou on joue le maintien à reculons. Il coûte deux saisons de billetterie. »"
+    left: {label: "Je le signe", effects: {vestiaire: "+", caisse: "--"}, answer: "Le chèque part le soir même. Le coach sourit pour la première fois depuis août ; le trésorier relit le chiffre deux fois."}
+    right: {label: "On joue avec l'effectif", effects: {vestiaire: "--", caisse: "+"}, answer: "Le coach range le dossier sans le fermer. À l'entraînement, il parle plus bas qu'avant."}
+
+  - id: ec.pr.local_kop
+    roles: [president]
+    arc: ultras
+    tags: [ultras, tribunes, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le capo du virage dépose une photo du local : le plafond sous une bâche, un seul radiateur pour soixante personnes. « On t'a fait président ici. Si le toit tombe, on le dira à qui ? »"
+    left: {label: "Je paie la toiture", effects: {tribunes: "++", caisse: "-"}, answer: "Les maçons arrivent un lundi. Le capo les surveille, un thermos à la main, sans te remercier ni te manquer."}
+    right: {label: "Le club n'a pas cet argent", effects: {tribunes: "--", caisse: "+"}, answer: "La bâche reste. Samedi, le virage se tait dix minutes face à la loge, bras croisés."}
+
+  - id: ec.pr.dividende
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse, rescue:direction]
+    speaker: nassir
+    when: "flag('eclair') && (gauges.direction < 60)"
+    cooldown: 26
+    text: "Ilyas fait tourner son stylo capuchonné entre deux doigts : « Le fonds a besoin d'un signe. Un dividende, petit, voté avant la fin du trimestre. Sinon, nous relirons la valeur du club. »"
+    left: {label: "Je fais voter le dividende", effects: {direction: "++", caisse: "--"}, answer: "Le conseil vote à main levée. Le fonds applaudit du bout des doigts ; le trésorier compte sur les siens."}
+    right: {label: "Pas avant l'an prochain", effects: {direction: "--", vestiaire: "+"}, answer: "Il capuchonne le stylo et le range. Il demande, très poliment, qu'on lui envoie les comptes en clair."}
+
+  - id: ec.pr.stade_mairie
+    roles: [president]
+    arc: caisse
+    tags: [caisse, tribunes, rescue:caisse]
+    when: "flag('eclair') && (!flag('ec_stade_vendu') && gauges.caisse < 65)"
+    cooldown: 60
+    once: true
+    text: "La mairie propose de racheter le stade et de te le louer cent ans : un gros chèque, un loyer symbolique. Les élus signent demain. Le virage, lui, n'a pas été prévenu."
+    left: {label: "Je vends à la mairie", effects: {caisse: "+++", tribunes: "--", set: [ec_stade_vendu]}, answer: "Le chèque tombe un vendredi. Samedi, quelqu'un a barré le mot « notre » sur la banderole du virage."}
+    right: {label: "Le stade reste au club", effects: {caisse: "-", tribunes: "++"}, answer: "Le maire sourit aux journalistes, pas à toi. Au virage, on te garde une place pour dimanche."}
+
+  - id: ec.pr.stade_loyer
+    roles: [president]
+    arc: caisse
+    tags: [caisse, tribunes]
+    when: "flag('eclair') && (flag('ec_stade_vendu'))"
+    cooldown: 60
+    once: true
+    text: "La mairie envoie l'avenant : le loyer du stade, « symbolique » l'an dernier, s'indexe sur la billetterie. Un adjoint a joint une note : les travaux de la tribune Est seront à la charge du club."
+    left: {label: "Je conteste l'avenant", effects: {tribunes: "+", caisse: "--"}, answer: "L'avocat du club plaide trois mois. Le virage, qui ne comprend rien aux clauses, applaudit le mot « contester »."}
+    right: {label: "Je signe l'avenant", effects: {caisse: "-", direction: "-"}, answer: "Tu signes sous le sourire poli de l'adjoint. Au conseil, quelqu'un rappelle qui a vendu les murs."}
+
+  - id: ec.pr.sponsor_couleurs
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, caisse, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le directeur marketing d'un fabricant de matelas veut ses couleurs sur le maillot : vert acide, trois bandes sur la poitrine. Il pose le chèque près du vieil écusson, sans le toucher."
+    left: {label: "Je signe, vert acide", effects: {caisse: "++", tribunes: "--"}, answer: "Le maillot sort en août. Dans le virage, on le brûle pour la photo ; le chèque, lui, est encaissé le jour même."}
+    right: {label: "L'écusson ne bouge pas", effects: {tribunes: "+", caisse: "-"}, answer: "Il reprend son chèque avec le sourire poli de ceux qui reviendront. À la boutique du club, on respire."}
+
+  - id: ec.pr.limoger_coach
+    roles: [president]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Trois défaites. Dans le couloir, deux administrateurs attendent que tu rentres de ta pause pour dire le nom du coach avant toi. Le coach, lui, a laissé sa porte ouverte."
+    left: {label: "Je le garde jusqu'à juin", effects: {vestiaire: "++", direction: "--"}, answer: "Les deux administrateurs repartent sans un mot. Le coach referme sa porte, doucement, comme on ferme celle d'un malade."}
+    right: {label: "J'appelle son remplaçant", effects: {direction: "++", vestiaire: "--"}, answer: "L'adjoint prend le banc dès lundi. Dans le vestiaire, quelqu'un décroche le nom de la porte du coach."}
+
+  - id: ec.pr.vendre_capitaine
+    roles: [president]
+    arc: mercato
+    tags: [mercato, vestiaire, rescue:caisse]
+    when: "flag('eclair') && (gauges.caisse < 60)"
+    cooldown: 26
+    text: "Un club étranger offre trois fois la valeur du capitaine, trente-quatre ans, formé ici. Il n'a rien demandé. Il attend dans le couloir, devant ta porte, que quelqu'un lui dise ce qui a été décidé."
+    left: {label: "Je vends le capitaine", effects: {caisse: "++", vestiaire: "-", tribunes: "-"}, answer: "Il signe un mardi, sans conférence de presse. Le soir, quelqu'un a laissé son maillot plié sur le banc des remplaçants."}
+    right: {label: "Il finit sa carrière ici", effects: {vestiaire: "+", caisse: "-"}, answer: "Il te serre la main une seconde de trop. Dans le car du samedi, il rit plus fort que les autres."}
+
+  - id: ec.pr.tresorier_trou
+    roles: [president]
+    arc: caisse
+    tags: [caisse, direction, rescue:caisse]
+    when: "flag('eclair') && (gauges.caisse < 45)"
+    cooldown: 26
+    text: "Le trésorier pose le relevé de la banque face contre le bureau, puis le retourne : un trou jusqu'en mars. « Je peux tailler dans le centre de formation, ou vous pouvez sortir de votre poche. »"
+    left: {label: "Je renfloue de ma poche", effects: {caisse: "++", direction: "-"}, answer: "Tu signes le virement. Au conseil, on remarque que le club te doit de l'argent, et qu'on ne dit plus rien devant toi."}
+    right: {label: "On taille dans le centre", effects: {caisse: "+", vestiaire: "--"}, answer: "Le trésorier barre trois lignes de budget. La directrice du centre ne te regarde pas en repartant."}
+
+  - id: ec.pr.prix_places
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le service billetterie propose d'augmenter les places de virage de vingt pour cent : la recette gagne un mois, le stade peut-être le perd. L'affiche est imprimée, il manque ta signature en bas."
+    left: {label: "Je signe la hausse", effects: {caisse: "++", tribunes: "--"}, answer: "L'affiche part chez l'imprimeur. À la billetterie, une file de gens compte ses pièces sans rien dire."}
+    right: {label: "On gèle les prix", effects: {tribunes: "++", caisse: "-"}, answer: "Tu déchires l'affiche en deux, devant le chef de billetterie. Il la recolle dès que tu sors."}
+
+  - id: ec.pr.dossier_agents
+    roles: [president]
+    arc: presse
+    tags: [presse, agents, scandale]
+    speaker: lea
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Léa met sur la table une liste de virements : trois commissions d'agents, toutes versées à la même adresse. « Le papier est prêt pour mardi. Je vous le montre avant, ou je ne vous le montre pas ? »"
+    left: {label: "Montrez-le-moi avant", effects: {direction: "+", vestiaire: "-"}, answer: "Elle fait glisser les pages une à une. Tu reconnais l'adresse ; elle regarde ses mains, jamais ton visage."}
+    right: {label: "Publiez, je ne dirai rien", effects: {tribunes: "+", direction: "--"}, answer: "Le papier sort mardi, en page trois. Au conseil, on parle de toi à la troisième personne."}
+
+  - id: ec.pr.centre_formation
+    roles: [president]
+    arc: formation
+    tags: [formation, vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "La directrice du centre de formation vient avec un classeur : quatre gamins de seize ans, un toit qui fuit, un minibus à remplacer. « Choisissez ce que je garde. Je ferai le reste. »"
+    left: {label: "Je finance le centre", effects: {vestiaire: "++", caisse: "--"}, answer: "Elle ouvre le classeur à la page du minibus, sans un mot. Dans l'internat, un gamin fait sécher ses chaussettes sur un néon."}
+    right: {label: "On ferme l'internat", effects: {caisse: "++", vestiaire: "--"}, answer: "Trois familles reprennent leurs enfants avant la fin du mois. Le minibus reste au garage."}
+
+  - id: ec.pr.calendrier_ligue
+    roles: [president]
+    arc: direction
+    tags: [direction, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le président de la Ligue te parle d'un calendrier « arrangé » : deux matches à domicile de suite en mars, pour un club qui sait remercier. Il ne demande rien. Il veut juste savoir où tu seras."
+    left: {label: "J'accepte l'arrangement", effects: {caisse: "+", direction: "-"}, answer: "Mars sera chaud et plein. Au conseil, quelqu'un fait remarquer que ces cadeaux-là se rendent toujours."}
+    right: {label: "Aucune faveur, merci", effects: {direction: "+", caisse: "-"}, answer: "Tu raccroches poliment. Deux semaines plus tard, le calendrier tombe : trois déplacements de suite en mars."}
+
+  - id: ec.pr.jubile
+    roles: [president]
+    arc: moment
+    tags: [moment, tribunes, rescue:tribunes]
+    when: "flag('eclair') && (gauges.tribunes < 65)"
+    cooldown: 26
+    text: "Un ancien avant-centre, les genoux ruinés, demande un jubilé : un match, un stade plein, la recette pour lui. Il garde ses crampons dans un sac plastique, qu'il serre contre lui pendant qu'il parle."
+    left: {label: "Je lui offre le match", effects: {tribunes: "++", caisse: "-"}, answer: "Le stade se remplit un jeudi soir, pour un adversaire qui n'importe pas. À la mi-temps, il pleure sans se cacher."}
+    right: {label: "Pas de recette pour lui", effects: {caisse: "+", tribunes: "-"}, answer: "Il hoche la tête, range ses crampons dans le sac. Le lendemain, la tribune parle de lui jusqu'à la buvette."}
+
+  - id: ec.pr.prime_greve
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair') && (gauges.vestiaire < 50)"
+    cooldown: 26
+    text: "Les employés du club-house, les jardiniers et deux intendants ont posé leurs clés sur le comptoir : prime de fin d'année, ou ils ne rouvrent pas pour le match de samedi."
+    left: {label: "Je paie la prime", effects: {vestiaire: "++", caisse: "-"}, answer: "Les clés reviennent dans les poches, une par une. Le jardinier tond samedi matin sans que personne le lui demande."}
+    right: {label: "Samedi, vous ouvrirez", effects: {caisse: "+", vestiaire: "--"}, answer: "Samedi, le club-house ouvre à midi au lieu de dix heures. Les jardiniers laissent la pelouse comme elle est."}
+
+  - id: ec.pr.clause_prodige
+    roles: [president]
+    arc: formation
+    tags: [formation, agents, vestiaire]
+    speaker: mere_mbako
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "La mère du prodige pose le stylo sur le contrat, côté club : « Il signe aujourd'hui, avec une clause de départ à six millions. Demain, il signera chez Portclair, sans clause, avec un cadeau. »"
+    left: {label: "Je signe la clause", effects: {vestiaire: "+", caisse: "-"}, answer: "Elle relit la clause, puis te regarde enfin. Son fils attend dans le couloir, la bouche ouverte, qui n'a rien entendu."}
+    right: {label: "Sans clause, pas de contrat", effects: {caisse: "+", tribunes: "--"}, answer: "Elle reprend le stylo. Le prodige s'entraîne chez Portclair dès lundi, dans un maillot trop grand."}
+
+  - id: ec.pr.caution_banque
+    roles: [president]
+    arc: caisse
+    tags: [caisse, direction, rescue:caisse]
+    speaker: dorian
+    when: "flag('eclair') && (gauges.caisse < 50)"
+    cooldown: 26
+    text: "Le banquier ne s'assoit pas : « La ligne de crédit est reconduite si votre nom figure sous la garantie. Pas celui du club. » Il tend un stylo qui n'a pas encore servi."
+    left: {label: "Je donne ma caution", effects: {caisse: "++", direction: "-"}, answer: "Tu signes. Le banquier range le stylo dans sa poche intérieure ; c'était le sien, et tu ne le reverras pas."}
+    right: {label: "Le club se garantit seul", effects: {direction: "+", caisse: "--"}, answer: "Il remet le stylo dans sa poche. La ligne est rabaissée de moitié, avec les remerciements de la banque."}
+
+  - id: ec.pr.loge_des_elus
+    roles: [president]
+    arc: direction
+    tags: [direction, tribunes, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le maire dépose la liste des invités de la loge pour dimanche : quarante noms, dont sa belle-famille. « Le stade est fait d'argent public, vous le savez. » Il laisse la feuille sur le fauteuil."
+    left: {label: "J'ouvre la loge aux élus", effects: {caisse: "+", tribunes: "-"}, answer: "Dimanche, la loge sent le café et la cire. Dans le virage, on compte les élus qui ne regardent pas le match."}
+    right: {label: "La loge est complète", effects: {tribunes: "+", caisse: "-"}, answer: "Le maire plie la liste en quatre. La subvention de l'été sera « réexaminée », écrit-il en bas de page."}
+
+  - id: ec.pr.star_finale
+    roles: [president]
+    arc: moment
+    tags: [moment, tribunes, rescue:tribunes]
+    when: "flag('eclair') && (gauges.tribunes < 70)"
+    cooldown: 26
+    text: "Un ancien international, trente-six ans, propose de finir sa carrière chez toi pour presque rien, à une condition : son nom sur la tribune ouest. Ses sponsors sont déjà dans le couloir."
+    left: {label: "Son nom sur la tribune", effects: {tribunes: "++", caisse: "-"}, answer: "Le peintre monte sur l'échafaudage le mardi suivant. Le vieux numéro sept, lui, enlève son maillot pour la première fois à l'entraînement."}
+    right: {label: "La tribune garde son nom", effects: {vestiaire: "+", tribunes: "-"}, answer: "Il dit comprendre, signe ailleurs, et laisse deux places à ton nom pour la reprise."}
+
+  - id: ec.pr.droits_tele
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, caisse, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Deux chaînes se disputent tes matches : l'une paie plus et cache le club derrière un abonnement ; l'autre, locale, diffuse en clair pour presque rien. Les deux veulent ta réponse avant dimanche."
+    left: {label: "Je signe avec la payante", effects: {caisse: "++", tribunes: "-"}, answer: "Le contrat part dimanche. Les anciens du quai se retrouvent chez un voisin qui a l'abonnement."}
+    right: {label: "Je reste en clair", effects: {tribunes: "++", caisse: "-"}, answer: "La chaîne locale te remercie avec un bouquet de fleurs, que tu poses sur le bureau de la secrétaire."}
+
+  - id: ec.pr.fonds_capital
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse, rescue:caisse]
+    speaker: nassir
+    when: "flag('eclair') && (!flag('ec_fonds_tiers') && gauges.caisse < 55)"
+    cooldown: 60
+    once: true
+    text: "Ilyas dispose trois feuilles sur la table : un tiers du capital, un siège de plus au conseil, un droit de regard sur le mercato. « Vous gardez le titre. Nous gardons l'argent qui va avec. »"
+    left: {label: "Je cède le tiers", effects: {caisse: "+++", direction: "--", set: [ec_fonds_tiers]}, answer: "Il signe avec le même stylo que la dernière fois, et en laisse la trace de l'encre sur ton buvard."}
+    right: {label: "Le capital reste local", effects: {direction: "+", caisse: "-"}, answer: "Il rassemble les feuilles d'un geste net. Il sait attendre, c'est son métier."}
+
+  - id: ec.pr.fonds_mercato
+    roles: [president]
+    arc: mercato
+    tags: [mercato, direction, caisse]
+    speaker: nassir
+    when: "flag('eclair') && (flag('ec_fonds_tiers'))"
+    cooldown: 60
+    once: true
+    text: "Le fonds a choisi un attaquant pour toi, sans demander ton avis : vingt-deux ans, un agent à Portclair, un nom que le coach n'a jamais prononcé. Ilyas appelle ça « une recommandation »."
+    left: {label: "Je l'accepte au club", effects: {direction: "+", vestiaire: "-", caisse: "-"}, answer: "Le coach apprend la nouvelle par le tableau d'affichage. Il enlève sa cravate dans l'escalier."}
+    right: {label: "Je rappelle mes droits", effects: {vestiaire: "+", direction: "--"}, answer: "Le droit de regard « n'est pas un droit de décision », rappelles-tu. Ilyas répond qu'il lira la clause à voix haute."}
+
+  - id: ec.pr.proces_perdu
+    roles: [president]
+    arc: caisse
+    tags: [caisse, vestiaire, scandale]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "L'avocat du club sort du tribunal, le jugement plié en quatre : un ancien joueur gagne, le club paie. « Je peux faire appel. Ça durera deux ans, et ça coûtera presque autant. »"
+    left: {label: "On paie et on tourne la page", effects: {vestiaire: "+", caisse: "--"}, answer: "Le chèque part avant la fin du mois. L'ancien joueur t'envoie une carte, sobre, sans un mot de trop."}
+    right: {label: "On fait appel", effects: {caisse: "+", tribunes: "-"}, answer: "Le dossier reste sur l'étagère. Dans le virage, on trouve que le club est dur avec un enfant du pays."}
+
+  - id: ec.pr.mecene
+    roles: [president]
+    arc: sponsors
+    tags: [sponsors, direction, caisse, rescue:caisse]
+    when: "flag('eclair') && (gauges.caisse < 40)"
+    cooldown: 26
+    text: "Un patron de garages paie les salaires d'un mois. En échange, un fauteuil au conseil et une photo dans le tunnel, la main sur l'épaule du capitaine. Il a déjà apporté un cadre."
+    left: {label: "Je lui donne le fauteuil", effects: {caisse: "++", direction: "-"}, answer: "Il s'assoit au conseil en gardant son manteau. La photo est accrochée avant la fin de la semaine."}
+    right: {label: "Le club ne se loue pas", effects: {direction: "+", caisse: "-"}, answer: "Il reprend le cadre avec dignité. Le trésorier ne te parle plus que par notes écrites."}
+
+  - id: ec.pr.pelouse
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le jardinier en chef te montre la pelouse à genoux : des plaques nues dans la surface. « Refaire maintenant, c'est trois semaines sans match chez nous. Attendre, c'est un genou. »"
+    left: {label: "On refait la pelouse", effects: {vestiaire: "+", caisse: "--"}, answer: "Les camions arrivent lundi. Le club joue trois fois dehors, et le jardinier dort dans sa cabane, le dos contre le motoculteur."}
+    right: {label: "On joue dessus jusqu'en mai", effects: {caisse: "+", vestiaire: "--"}, answer: "Samedi, un genou ne revient pas. Le jardinier ne dit rien et recouvre la plaque de sable."}
+
+  - id: ec.pr.supporter_malade
+    roles: [president]
+    arc: moment
+    tags: [moment, tribunes, vestiaire, rescue:tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un supporter de quatre-vingts ans, bonbonne d'oxygène sous le bras, demande à voir le capitaine avant dimanche. Son fils attend dans le couloir, la casquette à la main, sans rien demander."
+    left: {label: "Le capitaine descend le voir", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le capitaine arrive en survêtement, en retard de dix minutes à sa séance. Il reste quarante minutes, et personne ne le lui reproche."}
+    right: {label: "Pas avant le match", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le fils remet sa casquette. Dimanche, une chaise vide, avec une écharpe posée dessus, attend dans le virage."}
+
+  - id: ec.pr.fusion_reserves
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse, vestiaire]
+    speaker: malbec
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Malbec, président du club voisin, te serre la main devant les photographes, trop longtemps : une « fusion des réserves », deux clubs, un seul centre, une seule facture. Il a déjà le papier à en-tête."
+    left: {label: "Je fusionne les réserves", effects: {caisse: "++", vestiaire: "--"}, answer: "Les deux écussons s'impriment sur le même fanion. Les entraîneurs des jeunes se regardent, sans un mot, de part et d'autre de la table."}
+    right: {label: "Chacun sa maison", effects: {vestiaire: "+", caisse: "-"}, answer: "Malbec rit, prend la main de quelqu'un d'autre pour les photos. Il dit qu'il attendra, il a l'habitude."}
+
+  - id: ec.pr.assurance_blesse
+    roles: [president]
+    arc: caisse
+    tags: [caisse, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "L'assureur a reçu le certificat du médecin du club, et le sien dit autre chose : le joueur est apte, donc plus d'indemnité. Le joueur attend ton nom au bas d'une lettre de soutien."
+    left: {label: "Je signe la lettre", effects: {vestiaire: "++", caisse: "-"}, answer: "La lettre part en recommandé. Le joueur la lit trois fois devant toi, puis la glisse dans sa chaussette."}
+    right: {label: "L'assurance tranchera", effects: {caisse: "+", vestiaire: "--"}, answer: "Tu laisses le dossier suivre son cours. Le joueur croise ton regard au parking, puis le détourne."}
+
+  - id: ec.pr.controle_commission
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse, scandale, rescue:direction]
+    speaker: vialat
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Madame Vialat, de la Commission des comptes, aligne trois dossiers sur ta table : les salaires, les primes, les commissions. « Je commence par celui que vous préférez que je ne commence pas. »"
+    left: {label: "Je lui ouvre les trois", effects: {direction: "+", caisse: "-"}, answer: "Elle lit en silence, une heure et dix minutes, le doigt sous chaque ligne. Elle repart sans rien dire, avec les trois dossiers."}
+    right: {label: "Qu'elle prenne rendez-vous", effects: {caisse: "+", direction: "--"}, answer: "Elle ouvre son agenda, y inscrit la date, et la souligne deux fois. Le conseil l'apprend avant la fin de l'après-midi."}
+
+  - id: ec.pr.numero_retire
+    roles: [president]
+    arc: moment
+    tags: [moment, tribunes, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Les supporters demandent de retirer le numéro 10, en mémoire d'un joueur mort. Son fils, qui joue au club, veut le porter. Les deux demandes sont arrivées dans la même enveloppe."
+    left: {label: "Je retire le numéro", effects: {tribunes: "++", vestiaire: "-"}, answer: "Le numéro est retiré un samedi, sur une pelouse trempée. Le fils pose ses mains sur ses cuisses, et tient."}
+    right: {label: "Son fils le portera", effects: {vestiaire: "+", tribunes: "--"}, answer: "Le fils entre en jeu en dixième, la lèvre serrée. Dans le virage, quelqu'un retourne sa banderole."}
+
+  - id: ec.pr.tribune_vetuste
+    roles: [president]
+    arc: tribunes
+    tags: [tribunes, caisse, direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "L'inspecteur de la sécurité colle une étiquette rouge sur la tribune ouest : jauge réduite de moitié jusqu'aux travaux. Les travaux coûtent un an de billetterie. L'affiche de dimanche est vendue."
+    left: {label: "Je lance les travaux", effects: {caisse: "--", tribunes: "+"}, answer: "Les échafaudages montent lundi. Dimanche, la moitié de la tribune regarde de l'autre côté, avec des écharpes sur les yeux."}
+    right: {label: "Je réduis la jauge", effects: {tribunes: "--", direction: "+"}, answer: "Le stade est à moitié vide un dimanche d'affiche. L'inspecteur signe, et ne sourit pas."}
+
+  - id: ec.pr.vestiaire_grogne
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, caisse, rescue:vestiaire]
+    when: "flag('eclair') && (gauges.vestiaire < 45)"
+    cooldown: 26
+    text: "Le capitaine vient avec trois joueurs, sans rendez-vous : les primes de match n'ont pas été versées depuis un mois. « On n'a rien dit au coach. On a préféré te le dire à toi. »"
+    left: {label: "Je paie ce soir", effects: {vestiaire: "++", caisse: "--"}, answer: "Le trésorier vide un tiroir. Le capitaine compte les billets devant toi, sans gêne et sans plaisir."}
+    right: {label: "Je leur demande un mois", effects: {caisse: "+", vestiaire: "--"}, answer: "Ils hochent la tête, à la file. Dans le couloir, on entend une porte claquer deux fois."}
+
+  - id: ec.pr.pari_europe
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse, tribunes, piege]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le conseil réclame un grand coup : trois recrues avant dimanche, un pari sur le haut du tableau. « Sinon on se contente du milieu, et on vend », dit un administrateur, en regardant le sol."
+    left: {label: "On parie sur le haut", effects: {tribunes: "++", caisse: "---"}, answer: "Trois noms sont annoncés vendredi. Le virage chante jusqu'à minuit ; le trésorier, lui, n'a pas bougé de sa chaise."}
+    right: {label: "On se contente du milieu", effects: {caisse: "++", tribunes: "--"}, answer: "Le conseil vote à l'unanimité, sauf une voix. Samedi, des gens quittent le stade avant la mi-temps."}
+
+  - id: ec.pr.piege_fonds
+    roles: [president]
+    arc: direction
+    tags: [direction, caisse, vestiaire, piege]
+    speaker: nassir
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Ilyas pose devant toi un seul papier : le fonds rachète toute la dette ce soir. En échange, le choix du coach, des joueurs et du directeur sportif. Le stylo est déjà ouvert à la bonne page."
+    left: {label: "Je signe, la dette disparaît", effects: {caisse: "+++", vestiaire: "---"}, answer: "La dette est effacée à vingt-trois heures. À minuit, trois personnes du club ont déjà reçu la même lettre."}
+    right: {label: "Je refuse, la dette reste", effects: {direction: "--", tribunes: "++"}, answer: "Il remet le capuchon, sans hâte. Le lendemain, le virage chante ton nom, et le trésorier ne répond plus au téléphone."}
+
+  - id: ec.pr.piege_virage
+    roles: [president]
+    arc: ultras
+    tags: [ultras, tribunes, direction, piege]
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Le virage descend sur la pelouse avant le coup d'envoi, banderole à bout de bras : « VENDU, DEHORS ». Le speaker attend ton signe, micro en main, les joueurs figés au rond central."
+    left: {label: "Je viens leur parler", effects: {tribunes: "+++", direction: "--"}, answer: "Tu traverses la pelouse sous les sifflets, puis sous le silence. Le capo te donne la banderole, que tu plies toi-même."}
+    right: {label: "Je fais évacuer la pelouse", effects: {direction: "+", tribunes: "---"}, answer: "Les stadiers forment une ligne. Le stade chante une seule chose, très fort, jusqu'au coup d'envoi."}
+
+  - id: ec.pr.conseil_extraordinaire
+    roles: [president]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair') && (gauges.direction < 60)"
+    cooldown: 26
+    text: "Un administrateur convoque un conseil extraordinaire : l'ordre du jour tient en une ligne, ton nom, entre deux points. Il retire la convocation si tu présentes ton plan à voix haute, debout."
+    left: {label: "Je présente mon plan", effects: {direction: "++", vestiaire: "-"}, answer: "Tu parles dix-neuf minutes, sans notes. À la fin, un seul administrateur applaudit, et il n'est pas du côté que tu croyais."}
+    right: {label: "Que le conseil se tienne", effects: {direction: "-", tribunes: "+"}, answer: "Le conseil se réunit un jeudi, sans toi. Le procès-verbal te parvient le vendredi, avec une ligne soulignée au feutre."}
+
+  - id: ec.pr.rapport_annuel
+    roles: [president]
+    arc: direction
+    tags: [direction, tribunes, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le rapport annuel attend ta signature : trois pages de chiffres que tu connais, une de commentaire que tu n'as pas écrite. L'actionnaire principal l'a relu cette nuit, un crayon rouge à la main."
+    left: {label: "Je signe sa version", effects: {direction: "++", tribunes: "-"}, answer: "Tu signes au bas de la page quatre. Le commentaire parle de « rigueur » trois fois, et du stade sans y mettre un seul joueur."}
+    right: {label: "Je signe la mienne", effects: {tribunes: "+", direction: "--"}, answer: "Ta page est la plus courte, et la plus lue. L'actionnaire la range sous un cendrier, sans la plier."}
+
+  - id: ec.pr.dejeuner_actionnaire
+    roles: [president]
+    arc: direction
+    tags: [direction, vestiaire, rescue:direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un petit actionnaire, cinq pour cent et la voix la plus forte, t'invite à déjeuner dans une brasserie du centre. Il parle de tout sauf du club, jusqu'au café ; alors il parle du club."
+    left: {label: "Je l'écoute jusqu'au bout", effects: {direction: "+", vestiaire: "-"}, answer: "Il raconte quatre-vingt-dix minutes de la saison 1970. À la fin, il te serre la main avec les deux siennes, et dit qu'il votera comme toi."}
+    right: {label: "Je pars avant le café", effects: {vestiaire: "+", direction: "-"}, answer: "Il te regarde partir, la tasse à mi-chemin. À l'assemblée, il pose une question précise sur ton emploi du temps."}
+
+  - id: ec.pr.documentaire
+    roles: [president]
+    arc: presse
+    tags: [presse, tribunes, direction]
+    when: "flag('eclair')"
+    cooldown: 55
+    once: true
+    text: "Une équipe de télévision veut filmer le club toute la saison : vestiaires, bureaux, loges. La productrice promet un portrait « honnête » et ne dit pas un mot du droit de regard."
+    left: {label: "Je signe, sans regard", effects: {tribunes: "++", direction: "-"}, answer: "Les caméras entrent le lundi, par la porte des livreurs. Dans le couloir, un administrateur tourne le dos à l'objectif, à chaque passage."}
+    right: {label: "Pas de caméra dans le tunnel", effects: {direction: "+", tribunes: "-"}, answer: "La productrice remballe, un peu piquée. Le documentaire se fera sur le club d'à côté, où l'on ne dit rien de plus."}

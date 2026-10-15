@@ -338,7 +338,8 @@ void main() {
     // Le prologue (beat `prologue`, saison 0). Sans lui, la toute première
     // carte d'une carrière est le président qui réclame un objectif : « on est
     // jeté dans la fosse aux lions sans savoir ce qu'est vraiment le jeu ».
-    if (p['prologue'] == null) {
+    // (Le mode éclair n'en a pas, exprès : on ne lit pas un prologue en dix minutes.)
+    if (p['prologue'] == null && p['mode'] != 'eclair') {
       warnings.add('postulat ${p['id']}: aucun `prologue:` — la carrière commence sur la carte Objectif, sans mise en situation');
     }
     for (final sd in seeds) {
@@ -647,6 +648,10 @@ void main() {
     final pid = p['id'].toString();
     final prog = p['programme'] as Map?;
     if (prog == null) continue;
+    // Le mode éclair (« Le Fusible ») n'est pas un livre : pas de trois objectifs cachés, pas
+    // de budget de réservoir ni de casting. Le build a déjà vérifié ce qui compte pour lui
+    // (aucun arc de livre, aucun drapeau d'histoire, des jauges de départ vivantes).
+    if (p['mode'] == 'eclair') continue;
     final chantier = p['chantier'] == true;
     final strict = chantier ? warnings : errors;
     final suffix = chantier ? ' (en chantier)' : '';
@@ -934,8 +939,10 @@ void main() {
       final e = node['end'];
       if (e is String) endsTargeted.add(e);
       // la fin du livre d'un postulat : sa porte est le verdict de sa dernière saison
+      // (celle d'un postulat éclair ne compte pas : « Le fusible a tenu » ne s'atteint que dans
+      // ce mode, build_content la marque `dormante` et la sort du Cimetière des livres)
       final f = node['fin_de_livre'];
-      if (f is String) endsTargeted.add(f);
+      if (f is String && node['mode'] != 'eclair') endsTargeted.add(f);
       for (final v in node.values) {
         collectEnds(v);
       }

@@ -31,6 +31,7 @@
 library;
 
 import 'content.dart';
+import 'eclair.dart' show jaugesMortelles;
 import 'state.dart';
 
 /// Ce que la bande annonce.
@@ -96,7 +97,7 @@ List<Annonce> _candidats(Content content, GameState s, Pending p) {
   // 2. La fin qui devient atteignable : une jauge est entrée dans la zone où
   //    son écran de fin l'attend (le côté vide comme le côté plein).
   //    Le mode histoire n'annonce rien : une jauge au bord ne mène à aucune fin.
-  final role = content.director.jaugesFatales ? content.roles[s.role] : null;
+  final role = jaugesMortelles(content, s) ? content.roles[s.role] : null;
   if (role != null) {
     for (final g in role.gauges) {
       final v = s.gauges[g.id] ?? 50;

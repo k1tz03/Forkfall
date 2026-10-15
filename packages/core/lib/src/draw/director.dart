@@ -14,6 +14,7 @@ import 'dart:math' as math;
 
 import '../condition.dart';
 import '../content.dart';
+import '../eclair.dart' show carteDeLivre;
 import '../effects.dart';
 import '../rng.dart';
 import '../state.dart';
@@ -806,6 +807,15 @@ class Director {
     for (final a in content.arcsSorted) {
       if (a.kind != 'evenement' || !a.roles.contains(s.role)) continue;
       if (s.arcs.containsKey(a.id)) continue;
+      // Une carrière éclair n'a pas de livre : un événement écrit pour un livre
+      // (`postulats:`) n'y arme jamais, même quand son `when` ne lit aucun
+      // drapeau de ce livre (le bureau visité du livre 6 s'armait dans tout
+      // directeur sportif). Les livres, eux, gardent leur tirage tel qu'il est.
+      if (s.mode == kModeEclair && a.postulats.isNotEmpty && !a.postulats.contains(s.postulatId)) continue;
+      // Le grand déballage n'a pas de scène non plus : en éclair la parole est un compteur caché
+      // que rien n'arme (Engine._checkEndings), et « Les douze pages » demandent douze promesses
+      // qu'une carrière de dix minutes n'a pas eu le temps de faire.
+      if (s.mode == kModeEclair && a.id == 'co.deballage') continue;
       if (!evalWhen(a.when, c)) continue;
       el.add(a);
     }
@@ -1169,6 +1179,9 @@ class Director {
     final bands = <int, List<Card>>{};
     final bandW = <int, List<double>>{};
     for (final card in content.poolCards(s.role)) {
+      // Une carrière éclair ne joue que le contenu commun : aucune carte d'un livre, même
+      // oubliée sans drapeau (`en.h1.re.gege_berline`, une réaction du livre 1 que rien ne relie).
+      if (s.mode == kModeEclair && carteDeLivre(card.id)) continue;
       if (s.scheduled.any((sc) => sc.card == card.id)) continue; // no queue-jumping
       final last = s.cooldowns[card.id];
       if (last != null && card.once) continue;
@@ -1659,6 +1672,9 @@ class Director {
     // comme les autres intrigues (sinon ils doubleraient le tirage).
     for (final a in content.arcsSorted) {
       if (!a.isEverySeason || !a.roles.contains(s.role) || s.season < a.minSeason) continue;
+      // Un postulat éclair sans programme (le directeur sportif, le président, le sélectionneur)
+      // ne reçoit pas les rituels d'un livre : « Le tableau des clés » du livre 7 s'y armait.
+      if (s.mode == kModeEclair && a.postulats.isNotEmpty && !a.postulats.contains(s.postulatId)) continue;
       // `replayable` et non `doneSeason != season` : un rituel encore armé ou
       // actif à l'ouverture de saison (son étape 2 n'est pas sortie) était
       // ré-armé sur son étape 1 — la même carte trois saisons de suite, et

@@ -2291,7 +2291,10 @@ void main(List<String> args) {
       diffB = int.parse(args[i + 2]);
     }
   }
-  final nPost = content.postulatsByIndex.length;
+  // Les postulats éclair (« Le Fusible », eclair.dart) ne sont pas des livres : les budgets
+  // d'histoire ne les comptent pas, et `seed % nPost` garde son compte — ils sont ajoutés à la
+  // fin, derrière les dix livres. Pour les mesurer : `bin/eclair.dart`.
+  final nPost = content.postulatsByIndex.where((p) => p.mode != kModeEclair).length;
 
   if (goldens) {
     _goldens(engine, content, write: goldensWrite, recode: goldensRecode);
@@ -2498,7 +2501,8 @@ void main(List<String> args) {
 
     // Coverage report (only meaningful on the exploratory policies).
     if (entry.key == 'human_like') {
-      final never = content.cards.keys.where((id) => !seen.contains(id)).toList();
+      // (les cartes écrites pour le mode éclair, `ec.*`, ne se jouent qu'en éclair)
+      final never = content.cards.keys.where((id) => !seen.contains(id) && !id.startsWith('ec.')).toList();
       if (never.isNotEmpty) {
         stdout.writeln('  cartes jamais vues (${never.length}) : ${never.take(12).join(', ')}${never.length > 12 ? '…' : ''}');
       }

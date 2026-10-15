@@ -76,6 +76,15 @@
 // d'une saison) viennent du monde simulé, pas du calendrier des beats. C'est
 // la MÊME définition que celle de l'application (`{journee}` de `text.dart`)
 // et que celle de la carte Classement : `journeeDeSaison(world.blocks)`.
+//
+// LE MODE ÉCLAIR (« Le Fusible », packages/core/lib/src/eclair.dart) — `mode`
+// (`histoire` | `eclair`) dit si les jauges tuent dans la carrière ; `semaines`
+// est son score, les journées de championnat vécues (en lecture seule : la
+// coquille l'affiche, elle n'en calcule rien) ; `frise_auto` ne s'impose jamais
+// en éclair. Deux fonctions de plus : `fusibleDefiDuJour(date)` (le rôle, le
+// postulat et la graine d'une date, les mêmes pour tout le monde) et
+// `fusibleEclairApercu(graine, postulat)` (le rôle et l'époque que cette
+// graine donne, sans rien démarrer). Le postulat éclair est caché (`chantier`).
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
@@ -94,7 +103,9 @@ final List<FriseCarriere> _carrieres = <FriseCarriere>[];
 
 void _archiverCarriere() {
   final s = _state;
-  if (s == null || !s.over) return;
+  // Une carrière éclair (« Le Fusible ») n'entre pas à l'arrière-plan de la frise
+  // des livres : elle n'a ni histoire ni époque fixe, et elle ne fait pas partie du siècle.
+  if (s == null || !s.over || s.mode == kModeEclair) return;
   _carrieres.add(FriseCarriere(
     nom: s.entities.protagonist,
     debut: _content.postulats[s.postulatId]?.year ?? Engine.startYear,
@@ -122,6 +133,9 @@ String _postulatsJson() {
       'pitch': p.pitch,
       // une histoire en cours d'écriture ne se montre pas sur l'écran titre
       'chantier': p.chantier,
+      // le mode éclair (« Le Fusible ») : un postulat caché, jamais un livre
+      // (le build le range en `chantier`) ; la page le joue par `preview_eclair.js`
+      'mode': p.mode,
     });
   }
   // La ville (content/ville.yaml), telle quelle : la coquille de la version
@@ -186,6 +200,12 @@ String _view() {
     // définition partout, désormais : `journeeDeSaison`.
     'journee': _engine.journeeOf(s),
     'journees': _engine.journeesParSaison,
+    // LE MODE ÉCLAIR (eclair.dart) : `mode` dit si les jauges tuent dans cette
+    // carrière (`histoire` ou `eclair`) ; `semaines` est son score — les
+    // journées de championnat vécues, dérivées du monde simulé (en lecture
+    // seule : la coquille l'affiche, elle n'en calcule rien).
+    'mode': s.mode,
+    'semaines': semainesTenues(s),
     'phase': beats.isEmpty ? '' : beats[beatIndex].phase,
     // LA VILLE : le beat courant et ceux de la saison, pour poser la semaine
     // (combien de cartes avant le prochain match), et la distribution du
@@ -227,7 +247,8 @@ String _view() {
     // moments où elle doit s'imposer sans qu'on la demande : le passage d'une
     // décennie, un changement de club ou de rôle, la fin d'une carrière.
     'frise': _engine.friseOf(s, carrieres: _carrieres).toJson(),
-    'frise_auto': _engine.friseSImpose(s),
+    // (jamais en mode éclair : dix minutes, pas d'album qui s'ouvre au milieu)
+    'frise_auto': s.mode == kModeEclair ? false : _engine.friseSImpose(s),
     // LE BANDEAU « nouvelles cartes » (voir `annonce.dart`) : posé une seule
     // fois, au moment où le contenu s'ouvre, jamais sur deux cartes de suite,
     // deux par saison au plus. `null` le reste du temps.
@@ -430,6 +451,30 @@ void main() {
       (() {
         _state = _engine.banqueroute(_state!);
         return _view().toJS;
+      }).toJS);
+  // LE DÉFI DU JOUR (eclair.dart) : de la date (« 2026-10-15 », le jour de
+  // Paris que la coquille calcule), le rôle, le postulat éclair et la graine —
+  // les mêmes pour tout le monde, par hachage, sans serveur. `null` si le
+  // contenu n'a aucun postulat éclair.
+  globalContext.setProperty(
+      'fusibleDefiDuJour'.toJS,
+      ((JSString date) {
+        final d = defiDuJour(_content, date.toDart);
+        return (d == null ? 'null' : jsonEncode(d.toJson())).toJS;
+      }).toJS);
+  // Ce que la date fixe, avant de jouer (le rôle et l'époque du jour, sur la
+  // cartouche de l'accueil) : un départ qu'on jette — `_state` ne bouge pas.
+  globalContext.setProperty(
+      'fusibleEclairApercu'.toJS,
+      ((JSNumber seed, JSNumber postulat) {
+        final s = _engine.start(seed.toDartInt, postulat: postulat.toDartInt);
+        return jsonEncode({
+          'role': s.role,
+          'roleName': _content.roles[s.role]?.name ?? s.role,
+          'year': s.year,
+          'age': s.age,
+          'genre': s.entities.genre,
+        }).toJS;
       }).toJS);
   // La sauvegarde d'une carrière jouée en ville : l'état entier (le Code de
   // Carrière ne rejoue pas les activités).
