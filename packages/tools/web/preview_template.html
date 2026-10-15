@@ -2954,6 +2954,14 @@ window.FusibleContenu.pret((function () {
     if (view.frise_auto) openFrise(null);
   }
 
+  // Les départs demandés par `FusibleApercu.demarrer` : sa promesse se tient quand la carrière
+  // commence (le livre a pu devoir arriver d'abord, demarrage.js) — ou reprend, quand le dialogue
+  // d'un livre en cours l'a choisi. Elle se tient sans valeur : `FusibleApercu.vue()` dit la carrière.
+  var departsAttendus = [];
+  function departFait() { var l = departsAttendus; departsAttendus = []; l.forEach(function (f) { f(); }); }
+  crochet("debut", departFait);
+  crochet("reprise", departFait);
+
   // L'aperçu, pour les modules de la ville (ils ne partagent pas cette fermeture).
   window.FusibleApercu = {
     crochet: crochet,
@@ -2967,8 +2975,10 @@ window.FusibleContenu.pret((function () {
     // commencer un livre (avec la graine, si on la donne) ; une carrière déjà en cours dans ce livre
     // se demande d'abord (dialogue : Reprendre / Recommencer), elle ne s'efface jamais sans un mot.
     // Le livre arrive d'abord s'il n'est pas là (startRun, demarrage.js) : la carrière peut commencer
-    // un peu après l'appel — `crochet("debut", fn)` le dit.
-    demarrer: function (postulat, seed) { demarrerLivre(postulat, seed); },
+    // un peu après l'appel — la promesse rendue se tient alors (et `crochet("debut", fn)` le dit).
+    demarrer: function (postulat, seed) {
+      return new Promise(function (ok) { departsAttendus.push(ok); demarrerLivre(postulat, seed); });
+    },
     panneau: function (kind, titre, html, opener) { openPanel(kind, titre, html, opener || null); },
     fermer: closeAll,
     // redessiner l'accueil (au démarrage, `VILLE.pret()` pose déjà le « Reprendre » du haut : ici, il suit les cases)

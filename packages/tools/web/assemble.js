@@ -6,7 +6,7 @@
 // littéralement (split/join, aucune interprétation regex) :
 //   __CONTENU__       ← le contenu, découpé par build_content en un commun et un
 //                       bundle par livre (content/build/livres/, vérifiés contre
-//                       app/assets/content.json) et compressés (gzip) : embarqués
+//                       content/build/content.json) et compressés (gzip) : embarqués
 //                       en base64 dans le fichier seul ; avec --ville, posés à
 //                       côté de la page (contenu/commun.<hash>.gz,
 //                       contenu/<livre>.<hash>.gz) ; puis demarrage.js, qui les
@@ -52,7 +52,7 @@ const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'v
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js'];
+const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js'];
 
 // Les noms qu'un fichier déclare au premier niveau d'une fermeture (deux espaces) :
 // un module partage la fermeture, il ne redéclare jamais un nom de son hôte ni d'un
@@ -167,13 +167,16 @@ function accueilJs(versDossier) {
   return 'window.FUSIBLE_ACCUEIL = ' + JSON.stringify(out) + ';';
 }
 
-/// LE CONTENU — build_content écrit le bundle entier (app/assets/content.json, que
-/// l'application et les outils lisent) et, pour l'aperçu, le même découpé
-/// (content/build/livres/ : commun.json et un fichier par livre, voir
-/// packages/tools/bin/src/livres.dart). Un autre bundle (`--content`, les essais)
-/// part entier, comme commun, sans livres.
+/// LE CONTENU — build_content écrit le bundle entier (content/build/content.json, et
+/// sa copie app/assets/content.json que l'application lit) et, pour l'aperçu, le même
+/// découpé (content/build/livres/ : commun.json et un fichier par livre, voir
+/// packages/tools/bin/src/livres.dart), du même passage. On lit content/build/ : la
+/// copie de l'application est commitée et peut retarder sur le contenu (on ne la
+/// commite pas à chaque lot). Un autre bundle (`--content`, les essais) part entier,
+/// comme commun, sans livres.
 function chargerContenu(opts) {
-  const entierPath = opts.content ? path.resolve(opts.content) : path.join(ROOT, 'app', 'assets', 'content.json');
+  const construit = path.join(ROOT, 'content', 'build', 'content.json');
+  const entierPath = opts.content ? path.resolve(opts.content) : (fs.existsSync(construit) ? construit : path.join(ROOT, 'app', 'assets', 'content.json'));
   const entier = JSON.parse(fs.readFileSync(entierPath, 'utf8')); // un JSON valide avant d'être incrusté
   const dir = path.join(ROOT, 'content', 'build', 'livres');
   const communPath = path.join(dir, 'commun.json');
