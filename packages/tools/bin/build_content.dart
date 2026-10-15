@@ -1832,6 +1832,21 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
         });
         m['match'] = {...((m['match'] as Map?) ?? const {}), 'textes': base};
       }
+      // le dossier 1974 (un seul lot l'écrit) et tes fantômes (les livres se complètent) :
+      // docs/histoires/dossier_1974.md, fantomes.md ; compilés par `_compileDossierFantomes`
+      if (doc['dossier'] is Map) {
+        if (m['dossier'] != null) errors.add('ville/${f.uri.pathSegments.last}: `dossier` déjà écrit dans un autre lot');
+        m['dossier'] = doc['dossier'];
+      }
+      final fa = doc['fantomes'];
+      if (fa is Map && fa['livres'] is Map) {
+        final base = Map<String, dynamic>.of(((m['fantomes'] as Map?)?['livres'] as Map?)?.cast<String, dynamic>() ?? const {});
+        (fa['livres'] as Map).forEach((k, v) {
+          if (base.containsKey(k)) errors.add('ville/${f.uri.pathSegments.last}: fantomes/livres/$k déjà écrit ailleurs');
+          base[k.toString()] = v;
+        });
+        m['fantomes'] = {'livres': base};
+      }
       final r = doc['rencontres'];
       if (r is Map) {
         final base = Map<dynamic, dynamic>.of((m['rencontres'] as Map?) ?? const {});
@@ -2975,7 +2990,15 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
       },
       personnages: characterIds,
       drapeaux: {for (final f in ((_loadYaml('flags.yaml') as Map?)?['flags'] as List? ?? const [])) f.toString()});
+  // le dossier 1974 et tes fantômes : ce que la page garde d'une carrière à l'autre
+  final df = _compileDossierFantomes(m, errors,
+      endingIds: endingIds,
+      cardIds: {for (final c in cards) c['id'].toString()},
+      conversations: {for (final c in conversations) c['id'].toString()},
+      cinematiques: {for (final c in cinematiques) c['id'].toString()});
   return {
+    if (df.dossier.isNotEmpty) 'dossier': df.dossier,
+    if (df.fantomes.isNotEmpty) 'fantomes': df.fantomes,
     'lieux': lieux,
     'cartes_lieux': cartesLieux,
     if (ailleurs.isNotEmpty) 'ailleurs': ailleurs,
@@ -3000,6 +3023,151 @@ Map<String, dynamic> _compileVille(List<String> errors, Map<String, Map<String, 
     if (vivante.isNotEmpty) 'vivante': vivante,
     if (matchDirect.isNotEmpty) 'match_direct': matchDirect,
   };
+}
+
+/// LE DOSSIER 1974 ET TES FANTÔMES (docs/histoires/dossier_1974.md, fantomes.md ;
+/// content/ville/dossier_1974.yaml, fantomes.yaml) : ce que la page garde d'une carrière à
+/// l'autre. Le moteur n'en lit rien : `Engine.heritage` reçoit des drapeaux `dossier_*` et
+/// `fantome_*`, et c'est la page qui les choisit d'après ce qui est compilé ici. Les livres
+/// (`h1`…`h10`) sont ceux que nomme le drapeau `histoire_hN` d'un postulat ; leur année de
+/// départ dit qui peut se souvenir de qui (un livre ne se souvient que des livres d'avant).
+({Map<String, dynamic> dossier, Map<String, dynamic> fantomes}) _compileDossierFantomes(Map<String, dynamic> m, List<String> errors,
+    {required Set<String> endingIds, required Set<String> cardIds, required Set<String> conversations, required Set<String> cinematiques}) {
+  final livres = <String, Map<String, dynamic>>{};
+  final pdoc = _loadYaml('postulats.yaml');
+  final plist = pdoc is Map ? (pdoc['postulats'] as List? ?? const []) : (pdoc is List ? pdoc : const []);
+  for (final p in plist) {
+    if (p is! Map) continue;
+    for (final f in _strList(p['flags'])) {
+      final mm = RegExp(r'^histoire_(h\d+)$').firstMatch(f);
+      if (mm != null) livres[mm[1]!] = {'postulat': p['id'].toString(), 'annee': (p['year'] as num?)?.toInt() ?? 1990};
+    }
+  }
+  final idRe = RegExp(r'^[a-z][a-z0-9_]*$');
+  void long(Object? t, String where, int max, {bool requis = true}) {
+    final s = t?.toString() ?? '';
+    if (s.isEmpty && requis) errors.add('$where: texte vide');
+    if (s.length > max) errors.add('$where: ${s.length} caractères (> $max)');
+  }
+
+  // ─── le dossier : des pièces, et l'épilogue qu'elles ouvrent
+  final dossier = <String, dynamic>{};
+  final d = m['dossier'];
+  if (d is Map) {
+    final pieces = <Map<String, dynamic>>[];
+    final vus = <String>{};
+    for (final raw in (d['pieces'] as List? ?? const [])) {
+      final p = (raw as Map).cast<String, dynamic>();
+      final id = p['id']?.toString() ?? '';
+      final where = 'ville/dossier/$id';
+      if (!idRe.hasMatch(id) || !vus.add(id)) errors.add('$where: id vide, en double, ou pas en minuscules');
+      long(p['titre'], '$where/titre', 40);
+      long(p['texte'], '$where/texte', 200);
+      long(p['ou'], '$where/ou', 80);
+      long(p['date'], '$where/date', 20);
+      final lv = _strList(p['livres']);
+      for (final l in lv) {
+        if (!livres.containsKey(l)) errors.add('$where: livre « $l » inconnu (aucun postulat ne pose histoire_$l)');
+      }
+      final t = (p['trouve'] as Map?)?.cast<String, dynamic>() ?? const {};
+      const modes = ['drapeau', 'conversation', 'cinematique', 'fin', 'album'];
+      final mode = modes.where(t.containsKey).toList();
+      if (mode.length != 1) {
+        errors.add('$where: `trouve` nomme une seule façon de trouver la pièce (${modes.join(' | ')})');
+      } else {
+        final v = t[mode.first]?.toString() ?? '';
+        switch (mode.first) {
+          case 'drapeau':
+            if (v != 'dossier_$id') errors.add('$where: le drapeau d\'une pièce est dossier_$id (« $v »)');
+          case 'conversation':
+            if (!conversations.contains(v)) errors.add('$where: conversation « $v » inconnue');
+          case 'cinematique':
+            if (!cinematiques.contains(v)) errors.add('$where: scène jouée « $v » inconnue');
+          case 'fin':
+            // une carrière du livre finie sur une de ses fins : le livre lu jusqu'au bout
+            if (!livres.containsKey(v)) errors.add('$where: fin d\'un livre inconnu « $v »');
+            final fins = _strList(t['fins']);
+            if (fins.isEmpty) errors.add('$where: `fins` : les fins du livre qui donnent la pièce');
+            for (final e in fins) {
+              if (!endingIds.contains(e)) errors.add('$where: fin inconnue « $e »');
+            }
+          case 'album':
+            if (v.isEmpty) errors.add('$where: album sans id de vignette');
+        }
+      }
+      pieces.add({
+        'id': id,
+        'titre': p['titre'].toString(),
+        'date': p['date']?.toString() ?? '',
+        'ordre': (p['ordre'] as num?)?.toInt() ?? 0,
+        'livres': lv,
+        'ou': p['ou']?.toString() ?? '',
+        'texte': p['texte'].toString(),
+        'requise': p['requise'] != false,
+        'trouve': {for (final k in t.keys) k: (k == 'drapeaux' || k == 'fins') ? _strList(t[k]) : t[k].toString()},
+      });
+    }
+    pieces.sort((a, b) => (a['ordre'] as int).compareTo(b['ordre'] as int));
+    final ep = (d['epilogue'] as Map?)?.cast<String, dynamic>() ?? const {};
+    final ci = ep['cinematique']?.toString() ?? '';
+    if (pieces.isNotEmpty && !cinematiques.contains(ci)) errors.add('ville/dossier/epilogue: scène jouée « $ci » inconnue');
+    long(ep['brillante'], 'ville/dossier/epilogue/brillante', 200, requis: false);
+    long(d['titre'], 'ville/dossier/titre', 40);
+    dossier.addAll({
+      'titre': d['titre']?.toString() ?? '',
+      'pieces': pieces,
+      'epilogue': {for (final k in ep.keys) k: ep[k].toString()},
+    });
+  }
+
+  // ─── tes fantômes : par livre, les faits qu'une carrière laisse aux suivantes
+  final fantomes = <String, dynamic>{};
+  final fl = ((m['fantomes'] as Map?)?['livres'] as Map?)?.cast<String, dynamic>();
+  if (fl != null) {
+    final vus = <String>{};
+    final out = <String, dynamic>{};
+    for (final livre in fl.keys.toList()..sort()) {
+      final where = 'ville/fantomes/$livre';
+      final info = livres[livre];
+      if (info == null) {
+        errors.add('$where: livre inconnu (aucun postulat ne pose histoire_$livre)');
+        continue;
+      }
+      final faits = <Map<String, dynamic>>[];
+      for (final raw in ((fl[livre] as Map?)?['faits'] as List? ?? const [])) {
+        final x = (raw as Map).cast<String, dynamic>();
+        final id = x['id']?.toString() ?? '';
+        final w = '$where/$id';
+        if (!idRe.hasMatch(id) || !id.startsWith('${livre}_') || !vus.add(id)) errors.add('$w: id vide, en double, ou qui ne commence pas par ${livre}_');
+        long(x['texte'], '$w/texte', 120);
+        final fins = _strList(x['fins']), drapeaux = _strList(x['drapeaux']), cartes = _strList(x['cartes']);
+        if (fins.isEmpty && drapeaux.isEmpty && cartes.isEmpty) errors.add('$w: ni `fins`, ni `drapeaux`, ni `cartes`');
+        for (final e in fins) {
+          if (!endingIds.contains(e)) errors.add('$w: fin inconnue « $e »');
+        }
+        for (final c in cartes) {
+          if (!cardIds.contains(c)) errors.add('$w: carte inconnue « $c »');
+        }
+        final cote = x['cote']?.toString();
+        if (cartes.isNotEmpty && cote != 'gauche' && cote != 'droite') errors.add('$w: `cote` : gauche | droite');
+        faits.add({
+          'id': id,
+          'texte': x['texte'].toString(),
+          if (fins.isNotEmpty) 'fins': fins,
+          if (drapeaux.isNotEmpty) 'drapeaux': drapeaux,
+          if (cartes.isNotEmpty) 'cartes': cartes,
+          if (cote != null) 'cote': cote,
+        });
+      }
+      out[livre] = {...info, 'faits': faits};
+    }
+    // les livres sans fait se souviennent quand même (le nom, les années)
+    for (final l in livres.keys.toList()..sort()) {
+      out.putIfAbsent(l, () => {...livres[l]!, 'faits': const <Map<String, dynamic>>[]});
+    }
+    fantomes['livres'] = out;
+  }
+  return (dossier: dossier, fantomes: fantomes);
 }
 
 /// Le mode histoire (calendar.yaml `director.jauges_fatales: false`) : une

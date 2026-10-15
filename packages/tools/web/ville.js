@@ -995,6 +995,13 @@
     // comme les cartes (text.dart) : le nom en capitales, les initiales
     M.NOM = (e.nom || "").toLocaleUpperCase("fr-FR");
     M.initiales = ((e.prenom || "").charAt(0) + (e.nom || "").charAt(0)).toLocaleUpperCase("fr-FR");
+    // tes fantômes (preview_dossier.js, Engine.heritage) : le nom d'une carrière d'avant, élidé
+    // comme dans les cartes (« celle d'Ollivier »)
+    var fa = (vue && vue.fantomes) || {};
+    for (var f in fa) M[f] = fa[f];
+    t = String(t).replace(/(^|[\s(«'’-])([Dd]e|[Qq]ue) \{(fantome_\w+)\}/g, function (m, a, w, k) {
+      return M[k] && /^[AEIOUYÀÂÉÈÊËÎÏÔÙÛaeiouyàâéèêëîïôùû]/.test(M[k]) ? a + w.slice(0, -1) + "'" + M[k] : m;
+    });
     for (var k in extra || {}) M[k] = extra[k];
     return articles(String(t).replace(/\{(\w+)\}/g, function (m, cle) { return M[cle] != null ? M[cle] : m; }));
   }

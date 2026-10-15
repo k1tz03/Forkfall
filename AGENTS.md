@@ -28,7 +28,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 3 749 cartes, 341 arcs, 118 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 172 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 178 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
@@ -133,7 +133,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 172 tests
+cd packages/core && dart test                    # 178 tests
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -236,6 +236,22 @@ Ce que la ville porte en plus des cartes :
   `album_echange_<gens>`, donc un point de lien. Une page finie paie (pochettes, tuyau, francs, un
   quartier ouvert d'avance). La cinquième de 1974 est une brillante sans nom ; l'album l'annonce par
   l'événement `fusible:album` (`{type: 'brillante'|'page', id}`), que le dossier 1974 écoute.
+- **Le dossier 1974** (`docs/histoires/dossier_1974.md`, `content/ville/dossier_1974.yaml`,
+  `preview_dossier.js`, `ville_dossier.js`) : la finale de 1974 et son cinquième visage gratté
+  deviennent une enquête qui se garde d'une carrière à l'autre (`fusible.dossier.v1`) : douze pièces,
+  une au moins par livre (un tiroir, des scènes de la semaine, des conversations surprises, deux scènes
+  jouées du livre 10, la fin du livre 1, la brillante de l'album), un onglet du Carnet, et un épilogue
+  en mars 2050 qui se joue depuis l'accueil quand le dossier est complet. Le secret de « Trois mille
+  visages » reste à ce livre : seule l'ardoise le dit, et elle ne s'obtient qu'en finissant le livre 1
+  sur une de ses fins ; les autres pièces parlent de l'homme en écharpe, jamais de l'enveloppe.
+- **Tes fantômes** (`docs/histoires/fantomes.md`, `content/ville/fantomes.yaml`,
+  `content/cards/common/fantomes.yaml`) : chaque carrière finie laisse son nom, son livre, ses années,
+  sa fin et trois faits au plus (`fusible.fantomes.v1`) ; un livre plus tardif en hérite au crochet
+  `debut` par `Engine.heritage` (aucun tirage, seulement des drapeaux `fantome_*`/`dossier_*` et des
+  noms) : le vieux du Corner qui se trompe, une plaque, le livre de Léa, Mbako en 2024. Un livre ne se
+  souvient que des livres qui commencent avant lui. Le Code de Carrière ne rejoue qu'avec le même
+  héritage (la page le garde par graine, `fusible.heritage.v1`) ; un défi ou le livre du jour part sans
+  héritage (`FusibleDossier.sansHeritage()`).
 - **Les intérieurs** (`docs/design/pixel_iso/interieurs_jeu.js`, `pieces/`, `pieces/_plan.js` ;
   `packages/tools/web/ville_dedans.js`) : on entre dans tous les lieux qui ont une porte (39 pièces,
   toutes modelées à la main ; une pièce ajoutée au plan sans son fichier sort en ébauche). Une pièce

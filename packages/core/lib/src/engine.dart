@@ -296,6 +296,35 @@ class Engine {
     return s;
   }
 
+  /// TES FANTÔMES ET LE DOSSIER 1974 (docs/histoires/fantomes.md, dossier_1974.md) : ce que la
+  /// page garde des carrières d'avant, posé au début d'une carrière plus tardive. Des drapeaux
+  /// (`fantome_<livre>`, `fantome_<fait>`, `dossier_<pièce>`) que lisent les `when` et les `si`,
+  /// et des noms (`fantome_<livre>` : un nom de famille ; `fantome_<livre>_annees` : « 1990-1993 »)
+  /// que rendent les textes. Pur comme `activite`, et il ne tire RIEN : ni carte, ni aléa —
+  /// `rngState`, la carte en attente et les jauges ne bougent pas. Il n'écrit que sous ces deux
+  /// préfixes (un héritage ne pose pas un drapeau d'histoire, ne renomme pas le club) ; un nom
+  /// passe par la même normalisation que le nom saisi. Une carrière finie revient telle quelle.
+  ///
+  /// Le Code de Carrière (graine + swipes) ne le rejoue pas : une carrière héritière se rejoue
+  /// avec le même héritage, et sans héritage, la carrière est celle d'avant, carte pour carte.
+  GameState heritage(GameState prev, {Iterable<String> drapeaux = const [], Map<String, String> noms = const {}}) {
+    final s = prev.clone();
+    if (s.over) return s;
+    final cle = RegExp(r'^(fantome|dossier)_[a-z0-9_]{1,40}$');
+    for (final f in drapeaux) {
+      if (cle.hasMatch(f)) s.flags.add(f);
+    }
+    // dans l'ordre des clés : la sauvegarde (toJson) écrit `named` dans l'ordre d'insertion
+    final annees = RegExp(r'^\d{4}(-\d{4})?$');
+    for (final k in noms.keys.where((k) => k.startsWith('fantome_') && cle.hasMatch(k)).toList()..sort()) {
+      final brut = noms[k]!.trim();
+      final v = k.endsWith('_annees') ? (annees.hasMatch(brut) ? brut : '') : normalizeName(brut, max: 16);
+      if (v.isEmpty || isBlacklisted(v, content.blacklist)) continue;
+      s.entities.named[k] = v;
+    }
+    return s;
+  }
+
   void _appliquerVille(GameState s, EffetVille e) {
     final relAvant = Map<String, int>.of(s.relations);
     // Le Rng n'est là que pour la signature : un effet de la ville n'a ni `rand`
