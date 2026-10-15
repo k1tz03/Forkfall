@@ -350,7 +350,19 @@
       etat.demarrage = true;
       setTimeout(function () { etat.demarrage = false; }, 900);
       jingle();
-      try { A.demarrer(d.livre, d.graine); } catch (e) { bruit("relever", e); }
+      demarrerSurGraine(d.livre, d.graine, "relever");
+    }
+    // Un défi ou le livre du jour rejoue la carrière de quelqu'un d'autre : sans l'héritage des carrières
+    // passées (le dossier « tes fantômes » le pose au crochet 'debut'), la même graine ne donnerait pas la même
+    // carrière. Appel gardé : le module du dossier n'est pas toujours dans la page.
+    function sansHeritage() {
+      try {
+        if (window.FusibleDossier && typeof window.FusibleDossier.sansHeritage === "function") window.FusibleDossier.sansHeritage();
+      } catch (e) { bruit("sans héritage", e); }
+    }
+    function demarrerSurGraine(livre, graine, nom) {
+      sansHeritage();
+      try { A.demarrer(livre, graine); } catch (e) { bruit(nom, e); }
     }
     function jingle() { try { if (window.FusibleAudio && window.FusibleAudio.jingle) window.FusibleAudio.jingle("depart"); } catch (e) {} }
     function nomDeDefi(d) { return d && d.nom ? joliNom(d.nom) : ""; }
@@ -626,7 +638,7 @@
       etat.jourLance = { date: jour.date, postulat: jour.postulat, seed: jour.seed };     // en mémoire aussi : sans stockage
       ecrire(CLE_JOUR, etat.jourLance);
       jingle();
-      try { A.demarrer(jour.postulat, jour.seed); } catch (e) { bruit("lancer le livre du jour", e); }
+      demarrerSurGraine(jour.postulat, jour.seed, "lancer le livre du jour");
     }
     function saisieCode() {
       var w = el("div", "pt-code");
