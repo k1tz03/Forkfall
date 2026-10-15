@@ -68,13 +68,17 @@ arcs:
       journal: "{annee} : trois mille masques en carton au virage du Racing, et un homme pour les compter à la grille."
     steps:
       - id: biere
-        card: en.h1.masques.biere
+        card:
+          - { id: en.h1.masques.biere_su, if: "flag('h1_chant_su')" }
+          - { id: en.h1.masques.biere }
         next: [ { step: compte, in: [2, 3] } ]
       - id: compte
         card: en.h1.masques.compte
         next: [ { step: imprimeur, in: [3, 5] } ]
       - id: imprimeur
-        card: en.h1.masques.imprimeur
+        card:
+          - { id: en.h1.masques.imprimeur_promesse, if: "flag('h1_promesse_virage')" }
+          - { id: en.h1.masques.imprimeur }
         next: []
 
   # ================================================================ LE MAILLOT
@@ -262,7 +266,9 @@ arcs:
           - { step: mur, if: "flag('h1_phrase_buvette')", in: [3, 4] }
           - { step: sifflet, at_season: 1, at: [4, 5] }
       - id: mur
-        card: en.h1.lhoste.mur
+        card:
+          - { id: en.h1.lhoste.mur_virage, if: "flag('h1_virage_temoin')" }
+          - { id: en.h1.lhoste.mur }
         next: [ { step: sifflet, at_season: 1, at: [4, 5] } ]
       - id: sifflet
         card:

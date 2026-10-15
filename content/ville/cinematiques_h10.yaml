@@ -5,13 +5,14 @@
 # retraitée, qui écrit la lettre du dimanche) ; Mireille, la nièce de Josiane, tient le
 # secrétariat ; l'argent est en écus.
 #
-# L'introduction : la veille de l'élection. Les entrepôts de la Tréfilerie, où une femme en
-# manteau d'automne apporte le clapet (il ne sonnera qu'après le résultat : la carte de
-# Madame Septembre, pr.h10.pro6_septembre, le fait sonner) ; puis la buvette du kop, où l'on
-# prépare les seaux du vote, où Gégé voit que la veste penche, et où Nino pend la sienne à
-# la patère du poêle. Elle mène à l'élection (pr.h10.pro1_election) sans la raconter.
+# L'introduction : quatre répliques à la buvette du kop, le soir du vote, où Gégé voit que la
+# veste penche (le clapet que la femme en manteau d'automne a remis la veille, sur un quai) ;
+# elle mène à l'élection (pr.h10.pro1_election) sans la raconter. Le reste de l'ancienne
+# introduction vit plus loin : l'écran de la Commission et la patère de Nino juste après le
+# vote (h10.ci.ecran), le quai de la Tréfilerie revu quand le clapet sonne pour la première
+# fois, avant la carte de Madame Septembre (h10.ci.quai).
 #
-# Onze scènes ensuite, de 2037 à l'assemblée :
+# Treize scènes ensuite, de 2037 à l'assemblée :
 #   · avant une carte : Mbako sur le palier (S0, 16), la seconde sonnerie (S1, 10), le neveu
 #     au zinc (S1, 17), la lettre de Gégé (S2, 11), l'assemblée (S3, 1) ;
 #   · après, sur un drapeau : la dernière nuit du petit Brac au centre (vendu), cinq heures
@@ -25,40 +26,19 @@
 # l'imprimeur) ; aucune ne devance ce que les cartes révèlent.
 cinematiques:
   # ===================================================================== L'INTRODUCTION
+  # Quatre répliques à la buvette du kop, le soir du vote, et la première carte (l'élection)
+  # se joue sur place. Le reste de l'ancienne introduction est distillé : l'écran où Lian Mbako
+  # plaide devant la Commission, « Juin 2040 » et la veste de Nino à la patère, juste après le
+  # vote (h10.ci.ecran) ; le quai de la Tréfilerie, la veille, où une femme en manteau d'automne
+  # remet le clapet, revu au moment où il sonne pour la première fois (h10.ci.quai, avant
+  # Madame Septembre). Les graines sont toujours là : la veste qui penche, la patère, le clapet,
+  # la date de 2040, le manteau d'automne.
   - id: h10.ci.intro
     quand: debut
     roles: [president]
     si: "flag(histoire_h10)"
     titre: "Les Deux Téléphones"
     sous: "Aubérive, septembre 2037"
-    lieu: friche
-    tranche: nuit
-    meteo: pluie
-    suite: h10.ci.intro_2
-    acteurs:
-      - {qui: toi, place: porte}
-      - {id: gardien, qui: portier, nom: "Le gardien de nuit", place: [-1, 2]}
-      - {id: manteau, qui: passante, nom: "Une femme en manteau", place: [3, 1], cache: true}
-    etapes:
-      - {musique: sombre}
-      - {narration: "La veille de l'élection, vingt-trois heures. Les camions de ton entreprise dorment à quai, dans les entrepôts de l'ancienne Tréfilerie. Au bout de la cour, un feu de palettes tient sous la bruine."}
-      - {qui: toi, va: [1, 1]}
-      - {qui: gardien, dit: "Une dame vous attend au quai quatre. Elle n'a pas voulu de parapluie. Elle a dit que vous saviez."}
-      - {qui: gardien, geste: fume}
-      - {qui: toi, pense: "Deux pages signées en juin, sur une table de jardin. Rien n'y parlait d'un quai, ni d'une dame."}
-      - {qui: manteau, entre: [3, 1]}
-      - {narration: "Elle sort de l'ombre du quai de chargement. Un manteau d'automne, en septembre, boutonné jusqu'au col. Le visage reste sous la lampe éteinte."}
-      - {qui: manteau, dit: "Vingt-trois heures. Vous êtes à l'heure ; on nous l'avait dit."}
-      - {narration: "Elle tend un téléphone à clapet, gris, sans marque, un modèle de 1995. Elle le pose dans ta main et referme tes doigts dessus, un à un."}
-      - {qui: manteau, dit: "Il ne sonnera pas avant le résultat. Ensuite, une fois par mois. Ne le prêtez pas : il ne connaît que vous."}
-      - {qui: gardien, emote: "?"}
-      - {qui: manteau, dit: "Demain soir, levez la main droite pour remercier. Ça se voit mieux sur les photos."}
-      - {qui: manteau, sort: true}
-      - {narration: "Tu glisses le clapet dans la poche intérieure, à gauche. La veste ne tombe déjà plus pareil."}
-      - {qui: gardien, dit: "Elle est repartie à pied. Il n'y a plus de car, à cette heure-ci, sur la friche."}
-
-  - id: h10.ci.intro_2
-    quand: suite
     lieu: buvette
     tranche: nuit
     acteurs:
@@ -68,21 +48,70 @@ cinematiques:
       - {id: socio, qui: fan, nom: "Un socio", place: zinc_1}
       - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
     etapes:
-      - {narration: "Minuit passé, la buvette du kop, sous la Nord. Demain soir, on y vote. Des seaux à glace attendent les bulletins ; Nino les compte, vides, un par un."}
+      - {musique: sombre}
+      - {narration: "La buvette du kop, le soir du vote. Des seaux à glace attendent les bulletins ; Nino les compte, vides, un par un. Dans ta poche intérieure, à gauche, un clapet gris que tu n'as pas demandé."}
       - {qui: toi, va: table_1}
-      - {narration: "Au-dessus du comptoir, l'écran, le son coupé : Lian Mbako, président de la Fédération, en costume clair, devant la Commission des franchises."}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "Ta veste penche, 212. On dirait que tu as une pierre dans la poche."}
+      - {qui: toi, pense: "Elle ne pèse rien. Il le voit quand même. Hier soir, sur un quai, une femme en manteau l'a refermé dans ma main, un doigt après l'autre."}
+      - {qui: nino, dit: "Laisse, mon oncle. Un soir de vote, les candidats ont toujours les poches pleines. Moi, je compte à voix haute, et seul : c'est plus rapide."}
+
+  # Le vote lu, la buvette ne se vide pas : l'écran où le président de la Fédération plaide
+  # devant la Commission des franchises, la date que Gégé donne, la veste que Nino pend.
+  - id: h10.ci.ecran
+    quand: carte
+    cartes: [pr.h10.pro1_election_socios, pr.h10.pro1_election]
+    moment: apres
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: gege, place: fond, pose: assis}
+      - {qui: nino, place: table_2}
+      - {id: socio, qui: fan, nom: "Un socio", place: zinc_1}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+    etapes:
+      - {musique: sombre}
+      - {narration: "Minuit passé, la buvette du kop. Au-dessus du comptoir, l'écran, le son coupé : Lian Mbako, président de la Fédération, en costume clair, devant la Commission des franchises."}
+      - {qui: toi, va: table_1}
       - {qui: socio, dit: "Le petit Mbako. Mon père l'a vu jouer ici, à seize ans. Aujourd'hui, il vient fermer la porte derrière lui."}
       - {qui: gege, dit: "Éteins-moi ça. Je ne regarde pas les gens d'ici parler à la capitale.", ton: noir}
       - {narration: "Le patron coupe l'écran. Dans le noir de la vitre, la buvette se reflète, et Gégé au fond, qui ne bouge pas."}
-      - {qui: nino, dit: "Deux mille quatre cents cartes à jour de cotisation. Demain, je compte à voix haute, et seul. C'est plus rapide."}
       - {qui: gege, regarde: toi}
-      - {qui: gege, dit: "Ta veste penche, 212. On dirait que tu as une pierre dans la poche."}
-      - {qui: toi, pense: "Elle ne pèse rien. Il le voit quand même."}
-      - {qui: nino, dit: "Laisse, mon oncle. La veille d'un vote, les candidats ont toujours les poches pleines."}
-      - {narration: "Nino retire sa veste et la pend à la patère, au-dessus du poêle. Il la lisse du plat de la main avant de la lâcher."}
       - {qui: gege, dit: "Juin 2040. Après, monter sera un mot de vieux. Je voudrais l'avoir dit une fois, avant."}
       - {qui: gege, geste: tete_basse}
-      - {narration: "Il ferme les yeux. Nino reprend son compte à voix basse, depuis un, comme s'il avait perdu le fil."}
+      - {narration: "Nino retire sa veste, la pend à la patère au-dessus du poêle et la lisse du plat de la main avant de la lâcher. Puis il reprend son compte à voix basse, depuis un, comme s'il avait perdu le fil."}
+
+  # La veille du vote, revue quand le clapet sonne : le quai de la Tréfilerie, la femme en
+  # manteau d'automne, et ce qu'elle a dit en refermant les doigts.
+  - id: h10.ci.quai
+    quand: carte
+    cartes: [pr.h10.pro6_septembre]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h10)"
+    lieu: friche
+    tranche: nuit
+    meteo: pluie
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: gardien, qui: portier, nom: "Le gardien de nuit", place: [-1, 2]}
+      - {id: manteau, qui: passante, nom: "Une femme en manteau", place: [3, 1], cache: true}
+    etapes:
+      - {musique: sombre}
+      - {fondu: "La veille du vote, vingt-trois heures. L'ancienne Tréfilerie, sous la bruine."}
+      - {narration: "Les camions de ton entreprise dorment à quai. Au bout de la cour, un feu de palettes tient sous la pluie."}
+      - {qui: toi, va: [1, 1]}
+      - {qui: gardien, dit: "Une dame vous attend au quai quatre. Elle n'a pas voulu de parapluie. Elle a dit que vous saviez."}
+      - {qui: toi, pense: "Deux pages signées en juin, sur une table de jardin. Rien n'y parlait d'un quai, ni d'une dame."}
+      - {qui: manteau, entre: [3, 1]}
+      - {narration: "Un manteau d'automne, en septembre, boutonné jusqu'au col. Le visage reste sous la lampe éteinte. Elle tend un téléphone à clapet, gris, un modèle de 1995, et referme tes doigts dessus, un à un."}
+      - {qui: manteau, dit: "Il ne sonnera pas avant le résultat. Ensuite, une fois par mois. Ne le prêtez pas : il ne connaît que vous."}
+      - {qui: manteau, dit: "Demain soir, levez la main droite pour remercier. Ça se voit mieux sur les photos."}
+      - {qui: manteau, sort: true}
+      - {qui: gardien, dit: "Elle est repartie à pied. Il n'y a plus de car, à cette heure-ci, sur la friche."}
 
   # ===================================================================== SAISON 1 (2037-2038)
   # Le petit Brac vendu (la première commande, Madame Janvier) : sa dernière nuit au centre de
@@ -271,7 +300,7 @@ cinematiques:
   # Rouvier en bas, Nino assis sur la marche ; l'enveloppe attend sur la couverture.
   - id: h10.ci.escalier_du_local
     quand: carte
-    cartes: [pr.h10.c2_lettre, pr.h10.c2_lettre_promesse]
+    cartes: [pr.h10.c2_lettre, pr.h10.c2_lettre_promesse, pr.h10.c2_lettre_cafe, pr.h10.c2_lettre_nino, pr.h10.c2_lettre_promesse_cafe, pr.h10.c2_lettre_promesse_nino]
     moment: avant
     roles: [president]
     si: "flag(histoire_h10)"

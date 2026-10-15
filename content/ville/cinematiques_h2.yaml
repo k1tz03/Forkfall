@@ -9,10 +9,13 @@
 # carte qui l'y trouve. Norbert est poli, précis, serviable : la menace est sous la politesse.
 # Écrit au neutre : aucune ligne n'accorde le héros sans `{pg, select, …}`.
 #
-# L'introduction (trois lieux, un soir de pluie, avant la neuvième journée) : le terrain
-# annexe, où tu entraînes les moins de dix-sept ans et où Vukić vient te chercher ; le
-# club-house, où le président dicte « remercié » au téléphone ; le Terminus, où Norbert sait
-# déjà. Elle s'arrête sur le parking, sans le montrer : la première carte y attend.
+# L'introduction (quatre répliques, un soir de pluie, avant la neuvième journée) : Vukić vient
+# te chercher sur le parking, où la première carte attend. Ce que la nuit d'avant disait — les
+# gamins du terrain annexe, le président qui dicte « remercié », le Terminus où Norbert sait
+# déjà — est distribué sur la première semaine, après les premiers choix (content/ville/
+# intro_h2.yaml). Les scènes qui suivent un choix du prologue ou du livre (la compo, le
+# communiqué, la panne, le fusible, le rasoir, le « vivant ») ont deux versions, ou une
+# version de plus : celle de la variante d'abord, celle du défaut ensuite.
 #
 # Les scènes, dans l'ordre du livre :
 #   S1  dix heures au secrétariat (avant Monique) · le jeudi de Bréhaut (après le premier
@@ -30,73 +33,19 @@ cinematiques:
     si: "flag(histoire_h2)"
     titre: "Le Sapin en carton"
     sous: "Aubérive, 1990 · avant la neuvième journée"
-    lieu: terrain
+    lieu: voiture
     tranche: soir
     meteo: pluie
-    suite: h2.ci.intro_2
     acteurs:
       - {qui: toi, place: [0, 3]}
-      - {id: gamin, qui: enfant, nom: "Un gamin des moins de dix-sept", place: [2, 4]}
-      - {id: gamin2, qui: enfant, nom: "Un autre gamin", place: [-2, 4]}
       - {qui: vukic, place: porte, cache: true}
     etapes:
       - {musique: ville_nuit}
-      - {narration: "Le terrain annexe, sous la pluie. Un projecteur sur quatre. Les moins de dix-sept ans du Racing ramassent les plots dans la boue ; trois ans que tu les entraînes sous ce projecteur-là."}
-      - {qui: gamin, dit: "Coach, c'est vrai qu'ils ont viré Mercadier ? Au collège, il y en a qui disent qu'il est mort."}
-      - {qui: gamin2, dit: "N'importe quoi. Il est parti en train. C'est mon père qui l'a dit."}
+      - {narration: "Huit journées, et un entraîneur « remercié » que personne n'a vu partir. Tu entraînais les moins de dix-sept ans ; ce soir, Vukić te cherche sur le parking du stade, sous la pluie."}
       - {qui: vukic, entre: [1, 2]}
-      - {narration: "Zoran Vukić, l'adjoint de l'équipe première, s'arrête à la ligne de touche, sans parapluie. L'eau lui coule dans le col ; il ne la sent pas."}
-      - {qui: vukic, dit: "Le président te demande. Ce soir. Laisse les plots, ils les ramasseront."}
-      - {qui: gamin2, dit: "C'est pour le banc ? Coach, c'est pour son banc ?"}
-      - {qui: vukic, regarde: gamin2}
-      - {qui: vukic, dit: "Ramasse les plots."}
-      - {qui: toi, pense: "Trois tampons sur quatre, au stage fédéral. Pour un banc de deuxième division, il en faut quatre. Le président le sait."}
+      - {qui: vukic, dit: "Le président te donne son bureau, son sifflet et moi. Six semaines, jusqu'à nouvel ordre. Tu coûtes peu, et tu es là."}
+      - {qui: toi, pense: "Trois tampons sur quatre, au stage fédéral. Pour un banc de deuxième division, il en faut quatre. Le président n'a pas voulu le savoir."}
       - {qui: vukic, dit: "Je pose ses plots à sa place, tous les matins. Je continue tant qu'on ne me dit pas d'arrêter. C'est toi qui me le diras ?"}
-      - {qui: vukic, sort: true}
-      - {narration: "Les gamins se taisent. L'un d'eux a laissé un plot au milieu du terrain, sous le projecteur, et personne ne va le chercher."}
-
-  - id: h2.ci.intro_2
-    quand: suite
-    lieu: clubhouse
-    tranche: nuit
-    suite: h2.ci.intro_3
-    acteurs:
-      - {qui: toi, place: porte}
-      - {qui: aulard, place: president}
-      - {qui: josiane, place: secretaire}
-    etapes:
-      - {narration: "Le club-house, dix heures du soir. Tout est éteint, sauf la lampe du secrétariat et celle du premier. Ça sent le café réchauffé."}
-      - {qui: josiane, geste: ecrit}
-      - {qui: aulard, dit: "Une ligne. « Le Racing remercie Roland Mercadier. » Pas de date, pas de raison. L'Écho l'aura demain matin.", geste: telephone}
-      - {qui: josiane, emote: "..."}
-      - {qui: toi, va: visiteur_1}
-      - {qui: aulard, dit: "Six semaines, jusqu'à nouvel ordre. Son bureau, son sifflet, son adjoint. Tu coûtes peu, et tu es là."}
-      - {qui: toi, pense: "Il ne parle pas du quatrième tampon. Il ne veut pas le savoir."}
-      - {qui: aulard, dit: "Les gars vont te demander où il est. Tu diras ce que dit le communiqué : remercié. C'est un mot qui se suffit."}
-      - {narration: "Josiane monte la feuille. Vaubourg la signe sans la relire, et la tamponne."}
-      - {son: tampon_fin}
-      - {qui: aulard, dit: "Et ne t'occupe pas du parking. Le parking, c'est moi.", ton: noir}
-      - {narration: "Vaubourg éteint sa lampe. En bas, Madame Josiane sort deux tasses du placard, en regarde une longtemps, et la range."}
-
-  - id: h2.ci.intro_3
-    quand: suite
-    lieu: terminus
-    tranche: soir
-    acteurs:
-      - {qui: toi, place: porte}
-      - {qui: norbert, place: norbert}
-      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
-      - {id: chauffeur, qui: passant, nom: "Un chauffeur de car", place: comptoir_1}
-    etapes:
-      - {narration: "Le Terminus, onze heures du soir. Le bar des chauffeurs de car : on y boit debout, sous les horaires punaisés. La pluie coule sur la vitre."}
-      - {qui: toi, va: comptoir_2}
-      - {qui: chauffeur, dit: "L'intérimaire, il paraît : quelqu'un des moins de dix-sept. Pour six semaines."}
-      - {qui: patron, dit: "Six semaines. Après, on verra bien qui revient."}
-      - {qui: norbert, regarde: toi}
-      - {qui: norbert, dit: "Félicitations, coach. Ça s'est su avant la fin de la réunion. Ici, les nouvelles prennent le car.", ton: sourire}
-      - {qui: toi, pense: "Norbert. Le chauffeur du club. Il dort dans le car pendant les matchs, et tout le monde le trouve normal."}
-      - {qui: norbert, dit: "Trois jours de pluie. Les parkings n'ont jamais été aussi propres."}
-      - {narration: "Il accroche les clés du car au clou, derrière le comptoir. Le trousseau se balance longtemps, puis s'arrête."}
 
   # ═══════════════════════════════════════════════ SAISON 1 — L'ABSENT
   # Avant le premier appel de Monique : dix heures, le cahier de Josiane, et le téléphone
@@ -311,6 +260,39 @@ cinematiques:
 
   # Le lendemain de la Rive (S1, créneau 16), au tabac du Quai : par la vitre, les plongeurs ;
   # au comptoir, les trois qui ont besoin de trois choses différentes au fond de l'eau.
+  - id: h2.ci.quai_briquet
+    quand: carte
+    carte: en.h2.s1.rive
+    moment: apres
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_cigarette_norbert) && flag(h2_rive_vu)"
+    lieu: tabac
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: patron}
+      - {qui: monique, place: table_1}
+      - {qui: achard, place: marinier_2}
+      - {id: pompier, qui: passant, nom: "Un pompier", place: porte, cache: true}
+      - {qui: aulard, place: porte, cache: true}
+    etapes:
+      - {fondu: "Le lendemain matin. Le tabac du Quai."}
+      - {musique: sombre}
+      - {narration: "Par la vitre du tabac du Quai : la grue de la ville, deux plongeurs, une corde qui descend dans l'eau brune. Au comptoir, personne ne boit son café."}
+      - {qui: toi, pense: "Un briquet à capuchon doré, cette flamme, hier soir. Le même que celui qu'il m'a tendu dans la neige, pour sa cigarette."}
+      - {qui: toi, va: visiteur}
+      - {qui: pompier, entre: marinier_1}
+      - {qui: pompier, dit: "La voiture est au fond, couchée sur le flanc. Personne dedans. On a remonté ce qui flottait."}
+      - {qui: monique, dit: "Personne ? Vous êtes sûr ?"}
+      - {qui: pompier, dit: "Sûr, madame. Rien qu'un sapin en carton. Il tournait encore quand on est arrivés."}
+      - {qui: achard, dit: "Une voiture sans personne dedans, au fond d'une rivière : chez nous, ça s'appelle un stationnement."}
+      - {qui: aulard, entre: porte}
+      - {qui: aulard, dit: "Elle est à qui, cette voiture ? Sur le papier, je veux dire. Elle est à qui ?"}
+      - {qui: achard, dit: "À un homme disparu, monsieur le président. Disparu, pas mort. Pour mort, il faut un juge."}
+      - {qui: monique, regarde: toi}
+      - {qui: monique, dit: "Il avait horreur de l'eau. Entraîneur, il disait, c'est un métier où l'on reste au bord."}
+      - {narration: "Vaubourg regarde la vitre. Achard regarde Vaubourg. Personne ne regarde Monique."}
+
   - id: h2.ci.quai
     quand: carte
     carte: en.h2.s1.rive
@@ -375,6 +357,37 @@ cinematiques:
 
   # Avant l'audience de Portclair, quand Roland n'est pas à l'hôpital sous son nom : le car de
   # six heures quarante, Monique en noir, et Norbert qui souhaite bonne route.
+  - id: h2.ci.premier_car_president
+    quand: carte
+    prefixe: "en.h2.s2.audience"
+    moment: avant
+    roles: [entraineur]
+    si: "flag(histoire_h2) && flag(h2_dit_vivant_au_president) && !flag(h2_hopital) && !flag(h2_carnet_police)"
+    lieu: gareRoutiere
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: monique, place: banc_1}
+      - {qui: norbert, place: norbert}
+      - {qui: aulard, place: banc_3, cache: true}
+    etapes:
+      - {narration: "Gare routière, six heures trente, un mardi d'avril. Le car de Portclair attend, moteur allumé. Monique Mercadier est sur le banc, en manteau noir, un sac sur les genoux."}
+      - {qui: toi, va: banc_2}
+      - {qui: monique, dit: "J'ai mis le noir. Je ne savais pas quoi mettre, pour un mort qui n'est pas mort."}
+      - {qui: aulard, entre: banc_3}
+      - {narration: "Vaubourg arrive à pied, le col relevé, un billet de car à la main. Il ne prend jamais le car."}
+      - {qui: aulard, dit: "Je fais le voyage. Un homme que Josiane dit vivant : il faut quelqu'un du club pour entendre le juge en décider.", ton: noir}
+      - {qui: norbert, dit: "Bonne route, monsieur le président. Quarante minutes jusqu'à Portclair. On a le temps de penser à ce qu'on va dire."}
+      - {qui: monique, regarde: aulard}
+      - {qui: monique, geste: tete_basse}
+      - {qui: norbert, regarde: toi}
+      - {qui: norbert, dit: "Le juge de Portclair déjeune à midi pile, coach. Ceux qui parlent trop longtemps, il les fait revenir."}
+      - {son: klaxon}
+      - {narration: "Le chauffeur du car de Portclair donne deux coups de klaxon."}
+      - {qui: toi, pense: "Quarante minutes pour décider si un homme est mort, avec celui qui veut qu'il le soit à côté de moi."}
+      - {qui: monique, va: quai}
+      - {narration: "Monique monte la première. Elle s'assoit au dernier rang, côté fenêtre, du côté de la Rive."}
+
   - id: h2.ci.premier_car
     quand: carte
     prefixe: "en.h2.s2.audience"

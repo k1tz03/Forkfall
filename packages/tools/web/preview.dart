@@ -81,10 +81,9 @@
 // (`histoire` | `eclair`) dit si les jauges tuent dans la carrière ; `semaines`
 // est son score, les journées de championnat vécues (en lecture seule : la
 // coquille l'affiche, elle n'en calcule rien) ; `frise_auto` ne s'impose jamais
-// en éclair. Deux fonctions de plus : `fusibleDefiDuJour(date)` (le rôle, le
-// postulat et la graine d'une date, les mêmes pour tout le monde) et
-// `fusibleEclairApercu(graine, postulat)` (le rôle et l'époque que cette
-// graine donne, sans rien démarrer). Le postulat éclair est caché (`chantier`).
+// en éclair. Le défi du jour (`defiDuJour`, eclair.dart) n'a pas de fonction ici :
+// la page le calcule avant que le moteur n'arrive (preview_eclair.js en est le
+// miroir). Les postulats éclair sont cachés (`chantier`).
 import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:js_interop_unsafe';
@@ -192,6 +191,11 @@ String _view() {
       'club': s.entities.named['club'] ?? '',
       'ville': s.entities.named['ville'] ?? '',
       'rival': s.entities.named['rival'] ?? '',
+    },
+    // TES FANTÔMES (docs/histoires/fantomes.md) : les noms des carrières d'avant
+    // (`{fantome_h4}`, `{fantome_h4_annees}`), que la ville rend dans ses textes comme les cartes.
+    'fantomes': {
+      for (final k in (s.entities.named.keys.where((k) => k.startsWith('fantome_')).toList()..sort())) k: s.entities.named[k],
     },
     // LA JOURNÉE DE CHAMPIONNAT, et il n'y en a qu'une. Elle vient du monde
     // simulé (`world.blocks` × six), pas du calendrier des beats : le « J » du
@@ -379,6 +383,15 @@ void main() {
         _engine = Engine(_content);
         return _postulatsJson().toJS;
       }).toJS);
+  // Le contenu d'une carrière : le commun et le livre qu'elle joue, fusionnés
+  // par la page (demarrage.js). Le moteur le relit sans rien rendre — l'accueil
+  // a déjà sa liste des histoires, et la ville son contenu.
+  globalContext.setProperty(
+      'fusibleCharger'.toJS,
+      ((JSString j) {
+        _content = loadContentFromJson(j.toDart);
+        _engine = Engine(_content);
+      }).toJS);
   // fusibleStart(seed, postulat, prenom?, nom?, genre?, ville?, club?) : les
   // cinq derniers sont facultatifs ; une chaîne vide (ou absente) laisse le
   // moteur tirer. La ville et le club : la version jouable (la ville dessinée).
@@ -452,29 +465,18 @@ void main() {
         _state = _engine.banqueroute(_state!);
         return _view().toJS;
       }).toJS);
-  // LE DÉFI DU JOUR (eclair.dart) : de la date (« 2026-10-15 », le jour de
-  // Paris que la coquille calcule), le rôle, le postulat éclair et la graine —
-  // les mêmes pour tout le monde, par hachage, sans serveur. `null` si le
-  // contenu n'a aucun postulat éclair.
+  // TES FANTÔMES ET LE DOSSIER 1974 (preview_dossier.js ; docs/histoires/fantomes.md,
+  // dossier_1974.md) : ce que la page garde des carrières d'avant, posé au début d'une carrière
+  // — `{"drapeaux": [...], "noms": {...}}` → `Engine.heritage` (des drapeaux `fantome_*` et
+  // `dossier_*`, des noms ; aucun tirage). Rend la vue.
   globalContext.setProperty(
-      'fusibleDefiDuJour'.toJS,
-      ((JSString date) {
-        final d = defiDuJour(_content, date.toDart);
-        return (d == null ? 'null' : jsonEncode(d.toJson())).toJS;
-      }).toJS);
-  // Ce que la date fixe, avant de jouer (le rôle et l'époque du jour, sur la
-  // cartouche de l'accueil) : un départ qu'on jette — `_state` ne bouge pas.
-  globalContext.setProperty(
-      'fusibleEclairApercu'.toJS,
-      ((JSNumber seed, JSNumber postulat) {
-        final s = _engine.start(seed.toDartInt, postulat: postulat.toDartInt);
-        return jsonEncode({
-          'role': s.role,
-          'roleName': _content.roles[s.role]?.name ?? s.role,
-          'year': s.year,
-          'age': s.age,
-          'genre': s.entities.genre,
-        }).toJS;
+      'fusibleHeritage'.toJS,
+      ((JSString j) {
+        final m = (jsonDecode(j.toDart) as Map).cast<String, dynamic>();
+        _state = _engine.heritage(_state!,
+            drapeaux: ((m['drapeaux'] as List?) ?? const []).map((e) => e.toString()),
+            noms: ((m['noms'] as Map?) ?? const {}).map((k, v) => MapEntry(k.toString(), v.toString())));
+        return _view().toJS;
       }).toJS);
   // La sauvegarde d'une carrière jouée en ville : l'état entier (le Code de
   // Carrière ne rejoue pas les activités).

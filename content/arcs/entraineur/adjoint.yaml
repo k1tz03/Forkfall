@@ -59,6 +59,13 @@ arcs:
           - { id: en.adjoint.discours }
         next: [ { step: novembre, if: "flag('vukic_dauphin')", at_season: 1, at: [8, 11], in: [8, 11] } ]
       - id: novembre
-        card: en.adjoint.novembre
+        # Le mode éclair (drapeau `eclair`, content/postulats.yaml) lit la même scène, mais lui
+        # laisser le banc y ferme la carrière : c'est la porte de en_dauphin (« depuis novembre »)
+        # que les livres tiennent ailleurs (en.promu.veille_dauphin) et qu'une carrière éclair, qui
+        # ne joue aucun livre, n'atteignait jamais. Hors éclair le drapeau n'existe pas : la carte
+        # de toujours, au même tirage.
+        card:
+          - { id: en.adjoint.novembre_banc, if: "flag('eclair')" }
+          - { id: en.adjoint.novembre }
         on_expire: skip
         next: []

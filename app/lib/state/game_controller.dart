@@ -200,7 +200,17 @@ class GameController extends ChangeNotifier {
   /// moteur tire un nouveau prénom.
   void succeed() {
     final prev = state;
-    final nextPostulat = prev == null ? 0 : (prev.postulat + 1) % engine.content.postulatsByIndex.length;
+    final tous = engine.content.postulatsByIndex;
+    var nextPostulat = 0;
+    if (prev != null) {
+      // le suivant, en sautant ce qui n'est pas un livre livré (`chantier` : les postulats du
+      // mode éclair, « Le Fusible », sont cachés partout où l'on en tire un)
+      nextPostulat = prev.postulat;
+      for (var i = 0; i < tous.length; i++) {
+        nextPostulat = (nextPostulat + 1) % tous.length;
+        if (!tous[nextPostulat].chantier) break;
+      }
+    }
     _nextSeed = _seedFrom(runsPlayed, nextPostulat);
     _begin(_nextSeed, nextPostulat, PlayerName(prenom: '', nom: profile.name.nom, genre: profile.name.genre));
   }

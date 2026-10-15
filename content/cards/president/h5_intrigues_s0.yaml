@@ -91,6 +91,26 @@ cards:
       effects: {vestiaire: "+", caisse: "-", set: [h5_oudart_garde], outcome: refuse}
       answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, comme si quelqu'un regardait par-dessus son épaule."
 
+  # Variante du combiné raccroché : « Tu as raccroché mardi » (h5_raccroche).
+  - id: pr.h5.ordres.jeudi_raccroche
+    roles: [president]
+    arc: president
+    tags: [vestiaire, mercato]
+    speaker: brehaut
+    lieu: bureau
+    when: "flag('h5_conseil_entendu')"
+    tone: strategique
+    once: true
+    text: "Jeudi matin. Titi Bréhaut a le fax de Halvenne : cent mille francs pour Oudart, le seul gardien sous contrat. « Tu as raccroché mardi. Eux, non : ils m'ont appelé avant toi. Je signe ? »"
+    left:
+      label: "Signe"
+      effects: {caisse: "++", vestiaire: "--", set: [h5_oudart_vendu], outcome: obei, react: [{card: pr.h5.re.vukic_oudart, if: "!seen('pr.h5.re.vukic_oudart')"}]}
+      answer: "Oudart vide son casier à midi et laisse ses gants au suivant. Il n'y a pas de suivant : Vukić prend le gamin des moins de dix-neuf ans."
+    right:
+      label: "Oudart reste"
+      effects: {vestiaire: "+", caisse: "-", set: [h5_oudart_garde], outcome: refuse}
+      answer: "Bréhaut déchire le fax en deux, puis en quatre, lentement, comme si quelqu'un regardait par-dessus son épaule."
+
   # Étape 2 — la plaque de fonte. Le Conseil la veut avant samedi.
   - id: pr.h5.ordres.plaque_obei
     roles: [president]
@@ -100,6 +120,24 @@ cards:
     tone: strategique
     once: true
     text: "Mardi, dix-huit heures. « Ici le Conseil. Bien, pour le gardien. Faites déposer la plaque de la grille Est avant samedi. Elle gêne les géomètres. Nous rappellerons. »"
+    left:
+      label: "Je la fais déposer"
+      effects: {tribunes: "-", relation: {gege: -1}, set: [h5_plaque_deposee], outcome: obei, react: [{card: pr.h5.re.gege_trous, if: "!seen('pr.h5.re.gege_trous')"}]}
+      answer: "Deux employés municipaux la dévissent au matin. Josiane la fait monter au grenier, roulée dans un maillot de 1966."
+    right:
+      label: "La plaque reste"
+      effects: {direction: "-", set: [h5_plaque_restee], outcome: refuse}
+      answer: "Le samedi, Gégé la trouve couverte d'écharpes nouées. Il n'a rien demandé à personne. Personne ne sait qui a commencé."
+
+  # Variante du mot dicté : tu avais dicté « Conseil » à Vukić, et la voix le dit comme son cahier l'écrit (h5_conseil_ecrit).
+  - id: pr.h5.ordres.plaque_conseil
+    roles: [president]
+    arc: president
+    tags: [direction, telephone]
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Mardi, dix-huit heures. « Ici le Conseil. » Tu l'entends comme Vukić l'a écrit : entre guillemets. « Bien, pour le gardien. Faites déposer la plaque de la grille Est avant samedi. Nous rappellerons. »"
     left:
       label: "Je la fais déposer"
       effects: {tribunes: "-", relation: {gege: -1}, set: [h5_plaque_deposee], outcome: obei, react: [{card: pr.h5.re.gege_trous, if: "!seen('pr.h5.re.gege_trous')"}]}
@@ -269,6 +307,26 @@ cards:
       label: "Montre-moi"
       effects: {vestiaire: "+", relation: {vukic: 1}, set: [h5_cahier_lu]}
       answer: "Six lignes, la même heure, l'écriture serrée de Vukić. Au sixième mardi, il a ajouté : « a souri en raccrochant »."
+    right:
+      label: "Ferme ce cahier"
+      effects: {vestiaire: "-", direction: "+", relation: {vukic: -1}}
+      answer: "Il le ferme. Il le range dans la poche intérieure de son blouson, contre lui, comme un portefeuille plein."
+
+  # Variante du mot dicté : « Conseil », de ta main, en face de chaque mardi (h5_conseil_ecrit).
+  - id: pr.h5.dapres.cahier_conseil
+    roles: [president]
+    arc: vestiaire
+    tags: [vestiaire, objet]
+    speaker: vukic
+    lieu: terrain
+    when: "flag('h5_conseil_entendu') && (season >= 1 || slot >= 7)"
+    tone: leger
+    once: true
+    text: "Terrain annexe, sous les thuyas. Vukić ouvre son cahier à la page des mardis. « Dix-huit heures cinq, Titi au téléphone de la buvette. Six mardis. En face de chacun, j'ai écrit ton mot : Conseil. »"
+    left:
+      label: "Montre-moi"
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h5_cahier_lu]}
+      answer: "Six lignes, la même heure, et en face de chacune, entre guillemets, « Conseil ». Au sixième mardi, il a ajouté : « a souri en raccrochant »."
     right:
       label: "Ferme ce cahier"
       effects: {vestiaire: "-", direction: "+", relation: {vukic: -1}}

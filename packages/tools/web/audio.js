@@ -2090,6 +2090,39 @@
   var live = null, liveCtx = null;
   var mode = 'tout';
   var pending = { ambiance: null, tension: 0, year: 1990, theme: null };
+  // LA PAGE CACHÉE — le téléphone verrouillé, un autre onglet, l'application en
+  // fond : la musique se tait (le contexte est suspendu, le séquenceur arrêté, plus
+  // rien ne se programme) et reprend où elle en était quand la page revient, si le
+  // son est ouvert. Un geste joué pendant ce temps ne s'entend pas : personne n'écoute.
+  var cachee = !!(global.document && global.document.hidden);
+  function reveiller() {
+    if (!liveCtx || cachee || liveCtx.state === 'closed') return;
+    if (liveCtx.state !== 'running') { try { var p = liveCtx.resume(); if (p && p.catch) p.catch(function () {}); } catch (x) { /* un geste le relancera */ } }
+  }
+  function cacher() {
+    if (cachee) return;
+    cachee = true;
+    if (live) live.stopClock();
+    if (liveCtx && liveCtx.state === 'running') { try { var p = liveCtx.suspend(); if (p && p.catch) p.catch(function () {}); } catch (x) { /* rien */ } }
+  }
+  function montrer() {
+    if (!cachee) return;
+    cachee = false;
+    if (!live || !liveCtx) return;
+    reveiller();
+    live.startClock();
+    // un téléphone (iOS) peut refuser de relancer le son sans un geste : le prochain le relance
+    var geste = function () {
+      ['pointerdown', 'keydown', 'touchend'].forEach(function (t) { global.document.removeEventListener(t, geste, true); });
+      reveiller();
+    };
+    ['pointerdown', 'keydown', 'touchend'].forEach(function (t) { global.document.addEventListener(t, geste, true); });
+  }
+  if (global.document && global.addEventListener) {
+    global.document.addEventListener('visibilitychange', function () { if (global.document.hidden) cacher(); else montrer(); });
+    global.addEventListener('pagehide', cacher);
+    global.addEventListener('pageshow', function () { if (!global.document.hidden) montrer(); });
+  }
 
   function ensure() {
     if (live) return live;
@@ -2103,7 +2136,8 @@
     if (pending.theme) live.setTheme(pending.theme, { fade: 0.6 });
     if (pending.ambiance) live.setAmbiance(pending.ambiance, { fade: 0.8 });
     live.setTension(pending.tension);
-    live.startClock();
+    // né pendant que la page est cachée (rare : il faut un geste) : il attend qu'elle revienne
+    if (cachee) { try { liveCtx.suspend(); } catch (x) { /* rien */ } } else live.startClock();
     return live;
   }
 
@@ -2115,7 +2149,7 @@
     // Le premier geste du joueur : c'est là, et seulement là, que le son naît.
     unlock: function () {
       var e = ensure();
-      if (e && liveCtx && liveCtx.state === 'suspended') { try { liveCtx.resume(); } catch (x) {} }
+      if (e) reveiller();
       return !!e;
     },
     started: function () { return !!live && !!liveCtx && liveCtx.state === 'running'; },
@@ -2132,7 +2166,7 @@
       var e = ensure();
       if (e) {
         e.setMode(m);
-        if (liveCtx && liveCtx.state === 'suspended') { try { liveCtx.resume(); } catch (x) {} }
+        reveiller();
       }
       return mode;
     },

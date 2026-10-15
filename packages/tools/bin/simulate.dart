@@ -2501,8 +2501,10 @@ void main(List<String> args) {
 
     // Coverage report (only meaningful on the exploratory policies).
     if (entry.key == 'human_like') {
-      // (les cartes écrites pour le mode éclair, `ec.*`, ne se jouent qu'en éclair)
-      final never = content.cards.keys.where((id) => !seen.contains(id) && !id.startsWith('ec.')).toList();
+      // (les cartes écrites pour le mode éclair ne se jouent qu'en éclair : celles de `ec.*`, et la
+      // variante d'étape que garde `flag('eclair')`, comme en.adjoint.novembre_banc)
+      bool soloEclair(String id) => id.startsWith('ec.') || jsonEncode(content.cards[id]?.when).contains('"eclair"');
+      final never = content.cards.keys.where((id) => !seen.contains(id) && !soloEclair(id)).toList();
       if (never.isNotEmpty) {
         stdout.writeln('  cartes jamais vues (${never.length}) : ${never.take(12).join(', ')}${never.length > 12 ? '…' : ''}');
       }

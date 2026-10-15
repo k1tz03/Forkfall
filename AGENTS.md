@@ -28,7 +28,7 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 |---|---|
 | Contenu | 3 749 cartes, 341 arcs, 118 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 172 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 212 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
@@ -131,9 +131,9 @@ l'en-tête du test.
 
 ```bash
 dart pub get
-dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json
+dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json (+ content/build/livres/)
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 172 tests
+cd packages/core && dart test                    # 212 tests (dont livres_test : l'aperçu découpé par livre)
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
@@ -150,6 +150,27 @@ dart compile js -O2 packages/tools/web/preview.dart -o /tmp/engine.js
 node packages/tools/web/assemble.js --engine /tmp/engine.js --out /tmp/fusible.html
 ```
 
+**Le contenu de l'aperçu, par livre** (`packages/tools/bin/src/livres.dart`,
+`packages/tools/web/demarrage.js`) : la page ne lit plus le bundle entier au démarrage.
+`build_content` le découpe en un commun (ce que l'accueil, la ville et tous les livres
+lisent) et un bundle par livre, dans `content/build/livres/` ; `assemble.js` les compresse
+(gzip), vérifie l'inflate de secours à l'octet et la fusion livre par livre, et refuse un
+découpage qui ne vient pas de `content/build/content.json` (relancer `build_content`). Le
+fichier seul les embarque tous (base64, le moteur aussi) ; la version jouable les pose à côté
+de la page (voir « La ville »). `window.FusibleContenu` : `contenu()` rend le commun, puis
+commun + le livre de la carrière (le même objet, ses listes remplacées) ; `livre(postulat)`
+charge et fusionne le livre avant que le moteur ne le lise — `startRun`, la reprise de la ville
+et `FusibleApercu.demarrer` (qui rend une promesse tenue au départ) le font ; un nouveau chemin
+qui commence ou reprend une carrière passe par eux. Les listes découpées sont `cards`, `arcs`,
+`unes` et, dans la ville, `scenes`, `cinematiques`, `conversations`, `missions`,
+`lieux_variantes` (`setpieces.*` et `paroles` gardent leur longueur, un bouche-trou inerte à la
+place des items d'un autre livre) : un module qui en garde un index le refait par
+`FusibleContenu.apresFusion(fn)`, ou les lit à la demande. Plus de `#fusible-content` dans la
+page : un banc lit `FusibleContenu.contenu()` ou `content/build/content.json`.
+`packages/core/test/livres_test.dart` prouve, livre par livre, qu'une carrière sur commun +
+livre est celle du bundle entier (goldens, carrières simulées avec la ville, l'héritage des
+fantômes, le samedi en direct) ; un contenu qui la casse dit le livre, la graine et la carte.
+
 L'application Flutter : `cd app && flutter pub get && flutter analyze && flutter test`.
 
 ## La ville (la version jouable)
@@ -164,7 +185,11 @@ fenêtre dans la semaine (deux ou trois cartes du lundi au vendredi, le match le
 Le temps et l'argent sont tenus par la coquille (l'énergie et la faim de la préproduction
 sont parties avec le mode histoire ; un compteur caché, `eveil`, dit seulement depuis combien
 de tranches on n'a pas dormi, pour les répliques) ; la partie se sauvegarde par l'état entier
-du moteur (le Code de Carrière ne rejoue pas la ville).
+du moteur (le Code de Carrière ne rejoue pas la ville), **une case par livre**
+(`fusible.ville.v2.<id du postulat>` ; l'ancienne case unique `fusible.ville.v1` est rangée dans
+celle de son livre à la première lecture) : lancer un livre n'efface jamais celui d'un autre, et
+recommencer un livre en cours passe par un dialogue (Reprendre, Recommencer en deux touches,
+Retour) ; une carrière finie libère sa case.
 
 Ce que la ville porte en plus des cartes :
 
@@ -200,6 +225,24 @@ Ce que la ville porte en plus des cartes :
   décisions. Soixante décisions par rôle, situation, moment et époque ; la semaine en ouvre (le
   vestiaire, un lien de deux crans) ; `build_content` vérifie qu'aucun samedi ne reste muet. Ni la
   Coupe, ni le Grand Match, ni le Mondial du livre 9 n'ont de direct.
+- **Les échos** (`preview_echos.js`, banc `mesure_echos.js`) : en mode histoire les jauges se taisent ;
+  deux choses rares montrent ce que les choix ont fait. *La ligne* : après une réponse d'enjeu, une
+  phrase sans chiffre (« Gégé s'en souviendra. », « Ça reviendra. », « Ça se saura en ville. »), posée
+  dans la rangée du menu sur une carte, au-dessus du message du récit sur le plan. *Le ruban* : plus
+  tard, sur la carte qui lit ce que la réponse a posé (sablier `schedule`/`next`, variante d'étape,
+  `when`, ouverture d'intrigue), « ↩ Parce que tu as dit « … » ». Calculé sur les vues du moteur et
+  le contenu (condition évaluée à trois valeurs : rien n'est attribué à tort), mémoire par carrière
+  (`fusible.echos.v1:<livre>:<graine>`, bornée, effacée à la fin). Rythme : ≈ 3 lignes et ≈ 1 ruban
+  par quart d'heure (`node packages/tools/web/mesure_echos.js --engine <engine.js> --assert`).
+- **Le partage** (`preview_partage.js`) : « Partager ma Une » compose une affiche (story 1080×1920 ou
+  carré 1080×1080) sur un canvas à partir de l'écran de fin, envoyée par le partage du téléphone, sinon
+  la capacité `downloads`, sinon l'appui long ; « Fais mieux que moi » : un code de défi de 16 signes
+  (livre, graine, fin, cartes, avec une somme de contrôle) et le prénom, en lien `?defi=` ou collé sur
+  l'accueil ; le défi relevé finit sur la comparaison des deux fins ; le livre du jour (la date locale
+  donne le livre et la graine, les mêmes pour tous) et, dans l'artefact, la part des joueurs par fin
+  (base partagée : un document `jour/<id>` par joueur). Un défi ou le livre du jour part sans héritage
+  des fantômes. À la publication : `capabilities: {db: {rules: [{path: "jour", read: "view", write:
+  "owner"}, {path: "jour/{self}", write: "interact"}]}, user: {}, downloads: true}`.
 - **Le domicile** (`ville.yaml` `domiciles`) : par rôle (le sélectionneur à l'hôtel de la Rive),
   et une histoire peut en décider autrement par un drapeau.
 - **Loin d'Aubérive** (`ville.yaml` `loin`) : un drapeau d'histoire dit qu'on est parti (le
@@ -236,6 +279,22 @@ Ce que la ville porte en plus des cartes :
   `album_echange_<gens>`, donc un point de lien. Une page finie paie (pochettes, tuyau, francs, un
   quartier ouvert d'avance). La cinquième de 1974 est une brillante sans nom ; l'album l'annonce par
   l'événement `fusible:album` (`{type: 'brillante'|'page', id}`), que le dossier 1974 écoute.
+- **Le dossier 1974** (`docs/histoires/dossier_1974.md`, `content/ville/dossier_1974.yaml`,
+  `preview_dossier.js`, `ville_dossier.js`) : la finale de 1974 et son cinquième visage gratté
+  deviennent une enquête qui se garde d'une carrière à l'autre (`fusible.dossier.v1`) : douze pièces,
+  une au moins par livre (un tiroir, des scènes de la semaine, des conversations surprises, deux scènes
+  jouées du livre 10, la fin du livre 1, la brillante de l'album), un onglet du Carnet, et un épilogue
+  en mars 2050 qui se joue depuis l'accueil quand le dossier est complet. Le secret de « Trois mille
+  visages » reste à ce livre : seule l'ardoise le dit, et elle ne s'obtient qu'en finissant le livre 1
+  sur une de ses fins ; les autres pièces parlent de l'homme en écharpe, jamais de l'enveloppe.
+- **Tes fantômes** (`docs/histoires/fantomes.md`, `content/ville/fantomes.yaml`,
+  `content/cards/common/fantomes.yaml`) : chaque carrière finie laisse son nom, son livre, ses années,
+  sa fin et trois faits au plus (`fusible.fantomes.v1`) ; un livre plus tardif en hérite au crochet
+  `debut` par `Engine.heritage` (aucun tirage, seulement des drapeaux `fantome_*`/`dossier_*` et des
+  noms) : le vieux du Corner qui se trompe, une plaque, le livre de Léa, Mbako en 2024. Un livre ne se
+  souvient que des livres qui commencent avant lui. Le Code de Carrière ne rejoue qu'avec le même
+  héritage (la page le garde par graine, `fusible.heritage.v1`) ; un défi ou le livre du jour part sans
+  héritage (`FusibleDossier.sansHeritage()`).
 - **Les intérieurs** (`docs/design/pixel_iso/interieurs_jeu.js`, `pieces/`, `pieces/_plan.js` ;
   `packages/tools/web/ville_dedans.js`) : on entre dans tous les lieux qui ont une porte (39 pièces,
   toutes modelées à la main ; une pièce ajoutée au plan sans son fichier sort en ébauche). Une pièce
@@ -349,9 +408,17 @@ Ce que la ville porte en plus des cartes :
   livre fait revenir (16:00, 23:58, 06:10…), ses puces (rôle, division, année, « Jouée ×n »)
   et « Nouveau » quand elle n'était pas là à la visite précédente. Les images sortent de
   `docs/design/pixel_iso/accueil.js` (les rendus de la ville → `packages/tools/web/accueil/*.webp`,
-  commités, embarqués en `data:` par `assemble.js`) ; la couleur et l'heure de chaque histoire,
+  commités, embarqués en `data:` par `assemble.js` dans le fichier seul, posés dans `accueil/` à
+  côté de la page dans la version jouable) ; la couleur et l'heure de chaque histoire,
   de la table `HISTOIRES` du gabarit. **Un livre qui arrive** prend une entrée dans les deux
-  (l'assemblage prévient d'une histoire livrée sans vignette).
+  (l'assemblage prévient d'une histoire livrée sans vignette). La police de l'accueil est
+  « Jersey 15 » (la Pixelify lisait « AUGÉRIVE », « 20S0 ») ; « Commence ici » se pose sur le
+  livre 1 tant qu'aucune carrière n'a été jouée ; un livre en cours porte sa bande « Reprendre ».
+  **Le Cimetière** range les fins par livre (« La Sirène · 1/5 », puis « Toutes les histoires ») :
+  une fin trouvée montre son titre, une autre son `indice:` (une ligne, 90 caractères au plus,
+  `build_content` le vérifie et dérive `livre` du lot `endings/h<N>.yaml`). Des jalons
+  récompensent (`JALONS_FINS` : 3 fins, une pochette brillante ; 5, le port ; 8, les Tilleuls ; 12,
+  les quatre quartiers ouverts dès la première semaine), gardés dans `profile.recompenses`.
 
 ```bash
 # les images (une fois ; ~12 min, 5 Go de mémoire) : le Grand Aubérive de jour, au crépuscule, de nuit,
@@ -363,7 +430,17 @@ node packages/tools/web/assemble.js --engine /tmp/engine.js --out /tmp/ville/ind
 ```
 
 La page sort avec un dossier `ville/` à côté (tuiles, profondeur, grille, lieux, sprites) :
-elle se sert en HTTP (les JSON sont lus par `fetch`), pas en `file://`.
+elle se sert en HTTP (les JSON sont lus par `fetch`), pas en `file://`. À côté d'elle aussi :
+`contenu/` (le commun `commun.<empreinte>.gz`, demandé dès la tête de la page ; un
+`<livre>.<empreinte>.gz` par livre ; le moteur `moteur.<empreinte>.js`, que l'accueil n'attend
+pas — chaque nom est l'empreinte de ses octets), `accueil/` (les vignettes et le panorama),
+l'application (`manifest.webmanifest`, `icones/`, `sw.js`) et l'aperçu d'un lien partagé
+(`apercu.jpg`, 1200 × 630 ; `pwa/genere.js` refait les images). Le service worker est versionné
+par l'assemblage : la page, le réseau d'abord (le cache après trois secondes) ; `ville/`,
+`contenu/`, `accueil/`, `icones/`, le cache d'abord ; une mise à jour garde ce qui est nommé par
+son empreinte (le commun, le moteur, les livres déjà joués) ; on rejoue hors ligne ce qu'on a vu.
+La ville garde ses images décodées dans une réserve bornée (`ville.js`, `RESERVE_IMAGES`), et la
+musique se tait quand la page est cachée (`audio.js`).
 
 ## Comment on ajoute du contenu
 

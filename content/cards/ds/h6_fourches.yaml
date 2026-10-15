@@ -1,0 +1,184 @@
+# Histoire 6 — « 23 h 58 » : les fourches. Cinq cartes d'histoire dont les deux sorties ne
+# se distinguaient que par des jauges cachées posent maintenant un drapeau, et ce drapeau
+# revient trois à dix cartes plus tard (charte § 4 : planter, puis payer). Les payoffs sont
+# des variantes d'étape rangées devant la carte d'origine dans leur arc (mêmes effets que la
+# carte qu'elles remplacent, seuls le texte et les réponses changent), ou une carte mise en
+# file par le choix lui-même.
+#
+#   h6_tri_josiane / h6_tas        ← le bureau du prologue (le tri, ou le tas)
+#                                    → le presse-papier de Josiane (ds.h6.photo, 1re étape)
+#   h6_casquette_crochet           ← la casquette de Vogler, au vestiaire
+#                                    → les chaussettes de Tibo (ds.h6.tibo, 1re étape)
+#   h6_casquette_renvoyee          ← la casquette de Vogler, renvoyée à Vestrie
+#                                    → elle revient dédicacée, sous le bras de Tibo (ds.h6.tibo, 1re étape)
+#   h6_rapport_main_lu             ← le rapport écrit à la main de Barbier, lu tout de suite
+#                                    → le rapport tapé (ds.h6.barbier, 3e étape)
+#   h6_recrue_joue / h6_recrue_banc ← la recrue d'Ilyas, cinq minutes ou pas une
+#                                    → le maillot à la manche (ds.h6.canette, 3e étape)
+#   h6_maillot_chaise / h6_maillot_promesse ← le maillot de Tibo, pris ou repoussé
+#                                    → le comptoir du Terminus (ds.h6.tibo, 3e étape)
+cards:
+  # ═══════════════════════════════════════════ le tri, ou le tas (→ le presse-papier)
+  - id: ds.h6.photo.presse_papier_tri
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane pose une photocopie sur ton sous-main : « La pile des inconnus, celle que vous m'avez fait trier, ne contenait qu'une page : 23 h 58. Le fax blanchit, pas la copie. Je continue ? »"
+    left:
+      label: "Continuez, Josiane"
+      effects: {relation: {josiane: 1}, set: [h6_photocopies], outcome: copies}
+      answer: "Elle sort un classeur neuf et écrit « 23 h 58 — {nom} » sur la tranche, au feutre. Elle ne demande pas ce qu'il y a sur la photo."
+    right:
+      label: "Jetez tout"
+      effects: {relation: {josiane: -1}, set: [h6_tout_jete], outcome: jete}
+      answer: "Elle déchire la copie en quatre devant toi et jette les morceaux. Le soir, elle repart avec un sac plus lourd que le matin."
+
+  - id: ds.h6.photo.presse_papier_tas
+    roles: [ds]
+    arc: direction
+    tags: [direction, objet]
+    speaker: josiane
+    lieu: secretariat
+    tone: leger
+    once: true
+    text: "Madame Josiane pose une photocopie sur ton sous-main : « Dans le tas, le fax de 23 h 58 était sous un catalogue de crampons. Je l'ai sorti avant vous. Le fax blanchit, pas la copie. Je continue ? »"
+    left:
+      label: "Continuez, Josiane"
+      effects: {relation: {josiane: 1}, set: [h6_photocopies], outcome: copies}
+      answer: "Elle écrit « 23 h 58 — {nom} » sur la tranche d'un classeur neuf. « Demain, je trie avant que vous arriviez. » Elle ne demande rien."
+    right:
+      label: "Jetez tout"
+      effects: {relation: {josiane: -1}, set: [h6_tout_jete], outcome: jete}
+      answer: "Elle déchire la copie en quatre, vide le tas dans la corbeille et ressort la corbeille. Le soir, son sac est plus lourd que le matin."
+
+  # ═══════════════════════════════ la casquette de Vogler (→ les chaussettes, ou le retour)
+  - id: ds.h6.tibo.chaussettes_casquette
+    roles: [ds]
+    arc: vestiaire
+    tags: [formation]
+    speaker: tibo_rance
+    tone: strategique
+    once: true
+    text: "Tibo Rancé, dix-sept ans, la casquette de Vogler enfoncée jusqu'aux oreilles : « Elle était au dernier crochet. Mon père dit qu'un club de l'étranger paie ses dettes si je signe. Je signe ? »"
+    left:
+      label: "Ne signe rien"
+      effects: {tribunes: "+", relation: {tibo_rance: 1, bertrand_rance: -1}, set: [h6_tibo_conseil_rester], outcome: conseil_rester}
+      answer: "Il tire la visière sur ses yeux. « Je la garde, alors : elle ne part pas non plus. Vous le direz à mon père ? »"
+    right:
+      label: "C'est ta chance"
+      effects: {direction: "+", relation: {tibo_rance: -1, bertrand_rance: 1}, set: [h6_tibo_conseil_partir], outcome: conseil_partir}
+      answer: "Il ôte la casquette et la repose sur un crochet, pas le dernier. Le soir, il refait seul vingt fois le même centre, vers un but vide."
+
+  - id: ds.h6.tibo.chaussettes_retour
+    roles: [ds]
+    arc: vestiaire
+    tags: [formation]
+    speaker: tibo_rance
+    tone: strategique
+    once: true
+    text: "Tibo Rancé, dix-sept ans, la casquette de Vogler sous le bras, revenue de Vestrie dédicacée : « Vukić n'en veut pas. Mon père dit qu'un club de l'étranger paie ses dettes si je signe. Je signe ? »"
+    left:
+      label: "Ne signe rien"
+      effects: {tribunes: "+", relation: {tibo_rance: 1, bertrand_rance: -1}, set: [h6_tibo_conseil_rester], outcome: conseil_rester}
+      answer: "Il enfonce la casquette jusqu'aux oreilles. « Alors je la porte pour tout le monde. Vous le direz à mon père ? »"
+    right:
+      label: "C'est ta chance"
+      effects: {direction: "+", relation: {tibo_rance: -1, bertrand_rance: 1}, set: [h6_tibo_conseil_partir], outcome: conseil_partir}
+      answer: "Il remet la casquette sous son bras, comme un colis à poster. Le soir, il refait seul vingt fois le même centre, vers un but vide."
+
+  # ═══════════════════ la main de Barbier (→ le rapport tapé, lu à côté de la page écrite)
+  - id: ds.h6.barbier.rapport_main
+    roles: [ds]
+    arc: mercato
+    tags: [formation, objet]
+    speaker: barbier
+    tone: strategique
+    once: true
+    when: "season <= 1"
+    text: "Barbier pose sa page écrite à la main, que tu as lue, à côté du rapport tapé : « Ma page : le gaucher, sous la pluie, pas un prix. La tapée : trois millions. Je n'ai jamais écrit de prix. »"
+    left:
+      label: "Qui l'a tapé ?"
+      effects: {relation: {barbier: 1}, set: [h6_indice_prix_ajoute], var: {h6_indices: "+1"}}
+      answer: "« Tu avais lu avant de demander, {prenom}. Le petit, comme toujours : il finit mes phrases. » Il entend ce qu'il vient de dire."
+    right:
+      label: "Une faute de frappe"
+      effects: {relation: {barbier: -1}, set: [h6_prix_ignore]}
+      answer: "« Une faute qui sait compter. Et tu as lu ma page. » Il replie les deux feuilles ensemble et les glisse dans sa doudoune."
+
+  # ═══════════════════════════ la recrue d'Ilyas (→ le maillot à la manche, trois ans ou un)
+  - id: ds.h6.canette.manche_joue
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, tribunes]
+    speaker: nassir
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Ilyas tient le maillot devant le miroir du vestiaire, la canette cousue sur la manche : « Votre recrue a eu ses cinq minutes, les photographes l'ont gardée. Orange sur bordeaux : trois ans ? »"
+    left:
+      label: "Trois ans"
+      effects: {caisse: "++", tribunes: "-", relation: {nassir: 1}, set: [h6_canette_signee], outcome: signee}
+      answer: "Le maillot se vend mal en août et très bien à Noël. La recrue ne touche toujours que deux ballons par match ; au virage, on les compte."
+    right:
+      label: "Une saison, pas plus"
+      effects: {caisse: "+", relation: {nassir: -1}, set: [h6_canette_courte], outcome: courte}
+      answer: "« Une saison. » Il replie le maillot au carré. « La recrue sera à l'heure sur le banc : elle a pris l'habitude de ses cinq minutes. »"
+
+  - id: ds.h6.canette.manche_banc
+    roles: [ds]
+    arc: sponsors
+    tags: [sponsors, tribunes]
+    speaker: nassir
+    lieu: vestiaire
+    tone: strategique
+    once: true
+    text: "Ilyas tient le maillot devant le miroir du vestiaire, la canette cousue sur la manche : « Votre recrue a vu la saison derrière le photographe. Pas rancunier : orange sur bordeaux, trois ans ? »"
+    left:
+      label: "Trois ans"
+      effects: {caisse: "++", tribunes: "-", relation: {nassir: 1}, set: [h6_canette_signee], outcome: signee}
+      answer: "Le maillot se vend mal en août et très bien à Noël. Sur la photo du lundi, la recrue en survêtement est la seule à fuir l'objectif."
+    right:
+      label: "Une saison, pas plus"
+      effects: {caisse: "+", relation: {nassir: -1}, set: [h6_canette_courte], outcome: courte}
+      answer: "« Une saison. » Il replie le maillot au carré, manche dessous. « Je ne suis pas rancunier. Je note, c'est différent. »"
+
+  # ═════════════════ le maillot de Tibo (→ le comptoir du Terminus, la saison suivante)
+  - id: ds.h6.tibo.comptoir_maillot
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Comptoir du Terminus. Bertrand Rancé pose sur le zinc un talon de chèque : « JF Conseil, payé par la Mutuelle des Quais. Mon fils dit que son maillot est sur votre chaise. Je vais trouver ce JF. »"
+    left:
+      label: "Laissez la police faire"
+      effects: {relation: {bertrand_rance: -1}, set: [h6_indice_jf, h6_pere_police], var: {h6_indices: "+1"}}
+      answer: "« La police. » Il range le talon derrière la photo de son fils en poussin. « Le maillot sur votre chaise, c'est notre seul merci. »"
+    right:
+      label: "Prévenez-moi d'abord"
+      effects: {relation: {bertrand_rance: 1}, set: [h6_indice_jf, h6_pere_chasse], var: {h6_indices: "+1"}}
+      answer: "Il te serre la main par-dessus le zinc, trop longtemps. « Vous saurez avant tout le monde. Le maillot, gardez-le. » Il commande deux cafés."
+
+  - id: ds.h6.tibo.comptoir_promesse
+    roles: [ds]
+    arc: famille
+    tags: [famille, sombre]
+    speaker: bertrand_rance
+    lieu: tripot
+    tone: strategique
+    once: true
+    text: "Comptoir du Terminus. Bertrand Rancé pose sur le zinc un talon de chèque : « JF Conseil, payé par la Mutuelle des Quais. Mon fils a repris son maillot, il en aura d'autres, dit-il. Je trouve ce JF. »"
+    left:
+      label: "Laissez la police faire"
+      effects: {relation: {bertrand_rance: -1}, set: [h6_indice_jf, h6_pere_police], var: {h6_indices: "+1"}}
+      answer: "« La police. » Il rit sans bruit et range le talon derrière la photo de son fils en poussin. « Des maillots, il en aura d'autres, oui. »"
+    right:
+      label: "Prévenez-moi d'abord"
+      effects: {relation: {bertrand_rance: 1}, set: [h6_indice_jf, h6_pere_chasse], var: {h6_indices: "+1"}}
+      answer: "Il te serre la main par-dessus le zinc, trop longtemps. « Vous saurez avant tout le monde. » Il commande deux cafés, et paie les deux."

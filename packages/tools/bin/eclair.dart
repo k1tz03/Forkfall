@@ -5,6 +5,7 @@
 ///   dart run packages/tools/bin/eclair.dart --trace 123 --postulat 10 --policy novice
 ///   dart run packages/tools/bin/eclair.dart --jours 30          # le défi des trente prochains jours
 ///   dart run packages/tools/bin/eclair.dart --fuites --runs 150 # aucune carte de livre ne doit servir
+///   dart run packages/tools/bin/eclair.dart --fins --runs 400   # quelles fins le mode atteint-il (--policy x : un seul joueur type)
 ///
 /// Ce que ça mesure, par postulat éclair et par politique de joueur : la durée
 /// d'une carrière en cartes (ce qu'on lit : une carte, un geste), en semaines
@@ -148,6 +149,7 @@ void main(List<String> args) {
   int? jours;
   String? depuis;
   var fuites = false;
+  var fins = false;
   for (var i = 0; i < args.length; i++) {
     if (args[i] == '--runs' && i + 1 < args.length) runs = int.parse(args[i + 1]);
     if (args[i] == '--postulat' && i + 1 < args.length) postulat = int.parse(args[i + 1]);
@@ -158,6 +160,7 @@ void main(List<String> args) {
     }
     if (args[i] == '--jours' && i + 1 < args.length) jours = int.parse(args[i + 1]);
     if (args[i] == '--fuites') fuites = true;
+    if (args[i] == '--fins') fins = true;
     if (args[i] == '--depuis' && i + 1 < args.length) depuis = args[i + 1];
   }
   final eclair = postulatsEclair(content);
@@ -176,6 +179,75 @@ void main(List<String> args) {
       final s = engine.start(defi.seed, postulat: defi.postulat);
       stdout.writeln('$date · ${defi.role.padRight(13)} · ${s.year} · ${s.age} ans · graine ${defi.seed} · ${s.entities.named['club']}');
     }
+    return;
+  }
+
+  if (fins) {
+    // Quelles fins une carrière éclair atteint-elle ? `runs` carrières par rôle ET par politique de
+    // joueur, toutes les fins posées comptées, celles de jauge comme les autres — et, pour chacune,
+    // la carte qui l'a posée. Les fins que les livres ne peuvent plus atteindre depuis la fin du livre
+    // (une carrière de livre s'arrête avant) sont celles qu'on regarde ici : elles dorment au
+    // Cimetière tant qu'un mode ne les rend pas atteignables.
+    const voulues = [
+      'co_retraite', 'statue_de_bronze', 'en_retraite', 'en_chaussure', 'co_fuyard', 'co_pacte_tenu',
+      'co_photo_famille', 'co_radiation', 'en_dauphin', 'en_placard', 'en_valise', 'jp_consultant', 'ta_loge',
+    ];
+    final total = <String, int>{};
+    final parRole = <String, Map<String, int>>{};
+    final cartes = <String, Map<String, int>>{};
+    final exemple = <String, String>{};
+    final parPolitique = <String, Map<String, int>>{};
+    var n = 0;
+    final jouees = _politiques.entries.where((e) => seule == null || e.key == seule).toList();
+    for (final post in eclair) {
+      for (final entry in jouees) {
+        for (var i = 0; i < runs; i++) {
+          final c = jouer(engine, _graine(i), post.index, entry.value);
+          n++;
+          total[c.fin] = (total[c.fin] ?? 0) + 1;
+          final pp = parPolitique.putIfAbsent(c.fin, () => {});
+          pp[entry.key] = (pp[entry.key] ?? 0) + 1;
+          final r = parRole.putIfAbsent(c.fin, () => {});
+          r[post.role] = (r[post.role] ?? 0) + 1;
+          final cc = cartes.putIfAbsent(c.fin, () => {});
+          cc[c.derniere] = (cc[c.derniere] ?? 0) + 1;
+          exemple.putIfAbsent(c.fin, () => '${post.id} graine ${_graine(i)} ${entry.key} (${c.cartes} cartes)');
+        }
+      }
+    }
+    stdout.writeln('$n carrières éclair ($runs par rôle et par politique : ${jouees.map((e) => e.key).join(', ')})');
+    stdout.writeln('');
+    stdout.writeln('── les fins que le mode atteint, de la plus fréquente à la plus rare');
+    final ordre = total.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    for (final e in ordre) {
+      final titre = content.endings[e.key]?.title ?? '?';
+      final roles = (parRole[e.key]!.entries.toList()..sort((a, b) => b.value.compareTo(a.value))).map((x) => '${x.key} ${x.value}').join(', ');
+      stdout.writeln('  ${e.key.padRight(22)} ${e.value.toString().padLeft(5)} · ${_f(100 * e.value / n, 2)} % · $titre · $roles${_causes(cartes[e.key]!)}');
+    }
+    stdout.writeln('');
+    stdout.writeln('── les fins de longue carrière demandées');
+    for (final id in voulues) {
+      final def = content.endings[id];
+      if (def == null) {
+        stdout.writeln('  $id : cette fin n\'existe pas dans le contenu');
+      } else if ((total[id] ?? 0) == 0) {
+        stdout.writeln('  $id : « ${def.title} » — JAMAIS atteinte en $n carrières');
+      } else {
+        final qui = jouees.map((e) => '${e.key} ${parPolitique[id]?[e.key] ?? 0}').join(', ');
+        stdout.writeln('  $id : « ${def.title} » — ${total[id]} fois (${_f(100 * total[id]! / n, 2)} %) · $qui · ex. ${exemple[id]}');
+      }
+    }
+    stdout.writeln('');
+    stdout.writeln('── les fins du contenu que le mode n\'a jamais posées (hors fins de jauge et fins dormantes)');
+    final jaugeIds = <String>{
+      for (final r in content.roles.values)
+        for (final g in r.gauges) ...[g.emptyEnding, g.fullEnding],
+    };
+    final jamais = [
+      for (final e in content.endings.values)
+        if (!(total.containsKey(e.id)) && !jaugeIds.contains(e.id)) e.id,
+    ]..sort();
+    stdout.writeln('  ${jamais.length} : ${jamais.join(', ')}');
     return;
   }
 

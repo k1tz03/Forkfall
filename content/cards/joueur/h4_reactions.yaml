@@ -70,7 +70,7 @@ cards:
     text: "Dans le car du retour, Vukić s'assoit à côté de toi, un cahier d'écolier sur les genoux : « Les gars t'entendent, la nuit, dans le car. Tu dis “freine” en dormant. Depuis quand, {toi} ? »"
     left:
       label: "Depuis 1984"
-      effects: {vestiaire: "+", relation: {vukic: 1}}
+      effects: {vestiaire: "+", relation: {vukic: 1}, set: [h4_vukic_date]}
       answer: "Il ouvre le cahier à une page cornée, la relit, et le referme sans te la montrer. « Moi aussi, j'ai une date. Un jour, je te la lirai. »"
     right:
       label: "Je ne rêve jamais"
@@ -87,7 +87,7 @@ cards:
     text: "Le lendemain, sur la table de massage, Nadia Rouvier travaille ton genou en silence. Puis : « Vous parlez, quand vous somnolez ici. Une route, un pont. Je n'écris rien, {toi}. »"
     left:
       label: "Qu'est-ce que je dis ?"
-      effects: {relation: {rouvier: 1}}
+      effects: {relation: {rouvier: 1}, set: [h4_rouvier_freine]}
       answer: "« “Freine.” Toujours le même mot, toujours poli. » Elle reprend le massage. « Les noms, ce n'est pas mon métier. »"
     right:
       label: "Oubliez ça"
@@ -147,6 +147,23 @@ cards:
       effects: {relation: {vukic: -1}}
       answer: "Il le ferme, sans vexation. « Il sera dans mon sac, au banc de la réserve, à côté d'un survêtement à ta taille. »"
 
+  # Variante de la promesse : « Depuis 1984 » ; Vukić avait dit « un jour, je te lirai ma date » (h4_vukic_date).
+  - id: jp.h4.re.vukic_cahier_date
+    roles: [joueur]
+    arc: vestiaire
+    tags: [vestiaire, moment]
+    speaker: vukic
+    tone: strategique
+    text: "Le car du club, au petit jour. Vukić ouvre son cahier de 1984 à une page cornée : « Je t'avais promis ma date, un jour. Tu n'as pas crié, cette nuit. C'est aujourd'hui. »"
+    left:
+      label: "Je lis la page"
+      effects: {relation: {vukic: 1}, set: [h4_cahier_lu]}
+      answer: "14 mai 1984. « Départ du pont, 1 h 50. Titi au volant, {pg, select, f{la petite} other{le petit}} dort. » L'écriture penche, l'encre a bavé."
+    right:
+      label: "Ferme ce cahier"
+      effects: {relation: {vukic: -1}}
+      answer: "Il le ferme, sans vexation. « Une promesse, ça se garde aussi fermée. » Le cahier ira dans son sac, à côté d'un survêtement à ta taille."
+
   # ------------------------------------------------- le micro de Vaubourg (saison 2)
   - id: jp.h4.re.lea_micro
     roles: [joueur]
@@ -157,7 +174,7 @@ cards:
     text: "Léa, au bord du terrain, son bloc ouvert : « Vaubourg veut un micro au rond central pour votre jubilé. Il a déjà écrit votre discours ; il me l'a dicté. Vous le lirez, {toi} ? »"
     left:
       label: "Je lirai le mien"
-      effects: {tribunes: "+", relation: {lea: 1}}
+      effects: {tribunes: "+", relation: {lea: 1}, set: [h4_discours_a_moi]}
       answer: "« Alors je garderai deux colonnes blanches, le lundi. » Elle referme son bloc. « C'est rare, deux colonnes blanches. »"
     right:
       label: "Je lirai le sien"

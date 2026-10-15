@@ -7,7 +7,8 @@
   // comme dans *Reigns*, PAS de ville — rien que les cartes. Le score est le nombre de
   // semaines tenues (`view.semaines`, dérivé du monde simulé par le moteur) ; le défi du
   // jour est le même pour tout le monde (la date de Paris → un rôle et une graine, par
-  // hachage, `fusibleDefiDuJour` : le moteur Dart le calcule, pas ce fichier).
+  // hachage : `defiDe` ci-dessous, le miroir de `defiDuJour` de eclair.dart, parce que le moteur
+  // n'est pas encore chargé quand l'accueil se dessine).
   //
   // Ce que ce module fait, et pourquoi il ne touche presque rien au gabarit :
   //  · il passe par les crochets de la coquille (`debut`, `carte`, `reponse`, `fin`,
@@ -27,7 +28,7 @@
   // ═══════════════════════════════════════════════════════════════════════════
   (function () {
     var API = window.FusibleApercu;
-    if (!API || typeof window.fusibleDefiDuJour !== "function" || typeof window.fusibleEclairApercu !== "function") return;   // un moteur d'avant le mode éclair : rien à montrer
+    if (!API || !API.contenu || !Array.isArray(API.contenu.postulats)) return;
 
     var CLE = "fusible.eclair.v1", MAX_JOURS = 40;
     var HIST0 = MODE_HISTOIRE, VILLE0 = VILLE;   // ce que les livres attendent, pour le leur rendre
@@ -69,11 +70,26 @@
       } catch (e) {}
       return new Date().toISOString().slice(0, 10);
     }
-    function defi() {
-      try { return JSON.parse(window.fusibleDefiDuJour(jourDeParis())); } catch (e) { return null; }
+    // Le défi d'une date : le rôle et la graine, par hachage FNV-1a — le MIROIR de `defiDuJour`
+    // (packages/core/lib/src/eclair.dart, qui reste la référence : eclair_test.dart en épingle des valeurs).
+    // Il vit ici parce que le moteur n'est pas là à l'accueil (demarrage.js le charge après lui) et que
+    // son contenu n'arrive qu'avec un livre : la date suffit, et la liste des postulats éclair.
+    function fnv1a32(t) {
+      var h = 0x811c9dc5;
+      for (var i = 0; i < t.length; i++) { h ^= t.charCodeAt(i) & 0xFF; h = Math.imul(h, 0x01000193) >>> 0; }
+      return h >>> 0;
     }
-    function apercu(d) {
-      try { return JSON.parse(window.fusibleEclairApercu(d.seed, d.postulat)); } catch (e) { return null; }
+    function defiDe(date, posts) {
+      posts = posts || postulatsEclair();
+      if (!posts.length || !/^\d{4}-\d{2}-\d{2}$/.test(date || "")) return null;
+      var p = posts[fnv1a32("fusible|eclair|role|" + date) % posts.length];
+      return { date: date, postulat: p.index, role: p.role, seed: fnv1a32("fusible|eclair|graine|" + date) & 0x7FFFFFFF };
+    }
+    function defi() { return defiDe(jourDeParis()); }
+    function roleNom(role) {
+      var rs = (API.contenu && API.contenu.roles) || [];
+      for (var i = 0; i < rs.length; i++) if (rs[i] && rs[i].id === role) return String(rs[i].name || role).toLowerCase();
+      return String(role || "");
     }
     var ROLE_UN = {
       entraineur: ["un entraîneur", "une entraîneuse"], joueur: ["un joueur", "une joueuse"],
@@ -87,7 +103,11 @@
     function rangHtml(n) { n = n | 0; return n === 1 ? "1<sup>re</sup>" : n + "<sup>e</sup>"; }
     function dateCourte(d) { var p = String(d || "").split("-"); return p.length === 3 ? p[2] + "/" + p[1] : String(d || ""); }
     function esc(t) { return escapeHtml(t); }
-    function postulatsEclair() { return (API.postulats || []).filter(function (p) { return p && p.mode === "eclair"; }); }
+    function postulatsEclair() {
+      var l = (API.contenu.postulats || []).filter(function (p) { return p && p.mode === "eclair"; });
+      l.sort(function (x, y) { return (x.index | 0) - (y.index | 0); });
+      return l;
+    }
 
     // ─── le mode : ce que la coquille retrouve selon la partie ────────────────────
     function passerEnEclair() {
@@ -164,14 +184,20 @@
           var b = e.target && e.target.closest ? e.target.closest("[data-a]") : null;
           if (b) agir(b.getAttribute("data-a"));
         });
+        // le doigt posé, le livre de la partie arrive déjà (demarrage.js) : la touche part sans attendre
+        el.addEventListener("pointerdown", function (e) {
+          var b = e.target && e.target.closest ? e.target.closest("[data-a]") : null;
+          if (b) prechauffer(b.getAttribute("data-a"));
+        });
       }
-      var d = defi(), ap = d ? apercu(d) : null;
+      var d = defi();
       var auj = S.jours[jourDeParis()];
       var cours = coursReprenable();
       var puces = '<span class="fz-puce">10 minutes</span><span class="fz-puce">Graine du jour</span>' +
         (S.best ? '<span class="fz-puce or">Record : ' + esc(semainesTxt(S.best)) + "</span>" : "");
-      var jour = ap
-        ? "Aujourd'hui : " + esc(roleUn(ap.role, ap.genre)) + ", " + esc(ap.year) + (auj ? " · tu as tenu " + esc(semainesTxt(auj.s)) : "")
+      // le rôle du jour se dit à l'accueil ; l'époque, elle, sort de la graine au départ (l'affiche la dit)
+      var jour = d
+        ? "Rôle du jour : " + esc(roleNom(d.role)) + (auj ? " · tu as tenu " + esc(semainesTxt(auj.s)) : "")
         : "";
       el.innerHTML =
         '<div class="fz-cov">' + fusibleSvg() + '<span class="fz-ics" aria-hidden="true">' + jaugesIcones() + "</span>" +
@@ -200,6 +226,23 @@
     }
 
     // ─── lancer une partie ────────────────────────────────────────────────────────
+    // « Une autre » : le rôle et la graine se tirent avant la touche (le livre du rôle se décompresse
+    // pendant que le doigt s'appuie), puis la touche les prend.
+    var LIBRE = null;
+    function libre() {
+      if (LIBRE) return LIBRE;
+      var ps = postulatsEclair();
+      if (!ps.length) return null;
+      return (LIBRE = { postulat: ps[Math.floor(Math.random() * ps.length)].index, seed: Math.floor(Math.random() * 0x7fffffff) & 0x7fffffff });
+    }
+    function prechauffer(a) {
+      var CO = window.FusibleContenu, cible = null;
+      if (!CO || typeof CO.prechauffer !== "function") return;
+      if (a === "jour") { var d = defi(); cible = d && d.postulat; }
+      else if (a === "autre") { var l = libre(); cible = l && l.postulat; }
+      else if (a === "reprendre") cible = S.cours && S.cours.postulat;
+      if (cible != null) { try { CO.prechauffer(cible, 0); } catch (e) {} }
+    }
     function lancer(mode) {
       var postulat, seed, date = "";
       if (mode === "jour") {
@@ -207,30 +250,50 @@
         if (!d) return;
         postulat = d.postulat; seed = d.seed; date = d.date;
       } else {
-        var ps = postulatsEclair();
-        if (!ps.length) return;
-        postulat = ps[Math.floor(Math.random() * ps.length)].index;
-        seed = Math.floor(Math.random() * 0x7fffffff) & 0x7fffffff;
+        var l = libre();
+        if (!l) return;
+        postulat = l.postulat; seed = l.seed;
+        LIBRE = null;
       }
-      E = { mode: mode, date: date, postulat: postulat, seed: seed, fini: false };
+      var depart = E = { mode: mode, date: date, postulat: postulat, seed: seed, fini: false, attente: true };
       S.cours = null;                 // une nouvelle partie remplace celle qu'on avait laissée
       passerEnEclair();
+      sansHeritage();
       try { if (typeof audio !== "undefined" && audio && audio.jingle) audio.jingle("depart"); } catch (e) {}
-      API.demarrer(postulat, seed);
+      // Le livre arrive d'abord s'il n'est pas là (demarrage.js) : la carrière commence un peu après l'appel.
+      // Si elle ne vient pas (le réseau, un refus), l'accueil reprend son visage de livres.
+      var echec = function () { if (E === depart && depart.attente) { E = null; retourHistoire(); monterAccueil(); } };
+      try { API.demarrer(postulat, seed).then(function (ok) { if (ok === false) echec(); }, echec); } catch (e) { echec(); }
+      setTimeout(echec, 60000);
+    }
+    // Le dossier « tes fantômes » pose l'héritage des carrières d'avant au départ d'un livre : le Fusible
+    // n'en veut pas (la même graine doit donner la même partie à tout le monde). Appel gardé : le module
+    // n'est pas toujours dans la page.
+    function sansHeritage() {
+      try {
+        if (window.FusibleDossier && typeof window.FusibleDossier.sansHeritage === "function") window.FusibleDossier.sansHeritage();
+      } catch (e) {}
     }
     function reprendre() {
       var c = coursReprenable();
       if (!c) return;
-      var Q = window.FusibleCoquille;
+      var Q = window.FusibleCoquille, CO = window.FusibleContenu;
       E = { mode: c.mode || "libre", date: c.date || "", postulat: c.postulat, seed: c.seed, fini: false, reprise: true };
       passerEnEclair();
-      try {
-        Q.reprendre(c.etat, c.postulat, c.seed);
-      } catch (e) {
+      var echec = function (e) {
         S.cours = null; garder(); E = null; retourHistoire();
         if (window.console) console.error("éclair : la partie ne se rouvre pas", e);
         monterAccueil();
-      }
+      };
+      var rouvrir = function () {
+        try { Q.reprendre(c.etat, c.postulat, c.seed); } catch (e) { echec(e); }
+      };
+      // le livre de la partie d'abord : le moteur ne connaît que le commun avant qu'il arrive
+      if (CO && typeof CO.livre === "function") {
+        var p;
+        try { p = CO.livre(c.postulat); } catch (e) { echec(e); return; }
+        p.then(rouvrir, echec);
+      } else rouvrir();
     }
     // sortir en gardant la partie : elle est déjà sauvée à chaque réponse
     function quitter() {
@@ -334,6 +397,15 @@
 
       var e = v.ending || {};
       var gauge = e.gauge || null, plein = e.side === "plein";
+      // Une fin que pose une CARTE (la valise, le dauphin) déclare aussi une jauge, pour le Cimetière :
+      // on ne dit « à zéro » que d'une jauge qui y est vraiment.
+      if (gauge) {
+        var au_bord = false;
+        (v.gauges || []).forEach(function (g) {
+          if (g.id === gauge && (plein ? (g.value | 0) >= 100 : (g.value | 0) <= 0)) au_bord = true;
+        });
+        if (!au_bord) gauge = null;
+      }
       var rail = "";
       (v.gauges || []).forEach(function (g) {
         var fautif = g.id === gauge;
@@ -385,10 +457,12 @@
       if (!li) return;
       var moi = S.jours[info.date] || { s: info.semaines };
       var txt = "Aujourd'hui : <b>" + esc(semainesTxt(moi.s)) + "</b>";
-      if (r && r.total > 0) {
-        if (r.rang) txt = "Aujourd'hui : <b>" + rangHtml(r.rang) + "</b> sur " + esc(r.total);
-        else txt += " · " + esc(r.total) + (r.total > 1 ? " joueurs" : " joueur");
-        if (r.meilleur) txt += " · le meilleur : " + esc(semainesTxt(r.meilleur));
+      // le rang n'existe que si le résultat est dans la base (écrit, ou déjà aussi bon) : sans cela, la
+      // base ne dirait que les autres, et la ligne reste celle du jeu seul (le meilleur score est local)
+      if (r && r.rang && r.total > 0) {
+        txt = "Aujourd'hui : <b>" + rangHtml(r.rang) + "</b> sur " + esc(r.total);
+        if (r.rang === 1 && r.total > 1) txt += " · en tête";
+        else if (r.meilleur) txt += " · le meilleur : " + esc(semainesTxt(r.meilleur));
       }
       li.innerHTML = txt;
     }
@@ -441,14 +515,30 @@
     }
 
     // ─── les crochets de la coquille ──────────────────────────────────────────────
+    // La ville garde une case par livre (`fusible.ville.v2.<postulat>`, ville.js) : une partie éclair n'en a
+    // jamais. Si un geste en retard de la ville (un minuteur qui court encore) en a pourtant écrit une pour
+    // elle, elle ne doit pas devenir le « Reprendre » de l'accueil — qui la rouvrirait en ville.
+    function balayerCases() {
+      try {
+        var ks = [];
+        for (var i = 0; i < localStorage.length; i++) {
+          var k = localStorage.key(i);
+          if (k && /^fusible\.ville\.v2\.eclair_/.test(k)) ks.push(k);
+        }
+        ks.forEach(function (k) { localStorage.removeItem(k); });
+      } catch (e) {}
+    }
+    balayerCases();
     crochet("accueil", function () {
       retourHistoire();
       fermerBrief();
+      balayerCases();
       try { monterAccueil(); } catch (e) { if (window.console) console.error("éclair : accueil", e); }
     });
     crochet("debut", function (v) {
       if (!v || v.mode !== "eclair") { retourHistoire(); return; }
       if (!E) E = { mode: "libre", date: "", postulat: API.graine().postulat, seed: API.graine().seed, fini: false };
+      E.attente = false;
       passerEnEclair();
       monterMenu();
       // la partie n'est pas une « carrière » du livre : le compteur de l'accueil n'en sait rien
@@ -462,6 +552,7 @@
     crochet("reprise", function (v) {
       if (!v || v.mode !== "eclair") { retourHistoire(); return; }
       if (!E) E = { mode: "libre", date: "", postulat: API.graine().postulat, seed: API.graine().seed, fini: false };
+      E.attente = false;
       passerEnEclair();
       monterMenu();
     });
@@ -585,6 +676,7 @@
       reprendre: reprendre,
       jour: jourDeParis,
       defi: defi,
+      defiDe: defiDe,
       classer: classer,
       // essais seulement : une autre date, pour voir un autre défi
       _jour: function (d) { TEST.jour = d || null; monterAccueil(); },

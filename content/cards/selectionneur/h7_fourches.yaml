@@ -1,0 +1,199 @@
+# Histoire 7 · Chambre 12 — les fourches. Six cartes dont les deux sorties ne se distinguaient
+# que par des jauges cachées (ou par une relation) posent maintenant un drapeau, et ce
+# drapeau revient quelques cartes plus tard (charte § 4 : planter, puis payer). Les payoffs
+# sont des variantes d'étape rangées devant la carte d'origine dans leur arc (mêmes effets,
+# mêmes issues que la carte qu'elles remplacent : seuls le texte et les réponses changent), ou,
+# pour la nuit de Rouvier, une ligne du Carrefour de décembre (content/setpieces/h7.yaml).
+#
+#   h7_page_lue / h7_page_prise       ← la page de Sandrine, lue ou seulement prise
+#                                       (sl.h7.re.mbako_page) → la nuit dans le bus (2012)
+#   h7_fiche_rendue / h7_fiche_laissee ← la fiche de l'hymne de Mbako, rendue ou laissée à
+#                                       Josiane (sl.h7.h2_fiches) → la répétition (hymne)
+#   h7_canettes_essai / h7_canettes_restent ← les canettes de Fulgor, enlevées ou laissées
+#                                       (sl.h7.f2_vaubourg) → la table de presse
+#   h7_berline_heure / h7_berline_chez_lui ← Vaubourg déposé, sur le quai (sl.h7.v_berline)
+#                                       → l'envoi des procès-verbaux
+#   h7_mbako_defendu / h7_verite_dabord ← la lettre de Fauvel (sl.h7.k1_lettre*) → le vote
+#   h7_frappe_une / h7_frappe_pas      ← Rouvier à la porte de la 12 (sl.h7.re.rouvier_six_heures)
+#                                       → le Carrefour de décembre (set-piece)
+cards:
+  # ═════════════════════ la page de Sandrine (→ la nuit dans le bus, 2012)
+  - id: sl.h7.r3_bus_page_lue
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « Tu as lu la page de Sandrine, jusqu'au bout, devant moi. Alors écoute ce qui n'y est pas. Je suis entré. J'ai compté jusqu'à trente. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Puisque tu as lu, tu sais l'heure. » Il pose la bouteille sur le siège du chauffeur et descend le premier, cette fois."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Tu as lu, tu sais. C'est pire. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  - id: sl.h7.r3_bus_page_prise
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, sombre]
+    speaker: mbako
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Une heure du matin. Mbako boit seul dans le bus de 2010 : « Tu as pris la page de Sandrine, comme j'ai pris le double. On ne les lit pas, ces choses-là : on les garde. J'ai compté jusqu'à trente. »"
+    left:
+      label: "Tu vas témoigner"
+      effects: {vestiaire: "+", direction: "-", relation: {mbako: 1}, set: [h7_mbako_temoignera]}
+      answer: "« Alors lis-la, demain. » Il pose la bouteille sur le siège du chauffeur et descend le premier, cette fois."
+    right:
+      label: "Personne ne saura"
+      effects: {direction: "+", vestiaire: "-", set: [h7_mbako_silence]}
+      answer: "« Comme le double. » Quand tu descends, il reste assis au dernier rang, à la place qui était celle du petit."
+
+  # ═══════════════════════════ la fiche de l'hymne (→ la répétition à huis clos)
+  - id: sl.h7.h3_repetition_fiche_rendue
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, vestiaire]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Répétition à huis clos, vingt-six joueurs debout entre les tables. Le petit Rancé chante le premier, faux, très fort. Mbako garde la fiche de l'hymne pliée dans la poche du brassard, sans la sortir."
+    left:
+      label: "On recommence"
+      effects: {tribunes: "+", vestiaire: "+", set: [h7_hymne_chante], outcome: chante}
+      answer: "Trois fois, jusqu'à ce que ce soit juste. À la troisième, Mbako chante aussi, la fiche toujours dans sa poche : il connaissait les paroles."
+    right:
+      label: "Ça suffira"
+      effects: {vestiaire: "+", set: [h7_hymne_muet], outcome: muet}
+      answer: "Ils se rassoient. Mbako ne sort pas la fiche. Le petit fredonne encore en beurrant sa tartine ; personne ne lui dit de se taire."
+
+  - id: sl.h7.h3_repetition_fiche_laissee
+    roles: [selectionneur]
+    arc: tribune
+    tags: [tribunes, vestiaire]
+    lieu: hotel
+    tone: leger
+    once: true
+    when: "!flag('h7_rance_mort')"
+    text: "Répétition à huis clos, vingt-six joueurs debout entre les tables. Le petit Rancé chante le premier, faux, très fort. Mbako est allé chercher sa fiche chez Josiane, à la lettre M : lue, rendue."
+    left:
+      label: "On recommence"
+      effects: {tribunes: "+", vestiaire: "+", set: [h7_hymne_chante], outcome: chante}
+      answer: "Trois fois, jusqu'à ce que ce soit juste. À la troisième, Mbako chante aussi, les yeux sur la fenêtre : une fois lue, la fiche suffisait."
+    right:
+      label: "Ça suffira"
+      effects: {vestiaire: "+", set: [h7_hymne_muet], outcome: muet}
+      answer: "Ils se rassoient. Mbako, debout, remue les lèvres encore un peu, pour lui. Le petit fredonne ; personne ne lui dit de se taire."
+
+  # ═══════════════════════════ les canettes de Fulgor (→ la table de presse)
+  - id: sl.h7.f3_table_scotchees
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, presse]
+    lieu: stade
+    tone: leger
+    once: true
+    text: "La table de presse de la Fédération, avant la conférence : douze canettes orange, scotchées par le fond, comme promis. Le photographe attend que tu t'assoies derrière, pour la photo."
+    left:
+      label: "Je m'assois"
+      effects: {caisse: "+", direction: "+", outcome: dit}
+      answer: "Tu t'assois. Sur la photo du lendemain, on ne voit de toi que les mains, entre deux canettes qu'aucune main n'a pu déplacer."
+    right:
+      label: "Je les fais enlever"
+      effects: {direction: "-", tribunes: "+", outcome: pousse}
+      answer: "Le photographe tire sur la première ; le scotch emporte un morceau de nappe. Il reste un rond orange, et un trou, que personne ne recouvre."
+
+  - id: sl.h7.f3_table_cheque
+    roles: [selectionneur]
+    arc: argent
+    tags: [sponsors, presse]
+    lieu: stade
+    tone: leger
+    once: true
+    text: "La table de presse de la Fédération, avant la conférence du mois : douze canettes orange alignées, et le chèque de Fulgor, encadré, contre la carafe. Le photographe attend que tu t'assoies derrière."
+    left:
+      label: "Je m'assois"
+      effects: {caisse: "+", direction: "+", outcome: dit}
+      answer: "Tu t'assois. Sur la photo du lendemain, le chèque est lisible, et les mains aussi. Les primes des joueurs, elles, arriveront en mars."
+    right:
+      label: "Je les fais enlever"
+      effects: {direction: "-", tribunes: "+", outcome: pousse}
+      answer: "Le photographe range les canettes une par une. Le chèque, lui, reste contre la carafe : personne n'ose le retirer."
+
+  # ═════════════════════ Vaubourg déposé, sur le quai (→ l'envoi des procès-verbaux)
+  - id: sl.h7.v_envoi_heure
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat range le registre dans une serviette neuve : « Le ministre veut les procès-verbaux de 2011. Vaubourg m'avait dit pourquoi six heures. Tous, ou tous sauf un ? Vous signez le bordereau. »"
+    left:
+      label: "Envoyez-les tous"
+      effects: {direction: "-", tribunes: "+", set: [h7_registre_envoye]}
+      answer: "Il compte à voix haute, quarante et un, et te tend le bordereau. Six heures est dans le quarante et unième. Tu signes la dernière ligne."
+    right:
+      label: "Tous sauf un"
+      effects: {direction: "+", set: [h7_registre_garde]}
+      answer: "Il en retire un sans chercher et le glisse dans sa poche intérieure. « Quarante. » Tu signes le bordereau de quarante ; lui, il sourit."
+
+  - id: sl.h7.v_envoi_chez_lui
+    roles: [selectionneur]
+    arc: instances
+    tags: [direction]
+    speaker: dauzat
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "Dauzat range le registre dans une serviette : « Vaubourg est rentré chez lui, vous avez dit. Le ministre, lui, veut les procès-verbaux de 2011. Tous, ou tous sauf un ? Vous signez le bordereau. »"
+    left:
+      label: "Envoyez-les tous"
+      effects: {direction: "-", tribunes: "+", set: [h7_registre_envoye]}
+      answer: "Il compte à voix haute, quarante et un, et te tend le bordereau. « Chez lui, il n'en lira aucun. » Ta signature est la dernière de la page."
+    right:
+      label: "Tous sauf un"
+      effects: {direction: "+", set: [h7_registre_garde]}
+      answer: "Il en retire un sans chercher et le glisse dans sa poche intérieure. « Quarante. » Tu signes le bordereau de quarante, et il se tait."
+
+  # ═══════════════════════════ la lettre de Fauvel (→ le vote à main levée)
+  - id: sl.h7.k3_vote_defendu
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La salle du petit-déjeuner, tables contre les murs. Fauvel compte : « Qui veut qu'on dise la nuit du 14 ? » Mbako lève la main le premier, sans te regarder : on lui a dit que tu le défendais."
+    left:
+      label: "Je lève la mienne"
+      effects: {vestiaire: "++", direction: "--", set: [h7_vote_verite], outcome: vote}
+      answer: "Vingt-six mains, et la tienne ; Mbako baisse la sienne le dernier. Fauvel écrit le chiffre sur la nappe, et Sandrine note l'heure."
+    right:
+      label: "On arrête ce vote"
+      effects: {vestiaire: "--", direction: "+", set: [h7_vote_refuse], outcome: liste}
+      answer: "Les mains redescendent. Mbako garde la sienne en l'air jusqu'au bout, et te regarde enfin : il vient de comprendre ce que valait ta défense."
+
+  - id: sl.h7.k3_vote_verite
+    roles: [selectionneur]
+    arc: vestiaire
+    tags: [vestiaire]
+    lieu: hotel
+    tone: strategique
+    once: true
+    text: "La salle du petit-déjeuner, tables contre les murs. Fauvel compte : « Qui veut qu'on dise la nuit du 14 ? » Il te regarde avant de regarder les mains : tu lui as dit « la vérité d'abord »."
+    left:
+      label: "Je lève la mienne"
+      effects: {vestiaire: "++", direction: "--", set: [h7_vote_verite], outcome: vote}
+      answer: "Vingt-six mains, et la tienne. « Dans cet ordre-là, ça va », dit Fauvel, qui écrit le chiffre sur la nappe. Sandrine note l'heure."
+    right:
+      label: "On arrête ce vote"
+      effects: {vestiaire: "--", direction: "+", set: [h7_vote_refuse], outcome: liste}
+      answer: "Les mains redescendent. Fauvel te regarde longtemps. « La vérité d'abord, vous disiez. » Il froisse la nappe en papier, sans bruit."

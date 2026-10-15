@@ -42,9 +42,18 @@
     }
     return false;
   }
+  // les quartiers que des fins trouvées ont ouverts d'avance (le profil : `recompenses.quartiers`,
+  // posé par les paliers du Cimetière, preview_template.html JALONS_FINS)
+  function quartiersDuProfil() {
+    try {
+      var A = window.FusibleApercu, r = A && A.profil && A.profil().recompenses;
+      return r && Array.isArray(r.quartiers) ? r.quartiers : [];
+    } catch (e) { return []; }
+  }
   function quartierOuvert(cle) {
     var q = GRAND_Q[cle];
     if (!q || !MONDE) return true;
+    if (quartiersDuProfil().indexOf(cle) >= 0) return true;
     if (((vue && vue.flags) || []).indexOf("quartier_" + cle) >= 0) return true;
     if (q.semaine && S && S.semaine >= q.semaine) return true;
     if (q.saison && vue && (vue.season || 1) >= q.saison) return true;

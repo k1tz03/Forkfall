@@ -1,0 +1,29 @@
+# LE FUSIBLE — le mode éclair, l'entraîneur / l'entraîneuse (docs/histoires/mode_eclair.md).
+# L'entraîneur n'a pas de cartes à lui dans ce mode : il joue les intrigues communes que son
+# programme tire (content/postulats.yaml, `eclair_entraineur`). Une seule carte s'y ajoute, une
+# variante d'étape : la porte de la fin « Le dauphin » (en_dauphin), que les livres tiennent dans
+# leurs scripts (en.promu.veille_dauphin, en.h2.s3.veille_dauphin) et qu'une carrière éclair
+# n'atteignait pas.
+cards:
+  # « L'adjoint qui dîne », novembre (content/arcs/entraineur/adjoint.yaml, étape `novembre`) : la
+  # même scène que en.adjoint.novembre, lue à la place d'elle quand le drapeau `eclair` est levé.
+  # Là-bas, laisser le banc à Vukić ne le lui donne pas ; ici il le prend, et c'est la fin.
+  - id: en.adjoint.novembre_banc
+    roles: [entraineur]
+    arc: direction
+    tags: [direction, moment, chaine]
+    # La garde est déjà dans l'étape (`if: flag('eclair')`) ; elle est reposée sur la carte pour que
+    # `simulate` ne la compte pas parmi les « jamais vues » des livres (une carte qui lit `eclair`
+    # ne se joue qu'en éclair).
+    when: "flag('eclair')"
+    speaker: vukic
+    tone: strategique
+    text: "Vukić frappe deux fois, ce qu'il ne faisait plus, et entre : « J'ai fini de réfléchir : le président m'a proposé ton banc pour janvier. Il veut ta réponse avant Noël. Tu dis quoi, {toi} ? »"
+    left:
+      label: "Prends le banc, Zoran"
+      effects: {end: en_dauphin}
+      answer: "Il ne dit pas merci. Il « réfléchissait » depuis novembre."
+    right:
+      label: "Tu restes numéro deux"
+      effects: {direction: "+", vestiaire: "-", relation: {vukic: -1}, clear: [vukic_dauphin]}
+      answer: "Il reste. Il ne relit plus de discours ; le président trouve un autre relecteur, sans cahier."

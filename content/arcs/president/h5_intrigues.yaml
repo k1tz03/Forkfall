@@ -93,10 +93,14 @@ arcs:
     fallback: drop
     steps:
       - id: jeudi
-        card: pr.h5.ordres.jeudi
+        # Tu avais raccroché mardi : Bréhaut te le rappelle.
+        card:
+          - { id: pr.h5.ordres.jeudi_raccroche, if: "flag('h5_raccroche')" }
+          - { id: pr.h5.ordres.jeudi }
         next: [ { step: plaque, in: [2, 4] } ]
       - id: plaque
         card:
+          - { id: pr.h5.ordres.plaque_conseil, if: "flag('h5_oudart_vendu') && flag('h5_conseil_ecrit')" }
           - { id: pr.h5.ordres.plaque_obei, if: "flag('h5_oudart_vendu')" }
           - { id: pr.h5.ordres.plaque }
         next: [ { step: cendres, in: [3, 8] } ]
@@ -206,7 +210,10 @@ arcs:
     fallback: drop
     steps:
       - id: cahier
-        card: pr.h5.dapres.cahier
+        # Le mot « Conseil » dicté à Vukić, entre guillemets, en face de chaque mardi.
+        card:
+          - { id: pr.h5.dapres.cahier_conseil, if: "flag('h5_conseil_ecrit')" }
+          - { id: pr.h5.dapres.cahier }
         next: [ { step: titi, in: [2, 5] } ]
       - id: titi
         card:
@@ -422,7 +429,10 @@ arcs:
     fallback: drop
     steps:
       - id: coupure
-        card: pr.h5.vialat.coupure
+        # Tu avais regardé le chiffre en face, au premier solde.
+        card:
+          - { id: pr.h5.vialat.coupure_chiffre, if: "flag('h5_solde_regarde')" }
+          - { id: pr.h5.vialat.coupure }
         next: [ { step: ligne, in: [3, 12] } ]
       - id: ligne
         card: pr.h5.vialat.ligne
@@ -457,7 +467,11 @@ arcs:
         card: pr.h5.lambert.buvette
         next: [ { step: cuisine, in: [1, 6] } ]
       - id: cuisine
-        card: pr.h5.lambert.cuisine
+        # Gégé t'a conduit chez Lambert, ou son ticket t'a dit de parler à droite.
+        card:
+          - { id: pr.h5.lambert.cuisine_gege, if: "flag('h5_gege_emmene')" }
+          - { id: pr.h5.lambert.cuisine_droite, if: "flag('h5_ticket_droite')" }
+          - { id: pr.h5.lambert.cuisine }
         next: [ { step: permanence, in: [2, 7] } ]
       - id: permanence
         card: pr.h5.lambert.permanence
