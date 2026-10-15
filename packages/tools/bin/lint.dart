@@ -846,6 +846,11 @@ void main() {
     villeLit(m['si'], 'ville/cinematiques/${m['id']}');
     if (m['drapeau'] != null) villeLit("flag('${m['drapeau']}')", 'ville/cinematiques/${m['id']}');
   }
+  for (final c in (villeB['films'] as List? ?? const [])) {
+    final m = c as Map;
+    villeLit(m['si'], 'ville/films/${m['id']}');
+    if (m['drapeau'] != null) villeLit("flag('${m['drapeau']}')", 'ville/films/${m['id']}');
+  }
   for (final c in (villeB['conversations'] as List? ?? const [])) {
     villeLit((c as Map)['si'], 'ville/conversations/${c['id']}');
   }

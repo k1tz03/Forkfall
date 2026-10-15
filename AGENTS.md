@@ -79,6 +79,7 @@ Unes, ses set-pieces et sa ville (répliques, missions, scènes de la semaine).
 ```
 packages/core/     moteur déterministe, Dart pur (aucun Flutter, aucune I/O)
 packages/tools/    build_content, lint, simulate, et l'aperçu web (web/)
+packages/tools/web/cinema/  les films en 3D (three.js) : la trousse, les films, le tournage — docs/design/cinematiques.md
 content/           la source YAML → content/build/content.json
 app/               l'application Flutter
 docs/brainstorm/   la bible de conception (11 sections) — le pourquoi

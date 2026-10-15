@@ -49,6 +49,7 @@ const List<String> kListesLivre = [
   'unes',
   'ville.scenes',
   'ville.cinematiques',
+  'ville.films',
   'ville.conversations',
   'ville.missions',
   'ville.lieux_variantes',

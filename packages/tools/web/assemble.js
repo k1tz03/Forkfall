@@ -29,6 +29,14 @@
 //                       l'accueil n'attend pas pour se dessiner
 //   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Jersey 15
 //                       (la seule ressource externe de tout le fichier)
+//   __CINEMA__        ← le cinéma (docs/design/cinematiques.md) : le lecteur
+//                       (cinema/lecteur.js, window.FusibleCinema) toujours dans la
+//                       page ; three.js (vendor/three/fusible-three.js), la trousse
+//                       (cinema/kit/*.js, dans l'ordre des noms) et chaque film
+//                       (cinema/films/<id>.js), chargés au moment de jouer : des
+//                       blocs gzip en base64 dans le fichier seul ; avec --ville,
+//                       des fichiers à côté de la page (cinema/, nommés par leur
+//                       empreinte, gardés par le service worker)
 //   __VILLE_CSS__, __VILLE_JS__ ← vides, sauf avec --ville <dossier> : la
 //                       version jouable (la ville d'Aubérive en pixel art,
 //                       ville.css + ville.js). Le dossier donné porte les
@@ -48,11 +56,69 @@ const ROOT = path.resolve(HERE, '..', '..', '..');
 const BUILD_DIR = process.env.FUSIBLE_BUILD_DIR || path.join(ROOT, 'build', 'web');
 // Les modules de la ville, insérés dans la fermeture de ville.js (au repère
 // /*__VILLE_MODULES__*/), dans cet ordre : ils voient tout ce qu'elle voit.
-const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js', 'ville_album.js', 'ville_direct.js', 'ville_dossier.js'];
+const VILLE_MODULES = ['ville_dedans.js', 'ville_cinema.js', 'ville_film.js', 'ville_jeux.js', 'ville_vie.js', 'ville_gens.js', 'ville_quartiers.js', 'ville_album.js', 'ville_direct.js', 'ville_dossier.js'];
 // Les modules de l'aperçu, insérés dans la fermeture du gabarit (au repère
 // /*__PREVIEW_MODULES__*/, avant le premier dessin) : ils s'abonnent aux crochets
 // (`crochet('debut', fn)`…) et voient tout ce que voit le gabarit.
-const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js'];
+const PREVIEW_MODULES = ['preview_album.js', 'preview_direct.js', 'preview_dossier.js', 'preview_echos.js', 'preview_partage.js', 'preview_film.js'];
+// ville_film.js enveloppe ces quatre fonctions de ville_cinema.js (les portes des scènes
+// jouées, que les films prennent aussi) : un renommage doit casser l'assemblage, pas les films
+const PORTES_DES_FILMS = ['cineDeCarte', 'cineDeDrapeau', 'cineIntro', 'jouerCine'];
+
+/// LE CINÉMA (docs/design/cinematiques.md) : le lecteur, toujours dans la page ; three.js,
+/// la trousse et les films, chargés quand un film se joue. Les films sont les fichiers de
+/// cinema/films/ (l'id d'un film est le nom de son fichier, et il se déclare avec cet id) ;
+/// un déclencheur du contenu (`ville.films[].module`) qui nomme un film absent casse
+/// l'assemblage.
+function cinemaSources() {
+  const dir = path.join(HERE, 'cinema');
+  const kitDir = path.join(dir, 'kit'), filmsDir = path.join(dir, 'films');
+  const kit = fs.readdirSync(kitDir).filter((f) => /^\d\d_[a-z_]+\.js$/.test(f)).sort()
+    .map((f) => '/* cinema/kit/' + f + ' */\n' + fs.readFileSync(path.join(kitDir, f), 'utf8')).join('\n;\n');
+  const films = {};
+  for (const f of fs.readdirSync(filmsDir).filter((x) => /^[a-z0-9_]+\.js$/.test(x)).sort()) {
+    const id = f.slice(0, -3), src = fs.readFileSync(path.join(filmsDir, f), 'utf8');
+    if (!new RegExp('\\bid:\\s*["\']' + id + '["\']').test(src)) throw new Error('cinema/films/' + f + ' : le film doit se déclarer avec id: "' + id + '"');
+    films[id] = src;
+  }
+  return {
+    lecteur: fs.readFileSync(path.join(dir, 'lecteur.js'), 'utf8'),
+    three: fs.readFileSync(path.join(HERE, 'vendor', 'three', 'fusible-three.js'), 'utf8'),
+    kit, films,
+  };
+}
+function cinemaHtml(c, versDossier, bundle) {
+  const zlib = require('zlib');
+  const empreinte = (x) => require('crypto').createHash('sha1').update(x).digest('hex').slice(0, 10);
+  for (const f of ((bundle.ville || {}).films || [])) {
+    if (!c.films[f.module]) throw new Error('ville.films/' + f.id + ' : le film « ' + f.module + ' » n\'est pas dans packages/tools/web/cinema/films/');
+  }
+  const blocs = [], urls = [];
+  if (versDossier) {
+    fs.rmSync(path.join(versDossier, 'cinema'), { recursive: true, force: true });
+    fs.mkdirSync(path.join(versDossier, 'cinema'), { recursive: true });
+  }
+  const poser = (cle, texte, nom) => {
+    if (versDossier) {
+      const u = 'cinema/' + nom + '.' + empreinte(texte) + '.js';
+      fs.writeFileSync(path.join(versDossier, u), texte);
+      urls.push(u);
+      return { url: u };
+    }
+    const id = 'fusible-cinema-' + cle;
+    blocs.push('<script type="application/octet-stream" id="' + id + '">' + zlib.gzipSync(Buffer.from(texte, 'utf8'), { level: 9 }).toString('base64') + '</script>');
+    return { el: id };
+  };
+  const sources = { three: poser('three', c.three, 'three'), kit: poser('kit', c.kit, 'kit'), films: {} };
+  for (const [id, src] of Object.entries(c.films)) sources.films[id] = poser('film-' + id, src, 'film.' + id);
+  blocs.push('<script>window.FUSIBLE_CINEMA = ' + JSON.stringify(sources) + ';</script>');
+  blocs.push('<script>' + c.lecteur.split('</script').join('<\\/script') + '</script>');
+  const tous = [c.three, c.kit].concat(Object.values(c.films));
+  const octets = tous.reduce((a, s) => a + Buffer.byteLength(s), 0), gz = tous.reduce((a, s) => a + zlib.gzipSync(Buffer.from(s, 'utf8'), { level: 9 }).length, 0);
+  console.log('le cinéma : three.js, la trousse et ' + Object.keys(c.films).length + ' film(s), ' + Math.round(octets / 1024) + ' Ko (' + Math.round(gz / 1024) + ' Ko gzip) ' +
+    (versDossier ? 'à côté de la page, cinema/' : 'embarqués') + ' ; le lecteur, ' + Math.round(Buffer.byteLength(c.lecteur) / 1024) + ' Ko, dans la page');
+  return { html: blocs.join('\n'), urls };
+}
 
 // Les noms qu'un fichier déclare au premier niveau d'une fermeture (deux espaces) :
 // un module partage la fermeture, il ne redéclare jamais un nom de son hôte ni d'un
@@ -386,7 +452,7 @@ function main() {
     }
   }
 
-  const PLACEHOLDERS = ['__CONTENU__', '__TETE__', '__ENGINE_JS__', '__ART_JS__', '__AUDIO_JS__', '__ACCUEIL_JS__', '__FONTS_CSS__', '__VILLE_CSS__', '__VILLE_JS__'];
+  const PLACEHOLDERS = ['__CONTENU__', '__TETE__', '__ENGINE_JS__', '__ART_JS__', '__AUDIO_JS__', '__CINEMA__', '__ACCUEIL_JS__', '__FONTS_CSS__', '__VILLE_CSS__', '__VILLE_JS__'];
   for (const p of PLACEHOLDERS) {
     if (tpl.indexOf(p) < 0) throw new Error('placeholder absent du gabarit : ' + p);
   }
@@ -413,6 +479,8 @@ function main() {
   tpl = tpl.split('__ENGINE_JS__').join(dossier ? '/* le moteur : ' + moteurUrl + ' (demarrage.js le charge) */' : safeEngine);
   tpl = tpl.split('__ART_JS__').join(safeArt);
   tpl = tpl.split('__AUDIO_JS__').join(safeAudio);
+  const blocCinema = cinemaHtml(cinemaSources(), dossier, bundle);
+  tpl = tpl.split('__CINEMA__').join(blocCinema.html);
   tpl = tpl.split('__FONTS_CSS__').join(fontsCss());
   tpl = tpl.split('__ACCUEIL_JS__').join(accueilJs(dossier));
   // LA VILLE : la feuille et la couche, ou rien.
@@ -424,6 +492,11 @@ function main() {
     // un module partage la fermeture : il ne redéclare jamais un nom de la ville ou d'un autre
     // module (une `function lancer` y remplacerait celle qui démarre la ville, en silence)
     const vus = new Map([...declares(villeSrc)].map((n) => [n, 'ville.js']));
+    for (const n of PORTES_DES_FILMS) {
+      if (!new RegExp('\\bfunction ' + n + '\\b').test(fs.readFileSync(path.join(HERE, 'ville_cinema.js'), 'utf8'))) {
+        throw new Error('ville_film.js enveloppe « ' + n + ' », que ville_cinema.js ne déclare plus');
+      }
+    }
     for (const f of VILLE_MODULES) {
       for (const n of declares(fs.readFileSync(path.join(HERE, f), 'utf8'))) {
         if (vus.has(n)) throw new Error(`${f} redéclare « ${n} », déjà déclaré par ${vus.get(n)}`);
@@ -475,7 +548,7 @@ function main() {
       .concat(['lieux.json', 'grille.json', 'sprites.json', 'interieurs.json'].filter((f) => fs.existsSync(path.join(dest, f))).map((f) => 'ville/' + f))
       .concat(fs.readdirSync(dest).filter((f) => /^brume_.*\.webp$/.test(f)).sort().map((f) => 'ville/' + f));
     const version = require('crypto').createHash('sha1').update(tpl).update(JSON.stringify(depart)).update(fs.readFileSync(path.join(HERE, 'sw.js'))).digest('hex').slice(0, 12);
-    ecrirePwa(dossier, version, depart, blocContenu.livresUrls);
+    ecrirePwa(dossier, version, depart, blocContenu.livresUrls.concat(blocCinema.urls));
     console.log('l\'application : manifeste, icônes, aperçu, sw.js (version ' + version + ', ' + depart.length + ' fichiers au départ)');
   }
 }

@@ -5,26 +5,27 @@
    · La page (index.html, la navigation) : le réseau d'abord — une nouvelle
      version arrive dès qu'elle est en ligne —, le cache s'il ne répond pas
      (hors ligne, ou plus de trois secondes sur un réseau qui traîne).
-   · Le reste (ville/, contenu/, accueil/, icones/) : le cache d'abord. Ces
-     fichiers ne changent qu'avec une nouvelle version de la page, et chaque
+   · Le reste (ville/, contenu/, cinema/, accueil/, icones/) : le cache d'abord.
+     Ces fichiers ne changent qu'avec une nouvelle version de la page, et chaque
      version a son cache : l'ancien s'efface quand la nouvelle s'installe (ce
-     qui est nommé par son empreinte, contenu/, passe de l'un à l'autre sans
-     être retéléchargé). Une tuile, un livre déjà vus se rejouent hors ligne.
+     qui est nommé par son empreinte, contenu/ et cinema/, passe de l'un à
+     l'autre sans être retéléchargé). Une tuile, un livre, un film déjà vus se
+     rejouent hors ligne.
    · Ce qui n'est pas d'ici (les polices de Google) passe sans s'arrêter.
    ═══════════════════════════════════════════════════════════════════════════ */
 'use strict';
 var VERSION = '__VERSION__';
 var CACHE = 'fusible-' + VERSION;
 var DEPART = __DEPART__;   // ce qu'il faut pour rouvrir l'accueil hors ligne
-var LIVRES = __LIVRES__;   // les livres de cette version : on ne les demande pas d'avance
-var STATIQUE = /\/(ville|contenu|accueil|icones)\/[^/]+$/;
+var LIVRES = __LIVRES__;   // les livres et les films de cette version : on ne les demande pas d'avance
+var STATIQUE = /\/(ville|contenu|cinema|accueil|icones)\/[^/]+$/;
 
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) {
-    // contenu/ est nommé par l'empreinte de ses octets : un nom déjà vu dans le cache d'une
-    // version précédente est le même fichier. Le commun et le moteur n'y sont pas retéléchargés ;
-    // un livre déjà joué y reste (on le reprend hors ligne après une mise à jour)
-    var deja = function (u) { return /^contenu\//.test(u) ? caches.match(u) : Promise.resolve(null); };
+    // contenu/ et cinema/ sont nommés par l'empreinte de leurs octets : un nom déjà vu dans le
+    // cache d'une version précédente est le même fichier. Le commun et le moteur n'y sont pas
+    // retéléchargés ; un livre déjà joué, un film déjà vu y restent (hors ligne après une mise à jour)
+    var deja = function (u) { return /^(contenu|cinema)\//.test(u) ? caches.match(u) : Promise.resolve(null); };
     return Promise.all(DEPART.map(function (u) {
       return deja(u).then(function (r) { return r ? c.put(u, r) : c.add(u); });
     }).concat(LIVRES.map(function (u) {
