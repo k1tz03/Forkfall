@@ -705,6 +705,42 @@ class Engine {
     s.lastAnswer = 'Bilan : ${verdict.rank}e · objectif « ${objectiveLabelFr(s.objectiveTarget)} » '
         '${verdict.objectiveMet ? 'tenu' : 'manqué'}.';
     _checkObjectifs(s, 'bilan');
+    _finDeLivre(s);
+  }
+
+  /// **La fin du livre.** Au verdict de la dernière saison que le postulat
+  /// déclare (`saisons:`, `fin_de_livre:` de postulats.yaml), une carrière qui
+  /// n'a pris aucune fin d'histoire en chemin prend celle du livre : l'histoire
+  /// est racontée, la carrière aussi. Avant, elle continuait dans le contenu
+  /// générique (jusqu'à vingt-deux saisons mesurées, la même Une servie onze
+  /// fois) et ne finissait sur les fins du livre que dans 35 à 58 % des cas
+  /// pour les livres 2, 3 et 4.
+  ///
+  /// Elle se pose **comme toute fin de verdict** (`co.verdict.actionnaires` :
+  /// `endingId` + `over`) : `choose` voit `over` au sortir de `_applyPending`,
+  /// bâtit l'écran de fin (`_buildEndingPending`) et rend la main sans servir
+  /// de carte ; la coquille de la ville fait donc ce qu'elle fait de toute fin.
+  /// Elle tombe APRÈS l'application du verdict — la ligne d'Almanach du Bilan,
+  /// la montée ou la descente, le drapeau `bilan_tenu`/`bilan_manque` sont
+  /// écrits, l'écran de fin les lit — et AVANT la carte du contrat et le
+  /// Carrefour : le livre est fini, on ne propose ni un an de plus ni un autre
+  /// rôle. Un postulat sans `saisons` ni `fin_de_livre` (les contenus de test)
+  /// n'est pas touché.
+  ///
+  /// Aucun tirage : le Rng n'est pas lu. La saison est comptée jouée
+  /// (`stats.saisons`, que le Carrefour aurait incrémenté et que lisent les
+  /// objectifs cachés « trois saisons dans le même club »).
+  void _finDeLivre(GameState s) {
+    if (s.over) return;
+    final post = content.postulats[s.postulatId];
+    if (post == null || !post.livreFiniAuBilan(s.season)) return;
+    // Une fin que le contenu ne déclare pas ne ferme rien : la garde protège
+    // un bundle assemblé à la main (le build, lui, refuse un `fin_de_livre`
+    // inconnu).
+    if (!content.endings.containsKey(post.finDeLivre)) return;
+    s.stats['saisons'] = (s.stats['saisons'] ?? 0) + 1;
+    s.endingId = post.finDeLivre;
+    s.over = true;
   }
 
   /// Objectifs cachés du postulat (spec variété §1.9) : évalués sans Rng au
@@ -1417,10 +1453,24 @@ class Engine {
     );
   }
 
+  /// L'objectif de la saison. **Première saison : celui que le postulat
+  /// déclare** (`objective:` de postulats.yaml), sans aucun tirage — c'est le
+  /// livre qui dit où l'on commence (« Les Deux Téléphones » : la montée, pas
+  /// le maintien). Le test d'avant, `s.postulat >= 2`, jetait la déclaration
+  /// des livres 3 à 10 pour un tirage de `pickObjective` : 59 % des
+  /// carrières du livre 10 s'ouvraient sur « le maintien » alors qu'il
+  /// déclare la montée, et la moitié de celles des livres 6 à 9 sur un Top 5
+  /// ou un Top 10 que personne n'avait écrit.
+  ///
+  /// Coût Rng : **zéro** quand le postulat déclare son objectif en saison 0 ;
+  /// sinon (aucun objectif déclaré, ou toute saison suivante) un seul
+  /// `rng.nextDouble()` (aucun en Division 2 sous forte pression), comme
+  /// `pickObjective` l'a toujours fait. Ni `GameState.objectiveTarget`
+  /// (initialisé à `post.objective ?? 'maintien'`, donc jamais vide) ni le
+  /// rang du postulat ne servent à décider : seule la déclaration compte.
   Pending _objectiveCard(GameState s, Rng rng) {
-    final target = s.objectiveTarget.isEmpty || s.season > 0 || s.postulat >= 2
-        ? pickObjective(s.world.division, s.pression, rng)
-        : s.objectiveTarget;
+    final declare = s.season == 0 ? content.postulats[s.postulatId]?.objective : null;
+    final target = declare ?? pickObjective(s.world.division, s.pression, rng);
     s.objectiveTarget = target;
     s.objectiveLabel = objectiveLabelFr(target);
     final patronId = _patronOf(s);

@@ -374,7 +374,7 @@ void main() {
         monClub: 'US Test',
         rivalClub: 'AS Rival',
         prefixes: const ['US', 'AS', 'FC'],
-        villes: const ['Vaubelle', 'Portclair', 'Nerville', 'Castérac'],
+        villes: const ['Vaubelle', 'Portclair', 'Crevelaine', 'Castérac'],
         blocksClub: 6,
       );
       final sans = buildStandings(
@@ -388,7 +388,7 @@ void main() {
         monClub: 'US Test',
         rivalClub: 'AS Rival',
         prefixes: const ['US', 'AS', 'FC'],
-        villes: const ['Vaubelle', 'Portclair', 'Nerville', 'Castérac'],
+        villes: const ['Vaubelle', 'Portclair', 'Crevelaine', 'Castérac'],
       );
       expect(jsonEncode([for (final r in avec) r.toJson()]), jsonEncode([for (final r in sans) r.toJson()]));
     });

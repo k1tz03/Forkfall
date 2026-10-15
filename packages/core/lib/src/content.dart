@@ -878,6 +878,16 @@ class PostulatDef {
   final String? ville;
   final String? rival;
 
+  /// **La longueur du livre** et **sa fin** (`saisons:` et `fin_de_livre:` de
+  /// postulats.yaml). Un livre a un nombre de saisons ; au Bilan de la dernière
+  /// (le verdict de la saison d'index `saisons - 1`), une carrière qui n'a pas
+  /// pris de fin d'histoire prend [finDeLivre] : le livre est fini, la carrière
+  /// aussi (`Engine._resolveBilan`). Les deux vont ensemble ; un postulat qui
+  /// n'en déclare aucun (les contenus de test) se comporte comme avant : la
+  /// carrière continue jusqu'à une fin commune.
+  final int? saisons;
+  final String? finDeLivre;
+
   const PostulatDef({
     required this.id,
     required this.index,
@@ -907,7 +917,13 @@ class PostulatDef {
     this.club,
     this.ville,
     this.rival,
+    this.saisons,
+    this.finDeLivre,
   });
+
+  /// Le livre est-il fini au Bilan de la saison [season] (index à partir de 0) ?
+  /// Faux pour un postulat sans `saisons` ni `fin_de_livre`.
+  bool livreFiniAuBilan(int season) => saisons != null && finDeLivre != null && season >= saisons! - 1;
 
   factory PostulatDef.fromJson(Map<String, dynamic> j) {
     final cast = <String, CastEntry>{};
@@ -948,6 +964,8 @@ class PostulatDef {
       club: (j['club'] as String?)?.trim().isEmpty ?? true ? null : (j['club'] as String).trim(),
       ville: (j['ville'] as String?)?.trim().isEmpty ?? true ? null : (j['ville'] as String).trim(),
       rival: (j['rival'] as String?)?.trim().isEmpty ?? true ? null : (j['rival'] as String).trim(),
+      saisons: (j['saisons'] as num?)?.toInt(),
+      finDeLivre: (j['fin_de_livre'] as String?)?.trim().isEmpty ?? true ? null : (j['fin_de_livre'] as String).trim(),
     );
   }
 }

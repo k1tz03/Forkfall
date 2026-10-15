@@ -847,6 +847,31 @@ void main() {
         errors.add('postulats: $id: prologue « ${m['prologue']} » ne joue pas le rôle « ${m['role']} »');
       }
     }
+    // La longueur du livre et sa fin (`Engine._finDeLivre`) : au verdict de la
+    // saison d'index `saisons - 1`, une carrière encore en vie prend la fin
+    // `fin_de_livre`. Les deux champs vont ensemble ; aucun des deux = le
+    // postulat se joue jusqu'à une fin commune (les contenus de test).
+    if (m['saisons'] != null || m['fin_de_livre'] != null) {
+      final sa = m['saisons'];
+      final fin = m['fin_de_livre'];
+      if (sa == null || fin == null) {
+        errors.add('postulats: $id: `saisons` et `fin_de_livre` vont ensemble (l\'un sans l\'autre ne ferme rien)');
+      }
+      if (sa != null) {
+        if (sa is! int || sa < 1 || sa > 10) {
+          errors.add('postulats: $id: saisons « $sa » : un entier de 1 à 10');
+        } else {
+          m['saisons'] = sa;
+        }
+      }
+      if (fin != null) {
+        if (fin is! String || !endingIdsSeen.containsKey(fin)) {
+          errors.add('postulats: $id: fin_de_livre « $fin » : aucune fin de ce nom (content/endings*.yaml)');
+        } else {
+          m['fin_de_livre'] = fin;
+        }
+      }
+    }
     m['pitch'] = m['pitch']?.toString() ?? '';
     m['chantier'] = m['chantier'] == true;
     if (m['seeds'] != null && m['programme'] != null) errors.add('postulats: $id: `seeds` et `programme` sont exclusifs');
@@ -2975,6 +3000,9 @@ void _marquerFinsDormantes(Map<String, dynamic> bundle, Map<String, dynamic> dir
     if (n is Map) {
       final e = n['end'];
       if (e is String) vises.add(e);
+      // la fin d'un livre (`fin_de_livre:` d'un postulat) est une porte, elle aussi
+      final f = n['fin_de_livre'];
+      if (f is String) vises.add(f);
       for (final v in n.values) {
         collecte(v);
       }
