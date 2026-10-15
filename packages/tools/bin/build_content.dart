@@ -13,6 +13,7 @@ import 'package:fusible_core/fusible_core.dart' show fnv1a32, foldAccents, kLieu
 import 'package:yaml/yaml.dart';
 
 import 'src/condition_parser.dart';
+import 'src/livres.dart';
 
 final String contentDir = _findContentDir();
 
@@ -1601,6 +1602,22 @@ void main() {
     appAssets.createSync(recursive: true);
     File('${appAssets.path}/content.json').writeAsStringSync(pretty);
   }
+  // L'APERÇU WEB : le même bundle, découpé en un commun et un bundle par livre
+  // (bin/src/livres.dart) ; assemble.js les compresse et les embarque. Les deux
+  // content.json ci-dessus restent le bundle entier (l'application, les outils).
+  final decoupe = decouperParLivre(json.decode(pretty) as Map<String, dynamic>);
+  final livresDir = Directory('${outDir.path}/livres');
+  if (livresDir.existsSync()) livresDir.deleteSync(recursive: true);
+  livresDir.createSync(recursive: true);
+  final communJson = json.encode(decoupe.commun);
+  File('${livresDir.path}/commun.json').writeAsStringSync(communJson);
+  final tailles = <int>[];
+  decoupe.livres.forEach((id, l) {
+    final s = json.encode(l);
+    tailles.add(s.length);
+    File('${livresDir.path}/$id.json').writeAsStringSync(s);
+  });
+  tailles.sort();
 
   final nPool = cards.where((c) => c['pool'] == true).length;
   final nReact = cards.where((c) => c['kind'] == 'reaction').length;
@@ -1610,6 +1627,10 @@ void main() {
       '$nSetpieces variantes de set-piece (${setpieces.length} beats), ${arcs.length} arcs, ${postulats.length} postulats, '
       '${characters.length} personnages (${portraits.length} portraits), ${roles.length} rôles, ${endings.length} fins, ${feats.length} destins '
       '→ content/build/content.json (hash $hash)');
+  if (tailles.isNotEmpty) {
+    stdout.writeln('Aperçu : content/build/livres/ — commun ${communJson.length ~/ 1024} Ko, '
+        '${tailles.length} livres de ${tailles.first ~/ 1024} à ${tailles.last ~/ 1024} Ko');
+  }
 }
 
 /// Valeurs autorisées des fiches de portraits (content/portraits.yaml) ; les

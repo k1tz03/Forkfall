@@ -4,7 +4,16 @@
 //   node packages/tools/web/assemble.js --engine <engine.js> --out <fichier.html>
 // Le gabarit (preview_template.html) contient ses placeholders, remplacés
 // littéralement (split/join, aucune interprétation regex) :
-//   __CONTENT_JSON__  ← app/assets/content.json (bundle compilé par build_content)
+//   __CONTENU__       ← le contenu, découpé par build_content en un commun et un
+//                       bundle par livre (content/build/livres/, vérifiés contre
+//                       app/assets/content.json) et compressés (gzip) : embarqués
+//                       en base64 dans le fichier seul ; avec --ville, posés à
+//                       côté de la page (contenu/commun.<hash>.gz,
+//                       contenu/<livre>.<hash>.gz) ; puis demarrage.js, qui les
+//                       décompresse (window.FusibleContenu)
+//   __TETE__          ← avec --ville : la demande du commun (dès la tête), le
+//                       manifeste, les icônes, le service worker, l'aperçu d'un
+//                       lien partagé (Open Graph) ; rien sinon
 //   __ENGINE_JS__     ← le moteur Dart compilé en JS (dart compile js preview.dart)
 //   __ART_JS__        ← packages/tools/web/art.js (le SEUL moteur
 //                       d'illustration : SVG plat, géométrique, sans contour.
@@ -15,7 +24,9 @@
 //                       synthétisé : aucun fichier audio, aucune URL)
 //   __ACCUEIL_JS__    ← packages/tools/web/accueil/*.webp en data: (les
 //                       vignettes des histoires et le panorama de la ville,
-//                       découpés par docs/design/pixel_iso/accueil.js)
+//                       découpés par docs/design/pixel_iso/accueil.js) ; avec
+//                       --ville, des fichiers à côté de la page (accueil/), que
+//                       l'accueil n'attend pas pour se dessiner
 //   __FONTS_CSS__     ← le <link> Google Fonts de Space Mono et de Pixelify
 //                       Sans (la seule ressource externe de tout le fichier)
 //   __VILLE_CSS__, __VILLE_JS__ ← vides, sauf avec --ville <dossier> : la
@@ -102,13 +113,21 @@ function parseArgs(argv) {
 /// présence de ses capitales, et sur un italique qui est un vrai dessin et
 /// reste lisible à 15,5 px. IBM Plex Mono était plus sage, JetBrains Mono trop
 /// technique.
+///
+/// La feuille ne bloque rien (`media="print"` puis `all` à son arrivée) : une
+/// feuille ordinaire fait attendre TOUS les scripts qui la suivent, le temps
+/// d'aller chercher un autre serveur — sur un téléphone, une demi-seconde
+/// avant le premier écran. Les polices arrivent après, comme `display=swap`
+/// le prévoyait déjà.
 function fontsCss() {
+  const href = 'https://fonts.googleapis.com/css2?' +
+    'family=Pixelify+Sans:wght@400;500;600;700&' +
+    'family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap';
   return [
     '<link rel="preconnect" href="https://fonts.googleapis.com">',
     '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
-    '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?' +
-      'family=Pixelify+Sans:wght@400;500;600;700&' +
-      'family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap">',
+    '<link rel="stylesheet" href="' + href + '" media="print" onload="this.media=\'all\'">',
+    '<noscript><link rel="stylesheet" href="' + href + '"></noscript>',
   ].join('\n');
 }
 
@@ -118,17 +137,199 @@ function fontsCss() {
 /// tienne dans le fichier seul, avec ou sans la ville à côté.
 ///   couv_<postulat>.webp → FUSIBLE_ACCUEIL.couv[<postulat>]
 ///   panorama_<heure>.webp → FUSIBLE_ACCUEIL.panorama[<heure>]
-function accueilJs() {
+///
+/// Avec `versDossier` (la version jouable, servie en HTTP), les images sont
+/// copiées dans `accueil/` à côté de la page et nommées par leur chemin : la page
+/// pèse un mégaoctet de moins, l'accueil se dessine sans les attendre, et seul le
+/// panorama de l'heure est téléchargé.
+function accueilJs(versDossier) {
   const dir = path.join(HERE, 'accueil');
   const out = { couv: {}, panorama: {} };
   if (fs.existsSync(dir)) {
+    if (versDossier) fs.mkdirSync(path.join(versDossier, 'accueil'), { recursive: true });
     for (const f of fs.readdirSync(dir).sort()) {
       const m = /^(couv|panorama)_([a-z0-9_]+)\.webp$/.exec(f);
       if (!m) continue;
-      out[m[1]][m[2]] = 'data:image/webp;base64,' + fs.readFileSync(path.join(dir, f)).toString('base64');
+      if (versDossier) {
+        fs.copyFileSync(path.join(dir, f), path.join(versDossier, 'accueil', f));
+        out[m[1]][m[2]] = 'accueil/' + f;
+      } else {
+        out[m[1]][m[2]] = 'data:image/webp;base64,' + fs.readFileSync(path.join(dir, f)).toString('base64');
+      }
     }
   }
   return 'window.FUSIBLE_ACCUEIL = ' + JSON.stringify(out) + ';';
+}
+
+/// LE CONTENU — build_content écrit le bundle entier (app/assets/content.json, que
+/// l'application et les outils lisent) et, pour l'aperçu, le même découpé
+/// (content/build/livres/ : commun.json et un fichier par livre, voir
+/// packages/tools/bin/src/livres.dart). Un autre bundle (`--content`, les essais)
+/// part entier, comme commun, sans livres.
+function chargerContenu(opts) {
+  const entierPath = opts.content ? path.resolve(opts.content) : path.join(ROOT, 'app', 'assets', 'content.json');
+  const entier = JSON.parse(fs.readFileSync(entierPath, 'utf8')); // un JSON valide avant d'être incrusté
+  const dir = path.join(ROOT, 'content', 'build', 'livres');
+  const communPath = path.join(dir, 'commun.json');
+  const communTexte = fs.existsSync(communPath) ? fs.readFileSync(communPath, 'utf8') : null;
+  const commun = communTexte ? JSON.parse(communTexte) : null;
+  if (!commun || commun.hash !== entier.hash) {
+    if (opts.content) return { entier, communTexte: JSON.stringify(entier), commun: null, livres: {} };
+    throw new Error(commun ? 'content/build/livres/ ne vient pas de ' + path.relative(ROOT, entierPath) + ' (' + commun.hash + ' ≠ ' + entier.hash + ') : relance build_content'
+      : 'content/build/livres/commun.json absent : relance build_content');
+  }
+  const livres = {};
+  for (const id of commun.__livres.livres) livres[id] = fs.readFileSync(path.join(dir, id + '.json'), 'utf8');
+  return { entier, communTexte, commun, livres };
+}
+
+/// Avant d'embarquer : l'inflate de secours de demarrage.js rend chaque bundle à
+/// l'octet près, et sa fusion rend, pour chaque livre, le bundle entier restreint
+/// à ce livre (ce que packages/core/test/livres_test.dart joue en Dart).
+function verifierContenu(c, compresses) {
+  const FC = require(path.join(HERE, 'demarrage.js'));
+  for (const [nom, { texte, gz }] of Object.entries(compresses)) {
+    if (Buffer.compare(Buffer.from(FC._degzip(new Uint8Array(gz))), Buffer.from(texte, 'utf8')) !== 0) {
+      throw new Error('demarrage.js : l\'inflate de secours ne rend pas ' + nom);
+    }
+  }
+  if (!c.commun) return;
+  const d = c.commun.__livres, stables = new Set(d.stables);
+  const plages = (p) => { const o = []; for (let i = 0; i + 1 < p.length; i += 2) for (let k = 0; k < p[i + 1]; k++) o.push(p[i] + k); return o; };
+  const lire = (o, ch) => ch.split('.').reduce((x, k) => (x ? x[k] : undefined), o);
+  const bouchon = (x) => !!x && ((Array.isArray(x.roles) && x.roles.length === 1 && x.roles[0] === '-') || x.qui === '-');
+  for (const post of c.entier.postulats || []) {
+    const livre = c.livres[post.id] ? JSON.parse(c.livres[post.id]) : null;
+    // le bundle entier restreint au livre : ce que la fusion doit rendre
+    const attendu = JSON.parse(JSON.stringify(c.entier));
+    for (const chemin of Object.keys(d.listes).concat(d.stables)) {
+      const tout = lire(c.entier, chemin);
+      if (!Array.isArray(tout)) continue;
+      const e = livre && livre.listes[chemin], posL = new Set(e ? plages(e.pos) : []);
+      let l;
+      if (stables.has(chemin)) {
+        const cl = lire(c.commun, chemin);
+        l = tout.map((x, i) => (bouchon(cl[i]) && !posL.has(i) ? cl[i] : x));
+      } else {
+        const garde = new Set(plages(d.listes[chemin] || []).concat([...posL]));
+        l = tout.filter((x, i) => garde.has(i));
+      }
+      const ks = chemin.split('.');
+      ks.slice(0, -1).reduce((x, k) => x[k], attendu)[ks[ks.length - 1]] = l;
+    }
+    if (JSON.stringify(FC._fusionner(c.commun, livre)) !== JSON.stringify(attendu)) {
+      throw new Error('demarrage.js : la fusion du livre ' + post.id + ' ne rend pas le bundle entier restreint à ce livre');
+    }
+  }
+}
+
+/// Le bloc du contenu (__CONTENU__) : les bundles compressés, où les trouver, et
+/// demarrage.js. Le fichier seul les embarque tous (base64). Avec --ville, ce sont
+/// des fichiers à côté de la page, et le moteur aussi (`moteurUrl`) : le commun
+/// (`communUrl`, rendu avec le bloc), demandé dès la tête de la page (teteHtml),
+/// arrive pendant que la page se lit, sans le tiers de plus du base64 ; les livres
+/// et le moteur, l'accueil ne les attend pas. Chaque fichier est nommé par
+/// l'empreinte de ses octets : un nom ne désigne jamais deux contenus (le cache du
+/// navigateur et celui du service worker peuvent le garder sans demander).
+function contenuHtml(c, versDossier, moteurUrl) {
+  const zlib = require('zlib');
+  const gz = (t) => zlib.gzipSync(Buffer.from(t, 'utf8'), { level: 9 });
+  const empreinte = (x) => require('crypto').createHash('sha1').update(x).digest('hex').slice(0, 10);
+  const compresses = { commun: { texte: c.communTexte, gz: gz(c.communTexte) } };
+  for (const [id, t] of Object.entries(c.livres)) compresses[id] = { texte: t, gz: gz(t) };
+  verifierContenu(c, compresses);
+  const sources = { commun: { el: 'fusible-commun' }, livres: {} };
+  const blocs = [];
+  let communUrl = null;
+  if (versDossier) {
+    communUrl = 'contenu/commun.' + empreinte(compresses.commun.gz) + '.gz';
+    fs.writeFileSync(path.join(versDossier, communUrl), compresses.commun.gz);
+    sources.commun = { url: communUrl };
+  } else {
+    blocs.push('<script id="fusible-commun" type="application/octet-stream">' + compresses.commun.gz.toString('base64') + '</script>');
+  }
+  let octetsLivres = 0;
+  for (const id of Object.keys(c.livres)) {
+    const z = compresses[id].gz;
+    octetsLivres += z.length;
+    if (versDossier) {
+      const nom = 'contenu/' + id + '.' + empreinte(z) + '.gz';
+      fs.mkdirSync(path.join(versDossier, 'contenu'), { recursive: true });
+      fs.writeFileSync(path.join(versDossier, nom), z);
+      sources.livres[id] = { url: nom };
+    } else {
+      blocs.push('<script id="fusible-livre-' + id + '" type="application/octet-stream">' + z.toString('base64') + '</script>');
+      sources.livres[id] = { el: 'fusible-livre-' + id };
+    }
+  }
+  if (versDossier) sources.sw = 'sw.js';
+  if (moteurUrl) sources.moteur = moteurUrl;
+  blocs.push('<script>window.FUSIBLE_CONTENU = ' + JSON.stringify(sources) + ';</script>');
+  blocs.push('<script>' + fs.readFileSync(path.join(HERE, 'demarrage.js'), 'utf8').split('</script').join('<\\/script') + '</script>');
+  console.log('le contenu : commun ' + Math.round(c.communTexte.length / 1024) + ' Ko → ' + Math.round(compresses.commun.gz.length / 1024) +
+    ' Ko gzip (' + (versDossier ? communUrl : 'embarqué en base64') + ') ; ' + Object.keys(c.livres).length + ' livres, ' + Math.round(octetsLivres / 1024) + ' Ko gzip' +
+    (versDossier ? ' (à côté de la page, contenu/)' : ' (embarqués)'));
+  return { html: blocs.join('\n'), communUrl, livresUrls: Object.values(sources.livres).map((s) => s.url).filter(Boolean) };
+}
+
+/// L'APPLICATION ET LE PARTAGE (--ville) : le manifeste, les icônes, le service
+/// worker, l'aperçu d'un lien (Open Graph, Twitter). Les images viennent de
+/// packages/tools/web/pwa/ (pwa/genere.js les tire de l'accueil).
+const TITRE_PARTAGE = 'Fusible — une carrière de football à Aubérive';
+const DESCRIPTION = 'Aubérive, 1990 → 2050. Dix histoires, une ville en pixel art, des cartes qu\'on glisse à gauche ou à droite — et des fins qu\'on n\'avoue pas.';
+function teteHtml(communUrl) {
+  const a = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  return [
+    // le contenu commun part dès la première ligne lue : il arrive pendant que la page se
+    // lit (demarrage.js reprend cette promesse) ; une erreur est la sienne, pas celle de la page
+    '<script>window.FUSIBLE_COMMUN = window.fetch ? window.fetch(' + JSON.stringify(communUrl) + ') : null; if (window.FUSIBLE_COMMUN) window.FUSIBLE_COMMUN.catch(function () {});</script>',
+    '<meta name="description" content="' + a(DESCRIPTION) + '">',
+    '<link rel="manifest" href="manifest.webmanifest">',
+    '<link rel="icon" type="image/png" sizes="48x48" href="icones/icone-48.png">',
+    '<link rel="icon" type="image/png" sizes="192x192" href="icones/icone-192.png">',
+    '<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">',
+    '<meta name="mobile-web-app-capable" content="yes">',
+    '<meta name="apple-mobile-web-app-capable" content="yes">',
+    '<meta name="apple-mobile-web-app-title" content="Fusible">',
+    '<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">',
+    '<meta property="og:type" content="website">',
+    '<meta property="og:locale" content="fr_FR">',
+    '<meta property="og:site_name" content="Fusible">',
+    '<meta property="og:title" content="' + a(TITRE_PARTAGE) + '">',
+    '<meta property="og:description" content="' + a(DESCRIPTION) + '">',
+    '<meta property="og:image" content="apercu.jpg">',
+    '<meta property="og:image:type" content="image/jpeg">',
+    '<meta property="og:image:width" content="1200">',
+    '<meta property="og:image:height" content="630">',
+    '<meta property="og:image:alt" content="Aubérive au crépuscule, et le titre FUSIBLE posé au pixel">',
+    '<meta name="twitter:card" content="summary_large_image">',
+    '<meta name="twitter:title" content="' + a(TITRE_PARTAGE) + '">',
+    '<meta name="twitter:description" content="' + a(DESCRIPTION) + '">',
+    '<meta name="twitter:image" content="apercu.jpg">',
+  ].join('\n');
+}
+function ecrirePwa(dossier, version, depart, livres) {
+  const pwa = path.join(HERE, 'pwa');
+  fs.mkdirSync(path.join(dossier, 'icones'), { recursive: true });
+  for (const f of ['icone-48.png', 'icone-192.png', 'icone-512.png', 'icone-masquable-512.png', 'apple-touch-icon.png']) {
+    fs.copyFileSync(path.join(pwa, f), path.join(dossier, 'icones', f));
+  }
+  fs.copyFileSync(path.join(pwa, 'apercu.jpg'), path.join(dossier, 'apercu.jpg'));
+  const manifeste = {
+    name: 'Fusible', short_name: 'Fusible', description: DESCRIPTION, lang: 'fr', dir: 'ltr',
+    start_url: './', scope: './', display: 'standalone', orientation: 'portrait',
+    // l'encre de prune de l'accueil (preview_template.html, --a-fond)
+    background_color: '#120E1C', theme_color: '#120E1C',
+    icons: [
+      { src: 'icones/icone-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+      { src: 'icones/icone-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+      { src: 'icones/icone-masquable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+    ],
+  };
+  fs.writeFileSync(path.join(dossier, 'manifest.webmanifest'), JSON.stringify(manifeste, null, 2) + '\n');
+  const sw = fs.readFileSync(path.join(HERE, 'sw.js'), 'utf8').split('__VERSION__').join(version)
+    .split('__DEPART__').join(JSON.stringify(depart)).split('__LIVRES__').join(JSON.stringify(livres));
+  fs.writeFileSync(path.join(dossier, 'sw.js'), sw);
 }
 
 function main() {
@@ -136,7 +337,10 @@ function main() {
   const tplPath = path.join(HERE, 'preview_template.html');
   const artPath = path.join(HERE, 'art.js');
   const audioPath = path.join(HERE, 'audio.js');
-  const contentPath = opts.content ? path.resolve(opts.content) : path.join(ROOT, 'app', 'assets', 'content.json');
+  // la version jouable se sert en HTTP : le contenu des livres, les images de l'accueil
+  // et l'application (manifeste, icônes, service worker) sont des fichiers à côté de la page
+  const dossier = opts.ville ? path.dirname(path.resolve(opts.out)) : null;
+  if (dossier) fs.mkdirSync(dossier, { recursive: true });
 
   let tpl = fs.readFileSync(tplPath, 'utf8');
   {
@@ -157,8 +361,8 @@ function main() {
   const engine = fs.readFileSync(opts.engine, 'utf8');
   const art = fs.readFileSync(artPath, 'utf8');
   const audio = fs.readFileSync(audioPath, 'utf8');
-  let content = fs.readFileSync(contentPath, 'utf8');
-  const bundle = JSON.parse(content); // le bundle doit être un JSON valide avant d'être incrusté
+  const contenu = chargerContenu(opts);
+  const bundle = contenu.entier;
   // une histoire livrée sans vignette prend celle du promu : on le dit
   const vignettes = new Set(fs.existsSync(path.join(HERE, 'accueil'))
     ? fs.readdirSync(path.join(HERE, 'accueil')).map((f) => (/^couv_([a-z0-9_]+)\.webp$/.exec(f) || [])[1]).filter(Boolean) : []);
@@ -168,23 +372,35 @@ function main() {
     }
   }
 
-  const PLACEHOLDERS = ['__CONTENT_JSON__', '__ENGINE_JS__', '__ART_JS__', '__AUDIO_JS__', '__ACCUEIL_JS__', '__FONTS_CSS__', '__VILLE_CSS__', '__VILLE_JS__'];
+  const PLACEHOLDERS = ['__CONTENU__', '__TETE__', '__ENGINE_JS__', '__ART_JS__', '__AUDIO_JS__', '__ACCUEIL_JS__', '__FONTS_CSS__', '__VILLE_CSS__', '__VILLE_JS__'];
   for (const p of PLACEHOLDERS) {
     if (tpl.indexOf(p) < 0) throw new Error('placeholder absent du gabarit : ' + p);
   }
 
-  // Jamais de fermeture prématurée du <script> par le JSON ou les scripts.
-  content = content.split('</').join('<\\/');
+  // Jamais de fermeture prématurée du <script> par les scripts (le contenu est en base64).
   const safeEngine = engine.split('</script').join('<\\/script');
   const safeArt = art.split('</script').join('<\\/script');
   const safeAudio = audio.split('</script').join('<\\/script');
 
-  tpl = tpl.split('__CONTENT_JSON__').join(content);
-  tpl = tpl.split('__ENGINE_JS__').join(safeEngine);
+  // le moteur : embarqué dans le fichier seul ; à côté de la page avec --ville, nommé par
+  // son empreinte (le service worker le garde tant qu'il ne change pas)
+  let moteurUrl = null;
+  if (dossier) {
+    moteurUrl = 'contenu/moteur.' + require('crypto').createHash('sha1').update(engine).digest('hex').slice(0, 10) + '.js';
+    // contenu/ n'est qu'à nous : les livres et le moteur d'une version précédente s'en vont
+    fs.rmSync(path.join(dossier, 'contenu'), { recursive: true, force: true });
+    fs.mkdirSync(path.join(dossier, 'contenu'), { recursive: true });
+    fs.writeFileSync(path.join(dossier, moteurUrl), engine);
+  }
+  const blocContenu = contenuHtml(contenu, dossier, moteurUrl);
+  const communUrl = blocContenu.communUrl;
+  tpl = tpl.split('__CONTENU__').join(blocContenu.html);
+  tpl = tpl.split('__TETE__').join(dossier ? teteHtml(communUrl) : '');
+  tpl = tpl.split('__ENGINE_JS__').join(dossier ? '/* le moteur : ' + moteurUrl + ' (demarrage.js le charge) */' : safeEngine);
   tpl = tpl.split('__ART_JS__').join(safeArt);
   tpl = tpl.split('__AUDIO_JS__').join(safeAudio);
   tpl = tpl.split('__FONTS_CSS__').join(fontsCss());
-  tpl = tpl.split('__ACCUEIL_JS__').join(accueilJs());
+  tpl = tpl.split('__ACCUEIL_JS__').join(accueilJs(dossier));
   // LA VILLE : la feuille et la couche, ou rien.
   let villeCss = '', villeJs = '';
   if (opts.ville) {
@@ -215,7 +431,7 @@ function main() {
 
   fs.mkdirSync(path.dirname(opts.out), { recursive: true });
   fs.writeFileSync(opts.out, tpl);
-  console.log('assemblé : ' + opts.out + ' (' + tpl.length + ' octets)');
+  console.log('assemblé : ' + opts.out + ' (' + Buffer.byteLength(tpl, 'utf8') + ' octets)');
   if (opts.ville) {
     // les images de la ville, à côté de la page (chemins relatifs : ville/…)
     const dest = path.join(path.dirname(opts.out), 'ville');
@@ -237,6 +453,16 @@ function main() {
       }
     }
     console.log('la ville : ' + n + ' fichiers (' + Math.round(octets / 1024) + ' Ko) → ' + dest);
+    // l'application : de quoi rouvrir l'accueil et entrer en ville hors ligne ; le reste
+    // (les tuiles, les livres) entre au cache quand on le voit. Une version par page.
+    const page = path.basename(opts.out);
+    const depart = [page, communUrl, moteurUrl]
+      .concat(fs.readdirSync(path.join(dossier, 'accueil')).sort().map((f) => 'accueil/' + f))
+      .concat(['lieux.json', 'grille.json', 'sprites.json', 'interieurs.json'].filter((f) => fs.existsSync(path.join(dest, f))).map((f) => 'ville/' + f))
+      .concat(fs.readdirSync(dest).filter((f) => /^brume_.*\.webp$/.test(f)).sort().map((f) => 'ville/' + f));
+    const version = require('crypto').createHash('sha1').update(tpl).update(JSON.stringify(depart)).update(fs.readFileSync(path.join(HERE, 'sw.js'))).digest('hex').slice(0, 12);
+    ecrirePwa(dossier, version, depart, blocContenu.livresUrls);
+    console.log('l\'application : manifeste, icônes, aperçu, sw.js (version ' + version + ', ' + depart.length + ' fichiers au départ)');
   }
 }
 
