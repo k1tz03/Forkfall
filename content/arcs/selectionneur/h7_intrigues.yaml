@@ -204,10 +204,13 @@ arcs:
         next: [ { step: fiches, in: [1, 4] } ]
       - id: fiches
         card: sl.h7.h2_fiches
-        next: [ { step: repetition, in: [1, 4] } ]
+        next: [ { step: repetition, in: [3, 5] } ]
       - id: repetition
         card:
           - { id: sl.h7.h3_repetition_deuil, if: "flag('h7_rance_mort')" }
+          # la fiche de Mbako, rendue ou laissée à Josiane (sl.h7.h2_fiches)
+          - { id: sl.h7.h3_repetition_fiche_rendue, if: "flag('h7_fiche_rendue')" }
+          - { id: sl.h7.h3_repetition_fiche_laissee, if: "flag('h7_fiche_laissee')" }
           - { id: sl.h7.h3_repetition }
         next: []
 
@@ -468,10 +471,13 @@ arcs:
         card:
           - { id: sl.h7.f2_montres, if: "flag('h7_fulgor_signe')" }
           - { id: sl.h7.f2_vaubourg }
-        next: [ { step: vingt_heures, in: [1, 3] } ]
+        next: [ { step: vingt_heures, in: [3, 5] } ]
       - id: vingt_heures
         card:
           - { id: sl.h7.f3_plateau_canette, if: "flag('h7_fulgor_signe')" }
+          # les canettes que Vaubourg a imposées : essayé de les faire enlever, ou laissées (sl.h7.f2_vaubourg)
+          - { id: sl.h7.f3_table_scotchees, if: "flag('h7_canettes_essai')" }
+          - { id: sl.h7.f3_table_cheque, if: "flag('h7_canettes_restent')" }
           - { id: sl.h7.f3_table_de_presse }
         next: []
 
@@ -609,10 +615,13 @@ arcs:
       - id: berline
         card: sl.h7.v_berline
         statut_ok: [parti]
-        next: [ { step: envoi, in: [1, 3] } ]
+        next: [ { step: envoi, in: [3, 5] } ]
       - id: envoi
         card:
           - { id: sl.h7.v_source, if: "flag('h7_rossard_plateau')" }
+          # Vaubourg déposé sur le quai : l'heure choisie, ou « rentrez chez vous » (sl.h7.v_berline)
+          - { id: sl.h7.v_envoi_heure, if: "flag('h7_berline_heure')" }
+          - { id: sl.h7.v_envoi_chez_lui, if: "flag('h7_berline_chez_lui')" }
           - { id: sl.h7.v_envoi }
         next: []
 
@@ -686,5 +695,8 @@ arcs:
       - id: vote
         card:
           - { id: sl.h7.k3_vote_poignet, if: "flag('h7_ferrol_tait')" }
+          # la lettre de Fauvel : Mbako défendu, ou la vérité d'abord (sl.h7.k1_lettre)
+          - { id: sl.h7.k3_vote_defendu, if: "flag('h7_mbako_defendu')" }
+          - { id: sl.h7.k3_vote_verite, if: "flag('h7_verite_dabord')" }
           - { id: sl.h7.k3_vote }
         next: []
