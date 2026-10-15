@@ -65,8 +65,12 @@ function main() {
     .split('__BUILD__').join(build.replace(/'/g, '’'))
     .split('__AUDIO__').join(musique.split('</script').join('<\\/script'));
   fs.mkdirSync(o.out, { recursive: true });
+  // la page entière : le titre, les polices et le style dans <head>, le reste dans <body>
+  const coupe = page.indexOf('<div class="page">');
+  if (coupe < 0) throw new Error('juke_box_template.html : <div class="page"> introuvable');
   const entiere = '<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n' +
-    '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n</head>\n<body>\n' + page + '\n</body>\n</html>\n';
+    '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n' + page.slice(0, coupe) +
+    '</head>\n<body>\n' + page.slice(coupe) + '\n</body>\n</html>\n';
   fs.writeFileSync(path.join(o.out, 'index.html'), entiere);
   fs.writeFileSync(path.join(o.out, 'artefact.html'), page);
   console.log('juke-box : ' + themes.length + ' thèmes (' + themes.join(', ') + ') → ' + path.join(o.out, 'index.html') +
