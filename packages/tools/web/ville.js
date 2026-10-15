@@ -2733,7 +2733,7 @@
   }
   function activitesIci(cle) {
     return (D.activites || []).filter(function (a) {
-      return a.lieu === cle && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.jours || a.jours.indexOf(JOURS[S.jour]) >= 0) && (!a.si || siVrai(a.si, cle));
+      return a.lieu === cle && !a.cache && (!a.roles || a.roles.indexOf(S.role) >= 0) && (!a.jours || a.jours.indexOf(JOURS[S.jour]) >= 0) && (!a.si || siVrai(a.si, cle));
     });
   }
   function pourquoiPas(a, lieuOuvert) {

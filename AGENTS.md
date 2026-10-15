@@ -207,6 +207,17 @@ Ce que la ville porte en plus des cartes :
   voitures, logements, hélicoptère ; achat en deux gestes, revente, effets par
   `Engine.biens` (drapeaux `bn_*`), usage en ville (la vitesse, l'hélicoptère),
   saisies.
+- **L'album d'Aubérive** (`content/ville/album.yaml`, `bin/src/album.dart`, `preview_album.js`,
+  `ville_album.js`) : les pochettes du tabac-presse et du kiosque (`jeu: pochette`, quatre vignettes,
+  3 F de 1990) remplissent un album qui se garde d'une carrière à l'autre (`fusible.album.v1`) :
+  232 vignettes sur 19 pages (les 185 visages par camp et par époque, les maillots, les champions de
+  1962, la finale de 1974, tes Unes), 32 brillantes. Le tirage vient de la graine de la carrière et du
+  compteur de pochettes (jamais de `Math.random`). On en gagne (un lien qui monte, un service rendu, les
+  fins du Cimetière : `profile.recompenses.pochettes`) et on échange deux doubles contre une vignette
+  avec six personnes (Gégé, Nino, Hagop, Aram, et les gamins du city-stade) : un geste caché
+  `album_echange_<gens>`, donc un point de lien. Une page finie paie (pochettes, tuyau, francs, un
+  quartier ouvert d'avance). La cinquième de 1974 est une brillante sans nom ; l'album l'annonce par
+  l'événement `fusible:album` (`{type: 'brillante'|'page', id}`), que le dossier 1974 écoute.
 - **Les intérieurs** (`docs/design/pixel_iso/interieurs_jeu.js`, `pieces/`, `pieces/_plan.js` ;
   `packages/tools/web/ville_dedans.js`) : on entre dans tous les lieux qui ont une porte (39 pièces,
   toutes modelées à la main ; une pièce ajoutée au plan sans son fichier sort en ébauche). Une pièce

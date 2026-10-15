@@ -1,0 +1,531 @@
+# L'ALBUM D'AUBÉRIVE — les pochettes de vignettes du tabac-presse deviennent un album
+# qui se garde d'une carrière à l'autre (localStorage `fusible.album.v1`, jamais dans la
+# partie sauvée). Le lot dit tout ce qui est de l'ordre du contenu : les pages, ce qu'elles
+# contiennent, ce que coûte et ce que contient une pochette, avec qui l'on échange, ce que
+# rapporte une page complète. Le code (preview_album.js, ville_album.js) ne contient aucun
+# texte de jeu.
+#
+# Ce que `build_content` en fait : une section `album` sous `ville` (la ville la lit comme le
+# reste), les activités cachées de l'échange (`activites:` plus bas, `cache: true`), et une
+# mission d'une étape par page qui rapporte quelque chose au moteur (`album.page.<id>` :
+# l'argent passe par le pont de la ville, le quartier par son drapeau `quartier_<clé>`).
+#
+# LES PAGES. Deux familles :
+#   · les légendes, écrites à la main (`vignettes:`) : les équipes de chaque époque, les
+#     champions de 1962, la finale de 1974, les Unes (une par histoire, gagnée en jouant) ;
+#   · les visages, TIRÉS des personnages (characters.yaml et les gens d'Aubérive) : un
+#     sélecteur dit qui entre dans la page. `camp` (le camp du personnage), `lot` (le fichier
+#     de `gens:` où il vit : gens_club, gens_comptoirs…), `hors_lots` (aucun lot), `debut: [a, b]`
+#     (l'année où il apparaît : le début de son époque en ville, sinon sa première histoire).
+#     Un personnage entre dans la PREMIÈRE page dont le sélecteur le prend ; `build_content`
+#     refuse un visage laissé sans page. Une page tient 24 vignettes au plus.
+#
+# L'ÉPOQUE. Une vignette d'un visage de la ville porte l'époque où il est là (`annees`) :
+# dans une carrière, les vignettes de l'année en cours sortent plus souvent des pochettes
+# (`pochette.epoque`). Une page peut aussi aimer une histoire (`livres: {promu: 4}`) : ses
+# vignettes y sortent quatre fois plus souvent. C'est ce qui donne une raison de rejouer un
+# autre livre : on ne complète pas l'album d'une seule époque.
+#
+# LES BRILLANTES. Une pochette sur six (`brillante_sur`) porte une vignette brillante, tirée
+# des pages `rarete: brillante`. Celles des Unes ne sortent jamais d'une pochette : on les gagne.
+# La plus attendue est le cinquième joueur de 1974 : son visage est intact, son nom a bavé à
+# l'impression, et le livre 1 ne dit pas qui c'est (aucun nom ici, personne ne le devine).
+# Quand on la tient, le jeu envoie `fusible:album` {type: 'brillante', id: '1974_cinquieme'}.
+#
+# Tous les noms de cette page sont inventés. Aucun club, joueur, dirigeant ou marque réels.
+
+album:
+  pochette:
+    vignettes: 4           # par pochette
+    prix: 3                # en francs de 1990 (une pochette coûtait alors deux ou trois francs) : c'est le
+                           # `francs` des activités à `jeu: pochette` (la ville
+                           # applique l'inflation, puis l'écu, comme pour tout l'argent de la ville)
+    neuves: 0.45           # la part des vignettes tirées d'abord parmi celles qui manquent ; le reste est tiré au
+                           # hasard dans tout l'album : c'est là que naissent les doubles
+    brillante_sur: 6       # une pochette sur six porte une brillante
+    epoque: 2.5            # le poids d'une vignette de l'année en cours, contre 1
+  # les pochettes offertes en jouant : au plus tant par carrière
+  cadeaux:
+    lien: 8                # quand un lien monte d'un cran
+    service: 5             # quand quelqu'un te rend un service
+  echange:
+    donne: 2               # deux doubles
+    recoit: 1              # contre une vignette qui manque
+
+  pages:
+    # ═══════════════════════════════════════════════════════════════ LES LÉGENDES
+    - id: equipes
+      section: legendes
+      titre: "Les équipes"
+      sous: "Le Racing tous les cinq ans, les Cobalts les années de Mondial. Le maillot change, la photo reste de travers."
+      fond: "#7B1E34"
+      bande: "#F2E8CE"
+      recompense:
+        texte: "Quinze équipes, toutes collées. Le photographe du club te rend les cadres, et deux pochettes oubliées au fond du carton."
+        pochettes: 2
+        francs: 1200
+      vignettes:
+        - {id: equipe_1990, nom: "Racing Aubérive", label: "ÉQUIPE 1990", annee: 1990, epoque: [1990, 1994],
+           maillot: {motif: rayures, c1: "#7B1E34", c2: "#F2E8CE", col: polo, manches: courtes},
+           dos: "Coton lourd, col boutonné. Sous la pluie, le maillot pèse deux kilos de plus à la mi-temps."}
+        - {id: equipe_1995, nom: "Racing Aubérive", label: "ÉQUIPE 1995", annee: 1995, epoque: [1995, 1999],
+           maillot: {motif: rayures, c1: "#7B1E34", c2: "#F2E8CE", col: polo, manches: courtes},
+           dos: "Le nom dans le dos, au-dessus du numéro. L'intendant a cousu les lettres de travers, une seule fois."}
+        - {id: equipe_2000, nom: "Racing Aubérive", label: "ÉQUIPE 2000", annee: 2000, epoque: [2000, 2004],
+           maillot: {motif: cerceaux, c1: "#7B1E34", c2: "#F2E8CE", col: ronde, manches: courtes},
+           dos: "Un carré blanc sur la poitrine, pour le sponsor. Personne ne sait lire ce qu'il vend, tout le monde le porte."}
+        - {id: equipe_2005, nom: "Racing Aubérive", label: "ÉQUIPE 2005", annee: 2005, epoque: [2005, 2009],
+           maillot: {motif: rayures, c1: "#5E1527", c2: "#E9DCC0", col: v, manches: courtes},
+           dos: "Fibres synthétiques : le maillot ne pèse plus rien, et il ne garde plus la sueur du virage."}
+        - {id: equipe_2010, nom: "Racing Aubérive", label: "ÉQUIPE 2010", annee: 2010, epoque: [2010, 2014],
+           maillot: {motif: unie, c1: "#7B1E34", c2: "#F2E8CE", col: v, manches: courtes},
+           dos: "Coupe ajustée, col en V. Les remplaçants le portent plus longtemps que les titulaires."}
+        - {id: equipe_2015, nom: "Racing Aubérive", label: "ÉQUIPE 2015", annee: 2015, epoque: [2015, 2019],
+           maillot: {motif: chevrons, c1: "#7B1E34", c2: "#F2E8CE", col: ronde, manches: courtes},
+           dos: "Le maillot de l'année se vend avant d'être porté. Sur la photo, personne n'a encore sali le blanc."}
+        - {id: equipe_2020, nom: "Racing Aubérive", label: "ÉQUIPE 2020", annee: 2020, epoque: [2020, 2024],
+           maillot: {motif: bande, c1: "#7B1E34", c2: "#F2E8CE", col: aucun, manches: courtes},
+           dos: "Sans col, sans bouton, une étiquette lisible au scanner. Il y a des soirs où personne ne scanne."}
+        - {id: equipe_2025, nom: "Racing Aubérive", label: "ÉQUIPE 2025", annee: 2025, epoque: [2025, 2029],
+           maillot: {motif: bande, c1: "#2A2A30", c2: "#C9A24A", col: aucun, manches: longues},
+           dos: "Une seule bande, du col au short. L'ancien capitaine dit qu'on dirait un maillot de gardien."}
+        - {id: equipe_2030, nom: "Racing Aubérive", label: "ÉQUIPE 2030", annee: 2030, epoque: [2030, 2034],
+           maillot: {motif: unie, c1: "#2F4F3A", c2: "#F2E8CE", col: ronde, manches: courtes},
+           dos: "Fibres recyclées, étiquette verte. Le club le dit trois fois dans le communiqué, et une fois sur le maillot."}
+        - {id: equipe_2035, nom: "Racing Aubérive", label: "ÉQUIPE 2035", annee: 2035, epoque: [2035, 2039],
+           maillot: {motif: rayures, c1: "#7B1E34", c2: "#1C1C22", col: v, manches: courtes},
+           dos: "Le numéro est une lumière : on le règle à la mi-temps. Le club a un partenaire pour ça."}
+        - {id: equipe_2040, nom: "Racing Aubérive", label: "ÉQUIPE 2040", annee: 2040, epoque: [2040, 2044],
+           maillot: {motif: damier, c1: "#7B1E34", c2: "#F2E8CE", col: aucun, manches: courtes},
+           dos: "La brochure vante le tissu : il garde un peu de la chaleur du joueur d'avant. C'est écrit comme un avantage."}
+        - {id: equipe_2045, nom: "Racing Aubérive", label: "ÉQUIPE 2045", annee: 2045, epoque: [2045, 2050],
+           maillot: {motif: unie, c1: "#F2E8CE", c2: "#7B1E34", col: ronde, manches: courtes},
+           dos: "Imprimé à ta taille, à la commande, avec ton nom. Le club préférerait qu'on y lise celui du joueur."}
+        - {id: equipe_2050, nom: "Racing Aubérive", label: "ÉQUIPE 2050", annee: 2050, epoque: [2050, 2050],
+           maillot: {motif: unie, c1: "#1C1C22", c2: "#F2E8CE", col: aucun, manches: courtes},
+           dos: "Le maillot n'est plus qu'un cadre pour la photo. Tout se joue dans la tribune, qui n'est plus en carton."}
+        - {id: equipe_cobalts_2010, nom: "Les Cobalts", label: "SÉLECTION 2010", annee: 2010, epoque: [2010, 2012],
+           maillot: {motif: unie, c1: "#1F4FB8", c2: "#F2F2F2", col: v, manches: courtes},
+           dos: "La photo de groupe de la dernière qualification. Personne n'a voulu la légender."}
+        - {id: equipe_cobalts_2029, nom: "Les Cobalts", label: "SÉLECTION 2029", annee: 2029, epoque: [2028, 2030],
+           maillot: {motif: unie, c1: "#1F4FB8", c2: "#F2F2F2", col: ronde, manches: longues},
+           dos: "Manches longues : le tournoi se joue en hiver, sous un toit. On a refait les photos trois fois."}
+
+    - id: champions_1962
+      section: legendes
+      titre: "Les champions de 1962"
+      sous: "Onze hommes en maillots de laine, les bras croisés, le gardien en casquette. Le cuivre de la plaque brille plus que le reste."
+      fond: "#6B5230"
+      bande: "#F0E4C4"
+      rarete: brillante
+      livres: {geant_dechu: 4, fin_de_contrat: 3}
+      recompense:
+        texte: "Onze visages au complet. À la brasserie, un ancien te paie un demi sans rien dire, puis te confie une chose du vestiaire de 1962."
+        francs: 2500
+        tuyau:
+          texte: "Le gardien de 1962 ne savait pas danser, mais il savait parler aux hommes en noir. Si on te siffle un jour, demande-toi comment il disait non."
+      vignettes:
+        - {id: 1962_n01, nom: "Eugène Lascombes", label: "GARDIEN", annee: 1962,
+           portrait: {teint: clair, corpulence: large, age: mur, coiffure: casquette, cheveux: brun, pilosite: moustache, lunettes: aucune, tenue: gardien, couleur: gris, couleur2: jaune, accessoire: aucun, coiffe: gris},
+           dos: "Joue en casquette par tous les temps. Sur la photo, il tient le ballon comme on tient un chapeau."}
+        - {id: 1962_n02, nom: "Julien Mauffrey", label: "ARRIÈRE DROIT", annee: 1962,
+           portrait: {teint: clair, corpulence: moyen, age: jeune, coiffure: court, cheveux: chatain, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Pas une faute dans la surface en trois saisons. Ce n'est pas de la sagesse : il ne courait pas assez vite pour la faire."}
+        - {id: 1962_n03, nom: "Raoul Tessonnier", label: "ARRIÈRE GAUCHE", annee: 1962,
+           portrait: {teint: porcelaine, corpulence: large, age: jeune, coiffure: brosse, cheveux: blond, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Boulanger le matin, arrière gauche l'après-midi. Le vendredi, il livrait le pain de l'équipe en maillot."}
+        - {id: 1962_n04, nom: "Augustin Pelletan", label: "CAPITAINE", annee: 1962,
+           portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: court, cheveux: brun, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: brassard, couleur_accessoire: blanc},
+           dos: "Le brassard est cousu sur la manche gauche. Il le gardait sous la douche, pour qu'on ne le lui prenne pas."}
+        - {id: 1962_n05, nom: "Marcel Brandicourt", label: "STOPPEUR", annee: 1962,
+           portrait: {teint: olive, corpulence: large, age: mur, coiffure: brosse, cheveux: noir, pilosite: moustache, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Stoppeur. Le seul de l'équipe qui se coupait les ongles de pied avant le match, assis sur le banc, avec un couteau."}
+        - {id: 1962_n06, nom: "Lucien Escoffier", label: "DEMI", annee: 1962,
+           portrait: {teint: clair, corpulence: fin, age: jeune, coiffure: meche, cheveux: chatain, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Ses chaussettes tombaient à la mi-temps. On les remontait avec des élastiques de la poste."}
+        - {id: 1962_n07, nom: "Armand Chavroux", label: "AILIER DROIT", annee: 1962,
+           portrait: {teint: dore, corpulence: fin, age: jeune, coiffure: court, cheveux: noir, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Le plus rapide de la ville, et le seul à ne pas le savoir. Il courait comme on rentre chez soi sous l'orage."}
+        - {id: 1962_n08, nom: "Désiré Vauquelin", label: "INTÉRIEUR DROIT", annee: 1962,
+           portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: degarni, cheveux: gris, pilosite: moustache, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Il passait la balle sans regarder, par principe. Sur la photo, il regarde l'appareil par erreur."}
+        - {id: 1962_n09, nom: "Ernest Barrault", label: "AVANT-CENTRE", annee: 1962,
+           portrait: {teint: brun, corpulence: large, age: jeune, coiffure: brosse, cheveux: noir, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Il marquait de la tête, du genou, du ventre. Le règlement de l'époque ne précisait pas où l'on devait marquer."}
+        - {id: 1962_n10, nom: "Paul Sauveterre", label: "INTÉRIEUR GAUCHE", annee: 1962,
+           portrait: {teint: porcelaine, corpulence: fin, age: jeune, coiffure: carre, cheveux: roux, pilosite: rase, lunettes: rondes, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Seul joueur à lunettes de la finale. Il les ôtait au coup de sifflet et les retrouvait au coup de sifflet final."}
+        - {id: 1962_n11, nom: "Honoré Quinsac", label: "AILIER GAUCHE", annee: 1962,
+           portrait: {teint: olive, corpulence: moyen, age: jeune, coiffure: court, cheveux: brun, pilosite: moustache, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Il portait sa médaille au cou jusque dans le car. Il a fallu lui dire que ce n'était plus la peine."}
+
+    - id: finale_1974
+      section: legendes
+      titre: "La finale de 1974"
+      sous: "Planche d'avril 1974, imprimée avant le match. Onze visages que la ville connaît par cœur ; sur les photos de l'escalier, il en manque un."
+      fond: "#7A4B2A"
+      bande: "#F0E4C4"
+      rarete: brillante
+      livres: {promu: 4}
+      recompense:
+        texte: "La planche est complète, de la première à la dernière. Le buraliste ne veut pas être payé : il te remet trois pochettes, sans un mot."
+        pochettes: 3
+      vignettes:
+        - {id: 1974_n01, nom: "Joseph Lanfrey", label: "GARDIEN", annee: 1974,
+           portrait: {teint: clair, corpulence: moyen, age: mur, coiffure: court, cheveux: brun, pilosite: moustache, lunettes: aucune, tenue: gardien, couleur: marine, couleur2: jaune, accessoire: aucun},
+           dos: "Planche d'avril 1974. Il a les gants du magasin de sport, jamais ceux du club : ils étaient trop petits."}
+        - {id: 1974_n02, nom: "Victor Marsaguet", label: "ARRIÈRE DROIT", annee: 1974,
+           portrait: {teint: dore, corpulence: moyen, age: jeune, coiffure: mulet, cheveux: noir, pilosite: moustache, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Une tache d'encre sur le short, que l'imprimeur a vendue comme une ombre."}
+        - {id: 1974_n03, nom: "Roland Desfontaines", label: "ARRIÈRE GAUCHE", annee: 1974,
+           portrait: {teint: clair, corpulence: large, age: jeune, coiffure: long, cheveux: chatain, pilosite: barbe, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Il a laissé pousser ses cheveux pour la photo ; le coiffeur du club a pris cela pour une insulte."}
+        - {id: 1974_n04, nom: "Michel Hautbois", label: "DEMI", annee: 1974,
+           portrait: {teint: olive, corpulence: moyen, age: jeune, coiffure: boucle, cheveux: noir, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Il sourit parce qu'on lui a promis la photo avec sa fiancée, après. Elle n'y est pas."}
+        - {id: 1974_cinquieme, nom: null, secret: true, label: "NUMÉRO 5", annee: 1974, echangeable: false, livres: {promu: 4},
+           portrait: {teint: clair, corpulence: large, age: mur, coiffure: court, cheveux: brun, pilosite: moustache, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974, avant la finale. L'encre du nom a bavé à l'impression ; l'imprimeur a vendu la planche quand même."}
+        - {id: 1974_n06, nom: "Serge Montbazon", label: "DEMI", annee: 1974,
+           portrait: {teint: brun, corpulence: moyen, age: jeune, coiffure: brosse, cheveux: noir, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. On l'a collé dans le coin de la planche : c'était la seule place où son épaule tenait."}
+        - {id: 1974_n07, nom: "Gilbert Ferrandou", label: "AILIER DROIT", annee: 1974,
+           portrait: {teint: porcelaine, corpulence: fin, age: jeune, coiffure: meche, cheveux: blond, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Le seul sourire de la planche qui ne soit pas de circonstance."}
+        - {id: 1974_n08, nom: "Claude Pastoureau", label: "INTÉRIEUR DROIT", annee: 1974,
+           portrait: {teint: clair, corpulence: moyen, age: jeune, coiffure: court, cheveux: chatain, pilosite: moustache, lunettes: carrees, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Instituteur en semaine. Ses élèves ont la planche entière, et ils savent l'ordre par cœur."}
+        - {id: 1974_n09, nom: "Bernard Tolsan", label: "AVANT-CENTRE", annee: 1974,
+           portrait: {teint: ebene, corpulence: large, age: jeune, coiffure: boucle, cheveux: noir, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Vingt-deux buts en championnat ; la vignette n'en dit rien, elle dit seulement qu'il était grand."}
+        - {id: 1974_n10, nom: "Daniel Gachet", label: "INTÉRIEUR GAUCHE", annee: 1974,
+           portrait: {teint: dore, corpulence: fin, age: jeune, coiffure: long, cheveux: brun, pilosite: bouc, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Il tient le ballon sous le bras, comme un pain, et regarde ailleurs."}
+        - {id: 1974_n11, nom: "Alain Chevassus", label: "AILIER GAUCHE", annee: 1974,
+           portrait: {teint: clair, corpulence: moyen, age: jeune, coiffure: mulet, cheveux: roux, pilosite: rase, lunettes: aucune, tenue: maillot, couleur: bordeaux, couleur2: creme, accessoire: aucun},
+           dos: "Planche d'avril 1974. Le photographe lui a demandé de ne pas bouger ; il a bougé, et c'est la seule vignette nette."}
+
+    - id: unes
+      section: legendes
+      titre: "Les Unes"
+      sous: "Ton visage, le jour où le journal titre sur ta saison. On ne les achète pas : une par histoire, la première fois que tu fais la Une."
+      fond: "#1B1B20"
+      bande: "#F2E8CE"
+      rarete: brillante
+      unes: true
+      recompense:
+        texte: "Dix Unes, dix jours où l'on t'a lu. Le kiosquier colle ton portrait sur sa vitrine, et te remet ce qu'il lui reste de pochettes."
+        pochettes: 3
+        francs: 3000
+
+    # ═══════════════════════════════════════════════════════════════ LES VISAGES
+    - id: vestiaire_90
+      section: visages
+      titre: "Le vestiaire, années 90"
+      sous: "Ceux qui jouent, ceux qui soignent, ceux qui attendent à la maison."
+      fond: "#7B1E34"
+      bande: "#F2E8CE"
+      camp: [terrain]
+      hors_lots: true
+      debut: [1990, 1999]
+      recompense:
+        texte: "Le vestiaire est au complet. L'intendant te glisse une pochette dans ton sac, entre les chaussettes."
+        pochettes: 1
+
+    - id: vestiaire_apres
+      section: visages
+      titre: "Le vestiaire et la sélection"
+      sous: "Les visages d'après 2000 : le banc, les Cobalts, la famille qui regarde de loin."
+      fond: "#1F4FB8"
+      bande: "#F2F2F2"
+      camp: [terrain, selection]
+      hors_lots: true
+      recompense:
+        texte: "Page complète. Un brassard de capitaine tombe d'un sac : à l'intérieur, une pochette et un mot que personne ne signe."
+        pochettes: 1
+        francs: 500
+
+    - id: bureau
+      section: visages
+      titre: "Le bureau"
+      sous: "Présidents, agents, journalistes : ceux qui décident, ceux qui racontent."
+      fond: "#1F2D4D"
+      bande: "#E4B94A"
+      camp: [direction]
+      hors_lots: true
+      recompense:
+        texte: "Les bureaux sont au complet. Madame Josiane tape une lettre à ton nom, et glisse une pochette sous le papier."
+        pochettes: 1
+        francs: 600
+
+    - id: instances
+      section: visages
+      titre: "Les instances"
+      sous: "La mairie, la police, la Fédération : ceux qui te regardent sans t'applaudir."
+      fond: "#1F4D3A"
+      bande: "#D8D6CC"
+      camp: [instances]
+      hors_lots: true
+      recompense:
+        texte: "Neuf visages d'administration. Un huissier te tend une enveloppe : une pochette, et le reçu qui va avec."
+        pochettes: 2
+
+    - id: club_90
+      section: visages
+      titre: "Le club, années 90"
+      sous: "Le secrétariat, la buvette, la loge du stade : ceux qui tenaient la maison avant que tu y entres."
+      fond: "#7B1E34"
+      bande: "#F2E8CE"
+      lot: gens_club
+      debut: [1990, 1999]
+      recompense:
+        texte: "La maison est au complet. La buvette te sert un demi en l'honneur de l'album, et une pochette sur la soucoupe."
+        pochettes: 1
+        francs: 400
+
+    - id: club_apres
+      section: visages
+      titre: "Le club, après 2000"
+      sous: "Ceux qui ont repris les clés : les fils, les nièces, les apprentis."
+      fond: "#5E1527"
+      bande: "#E9DCC0"
+      lot: gens_club
+      debut: [2000, 2050]
+      recompense:
+        texte: "La relève est au complet. Le club-house te range une chemise au nom de la maison, et deux pochettes dedans."
+        pochettes: 2
+
+    - id: comptoirs
+      section: visages
+      titre: "Les comptoirs"
+      sous: "Le bar, le Terminus, la presse, le tabac : ceux qui savent le score avant toi."
+      fond: "#B85A1E"
+      bande: "#F6E7C8"
+      lot: gens_comptoirs
+      recompense:
+        texte: "Tous les comptoirs, d'une époque à l'autre. On te rend ta monnaie en pochettes ; on te dit que les gamins échangent mercredi et samedi."
+        pochettes: 2
+        tuyau:
+          texte: "Les gamins du grillage échangent les mercredis et les samedis, quand l'école est finie. Ils comptent tes doubles avant de te dire bonjour."
+
+    - id: notables_90
+      section: visages
+      titre: "Les notables, années 90"
+      sous: "Le banquier, le médecin, le curé, l'hôtelier : ceux qui savent les secrets, et ne les disent qu'à table."
+      fond: "#4B2A57"
+      bande: "#E9C9D8"
+      lot: gens_notables
+      debut: [1990, 1999]
+      recompense:
+        texte: "Page complète. Le médecin te prescrit une pochette, à prendre le matin, et rit seul de sa blague."
+        pochettes: 1
+        francs: 500
+
+    - id: notables_apres
+      section: visages
+      titre: "Les notables, après 2000"
+      sous: "Les nouveaux visages de la mairie, de l'église, de l'hôtel. Le même silence à table."
+      fond: "#3A2145"
+      bande: "#D9B8CB"
+      lot: gens_notables
+      debut: [2000, 2050]
+      recompense:
+        texte: "Les notables d'après sont collés. La mairie t'envoie un pli : deux pochettes, un tampon sans date."
+        pochettes: 2
+
+    - id: quartier_90
+      section: visages
+      titre: "Le quartier, années 90"
+      sous: "La boulangère, le garagiste, le projectionniste, la fleuriste : la rue des Lilas et ses commerces."
+      fond: "#B8862B"
+      bande: "#F4EBD2"
+      lot: gens_quartier
+      debut: [1990, 1999]
+      recompense:
+        texte: "La rue est au complet. La boulangère te glisse une pochette dans le sac à pain, entre deux baguettes."
+        pochettes: 1
+        francs: 400
+
+    - id: quartier_apres
+      section: visages
+      titre: "Le quartier, après 2000"
+      sous: "Les fils, les filles, les repreneurs : les mêmes rideaux, d'autres mains."
+      fond: "#9C6F1F"
+      bande: "#EFE3C4"
+      lot: gens_quartier
+      debut: [2000, 2050]
+      recompense:
+        texte: "La rue d'après est au complet. Le cinéma te donne deux places et, dans la pochette des places, une pochette de vignettes."
+        pochettes: 2
+        francs: 700
+
+    - id: campagne
+      section: visages
+      titre: "La campagne"
+      sous: "La ferme, le Bois-Joli, le manoir, l'auberge, l'étang, le stade de La Motte : ceux qu'on croise après la dernière maison."
+      fond: "#3F6B2C"
+      bande: "#E8D590"
+      lot: quartier_campagne
+      recompense:
+        texte: "La campagne te connaît de vue : la départementale est ouverte dès la première semaine, et personne ne te demande pourquoi."
+        pochettes: 1
+        quartier: campagne
+
+    - id: hauts
+      section: visages
+      titre: "Les Hauts"
+      sous: "Les tours, la galerie, l'avocat, le maître d'hôtel : ceux qui vendent le football au mètre carré."
+      fond: "#5A6B7A"
+      bande: "#F1F3F4"
+      lot: quartier_hauts
+      recompense:
+        texte: "Les Hauts te connaissent de vue : le concierge te tient la porte avant la deuxième saison, et il ne dit pas combien ça coûte."
+        pochettes: 1
+        quartier: hauts
+
+    - id: port
+      section: visages
+      titre: "Le port"
+      sous: "Les docks, la casse, la capitainerie, la guinguette : ceux qui déchargent ce qu'on ne déclare pas."
+      fond: "#1E4468"
+      bande: "#F0C230"
+      lot: quartier_port
+      recompense:
+        texte: "Le port te connaît de vue : les grilles des quais s'ouvrent dès la première semaine. On t'a rendu le nom au dos de la dernière vignette."
+        pochettes: 1
+        quartier: port
+
+    - id: tilleuls
+      section: visages
+      titre: "Les Tilleuls"
+      sous: "Le snack, le salon, la boxe, le city-stade, la tour C : la cité derrière ses tilleuls."
+      fond: "#6A8F3C"
+      bande: "#F4F1DC"
+      lot: quartier_tilleuls
+      recompense:
+        texte: "La cité te connaît de vue : les Tilleuls t'ouvrent leurs portes dès la première semaine, et on te garde un tabouret chez Hagop."
+        pochettes: 1
+        quartier: tilleuls
+
+  # ═══════════════════════════════════════════════════════════════ AVEC QUI L'ON ÉCHANGE
+  # Un échange : deux doubles contre une vignette qui te manque et que l'autre a (son stock vient du
+  # tirage de la semaine, graine de la carrière). Chaque échange est un geste avec la personne : un
+  # point de lien (l'activité cachée `album_echange_<gens>`, `avec:` et `habitude: quartier`), au plus un
+  # par jour. `affinite` : les pages qu'elle a en double de préférence ; `brillante` : la chance qu'elle
+  # ait une brillante cette semaine. Un successeur (Nino, Aram, Telma) reprend la place quand l'époque
+  # change : une personne qui n'est pas là ne propose rien.
+  echanges:
+    - gens: gege
+      affinite: [club_90, club_apres, comptoirs]
+      brillante: 0.12
+      stock: 12
+      scene: "Gégé étale ses doubles sur le zinc, tenus par un élastique de bureau, et les compte à voix haute sans te regarder."
+      fin:
+        - "Gégé reprend tes deux doubles, les range dans la poche intérieure de la veste, et pousse la vignette vers toi du dos de la main."
+        - "« Deux pour une, c'est le tarif de la Nord. » Il compte tes doubles en tapant du pouce sur le zinc, puis te rend l'élastique."
+        - "Il regarde ta vignette à contre-jour, au néon. « Celle-là, je la cherche depuis qu'il n'y a plus de carton dans les paquets. »"
+    - gens: nino
+      affinite: [club_apres, vestiaire_apres, comptoirs]
+      brillante: 0.12
+      stock: 12
+      scene: "Nino sort un classeur de sa veste, des pochettes plastique rangées par numéro, et les feuillette sans te laisser toucher."
+      fin:
+        - "Nino glisse tes deux doubles dans la pochette du fond, retire la vignette de la sienne avec des pincettes, et te la tend par le bord."
+        - "« Mon oncle échangeait à la gueule. Moi, je tiens un cahier. » Il note ton nom en face du numéro, au crayon."
+        - "Il compte tes doubles deux fois, change un mot de sa liste, et te rend ta vignette dans un sachet. Pour le soin."
+    - gens: hagop
+      affinite: [tilleuls, quartier_90, notables_90]
+      brillante: 0.15
+      stock: 12
+      scene: "Hagop pose sa pile de doubles à côté de la friteuse, sur un papier journal. Il en retire un, le remet, et attend que tu dises oui."
+      fin:
+        - "Hagop prend tes deux doubles du bout des doigts, loin du gras, et te tend la vignette dans une serviette en papier. « Ça ne tache pas. »"
+        - "Il emballe ta vignette comme un cornet, avec le papier des sports à l'extérieur. Tu paies en doubles, il ne te rend rien."
+        - "« Deux pour une, ce n'est pas un prix, c'est une façon de se dire bonne journée. » Il remet la pile derrière la caisse."
+    - gens: aram
+      affinite: [tilleuls, quartier_apres, notables_apres]
+      brillante: 0.15
+      stock: 12
+      scene: "Aram a collé ses doubles sur le carreau du snack, de l'intérieur, comme son père collait les résultats. Il les décolle un à un."
+      fin:
+        - "Aram décolle la vignette du carreau avec l'ongle, te la tend, et colle tes deux doubles à sa place, de l'intérieur."
+        - "« Mon père disait : on n'échange jamais sans manger. » Il pose une frite sur ta vignette, pour la forme, et la retire."
+        - "Il vérifie le numéro au dos, deux fois, comme un billet de loto. Puis il te sourit, ce qu'il ne fait jamais le samedi."
+    - gens: haddouche
+      affinite: [tilleuls, comptoirs, vestiaire_90]
+      brillante: 0.1
+      stock: 12
+      scene: "Les gamins étalent leurs doubles sur le capot d'une voiture, contre le grillage. Le plus grand les garde du plat de la main."
+      fin:
+        - "Les gamins se concertent à voix basse, puis le plus petit te tend la vignette, les deux mains en coupe, comme un oiseau."
+        - "« Deux doubles, pas un de moins. Pas de crédit. » Le grand compte les tiens, un par un, avant qu'on te la donne."
+        - "Le plus jeune rit quand tu reprends ta vignette, sans que personne sache pourquoi. Le grillage tremble, quelqu'un a lancé un ballon."
+    - gens: cazal
+      affinite: [tilleuls, comptoirs, vestiaire_apres]
+      brillante: 0.1
+      stock: 12
+      scene: "Les gamins du city-stade étalent leurs doubles sur le banc, et leur éducatrice fait semblant de ne pas regarder le prix."
+      fin:
+        - "Telma Cazal hoche la tête quand les gamins comptent tes doubles à voix haute. Elle n'intervient que si le compte est faux."
+        - "« Chacun son tour, et on n'embrouille pas le petit. » Les gamins te tendent ta vignette à la file, comme un seau d'eau."
+        - "Ils notent l'échange dans un carnet d'écolier. Le dernier numéro de la page est souligné deux fois ; personne ne l'a jamais eu."
+
+  # ═══════════════════════════════════════════════════════════════ LES ACTIVITÉS CACHÉES
+# Les gestes d'échange, comptés par le moteur comme n'importe quel geste avec quelqu'un (un point de lien,
+# au plus un entre deux cartes ; une habitude). Aucun bouton : la ville ne les montre pas dans la liste
+# d'un lieu (`cache: true`), c'est l'action « Échanger des vignettes » du panneau de la personne qui les joue.
+activites:
+  - id: album_echange_gege
+    lieu: buvette
+    avec: gege
+    habitude: quartier
+    cache: true
+    label: "Échanger des vignettes"
+    texte: "Deux doubles contre une vignette qui te manque : le tarif de la buvette, qu'on ne discute pas."
+    tranches: 0
+    max_jour: 1
+  - id: album_echange_nino
+    lieu: buvette
+    avec: nino
+    habitude: quartier
+    cache: true
+    label: "Échanger des vignettes"
+    texte: "Nino tient ses doubles dans un classeur, par numéro. Deux des tiens contre une des siennes, et son crayon note le reste."
+    tranches: 0
+    max_jour: 1
+  - id: album_echange_hagop
+    lieu: snack_tilleuls
+    avec: hagop
+    habitude: quartier
+    cache: true
+    label: "Échanger des vignettes"
+    texte: "Hagop échange ses doubles au comptoir, entre deux commandes. Deux des tiens, une des siennes, et pas de monnaie."
+    tranches: 0
+    max_jour: 1
+  - id: album_echange_aram
+    lieu: snack_tilleuls
+    avec: aram
+    habitude: quartier
+    cache: true
+    label: "Échanger des vignettes"
+    texte: "Aram échange ses doubles comme son père, au carreau du snack. Deux des tiens, une des siennes, sans monnaie."
+    tranches: 0
+    max_jour: 1
+  - id: album_echange_haddouche
+    lieu: city_stade
+    avec: haddouche
+    habitude: quartier
+    cache: true
+    label: "Échanger des vignettes"
+    texte: "Les gamins du grillage échangent leurs doubles sur un capot. Deux des tiens, une des leurs, pas de crédit."
+    tranches: 0
+    max_jour: 1
+  - id: album_echange_cazal
+    lieu: city_stade
+    avec: cazal
+    habitude: quartier
+    cache: true
+    label: "Échanger des vignettes"
+    texte: "Les gamins du city-stade échangent sur le banc. Deux des tiens, une des leurs, et un carnet pour les comptes."
+    tranches: 0
+    max_jour: 1
