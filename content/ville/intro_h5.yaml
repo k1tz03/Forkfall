@@ -1,0 +1,190 @@
+# HISTOIRE 5 — « LA MAQUETTE » : l'introduction distillée, et ce que la ville dit des choix du
+# prologue et du livre (format : docs/histoires/scenes_jouees.md ; la charte :
+# docs/bible/charte_histoire.md).
+#
+# L'introduction jouée tient en quatre répliques (cinematiques_h5.yaml, h5.ci.intro) : le
+# club-house le 2 juillet, la tasse qu'on monte à l'Inspecteur, puis la première carte. Ce
+# qu'elle disait avant — la friche et les géomètres, la buvette et l'ardoise — vient ici, après
+# les premiers choix : la friche après la vitrine de l'agence (le « stade neuf » dessiné là où
+# Didier Vallin dort), la buvette après la grille de l'Est (Gégé, l'ardoise, ton nom à la craie).
+#
+# Ensuite, ce que la ville dit des choix de la première saison et du livre : trois scènes (le ticket
+# de vestiaire de Josiane, le mot « Conseil » sur le tableau de Vukić, la feuille du premier solde),
+# puis des répliques. Rien n'y fait avancer l'intrigue : tout y prouve que le choix a été vu. Les
+# paroles n'accordent rien au protagoniste.
+cinematiques:
+  # Après la vitrine de l'agence : la nuit, à la friche, là où l'agence dessine un stade neuf.
+  - id: h5.ci.friche_geometres
+    quand: carte
+    prefixe: "pr.h5.pro2_vitrine"
+    moment: apres
+    roles: [president]
+    si: "flag(histoire_h5)"
+    lieu: feu
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: vallin, place: [2, 1]}
+      - {id: ombre, qui: passant, nom: "Une silhouette", place: [3, 3]}
+    etapes:
+      - {fondu: "La nuit. La friche de l'usine."}
+      - {musique: sombre}
+      - {narration: "Trois heures. La friche de l'usine, là où l'agence dessine un stade neuf. Des palettes brûlent dans un fût ; autour, des silhouettes qui se taisent quand tu approches."}
+      - {qui: toi, va: [1, 2]}
+      - {qui: ombre, dit: "Regarde, Didier : {pg, select, f{la patronne} other{le patron}} des grues vient voir son terrain."}
+      - {qui: vallin, regarde: toi}
+      - {qui: vallin, dit: "Les géomètres sont venus en juin. Ils ont posé leur trépied ici, contre le wagon. Et ils ont visé le stade, pas la friche."}
+      - {qui: toi, pense: "Sur les plans de l'agence, le stade neuf a déjà ses projecteurs. Ils sont dessinés ici. Exactement ici."}
+      - {narration: "Vallin pousse une palette dans le fût, du bout du pied. Les étincelles montent vers les lumières du pont."}
+      - {qui: vallin, dit: "Ici, on ne construira rien. Les beaux terrains sont au bord de l'eau. Le tien, par exemple."}
+      - {qui: vallin, geste: dos}
+      - {pause: 1200}
+      - {narration: "De l'autre côté de la Rive, la tribune Est découpe le ciel : du chêne de 1931, noir et sec. Il n'a pas plu depuis trois semaines."}
+
+  # Après la grille de l'Est : la buvette du kop, l'ardoise, ton nom à la craie.
+  - id: h5.ci.ardoise_nuit
+    quand: carte
+    prefixe: "pr.h5.pro5_grille"
+    moment: apres
+    roles: [president]
+    si: "flag(histoire_h5)"
+    lieu: buvette
+    tranche: nuit
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: gege, place: fond}
+      - {id: ancien, qui: ancien, nom: "Un ancien de la Nord", place: zinc_1}
+      - {id: abonne, qui: fan, nom: "Un abonné", place: table_2}
+      - {id: patron, qui: commercant2, nom: "Le patron", place: barman}
+    etapes:
+      - {fondu: "La nuit. La buvette du kop."}
+      - {narration: "Une heure du matin. Depuis le dépôt de bilan, sur l'ardoise, le prix du demi est effacé ; à la place, à la craie, ton nom. Personne n'est rentré se coucher."}
+      - {qui: toi, va: zinc_2}
+      - {qui: ancien, dit: "Le tribunal voulait un président avant midi, sinon il liquidait. Deux titres au mur, et on liquidait."}
+      - {qui: patron, geste: dos}
+      - {qui: abonne, dit: "Ils ont appelé quatre noms, ce jour-là. Les quatre ont raccroché avant la fin de la phrase."}
+      - {qui: gege, regarde: toi}
+      - {qui: gege, dit: "Il fallait quelqu'un du virage. Quelqu'un qui a des grues, et une raison de s'en servir."}
+      - {qui: ancien, emote: "..."}
+      - {qui: gege, va: zinc_3}
+      - {qui: gege, dit: "Ton père te portait sur ses épaules, dans la Nord, en 1953. Tu as pleuré au premier but. J'étais à côté ; j'avais dix ans."}
+      - {qui: toi, pense: "Une lettre datée du 12 juin dort dans un tiroir de l'agence Tessandier. Le chantier pour l'entreprise, un stade neuf pour le club. Je peux tenir les deux."}
+      - {narration: "Gégé repasse à la craie les lettres de ton nom, sur l'ardoise, à la place du prix du demi."}
+      - {qui: patron, dit: "Et le demi, je le vends combien, maintenant ?"}
+      - {qui: gege, dit: "Le prix qu'il faudra.", ton: noir}
+      - {narration: "Personne n'efface l'ardoise. Le patron sert la tournée suivante sans la marquer nulle part."}
+
+  # Ce que les choix de la première saison laissent derrière eux. Une scène ne pose rien et ne bouge rien :
+  # elle montre que le choix a été vu.
+  #
+  # Le ticket de vestiaire (h5_josie_bal) : la première fois qu'on retourne au club-house après avoir
+  # demandé à Josiane si le directeur de la banque dansait avec elle, en 1966.
+  - id: h5.ci.ticket_vestiaire
+    quand: lieu
+    roles: [president]
+    si: "flag(histoire_h5) && flag(h5_josie_bal) && saison == 1"
+    lieu: clubhouse
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: secretaire}
+    etapes:
+      - {narration: "Le club-house, un matin. Madame Josiane a sorti d'un tiroir un ticket de vestiaire en carton jauni, le 214, et le tourne entre deux doigts, comme une pièce."}
+      - {qui: toi, va: guichet}
+      - {qui: josiane, regarde: toi}
+      - {qui: josiane, dit: "Le bal de la Coupe, 1966. Je tenais le vestiaire. Il m'a tendu son ticket en disant Josie. Je ne lui avais jamais dit mon prénom."}
+      - {qui: josiane, geste: ecrit}
+      - {narration: "Elle glisse le ticket sous la pile, entre deux licences de 1987, là où personne ne cherche. Elle l'y remet comme si elle venait de le trouver."}
+
+  # Le mot dicté (h5_conseil_ecrit) : la première fois qu'on entre au stade après avoir dicté « Conseil » à Vukić.
+  - id: h5.ci.conseil_tableau
+    quand: lieu
+    roles: [president]
+    si: "flag(histoire_h5) && flag(h5_conseil_ecrit) && saison == 1"
+    lieu: stade
+    tranche: aprem
+    acteurs:
+      - {qui: toi, place: milieu}
+      - {qui: vukic, place: tableau}
+      - {qui: dembo, place: banc_2}
+    etapes:
+      - {narration: "Le vestiaire, avant l'entraînement. Sur le tableau, sous la composition, Vukić a recopié à la craie le mot de jeudi, entre guillemets, plus petit que le reste : « Conseil »."}
+      - {qui: dembo, dit: "C'est une consigne, coach ? Parce que je ne sais pas où me placer."}
+      - {qui: vukic, dit: "C'est le président qui l'a dicté. Je note ce qu'on me dicte. Je ne comprends rien."}
+      - {qui: dembo, regarde: toi}
+      - {qui: vukic, geste: ecrit}
+      - {narration: "Il passe la manche sur le mot, à moitié. Il en reste cinq lettres, et les guillemets."}
+
+  # Le chiffre regardé en face (h5_solde_regarde) : le matin de la reprise, avant la vase.
+  - id: h5.ci.solde_a_l_endroit
+    quand: carte
+    cartes: [pr.h5.b1_vase]
+    moment: avant
+    roles: [president]
+    si: "flag(histoire_h5) && flag(h5_solde_regarde)"
+    lieu: clubhouse
+    tranche: matin
+    acteurs:
+      - {qui: toi, place: porte}
+      - {qui: josiane, place: secretaire}
+    etapes:
+      - {narration: "Le matin de la reprise, au club-house. Sur le comptoir du secrétariat, la feuille du premier solde, posée à l'endroit, un crayon en travers."}
+      - {qui: toi, va: guichet}
+      - {qui: josiane, dit: "Madame Vialat est passée à sept heures. Pas de café. Elle a écrit une ligne, et elle a regardé le clou de l'escalier, longtemps."}
+      - {qui: toi, pense: "Au crayon, sous le chiffre : « Regardé en face. » Le crayon de l'été dernier, celui de la marge."}
+      - {narration: "Elle a laissé de la place en dessous. Comme si le prochain solde pouvait encore changer de forme."}
+
+paroles:
+  # Les comptes de 1998 : l'Inspecteur les a demandés le premier jour.
+  - qui: josiane
+    sujet: club
+    si: "flag(histoire_h5) && saison == 1"
+    texte: "Madame Vialat a demandé les comptes de 1998, le premier jour. Je lui ai dit qu'ils étaient à la cave. Elle a répondu : je sais."
+  # Qui avait la clé : le téléphone beige sonne sans elle.
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_cle_demandee) && saison == 1"
+    texte: "Vous m'avez demandé qui avait la clé. La serrure est neuve, la ligne est la même. Ce qui sonne là-haut n'a pas besoin de clé."
+  # Le combiné raccroché : Bréhaut s'en souvient.
+  - qui: brehaut
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_raccroche) && saison == 1"
+    texte: "Tu as raccroché, mardi. Moi, j'ai décroché, jeudi. Ils appellent toujours quelqu'un."
+  # Le premier solde : Vialat n'oublie pas qu'on a regardé le chiffre.
+  - qui: vialat
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_solde_regarde)"
+    texte: "Au solde, vous avez regardé le chiffre en face. Les gens regardent la porte, d'habitude. Je l'ai noté, en marge, à l'encre."
+  # Le cahier : le mot dicté.
+  - qui: vukic
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_conseil_ecrit)"
+    texte: "Tu m'as dicté « Conseil ». Je ne sais pas ce que ça veut dire. C'est le seul mot du cahier que je n'ai pas vu de mes yeux."
+  # Le bal de la Coupe : Josiane se souvient de la question.
+  - qui: josiane
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_josie_bal)"
+    texte: "Vous m'avez demandé s'il dansait avec moi. Personne ne l'avait demandé depuis 1966. J'ai cherché mon ticket de vestiaire, le soir même."
+  # La bâche : les mains bordeaux, vues de la Nord et de la banque.
+  - qui: gege
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_bache_tenue)"
+    texte: "Tes mains sont restées bordeaux deux jours. Au guichet, tout le monde les a vues. La Nord aussi : un président qui tient le drap, ça se raconte."
+  - qui: dorian
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_bache_tenue)"
+    texte: "Vos mains, bordeaux deux jours. Un président qui peint, je le note. Je note aussi que la peinture sèche plus vite que les dettes."
+  # L'huissier : Camille se souvient d'avoir été prévenue.
+  - qui: camille
+    sujet: toi
+    si: "flag(histoire_h5) && flag(h5_camille_prevenue)"
+    texte: "Tu m'as prévenue avant de signer. Rien ne t'y obligeait. Je m'en souviens, c'est tout."
+  # Lambert : la break de Gégé, ou le ticket.
+  - qui: gege
+    sujet: quartier
+    si: "flag(histoire_h5) && flag(h5_gege_emmene)"
+    texte: "Trois rues pour deux cents mètres, dans ma break, pour arriver chez Lambert de face. Il m'a dit après qu'il aimait ça, qu'on arrive de face."
+  - qui: gege
+    sujet: quartier
+    si: "flag(histoire_h5) && flag(h5_ticket_droite)"
+    texte: "Le ticket de la buvette, « parle-lui à droite » : je l'aurais écrit pour mon père, qui entendait mal à gauche lui aussi."

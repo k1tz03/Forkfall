@@ -56,7 +56,7 @@ cards:
     text: "Local du kop, un dimanche. Vingt mètres de drap blanc par terre, des pots de peinture bordeaux. Gégé trempe le pinceau. « LA RIVE AUX ENFANTS DU QUARTIER. Ça tient sur la largeur de l'Est ? »"
     left:
       label: "Je tiens le drap"
-      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_bache]}
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_bache, h5_bache_tenue]}
       answer: "Tu tiens le coin jusqu'à ce que la peinture prenne. Tes mains restent bordeaux deux jours ; à la banque, Dorian les regarde."
     right:
       label: "Pas en mon nom"
@@ -378,6 +378,25 @@ cards:
       label: "Je sais compter"
       effects: {direction: "+", relation: {vialat: -1}, outcome: refuse}
       answer: "« Tout le monde sait compter. C'est l'ordre des chiffres qui compte. » Elle note l'heure de l'entretien, à la minute."
+
+  # Variante du premier solde : tu avais regardé le chiffre en face, à la clôture (h5_solde_regarde).
+  - id: pr.h5.vialat.coupure_chiffre
+    roles: [president]
+    arc: instances
+    tags: [caisse, direction]
+    speaker: vialat
+    lieu: bureau
+    tone: strategique
+    once: true
+    text: "Madame Vialat sort de son sac une coupure jaunie : VAUCASTEL AU GREFFE, 1992. « Vous avez regardé le chiffre en face. Je les ai laissés passer en 1989, {toi}. Vous savez pourquoi je reviens ? »"
+    left:
+      label: "Dites-le"
+      effects: {direction: "-", relation: {vialat: 1}, set: [h5_vaucastel], outcome: compte}
+      answer: "« Parce que vous avez regardé le chiffre, et que Vaucastel n'a jamais regardé le sien. » Elle replie la coupure sur le titre, sans la lisser."
+    right:
+      label: "Je sais compter"
+      effects: {direction: "+", relation: {vialat: -1}, outcome: refuse}
+      answer: "« Tout le monde sait compter. Peu de gens regardent. » Elle note l'heure de l'entretien, à la minute."
 
   - id: pr.h5.vialat.ligne
     roles: [president]

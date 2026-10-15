@@ -97,11 +97,11 @@ cards:
     text: "Gégé, à la buvette : « Lambert, conseiller du quartier de la Rive. Il était au virage en 74, à ma gauche. Il vote avec le maire depuis vingt ans. Tu veux que je t'emmène chez lui, {toi} ? »"
     left:
       label: "Emmène-moi"
-      effects: {tribunes: "+", relation: {gege: 1}}
+      effects: {tribunes: "+", relation: {gege: 1}, set: [h5_gege_emmene]}
       answer: "Gégé sort sa vieille break qui sent le chien. Il fait trois rues pour deux cents mètres, pour que tu arrives de face."
     right:
       label: "J'y vais par moi-même"
-      effects: {direction: "+"}
+      effects: {direction: "+", set: [h5_ticket_droite]}
       answer: "Il écrit un rendez-vous au dos d'un ticket de buvette : café de la Mairie, jeudi. En dessous : « parle-lui à droite »."
 
   - id: pr.h5.lambert.cuisine
@@ -120,6 +120,42 @@ cards:
       label: "Votez comme vous voulez"
       effects: {direction: "+", set: [h5_lambert_libre], outcome: perdu}
       answer: "« Je ne veux rien, moi. C'est pour ça qu'on me demande. » Il ressert le café sans te demander, et regarde la place."
+
+  # Variante de la break : Gégé t'a conduit, il est au fond du café (h5_gege_emmene).
+  - id: pr.h5.lambert.cuisine_gege
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, direction]
+    lieu: cafe
+    tone: leger
+    once: true
+    text: "Café de la Mairie. Gégé s'est assis au fond, sans commander. Lambert sort de son portefeuille la photo du virage de 1974. « Je voterai selon ce que vous direz là-bas. Sinon, je vote avec le maire. »"
+    left:
+      label: "Je dirai quelque chose"
+      effects: {tribunes: "+", set: [h5_lambert_vu], outcome: vu}
+      answer: "« Dites-le fort. J'entends mal à gauche depuis 74. » Il range la photo ; au fond, Gégé a déjà payé les cafés, sans que personne le voie."
+    right:
+      label: "Votez comme vous voulez"
+      effects: {direction: "+", set: [h5_lambert_libre], outcome: perdu}
+      answer: "« Je ne veux rien, moi. C'est pour ça qu'on me demande. » Il ressert le café sans te demander, et regarde la place. Au fond, Gégé fait semblant de lire."
+
+  # Variante du ticket : « parle-lui à droite », écrit par Gégé au dos d'un ticket de buvette (h5_ticket_droite).
+  - id: pr.h5.lambert.cuisine_droite
+    roles: [president]
+    arc: tribune
+    tags: [tribunes, direction]
+    lieu: cafe
+    tone: leger
+    once: true
+    text: "Café de la Mairie. Tu t'assois à droite de Lambert, comme dit le ticket. Il sort la photo du virage de 1974. « Je voterai selon ce que vous direz là-bas. Sinon, je vote avec le maire. »"
+    left:
+      label: "Je dirai quelque chose"
+      effects: {tribunes: "+", set: [h5_lambert_vu], outcome: vu}
+      answer: "« Dites-le fort. À droite, j'entends tout. » Il range la photo et te laisse payer les cafés, sans discuter."
+    right:
+      label: "Votez comme vous voulez"
+      effects: {direction: "+", set: [h5_lambert_libre], outcome: perdu}
+      answer: "« Je ne veux rien, moi. C'est pour ça qu'on me demande. » Il ressert le café côté droit, comme on sert un invité, et regarde la place."
 
   - id: pr.h5.lambert.permanence
     roles: [president]
