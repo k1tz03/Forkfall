@@ -339,13 +339,23 @@ body.ville-on #gameScreen.carte-on .menu button.v-z{visibility:hidden}
   .v-porte,.v-fondu,.v-toast,#villeVoile{transition:none}
 }
 
-/* quatre boutons : une ligne chacun ; sur un téléphone, on serre les lettres, pas les doigts */
+/* quatre boutons (cinq dans une pièce : Plan, Attendre, Y aller, Ici, Sortir) : une ligne chacun ; sur un
+   téléphone, on serre les lettres, pas les doigts */
 .v-actions button{white-space:nowrap;letter-spacing:.08em;gap:6px;padding:0 6px}
 @media (max-width:440px){
   .v-actions{gap:6px}
   .v-actions button{letter-spacing:.04em;padding:0 4px;gap:4px;font-size:10.5px}
   .v-actions button svg{width:13px;height:13px}
 }
+/* sur un téléphone, cinq mots de front ne tiennent plus (à 360 px, « SORTI… » était coupé ; à 414, « ATTENDRE »
+   poussait les autres) : l'icône passe au-dessus du mot, chaque bouton garde sa part (55 px à 360, 70 à 414) et
+   ses 46 px de haut */
+@media (max-width:440px){
+  .v-actions{gap:5px}
+  .v-actions button{flex-direction:column;gap:3px;min-height:46px;min-width:0;padding:5px 2px 4px;font-size:10px;letter-spacing:.02em;line-height:1.1}
+  .v-actions button svg{width:16px;height:16px}
+}
+@media (max-width:340px){ .v-actions button{font-size:9px;letter-spacing:0} }
 
 /* ── la ville prend l'écran : un haut et un bas serrés ──────────────────────
    Sur un téléphone, le menu, le rail, l'heure, le rendez-vous et le bandeau
@@ -592,3 +602,53 @@ body.v-cine-on #villeCouche .v-lieu,body.v-cine-on .v-cartouche,body.v-cine-on .
 .v-q.v-q-grand{font-size:12px;letter-spacing:.16em}
 .v-q.v-q-grand.ferme{opacity:.9}
 .v-q.v-q-grand small{display:block;font-size:9.5px;font-style:italic;letter-spacing:.02em;text-transform:none;opacity:.85}
+
+/* ═══ LA BOUCLE DE LA VILLE : le fondu court, les chapitres, l'intitulé d'un lieu ═══════════════
+   (ville_rythme.js, ville_chapitres.js) */
+/* le fondu court : 0,35 s pour tomber au noir, autant pour en sortir ; sur le noir d'une attente,
+   l'heure qui défile (le jour, la tranche, et l'heure en dessous) */
+.v-fondu.court{transition-duration:350ms}
+.v-fondu.court b{font-size:clamp(18px,6vw,26px);letter-spacing:.14em}
+.v-fondu.court span{font-size:13px;letter-spacing:.24em;font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion: reduce){ .v-fondu.court{transition:none} }
+
+/* l'intitulé d'un lieu : posé en haut avec `left:50%`, il n'avait que la moitié de l'écran pour s'étendre
+   (cinq ou six lignes pour une phrase) ; sa largeur est celle de son texte, jusqu'au bord moins une marge */
+.v-cartouche{width:max-content;max-width:min(calc(100vw - 24px),420px)}
+
+/* la scène jouée se retire sur ce qui vient (la première carte de la carrière, la ville) : « Passer » part
+   tout de suite, il ne reste pas par-dessus la carte pendant que les bandes s'ouvrent */
+.v-cine.fin{pointer-events:none}
+.v-cine.fin .v-cine-passer{opacity:0;transition:opacity .12s linear}
+
+/* un panneau plein écran (le carnet, le plan, la frise, un chapitre) est dans la colonne de la coquille, sous
+   le message du récit et l'intitulé d'un lieu, posés sur la page : ils se lisaient par-dessus (« Tu fais la
+   séance entière… » sur la Une). Ils se taisent le temps du panneau. */
+body:has(.plein:not([hidden])) .v-toast,
+body:has(.plein:not([hidden])) .v-cartouche{visibility:hidden}
+
+/* le chapitre d'une semaine (« Une de la semaine », « La semaine prochaine… ») et « Pendant ton absence… » :
+   des panneaux de la coquille, le journal du jeu en page 1 */
+.v-une{padding-bottom:14px}
+.v-une .masthead h1 span{display:block}
+.v-une .etitle{text-wrap:balance;overflow-wrap:anywhere}
+.v-une ul.breves li{overflow-wrap:anywhere}
+.v-une .legend{overflow-wrap:anywhere}
+.v-sem{padding:2px 0 0}
+.v-sem-sous{margin:0 0 12px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--creme3)}
+.v-sem-vide{margin:14px 0;font-size:13.5px;font-style:italic;line-height:1.5;color:var(--creme2)}
+.v-agenda{list-style:none;margin:0;padding:0;border-top:1px solid var(--fond3)}
+.v-agenda li{display:grid;grid-template-columns:7.2em 1fr;gap:4px 12px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--fond3)}
+.v-agenda li b{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--creme3)}
+.v-agenda li span{font-size:13.5px;line-height:1.45;color:var(--creme);overflow-wrap:anywhere}
+.v-paie{margin:14px 0 0;font-size:12.5px;font-style:italic;line-height:1.5;color:var(--creme2);border-left:2px solid var(--framboise);padding-left:10px}
+.v-ch-btns{display:flex;flex-direction:column;gap:8px;margin:16px 0 0}
+.v-ch-btns button{
+  width:100%;min-height:48px;padding:0 14px;border-radius:3px;
+  font-size:12.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+}
+.v-ch-go{background:var(--framboise);color:var(--creme)}
+.v-ch-pause{border:1px solid var(--fond3);color:var(--creme2)}
+.v-ch-go:hover,.v-ch-go:focus-visible{outline:1px solid var(--creme);outline-offset:2px}
+.v-ch-pause:hover,.v-ch-pause:focus-visible{color:var(--creme);border-color:var(--creme3);outline:0}
+.v-ch-note{margin:2px 0 0;font-size:11.5px;font-style:italic;line-height:1.45;color:var(--creme3);text-align:center}

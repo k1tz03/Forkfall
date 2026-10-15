@@ -412,10 +412,12 @@
   // ─────────────────────────────────────────────────────────────── le héros
   var heros = { x: 0, y: 0, chemin: null, i: 0, miroir: false, pas: 0, dist: 0, arrivee: null };
   function poser(x, y) { heros.x = x; heros.y = y; heros.chemin = null; heros.arrivee = null; S.x = x; S.y = y; }
-  function allerA(cx, cy, quandArrive) {
-    var a = plusProche.apply(null, caseDe(heros.x, heros.y).concat([16]));
-    var b = plusProche(cx, cy, 16);
-    var ch = chemin(a, b);
+  // le chemin d'ici à une case (la plus proche qui se marche) ; `null` s'il n'y en a pas
+  function cheminVers(cx, cy) {
+    return chemin(plusProche.apply(null, caseDe(heros.x, heros.y).concat([16])), plusProche(cx, cy, 16));
+  }
+  function allerA(cx, cy, quandArrive, deja) {
+    var ch = deja || cheminVers(cx, cy);
     if (!ch) { toast("Pas de chemin d'ici."); return false; }
     heros.chemin = ch.map(centre); heros.i = 0; heros.arrivee = quandArrive || null;
     cam.libre = false;
@@ -424,14 +426,21 @@
     return true;
   }
   function allerAuLieu(cle) {
-    if (dedans) { if (cle === dedans.cle) { arriveeDedans(); return; } sortir(function () { allerAuLieu(cle); }); return; }
+    if (dedans && cle === dedans.cle) { arriveeDedans(); return; }
     if (lieuFerme(cle)) { var q0 = GRAND_Q[QUARTIER_DE[cle]]; toast(q0.nom + " : le quartier " + q0.indice + "."); return; }
     var l = LIEU[cle];
     if (!l || !l.door) return;
+    // dans une pièce : si le but est loin, un seul fondu de la pièce à sa porte (ville_rythme.js) ;
+    // sinon on sort d'abord, et l'on marche
+    if (dedans) { if (butLoin(cle)) sauterVers(cle); else sortir(function () { allerAuLieu(cle); }); return; }
     if (porteOuverte === cle) return;
     var c = caseDe(heros.x, heros.y);
     if (Math.abs(c[0] - l.door[0]) + Math.abs(c[1] - l.door[1]) <= 1 && !heros.chemin) { arriver(cle); return; }
-    allerA(l.door[0], l.door[1], function () { arriver(cle); });
+    // au-delà de quelques rues, la marche n'apprend rien : un fondu court remplace le trajet (toucher la
+    // ville pour marcher, lui, reste une marche)
+    var ch = cheminVers(l.door[0], l.door[1]);
+    if (ch && marcheTropLongue(ch)) { sauterVers(cle); return; }
+    allerA(l.door[0], l.door[1], function () { arriver(cle); }, ch);
   }
   function majMarche(dt) {
     var c = heros.chemin;
@@ -1037,6 +1046,7 @@
   }
   // toucher quelqu'un : s'il est loin, on va le voir (et il t'attend)
   function toucherQuelquun(g) {
+    cacherCartouche();
     if (bulle && bulle.g !== g) { bulle.g.parle = false; bulle = null; }
     if (dedans) { toucherQuelquunDedans(g); return; }
     if (g.role === "rdv" && rdv && LIEU[rdv.lieu]) { allerAuLieu(rdv.lieu); return; }
@@ -1059,6 +1069,7 @@
     var b = bulle;
     if (b && (performance.now() > b.jusqua || b.g.fini || !b.g.tete || carteOn || occupe)) { b.g.parle = false; bulle = null; b = null; }
     if (!b) { el.hidden = true; return; }
+    if (b.conv && cartoucheVisible()) { el.hidden = true; return; }
     if (el._pour !== b) {
       el._pour = b;
       el.querySelector("b").textContent = b.nom;
@@ -1418,7 +1429,7 @@
     if (dedans) majDedans(dt, ts);
     majCine(dt, ts);
     majVie(dt, ts);
-    if (!occupe && !carteOn && !MATCH && !CINE) guetterConv(ts);
+    if (!occupe && !carteOn && !MATCH && !CINE) { guetterConv(ts); guetterChapitre(ts); guetterAttendre(ts); }
     if (MATCH) majMatch(dt, ts);
     // la caméra suit le héros, sauf si on l'a déplacée à la main (ou si le match la tient)
     var p = visee();
@@ -1781,6 +1792,12 @@
       montrerCarte();
     }, 1600);
   }
+  // on entre dans la pièce du lieu : fermé à cette heure, la porte reste close (sauf chez soi, ou si
+  // l'on t'y attend) ; et le match se joue sur la pelouse, pas dans la pièce
+  function doitEntrer(cle) {
+    var attenduIci = (rdv && rdv.lieu === cle && tNow() >= rdv.debut) || (S.mission && S.mission.lieu === cle) || cle === chezToi();
+    return aInterieur(cle) && !carteOn && (ouvert(TEXTE_LIEU[cle] || {}) || attenduIci) && !(rdv && rdv.lieu === cle && rdv.type === "match" && tNow() >= rdv.debut);
+  }
   function arriver(cle) {
     S.lieu = cle;
     sauver();
@@ -1788,9 +1805,7 @@
     if (dedans && dedans.cle === cle) { arriveeDedans(); return; }
     var clieu = !aInterieur(cle) && !carteOn ? cineDeLieu(cle) : null;
     if (clieu) { jouerCine(clieu, function () { arriver(cle); }); return; }
-    // fermé à cette heure : la porte reste close (sauf chez soi, ou si l'on t'y attend)
-    var attenduIci = (rdv && rdv.lieu === cle && tNow() >= rdv.debut) || (S.mission && S.mission.lieu === cle) || cle === chezToi();
-    if (aInterieur(cle) && !carteOn && (ouvert(TEXTE_LIEU[cle] || {}) || attenduIci) && !(rdv && rdv.lieu === cle && rdv.type === "match" && tNow() >= rdv.debut)) {
+    if (doitEntrer(cle)) {
       entrerAvecFondu(cle, arriveeDedans);
       return;
     }
@@ -2617,7 +2632,7 @@
     S.francs += paie;
     var phrase = dj >= 3 ? dj + " semaines plus tard" : dj >= 1 ? "Quelques semaines plus tard" : "La semaine suivante";
     var texte = "La paie est tombée : " + argent(paie) + "." + (S.francs - paie < 0 && S.francs >= 0 ? " Le découvert est comblé." : "");
-    if (!sansFondu) attente.push({ titre: phrase, sous: moisCourant(), texte: texte });
+    if (!sansFondu) attente.push({ titre: phrase, sous: moisCourant(), texte: texte, paie: true });
     ruine();
     return texte;
   }
@@ -2666,7 +2681,6 @@
     }
   }
   var attente = [];
-  var allerApresNuit = false;
   function dormir(texteNuit) {
     // jusqu'au matin suivant ; la nuit peut être interrompue par un rendez-vous (ou un événement)
     var depart = S.semaine;
@@ -2680,25 +2694,17 @@
       var chez = chezToi();
       if (aInterieur(chez) && S.lieu === chez) entrer(chez); else recaler();
     }, function () {
-      var suite = attenteSuite, fondus = attente.length > 0;
-      attenteSuite = null;
-      suiteFondus();
-      if (echeance()) { allerApresNuit = false; return; }
-      if (sceneDue()) { allerApresNuit = false; return; }
-      if (allerApresNuit) {
-        allerApresNuit = false;
-        if (rdv && LIEU[rdv.lieu] && !rdv.sombre) { if (tNow() < rdv.debut) avancerJusquA(rdv.debut); else allerAuLieu(rdv.lieu); }
-        return;
-      }
-      // on attendait qu'il se passe quelque chose : l'attente reprend au réveil
-      if (suite && !fondus) attendre(suite);
+      // la Une de la semaine qui finit (s'il y en a une), les fondus en attente, puis ce qui est dû
+      chapitreSiDu(function () { suiteFondus(function () { if (!echeance()) sceneDue(); }); });
     });
   }
-  function suiteFondus() {
-    if (!attente.length) return;
+  // les fondus en attente (la banque, l'huissier…), l'un après l'autre ;
+  // `apres` : ce qui vient quand le dernier est fini (tout de suite, s'il n'y en a pas)
+  function suiteFondus(apres) {
+    if (!attente.length) { if (apres) apres(); return; }
     var a = attente.shift();
     // le tribunal de commerce : après son texte, l'écran de fin de la banqueroute
-    fonduTexte(a.titre, a.sous, a.texte, null, a.banqueroute ? function () { attente = []; sauver(); coquille.banqueroute(); } : suiteFondus);
+    fonduTexte(a.titre, a.sous, a.texte, null, a.banqueroute ? function () { attente = []; sauver(); coquille.banqueroute(); } : function () { suiteFondus(apres); });
   }
 
   // ─────────────────────────────────────────────────────────────── le fondu
@@ -2970,6 +2976,7 @@
     } else mh.hidden = true;
     var bt = $("villeAttendre");
     if (bt) bt.disabled = carteOn || occupe;
+    rappelEcrire();
   }
 
   // ─────────────────────────────────────────────────────────────── le plan
@@ -3078,9 +3085,12 @@
   // d'une mission ; la nuit tombée, on rentre dormir. Retour client : « on passe
   // une grande partie de son temps à passer des demi-journées, il n'y a rien à
   // faire entre les dialogues qui arrivent plusieurs jours plus tard » — une
-  // tranche par geste, c'était trois gestes vides en moyenne entre deux choses,
-  // onze parfois. Et le panneau du lieu ne se rouvre plus tout seul après
-  // l'attente : il couvrait le bouton, on ne pouvait plus passer.
+  // tranche par geste, c'était trois gestes vides en moyenne entre deux choses ;
+  // puis une chaîne de fondus (une nuit, une paie, un fondu par tranche : treize
+  // secondes par « Attendre », mesuré en jouant l'histoire 4). Désormais un seul
+  // fondu court, l'heure qui défile dessous (ville_rythme.js, `laisserPasser`).
+  // Et le panneau du lieu ne se rouvre plus tout seul après l'attente : il
+  // couvrait le bouton, on ne pouvait plus passer.
   function aLaPorte(cle) {
     if (dedans) return dedans.cle === cle;
     var l = LIEU[cle];
@@ -3092,41 +3102,7 @@
     var sm = S.mission;
     return !!(sm && !sm.offre && MISSION[sm.id] && missionIci(sm.lieu));
   }
-  function rentrerDormir() {
-    var chez = chezToi();
-    if (!(dedans && dedans.cle === chez) && LIEU[chez] && LIEU[chez].door) { var c = centre(LIEU[chez].door); poserEnVille(c[0], c[1]); S.lieu = chez; }
-    dormir();
-  }
-  // `suite` : l'attente reprend au réveil (rien n'est arrivé de la nuit) ; deux
-  // nuits au plus d'un seul geste, puis la main revient
-  var attenteSuite = null;
-  function attendre(suite) {
-    if (carteOn || occupe) return;
-    fermerPorte();
-    heros.chemin = null; heros.arrivee = null;
-    var rdvAvant = suite ? suite.rdv : !!rdvVisible(), miAvant = suite ? suite.mi : missionOuverte(), nuits = suite ? suite.nuits : 0, garde = 0;
-    function arret() { return (!rdvAvant && rdvVisible()) || (!miAvant && missionOuverte()); }
-    if (!(suite && arret())) {
-      while (garde++ < 12) {
-        if (S.tranche === 4) {
-          if (nuits < 2) attenteSuite = { nuits: nuits + 1, rdv: rdvAvant, mi: miAvant };
-          rentrerDormir();
-          return;
-        }
-        if (!pas()) { majHud(); sauver(); return; }
-        if (arret()) break;
-      }
-    }
-    majHud(); sauver();
-    if (attente.length) { suiteFondus(); return; }
-    // le rendez-vous (ou la mission) est là où tu attends : il commence
-    if (rdvVisible() && aLaPorte(rdv.lieu)) { arriver(rdv.lieu); return; }
-    if (missionOuverte() && aLaPorte(S.mission.lieu)) { arriver(S.mission.lieu); return; }
-    var dit = JOUR_MOT[S.jour].charAt(0).toUpperCase() + JOUR_MOT[S.jour].slice(1) + ", " + HEURE[TRANCHES[S.tranche]] + ".";
-    if (rdvVisible()) dit += " " + (rdv.type === "match" ? "Le match · " : (rdv.qui ? nomDe(rdv.qui) + " t'attend · " : "On t'attend · ")) + nomLieu(LIEU[rdv.lieu]) + ".";
-    else if (missionOuverte()) dit += " " + MISSION[S.mission.id].titre + " · " + nomLieu(LIEU[S.mission.lieu]) + " : c'est l'heure.";
-    toast(dit);
-  }
+  function attendre() { laisserPasser(); }
 
   // ─────────────────────────────────────────────────────────────── la sauvegarde
   function sauver() {
@@ -3292,25 +3268,9 @@
     taille();
     brancherEntrees();
   }
-  // le temps file jusqu'au rendez-vous (et s'arrête si quelque chose arrive avant)
-  function avancerJusquA(t) {
-    if (carteOn || occupe) return;
-    fermerPorte();
-    var garde = 0;
-    while (tNow() < t && garde++ < 80) {
-      if (S.tranche === 4) {
-        // la nuit, on rentre dormir — et au réveil, on reprend le chemin du rendez-vous
-        var chez = chezToi(), c = centre(LIEU[chez].door); poserEnVille(c[0], c[1]); S.lieu = chez;
-        allerApresNuit = true;
-        dormir();
-        return;
-      }
-      if (!pas()) { majHud(); sauver(); return; }
-    }
-    majHud(); sauver();
-    suiteFondus();
-    if (rdv && LIEU[rdv.lieu] && !carteOn && !occupe) allerAuLieu(rdv.lieu);
-  }
+  // le temps file jusqu'au rendez-vous, d'un seul fondu, et te voilà à sa porte (s'il arrive
+  // quelque chose avant, cela prend la main : ville_rythme.js, `laisserPasser`)
+  function avancerJusquA(t) { laisserPasser({ jusqua: t, vers: rdv && !rdv.sombre && LIEU[rdv.lieu] ? rdv.lieu : null }); }
 
   function chargerJson(nom) {
     return fetch(BASE + nom).then(function (r) { if (!r.ok) throw new Error(nom + " : " + r.status); return r.json(); });
@@ -3445,13 +3405,11 @@
         vue = v;
         annoncerVille("debut", v);
         var intro = cineIntro();
-        if (intro) { jouerCine(intro, function () { toast("Touche la ville pour marcher, un nom pour y aller. En rouge : là où l'on t'attend."); }); return; }
+        if (intro) { jouerCine(intro, ouvrirSurUneCarte); return; }
         var club = (v.entities && v.entities.club) || "club", leClub = (/^[AEIOUYÉÈÊaeiouyéèê]/.test(club) ? "L'" : "Le ") + club;
         var accueil = S.lieu === "hotel" ? "L'hôtel de la Rive, une chambre sur le quai. La Fédération paie la note ; elle la relira." :
           "Deux pièces au troisième, rue des Lilas. " + leClub + " t'attend. La ville aussi.";
-        fonduTexte((v.entities && v.entities.ville ? v.entities.ville : "Aubérive"), moisCourant(), accueil, null, function () {
-            toast("Touche la ville pour marcher, un nom pour y aller. En rouge : là où l'on t'attend.");
-          });
+        fonduTexte((v.entities && v.entities.ville ? v.entities.ville : "Aubérive"), moisCourant(), accueil, null, ouvrirSurUneCarte);
       };
       if (pret) faire(); else enAttente = faire;
     },
