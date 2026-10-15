@@ -215,7 +215,13 @@
       }
       L.finir = finir;
       ecouter(bouton, "click", function (e) { e.stopPropagation(); finir("passe"); });
-      ecouter(doc, "keydown", function (e) { if (e.key === "Escape") { e.preventDefault(); finir("passe"); } }, true);
+      ecouter(doc, "keydown", function (e) {
+        if (e.key === "Escape") { e.preventDefault(); finir("passe"); }
+        // le jeu, dessous, n'entend rien pendant le film : une flèche répondrait à la carte qui
+        // attend. (Entrée sur « Passer » le déclenche quand même : c'est l'action du bouton.)
+        e.stopPropagation();
+        if (/^Arrow/.test(e.key)) e.preventDefault();
+      }, true);
 
       // le secours : un carton de texte, quelques secondes, puis la partie reprend
       var cartonPose = false;
