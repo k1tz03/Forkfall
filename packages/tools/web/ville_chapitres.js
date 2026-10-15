@@ -135,8 +135,10 @@
     var A = window.FusibleApercu;
     if (ABONNE_CH || !A || !A.crochet) return;
     ABONNE_CH = true;
-    A.crochet("reponse", function (a) { chNoterReponse(a); direAideVille(); });
-    A.crochet("fin", function () { RAPPEL_VU = ""; try { localStorage.removeItem(CLE_RAPPEL); } catch (e) {} });
+    // Le Fusible (le mode éclair) n'a pas de ville : ses réponses et sa fin ne sont pas celles d'une
+    // carrière des livres — ni la Une d'une semaine, ni le rendez-vous gardé d'une partie en pause
+    A.crochet("reponse", function (a) { if (a && a.avant && a.avant.mode === "eclair") return; chNoterReponse(a); direAideVille(); });
+    A.crochet("fin", function (v) { if (v && v.mode === "eclair") return; RAPPEL_VU = ""; try { localStorage.removeItem(CLE_RAPPEL); } catch (e) {} });
   }
 
   // ─── la Une de la semaine qui finit
