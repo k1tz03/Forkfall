@@ -2947,7 +2947,11 @@ window.FusibleContenu.pret((function () {
   function advanceEnd() {
     var eid = view.ending && view.ending.id;
     gainFin = null;
-    if (eid && !profile.endings[eid]) {
+    // Le Fusible (preview_eclair.js) ne compte pas au Cimetière des livres ; une fin commune (sans
+    // `livre`, pas endormie) atteinte en éclair y entre, elle : les fins des longues carrières (la
+    // retraite, la statue…) ne s'atteignent plus que là depuis que les livres se ferment.
+    var compte = view.mode !== "eclair" || (ENDINGS[eid] && !ENDINGS[eid].dormante && !ENDINGS[eid].livre);
+    if (eid && compte && !profile.endings[eid]) {
       profile.endings[eid] = 1; saveProfile(profile);
       if (ENDINGS[eid] && !ENDINGS[eid].dormante) gainFin = { n: discovered(), jalons: donnerRecompenses() };
     }

@@ -7,6 +7,7 @@ export 'src/annonce.dart';
 export 'src/condition.dart' show EvalContext, evalWhen, kKnownPaths, kKnownPathPrefixes, kKnownCalls;
 export 'src/content.dart';
 export 'src/draw/director.dart';
+export 'src/eclair.dart';
 export 'src/effects.dart';
 export 'src/engine.dart';
 export 'src/frise.dart';

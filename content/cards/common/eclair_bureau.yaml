@@ -1,0 +1,180 @@
+# LE FUSIBLE — le mode éclair, les cartes que les trois rôles de bureau se partagent
+# (docs/histoires/mode_eclair.md). Des scènes qui ne tiennent à aucun poste : un fusible qui saute, le
+# médecin et son aptitude, une lettre anonyme, un sponsor, un vieil abonné. Les jauges y gardent
+# un sens commun à `ds`, `president` et `selectionneur` : vestiaire = ceux qui travaillent avec toi,
+# tribunes = le public, direction = ceux qui te tiennent (président, actionnaires, Fédération),
+# caisse = l'argent. Ouvertes au seul drapeau `eclair`.
+cards:
+  - id: ec.bu.fusible
+    roles: [ds, president, selectionneur]
+    arc: moment
+    tags: [moment, caisse, objet]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "À vingt et une heures, la moitié des projecteurs s'éteint pendant l'échauffement. L'électricien parle d'un fusible, d'un vieux circuit, et d'une facture qu'il te tend sans lever les yeux."
+    left: {label: "Je paie le circuit neuf", effects: {vestiaire: "+", caisse: "--"}, answer: "Les ouvriers arrivent le lendemain et restent dix jours. Le soir du match suivant, la lumière est parfaite, et personne ne la remarque."}
+    right: {label: "Fusible neuf, on joue", effects: {caisse: "+", vestiaire: "-"}, answer: "Le fusible neuf tient jusqu'au coup de sifflet final. Le lendemain, l'électricien repasse, regarde le tableau, et ne dit pas un mot."}
+
+  - id: ec.bu.medecin_aptitude
+    roles: [ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le médecin sort du couloir, une radio à la main : « Il dit qu'il peut jouer. Ses résultats disent le contraire. Si je signe l'aptitude, c'est vous qui répondrez de la suite. »"
+    left: {label: "Je signe l'aptitude", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le joueur entre à la dixième minute, boite à la trentième, et reste jusqu'à la fin pour ne pas laisser sa place."}
+    right: {label: "Pas de match pour lui", effects: {vestiaire: "+", tribunes: "-"}, answer: "Il retourne au vestiaire sans un mot. Dans la tribune, on a déjà reconnu son numéro sur la liste des absents."}
+
+  - id: ec.bu.lettre_anonyme
+    roles: [ds, president, selectionneur]
+    arc: moment
+    tags: [moment, direction, scandale]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Une lettre anonyme arrive au bureau, des mots découpés dans un journal : « Demande-lui ce qu'il fait le mardi soir. » Pas de nom. Juste l'adresse d'un bar et un numéro de table."
+    left: {label: "Je la brûle", effects: {vestiaire: "+", direction: "-"}, answer: "La cendre part dans le cendrier. Le mardi suivant, tu passes devant le bar sans t'arrêter, en le regardant à peine."}
+    right: {label: "Je la transmets à l'avocat", effects: {direction: "+", vestiaire: "-"}, answer: "L'avocat lit la lettre deux fois, lentement, comme un contrat. Il demande qui d'autre l'a vue avant de dire quoi que ce soit."}
+
+  - id: ec.bu.sponsor_diner
+    roles: [ds, president, selectionneur]
+    arc: sponsors
+    tags: [sponsors, caisse, direction, rescue:caisse]
+    when: "flag('eclair') && (gauges.caisse < 55)"
+    cooldown: 26
+    text: "Un sponsor t'invite à dîner dans un restaurant sans carte. La table est ronde, la lumière basse, son avocat déjà assis. « Rien d'urgent, juste une idée pour l'été prochain. »"
+    left: {label: "J'y vais", effects: {caisse: "++", direction: "-"}, answer: "Le dîner dure trois heures, le dessert aussi. À la fin, il te dit qu'il n'a rien demandé, et tu le crois presque."}
+    right: {label: "Je ne dîne pas en affaires", effects: {direction: "+", caisse: "-"}, answer: "Il comprend, ou fait semblant. Un an plus tard, son logo apparaît sur le maillot d'un club voisin."}
+
+  - id: ec.bu.ancien_emploi
+    roles: [ds, president, selectionneur]
+    arc: moment
+    tags: [moment, vestiaire, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un ancien joueur du club, la cinquantaine abîmée, t'attend à la réception avec un CV d'une page : « Je ferais n'importe quoi, même la billetterie. » Il a gardé sa carte de membre d'honneur."
+    left: {label: "Je lui trouve un poste", effects: {vestiaire: "+", caisse: "-"}, answer: "Il commence lundi, à la billetterie, en veste trop grande. Au guichet, les vieux supporters le reconnaissent, sans compter leur monnaie."}
+    right: {label: "Je lui donne rendez-vous", effects: {caisse: "+", tribunes: "-"}, answer: "Il hoche la tête et range son CV dans la poche intérieure. Le rendez-vous est dans trois mois ; il l'écrit sur sa main."}
+
+  - id: ec.bu.radio_matin
+    roles: [ds, president, selectionneur]
+    arc: presse
+    tags: [presse, tribunes, direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Une radio sportive t'invite à son émission du matin : quarante minutes en direct, une animatrice qui sourit en posant des questions qui ne sourient pas. Ton attaché de presse dit qu'il faut y aller."
+    left: {label: "J'y vais sans filet", effects: {tribunes: "++", direction: "-"}, answer: "Tu parles trop longtemps de ce que tu ne devais pas dire. Sur le parking de la radio, ton téléphone vibre sept fois."}
+    right: {label: "Je décline, poliment", effects: {direction: "+", tribunes: "-"}, answer: "L'animatrice remplace ton nom par un silence à l'antenne. Les auditeurs, eux, rappellent ton refus toute la matinée."}
+
+  - id: ec.bu.depeche_ecart
+    roles: [ds, president, selectionneur]
+    arc: presse
+    tags: [presse, tribunes, direction, scandale]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Une dépêche annonce ta mise à l'écart « imminente ». Elle est fausse, mais déjà reprise par deux journaux du soir et une radio. Le démenti coûterait ta crédibilité ; le silence, ton autorité."
+    left: {label: "Je démens ce soir", effects: {tribunes: "+", direction: "-"}, answer: "Ton démenti est lu à vingt heures, entre la météo et un reportage sur les marées. Trois personnes te croient."}
+    right: {label: "Je ne dis rien", effects: {direction: "+", tribunes: "-"}, answer: "Le silence dure toute la nuit. Au matin, le téléphone sonne moins, et tu ne sais pas si c'est bon signe."}
+
+  - id: ec.bu.derby_securite
+    roles: [ds, president]
+    arc: direction
+    tags: [direction, tribunes, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le préfet appelle la veille du derby : trois cents supporters adverses annoncés, une gare à surveiller. Il propose un coup d'envoi à midi, en clair, sans abonnés. Tu perds quatre mille places."
+    left: {label: "J'avance à midi", effects: {direction: "+", caisse: "-"}, answer: "Le derby se joue sous un soleil blanc, dans un stade à moitié vide. Il n'y a pas d'incident, ce qui ne fait pas de titre."}
+    right: {label: "Le coup d'envoi ne bouge pas", effects: {tribunes: "+", direction: "-"}, answer: "Le soir du match, la gare est un couloir de boucliers. Le préfet te le rappelle, par écrit, dans la semaine."}
+
+  - id: ec.bu.photo_saison
+    roles: [ds, president, selectionneur]
+    arc: moment
+    tags: [moment, tribunes, vestiaire]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Le photographe dispose tout le monde pour la photo de saison : le vieux capitaine à gauche, le jeune prodige au centre, ton fauteuil devant. Personne ne s'est mis d'accord sur l'ordre des chaises."
+    left: {label: "Le prodige au centre", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le photographe appuie. Sur le cliché, le capitaine regarde ailleurs, et le prodige sourit comme à un dentiste."}
+    right: {label: "Le capitaine au centre", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le prodige garde les mains dans les poches. La presse publie la photo avec une légende sans prénom."}
+
+  - id: ec.bu.dette_ancienne
+    roles: [ds, president, selectionneur]
+    arc: caisse
+    tags: [caisse, tribunes, direction]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un huissier t'apporte une vieille facture : un fournisseur de maillots, cinq ans de retard, un million. L'entreprise, reprise par un fonds, veut l'argent, ou une compensation en places."
+    left: {label: "Je paie en places", effects: {caisse: "+", tribunes: "-"}, answer: "Cinquante places par match pendant dix ans, les mêmes, sans vue. Les anciens du virage trouvent un nouveau voisin, silencieux."}
+    right: {label: "Je paie en argent", effects: {caisse: "--", direction: "+"}, answer: "Le virement part un vendredi. Le fonds t'envoie ses remerciements, deux lignes et une carte de visite."}
+
+  - id: ec.bu.voyage_offert
+    roles: [ds, president, selectionneur]
+    arc: direction
+    tags: [direction, vestiaire, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Une fédération amie offre un voyage tous frais payés pour toi et ton adjoint : une semaine au soleil, un tournoi de gala, un dîner de dirigeants. Rien n'est demandé. Les billets sont réservés."
+    left: {label: "J'y vais avec l'adjoint", effects: {direction: "+", vestiaire: "-"}, answer: "La semaine au soleil dure sept jours. À ton retour, deux dossiers se sont perdus et un joueur n'est plus là."}
+    right: {label: "Je reste au bureau", effects: {vestiaire: "+", direction: "-"}, answer: "L'adjoint range sa valise dans le placard. Le tournoi de gala se joue sans le club, et sans commentaire."}
+
+  - id: ec.bu.assistante_demission
+    roles: [ds, president, selectionneur]
+    arc: vestiaire
+    tags: [vestiaire, caisse, moment]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Ton assistante, vingt ans de maison, dépose sa lettre de démission sur le bureau, à côté d'une plante qu'elle a arrosée tous les jours. Elle part « pour de bon », et ne le dira pas à la presse."
+    left: {label: "Je lui demande de rester", effects: {vestiaire: "+", caisse: "-"}, answer: "Elle accepte une augmentation, et l'oublie aussitôt. Elle ne parle plus jamais de la plante."}
+    right: {label: "J'accepte, avec gratitude", effects: {caisse: "+", vestiaire: "--"}, answer: "Elle emporte la plante dans un carton. Le lendemain, le bureau sent le désinfectant, et personne ne sait où est le tampon."}
+
+  - id: ec.bu.gala_charite
+    roles: [ds, president, selectionneur]
+    arc: moment
+    tags: [moment, tribunes, caisse]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Un gala de charité t'invite comme président d'honneur : une table à mille, des photographes, un chèque à signer. Les organisateurs ont déjà écrit le montant. Il est élevé, et la caméra est braquée."
+    left: {label: "Je signe le chèque", effects: {tribunes: "++", caisse: "-"}, answer: "Les flashes partent avant que tu relèves le stylo. Le chèque est photographié plus souvent que toi."}
+    right: {label: "Je donne moins, discrètement", effects: {caisse: "+", tribunes: "--"}, answer: "Tu signes un chèque plus petit, sans caméra. Le lendemain, un journal compare les deux montants, en gras."}
+
+  - id: ec.bu.vieil_abonne
+    roles: [ds, president, selectionneur]
+    arc: tribunes
+    tags: [tribunes, caisse, moment, rescue:tribunes]
+    when: "flag('eclair') && (gauges.tribunes < 55)"
+    cooldown: 26
+    text: "Un abonné depuis trente ans écrit à la main : il ne vient plus au stade, c'est trop cher, mais il écoute les matches à la radio, dans sa voiture, garée devant l'entrée. Il demande une place « à vie »."
+    left: {label: "Je lui offre l'abonnement", effects: {tribunes: "+", caisse: "-"}, answer: "Il vient au prochain match, en veste de velours, avec une thermos. Il s'assoit à sa place avant l'ouverture des grilles."}
+    right: {label: "Je lui écris une lettre", effects: {caisse: "+", tribunes: "-"}, answer: "Tu écris trois lignes aimables. Au match suivant, sa voiture est garée devant l'entrée, moteur éteint, vitres baissées."}
+
+  - id: ec.bu.parent_prodige
+    roles: [ds, president, selectionneur]
+    arc: formation
+    tags: [formation, vestiaire, tribunes]
+    when: "flag('eclair')"
+    cooldown: 26
+    text: "Le père d'un gamin du centre attend à l'entrée, une enveloppe à la main : il veut qu'on le fasse jouer en pro, avant ses dix-sept ans. « Je ne vous demande rien. Je vous le dis, c'est tout. »"
+    left: {label: "Il joue vingt minutes", effects: {tribunes: "+", vestiaire: "-"}, answer: "Le gamin entre à la quatre-vingtième, touche un ballon, et sourit à la tribune. Son père n'est pas dans le stade."}
+    right: {label: "Il attendra ses dix-sept ans", effects: {vestiaire: "+", tribunes: "-"}, answer: "Le père range l'enveloppe, puis la tend à quelqu'un d'autre dans le couloir. Le gamin s'entraîne un peu moins fort ce jour-là."}
+
+  - id: ec.bu.commissaire_aux_comptes
+    roles: [ds, president, selectionneur]
+    arc: caisse
+    tags: [caisse, direction, scandale]
+    when: "flag('eclair')"
+    cooldown: 60
+    once: true
+    text: "Le commissaire aux comptes s'excuse : une ligne de dépenses ne correspond à rien, quatre-vingt mille d'une année précédente. Il l'a entourée au stylo. Quelqu'un a signé, dit-il, et ce n'est pas toi."
+    left: {label: "Je demande à qui", effects: {direction: "+", vestiaire: "-"}, answer: "Le nom que le commissaire murmure est celui d'un collègue, de ton étage. Le lendemain, son bureau est vide, avec une plante."}
+    right: {label: "J'étale la ligne", effects: {caisse: "+", direction: "--"}, answer: "La ligne est lissée, et la page est propre. Le commissaire repart sans insister, en tenant très bien son dossier."}
+
+  - id: ec.bu.piege_photos
+    roles: [ds, president, selectionneur]
+    arc: presse
+    tags: [presse, scandale, direction, tribunes, piege]
+    when: "flag('eclair')"
+    cooldown: 70
+    once: true
+    text: "Un journaliste a des photos : tu dînes avec un agent, un mardi soir, à une table du fond. Il propose de ne pas les publier si tu l'emmènes à tes prochains voyages. Le serveur a vu aussi."
+    left: {label: "J'accepte son marché", effects: {direction: "++", tribunes: "---"}, answer: "Il monte dans l'avion sans un mot, dans le siège du fond. Dans la presse, trois lignes sur ta « proximité inquiétante »."}
+    right: {label: "Qu'il publie", effects: {tribunes: "++", direction: "---"}, answer: "Les photos sortent un jeudi, en page deux. Le lendemain, un nom de remplaçant circule, que personne ne confirme."}

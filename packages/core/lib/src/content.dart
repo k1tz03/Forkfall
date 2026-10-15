@@ -4,6 +4,18 @@ library;
 
 import 'effects.dart';
 
+/// Le mode des livres (le défaut d'un postulat) : les jauges ne tuent pas, la
+/// carrière finit avec son histoire. Jamais sérialisé dans une sauvegarde :
+/// l'absence de `mode` veut dire celui-ci (voir `eclair.dart`).
+const String kModeHistoire = 'histoire';
+
+/// Le mode éclair (« Le Fusible ») : les jauges sont visibles et mortelles, il
+/// n'y a pas de livre. Un postulat le déclare par `mode: eclair`.
+const String kModeEclair = 'eclair';
+
+/// Les modes qu'un postulat peut déclarer.
+const Set<String> kModes = {kModeHistoire, kModeEclair};
+
 class Choice {
   final String label;
   final EffectSet effects;
@@ -888,6 +900,19 @@ class PostulatDef {
   final int? saisons;
   final String? finDeLivre;
 
+  /// **Le mode de la carrière** (`mode:` de postulats.yaml) : [kModeHistoire]
+  /// (le défaut, tous les livres) ou [kModeEclair]. Le moteur le copie dans
+  /// `GameState.mode` au départ ; un postulat éclair n'est jamais un livre (le
+  /// build le range en `chantier`, hors de toute liste d'histoires).
+  final String mode;
+
+  /// **L'époque d'une carrière éclair** (`annees: [première, dernière]`) : le
+  /// moteur y tire l'année de départ de la graine, dans `Engine.start` — après
+  /// tous les autres tirages, et pour les seuls postulats qui la déclarent, si
+  /// bien qu'aucune carrière de livre ne voit son flux bouger. Sans elle, la
+  /// carrière commence à [year], comme toujours.
+  final List<int>? annees;
+
   const PostulatDef({
     required this.id,
     required this.index,
@@ -919,6 +944,8 @@ class PostulatDef {
     this.rival,
     this.saisons,
     this.finDeLivre,
+    this.mode = kModeHistoire,
+    this.annees,
   });
 
   /// Le livre est-il fini au Bilan de la saison [season] (index à partir de 0) ?
@@ -966,6 +993,8 @@ class PostulatDef {
       rival: (j['rival'] as String?)?.trim().isEmpty ?? true ? null : (j['rival'] as String).trim(),
       saisons: (j['saisons'] as num?)?.toInt(),
       finDeLivre: (j['fin_de_livre'] as String?)?.trim().isEmpty ?? true ? null : (j['fin_de_livre'] as String).trim(),
+      mode: j['mode'] == kModeEclair ? kModeEclair : kModeHistoire,
+      annees: (j['annees'] as List?)?.length == 2 ? [for (final a in (j['annees'] as List)) (a as num).toInt()] : null,
     );
   }
 }

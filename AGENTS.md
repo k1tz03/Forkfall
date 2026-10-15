@@ -26,9 +26,9 @@ tout-assis, l'équipement, les tactiques. Jamais les gens.
 
 | | |
 |---|---|
-| Contenu | 3 749 cartes, 341 arcs, 118 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
+| Contenu | 3 988 cartes, 341 arcs, 123 fins, 249 Nouvelles datées, 548 manchettes de Une, 689 variantes de set-piece, 185 personnages (dont 134 gens de la ville) ; la ville : 855 scènes de la semaine |
 | Rôles jouables | entraîneur, joueur, président, directeur sportif, sélectionneur — les dix histoires livrées (voir « Les dix histoires ») |
-| Moteur | Dart pur, déterministe, 212 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
+| Moteur | Dart pur, déterministe, 250 tests, 20 goldens ; le mode histoire (`calendar.yaml` `director.jauges_fatales: false`) |
 | Qualité | `dart analyze` propre, `lint` 0 erreur (1 avertissement connu : la part des Unes qui nomment le héros) |
 | Bible narrative | `docs/bible/`, 13 chapitres, 565 000 mots, et la **charte d'écriture** (`docs/bible/charte_histoire.md`) |
 | La ville | la version jouable : Aubérive en pixel art, la semaine en tranches d'heures, les cartes à leur lieu ; **le Grand Aubérive** : la ville au centre d'un monde de 1 800 voxels, le boulevard de ceinture, quatre quartiers qui s'ouvrent au fil de la carrière (les Hauts, les Tilleuls, le port, la campagne : 26 lieux) et le paysage qui continue jusqu'à l'horizon ; **la ville vivante** : chaque geste laisse une trace (un lien, une habitude, un tuyau, un service, une dette) — voir plus bas ; 39 pièces où l'on entre, modelées à la main ; 191 scènes jouées (les dix introductions, 141 scènes des livres, 40 événements de la ville) ; 319 conversations surprises ; 624 activités (dans les pièces, objet par objet, et dehors ; 38 avec un petit jeu) ; 45 tableaux de rue — voir plus bas |
@@ -114,6 +114,25 @@ les accepte tant que leur `cause:` dit `jauge` ; un `end:` qui les vise les rév
 au changement : 40 à 89 % des carrières d'un livre s'arrêtaient sur une jauge, au milieu du
 livre ; elles finissent maintenant sur les fins écrites.
 
+**Le Fusible, le mode éclair** (`docs/histoires/mode_eclair.md`) : une carrière de dix minutes à
+côté des livres — un rôle et une époque tirés de la graine, quatre jauges visibles et mortelles, pas
+de ville, un score en « semaines tenues », un défi du jour (la date → un rôle et une graine, par
+hachage, sans serveur). Cinq postulats cachés (`mode: eclair`, index 10 à 14 : `eclair_entraineur`,
+`_joueur`, `_president`, `_ds`, `_selectionneur`), forcés `chantier` par `build_content` — jamais
+listés ni tirés ; `GameState.mode` (écrit dans la sauvegarde seulement s'il vaut `eclair`) ;
+`packages/core/lib/src/eclair.dart` (`jaugesMortelles`, `semainesTenues`, `defiDuJour`,
+`carteDeLivre`) ; le contenu (`content/cards/{president,ds,selectionneur}/eclair.yaml`,
+`common/eclair_bureau.yaml`, `entraineur/eclair.yaml`, les fins `ec_tenu_*`) ; la page
+(`preview_eclair.js`, clé `fusible.eclair.v1`, jamais une sauvegarde de livre) ; le classement du jour
+facultatif (capacité `db`, un document `eclair/<id>` écrit à la fin d'un défi du jour) ; le banc
+`packages/tools/bin/eclair.dart` (`--fins`, `--fuites`, `--jours`). **Règles** : l'index des cinq
+postulats est le Code de Carrière et leur ordre fixe le défi de chaque jour ; un événement commun qui
+doit s'ouvrir en éclair nomme `eclair_<rôle>` dans ses `postulats` ; une carte du mode se lit derrière
+`flag('eclair')` ; une carte de livre ne sert jamais en éclair ; le miroir JS `defiDe` reste d'accord
+avec `defiDuJour` (valeurs épinglées dans le test) ; un contenu ajouté au mode se mesure (soixante à
+cent cartes pour un joueur ordinaire). Les fins des longues carrières (la retraite, la statue…) ne
+s'atteignent plus que là : une fin commune atteinte en éclair entre au Cimetière, pas une fin de jauge.
+
 **Le déterminisme est le socle de tout le reste** (partage d'un run, défi entre
 amis, sauvegarde, tests). Trois règles à ne jamais casser :
 
@@ -133,7 +152,7 @@ l'en-tête du test.
 dart pub get
 dart run packages/tools/bin/build_content.dart   # YAML → content/build/content.json + app/assets/content.json (+ content/build/livres/)
 dart run packages/tools/bin/lint.dart            # 0 erreur exigé
-cd packages/core && dart test                    # 212 tests (dont livres_test : l'aperçu découpé par livre)
+cd packages/core && dart test                    # 250 tests (dont livres_test : l'aperçu découpé par livre)
 dart run packages/tools/bin/simulate.dart --runs 2000 --assert   # budgets d'équilibrage
 ```
 
